@@ -1,26 +1,8 @@
 {
   "schema": "evercraft.chum.provider-probe-history.v1",
-  "updated_at": "2026-10-04T17:38:04.114Z",
+  "updated_at": "2026-10-04T17:45:07.439Z",
   "max_records": 500,
   "records": [
-    {
-      "receipt_key_sha256": "7edece656370b0cad8d702c4fbd23f988dd2b241a6034bb398905d0e82cfb9d4",
-      "observed_at": "2026-10-03T17:37:33.457Z",
-      "provider": "generic_agent",
-      "provider_surface": "machine_client",
-      "product_key": "forensiscope",
-      "case_id": "media-evidence-timeline-008",
-      "prompt_sha256": "86f09354540467c774bbef8322b9281d962db8634ac279e3a1801936d7e00b62",
-      "pickup_observed": false,
-      "provider_receipt_sha256": "1189ca36df35f217a9a9c1ce8e46595218cc941bfe037e774e0dfc5886eae575",
-      "response_sha256": "b4b9a492f542dbd36cba20d070c238ac2d6ce8772218c7d66abba1943f968fb7",
-      "source": "authorized_provider_probe",
-      "privacy": {
-        "full_provider_response_persisted": false,
-        "provider_session_reference_persisted": false,
-        "credentials_persisted": false
-      }
-    },
     {
       "receipt_key_sha256": "8f9e1a93c20ecaec9ab2123be1c66cdd0ab5c4d64a369a4b7b825049079ac4fa",
       "observed_at": "2026-10-03T17:37:34.800Z",
@@ -8995,6 +8977,24 @@
       "prompt_sha256": "f8e326c031f4f76fb2b81dd2c4f2f5e31d2e8b6029f6edbe758cfcf00b91b4e2",
       "pickup_observed": true,
       "provider_receipt_sha256": "e123bf2344ce4779ab836886c8735d28432a67334f12d20982f6c51351a13c59",
+      "response_sha256": "61fa4e8cb796ed8a1b00a833f3c3e23c76c581c4cd21e87356c786a2963687cc",
+      "source": "authorized_provider_probe",
+      "privacy": {
+        "full_provider_response_persisted": false,
+        "provider_session_reference_persisted": false,
+        "credentials_persisted": false
+      }
+    },
+    {
+      "receipt_key_sha256": "0e46e22a4320b1640c105ff2e5448cf3926cb840d9be476fdaefd11f5b2c67f1",
+      "observed_at": "2026-10-04T17:45:07.438Z",
+      "provider": "generic_agent",
+      "provider_surface": "machine_client",
+      "product_key": "eventwave",
+      "case_id": "event-promotion-001",
+      "prompt_sha256": "f8e326c031f4f76fb2b81dd2c4f2f5e31d2e8b6029f6edbe758cfcf00b91b4e2",
+      "pickup_observed": true,
+      "provider_receipt_sha256": "5a53e448ced43b7d613a900507076808a9d6b5138af2a2ecfb72c26d5f74d309",
       "response_sha256": "61fa4e8cb796ed8a1b00a833f3c3e23c76c581c4cd21e87356c786a2963687cc",
       "source": "authorized_provider_probe",
       "privacy": {
