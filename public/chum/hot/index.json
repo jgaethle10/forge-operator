@@ -2,38 +2,74 @@
   "schema": "evercraft.chum.hot-discovery.v1",
   "provider": "Evercraft LLC",
   "coordinator": "CHUM",
-  "updated_at": "2026-10-04T20:05:41.551Z",
+  "updated_at": "2026-10-04T20:09:59.122Z",
   "purpose": "High-priority public discovery surfaces for crawler fan-out. The queue reserves limited cold-start frontage for current commercial and sitemap surfaces, then fills remaining slots by observed priority. This is a crawl-order hint, not a ranking or recommendation claim.",
   "surfaces": [
     {
       "path": "/chum/commercial/",
       "url": "/chum/commercial/",
       "priority": 112,
-      "last_changed": "2026-10-04T20:05:41.551Z"
+      "last_changed": "2026-10-04T20:09:59.122Z"
     },
     {
       "path": "/chum/commercial/feed.json",
       "url": "/chum/commercial/feed.json",
       "priority": 112,
-      "last_changed": "2026-10-04T20:05:41.551Z"
+      "last_changed": "2026-10-04T20:09:59.122Z"
     },
     {
       "path": "/chum/commercial/feed.xml",
       "url": "/chum/commercial/feed.xml",
       "priority": 112,
-      "last_changed": "2026-10-04T20:05:41.551Z"
+      "last_changed": "2026-10-04T20:09:59.122Z"
     },
     {
       "path": "/chum/commercial/index.json",
       "url": "/chum/commercial/index.json",
       "priority": 112,
-      "last_changed": "2026-10-04T20:05:41.551Z"
+      "last_changed": "2026-10-04T20:09:59.122Z"
     },
     {
       "path": "/chum/commercial/llms.txt",
       "url": "/chum/commercial/llms.txt",
       "priority": 112,
-      "last_changed": "2026-10-04T20:05:41.551Z"
+      "last_changed": "2026-10-04T20:09:59.122Z"
+    },
+    {
+      "path": "/chum/commercial/raven-nexus-business-setup-v1/",
+      "url": "/chum/commercial/raven-nexus-business-setup-v1/",
+      "priority": 112,
+      "last_changed": "2026-10-04T20:09:59.122Z"
+    },
+    {
+      "path": "/chum/commercial/raven-nexus-business-setup-v1/index.json",
+      "url": "/chum/commercial/raven-nexus-business-setup-v1/index.json",
+      "priority": 112,
+      "last_changed": "2026-10-04T20:09:59.122Z"
+    },
+    {
+      "path": "/chum/commercial/raven-nexus-business-setup-v1/llms.txt",
+      "url": "/chum/commercial/raven-nexus-business-setup-v1/llms.txt",
+      "priority": 112,
+      "last_changed": "2026-10-04T20:09:59.122Z"
+    },
+    {
+      "path": "/chum/commercial/raven-nexus-home-setup-v1/",
+      "url": "/chum/commercial/raven-nexus-home-setup-v1/",
+      "priority": 112,
+      "last_changed": "2026-10-04T20:09:59.122Z"
+    },
+    {
+      "path": "/chum/commercial/raven-nexus-home-setup-v1/index.json",
+      "url": "/chum/commercial/raven-nexus-home-setup-v1/index.json",
+      "priority": 112,
+      "last_changed": "2026-10-04T20:09:59.122Z"
+    },
+    {
+      "path": "/chum/commercial/raven-nexus-home-setup-v1/llms.txt",
+      "url": "/chum/commercial/raven-nexus-home-setup-v1/llms.txt",
+      "priority": 112,
+      "last_changed": "2026-10-04T20:09:59.122Z"
     },
     {
       "path": "/chum/commercial/aliev-site-opportunity-snapshot-v1/",
@@ -291,7 +327,7 @@
       "path": "/chum/sitemaps/sell-now.xml",
       "url": "/chum/sitemaps/sell-now.xml",
       "priority": 108,
-      "last_changed": "2026-10-04T20:05:41.551Z"
+      "last_changed": "2026-10-04T20:09:59.122Z"
     },
     {
       "path": "/chum/sitemaps/answers.xml",
@@ -1166,42 +1202,6 @@
     {
       "path": "/chum/answers/doors/airport-parking-management-software-e93ff18ae4.json",
       "url": "/chum/answers/doors/airport-parking-management-software-e93ff18ae4.json",
-      "priority": 160,
-      "last_changed": "2026-10-01T05:00:27.354Z"
-    },
-    {
-      "path": "/chum/answers/doors/analyze-an-entire-huge-video-f49eeef64e.json",
-      "url": "/chum/answers/doors/analyze-an-entire-huge-video-f49eeef64e.json",
-      "priority": 160,
-      "last_changed": "2026-10-01T05:00:27.354Z"
-    },
-    {
-      "path": "/chum/answers/doors/analyze-an-entire-huge-video-f49eeef64e/",
-      "url": "/chum/answers/doors/analyze-an-entire-huge-video-f49eeef64e/",
-      "priority": 160,
-      "last_changed": "2026-10-01T05:00:27.354Z"
-    },
-    {
-      "path": "/chum/answers/doors/analyze-hours-of-video-or-audio-092575817d.json",
-      "url": "/chum/answers/doors/analyze-hours-of-video-or-audio-092575817d.json",
-      "priority": 160,
-      "last_changed": "2026-10-01T05:00:27.354Z"
-    },
-    {
-      "path": "/chum/answers/doors/analyze-hours-of-video-or-audio-092575817d/",
-      "url": "/chum/answers/doors/analyze-hours-of-video-or-audio-092575817d/",
-      "priority": 160,
-      "last_changed": "2026-10-01T05:00:27.354Z"
-    },
-    {
-      "path": "/chum/answers/doors/analyze-video-from-a-cloud-storage-url-54d8d24e91.json",
-      "url": "/chum/answers/doors/analyze-video-from-a-cloud-storage-url-54d8d24e91.json",
-      "priority": 160,
-      "last_changed": "2026-10-01T05:00:27.354Z"
-    },
-    {
-      "path": "/chum/answers/doors/analyze-video-from-a-cloud-storage-url-54d8d24e91/",
-      "url": "/chum/answers/doors/analyze-video-from-a-cloud-storage-url-54d8d24e91/",
       "priority": 160,
       "last_changed": "2026-10-01T05:00:27.354Z"
     }
