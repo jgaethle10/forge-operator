@@ -1,6 +1,10 @@
 import fs from 'node:fs';
 
 const files = [
+  '.github/workflows/ci.yml',
+  'systemia/yard/public-edge-activator.mjs',
+  'systemia/chum/router-recall.mjs',
+  'systemia/chum/direct-door-readiness.mjs',
   '.github/workflows/network-mcp-canary.yml',
   '.github/workflows/customer-gauntlet.yml',
   'systemia/customer-gauntlet/runner.mjs',
@@ -43,6 +47,9 @@ const files = [
 ];
 
 const runtimeFiles = new Set([
+  'systemia/yard/public-edge-activator.mjs',
+  'systemia/chum/router-recall.mjs',
+  'systemia/chum/direct-door-readiness.mjs',
   'systemia/customer-gauntlet/runner.mjs',
   'systemia/network/public-mcp-canary.mjs',
   'systemia/chum/ibmi-rescue-canary.mjs',
