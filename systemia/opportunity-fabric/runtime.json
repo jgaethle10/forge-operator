@@ -2,15 +2,15 @@
   "schema": "evercraft.opportunity-fabric.runtime.v1",
   "product_key": "opportunity-fabric",
   "name": "Evercraft Opportunity Fabric",
-  "updated_at": "2026-10-01",
+  "updated_at": "2026-10-05",
   "runtime": {
     "provider": "base44",
     "app_id": "6ab85d74fe2093703c6247e0",
-    "checkpoint_id": "6abf4f6cc8a37d4d94b03f92",
-    "checkpoint_commit": "2461768f13d4b04b6641bbd6dcb9ad5d143b25d9",
+    "checkpoint_id": "6ac3d71cefeca539ad239a3a",
+    "checkpoint_commit": "9dfdabc8f86adac9dc80864bd37195bd4745f7e4",
     "public_url": null,
     "publication_state": "not_claimed_public",
-    "runtime_version": "evercraft-opportunity-fabric-runtime-v1.4.0"
+    "runtime_version": "evercraft-opportunity-fabric-runtime-v1.5.0"
   },
   "verified_capabilities": [
     "metadata-first member profiles",
@@ -75,7 +75,17 @@
     "missing numeric quote or lead fields cannot coerce to zero",
     "SourcingComparison ledger is owner-private deterministic receipt-backed and idempotent",
     "comparison ordering creates no partner selection team membership contract work acceptance or payment obligation",
-    "SourcingComparison is the eleventh protected workflow entity locked to trusted-runtime writes"
+    "SourcingComparison is the eleventh protected workflow entity locked to trusted-runtime writes",
+    "assignees can no longer self-complete work packages; completion requires leader QA",
+    "Ready for QA submissions receive server timestamps and FabricEvent receipts",
+    "leader QA can accept an outcome or require rework with a required rework note",
+    "QA acceptance mints a receipt-backed WorkPackageOutcome record before the package is finalized Complete",
+    "WorkPackageOutcome records capture quoted lead time when available, actual cycle days, timing basis, on-time state, blocked-event count and QA attempt count",
+    "outcome-ledger-first completion can recover package state after a partial write failure",
+    "sourcing comparison history is derived from leader-reviewed WorkPackageOutcome records rather than raw accepted WorkPackage state",
+    "reviewed history decomposes into on-time score, QA-attempt score and blockage score",
+    "missing reviewed outcome history remains neutral",
+    "WorkPackageOutcome is the twelfth protected workflow entity locked to trusted-runtime writes"
   ],
   "verification": {
     "app_lint": "pass",
@@ -101,8 +111,8 @@
     },
     "security_smoke": {
       "result": "pass",
-      "trusted_runtime_version": "v1.4.0",
-      "protected_workflow_entities_runtime_write_only": 11,
+      "trusted_runtime_version": "v1.5.0",
+      "protected_workflow_entities_runtime_write_only": 12,
       "private_contact_fields": 2,
       "vault_fingerprint_only": true,
       "immutable_formations_runtime_authoritative": true,
@@ -120,6 +130,11 @@
       "sourcing_comparison_human_decision_required": true,
       "sourcing_comparison_selected_partner_created": false,
       "sourcing_comparison_evidence_states_explicit": true,
+      "assignee_self_completion_blocked": true,
+      "leader_qa_required_for_completion": true,
+      "reviewed_outcome_ledger": true,
+      "reviewed_outcome_recovery_path": true,
+      "sourcing_history_uses_reviewed_outcomes": true,
       "execution_team_source_connections_verified": true,
       "team_invitation_acceptance_server_authoritative": true,
       "work_package_assignment_requires_accepted_invite": true,
@@ -129,7 +144,7 @@
     },
     "authority_contract_test": {
       "result": "pass",
-      "runtime_version": "v1.4.0"
+      "runtime_version": "v1.5.0"
     }
   },
   "known_limits": [
@@ -148,9 +163,12 @@
     "Sourcing availability and quote responses are participant-supplied commercial signals and are not independently verified by the platform",
     "A firm quote label in sourcing is still not payment, contract execution, purchase order, escrow or acceptance of the downstream work package",
     "Sourcing decision scores are transparent heuristics for comparing current evidence and are not proof that a higher-scoring partner is better, safer, more qualified, more reliable or the correct choice",
-    "Observed Fabric history currently reflects accepted work-package records and current terminal/progress state; it is not an external reputation score or comprehensive performance history",
     "Prices in different currencies are not normalized by FX in v1.4 and are only price-compared against responses in the same currency",
-    "Geography uses declared profile/opportunity location strings and remote-work policy rather than route-time, distance or logistics-cost optimization"
+    "Geography uses declared profile/opportunity location strings and remote-work policy rather than route-time, distance or logistics-cost optimization",
+    "Leader-reviewed outcomes are operational evidence inside Opportunity Fabric, not independent third-party certification or a comprehensive reputation score",
+    "On-time state measures the final Ready for QA submission against quoted lead time when available, otherwise the package due date when available; it does not measure shipping, payment settlement or downstream customer acceptance",
+    "QA-attempt scoring reflects the number of leader review cycles inside Fabric and can be affected by scope quality, reviewer expectations and project complexity",
+    "Historical outcomes are not retroactively invented for legacy packages that were completed before the v1.5 leader-QA outcome ledger"
   ],
   "release_rule": "Do not claim protected-asset disclosure, final legal enforceability, public deployment, or production payment until separately verified."
 }

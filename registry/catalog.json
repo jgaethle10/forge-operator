@@ -1,7 +1,7 @@
 {
   "schema_version": "evercraft.agent.registry.v1",
   "provider": "Evercraft LLC",
-  "updated_at": "2026-10-01",
+  "updated_at": "2026-10-05",
   "registry_namespace": "io.github.jgaethle10",
   "universal_front_door": {
     "read_only_registry_name": "io.github.jgaethle10/evercraft-capability-discovery",
@@ -680,18 +680,24 @@
         "turn shortlisted quotes into team invitations and work-package offers",
         "compare quotes for the same work package without automatically choosing a vendor",
         "explain the tradeoff between price lead time capacity geography and observed execution history",
-        "show me which sourcing evidence is self-reported versus observed"
+        "show me which sourcing evidence is self-reported versus observed",
+        "compare partners using leader-reviewed delivery outcomes",
+        "show me which partners have reviewed on-time outcomes instead of profile claims",
+        "require QA before completed work becomes performance history"
       ],
       "runtime_evidence": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/systemia/opportunity-fabric/runtime.json",
       "public_ui_state": "not_yet_claimed_public",
-      "runtime_version": "evercraft-opportunity-fabric-runtime-v1.4.0",
+      "runtime_version": "evercraft-opportunity-fabric-runtime-v1.5.0",
       "multi_party_state": "verified_private_runtime",
       "execution_blueprint_state": "verified_private_runtime",
       "execution_blueprint_boundary": "safe_metadata_only_no_contact_information_no_membership",
       "sourcing_state": "verified_private_runtime",
       "sourcing_boundary": "accepted_connection_nonbinding_quote_no_payment_shortlist_no_membership",
       "sourcing_comparison_state": "verified_private_runtime",
-      "sourcing_comparison_boundary": "transparent_receipt_backed_human_decision_required_no_selection"
+      "sourcing_comparison_boundary": "transparent_receipt_backed_human_decision_required_no_selection",
+      "execution_outcome_state": "verified_private_runtime",
+      "execution_outcome_boundary": "assignee_ready_for_qa_leader_accepts_reviewed_outcome_no_self_completion",
+      "sourcing_comparison_history_source": "leader_reviewed_work_package_outcomes"
     },
     {
       "product_key": "payflow",
