@@ -16,18 +16,25 @@ function atomicJson(file, value) {
 }
 
 const inbox = path.resolve(arg("--inbox", process.env.SYSTEMIA_COMPETITION_OPPORTUNITY_INBOX || "artifacts/competition-provider/opportunities.json"));
+const registryPath = path.resolve(arg("--registry", process.env.SYSTEMIA_COMPETITION_OPPORTUNITY_REGISTRY || "systemia/competition/opportunity-registry.json"));
 const out = path.resolve(arg("--out", process.env.SYSTEMIA_COMPETITION_CONTROL_PLANE_RECEIPT || "artifacts/competition-provider/control-plane/latest.json"));
 const ledgerPath = path.resolve(arg("--authorization-ledger", process.env.SYSTEMIA_COMPETITION_AUTHORIZATION_LEDGER || "artifacts/competition-provider/authorization-ledger.json"));
 
 let opportunities = [];
-if (fs.existsSync(inbox)) {
+const sources = [registryPath, inbox];
+const byId = new Map();
+for (const source of sources) {
+  if (!fs.existsSync(source)) continue;
   try {
-    const parsed = JSON.parse(fs.readFileSync(inbox, "utf8"));
-    opportunities = Array.isArray(parsed) ? parsed : Array.isArray(parsed?.opportunities) ? parsed.opportunities : [];
-  } catch {
-    opportunities = [];
-  }
+    const parsed = JSON.parse(fs.readFileSync(source, "utf8"));
+    const rows = Array.isArray(parsed) ? parsed : Array.isArray(parsed?.opportunities) ? parsed.opportunities : [];
+    for (const row of rows) {
+      const key = String(row?.opportunity_id || "").trim();
+      if (key) byId.set(key, { ...(byId.get(key) || {}), ...row });
+    }
+  } catch {}
 }
+opportunities = [...byId.values()];
 
 let authorizationLedger = {};
 if (fs.existsSync(ledgerPath)) {
