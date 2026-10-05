@@ -3,6 +3,7 @@ name: Base44 exit and KAIDANCE proof
 on:
   pull_request:
     paths:
+      - '.github/workflows/chum-llm-hunter.yml'
       - 'scripts/portfolio-sentinel-commercial-canary.mjs'
       - 'systemia/organism/portfolio-sentinel-runner.mjs'
       - '.github/workflows/systemia-portfolio-sentinel.yml'
@@ -37,6 +38,7 @@ on:
     branches:
       - main
     paths:
+      - '.github/workflows/chum-llm-hunter.yml'
       - 'scripts/portfolio-sentinel-commercial-canary.mjs'
       - 'systemia/organism/portfolio-sentinel-runner.mjs'
       - '.github/workflows/systemia-portfolio-sentinel.yml'
