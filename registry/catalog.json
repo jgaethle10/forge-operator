@@ -154,7 +154,7 @@
       "aliases": [
         "EPS Precise Estimator"
       ],
-      "route_note": "EPS Precise Estimator now has an owned static public fallback on the Evercraft GitHub Pages release. The calculator runs client-side with no account and no Base44 runtime dependency. Full evercraftpropertyservices.com origin migration remains a separate cutover gate."
+      "route_note": "EPS Precise Estimator now has an owned static public fallback on the Evercraft GitHub Pages release. The calculator runs client-side with no account and no legacy provider runtime dependency. Full evercraftpropertyservices.com origin migration remains a separate cutover gate."
     },
     {
       "product_key": "eventwave",

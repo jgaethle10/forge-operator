@@ -21,7 +21,7 @@
     "internal service-template prices and cost assumptions are estimation inputs, not a public machine-access price",
     "no approved external machine price or payment path is verified",
     "site verification, proposal issuance, acceptance and payment retain separate authority gates",
-    "the public calculator is a static Evercraft-owned fallback and does not depend on Base44 at runtime"
+    "the public calculator is a static Evercraft-owned fallback and does not depend on legacy provider at runtime"
   ],
   "commercial": null,
   "machine_commerce_handoff": null,
