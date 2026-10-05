@@ -134,6 +134,8 @@ export function classifyCompetitionOpportunity(opportunity, {
 
   const hardStop = teamBlockers.includes("ineligible") || dState === "closed";
   const prepRemaining = prepActions.length > 0 && !hardStop;
+  const gateBlocksPreparation = bool(rules.human_gate_blocks_preparation);
+  const humanGateDue = humanGates.length > 0 && (gateBlocksPreparation || !prepRemaining);
   const submissionReady =
     !hardStop &&
     rulesVerified(rules) &&
@@ -146,7 +148,7 @@ export function classifyCompetitionOpportunity(opportunity, {
   let state = "team_work_pending";
   if (hardStop) state = "held_ineligible_or_closed";
   else if (submissionReady) state = "autonomous_submission_ready";
-  else if (humanGates.length > 0 && prepRemaining) state = "team_can_advance_human_gate_pending";
+  else if (humanGates.length > 0 && !humanGateDue) state = "team_can_advance_human_gate_deferred";
   else if (humanGates.length > 0) state = "held_human_gate";
   else if (teamBlockers.length > 0) state = "internal_repair_required";
 
@@ -159,11 +161,13 @@ export function classifyCompetitionOpportunity(opportunity, {
     deadline_state: dState,
     state,
     human_gates: humanGates,
+    deferred_human_gates: humanGateDue ? [] : humanGates,
+    human_gate_due: humanGateDue,
     team_blockers: teamBlockers,
     team_can_continue_preparation: prepRemaining,
     next_team_action: prepActions[0] || (submissionReady ? "submit_and_verify_provider_receipt" : null),
     submission_ready: submissionReady,
-    notify_human: humanGates.some((gate) => HUMAN_GATE_TYPES.has(gate)),
+    notify_human: humanGateDue && humanGates.some((gate) => HUMAN_GATE_TYPES.has(gate)),
   };
 }
 
@@ -171,6 +175,7 @@ export function compileHumanGateQueue(classifications = []) {
   const seen = new Set();
   const queue = [];
   for (const item of classifications) {
+    if (!item.notify_human) continue;
     for (const gate of item.human_gates || []) {
       const key = [item.provider, item.opportunity_id, gate].join(":");
       if (seen.has(key)) continue;
