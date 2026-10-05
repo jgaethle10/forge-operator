@@ -53,13 +53,21 @@ export function directLineageRequester(baseUrl, { timeoutMs = 10_000 } = {}) {
 export function yardRelayLineageRequester({
   relayUrl,
   relayToken,
+  tokenProvider = null,
   timeoutMs = 15_000,
 } = {}) {
   const url = String(relayUrl || '').trim();
-  const token = String(relayToken || '').trim();
-  if (!url || !token) throw new Error('lineage_yard_relay_authority_required');
+  const fixedToken = String(relayToken || '').trim();
+  const readToken = typeof tokenProvider === 'function'
+    ? tokenProvider
+    : () => fixedToken;
+  if (!url || !String(readToken() || '').trim()) {
+    throw new Error('lineage_yard_relay_authority_required');
+  }
 
   return async function request({ method = 'GET', path = '/', body = null }) {
+    const token = String(readToken() || '').trim();
+    if (!token) throw new Error('lineage_yard_relay_authority_revoked');
     const controller = new AbortController();
     const timer = setTimeout(() => controller.abort(), timeoutMs);
     try {
