@@ -5,6 +5,23 @@
   "status": "simulation_control_contract_proof",
   "claim": "Evercraft builds autonomous fleet coordination, digital-twin, dispatch, safety-envelope, telemetry, and device-bridge technology for earthmoving systems.",
   "evidence_boundary": "The current public proof is a deterministic software simulation and hardware-neutral control contract. It is not a claim of unsupervised production autonomy on full-size heavy equipment.",
+  "problems": [
+    "automate repetitive earthmoving or material-handling cycles",
+    "coordinate excavators, haul trucks, loaders, dozers or compactors as one fleet",
+    "simulate a dirt-moving operation before buying autonomy hardware",
+    "reduce truck-excavator queue imbalance and idle time",
+    "add a vendor-neutral orchestration layer across mixed equipment",
+    "create a safer remote-supervised workflow for hazardous material movement",
+    "prototype retrofit autonomy without replacing an entire fleet"
+  ],
+  "applications": [
+    "quarry and aggregate haul loops",
+    "mass excavation and cut-fill",
+    "repetitive hopper or crusher loading",
+    "landfill and stockpile material management",
+    "solar and industrial site preparation",
+    "hazardous recovery and disaster debris"
+  ],
   "capabilities": [
     "multi-machine fleet coordination",
     "AI-assisted dispatch sequencing",
@@ -14,9 +31,14 @@
     "material-flow digital twin",
     "machine telemetry and command receipts",
     "fail-closed fleet stop",
-    "hardware-neutral equipment adapters"
+    "hardware-neutral equipment adapters",
+    "simulation-to-shadow-to-bounded-physical pilot progression"
   ],
-  "demo": "/apps/earthworks-autonomy/",
+  "public_surfaces": {
+    "demo": "/apps/earthworks-autonomy/",
+    "applications": "/apps/earthworks-autonomy/applications.html",
+    "site_contract": "/apps/earthworks-autonomy/site-contract.json"
+  },
   "source": "systemia/earthworks-autonomy/",
   "hardware_path": [
     "software_twin",
