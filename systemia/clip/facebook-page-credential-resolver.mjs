@@ -16,17 +16,7 @@ export function resolveFacebookPageCredential({
   env=process.env,
   credentialStateDir=resolveStateDir(env),
 }={}){
-  const credentialRef=clean(env.CLIP_FACEBOOK_CREDENTIAL_REF);
-  if(!credentialRef){
-    return {
-      config:{},
-      safe_status:{
-        vault_state:credentialStateDir?'configured':'credential_vault_not_configured',
-        facebook:'credential_ref_missing',
-        secret_material_returned:false,
-      },
-    };
-  }
+  let credentialRef=clean(env.CLIP_FACEBOOK_CREDENTIAL_REF);
 
   if(!credentialStateDir){
     return {
@@ -42,8 +32,23 @@ export function resolveFacebookPageCredential({
 
   try{
     const vault=new ProviderCredentialVault({stateDir:credentialStateDir});
-    const metadata=vault.list({provider:'facebook-pages'})
-      .find(row=>row.credential_ref===credentialRef) || null;
+    const rows=vault.list({provider:'facebook-pages'});
+    if(!credentialRef){
+      if(rows.length===1){
+        credentialRef=rows[0].credential_ref;
+      }else{
+        return {
+          config:{},
+          safe_status:{
+            vault_state:'configured',
+            facebook:rows.length===0?'credential_missing':'credential_selection_ambiguous',
+            candidate_count:rows.length,
+            secret_material_returned:false,
+          },
+        };
+      }
+    }
+    const metadata=rows.find(row=>row.credential_ref===credentialRef) || null;
     if(!metadata){
       return {
         config:{},
