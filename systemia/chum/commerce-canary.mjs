@@ -1,20 +1,37 @@
 import fs from 'node:fs';
+import { ownedHttpsEndpoint } from './owned-commerce-endpoint.mjs';
 
 const catalog=JSON.parse(fs.readFileSync('public/.well-known/evercraft-machine-catalog.json','utf8'));
-function ownedGateway(value){
-  const raw=String(value||'').trim();
-  if(!raw) return '';
-  const parsed=new URL(raw);
-  const host=parsed.hostname.toLowerCase();
-  if(parsed.protocol!=='https:') throw new Error('Commerce canary gateway must use HTTPS.');
-  if(host==='base44.app'||host.endsWith('.base44.app')) throw new Error('Commerce canary gateway points to retired Base44 infrastructure.');
-  return parsed.toString();
-}
-const gateway=ownedGateway(
-  process.env.EVERCRAFT_MACHINE_COMMERCE_GATEWAY_URL ||
-  process.env.EVERCRAFT_MACHINE_COMMERCE_GATEWAY
-);
+const gatewayRaw=String(process.env.EVERCRAFT_MACHINE_COMMERCE_GATEWAY_URL||'').trim();
+const gateway=gatewayRaw?ownedHttpsEndpoint(gatewayRaw,{name:'machine_commerce_gateway'}):null;
 const timeoutMs=15000;
+
+if(!gateway){
+  const held={
+    schema:'evercraft.chum.commerce-canary.v1',
+    generated_at:new Date().toISOString(),
+    state:'held_no_owned_gateway',
+    endpoint:null,
+    doctrine:{
+      read_only:true,
+      checkout_created:false,
+      payment_attempted:false,
+      payment_state_not_inferred:true,
+      explicit_human_confirmation_preserved:true
+    },
+    summary:{
+      sell_now_offers:(catalog.offers||[]).filter(o=>o?.public_id&&o?.commercial_state==='sell_now').length,
+      held_no_owned_gateway:true
+    },
+    results:[],
+    truth_boundary:'No owned Machine Commerce gateway is configured. The canary made no legacy-provider request and cannot assert money-path health.'
+  };
+  fs.mkdirSync('artifacts/chum',{recursive:true});
+  fs.writeFileSync('artifacts/chum/commerce-canary-latest.json',JSON.stringify(held,null,2)+'\n');
+  fs.writeFileSync('artifacts/chum/commerce-canary-latest.md','# CHUM Sell-Now Commerce Canary\n\nState: held_no_owned_gateway\n');
+  console.log(JSON.stringify(held.summary));
+  process.exit(0);
+}
 
 function containsId(value,expected,depth=0){
   if(depth>8||value==null) return false;
@@ -63,49 +80,6 @@ async function getResponse(url,{requireJson=false}={}){
 }
 
 const offers=(catalog.offers||[]).filter(o=>o?.public_id&&o?.commercial_state==='sell_now');
-
-if(!gateway){
-  const heldReceipt={
-    schema:'evercraft.chum.commerce-canary.v2',
-    generated_at:new Date().toISOString(),
-    status:'held',
-    route_state:'held_no_owned_gateway',
-    base44_used:false,
-    doctrine:{
-      read_only:true,
-      checkout_created:false,
-      payment_attempted:false,
-      payment_state_not_inferred:true,
-      explicit_human_confirmation_preserved:true
-    },
-    source_catalog:{
-      generated_at:catalog.generated_at||null,
-      source_schema_version:catalog.source_schema_version||null,
-      gateway_version:catalog.gateway_version||null
-    },
-    summary:{
-      sell_now_offers:offers.length,
-      gateway_probe_skipped:offers.length,
-      healthy_money_paths:0,
-      failed_money_paths:0
-    },
-    results:[]
-  };
-  fs.mkdirSync('artifacts/chum',{recursive:true});
-  fs.writeFileSync('artifacts/chum/commerce-canary-latest.json',JSON.stringify(heldReceipt,null,2)+'\n');
-  fs.writeFileSync('artifacts/chum/commerce-canary-latest.md',[
-    '# CHUM Sell-Now Commerce Canary','',
-    'Status: HELD',
-    'Route state: held_no_owned_gateway',
-    'Sell-now offers declared: '+offers.length,
-    '',
-    '> No verified Evercraft-owned Machine Commerce gateway is configured. The canary did not fall back to Base44 and did not classify unprobed money paths as healthy or broken.',
-    ''
-  ].join('\n'));
-  console.log(JSON.stringify(heldReceipt.summary));
-  process.exit(0);
-}
-
 const results=[];
 
 for(const offer of offers){
@@ -187,11 +161,8 @@ const reviewFailures=results.filter(r=>!r.review_door_valid);
 const buyerRequired=results.filter(r=>r.buyer_required);
 const buyerFailures=buyerRequired.filter(r=>!r.buyer_door_valid);
 const receipt={
-  schema:'evercraft.chum.commerce-canary.v2',
+  schema:'evercraft.chum.commerce-canary.v1',
   generated_at:new Date().toISOString(),
-  status:'pass',
-  route_state:'owned_gateway_probed',
-  base44_used:false,
   doctrine:{
     read_only:true,
     checkout_created:false,

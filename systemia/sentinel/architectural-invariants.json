@@ -1,6 +1,6 @@
 {
   "schema": "evercraft.portfolio-sentinel.architectural-invariants.v1",
-  "version": "2026-10-01.1",
+  "version": "2026-10-05.1",
   "purpose": "Permanent architectural laws learned from prior production/distribution failures. Sentinel evaluates these before health can be considered trustworthy.",
   "invariants": [
     {
@@ -141,12 +141,12 @@
         "export function buyerFrontageUrl",
         "export function configuredChumPublicOrigin",
         "return 'held_no_owned_public_origin';",
-        "return machineReviewUrl(offer.public_id, gateway);"
+        "return machineReviewUrl(offer.public_id, gateway);",
+        "BASE44_HOST(host)"
       ],
       "repair_recipe_id": "human-buyer-frontage-regression",
       "forbidden_literals": [
-        "DIRECT_HUMAN_BUYER_DESTINATIONS",
-        "'rivet-site-underwriting-v1': 'https://rivet.base44.app/'"
+        "DIRECT_HUMAN_BUYER_DESTINATIONS"
       ]
     },
     {

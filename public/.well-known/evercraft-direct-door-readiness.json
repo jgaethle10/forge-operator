@@ -8,7 +8,7 @@
   "invariant": "Never add an umbrella routing hop when a verified specialist can be invoked directly.",
   "universal_fallback": {
     "registry_name": "io.github.jgaethle10/evercraft-machine-commerce",
-    "remote_mcp": null
+    "remote_mcp": "https://fabric.systemiacommandcenters.com/mcp"
   },
   "promotion_order": [
     "prove_product_runtime",
@@ -18,15 +18,30 @@
   ],
   "summary": {
     "product_count": 17,
-    "direct_callable_count": 13,
-    "zero_hop_specialist_count": 13,
-    "fallback_required_count": 4,
-    "registry_published_count": 13,
+    "direct_callable_count": 0,
+    "zero_hop_specialist_count": 0,
+    "fallback_required_count": 17,
+    "registry_published_count": 0,
     "registry_pending_count": 0,
     "public_route_pending_count": 4,
-    "not_direct_callable_count": 4
+    "not_direct_callable_count": 17
   },
   "shared_blockers": {
+    "direct_runtime_or_public_route": [
+      "forensiscope",
+      "aliev",
+      "findmypart",
+      "systemia-website-audit",
+      "career-command",
+      "eventwave",
+      "faie",
+      "buildflow",
+      "evercraft-web",
+      "website-launch",
+      "deck-capital-fit",
+      "evercraft-clip",
+      "roasted"
+    ],
     "shared_public_edge_canary": [
       "systemia-remote-ops",
       "ibmi-rescue",
@@ -41,7 +56,7 @@
     ]
   },
   "release_queue": {
-    "measure_provider_pickup_separately": [
+    "repair_direct_runtime_or_public_route": [
       "forensiscope",
       "aliev",
       "findmypart",
@@ -67,231 +82,251 @@
     {
       "slug": "forensiscope",
       "name": "ForensiScope",
-      "state": "registry_published_direct_mcp_existing",
-      "direct_callable": true,
-      "registry_published": true,
-      "registry_name": "io.github.jgaethle10/forensiscope",
+      "state": "owned_runtime_route_pending",
+      "direct_callable": false,
+      "registry_published": false,
+      "registry_name": null,
       "mcp_url": null,
-      "public_origin_state": null,
+      "public_origin_state": "legacy_provider_retired_owned_route_pending",
       "runtime_path": null,
-      "blocking_gates": [],
+      "blocking_gates": [
+        "direct_runtime_or_public_route"
+      ],
       "preferred_route": {
-        "mode": "direct_specialist",
-        "hops_before_specialist": 0,
-        "use_universal_router_first": false,
-        "registry_name": "io.github.jgaethle10/forensiscope",
-        "remote_mcp": null,
-        "fallback_registry_name": "io.github.jgaethle10/evercraft-machine-commerce",
-        "fallback_remote_mcp": null
+        "mode": "universal_fallback_until_specialist_promoted",
+        "hops_before_specialist": 1,
+        "use_universal_router_first": true,
+        "registry_name": "io.github.jgaethle10/evercraft-machine-commerce",
+        "remote_mcp": "https://fabric.systemiacommandcenters.com/mcp",
+        "desired_specialist_registry_name": null,
+        "pending_specialist_runtime_path": null
       },
-      "next_release_action": "measure_provider_pickup_separately",
+      "next_release_action": "repair_direct_runtime_or_public_route",
       "registry_candidate": null
     },
     {
       "slug": "aliev",
       "name": "AliEV / RIVET",
-      "state": "registry_published_direct_mcp_existing",
-      "direct_callable": true,
-      "registry_published": true,
-      "registry_name": "io.github.jgaethle10/aliev",
+      "state": "owned_runtime_route_pending",
+      "direct_callable": false,
+      "registry_published": false,
+      "registry_name": null,
       "mcp_url": null,
-      "public_origin_state": null,
+      "public_origin_state": "legacy_provider_retired_owned_route_pending",
       "runtime_path": null,
-      "blocking_gates": [],
+      "blocking_gates": [
+        "direct_runtime_or_public_route"
+      ],
       "preferred_route": {
-        "mode": "direct_specialist",
-        "hops_before_specialist": 0,
-        "use_universal_router_first": false,
-        "registry_name": "io.github.jgaethle10/aliev",
-        "remote_mcp": null,
-        "fallback_registry_name": "io.github.jgaethle10/evercraft-machine-commerce",
-        "fallback_remote_mcp": null
+        "mode": "universal_fallback_until_specialist_promoted",
+        "hops_before_specialist": 1,
+        "use_universal_router_first": true,
+        "registry_name": "io.github.jgaethle10/evercraft-machine-commerce",
+        "remote_mcp": "https://fabric.systemiacommandcenters.com/mcp",
+        "desired_specialist_registry_name": null,
+        "pending_specialist_runtime_path": null
       },
-      "next_release_action": "measure_provider_pickup_separately",
+      "next_release_action": "repair_direct_runtime_or_public_route",
       "registry_candidate": null
     },
     {
       "slug": "findmypart",
       "name": "FindMyPart",
-      "state": "registry_published_direct_mcp_existing",
-      "direct_callable": true,
-      "registry_published": true,
-      "registry_name": "io.github.jgaethle10/findmypart",
+      "state": "owned_runtime_route_pending",
+      "direct_callable": false,
+      "registry_published": false,
+      "registry_name": null,
       "mcp_url": null,
-      "public_origin_state": null,
+      "public_origin_state": "legacy_provider_retired_owned_route_pending",
       "runtime_path": null,
-      "blocking_gates": [],
+      "blocking_gates": [
+        "direct_runtime_or_public_route"
+      ],
       "preferred_route": {
-        "mode": "direct_specialist",
-        "hops_before_specialist": 0,
-        "use_universal_router_first": false,
-        "registry_name": "io.github.jgaethle10/findmypart",
-        "remote_mcp": null,
-        "fallback_registry_name": "io.github.jgaethle10/evercraft-machine-commerce",
-        "fallback_remote_mcp": null
+        "mode": "universal_fallback_until_specialist_promoted",
+        "hops_before_specialist": 1,
+        "use_universal_router_first": true,
+        "registry_name": "io.github.jgaethle10/evercraft-machine-commerce",
+        "remote_mcp": "https://fabric.systemiacommandcenters.com/mcp",
+        "desired_specialist_registry_name": null,
+        "pending_specialist_runtime_path": null
       },
-      "next_release_action": "measure_provider_pickup_separately",
+      "next_release_action": "repair_direct_runtime_or_public_route",
       "registry_candidate": null
     },
     {
       "slug": "systemia-website-audit",
       "name": "Systemia Website Audit",
-      "state": "registry_published_direct_mcp_existing",
-      "direct_callable": true,
-      "registry_published": true,
-      "registry_name": "io.github.jgaethle10/systemia-website-audit",
+      "state": "owned_runtime_route_pending",
+      "direct_callable": false,
+      "registry_published": false,
+      "registry_name": null,
       "mcp_url": null,
-      "public_origin_state": null,
+      "public_origin_state": "legacy_provider_retired_owned_route_pending",
       "runtime_path": null,
-      "blocking_gates": [],
+      "blocking_gates": [
+        "direct_runtime_or_public_route"
+      ],
       "preferred_route": {
-        "mode": "direct_specialist",
-        "hops_before_specialist": 0,
-        "use_universal_router_first": false,
-        "registry_name": "io.github.jgaethle10/systemia-website-audit",
-        "remote_mcp": null,
-        "fallback_registry_name": "io.github.jgaethle10/evercraft-machine-commerce",
-        "fallback_remote_mcp": null
+        "mode": "universal_fallback_until_specialist_promoted",
+        "hops_before_specialist": 1,
+        "use_universal_router_first": true,
+        "registry_name": "io.github.jgaethle10/evercraft-machine-commerce",
+        "remote_mcp": "https://fabric.systemiacommandcenters.com/mcp",
+        "desired_specialist_registry_name": null,
+        "pending_specialist_runtime_path": null
       },
-      "next_release_action": "measure_provider_pickup_separately",
+      "next_release_action": "repair_direct_runtime_or_public_route",
       "registry_candidate": null
     },
     {
       "slug": "career-command",
       "name": "Career Command",
-      "state": "registry_published_direct_mcp_existing",
-      "direct_callable": true,
-      "registry_published": true,
-      "registry_name": "io.github.jgaethle10/career-command",
+      "state": "owned_runtime_route_pending",
+      "direct_callable": false,
+      "registry_published": false,
+      "registry_name": null,
       "mcp_url": null,
-      "public_origin_state": null,
+      "public_origin_state": "legacy_provider_retired_owned_route_pending",
       "runtime_path": null,
-      "blocking_gates": [],
+      "blocking_gates": [
+        "direct_runtime_or_public_route"
+      ],
       "preferred_route": {
-        "mode": "direct_specialist",
-        "hops_before_specialist": 0,
-        "use_universal_router_first": false,
-        "registry_name": "io.github.jgaethle10/career-command",
-        "remote_mcp": null,
-        "fallback_registry_name": "io.github.jgaethle10/evercraft-machine-commerce",
-        "fallback_remote_mcp": null
+        "mode": "universal_fallback_until_specialist_promoted",
+        "hops_before_specialist": 1,
+        "use_universal_router_first": true,
+        "registry_name": "io.github.jgaethle10/evercraft-machine-commerce",
+        "remote_mcp": "https://fabric.systemiacommandcenters.com/mcp",
+        "desired_specialist_registry_name": null,
+        "pending_specialist_runtime_path": null
       },
-      "next_release_action": "measure_provider_pickup_separately",
+      "next_release_action": "repair_direct_runtime_or_public_route",
       "registry_candidate": null
     },
     {
       "slug": "eventwave",
       "name": "EventWave",
-      "state": "registry_published_direct_mcp_existing",
-      "direct_callable": true,
-      "registry_published": true,
-      "registry_name": "io.github.jgaethle10/eventwave",
+      "state": "owned_runtime_route_pending",
+      "direct_callable": false,
+      "registry_published": false,
+      "registry_name": null,
       "mcp_url": null,
-      "public_origin_state": null,
+      "public_origin_state": "legacy_provider_retired_owned_route_pending",
       "runtime_path": null,
-      "blocking_gates": [],
+      "blocking_gates": [
+        "direct_runtime_or_public_route"
+      ],
       "preferred_route": {
-        "mode": "direct_specialist",
-        "hops_before_specialist": 0,
-        "use_universal_router_first": false,
-        "registry_name": "io.github.jgaethle10/eventwave",
-        "remote_mcp": null,
-        "fallback_registry_name": "io.github.jgaethle10/evercraft-machine-commerce",
-        "fallback_remote_mcp": null
+        "mode": "universal_fallback_until_specialist_promoted",
+        "hops_before_specialist": 1,
+        "use_universal_router_first": true,
+        "registry_name": "io.github.jgaethle10/evercraft-machine-commerce",
+        "remote_mcp": "https://fabric.systemiacommandcenters.com/mcp",
+        "desired_specialist_registry_name": null,
+        "pending_specialist_runtime_path": null
       },
-      "next_release_action": "measure_provider_pickup_separately",
+      "next_release_action": "repair_direct_runtime_or_public_route",
       "registry_candidate": null
     },
     {
       "slug": "faie",
       "name": "FAIE",
-      "state": "registry_published_direct_mcp_existing",
-      "direct_callable": true,
-      "registry_published": true,
-      "registry_name": "io.github.jgaethle10/faie",
+      "state": "owned_runtime_route_pending",
+      "direct_callable": false,
+      "registry_published": false,
+      "registry_name": null,
       "mcp_url": null,
-      "public_origin_state": null,
+      "public_origin_state": "legacy_provider_retired_owned_route_pending",
       "runtime_path": null,
-      "blocking_gates": [],
+      "blocking_gates": [
+        "direct_runtime_or_public_route"
+      ],
       "preferred_route": {
-        "mode": "direct_specialist",
-        "hops_before_specialist": 0,
-        "use_universal_router_first": false,
-        "registry_name": "io.github.jgaethle10/faie",
-        "remote_mcp": null,
-        "fallback_registry_name": "io.github.jgaethle10/evercraft-machine-commerce",
-        "fallback_remote_mcp": null
+        "mode": "universal_fallback_until_specialist_promoted",
+        "hops_before_specialist": 1,
+        "use_universal_router_first": true,
+        "registry_name": "io.github.jgaethle10/evercraft-machine-commerce",
+        "remote_mcp": "https://fabric.systemiacommandcenters.com/mcp",
+        "desired_specialist_registry_name": null,
+        "pending_specialist_runtime_path": null
       },
-      "next_release_action": "measure_provider_pickup_separately",
+      "next_release_action": "repair_direct_runtime_or_public_route",
       "registry_candidate": null
     },
     {
       "slug": "buildflow",
       "name": "BuildFlow Enterprise Operations",
-      "state": "registry_published_direct_mcp_existing",
-      "direct_callable": true,
-      "registry_published": true,
-      "registry_name": "io.github.jgaethle10/buildflow",
+      "state": "owned_runtime_route_pending",
+      "direct_callable": false,
+      "registry_published": false,
+      "registry_name": null,
       "mcp_url": null,
-      "public_origin_state": null,
+      "public_origin_state": "legacy_provider_retired_owned_route_pending",
       "runtime_path": null,
-      "blocking_gates": [],
+      "blocking_gates": [
+        "direct_runtime_or_public_route"
+      ],
       "preferred_route": {
-        "mode": "direct_specialist",
-        "hops_before_specialist": 0,
-        "use_universal_router_first": false,
-        "registry_name": "io.github.jgaethle10/buildflow",
-        "remote_mcp": null,
-        "fallback_registry_name": "io.github.jgaethle10/evercraft-machine-commerce",
-        "fallback_remote_mcp": null
+        "mode": "universal_fallback_until_specialist_promoted",
+        "hops_before_specialist": 1,
+        "use_universal_router_first": true,
+        "registry_name": "io.github.jgaethle10/evercraft-machine-commerce",
+        "remote_mcp": "https://fabric.systemiacommandcenters.com/mcp",
+        "desired_specialist_registry_name": null,
+        "pending_specialist_runtime_path": null
       },
-      "next_release_action": "measure_provider_pickup_separately",
+      "next_release_action": "repair_direct_runtime_or_public_route",
       "registry_candidate": null
     },
     {
       "slug": "evercraft-web",
       "name": "Evercraft Web",
-      "state": "registry_published_direct_mcp_existing",
-      "direct_callable": true,
-      "registry_published": true,
-      "registry_name": "io.github.jgaethle10/evercraft-web",
+      "state": "owned_runtime_route_pending",
+      "direct_callable": false,
+      "registry_published": false,
+      "registry_name": null,
       "mcp_url": null,
-      "public_origin_state": null,
+      "public_origin_state": "legacy_provider_retired_owned_route_pending",
       "runtime_path": null,
-      "blocking_gates": [],
+      "blocking_gates": [
+        "direct_runtime_or_public_route"
+      ],
       "preferred_route": {
-        "mode": "direct_specialist",
-        "hops_before_specialist": 0,
-        "use_universal_router_first": false,
-        "registry_name": "io.github.jgaethle10/evercraft-web",
-        "remote_mcp": null,
-        "fallback_registry_name": "io.github.jgaethle10/evercraft-machine-commerce",
-        "fallback_remote_mcp": null
+        "mode": "universal_fallback_until_specialist_promoted",
+        "hops_before_specialist": 1,
+        "use_universal_router_first": true,
+        "registry_name": "io.github.jgaethle10/evercraft-machine-commerce",
+        "remote_mcp": "https://fabric.systemiacommandcenters.com/mcp",
+        "desired_specialist_registry_name": null,
+        "pending_specialist_runtime_path": null
       },
-      "next_release_action": "measure_provider_pickup_separately",
+      "next_release_action": "repair_direct_runtime_or_public_route",
       "registry_candidate": null
     },
     {
       "slug": "website-launch",
       "name": "Website Launch",
-      "state": "registry_published_direct_mcp_existing",
-      "direct_callable": true,
-      "registry_published": true,
-      "registry_name": "io.github.jgaethle10/website-launch",
+      "state": "owned_runtime_route_pending",
+      "direct_callable": false,
+      "registry_published": false,
+      "registry_name": null,
       "mcp_url": null,
-      "public_origin_state": null,
+      "public_origin_state": "legacy_provider_retired_owned_route_pending",
       "runtime_path": null,
-      "blocking_gates": [],
+      "blocking_gates": [
+        "direct_runtime_or_public_route"
+      ],
       "preferred_route": {
-        "mode": "direct_specialist",
-        "hops_before_specialist": 0,
-        "use_universal_router_first": false,
-        "registry_name": "io.github.jgaethle10/website-launch",
-        "remote_mcp": null,
-        "fallback_registry_name": "io.github.jgaethle10/evercraft-machine-commerce",
-        "fallback_remote_mcp": null
+        "mode": "universal_fallback_until_specialist_promoted",
+        "hops_before_specialist": 1,
+        "use_universal_router_first": true,
+        "registry_name": "io.github.jgaethle10/evercraft-machine-commerce",
+        "remote_mcp": "https://fabric.systemiacommandcenters.com/mcp",
+        "desired_specialist_registry_name": null,
+        "pending_specialist_runtime_path": null
       },
-      "next_release_action": "measure_provider_pickup_separately",
+      "next_release_action": "repair_direct_runtime_or_public_route",
       "registry_candidate": null
     },
     {
@@ -313,7 +348,7 @@
         "hops_before_specialist": 1,
         "use_universal_router_first": true,
         "registry_name": "io.github.jgaethle10/evercraft-machine-commerce",
-        "remote_mcp": null,
+        "remote_mcp": "https://fabric.systemiacommandcenters.com/mcp",
         "desired_specialist_registry_name": "io.github.jgaethle10/systemia-remote-ops",
         "pending_specialist_runtime_path": "/mcp/systemia-remote-ops"
       },
@@ -328,70 +363,76 @@
     {
       "slug": "deck-capital-fit",
       "name": "Deck Capital Fit",
-      "state": "registry_published_direct_mcp_existing",
-      "direct_callable": true,
-      "registry_published": true,
-      "registry_name": "io.github.jgaethle10/deck-capital-fit",
+      "state": "owned_runtime_route_pending",
+      "direct_callable": false,
+      "registry_published": false,
+      "registry_name": null,
       "mcp_url": null,
-      "public_origin_state": null,
+      "public_origin_state": "legacy_provider_retired_owned_route_pending",
       "runtime_path": null,
-      "blocking_gates": [],
+      "blocking_gates": [
+        "direct_runtime_or_public_route"
+      ],
       "preferred_route": {
-        "mode": "direct_specialist",
-        "hops_before_specialist": 0,
-        "use_universal_router_first": false,
-        "registry_name": "io.github.jgaethle10/deck-capital-fit",
-        "remote_mcp": null,
-        "fallback_registry_name": "io.github.jgaethle10/evercraft-machine-commerce",
-        "fallback_remote_mcp": null
+        "mode": "universal_fallback_until_specialist_promoted",
+        "hops_before_specialist": 1,
+        "use_universal_router_first": true,
+        "registry_name": "io.github.jgaethle10/evercraft-machine-commerce",
+        "remote_mcp": "https://fabric.systemiacommandcenters.com/mcp",
+        "desired_specialist_registry_name": null,
+        "pending_specialist_runtime_path": null
       },
-      "next_release_action": "measure_provider_pickup_separately",
+      "next_release_action": "repair_direct_runtime_or_public_route",
       "registry_candidate": null
     },
     {
       "slug": "evercraft-clip",
       "name": "Evercraft Clip",
-      "state": "registry_published_direct_mcp_existing",
-      "direct_callable": true,
-      "registry_published": true,
-      "registry_name": "io.github.jgaethle10/evercraft-clip",
+      "state": "owned_runtime_route_pending",
+      "direct_callable": false,
+      "registry_published": false,
+      "registry_name": null,
       "mcp_url": null,
-      "public_origin_state": null,
+      "public_origin_state": "legacy_provider_retired_owned_route_pending",
       "runtime_path": null,
-      "blocking_gates": [],
+      "blocking_gates": [
+        "direct_runtime_or_public_route"
+      ],
       "preferred_route": {
-        "mode": "direct_specialist",
-        "hops_before_specialist": 0,
-        "use_universal_router_first": false,
-        "registry_name": "io.github.jgaethle10/evercraft-clip",
-        "remote_mcp": null,
-        "fallback_registry_name": "io.github.jgaethle10/evercraft-machine-commerce",
-        "fallback_remote_mcp": null
+        "mode": "universal_fallback_until_specialist_promoted",
+        "hops_before_specialist": 1,
+        "use_universal_router_first": true,
+        "registry_name": "io.github.jgaethle10/evercraft-machine-commerce",
+        "remote_mcp": "https://fabric.systemiacommandcenters.com/mcp",
+        "desired_specialist_registry_name": null,
+        "pending_specialist_runtime_path": null
       },
-      "next_release_action": "measure_provider_pickup_separately",
+      "next_release_action": "repair_direct_runtime_or_public_route",
       "registry_candidate": null
     },
     {
       "slug": "roasted",
       "name": "ROASTED",
-      "state": "registry_published_direct_mcp_existing",
-      "direct_callable": true,
-      "registry_published": true,
-      "registry_name": "io.github.jgaethle10/roasted",
+      "state": "owned_runtime_route_pending",
+      "direct_callable": false,
+      "registry_published": false,
+      "registry_name": null,
       "mcp_url": null,
-      "public_origin_state": null,
+      "public_origin_state": "legacy_provider_retired_owned_route_pending",
       "runtime_path": null,
-      "blocking_gates": [],
+      "blocking_gates": [
+        "direct_runtime_or_public_route"
+      ],
       "preferred_route": {
-        "mode": "direct_specialist",
-        "hops_before_specialist": 0,
-        "use_universal_router_first": false,
-        "registry_name": "io.github.jgaethle10/roasted",
-        "remote_mcp": null,
-        "fallback_registry_name": "io.github.jgaethle10/evercraft-machine-commerce",
-        "fallback_remote_mcp": null
+        "mode": "universal_fallback_until_specialist_promoted",
+        "hops_before_specialist": 1,
+        "use_universal_router_first": true,
+        "registry_name": "io.github.jgaethle10/evercraft-machine-commerce",
+        "remote_mcp": "https://fabric.systemiacommandcenters.com/mcp",
+        "desired_specialist_registry_name": null,
+        "pending_specialist_runtime_path": null
       },
-      "next_release_action": "measure_provider_pickup_separately",
+      "next_release_action": "repair_direct_runtime_or_public_route",
       "registry_candidate": null
     },
     {
@@ -413,7 +454,7 @@
         "hops_before_specialist": 1,
         "use_universal_router_first": true,
         "registry_name": "io.github.jgaethle10/evercraft-machine-commerce",
-        "remote_mcp": null,
+        "remote_mcp": "https://fabric.systemiacommandcenters.com/mcp",
         "desired_specialist_registry_name": "io.github.jgaethle10/ibmi-rescue",
         "pending_specialist_runtime_path": "/mcp/ibmi-rescue"
       },
@@ -444,7 +485,7 @@
         "hops_before_specialist": 1,
         "use_universal_router_first": true,
         "registry_name": "io.github.jgaethle10/evercraft-machine-commerce",
-        "remote_mcp": null,
+        "remote_mcp": "https://fabric.systemiacommandcenters.com/mcp",
         "desired_specialist_registry_name": "io.github.jgaethle10/foundry-app-escape",
         "pending_specialist_runtime_path": "/mcp/foundry-app-escape"
       },
@@ -475,7 +516,7 @@
         "hops_before_specialist": 1,
         "use_universal_router_first": true,
         "registry_name": "io.github.jgaethle10/evercraft-machine-commerce",
-        "remote_mcp": null,
+        "remote_mcp": "https://fabric.systemiacommandcenters.com/mcp",
         "desired_specialist_registry_name": "io.github.jgaethle10/site-survive",
         "pending_specialist_runtime_path": "/mcp/site-survive"
       },

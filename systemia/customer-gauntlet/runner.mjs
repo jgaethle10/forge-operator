@@ -2,6 +2,7 @@
 import fs from 'node:fs';
 import crypto from 'node:crypto';
 import { runLocalLennox } from './lennox-engine.mjs';
+import { ownedHttpsEndpoint } from '../chum/owned-commerce-endpoint.mjs';
 
 const catalogPath='public/.well-known/evercraft-machine-catalog.json';
 const personasPath='systemia/customer-gauntlet/personas.json';
@@ -11,19 +12,8 @@ const catalog=JSON.parse(fs.readFileSync(catalogPath,'utf8'));
 const personas=JSON.parse(fs.readFileSync(personasPath,'utf8'));
 const policy=JSON.parse(fs.readFileSync(policyPath,'utf8'));
 
-function ownedGateway(value){
-  const raw=String(value||'').trim();
-  if(!raw) return '';
-  const parsed=new URL(raw);
-  const host=parsed.hostname.toLowerCase();
-  if(parsed.protocol!=='https:') throw new Error('Customer Gauntlet gateway must use HTTPS.');
-  if(host==='base44.app'||host.endsWith('.base44.app')) throw new Error('Customer Gauntlet gateway points to retired Base44 infrastructure.');
-  return parsed.toString();
-}
-const gateway=ownedGateway(
-  process.env.EVERCRAFT_MACHINE_COMMERCE_GATEWAY_URL ||
-  process.env.EVERCRAFT_MACHINE_COMMERCE_GATEWAY
-);
+const gatewayRaw=String(process.env.EVERCRAFT_MACHINE_COMMERCE_GATEWAY_URL || process.env.EVERCRAFT_MACHINE_COMMERCE_GATEWAY || '').trim();
+const gateway=gatewayRaw?ownedHttpsEndpoint(gatewayRaw,{name:'machine_commerce_gateway'}):null;
 const bridgeUrl=String(process.env.RAVEN_NEXUS_CUSTOMER_BRIDGE_URL || '').replace(/\/$/,'');
 const bridgeToken=String(process.env.RAVEN_NEXUS_CUSTOMER_BRIDGE_TOKEN || '');
 const requireInteractive=String(process.env.CUSTOMER_GAUNTLET_REQUIRE_NEXUS || 'false')==='true';
@@ -96,28 +86,16 @@ async function runBridgeLennox(offer,persona){
 
 function heldInteractive(persona){
   return {
+    persona_id:persona.id,
     status:'BLOCKED',
-    engine:'raven_nexus_lennox_held_v1',
-    owned_execution:true,
+    engine:'owned_route_hold',
+    owned_execution:false,
     local:null,
     bridge:null,
     findings:[],
     checks_completed:[],
-    blocked_checks:[
-      'owned_public_gateway',
-      'transport_reachability',
-      'pixel_visual_diff',
-      'visual_clipping',
-      'javascript_console_errors',
-      'javascript_form_interaction',
-      'keyboard_tab_order',
-      'checkout_submit',
-      'provider_payment_verification',
-      'entitlement_verification',
-      'fulfillment_verification'
-    ],
-    interactive_depth:'held_no_owned_gateway',
-    persona_id:persona?.id||null
+    blocked_checks:['owned_machine_commerce_gateway'],
+    interactive_depth:'held_no_owned_gateway'
   };
 }
 
@@ -151,6 +129,7 @@ const offers=(catalog.offers||[]).filter(o=>o?.public_id&&o?.commercial_state===
 const results=[];
 for(const offer of offers){
   const publicStaticHandoff=offer.routing_surface==='public_static_handoff' && offer.legacy_gateway_routed===false;
+  const doorwayHeld=!publicStaticHandoff&&!gateway;
   let machine;
   let review;
   let continuation=null;
@@ -169,14 +148,7 @@ for(const offer of offers){
       machine={ok:false,status:0,bytes:0,text:'',body:null,error:'public_static_handoff_url_missing'};
       review=machine;
     }
-  }else if(!gateway){
-    machine={ok:false,status:0,bytes:0,text:'',body:null,error:'owned_gateway_unconfigured',blocked:true};
-    review={...machine};
-    continuation=null;
-    buyerUrl='';
-    buyer=null;
-    reviewTarget='';
-  }else{
+  }else if(gateway){
     const offerUrl=new URL(gateway); offerUrl.searchParams.set('action','offer'); offerUrl.searchParams.set('public_id',offer.public_id);
     const reviewUrl=new URL(gateway); reviewUrl.searchParams.set('view','service'); reviewUrl.searchParams.set('public_id',offer.public_id);
     machine=await request(offerUrl,{json:true});
@@ -185,25 +157,22 @@ for(const offer of offers){
     buyerUrl=typeof continuation?.buyer_url==='string'?continuation.buyer_url.trim():'';
     buyer=buyerUrl?await request(buyerUrl):null;
     reviewTarget=reviewUrl.toString();
+  }else{
+    machine={ok:false,status:0,bytes:0,text:'',body:null,error:'held_no_owned_gateway'};
+    review=machine;
+    reviewTarget='';
   }
 
-  const doorwayHeld=!publicStaticHandoff&&!gateway;
   const findings=[];
-  if(doorwayHeld){
-    findings.push({code:'owned_gateway_unconfigured',severity:'P2',stage:'doorway',detail:'No verified Evercraft-owned Machine Commerce gateway is configured; legacy fallback was not attempted.'});
-  }else{
-    if(obviousFailure(machine)) findings.push({code:'broken_cta',severity:severity('broken_cta'),stage:'offer',detail:`HTTP ${machine.status}`});
-    if(obviousFailure(review)) findings.push({code:'broken_cta',severity:severity('broken_cta'),stage:'review',detail:`HTTP ${review.status}`});
-    if(continuation?.mode==='direct_checkout_capable' && (!buyerUrl || obviousFailure(buyer))) findings.push({code:'dead_checkout',severity:severity('dead_checkout'),stage:'buyer',detail:buyerUrl?`HTTP ${buyer?.status}`:'buyer_url_missing'});
-  }
+  if(!doorwayHeld&&obviousFailure(machine)) findings.push({code:'broken_cta',severity:severity('broken_cta'),stage:'offer',detail:`HTTP ${machine.status}`});
+  if(!doorwayHeld&&obviousFailure(review)) findings.push({code:'broken_cta',severity:severity('broken_cta'),stage:'review',detail:`HTTP ${review.status}`});
+  if(continuation?.mode==='direct_checkout_capable' && (!buyerUrl || obviousFailure(buyer))) findings.push({code:'dead_checkout',severity:severity('dead_checkout'),stage:'buyer',detail:buyerUrl?`HTTP ${buyer?.status}`:'buyer_url_missing'});
 
   const personaResults=[];
   for(const persona of personas.personas){
-    personaResults.push(
-      doorwayHeld
-        ? {persona_id:persona.id,...heldInteractive(persona)}
-        : {persona_id:persona.id,...await runInteractive(offer,persona,{reviewUrl:reviewTarget,buyerUrl})}
-    );
+    personaResults.push(doorwayHeld
+      ? heldInteractive(persona)
+      : {persona_id:persona.id,...await runInteractive(offer,persona,{reviewUrl:reviewTarget,buyerUrl})});
   }
   for(const p of personaResults){
     for(const f of Array.isArray(p.findings)?p.findings:[]) findings.push({...f,persona_id:p.persona_id,severity:f.severity||severity(f.code)});
@@ -216,14 +185,7 @@ for(const offer of offers){
   const fulfillmentBlocked=personaResults.filter(p=>(p.blocked_checks||[]).includes('fulfillment_verification')).length;
   results.push({
     public_id:offer.public_id,name:offer.name,pricing:offer.pricing,
-    doorway:{
-      routing_surface:publicStaticHandoff?'public_static_handoff':gateway?'owned_gateway':'held_no_owned_gateway',
-      state:doorwayHeld?'HELD':'PROBED',
-      offer_status:machine.status,
-      review_status:review.status,
-      buyer_status:buyer?.status??null,
-      buyer_url:buyerUrl||null
-    },
+    doorway:{routing_surface:publicStaticHandoff?'public_static_handoff':gateway?'owned_gateway':'owned_gateway_unconfigured',offer_status:machine.status,review_status:review.status,buyer_status:buyer?.status??null,buyer_url:buyerUrl||null},
     interactive:{blocked:interactiveBlocked,visual_blocked:visualBlocked,payment_blocked:paymentBlocked,fulfillment_blocked:fulfillmentBlocked,personas:personaResults},
     findings,highest_severity:highest,
     disposition:doorwayHeld?'HELD':highest==='P0'?'QUARANTINE':highest==='P1'?'REPAIR_REQUIRED':'OPEN'
@@ -231,9 +193,8 @@ for(const offer of offers){
 }
 
 const receipt={
-  schema:'evercraft.customer-gauntlet.receipt.v2',
+  schema:'evercraft.customer-gauntlet.receipt.v1',
   generated_at:new Date().toISOString(),
-  base44_used:false,
   doctrine:{
     owned_test_engine:true,
     third_party_test_engine:false,
@@ -244,11 +205,11 @@ const receipt={
   },
   summary:{
     sell_now_offers:offers.length,
-    owned_gateway_configured:Boolean(gateway),
-    gateway_held:results.filter(r=>r.disposition==='HELD').length,
     open:results.filter(r=>r.disposition==='OPEN').length,
     repair_required:results.filter(r=>r.disposition==='REPAIR_REQUIRED').length,
     quarantined:results.filter(r=>r.disposition==='QUARANTINE').length,
+    held:results.filter(r=>r.disposition==='HELD').length,
+    held_no_owned_gateway:results.filter(r=>r.doorway.routing_surface==='owned_gateway_unconfigured').length,
     owned_protocol_executor:true,
     interactive_bridge_configured:Boolean(bridgeUrl&&bridgeToken),
     interactive_blocked:results.filter(r=>r.interactive.blocked).length,
@@ -267,11 +228,10 @@ fs.writeFileSync(outDir+'/latest.md',[
   '# Evercraft Customer Gauntlet','',
   `Generated: ${receipt.generated_at}`,
   `Sell-now offers: ${receipt.summary.sell_now_offers}`,
-  `Owned Machine Commerce gateway configured: ${receipt.summary.owned_gateway_configured}`,
-  `Gateway-held offers: ${receipt.summary.gateway_held}`,
   `Open: ${receipt.summary.open}`,
   `Repair required: ${receipt.summary.repair_required}`,
   `Quarantined: ${receipt.summary.quarantined}`,
+  `Held without owned gateway: ${receipt.summary.held_no_owned_gateway}`,
   `Owned Lennox protocol executor: ${receipt.summary.owned_protocol_executor}`,
   `Interactive Raven Nexus browser bridge configured: ${receipt.summary.interactive_bridge_configured}`,
   `Local Lennox persona runs: ${receipt.summary.local_lennox_completed}`,

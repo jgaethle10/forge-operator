@@ -1,23 +1,27 @@
 {
   "schema": "evercraft.machine-commerce.distribution.v1",
-  "generated_at": "2026-09-25T18:33:30Z",
+  "generated_at": "2026-10-05T22:20:00Z",
   "public_id": "evercraft-machine-commerce",
   "registry_name": "io.github.jgaethle10/evercraft-machine-commerce",
   "live_runtime": {
-    "version": "1.2.1",
+    "version": "1.6.0",
     "transport": "streamable-http",
-    "endpoint": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp",
-    "health": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp?action=health",
-    "state": "live_verified"
+    "endpoint": null,
+    "health": null,
+    "state": "legacy_endpoint_retired_owned_direct_runtime_pending",
+    "direct_runtime_verified": false,
+    "universal_discovery_mcp": "https://fabric.systemiacommandcenters.com/mcp",
+    "boundary": "The owned Fabric MCP is a read-only universal discovery route. It is not a substitute for a verified direct Machine Commerce MCP."
   },
   "destinations": [
     {
       "destination": "Official MCP Registry",
-      "state": "verified_live",
-      "version": "1.2.1",
+      "state": "registry_metadata_published_remote_currently_null",
+      "version": "1.6.0",
       "is_latest": true,
-      "observed_at": "2026-09-25T18:32:42Z",
-      "evidence_url": "https://registry.modelcontextprotocol.io/v0/servers?search=io.github.jgaethle10%2Fevercraft-machine-commerce"
+      "observed_at": "2026-10-05",
+      "evidence_url": "https://registry.modelcontextprotocol.io/v0/servers?search=io.github.jgaethle10%2Fevercraft-machine-commerce",
+      "note": "Registry metadata remains published, but the direct remote is intentionally null until an owned Machine Commerce runtime passes external HTTPS and MCP canaries."
     },
     {
       "destination": "Glama",
@@ -87,6 +91,8 @@
     "revenue_boundary": "Discovery and tool invocation are not checkout, payment, revenue, recommendation, or provider endorsement proof."
   },
   "next_milestones": [
+    "owned_machine_commerce_public_https_runtime_verified",
+    "official_registry_remote_updated_to_owned_runtime",
     "first_non_synthetic_external_tools_call",
     "first_attributed_human_buyer_handoff",
     "first_attributed_checkout_created",

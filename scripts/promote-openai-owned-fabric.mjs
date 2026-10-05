@@ -4,7 +4,7 @@ import path from 'node:path';
 import { createHash } from 'node:crypto';
 import { pathToFileURL } from 'node:url';
 
-const LEGACY_BASE44_MCP='https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp';
+const LEGACY_COMPATIBILITY_MCP=null;
 const sha256=(value)=>'sha256:'+createHash('sha256').update(value).digest('hex');
 const readJson=(file)=>JSON.parse(fs.readFileSync(file,'utf8'));
 const writeJson=(file,value)=>fs.writeFileSync(file,JSON.stringify(value,null,2)+'\n');
@@ -78,8 +78,8 @@ export function promoteOpenAiOwnedFabric({
   source.submission_state='owned_fabric_ready_new_plugin_submission_required';
   source.compatibility_transport={
     ...(source.compatibility_transport||{}),
-    mcp:LEGACY_BASE44_MCP,
-    authority:'legacy_compatibility_transport_only',
+    mcp:LEGACY_COMPATIBILITY_MCP,
+    authority:'legacy_compatibility_transport_retired',
     active:false,
     owned_fabric_cutover_required:false,
   };
@@ -121,7 +121,7 @@ export function promoteOpenAiOwnedFabric({
     source_canary_state:receipt.state,
     source_device_fingerprint:receipt.device_fingerprint||null,
     source_public_edge_admission_receipt_ref:receipt.public_edge_admission_receipt_ref||null,
-    legacy_mcp:LEGACY_BASE44_MCP,
+    legacy_mcp:LEGACY_COMPATIBILITY_MCP,
     legacy_transport_active:false,
     openai_origin_change_requires_new_plugin_submission:true,
   };
