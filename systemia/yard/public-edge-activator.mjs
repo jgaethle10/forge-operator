@@ -21,7 +21,7 @@ export async function activatePublicSpecialistEdge({
   requestedHostname='evercraft-specialists',
   mode='wildcard_https',
   requiredPlacementLabels=['public-edge'],
-  specialistGatewayUrl='https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway',
+  specialistGatewayUrl=process.env.EVERCRAFT_MACHINE_COMMERCE_GATEWAY_URL || '',
   allowLoopbackProof=false,
 }={}){
   if(!stateDir) throw new Error('activation_state_dir_required');
@@ -72,6 +72,18 @@ export async function activatePublicSpecialistEdge({
   }
 
   const selected=resolution.selected;
+  if(productionMode&&!String(specialistGatewayUrl||'').trim()){
+    const error=new Error('owned_specialist_gateway_unavailable');
+    error.receipt={
+      schema:'evercraft.public-edge.activation-hold.v1',
+      state:'held_owned_specialist_gateway_unavailable',
+      resolver_receipt:resolution.receipt_hash,
+      founder_action_required:false,
+      observed_at:new Date().toISOString(),
+    };
+    error.receipt.receipt_hash=sha(error.receipt);
+    throw error;
+  }
   const token=allocatorTokenForOffer(selected,{allocatorToken,allocatorTokens});
   if(selected.allocation_auth==='bearer'&&!token){
     const error=new Error('allocator_authority_unavailable_for_selected_edge_node');
