@@ -393,7 +393,7 @@ export function stepCameraRuntime(runtime:CameraRuntimeState,dt:number):CameraRu
     next.transition.durationSec,
     next.transition.elapsedSec+dt
   );
-  if(next.transition.elapsedSec>=next.transition.durationSec){
+  if(next.transition.elapsedSec>=next.transition.durationSec-1e-12){
     next.activeCameraId=next.transition.toCameraId;
     next.transition=null;
   }
