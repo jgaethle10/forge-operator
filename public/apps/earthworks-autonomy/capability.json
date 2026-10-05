@@ -52,5 +52,25 @@
     "name": "Site Autonomy Study",
     "authority": "read_only",
     "purpose": "Model one repetitive material flow, establish baseline evidence, simulate the operation, expose bottlenecks and identify the smallest justified autonomy or dispatch pilot."
+  },
+  "commerce": {
+    "layer": "evercraft_payments",
+    "provider_boundary": "raven_nexus",
+    "settlement_adapter": "stripe",
+    "provider_role": "settlement_adapter",
+    "direct_provider_checkout": false,
+    "offers": [
+      {
+        "offer_key": "site-autonomy-study-design-partner",
+        "amount_usd": 5000,
+        "state": "offer_defined_evercraft_payment_order_not_yet_verified"
+      },
+      {
+        "offer_key": "site-autonomy-study",
+        "amount_usd": 7500,
+        "state": "offer_defined_evercraft_payment_order_not_yet_verified"
+      }
+    ],
+    "boundary": "Evercraft Payments owns order, entitlement and fulfillment truth. Stripe settlement alone is not fulfillment proof."
   }
 }
