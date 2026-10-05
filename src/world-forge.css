@@ -253,6 +253,26 @@
   gap:6px;
 }
 
+.wf-camera-grid{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:6px;
+}
+
+.wf-camera-look{
+  margin-top:9px;
+  display:grid;
+  gap:6px;
+}
+
+.wf-camera-look>span{
+  color:#748497;
+  font-size:9px;
+  font-weight:800;
+  text-transform:uppercase;
+  letter-spacing:.08em;
+}
+
 .wf-number{
   display:grid;
   grid-template-columns:16px 1fr;
