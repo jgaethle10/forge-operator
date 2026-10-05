@@ -50,5 +50,9 @@
     "bypass_identity_controls": false,
     "invent_eligibility": false,
     "claim_success_without_provider_receipt": false
+  },
+  "inputs": {
+    "opportunity_inbox": "artifacts/competition-provider/opportunities.json",
+    "authorization_ledger": "artifacts/competition-provider/authorization-ledger.json"
   }
 }
