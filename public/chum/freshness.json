@@ -2,7 +2,7 @@
   "schema": "evercraft.chum.crawl-pressure.v1",
   "provider": "Evercraft LLC",
   "coordinator": "CHUM",
-  "updated_at": "2026-10-05T22:15:23.831Z",
+  "updated_at": "2026-10-05T22:15:42.834Z",
   "purpose": "Content-hash-backed freshness signals for public Evercraft discovery surfaces. A freshness signal requests attention; it does not prove indexing, ranking, recommendation, citation or provider pickup.",
   "indexnow": {
     "supported": true,
@@ -12,22 +12,22 @@
   "latest_change_batch": [
     {
       "path": "/chum/crawler-radar.json",
-      "last_changed": "2026-10-05T22:15:23.831Z",
+      "last_changed": "2026-10-05T22:15:42.834Z",
       "priority": 80
     },
     {
       "path": "/chum/crawler-radar.txt",
-      "last_changed": "2026-10-05T22:15:23.831Z",
+      "last_changed": "2026-10-05T22:15:42.834Z",
       "priority": 80
     },
     {
       "path": "/chum/hot/index.json",
-      "last_changed": "2026-10-05T22:15:23.831Z",
+      "last_changed": "2026-10-05T22:15:42.834Z",
       "priority": 80
     },
     {
       "path": "/chum/strike/index.json",
-      "last_changed": "2026-10-05T22:15:23.831Z",
+      "last_changed": "2026-10-05T22:15:42.834Z",
       "priority": 80
     }
   ],
@@ -35,26 +35,44 @@
     {
       "path": "/chum/crawler-radar.json",
       "url": "/chum/crawler-radar.json",
-      "last_changed": "2026-10-05T22:15:23.831Z",
+      "last_changed": "2026-10-05T22:15:42.834Z",
       "priority": 80
     },
     {
       "path": "/chum/crawler-radar.txt",
       "url": "/chum/crawler-radar.txt",
-      "last_changed": "2026-10-05T22:15:23.831Z",
+      "last_changed": "2026-10-05T22:15:42.834Z",
       "priority": 80
     },
     {
       "path": "/chum/hot/index.json",
       "url": "/chum/hot/index.json",
-      "last_changed": "2026-10-05T22:15:23.831Z",
+      "last_changed": "2026-10-05T22:15:42.834Z",
       "priority": 80
     },
     {
       "path": "/chum/strike/index.json",
       "url": "/chum/strike/index.json",
-      "last_changed": "2026-10-05T22:15:23.831Z",
+      "last_changed": "2026-10-05T22:15:42.834Z",
       "priority": 80
+    },
+    {
+      "path": "/chum/products/eps-estimate-engine/",
+      "url": "/chum/products/eps-estimate-engine/",
+      "last_changed": "2026-10-05T22:15:42.489Z",
+      "priority": 94
+    },
+    {
+      "path": "/chum/products/eps-estimate-engine/ai-conformance.json",
+      "url": "/chum/products/eps-estimate-engine/ai-conformance.json",
+      "last_changed": "2026-10-05T22:15:42.489Z",
+      "priority": 94
+    },
+    {
+      "path": "/chum/products/eps-estimate-engine/ai-discovery.json",
+      "url": "/chum/products/eps-estimate-engine/ai-discovery.json",
+      "last_changed": "2026-10-05T22:15:42.489Z",
+      "priority": 94
     },
     {
       "path": "/chum/hot/",
@@ -1511,24 +1529,6 @@
     {
       "path": "/chum/answers/doors/identify-this-part-870c0fa937.json",
       "url": "/chum/answers/doors/identify-this-part-870c0fa937.json",
-      "last_changed": "2026-10-02T17:01:08.152Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/identity-theft-protection-1d8e691739.json",
-      "url": "/chum/answers/doors/identity-theft-protection-1d8e691739.json",
-      "last_changed": "2026-10-02T17:01:08.152Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/income-strategy-f5da21b02c.json",
-      "url": "/chum/answers/doors/income-strategy-f5da21b02c.json",
-      "last_changed": "2026-10-02T17:01:08.152Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/install-an-ai-capability-dfa58c4e8f.json",
-      "url": "/chum/answers/doors/install-an-ai-capability-dfa58c4e8f.json",
       "last_changed": "2026-10-02T17:01:08.152Z",
       "priority": 100
     }

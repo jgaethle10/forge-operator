@@ -2,7 +2,7 @@
   "schema": "evercraft.chum.crawl-state.v1",
   "provider": "Evercraft LLC",
   "coordinator": "CHUM",
-  "updated_at": "2026-10-05T22:15:23.831Z",
+  "updated_at": "2026-10-05T22:15:42.834Z",
   "url_count": 2722,
   "doctrine": {
     "crawl_can_be_requested_not_forced": true,
@@ -141,8 +141,8 @@
     },
     "/chum/hot/index.json": {
       "path": "/chum/hot/index.json",
-      "content_sha256": "cd6d21ce7b2983740288060c63cf20fb74ed8948b547bb91e0b9fa83e2f31401",
-      "last_changed": "2026-10-05T22:15:23.831Z",
+      "content_sha256": "4bbc872524020de12bc889685754a891aa17139b340b9d9579477957b25d7343",
+      "last_changed": "2026-10-05T22:15:42.834Z",
       "priority": 80
     },
     "/chum/strike/": {
@@ -153,20 +153,20 @@
     },
     "/chum/strike/index.json": {
       "path": "/chum/strike/index.json",
-      "content_sha256": "c60510243327356eb9154ffc681a0822e86e9b6278af85d2eb7dd6a4e9a0c42e",
-      "last_changed": "2026-10-05T22:15:23.831Z",
+      "content_sha256": "0a51e78228cf7c36ca97985f754aebdab88951bbd7c0974f13e44d31178cd474",
+      "last_changed": "2026-10-05T22:15:42.834Z",
       "priority": 80
     },
     "/chum/crawler-radar.json": {
       "path": "/chum/crawler-radar.json",
-      "content_sha256": "58ba4786c613cf36e4f08b6788df63580707e0ecdc1ee00b8bd1456dcb5c8e91",
-      "last_changed": "2026-10-05T22:15:23.831Z",
+      "content_sha256": "00f06d53fc6f24054fec9ea4defa26c138bf03c3a7110de0df939e1329e0b92e",
+      "last_changed": "2026-10-05T22:15:42.834Z",
       "priority": 80
     },
     "/chum/crawler-radar.txt": {
       "path": "/chum/crawler-radar.txt",
-      "content_sha256": "478193688b2d785af6b7bd3a35c28cbafb1fd6adccee0b2f8e9e67e65590be2b",
-      "last_changed": "2026-10-05T22:15:23.831Z",
+      "content_sha256": "5909c116fa12bf8220443f136ab436fd527f3502128b57911770031f67a2e4a3",
+      "last_changed": "2026-10-05T22:15:42.834Z",
       "priority": 80
     },
     "/chum/proof/": {
@@ -2625,8 +2625,8 @@
     },
     "/chum/products/eps-estimate-engine/": {
       "path": "/chum/products/eps-estimate-engine/",
-      "content_sha256": "d0f6ab796d8291783b2024322b5530e01f180fc6a619ee491b05efd31dc8e3d1",
-      "last_changed": "2026-10-01T04:57:43.336Z",
+      "content_sha256": "3edfc3dd1c48d3fa140cb5ce5098e9397f4ee450f415dae3c2ae5ea5d123a214",
+      "last_changed": "2026-10-05T22:15:42.489Z",
       "priority": 94
     },
     "/chum/products/eps-estimate-engine/llms.txt": {
@@ -2637,14 +2637,14 @@
     },
     "/chum/products/eps-estimate-engine/ai-discovery.json": {
       "path": "/chum/products/eps-estimate-engine/ai-discovery.json",
-      "content_sha256": "7ffeb2aa14590b5a9f20de74422c8be2d1bc161e007f53887e98301f6a1f9176",
-      "last_changed": "2026-10-01T04:57:43.336Z",
+      "content_sha256": "778c051fc07cb6f50ea4f059f636d1b8a5f1dffc83ad3c750de79375854f2249",
+      "last_changed": "2026-10-05T22:15:42.489Z",
       "priority": 94
     },
     "/chum/products/eps-estimate-engine/ai-conformance.json": {
       "path": "/chum/products/eps-estimate-engine/ai-conformance.json",
-      "content_sha256": "f37ecf379e46a7c1038aa2d0d2ac90e2dfcde7e2c0b1acedf6c56879b7fb15af",
-      "last_changed": "2026-10-01T04:57:43.336Z",
+      "content_sha256": "b4471b9e883c712f7811b2e30cbce1dc8843e41054066dfe8a427eb295dee1b9",
+      "last_changed": "2026-10-05T22:15:42.489Z",
       "priority": 94
     },
     "/chum/products/eventwave/": {
