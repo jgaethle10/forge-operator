@@ -1,14 +1,55 @@
 import fs from 'node:fs';
+import path from 'node:path';
 
-const gateway = 'https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway';
-const painIndex = 'https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceIntentLanding';
-const artifactsDir = 'artifacts/chum';
+function resolveOwnedHttpsRoute(value, name) {
+  const raw = String(value || '').trim();
+  if (!raw) return { url: '', error: '' };
+  try {
+    const parsed = new URL(raw);
+    const host = parsed.hostname.toLowerCase();
+    if (parsed.protocol !== 'https:') {
+      return { url: '', error: name + ' must use HTTPS' };
+    }
+    if (host === 'base44.app' || host.endsWith('.base44.app')) {
+      return { url: '', error: name + ' points to retired Base44 infrastructure' };
+    }
+    return { url: parsed.toString(), error: '' };
+  } catch {
+    return { url: '', error: name + ' must be a valid owned HTTPS URL' };
+  }
+}
+
+function sameHostUrls(urls, host) {
+  return urls.filter((value) => {
+    try {
+      const parsed = new URL(value);
+      return parsed.protocol === 'https:' && parsed.hostname === host;
+    } catch {
+      return false;
+    }
+  });
+}
+
+const gatewayRoute = resolveOwnedHttpsRoute(
+  process.env.CHUM_INDEXNOW_GATEWAY_URL || process.env.EVERCRAFT_MACHINE_COMMERCE_GATEWAY_URL,
+  'CHUM IndexNow gateway'
+);
+const painIndexRoute = resolveOwnedHttpsRoute(
+  process.env.CHUM_INDEXNOW_PAIN_INDEX_URL,
+  'CHUM IndexNow pain index'
+);
+const gateway = gatewayRoute.url;
+const painIndex = painIndexRoute.url;
+const artifactsDir = process.env.CHUM_ARTIFACTS_DIR?.trim() || 'artifacts/chum';
 fs.mkdirSync(artifactsDir, { recursive: true });
 
 const receipt = {
-  schema: 'evercraft.chum.indexnow.v2',
+  schema: 'evercraft.chum.indexnow.v3',
   generated_at: new Date().toISOString(),
-  gateway,
+  gateway: gateway || null,
+  pain_index_url: painIndex || null,
+  route_state: gateway && painIndex ? 'owned_routes_configured' : 'held_no_owned_public_origin',
+  base44_used: false,
   status: 'started',
   submitted: 0,
   capability_pages: 0,
@@ -25,12 +66,14 @@ const receipt = {
 };
 
 function writeReceipt() {
-  fs.writeFileSync(artifactsDir + '/indexnow-latest.json', JSON.stringify(receipt, null, 2) + '\n');
+  fs.writeFileSync(path.join(artifactsDir, 'indexnow-latest.json'), JSON.stringify(receipt, null, 2) + '\n');
   const md = [
     '# CHUM Freshness Broadcast Receipt',
     '',
     'Generated: ' + receipt.generated_at,
     'Status: ' + receipt.status,
+    'Route state: ' + receipt.route_state,
+    'Base44 used: ' + receipt.base44_used,
     'Submitted URLs: ' + receipt.submitted,
     'Capability service pages: ' + receipt.capability_pages,
     'Sell-now offer pages: ' + receipt.sell_now_pages,
@@ -65,16 +108,54 @@ function writeReceipt() {
       ''
     ] : [])
   ].filter((value) => value !== null);
-  fs.writeFileSync(artifactsDir + '/indexnow-latest.md', md.join('\n'));
+  fs.writeFileSync(path.join(artifactsDir, 'indexnow-latest.md'), md.join('\n'));
 }
+
+const routeErrors = [gatewayRoute.error, painIndexRoute.error].filter(Boolean);
+if (routeErrors.length) {
+  receipt.status = 'failed';
+  receipt.route_state = 'rejected_non_owned_route';
+  receipt.error = routeErrors.join('; ');
+  receipt.pain_index.status = 'held';
+  writeReceipt();
+  console.error(JSON.stringify({
+    ok: false,
+    status: receipt.status,
+    route_state: receipt.route_state,
+    error: receipt.error,
+    base44_used: false
+  }));
+  process.exit(1);
+}
+
+if (!gateway || !painIndex) {
+  receipt.status = 'held';
+  receipt.pain_index.status = 'held';
+  receipt.hold_reason = 'owned_indexnow_routes_not_configured';
+  writeReceipt();
+  console.log(JSON.stringify({
+    ok: true,
+    status: 'held',
+    route_state: receipt.route_state,
+    base44_used: false,
+    missing_routes: [
+      ...(!gateway ? ['gateway'] : []),
+      ...(!painIndex ? ['pain_index'] : [])
+    ]
+  }));
+  process.exit(0);
+}
+
+const gatewayHost = new URL(gateway).hostname;
+const painIndexHost = new URL(painIndex).hostname;
 
 try {
   const [keyResponse, catalogResponse] = await Promise.all([
     fetch(gateway + '?action=indexnow-key', {
-      headers: { 'user-agent': 'Evercraft-CHUM/0.4 (+freshness-broadcast)' }
+      headers: { 'user-agent': 'Evercraft-CHUM/0.5 (+owned-freshness-broadcast)' }
     }),
     fetch(gateway + '?action=catalog', {
-      headers: { accept: 'application/json', 'user-agent': 'Evercraft-CHUM/0.4 (+freshness-broadcast)' }
+      headers: { accept: 'application/json', 'user-agent': 'Evercraft-CHUM/0.5 (+owned-freshness-broadcast)' }
     })
   ]);
 
@@ -120,7 +201,7 @@ try {
         method: 'GET',
         redirect: 'follow',
         headers: {
-          'user-agent': 'Evercraft-CHUM/0.4 (+indexnow-preflight)',
+          'user-agent': 'Evercraft-CHUM/0.5 (+indexnow-preflight)',
           accept: 'text/html,application/json,text/plain;q=0.8,*/*;q=0.3'
         },
         signal: controller.signal
@@ -145,7 +226,7 @@ try {
     method: 'POST',
     headers: { 'content-type': 'application/json; charset=utf-8' },
     body: JSON.stringify({
-      host: 'evercraft-ai-suite-08c4d2b8.base44.app',
+      host: gatewayHost,
       key,
       keyLocation: gateway + '?action=indexnow-key',
       urlList
@@ -159,10 +240,10 @@ try {
 
   const [painKeyResponse, painDirectoryResponse] = await Promise.all([
     fetch(painIndex + '?view=indexnow-key', {
-      headers: { 'user-agent': 'Evercraft-CHUM/0.4 (+pain-index-broadcast)' }
+      headers: { 'user-agent': 'Evercraft-CHUM/0.5 (+owned-pain-index-broadcast)' }
     }),
     fetch(painIndex, {
-      headers: { accept: 'application/json', 'user-agent': 'Evercraft-CHUM/0.4 (+pain-index-broadcast)' }
+      headers: { accept: 'application/json', 'user-agent': 'Evercraft-CHUM/0.5 (+owned-pain-index-broadcast)' }
     })
   ]);
   if (!painKeyResponse.ok) throw new Error('Pain-index IndexNow key endpoint HTTP ' + painKeyResponse.status);
@@ -171,9 +252,10 @@ try {
   const painKey = (await painKeyResponse.text()).trim().replace(/^["']|["']$/g, '');
   if (!/^[a-zA-Z0-9_-]{8,128}$/.test(painKey)) throw new Error('Pain-index IndexNow key missing or malformed');
   const painDirectory = await painDirectoryResponse.json();
-  const painPages = Array.isArray(painDirectory?.pages)
+  const declaredPainPages = Array.isArray(painDirectory?.pages)
     ? painDirectory.pages.map((row) => String(row?.url || '').trim()).filter(Boolean)
     : [];
+  const painPages = sameHostUrls(declaredPainPages, painIndexHost);
   const painCandidates = [...new Set([
     painIndex,
     painIndex + '?view=llms',
@@ -189,7 +271,7 @@ try {
         method: 'GET',
         redirect: 'follow',
         headers: {
-          'user-agent': 'Evercraft-CHUM/0.4 (+pain-index-preflight)',
+          'user-agent': 'Evercraft-CHUM/0.5 (+pain-index-preflight)',
           accept: 'text/html,application/json,text/plain,application/xml;q=0.8,*/*;q=0.3'
         },
         signal: controller.signal
@@ -201,6 +283,7 @@ try {
       clearTimeout(timer);
     }
   }));
+
   const painUrls = painChecked.filter((row) => row.ok).map((row) => row.url);
   receipt.pain_index.pages = painPages.length;
   receipt.pain_index.urls = painUrls;
@@ -211,7 +294,7 @@ try {
     method: 'POST',
     headers: { 'content-type': 'application/json; charset=utf-8' },
     body: JSON.stringify({
-      host: 'evercraft-ai-suite-08c4d2b8.base44.app',
+      host: painIndexHost,
       key: painKey,
       keyLocation: painIndex + '?view=indexnow-key',
       urlList: painUrls
@@ -233,7 +316,8 @@ try {
     pain_index_status: receipt.pain_index.status,
     pain_index_submitted: receipt.pain_index.submitted,
     pain_pages: receipt.pain_index.pages,
-    pain_preflight_failed: receipt.pain_index.preflight_failed.length
+    pain_preflight_failed: receipt.pain_index.preflight_failed.length,
+    base44_used: false
   }));
 } catch (error) {
   receipt.status = 'failed';
