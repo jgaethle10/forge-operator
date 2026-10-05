@@ -231,8 +231,70 @@ assert.equal(hero.animationRuntime.stateId,'wave');
 assert.ok(waveEvent);
 assert.equal(waveEvent.name,'wave_apex');
 
+const navigationWorld={
+  schema:'evercraft.world-engine.world.v1',
+  id:'evercraft-world-engine-navigation-proof',
+  version:1,
+  tickRateHz:10,
+  gravity:{x:0,y:0,z:0},
+  navigationMeshes:[{
+    schema:'evercraft.world-engine.navmesh.v1',
+    id:'proof-nav',
+    polygons:[
+      {
+        id:'a',
+        vertices:[
+          {x:0,y:0,z:0},{x:4,y:0,z:0},{x:4,y:0,z:4},{x:0,y:0,z:4}
+        ],
+        neighbors:['b']
+      },
+      {
+        id:'b',
+        vertices:[
+          {x:4,y:0,z:0},{x:8,y:0,z:0},{x:8,y:0,z:4},{x:4,y:0,z:4}
+        ],
+        neighbors:['a','c']
+      },
+      {
+        id:'c',
+        vertices:[
+          {x:4,y:0,z:4},{x:8,y:0,z:4},{x:8,y:0,z:8},{x:4,y:0,z:8}
+        ],
+        neighbors:['b']
+      }
+    ]
+  }],
+  entities:[{
+    id:'agent',
+    transform:{position:{x:1,y:0,z:1}},
+    rigidBody:{mass:1,velocity:{x:0,y:0,z:0},linearDamping:0},
+    collider:{type:'sphere',radius:.2},
+    navigationAgent:{
+      meshId:'proof-nav',
+      maxSpeed:5,
+      stoppingDistance:.05
+    }
+  }]
+};
+const navigationInputs=[{
+  id:'go',
+  tick:1,
+  entityId:'agent',
+  kind:'set_navigation_target',
+  value:{x:7,y:0,z:7}
+}];
+const navigationReceipt=replayWorld(navigationWorld,40,navigationInputs);
+assert.equal(navigationReceipt.deterministic,true);
+const navigationRuntime=new EvercraftWorldRuntime(navigationWorld);
+navigationRuntime.run(40,navigationInputs);
+const navigationAgent=navigationRuntime.entity('agent');
+assert.equal(navigationAgent.navigationRuntime.state,'arrived');
+assert.ok(Math.abs(navigationAgent.transform.position.x-7)<.06);
+assert.ok(Math.abs(navigationAgent.transform.position.z-7)<.06);
+assert.deepEqual(navigationAgent.navigationRuntime.path.polygonIds,['a','b','c']);
+
 process.stdout.write(JSON.stringify({
-  schema:'evercraft.world-engine.proof.v4',
+  schema:'evercraft.world-engine.proof.v5',
   status:'passed',
   world_id:world.id,
   replay:receipt,
@@ -249,6 +311,12 @@ process.stdout.write(JSON.stringify({
     pose:hero.animationRuntime.pose,
     event:waveEvent
   },
+  navigation:{
+    replay:navigationReceipt,
+    path:navigationAgent.navigationRuntime.path,
+    state:navigationAgent.navigationRuntime.state,
+    final_position:navigationAgent.transform.position
+  },
   assertions:{
     deterministic_replay:true,
     fixed_timestep:true,
@@ -259,6 +327,8 @@ process.stdout.write(JSON.stringify({
     deterministic_skeletal_animation:true,
     animation_state_machine:true,
     animation_event_receipts:true,
+    deterministic_navmesh_pathfinding:true,
+    physics_driven_agent_locomotion:true,
     canonical_snapshot_digest:true
   }
 },null,2)+'\n');
