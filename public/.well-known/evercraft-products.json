@@ -1703,9 +1703,12 @@
         "turn shortlisted quotes into team invitations and work-package offers",
         "compare quotes for the same work package without automatically choosing a vendor",
         "explain the tradeoff between price lead time capacity geography and observed execution history",
-        "show me which sourcing evidence is self-reported versus observed"
+        "show me which sourcing evidence is self-reported versus observed",
+        "compare partners using leader-reviewed delivery outcomes",
+        "show me which partners have reviewed on-time outcomes instead of profile claims",
+        "require QA before completed work becomes performance history"
       ],
-      "authority": "public capability discovery plus verified private metadata-first planning, non-binding sourcing, transparent sourcing comparison, and multi-party assembly; no public protected-file delivery, payment, or final legal-agreement authority is claimed",
+      "authority": "public capability discovery plus verified private metadata-first planning, non-binding sourcing, transparent sourcing comparison, leader-reviewed execution outcomes, and multi-party assembly; no public protected-file delivery, payment, or final legal-agreement authority is claimed",
       "human_confirmation_required": true,
       "boundaries": [
         "public matching must not require protected creative files or confidential material",
@@ -1732,7 +1735,12 @@
         "quote availability and lead time are participant-supplied rather than independently observed",
         "Fabric history uses accepted Opportunity Fabric work-package records only and missing history is neutral",
         "prices are compared only against same-currency peers; no FX normalization is claimed",
-        "comparison ordering requires human decision and creates no partner selection shortlist membership contract rights work acceptance or payment"
+        "comparison ordering requires human decision and creates no partner selection shortlist membership contract rights work acceptance or payment",
+        "assignees cannot self-complete work packages; completion requires leader QA",
+        "rework requires a leader QA note and returns the package to In progress",
+        "leader QA acceptance creates the WorkPackageOutcome used as observed execution history",
+        "reviewed outcomes are internal operational evidence not independent certification or a comprehensive reputation score",
+        "missing reviewed outcome history is neutral rather than negative evidence"
       ]
     },
     {
