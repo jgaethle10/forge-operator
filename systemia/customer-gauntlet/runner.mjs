@@ -2,6 +2,7 @@
 import fs from 'node:fs';
 import crypto from 'node:crypto';
 import { runLocalLennox } from './lennox-engine.mjs';
+import { ownedHttpsEndpoint } from '../chum/owned-commerce-endpoint.mjs';
 
 const catalogPath='public/.well-known/evercraft-machine-catalog.json';
 const personasPath='systemia/customer-gauntlet/personas.json';
@@ -11,7 +12,8 @@ const catalog=JSON.parse(fs.readFileSync(catalogPath,'utf8'));
 const personas=JSON.parse(fs.readFileSync(personasPath,'utf8'));
 const policy=JSON.parse(fs.readFileSync(policyPath,'utf8'));
 
-const gateway=String(process.env.EVERCRAFT_MACHINE_COMMERCE_GATEWAY || 'https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway');
+const gatewayRaw=String(process.env.EVERCRAFT_MACHINE_COMMERCE_GATEWAY_URL || process.env.EVERCRAFT_MACHINE_COMMERCE_GATEWAY || '').trim();
+const gateway=gatewayRaw?ownedHttpsEndpoint(gatewayRaw,{name:'machine_commerce_gateway'}):null;
 const bridgeUrl=String(process.env.RAVEN_NEXUS_CUSTOMER_BRIDGE_URL || '').replace(/\/$/,'');
 const bridgeToken=String(process.env.RAVEN_NEXUS_CUSTOMER_BRIDGE_TOKEN || '');
 const requireInteractive=String(process.env.CUSTOMER_GAUNTLET_REQUIRE_NEXUS || 'false')==='true';
@@ -130,7 +132,7 @@ for(const offer of offers){
       machine={ok:false,status:0,bytes:0,text:'',body:null,error:'public_static_handoff_url_missing'};
       review=machine;
     }
-  }else{
+  }else if(gateway){
     const offerUrl=new URL(gateway); offerUrl.searchParams.set('action','offer'); offerUrl.searchParams.set('public_id',offer.public_id);
     const reviewUrl=new URL(gateway); reviewUrl.searchParams.set('view','service'); reviewUrl.searchParams.set('public_id',offer.public_id);
     machine=await request(offerUrl,{json:true});
@@ -139,6 +141,10 @@ for(const offer of offers){
     buyerUrl=typeof continuation?.buyer_url==='string'?continuation.buyer_url.trim():'';
     buyer=buyerUrl?await request(buyerUrl):null;
     reviewTarget=reviewUrl.toString();
+  }else{
+    machine={ok:false,status:0,bytes:0,text:'',body:null,error:'owned_machine_commerce_gateway_unconfigured'};
+    review=machine;
+    reviewTarget='';
   }
 
   const findings=[];
@@ -161,7 +167,7 @@ for(const offer of offers){
   const fulfillmentBlocked=personaResults.filter(p=>(p.blocked_checks||[]).includes('fulfillment_verification')).length;
   results.push({
     public_id:offer.public_id,name:offer.name,pricing:offer.pricing,
-    doorway:{routing_surface:publicStaticHandoff?'public_static_handoff':'legacy_gateway',offer_status:machine.status,review_status:review.status,buyer_status:buyer?.status??null,buyer_url:buyerUrl||null},
+    doorway:{routing_surface:publicStaticHandoff?'public_static_handoff':gateway?'owned_gateway':'owned_gateway_unconfigured',offer_status:machine.status,review_status:review.status,buyer_status:buyer?.status??null,buyer_url:buyerUrl||null},
     interactive:{blocked:interactiveBlocked,visual_blocked:visualBlocked,payment_blocked:paymentBlocked,fulfillment_blocked:fulfillmentBlocked,personas:personaResults},
     findings,highest_severity:highest,
     disposition:highest==='P0'?'QUARANTINE':highest==='P1'?'REPAIR_REQUIRED':'OPEN'
