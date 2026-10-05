@@ -1,13 +1,24 @@
 name: Saban Production Capacity Radar
 
 on:
+  pull_request:
+    paths:
+      - 'systemia/saban/production-capacity-radar.mjs'
+      - 'systemia/saban/production-capacity-plan.mjs'
+      - 'systemia/saban/compute-exchange.mjs'
+      - 'systemia/saban/markets/akash.mjs'
+      - 'tests/saban-production-capacity-radar.test.mjs'
+      - 'tests/saban-production-capacity-plan.test.mjs'
+      - '.github/workflows/saban-production-capacity-radar.yml'
   push:
     branches: [main]
     paths:
       - 'systemia/saban/production-capacity-radar.mjs'
+      - 'systemia/saban/production-capacity-plan.mjs'
       - 'systemia/saban/compute-exchange.mjs'
       - 'systemia/saban/markets/akash.mjs'
       - 'tests/saban-production-capacity-radar.test.mjs'
+      - 'tests/saban-production-capacity-plan.test.mjs'
       - '.github/workflows/saban-production-capacity-radar.yml'
   workflow_dispatch:
   schedule:
@@ -17,13 +28,23 @@ permissions:
   contents: read
 
 jobs:
-  radar:
+  contract:
     runs-on: ubuntu-latest
     timeout-minutes: 5
     steps:
       - uses: actions/checkout@v4
-      - name: Run contract
+      - name: Prove production capacity radar contract
         run: node --test tests/saban-production-capacity-radar.test.mjs
+      - name: Prove production capacity planner and buyer handoff
+        run: node --test tests/saban-production-capacity-plan.test.mjs
+
+  live-radar:
+    if: ${{ github.event_name != 'pull_request' }}
+    needs: contract
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
       - name: Scan live capacity
         run: |
           mkdir -p artifacts
