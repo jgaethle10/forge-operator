@@ -3,6 +3,12 @@ name: Base44 exit and KAIDANCE proof
 on:
   pull_request:
     paths:
+      - 'scripts/inventory-base44-runtime-debt.mjs'
+      - 'public/.well-known/evercraft-direct-door-readiness.json'
+      - 'tests/final-base44-routing-cuts.test.mjs'
+      - 'tests/direct-door-readiness.test.mjs'
+      - '.github/workflows/ci.yml'
+      - 'systemia/yard/public-edge-activator.mjs'
       - 'tests/owned-canary-cutover.test.mjs'
       - '.github/workflows/network-mcp-canary.yml'
       - '.github/workflows/customer-gauntlet.yml'
@@ -43,6 +49,12 @@ on:
     branches:
       - main
     paths:
+      - 'scripts/inventory-base44-runtime-debt.mjs'
+      - 'public/.well-known/evercraft-direct-door-readiness.json'
+      - 'tests/final-base44-routing-cuts.test.mjs'
+      - 'tests/direct-door-readiness.test.mjs'
+      - '.github/workflows/ci.yml'
+      - 'systemia/yard/public-edge-activator.mjs'
       - 'tests/owned-canary-cutover.test.mjs'
       - '.github/workflows/network-mcp-canary.yml'
       - '.github/workflows/customer-gauntlet.yml'
@@ -98,6 +110,10 @@ jobs:
         run: node --test systemia/chum/indexnow-owned-routing.test.mjs
       - name: Prove owned canary cutover boundaries
         run: node --test tests/owned-canary-cutover.test.mjs
+      - name: Prove direct-door held routing ledger
+        run: node tests/direct-door-readiness.test.mjs
+      - name: Prove final Base44 routing cuts
+        run: node --test tests/final-base44-routing-cuts.test.mjs
       - name: Prove owned server routing cutover
         run: node --test tests/server-owned-routing-cutover.test.mjs
       - name: Prove KAIDANCE collider
