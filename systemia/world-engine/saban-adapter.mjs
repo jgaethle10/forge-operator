@@ -6,6 +6,7 @@ const ROLES=new Set([
   'ecs_guard',
   'scene_streaming_guard',
   'animation_guard',
+  'navigation_guard',
   'fallen_bridge_guard',
   'worldstate_bridge_guard',
   'provenance_guard',
@@ -113,6 +114,21 @@ function evaluate(role,world){
         'Animation parameters must enter through tick-bound world inputs when they affect replay truth.',
         'Inactive streamed entities must freeze animation time and resume from preserved state.',
         'Renderers consume sampled poses and events but do not become animation authority.'
+      ],
+      findings:[]
+    };
+  }
+
+  if(role==='navigation_guard'){
+    return {
+      category:'navigation',
+      directives:[
+        'Navigation meshes are shared world data and path selection must remain deterministic for identical inputs.',
+        'Polygon adjacency must validate fail-closed and path tie-breaking must be canonical.',
+        'Navigation targets that affect replay truth must enter through tick-bound world inputs.',
+        'Navigation chooses desired locomotion; physics remains authority for actual entity movement and collision.',
+        'Streamed-out agents freeze path progress and resume from preserved navigation state.',
+        'Renderer/debug clients may inspect paths but never become navigation authority.'
       ],
       findings:[]
     };

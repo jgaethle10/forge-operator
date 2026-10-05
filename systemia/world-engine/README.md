@@ -22,14 +22,19 @@ Implemented in this slice:
 - Parameter-driven animation state machines with priority, blend windows and tick-bound transitions.
 - Per-tick animation event receipts carried into provider-neutral render frames.
 - Streamed-out entities freeze animation time and resume from preserved runtime state.
+- Deterministic polygon navmeshes with validated symmetric adjacency and canonical A* tie-breaking.
+- Tick-bound navigation targets, path digests and stateful agent locomotion.
+- Navigation drives desired horizontal velocity while owned physics remains movement/collision authority.
+- Navigation can drive animation movement parameters in the same simulation tick.
+- Streamed-out agents freeze path progress and resume from preserved runtime state.
 - Deterministic behaviors for spin, constant force and oscillation.
 - Input ledger with tick-bound events.
 - Stable world-definition and snapshot SHA-256 digests.
 - Deterministic replay receipts.
 - Fallen Studio World → World Engine compiler.
 - Worldstate evidence → world projection bridge with evidence state preserved.
-- Provider-neutral render-frame contract with sampled skeletal pose/state handoff.
-- Tests for replay determinism, entity collision, ground collision, canonical broad-phase ordering, ECS query ordering, scene streaming/state preservation, animation transitions/blending/events, input ordering, Fallen compilation and Worldstate projection.
+- Provider-neutral render-frame contract with sampled skeletal pose/state and navigation/debug handoff.
+- Tests for replay determinism, entity collision, ground collision, canonical broad-phase ordering, ECS query ordering, scene streaming/state preservation, animation transitions/blending/events, navmesh pathfinding/arrival/freeze-resume, input ordering, Fallen compilation and Worldstate projection.
 
 ## Architectural contract
 
@@ -56,13 +61,13 @@ The engine does not gain publication authority, payment authority, emergency aut
 
 The V1 contract is deliberately small enough to prove ownership before expanding. The next compatible layers are:
 
-1. Navigation meshes and agent locomotion.
-2. Materials, lighting and camera graph.
-3. Audio scene graph.
-4. Multiplayer replication and rollback.
-5. WebGPU / native renderer adapters.
-6. Asset hot-reload and live Studio editing.
-7. Animation authoring/import bridge for Fallen character assets.
+1. Materials, lighting and camera graph.
+2. Audio scene graph.
+3. Multiplayer replication and rollback.
+4. WebGPU / native renderer adapters.
+5. Asset hot-reload and live Studio editing.
+6. Animation authoring/import bridge for Fallen character assets.
+7. Navigation corridor smoothing / dynamic obstacle avoidance.
 8. Saban simulation tournaments and deterministic QA at scale.
 9. Physical memory eviction / asset residency behind the logical scene activation contract.
 10. Broad-phase acceleration upgrades for very large worlds.
