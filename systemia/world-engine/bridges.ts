@@ -162,6 +162,14 @@ export interface WorldRenderFrame {
       transition:unknown;
       events:unknown[];
     };
+    navigation:null|{
+      state:string;
+      target:{x:number;y:number;z:number}|null;
+      waypointIndex:number;
+      desiredVelocity:{x:number;y:number;z:number};
+      path:unknown;
+      replanCount:number;
+    };
   }>;
 }
 
@@ -189,6 +197,14 @@ export function compileRenderFrame(
           pose:entity.animationRuntime.pose || [],
           transition:entity.animationRuntime.transition || null,
           events:entity.animationRuntime.events || []
+        }:null,
+        navigation:entity.navigationRuntime?{
+          state:entity.navigationRuntime.state,
+          target:entity.navigationRuntime.target || null,
+          waypointIndex:entity.navigationRuntime.waypointIndex || 0,
+          desiredVelocity:entity.navigationRuntime.desiredVelocity || {x:0,y:0,z:0},
+          path:entity.navigationRuntime.path || null,
+          replanCount:entity.navigationRuntime.replanCount || 0
         }:null
       }))
   };
