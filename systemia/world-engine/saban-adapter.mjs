@@ -5,6 +5,7 @@ const ROLES=new Set([
   'physics_guard',
   'ecs_guard',
   'scene_streaming_guard',
+  'animation_guard',
   'fallen_bridge_guard',
   'worldstate_bridge_guard',
   'provenance_guard',
@@ -98,6 +99,20 @@ function evaluate(role,world){
         'An entity may have one chunk owner; unassigned entities remain global rather than disappearing silently.',
         'Inactive entities preserve state and stop simulation until reactivated.',
         'Streaming changes simulation residency only and must not mutate Fallen canon, Worldstate evidence or source assets.'
+      ],
+      findings:[]
+    };
+  }
+
+  if(role==='animation_guard'){
+    return {
+      category:'animation',
+      directives:[
+        'Treat skeletal animation state as deterministic world state, not renderer-owned hidden state.',
+        'Validate bone hierarchy, clip references, transition references and keyframe bounds fail-closed.',
+        'Animation parameters must enter through tick-bound world inputs when they affect replay truth.',
+        'Inactive streamed entities must freeze animation time and resume from preserved state.',
+        'Renderers consume sampled poses and events but do not become animation authority.'
       ],
       findings:[]
     };

@@ -1,5 +1,6 @@
 import crypto from 'node:crypto';
 import { resolveEntityCollisions, type CollisionContact } from './spatial.js';
+import { initializeAnimationRuntime, setAnimationParameter, stepAnimationRuntime, validateAnimationComponent, type AnimationParameter, type AnimationRuntimeState, type SkeletalAnimationComponent } from './animation.js';
 
 export type Vec3 = { x:number; y:number; z:number };
 
@@ -35,6 +36,7 @@ export interface WorldEntity {
   rigidBody?:RigidBodyComponent;
   collider?:ColliderComponent;
   behaviors?:WorldBehavior[];
+  animation?:SkeletalAnimationComponent;
   assetRefs?:string[];
   tags?:string[];
   properties?:Record<string,unknown>;
@@ -55,6 +57,7 @@ export type WorldInput =
   | { id:string; tick:number; entityId:string; kind:'impulse'; value:Vec3 }
   | { id:string; tick:number; entityId:string; kind:'set_velocity'; value:Vec3 }
   | { id:string; tick:number; entityId:string; kind:'teleport'; value:Vec3 }
+  | { id:string; tick:number; entityId:string; kind:'set_animation_parameter'; key:string; value:AnimationParameter }
   | { id:string; tick:number; entityId:string; kind:'set_property'; key:string; value:unknown };
 
 export interface RuntimeEntity extends WorldEntity {
@@ -63,6 +66,7 @@ export interface RuntimeEntity extends WorldEntity {
     velocity:Vec3;
     acceleration:Vec3;
   };
+  animationRuntime?:AnimationRuntimeState;
 }
 
 export interface WorldSnapshot {
@@ -161,6 +165,7 @@ export function validateWorldDefinition(world:WorldDefinition){
         throw new Error(`world_entity_box_half_extents_invalid:${entity.id}`);
       }
     }
+    if(entity.animation) validateAnimationComponent(entity.animation);
     if(entity.rigidBody){
       if(!Number.isFinite(entity.rigidBody.mass) || entity.rigidBody.mass <= 0){
         throw new Error(`world_entity_mass_invalid:${entity.id}`);
@@ -179,6 +184,9 @@ function runtimeEntity(source:WorldEntity):RuntimeEntity{
   if(entity.rigidBody){
     entity.rigidBody.velocity ||= clone(ZERO);
     entity.rigidBody.acceleration ||= clone(ZERO);
+  }
+  if(entity.animation){
+    entity.animationRuntime=initializeAnimationRuntime(entity.animation);
   }
   return entity;
 }
@@ -268,6 +276,13 @@ export class EvercraftWorldRuntime {
       entity.properties[input.key]=clone(input.value);
       return;
     }
+    if(input.kind==='set_animation_parameter'){
+      if(!entity.animation || !entity.animationRuntime){
+        throw new Error(`world_entity_animation_missing:${entity.id}`);
+      }
+      setAnimationParameter(entity.animationRuntime,input.key,input.value);
+      return;
+    }
     if(!entity.rigidBody) throw new Error(`world_entity_not_dynamic:${entity.id}`);
     if(input.kind==='set_velocity'){
       finiteVec3(input.value,'set_velocity');
@@ -335,6 +350,9 @@ export class EvercraftWorldRuntime {
       .sort((a,b)=>a.id.localeCompare(b.id));
     for(const entity of ordered){
       this.applyBehaviors(entity,nextTime);
+      if(entity.animation && entity.animationRuntime){
+        entity.animationRuntime=stepAnimationRuntime(entity.animation,entity.animationRuntime,this.dt);
+      }
       this.integrate(entity);
     }
     this._collisions=resolveEntityCollisions(ordered);
