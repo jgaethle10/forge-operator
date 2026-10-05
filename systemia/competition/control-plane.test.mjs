@@ -44,10 +44,10 @@ test("terms and MFA become human gates while team keeps building", () => {
     build: { state: "not_started", raven_qa_state: "not_run", submission_package_ready: false },
   }, { now: NOW });
 
-  assert.equal(result.state, "team_can_advance_human_gate_pending");
+  assert.equal(result.state, "team_can_advance_human_gate_deferred");
   assert.deepEqual(result.human_gates, ["accept_terms", "mfa"]);
   assert.equal(result.team_can_continue_preparation, true);
-  assert.equal(result.notify_human, true);
+  assert.equal(result.notify_human, false);
 });
 
 test("verified Kaggle lane becomes autonomous only after build, QA and package", () => {
@@ -72,10 +72,11 @@ test("verified Kaggle lane becomes autonomous only after build, QA and package",
   assert.equal(result.next_team_action, "submit_and_verify_provider_receipt");
 });
 
-test("gate queue is deadline ordered and deduplicated", () => {
+test("gate queue is deadline ordered, deduplicated, and only includes due gates", () => {
   const items = [
-    { provider: "devpost", opportunity_id: "b", title: "B", deadline: "2026-10-30T00:00:00Z", human_gates: ["accept_terms", "accept_terms"] },
-    { provider: "devpost", opportunity_id: "a", title: "A", deadline: "2026-10-20T00:00:00Z", human_gates: ["mfa"] },
+    { provider: "devpost", opportunity_id: "b", title: "B", deadline: "2026-10-30T00:00:00Z", human_gates: ["accept_terms", "accept_terms"], notify_human: true },
+    { provider: "devpost", opportunity_id: "a", title: "A", deadline: "2026-10-20T00:00:00Z", human_gates: ["mfa"], notify_human: true },
+    { provider: "devpost", opportunity_id: "deferred", title: "Deferred", deadline: "2026-10-10T00:00:00Z", human_gates: ["accept_terms"], notify_human: false },
   ];
   const queue = compileHumanGateQueue(items);
   assert.equal(queue.length, 2);
@@ -95,4 +96,29 @@ test("control plane never calls drafts or blockers a submission", () => {
 
   assert.equal(receipt.summary.autonomous_submission_ready, 0);
   assert.equal(receipt.policy.success_requires_provider_receipt, true);
+});
+
+
+test("human gate becomes due once team preparation is complete", () => {
+  const result = classifyCompetitionOpportunity({
+    opportunity_id: "ready-devpost",
+    provider: "devpost",
+    title: "Ready Devpost Entry",
+    deadline: "2026-10-30T00:00:00Z",
+    rules: {
+      verification_state: "verified",
+      eligible: true,
+      new_terms_required: true,
+    },
+    authorization: {
+      provider_authenticated: true,
+      terms_state: "not_accepted",
+      submission_executor: "api",
+    },
+    build: { state: "built", raven_qa_state: "passed", submission_package_ready: true },
+  }, { now: NOW });
+
+  assert.equal(result.state, "held_human_gate");
+  assert.equal(result.human_gate_due, true);
+  assert.equal(result.notify_human, true);
 });
