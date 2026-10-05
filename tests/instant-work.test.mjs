@@ -5,6 +5,7 @@ import {
   createEvercraftPaymentOrder,
 } from '../systemia/commerce/instant-work.mjs';
 import { getFulfillmentProfile } from '../systemia/organism/universal-product-fulfillment.mjs';
+import { buildReceivablesPortfolio, deriveReceivableTruth } from '../systemia/commerce/receivables.mjs';
 
 const liveCatalog = JSON.parse(fs.readFileSync('public/.well-known/evercraft-machine-catalog.json', 'utf8'));
 const liveInstantWork = buildInstantWorkCatalog(liveCatalog);
@@ -104,3 +105,91 @@ console.log(JSON.stringify({
   payment_authority: order.authority,
   settlement_router: order.settlement_router,
 }));
+
+
+const invoiceOrder = {
+  order_key: 'RIVET-INVOICE-2026-1001-001',
+  amount_cents: 209300,
+  currency: 'usd',
+  state: 'checkout_open',
+  synthetic: false,
+  checkout_created_at: '2026-10-02T02:50:00.000Z',
+};
+
+const openTruth = deriveReceivableTruth({
+  order: invoiceOrder,
+  receipts: [],
+  now: new Date('2026-10-05T14:20:00-07:00'),
+});
+assert.equal(openTruth.authority, 'Evercraft Payments');
+assert.equal(openTruth.settlement_router, 'Raven Nexus');
+assert.equal(openTruth.canonical_paid, false);
+assert.equal(openTruth.truth_state, 'stale_open');
+assert.equal(openTruth.stale_open, true);
+assert.equal(openTruth.semantics.checkout_is_not_payment, true);
+
+const providerObservedTruth = deriveReceivableTruth({
+  order: invoiceOrder,
+  receipts: [],
+  providerObservation: {
+    provider: 'stripe',
+    paid: true,
+    session_id: 'cs_live_example',
+    payment_status: 'paid',
+  },
+  now: new Date('2026-10-05T14:20:00-07:00'),
+});
+assert.equal(providerObservedTruth.truth_state, 'provider_paid_unreconciled');
+assert.equal(providerObservedTruth.canonical_paid, false);
+assert.equal(providerObservedTruth.reconciliation_required, true);
+
+const verifiedReceipt = {
+  receipt_key: 'stripe:cs_live_example',
+  order_key: invoiceOrder.order_key,
+  amount_cents: 209300,
+  currency: 'usd',
+  synthetic: false,
+  verified_at: '2026-10-05T21:15:00.000Z',
+  evidence_ref: 'stripe:cs_live_example',
+};
+
+const verifiedTruth = deriveReceivableTruth({
+  order: { ...invoiceOrder, state: 'paid', verified_at: verifiedReceipt.verified_at },
+  receipts: [verifiedReceipt],
+  now: new Date('2026-10-05T14:20:00-07:00'),
+});
+assert.equal(verifiedTruth.truth_state, 'verified_paid');
+assert.equal(verifiedTruth.canonical_paid, true);
+assert.equal(verifiedTruth.canonical_receipt_key, verifiedReceipt.receipt_key);
+
+const portfolio = buildReceivablesPortfolio({
+  orders: [
+    invoiceOrder,
+    {
+      order_key: 'epo_paid_example',
+      amount_cents: 29900,
+      currency: 'USD',
+      state: 'paid',
+      synthetic: false,
+      created_at: '2026-10-05T10:00:00.000Z',
+    },
+  ],
+  receipts: [
+    {
+      receipt_key: 'receipt_paid_example',
+      order_key: 'epo_paid_example',
+      amount_cents: 29900,
+      currency: 'USD',
+      synthetic: false,
+      verified_at: '2026-10-05T10:05:00.000Z',
+      evidence_ref: 'receipt_paid_example',
+    },
+  ],
+  now: new Date('2026-10-05T14:20:00-07:00'),
+});
+const usd = portfolio.currencies.find((row) => row.currency === 'USD');
+assert.equal(usd.open_cents, 209300);
+assert.equal(usd.verified_paid_cents, 29900);
+assert.equal(usd.open_count, 1);
+assert.equal(usd.paid_count, 1);
+assert.equal(usd.stale_count, 1);
