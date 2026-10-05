@@ -26,6 +26,84 @@ function marketRole(radar,role){
   };
 }
 
+function radarRole(radar,role){
+  return (radar?.roles||[]).find((row)=>row.role===role)||null;
+}
+
+function zeroSpendFormationAcquisition(roleRow){
+  const demand=roleRow?.demand||{};
+  const resources=demand.resources||{};
+  const placement=demand.placement||{};
+  const trust=demand.trust||{};
+  return {
+    enabled:true,
+    demand_id:String(demand.demand_id||`production:${roleRow?.role||'capacity'}`),
+    negotiation_level:'lease',
+    zero_spend_only:true,
+    prefer_zero_cost:true,
+    cpu_units:Number(resources.cpu_units||1),
+    memory_mb:Number(resources.memory_mb||512),
+    storage_gb:Number(resources.storage_gb||0),
+    gpu_count:Number(resources.gpu_count||0),
+    gpu_models:Array.isArray(resources.gpu_models)?resources.gpu_models:[],
+    require_public_ingress:placement.require_public_ingress===true,
+    require_persistent_storage:placement.require_persistent_storage===true,
+    minimum_uptime_7d:Number(trust.minimum_uptime_7d||0),
+    audited_only:trust.audited_only===true,
+    valid_version_only:trust.valid_version_only!==false,
+    markets:{
+      evercraft_broker:{
+        enabled_if_configured:true,
+        state_dir_env:'EVERCRAFT_YARD_STATE_DIR',
+        broker_deployment_id_env:'EVERCRAFT_REMOTE_CAPACITY_BROKER_DEPLOYMENT_ID',
+      },
+      evercraft_voluntary:{
+        enabled_if_configured:true,
+        endpoint_env:'EVERCRAFT_VOLUNTARY_COMPUTE_ENDPOINT',
+        control_token_env:'EVERCRAFT_VOLUNTARY_CONTROL_TOKEN',
+      },
+      golem:{enabled:false},
+      akash:{enabled:false},
+    },
+  };
+}
+
+function acquisitionDirective({
+  radar,
+  role,
+  commercialCapacityAllowed,
+}={}){
+  const row=radarRole(radar,role);
+  if(!row) return null;
+  const selected=row.selected_candidate||null;
+  return {
+    schema:'evercraft.saban.capacity-acquisition-directive.v1',
+    role,
+    demand:row.demand?structuredClone(row.demand):null,
+    zero_spend_phase:{
+      state:'policy_ready',
+      formation_acquisition:zeroSpendFormationAcquisition(row),
+      authority_material_present:false,
+      paid_market_order_authorized:false,
+      paid_lease_authorized:false,
+    },
+    commercial_fallback:{
+      state:selected
+        ? (commercialCapacityAllowed
+            ? 'explicit_quote_and_spend_authority_required'
+            : 'disabled_by_zero_spend_policy')
+        : 'no_candidate',
+      candidate:selected?structuredClone(selected):null,
+      commercial_capacity_allowed:commercialCapacityAllowed===true,
+      quote_authority_required:true,
+      spend_authority_required:true,
+      hard_cost_ceiling_required:true,
+      market_order_authorized:false,
+      paid_lease_authorized:false,
+    },
+  };
+}
+
 function unresolvedRole({
   role,
   ambient,
@@ -171,6 +249,16 @@ export function planProductionCapacity({
   const commercialFillable=commercialCapacityAllowed&&roles.every(
     r=>r.current_state==='satisfied'||r.commercial_fallback_available===true
   );
+  const unsatisfiedRoles=roles
+    .filter((row)=>row.current_state!=='satisfied')
+    .map((row)=>row.role);
+  const acquisitionDirectives=unsatisfiedRoles
+    .map((role)=>acquisitionDirective({
+      radar,
+      role,
+      commercialCapacityAllowed,
+    }))
+    .filter(Boolean);
 
   const body={
     schema:'evercraft.saban.production-capacity-plan.v2',
@@ -196,6 +284,18 @@ export function planProductionCapacity({
       public_ingress_offer_count:ingressAmbient.eligible_count,
       rivet_runtime_offer_count:rivetAmbient.eligible_count,
       aliev_source_store_offer_count:alievAmbient.eligible_count,
+    },
+    buyer_handoff:{
+      schema:'evercraft.saban.capacity-buyer-handoff.v1',
+      directive_count:acquisitionDirectives.length,
+      zero_spend_policy_ready_count:
+        acquisitionDirectives.filter((row)=>
+          row.zero_spend_phase?.state==='policy_ready'
+        ).length,
+      directives:acquisitionDirectives,
+      authority_material_present:false,
+      paid_market_order_authorized:false,
+      paid_lease_authorized:false,
     },
     policy:{
       zero_spend_default:true,

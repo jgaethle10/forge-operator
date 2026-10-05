@@ -528,3 +528,18 @@ Market preference is enforced after resource, placement, trust and budget eligib
 4. Akash capacity
 
 Before a commitment, a safe quote failure may fall through to the next eligible market. Once a lease request has been attempted, an uncertain failure stops automatic failover and requires reconciliation.
+
+## Production capacity planner → buyer handoff
+
+`production-capacity-plan.mjs` now emits a bounded `evercraft.saban.capacity-buyer-handoff.v1` whenever a production role remains unsatisfied.
+
+Each unsatisfied role receives two separate phases:
+
+1. **Zero-spend phase**: a policy-ready formation acquisition directive that may use Evercraft broker and voluntary capacity once an eligible source is configured at runtime.
+2. **Commercial fallback**: visibility into the best known commercial candidate, but no quote authority, spend authority, market-order authority, or lease authority.
+
+The zero-spend phase uses `enabled_if_configured` for broker and voluntary sources. This means Saban uses whichever trusted source is actually wired at runtime. An absent broker does not suppress an available voluntary worker, and an absent voluntary exchange does not suppress a configured broker.
+
+The handoff may contain environment-variable names such as `EVERCRAFT_YARD_STATE_DIR` or `EVERCRAFT_VOLUNTARY_CONTROL_TOKEN`, but never the values behind them. Authority material remains in runtime environment or private Yard state.
+
+Commercial visibility never becomes purchasing authority automatically. Even when the production planner reports `commercial_fillable_with_explicit_authority`, a separate demand-scoped quote/spend grant with hard ceilings is still required before Saban may place an order or create a paid lease.

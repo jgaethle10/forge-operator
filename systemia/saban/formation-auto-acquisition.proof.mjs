@@ -95,9 +95,13 @@ try{
           zero_spend_only:true,
           negotiation_level:'lease',
           markets:{
-            evercraft_broker:{enabled:false},
+            evercraft_broker:{
+              enabled_if_configured:true,
+              state_dir_env:'EVERCRAFT_YARD_STATE_DIR',
+              broker_deployment_id_env:'EVERCRAFT_REMOTE_CAPACITY_BROKER_DEPLOYMENT_ID',
+            },
             evercraft_voluntary:{
-              enabled:true,
+              enabled_if_configured:true,
               endpoint:exchange.endpoint,
               control_token_env:'EVERCRAFT_VOLUNTARY_CONTROL_TOKEN',
             },
@@ -151,6 +155,8 @@ try{
     configured_nodeseeds:0,
     acquisition_policy_declared_in_formation:true,
     adapters_built_at_runtime:true,
+    unconfigured_broker_skipped:true,
+    voluntary_source_used_when_configured:true,
     zero_spend_authority_generated:true,
     provider:'formation-auto-voluntary-provider',
     market:'evercraft-voluntary',
