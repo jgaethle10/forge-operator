@@ -139,3 +139,15 @@ process.stdout.write(JSON.stringify({
   top_runtime_files:activeFiles.slice(0,20),
   top_public_files:publicFiles.slice(0,20),
 },null,2)+"\n");
+
+if(process.argv.includes("--strict-active") && (activeFiles.length>0 || publicFiles.length>0)){
+  process.stderr.write(JSON.stringify({
+    ok:false,
+    error:"base44_active_or_public_debt_regression",
+    active_runtime_candidate_files:activeFiles.length,
+    public_surface_files:publicFiles.length,
+    top_runtime_files:activeFiles.slice(0,20),
+    top_public_files:publicFiles.slice(0,20)
+  },null,2)+"\n");
+  process.exit(2);
+}
