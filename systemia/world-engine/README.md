@@ -38,6 +38,11 @@ Implemented in this slice:
 - Deterministic 2D/3D attenuation, listener-relative position and effective bus/listener/emitter gain.
 - Streamed-out emitters freeze playback and resume from preserved playhead/loop state.
 - Provider-neutral audio-frame contracts let replaceable backends consume spatial playback truth without owning it.
+- Versioned transport-neutral replication sessions, hashed input envelopes and authoritative checkpoint packets.
+- Digest-verified full snapshot restoration for deterministic rollback.
+- Predictive client rollback that discards stale past predictions and replays eligible future inputs in canonical order.
+- Bounded rollback windows, idempotent input submission and fail-closed late-authority input handling.
+- Packet digests provide deterministic content integrity only; transport authentication/encryption remain separate security adapters.
 - Deterministic behaviors for spin, constant force and oscillation.
 - Input ledger with tick-bound events.
 - Stable world-definition and snapshot SHA-256 digests.
@@ -45,7 +50,7 @@ Implemented in this slice:
 - Fallen Studio World → World Engine compiler.
 - Worldstate evidence → world projection bridge with evidence state preserved.
 - Provider-neutral render-frame contract with sampled skeletal pose/state, navigation/debug handoff, canonical visual subframes and audio subframes.
-- Tests for replay determinism, entity collision, ground collision, canonical broad-phase ordering, ECS query ordering, scene streaming/state preservation, animation transitions/blending/events, navmesh pathfinding/arrival/freeze-resume, material/light validation, camera graph interpolation/layer masking, audio playback/loop/seek/listener switching/attenuation, input ordering, Fallen compilation and Worldstate projection.
+- Tests for replay determinism, entity collision, ground collision, canonical broad-phase ordering, ECS query ordering, scene streaming/state preservation, animation transitions/blending/events, navmesh pathfinding/arrival/freeze-resume, material/light validation, camera graph interpolation/layer masking, audio playback/loop/seek/listener switching/attenuation, snapshot restore/tamper rejection, authoritative checkpoints/client prediction/rollback convergence, input ordering, Fallen compilation and Worldstate projection.
 
 ## Architectural contract
 
@@ -72,11 +77,11 @@ The engine does not gain publication authority, payment authority, emergency aut
 
 The V1 contract is deliberately small enough to prove ownership before expanding. The next compatible layers are:
 
-1. Multiplayer replication and rollback.
-2. WebGPU / native renderer adapters.
-3. Asset hot-reload and live Studio editing.
-4. Animation authoring/import bridge for Fallen character assets.
-5. Navigation corridor smoothing / dynamic obstacle avoidance.
+1. WebGPU / native renderer adapters.
+2. Asset hot-reload and live Studio editing.
+3. Animation authoring/import bridge for Fallen character assets.
+4. Navigation corridor smoothing / dynamic obstacle avoidance.
+5. Server-side rollback policy for explicitly admitted late inputs.
 6. Shadow-map / reflection / post-process contracts behind the visual-frame boundary.
 7. Spatial panning / occlusion / reverb-zone contracts behind the audio-frame boundary.
 8. Saban simulation tournaments and deterministic QA at scale.
