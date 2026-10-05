@@ -1,4 +1,5 @@
 import crypto from 'node:crypto';
+import { resolveEntityCollisions, type CollisionContact } from './spatial.js';
 
 export type Vec3 = { x:number; y:number; z:number };
 
@@ -72,6 +73,7 @@ export interface WorldSnapshot {
   tick:number;
   timeSec:number;
   entities:RuntimeEntity[];
+  collisions:CollisionContact[];
   digest:string;
 }
 
@@ -181,6 +183,7 @@ export class EvercraftWorldRuntime {
   readonly dt:number;
   private state:Map<string,RuntimeEntity>;
   private _tick=0;
+  private _collisions:CollisionContact[]=[];
 
   constructor(definition:WorldDefinition){
     validateWorldDefinition(definition);
@@ -205,6 +208,10 @@ export class EvercraftWorldRuntime {
   entity(id:string){
     const found=this.state.get(id);
     return found?clone(found):null;
+  }
+
+  get collisions(){
+    return clone(this._collisions);
   }
 
   private mutateEntity(id:string){
@@ -287,10 +294,12 @@ export class EvercraftWorldRuntime {
     }
 
     const nextTime=targetTick*this.dt;
-    for(const entity of [...this.state.values()].sort((a,b)=>a.id.localeCompare(b.id))){
+    const ordered=[...this.state.values()].sort((a,b)=>a.id.localeCompare(b.id));
+    for(const entity of ordered){
       this.applyBehaviors(entity,nextTime);
       this.integrate(entity);
     }
+    this._collisions=resolveEntityCollisions(ordered);
     this._tick=targetTick;
     return this.snapshot();
   }
@@ -312,7 +321,8 @@ export class EvercraftWorldRuntime {
       timeSec:Number(this.timeSec.toFixed(9)),
       entities:[...this.state.values()]
         .sort((a,b)=>a.id.localeCompare(b.id))
-        .map(entity=>clone(entity))
+        .map(entity=>clone(entity)),
+      collisions:clone(this._collisions)
     };
     return {...core,digest:digest(core)};
   }
