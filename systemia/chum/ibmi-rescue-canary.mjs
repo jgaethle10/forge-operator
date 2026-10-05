@@ -1,6 +1,8 @@
 #!/usr/bin/env node
 
-const GATEWAY = 'https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway';
+import { ownedHttpsEndpoint } from './owned-commerce-endpoint.mjs';
+
+const GATEWAY = ownedHttpsEndpoint(process.env.EVERCRAFT_MACHINE_COMMERCE_GATEWAY_URL,{name:'machine_commerce_gateway'});
 const PUBLIC_ID = 'ibmi-rescue-v1';
 
 async function jsonRequest(url, init = {}) {
