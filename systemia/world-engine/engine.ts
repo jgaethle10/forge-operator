@@ -73,6 +73,7 @@ export interface WorldSnapshot {
   tick:number;
   timeSec:number;
   entities:RuntimeEntity[];
+  activeEntityIds:string[];
   collisions:CollisionContact[];
   digest:string;
 }
@@ -201,6 +202,7 @@ export class EvercraftWorldRuntime {
   readonly definitionDigest:string;
   readonly dt:number;
   private state:Map<string,RuntimeEntity>;
+  private activeEntityIdsSet:Set<string>;
   private _tick=0;
   private _collisions:CollisionContact[]=[];
 
@@ -214,6 +216,7 @@ export class EvercraftWorldRuntime {
         .sort((a,b)=>a.id.localeCompare(b.id))
         .map(entity=>[entity.id,runtimeEntity(entity)])
     );
+    this.activeEntityIdsSet=new Set([...this.state.keys()].sort());
   }
 
   get tick(){
@@ -231,6 +234,20 @@ export class EvercraftWorldRuntime {
 
   get collisions(){
     return clone(this._collisions);
+  }
+
+  get activeEntityIds(){
+    return [...this.activeEntityIdsSet].sort();
+  }
+
+  setActiveEntityIds(ids:string[]){
+    const next=[...new Set(ids)].sort();
+    for(const id of next){
+      if(!this.state.has(id)) throw new Error(`world_active_entity_missing:${id}`);
+    }
+    this.activeEntityIdsSet=new Set(next);
+    this._collisions=[];
+    return this.activeEntityIds;
   }
 
   private mutateEntity(id:string){
@@ -313,7 +330,9 @@ export class EvercraftWorldRuntime {
     }
 
     const nextTime=targetTick*this.dt;
-    const ordered=[...this.state.values()].sort((a,b)=>a.id.localeCompare(b.id));
+    const ordered=[...this.state.values()]
+      .filter(entity=>this.activeEntityIdsSet.has(entity.id))
+      .sort((a,b)=>a.id.localeCompare(b.id));
     for(const entity of ordered){
       this.applyBehaviors(entity,nextTime);
       this.integrate(entity);
@@ -341,6 +360,7 @@ export class EvercraftWorldRuntime {
       entities:[...this.state.values()]
         .sort((a,b)=>a.id.localeCompare(b.id))
         .map(entity=>clone(entity)),
+      activeEntityIds:this.activeEntityIds,
       collisions:clone(this._collisions)
     };
     return {...core,digest:digest(core)};
