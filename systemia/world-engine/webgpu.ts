@@ -6,6 +6,7 @@ import type {
   MaterialDefinition,
   VisualFrameContract
 } from './visual.js';
+import { verifyVisualFrameContract } from './visual.js';
 import type { TransformComponent, Vec3 } from './engine.js';
 
 export interface GeometryAsset {
@@ -360,6 +361,7 @@ export function compileWebGpuRenderPlan(
   viewport:{width:number;height:number}
 ):WebGpuRenderPlan{
   if(frame?.schema!=='evercraft.world-engine.visual-frame.v1') throw new Error('webgpu_visual_frame_schema_invalid');
+  if(!verifyVisualFrameContract(frame)) throw new Error('webgpu_visual_frame_digest_invalid');
   if(!Number.isInteger(viewport.width)||viewport.width<1||!Number.isInteger(viewport.height)||viewport.height<1){
     throw new Error('webgpu_viewport_invalid');
   }
