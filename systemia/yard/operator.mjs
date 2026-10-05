@@ -971,6 +971,75 @@ export class YardOperator {
     };
   }
 
+  async browserDelegatedSnapshot(deploymentId, { sessionId } = {}) {
+    const record = this.deploymentStatus(deploymentId);
+    const secret = this.#loadLeaseSecret(deploymentId);
+    if (!record || !secret) throw new Error('deployment lease authority unavailable');
+    if (record.receipt?.workload_class !== 'systemia.evercraft-web-browser.v1') {
+      throw new Error('deployment is not an Evercraft browser worker');
+    }
+    if (
+      record.result?.delegated_draft_automation_supported !== true ||
+      !record.result?.delegated_snapshot_path
+    ) {
+      throw new Error('Evercraft delegated browser snapshot is unavailable');
+    }
+    if (!String(sessionId || '').trim()) throw new Error('delegated browser session_id is required');
+
+    const invoked = await request(
+      new URL(record.result.delegated_snapshot_path, secret.capacity_endpoint).toString(),
+      {
+        method: 'POST',
+        body: JSON.stringify({
+          token: secret.token,
+          session_id: String(sessionId),
+        }),
+      }
+    );
+
+    return {
+      ok: true,
+      deployment_id: deploymentId,
+      result: invoked.result,
+      compute_receipt_hash: invoked.receipt?.receipt_hash || null,
+    };
+  }
+
+  async browserDelegatedAction(deploymentId, { sessionId, action } = {}) {
+    const record = this.deploymentStatus(deploymentId);
+    const secret = this.#loadLeaseSecret(deploymentId);
+    if (!record || !secret) throw new Error('deployment lease authority unavailable');
+    if (record.receipt?.workload_class !== 'systemia.evercraft-web-browser.v1') {
+      throw new Error('deployment is not an Evercraft browser worker');
+    }
+    if (
+      record.result?.delegated_draft_automation_supported !== true ||
+      !record.result?.delegated_action_path
+    ) {
+      throw new Error('Evercraft delegated browser action is unavailable');
+    }
+    if (!String(sessionId || '').trim()) throw new Error('delegated browser session_id is required');
+
+    const invoked = await request(
+      new URL(record.result.delegated_action_path, secret.capacity_endpoint).toString(),
+      {
+        method: 'POST',
+        body: JSON.stringify({
+          token: secret.token,
+          session_id: String(sessionId),
+          action: action || {},
+        }),
+      }
+    );
+
+    return {
+      ok: true,
+      deployment_id: deploymentId,
+      result: invoked.result,
+      compute_receipt_hash: invoked.receipt?.receipt_hash || null,
+    };
+  }
+
   async pushMissionSnapshot(deploymentId, {
     sourceKey,
     snapshot,

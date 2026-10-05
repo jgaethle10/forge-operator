@@ -6,6 +6,7 @@ const resident = JSON.parse(fs.readFileSync("systemia/core/resident-services.jso
 const scoutManifest = JSON.parse(fs.readFileSync("systemia/organism/competition-provider-scout.workflow.json", "utf8"));
 const submitManifest = JSON.parse(fs.readFileSync("systemia/organism/competition-submission-executor.workflow.json", "utf8"));
 const controlManifest = JSON.parse(fs.readFileSync("systemia/organism/competition-control-plane.workflow.json", "utf8"));
+const draftManifest = JSON.parse(fs.readFileSync("systemia/organism/competition-browser-draft-executor.workflow.json", "utf8"));
 const slice = JSON.parse(fs.readFileSync("systemia/migrations/base44-exit/slices/competition-foundry-raven-runtime.json", "utf8"));
 
 test("competition provider scout is resident-wired without Base44 or public Fabric", () => {
@@ -91,4 +92,27 @@ test("canonical competition registry is present and carries live money targets",
     assert.ok(row.deadline);
     assert.equal(row.build?.submission_package_ready, false);
   }
+});
+
+
+test("competition browser draft executor is resident and cannot become final submit authority", () => {
+  const service = resident.services.find((row) => row.service_key === "competition-browser-draft-executor");
+  assert.ok(service);
+  assert.equal(service.mode, "cycle");
+  assert.equal(service.cadence_seconds, 300);
+  assert.equal(service.executable, "systemia/competition/browser-draft-runner.mjs");
+  assert.equal(draftManifest.authority.fill_draft_fields, "autonomous_after_raven_qa");
+  assert.equal(draftManifest.authority.save_draft, "autonomous_after_raven_qa");
+  assert.match(draftManifest.authority.final_submission, /^human_gate_/);
+  assert.equal(draftManifest.safety.human_claim_token_to_agent, false);
+  assert.equal(draftManifest.safety.accept_new_terms, false);
+  assert.equal(draftManifest.safety.final_submit_without_human_gate, false);
+  assert.equal(draftManifest.safety.call_draft_a_submission, false);
+  assert.deepEqual(draftManifest.routing.canonical_path, [
+    "systemia",
+    "raven_qa",
+    "yard",
+    "evercraft_compute",
+    "authenticated_browser_delegation",
+  ]);
 });

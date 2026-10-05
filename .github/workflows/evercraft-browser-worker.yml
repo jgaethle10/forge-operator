@@ -28,6 +28,10 @@ on:
 permissions:
   contents: read
 
+concurrency:
+  group: evercraft-browser-worker-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
 jobs:
   browser-worker:
     runs-on: ubuntu-latest
@@ -48,14 +52,19 @@ jobs:
         run: docker build -t evercraft/browser-worker:ci .
       - name: Smoke worker image
         run: |
-          docker run -d --rm --name evercraft-browser-smoke             -e EVERCRAFT_BROWSER_WORKER_TOKEN=ci-public-read-only-token             -e EVERCRAFT_AUTH_BROWSER_OPERATOR_TOKEN=ci-auth-handoff-operator-token             -p 127.0.0.1:18787:8787             evercraft/browser-worker:ci
+          docker run -d --name evercraft-browser-smoke             -e EVERCRAFT_BROWSER_WORKER_TOKEN=ci-public-read-only-token             -e EVERCRAFT_AUTH_BROWSER_OPERATOR_TOKEN=ci-auth-handoff-operator-token             -p 127.0.0.1:18787:8787             evercraft/browser-worker:ci
           for i in {1..30}; do
             if curl -fsS http://127.0.0.1:18787/healthz > /tmp/evercraft-browser-health.json; then break; fi
             sleep 1
           done
+          if ! test -s /tmp/evercraft-browser-health.json; then
+            echo "Browser worker failed to produce a health receipt"
+            docker logs evercraft-browser-smoke || true
+            exit 1
+          fi
           node -e "const h=require('/tmp/evercraft-browser-health.json'); if(!h.ok||h.service!=='evercraft-owned-browser-worker'||h.authenticated_handoff_available!==true) process.exit(1)"
           curl -fsS http://127.0.0.1:18787/auth-browser/health | tee /tmp/evercraft-auth-browser-health.json
-          node -e "const h=require('/tmp/evercraft-auth-browser-health.json'); if(!h.ok||h.mode!=='human_authorized_ephemeral'||h.secret_text_returned!==false) process.exit(1)"
+          node -e "const h=require('/tmp/evercraft-auth-browser-health.json'); if(!h.ok||h.mode!=='human_authorized_ephemeral'||h.secret_text_returned!==false||h.delegated_draft_automation!==true||h.delegated_final_submission_authority!==false||h.delegated_payment_authority!==false||h.delegated_new_terms_authority!==false) process.exit(1)"
           curl -fsS -X POST http://127.0.0.1:18787/v1/auth-browser/sessions             -H 'authorization: Bearer ci-auth-handoff-operator-token'             -H 'content-type: application/json'             --data '{"url":"https://example.com/","viewport":{"width":1024,"height":768}}'             > /tmp/evercraft-auth-session.json
           node <<'NODE'
           const fs = require('node:fs');
@@ -81,6 +90,24 @@ jobs:
           NODE
           curl -fsS -X POST "http://127.0.0.1:18787/v1/auth-browser/sessions/$SESSION_ID/action"             -H "x-evercraft-browser-claim: $CLAIM"             -H 'content-type: application/json'             --data '{"type":"reload"}'             > /tmp/evercraft-auth-action.json
           node -e "const a=require('/tmp/evercraft-auth-action.json'); if(!a.ok||a.type!=='reload'||a.action_count!==1) process.exit(1)"
+          curl -fsS -X POST "http://127.0.0.1:18787/v1/auth-browser/sessions/$SESSION_ID/delegate"             -H "x-evercraft-browser-claim: $CLAIM"             -H 'content-type: application/json'             --data '{"scopes":["read","same_origin_navigation","draft_form_fill","draft_save"]}'             > /tmp/evercraft-browser-delegation.json
+          node <<'NODE'
+          const d=require('/tmp/evercraft-browser-delegation.json');
+          if(!d.ok||d.delegated!==true||d.mode!=='competition_draft_automation') process.exit(1);
+          if(d.final_submission_authority!==false||d.payment_authority!==false||d.accepts_new_terms!==false||d.secret_entry_authority!==false) process.exit(1);
+          NODE
+          curl -fsS "http://127.0.0.1:18787/v1/auth-browser/delegated/$SESSION_ID/snapshot"             -H 'authorization: Bearer ci-auth-handoff-operator-token'             > /tmp/evercraft-delegated-snapshot.json
+          node -e "const s=require('/tmp/evercraft-delegated-snapshot.json'); if(!s.ok||s.mode!=='competition_draft_automation'||!s.screenshot_sha256||s.delegation.final_submission_authority!==false) process.exit(1)"
+          curl -fsS -X POST "http://127.0.0.1:18787/v1/auth-browser/delegated/$SESSION_ID/action"             -H 'authorization: Bearer ci-auth-handoff-operator-token'             -H 'content-type: application/json'             --data '{"type":"wait","ms":10}'             > /tmp/evercraft-delegated-action.json
+          node -e "const a=require('/tmp/evercraft-delegated-action.json'); if(!a.ok||a.type!=='wait'||a.final_submission_authority!==false||a.payment_authority!==false||a.accepts_new_terms!==false) process.exit(1)"
+          HTTP_CODE="$(curl -sS -o /tmp/evercraft-delegated-cross-origin.json -w '%{http_code}' -X POST "http://127.0.0.1:18787/v1/auth-browser/delegated/$SESSION_ID/action"             -H 'authorization: Bearer ci-auth-handoff-operator-token'             -H 'content-type: application/json'             --data '{"type":"navigate","url":"https://example.org/"}')"
+          test "$HTTP_CODE" = "400"
+          node -e "const a=require('/tmp/evercraft-delegated-cross-origin.json'); if(a.error!=='delegated_cross_origin_navigation_blocked') process.exit(1)"
+          curl -fsS -X DELETE "http://127.0.0.1:18787/v1/auth-browser/sessions/$SESSION_ID/delegate"             -H "x-evercraft-browser-claim: $CLAIM"             > /tmp/evercraft-browser-delegation-revoke.json
+          node -e "const r=require('/tmp/evercraft-browser-delegation-revoke.json'); if(!r.ok||r.delegated!==false) process.exit(1)"
+          HTTP_CODE="$(curl -sS -o /tmp/evercraft-delegated-after-revoke.json -w '%{http_code}' "http://127.0.0.1:18787/v1/auth-browser/delegated/$SESSION_ID/snapshot"             -H 'authorization: Bearer ci-auth-handoff-operator-token')"
+          test "$HTTP_CODE" = "400"
+          node -e "const a=require('/tmp/evercraft-delegated-after-revoke.json'); if(a.error!=='authenticated_browser_delegation_required') process.exit(1)"
           curl -fsS -X DELETE "http://127.0.0.1:18787/v1/auth-browser/sessions/$SESSION_ID"             -H "x-evercraft-browser-claim: $CLAIM"             > /tmp/evercraft-auth-close.json
           node -e "const c=require('/tmp/evercraft-auth-close.json'); if(!c.ok||c.closed!==true) process.exit(1)"
       - name: Stop smoke worker

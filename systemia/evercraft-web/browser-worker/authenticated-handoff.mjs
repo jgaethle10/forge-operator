@@ -1,4 +1,11 @@
 import crypto from 'node:crypto';
+import {
+  assertDelegatedElementAllowed,
+  assertDelegatedNavigationAllowed,
+  delegationReceipt,
+  normalizeDelegatedBrowserAction,
+  normalizeDelegationPolicy,
+} from './delegated-session-policy.mjs';
 
 const DEFAULT_TTL_MS = 15 * 60_000;
 const MAX_TTL_MS = 60 * 60_000;
@@ -93,7 +100,7 @@ export function renderHumanBrowserHandoffPage({ sessionId }) {
     '</section>',
     '<aside class="rail">',
     '<section class="card trustcard"><div class="eyebrow">Trust boundary</div><div class="trust"><div class="trustrow"><div class="trusticon">✓</div><div><h2>Evercraft-owned session</h2><p>Your login stays inside this isolated browser context. Typed text is never returned in receipts.</p></div></div><div class="trustrow"><div class="trusticon">⏱</div><div><h2>Ephemeral by design</h2><p>No persistent browser profile in this version. Closing the room destroys the session context.</p></div></div></div></section>',
-    '<section class="card"><div class="eyebrow">Session</div><div class="metric"><span>Connection</span><strong id="connection">Connecting</strong></div><div class="metric"><span>Site</span><strong id="site">—</strong></div><div class="metric"><span>Transport</span><strong id="transport">—</strong></div><div class="metric"><span>Expires</span><strong id="expires">—</strong></div><div class="metric"><span>Actions</span><strong id="actions">0</strong></div></section>',
+    '<section class="card"><div class="eyebrow">Session</div><div class="metric"><span>Connection</span><strong id="connection">Connecting</strong></div><div class="metric"><span>Site</span><strong id="site">—</strong></div><div class="metric"><span>Transport</span><strong id="transport">—</strong></div><div class="metric"><span>Expires</span><strong id="expires">—</strong></div><div class="metric"><span>Actions</span><strong id="actions">0</strong></div><div class="metric"><span>Delegation</span><strong id="delegation">Human only</strong></div><div style="display:flex;gap:7px;margin-top:10px"><button class="primary" id="delegate" style="flex:1">Hand back to Systemia</button><button class="key" id="revoke">Revoke</button></div><p style="margin-top:9px">Delegation is draft-only: no new terms, final submission, payments, MFA/CAPTCHA, security changes, or secret entry.</p></section>',
     '</aside>',
     '</main>',
     '<div class="dock"><div class="dockin">',
@@ -110,7 +117,7 @@ export function renderHumanBrowserHandoffPage({ sessionId }) {
     'const claim=hash.get("claim")||"";',
     'history.replaceState(null,"",location.pathname);',
     'const $=function(id){return document.getElementById(id)};',
-    'const shot=$("shot"),screen=$("screen"),status=$("status"),urlInput=$("url"),textInput=$("text"),connection=$("connection"),site=$("site"),transport=$("transport"),expires=$("expires"),actions=$("actions"),state=$("state"),toast=$("toast");',
+    'const shot=$("shot"),screen=$("screen"),status=$("status"),urlInput=$("url"),textInput=$("text"),connection=$("connection"),site=$("site"),transport=$("transport"),expires=$("expires"),actions=$("actions"),delegation=$("delegation"),state=$("state"),toast=$("toast");',
     'let busy=false,closed=false,actionCount=0,privateTyping=true,lastHash="",refreshTimer=null;',
     'function announce(message){toast.textContent=message;toast.classList.add("show");setTimeout(function(){toast.classList.remove("show")},1500)}',
     'function setBusy(next,label){busy=next;screen.classList.toggle("loading",next);document.querySelectorAll("button").forEach(function(button){button.disabled=next&&button.id!=="close"&&button.id!=="close2"});if(label)status.textContent=label}',
@@ -127,6 +134,8 @@ export function renderHumanBrowserHandoffPage({ sessionId }) {
     '$("scrollup").onclick=function(){act({type:"scroll",y:-700},"Scrolling…")};$("scrolldown").onclick=function(){act({type:"scroll",y:700},"Scrolling…")};',
     '$("back").onclick=function(){act({type:"go_back"},"Going back…")};$("forward").onclick=function(){act({type:"go_forward"},"Going forward…")};$("reload").onclick=function(){act({type:"reload"},"Reloading…")};',
     '$("go").onclick=function(){act({type:"navigate",url:urlInput.value},"Navigating…")};urlInput.addEventListener("keydown",function(event){if(event.key==="Enter"){$("go").click()}});',
+    '$("delegate").onclick=async function(){if(closed||busy)return;try{setBusy(true,"Delegating draft work to Systemia…");const result=await api("/v1/auth-browser/sessions/"+encodeURIComponent(sessionId)+"/delegate",{method:"POST",headers:{"content-type":"application/json"},body:JSON.stringify({scopes:["read","same_origin_navigation","draft_form_fill","draft_save"]})});delegation.textContent="Systemia draft-only";delegation.style.color="var(--good)";status.textContent="Safe draft automation is active. You can close this page without ending the browser session.";announce("Draft automation delegated")}catch(error){status.textContent=error.message;announce("Delegation failed")}finally{setBusy(false)}};',
+    '$("revoke").onclick=async function(){if(closed||busy)return;try{setBusy(true,"Revoking delegation…");await api("/v1/auth-browser/sessions/"+encodeURIComponent(sessionId)+"/delegate",{method:"DELETE"});delegation.textContent="Human only";delegation.style.color="";status.textContent="Delegation revoked. Human control only.";announce("Delegation revoked")}catch(error){status.textContent=error.message;announce("Revoke failed")}finally{setBusy(false)}};',
     '$("refresh").onclick=function(){refresh(false)};',
     '$("fullscreen").onclick=async function(){try{if(!document.fullscreenElement)await screen.requestFullscreen();else await document.exitFullscreen()}catch{} };',
     'async function endSession(){if(closed)return;try{setBusy(true,"Closing session…");await api("/v1/auth-browser/sessions/"+encodeURIComponent(sessionId),{method:"DELETE"});closed=true;connection.textContent="Closed";connection.style.color="var(--muted)";state.textContent="Session closed";status.textContent="The isolated browser context has been destroyed.";shot.removeAttribute("src");document.querySelectorAll("button,input").forEach(function(node){node.disabled=true})}catch(error){status.textContent="Close failed: "+error.message}finally{screen.classList.remove("loading")}}',
@@ -192,6 +201,9 @@ export class AuthenticatedBrowserSessionManager {
       expiresAt: Date.now() + this.ttlMs,
       viewport: normalizedViewport,
       actionCount: 0,
+      delegatedActionCount: 0,
+      delegation: null,
+      delegatedMutationMode: null,
     };
 
     context.on('page', (page) => {
@@ -203,6 +215,31 @@ export class AuthenticatedBrowserSessionManager {
     await context.route('**/*', async (route) => {
       try {
         await this.assertBrowserRequestUrl(route.request().url());
+        if (session.delegation) {
+          const request = route.request();
+          const method = request.method().toUpperCase();
+          const isMainNavigation = request.isNavigationRequest() && session.page && request.frame() === session.page.mainFrame();
+          if (isMainNavigation) {
+            const targetOrigin = new URL(request.url()).origin;
+            if (!session.delegation.policy.allowed_origins.includes(targetOrigin)) {
+              await route.abort('blockedbyclient');
+              return;
+            }
+          }
+          if (!['GET','HEAD','OPTIONS'].includes(method)) {
+            let requestOrigin = null;
+            try { requestOrigin = new URL(request.url()).origin; } catch {}
+            const draftMutation =
+              session.delegatedMutationMode === 'draft_save' &&
+              ['POST','PUT','PATCH'].includes(method) &&
+              requestOrigin !== null &&
+              session.delegation.policy.allowed_origins.includes(requestOrigin);
+            if (!draftMutation) {
+              await route.abort('blockedbyclient');
+              return;
+            }
+          }
+        }
         await route.continue();
       } catch {
         await route.abort('blockedbyclient');
@@ -227,6 +264,7 @@ export class AuthenticatedBrowserSessionManager {
       mode: 'human_authorized_ephemeral',
       persisted_profile: false,
       secret_text_returned: false,
+      draft_delegation_available: true,
     };
   }
 
@@ -281,6 +319,139 @@ export class AuthenticatedBrowserSessionManager {
       action_count: session.actionCount,
       expires_at: new Date(session.expiresAt).toISOString(),
     };
+  }
+
+  async delegateSession(id, claimToken, rawPolicy = {}) {
+    const session = this.requireSession(id, claimToken);
+    const policy = normalizeDelegationPolicy(rawPolicy, {
+      currentUrl: session.page.url(),
+      sessionExpiresAt: new Date(session.expiresAt).toISOString(),
+    });
+    session.delegation = {
+      policy,
+      grantedAt: Date.now(),
+    };
+    session.delegatedActionCount = 0;
+    session.delegatedMutationMode = null;
+    return {
+      ok: true,
+      delegated: true,
+      ...delegationReceipt({ sessionId: session.id, policy }),
+    };
+  }
+
+  async revokeDelegation(id, claimToken) {
+    const session = this.requireSession(id, claimToken);
+    session.delegation = null;
+    session.delegatedMutationMode = null;
+    return {
+      ok: true,
+      delegated: false,
+      session_id: session.id,
+      revoked_at: new Date().toISOString(),
+    };
+  }
+
+  requireDelegatedSession(id) {
+    const session = this.sessions.get(String(id || ''));
+    if (!session) throw new Error('authenticated_browser_session_not_found');
+    if (session.expiresAt <= Date.now()) throw new Error('authenticated_browser_session_expired');
+    if (!session.delegation?.policy) throw new Error('authenticated_browser_delegation_required');
+    if (Date.parse(session.delegation.policy.expires_at) <= Date.now()) {
+      session.delegation = null;
+      throw new Error('authenticated_browser_delegation_expired');
+    }
+    return session;
+  }
+
+  async delegatedSnapshot(id) {
+    const session = this.requireDelegatedSession(id);
+    const page = session.page;
+    const png = await page.screenshot({ type: 'png', fullPage: false, animations: 'disabled', caret: 'hide' });
+    return {
+      ok: true,
+      session_id: session.id,
+      title: String(await page.title()).slice(0, 500),
+      url: this.redactUrl(page.url()),
+      origin: (() => { try { return new URL(page.url()).origin; } catch { return null; } })(),
+      viewport: session.viewport,
+      screenshot_base64: png.toString('base64'),
+      screenshot_sha256: crypto.createHash('sha256').update(png).digest('hex'),
+      delegation: delegationReceipt({ sessionId: session.id, policy: session.delegation.policy }),
+      delegated_action_count: session.delegatedActionCount,
+      mode: 'competition_draft_automation',
+    };
+  }
+
+  async delegatedAct(id, rawAction) {
+    const session = this.requireDelegatedSession(id);
+    if (session.delegatedActionCount >= 250) throw new Error('authenticated_browser_delegated_action_limit');
+    const action = normalizeDelegatedBrowserAction(rawAction);
+    const page = session.page;
+    const policy = session.delegation.policy;
+
+    if (action.type === 'navigate') {
+      assertDelegatedNavigationAllowed(action, policy, page.url());
+      const target = await this.assertPublicHttpUrl(action.url);
+      await page.goto(target.toString(), { waitUntil: 'domcontentloaded', timeout: 20000 });
+    } else if (action.type === 'wait') {
+      await page.waitForTimeout(action.ms);
+    } else if (action.type === 'scroll') {
+      await page.mouse.wheel(action.x, action.y);
+    } else if (action.type === 'click' || action.type === 'fill') {
+      const locator = page.locator(action.selector).first();
+      if (await locator.count() < 1) throw new Error('delegated_selector_not_found');
+      const meta = await locator.evaluate((node) => ({
+        tag: String(node?.tagName || '').toLowerCase(),
+        type: String(node?.getAttribute?.('type') || ''),
+        text: String(node?.textContent || '').replace(/\s+/g, ' ').trim().slice(0, 500),
+        name: String(node?.getAttribute?.('name') || ''),
+        id: String(node?.id || ''),
+        aria_label: String(node?.getAttribute?.('aria-label') || ''),
+        title: String(node?.getAttribute?.('title') || ''),
+        placeholder: String(node?.getAttribute?.('placeholder') || ''),
+        autocomplete: String(node?.getAttribute?.('autocomplete') || ''),
+        role: String(node?.getAttribute?.('role') || ''),
+        href: String(node?.href || ''),
+        form_action: String(node?.formAction || node?.form?.action || ''),
+      }));
+      assertDelegatedElementAllowed(action, meta);
+      for (const candidate of [meta.href, meta.form_action]) {
+        if (!candidate) continue;
+        assertDelegatedNavigationAllowed({ type: 'navigate', url: candidate }, policy, page.url());
+      }
+
+      if (action.type === 'fill') {
+        if (!policy.scopes.includes('draft_form_fill')) throw new Error('delegated_fill_scope_missing');
+        await locator.fill(action.value);
+      } else {
+        const requiredScope = action.intent === 'draft_save' ? 'draft_save' : 'read';
+        if (!policy.scopes.includes(requiredScope)) throw new Error('delegated_click_scope_missing');
+        session.delegatedMutationMode = action.intent === 'draft_save' ? 'draft_save' : null;
+        try {
+          await locator.click({ timeout: 5000 });
+          await page.waitForLoadState('domcontentloaded', { timeout: 1500 }).catch(() => {});
+        } finally {
+          session.delegatedMutationMode = null;
+        }
+      }
+    }
+
+    session.delegatedActionCount += 1;
+    const receipt = {
+      ok: true,
+      type: action.type,
+      intent: action.intent || null,
+      selector_sha256: action.selector ? sha256(action.selector) : null,
+      char_count: action.type === 'fill' ? action.value.length : null,
+      secret_text_recorded: false,
+      delegated_action_count: session.delegatedActionCount,
+      expires_at: policy.expires_at,
+      final_submission_authority: false,
+      payment_authority: false,
+      accepts_new_terms: false,
+    };
+    return receipt;
   }
 
   async closeSession(id, claimToken = null) {
