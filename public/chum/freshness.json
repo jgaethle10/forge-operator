@@ -2,7 +2,7 @@
   "schema": "evercraft.chum.crawl-pressure.v1",
   "provider": "Evercraft LLC",
   "coordinator": "CHUM",
-  "updated_at": "2026-10-05T16:57:34.520Z",
+  "updated_at": "2026-10-05T17:07:15.437Z",
   "purpose": "Content-hash-backed freshness signals for public Evercraft discovery surfaces. A freshness signal requests attention; it does not prove indexing, ranking, recommendation, citation or provider pickup.",
   "indexnow": {
     "supported": true,
@@ -11,35 +11,171 @@
   },
   "latest_change_batch": [
     {
+      "path": "/chum/products/opportunity-fabric/",
+      "last_changed": "2026-10-05T17:07:15.437Z",
+      "priority": 94
+    },
+    {
+      "path": "/chum/products/opportunity-fabric/ai-conformance.json",
+      "last_changed": "2026-10-05T17:07:15.437Z",
+      "priority": 94
+    },
+    {
+      "path": "/chum/products/opportunity-fabric/ai-discovery.json",
+      "last_changed": "2026-10-05T17:07:15.437Z",
+      "priority": 94
+    },
+    {
+      "path": "/chum/products/opportunity-fabric/llms.txt",
+      "last_changed": "2026-10-05T17:07:15.437Z",
+      "priority": 94
+    },
+    {
+      "path": "/.well-known/evercraft-products.json",
+      "last_changed": "2026-10-05T17:07:15.437Z",
+      "priority": 88
+    },
+    {
+      "path": "/llms-full.txt",
+      "last_changed": "2026-10-05T17:07:15.437Z",
+      "priority": 86
+    },
+    {
+      "path": "/.well-known/evercraft-agent-directory.json",
+      "last_changed": "2026-10-05T17:07:15.437Z",
+      "priority": 84
+    },
+    {
+      "path": "/.well-known/evercraft-syndication.json",
+      "last_changed": "2026-10-05T17:07:15.437Z",
+      "priority": 84
+    },
+    {
       "path": "/chum/hot/index.json",
-      "last_changed": "2026-10-05T16:57:34.520Z",
+      "last_changed": "2026-10-05T17:07:15.437Z",
       "priority": 80
+    },
+    {
+      "path": "/chum/proof/forensiscope.json",
+      "last_changed": "2026-10-05T17:07:15.437Z",
+      "priority": 80
+    },
+    {
+      "path": "/chum/proof/index.json",
+      "last_changed": "2026-10-05T17:07:15.437Z",
+      "priority": 80
+    },
+    {
+      "path": "/chum/proof/rivet.json",
+      "last_changed": "2026-10-05T17:07:15.437Z",
+      "priority": 80
+    },
+    {
+      "path": "/chum/syndication/index.json",
+      "last_changed": "2026-10-05T17:07:15.437Z",
+      "priority": 80
+    },
+    {
+      "path": "/feed.json",
+      "last_changed": "2026-10-05T17:07:15.437Z",
+      "priority": 60
+    },
+    {
+      "path": "/feed.xml",
+      "last_changed": "2026-10-05T17:07:15.437Z",
+      "priority": 60
     }
   ],
   "recent_surfaces": [
     {
+      "path": "/chum/products/opportunity-fabric/",
+      "url": "/chum/products/opportunity-fabric/",
+      "last_changed": "2026-10-05T17:07:15.437Z",
+      "priority": 94
+    },
+    {
+      "path": "/chum/products/opportunity-fabric/ai-conformance.json",
+      "url": "/chum/products/opportunity-fabric/ai-conformance.json",
+      "last_changed": "2026-10-05T17:07:15.437Z",
+      "priority": 94
+    },
+    {
+      "path": "/chum/products/opportunity-fabric/ai-discovery.json",
+      "url": "/chum/products/opportunity-fabric/ai-discovery.json",
+      "last_changed": "2026-10-05T17:07:15.437Z",
+      "priority": 94
+    },
+    {
+      "path": "/chum/products/opportunity-fabric/llms.txt",
+      "url": "/chum/products/opportunity-fabric/llms.txt",
+      "last_changed": "2026-10-05T17:07:15.437Z",
+      "priority": 94
+    },
+    {
+      "path": "/.well-known/evercraft-products.json",
+      "url": "/.well-known/evercraft-products.json",
+      "last_changed": "2026-10-05T17:07:15.437Z",
+      "priority": 88
+    },
+    {
+      "path": "/llms-full.txt",
+      "url": "/llms-full.txt",
+      "last_changed": "2026-10-05T17:07:15.437Z",
+      "priority": 86
+    },
+    {
+      "path": "/.well-known/evercraft-agent-directory.json",
+      "url": "/.well-known/evercraft-agent-directory.json",
+      "last_changed": "2026-10-05T17:07:15.437Z",
+      "priority": 84
+    },
+    {
+      "path": "/.well-known/evercraft-syndication.json",
+      "url": "/.well-known/evercraft-syndication.json",
+      "last_changed": "2026-10-05T17:07:15.437Z",
+      "priority": 84
+    },
+    {
       "path": "/chum/hot/index.json",
       "url": "/chum/hot/index.json",
-      "last_changed": "2026-10-05T16:57:34.520Z",
+      "last_changed": "2026-10-05T17:07:15.437Z",
       "priority": 80
     },
     {
       "path": "/chum/proof/forensiscope.json",
       "url": "/chum/proof/forensiscope.json",
-      "last_changed": "2026-10-05T15:22:53.915Z",
+      "last_changed": "2026-10-05T17:07:15.437Z",
       "priority": 80
     },
     {
       "path": "/chum/proof/index.json",
       "url": "/chum/proof/index.json",
-      "last_changed": "2026-10-05T15:22:53.915Z",
+      "last_changed": "2026-10-05T17:07:15.437Z",
       "priority": 80
     },
     {
       "path": "/chum/proof/rivet.json",
       "url": "/chum/proof/rivet.json",
-      "last_changed": "2026-10-05T15:22:53.915Z",
+      "last_changed": "2026-10-05T17:07:15.437Z",
       "priority": 80
+    },
+    {
+      "path": "/chum/syndication/index.json",
+      "url": "/chum/syndication/index.json",
+      "last_changed": "2026-10-05T17:07:15.437Z",
+      "priority": 80
+    },
+    {
+      "path": "/feed.json",
+      "url": "/feed.json",
+      "last_changed": "2026-10-05T17:07:15.437Z",
+      "priority": 60
+    },
+    {
+      "path": "/feed.xml",
+      "url": "/feed.xml",
+      "last_changed": "2026-10-05T17:07:15.437Z",
+      "priority": 60
     },
     {
       "path": "/chum/hot/",
@@ -156,46 +292,10 @@
       "priority": 94
     },
     {
-      "path": "/llms-full.txt",
-      "url": "/llms-full.txt",
-      "last_changed": "2026-10-05T08:44:34.236Z",
-      "priority": 86
-    },
-    {
-      "path": "/.well-known/evercraft-agent-directory.json",
-      "url": "/.well-known/evercraft-agent-directory.json",
-      "last_changed": "2026-10-05T08:44:34.236Z",
-      "priority": 84
-    },
-    {
-      "path": "/.well-known/evercraft-syndication.json",
-      "url": "/.well-known/evercraft-syndication.json",
-      "last_changed": "2026-10-05T08:44:34.236Z",
-      "priority": 84
-    },
-    {
       "path": "/chum/index.json",
       "url": "/chum/index.json",
       "last_changed": "2026-10-05T08:44:34.236Z",
       "priority": 80
-    },
-    {
-      "path": "/chum/syndication/index.json",
-      "url": "/chum/syndication/index.json",
-      "last_changed": "2026-10-05T08:44:34.236Z",
-      "priority": 80
-    },
-    {
-      "path": "/feed.json",
-      "url": "/feed.json",
-      "last_changed": "2026-10-05T08:44:34.236Z",
-      "priority": 60
-    },
-    {
-      "path": "/feed.xml",
-      "url": "/feed.xml",
-      "last_changed": "2026-10-05T08:44:34.236Z",
-      "priority": 60
     },
     {
       "path": "/schema.jsonld",
@@ -220,12 +320,6 @@
       "url": "/chum/strike/index.json",
       "last_changed": "2026-10-05T08:22:37.261Z",
       "priority": 80
-    },
-    {
-      "path": "/.well-known/evercraft-products.json",
-      "url": "/.well-known/evercraft-products.json",
-      "last_changed": "2026-10-04T17:44:43.006Z",
-      "priority": 88
     },
     {
       "path": "/.well-known/evercraft-agent-commerce.json",
@@ -1490,30 +1584,6 @@
     {
       "path": "/chum/answers/doors/ibm-i-upgrade-proof-240178e2de.json",
       "url": "/chum/answers/doors/ibm-i-upgrade-proof-240178e2de.json",
-      "last_changed": "2026-10-02T17:01:08.152Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/identify-a-broken-part-from-a-label-or-serial-plate-ff44c80e2a.json",
-      "url": "/chum/answers/doors/identify-a-broken-part-from-a-label-or-serial-plate-ff44c80e2a.json",
-      "last_changed": "2026-10-02T17:01:08.152Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/identify-a-component-from-a-diagram-invoice-measurement-or-broken-fragment-8e283e1da2.json",
-      "url": "/chum/answers/doors/identify-a-component-from-a-diagram-invoice-measurement-or-broken-fragment-8e283e1da2.json",
-      "last_changed": "2026-10-02T17:01:08.152Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/identify-a-hard-to-source-part-from-incomplete-clues-cff5791f39.json",
-      "url": "/chum/answers/doors/identify-a-hard-to-source-part-from-incomplete-clues-cff5791f39.json",
-      "last_changed": "2026-10-02T17:01:08.152Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/identify-a-part-from-a-photo-or-markings-0ff974a58c.json",
-      "url": "/chum/answers/doors/identify-a-part-from-a-photo-or-markings-0ff974a58c.json",
       "last_changed": "2026-10-02T17:01:08.152Z",
       "priority": 100
     }
