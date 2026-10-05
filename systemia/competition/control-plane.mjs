@@ -92,6 +92,7 @@ export function classifyCompetitionOpportunity(opportunity, {
 
   if (!rulesVerified(rules)) pushUnique(teamBlockers, "rules_not_verified");
   if (rules.eligible === false) pushUnique(teamBlockers, "ineligible");
+  else if (rules.eligible !== true) pushUnique(teamBlockers, "eligibility_not_verified");
 
   if (bool(rules.new_terms_required) && !termsAccepted(auth.terms_state)) {
     pushUnique(humanGates, "accept_terms");
