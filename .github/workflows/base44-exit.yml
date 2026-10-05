@@ -82,6 +82,8 @@ jobs:
         run: node scripts/validate-owned-execution-ratchet.mjs
       - name: Enforce zero Base44 active hot paths
         run: node scripts/validate-no-base44-hotpath.mjs
+      - name: Prove owned-only CHUM IndexNow routing
+        run: node --test systemia/chum/indexnow-owned-routing.test.mjs
       - name: Prove owned server routing cutover
         run: node --test tests/server-owned-routing-cutover.test.mjs
       - name: Prove KAIDANCE collider
