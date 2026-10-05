@@ -58,7 +58,8 @@
       "optional_when_unconfigured": true,
       "optional_env_args": {
         "--inbox": "SYSTEMIA_COMPETITION_OPPORTUNITY_INBOX",
-        "--out": "SYSTEMIA_COMPETITION_CONTROL_PLANE_RECEIPT"
+        "--out": "SYSTEMIA_COMPETITION_CONTROL_PLANE_RECEIPT",
+        "--authorization-ledger": "SYSTEMIA_COMPETITION_AUTHORIZATION_LEDGER"
       }
     },
     {
