@@ -1,27 +1,8 @@
 import fs from 'node:fs';
 import path from 'node:path';
+import { ownedHttpsEndpoint } from '../chum/owned-commerce-endpoint.mjs';
 
-function resolveOwnedEndpoint(value) {
-  const raw = String(value || '').trim();
-  if (!raw) return { url: '', error: '' };
-  try {
-    const parsed = new URL(raw);
-    const host = parsed.hostname.toLowerCase();
-    if (parsed.protocol !== 'https:') return { url: '', error: 'Network MCP endpoint must use HTTPS.' };
-    if (host === 'base44.app' || host.endsWith('.base44.app')) {
-      return { url: '', error: 'Network MCP endpoint points to retired Base44 infrastructure.' };
-    }
-    return { url: parsed.toString(), error: '' };
-  } catch {
-    return { url: '', error: 'Network MCP endpoint is not a valid URL.' };
-  }
-}
-
-const endpointConfig = resolveOwnedEndpoint(
-  process.env.EVERCRAFT_MACHINE_COMMERCE_MCP_URL ||
-  process.env.EVERCRAFT_MACHINE_COMMERCE_MCP
-);
-const ENDPOINT = endpointConfig.url;
+const ENDPOINT = ownedHttpsEndpoint(process.env.EVERCRAFT_NETWORK_MCP_URL || process.env.EVERCRAFT_MACHINE_COMMERCE_MCP || '',{name:'network_mcp'});
 
 const REQUIRED_TOOLS = [
   'get_network_capabilities',
@@ -99,45 +80,6 @@ function summarizeCall(messages, id) {
 }
 
 const checkedAt = new Date().toISOString();
-const outDir = path.join('artifacts', 'network');
-fs.mkdirSync(outDir, { recursive: true });
-
-if (endpointConfig.error) {
-  const receipt = {
-    schema: 'evercraft.network.public-mcp-canary.v2',
-    checked_at: checkedAt,
-    status: 'failed',
-    route_state: 'rejected_non_owned_route',
-    endpoint: null,
-    base44_used: false,
-    error: endpointConfig.error,
-    required_tools: REQUIRED_TOOLS,
-    live_read_only_calls: [],
-  };
-  fs.writeFileSync(path.join(outDir, 'public-mcp-canary-latest.json'), JSON.stringify(receipt, null, 2) + '\n');
-  console.error(JSON.stringify(receipt, null, 2));
-  process.exit(1);
-}
-
-if (!ENDPOINT) {
-  const receipt = {
-    schema: 'evercraft.network.public-mcp-canary.v2',
-    checked_at: checkedAt,
-    status: 'held',
-    route_state: 'held_no_owned_public_mcp',
-    endpoint: null,
-    base44_used: false,
-    required_tools: REQUIRED_TOOLS,
-    live_read_only_calls: [],
-    truth_boundary: {
-      verified: [],
-      not_verified: ['public MCP initialize', 'tools/list', 'read-only Network calls'],
-    },
-  };
-  fs.writeFileSync(path.join(outDir, 'public-mcp-canary-latest.json'), JSON.stringify(receipt, null, 2) + '\n');
-  console.log(JSON.stringify(receipt, null, 2));
-  process.exit(0);
-}
 
 const initialize = await post({
   jsonrpc: '2.0',
@@ -241,11 +183,8 @@ for (const safeCall of SAFE_CALLS) {
 const capabilityCall = liveReadOnlyCalls.find((row) => row.tool === 'get_network_capabilities');
 
 const receipt = {
-  schema: 'evercraft.network.public-mcp-canary.v2',
+  schema: 'evercraft.network.public-mcp-canary.v1',
   checked_at: checkedAt,
-  status: 'pass',
-  route_state: 'owned_public_mcp_probed',
-  base44_used: false,
   endpoint: ENDPOINT,
   initialize: {
     http_status: initialize.status,
@@ -283,6 +222,8 @@ const receipt = {
   }
 };
 
+const outDir = path.join('artifacts', 'network');
+fs.mkdirSync(outDir, { recursive: true });
 fs.writeFileSync(path.join(outDir, 'public-mcp-canary-latest.json'), JSON.stringify(receipt, null, 2) + '\n');
 
 console.log(JSON.stringify({
