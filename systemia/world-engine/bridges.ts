@@ -150,6 +150,18 @@ export interface WorldRenderFrame {
     assetRefs:string[];
     tags:string[];
     properties:Record<string,unknown>;
+    animation:null|{
+      stateId:string;
+      stateTimeSec:number;
+      pose:Array<{
+        boneId:string;
+        translation:{x:number;y:number;z:number};
+        rotationDeg:{x:number;y:number;z:number};
+        scale:{x:number;y:number;z:number};
+      }>;
+      transition:unknown;
+      events:unknown[];
+    };
   }>;
 }
 
@@ -170,7 +182,14 @@ export function compileRenderFrame(
         transform:entity.transform,
         assetRefs:entity.assetRefs || [],
         tags:entity.tags || [],
-        properties:entity.properties || {}
+        properties:entity.properties || {},
+        animation:entity.animationRuntime?{
+          stateId:entity.animationRuntime.stateId,
+          stateTimeSec:entity.animationRuntime.stateTimeSec,
+          pose:entity.animationRuntime.pose || [],
+          transition:entity.animationRuntime.transition || null,
+          events:entity.animationRuntime.events || []
+        }:null
       }))
   };
 }
