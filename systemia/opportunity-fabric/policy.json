@@ -123,7 +123,9 @@
     "work_package_acceptance_grants_ip_rights": false,
     "protected_material_may_be_flagged_required_without_disclosure": true,
     "protected_material_disclosed_by_team_flow": false,
-    "protected_file_delivery_enabled": false
+    "protected_file_delivery_enabled": false,
+    "assignee_can_self_complete": false,
+    "leader_qa_required_for_completion": true
   },
   "execution_planning": {
     "enabled_in_verified_private_runtime": true,
@@ -215,7 +217,7 @@
       "quote": "participant_supplied_quote",
       "lead_time": "participant_supplied",
       "availability": "participant_supplied",
-      "history": "observed_fabric_history_or_neutral_missing",
+      "history": "leader_reviewed_execution_outcomes_or_neutral_missing",
       "geography": "profile_metadata_or_insufficient_metadata"
     },
     "missing_history_is_neutral": true,
@@ -235,6 +237,44 @@
       "deterministic_comparison_id": true,
       "identical_evidence_idempotent_replay": true,
       "fabric_event_receipt_link_required": true
+    },
+    "history_model": {
+      "source_entity": "WorkPackageOutcome",
+      "on_time_weight": 0.45,
+      "qa_attempt_weight": 0.35,
+      "blockage_weight": 0.2,
+      "missing_history_score": 50,
+      "self_reported_profile_history_used": false
     }
+  },
+  "execution_outcomes": {
+    "enabled_in_verified_private_runtime": true,
+    "entity": "WorkPackageOutcome",
+    "assignee_submits_state": "Ready for QA",
+    "assignee_self_completion": false,
+    "leader_decisions": [
+      "Accepted",
+      "Rework required"
+    ],
+    "rework_note_required": true,
+    "final_outcome_created_only_on_leader_acceptance": true,
+    "outcome_written_before_complete_state": true,
+    "partial_write_recovery_from_outcome_ledger": true,
+    "timing_basis_priority": [
+      "Quoted lead time",
+      "Package due date",
+      "Not measurable"
+    ],
+    "captured_observed_fields": [
+      "cycle_days",
+      "on_time_state",
+      "timing_basis",
+      "blocked_event_count",
+      "qa_attempt_count",
+      "qa_accepted"
+    ],
+    "payment_obligation_created": false,
+    "grants_rights": false,
+    "protected_material_disclosed": false
   }
 }
