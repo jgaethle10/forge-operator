@@ -912,7 +912,7 @@
       "provider_behavior_state": "not_run",
       "conformance_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/opportunity-fabric/ai-conformance.json",
       "chum_mirror_state": "generated_public_fallback",
-      "runtime_state": "legacy provider_private_runtime_v1_4_transparent_sourcing_comparison_verified",
+      "runtime_state": "base44_private_runtime_v1_5_reviewed_execution_outcomes_verified",
       "live_canary_evidence": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/systemia/opportunity-fabric/runtime.json",
       "multi_party_state": "verified_private_runtime",
       "authority_contract_state": "pass",
@@ -925,7 +925,7 @@
       "execution_blueprint_protected_content_used": false,
       "recommendation_is_not_membership": true,
       "execution_blueprint_ledger_state": "owner_private_receipt_backed_idempotent",
-      "protected_workflow_entities_runtime_write_only": 11,
+      "protected_workflow_entities_runtime_write_only": 12,
       "sourcing_state": "verified_private_runtime",
       "sourcing_requires_accepted_connection": true,
       "sourcing_payment_obligation_created": false,
@@ -944,7 +944,12 @@
         "doorway_state": "source_build_green",
         "conformance_state": "private_runtime_verified_public_release_pending"
       },
-      "live_canary_evidence_state": "historical_pre_cutover_not_current"
+      "live_canary_evidence_state": "historical_pre_cutover_not_current",
+      "execution_outcome_state": "verified_private_runtime",
+      "assignee_self_completion": false,
+      "leader_qa_required_for_completion": true,
+      "reviewed_outcome_ledger": true,
+      "sourcing_history_source": "leader_reviewed_work_package_outcomes"
     },
     {
       "product_key": "payflow",

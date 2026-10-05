@@ -1,6 +1,6 @@
 # Opportunity Fabric Multi-Party Execution Contract
 
-Version: v1.4  
+Version: v1.5  
 Evidence state: private runtime verified  
 Authority: Systemia Opportunity Fabric / trusted service-role runtime
 
@@ -114,9 +114,21 @@ A package must specify:
 
 The trusted runtime may create a work package only when the assignee has accepted the specific team invitation tied to that team.
 
-The leader defines scope and economics. The assignee independently accepts the package and reports execution progress.
+The leader defines scope and economics. The assignee independently accepts the package and reports execution progress. The assignee may submit `Ready for QA` but may not self-complete the package.
 
 Package acceptance does not modify ownership, license, confidentiality, or protected-material rights.
+
+## QA and observed outcome rule
+
+A work package becomes observed execution history only after the assignee submits `Ready for QA` and the team leader reviews it.
+
+The leader may accept the outcome or require rework. Rework requires a QA note and returns the package to `In progress`.
+
+Leader acceptance creates a `WorkPackageOutcome` record before the package is finalized `Complete`. The outcome records the available sourcing promise and execution evidence, including quoted lead time when available, actual cycle days, timing basis, on-time state, blocked-event count and QA-attempt count.
+
+A durable outcome can reconcile package state after a partial write failure.
+
+Future sourcing comparisons may use these reviewed outcomes. They must not use self-reported profile claims as observed execution history.
 
 ## Protected-material rule
 
@@ -136,11 +148,11 @@ A future work-package-specific disclosure must bind:
 - recipient acceptance
 - a durable receipt
 
-Actual protected-file delivery is not enabled or claimed in v1.4.
+Actual protected-file delivery is not enabled or claimed in v1.5.
 
 ## Authority model
 
-The following workflow entities are direct-client mutation locked in the verified v1.4 runtime:
+The following workflow entities are direct-client mutation locked in the verified v1.5 runtime:
 
 - ConnectionRequest
 - ProtectedAsset
@@ -150,6 +162,10 @@ The following workflow entities are direct-client mutation locked in the verifie
 - ExecutionTeam
 - TeamInvitation
 - WorkPackage
+- ExecutionBlueprint
+- SourcingRequest
+- SourcingComparison
+- WorkPackageOutcome
 
 Clients receive only the read access needed for their role. Consequential mutations run through the authenticated Opportunity Fabric service-role runtime, which re-verifies identity and state before writing.
 
@@ -171,7 +187,7 @@ Verified cross-industry examples include:
 
 ## Non-claims
 
-v1.4 does not claim:
+v1.5 does not claim:
 
 - a final legally reviewed Creator Covenant
 - signed contract execution
