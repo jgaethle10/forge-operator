@@ -73,7 +73,9 @@ assert.match(rootLlms, /Legacy Rescue Lab/i);
 const painEntry = painIndex.entries.find((row) => row.capability_id === 'product:legacy-rescue-lab');
 assert(painEntry, 'Legacy Rescue Lab missing from CHUM pain index');
 assert.match(painEntry.pain_phrases.join(' '), /repair instead of rebuild/i);
-assert.equal(painEntry.machine_state, 'specialist_mcp_declared');
+assert.equal(painEntry.machine_state, 'discovery_only');
+assert.equal(painEntry.mcp, null);
+assert.equal(painEntry.routing?.target, null);
 
 console.log(JSON.stringify({
   ok:true,
