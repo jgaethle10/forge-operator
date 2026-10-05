@@ -135,8 +135,104 @@ assert.equal(nearAfterSecond.transform.position.x,nearAfterFirst.transform.posit
 assert.ok(farAfterSecond.transform.position.x>100.9);
 assert.deepEqual(streamRuntime.activeEntityIds,['far-mover','global-anchor']);
 
+const animationWorld={
+  schema:'evercraft.world-engine.world.v1',
+  id:'evercraft-world-engine-animation-proof',
+  version:1,
+  tickRateHz:10,
+  gravity:{x:0,y:0,z:0},
+  entities:[{
+    id:'hero',
+    transform:{position:{x:0,y:0,z:0}},
+    animation:{
+      schema:'evercraft.world-engine.animation.v1',
+      rig:{
+        id:'proof-rig',
+        bones:[
+          {
+            id:'root',
+            bind:{
+              translation:{x:0,y:0,z:0},
+              rotationDeg:{x:0,y:0,z:0},
+              scale:{x:1,y:1,z:1}
+            }
+          },
+          {
+            id:'arm',
+            parentId:'root',
+            bind:{
+              translation:{x:0,y:1,z:0},
+              rotationDeg:{x:0,y:0,z:0},
+              scale:{x:1,y:1,z:1}
+            }
+          }
+        ]
+      },
+      clips:[
+        {
+          id:'idle',
+          durationSec:1,
+          loop:true,
+          tracks:[]
+        },
+        {
+          id:'wave',
+          durationSec:.4,
+          loop:true,
+          tracks:[{
+            boneId:'arm',
+            rotationDeg:[
+              {timeSec:0,value:{x:0,y:0,z:-20}},
+              {timeSec:.2,value:{x:0,y:0,z:20}},
+              {timeSec:.4,value:{x:0,y:0,z:-20}}
+            ]
+          }],
+          events:[{id:'wave-apex',name:'wave_apex',timeSec:.2}]
+        }
+      ],
+      states:[
+        {id:'idle',clipId:'idle'},
+        {id:'wave',clipId:'wave'}
+      ],
+      initialState:'idle',
+      transitions:[
+        {
+          id:'idle-to-wave',
+          from:'idle',
+          to:'wave',
+          priority:10,
+          blendSec:.2,
+          conditions:[{parameter:'waving',operator:'truthy'}]
+        }
+      ],
+      parameters:{waving:false}
+    }
+  }]
+};
+const animationInputs=[{
+  id:'start-wave',
+  tick:1,
+  entityId:'hero',
+  kind:'set_animation_parameter',
+  key:'waving',
+  value:true
+}];
+const animationReceipt=replayWorld(animationWorld,6,animationInputs);
+assert.equal(animationReceipt.deterministic,true);
+const animationRuntime=new EvercraftWorldRuntime(animationWorld);
+let waveEvent=null;
+for(let i=0;i<6;i++){
+  animationRuntime.step(animationInputs);
+  const hero=animationRuntime.entity('hero');
+  if(hero?.animationRuntime?.events?.length) waveEvent=hero.animationRuntime.events[0];
+}
+const hero=animationRuntime.entity('hero');
+assert.equal(hero.animationRuntime.stateId,'wave');
+assert.ok(waveEvent);
+assert.equal(waveEvent.name,'wave_apex');
+
 process.stdout.write(JSON.stringify({
-  schema:'evercraft.world-engine.proof.v3',
+  schema:'evercraft.world-engine.proof.v4',
   status:'passed',
   world_id:world.id,
   replay:receipt,
@@ -147,6 +243,12 @@ process.stdout.write(JSON.stringify({
     near:nearPlan,
     far:farPlan
   },
+  animation:{
+    replay:animationReceipt,
+    state:hero.animationRuntime.stateId,
+    pose:hero.animationRuntime.pose,
+    event:waveEvent
+  },
   assertions:{
     deterministic_replay:true,
     fixed_timestep:true,
@@ -154,6 +256,9 @@ process.stdout.write(JSON.stringify({
     entity_collision:true,
     deterministic_scene_streaming:true,
     inactive_state_preservation:true,
+    deterministic_skeletal_animation:true,
+    animation_state_machine:true,
+    animation_event_receipts:true,
     canonical_snapshot_digest:true
   }
 },null,2)+'\n');
