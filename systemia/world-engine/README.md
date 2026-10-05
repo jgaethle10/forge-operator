@@ -32,14 +32,20 @@ Implemented in this slice:
 - Deterministic camera transition graph with tick-bound camera activation and engine-resolved interpolation.
 - Camera layer masks plus scene residency deterministically gate renderables and lights.
 - Provider-neutral visual-frame contracts carry resolved camera, sorted materials, visible geometry bindings and active lights.
+- Canonical audio scenes reference Fallen-produced/mastered assets through clip IDs and audio asset refs.
+- First-class audio emitters/listeners, buses, autoplay/loop state, playback rate and deterministic playhead state.
+- Tick-bound play, pause, stop, seek and listener-switch inputs participate in replay truth.
+- Deterministic 2D/3D attenuation, listener-relative position and effective bus/listener/emitter gain.
+- Streamed-out emitters freeze playback and resume from preserved playhead/loop state.
+- Provider-neutral audio-frame contracts let replaceable backends consume spatial playback truth without owning it.
 - Deterministic behaviors for spin, constant force and oscillation.
 - Input ledger with tick-bound events.
 - Stable world-definition and snapshot SHA-256 digests.
 - Deterministic replay receipts.
 - Fallen Studio World → World Engine compiler.
 - Worldstate evidence → world projection bridge with evidence state preserved.
-- Provider-neutral render-frame contract with sampled skeletal pose/state, navigation/debug handoff and canonical visual subframes.
-- Tests for replay determinism, entity collision, ground collision, canonical broad-phase ordering, ECS query ordering, scene streaming/state preservation, animation transitions/blending/events, navmesh pathfinding/arrival/freeze-resume, material/light validation, camera graph interpolation/layer masking, input ordering, Fallen compilation and Worldstate projection.
+- Provider-neutral render-frame contract with sampled skeletal pose/state, navigation/debug handoff, canonical visual subframes and audio subframes.
+- Tests for replay determinism, entity collision, ground collision, canonical broad-phase ordering, ECS query ordering, scene streaming/state preservation, animation transitions/blending/events, navmesh pathfinding/arrival/freeze-resume, material/light validation, camera graph interpolation/layer masking, audio playback/loop/seek/listener switching/attenuation, input ordering, Fallen compilation and Worldstate projection.
 
 ## Architectural contract
 
@@ -66,13 +72,13 @@ The engine does not gain publication authority, payment authority, emergency aut
 
 The V1 contract is deliberately small enough to prove ownership before expanding. The next compatible layers are:
 
-1. Audio scene graph.
-2. Multiplayer replication and rollback.
-3. WebGPU / native renderer adapters.
-4. Asset hot-reload and live Studio editing.
-5. Animation authoring/import bridge for Fallen character assets.
-6. Navigation corridor smoothing / dynamic obstacle avoidance.
-7. Shadow-map / reflection / post-process contracts behind the visual-frame boundary.
+1. Multiplayer replication and rollback.
+2. WebGPU / native renderer adapters.
+3. Asset hot-reload and live Studio editing.
+4. Animation authoring/import bridge for Fallen character assets.
+5. Navigation corridor smoothing / dynamic obstacle avoidance.
+6. Shadow-map / reflection / post-process contracts behind the visual-frame boundary.
+7. Spatial panning / occlusion / reverb-zone contracts behind the audio-frame boundary.
 8. Saban simulation tournaments and deterministic QA at scale.
 9. Physical memory eviction / asset residency behind the logical scene activation contract.
 10. Broad-phase acceleration upgrades for very large worlds.
