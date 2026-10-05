@@ -65,12 +65,12 @@ test('commercial supply is visibility-only by default',()=>{
     assert.equal(role.acquisition_gate,'commercial_disabled_by_zero_spend_policy');
   }
   assert.equal(plan.buyer_handoff.directive_count,3);
-  assert.equal(plan.buyer_handoff.executable_zero_spend_directive_count,3);
+  assert.equal(plan.buyer_handoff.zero_spend_policy_ready_count,3);
   assert.equal(plan.buyer_handoff.authority_material_present,false);
   assert.equal(plan.buyer_handoff.paid_market_order_authorized,false);
   assert.equal(plan.buyer_handoff.paid_lease_authorized,false);
   for(const directive of plan.buyer_handoff.directives){
-    assert.equal(directive.zero_spend_phase.state,'ready_to_execute');
+    assert.equal(directive.zero_spend_phase.state,'policy_ready');
     assert.equal(
       directive.zero_spend_phase.formation_acquisition.zero_spend_only,
       true
@@ -135,7 +135,7 @@ test('authorized ambient devices satisfy roles before commercial capacity',()=>{
     assert.equal(role.zero_cost,true);
   }
   assert.equal(plan.buyer_handoff.directive_count,0);
-  assert.equal(plan.buyer_handoff.executable_zero_spend_directive_count,0);
+  assert.equal(plan.buyer_handoff.zero_spend_policy_ready_count,0);
 });
 
 test('planner prefers healthy Evercraft capacity over ambient and commercial',()=>{
