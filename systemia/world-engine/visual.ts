@@ -323,6 +323,11 @@ export function validateVisualScene(scene:VisualSceneDefinition,entities:WorldEn
     if(transition.fromCameraId===transition.toCameraId){
       throw new Error(`visual_camera_transition_self:${transition.id}`);
     }
+    const fromCamera=entityMap.get(transition.fromCameraId)?.camera;
+    const toCamera=entityMap.get(transition.toCameraId)?.camera;
+    if(fromCamera?.projection.type!==toCamera?.projection.type){
+      throw new Error(`visual_camera_transition_projection_mismatch:${transition.id}`);
+    }
     finite(transition.durationSec,`camera_transition_${transition.id}_duration`);
     if(transition.durationSec<0) throw new Error(`visual_camera_transition_duration_invalid:${transition.id}`);
     if(transition.curve && !['linear','smoothstep'].includes(transition.curve)){
@@ -403,6 +408,40 @@ function blendWeight(transition:CameraTransitionRuntime|null){
   return transition.curve==='linear'?t:t*t*(3-2*t);
 }
 
+function lerp(a:number,b:number,t:number){
+  return a+(b-a)*t;
+}
+
+function angleDelta(a:number,b:number){
+  let value=((b-a+180)%360+360)%360-180;
+  if(Math.abs(value+180)<1e-12) value=180;
+  return value;
+}
+
+function blendVec(a:Vec3,b:Vec3,t:number):Vec3{
+  return {
+    x:lerp(a.x,b.x,t),
+    y:lerp(a.y,b.y,t),
+    z:lerp(a.z,b.z,t)
+  };
+}
+
+function blendRotation(a:Vec3,b:Vec3,t:number):Vec3{
+  return {
+    x:a.x+angleDelta(a.x,b.x)*t,
+    y:a.y+angleDelta(a.y,b.y)*t,
+    z:a.z+angleDelta(a.z,b.z)*t
+  };
+}
+
+function completeTransform(transform:TransformComponent){
+  return {
+    position:clone(transform.position),
+    rotationDeg:clone(transform.rotationDeg || {x:0,y:0,z:0}),
+    scale:clone(transform.scale || {x:1,y:1,z:1})
+  };
+}
+
 function cameraSample(entity:WorldEntity,blend:CameraSample['blend']):CameraSample{
   if(!entity.camera) throw new Error(`visual_camera_component_missing:${entity.id}`);
   return {
@@ -412,7 +451,7 @@ function cameraSample(entity:WorldEntity,blend:CameraSample['blend']):CameraSamp
     far:entity.camera.far,
     exposure:entity.camera.exposure ?? 1,
     layerMask:entity.camera.layerMask ?? DEFAULT_LAYER_MASK,
-    transform:clone(entity.transform),
+    transform:completeTransform(entity.transform),
     blend
   };
 }
@@ -428,14 +467,49 @@ export function sampleCamera(
     return cameraSample(active,null);
   }
 
+  const source=byId.get(runtime.transition.fromCameraId);
   const target=byId.get(runtime.transition.toCameraId);
+  if(!source) throw new Error(`visual_camera_entity_missing:${runtime.transition.fromCameraId}`);
   if(!target) throw new Error(`visual_camera_entity_missing:${runtime.transition.toCameraId}`);
-  return cameraSample(target,{
-    fromCameraId:runtime.transition.fromCameraId,
-    toCameraId:runtime.transition.toCameraId,
-    weight:Number(blendWeight(runtime.transition).toFixed(9)),
-    curve:runtime.transition.curve
-  });
+  if(!source.camera || !target.camera) throw new Error('visual_camera_component_missing');
+  const weight=Number(blendWeight(runtime.transition).toFixed(9));
+  const sourceTransform=completeTransform(source.transform);
+  const targetTransform=completeTransform(target.transform);
+
+  let projection:CameraProjection;
+  if(source.camera.projection.type==='perspective' && target.camera.projection.type==='perspective'){
+    projection={
+      type:'perspective',
+      fovYDeg:lerp(source.camera.projection.fovYDeg,target.camera.projection.fovYDeg,weight)
+    };
+  }else if(source.camera.projection.type==='orthographic' && target.camera.projection.type==='orthographic'){
+    projection={
+      type:'orthographic',
+      orthoHeight:lerp(source.camera.projection.orthoHeight,target.camera.projection.orthoHeight,weight)
+    };
+  }else{
+    throw new Error(`visual_camera_projection_blend_invalid:${runtime.transition.id}`);
+  }
+
+  return {
+    cameraId:target.id,
+    projection,
+    near:lerp(source.camera.near,target.camera.near,weight),
+    far:lerp(source.camera.far,target.camera.far,weight),
+    exposure:lerp(source.camera.exposure ?? 1,target.camera.exposure ?? 1,weight),
+    layerMask:target.camera.layerMask ?? DEFAULT_LAYER_MASK,
+    transform:{
+      position:blendVec(sourceTransform.position,targetTransform.position,weight),
+      rotationDeg:blendRotation(sourceTransform.rotationDeg,targetTransform.rotationDeg,weight),
+      scale:blendVec(sourceTransform.scale,targetTransform.scale,weight)
+    },
+    blend:{
+      fromCameraId:runtime.transition.fromCameraId,
+      toCameraId:runtime.transition.toCameraId,
+      weight,
+      curve:runtime.transition.curve
+    }
+  };
 }
 
 export function compileVisualFrame(
