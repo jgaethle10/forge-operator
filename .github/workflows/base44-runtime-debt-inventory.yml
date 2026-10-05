@@ -39,7 +39,7 @@ jobs:
         with:
           node-version: "22"
       - name: Inventory Base44 migration debt
-        run: node scripts/inventory-base44-runtime-debt.mjs --out artifacts/base44-runtime-debt/latest.json
+        run: node scripts/inventory-base44-runtime-debt.mjs --strict-active --out artifacts/base44-runtime-debt/latest.json
       - name: Upload migration-debt receipt
         uses: actions/upload-artifact@v4
         with:
