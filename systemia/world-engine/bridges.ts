@@ -1,4 +1,5 @@
 import type { WorldDefinition, WorldEntity } from './engine.js';
+import { compileVisualFrame, type VisualFrameContract } from './visual.js';
 
 type LooseRecord=Record<string,any>;
 
@@ -144,6 +145,7 @@ export interface WorldRenderFrame {
   tick:number;
   timeSec:number;
   cameraId:string;
+  visual:VisualFrameContract|null;
   entities:Array<{
     id:string;
     transform:WorldEntity['transform'];
@@ -174,15 +176,35 @@ export interface WorldRenderFrame {
 }
 
 export function compileRenderFrame(
-  snapshot:{worldId:string;tick:number;timeSec:number;entities:any[]},
-  cameraId='default'
+  snapshot:{
+    worldId:string;
+    tick:number;
+    timeSec:number;
+    entities:any[];
+    activeEntityIds?:string[];
+    cameraRuntime?:any;
+  },
+  cameraId='default',
+  world?:WorldDefinition
 ):WorldRenderFrame{
+  const visual=world?.visualScene && snapshot.cameraRuntime
+    ? compileVisualFrame(
+        snapshot.worldId,
+        snapshot.tick,
+        snapshot.timeSec,
+        world.visualScene,
+        snapshot.entities,
+        snapshot.cameraRuntime,
+        snapshot.activeEntityIds
+      )
+    : null;
   return {
     schema:'evercraft.world-engine.render-frame.v1',
     worldId:snapshot.worldId,
     tick:snapshot.tick,
     timeSec:snapshot.timeSec,
-    cameraId,
+    cameraId:visual?.camera.cameraId || cameraId,
+    visual,
     entities:[...snapshot.entities]
       .sort((a,b)=>String(a.id).localeCompare(String(b.id)))
       .map(entity=>({
