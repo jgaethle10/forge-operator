@@ -535,7 +535,7 @@ Before a commitment, a safe quote failure may fall through to the next eligible 
 
 Each unsatisfied role receives two separate phases:
 
-1. **Zero-spend phase**: an executable formation acquisition policy that may use Evercraft broker and voluntary capacity.
+1. **Zero-spend phase**: a policy-ready formation acquisition directive that may use Evercraft broker and voluntary capacity once an eligible source is configured at runtime.
 2. **Commercial fallback**: visibility into the best known commercial candidate, but no quote authority, spend authority, market-order authority, or lease authority.
 
 The zero-spend phase uses `enabled_if_configured` for broker and voluntary sources. This means Saban uses whichever trusted source is actually wired at runtime. An absent broker does not suppress an available voluntary worker, and an absent voluntary exchange does not suppress a configured broker.
