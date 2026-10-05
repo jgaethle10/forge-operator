@@ -1,6 +1,7 @@
 import assert from 'node:assert/strict';
 import { EvercraftWorldRuntime, replayWorld } from './engine.ts';
 import { SceneStreamController } from './streaming.ts';
+import { compileVisualFrame } from './visual.ts';
 
 const world={
   schema:'evercraft.world-engine.world.v1',
@@ -293,8 +294,112 @@ assert.ok(Math.abs(navigationAgent.transform.position.x-7)<.06);
 assert.ok(Math.abs(navigationAgent.transform.position.z-7)<.06);
 assert.deepEqual(navigationAgent.navigationRuntime.path.polygonIds,['a','b','c']);
 
+const visualWorld={
+  schema:'evercraft.world-engine.world.v1',
+  id:'evercraft-world-engine-visual-proof',
+  version:1,
+  tickRateHz:10,
+  gravity:{x:0,y:0,z:0},
+  visualScene:{
+    schema:'evercraft.world-engine.visual-scene.v1',
+    initialCameraEntityId:'camera-a',
+    materials:[
+      {
+        id:'proof-metal',
+        model:'pbr',
+        baseColor:{r:.8,g:.8,b:.85,a:1},
+        metallic:1,
+        roughness:.2
+      }
+    ],
+    cameraTransitions:[
+      {
+        id:'camera-a-to-b',
+        fromCameraId:'camera-a',
+        toCameraId:'camera-b',
+        durationSec:.5,
+        curve:'smoothstep'
+      }
+    ],
+    clearColor:{r:.01,g:.01,b:.02}
+  },
+  entities:[
+    {
+      id:'camera-a',
+      transform:{position:{x:0,y:2,z:-8},rotationDeg:{x:0,y:0,z:0}},
+      camera:{
+        projection:{type:'perspective',fovYDeg:60},
+        near:.1,
+        far:100,
+        exposure:1,
+        layerMask:1
+      }
+    },
+    {
+      id:'camera-b',
+      transform:{position:{x:6,y:3,z:-4},rotationDeg:{x:0,y:45,z:0}},
+      camera:{
+        projection:{type:'perspective',fovYDeg:75},
+        near:.1,
+        far:120,
+        exposure:1.5,
+        layerMask:1
+      }
+    },
+    {
+      id:'proof-object',
+      transform:{position:{x:0,y:0,z:0}},
+      renderable:{
+        geometryRef:'geometry:proof-cube',
+        materialId:'proof-metal',
+        castsShadow:true,
+        receivesShadow:true,
+        layerMask:1
+      }
+    },
+    {
+      id:'proof-sun',
+      transform:{position:{x:0,y:10,z:0},rotationDeg:{x:45,y:20,z:0}},
+      light:{
+        type:'directional',
+        color:{r:1,g:.95,b:.9},
+        intensity:3,
+        castsShadow:true,
+        layerMask:1
+      }
+    }
+  ]
+};
+const visualInputs=[{
+  id:'switch-camera',
+  tick:1,
+  kind:'activate_camera',
+  cameraEntityId:'camera-b',
+  transitionId:'camera-a-to-b'
+}];
+const visualReceipt=replayWorld(visualWorld,6,visualInputs);
+assert.equal(visualReceipt.deterministic,true);
+const visualRuntime=new EvercraftWorldRuntime(visualWorld);
+visualRuntime.run(6,visualInputs);
+assert.equal(visualRuntime.cameraRuntime.activeCameraId,'camera-b');
+assert.equal(visualRuntime.cameraRuntime.transition,null);
+const visualSnapshot=visualRuntime.snapshot();
+const visualFrame=compileVisualFrame(
+  visualSnapshot.worldId,
+  visualSnapshot.tick,
+  visualSnapshot.timeSec,
+  visualRuntime.definition.visualScene,
+  visualSnapshot.entities,
+  visualSnapshot.cameraRuntime,
+  visualSnapshot.activeEntityIds
+);
+assert.equal(visualFrame.camera.cameraId,'camera-b');
+assert.deepEqual(visualFrame.renderables.map(item=>item.entityId),['proof-object']);
+assert.deepEqual(visualFrame.lights.map(item=>item.entityId),['proof-sun']);
+assert.deepEqual(visualFrame.materials.map(item=>item.id),['proof-metal']);
+
 process.stdout.write(JSON.stringify({
-  schema:'evercraft.world-engine.proof.v5',
+  schema:'evercraft.world-engine.proof.v6',
   status:'passed',
   world_id:world.id,
   replay:receipt,
@@ -317,6 +422,15 @@ process.stdout.write(JSON.stringify({
     state:navigationAgent.navigationRuntime.state,
     final_position:navigationAgent.transform.position
   },
+  visual:{
+    replay:visualReceipt,
+    camera_runtime:visualSnapshot.cameraRuntime,
+    frame_digest:visualFrame.digest,
+    camera:visualFrame.camera,
+    materials:visualFrame.materials.map(item=>item.id),
+    renderables:visualFrame.renderables.map(item=>item.entityId),
+    lights:visualFrame.lights.map(item=>item.entityId)
+  },
   assertions:{
     deterministic_replay:true,
     fixed_timestep:true,
@@ -329,6 +443,9 @@ process.stdout.write(JSON.stringify({
     animation_event_receipts:true,
     deterministic_navmesh_pathfinding:true,
     physics_driven_agent_locomotion:true,
+    deterministic_visual_scene:true,
+    deterministic_camera_graph:true,
+    material_and_light_contracts:true,
     canonical_snapshot_digest:true
   }
 },null,2)+'\n');
