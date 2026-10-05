@@ -5,6 +5,8 @@ REPO_ROOT=""
 RUN_USER=""
 CADENCE="2min"
 STATE_DIR="/var/lib/evercraft/saban-capacity"
+OWNED_HOST="false"
+PUBLIC_MARKET_DISCOVERY="false"
 
 usage(){
   cat <<'EOF'
@@ -13,7 +15,9 @@ Usage:
     --repo-root /home/user/forge-operator \
     [--user user] \
     [--cadence 2min] \
-    [--state-dir /var/lib/evercraft/saban-capacity]
+    [--state-dir /var/lib/evercraft/saban-capacity] \
+    [--owned-host] \
+    [--public-market-discovery]
 
 Installs Saban's zero-spend ambient capacity organism.
 
@@ -23,13 +27,16 @@ The resident cycle may:
   - expire stale or revoked authorized devices;
   - compile active MicroSeed manifests into bounded capabilities;
   - plan zero-cost capability and workload placement;
-  - write local receipts describing missing capacity.
+  - write local receipts describing missing capacity;
+  - turn missing/predicted capacity into Resource Field expansion intents;
+  - keep a resident zero-spend Resource Expansion organism evaluating safe lanes.
 
 It does NOT:
   - authorize observed devices;
   - log into discovered devices;
   - run arbitrary code on MicroSeed devices;
-  - create commercial market orders or paid leases.
+  - create commercial market orders or paid leases;
+  - treat the current host as Evercraft-owned unless --owned-host is explicit.
 EOF
 }
 
@@ -39,6 +46,8 @@ while [[ $# -gt 0 ]]; do
     --user) RUN_USER="${2:-}"; shift 2 ;;
     --cadence) CADENCE="${2:-}"; shift 2 ;;
     --state-dir) STATE_DIR="${2:-}"; shift 2 ;;
+    --owned-host) OWNED_HOST="true"; shift ;;
+    --public-market-discovery) PUBLIC_MARKET_DISCOVERY="true"; shift ;;
     -h|--help) usage; exit 0 ;;
     *) echo "ERROR: unknown argument: $1" >&2; usage >&2; exit 2 ;;
   esac
@@ -63,6 +72,13 @@ if [[ ! "$CADENCE" =~ ^[1-9][0-9]*(s|min|h)$ ]]; then
   echo "ERROR: cadence must look like 30s, 2min, or 1h" >&2
   exit 2
 fi
+
+case "$CADENCE" in
+  *min) CADENCE_SECONDS=$(( ${CADENCE%min} * 60 )) ;;
+  *h) CADENCE_SECONDS=$(( ${CADENCE%h} * 3600 )) ;;
+  *s) CADENCE_SECONDS=$(( ${CADENCE%s} )) ;;
+esac
+RESOURCE_EXPANSION_INTERVAL_MS=$(( CADENCE_SECONDS * 1000 ))
 
 REPO_ROOT="$(cd "$REPO_ROOT" && pwd)"
 STATE_DIR="$(mkdir -p "$STATE_DIR" && cd "$STATE_DIR" && pwd)"
@@ -143,6 +159,43 @@ Unit=evercraft-saban-capacity.service
 
 [Install]
 WantedBy=timers.target
+EOF
+
+cat >/etc/systemd/system/evercraft-saban-resource-expansion.service <<EOF
+[Unit]
+Description=Evercraft Saban proactive Resource Field expansion organism
+After=network-online.target evercraft-saban-capacity.service
+Wants=network-online.target
+
+[Service]
+Type=simple
+User=$RUN_USER
+Group=$RUN_GROUP
+WorkingDirectory=$REPO_ROOT
+Environment=SABAN_AMBIENT_STATE_DIR=$STATE_DIR
+Environment=SABAN_ALLOW_COMMERCIAL_CAPACITY=0
+Environment=SABAN_PUBLIC_MARKET_DISCOVERY=$PUBLIC_MARKET_DISCOVERY
+Environment=EVERCRAFT_OWNED_HOST=$OWNED_HOST
+Environment=EVERCRAFT_LOCAL_NODE_ROOT=$STATE_DIR/resource-field-local-node
+Environment=SABAN_RESOURCE_EXPANSION_INTERVAL_MS=$RESOURCE_EXPANSION_INTERVAL_MS
+ExecStart=$NODE_BIN $REPO_ROOT/systemia/saban/resource-expansion-organism.mjs
+Restart=always
+RestartSec=5s
+NoNewPrivileges=true
+PrivateTmp=true
+ProtectSystem=full
+ProtectHome=read-only
+ProtectKernelTunables=true
+ProtectKernelModules=true
+ProtectControlGroups=true
+RestrictSUIDSGID=true
+LockPersonality=true
+RestrictRealtime=true
+ReadWritePaths=$STATE_DIR
+TimeoutStartSec=30s
+
+[Install]
+WantedBy=multi-user.target
 EOF
 
 cat >/etc/systemd/system/evercraft-saban-microseed-gateway.service <<EOF
@@ -372,6 +425,7 @@ EOF
 
 systemctl daemon-reload
 systemctl enable --now evercraft-saban-capacity.timer
+systemctl enable --now evercraft-saban-resource-expansion.service
 systemctl enable --now evercraft-saban-microseed-gateway.service
 systemctl enable --now evercraft-saban-work-api.service
 systemctl enable --now evercraft-saban-pairing-api.service
@@ -386,6 +440,10 @@ systemctl --no-pager --full status evercraft-saban-capacity.timer | sed -n '1,12
 echo
 echo "State: $STATE_DIR/capacity-organism-state.json"
 echo "Registry: $STATE_DIR/registry"
+echo "Resource Expansion: resident; zero-spend safe lanes only"
+echo "Resource Expansion state: $STATE_DIR/resource-field-expansion-state.json"
+echo "Owned-host bootstrap: $OWNED_HOST"
+echo "Public market discovery: $PUBLIC_MARKET_DISCOVERY"
 echo "MicroSeed gateway: http://127.0.0.1:8791"
 echo "Product work API: http://127.0.0.1:8793"
 echo "Pairing enrollment API: http://127.0.0.1:8794 (loopback only)"
