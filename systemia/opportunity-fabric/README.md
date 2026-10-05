@@ -65,13 +65,36 @@ The comparison makes its weights visible:
 - observed Fabric history: 20%
 - geography: 10%
 
-Evidence states remain explicit. Quote, availability and lead time are participant-supplied. Geography comes from declared profile/opportunity metadata. Fabric history is calculated only from work packages the recipient actually accepted inside Opportunity Fabric. No observed work history is treated as neutral, not as positive proof.
+Evidence states remain explicit. Quote, availability and lead time are participant-supplied. Geography comes from declared profile/opportunity metadata. Fabric history is calculated only from leader-reviewed `WorkPackageOutcome` records created after QA acceptance. No reviewed outcome history is treated as neutral, not as positive proof.
 
 Price is compared only against responses using the same currency. v1.4 does not silently perform FX conversion. Missing numeric quote or lead-time fields are treated as missing rather than coerced to zero.
 
 The resulting decision score orders the evidence for human review. It does not select a partner, shortlist a response, create team membership, accept work, grant rights, create a contract or create a payment obligation.
 
 Every new evidence state receives a deterministic owner-private `SourcingComparison` ledger record and `FabricEvent` receipt. If the underlying evidence changes, the comparison id changes instead of rewriting the earlier decision context.
+
+## Reviewed execution outcomes
+
+v1.5 closes the learning loop between sourcing promises and completed work.
+
+An assignee may accept a package, work it, mark it blocked, and submit it as `Ready for QA`. The assignee cannot mark their own work `Complete`.
+
+Only the team leader can close the package. The leader can:
+
+- accept the outcome
+- require rework, with a required QA note
+
+When the leader accepts the outcome, the runtime creates a receipt-backed `WorkPackageOutcome` before finalizing the package as `Complete`. The outcome can capture quoted lead time, observed cycle days from package acceptance to final QA submission, whether that timing was on-time, blocked-event count, QA-attempt count, and the timing basis used.
+
+The write order is intentionally recoverable: if the durable outcome exists but final package state does not, a retry reconciles the package from the outcome ledger rather than losing the execution evidence.
+
+Future sourcing comparisons use these leader-reviewed outcomes, not profile claims and not raw package existence. The 20% Fabric-history component is internally decomposed as:
+
+- on-time outcomes: 45%
+- QA-attempt quality: 35%
+- blockage history: 20%
+
+Missing reviewed history stays neutral.
 
 ## Multi-party assembly
 
@@ -120,7 +143,7 @@ This policy is a product-control contract specification. It is NOT represented a
 
 ## Trust model
 
-The verified v1.4 implementation sits behind an authenticated service-role runtime. Direct client mutation is locked for protected workflow entities, and the runtime re-verifies identity, relationship state, invitation state, and package authority before consequential writes. Client-supplied booleans or user ids must never be treated as proof of identity, signature, ownership, relationship, or authority.
+The verified v1.5 implementation sits behind an authenticated service-role runtime. Direct client mutation is locked for protected workflow entities, and the runtime re-verifies identity, relationship state, invitation state, and package authority before consequential writes. Client-supplied booleans or user ids must never be treated as proof of identity, signature, ownership, relationship, or authority.
 
 Authentication, e-signature identity proof, payment authority, durable storage, protected-file delivery, and legal record retention remain separate gates.
 
@@ -132,4 +155,4 @@ Discovery exposes opportunity, not crown-jewel content.
 
 ## Status
 
-v1.4 establishes metadata-first matching, safe execution blueprints, protected one-to-one formation, immutable terms snapshots, purpose-bound disclosure grants, multi-party execution teams, project-specific invitations, bounded work packages, evidence receipts, and conformance tests. The private runtime is verified, but it does not yet claim a production-ready legal agreement, payment/escrow rail, production identity proofing, protected-file delivery, or a publicly deployed transactional marketplace.
+v1.5 establishes metadata-first matching, safe execution blueprints, protected one-to-one formation, immutable terms snapshots, purpose-bound disclosure grants, multi-party execution teams, project-specific invitations, bounded work packages, evidence receipts, and conformance tests. The private runtime is verified, but it does not yet claim a production-ready legal agreement, payment/escrow rail, production identity proofing, protected-file delivery, or a publicly deployed transactional marketplace.
