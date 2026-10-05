@@ -307,15 +307,35 @@ export async function runResourceExpansionCycle({
   return {...body,receipt_hash:sha(body)};
 }
 
-async function main(){
-  const root=path.resolve(
-    process.env.SABAN_AMBIENT_STATE_DIR||
-    path.join(os.homedir(),'.local/state/evercraft/saban-ambient')
-  );
+function cliArg(name,fallback=null){
+  const index=process.argv.indexOf(name);
+  return index>=0&&process.argv[index+1]?process.argv[index+1]:fallback;
+}
+function cliHas(name){return process.argv.includes(name);}
+
+async function runResidentExpansionOnce({root}={}){
   const queueFile=path.join(root,'resource-field-expansion-intents.json');
   if(!fs.existsSync(queueFile)){
-    throw new Error('resource_field_expansion_queue_missing');
+    const idle={
+      schema:'evercraft.saban.resource-expansion-cycle.v1',
+      state:'waiting_for_capacity_organism_queue',
+      considered:0,
+      ready_internal:0,
+      owned_spawn_activated:0,
+      zero_cost_market_visible:0,
+      paid_capacity_visible_authority_required:0,
+      engineering_required:0,
+      evaluations:[],
+      paid_execution_authorized:false,
+      market_order_created:false,
+      paid_lease_created:false,
+      generated_at:new Date().toISOString(),
+    };
+    const receipt={...idle,receipt_hash:sha(idle)};
+    atomicJson(path.join(root,'resource-field-expansion-state.json'),receipt);
+    return receipt;
   }
+
   const queue=JSON.parse(fs.readFileSync(queueFile,'utf8'));
   const cycle=await runResourceExpansionCycle({
     queue,
@@ -325,24 +345,71 @@ async function main(){
         String(process.env.SABAN_PUBLIC_MARKET_DISCOVERY||'').toLowerCase()==='true',
       allow_local_host_bootstrap:
         String(process.env.EVERCRAFT_OWNED_HOST||'').toLowerCase()==='true',
+      local_node_root:String(process.env.EVERCRAFT_LOCAL_NODE_ROOT||'').trim()||undefined,
+      local_node_id:String(process.env.EVERCRAFT_LOCAL_NODE_ID||'').trim()||undefined,
     },
     poolOptions:{
       allocatorToken:String(process.env.EVERCRAFT_ALLOCATOR_TOKEN||''),
     },
   });
   atomicJson(path.join(root,'resource-field-expansion-state.json'),cycle);
-  process.stdout.write(JSON.stringify({
-    schema:'evercraft.saban.resource-expansion-cycle-summary.v1',
-    considered:cycle.considered,
-    ready_internal:cycle.ready_internal,
-    owned_spawn_activated:cycle.owned_spawn_activated,
-    zero_cost_market_visible:cycle.zero_cost_market_visible,
-    paid_capacity_visible_authority_required:
-      cycle.paid_capacity_visible_authority_required,
-    engineering_required:cycle.engineering_required,
-    paid_execution_authorized:false,
-    receipt_hash:cycle.receipt_hash,
-  })+'\n');
+  return cycle;
+}
+
+async function main(){
+  const root=path.resolve(
+    process.env.SABAN_AMBIENT_STATE_DIR||
+    path.join(os.homedir(),'.local/state/evercraft/saban-ambient')
+  );
+  fs.mkdirSync(root,{recursive:true,mode:0o700});
+  const once=cliHas('--once');
+  const intervalMs=Math.max(
+    30_000,
+    Number(
+      cliArg(
+        '--interval-ms',
+        process.env.SABAN_RESOURCE_EXPANSION_INTERVAL_MS||120000
+      )
+    )
+  );
+
+  const emit=async()=>{
+    const cycle=await runResidentExpansionOnce({root});
+    process.stdout.write(JSON.stringify({
+      schema:'evercraft.saban.resource-expansion-cycle-summary.v1',
+      state:cycle.state||'evaluated',
+      considered:cycle.considered,
+      ready_internal:cycle.ready_internal,
+      owned_spawn_activated:cycle.owned_spawn_activated,
+      zero_cost_market_visible:cycle.zero_cost_market_visible,
+      paid_capacity_visible_authority_required:
+        cycle.paid_capacity_visible_authority_required,
+      engineering_required:cycle.engineering_required,
+      paid_execution_authorized:false,
+      receipt_hash:cycle.receipt_hash,
+    })+'\n');
+  };
+
+  await emit();
+  if(once) return;
+
+  const timer=setInterval(()=>emit().catch(error=>{
+    process.stderr.write(JSON.stringify({
+      ok:false,
+      schema:'evercraft.saban.resource-expansion-cycle-error.v1',
+      error:String(error?.message||error),
+      paid_execution_authorized:false,
+      observed_at:new Date().toISOString(),
+    })+'\n');
+  }),intervalMs);
+
+  const close=()=>{
+    clearInterval(timer);
+    process.exit(0);
+  };
+  process.on('SIGINT',close);
+  process.on('SIGTERM',close);
+  await new Promise(()=>{});
 }
 
 if(process.argv[1]&&path.resolve(process.argv[1])===MODULE_FILE){
