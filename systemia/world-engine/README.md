@@ -15,6 +15,9 @@ Implemented in this slice:
 - Entity transforms, rigid bodies, scale-aware box/sphere colliders and a canonical ground plane.
 - Deterministic sweep-and-prune broad phase plus sphere/sphere, box/box and sphere/box narrow-phase collision.
 - Deterministic impulse response, positional separation, gravity, damping, restitution and input impulses.
+- Deterministic entity/component indexing with canonical tag/component queries.
+- Scene manifests with explicit bounds, preload radius, dependencies, global entities and stable stream-plan digests.
+- Runtime scene activation that stops inactive simulation without discarding entity state.
 - Deterministic behaviors for spin, constant force and oscillation.
 - Input ledger with tick-bound events.
 - Stable world-definition and snapshot SHA-256 digests.
@@ -22,7 +25,7 @@ Implemented in this slice:
 - Fallen Studio World → World Engine compiler.
 - Worldstate evidence → world projection bridge with evidence state preserved.
 - Provider-neutral render-frame contract.
-- Tests for replay determinism, entity collision, ground collision, canonical broad-phase ordering, input ordering, Fallen compilation and Worldstate projection.
+- Tests for replay determinism, entity collision, ground collision, canonical broad-phase ordering, ECS query ordering, scene streaming/state preservation, input ordering, Fallen compilation and Worldstate projection.
 
 ## Architectural contract
 
@@ -49,15 +52,15 @@ The engine does not gain publication authority, payment authority, emergency aut
 
 The V1 contract is deliberately small enough to prove ownership before expanding. The next compatible layers are:
 
-1. ECS storage and scene streaming.
-2. Skeletal animation state machines.
-3. Navigation meshes and agent locomotion.
-4. Materials, lighting and camera graph.
-5. Audio scene graph.
-6. Multiplayer replication and rollback.
-7. WebGPU / native renderer adapters.
-8. Asset hot-reload and live Studio editing.
-9. Saban simulation tournaments and deterministic QA at scale.
+1. Skeletal animation state machines.
+2. Navigation meshes and agent locomotion.
+3. Materials, lighting and camera graph.
+4. Audio scene graph.
+5. Multiplayer replication and rollback.
+6. WebGPU / native renderer adapters.
+7. Asset hot-reload and live Studio editing.
+8. Saban simulation tournaments and deterministic QA at scale.
+9. Physical memory eviction / asset residency behind the logical scene activation contract.
 10. Broad-phase acceleration upgrades for very large worlds.
 
 ## Test
