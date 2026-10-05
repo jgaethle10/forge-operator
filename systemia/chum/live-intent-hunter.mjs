@@ -1,8 +1,24 @@
 import { rankDiscoveryCandidates } from './discovery-router.mjs';
 import { rankPain } from './pain-index-lib.mjs';
 
-const MACHINE_COMMERCE_GATEWAY =
-  'https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway';
+function ownedMachineCommerceGateway(value) {
+  const raw = String(value || '').trim();
+  if (!raw) return '';
+  try {
+    const parsed = new URL(raw);
+    const host = parsed.hostname.toLowerCase();
+    if (parsed.protocol !== 'https:') return '';
+    if (host === 'base44.app' || host.endsWith('.base44.app')) return '';
+    return parsed.toString();
+  } catch {
+    return '';
+  }
+}
+
+const MACHINE_COMMERCE_GATEWAY = ownedMachineCommerceGateway(
+  process.env.EVERCRAFT_MACHINE_COMMERCE_GATEWAY_URL ||
+  process.env.EVERCRAFT_MACHINE_COMMERCE_GATEWAY
+);
 
 const COMMERCIAL_CONTINUATION_PATTERN =
   /\b(buy|purchase|checkout|price|pricing|quote|paid|report|underwrite|underwriting|diligence|roi|investment|site plan|preliminary|full report)\b/i;
@@ -100,9 +116,9 @@ function projectOfferMatch(entry) {
 function continuationFor(match, state) {
   if (!match) return null;
 
-  const reviewUrl = match.public_id
+  const reviewUrl = match.public_id && MACHINE_COMMERCE_GATEWAY
     ? MACHINE_COMMERCE_GATEWAY + '?view=service&public_id=' + encodeURIComponent(match.public_id)
-    : null;
+    : (match.public_url || match.canonical_url || null);
 
   if (state === 'sell_now_match' || state === 'sell_now_discovery_match') {
     return {
