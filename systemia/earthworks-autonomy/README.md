@@ -61,3 +61,35 @@ node --test systemia/earthworks-autonomy/fleet-controller.test.mjs
 ```
 
 The visual demo is in `public/apps/earthworks-autonomy/index.html`.
+
+
+## EarthWorks Compatible
+
+EarthWorks now exposes a vendor-neutral Equipment Adapter Contract plus an executable conformance harness. Compatibility means a simulator, RC platform, retrofit system or approved OEM interface can expose machine capabilities through the same machine grammar.
+
+A compatible adapter does not grant itself authority. Shadow adapters remain non-actuating, and any adapter declaring `bounded_physical` must expose independent stop, heartbeat fail-safe, operator takeover, adapter watchdog and local command-timeout stop behavior before it can pass interface validation.
+
+Public surfaces:
+- `/apps/earthworks-autonomy/adapter-contract.json`
+- `/apps/earthworks-autonomy/compatible.html`
+- `/apps/earthworks-autonomy/adapters/simulator-haul-truck.json`
+
+Conformance is interface compatibility only. It is not machine certification or site safety approval.
+
+## Commercial entry
+
+The first external product is the **Site Autonomy Study**. It does not require physical actuation.
+
+The study maps one repetitive material flow into:
+- machine roster and roles,
+- route/zone graph,
+- observed cycle evidence,
+- material source/destination,
+- production target,
+- queue and idle-time behavior,
+- simulation replay,
+- autonomy candidate tasks,
+- telemetry gaps,
+- blockers and safety prerequisites.
+
+A site can then graduate into shadow dispatch, where EarthWorks recommendations are scored beside the real operation before any machine is commanded.
