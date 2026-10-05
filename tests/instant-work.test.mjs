@@ -6,6 +6,7 @@ import {
 } from '../systemia/commerce/instant-work.mjs';
 import { getFulfillmentProfile } from '../systemia/organism/universal-product-fulfillment.mjs';
 import { buildReceivablesPortfolio, deriveReceivableTruth } from '../systemia/commerce/receivables.mjs';
+import { selectRavenSettlementRoute } from '../systemia/commerce/raven-settlement-router.mjs';
 
 const liveCatalog = JSON.parse(fs.readFileSync('public/.well-known/evercraft-machine-catalog.json', 'utf8'));
 const liveInstantWork = buildInstantWorkCatalog(liveCatalog);
@@ -193,3 +194,81 @@ assert.equal(usd.verified_paid_cents, 29900);
 assert.equal(usd.open_count, 1);
 assert.equal(usd.paid_count, 1);
 assert.equal(usd.stale_count, 1);
+
+
+const routed = selectRavenSettlementRoute({
+  order: {
+    order_key: 'epo_route_example',
+    amount_cents: 209300,
+    currency: 'USD',
+    billing_mode: 'one_time',
+  },
+  adapters: [
+    {
+      adapter_key: 'card-primary',
+      provider: 'provider-a',
+      rail: 'card',
+      enabled: true,
+      health: 'healthy',
+      currencies: ['USD'],
+      billing_modes: ['one_time'],
+      priority: 20,
+      estimated_fee_bps: 290,
+      estimated_fixed_fee_cents: 30,
+      estimated_settlement_minutes: 2880,
+    },
+    {
+      adapter_key: 'bank-primary',
+      provider: 'provider-b',
+      rail: 'ach',
+      enabled: true,
+      health: 'healthy',
+      currencies: ['USD'],
+      billing_modes: ['one_time'],
+      priority: 10,
+      estimated_fee_bps: 80,
+      estimated_fixed_fee_cents: 0,
+      estimated_settlement_minutes: 1440,
+    },
+    {
+      adapter_key: 'unhealthy-cheap',
+      provider: 'provider-c',
+      rail: 'bank',
+      enabled: true,
+      health: 'degraded',
+      currencies: ['USD'],
+      billing_modes: ['one_time'],
+      priority: 1,
+      estimated_fee_bps: 0,
+      estimated_fixed_fee_cents: 0,
+      estimated_settlement_minutes: 1,
+    },
+  ],
+});
+assert.equal(routed.authority, 'Evercraft Payments');
+assert.equal(routed.settlement_router, 'Raven Nexus');
+assert.equal(routed.route_state, 'selected');
+assert.equal(routed.selected_adapter.adapter_key, 'bank-primary');
+assert.equal(routed.fallback_adapters[0].adapter_key, 'card-primary');
+assert.equal(routed.doctrine.route_selection_is_not_payment_proof, true);
+
+const blockedRoute = selectRavenSettlementRoute({
+  order: {
+    order_key: 'epo_no_route',
+    amount_cents: 10000,
+    currency: 'EUR',
+    billing_mode: 'monthly',
+  },
+  adapters: [
+    {
+      adapter_key: 'usd-only',
+      enabled: true,
+      health: 'healthy',
+      currencies: ['USD'],
+      billing_modes: ['one_time'],
+      priority: 1,
+    },
+  ],
+});
+assert.equal(blockedRoute.route_state, 'blocked_no_eligible_adapter');
+assert.equal(blockedRoute.selected_adapter, null);
