@@ -2,8 +2,36 @@ import fs from 'node:fs';
 import { ownedHttpsEndpoint } from './owned-commerce-endpoint.mjs';
 
 const catalog=JSON.parse(fs.readFileSync('public/.well-known/evercraft-machine-catalog.json','utf8'));
-const gateway=ownedHttpsEndpoint(process.env.EVERCRAFT_MACHINE_COMMERCE_GATEWAY_URL,{name:'machine_commerce_gateway'});
+const gatewayRaw=String(process.env.EVERCRAFT_MACHINE_COMMERCE_GATEWAY_URL||'').trim();
+const gateway=gatewayRaw?ownedHttpsEndpoint(gatewayRaw,{name:'machine_commerce_gateway'}):null;
 const timeoutMs=15000;
+
+if(!gateway){
+  const held={
+    schema:'evercraft.chum.commerce-canary.v1',
+    generated_at:new Date().toISOString(),
+    state:'held_no_owned_gateway',
+    endpoint:null,
+    doctrine:{
+      read_only:true,
+      checkout_created:false,
+      payment_attempted:false,
+      payment_state_not_inferred:true,
+      explicit_human_confirmation_preserved:true
+    },
+    summary:{
+      sell_now_offers:(catalog.offers||[]).filter(o=>o?.public_id&&o?.commercial_state==='sell_now').length,
+      held_no_owned_gateway:true
+    },
+    results:[],
+    truth_boundary:'No owned Machine Commerce gateway is configured. The canary made no legacy-provider request and cannot assert money-path health.'
+  };
+  fs.mkdirSync('artifacts/chum',{recursive:true});
+  fs.writeFileSync('artifacts/chum/commerce-canary-latest.json',JSON.stringify(held,null,2)+'\n');
+  fs.writeFileSync('artifacts/chum/commerce-canary-latest.md','# CHUM Sell-Now Commerce Canary\n\nState: held_no_owned_gateway\n');
+  console.log(JSON.stringify(held.summary));
+  process.exit(0);
+}
 
 function containsId(value,expected,depth=0){
   if(depth>8||value==null) return false;
