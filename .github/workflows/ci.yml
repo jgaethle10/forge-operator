@@ -165,8 +165,11 @@ jobs:
             -H 'A2A-Version: 1.0' \
             --data '{"message":{"messageId":"smoke-a2a-1","role":"ROLE_USER","parts":[{"text":"My AI cannot process this three hour video and I need the whole recording reviewed"}]}}' \
             | tee /tmp/a2a-discovery-response.json
-          curl --fail --silent -D /tmp/buyer-handoff-headers.txt -o /dev/null \
-            "http://127.0.0.1:3000/api/chum/go/roasted-text-pressure-test-machine-v1?surface=ci_buyer_frontage"
+          curl --silent --show-error -D /tmp/buyer-handoff-headers.txt \
+            -o /tmp/buyer-handoff-body.txt \
+            -w '%{http_code}' \
+            "http://127.0.0.1:3000/api/chum/go/roasted-text-pressure-test-machine-v1?surface=ci_buyer_frontage" \
+            > /tmp/buyer-handoff-status.txt
 
           node - <<'NODE'
           const fs = require('fs');
@@ -204,6 +207,8 @@ jobs:
           const a2aAgentCard = JSON.parse(fs.readFileSync('/tmp/a2a-agent-card.json','utf8'));
           const a2aDiscovery = JSON.parse(fs.readFileSync('/tmp/a2a-discovery-response.json','utf8'));
           const buyerHandoffHeaders = fs.readFileSync('/tmp/buyer-handoff-headers.txt','utf8');
+          const buyerHandoffBody = fs.readFileSync('/tmp/buyer-handoff-body.txt','utf8');
+          const buyerHandoffStatus = fs.readFileSync('/tmp/buyer-handoff-status.txt','utf8').trim();
 
           if (health.ok !== true) throw new Error('health.ok must be true');
           if (health.service !== 'forge-operator') throw new Error('unexpected health service');
@@ -222,7 +227,7 @@ jobs:
           if (fallenEpisode.data?.seriesPlan?.continuity?.status !== 'pass') throw new Error('Fallen family episode continuity did not pass');
           if (capabilities.invoke?.path !== '/api/forge') throw new Error('missing Forge invocation contract');
           if (capabilities.discovery?.crawlerRadar !== '/chum/crawler-radar.json') throw new Error('crawler radar public surface missing from capabilities');
-          if (capabilities.discovery?.buyerFrontage !== 'https://evercraft-ai-suite-08c4d2b8.base44.app/buy/{publicId}') throw new Error('dedicated buyer frontage contract missing from capabilities');
+          if (capabilities.discovery?.buyerFrontage !== null) throw new Error('smoke runtime must not invent buyer frontage without an owned origin');
           if (crawlerRadar.schema !== 'evercraft.chum.crawler-radar.runtime.v1') throw new Error('crawler radar runtime schema missing');
           if (crawlerRadar.event_count < 1) throw new Error('crawler radar did not observe the synthetic crawler request');
           if (!crawlerRadar.paths?.some((row) => row.path === '/forensiscope/' && row.crawler_families?.['openai-search'] >= 1)) throw new Error('crawler radar did not attribute OAI-SearchBot request to ForensiScope');
@@ -286,11 +291,10 @@ jobs:
           if (!/^link:.*chum\/sitemaps\/index\.xml/im.test(chumHeaders)) throw new Error('CHUM response missing segmented sitemap Link header');
           if (!/^link:.*chum\/commercial\/feed\.json/im.test(chumHeaders)) throw new Error('CHUM response missing commercial intent feed Link header');
           if (!/^access-control-allow-origin:\s*\*/im.test(chumHeaders)) throw new Error('CHUM public discovery CORS missing');
-          if (!/^location:\s*https:\/\/evercraft-ai-suite-08c4d2b8\.base44\.app\/buy\/roasted-text-pressure-test-machine-v1\?/im.test(buyerHandoffHeaders)) {
-            throw new Error('CHUM human handoff did not route to the live Evercraft buyer frontage');
-          }
-          if (!/location:.*ec_surface=ci_buyer_frontage/im.test(buyerHandoffHeaders)) {
-            throw new Error('CHUM human handoff lost buyer-surface attribution');
+          if (buyerHandoffStatus !== '503') throw new Error('unconfigured owned buyer frontage must fail closed with HTTP 503');
+          if (/^location:/im.test(buyerHandoffHeaders)) throw new Error('unconfigured buyer frontage must not redirect anywhere');
+          if (!buyerHandoffBody.includes('Evercraft-owned buyer route is not verified yet.')) {
+            throw new Error('buyer frontage hold did not preserve the owned-route truth boundary');
           }
           NODE
 
