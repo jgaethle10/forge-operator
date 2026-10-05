@@ -10,6 +10,8 @@ export type EntityComponentKey =
   | 'renderable'
   | 'light'
   | 'camera'
+  | 'audioEmitter'
+  | 'audioListener'
   | 'assetRefs'
   | 'tags'
   | 'properties';
@@ -49,7 +51,7 @@ export class WorldEntityStore<T extends WorldEntity=RuntimeEntity>{
       }
 
       const keys:EntityComponentKey[]=[
-        'transform','rigidBody','collider','behaviors','animation','navigationAgent','renderable','light','camera','assetRefs','tags','properties'
+        'transform','rigidBody','collider','behaviors','animation','navigationAgent','renderable','light','camera','audioEmitter','audioListener','assetRefs','tags','properties'
       ];
       for(const key of keys){
         if(!hasComponent(entity,key)) continue;
