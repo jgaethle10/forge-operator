@@ -1,6 +1,7 @@
 import crypto from 'node:crypto';
 import { resolveEntityCollisions, type CollisionContact } from './spatial.js';
 import { initializeAnimationRuntime, setAnimationParameter, stepAnimationRuntime, validateAnimationComponent, type AnimationParameter, type AnimationRuntimeState, type SkeletalAnimationComponent } from './animation.js';
+import { clearNavigationTarget, initializeNavigationAgent, setNavigationTarget, stepNavigationAgent, validateNavigationAgent, validateNavigationMesh, type NavigationAgentComponent, type NavigationAgentRuntime, type NavigationMesh } from './navigation.js';
 
 export type Vec3 = { x:number; y:number; z:number };
 
@@ -37,6 +38,7 @@ export interface WorldEntity {
   collider?:ColliderComponent;
   behaviors?:WorldBehavior[];
   animation?:SkeletalAnimationComponent;
+  navigationAgent?:NavigationAgentComponent;
   assetRefs?:string[];
   tags?:string[];
   properties?:Record<string,unknown>;
@@ -50,6 +52,7 @@ export interface WorldDefinition {
   gravity:Vec3;
   ground?:{ enabled:boolean; height:number };
   entities:WorldEntity[];
+  navigationMeshes?:NavigationMesh[];
   metadata?:Record<string,unknown>;
 }
 
@@ -58,6 +61,8 @@ export type WorldInput =
   | { id:string; tick:number; entityId:string; kind:'set_velocity'; value:Vec3 }
   | { id:string; tick:number; entityId:string; kind:'teleport'; value:Vec3 }
   | { id:string; tick:number; entityId:string; kind:'set_animation_parameter'; key:string; value:AnimationParameter }
+  | { id:string; tick:number; entityId:string; kind:'set_navigation_target'; value:Vec3 }
+  | { id:string; tick:number; entityId:string; kind:'clear_navigation_target' }
   | { id:string; tick:number; entityId:string; kind:'set_property'; key:string; value:unknown };
 
 export interface RuntimeEntity extends WorldEntity {
@@ -67,6 +72,7 @@ export interface RuntimeEntity extends WorldEntity {
     acceleration:Vec3;
   };
   animationRuntime?:AnimationRuntimeState;
+  navigationRuntime?:NavigationAgentRuntime;
 }
 
 export interface WorldSnapshot {
@@ -141,6 +147,13 @@ export function validateWorldDefinition(world:WorldDefinition){
     throw new Error('world_tick_rate_invalid');
   }
   finiteVec3(world.gravity,'gravity');
+  const navigationMeshes=[...(world.navigationMeshes || [])];
+  const meshIds=new Set<string>();
+  for(const mesh of navigationMeshes){
+    validateNavigationMesh(mesh);
+    if(meshIds.has(mesh.id)) throw new Error(`world_navigation_mesh_duplicate:${mesh.id}`);
+    meshIds.add(mesh.id);
+  }
   const ids = new Set<string>();
   for(const entity of world.entities || []){
     if(!entity.id) throw new Error('world_entity_id_missing');
@@ -166,6 +179,15 @@ export function validateWorldDefinition(world:WorldDefinition){
       }
     }
     if(entity.animation) validateAnimationComponent(entity.animation);
+    if(entity.navigationAgent){
+      validateNavigationAgent(entity.navigationAgent,navigationMeshes);
+      if(!entity.rigidBody || entity.rigidBody.kinematic){
+        throw new Error(`world_navigation_agent_requires_dynamic_rigid_body:${entity.id}`);
+      }
+      if(!entity.collider){
+        throw new Error(`world_navigation_agent_requires_collider:${entity.id}`);
+      }
+    }
     if(entity.rigidBody){
       if(!Number.isFinite(entity.rigidBody.mass) || entity.rigidBody.mass <= 0){
         throw new Error(`world_entity_mass_invalid:${entity.id}`);
@@ -177,7 +199,7 @@ export function validateWorldDefinition(world:WorldDefinition){
   return true;
 }
 
-function runtimeEntity(source:WorldEntity):RuntimeEntity{
+function runtimeEntity(source:WorldEntity,navigationMeshes:Map<string,NavigationMesh>):RuntimeEntity{
   const entity=clone(source) as RuntimeEntity;
   entity.transform.rotationDeg ||= clone(ZERO);
   entity.transform.scale ||= {x:1,y:1,z:1};
@@ -187,6 +209,11 @@ function runtimeEntity(source:WorldEntity):RuntimeEntity{
   }
   if(entity.animation){
     entity.animationRuntime=initializeAnimationRuntime(entity.animation);
+  }
+  if(entity.navigationAgent){
+    const mesh=navigationMeshes.get(entity.navigationAgent.meshId);
+    if(!mesh) throw new Error(`world_navigation_mesh_missing:${entity.navigationAgent.meshId}`);
+    entity.navigationRuntime=initializeNavigationAgent(entity.navigationAgent,mesh,entity.transform.position);
   }
   return entity;
 }
@@ -210,6 +237,7 @@ export class EvercraftWorldRuntime {
   readonly definitionDigest:string;
   readonly dt:number;
   private state:Map<string,RuntimeEntity>;
+  private navigationMeshes:Map<string,NavigationMesh>;
   private activeEntityIdsSet:Set<string>;
   private _tick=0;
   private _collisions:CollisionContact[]=[];
@@ -219,10 +247,15 @@ export class EvercraftWorldRuntime {
     this.definition=clone(definition);
     this.definitionDigest=worldDefinitionDigest(this.definition);
     this.dt=1/this.definition.tickRateHz;
+    this.navigationMeshes=new Map(
+      [...(this.definition.navigationMeshes || [])]
+        .sort((a,b)=>a.id.localeCompare(b.id))
+        .map(mesh=>[mesh.id,clone(mesh)])
+    );
     this.state=new Map(
       [...this.definition.entities]
         .sort((a,b)=>a.id.localeCompare(b.id))
-        .map(entity=>[entity.id,runtimeEntity(entity)])
+        .map(entity=>[entity.id,runtimeEntity(entity,this.navigationMeshes)])
     );
     this.activeEntityIdsSet=new Set([...this.state.keys()].sort());
   }
@@ -281,6 +314,30 @@ export class EvercraftWorldRuntime {
         throw new Error(`world_entity_animation_missing:${entity.id}`);
       }
       setAnimationParameter(entity.animationRuntime,input.key,input.value);
+      return;
+    }
+    if(input.kind==='set_navigation_target'){
+      if(!entity.navigationAgent || !entity.navigationRuntime){
+        throw new Error(`world_entity_navigation_missing:${entity.id}`);
+      }
+      const mesh=this.navigationMeshes.get(entity.navigationAgent.meshId);
+      if(!mesh) throw new Error(`world_navigation_mesh_missing:${entity.navigationAgent.meshId}`);
+      entity.navigationRuntime=setNavigationTarget(
+        entity.navigationAgent,
+        entity.navigationRuntime,
+        mesh,
+        entity.transform.position,
+        input.value
+      );
+      return;
+    }
+    if(input.kind==='clear_navigation_target'){
+      if(!entity.navigationRuntime) throw new Error(`world_entity_navigation_missing:${entity.id}`);
+      entity.navigationRuntime=clearNavigationTarget(entity.navigationRuntime);
+      if(entity.rigidBody){
+        entity.rigidBody.velocity.x=0;
+        entity.rigidBody.velocity.z=0;
+      }
       return;
     }
     if(!entity.rigidBody) throw new Error(`world_entity_not_dynamic:${entity.id}`);
@@ -350,6 +407,30 @@ export class EvercraftWorldRuntime {
       .sort((a,b)=>a.id.localeCompare(b.id));
     for(const entity of ordered){
       this.applyBehaviors(entity,nextTime);
+      if(entity.navigationAgent && entity.navigationRuntime){
+        const mesh=this.navigationMeshes.get(entity.navigationAgent.meshId);
+        if(!mesh) throw new Error(`world_navigation_mesh_missing:${entity.navigationAgent.meshId}`);
+        entity.navigationRuntime=stepNavigationAgent(
+          entity.navigationAgent,
+          entity.navigationRuntime,
+          entity.transform.position,
+          this.dt
+        );
+        if(entity.rigidBody){
+          entity.rigidBody.velocity.x=entity.navigationRuntime.desiredVelocity.x;
+          entity.rigidBody.velocity.z=entity.navigationRuntime.desiredVelocity.z;
+        }
+        if(
+          entity.navigationAgent.animationMovingParameter &&
+          entity.animationRuntime
+        ){
+          setAnimationParameter(
+            entity.animationRuntime,
+            entity.navigationAgent.animationMovingParameter,
+            entity.navigationRuntime.state==='moving'
+          );
+        }
+      }
       if(entity.animation && entity.animationRuntime){
         entity.animationRuntime=stepAnimationRuntime(entity.animation,entity.animationRuntime,this.dt);
       }
