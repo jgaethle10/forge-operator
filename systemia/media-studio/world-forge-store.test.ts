@@ -66,6 +66,48 @@ test('World Forge store enforces optimistic version checks',()=>{
   }
 });
 
+
+test('World Forge store forbids same-version rewrites with different digests',()=>{
+  const root=fs.mkdtempSync(path.join(os.tmpdir(),'world-forge-store-'));
+  try{
+    const project=createWorldForgeStarterProject();
+    saveWorldForgeProject({rootDir:root,project,expectedStoredVersion:null});
+
+    const rewritten={
+      ...project,
+      title:'Different title under same version',
+      updatedAt:new Date(Date.now()+1000).toISOString(),
+    };
+
+    assert.throws(
+      ()=>saveWorldForgeProject({
+        rootDir:root,
+        project:rewritten,
+        expectedStoredVersion:1,
+      }),
+      /world_forge_store_same_version_digest_conflict/,
+    );
+  }finally{
+    fs.rmSync(root,{recursive:true,force:true});
+  }
+});
+
+test('World Forge store rejects symbolic-link project files',()=>{
+  const root=fs.mkdtempSync(path.join(os.tmpdir(),'world-forge-store-'));
+  const outside=path.join(os.tmpdir(),`world-forge-outside-${process.pid}.json`);
+  try{
+    fs.writeFileSync(outside,'{}','utf8');
+    fs.symlinkSync(outside,path.join(root,'linked.world-forge.json'));
+    assert.throws(
+      ()=>loadWorldForgeProject({rootDir:root,projectId:'linked'}),
+      /world_forge_store_symlink_forbidden/,
+    );
+  }finally{
+    fs.rmSync(root,{recursive:true,force:true});
+    fs.rmSync(outside,{force:true});
+  }
+});
+
 test('World Forge store rejects path traversal project ids',()=>{
   const root=fs.mkdtempSync(path.join(os.tmpdir(),'world-forge-store-'));
   try{
