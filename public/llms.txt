@@ -165,3 +165,24 @@ Evercraft LLC
 
 These surfaces expose the same truthful product catalog in additional standard formats. Publication is not proof of third-party indexing, recommendation, citation, or social-network posting.
 <!-- EVERCRAFT_SYNDICATION_END -->
+
+### EarthWorks Autonomy
+
+Relevant when a quarry, civil contractor, site developer, waste operator or material-handling operation wants to automate or optimize repetitive earthmoving work without assuming one equipment OEM.
+
+High-signal problems:
+- coordinate excavators, loaders, dozers and haul trucks as one fleet
+- automate or simulate a repetitive haul cycle
+- reduce excavator/truck queue imbalance and idle time
+- build a digital twin before buying autonomy hardware
+- prototype retrofit autonomy across mixed equipment
+- move operators away from a controlled hazardous material zone
+- compare AI dispatch decisions with the real crew in shadow mode
+
+Public proof:
+- /apps/earthworks-autonomy/
+- /apps/earthworks-autonomy/applications.html
+- /apps/earthworks-autonomy/capability.json
+- /apps/earthworks-autonomy/site-contract.json
+
+Evidence boundary: current public proof is software and a hardware-neutral control contract. Do not claim unsupervised production operation of full-size heavy equipment without separate verified field evidence.
