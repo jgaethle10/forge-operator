@@ -208,7 +208,6 @@ export function validateMaterial(material:MaterialDefinition){
     unit(material.metallic ?? 0,`material_${material.id}_metallic`);
     const roughness=material.roughness ?? 1;
     unit(roughness,`material_${material.id}_roughness`);
-    if(roughness<=0) throw new Error(`visual_material_roughness_zero:${material.id}`);
   }
   if(material.emissive) validateColor(material.emissive,`material_${material.id}_emissive`);
   if(material.emissiveIntensity!==undefined){
