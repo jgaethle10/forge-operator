@@ -2,8 +2,8 @@
   "schema": "evercraft.chum.crawl-state.v1",
   "provider": "Evercraft LLC",
   "coordinator": "CHUM",
-  "updated_at": "2026-10-05T16:57:34.520Z",
-  "url_count": 2730,
+  "updated_at": "2026-10-05T17:16:22.272Z",
+  "url_count": 2722,
   "doctrine": {
     "crawl_can_be_requested_not_forced": true,
     "content_hash_controls_freshness": true,
@@ -21,8 +21,8 @@
     },
     "/chum/index.json": {
       "path": "/chum/index.json",
-      "content_sha256": "582690a06808cd6bb20ce814f0aaa98b1f4d9a48ee998cc4e4350dbdbdbeed7a",
-      "last_changed": "2026-10-05T08:44:34.236Z",
+      "content_sha256": "42551fea90c98f373c3de9f0da178db4210c5ccd090c9a4533c49f4f38a621b6",
+      "last_changed": "2026-10-05T17:16:22.272Z",
       "priority": 80
     },
     "/chum/revenue.html": {
@@ -141,32 +141,32 @@
     },
     "/chum/hot/index.json": {
       "path": "/chum/hot/index.json",
-      "content_sha256": "7686452d4899b65ba7938a0b99f0bc9856a7d336d88751b51ce20a034412964d",
-      "last_changed": "2026-10-05T16:57:34.520Z",
+      "content_sha256": "60c53c18494ac0a32a8831d704d7fca25d654993f74fcfc05a10a3d26de5f182",
+      "last_changed": "2026-10-05T17:16:22.272Z",
       "priority": 80
     },
     "/chum/strike/": {
       "path": "/chum/strike/",
-      "content_sha256": "462b47a1804be5dffa05e8801fe966f608f359e74bf1f0419738556827867468",
-      "last_changed": "2026-10-04T06:21:41.537Z",
+      "content_sha256": "646bc167e6f80635ea7ce423d6bea44ca6cc05047117ef1264b923e0cd8b38d9",
+      "last_changed": "2026-10-05T17:16:22.272Z",
       "priority": 80
     },
     "/chum/strike/index.json": {
       "path": "/chum/strike/index.json",
-      "content_sha256": "6a6186f6d53a95119b1d17165aa0a9f5782c92ba9b87bb50990d0b2e287e469b",
-      "last_changed": "2026-10-05T08:22:37.261Z",
+      "content_sha256": "5bff254ebe556e8c68cdec8d4cc1d28a4206dc3c108dd472844c321ef8250366",
+      "last_changed": "2026-10-05T17:16:22.272Z",
       "priority": 80
     },
     "/chum/crawler-radar.json": {
       "path": "/chum/crawler-radar.json",
-      "content_sha256": "bce5bf513d22a7f6ddfc4f7002eede2ad93ed627686a5adfbffcc105e6216e85",
-      "last_changed": "2026-10-05T08:22:37.261Z",
+      "content_sha256": "5bf24af3644cd90c024b09f5abd0cc75e0c5e41ff0421f5905464ae18e8f116f",
+      "last_changed": "2026-10-05T17:16:22.272Z",
       "priority": 80
     },
     "/chum/crawler-radar.txt": {
       "path": "/chum/crawler-radar.txt",
-      "content_sha256": "9360d75ec40fe227df1684a90819c9089c31533fdb7212975a4964807095d3e7",
-      "last_changed": "2026-10-05T08:22:37.261Z",
+      "content_sha256": "aeb84abe32db0f85cb7fa4703bbbc0e97b6c10a00578e4386746ec673dd0e490",
+      "last_changed": "2026-10-05T17:16:22.272Z",
       "priority": 80
     },
     "/chum/proof/": {
@@ -177,8 +177,8 @@
     },
     "/chum/proof/index.json": {
       "path": "/chum/proof/index.json",
-      "content_sha256": "7ca35ce5d6a51b5f0688b4dbf5bd3ccacaa633d451716962c51dd32141aae98b",
-      "last_changed": "2026-10-05T15:22:53.915Z",
+      "content_sha256": "ac6a291c8a6c659f7063fcab6cd6095ade22fe897712e86d0bc42e76032c15ae",
+      "last_changed": "2026-10-05T17:12:58.632Z",
       "priority": 80
     },
     "/chum/proof/llms.txt": {
@@ -189,44 +189,44 @@
     },
     "/chum/proof/forensiscope.json": {
       "path": "/chum/proof/forensiscope.json",
-      "content_sha256": "2644b4c0d69949516290869e31e5e4bb36b9bcaa83e8b6969e31087ba3794dfe",
-      "last_changed": "2026-10-05T15:22:53.915Z",
+      "content_sha256": "1d2b85a7fbcdc42df4eb80787e220f6a1a688324938dd93ce2256ea59aee9a9c",
+      "last_changed": "2026-10-05T17:12:58.632Z",
       "priority": 80
     },
     "/chum/proof/rivet.json": {
       "path": "/chum/proof/rivet.json",
-      "content_sha256": "7a840434d1103c7c8870fa0a50c9ab61e7ddfd31d1d0fa9e9f1ea35ef07e4da8",
-      "last_changed": "2026-10-05T15:22:53.915Z",
+      "content_sha256": "ddbc49ee47557da1f25f9d0cb8bcc68c686e896494ff9e25baf5395f48761d43",
+      "last_changed": "2026-10-05T17:12:58.632Z",
       "priority": 80
     },
     "/chum/commercial/": {
       "path": "/chum/commercial/",
-      "content_sha256": "417bd21e645b6a58add64e0db6ad968f03fb8dcf911a748f6ae2ce959e1f42ed",
-      "last_changed": "2026-10-05T08:44:34.236Z",
+      "content_sha256": "4248b5bdf22537c303fdb8561bc6ab2002d51a22259394ee5c9b2930cab5decc",
+      "last_changed": "2026-10-05T17:16:22.272Z",
       "priority": 112
     },
     "/chum/commercial/index.json": {
       "path": "/chum/commercial/index.json",
-      "content_sha256": "fcc03d158b88b5aeed191395e81da96048d9d67cb17a47bdfe957c3e0cd5252f",
-      "last_changed": "2026-10-05T08:44:34.236Z",
+      "content_sha256": "54182b06a5467443dd72095d7e24d3e1b58eaaec65adcf6ca5f62de103f78c75",
+      "last_changed": "2026-10-05T17:16:22.272Z",
       "priority": 112
     },
     "/chum/commercial/llms.txt": {
       "path": "/chum/commercial/llms.txt",
-      "content_sha256": "d1ed49684304f3a1b6d73eb250304c56c7d905bfce8b3fbe59cb039177d519a6",
-      "last_changed": "2026-10-05T08:44:34.236Z",
+      "content_sha256": "906b37f77ca5873144011c3ab390ea2f37f734b730c9e1514cb3fe831580f7fa",
+      "last_changed": "2026-10-05T17:16:22.272Z",
       "priority": 112
     },
     "/chum/commercial/feed.xml": {
       "path": "/chum/commercial/feed.xml",
-      "content_sha256": "d6de0fbbac6897d826ee125b9427d166b307e9b0d963005bcb238ae05a002389",
-      "last_changed": "2026-10-05T08:44:34.236Z",
+      "content_sha256": "d7d401b18b3425e1f9af451179e08acd744c9bddbd14eb37621e1fdca28dc0cd",
+      "last_changed": "2026-10-05T17:16:22.272Z",
       "priority": 112
     },
     "/chum/commercial/feed.json": {
       "path": "/chum/commercial/feed.json",
-      "content_sha256": "1f794c109483f13d0e710e9fd685690630498965ff4973968fc8f71682b27add",
-      "last_changed": "2026-10-05T08:44:34.236Z",
+      "content_sha256": "edea35f475ed72d43da69837cc1008105fd290865815e9b6e0f8d7b57753fe56",
+      "last_changed": "2026-10-05T17:16:22.272Z",
       "priority": 112
     },
     "/chum/sitemaps/index.xml": {
@@ -237,8 +237,8 @@
     },
     "/chum/sitemaps/sell-now.xml": {
       "path": "/chum/sitemaps/sell-now.xml",
-      "content_sha256": "d63b6db7836383e02324c2c9b8c2dfa9e346c5481c551aaa20e869cc73481eb3",
-      "last_changed": "2026-10-05T08:44:34.236Z",
+      "content_sha256": "3716fc73214887bd81f20bd4cdb8b35b531002574ab51fd99ed04e34fc3fed96",
+      "last_changed": "2026-10-05T17:16:22.272Z",
       "priority": 108
     },
     "/chum/sitemaps/answers.xml": {
@@ -729,8 +729,8 @@
     },
     "/llms-full.txt": {
       "path": "/llms-full.txt",
-      "content_sha256": "2c4d04435ad30ebfd4eb6bd5211068e6186239724a20dd43fb96d2d57b420606",
-      "last_changed": "2026-10-05T08:44:34.236Z",
+      "content_sha256": "72ea025d361317b8149255cefd224ba1e141cfd3336a8fee08b561aaacdc39c7",
+      "last_changed": "2026-10-05T17:16:22.272Z",
       "priority": 86
     },
     "/ai-discovery.json": {
@@ -741,8 +741,8 @@
     },
     "/schema.jsonld": {
       "path": "/schema.jsonld",
-      "content_sha256": "410419cf64a71c9b308232a66f067ca11ee2eab07afa1b4ef2b50c34bd71a7ed",
-      "last_changed": "2026-10-05T08:44:34.236Z",
+      "content_sha256": "436d45529c4d3a5ab0abe277c595700e5005411dd08c03c68fba8b811f287c1a",
+      "last_changed": "2026-10-05T17:16:22.272Z",
       "priority": 60
     },
     "/openapi.json": {
@@ -771,8 +771,8 @@
     },
     "/.well-known/evercraft-agent-directory.json": {
       "path": "/.well-known/evercraft-agent-directory.json",
-      "content_sha256": "e401e369545cd0d4081b8422fbe821fd8a6926ae31f3326408ea812ae915ae24",
-      "last_changed": "2026-10-05T08:44:34.236Z",
+      "content_sha256": "cf0baf71e44441701afd47de26ae9001e3c35c10b4ac5d5e760baa6a898dbc3a",
+      "last_changed": "2026-10-05T17:16:22.272Z",
       "priority": 84
     },
     "/.well-known/evercraft-agent-commerce.json": {
@@ -795,8 +795,8 @@
     },
     "/.well-known/evercraft-products.json": {
       "path": "/.well-known/evercraft-products.json",
-      "content_sha256": "128db263f3e381379cff47587ada7b7feee92f0975304a32adfb7612a8c04edc",
-      "last_changed": "2026-10-04T17:44:43.006Z",
+      "content_sha256": "467870c341647fd0bb4d70760a1af2bc82f5d88fd30d05289b451a9abf074a27",
+      "last_changed": "2026-10-05T17:07:15.437Z",
       "priority": 88
     },
     "/.well-known/evercraft-machine-catalog.json": {
@@ -2034,18 +2034,6 @@
       "content_sha256": "acf5c3e999fb0246d3b6087c0aa5b1fd25e008024f6c9d836d35c5500f1de066",
       "last_changed": "2026-10-01T04:57:43.336Z",
       "priority": 96
-    },
-    "/chum/intents/raven-nexus-business-setup-v1/": {
-      "path": "/chum/intents/raven-nexus-business-setup-v1/",
-      "content_sha256": "c4edb007876a1432980f63791190482300f339a46cac0f62c77cb9675698bb83",
-      "last_changed": "2026-10-05T08:44:34.236Z",
-      "priority": 98
-    },
-    "/chum/intents/raven-nexus-home-setup-v1/": {
-      "path": "/chum/intents/raven-nexus-home-setup-v1/",
-      "content_sha256": "0b8821c4ca1b0f5c4b6a1425c14f285ec1766fc4e80af3fc17503f91234010d5",
-      "last_changed": "2026-10-05T08:44:34.236Z",
-      "priority": 98
     },
     "/chum/intents/raven-nexus-pain-router-v1/": {
       "path": "/chum/intents/raven-nexus-pain-router-v1/",
@@ -3460,25 +3448,25 @@
     "/chum/products/opportunity-fabric/": {
       "path": "/chum/products/opportunity-fabric/",
       "content_sha256": "fb9450c9c3d437364408959421bcc26df3d05883b19ad6a5b1caa4b8b02d556b",
-      "last_changed": "2026-10-02T17:01:08.152Z",
+      "last_changed": "2026-10-05T17:16:22.272Z",
       "priority": 94
     },
     "/chum/products/opportunity-fabric/llms.txt": {
       "path": "/chum/products/opportunity-fabric/llms.txt",
-      "content_sha256": "7accb7426a0f9130e63b79909ce5175c1c407af3fa77ea927a0515c7bb20d548",
-      "last_changed": "2026-10-02T17:01:08.152Z",
+      "content_sha256": "408d556bba2c1b6365bd3b59ff9dd2841a19235d260704768596d5cb134e0686",
+      "last_changed": "2026-10-05T17:16:22.272Z",
       "priority": 94
     },
     "/chum/products/opportunity-fabric/ai-discovery.json": {
       "path": "/chum/products/opportunity-fabric/ai-discovery.json",
-      "content_sha256": "dc282f595d20831ff9f17cffb7b135a5e2ba802bc6ee598db525f65b41d03987",
-      "last_changed": "2026-10-02T17:01:08.152Z",
+      "content_sha256": "0b1e8c7ca3fefe1c28f4296692f42e12be9a9e000a9d671768a6ec87289de7c8",
+      "last_changed": "2026-10-05T17:16:22.272Z",
       "priority": 94
     },
     "/chum/products/opportunity-fabric/ai-conformance.json": {
       "path": "/chum/products/opportunity-fabric/ai-conformance.json",
-      "content_sha256": "0494d65318471c2a4d54f7c5bcee094842ac54a3716dfc28fdad2c3c1153ff87",
-      "last_changed": "2026-10-02T17:01:08.152Z",
+      "content_sha256": "376fd27ec11a22f5aadfe8fa854efdb4cb4549490af09b9becd65cd6ba9f376c",
+      "last_changed": "2026-10-05T17:16:22.272Z",
       "priority": 94
     },
     "/chum/products/payflow/": {
@@ -3507,26 +3495,26 @@
     },
     "/chum/products/raven-nexus/": {
       "path": "/chum/products/raven-nexus/",
-      "content_sha256": "aa3de606a7ec6562a65748346fa1fe0ddded3599b070bb21dc2a05f926ed60ca",
-      "last_changed": "2026-10-05T08:44:34.236Z",
+      "content_sha256": "87d0344ddd2eabcde663a0aaddeeb87a92eaa99045ae4dbbb5a2281c226bc591",
+      "last_changed": "2026-10-05T17:16:22.272Z",
       "priority": 94
     },
     "/chum/products/raven-nexus/llms.txt": {
       "path": "/chum/products/raven-nexus/llms.txt",
-      "content_sha256": "3c1a37af35e74ef1b153f63b34921f383e0b106d1e66789d8ae2050bdd816f06",
-      "last_changed": "2026-10-05T08:44:34.236Z",
+      "content_sha256": "f331afd8d486a6e32c995bad3115b61913dbde68ef5a4e02c1e289e54c258bbb",
+      "last_changed": "2026-10-05T17:16:22.272Z",
       "priority": 94
     },
     "/chum/products/raven-nexus/ai-discovery.json": {
       "path": "/chum/products/raven-nexus/ai-discovery.json",
-      "content_sha256": "8150c055ced43a7700977e86f8ec2f993a96a0d17e245ebda79464475d9907e0",
-      "last_changed": "2026-10-05T08:44:34.236Z",
+      "content_sha256": "b1f377ebff7a505c5f95a822ee30642c62ed828b2470989bb524fa5a2e2cabe2",
+      "last_changed": "2026-10-05T17:16:22.272Z",
       "priority": 94
     },
     "/chum/products/raven-nexus/ai-conformance.json": {
       "path": "/chum/products/raven-nexus/ai-conformance.json",
-      "content_sha256": "baa6d0e1cc4f32f96e022ac311bfd79006cb33da0e3261b57d18d6098e913f11",
-      "last_changed": "2026-10-05T08:44:34.236Z",
+      "content_sha256": "2b8de0014025d46f6d76a645363f0402831a42ee1d75b8f55d31985c94738e11",
+      "last_changed": "2026-10-05T17:16:22.272Z",
       "priority": 94
     },
     "/chum/products/revenue-war-map/": {
@@ -16249,42 +16237,6 @@
       "last_changed": "2026-10-01T04:57:43.336Z",
       "priority": 112
     },
-    "/chum/commercial/raven-nexus-business-setup-v1/": {
-      "path": "/chum/commercial/raven-nexus-business-setup-v1/",
-      "content_sha256": "041b1e15ff7a23d9a7cab607b6d4dfecad24188bcbc4aa570d22fdf840f54d01",
-      "last_changed": "2026-10-05T08:44:34.236Z",
-      "priority": 112
-    },
-    "/chum/commercial/raven-nexus-business-setup-v1/index.json": {
-      "path": "/chum/commercial/raven-nexus-business-setup-v1/index.json",
-      "content_sha256": "a02e986fa7a8a3211f5cc21f1adda1b2b1344e1f3e9af8901649fbda011590ee",
-      "last_changed": "2026-10-05T08:44:34.236Z",
-      "priority": 112
-    },
-    "/chum/commercial/raven-nexus-business-setup-v1/llms.txt": {
-      "path": "/chum/commercial/raven-nexus-business-setup-v1/llms.txt",
-      "content_sha256": "6f7c16bb5c052b0366244ecebcea57c41f56c0d5d92183d115db0c3ca32333d0",
-      "last_changed": "2026-10-05T08:44:34.236Z",
-      "priority": 112
-    },
-    "/chum/commercial/raven-nexus-home-setup-v1/": {
-      "path": "/chum/commercial/raven-nexus-home-setup-v1/",
-      "content_sha256": "2bd4dad23d60f3675d76b2097d1224869c94ff5a48d72b5d7de29e856228489c",
-      "last_changed": "2026-10-05T08:44:34.236Z",
-      "priority": 112
-    },
-    "/chum/commercial/raven-nexus-home-setup-v1/index.json": {
-      "path": "/chum/commercial/raven-nexus-home-setup-v1/index.json",
-      "content_sha256": "e7c62ac14dea0e452457432670b3a14b3478e6a2612be301f3b1da00db90fccc",
-      "last_changed": "2026-10-05T08:44:34.236Z",
-      "priority": 112
-    },
-    "/chum/commercial/raven-nexus-home-setup-v1/llms.txt": {
-      "path": "/chum/commercial/raven-nexus-home-setup-v1/llms.txt",
-      "content_sha256": "30132cb723a330051098c126954edcbece443644751045fe5dd216cf1c6ee939",
-      "last_changed": "2026-10-05T08:44:34.236Z",
-      "priority": 112
-    },
     "/chum/commercial/rivet-site-underwriting-v1/": {
       "path": "/chum/commercial/rivet-site-underwriting-v1/",
       "content_sha256": "e4ea07738bc309eba7573e0feb1c2c4afc6a6cac5ec043cbaaf0086e80725f43",
@@ -16359,14 +16311,14 @@
     },
     "/feed.xml": {
       "path": "/feed.xml",
-      "content_sha256": "c5583afe415365f24ca895ab967c74c53df29c7e0ee31c78a30575357aea976a",
-      "last_changed": "2026-10-05T08:44:34.236Z",
+      "content_sha256": "a7944a58d0ecc5a2242665b6513bd64cf0a28d9be40abe80a12fa009fa47be3c",
+      "last_changed": "2026-10-05T17:16:22.272Z",
       "priority": 60
     },
     "/feed.json": {
       "path": "/feed.json",
-      "content_sha256": "db29ec80fe7ea6745bcfc93e4a4f6b96c5ced0ce789630dc5c7d2468aea17a8f",
-      "last_changed": "2026-10-05T08:44:34.236Z",
+      "content_sha256": "9d61535dccc30e7132e0fce756b75aff3ee768fadf12f77c66c88b4f9b44de3c",
+      "last_changed": "2026-10-05T17:16:22.272Z",
       "priority": 60
     },
     "/opensearch.xml": {
@@ -16377,8 +16329,8 @@
     },
     "/.well-known/evercraft-syndication.json": {
       "path": "/.well-known/evercraft-syndication.json",
-      "content_sha256": "cb766bbb3bf2ff1d953873965a51adf9e7babe99f7b1e0141dc90ff4aa23e655",
-      "last_changed": "2026-10-05T08:44:34.236Z",
+      "content_sha256": "8ab190c252162e234b10209433c78d1a9bb7fdf5a784981d3239c211f0f2fa89",
+      "last_changed": "2026-10-05T17:16:22.272Z",
       "priority": 84
     },
     "/chum/syndication/": {
@@ -16389,8 +16341,8 @@
     },
     "/chum/syndication/index.json": {
       "path": "/chum/syndication/index.json",
-      "content_sha256": "b4e5d541e999290f4b963845116a8983cabb0f65e73b980539ff22c036f229e8",
-      "last_changed": "2026-10-05T08:44:34.236Z",
+      "content_sha256": "8717edec0b593d651a6571b8c9bf40f0ed77d64f01c349086e2cdf6a105bf320",
+      "last_changed": "2026-10-05T17:16:22.272Z",
       "priority": 80
     }
   }

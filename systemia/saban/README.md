@@ -424,3 +424,122 @@ what Evercraft is waiting to execute
   -> zero-spend partner/voluntary paths only where allowed
   -> commercial capacity remains unauthorized unless separately approved
 ```
+
+
+## Portable marketplace execution
+
+Marketplace capacity is not assumed to be a full Evercraft NodeSeed. Saban may execute on a marketplace provider only when the selected software contract explicitly declares a portable worker for that market.
+
+A portable worker declaration binds:
+
+- a stable worker ID and version;
+- the exact local worker file Saban is allowed to transfer;
+- the provider image/runtime required to execute it;
+- whether network access is allowed;
+- whether arbitrary shell execution is allowed.
+
+The first portable workload is CHUM:
+
+- worker ID: `chum-portable-v1`;
+- image: `golem/node:20-alpine`;
+- worker: `systemia/saban/portable-workers/chum.mjs`;
+- network access: disabled by contract;
+- arbitrary shell: disabled by contract.
+
+For Golem, Saban uploads only the registered portable worker plus a JSON assignment, invokes Node using the argv form of the provider execution API, validates the portable-worker receipt, returns the normal assignment result/checkpoint into the distributed scheduler, and finalizes the rental after the acquired pool finishes.
+
+If a software contract does not declare a Golem portable worker, the Golem adapter does not advertise eligible supply for that demand. This keeps external compute acquisition fail-closed by software capability rather than treating every Evercraft workload as portable.
+
+The automatic distributed fallback now supports two acquisition transports:
+
+1. an acquired NodeSeed endpoint with allocator authority; or
+2. an execution-ready negotiated market adapter implementing the bounded Saban assignment contract.
+
+Provider concurrency ceilings remain authoritative even when a Saban plan requests a larger physical worker pool.
+
+
+### Golem requestor sidecar
+
+Golem execution is an optional requestor sidecar rather than a mandatory root Forge dependency.
+
+Prepare the pinned SDK:
+
+```bash
+npm run saban:golem:prepare
+```
+
+That installs `@golem-sdk/golem-js` only under
+`systemia/saban/golem-requestor/node_modules` and verifies the SDK is present.
+
+Once a Linux Yagna requestor is running and `YAGNA_APPKEY` is available:
+
+```bash
+npm run saban:golem:preflight
+```
+
+The preflight connects through the configured Yagna API URL, verifies the requestor can be reached, and never prints the app-key.
+
+A green repository proof is not a claim that a funded Golem requestor is currently connected. Live marketplace execution requires the sidecar preflight to pass in the actual runtime and the selected payment network to have sufficient requestor funds.
+
+
+## Formation-level compute acquisition
+
+A distributed formation can ask Saban to acquire capacity when its configured NodeSeed pool cannot satisfy the job. The formation declares policy only. Runtime adapters and authority material are constructed at execution time.
+
+Example zero-spend policy:
+
+```json
+{
+  "execution": {
+    "mode": "nodeseed_pool",
+    "discover": true,
+    "acquisition": {
+      "enabled": true,
+      "zero_spend_only": true,
+      "negotiation_level": "lease",
+      "markets": {
+        "evercraft_broker": {
+          "enabled": true,
+          "state_dir_env": "EVERCRAFT_YARD_STATE_DIR",
+          "broker_deployment_id_env": "EVERCRAFT_REMOTE_CAPACITY_BROKER_DEPLOYMENT_ID"
+        },
+        "evercraft_voluntary": {
+          "enabled": true,
+          "endpoint_env": "EVERCRAFT_VOLUNTARY_COMPUTE_ENDPOINT",
+          "control_token_env": "EVERCRAFT_VOLUNTARY_CONTROL_TOKEN"
+        },
+        "golem": { "enabled": false },
+        "akash": { "enabled": false }
+      }
+    }
+  }
+}
+```
+
+With `zero_spend_only`, Saban generates demand-scoped quote/lease authority only for eligible Evercraft broker and voluntary markets and fixes USD ceilings at zero. Paid offers cannot pass the generic lease gate.
+
+External paid markets must be explicitly enabled and supplied with an approved quote/lease policy. Paid leases additionally require `allow_spend: true` plus the applicable hard ceiling. Akash credentials, Yagna app keys, voluntary-control tokens and Yard authority never belong in the formation JSON. They are loaded from named runtime environment variables or private Yard state.
+
+Market preference is enforced after resource, placement, trust and budget eligibility:
+
+1. Evercraft broker capacity
+2. Evercraft voluntary capacity
+3. Golem portable capacity
+4. Akash capacity
+
+Before a commitment, a safe quote failure may fall through to the next eligible market. Once a lease request has been attempted, an uncertain failure stops automatic failover and requires reconciliation.
+
+## Production capacity planner → buyer handoff
+
+`production-capacity-plan.mjs` now emits a bounded `evercraft.saban.capacity-buyer-handoff.v1` whenever a production role remains unsatisfied.
+
+Each unsatisfied role receives two separate phases:
+
+1. **Zero-spend phase**: a policy-ready formation acquisition directive that may use Evercraft broker and voluntary capacity once an eligible source is configured at runtime.
+2. **Commercial fallback**: visibility into the best known commercial candidate, but no quote authority, spend authority, market-order authority, or lease authority.
+
+The zero-spend phase uses `enabled_if_configured` for broker and voluntary sources. This means Saban uses whichever trusted source is actually wired at runtime. An absent broker does not suppress an available voluntary worker, and an absent voluntary exchange does not suppress a configured broker.
+
+The handoff may contain environment-variable names such as `EVERCRAFT_YARD_STATE_DIR` or `EVERCRAFT_VOLUNTARY_CONTROL_TOKEN`, but never the values behind them. Authority material remains in runtime environment or private Yard state.
+
+Commercial visibility never becomes purchasing authority automatically. Even when the production planner reports `commercial_fillable_with_explicit_authority`, a separate demand-scoped quote/spend grant with hard ceilings is still required before Saban may place an order or create a paid lease.

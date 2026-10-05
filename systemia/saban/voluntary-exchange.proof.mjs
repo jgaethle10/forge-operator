@@ -91,6 +91,7 @@ try{
       approved:true,
       demand_id:'voluntary-proof-demand',
       allowed_markets:['evercraft-voluntary'],
+      allow_spend:true,
       max_total_usd:0.02,
       expires_at:new Date(Date.now()+60000).toISOString(),
     },

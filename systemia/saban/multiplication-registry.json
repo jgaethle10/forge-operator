@@ -101,6 +101,18 @@
         "cpu_units_per_worker": 1,
         "memory_mb_per_worker": 128,
         "require_capacity_hint": false
+      },
+      "portable_execution": {
+        "golem": {
+          "enabled": true,
+          "worker_id": "chum-portable-v1",
+          "worker_version": "1",
+          "worker_file": "systemia/saban/portable-workers/chum.mjs",
+          "image_tag": "golem/node:20-alpine",
+          "runtime": "node",
+          "network_access": false,
+          "arbitrary_shell": false
+        }
       }
     },
     {

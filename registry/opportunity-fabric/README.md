@@ -28,9 +28,9 @@ Evercraft Opportunity Fabric is an approved public Evercraft discovery record. T
 - compare quotes for the same work package without automatically choosing a vendor
 - explain the tradeoff between price lead time capacity geography and observed execution history
 - show me which sourcing evidence is self-reported versus observed
-- require QA before completed work becomes performance history
-- show me which partners have reviewed on-time outcomes instead of profile claims
 - compare partners using leader-reviewed delivery outcomes
+- show me which partners have reviewed on-time outcomes instead of profile claims
+- require QA before completed work becomes performance history
 
 ## Public routes
 
@@ -68,13 +68,14 @@ Human confirmation required: yes
 - accepting a sourced team invitation materializes the package as Offered and Not accepted
 - sourcing comparison uses explicit fixed weights and preserves evidence classes
 - quote availability and lead time are participant-supplied rather than independently observed
-- Fabric history uses leader-reviewed WorkPackageOutcome records only and missing reviewed history is neutral
+- Fabric history uses accepted Opportunity Fabric work-package records only and missing history is neutral
 - prices are compared only against same-currency peers; no FX normalization is claimed
 - comparison ordering requires human decision and creates no partner selection shortlist membership contract rights work acceptance or payment
-- reviewed outcomes are internal operational evidence, not independent certification or a comprehensive reputation score
-- leader QA acceptance creates the reviewed execution outcome used by future sourcing comparisons
-- rework requires a leader QA note and returns the package to In progress
 - assignees cannot self-complete work packages; completion requires leader QA
+- rework requires a leader QA note and returns the package to In progress
+- leader QA acceptance creates the WorkPackageOutcome used as observed execution history
+- reviewed outcomes are internal operational evidence not independent certification or a comprehensive reputation score
+- missing reviewed outcome history is neutral rather than negative evidence
 
 ## Evidence state
 

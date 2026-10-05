@@ -2,7 +2,7 @@
   "schema": "evercraft.chum.crawl-pressure.v1",
   "provider": "Evercraft LLC",
   "coordinator": "CHUM",
-  "updated_at": "2026-10-05T16:57:34.520Z",
+  "updated_at": "2026-10-05T17:16:22.272Z",
   "purpose": "Content-hash-backed freshness signals for public Evercraft discovery surfaces. A freshness signal requests attention; it does not prove indexing, ranking, recommendation, citation or provider pickup.",
   "indexnow": {
     "supported": true,
@@ -11,221 +11,333 @@
   },
   "latest_change_batch": [
     {
-      "path": "/chum/hot/index.json",
-      "last_changed": "2026-10-05T16:57:34.520Z",
+      "path": "/chum/commercial/",
+      "last_changed": "2026-10-05T17:16:22.272Z",
+      "priority": 112
+    },
+    {
+      "path": "/chum/commercial/feed.json",
+      "last_changed": "2026-10-05T17:16:22.272Z",
+      "priority": 112
+    },
+    {
+      "path": "/chum/commercial/feed.xml",
+      "last_changed": "2026-10-05T17:16:22.272Z",
+      "priority": 112
+    },
+    {
+      "path": "/chum/commercial/index.json",
+      "last_changed": "2026-10-05T17:16:22.272Z",
+      "priority": 112
+    },
+    {
+      "path": "/chum/commercial/llms.txt",
+      "last_changed": "2026-10-05T17:16:22.272Z",
+      "priority": 112
+    },
+    {
+      "path": "/chum/sitemaps/sell-now.xml",
+      "last_changed": "2026-10-05T17:16:22.272Z",
+      "priority": 108
+    },
+    {
+      "path": "/chum/products/opportunity-fabric/",
+      "last_changed": "2026-10-05T17:16:22.272Z",
+      "priority": 94
+    },
+    {
+      "path": "/chum/products/opportunity-fabric/ai-conformance.json",
+      "last_changed": "2026-10-05T17:16:22.272Z",
+      "priority": 94
+    },
+    {
+      "path": "/chum/products/opportunity-fabric/ai-discovery.json",
+      "last_changed": "2026-10-05T17:16:22.272Z",
+      "priority": 94
+    },
+    {
+      "path": "/chum/products/opportunity-fabric/llms.txt",
+      "last_changed": "2026-10-05T17:16:22.272Z",
+      "priority": 94
+    },
+    {
+      "path": "/chum/products/raven-nexus/",
+      "last_changed": "2026-10-05T17:16:22.272Z",
+      "priority": 94
+    },
+    {
+      "path": "/chum/products/raven-nexus/ai-conformance.json",
+      "last_changed": "2026-10-05T17:16:22.272Z",
+      "priority": 94
+    },
+    {
+      "path": "/chum/products/raven-nexus/ai-discovery.json",
+      "last_changed": "2026-10-05T17:16:22.272Z",
+      "priority": 94
+    },
+    {
+      "path": "/chum/products/raven-nexus/llms.txt",
+      "last_changed": "2026-10-05T17:16:22.272Z",
+      "priority": 94
+    },
+    {
+      "path": "/llms-full.txt",
+      "last_changed": "2026-10-05T17:16:22.272Z",
+      "priority": 86
+    },
+    {
+      "path": "/.well-known/evercraft-agent-directory.json",
+      "last_changed": "2026-10-05T17:16:22.272Z",
+      "priority": 84
+    },
+    {
+      "path": "/.well-known/evercraft-syndication.json",
+      "last_changed": "2026-10-05T17:16:22.272Z",
+      "priority": 84
+    },
+    {
+      "path": "/chum/crawler-radar.json",
+      "last_changed": "2026-10-05T17:16:22.272Z",
       "priority": 80
+    },
+    {
+      "path": "/chum/crawler-radar.txt",
+      "last_changed": "2026-10-05T17:16:22.272Z",
+      "priority": 80
+    },
+    {
+      "path": "/chum/hot/index.json",
+      "last_changed": "2026-10-05T17:16:22.272Z",
+      "priority": 80
+    },
+    {
+      "path": "/chum/index.json",
+      "last_changed": "2026-10-05T17:16:22.272Z",
+      "priority": 80
+    },
+    {
+      "path": "/chum/strike/",
+      "last_changed": "2026-10-05T17:16:22.272Z",
+      "priority": 80
+    },
+    {
+      "path": "/chum/strike/index.json",
+      "last_changed": "2026-10-05T17:16:22.272Z",
+      "priority": 80
+    },
+    {
+      "path": "/chum/syndication/index.json",
+      "last_changed": "2026-10-05T17:16:22.272Z",
+      "priority": 80
+    },
+    {
+      "path": "/feed.json",
+      "last_changed": "2026-10-05T17:16:22.272Z",
+      "priority": 60
+    },
+    {
+      "path": "/feed.xml",
+      "last_changed": "2026-10-05T17:16:22.272Z",
+      "priority": 60
+    },
+    {
+      "path": "/schema.jsonld",
+      "last_changed": "2026-10-05T17:16:22.272Z",
+      "priority": 60
     }
   ],
   "recent_surfaces": [
     {
+      "path": "/chum/commercial/",
+      "url": "/chum/commercial/",
+      "last_changed": "2026-10-05T17:16:22.272Z",
+      "priority": 112
+    },
+    {
+      "path": "/chum/commercial/feed.json",
+      "url": "/chum/commercial/feed.json",
+      "last_changed": "2026-10-05T17:16:22.272Z",
+      "priority": 112
+    },
+    {
+      "path": "/chum/commercial/feed.xml",
+      "url": "/chum/commercial/feed.xml",
+      "last_changed": "2026-10-05T17:16:22.272Z",
+      "priority": 112
+    },
+    {
+      "path": "/chum/commercial/index.json",
+      "url": "/chum/commercial/index.json",
+      "last_changed": "2026-10-05T17:16:22.272Z",
+      "priority": 112
+    },
+    {
+      "path": "/chum/commercial/llms.txt",
+      "url": "/chum/commercial/llms.txt",
+      "last_changed": "2026-10-05T17:16:22.272Z",
+      "priority": 112
+    },
+    {
+      "path": "/chum/sitemaps/sell-now.xml",
+      "url": "/chum/sitemaps/sell-now.xml",
+      "last_changed": "2026-10-05T17:16:22.272Z",
+      "priority": 108
+    },
+    {
+      "path": "/chum/products/opportunity-fabric/",
+      "url": "/chum/products/opportunity-fabric/",
+      "last_changed": "2026-10-05T17:16:22.272Z",
+      "priority": 94
+    },
+    {
+      "path": "/chum/products/opportunity-fabric/ai-conformance.json",
+      "url": "/chum/products/opportunity-fabric/ai-conformance.json",
+      "last_changed": "2026-10-05T17:16:22.272Z",
+      "priority": 94
+    },
+    {
+      "path": "/chum/products/opportunity-fabric/ai-discovery.json",
+      "url": "/chum/products/opportunity-fabric/ai-discovery.json",
+      "last_changed": "2026-10-05T17:16:22.272Z",
+      "priority": 94
+    },
+    {
+      "path": "/chum/products/opportunity-fabric/llms.txt",
+      "url": "/chum/products/opportunity-fabric/llms.txt",
+      "last_changed": "2026-10-05T17:16:22.272Z",
+      "priority": 94
+    },
+    {
+      "path": "/chum/products/raven-nexus/",
+      "url": "/chum/products/raven-nexus/",
+      "last_changed": "2026-10-05T17:16:22.272Z",
+      "priority": 94
+    },
+    {
+      "path": "/chum/products/raven-nexus/ai-conformance.json",
+      "url": "/chum/products/raven-nexus/ai-conformance.json",
+      "last_changed": "2026-10-05T17:16:22.272Z",
+      "priority": 94
+    },
+    {
+      "path": "/chum/products/raven-nexus/ai-discovery.json",
+      "url": "/chum/products/raven-nexus/ai-discovery.json",
+      "last_changed": "2026-10-05T17:16:22.272Z",
+      "priority": 94
+    },
+    {
+      "path": "/chum/products/raven-nexus/llms.txt",
+      "url": "/chum/products/raven-nexus/llms.txt",
+      "last_changed": "2026-10-05T17:16:22.272Z",
+      "priority": 94
+    },
+    {
+      "path": "/llms-full.txt",
+      "url": "/llms-full.txt",
+      "last_changed": "2026-10-05T17:16:22.272Z",
+      "priority": 86
+    },
+    {
+      "path": "/.well-known/evercraft-agent-directory.json",
+      "url": "/.well-known/evercraft-agent-directory.json",
+      "last_changed": "2026-10-05T17:16:22.272Z",
+      "priority": 84
+    },
+    {
+      "path": "/.well-known/evercraft-syndication.json",
+      "url": "/.well-known/evercraft-syndication.json",
+      "last_changed": "2026-10-05T17:16:22.272Z",
+      "priority": 84
+    },
+    {
+      "path": "/chum/crawler-radar.json",
+      "url": "/chum/crawler-radar.json",
+      "last_changed": "2026-10-05T17:16:22.272Z",
+      "priority": 80
+    },
+    {
+      "path": "/chum/crawler-radar.txt",
+      "url": "/chum/crawler-radar.txt",
+      "last_changed": "2026-10-05T17:16:22.272Z",
+      "priority": 80
+    },
+    {
       "path": "/chum/hot/index.json",
       "url": "/chum/hot/index.json",
-      "last_changed": "2026-10-05T16:57:34.520Z",
+      "last_changed": "2026-10-05T17:16:22.272Z",
       "priority": 80
+    },
+    {
+      "path": "/chum/index.json",
+      "url": "/chum/index.json",
+      "last_changed": "2026-10-05T17:16:22.272Z",
+      "priority": 80
+    },
+    {
+      "path": "/chum/strike/",
+      "url": "/chum/strike/",
+      "last_changed": "2026-10-05T17:16:22.272Z",
+      "priority": 80
+    },
+    {
+      "path": "/chum/strike/index.json",
+      "url": "/chum/strike/index.json",
+      "last_changed": "2026-10-05T17:16:22.272Z",
+      "priority": 80
+    },
+    {
+      "path": "/chum/syndication/index.json",
+      "url": "/chum/syndication/index.json",
+      "last_changed": "2026-10-05T17:16:22.272Z",
+      "priority": 80
+    },
+    {
+      "path": "/feed.json",
+      "url": "/feed.json",
+      "last_changed": "2026-10-05T17:16:22.272Z",
+      "priority": 60
+    },
+    {
+      "path": "/feed.xml",
+      "url": "/feed.xml",
+      "last_changed": "2026-10-05T17:16:22.272Z",
+      "priority": 60
+    },
+    {
+      "path": "/schema.jsonld",
+      "url": "/schema.jsonld",
+      "last_changed": "2026-10-05T17:16:22.272Z",
+      "priority": 60
     },
     {
       "path": "/chum/proof/forensiscope.json",
       "url": "/chum/proof/forensiscope.json",
-      "last_changed": "2026-10-05T15:22:53.915Z",
+      "last_changed": "2026-10-05T17:12:58.632Z",
       "priority": 80
     },
     {
       "path": "/chum/proof/index.json",
       "url": "/chum/proof/index.json",
-      "last_changed": "2026-10-05T15:22:53.915Z",
+      "last_changed": "2026-10-05T17:12:58.632Z",
       "priority": 80
     },
     {
       "path": "/chum/proof/rivet.json",
       "url": "/chum/proof/rivet.json",
-      "last_changed": "2026-10-05T15:22:53.915Z",
+      "last_changed": "2026-10-05T17:12:58.632Z",
       "priority": 80
+    },
+    {
+      "path": "/.well-known/evercraft-products.json",
+      "url": "/.well-known/evercraft-products.json",
+      "last_changed": "2026-10-05T17:07:15.437Z",
+      "priority": 88
     },
     {
       "path": "/chum/hot/",
       "url": "/chum/hot/",
       "last_changed": "2026-10-05T12:44:22.254Z",
       "priority": 80
-    },
-    {
-      "path": "/chum/commercial/",
-      "url": "/chum/commercial/",
-      "last_changed": "2026-10-05T08:44:34.236Z",
-      "priority": 112
-    },
-    {
-      "path": "/chum/commercial/feed.json",
-      "url": "/chum/commercial/feed.json",
-      "last_changed": "2026-10-05T08:44:34.236Z",
-      "priority": 112
-    },
-    {
-      "path": "/chum/commercial/feed.xml",
-      "url": "/chum/commercial/feed.xml",
-      "last_changed": "2026-10-05T08:44:34.236Z",
-      "priority": 112
-    },
-    {
-      "path": "/chum/commercial/index.json",
-      "url": "/chum/commercial/index.json",
-      "last_changed": "2026-10-05T08:44:34.236Z",
-      "priority": 112
-    },
-    {
-      "path": "/chum/commercial/llms.txt",
-      "url": "/chum/commercial/llms.txt",
-      "last_changed": "2026-10-05T08:44:34.236Z",
-      "priority": 112
-    },
-    {
-      "path": "/chum/commercial/raven-nexus-business-setup-v1/",
-      "url": "/chum/commercial/raven-nexus-business-setup-v1/",
-      "last_changed": "2026-10-05T08:44:34.236Z",
-      "priority": 112
-    },
-    {
-      "path": "/chum/commercial/raven-nexus-business-setup-v1/index.json",
-      "url": "/chum/commercial/raven-nexus-business-setup-v1/index.json",
-      "last_changed": "2026-10-05T08:44:34.236Z",
-      "priority": 112
-    },
-    {
-      "path": "/chum/commercial/raven-nexus-business-setup-v1/llms.txt",
-      "url": "/chum/commercial/raven-nexus-business-setup-v1/llms.txt",
-      "last_changed": "2026-10-05T08:44:34.236Z",
-      "priority": 112
-    },
-    {
-      "path": "/chum/commercial/raven-nexus-home-setup-v1/",
-      "url": "/chum/commercial/raven-nexus-home-setup-v1/",
-      "last_changed": "2026-10-05T08:44:34.236Z",
-      "priority": 112
-    },
-    {
-      "path": "/chum/commercial/raven-nexus-home-setup-v1/index.json",
-      "url": "/chum/commercial/raven-nexus-home-setup-v1/index.json",
-      "last_changed": "2026-10-05T08:44:34.236Z",
-      "priority": 112
-    },
-    {
-      "path": "/chum/commercial/raven-nexus-home-setup-v1/llms.txt",
-      "url": "/chum/commercial/raven-nexus-home-setup-v1/llms.txt",
-      "last_changed": "2026-10-05T08:44:34.236Z",
-      "priority": 112
-    },
-    {
-      "path": "/chum/sitemaps/sell-now.xml",
-      "url": "/chum/sitemaps/sell-now.xml",
-      "last_changed": "2026-10-05T08:44:34.236Z",
-      "priority": 108
-    },
-    {
-      "path": "/chum/intents/raven-nexus-business-setup-v1/",
-      "url": "/chum/intents/raven-nexus-business-setup-v1/",
-      "last_changed": "2026-10-05T08:44:34.236Z",
-      "priority": 98
-    },
-    {
-      "path": "/chum/intents/raven-nexus-home-setup-v1/",
-      "url": "/chum/intents/raven-nexus-home-setup-v1/",
-      "last_changed": "2026-10-05T08:44:34.236Z",
-      "priority": 98
-    },
-    {
-      "path": "/chum/products/raven-nexus/",
-      "url": "/chum/products/raven-nexus/",
-      "last_changed": "2026-10-05T08:44:34.236Z",
-      "priority": 94
-    },
-    {
-      "path": "/chum/products/raven-nexus/ai-conformance.json",
-      "url": "/chum/products/raven-nexus/ai-conformance.json",
-      "last_changed": "2026-10-05T08:44:34.236Z",
-      "priority": 94
-    },
-    {
-      "path": "/chum/products/raven-nexus/ai-discovery.json",
-      "url": "/chum/products/raven-nexus/ai-discovery.json",
-      "last_changed": "2026-10-05T08:44:34.236Z",
-      "priority": 94
-    },
-    {
-      "path": "/chum/products/raven-nexus/llms.txt",
-      "url": "/chum/products/raven-nexus/llms.txt",
-      "last_changed": "2026-10-05T08:44:34.236Z",
-      "priority": 94
-    },
-    {
-      "path": "/llms-full.txt",
-      "url": "/llms-full.txt",
-      "last_changed": "2026-10-05T08:44:34.236Z",
-      "priority": 86
-    },
-    {
-      "path": "/.well-known/evercraft-agent-directory.json",
-      "url": "/.well-known/evercraft-agent-directory.json",
-      "last_changed": "2026-10-05T08:44:34.236Z",
-      "priority": 84
-    },
-    {
-      "path": "/.well-known/evercraft-syndication.json",
-      "url": "/.well-known/evercraft-syndication.json",
-      "last_changed": "2026-10-05T08:44:34.236Z",
-      "priority": 84
-    },
-    {
-      "path": "/chum/index.json",
-      "url": "/chum/index.json",
-      "last_changed": "2026-10-05T08:44:34.236Z",
-      "priority": 80
-    },
-    {
-      "path": "/chum/syndication/index.json",
-      "url": "/chum/syndication/index.json",
-      "last_changed": "2026-10-05T08:44:34.236Z",
-      "priority": 80
-    },
-    {
-      "path": "/feed.json",
-      "url": "/feed.json",
-      "last_changed": "2026-10-05T08:44:34.236Z",
-      "priority": 60
-    },
-    {
-      "path": "/feed.xml",
-      "url": "/feed.xml",
-      "last_changed": "2026-10-05T08:44:34.236Z",
-      "priority": 60
-    },
-    {
-      "path": "/schema.jsonld",
-      "url": "/schema.jsonld",
-      "last_changed": "2026-10-05T08:44:34.236Z",
-      "priority": 60
-    },
-    {
-      "path": "/chum/crawler-radar.json",
-      "url": "/chum/crawler-radar.json",
-      "last_changed": "2026-10-05T08:22:37.261Z",
-      "priority": 80
-    },
-    {
-      "path": "/chum/crawler-radar.txt",
-      "url": "/chum/crawler-radar.txt",
-      "last_changed": "2026-10-05T08:22:37.261Z",
-      "priority": 80
-    },
-    {
-      "path": "/chum/strike/index.json",
-      "url": "/chum/strike/index.json",
-      "last_changed": "2026-10-05T08:22:37.261Z",
-      "priority": 80
-    },
-    {
-      "path": "/.well-known/evercraft-products.json",
-      "url": "/.well-known/evercraft-products.json",
-      "last_changed": "2026-10-04T17:44:43.006Z",
-      "priority": 88
     },
     {
       "path": "/.well-known/evercraft-agent-commerce.json",
@@ -238,12 +350,6 @@
       "url": "/.well-known/evercraft-machine-catalog.json",
       "last_changed": "2026-10-04T17:44:43.006Z",
       "priority": 84
-    },
-    {
-      "path": "/chum/strike/",
-      "url": "/chum/strike/",
-      "last_changed": "2026-10-04T06:21:41.537Z",
-      "priority": 80
     },
     {
       "path": "/.well-known/agent-card.json",
@@ -1514,6 +1620,30 @@
     {
       "path": "/chum/answers/doors/identify-a-part-from-a-photo-or-markings-0ff974a58c.json",
       "url": "/chum/answers/doors/identify-a-part-from-a-photo-or-markings-0ff974a58c.json",
+      "last_changed": "2026-10-02T17:01:08.152Z",
+      "priority": 100
+    },
+    {
+      "path": "/chum/answers/doors/identify-this-part-870c0fa937.json",
+      "url": "/chum/answers/doors/identify-this-part-870c0fa937.json",
+      "last_changed": "2026-10-02T17:01:08.152Z",
+      "priority": 100
+    },
+    {
+      "path": "/chum/answers/doors/identity-theft-protection-1d8e691739.json",
+      "url": "/chum/answers/doors/identity-theft-protection-1d8e691739.json",
+      "last_changed": "2026-10-02T17:01:08.152Z",
+      "priority": 100
+    },
+    {
+      "path": "/chum/answers/doors/income-strategy-f5da21b02c.json",
+      "url": "/chum/answers/doors/income-strategy-f5da21b02c.json",
+      "last_changed": "2026-10-02T17:01:08.152Z",
+      "priority": 100
+    },
+    {
+      "path": "/chum/answers/doors/install-an-ai-capability-dfa58c4e8f.json",
+      "url": "/chum/answers/doors/install-an-ai-capability-dfa58c4e8f.json",
       "last_changed": "2026-10-02T17:01:08.152Z",
       "priority": 100
     }

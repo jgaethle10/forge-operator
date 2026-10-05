@@ -65,7 +65,7 @@
   "machine_commerce_public_id": null,
   "machine_commerce_tool": null,
   "live_canary_evidence": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/systemia/opportunity-fabric/runtime.json",
-  "runtime_state": "base44_private_runtime_v1_5_reviewed_execution_outcomes_verified",
+  "runtime_state": "legacy provider_private_runtime_v1_5_reviewed_execution_outcomes_verified",
   "execution_outcome_state": "verified_private_runtime",
   "assignee_self_completion": false,
   "leader_qa_required_for_completion": true,
