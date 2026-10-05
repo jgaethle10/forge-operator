@@ -1,0 +1,114 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Evercraft HVAC Lead Recovery Demo</title>
+<meta name="description" content="Interactive Evercraft prototype showing how an after-hours HVAC inquiry becomes a structured, ready-to-work lead." />
+<style>
+:root{font-family:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;color:#f5f7fb;background:#090d12}
+*{box-sizing:border-box}body{margin:0;background:radial-gradient(circle at 20% 0,#142233 0,#090d12 42%);min-height:100vh}
+.shell{width:min(1100px,92vw);margin:0 auto}.top{padding:28px 0 12px;display:flex;justify-content:space-between;gap:16px;align-items:center}
+.brand{font-size:13px;letter-spacing:.16em;text-transform:uppercase;color:#8fb8ff}.badge{border:1px solid #314153;background:#111820;padding:8px 10px;border-radius:999px;font-size:12px;color:#b9c7d8}
+.hero{padding:44px 0 28px}.hero h1{font-size:clamp(38px,7vw,76px);line-height:.98;margin:0;max-width:850px;letter-spacing:-.04em}.hero p{color:#aebccc;font-size:19px;max-width:760px;line-height:1.55}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:18px;padding-bottom:34px}.card{background:#0f151d;border:1px solid #202c39;border-radius:20px;padding:22px;box-shadow:0 18px 60px rgba(0,0,0,.25)}
+.card h2{margin:0 0 8px;font-size:18px}.muted{color:#8c9bab;font-size:13px;line-height:1.5}
+label{display:block;font-size:12px;color:#aebccc;margin:16px 0 6px}input,select,textarea{width:100%;border:1px solid #2c3948;background:#0a1016;color:#fff;border-radius:12px;padding:12px 13px;font:inherit}textarea{resize:vertical;min-height:90px}
+.row{display:grid;grid-template-columns:1fr 1fr;gap:12px}.btn{width:100%;margin-top:18px;border:0;border-radius:13px;background:#f5f7fb;color:#0b1117;font-weight:800;padding:14px 16px;cursor:pointer}.btn:hover{filter:brightness(.92)}
+.pipeline{display:grid;gap:10px;margin-top:18px}.step{padding:13px;border:1px solid #273441;background:#0a1016;border-radius:13px;display:flex;gap:10px;align-items:flex-start}.n{width:26px;height:26px;border-radius:8px;background:#16263a;display:grid;place-items:center;color:#9ec5ff;font-weight:800;font-size:12px;flex:none}.step strong{display:block;font-size:13px}.step span{display:block;color:#8796a7;font-size:12px;margin-top:2px}
+.output{min-height:280px}.empty{height:280px;display:grid;place-items:center;text-align:center;color:#748294;border:1px dashed #2a3745;border-radius:16px;padding:20px}
+.lead{display:none}.lead.show{display:block}.leadhead{display:flex;justify-content:space-between;gap:10px;align-items:start;margin-bottom:18px}.urgent{background:#3a1720;color:#ffb9c7;border:1px solid #6d2838;padding:6px 9px;border-radius:999px;font-size:11px;font-weight:800}.kv{display:grid;grid-template-columns:1fr 1fr;gap:10px}.kv div{background:#0a1016;border:1px solid #263342;border-radius:12px;padding:11px}.kv span{display:block;color:#78889b;font-size:11px;text-transform:uppercase;letter-spacing:.08em}.kv strong{display:block;margin-top:4px;font-size:14px}
+.note{margin-top:12px;padding:12px;border-left:3px solid #6da7ff;background:#0b141f;color:#b8c6d6;font-size:13px;line-height:1.45}
+.roi{margin:18px 0 42px;display:grid;grid-template-columns:repeat(3,1fr);gap:12px}.metric{background:#0f151d;border:1px solid #202c39;border-radius:16px;padding:18px}.metric span{display:block;color:#7f8fa1;font-size:12px}.metric strong{display:block;font-size:28px;margin-top:5px}
+.footer{padding:0 0 42px;color:#647284;font-size:12px;line-height:1.6}
+@media(max-width:780px){.grid,.row,.roi{grid-template-columns:1fr}.hero{padding-top:28px}.top{align-items:flex-start;flex-direction:column}}
+</style>
+</head>
+<body>
+<div class="shell">
+  <div class="top"><div class="brand">Evercraft · Service Lead Recovery</div><div class="badge">Interactive prototype · no customer data is sent</div></div>
+  <section class="hero">
+    <div class="brand" id="forBusiness">Prototype workflow</div>
+    <h1>What if the phone rings after the office stops?</h1>
+    <p>This demo turns an after-hours HVAC inquiry into a structured lead the office can actually work. It is designed to recover demand without pretending an AI should replace the people who run the business.</p>
+  </section>
+
+  <section class="grid">
+    <div class="card">
+      <h2>Customer side</h2>
+      <div class="muted">Try the flow a homeowner could use when nobody can pick up immediately.</div>
+      <label>Name</label><input id="name" value="Jamie R." />
+      <div class="row">
+        <div><label>Phone</label><input id="phone" value="(509) 555-0182" /></div>
+        <div><label>ZIP</label><input id="zip" value="98902" /></div>
+      </div>
+      <label>What is happening?</label>
+      <select id="issue">
+        <option>No heat</option><option>No cooling</option><option>System making unusual noise</option><option>Water / condensate leak</option><option>Maintenance / tune-up</option><option>Estimate for replacement</option>
+      </select>
+      <div class="row">
+        <div><label>Urgency</label><select id="urgency"><option>Need help tonight</option><option>Tomorrow is okay</option><option>This week</option><option>Planning / estimate</option></select></div>
+        <div><label>Preferred time</label><select id="time"><option>As soon as available</option><option>Morning</option><option>Afternoon</option><option>Evening</option></select></div>
+      </div>
+      <label>Anything the technician should know?</label><textarea id="notes">Furnace starts, runs for about a minute, then shuts off. House is getting cold.</textarea>
+      <button class="btn" id="simulate">Turn this into a ready-to-work lead</button>
+
+      <div class="pipeline">
+        <div class="step"><div class="n">1</div><div><strong>Capture now</strong><span>Do not force the customer to leave a vague voicemail and start over later.</span></div></div>
+        <div class="step"><div class="n">2</div><div><strong>Structure the request</strong><span>Problem, urgency, location, contact details and preferred timing arrive together.</span></div></div>
+        <div class="step"><div class="n">3</div><div><strong>Human confirmation</strong><span>The office or on-call team decides priority, availability, price and dispatch.</span></div></div>
+      </div>
+    </div>
+
+    <div class="card output">
+      <h2>Office side</h2>
+      <div class="muted">The point is not “AI magic.” It is reducing the number of leads that arrive incomplete, late, or impossible to prioritize.</div>
+      <div class="empty" id="empty">Run the customer-side demo.<br/>The structured lead will appear here.</div>
+      <div class="lead" id="lead">
+        <div class="leadhead"><div><div class="brand">New service request</div><h2 id="leadIssue" style="margin-top:6px"></h2></div><div class="urgent" id="leadUrgency"></div></div>
+        <div class="kv">
+          <div><span>Customer</span><strong id="leadName"></strong></div>
+          <div><span>Phone</span><strong id="leadPhone"></strong></div>
+          <div><span>ZIP</span><strong id="leadZip"></strong></div>
+          <div><span>Preferred time</span><strong id="leadTime"></strong></div>
+        </div>
+        <div class="note" id="leadNotes"></div>
+        <div class="note"><strong>Suggested next action:</strong> human review, confirm service area and availability, then call/text the customer. No autonomous dispatch or pricing is performed in this demo.</div>
+      </div>
+    </div>
+  </section>
+
+  <section class="roi">
+    <div class="metric"><span>Example recovered calls / month</span><strong id="calls">8</strong></div>
+    <div class="metric"><span>Example average completed ticket</span><strong id="ticket">$450</strong></div>
+    <div class="metric"><span>Illustrative recovered revenue</span><strong id="revenue">$3,600</strong></div>
+  </section>
+
+  <div class="footer">
+    Built by Evercraft as a workflow prototype. Revenue figures are illustrative, not a forecast. A real installation would connect to the business's existing phone, messaging, scheduling or CRM workflow only with the business's permission and defined human gates.
+  </div>
+</div>
+<script>
+const p=new URLSearchParams(location.search);
+const business=p.get('business');
+if(business) document.getElementById('forBusiness').textContent='Prototype for '+business;
+const calls=Math.max(1,Number(p.get('calls')||8));
+const ticket=Math.max(1,Number(p.get('ticket')||450));
+document.getElementById('calls').textContent=calls;
+document.getElementById('ticket').textContent='$'+ticket.toLocaleString();
+document.getElementById('revenue').textContent='$'+(calls*ticket).toLocaleString();
+document.getElementById('simulate').addEventListener('click',()=>{
+  const v=id=>document.getElementById(id).value;
+  document.getElementById('leadName').textContent=v('name');
+  document.getElementById('leadPhone').textContent=v('phone');
+  document.getElementById('leadZip').textContent=v('zip');
+  document.getElementById('leadIssue').textContent=v('issue');
+  document.getElementById('leadUrgency').textContent=v('urgency');
+  document.getElementById('leadTime').textContent=v('time');
+  document.getElementById('leadNotes').textContent=v('notes');
+  document.getElementById('empty').style.display='none';
+  document.getElementById('lead').classList.add('show');
+});
+</script>
+</body>
+</html>
