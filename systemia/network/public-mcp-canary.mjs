@@ -1,8 +1,8 @@
 import fs from 'node:fs';
 import path from 'node:path';
+import { ownedHttpsEndpoint } from '../chum/owned-commerce-endpoint.mjs';
 
-const ENDPOINT = process.env.EVERCRAFT_MACHINE_COMMERCE_MCP ||
-  'https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp';
+const ENDPOINT = ownedHttpsEndpoint(process.env.EVERCRAFT_NETWORK_MCP_URL || process.env.EVERCRAFT_MACHINE_COMMERCE_MCP || '',{name:'network_mcp'});
 
 const REQUIRED_TOOLS = [
   'get_network_capabilities',
