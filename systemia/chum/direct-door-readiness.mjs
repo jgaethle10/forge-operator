@@ -9,9 +9,9 @@ const DIRECT_CALLABLE_STATES = new Set([
 ]);
 
 export const UNIVERSAL_FALLBACK = {
+  state: 'held_owned_public_route_pending',
   registry_name: 'io.github.jgaethle10/evercraft-machine-commerce',
-  remote_mcp:
-    'https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp',
+  remote_mcp: null,
 };
 
 function arg(name, fallback = null) {
@@ -53,10 +53,20 @@ export function classifyDirectDoor(product, candidate = null) {
     state === 'registry_published_direct_mcp_existing' &&
     typeof product?.registry_name === 'string' &&
     product.registry_name.length > 0;
-  const directCallable =
-    DIRECT_CALLABLE_STATES.has(state) &&
-    typeof product?.mcp_url === 'string' &&
-    product.mcp_url.startsWith('https://');
+  const directMcp = String(product?.mcp_url || '').trim();
+  let directCallable = false;
+  if (DIRECT_CALLABLE_STATES.has(state) && directMcp) {
+    try {
+      const url = new URL(directMcp);
+      const host = url.hostname.toLowerCase();
+      directCallable =
+        url.protocol === 'https:' &&
+        host !== 'base44.app' &&
+        !host.endsWith('.base44.app');
+    } catch {
+      directCallable = false;
+    }
+  }
 
   const blockingGates = [];
   if (state === 'yard_runtime_proven_public_route_pending') {
@@ -77,15 +87,17 @@ export function classifyDirectDoor(product, candidate = null) {
         use_universal_router_first: false,
         registry_name: registryPublished ? product.registry_name : null,
         remote_mcp: product.mcp_url,
+        fallback_state: UNIVERSAL_FALLBACK.state,
         fallback_registry_name: UNIVERSAL_FALLBACK.registry_name,
-        fallback_remote_mcp: UNIVERSAL_FALLBACK.remote_mcp,
+        fallback_remote_mcp: null,
       }
     : {
-        mode: 'universal_fallback_until_specialist_promoted',
-        hops_before_specialist: 1,
-        use_universal_router_first: true,
-        registry_name: UNIVERSAL_FALLBACK.registry_name,
-        remote_mcp: UNIVERSAL_FALLBACK.remote_mcp,
+        mode: 'held_until_owned_route_verified',
+        hops_before_specialist: null,
+        use_universal_router_first: false,
+        registry_name: null,
+        remote_mcp: null,
+        desired_universal_registry_name: UNIVERSAL_FALLBACK.registry_name,
         desired_specialist_registry_name: candidate?.desired_registry_name || null,
         pending_specialist_runtime_path: product.runtime_path || null,
       };
@@ -127,11 +139,12 @@ export function resolveProductRoute({ slug, specs, candidates = new Map() }) {
       state: 'unknown_product',
       slug,
       route: {
-        mode: 'universal_fallback_for_unknown_product',
-        hops_before_specialist: 1,
-        use_universal_router_first: true,
-        registry_name: UNIVERSAL_FALLBACK.registry_name,
-        remote_mcp: UNIVERSAL_FALLBACK.remote_mcp,
+        mode: 'held_unknown_product_no_verified_owned_route',
+        hops_before_specialist: null,
+        use_universal_router_first: false,
+        registry_name: null,
+        remote_mcp: null,
+        desired_universal_registry_name: UNIVERSAL_FALLBACK.registry_name,
       },
     };
   }
@@ -163,8 +176,9 @@ export function buildDirectDoorReadiness({ specs, candidates = new Map() }) {
     zero_hop_specialist_count: products.filter(
       (p) => p.preferred_route.hops_before_specialist === 0
     ).length,
-    fallback_required_count: products.filter(
-      (p) => p.preferred_route.use_universal_router_first
+    fallback_required_count: products.filter((p) => !p.direct_callable).length,
+    held_route_count: products.filter(
+      (p) => p.preferred_route.mode === 'held_until_owned_route_verified'
     ).length,
     registry_published_count: products.filter((p) => p.registry_published).length,
     registry_pending_count: products.filter(
