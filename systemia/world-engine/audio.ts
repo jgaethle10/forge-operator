@@ -400,7 +400,7 @@ export function compileAudioFrame(
   tick:number,
   timeSec:number,
   scene:AudioSceneDefinition,
-  entities:WorldEntity[],
+  entities:Array<WorldEntity & {audioRuntime?:AudioEmitterRuntime}>,
   runtime:AudioSceneRuntime,
   activeEntityIds?:string[]
 ):AudioFrameContract{
