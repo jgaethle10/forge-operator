@@ -5,6 +5,7 @@ import fs from "node:fs";
 const resident = JSON.parse(fs.readFileSync("systemia/core/resident-services.json", "utf8"));
 const scoutManifest = JSON.parse(fs.readFileSync("systemia/organism/competition-provider-scout.workflow.json", "utf8"));
 const submitManifest = JSON.parse(fs.readFileSync("systemia/organism/competition-submission-executor.workflow.json", "utf8"));
+const controlManifest = JSON.parse(fs.readFileSync("systemia/organism/competition-control-plane.workflow.json", "utf8"));
 const slice = JSON.parse(fs.readFileSync("systemia/migrations/base44-exit/slices/competition-foundry-raven-runtime.json", "utf8"));
 
 test("competition provider scout is resident-wired without Base44 or public Fabric", () => {
@@ -45,4 +46,32 @@ test("competition submission executor is resident and autonomous only for existi
   assert.equal(submitManifest.routing.base44_allowed, false);
   assert.equal(submitManifest.routing.public_fabric_transit_allowed, false);
   assert.deepEqual(submitManifest.routing.canonical_path, ["systemia", "build_test", "raven_qa", "raven_nexus", "provider_api"]);
+});
+
+
+test("competition control plane makes Jesse an exception handler, not the operator", () => {
+  const service = resident.services.find((row) => row.service_key === "competition-control-plane");
+  assert.ok(service);
+  assert.equal(service.mode, "cycle");
+  assert.equal(service.cadence_seconds, 300);
+  assert.equal(service.executable, "systemia/competition/control-plane-runner.mjs");
+
+  assert.equal(controlManifest.authority.discovery, "autonomous");
+  assert.equal(controlManifest.authority.rules_research, "autonomous");
+  assert.equal(controlManifest.authority.build_and_test, "autonomous");
+  assert.equal(controlManifest.authority.raven_qa, "autonomous_required");
+  assert.equal(controlManifest.authority.new_terms, "human_gate");
+  assert.equal(controlManifest.authority.identity_mfa_captcha, "human_gate");
+  assert.equal(controlManifest.authority.payment_or_staking, "human_gate");
+  assert.equal(controlManifest.safety.accept_new_terms, false);
+  assert.equal(controlManifest.safety.bypass_identity_controls, false);
+  assert.equal(controlManifest.safety.claim_success_without_provider_receipt, false);
+  assert.deepEqual(controlManifest.routing.canonical_path, [
+    "systemia",
+    "competition_control_plane",
+    "build_test",
+    "raven_qa",
+    "raven_nexus",
+    "provider_executor",
+  ]);
 });
