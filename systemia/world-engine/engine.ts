@@ -1,4 +1,5 @@
 import crypto from 'node:crypto';
+import { resolveEntityCollisions, type CollisionContact } from './spatial.js';
 
 export type Vec3 = { x:number; y:number; z:number };
 
@@ -72,6 +73,7 @@ export interface WorldSnapshot {
   tick:number;
   timeSec:number;
   entities:RuntimeEntity[];
+  collisions:CollisionContact[];
   digest:string;
 }
 
@@ -140,6 +142,24 @@ export function validateWorldDefinition(world:WorldDefinition){
     if(ids.has(entity.id)) throw new Error(`world_entity_duplicate:${entity.id}`);
     ids.add(entity.id);
     finiteVec3(entity.transform?.position,`entity_position_${entity.id}`);
+    if(entity.transform.rotationDeg) finiteVec3(entity.transform.rotationDeg,`entity_rotation_${entity.id}`);
+    if(entity.transform.scale){
+      finiteVec3(entity.transform.scale,`entity_scale_${entity.id}`);
+      if(entity.transform.scale.x<=0 || entity.transform.scale.y<=0 || entity.transform.scale.z<=0){
+        throw new Error(`world_entity_scale_invalid:${entity.id}`);
+      }
+    }
+    if(entity.collider?.type==='sphere'){
+      if(!Number.isFinite(entity.collider.radius) || entity.collider.radius<=0){
+        throw new Error(`world_entity_sphere_radius_invalid:${entity.id}`);
+      }
+    }
+    if(entity.collider?.type==='box'){
+      finiteVec3(entity.collider.halfExtents,`entity_box_half_extents_${entity.id}`);
+      if(entity.collider.halfExtents.x<=0 || entity.collider.halfExtents.y<=0 || entity.collider.halfExtents.z<=0){
+        throw new Error(`world_entity_box_half_extents_invalid:${entity.id}`);
+      }
+    }
     if(entity.rigidBody){
       if(!Number.isFinite(entity.rigidBody.mass) || entity.rigidBody.mass <= 0){
         throw new Error(`world_entity_mass_invalid:${entity.id}`);
@@ -162,17 +182,18 @@ function runtimeEntity(source:WorldEntity):RuntimeEntity{
   return entity;
 }
 
-function colliderBottom(entity:RuntimeEntity){
-  const collider=entity.collider;
-  if(!collider) return entity.transform.position.y;
-  if(collider.type==='sphere') return entity.transform.position.y-collider.radius;
-  return entity.transform.position.y-collider.halfExtents.y;
-}
-
 function colliderVerticalExtent(entity:RuntimeEntity){
   const collider=entity.collider;
   if(!collider) return 0;
-  return collider.type==='sphere'?collider.radius:collider.halfExtents.y;
+  const scale=entity.transform.scale || {x:1,y:1,z:1};
+  if(collider.type==='sphere'){
+    return collider.radius*Math.max(Math.abs(scale.x),Math.abs(scale.y),Math.abs(scale.z));
+  }
+  return collider.halfExtents.y*Math.abs(scale.y);
+}
+
+function colliderBottom(entity:RuntimeEntity){
+  return entity.transform.position.y-colliderVerticalExtent(entity);
 }
 
 export class EvercraftWorldRuntime {
@@ -181,6 +202,7 @@ export class EvercraftWorldRuntime {
   readonly dt:number;
   private state:Map<string,RuntimeEntity>;
   private _tick=0;
+  private _collisions:CollisionContact[]=[];
 
   constructor(definition:WorldDefinition){
     validateWorldDefinition(definition);
@@ -205,6 +227,10 @@ export class EvercraftWorldRuntime {
   entity(id:string){
     const found=this.state.get(id);
     return found?clone(found):null;
+  }
+
+  get collisions(){
+    return clone(this._collisions);
   }
 
   private mutateEntity(id:string){
@@ -287,10 +313,12 @@ export class EvercraftWorldRuntime {
     }
 
     const nextTime=targetTick*this.dt;
-    for(const entity of [...this.state.values()].sort((a,b)=>a.id.localeCompare(b.id))){
+    const ordered=[...this.state.values()].sort((a,b)=>a.id.localeCompare(b.id));
+    for(const entity of ordered){
       this.applyBehaviors(entity,nextTime);
       this.integrate(entity);
     }
+    this._collisions=resolveEntityCollisions(ordered);
     this._tick=targetTick;
     return this.snapshot();
   }
@@ -312,7 +340,8 @@ export class EvercraftWorldRuntime {
       timeSec:Number(this.timeSec.toFixed(9)),
       entities:[...this.state.values()]
         .sort((a,b)=>a.id.localeCompare(b.id))
-        .map(entity=>clone(entity))
+        .map(entity=>clone(entity)),
+      collisions:clone(this._collisions)
     };
     return {...core,digest:digest(core)};
   }
