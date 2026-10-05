@@ -19,6 +19,13 @@ const ACTIVE_ROOTS = [
   "scripts/",
   ".github/workflows/",
 ];
+const PROVENANCE_FILES = new Set([
+  "systemia/saban/capability-promotion-links.json",
+]);
+const COMPATIBILITY_OR_GUARD_FILES = new Set([
+  "scripts/promote-openai-owned-fabric.mjs",
+  "systemia/sentinel/architectural-invariants.json",
+]);
 const SIGNALS = [
   { key:"legacy_public_url", re:/https?:\/\/[^\s"'\x60<>]*base44\.app[^\s"'\x60<>]*/ig },
   { key:"base44_sdk_import", re:/@base44\/sdk/ig },
@@ -48,6 +55,8 @@ function lineOf(text,index) {
 function classify(file) {
   const normalized="/"+file;
   const base=path.basename(file).toLowerCase();
+  if (PROVENANCE_FILES.has(file)) return "provenance_evidence";
+  if (COMPATIBILITY_OR_GUARD_FILES.has(file)) return "compatibility_or_guard";
   if (
     EVIDENCE_ONLY_SEGMENTS.some(segment=>normalized.includes(segment)) ||
     /(?:^|\.)(?:test|spec|proof)\.[^.]+$/.test(base) ||
@@ -106,7 +115,7 @@ const payload={
     runtime_execution_proven:false,
     production_use_proven:false,
     missing_match_means_no_dependency:false,
-    purpose:"Locate candidate Base44 migration debt without upgrading static source to runtime truth."
+    purpose:"Locate candidate Base44 migration debt without upgrading static source to runtime truth. Historical provenance and frozen compatibility/guard literals remain visible but are not promoted to active runtime debt."
   },
   summary:{
     finding_count:findings.length,

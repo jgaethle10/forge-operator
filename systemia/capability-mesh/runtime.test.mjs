@@ -19,38 +19,26 @@ test('AliEV contract compiles into a fail-closed runtime policy', () => {
   assert.deepEqual(policy.meter.metrics, [{ metric: 'site_reports', unit: 'report' }]);
   assert.equal(policy.execution.gate_required, true);
   assert.equal(policy.route.specialist_slug, 'aliev');
-  assert.equal(policy.route.direct_callable, true);
+  assert.equal(policy.route.direct_callable, false);
   assert.equal(policy.runtime_verified, false);
   assert.equal(policy.grants_authority, false);
 });
 
-test('one product action compiles into the exact Execution Gate input and Meter metric', () => {
-  const prepared = buildExecutionGateInput({
-    product_key: 'aliev',
-    actor_ref: 'agent:rivet-worker',
-    scope: 'report.generate',
-    resource_ref: 'site:yakima-001',
-    request: { address: '6405 W Chestnut Ave, Yakima, WA', report: 'preliminary' },
-    meter_subject_ref: 'org:demo',
-    idempotency_key: 'capability-mesh:aliev:prepare:001',
-    lease_id: 'lease_mesh_001',
-    require_direct_specialist: true,
-  });
-
-  const input = prepared.execution_gate_input;
-  assert.equal(input.passport_product, 'rivet');
-  assert.equal(input.scope, 'report.generate');
-  assert.equal(input.specialist_slug, 'aliev');
-  assert.deepEqual(input.meter, {
-    subject_ref: 'org:demo',
-    product: 'rivet',
-    metric: 'site_reports',
-    quantity: 1,
-    unit: 'report',
-  });
-  assert.equal(input.require_direct_specialist, true);
-  assert.equal(prepared.grants_execution_authority, false);
-  assert.equal(prepared.payment_state_inferred, false);
+test('AliEV direct-specialist preparation fails closed while the owned public route is held', () => {
+  assert.throws(
+    () => buildExecutionGateInput({
+      product_key: 'aliev',
+      actor_ref: 'agent:rivet-worker',
+      scope: 'report.generate',
+      resource_ref: 'site:yakima-001',
+      request: { address: '6405 W Chestnut Ave, Yakima, WA', report: 'preliminary' },
+      meter_subject_ref: 'org:demo',
+      idempotency_key: 'capability-mesh:aliev:prepare:001',
+      lease_id: 'lease_mesh_001',
+      require_direct_specialist: true,
+    }),
+    /direct_specialist_not_ready/
+  );
 });
 
 test('undeclared scope cannot be smuggled through a valid product contract', () => {
@@ -91,7 +79,7 @@ test('ForensiScope contract exposes only the currently proven route-classificati
   assert.equal(policy.execution.gate_required, true);
   assert.deepEqual(policy.execution.actions, [{ scope: 'classify_media_route' }]);
   assert.equal(policy.route.specialist_slug, 'forensiscope');
-  assert.equal(policy.route.direct_callable, true);
+  assert.equal(policy.route.direct_callable, false);
   assert.equal(policy.runtime_verified, false);
   assert.equal(policy.boundaries?.runtime_analysis_action_contracted, false);
 });
@@ -107,7 +95,6 @@ test('ForensiScope route classification compiles without inventing a Meter charg
       failureCode: 'duration_exceeded',
     },
     idempotency_key: 'capability-mesh:forensiscope:route:001',
-    require_direct_specialist: true,
   });
 
   const input = prepared.execution_gate_input;
@@ -115,7 +102,7 @@ test('ForensiScope route classification compiles without inventing a Meter charg
   assert.equal(input.scope, 'classify_media_route');
   assert.equal(input.specialist_slug, 'forensiscope');
   assert.equal(Object.prototype.hasOwnProperty.call(input, 'meter'), false);
-  assert.equal(prepared.route_snapshot.direct_callable, true);
+  assert.equal(prepared.route_snapshot.direct_callable, false);
   assert.equal(prepared.grants_execution_authority, false);
 });
 
@@ -159,7 +146,6 @@ test('Clip planning compiles without inventing rendering, publishing or payment 
       platforms: ['facebook', 'linkedin', 'instagram'],
     },
     idempotency_key: 'capability-mesh:clip:plan:001',
-    require_direct_specialist: true,
   });
 
   const input = prepared.execution_gate_input;
@@ -204,7 +190,6 @@ test('FindMyPart free triage compiles without inventing checkout, payment or pur
     scope: 'free_part_triage',
     request: { markings: 'ABC-123', equipment: 'legacy tractor' },
     idempotency_key: 'capability-mesh:findmypart:triage:001',
-    require_direct_specialist: true,
   });
   assert.equal(prepared.execution_gate_input.passport_product, 'findmypart');
   assert.equal(prepared.execution_gate_input.scope, 'free_part_triage');

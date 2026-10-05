@@ -29,6 +29,9 @@ assert.equal(
 );
 assert.equal(actual.summary.zero_hop_specialist_count, actual.summary.direct_callable_count);
 assert.equal(actual.summary.fallback_required_count, actual.summary.not_direct_callable_count);
+assert.equal(actual.summary.held_route_count, actual.summary.not_direct_callable_count);
+assert.equal(actual.universal_fallback.remote_mcp, null);
+assert.equal(actual.universal_fallback.state, 'held_owned_public_route_pending');
 assert.match(actual.invariant, /Never add an umbrella routing hop/i);
 
 const bySlug = new Map(actual.products.map((product) => [product.slug, product]));
@@ -50,9 +53,11 @@ for (const spec of specs.products) {
   if (spec.state === 'yard_runtime_proven_public_route_pending') {
     assert.equal(row.direct_callable, false, spec.slug + ': route-pending door must not claim callable');
     assert.ok(row.registry_candidate, spec.slug + ': route-pending door must have registry candidate');
-    assert.equal(row.preferred_route.mode, 'universal_fallback_until_specialist_promoted');
-    assert.equal(row.preferred_route.hops_before_specialist, 1);
-    assert.equal(row.preferred_route.remote_mcp, UNIVERSAL_FALLBACK.remote_mcp);
+    assert.equal(row.preferred_route.mode, 'held_until_owned_route_verified');
+    assert.equal(row.preferred_route.hops_before_specialist, null);
+    assert.equal(row.preferred_route.use_universal_router_first, false);
+    assert.equal(row.preferred_route.remote_mcp, null);
+    assert.equal(row.preferred_route.desired_universal_registry_name, UNIVERSAL_FALLBACK.registry_name);
     assert.equal(row.preferred_route.pending_specialist_runtime_path, spec.runtime_path);
     assert.equal(
       row.next_release_action,
@@ -82,8 +87,10 @@ const forensiRoute = resolveProductRoute({
   specs,
   candidates: new Map(),
 });
-assert.equal(forensiRoute.state, 'specialist_direct');
-assert.equal(forensiRoute.route.hops_before_specialist, 0);
+assert.equal(forensiRoute.state, 'fallback_required');
+assert.equal(forensiRoute.route.mode, 'held_until_owned_route_verified');
+assert.equal(forensiRoute.route.hops_before_specialist, null);
+assert.equal(forensiRoute.route.remote_mcp, null);
 assert.equal(forensiRoute.route.use_universal_router_first, false);
 
 const unknownRoute = resolveProductRoute({
@@ -92,8 +99,10 @@ const unknownRoute = resolveProductRoute({
   candidates: new Map(),
 });
 assert.equal(unknownRoute.state, 'unknown_product');
-assert.equal(unknownRoute.route.registry_name, UNIVERSAL_FALLBACK.registry_name);
-assert.equal(unknownRoute.route.use_universal_router_first, true);
+assert.equal(unknownRoute.route.registry_name, null);
+assert.equal(unknownRoute.route.remote_mcp, null);
+assert.equal(unknownRoute.route.desired_universal_registry_name, UNIVERSAL_FALLBACK.registry_name);
+assert.equal(unknownRoute.route.use_universal_router_first, false);
 
 const synthetic = buildDirectDoorReadiness({
   specs: {
@@ -117,6 +126,7 @@ const synthetic = buildDirectDoorReadiness({
 assert.equal(synthetic.summary.direct_callable_count, 1);
 assert.equal(synthetic.summary.zero_hop_specialist_count, 1);
 assert.equal(synthetic.summary.fallback_required_count, 0);
+assert.equal(synthetic.summary.held_route_count, 0);
 assert.equal(synthetic.summary.registry_published_count, 0);
 assert.equal(synthetic.summary.registry_pending_count, 1);
 
