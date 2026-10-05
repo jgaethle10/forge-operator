@@ -1,6 +1,9 @@
 import fs from 'node:fs';
 
 const files = [
+  'systemia/chum/live-intent-hunter.mjs',
+  'systemia/chum/money-radar.mjs',
+  '.github/workflows/chum-llm-hunter.yml',
   'systemia/chum/indexnow.mjs',
   'scripts/portfolio-sentinel-commercial-canary.mjs',
   'systemia/organism/portfolio-sentinel-runner.mjs',
@@ -34,6 +37,8 @@ const files = [
 ];
 
 const runtimeFiles = new Set([
+  'systemia/chum/live-intent-hunter.mjs',
+  'systemia/chum/money-radar.mjs',
   'systemia/chum/indexnow.mjs',
   'scripts/portfolio-sentinel-commercial-canary.mjs',
   'systemia/organism/portfolio-sentinel-runner.mjs',
