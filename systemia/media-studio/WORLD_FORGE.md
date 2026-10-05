@@ -192,6 +192,41 @@ The V1 render plan intentionally remains non-executable until a backend is selec
 - attach World State and Journal/TOWI/FAIE layers to real world-space surfaces;
 - support persistent worlds for The Watcher's Mask and the Ember Fox and future immersive properties.
 
+## Persistence
+
+World Forge now has two persistence lanes with different trust boundaries.
+
+### Trusted owned filesystem store
+
+The canonical local/Yard store writes `<project-id>.world-forge.json` files through an atomic write path.
+
+Properties:
+
+- project IDs are path-safe and traversal is rejected;
+- symbolic-link project files are refused;
+- projects must pass the normal World Forge validator before storage;
+- optimistic stored-version checks prevent accidental overwrite;
+- project versions cannot regress;
+- the same version number cannot be rewritten with a different digest;
+- temporary files are written with restricted permissions, fsynced, then atomically renamed;
+- save receipts bind stored version and project digest without leaking filesystem paths;
+- list/load/save are available through the Media Studio CLI;
+- no unauthenticated public HTTP route exposes this filesystem store.
+
+Commands:
+
+```bash
+npm run media:studio -- world-forge-save ./tmp/world.json ./.evercraft/world-forge null
+npm run media:studio -- world-forge-load fallen-world-forge-starter ./tmp/world.json ./.evercraft/world-forge
+npm run media:studio -- world-forge-list ./.evercraft/world-forge ./tmp/worlds.json
+```
+
+### Device autosave
+
+The browser editor can restore its last local project after refresh. Restored state is sent through the server-side World Forge validator before acceptance. Invalid local state is discarded. Device autosave is bounded to avoid silently overflowing browser storage.
+
+Device autosave is convenience continuity, not the canonical shared project store.
+
 ## Non-negotiables
 
 - No Base44 runtime dependency.
