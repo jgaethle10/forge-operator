@@ -29,7 +29,8 @@
   },
   "runner": "systemia/competition/control-plane-runner.mjs",
   "outputs": {
-    "control_plane_receipt": "artifacts/competition-provider/control-plane/latest.json"
+    "control_plane_receipt": "artifacts/competition-provider/control-plane/latest.json",
+    "goal_states": "artifacts/competition-provider/goals"
   },
   "routing": {
     "canonical_path": [
