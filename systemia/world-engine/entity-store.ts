@@ -5,6 +5,7 @@ export type EntityComponentKey =
   | 'rigidBody'
   | 'collider'
   | 'behaviors'
+  | 'animation'
   | 'assetRefs'
   | 'tags'
   | 'properties';
@@ -44,7 +45,7 @@ export class WorldEntityStore<T extends WorldEntity=RuntimeEntity>{
       }
 
       const keys:EntityComponentKey[]=[
-        'transform','rigidBody','collider','behaviors','assetRefs','tags','properties'
+        'transform','rigidBody','collider','behaviors','animation','assetRefs','tags','properties'
       ];
       for(const key of keys){
         if(!hasComponent(entity,key)) continue;
