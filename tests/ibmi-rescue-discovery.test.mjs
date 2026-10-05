@@ -39,7 +39,7 @@ assert.equal(cat.machine_state, 'direct_checkout_ready');
 
 const conf = conformance.products.find((row) => row.product_key === 'ibmi-rescue');
 assert(conf, 'ibmi-rescue missing from conformance inventory');
-assert.equal(conf.conformance_state, 'machine_commerce_direct_checkout_live_verified');
+assert.equal(conf.conformance_state, 'owned_runtime_reverification_pending');
 assert.equal(conf.machine_commerce_handoff_state, 'live_verified');
 assert.equal(conf.provider_behavior_state, 'not_run');
 assert.equal(conf.buyer_route_state, 'live_verified');
@@ -48,6 +48,10 @@ assert.equal(conf.machine_commerce_tool, 'prepare_verified_checkout');
 assert.equal(conf.machine_commerce_offer_tool, 'get_live_checkout_offer');
 assert.equal(conf.machine_commerce_status_tool, 'get_verified_order_status');
 assert.equal(conf.mcp_registry?.publication_state, 'published_shared_server');
+assert.equal(conf.mcp_registry?.endpoint_state, 'legacy_endpoint_retired_owned_republication_pending');
+assert.equal(conf.legacy_provider_runtime, 'retired');
+assert.equal(conf.runtime_route_state, 'owned_route_pending_external_verification');
+assert.equal(conf.live_canary_evidence_state, 'historical_pre_cutover_not_current');
 assert.match(conf.live_canary_evidence || '', /^GitHubActionsRun:/);
 
 const idx = publicIndex.products.find((row) => row.product_key === 'ibmi-rescue');
@@ -96,5 +100,7 @@ console.log(JSON.stringify({
   offers: product.commercial.offers.map((row) => row.offer_key),
   invocation: idx.invocation.mode,
   checkout_state: product.commercial.status,
-  provider_url_retired: true
+  provider_url_retired: true,
+  runtime_route_state: conf.runtime_route_state,
+  conformance_state: conf.conformance_state
 }, null, 2));
