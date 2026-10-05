@@ -138,7 +138,7 @@
     {
       "product_key": "eps-estimate-engine",
       "name": "EPS Field-Service Estimate Engine",
-      "canonical_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/eps-estimate-engine/index.html",
+      "canonical_url": "https://jgaethle10.github.io/forge-operator/apps/eps-estimator/",
       "registry_name": "io.github.jgaethle10/evercraft-machine-commerce",
       "mcp": null,
       "mode": "shared_mcp",
@@ -154,7 +154,7 @@
       "aliases": [
         "EPS Precise Estimator"
       ],
-      "route_note": "EPS Estimate Intelligence is callable through the published Evercraft Machine Commerce MCP. The public no-account preview uses caller-supplied costs only, creates no customer obligation, and exposes a receipt verifier with integrity-only authority. Workspace writes and billing remain separately authenticated/gated."
+      "route_note": "EPS Precise Estimator now has an owned static public fallback on the Evercraft GitHub Pages release. The calculator runs client-side with no account and no Base44 runtime dependency. Full evercraftpropertyservices.com origin migration remains a separate cutover gate."
     },
     {
       "product_key": "eventwave",
