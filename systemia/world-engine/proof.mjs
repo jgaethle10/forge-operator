@@ -3,6 +3,7 @@ import { EvercraftWorldRuntime, replayWorld } from './engine.ts';
 import { SceneStreamController } from './streaming.ts';
 import { compileVisualFrame } from './visual.ts';
 import { compileAudioFrame } from './audio.ts';
+import { AuthoritativeReplicationRuntime, PredictiveReplicationRuntime, createReplicatedInput } from './replication.ts';
 
 const world={
   schema:'evercraft.world-engine.world.v1',
@@ -466,8 +467,67 @@ assert.equal(proofEmitter.distance,3);
 assert.equal(proofEmitter.attenuation,.8);
 assert.equal(audioRuntime.entity('tone-emitter').audioRuntime.loopCount,1);
 
+const replicationWorld={
+  schema:'evercraft.world-engine.world.v1',
+  id:'evercraft-world-engine-replication-proof',
+  version:1,
+  tickRateHz:10,
+  gravity:{x:0,y:0,z:0},
+  entities:[{
+    id:'player',
+    transform:{position:{x:0,y:0,z:0}},
+    rigidBody:{mass:1,velocity:{x:0,y:0,z:0},linearDamping:0},
+    collider:{type:'sphere',radius:.25}
+  }]
+};
+const replicationSession={
+  schema:'evercraft.world-engine.replication.v1',
+  sessionId:'proof-session',
+  worldId:replicationWorld.id,
+  authorityPeerId:'authority',
+  rollbackWindowTicks:20,
+  checkpointIntervalTicks:5
+};
+const authority=new AuthoritativeReplicationRuntime(replicationSession,replicationWorld);
+const predictor=new PredictiveReplicationRuntime(replicationSession,replicationWorld,'peer-a');
+const acceptedInput=createReplicatedInput(replicationSession,'peer-a',1,{
+  id:'accepted-speed',
+  tick:2,
+  entityId:'player',
+  kind:'set_velocity',
+  value:{x:1,y:0,z:0}
+});
+const rejectedPrediction=createReplicatedInput(replicationSession,'peer-a',2,{
+  id:'bad-prediction',
+  tick:4,
+  entityId:'player',
+  kind:'impulse',
+  value:{x:5,y:0,z:0}
+});
+const futureInput=createReplicatedInput(replicationSession,'peer-a',3,{
+  id:'future-speed',
+  tick:6,
+  entityId:'player',
+  kind:'set_velocity',
+  value:{x:2,y:0,z:0}
+});
+authority.submitInput(acceptedInput);
+predictor.queueInput(acceptedInput);
+predictor.queueInput(rejectedPrediction);
+predictor.queueInput(futureInput);
+authority.run(5);
+const authorityCheckpoint=authority.checkpoint();
+predictor.run(7);
+const reconciliation=predictor.reconcile(authorityCheckpoint);
+assert.equal(reconciliation.rolledBack,true);
+assert.deepEqual(reconciliation.discardedPastPredictionDigests,[rejectedPrediction.digest]);
+assert.deepEqual(reconciliation.replayedInputDigests,[futureInput.digest]);
+authority.submitInput(futureInput);
+authority.run(2);
+assert.equal(predictor.runtime.snapshot().digest,authority.runtime.snapshot().digest);
+
 process.stdout.write(JSON.stringify({
-  schema:'evercraft.world-engine.proof.v7',
+  schema:'evercraft.world-engine.proof.v8',
   status:'passed',
   world_id:world.id,
   replay:receipt,
@@ -510,6 +570,13 @@ process.stdout.write(JSON.stringify({
       effective_gain:item.effectiveGain
     }))
   },
+  replication:{
+    checkpoint_tick:authorityCheckpoint.tick,
+    checkpoint_digest:authorityCheckpoint.digest,
+    reconciliation,
+    authority_final_digest:authority.runtime.snapshot().digest,
+    predictor_final_digest:predictor.runtime.snapshot().digest
+  },
   assertions:{
     deterministic_replay:true,
     fixed_timestep:true,
@@ -528,6 +595,10 @@ process.stdout.write(JSON.stringify({
     deterministic_audio_scene:true,
     spatial_audio_attenuation:true,
     audio_listener_switching:true,
+    digest_verified_snapshot_restore:true,
+    deterministic_replication:true,
+    client_prediction_rollback:true,
+    authoritative_checkpoint_convergence:true,
     canonical_snapshot_digest:true
   }
 },null,2)+'\n');

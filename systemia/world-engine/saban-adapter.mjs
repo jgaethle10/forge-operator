@@ -9,6 +9,7 @@ const ROLES=new Set([
   'navigation_guard',
   'visual_scene_guard',
   'audio_scene_guard',
+  'replication_guard',
   'fallen_bridge_guard',
   'worldstate_bridge_guard',
   'provenance_guard',
@@ -161,6 +162,21 @@ function evaluate(role,world){
         'Streamed-out emitters freeze playhead state and resume without silently advancing.',
         'Spatial attenuation and effective gain must be deterministic inputs to replaceable audio backends, not backend-private truth.',
         'Audio adapters consume audio-frame contracts but do not gain canon, publication or payment authority.'
+      ],
+      findings:[]
+    };
+  }
+
+  if(role==='replication_guard'){
+    return {
+      category:'replication',
+      directives:[
+        'Authoritative checkpoints must bind to the same world definition digest and pass snapshot integrity verification before restore.',
+        'Prediction inputs and checkpoints must use deterministic packet digests, but packet hashes must never be treated as peer authentication.',
+        'Late authority inputs fail closed unless an explicit server-rollback policy is added; the v8 authority path must not silently rewrite committed history.',
+        'Client rollback must discard stale past predictions, replay eligible future inputs in canonical order, and converge to authoritative state.',
+        'Rollback memory is bounded and checkpoints outside the configured window fail closed.',
+        'Networking transport, encryption and peer authentication remain replaceable security adapters outside canonical simulation truth.'
       ],
       findings:[]
     };
