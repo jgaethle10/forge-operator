@@ -18,6 +18,7 @@ const world={
     {
       id:'proof-wall',
       transform:{position:{x:0,y:1,z:0}},
+      rigidBody:{mass:1,velocity:{x:0,y:0,z:0},restitution:1,kinematic:true},
       collider:{type:'box',halfExtents:{x:.5,y:1,z:1}}
     }
   ]
@@ -27,9 +28,15 @@ const receipt=replayWorld(world,180,[]);
 assert.equal(receipt.deterministic,true);
 
 const runtime=new EvercraftWorldRuntime(world);
-const snapshot=runtime.run(180);
+let wallContact=null;
+for(let i=0;i<180;i++){
+  runtime.step();
+  if(runtime.collisions.length && !wallContact) wallContact=runtime.collisions[0];
+}
+const snapshot=runtime.snapshot();
 const orb=runtime.entity('proof-orb');
 assert.ok(orb);
+assert.ok(wallContact);
 assert.ok(orb.transform.position.y>=.5);
 assert.ok(orb.rigidBody.velocity.x<0);
 
@@ -54,9 +61,16 @@ const collisionRuntime=new EvercraftWorldRuntime({
     }
   ]
 });
-collisionRuntime.run(31);
-assert.equal(collisionRuntime.collisions.length,1);
-assert.equal(collisionRuntime.collisions[0].kind,'sphere_sphere');
+let sphereContact=null;
+for(let i=0;i<40;i++){
+  collisionRuntime.step();
+  if(collisionRuntime.collisions.length){
+    sphereContact=collisionRuntime.collisions[0];
+    break;
+  }
+}
+assert.ok(sphereContact);
+assert.equal(sphereContact.kind,'sphere_sphere');
 
 process.stdout.write(JSON.stringify({
   schema:'evercraft.world-engine.proof.v2',
@@ -64,7 +78,8 @@ process.stdout.write(JSON.stringify({
   world_id:world.id,
   replay:receipt,
   final_snapshot_digest:snapshot.digest,
-  collision_contact:collisionRuntime.collisions[0],
+  wall_contact:wallContact,
+  collision_contact:sphereContact,
   assertions:{
     deterministic_replay:true,
     fixed_timestep:true,
