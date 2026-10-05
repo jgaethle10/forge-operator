@@ -3,6 +3,11 @@ name: Base44 exit and KAIDANCE proof
 on:
   pull_request:
     paths:
+      - 'tests/owned-canary-cutover.test.mjs'
+      - '.github/workflows/network-mcp-canary.yml'
+      - '.github/workflows/customer-gauntlet.yml'
+      - 'systemia/customer-gauntlet/runner.mjs'
+      - 'systemia/network/public-mcp-canary.mjs'
       - '.github/workflows/chum-llm-hunter.yml'
       - 'scripts/portfolio-sentinel-commercial-canary.mjs'
       - 'systemia/organism/portfolio-sentinel-runner.mjs'
@@ -38,6 +43,11 @@ on:
     branches:
       - main
     paths:
+      - 'tests/owned-canary-cutover.test.mjs'
+      - '.github/workflows/network-mcp-canary.yml'
+      - '.github/workflows/customer-gauntlet.yml'
+      - 'systemia/customer-gauntlet/runner.mjs'
+      - 'systemia/network/public-mcp-canary.mjs'
       - '.github/workflows/chum-llm-hunter.yml'
       - 'scripts/portfolio-sentinel-commercial-canary.mjs'
       - 'systemia/organism/portfolio-sentinel-runner.mjs'
@@ -86,6 +96,8 @@ jobs:
         run: node scripts/validate-no-base44-hotpath.mjs
       - name: Prove owned-only CHUM IndexNow routing
         run: node --test systemia/chum/indexnow-owned-routing.test.mjs
+      - name: Prove owned canary cutover boundaries
+        run: node --test tests/owned-canary-cutover.test.mjs
       - name: Prove owned server routing cutover
         run: node --test tests/server-owned-routing-cutover.test.mjs
       - name: Prove KAIDANCE collider

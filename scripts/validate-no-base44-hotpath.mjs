@@ -1,6 +1,12 @@
 import fs from 'node:fs';
 
 const files = [
+  '.github/workflows/network-mcp-canary.yml',
+  '.github/workflows/customer-gauntlet.yml',
+  'systemia/customer-gauntlet/runner.mjs',
+  'systemia/network/public-mcp-canary.mjs',
+  'systemia/chum/ibmi-rescue-canary.mjs',
+  'systemia/chum/commerce-canary.mjs',
   'systemia/chum/live-intent-hunter.mjs',
   'systemia/chum/money-radar.mjs',
   '.github/workflows/chum-llm-hunter.yml',
@@ -37,6 +43,10 @@ const files = [
 ];
 
 const runtimeFiles = new Set([
+  'systemia/customer-gauntlet/runner.mjs',
+  'systemia/network/public-mcp-canary.mjs',
+  'systemia/chum/ibmi-rescue-canary.mjs',
+  'systemia/chum/commerce-canary.mjs',
   'systemia/chum/live-intent-hunter.mjs',
   'systemia/chum/money-radar.mjs',
   'systemia/chum/indexnow.mjs',

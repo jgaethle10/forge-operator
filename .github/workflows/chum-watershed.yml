@@ -36,6 +36,7 @@ env:
   CHUM_PUBLIC_ORIGIN: ${{ vars.CHUM_PUBLIC_ORIGIN }}
   CHUM_INDEXNOW_GATEWAY_URL: ${{ vars.EVERCRAFT_MACHINE_COMMERCE_GATEWAY_URL }}
   CHUM_INDEXNOW_PAIN_INDEX_URL: ${{ vars.CHUM_INDEXNOW_PAIN_INDEX_URL }}
+  EVERCRAFT_MACHINE_COMMERCE_GATEWAY_URL: ${{ vars.EVERCRAFT_MACHINE_COMMERCE_GATEWAY_URL }}
 
 concurrency:
   group: chum-watershed-${{ github.event_name }}-${{ github.ref }}
@@ -169,7 +170,17 @@ jobs:
         id: commerce
         if: always()
         continue-on-error: true
-        run: npm run chum:commerce-canary
+        shell: bash
+        run: |
+          npm run chum:commerce-canary
+          node <<'NODE'
+          const fs = require('fs');
+          const receipt = JSON.parse(fs.readFileSync('artifacts/chum/commerce-canary-latest.json','utf8'));
+          fs.appendFileSync(process.env.GITHUB_OUTPUT, [
+            'route_state=' + String(receipt.route_state || 'unknown'),
+            'status=' + String(receipt.status || 'unknown')
+          ].join('\n') + '\n');
+          NODE
 
       - name: Run independent customer gauntlet
         id: gauntlet
@@ -178,7 +189,17 @@ jobs:
           RAVEN_NEXUS_CUSTOMER_BRIDGE_TOKEN: ${{ secrets.RAVEN_NEXUS_CUSTOMER_BRIDGE_TOKEN }}
           CUSTOMER_GAUNTLET_REQUIRE_NEXUS: "false"
           CUSTOMER_GAUNTLET_SANDBOX_PURCHASE: "false"
-        run: npm run customer:gauntlet
+        shell: bash
+        run: |
+          npm run customer:gauntlet
+          node <<'NODE'
+          const fs = require('fs');
+          const receipt = JSON.parse(fs.readFileSync('artifacts/customer-gauntlet/latest.json','utf8'));
+          fs.appendFileSync(process.env.GITHUB_OUTPUT, [
+            'gateway_held=' + String(receipt.summary?.gateway_held || 0),
+            'owned_gateway_configured=' + String(Boolean(receipt.summary?.owned_gateway_configured))
+          ].join('\n') + '\n');
+          NODE
 
       - name: Form Saban revenue lanes
         id: revenue
@@ -471,7 +492,9 @@ jobs:
             echo "Crawler reachability: ${{ steps.crawlers.outcome }}"
             echo "MCP / Registry: ${{ steps.mcp.outcome }}"
             echo "Sell-now commerce doors: ${{ steps.commerce.outcome }}"
+            echo "Commerce route state: ${{ steps.commerce.outputs.route_state }}"
             echo "Independent customer gauntlet: ${{ steps.gauntlet.outcome }}"
+            echo "Customer gauntlet gateway-held offers: ${{ steps.gauntlet.outputs.gateway_held }}"
             echo "Saban revenue formation: ${{ steps.revenue.outcome }}"
             echo "LLM ecosystem hunter: ${{ steps.hunter.outcome }}"
             echo "ARD registry strike: ${{ steps.ard.outcome }}"

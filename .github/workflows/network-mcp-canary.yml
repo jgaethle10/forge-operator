@@ -47,6 +47,8 @@ jobs:
           node-version: 22
 
       - name: Verify Evercraft Network live MCP contract
+        env:
+          EVERCRAFT_MACHINE_COMMERCE_MCP_URL: ${{ vars.EVERCRAFT_MACHINE_COMMERCE_MCP_URL }}
         run: node systemia/network/public-mcp-canary.mjs
 
       - name: Upload Evercraft Network MCP receipt
