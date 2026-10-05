@@ -53,6 +53,21 @@ test('native preview reflects editable topology changes',()=>{
   assert.ok(after.receipt.lineCount>before.receipt.lineCount);
 });
 
+
+test('native preview digest changes when the authored camera changes',()=>{
+  const project=createWorldForgeStarterProject();
+  const base=renderWorldForgeNativePreview({project,renderIntentId:'preview'});
+
+  const camera=project.nodes.find(node=>node.id==='camera-main');
+  if(!camera?.camera) throw new Error('camera fixture missing');
+  camera.camera.focalLengthMm=35;
+  camera.camera.lookAt={x:1,y:0,z:1};
+
+  const changed=renderWorldForgeNativePreview({project,renderIntentId:'preview'});
+  assert.notEqual(base.receipt.svgSha256,changed.receipt.svgSha256);
+  assert.notEqual(base.receipt.projectDigest,changed.receipt.projectDigest);
+});
+
 test('native preview refuses unsupported production-only scene features',()=>{
   const project=createWorldForgeStarterProject();
   project.simulations.push({
