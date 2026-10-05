@@ -2,6 +2,7 @@ import assert from 'node:assert/strict';
 import { EvercraftWorldRuntime, replayWorld } from './engine.ts';
 import { SceneStreamController } from './streaming.ts';
 import { compileVisualFrame } from './visual.ts';
+import { compileAudioFrame } from './audio.ts';
 
 const world={
   schema:'evercraft.world-engine.world.v1',
@@ -398,8 +399,75 @@ assert.deepEqual(visualFrame.renderables.map(item=>item.entityId),['proof-object
 assert.deepEqual(visualFrame.lights.map(item=>item.entityId),['proof-sun']);
 assert.deepEqual(visualFrame.materials.map(item=>item.id),['proof-metal']);
 
+const audioWorld={
+  schema:'evercraft.world-engine.world.v1',
+  id:'evercraft-world-engine-audio-proof',
+  version:1,
+  tickRateHz:10,
+  gravity:{x:0,y:0,z:0},
+  audioScene:{
+    schema:'evercraft.world-engine.audio-scene.v1',
+    initialListenerEntityId:'listener-a',
+    clips:[{id:'tone',assetRef:'fallen:audio:tone-master',durationSec:1}],
+    buses:[{id:'sfx',gain:1}]
+  },
+  entities:[
+    {
+      id:'listener-a',
+      transform:{position:{x:0,y:0,z:0}},
+      audioListener:{gain:1}
+    },
+    {
+      id:'listener-b',
+      transform:{position:{x:8,y:0,z:0}},
+      audioListener:{gain:.5}
+    },
+    {
+      id:'tone-emitter',
+      transform:{position:{x:5,y:0,z:0}},
+      audioEmitter:{
+        clipId:'tone',
+        busId:'sfx',
+        gain:1,
+        autoplay:true,
+        loop:true,
+        spatialMode:'3d',
+        minDistance:1,
+        maxDistance:11,
+        rolloff:'linear'
+      }
+    }
+  ]
+};
+const audioInputs=[{
+  id:'switch-listener',
+  tick:2,
+  kind:'activate_audio_listener',
+  listenerEntityId:'listener-b'
+}];
+const audioReceipt=replayWorld(audioWorld,12,audioInputs);
+assert.equal(audioReceipt.deterministic,true);
+const audioRuntime=new EvercraftWorldRuntime(audioWorld);
+audioRuntime.run(12,audioInputs);
+const audioSnapshot=audioRuntime.snapshot();
+const audioFrame=compileAudioFrame(
+  audioSnapshot.worldId,
+  audioSnapshot.tick,
+  audioSnapshot.timeSec,
+  audioRuntime.definition.audioScene,
+  audioSnapshot.entities,
+  audioSnapshot.audioSceneRuntime,
+  audioSnapshot.activeEntityIds
+);
+assert.equal(audioFrame.listener.entityId,'listener-b');
+const proofEmitter=audioFrame.emitters.find(item=>item.entityId==='tone-emitter');
+assert.ok(proofEmitter);
+assert.equal(proofEmitter.distance,3);
+assert.equal(proofEmitter.attenuation,.8);
+assert.equal(audioRuntime.entity('tone-emitter').audioRuntime.loopCount,1);
+
 process.stdout.write(JSON.stringify({
-  schema:'evercraft.world-engine.proof.v6',
+  schema:'evercraft.world-engine.proof.v7',
   status:'passed',
   world_id:world.id,
   replay:receipt,
@@ -431,6 +499,17 @@ process.stdout.write(JSON.stringify({
     renderables:visualFrame.renderables.map(item=>item.entityId),
     lights:visualFrame.lights.map(item=>item.entityId)
   },
+  audio:{
+    replay:audioReceipt,
+    listener:audioFrame.listener.entityId,
+    frame_digest:audioFrame.digest,
+    emitters:audioFrame.emitters.map(item=>({
+      entity_id:item.entityId,
+      state:item.state,
+      attenuation:item.attenuation,
+      effective_gain:item.effectiveGain
+    }))
+  },
   assertions:{
     deterministic_replay:true,
     fixed_timestep:true,
@@ -446,6 +525,9 @@ process.stdout.write(JSON.stringify({
     deterministic_visual_scene:true,
     deterministic_camera_graph:true,
     material_and_light_contracts:true,
+    deterministic_audio_scene:true,
+    spatial_audio_attenuation:true,
+    audio_listener_switching:true,
     canonical_snapshot_digest:true
   }
 },null,2)+'\n');
