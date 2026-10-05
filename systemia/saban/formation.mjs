@@ -55,8 +55,10 @@ export async function buildFormationAcquisition({
   execution,
   rootDir=process.cwd(),
 }={}){
-  const config=execution?.acquisition;
-  if(config?.enabled!==true) return null;
+  const rawConfig=execution?.acquisition;
+  if(rawConfig===false) return null;
+  const config=rawConfig&&typeof rawConfig==='object' ? rawConfig : {};
+  if(config.enabled===false) return null;
 
   const markets=config.markets||{};
   const brokerCfg=markets.evercraft_broker||{};
@@ -218,6 +220,11 @@ export async function buildFormationAcquisition({
 
   return {
     enabled:true,
+    auto_discover_markets:config.auto_discover_markets!==false,
+    public_market_discovery:config.public_market_discovery===true,
+    allow_local_host_bootstrap:config.allow_local_host_bootstrap,
+    local_node_root:config.local_node_root||null,
+    local_node_id:config.local_node_id||null,
     demand_id:demandId,
     negotiation_level:config.negotiation_level||'lease',
     prefer_zero_cost:config.prefer_zero_cost!==false,
@@ -445,7 +452,7 @@ export async function executeFormation({ formation, rootDir = process.cwd() }) {
             reconcile: node.reconcile,
             nodePool: {
               endpoints: node.execution?.endpoints || [],
-              discover: node.execution?.discover === true,
+              discover: node.execution?.discover !== false,
               discoveryOptions: node.execution?.discovery_options || {},
               allocatorToken: process.env.EVERCRAFT_ALLOCATOR_TOKEN || '',
               maxAttempts: node.execution?.max_attempts,

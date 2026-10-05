@@ -25,6 +25,7 @@ import { nodeSeedInventoryToComputeOffers } from './nodeseed-capacity-offer.mjs'
 import { readSafeNodeSeedInventory } from './nodeseed-inventory-ingest.mjs';
 import { appendDemandHistory, forecastCapacityDemand, prewarmActionsForAuthorizedCapacity } from './capacity-demand-forecast.mjs';
 import { buildForecastHeadroomReservations } from './capacity-headroom.mjs';
+import { buildResourceFieldExpansionIntents } from './capacity-resource-field-bridge.mjs';
 
 const MODULE_FILE=fileURLToPath(import.meta.url);
 
@@ -289,6 +290,11 @@ export async function runCapacityOrganismOnce({
     demandForecast,
     now,
   });
+  const resourceFieldExpansion=buildResourceFieldExpansionIntents({
+    capacityState:compiled,
+    tasks:compiled.workload_anatomy?.tasks||[],
+    demandForecast,
+  });
   const opportunityMap=candidateInventory
     ? matchCapacityGapsToAmbientCandidates({
         capacityState:compiled,
@@ -363,6 +369,15 @@ export async function runCapacityOrganismOnce({
       hold_count:autonomyPlan.hold_count,
       receipt_hash:autonomyPlan.receipt_hash,
     },
+    resource_field_expansion:{
+      intent_count:resourceFieldExpansion.intent_count,
+      current_pressure_intent_count:resourceFieldExpansion.current_pressure_intent_count,
+      forecast_pressure_intent_count:resourceFieldExpansion.forecast_pressure_intent_count,
+      zero_spend_first:resourceFieldExpansion.policy.zero_spend_first,
+      paid_capacity_auto_authorized:resourceFieldExpansion.policy.paid_capacity_auto_authorized,
+      proactive_before_failure:resourceFieldExpansion.policy.proactive_before_failure,
+      receipt_hash:resourceFieldExpansion.receipt_hash,
+    },
     backlog_capacity_hunt:demandHuntPlan?{
       demand_workloads:demandHuntPlan.demand_workloads,
       candidate_matches:demandHuntPlan.candidate_matches,
@@ -387,6 +402,7 @@ export async function runCapacityOrganismOnce({
   atomicJson(path.join(resolvedRoot,'capacity-demand-forecast.json'),demandForecast);
   atomicJson(path.join(resolvedRoot,'capacity-prewarm-plan.json'),prewarmPlan);
   atomicJson(path.join(resolvedRoot,'capacity-autonomy-plan.json'),autonomyPlan);
+  atomicJson(path.join(resolvedRoot,'resource-field-expansion-intents.json'),resourceFieldExpansion);
   atomicJson(path.join(resolvedRoot,'authority-requests.json'),{
     schema:'evercraft.saban.capacity-authority-queue.v1',
     authority_requests:autonomyPlan.authority_requests,
@@ -418,6 +434,9 @@ async function main(){
       forecast_prewarm_workload_count:receipt.demand_forecast?.prewarm_workloads?.length||0,
       forecast_prewarm_action_count:receipt.demand_forecast?.prewarm_action_count||0,
       forecast_headroom_reservation_count:receipt.capacity_headroom?.reservation_count||0,
+      resource_field_expansion_intent_count:receipt.resource_field_expansion?.intent_count||0,
+      resource_field_current_pressure_count:receipt.resource_field_expansion?.current_pressure_intent_count||0,
+      resource_field_forecast_pressure_count:receipt.resource_field_expansion?.forecast_pressure_intent_count||0,
       commercial_capacity_authorized:false,
       generated_at:receipt.generated_at,
     })+'\n');

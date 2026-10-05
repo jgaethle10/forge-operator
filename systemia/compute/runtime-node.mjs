@@ -24,12 +24,12 @@ import { startFabricLocalRuntime } from '../mcp/fabric-local-runtime.mjs';
 import { startPublicEdgeRuntime } from '../network/public-edge-runtime.mjs';
 import { startFederatedServiceBridge } from '../network/federated-service-bridge.mjs';
 import { startEvercraftHomeServer } from '../evercraft-home/server.mjs';
-import { startLineageRemoteRuntime } from '../lineage/yard-remote-runtime.mjs';
 import { startEvercraftEdgeDnsRuntime } from './evercraft-edge-dns-runtime.mjs';
 import { validatePublicEdgeAdmission } from '../network/public-edge-tls.mjs';
 import { transcriptionCapabilityStatus } from '../forensiscope/transcription-engine.mjs';
 import { EvercraftRemoteOperator } from './remote-operator.mjs';
 import { NodeSeedMicroWorkloads, runNodeSeedRegisteredWorkload } from './nodeseed-registered-worker.mjs';
+import { detectHardwareCapacity } from './hardware-inventory.mjs';
 
 const CODE_ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '../..');
 
@@ -90,7 +90,6 @@ const BRIDGED_WORKLOADS = new Set([
   'systemia.specialist-handoff-mcp.v1',
   'systemia.fabric-local-mcp.v1',
   'systemia.rivet-report-runtime.v1',
-  'systemia.lineage-remote.v1',
 ]);
 
 const BRIDGE_REQUEST_HEADERS = new Set([
@@ -143,21 +142,10 @@ function bridgeServiceOrigin(entry) {
   if (entry?.workload_class === 'systemia.rivet-report-runtime.v1') {
     return String(entry?.runtime?.service_url || '');
   }
-  if (entry?.workload_class === 'systemia.lineage-remote.v1') {
-    return String(entry?.runtime?.service_url || '');
-  }
   return '';
 }
 
 function bridgeRouteAllowed(entry, method, requestPath) {
-  if (entry?.workload_class === 'systemia.lineage-remote.v1') {
-    if (method === 'GET' && ['/health', '/v1/refs'].includes(requestPath)) return true;
-    if (
-      method === 'POST' &&
-      /^\/v1\/(?:ref\/(?:read|cas)|object\/(?:has|get|put))$/.test(requestPath)
-    ) return true;
-    return false;
-  }
   if (entry?.workload_class !== 'systemia.rivet-report-runtime.v1') return true;
   if (method === 'GET' && requestPath === '/health') return true;
   if (method === 'POST' && requestPath === '/v1/reports') return true;
@@ -524,6 +512,7 @@ export async function startEvercraftComputeNode({
     memoryMb:totalMemoryMb,
     storageGb:freeStorageGb,
   });
+  const hardwareCapacity=detectHardwareCapacity({root:allowedRoot});
   const publicEdgeCapability = (() => {
     const baseDomain = String(process.env.EVERCRAFT_PUBLIC_EDGE_BASE_DOMAIN || '').trim();
     const tlsKeyPath = String(process.env.EVERCRAFT_PUBLIC_EDGE_TLS_KEY_PATH || '').trim();
@@ -859,7 +848,6 @@ export async function startEvercraftComputeNode({
     'systemia.evercraft-edge-dns.v1',
     'systemia.federated-service-bridge.v1',
     'systemia.evercraft-home.v1',
-    'systemia.lineage-remote.v1',
     'saban.logical-agent',
     'saban.multiplier-assignment.v1',
   ]);
@@ -1065,9 +1053,14 @@ export async function startEvercraftComputeNode({
           device_fingerprint: deviceIdentity?.fingerprint || null,
           attestation_supported: Boolean(deviceIdentity),
           capacity_hint: {
-            cpu_units: Math.max(1, os.cpus()?.length || 1),
+            cpu_units: hardwareCapacity.cpu_units,
             memory_mb: totalMemoryMb,
             storage_gb: freeStorageGb,
+            gpu_units: hardwareCapacity.gpu_units,
+            gpu_count: hardwareCapacity.gpu_units,
+            vram_mb: hardwareCapacity.vram_mb,
+            gpu_models: hardwareCapacity.gpu_models,
+            hardware_evidence: hardwareCapacity.evidence,
             recommended_concurrency:hardwareSummary.recommended_concurrency.value,
             hardware:hardwareSummary,
             executables: executableCapabilities,
@@ -1649,16 +1642,6 @@ export async function startEvercraftComputeNode({
             return send(res, 403, { error: 'evercraft_identity_state_outside_admitted_root' });
           }
 
-          const credentialStateValue = String(
-            body.input?.provider_credential_state_dir ||
-            process.env.EVERCRAFT_CREDENTIAL_STATE_DIR ||
-            path.join(identityStateRoot, 'provider-credentials')
-          ).trim();
-          const credentialStateRoot = path.resolve(credentialStateValue);
-          if (!isWithin(allowedRoot, credentialStateRoot)) {
-            return send(res, 403, { error: 'evercraft_provider_credential_state_outside_admitted_root' });
-          }
-
           const passportStateRoot = path.resolve(String(
             body.input?.passport_state_dir ||
             process.env.EVERCRAFT_PASSPORT_STATE_DIR ||
@@ -1688,7 +1671,6 @@ export async function startEvercraftComputeNode({
             identitySecret,
             passportStateDir: passportStateRoot,
             identityStateDir: identityStateRoot,
-            credentialStateDir: credentialStateRoot,
             yardStateDir: yardStateRoot,
           });
 
@@ -2315,23 +2297,6 @@ export async function startEvercraftComputeNode({
             ],
           });
 
-          const providerCredentialStateValue = String(
-            body.input?.provider_credential_state_dir ||
-            process.env.EVERCRAFT_CREDENTIAL_STATE_DIR ||
-            (process.env.EVERCRAFT_IDENTITY_STATE_DIR
-              ? path.join(process.env.EVERCRAFT_IDENTITY_STATE_DIR, 'provider-credentials')
-              : '')
-          ).trim();
-          const providerCredentialStateRoot = providerCredentialStateValue
-            ? path.resolve(providerCredentialStateValue)
-            : '';
-          if (
-            providerCredentialStateRoot &&
-            !isWithin(allowedRoot, providerCredentialStateRoot)
-          ) {
-            return send(res, 403, { error: 'core_provider_credential_state_outside_admitted_root' });
-          }
-
           const serviceEnv = {
             NODE_ENV: String(process.env.NODE_ENV || 'production'),
             EVERCRAFT_RELEASE_REF: releaseRef,
@@ -2370,7 +2335,6 @@ export async function startEvercraftComputeNode({
               workspaceRoot,
               'eps-social-continuity'
             ),
-            RAVEN_PROVIDER_CREDENTIAL_STATE_DIR: providerCredentialStateRoot,
           };
 
           if (serviceEnv.EVERCRAFT_CLIP_EPS_INGRESS_URL) {
@@ -2421,69 +2385,12 @@ export async function startEvercraftComputeNode({
             health_path: `/v1/services/${serviceId}/health`,
             supervised_service_count: health.service_count,
             sentinel_region_profile: serviceEnv.SYSTEMIA_SENTINEL_REGION_PROFILE || null,
-            provider_credential_vault_bound: Boolean(
-              serviceEnv.RAVEN_PROVIDER_CREDENTIAL_STATE_DIR
-            ),
           };
           const receipt = chain.issue('service.started', {
             lease_id: body.lease_id,
             service_id: serviceId,
             workload_class: body.workload_class,
             result_schema: result.schema,
-          });
-          return send(res, 200, {
-            ok: true,
-            node_id: nodeId,
-            workload_class: body.workload_class,
-            result,
-            receipt,
-          });
-        }
-
-        if (workloadClass === 'systemia.lineage-remote.v1') {
-          const remoteKey = String(body.input?.remote_key || 'default').trim();
-          if (!/^[a-zA-Z0-9._-]{1,80}$/.test(remoteKey)) {
-            return send(res, 422, { error: 'lineage_remote_key_invalid' });
-          }
-          const stateRoot = path.resolve(String(
-            body.input?.state_root ||
-            path.join(allowedRoot, '.evercraft', 'lineage-remotes', remoteKey)
-          ));
-          if (!isWithin(allowedRoot, stateRoot)) {
-            return send(res, 403, { error: 'lineage_remote_state_outside_admitted_root' });
-          }
-
-          const runtime = await startLineageRemoteRuntime({
-            stateDir: stateRoot,
-            host: '127.0.0.1',
-            port: 0,
-            maxObjectBytes: 5 * 1024 * 1024,
-          });
-          const serviceId = `svc_${randomBytes(8).toString('hex')}`;
-          services.set(serviceId, {
-            lease_id: body.lease_id,
-            workload_class: body.workload_class,
-            runtime,
-            service: runtime,
-          });
-          const result = {
-            schema: 'evercraft.compute.resident-service.v1',
-            service_id: serviceId,
-            workload_class: body.workload_class,
-            service_url: null,
-            health_path: `/v1/services/${serviceId}/health`,
-            protocol: 'evercraft.lineage.remote.v1',
-            remote_key: remoteKey,
-            public_route_required: false,
-            authority_material_exposed: false,
-          };
-          const receipt = chain.issue('service.started', {
-            lease_id: body.lease_id,
-            service_id: serviceId,
-            workload_class: body.workload_class,
-            result_schema: result.schema,
-            remote_key: remoteKey,
-            protocol: result.protocol,
           });
           return send(res, 200, {
             ok: true,
