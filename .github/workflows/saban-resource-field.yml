@@ -4,6 +4,9 @@ on:
   pull_request:
     paths:
       - 'systemia/saban/resource-field.mjs'
+      - 'systemia/saban/capacity-resource-field-bridge.mjs'
+      - 'systemia/saban/capacity-resource-field-bridge.proof.mjs'
+      - 'systemia/saban/capacity-organism.mjs'
       - 'systemia/saban/resource-field.proof.mjs'
       - 'systemia/saban/resource-placement.proof.mjs'
       - 'systemia/saban/resource-acquirer.mjs'
@@ -61,6 +64,8 @@ jobs:
         run: node systemia/compute/hardware-inventory.proof.mjs
       - name: Prove Resource Field planning
         run: node systemia/saban/resource-field.proof.mjs
+      - name: Prove Capacity Organism to Resource Field bridge
+        run: node systemia/saban/capacity-resource-field-bridge.proof.mjs
       - name: Prove hardware-aware placement
         run: node systemia/saban/resource-placement.proof.mjs
       - name: Prove live resource acquisition
