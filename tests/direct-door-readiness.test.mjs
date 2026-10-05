@@ -87,8 +87,10 @@ const forensiRoute = resolveProductRoute({
   specs,
   candidates: new Map(),
 });
-assert.equal(forensiRoute.state, 'specialist_direct');
-assert.equal(forensiRoute.route.hops_before_specialist, 0);
+assert.equal(forensiRoute.state, 'fallback_required');
+assert.equal(forensiRoute.route.mode, 'held_until_owned_route_verified');
+assert.equal(forensiRoute.route.hops_before_specialist, null);
+assert.equal(forensiRoute.route.remote_mcp, null);
 assert.equal(forensiRoute.route.use_universal_router_first, false);
 
 const unknownRoute = resolveProductRoute({
