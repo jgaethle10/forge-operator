@@ -41,7 +41,14 @@ function projectPath(rootDir:string,id:string){
   return path.join(path.resolve(rootDir),`${id}.world-forge.json`);
 }
 
+function assertRegularProjectFile(filePath:string){
+  const stat=fs.lstatSync(filePath);
+  if(stat.isSymbolicLink()) throw new Error('world_forge_store_symlink_forbidden');
+  if(!stat.isFile()) throw new Error('world_forge_store_not_regular_file');
+}
+
 function parseProject(filePath:string):WorldForgeProject{
+  assertRegularProjectFile(filePath);
   const parsed=JSON.parse(fs.readFileSync(filePath,'utf8')) as WorldForgeProject;
   const validation=validateWorldForgeProject(parsed);
   if(validation.status!=='accepted'){
@@ -76,6 +83,7 @@ export function saveWorldForgeProject(input:{
   const filePath=projectPath(root,input.project.id);
   const existing=fs.existsSync(filePath)?parseProject(filePath):null;
   const expected=input.expectedStoredVersion;
+  const nextDigest=validation.digest;
 
   if(expected!==undefined){
     const actual=existing?.version??null;
@@ -86,12 +94,26 @@ export function saveWorldForgeProject(input:{
 
   const previousVersion=existing?.version??null;
   const previousDigest=existing?worldForgeDigest(existing):null;
+
+  if(existing&&input.project.version<existing.version){
+    throw new Error(`world_forge_store_version_regression:stored=${existing.version}:incoming=${input.project.version}`);
+  }
+  if(existing&&input.project.version===existing.version&&previousDigest!==nextDigest){
+    throw new Error(`world_forge_store_same_version_digest_conflict:version=${existing.version}`);
+  }
+
   const payload=JSON.stringify(input.project,null,2)+'\n';
   const tempName=`.${input.project.id}.${process.pid}.${crypto.randomBytes(6).toString('hex')}.tmp`;
   const tempPath=path.join(root,tempName);
 
   try{
-    fs.writeFileSync(tempPath,payload,{encoding:'utf8',mode:0o600,flag:'wx'});
+    const fd=fs.openSync(tempPath,'wx',0o600);
+    try{
+      fs.writeFileSync(fd,payload,{encoding:'utf8'});
+      fs.fsyncSync(fd);
+    }finally{
+      fs.closeSync(fd);
+    }
     fs.renameSync(tempPath,filePath);
   }finally{
     if(fs.existsSync(tempPath)) fs.unlinkSync(tempPath);
@@ -125,7 +147,9 @@ export function listWorldForgeProjects(input:{
     const id=name.slice(0,-'.world-forge.json'.length);
     if(!validProjectId(id)) continue;
     try{
-      const project=parseProject(path.join(root,name));
+      const filePath=path.join(root,name);
+      if(fs.lstatSync(filePath).isSymbolicLink()) continue;
+      const project=parseProject(filePath);
       rows.push({
         id:project.id,
         title:project.title,
