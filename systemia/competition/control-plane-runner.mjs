@@ -1,6 +1,7 @@
 import fs from "node:fs";
 import path from "node:path";
 import { runCompetitionControlPlane } from "./control-plane.mjs";
+import { applyAuthorizationLedger, summarizeAuthorizationLedger } from "./authorization-ledger.mjs";
 
 function arg(name, fallback = "") {
   const index = process.argv.indexOf(name);
@@ -16,6 +17,7 @@ function atomicJson(file, value) {
 
 const inbox = path.resolve(arg("--inbox", process.env.SYSTEMIA_COMPETITION_OPPORTUNITY_INBOX || "artifacts/competition-provider/opportunities.json"));
 const out = path.resolve(arg("--out", process.env.SYSTEMIA_COMPETITION_CONTROL_PLANE_RECEIPT || "artifacts/competition-provider/control-plane/latest.json"));
+const ledgerPath = path.resolve(arg("--authorization-ledger", process.env.SYSTEMIA_COMPETITION_AUTHORIZATION_LEDGER || "artifacts/competition-provider/authorization-ledger.json"));
 
 let opportunities = [];
 if (fs.existsSync(inbox)) {
@@ -27,7 +29,14 @@ if (fs.existsSync(inbox)) {
   }
 }
 
-const receipt = runCompetitionControlPlane(opportunities);
+let authorizationLedger = {};
+if (fs.existsSync(ledgerPath)) {
+  try { authorizationLedger = JSON.parse(fs.readFileSync(ledgerPath, "utf8")); } catch { authorizationLedger = {}; }
+}
+
+const resolvedOpportunities = applyAuthorizationLedger(opportunities, authorizationLedger);
+const receipt = runCompetitionControlPlane(resolvedOpportunities);
+receipt.authorization_ledger = summarizeAuthorizationLedger(authorizationLedger);
 atomicJson(out, receipt);
 process.stdout.write(JSON.stringify({
   ok: true,
