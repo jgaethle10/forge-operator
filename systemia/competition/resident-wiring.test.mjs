@@ -75,3 +75,20 @@ test("competition control plane makes Jesse an exception handler, not the operat
     "provider_executor",
   ]);
 });
+
+
+test("canonical competition registry is present and carries live money targets", () => {
+  const registry = JSON.parse(fs.readFileSync("systemia/competition/opportunity-registry.json", "utf8"));
+  assert.equal(registry.schema, "evercraft.systemia.competition-opportunity-registry.v1");
+  assert.ok(Array.isArray(registry.opportunities));
+  const ids = new Set(registry.opportunities.map((row) => row.opportunity_id));
+  assert.ok(ids.has("qloo-agentic-hackathon-2026"));
+  assert.ok(ids.has("nebius-nvidia-global-ai-hackathon-2026"));
+  assert.ok(ids.has("paypal-ai-hackathon-2026"));
+  assert.ok(ids.has("google-gemma-4-developer-agent-2026"));
+  for (const row of registry.opportunities) {
+    assert.ok(row.evidence?.source);
+    assert.ok(row.deadline);
+    assert.equal(row.build?.submission_package_ready, false);
+  }
+});
