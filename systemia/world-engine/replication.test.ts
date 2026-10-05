@@ -203,6 +203,24 @@ test('authority input submission is idempotent but sequence conflicts fail close
   );
 });
 
+test('processed packet retransmission remains idempotent',()=>{
+  const config=session();
+  const authority=new AuthoritativeReplicationRuntime(config,world());
+  const packet=createReplicatedInput(config,'peer-a',4,{
+    id:'move',
+    tick:2,
+    entityId:'player',
+    kind:'set_velocity',
+    value:{x:1,y:0,z:0}
+  });
+  authority.submitInput(packet);
+  authority.run(3);
+
+  const retry=authority.submitInput(packet);
+  assert.equal(retry.accepted,false);
+  assert.equal(retry.duplicate,true);
+});
+
 test('authority rejects late inputs instead of silently rewriting history',()=>{
   const config=session();
   const authority=new AuthoritativeReplicationRuntime(config,world());
