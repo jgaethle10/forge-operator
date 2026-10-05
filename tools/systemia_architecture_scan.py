@@ -19,7 +19,7 @@ import os
 from pathlib import Path
 import re
 
-VERSION = "systemia-architecture-scan/1.2"
+VERSION = "systemia-architecture-scan/1.3"
 
 EXTENSIONS = {".py", ".js", ".jsx", ".ts", ".tsx", ".mjs", ".cjs"}
 EXCLUDES = {
@@ -41,6 +41,9 @@ BASE44_ENTITY_PATTERN = re.compile(
 BASE44_FUNCTION_INVOKE_PATTERN = re.compile(
     r"""\bfunctions\s*\.\s*invoke\s*\(\s*["']([^"']+)["']""",
     re.MULTILINE,
+)
+BASE44_HTTP_FUNCTION_PATTERN = re.compile(
+    r"""https://base44\.app/api/apps/[^\`"'\\s]+/functions/([A-Za-z_$][A-Za-z0-9_$-]*)"""
 )
 BASE44_READ_METHODS = {"filter", "list", "get"}
 BASE44_WRITE_METHODS = {"create", "update", "delete", "bulkCreate", "bulkUpdate"}
@@ -221,7 +224,12 @@ def scan_js_family(root: Path, path: Path, nodes: dict, edges: dict, coverage: l
                     confidence="high",
                 )
 
-    source_for_access = "\n".join(line.split("//", 1)[0] for line in source_lines)
+    def strip_line_comment_preserving_urls(line: str) -> str:
+        protected = line.replace("https://", "https:__DOUBLE_SLASH__").replace("http://", "http:__DOUBLE_SLASH__")
+        stripped = protected.split("//", 1)[0]
+        return stripped.replace("https:__DOUBLE_SLASH__", "https://").replace("http:__DOUBLE_SLASH__", "http://")
+
+    source_for_access = "\n".join(strip_line_comment_preserving_urls(line) for line in source_lines)
 
     for match in BASE44_ENTITY_PATTERN.finditer(source_for_access):
         entity_name = match.group(1)
@@ -256,6 +264,21 @@ def scan_js_family(root: Path, path: Path, nodes: dict, edges: dict, coverage: l
             confidence="high",
         )
 
+    for match in BASE44_HTTP_FUNCTION_PATTERN.finditer(source_for_access):
+        line_number = source_for_access.count("\n", 0, match.start()) + 1
+        excerpt = " ".join(match.group(0).split())
+        add_edge(
+            edges,
+            file_key,
+            workflow_node(match.group(1), nodes),
+            "invokes",
+            rel,
+            line_number,
+            excerpt,
+            "base44_http_function_url",
+            confidence="high",
+        )
+
     coverage.append({
         "file_path": rel,
         "parser_mode": "js_ts_literal_plus_base44_access",
@@ -264,7 +287,8 @@ def scan_js_family(root: Path, path: Path, nodes: dict, edges: dict, coverage: l
             "Literal import/export/require patterns are extracted.",
             "Literal Base44 entity accesses are classified as reads or writes across whitespace/newlines.",
             "Literal functions.invoke targets are extracted across whitespace/newlines as workflow invocations.",
-            "Line comments are removed before Base44 access matching; block-comment parsing is not claimed.",
+            "Literal Base44 HTTPS function endpoints are extracted as workflow invocations.",
+            "Line comments are removed while preserving http/https URL strings; block-comment parsing is not claimed.",
             "This is not a full JS/TS parser.",
             "Computed entity names, computed function targets, bundler resolution, general call graph, and runtime behavior are not claimed.",
         ],
@@ -311,7 +335,7 @@ def scan(root: Path) -> dict:
             "executes_scanned_code": False,
             "claims_runtime_behavior": False,
             "python_parser": "stdlib ast",
-            "js_ts_parser": "literal imports + Base44 literal entity/function access across whitespace; partial",
+            "js_ts_parser": "literal imports + Base44 literal entity/function access + Base44 HTTPS function endpoints; partial",
         },
         "counts": {
             "nodes": len(nodes),
