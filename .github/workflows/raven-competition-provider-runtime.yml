@@ -7,6 +7,7 @@ on:
       - "systemia/raven/provider-secret-boundary.mjs"
       - "systemia/organism/competition-provider-scout.workflow.json"
       - "systemia/organism/competition-submission-executor.workflow.json"
+      - "systemia/organism/competition-control-plane.workflow.json"
       - "systemia/core/resident-services.json"
       - "systemia/migrations/base44-exit/**"
       - ".github/workflows/raven-competition-provider-runtime.yml"
@@ -17,6 +18,7 @@ on:
       - "systemia/raven/provider-secret-boundary.mjs"
       - "systemia/organism/competition-provider-scout.workflow.json"
       - "systemia/organism/competition-submission-executor.workflow.json"
+      - "systemia/organism/competition-control-plane.workflow.json"
       - "systemia/core/resident-services.json"
       - "systemia/migrations/base44-exit/**"
       - ".github/workflows/raven-competition-provider-runtime.yml"
@@ -35,7 +37,7 @@ jobs:
         with:
           node-version: "22"
       - name: Prove Raven competition provider runtime
-        run: node --test systemia/competition/provider-runtime.test.mjs systemia/competition/submission-runtime.test.mjs systemia/competition/resident-wiring.test.mjs systemia/raven/provider-secret-boundary.test.mjs systemia/evercraft-home/provider-credentials.test.mjs
+        run: node --test systemia/competition/control-plane.test.mjs systemia/competition/provider-runtime.test.mjs systemia/competition/submission-runtime.test.mjs systemia/competition/resident-wiring.test.mjs systemia/raven/provider-secret-boundary.test.mjs systemia/evercraft-home/provider-credentials.test.mjs
       - name: Prove fail-closed unconfigured resident scout
         run: |
           rm -rf artifacts/competition-provider
