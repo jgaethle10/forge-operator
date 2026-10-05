@@ -1,0 +1,28 @@
+{
+  "id": "evercraft.earthworks-autonomy.v1",
+  "name": "Evercraft EarthWorks Autonomy",
+  "owner": "Evercraft",
+  "status": "simulation_control_contract_proof",
+  "claim": "Evercraft builds autonomous fleet coordination, digital-twin, dispatch, safety-envelope, telemetry, and device-bridge technology for earthmoving systems.",
+  "evidence_boundary": "The current public proof is a deterministic software simulation and hardware-neutral control contract. It is not a claim of unsupervised production autonomy on full-size heavy equipment.",
+  "capabilities": [
+    "multi-machine fleet coordination",
+    "AI-assisted dispatch sequencing",
+    "deterministic safety-envelope enforcement",
+    "geofenced machine operation",
+    "exclusive loading-zone arbitration",
+    "material-flow digital twin",
+    "machine telemetry and command receipts",
+    "fail-closed fleet stop",
+    "hardware-neutral equipment adapters"
+  ],
+  "demo": "/apps/earthworks-autonomy/",
+  "source": "systemia/earthworks-autonomy/",
+  "hardware_path": [
+    "software_twin",
+    "toy_rc_yard",
+    "scaled_prototype",
+    "closed_course_equipment_pilot",
+    "production_candidate"
+  ]
+}
