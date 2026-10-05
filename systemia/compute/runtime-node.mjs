@@ -2068,6 +2068,9 @@ export async function startEvercraftComputeNode({
           });
           const serviceId = `svc_${randomBytes(8).toString('hex')}`;
           const authHandoffSupported = typeof runtime.createAuthSession === 'function';
+          const delegatedDraftAutomationSupported =
+            typeof runtime.delegatedSnapshot === 'function' &&
+            typeof runtime.delegatedAction === 'function';
           services.set(serviceId, {
             lease_id: body.lease_id,
             workload_class: body.workload_class,
@@ -2084,12 +2087,18 @@ export async function startEvercraftComputeNode({
             health_path: `/v1/services/${serviceId}/health`,
             invoke_path: `/v1/services/${serviceId}/browser`,
             auth_handoff_create_path: authHandoffSupported ? `/v1/services/${serviceId}/browser/auth-session` : null,
+            delegated_snapshot_path: delegatedDraftAutomationSupported ? `/v1/services/${serviceId}/browser/delegated/snapshot` : null,
+            delegated_action_path: delegatedDraftAutomationSupported ? `/v1/services/${serviceId}/browser/delegated/action` : null,
             public_render_path: '/v1/browser/render',
             public_handoff_path_template: authHandoffSupported ? '/handoff/{session_id}' : null,
             public_health_path: '/health',
             instance_id: runtime.instanceId || null,
             mode: authHandoffSupported ? 'public_read_only_plus_human_handoff' : 'public_read_only',
             auth_handoff_supported: authHandoffSupported,
+            delegated_draft_automation_supported: delegatedDraftAutomationSupported,
+            delegated_final_submission_authority: false,
+            delegated_payment_authority: false,
+            delegated_new_terms_authority: false,
             browser_engine: 'playwright-chromium',
             private_worker_endpoint_exposed: false,
           };
@@ -3149,6 +3158,78 @@ export async function startEvercraftComputeNode({
             session_id_sha256: sha(String(result?.session_id || '')),
             expires_at: result?.expires_at || null,
             secret_material_recorded: false,
+          }),
+        });
+      }
+
+      const browserDelegatedSnapshot = req.url?.match(/^\/v1\/services\/([^/]+)\/browser\/delegated\/snapshot$/);
+      if (req.method === 'POST' && browserDelegatedSnapshot) {
+        const entry = services.get(browserDelegatedSnapshot[1]);
+        if (!entry) return send(res, 404, { error: 'service_not_found' });
+        const body = await readJson(req);
+        const lease = leases.get(entry.lease_id);
+        if (!lease || lease.token_hash !== sha(body.token || '')) {
+          return send(res, 401, { error: 'invalid_lease' });
+        }
+        if (entry.workload_class !== 'systemia.evercraft-web-browser.v1') {
+          return send(res, 422, { error: 'browser_delegated_snapshot_not_supported' });
+        }
+        if (typeof entry.runtime.delegatedSnapshot !== 'function') {
+          return send(res, 503, { error: 'browser_delegated_automation_unavailable' });
+        }
+        const result = await entry.runtime.delegatedSnapshot(String(body.session_id || ''));
+        return send(res, 200, {
+          ok: true,
+          service_id: browserDelegatedSnapshot[1],
+          result,
+          receipt: chain.issue('browser.delegated_snapshot.executed', {
+            service_id: browserDelegatedSnapshot[1],
+            lease_id: entry.lease_id,
+            workload_class: entry.workload_class,
+            session_id_sha256: sha(String(body.session_id || '')),
+            screenshot_sha256: result?.screenshot_sha256 || null,
+            final_submission_authority: false,
+            payment_authority: false,
+            new_terms_authority: false,
+          }),
+        });
+      }
+
+      const browserDelegatedAction = req.url?.match(/^\/v1\/services\/([^/]+)\/browser\/delegated\/action$/);
+      if (req.method === 'POST' && browserDelegatedAction) {
+        const entry = services.get(browserDelegatedAction[1]);
+        if (!entry) return send(res, 404, { error: 'service_not_found' });
+        const body = await readJson(req);
+        const lease = leases.get(entry.lease_id);
+        if (!lease || lease.token_hash !== sha(body.token || '')) {
+          return send(res, 401, { error: 'invalid_lease' });
+        }
+        if (entry.workload_class !== 'systemia.evercraft-web-browser.v1') {
+          return send(res, 422, { error: 'browser_delegated_action_not_supported' });
+        }
+        if (typeof entry.runtime.delegatedAction !== 'function') {
+          return send(res, 503, { error: 'browser_delegated_automation_unavailable' });
+        }
+        const result = await entry.runtime.delegatedAction(
+          String(body.session_id || ''),
+          body.action || {}
+        );
+        return send(res, 200, {
+          ok: true,
+          service_id: browserDelegatedAction[1],
+          result,
+          receipt: chain.issue('browser.delegated_action.executed', {
+            service_id: browserDelegatedAction[1],
+            lease_id: entry.lease_id,
+            workload_class: entry.workload_class,
+            session_id_sha256: sha(String(body.session_id || '')),
+            action_type: String(body.action?.type || ''),
+            action_intent: String(body.action?.intent || ''),
+            selector_sha256: body.action?.selector ? sha(String(body.action.selector)) : null,
+            secret_text_recorded: false,
+            final_submission_authority: false,
+            payment_authority: false,
+            new_terms_authority: false,
           }),
         });
       }

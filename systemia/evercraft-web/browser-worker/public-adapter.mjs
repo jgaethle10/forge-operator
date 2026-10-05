@@ -106,6 +106,12 @@ export async function startBrowserPublicAdapter({
             typeof runtime.authClose==='function',
           authenticated_handoff_persists_profile:false,
           authenticated_handoff_secret_text_returned:false,
+          delegated_draft_automation:
+            typeof runtime.authDelegate==='function' &&
+            typeof runtime.authRevokeDelegation==='function',
+          delegated_final_submission_authority:false,
+          delegated_payment_authority:false,
+          delegated_new_terms_authority:false,
           max_request_bytes:MAX_BODY_BYTES,
         });
       }
@@ -116,6 +122,23 @@ export async function startBrowserPublicAdapter({
           return sendJson(res,503,{ok:false,error:'authenticated_browser_handoff_unavailable'});
         }
         return sendHtml(res,200,await runtime.authHandoffPage(handoffMatch[1]));
+      }
+
+      const delegateMatch=String(req.url||'').match(/^\/v1\/auth-browser\/sessions\/([A-Za-z0-9_-]+)\/delegate$/);
+      if(req.method==='POST' && delegateMatch){
+        if(typeof runtime.authDelegate!=='function'){
+          return sendJson(res,503,{ok:false,error:'authenticated_browser_delegation_unavailable'});
+        }
+        const claim=String(req.headers['x-evercraft-browser-claim']||'').trim();
+        const policy=await readJson(req);
+        return sendJson(res,200,await runtime.authDelegate(delegateMatch[1],claim,policy));
+      }
+      if(req.method==='DELETE' && delegateMatch){
+        if(typeof runtime.authRevokeDelegation!=='function'){
+          return sendJson(res,503,{ok:false,error:'authenticated_browser_delegation_unavailable'});
+        }
+        const claim=String(req.headers['x-evercraft-browser-claim']||'').trim();
+        return sendJson(res,200,await runtime.authRevokeDelegation(delegateMatch[1],claim));
       }
 
       const snapshotMatch=String(req.url||'').match(/^\/v1\/auth-browser\/sessions\/([A-Za-z0-9_-]+)\/snapshot$/);

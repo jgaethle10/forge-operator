@@ -206,6 +206,41 @@ export async function startBrowserContainer({
           body: JSON.stringify(action || {}),
         }, 35_000);
       },
+      async authDelegate(sessionId, claimToken, policy = {}) {
+        return fetchJson(`${url}/v1/auth-browser/sessions/${encodeURIComponent(String(sessionId || ''))}/delegate`, {
+          method: 'POST',
+          headers: {
+            'content-type': 'application/json',
+            'x-evercraft-browser-claim': String(claimToken || ''),
+          },
+          body: JSON.stringify(policy || {}),
+        }, 10_000);
+      },
+      async authRevokeDelegation(sessionId, claimToken) {
+        return fetchJson(`${url}/v1/auth-browser/sessions/${encodeURIComponent(String(sessionId || ''))}/delegate`, {
+          method: 'DELETE',
+          headers: {
+            'x-evercraft-browser-claim': String(claimToken || ''),
+          },
+        }, 10_000);
+      },
+      async delegatedSnapshot(sessionId) {
+        return fetchJson(`${url}/v1/auth-browser/delegated/${encodeURIComponent(String(sessionId || ''))}/snapshot`, {
+          headers: {
+            authorization: `Bearer ${authOperatorToken}`,
+          },
+        }, 10_000);
+      },
+      async delegatedAction(sessionId, action) {
+        return fetchJson(`${url}/v1/auth-browser/delegated/${encodeURIComponent(String(sessionId || ''))}/action`, {
+          method: 'POST',
+          headers: {
+            authorization: `Bearer ${authOperatorToken}`,
+            'content-type': 'application/json',
+          },
+          body: JSON.stringify(action || {}),
+        }, 35_000);
+      },
       async authClose(sessionId, claimToken) {
         return fetchJson(`${url}/v1/auth-browser/sessions/${encodeURIComponent(String(sessionId || ''))}`, {
           method: 'DELETE',

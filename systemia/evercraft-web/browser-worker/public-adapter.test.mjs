@@ -45,6 +45,23 @@ test('public adapter exposes receipt-bound health and bounded render', async()=>
       if(claim!=='claim-ok') throw new Error('authenticated_browser_claim_invalid');
       return {ok:true,session_id:sessionId,type:action.type,secret_text_recorded:false};
     },
+    async authDelegate(sessionId,claim,policy){
+      if(claim!=='claim-ok') throw new Error('authenticated_browser_claim_invalid');
+      return {
+        ok:true,
+        delegated:true,
+        session_id:sessionId,
+        mode:'competition_draft_automation',
+        scopes:policy.scopes,
+        final_submission_authority:false,
+        payment_authority:false,
+        accepts_new_terms:false,
+      };
+    },
+    async authRevokeDelegation(sessionId,claim){
+      if(claim!=='claim-ok') throw new Error('authenticated_browser_claim_invalid');
+      return {ok:true,delegated:false,session_id:sessionId};
+    },
     async authClose(sessionId,claim){
       if(claim!=='claim-ok') throw new Error('authenticated_browser_claim_invalid');
       return {ok:true,closed:true,session_id:sessionId};
@@ -67,6 +84,10 @@ test('public adapter exposes receipt-bound health and bounded render', async()=>
     assert.equal(capabilities.authenticated_human_handoff,true);
     assert.equal(capabilities.authenticated_handoff_persists_profile,false);
     assert.equal(capabilities.authenticated_handoff_secret_text_returned,false);
+    assert.equal(capabilities.delegated_draft_automation,true);
+    assert.equal(capabilities.delegated_final_submission_authority,false);
+    assert.equal(capabilities.delegated_payment_authority,false);
+    assert.equal(capabilities.delegated_new_terms_authority,false);
 
     const handoff=await fetch(adapter.url+'/handoff/session-test');
     assert.equal(handoff.status,200);
@@ -89,6 +110,27 @@ test('public adapter exposes receipt-bound health and bounded render', async()=>
     assert.equal(typed.ok,true);
     assert.equal(typed.secret_text_recorded,false);
     assert.equal(JSON.stringify(typed).includes('never-log-me'),false);
+
+    const delegated=await fetch(adapter.url+'/v1/auth-browser/sessions/session-test/delegate',{
+      method:'POST',
+      headers:{
+        'content-type':'application/json',
+        'x-evercraft-browser-claim':'claim-ok'
+      },
+      body:JSON.stringify({scopes:['read','draft_form_fill','draft_save']})
+    }).then(r=>r.json());
+    assert.equal(delegated.ok,true);
+    assert.equal(delegated.delegated,true);
+    assert.equal(delegated.final_submission_authority,false);
+    assert.equal(delegated.payment_authority,false);
+    assert.equal(delegated.accepts_new_terms,false);
+
+    const revoked=await fetch(adapter.url+'/v1/auth-browser/sessions/session-test/delegate',{
+      method:'DELETE',
+      headers:{'x-evercraft-browser-claim':'claim-ok'}
+    }).then(r=>r.json());
+    assert.equal(revoked.ok,true);
+    assert.equal(revoked.delegated,false);
 
     const closed=await fetch(adapter.url+'/v1/auth-browser/sessions/session-test',{
       method:'DELETE',

@@ -76,6 +76,22 @@
       }
     },
     {
+      "service_key": "competition-browser-draft-executor",
+      "mode": "cycle",
+      "manifest": "systemia/organism/competition-browser-draft-executor.workflow.json",
+      "executable": "systemia/competition/browser-draft-runner.mjs",
+      "cadence_seconds": 300,
+      "optional_when_unconfigured": true,
+      "env_args": {
+        "--yard-state": "SYSTEMIA_YARD_STATE_DIR"
+      },
+      "optional_env_args": {
+        "--job-dir": "SYSTEMIA_COMPETITION_BROWSER_DRAFT_JOB_DIR",
+        "--out-dir": "SYSTEMIA_COMPETITION_BROWSER_DRAFT_RECEIPT_DIR",
+        "--browser-deployment-id": "SYSTEMIA_COMPETITION_BROWSER_DEPLOYMENT_ID"
+      }
+    },
+    {
       "service_key": "competition-submission-executor",
       "mode": "cycle",
       "manifest": "systemia/organism/competition-submission-executor.workflow.json",

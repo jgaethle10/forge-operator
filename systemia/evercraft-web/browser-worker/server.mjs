@@ -337,7 +337,8 @@ const server = http.createServer(async (req,res) => {
         active_jobs:activeJobs,
         max_concurrency:MAX_CONCURRENCY,
         authenticated_handoff_available:Boolean(authSessions),
-        authenticated_handoff_mode:authSessions ? 'human_authorized_ephemeral' : 'disabled'
+        authenticated_handoff_mode:authSessions ? 'human_authorized_ephemeral' : 'disabled',
+        delegated_draft_automation_available:Boolean(authSessions)
       });
       return;
     }
@@ -349,7 +350,11 @@ const server = http.createServer(async (req,res) => {
         enabled:Boolean(authSessions),
         mode:authSessions ? 'human_authorized_ephemeral' : 'disabled',
         persistent_profile:false,
-        secret_text_returned:false
+        secret_text_returned:false,
+        delegated_draft_automation: Boolean(authSessions),
+        delegated_final_submission_authority: false,
+        delegated_payment_authority: false,
+        delegated_new_terms_authority: false
       });
       return;
     }
@@ -383,6 +388,54 @@ const server = http.createServer(async (req,res) => {
         return;
       }
       html(res,200,renderHumanBrowserHandoffPage({sessionId:handoffMatch[1]}));
+      return;
+    }
+
+    const delegateMatch = pathname.match(/^\/v1\/auth-browser\/sessions\/([A-Za-z0-9_-]+)\/delegate$/);
+    if (req.method === 'POST' && delegateMatch) {
+      if (!authSessions) {
+        json(res,503,{ok:false,error:'authenticated_browser_disabled'});
+        return;
+      }
+      const body = await readJson(req);
+      json(res,200,await authSessions.delegateSession(delegateMatch[1],browserClaim(req),body));
+      return;
+    }
+    if (req.method === 'DELETE' && delegateMatch) {
+      if (!authSessions) {
+        json(res,503,{ok:false,error:'authenticated_browser_disabled'});
+        return;
+      }
+      json(res,200,await authSessions.revokeDelegation(delegateMatch[1],browserClaim(req)));
+      return;
+    }
+
+    const delegatedSnapshotMatch = pathname.match(/^\/v1\/auth-browser\/delegated\/([A-Za-z0-9_-]+)\/snapshot$/);
+    if (req.method === 'GET' && delegatedSnapshotMatch) {
+      if (!authSessions) {
+        json(res,503,{ok:false,error:'authenticated_browser_disabled'});
+        return;
+      }
+      if (!authOperatorAuthorized(req)) {
+        json(res,401,{ok:false,error:'authenticated_browser_operator_credential_required'});
+        return;
+      }
+      json(res,200,await authSessions.delegatedSnapshot(delegatedSnapshotMatch[1]));
+      return;
+    }
+
+    const delegatedActionMatch = pathname.match(/^\/v1\/auth-browser\/delegated\/([A-Za-z0-9_-]+)\/action$/);
+    if (req.method === 'POST' && delegatedActionMatch) {
+      if (!authSessions) {
+        json(res,503,{ok:false,error:'authenticated_browser_disabled'});
+        return;
+      }
+      if (!authOperatorAuthorized(req)) {
+        json(res,401,{ok:false,error:'authenticated_browser_operator_credential_required'});
+        return;
+      }
+      const body = await readJson(req);
+      json(res,200,await authSessions.delegatedAct(delegatedActionMatch[1],body));
       return;
     }
 
@@ -468,7 +521,27 @@ const server = http.createServer(async (req,res) => {
       'authenticated_browser_capacity_exhausted',
       'typed_text_too_long',
       'unsupported_key',
-      'unsupported_human_browser_action'
+      'unsupported_human_browser_action',
+      'delegation_invalid_origin',
+      'delegation_scope_not_allowed',
+      'delegation_cross_origin_not_allowed_v1',
+      'delegated_navigation_url_required',
+      'delegated_selector_invalid',
+      'delegated_click_intent_not_allowed',
+      'delegated_fill_value_too_long',
+      'delegated_sensitive_control_blocked',
+      'delegated_secret_field_blocked',
+      'delegated_identity_field_blocked',
+      'delegated_sensitive_field_blocked',
+      'delegated_submit_control_blocked',
+      'delegated_navigation_scope_missing',
+      'delegated_cross_origin_navigation_blocked',
+      'authenticated_browser_delegation_required',
+      'authenticated_browser_delegation_expired',
+      'authenticated_browser_delegated_action_limit',
+      'delegated_selector_not_found',
+      'delegated_fill_scope_missing',
+      'delegated_click_scope_missing'
     ]);
     const status = authErrors.has(message) ? 401 : missingErrors.has(message) ? 404 : safeClientErrors.has(message) || message.startsWith('unsupported_action') || message.startsWith('invalid_selector') || message.startsWith('invalid_anchor_selector') ? 400 : 500;
     json(res,status,{ok:false,error:message,engine:ENGINE});

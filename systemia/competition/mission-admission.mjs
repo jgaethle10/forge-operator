@@ -65,14 +65,30 @@ export function buildCompetitionGoalPlan({ opportunity, classification }) {
   ];
 
   const gates = classification?.human_gates || [];
+  const browserDraftProvider = ["devpost", "lablab", "band", "amd"].includes(
+    String(opportunity?.provider || "").trim().toLowerCase()
+  );
   let submitDeps = ["package-submission"];
+
+  if (browserDraftProvider) {
+    plan.push({
+      work_key: "prepare-provider-draft",
+      dedupe_key: prefix + ":prepare-provider-draft",
+      title: "Fill and save the provider draft through a human-granted Evercraft browser delegation without accepting terms or submitting",
+      work_type: "external_action",
+      dependency_keys: ["package-submission"],
+      assigned_agents: ["systemia-competition", "yard", "raven-nexus"],
+    });
+    submitDeps = ["prepare-provider-draft"];
+  }
+
   if (gates.length > 0) {
     plan.push({
       work_key: "human-provider-gate",
       dedupe_key: prefix + ":human-provider-gate",
       title: "Complete only the provider actions that genuinely require human authority: " + gates.join(", "),
       work_type: "external_action",
-      dependency_keys: ["package-submission"],
+      dependency_keys: submitDeps,
       human_gate_required: true,
       assigned_agents: ["human-approved-operator"],
     });

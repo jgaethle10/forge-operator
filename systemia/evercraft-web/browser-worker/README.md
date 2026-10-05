@@ -89,3 +89,20 @@ The flow is:
 The human handoff supports screenshot refresh, coordinate clicks, typing into the focused browser field, bounded key presses, scrolling, waiting and validated public-URL navigation. Private/reserved network targets remain blocked. Downloads and service workers remain blocked.
 
 This source capability is **not production-live merely because it exists**. A public handoff URL must not be represented as available until the Yard deployment has a verified public route and an external authenticated-handoff canary has passed.
+
+## Human-granted Systemia delegation
+
+Authenticated handoff can now grant a short-lived **competition draft automation** lease after the human has logged in. The claim token remains on the human side. The agent/operator does not receive it.
+
+The delegated path is intentionally split:
+
+- public edge: human can grant or revoke delegation using the human claim;
+- private Yard/Compute lease: Systemia can request delegated snapshots and bounded actions after delegation exists;
+- same-origin only in v1;
+- draft field filling and explicit Save Draft actions only;
+- no new terms acceptance, registration/join attestation, final submission, payments, staking, account-security changes, password/secret entry, MFA/OTP, or CAPTCHA authority;
+- delegation is in-memory, expires with the session, and does not persist an authenticated profile.
+
+This removes repetitive competition-form work without treating authentication as blanket legal authority.
+
+The delegation source and tests are still **candidate capability**, not proof of a production-authenticated provider session. Promotion requires the existing verified public handoff gate plus an external canary that demonstrates human login, human grant, private Yard delegated action, rejection of a prohibited action, revoke, and session destruction.

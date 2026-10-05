@@ -15,6 +15,8 @@ let closed = false;
 let receiptRef = '';
 let browseCount = 0;
 let authSessionCount = 0;
+let delegatedSnapshotCount = 0;
+let delegatedActionCount = 0;
 const instanceId = 'browser-proof-instance';
 
 const browserRuntimeFactory = async () => ({
@@ -81,6 +83,35 @@ const browserRuntimeFactory = async () => ({
       persisted_profile: false
     };
   },
+  async delegatedSnapshot(sessionId) {
+    assert.equal(sessionId, 'auth-proof-session');
+    delegatedSnapshotCount += 1;
+    return {
+      ok: true,
+      session_id: sessionId,
+      mode: 'competition_draft_automation',
+      screenshot_sha256: 'a'.repeat(64),
+      delegation: {
+        final_submission_authority: false,
+        payment_authority: false,
+        accepts_new_terms: false,
+      },
+    };
+  },
+  async delegatedAction(sessionId, action = {}) {
+    assert.equal(sessionId, 'auth-proof-session');
+    assert.equal(action.type, 'wait');
+    delegatedActionCount += 1;
+    return {
+      ok: true,
+      type: action.type,
+      delegated_action_count: delegatedActionCount,
+      final_submission_authority: false,
+      payment_authority: false,
+      accepts_new_terms: false,
+      secret_text_recorded: false,
+    };
+  },
   setDeploymentReceipt(value) {
     receiptRef = String(value || '');
     return {
@@ -124,7 +155,13 @@ try {
   assert.equal(deployment.receipt.route_verification, 'private_browser_health_verified');
   assert.equal(deployment.result.mode, 'public_read_only_plus_human_handoff');
   assert.equal(deployment.result.auth_handoff_supported, true);
+  assert.equal(deployment.result.delegated_draft_automation_supported, true);
+  assert.equal(deployment.result.delegated_final_submission_authority, false);
+  assert.equal(deployment.result.delegated_payment_authority, false);
+  assert.equal(deployment.result.delegated_new_terms_authority, false);
   assert.match(deployment.result.invoke_path, /\/browser$/);
+  assert.match(deployment.result.delegated_snapshot_path, /\/browser\/delegated\/snapshot$/);
+  assert.match(deployment.result.delegated_action_path, /\/browser\/delegated\/action$/);
   assert.ok(deployment.receipt.receipt_hash);
   assert.equal(receiptRef, deployment.receipt.receipt_hash);
 
@@ -138,6 +175,29 @@ try {
   assert.equal(handoff.result.handoff_url, null);
   assert.match(handoff.compute_receipt_hash, /^[a-f0-9]{64}$/);
   assert.equal(authSessionCount, 1);
+
+  const delegatedSnapshot = await yard.browserDelegatedSnapshot(
+    'evercraft-browser-proof',
+    { sessionId: handoff.result.session_id }
+  );
+  assert.equal(delegatedSnapshot.ok, true);
+  assert.equal(delegatedSnapshot.result.mode, 'competition_draft_automation');
+  assert.equal(delegatedSnapshot.result.delegation.final_submission_authority, false);
+  assert.match(delegatedSnapshot.compute_receipt_hash, /^[a-f0-9]{64}$/);
+  assert.equal(delegatedSnapshotCount, 1);
+
+  const delegatedAction = await yard.browserDelegatedAction(
+    'evercraft-browser-proof',
+    { sessionId: handoff.result.session_id, action: { type: 'wait', ms: 10 } }
+  );
+  assert.equal(delegatedAction.ok, true);
+  assert.equal(delegatedAction.result.ok, true);
+  assert.equal(delegatedAction.result.final_submission_authority, false);
+  assert.equal(delegatedAction.result.payment_authority, false);
+  assert.equal(delegatedAction.result.accepts_new_terms, false);
+  assert.equal(delegatedAction.result.secret_text_recorded, false);
+  assert.match(delegatedAction.compute_receipt_hash, /^[a-f0-9]{64}$/);
+  assert.equal(delegatedActionCount, 1);
 
   const route = await yard.verifyRoute('evercraft-browser-proof');
   assert.equal(route.ok, false);
@@ -178,6 +238,10 @@ try {
     health_verified: true,
     deployment_receipt_bound: true,
     browser_invoke_routed_through_compute: true,
+    delegated_draft_automation_routed_through_private_compute_lease: true,
+    delegated_final_submission_authority: false,
+    delegated_payment_authority: false,
+    delegated_new_terms_authority: false,
     private_target_rejection_propagated: true,
     stop_lifecycle_verified: true,
     deployment_receipt: deployment.receipt.receipt_hash,
