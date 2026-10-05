@@ -53,12 +53,12 @@ function zeroSpendFormationAcquisition(roleRow){
     valid_version_only:trust.valid_version_only!==false,
     markets:{
       evercraft_broker:{
-        enabled:true,
+        enabled_if_configured:true,
         state_dir_env:'EVERCRAFT_YARD_STATE_DIR',
         broker_deployment_id_env:'EVERCRAFT_REMOTE_CAPACITY_BROKER_DEPLOYMENT_ID',
       },
       evercraft_voluntary:{
-        enabled:true,
+        enabled_if_configured:true,
         endpoint_env:'EVERCRAFT_VOLUNTARY_COMPUTE_ENDPOINT',
         control_token_env:'EVERCRAFT_VOLUNTARY_CONTROL_TOKEN',
       },
