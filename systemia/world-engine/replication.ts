@@ -232,15 +232,16 @@ export class AuthoritativeReplicationRuntime {
 
   submitInput(packet:ReplicatedInputEnvelope){
     validatePacketForSession(this.session,packet);
-    if(packet.input.tick<=this.runtime.tick){
-      throw new Error('replication_authority_late_input_rejected');
-    }
 
     const identity=`${packet.peerId}:${packet.sequence}`;
     const existing=this.seen.get(identity);
     if(existing){
       if(existing.digest!==packet.digest) throw new Error('replication_input_sequence_conflict');
       return {accepted:false,duplicate:true,digest:packet.digest};
+    }
+
+    if(packet.input.tick<=this.runtime.tick){
+      throw new Error('replication_authority_late_input_rejected');
     }
 
     this.seen.set(identity,clone(packet));
