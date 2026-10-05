@@ -18,6 +18,14 @@ type ForgeNode={
       faces:number[][];
     };
   };
+  camera?:{
+    projection:string;
+    focalLengthMm?:number;
+    sensorWidthMm?:number;
+    lookAt?:Vec3;
+    near?:number;
+    far?:number;
+  };
   light?:{type:string;intensity:number;color:[number,number,number]};
 };
 type ForgeProject={
@@ -31,6 +39,7 @@ type ForgeProject={
 type ForgeOperation=
   |{type:'set_transform';nodeId:string;transform:Partial<Transform>}
   |{type:'set_visibility';nodeId:string;visible:boolean}
+  |{type:'set_camera';nodeId:string;camera:Partial<NonNullable<ForgeNode['camera']>>}
   |{type:'add_node';node:ForgeNode}
   |{type:'remove_node';nodeId:string;allowDestructive?:boolean};
 
@@ -477,6 +486,15 @@ export default function WorldForgeEditor(){
     transformPatch('position',axis,next);
   }
 
+  function cameraPatch(patch:Partial<NonNullable<ForgeNode['camera']>>){
+    if(!selected||selected.kind!=='camera'||!selected.camera) return;
+    mutate([{
+      type:'set_camera',
+      nodeId:selected.id,
+      camera:patch,
+    }]);
+  }
+
   function addCube(){
     if(!project) return;
     const index=project.nodes.filter(node=>node.kind==='mesh').length+1;
@@ -710,6 +728,37 @@ export default function WorldForgeEditor(){
               />)}
             </div>
           </fieldset>
+
+          {selected.kind==='camera'&&selected.camera&&<fieldset disabled={selected.locked||busy}>
+            <legend>Camera</legend>
+            <div className="wf-camera-grid">
+              <NumberField
+                label="MM"
+                value={selected.camera.focalLengthMm??50}
+                step={1}
+                onCommit={value=>cameraPatch({focalLengthMm:Math.max(1,value)})}
+              />
+              <NumberField
+                label="S"
+                value={selected.camera.sensorWidthMm??36}
+                step={1}
+                onCommit={value=>cameraPatch({sensorWidthMm:Math.max(1,value)})}
+              />
+            </div>
+            <div className="wf-camera-look">
+              <span>Look at</span>
+              <div className="wf-fields">
+                {(['x','y','z'] as const).map(axis=><NumberField
+                  key={axis}
+                  label={axis.toUpperCase()}
+                  value={(selected.camera?.lookAt??{x:0,y:0,z:0})[axis]}
+                  onCommit={value=>cameraPatch({
+                    lookAt:{...(selected.camera?.lookAt??{x:0,y:0,z:0}),[axis]:value},
+                  })}
+                />)}
+              </div>
+            </div>
+          </fieldset>}
 
           {selected.locked&&<div className="wf-locked-note">Canonical environment object. Locked mutations fail closed.</div>}
         </>:<div className="wf-empty">Select an object.</div>}
