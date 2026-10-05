@@ -1,7 +1,40 @@
 #!/usr/bin/env node
+import fs from 'node:fs';
 
-const GATEWAY = 'https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway';
+function ownedGateway(value) {
+  const raw = String(value || '').trim();
+  if (!raw) return '';
+  const parsed = new URL(raw);
+  const host = parsed.hostname.toLowerCase();
+  if (parsed.protocol !== 'https:') throw new Error('IBM i canary gateway must use HTTPS.');
+  if (host === 'base44.app' || host.endsWith('.base44.app')) {
+    throw new Error('IBM i canary gateway points to retired Base44 infrastructure.');
+  }
+  return parsed.toString();
+}
+
+const GATEWAY = ownedGateway(
+  process.env.EVERCRAFT_MACHINE_COMMERCE_GATEWAY_URL ||
+  process.env.EVERCRAFT_MACHINE_COMMERCE_GATEWAY
+);
 const PUBLIC_ID = 'ibmi-rescue-v1';
+
+if (!GATEWAY) {
+  const receipt = {
+    schema: 'evercraft.ibmi.machine-commerce-canary.v2',
+    checked_at: new Date().toISOString(),
+    status: 'held',
+    route_state: 'held_no_owned_gateway',
+    public_id: PUBLIC_ID,
+    base44_used: false,
+    checkout_attempted: false,
+    payment_attempted: false,
+  };
+  fs.mkdirSync('artifacts/chum', { recursive: true });
+  fs.writeFileSync('artifacts/chum/ibmi-rescue-canary-latest.json', JSON.stringify(receipt, null, 2) + '\n');
+  console.log('IBMI_MACHINE_COMMERCE_CANARY_HELD', JSON.stringify(receipt));
+  process.exit(0);
+}
 
 async function jsonRequest(url, init = {}) {
   const controller = new AbortController();
@@ -96,7 +129,12 @@ assert(
 );
 assert(Number(checkout.payload?.checkout?.amount_cents) === 25000, 'checkout_amount_mismatch', checkout.payload?.checkout);
 
-console.log('IBMI_MACHINE_COMMERCE_CANARY_PASS', JSON.stringify({
+const receipt = {
+  schema: 'evercraft.ibmi.machine-commerce-canary.v2',
+  checked_at: new Date().toISOString(),
+  status: 'pass',
+  route_state: 'owned_gateway_probed',
+  base44_used: false,
   public_id: PUBLIC_ID,
   machine_state: catalog.payload.offer.machine_state,
   continuation_mode: catalog.payload.continuation.mode,
@@ -106,4 +144,7 @@ console.log('IBMI_MACHINE_COMMERCE_CANARY_PASS', JSON.stringify({
   payment_created: checkout.payload.payment_created,
   verification_watch_key: checkout.payload.verification_watch_key || null,
   synthetic_request: true,
-}));
+};
+fs.mkdirSync('artifacts/chum', { recursive: true });
+fs.writeFileSync('artifacts/chum/ibmi-rescue-canary-latest.json', JSON.stringify(receipt, null, 2) + '\n');
+console.log('IBMI_MACHINE_COMMERCE_CANARY_PASS', JSON.stringify(receipt));
