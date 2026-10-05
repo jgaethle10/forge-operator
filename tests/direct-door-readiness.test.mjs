@@ -30,6 +30,16 @@ assert.equal(
 assert.equal(actual.summary.zero_hop_specialist_count, actual.summary.direct_callable_count);
 assert.equal(actual.summary.fallback_required_count, actual.summary.not_direct_callable_count);
 assert.match(actual.invariant, /Never add an umbrella routing hop/i);
+assert.equal(
+  UNIVERSAL_FALLBACK.remote_mcp,
+  'https://fabric.systemiacommandcenters.com/mcp',
+  'universal fallback must use the verified owned Fabric MCP'
+);
+assert.doesNotMatch(
+  UNIVERSAL_FALLBACK.remote_mcp,
+  /base44\.app/i,
+  'universal fallback must never regress to Base44'
+);
 
 const bySlug = new Map(actual.products.map((product) => [product.slug, product]));
 for (const spec of specs.products) {
