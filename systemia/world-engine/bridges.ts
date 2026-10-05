@@ -1,5 +1,6 @@
 import type { WorldDefinition, WorldEntity } from './engine.js';
 import { compileVisualFrame, type VisualFrameContract } from './visual.js';
+import { compileAudioFrame, type AudioFrameContract } from './audio.js';
 
 type LooseRecord=Record<string,any>;
 
@@ -146,6 +147,7 @@ export interface WorldRenderFrame {
   timeSec:number;
   cameraId:string;
   visual:VisualFrameContract|null;
+  audio:AudioFrameContract|null;
   entities:Array<{
     id:string;
     transform:WorldEntity['transform'];
@@ -183,6 +185,7 @@ export function compileRenderFrame(
     entities:any[];
     activeEntityIds?:string[];
     cameraRuntime?:any;
+    audioSceneRuntime?:any;
   },
   cameraId='default',
   world?:WorldDefinition
@@ -198,6 +201,17 @@ export function compileRenderFrame(
         snapshot.activeEntityIds
       )
     : null;
+  const audio=world?.audioScene && snapshot.audioSceneRuntime
+    ? compileAudioFrame(
+        snapshot.worldId,
+        snapshot.tick,
+        snapshot.timeSec,
+        world.audioScene,
+        snapshot.entities,
+        snapshot.audioSceneRuntime,
+        snapshot.activeEntityIds
+      )
+    : null;
   return {
     schema:'evercraft.world-engine.render-frame.v1',
     worldId:snapshot.worldId,
@@ -205,6 +219,7 @@ export function compileRenderFrame(
     timeSec:snapshot.timeSec,
     cameraId:visual?.camera.cameraId || cameraId,
     visual,
+    audio,
     entities:[...snapshot.entities]
       .sort((a,b)=>String(a.id).localeCompare(String(b.id)))
       .map(entity=>({
