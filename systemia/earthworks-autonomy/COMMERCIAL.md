@@ -112,3 +112,31 @@ Every EarthWorks commercial statement must declare the evidence state:
 - production deployment.
 
 Never collapse them.
+
+
+## Payment path
+
+EarthWorks commercial orders use **Evercraft Payments**.
+
+Canonical route:
+
+```
+EarthWorks offer
+→ Evercraft Payments order
+→ Raven Nexus
+→ Stripe settlement adapter
+→ verified payment receipt
+→ Evercraft entitlement / fulfillment
+```
+
+Do not create a Stripe-first EarthWorks checkout path. Stripe is currently connected behind Raven Nexus and functions as settlement infrastructure; Evercraft Payments remains the customer-facing and canonical economic layer.
+
+For the first design-partner Site Autonomy Study, the offer key is:
+
+`earthworks-autonomy / site-autonomy-study-design-partner / USD 5000`
+
+The standard Site Autonomy Study target price is:
+
+`earthworks-autonomy / site-autonomy-study / USD 7500`
+
+These offer definitions are commercial intent until an Evercraft Payments order/checkout path for the specific offer is verified. Do not substitute a generic processor link.
