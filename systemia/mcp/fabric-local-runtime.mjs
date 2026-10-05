@@ -22,6 +22,8 @@ import {
   fabricMobileManifest,
   renderFabricMobileApp,
 } from './fabric-mobile-site.mjs';
+import { triageRepairIntent } from '../repair/repair-graph.mjs';
+import { renderRepairNavigator } from '../repair/repair-site.mjs';
 
 function isLegacyBase44Connection(connection={}) {
   try {
@@ -299,6 +301,8 @@ export async function startFabricLocalRuntime({
     public_plugin_submission_ready:true,
     mobile_path:'/mobile',
     mobile_installable:true,
+    repair_path:'/repair',
+    repair_graph_ready:true,
     journal_mirror_path:'/journal/',
     journal_mirror_ready:fs.existsSync(path.join(journalDir,'index.html')),
     journal_mirror_indexing:'noindex_until_dedicated_origin',
@@ -385,6 +389,13 @@ export async function startFabricLocalRuntime({
           JSON.stringify(fabricMobileManifest()),
           {contentType:'application/manifest+json; charset=utf-8'}
         );
+      }
+
+      if (req.method==='GET' && (req.url==='/repair'||String(req.url||'').startsWith('/repair?'))) {
+        const parsed=new URL(String(req.url||''),'http://fabric.local');
+        const query=String(parsed.searchParams.get('q')||'').trim().slice(0,4000);
+        const result=query?triageRepairIntent(query):null;
+        return sendMobileHtml(res,200,renderRepairNavigator({query,result}));
       }
 
       if (req.method==='GET' && req.url==='/capabilities') {

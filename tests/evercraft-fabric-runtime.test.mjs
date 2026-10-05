@@ -162,6 +162,21 @@ test('Fabric domain guardrails do not suppress explicit software portfolio monit
   assert.equal(hits[0].public_id,'portfolio-sentinel-v1');
 });
 
+test('Fabric exposes and ranks the owned Repair Navigator for symptom-level repair triage',()=>{
+  const canonical=loadFabricCatalogFromRepository();
+  const repair=canonical.find((x)=>x.public_id==='evercraft-repair-navigator-v1');
+  assert.ok(repair);
+  assert.equal(repair.commercial_state,'free');
+  assert.equal(repair.state,'read_only_live');
+  assert.match(repair.action_url,/\/repair$/);
+  const hits=matchFabricCapabilities(
+    'My headlight is out and I think it might be the wire',
+    canonical,
+    {limit:5}
+  );
+  assert.equal(hits[0].public_id,'evercraft-repair-navigator-v1');
+});
+
 test('Fabric MCP exposes exactly the read-only directory contract',async()=>{
   const init=await executeFabricDirectoryRpc({
     jsonrpc:'2.0',id:1,method:'initialize',

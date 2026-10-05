@@ -4,6 +4,7 @@ on:
   pull_request:
     paths:
       - 'systemia/mcp/fabric-directory.mjs'
+      - 'systemia/repair/**'
       - 'systemia/mcp/fabric-local-runtime.mjs'
       - 'systemia/mcp/fabric-mobile-site.mjs'
       - 'systemia/mcp/specialist-handoff-runtime.mjs'
@@ -38,7 +39,7 @@ jobs:
         with:
           node-version: '22'
       - name: Prove Fabric MCP and mobile door
-        run: node --test tests/evercraft-fabric-runtime.test.mjs tests/fabric-mobile-runtime.test.mjs
+        run: node --test tests/evercraft-fabric-runtime.test.mjs tests/fabric-mobile-runtime.test.mjs tests/repair-graph.test.mjs
       - name: Prove specialist runtime remains safe
         run: |
           npm install --no-audit --no-fund
