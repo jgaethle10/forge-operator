@@ -2,7 +2,7 @@
   "schema": "evercraft.chum.crawl-state.v1",
   "provider": "Evercraft LLC",
   "coordinator": "CHUM",
-  "updated_at": "2026-10-05T22:15:42.834Z",
+  "updated_at": "2026-10-05T22:19:16.372Z",
   "url_count": 2722,
   "doctrine": {
     "crawl_can_be_requested_not_forced": true,
@@ -141,8 +141,8 @@
     },
     "/chum/hot/index.json": {
       "path": "/chum/hot/index.json",
-      "content_sha256": "4bbc872524020de12bc889685754a891aa17139b340b9d9579477957b25d7343",
-      "last_changed": "2026-10-05T22:15:42.834Z",
+      "content_sha256": "cf5374f5871b20c715801c172ab2792e0c6d7a86d033c3eae25271c0b6f3e5df",
+      "last_changed": "2026-10-05T22:19:16.372Z",
       "priority": 80
     },
     "/chum/strike/": {
@@ -153,20 +153,20 @@
     },
     "/chum/strike/index.json": {
       "path": "/chum/strike/index.json",
-      "content_sha256": "0a51e78228cf7c36ca97985f754aebdab88951bbd7c0974f13e44d31178cd474",
-      "last_changed": "2026-10-05T22:15:42.834Z",
+      "content_sha256": "a6a21ecac8466d2afe7a42119a3807c2bf085fa6109e4b6cdae638b4a2a5327b",
+      "last_changed": "2026-10-05T22:19:16.372Z",
       "priority": 80
     },
     "/chum/crawler-radar.json": {
       "path": "/chum/crawler-radar.json",
-      "content_sha256": "00f06d53fc6f24054fec9ea4defa26c138bf03c3a7110de0df939e1329e0b92e",
-      "last_changed": "2026-10-05T22:15:42.834Z",
+      "content_sha256": "4c47840dab7e25868c90acd6110b45f45f088fd22fb52ea68121497b3e30f556",
+      "last_changed": "2026-10-05T22:19:16.372Z",
       "priority": 80
     },
     "/chum/crawler-radar.txt": {
       "path": "/chum/crawler-radar.txt",
-      "content_sha256": "5909c116fa12bf8220443f136ab436fd527f3502128b57911770031f67a2e4a3",
-      "last_changed": "2026-10-05T22:15:42.834Z",
+      "content_sha256": "878cfcaab9cca138107b7e5ee0dc73927b33e89d5e8c7722947a4a72e89cb2ae",
+      "last_changed": "2026-10-05T22:19:16.372Z",
       "priority": 80
     },
     "/chum/proof/": {
@@ -2637,8 +2637,8 @@
     },
     "/chum/products/eps-estimate-engine/ai-discovery.json": {
       "path": "/chum/products/eps-estimate-engine/ai-discovery.json",
-      "content_sha256": "778c051fc07cb6f50ea4f059f636d1b8a5f1dffc83ad3c750de79375854f2249",
-      "last_changed": "2026-10-05T22:15:42.489Z",
+      "content_sha256": "46d0e1370b7f920bcb3e8a516190c8321046ea4097e91f571a609a7209ec2ecd",
+      "last_changed": "2026-10-05T22:19:15.790Z",
       "priority": 94
     },
     "/chum/products/eps-estimate-engine/ai-conformance.json": {
