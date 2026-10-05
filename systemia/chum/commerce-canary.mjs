@@ -1,7 +1,8 @@
 import fs from 'node:fs';
+import { ownedHttpsEndpoint } from './owned-commerce-endpoint.mjs';
 
 const catalog=JSON.parse(fs.readFileSync('public/.well-known/evercraft-machine-catalog.json','utf8'));
-const gateway='https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway';
+const gateway=ownedHttpsEndpoint(process.env.EVERCRAFT_MACHINE_COMMERCE_GATEWAY_URL,{name:'machine_commerce_gateway'});
 const timeoutMs=15000;
 
 function containsId(value,expected,depth=0){
