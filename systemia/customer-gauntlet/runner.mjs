@@ -84,6 +84,21 @@ async function runBridgeLennox(offer,persona){
   }
 }
 
+function heldInteractive(persona){
+  return {
+    persona_id:persona.id,
+    status:'BLOCKED',
+    engine:'owned_route_hold',
+    owned_execution:false,
+    local:null,
+    bridge:null,
+    findings:[],
+    checks_completed:[],
+    blocked_checks:['owned_machine_commerce_gateway'],
+    interactive_depth:'held_no_owned_gateway'
+  };
+}
+
 async function runInteractive(offer,persona,{reviewUrl,buyerUrl}={}){
   const local=await runLocalLennox({offer,persona,reviewUrl,buyerUrl,timeoutMs});
   const bridge=await runBridgeLennox(offer,persona);
@@ -114,6 +129,7 @@ const offers=(catalog.offers||[]).filter(o=>o?.public_id&&o?.commercial_state===
 const results=[];
 for(const offer of offers){
   const publicStaticHandoff=offer.routing_surface==='public_static_handoff' && offer.legacy_gateway_routed===false;
+  const doorwayHeld=!publicStaticHandoff&&!gateway;
   let machine;
   let review;
   let continuation=null;
@@ -142,19 +158,21 @@ for(const offer of offers){
     buyer=buyerUrl?await request(buyerUrl):null;
     reviewTarget=reviewUrl.toString();
   }else{
-    machine={ok:false,status:0,bytes:0,text:'',body:null,error:'owned_machine_commerce_gateway_unconfigured'};
+    machine={ok:false,status:0,bytes:0,text:'',body:null,error:'held_no_owned_gateway'};
     review=machine;
     reviewTarget='';
   }
 
   const findings=[];
-  if(obviousFailure(machine)) findings.push({code:'broken_cta',severity:severity('broken_cta'),stage:'offer',detail:`HTTP ${machine.status}`});
-  if(obviousFailure(review)) findings.push({code:'broken_cta',severity:severity('broken_cta'),stage:'review',detail:`HTTP ${review.status}`});
+  if(!doorwayHeld&&obviousFailure(machine)) findings.push({code:'broken_cta',severity:severity('broken_cta'),stage:'offer',detail:`HTTP ${machine.status}`});
+  if(!doorwayHeld&&obviousFailure(review)) findings.push({code:'broken_cta',severity:severity('broken_cta'),stage:'review',detail:`HTTP ${review.status}`});
   if(continuation?.mode==='direct_checkout_capable' && (!buyerUrl || obviousFailure(buyer))) findings.push({code:'dead_checkout',severity:severity('dead_checkout'),stage:'buyer',detail:buyerUrl?`HTTP ${buyer?.status}`:'buyer_url_missing'});
 
   const personaResults=[];
   for(const persona of personas.personas){
-    personaResults.push({persona_id:persona.id,...await runInteractive(offer,persona,{reviewUrl:reviewTarget,buyerUrl})});
+    personaResults.push(doorwayHeld
+      ? heldInteractive(persona)
+      : {persona_id:persona.id,...await runInteractive(offer,persona,{reviewUrl:reviewTarget,buyerUrl})});
   }
   for(const p of personaResults){
     for(const f of Array.isArray(p.findings)?p.findings:[]) findings.push({...f,persona_id:p.persona_id,severity:f.severity||severity(f.code)});
@@ -170,7 +188,7 @@ for(const offer of offers){
     doorway:{routing_surface:publicStaticHandoff?'public_static_handoff':gateway?'owned_gateway':'owned_gateway_unconfigured',offer_status:machine.status,review_status:review.status,buyer_status:buyer?.status??null,buyer_url:buyerUrl||null},
     interactive:{blocked:interactiveBlocked,visual_blocked:visualBlocked,payment_blocked:paymentBlocked,fulfillment_blocked:fulfillmentBlocked,personas:personaResults},
     findings,highest_severity:highest,
-    disposition:highest==='P0'?'QUARANTINE':highest==='P1'?'REPAIR_REQUIRED':'OPEN'
+    disposition:doorwayHeld?'HELD':highest==='P0'?'QUARANTINE':highest==='P1'?'REPAIR_REQUIRED':'OPEN'
   });
 }
 
@@ -190,6 +208,8 @@ const receipt={
     open:results.filter(r=>r.disposition==='OPEN').length,
     repair_required:results.filter(r=>r.disposition==='REPAIR_REQUIRED').length,
     quarantined:results.filter(r=>r.disposition==='QUARANTINE').length,
+    held:results.filter(r=>r.disposition==='HELD').length,
+    held_no_owned_gateway:results.filter(r=>r.doorway.routing_surface==='owned_gateway_unconfigured').length,
     owned_protocol_executor:true,
     interactive_bridge_configured:Boolean(bridgeUrl&&bridgeToken),
     interactive_blocked:results.filter(r=>r.interactive.blocked).length,
@@ -211,6 +231,7 @@ fs.writeFileSync(outDir+'/latest.md',[
   `Open: ${receipt.summary.open}`,
   `Repair required: ${receipt.summary.repair_required}`,
   `Quarantined: ${receipt.summary.quarantined}`,
+  `Held without owned gateway: ${receipt.summary.held_no_owned_gateway}`,
   `Owned Lennox protocol executor: ${receipt.summary.owned_protocol_executor}`,
   `Interactive Raven Nexus browser bridge configured: ${receipt.summary.interactive_bridge_configured}`,
   `Local Lennox persona runs: ${receipt.summary.local_lennox_completed}`,
