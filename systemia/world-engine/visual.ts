@@ -140,6 +140,7 @@ export interface VisualFrameContract {
   tick:number;
   timeSec:number;
   camera:CameraSample;
+  clearColor:ColorRGB;
   materials:MaterialDefinition[];
   renderables:Array<{
     entityId:string;
@@ -551,6 +552,7 @@ export function compileVisualFrame(
     tick,
     timeSec,
     camera,
+    clearColor:clone(scene.clearColor || {r:0,g:0,b:0}),
     materials:[...(scene.materials || [])].sort((a,b)=>a.id.localeCompare(b.id)).map(clone),
     renderables,
     lights
