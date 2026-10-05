@@ -267,6 +267,7 @@ export type WorldForgeOperation =
   | { type:'set_transform'; nodeId:string; transform:Partial<WorldForgeTransform> }
   | { type:'set_visibility'; nodeId:string; visible:boolean }
   | { type:'set_geometry'; nodeId:string; geometry:WorldForgeGeometry }
+  | { type:'set_camera'; nodeId:string; camera:Partial<WorldForgeCameraComponent> }
   | { type:'reparent_node'; nodeId:string; parentId?:string }
   | { type:'add_modifier'; nodeId:string; modifier:WorldForgeModifier }
   | { type:'remove_modifier'; nodeId:string; modifierId:string }
@@ -454,6 +455,14 @@ export function validateWorldForgeProject(project:WorldForgeProject):WorldForgeV
     }
 
     if(node.kind==='camera'&&!node.camera) errors.push(`camera_component_missing:${node.id}`);
+    if(node.kind==='camera'&&node.camera){
+      if(node.camera.focalLengthMm!==undefined&&node.camera.focalLengthMm<=0) errors.push(`camera_focal_length_invalid:${node.id}`);
+      if(node.camera.sensorWidthMm!==undefined&&node.camera.sensorWidthMm<=0) errors.push(`camera_sensor_width_invalid:${node.id}`);
+      if(node.camera.near!==undefined&&node.camera.near<=0) errors.push(`camera_near_invalid:${node.id}`);
+      if(node.camera.far!==undefined&&node.camera.near!==undefined&&node.camera.far<=node.camera.near){
+        errors.push(`camera_clip_range_invalid:${node.id}`);
+      }
+    }
     if(node.kind==='light'&&!node.light) errors.push(`light_component_missing:${node.id}`);
   }
 
@@ -540,6 +549,10 @@ function operationInverse(project:WorldForgeProject,operation:WorldForgeOperatio
     if(!node.geometry) throw new Error(`node_geometry_missing:${node.id}`);
     return {type:'set_geometry',nodeId:node.id,geometry:clone(node.geometry)};
   }
+  if(operation.type==='set_camera'){
+    if(!node.camera) throw new Error(`camera_component_missing:${node.id}`);
+    return {type:'set_camera',nodeId:node.id,camera:clone(node.camera)};
+  }
   if(operation.type==='reparent_node') return {type:'reparent_node',nodeId:node.id,parentId:node.parentId};
   if(operation.type==='add_modifier') return {type:'remove_modifier',nodeId:node.id,modifierId:operation.modifier.id};
   if(operation.type==='remove_modifier'){
@@ -596,6 +609,12 @@ function applyOperation(project:WorldForgeProject,operation:WorldForgeOperation)
   if(operation.type==='set_geometry'){
     if(node.kind!=='mesh') throw new Error(`geometry_target_not_mesh:${node.id}`);
     node.geometry=clone(operation.geometry);
+    return;
+  }
+
+  if(operation.type==='set_camera'){
+    if(node.kind!=='camera'||!node.camera) throw new Error(`camera_target_invalid:${node.id}`);
+    node.camera={...node.camera,...clone(operation.camera)};
     return;
   }
 
