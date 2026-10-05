@@ -871,6 +871,7 @@
         "scene_streaming_guard",
         "animation_guard",
         "navigation_guard",
+        "visual_scene_guard",
         "fallen_bridge_guard",
         "worldstate_bridge_guard",
         "provenance_guard",
@@ -903,7 +904,7 @@
       "assignment_strategy": "role_item_cartesian",
       "scaling": {
         "strategy": "work_conserving",
-        "max_agents_per_item": 12,
+        "max_agents_per_item": 13,
         "target_logical_per_physical_worker": 8,
         "minimum_role_item_passes": 1
       },
