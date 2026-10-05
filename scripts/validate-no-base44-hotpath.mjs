@@ -1,6 +1,7 @@
 import fs from 'node:fs';
 
 const files = [
+  'systemia/chum/indexnow.mjs',
   'scripts/portfolio-sentinel-commercial-canary.mjs',
   'systemia/organism/portfolio-sentinel-runner.mjs',
   '.github/workflows/systemia-portfolio-sentinel.yml',
@@ -33,6 +34,7 @@ const files = [
 ];
 
 const runtimeFiles = new Set([
+  'systemia/chum/indexnow.mjs',
   'scripts/portfolio-sentinel-commercial-canary.mjs',
   'systemia/organism/portfolio-sentinel-runner.mjs',
   'server.ts',
