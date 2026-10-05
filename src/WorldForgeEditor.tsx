@@ -1,6 +1,35 @@
 import React, { useEffect, useMemo, useRef, useState } from 'react';
 import './world-forge.css';
 
+const WORLD_FORGE_LOCAL_KEY='evercraft.world-forge.local-project.v1';
+const WORLD_FORGE_LOCAL_LIMIT=2_000_000;
+
+function persistLocalWorld(project:unknown){
+  try{
+    const payload=JSON.stringify(project);
+    if(payload.length>WORLD_FORGE_LOCAL_LIMIT){
+      return {saved:false,reason:'device_autosave_size_limit'};
+    }
+    window.localStorage.setItem(WORLD_FORGE_LOCAL_KEY,payload);
+    return {saved:true,reason:null};
+  }catch(error){
+    return {
+      saved:false,
+      reason:error instanceof Error?error.message:String(error),
+    };
+  }
+}
+
+function readLocalWorld(){
+  try{
+    const payload=window.localStorage.getItem(WORLD_FORGE_LOCAL_KEY);
+    if(!payload) return null;
+    return JSON.parse(payload);
+  }catch{
+    return null;
+  }
+}
+
 type Vec3={x:number;y:number;z:number};
 type Transform={position:Vec3;rotationDeg:Vec3;scale:Vec3};
 type ForgeNode={
@@ -419,21 +448,53 @@ export default function WorldForgeEditor(){
   const [command,setCommand]=useState('');
   const [commandNote,setCommandNote]=useState('');
   const [shotDigest,setShotDigest]=useState('');
+  const [autosaveState,setAutosaveState]=useState<'idle'|'saved'|'blocked'>('idle');
   const [nativePreview,setNativePreview]=useState<{svg:string;sha:string}|null>(null);
 
   useEffect(()=>{
     let active=true;
-    fetch('/api/fallen/world-forge/starter')
-      .then(async response=>{
-        const payload=await response.json();
-        if(!response.ok||!payload.success) throw new Error(payload.error||'Could not load World Forge.');
-        if(!active) return;
-        setProject(payload.project);
-        setDigest(payload.validation.digest);
-        const first=payload.project.nodes.find((node:ForgeNode)=>node.kind==='mesh'&&!node.locked);
-        setSelectedId(first?.id||payload.project.nodes[0]?.id||'');
-      })
-      .catch(err=>active&&setError(err instanceof Error?err.message:String(err)));
+
+    async function acceptProject(candidate:ForgeProject){
+      const validationResponse=await fetch('/api/fallen/world-forge/validate',{
+        method:'POST',
+        headers:{'content-type':'application/json'},
+        body:JSON.stringify({project:candidate}),
+      });
+      const validationPayload=await validationResponse.json();
+      if(!validationResponse.ok||!validationPayload.validation||validationPayload.validation.status!=='accepted'){
+        throw new Error('device_project_validation_failed');
+      }
+      if(!active) return;
+      setProject(candidate);
+      setDigest(validationPayload.validation.digest);
+      const first=candidate.nodes.find((node:ForgeNode)=>node.kind==='mesh'&&!node.locked);
+      setSelectedId(first?.id||candidate.nodes[0]?.id||'');
+      setAutosaveState('saved');
+    }
+
+    async function boot(){
+      const local=readLocalWorld() as ForgeProject|null;
+      if(local){
+        try{
+          await acceptProject(local);
+          return;
+        }catch{
+          try{ window.localStorage.removeItem(WORLD_FORGE_LOCAL_KEY); }catch{}
+        }
+      }
+
+      const response=await fetch('/api/fallen/world-forge/starter');
+      const payload=await response.json();
+      if(!response.ok||!payload.success) throw new Error(payload.error||'Could not load World Forge.');
+      if(!active) return;
+      setProject(payload.project);
+      setDigest(payload.validation.digest);
+      const first=payload.project.nodes.find((node:ForgeNode)=>node.kind==='mesh'&&!node.locked);
+      setSelectedId(first?.id||payload.project.nodes[0]?.id||'');
+      setAutosaveState('idle');
+    }
+
+    void boot().catch(err=>active&&setError(err instanceof Error?err.message:String(err)));
     return ()=>{active=false;};
   },[]);
 
@@ -460,6 +521,8 @@ export default function WorldForgeEditor(){
       }
       setProject(payload.result.project);
       setDigest(payload.result.validation.digest);
+      const autosave=persistLocalWorld(payload.result.project);
+      setAutosaveState(autosave.saved?'saved':'blocked');
       setReceipts(current=>[payload.result!.receipt,...current].slice(0,12));
       if(recordUndo&&payload.result.receipt.inverseOperations.length){
         setUndoStack(current=>[...current,payload.result!.receipt.inverseOperations].slice(-50));
@@ -779,6 +842,7 @@ export default function WorldForgeEditor(){
       <span>Scene graph: {project.nodes.length} nodes</span>
       <span>Human + command operations share one contract</span>
       <span>Publication authority: OFF</span>
+      <span>Device autosave: {autosaveState==='saved'?'ON':autosaveState==='blocked'?'BLOCKED':'READY'}</span>
       {shotDigest&&<span title={shotDigest}>Shot: {shotDigest.slice(0,10)}</span>}
     </footer>
   </main>;

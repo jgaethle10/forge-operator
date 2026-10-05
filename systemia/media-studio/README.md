@@ -181,6 +181,9 @@ npm run media:studio -- world-forge-validate ./tmp/world.json ./tmp/world.valida
 npm run media:studio -- world-forge-mutate ./tmp/world-mutation.json ./tmp/world-mutation.result.json
 npm run media:studio -- world-forge-render-plan ./tmp/world-render.json ./tmp/world-render.plan.json
 npm run media:studio -- world-forge-shot ./tmp/world-shot.json ./tmp/world-shot.contract.json
+npm run media:studio -- world-forge-save ./tmp/world.json ./.evercraft/world-forge null
+npm run media:studio -- world-forge-load fallen-world-forge-starter ./tmp/world.json ./.evercraft/world-forge
+npm run media:studio -- world-forge-list ./.evercraft/world-forge ./tmp/worlds.json
 ```
 
 See `WORLD_FORGE.md` for the architecture and roadmap.

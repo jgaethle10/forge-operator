@@ -71,6 +71,11 @@ import {
 } from './world-forge.js';
 import { buildWorldForgeCinematicShot } from './world-forge-cinematic.js';
 import { renderWorldForgeNativePreview } from './world-forge-native-preview.js';
+import {
+  listWorldForgeProjects,
+  loadWorldForgeProject,
+  saveWorldForgeProject,
+} from './world-forge-store.js';
 
 function readJson<T>(filePath: string): T {
   return JSON.parse(fs.readFileSync(path.resolve(filePath), 'utf8')) as T;
@@ -121,6 +126,9 @@ function usage() {
     '  npm run media:studio -- world-forge-render-plan <payload.json> <render-plan.json>',
     '  npm run media:studio -- world-forge-shot <payload.json> <shot.json>',
     '  npm run media:studio -- world-forge-preview <payload.json> <preview.svg> [receipt.json]',
+    '  npm run media:studio -- world-forge-save <project.json> <store-dir> [expected-version]',
+    '  npm run media:studio -- world-forge-load <project-id> <output.json> [store-dir]',
+    '  npm run media:studio -- world-forge-list <store-dir> <output.json>',
   ].join('\n'));
 }
 
@@ -163,6 +171,61 @@ function main() {
     console.log(`World Forge mutation: ${result.status}`);
     console.log(`Version: ${result.project.version}; digest: ${result.validation.digest}`);
     if (result.status === 'blocked') process.exitCode = 2;
+    return;
+  }
+
+  if (command === 'world-forge-save') {
+    if (!input || !output) {
+      usage();
+      process.exitCode = 1;
+      return;
+    }
+    const project = readJson<WorldForgeProject>(input);
+    const expectedStoredVersion = optionalPlan===undefined
+      ? undefined
+      : optionalPlan==='null'
+        ? null
+        : Number(optionalPlan);
+    if(expectedStoredVersion!==undefined&&expectedStoredVersion!==null&&!Number.isInteger(expectedStoredVersion)){
+      throw new Error('world_forge_store_expected_version_invalid');
+    }
+    const receipt = saveWorldForgeProject({
+      rootDir:output,
+      project,
+      expectedStoredVersion,
+    });
+    console.log(`World Forge project saved: ${receipt.projectId} v${receipt.projectVersion}`);
+    console.log(`Digest: ${receipt.projectDigest}`);
+    return;
+  }
+
+  if (command === 'world-forge-load') {
+    if (!input || !output) {
+      usage();
+      process.exitCode = 1;
+      return;
+    }
+    const rootDir=optionalPlan??process.env.WORLD_FORGE_STORE_DIR??'./.evercraft/world-forge';
+    const project=loadWorldForgeProject({rootDir,projectId:input});
+    if(!project){
+      console.error(`World Forge project not found: ${input}`);
+      process.exitCode=2;
+      return;
+    }
+    writeJson(output,project);
+    console.log(`World Forge project loaded: ${project.id} v${project.version}`);
+    return;
+  }
+
+  if (command === 'world-forge-list') {
+    if (!input || !output) {
+      usage();
+      process.exitCode = 1;
+      return;
+    }
+    const projects=listWorldForgeProjects({rootDir:input});
+    writeJson(output,projects);
+    console.log(`World Forge projects listed: ${projects.length}`);
     return;
   }
 
