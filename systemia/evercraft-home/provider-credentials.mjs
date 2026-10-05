@@ -24,6 +24,11 @@ const SPECS = Object.freeze({
     label: 'competition-foundry',
     environment: 'live',
   }),
+  'facebook-pages': Object.freeze({
+    provider: 'facebook-pages',
+    label: 'evercraft-clip',
+    environment: 'live',
+  }),
 });
 
 function clean(value) {
@@ -80,6 +85,16 @@ export function normalizeProviderCredentialRequest(provider, body = {}) {
       label: clean(body.label) || spec.label,
       apiKeyId: clean(body.public_id),
       apiSecret: clean(body.secret_key),
+    };
+  }
+
+  if (spec.provider === 'facebook-pages') {
+    return {
+      provider: spec.provider,
+      environment: clean(body.environment) || spec.environment,
+      label: clean(body.label) || spec.label,
+      apiKeyId: clean(body.page_id),
+      apiSecret: clean(body.page_access_token),
     };
   }
 
