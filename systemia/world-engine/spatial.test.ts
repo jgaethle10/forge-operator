@@ -14,6 +14,14 @@ function collisionWorld(entities:WorldDefinition['entities']):WorldDefinition{
   };
 }
 
+function runUntilCollision(runtime:EvercraftWorldRuntime,maxTicks:number){
+  for(let tick=0;tick<maxTicks;tick++){
+    runtime.step();
+    if(runtime.collisions.length) return runtime.collisions;
+  }
+  return [];
+}
+
 test('dynamic spheres collide and exchange velocity with elastic restitution',()=>{
   const world=collisionWorld([
     {
@@ -31,15 +39,15 @@ test('dynamic spheres collide and exchange velocity with elastic restitution',()
   ]);
 
   const runtime=new EvercraftWorldRuntime(world);
-  runtime.run(31);
+  const contacts=runUntilCollision(runtime,40);
   const alpha=runtime.entity('alpha');
   const beta=runtime.entity('beta');
 
   assert.ok(alpha && beta);
+  assert.equal(contacts.length,1);
+  assert.equal(contacts[0].kind,'sphere_sphere');
   assert.ok(alpha.rigidBody!.velocity.x<0);
   assert.ok(beta.rigidBody!.velocity.x>0);
-  assert.equal(runtime.collisions.length,1);
-  assert.equal(runtime.collisions[0].kind,'sphere_sphere');
 });
 
 test('dynamic sphere rebounds from a static box',()=>{
@@ -53,17 +61,19 @@ test('dynamic sphere rebounds from a static box',()=>{
     {
       id:'wall',
       transform:{position:{x:0,y:0,z:0}},
+      rigidBody:{mass:1,velocity:{x:0,y:0,z:0},restitution:1,kinematic:true},
       collider:{type:'box',halfExtents:{x:.5,y:2,z:2}}
     }
   ]);
 
   const runtime=new EvercraftWorldRuntime(world);
-  runtime.run(31);
+  const contacts=runUntilCollision(runtime,50);
   const ball=runtime.entity('ball');
 
   assert.ok(ball);
+  assert.equal(contacts.length,1);
+  assert.equal(contacts[0].kind,'sphere_box');
   assert.ok(ball.rigidBody!.velocity.x<0);
-  assert.equal(runtime.collisions[0]?.kind,'sphere_box');
   assert.ok(ball.transform.position.x<=-1);
 });
 
