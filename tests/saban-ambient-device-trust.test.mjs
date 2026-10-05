@@ -73,10 +73,12 @@ test('manifest drift and identity drift fail closed',()=>{
   assert.throws(()=>heartbeatAmbientDevice(r,{
     capability_manifest_hash:'sha256:'+'b'.repeat(64),
     attestation_identity:'hub-a',
+    observed_at:'2026-10-01T03:01:00.000Z',
   }),/manifest_drift/);
   assert.throws(()=>heartbeatAmbientDevice(r,{
     capability_manifest_hash:manifest,
     attestation_identity:'hub-b',
+    observed_at:'2026-10-01T03:01:00.000Z',
   }),/identity_mismatch/);
 });
 
