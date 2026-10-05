@@ -3,6 +3,8 @@ const ROLES=new Set([
   'determinism_guard',
   'simulation_guard',
   'physics_guard',
+  'ecs_guard',
+  'scene_streaming_guard',
   'fallen_bridge_guard',
   'worldstate_bridge_guard',
   'provenance_guard',
@@ -73,6 +75,31 @@ function evaluate(role,world){
         world?.gravity?null:'gravity_missing',
         duplicates.length?`duplicate_entity_ids:${duplicates.join(',')}`:null
       ].filter(Boolean)
+    };
+  }
+
+  if(role==='ecs_guard'){
+    return {
+      category:'ecs',
+      directives:[
+        'Entity identity must remain canonical regardless of insertion or query order.',
+        'Component and tag indexes are derived acceleration structures, never competing state authority.',
+        'Queries must return stable ordering so receipts and agent decisions are reproducible.'
+      ],
+      findings:duplicates.length?[`duplicate_entity_ids:${duplicates.join(',')}`]:[]
+    };
+  }
+
+  if(role==='scene_streaming_guard'){
+    return {
+      category:'scene_streaming',
+      directives:[
+        'Chunk activation must derive deterministically from explicit bounds, preload radius, focus and pinned dependencies.',
+        'An entity may have one chunk owner; unassigned entities remain global rather than disappearing silently.',
+        'Inactive entities preserve state and stop simulation until reactivated.',
+        'Streaming changes simulation residency only and must not mutate Fallen canon, Worldstate evidence or source assets.'
+      ],
+      findings:[]
     };
   }
 
