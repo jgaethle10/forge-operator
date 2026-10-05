@@ -157,6 +157,12 @@ export function worldDefinitionDigest(world:WorldDefinition){
   return digest(world);
 }
 
+export function verifyWorldSnapshot(snapshot:WorldSnapshot){
+  if(snapshot?.schema!=='evercraft.world-engine.snapshot.v1') return false;
+  const {digest:claimed,...core}=snapshot;
+  return typeof claimed==='string' && claimed===digest(core);
+}
+
 export function validateWorldDefinition(world:WorldDefinition){
   if(world?.schema !== 'evercraft.world-engine.world.v1') throw new Error('world_schema_invalid');
   if(!world.id) throw new Error('world_id_missing');
@@ -554,6 +560,72 @@ export class EvercraftWorldRuntime {
     let snapshot=this.snapshot();
     for(let i=0;i<ticks;i++) snapshot=this.step(inputs);
     return snapshot;
+  }
+
+  restoreSnapshot(snapshot:WorldSnapshot){
+    if(snapshot?.schema!=='evercraft.world-engine.snapshot.v1'){
+      throw new Error('world_snapshot_schema_invalid');
+    }
+    if(snapshot.worldId!==this.definition.id){
+      throw new Error('world_snapshot_world_mismatch');
+    }
+    if(snapshot.worldVersion!==this.definition.version){
+      throw new Error('world_snapshot_version_mismatch');
+    }
+    if(snapshot.definitionDigest!==this.definitionDigest){
+      throw new Error('world_snapshot_definition_digest_mismatch');
+    }
+    if(!Number.isInteger(snapshot.tick) || snapshot.tick<0){
+      throw new Error('world_snapshot_tick_invalid');
+    }
+    const expectedTime=Number((snapshot.tick*this.dt).toFixed(9));
+    if(snapshot.timeSec!==expectedTime){
+      throw new Error('world_snapshot_time_mismatch');
+    }
+    if(!verifyWorldSnapshot(snapshot)){
+      throw new Error('world_snapshot_digest_invalid');
+    }
+
+    const definitionIds=[...this.definition.entities].map(entity=>entity.id).sort();
+    const snapshotIds=[...snapshot.entities].map(entity=>entity.id).sort();
+    if(snapshotIds.length!==new Set(snapshotIds).size){
+      throw new Error('world_snapshot_entity_duplicate');
+    }
+    if(
+      definitionIds.length!==snapshotIds.length ||
+      definitionIds.some((id,index)=>id!==snapshotIds[index])
+    ){
+      throw new Error('world_snapshot_entity_set_mismatch');
+    }
+
+    const active=[...new Set(snapshot.activeEntityIds)].sort();
+    for(const id of active){
+      if(!snapshotIds.includes(id)) throw new Error(`world_snapshot_active_entity_missing:${id}`);
+    }
+
+    if(Boolean(this.definition.visualScene)!==Boolean(snapshot.cameraRuntime)){
+      throw new Error('world_snapshot_camera_runtime_mismatch');
+    }
+    if(Boolean(this.definition.audioScene)!==Boolean(snapshot.audioSceneRuntime)){
+      throw new Error('world_snapshot_audio_runtime_mismatch');
+    }
+
+    this.state=new Map(
+      [...snapshot.entities]
+        .sort((a,b)=>a.id.localeCompare(b.id))
+        .map(entity=>[entity.id,clone(entity)])
+    );
+    this.activeEntityIdsSet=new Set(active);
+    this.cameraRuntimeState=snapshot.cameraRuntime?clone(snapshot.cameraRuntime):null;
+    this.audioSceneRuntimeState=snapshot.audioSceneRuntime?clone(snapshot.audioSceneRuntime):null;
+    this._collisions=clone(snapshot.collisions);
+    this._tick=snapshot.tick;
+
+    const restored=this.snapshot();
+    if(restored.digest!==snapshot.digest){
+      throw new Error('world_snapshot_restore_digest_mismatch');
+    }
+    return restored;
   }
 
   snapshot():WorldSnapshot{
