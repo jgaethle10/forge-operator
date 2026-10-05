@@ -322,7 +322,11 @@ function scoreEntry(intent,entry,{frequency,total}){
   if(hasBusinessDistress){
     if(entry.public_id==='buildflow-process-audit-machine-v1'&&distressOperational>=1) score+=85;
     if(entry.public_id==='deck-capital-fit-sprint-machine-v1'&&distressFinancial>=1) score+=70;
-    if(entry.public_id==='income-war-map-v1'&&distressFinancial>=1) score+=55;
+    if(entry.public_id==='income-war-map-v1'&&distressFinancial>=1){
+      score+=55;
+      if(distressOperational>=1) score+=30;
+      if(distressCompliance>=1) score+=15;
+    }
     if(entry.public_id==='capability-concierge-v1') score+=25;
     if(
       entry.public_id==='eps-estimate-engine-machine-v1' &&
