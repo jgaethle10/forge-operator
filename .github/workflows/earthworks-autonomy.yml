@@ -18,14 +18,18 @@ permissions:
   contents: read
 
 jobs:
-  controller-proof:
+  earthworks-proof:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
         with:
           node-version: '22'
-      - name: Run deterministic fleet-control proof
-        run: node --test systemia/earthworks-autonomy/fleet-controller.test.mjs
-      - name: Verify public toy yard exists
-        run: test -s public/apps/earthworks-autonomy/index.html
+      - name: Run EarthWorks autonomy tests
+        run: node --test systemia/earthworks-autonomy/*.test.mjs
+      - name: Verify public proof surfaces
+        run: |
+          test -s public/apps/earthworks-autonomy/index.html
+          test -s public/apps/earthworks-autonomy/applications.html
+          test -s public/apps/earthworks-autonomy/capability.json
+          test -s public/apps/earthworks-autonomy/site-contract.json
