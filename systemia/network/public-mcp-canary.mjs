@@ -2,7 +2,24 @@ import fs from 'node:fs';
 import path from 'node:path';
 import { ownedHttpsEndpoint } from '../chum/owned-commerce-endpoint.mjs';
 
-const ENDPOINT = ownedHttpsEndpoint(process.env.EVERCRAFT_NETWORK_MCP_URL || process.env.EVERCRAFT_MACHINE_COMMERCE_MCP || '',{name:'network_mcp'});
+const endpointRaw=String(process.env.EVERCRAFT_NETWORK_MCP_URL || process.env.EVERCRAFT_MACHINE_COMMERCE_MCP_URL || process.env.EVERCRAFT_MACHINE_COMMERCE_MCP || '').trim();
+const ENDPOINT = endpointRaw?ownedHttpsEndpoint(endpointRaw,{name:'network_mcp'}):null;
+
+if(!ENDPOINT){
+  const held={
+    schema:'evercraft.network.public-mcp-canary.v1',
+    state:'held_no_owned_public_mcp',
+    checked_at:new Date().toISOString(),
+    endpoint:null,
+    required_tools:['get_network_capabilities','get_network_presence','prepare_network_handoff'],
+    truth_boundary:'No owned public Network MCP is configured; no legacy-provider request was made.'
+  };
+  const heldDir=path.join('artifacts','network');
+  fs.mkdirSync(heldDir,{recursive:true});
+  fs.writeFileSync(path.join(heldDir,'public-mcp-canary-latest.json'),JSON.stringify(held,null,2)+'\n');
+  console.log(JSON.stringify({status:'held_no_owned_public_mcp',endpoint:null},null,2));
+  process.exit(0);
+}
 
 const REQUIRED_TOOLS = [
   'get_network_capabilities',
