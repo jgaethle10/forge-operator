@@ -76,7 +76,11 @@ export async function buildFormationAcquisition({
 
   let yard=null;
   let brokerDeploymentId='';
-  if(brokerCfg.enabled===true){
+  const brokerRequested=
+    brokerCfg.enabled===true ||
+    brokerCfg.enabled_if_configured===true;
+  const brokerOptional=brokerCfg.enabled_if_configured===true;
+  if(brokerRequested){
     const stateDir=
       brokerCfg.state_dir ||
       envValue(brokerCfg.state_dir_env||'EVERCRAFT_YARD_STATE_DIR');
@@ -86,13 +90,16 @@ export async function buildFormationAcquisition({
         brokerCfg.broker_deployment_id_env||
         'EVERCRAFT_REMOTE_CAPACITY_BROKER_DEPLOYMENT_ID'
       );
-    if(!stateDir) throw new Error('formation_acquisition_yard_state_dir_required');
-    if(!brokerDeploymentId){
+    if(stateDir&&brokerDeploymentId){
+      yard=new YardOperator({
+        stateDir:path.resolve(rootDir,stateDir),
+      });
+    }else if(!brokerOptional){
+      if(!stateDir) throw new Error('formation_acquisition_yard_state_dir_required');
       throw new Error('formation_acquisition_broker_deployment_id_required');
+    }else{
+      brokerDeploymentId='';
     }
-    yard=new YardOperator({
-      stateDir:path.resolve(rootDir,stateDir),
-    });
   }
 
   const voluntaryEndpoint=
@@ -101,16 +108,25 @@ export async function buildFormationAcquisition({
       voluntaryCfg.endpoint_env||
       'EVERCRAFT_VOLUNTARY_COMPUTE_ENDPOINT'
     );
-  if(voluntaryCfg.enabled===true&&!voluntaryEndpoint){
-    throw new Error('formation_acquisition_voluntary_endpoint_required');
-  }
-  const voluntaryToken=voluntaryCfg.enabled===true
+  const voluntaryRequested=
+    voluntaryCfg.enabled===true ||
+    voluntaryCfg.enabled_if_configured===true;
+  const voluntaryOptional=voluntaryCfg.enabled_if_configured===true;
+  const voluntaryToken=voluntaryRequested
     ? envValue(
         voluntaryCfg.control_token_env||
         'EVERCRAFT_VOLUNTARY_CONTROL_TOKEN'
       )
     : '';
-  if(voluntaryCfg.enabled===true&&!voluntaryToken){
+  const voluntaryConfigured=Boolean(
+    voluntaryRequested &&
+    voluntaryEndpoint &&
+    voluntaryToken
+  );
+  if(voluntaryRequested&&!voluntaryConfigured&&!voluntaryOptional){
+    if(!voluntaryEndpoint){
+      throw new Error('formation_acquisition_voluntary_endpoint_required');
+    }
     throw new Error('formation_acquisition_voluntary_control_token_required');
   }
 
@@ -118,9 +134,9 @@ export async function buildFormationAcquisition({
     yard,
     brokerDeploymentId,
     voluntaryEndpoint:
-      voluntaryCfg.enabled===true ? voluntaryEndpoint : '',
+      voluntaryConfigured ? voluntaryEndpoint : '',
     voluntaryControlHeaders:
-      voluntaryCfg.enabled===true
+      voluntaryConfigured
         ? {authorization:`Bearer ${voluntaryToken}`}
         : null,
     includeGolem:golemCfg.enabled===true,
