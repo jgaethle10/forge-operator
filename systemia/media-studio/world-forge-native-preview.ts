@@ -112,17 +112,19 @@ function uniqueFaceEdges(faces:number[][]){
 
 function nodeLines(node:WorldForgeNode):Line3[]{
   if(node.kind!=='mesh'||node.visible===false||!node.geometry) return [];
-  if(node.geometry.kind==='primitive'&&node.geometry.primitive==='cube'){
+  const geometry=node.geometry;
+  if(geometry.kind==='primitive'&&geometry.primitive==='cube'){
     return CUBE_EDGES.map(([a,b])=>({
       a:transformPoint(node,CUBE_VERTICES[a]),
       b:transformPoint(node,CUBE_VERTICES[b]),
     }));
   }
-  if(node.geometry.kind==='editable_mesh'){
-    const edges=uniqueFaceEdges(node.geometry.mesh.faces);
+  if(geometry.kind==='editable_mesh'){
+    const mesh=geometry.mesh;
+    const edges=uniqueFaceEdges(mesh.faces);
     return edges.map(([a,b])=>({
-      a:transformPoint(node,node.geometry!.kind==='editable_mesh'?node.geometry.mesh.vertices[a]:{x:0,y:0,z:0}),
-      b:transformPoint(node,node.geometry!.kind==='editable_mesh'?node.geometry.mesh.vertices[b]:{x:0,y:0,z:0}),
+      a:transformPoint(node,mesh.vertices[a]),
+      b:transformPoint(node,mesh.vertices[b]),
     }));
   }
   return [];
