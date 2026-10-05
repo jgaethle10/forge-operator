@@ -75,11 +75,23 @@ export class LargeObjectStore {
 
   async hasChunk(id) {
     try {
-      const s = await stat(this.chunkPath(id));
-      return s.isFile();
+      const path = this.chunkPath(id);
+      const s = await stat(path);
+      if (!s.isFile()) return false;
+      const bytes = await readFile(path);
+      return sha256(bytes) === id;
     } catch {
       return false;
     }
+  }
+
+  async getChunk(id) {
+    const bytes = await readFile(this.chunkPath(id));
+    const actual = sha256(bytes);
+    if (actual !== id) {
+      throw new Error(`Chunk digest mismatch: expected ${id}, got ${actual}`);
+    }
+    return bytes;
   }
 
   async putChunk(bytes) {
@@ -87,13 +99,52 @@ export class LargeObjectStore {
     const id = sha256(bytes);
     const path = this.chunkPath(id);
     await mkdir(dirname(path), { recursive: true });
-    let reused = false;
-    if (await this.hasChunk(id)) {
-      reused = true;
-    } else {
-      await writeFile(path, bytes);
-    }
+    const reused = await this.hasChunk(id);
+    if (!reused) await writeFile(path, bytes);
     return { id, bytes: bytes.length, reused };
+  }
+
+  async hasManifest(id) {
+    try {
+      await this.readManifest(id);
+      return true;
+    } catch {
+      return false;
+    }
+  }
+
+  async putManifest(manifest, { expectedId = null } = {}) {
+    await this.init();
+    if (!manifest || manifest.schema !== SCHEMA) {
+      throw new Error('Unsupported large-object manifest schema');
+    }
+    if (!Array.isArray(manifest.chunks)) {
+      throw new Error('Large-object manifest chunks are required');
+    }
+    for (const chunk of manifest.chunks) {
+      if (!/^[a-f0-9]{64}$/.test(String(chunk?.id || ''))) {
+        throw new Error('Large-object manifest contains invalid chunk id');
+      }
+      if (!Number.isInteger(Number(chunk?.bytes)) || Number(chunk.bytes) < 0) {
+        throw new Error('Large-object manifest contains invalid chunk size');
+      }
+    }
+
+    const encoded = Buffer.from(JSON.stringify(manifest));
+    const id = sha256(encoded);
+    if (expectedId && id !== expectedId) {
+      const error = new Error(`Large-object manifest digest mismatch: expected ${expectedId}, got ${id}`);
+      error.code = 'LARGE_OBJECT_MANIFEST_DIGEST_MISMATCH';
+      throw error;
+    }
+
+    const path = this.manifestPath(id);
+    await mkdir(dirname(path), { recursive: true });
+    const reused = await this.hasManifest(id);
+    if (!reused) {
+      await writeFile(path, JSON.stringify(manifest, null, 2) + '\n', 'utf8');
+    }
+    return { id, reused, bytes: manifest.bytes, chunk_count: manifest.chunks.length };
   }
 
   async putBuffer(buffer, {
@@ -126,12 +177,8 @@ export class LargeObjectStore {
       },
       chunks
     };
-    const encoded = Buffer.from(JSON.stringify(manifest));
-    const manifestId = sha256(encoded);
-    const path = this.manifestPath(manifestId);
-    await mkdir(dirname(path), { recursive: true });
-    try { await readFile(path); }
-    catch { await writeFile(path, JSON.stringify(manifest, null, 2) + '\n', 'utf8'); }
+    const storedManifest = await this.putManifest(manifest);
+    const manifestId = storedManifest.id;
 
     return {
       manifest_id: manifestId,
@@ -146,6 +193,10 @@ export class LargeObjectStore {
   async readManifest(id) {
     const manifest = JSON.parse(await readFile(this.manifestPath(id), 'utf8'));
     if (manifest.schema !== SCHEMA) throw new Error(`Unsupported large-object schema for ${id}`);
+    const actual = sha256(Buffer.from(JSON.stringify(manifest)));
+    if (actual !== id) {
+      throw new Error(`Large-object manifest digest mismatch: expected ${id}, got ${actual}`);
+    }
     return manifest;
   }
 
@@ -153,11 +204,8 @@ export class LargeObjectStore {
     const manifest = await this.readManifest(id);
     const buffers = [];
     for (const chunk of manifest.chunks) {
-      const bytes = await readFile(this.chunkPath(chunk.id));
-      const actual = sha256(bytes);
-      if (actual !== chunk.id) {
-        throw new Error(`Chunk digest mismatch: expected ${chunk.id}, got ${actual}`);
-      }
+      const bytes = await this.getChunk(chunk.id);
+      const actual = chunk.id;
       if (bytes.length !== chunk.bytes) {
         throw new Error(`Chunk size mismatch for ${chunk.id}`);
       }
