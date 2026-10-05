@@ -33,3 +33,4 @@ jobs:
           test -s public/apps/earthworks-autonomy/applications.html
           test -s public/apps/earthworks-autonomy/capability.json
           test -s public/apps/earthworks-autonomy/site-contract.json
+          test -s public/apps/earthworks-autonomy/study.html
