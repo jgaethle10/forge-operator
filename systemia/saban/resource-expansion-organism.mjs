@@ -9,7 +9,7 @@ import { discoverResourceFieldCandidates } from './resource-discovery.mjs';
 import { buildLocalHostCandidate, createLocalHostSpawnAdapter } from './local-host-capacity.mjs';
 import { buildComputeMarketAdapters } from './market-factory.mjs';
 import { resourceNeedToComputeDemand } from './resource-acquirer.mjs';
-import { rankComputeOffers } from './compute-exchange.mjs';
+import { normalizeComputeDemand, rankComputeOffers } from './compute-exchange.mjs';
 
 const MODULE_FILE=fileURLToPath(import.meta.url);
 const sha=(value)=>'sha256:'+createHash('sha256').update(
@@ -195,12 +195,18 @@ export async function evaluateResourceExpansionIntent({
     .map(row=>row.offer)
     .filter(offer=>offer?.economics?.zero_cost===true);
 
-  const broadDemand=resourceNeedToComputeDemand(need,{
+  const broadDemand=normalizeComputeDemand({
+    demand_id:need.need_id+':market-visibility',
+    workload_class:need.workload_class,
+    cpu_units:need.resources.cpu_units,
+    memory_mb:need.resources.memory_mb,
+    storage_gb:need.resources.storage_gb,
+    gpu_count:need.resources.gpu_units,
+    gpu_models:need.resources.gpu_models,
     negotiation_level:'discover',
-    max_hourly_usd:null,
     prefer_zero_cost:true,
+    max_hourly_usd:null,
   });
-  broadDemand.economics.max_hourly_usd=null;
   const broadRanking=rankComputeOffers(broadDemand,marketDiscovery.offers);
   const paidOffers=broadRanking.eligible
     .map(row=>row.offer)
