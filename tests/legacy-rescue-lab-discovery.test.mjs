@@ -29,21 +29,27 @@ assert.equal(product.commercial?.machine_commerce_handoff?.state, 'live_verified
 assert.equal(product.commercial?.machine_commerce_handoff?.public_id, 'legacy-rescue-lab-v1');
 assert.equal(product.commercial?.machine_commerce_handoff?.tool, 'prepare_legacy_rescue_scan_handoff');
 assert.equal(product.commercial?.machine_commerce_handoff?.request_tool, 'submit_legacy_rescue_scan_request');
-assert.match(product.commercial?.machine_commerce_handoff?.buyer_url || '', /machineCommerceGateway\?view=service&public_id=legacy-rescue-lab-v1/);
-assert.doesNotMatch(product.commercial?.machine_commerce_handoff?.buyer_url || '', /\/buy\/legacy-rescue-lab-v1/);
+assert.equal(product.commercial?.machine_commerce_handoff?.buyer_url, null);
+assert.equal(product.commercial?.machine_commerce_handoff?.mcp, null);
 
 const cat = catalog.products.find((row) => row.product_key === 'legacy-rescue-lab');
 assert(cat, 'legacy-rescue-lab missing from registry catalog');
 assert.equal(cat.mode, 'shared_mcp');
 assert.equal(cat.registry_name, 'io.github.jgaethle10/evercraft-machine-commerce');
-assert.match(cat.mcp || '', /machineCommerceMcp$/);
+assert.equal(cat.mcp, null, 'retired shared provider URL must remain absent');
 assert.equal(cat.machine_state, 'human_handoff_ready');
 
 assert.equal(discovery.product_key, 'legacy-rescue-lab');
 assert.equal(discovery.human_confirmation_required, true);
 assert.equal(discovery.commercial?.offers?.[0]?.offer_key, 'legacy_rescue_scan_299');
 assert.equal(discovery.registry_name, 'io.github.jgaethle10/evercraft-machine-commerce');
-assert.match(discovery.mcp || '', /machineCommerceMcp$/);
+assert.equal(discovery.mcp, null);
+assert.equal(discovery.machine_commerce_mcp, null);
+assert.equal(discovery.human_start_url, null);
+assert.equal(discovery.buyer_frontage_url, null);
+assert.equal(aiConformance.mcp, null);
+assert.equal(aiConformance.human_start_url, null);
+assert.equal(aiConformance.buyer_frontage_url, null);
 assert.equal(aiConformance.provider_behavior_state, 'not_inferred_from_publication');
 
 const registeredConformance = conformanceRegistry.products.find((row) => row.product_key === 'legacy-rescue-lab');
@@ -62,6 +68,7 @@ assert.match(llms, /\$299 one-time/);
 assert.match(llms, /my checkout is broken and customers cannot buy/i);
 assert.match(llms, /developer disappeared/i);
 assert.match(llms, /direct public checkout is not represented as live/i);
+assert.doesNotMatch(llms, /machineCommerceGateway|machineCommerceMcp|base44\.app/i, 'Legacy Rescue guidance must not resurrect retired provider routes');
 assert.match(rootLlms, /Legacy Rescue Lab/i);
 const painEntry = painIndex.entries.find((row) => row.capability_id === 'product:legacy-rescue-lab');
 assert(painEntry, 'Legacy Rescue Lab missing from CHUM pain index');
@@ -73,5 +80,6 @@ console.log(JSON.stringify({
   product_key:product.product_key,
   offer_key:offer.offer_key,
   price_usd:offer.price_usd,
-  mode:cat.mode
+  mode:cat.mode,
+  provider_url_retired:true
 }, null, 2));
