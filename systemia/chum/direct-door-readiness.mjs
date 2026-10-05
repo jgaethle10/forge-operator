@@ -218,7 +218,7 @@ export function buildDirectDoorReadiness({ specs, candidates = new Map() }) {
     release_queue: releaseQueue,
     products,
     truth_boundary:
-      'This ledger reports Evercraft-controlled doorway state and route choice only. A callable MCP or registry publication does not prove that any external AI provider has discovered, ranked, recommended, or invoked the product. Provider pickup is measured separately.',
+      'This ledger reports Evercraft-controlled doorway state and route choice only. An unavailable universal route is HELD, never silently sent to a retired provider. A callable MCP or registry publication does not prove that any external AI provider has discovered, ranked, recommended, or invoked the product. Provider pickup is measured separately.',
   };
 }
 
