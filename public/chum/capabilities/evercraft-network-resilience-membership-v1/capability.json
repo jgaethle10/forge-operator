@@ -39,7 +39,7 @@
   "invocation_status": "LIVE READ-ONLY MCP VERIFIED: production initialize, tools/list, get_network_capabilities, get_network_presence, and prepare_network_handoff all passed the dedicated Evercraft Network canary. The handoff call returned only a tagged human URL and created no enrollment, checkout, payment obligation, device action, carrier action, or emergency authority. Founding Membership billing remains not live.",
   "live_canary_evidence": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/conformance/runtime-observations/2026-09-26-evercraft-network-mcp.json",
   "live_proof": {
-    "conformance_state": "live_read_only_mcp_verified",
+    "conformance_state": "owned_runtime_reverification_pending",
     "machine_commerce_handoff_state": "bounded_read_only_mcp_verified",
     "mcp": null,
     "registry_name": "io.github.jgaethle10/evercraft-machine-commerce",

@@ -97,3 +97,22 @@ test('provider response without a post id is not treated as published',async()=>
     brandKey:'havenly-cleaning',
   }),/facebook_post_id_missing/);
 });
+
+test('Facebook adapter refuses a Base44 link even if the runtime is bypassed',async()=>{
+  let called=false;
+  const adapter=createFacebookPagePublisherAdapter({
+    pageId:'123',
+    pageAccessToken:'token',
+    verified:true,
+    allowPublish:true,
+    fetchImpl:async()=>{called=true;return response(200,{id:'123_456'});},
+  });
+  await assert.rejects(()=>adapter.publish({
+    metadata:{
+      message:'This must never publish.',
+      link:'https://peak-eps-calc.base44.app/',
+    },
+    brandKey:'eps',
+  }),/clip_public_link_legacy_provider_blocked/);
+  assert.equal(called,false);
+});

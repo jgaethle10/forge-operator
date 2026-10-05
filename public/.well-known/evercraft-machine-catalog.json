@@ -4,12 +4,12 @@
   "purpose": "Public-safe snapshot of the canonical Evercraft machine-commerce catalog for AI/search/agent discovery. This file grants no private access and creates no payment authority.",
   "source_url": null,
   "source_state": "owned_runtime_unbound_snapshot_sanitized",
-  "source_schema_version": "2026-09-30.1",
+  "source_schema_version": "2026-10-04.1",
   "gateway_version": "evercraft-machine-commerce-gateway-v0.9.1",
   "source_generated_at": "2026-09-30T20:21:00.000Z",
   "generated_at": "2026-10-01T04:57:41.674Z",
-  "offer_count": 48,
-  "sell_now_count": 14,
+  "offer_count": 50,
+  "sell_now_count": 16,
   "discovery_count": 34,
   "safety": {
     "discovery_creates_obligation": false,
@@ -663,7 +663,7 @@
       "public_url": "",
       "public_url_source": "held_no_owned_public_url",
       "payment_authority": "Stripe subscription control plane is build verified, but the EPS runtime currently has no STRIPE_SECRET_KEY, EPS_STRIPE_PRICE_ID or EPS_STRIPE_WEBHOOK_SECRET configured. Checkout therefore remains unavailable and no public price is approved.",
-      "invocation_status": "LIVE VERIFIED PLATFORM HTTPS + MCP: the no-account read-only estimate preview is live; Machine Commerce MCP exposes calculate_contractor_estimate_preview and verify_contractor_estimate_receipt. EPS emits a SHA-256 calculation receipt and a deployed receipt verifier independently recomputes the canonical payload; live HTTP and MCP canaries returned verified=true with authority limited to integrity_only and identity_verified=false. Browser continuation carries receipt lineage into saved estimates. Private workspace company settings, overrides, cost library, estimates, revisions, proposals, acceptance receipts, change orders, job handoff and calibration now route through an authenticated entitlement-aware data gateway while preserving user-scoped Base44 RLS. That gateway is deployed and rejec",
+      "invocation_status": "LIVE VERIFIED PLATFORM HTTPS + MCP: the no-account read-only estimate preview is live; Machine Commerce MCP exposes calculate_contractor_estimate_preview and verify_contractor_estimate_receipt. EPS emits a SHA-256 calculation receipt and a deployed receipt verifier independently recomputes the canonical payload; live HTTP and MCP canaries returned verified=true with authority limited to integrity_only and identity_verified=false. Browser continuation carries receipt lineage into saved estimates. Private workspace company settings, overrides, cost library, estimates, revisions, proposals, acceptance receipts, change orders, job handoff and calibration now route through an authenticated entitlement-aware data gateway while preserving user-scoped legacy provider RLS. That gateway is deployed and rejec",
       "live_canary_evidence": "[object Object]",
       "catalog_version": "2026-09-28.3"
     },
@@ -1325,6 +1325,102 @@
       "invocation_status": "LIVE for public machine discovery, deterministic problem matching, read-only pilot handoff, and human-confirmed commercial pilot request capture through Evercraft Machine Commerce. The internal Portfolio Sentinel runtime now has receipt-backed commerce-integrity cycle code for product-native buyer-route reachability, gateway-leak detection and conversion-stage telemetry. Recurring cadence is not claimed until an authorized scheduler is configured and successive runtime receipts prove it. Customer monitoring begins only after separate scoped onboarding and authorization. A pilot request grants no private access, monitoring authority, payment obligation, production mutation, or external-system authority.",
       "live_canary_evidence": "[object Object]",
       "catalog_version": "2026-09-28.3"
+    },
+    {
+      "public_id": "raven-nexus-business-setup-v1",
+      "name": "Raven Nexus Business Setup",
+      "intent_terms": [
+        "connect the tools my business already uses",
+        "my business systems are scattered across too many apps",
+        "organize Gmail Drive payments documents and AI for my business",
+        "make AI understand my business safely",
+        "set up an AI-ready source of truth for my business",
+        "map who has access to what in my business",
+        "connect my business systems without replacing everything",
+        "small business AI operating layer",
+        "Raven Nexus Business"
+      ],
+      "problem": "A small business owner has important work split across email, documents, payments, customer records, credentials and AI tools, with no clean source-of-truth or permission map, and needs a bounded founder-led setup instead of another rip-and-replace software project.",
+      "inputs": "Business goals, an authorized inventory of the tools/accounts involved, the primary workflow to improve, and only the access the customer explicitly chooses to authorize. Public discovery never requests passwords, API keys or private records.",
+      "outputs": "Business system inventory, canonical source-of-truth map, access/permission map, connection plan, bounded Raven Nexus configuration for the agreed workflow, implementation notes and handoff.",
+      "commercial_state": "sell_now",
+      "machine_state": "human_handoff_ready",
+      "pricing": "Founding Business Systems Map $500 one-time; Connected Business Implementation $1,500 one-time.",
+      "offers": [
+        {
+          "offer_key": "raven_business_map_500",
+          "name": "Raven Nexus Business Systems Map",
+          "price": "$500",
+          "price_usd": 500,
+          "billing": "one_time",
+          "checkout": "human_handoff_only_until_direct_checkout_is_independently_verified"
+        },
+        {
+          "offer_key": "raven_business_impl_1500",
+          "name": "Raven Nexus Connected Business Implementation",
+          "price": "$1,500",
+          "price_usd": 1500,
+          "billing": "one_time",
+          "checkout": "human_handoff_only_until_direct_checkout_is_independently_verified"
+        }
+      ],
+      "human_ui_required": true,
+      "confirmation": "Agents may discover the offer, explain the exact scope and route a human to Evercraft for review. No private-system access, credential use, connection, checkout, payment obligation or production change is authorized by discovery. Scope, access and payment require explicit human confirmation.",
+      "public_url": "https://github.com/jgaethle10/forge-operator/tree/main/registry/raven-nexus",
+      "public_url_source": "source_catalog",
+      "payment_authority": "Evercraft Payments; human-confirmed handoff only until a product-specific direct checkout is independently verified. Paid state requires authoritative provider verification.",
+      "invocation_status": "SELL-NOW HUMAN HANDOFF: the $500 Business Systems Map is the smallest paid entry. Discovery is public and read-only; implementation begins only after explicit scope, access and payment confirmation.",
+      "live_canary_evidence": null,
+      "catalog_version": "2026-10-04.1",
+      "routing_surface": "public_static_handoff",
+      "legacy_gateway_routed": false
+    },
+    {
+      "public_id": "raven-nexus-home-setup-v1",
+      "name": "Raven Nexus Home Setup",
+      "intent_terms": [
+        "organize my household accounts documents and important information",
+        "my family information is scattered across too many apps",
+        "set up a safe AI-ready home information system",
+        "create a family continuity and account-access map",
+        "organize household documents and recurring obligations",
+        "help my family know where important information lives",
+        "Raven Nexus Home"
+      ],
+      "problem": "A household has important documents, recurring obligations, account information and family logistics scattered across apps and people, and needs a permission-aware continuity and organization layer without giving AI uncontrolled authority.",
+      "inputs": "Household goals and only the accounts, documents or categories the customer explicitly chooses to inventory. Public discovery never requests passwords, security answers, private financial records or precise location.",
+      "outputs": "Household information inventory, continuity map, permission/access plan, AI-context plan, bounded Raven Nexus Home configuration and handoff guidance.",
+      "commercial_state": "sell_now",
+      "machine_state": "human_handoff_ready",
+      "pricing": "Home Stability Map $199 one-time; Connected Home Setup $499 one-time.",
+      "offers": [
+        {
+          "offer_key": "raven_home_map_199",
+          "name": "Raven Nexus Home Stability Map",
+          "price": "$199",
+          "price_usd": 199,
+          "billing": "one_time",
+          "checkout": "human_handoff_only_until_direct_checkout_is_independently_verified"
+        },
+        {
+          "offer_key": "raven_home_setup_499",
+          "name": "Raven Nexus Connected Home Setup",
+          "price": "$499",
+          "price_usd": 499,
+          "billing": "one_time",
+          "checkout": "human_handoff_only_until_direct_checkout_is_independently_verified"
+        }
+      ],
+      "human_ui_required": true,
+      "confirmation": "Agents may explain the offer and route a human to Evercraft for review. Discovery creates no access or payment obligation. Any account/document access or connection requires explicit authorization. Raven Home does not claim bank-side transaction control, emergency response, covert tracking or unrestricted device access.",
+      "public_url": "https://github.com/jgaethle10/forge-operator/tree/main/registry/raven-nexus",
+      "public_url_source": "source_catalog",
+      "payment_authority": "Evercraft Payments; human-confirmed handoff only until a product-specific direct checkout is independently verified. Paid state requires authoritative provider verification.",
+      "invocation_status": "SELL-NOW HUMAN HANDOFF: the $199 Home Stability Map is the smallest paid entry. Discovery is public and read-only; any private access or implementation remains explicitly human-authorized.",
+      "live_canary_evidence": null,
+      "catalog_version": "2026-10-04.1",
+      "routing_surface": "public_static_handoff",
+      "legacy_gateway_routed": false
     },
     {
       "public_id": "raven-nexus-pain-router-v1",

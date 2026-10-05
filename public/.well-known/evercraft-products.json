@@ -968,7 +968,7 @@
           "total_dollar_cap",
           "funding_reference"
         ],
-        "deployment_note": "Base44 production deployment remains separately verified; source state alone is not proof the public runtime contains the fulfillment engine.",
+        "deployment_note": "legacy provider production deployment remains separately verified; source state alone is not proof the public runtime contains the fulfillment engine.",
         "founding_player_target": 2000,
         "player_goals": "interest_only_until_a_real_configured_offer_supplies_a_points_target",
         "referrals": "attribution_then_verified_local_checkin_qualification",
@@ -1700,16 +1700,19 @@
         "ask a matched partner if they have capacity for this package",
         "get availability and a quote from accepted partners before assembling a team",
         "shortlist supplier quotes into a temporary execution team",
-        "turn shortlisted quotes into team invitations and work-package offers"
+        "turn shortlisted quotes into team invitations and work-package offers",
+        "compare quotes for the same work package without automatically choosing a vendor",
+        "explain the tradeoff between price lead time capacity geography and observed execution history",
+        "show me which sourcing evidence is self-reported versus observed"
       ],
-      "authority": "public capability discovery plus verified private metadata-first planning, non-binding sourcing, and multi-party assembly; no public protected-file delivery, payment, or final legal-agreement authority is claimed",
+      "authority": "public capability discovery plus verified private metadata-first planning, non-binding sourcing, transparent sourcing comparison, and multi-party assembly; no public protected-file delivery, payment, or final legal-agreement authority is claimed",
       "human_confirmation_required": true,
       "boundaries": [
         "public matching must not require protected creative files or confidential material",
         "uploading listing viewing matching or forming a team does not transfer ownership or grant commercial rights",
         "protected disclosure remains gated and actual protected-file delivery is not exposed as a public production workflow",
         "Creator Covenant legal language remains draft_for_counsel_review",
-        "public Base44 deployment URL is not yet claimed",
+        "public legacy provider deployment URL is not yet claimed",
         "fingerprint vault evidence support is not copyright registration patent filing or dispositive proof of ownership",
         "multi-party team creation requires already-accepted source relationships",
         "each counterparty must accept the specific team invitation before receiving a work package",
@@ -1724,7 +1727,12 @@
         "sourcing availability and quote responses create no payment obligation or work acceptance",
         "shortlisting a sourcing response creates no team membership or contract",
         "only shortlisted Available or Limited responses from one project and one blueprint can seed sourced team invitations",
-        "accepting a sourced team invitation materializes the package as Offered and Not accepted"
+        "accepting a sourced team invitation materializes the package as Offered and Not accepted",
+        "sourcing comparison uses explicit fixed weights and preserves evidence classes",
+        "quote availability and lead time are participant-supplied rather than independently observed",
+        "Fabric history uses accepted Opportunity Fabric work-package records only and missing history is neutral",
+        "prices are compared only against same-currency peers; no FX normalization is claimed",
+        "comparison ordering requires human decision and creates no partner selection shortlist membership contract rights work acceptance or payment"
       ]
     },
     {
@@ -1769,9 +1777,12 @@
         "set up family safety check-ins or preparedness",
         "make a personal or relationship safety plan",
         "protect a business from phishing, fake payment instructions, account compromise, or continuity risk",
-        "find the smallest Raven safety capability without buying the full suite or hardware"
+        "find the smallest Raven safety capability without buying the full suite or hardware",
+        "connect the tools my business already uses into a permission-aware operating layer",
+        "make my business information AI-ready without replacing everything",
+        "organize household documents obligations and important information into a permission-aware home layer"
       ],
-      "authority": "public pain-to-capability discovery and bounded Raven routing; any purchase or protective action remains limited by the selected capability's verified commercial and authority state",
+      "authority": "public pain-to-capability discovery plus bounded sell-now human handoff for Raven Nexus Home and Business setup; private access, consequential actions and payment remain explicitly human-authorized",
       "human_confirmation_required": true,
       "machine_router": null,
       "boundaries": [
@@ -1781,8 +1792,26 @@
         "does not claim bank-side transaction blocking without verified banking authority",
         "does not permit covert tracking, stalking, or unauthorized surveillance",
         "Raven discovery is not emergency response",
-        "checkout creation is not payment proof"
-      ]
+        "checkout creation is not payment proof",
+        "public discovery never requests passwords, security answers, API keys or private records",
+        "business and home setup are human-handoff services until product-specific direct checkout is independently verified"
+      ],
+      "commercial": {
+        "status": "sell_now_human_handoff",
+        "offers": [
+          {
+            "public_id": "raven-nexus-business-setup-v1",
+            "name": "Raven Nexus Business Systems Map",
+            "price": "$500 one-time"
+          },
+          {
+            "public_id": "raven-nexus-home-setup-v1",
+            "name": "Raven Nexus Home Stability Map",
+            "price": "$199 one-time"
+          }
+        ],
+        "payment_state": "No silent purchase. Human-confirmed scope and payment are required; paid state requires provider verification."
+      }
     },
     {
       "product_key": "revenue-war-map",

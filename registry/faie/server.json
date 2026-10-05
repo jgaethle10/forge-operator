@@ -2,8 +2,13 @@
   "$schema": "https://static.modelcontextprotocol.io/schemas/2025-12-11/server.schema.json",
   "name": "io.github.jgaethle10/faie",
   "title": "FAIE",
-  "description": "Evidence-first agriculture and resilience briefs with human-confirmed checkout.",
-  "version": "1.0.0",
-  "websiteUrl": "https://faie.base44.app/functions/faieAgentGateway?view=docs",
-  "remotes": [{"type":"streamable-http","url":"https://faie.base44.app/functions/faieMcp"}]
+  "description": "Evidence-first agriculture and resilience runtime. Native owned MCP is implemented at /mcp/faie; public direct origin remains held until Evercraft edge verification.",
+  "version": "1.1.0",
+  "websiteUrl": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/faie/index.html",
+  "remotes": [
+    {
+      "type": "streamable-http",
+      "url": "https://fabric.systemiacommandcenters.com/mcp"
+    }
+  ]
 }

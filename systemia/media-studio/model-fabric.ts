@@ -55,6 +55,7 @@ export interface VisualModelCapability {
   maxReferences?:number;
   referenceRoles?:VisualReferenceRole[];
   identityContinuityViaStartFrame?:boolean;
+  environmentContinuityViaStartFrame?:boolean;
   framesExclusiveWithReferences?:boolean;
   referenceImageDurationOptions?:number[];
   locatorKinds?:VisualReferenceLocator['kind'][];
@@ -326,6 +327,23 @@ function capabilityReasons(
       reasons.push('identity_reference_missing');
     }else if(!compatibleIdentity.length&&!continuityStart){
       reasons.push('identity_reference_mode_not_supported');
+    }
+  }
+
+  if(request.requires.includes('reference_environment')){
+    const declaredEnvironment=request.references.filter(
+      ref=>ref.role==='environment'&&(ref.kind==='image'||ref.kind==='video')
+    );
+    const compatibleEnvironment=compatible.filter(
+      ref=>ref.role==='environment'&&(ref.kind==='image'||ref.kind==='video')
+    );
+    const continuityStart=capability.environmentContinuityViaStartFrame===true&&
+      compatible.some(ref=>ref.role==='start_frame'&&ref.kind==='image');
+
+    if(!declaredEnvironment.length&&!continuityStart){
+      reasons.push('environment_reference_missing');
+    }else if(!compatibleEnvironment.length&&!continuityStart){
+      reasons.push('environment_reference_mode_not_supported');
     }
   }
   return [...new Set(reasons)];

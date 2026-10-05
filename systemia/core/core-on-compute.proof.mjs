@@ -37,6 +37,8 @@ const computeRoot = path.join(root, 'compute');
 const yardState = path.join(computeRoot, 'control', 'yard');
 const kaidanceRoot = path.join(computeRoot, 'services', 'kaidance');
 const coreRoot = path.join(computeRoot, 'services', 'systemia-core');
+const providerCredentialState = path.join(computeRoot, 'private', 'provider-credentials');
+fs.mkdirSync(providerCredentialState, { recursive: true, mode: 0o700 });
 const allocatorToken = 'core-compute-proof-token';
 const announcePort = await freeUdpPort();
 const discovery = {
@@ -106,6 +108,7 @@ try {
       yard_state_dir: yardState,
       kaidance_deployment_id: 'kaidance-for-core-proof',
       sentinel_region_profile: 'yakima-basin-wa',
+      provider_credential_state_dir: providerCredentialState,
       openai_challenge_token: 'OpenAIChallenge_CorePrivate_abcdefghijklmnopqrstuvwxyz123456',
     },
     rollbackTarget: 'proof:core-supervisor-rollback',
@@ -119,6 +122,7 @@ try {
   assert.equal(core.receipt.route_verification, 'private_core_health_verified');
   assert.equal(core.result.supervised_service_count, expectedCoreServiceCount);
   assert.equal(core.result.sentinel_region_profile, 'yakima-basin-wa');
+  assert.equal(core.result.provider_credential_vault_bound, true);
   assert.ok(core.management.receipt_binding_hash);
   assert.equal(core.discovery.selected_node_id, 'core-compute-proof-node');
   assert.ok(core.discovery.receipt_hash);
@@ -247,6 +251,7 @@ try {
     yard_health_verified: true,
     deployment_receipt_bound: true,
     private_paths_redacted_from_health: true,
+    provider_credential_vault_bound: true,
     allocator_secret_redacted_from_children_and_health: true,
     openai_challenge_token_memory_only_verified: true,
     clean_stop_verified: true,

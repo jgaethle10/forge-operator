@@ -338,13 +338,71 @@ async function main() {
     scanned += publicScan.scanned;
     network.url_probes = publicScan.rows;
 
-    const journalFreshness = await probeJournalFreshness({
-      url: process.env.EVERCRAFT_JOURNAL_URL || 'https://evercraftjournal.base44.app/',
-      now: observedAt
-    });
-    findings.push(...journalFreshness.findings.map((finding) => makeFinding(finding)));
-    scanned += journalFreshness.scanned;
-    network.journal_freshness = journalFreshness.observation;
+    const configuredJournalUrl = clean(process.env.EVERCRAFT_JOURNAL_URL);
+    let journalRoute = null;
+    if (configuredJournalUrl) {
+      try {
+        const parsed = new URL(configuredJournalUrl);
+        const host = parsed.hostname.toLowerCase();
+        if (
+          parsed.protocol === 'https:' &&
+          host !== 'base44.app' &&
+          !host.endsWith('.base44.app')
+        ) {
+          journalRoute = parsed.toString();
+        } else if (host === 'base44.app' || host.endsWith('.base44.app')) {
+          findings.push(makeFinding({
+            code: 'journal_legacy_route_rejected',
+            severity: 'high',
+            subject: 'Evercraft Journal',
+            detail: 'The configured Journal health route points to retired Base44 infrastructure and was rejected without a network request.',
+            evidence_refs: ['env:EVERCRAFT_JOURNAL_URL'],
+            repair_mode: 'systemia_repair',
+            human_gate_required: false
+          }));
+        }
+      } catch {
+        findings.push(makeFinding({
+          code: 'journal_owned_route_invalid',
+          severity: 'medium',
+          subject: 'Evercraft Journal',
+          detail: 'The configured Journal health route is not a valid owned HTTPS URL.',
+          evidence_refs: ['env:EVERCRAFT_JOURNAL_URL'],
+          repair_mode: 'systemia_repair',
+          human_gate_required: false
+        }));
+      }
+    }
+
+    if (journalRoute) {
+      const journalFreshness = await probeJournalFreshness({
+        url: journalRoute,
+        now: observedAt
+      });
+      findings.push(...journalFreshness.findings.map((finding) => makeFinding(finding)));
+      scanned += journalFreshness.scanned;
+      network.journal_freshness = journalFreshness.observation;
+    } else {
+      network.journal_freshness = {
+        schema: 'evercraft.journal.freshness-observation.v1',
+        observed_at: observedAt.toISOString(),
+        canonical_url: null,
+        state: 'held_no_owned_public_origin',
+        age_hours: null,
+        route_configured: false
+      };
+      if (!configuredJournalUrl) {
+        findings.push(makeFinding({
+          code: 'journal_owned_route_unconfigured',
+          severity: 'medium',
+          subject: 'Evercraft Journal',
+          detail: 'Journal freshness is held because no verified Evercraft-owned public Journal URL is configured. No legacy provider fallback was attempted.',
+          evidence_refs: ['env:EVERCRAFT_JOURNAL_URL'],
+          repair_mode: 'systemia_repair',
+          human_gate_required: false
+        }));
+      }
+    }
 
     const githubScan = await scanGithub({
       owner: args.githubOwner,

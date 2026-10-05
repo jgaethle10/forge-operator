@@ -114,3 +114,18 @@ Run:
     npm run proof:transient-contact-queue
 
 See AIRCRAFT-RELAY.md for the contact-window, store-and-forward, and truth-boundary contract.
+
+
+## Terrain-Aware Mesh v1
+
+Evercraft Network now has a terrain-aware planning contract for authorized mesh routes and future 3D Evermaps/network views.
+
+Run:
+
+    npm run proof:terrain-mesh
+
+The planner keeps terrain clearance labeled as modeled from supplied elevation profiles, fails closed on modeled radio links unless a mission explicitly permits them, records the weakest evidence state across a route, emits deterministic receipts, and redacts exact coordinates for sensitive or critical nodes in public views.
+
+This is a software planning proof, not a claim of field-verified RF performance or compatibility with any particular LoRa, Meshtastic, MeshCore, antenna, or radio stack. Those claims require adapter-specific implementation and physical test receipts.
+
+See TERRAIN-MESH.md for the scene contract, evidence boundary, and critical-infrastructure trust rules.

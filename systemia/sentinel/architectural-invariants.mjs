@@ -215,9 +215,21 @@ function evaluateSellNowCatalog(rootDir, invariant) {
   if (!parsed.ok) return [violation(invariant, `Machine catalog unavailable: ${parsed.reason}.`, evidence)];
   const offers = Array.isArray(parsed.value?.offers) ? parsed.value.offers : [];
   const out = [];
+  const allowEmptyPublicUrlSources = new Set(
+    (invariant.allow_empty_public_url_when_source_in || []).map((value) => clean(value))
+  );
   for (const offer of offers.filter((row) => row?.commercial_state === 'sell_now')) {
     const publicId = clean(offer.public_id) || '<missing-public-id>';
-    const missing = (invariant.required_fields || []).filter((field) => !nonempty(offer?.[field]));
+    const missing = (invariant.required_fields || []).filter((field) => {
+      if (
+        field === 'public_url' &&
+        !nonempty(offer?.public_url) &&
+        allowEmptyPublicUrlSources.has(clean(offer?.public_url_source))
+      ) {
+        return false;
+      }
+      return !nonempty(offer?.[field]);
+    });
     if (invariant.require_nonempty_offers && !nonempty(offer?.offers)) missing.push('offers[]');
     if (missing.length) {
       out.push(violation(

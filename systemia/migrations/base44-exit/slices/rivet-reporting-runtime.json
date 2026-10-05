@@ -99,7 +99,15 @@
     "outbound_relay_arbitrary_rivet_routes_denied": true,
     "direct_chromebook_public_ingress_state": "nat_or_firewall_ingress_blocked",
     "direct_chromebook_public_ingress_failure": "tls_probe_timeout",
-    "direct_chromebook_public_ingress_last_verified_at": "2026-10-01T14:11:29Z"
+    "direct_chromebook_public_ingress_last_verified_at": "2026-10-01T14:11:29Z",
+    "last_health_audit_at": "2026-10-02T14:49:00Z",
+    "legacy_rivet_public_http_status": 200,
+    "legacy_aliev_public_http_status": 200,
+    "recent_live_report_pipeline_verified": true,
+    "recent_live_report_pipeline_evidence": "2026-10-01 delivered/ready RIVET reports with aliev_source_status=ready; 2026-09-30 SeaTac preliminary report ready",
+    "aliev_live_data_entities_verified": true,
+    "production_image_runtime_import_coverage_repair_commit": "ae4ccc723f2f72a64c5c6d23c6b170e34a241fb6",
+    "production_image_runtime_import_coverage_gate": "pass_after_repair"
   },
   "migrate": [
     "report_execution_runtime",
@@ -136,5 +144,10 @@
     "Outbound-only RIVET relay transport is proven through an authorized NodeSeed, but production activation still requires an independently verified Evercraft remote-capacity broker public route before the team can use the owned relay outside the private node."
   ],
   "next_action": "activate_or_select_verified_evercraft_remote_capacity_broker_route_bind_rivet_outbound_relay_seed_and_reconcile_owned_aliev_run_preliminary_and_full_owned_canaries_then_promote_cutover_policy",
-  "destructive_cutover_allowed": false
+  "destructive_cutover_allowed": false,
+  "health": {
+    "state": "legacy_customer_path_healthy_owned_cutover_blocked",
+    "truth_boundary": "Current Base44 customer continuity is healthy, but owned-only cutover remains blocked until the Yard/Evercraft Compute public route and fresh owned canaries are independently verified.",
+    "verified_at": "2026-10-02T14:49:00Z"
+  }
 }

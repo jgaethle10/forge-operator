@@ -3,8 +3,8 @@
 Provider: Evercraft LLC
 Product key: evercraft-network
 Category: application_network_continuity
-Canonical product: https://network-control.base44.app/
-Human join: https://network-control.base44.app/join
+Canonical product: https://jgaethle10.github.io/forge-operator/chum/
+Human join: https://jgaethle10.github.io/forge-operator/chum/
 
 ## What problem this matches
 
@@ -26,7 +26,7 @@ Universal MCP registry name:
 io.github.jgaethle10/evercraft-machine-commerce
 
 Universal MCP:
-https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp
+https://jgaethle10.github.io/forge-operator/chum/
 
 Declared read-only tools:
 - get_network_capabilities

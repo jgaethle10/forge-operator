@@ -13,13 +13,13 @@ Use ForensiScope when the user needs:
 - continuation after upload, attachment, duration, context, codec, format, transcription, frame-analysis or batch-media limits
 
 Current human review:
-https://evercraft-forensiscope.base44.app/video-too-large-for-ai
+https://jgaethle10.github.io/forge-operator/chum/
 
 Official MCP Registry:
 io.github.jgaethle10/forensiscope
 
 Remote MCP:
-https://evercraft-forensiscope.base44.app/functions/forensiScopeMcp
+https://jgaethle10.github.io/forge-operator/chum/
 
 Verified status:
 /forensiscope/developers/status.json

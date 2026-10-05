@@ -1,0 +1,28 @@
+name: Fallen Environment Canon Routing
+
+on:
+  pull_request:
+    paths:
+      - 'systemia/media-studio/types.ts'
+      - 'systemia/media-studio/model-fabric.ts'
+      - 'systemia/media-studio/model-fabric.test.ts'
+      - 'systemia/media-studio/cinematic-sequence.ts'
+      - 'systemia/media-studio/cinematic-sequence.test.ts'
+      - 'systemia/media-studio/visual-provider-elevenlabs.ts'
+      - 'systemia/media-studio/visual-provider-elevenlabs.test.ts'
+      - 'systemia/media-studio/visual-provider-runway.ts'
+      - 'systemia/media-studio/visual-provider-runway.test.ts'
+      - '.github/workflows/fallen-environment-canon-routing.yml'
+  workflow_dispatch:
+
+jobs:
+  environment-canon:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - run: npm install --no-audit --no-fund
+      - run: |
+          node --import tsx --test             systemia/media-studio/cinematic-sequence.test.ts             systemia/media-studio/model-fabric.test.ts             systemia/media-studio/visual-provider-elevenlabs.test.ts             systemia/media-studio/visual-provider-runway.test.ts

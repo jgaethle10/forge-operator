@@ -11,7 +11,7 @@ import { transcriptionCapabilityStatus } from './systemia/forensiscope/transcrip
 import { rankPain } from './systemia/chum/pain-index-lib.mjs';
 import { createAttributionEvent, issueReferralToken, PUBLIC_ATTRIBUTION_STAGES } from './systemia/chum/attribution.ts';
 import { huntLiveIntent } from './systemia/chum/live-intent-hunter.mjs';
-import { buyerFrontageUrl } from './systemia/chum/start-corridor.mjs';
+import { buyerFrontageUrl, machineReviewUrl } from './systemia/chum/start-corridor.mjs';
 import { createCrawlerRadarStore } from './systemia/chum/crawler-radar.mjs';
 import { registerFallenFamilyRoutes } from './systemia/media-studio/family-http.js';
 import { registerRivetReportGateway } from './systemia/rivet/http-gateway.mjs';
@@ -35,9 +35,28 @@ const chumAttributionSecret = process.env.CHUM_ATTRIBUTION_SECRET?.trim() || '';
 const chumAttributionSinkUrl = process.env.CHUM_ATTRIBUTION_SINK_URL?.trim() || '';
 const chumAttributionSinkToken = process.env.CHUM_ATTRIBUTION_SINK_TOKEN?.trim() || '';
 const chumAttributionIngestToken = process.env.CHUM_ATTRIBUTION_INGEST_TOKEN?.trim() || '';
+function ownedHttpsUrl(value: unknown): string {
+  const raw = String(value ?? '').trim();
+  if (!raw) return '';
+  try {
+    const url = new URL(raw);
+    const host = url.hostname.toLowerCase();
+    if (url.protocol !== 'https:') return '';
+    if (host === 'base44.app' || host.endsWith('.base44.app')) return '';
+    return url.toString();
+  } catch {
+    return '';
+  }
+}
+
 const machineCommerceGatewayUrl =
-  process.env.EVERCRAFT_MACHINE_COMMERCE_GATEWAY_URL?.trim() ||
-  'https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway';
+  ownedHttpsUrl(process.env.EVERCRAFT_MACHINE_COMMERCE_GATEWAY_URL);
+const centralMachineCommerceMcp =
+  ownedHttpsUrl(process.env.EVERCRAFT_MACHINE_COMMERCE_MCP_URL);
+const buyerFrontageOrigin =
+  ownedHttpsUrl(process.env.EVERCRAFT_BUYER_FRONTAGE_ORIGIN);
+const machineCommerceAcquisitionExport =
+  ownedHttpsUrl(process.env.EVERCRAFT_MACHINE_COMMERCE_ACQUISITION_EXPORT_URL);
 const crawlerRadarStore = createCrawlerRadarStore({
   maxEvents: Number(process.env.CHUM_CRAWLER_RADAR_MAX_EVENTS || 5000),
   persistPath: process.env.CHUM_CRAWLER_OBSERVATION_PATH?.trim() || '',
@@ -112,9 +131,10 @@ function routeFirstPartyIntent(intentInput: unknown) {
 const forensiScopeHandoff = {
   product: 'ForensiScope',
   productKey: 'forensiscope',
-  canonicalUrl: 'https://evercraft-forensiscope.base44.app/',
+  canonicalUrl: 'https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/forensiscope/index.html',
   registryName: 'io.github.jgaethle10/forensiscope',
-  mcp: 'https://evercraft-forensiscope.base44.app/functions/forensiScopeMcp',
+  mcp: null,
+  publicRouteState: 'owned_runtime_route_pending',
   overflowManifest: '/.well-known/evercraft-media-overflow.json',
 };
 
@@ -184,8 +204,7 @@ registerHouseholdFabricGateway(app);
 registerSpecialistHandoffMcps(app, { gatewayUrl: machineCommerceGatewayUrl });
 registerRemoteOperatorMcp(app);
 
-const CENTRAL_MACHINE_COMMERCE_MCP =
-  'https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp';
+const CENTRAL_MACHINE_COMMERCE_MCP = centralMachineCommerceMcp;
 
 const CHUM_DISCOVERY_LINKS = [
   '</llms.txt>; rel="describedby"; type="text/plain"',
@@ -211,7 +230,9 @@ const CHUM_DISCOVERY_LINKS = [
   '</chum/hot/>; rel="alternate"; type="text/html"; title="Evercraft CHUM Hot Discovery Queue"',
   '</chum/crawler-radar.json>; rel="alternate"; type="application/json"; title="Evercraft CHUM Crawler Radar"',
   '</chum/strike/>; rel="alternate"; type="text/html"; title="Evercraft CHUM Adaptive Strike Hub"',
-  `<${CENTRAL_MACHINE_COMMERCE_MCP}>; rel="service-desc"; title="Evercraft Machine Commerce MCP"`,
+  ...(CENTRAL_MACHINE_COMMERCE_MCP
+    ? [`<${CENTRAL_MACHINE_COMMERCE_MCP}>; rel="service-desc"; title="Evercraft Machine Commerce MCP"`]
+    : []),
 ];
 
 function isChumDiscoverySurface(pathname: string): boolean {
@@ -425,14 +446,8 @@ function findChumOffer(publicId: string): any | null {
     .find((offer: any) => offer.public_id === publicId) || null;
 }
 
-function chumHumanReviewUrl(publicId: string): string {
-  const target = new URL(machineCommerceGatewayUrl);
-  if (target.protocol !== 'https:') {
-    throw new Error('Evercraft Machine Commerce gateway must use HTTPS.');
-  }
-  target.searchParams.set('view', 'service');
-  target.searchParams.set('public_id', publicId);
-  return target.toString();
+function chumHumanReviewUrl(publicId: string): string | null {
+  return machineReviewUrl(publicId, machineCommerceGatewayUrl);
 }
 
 async function persistChumAttributionEvent(event: unknown) {
@@ -544,8 +559,10 @@ app.get('/api/capabilities', (_req: Request, res: Response) => {
       chumAttribution: '/.well-known/evercraft-chum-attribution.json',
       chumReferral: { method: 'POST', path: '/api/chum/referral' },
       chumHumanHandoff: { method: 'GET', path: '/api/chum/go/{publicId}' },
-      buyerFrontage: 'https://evercraft-ai-suite-08c4d2b8.base44.app/buy/{publicId}',
-      acquisitionExport: 'https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceAcquisition?view=export&hours=720',
+      buyerFrontage: buyerFrontageOrigin
+        ? buyerFrontageOrigin.replace(/\/$/, '') + '/buy/{publicId}'
+        : null,
+      acquisitionExport: machineCommerceAcquisitionExport || null,
       liveIntentHunter: { method: 'POST', path: '/api/chum/hunt' },
       specialistMcps: [
         { product: 'Evercraft IBM i Rescue', path: '/mcp/ibmi-rescue', state: 'read_only_handoff_runtime' },
@@ -719,7 +736,7 @@ function buildChumDiscoveryResult(q: string, requestedLimit: number) {
       pain_index: '/.well-known/evercraft-pain-index.json',
       product_directory: '/.well-known/evercraft-products.json',
       machine_catalog: '/.well-known/evercraft-machine-catalog.json',
-      universal_mcp: CENTRAL_MACHINE_COMMERCE_MCP,
+      universal_mcp: CENTRAL_MACHINE_COMMERCE_MCP || null,
     },
     doctrine: {
       match_problem_first: true,
@@ -982,6 +999,14 @@ app.post('/api/chum/referral', rateLimit(240, 60 * 60 * 1000), (req: Request, re
       surface,
       source: providerClaim === 'unknown' ? 'chum' : providerClaim
     }) || chumHumanReviewUrl(offer.public_id);
+    if (!targetUrl) {
+      res.status(503).json({
+        success: false,
+        state: 'held_no_owned_public_origin',
+        error: 'No verified Evercraft-owned buyer or review route is configured.',
+      });
+      return;
+    }
     const issued = issueReferralToken({
       productKey: offer.product_key || offer.public_id,
       publicId: offer.public_id,
@@ -1046,6 +1071,10 @@ app.get('/api/chum/go/:publicId', rateLimit(240, 60 * 60 * 1000), async (req: Re
       surface,
       source: providerClaim === 'unknown' ? 'chum' : providerClaim
     }) || chumHumanReviewUrl(offer.public_id);
+    if (!targetUrl) {
+      res.status(503).type('text/plain').send('Evercraft-owned buyer route is not verified yet.');
+      return;
+    }
     const landing = new URL(targetUrl);
     landing.searchParams.set('ec_source', 'chum');
     landing.searchParams.set('ec_surface', surface);

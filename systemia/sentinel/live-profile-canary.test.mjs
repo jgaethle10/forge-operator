@@ -1,5 +1,5 @@
 import assert from 'node:assert/strict';
-import { runSentinelLiveProfileCanary, updateCanaryHistory } from './live-profile-canary.mjs';
+import { runSentinelLiveProfileCanary, updateCanaryHistory, buildLiveCanaryMissionSnapshot } from './live-profile-canary.mjs';
 
 const now = '2026-09-30T20:00:00Z';
 
@@ -53,6 +53,14 @@ assert.equal(pass.resolved_profile.usgs_water_location_count, 4);
 assert.equal(pass.sources.find((source) => source.source_id === 'nws-active-alerts').item_count, 0);
 assert.equal(pass.sources.find((source) => source.source_id === 'usgs-water-latest-continuous').matched_profile_locations, 4);
 
+const healthyMission = buildLiveCanaryMissionSnapshot(pass);
+assert.equal(healthyMission.schema, 'evercraft.kaidance.mission-snapshot.v1');
+assert.equal(healthyMission.mission_key, 'evercraft-life-safety-sentinel-source-health');
+assert.equal(healthyMission.counts.scanned, 3);
+assert.equal(healthyMission.counts.admitted, 0);
+assert.equal(healthyMission.counts.held, 0);
+assert.equal(healthyMission.counts.changed, 0);
+
 const stale = await runSentinelLiveProfileCanary({
   profileId: 'yakima-basin-wa',
   now,
@@ -71,6 +79,11 @@ const stale = await runSentinelLiveProfileCanary({
   }
 });
 assert.equal(stale.pass, false);
+const degradedMission = buildLiveCanaryMissionSnapshot(stale);
+assert.equal(degradedMission.counts.admitted, 0);
+assert.equal(degradedMission.counts.held, 1);
+assert.equal(degradedMission.counts.changed, 1);
+assert.ok(degradedMission.evidence_refs.some((ref) => ref.includes('stale_live_observation')));
 assert.ok(stale.sources.find((source) => source.source_id === 'usgs-water-latest-continuous').errors.includes('stale_live_observation'));
 
 const precisionLeak = await runSentinelLiveProfileCanary({

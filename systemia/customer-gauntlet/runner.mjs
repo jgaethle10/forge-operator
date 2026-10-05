@@ -111,13 +111,35 @@ async function runInteractive(offer,persona,{reviewUrl,buyerUrl}={}){
 const offers=(catalog.offers||[]).filter(o=>o?.public_id&&o?.commercial_state==='sell_now');
 const results=[];
 for(const offer of offers){
-  const offerUrl=new URL(gateway); offerUrl.searchParams.set('action','offer'); offerUrl.searchParams.set('public_id',offer.public_id);
-  const reviewUrl=new URL(gateway); reviewUrl.searchParams.set('view','service'); reviewUrl.searchParams.set('public_id',offer.public_id);
-  const machine=await request(offerUrl,{json:true});
-  const review=await request(reviewUrl);
-  const continuation=machine.body?.continuation||null;
-  const buyerUrl=typeof continuation?.buyer_url==='string'?continuation.buyer_url.trim():'';
-  const buyer=buyerUrl?await request(buyerUrl):null;
+  const publicStaticHandoff=offer.routing_surface==='public_static_handoff' && offer.legacy_gateway_routed===false;
+  let machine;
+  let review;
+  let continuation=null;
+  let buyerUrl='';
+  let buyer=null;
+  let reviewTarget='';
+
+  if(publicStaticHandoff){
+    reviewTarget=String(offer.public_url||'').trim();
+    if(reviewTarget){
+      const handoff=await request(reviewTarget);
+      machine={...handoff,body:{continuation:{mode:'human_handoff',buyer_url:null}}};
+      review=handoff;
+      continuation=machine.body.continuation;
+    }else{
+      machine={ok:false,status:0,bytes:0,text:'',body:null,error:'public_static_handoff_url_missing'};
+      review=machine;
+    }
+  }else{
+    const offerUrl=new URL(gateway); offerUrl.searchParams.set('action','offer'); offerUrl.searchParams.set('public_id',offer.public_id);
+    const reviewUrl=new URL(gateway); reviewUrl.searchParams.set('view','service'); reviewUrl.searchParams.set('public_id',offer.public_id);
+    machine=await request(offerUrl,{json:true});
+    review=await request(reviewUrl);
+    continuation=machine.body?.continuation||null;
+    buyerUrl=typeof continuation?.buyer_url==='string'?continuation.buyer_url.trim():'';
+    buyer=buyerUrl?await request(buyerUrl):null;
+    reviewTarget=reviewUrl.toString();
+  }
 
   const findings=[];
   if(obviousFailure(machine)) findings.push({code:'broken_cta',severity:severity('broken_cta'),stage:'offer',detail:`HTTP ${machine.status}`});
@@ -126,7 +148,7 @@ for(const offer of offers){
 
   const personaResults=[];
   for(const persona of personas.personas){
-    personaResults.push({persona_id:persona.id,...await runInteractive(offer,persona,{reviewUrl:reviewUrl.toString(),buyerUrl})});
+    personaResults.push({persona_id:persona.id,...await runInteractive(offer,persona,{reviewUrl:reviewTarget,buyerUrl})});
   }
   for(const p of personaResults){
     for(const f of Array.isArray(p.findings)?p.findings:[]) findings.push({...f,persona_id:p.persona_id,severity:f.severity||severity(f.code)});
@@ -139,7 +161,7 @@ for(const offer of offers){
   const fulfillmentBlocked=personaResults.filter(p=>(p.blocked_checks||[]).includes('fulfillment_verification')).length;
   results.push({
     public_id:offer.public_id,name:offer.name,pricing:offer.pricing,
-    doorway:{offer_status:machine.status,review_status:review.status,buyer_status:buyer?.status??null,buyer_url:buyerUrl||null},
+    doorway:{routing_surface:publicStaticHandoff?'public_static_handoff':'legacy_gateway',offer_status:machine.status,review_status:review.status,buyer_status:buyer?.status??null,buyer_url:buyerUrl||null},
     interactive:{blocked:interactiveBlocked,visual_blocked:visualBlocked,payment_blocked:paymentBlocked,fulfillment_blocked:fulfillmentBlocked,personas:personaResults},
     findings,highest_severity:highest,
     disposition:highest==='P0'?'QUARANTINE':highest==='P1'?'REPAIR_REQUIRED':'OPEN'

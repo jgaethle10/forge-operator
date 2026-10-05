@@ -62,7 +62,8 @@ jobs:
           node systemia/sentinel/live-profile-canary.mjs \
             --profile "$SENTINEL_PROFILE" \
             --out artifacts/sentinel-live-canary/latest.json \
-            --history artifacts/sentinel-live-canary/history.json
+            --history artifacts/sentinel-live-canary/history.json \
+            --mission artifacts/sentinel-live-canary/mission-snapshot.json
 
       - name: Save live-canary history
         if: always()
@@ -79,6 +80,7 @@ jobs:
           path: |
             artifacts/sentinel-live-canary/latest.json
             artifacts/sentinel-live-canary/history.json
+            artifacts/sentinel-live-canary/mission-snapshot.json
           if-no-files-found: error
           retention-days: 30
 
@@ -93,7 +95,7 @@ jobs:
             echo "Purpose: source reachability, freshness, profile resolution, and receipt integrity only."
             echo "Threat decisions: none."
             echo
-            for FILE in artifacts/sentinel-live-canary/latest.json artifacts/sentinel-live-canary/history.json; do
+            for FILE in artifacts/sentinel-live-canary/latest.json artifacts/sentinel-live-canary/history.json artifacts/sentinel-live-canary/mission-snapshot.json; do
               if [ -f "$FILE" ]; then
                 echo "### $FILE"
                 echo '~~~json'

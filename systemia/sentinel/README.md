@@ -246,3 +246,12 @@ A healthy source may return zero alerts or zero earthquakes. That is not a failu
 The canary never calls Sentinel incident ingestion. It cannot create an incident, raise incident confidence, infer hostile intent, or authorize intervention.
 
 Each run writes a receipt plus a bounded 96-run history containing consecutive-pass count and last-failure time. Those receipts are uptime evidence for the sensing path, not proof that Sentinel is a permanently deployed field system.
+
+
+### Canary health enters KAIDANCE
+
+The live profile canary emits `artifacts/sentinel-live-canary/mission-snapshot.json` using the standard KAIDANCE mission-snapshot contract. This source is optional with a 20-minute freshness window.
+
+A failed source contributes only to `held` work and material health change. The canary always reports `admitted: 0`. Sensor blindness therefore becomes an operational dependency for KAIDANCE to surface and carry forward, never evidence that a hazard exists.
+
+A fully healthy canary reports zero held and zero changed work. Routine green heartbeats do not manufacture mission progress.

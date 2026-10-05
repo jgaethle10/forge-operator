@@ -12,9 +12,12 @@
     "set up family safety check-ins or preparedness",
     "make a personal or relationship safety plan",
     "protect a business from phishing, fake payment instructions, account compromise, or continuity risk",
-    "find the smallest Raven safety capability without buying the full suite or hardware"
+    "find the smallest Raven safety capability without buying the full suite or hardware",
+    "connect the tools my business already uses into a permission-aware operating layer",
+    "make my business information AI-ready without replacing everything",
+    "organize household documents obligations and important information into a permission-aware home layer"
   ],
-  "authority": "public pain-to-capability discovery and bounded Raven routing; any purchase or protective action remains limited by the selected capability's verified commercial and authority state",
+  "authority": "public pain-to-capability discovery plus bounded sell-now human handoff for Raven Nexus Home and Business setup; private access, consequential actions and payment remain explicitly human-authorized",
   "human_confirmation_required": true,
   "boundaries": [
     "full-suite purchase is not required when a smaller capability is sufficient",
@@ -25,10 +28,26 @@
     "Raven discovery is not emergency response",
     "checkout creation is not payment proof"
   ],
-  "commercial": null,
+  "commercial": {
+    "status": "sell_now_human_handoff",
+    "offers": [
+      {
+        "public_id": "raven-nexus-business-setup-v1",
+        "name": "Raven Nexus Business Systems Map",
+        "price": "$500 one-time"
+      },
+      {
+        "public_id": "raven-nexus-home-setup-v1",
+        "name": "Raven Nexus Home Stability Map",
+        "price": "$199 one-time"
+      }
+    ],
+    "direct_checkout_verified": false,
+    "paid_state_requires_provider_verification": true
+  },
   "machine_commerce_handoff": null,
-  "human_start_url": null,
-  "buyer_frontage_url": null,
+  "human_start_url": "https://github.com/jgaethle10/forge-operator/tree/main/registry/raven-nexus",
+  "buyer_frontage_url": "https://github.com/jgaethle10/forge-operator/tree/main/registry/raven-nexus",
   "registry_name": null,
   "mcp": null,
   "machine_commerce_mcp": null,

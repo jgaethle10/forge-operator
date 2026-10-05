@@ -146,6 +146,8 @@ test('binds the previous selected end frame into the next model request',()=>{
   assert.ok(request.references.some(ref=>ref.role==='start_frame'));
   assert.ok(request.references.some(ref=>ref.role==='identity'&&ref.id==='eli'));
   assert.ok(request.references.some(ref=>ref.role==='environment'&&ref.id==='bridge'));
+  assert.ok(request.requires.includes('reference_identity'));
+  assert.ok(request.requires.includes('reference_environment'));
   assert.equal(request.candidateCount,4);
   assert.equal(request.modelDiversity,2);
 });

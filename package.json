@@ -24,6 +24,7 @@
     "proof:saban-network": "node systemia/network/saban-network-proof.mjs --agents 10000 --out ./saban-proof-output",
     "proof:air-relay": "node systemia/network/air-relay-proof.mjs",
     "proof:aircraft-relay": "node systemia/network/aircraft-relay-proof.mjs",
+    "proof:terrain-mesh": "node systemia/network/terrain-mesh-proof.mjs",
     "proof:transient-contact-queue": "node systemia/network/transient-contact-queue-proof.mjs",
     "proof:nodeseed-placement": "node systemia/network/nodeseed-placement-label-proof.mjs",
     "test:release-policy": "node systemia/release/release-policy.test.mjs && node systemia/release/scoped-approval.test.mjs",

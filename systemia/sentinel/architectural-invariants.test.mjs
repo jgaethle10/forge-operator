@@ -104,6 +104,59 @@ assert.equal(result.ok, false);
 assert.ok(result.violations[0]?.metadata?.missing_fields?.includes('public_url'));
 assert.ok(result.violations[0]?.metadata?.missing_fields?.includes('offers[]'));
 
+write('catalog.json', JSON.stringify({
+  offers: [{
+    public_id: 'held-sell-now',
+    name: 'Held Sell Now',
+    problem: 'test',
+    commercial_state: 'sell_now',
+    machine_state: 'payment_ready',
+    pricing: '$1',
+    public_url: '',
+    public_url_source: 'held_no_owned_public_url',
+    payment_authority: 'Evercraft Payments',
+    confirmation: 'Human confirmation required.',
+    offers: [{ offer_key: 'one', price: '$1' }]
+  }]
+}));
+const heldCatalogRegistry = {
+  version: 'test',
+  invariants: [{
+    invariant_id: 'catalog-held-test',
+    severity: 'high',
+    type: 'sell_now_catalog_contract',
+    file: 'catalog.json',
+    required_fields: [
+      'public_id','name','problem','commercial_state','machine_state','pricing',
+      'public_url','public_url_source','payment_authority','confirmation'
+    ],
+    allow_empty_public_url_when_source_in: ['held_no_owned_public_url'],
+    require_nonempty_offers: true,
+    repair_recipe_id: 'sell-now-continuation-contract'
+  }]
+};
+result = evaluateArchitecturalInvariants({ rootDir: root, registry: heldCatalogRegistry });
+assert.equal(result.ok, true);
+
+write('catalog.json', JSON.stringify({
+  offers: [{
+    public_id: 'unlabeled-empty',
+    name: 'Broken Empty',
+    problem: 'test',
+    commercial_state: 'sell_now',
+    machine_state: 'payment_ready',
+    pricing: '$1',
+    public_url: '',
+    public_url_source: 'source_catalog',
+    payment_authority: 'Evercraft Payments',
+    confirmation: 'Human confirmation required.',
+    offers: [{ offer_key: 'one', price: '$1' }]
+  }]
+}));
+result = evaluateArchitecturalInvariants({ rootDir: root, registry: heldCatalogRegistry });
+assert.equal(result.ok, false);
+assert.ok(result.violations[0]?.metadata?.missing_fields?.includes('public_url'));
+
 const recipes = loadRepairRecipeRegistry(process.cwd());
 assert.equal(recipes.ok, true);
 const recipe = resolveRepairRecipe({

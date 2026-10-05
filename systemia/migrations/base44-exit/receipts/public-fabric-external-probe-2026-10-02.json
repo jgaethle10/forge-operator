@@ -1,0 +1,13 @@
+{
+  "schema": "evercraft.systemia.external-door-probe.v1",
+  "observed_date": "2026-10-02",
+  "surface": "evercraft_public_fabric_mcp",
+  "probe": "list_evercraft_capabilities",
+  "result": "unavailable",
+  "transport_error": "MCP SSE probe returned 429 from openai.org",
+  "classification": "external_door_degraded",
+  "internal_execution_impact": "none_by_design",
+  "routing_rule": "Internal Systemia and Raven execution must not transit the public Fabric doorway.",
+  "base44_fallback_allowed": false,
+  "notes": "This receipt describes the external doorway only. It does not establish failure of owned internal Systemia, Raven Nexus, Yard, Evercraft Compute, Clip, Journal, or scheduled-job paths."
+}

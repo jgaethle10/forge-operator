@@ -154,8 +154,10 @@ test('Veo endpoint advertises governed identity references and frame/reference e
   const capability=elevenLabsVeoEndpoint('veo-3.1-generate-001',true).capabilities[0];
   assert.ok(capability.inputModes.includes('image_reference'));
   assert.ok(capability.requirements.includes('reference_identity'));
+  assert.ok(capability.requirements.includes('reference_environment'));
   assert.equal(capability.framesExclusiveWithReferences,true);
   assert.equal(capability.identityContinuityViaStartFrame,true);
+  assert.equal(capability.environmentContinuityViaStartFrame,true);
   assert.deepEqual(capability.referenceImageDurationOptions,[8]);
   assert.deepEqual(capability.locatorKinds,['inline_base64','provider_asset','provider_generation']);
 });

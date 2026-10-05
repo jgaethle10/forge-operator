@@ -36,6 +36,12 @@
       "path": "../../artifacts/sentinel-resident/mission-snapshot.json",
       "required": false,
       "stale_after_seconds": 180
+    },
+    {
+      "source_key": "sentinel-live-source-health",
+      "path": "../../artifacts/sentinel-live-canary/mission-snapshot.json",
+      "required": false,
+      "stale_after_seconds": 1200
     }
   ]
 }

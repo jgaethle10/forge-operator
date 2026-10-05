@@ -1,0 +1,77 @@
+# Evercraft Lineage
+
+Evercraft Lineage is Systemia's universal history and provenance kernel. It takes the durable ideas behind Git and applies them to the broader Evercraft object world: source code, documents, datasets, research packages, media, 3D/world assets, workflows, and governed agent actions.
+
+It is intentionally **not** a Git wrapper. Git remains useful as an interoperability bridge. Lineage's native contract is broader:
+
+- content-addressed immutable objects;
+- typed artifact trees rather than code-only assumptions;
+- checkpoints/commits with multiple parents;
+- branches, diffs, restore, rollback, merge previews, and deterministic non-conflicting merges;
+- explicit human/agent actor identity;
+- provenance, evidence, rights, rationale, and authority fields on commits;
+- first-class immutable transaction receipts for agent and workflow mutations;
+- fail-closed merge conflicts instead of silent AI guessing;
+- provider-independent storage semantics so Yard can host it without binding the history model to a SaaS vendor.
+
+## Why this belongs in Systemia
+
+Systemia already routes work, permissions, evidence, and execution. Lineage gives that work a durable history grammar. Fallen scenes, RIVET datasets, FAIE/TOWI evidence packages, Journal research, release artifacts, agent edits, and future canonical-world objects can all point to the same primitives without pretending every asset is source code.
+
+A future UI can render different diffs for different artifact types while preserving one underlying lineage model. A `.ts` file may show a text diff, a dataset may show row/schema drift, a Fallen world may show scene-graph operations, a video may show timeline/shot deltas, and an agent run may show typed mutations and receipts.
+
+## Object model
+
+Lineage v1 stores immutable JSON envelopes under `.lineage/objects/` and mutable branch references under `.lineage/refs/heads/`.
+
+Core object types:
+
+- `blob`: arbitrary bytes, base64 encoded in this reference kernel;
+- `tree`: stable path-to-object manifest with asset classification;
+- `commit`: tree + parents + actor + rationale + provenance + authority + transaction IDs;
+- `transaction`: typed human/agent mutation with inputs, outputs, evidence, authority, and reversal contract;
+- `receipt`: immutable evidence that a state transition occurred.
+
+The first implementation favors correctness and inspectability over storage efficiency. Large-media chunking, pack files, delta compression, remote replication, signatures, ACLs, and specialized semantic diff adapters belong in later slices without changing the top-level object contract.
+
+## CLI
+
+```bash
+node systemia/lineage/cli.mjs init
+node systemia/lineage/cli.mjs commit "initial world"
+node systemia/lineage/cli.mjs branch experiment
+node systemia/lineage/cli.mjs switch experiment
+node systemia/lineage/cli.mjs diff HEAD
+node systemia/lineage/cli.mjs merge-preview main
+node systemia/lineage/cli.mjs merge main
+node systemia/lineage/cli.mjs log
+node systemia/lineage/cli.mjs rollback <commit>
+```
+
+Set `EVERCRAFT_ACTOR_TYPE` and `EVERCRAFT_ACTOR_ID` when a Systemia agent or worker is making the change.
+
+## Integration direction
+
+1. **Systemia admission** issues a mission/work identity and actor authority.
+2. The target product writes native artifacts or typed transactions.
+3. **Lineage** snapshots the resulting object graph and emits receipts.
+4. **Yard** stores/replicates objects and refs, verifies hashes, and enforces workspace/tenant boundaries.
+5. Product-specific diff adapters make the same history legible: code, document, table, scene graph, timeline, evidence package, release.
+6. Saban can fan out speculative branches safely. Reconciliation merges only admitted results.
+7. Releases and publications point to immutable Lineage commit IDs, making "what exactly shipped?" answerable.
+
+## Non-goals for v1
+
+- replacing Git hosting overnight;
+- inventing a distributed consensus protocol before the local object semantics are proven;
+- auto-resolving semantic conflicts with an LLM;
+- granting publish/payment/deployment authority merely because an agent created a commit;
+- treating a successful write as proof of public deployment.
+
+## Test
+
+```bash
+node --test systemia/lineage/core.test.mjs
+```
+
+The current tests cover typed diffs, branching, two-parent merges, conflict detection, rollback, world assets, agent identity, and immutable transaction receipts.

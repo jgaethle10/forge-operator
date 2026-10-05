@@ -6,6 +6,7 @@ const script=fs.readFileSync('scripts/update-fabric-owned-edge.sh','utf8');
 
 test('owned Fabric updater repairs bounded router-map config readability',()=>{
   assert.ok(script.includes('repair_router_map_env_permissions()'));
+  assert.ok(script.includes('chmod 0755 "$(dirname "$ROUTER_MAP_ENV")"'));
   assert.ok(script.includes('chmod 0644 "$ROUTER_MAP_ENV"'));
   const resident=script.indexOf('ensure_router_map_resident_from_saved_config()');
   const repairAfterResident=script.indexOf('repair_router_map_env_permissions',resident);

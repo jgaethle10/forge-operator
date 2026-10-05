@@ -2,15 +2,15 @@
   "schema": "evercraft.opportunity-fabric.runtime.v1",
   "product_key": "opportunity-fabric",
   "name": "Evercraft Opportunity Fabric",
-  "updated_at": "2026-09-29",
+  "updated_at": "2026-10-01",
   "runtime": {
     "provider": "base44",
     "app_id": "6ab85d74fe2093703c6247e0",
-    "checkpoint_id": "6abdd9bafc5e16a5d35c1637",
-    "checkpoint_commit": "27a9e5e850e5e2b93c1e3ecf544f08b2c59ae45e",
+    "checkpoint_id": "6abf4f6cc8a37d4d94b03f92",
+    "checkpoint_commit": "2461768f13d4b04b6641bbd6dcb9ad5d143b25d9",
     "public_url": null,
     "publication_state": "not_claimed_public",
-    "runtime_version": "evercraft-opportunity-fabric-runtime-v1.3.0"
+    "runtime_version": "evercraft-opportunity-fabric-runtime-v1.4.0"
   },
   "verified_capabilities": [
     "metadata-first member profiles",
@@ -66,7 +66,16 @@
     "only shortlisted Available or Limited sourcing responses from one project and one blueprint can seed a sourced execution team",
     "sourced team invitations preserve sourcing lineage",
     "accepting a sourced team invitation automatically materializes the exact sourced WorkPackage as Offered and Not accepted",
-    "SourcingRequest is the tenth protected workflow entity locked to trusted-runtime writes"
+    "SourcingRequest is the tenth protected workflow entity locked to trusted-runtime writes",
+    "transparent same-package sourcing comparison across available responses",
+    "comparison score exposes fixed weights for price lead time availability observed Fabric history and geography",
+    "quote and availability evidence are labeled participant-supplied rather than observed",
+    "Fabric history score is derived only from accepted WorkPackage records and missing history remains neutral",
+    "price comparison occurs only among quote responses sharing the same currency",
+    "missing numeric quote or lead fields cannot coerce to zero",
+    "SourcingComparison ledger is owner-private deterministic receipt-backed and idempotent",
+    "comparison ordering creates no partner selection team membership contract work acceptance or payment obligation",
+    "SourcingComparison is the eleventh protected workflow entity locked to trusted-runtime writes"
   ],
   "verification": {
     "app_lint": "pass",
@@ -92,8 +101,8 @@
     },
     "security_smoke": {
       "result": "pass",
-      "trusted_runtime_version": "v1.3.0",
-      "protected_workflow_entities_runtime_write_only": 10,
+      "trusted_runtime_version": "v1.4.0",
+      "protected_workflow_entities_runtime_write_only": 11,
       "private_contact_fields": 2,
       "vault_fingerprint_only": true,
       "immutable_formations_runtime_authoritative": true,
@@ -107,6 +116,10 @@
       "sourcing_shortlist_creates_no_membership": true,
       "sourced_team_requires_shortlisted_available_response": true,
       "sourced_team_acceptance_materializes_offer_not_acceptance": true,
+      "sourcing_comparison_receipt_backed": true,
+      "sourcing_comparison_human_decision_required": true,
+      "sourcing_comparison_selected_partner_created": false,
+      "sourcing_comparison_evidence_states_explicit": true,
       "execution_team_source_connections_verified": true,
       "team_invitation_acceptance_server_authoritative": true,
       "work_package_assignment_requires_accepted_invite": true,
@@ -116,7 +129,7 @@
     },
     "authority_contract_test": {
       "result": "pass",
-      "runtime_version": "v1.3.0"
+      "runtime_version": "v1.4.0"
     }
   },
   "known_limits": [
@@ -133,7 +146,11 @@
     "Execution blueprints are heuristic recommendations from safe metadata and are not proof that a candidate is qualified, available, willing or suitable",
     "Blueprint candidate suggestions do not establish membership, partnership, contract, IP rights or authorization; every candidate still requires the normal protected connection and team gates",
     "Sourcing availability and quote responses are participant-supplied commercial signals and are not independently verified by the platform",
-    "A firm quote label in sourcing is still not payment, contract execution, purchase order, escrow or acceptance of the downstream work package"
+    "A firm quote label in sourcing is still not payment, contract execution, purchase order, escrow or acceptance of the downstream work package",
+    "Sourcing decision scores are transparent heuristics for comparing current evidence and are not proof that a higher-scoring partner is better, safer, more qualified, more reliable or the correct choice",
+    "Observed Fabric history currently reflects accepted work-package records and current terminal/progress state; it is not an external reputation score or comprehensive performance history",
+    "Prices in different currencies are not normalized by FX in v1.4 and are only price-compared against responses in the same currency",
+    "Geography uses declared profile/opportunity location strings and remote-work policy rather than route-time, distance or logistics-cost optimization"
   ],
   "release_rule": "Do not claim protected-asset disclosure, final legal enforceability, public deployment, or production payment until separately verified."
 }

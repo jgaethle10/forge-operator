@@ -1,0 +1,52 @@
+{
+  "schema": "evercraft.systemia.owned-execution-ratchet.v1",
+  "status": "active",
+  "effective_date": "2026-10-02",
+  "purpose": "Prevent Base44 integration credits and the public Fabric doorway from becoming hidden dependencies of Evercraft internal execution during the final cutover.",
+  "rules": {
+    "new_base44_dependency_allowed": false,
+    "base44_internal_execution_allowed": false,
+    "base44_integration_credit_dependency_allowed": false,
+    "public_fabric_as_internal_transit_allowed": false,
+    "public_fabric_role": "external_doorway_only",
+    "internal_execution_must_use_owned_routes": true,
+    "legacy_kill_requires_external_replacement_receipt": true
+  },
+  "canonical_paths": {
+    "competition_provider_execution": [
+      "systemia",
+      "raven_nexus",
+      "provider_api"
+    ],
+    "internal_llm_provider_execution": [
+      "systemia",
+      "raven_nexus",
+      "provider_api"
+    ],
+    "publishing": [
+      "systemia",
+      "owned_worker",
+      "destination_api"
+    ],
+    "scheduled_jobs": [
+      "systemia_resident_or_ci",
+      "yard_evercraft_compute"
+    ],
+    "public_fabric": [
+      "external_client",
+      "evercraft_public_door",
+      "owned_internal_route"
+    ]
+  },
+  "receipt_gates": [
+    "replacement_runtime_live",
+    "provider_or_destination_response_verified",
+    "durable_execution_receipt",
+    "rollback_target_present",
+    "observation_window_pass"
+  ],
+  "protected_compatibility": {
+    "openai_reviewed_v1_lane_must_remain_frozen": true,
+    "compatibility_lane_may_not_become_internal_runtime": true
+  }
+}

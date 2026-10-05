@@ -100,6 +100,52 @@ jobs:
           assert.equal(page.status, 200);
           assert.match(await page.text(), /Evidence for the physical world/);
 
+          const mcpHealth = await json('/mcp/faie?action=health');
+          assert.equal(mcpHealth.response.status, 200);
+          assert.equal(mcpHealth.body.server, 'evercraft-faie');
+          assert.deepEqual(mcpHealth.body.tools, [
+            'investigate_faie_evidence',
+            'get_faie_signal_snapshot',
+            'get_faie_health'
+          ]);
+          assert.equal(mcpHealth.body.persisted_public_investigations, false);
+
+          const mcpInit = await json('/mcp/faie', {
+            method: 'POST',
+            headers: { 'content-type': 'application/json' },
+            body: JSON.stringify({
+              jsonrpc: '2.0',
+              id: 1,
+              method: 'initialize',
+              params: {
+                protocolVersion: '2025-03-26',
+                capabilities: {},
+                clientInfo: { name: 'faie-smoke', version: '1' }
+              }
+            })
+          });
+          assert.equal(mcpInit.response.status, 200);
+          assert.equal(mcpInit.body.result.serverInfo.name, 'evercraft-faie');
+
+          const mcpTools = await json('/mcp/faie', {
+            method: 'POST',
+            headers: { 'content-type': 'application/json' },
+            body: JSON.stringify({
+              jsonrpc: '2.0',
+              id: 2,
+              method: 'tools/list',
+              params: {}
+            })
+          });
+          assert.deepEqual(
+            mcpTools.body.result.tools.map((tool) => tool.name),
+            [
+              'investigate_faie_evidence',
+              'get_faie_signal_snapshot',
+              'get_faie_health'
+            ]
+          );
+
           const preview = await json('/api/faie/investigate', {
             method: 'POST',
             headers: { 'content-type': 'application/json' },

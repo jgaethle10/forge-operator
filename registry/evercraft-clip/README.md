@@ -19,6 +19,7 @@ Evercraft Clip is an approved public Evercraft discovery record. This GitHub mir
 
 - Canonical: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/evercraft-clip/index.html
 - GitHub LLM mirror: ./llms.txt
+- Runtime or CHUM llms.txt: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/evercraft-clip/llms.txt
 
 ## Authority
 

@@ -48,7 +48,7 @@
     "source": "Evercraft Machine Commerce live gateway"
   },
   "live_proof": {
-    "conformance_state": "live_match_canary_passed",
+    "conformance_state": "owned_runtime_reverification_pending",
     "machine_commerce_handoff_state": null,
     "mcp": null,
     "registry_name": "io.github.jgaethle10/evercraft-machine-commerce",

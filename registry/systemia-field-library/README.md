@@ -18,6 +18,7 @@ Systemia Field Library is an approved public Evercraft discovery record. This Gi
 
 - Canonical: https://systemiafieldlibrary.com/
 - GitHub LLM mirror: ./llms.txt
+- Runtime or CHUM llms.txt: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/systemia-field-library/llms.txt
 
 ## Authority
 

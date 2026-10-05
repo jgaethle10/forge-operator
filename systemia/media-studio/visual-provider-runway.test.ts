@@ -126,9 +126,11 @@ test('paid generation requires an explicit execution authorization',async()=>{
 test('Runway endpoint declares one-image identity continuity semantics',()=>{
   const capability=runwayGen45Endpoint(true).capabilities[0];
   assert.ok(capability.requirements.includes('reference_identity'));
+  assert.ok(capability.requirements.includes('reference_environment'));
   assert.ok(capability.inputModes.includes('image_reference'));
   assert.equal(capability.identityContinuityViaStartFrame,true);
-  assert.deepEqual(capability.referenceRoles,['identity','start_frame']);
+  assert.equal(capability.environmentContinuityViaStartFrame,true);
+  assert.deepEqual(capability.referenceRoles,['identity','environment','start_frame']);
   assert.deepEqual(capability.locatorKinds,['url','data_uri']);
   assert.equal(capability.maxReferences,1);
 });
@@ -170,4 +172,29 @@ test('Runway refuses multiple prompt identity images before spending',async()=>{
     ],
     requires:['reference_identity','commercial_rights','provenance_receipt','timing_control']
   }),/runway_gen45_multiple_prompt_images_unsupported/);
+});
+
+
+test('Runway can use one environment canon image as promptImage for an establishing shot',async()=>{
+  const calls:any[]=[];
+  const fetchImpl=async(url:string,init?:any)=>{
+    calls.push({url,body:init?.body?JSON.parse(init.body):undefined});
+    if(url.endsWith('/v1/image_to_video')) return response(200,{id:'task-environment'});
+    if(url.endsWith('/v1/tasks/task-environment')) return response(200,{id:'task-environment',status:'SUCCEEDED',output:['https://signed.runway/environment.mp4']});
+    return response(200,{},Buffer.from('environment-video'));
+  };
+  const adapter=createRunwayGen45Adapter({
+    apiKey:'test-key',outputDir:fs.mkdtempSync(path.join(os.tmpdir(),'fallen-runway-environment-')),
+    verified:true,commercialRights:'allowed',allowPaidGeneration:true,pollIntervalMs:0,maxPolls:1,
+    fetchImpl:fetchImpl as any,
+  });
+  await adapter.execute({
+    ...baseJob,
+    references:[{
+      id:'bridge',kind:'image',role:'environment',sourceRefs:['canon:bridge'],
+      locator:{kind:'url',value:'https://assets.example/bridge.png'}
+    }],
+    requires:['reference_environment','commercial_rights','provenance_receipt','timing_control']
+  });
+  assert.equal(calls[0].body.promptImage,'https://assets.example/bridge.png');
 });

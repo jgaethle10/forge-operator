@@ -70,6 +70,51 @@ local_organism_install_receipt="/tmp/evercraft-edge-doctor-local-organism-instal
 self_update_install_receipt="/tmp/evercraft-edge-doctor-self-update-install.log"
 saban_capacity_install_receipt="/tmp/evercraft-edge-doctor-saban-capacity-install.log"
 
+ensure_fabric_service_source(){
+  local node_bin
+  node_bin="$(command -v node || true)"
+  [[ -n "$node_bin" ]] || { echo "ERROR: node unavailable for Fabric service reconciliation" >&2; return 61; }
+  [[ -f "$REPO_ROOT/systemia/mcp/fabric-local-runtime.mjs" ]] || {
+    echo "ERROR: current Forge checkout is missing Fabric runtime source" >&2
+    return 62
+  }
+
+  local desired_exec="$node_bin $REPO_ROOT/systemia/mcp/fabric-local-runtime.mjs --host 127.0.0.1 --port $FABRIC_PORT"
+  local current_exec current_workdir
+  current_exec="$(systemctl show -p ExecStart --value evercraft-fabric.service 2>/dev/null || true)"
+  current_workdir="$(systemctl show -p WorkingDirectory --value evercraft-fabric.service 2>/dev/null || true)"
+
+  if [[ "$current_exec" == *"$REPO_ROOT/systemia/mcp/fabric-local-runtime.mjs"* && "$current_workdir" == "$REPO_ROOT" ]]; then
+    return 0
+  fi
+
+  echo "[repair] Fabric service source drift detected; binding resident service to current Forge checkout..."
+  cat > /etc/systemd/system/evercraft-fabric.service <<EOF
+[Unit]
+Description=Evercraft Fabric MCP
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=simple
+User=$RUN_USER
+WorkingDirectory=$REPO_ROOT
+EnvironmentFile=/etc/evercraft/fabric.env
+ExecStart=$desired_exec
+Restart=always
+RestartSec=3
+NoNewPrivileges=true
+PrivateTmp=true
+ProtectSystem=full
+ProtectHome=read-only
+
+[Install]
+WantedBy=multi-user.target
+EOF
+  systemctl daemon-reload
+  return 0
+}
+
 ensure_local_organism(){
   if [[ -f "$node_receipt" && -f "$allocator_file" ]]; then
     return 0
@@ -233,6 +278,9 @@ if [[ "$REPAIR" == "true" ]]; then
     echo "[repair] WARNING: verified self-updater is degraded (code=$self_update_repair_code); continuing critical edge recovery."
   fi
 
+  # Bind the resident Fabric service to the current Forge checkout before restarting.
+  ensure_fabric_service_source || true
+
   # Restore the critical public edge before touching optional resident capacity.
   systemctl enable --now evercraft-fabric.service >/dev/null 2>&1 || true
   systemctl enable --now evercraft-public-edge.service >/dev/null 2>&1 || true
@@ -300,6 +348,13 @@ if local_health="$(curl -fsS --max-time 4 "http://127.0.0.1:$FABRIC_PORT/health"
   local_health_ok=true
 fi
 
+runtime_mobile_expected=false
+runtime_mobile_observed=false
+[[ -f "$REPO_ROOT/systemia/mcp/fabric-mobile-site.mjs" ]] && runtime_mobile_expected=true
+if [[ "$local_health_ok" == "true" ]]; then
+  runtime_mobile_observed="$(printf '%s' "$local_health" | node -e "let s='';process.stdin.on('data',d=>s+=d);process.stdin.on('end',()=>{try{const j=JSON.parse(s);process.stdout.write(j.mobile_path==='/mobile'&&j.mobile_installable===true?'true':'false')}catch{process.stdout.write('false')}})")"
+fi
+
 echo
 echo "[local Fabric]"
 if [[ "$local_health_ok" == "true" ]]; then
@@ -307,12 +362,15 @@ if [[ "$local_health_ok" == "true" ]]; then
 else
   echo "UNREACHABLE http://127.0.0.1:$FABRIC_PORT/health"
 fi
+echo "runtime_mobile_expected=$runtime_mobile_expected"
+echo "runtime_mobile_observed=$runtime_mobile_observed"
 
 LAN_HOST=""
 GATEWAY=""
 if [[ -f "$ROUTER_ENV" ]]; then
-  # This file contains only bounded router mapping coordinates, not secrets.
-  # The resident router-map service runs unprivileged and must be able to read it.
+  # This directory/file contain only bounded router mapping coordinates, not secrets.
+  # The resident router-map service runs unprivileged and must be able to traverse/read them.
+  chmod 0755 "$(dirname "$ROUTER_ENV")" 2>/dev/null || true
   chmod 0644 "$ROUTER_ENV" 2>/dev/null || true
   # shellcheck disable=SC1090
   source "$ROUTER_ENV"
@@ -324,6 +382,19 @@ echo
 echo "[router config]"
 echo "gateway=${GATEWAY:-missing}"
 echo "chromebook_lan_host=${LAN_HOST:-missing}"
+
+local_edge_http_ok=false
+local_edge_https_ok=false
+set +e
+local_http_probe="$(tcp_probe 127.0.0.1 "$HTTP_PORT" 2>/dev/null)"; local_http_rc=$?
+local_https_probe="$(tcp_probe 127.0.0.1 "$HTTPS_PORT" 2>/dev/null)"; local_https_rc=$?
+set -e
+[[ "$local_http_rc" -eq 0 ]] && local_edge_http_ok=true
+[[ "$local_https_rc" -eq 0 ]] && local_edge_https_ok=true
+echo
+echo "[Linux public-edge listener probes]"
+echo "$local_http_probe"
+echo "$local_https_probe"
 
 lan_http_ok=false
 lan_https_ok=false
@@ -385,17 +456,13 @@ human_gate=false
 ingress_transport="direct_chromeos_router"
 if [[ "$local_health_ok" != "true" ]]; then
   diagnosis="fabric_runtime_unreachable"
-elif [[ -n "$LAN_HOST" && ( "$lan_http_ok" != "true" || "$lan_https_ok" != "true" ) ]]; then
-  if [[ "$relay_state" == "active" && -f "$RELAY_ENV" ]]; then
-    diagnosis="local_edge_path_ready_external_canary_required"
-    human_gate=false
-    ingress_transport="outbound_service_relay"
-  else
-    diagnosis="chromeos_host_forward_unreachable"
-    human_gate=true
-  fi
-elif [[ "$router_refresh_ok" != "true" ]]; then
-  diagnosis="router_mapping_refresh_failed"
+elif [[ "$runtime_mobile_expected" == "true" && "$runtime_mobile_observed" != "true" ]]; then
+  diagnosis="fabric_service_source_mismatch"
+elif [[ "$relay_state" == "active" && -f "$RELAY_ENV" ]]; then
+  diagnosis="local_edge_path_ready_external_canary_required"
+  ingress_transport="outbound_service_relay"
+elif [[ "$local_edge_http_ok" != "true" || "$local_edge_https_ok" != "true" ]]; then
+  diagnosis="public_edge_listener_unreachable"
 elif [[ -n "$dns_ip" && -n "$public_ip" && "$dns_ip" != "$public_ip" ]]; then
   diagnosis="dns_public_ip_mismatch"
 elif [[ "$node_identity_ready" == "true" && "$attestation_local_ok" != "true" ]]; then
@@ -411,19 +478,21 @@ echo "human_gate=$human_gate"
 echo "ingress_transport=$ingress_transport"
 
 field_action="none"
-if [[ "$diagnosis" == "chromeos_host_forward_unreachable" ]]; then
-  field_action="chromeos_linux_port_forwarding"
+if [[ "$diagnosis" == "public_edge_listener_unreachable" ]]; then
   echo
-  echo "[ChromeOS field gate]"
-  echo "Fabric below ChromeOS is reachable, but the ChromeOS host-forward layer is not."
-  echo "Open: ChromeOS Settings -> Developers -> Linux development environment -> Port forwarding"
-  echo "Required host forwards:"
-  echo "  TCP 18080  status=$([[ "$lan_http_ok" == "true" ]] && echo reachable || echo NOT_REACHABLE)"
-  echo "  TCP 8443   status=$([[ "$lan_https_ok" == "true" ]] && echo reachable || echo NOT_REACHABLE)"
-  echo "If either entry already exists, toggle it off and back on."
-  echo "Then rerun:"
-  echo "  cd $REPO_ROOT"
-  echo "  sudo bash scripts/fabric-edge-doctor.sh --repair --trigger-canary"
+  echo "[public edge listener failure]"
+  echo "Caddy/public-edge is not listening on both required Linux ports."
+  echo "This is below the ChromeOS forwarding layer; do not change ChromeOS port settings."
+  systemctl --no-pager --full status evercraft-public-edge.service 2>&1 || true
+  journalctl -u evercraft-public-edge.service -n 80 --no-pager 2>&1 || true
+fi
+
+if [[ -n "$LAN_HOST" && ( "$lan_http_ok" != "true" || "$lan_https_ok" != "true" ) ]]; then
+  echo
+  echo "[ChromeOS host-forward observation]"
+  echo "LAN self-probe did not reach one or both ChromeOS forwarded ports."
+  echo "This observation is advisory because Crostini-to-host hairpin/self-reflection can fail even when forwarding works externally."
+  echo "Authoritative ingress state comes from the independent external canary."
 fi
 
 saban_capacity_degraded=false
@@ -463,6 +532,8 @@ cat > /tmp/evercraft-fabric-edge-doctor.json <<EOF
   "schema":"evercraft.fabric-edge-doctor.v1",
   "domain":"$DOMAIN",
   "local_fabric_ok":$(json_bool "$local_health_ok"),
+  "runtime_mobile_expected":$(json_bool "$runtime_mobile_expected"),
+  "runtime_mobile_observed":$(json_bool "$runtime_mobile_observed"),
   "fabric_service":"$fabric_state",
   "public_edge_service":"$edge_state",
   "router_map_timer":"$router_timer_state",
@@ -485,8 +556,11 @@ cat > /tmp/evercraft-fabric-edge-doctor.json <<EOF
   "saban_capacity_repair_ok":$(json_bool "$saban_capacity_repair_ok"),
   "saban_capacity_repair_code":$saban_capacity_repair_code,
   "saban_capacity_degraded":$(json_bool "$saban_capacity_degraded"),
-  "lan_http_forward_ok":$(json_bool "$lan_http_ok"),
-  "lan_https_forward_ok":$(json_bool "$lan_https_ok"),
+  "local_edge_http_listener_ok":$(json_bool "$local_edge_http_ok"),
+  "local_edge_https_listener_ok":$(json_bool "$local_edge_https_ok"),
+  "lan_http_forward_observed":$(json_bool "$lan_http_ok"),
+  "lan_https_forward_observed":$(json_bool "$lan_https_ok"),
+  "lan_forward_probe_authoritative":false,
   "router_refresh_ok":$(json_bool "$router_refresh_ok"),
   "node_identity_material_present":$(json_bool "$node_identity_ready"),
   "local_edge_attestation_responding":$(json_bool "$attestation_local_ok"),

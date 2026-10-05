@@ -100,6 +100,68 @@ test('Fabric routes explicit salvage blueprint and fabrication sourcing to the p
   assert.ok(hits[0].match_score>0);
 });
 
+test('Fabric routes a messy contractor cash crisis toward business recovery capabilities',()=>{
+  const canonical=loadFabricCatalogFromRepository();
+  const hits=matchFabricCapabilities(
+    'My restoration company is thousands of dollars behind in payroll because of one job where a subcontractor no showed us and it ended up taking months longer than expected. I’m facing L&I fines and we are really slow at the moment. What do I do?',
+    canonical,
+    {limit:5}
+  );
+  const ids=hits.map((x)=>x.public_id);
+  assert.equal(ids[0],'buildflow-process-audit-machine-v1');
+  assert.ok(ids.includes('deck-capital-fit-sprint-machine-v1'));
+  assert.ok(ids.includes('income-war-map-v1'));
+  assert.equal(ids.includes('audit-center-website-audit-machine-v1'),false);
+  assert.equal(ids.includes('portfolio-sentinel-v1'),false);
+  assert.equal(ids.includes('globalstat-country-intelligence-machine-v1'),false);
+  assert.equal(ids.includes('evercraft-clip-social-video-v1'),false);
+});
+
+test('Fabric ignores generic question language when routing a simple payroll crisis',()=>{
+  const canonical=loadFabricCatalogFromRepository();
+  const hits=matchFabricCapabilities(
+    'I have a company that is way behind in payroll. What should I do?',
+    canonical,
+    {limit:5}
+  );
+  const ids=hits.map((x)=>x.public_id);
+  assert.equal(ids[0],'deck-capital-fit-sprint-machine-v1');
+  assert.ok(ids.includes('income-war-map-v1'));
+  assert.equal(ids.includes('aliev-site-opportunity-snapshot-v1'),false);
+  assert.equal(ids.includes('buildflow-procure-to-pay-shadow-v1'),false);
+  assert.equal(ids.includes('buildflow-enterprise-ops-router-v1'),false);
+});
+
+test('Fabric still routes explicit EV charging language after generic-language filtering',()=>{
+  const canonical=loadFabricCatalogFromRepository();
+  const hits=matchFabricCapabilities(
+    'Should I install EV chargers at my commercial property?',
+    canonical,
+    {limit:5}
+  );
+  assert.equal(hits[0].public_id,'aliev-site-opportunity-snapshot-v1');
+});
+
+test('Fabric domain guardrails do not suppress an explicitly requested website audit',()=>{
+  const canonical=loadFabricCatalogFromRepository();
+  const hits=matchFabricCapabilities(
+    'My business website is slow, not ranking, and traffic is not turning into leads.',
+    canonical,
+    {limit:5}
+  );
+  assert.equal(hits[0].public_id,'audit-center-website-audit-machine-v1');
+});
+
+test('Fabric domain guardrails do not suppress explicit software portfolio monitoring',()=>{
+  const canonical=loadFabricCatalogFromRepository();
+  const hits=matchFabricCapabilities(
+    'Monitor my software portfolio, GitHub repositories, deployments, APIs, and public endpoints for breakage.',
+    canonical,
+    {limit:5}
+  );
+  assert.equal(hits[0].public_id,'portfolio-sentinel-v1');
+});
+
 test('Fabric MCP exposes exactly the read-only directory contract',async()=>{
   const init=await executeFabricDirectoryRpc({
     jsonrpc:'2.0',id:1,method:'initialize',

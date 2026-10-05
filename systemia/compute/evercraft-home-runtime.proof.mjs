@@ -94,6 +94,7 @@ try {
   assert.equal(managedHealth.auth_mode, "passport");
   assert.equal(managedHealth.identity_login_configured, true);
   assert.equal(managedHealth.session_revocation_supported, true);
+  assert.equal(managedHealth.provider_credential_vault_configured, true);
   assert.equal(managedHealth.signing_key_id, "primary");
   assert.equal(managedHealth.accepted_signing_key_count, 1);
   assert.equal(managedHealth.external_ai_required, false);
@@ -159,6 +160,7 @@ try {
     owner_login_verified: true,
     server_side_logout_verified: true,
     provider_independent_boot: job.result.provider_independent_boot,
+    provider_credential_vault_configured: managedHealth.provider_credential_vault_configured,
   }, null, 2));
 } finally {
   if (node) await node.close();

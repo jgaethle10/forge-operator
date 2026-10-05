@@ -1,6 +1,6 @@
 # Opportunity Fabric Multi-Party Execution Contract
 
-Version: v1.3  
+Version: v1.4  
 Evidence state: private runtime verified  
 Authority: Systemia Opportunity Fabric / trusted service-role runtime
 
@@ -54,6 +54,23 @@ The recipient may respond with current capacity, estimate or firm quote mode, pr
 The opportunity owner may shortlist or pass a response. Only shortlisted responses marked `Available` or `Limited` can seed a sourced team. All selected responses must come from one project and one blueprint.
 
 Accepting the resulting team invitation does not automatically accept the sourced work. It materializes the sourced package as an `Offered` work package, preserving a separate assignee acceptance gate.
+
+## Comparison rule
+
+Available sourcing responses for the same project, execution blueprint and suggested package may be compared using a transparent decision score.
+
+The current verified weights are price 30%, lead time 25%, availability 15%, observed Fabric history 20% and geography 10%.
+
+The comparison must preserve evidence class:
+
+- quote, availability and lead time are participant-supplied
+- geography is declared profile/opportunity metadata
+- Fabric history is observed only from accepted Opportunity Fabric work packages
+- no Fabric history is neutral, not positive evidence
+- missing quote or lead time is missing, not zero
+- price is compared only within the same currency
+
+A comparison may sort responses for readability, but it must set `human_decision_required=true` and `selected_partner_created=false`. It may not shortlist, award, contract, pay, invite or accept work on the user's behalf.
 
 ## Admission rule
 
@@ -119,11 +136,11 @@ A future work-package-specific disclosure must bind:
 - recipient acceptance
 - a durable receipt
 
-Actual protected-file delivery is not enabled or claimed in v1.3.
+Actual protected-file delivery is not enabled or claimed in v1.4.
 
 ## Authority model
 
-The following workflow entities are direct-client mutation locked in the verified v1.3 runtime:
+The following workflow entities are direct-client mutation locked in the verified v1.4 runtime:
 
 - ConnectionRequest
 - ProtectedAsset
@@ -154,7 +171,7 @@ Verified cross-industry examples include:
 
 ## Non-claims
 
-v1.3 does not claim:
+v1.4 does not claim:
 
 - a final legally reviewed Creator Covenant
 - signed contract execution

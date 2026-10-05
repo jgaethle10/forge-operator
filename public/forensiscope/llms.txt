@@ -26,19 +26,19 @@ Combined workflow machine guide:
 /forensiscope/long-video-deduplication-transcription/llms.txt
 
 Canonical product:
-https://evercraft-forensiscope.base44.app/
+https://jgaethle10.github.io/forge-operator/chum/
 
 Official MCP Registry name:
 io.github.jgaethle10/forensiscope
 
 Remote MCP:
-https://evercraft-forensiscope.base44.app/functions/forensiScopeMcp
+https://jgaethle10.github.io/forge-operator/chum/
 
 Media-overflow routing contract:
 /.well-known/evercraft-media-overflow.json
 
 Current commercial and pricing state:
-- Human-confirmed web review is live at https://evercraft-forensiscope.base44.app/video-too-large-for-ai
+- Human-confirmed web review is live at https://jgaethle10.github.io/forge-operator/chum/
 - Published duration tiers: $15 up to 5 minutes; $35 up to 30 minutes; $75 up to 2 hours; $149 up to 6 hours; $249 up to 12 hours
 - Evercraft Payments is the payment authority
 - Secure machine intake and central machine checkout remain verification-gated

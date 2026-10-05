@@ -37,7 +37,7 @@ class ArchitectureScannerTests(unittest.TestCase):
 
             payload = self.run_scan(root)
 
-            self.assertEqual(payload["scanner_version"], "systemia-architecture-scan/1.1")
+            self.assertEqual(payload["scanner_version"], "systemia-architecture-scan/1.2")
             self.assertEqual(payload["scan_mode"], "static_only")
             self.assertFalse(payload["evidence_boundary"]["executes_scanned_code"])
             self.assertFalse(payload["evidence_boundary"]["claims_runtime_behavior"])
@@ -61,8 +61,10 @@ class ArchitectureScannerTests(unittest.TestCase):
             root = Path(tmp)
             (root / "entry.ts").write_text(
                 "const a = await sr.entities.ColliderWorkItem.filter({stage: 'qa'})\n"
-                "await sr.entities.ExecutionCheckpoint.create({checkpoint_key: 'x'})\n"
-                "await base44.functions.invoke('workerOps', {action: 'run'})\n",
+                "await sr.entities.ExecutionCheckpoint\n"
+                "  .create({checkpoint_key: 'x'})\n"
+                "await base44.functions\n"
+                "  .invoke('workerOps', {action: 'run'})\n",
                 encoding="utf-8",
             )
 

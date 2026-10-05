@@ -44,12 +44,13 @@ export function runwayGen45Endpoint(verified=false):VisualModelEndpoint{
     capabilities:[{
       task:'video',
       inputModes:['text','image_reference','start_frame'],
-      requirements:['reference_identity','commercial_rights','provenance_receipt','timing_control'],
+      requirements:['reference_identity','reference_environment','commercial_rights','provenance_receipt','timing_control'],
       aspectRatios:['16:9','9:16'],
       maxDurationSec:10,
       maxReferences:1,
-      referenceRoles:['identity','start_frame'],
+      referenceRoles:['identity','environment','start_frame'],
       identityContinuityViaStartFrame:true,
+      environmentContinuityViaStartFrame:true,
       framesExclusiveWithReferences:true,
       locatorKinds:['url','data_uri'],
       batchVariants:1,
@@ -90,7 +91,8 @@ function validateJob(job:VisualModelJob){
     throw new Error('runway_gen45_end_frame_not_supported_by_adapter');
   }
   const promptRefs=job.references.filter(
-    ref=>ref.role==='start_frame'||(ref.role==='identity'&&ref.kind==='image')
+    ref=>ref.role==='start_frame'||
+      ((ref.role==='identity'||ref.role==='environment')&&ref.kind==='image')
   );
   if(promptRefs.length>1){
     throw new Error('runway_gen45_multiple_prompt_images_unsupported');
@@ -119,7 +121,8 @@ export function createRunwayGen45Adapter(
       const fetchImpl=fetcher(config);
       const start=job.references.find(ref=>ref.role==='start_frame');
       const identity=job.references.find(ref=>ref.role==='identity'&&ref.kind==='image');
-      const promptRef=start??identity;
+      const environment=job.references.find(ref=>ref.role==='environment'&&ref.kind==='image');
+      const promptRef=start??identity??environment;
       const body:any={
         model:'gen4.5',
         promptText:job.prompt,
