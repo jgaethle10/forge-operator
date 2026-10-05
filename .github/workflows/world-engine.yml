@@ -8,6 +8,15 @@ on:
       - 'systemia/saban/multiplication-registry.json'
       - 'package.json'
       - '.github/workflows/world-engine.yml'
+  push:
+    branches:
+      - main
+    paths:
+      - 'systemia/world-engine/**'
+      - 'systemia/saban/fixtures/world-engine-review-job.json'
+      - 'systemia/saban/multiplication-registry.json'
+      - 'package.json'
+      - '.github/workflows/world-engine.yml'
   workflow_dispatch:
 
 permissions:
@@ -25,10 +34,9 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: '22'
-          cache: npm
 
       - name: Install
-        run: npm ci
+        run: npm install --no-audit --no-fund
 
       - name: Deterministic runtime tests
         run: npm run test:world-engine
