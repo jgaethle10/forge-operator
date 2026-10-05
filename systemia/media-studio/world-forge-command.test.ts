@@ -62,6 +62,35 @@ test('World Forge command planner compiles rotate, scale, and visibility command
 });
 
 
+
+test('World Forge command planner authors camera lens and look-at through typed operations',()=>{
+  const project=createWorldForgeStarterProject();
+
+  const lens=compileWorldForgeCommand({
+    project,
+    selectedNodeId:'camera-main',
+    instruction:'lens 35mm',
+  });
+  assert.equal(lens.status,'accepted');
+  assert.deepEqual(lens.operations,[{
+    type:'set_camera',
+    nodeId:'camera-main',
+    camera:{focalLengthMm:35},
+  }]);
+
+  const look=compileWorldForgeCommand({
+    project,
+    selectedNodeId:'camera-main',
+    instruction:'look at 1 2 3',
+  });
+  assert.equal(look.status,'accepted');
+  assert.deepEqual(look.operations,[{
+    type:'set_camera',
+    nodeId:'camera-main',
+    camera:{lookAt:{x:1,y:2,z:3}},
+  }]);
+});
+
 test('World Forge command planner compiles editable mesh conversion and extrusion',()=>{
   const project=createWorldForgeStarterProject();
 
