@@ -1,6 +1,6 @@
 {
   "schema": "evercraft.chum.adaptive-strike-hub.v1",
-  "generated_at": "2026-10-05T17:16:22.096Z",
+  "generated_at": "2026-10-05T21:53:44.822Z",
   "coordinator": "CHUM",
   "purpose": "Adaptive internal cross-link hub for public Evercraft surfaces that currently need more legitimate crawler attention.",
   "truth_boundary": "Placement here requests discovery attention only. It does not prove indexing, ranking, citation, recommendation, provider pickup, or conversion.",
