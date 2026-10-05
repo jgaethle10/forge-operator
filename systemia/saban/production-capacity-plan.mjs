@@ -81,7 +81,7 @@ function acquisitionDirective({
     role,
     demand:row.demand?structuredClone(row.demand):null,
     zero_spend_phase:{
-      state:'ready_to_execute',
+      state:'policy_ready',
       formation_acquisition:zeroSpendFormationAcquisition(row),
       authority_material_present:false,
       paid_market_order_authorized:false,
@@ -288,9 +288,9 @@ export function planProductionCapacity({
     buyer_handoff:{
       schema:'evercraft.saban.capacity-buyer-handoff.v1',
       directive_count:acquisitionDirectives.length,
-      executable_zero_spend_directive_count:
+      zero_spend_policy_ready_count:
         acquisitionDirectives.filter((row)=>
-          row.zero_spend_phase?.state==='ready_to_execute'
+          row.zero_spend_phase?.state==='policy_ready'
         ).length,
       directives:acquisitionDirectives,
       authority_material_present:false,
