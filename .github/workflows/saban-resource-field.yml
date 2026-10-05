@@ -7,6 +7,8 @@ on:
       - 'systemia/saban/capacity-resource-field-bridge.mjs'
       - 'systemia/saban/resource-expansion-organism.mjs'
       - 'systemia/saban/resource-expansion-organism.proof.mjs'
+      - 'systemia/saban/resource-expansion-install.proof.mjs'
+      - 'scripts/install-saban-capacity-organism.sh'
       - 'systemia/saban/capacity-resource-field-bridge.proof.mjs'
       - 'systemia/saban/capacity-organism.mjs'
       - 'systemia/saban/resource-field.proof.mjs'
@@ -70,6 +72,10 @@ jobs:
         run: node systemia/saban/capacity-resource-field-bridge.proof.mjs
       - name: Prove proactive Resource Expansion Organism
         run: node systemia/saban/resource-expansion-organism.proof.mjs
+      - name: Validate Saban capacity installer shell syntax
+        run: bash -n scripts/install-saban-capacity-organism.sh
+      - name: Prove Resource Expansion installer policy
+        run: node systemia/saban/resource-expansion-install.proof.mjs
       - name: Prove hardware-aware placement
         run: node systemia/saban/resource-placement.proof.mjs
       - name: Prove live resource acquisition
