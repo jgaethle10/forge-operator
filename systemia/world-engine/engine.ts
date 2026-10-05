@@ -3,6 +3,7 @@ import { resolveEntityCollisions, type CollisionContact } from './spatial.js';
 import { initializeAnimationRuntime, setAnimationParameter, stepAnimationRuntime, validateAnimationComponent, type AnimationParameter, type AnimationRuntimeState, type SkeletalAnimationComponent } from './animation.js';
 import { clearNavigationTarget, initializeNavigationAgent, setNavigationTarget, stepNavigationAgent, validateNavigationAgent, validateNavigationMesh, type NavigationAgentComponent, type NavigationAgentRuntime, type NavigationMesh } from './navigation.js';
 import { activateCamera, initializeCameraRuntime, stepCameraRuntime, validateVisualScene, type CameraComponent, type CameraRuntimeState, type LightComponent, type RenderableComponent, type VisualSceneDefinition } from './visual.js';
+import { activateAudioListener, clearAudioRuntimeEvents, initializeAudioEmitter, initializeAudioSceneRuntime, pauseAudio, playAudio, seekAudio, stepAudioEmitter, stopAudio, validateAudioScene, type AudioClipDefinition, type AudioEmitterComponent, type AudioEmitterRuntime, type AudioListenerComponent, type AudioSceneDefinition, type AudioSceneRuntime } from './audio.js';
 
 export type Vec3 = { x:number; y:number; z:number };
 
@@ -43,6 +44,8 @@ export interface WorldEntity {
   renderable?:RenderableComponent;
   light?:LightComponent;
   camera?:CameraComponent;
+  audioEmitter?:AudioEmitterComponent;
+  audioListener?:AudioListenerComponent;
   assetRefs?:string[];
   tags?:string[];
   properties?:Record<string,unknown>;
@@ -58,6 +61,7 @@ export interface WorldDefinition {
   entities:WorldEntity[];
   navigationMeshes?:NavigationMesh[];
   visualScene?:VisualSceneDefinition;
+  audioScene?:AudioSceneDefinition;
   metadata?:Record<string,unknown>;
 }
 
@@ -69,6 +73,11 @@ export type WorldInput =
   | { id:string; tick:number; entityId:string; kind:'set_navigation_target'; value:Vec3 }
   | { id:string; tick:number; entityId:string; kind:'clear_navigation_target' }
   | { id:string; tick:number; kind:'activate_camera'; cameraEntityId:string; transitionId?:string }
+  | { id:string; tick:number; kind:'activate_audio_listener'; listenerEntityId:string }
+  | { id:string; tick:number; entityId:string; kind:'play_audio' }
+  | { id:string; tick:number; entityId:string; kind:'pause_audio' }
+  | { id:string; tick:number; entityId:string; kind:'stop_audio' }
+  | { id:string; tick:number; entityId:string; kind:'seek_audio'; value:number }
   | { id:string; tick:number; entityId:string; kind:'set_property'; key:string; value:unknown };
 
 export interface RuntimeEntity extends WorldEntity {
@@ -79,6 +88,7 @@ export interface RuntimeEntity extends WorldEntity {
   };
   animationRuntime?:AnimationRuntimeState;
   navigationRuntime?:NavigationAgentRuntime;
+  audioRuntime?:AudioEmitterRuntime;
 }
 
 export interface WorldSnapshot {
@@ -91,6 +101,7 @@ export interface WorldSnapshot {
   entities:RuntimeEntity[];
   activeEntityIds:string[];
   cameraRuntime:CameraRuntimeState|null;
+  audioSceneRuntime:AudioSceneRuntime|null;
   collisions:CollisionContact[];
   digest:string;
 }
@@ -167,6 +178,12 @@ export function validateWorldDefinition(world:WorldDefinition){
   }else if(hasVisualComponents){
     throw new Error('world_visual_scene_required');
   }
+  const hasAudioComponents=(world.entities || []).some(entity=>entity.audioEmitter || entity.audioListener);
+  if(world.audioScene){
+    validateAudioScene(world.audioScene,world.entities || []);
+  }else if(hasAudioComponents){
+    throw new Error('world_audio_scene_required');
+  }
   const ids = new Set<string>();
   for(const entity of world.entities || []){
     if(!entity.id) throw new Error('world_entity_id_missing');
@@ -228,6 +245,9 @@ function runtimeEntity(source:WorldEntity,navigationMeshes:Map<string,Navigation
     if(!mesh) throw new Error(`world_navigation_mesh_missing:${entity.navigationAgent.meshId}`);
     entity.navigationRuntime=initializeNavigationAgent(entity.navigationAgent,mesh,entity.transform.position);
   }
+  if(entity.audioEmitter){
+    entity.audioRuntime=initializeAudioEmitter(entity.audioEmitter);
+  }
   return entity;
 }
 
@@ -251,7 +271,9 @@ export class EvercraftWorldRuntime {
   readonly dt:number;
   private state:Map<string,RuntimeEntity>;
   private navigationMeshes:Map<string,NavigationMesh>;
+  private audioClips:Map<string,AudioClipDefinition>;
   private cameraRuntimeState:CameraRuntimeState|null;
+  private audioSceneRuntimeState:AudioSceneRuntime|null;
   private activeEntityIdsSet:Set<string>;
   private _tick=0;
   private _collisions:CollisionContact[]=[];
@@ -268,6 +290,14 @@ export class EvercraftWorldRuntime {
     );
     this.cameraRuntimeState=this.definition.visualScene
       ? initializeCameraRuntime(this.definition.visualScene)
+      : null;
+    this.audioClips=new Map(
+      [...(this.definition.audioScene?.clips || [])]
+        .sort((a,b)=>a.id.localeCompare(b.id))
+        .map(clip=>[clip.id,clone(clip)])
+    );
+    this.audioSceneRuntimeState=this.definition.audioScene
+      ? initializeAudioSceneRuntime(this.definition.audioScene)
       : null;
     this.state=new Map(
       [...this.definition.entities]
@@ -302,6 +332,10 @@ export class EvercraftWorldRuntime {
     return this.cameraRuntimeState?clone(this.cameraRuntimeState):null;
   }
 
+  get audioSceneRuntime(){
+    return this.audioSceneRuntimeState?clone(this.audioSceneRuntimeState):null;
+  }
+
   setActiveEntityIds(ids:string[]){
     const next=[...new Set(ids)].sort();
     for(const id of next){
@@ -333,6 +367,17 @@ export class EvercraftWorldRuntime {
       );
       return;
     }
+    if(input.kind==='activate_audio_listener'){
+      if(!this.definition.audioScene || !this.audioSceneRuntimeState){
+        throw new Error('world_audio_scene_runtime_missing');
+      }
+      this.audioSceneRuntimeState=activateAudioListener(
+        this.audioSceneRuntimeState,
+        input.listenerEntityId,
+        [...this.state.values()]
+      );
+      return;
+    }
     const entity=this.mutateEntity(input.entityId);
     if(input.kind==='teleport'){
       finiteVec3(input.value,'teleport');
@@ -342,6 +387,23 @@ export class EvercraftWorldRuntime {
     if(input.kind==='set_property'){
       entity.properties ||= {};
       entity.properties[input.key]=clone(input.value);
+      return;
+    }
+    if(input.kind==='play_audio' || input.kind==='pause_audio' || input.kind==='stop_audio' || input.kind==='seek_audio'){
+      if(!entity.audioEmitter || !entity.audioRuntime){
+        throw new Error(`world_entity_audio_missing:${entity.id}`);
+      }
+      if(input.kind==='play_audio'){
+        playAudio(entity.audioEmitter,entity.audioRuntime);
+      }else if(input.kind==='pause_audio'){
+        pauseAudio(entity.audioEmitter,entity.audioRuntime);
+      }else if(input.kind==='stop_audio'){
+        stopAudio(entity.audioEmitter,entity.audioRuntime);
+      }else{
+        const clip=this.audioClips.get(entity.audioEmitter.clipId);
+        if(!clip) throw new Error(`world_audio_clip_missing:${entity.audioEmitter.clipId}`);
+        seekAudio(entity.audioEmitter,entity.audioRuntime,clip,input.value);
+      }
       return;
     }
     if(input.kind==='set_animation_parameter'){
@@ -430,6 +492,9 @@ export class EvercraftWorldRuntime {
 
   step(inputs:WorldInput[]=[]){
     const targetTick=this._tick+1;
+    for(const entity of this.state.values()){
+      if(entity.audioRuntime) clearAudioRuntimeEvents(entity.audioRuntime);
+    }
     for(const input of [...inputs]
       .filter(item=>item.tick===targetTick)
       .sort((a,b)=>a.id.localeCompare(b.id))){
@@ -472,6 +537,11 @@ export class EvercraftWorldRuntime {
       if(entity.animation && entity.animationRuntime){
         entity.animationRuntime=stepAnimationRuntime(entity.animation,entity.animationRuntime,this.dt);
       }
+      if(entity.audioEmitter && entity.audioRuntime){
+        const clip=this.audioClips.get(entity.audioEmitter.clipId);
+        if(!clip) throw new Error(`world_audio_clip_missing:${entity.audioEmitter.clipId}`);
+        stepAudioEmitter(entity.audioEmitter,entity.audioRuntime,clip,this.dt);
+      }
       this.integrate(entity);
     }
     this._collisions=resolveEntityCollisions(ordered);
@@ -499,6 +569,7 @@ export class EvercraftWorldRuntime {
         .map(entity=>clone(entity)),
       activeEntityIds:this.activeEntityIds,
       cameraRuntime:this.cameraRuntime,
+      audioSceneRuntime:this.audioSceneRuntime,
       collisions:clone(this._collisions)
     };
     return {...core,digest:digest(core)};
