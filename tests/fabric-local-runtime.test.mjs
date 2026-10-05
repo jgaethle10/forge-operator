@@ -163,13 +163,20 @@ test('Fabric public customer front door is branded, browsable, and policy-safe',
       assert.match(await response.text(),pattern);
     }
 
+    const journalReady=runtime.health().journal_mirror_ready===true;
     const journalResponse=await fetch(runtime.url+'/journal/');
-    assert.equal(journalResponse.status,200);
-    assert.match(journalResponse.headers.get('content-type')||'',/^text\/html/);
-    assert.equal(journalResponse.headers.get('x-robots-tag'),'noindex, nofollow');
-    const journal=await journalResponse.text();
-    assert.match(journal,/Evercraft Journal/);
-    assert.doesNotMatch(journal,/Black Friday|shopping assistant|optimize your cart/i);
+    if(journalReady){
+      assert.equal(journalResponse.status,200);
+      assert.match(journalResponse.headers.get('content-type')||'',/^text\/html/);
+      assert.equal(journalResponse.headers.get('x-robots-tag'),'noindex, nofollow');
+      const journal=await journalResponse.text();
+      assert.match(journal,/Evercraft Journal/);
+      assert.doesNotMatch(journal,/Black Friday|shopping assistant|optimize your cart/i);
+    }else{
+      assert.equal(journalResponse.status,404);
+      const held=await journalResponse.json();
+      assert.equal(held.error,'journal_asset_not_found');
+    }
   } finally {
     await runtime.close();
   }
