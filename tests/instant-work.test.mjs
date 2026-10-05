@@ -7,6 +7,7 @@ import {
 import { getFulfillmentProfile } from '../systemia/organism/universal-product-fulfillment.mjs';
 import { buildReceivablesPortfolio, deriveReceivableTruth } from '../systemia/commerce/receivables.mjs';
 import { selectRavenSettlementRoute } from '../systemia/commerce/raven-settlement-router.mjs';
+import { recommendReceivableFollowup } from '../systemia/commerce/receivable-followup.mjs';
 
 const liveCatalog = JSON.parse(fs.readFileSync('public/.well-known/evercraft-machine-catalog.json', 'utf8'));
 const liveInstantWork = buildInstantWorkCatalog(liveCatalog);
@@ -272,3 +273,77 @@ const blockedRoute = selectRavenSettlementRoute({
 });
 assert.equal(blockedRoute.route_state, 'blocked_no_eligible_adapter');
 assert.equal(blockedRoute.selected_adapter, null);
+
+
+const freshFollowup = recommendReceivableFollowup({
+  receivable: {
+    order_key: 'epo_fresh',
+    order_state: 'checkout_open',
+    canonical_paid: false,
+    customer_email: 'buyer@example.com',
+    checkout_created_at: '2026-10-05T18:00:00.000Z',
+  },
+  now: new Date('2026-10-06T12:00:00.000Z'),
+});
+assert.equal(freshFollowup.action, 'none');
+assert.equal(freshFollowup.eligible_to_send, false);
+
+const gentleFollowup = recommendReceivableFollowup({
+  receivable: {
+    order_key: 'epo_gentle',
+    order_state: 'checkout_open',
+    canonical_paid: false,
+    customer_email: 'buyer@example.com',
+    checkout_created_at: '2026-10-04T06:00:00.000Z',
+  },
+  now: new Date('2026-10-06T12:00:00.000Z'),
+});
+assert.equal(gentleFollowup.action, 'gentle_reminder');
+assert.equal(gentleFollowup.eligible_to_send, true);
+
+const dedupedFollowup = recommendReceivableFollowup({
+  receivable: {
+    order_key: 'epo_gentle',
+    order_state: 'checkout_open',
+    canonical_paid: false,
+    customer_email: 'buyer@example.com',
+    checkout_created_at: '2026-10-04T06:00:00.000Z',
+  },
+  followupHistory: [{
+    order_key: 'epo_gentle',
+    action: 'gentle_reminder',
+    status: 'sent',
+    sent_at: '2026-10-05T18:00:00.000Z',
+  }],
+  now: new Date('2026-10-06T12:00:00.000Z'),
+});
+assert.equal(dedupedFollowup.reason, 'cadence_dedupe_hold');
+assert.equal(dedupedFollowup.eligible_to_send, false);
+
+const paidFollowup = recommendReceivableFollowup({
+  receivable: {
+    order_key: 'epo_paid',
+    order_state: 'paid',
+    canonical_paid: true,
+    customer_email: 'buyer@example.com',
+    checkout_created_at: '2026-10-01T06:00:00.000Z',
+  },
+  now: new Date('2026-10-06T12:00:00.000Z'),
+});
+assert.equal(paidFollowup.action, 'none');
+assert.equal(paidFollowup.reason, 'verified_paid');
+assert.equal(paidFollowup.eligible_to_send, false);
+
+const escalationFollowup = recommendReceivableFollowup({
+  receivable: {
+    order_key: 'epo_week_old',
+    order_state: 'checkout_open',
+    canonical_paid: false,
+    customer_email: 'buyer@example.com',
+    checkout_created_at: '2026-09-28T06:00:00.000Z',
+  },
+  now: new Date('2026-10-06T12:00:00.000Z'),
+});
+assert.equal(escalationFollowup.action, 'escalation_review');
+assert.equal(escalationFollowup.eligible_to_send, true);
+assert.equal(escalationFollowup.send_requires.recheck_payment_immediately_before_send, true);
