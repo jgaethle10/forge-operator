@@ -36,6 +36,7 @@ jobs:
           RAVEN_NEXUS_CUSTOMER_BRIDGE_TOKEN: ${{ secrets.RAVEN_NEXUS_CUSTOMER_BRIDGE_TOKEN }}
           CUSTOMER_GAUNTLET_REQUIRE_NEXUS: "false"
           CUSTOMER_GAUNTLET_SANDBOX_PURCHASE: "false"
+          EVERCRAFT_MACHINE_COMMERCE_GATEWAY_URL: ${{ vars.EVERCRAFT_MACHINE_COMMERCE_GATEWAY_URL }}
         run: node systemia/customer-gauntlet/runner.mjs
       - name: Upload receipts
         if: always()
