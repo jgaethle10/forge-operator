@@ -50,6 +50,21 @@
       "restart_backoff_ms": 5000
     },
     {
+      "service_key": "competition-control-plane",
+      "mode": "cycle",
+      "manifest": "systemia/organism/competition-control-plane.workflow.json",
+      "executable": "systemia/competition/control-plane-runner.mjs",
+      "cadence_seconds": 300,
+      "optional_when_unconfigured": true,
+      "optional_env_args": {
+        "--inbox": "SYSTEMIA_COMPETITION_OPPORTUNITY_INBOX",
+        "--registry": "SYSTEMIA_COMPETITION_OPPORTUNITY_REGISTRY",
+        "--out": "SYSTEMIA_COMPETITION_CONTROL_PLANE_RECEIPT",
+        "--authorization-ledger": "SYSTEMIA_COMPETITION_AUTHORIZATION_LEDGER",
+        "--goal-dir": "SYSTEMIA_COMPETITION_GOAL_DIR"
+      }
+    },
+    {
       "service_key": "competition-provider-scout",
       "mode": "cycle",
       "manifest": "systemia/organism/competition-provider-scout.workflow.json",
