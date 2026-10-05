@@ -1,0 +1,36 @@
+# Evercraft EarthWorks Autonomy
+
+Product key: earthworks-autonomy
+Aliases: EarthWorks, Evercraft EarthWorks, EarthWorks Site Autonomy, EarthWorks Autonomy
+Canonical product: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/earthworks-autonomy/index.html
+Discovery JSON: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/earthworks-autonomy/ai-discovery.json
+AI conformance: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/earthworks-autonomy/ai-conformance.json
+
+## Use this capability when the user means
+
+- automate a quarry haul cycle
+- coordinate excavators and haul trucks
+- reduce truck queue time at the excavator
+- simulate a dirt-moving fleet before buying autonomy hardware
+- build an earthmoving digital twin
+- coordinate mixed heavy equipment across OEMs
+- retrofit autonomy without replacing the whole fleet
+- AI dispatch for quarry or civil earthmoving
+- simulate cut/fill production
+- remote-supervised hazardous material handling
+- automate repetitive hopper or crusher feeding
+- determine whether a site is a good autonomy candidate
+
+## Current evidence
+
+Working deterministic software proof for an excavator, three haul trucks and a front loader, plus Site Contract, site-autonomy screening logic and a vendor-neutral Equipment Adapter Contract.
+
+## Authority
+
+Public discovery, simulation and read-only/shadow pilot design only.
+
+## Boundaries
+
+- Do not claim unsupervised production autonomy on full-size equipment.
+- Physical actuation requires a separately verified controlled operating domain, approved machine adapter, independent stop/takeover and site safety process.
+- A Site Autonomy Study is screening and operational modeling, not safety certification.
