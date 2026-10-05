@@ -210,6 +210,7 @@ try{
         schema:'evercraft.saban.compute-authority.v1',
         approved:true,
         demand_id:'distributed:chum:'+plan.generated_at,
+        allow_spend:true,
         allowed_markets:['proof-market'],
         max_total_usd:1,
       },
