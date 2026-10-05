@@ -512,6 +512,12 @@ export function sampleCamera(
   };
 }
 
+export function verifyVisualFrameContract(frame:VisualFrameContract){
+  if(frame?.schema!=='evercraft.world-engine.visual-frame.v1') return false;
+  const {digest:claimed,...core}=frame;
+  return typeof claimed==='string' && claimed===digest(core);
+}
+
 export function compileVisualFrame(
   worldId:string,
   tick:number,
