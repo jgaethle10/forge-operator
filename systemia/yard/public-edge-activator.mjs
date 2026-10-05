@@ -21,7 +21,7 @@ export async function activatePublicSpecialistEdge({
   requestedHostname='evercraft-specialists',
   mode='wildcard_https',
   requiredPlacementLabels=['public-edge'],
-  specialistGatewayUrl='https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway',
+  specialistGatewayUrl='',
   allowLoopbackProof=false,
 }={}){
   if(!stateDir) throw new Error('activation_state_dir_required');
@@ -72,6 +72,45 @@ export async function activatePublicSpecialistEdge({
   }
 
   const selected=resolution.selected;
+
+  let ownedSpecialistGateway='';
+  const rawSpecialistGateway=String(specialistGatewayUrl||'').trim();
+  if(rawSpecialistGateway){
+    try{
+      const parsed=new URL(rawSpecialistGateway);
+      const host=parsed.hostname.toLowerCase();
+      if(parsed.protocol!=='https:') throw new Error('specialist_gateway_must_use_https');
+      if(host==='base44.app'||host.endsWith('.base44.app')) throw new Error('specialist_gateway_must_not_be_base44');
+      ownedSpecialistGateway=parsed.toString();
+    }catch(error){
+      const hold=new Error(error instanceof Error?error.message:'specialist_gateway_invalid');
+      hold.receipt={
+        schema:'evercraft.public-edge.activation-hold.v1',
+        state:'held_invalid_owned_specialist_gateway',
+        selected_node:selected.node_id,
+        resolver_receipt:resolution.receipt_hash,
+        founder_action_required:false,
+        observed_at:new Date().toISOString(),
+      };
+      hold.receipt.receipt_hash=sha(hold.receipt);
+      throw hold;
+    }
+  }
+
+  if(productionMode&&!ownedSpecialistGateway){
+    const hold=new Error('owned_specialist_gateway_unconfigured');
+    hold.receipt={
+      schema:'evercraft.public-edge.activation-hold.v1',
+      state:'held_owned_specialist_gateway_unconfigured',
+      selected_node:selected.node_id,
+      resolver_receipt:resolution.receipt_hash,
+      founder_action_required:false,
+      observed_at:new Date().toISOString(),
+    };
+    hold.receipt.receipt_hash=sha(hold.receipt);
+    throw hold;
+  }
+
   const token=allocatorTokenForOffer(selected,{allocatorToken,allocatorTokens});
   if(selected.allocation_auth==='bearer'&&!token){
     const error=new Error('allocator_authority_unavailable_for_selected_edge_node');
@@ -115,7 +154,7 @@ export async function activatePublicSpecialistEdge({
       public_port:productionMode?443:0,
     },
     specialist:{
-      gateway_url:specialistGatewayUrl,
+      gateway_url:ownedSpecialistGateway,
     },
     requestedHostname,
     edgeRollbackTarget:'systemia:auto-edge-previous',
