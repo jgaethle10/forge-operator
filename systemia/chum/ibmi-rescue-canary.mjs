@@ -1,9 +1,27 @@
 #!/usr/bin/env node
 
+import fs from 'node:fs';
 import { ownedHttpsEndpoint } from './owned-commerce-endpoint.mjs';
 
-const GATEWAY = ownedHttpsEndpoint(process.env.EVERCRAFT_MACHINE_COMMERCE_GATEWAY_URL,{name:'machine_commerce_gateway'});
+const gatewayRaw=String(process.env.EVERCRAFT_MACHINE_COMMERCE_GATEWAY_URL||'').trim();
+const GATEWAY = gatewayRaw?ownedHttpsEndpoint(gatewayRaw,{name:'machine_commerce_gateway'}):null;
 const PUBLIC_ID = 'ibmi-rescue-v1';
+
+if(!GATEWAY){
+  const held={
+    schema:'evercraft.ibmi-rescue.machine-commerce-canary.v1',
+    state:'held_no_owned_gateway',
+    public_id:PUBLIC_ID,
+    checked_at:new Date().toISOString(),
+    gateway:null,
+    payment_attempted:false,
+    truth_boundary:'No owned Machine Commerce gateway is configured; no legacy-provider request was made.'
+  };
+  fs.mkdirSync('artifacts/chum',{recursive:true});
+  fs.writeFileSync('artifacts/chum/ibmi-rescue-canary-latest.json',JSON.stringify(held,null,2)+'\n');
+  console.log('IBMI_MACHINE_COMMERCE_CANARY_HELD',JSON.stringify(held));
+  process.exit(0);
+}
 
 async function jsonRequest(url, init = {}) {
   const controller = new AbortController();
