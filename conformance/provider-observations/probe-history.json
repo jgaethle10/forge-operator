@@ -1,26 +1,8 @@
 {
   "schema": "evercraft.chum.provider-probe-history.v1",
-  "updated_at": "2026-10-05T17:07:12.603Z",
+  "updated_at": "2026-10-05T17:12:55.844Z",
   "max_records": 500,
   "records": [
-    {
-      "receipt_key_sha256": "f716260a4fecbd53b2d00865884d4ac7359a5cf60b505c55e2b3279c039a491c",
-      "observed_at": "2026-10-04T14:27:28.882Z",
-      "provider": "generic_agent",
-      "provider_surface": "machine_client",
-      "product_key": "forensiscope",
-      "case_id": "media-recording-compare-005",
-      "prompt_sha256": "426d5b4740995186012077a46fd92e1b7d5eb0d48dc3a66c9071a4041d88b8da",
-      "pickup_observed": true,
-      "provider_receipt_sha256": "b14648a798881d7c7ac57c749c98b2415cb18c64c54566a2fd478e85c8c95c9d",
-      "response_sha256": "5776f838c6cc6bb17351ac5d1215f2d3a43ec7a33c583e55805384a59f9b6d8a",
-      "source": "authorized_provider_probe",
-      "privacy": {
-        "full_provider_response_persisted": false,
-        "provider_session_reference_persisted": false,
-        "credentials_persisted": false
-      }
-    },
     {
       "receipt_key_sha256": "44cee945886aad409d893dd0c0afdb7da5ea2f76e0798a9a668b05978ffcdfeb",
       "observed_at": "2026-10-04T14:27:30.783Z",
@@ -8995,6 +8977,24 @@
       "prompt_sha256": "8a935e2ff49e5f6f85dd22364881b0c5b338f6b112012c9cbe159edf50fb3631",
       "pickup_observed": false,
       "provider_receipt_sha256": "c0e5e1f64527ddfa0a5000b0c055d90951534fc149245fee0aef8873e911baa6",
+      "response_sha256": "14f4f27e27877cdeb08a59bf10d7e157094be8bbcf3a3c09fe6c49cd91538168",
+      "source": "authorized_provider_probe",
+      "privacy": {
+        "full_provider_response_persisted": false,
+        "provider_session_reference_persisted": false,
+        "credentials_persisted": false
+      }
+    },
+    {
+      "receipt_key_sha256": "bcadf1e89e37a13209c8a82c3b01cbb33663cfcdf818c891a6b269322b42b49a",
+      "observed_at": "2026-10-05T17:12:55.844Z",
+      "provider": "generic_agent",
+      "provider_surface": "machine_client",
+      "product_key": "forensiscope",
+      "case_id": "media-video-rag-006",
+      "prompt_sha256": "8a935e2ff49e5f6f85dd22364881b0c5b338f6b112012c9cbe159edf50fb3631",
+      "pickup_observed": false,
+      "provider_receipt_sha256": "743788f07e88d563f79e58dd13fe0d274511f40f2d97726d9adbd108b728d6a9",
       "response_sha256": "14f4f27e27877cdeb08a59bf10d7e157094be8bbcf3a3c09fe6c49cd91538168",
       "source": "authorized_provider_probe",
       "privacy": {

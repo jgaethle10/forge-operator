@@ -2,7 +2,7 @@
   "schema": "evercraft.chum.crawl-pressure.v1",
   "provider": "Evercraft LLC",
   "coordinator": "CHUM",
-  "updated_at": "2026-10-05T17:07:15.437Z",
+  "updated_at": "2026-10-05T17:12:58.632Z",
   "purpose": "Content-hash-backed freshness signals for public Evercraft discovery surfaces. A freshness signal requests attention; it does not prove indexing, ranking, recommendation, citation or provider pickup.",
   "indexnow": {
     "supported": true,
@@ -11,82 +11,51 @@
   },
   "latest_change_batch": [
     {
-      "path": "/chum/products/opportunity-fabric/",
-      "last_changed": "2026-10-05T17:07:15.437Z",
-      "priority": 94
-    },
-    {
-      "path": "/chum/products/opportunity-fabric/ai-conformance.json",
-      "last_changed": "2026-10-05T17:07:15.437Z",
-      "priority": 94
-    },
-    {
-      "path": "/chum/products/opportunity-fabric/ai-discovery.json",
-      "last_changed": "2026-10-05T17:07:15.437Z",
-      "priority": 94
-    },
-    {
-      "path": "/chum/products/opportunity-fabric/llms.txt",
-      "last_changed": "2026-10-05T17:07:15.437Z",
-      "priority": 94
-    },
-    {
-      "path": "/.well-known/evercraft-products.json",
-      "last_changed": "2026-10-05T17:07:15.437Z",
-      "priority": 88
-    },
-    {
-      "path": "/llms-full.txt",
-      "last_changed": "2026-10-05T17:07:15.437Z",
-      "priority": 86
-    },
-    {
-      "path": "/.well-known/evercraft-agent-directory.json",
-      "last_changed": "2026-10-05T17:07:15.437Z",
-      "priority": 84
-    },
-    {
-      "path": "/.well-known/evercraft-syndication.json",
-      "last_changed": "2026-10-05T17:07:15.437Z",
-      "priority": 84
-    },
-    {
       "path": "/chum/hot/index.json",
-      "last_changed": "2026-10-05T17:07:15.437Z",
+      "last_changed": "2026-10-05T17:12:58.632Z",
       "priority": 80
     },
     {
       "path": "/chum/proof/forensiscope.json",
-      "last_changed": "2026-10-05T17:07:15.437Z",
+      "last_changed": "2026-10-05T17:12:58.632Z",
       "priority": 80
     },
     {
       "path": "/chum/proof/index.json",
-      "last_changed": "2026-10-05T17:07:15.437Z",
+      "last_changed": "2026-10-05T17:12:58.632Z",
       "priority": 80
     },
     {
       "path": "/chum/proof/rivet.json",
-      "last_changed": "2026-10-05T17:07:15.437Z",
+      "last_changed": "2026-10-05T17:12:58.632Z",
       "priority": 80
-    },
-    {
-      "path": "/chum/syndication/index.json",
-      "last_changed": "2026-10-05T17:07:15.437Z",
-      "priority": 80
-    },
-    {
-      "path": "/feed.json",
-      "last_changed": "2026-10-05T17:07:15.437Z",
-      "priority": 60
-    },
-    {
-      "path": "/feed.xml",
-      "last_changed": "2026-10-05T17:07:15.437Z",
-      "priority": 60
     }
   ],
   "recent_surfaces": [
+    {
+      "path": "/chum/hot/index.json",
+      "url": "/chum/hot/index.json",
+      "last_changed": "2026-10-05T17:12:58.632Z",
+      "priority": 80
+    },
+    {
+      "path": "/chum/proof/forensiscope.json",
+      "url": "/chum/proof/forensiscope.json",
+      "last_changed": "2026-10-05T17:12:58.632Z",
+      "priority": 80
+    },
+    {
+      "path": "/chum/proof/index.json",
+      "url": "/chum/proof/index.json",
+      "last_changed": "2026-10-05T17:12:58.632Z",
+      "priority": 80
+    },
+    {
+      "path": "/chum/proof/rivet.json",
+      "url": "/chum/proof/rivet.json",
+      "last_changed": "2026-10-05T17:12:58.632Z",
+      "priority": 80
+    },
     {
       "path": "/chum/products/opportunity-fabric/",
       "url": "/chum/products/opportunity-fabric/",
@@ -134,30 +103,6 @@
       "url": "/.well-known/evercraft-syndication.json",
       "last_changed": "2026-10-05T17:07:15.437Z",
       "priority": 84
-    },
-    {
-      "path": "/chum/hot/index.json",
-      "url": "/chum/hot/index.json",
-      "last_changed": "2026-10-05T17:07:15.437Z",
-      "priority": 80
-    },
-    {
-      "path": "/chum/proof/forensiscope.json",
-      "url": "/chum/proof/forensiscope.json",
-      "last_changed": "2026-10-05T17:07:15.437Z",
-      "priority": 80
-    },
-    {
-      "path": "/chum/proof/index.json",
-      "url": "/chum/proof/index.json",
-      "last_changed": "2026-10-05T17:07:15.437Z",
-      "priority": 80
-    },
-    {
-      "path": "/chum/proof/rivet.json",
-      "url": "/chum/proof/rivet.json",
-      "last_changed": "2026-10-05T17:07:15.437Z",
-      "priority": 80
     },
     {
       "path": "/chum/syndication/index.json",
