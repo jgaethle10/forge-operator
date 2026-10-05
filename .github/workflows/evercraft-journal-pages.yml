@@ -46,6 +46,8 @@ jobs:
         run: npm run journal:test
 
       - name: Build canonical portable Journal artifact
+        id: journal_portable
+        continue-on-error: true
         env:
           EVERCRAFT_JOURNAL_ORIGIN: https://journal.evercraft.global
         run: |
@@ -53,6 +55,7 @@ jobs:
           node systemia/newsroom/journal-publisher.mjs systemia/newsroom/stories _journal_release
 
       - name: Verify canonical portable artifact
+        if: steps.journal_portable.outcome == 'success'
         shell: bash
         run: |
           set -euo pipefail
@@ -68,6 +71,7 @@ jobs:
           fi
 
       - name: Preserve portable Journal release
+        if: steps.journal_portable.outcome == 'success'
         uses: actions/upload-artifact@v4
         with:
           name: evercraft-journal-portable
@@ -91,7 +95,18 @@ jobs:
           rm -rf _public_pages
           mkdir -p _public_pages
           cp -R public/. _public_pages/
-          node systemia/newsroom/journal-publisher.mjs systemia/newsroom/stories _public_pages/journal
+          rm -rf _public_pages/journal
+          if node systemia/newsroom/journal-publisher.mjs systemia/newsroom/stories _public_pages/journal; then
+            echo "Journal included in Pages fallback."
+          else
+            rm -rf _public_pages/journal
+            {
+              echo "## Journal isolated from public fallback"
+              echo
+              echo "Journal failed its own publication gate and was omitted."
+              echo "Product and customer fallback surfaces will still deploy."
+            } >> "$GITHUB_STEP_SUMMARY"
+          fi
           touch _public_pages/.nojekyll
           cat > _public_pages/index.html <<'HTML'
           <!doctype html>
@@ -131,7 +146,8 @@ jobs:
           test -f _public_pages/chum/index.html
           test -f _public_pages/chum/products/infinite-classroom/index.html
           grep -q 'Infinite Classroom' _public_pages/chum/products/infinite-classroom/index.html
-          test -f _public_pages/journal/index.html
+          test -f _public_pages/apps/eps-estimator/index.html
+          grep -q 'EPS Precise Estimator' _public_pages/apps/eps-estimator/index.html
 
       - name: Upload Pages artifact
         if: steps.pages.outcome == 'success'
@@ -163,16 +179,20 @@ jobs:
         id: deployment
         uses: actions/deploy-pages@v4
 
-      - name: Verify Infinite Classroom fallback door
+      - name: Verify customer fallback doors
         shell: bash
         run: |
           set -euo pipefail
           base="${{ steps.deployment.outputs.page_url }}"
-          target="${base%/}/chum/products/infinite-classroom/"
-          body="$(curl --fail --silent --show-error --retry 8 --retry-all-errors --retry-delay 2 "$target")"
-          printf '%s' "$body" | grep -q 'Infinite Classroom'
+          classroom="${base%/}/chum/products/infinite-classroom/"
+          classroom_body="$(curl --fail --silent --show-error --retry 8 --retry-all-errors --retry-delay 2 "$classroom")"
+          printf '%s' "$classroom_body" | grep -q 'Infinite Classroom'
+          estimator="${base%/}/apps/eps-estimator/"
+          estimator_body="$(curl --fail --silent --show-error --retry 8 --retry-all-errors --retry-delay 2 "$estimator")"
+          printf '%s' "$estimator_body" | grep -q 'EPS Precise Estimator'
           {
             echo "## Evercraft public fallback live"
             echo
-            echo "Infinite Classroom: $target"
+            echo "Infinite Classroom: $classroom"
+            echo "EPS estimator: $estimator"
           } >> "$GITHUB_STEP_SUMMARY"
