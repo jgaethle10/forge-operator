@@ -7,6 +7,7 @@ const ROLES=new Set([
   'scene_streaming_guard',
   'animation_guard',
   'navigation_guard',
+  'visual_scene_guard',
   'fallen_bridge_guard',
   'worldstate_bridge_guard',
   'provenance_guard',
@@ -129,6 +130,21 @@ function evaluate(role,world){
         'Navigation chooses desired locomotion; physics remains authority for actual entity movement and collision.',
         'Streamed-out agents freeze path progress and resume from preserved navigation state.',
         'Renderer/debug clients may inspect paths but never become navigation authority.'
+      ],
+      findings:[]
+    };
+  }
+
+  if(role==='visual_scene_guard'){
+    return {
+      category:'visual_scene',
+      directives:[
+        'Materials, renderables, lights and cameras are canonical world data, not renderer-private configuration.',
+        'Material and camera references must validate fail-closed before a world can run.',
+        'Camera activation and blends that affect replay truth must enter through tick-bound world inputs.',
+        'Camera interpolation must be resolved by World Engine so renderer adapters cannot invent shot timing or motion.',
+        'Layer masks and scene residency must deterministically gate visible renderables and lights.',
+        'Renderer backends consume visual-frame contracts but remain replaceable and non-authoritative.'
       ],
       findings:[]
     };

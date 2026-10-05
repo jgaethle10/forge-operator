@@ -27,14 +27,19 @@ Implemented in this slice:
 - Navigation drives desired horizontal velocity while owned physics remains movement/collision authority.
 - Navigation can drive animation movement parameters in the same simulation tick.
 - Streamed-out agents freeze path progress and resume from preserved runtime state.
+- Canonical PBR/unlit material definitions with texture references, alpha modes and fail-closed bindings.
+- First-class renderable, ambient/directional/point/spot light and perspective/orthographic camera components.
+- Deterministic camera transition graph with tick-bound camera activation and engine-resolved interpolation.
+- Camera layer masks plus scene residency deterministically gate renderables and lights.
+- Provider-neutral visual-frame contracts carry resolved camera, sorted materials, visible geometry bindings and active lights.
 - Deterministic behaviors for spin, constant force and oscillation.
 - Input ledger with tick-bound events.
 - Stable world-definition and snapshot SHA-256 digests.
 - Deterministic replay receipts.
 - Fallen Studio World → World Engine compiler.
 - Worldstate evidence → world projection bridge with evidence state preserved.
-- Provider-neutral render-frame contract with sampled skeletal pose/state and navigation/debug handoff.
-- Tests for replay determinism, entity collision, ground collision, canonical broad-phase ordering, ECS query ordering, scene streaming/state preservation, animation transitions/blending/events, navmesh pathfinding/arrival/freeze-resume, input ordering, Fallen compilation and Worldstate projection.
+- Provider-neutral render-frame contract with sampled skeletal pose/state, navigation/debug handoff and canonical visual subframes.
+- Tests for replay determinism, entity collision, ground collision, canonical broad-phase ordering, ECS query ordering, scene streaming/state preservation, animation transitions/blending/events, navmesh pathfinding/arrival/freeze-resume, material/light validation, camera graph interpolation/layer masking, input ordering, Fallen compilation and Worldstate projection.
 
 ## Architectural contract
 
@@ -61,13 +66,13 @@ The engine does not gain publication authority, payment authority, emergency aut
 
 The V1 contract is deliberately small enough to prove ownership before expanding. The next compatible layers are:
 
-1. Materials, lighting and camera graph.
-2. Audio scene graph.
-3. Multiplayer replication and rollback.
-4. WebGPU / native renderer adapters.
-5. Asset hot-reload and live Studio editing.
-6. Animation authoring/import bridge for Fallen character assets.
-7. Navigation corridor smoothing / dynamic obstacle avoidance.
+1. Audio scene graph.
+2. Multiplayer replication and rollback.
+3. WebGPU / native renderer adapters.
+4. Asset hot-reload and live Studio editing.
+5. Animation authoring/import bridge for Fallen character assets.
+6. Navigation corridor smoothing / dynamic obstacle avoidance.
+7. Shadow-map / reflection / post-process contracts behind the visual-frame boundary.
 8. Saban simulation tournaments and deterministic QA at scale.
 9. Physical memory eviction / asset residency behind the logical scene activation contract.
 10. Broad-phase acceleration upgrades for very large worlds.

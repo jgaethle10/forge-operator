@@ -2,6 +2,7 @@ import crypto from 'node:crypto';
 import { resolveEntityCollisions, type CollisionContact } from './spatial.js';
 import { initializeAnimationRuntime, setAnimationParameter, stepAnimationRuntime, validateAnimationComponent, type AnimationParameter, type AnimationRuntimeState, type SkeletalAnimationComponent } from './animation.js';
 import { clearNavigationTarget, initializeNavigationAgent, setNavigationTarget, stepNavigationAgent, validateNavigationAgent, validateNavigationMesh, type NavigationAgentComponent, type NavigationAgentRuntime, type NavigationMesh } from './navigation.js';
+import { activateCamera, initializeCameraRuntime, stepCameraRuntime, validateVisualScene, type CameraComponent, type CameraRuntimeState, type LightComponent, type RenderableComponent, type VisualSceneDefinition } from './visual.js';
 
 export type Vec3 = { x:number; y:number; z:number };
 
@@ -39,6 +40,9 @@ export interface WorldEntity {
   behaviors?:WorldBehavior[];
   animation?:SkeletalAnimationComponent;
   navigationAgent?:NavigationAgentComponent;
+  renderable?:RenderableComponent;
+  light?:LightComponent;
+  camera?:CameraComponent;
   assetRefs?:string[];
   tags?:string[];
   properties?:Record<string,unknown>;
@@ -53,6 +57,7 @@ export interface WorldDefinition {
   ground?:{ enabled:boolean; height:number };
   entities:WorldEntity[];
   navigationMeshes?:NavigationMesh[];
+  visualScene?:VisualSceneDefinition;
   metadata?:Record<string,unknown>;
 }
 
@@ -63,6 +68,7 @@ export type WorldInput =
   | { id:string; tick:number; entityId:string; kind:'set_animation_parameter'; key:string; value:AnimationParameter }
   | { id:string; tick:number; entityId:string; kind:'set_navigation_target'; value:Vec3 }
   | { id:string; tick:number; entityId:string; kind:'clear_navigation_target' }
+  | { id:string; tick:number; kind:'activate_camera'; cameraEntityId:string; transitionId?:string }
   | { id:string; tick:number; entityId:string; kind:'set_property'; key:string; value:unknown };
 
 export interface RuntimeEntity extends WorldEntity {
@@ -84,6 +90,7 @@ export interface WorldSnapshot {
   timeSec:number;
   entities:RuntimeEntity[];
   activeEntityIds:string[];
+  cameraRuntime:CameraRuntimeState|null;
   collisions:CollisionContact[];
   digest:string;
 }
@@ -153,6 +160,12 @@ export function validateWorldDefinition(world:WorldDefinition){
     validateNavigationMesh(mesh);
     if(meshIds.has(mesh.id)) throw new Error(`world_navigation_mesh_duplicate:${mesh.id}`);
     meshIds.add(mesh.id);
+  }
+  const hasVisualComponents=(world.entities || []).some(entity=>entity.renderable || entity.light || entity.camera);
+  if(world.visualScene){
+    validateVisualScene(world.visualScene,world.entities || []);
+  }else if(hasVisualComponents){
+    throw new Error('world_visual_scene_required');
   }
   const ids = new Set<string>();
   for(const entity of world.entities || []){
@@ -238,6 +251,7 @@ export class EvercraftWorldRuntime {
   readonly dt:number;
   private state:Map<string,RuntimeEntity>;
   private navigationMeshes:Map<string,NavigationMesh>;
+  private cameraRuntimeState:CameraRuntimeState|null;
   private activeEntityIdsSet:Set<string>;
   private _tick=0;
   private _collisions:CollisionContact[]=[];
@@ -252,6 +266,9 @@ export class EvercraftWorldRuntime {
         .sort((a,b)=>a.id.localeCompare(b.id))
         .map(mesh=>[mesh.id,clone(mesh)])
     );
+    this.cameraRuntimeState=this.definition.visualScene
+      ? initializeCameraRuntime(this.definition.visualScene)
+      : null;
     this.state=new Map(
       [...this.definition.entities]
         .sort((a,b)=>a.id.localeCompare(b.id))
@@ -281,6 +298,10 @@ export class EvercraftWorldRuntime {
     return [...this.activeEntityIdsSet].sort();
   }
 
+  get cameraRuntime(){
+    return this.cameraRuntimeState?clone(this.cameraRuntimeState):null;
+  }
+
   setActiveEntityIds(ids:string[]){
     const next=[...new Set(ids)].sort();
     for(const id of next){
@@ -298,6 +319,20 @@ export class EvercraftWorldRuntime {
   }
 
   private applyInput(input:WorldInput){
+    if(input.kind==='activate_camera'){
+      if(!this.definition.visualScene || !this.cameraRuntimeState){
+        throw new Error('world_visual_camera_runtime_missing');
+      }
+      const target=this.state.get(input.cameraEntityId);
+      if(!target?.camera) throw new Error(`world_camera_entity_missing:${input.cameraEntityId}`);
+      this.cameraRuntimeState=activateCamera(
+        this.definition.visualScene,
+        this.cameraRuntimeState,
+        input.cameraEntityId,
+        input.transitionId
+      );
+      return;
+    }
     const entity=this.mutateEntity(input.entityId);
     if(input.kind==='teleport'){
       finiteVec3(input.value,'teleport');
@@ -402,6 +437,9 @@ export class EvercraftWorldRuntime {
     }
 
     const nextTime=targetTick*this.dt;
+    if(this.cameraRuntimeState){
+      this.cameraRuntimeState=stepCameraRuntime(this.cameraRuntimeState,this.dt);
+    }
     const ordered=[...this.state.values()]
       .filter(entity=>this.activeEntityIdsSet.has(entity.id))
       .sort((a,b)=>a.id.localeCompare(b.id));
@@ -460,6 +498,7 @@ export class EvercraftWorldRuntime {
         .sort((a,b)=>a.id.localeCompare(b.id))
         .map(entity=>clone(entity)),
       activeEntityIds:this.activeEntityIds,
+      cameraRuntime:this.cameraRuntime,
       collisions:clone(this._collisions)
     };
     return {...core,digest:digest(core)};
