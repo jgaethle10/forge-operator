@@ -37,7 +37,7 @@ class ArchitectureScannerTests(unittest.TestCase):
 
             payload = self.run_scan(root)
 
-            self.assertEqual(payload["scanner_version"], "systemia-architecture-scan/1.2")
+            self.assertEqual(payload["scanner_version"], "systemia-architecture-scan/1.3")
             self.assertEqual(payload["scan_mode"], "static_only")
             self.assertFalse(payload["evidence_boundary"]["executes_scanned_code"])
             self.assertFalse(payload["evidence_boundary"]["claims_runtime_behavior"])
@@ -83,6 +83,27 @@ class ArchitectureScannerTests(unittest.TestCase):
             self.assertFalse(payload["evidence_boundary"]["executes_scanned_code"])
             self.assertFalse(payload["evidence_boundary"]["claims_runtime_behavior"])
 
+    def test_base44_https_function_endpoint_is_extracted(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            (root / "socialWakeBridge.ts").write_text(
+                "const APP = 'abc'\\n"
+                "const URL = `https://base44.app/api/apps/${APP}/functions/systemiaEPSPublishIngress`\\n"
+                "const response = await fetch(URL, {method: 'POST'})\\n",
+                encoding="utf-8",
+            )
+
+            payload = self.run_scan(root)
+
+            self.assertTrue(any(
+                edge["relation_type"] == "invokes"
+                and edge["source_excerpt"].endswith("/functions/systemiaEPSPublishIngress")
+                for edge in payload["edges"]
+            ))
+            self.assertIn(
+                ("workflow", "systemiaEPSPublishIngress"),
+                {(n["node_type"], n["display_name"]) for n in payload["nodes"]},
+            )
     def test_output_is_deterministic_for_unchanged_tree(self):
         with tempfile.TemporaryDirectory() as tmp:
             root = Path(tmp)
