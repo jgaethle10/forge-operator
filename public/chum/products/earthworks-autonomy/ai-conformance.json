@@ -1,0 +1,29 @@
+{
+  "schema": "evercraft.ai-conformance.v1",
+  "product_key": "earthworks-autonomy",
+  "checked_at": "2026-10-05",
+  "public_claim": "Evercraft builds autonomous fleet coordination, digital-twin, dispatch, safety-envelope, telemetry and device-bridge technology for earthmoving systems.",
+  "evidence_state": "simulation_control_contract_proof",
+  "verified": [
+    "deterministic excavator-haul-truck-loader material flow simulation",
+    "exclusive load-slot arbitration",
+    "fail-closed fleet stop",
+    "unsafe speed-command containment",
+    "pain-first application routing",
+    "conservative site-autonomy screening",
+    "vendor-neutral equipment adapter contract with physical safety registration gates"
+  ],
+  "not_verified": [
+    "production control of full-size heavy equipment",
+    "unsupervised jobsite autonomy",
+    "OEM production certification",
+    "regulatory or insurance approval",
+    "customer production deployment"
+  ],
+  "required_next_evidence": [
+    "Toy Yard 002 physical RC fleet",
+    "receipt-backed physical command replay",
+    "shadow-mode field study on a real repetitive material loop",
+    "approved bounded physical adapter and site safety case"
+  ]
+}
