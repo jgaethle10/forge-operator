@@ -76,11 +76,11 @@ test('commercial supply is visibility-only by default',()=>{
       true
     );
     assert.equal(
-      directive.zero_spend_phase.formation_acquisition.markets.evercraft_broker.enabled,
+      directive.zero_spend_phase.formation_acquisition.markets.evercraft_broker.enabled_if_configured,
       true
     );
     assert.equal(
-      directive.zero_spend_phase.formation_acquisition.markets.evercraft_voluntary.enabled,
+      directive.zero_spend_phase.formation_acquisition.markets.evercraft_voluntary.enabled_if_configured,
       true
     );
     assert.equal(
