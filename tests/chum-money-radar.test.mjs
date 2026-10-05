@@ -184,6 +184,18 @@ test('Money Radar reports both lanes blocked when no acquisition or payment sour
   assert.equal(receipt.payment_measurement_state, 'blocked_trusted_source_not_configured');
 });
 
+test('Money Radar rejects a retired Base44 acquisition source without using it as a fallback', async () => {
+  const root = fs.mkdtempSync(path.join(os.tmpdir(), 'money-radar-'));
+  const { receipt } = await buildMoneyRadar({
+    root,
+    sourceUrl: '',
+    sourceToken: '',
+    publicSourceUrl: 'https://legacy.base44.app/functions/acquisition',
+  });
+  assert.equal(receipt.acquisition_measurement_state, 'blocked_source_fetch_failed');
+  assert.match(receipt.source.acquisition.error, /retired Base44 infrastructure/);
+});
+
 test('Money Radar blocks an unauthenticated trusted payment receipt source', async () => {
   const root = fs.mkdtempSync(path.join(os.tmpdir(), 'money-radar-'));
   const { receipt } = await buildMoneyRadar({
@@ -207,7 +219,8 @@ test('payment export uses GitHub OIDC in authorized CHUM workflows', () => {
     assert.match(workflow, /evercraft-chum-payment-export/, file);
     assert.match(workflow, /ACTIONS_ID_TOKEN_REQUEST_URL/, file);
     assert.match(workflow, /ACTIONS_ID_TOKEN_REQUEST_TOKEN/, file);
-    assert.match(workflow, /machineCommercePaymentExport/, file);
+    assert.match(workflow, /CONFIGURED_EXPORT_URL/, file);
+    assert.match(workflow, /Retired provider payment export is forbidden/, file);
     assert.doesNotMatch(
       workflow,
       /CHUM_ATTRIBUTION_EXPORT_TOKEN:\s*\$\{\{\s*secrets\./,

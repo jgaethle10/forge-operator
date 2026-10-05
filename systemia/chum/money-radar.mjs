@@ -3,8 +3,7 @@ import fs from 'node:fs';
 import path from 'node:path';
 import { pathToFileURL } from 'node:url';
 
-export const DEFAULT_PUBLIC_ACQUISITION_EXPORT_URL =
-  'https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceAcquisition?view=export&hours=720';
+export const DEFAULT_PUBLIC_ACQUISITION_EXPORT_URL = '';
 
 const PUBLIC_STAGES = new Set(['landing', 'offer_view', 'continue_clicked', 'checkout_started']);
 const DECISION_THRESHOLDS = Object.freeze({
@@ -360,6 +359,10 @@ function windowSnapshot(events, generatedAt, hours) {
 async function fetchRemote(url, token = '') {
   const target = new URL(url);
   if (target.protocol !== 'https:') throw new Error('Money Radar source URL must use HTTPS.');
+  const host = target.hostname.toLowerCase();
+  if (host === 'base44.app' || host.endsWith('.base44.app')) {
+    throw new Error('Money Radar source URL points to retired Base44 infrastructure.');
+  }
   const response = await fetch(target, {
     headers: {
       accept: 'application/json, application/x-ndjson, text/plain',
