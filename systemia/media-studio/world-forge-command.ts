@@ -151,6 +151,48 @@ export function compileWorldForgeCommand(input:{
     };
   }
 
+  const lens=normalized.match(/\b(?:set\s+)?lens\s+(?:to\s+)?(\d+(?:\.\d+)?)\s*(?:mm|millimeter|millimeters)?\b/);
+  if(lens){
+    if(target.kind!=='camera'||!target.camera){
+      return {
+        ...base,status:'blocked',targetNodeId:target.id,operations:[],
+        reasons:[`camera_target_invalid:${target.id}`],
+        explanation:'Lens commands require a selected camera.',
+      };
+    }
+    const focalLengthMm=Number(lens[1]);
+    return {
+      ...base,status:'accepted',targetNodeId:target.id,reasons:[],
+      operations:[{
+        type:'set_camera',
+        nodeId:target.id,
+        camera:{focalLengthMm},
+      }],
+      explanation:`Set ${target.name} lens to ${focalLengthMm} mm.`,
+    };
+  }
+
+  const lookAt=normalized.match(/\blook\s+at\s+(-?\d+(?:\.\d+)?)\s+(-?\d+(?:\.\d+)?)\s+(-?\d+(?:\.\d+)?)\b/);
+  if(lookAt){
+    if(target.kind!=='camera'||!target.camera){
+      return {
+        ...base,status:'blocked',targetNodeId:target.id,operations:[],
+        reasons:[`camera_target_invalid:${target.id}`],
+        explanation:'Look-at commands require a selected camera.',
+      };
+    }
+    const point={x:Number(lookAt[1]),y:Number(lookAt[2]),z:Number(lookAt[3])};
+    return {
+      ...base,status:'accepted',targetNodeId:target.id,reasons:[],
+      operations:[{
+        type:'set_camera',
+        nodeId:target.id,
+        camera:{lookAt:point},
+      }],
+      explanation:`Aim ${target.name} at ${point.x}, ${point.y}, ${point.z}.`,
+    };
+  }
+
   const moveAbsolute=normalized.match(/\b(?:set|move)\s+(?:position\s+)?([xyz])\s*(?:to|=)?\s*(-?\d+(?:\.\d+)?)/);
   if(moveAbsolute){
     const axis=moveAbsolute[1] as 'x'|'y'|'z';
