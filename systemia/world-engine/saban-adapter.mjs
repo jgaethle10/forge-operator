@@ -8,6 +8,7 @@ const ROLES=new Set([
   'animation_guard',
   'navigation_guard',
   'visual_scene_guard',
+  'audio_scene_guard',
   'fallen_bridge_guard',
   'worldstate_bridge_guard',
   'provenance_guard',
@@ -145,6 +146,21 @@ function evaluate(role,world){
         'Camera interpolation must be resolved by World Engine so renderer adapters cannot invent shot timing or motion.',
         'Layer masks and scene residency must deterministically gate visible renderables and lights.',
         'Renderer backends consume visual-frame contracts but remain replaceable and non-authoritative.'
+      ],
+      findings:[]
+    };
+  }
+
+  if(role==='audio_scene_guard'){
+    return {
+      category:'audio_scene',
+      directives:[
+        'Fallen remains authority for authored/mastered audio assets while World Engine owns playback and spatial runtime state.',
+        'Clip, bus, emitter and listener references must validate fail-closed before simulation.',
+        'Play, pause, stop, seek and listener changes that affect replay truth must enter through tick-bound world inputs.',
+        'Streamed-out emitters freeze playhead state and resume without silently advancing.',
+        'Spatial attenuation and effective gain must be deterministic inputs to replaceable audio backends, not backend-private truth.',
+        'Audio adapters consume audio-frame contracts but do not gain canon, publication or payment authority.'
       ],
       findings:[]
     };
