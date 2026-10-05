@@ -1,26 +1,8 @@
 {
   "schema": "evercraft.chum.provider-probe-history.v1",
-  "updated_at": "2026-10-05T22:20:12.727Z",
+  "updated_at": "2026-10-05T22:22:13.457Z",
   "max_records": 500,
   "records": [
-    {
-      "receipt_key_sha256": "5bca8b930f399c026b707b50f8200709f7d6615e4e0b24f375e0473fa1d9a16b",
-      "observed_at": "2026-10-04T14:28:06.532Z",
-      "provider": "generic_agent",
-      "provider_surface": "machine_client",
-      "product_key": "systemia-website-audit",
-      "case_id": "website-audit-001",
-      "prompt_sha256": "e6a88dba6f0d63962eb1b93ff3dd00071846815cadd934c02774a440a75fe3a9",
-      "pickup_observed": true,
-      "provider_receipt_sha256": "d38360692a2aa28da2bdebe8f19423a2e442fd4a88dcfd5feadbb578ce608d78",
-      "response_sha256": "e68c0aff0f688de5b0e51c97e09d582d532ece074c334ef4aa6eb0ab92a8602e",
-      "source": "authorized_provider_probe",
-      "privacy": {
-        "full_provider_response_persisted": false,
-        "provider_session_reference_persisted": false,
-        "credentials_persisted": false
-      }
-    },
     {
       "receipt_key_sha256": "ee0957d311f03e61e1f9d0a77e18342d341563e0f2c410b4abfbca4956578e8e",
       "observed_at": "2026-10-04T14:28:08.489Z",
@@ -8995,6 +8977,24 @@
       "prompt_sha256": "f9f09cf62b463921216e14b9f25f60fa348c28b76a9bc1ea871d264a2168a75b",
       "pickup_observed": true,
       "provider_receipt_sha256": "ddb1df1345434384f4a1ed070a491328c3ae092ef139c1db205a64b0d1737dbf",
+      "response_sha256": "0b77be51cb1d6579d5a74d1c476a2695977f093a04d80d3349322bcdb9bd1774",
+      "source": "authorized_provider_probe",
+      "privacy": {
+        "full_provider_response_persisted": false,
+        "provider_session_reference_persisted": false,
+        "credentials_persisted": false
+      }
+    },
+    {
+      "receipt_key_sha256": "e913bb1119b9f245374cadbfd3ba853c2b4c52a16b08b76b0ea7abedf833aa60",
+      "observed_at": "2026-10-05T22:22:13.457Z",
+      "provider": "generic_agent",
+      "provider_surface": "machine_client",
+      "product_key": "career-command",
+      "case_id": "interview-001",
+      "prompt_sha256": "f9f09cf62b463921216e14b9f25f60fa348c28b76a9bc1ea871d264a2168a75b",
+      "pickup_observed": true,
+      "provider_receipt_sha256": "0762a61ab50d31424b89da769408e7c3a18c987efb352ab7dd877425240f67d5",
       "response_sha256": "0b77be51cb1d6579d5a74d1c476a2695977f093a04d80d3349322bcdb9bd1774",
       "source": "authorized_provider_probe",
       "privacy": {
