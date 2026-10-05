@@ -18,14 +18,18 @@ Implemented in this slice:
 - Deterministic entity/component indexing with canonical tag/component queries.
 - Scene manifests with explicit bounds, preload radius, dependencies, global entities and stable stream-plan digests.
 - Runtime scene activation that stops inactive simulation without discarding entity state.
+- Deterministic skeletal rigs, keyframed clips, sampled bone poses and shortest-path Euler rotation interpolation.
+- Parameter-driven animation state machines with priority, blend windows and tick-bound transitions.
+- Per-tick animation event receipts carried into provider-neutral render frames.
+- Streamed-out entities freeze animation time and resume from preserved runtime state.
 - Deterministic behaviors for spin, constant force and oscillation.
 - Input ledger with tick-bound events.
 - Stable world-definition and snapshot SHA-256 digests.
 - Deterministic replay receipts.
 - Fallen Studio World → World Engine compiler.
 - Worldstate evidence → world projection bridge with evidence state preserved.
-- Provider-neutral render-frame contract.
-- Tests for replay determinism, entity collision, ground collision, canonical broad-phase ordering, ECS query ordering, scene streaming/state preservation, input ordering, Fallen compilation and Worldstate projection.
+- Provider-neutral render-frame contract with sampled skeletal pose/state handoff.
+- Tests for replay determinism, entity collision, ground collision, canonical broad-phase ordering, ECS query ordering, scene streaming/state preservation, animation transitions/blending/events, input ordering, Fallen compilation and Worldstate projection.
 
 ## Architectural contract
 
@@ -52,13 +56,13 @@ The engine does not gain publication authority, payment authority, emergency aut
 
 The V1 contract is deliberately small enough to prove ownership before expanding. The next compatible layers are:
 
-1. Skeletal animation state machines.
-2. Navigation meshes and agent locomotion.
-3. Materials, lighting and camera graph.
-4. Audio scene graph.
-5. Multiplayer replication and rollback.
-6. WebGPU / native renderer adapters.
-7. Asset hot-reload and live Studio editing.
+1. Navigation meshes and agent locomotion.
+2. Materials, lighting and camera graph.
+3. Audio scene graph.
+4. Multiplayer replication and rollback.
+5. WebGPU / native renderer adapters.
+6. Asset hot-reload and live Studio editing.
+7. Animation authoring/import bridge for Fallen character assets.
 8. Saban simulation tournaments and deterministic QA at scale.
 9. Physical memory eviction / asset residency behind the logical scene activation contract.
 10. Broad-phase acceleration upgrades for very large worlds.
