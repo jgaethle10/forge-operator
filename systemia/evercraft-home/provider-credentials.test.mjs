@@ -7,7 +7,7 @@ import {
 } from './provider-credentials.mjs';
 
 test('provider credential intake is an explicit allowlist', () => {
-  assert.deepEqual(supportedCredentialProviders(), ['alpaca', 'google-places', 'kroger', 'kaggle', 'numerai']);
+  assert.deepEqual(supportedCredentialProviders(), ['alpaca', 'google-places', 'kroger', 'kaggle', 'numerai', 'facebook-pages']);
   assert.equal(credentialProviderSpec('unknown'), null);
   assert.throws(
     () => normalizeProviderCredentialRequest('unknown', {}),
@@ -53,4 +53,16 @@ test('Kaggle and Numerai map into the owned generic credential envelope', () => 
   assert.equal(numerai.apiKeyId, 'numerai-public-id');
   assert.equal(numerai.apiSecret, 'numerai-secret-key-abcdefghijklmnopqrstuvwxyz');
   assert.equal(numerai.label, 'competition-foundry');
+});
+
+
+test('Facebook Pages maps Page identity and Page token into the owned generic credential envelope', () => {
+  const row = normalizeProviderCredentialRequest('facebook-pages', {
+    page_id: '123456789012345',
+    page_access_token: 'EAAB-owned-page-access-token-abcdefghijklmnopqrstuvwxyz',
+  });
+  assert.equal(row.provider, 'facebook-pages');
+  assert.equal(row.apiKeyId, '123456789012345');
+  assert.equal(row.apiSecret, 'EAAB-owned-page-access-token-abcdefghijklmnopqrstuvwxyz');
+  assert.equal(row.label, 'evercraft-clip');
 });
