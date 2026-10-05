@@ -150,3 +150,39 @@ node systemia/lineage/cli.mjs release-show week-in-motion-42 production
 ```
 
 A pointer update is compare-and-swap protected. The `released` state fails closed unless at least one downstream authority receipt is supplied. Lineage records what state was released; it does not create release authority by itself.
+
+
+## Yard transport
+
+Lineage can now run as a lease-bound resident service inside Evercraft Compute and be reached through the existing Yard remote-capacity authority model.
+
+The resident runtime is deliberately narrow:
+
+- it binds to loopback only;
+- it exposes health, ref advertisement/read/CAS, and immutable object has/get/put;
+- object writes verify canonical Lineage identity before storage;
+- ref writes use compare-and-swap;
+- it carries no publication, deployment, or payment authority;
+- Compute restricts the resident HTTP bridge to the exact Lineage routes instead of granting a generic tunnel.
+
+The Yard session flow is:
+
+```
+AUTHORIZED + ATTESTED YARD NODE
+        ↓
+short-lived remote-capacity grant
+        ↓
+Compute lease: systemia.lineage-remote.v1
+        ↓
+loopback Lineage resident service
+        ↓
+short-lived Yard service relay
+        ↓
+HttpLineageRemote
+        ↓
+existing pushCommitGraph / fetchCommitGraph semantics
+```
+
+The session wrapper requires connected capacity, verified device identity binding, session attestation, the Lineage workload declaration, and zero-cost capacity by default. It preserves the existing Yard receipts for inventory, grant, service start, public route and relay creation.
+
+Allocator, lease and relay credentials remain in memory only. Closing the session releases the relay and Compute lease, clears the in-memory credentials, and makes the attached remote unusable. No Lineage operation widens the Yard grant or creates downstream release authority.
