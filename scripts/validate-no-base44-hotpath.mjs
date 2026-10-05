@@ -1,6 +1,7 @@
 import fs from 'node:fs';
 
 const files = [
+  'distribution/machine-commerce-distribution.json',
   '.github/workflows/ci.yml',
   'systemia/yard/public-edge-activator.mjs',
   'systemia/chum/router-recall.mjs',

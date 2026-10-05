@@ -3,6 +3,8 @@ name: Base44 exit and KAIDANCE proof
 on:
   pull_request:
     paths:
+      - 'tests/machine-commerce-distribution-retirement.test.mjs'
+      - 'distribution/machine-commerce-distribution.json'
       - 'scripts/inventory-base44-runtime-debt.mjs'
       - 'public/.well-known/evercraft-direct-door-readiness.json'
       - 'tests/final-base44-routing-cuts.test.mjs'
@@ -49,6 +51,8 @@ on:
     branches:
       - main
     paths:
+      - 'tests/machine-commerce-distribution-retirement.test.mjs'
+      - 'distribution/machine-commerce-distribution.json'
       - 'scripts/inventory-base44-runtime-debt.mjs'
       - 'public/.well-known/evercraft-direct-door-readiness.json'
       - 'tests/final-base44-routing-cuts.test.mjs'
@@ -114,6 +118,8 @@ jobs:
         run: node tests/direct-door-readiness.test.mjs
       - name: Prove final Base44 routing cuts
         run: node --test tests/final-base44-routing-cuts.test.mjs
+      - name: Prove retired Machine Commerce public distribution
+        run: node --test tests/machine-commerce-distribution-retirement.test.mjs
       - name: Prove owned server routing cutover
         run: node --test tests/server-owned-routing-cutover.test.mjs
       - name: Prove KAIDANCE collider
