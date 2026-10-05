@@ -222,7 +222,9 @@ export function findNavigationPath(mesh:NavigationMesh,start:Vec3,goal:Vec3):Nav
       }
       polygonIds.reverse();
 
-      const intermediates=polygonIds.slice(1,-1).map(id=>centroid(byId.get(id)!));
+      const intermediates=polygonIds.length>1
+        ? polygonIds.slice(1).map(id=>centroid(byId.get(id)!))
+        : [];
       const waypoints=[...intermediates,clone(goal)];
       const core={
         schema:'evercraft.world-engine.navpath.v1' as const,
@@ -342,10 +344,12 @@ export function stepNavigationAgent(
     y:0,
     z:waypoint.z-position.z
   });
+  const remaining=distance(position,waypoint);
+  const speed=dt<=EPS?0:Math.min(component.maxSpeed,remaining/dt);
   next.desiredVelocity={
-    x:direction.x*component.maxSpeed,
+    x:direction.x*speed,
     y:0,
-    z:direction.z*component.maxSpeed
+    z:direction.z*speed
   };
   return next;
 }
