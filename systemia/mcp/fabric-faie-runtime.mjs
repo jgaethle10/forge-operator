@@ -3,6 +3,7 @@ import os from 'node:os';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { createFaieRuntime } from '../faie/runtime.mjs';
+import { faieCollectorConfigFromEnv } from '../faie/collectors.mjs';
 import {
   executeFaieMcpRpc,
   faieMcpTools,
@@ -108,16 +109,22 @@ export function createFabricFaieSurface({
   stateDir=process.env.FAIE_EDGE_STATE_DIR || path.join(os.homedir(),'.local/state/evercraft/faie'),
   intervalMs=Number(process.env.FAIE_INTERVAL_MS || 5*60*1000),
   fetchImpl=globalThis.fetch,
+  collectorConfig=null,
   startResident=true,
   postLimit=45
 }={}){
   const moduleDir=path.dirname(fileURLToPath(import.meta.url));
   const pagePath=path.resolve(moduleDir,'../../public/faie/index.html');
   const ownsRuntime=!runtime;
+  const effectiveCollectorConfig=collectorConfig||faieCollectorConfigFromEnv({
+    ...process.env,
+    FAIE_REGION_PROFILE:process.env.FAIE_REGION_PROFILE||'yakima-basin-wa'
+  });
   const faieRuntime=runtime||createFaieRuntime({
     stateDir,
     intervalMs,
-    fetchImpl
+    fetchImpl,
+    collectorConfig:effectiveCollectorConfig
   });
 
   if(ownsRuntime&&startResident) faieRuntime.start();
@@ -134,7 +141,8 @@ export function createFabricFaieSurface({
       fabric_native:true,
       transport_owner:'Evercraft Fabric',
       base44_transport_enabled:false,
-      public_preview_persists_queries:false
+      public_preview_persists_queries:false,
+      deployment_region_profile:runtimeHealth.official_collectors?.region_profile_id||null
     };
   }
 
