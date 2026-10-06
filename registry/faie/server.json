@@ -2,13 +2,13 @@
   "$schema": "https://static.modelcontextprotocol.io/schemas/2025-12-11/server.schema.json",
   "name": "io.github.jgaethle10/faie",
   "title": "FAIE",
-  "description": "Evidence-first agriculture and resilience runtime with native owned MCP at /mcp/faie.",
+  "description": "Owned FAIE food-infrastructure and resilience intelligence runtime. Human UI and native read-only specialist MCP are independently verified on Evercraft Fabric.",
   "version": "1.1.0",
-  "websiteUrl": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/faie/index.html",
+  "websiteUrl": "https://fabric.systemiacommandcenters.com/faie/",
   "remotes": [
     {
       "type": "streamable-http",
-      "url": "https://fabric.systemiacommandcenters.com/mcp"
+      "url": "https://fabric.systemiacommandcenters.com/mcp/faie"
     }
   ]
 }
