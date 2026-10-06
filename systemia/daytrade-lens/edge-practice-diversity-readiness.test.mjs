@@ -15,6 +15,7 @@ fs.writeFileSync(protocol,JSON.stringify({
   minimum_distinct_market_dates:2,
   required_market_phases:["OPENING","MIDDAY","CLOSING"],
   minimum_windows_per_required_phase:1,
+  minimum_independent_window_separation_minutes:5,
   frozen_execution_rule:"spread-abstention-v1",
   live_trade_authority:false,
 }));
@@ -40,6 +41,9 @@ const ready=buildPracticeDiversityReadiness({
   protocolPath:protocol,
 });
 assert.equal(ready.status,"PRACTICE_DIVERSITY_READY");
+assert.equal(ready.observed.raw_prospective_windows,6);
+assert.equal(ready.observed.independent_prospective_windows,6);
+assert.equal(ready.observed.near_duplicate_windows_excluded,0);
 assert.equal(ready.observed.distinct_market_dates_et,2);
 assert.equal(ready.observed.phase_counts.OPENING,2);
 assert.equal(ready.observed.phase_counts.MIDDAY,2);
@@ -61,7 +65,10 @@ const blocked=buildPracticeDiversityReadiness({
   protocolPath:protocol,
 });
 assert.equal(blocked.status,"PRACTICE_DIVERSITY_NOT_READY");
-assert.equal(blocked.gates.window_count_ready,true);
+assert.equal(blocked.observed.raw_prospective_windows,6);
+assert.equal(blocked.observed.independent_prospective_windows,2);
+assert.equal(blocked.observed.near_duplicate_windows_excluded,4);
+assert.equal(blocked.gates.window_count_ready,false);
 assert.equal(blocked.gates.date_diversity_ready,false);
 assert.equal(blocked.gates.phase_diversity_ready,false);
 assert.equal(blocked.interpretation.same_day_repetition_cannot_satisfy_date_diversity,true);
@@ -71,5 +78,6 @@ console.log(JSON.stringify({
   ok:true,
   multi_day_multi_phase_required:true,
   same_day_repetition_blocked:true,
+  near_duplicate_windows_excluded:true,
   passing_does_not_authorize_live_trading:true
 }));
