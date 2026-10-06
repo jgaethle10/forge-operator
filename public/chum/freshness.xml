@@ -2,9 +2,11 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
 <id>urn:evercraft:chum:crawl-pressure</id>
 <title>Evercraft CHUM Freshness Feed</title>
-<updated>2026-10-06T16:41:21.859Z</updated>
+<updated>2026-10-06T16:41:47.484Z</updated>
 <link rel="self" href="/chum/freshness.xml"/>
 <subtitle>Content-hash-backed public discovery changes. Freshness is not proof of provider pickup.</subtitle>
+<entry><id>urn:evercraft:chum:770866315bf12f2c92446bfe</id><title>/chum/hot/</title><updated>2026-10-06T16:41:47.484Z</updated><link href="/chum/hot/"/><category term="priority-80"/></entry>
+<entry><id>urn:evercraft:chum:0df896994e643d779039e059</id><title>/chum/hot/index.json</title><updated>2026-10-06T16:41:47.484Z</updated><link href="/chum/hot/index.json"/><category term="priority-80"/></entry>
 <entry><id>urn:evercraft:chum:91f5941610c82b06168079a6</id><title>/chum/capabilities/agent-proving-mission-v1/</title><updated>2026-10-06T16:41:21.859Z</updated><link href="/chum/capabilities/agent-proving-mission-v1/"/><category term="priority-96"/></entry>
 <entry><id>urn:evercraft:chum:5a3887b54ca9914d3f1706b3</id><title>/chum/capabilities/agent-proving-mission-v1/capability.json</title><updated>2026-10-06T16:41:21.859Z</updated><link href="/chum/capabilities/agent-proving-mission-v1/capability.json"/><category term="priority-96"/></entry>
 <entry><id>urn:evercraft:chum:287905b5f33093cb8822298c</id><title>/chum/capabilities/agent-proving-mission-v1/llms.txt</title><updated>2026-10-06T16:41:21.859Z</updated><link href="/chum/capabilities/agent-proving-mission-v1/llms.txt"/><category term="priority-96"/></entry>
@@ -103,6 +105,4 @@
 <entry><id>urn:evercraft:chum:3b84c4ac278af8280859597b</id><title>/chum/capabilities/evermaps-evidence-projection-machine-v1/schema.jsonld</title><updated>2026-10-06T16:41:21.859Z</updated><link href="/chum/capabilities/evermaps-evidence-projection-machine-v1/schema.jsonld"/><category term="priority-96"/></entry>
 <entry><id>urn:evercraft:chum:81704a9ad461cc7a67b684ca</id><title>/chum/capabilities/faie-signal-brief-v1/</title><updated>2026-10-06T16:41:21.859Z</updated><link href="/chum/capabilities/faie-signal-brief-v1/"/><category term="priority-96"/></entry>
 <entry><id>urn:evercraft:chum:6b1be9008f4830957746c7f2</id><title>/chum/capabilities/faie-signal-brief-v1/capability.json</title><updated>2026-10-06T16:41:21.859Z</updated><link href="/chum/capabilities/faie-signal-brief-v1/capability.json"/><category term="priority-96"/></entry>
-<entry><id>urn:evercraft:chum:9ff5a4d239c37353522ed137</id><title>/chum/capabilities/faie-signal-brief-v1/llms.txt</title><updated>2026-10-06T16:41:21.859Z</updated><link href="/chum/capabilities/faie-signal-brief-v1/llms.txt"/><category term="priority-96"/></entry>
-<entry><id>urn:evercraft:chum:5d7ccf3c334bb691727033d7</id><title>/chum/capabilities/faie-signal-brief-v1/schema.jsonld</title><updated>2026-10-06T16:41:21.859Z</updated><link href="/chum/capabilities/faie-signal-brief-v1/schema.jsonld"/><category term="priority-96"/></entry>
 </feed>
