@@ -85,6 +85,19 @@ jobs:
           node systemia/saban/contract-doctor.mjs
           node systemia/daytrade-lens/sec-edge-backfill-contract.test.mjs
 
+      - name: Run one-shot $20 SOXX paper execution probe
+        if: github.event_name == 'pull_request'
+        env:
+          ALPACA_TRADING: ${{ secrets.ALPACA_TRADING }}
+          ALPACA_TRADING_SECRET: ${{ secrets.ALPACA_TRADING_SECRET }}
+          DAYTRADE_PAPER_PROBE_OUTPUT: artifacts/daytrade-edge/paper-probe-2026-10-06.json
+        run: |
+          if ! git log -1 --pretty=%B | grep -Fq '[paper-probe-2026-10-06]'; then
+            echo "No one-shot paper-probe tag on this commit; skipping."
+            exit 0
+          fi
+          node systemia/daytrade-lens/edge-paper-run-once.mjs
+
       - name: Run Saban DayTrade learning red team
         run: |
           mkdir -p artifacts/daytrade-edge
@@ -125,6 +138,15 @@ jobs:
             artifacts/daytrade-edge/saban-learning-state.json
             artifacts/daytrade-edge/saban-learning-attack-coverage.json
           if-no-files-found: warn
+          retention-days: 30
+
+      - name: Upload one-shot paper execution receipt
+        if: always() && github.event_name == 'pull_request'
+        uses: actions/upload-artifact@v4
+        with:
+          name: daytrade-paper-probe-${{ github.run_id }}
+          path: artifacts/daytrade-edge/paper-probe-2026-10-06.json
+          if-no-files-found: ignore
           retention-days: 30
 
       - name: Upload Edge Lab research receipts
