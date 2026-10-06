@@ -37,6 +37,27 @@ function phaseEt(timestamp){
   return "OUTSIDE_CORE";
 }
 
+function selectIndependentWindows(windows,minSeparationMinutes){
+  const minMs=Math.max(0,Number(minSeparationMinutes||0))*60*1000;
+  if(minMs===0) return [...windows];
+  const sorted=[...windows].sort(
+    (a,b)=>new Date(a.generated_at).getTime()-new Date(b.generated_at).getTime()
+  );
+  const kept=[];
+  const lastByBucket=new Map();
+  for(const window of sorted){
+    const ms=new Date(window.generated_at).getTime();
+    if(!Number.isFinite(ms)) continue;
+    const bucket=`${window.market_date_et}|${window.market_phase_et}`;
+    const last=lastByBucket.get(bucket);
+    if(last===undefined||ms-last>=minMs){
+      kept.push(window);
+      lastByBucket.set(bucket,ms);
+    }
+  }
+  return kept;
+}
+
 export function buildPracticeDiversityReadiness({
   receiptDir=DEFAULT_RECEIPT_DIR,
   protocolPath=DEFAULT_PROTOCOL_PATH,
@@ -46,14 +67,14 @@ export function buildPracticeDiversityReadiness({
     throw new Error("practice_diversity_protocol_schema_invalid");
   }
 
-  const windows=[];
+  const rawWindows=[];
   for(const file of fs.readdirSync(receiptDir).filter(x=>x.endsWith(".json")).sort()){
     const row=JSON.parse(fs.readFileSync(path.join(receiptDir,file),"utf8"));
     if(
       row?.schema!=="evercraft.daytrade.prospective-spread-rule-practice-summary.v1"
     ) continue;
     const p=partsEt(row.generated_at);
-    windows.push({
+    rawWindows.push({
       file,
       generated_at:row.generated_at,
       market_date_et:p?.date||null,
@@ -62,6 +83,10 @@ export function buildPracticeDiversityReadiness({
     });
   }
 
+  const minSeparationMinutes=Number(
+    protocol.minimum_independent_window_separation_minutes||0
+  );
+  const windows=selectIndependentWindows(rawWindows,minSeparationMinutes);
   const dates=[...new Set(windows.map(x=>x.market_date_et).filter(Boolean))].sort();
   const phaseCounts={OPENING:0,MIDDAY:0,CLOSING:0,OUTSIDE_CORE:0,UNKNOWN:0};
   for(const w of windows){
@@ -83,7 +108,10 @@ export function buildPracticeDiversityReadiness({
     protocol_id:protocol.protocol_id,
     frozen_execution_rule:protocol.frozen_execution_rule,
     observed:{
+      raw_prospective_windows:rawWindows.length,
       prospective_windows:windows.length,
+      independent_prospective_windows:windows.length,
+      near_duplicate_windows_excluded:rawWindows.length-windows.length,
       distinct_market_dates_et:dates.length,
       market_dates_et:dates,
       phase_counts:phaseCounts,
@@ -94,6 +122,7 @@ export function buildPracticeDiversityReadiness({
       required_market_phases:requiredPhases,
       minimum_windows_per_required_phase:
         protocol.minimum_windows_per_required_phase,
+      minimum_independent_window_separation_minutes:minSeparationMinutes,
     },
     gates:{
       window_count_ready:windowReady,
@@ -107,11 +136,15 @@ export function buildPracticeDiversityReadiness({
     interpretation:{
       same_day_repetition_cannot_satisfy_date_diversity:true,
       single_phase_repetition_cannot_satisfy_phase_diversity:true,
+      near_duplicate_windows_do_not_count_as_independent:true,
       passing_this_protocol_does_not_validate_signal:true,
       passing_this_protocol_does_not_validate_live_fill_quality:true,
       passing_this_protocol_does_not_authorize_live_trading:true,
     },
     windows,
+    excluded_near_duplicate_windows:rawWindows.filter(
+      raw=>!windows.some(kept=>kept.file===raw.file)
+    ),
     live_trade_authority:false,
   };
 }
