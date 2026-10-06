@@ -1,6 +1,9 @@
 import fs from "node:fs";
 import path from "node:path";
 import {fileURLToPath} from "node:url";
+import {
+  selectIndependentPracticeWindows,
+} from "./edge-practice-independence.mjs";
 
 const HERE=path.dirname(fileURLToPath(import.meta.url));
 const DEFAULT_RECEIPT_DIR=path.join(HERE,"paper-receipts");
@@ -20,7 +23,7 @@ export function buildSpreadThresholdRobustness({
   const files=fs.existsSync(receiptDir)
     ?fs.readdirSync(receiptDir).filter(x=>x.endsWith(".json")).sort()
     :[];
-  const windows=[];
+  const rawWindows=[];
   for(const file of files){
     const row=JSON.parse(fs.readFileSync(path.join(receiptDir,file),"utf8"));
     if(
@@ -35,14 +38,16 @@ export function buildSpreadThresholdRobustness({
       Number.isFinite(x.entry_spread_bps) &&
       Number.isFinite(x.always_cross_pnl_usd)
     );
-    windows.push({
+    rawWindows.push({
       file,
       generated_at:row.generated_at||null,
       source_run_id:row.source_run_id||null,
       decisions,
     });
   }
-  if(!windows.length) throw new Error("spread_threshold_robustness_no_windows");
+  if(!rawWindows.length) throw new Error("spread_threshold_robustness_no_windows");
+  const independence=selectIndependentPracticeWindows(rawWindows);
+  const windows=independence.independent;
 
   const decisions=windows.flatMap((window,window_index)=>
     window.decisions.map(decision=>({...decision,window_index}))
@@ -79,7 +84,10 @@ export function buildSpreadThresholdRobustness({
   return {
     schema:"evercraft.daytrade.spread-threshold-robustness.v1",
     generated_at:new Date().toISOString(),
+    raw_windows:rawWindows.length,
     windows:windows.length,
+    near_duplicate_windows_excluded:independence.excluded_count,
+    minimum_independence_separation_ms:independence.minimum_separation_ms,
     instrument_decisions:decisions.length,
     thresholds_bps:grid.map(x=>x.max_entry_spread_bps),
     always_cross_total_pnl_usd:alwaysCrossTotal,
@@ -89,6 +97,7 @@ export function buildSpreadThresholdRobustness({
     threshold_grid:grid,
     controls:{
       post_hoc_robustness_diagnostic_only:true,
+      robustness_uses_independent_windows:true,
       do_not_choose_best_threshold_from_this_grid:true,
       original_3bps_rule_remains_frozen:true,
       same_day_selection_bias_remains:true,
