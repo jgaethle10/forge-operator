@@ -1,0 +1,33 @@
+name: DayTrade Relative Value Practice Once
+
+on:
+  push:
+    branches:
+      - "systemia/daytrade-practice-camp-2026-10-06-e"
+
+permissions:
+  contents: read
+
+jobs:
+  practice:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Run relative-value practice camp
+        env:
+          ALPACA_TRADING: ${{ secrets.ALPACA_TRADING }}
+          ALPACA_TRADING_SECRET: ${{ secrets.ALPACA_TRADING_SECRET }}
+          DAYTRADE_RELATIVE_VALUE_OUTPUT: artifacts/daytrade-edge/relative-value-practice-2026-10-06-e.json
+        run: node systemia/daytrade-lens/edge-relative-value-practice-camp.mjs
+      - name: Upload practice receipt
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: daytrade-relative-value-practice-${{ github.run_id }}
+          path: artifacts/daytrade-edge/relative-value-practice-2026-10-06-e.json
+          if-no-files-found: warn
+          retention-days: 30
