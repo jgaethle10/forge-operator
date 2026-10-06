@@ -1,0 +1,26 @@
+{
+  "schema": "evercraft.daytrade.practice-diversity-protocol.v1",
+  "protocol_id": "practice-diversity-v1",
+  "minimum_prospective_windows": 20,
+  "minimum_distinct_market_dates": 5,
+  "required_market_phases": [
+    "OPENING",
+    "MIDDAY",
+    "CLOSING"
+  ],
+  "minimum_windows_per_required_phase": 3,
+  "market_phase_windows_et": {
+    "OPENING": "09:30-10:30",
+    "MIDDAY": "10:30-15:00",
+    "CLOSING": "15:00-16:00"
+  },
+  "frozen_execution_rule": "spread-abstention-v1",
+  "purpose": "Prevent same-day or single-phase paper practice from being mistaken for diversified execution evidence.",
+  "pass_does_not_mean": [
+    "signal validated",
+    "live fill quality validated",
+    "profitability proven",
+    "live trading authorized"
+  ],
+  "live_trade_authority": false
+}
