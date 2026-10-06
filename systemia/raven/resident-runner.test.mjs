@@ -3,7 +3,7 @@ import assert from "node:assert/strict";
 import fs from "node:fs";
 import os from "node:os";
 import path from "node:path";
-import { loadControlToken, startRavenResident } from "./resident-runner.mjs";
+import { loadControlToken, loadInferenceToken, startRavenResident } from "./resident-runner.mjs";
 
 function tempRoot() {
   return fs.mkdtempSync(path.join(os.tmpdir(), "raven-resident-"));
@@ -17,6 +17,35 @@ test("resident runner requires private token-file permissions", () => {
     assert.throws(() => loadControlToken(file), /permissions_too_open/);
     fs.chmodSync(file, 0o600);
     assert.equal(loadControlToken(file), "012345678901234567890123456789012345");
+  } finally {
+    fs.rmSync(root, { recursive: true, force: true });
+  }
+});
+
+test("Raven inference token uses the same private-file boundary", () => {
+  const root = tempRoot();
+  try {
+    const file = path.join(root, "inference-token");
+    fs.writeFileSync(file, "abcdefghijklmnopqrstuvwxyz0123456789TOKEN", { mode: 0o644 });
+    assert.throws(() => loadInferenceToken(file), /permissions_too_open/);
+    fs.chmodSync(file, 0o600);
+    assert.equal(loadInferenceToken(file), "abcdefghijklmnopqrstuvwxyz0123456789TOKEN");
+  } finally {
+    fs.rmSync(root, { recursive: true, force: true });
+  }
+});
+
+test("Raven requires inference origin and token file as one binding", async () => {
+  const root = tempRoot();
+  const tokenFile = path.join(root, "control-token");
+  fs.writeFileSync(tokenFile, "resident-proof-token-01234567890123456789", { mode: 0o600 });
+  try {
+    await assert.rejects(() => startRavenResident({
+      stateDir: path.join(root, "state"),
+      controlTokenFile: tokenFile,
+      inferenceOrigin: "https://inference.example",
+      repoRoot: path.resolve("."),
+    }), /configured_together/);
   } finally {
     fs.rmSync(root, { recursive: true, force: true });
   }
@@ -45,6 +74,8 @@ test("resident runner starts Raven loopback-only without exposing control token"
     assert.equal(health.loopback_only, true);
     assert.equal(health.base44_required, false);
     assert.equal(health.execution_authority_granted, false);
+    assert.equal(health.internal_readonly_team_review_enabled, false);
+    assert.equal(health.ai_inference_enabled, false);
     assert.equal(health.deployment_receipt_bound, true);
     assert.equal(health.deployment_receipt_ref, "receipt:raven-resident-proof");
     assert.equal(JSON.stringify(health).includes(token), false);
@@ -67,9 +98,14 @@ test("resident service wiring keeps Raven optional and private", () => {
   assert.equal(service.optional_when_unconfigured, true);
   assert.equal(service.env_args["--state-dir"], "RAVEN_PRIVATE_STATE_DIR");
   assert.equal(service.env_args["--control-token-file"], "RAVEN_PRIVATE_CONTROL_TOKEN_FILE");
+  assert.equal(service.optional_env_args["--inference-origin"], "RAVEN_INFERENCE_ORIGIN");
+  assert.equal(service.optional_env_args["--inference-token-file"], "RAVEN_INFERENCE_TOKEN_FILE");
   assert.equal(manifest.network.bind, "127.0.0.1");
   assert.equal(manifest.network.public_bind_allowed, false);
   assert.equal(manifest.network.public_fabric_required, false);
   assert.equal(manifest.network.base44_required, false);
   assert.equal(manifest.secret_boundary.raw_token_in_cli_args, false);
+  assert.equal(manifest.secret_boundary.raw_inference_token_in_cli_args, false);
+  assert.equal(manifest.inference.base44_fallback, false);
+  assert.deepEqual(manifest.inference.allowed_work_types, ["analyze", "research", "qa"]);
 });
