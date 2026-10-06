@@ -35,6 +35,7 @@
   "machine_review_url": null,
   "start_url": null,
   "start_url_state": "not_sell_now",
+  "start_blocker": null,
   "entry_paid_offer": null,
   "mirror": {
     "page": "/chum/capabilities/evercraft-clip-social-video-v1/",

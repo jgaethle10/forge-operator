@@ -18,6 +18,7 @@
       "schema_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/capabilities/aliev-site-opportunity-snapshot-v1/schema.jsonld",
       "start_url": null,
       "start_url_state": "held_no_owned_public_origin",
+      "start_blocker": "owned_public_execution_origin_not_verified",
       "machine_review_url": null,
       "entry_paid_offer": {
         "offer_key": "opportunity_pack_250",
@@ -58,6 +59,7 @@
       "schema_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/capabilities/audit-center-website-audit-machine-v1/schema.jsonld",
       "start_url": null,
       "start_url_state": "held_no_owned_public_origin",
+      "start_blocker": "owned_public_execution_origin_not_verified",
       "machine_review_url": null,
       "entry_paid_offer": {
         "offer_key": "quick",
@@ -101,6 +103,7 @@
       "schema_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/capabilities/career-command-interview-practice-machine-v1/schema.jsonld",
       "start_url": null,
       "start_url_state": "held_no_owned_public_origin",
+      "start_blocker": "owned_public_execution_origin_not_verified",
       "machine_review_url": null,
       "entry_paid_offer": {
         "name": "Evercraft Interview Sprint",
@@ -135,6 +138,7 @@
       "schema_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/capabilities/deck-capital-fit-sprint-machine-v1/schema.jsonld",
       "start_url": null,
       "start_url_state": "held_no_owned_public_origin",
+      "start_blocker": "owned_public_execution_origin_not_verified",
       "machine_review_url": null,
       "entry_paid_offer": {
         "name": "Founding Capital Fit Sprint",
@@ -170,6 +174,7 @@
       "schema_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/capabilities/eventwave-paid-promotion-v1/schema.jsonld",
       "start_url": null,
       "start_url_state": "held_no_owned_public_origin",
+      "start_blocker": "owned_public_execution_origin_not_verified",
       "machine_review_url": null,
       "entry_paid_offer": {
         "name": "Event Boost",
@@ -206,6 +211,7 @@
       "schema_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/capabilities/faie-signal-brief-v1/schema.jsonld",
       "start_url": null,
       "start_url_state": "held_no_owned_public_origin",
+      "start_blocker": "owned_public_execution_origin_not_verified",
       "machine_review_url": null,
       "entry_paid_offer": {
         "name": "FAIE Signal Brief",
@@ -236,6 +242,7 @@
       "schema_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/capabilities/findmypart-paid-hunt-v1/schema.jsonld",
       "start_url": null,
       "start_url_state": "held_no_owned_public_origin",
+      "start_blocker": "owned_public_execution_origin_not_verified",
       "machine_review_url": null,
       "entry_paid_offer": {
         "name": "Quick Hunt",
@@ -269,6 +276,7 @@
       "schema_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/capabilities/foundry-app-escape-audit-v1/schema.jsonld",
       "start_url": null,
       "start_url_state": "held_no_owned_public_origin",
+      "start_blocker": "owned_public_execution_origin_not_verified",
       "machine_review_url": null,
       "entry_paid_offer": {
         "name": "App Escape Audit",
@@ -299,6 +307,7 @@
       "schema_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/capabilities/ibmi-rescue-v1/schema.jsonld",
       "start_url": null,
       "start_url_state": "held_no_owned_public_origin",
+      "start_blocker": "owned_public_execution_origin_not_verified",
       "machine_review_url": null,
       "entry_paid_offer": {
         "offer_key": "ibmi_estate_xray_250",
@@ -338,6 +347,7 @@
       "schema_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/capabilities/legacy-rescue-lab-v1/schema.jsonld",
       "start_url": null,
       "start_url_state": "held_no_owned_public_origin",
+      "start_blocker": "owned_public_execution_origin_not_verified",
       "machine_review_url": null,
       "entry_paid_offer": {
         "offer_key": "legacy_rescue_scan_299",
@@ -381,6 +391,7 @@
       "schema_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/capabilities/raven-nexus-business-setup-v1/schema.jsonld",
       "start_url": null,
       "start_url_state": "held_no_owned_public_origin",
+      "start_blocker": "owned_public_execution_origin_not_verified",
       "machine_review_url": null,
       "entry_paid_offer": {
         "offer_key": "raven_business_map_500",
@@ -418,6 +429,7 @@
       "schema_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/capabilities/raven-nexus-home-setup-v1/schema.jsonld",
       "start_url": null,
       "start_url_state": "held_no_owned_public_origin",
+      "start_blocker": "owned_public_execution_origin_not_verified",
       "machine_review_url": null,
       "entry_paid_offer": {
         "offer_key": "raven_home_map_199",
@@ -453,6 +465,7 @@
       "schema_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/capabilities/rivet-site-underwriting-v1/schema.jsonld",
       "start_url": null,
       "start_url_state": "held_no_owned_public_origin",
+      "start_blocker": "owned_public_execution_origin_not_verified",
       "machine_review_url": null,
       "entry_paid_offer": {
         "offer_key": "site_report_299",
@@ -499,6 +512,7 @@
       "schema_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/capabilities/roasted-text-pressure-test-machine-v1/schema.jsonld",
       "start_url": null,
       "start_url_state": "held_no_owned_public_origin",
+      "start_blocker": "owned_public_execution_origin_not_verified",
       "machine_review_url": null,
       "entry_paid_offer": {
         "name": "Single Roast",
@@ -534,6 +548,7 @@
       "schema_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/capabilities/site-survive-rapid-audit-v1/schema.jsonld",
       "start_url": null,
       "start_url_state": "held_no_owned_public_origin",
+      "start_blocker": "owned_public_execution_origin_not_verified",
       "machine_review_url": null,
       "entry_paid_offer": {
         "name": "Site-Survive Rapid Audit",
@@ -564,6 +579,7 @@
       "schema_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/capabilities/website-launch-service-v1/schema.jsonld",
       "start_url": null,
       "start_url_state": "held_no_owned_public_origin",
+      "start_blocker": "owned_public_execution_origin_not_verified",
       "machine_review_url": null,
       "entry_paid_offer": {
         "name": "Human-Finished Pro Site",

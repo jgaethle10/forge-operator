@@ -49,6 +49,7 @@
   "machine_review_url": null,
   "start_url": null,
   "start_url_state": "held_no_owned_public_origin",
+  "start_blocker": "owned_public_execution_origin_not_verified",
   "entry_paid_offer": {
     "offer_key": "raven_home_map_199",
     "name": "Raven Nexus Home Stability Map",
