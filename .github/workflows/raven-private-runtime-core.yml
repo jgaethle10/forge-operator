@@ -4,6 +4,9 @@ on:
   pull_request:
     paths:
       - "systemia/raven/**"
+      - "systemia/core/resident-services.json"
+      - "systemia/organism/raven-private-runtime.workflow.json"
+      - "nexus-work/**"
       - ".github/workflows/raven-private-runtime-core.yml"
   push:
     branches: [main]
@@ -25,8 +28,17 @@ jobs:
         with:
           node-version: 22
       - name: Check Raven private runtime source
-        run: node --check systemia/raven/private-runtime.mjs
+        run: |
+          node --check systemia/raven/private-runtime.mjs
+          node --check systemia/raven/team-review-runtime.mjs
+          node --check systemia/raven/resident-runner.mjs
       - name: Prove Raven private runtime core
         run: node systemia/raven/private-runtime.proof.mjs
+      - name: Prove Raven team review and secret boundaries
+        run: |
+          node --test \
+            systemia/raven/team-review-runtime.test.mjs \
+            systemia/raven/private-runtime.team-review.test.mjs \
+            systemia/raven/provider-secret-boundary.test.mjs
       - name: Prove Raven resident runtime wiring
         run: node --test systemia/raven/resident-runner.test.mjs
