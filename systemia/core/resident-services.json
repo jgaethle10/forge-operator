@@ -46,7 +46,8 @@
         "--trusted-subject-ref": "RAVEN_PRIVATE_TRUSTED_SUBJECT_REF",
         "--deployment-receipt-file": "RAVEN_PRIVATE_DEPLOYMENT_RECEIPT_FILE",
         "--inference-origin": "RAVEN_INFERENCE_ORIGIN",
-        "--inference-token-file": "RAVEN_INFERENCE_TOKEN_FILE"
+        "--inference-token-file": "RAVEN_INFERENCE_TOKEN_FILE",
+        "--port": "RAVEN_PRIVATE_PORT"
       },
       "max_restarts_per_hour": 12,
       "restart_backoff_ms": 5000
