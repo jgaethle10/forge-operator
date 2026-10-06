@@ -7,14 +7,37 @@ function escapeHtml(value='') {
     .replaceAll("'",'&#39;');
 }
 
-const shell=(title,body)=>`<!doctype html>
+const PUBLIC_ORIGIN='https://fabric.systemiacommandcenters.com';
+const DEFAULT_DESCRIPTION='Evercraft Fabric routes plain-language problems to the smallest relevant Evercraft capability while preserving authorization, provenance, and human control.';
+
+const shell=(title,body,{
+  description=DEFAULT_DESCRIPTION,
+  canonical='',
+  ogType='website',
+}={})=>{
+  const canonicalUrl=canonical
+    ? (String(canonical).startsWith('https://')?String(canonical):PUBLIC_ORIGIN+String(canonical))
+    : '';
+  const socialTitle=escapeHtml(title);
+  const socialDescription=escapeHtml(description);
+  const socialUrl=escapeHtml(canonicalUrl||PUBLIC_ORIGIN);
+  return `<!doctype html>
 <html lang="en">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <meta name="theme-color" content="#07101f">
-<title>${escapeHtml(title)}</title>
-<meta name="description" content="Evercraft Fabric routes plain-language problems to the smallest relevant Evercraft capability while preserving authorization, provenance, and human control.">
+<title>${socialTitle}</title>
+<meta name="description" content="${socialDescription}">
+<meta property="og:type" content="${escapeHtml(ogType)}">
+<meta property="og:site_name" content="Evercraft">
+<meta property="og:title" content="${socialTitle}">
+<meta property="og:description" content="${socialDescription}">
+<meta property="og:url" content="${socialUrl}">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="${socialTitle}">
+<meta name="twitter:description" content="${socialDescription}">
+${canonicalUrl?'<link rel="canonical" href="'+escapeHtml(canonicalUrl)+'">':''}
 <link rel="icon" href="/assets/evercraft-icon.png">
 <style>
 :root{
@@ -124,6 +147,7 @@ ${body}
 </div>
 </body>
 </html>`;
+};
 
 function inlineMarkdown(value){
   return escapeHtml(value)
@@ -271,7 +295,11 @@ export function renderOffers(capabilities=[]){
     '</section>',
     '<div class="grid">'+(offers||'<article class="card"><h3>No public offer pages are available yet.</h3></article>')+'</div>',
     '</main>'
-  ].join('\n'));
+  ].join('\n'),{
+    description:copy.lede+' '+offerName+' starts at '+price+'.',
+    canonical:'/offers/'+copy.slug,
+    ogType:'website',
+  });
 }
 
 export function renderOfferPage(item){
