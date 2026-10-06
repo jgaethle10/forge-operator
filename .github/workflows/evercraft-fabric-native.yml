@@ -25,6 +25,8 @@ on:
       - 'tests/fabric-owned-edge-updater-contract.test.mjs'
       - 'scripts/fabric-edge-doctor.sh'
       - 'scripts/update-fabric-owned-edge.sh'
+      - 'scripts/install-fabric-self-update.sh'
+      - 'tests/fabric-self-update-hardening.test.mjs'
       - 'package.json'
       - '.github/workflows/evercraft-fabric-native.yml'
   workflow_dispatch:
@@ -53,6 +55,9 @@ jobs:
           node systemia/yard/public-route-broker.proof.mjs
       - name: Prove Public Edge invariants
         run: node --test tests/public-edge-mainline-invariants.test.mjs
+      - name: Prove Fabric self-update sandbox boundary
+        run: node --test tests/fabric-self-update-hardening.test.mjs
+
       - name: Prove Fabric edge doctor field gate
         run: |
           bash -n scripts/fabric-edge-doctor.sh
