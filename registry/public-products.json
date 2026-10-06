@@ -427,7 +427,7 @@
     {
       "product_key": "faie",
       "name": "FAIE",
-      "class": "evidence_first_agriculture_and_resilience_research",
+      "class": "evidence_first_food_infrastructure_and_resilience_intelligence",
       "canonical_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/faie/index.html",
       "github_record": "./faie/README.md",
       "llms": "./faie/llms.txt",
