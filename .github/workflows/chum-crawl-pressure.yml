@@ -80,10 +80,33 @@ jobs:
 
           if git diff --cached --quiet; then
             echo "Crawl-pressure state is current."
-          else
-            git commit -m "CHUM refresh crawl pressure signals [skip ci]"
-            git push origin HEAD:main
+            exit 0
           fi
+
+          git commit -m "CHUM refresh crawl pressure signals [skip ci]"
+
+          for ATTEMPT in 1 2 3; do
+            if git push origin HEAD:main; then
+              echo "Crawl-pressure state published."
+              exit 0
+            fi
+
+            echo "Main advanced during crawl-pressure publish attempt ${ATTEMPT}/3."
+            git fetch origin main --quiet
+
+            set +e
+            git rebase origin/main
+            REBASE_STATUS="$?"
+            set -e
+            if [ "$REBASE_STATUS" -ne 0 ]; then
+              git rebase --abort || true
+              echo "Generated crawl state conflicted with newer main. This run is superseded; the newer push/scheduled run will regenerate from current source."
+              exit 0
+            fi
+          done
+
+          echo "Crawl-pressure state could not be published after three race-safe attempts." >&2
+          exit 1
 
       - name: Publish crawl-pressure summary
         if: always()
