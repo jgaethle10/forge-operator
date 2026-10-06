@@ -2,7 +2,7 @@
   "schema": "evercraft.chum.crawl-pressure.v1",
   "provider": "Evercraft LLC",
   "coordinator": "CHUM",
-  "updated_at": "2026-10-06T16:15:52.705Z",
+  "updated_at": "2026-10-06T16:16:19.046Z",
   "purpose": "Content-hash-backed freshness signals for public Evercraft discovery surfaces. A freshness signal requests attention; it does not prove indexing, ranking, recommendation, citation or provider pickup.",
   "indexnow": {
     "supported": true,
@@ -11,28 +11,34 @@
   },
   "latest_change_batch": [
     {
-      "path": "/chum/revenue.json",
-      "last_changed": "2026-10-06T16:15:52.705Z",
-      "priority": 90
+      "path": "/chum/hot/",
+      "last_changed": "2026-10-06T16:16:19.046Z",
+      "priority": 80
     },
     {
       "path": "/chum/hot/index.json",
-      "last_changed": "2026-10-06T16:15:52.705Z",
+      "last_changed": "2026-10-06T16:16:19.046Z",
       "priority": 80
     }
   ],
   "recent_surfaces": [
     {
-      "path": "/chum/revenue.json",
-      "url": "/chum/revenue.json",
-      "last_changed": "2026-10-06T16:15:52.705Z",
-      "priority": 90
+      "path": "/chum/hot/",
+      "url": "/chum/hot/",
+      "last_changed": "2026-10-06T16:16:19.046Z",
+      "priority": 80
     },
     {
       "path": "/chum/hot/index.json",
       "url": "/chum/hot/index.json",
-      "last_changed": "2026-10-06T16:15:52.705Z",
+      "last_changed": "2026-10-06T16:16:19.046Z",
       "priority": 80
+    },
+    {
+      "path": "/chum/revenue.json",
+      "url": "/chum/revenue.json",
+      "last_changed": "2026-10-06T16:15:52.705Z",
+      "priority": 90
     },
     {
       "path": "/chum/intents/foundry-app-escape-audit-v1/",
@@ -129,12 +135,6 @@
       "url": "/chum/intents/site-survive-rapid-audit-v1/",
       "last_changed": "2026-10-06T16:12:55.160Z",
       "priority": 98
-    },
-    {
-      "path": "/chum/hot/",
-      "url": "/chum/hot/",
-      "last_changed": "2026-10-06T16:11:44.411Z",
-      "priority": 80
     },
     {
       "path": "/chum/capabilities/agent-proving-mission-v1/capability.json",
