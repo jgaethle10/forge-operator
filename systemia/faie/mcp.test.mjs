@@ -32,6 +32,7 @@ test('FAIE MCP exposes only read-only engine tools', () => {
     faieMcpTools().map((tool) => tool.name),
     [
       'investigate_faie_evidence',
+      'compare_faie_candidates',
       'get_faie_signal_snapshot',
       'get_faie_health'
     ]
@@ -163,6 +164,44 @@ test('FAIE MCP carries thesis assumptions through the read-only investigation to
     assert.equal(memory.assumption_count, 1);
     assert.equal(memory.assumptions[0].verdict_authority, false);
     assert.ok(['related_evidence_present', 'unknown'].includes(memory.assumptions[0].evaluation_state));
+  } finally {
+    fs.rmSync(dir, { recursive: true, force: true });
+  }
+});
+
+
+test('FAIE MCP compares candidates without persisting or issuing a site verdict', async () => {
+  const dir = fs.mkdtempSync(path.join(os.tmpdir(), 'faie-mcp-compare-'));
+  try {
+    const runtime = createFaieRuntime({
+      stateDir: dir,
+      collectorConfig: { enabled: false }
+    });
+    runtime.ingest(observation(), { now: '2026-09-30T20:00:00.000Z' });
+
+    const before = runtime.health().comparison_count;
+    const response = await executeFaieMcpRpc(runtime, {
+      jsonrpc: '2.0',
+      id: 6,
+      method: 'tools/call',
+      params: {
+        name: 'compare_faie_candidates',
+        arguments: {
+          question: 'Compare evidence readiness for food infrastructure.',
+          asset_types: ['regional food production infrastructure'],
+          candidates: [
+            { label: 'Yakima', region_keys: ['yakima-wa'] },
+            { label: 'Unknown Region', region_keys: ['unknown-region'] }
+          ]
+        }
+      }
+    });
+
+    const payload = response.result.structuredContent;
+    assert.equal(payload.persisted, false);
+    assert.equal(payload.comparison.candidate_count, 2);
+    assert.equal(payload.comparison.candidates[0].site_suitability_verdict, null);
+    assert.equal(runtime.health().comparison_count, before);
   } finally {
     fs.rmSync(dir, { recursive: true, force: true });
   }
