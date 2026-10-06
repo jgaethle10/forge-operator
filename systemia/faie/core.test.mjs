@@ -1,6 +1,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import {
+  buildFaieComparison,
   buildFaieInvestigation,
   emptyFaieState,
   ingestFaieObservation,
@@ -213,4 +214,26 @@ test('FAIE evidence acquisition queue turns missing dimensions into governed mis
     result.investigation.decision_packet.decide.evidence_acquisition_queue,
     queue
   );
+});
+
+
+test('FAIE comparative underwriting ranks evidence readiness without declaring site suitability', () => {
+  let state = emptyFaieState();
+  state = ingestFaieObservation(state, observation(), { now: NOW }).state;
+
+  const result = buildFaieComparison(state, {
+    question: 'Compare evidence readiness for regional food infrastructure.',
+    asset_types: ['regional food production infrastructure'],
+    candidates: [
+      { label: 'Yakima', region_keys: ['yakima-wa'] },
+      { label: 'Unknown Region', region_keys: ['unknown-region'] }
+    ]
+  }, { now: NOW });
+
+  assert.equal(result.comparison.candidate_count, 2);
+  assert.equal(result.comparison.decision_authority, false);
+  assert.equal(result.comparison.candidates[0].site_suitability_verdict, null);
+  assert.equal(result.comparison.candidates[0].investment_recommendation, null);
+  assert.equal(result.comparison.evidence_readiness_order[0].label, 'Yakima');
+  assert.match(result.comparison.interpretation, /not a site-suitability score/i);
 });
