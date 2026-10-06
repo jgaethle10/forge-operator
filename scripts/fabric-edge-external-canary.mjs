@@ -251,19 +251,46 @@ try{
   if(!/One problem\.|One clear offer\./i.test(offerDirectory.text)) throw new Error('offer_directory_identity_missing');
 
   const requiredOffers=[
-    ['/offers/website-audit',/What you are buying|Quick Win Audit/i],
-    ['/offers/ibmi-rescue',/IBM i Estate X-Ray|Don.t touch production/i],
-    ['/offers/legacy-rescue',/Legacy Rescue Scan|software is broken/i],
-    ['/offers/findmypart',/Quick Hunt|Can.t find the part/i],
+    ['/offers/website-audit',/What you are buying|Quick Win Audit/i,'/api/offers/website-audit/checkout'],
+    ['/offers/ibmi-rescue',/IBM i Estate X-Ray|Don.t touch production/i,'/api/offers/ibmi-rescue/checkout'],
+    ['/offers/legacy-rescue',/Legacy Rescue Scan|software is broken/i,'/api/offers/legacy-rescue/checkout'],
+    ['/offers/findmypart',/Quick Hunt|Can.t find the part/i,'/api/offers/findmypart/checkout'],
   ];
   receipt.offer_storefront={directory_status:offerDirectory.response.status,pages:[]};
-  for(const [path,identity] of requiredOffers){
+  for(const [path,identity,checkoutPath] of requiredOffers){
     const page=await getText(path);
     const contentType=page.response.headers.get('content-type')||'';
     if(!/^text\/html/i.test(contentType)) throw new Error('offer_page_not_html:'+path);
     if(!identity.test(page.text)) throw new Error('offer_page_identity_missing:'+path);
-    receipt.offer_storefront.pages.push({path,status:page.response.status,identity_verified:true});
+    if(!page.text.includes('action="'+checkoutPath+'"')) throw new Error('offer_checkout_action_missing:'+path);
+    if(!/Evercraft Payments/i.test(page.text)) throw new Error('offer_payment_authority_missing:'+path);
+    receipt.offer_storefront.pages.push({
+      path,
+      status:page.response.status,
+      identity_verified:true,
+      checkout_action:checkoutPath,
+      payment_authority:'Evercraft Payments',
+    });
   }
+
+  const negativeCheckout=await timedFetch(origin+'/api/offers/website-audit/checkout',{
+    method:'POST',
+    headers:{
+      'content-type':'application/json',
+      'accept':'application/json',
+      'user-agent':'Evercraft-Operator-Edge-Canary/1.0',
+    },
+    body:'{}',
+  });
+  const negativeBody=await negativeCheckout.json().catch(()=>null);
+  if(negativeCheckout.status!==409||negativeBody?.error!=='explicit_user_confirmation_required'){
+    throw new Error('offer_checkout_confirmation_gate_failed');
+  }
+  receipt.offer_storefront.negative_confirmation={
+    status:negativeCheckout.status,
+    error:negativeBody.error,
+    checkout_created:false,
+  };
   receipt.checks.offer_storefront=true;
 
   for(const path of ['/support','/privacy','/terms']){
@@ -278,6 +305,15 @@ try{
   if(health.server!=='evercraft-fabric') throw new Error('unexpected_fabric_server');
   if(health.read_only!==true||health.transactional!==false||health.external_action_authority!==false){
     throw new Error('fabric_authority_boundary_failed');
+  }
+  if(
+    health.mcp_read_only!==true||
+    health.human_offer_checkout_enabled!==true||
+    health.human_offer_checkout_requires_explicit_confirmation!==true||
+    health.payment_authority!=='Evercraft Payments'||
+    health.payment_router!=='Raven Nexus'
+  ){
+    throw new Error('fabric_human_commerce_boundary_failed');
   }
   if(health.base44_transport_enabled!==false) throw new Error('base44_transport_enabled');
   if(Number(health.capability_count)<40) throw new Error('capability_count_below_floor');
