@@ -322,6 +322,8 @@ try{
 }catch(error){
   receipt.state='verification_failed';
   receipt.error=error instanceof Error?error.message:String(error);
+  receipt.error_code=clean(error?.code||'')||null;
+  receipt.error_name=clean(error?.name||'')||null;
   receipt.failure_stage=failureStage(receipt.checks,receipt.error);
   const tcpLike=/timeout|ECONNREFUSED|EHOSTUNREACH|ENETUNREACH|ECONNRESET/i.test(receipt.error);
   receipt.ingress_diagnosis=classifyPublicEdgeIngress({
