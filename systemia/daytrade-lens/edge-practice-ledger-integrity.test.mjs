@@ -28,7 +28,16 @@ write(clean,"b.json",{run:2,artifact:12,digest:"sha256:b",end:"2026-10-06T16:03:
 const good=buildPracticeLedgerIntegrity({receiptDir:clean});
 assert.equal(good.ok,true);
 assert.equal(good.prospective_receipts,2);
-assert.equal(good.violations.overlapping_windows.length,0);
+assert.equal(good.independence_exclusions.physically_overlapping_windows.length,0);
+
+
+const overlapOnly=path.join(root,"overlap-only");
+fs.mkdirSync(overlapOnly);
+write(overlapOnly,"a.json",{run:21,artifact:31,digest:"sha256:x",end:"2026-10-06T16:01:00.000Z"});
+write(overlapOnly,"b.json",{run:22,artifact:32,digest:"sha256:y",end:"2026-10-06T16:01:30.000Z"});
+const overlapReport=buildPracticeLedgerIntegrity({receiptDir:overlapOnly});
+assert.equal(overlapReport.ok,true);
+assert.equal(overlapReport.independence_exclusions.physically_overlapping_windows.length,1);
 
 const bad=path.join(root,"bad");
 fs.mkdirSync(bad);
@@ -38,14 +47,14 @@ write(bad,"drift.json",{run:3,artifact:13,digest:"sha256:c",end:"2026-10-06T16:0
 const blocked=buildPracticeLedgerIntegrity({receiptDir:bad});
 assert.equal(blocked.ok,false);
 assert.equal(blocked.violations.duplicate_source_run_ids.length,1);
-assert.ok(blocked.violations.overlapping_windows.length>=1);
+assert.ok(blocked.independence_exclusions.physically_overlapping_windows.length>=1);
 assert.equal(blocked.violations.frozen_rule_drift.length,1);
 assert.equal(blocked.live_trade_authority,false);
 
 console.log(JSON.stringify({
   ok:true,
   duplicate_run_blocked:true,
-  overlapping_window_blocked:true,
+  overlapping_window_preserved_as_independence_exclusion:true,
   frozen_rule_drift_blocked:true,
   live_trade_authority:false
 }));
