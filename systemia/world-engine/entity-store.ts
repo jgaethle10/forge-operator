@@ -28,7 +28,7 @@ function clone<T>(value:T):T{
 
 function hasComponent(entity:WorldEntity,key:EntityComponentKey){
   if(key==='transform') return Boolean(entity.transform);
-  const value=(entity as Record<string,unknown>)[key];
+  const value=(entity as unknown as Record<string,unknown>)[key];
   if(Array.isArray(value)) return value.length>0;
   return value!==undefined && value!==null;
 }
