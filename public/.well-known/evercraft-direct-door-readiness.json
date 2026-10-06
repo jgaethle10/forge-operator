@@ -72,14 +72,14 @@
       "evercraft-clip",
       "roasted"
     ],
-    "prepare_official_mcp_registry_candidate": [
-      "faie"
-    ],
     "activate_shared_public_edge_and_verify_external_canary": [
       "systemia-remote-ops",
       "ibmi-rescue",
       "foundry-app-escape",
       "site-survive"
+    ],
+    "publish_official_mcp_registry_candidate": [
+      "faie"
     ]
   },
   "products": [
@@ -262,8 +262,13 @@
         "fallback_registry_name": "io.github.jgaethle10/evercraft-machine-commerce",
         "fallback_remote_mcp": null
       },
-      "next_release_action": "prepare_official_mcp_registry_candidate",
-      "registry_candidate": null
+      "next_release_action": "publish_official_mcp_registry_candidate",
+      "registry_candidate": {
+        "publication_state": "ready_for_official_registry_publication",
+        "desired_registry_name": "io.github.jgaethle10/faie",
+        "public_execution_verified": true,
+        "registry_publication_proven": false
+      }
     },
     {
       "slug": "buildflow",
