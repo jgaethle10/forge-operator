@@ -93,7 +93,7 @@ Answer ID: intent:9ad9d965bc
 Human-readable match: /chum/answers/doors/agriculture-evidence-brief-9ad9d965bc/
 Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/agriculture-evidence-brief-9ad9d965bc.json
 Candidates:
-- FAIE | kind=product | commercial=product_contract | machine=discovery_only | public=https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/faie/index.html
+- FAIE | kind=product | commercial=product_contract | machine=specialist_mcp_declared | public=https://fabric.systemiacommandcenters.com/faie/
 
 ## AI agent needs approval before it changes ERP data
 Answer ID: intent:7ecc03f896
@@ -683,7 +683,7 @@ Answer ID: intent:baefc8483b
 Human-readable match: /chum/answers/doors/build-a-sourced-brief-about-farm-water-land-or-production-risk-baefc8483b/
 Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/build-a-sourced-brief-about-farm-water-land-or-production-risk-baefc8483b.json
 Candidates:
-- FAIE | kind=product | commercial=product_contract | machine=discovery_only | public=https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/faie/index.html
+- FAIE | kind=product | commercial=product_contract | machine=specialist_mcp_declared | public=https://fabric.systemiacommandcenters.com/faie/
 
 ## build a talent profile from this portfolio
 Answer ID: intent:613dec5ab1
@@ -1094,7 +1094,7 @@ Answer ID: intent:6e4291507d
 Human-readable match: /chum/answers/doors/compare-candidate-food-production-regions-using-the-same-evidence-rubric-6e4291507d/
 Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/compare-candidate-food-production-regions-using-the-same-evidence-rubric-6e4291507d.json
 Candidates:
-- FAIE | kind=product | commercial=product_contract | machine=discovery_only | public=https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/faie/index.html
+- FAIE | kind=product | commercial=product_contract | machine=specialist_mcp_declared | public=https://fabric.systemiacommandcenters.com/faie/
 
 ## compare electricity mixes between regions
 Answer ID: intent:d49f331223
@@ -1220,7 +1220,7 @@ Answer ID: intent:8c40a2cd41
 Human-readable match: /chum/answers/doors/compare-these-agriculture-production-locations-8c40a2cd41/
 Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/compare-these-agriculture-production-locations-8c40a2cd41.json
 Candidates:
-- FAIE Evidence-First Signal Brief | kind=machine_offer | commercial=sell_now | machine=payment_ready | public=https://fabric.systemiacommandcenters.com/capabilities/faie-signal-brief-v1
+- FAIE Evidence-First Signal Brief | kind=machine_offer | commercial=sell_now | machine=payment_ready | public=https://fabric.systemiacommandcenters.com/faie/
 
 ## compare these countries on this metric
 Answer ID: intent:14e53d7a85
@@ -1655,7 +1655,7 @@ Answer ID: intent:227f8bd16b
 Human-readable match: /chum/answers/doors/do-a-resilience-investigation-227f8bd16b/
 Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/do-a-resilience-investigation-227f8bd16b.json
 Candidates:
-- FAIE Evidence-First Signal Brief | kind=machine_offer | commercial=sell_now | machine=payment_ready | public=https://fabric.systemiacommandcenters.com/capabilities/faie-signal-brief-v1
+- FAIE Evidence-First Signal Brief | kind=machine_offer | commercial=sell_now | machine=payment_ready | public=https://fabric.systemiacommandcenters.com/faie/
 
 ## document a payroll dispute or correction
 Answer ID: intent:1d40b88f4c
@@ -2679,7 +2679,7 @@ Answer ID: intent:6fe5b60c84
 Human-readable match: /chum/answers/doors/get-an-evidence-based-agriculture-or-water-risk-brief-6fe5b60c84/
 Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/get-an-evidence-based-agriculture-or-water-risk-brief-6fe5b60c84.json
 Candidates:
-- FAIE | kind=product | commercial=product_contract | machine=discovery_only | public=https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/faie/index.html
+- FAIE | kind=product | commercial=product_contract | machine=specialist_mcp_declared | public=https://fabric.systemiacommandcenters.com/faie/
 
 ## get availability and a quote from accepted partners before assembling a team
 Answer ID: intent:1651ccaaeb
@@ -2736,7 +2736,7 @@ Answer ID: intent:6033eecd70
 Human-readable match: /chum/answers/doors/give-me-an-evidence-brief-on-this-region-6033eecd70/
 Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/give-me-an-evidence-brief-on-this-region-6033eecd70.json
 Candidates:
-- FAIE Evidence-First Signal Brief | kind=machine_offer | commercial=sell_now | machine=payment_ready | public=https://fabric.systemiacommandcenters.com/capabilities/faie-signal-brief-v1
+- FAIE Evidence-First Signal Brief | kind=machine_offer | commercial=sell_now | machine=payment_ready | public=https://fabric.systemiacommandcenters.com/faie/
 
 ## give me map-ready heat or smoke action sites
 Answer ID: intent:62499579ce
@@ -3388,7 +3388,7 @@ Answer ID: intent:1c7410d981
 Human-readable match: /chum/answers/doors/identify-missing-evidence-before-a-consequential-site-or-production-decision-1c7410d981/
 Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/identify-missing-evidence-before-a-consequential-site-or-production-decision-1c7410d981.json
 Candidates:
-- FAIE | kind=product | commercial=product_contract | machine=discovery_only | public=https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/faie/index.html
+- FAIE | kind=product | commercial=product_contract | machine=specialist_mcp_declared | public=https://fabric.systemiacommandcenters.com/faie/
 
 ## identify this broken part from a label serial plate invoice diagram or fragment
 Answer ID: intent:69a166fa68
@@ -3458,14 +3458,14 @@ Answer ID: intent:d61d69c66b
 Human-readable match: /chum/answers/doors/investigate-an-agriculture-signal-before-making-a-decision-d61d69c66b/
 Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/investigate-an-agriculture-signal-before-making-a-decision-d61d69c66b.json
 Candidates:
-- FAIE | kind=product | commercial=product_contract | machine=discovery_only | public=https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/faie/index.html
+- FAIE | kind=product | commercial=product_contract | machine=specialist_mcp_declared | public=https://fabric.systemiacommandcenters.com/faie/
 
 ## investigate this agriculture signal
 Answer ID: intent:76deb8c556
 Human-readable match: /chum/answers/doors/investigate-this-agriculture-signal-76deb8c556/
 Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/investigate-this-agriculture-signal-76deb8c556.json
 Candidates:
-- FAIE Evidence-First Signal Brief | kind=machine_offer | commercial=sell_now | machine=payment_ready | public=https://fabric.systemiacommandcenters.com/capabilities/faie-signal-brief-v1
+- FAIE Evidence-First Signal Brief | kind=machine_offer | commercial=sell_now | machine=payment_ready | public=https://fabric.systemiacommandcenters.com/faie/
 
 ## invite friends to join a local gaming rewards network
 Answer ID: intent:2957a35efd
@@ -3635,7 +3635,7 @@ Answer ID: intent:070163adbc
 Human-readable match: /chum/answers/doors/land-resilience-070163adbc/
 Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/land-resilience-070163adbc.json
 Candidates:
-- FAIE | kind=product | commercial=product_contract | machine=discovery_only | public=https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/faie/index.html
+- FAIE | kind=product | commercial=product_contract | machine=specialist_mcp_declared | public=https://fabric.systemiacommandcenters.com/faie/
 
 ## landscaping estimate calculator
 Answer ID: intent:bdc36b4571
@@ -4738,7 +4738,7 @@ Answer ID: intent:a9bc1937b3
 Human-readable match: /chum/answers/doors/production-risk-a9bc1937b3/
 Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/production-risk-a9bc1937b3.json
 Candidates:
-- FAIE | kind=product | commercial=product_contract | machine=discovery_only | public=https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/faie/index.html
+- FAIE | kind=product | commercial=product_contract | machine=specialist_mcp_declared | public=https://fabric.systemiacommandcenters.com/faie/
 
 ## professional fabric procurement workflow
 Answer ID: intent:52b7de91fe
@@ -5141,7 +5141,7 @@ Answer ID: intent:64672abc7c
 Human-readable match: /chum/answers/doors/research-land-production-or-resilience-risk-64672abc7c/
 Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/research-land-production-or-resilience-risk-64672abc7c.json
 Candidates:
-- FAIE | kind=product | commercial=product_contract | machine=discovery_only | public=https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/faie/index.html
+- FAIE | kind=product | commercial=product_contract | machine=specialist_mcp_declared | public=https://fabric.systemiacommandcenters.com/faie/
 
 ## research realistic capital options for my business
 Answer ID: intent:dfcdd31812
@@ -5162,7 +5162,7 @@ Answer ID: intent:db58edbbad
 Human-readable match: /chum/answers/doors/research-this-land-or-water-question-db58edbbad/
 Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/research-this-land-or-water-question-db58edbbad.json
 Candidates:
-- FAIE Evidence-First Signal Brief | kind=machine_offer | commercial=sell_now | machine=payment_ready | public=https://fabric.systemiacommandcenters.com/capabilities/faie-signal-brief-v1
+- FAIE Evidence-First Signal Brief | kind=machine_offer | commercial=sell_now | machine=payment_ready | public=https://fabric.systemiacommandcenters.com/faie/
 
 ## research this question with sources
 Answer ID: intent:892e1034a8
@@ -6021,14 +6021,14 @@ Answer ID: intent:30f77c2da7
 Human-readable match: /chum/answers/doors/stress-test-the-assumptions-behind-an-agriculture-infrastructure-project-30f77c2da7/
 Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/stress-test-the-assumptions-behind-an-agriculture-infrastructure-project-30f77c2da7.json
 Candidates:
-- FAIE | kind=product | commercial=product_contract | machine=discovery_only | public=https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/faie/index.html
+- FAIE | kind=product | commercial=product_contract | machine=specialist_mcp_declared | public=https://fabric.systemiacommandcenters.com/faie/
 
 ## stress test this food production thesis
 Answer ID: intent:6e974283aa
 Human-readable match: /chum/answers/doors/stress-test-this-food-production-thesis-6e974283aa/
 Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/stress-test-this-food-production-thesis-6e974283aa.json
 Candidates:
-- FAIE Evidence-First Signal Brief | kind=machine_offer | commercial=sell_now | machine=payment_ready | public=https://fabric.systemiacommandcenters.com/capabilities/faie-signal-brief-v1
+- FAIE Evidence-First Signal Brief | kind=machine_offer | commercial=sell_now | machine=payment_ready | public=https://fabric.systemiacommandcenters.com/faie/
 
 ## structure parent coach and school support around a young athlete
 Answer ID: intent:4cfce2f9e8
@@ -6197,7 +6197,7 @@ Answer ID: intent:ea50112a02
 Human-readable match: /chum/answers/doors/tell-me-what-evidence-is-missing-before-we-build-ea50112a02/
 Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/tell-me-what-evidence-is-missing-before-we-build-ea50112a02.json
 Candidates:
-- FAIE Evidence-First Signal Brief | kind=machine_offer | commercial=sell_now | machine=payment_ready | public=https://fabric.systemiacommandcenters.com/capabilities/faie-signal-brief-v1
+- FAIE Evidence-First Signal Brief | kind=machine_offer | commercial=sell_now | machine=payment_ready | public=https://fabric.systemiacommandcenters.com/faie/
 
 ## tell me what is wrong with my business website
 Answer ID: intent:de24de764f
@@ -6409,7 +6409,7 @@ Answer ID: intent:754f66c40e
 Human-readable match: /chum/answers/doors/track-whether-the-assumptions-behind-a-physical-food-infrastructure-project-remain-754f66c40e/
 Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/track-whether-the-assumptions-behind-a-physical-food-infrastructure-project-remain-754f66c40e.json
 Candidates:
-- FAIE | kind=product | commercial=product_contract | machine=discovery_only | public=https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/faie/index.html
+- FAIE | kind=product | commercial=product_contract | machine=specialist_mcp_declared | public=https://fabric.systemiacommandcenters.com/faie/
 
 ## transcribe a huge video and remove duplicate or repeated segments
 Answer ID: intent:ea560dba5a
@@ -6580,7 +6580,7 @@ Answer ID: intent:4513867f02
 Human-readable match: /chum/answers/doors/underwrite-a-food-infrastructure-site-before-committing-capital-4513867f02/
 Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/underwrite-a-food-infrastructure-site-before-committing-capital-4513867f02.json
 Candidates:
-- FAIE | kind=product | commercial=product_contract | machine=discovery_only | public=https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/faie/index.html
+- FAIE | kind=product | commercial=product_contract | machine=specialist_mcp_declared | public=https://fabric.systemiacommandcenters.com/faie/
 
 ## underwrite an EV charging site
 Answer ID: intent:c05a16b3c1
@@ -6594,7 +6594,7 @@ Answer ID: intent:0dfb274827
 Human-readable match: /chum/answers/doors/underwrite-this-food-infrastructure-site-0dfb274827/
 Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/underwrite-this-food-infrastructure-site-0dfb274827.json
 Candidates:
-- FAIE Evidence-First Signal Brief | kind=machine_offer | commercial=sell_now | machine=payment_ready | public=https://fabric.systemiacommandcenters.com/capabilities/faie-signal-brief-v1
+- FAIE Evidence-First Signal Brief | kind=machine_offer | commercial=sell_now | machine=payment_ready | public=https://fabric.systemiacommandcenters.com/faie/
 
 ## undocumented IBM i integrations
 Answer ID: intent:9a48a464ea
@@ -6660,7 +6660,7 @@ Answer ID: intent:bffe897b1e
 Human-readable match: /chum/answers/doors/validate-this-environmental-signal-bffe897b1e/
 Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/validate-this-environmental-signal-bffe897b1e.json
 Candidates:
-- FAIE Evidence-First Signal Brief | kind=machine_offer | commercial=sell_now | machine=payment_ready | public=https://fabric.systemiacommandcenters.com/capabilities/faie-signal-brief-v1
+- FAIE Evidence-First Signal Brief | kind=machine_offer | commercial=sell_now | machine=payment_ready | public=https://fabric.systemiacommandcenters.com/faie/
 
 ## venue operations software
 Answer ID: intent:fcea37116b
@@ -6766,7 +6766,7 @@ Answer ID: intent:88c4b4b3ef
 Human-readable match: /chum/answers/doors/water-risk-88c4b4b3ef/
 Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/water-risk-88c4b4b3ef.json
 Candidates:
-- FAIE | kind=product | commercial=product_contract | machine=discovery_only | public=https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/faie/index.html
+- FAIE | kind=product | commercial=product_contract | machine=specialist_mcp_declared | public=https://fabric.systemiacommandcenters.com/faie/
 
 ## ways to earn extra money with the skills I already have
 Answer ID: intent:73a3046d48

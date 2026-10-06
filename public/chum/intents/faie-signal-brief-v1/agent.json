@@ -41,7 +41,7 @@
     "state": "held_no_owned_public_origin",
     "blocker": "owned_public_execution_origin_not_verified",
     "machine_offer_url": null,
-    "public_url": "https://fabric.systemiacommandcenters.com/capabilities/faie-signal-brief-v1",
+    "public_url": "https://fabric.systemiacommandcenters.com/faie/",
     "universal_mcp": null
   },
   "authority": {

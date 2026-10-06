@@ -1322,7 +1322,7 @@
       "name": "FAIE",
       "aliases": [],
       "class": "evidence_first_food_infrastructure_and_resilience_intelligence",
-      "canonical_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/faie/index.html",
+      "canonical_url": "https://fabric.systemiacommandcenters.com/faie/",
       "intents": [
         "get an evidence-based agriculture or water risk brief",
         "research land production or resilience risk",
@@ -1335,9 +1335,9 @@
         "track whether the assumptions behind a physical food infrastructure project remain true"
       ],
       "invocation": {
-        "mode": "discovery_only",
-        "url": null,
-        "registry_name": null
+        "mode": "mcp",
+        "url": "https://fabric.systemiacommandcenters.com/mcp/faie",
+        "registry_name": "io.github.jgaethle10/faie"
       },
       "llms_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/faie/llms.txt",
       "discovery_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/faie/ai-discovery.json",

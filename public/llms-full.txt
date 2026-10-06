@@ -178,7 +178,7 @@ Public ID: faie-signal-brief-v1
 Problem: A buyer has a bounded agriculture, land, water, production, resilience, or food-infrastructure question and needs a sourced evidence-first investigation that separates what is known, challenged, missing, and required next.
 Machine state: payment_ready
 Pricing: Signal Brief $250 one-time; Proof Sprint $2,500 one-time. Other intake categories are not auto-quotable.
-Public URL: https://fabric.systemiacommandcenters.com/capabilities/faie-signal-brief-v1
+Public URL: https://fabric.systemiacommandcenters.com/faie/
 Human UI required: false
 Confirmation: Explicit buyer confirmation is required before checkout. Verified payment queues a human-controlled mission; consequential claims or actions remain review-gated.
 Payment authority: FAIE / Stripe, provider-verified
@@ -1736,8 +1736,10 @@ Boundaries:
 
 ### FAIE
 Product key: faie
-Canonical: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/faie/index.html
-Machine state: discovery_only
+Canonical: https://fabric.systemiacommandcenters.com/faie/
+Machine state: mcp
+Official MCP Registry: io.github.jgaethle10/faie
+Invocation: https://fabric.systemiacommandcenters.com/mcp/faie
 Discovery: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/faie/ai-discovery.json
 AI conformance: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/faie/ai-conformance.json
 Use when the user says or means:

@@ -40,6 +40,5 @@
   "machine_commerce_handoff_state": "verified_bounded_owned_fabric_route",
   "machine_commerce_public_id": "faie-signal-brief-v1",
   "machine_commerce_tool": null,
-  "live_canary_evidence": "conformance/runtime-observations/2026-10-06-faie-owned-fabric-door.json",
-  "runtime_state": "owned_fabric_external_canary_verified"
+  "live_canary_evidence": "conformance/runtime-observations/2026-10-06-faie-owned-fabric-door.json"
 }

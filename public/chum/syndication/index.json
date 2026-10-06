@@ -1032,12 +1032,12 @@
     {
       "product_key": "faie",
       "name": "FAIE",
-      "canonical_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/faie/index.html",
+      "canonical_url": "https://fabric.systemiacommandcenters.com/faie/",
       "mirror_path": "/chum/products/faie/",
       "llms_path": "/chum/products/faie/llms.txt",
       "discovery_path": "/chum/products/faie/ai-discovery.json",
       "registry_name": "io.github.jgaethle10/faie",
-      "mcp": null,
+      "mcp": "https://fabric.systemiacommandcenters.com/mcp/faie",
       "class": "evidence_first_food_infrastructure_and_resilience_intelligence",
       "intents": [
         "get an evidence-based agriculture or water risk brief",
@@ -1054,7 +1054,7 @@
       "human_confirmation_required": true,
       "commercial_status": "",
       "description": "FAIE is an Evercraft evidence first food infrastructure and resilience intelligence capability. Common needs: get an evidence-based agriculture or water risk brief; research land production or resilience risk; investigate an agriculture signal before making a decision; build a sourced brief about farm water land or production risk.",
-      "content_sha256": "ae8e8aa16a7ddbd01ed67988974e81425ec38a51523898b1cc4af576c8631f38",
+      "content_sha256": "98bec1f98edee3a65826749bd4c7652ba24af0cb60bcb0db077dc286fb83fc44",
       "updated_at": "2026-10-05T00:00:00.000Z"
     },
     {

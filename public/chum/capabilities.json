@@ -1,6 +1,6 @@
 {
   "schema": "evercraft.chum.capability-index.v1",
-  "updated_at": "2026-10-06T18:19:52.785Z",
+  "updated_at": "2026-10-06T20:36:29.057Z",
   "count": 50,
   "sell_now_count": 16,
   "universal_mcp": "https://fabric.systemiacommandcenters.com/mcp",
@@ -758,9 +758,9 @@
       "llms_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/capabilities/faie-signal-brief-v1/llms.txt",
       "json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/capabilities/faie-signal-brief-v1/capability.json",
       "schema_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/capabilities/faie-signal-brief-v1/schema.jsonld",
-      "start_url": "https://fabric.systemiacommandcenters.com/faie/",
-      "start_url_state": "owned_direct_human_start",
-      "start_blocker": null,
+      "start_url": null,
+      "start_url_state": "held_no_owned_public_origin",
+      "start_blocker": "owned_public_execution_origin_not_verified",
       "machine_review_url": null,
       "entry_paid_offer": {
         "name": "FAIE Signal Brief",

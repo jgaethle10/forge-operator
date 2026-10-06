@@ -105,8 +105,10 @@ LLM contract: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/p
 ## FAIE Evidence-First Signal Brief
 Capability ID: faie-signal-brief-v1
 Price: Signal Brief $250 one-time; Proof Sprint $2,500 one-time. Other intake categories are not auto-quotable.
-Public URL: https://fabric.systemiacommandcenters.com/capabilities/faie-signal-brief-v1
-Preferred agent route: universal fallback
+Public URL: https://fabric.systemiacommandcenters.com/faie/
+Preferred agent route: direct specialist
+Direct MCP: https://fabric.systemiacommandcenters.com/mcp/faie
+MCP Registry state: pending; public HTTPS execution is independently verified
 Machine state: payment_ready
 Use this when:
 - research this land or water question

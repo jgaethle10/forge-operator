@@ -2,7 +2,7 @@
   "schema": "evercraft.chum.crawl-pressure.v1",
   "provider": "Evercraft LLC",
   "coordinator": "CHUM",
-  "updated_at": "2026-10-06T20:16:06.100Z",
+  "updated_at": "2026-10-06T20:36:30.736Z",
   "purpose": "Content-hash-backed freshness signals for public Evercraft discovery surfaces. A freshness signal requests attention; it does not prove indexing, ranking, recommendation, citation or provider pickup.",
   "indexnow": {
     "supported": true,
@@ -11,17 +11,820 @@
   },
   "latest_change_batch": [
     {
-      "path": "/chum/hot/index.json",
-      "last_changed": "2026-10-06T20:16:06.100Z",
+      "path": "/chum/answers/doors/agriculture-evidence-brief-9ad9d965bc.json",
+      "last_changed": "2026-10-06T20:36:30.736Z",
+      "priority": 160
+    },
+    {
+      "path": "/chum/answers/doors/agriculture-evidence-brief-9ad9d965bc/",
+      "last_changed": "2026-10-06T20:36:30.736Z",
+      "priority": 160
+    },
+    {
+      "path": "/chum/answers/doors/build-a-sourced-brief-about-farm-water-land-or-production-risk-baefc8483b.json",
+      "last_changed": "2026-10-06T20:36:30.736Z",
+      "priority": 160
+    },
+    {
+      "path": "/chum/answers/doors/build-a-sourced-brief-about-farm-water-land-or-production-risk-baefc8483b/",
+      "last_changed": "2026-10-06T20:36:30.736Z",
+      "priority": 160
+    },
+    {
+      "path": "/chum/answers/doors/do-a-resilience-investigation-227f8bd16b.json",
+      "last_changed": "2026-10-06T20:36:30.736Z",
+      "priority": 160
+    },
+    {
+      "path": "/chum/commercial/faie-signal-brief-v1/index.json",
+      "last_changed": "2026-10-06T20:36:30.736Z",
+      "priority": 112
+    },
+    {
+      "path": "/chum/answers/doors/compare-candidate-food-production-regions-using-the-same-evidence-rubric-6e4291507d.json",
+      "last_changed": "2026-10-06T20:36:30.736Z",
+      "priority": 100
+    },
+    {
+      "path": "/chum/answers/doors/compare-candidate-food-production-regions-using-the-same-evidence-rubric-6e4291507d/",
+      "last_changed": "2026-10-06T20:36:30.736Z",
+      "priority": 100
+    },
+    {
+      "path": "/chum/answers/doors/compare-these-agriculture-production-locations-8c40a2cd41.json",
+      "last_changed": "2026-10-06T20:36:30.736Z",
+      "priority": 100
+    },
+    {
+      "path": "/chum/answers/doors/get-an-evidence-based-agriculture-or-water-risk-brief-6fe5b60c84.json",
+      "last_changed": "2026-10-06T20:36:30.736Z",
+      "priority": 100
+    },
+    {
+      "path": "/chum/answers/doors/get-an-evidence-based-agriculture-or-water-risk-brief-6fe5b60c84/",
+      "last_changed": "2026-10-06T20:36:30.736Z",
+      "priority": 100
+    },
+    {
+      "path": "/chum/answers/doors/give-me-an-evidence-brief-on-this-region-6033eecd70.json",
+      "last_changed": "2026-10-06T20:36:30.736Z",
+      "priority": 100
+    },
+    {
+      "path": "/chum/answers/doors/identify-missing-evidence-before-a-consequential-site-or-production-decision-1c7410d981.json",
+      "last_changed": "2026-10-06T20:36:30.736Z",
+      "priority": 100
+    },
+    {
+      "path": "/chum/answers/doors/identify-missing-evidence-before-a-consequential-site-or-production-decision-1c7410d981/",
+      "last_changed": "2026-10-06T20:36:30.736Z",
+      "priority": 100
+    },
+    {
+      "path": "/chum/answers/doors/investigate-an-agriculture-signal-before-making-a-decision-d61d69c66b.json",
+      "last_changed": "2026-10-06T20:36:30.736Z",
+      "priority": 100
+    },
+    {
+      "path": "/chum/answers/doors/investigate-an-agriculture-signal-before-making-a-decision-d61d69c66b/",
+      "last_changed": "2026-10-06T20:36:30.736Z",
+      "priority": 100
+    },
+    {
+      "path": "/chum/answers/doors/investigate-this-agriculture-signal-76deb8c556.json",
+      "last_changed": "2026-10-06T20:36:30.736Z",
+      "priority": 100
+    },
+    {
+      "path": "/chum/answers/doors/land-resilience-070163adbc.json",
+      "last_changed": "2026-10-06T20:36:30.736Z",
+      "priority": 100
+    },
+    {
+      "path": "/chum/answers/doors/land-resilience-070163adbc/",
+      "last_changed": "2026-10-06T20:36:30.736Z",
+      "priority": 100
+    },
+    {
+      "path": "/chum/answers/doors/production-risk-a9bc1937b3.json",
+      "last_changed": "2026-10-06T20:36:30.736Z",
+      "priority": 100
+    },
+    {
+      "path": "/chum/answers/doors/production-risk-a9bc1937b3/",
+      "last_changed": "2026-10-06T20:36:30.736Z",
+      "priority": 100
+    },
+    {
+      "path": "/chum/answers/doors/research-land-production-or-resilience-risk-64672abc7c.json",
+      "last_changed": "2026-10-06T20:36:30.736Z",
+      "priority": 100
+    },
+    {
+      "path": "/chum/answers/doors/research-land-production-or-resilience-risk-64672abc7c/",
+      "last_changed": "2026-10-06T20:36:30.736Z",
+      "priority": 100
+    },
+    {
+      "path": "/chum/answers/doors/research-this-land-or-water-question-db58edbbad.json",
+      "last_changed": "2026-10-06T20:36:30.736Z",
+      "priority": 100
+    },
+    {
+      "path": "/chum/answers/doors/stress-test-the-assumptions-behind-an-agriculture-infrastructure-project-30f77c2da7.json",
+      "last_changed": "2026-10-06T20:36:30.736Z",
+      "priority": 100
+    },
+    {
+      "path": "/chum/answers/doors/stress-test-the-assumptions-behind-an-agriculture-infrastructure-project-30f77c2da7/",
+      "last_changed": "2026-10-06T20:36:30.736Z",
+      "priority": 100
+    },
+    {
+      "path": "/chum/answers/doors/stress-test-this-food-production-thesis-6e974283aa.json",
+      "last_changed": "2026-10-06T20:36:30.736Z",
+      "priority": 100
+    },
+    {
+      "path": "/chum/answers/doors/tell-me-what-evidence-is-missing-before-we-build-ea50112a02.json",
+      "last_changed": "2026-10-06T20:36:30.736Z",
+      "priority": 100
+    },
+    {
+      "path": "/chum/answers/doors/track-whether-the-assumptions-behind-a-physical-food-infrastructure-project-remain-754f66c40e.json",
+      "last_changed": "2026-10-06T20:36:30.736Z",
+      "priority": 100
+    },
+    {
+      "path": "/chum/answers/doors/track-whether-the-assumptions-behind-a-physical-food-infrastructure-project-remain-754f66c40e/",
+      "last_changed": "2026-10-06T20:36:30.736Z",
+      "priority": 100
+    },
+    {
+      "path": "/chum/answers/doors/underwrite-a-food-infrastructure-site-before-committing-capital-4513867f02.json",
+      "last_changed": "2026-10-06T20:36:30.736Z",
+      "priority": 100
+    },
+    {
+      "path": "/chum/answers/doors/underwrite-a-food-infrastructure-site-before-committing-capital-4513867f02/",
+      "last_changed": "2026-10-06T20:36:30.736Z",
+      "priority": 100
+    },
+    {
+      "path": "/chum/answers/doors/underwrite-this-food-infrastructure-site-0dfb274827.json",
+      "last_changed": "2026-10-06T20:36:30.736Z",
+      "priority": 100
+    },
+    {
+      "path": "/chum/answers/doors/validate-this-environmental-signal-bffe897b1e.json",
+      "last_changed": "2026-10-06T20:36:30.736Z",
+      "priority": 100
+    },
+    {
+      "path": "/chum/answers/doors/water-risk-88c4b4b3ef.json",
+      "last_changed": "2026-10-06T20:36:30.736Z",
+      "priority": 100
+    },
+    {
+      "path": "/chum/answers/doors/water-risk-88c4b4b3ef/",
+      "last_changed": "2026-10-06T20:36:30.736Z",
+      "priority": 100
+    },
+    {
+      "path": "/chum/intents/faie-signal-brief-v1/",
+      "last_changed": "2026-10-06T20:36:30.736Z",
+      "priority": 98
+    },
+    {
+      "path": "/chum/capabilities/faie-signal-brief-v1/",
+      "last_changed": "2026-10-06T20:36:30.736Z",
+      "priority": 96
+    },
+    {
+      "path": "/chum/capabilities/faie-signal-brief-v1/capability.json",
+      "last_changed": "2026-10-06T20:36:30.736Z",
+      "priority": 96
+    },
+    {
+      "path": "/chum/capabilities/faie-signal-brief-v1/llms.txt",
+      "last_changed": "2026-10-06T20:36:30.736Z",
+      "priority": 96
+    },
+    {
+      "path": "/chum/capabilities/faie-signal-brief-v1/schema.jsonld",
+      "last_changed": "2026-10-06T20:36:30.736Z",
+      "priority": 96
+    },
+    {
+      "path": "/chum/products/faie/",
+      "last_changed": "2026-10-06T20:36:30.736Z",
+      "priority": 94
+    },
+    {
+      "path": "/chum/products/faie/ai-conformance.json",
+      "last_changed": "2026-10-06T20:36:30.736Z",
+      "priority": 94
+    },
+    {
+      "path": "/chum/products/faie/ai-discovery.json",
+      "last_changed": "2026-10-06T20:36:30.736Z",
+      "priority": 94
+    },
+    {
+      "path": "/chum/products/faie/llms.txt",
+      "last_changed": "2026-10-06T20:36:30.736Z",
+      "priority": 94
+    },
+    {
+      "path": "/chum/sell-now.html",
+      "last_changed": "2026-10-06T20:36:30.736Z",
+      "priority": 92
+    },
+    {
+      "path": "/chum/sell-now.json",
+      "last_changed": "2026-10-06T20:36:30.736Z",
+      "priority": 92
+    },
+    {
+      "path": "/chum/sell-now.txt",
+      "last_changed": "2026-10-06T20:36:30.736Z",
+      "priority": 92
+    },
+    {
+      "path": "/.well-known/evercraft-pain-index.json",
+      "last_changed": "2026-10-06T20:36:30.736Z",
+      "priority": 90
+    },
+    {
+      "path": "/chum/revenue.html",
+      "last_changed": "2026-10-06T20:36:30.736Z",
+      "priority": 90
+    },
+    {
+      "path": "/chum/revenue.json",
+      "last_changed": "2026-10-06T20:36:30.736Z",
+      "priority": 90
+    },
+    {
+      "path": "/chum/revenue.txt",
+      "last_changed": "2026-10-06T20:36:30.736Z",
+      "priority": 90
+    },
+    {
+      "path": "/.well-known/evercraft-products.json",
+      "last_changed": "2026-10-06T20:36:30.736Z",
+      "priority": 88
+    },
+    {
+      "path": "/llms-full.txt",
+      "last_changed": "2026-10-06T20:36:30.736Z",
+      "priority": 86
+    },
+    {
+      "path": "/.well-known/evercraft-agent-commerce.json",
+      "last_changed": "2026-10-06T20:36:30.736Z",
+      "priority": 84
+    },
+    {
+      "path": "/.well-known/evercraft-agent-directory.json",
+      "last_changed": "2026-10-06T20:36:30.736Z",
+      "priority": 84
+    },
+    {
+      "path": "/.well-known/evercraft-machine-catalog.json",
+      "last_changed": "2026-10-06T20:36:30.736Z",
+      "priority": 84
+    },
+    {
+      "path": "/.well-known/evercraft-syndication.json",
+      "last_changed": "2026-10-06T20:36:30.736Z",
+      "priority": 84
+    },
+    {
+      "path": "/chum/",
+      "last_changed": "2026-10-06T20:36:30.736Z",
       "priority": 80
+    },
+    {
+      "path": "/chum/agent-commerce.html",
+      "last_changed": "2026-10-06T20:36:30.736Z",
+      "priority": 80
+    },
+    {
+      "path": "/chum/agent-commerce.json",
+      "last_changed": "2026-10-06T20:36:30.736Z",
+      "priority": 80
+    },
+    {
+      "path": "/chum/answers/",
+      "last_changed": "2026-10-06T20:36:30.736Z",
+      "priority": 80
+    },
+    {
+      "path": "/chum/answers/index.json",
+      "last_changed": "2026-10-06T20:36:30.736Z",
+      "priority": 80
+    },
+    {
+      "path": "/chum/answers/index.txt",
+      "last_changed": "2026-10-06T20:36:30.736Z",
+      "priority": 80
+    },
+    {
+      "path": "/chum/capabilities.json",
+      "last_changed": "2026-10-06T20:36:30.736Z",
+      "priority": 80
+    },
+    {
+      "path": "/chum/hot/index.json",
+      "last_changed": "2026-10-06T20:36:30.736Z",
+      "priority": 80
+    },
+    {
+      "path": "/chum/index.json",
+      "last_changed": "2026-10-06T20:36:30.736Z",
+      "priority": 80
+    },
+    {
+      "path": "/chum/pain-index.json",
+      "last_changed": "2026-10-06T20:36:30.736Z",
+      "priority": 80
+    },
+    {
+      "path": "/chum/pain-index.txt",
+      "last_changed": "2026-10-06T20:36:30.736Z",
+      "priority": 80
+    },
+    {
+      "path": "/chum/syndication/",
+      "last_changed": "2026-10-06T20:36:30.736Z",
+      "priority": 80
+    },
+    {
+      "path": "/chum/syndication/index.json",
+      "last_changed": "2026-10-06T20:36:30.736Z",
+      "priority": 80
+    },
+    {
+      "path": "/feed.json",
+      "last_changed": "2026-10-06T20:36:30.736Z",
+      "priority": 60
+    },
+    {
+      "path": "/feed.xml",
+      "last_changed": "2026-10-06T20:36:30.736Z",
+      "priority": 60
+    },
+    {
+      "path": "/schema.jsonld",
+      "last_changed": "2026-10-06T20:36:30.736Z",
+      "priority": 60
     }
   ],
   "recent_surfaces": [
     {
+      "path": "/chum/answers/doors/agriculture-evidence-brief-9ad9d965bc.json",
+      "url": "/chum/answers/doors/agriculture-evidence-brief-9ad9d965bc.json",
+      "last_changed": "2026-10-06T20:36:30.736Z",
+      "priority": 160
+    },
+    {
+      "path": "/chum/answers/doors/agriculture-evidence-brief-9ad9d965bc/",
+      "url": "/chum/answers/doors/agriculture-evidence-brief-9ad9d965bc/",
+      "last_changed": "2026-10-06T20:36:30.736Z",
+      "priority": 160
+    },
+    {
+      "path": "/chum/answers/doors/build-a-sourced-brief-about-farm-water-land-or-production-risk-baefc8483b.json",
+      "url": "/chum/answers/doors/build-a-sourced-brief-about-farm-water-land-or-production-risk-baefc8483b.json",
+      "last_changed": "2026-10-06T20:36:30.736Z",
+      "priority": 160
+    },
+    {
+      "path": "/chum/answers/doors/build-a-sourced-brief-about-farm-water-land-or-production-risk-baefc8483b/",
+      "url": "/chum/answers/doors/build-a-sourced-brief-about-farm-water-land-or-production-risk-baefc8483b/",
+      "last_changed": "2026-10-06T20:36:30.736Z",
+      "priority": 160
+    },
+    {
+      "path": "/chum/answers/doors/do-a-resilience-investigation-227f8bd16b.json",
+      "url": "/chum/answers/doors/do-a-resilience-investigation-227f8bd16b.json",
+      "last_changed": "2026-10-06T20:36:30.736Z",
+      "priority": 160
+    },
+    {
+      "path": "/chum/commercial/faie-signal-brief-v1/index.json",
+      "url": "/chum/commercial/faie-signal-brief-v1/index.json",
+      "last_changed": "2026-10-06T20:36:30.736Z",
+      "priority": 112
+    },
+    {
+      "path": "/chum/answers/doors/compare-candidate-food-production-regions-using-the-same-evidence-rubric-6e4291507d.json",
+      "url": "/chum/answers/doors/compare-candidate-food-production-regions-using-the-same-evidence-rubric-6e4291507d.json",
+      "last_changed": "2026-10-06T20:36:30.736Z",
+      "priority": 100
+    },
+    {
+      "path": "/chum/answers/doors/compare-candidate-food-production-regions-using-the-same-evidence-rubric-6e4291507d/",
+      "url": "/chum/answers/doors/compare-candidate-food-production-regions-using-the-same-evidence-rubric-6e4291507d/",
+      "last_changed": "2026-10-06T20:36:30.736Z",
+      "priority": 100
+    },
+    {
+      "path": "/chum/answers/doors/compare-these-agriculture-production-locations-8c40a2cd41.json",
+      "url": "/chum/answers/doors/compare-these-agriculture-production-locations-8c40a2cd41.json",
+      "last_changed": "2026-10-06T20:36:30.736Z",
+      "priority": 100
+    },
+    {
+      "path": "/chum/answers/doors/get-an-evidence-based-agriculture-or-water-risk-brief-6fe5b60c84.json",
+      "url": "/chum/answers/doors/get-an-evidence-based-agriculture-or-water-risk-brief-6fe5b60c84.json",
+      "last_changed": "2026-10-06T20:36:30.736Z",
+      "priority": 100
+    },
+    {
+      "path": "/chum/answers/doors/get-an-evidence-based-agriculture-or-water-risk-brief-6fe5b60c84/",
+      "url": "/chum/answers/doors/get-an-evidence-based-agriculture-or-water-risk-brief-6fe5b60c84/",
+      "last_changed": "2026-10-06T20:36:30.736Z",
+      "priority": 100
+    },
+    {
+      "path": "/chum/answers/doors/give-me-an-evidence-brief-on-this-region-6033eecd70.json",
+      "url": "/chum/answers/doors/give-me-an-evidence-brief-on-this-region-6033eecd70.json",
+      "last_changed": "2026-10-06T20:36:30.736Z",
+      "priority": 100
+    },
+    {
+      "path": "/chum/answers/doors/identify-missing-evidence-before-a-consequential-site-or-production-decision-1c7410d981.json",
+      "url": "/chum/answers/doors/identify-missing-evidence-before-a-consequential-site-or-production-decision-1c7410d981.json",
+      "last_changed": "2026-10-06T20:36:30.736Z",
+      "priority": 100
+    },
+    {
+      "path": "/chum/answers/doors/identify-missing-evidence-before-a-consequential-site-or-production-decision-1c7410d981/",
+      "url": "/chum/answers/doors/identify-missing-evidence-before-a-consequential-site-or-production-decision-1c7410d981/",
+      "last_changed": "2026-10-06T20:36:30.736Z",
+      "priority": 100
+    },
+    {
+      "path": "/chum/answers/doors/investigate-an-agriculture-signal-before-making-a-decision-d61d69c66b.json",
+      "url": "/chum/answers/doors/investigate-an-agriculture-signal-before-making-a-decision-d61d69c66b.json",
+      "last_changed": "2026-10-06T20:36:30.736Z",
+      "priority": 100
+    },
+    {
+      "path": "/chum/answers/doors/investigate-an-agriculture-signal-before-making-a-decision-d61d69c66b/",
+      "url": "/chum/answers/doors/investigate-an-agriculture-signal-before-making-a-decision-d61d69c66b/",
+      "last_changed": "2026-10-06T20:36:30.736Z",
+      "priority": 100
+    },
+    {
+      "path": "/chum/answers/doors/investigate-this-agriculture-signal-76deb8c556.json",
+      "url": "/chum/answers/doors/investigate-this-agriculture-signal-76deb8c556.json",
+      "last_changed": "2026-10-06T20:36:30.736Z",
+      "priority": 100
+    },
+    {
+      "path": "/chum/answers/doors/land-resilience-070163adbc.json",
+      "url": "/chum/answers/doors/land-resilience-070163adbc.json",
+      "last_changed": "2026-10-06T20:36:30.736Z",
+      "priority": 100
+    },
+    {
+      "path": "/chum/answers/doors/land-resilience-070163adbc/",
+      "url": "/chum/answers/doors/land-resilience-070163adbc/",
+      "last_changed": "2026-10-06T20:36:30.736Z",
+      "priority": 100
+    },
+    {
+      "path": "/chum/answers/doors/production-risk-a9bc1937b3.json",
+      "url": "/chum/answers/doors/production-risk-a9bc1937b3.json",
+      "last_changed": "2026-10-06T20:36:30.736Z",
+      "priority": 100
+    },
+    {
+      "path": "/chum/answers/doors/production-risk-a9bc1937b3/",
+      "url": "/chum/answers/doors/production-risk-a9bc1937b3/",
+      "last_changed": "2026-10-06T20:36:30.736Z",
+      "priority": 100
+    },
+    {
+      "path": "/chum/answers/doors/research-land-production-or-resilience-risk-64672abc7c.json",
+      "url": "/chum/answers/doors/research-land-production-or-resilience-risk-64672abc7c.json",
+      "last_changed": "2026-10-06T20:36:30.736Z",
+      "priority": 100
+    },
+    {
+      "path": "/chum/answers/doors/research-land-production-or-resilience-risk-64672abc7c/",
+      "url": "/chum/answers/doors/research-land-production-or-resilience-risk-64672abc7c/",
+      "last_changed": "2026-10-06T20:36:30.736Z",
+      "priority": 100
+    },
+    {
+      "path": "/chum/answers/doors/research-this-land-or-water-question-db58edbbad.json",
+      "url": "/chum/answers/doors/research-this-land-or-water-question-db58edbbad.json",
+      "last_changed": "2026-10-06T20:36:30.736Z",
+      "priority": 100
+    },
+    {
+      "path": "/chum/answers/doors/stress-test-the-assumptions-behind-an-agriculture-infrastructure-project-30f77c2da7.json",
+      "url": "/chum/answers/doors/stress-test-the-assumptions-behind-an-agriculture-infrastructure-project-30f77c2da7.json",
+      "last_changed": "2026-10-06T20:36:30.736Z",
+      "priority": 100
+    },
+    {
+      "path": "/chum/answers/doors/stress-test-the-assumptions-behind-an-agriculture-infrastructure-project-30f77c2da7/",
+      "url": "/chum/answers/doors/stress-test-the-assumptions-behind-an-agriculture-infrastructure-project-30f77c2da7/",
+      "last_changed": "2026-10-06T20:36:30.736Z",
+      "priority": 100
+    },
+    {
+      "path": "/chum/answers/doors/stress-test-this-food-production-thesis-6e974283aa.json",
+      "url": "/chum/answers/doors/stress-test-this-food-production-thesis-6e974283aa.json",
+      "last_changed": "2026-10-06T20:36:30.736Z",
+      "priority": 100
+    },
+    {
+      "path": "/chum/answers/doors/tell-me-what-evidence-is-missing-before-we-build-ea50112a02.json",
+      "url": "/chum/answers/doors/tell-me-what-evidence-is-missing-before-we-build-ea50112a02.json",
+      "last_changed": "2026-10-06T20:36:30.736Z",
+      "priority": 100
+    },
+    {
+      "path": "/chum/answers/doors/track-whether-the-assumptions-behind-a-physical-food-infrastructure-project-remain-754f66c40e.json",
+      "url": "/chum/answers/doors/track-whether-the-assumptions-behind-a-physical-food-infrastructure-project-remain-754f66c40e.json",
+      "last_changed": "2026-10-06T20:36:30.736Z",
+      "priority": 100
+    },
+    {
+      "path": "/chum/answers/doors/track-whether-the-assumptions-behind-a-physical-food-infrastructure-project-remain-754f66c40e/",
+      "url": "/chum/answers/doors/track-whether-the-assumptions-behind-a-physical-food-infrastructure-project-remain-754f66c40e/",
+      "last_changed": "2026-10-06T20:36:30.736Z",
+      "priority": 100
+    },
+    {
+      "path": "/chum/answers/doors/underwrite-a-food-infrastructure-site-before-committing-capital-4513867f02.json",
+      "url": "/chum/answers/doors/underwrite-a-food-infrastructure-site-before-committing-capital-4513867f02.json",
+      "last_changed": "2026-10-06T20:36:30.736Z",
+      "priority": 100
+    },
+    {
+      "path": "/chum/answers/doors/underwrite-a-food-infrastructure-site-before-committing-capital-4513867f02/",
+      "url": "/chum/answers/doors/underwrite-a-food-infrastructure-site-before-committing-capital-4513867f02/",
+      "last_changed": "2026-10-06T20:36:30.736Z",
+      "priority": 100
+    },
+    {
+      "path": "/chum/answers/doors/underwrite-this-food-infrastructure-site-0dfb274827.json",
+      "url": "/chum/answers/doors/underwrite-this-food-infrastructure-site-0dfb274827.json",
+      "last_changed": "2026-10-06T20:36:30.736Z",
+      "priority": 100
+    },
+    {
+      "path": "/chum/answers/doors/validate-this-environmental-signal-bffe897b1e.json",
+      "url": "/chum/answers/doors/validate-this-environmental-signal-bffe897b1e.json",
+      "last_changed": "2026-10-06T20:36:30.736Z",
+      "priority": 100
+    },
+    {
+      "path": "/chum/answers/doors/water-risk-88c4b4b3ef.json",
+      "url": "/chum/answers/doors/water-risk-88c4b4b3ef.json",
+      "last_changed": "2026-10-06T20:36:30.736Z",
+      "priority": 100
+    },
+    {
+      "path": "/chum/answers/doors/water-risk-88c4b4b3ef/",
+      "url": "/chum/answers/doors/water-risk-88c4b4b3ef/",
+      "last_changed": "2026-10-06T20:36:30.736Z",
+      "priority": 100
+    },
+    {
+      "path": "/chum/intents/faie-signal-brief-v1/",
+      "url": "/chum/intents/faie-signal-brief-v1/",
+      "last_changed": "2026-10-06T20:36:30.736Z",
+      "priority": 98
+    },
+    {
+      "path": "/chum/capabilities/faie-signal-brief-v1/",
+      "url": "/chum/capabilities/faie-signal-brief-v1/",
+      "last_changed": "2026-10-06T20:36:30.736Z",
+      "priority": 96
+    },
+    {
+      "path": "/chum/capabilities/faie-signal-brief-v1/capability.json",
+      "url": "/chum/capabilities/faie-signal-brief-v1/capability.json",
+      "last_changed": "2026-10-06T20:36:30.736Z",
+      "priority": 96
+    },
+    {
+      "path": "/chum/capabilities/faie-signal-brief-v1/llms.txt",
+      "url": "/chum/capabilities/faie-signal-brief-v1/llms.txt",
+      "last_changed": "2026-10-06T20:36:30.736Z",
+      "priority": 96
+    },
+    {
+      "path": "/chum/capabilities/faie-signal-brief-v1/schema.jsonld",
+      "url": "/chum/capabilities/faie-signal-brief-v1/schema.jsonld",
+      "last_changed": "2026-10-06T20:36:30.736Z",
+      "priority": 96
+    },
+    {
+      "path": "/chum/products/faie/",
+      "url": "/chum/products/faie/",
+      "last_changed": "2026-10-06T20:36:30.736Z",
+      "priority": 94
+    },
+    {
+      "path": "/chum/products/faie/ai-conformance.json",
+      "url": "/chum/products/faie/ai-conformance.json",
+      "last_changed": "2026-10-06T20:36:30.736Z",
+      "priority": 94
+    },
+    {
+      "path": "/chum/products/faie/ai-discovery.json",
+      "url": "/chum/products/faie/ai-discovery.json",
+      "last_changed": "2026-10-06T20:36:30.736Z",
+      "priority": 94
+    },
+    {
+      "path": "/chum/products/faie/llms.txt",
+      "url": "/chum/products/faie/llms.txt",
+      "last_changed": "2026-10-06T20:36:30.736Z",
+      "priority": 94
+    },
+    {
+      "path": "/chum/sell-now.html",
+      "url": "/chum/sell-now.html",
+      "last_changed": "2026-10-06T20:36:30.736Z",
+      "priority": 92
+    },
+    {
+      "path": "/chum/sell-now.json",
+      "url": "/chum/sell-now.json",
+      "last_changed": "2026-10-06T20:36:30.736Z",
+      "priority": 92
+    },
+    {
+      "path": "/chum/sell-now.txt",
+      "url": "/chum/sell-now.txt",
+      "last_changed": "2026-10-06T20:36:30.736Z",
+      "priority": 92
+    },
+    {
+      "path": "/.well-known/evercraft-pain-index.json",
+      "url": "/.well-known/evercraft-pain-index.json",
+      "last_changed": "2026-10-06T20:36:30.736Z",
+      "priority": 90
+    },
+    {
+      "path": "/chum/revenue.html",
+      "url": "/chum/revenue.html",
+      "last_changed": "2026-10-06T20:36:30.736Z",
+      "priority": 90
+    },
+    {
+      "path": "/chum/revenue.json",
+      "url": "/chum/revenue.json",
+      "last_changed": "2026-10-06T20:36:30.736Z",
+      "priority": 90
+    },
+    {
+      "path": "/chum/revenue.txt",
+      "url": "/chum/revenue.txt",
+      "last_changed": "2026-10-06T20:36:30.736Z",
+      "priority": 90
+    },
+    {
+      "path": "/.well-known/evercraft-products.json",
+      "url": "/.well-known/evercraft-products.json",
+      "last_changed": "2026-10-06T20:36:30.736Z",
+      "priority": 88
+    },
+    {
+      "path": "/llms-full.txt",
+      "url": "/llms-full.txt",
+      "last_changed": "2026-10-06T20:36:30.736Z",
+      "priority": 86
+    },
+    {
+      "path": "/.well-known/evercraft-agent-commerce.json",
+      "url": "/.well-known/evercraft-agent-commerce.json",
+      "last_changed": "2026-10-06T20:36:30.736Z",
+      "priority": 84
+    },
+    {
+      "path": "/.well-known/evercraft-agent-directory.json",
+      "url": "/.well-known/evercraft-agent-directory.json",
+      "last_changed": "2026-10-06T20:36:30.736Z",
+      "priority": 84
+    },
+    {
+      "path": "/.well-known/evercraft-machine-catalog.json",
+      "url": "/.well-known/evercraft-machine-catalog.json",
+      "last_changed": "2026-10-06T20:36:30.736Z",
+      "priority": 84
+    },
+    {
+      "path": "/.well-known/evercraft-syndication.json",
+      "url": "/.well-known/evercraft-syndication.json",
+      "last_changed": "2026-10-06T20:36:30.736Z",
+      "priority": 84
+    },
+    {
+      "path": "/chum/",
+      "url": "/chum/",
+      "last_changed": "2026-10-06T20:36:30.736Z",
+      "priority": 80
+    },
+    {
+      "path": "/chum/agent-commerce.html",
+      "url": "/chum/agent-commerce.html",
+      "last_changed": "2026-10-06T20:36:30.736Z",
+      "priority": 80
+    },
+    {
+      "path": "/chum/agent-commerce.json",
+      "url": "/chum/agent-commerce.json",
+      "last_changed": "2026-10-06T20:36:30.736Z",
+      "priority": 80
+    },
+    {
+      "path": "/chum/answers/",
+      "url": "/chum/answers/",
+      "last_changed": "2026-10-06T20:36:30.736Z",
+      "priority": 80
+    },
+    {
+      "path": "/chum/answers/index.json",
+      "url": "/chum/answers/index.json",
+      "last_changed": "2026-10-06T20:36:30.736Z",
+      "priority": 80
+    },
+    {
+      "path": "/chum/answers/index.txt",
+      "url": "/chum/answers/index.txt",
+      "last_changed": "2026-10-06T20:36:30.736Z",
+      "priority": 80
+    },
+    {
+      "path": "/chum/capabilities.json",
+      "url": "/chum/capabilities.json",
+      "last_changed": "2026-10-06T20:36:30.736Z",
+      "priority": 80
+    },
+    {
       "path": "/chum/hot/index.json",
       "url": "/chum/hot/index.json",
-      "last_changed": "2026-10-06T20:16:06.100Z",
+      "last_changed": "2026-10-06T20:36:30.736Z",
       "priority": 80
+    },
+    {
+      "path": "/chum/index.json",
+      "url": "/chum/index.json",
+      "last_changed": "2026-10-06T20:36:30.736Z",
+      "priority": 80
+    },
+    {
+      "path": "/chum/pain-index.json",
+      "url": "/chum/pain-index.json",
+      "last_changed": "2026-10-06T20:36:30.736Z",
+      "priority": 80
+    },
+    {
+      "path": "/chum/pain-index.txt",
+      "url": "/chum/pain-index.txt",
+      "last_changed": "2026-10-06T20:36:30.736Z",
+      "priority": 80
+    },
+    {
+      "path": "/chum/syndication/",
+      "url": "/chum/syndication/",
+      "last_changed": "2026-10-06T20:36:30.736Z",
+      "priority": 80
+    },
+    {
+      "path": "/chum/syndication/index.json",
+      "url": "/chum/syndication/index.json",
+      "last_changed": "2026-10-06T20:36:30.736Z",
+      "priority": 80
+    },
+    {
+      "path": "/feed.json",
+      "url": "/feed.json",
+      "last_changed": "2026-10-06T20:36:30.736Z",
+      "priority": 60
+    },
+    {
+      "path": "/feed.xml",
+      "url": "/feed.xml",
+      "last_changed": "2026-10-06T20:36:30.736Z",
+      "priority": 60
+    },
+    {
+      "path": "/schema.jsonld",
+      "url": "/schema.jsonld",
+      "last_changed": "2026-10-06T20:36:30.736Z",
+      "priority": 60
     },
     {
       "path": "/chum/proof/forensiscope.json",
@@ -45,42 +848,6 @@
       "path": "/chum/hot/",
       "url": "/chum/hot/",
       "last_changed": "2026-10-06T18:20:27.396Z",
-      "priority": 80
-    },
-    {
-      "path": "/chum/sell-now.json",
-      "url": "/chum/sell-now.json",
-      "last_changed": "2026-10-06T18:19:54.562Z",
-      "priority": 92
-    },
-    {
-      "path": "/chum/revenue.json",
-      "url": "/chum/revenue.json",
-      "last_changed": "2026-10-06T18:19:54.562Z",
-      "priority": 90
-    },
-    {
-      "path": "/.well-known/evercraft-agent-commerce.json",
-      "url": "/.well-known/evercraft-agent-commerce.json",
-      "last_changed": "2026-10-06T18:19:54.562Z",
-      "priority": 84
-    },
-    {
-      "path": "/.well-known/evercraft-machine-catalog.json",
-      "url": "/.well-known/evercraft-machine-catalog.json",
-      "last_changed": "2026-10-06T18:19:54.562Z",
-      "priority": 84
-    },
-    {
-      "path": "/chum/agent-commerce.json",
-      "url": "/chum/agent-commerce.json",
-      "last_changed": "2026-10-06T18:19:54.562Z",
-      "priority": 80
-    },
-    {
-      "path": "/chum/capabilities.json",
-      "url": "/chum/capabilities.json",
-      "last_changed": "2026-10-06T18:19:54.562Z",
       "priority": 80
     },
     {
@@ -108,24 +875,6 @@
       "priority": 80
     },
     {
-      "path": "/chum/answers/doors/agriculture-evidence-brief-9ad9d965bc.json",
-      "url": "/chum/answers/doors/agriculture-evidence-brief-9ad9d965bc.json",
-      "last_changed": "2026-10-06T18:02:46.847Z",
-      "priority": 160
-    },
-    {
-      "path": "/chum/answers/doors/build-a-sourced-brief-about-farm-water-land-or-production-risk-baefc8483b.json",
-      "url": "/chum/answers/doors/build-a-sourced-brief-about-farm-water-land-or-production-risk-baefc8483b.json",
-      "last_changed": "2026-10-06T18:02:46.847Z",
-      "priority": 160
-    },
-    {
-      "path": "/chum/answers/doors/do-a-resilience-investigation-227f8bd16b.json",
-      "url": "/chum/answers/doors/do-a-resilience-investigation-227f8bd16b.json",
-      "last_changed": "2026-10-06T18:02:46.847Z",
-      "priority": 160
-    },
-    {
       "path": "/chum/answers/doors/do-a-resilience-investigation-227f8bd16b/",
       "url": "/chum/answers/doors/do-a-resilience-investigation-227f8bd16b/",
       "last_changed": "2026-10-06T18:02:46.847Z",
@@ -140,12 +889,6 @@
     {
       "path": "/chum/commercial/faie-signal-brief-v1/",
       "url": "/chum/commercial/faie-signal-brief-v1/",
-      "last_changed": "2026-10-06T18:02:46.847Z",
-      "priority": 112
-    },
-    {
-      "path": "/chum/commercial/faie-signal-brief-v1/index.json",
-      "url": "/chum/commercial/faie-signal-brief-v1/index.json",
       "last_changed": "2026-10-06T18:02:46.847Z",
       "priority": 112
     },
@@ -204,38 +947,8 @@
       "priority": 102
     },
     {
-      "path": "/chum/answers/doors/compare-candidate-food-production-regions-using-the-same-evidence-rubric-6e4291507d.json",
-      "url": "/chum/answers/doors/compare-candidate-food-production-regions-using-the-same-evidence-rubric-6e4291507d.json",
-      "last_changed": "2026-10-06T18:02:46.847Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/compare-candidate-food-production-regions-using-the-same-evidence-rubric-6e4291507d/",
-      "url": "/chum/answers/doors/compare-candidate-food-production-regions-using-the-same-evidence-rubric-6e4291507d/",
-      "last_changed": "2026-10-06T18:02:46.847Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/compare-these-agriculture-production-locations-8c40a2cd41.json",
-      "url": "/chum/answers/doors/compare-these-agriculture-production-locations-8c40a2cd41.json",
-      "last_changed": "2026-10-06T18:02:46.847Z",
-      "priority": 100
-    },
-    {
       "path": "/chum/answers/doors/compare-these-agriculture-production-locations-8c40a2cd41/",
       "url": "/chum/answers/doors/compare-these-agriculture-production-locations-8c40a2cd41/",
-      "last_changed": "2026-10-06T18:02:46.847Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/get-an-evidence-based-agriculture-or-water-risk-brief-6fe5b60c84.json",
-      "url": "/chum/answers/doors/get-an-evidence-based-agriculture-or-water-risk-brief-6fe5b60c84.json",
-      "last_changed": "2026-10-06T18:02:46.847Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/give-me-an-evidence-brief-on-this-region-6033eecd70.json",
-      "url": "/chum/answers/doors/give-me-an-evidence-brief-on-this-region-6033eecd70.json",
       "last_changed": "2026-10-06T18:02:46.847Z",
       "priority": 100
     },
@@ -246,56 +959,8 @@
       "priority": 100
     },
     {
-      "path": "/chum/answers/doors/identify-missing-evidence-before-a-consequential-site-or-production-decision-1c7410d981.json",
-      "url": "/chum/answers/doors/identify-missing-evidence-before-a-consequential-site-or-production-decision-1c7410d981.json",
-      "last_changed": "2026-10-06T18:02:46.847Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/identify-missing-evidence-before-a-consequential-site-or-production-decision-1c7410d981/",
-      "url": "/chum/answers/doors/identify-missing-evidence-before-a-consequential-site-or-production-decision-1c7410d981/",
-      "last_changed": "2026-10-06T18:02:46.847Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/investigate-an-agriculture-signal-before-making-a-decision-d61d69c66b.json",
-      "url": "/chum/answers/doors/investigate-an-agriculture-signal-before-making-a-decision-d61d69c66b.json",
-      "last_changed": "2026-10-06T18:02:46.847Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/investigate-this-agriculture-signal-76deb8c556.json",
-      "url": "/chum/answers/doors/investigate-this-agriculture-signal-76deb8c556.json",
-      "last_changed": "2026-10-06T18:02:46.847Z",
-      "priority": 100
-    },
-    {
       "path": "/chum/answers/doors/investigate-this-agriculture-signal-76deb8c556/",
       "url": "/chum/answers/doors/investigate-this-agriculture-signal-76deb8c556/",
-      "last_changed": "2026-10-06T18:02:46.847Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/land-resilience-070163adbc.json",
-      "url": "/chum/answers/doors/land-resilience-070163adbc.json",
-      "last_changed": "2026-10-06T18:02:46.847Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/production-risk-a9bc1937b3.json",
-      "url": "/chum/answers/doors/production-risk-a9bc1937b3.json",
-      "last_changed": "2026-10-06T18:02:46.847Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/research-land-production-or-resilience-risk-64672abc7c.json",
-      "url": "/chum/answers/doors/research-land-production-or-resilience-risk-64672abc7c.json",
-      "last_changed": "2026-10-06T18:02:46.847Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/research-this-land-or-water-question-db58edbbad.json",
-      "url": "/chum/answers/doors/research-this-land-or-water-question-db58edbbad.json",
       "last_changed": "2026-10-06T18:02:46.847Z",
       "priority": 100
     },
@@ -306,32 +971,8 @@
       "priority": 100
     },
     {
-      "path": "/chum/answers/doors/stress-test-the-assumptions-behind-an-agriculture-infrastructure-project-30f77c2da7.json",
-      "url": "/chum/answers/doors/stress-test-the-assumptions-behind-an-agriculture-infrastructure-project-30f77c2da7.json",
-      "last_changed": "2026-10-06T18:02:46.847Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/stress-test-the-assumptions-behind-an-agriculture-infrastructure-project-30f77c2da7/",
-      "url": "/chum/answers/doors/stress-test-the-assumptions-behind-an-agriculture-infrastructure-project-30f77c2da7/",
-      "last_changed": "2026-10-06T18:02:46.847Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/stress-test-this-food-production-thesis-6e974283aa.json",
-      "url": "/chum/answers/doors/stress-test-this-food-production-thesis-6e974283aa.json",
-      "last_changed": "2026-10-06T18:02:46.847Z",
-      "priority": 100
-    },
-    {
       "path": "/chum/answers/doors/stress-test-this-food-production-thesis-6e974283aa/",
       "url": "/chum/answers/doors/stress-test-this-food-production-thesis-6e974283aa/",
-      "last_changed": "2026-10-06T18:02:46.847Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/tell-me-what-evidence-is-missing-before-we-build-ea50112a02.json",
-      "url": "/chum/answers/doors/tell-me-what-evidence-is-missing-before-we-build-ea50112a02.json",
       "last_changed": "2026-10-06T18:02:46.847Z",
       "priority": 100
     },
@@ -342,44 +983,8 @@
       "priority": 100
     },
     {
-      "path": "/chum/answers/doors/track-whether-the-assumptions-behind-a-physical-food-infrastructure-project-remain-754f66c40e.json",
-      "url": "/chum/answers/doors/track-whether-the-assumptions-behind-a-physical-food-infrastructure-project-remain-754f66c40e.json",
-      "last_changed": "2026-10-06T18:02:46.847Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/track-whether-the-assumptions-behind-a-physical-food-infrastructure-project-remain-754f66c40e/",
-      "url": "/chum/answers/doors/track-whether-the-assumptions-behind-a-physical-food-infrastructure-project-remain-754f66c40e/",
-      "last_changed": "2026-10-06T18:02:46.847Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/underwrite-a-food-infrastructure-site-before-committing-capital-4513867f02.json",
-      "url": "/chum/answers/doors/underwrite-a-food-infrastructure-site-before-committing-capital-4513867f02.json",
-      "last_changed": "2026-10-06T18:02:46.847Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/underwrite-a-food-infrastructure-site-before-committing-capital-4513867f02/",
-      "url": "/chum/answers/doors/underwrite-a-food-infrastructure-site-before-committing-capital-4513867f02/",
-      "last_changed": "2026-10-06T18:02:46.847Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/underwrite-this-food-infrastructure-site-0dfb274827.json",
-      "url": "/chum/answers/doors/underwrite-this-food-infrastructure-site-0dfb274827.json",
-      "last_changed": "2026-10-06T18:02:46.847Z",
-      "priority": 100
-    },
-    {
       "path": "/chum/answers/doors/underwrite-this-food-infrastructure-site-0dfb274827/",
       "url": "/chum/answers/doors/underwrite-this-food-infrastructure-site-0dfb274827/",
-      "last_changed": "2026-10-06T18:02:46.847Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/validate-this-environmental-signal-bffe897b1e.json",
-      "url": "/chum/answers/doors/validate-this-environmental-signal-bffe897b1e.json",
       "last_changed": "2026-10-06T18:02:46.847Z",
       "priority": 100
     },
@@ -390,178 +995,10 @@
       "priority": 100
     },
     {
-      "path": "/chum/answers/doors/water-risk-88c4b4b3ef.json",
-      "url": "/chum/answers/doors/water-risk-88c4b4b3ef.json",
-      "last_changed": "2026-10-06T18:02:46.847Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/intents/faie-signal-brief-v1/",
-      "url": "/chum/intents/faie-signal-brief-v1/",
-      "last_changed": "2026-10-06T18:02:46.847Z",
-      "priority": 98
-    },
-    {
-      "path": "/chum/capabilities/faie-signal-brief-v1/",
-      "url": "/chum/capabilities/faie-signal-brief-v1/",
-      "last_changed": "2026-10-06T18:02:46.847Z",
-      "priority": 96
-    },
-    {
-      "path": "/chum/capabilities/faie-signal-brief-v1/capability.json",
-      "url": "/chum/capabilities/faie-signal-brief-v1/capability.json",
-      "last_changed": "2026-10-06T18:02:46.847Z",
-      "priority": 96
-    },
-    {
-      "path": "/chum/capabilities/faie-signal-brief-v1/llms.txt",
-      "url": "/chum/capabilities/faie-signal-brief-v1/llms.txt",
-      "last_changed": "2026-10-06T18:02:46.847Z",
-      "priority": 96
-    },
-    {
-      "path": "/chum/capabilities/faie-signal-brief-v1/schema.jsonld",
-      "url": "/chum/capabilities/faie-signal-brief-v1/schema.jsonld",
-      "last_changed": "2026-10-06T18:02:46.847Z",
-      "priority": 96
-    },
-    {
-      "path": "/chum/products/faie/",
-      "url": "/chum/products/faie/",
-      "last_changed": "2026-10-06T18:02:46.847Z",
-      "priority": 94
-    },
-    {
-      "path": "/chum/products/faie/ai-conformance.json",
-      "url": "/chum/products/faie/ai-conformance.json",
-      "last_changed": "2026-10-06T18:02:46.847Z",
-      "priority": 94
-    },
-    {
-      "path": "/chum/products/faie/ai-discovery.json",
-      "url": "/chum/products/faie/ai-discovery.json",
-      "last_changed": "2026-10-06T18:02:46.847Z",
-      "priority": 94
-    },
-    {
-      "path": "/chum/products/faie/llms.txt",
-      "url": "/chum/products/faie/llms.txt",
-      "last_changed": "2026-10-06T18:02:46.847Z",
-      "priority": 94
-    },
-    {
-      "path": "/chum/sell-now.txt",
-      "url": "/chum/sell-now.txt",
-      "last_changed": "2026-10-06T18:02:46.847Z",
-      "priority": 92
-    },
-    {
-      "path": "/.well-known/evercraft-pain-index.json",
-      "url": "/.well-known/evercraft-pain-index.json",
-      "last_changed": "2026-10-06T18:02:46.847Z",
-      "priority": 90
-    },
-    {
-      "path": "/chum/revenue.html",
-      "url": "/chum/revenue.html",
-      "last_changed": "2026-10-06T18:02:46.847Z",
-      "priority": 90
-    },
-    {
-      "path": "/chum/revenue.txt",
-      "url": "/chum/revenue.txt",
-      "last_changed": "2026-10-06T18:02:46.847Z",
-      "priority": 90
-    },
-    {
-      "path": "/.well-known/evercraft-products.json",
-      "url": "/.well-known/evercraft-products.json",
-      "last_changed": "2026-10-06T18:02:46.847Z",
-      "priority": 88
-    },
-    {
-      "path": "/llms-full.txt",
-      "url": "/llms-full.txt",
-      "last_changed": "2026-10-06T18:02:46.847Z",
-      "priority": 86
-    },
-    {
-      "path": "/.well-known/evercraft-agent-directory.json",
-      "url": "/.well-known/evercraft-agent-directory.json",
-      "last_changed": "2026-10-06T18:02:46.847Z",
-      "priority": 84
-    },
-    {
-      "path": "/.well-known/evercraft-syndication.json",
-      "url": "/.well-known/evercraft-syndication.json",
-      "last_changed": "2026-10-06T18:02:46.847Z",
-      "priority": 84
-    },
-    {
-      "path": "/chum/agent-commerce.html",
-      "url": "/chum/agent-commerce.html",
-      "last_changed": "2026-10-06T18:02:46.847Z",
-      "priority": 80
-    },
-    {
       "path": "/chum/agent-commerce.txt",
       "url": "/chum/agent-commerce.txt",
       "last_changed": "2026-10-06T18:02:46.847Z",
       "priority": 80
-    },
-    {
-      "path": "/chum/answers/",
-      "url": "/chum/answers/",
-      "last_changed": "2026-10-06T18:02:46.847Z",
-      "priority": 80
-    },
-    {
-      "path": "/chum/answers/index.json",
-      "url": "/chum/answers/index.json",
-      "last_changed": "2026-10-06T18:02:46.847Z",
-      "priority": 80
-    },
-    {
-      "path": "/chum/answers/index.txt",
-      "url": "/chum/answers/index.txt",
-      "last_changed": "2026-10-06T18:02:46.847Z",
-      "priority": 80
-    },
-    {
-      "path": "/chum/pain-index.json",
-      "url": "/chum/pain-index.json",
-      "last_changed": "2026-10-06T18:02:46.847Z",
-      "priority": 80
-    },
-    {
-      "path": "/chum/pain-index.txt",
-      "url": "/chum/pain-index.txt",
-      "last_changed": "2026-10-06T18:02:46.847Z",
-      "priority": 80
-    },
-    {
-      "path": "/chum/syndication/index.json",
-      "url": "/chum/syndication/index.json",
-      "last_changed": "2026-10-06T18:02:46.847Z",
-      "priority": 80
-    },
-    {
-      "path": "/feed.json",
-      "url": "/feed.json",
-      "last_changed": "2026-10-06T18:02:46.847Z",
-      "priority": 60
-    },
-    {
-      "path": "/feed.xml",
-      "url": "/feed.xml",
-      "last_changed": "2026-10-06T18:02:46.847Z",
-      "priority": 60
-    },
-    {
-      "path": "/schema.jsonld",
-      "url": "/schema.jsonld",
-      "last_changed": "2026-10-06T18:02:46.847Z",
-      "priority": 60
     },
     {
       "path": "/chum/answers/doors/account-takeover-protection-6a5072fc31.json",
@@ -1442,78 +1879,6 @@
     {
       "path": "/chum/answers/doors/home-stability-help-b3ad9f869f.json",
       "url": "/chum/answers/doors/home-stability-help-b3ad9f869f.json",
-      "last_changed": "2026-10-06T16:42:20.155Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/hotel-ev-charging-opportunity-17daee3ad4.json",
-      "url": "/chum/answers/doors/hotel-ev-charging-opportunity-17daee3ad4.json",
-      "last_changed": "2026-10-06T16:42:20.155Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/hotel-ev-charging-site-analysis-7464f372e9.json",
-      "url": "/chum/answers/doors/hotel-ev-charging-site-analysis-7464f372e9.json",
-      "last_changed": "2026-10-06T16:42:20.155Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/household-connectivity-resilience-846c28a64f.json",
-      "url": "/chum/answers/doors/household-connectivity-resilience-846c28a64f.json",
-      "last_changed": "2026-10-06T16:42:20.155Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/i-have-an-interview-tomorrow-0fe9809d38.json",
-      "url": "/chum/answers/doors/i-have-an-interview-tomorrow-0fe9809d38.json",
-      "last_changed": "2026-10-06T16:42:20.155Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/i-know-what-this-part-does-but-not-what-it-is-called-8e34c87662.json",
-      "url": "/chum/answers/doors/i-know-what-this-part-does-but-not-what-it-is-called-8e34c87662.json",
-      "last_changed": "2026-10-06T16:42:20.155Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/identify-a-broken-part-from-a-label-or-serial-plate-ff44c80e2a.json",
-      "url": "/chum/answers/doors/identify-a-broken-part-from-a-label-or-serial-plate-ff44c80e2a.json",
-      "last_changed": "2026-10-06T16:42:20.155Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/identify-a-component-from-a-diagram-invoice-measurement-or-broken-fragment-8e283e1da2.json",
-      "url": "/chum/answers/doors/identify-a-component-from-a-diagram-invoice-measurement-or-broken-fragment-8e283e1da2.json",
-      "last_changed": "2026-10-06T16:42:20.155Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/identify-a-hard-to-source-part-from-incomplete-clues-cff5791f39.json",
-      "url": "/chum/answers/doors/identify-a-hard-to-source-part-from-incomplete-clues-cff5791f39.json",
-      "last_changed": "2026-10-06T16:42:20.155Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/identify-a-part-from-a-photo-or-markings-0ff974a58c.json",
-      "url": "/chum/answers/doors/identify-a-part-from-a-photo-or-markings-0ff974a58c.json",
-      "last_changed": "2026-10-06T16:42:20.155Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/identify-this-part-870c0fa937.json",
-      "url": "/chum/answers/doors/identify-this-part-870c0fa937.json",
-      "last_changed": "2026-10-06T16:42:20.155Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/identity-theft-protection-1d8e691739.json",
-      "url": "/chum/answers/doors/identity-theft-protection-1d8e691739.json",
-      "last_changed": "2026-10-06T16:42:20.155Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/internet-outage-continuity-264505af3f.json",
-      "url": "/chum/answers/doors/internet-outage-continuity-264505af3f.json",
       "last_changed": "2026-10-06T16:42:20.155Z",
       "priority": 100
     }

@@ -499,7 +499,7 @@ Invocation status: LIVE: public machine discovery docs plus central Evercraft MC
 Capability ID: offer:faie-signal-brief-v1
 Commercial state: sell_now
 Machine state: payment_ready
-Public URL: https://fabric.systemiacommandcenters.com/capabilities/faie-signal-brief-v1
+Public URL: https://fabric.systemiacommandcenters.com/faie/
 Pricing: Signal Brief $250 one-time; Proof Sprint $2,500 one-time. Other intake categories are not auto-quotable.
 Use when the user means:
 - research this land or water question
@@ -514,7 +514,7 @@ Use when the user means:
 Problem: A buyer has a bounded agriculture, land, water, production, resilience, or food-infrastructure question and needs a sourced evidence-first investigation that separates what is known, challenged, missing, and required next.
 Outputs: A bounded Sense-Challenge-Decide evidence packet with findings, source references, evidence-state labels, coverage gaps, adversarial challenge, evidence-acquisition queue, thesis-memory requirements and human-review items.
 Confirmation boundary: Explicit buyer confirmation is required before checkout. Verified payment queues a human-controlled mission; consequential claims or actions remain review-gated.
-Invocation status: LIVE: FAIE HTTP agent gateway + OpenAPI + llms guidance + remote MCP at [retired provider route removed] Agents can inspect the fixed $250/$2,500 offers, prepare checkout only after explicit human confirmation, and verify payment/mission queue state. Paid work remains human-review controlled.
+Invocation status: LIVE OWNED FABRIC VERIFIED: FAIE human UI, ephemeral public investigation/comparison API, and native read-only specialist MCP are externally verified at fabric.systemiacommandcenters.com. Base44 transport is disabled. Paid work remains human-confirmed and consequential decisions remain review-gated.
 
 ## FindMyPart Paid Part Hunt
 Capability ID: offer:findmypart-paid-hunt-v1
@@ -1666,8 +1666,9 @@ Invocation status: Route through the universal Evercraft discovery surface unles
 Capability ID: product:faie
 Product key: faie
 Commercial state: product_contract
-Machine state: discovery_only
-Public URL: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/faie/index.html
+Machine state: specialist_mcp_declared
+Public URL: https://fabric.systemiacommandcenters.com/faie/
+MCP: https://fabric.systemiacommandcenters.com/mcp/faie
 Use when the user means:
 - get an evidence-based agriculture or water risk brief
 - research land production or resilience risk
@@ -1683,7 +1684,7 @@ Use when the user means:
 - land resilience
 - production risk
 Confirmation boundary: Preserve the product-specific human confirmation boundary before any checkout, payment obligation, external handoff, or consequential action.
-Invocation status: Route through the universal Evercraft discovery surface unless a bounded specialist interface is later verified.
+Invocation status: Specialist MCP declared in the Evercraft registry. Runtime health remains receipt-gated.
 
 ## FindMyPart
 Capability ID: product:findmypart

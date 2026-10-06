@@ -7,7 +7,7 @@
   "source_schema_version": "2026-10-04.1",
   "gateway_version": "evercraft-machine-commerce-gateway-v0.9.1",
   "source_generated_at": "2026-09-30T20:21:00.000Z",
-  "generated_at": "2026-10-06T18:19:52.785Z",
+  "generated_at": "2026-10-06T20:36:29.057Z",
   "offer_count": 50,
   "sell_now_count": 16,
   "discovery_count": 34,
@@ -878,14 +878,11 @@
       "human_ui_required": false,
       "confirmation": "Explicit buyer confirmation is required before checkout. Verified payment queues a human-controlled mission; consequential claims or actions remain review-gated.",
       "public_url": "https://fabric.systemiacommandcenters.com/faie/",
-      "public_url_source": "owned_fabric_external_canary",
+      "public_url_source": "source_catalog",
       "payment_authority": "FAIE / Stripe, provider-verified",
       "invocation_status": "LIVE OWNED FABRIC VERIFIED: FAIE human UI, ephemeral public investigation/comparison API, and native read-only specialist MCP are externally verified at fabric.systemiacommandcenters.com. Base44 transport is disabled. Paid work remains human-confirmed and consequential decisions remain review-gated.",
       "live_canary_evidence": "conformance/runtime-observations/2026-10-06-faie-owned-fabric-door.json",
-      "catalog_version": "2026-10-06.1",
-      "human_start_url": "https://fabric.systemiacommandcenters.com/faie/",
-      "human_start_url_state": "external_canary_verified",
-      "mcp_url": "https://fabric.systemiacommandcenters.com/mcp/faie"
+      "catalog_version": "2026-10-06.1"
     },
     {
       "public_id": "findmypart-paid-hunt-v1",

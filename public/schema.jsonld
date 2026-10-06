@@ -457,10 +457,10 @@
     },
     {
       "@type": "Service",
-      "@id": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/faie/index.html#evercraft-service",
+      "@id": "https://fabric.systemiacommandcenters.com/faie/#evercraft-service",
       "name": "FAIE",
       "alternateName": [],
-      "url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/faie/index.html",
+      "url": "https://fabric.systemiacommandcenters.com/faie/",
       "provider": {
         "@id": "https://github.com/jgaethle10/forge-operator#evercraft"
       },
@@ -950,7 +950,7 @@
       "@id": "https://github.com/jgaethle10/forge-operator#offer-faie-signal-brief-v1",
       "name": "FAIE Evidence-First Signal Brief",
       "description": "A buyer has a bounded agriculture, land, water, production, resilience, or food-infrastructure question and needs a sourced evidence-first investigation that separates what is known, challenged, missing, and required next.",
-      "url": "https://fabric.systemiacommandcenters.com/capabilities/faie-signal-brief-v1",
+      "url": "https://fabric.systemiacommandcenters.com/faie/",
       "provider": {
         "@id": "https://github.com/jgaethle10/forge-operator#evercraft"
       },

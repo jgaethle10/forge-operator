@@ -297,9 +297,9 @@
           "public_id": null,
           "name": "FAIE",
           "commercial_state": "product_contract",
-          "machine_state": "discovery_only",
+          "machine_state": "specialist_mcp_declared",
           "pain_page": "/chum/products/faie/",
-          "public_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/faie/index.html",
+          "public_url": "https://fabric.systemiacommandcenters.com/faie/",
           "registry_name": "io.github.jgaethle10/faie"
         }
       ]
@@ -2314,9 +2314,9 @@
           "public_id": null,
           "name": "FAIE",
           "commercial_state": "product_contract",
-          "machine_state": "discovery_only",
+          "machine_state": "specialist_mcp_declared",
           "pain_page": "/chum/products/faie/",
-          "public_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/faie/index.html",
+          "public_url": "https://fabric.systemiacommandcenters.com/faie/",
           "registry_name": "io.github.jgaethle10/faie"
         }
       ]
@@ -3708,9 +3708,9 @@
           "public_id": null,
           "name": "FAIE",
           "commercial_state": "product_contract",
-          "machine_state": "discovery_only",
+          "machine_state": "specialist_mcp_declared",
           "pain_page": "/chum/products/faie/",
-          "public_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/faie/index.html",
+          "public_url": "https://fabric.systemiacommandcenters.com/faie/",
           "registry_name": "io.github.jgaethle10/faie"
         }
       ]
@@ -4124,7 +4124,7 @@
           "commercial_state": "sell_now",
           "machine_state": "payment_ready",
           "pain_page": "/chum/intents/faie-signal-brief-v1/",
-          "public_url": "https://fabric.systemiacommandcenters.com/capabilities/faie-signal-brief-v1",
+          "public_url": "https://fabric.systemiacommandcenters.com/faie/",
           "registry_name": null
         }
       ]
@@ -5623,7 +5623,7 @@
           "commercial_state": "sell_now",
           "machine_state": "payment_ready",
           "pain_page": "/chum/intents/faie-signal-brief-v1/",
-          "public_url": "https://fabric.systemiacommandcenters.com/capabilities/faie-signal-brief-v1",
+          "public_url": "https://fabric.systemiacommandcenters.com/faie/",
           "registry_name": null
         }
       ]
@@ -9125,9 +9125,9 @@
           "public_id": null,
           "name": "FAIE",
           "commercial_state": "product_contract",
-          "machine_state": "discovery_only",
+          "machine_state": "specialist_mcp_declared",
           "pain_page": "/chum/products/faie/",
-          "public_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/faie/index.html",
+          "public_url": "https://fabric.systemiacommandcenters.com/faie/",
           "registry_name": "io.github.jgaethle10/faie"
         }
       ]
@@ -9323,7 +9323,7 @@
           "commercial_state": "sell_now",
           "machine_state": "payment_ready",
           "pain_page": "/chum/intents/faie-signal-brief-v1/",
-          "public_url": "https://fabric.systemiacommandcenters.com/capabilities/faie-signal-brief-v1",
+          "public_url": "https://fabric.systemiacommandcenters.com/faie/",
           "registry_name": null
         }
       ]
@@ -11533,9 +11533,9 @@
           "public_id": null,
           "name": "FAIE",
           "commercial_state": "product_contract",
-          "machine_state": "discovery_only",
+          "machine_state": "specialist_mcp_declared",
           "pain_page": "/chum/products/faie/",
-          "public_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/faie/index.html",
+          "public_url": "https://fabric.systemiacommandcenters.com/faie/",
           "registry_name": "io.github.jgaethle10/faie"
         }
       ]
@@ -11763,9 +11763,9 @@
           "public_id": null,
           "name": "FAIE",
           "commercial_state": "product_contract",
-          "machine_state": "discovery_only",
+          "machine_state": "specialist_mcp_declared",
           "pain_page": "/chum/products/faie/",
-          "public_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/faie/index.html",
+          "public_url": "https://fabric.systemiacommandcenters.com/faie/",
           "registry_name": "io.github.jgaethle10/faie"
         }
       ]
@@ -11788,7 +11788,7 @@
           "commercial_state": "sell_now",
           "machine_state": "payment_ready",
           "pain_page": "/chum/intents/faie-signal-brief-v1/",
-          "public_url": "https://fabric.systemiacommandcenters.com/capabilities/faie-signal-brief-v1",
+          "public_url": "https://fabric.systemiacommandcenters.com/faie/",
           "registry_name": null
         }
       ]
@@ -12362,9 +12362,9 @@
           "public_id": null,
           "name": "FAIE",
           "commercial_state": "product_contract",
-          "machine_state": "discovery_only",
+          "machine_state": "specialist_mcp_declared",
           "pain_page": "/chum/products/faie/",
-          "public_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/faie/index.html",
+          "public_url": "https://fabric.systemiacommandcenters.com/faie/",
           "registry_name": "io.github.jgaethle10/faie"
         }
       ]
@@ -16204,9 +16204,9 @@
           "public_id": null,
           "name": "FAIE",
           "commercial_state": "product_contract",
-          "machine_state": "discovery_only",
+          "machine_state": "specialist_mcp_declared",
           "pain_page": "/chum/products/faie/",
-          "public_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/faie/index.html",
+          "public_url": "https://fabric.systemiacommandcenters.com/faie/",
           "registry_name": "io.github.jgaethle10/faie"
         }
       ]
@@ -17563,9 +17563,9 @@
           "public_id": null,
           "name": "FAIE",
           "commercial_state": "product_contract",
-          "machine_state": "discovery_only",
+          "machine_state": "specialist_mcp_declared",
           "pain_page": "/chum/products/faie/",
-          "public_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/faie/index.html",
+          "public_url": "https://fabric.systemiacommandcenters.com/faie/",
           "registry_name": "io.github.jgaethle10/faie"
         }
       ]
@@ -17634,7 +17634,7 @@
           "commercial_state": "sell_now",
           "machine_state": "payment_ready",
           "pain_page": "/chum/intents/faie-signal-brief-v1/",
-          "public_url": "https://fabric.systemiacommandcenters.com/capabilities/faie-signal-brief-v1",
+          "public_url": "https://fabric.systemiacommandcenters.com/faie/",
           "registry_name": null
         }
       ]
@@ -20559,9 +20559,9 @@
           "public_id": null,
           "name": "FAIE",
           "commercial_state": "product_contract",
-          "machine_state": "discovery_only",
+          "machine_state": "specialist_mcp_declared",
           "pain_page": "/chum/products/faie/",
-          "public_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/faie/index.html",
+          "public_url": "https://fabric.systemiacommandcenters.com/faie/",
           "registry_name": "io.github.jgaethle10/faie"
         }
       ]
@@ -20584,7 +20584,7 @@
           "commercial_state": "sell_now",
           "machine_state": "payment_ready",
           "pain_page": "/chum/intents/faie-signal-brief-v1/",
-          "public_url": "https://fabric.systemiacommandcenters.com/capabilities/faie-signal-brief-v1",
+          "public_url": "https://fabric.systemiacommandcenters.com/faie/",
           "registry_name": null
         }
       ]
@@ -21148,7 +21148,7 @@
           "commercial_state": "sell_now",
           "machine_state": "payment_ready",
           "pain_page": "/chum/intents/faie-signal-brief-v1/",
-          "public_url": "https://fabric.systemiacommandcenters.com/capabilities/faie-signal-brief-v1",
+          "public_url": "https://fabric.systemiacommandcenters.com/faie/",
           "registry_name": null
         }
       ]
@@ -21860,9 +21860,9 @@
           "public_id": null,
           "name": "FAIE",
           "commercial_state": "product_contract",
-          "machine_state": "discovery_only",
+          "machine_state": "specialist_mcp_declared",
           "pain_page": "/chum/products/faie/",
-          "public_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/faie/index.html",
+          "public_url": "https://fabric.systemiacommandcenters.com/faie/",
           "registry_name": "io.github.jgaethle10/faie"
         }
       ]
@@ -22448,9 +22448,9 @@
           "public_id": null,
           "name": "FAIE",
           "commercial_state": "product_contract",
-          "machine_state": "discovery_only",
+          "machine_state": "specialist_mcp_declared",
           "pain_page": "/chum/products/faie/",
-          "public_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/faie/index.html",
+          "public_url": "https://fabric.systemiacommandcenters.com/faie/",
           "registry_name": "io.github.jgaethle10/faie"
         }
       ]
@@ -22496,7 +22496,7 @@
           "commercial_state": "sell_now",
           "machine_state": "payment_ready",
           "pain_page": "/chum/intents/faie-signal-brief-v1/",
-          "public_url": "https://fabric.systemiacommandcenters.com/capabilities/faie-signal-brief-v1",
+          "public_url": "https://fabric.systemiacommandcenters.com/faie/",
           "registry_name": null
         }
       ]
@@ -22739,7 +22739,7 @@
           "commercial_state": "sell_now",
           "machine_state": "payment_ready",
           "pain_page": "/chum/intents/faie-signal-brief-v1/",
-          "public_url": "https://fabric.systemiacommandcenters.com/capabilities/faie-signal-brief-v1",
+          "public_url": "https://fabric.systemiacommandcenters.com/faie/",
           "registry_name": null
         }
       ]
@@ -23094,9 +23094,9 @@
           "public_id": null,
           "name": "FAIE",
           "commercial_state": "product_contract",
-          "machine_state": "discovery_only",
+          "machine_state": "specialist_mcp_declared",
           "pain_page": "/chum/products/faie/",
-          "public_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/faie/index.html",
+          "public_url": "https://fabric.systemiacommandcenters.com/faie/",
           "registry_name": "io.github.jgaethle10/faie"
         }
       ]

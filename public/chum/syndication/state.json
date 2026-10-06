@@ -1,6 +1,6 @@
 {
   "schema": "evercraft.syndication-state.v1",
-  "updated_at": "2026-10-06T18:02:46.682Z",
+  "updated_at": "2026-10-06T20:36:30.567Z",
   "complete_mirror": true,
   "product_hashes": {
     "aliev": "32e6dabf7b53521f73c1def4034ce3aa7cf0880f32c5e07e33184626cdde420a",
@@ -39,7 +39,7 @@
     "evernest": "41a6b99039ed575ca52367d14a8d6943f09ce38b21bf7441351e6494817d24b0",
     "evernest-atlas": "0be5e6afe3f342ca4876f79cacefb6929f547018c76936d11f6630a82384c625",
     "everystage": "a2784a98c311a2f8c36f5aa37ff3ce5ae1c313ad2a7adad2f02695d687d27a36",
-    "faie": "ae8e8aa16a7ddbd01ed67988974e81425ec38a51523898b1cc4af576c8631f38",
+    "faie": "98bec1f98edee3a65826749bd4c7652ba24af0cb60bcb0db077dc286fb83fc44",
     "findmypart": "daeda7fb261390914481d2097c14394948c19608e9cca746b1280aa520e9f499",
     "forensiscope": "a48c8b0b0f89fdb53dc8d67f154449f2b5cc8f78e9d9677dde556ae202be7863",
     "global-energy-atlas": "7cd8cc8a7a056a5870dc4f47a1bc741bad5855379e84c2f9a42353b3ac212ea6",

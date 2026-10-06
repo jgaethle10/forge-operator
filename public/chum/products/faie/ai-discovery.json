@@ -32,7 +32,7 @@
   "buyer_frontage_url": null,
   "registry_name": "io.github.jgaethle10/faie",
   "mcp": "https://fabric.systemiacommandcenters.com/mcp/faie",
-  "machine_commerce_mcp": "https://fabric.systemiacommandcenters.com/mcp",
+  "machine_commerce_mcp": null,
   "developer_surfaces": null,
   "editorial_surfaces": null,
   "knowledge_surfaces": null,
@@ -45,7 +45,5 @@
     "discovery": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/faie/ai-discovery.json",
     "conformance": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/faie/ai-conformance.json",
     "page": "/chum/products/faie/"
-  },
-  "runtime_state": "owned_fabric_external_canary_verified",
-  "live_canary_evidence": "conformance/runtime-observations/2026-10-06-faie-owned-fabric-door.json"
+  }
 }

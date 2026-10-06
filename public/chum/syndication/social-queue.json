@@ -1,6 +1,6 @@
 {
   "schema": "evercraft.syndication-social-queue.v1",
-  "generated_at": "2026-10-02T06:57:33.662Z",
+  "generated_at": "2026-10-06T20:36:30.567Z",
   "bootstrap": false,
   "policy": "Material product changes enter once per content hash only when a customer-grade HTTPS destination exists. Raw source hosts, legacy-provider URLs, and stale unsafe queue items are rejected before Evercraft Clip independently preflights the final customer destination.",
   "items": [
@@ -45,6 +45,17 @@
       "discovery_path": "/chum/products/evercraft-property-services/ai-discovery.json",
       "text": "Evercraft Property Services: Evercraft Property Services is an Evercraft local property services and estimate intake capability. Common needs: lawn mowing near me in Yakima; yard cleanup near me in Yakima; sprinkler repair near me in Yakima; sprinkler startup or blowout near me.",
       "content_sha256": "7e64108efbd8d11903f4a10b2e0cab045c6be56fb0a4e1f94dbb4dcc69d14e1e",
+      "requires_authorized_destination": true,
+      "requires_anonymous_link_preflight": true
+    },
+    {
+      "dedupe_key": "faie:98bec1f98edee3a65826749bd4c7652ba24af0cb60bcb0db077dc286fb83fc44",
+      "product_key": "faie",
+      "name": "FAIE",
+      "canonical_url": "https://fabric.systemiacommandcenters.com/faie/",
+      "discovery_path": "/chum/products/faie/ai-discovery.json",
+      "text": "FAIE: FAIE is an Evercraft evidence first food infrastructure and resilience intelligence capability. Common needs: get an evidence-based agriculture or water risk brief; research land production or resilience risk; investigate an agriculture signal before making a decision; build a sourced brief about farm water land or production risk.",
+      "content_sha256": "98bec1f98edee3a65826749bd4c7652ba24af0cb60bcb0db077dc286fb83fc44",
       "requires_authorized_destination": true,
       "requires_anonymous_link_preflight": true
     },

@@ -2,9 +2,15 @@
   "schema": "evercraft.chum.hot-discovery.v1",
   "provider": "Evercraft LLC",
   "coordinator": "CHUM",
-  "updated_at": "2026-10-06T20:16:06.100Z",
+  "updated_at": "2026-10-06T20:36:30.736Z",
   "purpose": "High-priority public discovery surfaces for crawler fan-out. The queue reserves limited cold-start frontage for current commercial and sitemap surfaces, then fills remaining slots by observed priority. This is a crawl-order hint, not a ranking or recommendation claim.",
   "surfaces": [
+    {
+      "path": "/chum/commercial/faie-signal-brief-v1/index.json",
+      "url": "/chum/commercial/faie-signal-brief-v1/index.json",
+      "priority": 112,
+      "last_changed": "2026-10-06T20:36:30.736Z"
+    },
     {
       "path": "/chum/commercial/",
       "url": "/chum/commercial/",
@@ -14,12 +20,6 @@
     {
       "path": "/chum/commercial/faie-signal-brief-v1/",
       "url": "/chum/commercial/faie-signal-brief-v1/",
-      "priority": 112,
-      "last_changed": "2026-10-06T18:02:46.847Z"
-    },
-    {
-      "path": "/chum/commercial/faie-signal-brief-v1/index.json",
-      "url": "/chum/commercial/faie-signal-brief-v1/index.json",
       "priority": 112,
       "last_changed": "2026-10-06T18:02:46.847Z"
     },
@@ -354,70 +354,82 @@
       "last_changed": "2026-09-26T19:35:58.578Z"
     },
     {
+      "path": "/chum/sell-now.html",
+      "url": "/chum/sell-now.html",
+      "priority": 92,
+      "last_changed": "2026-10-06T20:36:30.736Z"
+    },
+    {
       "path": "/chum/sell-now.json",
       "url": "/chum/sell-now.json",
       "priority": 92,
-      "last_changed": "2026-10-06T18:19:54.562Z"
+      "last_changed": "2026-10-06T20:36:30.736Z"
     },
     {
       "path": "/chum/sell-now.txt",
       "url": "/chum/sell-now.txt",
       "priority": 92,
-      "last_changed": "2026-10-06T18:02:46.847Z"
-    },
-    {
-      "path": "/chum/sell-now.html",
-      "url": "/chum/sell-now.html",
-      "priority": 92,
-      "last_changed": "2026-10-06T14:10:27.346Z"
-    },
-    {
-      "path": "/chum/revenue.json",
-      "url": "/chum/revenue.json",
-      "priority": 90,
-      "last_changed": "2026-10-06T18:19:54.562Z"
+      "last_changed": "2026-10-06T20:36:30.736Z"
     },
     {
       "path": "/.well-known/evercraft-pain-index.json",
       "url": "/.well-known/evercraft-pain-index.json",
       "priority": 90,
-      "last_changed": "2026-10-06T18:02:46.847Z"
+      "last_changed": "2026-10-06T20:36:30.736Z"
     },
     {
       "path": "/chum/revenue.html",
       "url": "/chum/revenue.html",
       "priority": 90,
-      "last_changed": "2026-10-06T18:02:46.847Z"
+      "last_changed": "2026-10-06T20:36:30.736Z"
+    },
+    {
+      "path": "/chum/revenue.json",
+      "url": "/chum/revenue.json",
+      "priority": 90,
+      "last_changed": "2026-10-06T20:36:30.736Z"
     },
     {
       "path": "/chum/revenue.txt",
       "url": "/chum/revenue.txt",
       "priority": 90,
-      "last_changed": "2026-10-06T18:02:46.847Z"
+      "last_changed": "2026-10-06T20:36:30.736Z"
     },
     {
       "path": "/.well-known/evercraft-machine-catalog.json",
       "url": "/.well-known/evercraft-machine-catalog.json",
       "priority": 84,
-      "last_changed": "2026-10-06T18:19:54.562Z"
+      "last_changed": "2026-10-06T20:36:30.736Z"
     },
     {
       "path": "/chum/answers/doors/agriculture-evidence-brief-9ad9d965bc.json",
       "url": "/chum/answers/doors/agriculture-evidence-brief-9ad9d965bc.json",
       "priority": 160,
-      "last_changed": "2026-10-06T18:02:46.847Z"
+      "last_changed": "2026-10-06T20:36:30.736Z"
+    },
+    {
+      "path": "/chum/answers/doors/agriculture-evidence-brief-9ad9d965bc/",
+      "url": "/chum/answers/doors/agriculture-evidence-brief-9ad9d965bc/",
+      "priority": 160,
+      "last_changed": "2026-10-06T20:36:30.736Z"
     },
     {
       "path": "/chum/answers/doors/build-a-sourced-brief-about-farm-water-land-or-production-risk-baefc8483b.json",
       "url": "/chum/answers/doors/build-a-sourced-brief-about-farm-water-land-or-production-risk-baefc8483b.json",
       "priority": 160,
-      "last_changed": "2026-10-06T18:02:46.847Z"
+      "last_changed": "2026-10-06T20:36:30.736Z"
+    },
+    {
+      "path": "/chum/answers/doors/build-a-sourced-brief-about-farm-water-land-or-production-risk-baefc8483b/",
+      "url": "/chum/answers/doors/build-a-sourced-brief-about-farm-water-land-or-production-risk-baefc8483b/",
+      "priority": 160,
+      "last_changed": "2026-10-06T20:36:30.736Z"
     },
     {
       "path": "/chum/answers/doors/do-a-resilience-investigation-227f8bd16b.json",
       "url": "/chum/answers/doors/do-a-resilience-investigation-227f8bd16b.json",
       "priority": 160,
-      "last_changed": "2026-10-06T18:02:46.847Z"
+      "last_changed": "2026-10-06T20:36:30.736Z"
     },
     {
       "path": "/chum/answers/doors/do-a-resilience-investigation-227f8bd16b/",
@@ -1152,12 +1164,6 @@
       "last_changed": "2026-10-01T05:00:27.354Z"
     },
     {
-      "path": "/chum/answers/doors/agriculture-evidence-brief-9ad9d965bc/",
-      "url": "/chum/answers/doors/agriculture-evidence-brief-9ad9d965bc/",
-      "priority": 160,
-      "last_changed": "2026-10-01T05:00:27.354Z"
-    },
-    {
       "path": "/chum/answers/doors/ai-agents-still-running-6bf3174230.json",
       "url": "/chum/answers/doors/ai-agents-still-running-6bf3174230.json",
       "priority": 160,
@@ -1196,12 +1202,6 @@
     {
       "path": "/chum/answers/doors/ai-tool-to-evaluate-a-property-for-ev-charging-and-estimate-the-opportunity-562b434920.json",
       "url": "/chum/answers/doors/ai-tool-to-evaluate-a-property-for-ev-charging-and-estimate-the-opportunity-562b434920.json",
-      "priority": 160,
-      "last_changed": "2026-10-01T05:00:27.354Z"
-    },
-    {
-      "path": "/chum/answers/doors/ai-tool-to-evaluate-a-property-for-ev-charging-and-estimate-the-opportunity-562b434920/",
-      "url": "/chum/answers/doors/ai-tool-to-evaluate-a-property-for-ev-charging-and-estimate-the-opportunity-562b434920/",
       "priority": 160,
       "last_changed": "2026-10-01T05:00:27.354Z"
     }

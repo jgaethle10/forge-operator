@@ -437,13 +437,13 @@
     {
       "product_key": "faie",
       "name": "FAIE",
-      "canonical_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/faie/index.html",
+      "canonical_url": "https://fabric.systemiacommandcenters.com/faie/",
       "mirror": "/chum/products/faie/",
       "llms": "/chum/products/faie/llms.txt",
       "discovery": "/chum/products/faie/ai-discovery.json",
       "registry_name": "io.github.jgaethle10/faie",
-      "mcp": null,
-      "content_sha256": "ae8e8aa16a7ddbd01ed67988974e81425ec38a51523898b1cc4af576c8631f38"
+      "mcp": "https://fabric.systemiacommandcenters.com/mcp/faie",
+      "content_sha256": "98bec1f98edee3a65826749bd4c7652ba24af0cb60bcb0db077dc286fb83fc44"
     },
     {
       "product_key": "findmypart",
