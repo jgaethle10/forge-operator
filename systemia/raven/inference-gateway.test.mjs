@@ -36,7 +36,7 @@ test("local Ollama adapter stays loopback and returns a receipt", async () => {
 
 test("Gemini adapter reads key from owned vault and never returns it", async () => {
   const root=fs.mkdtempSync(path.join(os.tmpdir(),"raven-gemini-"));
-  const secret="AIzaSyProofSecretValue123456789012345";
+  const secret="fixture-gemini-secret-proof-123456789012345";
   try{
     new ProviderCredentialVault({stateDir:root}).put({
       provider:"gemini",environment:"live",label:"raven-inference",
@@ -60,7 +60,7 @@ test("Gemini adapter reads key from owned vault and never returns it", async () 
 
 test("OpenAI Responses adapter reads owned vault key and extracts output text", async () => {
   const root=fs.mkdtempSync(path.join(os.tmpdir(),"raven-openai-"));
-  const secret="sk-proof-secret-value-abcdefghijklmnopqrstuvwxyz";
+  const secret="fixture-openai-secret-proof-abcdefghijklmnopqrstuvwxyz";
   try{
     new ProviderCredentialVault({stateDir:root}).put({
       provider:"openai",environment:"live",label:"raven-inference",
@@ -134,7 +134,7 @@ test("Ollama validation checks installed model metadata without inference", asyn
 
 test("Gemini validation uses models.get with vault credential and no prompt", async () => {
   const root=fs.mkdtempSync(path.join(os.tmpdir(),"raven-gemini-validate-"));
-  const secret="AIzaSyValidationSecretValue123456789012";
+  const secret="fixture-gemini-secret-validation-123456789012";
   try{
     new ProviderCredentialVault({stateDir:root}).put({
       provider:"gemini",environment:"live",label:"raven-inference",
@@ -167,7 +167,7 @@ test("Gemini validation uses models.get with vault credential and no prompt", as
 
 test("OpenAI validation uses retrieve-model metadata with vault credential and no prompt", async () => {
   const root=fs.mkdtempSync(path.join(os.tmpdir(),"raven-openai-validate-"));
-  const secret="sk-validation-secret-value-abcdefghijklmnopqrstuvwxyz";
+  const secret="fixture-openai-secret-validation-abcdefghijklmnopqrstuvwxyz";
   try{
     new ProviderCredentialVault({stateDir:root}).put({
       provider:"openai",environment:"live",label:"raven-inference",
