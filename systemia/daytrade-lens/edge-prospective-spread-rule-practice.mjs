@@ -73,7 +73,10 @@ async function main(){
   if(rule?.rule_id!=="spread-abstention-v1"){
     throw new Error("prospective_spread_rule_id_invalid");
   }
-  if(rule?.frozen_before_test!==true||rule?.live_trade_authority!==false){
+  const explicitFreeze=
+    rule?.frozen_before_test===true ||
+    rule?.frozen_before_first_prospective_window===true;
+  if(explicitFreeze!==true||rule?.live_trade_authority!==false){
     throw new Error("prospective_spread_rule_authority_invalid");
   }
   const threshold=finite(rule?.entry_rule?.max_observed_entry_spread_bps);
