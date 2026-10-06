@@ -1,0 +1,33 @@
+name: DayTrade Passive Touch Practice Once
+
+on:
+  push:
+    branches:
+      - "systemia/daytrade-practice-camp-2026-10-06-b"
+
+permissions:
+  contents: read
+
+jobs:
+  practice:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Run passive-touch practice camp
+        env:
+          ALPACA_TRADING: ${{ secrets.ALPACA_TRADING }}
+          ALPACA_TRADING_SECRET: ${{ secrets.ALPACA_TRADING_SECRET }}
+          DAYTRADE_PASSIVE_PRACTICE_OUTPUT: artifacts/daytrade-edge/passive-touch-practice-2026-10-06-b.json
+        run: node systemia/daytrade-lens/edge-passive-touch-practice-camp.mjs
+      - name: Upload practice receipt
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: daytrade-passive-touch-practice-${{ github.run_id }}
+          path: artifacts/daytrade-edge/passive-touch-practice-2026-10-06-b.json
+          if-no-files-found: warn
+          retention-days: 30
