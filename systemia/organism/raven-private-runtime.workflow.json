@@ -14,7 +14,7 @@
   "authority": {
     "private_session_planning": "authorized_internal_only",
     "systemia_mission_admission": "plan_only",
-    "specialist_execution": "held",
+    "specialist_execution": "internal_read_only_only",
     "external_communication": "held",
     "publication": "held",
     "payment": "held",
@@ -30,6 +30,20 @@
   "secret_boundary": {
     "control_token_source": "private_file",
     "raw_token_in_cli_args": false,
-    "raw_token_in_receipts": false
+    "raw_token_in_receipts": false,
+    "inference_token_source": "private_file",
+    "raw_inference_token_in_cli_args": false,
+    "raw_inference_token_in_receipts": false
+  },
+  "inference": {
+    "state": "optional_when_configured",
+    "endpoint_contract": "nexus-work/inference-contract.json",
+    "review_contract": "nexus-work/team-review-contract.json",
+    "allowed_work_types": [
+      "analyze",
+      "research",
+      "qa"
+    ],
+    "base44_fallback": false
   }
 }
