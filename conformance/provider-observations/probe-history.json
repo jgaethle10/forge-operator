@@ -1,26 +1,8 @@
 {
   "schema": "evercraft.chum.provider-probe-history.v1",
-  "updated_at": "2026-10-06T20:36:55.427Z",
+  "updated_at": "2026-10-06T20:39:11.194Z",
   "max_records": 500,
   "records": [
-    {
-      "receipt_key_sha256": "62eaf031ed887252af417f866a0e82a6dc407da05368046885f2a140e5582c01",
-      "observed_at": "2026-10-05T23:19:37.762Z",
-      "provider": "generic_agent",
-      "provider_surface": "machine_client",
-      "product_key": "systemia-remote-ops",
-      "case_id": "business-simulator-expansion-003",
-      "prompt_sha256": "7c8667c614ff5c1a5050299b28517d3b4bdc3826ed386fddd9d7818883cc8c08",
-      "pickup_observed": false,
-      "provider_receipt_sha256": "59345af469a4b4756be304e8f840b90b72da1d6b2cfbe3e061f1bf0f578a6de9",
-      "response_sha256": "920c03daa731e08501f99afa1601f7070a35a07667b184e15b243b8935302cab",
-      "source": "authorized_provider_probe",
-      "privacy": {
-        "full_provider_response_persisted": false,
-        "provider_session_reference_persisted": false,
-        "credentials_persisted": false
-      }
-    },
     {
       "receipt_key_sha256": "796352b6944cba5d4e6f7089ae1cbe28164e3f0ea76a63160defacc4cfe2d796",
       "observed_at": "2026-10-05T23:19:38.789Z",
@@ -8995,6 +8977,24 @@
       "prompt_sha256": "847b106b51da88ab97c20b5eea5682cf88dfab66f439835bb5ca6112777c7d90",
       "pickup_observed": true,
       "provider_receipt_sha256": "aa1b231c064508807a1497998fc14fe12f9e74c86bde090eaf589905ef723e7e",
+      "response_sha256": "432756eae19fa82bd0b52538ac94c750a00123a2c0b4b13d477c5e6edefa5255",
+      "source": "authorized_provider_probe",
+      "privacy": {
+        "full_provider_response_persisted": false,
+        "provider_session_reference_persisted": false,
+        "credentials_persisted": false
+      }
+    },
+    {
+      "receipt_key_sha256": "cf3005f4f4396944d6f1a2e5d06e42c3417d427e9071e3f7add2d0458a4945a6",
+      "observed_at": "2026-10-06T20:39:11.193Z",
+      "provider": "generic_agent",
+      "provider_surface": "machine_client",
+      "product_key": "legacy-rescue-lab",
+      "case_id": "legacy-rescue-abandoned-codebase-001",
+      "prompt_sha256": "847b106b51da88ab97c20b5eea5682cf88dfab66f439835bb5ca6112777c7d90",
+      "pickup_observed": true,
+      "provider_receipt_sha256": "69b1ba43430815af2a6a29f0e30a2197ba4951a7d2f9a67d3501a01cbaad7489",
       "response_sha256": "432756eae19fa82bd0b52538ac94c750a00123a2c0b4b13d477c5e6edefa5255",
       "source": "authorized_provider_probe",
       "privacy": {
