@@ -1,0 +1,36 @@
+{
+  "schema": "evercraft.daytrade.practice-scorecard.v1",
+  "generated_at": "2026-10-06T16:45:33.204Z",
+  "source_run_id": 37498208208,
+  "source_artifact_id": 11428571584,
+  "source_artifact_digest": "sha256:e1853c6e88633b453c42435664e3345f0b7b176d42fe0133bd3c3dda9e4fe29d",
+  "receipt_count": 11,
+  "invalid_receipt_count": 0,
+  "simulation_receipt_count": 11,
+  "total_reported_capital_at_risk_usd": 0,
+  "any_live_trade_authority": false,
+  "prospective_spread_rule": {
+    "rule_id": "spread-abstention-v1",
+    "windows": 5,
+    "helped_windows": 4,
+    "hurt_windows": 0,
+    "neutral_windows": 1,
+    "cumulative_rule_improvement_vs_always_cross_usd": 0.06225888914626054,
+    "mean_rule_improvement_vs_always_cross_usd": 0.012451777829252109,
+    "cumulative_governed_pnl_usd": 0.0008867808685621981,
+    "cumulative_always_cross_pnl_usd": -0.061372108277698345,
+    "evidence_state": "PRACTICE_SERIES_FORMING",
+    "independent_market_validation": false,
+    "live_rule_authorized": false
+  },
+  "spread_persistence_receipts": 1,
+  "controls": {
+    "failed_or_negative_practice_must_remain_in_ledger": true,
+    "same_day_selection_bias_disclosed": true,
+    "no_threshold_retuning_from_scorecard": true,
+    "practice_not_signal_validation": true,
+    "practice_not_live_fill_validation": true,
+    "live_trade_authority": false
+  },
+  "live_trade_authority": false
+}
