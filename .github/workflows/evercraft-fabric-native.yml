@@ -1,10 +1,19 @@
 name: Evercraft Fabric Native Door
 
 on:
+  push:
+    branches: [main]
+    paths:
+      - 'systemia/mcp/fabric-directory.mjs'
+      - 'systemia/mcp/fabric-local-runtime.mjs'
+      - 'systemia/mcp/fabric-public-site.mjs'
+      - 'tests/fabric-offer-pages.test.mjs'
+      - '.github/workflows/evercraft-fabric-native.yml'
   pull_request:
     paths:
       - 'systemia/mcp/fabric-directory.mjs'
       - 'systemia/mcp/fabric-local-runtime.mjs'
+      - 'systemia/mcp/fabric-public-site.mjs'
       - 'systemia/mcp/fabric-faie-runtime.mjs'
       - 'systemia/faie/**'
       - 'public/faie/**'
@@ -15,6 +24,7 @@ on:
       - 'systemia/yard/public-edge-activation-watch.mjs'
       - 'systemia/organism/public-edge-activation-watch-runner.mjs'
       - 'tests/evercraft-fabric-runtime.test.mjs'
+      - 'tests/fabric-offer-pages.test.mjs'
       - 'tests/fabric-faie-native-runtime.test.mjs'
       - 'tests/fabric-mobile-runtime.test.mjs'
       - 'tests/specialist-handoff-native-runtime.test.mjs'
@@ -43,8 +53,8 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: '22'
-      - name: Prove Fabric MCP and mobile door
-        run: node --test tests/evercraft-fabric-runtime.test.mjs tests/fabric-mobile-runtime.test.mjs tests/fabric-faie-native-runtime.test.mjs
+      - name: Prove Fabric MCP, human offer storefront, and mobile door
+        run: node --test tests/evercraft-fabric-runtime.test.mjs tests/fabric-offer-pages.test.mjs tests/fabric-mobile-runtime.test.mjs tests/fabric-faie-native-runtime.test.mjs
       - name: Prove specialist runtime remains safe
         run: |
           npm install --no-audit --no-fund
