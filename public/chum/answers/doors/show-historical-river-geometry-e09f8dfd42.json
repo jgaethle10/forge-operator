@@ -19,7 +19,7 @@
       "pricing": "No approved machine price was found. Do not auto-quote.",
       "commercial_state": "verification_required",
       "machine_state": "discovery_only",
-      "public_url": null,
+      "public_url": "https://fabric.systemiacommandcenters.com/capabilities/evermaps-evidence-projection-machine-v1",
       "pain_page": "/chum/intents/evermaps-evidence-projection-machine-v1/",
       "registry_name": null,
       "direct_mcp": null,

@@ -19,7 +19,7 @@
       "pricing": "Published duration tiers are $15 up to 5 minutes, $35 up to 30 minutes, $75 up to 2 hours, $149 up to 6 hours and $249 up to 12 hours. Central machine checkout remains verification-gated.",
       "commercial_state": "verification_required",
       "machine_state": "discovery_only",
-      "public_url": null,
+      "public_url": "https://fabric.systemiacommandcenters.com/capabilities/forensiscope-evidence-review-v1",
       "pain_page": "/chum/intents/forensiscope-evidence-review-v1/",
       "registry_name": null,
       "direct_mcp": null,

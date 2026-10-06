@@ -19,7 +19,7 @@
       "pricing": "No approved public self-service subscription or machine-call price is advertised yet. The read-only planning preview has no checkout or payment side effect.",
       "commercial_state": "contractor_beta",
       "machine_state": "mcp_http_preview_and_receipt_verify_live_workspace_entitlement_build_verified",
-      "public_url": null,
+      "public_url": "https://fabric.systemiacommandcenters.com/capabilities/eps-estimate-engine-machine-v1",
       "pain_page": "/chum/intents/eps-estimate-engine-machine-v1/",
       "registry_name": null,
       "direct_mcp": null,

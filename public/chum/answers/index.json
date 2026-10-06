@@ -138,7 +138,7 @@
           "commercial_state": "verification_required",
           "machine_state": "invocation_ready",
           "pain_page": "/chum/intents/raven-nexus-pain-router-v1/",
-          "public_url": null,
+          "public_url": "https://fabric.systemiacommandcenters.com/capabilities/raven-nexus-pain-router-v1",
           "registry_name": null
         }
       ]
@@ -207,7 +207,7 @@
           "commercial_state": "verification_required",
           "machine_state": "human_auth_handoff",
           "pain_page": "/chum/intents/buildflow-bounded-agent-action-v1/",
-          "public_url": null,
+          "public_url": "https://fabric.systemiacommandcenters.com/capabilities/buildflow-bounded-agent-action-v1",
           "registry_name": null
         }
       ]
@@ -230,7 +230,7 @@
           "commercial_state": "sell_now",
           "machine_state": "payment_ready",
           "pain_page": "/chum/intents/eventwave-paid-promotion-v1/",
-          "public_url": null,
+          "public_url": "https://fabric.systemiacommandcenters.com/capabilities/eventwave-paid-promotion-v1",
           "registry_name": null
         }
       ]
@@ -322,7 +322,7 @@
           "commercial_state": "verification_required",
           "machine_state": "human_auth_handoff",
           "pain_page": "/chum/intents/buildflow-bounded-agent-action-v1/",
-          "public_url": null,
+          "public_url": "https://fabric.systemiacommandcenters.com/capabilities/buildflow-bounded-agent-action-v1",
           "registry_name": null
         }
       ]
@@ -391,7 +391,7 @@
           "commercial_state": "contractor_beta",
           "machine_state": "mcp_http_preview_and_receipt_verify_live_workspace_entitlement_build_verified",
           "pain_page": "/chum/intents/eps-estimate-engine-machine-v1/",
-          "public_url": null,
+          "public_url": "https://fabric.systemiacommandcenters.com/capabilities/eps-estimate-engine-machine-v1",
           "registry_name": null
         }
       ]
@@ -414,7 +414,7 @@
           "commercial_state": "verification_required",
           "machine_state": "human_auth_handoff",
           "pain_page": "/chum/intents/buildflow-entity-resolution-machine-v1/",
-          "public_url": null,
+          "public_url": "https://fabric.systemiacommandcenters.com/capabilities/buildflow-entity-resolution-machine-v1",
           "registry_name": null
         }
       ]
@@ -437,7 +437,7 @@
           "commercial_state": "commercial_pilot",
           "machine_state": "human_handoff_ready",
           "pain_page": "/chum/intents/portfolio-sentinel-v1/",
-          "public_url": null,
+          "public_url": "https://fabric.systemiacommandcenters.com/capabilities/portfolio-sentinel-v1",
           "registry_name": null
         },
         {
@@ -495,7 +495,7 @@
           "commercial_state": "verification_required",
           "machine_state": "invocation_ready",
           "pain_page": "/chum/intents/raven-nexus-pain-router-v1/",
-          "public_url": null,
+          "public_url": "https://fabric.systemiacommandcenters.com/capabilities/raven-nexus-pain-router-v1",
           "registry_name": null
         }
       ]
@@ -518,7 +518,7 @@
           "commercial_state": "verification_required",
           "machine_state": "human_auth_handoff",
           "pain_page": "/chum/intents/buildflow-bounded-agent-action-v1/",
-          "public_url": null,
+          "public_url": "https://fabric.systemiacommandcenters.com/capabilities/buildflow-bounded-agent-action-v1",
           "registry_name": null
         }
       ]
@@ -610,7 +610,7 @@
           "commercial_state": "verification_required",
           "machine_state": "invocation_ready",
           "pain_page": "/chum/intents/evercraft-clip-social-video-v1/",
-          "public_url": null,
+          "public_url": "https://fabric.systemiacommandcenters.com/capabilities/evercraft-clip-social-video-v1",
           "registry_name": null
         },
         {
@@ -795,7 +795,7 @@
           "commercial_state": "verification_required",
           "machine_state": "discovery_only",
           "pain_page": "/chum/intents/forensiscope-evidence-review-v1/",
-          "public_url": null,
+          "public_url": "https://fabric.systemiacommandcenters.com/capabilities/forensiscope-evidence-review-v1",
           "registry_name": null
         }
       ]
@@ -864,7 +864,7 @@
           "commercial_state": "verification_required",
           "machine_state": "discovery_only",
           "pain_page": "/chum/intents/forensiscope-evidence-review-v1/",
-          "public_url": null,
+          "public_url": "https://fabric.systemiacommandcenters.com/capabilities/forensiscope-evidence-review-v1",
           "registry_name": null
         }
       ]
@@ -887,7 +887,7 @@
           "commercial_state": "verification_required",
           "machine_state": "human_auth_handoff",
           "pain_page": "/chum/intents/buildflow-process-audit-machine-v1/",
-          "public_url": null,
+          "public_url": "https://fabric.systemiacommandcenters.com/capabilities/buildflow-process-audit-machine-v1",
           "registry_name": null
         }
       ]
@@ -910,7 +910,7 @@
           "commercial_state": "verification_required",
           "machine_state": "human_auth_handoff",
           "pain_page": "/chum/intents/buildflow-shadow-migration-machine-v1/",
-          "public_url": null,
+          "public_url": "https://fabric.systemiacommandcenters.com/capabilities/buildflow-shadow-migration-machine-v1",
           "registry_name": null
         }
       ]
@@ -933,7 +933,7 @@
           "commercial_state": "verification_required",
           "machine_state": "human_auth_handoff",
           "pain_page": "/chum/intents/buildflow-procure-to-pay-shadow-v1/",
-          "public_url": null,
+          "public_url": "https://fabric.systemiacommandcenters.com/capabilities/buildflow-procure-to-pay-shadow-v1",
           "registry_name": null
         }
       ]
@@ -979,7 +979,7 @@
           "commercial_state": "sell_now",
           "machine_state": "payment_ready_human_confirmation",
           "pain_page": "/chum/intents/rivet-site-underwriting-v1/",
-          "public_url": null,
+          "public_url": "https://fabric.systemiacommandcenters.com/capabilities/rivet-site-underwriting-v1",
           "registry_name": null
         },
         {
@@ -1037,7 +1037,7 @@
           "commercial_state": "discovery_only",
           "machine_state": "human_handoff_only",
           "pain_page": "/chum/intents/evercraft-network-resilience-membership-v1/",
-          "public_url": null,
+          "public_url": "https://fabric.systemiacommandcenters.com/capabilities/evercraft-network-resilience-membership-v1",
           "registry_name": null
         }
       ]
@@ -1290,7 +1290,7 @@
           "commercial_state": "verification_required",
           "machine_state": "discovery_only",
           "pain_page": "/chum/intents/forensiscope-evidence-review-v1/",
-          "public_url": null,
+          "public_url": "https://fabric.systemiacommandcenters.com/capabilities/forensiscope-evidence-review-v1",
           "registry_name": null
         }
       ]
@@ -1359,7 +1359,7 @@
           "commercial_state": "sell_now",
           "machine_state": "human_handoff_ready",
           "pain_page": "/chum/intents/foundry-app-escape-audit-v1/",
-          "public_url": null,
+          "public_url": "https://fabric.systemiacommandcenters.com/capabilities/foundry-app-escape-audit-v1",
           "registry_name": null
         }
       ]
@@ -1428,7 +1428,7 @@
           "commercial_state": "verify",
           "machine_state": "discovery_only",
           "pain_page": "/chum/intents/career-command-resume-job-fit-machine-v1/",
-          "public_url": null,
+          "public_url": "https://fabric.systemiacommandcenters.com/capabilities/career-command-resume-job-fit-machine-v1",
           "registry_name": null
         }
       ]
@@ -1451,7 +1451,7 @@
           "commercial_state": "sell_now",
           "machine_state": "payment_ready",
           "pain_page": "/chum/intents/audit-center-website-audit-machine-v1/",
-          "public_url": null,
+          "public_url": "https://fabric.systemiacommandcenters.com/capabilities/audit-center-website-audit-machine-v1",
           "registry_name": null
         }
       ]
@@ -1497,7 +1497,7 @@
           "commercial_state": "verification_required",
           "machine_state": "human_auth_handoff",
           "pain_page": "/chum/intents/buildflow-process-audit-machine-v1/",
-          "public_url": null,
+          "public_url": "https://fabric.systemiacommandcenters.com/capabilities/buildflow-process-audit-machine-v1",
           "registry_name": null
         }
       ]
@@ -1520,7 +1520,7 @@
           "commercial_state": "verification_required",
           "machine_state": "human_auth_handoff",
           "pain_page": "/chum/intents/buildflow-procure-to-pay-shadow-v1/",
-          "public_url": null,
+          "public_url": "https://fabric.systemiacommandcenters.com/capabilities/buildflow-procure-to-pay-shadow-v1",
           "registry_name": null
         }
       ]
@@ -1566,7 +1566,7 @@
           "commercial_state": "verification_required",
           "machine_state": "discovery_only",
           "pain_page": "/chum/intents/datafoundry-data-gap-audit-machine-v1/",
-          "public_url": null,
+          "public_url": "https://fabric.systemiacommandcenters.com/capabilities/datafoundry-data-gap-audit-machine-v1",
           "registry_name": null
         }
       ]
@@ -1589,7 +1589,7 @@
           "commercial_state": "verification_required",
           "machine_state": "discovery_only",
           "pain_page": "/chum/intents/freight-load-exception-intelligence-machine-v1/",
-          "public_url": null,
+          "public_url": "https://fabric.systemiacommandcenters.com/capabilities/freight-load-exception-intelligence-machine-v1",
           "registry_name": null
         },
         {
@@ -1624,7 +1624,7 @@
           "commercial_state": "verification_required",
           "machine_state": "discovery_only",
           "pain_page": "/chum/intents/littlered-kdp-export-qa-machine-v1/",
-          "public_url": null,
+          "public_url": "https://fabric.systemiacommandcenters.com/capabilities/littlered-kdp-export-qa-machine-v1",
           "registry_name": null
         },
         {
@@ -1705,7 +1705,7 @@
           "commercial_state": "sell_now",
           "machine_state": "payment_ready",
           "pain_page": "/chum/intents/roasted-text-pressure-test-machine-v1/",
-          "public_url": null,
+          "public_url": "https://fabric.systemiacommandcenters.com/capabilities/roasted-text-pressure-test-machine-v1",
           "registry_name": null
         }
       ]
@@ -1728,7 +1728,7 @@
           "commercial_state": "sell_now",
           "machine_state": "payment_ready",
           "pain_page": "/chum/intents/career-command-interview-practice-machine-v1/",
-          "public_url": null,
+          "public_url": "https://fabric.systemiacommandcenters.com/capabilities/career-command-interview-practice-machine-v1",
           "registry_name": null
         }
       ]
@@ -1820,7 +1820,7 @@
           "commercial_state": "sell_now",
           "machine_state": "payment_ready",
           "pain_page": "/chum/intents/eventwave-paid-promotion-v1/",
-          "public_url": null,
+          "public_url": "https://fabric.systemiacommandcenters.com/capabilities/eventwave-paid-promotion-v1",
           "registry_name": null
         },
         {
@@ -1855,7 +1855,7 @@
           "commercial_state": "sell_now",
           "machine_state": "payment_ready",
           "pain_page": "/chum/intents/eventwave-paid-promotion-v1/",
-          "public_url": null,
+          "public_url": "https://fabric.systemiacommandcenters.com/capabilities/eventwave-paid-promotion-v1",
           "registry_name": null
         }
       ]
@@ -1970,7 +1970,7 @@
           "commercial_state": "discovery_only",
           "machine_state": "specialist_discovery_ready_runtime_gated",
           "pain_page": "/chum/intents/evercraft-web-browser-agent-v1/",
-          "public_url": null,
+          "public_url": "https://fabric.systemiacommandcenters.com/capabilities/evercraft-web-browser-agent-v1",
           "registry_name": null
         },
         {
@@ -2051,7 +2051,7 @@
           "commercial_state": "sell_now",
           "machine_state": "payment_ready",
           "pain_page": "/chum/intents/roasted-text-pressure-test-machine-v1/",
-          "public_url": null,
+          "public_url": "https://fabric.systemiacommandcenters.com/capabilities/roasted-text-pressure-test-machine-v1",
           "registry_name": null
         }
       ]
@@ -2074,7 +2074,7 @@
           "commercial_state": "contractor_beta",
           "machine_state": "mcp_http_preview_and_receipt_verify_live_workspace_entitlement_build_verified",
           "pain_page": "/chum/intents/eps-estimate-engine-machine-v1/",
-          "public_url": null,
+          "public_url": "https://fabric.systemiacommandcenters.com/capabilities/eps-estimate-engine-machine-v1",
           "registry_name": null
         }
       ]
@@ -2166,7 +2166,7 @@
           "commercial_state": "sell_now",
           "machine_state": "payment_ready",
           "pain_page": "/chum/intents/deck-capital-fit-sprint-machine-v1/",
-          "public_url": null,
+          "public_url": "https://fabric.systemiacommandcenters.com/capabilities/deck-capital-fit-sprint-machine-v1",
           "registry_name": null
         }
       ]
@@ -2339,7 +2339,7 @@
           "commercial_state": "verification_required",
           "machine_state": "discovery_only",
           "pain_page": "/chum/intents/talent-evidence-profile-machine-v1/",
-          "public_url": null,
+          "public_url": "https://fabric.systemiacommandcenters.com/capabilities/talent-evidence-profile-machine-v1",
           "registry_name": null
         },
         {
@@ -2535,7 +2535,7 @@
           "commercial_state": "sell_now",
           "machine_state": "payment_ready",
           "pain_page": "/chum/intents/website-launch-service-v1/",
-          "public_url": null,
+          "public_url": "https://fabric.systemiacommandcenters.com/capabilities/website-launch-service-v1",
           "registry_name": null
         }
       ]
@@ -2581,7 +2581,7 @@
           "commercial_state": "verification_required",
           "machine_state": "discovery_only",
           "pain_page": "/chum/intents/towi-evidence-research-machine-v1/",
-          "public_url": null,
+          "public_url": "https://fabric.systemiacommandcenters.com/capabilities/towi-evidence-research-machine-v1",
           "registry_name": null
         },
         {
@@ -2662,7 +2662,7 @@
           "commercial_state": "verification_required",
           "machine_state": "invocation_ready",
           "pain_page": "/chum/intents/raven-nexus-pain-router-v1/",
-          "public_url": null,
+          "public_url": "https://fabric.systemiacommandcenters.com/capabilities/raven-nexus-pain-router-v1",
           "registry_name": null
         }
       ]
@@ -2685,7 +2685,7 @@
           "commercial_state": "discovery_only",
           "machine_state": "human_handoff_only",
           "pain_page": "/chum/intents/evercraft-network-resilience-membership-v1/",
-          "public_url": null,
+          "public_url": "https://fabric.systemiacommandcenters.com/capabilities/evercraft-network-resilience-membership-v1",
           "registry_name": null
         }
       ]
@@ -2731,7 +2731,7 @@
           "commercial_state": "verification_required",
           "machine_state": "invocation_ready",
           "pain_page": "/chum/intents/raven-nexus-pain-router-v1/",
-          "public_url": null,
+          "public_url": "https://fabric.systemiacommandcenters.com/capabilities/raven-nexus-pain-router-v1",
           "registry_name": null
         }
       ]
@@ -2800,7 +2800,7 @@
           "commercial_state": "sell_now",
           "machine_state": "human_handoff_ready",
           "pain_page": "/chum/intents/site-survive-rapid-audit-v1/",
-          "public_url": null,
+          "public_url": "https://fabric.systemiacommandcenters.com/capabilities/site-survive-rapid-audit-v1",
           "registry_name": null
         }
       ]
@@ -2892,7 +2892,7 @@
           "commercial_state": "sell_now",
           "machine_state": "payment_ready",
           "pain_page": "/chum/intents/eventwave-paid-promotion-v1/",
-          "public_url": null,
+          "public_url": "https://fabric.systemiacommandcenters.com/capabilities/eventwave-paid-promotion-v1",
           "registry_name": null
         }
       ]
@@ -2915,7 +2915,7 @@
           "commercial_state": "verification_required",
           "machine_state": "invocation_ready",
           "pain_page": "/chum/intents/systemia-yard-runtime-extension-v1/",
-          "public_url": null,
+          "public_url": "https://fabric.systemiacommandcenters.com/capabilities/systemia-yard-runtime-extension-v1",
           "registry_name": null
         }
       ]
@@ -2984,7 +2984,7 @@
           "commercial_state": "contractor_beta",
           "machine_state": "mcp_http_preview_and_receipt_verify_live_workspace_entitlement_build_verified",
           "pain_page": "/chum/intents/eps-estimate-engine-machine-v1/",
-          "public_url": null,
+          "public_url": "https://fabric.systemiacommandcenters.com/capabilities/eps-estimate-engine-machine-v1",
           "registry_name": null
         }
       ]
@@ -3007,7 +3007,7 @@
           "commercial_state": "contractor_beta",
           "machine_state": "mcp_http_preview_and_receipt_verify_live_workspace_entitlement_build_verified",
           "pain_page": "/chum/intents/eps-estimate-engine-machine-v1/",
-          "public_url": null,
+          "public_url": "https://fabric.systemiacommandcenters.com/capabilities/eps-estimate-engine-machine-v1",
           "registry_name": null
         }
       ]
@@ -3122,7 +3122,7 @@
           "commercial_state": "discovery_only",
           "machine_state": "specialist_discovery_ready_runtime_gated",
           "pain_page": "/chum/intents/evercraft-web-browser-agent-v1/",
-          "public_url": null,
+          "public_url": "https://fabric.systemiacommandcenters.com/capabilities/evercraft-web-browser-agent-v1",
           "registry_name": null
         }
       ]
@@ -3168,7 +3168,7 @@
           "commercial_state": "sell_now",
           "machine_state": "payment_ready_human_confirmation",
           "pain_page": "/chum/intents/rivet-site-underwriting-v1/",
-          "public_url": null,
+          "public_url": "https://fabric.systemiacommandcenters.com/capabilities/rivet-site-underwriting-v1",
           "registry_name": null
         }
       ]
@@ -3237,7 +3237,7 @@
           "commercial_state": "verification_required",
           "machine_state": "discovery_only",
           "pain_page": "/chum/intents/littlered-kdp-export-qa-machine-v1/",
-          "public_url": null,
+          "public_url": "https://fabric.systemiacommandcenters.com/capabilities/littlered-kdp-export-qa-machine-v1",
           "registry_name": null
         },
         {
@@ -3272,7 +3272,7 @@
           "commercial_state": "sell_now",
           "machine_state": "payment_ready",
           "pain_page": "/chum/intents/audit-center-website-audit-machine-v1/",
-          "public_url": null,
+          "public_url": "https://fabric.systemiacommandcenters.com/capabilities/audit-center-website-audit-machine-v1",
           "registry_name": null
         }
       ]
@@ -3295,7 +3295,7 @@
           "commercial_state": "verify",
           "machine_state": "discovery_only",
           "pain_page": "/chum/intents/career-command-resume-job-fit-machine-v1/",
-          "public_url": null,
+          "public_url": "https://fabric.systemiacommandcenters.com/capabilities/career-command-resume-job-fit-machine-v1",
           "registry_name": null
         }
       ]
@@ -3318,7 +3318,7 @@
           "commercial_state": "verification_required",
           "machine_state": "discovery_only",
           "pain_page": "/chum/intents/littlered-kdp-export-qa-machine-v1/",
-          "public_url": null,
+          "public_url": "https://fabric.systemiacommandcenters.com/capabilities/littlered-kdp-export-qa-machine-v1",
           "registry_name": null
         },
         {
@@ -3353,7 +3353,7 @@
           "commercial_state": "verification_required",
           "machine_state": "discovery_only",
           "pain_page": "/chum/intents/freight-load-exception-intelligence-machine-v1/",
-          "public_url": null,
+          "public_url": "https://fabric.systemiacommandcenters.com/capabilities/freight-load-exception-intelligence-machine-v1",
           "registry_name": null
         },
         {
@@ -3457,7 +3457,7 @@
           "commercial_state": "discovery_only",
           "machine_state": "specialist_discovery_ready_runtime_gated",
           "pain_page": "/chum/intents/evercraft-web-browser-agent-v1/",
-          "public_url": null,
+          "public_url": "https://fabric.systemiacommandcenters.com/capabilities/evercraft-web-browser-agent-v1",
           "registry_name": null
         }
       ]
@@ -3572,7 +3572,7 @@
           "commercial_state": "sell_now",
           "machine_state": "payment_ready_human_confirmation",
           "pain_page": "/chum/intents/aliev-site-opportunity-snapshot-v1/",
-          "public_url": null,
+          "public_url": "https://fabric.systemiacommandcenters.com/capabilities/aliev-site-opportunity-snapshot-v1",
           "registry_name": null
         }
       ]
@@ -4078,7 +4078,7 @@
           "commercial_state": "verification_required",
           "machine_state": "human_auth_handoff",
           "pain_page": "/chum/intents/buildflow-process-audit-machine-v1/",
-          "public_url": null,
+          "public_url": "https://fabric.systemiacommandcenters.com/capabilities/buildflow-process-audit-machine-v1",
           "registry_name": null
         }
       ]
@@ -4101,7 +4101,7 @@
           "commercial_state": "verification_required",
           "machine_state": "discovery_only",
           "pain_page": "/chum/intents/globalstat-country-intelligence-machine-v1/",
-          "public_url": null,
+          "public_url": "https://fabric.systemiacommandcenters.com/capabilities/globalstat-country-intelligence-machine-v1",
           "registry_name": null
         },
         {
@@ -4136,7 +4136,7 @@
           "commercial_state": "verification_required",
           "machine_state": "discovery_only",
           "pain_page": "/chum/intents/forensiscope-evidence-review-v1/",
-          "public_url": null,
+          "public_url": "https://fabric.systemiacommandcenters.com/capabilities/forensiscope-evidence-review-v1",
           "registry_name": null
         }
       ]
@@ -4205,7 +4205,7 @@
           "commercial_state": "verification_required",
           "machine_state": "discovery_only",
           "pain_page": "/chum/intents/buildflow-enterprise-ops-router-v1/",
-          "public_url": null,
+          "public_url": "https://fabric.systemiacommandcenters.com/capabilities/buildflow-enterprise-ops-router-v1",
           "registry_name": null
         }
       ]
@@ -4366,7 +4366,7 @@
           "commercial_state": "discovery_only",
           "machine_state": "human_handoff_only",
           "pain_page": "/chum/intents/evercraft-network-resilience-membership-v1/",
-          "public_url": null,
+          "public_url": "https://fabric.systemiacommandcenters.com/capabilities/evercraft-network-resilience-membership-v1",
           "registry_name": null
         }
       ]
@@ -4435,7 +4435,7 @@
           "commercial_state": "commercial_pilot",
           "machine_state": "human_handoff_ready",
           "pain_page": "/chum/intents/portfolio-sentinel-v1/",
-          "public_url": null,
+          "public_url": "https://fabric.systemiacommandcenters.com/capabilities/portfolio-sentinel-v1",
           "registry_name": null
         },
         {
@@ -4470,7 +4470,7 @@
           "commercial_state": "commercial_pilot",
           "machine_state": "human_handoff_ready",
           "pain_page": "/chum/intents/portfolio-sentinel-v1/",
-          "public_url": null,
+          "public_url": "https://fabric.systemiacommandcenters.com/capabilities/portfolio-sentinel-v1",
           "registry_name": null
         },
         {
@@ -4551,7 +4551,7 @@
           "commercial_state": "contractor_beta",
           "machine_state": "mcp_http_preview_and_receipt_verify_live_workspace_entitlement_build_verified",
           "pain_page": "/chum/intents/eps-estimate-engine-machine-v1/",
-          "public_url": null,
+          "public_url": "https://fabric.systemiacommandcenters.com/capabilities/eps-estimate-engine-machine-v1",
           "registry_name": null
         }
       ]
@@ -4574,7 +4574,7 @@
           "commercial_state": "contractor_beta",
           "machine_state": "mcp_http_preview_and_receipt_verify_live_workspace_entitlement_build_verified",
           "pain_page": "/chum/intents/eps-estimate-engine-machine-v1/",
-          "public_url": null,
+          "public_url": "https://fabric.systemiacommandcenters.com/capabilities/eps-estimate-engine-machine-v1",
           "registry_name": null
         }
       ]
@@ -4689,7 +4689,7 @@
           "commercial_state": "contractor_beta",
           "machine_state": "mcp_http_preview_and_receipt_verify_live_workspace_entitlement_build_verified",
           "pain_page": "/chum/intents/eps-estimate-engine-machine-v1/",
-          "public_url": null,
+          "public_url": "https://fabric.systemiacommandcenters.com/capabilities/eps-estimate-engine-machine-v1",
           "registry_name": null
         }
       ]
@@ -4712,7 +4712,7 @@
           "commercial_state": "contractor_beta",
           "machine_state": "mcp_http_preview_and_receipt_verify_live_workspace_entitlement_build_verified",
           "pain_page": "/chum/intents/eps-estimate-engine-machine-v1/",
-          "public_url": null,
+          "public_url": "https://fabric.systemiacommandcenters.com/capabilities/eps-estimate-engine-machine-v1",
           "registry_name": null
         }
       ]
@@ -4827,7 +4827,7 @@
           "commercial_state": "verification_required",
           "machine_state": "discovery_only",
           "pain_page": "/chum/intents/globalstat-country-intelligence-machine-v1/",
-          "public_url": null,
+          "public_url": "https://fabric.systemiacommandcenters.com/capabilities/globalstat-country-intelligence-machine-v1",
           "registry_name": null
         },
         {
@@ -5069,7 +5069,7 @@
           "commercial_state": "verification_required",
           "machine_state": "invocation_ready",
           "pain_page": "/chum/intents/evercraft-clip-social-video-v1/",
-          "public_url": null,
+          "public_url": "https://fabric.systemiacommandcenters.com/capabilities/evercraft-clip-social-video-v1",
           "registry_name": null
         },
         {
@@ -5104,7 +5104,7 @@
           "commercial_state": "verification_required",
           "machine_state": "invocation_ready",
           "pain_page": "/chum/intents/raven-nexus-pain-router-v1/",
-          "public_url": null,
+          "public_url": "https://fabric.systemiacommandcenters.com/capabilities/raven-nexus-pain-router-v1",
           "registry_name": null
         }
       ]
@@ -5196,7 +5196,7 @@
           "commercial_state": "contractor_beta",
           "machine_state": "mcp_http_preview_and_receipt_verify_live_workspace_entitlement_build_verified",
           "pain_page": "/chum/intents/eps-estimate-engine-machine-v1/",
-          "public_url": null,
+          "public_url": "https://fabric.systemiacommandcenters.com/capabilities/eps-estimate-engine-machine-v1",
           "registry_name": null
         }
       ]
@@ -5323,7 +5323,7 @@
           "commercial_state": "verification_required",
           "machine_state": "human_auth_handoff",
           "pain_page": "/chum/intents/buildflow-entity-resolution-machine-v1/",
-          "public_url": null,
+          "public_url": "https://fabric.systemiacommandcenters.com/capabilities/buildflow-entity-resolution-machine-v1",
           "registry_name": null
         }
       ]
@@ -5392,7 +5392,7 @@
           "commercial_state": "verification_required",
           "machine_state": "discovery_only",
           "pain_page": "/chum/intents/datafoundry-data-gap-audit-machine-v1/",
-          "public_url": null,
+          "public_url": "https://fabric.systemiacommandcenters.com/capabilities/datafoundry-data-gap-audit-machine-v1",
           "registry_name": null
         }
       ]
@@ -5415,7 +5415,7 @@
           "commercial_state": "commercial_pilot",
           "machine_state": "human_handoff_ready",
           "pain_page": "/chum/intents/portfolio-sentinel-v1/",
-          "public_url": null,
+          "public_url": "https://fabric.systemiacommandcenters.com/capabilities/portfolio-sentinel-v1",
           "registry_name": null
         },
         {
@@ -5450,7 +5450,7 @@
           "commercial_state": "commercial_pilot",
           "machine_state": "human_handoff_ready",
           "pain_page": "/chum/intents/portfolio-sentinel-v1/",
-          "public_url": null,
+          "public_url": "https://fabric.systemiacommandcenters.com/capabilities/portfolio-sentinel-v1",
           "registry_name": null
         },
         {
@@ -5531,7 +5531,7 @@
           "commercial_state": "discovery_only",
           "machine_state": "human_handoff_only",
           "pain_page": "/chum/intents/evercraft-network-resilience-membership-v1/",
-          "public_url": null,
+          "public_url": "https://fabric.systemiacommandcenters.com/capabilities/evercraft-network-resilience-membership-v1",
           "registry_name": null
         }
       ]
@@ -5554,7 +5554,7 @@
           "commercial_state": "discovery_only",
           "machine_state": "human_handoff_only",
           "pain_page": "/chum/intents/evercraft-network-resilience-membership-v1/",
-          "public_url": null,
+          "public_url": "https://fabric.systemiacommandcenters.com/capabilities/evercraft-network-resilience-membership-v1",
           "registry_name": null
         }
       ]
@@ -5577,7 +5577,7 @@
           "commercial_state": "sell_now",
           "machine_state": "payment_ready",
           "pain_page": "/chum/intents/faie-signal-brief-v1/",
-          "public_url": null,
+          "public_url": "https://fabric.systemiacommandcenters.com/capabilities/faie-signal-brief-v1",
           "registry_name": null
         }
       ]
@@ -5830,7 +5830,7 @@
           "commercial_state": "sell_now",
           "machine_state": "human_handoff_ready",
           "pain_page": "/chum/intents/foundry-app-escape-audit-v1/",
-          "public_url": null,
+          "public_url": "https://fabric.systemiacommandcenters.com/capabilities/foundry-app-escape-audit-v1",
           "registry_name": null
         }
       ]
@@ -5922,7 +5922,7 @@
           "commercial_state": "contractor_beta",
           "machine_state": "mcp_http_preview_and_receipt_verify_live_workspace_entitlement_build_verified",
           "pain_page": "/chum/intents/eps-estimate-engine-machine-v1/",
-          "public_url": null,
+          "public_url": "https://fabric.systemiacommandcenters.com/capabilities/eps-estimate-engine-machine-v1",
           "registry_name": null
         }
       ]
@@ -5945,7 +5945,7 @@
           "commercial_state": "contractor_beta",
           "machine_state": "mcp_http_preview_and_receipt_verify_live_workspace_entitlement_build_verified",
           "pain_page": "/chum/intents/eps-estimate-engine-machine-v1/",
-          "public_url": null,
+          "public_url": "https://fabric.systemiacommandcenters.com/capabilities/eps-estimate-engine-machine-v1",
           "registry_name": null
         }
       ]
@@ -6014,7 +6014,7 @@
           "commercial_state": "sell_now",
           "machine_state": "payment_ready_human_confirmation",
           "pain_page": "/chum/intents/aliev-site-opportunity-snapshot-v1/",
-          "public_url": null,
+          "public_url": "https://fabric.systemiacommandcenters.com/capabilities/aliev-site-opportunity-snapshot-v1",
           "registry_name": null
         }
       ]
@@ -6037,7 +6037,7 @@
           "commercial_state": "sell_now",
           "machine_state": "payment_ready_human_confirmation",
           "pain_page": "/chum/intents/rivet-site-underwriting-v1/",
-          "public_url": null,
+          "public_url": "https://fabric.systemiacommandcenters.com/capabilities/rivet-site-underwriting-v1",
           "registry_name": null
         },
         {
@@ -6072,7 +6072,7 @@
           "commercial_state": "sell_now",
           "machine_state": "payment_ready_human_confirmation",
           "pain_page": "/chum/intents/rivet-site-underwriting-v1/",
-          "public_url": null,
+          "public_url": "https://fabric.systemiacommandcenters.com/capabilities/rivet-site-underwriting-v1",
           "registry_name": null
         },
         {
@@ -6107,7 +6107,7 @@
           "commercial_state": "sell_now",
           "machine_state": "payment_ready_human_confirmation",
           "pain_page": "/chum/intents/rivet-site-underwriting-v1/",
-          "public_url": null,
+          "public_url": "https://fabric.systemiacommandcenters.com/capabilities/rivet-site-underwriting-v1",
           "registry_name": null
         }
       ]
@@ -6130,7 +6130,7 @@
           "commercial_state": "sell_now",
           "machine_state": "payment_ready_human_confirmation",
           "pain_page": "/chum/intents/aliev-site-opportunity-snapshot-v1/",
-          "public_url": null,
+          "public_url": "https://fabric.systemiacommandcenters.com/capabilities/aliev-site-opportunity-snapshot-v1",
           "registry_name": null
         }
       ]
@@ -6153,7 +6153,7 @@
           "commercial_state": "sell_now",
           "machine_state": "payment_ready_human_confirmation",
           "pain_page": "/chum/intents/rivet-site-underwriting-v1/",
-          "public_url": null,
+          "public_url": "https://fabric.systemiacommandcenters.com/capabilities/rivet-site-underwriting-v1",
           "registry_name": null
         },
         {
@@ -6188,7 +6188,7 @@
           "commercial_state": "sell_now",
           "machine_state": "payment_ready_human_confirmation",
           "pain_page": "/chum/intents/rivet-site-underwriting-v1/",
-          "public_url": null,
+          "public_url": "https://fabric.systemiacommandcenters.com/capabilities/rivet-site-underwriting-v1",
           "registry_name": null
         }
       ]
@@ -6211,7 +6211,7 @@
           "commercial_state": "sell_now",
           "machine_state": "payment_ready_human_confirmation",
           "pain_page": "/chum/intents/aliev-site-opportunity-snapshot-v1/",
-          "public_url": null,
+          "public_url": "https://fabric.systemiacommandcenters.com/capabilities/aliev-site-opportunity-snapshot-v1",
           "registry_name": null
         }
       ]
@@ -6234,7 +6234,7 @@
           "commercial_state": "sell_now",
           "machine_state": "payment_ready_human_confirmation",
           "pain_page": "/chum/intents/rivet-site-underwriting-v1/",
-          "public_url": null,
+          "public_url": "https://fabric.systemiacommandcenters.com/capabilities/rivet-site-underwriting-v1",
           "registry_name": null
         },
         {
@@ -6269,7 +6269,7 @@
           "commercial_state": "sell_now",
           "machine_state": "payment_ready_human_confirmation",
           "pain_page": "/chum/intents/aliev-site-opportunity-snapshot-v1/",
-          "public_url": null,
+          "public_url": "https://fabric.systemiacommandcenters.com/capabilities/aliev-site-opportunity-snapshot-v1",
           "registry_name": null
         }
       ]
@@ -6338,7 +6338,7 @@
           "commercial_state": "sell_now",
           "machine_state": "payment_ready_human_confirmation",
           "pain_page": "/chum/intents/rivet-site-underwriting-v1/",
-          "public_url": null,
+          "public_url": "https://fabric.systemiacommandcenters.com/capabilities/rivet-site-underwriting-v1",
           "registry_name": null
         },
         {
@@ -6396,7 +6396,7 @@
           "commercial_state": "sell_now",
           "machine_state": "payment_ready_human_confirmation",
           "pain_page": "/chum/intents/rivet-site-underwriting-v1/",
-          "public_url": null,
+          "public_url": "https://fabric.systemiacommandcenters.com/capabilities/rivet-site-underwriting-v1",
           "registry_name": null
         },
         {
@@ -6500,7 +6500,7 @@
           "commercial_state": "sell_now",
           "machine_state": "payment_ready_human_confirmation",
           "pain_page": "/chum/intents/rivet-site-underwriting-v1/",
-          "public_url": null,
+          "public_url": "https://fabric.systemiacommandcenters.com/capabilities/rivet-site-underwriting-v1",
           "registry_name": null
         }
       ]
@@ -6523,7 +6523,7 @@
           "commercial_state": "verification_required",
           "machine_state": "discovery_only",
           "pain_page": "/chum/intents/talent-evidence-profile-machine-v1/",
-          "public_url": null,
+          "public_url": "https://fabric.systemiacommandcenters.com/capabilities/talent-evidence-profile-machine-v1",
           "registry_name": null
         },
         {
@@ -6604,7 +6604,7 @@
           "commercial_state": "discovery_only",
           "machine_state": "human_handoff_only",
           "pain_page": "/chum/intents/evercraft-network-resilience-membership-v1/",
-          "public_url": null,
+          "public_url": "https://fabric.systemiacommandcenters.com/capabilities/evercraft-network-resilience-membership-v1",
           "registry_name": null
         },
         {
@@ -6662,7 +6662,7 @@
           "commercial_state": "verification_required",
           "machine_state": "discovery_only",
           "pain_page": "/chum/intents/forensiscope-evidence-review-v1/",
-          "public_url": null,
+          "public_url": "https://fabric.systemiacommandcenters.com/capabilities/forensiscope-evidence-review-v1",
           "registry_name": null
         }
       ]
@@ -6892,7 +6892,7 @@
           "commercial_state": "sell_now",
           "machine_state": "human_handoff_ready",
           "pain_page": "/chum/intents/foundry-app-escape-audit-v1/",
-          "public_url": null,
+          "public_url": "https://fabric.systemiacommandcenters.com/capabilities/foundry-app-escape-audit-v1",
           "registry_name": null
         }
       ]
@@ -6915,7 +6915,7 @@
           "commercial_state": "verification_required",
           "machine_state": "invocation_ready",
           "pain_page": "/chum/intents/systemia-yard-runtime-extension-v1/",
-          "public_url": null,
+          "public_url": "https://fabric.systemiacommandcenters.com/capabilities/systemia-yard-runtime-extension-v1",
           "registry_name": null
         }
       ]
@@ -7007,7 +7007,7 @@
           "commercial_state": "verification_required",
           "machine_state": "invocation_ready",
           "pain_page": "/chum/intents/raven-nexus-pain-router-v1/",
-          "public_url": null,
+          "public_url": "https://fabric.systemiacommandcenters.com/capabilities/raven-nexus-pain-router-v1",
           "registry_name": null
         }
       ]
@@ -7237,7 +7237,7 @@
           "commercial_state": "sell_now",
           "machine_state": "payment_ready",
           "pain_page": "/chum/intents/eventwave-paid-promotion-v1/",
-          "public_url": null,
+          "public_url": "https://fabric.systemiacommandcenters.com/capabilities/eventwave-paid-promotion-v1",
           "registry_name": null
         }
       ]
@@ -7283,7 +7283,7 @@
           "commercial_state": "discovery_only",
           "machine_state": "specialist_discovery_ready_runtime_gated",
           "pain_page": "/chum/intents/evercraft-web-browser-agent-v1/",
-          "public_url": null,
+          "public_url": "https://fabric.systemiacommandcenters.com/capabilities/evercraft-web-browser-agent-v1",
           "registry_name": null
         }
       ]
@@ -7352,7 +7352,7 @@
           "commercial_state": "contractor_beta",
           "machine_state": "mcp_http_preview_and_receipt_verify_live_workspace_entitlement_build_verified",
           "pain_page": "/chum/intents/eps-estimate-engine-machine-v1/",
-          "public_url": null,
+          "public_url": "https://fabric.systemiacommandcenters.com/capabilities/eps-estimate-engine-machine-v1",
           "registry_name": null
         }
       ]
@@ -7421,7 +7421,7 @@
           "commercial_state": "sell_now",
           "machine_state": "payment_ready",
           "pain_page": "/chum/intents/findmypart-paid-hunt-v1/",
-          "public_url": null,
+          "public_url": "https://fabric.systemiacommandcenters.com/capabilities/findmypart-paid-hunt-v1",
           "registry_name": null
         }
       ]
@@ -7490,7 +7490,7 @@
           "commercial_state": "sell_now",
           "machine_state": "payment_ready",
           "pain_page": "/chum/intents/findmypart-paid-hunt-v1/",
-          "public_url": null,
+          "public_url": "https://fabric.systemiacommandcenters.com/capabilities/findmypart-paid-hunt-v1",
           "registry_name": null
         }
       ]
@@ -7513,7 +7513,7 @@
           "commercial_state": "free",
           "machine_state": "read_only_live",
           "pain_page": "/chum/intents/findmypart-part-passport-v1/",
-          "public_url": null,
+          "public_url": "https://fabric.systemiacommandcenters.com/capabilities/findmypart-part-passport-v1",
           "registry_name": null
         }
       ]
@@ -7536,7 +7536,7 @@
           "commercial_state": "sell_now",
           "machine_state": "payment_ready",
           "pain_page": "/chum/intents/findmypart-paid-hunt-v1/",
-          "public_url": null,
+          "public_url": "https://fabric.systemiacommandcenters.com/capabilities/findmypart-paid-hunt-v1",
           "registry_name": null
         }
       ]
@@ -7559,7 +7559,7 @@
           "commercial_state": "sell_now",
           "machine_state": "payment_ready",
           "pain_page": "/chum/intents/findmypart-paid-hunt-v1/",
-          "public_url": null,
+          "public_url": "https://fabric.systemiacommandcenters.com/capabilities/findmypart-paid-hunt-v1",
           "registry_name": null
         }
       ]
@@ -7674,7 +7674,7 @@
           "commercial_state": "sell_now",
           "machine_state": "payment_ready",
           "pain_page": "/chum/intents/findmypart-paid-hunt-v1/",
-          "public_url": null,
+          "public_url": "https://fabric.systemiacommandcenters.com/capabilities/findmypart-paid-hunt-v1",
           "registry_name": null
         },
         {
@@ -7755,7 +7755,7 @@
           "commercial_state": "verification_required",
           "machine_state": "human_auth_handoff",
           "pain_page": "/chum/intents/buildflow-process-audit-machine-v1/",
-          "public_url": null,
+          "public_url": "https://fabric.systemiacommandcenters.com/capabilities/buildflow-process-audit-machine-v1",
           "registry_name": null
         }
       ]
@@ -7778,7 +7778,7 @@
           "commercial_state": "sell_now",
           "machine_state": "payment_ready",
           "pain_page": "/chum/intents/deck-capital-fit-sprint-machine-v1/",
-          "public_url": null,
+          "public_url": "https://fabric.systemiacommandcenters.com/capabilities/deck-capital-fit-sprint-machine-v1",
           "registry_name": null
         }
       ]
@@ -7824,7 +7824,7 @@
           "commercial_state": "verification_required",
           "machine_state": "human_auth_handoff",
           "pain_page": "/chum/intents/buildflow-shadow-migration-machine-v1/",
-          "public_url": null,
+          "public_url": "https://fabric.systemiacommandcenters.com/capabilities/buildflow-shadow-migration-machine-v1",
           "registry_name": null
         }
       ]
@@ -7870,7 +7870,7 @@
           "commercial_state": "sell_now",
           "machine_state": "payment_ready",
           "pain_page": "/chum/intents/audit-center-website-audit-machine-v1/",
-          "public_url": null,
+          "public_url": "https://fabric.systemiacommandcenters.com/capabilities/audit-center-website-audit-machine-v1",
           "registry_name": null
         }
       ]
@@ -7916,7 +7916,7 @@
           "commercial_state": "commercial_pilot",
           "machine_state": "human_handoff_ready",
           "pain_page": "/chum/intents/portfolio-sentinel-v1/",
-          "public_url": null,
+          "public_url": "https://fabric.systemiacommandcenters.com/capabilities/portfolio-sentinel-v1",
           "registry_name": null
         },
         {
@@ -7997,7 +7997,7 @@
           "commercial_state": "sell_now",
           "machine_state": "payment_ready_human_confirmation",
           "pain_page": "/chum/intents/aliev-site-opportunity-snapshot-v1/",
-          "public_url": null,
+          "public_url": "https://fabric.systemiacommandcenters.com/capabilities/aliev-site-opportunity-snapshot-v1",
           "registry_name": null
         }
       ]
@@ -8043,7 +8043,7 @@
           "commercial_state": "verification_required",
           "machine_state": "discovery_only",
           "pain_page": "/chum/intents/talent-evidence-profile-machine-v1/",
-          "public_url": null,
+          "public_url": "https://fabric.systemiacommandcenters.com/capabilities/talent-evidence-profile-machine-v1",
           "registry_name": null
         },
         {
@@ -8147,7 +8147,7 @@
           "commercial_state": "verification_required",
           "machine_state": "discovery_only",
           "pain_page": "/chum/intents/freight-load-exception-intelligence-machine-v1/",
-          "public_url": null,
+          "public_url": "https://fabric.systemiacommandcenters.com/capabilities/freight-load-exception-intelligence-machine-v1",
           "registry_name": null
         },
         {
@@ -8182,7 +8182,7 @@
           "commercial_state": "verification_required",
           "machine_state": "human_auth_handoff",
           "pain_page": "/chum/intents/buildflow-procure-to-pay-shadow-v1/",
-          "public_url": null,
+          "public_url": "https://fabric.systemiacommandcenters.com/capabilities/buildflow-procure-to-pay-shadow-v1",
           "registry_name": null
         }
       ]
@@ -8205,7 +8205,7 @@
           "commercial_state": "verification_required",
           "machine_state": "discovery_only",
           "pain_page": "/chum/intents/findmypart-repair-shop-desk-v1/",
-          "public_url": null,
+          "public_url": "https://fabric.systemiacommandcenters.com/capabilities/findmypart-repair-shop-desk-v1",
           "registry_name": null
         }
       ]
@@ -8297,7 +8297,7 @@
           "commercial_state": "verification_required",
           "machine_state": "discovery_only",
           "pain_page": "/chum/intents/datafoundry-data-gap-audit-machine-v1/",
-          "public_url": null,
+          "public_url": "https://fabric.systemiacommandcenters.com/capabilities/datafoundry-data-gap-audit-machine-v1",
           "registry_name": null
         }
       ]
@@ -8539,7 +8539,7 @@
           "commercial_state": "verification_required",
           "machine_state": "invocation_ready",
           "pain_page": "/chum/intents/evercraft-clip-social-video-v1/",
-          "public_url": null,
+          "public_url": "https://fabric.systemiacommandcenters.com/capabilities/evercraft-clip-social-video-v1",
           "registry_name": null
         },
         {
@@ -8724,7 +8724,7 @@
           "commercial_state": "sell_now",
           "machine_state": "payment_ready_human_confirmation",
           "pain_page": "/chum/intents/rivet-site-underwriting-v1/",
-          "public_url": null,
+          "public_url": "https://fabric.systemiacommandcenters.com/capabilities/rivet-site-underwriting-v1",
           "registry_name": null
         },
         {
@@ -8851,7 +8851,7 @@
           "commercial_state": "contractor_beta",
           "machine_state": "mcp_http_preview_and_receipt_verify_live_workspace_entitlement_build_verified",
           "pain_page": "/chum/intents/eps-estimate-engine-machine-v1/",
-          "public_url": null,
+          "public_url": "https://fabric.systemiacommandcenters.com/capabilities/eps-estimate-engine-machine-v1",
           "registry_name": null
         }
       ]
@@ -9173,7 +9173,7 @@
           "commercial_state": "verification_required",
           "machine_state": "human_auth_handoff",
           "pain_page": "/chum/intents/buildflow-bounded-agent-action-v1/",
-          "public_url": null,
+          "public_url": "https://fabric.systemiacommandcenters.com/capabilities/buildflow-bounded-agent-action-v1",
           "registry_name": null
         }
       ]
@@ -9242,7 +9242,7 @@
           "commercial_state": "verification_required",
           "machine_state": "discovery_only",
           "pain_page": "/chum/intents/towi-evidence-research-machine-v1/",
-          "public_url": null,
+          "public_url": "https://fabric.systemiacommandcenters.com/capabilities/towi-evidence-research-machine-v1",
           "registry_name": null
         },
         {
@@ -9277,7 +9277,7 @@
           "commercial_state": "sell_now",
           "machine_state": "payment_ready",
           "pain_page": "/chum/intents/faie-signal-brief-v1/",
-          "public_url": null,
+          "public_url": "https://fabric.systemiacommandcenters.com/capabilities/faie-signal-brief-v1",
           "registry_name": null
         }
       ]
@@ -9300,7 +9300,7 @@
           "commercial_state": "verification_required",
           "machine_state": "discovery_only",
           "pain_page": "/chum/intents/evermaps-evidence-projection-machine-v1/",
-          "public_url": null,
+          "public_url": "https://fabric.systemiacommandcenters.com/capabilities/evermaps-evidence-projection-machine-v1",
           "registry_name": null
         },
         {
@@ -9358,7 +9358,7 @@
           "commercial_state": "verification_required",
           "machine_state": "discovery_only",
           "pain_page": "/chum/intents/globalstat-country-intelligence-machine-v1/",
-          "public_url": null,
+          "public_url": "https://fabric.systemiacommandcenters.com/capabilities/globalstat-country-intelligence-machine-v1",
           "registry_name": null
         },
         {
@@ -9393,7 +9393,7 @@
           "commercial_state": "discovery_only",
           "machine_state": "specialist_discovery_ready_runtime_gated",
           "pain_page": "/chum/intents/evercraft-web-browser-agent-v1/",
-          "public_url": null,
+          "public_url": "https://fabric.systemiacommandcenters.com/capabilities/evercraft-web-browser-agent-v1",
           "registry_name": null
         }
       ]
@@ -9439,7 +9439,7 @@
           "commercial_state": "verification_required",
           "machine_state": "invocation_ready",
           "pain_page": "/chum/intents/systemia-yard-runtime-extension-v1/",
-          "public_url": null,
+          "public_url": "https://fabric.systemiacommandcenters.com/capabilities/systemia-yard-runtime-extension-v1",
           "registry_name": null
         }
       ]
@@ -9485,7 +9485,7 @@
           "commercial_state": "sell_now",
           "machine_state": "payment_ready",
           "pain_page": "/chum/intents/website-launch-service-v1/",
-          "public_url": null,
+          "public_url": "https://fabric.systemiacommandcenters.com/capabilities/website-launch-service-v1",
           "registry_name": null
         }
       ]
@@ -9531,7 +9531,7 @@
           "commercial_state": "discovery_only",
           "machine_state": "specialist_discovery_ready_runtime_gated",
           "pain_page": "/chum/intents/evercraft-web-browser-agent-v1/",
-          "public_url": null,
+          "public_url": "https://fabric.systemiacommandcenters.com/capabilities/evercraft-web-browser-agent-v1",
           "registry_name": null
         }
       ]
@@ -9577,7 +9577,7 @@
           "commercial_state": "verification_required",
           "machine_state": "discovery_only",
           "pain_page": "/chum/intents/buildflow-enterprise-ops-router-v1/",
-          "public_url": null,
+          "public_url": "https://fabric.systemiacommandcenters.com/capabilities/buildflow-enterprise-ops-router-v1",
           "registry_name": null
         }
       ]
@@ -9623,7 +9623,7 @@
           "commercial_state": "verify",
           "machine_state": "human_auth_handoff",
           "pain_page": "/chum/intents/callproof-complaint-packet-machine-v1/",
-          "public_url": null,
+          "public_url": "https://fabric.systemiacommandcenters.com/capabilities/callproof-complaint-packet-machine-v1",
           "registry_name": null
         },
         {
@@ -9658,7 +9658,7 @@
           "commercial_state": "sell_now",
           "machine_state": "payment_ready",
           "pain_page": "/chum/intents/deck-capital-fit-sprint-machine-v1/",
-          "public_url": null,
+          "public_url": "https://fabric.systemiacommandcenters.com/capabilities/deck-capital-fit-sprint-machine-v1",
           "registry_name": null
         }
       ]
@@ -9796,7 +9796,7 @@
           "commercial_state": "sell_now",
           "machine_state": "payment_ready",
           "pain_page": "/chum/intents/deck-capital-fit-sprint-machine-v1/",
-          "public_url": null,
+          "public_url": "https://fabric.systemiacommandcenters.com/capabilities/deck-capital-fit-sprint-machine-v1",
           "registry_name": null
         }
       ]
@@ -9819,7 +9819,7 @@
           "commercial_state": "sell_now",
           "machine_state": "payment_ready",
           "pain_page": "/chum/intents/career-command-interview-practice-machine-v1/",
-          "public_url": null,
+          "public_url": "https://fabric.systemiacommandcenters.com/capabilities/career-command-interview-practice-machine-v1",
           "registry_name": null
         }
       ]
@@ -10095,7 +10095,7 @@
           "commercial_state": "sell_now",
           "machine_state": "payment_ready",
           "pain_page": "/chum/intents/eventwave-paid-promotion-v1/",
-          "public_url": null,
+          "public_url": "https://fabric.systemiacommandcenters.com/capabilities/eventwave-paid-promotion-v1",
           "registry_name": null
         },
         {
@@ -10268,7 +10268,7 @@
           "commercial_state": "verification_required",
           "machine_state": "invocation_ready",
           "pain_page": "/chum/intents/raven-nexus-pain-router-v1/",
-          "public_url": null,
+          "public_url": "https://fabric.systemiacommandcenters.com/capabilities/raven-nexus-pain-router-v1",
           "registry_name": null
         }
       ]
@@ -10291,7 +10291,7 @@
           "commercial_state": "verification_required",
           "machine_state": "invocation_ready",
           "pain_page": "/chum/intents/raven-nexus-pain-router-v1/",
-          "public_url": null,
+          "public_url": "https://fabric.systemiacommandcenters.com/capabilities/raven-nexus-pain-router-v1",
           "registry_name": null
         }
       ]
@@ -10314,7 +10314,7 @@
           "commercial_state": "sell_now",
           "machine_state": "payment_ready_human_confirmation",
           "pain_page": "/chum/intents/aliev-site-opportunity-snapshot-v1/",
-          "public_url": null,
+          "public_url": "https://fabric.systemiacommandcenters.com/capabilities/aliev-site-opportunity-snapshot-v1",
           "registry_name": null
         }
       ]
@@ -10337,7 +10337,7 @@
           "commercial_state": "sell_now",
           "machine_state": "payment_ready_human_confirmation",
           "pain_page": "/chum/intents/rivet-site-underwriting-v1/",
-          "public_url": null,
+          "public_url": "https://fabric.systemiacommandcenters.com/capabilities/rivet-site-underwriting-v1",
           "registry_name": null
         },
         {
@@ -10372,7 +10372,7 @@
           "commercial_state": "discovery_only",
           "machine_state": "human_handoff_only",
           "pain_page": "/chum/intents/evercraft-network-resilience-membership-v1/",
-          "public_url": null,
+          "public_url": "https://fabric.systemiacommandcenters.com/capabilities/evercraft-network-resilience-membership-v1",
           "registry_name": null
         }
       ]
@@ -10649,7 +10649,7 @@
           "commercial_state": "sell_now",
           "machine_state": "payment_ready",
           "pain_page": "/chum/intents/career-command-interview-practice-machine-v1/",
-          "public_url": null,
+          "public_url": "https://fabric.systemiacommandcenters.com/capabilities/career-command-interview-practice-machine-v1",
           "registry_name": null
         }
       ]
@@ -10787,7 +10787,7 @@
           "commercial_state": "free",
           "machine_state": "read_only_live",
           "pain_page": "/chum/intents/findmypart-part-passport-v1/",
-          "public_url": null,
+          "public_url": "https://fabric.systemiacommandcenters.com/capabilities/findmypart-part-passport-v1",
           "registry_name": null
         }
       ]
@@ -11351,7 +11351,7 @@
           "commercial_state": "free",
           "machine_state": "read_only_live",
           "pain_page": "/chum/intents/findmypart-part-passport-v1/",
-          "public_url": null,
+          "public_url": "https://fabric.systemiacommandcenters.com/capabilities/findmypart-part-passport-v1",
           "registry_name": null
         }
       ]
@@ -11374,7 +11374,7 @@
           "commercial_state": "free",
           "machine_state": "read_only_live",
           "pain_page": "/chum/intents/findmypart-part-passport-v1/",
-          "public_url": null,
+          "public_url": "https://fabric.systemiacommandcenters.com/capabilities/findmypart-part-passport-v1",
           "registry_name": null
         }
       ]
@@ -11397,7 +11397,7 @@
           "commercial_state": "free",
           "machine_state": "read_only_live",
           "pain_page": "/chum/intents/findmypart-part-passport-v1/",
-          "public_url": null,
+          "public_url": "https://fabric.systemiacommandcenters.com/capabilities/findmypart-part-passport-v1",
           "registry_name": null
         }
       ]
@@ -11443,7 +11443,7 @@
           "commercial_state": "free",
           "machine_state": "read_only_live",
           "pain_page": "/chum/intents/findmypart-part-passport-v1/",
-          "public_url": null,
+          "public_url": "https://fabric.systemiacommandcenters.com/capabilities/findmypart-part-passport-v1",
           "registry_name": null
         }
       ]
@@ -11535,7 +11535,7 @@
           "commercial_state": "free",
           "machine_state": "read_only_live",
           "pain_page": "/chum/intents/findmypart-part-passport-v1/",
-          "public_url": null,
+          "public_url": "https://fabric.systemiacommandcenters.com/capabilities/findmypart-part-passport-v1",
           "registry_name": null
         }
       ]
@@ -11558,7 +11558,7 @@
           "commercial_state": "verification_required",
           "machine_state": "invocation_ready",
           "pain_page": "/chum/intents/raven-nexus-pain-router-v1/",
-          "public_url": null,
+          "public_url": "https://fabric.systemiacommandcenters.com/capabilities/raven-nexus-pain-router-v1",
           "registry_name": null
         }
       ]
@@ -11673,7 +11673,7 @@
           "commercial_state": "sell_now",
           "machine_state": "human_handoff_ready",
           "pain_page": "/chum/intents/site-survive-rapid-audit-v1/",
-          "public_url": null,
+          "public_url": "https://fabric.systemiacommandcenters.com/capabilities/site-survive-rapid-audit-v1",
           "registry_name": null
         }
       ]
@@ -11719,7 +11719,7 @@
           "commercial_state": "sell_now",
           "machine_state": "payment_ready",
           "pain_page": "/chum/intents/faie-signal-brief-v1/",
-          "public_url": null,
+          "public_url": "https://fabric.systemiacommandcenters.com/capabilities/faie-signal-brief-v1",
           "registry_name": null
         }
       ]
@@ -11765,7 +11765,7 @@
           "commercial_state": "verification_required",
           "machine_state": "discovery_only",
           "pain_page": "/chum/intents/littlered-kdp-export-qa-machine-v1/",
-          "public_url": null,
+          "public_url": "https://fabric.systemiacommandcenters.com/capabilities/littlered-kdp-export-qa-machine-v1",
           "registry_name": null
         },
         {
@@ -11800,7 +11800,7 @@
           "commercial_state": "sell_now",
           "machine_state": "payment_ready_human_confirmation",
           "pain_page": "/chum/intents/aliev-site-opportunity-snapshot-v1/",
-          "public_url": null,
+          "public_url": "https://fabric.systemiacommandcenters.com/capabilities/aliev-site-opportunity-snapshot-v1",
           "registry_name": null
         }
       ]
@@ -11823,7 +11823,7 @@
           "commercial_state": "verify",
           "machine_state": "discovery_only",
           "pain_page": "/chum/intents/career-command-resume-job-fit-machine-v1/",
-          "public_url": null,
+          "public_url": "https://fabric.systemiacommandcenters.com/capabilities/career-command-resume-job-fit-machine-v1",
           "registry_name": null
         }
       ]
@@ -11846,7 +11846,7 @@
           "commercial_state": "free",
           "machine_state": "read_only_live",
           "pain_page": "/chum/intents/findmypart-part-passport-v1/",
-          "public_url": null,
+          "public_url": "https://fabric.systemiacommandcenters.com/capabilities/findmypart-part-passport-v1",
           "registry_name": null
         }
       ]
@@ -11869,7 +11869,7 @@
           "commercial_state": "sell_now",
           "machine_state": "payment_ready_human_confirmation",
           "pain_page": "/chum/intents/aliev-site-opportunity-snapshot-v1/",
-          "public_url": null,
+          "public_url": "https://fabric.systemiacommandcenters.com/capabilities/aliev-site-opportunity-snapshot-v1",
           "registry_name": null
         }
       ]
@@ -11915,7 +11915,7 @@
           "commercial_state": "sell_now",
           "machine_state": "payment_ready_human_confirmation",
           "pain_page": "/chum/intents/aliev-site-opportunity-snapshot-v1/",
-          "public_url": null,
+          "public_url": "https://fabric.systemiacommandcenters.com/capabilities/aliev-site-opportunity-snapshot-v1",
           "registry_name": null
         }
       ]
@@ -11961,7 +11961,7 @@
           "commercial_state": "contractor_beta",
           "machine_state": "mcp_http_preview_and_receipt_verify_live_workspace_entitlement_build_verified",
           "pain_page": "/chum/intents/eps-estimate-engine-machine-v1/",
-          "public_url": null,
+          "public_url": "https://fabric.systemiacommandcenters.com/capabilities/eps-estimate-engine-machine-v1",
           "registry_name": null
         }
       ]
@@ -12145,7 +12145,7 @@
           "commercial_state": "commercial_pilot",
           "machine_state": "human_handoff_ready",
           "pain_page": "/chum/intents/portfolio-sentinel-v1/",
-          "public_url": null,
+          "public_url": "https://fabric.systemiacommandcenters.com/capabilities/portfolio-sentinel-v1",
           "registry_name": null
         },
         {
@@ -12203,7 +12203,7 @@
           "commercial_state": "discovery_only",
           "machine_state": "human_handoff_only",
           "pain_page": "/chum/intents/evercraft-network-resilience-membership-v1/",
-          "public_url": null,
+          "public_url": "https://fabric.systemiacommandcenters.com/capabilities/evercraft-network-resilience-membership-v1",
           "registry_name": null
         }
       ]
@@ -12272,7 +12272,7 @@
           "commercial_state": "verification_required",
           "machine_state": "invocation_ready",
           "pain_page": "/chum/intents/systemia-yard-runtime-extension-v1/",
-          "public_url": null,
+          "public_url": "https://fabric.systemiacommandcenters.com/capabilities/systemia-yard-runtime-extension-v1",
           "registry_name": null
         }
       ]
@@ -12318,7 +12318,7 @@
           "commercial_state": "contractor_beta",
           "machine_state": "mcp_http_preview_and_receipt_verify_live_workspace_entitlement_build_verified",
           "pain_page": "/chum/intents/eps-estimate-engine-machine-v1/",
-          "public_url": null,
+          "public_url": "https://fabric.systemiacommandcenters.com/capabilities/eps-estimate-engine-machine-v1",
           "registry_name": null
         }
       ]
@@ -12433,7 +12433,7 @@
           "commercial_state": "sell_now",
           "machine_state": "payment_ready",
           "pain_page": "/chum/intents/website-launch-service-v1/",
-          "public_url": null,
+          "public_url": "https://fabric.systemiacommandcenters.com/capabilities/website-launch-service-v1",
           "registry_name": null
         }
       ]
@@ -12709,7 +12709,7 @@
           "commercial_state": "verification_required",
           "machine_state": "human_auth_handoff",
           "pain_page": "/chum/intents/buildflow-bounded-agent-action-v1/",
-          "public_url": null,
+          "public_url": "https://fabric.systemiacommandcenters.com/capabilities/buildflow-bounded-agent-action-v1",
           "registry_name": null
         }
       ]
@@ -12755,7 +12755,7 @@
           "commercial_state": "discovery_only",
           "machine_state": "specialist_discovery_ready_runtime_gated",
           "pain_page": "/chum/intents/evercraft-web-browser-agent-v1/",
-          "public_url": null,
+          "public_url": "https://fabric.systemiacommandcenters.com/capabilities/evercraft-web-browser-agent-v1",
           "registry_name": null
         }
       ]
@@ -12985,7 +12985,7 @@
           "commercial_state": "verification_required",
           "machine_state": "discovery_only",
           "pain_page": "/chum/intents/forensiscope-evidence-review-v1/",
-          "public_url": null,
+          "public_url": "https://fabric.systemiacommandcenters.com/capabilities/forensiscope-evidence-review-v1",
           "registry_name": null
         }
       ]
@@ -13054,7 +13054,7 @@
           "commercial_state": "verify",
           "machine_state": "human_auth_handoff",
           "pain_page": "/chum/intents/callproof-complaint-packet-machine-v1/",
-          "public_url": null,
+          "public_url": "https://fabric.systemiacommandcenters.com/capabilities/callproof-complaint-packet-machine-v1",
           "registry_name": null
         },
         {
@@ -13112,7 +13112,7 @@
           "commercial_state": "verification_required",
           "machine_state": "discovery_only",
           "pain_page": "/chum/intents/towi-evidence-research-machine-v1/",
-          "public_url": null,
+          "public_url": "https://fabric.systemiacommandcenters.com/capabilities/towi-evidence-research-machine-v1",
           "registry_name": null
         },
         {
@@ -13147,7 +13147,7 @@
           "commercial_state": "sell_now",
           "machine_state": "payment_ready",
           "pain_page": "/chum/intents/website-launch-service-v1/",
-          "public_url": null,
+          "public_url": "https://fabric.systemiacommandcenters.com/capabilities/website-launch-service-v1",
           "registry_name": null
         }
       ]
@@ -13216,7 +13216,7 @@
           "commercial_state": "verification_required",
           "machine_state": "invocation_ready",
           "pain_page": "/chum/intents/evercraft-clip-social-video-v1/",
-          "public_url": null,
+          "public_url": "https://fabric.systemiacommandcenters.com/capabilities/evercraft-clip-social-video-v1",
           "registry_name": null
         },
         {
@@ -13251,7 +13251,7 @@
           "commercial_state": "verification_required",
           "machine_state": "invocation_ready",
           "pain_page": "/chum/intents/evercraft-clip-social-video-v1/",
-          "public_url": null,
+          "public_url": "https://fabric.systemiacommandcenters.com/capabilities/evercraft-clip-social-video-v1",
           "registry_name": null
         },
         {
@@ -13355,7 +13355,7 @@
           "commercial_state": "verification_required",
           "machine_state": "human_auth_handoff",
           "pain_page": "/chum/intents/buildflow-shadow-migration-machine-v1/",
-          "public_url": null,
+          "public_url": "https://fabric.systemiacommandcenters.com/capabilities/buildflow-shadow-migration-machine-v1",
           "registry_name": null
         }
       ]
@@ -13401,7 +13401,7 @@
           "commercial_state": "verification_required",
           "machine_state": "human_auth_handoff",
           "pain_page": "/chum/intents/buildflow-process-audit-machine-v1/",
-          "public_url": null,
+          "public_url": "https://fabric.systemiacommandcenters.com/capabilities/buildflow-process-audit-machine-v1",
           "registry_name": null
         }
       ]
@@ -13459,7 +13459,7 @@
           "commercial_state": "verification_required",
           "machine_state": "discovery_only",
           "pain_page": "/chum/intents/towi-evidence-research-machine-v1/",
-          "public_url": null,
+          "public_url": "https://fabric.systemiacommandcenters.com/capabilities/towi-evidence-research-machine-v1",
           "registry_name": null
         },
         {
@@ -13494,7 +13494,7 @@
           "commercial_state": "verification_required",
           "machine_state": "discovery_only",
           "pain_page": "/chum/intents/evermaps-evidence-projection-machine-v1/",
-          "public_url": null,
+          "public_url": "https://fabric.systemiacommandcenters.com/capabilities/evermaps-evidence-projection-machine-v1",
           "registry_name": null
         },
         {
@@ -13529,7 +13529,7 @@
           "commercial_state": "verification_required",
           "machine_state": "discovery_only",
           "pain_page": "/chum/intents/talent-evidence-profile-machine-v1/",
-          "public_url": null,
+          "public_url": "https://fabric.systemiacommandcenters.com/capabilities/talent-evidence-profile-machine-v1",
           "registry_name": null
         },
         {
@@ -13587,7 +13587,7 @@
           "commercial_state": "verification_required",
           "machine_state": "human_auth_handoff",
           "pain_page": "/chum/intents/buildflow-entity-resolution-machine-v1/",
-          "public_url": null,
+          "public_url": "https://fabric.systemiacommandcenters.com/capabilities/buildflow-entity-resolution-machine-v1",
           "registry_name": null
         }
       ]
@@ -13656,7 +13656,7 @@
           "commercial_state": "verification_required",
           "machine_state": "discovery_only",
           "pain_page": "/chum/intents/forensiscope-evidence-review-v1/",
-          "public_url": null,
+          "public_url": "https://fabric.systemiacommandcenters.com/capabilities/forensiscope-evidence-review-v1",
           "registry_name": null
         }
       ]
@@ -13771,7 +13771,7 @@
           "commercial_state": "sell_now",
           "machine_state": "human_handoff_ready",
           "pain_page": "/chum/intents/foundry-app-escape-audit-v1/",
-          "public_url": null,
+          "public_url": "https://fabric.systemiacommandcenters.com/capabilities/foundry-app-escape-audit-v1",
           "registry_name": null
         }
       ]
@@ -13794,7 +13794,7 @@
           "commercial_state": "verification_required",
           "machine_state": "human_auth_handoff",
           "pain_page": "/chum/intents/buildflow-shadow-migration-machine-v1/",
-          "public_url": null,
+          "public_url": "https://fabric.systemiacommandcenters.com/capabilities/buildflow-shadow-migration-machine-v1",
           "registry_name": null
         }
       ]
@@ -13840,7 +13840,7 @@
           "commercial_state": "sell_now",
           "machine_state": "payment_ready",
           "pain_page": "/chum/intents/career-command-interview-practice-machine-v1/",
-          "public_url": null,
+          "public_url": "https://fabric.systemiacommandcenters.com/capabilities/career-command-interview-practice-machine-v1",
           "registry_name": null
         }
       ]
@@ -13955,7 +13955,7 @@
           "commercial_state": "verification_required",
           "machine_state": "discovery_only",
           "pain_page": "/chum/intents/buildflow-enterprise-ops-router-v1/",
-          "public_url": null,
+          "public_url": "https://fabric.systemiacommandcenters.com/capabilities/buildflow-enterprise-ops-router-v1",
           "registry_name": null
         }
       ]
@@ -13978,7 +13978,7 @@
           "commercial_state": "commercial_pilot",
           "machine_state": "human_handoff_ready",
           "pain_page": "/chum/intents/portfolio-sentinel-v1/",
-          "public_url": null,
+          "public_url": "https://fabric.systemiacommandcenters.com/capabilities/portfolio-sentinel-v1",
           "registry_name": null
         },
         {
@@ -14013,7 +14013,7 @@
           "commercial_state": "commercial_pilot",
           "machine_state": "human_handoff_ready",
           "pain_page": "/chum/intents/portfolio-sentinel-v1/",
-          "public_url": null,
+          "public_url": "https://fabric.systemiacommandcenters.com/capabilities/portfolio-sentinel-v1",
           "registry_name": null
         },
         {
@@ -14048,7 +14048,7 @@
           "commercial_state": "commercial_pilot",
           "machine_state": "human_handoff_ready",
           "pain_page": "/chum/intents/portfolio-sentinel-v1/",
-          "public_url": null,
+          "public_url": "https://fabric.systemiacommandcenters.com/capabilities/portfolio-sentinel-v1",
           "registry_name": null
         },
         {
@@ -14256,7 +14256,7 @@
           "commercial_state": "discovery_only",
           "machine_state": "human_handoff_only",
           "pain_page": "/chum/intents/evercraft-network-resilience-membership-v1/",
-          "public_url": null,
+          "public_url": "https://fabric.systemiacommandcenters.com/capabilities/evercraft-network-resilience-membership-v1",
           "registry_name": null
         }
       ]
@@ -14348,7 +14348,7 @@
           "commercial_state": "discovery_only",
           "machine_state": "human_handoff_only",
           "pain_page": "/chum/intents/evercraft-network-resilience-membership-v1/",
-          "public_url": null,
+          "public_url": "https://fabric.systemiacommandcenters.com/capabilities/evercraft-network-resilience-membership-v1",
           "registry_name": null
         }
       ]
@@ -14371,7 +14371,7 @@
           "commercial_state": "sell_now",
           "machine_state": "payment_ready",
           "pain_page": "/chum/intents/audit-center-website-audit-machine-v1/",
-          "public_url": null,
+          "public_url": "https://fabric.systemiacommandcenters.com/capabilities/audit-center-website-audit-machine-v1",
           "registry_name": null
         }
       ]
@@ -14440,7 +14440,7 @@
           "commercial_state": "discovery_only",
           "machine_state": "human_handoff_only",
           "pain_page": "/chum/intents/evercraft-network-resilience-membership-v1/",
-          "public_url": null,
+          "public_url": "https://fabric.systemiacommandcenters.com/capabilities/evercraft-network-resilience-membership-v1",
           "registry_name": null
         },
         {
@@ -14475,7 +14475,7 @@
           "commercial_state": "contractor_beta",
           "machine_state": "mcp_http_preview_and_receipt_verify_live_workspace_entitlement_build_verified",
           "pain_page": "/chum/intents/eps-estimate-engine-machine-v1/",
-          "public_url": null,
+          "public_url": "https://fabric.systemiacommandcenters.com/capabilities/eps-estimate-engine-machine-v1",
           "registry_name": null
         }
       ]
@@ -14498,7 +14498,7 @@
           "commercial_state": "sell_now",
           "machine_state": "payment_ready",
           "pain_page": "/chum/intents/findmypart-paid-hunt-v1/",
-          "public_url": null,
+          "public_url": "https://fabric.systemiacommandcenters.com/capabilities/findmypart-paid-hunt-v1",
           "registry_name": null
         }
       ]
@@ -14521,7 +14521,7 @@
           "commercial_state": "sell_now",
           "machine_state": "human_handoff_ready",
           "pain_page": "/chum/intents/site-survive-rapid-audit-v1/",
-          "public_url": null,
+          "public_url": "https://fabric.systemiacommandcenters.com/capabilities/site-survive-rapid-audit-v1",
           "registry_name": null
         }
       ]
@@ -14567,7 +14567,7 @@
           "commercial_state": "commercial_pilot",
           "machine_state": "human_handoff_ready",
           "pain_page": "/chum/intents/portfolio-sentinel-v1/",
-          "public_url": null,
+          "public_url": "https://fabric.systemiacommandcenters.com/capabilities/portfolio-sentinel-v1",
           "registry_name": null
         },
         {
@@ -14763,7 +14763,7 @@
           "commercial_state": "verify",
           "machine_state": "human_auth_handoff",
           "pain_page": "/chum/intents/callproof-complaint-packet-machine-v1/",
-          "public_url": null,
+          "public_url": "https://fabric.systemiacommandcenters.com/capabilities/callproof-complaint-packet-machine-v1",
           "registry_name": null
         },
         {
@@ -14798,7 +14798,7 @@
           "commercial_state": "verify",
           "machine_state": "human_auth_handoff",
           "pain_page": "/chum/intents/callproof-complaint-packet-machine-v1/",
-          "public_url": null,
+          "public_url": "https://fabric.systemiacommandcenters.com/capabilities/callproof-complaint-packet-machine-v1",
           "registry_name": null
         }
       ]
@@ -14844,7 +14844,7 @@
           "commercial_state": "verification_required",
           "machine_state": "discovery_only",
           "pain_page": "/chum/intents/buildflow-enterprise-ops-router-v1/",
-          "public_url": null,
+          "public_url": "https://fabric.systemiacommandcenters.com/capabilities/buildflow-enterprise-ops-router-v1",
           "registry_name": null
         }
       ]
@@ -14867,7 +14867,7 @@
           "commercial_state": "commercial_pilot",
           "machine_state": "human_handoff_ready",
           "pain_page": "/chum/intents/portfolio-sentinel-v1/",
-          "public_url": null,
+          "public_url": "https://fabric.systemiacommandcenters.com/capabilities/portfolio-sentinel-v1",
           "registry_name": null
         },
         {
@@ -14937,7 +14937,7 @@
           "commercial_state": "verification_required",
           "machine_state": "human_auth_handoff",
           "pain_page": "/chum/intents/buildflow-procure-to-pay-shadow-v1/",
-          "public_url": null,
+          "public_url": "https://fabric.systemiacommandcenters.com/capabilities/buildflow-procure-to-pay-shadow-v1",
           "registry_name": null
         }
       ]
@@ -14995,7 +14995,7 @@
           "commercial_state": "verification_required",
           "machine_state": "human_auth_handoff",
           "pain_page": "/chum/intents/buildflow-procure-to-pay-shadow-v1/",
-          "public_url": null,
+          "public_url": "https://fabric.systemiacommandcenters.com/capabilities/buildflow-procure-to-pay-shadow-v1",
           "registry_name": null
         }
       ]
@@ -15088,7 +15088,7 @@
           "commercial_state": "contractor_beta",
           "machine_state": "mcp_http_preview_and_receipt_verify_live_workspace_entitlement_build_verified",
           "pain_page": "/chum/intents/eps-estimate-engine-machine-v1/",
-          "public_url": null,
+          "public_url": "https://fabric.systemiacommandcenters.com/capabilities/eps-estimate-engine-machine-v1",
           "registry_name": null
         }
       ]
@@ -15180,7 +15180,7 @@
           "commercial_state": "sell_now",
           "machine_state": "payment_ready_human_confirmation",
           "pain_page": "/chum/intents/rivet-site-underwriting-v1/",
-          "public_url": null,
+          "public_url": "https://fabric.systemiacommandcenters.com/capabilities/rivet-site-underwriting-v1",
           "registry_name": null
         },
         {
@@ -15238,7 +15238,7 @@
           "commercial_state": "verification_required",
           "machine_state": "discovery_only",
           "pain_page": "/chum/intents/findmypart-repair-shop-desk-v1/",
-          "public_url": null,
+          "public_url": "https://fabric.systemiacommandcenters.com/capabilities/findmypart-repair-shop-desk-v1",
           "registry_name": null
         }
       ]
@@ -15330,7 +15330,7 @@
           "commercial_state": "sell_now",
           "machine_state": "payment_ready",
           "pain_page": "/chum/intents/audit-center-website-audit-machine-v1/",
-          "public_url": null,
+          "public_url": "https://fabric.systemiacommandcenters.com/capabilities/audit-center-website-audit-machine-v1",
           "registry_name": null
         }
       ]
@@ -15399,7 +15399,7 @@
           "commercial_state": "verification_required",
           "machine_state": "invocation_ready",
           "pain_page": "/chum/intents/evercraft-clip-social-video-v1/",
-          "public_url": null,
+          "public_url": "https://fabric.systemiacommandcenters.com/capabilities/evercraft-clip-social-video-v1",
           "registry_name": null
         },
         {
@@ -15480,7 +15480,7 @@
           "commercial_state": "discovery_only",
           "machine_state": "specialist_discovery_ready_runtime_gated",
           "pain_page": "/chum/intents/evercraft-web-browser-agent-v1/",
-          "public_url": null,
+          "public_url": "https://fabric.systemiacommandcenters.com/capabilities/evercraft-web-browser-agent-v1",
           "registry_name": null
         }
       ]
@@ -15526,7 +15526,7 @@
           "commercial_state": "verification_required",
           "machine_state": "discovery_only",
           "pain_page": "/chum/intents/evermaps-evidence-projection-machine-v1/",
-          "public_url": null,
+          "public_url": "https://fabric.systemiacommandcenters.com/capabilities/evermaps-evidence-projection-machine-v1",
           "registry_name": null
         },
         {
@@ -15630,7 +15630,7 @@
           "commercial_state": "sell_now",
           "machine_state": "payment_ready",
           "pain_page": "/chum/intents/career-command-interview-practice-machine-v1/",
-          "public_url": null,
+          "public_url": "https://fabric.systemiacommandcenters.com/capabilities/career-command-interview-practice-machine-v1",
           "registry_name": null
         }
       ]
@@ -15768,7 +15768,7 @@
           "commercial_state": "sell_now",
           "machine_state": "payment_ready_human_confirmation",
           "pain_page": "/chum/intents/rivet-site-underwriting-v1/",
-          "public_url": null,
+          "public_url": "https://fabric.systemiacommandcenters.com/capabilities/rivet-site-underwriting-v1",
           "registry_name": null
         },
         {
@@ -15895,7 +15895,7 @@
           "commercial_state": "sell_now",
           "machine_state": "payment_ready",
           "pain_page": "/chum/intents/career-command-interview-practice-machine-v1/",
-          "public_url": null,
+          "public_url": "https://fabric.systemiacommandcenters.com/capabilities/career-command-interview-practice-machine-v1",
           "registry_name": null
         }
       ]
@@ -15918,7 +15918,7 @@
           "commercial_state": "verify",
           "machine_state": "human_auth_handoff",
           "pain_page": "/chum/intents/callproof-complaint-packet-machine-v1/",
-          "public_url": null,
+          "public_url": "https://fabric.systemiacommandcenters.com/capabilities/callproof-complaint-packet-machine-v1",
           "registry_name": null
         },
         {
@@ -15976,7 +15976,7 @@
           "commercial_state": "sell_now",
           "machine_state": "payment_ready",
           "pain_page": "/chum/intents/roasted-text-pressure-test-machine-v1/",
-          "public_url": null,
+          "public_url": "https://fabric.systemiacommandcenters.com/capabilities/roasted-text-pressure-test-machine-v1",
           "registry_name": null
         }
       ]
@@ -15999,7 +15999,7 @@
           "commercial_state": "sell_now",
           "machine_state": "payment_ready",
           "pain_page": "/chum/intents/roasted-text-pressure-test-machine-v1/",
-          "public_url": null,
+          "public_url": "https://fabric.systemiacommandcenters.com/capabilities/roasted-text-pressure-test-machine-v1",
           "registry_name": null
         }
       ]
@@ -16045,7 +16045,7 @@
           "commercial_state": "verification_required",
           "machine_state": "human_auth_handoff",
           "pain_page": "/chum/intents/buildflow-bounded-agent-action-v1/",
-          "public_url": null,
+          "public_url": "https://fabric.systemiacommandcenters.com/capabilities/buildflow-bounded-agent-action-v1",
           "registry_name": null
         }
       ]
@@ -16068,7 +16068,7 @@
           "commercial_state": "contractor_beta",
           "machine_state": "mcp_http_preview_and_receipt_verify_live_workspace_entitlement_build_verified",
           "pain_page": "/chum/intents/eps-estimate-engine-machine-v1/",
-          "public_url": null,
+          "public_url": "https://fabric.systemiacommandcenters.com/capabilities/eps-estimate-engine-machine-v1",
           "registry_name": null
         }
       ]
@@ -16114,7 +16114,7 @@
           "commercial_state": "verification_required",
           "machine_state": "human_auth_handoff",
           "pain_page": "/chum/intents/buildflow-process-audit-machine-v1/",
-          "public_url": null,
+          "public_url": "https://fabric.systemiacommandcenters.com/capabilities/buildflow-process-audit-machine-v1",
           "registry_name": null
         }
       ]
@@ -16275,7 +16275,7 @@
           "commercial_state": "sell_now",
           "machine_state": "payment_ready",
           "pain_page": "/chum/intents/eventwave-paid-promotion-v1/",
-          "public_url": null,
+          "public_url": "https://fabric.systemiacommandcenters.com/capabilities/eventwave-paid-promotion-v1",
           "registry_name": null
         }
       ]
@@ -16298,7 +16298,7 @@
           "commercial_state": "sell_now",
           "machine_state": "payment_ready",
           "pain_page": "/chum/intents/eventwave-paid-promotion-v1/",
-          "public_url": null,
+          "public_url": "https://fabric.systemiacommandcenters.com/capabilities/eventwave-paid-promotion-v1",
           "registry_name": null
         }
       ]
@@ -16321,7 +16321,7 @@
           "commercial_state": "sell_now",
           "machine_state": "payment_ready",
           "pain_page": "/chum/intents/eventwave-paid-promotion-v1/",
-          "public_url": null,
+          "public_url": "https://fabric.systemiacommandcenters.com/capabilities/eventwave-paid-promotion-v1",
           "registry_name": null
         },
         {
@@ -16356,7 +16356,7 @@
           "commercial_state": "sell_now",
           "machine_state": "payment_ready",
           "pain_page": "/chum/intents/eventwave-paid-promotion-v1/",
-          "public_url": null,
+          "public_url": "https://fabric.systemiacommandcenters.com/capabilities/eventwave-paid-promotion-v1",
           "registry_name": null
         }
       ]
@@ -16379,7 +16379,7 @@
           "commercial_state": "sell_now",
           "machine_state": "payment_ready",
           "pain_page": "/chum/intents/eventwave-paid-promotion-v1/",
-          "public_url": null,
+          "public_url": "https://fabric.systemiacommandcenters.com/capabilities/eventwave-paid-promotion-v1",
           "registry_name": null
         }
       ]
@@ -16402,7 +16402,7 @@
           "commercial_state": "sell_now",
           "machine_state": "payment_ready_human_confirmation",
           "pain_page": "/chum/intents/aliev-site-opportunity-snapshot-v1/",
-          "public_url": null,
+          "public_url": "https://fabric.systemiacommandcenters.com/capabilities/aliev-site-opportunity-snapshot-v1",
           "registry_name": null
         }
       ]
@@ -16494,7 +16494,7 @@
           "commercial_state": "verification_required",
           "machine_state": "invocation_ready",
           "pain_page": "/chum/intents/raven-nexus-pain-router-v1/",
-          "public_url": null,
+          "public_url": "https://fabric.systemiacommandcenters.com/capabilities/raven-nexus-pain-router-v1",
           "registry_name": null
         }
       ]
@@ -16540,7 +16540,7 @@
           "commercial_state": "verification_required",
           "machine_state": "invocation_ready",
           "pain_page": "/chum/intents/raven-nexus-pain-router-v1/",
-          "public_url": null,
+          "public_url": "https://fabric.systemiacommandcenters.com/capabilities/raven-nexus-pain-router-v1",
           "registry_name": null
         }
       ]
@@ -16793,7 +16793,7 @@
           "commercial_state": "discovery_only",
           "machine_state": "specialist_discovery_ready_runtime_gated",
           "pain_page": "/chum/intents/evercraft-web-browser-agent-v1/",
-          "public_url": null,
+          "public_url": "https://fabric.systemiacommandcenters.com/capabilities/evercraft-web-browser-agent-v1",
           "registry_name": null
         }
       ]
@@ -16816,7 +16816,7 @@
           "commercial_state": "verification_required",
           "machine_state": "invocation_ready",
           "pain_page": "/chum/intents/raven-nexus-pain-router-v1/",
-          "public_url": null,
+          "public_url": "https://fabric.systemiacommandcenters.com/capabilities/raven-nexus-pain-router-v1",
           "registry_name": null
         }
       ]
@@ -16885,7 +16885,7 @@
           "commercial_state": "discovery_only",
           "machine_state": "specialist_discovery_ready_runtime_gated",
           "pain_page": "/chum/intents/evercraft-web-browser-agent-v1/",
-          "public_url": null,
+          "public_url": "https://fabric.systemiacommandcenters.com/capabilities/evercraft-web-browser-agent-v1",
           "registry_name": null
         }
       ]
@@ -16954,7 +16954,7 @@
           "commercial_state": "verification_required",
           "machine_state": "discovery_only",
           "pain_page": "/chum/intents/globalstat-country-intelligence-machine-v1/",
-          "public_url": null,
+          "public_url": "https://fabric.systemiacommandcenters.com/capabilities/globalstat-country-intelligence-machine-v1",
           "registry_name": null
         },
         {
@@ -16989,7 +16989,7 @@
           "commercial_state": "verification_required",
           "machine_state": "discovery_only",
           "pain_page": "/chum/intents/datafoundry-data-gap-audit-machine-v1/",
-          "public_url": null,
+          "public_url": "https://fabric.systemiacommandcenters.com/capabilities/datafoundry-data-gap-audit-machine-v1",
           "registry_name": null
         }
       ]
@@ -17012,7 +17012,7 @@
           "commercial_state": "verification_required",
           "machine_state": "human_auth_handoff",
           "pain_page": "/chum/intents/buildflow-entity-resolution-machine-v1/",
-          "public_url": null,
+          "public_url": "https://fabric.systemiacommandcenters.com/capabilities/buildflow-entity-resolution-machine-v1",
           "registry_name": null
         }
       ]
@@ -17035,7 +17035,7 @@
           "commercial_state": "verification_required",
           "machine_state": "human_auth_handoff",
           "pain_page": "/chum/intents/buildflow-shadow-migration-machine-v1/",
-          "public_url": null,
+          "public_url": "https://fabric.systemiacommandcenters.com/capabilities/buildflow-shadow-migration-machine-v1",
           "registry_name": null
         }
       ]
@@ -17081,7 +17081,7 @@
           "commercial_state": "verification_required",
           "machine_state": "human_auth_handoff",
           "pain_page": "/chum/intents/buildflow-process-audit-machine-v1/",
-          "public_url": null,
+          "public_url": "https://fabric.systemiacommandcenters.com/capabilities/buildflow-process-audit-machine-v1",
           "registry_name": null
         }
       ]
@@ -17104,7 +17104,7 @@
           "commercial_state": "verification_required",
           "machine_state": "human_auth_handoff",
           "pain_page": "/chum/intents/buildflow-procure-to-pay-shadow-v1/",
-          "public_url": null,
+          "public_url": "https://fabric.systemiacommandcenters.com/capabilities/buildflow-procure-to-pay-shadow-v1",
           "registry_name": null
         }
       ]
@@ -17150,7 +17150,7 @@
           "commercial_state": "verification_required",
           "machine_state": "discovery_only",
           "pain_page": "/chum/intents/findmypart-repair-shop-desk-v1/",
-          "public_url": null,
+          "public_url": "https://fabric.systemiacommandcenters.com/capabilities/findmypart-repair-shop-desk-v1",
           "registry_name": null
         }
       ]
@@ -17196,7 +17196,7 @@
           "commercial_state": "verification_required",
           "machine_state": "invocation_ready",
           "pain_page": "/chum/intents/raven-nexus-pain-router-v1/",
-          "public_url": null,
+          "public_url": "https://fabric.systemiacommandcenters.com/capabilities/raven-nexus-pain-router-v1",
           "registry_name": null
         }
       ]
@@ -17300,7 +17300,7 @@
           "commercial_state": "verification_required",
           "machine_state": "discovery_only",
           "pain_page": "/chum/intents/findmypart-repair-shop-desk-v1/",
-          "public_url": null,
+          "public_url": "https://fabric.systemiacommandcenters.com/capabilities/findmypart-repair-shop-desk-v1",
           "registry_name": null
         }
       ]
@@ -17369,7 +17369,7 @@
           "commercial_state": "sell_now",
           "machine_state": "payment_ready",
           "pain_page": "/chum/intents/website-launch-service-v1/",
-          "public_url": null,
+          "public_url": "https://fabric.systemiacommandcenters.com/capabilities/website-launch-service-v1",
           "registry_name": null
         }
       ]
@@ -17415,7 +17415,7 @@
           "commercial_state": "verification_required",
           "machine_state": "invocation_ready",
           "pain_page": "/chum/intents/evercraft-clip-social-video-v1/",
-          "public_url": null,
+          "public_url": "https://fabric.systemiacommandcenters.com/capabilities/evercraft-clip-social-video-v1",
           "registry_name": null
         },
         {
@@ -17565,7 +17565,7 @@
           "commercial_state": "sell_now",
           "machine_state": "payment_ready",
           "pain_page": "/chum/intents/faie-signal-brief-v1/",
-          "public_url": null,
+          "public_url": "https://fabric.systemiacommandcenters.com/capabilities/faie-signal-brief-v1",
           "registry_name": null
         }
       ]
@@ -17588,7 +17588,7 @@
           "commercial_state": "verification_required",
           "machine_state": "discovery_only",
           "pain_page": "/chum/intents/towi-evidence-research-machine-v1/",
-          "public_url": null,
+          "public_url": "https://fabric.systemiacommandcenters.com/capabilities/towi-evidence-research-machine-v1",
           "registry_name": null
         },
         {
@@ -17646,7 +17646,7 @@
           "commercial_state": "verification_required",
           "machine_state": "human_auth_handoff",
           "pain_page": "/chum/intents/buildflow-entity-resolution-machine-v1/",
-          "public_url": null,
+          "public_url": "https://fabric.systemiacommandcenters.com/capabilities/buildflow-entity-resolution-machine-v1",
           "registry_name": null
         }
       ]
@@ -17669,7 +17669,7 @@
           "commercial_state": "verify",
           "machine_state": "discovery_only",
           "pain_page": "/chum/intents/career-command-resume-job-fit-machine-v1/",
-          "public_url": null,
+          "public_url": "https://fabric.systemiacommandcenters.com/capabilities/career-command-resume-job-fit-machine-v1",
           "registry_name": null
         }
       ]
@@ -17692,7 +17692,7 @@
           "commercial_state": "sell_now",
           "machine_state": "payment_ready_human_confirmation",
           "pain_page": "/chum/intents/rivet-site-underwriting-v1/",
-          "public_url": null,
+          "public_url": "https://fabric.systemiacommandcenters.com/capabilities/rivet-site-underwriting-v1",
           "registry_name": null
         },
         {
@@ -17750,7 +17750,7 @@
           "commercial_state": "verification_required",
           "machine_state": "discovery_only",
           "pain_page": "/chum/intents/evermaps-evidence-projection-machine-v1/",
-          "public_url": null,
+          "public_url": "https://fabric.systemiacommandcenters.com/capabilities/evermaps-evidence-projection-machine-v1",
           "registry_name": null
         },
         {
@@ -17877,7 +17877,7 @@
           "commercial_state": "verification_required",
           "machine_state": "discovery_only",
           "pain_page": "/chum/intents/forensiscope-evidence-review-v1/",
-          "public_url": null,
+          "public_url": "https://fabric.systemiacommandcenters.com/capabilities/forensiscope-evidence-review-v1",
           "registry_name": null
         }
       ]
@@ -17900,7 +17900,7 @@
           "commercial_state": "sell_now",
           "machine_state": "payment_ready",
           "pain_page": "/chum/intents/deck-capital-fit-sprint-machine-v1/",
-          "public_url": null,
+          "public_url": "https://fabric.systemiacommandcenters.com/capabilities/deck-capital-fit-sprint-machine-v1",
           "registry_name": null
         }
       ]
@@ -17923,7 +17923,7 @@
           "commercial_state": "sell_now",
           "machine_state": "payment_ready",
           "pain_page": "/chum/intents/audit-center-website-audit-machine-v1/",
-          "public_url": null,
+          "public_url": "https://fabric.systemiacommandcenters.com/capabilities/audit-center-website-audit-machine-v1",
           "registry_name": null
         }
       ]
@@ -17969,7 +17969,7 @@
           "commercial_state": "verification_required",
           "machine_state": "discovery_only",
           "pain_page": "/chum/intents/forensiscope-evidence-review-v1/",
-          "public_url": null,
+          "public_url": "https://fabric.systemiacommandcenters.com/capabilities/forensiscope-evidence-review-v1",
           "registry_name": null
         }
       ]
@@ -18038,7 +18038,7 @@
           "commercial_state": "verification_required",
           "machine_state": "discovery_only",
           "pain_page": "/chum/intents/forensiscope-evidence-review-v1/",
-          "public_url": null,
+          "public_url": "https://fabric.systemiacommandcenters.com/capabilities/forensiscope-evidence-review-v1",
           "registry_name": null
         }
       ]
@@ -18153,7 +18153,7 @@
           "commercial_state": "sell_now",
           "machine_state": "payment_ready",
           "pain_page": "/chum/intents/roasted-text-pressure-test-machine-v1/",
-          "public_url": null,
+          "public_url": "https://fabric.systemiacommandcenters.com/capabilities/roasted-text-pressure-test-machine-v1",
           "registry_name": null
         }
       ]
@@ -18176,7 +18176,7 @@
           "commercial_state": "sell_now",
           "machine_state": "payment_ready",
           "pain_page": "/chum/intents/roasted-text-pressure-test-machine-v1/",
-          "public_url": null,
+          "public_url": "https://fabric.systemiacommandcenters.com/capabilities/roasted-text-pressure-test-machine-v1",
           "registry_name": null
         }
       ]
@@ -18199,7 +18199,7 @@
           "commercial_state": "sell_now",
           "machine_state": "payment_ready",
           "pain_page": "/chum/intents/roasted-text-pressure-test-machine-v1/",
-          "public_url": null,
+          "public_url": "https://fabric.systemiacommandcenters.com/capabilities/roasted-text-pressure-test-machine-v1",
           "registry_name": null
         }
       ]
@@ -18222,7 +18222,7 @@
           "commercial_state": "sell_now",
           "machine_state": "payment_ready",
           "pain_page": "/chum/intents/roasted-text-pressure-test-machine-v1/",
-          "public_url": null,
+          "public_url": "https://fabric.systemiacommandcenters.com/capabilities/roasted-text-pressure-test-machine-v1",
           "registry_name": null
         }
       ]
@@ -18245,7 +18245,7 @@
           "commercial_state": "sell_now",
           "machine_state": "payment_ready",
           "pain_page": "/chum/intents/roasted-text-pressure-test-machine-v1/",
-          "public_url": null,
+          "public_url": "https://fabric.systemiacommandcenters.com/capabilities/roasted-text-pressure-test-machine-v1",
           "registry_name": null
         },
         {
@@ -18349,7 +18349,7 @@
           "commercial_state": "contractor_beta",
           "machine_state": "mcp_http_preview_and_receipt_verify_live_workspace_entitlement_build_verified",
           "pain_page": "/chum/intents/eps-estimate-engine-machine-v1/",
-          "public_url": null,
+          "public_url": "https://fabric.systemiacommandcenters.com/capabilities/eps-estimate-engine-machine-v1",
           "registry_name": null
         }
       ]
@@ -18694,7 +18694,7 @@
           "commercial_state": "sell_now",
           "machine_state": "payment_ready",
           "pain_page": "/chum/intents/career-command-interview-practice-machine-v1/",
-          "public_url": null,
+          "public_url": "https://fabric.systemiacommandcenters.com/capabilities/career-command-interview-practice-machine-v1",
           "registry_name": null
         }
       ]
@@ -18947,7 +18947,7 @@
           "commercial_state": "contractor_beta",
           "machine_state": "mcp_http_preview_and_receipt_verify_live_workspace_entitlement_build_verified",
           "pain_page": "/chum/intents/eps-estimate-engine-machine-v1/",
-          "public_url": null,
+          "public_url": "https://fabric.systemiacommandcenters.com/capabilities/eps-estimate-engine-machine-v1",
           "registry_name": null
         }
       ]
@@ -18993,7 +18993,7 @@
           "commercial_state": "contractor_beta",
           "machine_state": "mcp_http_preview_and_receipt_verify_live_workspace_entitlement_build_verified",
           "pain_page": "/chum/intents/eps-estimate-engine-machine-v1/",
-          "public_url": null,
+          "public_url": "https://fabric.systemiacommandcenters.com/capabilities/eps-estimate-engine-machine-v1",
           "registry_name": null
         }
       ]
@@ -19315,7 +19315,7 @@
           "commercial_state": "sell_now",
           "machine_state": "payment_ready_human_confirmation",
           "pain_page": "/chum/intents/rivet-site-underwriting-v1/",
-          "public_url": null,
+          "public_url": "https://fabric.systemiacommandcenters.com/capabilities/rivet-site-underwriting-v1",
           "registry_name": null
         },
         {
@@ -19350,7 +19350,7 @@
           "commercial_state": "sell_now",
           "machine_state": "payment_ready_human_confirmation",
           "pain_page": "/chum/intents/aliev-site-opportunity-snapshot-v1/",
-          "public_url": null,
+          "public_url": "https://fabric.systemiacommandcenters.com/capabilities/aliev-site-opportunity-snapshot-v1",
           "registry_name": null
         }
       ]
@@ -19465,7 +19465,7 @@
           "commercial_state": "verification_required",
           "machine_state": "discovery_only",
           "pain_page": "/chum/intents/evermaps-evidence-projection-machine-v1/",
-          "public_url": null,
+          "public_url": "https://fabric.systemiacommandcenters.com/capabilities/evermaps-evidence-projection-machine-v1",
           "registry_name": null
         },
         {
@@ -19500,7 +19500,7 @@
           "commercial_state": "verification_required",
           "machine_state": "discovery_only",
           "pain_page": "/chum/intents/evermaps-evidence-projection-machine-v1/",
-          "public_url": null,
+          "public_url": "https://fabric.systemiacommandcenters.com/capabilities/evermaps-evidence-projection-machine-v1",
           "registry_name": null
         },
         {
@@ -19558,7 +19558,7 @@
           "commercial_state": "verification_required",
           "machine_state": "discovery_only",
           "pain_page": "/chum/intents/globalstat-country-intelligence-machine-v1/",
-          "public_url": null,
+          "public_url": "https://fabric.systemiacommandcenters.com/capabilities/globalstat-country-intelligence-machine-v1",
           "registry_name": null
         },
         {
@@ -19961,7 +19961,7 @@
           "commercial_state": "sell_now",
           "machine_state": "human_handoff_ready",
           "pain_page": "/chum/intents/site-survive-rapid-audit-v1/",
-          "public_url": null,
+          "public_url": "https://fabric.systemiacommandcenters.com/capabilities/site-survive-rapid-audit-v1",
           "registry_name": null
         }
       ]
@@ -19984,7 +19984,7 @@
           "commercial_state": "sell_now",
           "machine_state": "payment_ready_human_confirmation",
           "pain_page": "/chum/intents/rivet-site-underwriting-v1/",
-          "public_url": null,
+          "public_url": "https://fabric.systemiacommandcenters.com/capabilities/rivet-site-underwriting-v1",
           "registry_name": null
         },
         {
@@ -20111,7 +20111,7 @@
           "commercial_state": "verification_required",
           "machine_state": "invocation_ready",
           "pain_page": "/chum/intents/evercraft-clip-social-video-v1/",
-          "public_url": null,
+          "public_url": "https://fabric.systemiacommandcenters.com/capabilities/evercraft-clip-social-video-v1",
           "registry_name": null
         },
         {
@@ -20146,7 +20146,7 @@
           "commercial_state": "commercial_pilot",
           "machine_state": "human_handoff_ready",
           "pain_page": "/chum/intents/portfolio-sentinel-v1/",
-          "public_url": null,
+          "public_url": "https://fabric.systemiacommandcenters.com/capabilities/portfolio-sentinel-v1",
           "registry_name": null
         },
         {
@@ -20204,7 +20204,7 @@
           "commercial_state": "commercial_pilot",
           "machine_state": "human_handoff_ready",
           "pain_page": "/chum/intents/portfolio-sentinel-v1/",
-          "public_url": null,
+          "public_url": "https://fabric.systemiacommandcenters.com/capabilities/portfolio-sentinel-v1",
           "registry_name": null
         },
         {
@@ -20262,7 +20262,7 @@
           "commercial_state": "sell_now",
           "machine_state": "payment_ready",
           "pain_page": "/chum/intents/findmypart-paid-hunt-v1/",
-          "public_url": null,
+          "public_url": "https://fabric.systemiacommandcenters.com/capabilities/findmypart-paid-hunt-v1",
           "registry_name": null
         }
       ]
@@ -20285,7 +20285,7 @@
           "commercial_state": "verification_required",
           "machine_state": "discovery_only",
           "pain_page": "/chum/intents/findmypart-repair-shop-desk-v1/",
-          "public_url": null,
+          "public_url": "https://fabric.systemiacommandcenters.com/capabilities/findmypart-repair-shop-desk-v1",
           "registry_name": null
         }
       ]
@@ -20308,7 +20308,7 @@
           "commercial_state": "sell_now",
           "machine_state": "payment_ready",
           "pain_page": "/chum/intents/findmypart-paid-hunt-v1/",
-          "public_url": null,
+          "public_url": "https://fabric.systemiacommandcenters.com/capabilities/findmypart-paid-hunt-v1",
           "registry_name": null
         }
       ]
@@ -20423,7 +20423,7 @@
           "commercial_state": "verification_required",
           "machine_state": "human_auth_handoff",
           "pain_page": "/chum/intents/buildflow-shadow-migration-machine-v1/",
-          "public_url": null,
+          "public_url": "https://fabric.systemiacommandcenters.com/capabilities/buildflow-shadow-migration-machine-v1",
           "registry_name": null
         }
       ]
@@ -20814,7 +20814,7 @@
           "commercial_state": "verification_required",
           "machine_state": "discovery_only",
           "pain_page": "/chum/intents/freight-load-exception-intelligence-machine-v1/",
-          "public_url": null,
+          "public_url": "https://fabric.systemiacommandcenters.com/capabilities/freight-load-exception-intelligence-machine-v1",
           "registry_name": null
         },
         {
@@ -20872,7 +20872,7 @@
           "commercial_state": "verify",
           "machine_state": "discovery_only",
           "pain_page": "/chum/intents/career-command-resume-job-fit-machine-v1/",
-          "public_url": null,
+          "public_url": "https://fabric.systemiacommandcenters.com/capabilities/career-command-resume-job-fit-machine-v1",
           "registry_name": null
         }
       ]
@@ -20918,7 +20918,7 @@
           "commercial_state": "contractor_beta",
           "machine_state": "mcp_http_preview_and_receipt_verify_live_workspace_entitlement_build_verified",
           "pain_page": "/chum/intents/eps-estimate-engine-machine-v1/",
-          "public_url": null,
+          "public_url": "https://fabric.systemiacommandcenters.com/capabilities/eps-estimate-engine-machine-v1",
           "registry_name": null
         }
       ]
@@ -20964,7 +20964,7 @@
           "commercial_state": "sell_now",
           "machine_state": "payment_ready",
           "pain_page": "/chum/intents/roasted-text-pressure-test-machine-v1/",
-          "public_url": null,
+          "public_url": "https://fabric.systemiacommandcenters.com/capabilities/roasted-text-pressure-test-machine-v1",
           "registry_name": null
         }
       ]
@@ -21033,7 +21033,7 @@
           "commercial_state": "sell_now",
           "machine_state": "payment_ready",
           "pain_page": "/chum/intents/audit-center-website-audit-machine-v1/",
-          "public_url": null,
+          "public_url": "https://fabric.systemiacommandcenters.com/capabilities/audit-center-website-audit-machine-v1",
           "registry_name": null
         }
       ]
@@ -21056,7 +21056,7 @@
           "commercial_state": "commercial_pilot",
           "machine_state": "human_handoff_ready",
           "pain_page": "/chum/intents/portfolio-sentinel-v1/",
-          "public_url": null,
+          "public_url": "https://fabric.systemiacommandcenters.com/capabilities/portfolio-sentinel-v1",
           "registry_name": null
         },
         {
@@ -21252,7 +21252,7 @@
           "commercial_state": "verification_required",
           "machine_state": "discovery_only",
           "pain_page": "/chum/intents/forensiscope-evidence-review-v1/",
-          "public_url": null,
+          "public_url": "https://fabric.systemiacommandcenters.com/capabilities/forensiscope-evidence-review-v1",
           "registry_name": null
         }
       ]
@@ -21298,7 +21298,7 @@
           "commercial_state": "verification_required",
           "machine_state": "human_auth_handoff",
           "pain_page": "/chum/intents/buildflow-entity-resolution-machine-v1/",
-          "public_url": null,
+          "public_url": "https://fabric.systemiacommandcenters.com/capabilities/buildflow-entity-resolution-machine-v1",
           "registry_name": null
         }
       ]
@@ -21390,7 +21390,7 @@
           "commercial_state": "verification_required",
           "machine_state": "discovery_only",
           "pain_page": "/chum/intents/forensiscope-evidence-review-v1/",
-          "public_url": null,
+          "public_url": "https://fabric.systemiacommandcenters.com/capabilities/forensiscope-evidence-review-v1",
           "registry_name": null
         }
       ]
@@ -21413,7 +21413,7 @@
           "commercial_state": "discovery_only",
           "machine_state": "specialist_discovery_ready_runtime_gated",
           "pain_page": "/chum/intents/evercraft-web-browser-agent-v1/",
-          "public_url": null,
+          "public_url": "https://fabric.systemiacommandcenters.com/capabilities/evercraft-web-browser-agent-v1",
           "registry_name": null
         },
         {
@@ -21494,7 +21494,7 @@
           "commercial_state": "verification_required",
           "machine_state": "human_auth_handoff",
           "pain_page": "/chum/intents/buildflow-procure-to-pay-shadow-v1/",
-          "public_url": null,
+          "public_url": "https://fabric.systemiacommandcenters.com/capabilities/buildflow-procure-to-pay-shadow-v1",
           "registry_name": null
         }
       ]
@@ -21747,7 +21747,7 @@
           "commercial_state": "verification_required",
           "machine_state": "discovery_only",
           "pain_page": "/chum/intents/forensiscope-evidence-review-v1/",
-          "public_url": null,
+          "public_url": "https://fabric.systemiacommandcenters.com/capabilities/forensiscope-evidence-review-v1",
           "registry_name": null
         }
       ]
@@ -21908,7 +21908,7 @@
           "commercial_state": "verification_required",
           "machine_state": "invocation_ready",
           "pain_page": "/chum/intents/evercraft-clip-social-video-v1/",
-          "public_url": null,
+          "public_url": "https://fabric.systemiacommandcenters.com/capabilities/evercraft-clip-social-video-v1",
           "registry_name": null
         },
         {
@@ -21943,7 +21943,7 @@
           "commercial_state": "contractor_beta",
           "machine_state": "mcp_http_preview_and_receipt_verify_live_workspace_entitlement_build_verified",
           "pain_page": "/chum/intents/eps-estimate-engine-machine-v1/",
-          "public_url": null,
+          "public_url": "https://fabric.systemiacommandcenters.com/capabilities/eps-estimate-engine-machine-v1",
           "registry_name": null
         }
       ]
@@ -21966,7 +21966,7 @@
           "commercial_state": "sell_now",
           "machine_state": "payment_ready",
           "pain_page": "/chum/intents/deck-capital-fit-sprint-machine-v1/",
-          "public_url": null,
+          "public_url": "https://fabric.systemiacommandcenters.com/capabilities/deck-capital-fit-sprint-machine-v1",
           "registry_name": null
         }
       ]
@@ -21989,7 +21989,7 @@
           "commercial_state": "verify",
           "machine_state": "human_auth_handoff",
           "pain_page": "/chum/intents/callproof-complaint-packet-machine-v1/",
-          "public_url": null,
+          "public_url": "https://fabric.systemiacommandcenters.com/capabilities/callproof-complaint-packet-machine-v1",
           "registry_name": null
         }
       ]
@@ -22081,7 +22081,7 @@
           "commercial_state": "verification_required",
           "machine_state": "discovery_only",
           "pain_page": "/chum/intents/buildflow-enterprise-ops-router-v1/",
-          "public_url": null,
+          "public_url": "https://fabric.systemiacommandcenters.com/capabilities/buildflow-enterprise-ops-router-v1",
           "registry_name": null
         }
       ]
@@ -22127,7 +22127,7 @@
           "commercial_state": "verification_required",
           "machine_state": "discovery_only",
           "pain_page": "/chum/intents/talent-evidence-profile-machine-v1/",
-          "public_url": null,
+          "public_url": "https://fabric.systemiacommandcenters.com/capabilities/talent-evidence-profile-machine-v1",
           "registry_name": null
         },
         {
@@ -22231,7 +22231,7 @@
           "commercial_state": "verification_required",
           "machine_state": "invocation_ready",
           "pain_page": "/chum/intents/evercraft-clip-social-video-v1/",
-          "public_url": null,
+          "public_url": "https://fabric.systemiacommandcenters.com/capabilities/evercraft-clip-social-video-v1",
           "registry_name": null
         },
         {
@@ -22289,7 +22289,7 @@
           "commercial_state": "sell_now",
           "machine_state": "payment_ready_human_confirmation",
           "pain_page": "/chum/intents/rivet-site-underwriting-v1/",
-          "public_url": null,
+          "public_url": "https://fabric.systemiacommandcenters.com/capabilities/rivet-site-underwriting-v1",
           "registry_name": null
         }
       ]
@@ -22404,7 +22404,7 @@
           "commercial_state": "sell_now",
           "machine_state": "payment_ready_human_confirmation",
           "pain_page": "/chum/intents/rivet-site-underwriting-v1/",
-          "public_url": null,
+          "public_url": "https://fabric.systemiacommandcenters.com/capabilities/rivet-site-underwriting-v1",
           "registry_name": null
         },
         {
@@ -22462,7 +22462,7 @@
           "commercial_state": "verification_required",
           "machine_state": "discovery_only",
           "pain_page": "/chum/intents/littlered-kdp-export-qa-machine-v1/",
-          "public_url": null,
+          "public_url": "https://fabric.systemiacommandcenters.com/capabilities/littlered-kdp-export-qa-machine-v1",
           "registry_name": null
         },
         {
@@ -22497,7 +22497,7 @@
           "commercial_state": "verification_required",
           "machine_state": "discovery_only",
           "pain_page": "/chum/intents/towi-evidence-research-machine-v1/",
-          "public_url": null,
+          "public_url": "https://fabric.systemiacommandcenters.com/capabilities/towi-evidence-research-machine-v1",
           "registry_name": null
         },
         {
@@ -22532,7 +22532,7 @@
           "commercial_state": "sell_now",
           "machine_state": "payment_ready",
           "pain_page": "/chum/intents/faie-signal-brief-v1/",
-          "public_url": null,
+          "public_url": "https://fabric.systemiacommandcenters.com/capabilities/faie-signal-brief-v1",
           "registry_name": null
         }
       ]
@@ -22647,7 +22647,7 @@
           "commercial_state": "contractor_beta",
           "machine_state": "mcp_http_preview_and_receipt_verify_live_workspace_entitlement_build_verified",
           "pain_page": "/chum/intents/eps-estimate-engine-machine-v1/",
-          "public_url": null,
+          "public_url": "https://fabric.systemiacommandcenters.com/capabilities/eps-estimate-engine-machine-v1",
           "registry_name": null
         }
       ]
@@ -22670,7 +22670,7 @@
           "commercial_state": "contractor_beta",
           "machine_state": "mcp_http_preview_and_receipt_verify_live_workspace_entitlement_build_verified",
           "pain_page": "/chum/intents/eps-estimate-engine-machine-v1/",
-          "public_url": null,
+          "public_url": "https://fabric.systemiacommandcenters.com/capabilities/eps-estimate-engine-machine-v1",
           "registry_name": null
         }
       ]
@@ -22739,7 +22739,7 @@
           "commercial_state": "verification_required",
           "machine_state": "discovery_only",
           "pain_page": "/chum/intents/forensiscope-evidence-review-v1/",
-          "public_url": null,
+          "public_url": "https://fabric.systemiacommandcenters.com/capabilities/forensiscope-evidence-review-v1",
           "registry_name": null
         }
       ]
@@ -22785,7 +22785,7 @@
           "commercial_state": "sell_now",
           "machine_state": "payment_ready",
           "pain_page": "/chum/intents/audit-center-website-audit-machine-v1/",
-          "public_url": null,
+          "public_url": "https://fabric.systemiacommandcenters.com/capabilities/audit-center-website-audit-machine-v1",
           "registry_name": null
         }
       ]
@@ -22854,7 +22854,7 @@
           "commercial_state": "commercial_pilot",
           "machine_state": "human_handoff_ready",
           "pain_page": "/chum/intents/portfolio-sentinel-v1/",
-          "public_url": null,
+          "public_url": "https://fabric.systemiacommandcenters.com/capabilities/portfolio-sentinel-v1",
           "registry_name": null
         },
         {
@@ -22970,7 +22970,7 @@
           "commercial_state": "verification_required",
           "machine_state": "discovery_only",
           "pain_page": "/chum/intents/buildflow-enterprise-ops-router-v1/",
-          "public_url": null,
+          "public_url": "https://fabric.systemiacommandcenters.com/capabilities/buildflow-enterprise-ops-router-v1",
           "registry_name": null
         }
       ]
@@ -22993,7 +22993,7 @@
           "commercial_state": "verification_required",
           "machine_state": "discovery_only",
           "pain_page": "/chum/intents/buildflow-enterprise-ops-router-v1/",
-          "public_url": null,
+          "public_url": "https://fabric.systemiacommandcenters.com/capabilities/buildflow-enterprise-ops-router-v1",
           "registry_name": null
         }
       ]
@@ -23143,7 +23143,7 @@
           "commercial_state": "discovery_only",
           "machine_state": "specialist_discovery_ready_runtime_gated",
           "pain_page": "/chum/intents/evercraft-web-browser-agent-v1/",
-          "public_url": null,
+          "public_url": "https://fabric.systemiacommandcenters.com/capabilities/evercraft-web-browser-agent-v1",
           "registry_name": null
         }
       ]
@@ -23212,7 +23212,7 @@
           "commercial_state": "discovery_only",
           "machine_state": "specialist_discovery_ready_runtime_gated",
           "pain_page": "/chum/intents/evercraft-web-browser-agent-v1/",
-          "public_url": null,
+          "public_url": "https://fabric.systemiacommandcenters.com/capabilities/evercraft-web-browser-agent-v1",
           "registry_name": null
         }
       ]
@@ -23304,7 +23304,7 @@
           "commercial_state": "sell_now",
           "machine_state": "payment_ready",
           "pain_page": "/chum/intents/audit-center-website-audit-machine-v1/",
-          "public_url": null,
+          "public_url": "https://fabric.systemiacommandcenters.com/capabilities/audit-center-website-audit-machine-v1",
           "registry_name": null
         }
       ]
@@ -23350,7 +23350,7 @@
           "commercial_state": "sell_now",
           "machine_state": "payment_ready",
           "pain_page": "/chum/intents/deck-capital-fit-sprint-machine-v1/",
-          "public_url": null,
+          "public_url": "https://fabric.systemiacommandcenters.com/capabilities/deck-capital-fit-sprint-machine-v1",
           "registry_name": null
         }
       ]
@@ -23373,7 +23373,7 @@
           "commercial_state": "verify",
           "machine_state": "discovery_only",
           "pain_page": "/chum/intents/career-command-resume-job-fit-machine-v1/",
-          "public_url": null,
+          "public_url": "https://fabric.systemiacommandcenters.com/capabilities/career-command-resume-job-fit-machine-v1",
           "registry_name": null
         }
       ]
@@ -23465,7 +23465,7 @@
           "commercial_state": "verification_required",
           "machine_state": "discovery_only",
           "pain_page": "/chum/intents/datafoundry-data-gap-audit-machine-v1/",
-          "public_url": null,
+          "public_url": "https://fabric.systemiacommandcenters.com/capabilities/datafoundry-data-gap-audit-machine-v1",
           "registry_name": null
         }
       ]
@@ -23488,7 +23488,7 @@
           "commercial_state": "sell_now",
           "machine_state": "payment_ready_human_confirmation",
           "pain_page": "/chum/intents/aliev-site-opportunity-snapshot-v1/",
-          "public_url": null,
+          "public_url": "https://fabric.systemiacommandcenters.com/capabilities/aliev-site-opportunity-snapshot-v1",
           "registry_name": null
         }
       ]
@@ -23511,7 +23511,7 @@
           "commercial_state": "free",
           "machine_state": "read_only_live",
           "pain_page": "/chum/intents/findmypart-part-passport-v1/",
-          "public_url": null,
+          "public_url": "https://fabric.systemiacommandcenters.com/capabilities/findmypart-part-passport-v1",
           "registry_name": null
         }
       ]
@@ -23580,7 +23580,7 @@
           "commercial_state": "sell_now",
           "machine_state": "payment_ready_human_confirmation",
           "pain_page": "/chum/intents/aliev-site-opportunity-snapshot-v1/",
-          "public_url": null,
+          "public_url": "https://fabric.systemiacommandcenters.com/capabilities/aliev-site-opportunity-snapshot-v1",
           "registry_name": null
         }
       ]
@@ -23603,7 +23603,7 @@
           "commercial_state": "verification_required",
           "machine_state": "discovery_only",
           "pain_page": "/chum/intents/freight-load-exception-intelligence-machine-v1/",
-          "public_url": null,
+          "public_url": "https://fabric.systemiacommandcenters.com/capabilities/freight-load-exception-intelligence-machine-v1",
           "registry_name": null
         },
         {
@@ -23684,7 +23684,7 @@
           "commercial_state": "verification_required",
           "machine_state": "invocation_ready",
           "pain_page": "/chum/intents/raven-nexus-pain-router-v1/",
-          "public_url": null,
+          "public_url": "https://fabric.systemiacommandcenters.com/capabilities/raven-nexus-pain-router-v1",
           "registry_name": null
         }
       ]
@@ -23707,7 +23707,7 @@
           "commercial_state": "verification_required",
           "machine_state": "discovery_only",
           "pain_page": "/chum/intents/freight-load-exception-intelligence-machine-v1/",
-          "public_url": null,
+          "public_url": "https://fabric.systemiacommandcenters.com/capabilities/freight-load-exception-intelligence-machine-v1",
           "registry_name": null
         },
         {
@@ -23765,7 +23765,7 @@
           "commercial_state": "verification_required",
           "machine_state": "discovery_only",
           "pain_page": "/chum/intents/talent-evidence-profile-machine-v1/",
-          "public_url": null,
+          "public_url": "https://fabric.systemiacommandcenters.com/capabilities/talent-evidence-profile-machine-v1",
           "registry_name": null
         },
         {
@@ -23823,7 +23823,7 @@
           "commercial_state": "verification_required",
           "machine_state": "human_auth_handoff",
           "pain_page": "/chum/intents/buildflow-process-audit-machine-v1/",
-          "public_url": null,
+          "public_url": "https://fabric.systemiacommandcenters.com/capabilities/buildflow-process-audit-machine-v1",
           "registry_name": null
         }
       ]
@@ -23846,7 +23846,7 @@
           "commercial_state": "verification_required",
           "machine_state": "discovery_only",
           "pain_page": "/chum/intents/datafoundry-data-gap-audit-machine-v1/",
-          "public_url": null,
+          "public_url": "https://fabric.systemiacommandcenters.com/capabilities/datafoundry-data-gap-audit-machine-v1",
           "registry_name": null
         }
       ]
@@ -23915,7 +23915,7 @@
           "commercial_state": "discovery_only",
           "machine_state": "human_handoff_only",
           "pain_page": "/chum/intents/evercraft-network-resilience-membership-v1/",
-          "public_url": null,
+          "public_url": "https://fabric.systemiacommandcenters.com/capabilities/evercraft-network-resilience-membership-v1",
           "registry_name": null
         }
       ]
@@ -23938,7 +23938,7 @@
           "commercial_state": "verification_required",
           "machine_state": "discovery_only",
           "pain_page": "/chum/intents/globalstat-country-intelligence-machine-v1/",
-          "public_url": null,
+          "public_url": "https://fabric.systemiacommandcenters.com/capabilities/globalstat-country-intelligence-machine-v1",
           "registry_name": null
         },
         {
@@ -23996,7 +23996,7 @@
           "commercial_state": "sell_now",
           "machine_state": "payment_ready",
           "pain_page": "/chum/intents/deck-capital-fit-sprint-machine-v1/",
-          "public_url": null,
+          "public_url": "https://fabric.systemiacommandcenters.com/capabilities/deck-capital-fit-sprint-machine-v1",
           "registry_name": null
         }
       ]
@@ -24019,7 +24019,7 @@
           "commercial_state": "verify",
           "machine_state": "discovery_only",
           "pain_page": "/chum/intents/career-command-resume-job-fit-machine-v1/",
-          "public_url": null,
+          "public_url": "https://fabric.systemiacommandcenters.com/capabilities/career-command-resume-job-fit-machine-v1",
           "registry_name": null
         }
       ]
@@ -24042,7 +24042,7 @@
           "commercial_state": "sell_now",
           "machine_state": "payment_ready",
           "pain_page": "/chum/intents/audit-center-website-audit-machine-v1/",
-          "public_url": null,
+          "public_url": "https://fabric.systemiacommandcenters.com/capabilities/audit-center-website-audit-machine-v1",
           "registry_name": null
         }
       ]
@@ -24065,7 +24065,7 @@
           "commercial_state": "sell_now",
           "machine_state": "payment_ready",
           "pain_page": "/chum/intents/audit-center-website-audit-machine-v1/",
-          "public_url": null,
+          "public_url": "https://fabric.systemiacommandcenters.com/capabilities/audit-center-website-audit-machine-v1",
           "registry_name": null
         }
       ]
@@ -24088,7 +24088,7 @@
           "commercial_state": "sell_now",
           "machine_state": "payment_ready",
           "pain_page": "/chum/intents/audit-center-website-audit-machine-v1/",
-          "public_url": null,
+          "public_url": "https://fabric.systemiacommandcenters.com/capabilities/audit-center-website-audit-machine-v1",
           "registry_name": null
         }
       ]
@@ -24111,7 +24111,7 @@
           "commercial_state": "sell_now",
           "machine_state": "payment_ready",
           "pain_page": "/chum/intents/audit-center-website-audit-machine-v1/",
-          "public_url": null,
+          "public_url": "https://fabric.systemiacommandcenters.com/capabilities/audit-center-website-audit-machine-v1",
           "registry_name": null
         }
       ]

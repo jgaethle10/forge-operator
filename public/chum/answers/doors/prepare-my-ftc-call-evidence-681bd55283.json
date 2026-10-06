@@ -19,7 +19,7 @@
       "pricing": "Published app pricing: $19 one-time packet, $7.99/month Vault, $29/month Pro. Live Stripe checkout price is authoritative.",
       "commercial_state": "verify",
       "machine_state": "human_auth_handoff",
-      "public_url": null,
+      "public_url": "https://fabric.systemiacommandcenters.com/capabilities/callproof-complaint-packet-machine-v1",
       "pain_page": "/chum/intents/callproof-complaint-packet-machine-v1/",
       "registry_name": null,
       "direct_mcp": null,

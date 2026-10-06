@@ -19,7 +19,7 @@
       "pricing": "Raven contains a country-brief pricing hypothesis ($299-$2,500 depending depth). No approved fixed machine price/payment path was verified, so it is not auto-quotable.",
       "commercial_state": "verification_required",
       "machine_state": "discovery_only",
-      "public_url": null,
+      "public_url": "https://fabric.systemiacommandcenters.com/capabilities/globalstat-country-intelligence-machine-v1",
       "pain_page": "/chum/intents/globalstat-country-intelligence-machine-v1/",
       "registry_name": null,
       "direct_mcp": null,

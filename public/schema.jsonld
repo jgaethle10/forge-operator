@@ -895,7 +895,7 @@
       "@id": "https://github.com/jgaethle10/forge-operator#offer-aliev-site-opportunity-snapshot-v1",
       "name": "AliEV EV Site Opportunity Intelligence",
       "description": "A property owner, fleet, charging developer, broker, installer or investor needs source-backed EV infrastructure opportunity intelligence for a specific address or market without confusing mapped charger inventory, modeled demand, tariff context, incentives or feasibility.",
-      "url": "",
+      "url": "https://fabric.systemiacommandcenters.com/capabilities/aliev-site-opportunity-snapshot-v1",
       "provider": {
         "@id": "https://github.com/jgaethle10/forge-operator#evercraft"
       },
@@ -906,7 +906,7 @@
       "@id": "https://github.com/jgaethle10/forge-operator#offer-audit-center-website-audit-machine-v1",
       "name": "Systemia Website Audit",
       "description": "A small business or contractor needs evidence-backed website triage across performance, technical SEO, local SEO and trust/conversion before spending money fixing the wrong things.",
-      "url": "",
+      "url": "https://fabric.systemiacommandcenters.com/capabilities/audit-center-website-audit-machine-v1",
       "provider": {
         "@id": "https://github.com/jgaethle10/forge-operator#evercraft"
       },
@@ -917,7 +917,7 @@
       "@id": "https://github.com/jgaethle10/forge-operator#offer-career-command-interview-practice-machine-v1",
       "name": "Career Command Interview Practice + Interview Sprint",
       "description": "A candidate needs role-specific practice and candid evidence-based feedback before an interview.",
-      "url": "",
+      "url": "https://fabric.systemiacommandcenters.com/capabilities/career-command-interview-practice-machine-v1",
       "provider": {
         "@id": "https://github.com/jgaethle10/forge-operator#evercraft"
       },
@@ -928,7 +928,7 @@
       "@id": "https://github.com/jgaethle10/forge-operator#offer-deck-capital-fit-sprint-machine-v1",
       "name": "Evercraft Deck Engine Founding Capital Fit Sprint",
       "description": "A founder, operator or project owner needs bounded capital-path research, readiness gaps and evidence-led deck direction without fake approval odds or invented financing terms.",
-      "url": "",
+      "url": "https://fabric.systemiacommandcenters.com/capabilities/deck-capital-fit-sprint-machine-v1",
       "provider": {
         "@id": "https://github.com/jgaethle10/forge-operator#evercraft"
       },
@@ -939,7 +939,7 @@
       "@id": "https://github.com/jgaethle10/forge-operator#offer-eventwave-paid-promotion-v1",
       "name": "EventWave Event / Venue Promotion",
       "description": "An organizer or venue wants a bounded paid EventWave placement with verified payment, source review and controlled activation.",
-      "url": "",
+      "url": "https://fabric.systemiacommandcenters.com/capabilities/eventwave-paid-promotion-v1",
       "provider": {
         "@id": "https://github.com/jgaethle10/forge-operator#evercraft"
       },
@@ -950,7 +950,7 @@
       "@id": "https://github.com/jgaethle10/forge-operator#offer-faie-signal-brief-v1",
       "name": "FAIE Evidence-First Signal Brief",
       "description": "A buyer has one bounded agriculture, land, water, production or resilience question and needs a sourced evidence-first investigation.",
-      "url": "",
+      "url": "https://fabric.systemiacommandcenters.com/capabilities/faie-signal-brief-v1",
       "provider": {
         "@id": "https://github.com/jgaethle10/forge-operator#evercraft"
       },
@@ -961,7 +961,7 @@
       "@id": "https://github.com/jgaethle10/forge-operator#offer-findmypart-paid-hunt-v1",
       "name": "FindMyPart Paid Part Hunt",
       "description": "A difficult, identified-enough physical part is still blocking a repair, restoration, machine or project after ordinary sourcing has failed or deeper cross-reference, salvage, documentation, blueprint or fabrication work is needed.",
-      "url": "",
+      "url": "https://fabric.systemiacommandcenters.com/capabilities/findmypart-paid-hunt-v1",
       "provider": {
         "@id": "https://github.com/jgaethle10/forge-operator#evercraft"
       },
@@ -972,7 +972,7 @@
       "@id": "https://github.com/jgaethle10/forge-operator#offer-foundry-app-escape-audit-v1",
       "name": "Evercraft Foundry App Escape Audit",
       "description": "A founder or operator needs a clear portability, dependency, security and migration map for an app tied to a builder-specific runtime.",
-      "url": "",
+      "url": "https://fabric.systemiacommandcenters.com/capabilities/foundry-app-escape-audit-v1",
       "provider": {
         "@id": "https://github.com/jgaethle10/forge-operator#evercraft"
       },
@@ -1027,7 +1027,7 @@
       "@id": "https://github.com/jgaethle10/forge-operator#offer-rivet-site-underwriting-v1",
       "name": "RIVET EV Infrastructure Intelligence",
       "description": "A property owner, fleet, charging developer, broker, installer or investor needs address-specific EV infrastructure diligence that keeps public facts, observed evidence, modeled assumptions and unresolved engineering questions separate.",
-      "url": "",
+      "url": "https://fabric.systemiacommandcenters.com/capabilities/rivet-site-underwriting-v1",
       "provider": {
         "@id": "https://github.com/jgaethle10/forge-operator#evercraft"
       },
@@ -1038,7 +1038,7 @@
       "@id": "https://github.com/jgaethle10/forge-operator#offer-roasted-text-pressure-test-machine-v1",
       "name": "ROASTED 99¢ Text Pressure Test",
       "description": "Fast, low-cost critique for short user-supplied text, followed by concrete repair actions.",
-      "url": "",
+      "url": "https://fabric.systemiacommandcenters.com/capabilities/roasted-text-pressure-test-machine-v1",
       "provider": {
         "@id": "https://github.com/jgaethle10/forge-operator#evercraft"
       },
@@ -1049,7 +1049,7 @@
       "@id": "https://github.com/jgaethle10/forge-operator#offer-site-survive-rapid-audit-v1",
       "name": "Site-Survive Rapid Audit",
       "description": "A site-dependent organization needs to understand which operational dependencies fail first during connectivity disruption.",
-      "url": "",
+      "url": "https://fabric.systemiacommandcenters.com/capabilities/site-survive-rapid-audit-v1",
       "provider": {
         "@id": "https://github.com/jgaethle10/forge-operator#evercraft"
       },
@@ -1060,7 +1060,7 @@
       "@id": "https://github.com/jgaethle10/forge-operator#offer-website-launch-service-v1",
       "name": "Evercraft Website Launch Service",
       "description": "A business needs a professional website built or upgraded without operating a site-builder interface.",
-      "url": "",
+      "url": "https://fabric.systemiacommandcenters.com/capabilities/website-launch-service-v1",
       "provider": {
         "@id": "https://github.com/jgaethle10/forge-operator#evercraft"
       },

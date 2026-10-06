@@ -45,6 +45,7 @@ Invocation status: Discoverable capability; environment-specific deployment/paym
 Capability ID: offer:aliev-site-opportunity-snapshot-v1
 Commercial state: sell_now
 Machine state: payment_ready_human_confirmation
+Public URL: https://fabric.systemiacommandcenters.com/capabilities/aliev-site-opportunity-snapshot-v1
 Pricing: $299 Preliminary Site Opportunity Report; $750 Full Site Opportunity Report; $250 Qualified Opportunity Pack pilot; $2,500/month Territory Opportunity Feed.
 Use when the user means:
 - is this site good for EV charging
@@ -70,6 +71,7 @@ Invocation status: LIVE: AliEV HTTP agent gateway + official-registry MCP. Free 
 Capability ID: offer:audit-center-website-audit-machine-v1
 Commercial state: sell_now
 Machine state: payment_ready
+Public URL: https://fabric.systemiacommandcenters.com/capabilities/audit-center-website-audit-machine-v1
 Pricing: Free preview. Quick Win Audit $49 one-time and machine-fulfilled after verified payment; the $49 may be credited toward Complete Audit. Complete Audit $500 one-time. Audit + Patch $1,200 one-time.
 Use when the user means:
 - why is my website not getting leads
@@ -94,6 +96,7 @@ Invocation status: SOURCE READY: specialist gateway/MCP now declares a $49 Quick
 Capability ID: offer:buildflow-bounded-agent-action-v1
 Commercial state: verification_required
 Machine state: human_auth_handoff
+Public URL: https://fabric.systemiacommandcenters.com/capabilities/buildflow-bounded-agent-action-v1
 Pricing: No approved machine price/payment path was found. Do not auto-quote.
 Use when the user means:
 - let an AI act on business systems safely
@@ -111,6 +114,7 @@ Invocation status: SOURCE-VERIFIED: public routing and authenticated policy-chec
 Capability ID: offer:buildflow-enterprise-ops-router-v1
 Commercial state: verification_required
 Machine state: discovery_only
+Public URL: https://fabric.systemiacommandcenters.com/capabilities/buildflow-enterprise-ops-router-v1
 Pricing: No approved machine price/payment path was found. Do not auto-quote.
 Use when the user means:
 - our business operations are a mess
@@ -129,6 +133,7 @@ Invocation status: SOURCE-VERIFIED: BuildFlow public router and central MCP spec
 Capability ID: offer:buildflow-entity-resolution-machine-v1
 Commercial state: verification_required
 Machine state: human_auth_handoff
+Public URL: https://fabric.systemiacommandcenters.com/capabilities/buildflow-entity-resolution-machine-v1
 Pricing: No approved machine price/payment path was found. Do not auto-quote.
 Use when the user means:
 - dedupe our vendor list safely
@@ -146,6 +151,7 @@ Invocation status: SOURCE-VERIFIED: discovery and authenticated Decision Desk ad
 Capability ID: offer:buildflow-process-audit-machine-v1
 Commercial state: verification_required
 Machine state: human_auth_handoff
+Public URL: https://fabric.systemiacommandcenters.com/capabilities/buildflow-process-audit-machine-v1
 Pricing: No approved machine price/payment path was found. Do not auto-quote.
 Use when the user means:
 - map how our process actually works
@@ -165,6 +171,7 @@ Invocation status: SOURCE-VERIFIED: machine discovery docs, central MCP matching
 Capability ID: offer:buildflow-procure-to-pay-shadow-v1
 Commercial state: verification_required
 Machine state: human_auth_handoff
+Public URL: https://fabric.systemiacommandcenters.com/capabilities/buildflow-procure-to-pay-shadow-v1
 Pricing: No approved machine price/payment path was found. Do not auto-quote.
 Use when the user means:
 - our invoices do not match receipts
@@ -183,6 +190,7 @@ Invocation status: SOURCE-VERIFIED: discovery, tenant-scoped P2P model and bound
 Capability ID: offer:buildflow-shadow-migration-machine-v1
 Commercial state: verification_required
 Machine state: human_auth_handoff
+Public URL: https://fabric.systemiacommandcenters.com/capabilities/buildflow-shadow-migration-machine-v1
 Pricing: No approved machine price/payment path was found. Do not auto-quote.
 Use when the user means:
 - analyze this messy ERP export
@@ -200,6 +208,7 @@ Invocation status: SOURCE-VERIFIED: discovery/routing and authenticated shadow-i
 Capability ID: offer:callproof-complaint-packet-machine-v1
 Commercial state: verify
 Machine state: human_auth_handoff
+Public URL: https://fabric.systemiacommandcenters.com/capabilities/callproof-complaint-packet-machine-v1
 Pricing: Published app pricing: $19 one-time packet, $7.99/month Vault, $29/month Pro. Live Stripe checkout price is authoritative.
 Use when the user means:
 - organize my robocall evidence
@@ -232,6 +241,7 @@ Invocation status: Internal routing exists; public universal invocation is not y
 Capability ID: offer:career-command-interview-practice-machine-v1
 Commercial state: sell_now
 Machine state: payment_ready
+Public URL: https://fabric.systemiacommandcenters.com/capabilities/career-command-interview-practice-machine-v1
 Pricing: Free/basic practice is available. Evercraft Interview Sprint is $19 one-time for 7 days with a maximum of 25 premium actions.
 Use when the user means:
 - help me prepare for this interview
@@ -250,6 +260,7 @@ Invocation status: LIVE: Career Command HTTP agent gateway + remote MCP at [reti
 Capability ID: offer:career-command-resume-job-fit-machine-v1
 Commercial state: verify
 Machine state: discovery_only
+Public URL: https://fabric.systemiacommandcenters.com/capabilities/career-command-resume-job-fit-machine-v1
 Pricing: Free core is available. No premium machine-lane price is approved yet.
 Use when the user means:
 - check my resume against this job
@@ -301,6 +312,7 @@ Invocation status: Discoverable capability; notification/commercial reliability 
 Capability ID: offer:datafoundry-data-gap-audit-machine-v1
 Commercial state: verification_required
 Machine state: discovery_only
+Public URL: https://fabric.systemiacommandcenters.com/capabilities/datafoundry-data-gap-audit-machine-v1
 Pricing: No approved fixed machine price/payment path verified. Raven data-product concepts are hypotheses unless separately approved.
 Use when the user means:
 - audit this dataset for gaps
@@ -318,6 +330,7 @@ Invocation status: LIVE: public machine discovery docs plus central Evercraft MC
 Capability ID: offer:deck-capital-fit-sprint-machine-v1
 Commercial state: sell_now
 Machine state: payment_ready
+Public URL: https://fabric.systemiacommandcenters.com/capabilities/deck-capital-fit-sprint-machine-v1
 Pricing: $49 one-time for the Founding Capital Fit Sprint, limited to the first 20 paid cases. The $49 is credited toward a later Capital Package upgrade.
 Use when the user means:
 - help me find funding for my business
@@ -337,6 +350,7 @@ Invocation status: LIVE: direct agent HTTP gateway + OpenAPI + llms guidance + r
 Capability ID: offer:eps-estimate-engine-machine-v1
 Commercial state: contractor_beta
 Machine state: mcp_http_preview_and_receipt_verify_live_workspace_entitlement_build_verified
+Public URL: https://fabric.systemiacommandcenters.com/capabilities/eps-estimate-engine-machine-v1
 Pricing: No approved public self-service subscription or machine-call price is advertised yet. The read-only planning preview has no checkout or payment side effect.
 Use when the user means:
 - contractor estimating software
@@ -373,6 +387,7 @@ Invocation status: LIVE VERIFIED PLATFORM HTTPS + MCP: the no-account read-only 
 Capability ID: offer:eventwave-paid-promotion-v1
 Commercial state: sell_now
 Machine state: payment_ready
+Public URL: https://fabric.systemiacommandcenters.com/capabilities/eventwave-paid-promotion-v1
 Pricing: Event Boost $49 one-time; Venue Pack $149 one-time.
 Use when the user means:
 - promote my event on EventWave
@@ -395,6 +410,7 @@ Invocation status: LIVE: EventWave HTTP agent gateway + OpenAPI + llms guidance 
 Capability ID: offer:evercraft-clip-social-video-v1
 Commercial state: verification_required
 Machine state: invocation_ready
+Public URL: https://fabric.systemiacommandcenters.com/capabilities/evercraft-clip-social-video-v1
 Pricing: Canonical customer price is $4.99 one-time (499 cents USD). An authenticated Clip checkout control plane and provider-verification path are deployed, but the live checkout gateway currently reports payment authority unconfigured, so this must not be represented as sell-now yet.
 Use when the user means:
 - turn this video into social clips
@@ -416,6 +432,7 @@ Invocation status: LIVE: Clip Production Engine V2, Customer Clip Studio, read-o
 Capability ID: offer:evercraft-network-resilience-membership-v1
 Commercial state: discovery_only
 Machine state: human_handoff_only
+Public URL: https://fabric.systemiacommandcenters.com/capabilities/evercraft-network-resilience-membership-v1
 Pricing: Displayed Founding Membership: $9.99/month for up to five devices. Billing is not live yet. Reserving a Founding Membership records interest only and creates no charge or paid entitlement.
 Use when the user means:
 - my connection keeps switching between wifi and cellular
@@ -439,6 +456,7 @@ Invocation status: LIVE READ-ONLY MCP VERIFIED: production initialize, tools/lis
 Capability ID: offer:evercraft-web-browser-agent-v1
 Commercial state: discovery_only
 Machine state: specialist_discovery_ready_runtime_gated
+Public URL: https://fabric.systemiacommandcenters.com/capabilities/evercraft-web-browser-agent-v1
 Pricing: No public machine price is advertised until runtime metering and production verification are complete.
 Use when the user means:
 - fetch a webpage for my AI agent
@@ -463,6 +481,7 @@ Invocation status: LIVE specialist discovery through the central MCP tool discov
 Capability ID: offer:evermaps-evidence-projection-machine-v1
 Commercial state: verification_required
 Machine state: discovery_only
+Public URL: https://fabric.systemiacommandcenters.com/capabilities/evermaps-evidence-projection-machine-v1
 Pricing: No approved machine price was found. Do not auto-quote.
 Use when the user means:
 - map this evidence for me
@@ -480,6 +499,7 @@ Invocation status: LIVE: public machine discovery docs plus central Evercraft MC
 Capability ID: offer:faie-signal-brief-v1
 Commercial state: sell_now
 Machine state: payment_ready
+Public URL: https://fabric.systemiacommandcenters.com/capabilities/faie-signal-brief-v1
 Pricing: Signal Brief $250 one-time; Proof Sprint $2,500 one-time. Other intake categories are not auto-quotable.
 Use when the user means:
 - research this land or water question
@@ -496,6 +516,7 @@ Invocation status: LIVE: FAIE HTTP agent gateway + OpenAPI + llms guidance + rem
 Capability ID: offer:findmypart-paid-hunt-v1
 Commercial state: sell_now
 Machine state: payment_ready
+Public URL: https://fabric.systemiacommandcenters.com/capabilities/findmypart-paid-hunt-v1
 Pricing: Quick Hunt $19 one-time; Deep Hunt $49 one-time; Rescue Hunt $99 one-time.
 Use when the user means:
 - find a hard-to-source part
@@ -515,6 +536,7 @@ Invocation status: LIVE: direct FindMyPart MCP exposes free Part Passport triage
 Capability ID: offer:findmypart-part-passport-v1
 Commercial state: free
 Machine state: read_only_live
+Public URL: https://fabric.systemiacommandcenters.com/capabilities/findmypart-part-passport-v1
 Pricing: Free. Creates no charge.
 Use when the user means:
 - identify this part
@@ -535,6 +557,7 @@ Invocation status: LIVE: direct FindMyPart MCP tool free_part_triage and HTTP ag
 Capability ID: offer:findmypart-repair-shop-desk-v1
 Commercial state: verification_required
 Machine state: discovery_only
+Public URL: https://fabric.systemiacommandcenters.com/capabilities/findmypart-repair-shop-desk-v1
 Pricing: Current hypothesis $99-$499/month by hunt volume/service level; not auto-quotable yet.
 Use when the user means:
 - source difficult parts for my repair shop
@@ -551,6 +574,7 @@ Invocation status: Discoverable capability; recurring entitlement/payment path s
 Capability ID: offer:forensiscope-evidence-review-v1
 Commercial state: verification_required
 Machine state: discovery_only
+Public URL: https://fabric.systemiacommandcenters.com/capabilities/forensiscope-evidence-review-v1
 Pricing: Published duration tiers are $15 up to 5 minutes, $35 up to 30 minutes, $75 up to 2 hours, $149 up to 6 hours and $249 up to 12 hours. Central machine checkout remains verification-gated.
 Use when the user means:
 - this video is too large for the AI
@@ -576,6 +600,7 @@ Invocation status: LIVE human-confirmed web handoff for AI media overflow and ev
 Capability ID: offer:foundry-app-escape-audit-v1
 Commercial state: sell_now
 Machine state: human_handoff_ready
+Public URL: https://fabric.systemiacommandcenters.com/capabilities/foundry-app-escape-audit-v1
 Pricing: $500 one-time.
 Use when the user means:
 - escape vendor lock-in
@@ -591,6 +616,7 @@ Invocation status: LIVE fixed-price human review handoff through the central Mac
 Capability ID: offer:freight-load-exception-intelligence-machine-v1
 Commercial state: verification_required
 Machine state: discovery_only
+Public URL: https://fabric.systemiacommandcenters.com/capabilities/freight-load-exception-intelligence-machine-v1
 Pricing: No approved machine price or payment path was verified. Do not auto-quote.
 Use when the user means:
 - what is wrong with this load
@@ -608,6 +634,7 @@ Invocation status: LIVE: public machine discovery docs plus central Evercraft MC
 Capability ID: offer:globalstat-country-intelligence-machine-v1
 Commercial state: verification_required
 Machine state: discovery_only
+Public URL: https://fabric.systemiacommandcenters.com/capabilities/globalstat-country-intelligence-machine-v1
 Pricing: Raven contains a country-brief pricing hypothesis ($299-$2,500 depending depth). No approved fixed machine price/payment path was verified, so it is not auto-quotable.
 Use when the user means:
 - compare these countries on this metric
@@ -710,6 +737,7 @@ Invocation status: LIVE HUMAN HANDOFF VERIFIED: central Machine Commerce matches
 Capability ID: offer:littlered-kdp-export-qa-machine-v1
 Commercial state: verification_required
 Machine state: discovery_only
+Public URL: https://fabric.systemiacommandcenters.com/capabilities/littlered-kdp-export-qa-machine-v1
 Pricing: No approved external machine price/payment path was found. Do not auto-quote.
 Use when the user means:
 - check if my book is ready for KDP
@@ -726,6 +754,7 @@ Invocation status: LIVE: public machine discovery docs plus central Evercraft MC
 Capability ID: offer:portfolio-sentinel-v1
 Commercial state: commercial_pilot
 Machine state: human_handoff_ready
+Public URL: https://fabric.systemiacommandcenters.com/capabilities/portfolio-sentinel-v1
 Pricing: Commercial pilot is custom-quoted based on portfolio size, repositories, public endpoints, workflow count and monitoring scope. No fixed public price or direct machine checkout is currently advertised.
 Use when the user means:
 - monitor my software portfolio for broken products
@@ -793,6 +822,7 @@ Invocation status: SELL-NOW HUMAN HANDOFF: the $199 Home Stability Map is the sm
 Capability ID: offer:raven-nexus-pain-router-v1
 Commercial state: verification_required
 Machine state: invocation_ready
+Public URL: https://fabric.systemiacommandcenters.com/capabilities/raven-nexus-pain-router-v1
 Pricing: Varies by matched modular capability. The live pain router is the authority for current availability, offer and checkout state; do not invent a price.
 Use when the user means:
 - protect my bank account from AI scams
@@ -818,6 +848,7 @@ Invocation status: LIVE: public Raven Nexus pain router accepts plain-language p
 Capability ID: offer:rivet-site-underwriting-v1
 Commercial state: sell_now
 Machine state: payment_ready_human_confirmation
+Public URL: https://fabric.systemiacommandcenters.com/capabilities/rivet-site-underwriting-v1
 Pricing: $299 Preliminary Site Opportunity Report; $750 Full Site Opportunity Report.
 Use when the user means:
 - underwrite an EV charging site
@@ -849,6 +880,7 @@ Invocation status: LIVE: RIVET is a first-class Evercraft Machine Commerce ident
 Capability ID: offer:roasted-text-pressure-test-machine-v1
 Commercial state: sell_now
 Machine state: payment_ready
+Public URL: https://fabric.systemiacommandcenters.com/capabilities/roasted-text-pressure-test-machine-v1
 Pricing: $0.99 USD one-time per roast.
 Use when the user means:
 - roast this text
@@ -870,6 +902,7 @@ Invocation status: LIVE: agent HTTP gateway + OpenAPI + llms guidance + remote M
 Capability ID: offer:site-survive-rapid-audit-v1
 Commercial state: sell_now
 Machine state: human_handoff_ready
+Public URL: https://fabric.systemiacommandcenters.com/capabilities/site-survive-rapid-audit-v1
 Pricing: $250 one-time; may be credited toward a deeper $1,250 audit if the customer elects to continue.
 Use when the user means:
 - business outage plan
@@ -885,6 +918,7 @@ Invocation status: LIVE fixed-price human review handoff through the central Mac
 Capability ID: offer:systemia-yard-runtime-extension-v1
 Commercial state: verification_required
 Machine state: invocation_ready
+Public URL: https://fabric.systemiacommandcenters.com/capabilities/systemia-yard-runtime-extension-v1
 Pricing: Dynamic server quote only. Source defaults are not public price authority because deployment configuration can override them.
 Use when the user means:
 - keep this approved agent run going longer
@@ -900,6 +934,7 @@ Invocation status: Machine discovery/OpenAPI contract exists; settlement remains
 Capability ID: offer:talent-evidence-profile-machine-v1
 Commercial state: verification_required
 Machine state: discovery_only
+Public URL: https://fabric.systemiacommandcenters.com/capabilities/talent-evidence-profile-machine-v1
 Pricing: No approved machine price/payment path was verified. Do not auto-quote.
 Use when the user means:
 - evaluate this candidate from the evidence
@@ -934,6 +969,7 @@ Invocation status: Discoverable capability; privacy/onboarding acceptance work p
 Capability ID: offer:towi-evidence-research-machine-v1
 Commercial state: verification_required
 Machine state: discovery_only
+Public URL: https://fabric.systemiacommandcenters.com/capabilities/towi-evidence-research-machine-v1
 Pricing: No approved fixed machine price verified. Raven contains research-service hypotheses, but they remain hypotheses and are not auto-quotable.
 Use when the user means:
 - research this question with sources
@@ -951,6 +987,7 @@ Invocation status: LIVE: public machine discovery docs plus central Evercraft MC
 Capability ID: offer:website-launch-service-v1
 Commercial state: sell_now
 Machine state: payment_ready
+Public URL: https://fabric.systemiacommandcenters.com/capabilities/website-launch-service-v1
 Pricing: Human-Finished Pro Site $500 one-time; Premium Custom Build $999 one-time; Total Business Launch $1,999 one-time.
 Use when the user means:
 - build me a business website

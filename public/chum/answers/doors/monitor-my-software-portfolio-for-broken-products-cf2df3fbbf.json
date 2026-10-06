@@ -19,7 +19,7 @@
       "pricing": "Commercial pilot is custom-quoted based on portfolio size, repositories, public endpoints, workflow count and monitoring scope. No fixed public price or direct machine checkout is currently advertised.",
       "commercial_state": "commercial_pilot",
       "machine_state": "human_handoff_ready",
-      "public_url": null,
+      "public_url": "https://fabric.systemiacommandcenters.com/capabilities/portfolio-sentinel-v1",
       "pain_page": "/chum/intents/portfolio-sentinel-v1/",
       "registry_name": null,
       "direct_mcp": null,

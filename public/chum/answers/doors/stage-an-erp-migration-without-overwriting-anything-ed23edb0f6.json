@@ -19,7 +19,7 @@
       "pricing": "No approved machine price/payment path was found. Do not auto-quote.",
       "commercial_state": "verification_required",
       "machine_state": "human_auth_handoff",
-      "public_url": null,
+      "public_url": "https://fabric.systemiacommandcenters.com/capabilities/buildflow-shadow-migration-machine-v1",
       "pain_page": "/chum/intents/buildflow-shadow-migration-machine-v1/",
       "registry_name": null,
       "direct_mcp": null,

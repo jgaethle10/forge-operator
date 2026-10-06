@@ -19,7 +19,7 @@
       "pricing": "No public machine price is advertised until runtime metering and production verification are complete.",
       "commercial_state": "discovery_only",
       "machine_state": "specialist_discovery_ready_runtime_gated",
-      "public_url": null,
+      "public_url": "https://fabric.systemiacommandcenters.com/capabilities/evercraft-web-browser-agent-v1",
       "pain_page": "/chum/intents/evercraft-web-browser-agent-v1/",
       "registry_name": null,
       "direct_mcp": null,

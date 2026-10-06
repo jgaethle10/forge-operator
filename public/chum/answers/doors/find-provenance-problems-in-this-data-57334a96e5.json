@@ -19,7 +19,7 @@
       "pricing": "No approved fixed machine price/payment path verified. Raven data-product concepts are hypotheses unless separately approved.",
       "commercial_state": "verification_required",
       "machine_state": "discovery_only",
-      "public_url": null,
+      "public_url": "https://fabric.systemiacommandcenters.com/capabilities/datafoundry-data-gap-audit-machine-v1",
       "pain_page": "/chum/intents/datafoundry-data-gap-audit-machine-v1/",
       "registry_name": null,
       "direct_mcp": null,
