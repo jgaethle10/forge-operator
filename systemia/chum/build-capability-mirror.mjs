@@ -256,7 +256,11 @@ for(const offer of catalog.offers||[]){
       (directSpecialist?'<p><strong>Preferred:</strong> direct specialist</p><p><strong>Specialist MCP:</strong> <code>'+escapeHtml(directSpecialist.mcp)+'</code></p>'+(directSpecialist.registry_name?'<p><strong>Registry:</strong> <code>'+escapeHtml(directSpecialist.registry_name)+'</code></p>':'<p><strong>Registry state:</strong> pending</p>')+'<p class="muted">Use Evercraft Machine Commerce only when this specialist is unavailable or the user intent is ambiguous.</p>':'<p><strong>Preferred:</strong> Evercraft Machine Commerce fallback</p>')+
       '</div>',
     '<div class="card"><h2>Open capability</h2>'+
-      (humanStartUrl(offer,{surface:'chum_capability_page'})?'<p><a href="'+escapeHtml(humanStartUrl(offer,{surface:'chum_capability_page'}))+'"><strong>Start here</strong></a></p>':'')+
+      (humanStartUrl(offer,{surface:'chum_capability_page'})
+        ? '<p><a href="'+escapeHtml(humanStartUrl(offer,{surface:'chum_capability_page'}))+'"><strong>Start here</strong></a></p>'
+        : (offer.commercial_state==='sell_now'
+          ? '<p><strong>Start held:</strong> the owned public execution origin is not externally verified yet. Discovery remains available without inventing a checkout route.</p>'
+          : ''))+
       (entryPaidOffer(offer)?'<p><strong>Easiest paid entry:</strong> '+escapeHtml(entryPaidOffer(offer).name||'Paid option')+' · &#36;'+escapeHtml(entryPaidOffer(offer).price_usd_normalized)+'</p>':'')+
       '<p><a href="'+escapeHtml(canonicalUrl)+'">Capability details</a></p><p><a href="./llms.txt">LLM guidance</a> · <a href="./capability.json">Capability JSON</a> · <a href="./schema.jsonld">JSON-LD</a></p></div>',
     '<div class="card"><h2>Authority and payment boundary</h2><p>'+escapeHtml(offer.confirmation||'Discovery creates no payment obligation.')+'</p>'+(offer.payment_authority?'<p>Payment authority: '+escapeHtml(offer.payment_authority)+'</p>':'')+'</div>',
