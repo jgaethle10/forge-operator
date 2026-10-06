@@ -1,0 +1,41 @@
+{
+  "schema": "evercraft.daytrade.practice-diversity-readiness.v1",
+  "generated_at": "2026-10-06T16:51:19.660Z",
+  "source_run_id": 37498955183,
+  "source_artifact_id": 11428129493,
+  "source_artifact_digest": "sha256:0f195e6915c0b8e80a258186a9bf44185ee25816c5b71ea779a0b56445195493",
+  "protocol_id": "practice-diversity-v1",
+  "frozen_execution_rule": "spread-abstention-v1",
+  "observed": {
+    "prospective_windows": 5,
+    "distinct_market_dates_et": 1,
+    "market_dates_et": ["2026-10-06"],
+    "phase_counts": {
+      "OPENING": 0,
+      "MIDDAY": 5,
+      "CLOSING": 0,
+      "OUTSIDE_CORE": 0,
+      "UNKNOWN": 0
+    }
+  },
+  "requirements": {
+    "minimum_prospective_windows": 20,
+    "minimum_distinct_market_dates": 5,
+    "required_market_phases": ["OPENING","MIDDAY","CLOSING"],
+    "minimum_windows_per_required_phase": 3
+  },
+  "gates": {
+    "window_count_ready": false,
+    "date_diversity_ready": false,
+    "phase_diversity_ready": false
+  },
+  "status": "PRACTICE_DIVERSITY_NOT_READY",
+  "interpretation": {
+    "same_day_repetition_cannot_satisfy_date_diversity": true,
+    "single_phase_repetition_cannot_satisfy_phase_diversity": true,
+    "passing_this_protocol_does_not_validate_signal": true,
+    "passing_this_protocol_does_not_validate_live_fill_quality": true,
+    "passing_this_protocol_does_not_authorize_live_trading": true
+  },
+  "live_trade_authority": false
+}
