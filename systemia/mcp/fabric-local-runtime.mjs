@@ -183,6 +183,7 @@ export async function startFabricLocalRuntime({
   allocatorTokenFile='',
   nodeAttestationProvider=null,
   faieStateDir='',
+  faieCollectorConfig=null,
   faieSurfaceEnabled=true,
 }={}) {
   const instanceId='fabric_local_'+crypto.randomBytes(10).toString('hex');
@@ -263,6 +264,7 @@ export async function startFabricLocalRuntime({
   const faieSurface=faieSurfaceEnabled
     ? createFabricFaieSurface({
         stateDir:faieStateDir||undefined,
+        collectorConfig:faieCollectorConfig||undefined,
       })
     : null;
   const docs={
