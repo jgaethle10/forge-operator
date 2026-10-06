@@ -2,13 +2,13 @@
   "$schema": "https://static.modelcontextprotocol.io/schemas/2025-12-11/server.schema.json",
   "name": "io.github.jgaethle10/evercraft-machine-commerce",
   "title": "Evercraft Machine Commerce",
-  "description": "Problem-first Evercraft routing with read-only tools and human gates for consequential actions.",
-  "version": "1.6.0",
-  "websiteUrl": "https://github.com/jgaethle10/forge-operator/tree/main/registry/evercraft-machine-commerce",
+  "description": "Route a real-world problem to the smallest relevant Evercraft capability through the read-only Evercraft Fabric directory.",
+  "version": "1.7.0",
+  "websiteUrl": "https://fabric.systemiacommandcenters.com/",
   "remotes": [
     {
       "type": "streamable-http",
-      "url": null
+      "url": "https://fabric.systemiacommandcenters.com/mcp"
     }
   ]
 }
