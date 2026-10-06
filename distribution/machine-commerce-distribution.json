@@ -1,6 +1,6 @@
 {
   "schema": "evercraft.machine-commerce.distribution.v2",
-  "generated_at": "2026-10-06T16:50:00.000Z",
+  "generated_at": "2026-10-06T16:56:58.709Z",
   "public_id": "evercraft-machine-commerce",
   "registry_name": "io.github.jgaethle10/evercraft-machine-commerce",
   "live_runtime": {
@@ -20,12 +20,13 @@
   "destinations": [
     {
       "destination": "Official MCP Registry",
-      "state": "legacy_listing_observed_repoint_pending",
-      "version": "1.2.1",
-      "is_latest": false,
-      "observed_at": "2026-09-25T18:32:42Z",
+      "state": "verified_published_owned_runtime",
+      "version": "1.7.0",
+      "is_latest": true,
+      "observed_at": "2026-10-06T16:56:58.709Z",
       "evidence_url": "https://registry.modelcontextprotocol.io/v0/servers?search=io.github.jgaethle10%2Fevercraft-machine-commerce",
-      "note": "The existing registry listing is historical and must not be treated as runtime authority. The current owned universal discovery runtime is https://fabric.systemiacommandcenters.com/mcp and is independently verified; repoint the registry only through the authorized publication chain with a new receipt."
+      "note": "Official MCP Registry publisher successfully published io.github.jgaethle10/evercraft-machine-commerce v1.7.0 with the externally verified owned Fabric remote https://fabric.systemiacommandcenters.com/mcp. Registry publication is verified; downstream directory pickup remains separate evidence.",
+      "evidence_ref": "GitHubActionsRun:37499511004"
     },
     {
       "destination": "Glama",
@@ -98,12 +99,11 @@
     "note": "The owned Fabric runtime is externally verified for public read-only capability discovery. Historical Machine Commerce discovery-event instrumentation remains separate and must be reverified against the owned route before attribution claims."
   },
   "next_milestones": [
-    "registry_listing_repointed_to_owned_runtime",
     "independent_directory_pickup_verified_on_owned_runtime",
     "first_non_synthetic_external_tools_call_on_owned_runtime",
     "first_attributed_human_buyer_handoff",
     "first_attributed_checkout_created",
     "first_provider_verified_payment"
   ],
-  "truth_boundary": "Evercraft Fabric is the current externally verified owned universal discovery MCP. Historical registry/directory listings are not automatically current merely because the owned runtime is live; repointing, pickup, payment and revenue each require their own receipts."
+  "truth_boundary": "Evercraft Fabric is the externally verified owned universal discovery MCP, and Official MCP Registry v1.7.0 is verified published to that runtime. Downstream directory pickup, tool use, buyer handoff, checkout, payment and revenue remain separate receipt boundaries."
 }
