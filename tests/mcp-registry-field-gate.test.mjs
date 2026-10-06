@@ -43,6 +43,23 @@ function rootWithCanary({fieldVerified}){
       public_edge_admission_receipt_ref:fieldVerified?'sha256:'+'c'.repeat(64):null,
     },
   }));
+  products.push({
+    slug:'faie',
+    name:'FAIE',
+    short_description:'proof',
+    long_description:'proof',
+    category:'Business',
+    website_url:'https://fabric.systemiacommandcenters.com/faie/',
+    registry_name:null,
+    mcp_url:null,
+    state:'owned_runtime_route_pending',
+    default_prompt:'proof',
+    keywords:['faie'],
+    intent:'proof',
+    truth_boundary:'proof',
+    capability_public_ids:[],
+    public_origin_state:'owned_runtime_route_pending'
+  });
   fs.writeFileSync(
     path.join(root,'distribution/direct-plugin-specs.json'),
     JSON.stringify({
