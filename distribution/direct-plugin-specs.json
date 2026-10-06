@@ -194,14 +194,14 @@
     {
       "slug": "faie",
       "name": "FAIE",
-      "short_description": "Build evidence briefs for agriculture and resilience decisions",
-      "long_description": "Use FAIE directly when agriculture, water, land resilience, or production-risk decisions need a sourced evidence brief with uncertainty and evidence state preserved.",
+      "short_description": "Underwrite food infrastructure with evidence, challenge and thesis memory",
+      "long_description": "Use FAIE directly when food infrastructure, agriculture, water, land, production, or resilience decisions need a sourced Sense-Challenge-Decide packet, comparative evidence readiness, explicit uncertainty, and evidence acquisition.",
       "category": "Business",
-      "website_url": "https://github.com/jgaethle10/forge-operator/tree/main/public/chum/products/faie",
+      "website_url": "https://fabric.systemiacommandcenters.com/faie/",
       "registry_name": null,
-      "mcp_url": null,
-      "state": "owned_runtime_route_pending",
-      "default_prompt": "Build me a sourced evidence brief for an agriculture, water, land-resilience, or production-risk decision.",
+      "mcp_url": "https://fabric.systemiacommandcenters.com/mcp/faie",
+      "state": "public_https_verified_registry_pending",
+      "default_prompt": "Underwrite this food-infrastructure or agriculture decision with sourced evidence, adversarial challenge, missing-evidence missions, and explicit uncertainty.",
       "keywords": [
         "faie",
         "agriculture",
@@ -212,13 +212,13 @@
         "evidence",
         "mcp"
       ],
-      "intent": "Agriculture evidence briefs for water, land resilience, and production risk.",
+      "intent": "Evidence-first food-infrastructure, agriculture, water, land, production and resilience intelligence.",
       "truth_boundary": "Preserve source provenance, uncertainty, geography, and date boundaries. Do not turn modeled or incomplete evidence into certainty.",
       "capability_public_ids": [
         "faie-signal-brief-v1"
       ],
-      "public_origin_state": "legacy_provider_retired_owned_route_pending",
-      "retired_registry_name": "io.github.jgaethle10/faie"
+      "public_origin_state": "owned_public_https_external_canary_verified",
+      "live_canary_evidence": "conformance/runtime-observations/2026-10-06-faie-owned-fabric-door.json"
     },
     {
       "slug": "buildflow",

@@ -451,15 +451,16 @@
     {
       "product_key": "faie",
       "name": "FAIE",
-      "canonical_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/faie/index.html",
+      "canonical_url": "https://fabric.systemiacommandcenters.com/faie/",
       "registry_name": "io.github.jgaethle10/faie",
-      "mcp": null,
+      "mcp": "https://fabric.systemiacommandcenters.com/mcp/faie",
       "triggers": [
         "agriculture evidence brief",
         "water risk",
         "land resilience",
         "production risk"
-      ]
+      ],
+      "runtime_state": "owned_fabric_external_canary_verified"
     },
     {
       "product_key": "findmypart",

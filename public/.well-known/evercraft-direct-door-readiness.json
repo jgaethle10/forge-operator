@@ -19,14 +19,14 @@
   ],
   "summary": {
     "product_count": 17,
-    "direct_callable_count": 0,
-    "zero_hop_specialist_count": 0,
-    "fallback_required_count": 17,
-    "held_route_count": 17,
+    "direct_callable_count": 1,
+    "zero_hop_specialist_count": 1,
+    "fallback_required_count": 16,
+    "held_route_count": 16,
     "registry_published_count": 0,
-    "registry_pending_count": 0,
+    "registry_pending_count": 1,
     "public_route_pending_count": 4,
-    "not_direct_callable_count": 17
+    "not_direct_callable_count": 16
   },
   "shared_blockers": {
     "direct_runtime_or_public_route": [
@@ -36,7 +36,6 @@
       "systemia-website-audit",
       "career-command",
       "eventwave",
-      "faie",
       "buildflow",
       "evercraft-web",
       "website-launch",
@@ -44,13 +43,14 @@
       "evercraft-clip",
       "roasted"
     ],
-    "shared_public_edge_canary": [
+    "official_mcp_registry_publication": [
+      "faie",
       "systemia-remote-ops",
       "ibmi-rescue",
       "foundry-app-escape",
       "site-survive"
     ],
-    "official_mcp_registry_publication": [
+    "shared_public_edge_canary": [
       "systemia-remote-ops",
       "ibmi-rescue",
       "foundry-app-escape",
@@ -65,13 +65,15 @@
       "systemia-website-audit",
       "career-command",
       "eventwave",
-      "faie",
       "buildflow",
       "evercraft-web",
       "website-launch",
       "deck-capital-fit",
       "evercraft-clip",
       "roasted"
+    ],
+    "prepare_official_mcp_registry_candidate": [
+      "faie"
     ],
     "activate_shared_public_edge_and_verify_external_canary": [
       "systemia-remote-ops",
@@ -240,27 +242,27 @@
     {
       "slug": "faie",
       "name": "FAIE",
-      "state": "owned_runtime_route_pending",
-      "direct_callable": false,
+      "state": "public_https_verified_registry_pending",
+      "direct_callable": true,
       "registry_published": false,
       "registry_name": null,
-      "mcp_url": null,
-      "public_origin_state": "legacy_provider_retired_owned_route_pending",
+      "mcp_url": "https://fabric.systemiacommandcenters.com/mcp/faie",
+      "public_origin_state": "owned_public_https_external_canary_verified",
       "runtime_path": null,
       "blocking_gates": [
-        "direct_runtime_or_public_route"
+        "official_mcp_registry_publication"
       ],
       "preferred_route": {
-        "mode": "held_until_owned_route_verified",
-        "hops_before_specialist": null,
+        "mode": "direct_specialist",
+        "hops_before_specialist": 0,
         "use_universal_router_first": false,
         "registry_name": null,
-        "remote_mcp": null,
-        "desired_universal_registry_name": "io.github.jgaethle10/evercraft-machine-commerce",
-        "desired_specialist_registry_name": null,
-        "pending_specialist_runtime_path": null
+        "remote_mcp": "https://fabric.systemiacommandcenters.com/mcp/faie",
+        "fallback_state": "held_owned_public_route_pending",
+        "fallback_registry_name": "io.github.jgaethle10/evercraft-machine-commerce",
+        "fallback_remote_mcp": null
       },
-      "next_release_action": "repair_direct_runtime_or_public_route",
+      "next_release_action": "prepare_official_mcp_registry_candidate",
       "registry_candidate": null
     },
     {

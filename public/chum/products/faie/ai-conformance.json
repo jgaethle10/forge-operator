@@ -12,11 +12,11 @@
     "grok",
     "generic_agent"
   ],
-  "canonical_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/faie/index.html",
+  "canonical_url": "https://fabric.systemiacommandcenters.com/faie/",
   "llms_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/faie/llms.txt",
   "discovery_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/faie/ai-discovery.json",
   "registry_name": "io.github.jgaethle10/faie",
-  "mcp": null,
+  "mcp": "https://fabric.systemiacommandcenters.com/mcp/faie",
   "authority": "public discovery and bounded evidence investigation; paid missions remain human-confirmed and consequential siting, capital, production, regulatory, or operating decisions remain human-controlled",
   "human_confirmation_required": true,
   "boundaries": [
@@ -28,7 +28,7 @@
     "public or authorized evidence only"
   ],
   "commercial": null,
-  "human_start_url": null,
+  "human_start_url": "https://fabric.systemiacommandcenters.com/faie/",
   "buyer_frontage_url": null,
   "developer_surfaces": null,
   "editorial_surfaces": null,
@@ -37,8 +37,9 @@
   "relationships": null,
   "proof_library": null,
   "provider_behavior_state": "not_inferred_from_publication",
-  "machine_commerce_handoff_state": null,
-  "machine_commerce_public_id": null,
+  "machine_commerce_handoff_state": "verified_bounded_owned_fabric_route",
+  "machine_commerce_public_id": "faie-signal-brief-v1",
   "machine_commerce_tool": null,
-  "live_canary_evidence": null
+  "live_canary_evidence": "conformance/runtime-observations/2026-10-06-faie-owned-fabric-door.json",
+  "runtime_state": "owned_fabric_external_canary_verified"
 }

@@ -1,8 +1,10 @@
 # FAIE
 
 Product key: faie
-Canonical product: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/faie/index.html
+Canonical product: https://fabric.systemiacommandcenters.com/faie/
 Official MCP Registry: io.github.jgaethle10/faie
+Direct MCP: https://fabric.systemiacommandcenters.com/mcp/faie
+Owned Fabric verification: conformance/runtime-observations/2026-10-06-faie-owned-fabric-door.json
 CHUM discovery JSON: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/faie/ai-discovery.json
 AI conformance: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/faie/ai-conformance.json
 
@@ -33,6 +35,6 @@ public discovery and bounded evidence investigation; paid missions remain human-
 
 ## Universal Evercraft routing
 
-Not declared.
+Direct specialist MCP is preferred at https://fabric.systemiacommandcenters.com/mcp/faie. Universal Fabric remains available at https://fabric.systemiacommandcenters.com/mcp.
 
 Discovery or matching creates no payment obligation. Any supported checkout preparation requires explicit human confirmation, and checkout creation is not proof of payment.
