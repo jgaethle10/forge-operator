@@ -1,0 +1,79 @@
+{
+  "schema": "evercraft.daytrade.marketdata-paper-roundtrip.v1",
+  "generated_at": "2026-10-06T15:03:27.376Z",
+  "source_github_run_id": 37483990774,
+  "source_artifact_id": 11422277729,
+  "source_artifact_digest": "sha256:dc0b5cd28f982a6edf90ccdb3c5c6de40d9824b2bdc9170630ab8528ef3e4e29",
+  "simulation_only": true,
+  "broker_order_submitted": false,
+  "live_order_submitted": false,
+  "capital_at_risk_usd": 0,
+  "requested_simulated_notional_usd": 20,
+  "symbol": "SOXX",
+  "side": "long",
+  "hold_ms": 60000,
+  "credential_diagnosis": {
+    "paper_account_http_status": 401,
+    "live_account_http_status": 200,
+    "market_data_http_status": 200,
+    "no_orders_submitted_during_diagnosis": true,
+    "paper_broker_credentials_verified": false,
+    "live_credentials_never_used_for_order_submission": true
+  },
+  "frozen_protocol_reference": {
+    "signal_key": "ai_models|sec_8_k|SOXX|1d",
+    "cohort_id": "edgepaper_29a22b58b874a6e2e67f",
+    "learned_direction": "POSITIVE_EXCESS_RETURN",
+    "protocol_hash": "29a22b58b874a6e2e67f335ce623907533236a0661661fbca5f51a593a80a50a",
+    "protocol_live_trade_authority": false
+  },
+  "entry": {
+    "decision_time": "2026-10-06T15:02:27.108Z",
+    "quote": {
+      "timestamp": "2026-10-06T15:02:27.190094753Z",
+      "bid": 594.2,
+      "ask": 594.48,
+      "midpoint": 594.34,
+      "spread_bps": 4.711108119930893,
+      "feed": "iex"
+    },
+    "simulated_fill_rule": "marketable long entry at observed ask",
+    "simulated_fill_price": 594.48,
+    "simulated_quantity": 0.03364284753061499,
+    "entry_spread_drag_usd_vs_midpoint": 0.004709998654284675
+  },
+  "exit": {
+    "decision_time": "2026-10-06T15:03:27.276Z",
+    "quote": {
+      "timestamp": "2026-10-06T15:03:27.331431955Z",
+      "bid": 594.37,
+      "ask": 594.53,
+      "midpoint": 594.45,
+      "spread_bps": 2.6915636302459105,
+      "feed": "iex"
+    },
+    "simulated_fill_rule": "marketable long exit at observed bid",
+    "simulated_fill_price": 594.37,
+    "simulated_exit_notional_usd": 19.996299286771634,
+    "exit_spread_drag_usd_vs_midpoint": 0.0026914278024499083
+  },
+  "result": {
+    "gross_pnl_usd": -0.0037007132283655153,
+    "gross_return_pct": -0.018503566141827577,
+    "midpoint_move_pnl_usd": 0.003700713228369068,
+    "total_observed_spread_drag_usd": 0.007401426456734583,
+    "profitable": false
+  },
+  "limitations": {
+    "iex_is_not_consolidated_sip_nbbo": true,
+    "simulated_touch_is_not_real_fill": true,
+    "queue_position_unobserved": true,
+    "market_impact_unobserved": true,
+    "hidden_liquidity_unobserved": true,
+    "broker_latency_unobserved": true,
+    "sixty_second_roundtrip_does_not_test_one_day_signal_profitability": true,
+    "paper_broker_execution_receipt_still_missing": true
+  },
+  "autonomous_live_order_authority": false,
+  "live_trade_authority": false
+}
