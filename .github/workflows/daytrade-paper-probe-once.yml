@@ -36,11 +36,20 @@ jobs:
           ALPACA_TRADING_SECRET: ${{ secrets.ALPACA_TRADING_SECRET }}
           DAYTRADE_PAPER_PROBE_OUTPUT: artifacts/daytrade-edge/paper-probe-2026-10-06.json
         run: node systemia/daytrade-lens/edge-paper-run-once.mjs
+      - name: Run $20 SOXX market-data paper roundtrip fallback
+        if: steps.diagnose.outputs.paper_ok != 'true'
+        env:
+          ALPACA_TRADING: ${{ secrets.ALPACA_TRADING }}
+          ALPACA_TRADING_SECRET: ${{ secrets.ALPACA_TRADING_SECRET }}
+          DAYTRADE_MARKETDATA_PAPER_OUTPUT: artifacts/daytrade-edge/marketdata-paper-roundtrip-2026-10-06.json
+        run: node systemia/daytrade-lens/edge-marketdata-paper-roundtrip.mjs
       - name: Upload paper execution receipt
         if: always()
         uses: actions/upload-artifact@v4
         with:
           name: daytrade-paper-probe-${{ github.run_id }}
-          path: artifacts/daytrade-edge/paper-probe-2026-10-06.json
+          path: |
+            artifacts/daytrade-edge/paper-probe-2026-10-06.json
+            artifacts/daytrade-edge/marketdata-paper-roundtrip-2026-10-06.json
           if-no-files-found: warn
           retention-days: 30
