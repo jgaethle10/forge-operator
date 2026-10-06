@@ -181,3 +181,143 @@ test('publication recorder refuses a canary without executed tool-call proof',()
     );
   }finally{fs.rmSync(root,{recursive:true,force:true});}
 });
+
+
+test('official publisher records receipt-backed FAIE registry publication',()=>{
+  const root=fs.mkdtempSync(path.join(os.tmpdir(),'registry-publication-record-faie-'));
+  try{
+    fs.mkdirSync(path.join(root,'distribution'),{recursive:true});
+    fs.mkdirSync(path.join(root,'mcp-registry'),{recursive:true});
+    fs.mkdirSync(path.join(root,'conformance/runtime-observations'),{recursive:true});
+
+    const mcp='https://fabric.systemiacommandcenters.com/mcp/faie';
+    const receiptRef='conformance/runtime-observations/faie-canary.json';
+    fs.writeFileSync(path.join(root,receiptRef),JSON.stringify({
+      verified:true,
+      state:'public_https_verified',
+      mcp_url:mcp,
+      checks:{
+        faie_mcp_initialize:true,
+        faie_mcp_tools:true,
+        external_route:true
+      },
+      transport:{
+        owner:'Evercraft Fabric',
+        mcp_verified:true,
+        base44_transport_required:false
+      },
+      faie:{
+        fabric_native:true,
+        base44_transport_enabled:false
+      },
+      source:{
+        workflow_run_id:777,
+        artifact_digest:'sha256:'+'a'.repeat(64),
+        receipt_hash:'sha256:'+'b'.repeat(64)
+      }
+    },null,2)+'\n');
+
+    fs.writeFileSync(
+      path.join(root,'distribution/direct-plugin-specs.json'),
+      JSON.stringify({
+        schema:'evercraft.direct-plugin-specs.v1',
+        version:'1.0.0',
+        routing_policy:{},
+        products:[{
+          slug:'faie',
+          name:'FAIE',
+          state:'public_https_verified_registry_pending',
+          registry_name:null,
+          mcp_url:mcp,
+          public_origin_state:'owned_public_https_external_canary_verified',
+          live_canary_evidence:receiptRef
+        }]
+      },null,2)+'\n'
+    );
+    fs.writeFileSync(
+      path.join(root,'mcp-registry/faie.json'),
+      JSON.stringify({
+        '$schema':'https://static.modelcontextprotocol.io/schemas/2025-12-11/server.schema.json',
+        name:'io.github.jgaethle10/faie',
+        title:'FAIE',
+        description:'proof',
+        version:'1.1.0',
+        websiteUrl:'https://fabric.systemiacommandcenters.com/faie/',
+        remotes:[{type:'streamable-http',url:mcp}]
+      },null,2)+'\n'
+    );
+    fs.writeFileSync(path.join(root,'published.txt'),'mcp-registry/faie.json\n');
+
+    execFileSync(process.execPath,[
+      script,
+      '--manifests-file','published.txt',
+      '--workflow-run-id','37527689387',
+      '--release-sha','c'.repeat(40),
+      '--approval-mode','auto_policy',
+      '--approval-ref','routine_public'
+    ],{cwd:root,stdio:'pipe'});
+
+    const specs=JSON.parse(fs.readFileSync(
+      path.join(root,'distribution/direct-plugin-specs.json'),'utf8'
+    ));
+    const product=specs.products[0];
+    assert.equal(product.state,'registry_published_direct_mcp_existing');
+    assert.equal(product.registry_name,'io.github.jgaethle10/faie');
+    assert.equal(product.registry_publication_proven,true);
+    assert.equal(product.registry_publication_receipt.evidence_mode,'owned_external_canary');
+    assert.equal(product.registry_publication_receipt.live_canary_evidence,receiptRef);
+    assert.equal(product.registry_publication_receipt.external_canary_workflow_run_id,'777');
+    assert.equal(product.registry_publication_receipt.mcp_tool_calls_verified,true);
+    assert.equal(
+      fs.existsSync(path.join(root,'distribution/mcp-registry-publication-receipts/faie-1.1.0.json')),
+      true
+    );
+  }finally{fs.rmSync(root,{recursive:true,force:true});}
+});
+
+test('FAIE publication recorder fails closed when its external canary receipt is invalid',()=>{
+  const root=fs.mkdtempSync(path.join(os.tmpdir(),'registry-publication-record-faie-invalid-'));
+  try{
+    fs.mkdirSync(path.join(root,'distribution'),{recursive:true});
+    fs.mkdirSync(path.join(root,'mcp-registry'),{recursive:true});
+    fs.mkdirSync(path.join(root,'conformance/runtime-observations'),{recursive:true});
+    const mcp='https://fabric.systemiacommandcenters.com/mcp/faie';
+    const receiptRef='conformance/runtime-observations/faie-canary.json';
+    fs.writeFileSync(path.join(root,receiptRef),JSON.stringify({
+      verified:true,
+      state:'public_https_verified',
+      mcp_url:mcp,
+      checks:{faie_mcp_initialize:true,faie_mcp_tools:false,external_route:true},
+      transport:{owner:'Evercraft Fabric',mcp_verified:true,base44_transport_required:false},
+      faie:{fabric_native:true,base44_transport_enabled:false}
+    },null,2)+'\n');
+    fs.writeFileSync(
+      path.join(root,'distribution/direct-plugin-specs.json'),
+      JSON.stringify({
+        schema:'evercraft.direct-plugin-specs.v1',
+        products:[{
+          slug:'faie',name:'FAIE',
+          state:'public_https_verified_registry_pending',
+          registry_name:null,
+          mcp_url:mcp,
+          live_canary_evidence:receiptRef
+        }]
+      },null,2)+'\n'
+    );
+    fs.writeFileSync(path.join(root,'mcp-registry/faie.json'),JSON.stringify({
+      name:'io.github.jgaethle10/faie',
+      version:'1.1.0',
+      remotes:[{type:'streamable-http',url:mcp}]
+    },null,2)+'\n');
+    fs.writeFileSync(path.join(root,'published.txt'),'mcp-registry/faie.json\n');
+
+    assert.throws(
+      ()=>execFileSync(process.execPath,[
+        script,'--manifests-file','published.txt',
+        '--workflow-run-id','37527689387',
+        '--release-sha','c'.repeat(40)
+      ],{cwd:root,stdio:'pipe'}),
+      /Command failed/
+    );
+  }finally{fs.rmSync(root,{recursive:true,force:true});}
+});
