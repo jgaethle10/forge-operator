@@ -1,0 +1,33 @@
+name: DayTrade Closing Spread Tape Once
+
+on:
+  push:
+    branches:
+      - "systemia/daytrade-closing-tape-2026-10-06"
+
+permissions:
+  contents: read
+
+jobs:
+  tape:
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Run closing spread tape
+        env:
+          ALPACA_TRADING: ${{ secrets.ALPACA_TRADING }}
+          ALPACA_TRADING_SECRET: ${{ secrets.ALPACA_TRADING_SECRET }}
+          DAYTRADE_CLOSING_TAPE_OUTPUT: artifacts/daytrade-edge/closing-spread-tape-2026-10-06.json
+        run: node systemia/daytrade-lens/edge-closing-spread-tape-2026-10-06.mjs
+      - name: Upload closing tape
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: daytrade-closing-spread-tape-${{ github.run_id }}
+          path: artifacts/daytrade-edge/closing-spread-tape-2026-10-06.json
+          if-no-files-found: warn
+          retention-days: 30
