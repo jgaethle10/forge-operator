@@ -1726,6 +1726,50 @@ export async function startEvercraftComputeNode({
             return send(res, 403, { error: 'evercraft_yard_state_outside_admitted_root' });
           }
 
+          const ravenWorkTokenValue = String(
+            body.input?.raven_work_token_file || ''
+          ).trim();
+          const ravenWorkTokenFile = ravenWorkTokenValue
+            ? path.resolve(ravenWorkTokenValue)
+            : '';
+          if (ravenWorkTokenFile) {
+            if (!isWithin(allowedRoot, ravenWorkTokenFile)) {
+              return send(res, 403, { error: 'evercraft_raven_token_file_outside_admitted_root' });
+            }
+            if (!fs.existsSync(ravenWorkTokenFile) || !fs.statSync(ravenWorkTokenFile).isFile()) {
+              return send(res, 422, { error: 'evercraft_raven_token_file_missing' });
+            }
+            if ((fs.statSync(ravenWorkTokenFile).mode & 0o077) !== 0) {
+              return send(res, 422, { error: 'evercraft_raven_token_file_permissions_too_open' });
+            }
+          }
+
+          const ravenWorkUrlValue = String(
+            body.input?.raven_work_url ||
+            (ravenWorkTokenFile ? 'http://127.0.0.1:4321' : '')
+          ).trim();
+          if (ravenWorkUrlValue) {
+            if (!ravenWorkTokenFile) {
+              return send(res, 422, { error: 'evercraft_raven_work_url_requires_token_file' });
+            }
+            let ravenWorkUrl;
+            try {
+              ravenWorkUrl = new URL(ravenWorkUrlValue);
+            } catch {
+              return send(res, 422, { error: 'evercraft_raven_work_url_invalid' });
+            }
+            if (
+              ravenWorkUrl.protocol !== 'http:' ||
+              !['127.0.0.1', 'localhost', '::1'].includes(ravenWorkUrl.hostname)
+            ) {
+              return send(res, 403, { error: 'evercraft_raven_work_url_must_be_loopback_http' });
+            }
+          }
+
+          const ravenReceiptDir = ravenWorkTokenFile
+            ? path.join(identityStateRoot, 'raven-execution-receipts')
+            : '';
+
           const runtime = await startEvercraftHomeServer({
             host: '127.0.0.1',
             port: Number(body.input?.port || 0),
@@ -1735,6 +1779,13 @@ export async function startEvercraftComputeNode({
             identityStateDir: identityStateRoot,
             credentialStateDir: credentialStateRoot,
             yardStateDir: yardStateRoot,
+            serviceOrigins: {
+              ...(ravenWorkTokenFile ? {
+                RAVEN_NEXUS_WORK_URL: ravenWorkUrlValue,
+                RAVEN_NEXUS_WORK_TOKEN_FILE: ravenWorkTokenFile,
+                EVERCRAFT_RAVEN_RECEIPT_DIR: ravenReceiptDir,
+              } : {}),
+            },
           });
 
           const serviceId = `svc_${randomBytes(8).toString('hex')}`;
@@ -1758,6 +1809,8 @@ export async function startEvercraftComputeNode({
             auth_mode: runtime.authMode,
             private_origin_only: true,
             provider_independent_boot: true,
+            raven_readonly_execution_configured: Boolean(ravenWorkTokenFile),
+            raven_work_authority_exposed: false,
           };
           const receipt = chain.issue('service.started', {
             lease_id: body.lease_id,
