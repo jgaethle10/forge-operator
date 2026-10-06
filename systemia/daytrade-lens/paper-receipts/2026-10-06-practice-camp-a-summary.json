@@ -1,0 +1,62 @@
+{
+  "schema": "evercraft.daytrade.practice-camp-summary.v1",
+  "generated_at": "2026-10-06T16:03:39.683Z",
+  "source_run_id": 37492447897,
+  "source_artifact_id": 11425274372,
+  "source_artifact_digest": "sha256:bec7badb20012b9c2c516a238aeaadae56dc673f9c17de72e39389b3a6d54890",
+  "simulation_only": true,
+  "capital_at_risk_usd": 0,
+  "notional_per_drill_usd": 20,
+  "symbols": ["SOXX", "SMH", "QQQ"],
+  "timing": {
+    "delayed_entry_ms": 30000,
+    "common_exit_ms_from_t0": 90000
+  },
+  "results": [
+    {
+      "symbol": "SOXX",
+      "immediate_pnl_usd": -0.01414713015359581,
+      "immediate_return_pct": -0.07073565076797905,
+      "delayed_pnl_usd": -0.019867661172188633,
+      "delay_effect_usd": -0.005720531018592823,
+      "delay_effect_bps": -2.8602655092964113,
+      "immediate_spread_drag_usd": 0.009599838318511189
+    },
+    {
+      "symbol": "SMH",
+      "immediate_pnl_usd": -0.005337603416066372,
+      "immediate_return_pct": -0.026688017080331857,
+      "delayed_pnl_usd": -0.00973113807228998,
+      "delay_effect_usd": -0.004393534656223608,
+      "delay_effect_bps": -2.196767328111804,
+      "immediate_spread_drag_usd": 0.004552661737236008
+    },
+    {
+      "symbol": "QQQ",
+      "immediate_pnl_usd": -0.0007876082961395525,
+      "immediate_return_pct": -0.003938041480697763,
+      "delayed_pnl_usd": -0.0007876082961395525,
+      "delay_effect_usd": 0,
+      "delay_effect_bps": 0,
+      "immediate_spread_drag_usd": 0.0010501443948562894
+    }
+  ],
+  "aggregate": {
+    "mean_immediate_pnl_usd": -0.006757447288600578,
+    "mean_delayed_pnl_usd": -0.010128802513539389,
+    "immediate_profitable_count": 0,
+    "delayed_profitable_count": 0,
+    "mean_immediate_spread_drag_usd": 0.005067548150201162,
+    "mean_delay_effect_usd": -0.00337135522493881
+  },
+  "interpretation": {
+    "arbitrary_midday_rehearsal_not_signal_validation": true,
+    "soxx_delay_worsened_outcome": true,
+    "smh_delay_worsened_outcome": true,
+    "qqq_delay_effect_negligible": true,
+    "qqq_spread_materially_tighter_than_semiconductor_etfs_in_this_snapshot": true,
+    "iex_is_not_consolidated_sip_nbbo": true,
+    "observed_quote_touch_not_real_fill": true
+  },
+  "live_trade_authority": false
+}
