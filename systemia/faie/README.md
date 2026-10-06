@@ -94,6 +94,7 @@ Internal investigation and write surfaces require FAIE_INTERNAL_TOKEN:
 - GET /api/faie/investigations/:id/markdown
 - POST /api/faie/investigations
 - POST /api/faie/ingest
+- POST /api/faie/acquire/soil
 - POST /api/faie/rivet-context
 - POST /api/faie/worldstate-dispatch
 - POST /api/faie/run
@@ -155,6 +156,14 @@ Pilot acceptance gate:
 - controlled-environment coverage gaps are explicit
 - one-click Yakima Valley food-infrastructure scope is available on the real UI
 - human review remains required before consequential action
+
+### USDA NRCS site soil acquisition
+
+The internal `POST /api/faie/acquire/soil` route performs a bounded read from USDA NRCS Soil Data Access when an exact latitude and longitude are supplied. It uses the official WGS84 map-unit intersection function and retrieves SSURGO map-unit, component, horizon and texture-related fields.
+
+Soil Data Access is treated as official mapped survey evidence, not a live field soil test. FAIE preserves the survey-area `saverest` update date as the observation timestamp when available, labels the evidence `REPORTED`, and carries an explicit field-verification requirement for consequential site, crop, engineering or capital decisions.
+
+FAIE does not substitute a regional centroid or arbitrary sample point when exact site coordinates are missing.
 
 ## Owned evidence bridges
 
