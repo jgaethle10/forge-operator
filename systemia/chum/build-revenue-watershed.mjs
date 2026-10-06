@@ -427,9 +427,9 @@ for (const offer of output.discovery_offers) {
     offer.commercial_state === 'sell_now'
       ? '<p>This capability is currently marked sell-now in the canonical catalog. Human confirmation and authoritative payment verification still apply.</p>'
       : '<p>This capability is publicly discoverable, but machine checkout is not exposed until its current commercial verification gate is satisfied.</p>',
-    offer.start_url
-      ? `<p><a href="${escapeHtml(offer.start_url)}"><strong>Start here</strong></a> · <a href="${escapeHtml(offer.public_url)}">Capability details</a></p>`
-      : `<p><a href="${escapeHtml(offer.public_url)}">Open the public capability</a> · <a href="${escapeHtml(offer.machine_review_url)}">Review this capability</a></p>`,
+    (offer.start_url || offer.machine_review_url)
+      ? `<p><a href="${escapeHtml(offer.start_url || offer.machine_review_url)}"><strong>Start here</strong></a> · <a href="${escapeHtml(offer.public_url)}">Capability details</a></p>`
+      : `<p><a href="${escapeHtml(offer.public_url)}">Open the public capability</a></p>`,
     '<p>Discovery creates no payment obligation. Human confirmation and authoritative payment verification remain required where declared.</p>',
     '</main></body></html>'
   ].join('\n');
