@@ -163,6 +163,27 @@ function signalRelevant(observation) {
   return Object.values(DIMENSION_RULES).flat().some((term) => corpusHasTerm(corpus, term));
 }
 
+function normalizeThesisAssumptions(value) {
+  const rows = Array.isArray(value) ? value : [];
+  const normalized = [];
+  const seen = new Set();
+
+  for (const row of rows.slice(0, 40)) {
+    const statement = clean(typeof row === 'string' ? row : row?.statement).slice(0, 500);
+    if (!statement) continue;
+    const assumptionId = clean(typeof row === 'object' ? row?.assumption_id : '') ||
+      ('faie-assumption:' + stableHash(statement.toLowerCase()));
+    if (seen.has(assumptionId)) continue;
+    seen.add(assumptionId);
+    normalized.push({
+      assumption_id: assumptionId,
+      statement,
+      criticality: clean(typeof row === 'object' ? row?.criticality : '').slice(0, 40) || 'material'
+    });
+  }
+  return normalized;
+}
+
 function normalizeScope(input = {}) {
   const question = clean(input.question || input.query);
   if (!question) throw new TypeError('question is required');
@@ -172,6 +193,7 @@ function normalizeScope(input = {}) {
     asset_types: unique(input.asset_types || input.assets, 30),
     crop: clean(input.crop).slice(0, 120),
     water_source: clean(input.water_source).slice(0, 120),
+    thesis_assumptions: normalizeThesisAssumptions(input.thesis_assumptions || input.assumptions),
     horizon_days: Math.max(1, Math.min(3650, Number(input.horizon_days) || 90)),
     include_weak_evidence: Boolean(input.include_weak_evidence)
   };
@@ -221,6 +243,97 @@ function relevanceScore(signal, scope) {
   return Number(clamp01((0.55 * tokenScore) + (0.3 * regionMatch) + (0.15 * cropMatch)).toFixed(3));
 }
 
+function expectedDimensionsForScope(scope) {
+  const corpus = [
+    scope.question,
+    scope.crop,
+    scope.water_source,
+    ...(scope.asset_types || [])
+  ].join(' ').toLowerCase();
+
+  const expected = new Set();
+  const includesAny = (terms) => terms.some((term) => corpus.includes(term));
+  const add = (...dimensions) => dimensions.forEach((dimension) => expected.add(dimension));
+
+  if (includesAny(['greenhouse', 'controlled environment', 'controlled-environment', 'hydroponic', 'indoor farm', 'cea'])) {
+    add('water', 'heat', 'energy', 'infrastructure', 'logistics', 'labor', 'crop_health', 'resilience');
+  }
+
+  if (includesAny(['food infrastructure', 'regional production', 'regional food', 'native soil', 'living soil', 'sunlight', 'natural light', 'food sovereignty', 'domestic food', 'site selection', 'production campus'])) {
+    add('water', 'heat', 'soil', 'energy', 'infrastructure', 'logistics', 'labor', 'economics', 'policy', 'crop_health', 'resilience');
+  }
+
+  if (scope.crop) add('crop_health');
+  if (scope.water_source || includesAny(['water', 'irrigation', 'aquifer', 'well', 'river', 'reservoir'])) add('water');
+  if (includesAny(['heat', 'temperature', 'cooling', 'hvac'])) add('heat');
+  if (includesAny(['power', 'electricity', 'energy', 'utility', 'tariff'])) add('energy');
+  if (includesAny(['road', 'freight', 'shipping', 'logistics', 'distribution'])) add('logistics');
+  if (includesAny(['labor', 'worker', 'workforce', 'staffing'])) add('labor');
+  if (includesAny(['infrastructure', 'interconnection', 'service capacity', 'transformer'])) add('infrastructure');
+
+  return [...expected];
+}
+
+function evidenceNeedForDimension(dimension) {
+  const needs = {
+    water: 'Site-specific water source, allocation, reliability, quality, and current operating constraints',
+    heat: 'Site-level temperature, solar-load, humidity, cooling-load, and extreme-heat evidence',
+    energy: 'Serving-utility tariff, demand charges, outage history, and site electrical capacity',
+    infrastructure: 'Site utility, road, communications, drainage, and interconnection constraints',
+    logistics: 'Inbound and outbound freight access, cold-chain needs, and market-distance evidence',
+    labor: 'Local labor availability, wage pressure, seasonality, and critical-skill constraints',
+    crop_health: 'Crop-specific production, yield, quality, pest, disease, and environmental-control evidence',
+    resilience: 'Continuity evidence for outages, water interruption, smoke, heat, freeze, and other credible disruptions',
+    soil: 'Site-specific soil series, texture, organic matter, drainage, salinity, contamination, biology, and amendment constraints',
+    economics: 'Regional land, construction, operating-input, crop-margin, insurance, and distribution-cost evidence',
+    policy: 'Zoning, water rights, permitting, food-safety, labor, incentive, grant, and other regulatory constraints relevant to development'
+  };
+  return needs[dimension] || `Additional current evidence for the ${dimension} dimension`;
+}
+
+function buildAssumptionRegister(scope, findings, nowIso) {
+  return (scope.thesis_assumptions || []).map((assumption) => {
+    const assumptionTokens = tokenSet(assumption.statement);
+    const related = findings
+      .map((finding) => {
+        const findingTokens = tokenSet([
+          finding.summary,
+          ...(finding.dimensions || []),
+          ...(finding.domains || [])
+        ].join(' '));
+        let overlap = 0;
+        for (const token of assumptionTokens) if (findingTokens.has(token)) overlap += 1;
+        const relation = assumptionTokens.size ? overlap / Math.min(10, assumptionTokens.size) : 0;
+        return { finding, relation };
+      })
+      .filter((row) => row.relation >= 0.12)
+      .sort((a, b) => b.relation - a.relation)
+      .slice(0, 8);
+
+    const stateCounts = {};
+    for (const row of related) {
+      const state = row.finding.evidence_state || 'UNKNOWN';
+      stateCounts[state] = (stateCounts[state] || 0) + 1;
+    }
+
+    return {
+      schema: 'evercraft.faie.thesis-assumption.v1',
+      assumption_id: assumption.assumption_id,
+      statement: assumption.statement,
+      criticality: assumption.criticality,
+      evaluation_state: related.length ? 'related_evidence_present' : 'unknown',
+      related_signal_ids: related.map((row) => row.finding.signal_id),
+      related_evidence_count: related.length,
+      evidence_states: stateCounts,
+      last_evaluated_at: nowIso,
+      verdict_authority: false,
+      note: related.length
+        ? 'FAIE found evidence related to this assumption. Related evidence is not itself proof that the assumption is true or false.'
+        : 'FAIE does not currently hold enough related evidence to evaluate this assumption.'
+    };
+  });
+}
+
 function investigationFinding(signal, relevance) {
   return {
     signal_id: signal.signal_id,
@@ -246,6 +359,7 @@ export function emptyFaieState() {
     observations: {},
     signals: {},
     investigations: {},
+    comparisons: {},
     receipts: [],
     last_cycle: null
   };
@@ -415,11 +529,68 @@ export function buildFaieInvestigation(inputState, input, { now = new Date().toI
     0.15 * Math.min(1, strongFindings.length / 3)
   ).toFixed(3));
 
+  const coveredDimensions = unique(findings.flatMap((item) => item.dimensions || []), 50);
+  const expectedDimensions = expectedDimensionsForScope(scope);
+  const coveredDimensionSet = new Set(coveredDimensions);
+  const missingDimensions = expectedDimensions.filter((dimension) => !coveredDimensionSet.has(dimension));
+
   const unknowns = [];
   if (!findings.length) unknowns.push('No currently ingested FAIE evidence matched the scope closely enough to support a finding.');
   if (sourceFamilies.length < 2) unknowns.push('Independent source-family corroboration is limited.');
   if (!strongFindings.length) unknowns.push('No high-confidence observed or verified evidence currently clears the strong-evidence gate.');
   if (!scope.region_keys.length) unknowns.push('No explicit region key was provided, so geographic relevance is broader and less precise.');
+  if (missingDimensions.length) {
+    unknowns.push('Scoped decision coverage is incomplete. Missing evidence dimensions: ' + missingDimensions.join(', ') + '.');
+  }
+
+  const evidenceNeeded = unique([
+    ...missingDimensions.map(evidenceNeedForDimension),
+    'More recent observations for the exact scoped geography',
+    ...(sourceFamilies.length < 2 ? ['Independent corroboration from a separate source family'] : []),
+    'Field, sensor, operator, or official-source evidence when a consequential decision depends on the result'
+  ], 30);
+
+  const evidenceAcquisitionQueue = [
+    ...missingDimensions.map((dimension) => ({
+      acquisition_id: 'faie-acquisition:' + stableHash([scope.question, dimension, 'dimension_gap']),
+      dimension,
+      priority: 'P0',
+      state: 'OPEN',
+      request: evidenceNeedForDimension(dimension),
+      preferred_evidence: ['official_source', 'field_measurement', 'operator_authorized_record'],
+      external_action_taken: false,
+      human_or_separate_authority_required: true
+    })),
+    {
+      acquisition_id: 'faie-acquisition:' + stableHash([scope.question, 'geography_freshness']),
+      dimension: 'geography_freshness',
+      priority: findings.length ? 'P1' : 'P0',
+      state: 'OPEN',
+      request: 'Acquire more recent observations for the exact scoped geography.',
+      preferred_evidence: ['official_source', 'sensor', 'field_measurement'],
+      external_action_taken: false,
+      human_or_separate_authority_required: true
+    },
+    ...(sourceFamilies.length < 2 ? [{
+      acquisition_id: 'faie-acquisition:' + stableHash([scope.question, 'independent_corroboration']),
+      dimension: 'independent_corroboration',
+      priority: 'P0',
+      state: 'OPEN',
+      request: 'Acquire independent corroboration from a separate source family.',
+      preferred_evidence: ['official_source', 'independent_observation', 'operator_authorized_record'],
+      external_action_taken: false,
+      human_or_separate_authority_required: true
+    }] : [])
+  ];
+
+  const decisionReadiness = findings.length &&
+    !missingDimensions.length &&
+    sourceFamilies.length >= 2 &&
+    strongFindings.length
+      ? 'review_ready'
+      : 'evidence_gaps';
+
+  const thesisAssumptionRegister = buildAssumptionRegister(scope, findings, nowIso);
 
   const investigationId = 'faie-investigation:' + stableHash([
     scope,
@@ -446,14 +617,50 @@ export function buildFaieInvestigation(inputState, input, { now = new Date().toI
       matched_signal_count: findings.length,
       strong_finding_count: strongFindings.length,
       independent_source_family_count: sourceFamilies.length,
-      evidence_states: evidenceStates
+      evidence_states: evidenceStates,
+      expected_dimensions: expectedDimensions,
+      covered_dimensions: coveredDimensions,
+      missing_dimensions: missingDimensions,
+      decision_readiness: decisionReadiness
+    },
+    decision_packet: {
+      framework: 'SENSE_CHALLENGE_DECIDE',
+      sense: {
+        finding_count: findings.length,
+        covered_dimensions: coveredDimensions,
+        strongest_findings: findings.slice(0, 5).map((item) => ({
+          signal_id: item.signal_id,
+          summary: item.summary,
+          evidence_state: item.evidence_state,
+          source_family: item.source_family,
+          relevance_score: item.relevance_score,
+          signal_score: item.signal_score
+        }))
+      },
+      challenge: {
+        unknowns: [...unknowns],
+        missing_dimensions: missingDimensions,
+        independent_source_family_count: sourceFamilies.length,
+        strong_finding_count: strongFindings.length
+      },
+      decide: {
+        readiness: decisionReadiness,
+        next_evidence: evidenceNeeded,
+        evidence_acquisition_queue: evidenceAcquisitionQueue,
+        human_review_required: true,
+        action_authority: false
+      }
+    },
+    thesis_memory: {
+      schema: 'evercraft.faie.thesis-memory.v1',
+      assumption_count: thesisAssumptionRegister.length,
+      assumptions: thesisAssumptionRegister,
+      longitudinal_comparison_ready: thesisAssumptionRegister.length > 0,
+      verdict_authority: false
     },
     unknowns,
-    evidence_needed: [
-      'More recent observations for the exact scoped geography',
-      'Independent corroboration when only one source family is represented',
-      'Field, sensor, operator, or official-source evidence when a consequential decision depends on the result'
-    ],
+    evidence_needed: evidenceNeeded,
+    evidence_acquisition_queue: evidenceAcquisitionQueue,
     boundaries: [
       'FAIE provides evidence support, not autonomous consequential authority.',
       'Modeled, reported, observed, and verified evidence remain distinct.',
@@ -477,6 +684,126 @@ export function buildFaieInvestigation(inputState, input, { now = new Date().toI
   state.receipts = [...(state.receipts || []), receipt].slice(-10000);
 
   return { state, investigation, receipt };
+}
+
+export function buildFaieComparison(inputState, input = {}, { now = new Date().toISOString() } = {}) {
+  const question = clean(input.question || input.query);
+  if (!question) throw new TypeError('question is required');
+
+  const candidates = Array.isArray(input.candidates) ? input.candidates.slice(0, 8) : [];
+  if (candidates.length < 2) throw new TypeError('at least two comparison candidates are required');
+
+  let state = structuredClone(inputState || emptyFaieState());
+  const nowIso = iso(now);
+  const rows = [];
+
+  for (let index = 0; index < candidates.length; index += 1) {
+    const candidate = candidates[index] || {};
+    const label = clean(candidate.label || candidate.name || ('Candidate ' + (index + 1))).slice(0, 160);
+    const result = buildFaieInvestigation(state, {
+      question,
+      region_keys: candidate.region_keys || candidate.regions || candidate.region,
+      asset_types: candidate.asset_types || candidate.assets || input.asset_types || input.assets,
+      crop: candidate.crop || input.crop,
+      water_source: candidate.water_source || input.water_source,
+      thesis_assumptions: candidate.thesis_assumptions || candidate.assumptions || input.thesis_assumptions || input.assumptions,
+      horizon_days: candidate.horizon_days || input.horizon_days,
+      include_weak_evidence: candidate.include_weak_evidence ?? input.include_weak_evidence
+    }, { now: nowIso });
+
+    state = result.state;
+    const investigation = result.investigation;
+    const expected = investigation.coverage.expected_dimensions || [];
+    const covered = new Set(investigation.coverage.covered_dimensions || []);
+    const dimensionCoverage = expected.length
+      ? expected.filter((dimension) => covered.has(dimension)).length / expected.length
+      : investigation.findings.length ? 1 : 0;
+
+    const evidenceReadinessScore = Number(clamp01(
+      (0.35 * investigation.confidence) +
+      (0.25 * Math.min(1, investigation.coverage.independent_source_family_count / 4)) +
+      (0.20 * Math.min(1, investigation.coverage.strong_finding_count / 3)) +
+      (0.20 * dimensionCoverage)
+    ).toFixed(3));
+
+    rows.push({
+      candidate_id: 'faie-candidate:' + stableHash([label, investigation.scope]),
+      label,
+      investigation_id: investigation.investigation_id,
+      scope: investigation.scope,
+      evidence_readiness_score: evidenceReadinessScore,
+      decision_readiness: investigation.coverage.decision_readiness,
+      confidence: investigation.confidence,
+      matched_signal_count: investigation.coverage.matched_signal_count,
+      strong_finding_count: investigation.coverage.strong_finding_count,
+      independent_source_family_count: investigation.coverage.independent_source_family_count,
+      expected_dimensions: expected,
+      covered_dimensions: investigation.coverage.covered_dimensions,
+      missing_dimensions: investigation.coverage.missing_dimensions,
+      unknowns: investigation.unknowns,
+      evidence_needed: investigation.evidence_needed,
+      evidence_acquisition_queue: investigation.evidence_acquisition_queue,
+      thesis_memory: investigation.thesis_memory,
+      site_suitability_verdict: null,
+      investment_recommendation: null
+    });
+  }
+
+  const evidenceOrder = [...rows]
+    .sort((a, b) =>
+      b.evidence_readiness_score - a.evidence_readiness_score ||
+      b.independent_source_family_count - a.independent_source_family_count ||
+      a.label.localeCompare(b.label)
+    )
+    .map((row, index) => ({
+      evidence_rank: index + 1,
+      candidate_id: row.candidate_id,
+      label: row.label,
+      evidence_readiness_score: row.evidence_readiness_score
+    }));
+
+  const dimensionUniverse = unique(rows.flatMap((row) => row.expected_dimensions), 100);
+  const comparisonId = 'faie-comparison:' + stableHash([
+    question,
+    rows.map((row) => [row.candidate_id, row.investigation_id]),
+    nowIso
+  ]);
+
+  const comparison = {
+    schema: 'evercraft.faie.comparison.v1',
+    comparison_id: comparisonId,
+    created_at: nowIso,
+    question,
+    candidate_count: rows.length,
+    candidates: rows,
+    evidence_readiness_order: evidenceOrder,
+    dimension_universe: dimensionUniverse,
+    interpretation: 'Evidence-readiness rank compares the completeness and corroboration of the current FAIE evidence packet. It is not a site-suitability score, investment recommendation, crop recommendation, or authority to act.',
+    boundaries: [
+      'A more complete evidence packet does not mean a site is better.',
+      'A less complete evidence packet may reflect missing data rather than poor underlying conditions.',
+      'Modeled, reported, observed, and verified evidence remain distinct.',
+      'Consequential siting, capital, production, regulatory, and operating decisions require human review.'
+    ],
+    decision_authority: false,
+    publication_authority: false
+  };
+
+  state.comparisons = {
+    ...(state.comparisons || {}),
+    [comparisonId]: comparison
+  };
+
+  const receipt = {
+    schema: 'evercraft.faie.comparison-receipt.v1',
+    receipt_id: 'faie-comparison-receipt:' + stableHash([comparisonId, nowIso]),
+    comparison_id: comparisonId,
+    candidate_count: rows.length,
+    created_at: nowIso
+  };
+  state.receipts = [...(state.receipts || []), receipt].slice(-10000);
+
+  return { state, comparison, receipt };
 }
 
 export function publicFaieSnapshot(inputState, { limit = 50 } = {}) {
