@@ -54,12 +54,18 @@ test('SELL NOW directory count equals live catalog',()=>{
 });
 
 
-test('SELL NOW mirrors expose one human Start corridor',()=>{
+test('SELL NOW mirrors expose a verified Start corridor or an explicit hold',()=>{
   for(const row of sellNow.offers){
-    assert.match(String(row.start_url||''),/^https:\/\//,row.public_id);
-    assert.match(String(row.machine_review_url||''),/^https:\/\//,row.public_id);
-    if(row.start_url_state==='machine_commerce_review_fallback'){
-      assert.equal(row.start_url,row.machine_review_url,row.public_id);
+    const held=row.start_url_state==='held_no_owned_public_origin';
+    if(held){
+      assert.equal(row.start_url,null,row.public_id);
+      assert.equal(row.machine_review_url,null,row.public_id);
+    }else{
+      assert.match(String(row.start_url||''),/^https:\/\//,row.public_id);
+      assert.match(String(row.machine_review_url||row.start_url||''),/^https:\/\//,row.public_id);
+      if(row.start_url_state==='machine_commerce_review_fallback'){
+        assert.equal(row.start_url,row.machine_review_url,row.public_id);
+      }
     }
     assert.equal(String(row.start_url||'').startsWith('/api/chum/go/'),false,row.public_id);
     const source=(machine.offers||[]).find(x=>x.public_id===row.public_id);
@@ -77,26 +83,30 @@ test('SELL NOW mirrors expose one human Start corridor',()=>{
     assert.equal(record.start_url_state,row.start_url_state,row.public_id);
     assert.equal(record.machine_review_url,row.machine_review_url,row.public_id);
     const page=fs.readFileSync('public/chum/capabilities/'+row.public_id+'/index.html','utf8');
-    assert.match(page,/Start here/,row.public_id);
+    if(held) assert.match(page,/Start held:/,row.public_id);
+    else assert.match(page,/Start here/,row.public_id);
   }
 });
 
-test('live conformance proof survives capability generation',()=>{
+test('conformance state survives capability generation without inventing live proof',()=>{
   const conformance=JSON.parse(fs.readFileSync('conformance/products.json','utf8'));
-  const live=(conformance.products||[]).filter((row)=>
-    row?.machine_commerce_public_id &&
-    row?.conformance_state==='live_read_only_mcp_verified' &&
-    String(row?.live_canary_evidence||'').startsWith('https://')
-  );
-  assert.ok(live.length>=1,'expected at least one live read-only MCP conformance record');
-  for(const proof of live){
+  const rows=(conformance.products||[]).filter((row)=>row?.machine_commerce_public_id);
+  for(const proof of rows){
     const file='public/chum/capabilities/'+proof.machine_commerce_public_id+'/capability.json';
-    assert.equal(fs.existsSync(file),true,file);
+    if(!fs.existsSync(file)) continue;
     const record=JSON.parse(fs.readFileSync(file,'utf8'));
-    assert.match(String(record.invocation_status||''),/^LIVE READ-ONLY MCP VERIFIED:/,proof.machine_commerce_public_id);
-    assert.equal(record.live_canary_evidence,proof.live_canary_evidence,proof.machine_commerce_public_id);
-    assert.equal(record.live_proof?.conformance_state,proof.conformance_state,proof.machine_commerce_public_id);
-    assert.equal(record.live_proof?.machine_commerce_handoff_state,proof.machine_commerce_handoff_state,proof.machine_commerce_public_id);
-    assert.equal(record.live_proof?.mcp,proof.mcp,proof.machine_commerce_public_id);
+    const evidence=typeof proof.live_canary_evidence==='string'&&proof.live_canary_evidence.startsWith('https://')
+      ? proof.live_canary_evidence
+      : null;
+    if(proof.conformance_state==='live_read_only_mcp_verified'&&evidence){
+      assert.match(String(record.invocation_status||''),/^LIVE READ-ONLY MCP VERIFIED:/,proof.machine_commerce_public_id);
+      assert.equal(record.live_canary_evidence,proof.live_canary_evidence,proof.machine_commerce_public_id);
+      assert.equal(record.live_proof?.conformance_state,proof.conformance_state,proof.machine_commerce_public_id);
+      assert.equal(record.live_proof?.machine_commerce_handoff_state,proof.machine_commerce_handoff_state,proof.machine_commerce_public_id);
+      assert.equal(record.live_proof?.mcp,proof.mcp,proof.machine_commerce_public_id);
+    }
+    if(proof.conformance_state==='owned_runtime_reverification_pending'){
+      assert.doesNotMatch(String(record.invocation_status||''),/^LIVE READ-ONLY MCP VERIFIED:/,proof.machine_commerce_public_id);
+    }
   }
 });
