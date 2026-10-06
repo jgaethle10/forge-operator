@@ -24,19 +24,26 @@ const BLOCKED_PUBLIC_HOSTS = new Set([
   'www.systemiacommandcenters.com'
 ]);
 
+const OWNED_FABRIC_ORIGIN = 'https://fabric.systemiacommandcenters.com';
+
 function safeOfferUrl(offer) {
-  const value = String(offer?.public_url || '').trim();
-  if (!value) return null;
-  try {
-    const url = new URL(value);
-    const host = url.hostname.toLowerCase();
-    if (!['http:', 'https:'].includes(url.protocol)) return null;
-    if (BLOCKED_PUBLIC_HOSTS.has(host)) return null;
-    if (host === 'base44.app' || host.endsWith('.base44.app')) return null;
-    return url.toString();
-  } catch {
-    return null;
+  const publicId = String(offer?.public_id || '').trim();
+  const ownedFallback = publicId
+    ? OWNED_FABRIC_ORIGIN + '/capabilities/' + encodeURIComponent(publicId)
+    : '';
+  for (const value of [offer?.public_url, ownedFallback]) {
+    const raw = String(value || '').trim();
+    if (!raw) continue;
+    try {
+      const url = new URL(raw);
+      const host = url.hostname.toLowerCase();
+      if (!['http:', 'https:'].includes(url.protocol)) continue;
+      if (BLOCKED_PUBLIC_HOSTS.has(host)) continue;
+      if (host === 'base44.app' || host.endsWith('.base44.app')) continue;
+      return url.toString();
+    } catch {}
   }
+  return null;
 }
 
 const catalog = JSON.parse(fs.readFileSync('public/.well-known/evercraft-machine-catalog.json','utf8'));
