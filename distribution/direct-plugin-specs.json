@@ -198,7 +198,7 @@
       "long_description": "Use FAIE directly when food infrastructure, agriculture, water, land, production, or resilience decisions need a sourced Sense-Challenge-Decide packet, comparative evidence readiness, explicit uncertainty, and evidence acquisition.",
       "category": "Business",
       "website_url": "https://fabric.systemiacommandcenters.com/faie/",
-      "registry_name": "io.github.jgaethle10/faie",
+      "registry_name": null,
       "mcp_url": "https://fabric.systemiacommandcenters.com/mcp/faie",
       "state": "public_https_verified_registry_pending",
       "default_prompt": "Underwrite this food-infrastructure or agriculture decision with sourced evidence, adversarial challenge, missing-evidence missions, and explicit uncertainty.",
