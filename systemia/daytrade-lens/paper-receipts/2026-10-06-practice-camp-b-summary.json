@@ -1,0 +1,55 @@
+{
+  "schema": "evercraft.daytrade.passive-touch-practice-summary.v1",
+  "generated_at": "2026-10-06T16:07:44.635Z",
+  "source_run_id": 37493008578,
+  "source_artifact_id": 11427120054,
+  "source_artifact_digest": "sha256:fd426d0d3ec1fa0aeeb120f5a7a3faa4a8fa684bb412ecf39dd15f3ec7ef9f9a",
+  "simulation_only": true,
+  "capital_at_risk_usd": 0,
+  "notional_per_drill_usd": 20,
+  "window_ms": 90000,
+  "results": [
+    {
+      "symbol": "SOXX",
+      "passive_price_touch_observed": true,
+      "touch_delay_ms": 54461,
+      "marketable_pnl_usd": -0.012479973016272794,
+      "passive_price_improvement_bps_vs_marketable_entry": 5.059448520112458,
+      "touch_supported_passive_upper_bound_pnl_usd": -0.002362271154979112,
+      "realized_passive_fill_claimed": false
+    },
+    {
+      "symbol": "SMH",
+      "passive_price_touch_observed": true,
+      "touch_delay_ms": 66755,
+      "marketable_pnl_usd": -0.012258176046266556,
+      "passive_price_improvement_bps_vs_marketable_entry": 5.5004636105028855,
+      "touch_supported_passive_upper_bound_pnl_usd": -0.001257940750996056,
+      "realized_passive_fill_claimed": false
+    },
+    {
+      "symbol": "QQQ",
+      "passive_price_touch_observed": true,
+      "touch_delay_ms": 16986,
+      "marketable_pnl_usd": -0.004200798151646978,
+      "passive_price_improvement_bps_vs_marketable_entry": 0.7876496534334361,
+      "touch_supported_passive_upper_bound_pnl_usd": -0.002625705658395816,
+      "realized_passive_fill_claimed": false
+    }
+  ],
+  "aggregate": {
+    "touch_count": 3,
+    "no_touch_count": 0,
+    "mean_marketable_pnl_usd": -0.009646315738062109,
+    "touched_passive_upper_bound_mean_pnl_usd": -0.002081972521456995
+  },
+  "interpretation": {
+    "public_trade_touch_is_not_fill": true,
+    "passive_upper_bound_improved_on_marketable_route_for_all_three": true,
+    "soxx_and_smh_spread_savings_materially_larger_than_qqq": true,
+    "queue_position_unobserved": true,
+    "iex_is_not_consolidated_sip_nbbo": true,
+    "arbitrary_midday_rehearsal_not_signal_validation": true
+  },
+  "live_trade_authority": false
+}
