@@ -60,3 +60,26 @@ console.log(JSON.stringify({
   no_unowned_fallback: true,
   tracked_corridor_requires_configured_https_origin: true
 }));
+
+
+const directOwnedOffer={
+  ...offer,
+  human_start_url:'https://fabric.systemiacommandcenters.com/faie/',
+  human_start_url_state:'public_https_verified'
+};
+assert.equal(
+  humanStartUrl(directOwnedOffer,{publicOrigin:'',surface:'test_surface'}),
+  'https://fabric.systemiacommandcenters.com/faie/'
+);
+assert.equal(
+  humanStartState(directOwnedOffer,{publicOrigin:''}),
+  'owned_direct_human_start'
+);
+assert.equal(
+  humanStartUrl({...directOwnedOffer,human_start_url_state:'pending'},{publicOrigin:''}),
+  null
+);
+assert.equal(
+  humanStartUrl({...directOwnedOffer,human_start_url:'https://legacy.example.base44.app/faie/'},{publicOrigin:''}),
+  null
+);
