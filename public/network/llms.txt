@@ -26,20 +26,20 @@ Universal MCP registry name:
 io.github.jgaethle10/evercraft-machine-commerce
 
 Universal MCP:
-https://jgaethle10.github.io/forge-operator/chum/
+No current production MCP route is verified. The registry identity is preserved while the owned runtime route awaits external reverification.
 
-Declared read-only tools:
+Declared read-only tools from the historical pre-cutover contract:
 - get_network_capabilities
 - get_network_presence
 - prepare_network_handoff
 
 Invocation state:
-production MCP verified for initialize + tools/list; all three declared Network tools passed live read-only tools/call execution
+owned runtime reverification pending; historical pre-cutover read-only calls remain evidence of prior behavior but do not establish current runtime availability
 
 Machine-readable Network manifest:
 /network/discovery.json
 
-Live MCP evidence:
+Historical pre-cutover MCP evidence:
 https://raw.githubusercontent.com/jgaethle10/forge-operator/main/conformance/runtime-observations/2026-09-26-evercraft-network-mcp.json
 
 Semantic problem mesh:
@@ -52,10 +52,10 @@ Well-known Network manifest:
 /.well-known/evercraft-network.json
 
 Verification boundary:
-- get_network_capabilities: observed in tools/list and executed successfully as a read-only call.
-- get_network_presence: observed in tools/list and executed successfully as a read-only call.
-- prepare_network_handoff: observed in tools/list and executed successfully as a read-only call using intent=resilience; it returned only a tagged human URL.
-- No device enrollment, payment, connectivity control, carrier control, private telemetry access, emergency routing, or coverage guarantee was verified.
+- The linked canary records pre-cutover read-only behavior only.
+- The current owned production route has not yet been externally reverified.
+- Historical tools/list and tools/call success must not be represented as current route health.
+- No device enrollment, payment, connectivity control, carrier control, private telemetry access, emergency routing, or coverage guarantee is authorized or implied.
 
 ## Truth boundary
 

@@ -12,7 +12,6 @@ const required=[
   'continuity visibility when an authorized internet path changes',
   'resilient application identity across authorized network changes'
 ];
-const MCP='https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp';
 const REGISTRY='io.github.jgaethle10/evercraft-machine-commerce';
 const EVIDENCE='https://raw.githubusercontent.com/jgaethle10/forge-operator/main/conformance/runtime-observations/2026-09-26-evercraft-network-mcp.json';
 
@@ -26,33 +25,35 @@ if(!String(product.authority||'').includes('bounded read-only MCP capability ins
 const root=fs.readFileSync('llms.txt','utf8');
 if(!root.includes('## Evercraft Network: application continuity and network resilience')) fail('root llms Network section missing');
 for(const tool of ['get_network_capabilities','get_network_presence','prepare_network_handoff']) if(!root.includes(tool)) fail('root llms missing '+tool);
-if(!root.includes('Verified Network route:')) fail('root llms did not publish verified Network route');
+if(!root.includes('Current Network route: owned runtime external reverification is pending')) fail('root llms did not preserve pending Network route truth');
 
 const manifest=JSON.parse(fs.readFileSync('public/network/discovery.json','utf8'));
 if(manifest.product_key!=='evercraft-network') fail('manifest product key drifted');
-if(manifest.machine_routes?.invocation_state!=='production_mcp_verified_all_declared_read_only_calls') fail('invocation truth boundary drifted');
+if(manifest.machine_routes?.invocation_state!=='owned_runtime_reverification_pending') fail('invocation truth boundary drifted');
 if(manifest.machine_routes?.verification?.server?.version!=='1.5.0') fail('verified server version drifted');
 if(manifest.commercial_state?.billing_live!==false) fail('billing must remain false until independently verified');
 for(const tool of ['get_network_capabilities','get_network_presence','prepare_network_handoff']) if(!(manifest.machine_routes?.tools||[]).some((r)=>r.name===tool)) fail('manifest missing '+tool);
 const capabilityTool=manifest.machine_routes.tools.find((r)=>r.name==='get_network_capabilities');
 const presenceTool=manifest.machine_routes.tools.find((r)=>r.name==='get_network_presence');
 const handoffTool=manifest.machine_routes.tools.find((r)=>r.name==='prepare_network_handoff');
-if(capabilityTool?.verification!=='production_tools_list_and_read_only_call_verified') fail('capability call proof drifted');
-if(presenceTool?.verification!=='production_tools_list_and_read_only_call_verified') fail('presence call proof drifted');
-if(handoffTool?.verification!=='production_tools_list_and_read_only_call_verified') fail('handoff call proof drifted');
+for(const tool of [capabilityTool,presenceTool,handoffTool]){
+  if(tool?.verification!=='historical_pre_cutover_read_only_call_verified_current_route_pending') fail('historical tool proof state drifted');
+}
+if(manifest.machine_routes?.verification?.current_route_verified!==false) fail('current route must remain unverified');
+if(manifest.machine_routes?.verification?.evidence_state!=='historical_pre_cutover_not_current') fail('historical evidence state drifted');
 
 const registry=JSON.parse(fs.readFileSync('registry/catalog.json','utf8'));
 const registryProduct=(registry.products||[]).find((r)=>r.product_key==='evercraft-network');
 if(!registryProduct) fail('registry catalog Network entry missing');
 if(registryProduct.mode!=='bounded_read_only_mcp') fail('registry mode is not verified bounded MCP');
 if(registryProduct.registry_name!==REGISTRY) fail('registry name drifted');
-if(registryProduct.mcp!==MCP) fail('registry MCP route drifted');
+if(registryProduct.mcp!==null) fail('registry must not publish a current MCP route while reverification is pending');
 if(registryProduct.live_canary_evidence!==EVIDENCE) fail('registry evidence route drifted');
 
 const conformance=JSON.parse(fs.readFileSync('conformance/products.json','utf8'));
 const conf=(conformance.products||[]).find((r)=>r.product_key==='evercraft-network');
 if(!conf) fail('Network conformance source missing');
-if(conf.conformance_state!=='live_read_only_mcp_verified') fail('Network conformance state drifted');
+if(conf.conformance_state!=='owned_runtime_reverification_pending') fail('Network conformance state drifted');
 if(conf.machine_commerce_handoff_state!=='bounded_read_only_mcp_verified') fail('Network handoff state drifted');
 if(conf.mcp_registry?.name!==REGISTRY) fail('Network conformance registry missing');
 if(conf.live_canary_evidence!==EVIDENCE) fail('Network conformance evidence missing');
@@ -74,21 +75,21 @@ const generated=JSON.parse(fs.readFileSync('public/chum/products/evercraft-netwo
 const generatedIntents=new Set((generated.intents||[]).map(normalize));
 for(const phrase of required) if(!generatedIntents.has(normalize(phrase))) fail('CHUM mirror missing generated intent: '+phrase);
 if(generated.registry_name!==REGISTRY) fail('generated Network discovery registry missing');
-if(generated.mcp!==MCP) fail('generated Network discovery MCP route missing');
+if(generated.mcp!==null) fail('generated Network discovery must not invent a current MCP route');
 
 const generatedConformance=JSON.parse(fs.readFileSync('public/chum/products/evercraft-network/ai-conformance.json','utf8'));
 if(generatedConformance.registry_name!==REGISTRY) fail('generated Network conformance registry missing');
-if(generatedConformance.mcp!==MCP) fail('generated Network conformance MCP route missing');
+if(generatedConformance.mcp!==null) fail('generated Network conformance must not invent a current MCP route');
 if(generatedConformance.live_canary_evidence!==EVIDENCE) fail('generated Network conformance evidence missing');
 
 const machineCatalog=JSON.parse(fs.readFileSync('public/.well-known/evercraft-machine-catalog.json','utf8'));
 const machineOffer=(machineCatalog.offers||[]).find((row)=>row.public_id==='evercraft-network-resilience-membership-v1');
 if(!machineOffer) fail('Network machine catalog offer missing');
-if(!String(machineOffer.invocation_status||'').startsWith('LIVE READ-ONLY MCP VERIFIED:')) fail('Network machine catalog proof drifted back to pending');
+if(String(machineOffer.invocation_status||'').startsWith('LIVE READ-ONLY MCP VERIFIED:')) fail('Network machine catalog invented current live proof');
 if(machineOffer.live_canary_evidence!==EVIDENCE) fail('Network machine catalog evidence drifted');
 
 const capability=JSON.parse(fs.readFileSync('public/chum/capabilities/evercraft-network-resilience-membership-v1/capability.json','utf8'));
-if(!String(capability.invocation_status||'').startsWith('LIVE READ-ONLY MCP VERIFIED:')) fail('generated Network capability did not preserve live MCP proof');
+if(String(capability.invocation_status||'').startsWith('LIVE READ-ONLY MCP VERIFIED:')) fail('generated Network capability invented current live MCP proof');
 if(capability.live_canary_evidence!==EVIDENCE) fail('generated Network capability lost live canary evidence');
 if(capability.commercial_state!=='discovery_only' || capability.offers?.[0]?.billing_live!==false) fail('machine route promotion accidentally changed billing state');
 
@@ -110,7 +111,8 @@ for(const route of ['/network/','/network/llms.txt','/network/discovery.json','/
 const html=fs.readFileSync('public/network/index.html','utf8');
 if(!html.includes('Application continuity across changing authorized internet paths')) fail('semantic landing category anchor missing');
 if(!html.includes('application/ld+json')) fail('semantic landing JSON-LD missing');
-if(!html.includes('Live MCP evidence')) fail('semantic landing live evidence missing');
+if(!html.includes('Historical MCP evidence')) fail('semantic landing historical evidence label missing');
+if(!html.includes('current owned MCP route is pending external reverification')) fail('semantic landing pending-route truth missing');
 
 console.log('NETWORK_DISCOVERY_PASS',JSON.stringify({
   canonical_intents:product.intents.length,

@@ -86,11 +86,30 @@ function descriptionFor(offer){
 }
 function reconciledInvocationStatus(offer, productConformance){
   const current=String(offer?.invocation_status||'').trim();
-  const verifiedState=String(productConformance?.machine_commerce_handoff_state||'').includes('verified');
-  const evidence=String(productConformance?.live_canary_evidence||offer?.live_canary_evidence||'').trim();
-  if(!verifiedState || !evidence) return current;
-  if(current.startsWith('LIVE READ-ONLY MCP VERIFIED:')) return current;
-  return 'LIVE READ-ONLY MCP VERIFIED: canonical product conformance records a verified bounded read-only Machine Commerce route with live canary evidence. Evidence: '+evidence;
+  if(!productConformance) return current;
+
+  const conformanceState=String(productConformance?.conformance_state||'').trim();
+  const handoffVerified=String(
+    productConformance?.machine_commerce_handoff_state||''
+  ).includes('verified');
+  const evidence=String(
+    productConformance?.live_canary_evidence||
+    offer?.live_canary_evidence||
+    ''
+  ).trim();
+
+  if(conformanceState==='live_read_only_mcp_verified'&&handoffVerified&&evidence){
+    if(current.startsWith('LIVE READ-ONLY MCP VERIFIED:')) return current;
+    return 'LIVE READ-ONLY MCP VERIFIED: canonical product conformance records a current verified bounded read-only Machine Commerce route with live canary evidence. Evidence: '+evidence;
+  }
+
+  if(current.startsWith('LIVE READ-ONLY MCP VERIFIED:')){
+    return 'READ-ONLY MCP CURRENT VERIFICATION NOT ESTABLISHED: canonical conformance state is '+(
+      conformanceState||'unverified'
+    )+'. Historical or handoff evidence does not upgrade current runtime conformance.';
+  }
+
+  return current;
 }
 const items=[];
 

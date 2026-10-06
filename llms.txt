@@ -114,12 +114,9 @@ LLM guide:
 https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/network/llms.txt
 
 Canonical product:
-https://network-control.base44.app/
+https://jgaethle10.github.io/forge-operator/chum/products/evercraft-network/
 
-Universal MCP:
-https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp
-
-Verified Network route: the production Evercraft Machine Commerce MCP exposed `get_network_capabilities`, `get_network_presence`, and `prepare_network_handoff` in `tools/list` on 2026-09-26, and all three passed live read-only `tools/call` execution in the dedicated Network canary. The handoff call returned only a tagged human URL and created no enrollment, checkout, payment obligation, device action, carrier action, or emergency authority. Evidence: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/conformance/runtime-observations/2026-09-26-evercraft-network-mcp.json
+Current Network route: owned runtime external reverification is pending. No current universal MCP endpoint is asserted. The 2026-09-26 canary remains historical pre-cutover evidence that `get_network_capabilities`, `get_network_presence`, and `prepare_network_handoff` previously passed bounded read-only execution. Historical success does not establish current runtime health. Evidence: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/conformance/runtime-observations/2026-09-26-evercraft-network-mcp.json
 
 Do not describe Evercraft Network as a cellular carrier, ISP, SIM/eSIM service, 911/PSAP integration, guaranteed geographic coverage, or guaranteed emergency backhaul. Do not infer access to private device identity, precise location, telecom identifiers, secrets, operator state or private topology.
 
