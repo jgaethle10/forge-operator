@@ -28,7 +28,16 @@ test('owned Fabric serves FAIE UI, public preview API, and native FAIE MCP witho
     host:'127.0.0.1',
     port:0,
     catalog,
-    faieStateDir:stateDir
+    faieStateDir:stateDir,
+    faieCollectorConfig:{
+      enabled:false,
+      region_profile:{profile_id:'test-disabled'},
+      nws_enabled:false,
+      nws_area:null,
+      usgs_water_sites:[],
+      usgs_water_parameters:[],
+      nwps_gauges:[]
+    }
   });
 
   try{
