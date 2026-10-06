@@ -1,26 +1,8 @@
 {
   "schema": "evercraft.chum.provider-probe-history.v1",
-  "updated_at": "2026-10-06T20:16:04.070Z",
+  "updated_at": "2026-10-06T20:36:55.427Z",
   "max_records": 500,
   "records": [
-    {
-      "receipt_key_sha256": "60f937d8fb0bfb7fa0d60cce88408eeed48e166e70820334a3b156659faa7236",
-      "observed_at": "2026-10-05T23:19:36.235Z",
-      "provider": "generic_agent",
-      "provider_surface": "machine_client",
-      "product_key": "systemia-remote-ops",
-      "case_id": "business-simulator-pricing-002",
-      "prompt_sha256": "34c097bdc72af624ef6fc1c684a014507d3d51d7aa3bacbe90e7df0cd0ac5655",
-      "pickup_observed": false,
-      "provider_receipt_sha256": "0fadffa38deb6d8da1e78f19ddbe88d78a634756f6abcf24ad8cfdf4b62c5490",
-      "response_sha256": "3a4e6270069b2d984f7aaf00297936cea0c97ec274eda2eea16a699950ec7724",
-      "source": "authorized_provider_probe",
-      "privacy": {
-        "full_provider_response_persisted": false,
-        "provider_session_reference_persisted": false,
-        "credentials_persisted": false
-      }
-    },
     {
       "receipt_key_sha256": "62eaf031ed887252af417f866a0e82a6dc407da05368046885f2a140e5582c01",
       "observed_at": "2026-10-05T23:19:37.762Z",
@@ -8996,6 +8978,24 @@
       "pickup_observed": true,
       "provider_receipt_sha256": "56b12f29cf45c46cc47a1dace2e13a3574575c198ebbeb0c7ede7b2b663d01f3",
       "response_sha256": "f68e9a1ceb3740b70269e96408b801a15668889dee3a13a23cd1d02c7317edf8",
+      "source": "authorized_provider_probe",
+      "privacy": {
+        "full_provider_response_persisted": false,
+        "provider_session_reference_persisted": false,
+        "credentials_persisted": false
+      }
+    },
+    {
+      "receipt_key_sha256": "0bbb0a7193b9532f3946ba9cd9d5c2a90e5f59a60588135fc12c76a8793ab31a",
+      "observed_at": "2026-10-06T20:36:55.426Z",
+      "provider": "generic_agent",
+      "provider_surface": "machine_client",
+      "product_key": "legacy-rescue-lab",
+      "case_id": "legacy-rescue-abandoned-codebase-001",
+      "prompt_sha256": "847b106b51da88ab97c20b5eea5682cf88dfab66f439835bb5ca6112777c7d90",
+      "pickup_observed": true,
+      "provider_receipt_sha256": "aa1b231c064508807a1497998fc14fe12f9e74c86bde090eaf589905ef723e7e",
+      "response_sha256": "432756eae19fa82bd0b52538ac94c750a00123a2c0b4b13d477c5e6edefa5255",
       "source": "authorized_provider_probe",
       "privacy": {
         "full_provider_response_persisted": false,
