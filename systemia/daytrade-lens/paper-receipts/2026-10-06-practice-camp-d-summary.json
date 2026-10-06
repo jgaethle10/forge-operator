@@ -1,0 +1,59 @@
+{
+  "schema": "evercraft.daytrade.spread-persistence-practice-summary.v1",
+  "generated_at": "2026-10-06T16:28:05.096Z",
+  "source_run_id": 37495648019,
+  "source_artifact_id": 11427771499,
+  "source_artifact_digest": "sha256:c7a5c880b21e2c9449abaedfe7740edee5e92c03d02fd06288b55bac55492574",
+  "simulation_only": true,
+  "capital_at_risk_usd": 0,
+  "sample_count": 7,
+  "sample_interval_ms": 20000,
+  "notional_per_route_usd": 20,
+  "summaries": [
+    {
+      "symbol": "SOXX",
+      "mean_spread_bps": 4.268785727500758,
+      "min_spread_bps": 3.375755325252874,
+      "max_spread_bps": 5.064231334086574,
+      "midpoint_change_bps": -1.1815143638397532,
+      "samples_at_or_below_3bps": 0,
+      "samples_at_or_below_5bps": 6,
+      "hindsight_best_entry_pnl_usd": -0.005401755570559885,
+      "hindsight_worst_entry_pnl_usd": -0.010800594032669864
+    },
+    {
+      "symbol": "SMH",
+      "mean_spread_bps": 3.5956815383085723,
+      "min_spread_bps": 1.1009145454410345,
+      "max_spread_bps": 5.348687211918634,
+      "midpoint_change_bps": -1.887282077899427,
+      "samples_at_or_below_2bps": 1,
+      "samples_at_or_below_3bps": 3,
+      "samples_at_or_below_5bps": 5,
+      "hindsight_best_entry_pnl_usd": -0.003460969700782357,
+      "hindsight_worst_entry_pnl_usd": -0.010064950382940197
+    },
+    {
+      "symbol": "QQQ",
+      "mean_spread_bps": 0.5819219420308309,
+      "min_spread_bps": 0.2627568448155685,
+      "max_spread_bps": 0.7884880741186558,
+      "midpoint_change_bps": -2.7589468705649627,
+      "samples_at_or_below_0_5bps": 1,
+      "samples_at_or_below_1bps": 7,
+      "hindsight_best_entry_pnl_usd": -0.0021024967148512985,
+      "hindsight_worst_entry_pnl_usd": -0.006568834820079417
+    }
+  ],
+  "interpretation": {
+    "soxx_spread_above_3bps_all_7_samples": true,
+    "qqq_spread_below_1bps_all_7_samples": true,
+    "smh_spread_regime_flickered_materially": true,
+    "single_snapshot_storytelling_reduced": true,
+    "hindsight_entry_optimization_prohibited": true,
+    "thresholds_not_live_authorized": true,
+    "arbitrary_intraday_rehearsal_not_signal_validation": true,
+    "iex_is_not_consolidated_sip_nbbo": true
+  },
+  "live_trade_authority": false
+}
