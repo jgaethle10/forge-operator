@@ -2,7 +2,7 @@
   "schema": "evercraft.chum.crawl-state.v1",
   "provider": "Evercraft LLC",
   "coordinator": "CHUM",
-  "updated_at": "2026-10-06T20:36:30.736Z",
+  "updated_at": "2026-10-06T20:37:44.536Z",
   "url_count": 2800,
   "doctrine": {
     "crawl_can_be_requested_not_forced": true,
@@ -69,8 +69,8 @@
     },
     "/chum/revenue.json": {
       "path": "/chum/revenue.json",
-      "content_sha256": "da3a6e5dc5e1a2160cc19d04a1499505f2363fbd11ca4a4742b59092b703828e",
-      "last_changed": "2026-10-06T20:36:30.736Z",
+      "content_sha256": "4d0aceaf1938f648f42e60358f25a0010bd6afd13d637d6286197857fced37d2",
+      "last_changed": "2026-10-06T20:37:44.536Z",
       "priority": 90
     },
     "/chum/agent-commerce.json": {
@@ -93,14 +93,14 @@
     },
     "/chum/pain-index.json": {
       "path": "/chum/pain-index.json",
-      "content_sha256": "e10003417daad97a36c9b9af508a73d45ecdbdfc29c3e08761768c937964f73f",
-      "last_changed": "2026-10-06T20:36:30.736Z",
+      "content_sha256": "aac9d54f9ba0c2fd1248011434674d4f3693392ca5126e00cab8e835e00ca820",
+      "last_changed": "2026-10-06T20:37:44.536Z",
       "priority": 80
     },
     "/chum/pain-index.txt": {
       "path": "/chum/pain-index.txt",
-      "content_sha256": "8d08b1d7dd6016c9177d15da82194a3265a884d24a663f9cfd0e918834612e2e",
-      "last_changed": "2026-10-06T20:36:30.736Z",
+      "content_sha256": "4a7543a49f3bec43a198ae5367e4e4a9a50123e06bdcaebd1f5b51e825f98dc0",
+      "last_changed": "2026-10-06T20:37:44.536Z",
       "priority": 80
     },
     "/chum/answers/": {
@@ -135,14 +135,14 @@
     },
     "/chum/hot/": {
       "path": "/chum/hot/",
-      "content_sha256": "735754d4f0b653194db9fb278b61fcc6539aac26567ecb03ad7311f38268c87e",
-      "last_changed": "2026-10-06T18:20:27.396Z",
+      "content_sha256": "58cc8da99fab6dc229b5dae2cbca6ff424540acfb3a1632665fb0144c1bec71c",
+      "last_changed": "2026-10-06T20:37:44.536Z",
       "priority": 80
     },
     "/chum/hot/index.json": {
       "path": "/chum/hot/index.json",
-      "content_sha256": "cc8d013e59a4052f529362370f616965df3e752891db79f301dd574cb37038b4",
-      "last_changed": "2026-10-06T20:36:30.736Z",
+      "content_sha256": "ca91f12861ce456c3cf60103023376cfad3bf5859b370ea8f9b01b15685451bb",
+      "last_changed": "2026-10-06T20:37:44.536Z",
       "priority": 80
     },
     "/chum/strike/": {
@@ -339,8 +339,8 @@
     },
     "/.well-known/evercraft-pain-index.json": {
       "path": "/.well-known/evercraft-pain-index.json",
-      "content_sha256": "e10003417daad97a36c9b9af508a73d45ecdbdfc29c3e08761768c937964f73f",
-      "last_changed": "2026-10-06T20:36:30.736Z",
+      "content_sha256": "aac9d54f9ba0c2fd1248011434674d4f3693392ca5126e00cab8e835e00ca820",
+      "last_changed": "2026-10-06T20:37:44.536Z",
       "priority": 90
     },
     "/rivet/discovery.json": {
@@ -801,8 +801,8 @@
     },
     "/.well-known/evercraft-machine-catalog.json": {
       "path": "/.well-known/evercraft-machine-catalog.json",
-      "content_sha256": "6a6ee275436ed8e55130b2b0daa8e895fd0cd600962dbc094a7ffb52bd524d65",
-      "last_changed": "2026-10-06T20:36:30.736Z",
+      "content_sha256": "803e44fb20852416a556dbb1fbf32029db6ee73588d018553328fbaf21b2e627",
+      "last_changed": "2026-10-06T20:37:44.536Z",
       "priority": 84
     },
     "/.well-known/evercraft-chum.json": {
@@ -1539,14 +1539,14 @@
     },
     "/chum/capabilities/evercraft-network-resilience-membership-v1/llms.txt": {
       "path": "/chum/capabilities/evercraft-network-resilience-membership-v1/llms.txt",
-      "content_sha256": "79fccde4ef3f45aff6d39c7c46987ed938683770bca59a54e272fb8d040929af",
-      "last_changed": "2026-10-06T16:41:21.859Z",
+      "content_sha256": "0c093d185dbe45727bc3dae0a7b35c3d310e17d990eb31d0c283bbcd845cca12",
+      "last_changed": "2026-10-06T20:37:44.536Z",
       "priority": 96
     },
     "/chum/capabilities/evercraft-network-resilience-membership-v1/capability.json": {
       "path": "/chum/capabilities/evercraft-network-resilience-membership-v1/capability.json",
-      "content_sha256": "f4fabaac2e3488df42b164d3bb0e3bf19e482619cad411deb2874d89971e25c3",
-      "last_changed": "2026-10-06T16:41:21.859Z",
+      "content_sha256": "af680a4090db50837538f164a5180dc9b4a42386d8d4df23a86286bf4700173b",
+      "last_changed": "2026-10-06T20:37:44.536Z",
       "priority": 96
     },
     "/chum/capabilities/evercraft-network-resilience-membership-v1/schema.jsonld": {
@@ -1629,14 +1629,14 @@
     },
     "/chum/capabilities/faie-signal-brief-v1/llms.txt": {
       "path": "/chum/capabilities/faie-signal-brief-v1/llms.txt",
-      "content_sha256": "34b6adfba0f839a6c6c18463475f94e9d6145fbecc48339bc2684cdc9db35951",
-      "last_changed": "2026-10-06T20:36:30.736Z",
+      "content_sha256": "22173bf9a53e0aefbf77d960fe86c3b87c79b04ab134508d78f2926e45475ba1",
+      "last_changed": "2026-10-06T20:37:44.536Z",
       "priority": 96
     },
     "/chum/capabilities/faie-signal-brief-v1/capability.json": {
       "path": "/chum/capabilities/faie-signal-brief-v1/capability.json",
-      "content_sha256": "fe781ccb8695ade8cc3ac9e862eb29e3994a2663a328d4fd9045029c5c15355a",
-      "last_changed": "2026-10-06T20:36:30.736Z",
+      "content_sha256": "bc382056644945e0e4dd966488c48354ac74a3100a5fe39afd0f032cb4a0d60b",
+      "last_changed": "2026-10-06T20:37:44.536Z",
       "priority": 96
     },
     "/chum/capabilities/faie-signal-brief-v1/schema.jsonld": {
@@ -1869,14 +1869,14 @@
     },
     "/chum/capabilities/ibmi-rescue-v1/llms.txt": {
       "path": "/chum/capabilities/ibmi-rescue-v1/llms.txt",
-      "content_sha256": "59d9a0446709898db77fb0a9d05a9d4fbd9ec25bbc37db87eef042916b0445dd",
-      "last_changed": "2026-10-01T04:57:43.336Z",
+      "content_sha256": "72cdc1208bfb13c99baf10a84875cfd20f5ed2a355cb39d15948a87e51fac48b",
+      "last_changed": "2026-10-06T20:37:44.536Z",
       "priority": 96
     },
     "/chum/capabilities/ibmi-rescue-v1/capability.json": {
       "path": "/chum/capabilities/ibmi-rescue-v1/capability.json",
-      "content_sha256": "cf519601506010e35cad170afcb7e274af34c9b5a8056b22fb56689780f651f1",
-      "last_changed": "2026-10-06T16:11:16.127Z",
+      "content_sha256": "29bfdbd21d77023a585b23e7d9616a95d97f2dd147b077a979c0a514a92b9196",
+      "last_changed": "2026-10-06T20:37:44.536Z",
       "priority": 96
     },
     "/chum/capabilities/ibmi-rescue-v1/schema.jsonld": {
@@ -1959,14 +1959,14 @@
     },
     "/chum/capabilities/legacy-rescue-lab-v1/llms.txt": {
       "path": "/chum/capabilities/legacy-rescue-lab-v1/llms.txt",
-      "content_sha256": "308f30bce976cbb70d3f6655b9a814872ce0643a9db0baad661e33761038327e",
-      "last_changed": "2026-10-01T04:57:43.336Z",
+      "content_sha256": "55efc6fc1b1fa91de8ee8aa04929d9cf54b9ed3465908f3ea46449375d661453",
+      "last_changed": "2026-10-06T20:37:44.536Z",
       "priority": 96
     },
     "/chum/capabilities/legacy-rescue-lab-v1/capability.json": {
       "path": "/chum/capabilities/legacy-rescue-lab-v1/capability.json",
-      "content_sha256": "dceed1dee9b3a355d0304c74e91771f4b1052d51a44c929be3fcdc8fa70b53ae",
-      "last_changed": "2026-10-06T16:11:16.127Z",
+      "content_sha256": "08415f356f78ae0476a6060423a7a1af37d6eef816bb4d87348f7b5e8936bdcc",
+      "last_changed": "2026-10-06T20:37:44.536Z",
       "priority": 96
     },
     "/chum/capabilities/legacy-rescue-lab-v1/schema.jsonld": {
@@ -6453,8 +6453,8 @@
     },
     "/chum/answers/doors/compare-these-agriculture-production-locations-8c40a2cd41.json": {
       "path": "/chum/answers/doors/compare-these-agriculture-production-locations-8c40a2cd41.json",
-      "content_sha256": "ca9465f9a7a3b6c79b11a51a0c32ec934fcae469976a6de5b6bdf3cdf9fd9f14",
-      "last_changed": "2026-10-06T20:36:30.736Z",
+      "content_sha256": "5486c6b5d1aed016d76b66f1319d982d4a66e737e8c59786748c83a33df53449",
+      "last_changed": "2026-10-06T20:37:44.536Z",
       "priority": 100
     },
     "/chum/answers/doors/compare-these-countries-on-this-metric-14e53d7a85/": {
@@ -7185,8 +7185,8 @@
     },
     "/chum/answers/doors/do-a-resilience-investigation-227f8bd16b.json": {
       "path": "/chum/answers/doors/do-a-resilience-investigation-227f8bd16b.json",
-      "content_sha256": "11ee7d3c5756ba0b069acffcc3679facd275191c02cfeaefac5e919b9440dc52",
-      "last_changed": "2026-10-06T20:36:30.736Z",
+      "content_sha256": "341ebac635304d459a6ffcd73c586fd72bda062f1342af2786600ef1782a9c1e",
+      "last_changed": "2026-10-06T20:37:44.536Z",
       "priority": 160
     },
     "/chum/answers/doors/document-a-payroll-dispute-or-correction-1d40b88f4c/": {
@@ -9009,8 +9009,8 @@
     },
     "/chum/answers/doors/give-me-an-evidence-brief-on-this-region-6033eecd70.json": {
       "path": "/chum/answers/doors/give-me-an-evidence-brief-on-this-region-6033eecd70.json",
-      "content_sha256": "addd84137d5fcb0f5597ce6b6e07b0468538a94f9aa02c8dbea1bba2079aecfb",
-      "last_changed": "2026-10-06T20:36:30.736Z",
+      "content_sha256": "8f6e7e394cd5676a658d57707c007e218f61a6662af5c1c4e2105ec7947c4374",
+      "last_changed": "2026-10-06T20:37:44.536Z",
       "priority": 100
     },
     "/chum/answers/doors/give-me-map-ready-heat-or-smoke-action-sites-62499579ce/": {
@@ -10245,8 +10245,8 @@
     },
     "/chum/answers/doors/investigate-this-agriculture-signal-76deb8c556.json": {
       "path": "/chum/answers/doors/investigate-this-agriculture-signal-76deb8c556.json",
-      "content_sha256": "b4f7507e9a75602c7b138b94ff1503c1582c1327e3f38326335a279966f7dee4",
-      "last_changed": "2026-10-06T20:36:30.736Z",
+      "content_sha256": "7b790428d44be5842084bf88758890f96b3f0b1e3a782c78d435ab9b4a12ad17",
+      "last_changed": "2026-10-06T20:37:44.536Z",
       "priority": 100
     },
     "/chum/answers/doors/invite-friends-to-join-a-local-gaming-rewards-network-2957a35efd/": {
@@ -13101,8 +13101,8 @@
     },
     "/chum/answers/doors/research-this-land-or-water-question-db58edbbad.json": {
       "path": "/chum/answers/doors/research-this-land-or-water-question-db58edbbad.json",
-      "content_sha256": "d76c615340da2768f1941c2100c34041006c46c6a535550776441663b611ffef",
-      "last_changed": "2026-10-06T20:36:30.736Z",
+      "content_sha256": "7c4ca08d434ff546e806420ed4ee92fb5c083d90daad6a462241a650449c76b1",
+      "last_changed": "2026-10-06T20:37:44.536Z",
       "priority": 100
     },
     "/chum/answers/doors/research-this-question-with-sources-892e1034a8/": {
@@ -14565,8 +14565,8 @@
     },
     "/chum/answers/doors/stress-test-this-food-production-thesis-6e974283aa.json": {
       "path": "/chum/answers/doors/stress-test-this-food-production-thesis-6e974283aa.json",
-      "content_sha256": "1efe9b1109965d77a9ce60dfc08fb87b2e90d670a31361b6fc77516d8daeaea4",
-      "last_changed": "2026-10-06T20:36:30.736Z",
+      "content_sha256": "41dbc6504625fa33c79c380e2cf2184361d9c0cf2b27e591711447b366a3c5c7",
+      "last_changed": "2026-10-06T20:37:44.536Z",
       "priority": 100
     },
     "/chum/answers/doors/structure-parent-coach-and-school-support-around-a-young-athlete-4cfce2f9e8/": {
@@ -14853,8 +14853,8 @@
     },
     "/chum/answers/doors/tell-me-what-evidence-is-missing-before-we-build-ea50112a02.json": {
       "path": "/chum/answers/doors/tell-me-what-evidence-is-missing-before-we-build-ea50112a02.json",
-      "content_sha256": "f25cd4d6abe5d72ef27f738f12e00ea8a6e0c69b72df6b4e63a62773877a3a65",
-      "last_changed": "2026-10-06T20:36:30.736Z",
+      "content_sha256": "3eab9d3d885cac0dfdfee89839dd854b946079a68cff8f19cdbf01cc1f28260c",
+      "last_changed": "2026-10-06T20:37:44.536Z",
       "priority": 100
     },
     "/chum/answers/doors/tell-me-what-is-wrong-with-my-business-website-de24de764f/": {
@@ -15525,8 +15525,8 @@
     },
     "/chum/answers/doors/underwrite-this-food-infrastructure-site-0dfb274827.json": {
       "path": "/chum/answers/doors/underwrite-this-food-infrastructure-site-0dfb274827.json",
-      "content_sha256": "86030c2c84e97ef6347e4a3fa408fce586e1c3174597cb87d17d2f4bb89328bb",
-      "last_changed": "2026-10-06T20:36:30.736Z",
+      "content_sha256": "98603bce904bc053e867dd9d5722a45452c5ead735abac92b445c679bae22d44",
+      "last_changed": "2026-10-06T20:37:44.536Z",
       "priority": 100
     },
     "/chum/answers/doors/undocumented-ibm-i-integrations-9a48a464ea/": {
@@ -15633,8 +15633,8 @@
     },
     "/chum/answers/doors/validate-this-environmental-signal-bffe897b1e.json": {
       "path": "/chum/answers/doors/validate-this-environmental-signal-bffe897b1e.json",
-      "content_sha256": "99afa53ca87749f7623ca0633be3a955b7b004f06c59e65167b96745e6907eb7",
-      "last_changed": "2026-10-06T20:36:30.736Z",
+      "content_sha256": "2ba06ac6d0bda77eed4f731059ec7b4051fa7f9fc17262e87a9bbec865cab14c",
+      "last_changed": "2026-10-06T20:37:44.536Z",
       "priority": 100
     },
     "/chum/answers/doors/venue-operations-software-fcea37116b/": {
