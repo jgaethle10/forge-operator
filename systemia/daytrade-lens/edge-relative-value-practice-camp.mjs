@@ -108,7 +108,15 @@ async function main(){
       LEG_NOTIONAL_USD
     );
     const pairPnl=long.pnl_usd+benchmarkShort.pnl_usd;
-    const naked=nakedLong(entry.quotes[symbol],exit.quotes[symbol]);
+    const nakedSameLeg=longLeg(
+      entry.quotes[symbol],
+      exit.quotes[symbol],
+      LEG_NOTIONAL_USD
+    );
+    const nakedGrossMatched=nakedLong(
+      entry.quotes[symbol],
+      exit.quotes[symbol]
+    );
     const longMidBps=
       ((exit.quotes[symbol].midpoint-entry.quotes[symbol].midpoint)/
         entry.quotes[symbol].midpoint)*10000;
@@ -125,8 +133,11 @@ async function main(){
       short_benchmark_leg:{...benchmarkShort},
       pair_pnl_usd:pairPnl,
       pair_return_on_gross_pct:pairPnl/GROSS_NOTIONAL_USD*100,
-      naked_long_20usd:naked,
-      hedge_effect_vs_naked_usd:pairPnl-naked.pnl_usd,
+      naked_long_same_leg_10usd:nakedSameLeg,
+      naked_long_gross_matched_20usd:nakedGrossMatched,
+      benchmark_short_contribution_usd:benchmarkShort.pnl_usd,
+      pair_minus_same_long_leg_usd:pairPnl-nakedSameLeg.pnl_usd,
+      gross_matched_comparison_is_not_exposure_matched:true,
       midpoint_relative_move_bps:longMidBps-spyMidBps,
       long_midpoint_move_bps:longMidBps,
       benchmark_midpoint_move_bps:spyMidBps,
@@ -150,6 +161,8 @@ async function main(){
       frozen_edge_is_relative_to_spy_not_absolute_direction:true,
       pair_execution_requires_crossing_two_books:true,
       naked_long_and_relative_pair_are_not_equivalent:true,
+      pair_compared_to_same_long_leg_notional:true,
+      gross_matched_naked_comparison_not_treated_as_hedge_effect:true,
       midpoint_relative_move_separated_from_execution_cost:true,
       arbitrary_intraday_rehearsal_not_one_day_signal_validation:true,
       short_leg_is_simulated_only:true,
@@ -171,8 +184,10 @@ async function main(){
       symbol:x.signal_symbol,
       pair_pnl_usd:x.pair_pnl_usd,
       pair_return_on_gross_pct:x.pair_return_on_gross_pct,
-      naked_long_pnl_usd:x.naked_long_20usd.pnl_usd,
-      hedge_effect_vs_naked_usd:x.hedge_effect_vs_naked_usd,
+      naked_same_leg_pnl_usd:x.naked_long_same_leg_10usd.pnl_usd,
+      naked_gross_matched_pnl_usd:x.naked_long_gross_matched_20usd.pnl_usd,
+      benchmark_short_contribution_usd:x.benchmark_short_contribution_usd,
+      pair_minus_same_long_leg_usd:x.pair_minus_same_long_leg_usd,
       midpoint_relative_move_bps:x.midpoint_relative_move_bps,
     })),
     simulation_only:true,
