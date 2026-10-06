@@ -20,7 +20,7 @@ on:
   workflow_dispatch:
 
 permissions:
-  contents: read
+  contents: write
 
 jobs:
   prove:
@@ -34,6 +34,8 @@ jobs:
       - name: Prove owned newsroom contracts
         run: npm run journal:test
       - name: Build owned Journal
+        env:
+          EVERCRAFT_JOURNAL_ORIGIN: https://fabric.systemiacommandcenters.com/journal
         run: npm run journal:build
       - name: Verify owned Journal build outputs
         run: |
@@ -51,3 +53,40 @@ jobs:
             echo "Legacy shopping identity detected in owned Journal output."
             exit 1
           fi
+
+      - name: Persist verified Journal artifact
+        if: github.ref == 'refs/heads/main'
+        shell: bash
+        env:
+          EVERCRAFT_JOURNAL_ORIGIN: https://fabric.systemiacommandcenters.com/journal
+        run: |
+          set -euo pipefail
+          git config user.name "Evercraft Journal"
+          git config user.email "evercraft-journal@users.noreply.github.com"
+
+          regenerate() {
+            rm -rf public/journal
+            npm run journal:build
+          }
+
+          for ATTEMPT in 1 2 3; do
+            git add public/journal
+            if git diff --cached --quiet; then
+              echo "Verified Journal artifact is already current."
+              exit 0
+            fi
+
+            git commit -m "Refresh verified Journal artifact [skip ci]"
+            if git push origin HEAD:main; then
+              echo "Verified Journal artifact persisted to main."
+              exit 0
+            fi
+
+            echo "Main advanced during Journal artifact publish attempt ${ATTEMPT}/3; regenerating from current main."
+            git fetch origin main --quiet
+            git reset --hard origin/main
+            regenerate
+          done
+
+          echo "Journal artifact publication lost three consecutive main-branch races." >&2
+          exit 1
