@@ -5,6 +5,7 @@ on:
     branches: [main]
     paths:
       - 'systemia/mcp/fabric-local-runtime.mjs'
+      - 'systemia/mcp/fabric-public-site.mjs'
       - 'systemia/mcp/fabric-faie-runtime.mjs'
       - 'systemia/faie/**'
       - 'public/faie/**'
