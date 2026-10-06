@@ -4,7 +4,7 @@ Problem: An organizer or venue wants a bounded paid EventWave placement with ver
 Pricing: Event Boost $49 one-time; Venue Pack $149 one-time.
 Commercial state: sell_now
 Machine state: payment_ready
-Public capability: null
+Public capability: https://fabric.systemiacommandcenters.com/capabilities/eventwave-paid-promotion-v1
 Start here: Not exposed until commercial verification is complete
 Human review fallback: null
 Machine offer JSON: Not exposed until commercial verification is complete

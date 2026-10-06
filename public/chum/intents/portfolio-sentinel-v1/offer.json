@@ -34,7 +34,7 @@
   "entry_paid_offer": null,
   "commercial_state": "commercial_pilot",
   "machine_state": "human_handoff_ready",
-  "public_url": null,
+  "public_url": "https://fabric.systemiacommandcenters.com/capabilities/portfolio-sentinel-v1",
   "human_ui_required": false,
   "confirmation": "Public discovery is read-only. Monitoring private repositories, internal systems or customer infrastructure requires explicit scoped authorization. Production changes, payment actions and external communications remain separately gated.",
   "payment_authority": "No direct machine checkout is exposed. Commercial terms and any later payment require explicit human agreement and authoritative payment verification.",

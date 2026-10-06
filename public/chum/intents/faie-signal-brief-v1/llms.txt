@@ -4,7 +4,7 @@ Problem: A buyer has one bounded agriculture, land, water, production or resilie
 Pricing: Signal Brief $250 one-time; Proof Sprint $2,500 one-time. Other intake categories are not auto-quotable.
 Commercial state: sell_now
 Machine state: payment_ready
-Public capability: null
+Public capability: https://fabric.systemiacommandcenters.com/capabilities/faie-signal-brief-v1
 Start here: Not exposed until commercial verification is complete
 Human review fallback: null
 Machine offer JSON: Not exposed until commercial verification is complete

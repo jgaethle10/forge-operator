@@ -4,7 +4,7 @@ Problem: A business has duplicate or conflicting customer/vendor identities acro
 Pricing: No approved machine price/payment path was found. Do not auto-quote.
 Commercial state: verification_required
 Machine state: human_auth_handoff
-Public capability: null
+Public capability: https://fabric.systemiacommandcenters.com/capabilities/buildflow-entity-resolution-machine-v1
 Start here: Not exposed until commercial verification is complete
 Human review fallback: null
 Machine offer JSON: Not exposed until commercial verification is complete

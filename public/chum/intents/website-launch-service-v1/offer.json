@@ -37,7 +37,7 @@
   },
   "commercial_state": "sell_now",
   "machine_state": "payment_ready",
-  "public_url": null,
+  "public_url": "https://fabric.systemiacommandcenters.com/capabilities/website-launch-service-v1",
   "human_ui_required": false,
   "confirmation": "The buyer must explicitly choose a tier and confirm payment before checkout. Fulfillment begins only after independent payment verification.",
   "payment_authority": "Evercraft Website Service / Stripe, provider-verified",

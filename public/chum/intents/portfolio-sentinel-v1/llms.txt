@@ -4,7 +4,7 @@ Problem: Organizations with growing software estates lose track of which apps, r
 Pricing: Commercial pilot is custom-quoted based on portfolio size, repositories, public endpoints, workflow count and monitoring scope. No fixed public price or direct machine checkout is currently advertised.
 Commercial state: commercial_pilot
 Machine state: human_handoff_ready
-Public capability: null
+Public capability: https://fabric.systemiacommandcenters.com/capabilities/portfolio-sentinel-v1
 Start here: Not exposed until commercial verification is complete
 Human review fallback: null
 Machine offer JSON: Not exposed until commercial verification is complete

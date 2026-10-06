@@ -17,7 +17,7 @@
   "entry_paid_offer": null,
   "commercial_state": "verification_required",
   "machine_state": "discovery_only",
-  "public_url": null,
+  "public_url": "https://fabric.systemiacommandcenters.com/capabilities/talent-evidence-profile-machine-v1",
   "human_ui_required": false,
   "confirmation": "No contact, representation, application or third-party sharing without explicit authority/consent. Analysis must not infer protected traits or use gated sensitive data for scoring.",
   "payment_authority": "No verified Evercraft Payments path for this capability.",

@@ -17,7 +17,7 @@
   "entry_paid_offer": null,
   "commercial_state": "verification_required",
   "machine_state": "discovery_only",
-  "public_url": null,
+  "public_url": "https://fabric.systemiacommandcenters.com/capabilities/talent-proof-portal-v1",
   "human_ui_required": false,
   "confirmation": "No employment decision is automated by discovery. Participant consent/authority and payment are required where applicable.",
   "payment_authority": "Evercraft Payments",

@@ -21,7 +21,7 @@
   "entry_paid_offer": null,
   "commercial_state": "verification_required",
   "machine_state": "invocation_ready",
-  "public_url": null,
+  "public_url": "https://fabric.systemiacommandcenters.com/capabilities/evercraft-clip-social-video-v1",
   "human_ui_required": true,
   "confirmation": "Public discovery and planning create no payment obligation. Customer checkout requires an authenticated human and explicit $4.99 confirmation; rendering remains locked until Stripe reports paid + complete and exact amount, currency, and order metadata all verify.",
   "payment_authority": "Evercraft Clip clipCheckoutGateway + Stripe provider verification. Control plane is deployed and fail-closed; live gateway observed 2026-09-28 with checkout_configured=false, so payment creation remains unavailable until server-side authority is provisioned.",

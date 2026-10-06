@@ -50,7 +50,7 @@
   },
   "commercial_state": "sell_now",
   "machine_state": "payment_ready_human_confirmation",
-  "public_url": null,
+  "public_url": "https://fabric.systemiacommandcenters.com/capabilities/rivet-site-underwriting-v1",
   "human_ui_required": true,
   "confirmation": "Agents may discover RIVET and inspect current report options. Secure checkout preparation requires explicit human payment confirmation, buyer email and address. Checkout creation is not payment proof; paid state and fulfillment require authoritative provider verification.",
   "payment_authority": "Evercraft Payments / provider-verified payment authority. Discovery and agent routing have no silent payment authority.",

@@ -18,7 +18,7 @@
   "entry_paid_offer": null,
   "commercial_state": "verification_required",
   "machine_state": "discovery_only",
-  "public_url": null,
+  "public_url": "https://fabric.systemiacommandcenters.com/capabilities/buildflow-enterprise-ops-router-v1",
   "human_ui_required": true,
   "confirmation": "Public routing does not ingest private company records or execute business actions. Authenticated tenant context is required before customer data access.",
   "payment_authority": "No verified Evercraft Payments path.",

@@ -4,7 +4,7 @@ Problem: Field teams need operational go/no-go decision support against their ow
 Pricing: Current hypothesis $199-$399/month small team, $499+/month multi-site; not auto-quotable yet.
 Commercial state: verification_required
 Machine state: discovery_only
-Public capability: null
+Public capability: https://fabric.systemiacommandcenters.com/capabilities/condition-desk-field-ops-v1
 Start here: Not exposed until commercial verification is complete
 Human review fallback: null
 Machine offer JSON: Not exposed until commercial verification is complete

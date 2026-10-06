@@ -28,7 +28,7 @@
   },
   "commercial_state": "sell_now",
   "machine_state": "human_handoff_ready",
-  "public_url": null,
+  "public_url": "https://fabric.systemiacommandcenters.com/capabilities/site-survive-rapid-audit-v1",
   "human_ui_required": false,
   "confirmation": "Explicit buyer confirmation is required before payment or paid work.",
   "payment_authority": "Evercraft Payments; direct machine checkout is not exposed for this service.",

@@ -17,7 +17,7 @@
   "entry_paid_offer": null,
   "commercial_state": "verification_required",
   "machine_state": "discovery_only",
-  "public_url": null,
+  "public_url": "https://fabric.systemiacommandcenters.com/capabilities/worldstate-reality-delta-v1",
   "human_ui_required": false,
   "confirmation": "Discovery and evidence comparison create no action authority. Publishing, consequential decisions, private-data access, and paid work remain separately authorized.",
   "payment_authority": "No verified public payment path.",

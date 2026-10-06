@@ -4,7 +4,7 @@ Problem: Fast, low-cost critique for short user-supplied text, followed by concr
 Pricing: $0.99 USD one-time per roast.
 Commercial state: sell_now
 Machine state: payment_ready
-Public capability: null
+Public capability: https://fabric.systemiacommandcenters.com/capabilities/roasted-text-pressure-test-machine-v1
 Start here: Not exposed until commercial verification is complete
 Human review fallback: null
 Machine offer JSON: Not exposed until commercial verification is complete

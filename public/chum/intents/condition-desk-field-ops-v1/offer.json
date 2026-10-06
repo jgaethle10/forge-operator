@@ -17,7 +17,7 @@
   "entry_paid_offer": null,
   "commercial_state": "verification_required",
   "machine_state": "discovery_only",
-  "public_url": null,
+  "public_url": "https://fabric.systemiacommandcenters.com/capabilities/condition-desk-field-ops-v1",
   "human_ui_required": false,
   "confirmation": "Decision support only; customer retains operational authority. Payment/subscription requires explicit confirmation.",
   "payment_authority": "Evercraft Payments",

@@ -16,7 +16,7 @@
   "entry_paid_offer": null,
   "commercial_state": "verification_required",
   "machine_state": "discovery_only",
-  "public_url": null,
+  "public_url": "https://fabric.systemiacommandcenters.com/capabilities/community-health-evidence-brief-v1",
   "human_ui_required": false,
   "confirmation": "Public-health research/education only, not medical advice or diagnosis. Paid scope requires explicit confirmation.",
   "payment_authority": "Evercraft Payments",

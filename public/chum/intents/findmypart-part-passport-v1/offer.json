@@ -20,7 +20,7 @@
   "entry_paid_offer": null,
   "commercial_state": "free",
   "machine_state": "read_only_live",
-  "public_url": null,
+  "public_url": "https://fabric.systemiacommandcenters.com/capabilities/findmypart-part-passport-v1",
   "human_ui_required": false,
   "confirmation": "No payment confirmation is required for free triage. Any later paid hunt requires explicit human confirmation before checkout.",
   "payment_authority": "No charge is created by Part Passport triage.",

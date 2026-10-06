@@ -4,7 +4,7 @@ Problem: A household, business, or device operator wants an application-network 
 Pricing: Displayed Founding Membership: $9.99/month for up to five devices. Billing is not live yet. Reserving a Founding Membership records interest only and creates no charge or paid entitlement.
 Commercial state: discovery_only
 Machine state: human_handoff_only
-Public capability: null
+Public capability: https://fabric.systemiacommandcenters.com/capabilities/evercraft-network-resilience-membership-v1
 Start here: Not exposed until commercial verification is complete
 Human review fallback: null
 Machine offer JSON: Not exposed until commercial verification is complete

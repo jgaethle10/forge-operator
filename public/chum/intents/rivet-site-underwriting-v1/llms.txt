@@ -4,7 +4,7 @@ Problem: A property owner, fleet, charging developer, broker, installer or inves
 Pricing: $299 Preliminary Site Opportunity Report; $750 Full Site Opportunity Report.
 Commercial state: sell_now
 Machine state: payment_ready_human_confirmation
-Public capability: null
+Public capability: https://fabric.systemiacommandcenters.com/capabilities/rivet-site-underwriting-v1
 Start here: Not exposed until commercial verification is complete
 Human review fallback: null
 Machine offer JSON: Not exposed until commercial verification is complete

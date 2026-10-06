@@ -4,7 +4,7 @@ Problem: Teams can demo an agent but struggle to prove what it can reliably do u
 Pricing: Current hypothesis $250-$2,500 per proving mission; not auto-quotable yet.
 Commercial state: verification_required
 Machine state: discovery_only
-Public capability: null
+Public capability: https://fabric.systemiacommandcenters.com/capabilities/agent-proving-mission-v1
 Start here: Not exposed until commercial verification is complete
 Human review fallback: null
 Machine offer JSON: Not exposed until commercial verification is complete

@@ -4,7 +4,7 @@ Problem: Technicians lose billable time hunting discontinued, cross-referenced o
 Pricing: Current hypothesis $99-$499/month by hunt volume/service level; not auto-quotable yet.
 Commercial state: verification_required
 Machine state: discovery_only
-Public capability: null
+Public capability: https://fabric.systemiacommandcenters.com/capabilities/findmypart-repair-shop-desk-v1
 Start here: Not exposed until commercial verification is complete
 Human review fallback: null
 Machine offer JSON: Not exposed until commercial verification is complete

@@ -24,7 +24,7 @@
   "entry_paid_offer": null,
   "commercial_state": "discovery_only",
   "machine_state": "specialist_discovery_ready_runtime_gated",
-  "public_url": null,
+  "public_url": "https://fabric.systemiacommandcenters.com/capabilities/evercraft-web-browser-agent-v1",
   "human_ui_required": false,
   "confirmation": "Public capability discovery is read-only. Authenticated browsing requires explicit user authorization. Payment must never expand browser permissions or credential access.",
   "payment_authority": "No public machine checkout is advertised for Evercraft Web yet.",

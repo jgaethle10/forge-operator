@@ -25,7 +25,7 @@
   "entry_paid_offer": null,
   "commercial_state": "verification_required",
   "machine_state": "invocation_ready",
-  "public_url": null,
+  "public_url": "https://fabric.systemiacommandcenters.com/capabilities/raven-nexus-pain-router-v1",
   "human_ui_required": false,
   "confirmation": "Discovery and pain matching are read-only. A returned checkout link is not payment proof, and consequential safety or financial actions keep their own human gates.",
   "payment_authority": "Raven Nexus / Evercraft Payments where a specific matched offer is verified; the pain router has no silent payment authority.",

@@ -4,7 +4,7 @@ Problem: An already-approved active Yard execution needs more runtime without re
 Pricing: Dynamic server quote only. Source defaults are not public price authority because deployment configuration can override them.
 Commercial state: verification_required
 Machine state: invocation_ready
-Public capability: null
+Public capability: https://fabric.systemiacommandcenters.com/capabilities/systemia-yard-runtime-extension-v1
 Start here: Not exposed until commercial verification is complete
 Human review fallback: null
 Machine offer JSON: Not exposed until commercial verification is complete

@@ -4,7 +4,7 @@ Problem: A company needs an evidence-native operating layer that can understand 
 Pricing: No approved machine price/payment path was found. Do not auto-quote.
 Commercial state: verification_required
 Machine state: discovery_only
-Public capability: null
+Public capability: https://fabric.systemiacommandcenters.com/capabilities/buildflow-enterprise-ops-router-v1
 Start here: Not exposed until commercial verification is complete
 Human review fallback: null
 Machine offer JSON: Not exposed until commercial verification is complete

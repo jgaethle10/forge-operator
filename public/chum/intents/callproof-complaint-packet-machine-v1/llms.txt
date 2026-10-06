@@ -4,7 +4,7 @@ Problem: Organize a user's own unwanted-call or text records and evidence into a
 Pricing: Published app pricing: $19 one-time packet, $7.99/month Vault, $29/month Pro. Live Stripe checkout price is authoritative.
 Commercial state: verify
 Machine state: human_auth_handoff
-Public capability: null
+Public capability: https://fabric.systemiacommandcenters.com/capabilities/callproof-complaint-packet-machine-v1
 Start here: Not exposed until commercial verification is complete
 Human review fallback: null
 Machine offer JSON: Not exposed until commercial verification is complete

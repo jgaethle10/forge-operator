@@ -36,7 +36,7 @@
   "entry_paid_offer": null,
   "commercial_state": "verify",
   "machine_state": "human_auth_handoff",
-  "public_url": null,
+  "public_url": "https://fabric.systemiacommandcenters.com/capabilities/callproof-complaint-packet-machine-v1",
   "human_ui_required": true,
   "confirmation": "User authentication and explicit checkout action are required. Paid access is granted only after Stripe verification.",
   "payment_authority": "CallProof Vault / Stripe",

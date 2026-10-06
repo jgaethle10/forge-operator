@@ -4,7 +4,7 @@ Problem: An analyst or agent needs country-level comparative data with sources, 
 Pricing: Raven contains a country-brief pricing hypothesis ($299-$2,500 depending depth). No approved fixed machine price/payment path was verified, so it is not auto-quotable.
 Commercial state: verification_required
 Machine state: discovery_only
-Public capability: null
+Public capability: https://fabric.systemiacommandcenters.com/capabilities/globalstat-country-intelligence-machine-v1
 Start here: Not exposed until commercial verification is complete
 Human review fallback: null
 Machine offer JSON: Not exposed until commercial verification is complete

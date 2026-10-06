@@ -4,7 +4,7 @@ Problem: An author or publishing workflow needs a bounded preflight on page-coun
 Pricing: No approved external machine price/payment path was found. Do not auto-quote.
 Commercial state: verification_required
 Machine state: discovery_only
-Public capability: null
+Public capability: https://fabric.systemiacommandcenters.com/capabilities/littlered-kdp-export-qa-machine-v1
 Start here: Not exposed until commercial verification is complete
 Human review fallback: null
 Machine offer JSON: Not exposed until commercial verification is complete

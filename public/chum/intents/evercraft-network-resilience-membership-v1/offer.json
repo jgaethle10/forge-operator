@@ -31,7 +31,7 @@
   "entry_paid_offer": null,
   "commercial_state": "discovery_only",
   "machine_state": "human_handoff_only",
-  "public_url": null,
+  "public_url": "https://fabric.systemiacommandcenters.com/capabilities/evercraft-network-resilience-membership-v1",
   "human_ui_required": true,
   "confirmation": "AI assistants may discover Evercraft Network, inspect public-safe capabilities and presence, and prepare a human handoff. They may not enroll a device, create payment, control connectivity, access private telemetry, expose private topology, control a carrier, or route an emergency.",
   "payment_authority": "No live Network membership payment authority is advertised. Reservation creates no charge. Any future paid activation requires an independently verified billing path and explicit human action.",

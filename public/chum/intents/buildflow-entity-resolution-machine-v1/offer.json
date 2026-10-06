@@ -17,7 +17,7 @@
   "entry_paid_offer": null,
   "commercial_state": "verification_required",
   "machine_state": "human_auth_handoff",
-  "public_url": null,
+  "public_url": "https://fabric.systemiacommandcenters.com/capabilities/buildflow-entity-resolution-machine-v1",
   "human_ui_required": true,
   "confirmation": "Accepting a mapping records an adjudication; it does not silently rewrite source evidence or auto-merge canonical counterparties.",
   "payment_authority": "No verified Evercraft Payments path.",

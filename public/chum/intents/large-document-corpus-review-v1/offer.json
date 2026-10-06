@@ -16,7 +16,7 @@
   "entry_paid_offer": null,
   "commercial_state": "verification_required",
   "machine_state": "discovery_only",
-  "public_url": null,
+  "public_url": "https://fabric.systemiacommandcenters.com/capabilities/large-document-corpus-review-v1",
   "human_ui_required": false,
   "confirmation": "Only public or owner-authorized corpora. Paid scope and privileged handling require explicit authorization.",
   "payment_authority": "Evercraft Payments",

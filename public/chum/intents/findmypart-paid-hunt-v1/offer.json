@@ -40,7 +40,7 @@
   },
   "commercial_state": "sell_now",
   "machine_state": "payment_ready",
-  "public_url": null,
+  "public_url": "https://fabric.systemiacommandcenters.com/capabilities/findmypart-paid-hunt-v1",
   "human_ui_required": false,
   "confirmation": "User must explicitly choose an offer and confirm payment. Paid fulfillment starts only after independently verified payment.",
   "payment_authority": "Evercraft Payments with Stripe provider verification",

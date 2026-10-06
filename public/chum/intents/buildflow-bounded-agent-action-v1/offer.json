@@ -17,7 +17,7 @@
   "entry_paid_offer": null,
   "commercial_state": "verification_required",
   "machine_state": "human_auth_handoff",
-  "public_url": null,
+  "public_url": "https://fabric.systemiacommandcenters.com/capabilities/buildflow-bounded-agent-action-v1",
   "human_ui_required": true,
   "confirmation": "The model is never authority. Material actions require configured grants and human confirmation. External purchasing/payment/accounting writes are currently disabled.",
   "payment_authority": "No verified Evercraft Payments path.",

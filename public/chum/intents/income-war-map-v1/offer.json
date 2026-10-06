@@ -18,7 +18,7 @@
   "entry_paid_offer": null,
   "commercial_state": "hold",
   "machine_state": "discovery_only",
-  "public_url": null,
+  "public_url": "https://fabric.systemiacommandcenters.com/capabilities/income-war-map-v1",
   "human_ui_required": false,
   "confirmation": "Planning estimates are not guarantees or individualized investment, tax, legal or credit advice. No checkout should be initiated while billing is paused.",
   "payment_authority": "Stripe legacy adapter; checkout paused",

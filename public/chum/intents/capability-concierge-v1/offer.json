@@ -15,7 +15,7 @@
   "entry_paid_offer": null,
   "commercial_state": "discovery_only",
   "machine_state": "discovery_only",
-  "public_url": null,
+  "public_url": "https://fabric.systemiacommandcenters.com/capabilities/capability-concierge-v1",
   "human_ui_required": false,
   "confirmation": "Discovery/routing may be automatic. Pricing commitments, payment and consequential actions remain confirmation-gated.",
   "payment_authority": "Evercraft Payments",

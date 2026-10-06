@@ -4,7 +4,7 @@ Problem: A site-dependent organization needs to understand which operational dep
 Pricing: $250 one-time; may be credited toward a deeper $1,250 audit if the customer elects to continue.
 Commercial state: sell_now
 Machine state: human_handoff_ready
-Public capability: null
+Public capability: https://fabric.systemiacommandcenters.com/capabilities/site-survive-rapid-audit-v1
 Start here: Not exposed until commercial verification is complete
 Human review fallback: null
 Machine offer JSON: Not exposed until commercial verification is complete
