@@ -323,6 +323,11 @@ function publicAssetPath(relativePath: string): string {
   return path.resolve(__dirname, isProd ? `dist/${relativePath}` : `public/${relativePath}`);
 }
 
+app.get(['/faie', '/faie/'], (_req: Request, res: Response) => {
+  res.setHeader('Cache-Control', 'no-store');
+  res.sendFile(publicAssetPath('faie/index.html'));
+});
+
 function sendPublicXmlWithAbsoluteLocs(relativePath: string, req: Request, res: Response) {
   const origin = requestOrigin(req);
   if (!origin) {
