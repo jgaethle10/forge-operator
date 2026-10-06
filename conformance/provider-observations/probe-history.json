@@ -1,26 +1,8 @@
 {
   "schema": "evercraft.chum.provider-probe-history.v1",
-  "updated_at": "2026-10-06T16:50:46.171Z",
+  "updated_at": "2026-10-06T16:56:34.338Z",
   "max_records": 500,
   "records": [
-    {
-      "receipt_key_sha256": "50e271bf65ad18c049a6f268499ca3b6dca11f49b7a3372f9e9c7af01184d330",
-      "observed_at": "2026-10-05T15:21:19.950Z",
-      "provider": "generic_agent",
-      "provider_surface": "machine_client",
-      "product_key": "forensiscope",
-      "case_id": "media-overflow-multi-hour-003",
-      "prompt_sha256": "f2b756f4aca08e92f39ac074ec72c6d0fab2feed1a4ce002ef7f2d62b472ee86",
-      "pickup_observed": false,
-      "provider_receipt_sha256": "1dc4c37aba34ec8289233daf783de12ccb167be6dcd108bdcad6433980b0970b",
-      "response_sha256": "0c911455ad7cd5b4800408d57f8b104501e2a0ad2da841ff0190a01de4e0feae",
-      "source": "authorized_provider_probe",
-      "privacy": {
-        "full_provider_response_persisted": false,
-        "provider_session_reference_persisted": false,
-        "credentials_persisted": false
-      }
-    },
     {
       "receipt_key_sha256": "635cff918c94ee763e3c9bb724bf699afedbe9679155e72c01f4771023a201c1",
       "observed_at": "2026-10-05T15:21:21.665Z",
@@ -8995,6 +8977,24 @@
       "prompt_sha256": "877db7140c325f80f8988dbcf36c6c10b4ef488b9306daf52be2f39e4e0ee67e",
       "pickup_observed": false,
       "provider_receipt_sha256": "1cf936f8b4fc3ec3213b55ba5efe2cab0a66afbb8597339f2b55a389134edec8",
+      "response_sha256": "e96f2debdce6184a6a467c660393e7c565a49a93879fcf2ce4c449467d28655e",
+      "source": "authorized_provider_probe",
+      "privacy": {
+        "full_provider_response_persisted": false,
+        "provider_session_reference_persisted": false,
+        "credentials_persisted": false
+      }
+    },
+    {
+      "receipt_key_sha256": "ddf294cca9f0233847bb1c5c74c7395dc3b9390be1094b3d136a72fc75a33322",
+      "observed_at": "2026-10-06T16:56:34.338Z",
+      "provider": "generic_agent",
+      "provider_surface": "machine_client",
+      "product_key": "systemia-remote-ops",
+      "case_id": "business-simulator-startup-001",
+      "prompt_sha256": "877db7140c325f80f8988dbcf36c6c10b4ef488b9306daf52be2f39e4e0ee67e",
+      "pickup_observed": false,
+      "provider_receipt_sha256": "d1b3c3b1e63cdd05547d37a04e5d2c74b7c1bad58c7e81d756279a0f908eaf19",
       "response_sha256": "e96f2debdce6184a6a467c660393e7c565a49a93879fcf2ce4c449467d28655e",
       "source": "authorized_provider_probe",
       "privacy": {
