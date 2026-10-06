@@ -1,0 +1,51 @@
+{
+  "schema": "evercraft.daytrade.relative-value-practice-summary.v1",
+  "generated_at": "2026-10-06T16:31:31.499Z",
+  "source_run_id": 37496227563,
+  "source_artifact_id": 11427642875,
+  "source_artifact_digest": "sha256:06e71267546257bc60b127ebafadea7cffe3f38ae27aefa43b9c88293fc7fa3e",
+  "simulation_only": true,
+  "capital_at_risk_usd": 0,
+  "gross_notional_per_pair_usd": 20,
+  "leg_notional_usd": 10,
+  "benchmark": "SPY",
+  "results": [
+    {
+      "symbol": "SOXX",
+      "entry_spread_bps": 2.701561840440386,
+      "pair_pnl_usd": 0.0012913020691645016,
+      "same_long_leg_pnl_usd": 0.002701196967906938,
+      "benchmark_short_contribution_usd": -0.0014098948987424365,
+      "midpoint_relative_move_bps": 5.487547488392495
+    },
+    {
+      "symbol": "SMH",
+      "entry_spread_bps": 4.564521079429964,
+      "pair_pnl_usd": 0.00016371874763443373,
+      "same_long_leg_pnl_usd": 0.0015736136463768702,
+      "benchmark_short_contribution_usd": -0.0014098948987424365,
+      "midpoint_relative_move_bps": 5.9023979475394865
+    },
+    {
+      "symbol": "QQQ",
+      "entry_spread_bps": 0.3944073044229192,
+      "pair_pnl_usd": 0.00016770320813996875,
+      "same_long_leg_pnl_usd": 0.0015775981068824052,
+      "benchmark_short_contribution_usd": -0.0014098948987424365,
+      "midpoint_relative_move_bps": 2.1035056235918916
+    }
+  ],
+  "interpretation": {
+    "comparison_bug_fixed_before_canonical_receipt": true,
+    "pair_compared_to_same_long_leg_notional": true,
+    "benchmark_short_leg_was_costly_in_this_window": true,
+    "soxx_showed_positive_relative_midpoint_move": true,
+    "smh_showed_positive_relative_midpoint_move_but_wider_entry_spread": true,
+    "qqq_showed_smaller_positive_relative_midpoint_move_with_tight_entry_spread": true,
+    "pair_execution_crosses_two_books": true,
+    "arbitrary_intraday_rehearsal_not_one_day_signal_validation": true,
+    "short_leg_is_simulated_only": true,
+    "iex_is_not_consolidated_sip_nbbo": true
+  },
+  "live_trade_authority": false
+}
