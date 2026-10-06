@@ -54,12 +54,14 @@ export async function startRavenResident({
   const resolvedState = path.resolve(String(stateDir || "").trim());
   if (!String(stateDir || "").trim()) throw new Error("raven_state_dir_required");
   const controlToken = loadControlToken(controlTokenFile);
-  const normalizedInferenceOrigin = String(inferenceOrigin || "").trim();
   const normalizedInferenceTokenFile = String(inferenceTokenFile || "").trim();
-  if (Boolean(normalizedInferenceOrigin) !== Boolean(normalizedInferenceTokenFile)) {
-    throw new Error("raven_inference_origin_and_token_file_must_be_configured_together");
+  const normalizedInferenceOrigin = String(
+    inferenceOrigin || (normalizedInferenceTokenFile ? "http://127.0.0.1:4322" : "")
+  ).trim();
+  if (normalizedInferenceOrigin && !normalizedInferenceTokenFile) {
+    throw new Error("raven_inference_origin_requires_token_file");
   }
-  const inferenceAdapter = normalizedInferenceOrigin
+  const inferenceAdapter = normalizedInferenceTokenFile
     ? createHttpInferenceAdapter({
         origin: normalizedInferenceOrigin,
         token: loadInferenceToken(normalizedInferenceTokenFile),
