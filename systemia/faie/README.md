@@ -72,14 +72,16 @@ Public evidence-support surfaces:
 - GET /api/faie/health
 - GET /api/faie/signals
 - POST /api/faie/investigate
+- POST /api/faie/compare
 - GET /mcp/faie?action=health
 - POST /mcp/faie
 
 Public investigation requests are ephemeral previews. They are rate limited by the Forge runtime and are not written into the shared investigation archive.
 
-The native FAIE MCP exposes three read-only tools:
+The native FAIE MCP exposes four read-only tools:
 
 - investigate_faie_evidence
+- compare_faie_candidates
 - get_faie_signal_snapshot
 - get_faie_health
 
@@ -99,6 +101,14 @@ Human UI:
 
 - /faie/
 
+
+## Comparative underwriting
+
+FAIE can apply the same evidence rubric across two to eight candidate regions or sites with `POST /api/faie/compare` or the read-only MCP tool `compare_faie_candidates`.
+
+The output ranks **evidence readiness**, not site suitability. A candidate with better source coverage, more independent corroboration, stronger evidence and fewer missing dimensions may rank higher even when its underlying operating conditions are worse. FAIE therefore returns `site_suitability_verdict=null` and `investment_recommendation=null` for every candidate.
+
+Public comparisons are ephemeral previews. Internal authorized comparisons may be persisted into the FAIE state and comparison archive.
 
 ## Saban specialist swarm
 
