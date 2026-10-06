@@ -1,6 +1,7 @@
 import path from 'node:path';
 import { createFaieRuntime, investigationToMarkdown } from './runtime.mjs';
 import { executeFaieMcpRpc, faieMcpTools } from './mcp.mjs';
+import { rivetSnapshotToFaieObservations } from './rivet-bridge.mjs';
 
 function bearer(req) {
   const header = String(req.headers?.authorization || '');
@@ -279,6 +280,40 @@ export function registerFaieRoutes(app, {
       res.status(decision.action === 'ignored' ? 202 : 200).json({
         ok: true,
         decision
+      });
+    } catch (error) {
+      res.status(400).json({
+        ok: false,
+        error: error instanceof Error ? error.message : String(error)
+      });
+    }
+  });
+
+  app.post('/api/faie/rivet-context', requireInternal, (req, res) => {
+    try {
+      const snapshot = req.body?.snapshot;
+      if (!snapshot || typeof snapshot !== 'object') {
+        res.status(400).json({ ok: false, error: 'snapshot is required.' });
+        return;
+      }
+
+      const bridged = rivetSnapshotToFaieObservations(snapshot, {
+        regionKeys: req.body?.region_keys || req.body?.regions || req.body?.region,
+        observedAt: req.body?.observed_at
+      });
+      const decisions = bridged.observations.map((observation) => runtime.ingest(observation));
+      res.status(200).json({
+        ok: true,
+        bridge: {
+          schema: bridged.schema,
+          observation_count: bridged.observation_count,
+          region_keys: bridged.region_keys,
+          exclusions: bridged.exclusions
+        },
+        decisions,
+        external_action_taken: false,
+        decision_authority: false,
+        publication_authority: false
       });
     } catch (error) {
       res.status(400).json({
