@@ -1,6 +1,6 @@
 {
   "schema": "evercraft.chum.crawler-radar.v1",
-  "generated_at": "2026-10-06T14:45:49.837Z",
+  "generated_at": "2026-10-06T16:11:11.027Z",
   "coordinator": "CHUM",
   "runtime_feedback": {
     "requested": false,
@@ -10,7 +10,7 @@
   "observation_count": 0,
   "negative_provider_pickup_receipts": 174,
   "surface_count": 2782,
-  "strike_now_count": 686,
+  "strike_now_count": 745,
   "doctrine": {
     "crawler_fetch_is_not_indexing": true,
     "indexing_is_not_ranking": true,
@@ -23,10 +23,10 @@
     {
       "path": "/chum/intents/forensiscope-evidence-review-v1/",
       "product_key": "forensiscope",
-      "score": 235,
+      "score": 250,
       "urgency": "strike_now",
       "crawl_priority": 158,
-      "last_changed": "2026-10-01T04:57:43.336Z",
+      "last_changed": "2026-10-06T14:45:54.937Z",
       "last_observed_crawler_fetch": null,
       "last_observed_crawler_family": null,
       "indexnow_pending": true,
@@ -472,6 +472,7 @@
       ],
       "reasons": [
         "no_self_identified_crawler_fetch_observed",
+        "fresh_content_under_24h",
         "negative_provider_pickup_receipt",
         "indexnow_hash_pending"
       ],
@@ -485,10 +486,10 @@
     {
       "path": "/chum/intents/foundry-app-escape-audit-v1/",
       "product_key": "foundry-app-escape",
-      "score": 235,
+      "score": 250,
       "urgency": "strike_now",
       "crawl_priority": 158,
-      "last_changed": "2026-10-01T04:57:43.336Z",
+      "last_changed": "2026-10-06T14:45:54.937Z",
       "last_observed_crawler_fetch": null,
       "last_observed_crawler_family": null,
       "indexnow_pending": true,
@@ -544,6 +545,7 @@
       ],
       "reasons": [
         "no_self_identified_crawler_fetch_observed",
+        "fresh_content_under_24h",
         "negative_provider_pickup_receipt",
         "indexnow_hash_pending"
       ],
@@ -557,10 +559,10 @@
     {
       "path": "/chum/intents/website-launch-service-v1/",
       "product_key": "website-launch",
-      "score": 235,
+      "score": 250,
       "urgency": "strike_now",
       "crawl_priority": 158,
-      "last_changed": "2026-10-01T04:57:43.336Z",
+      "last_changed": "2026-10-06T14:45:54.937Z",
       "last_observed_crawler_fetch": null,
       "last_observed_crawler_family": null,
       "indexnow_pending": true,
@@ -610,6 +612,7 @@
       ],
       "reasons": [
         "no_self_identified_crawler_fetch_observed",
+        "fresh_content_under_24h",
         "negative_provider_pickup_receipt",
         "indexnow_hash_pending"
       ],
