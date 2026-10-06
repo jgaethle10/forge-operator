@@ -1,0 +1,47 @@
+{
+  "schema": "evercraft.daytrade.closing-horizon-ladder-summary.v1",
+  "generated_at": "2026-10-06T19:15:20.890Z",
+  "source_run_id": 37517291237,
+  "source_artifact_id": 11437641563,
+  "source_artifact_digest": "sha256:35160cf3a8f5a9a4284a4d0e93f48c6b8ee18563bdc80118f9213df10e4757e1",
+  "simulation_only": true,
+  "capital_at_risk_usd": 0,
+  "market_phase": "CLOSING",
+  "horizons_seconds": [30,60,120],
+  "notional_per_symbol_usd": 20,
+  "rows": [
+    {
+      "symbol": "SOXX",
+      "entry_spread_bps": 2.8709184405858825,
+      "frozen_rule_decision": "SIMULATE_MARKETABLE_LONG",
+      "pnl_usd": {"30": -0.0037147729767177395, "60": -0.0010131199027405557, "120": 0.0006754132684925196},
+      "midpoint_move_pnl_usd": {"30": 0, "60": 0.004727892879461848, "120": 0.0077672525876799625},
+      "spread_drag_usd": {"30": 0.0037147729767177395, "60": 0.005741012782202404, "120": 0.007091839319187443}
+    },
+    {
+      "symbol": "SMH",
+      "entry_spread_bps": 2.9931394094054027,
+      "frozen_rule_decision": "SIMULATE_MARKETABLE_LONG",
+      "pnl_usd": {"30": -0.0028351814516156537, "60": -0.0009450604838718846, "120": 0.004410282258064058},
+      "midpoint_move_pnl_usd": {"30": 0.003780241935480433, "60": 0.003780241935480433, "120": 0.009608114919348765},
+      "spread_drag_usd": {"30": 0.006615423387096087, "60": 0.004725302419352317, "120": 0.005197832661284707}
+    },
+    {
+      "symbol": "QQQ",
+      "entry_spread_bps": 0.6573627919506522,
+      "frozen_rule_decision": "SIMULATE_MARKETABLE_LONG",
+      "pnl_usd": {"30": 0.0005258729490940084, "60": 0.0018405553218343584, "120": 0.0034181741691199363},
+      "midpoint_move_pnl_usd": {"30": 0.0018405553218308057, "60": 0.0030237694572967655, "120": 0.004601388304582343},
+      "spread_drag_usd": {"30": 0.0013146823727367973, "60": 0.001183214135462407, "120": 0.001183214135462407}
+    }
+  ],
+  "interpretation": {
+    "soxx_and_smh_crossed_from_negative_to_positive_by_120s_in_this_window": true,
+    "qqq_positive_at_all_three_horizons_in_this_window": true,
+    "midpoint_move_and_spread_drag_are_separated": true,
+    "do_not_promote_120s_from_single_post_hoc_window": true,
+    "not_signal_validation": true,
+    "iex_is_not_consolidated_sip_nbbo": true
+  },
+  "live_trade_authority": false
+}
