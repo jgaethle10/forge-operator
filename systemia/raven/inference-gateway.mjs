@@ -210,9 +210,136 @@ export function createInferenceEngine({
     };
   }
 
+  async function validateOllama() {
+    const base = clean(ollamaOrigin, 2000).replace(/\/$/, "");
+    const url = new URL(base);
+    if (!["127.0.0.1", "localhost", "::1"].includes(url.hostname) || url.protocol !== "http:") {
+      throw new Error("ollama_origin_must_be_loopback_http");
+    }
+    const { response, body } = await fetchJson(base + "/api/tags", {
+      method: "GET",
+      headers: { "accept": "application/json" },
+    }, { fetchImpl, timeoutMs });
+    if (!response.ok) throw new Error("ollama_model_list_http_" + response.status);
+    const rows = Array.isArray(body?.models) ? body.models : [];
+    const wanted = modelKey.toLowerCase();
+    const available = rows.some((row) => {
+      const names = [clean(row?.name, 300), clean(row?.model, 300)]
+        .filter(Boolean)
+        .map((value) => value.toLowerCase());
+      return names.some((value) =>
+        value === wanted ||
+        value === wanted + ":latest" ||
+        (wanted.endsWith(":latest") && value === wanted.slice(0, -7))
+      );
+    });
+    if (!available) throw new Error("ollama_model_not_installed");
+    return {
+      provider: "ollama",
+      model: modelKey,
+      provider_request_id: null,
+      credential_ref: null,
+      metadata_endpoint: "/api/tags",
+    };
+  }
+
+  async function validateGemini() {
+    const secret = latestVaultSecret(credentialStateDir, "gemini");
+    if (!secret?.api_secret) throw new Error("gemini_credential_missing");
+    const base = clean(geminiOrigin, 2000).replace(/\/$/, "");
+    const url = new URL(base);
+    if (url.protocol !== "https:" || url.hostname !== "generativelanguage.googleapis.com") {
+      throw new Error("gemini_origin_invalid");
+    }
+    const endpoint = base + "/v1beta/models/" + encodeURIComponent(modelKey);
+    const { response, body } = await fetchJson(endpoint, {
+      method: "GET",
+      headers: {
+        "accept": "application/json",
+        "x-goog-api-key": secret.api_secret,
+      },
+    }, { fetchImpl, timeoutMs });
+    if (!response.ok) {
+      throw new Error(clean(body?.error?.message || ("gemini_model_http_" + response.status), 2000));
+    }
+    const returnedName = clean(body?.name, 500);
+    if (returnedName && returnedName !== "models/" + modelKey) {
+      throw new Error("gemini_model_identity_mismatch");
+    }
+    return {
+      provider: "gemini",
+      model: modelKey,
+      provider_request_id: clean(response.headers?.get?.("x-request-id"), 300) || null,
+      credential_ref: secret.credential_ref,
+      metadata_endpoint: "/v1beta/models/" + modelKey,
+    };
+  }
+
+  async function validateOpenAI() {
+    const secret = latestVaultSecret(credentialStateDir, "openai");
+    if (!secret?.api_secret) throw new Error("openai_credential_missing");
+    const base = clean(openaiOrigin, 2000).replace(/\/$/, "");
+    const url = new URL(base);
+    if (url.protocol !== "https:" || url.hostname !== "api.openai.com") {
+      throw new Error("openai_origin_invalid");
+    }
+    const endpoint = base + "/v1/models/" + encodeURIComponent(modelKey);
+    const { response, body } = await fetchJson(endpoint, {
+      method: "GET",
+      headers: {
+        "accept": "application/json",
+        "authorization": "Bearer " + secret.api_secret,
+      },
+    }, { fetchImpl, timeoutMs });
+    if (!response.ok) {
+      throw new Error(clean(body?.error?.message || ("openai_model_http_" + response.status), 2000));
+    }
+    if (clean(body?.id, 300) !== modelKey) throw new Error("openai_model_identity_mismatch");
+    return {
+      provider: "openai",
+      model: modelKey,
+      provider_request_id: clean(response.headers?.get?.("x-request-id"), 300) || null,
+      credential_ref: secret.credential_ref,
+      metadata_endpoint: "/v1/models/" + modelKey,
+    };
+  }
+
   return {
     provider: providerKey,
     model: modelKey,
+    async validate() {
+      const startedAt = now().toISOString();
+      const result = providerKey === "ollama"
+        ? await validateOllama()
+        : providerKey === "gemini"
+          ? await validateGemini()
+          : await validateOpenAI();
+      const completedAt = now().toISOString();
+      const receiptCore = {
+        schema: "evercraft.raven.provider-validation-receipt.v1",
+        provider: result.provider,
+        model: result.model,
+        provider_request_id: result.provider_request_id,
+        credential_ref: result.credential_ref,
+        metadata_endpoint: result.metadata_endpoint,
+        inference_performed: false,
+        prompt_sent: false,
+        started_at: startedAt,
+        completed_at: completedAt,
+        base44_used: false,
+        raw_credential_returned: false,
+      };
+      return {
+        status: "available",
+        provider: result.provider,
+        model: result.model,
+        validation_receipt: sha256(JSON.stringify(receiptCore)),
+        inference_performed: false,
+        prompt_sent: false,
+        base44_used: false,
+        raw_credential_returned: false,
+      };
+    },
     async infer({ request_id, role, input }) {
       const requestId = clean(request_id, 260);
       const roleKey = clean(role, 120);
@@ -303,6 +430,31 @@ export async function startRavenInferenceGateway({
     if (!safeEqual(bearer(req), token)) {
       return json(res, 401, { ok: false, status: "failed", error: "raven_inference_authority_required" });
     }
+    if (req.method === "POST" && url.pathname === "/v1/validate") {
+      try {
+        const body = await readBody(req, 32768);
+        if (body?.schema !== "evercraft.raven.inference-validation.request.v1") {
+          throw new Error("inference_validation_request_schema_invalid");
+        }
+        const result = await engine.validate();
+        return json(res, 200, {
+          ok: true,
+          ...result,
+          external_side_effects_authorized: false,
+        });
+      } catch (error) {
+        return json(res, 409, {
+          ok: false,
+          status: "blocked",
+          blocked_reason: clean(error?.message || error, 2000),
+          inference_performed: false,
+          prompt_sent: false,
+          base44_used: false,
+          external_side_effects_authorized: false,
+        });
+      }
+    }
+
     if (req.method === "POST" && url.pathname === "/v1/infer") {
       try {
         const body = await readBody(req);

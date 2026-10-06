@@ -120,8 +120,60 @@ if [[ -z "${RAVEN_HEALTH}" || -z "${INFERENCE_HEALTH}" ]]; then
   exit 4
 fi
 
+GATEWAY_TOKEN_FILE="${STATE_ROOT}/compute/services/systemia-core/.private-bindings/raven/inference-gateway-token"
+if [[ ! -f "${GATEWAY_TOKEN_FILE}" ]]; then
+  echo "Raven inference gateway authority file is missing." >&2
+  exit 5
+fi
+
+VALIDATION_JSON="$("${NODE_BIN}" -e '
+  const fs=require("fs");
+  const file=process.argv[1];
+  const expectedProvider=process.argv[2];
+  const expectedModel=process.argv[3];
+  const stat=fs.statSync(file);
+  if((stat.mode & 0o077)!==0) throw new Error("gateway_token_permissions_too_open");
+  const token=fs.readFileSync(file,"utf8").trim();
+  if(Buffer.byteLength(token,"utf8")<32) throw new Error("gateway_token_too_short");
+  fetch("http://127.0.0.1:4322/v1/validate",{
+    method:"POST",
+    headers:{
+      authorization:"Bearer "+token,
+      "content-type":"application/json"
+    },
+    body:JSON.stringify({schema:"evercraft.raven.inference-validation.request.v1"})
+  })
+  .then(async r=>({status:r.status,body:await r.json()}))
+  .then(({status,body})=>{
+    if(status!==200||body.ok!==true||body.status!=="available") {
+      process.stderr.write(JSON.stringify(body)+"\n");
+      process.exit(2);
+    }
+    if(body.provider!==expectedProvider||body.model!==expectedModel) process.exit(3);
+    if(body.inference_performed!==false||body.prompt_sent!==false) process.exit(4);
+    if(body.base44_used!==false) process.exit(5);
+    process.stdout.write(JSON.stringify({
+      status:body.status,
+      provider:body.provider,
+      model:body.model,
+      validation_receipt:body.validation_receipt,
+      inference_performed:false,
+      prompt_sent:false,
+      base44_used:false
+    }));
+  })
+  .catch(error=>{
+    process.stderr.write(String(error?.message||error)+"\n");
+    process.exit(6);
+  });
+' "${GATEWAY_TOKEN_FILE}" "${PROVIDER}" "${MODEL}")" || {
+  echo "Provider key/model metadata validation failed. No inference prompt was sent." >&2
+  exit 6
+}
+
 echo "Raven private runtime: ${RAVEN_HEALTH}"
 echo "Raven inference gateway: ${INFERENCE_HEALTH}"
+echo "Provider/model metadata validation: ${VALIDATION_JSON}"
 echo "Provider credential values printed: false"
 echo "Base44 required: false"
 echo "Live model inference has NOT been exercised by this bootstrap command."

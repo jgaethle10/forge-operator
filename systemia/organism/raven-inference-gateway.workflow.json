@@ -16,7 +16,8 @@
     "payment": "held",
     "purchase": "held",
     "deployment": "held",
-    "account_mutation": "held"
+    "account_mutation": "held",
+    "model_metadata_validation": "internal_non_inference"
   },
   "network": {
     "bind": "127.0.0.1",
@@ -47,5 +48,16 @@
     "provider_credentials_source": "owned_encrypted_vault",
     "raw_tokens_in_cli_args": false,
     "raw_provider_credentials_in_receipts": false
+  },
+  "validation": {
+    "endpoint": "POST /v1/validate",
+    "provider_calls": {
+      "ollama": "local model inventory",
+      "gemini": "models.get",
+      "openai": "retrieve model"
+    },
+    "prompt_sent": false,
+    "inference_performed": false,
+    "base44_fallback": false
   }
 }

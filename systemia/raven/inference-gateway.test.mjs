@@ -107,3 +107,132 @@ test("gateway endpoint is authenticated and consequence constrained", async () =
     assert.equal(JSON.stringify(body).includes(token),false);
   }finally{if(runtime) await runtime.close();}
 });
+
+
+test("Ollama validation checks installed model metadata without inference", async () => {
+  const calls=[];
+  const engine=createInferenceEngine({
+    provider:"ollama",
+    model:"proof-model",
+    fetchImpl:async(url,init)=>{
+      calls.push({url,method:init.method,body:init.body});
+      return {
+        ok:true,status:200,headers:{get:()=>null},
+        async json(){return {models:[{name:"proof-model:latest",model:"proof-model:latest"}]};}
+      };
+    },
+  });
+  const result=await engine.validate();
+  assert.equal(result.status,"available");
+  assert.equal(result.inference_performed,false);
+  assert.equal(result.prompt_sent,false);
+  assert.equal(calls.length,1);
+  assert.equal(calls[0].url,"http://127.0.0.1:11434/api/tags");
+  assert.equal(calls[0].method,"GET");
+  assert.equal(calls[0].body,undefined);
+});
+
+test("Gemini validation uses models.get with vault credential and no prompt", async () => {
+  const root=fs.mkdtempSync(path.join(os.tmpdir(),"raven-gemini-validate-"));
+  const secret="AIzaSyValidationSecretValue123456789012";
+  try{
+    new ProviderCredentialVault({stateDir:root}).put({
+      provider:"gemini",environment:"live",label:"raven-inference",
+      apiKeyId:"gemini-api-key",apiSecret:secret,actorRef:"proof"
+    });
+    let observed={};
+    const engine=createInferenceEngine({
+      provider:"gemini",model:"gemini-3.5-flash-lite",credentialStateDir:root,
+      fetchImpl:async(url,init)=>{
+        observed={url,method:init.method,key:init.headers["x-goog-api-key"],body:init.body};
+        return {
+          ok:true,status:200,headers:{get:()=> "gemini-validation-request"},
+          async json(){return {name:"models/gemini-3.5-flash-lite",baseModelId:"gemini-3.5-flash-lite"};}
+        };
+      }
+    });
+    const result=await engine.validate();
+    assert.equal(result.status,"available");
+    assert.equal(result.provider,"gemini");
+    assert.equal(result.model,"gemini-3.5-flash-lite");
+    assert.equal(result.inference_performed,false);
+    assert.equal(result.prompt_sent,false);
+    assert.equal(observed.url,"https://generativelanguage.googleapis.com/v1beta/models/gemini-3.5-flash-lite");
+    assert.equal(observed.method,"GET");
+    assert.equal(observed.key,secret);
+    assert.equal(observed.body,undefined);
+    assert.equal(JSON.stringify(result).includes(secret),false);
+  }finally{fs.rmSync(root,{recursive:true,force:true});}
+});
+
+test("OpenAI validation uses retrieve-model metadata with vault credential and no prompt", async () => {
+  const root=fs.mkdtempSync(path.join(os.tmpdir(),"raven-openai-validate-"));
+  const secret="sk-validation-secret-value-abcdefghijklmnopqrstuvwxyz";
+  try{
+    new ProviderCredentialVault({stateDir:root}).put({
+      provider:"openai",environment:"live",label:"raven-inference",
+      apiKeyId:"openai-api-key",apiSecret:secret,actorRef:"proof"
+    });
+    let observed={};
+    const engine=createInferenceEngine({
+      provider:"openai",model:"gpt-proof",credentialStateDir:root,
+      fetchImpl:async(url,init)=>{
+        observed={url,method:init.method,auth:init.headers.authorization,body:init.body};
+        return {
+          ok:true,status:200,headers:{get:()=> "openai-validation-request"},
+          async json(){return {id:"gpt-proof",object:"model",owned_by:"openai"};}
+        };
+      }
+    });
+    const result=await engine.validate();
+    assert.equal(result.status,"available");
+    assert.equal(result.provider,"openai");
+    assert.equal(result.model,"gpt-proof");
+    assert.equal(result.inference_performed,false);
+    assert.equal(result.prompt_sent,false);
+    assert.equal(observed.url,"https://api.openai.com/v1/models/gpt-proof");
+    assert.equal(observed.method,"GET");
+    assert.equal(observed.auth,"Bearer "+secret);
+    assert.equal(observed.body,undefined);
+    assert.equal(JSON.stringify(result).includes(secret),false);
+  }finally{fs.rmSync(root,{recursive:true,force:true});}
+});
+
+test("gateway exposes authenticated metadata-only validation", async () => {
+  const token="gateway-validation-token-012345678901234567890";
+  let runtime;
+  try{
+    runtime=await startRavenInferenceGateway({
+      port:0,controlToken:token,provider:"ollama",model:"proof",
+      fetchImpl:async(url,init)=>{
+        assert.equal(url,"http://127.0.0.1:11434/api/tags");
+        assert.equal(init.method,"GET");
+        return {
+          ok:true,status:200,headers:{get:()=>null},
+          async json(){return {models:[{name:"proof:latest"}]};}
+        };
+      }
+    });
+    const denied=await fetch(runtime.url+"/v1/validate",{
+      method:"POST",
+      headers:{"content-type":"application/json"},
+      body:JSON.stringify({schema:"evercraft.raven.inference-validation.request.v1"})
+    });
+    assert.equal(denied.status,401);
+
+    const response=await fetch(runtime.url+"/v1/validate",{
+      method:"POST",
+      headers:{authorization:"Bearer "+token,"content-type":"application/json"},
+      body:JSON.stringify({schema:"evercraft.raven.inference-validation.request.v1"})
+    });
+    assert.equal(response.status,200);
+    const body=await response.json();
+    assert.equal(body.ok,true);
+    assert.equal(body.status,"available");
+    assert.equal(body.inference_performed,false);
+    assert.equal(body.prompt_sent,false);
+    assert.equal(body.base44_used,false);
+    assert.ok(body.validation_receipt);
+    assert.equal(JSON.stringify(body).includes(token),false);
+  }finally{if(runtime) await runtime.close();}
+});
