@@ -2,7 +2,7 @@
   "schema": "evercraft.chum.crawl-pressure.v1",
   "provider": "Evercraft LLC",
   "coordinator": "CHUM",
-  "updated_at": "2026-10-06T20:37:44.536Z",
+  "updated_at": "2026-10-06T20:40:19.032Z",
   "purpose": "Content-hash-backed freshness signals for public Evercraft discovery surfaces. A freshness signal requests attention; it does not prove indexing, ranking, recommendation, citation or provider pickup.",
   "indexnow": {
     "supported": true,
@@ -11,127 +11,68 @@
   },
   "latest_change_batch": [
     {
-      "path": "/chum/answers/doors/do-a-resilience-investigation-227f8bd16b.json",
-      "last_changed": "2026-10-06T20:37:44.536Z",
-      "priority": 160
+      "path": "/chum/crawler-radar.json",
+      "last_changed": "2026-10-06T20:40:19.032Z",
+      "priority": 80
     },
     {
-      "path": "/chum/answers/doors/compare-these-agriculture-production-locations-8c40a2cd41.json",
-      "last_changed": "2026-10-06T20:37:44.536Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/give-me-an-evidence-brief-on-this-region-6033eecd70.json",
-      "last_changed": "2026-10-06T20:37:44.536Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/investigate-this-agriculture-signal-76deb8c556.json",
-      "last_changed": "2026-10-06T20:37:44.536Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/research-this-land-or-water-question-db58edbbad.json",
-      "last_changed": "2026-10-06T20:37:44.536Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/stress-test-this-food-production-thesis-6e974283aa.json",
-      "last_changed": "2026-10-06T20:37:44.536Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/tell-me-what-evidence-is-missing-before-we-build-ea50112a02.json",
-      "last_changed": "2026-10-06T20:37:44.536Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/underwrite-this-food-infrastructure-site-0dfb274827.json",
-      "last_changed": "2026-10-06T20:37:44.536Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/validate-this-environmental-signal-bffe897b1e.json",
-      "last_changed": "2026-10-06T20:37:44.536Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/capabilities/evercraft-network-resilience-membership-v1/capability.json",
-      "last_changed": "2026-10-06T20:37:44.536Z",
-      "priority": 96
-    },
-    {
-      "path": "/chum/capabilities/evercraft-network-resilience-membership-v1/llms.txt",
-      "last_changed": "2026-10-06T20:37:44.536Z",
-      "priority": 96
-    },
-    {
-      "path": "/chum/capabilities/faie-signal-brief-v1/capability.json",
-      "last_changed": "2026-10-06T20:37:44.536Z",
-      "priority": 96
-    },
-    {
-      "path": "/chum/capabilities/faie-signal-brief-v1/llms.txt",
-      "last_changed": "2026-10-06T20:37:44.536Z",
-      "priority": 96
-    },
-    {
-      "path": "/chum/capabilities/ibmi-rescue-v1/capability.json",
-      "last_changed": "2026-10-06T20:37:44.536Z",
-      "priority": 96
-    },
-    {
-      "path": "/chum/capabilities/ibmi-rescue-v1/llms.txt",
-      "last_changed": "2026-10-06T20:37:44.536Z",
-      "priority": 96
-    },
-    {
-      "path": "/chum/capabilities/legacy-rescue-lab-v1/capability.json",
-      "last_changed": "2026-10-06T20:37:44.536Z",
-      "priority": 96
-    },
-    {
-      "path": "/chum/capabilities/legacy-rescue-lab-v1/llms.txt",
-      "last_changed": "2026-10-06T20:37:44.536Z",
-      "priority": 96
-    },
-    {
-      "path": "/.well-known/evercraft-pain-index.json",
-      "last_changed": "2026-10-06T20:37:44.536Z",
-      "priority": 90
-    },
-    {
-      "path": "/chum/revenue.json",
-      "last_changed": "2026-10-06T20:37:44.536Z",
-      "priority": 90
-    },
-    {
-      "path": "/.well-known/evercraft-machine-catalog.json",
-      "last_changed": "2026-10-06T20:37:44.536Z",
-      "priority": 84
-    },
-    {
-      "path": "/chum/hot/",
-      "last_changed": "2026-10-06T20:37:44.536Z",
+      "path": "/chum/crawler-radar.txt",
+      "last_changed": "2026-10-06T20:40:19.032Z",
       "priority": 80
     },
     {
       "path": "/chum/hot/index.json",
-      "last_changed": "2026-10-06T20:37:44.536Z",
+      "last_changed": "2026-10-06T20:40:19.032Z",
       "priority": 80
     },
     {
-      "path": "/chum/pain-index.json",
-      "last_changed": "2026-10-06T20:37:44.536Z",
+      "path": "/chum/strike/",
+      "last_changed": "2026-10-06T20:40:19.032Z",
       "priority": 80
     },
     {
-      "path": "/chum/pain-index.txt",
-      "last_changed": "2026-10-06T20:37:44.536Z",
+      "path": "/chum/strike/index.json",
+      "last_changed": "2026-10-06T20:40:19.032Z",
       "priority": 80
     }
   ],
   "recent_surfaces": [
+    {
+      "path": "/chum/crawler-radar.json",
+      "url": "/chum/crawler-radar.json",
+      "last_changed": "2026-10-06T20:40:19.032Z",
+      "priority": 80
+    },
+    {
+      "path": "/chum/crawler-radar.txt",
+      "url": "/chum/crawler-radar.txt",
+      "last_changed": "2026-10-06T20:40:19.032Z",
+      "priority": 80
+    },
+    {
+      "path": "/chum/hot/index.json",
+      "url": "/chum/hot/index.json",
+      "last_changed": "2026-10-06T20:40:19.032Z",
+      "priority": 80
+    },
+    {
+      "path": "/chum/strike/",
+      "url": "/chum/strike/",
+      "last_changed": "2026-10-06T20:40:19.032Z",
+      "priority": 80
+    },
+    {
+      "path": "/chum/strike/index.json",
+      "url": "/chum/strike/index.json",
+      "last_changed": "2026-10-06T20:40:19.032Z",
+      "priority": 80
+    },
+    {
+      "path": "/chum/hot/",
+      "url": "/chum/hot/",
+      "last_changed": "2026-10-06T20:40:18.411Z",
+      "priority": 80
+    },
     {
       "path": "/chum/answers/doors/do-a-resilience-investigation-227f8bd16b.json",
       "url": "/chum/answers/doors/do-a-resilience-investigation-227f8bd16b.json",
@@ -251,18 +192,6 @@
       "url": "/.well-known/evercraft-machine-catalog.json",
       "last_changed": "2026-10-06T20:37:44.536Z",
       "priority": 84
-    },
-    {
-      "path": "/chum/hot/",
-      "url": "/chum/hot/",
-      "last_changed": "2026-10-06T20:37:44.536Z",
-      "priority": 80
-    },
-    {
-      "path": "/chum/hot/index.json",
-      "url": "/chum/hot/index.json",
-      "last_changed": "2026-10-06T20:37:44.536Z",
-      "priority": 80
     },
     {
       "path": "/chum/pain-index.json",
@@ -634,30 +563,6 @@
       "path": "/chum/proof/rivet.json",
       "url": "/chum/proof/rivet.json",
       "last_changed": "2026-10-06T18:34:25.689Z",
-      "priority": 80
-    },
-    {
-      "path": "/chum/crawler-radar.json",
-      "url": "/chum/crawler-radar.json",
-      "last_changed": "2026-10-06T18:19:20.631Z",
-      "priority": 80
-    },
-    {
-      "path": "/chum/crawler-radar.txt",
-      "url": "/chum/crawler-radar.txt",
-      "last_changed": "2026-10-06T18:19:20.631Z",
-      "priority": 80
-    },
-    {
-      "path": "/chum/strike/",
-      "url": "/chum/strike/",
-      "last_changed": "2026-10-06T18:19:20.631Z",
-      "priority": 80
-    },
-    {
-      "path": "/chum/strike/index.json",
-      "url": "/chum/strike/index.json",
-      "last_changed": "2026-10-06T18:19:20.631Z",
       "priority": 80
     },
     {
