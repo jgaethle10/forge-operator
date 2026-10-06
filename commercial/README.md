@@ -85,11 +85,25 @@ Do not market EverScript as "our JavaScript." Position it as a governed executio
 
 Before a broad hosted launch, close the production work already documented in `everscript/README.md`: schema contracts, persistent registry/key rotation, production auth scopes, Evercraft Payments adapter, Yard quotas/isolation, full MCP invocation, signed external audit receipts, and portable sandboxing.
 
-## RIVET positioning
+## RIVET + AliEV commercial architecture
 
-Do not lead with a generic "EV site-selection SaaS" claim. The current market has mature products covering utilization, design, reports, parcel/utility/AHJ context, cost estimates, and batch evaluation.
+RIVET is the **reporting brand**. Keep its buyer flow brutally simple: address in -> decision-ready report out.
 
-RIVET should enter through a differentiated partner lane: evidence-state-aware site intelligence, installer/sales routing, tariff/incentive/economics explanation, and integration into a broader execution stack. Its launch should follow direct benchmarking against current category leaders.
+AliEV is the Evercraft-owned **EV intelligence and operating layer** underneath RIVET. AliEV may become arbitrarily deep across competition, traffic, utility service area, tariffs, incentives, parcel/planning, EV stock, dwell/freight context, economics, provenance and observed session evidence without exposing that complexity in the RIVET buyer experience.
+
+RIVET competes by making a better report, not a busier dashboard. The strongest differentiator is session intelligence with evidence integrity: verified site-resolved observed sessions where legitimately available, plus freshness, period, energy, usage patterns, reliability and provenance as coverage grows. Missing stays missing; inventory never masquerades as utilization; modeled demand never masquerades as observed usage.
+
+The target experience remains:
+`address -> RIVET report`
+
+The target internal path is:
+`RIVET report request -> AliEV evidence assembly -> report projection -> verification -> durable report/receipt`
+
+Current owned public Fabric paths staged in this launch branch:
+- `/rivet` for the reporting brand.
+- `/aliev` for the intelligence layer.
+
+Do not use Base44 for either public frontage.
 
 ## Definition of commercially deployed
 
