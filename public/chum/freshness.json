@@ -2,7 +2,7 @@
   "schema": "evercraft.chum.crawl-pressure.v1",
   "provider": "Evercraft LLC",
   "coordinator": "CHUM",
-  "updated_at": "2026-10-06T15:06:07.965Z",
+  "updated_at": "2026-10-06T16:07:13.523Z",
   "purpose": "Content-hash-backed freshness signals for public Evercraft discovery surfaces. A freshness signal requests attention; it does not prove indexing, ranking, recommendation, citation or provider pickup.",
   "indexnow": {
     "supported": true,
@@ -11,16 +11,192 @@
   },
   "latest_change_batch": [
     {
+      "path": "/chum/capabilities/aliev-site-opportunity-snapshot-v1/",
+      "last_changed": "2026-10-06T16:07:13.523Z",
+      "priority": 96
+    },
+    {
+      "path": "/chum/capabilities/audit-center-website-audit-machine-v1/",
+      "last_changed": "2026-10-06T16:07:13.523Z",
+      "priority": 96
+    },
+    {
+      "path": "/chum/capabilities/career-command-interview-practice-machine-v1/",
+      "last_changed": "2026-10-06T16:07:13.523Z",
+      "priority": 96
+    },
+    {
+      "path": "/chum/capabilities/deck-capital-fit-sprint-machine-v1/",
+      "last_changed": "2026-10-06T16:07:13.523Z",
+      "priority": 96
+    },
+    {
+      "path": "/chum/capabilities/eventwave-paid-promotion-v1/",
+      "last_changed": "2026-10-06T16:07:13.523Z",
+      "priority": 96
+    },
+    {
+      "path": "/chum/capabilities/faie-signal-brief-v1/",
+      "last_changed": "2026-10-06T16:07:13.523Z",
+      "priority": 96
+    },
+    {
+      "path": "/chum/capabilities/findmypart-paid-hunt-v1/",
+      "last_changed": "2026-10-06T16:07:13.523Z",
+      "priority": 96
+    },
+    {
+      "path": "/chum/capabilities/foundry-app-escape-audit-v1/",
+      "last_changed": "2026-10-06T16:07:13.523Z",
+      "priority": 96
+    },
+    {
+      "path": "/chum/capabilities/ibmi-rescue-v1/",
+      "last_changed": "2026-10-06T16:07:13.523Z",
+      "priority": 96
+    },
+    {
+      "path": "/chum/capabilities/legacy-rescue-lab-v1/",
+      "last_changed": "2026-10-06T16:07:13.523Z",
+      "priority": 96
+    },
+    {
+      "path": "/chum/capabilities/raven-nexus-business-setup-v1/",
+      "last_changed": "2026-10-06T16:07:13.523Z",
+      "priority": 96
+    },
+    {
+      "path": "/chum/capabilities/raven-nexus-home-setup-v1/",
+      "last_changed": "2026-10-06T16:07:13.523Z",
+      "priority": 96
+    },
+    {
+      "path": "/chum/capabilities/rivet-site-underwriting-v1/",
+      "last_changed": "2026-10-06T16:07:13.523Z",
+      "priority": 96
+    },
+    {
+      "path": "/chum/capabilities/roasted-text-pressure-test-machine-v1/",
+      "last_changed": "2026-10-06T16:07:13.523Z",
+      "priority": 96
+    },
+    {
+      "path": "/chum/capabilities/site-survive-rapid-audit-v1/",
+      "last_changed": "2026-10-06T16:07:13.523Z",
+      "priority": 96
+    },
+    {
+      "path": "/chum/capabilities/website-launch-service-v1/",
+      "last_changed": "2026-10-06T16:07:13.523Z",
+      "priority": 96
+    },
+    {
       "path": "/chum/hot/index.json",
-      "last_changed": "2026-10-06T15:06:07.965Z",
+      "last_changed": "2026-10-06T16:07:13.523Z",
       "priority": 80
     }
   ],
   "recent_surfaces": [
     {
+      "path": "/chum/capabilities/aliev-site-opportunity-snapshot-v1/",
+      "url": "/chum/capabilities/aliev-site-opportunity-snapshot-v1/",
+      "last_changed": "2026-10-06T16:07:13.523Z",
+      "priority": 96
+    },
+    {
+      "path": "/chum/capabilities/audit-center-website-audit-machine-v1/",
+      "url": "/chum/capabilities/audit-center-website-audit-machine-v1/",
+      "last_changed": "2026-10-06T16:07:13.523Z",
+      "priority": 96
+    },
+    {
+      "path": "/chum/capabilities/career-command-interview-practice-machine-v1/",
+      "url": "/chum/capabilities/career-command-interview-practice-machine-v1/",
+      "last_changed": "2026-10-06T16:07:13.523Z",
+      "priority": 96
+    },
+    {
+      "path": "/chum/capabilities/deck-capital-fit-sprint-machine-v1/",
+      "url": "/chum/capabilities/deck-capital-fit-sprint-machine-v1/",
+      "last_changed": "2026-10-06T16:07:13.523Z",
+      "priority": 96
+    },
+    {
+      "path": "/chum/capabilities/eventwave-paid-promotion-v1/",
+      "url": "/chum/capabilities/eventwave-paid-promotion-v1/",
+      "last_changed": "2026-10-06T16:07:13.523Z",
+      "priority": 96
+    },
+    {
+      "path": "/chum/capabilities/faie-signal-brief-v1/",
+      "url": "/chum/capabilities/faie-signal-brief-v1/",
+      "last_changed": "2026-10-06T16:07:13.523Z",
+      "priority": 96
+    },
+    {
+      "path": "/chum/capabilities/findmypart-paid-hunt-v1/",
+      "url": "/chum/capabilities/findmypart-paid-hunt-v1/",
+      "last_changed": "2026-10-06T16:07:13.523Z",
+      "priority": 96
+    },
+    {
+      "path": "/chum/capabilities/foundry-app-escape-audit-v1/",
+      "url": "/chum/capabilities/foundry-app-escape-audit-v1/",
+      "last_changed": "2026-10-06T16:07:13.523Z",
+      "priority": 96
+    },
+    {
+      "path": "/chum/capabilities/ibmi-rescue-v1/",
+      "url": "/chum/capabilities/ibmi-rescue-v1/",
+      "last_changed": "2026-10-06T16:07:13.523Z",
+      "priority": 96
+    },
+    {
+      "path": "/chum/capabilities/legacy-rescue-lab-v1/",
+      "url": "/chum/capabilities/legacy-rescue-lab-v1/",
+      "last_changed": "2026-10-06T16:07:13.523Z",
+      "priority": 96
+    },
+    {
+      "path": "/chum/capabilities/raven-nexus-business-setup-v1/",
+      "url": "/chum/capabilities/raven-nexus-business-setup-v1/",
+      "last_changed": "2026-10-06T16:07:13.523Z",
+      "priority": 96
+    },
+    {
+      "path": "/chum/capabilities/raven-nexus-home-setup-v1/",
+      "url": "/chum/capabilities/raven-nexus-home-setup-v1/",
+      "last_changed": "2026-10-06T16:07:13.523Z",
+      "priority": 96
+    },
+    {
+      "path": "/chum/capabilities/rivet-site-underwriting-v1/",
+      "url": "/chum/capabilities/rivet-site-underwriting-v1/",
+      "last_changed": "2026-10-06T16:07:13.523Z",
+      "priority": 96
+    },
+    {
+      "path": "/chum/capabilities/roasted-text-pressure-test-machine-v1/",
+      "url": "/chum/capabilities/roasted-text-pressure-test-machine-v1/",
+      "last_changed": "2026-10-06T16:07:13.523Z",
+      "priority": 96
+    },
+    {
+      "path": "/chum/capabilities/site-survive-rapid-audit-v1/",
+      "url": "/chum/capabilities/site-survive-rapid-audit-v1/",
+      "last_changed": "2026-10-06T16:07:13.523Z",
+      "priority": 96
+    },
+    {
+      "path": "/chum/capabilities/website-launch-service-v1/",
+      "url": "/chum/capabilities/website-launch-service-v1/",
+      "last_changed": "2026-10-06T16:07:13.523Z",
+      "priority": 96
+    },
+    {
       "path": "/chum/hot/index.json",
       "url": "/chum/hot/index.json",
-      "last_changed": "2026-10-06T15:06:07.965Z",
+      "last_changed": "2026-10-06T16:07:13.523Z",
       "priority": 80
     },
     {
@@ -882,12 +1058,6 @@
       "priority": 96
     },
     {
-      "path": "/chum/capabilities/raven-nexus-business-setup-v1/",
-      "url": "/chum/capabilities/raven-nexus-business-setup-v1/",
-      "last_changed": "2026-10-06T14:10:27.346Z",
-      "priority": 96
-    },
-    {
       "path": "/chum/capabilities/raven-nexus-business-setup-v1/capability.json",
       "url": "/chum/capabilities/raven-nexus-business-setup-v1/capability.json",
       "last_changed": "2026-10-06T14:10:27.346Z",
@@ -902,12 +1072,6 @@
     {
       "path": "/chum/capabilities/raven-nexus-business-setup-v1/schema.jsonld",
       "url": "/chum/capabilities/raven-nexus-business-setup-v1/schema.jsonld",
-      "last_changed": "2026-10-06T14:10:27.346Z",
-      "priority": 96
-    },
-    {
-      "path": "/chum/capabilities/raven-nexus-home-setup-v1/",
-      "url": "/chum/capabilities/raven-nexus-home-setup-v1/",
       "last_changed": "2026-10-06T14:10:27.346Z",
       "priority": 96
     },
@@ -1430,90 +1594,6 @@
     {
       "path": "/chum/answers/doors/build-a-lender-ready-deck-592e365c97.json",
       "url": "/chum/answers/doors/build-a-lender-ready-deck-592e365c97.json",
-      "last_changed": "2026-10-02T17:01:08.152Z",
-      "priority": 160
-    },
-    {
-      "path": "/chum/answers/doors/build-a-rollback-test-and-evidence-plan-before-changing-an-ibm-i-production-system-030d199287.json",
-      "url": "/chum/answers/doors/build-a-rollback-test-and-evidence-plan-before-changing-an-ibm-i-production-system-030d199287.json",
-      "last_changed": "2026-10-02T17:01:08.152Z",
-      "priority": 160
-    },
-    {
-      "path": "/chum/answers/doors/build-a-talent-profile-from-this-portfolio-613dec5ab1.json",
-      "url": "/chum/answers/doors/build-a-talent-profile-from-this-portfolio-613dec5ab1.json",
-      "last_changed": "2026-10-02T17:01:08.152Z",
-      "priority": 160
-    },
-    {
-      "path": "/chum/answers/doors/build-me-a-business-website-47014a0bbb.json",
-      "url": "/chum/answers/doors/build-me-a-business-website-47014a0bbb.json",
-      "last_changed": "2026-10-02T17:01:08.152Z",
-      "priority": 160
-    },
-    {
-      "path": "/chum/answers/doors/build-me-an-evidence-brief-6b531cab64.json",
-      "url": "/chum/answers/doors/build-me-an-evidence-brief-6b531cab64.json",
-      "last_changed": "2026-10-02T17:01:08.152Z",
-      "priority": 160
-    },
-    {
-      "path": "/chum/answers/doors/build-me-an-income-plan-99c95ec4f1.json",
-      "url": "/chum/answers/doors/build-me-an-income-plan-99c95ec4f1.json",
-      "last_changed": "2026-10-02T17:01:08.152Z",
-      "priority": 160
-    },
-    {
-      "path": "/chum/answers/doors/business-account-security-d61002122d.json",
-      "url": "/chum/answers/doors/business-account-security-d61002122d.json",
-      "last_changed": "2026-10-02T17:01:08.152Z",
-      "priority": 160
-    },
-    {
-      "path": "/chum/answers/doors/business-connectivity-resilience-fd7009021f.json",
-      "url": "/chum/answers/doors/business-connectivity-resilience-fd7009021f.json",
-      "last_changed": "2026-10-02T17:01:08.152Z",
-      "priority": 160
-    },
-    {
-      "path": "/chum/answers/doors/business-continuity-and-safety-0babb51749.json",
-      "url": "/chum/answers/doors/business-continuity-and-safety-0babb51749.json",
-      "last_changed": "2026-10-02T17:01:08.152Z",
-      "priority": 160
-    },
-    {
-      "path": "/chum/answers/doors/business-outage-plan-bd1f9b74ee.json",
-      "url": "/chum/answers/doors/business-outage-plan-bd1f9b74ee.json",
-      "last_changed": "2026-10-02T17:01:08.152Z",
-      "priority": 160
-    },
-    {
-      "path": "/chum/answers/doors/buy-event-promotion-785fc960f0.json",
-      "url": "/chum/answers/doors/buy-event-promotion-785fc960f0.json",
-      "last_changed": "2026-10-02T17:01:08.152Z",
-      "priority": 160
-    },
-    {
-      "path": "/chum/answers/doors/buy-more-runtime-for-this-yard-execution-f138b36c09.json",
-      "url": "/chum/answers/doors/buy-more-runtime-for-this-yard-execution-f138b36c09.json",
-      "last_changed": "2026-10-02T17:01:08.152Z",
-      "priority": 160
-    },
-    {
-      "path": "/chum/answers/doors/can-my-crews-work-tomorrow-cbf6dd66e5.json",
-      "url": "/chum/answers/doors/can-my-crews-work-tomorrow-cbf6dd66e5.json",
-      "last_changed": "2026-10-02T17:01:08.152Z",
-      "priority": 160
-    },
-    {
-      "path": "/chum/answers/doors/cdp-browser-control-6fbc285731.json",
-      "url": "/chum/answers/doors/cdp-browser-control-6fbc285731.json",
-      "last_changed": "2026-10-02T17:01:08.152Z",
-      "priority": 160
-    },
-    {
-      "path": "/chum/answers/doors/charging-site-economics-6092dd77f1.json",
-      "url": "/chum/answers/doors/charging-site-economics-6092dd77f1.json",
       "last_changed": "2026-10-02T17:01:08.152Z",
       "priority": 160
     }
