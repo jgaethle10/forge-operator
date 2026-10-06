@@ -218,6 +218,7 @@ export function createRavenReadOnlyTeamAdapter({
           results,
           receipt_path: receiptPath,
           response_sha256: receipt.response_sha256,
+          raven_receipt: body?.raven_receipt || null,
           base44_required: false,
         },
       };
