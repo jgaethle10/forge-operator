@@ -1,6 +1,9 @@
 import fs from "node:fs";
 import path from "node:path";
 import {fileURLToPath} from "node:url";
+import {
+  selectIndependentPracticeWindows,
+} from "./edge-practice-independence.mjs";
 
 const HERE=path.dirname(fileURLToPath(import.meta.url));
 const DEFAULT_RECEIPT_DIR=path.join(HERE,"paper-receipts");
@@ -44,9 +47,11 @@ export function buildPracticeScorecard({
     .map(x=>finite(x.capital_at_risk_usd))
     .filter(Number.isFinite);
 
-  const prospective=valid.filter(
+  const rawProspective=valid.filter(
     x=>x.schema==="evercraft.daytrade.prospective-spread-rule-practice-summary.v1"
   );
+  const independence=selectIndependentPracticeWindows(rawProspective);
+  const prospective=independence.independent;
   const prospectiveImprovements=prospective
     .map(x=>finite(x?.aggregate?.rule_improvement_vs_always_cross_usd))
     .filter(Number.isFinite);
@@ -71,7 +76,16 @@ export function buildPracticeScorecard({
     any_live_trade_authority:anyLiveAuthority,
     prospective_spread_rule:{
       rule_id:"spread-abstention-v1",
+      raw_windows:rawProspective.length,
       windows:prospective.length,
+      near_duplicate_windows_excluded:independence.excluded_count,
+      minimum_independence_separation_ms:independence.minimum_separation_ms,
+      excluded_windows:independence.excluded.map(x=>({
+        file:x.file,
+        generated_at:x.generated_at||null,
+        nearest_selected_file:x.nearest_selected_file||null,
+        separation_ms:x.separation_ms,
+      })),
       helped_windows:prospectiveImprovements.filter(x=>x>0).length,
       hurt_windows:prospectiveImprovements.filter(x=>x<0).length,
       neutral_windows:prospectiveImprovements.filter(x=>x===0).length,
@@ -91,6 +105,8 @@ export function buildPracticeScorecard({
     spread_persistence_receipts:spreadPersistence.length,
     controls:{
       failed_or_negative_practice_must_remain_in_ledger:true,
+      raw_runs_remain_visible:true,
+      near_duplicate_windows_excluded_from_evidence:true,
       same_day_selection_bias_disclosed:true,
       no_threshold_retuning_from_scorecard:true,
       practice_not_signal_validation:true,
