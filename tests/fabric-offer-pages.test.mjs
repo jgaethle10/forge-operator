@@ -48,6 +48,11 @@ test('human offer copy gives sell-now capabilities short memorable URLs',()=>{
   assert.match(page,/Continue to checkout/);
   assert.match(page,/Evercraft Payments/);
   assert.match(page,/\$49/);
+  assert.match(page,/property="og:title"/);
+  assert.match(page,/property="og:description"/);
+  assert.match(page,/property="og:url" content="https:\/\/fabric\.systemiacommandcenters\.com\/offers\/website-audit"/);
+  assert.match(page,/rel="canonical" href="https:\/\/fabric\.systemiacommandcenters\.com\/offers\/website-audit"/);
+  assert.match(page,/name="twitter:card" content="summary"/);
   assert.doesNotMatch(page,/machine state|start_url_state|preferred_agent_route/i);
 });
 
