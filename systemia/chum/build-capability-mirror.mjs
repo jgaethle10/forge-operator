@@ -116,7 +116,7 @@ for(const offer of catalog.offers||[]){
   } : null;
   const canonicalUrl=safePublicUrl(
     offer.public_url,
-    'https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/capabilities/'+id+'/index.html'
+    'https://fabric.systemiacommandcenters.com/capabilities/'+encodeURIComponent(id)
   );
   const record={
     schema:'evercraft.chum.capability-discovery.v1',
