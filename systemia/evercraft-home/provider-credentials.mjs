@@ -29,6 +29,16 @@ const SPECS = Object.freeze({
     label: 'evercraft-clip',
     environment: 'live',
   }),
+  gemini: Object.freeze({
+    provider: 'gemini',
+    label: 'raven-inference',
+    environment: 'live',
+  }),
+  openai: Object.freeze({
+    provider: 'openai',
+    label: 'raven-inference',
+    environment: 'live',
+  }),
 });
 
 function clean(value) {
@@ -85,6 +95,26 @@ export function normalizeProviderCredentialRequest(provider, body = {}) {
       label: clean(body.label) || spec.label,
       apiKeyId: clean(body.public_id),
       apiSecret: clean(body.secret_key),
+    };
+  }
+
+  if (spec.provider === 'gemini') {
+    return {
+      provider: spec.provider,
+      environment: clean(body.environment) || spec.environment,
+      label: clean(body.label) || spec.label,
+      apiKeyId: 'gemini-api-key',
+      apiSecret: clean(body.api_key),
+    };
+  }
+
+  if (spec.provider === 'openai') {
+    return {
+      provider: spec.provider,
+      environment: clean(body.environment) || spec.environment,
+      label: clean(body.label) || spec.label,
+      apiKeyId: 'openai-api-key',
+      apiSecret: clean(body.api_key),
     };
   }
 
