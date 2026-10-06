@@ -7,6 +7,8 @@ import {
   buildVisualStory,
   normalizeVisualStory,
   renderShareCard,
+  renderCardVariant,
+  renderMotionStage,
 } from './factory.mjs';
 
 const fixture={
@@ -45,13 +47,25 @@ test('fails closed without sources',()=>{
   );
 });
 
-test('renders a 1080x1350 branded social card',()=>{
-  const svg=renderShareCard(fixture);
-  assert.match(svg,/width="1080"/);
-  assert.match(svg,/height="1350"/);
-  assert.match(svg,/EVERCRAFT VISUAL DESK/);
-  assert.match(svg,/MODELED/);
-  assert.match(svg,/Yakima/);
+test('renders feed, square and vertical story assets from one story',()=>{
+  const feed=renderShareCard(fixture);
+  const square=renderCardVariant(fixture,'square');
+  const story=renderCardVariant(fixture,'story');
+  assert.match(feed,/width="1080"/);
+  assert.match(feed,/height="1350"/);
+  assert.match(square,/height="1080"/);
+  assert.match(story,/height="1920"/);
+  assert.match(story,/THE WORLD, MADE LEGIBLE/);
+  assert.match(feed,/MODELED/);
+  assert.match(feed,/Yakima/);
+});
+
+test('motion stage exposes deterministic exact-time render controls',()=>{
+  const html=renderMotionStage(fixture);
+  assert.match(html,/__evercraftRenderAt/);
+  assert.match(html,/__evercraftRenderFrame/);
+  assert.match(html,/deterministic/);
+  assert.match(html,/publicationAuthority/);
 });
 
 test('build emits owned page, social card, manifest and Clip handoff',()=>{
@@ -64,10 +78,14 @@ test('build emits owned page, social card, manifest and Clip handoff',()=>{
 
     const files=fs.readdirSync(result.outputDir).sort();
     assert.deepEqual(files,[
+      'card-feed.svg',
+      'card-square.svg',
+      'card-story.svg',
       'card.svg',
       'clip-handoff.json',
       'index.html',
       'manifest.json',
+      'motion.html',
       'story.json',
     ]);
 
@@ -78,7 +96,11 @@ test('build emits owned page, social card, manifest and Clip handoff',()=>{
     assert.match(html,/og:image/);
     assert.match(html,/visuals\.evercraft\.test\/cascade-test/);
     assert.equal(manifest.canonicalUrl,'https://visuals.evercraft.test/cascade-test/');
+    assert.equal(manifest.schema,'evercraft.visual-story.manifest.v2');
+    assert.match(manifest.assets.motionStage,/motion\.html$/);
     assert.equal(handoff.publicationAuthority,false);
+    assert.equal(handoff.schema,'evercraft.visual-story.clip-handoff.v2');
+    assert.match(handoff.preferredAssetByDestination.tiktok,/card-story\.svg$/);
     assert.deepEqual(handoff.suggestedDestinations,['facebook','instagram','linkedin','tiktok']);
   }finally{
     fs.rmSync(root,{recursive:true,force:true});

@@ -30,6 +30,29 @@ jobs:
       - name: Prove visual story factory
         run: node --test systemia/visual-desk/factory.test.mjs
 
+      - name: Build source-backed specimen release
+        run: |
+          rm -rf _visual_desk_release
+          mkdir -p _visual_desk_release
+          cp public/visuals/index.html _visual_desk_release/index.html
+          node systemia/visual-desk/build-all.mjs systemia/visual-desk/stories _visual_desk_release https://fabric.systemiacommandcenters.com/visuals
+          test -f _visual_desk_release/index.html
+          test -f _visual_desk_release/index.json
+          test -f _visual_desk_release/washington-active-volcanoes/card-feed.svg
+          test -f _visual_desk_release/washington-active-volcanoes/card-square.svg
+          test -f _visual_desk_release/washington-active-volcanoes/card-story.svg
+          test -f _visual_desk_release/washington-active-volcanoes/motion.html
+          grep -q '__evercraftRenderAt' _visual_desk_release/washington-active-volcanoes/motion.html
+          grep -q 'usgs.gov' _visual_desk_release/washington-active-volcanoes/story.json
+
+      - name: Preserve portable Visual Desk release
+        uses: actions/upload-artifact@v4
+        with:
+          name: evercraft-visual-desk-portable
+          path: _visual_desk_release
+          if-no-files-found: error
+          retention-days: 90
+
       - name: Verify public landing surface
         run: |
           test -f public/visuals/index.html

@@ -212,11 +212,106 @@ export function renderShareCard(input){
   ].join('\n');
 }
 
+
+const CARD_FORMATS={
+  feed:{width:1080,height:1350,scale:1,tx:0,ty:0},
+  story:{width:1080,height:1920,scale:1,tx:0,ty:285},
+  square:{width:1080,height:1080,scale:0.8,tx:108,ty:0},
+};
+
+export function renderCardVariant(input,format='feed'){
+  const story=input.digest ? input : normalizeVisualStory(input);
+  const spec=CARD_FORMATS[format];
+  if(!spec) throw new Error('visual_story_card_format_invalid');
+  if(format==='feed') return renderShareCard(story);
+
+  const base=renderShareCard(story);
+  const inner=base
+    .replace(/^<svg[^>]*>\s*/,'')
+    .replace(/\s*<\/svg>\s*$/,'');
+
+  const footerY=spec.height-72;
+  return [
+    '<svg xmlns="http://www.w3.org/2000/svg" width="'+spec.width+'" height="'+spec.height+'" viewBox="0 0 '+spec.width+' '+spec.height+'">',
+    '<rect width="'+spec.width+'" height="'+spec.height+'" fill="#080B0B"/>',
+    format==='story' ? '<text x="92" y="105" font-family="Arial,sans-serif" font-size="26" font-weight="800" letter-spacing="3" fill="#4FB8FF">THE WORLD, MADE LEGIBLE</text>' : '',
+    '<g transform="translate('+spec.tx+' '+spec.ty+') scale('+spec.scale+')">'+inner+'</g>',
+    format==='story' ? '<text x="92" y="'+footerY+'" font-family="Arial,sans-serif" font-size="22" fill="#B7BDC5">Source-backed visual • '+esc(story.evidenceState.toUpperCase())+'</text>' : '',
+    '</svg>',
+    ''
+  ].join('\n');
+}
+
+export function renderMotionStage(input){
+  const story=input.digest ? input : normalizeVisualStory(input);
+  const svg=renderShareCard(story);
+  const payload=JSON.stringify({
+    schema:'evercraft.visual-story.motion-stage.v1',
+    storyDigest:story.digest,
+    durationSec:8,
+    fps:30,
+    deterministic:true,
+    publicationAuthority:false,
+  }).replaceAll('<','\\u003c');
+
+  return [
+    '<!doctype html>',
+    '<html><head><meta charset="utf-8"><meta name="viewport" content="width=1080,initial-scale=1">',
+    '<style>',
+    'html,body{margin:0;width:1080px;height:1920px;overflow:hidden;background:#080B0B}body{font-family:Arial,sans-serif}',
+    '#stage{position:relative;width:1080px;height:1920px;background:radial-gradient(circle at 50% 42%,#14232b 0,#080B0B 58%)}',
+    '#brand{position:absolute;left:92px;top:86px;color:#4FB8FF;font:800 25px Arial;letter-spacing:4px}',
+    '#card{position:absolute;left:0;top:285px;width:1080px;height:1350px;transform-origin:50% 50%;will-change:transform}',
+    '#card svg{display:block;width:1080px;height:1350px}',
+    '#footer{position:absolute;left:92px;bottom:94px;color:#B7BDC5;font:600 24px Arial}',
+    '</style></head><body>',
+    '<div id="stage"><div id="brand">EVERCRAFT VISUAL DESK</div><div id="card">'+svg+'</div><div id="footer">Open the owned page for sources, context and methodology.</div></div>',
+    '<script>',
+    'window.__EVERCRAFT_VISUAL_STAGE__='+payload+';',
+    '(function(){',
+    'const duration=8;',
+    'const card=document.getElementById("card");',
+    'const paths=Array.from(card.querySelectorAll("path"));',
+    'const circles=Array.from(card.querySelectorAll("circle"));',
+    'const labels=Array.from(card.querySelectorAll("text"));',
+    'function clamp(v){return Math.max(0,Math.min(1,v));}',
+    'function ease(v){v=clamp(v);return v*v*(3-2*v);}',
+    'function renderAt(seconds){',
+    ' const t=clamp(Number(seconds||0)/duration);',
+    ' card.style.transform="scale("+(1+0.045*t)+") translateY("+(-22*t)+"px)";',
+    ' paths.forEach(function(node,index){',
+    '   const local=ease((t-(0.10+index*0.055))/0.38);',
+    '   node.style.strokeDasharray="1800";',
+    '   node.style.strokeDashoffset=String(1800*(1-local));',
+    '   node.style.opacity=String(0.15+0.85*local);',
+    ' });',
+    ' circles.forEach(function(node,index){',
+    '   const local=ease((t-(0.18+index*0.035))/0.26);',
+    '   node.style.transformBox="fill-box";',
+    '   node.style.transformOrigin="center";',
+    '   node.style.transform="scale("+(0.58+0.42*local)+")";',
+    '   node.style.opacity=String(0.16+0.84*local);',
+    ' });',
+    ' labels.forEach(function(node,index){',
+    '   const local=ease((t-(0.03+index*0.006))/0.22);',
+    '   node.style.opacity=String(0.30+0.70*local);',
+    ' });',
+    ' return {seconds:Number(seconds||0),progress:t};',
+    '}',
+    'window.__evercraftRenderAt=renderAt;',
+    'window.__evercraftRenderFrame=function(frame,fps){return renderAt(Number(frame||0)/Number(fps||30));};',
+    'renderAt(0);',
+    '})();',
+    '</script></body></html>',
+    ''
+  ].join('\n');
+}
+
 export function renderStoryHtml(input,{origin=DEFAULT_ORIGIN}={}){
   const story=input.digest ? input : normalizeVisualStory(input);
   const root=String(origin || DEFAULT_ORIGIN).replace(/\/$/,'');
   const canonical=root+'/'+story.slug+'/';
-  const cardUrl=canonical+'card.svg';
+  const cardUrl=canonical+'card-feed.svg';
   const description=story.subtitle || story.narrative || story.callout || story.title;
   const pointCards=story.points.map(point=>
     '<div class="point"><b>'+esc(point.label || point.id)+'</b><span>'+point.lat.toFixed(3)+', '+point.lon.toFixed(3)+'</span>'+(point.note ? '<p>'+esc(point.note)+'</p>' : '')+'</div>'
@@ -257,11 +352,17 @@ export function buildVisualStory(input,{outputRoot,origin=DEFAULT_ORIGIN}={}){
   fs.mkdirSync(outputDir,{recursive:true});
 
   const manifest={
-    schema:'evercraft.visual-story.manifest.v1',
+    schema:'evercraft.visual-story.manifest.v2',
     slug:story.slug,
     title:story.title,
     canonicalUrl,
-    socialCardUrl:canonicalUrl+'card.svg',
+    socialCardUrl:canonicalUrl+'card-feed.svg',
+    assets:{
+      feed:canonicalUrl+'card-feed.svg',
+      square:canonicalUrl+'card-square.svg',
+      story:canonicalUrl+'card-story.svg',
+      motionStage:canonicalUrl+'motion.html',
+    },
     evidenceState:story.evidenceState,
     sourceRefs:story.sourceRefs,
     storyDigest:story.digest,
@@ -269,18 +370,30 @@ export function buildVisualStory(input,{outputRoot,origin=DEFAULT_ORIGIN}={}){
   };
 
   const clipHandoff={
-    schema:'evercraft.visual-story.clip-handoff.v1',
+    schema:'evercraft.visual-story.clip-handoff.v2',
     publicationAuthority:false,
     brandKey:'evercraft',
     canonicalUrl,
     socialCardUrl:manifest.socialCardUrl,
+    assets:manifest.assets,
+    preferredAssetByDestination:{
+      facebook:manifest.assets.feed,
+      instagram:manifest.assets.feed,
+      linkedin:manifest.assets.feed,
+      tiktok:manifest.assets.story,
+    },
     suggestedMessage:[story.title,story.subtitle].filter(Boolean).join(' | '),
     suggestedDestinations:['facebook','instagram','linkedin','tiktok'],
     sourceRefs:story.sourceRefs,
   };
 
   fs.writeFileSync(path.join(outputDir,'index.html'),renderStoryHtml(story,{origin}));
-  fs.writeFileSync(path.join(outputDir,'card.svg'),renderShareCard(story));
+  const feed=renderCardVariant(story,'feed');
+  fs.writeFileSync(path.join(outputDir,'card.svg'),feed);
+  fs.writeFileSync(path.join(outputDir,'card-feed.svg'),feed);
+  fs.writeFileSync(path.join(outputDir,'card-square.svg'),renderCardVariant(story,'square'));
+  fs.writeFileSync(path.join(outputDir,'card-story.svg'),renderCardVariant(story,'story'));
+  fs.writeFileSync(path.join(outputDir,'motion.html'),renderMotionStage(story));
   fs.writeFileSync(path.join(outputDir,'manifest.json'),JSON.stringify(manifest,null,2)+'\n');
   fs.writeFileSync(path.join(outputDir,'story.json'),JSON.stringify(story,null,2)+'\n');
   fs.writeFileSync(path.join(outputDir,'clip-handoff.json'),JSON.stringify(clipHandoff,null,2)+'\n');

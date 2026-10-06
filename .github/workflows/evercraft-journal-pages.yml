@@ -7,6 +7,7 @@ on:
     paths:
       - 'public/**'
       - 'systemia/newsroom/**'
+      - 'systemia/visual-desk/**'
       - 'systemia/chum/public-origin-runtime.mjs'
       - 'systemia/network/public-edge-runtime.mjs'
       - 'systemia/domain-authority/**'
@@ -107,6 +108,13 @@ jobs:
               echo "Product and customer fallback surfaces will still deploy."
             } >> "$GITHUB_STEP_SUMMARY"
           fi
+          EVERCRAFT_VISUAL_ORIGIN=https://jgaethle10.github.io/forge-operator/visuals \\
+            node systemia/visual-desk/build-all.mjs systemia/visual-desk/stories _public_pages/visuals
+          test -f _public_pages/visuals/index.html
+          test -f _public_pages/visuals/index.json
+          test -f _public_pages/visuals/washington-active-volcanoes/index.html
+          test -f _public_pages/visuals/washington-active-volcanoes/card-story.svg
+          test -f _public_pages/visuals/washington-active-volcanoes/motion.html
           touch _public_pages/.nojekyll
           cat > _public_pages/index.html <<'HTML'
           <!doctype html>
@@ -190,9 +198,15 @@ jobs:
           estimator="${base%/}/apps/eps-estimator/"
           estimator_body="$(curl --fail --silent --show-error --retry 8 --retry-all-errors --retry-delay 2 "$estimator")"
           printf '%s' "$estimator_body" | grep -q 'EPS Precise Estimator'
+          visual="${base%/}/visuals/washington-active-volcanoes/"
+          visual_body="$(curl --fail --silent --show-error --retry 8 --retry-all-errors --retry-delay 2 "$visual")"
+          printf '%s' "$visual_body" | grep -q 'Washington'
+          motion="${base%/}/visuals/washington-active-volcanoes/motion.html"
+          curl --fail --silent --show-error --retry 8 --retry-all-errors --retry-delay 2 "$motion" | grep -q "__evercraftRenderAt"
           {
             echo "## Evercraft public fallback live"
             echo
             echo "Infinite Classroom: $classroom"
             echo "EPS estimator: $estimator"
+            echo "Visual Desk specimen: $visual"
           } >> "$GITHUB_STEP_SUMMARY"
