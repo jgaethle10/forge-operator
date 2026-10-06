@@ -40,10 +40,14 @@ assert.ok(registryRow.triggers.includes('monitor LLM discovery pages and agent e
 
 const conf = conformance.products.find((row) => row.product_key === 'systemia-portfolio-sentinel');
 assert.ok(conf, 'Portfolio Sentinel conformance record missing');
-assert.equal(conf.doorway_state, 'machine_commerce_live');
-assert.equal(conf.conformance_state, 'live_match_canary_passed');
+assert.equal(conf.doorway_state, 'owned_public_fallback_configured_runtime_route_pending');
+assert.equal(conf.conformance_state, 'owned_runtime_reverification_pending');
 assert.equal(conf.provider_behavior_state, 'not_run');
 assert.equal(conf.live_canary_evidence?.match_score, 36);
+assert.equal(conf.live_canary_evidence_state, 'historical_pre_cutover_not_current');
+assert.equal(conf.pre_cutover_state?.doorway_state, 'machine_commerce_live');
+assert.equal(conf.pre_cutover_state?.conformance_state, 'live_match_canary_passed');
+assert.equal(conf.runtime_route_state, 'owned_route_pending_external_verification');
 assert.equal(conf.machine_commerce_handoff_tool, 'prepare_portfolio_sentinel_pilot_handoff');
 assert.equal(conf.machine_commerce_request_tool, 'submit_portfolio_sentinel_pilot_request');
 assert.equal(conf.pilot_request_canary_evidence?.result, 'pass');
