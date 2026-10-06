@@ -17,6 +17,8 @@ try {
     releaseRef,
     heartbeatTargetSeconds: 300,
     graceSeconds: 90,
+    ravenInferenceProvider: 'ollama',
+    ravenInferenceModel: 'proof-local-model',
   });
 
   assert.equal(first.seed.endpoint.startsWith('http://127.0.0.1:'), true);
@@ -32,6 +34,19 @@ try {
   assert.equal(firstHealth.ok, true);
   assert.equal(firstHealth.kaidance.ok, true);
   assert.equal(firstHealth.systemia_core.ok, true);
+  assert.equal(first.core.result.raven_private_runtime_configured, true);
+  assert.equal(first.core.result.raven_inference_gateway_configured, true);
+  assert.equal(first.core.result.raven_inference_provider, 'ollama');
+  assert.equal(first.core.result.raven_inference_model, 'proof-local-model');
+  const firstCoreRoute = await first.yard.verifyRoute('systemia-core-local-resident');
+  const firstRavenPrivate = firstCoreRoute.health.services.find(
+    (service) => service.service_key === 'raven-private-runtime'
+  );
+  const firstRavenInference = firstCoreRoute.health.services.find(
+    (service) => service.service_key === 'raven-inference-gateway'
+  );
+  assert.equal(firstRavenPrivate?.status, 'running');
+  assert.equal(firstRavenInference?.status, 'running');
 
   const firstFingerprint = first.seed.device_fingerprint;
   const firstCycleNumber = first.pulse.cycle_number;
@@ -64,6 +79,8 @@ try {
     releaseRef,
     heartbeatTargetSeconds: 300,
     graceSeconds: 90,
+    ravenInferenceProvider: 'ollama',
+    ravenInferenceModel: 'proof-local-model',
   });
 
   assert.equal(second.seed.device_fingerprint, firstFingerprint);
@@ -111,6 +128,9 @@ try {
     persistent_device_identity: true,
     kaidance_state_survives_restart: true,
     core_redeploys_through_yard: true,
+    raven_private_runtime_redeploys_through_core: true,
+    raven_inference_gateway_redeploys_through_core: true,
+    raven_activation_intent_crosses_local_organism_boundary: true,
     allocator_secret_redacted: true,
     field_attestation: second.pulse.field_attestation.state,
     physical_field_certification_claimed: false,
