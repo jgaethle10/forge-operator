@@ -2,7 +2,7 @@
   "schema": "evercraft.chum.crawl-state.v1",
   "provider": "Evercraft LLC",
   "coordinator": "CHUM",
-  "updated_at": "2026-10-06T20:40:23.559Z",
+  "updated_at": "2026-10-06T20:50:03.642Z",
   "url_count": 2800,
   "doctrine": {
     "crawl_can_be_requested_not_forced": true,
@@ -141,8 +141,8 @@
     },
     "/chum/hot/index.json": {
       "path": "/chum/hot/index.json",
-      "content_sha256": "b0799d603439ad89c71701a762e2ec50a2a3a4b8bee93f77a686b98af5a92dfa",
-      "last_changed": "2026-10-06T20:40:23.559Z",
+      "content_sha256": "b7388e8b89f1de503e2359e29974c05968bd3f4c1b0ce698b73d6b25c5c2ff6b",
+      "last_changed": "2026-10-06T20:50:03.642Z",
       "priority": 80
     },
     "/chum/strike/": {
@@ -153,20 +153,20 @@
     },
     "/chum/strike/index.json": {
       "path": "/chum/strike/index.json",
-      "content_sha256": "e46a8b9709aa2ebdfed71354b8f9147c9b6a8665ff259e2a4560da229887538c",
-      "last_changed": "2026-10-06T20:40:19.032Z",
+      "content_sha256": "aed023e9c9bd4b36f6e666b7bee22eb86b1e100ab62ae53dfe250300e98df7ec",
+      "last_changed": "2026-10-06T20:50:03.642Z",
       "priority": 80
     },
     "/chum/crawler-radar.json": {
       "path": "/chum/crawler-radar.json",
-      "content_sha256": "77603885111f0823e5e52a493868aeccca0f0a2b5364d2f6f034253be316a9d2",
-      "last_changed": "2026-10-06T20:40:19.032Z",
+      "content_sha256": "6c60673848504abc9df7c901ac3b3ddbec91bf7085a5c02a1154f2d69a03f658",
+      "last_changed": "2026-10-06T20:50:03.642Z",
       "priority": 80
     },
     "/chum/crawler-radar.txt": {
       "path": "/chum/crawler-radar.txt",
-      "content_sha256": "96e74d185fe26aae89d57115fd777b3f1747205e60eac63607171d3ca6a80344",
-      "last_changed": "2026-10-06T20:40:19.032Z",
+      "content_sha256": "b6ffeb4f1539f9f52d9c0252014b0cb8eb15aae2d14a73aaa1fb3af1f40d03c3",
+      "last_changed": "2026-10-06T20:50:03.642Z",
       "priority": 80
     },
     "/chum/proof/": {
