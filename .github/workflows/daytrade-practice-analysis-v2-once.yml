@@ -1,0 +1,46 @@
+name: DayTrade Practice Analysis V2 Once
+
+on:
+  push:
+    branches:
+      - "systemia/daytrade-practice-analysis-2026-10-06-v2"
+
+permissions:
+  contents: read
+
+jobs:
+  analysis:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Prove practice analysis contracts
+        run: |
+          node systemia/daytrade-lens/edge-practice-scorecard.test.mjs
+          node systemia/daytrade-lens/edge-spread-threshold-robustness.test.mjs
+          node systemia/daytrade-lens/edge-practice-diversity-readiness.test.mjs
+          node systemia/daytrade-lens/edge-practice-phase-scorecard.test.mjs
+          node systemia/daytrade-lens/edge-instrument-conditioned-spread.test.mjs
+      - name: Build practice analysis
+        env:
+          DAYTRADE_PRACTICE_SCORECARD_OUTPUT: artifacts/daytrade-practice/practice-scorecard.json
+          DAYTRADE_THRESHOLD_ROBUSTNESS_OUTPUT: artifacts/daytrade-practice/threshold-robustness.json
+          DAYTRADE_DIVERSITY_OUTPUT: artifacts/daytrade-practice/diversity-readiness.json
+          DAYTRADE_PHASE_SCORECARD_OUTPUT: artifacts/daytrade-practice/phase-scorecard.json
+          DAYTRADE_INSTRUMENT_SPREAD_OUTPUT: artifacts/daytrade-practice/instrument-conditioned-spread.json
+        run: |
+          node systemia/daytrade-lens/edge-practice-scorecard.mjs
+          node systemia/daytrade-lens/edge-spread-threshold-robustness.mjs
+          node systemia/daytrade-lens/edge-practice-diversity-readiness.mjs
+          node systemia/daytrade-lens/edge-practice-phase-scorecard.mjs
+          node systemia/daytrade-lens/edge-instrument-conditioned-spread.mjs
+      - name: Upload analysis
+        uses: actions/upload-artifact@v4
+        with:
+          name: daytrade-practice-analysis-v2-${{ github.run_id }}
+          path: artifacts/daytrade-practice
+          if-no-files-found: error
+          retention-days: 30
