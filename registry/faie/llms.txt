@@ -3,9 +3,11 @@
 Provider: Evercraft
 Product key: faie
 Class: evidence_first_food_infrastructure_and_resilience_intelligence
-Canonical URL: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/faie/index.html
+Canonical URL: https://fabric.systemiacommandcenters.com/faie/
 Authority: public discovery and bounded evidence investigation; paid missions remain human-confirmed and consequential siting, capital, production, regulatory, or operating decisions remain human-controlled
 Human confirmation required: yes
+Direct MCP: https://fabric.systemiacommandcenters.com/mcp/faie
+External verification: conformance/runtime-observations/2026-10-06-faie-owned-fabric-door.json
 Runtime or CHUM llms.txt: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/faie/llms.txt
 
 ## Natural-language intents
