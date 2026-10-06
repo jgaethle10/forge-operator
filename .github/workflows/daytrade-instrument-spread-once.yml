@@ -1,0 +1,32 @@
+name: DayTrade Instrument Spread Once
+
+on:
+  push:
+    branches:
+      - "systemia/daytrade-instrument-spread-2026-10-06"
+
+permissions:
+  contents: read
+
+jobs:
+  diagnostic:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Prove instrument-conditioned spread diagnostic
+        run: node systemia/daytrade-lens/edge-instrument-conditioned-spread.test.mjs
+      - name: Build instrument-conditioned report
+        env:
+          DAYTRADE_INSTRUMENT_SPREAD_OUTPUT: artifacts/daytrade-edge/instrument-conditioned-spread-2026-10-06.json
+        run: node systemia/daytrade-lens/edge-instrument-conditioned-spread.mjs
+      - name: Upload report
+        uses: actions/upload-artifact@v4
+        with:
+          name: daytrade-instrument-spread-${{ github.run_id }}
+          path: artifacts/daytrade-edge/instrument-conditioned-spread-2026-10-06.json
+          if-no-files-found: error
+          retention-days: 30
