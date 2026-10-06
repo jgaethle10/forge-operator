@@ -64,7 +64,7 @@ jobs:
           test -f _journal_release/feed.xml
           test -f _journal_release/llms.txt
           grep -q 'Evercraft Journal' _journal_release/index.html
-          grep -q 'https://journal.evercraft.global/' _journal_release/index.json
+          grep -q 'https://fabric.systemiacommandcenters.com/journal/' _journal_release/index.json
           if grep -RniE 'Black Friday|shopping assistant|optimize your cart' _journal_release; then
             echo "Legacy shopping identity detected in canonical Journal artifact."
             exit 1
