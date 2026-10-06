@@ -45,9 +45,27 @@
       "optional_env_args": {
         "--trusted-subject-ref": "RAVEN_PRIVATE_TRUSTED_SUBJECT_REF",
         "--deployment-receipt-file": "RAVEN_PRIVATE_DEPLOYMENT_RECEIPT_FILE",
-        "--inference-origin": "RAVEN_INFERENCE_ORIGIN",
-        "--inference-token-file": "RAVEN_INFERENCE_TOKEN_FILE",
+        "--inference-token-file": "RAVEN_INFERENCE_GATEWAY_TOKEN_FILE",
         "--port": "RAVEN_PRIVATE_PORT"
+      },
+      "max_restarts_per_hour": 12,
+      "restart_backoff_ms": 5000
+    },
+    {
+      "service_key": "raven-inference-gateway",
+      "mode": "resident",
+      "manifest": "systemia/organism/raven-inference-gateway.workflow.json",
+      "executable": "systemia/raven/inference-gateway-runner.mjs",
+      "optional_when_unconfigured": true,
+      "env_args": {
+        "--control-token-file": "RAVEN_INFERENCE_GATEWAY_TOKEN_FILE",
+        "--provider": "RAVEN_INFERENCE_PROVIDER",
+        "--model": "RAVEN_INFERENCE_MODEL"
+      },
+      "optional_env_args": {
+        "--credential-state-dir": "RAVEN_PROVIDER_CREDENTIAL_STATE_DIR",
+        "--port": "RAVEN_INFERENCE_GATEWAY_PORT",
+        "--ollama-origin": "RAVEN_OLLAMA_ORIGIN"
       },
       "max_restarts_per_hour": 12,
       "restart_backoff_ms": 5000
