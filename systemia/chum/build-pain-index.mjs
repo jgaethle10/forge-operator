@@ -47,7 +47,7 @@ export function buildPainIndex(){
   const registry=safeRead(REGISTRY,{products:[],universal_front_door:null});
 
   const registryByKey=new Map((registry.products||[]).map((p)=>[p.product_key,p]));
-  const universalMcp=universalMcp;
+  const universalMcp=safePublicUrl(registry.universal_front_door?.mcp);
   const universalFrontDoor=registry.universal_front_door
     ? {...registry.universal_front_door,mcp:universalMcp}
     : null;
