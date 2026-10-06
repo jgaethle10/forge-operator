@@ -12,9 +12,11 @@ test('Fabric self-updater keeps home read-only but explicitly admits its Forge c
   assert.match(installer,/PrivateTmp=true/);
 });
 
-test('Fabric updater still fails closed on dirty or non-fast-forward source',()=>{
-  assert.match(updater,/status --porcelain/);
-  assert.match(updater,/checkout is dirty; refusing unattended update/);
+test('Fabric updater fails closed on source changes while ignoring generated artifacts',()=>{
+  assert.match(updater,/status --porcelain --untracked-files=all/);
+  assert.match(updater,/grep -vE '\^\\\?\\\? artifacts\/'/);
+  assert.match(updater,/checkout has source changes; refusing unattended update/);
+  assert.match(updater,/ignoring generated artifacts\/ entries in checkout preflight/);
   assert.match(updater,/merge-base --is-ancestor/);
   assert.match(updater,/remote branch is not a fast-forward/);
   assert.match(updater,/merge --ff-only/);
