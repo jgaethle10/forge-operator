@@ -232,7 +232,68 @@ export function offerCapabilityForSlug(slug,capabilities=[]){
 function entryPriceLabel(item){
   const entry=item?.entry_paid_offer||null;
   if(entry?.price) return entry.price;
-  if(Number.isFinite(entry?.price_usd_normalized)) return '
+  if(Number.isFinite(entry?.price_usd_normalized)) return String.fromCharCode(36)+entry.price_usd_normalized;
+  return item?.pricing||'See current offer';
+}
+
+export function renderOffers(capabilities=[]){
+  const offers=(capabilities||[])
+    .filter((item)=>item.commercial_state==='sell_now'&&offerSlugForCapability(item.public_id))
+    .map((item)=>{
+      const copy=OFFER_PAGE_COPY[item.public_id];
+      return '<article class="card">'
+        +'<div class="eyebrow">'+escapeHtml(copy.eyebrow)+'</div>'
+        +'<h3><a href="/offers/'+escapeHtml(copy.slug)+'" style="text-decoration:none">'+escapeHtml(copy.headline)+'</a></h3>'
+        +'<p>'+escapeHtml(copy.promise)+'</p>'
+        +'<p class="price">Starts at '+escapeHtml(entryPriceLabel(item))+'</p>'
+        +'<div class="cardlinks"><a class="btn primary" href="/offers/'+escapeHtml(copy.slug)+'">See the offer</a></div>'
+        +'</article>';
+    }).join('');
+  return shell('Evercraft Offers',[
+    '<main>',
+    '<section class="hero">',
+    '<div class="eyebrow">Evercraft offers</div>',
+    '<h1>One problem.<br>One clear offer.</h1>',
+    '<p class="lede">No software scavenger hunt. These pages explain the pain, the smallest useful paid entry, what you send, what you get, and what happens next.</p>',
+    '</section>',
+    '<div class="grid">'+(offers||'<article class="card"><h3>No public offer pages are available yet.</h3></article>')+'</div>',
+    '</main>'
+  ].join('\n'));
+}
+
+export function renderOfferPage(item){
+  const copy=OFFER_PAGE_COPY[item?.public_id];
+  if(!copy) return null;
+  const entry=item.entry_paid_offer||null;
+  const price=entryPriceLabel(item);
+  const offerName=entry?.name||item.name;
+  const send=copy.send.map((x)=>'<li>'+escapeHtml(x)+'</li>').join('');
+  const get=copy.get.map((x)=>'<li>'+escapeHtml(x)+'</li>').join('');
+  const steps=copy.steps.map(([title,body])=>'<div class="offer-step"><strong>'+escapeHtml(title)+'</strong><span>'+escapeHtml(body)+'</span></div>').join('');
+  return shell(copy.headline+' · Evercraft',[
+    '<main>',
+    '<section class="offer-hero">',
+    '<div class="kicker"><span class="dot"></span> '+escapeHtml(copy.eyebrow)+' · available now</div>',
+    '<h1>'+escapeHtml(copy.headline)+'</h1>',
+    '<p class="lede">'+escapeHtml(copy.lede)+'</p>',
+    '<div class="offer-price">'+escapeHtml(price)+'</div>',
+    '<div class="offer-price-note">'+escapeHtml(offerName)+' · '+escapeHtml(item.pricing||'')+'</div>',
+    '<div class="actions">',
+    '<a class="btn primary" href="/capabilities/'+encodeURIComponent(item.public_id)+'">See technical proof</a>',
+    '<a class="btn" href="/offers">See other offers</a>',
+    '</div>',
+    '</section>',
+    '<div class="offer-grid">',
+    '<section class="offer-panel"><h2>What you are buying</h2><p class="plain">'+escapeHtml(copy.promise)+'</p><div class="offer-proof">No giant platform commitment is required to understand the first paid step.</div></section>',
+    '<section class="offer-panel"><h2>What you send us</h2><ul>'+send+'</ul></section>',
+    '<section class="offer-panel"><h2>What you get back</h2><ul>'+get+'</ul></section>',
+    '<section class="offer-panel"><h2>How it works</h2><div class="offer-steps">'+steps+'</div></section>',
+    '</div>',
+    '</main>'
+  ].join('\n'));
+}
+
+export function renderFabricHome({capabilityCount=0,capabilities=[]}={}){
   const count=Array.isArray(capabilities)&&capabilities.length
     ? capabilities.length
     : Number(capabilityCount)||0;
@@ -244,54 +305,51 @@ function entryPriceLabel(item){
         const problem=item.use_when?.[0]||item.description;
         const offerSlug=offerSlugForCapability(item.public_id);
         const href=offerSlug?'/offers/'+encodeURIComponent(offerSlug):'/capabilities/'+encodeURIComponent(item.public_id);
-        return `<article class="card"><h3><a href="${href}" style="text-decoration:none">${escapeHtml(item.name)}</a></h3><p>${escapeHtml(problem)}</p><p class="price">${escapeHtml(item.pricing)}</p><div class="cardlinks"><a class="docs-link" href="${href}">${offerSlug?'See the offer':'See what it does'} →</a></div></article>`;
+        return '<article class="card"><h3><a href="'+href+'" style="text-decoration:none">'+escapeHtml(item.name)+'</a></h3><p>'+escapeHtml(problem)+'</p><p class="price">'+escapeHtml(item.pricing)+'</p><div class="cardlinks"><a class="docs-link" href="'+href+'">'+(offerSlug?'See the offer':'See what it does')+' →</a></div></article>';
       }).join('')
     : '<article class="card"><h3>Capability catalog</h3><p>Current commercial state is available through the live directory.</p></article>';
-  return shell('Evercraft Fabric',`
-<main>
-  <section class="hero">
-    <div class="kicker"><span class="dot"></span> Evercraft Fabric is online</div>
-    <h1>Bring the problem.<br>Fabric finds the path.</h1>
-    <p class="lede">One permission-aware front door into Evercraft. Describe what you are trying to accomplish in plain language and Fabric routes you to the smallest relevant capability without turning discovery into authority.</p>
-    <div class="actions"><a class="btn primary" href="/capabilities">Explore ${count} capabilities</a><a class="btn" href="/health">View live health</a></div>
-  </section>
-
-  <div class="trust">
-    <div><strong>${count}</strong><span>public-safe capabilities</span></div>
-    <div><strong>Read only</strong><span>discovery by default</span></div>
-    <div><strong>No silent checkout</strong><span>human confirmation stays in control</span></div>
-    <div><strong>Evidence aware</strong><span>state and provenance stay explicit</span></div>
-  </div>
-
-  <section>
-    <div class="eyebrow">How it works</div>
-    <h2>Problem first. Product second.</h2>
-    <p class="sub">You should not need to memorize a software catalog. Fabric interprets the job, compares it with current published capability metadata, and returns the safest useful route it can actually support.</p>
-    <div class="grid">
-      <article class="card"><h3>1. Describe the problem</h3><p>Use normal language. Start with the work, not an Evercraft product name.</p></article>
-      <article class="card"><h3>2. Match the specialist</h3><p>Fabric ranks current capabilities and favors the narrowest truthful fit.</p></article>
-      <article class="card"><h3>3. Continue deliberately</h3><p>Connection options stay explicit. Discovery alone never creates payment or external action.</p></article>
-    </div>
-  </section>
-
-  <section>
-    <div class="eyebrow">Available now</div>
-    <h2>Useful work, not a software scavenger hunt.</h2>
-    <p class="sub">These are current public capabilities whose catalog state says they can be sold now. The offer and pricing shown here come from the same runtime metadata agents see.</p>
-    <div class="grid">${featuredMarkup}</div>
-  </section>
-
-  <section>
-    <div class="eyebrow">Try asking</div>
-    <h2>Real problems are the interface.</h2>
-    <div class="prompts">
-      <article class="prompt"><h3>Hard-to-find parts</h3><p>Route an obsolete component problem to the relevant sourcing capability.</p><code>“I need a discontinued hydraulic valve that normal suppliers cannot locate.”</code></article>
-      <article class="prompt"><h3>EV infrastructure</h3><p>Find the right site-intelligence path for a commercial property.</p><code>“Is this property a good place for EV charging?”</code></article>
-      <article class="prompt"><h3>Website conversion</h3><p>Find the bounded audit surface when traffic is not becoming leads.</p><code>“My website gets traffic but almost nobody contacts us.”</code></article>
-      <article class="prompt"><h3>Large evidence review</h3><p>Route long-form media and document evidence to an evidence-aware workflow.</p><code>“I have hours of video and need a trustworthy timeline and transcript.”</code></article>
-    </div>
-  </section>
-</main>`);
+  return shell('Evercraft Fabric',[
+    '<main>',
+    '<section class="hero">',
+    '<div class="kicker"><span class="dot"></span> Evercraft Fabric is online</div>',
+    '<h1>Bring the problem.<br>Fabric finds the path.</h1>',
+    '<p class="lede">One permission-aware front door into Evercraft. Describe what you are trying to accomplish in plain language and Fabric routes you to the smallest relevant capability without turning discovery into authority.</p>',
+    '<div class="actions"><a class="btn primary" href="/offers">See simple offers</a><a class="btn" href="/capabilities">Explore '+count+' capabilities</a></div>',
+    '</section>',
+    '<div class="trust">',
+    '<div><strong>'+count+'</strong><span>public-safe capabilities</span></div>',
+    '<div><strong>Read only</strong><span>discovery by default</span></div>',
+    '<div><strong>No silent checkout</strong><span>human confirmation stays in control</span></div>',
+    '<div><strong>Evidence aware</strong><span>state and provenance stay explicit</span></div>',
+    '</div>',
+    '<section>',
+    '<div class="eyebrow">How it works</div>',
+    '<h2>Problem first. Product second.</h2>',
+    '<p class="sub">You should not need to memorize a software catalog. Fabric interprets the job, compares it with current published capability metadata, and returns the safest useful route it can actually support.</p>',
+    '<div class="grid">',
+    '<article class="card"><h3>1. Describe the problem</h3><p>Use normal language. Start with the work, not an Evercraft product name.</p></article>',
+    '<article class="card"><h3>2. Match the specialist</h3><p>Fabric ranks current capabilities and favors the narrowest truthful fit.</p></article>',
+    '<article class="card"><h3>3. Continue deliberately</h3><p>Connection options stay explicit. Discovery alone never creates payment or external action.</p></article>',
+    '</div>',
+    '</section>',
+    '<section>',
+    '<div class="eyebrow">Available now</div>',
+    '<h2>Useful work, not a software scavenger hunt.</h2>',
+    '<p class="sub">Human offer pages explain the problem and first paid step plainly. The underlying capability record remains available for technical proof.</p>',
+    '<div class="grid">'+featuredMarkup+'</div>',
+    '</section>',
+    '<section>',
+    '<div class="eyebrow">Try asking</div>',
+    '<h2>Real problems are the interface.</h2>',
+    '<div class="prompts">',
+    '<article class="prompt"><h3>Hard-to-find parts</h3><p>Route an obsolete component problem to the relevant sourcing capability.</p><code>“I need a discontinued hydraulic valve that normal suppliers cannot locate.”</code></article>',
+    '<article class="prompt"><h3>EV infrastructure</h3><p>Find the right site-intelligence path for a commercial property.</p><code>“Is this property a good place for EV charging?”</code></article>',
+    '<article class="prompt"><h3>Website conversion</h3><p>Find the bounded audit surface when traffic is not becoming leads.</p><code>“My website gets traffic but almost nobody contacts us.”</code></article>',
+    '<article class="prompt"><h3>Large evidence review</h3><p>Route long-form media and document evidence to an evidence-aware workflow.</p><code>“I have hours of video and need a trustworthy timeline and transcript.”</code></article>',
+    '</div>',
+    '</section>',
+    '</main>'
+  ].join('\n'));
 }
 
 export function renderCapabilities(capabilities=[]){
