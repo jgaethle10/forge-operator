@@ -32,3 +32,17 @@ The public-edge controller uses this state because public ingress must not appea
 RIVET report execution belongs on Yard / Evercraft Compute. The resident RIVET edge may reuse already-admitted public-edge compute authority, but it may not provision arbitrary external capacity or silently route source intelligence back through Base44. An owned AliEV source URL, immutable release reference, verified deployment receipt and public HTTPS route are required before the report path is considered live.
 
 The Base44 report function remains continuity-only until a fresh live report reaches `generation_state=ready` through the owned route and the migration observation window passes.
+
+
+## Raven private intelligence residents
+
+The Core resident supervisor now contains two optional, colocated Raven services:
+
+- `raven-private-runtime` on loopback port 4321 owns private team orchestration and the authenticated `/v1/team-review` surface.
+- `raven-inference-gateway` on loopback port 4322 owns provider selection, provider-vault access and the authenticated `/v1/infer` surface.
+
+Evercraft Compute does not forward raw Raven authority tokens from a deployment request. When an explicit `raven_inference_provider` and `raven_inference_model` are admitted on the Core workload, Compute generates separate 256-bit authority values inside `<core-state>/.private-bindings/raven/`, writes them with mode 0600, and passes only their file paths to the resident supervisor.
+
+If provider/model are absent, both Raven residents remain intentionally disabled. If configured, private Raven and the inference gateway activate together. Provider/model are non-secret configuration; hosted provider API keys remain in the Evercraft encrypted provider vault.
+
+The Chromebook local organism passes only `RAVEN_INFERENCE_PROVIDER`, `RAVEN_INFERENCE_MODEL`, optional `RAVEN_PROVIDER_CREDENTIAL_STATE_DIR`, and optional loopback `RAVEN_OLLAMA_ORIGIN` into the admitted Core request. The Core boundary owns secret creation after admission.
