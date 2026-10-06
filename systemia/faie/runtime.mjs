@@ -1,6 +1,7 @@
 import fs from 'node:fs';
 import path from 'node:path';
 import {
+  buildFaieComparison,
   buildFaieInvestigation,
   emptyFaieState,
   ingestFaieObservation,
@@ -132,6 +133,7 @@ export function createFaieRuntime({
   const publicFile = path.join(stateDir, 'public-latest.json');
   const receiptsFile = path.join(stateDir, 'receipts.jsonl');
   const investigationsDir = path.join(stateDir, 'investigations');
+  const comparisonsDir = path.join(stateDir, 'comparisons');
 
   let state = readJson(stateFile, emptyFaieState());
   let timer = null;
@@ -168,6 +170,21 @@ export function createFaieRuntime({
     return result.investigation;
   }
 
+  function previewComparison(input, options = {}) {
+    return buildFaieComparison(state, input, options).comparison;
+  }
+
+  function compare(input, options = {}) {
+    const result = buildFaieComparison(state, input, options);
+    state = result.state;
+    persist();
+    appendJsonl(receiptsFile, result.receipt);
+    ensureDir(comparisonsDir);
+    const safeId = result.comparison.comparison_id.replace(/[^a-zA-Z0-9._-]/g, '_');
+    writeJson(path.join(comparisonsDir, safeId + '.json'), result.comparison);
+    return result.comparison;
+  }
+
   function latestInvestigations(limit = 20) {
     return Object.values(state.investigations || {})
       .sort((a, b) => b.created_at.localeCompare(a.created_at))
@@ -176,6 +193,16 @@ export function createFaieRuntime({
 
   function getInvestigation(id) {
     return state.investigations?.[String(id || '')] || null;
+  }
+
+  function latestComparisons(limit = 20) {
+    return Object.values(state.comparisons || {})
+      .sort((a, b) => b.created_at.localeCompare(a.created_at))
+      .slice(0, Math.max(1, Math.min(100, Number(limit) || 20)));
+  }
+
+  function getComparison(id) {
+    return state.comparisons?.[String(id || '')] || null;
   }
 
   function snapshot(limit = 50) {
@@ -199,6 +226,7 @@ export function createFaieRuntime({
       signal_count: Object.keys(state.signals || {}).length,
       observation_count: Object.keys(state.observations || {}).length,
       investigation_count: Object.keys(state.investigations || {}).length,
+      comparison_count: Object.keys(state.comparisons || {}).length,
       radar_bridge: Boolean(radarResident),
       official_collectors: {
         enabled: Boolean(collectorConfig?.enabled),
@@ -320,8 +348,12 @@ export function createFaieRuntime({
     ingest,
     preview,
     investigate,
+    previewComparison,
+    compare,
     latestInvestigations,
     getInvestigation,
+    latestComparisons,
+    getComparison,
     snapshot,
     health,
     runOnce,
