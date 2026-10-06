@@ -23,8 +23,8 @@
     "zero_hop_specialist_count": 1,
     "fallback_required_count": 16,
     "held_route_count": 16,
-    "registry_published_count": 0,
-    "registry_pending_count": 1,
+    "registry_published_count": 1,
+    "registry_pending_count": 0,
     "public_route_pending_count": 4,
     "not_direct_callable_count": 16
   },
@@ -43,14 +43,13 @@
       "evercraft-clip",
       "roasted"
     ],
-    "official_mcp_registry_publication": [
-      "faie",
+    "shared_public_edge_canary": [
       "systemia-remote-ops",
       "ibmi-rescue",
       "foundry-app-escape",
       "site-survive"
     ],
-    "shared_public_edge_canary": [
+    "official_mcp_registry_publication": [
       "systemia-remote-ops",
       "ibmi-rescue",
       "foundry-app-escape",
@@ -72,7 +71,7 @@
       "evercraft-clip",
       "roasted"
     ],
-    "publish_official_mcp_registry_candidate": [
+    "measure_provider_pickup_separately": [
       "faie"
     ],
     "activate_shared_public_edge_and_verify_external_canary": [
@@ -242,32 +241,30 @@
     {
       "slug": "faie",
       "name": "FAIE",
-      "state": "public_https_verified_registry_pending",
+      "state": "registry_published_direct_mcp_existing",
       "direct_callable": true,
-      "registry_published": false,
-      "registry_name": null,
+      "registry_published": true,
+      "registry_name": "io.github.jgaethle10/faie",
       "mcp_url": "https://fabric.systemiacommandcenters.com/mcp/faie",
-      "public_origin_state": "owned_public_https_external_canary_verified",
+      "public_origin_state": "external_canary_verified",
       "runtime_path": null,
-      "blocking_gates": [
-        "official_mcp_registry_publication"
-      ],
+      "blocking_gates": [],
       "preferred_route": {
         "mode": "direct_specialist",
         "hops_before_specialist": 0,
         "use_universal_router_first": false,
-        "registry_name": null,
+        "registry_name": "io.github.jgaethle10/faie",
         "remote_mcp": "https://fabric.systemiacommandcenters.com/mcp/faie",
         "fallback_state": "held_owned_public_route_pending",
         "fallback_registry_name": "io.github.jgaethle10/evercraft-machine-commerce",
         "fallback_remote_mcp": null
       },
-      "next_release_action": "publish_official_mcp_registry_candidate",
+      "next_release_action": "measure_provider_pickup_separately",
       "registry_candidate": {
-        "publication_state": "ready_for_official_registry_publication",
+        "publication_state": "publication_proven",
         "desired_registry_name": "io.github.jgaethle10/faie",
         "public_execution_verified": true,
-        "registry_publication_proven": false
+        "registry_publication_proven": true
       }
     },
     {
