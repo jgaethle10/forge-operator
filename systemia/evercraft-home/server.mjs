@@ -39,6 +39,18 @@ function cookies(req) {
   }));
 }
 
+function readPrivateRuntimeToken(file, prefix = "runtime") {
+  const value = String(file || "").trim();
+  if (!value) return "";
+  const resolved = path.resolve(value);
+  const stat = fs.statSync(resolved);
+  if (!stat.isFile()) throw new Error(prefix + "_token_path_not_file");
+  if ((stat.mode & 0o077) !== 0) throw new Error(prefix + "_token_file_permissions_too_open");
+  const token = fs.readFileSync(resolved, "utf8").trim();
+  if (Buffer.byteLength(token, "utf8") < 32) throw new Error(prefix + "_token_too_short");
+  return token;
+}
+
 async function readJsonBody(req, limit = 131072) {
   const chunks = [];
   let size = 0;
@@ -122,7 +134,13 @@ export async function startEvercraftHomeServer({
   const credentialVault = credentialStateDir ? new ProviderCredentialVault({ stateDir: credentialStateDir }) : null;
   const instanceId = "home_" + randomUUID();
   const ravenWorkBridgeUrl = String(serviceOrigins?.RAVEN_NEXUS_WORK_URL || "").trim();
-  const ravenWorkBridgeToken = String(serviceOrigins?.RAVEN_NEXUS_WORK_TOKEN || "").trim();
+  const ravenWorkBridgeTokenFile = String(serviceOrigins?.RAVEN_NEXUS_WORK_TOKEN_FILE || "").trim();
+  if (Boolean(ravenWorkBridgeUrl) !== Boolean(ravenWorkBridgeTokenFile)) {
+    throw new Error("raven_work_bridge_url_and_token_file_must_be_configured_together");
+  }
+  const ravenWorkBridgeToken = ravenWorkBridgeTokenFile
+    ? readPrivateRuntimeToken(ravenWorkBridgeTokenFile, "raven_work_bridge")
+    : "";
   const ravenReceiptDir = String(serviceOrigins?.EVERCRAFT_RAVEN_RECEIPT_DIR || "").trim();
   let closed = false;
   let deploymentReceiptRef = "";
@@ -147,7 +165,7 @@ export async function startEvercraftHomeServer({
       accepted_signing_key_count: authMode === "passport" ? Object.keys(signingKeys).length : 0,
       session_revocation_supported: Boolean(identity),
       provider_credential_vault_configured: Boolean(credentialVault),
-      raven_readonly_execution_configured: Boolean(ravenWorkBridgeUrl && ravenWorkBridgeToken),
+      raven_readonly_execution_configured: Boolean(ravenWorkBridgeUrl && ravenWorkBridgeTokenFile),
     };
   }
 
