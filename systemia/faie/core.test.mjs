@@ -144,3 +144,25 @@ test('FAIE treats controlled-environment agriculture as a multi-domain evidence 
   assert.equal(result.investigation.decision_packet.decide.action_authority, false);
   assert.ok(result.investigation.evidence_needed.some((item) => /utility tariff/i.test(item)));
 });
+
+
+test('FAIE expands AgNormal-style regional food infrastructure into buildout evidence domains', () => {
+  let state = emptyFaieState();
+  state = ingestFaieObservation(state, observation(), { now: NOW }).state;
+
+  const result = buildFaieInvestigation(state, {
+    question: 'What evidence should shape site selection and regional food infrastructure using native living soil and natural light in Yakima?',
+    region_keys: ['yakima-wa'],
+    asset_types: ['regional food production infrastructure'],
+    horizon_days: 90
+  }, { now: NOW });
+
+  const expected = result.investigation.coverage.expected_dimensions;
+  for (const dimension of ['water', 'soil', 'energy', 'infrastructure', 'logistics', 'labor', 'economics', 'policy', 'crop_health', 'resilience']) {
+    assert.ok(expected.includes(dimension), 'expected dimension ' + dimension);
+  }
+  assert.equal(result.investigation.coverage.decision_readiness, 'evidence_gaps');
+  assert.ok(result.investigation.evidence_needed.some((item) => /soil series/i.test(item)));
+  assert.ok(result.investigation.evidence_needed.some((item) => /land, construction/i.test(item)));
+  assert.ok(result.investigation.evidence_needed.some((item) => /zoning, water rights/i.test(item)));
+});
