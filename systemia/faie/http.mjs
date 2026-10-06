@@ -2,6 +2,7 @@ import path from 'node:path';
 import { createFaieRuntime, investigationToMarkdown } from './runtime.mjs';
 import { executeFaieMcpRpc, faieMcpTools } from './mcp.mjs';
 import { rivetSnapshotToFaieObservations } from './rivet-bridge.mjs';
+import { collectUsdaSoilAtPoint } from './soil-source.mjs';
 
 function bearer(req) {
   const header = String(req.headers?.authorization || '');
@@ -280,6 +281,46 @@ export function registerFaieRoutes(app, {
       res.status(decision.action === 'ignored' ? 202 : 200).json({
         ok: true,
         decision
+      });
+    } catch (error) {
+      res.status(400).json({
+        ok: false,
+        error: error instanceof Error ? error.message : String(error)
+      });
+    }
+  });
+
+  app.post('/api/faie/acquire/soil', requireInternal, async (req, res) => {
+    try {
+      const latitude = Number(req.body?.latitude);
+      const longitude = Number(req.body?.longitude);
+      const acquisition = await collectUsdaSoilAtPoint({
+        latitude,
+        longitude,
+        regionKeys: req.body?.region_keys || req.body?.regions || req.body?.region || [],
+        fetchImpl: globalThis.fetch,
+        retrievedAt: new Date().toISOString()
+      });
+
+      const decision = acquisition.observation
+        ? runtime.ingest(acquisition.observation)
+        : null;
+
+      res.status(200).json({
+        ok: true,
+        acquisition: {
+          schema: acquisition.schema,
+          source_id: acquisition.source_id,
+          retrieved_at: acquisition.retrieved_at,
+          row_count: acquisition.row_count,
+          mapunit_count: acquisition.mapunit_count,
+          receipt: acquisition.receipt
+        },
+        ingest_decision: decision,
+        external_action_taken: true,
+        external_action: 'read_official_usda_soil_data_access',
+        decision_authority: false,
+        publication_authority: false
       });
     } catch (error) {
       res.status(400).json({
