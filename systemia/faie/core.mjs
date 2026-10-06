@@ -221,6 +221,47 @@ function relevanceScore(signal, scope) {
   return Number(clamp01((0.55 * tokenScore) + (0.3 * regionMatch) + (0.15 * cropMatch)).toFixed(3));
 }
 
+function expectedDimensionsForScope(scope) {
+  const corpus = [
+    scope.question,
+    scope.crop,
+    scope.water_source,
+    ...(scope.asset_types || [])
+  ].join(' ').toLowerCase();
+
+  const expected = new Set();
+  const includesAny = (terms) => terms.some((term) => corpus.includes(term));
+  const add = (...dimensions) => dimensions.forEach((dimension) => expected.add(dimension));
+
+  if (includesAny(['greenhouse', 'controlled environment', 'controlled-environment', 'hydroponic', 'indoor farm', 'cea'])) {
+    add('water', 'heat', 'energy', 'infrastructure', 'logistics', 'labor', 'crop_health', 'resilience');
+  }
+
+  if (scope.crop) add('crop_health');
+  if (scope.water_source || includesAny(['water', 'irrigation', 'aquifer', 'well', 'river', 'reservoir'])) add('water');
+  if (includesAny(['heat', 'temperature', 'cooling', 'hvac'])) add('heat');
+  if (includesAny(['power', 'electricity', 'energy', 'utility', 'tariff'])) add('energy');
+  if (includesAny(['road', 'freight', 'shipping', 'logistics', 'distribution'])) add('logistics');
+  if (includesAny(['labor', 'worker', 'workforce', 'staffing'])) add('labor');
+  if (includesAny(['infrastructure', 'interconnection', 'service capacity', 'transformer'])) add('infrastructure');
+
+  return [...expected];
+}
+
+function evidenceNeedForDimension(dimension) {
+  const needs = {
+    water: 'Site-specific water source, allocation, reliability, quality, and current operating constraints',
+    heat: 'Site-level temperature, solar-load, humidity, cooling-load, and extreme-heat evidence',
+    energy: 'Serving-utility tariff, demand charges, outage history, and site electrical capacity',
+    infrastructure: 'Site utility, road, communications, drainage, and interconnection constraints',
+    logistics: 'Inbound and outbound freight access, cold-chain needs, and market-distance evidence',
+    labor: 'Local labor availability, wage pressure, seasonality, and critical-skill constraints',
+    crop_health: 'Crop-specific production, yield, quality, pest, disease, and environmental-control evidence',
+    resilience: 'Continuity evidence for outages, water interruption, smoke, heat, freeze, and other credible disruptions'
+  };
+  return needs[dimension] || `Additional current evidence for the ${dimension} dimension`;
+}
+
 function investigationFinding(signal, relevance) {
   return {
     signal_id: signal.signal_id,
@@ -415,11 +456,33 @@ export function buildFaieInvestigation(inputState, input, { now = new Date().toI
     0.15 * Math.min(1, strongFindings.length / 3)
   ).toFixed(3));
 
+  const coveredDimensions = unique(findings.flatMap((item) => item.dimensions || []), 50);
+  const expectedDimensions = expectedDimensionsForScope(scope);
+  const coveredDimensionSet = new Set(coveredDimensions);
+  const missingDimensions = expectedDimensions.filter((dimension) => !coveredDimensionSet.has(dimension));
+
   const unknowns = [];
   if (!findings.length) unknowns.push('No currently ingested FAIE evidence matched the scope closely enough to support a finding.');
   if (sourceFamilies.length < 2) unknowns.push('Independent source-family corroboration is limited.');
   if (!strongFindings.length) unknowns.push('No high-confidence observed or verified evidence currently clears the strong-evidence gate.');
   if (!scope.region_keys.length) unknowns.push('No explicit region key was provided, so geographic relevance is broader and less precise.');
+  if (missingDimensions.length) {
+    unknowns.push('Scoped decision coverage is incomplete. Missing evidence dimensions: ' + missingDimensions.join(', ') + '.');
+  }
+
+  const evidenceNeeded = unique([
+    ...missingDimensions.map(evidenceNeedForDimension),
+    'More recent observations for the exact scoped geography',
+    ...(sourceFamilies.length < 2 ? ['Independent corroboration from a separate source family'] : []),
+    'Field, sensor, operator, or official-source evidence when a consequential decision depends on the result'
+  ], 30);
+
+  const decisionReadiness = findings.length &&
+    !missingDimensions.length &&
+    sourceFamilies.length >= 2 &&
+    strongFindings.length
+      ? 'review_ready'
+      : 'evidence_gaps';
 
   const investigationId = 'faie-investigation:' + stableHash([
     scope,
@@ -446,14 +509,41 @@ export function buildFaieInvestigation(inputState, input, { now = new Date().toI
       matched_signal_count: findings.length,
       strong_finding_count: strongFindings.length,
       independent_source_family_count: sourceFamilies.length,
-      evidence_states: evidenceStates
+      evidence_states: evidenceStates,
+      expected_dimensions: expectedDimensions,
+      covered_dimensions: coveredDimensions,
+      missing_dimensions: missingDimensions,
+      decision_readiness: decisionReadiness
+    },
+    decision_packet: {
+      framework: 'SENSE_CHALLENGE_DECIDE',
+      sense: {
+        finding_count: findings.length,
+        covered_dimensions: coveredDimensions,
+        strongest_findings: findings.slice(0, 5).map((item) => ({
+          signal_id: item.signal_id,
+          summary: item.summary,
+          evidence_state: item.evidence_state,
+          source_family: item.source_family,
+          relevance_score: item.relevance_score,
+          signal_score: item.signal_score
+        }))
+      },
+      challenge: {
+        unknowns: [...unknowns],
+        missing_dimensions: missingDimensions,
+        independent_source_family_count: sourceFamilies.length,
+        strong_finding_count: strongFindings.length
+      },
+      decide: {
+        readiness: decisionReadiness,
+        next_evidence: evidenceNeeded,
+        human_review_required: true,
+        action_authority: false
+      }
     },
     unknowns,
-    evidence_needed: [
-      'More recent observations for the exact scoped geography',
-      'Independent corroboration when only one source family is represented',
-      'Field, sensor, operator, or official-source evidence when a consequential decision depends on the result'
-    ],
+    evidence_needed: evidenceNeeded,
     boundaries: [
       'FAIE provides evidence support, not autonomous consequential authority.',
       'Modeled, reported, observed, and verified evidence remain distinct.',
