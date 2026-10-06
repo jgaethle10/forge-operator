@@ -21,6 +21,8 @@ import {
   renderMarkdownDocument,
   renderOfferPage,
   renderOffers,
+  renderRivetLanding,
+  renderAliEvLanding,
 } from './fabric-public-site.mjs';
 import {
   fabricMobileManifest,
@@ -323,6 +325,8 @@ export async function startFabricLocalRuntime({
     faie_public_api:faieSurface?'/api/faie':null,
     faie_mcp_path:faieSurface?'/mcp/faie':null,
     faie_base44_transport_enabled:false,
+    rivet_public_path:'/rivet',
+    aliev_public_path:'/aliev',
     provider_publication_state:'external_to_runtime',
     public_submission_note:'The owned Fabric runtime and review surface are submission-ready. Provider review, approval, publication, and directory visibility are external states and are not inferred by this health endpoint.',
     catalog_reload_mode:staticPrepared?'static_injected':'hot_reload_repository',
@@ -377,6 +381,14 @@ export async function startFabricLocalRuntime({
           if(!page) return sendJson(res,404,{error:'offer_not_found'});
           return sendText(res,200,page,{contentType:'text/html; charset=utf-8'});
         }
+      }
+
+      if (req.method==='GET' && (req.url==='/rivet'||req.url==='/rivet/')) {
+        return sendText(res,200,renderRivetLanding(),{contentType:'text/html; charset=utf-8'});
+      }
+
+      if (req.method==='GET' && (req.url==='/aliev'||req.url==='/aliev/')) {
+        return sendText(res,200,renderAliEvLanding(),{contentType:'text/html; charset=utf-8'});
       }
 
       if (req.method==='GET' && (req.url==='/mobile'||req.url==='/mobile/')) {
