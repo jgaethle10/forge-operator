@@ -2,7 +2,7 @@
   "schema": "evercraft.chum.crawl-pressure.v1",
   "provider": "Evercraft LLC",
   "coordinator": "CHUM",
-  "updated_at": "2026-10-06T16:12:55.160Z",
+  "updated_at": "2026-10-06T16:13:26.218Z",
   "purpose": "Content-hash-backed freshness signals for public Evercraft discovery surfaces. A freshness signal requests attention; it does not prove indexing, ranking, recommendation, citation or provider pickup.",
   "indexnow": {
     "supported": true,
@@ -11,92 +11,18 @@
   },
   "latest_change_batch": [
     {
-      "path": "/chum/intents/foundry-app-escape-audit-v1/",
-      "last_changed": "2026-10-06T16:12:55.160Z",
-      "priority": 158
-    },
-    {
-      "path": "/chum/intents/website-launch-service-v1/",
-      "last_changed": "2026-10-06T16:12:55.160Z",
-      "priority": 158
-    },
-    {
-      "path": "/chum/intents/aliev-site-opportunity-snapshot-v1/",
-      "last_changed": "2026-10-06T16:12:55.160Z",
-      "priority": 98
-    },
-    {
-      "path": "/chum/intents/audit-center-website-audit-machine-v1/",
-      "last_changed": "2026-10-06T16:12:55.160Z",
-      "priority": 98
-    },
-    {
-      "path": "/chum/intents/career-command-interview-practice-machine-v1/",
-      "last_changed": "2026-10-06T16:12:55.160Z",
-      "priority": 98
-    },
-    {
-      "path": "/chum/intents/deck-capital-fit-sprint-machine-v1/",
-      "last_changed": "2026-10-06T16:12:55.160Z",
-      "priority": 98
-    },
-    {
-      "path": "/chum/intents/eventwave-paid-promotion-v1/",
-      "last_changed": "2026-10-06T16:12:55.160Z",
-      "priority": 98
-    },
-    {
-      "path": "/chum/intents/faie-signal-brief-v1/",
-      "last_changed": "2026-10-06T16:12:55.160Z",
-      "priority": 98
-    },
-    {
-      "path": "/chum/intents/findmypart-paid-hunt-v1/",
-      "last_changed": "2026-10-06T16:12:55.160Z",
-      "priority": 98
-    },
-    {
-      "path": "/chum/intents/ibmi-rescue-v1/",
-      "last_changed": "2026-10-06T16:12:55.160Z",
-      "priority": 98
-    },
-    {
-      "path": "/chum/intents/legacy-rescue-lab-v1/",
-      "last_changed": "2026-10-06T16:12:55.160Z",
-      "priority": 98
-    },
-    {
-      "path": "/chum/intents/raven-nexus-business-setup-v1/",
-      "last_changed": "2026-10-06T16:12:55.160Z",
-      "priority": 98
-    },
-    {
-      "path": "/chum/intents/raven-nexus-home-setup-v1/",
-      "last_changed": "2026-10-06T16:12:55.160Z",
-      "priority": 98
-    },
-    {
-      "path": "/chum/intents/rivet-site-underwriting-v1/",
-      "last_changed": "2026-10-06T16:12:55.160Z",
-      "priority": 98
-    },
-    {
-      "path": "/chum/intents/roasted-text-pressure-test-machine-v1/",
-      "last_changed": "2026-10-06T16:12:55.160Z",
-      "priority": 98
-    },
-    {
-      "path": "/chum/intents/site-survive-rapid-audit-v1/",
-      "last_changed": "2026-10-06T16:12:55.160Z",
-      "priority": 98
-    },
-    {
       "path": "/chum/hot/index.json",
-      "last_changed": "2026-10-06T16:12:55.160Z",
+      "last_changed": "2026-10-06T16:13:26.218Z",
       "priority": 80
     }
   ],
   "recent_surfaces": [
+    {
+      "path": "/chum/hot/index.json",
+      "url": "/chum/hot/index.json",
+      "last_changed": "2026-10-06T16:13:26.218Z",
+      "priority": 80
+    },
     {
       "path": "/chum/intents/foundry-app-escape-audit-v1/",
       "url": "/chum/intents/foundry-app-escape-audit-v1/",
@@ -192,12 +118,6 @@
       "url": "/chum/intents/site-survive-rapid-audit-v1/",
       "last_changed": "2026-10-06T16:12:55.160Z",
       "priority": 98
-    },
-    {
-      "path": "/chum/hot/index.json",
-      "url": "/chum/hot/index.json",
-      "last_changed": "2026-10-06T16:12:55.160Z",
-      "priority": 80
     },
     {
       "path": "/chum/hot/",
