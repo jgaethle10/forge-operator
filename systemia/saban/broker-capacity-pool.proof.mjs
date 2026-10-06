@@ -62,7 +62,19 @@ const publicEdge=classifyBrokerCapacity([chromebook,fieldEdge],{
 assert.deepEqual(publicEdge.eligible.map((n)=>n.node_id),['field-edge-002']);
 assert.equal(publicEdge.rejected.length,1);
 assert.equal(publicEdge.rejected[0].node_id,'chromebook-crostini');
-assert.equal(publicEdge.rejected[0].reason,'required_label_missing');
+assert.equal(publicEdge.rejected[0].reason,'zero_cost_required');
+
+const labelOnlyChromebook=structuredClone(chromebook);
+labelOnlyChromebook.capacity.zero_cost=true;
+labelOnlyChromebook.capacity.public_ingress=true;
+const labelOnly=classifyBrokerCapacity([labelOnlyChromebook],{
+  requiredNodeLabels:['public-edge','gateway'],
+  forbiddenNodeLabels:['outbound-only'],
+  requireZeroCost:true,
+  requirePublicIngress:true,
+});
+assert.equal(labelOnly.eligible.length,0);
+assert.equal(labelOnly.rejected[0].reason,'required_label_missing');
 
 const stale=structuredClone(chromebook);
 stale.connected=false;
@@ -77,6 +89,7 @@ console.log(JSON.stringify({
   chromebook_public_edge_ineligible:true,
   field_edge_eligible:true,
   zero_cost_public_ingress_required:true,
+  required_label_rejection_verified:true,
   disconnected_nodes_rejected:true,
   arbitrary_unknown_hardware_auto_authorized:false,
 },null,2));
