@@ -90,7 +90,13 @@ for (const offer of canonicalSellNow) {
   const painPagePath = `public/chum/intents/${slug}/index.html`;
   if (!fs.existsSync(painPagePath)) fail(`sell-now pain page missing: ${offer.public_id}`);
   const painPage = fs.readFileSync(painPagePath, 'utf8');
-  if (!painPage.includes('Start here')) fail(`sell-now pain page missing Start CTA: ${offer.public_id}`);
+  const held = compact.start_url_state === 'held_no_owned_public_origin';
+  if (held) {
+    if (!painPage.includes('Start held:')) fail(`held sell-now pain page missing explicit blocker: ${offer.public_id}`);
+    if (painPage.includes('<strong>Start here</strong>')) fail(`held sell-now pain page leaked executable Start CTA: ${offer.public_id}`);
+  } else if (!painPage.includes('Start here')) {
+    fail(`sell-now pain page missing Start CTA: ${offer.public_id}`);
+  }
   if (canonicalPaidTiers.length && !painPage.includes('Easiest paid entry:')) {
     fail(`sell-now pain page missing entry offer: ${offer.public_id}`);
   }
