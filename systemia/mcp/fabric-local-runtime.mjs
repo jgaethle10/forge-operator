@@ -299,6 +299,8 @@ export async function startFabricLocalRuntime({
     public_plugin_submission_ready:true,
     mobile_path:'/mobile',
     mobile_installable:true,
+    chum_human_review_path_template:'/api/chum/go/{public_id}',
+    chum_human_review_authority:'discovery_review_only',
     journal_mirror_path:'/journal/',
     journal_mirror_ready:fs.existsSync(path.join(journalDir,'index.html')),
     journal_mirror_indexing:'noindex_until_dedicated_origin',
@@ -394,6 +396,35 @@ export async function startFabricLocalRuntime({
           renderCapabilities(preparedCatalog().capabilities),
           {contentType:'text/html; charset=utf-8'}
         );
+      }
+
+      if (req.method==='GET' && String(req.url||'').startsWith('/api/chum/go/')) {
+        const parsed=new URL(String(req.url||''),'http://fabric.local');
+        const raw=decodeURIComponent(parsed.pathname.slice('/api/chum/go/'.length));
+        if(!raw || raw.includes('/') || !/^[a-z0-9][a-z0-9._:-]{0,159}$/i.test(raw)){
+          return sendJson(res,400,{
+            error:'invalid_capability_id',
+            transactional:false,
+            external_action_taken:false,
+          });
+        }
+        const capability=preparedCatalog().capabilities.find((item)=>item.public_id===raw);
+        if(!capability) return sendJson(res,404,{
+          error:'capability_not_found',
+          transactional:false,
+          external_action_taken:false,
+        });
+        const surface=String(parsed.searchParams.get('surface')||'chum_public_surface').slice(0,80);
+        const location='/capabilities/'+encodeURIComponent(raw)
+          +'?from=chum&surface='+encodeURIComponent(surface);
+        res.writeHead(302,{
+          location,
+          'cache-control':'no-store',
+          'x-content-type-options':'nosniff',
+          'referrer-policy':'no-referrer',
+          'x-evercraft-authority':'discovery-review-only',
+        });
+        return res.end();
       }
 
       if (req.method==='GET' && req.url==='/capabilities.json') {
