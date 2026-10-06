@@ -107,6 +107,13 @@ for (const offer of sellNow.offers || []) {
   if (!String(offer.pricing || '').trim()) fail(`sell-now offer missing pricing: ${offer.public_id}`);
   if (!Array.isArray(offer.intent_terms) || offer.intent_terms.length < 1) fail(`sell-now offer missing intent language: ${offer.public_id}`);
   if (!String(offer.public_url || '').startsWith('http')) fail(`sell-now offer missing public URL: ${offer.public_id}`);
+  if (/https?:\/\/(?:base44\.app|[^/]+\.base44\.app)(?:\/|$)/i.test(String(offer.public_url || ''))) {
+    fail(`retired provider leaked into public URL: ${offer.public_id}`);
+  }
+  if (offer.public_id === 'aliev-site-opportunity-snapshot-v1' &&
+      !String(offer.public_url || '').startsWith('https://fabric.systemiacommandcenters.com/capabilities/')) {
+    fail('AliEV public URL did not migrate to owned Fabric');
+  }
 }
 
 console.log(JSON.stringify({
