@@ -4,6 +4,7 @@ import { SceneStreamController } from './streaming.ts';
 import { compileVisualFrame } from './visual.ts';
 import { compileAudioFrame } from './audio.ts';
 import { AuthoritativeReplicationRuntime, PredictiveReplicationRuntime, createReplicatedInput } from './replication.ts';
+import { compileWebGpuRenderPlan, EVERCRAFT_WEBGPU_WGSL } from './webgpu.ts';
 
 const world={
   schema:'evercraft.world-engine.world.v1',
@@ -526,8 +527,39 @@ authority.submitInput(futureInput);
 authority.run(2);
 assert.equal(predictor.runtime.snapshot().digest,authority.runtime.snapshot().digest);
 
+const webgpuGeometry={
+  schema:'evercraft.world-engine.geometry.v1',
+  id:'geometry:proof-cube',
+  primitive:'triangles',
+  positions:[
+    -1,-1,0,
+    1,-1,0,
+    0,1,0
+  ],
+  normals:[
+    0,0,1,
+    0,0,1,
+    0,0,1
+  ]
+};
+const webgpuPlan=compileWebGpuRenderPlan(
+  visualFrame,
+  [webgpuGeometry],
+  {width:1280,height:720}
+);
+const webgpuPlanAgain=compileWebGpuRenderPlan(
+  visualFrame,
+  [webgpuGeometry],
+  {width:1280,height:720}
+);
+assert.equal(webgpuPlan.digest,webgpuPlanAgain.digest);
+assert.equal(webgpuPlan.draws.length,1);
+assert.equal(webgpuPlan.lights.length,1);
+assert.match(EVERCRAFT_WEBGPU_WGSL,/@vertex/);
+assert.match(EVERCRAFT_WEBGPU_WGSL,/@fragment/);
+
 process.stdout.write(JSON.stringify({
-  schema:'evercraft.world-engine.proof.v8',
+  schema:'evercraft.world-engine.proof.v9',
   status:'passed',
   world_id:world.id,
   replay:receipt,
@@ -577,6 +609,15 @@ process.stdout.write(JSON.stringify({
     authority_final_digest:authority.runtime.snapshot().digest,
     predictor_final_digest:predictor.runtime.snapshot().digest
   },
+  webgpu:{
+    plan_digest:webgpuPlan.digest,
+    source_visual_frame_digest:webgpuPlan.sourceVisualFrameDigest,
+    draw_count:webgpuPlan.draws.length,
+    light_count:webgpuPlan.lights.length,
+    shading_model:webgpuPlan.shadingModel,
+    owned_wgsl:true,
+    browser_gpu_submission:'not_exercised_in_node_ci'
+  },
   assertions:{
     deterministic_replay:true,
     fixed_timestep:true,
@@ -599,6 +640,9 @@ process.stdout.write(JSON.stringify({
     deterministic_replication:true,
     client_prediction_rollback:true,
     authoritative_checkpoint_convergence:true,
+    deterministic_webgpu_render_plan:true,
+    visual_frame_receipt_verified_before_gpu_plan:true,
+    owned_wgsl_shader_contract:true,
     canonical_snapshot_digest:true
   }
 },null,2)+'\n');
