@@ -1,0 +1,16 @@
+{
+  "schema": "evercraft.mcp-registry-candidate.v1",
+  "product": "FAIE",
+  "slug": "faie",
+  "publication_state": "ready_for_official_registry_publication",
+  "desired_registry_name": "io.github.jgaethle10/faie",
+  "registry_publication_proven": false,
+  "public_execution_verified": true,
+  "source_state": "public_https_verified_registry_pending",
+  "source_public_origin_state": "owned_public_https_external_canary_verified",
+  "source_canary": "conformance/runtime-observations/2026-10-06-faie-owned-fabric-door.json",
+  "manifest": "mcp-registry/faie.json",
+  "remote_mcp": "https://fabric.systemiacommandcenters.com/mcp/faie",
+  "website_url": "https://fabric.systemiacommandcenters.com/faie/",
+  "release_rule": "Candidate preparation never proves registry publication. Publication remains governed by Systemia release authorization and the official MCP Registry publisher; provider pickup is observed separately after publication."
+}
