@@ -16,7 +16,7 @@ test('Home seals Google Places and Kroger credentials without echoing secret mat
   });
 
   try {
-    const googleSecret = 'AIzaSyHouseholdFabricSecret1234567890';
+    const googleSecret = 'fixture-google-places-secret-1234567890';
     const googleResponse = await fetch(runtime.url + '/api/credentials/providers/google-places', {
       method: 'POST',
       headers: { 'content-type': 'application/json' },
@@ -71,7 +71,7 @@ test('Home seals Google Places and Kroger credentials without echoing secret mat
     assert.equal(numeraiBody.provider, 'numerai');
     assert.equal(JSON.stringify(numeraiBody).includes(numeraiSecret), false);
 
-    const geminiSecret = 'AIzaSyRavenInferenceSecret123456789012345';
+    const geminiSecret = 'fixture-gemini-raven-inference-secret-123456789012345';
     const geminiResponse = await fetch(runtime.url + '/api/credentials/providers/gemini', {
       method: 'POST',
       headers: { 'content-type': 'application/json' },
@@ -82,7 +82,7 @@ test('Home seals Google Places and Kroger credentials without echoing secret mat
     assert.equal(geminiBody.provider, 'gemini');
     assert.equal(JSON.stringify(geminiBody).includes(geminiSecret), false);
 
-    const openaiSecret = 'sk-raven-inference-secret-abcdefghijklmnopqrstuvwxyz';
+    const openaiSecret = 'fixture-openai-raven-inference-secret-abcdefghijklmnopqrstuvwxyz';
     const openaiResponse = await fetch(runtime.url + '/api/credentials/providers/openai', {
       method: 'POST',
       headers: { 'content-type': 'application/json' },

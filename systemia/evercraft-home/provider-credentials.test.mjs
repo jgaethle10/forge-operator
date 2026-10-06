@@ -17,11 +17,11 @@ test('provider credential intake is an explicit allowlist', () => {
 
 test('Google Places uses a fixed non-secret key ID and seals the API key as secret material', () => {
   const row = normalizeProviderCredentialRequest('google-places', {
-    api_key: 'AIzaSyExampleSecretValue123456789',
+    api_key: 'fixture-google-api-secret-123456789',
   });
   assert.equal(row.provider, 'google-places');
   assert.equal(row.apiKeyId, 'google-places-api-key');
-  assert.equal(row.apiSecret, 'AIzaSyExampleSecretValue123456789');
+  assert.equal(row.apiSecret, 'fixture-google-api-secret-123456789');
   assert.equal(row.label, 'household-fabric');
 });
 
@@ -70,14 +70,14 @@ test('Facebook Pages maps Page identity and Page token into the owned generic cr
 
 test('Raven Gemini and OpenAI keys map into the owned credential envelope', () => {
   const gemini = normalizeProviderCredentialRequest('gemini', {
-    api_key: 'AIzaSyExampleRavenInferenceKey123456789',
+    api_key: 'fixture-gemini-api-secret-123456789',
   });
   assert.equal(gemini.provider, 'gemini');
   assert.equal(gemini.apiKeyId, 'gemini-api-key');
   assert.equal(gemini.label, 'raven-inference');
 
   const openai = normalizeProviderCredentialRequest('openai', {
-    api_key: 'sk-example-raven-inference-key-abcdefghijklmnopqrstuvwxyz',
+    api_key: 'fixture-openai-api-secret-abcdefghijklmnopqrstuvwxyz',
   });
   assert.equal(openai.provider, 'openai');
   assert.equal(openai.apiKeyId, 'openai-api-key');

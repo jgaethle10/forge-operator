@@ -10,7 +10,7 @@ import {
 
 test("local inference credential helper seals Gemini without returning secret", () => {
   const root=fs.mkdtempSync(path.join(os.tmpdir(),"raven-local-seal-"));
-  const secret="AIzaSyLocalProofSecret123456789012345678";
+  const secret="fixture-gemini-local-proof-secret-123456789012345678";
   try{
     assert.equal(ravenInferenceCredentialStatus({provider:"gemini",stateDir:root}).configured,false);
     const result=sealRavenInferenceCredential({
