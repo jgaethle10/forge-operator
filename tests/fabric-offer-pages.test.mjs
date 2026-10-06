@@ -2,6 +2,7 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import {
   offerCapabilityForSlug,
+  offerPurchaseKeyForSlug,
   offerSlugForCapability,
   renderOfferPage,
   renderOffers,
@@ -30,6 +31,7 @@ const websiteAudit={
 test('human offer copy gives sell-now capabilities short memorable URLs',()=>{
   assert.equal(offerSlugForCapability(websiteAudit.public_id),'website-audit');
   assert.equal(offerCapabilityForSlug('website-audit',[websiteAudit])?.public_id,websiteAudit.public_id);
+  assert.equal(offerPurchaseKeyForSlug('website-audit'),'website-audit-quick-win');
 
   const directory=renderOffers([websiteAudit]);
   assert.match(directory,/\/offers\/website-audit/);
@@ -42,16 +44,40 @@ test('human offer copy gives sell-now capabilities short memorable URLs',()=>{
   assert.match(page,/What you send us/);
   assert.match(page,/What you get back/);
   assert.match(page,/How it works/);
+  assert.match(page,/\/api\/offers\/website-audit\/checkout/);
+  assert.match(page,/Continue to checkout/);
+  assert.match(page,/Evercraft Payments/);
   assert.match(page,/\$49/);
   assert.doesNotMatch(page,/machine state|start_url_state|preferred_agent_route/i);
 });
 
-test('owned Fabric serves offer pages and CHUM review lands on the human offer',async()=>{
+test('owned Fabric serves offer pages, requires confirmation, and delegates checkout to Raven',async()=>{
+  const seen=[];
   const runtime=await startFabricLocalRuntime({
     host:'127.0.0.1',
     port:0,
     catalog:[websiteAudit],
     faieSurfaceEnabled:false,
+    purchaseIntentFetch:async(url,init)=>{
+      seen.push({
+        url:String(url),
+        body:JSON.parse(String(init?.body||'{}')),
+      });
+      return new Response(JSON.stringify({
+        ok:true,
+        authority:'Evercraft Payments',
+        order_key:'RAVEN-WEBSITE-AUDIT-QUICK-WIN-TEST',
+        amount_cents:4900,
+        currency:'usd',
+        checkout_ready:true,
+        checkout_url:'https://checkout.stripe.test/pay/test',
+        payment_state:'unpaid',
+        fulfillment_release:false,
+      }),{
+        status:200,
+        headers:{'content-type':'application/json'},
+      });
+    },
   });
   try{
     const directory=await fetch(runtime.url+'/offers');
@@ -61,6 +87,28 @@ test('owned Fabric serves offer pages and CHUM review lands on the human offer',
     const offer=await fetch(runtime.url+'/offers/website-audit');
     assert.equal(offer.status,200);
     assert.match(await offer.text(),/Quick Win Audit/);
+
+    const noConfirmation=await fetch(runtime.url+'/api/offers/website-audit/checkout',{
+      method:'POST',
+      headers:{'content-type':'application/json'},
+      body:JSON.stringify({}),
+    });
+    assert.equal(noConfirmation.status,409);
+    assert.equal(seen.length,0);
+
+    const checkout=await fetch(runtime.url+'/api/offers/website-audit/checkout',{
+      method:'POST',
+      headers:{'content-type':'application/x-www-form-urlencoded'},
+      body:new URLSearchParams({user_confirmed:'true'}),
+      redirect:'manual',
+    });
+    assert.equal(checkout.status,303);
+    assert.equal(checkout.headers.get('location'),'https://checkout.stripe.test/pay/test');
+    assert.equal(checkout.headers.get('x-evercraft-payment-authority'),'Evercraft Payments');
+    assert.equal(seen.length,1);
+    assert.equal(seen[0].body.user_confirmed,true);
+    assert.equal(seen[0].body.capability_key,'website-audit-quick-win');
+    assert.match(seen[0].body.idempotency_key,/^fabric-website-audit-/);
 
     const review=await fetch(runtime.url+'/api/chum/go/'+websiteAudit.public_id+'?surface=offer-test',{
       redirect:'manual',
