@@ -13,10 +13,14 @@ import {
   validateOpenAiChallengeToken,
 } from './fabric-directory.mjs';
 import {
+  offerCapabilityForSlug,
+  offerSlugForCapability,
   renderCapabilities,
   renderCapabilityDetail,
   renderFabricHome,
   renderMarkdownDocument,
+  renderOfferPage,
+  renderOffers,
 } from './fabric-public-site.mjs';
 import {
   fabricMobileManifest,
@@ -354,6 +358,27 @@ export async function startFabricLocalRuntime({
         );
       }
 
+      if (req.method==='GET' && (req.url==='/offers'||req.url==='/offers/')) {
+        return sendText(
+          res,
+          200,
+          renderOffers(preparedCatalog().capabilities),
+          {contentType:'text/html; charset=utf-8'}
+        );
+      }
+
+      if (req.method==='GET' && String(req.url||'').startsWith('/offers/')) {
+        const parsed=new URL(String(req.url||''),'http://fabric.local');
+        const slug=decodeURIComponent(parsed.pathname.slice('/offers/'.length)).replace(/\/+$/,'');
+        if(slug&&!slug.includes('/')){
+          const offer=offerCapabilityForSlug(slug,preparedCatalog().capabilities);
+          if(!offer) return sendJson(res,404,{error:'offer_not_found'});
+          const page=renderOfferPage(offer);
+          if(!page) return sendJson(res,404,{error:'offer_not_found'});
+          return sendText(res,200,page,{contentType:'text/html; charset=utf-8'});
+        }
+      }
+
       if (req.method==='GET' && (req.url==='/mobile'||req.url==='/mobile/')) {
         return sendMobileHtml(
           res,
@@ -434,8 +459,10 @@ export async function startFabricLocalRuntime({
           external_action_taken:false,
         });
         const surface=String(parsed.searchParams.get('surface')||'chum_public_surface').slice(0,80);
-        const location='/capabilities/'+encodeURIComponent(raw)
-          +'?from=chum&surface='+encodeURIComponent(surface);
+        const offerSlug=offerSlugForCapability(raw);
+        const location=offerSlug
+          ? '/offers/'+encodeURIComponent(offerSlug)+'?from=chum&surface='+encodeURIComponent(surface)
+          : '/capabilities/'+encodeURIComponent(raw)+'?from=chum&surface='+encodeURIComponent(surface);
         res.writeHead(302,{
           location,
           'cache-control':'no-store',
