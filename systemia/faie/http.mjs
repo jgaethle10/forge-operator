@@ -87,6 +87,25 @@ export function registerFaieRoutes(app, {
     res.json(publicInvestigation(investigation));
   });
 
+  app.get('/api/faie/comparisons', requireInternal, (req, res) => {
+    const limit = Math.max(1, Math.min(50, Number(req.query?.limit) || 10));
+    res.setHeader('Cache-Control', 'no-store');
+    res.json({
+      schema: 'evercraft.faie.comparison-index.public.v1',
+      comparisons: runtime.latestComparisons(limit)
+    });
+  });
+
+  app.get('/api/faie/comparisons/:id', requireInternal, (req, res) => {
+    const comparison = runtime.getComparison(String(req.params.id || ''));
+    if (!comparison) {
+      res.status(404).json({ ok: false, error: 'FAIE comparison not found.' });
+      return;
+    }
+    res.setHeader('Cache-Control', 'no-store');
+    res.json(comparison);
+  });
+
   app.get('/api/faie/investigations/:id/markdown', requireInternal, (req, res) => {
     const investigation = runtime.getInvestigation(String(req.params.id || ''));
     if (!investigation) {
@@ -144,6 +163,43 @@ export function registerFaieRoutes(app, {
     }
   });
 
+  app.post('/api/faie/compare', publicInvestigateLimiter, (req, res) => {
+    try {
+      const question = String(req.body?.question || req.body?.query || '').trim();
+      if (!question) {
+        res.status(400).json({ ok: false, error: 'question is required.' });
+        return;
+      }
+      if (question.length > 1200) {
+        res.status(413).json({ ok: false, error: 'question is too long.' });
+        return;
+      }
+      const candidates = Array.isArray(req.body?.candidates) ? req.body.candidates : [];
+      if (candidates.length < 2 || candidates.length > 8) {
+        res.status(400).json({ ok: false, error: 'candidates must contain between 2 and 8 items.' });
+        return;
+      }
+
+      const comparison = runtime.previewComparison({
+        question,
+        candidates,
+        asset_types: req.body?.asset_types || req.body?.assets,
+        crop: req.body?.crop,
+        water_source: req.body?.water_source,
+        thesis_assumptions: req.body?.thesis_assumptions || req.body?.assumptions,
+        horizon_days: req.body?.horizon_days,
+        include_weak_evidence: req.body?.include_weak_evidence
+      });
+
+      res.status(200).json(comparison);
+    } catch (error) {
+      res.status(400).json({
+        ok: false,
+        error: error instanceof Error ? error.message : String(error)
+      });
+    }
+  });
+
   app.post('/api/faie/investigate', publicInvestigateLimiter, (req, res) => {
     try {
       const question = String(req.body?.question || req.body?.query || '').trim();
@@ -168,6 +224,18 @@ export function registerFaieRoutes(app, {
       });
 
       res.status(200).json(publicInvestigation(investigation));
+    } catch (error) {
+      res.status(400).json({
+        ok: false,
+        error: error instanceof Error ? error.message : String(error)
+      });
+    }
+  });
+
+  app.post('/api/faie/comparisons', requireInternal, (req, res) => {
+    try {
+      const comparison = runtime.compare(req.body || {});
+      res.status(201).json(comparison);
     } catch (error) {
       res.status(400).json({
         ok: false,
