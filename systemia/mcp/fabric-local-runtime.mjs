@@ -22,6 +22,7 @@ import {
   fabricMobileManifest,
   renderFabricMobileApp,
 } from './fabric-mobile-site.mjs';
+import { createFabricFaieSurface } from './fabric-faie-runtime.mjs';
 
 function isLegacyBase44Connection(connection={}) {
   try {
@@ -181,6 +182,9 @@ export async function startFabricLocalRuntime({
   nodeReceiptPath='',
   allocatorTokenFile='',
   nodeAttestationProvider=null,
+  faieStateDir='',
+  faieCollectorConfig=null,
+  faieSurfaceEnabled=true,
 }={}) {
   const instanceId='fabric_local_'+crypto.randomBytes(10).toString('hex');
   let deploymentReceiptRef='';
@@ -257,6 +261,12 @@ export async function startFabricLocalRuntime({
   const moduleDir=path.dirname(fileURLToPath(import.meta.url));
   const pluginDir=path.resolve(moduleDir,'../../plugins/evercraft-fabric');
   const journalDir=path.resolve(moduleDir,'../../public/journal');
+  const faieSurface=faieSurfaceEnabled
+    ? createFabricFaieSurface({
+        stateDir:faieStateDir||undefined,
+        collectorConfig:faieCollectorConfig||undefined,
+      })
+    : null;
   const docs={
     privacy:fs.readFileSync(path.join(pluginDir,'PRIVACY.md'),'utf8'),
     terms:fs.readFileSync(path.join(pluginDir,'TERMS.md'),'utf8'),
@@ -304,6 +314,11 @@ export async function startFabricLocalRuntime({
     journal_mirror_path:'/journal/',
     journal_mirror_ready:fs.existsSync(path.join(journalDir,'index.html')),
     journal_mirror_indexing:'noindex_until_dedicated_origin',
+    faie_native_surface:Boolean(faieSurface),
+    faie_public_path:faieSurface?'/faie/':null,
+    faie_public_api:faieSurface?'/api/faie':null,
+    faie_mcp_path:faieSurface?'/mcp/faie':null,
+    faie_base44_transport_enabled:false,
     provider_publication_state:'external_to_runtime',
     public_submission_note:'The owned Fabric runtime and review surface are submission-ready. Provider review, approval, publication, and directory visibility are external states and are not inferred by this health endpoint.',
     catalog_reload_mode:staticPrepared?'static_injected':'hot_reload_repository',
@@ -320,6 +335,10 @@ export async function startFabricLocalRuntime({
           'access-control-allow-methods':'GET, POST, OPTIONS',
         });
         return res.end();
+      }
+
+      if (faieSurface && await faieSurface.handle(req,res)) {
+        return;
       }
 
       if (req.method==='GET' && req.url==='/health') {
@@ -588,9 +607,12 @@ export async function startFabricLocalRuntime({
       deploymentReceiptRef=receipt;
       return health();
     },
-    close:()=>new Promise((resolve,reject)=>
-      server.close((error)=>error?reject(error):resolve())
-    ),
+    close:async()=>{
+      await faieSurface?.close();
+      await new Promise((resolve,reject)=>
+        server.close((error)=>error?reject(error):resolve())
+      );
+    },
   };
 }
 

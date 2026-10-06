@@ -90,8 +90,8 @@ async function getJson(path){
   if(!r.ok||!body) throw new Error('json_http_'+r.status+':'+path);
   return body;
 }
-async function rpc(id,method,params={}){
-  const r=await timedFetch(origin+'/mcp',{
+async function rpcAt(path,id,method,params={}){
+  const r=await timedFetch(origin+path,{
     method:'POST',
     headers:{'content-type':'application/json','user-agent':'Evercraft-Operator-Edge-Canary/1.0'},
     body:JSON.stringify({jsonrpc:'2.0',id,method,params}),
@@ -100,6 +100,9 @@ async function rpc(id,method,params={}){
   if(!r.ok||!body) throw new Error('mcp_http_'+r.status+':'+method);
   if(body.error) throw new Error('mcp_'+method+':'+clean(body.error.message));
   return body.result;
+}
+async function rpc(id,method,params={}){
+  return rpcAt('/mcp',id,method,params);
 }
 
 function failureStage(checks={},message=''){
@@ -111,6 +114,9 @@ function failureStage(checks={},message=''){
     return 'trusted_tls';
   }
   if(checks.customer_surface!==true) return 'customer_surface';
+  if(checks.faie_surface!==true) return 'faie_surface';
+  if(checks.faie_health!==true) return 'faie_health';
+  if(checks.faie_mcp!==true) return 'faie_mcp';
   if(checks.mobile_surface!==true) return 'mobile_surface';
   if(checks.policy_surfaces!==true) return 'policy_surfaces';
   if(checks.runtime_health!==true) return 'runtime_health';
@@ -177,6 +183,56 @@ try{
   const home=await getText('/');
   if(!/Evercraft Fabric|Bring the problem\./i.test(home.text)) throw new Error('fabric_home_identity_missing');
   receipt.checks.customer_surface=true;
+
+  const faiePage=await getText('/faie/');
+  const faieContentType=faiePage.response.headers.get('content-type')||'';
+  if(!/^text\/html/i.test(faieContentType)) throw new Error('faie_surface_not_html');
+  if(!/Evidence for the physical world/i.test(faiePage.text)) throw new Error('faie_surface_identity_missing');
+  if(/base44\.app/i.test(faiePage.text)) throw new Error('faie_surface_base44_reference');
+  receipt.faie_surface={
+    status:faiePage.response.status,
+    content_type:faieContentType,
+    identity_verified:true,
+    url:origin+'/faie/',
+  };
+  receipt.checks.faie_surface=true;
+
+  const faieHealth=await getJson('/api/faie/health');
+  if(faieHealth.fabric_native!==true) throw new Error('faie_health_not_fabric_native');
+  if(faieHealth.public_surface!=='/faie/') throw new Error('faie_health_public_path_mismatch');
+  if(faieHealth.public_mcp!=='/mcp/faie') throw new Error('faie_health_mcp_path_mismatch');
+  if(faieHealth.base44_transport_enabled!==false) throw new Error('faie_health_base44_transport_enabled');
+  if(faieHealth.decision_authority!==false||faieHealth.publication_authority!==false){
+    throw new Error('faie_health_authority_boundary_failed');
+  }
+  receipt.faie_health={
+    ok:faieHealth.ok===true,
+    signal_count:Number(faieHealth.signal_count||0),
+    observation_count:Number(faieHealth.observation_count||0),
+    public_surface:faieHealth.public_surface,
+    public_mcp:faieHealth.public_mcp,
+    fabric_native:true,
+    base44_transport_enabled:false,
+  };
+  receipt.checks.faie_health=true;
+
+  const faieInit=await rpcAt('/mcp/faie',101,'initialize',{
+    protocolVersion:'2025-03-26',
+    capabilities:{},
+    clientInfo:{name:'evercraft-faIE-public-edge-canary',version:'1'},
+  });
+  if(faieInit?.serverInfo?.name!=='evercraft-faie') throw new Error('faie_mcp_identity_mismatch');
+  const faieTools=await rpcAt('/mcp/faie',102,'tools/list',{});
+  const faieToolNames=(faieTools?.tools||[]).map((tool)=>clean(tool.name));
+  for(const expected of ['investigate_faie_evidence','compare_faie_candidates','get_faie_signal_snapshot','get_faie_health']){
+    if(!faieToolNames.includes(expected)) throw new Error('faie_mcp_tool_missing:'+expected);
+  }
+  receipt.faie_mcp={
+    server:faieInit.serverInfo.name,
+    tools:faieToolNames,
+    url:origin+'/mcp/faie',
+  };
+  receipt.checks.faie_mcp=true;
 
   const mobile=await getText('/mobile');
   const mobileContentType=mobile.response.headers.get('content-type')||'';

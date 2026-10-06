@@ -225,7 +225,7 @@
     "proof:saban-hardware-federation": "node systemia/saban/hardware-federation.proof.mjs",
     "proof:saban-hardware-federation-bridge": "node systemia/saban/hardware-federation-bridge.proof.mjs",
     "fabric:local": "node systemia/mcp/fabric-local-runtime.mjs",
-    "test:fabric-local": "npm run journal:build && node --test tests/fabric-local-runtime.test.mjs",
+    "test:fabric-local": "npm run journal:build && node --test tests/fabric-local-runtime.test.mjs tests/fabric-faie-native-runtime.test.mjs",
     "test:fabric-owned-edge": "node --test tests/fabric-owned-edge-installer.test.mjs tests/fabric-outbound-relay.test.mjs",
     "fabric:launch-gate": "node scripts/fabric-launch-gate.mjs",
     "proof:rockies": "node systemia/rockies/expansion.proof.mjs",
@@ -288,7 +288,8 @@
     "proof:saban-world-engine": "node systemia/saban/multiplier.mjs --software world-engine-review --inventory systemia/saban/fixtures/world-engine-review-job.json --agents 16 --workers 4 --execute --reconcile",
     "saban:golem:prepare": "npm install --omit=dev --ignore-scripts --prefix systemia/saban/golem-requestor && node systemia/saban/golem-requestor/preflight.mjs --sdk-only",
     "saban:golem:preflight": "node systemia/saban/golem-requestor/preflight.mjs",
-    "proof:saban-faie": "node systemia/saban/multiplier.mjs --software faie --agents 12 --workers 4 --execute --reconcile"
+    "proof:saban-faie": "node systemia/saban/multiplier.mjs --software faie --agents 12 --workers 4 --execute --reconcile",
+    "test:fabric-faie-native": "node --test tests/fabric-faie-native-runtime.test.mjs"
   },
   "dependencies": {
     "@google/genai": "^2.4.0",
