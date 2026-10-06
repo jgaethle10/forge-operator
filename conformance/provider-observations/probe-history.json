@@ -1,26 +1,8 @@
 {
   "schema": "evercraft.chum.provider-probe-history.v1",
-  "updated_at": "2026-10-06T14:10:54.285Z",
+  "updated_at": "2026-10-06T14:46:28.265Z",
   "max_records": 500,
   "records": [
-    {
-      "receipt_key_sha256": "a472f916b22968fb60616d8b08e02b6f126be26e7d93f1cec602e1c5354f6fcf",
-      "observed_at": "2026-10-05T14:39:00.827Z",
-      "provider": "generic_agent",
-      "provider_surface": "machine_client",
-      "product_key": "site-survive",
-      "case_id": "site-survive-001",
-      "prompt_sha256": "a1cdfd5e37a2130a30d0e6bd60159a2396194a49f5b118c471d97adb280e167a",
-      "pickup_observed": false,
-      "provider_receipt_sha256": "218d5b58e5b40589bac470381687821cc61e6c2b116bb692fddd50ac05fd2f47",
-      "response_sha256": "fde47767b9699fa93b86cfdbab6baf67a5eb2e84909d8e37fbad6a9219bb5738",
-      "source": "authorized_provider_probe",
-      "privacy": {
-        "full_provider_response_persisted": false,
-        "provider_session_reference_persisted": false,
-        "credentials_persisted": false
-      }
-    },
     {
       "receipt_key_sha256": "ae42528fd963aad212b44385362827a4b49216d1e3549c4b8c050250ad4f8bc3",
       "observed_at": "2026-10-05T14:39:02.105Z",
@@ -8996,6 +8978,24 @@
       "pickup_observed": false,
       "provider_receipt_sha256": "d3dde84200ec79b1825abcf9b23d56800f55acfe371023b1e41fc2f3df2af685",
       "response_sha256": "9ff086b23c999633d84468aa71635c8e964129af481aa63420f6d66b0969d2ab",
+      "source": "authorized_provider_probe",
+      "privacy": {
+        "full_provider_response_persisted": false,
+        "provider_session_reference_persisted": false,
+        "credentials_persisted": false
+      }
+    },
+    {
+      "receipt_key_sha256": "d05dc2698af428f4ada2bc86f7ba9867189a230ee59341077f8cb048e577212b",
+      "observed_at": "2026-10-06T14:46:28.265Z",
+      "provider": "generic_agent",
+      "provider_surface": "machine_client",
+      "product_key": "evercraft-network",
+      "case_id": "network-business-resilience-002",
+      "prompt_sha256": "677d2c9c0c4e080ed3ac1b0109efdd6f236576fa13c9361e47e6107108fe5e4a",
+      "pickup_observed": false,
+      "provider_receipt_sha256": "b94742b47079f654485cd412bee7dee80379627da4da131ae6cce31543296470",
+      "response_sha256": "8b852c83626cc135a712efe655cf731640a14084ea519c46de76801b6db01f7f",
       "source": "authorized_provider_probe",
       "privacy": {
         "full_provider_response_persisted": false,
