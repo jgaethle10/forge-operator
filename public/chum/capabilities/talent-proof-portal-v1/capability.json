@@ -20,7 +20,7 @@
   "offers": [],
   "human_ui_required": false,
   "confirmation": "No employment decision is automated by discovery. Participant consent/authority and payment are required where applicable.",
-  "public_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/capabilities/talent-proof-portal-v1/index.html",
+  "public_url": "https://fabric.systemiacommandcenters.com/capabilities/talent-proof-portal-v1",
   "payment_authority": "Evercraft Payments",
   "invocation_status": "Discoverable capability; privacy/onboarding acceptance work pending.",
   "live_canary_evidence": null,

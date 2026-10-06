@@ -20,7 +20,7 @@
   "offers": [],
   "human_ui_required": true,
   "confirmation": "The model is never authority. Material actions require configured grants and human confirmation. External purchasing/payment/accounting writes are currently disabled.",
-  "public_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/capabilities/buildflow-bounded-agent-action-v1/index.html",
+  "public_url": "https://fabric.systemiacommandcenters.com/capabilities/buildflow-bounded-agent-action-v1",
   "payment_authority": "No verified Evercraft Payments path.",
   "invocation_status": "SOURCE-VERIFIED: public routing and authenticated policy-check/internal-approval primitives are implemented and build-tested; external client canary remains pending. No external business-action executor.",
   "live_canary_evidence": null,

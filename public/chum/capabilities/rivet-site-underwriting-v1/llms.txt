@@ -3,7 +3,7 @@
 Capability ID: rivet-site-underwriting-v1
 Commercial state: sell_now
 Machine state: payment_ready_human_confirmation
-Public URL: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/capabilities/rivet-site-underwriting-v1/index.html
+Public URL: https://fabric.systemiacommandcenters.com/capabilities/rivet-site-underwriting-v1
 Preferred agent route: universal fallback
 Universal Evercraft MCP: https://fabric.systemiacommandcenters.com/mcp
 Start here: Not a current sell-now route

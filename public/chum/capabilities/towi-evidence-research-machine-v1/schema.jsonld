@@ -3,10 +3,10 @@
   "@graph": [
     {
       "@type": "Service",
-      "@id": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/capabilities/towi-evidence-research-machine-v1/index.html#evercraft-capability",
+      "@id": "https://fabric.systemiacommandcenters.com/capabilities/towi-evidence-research-machine-v1#evercraft-capability",
       "name": "Evidence-Controlled Research Brief",
       "description": "A decision-maker needs a sourced research answer with provenance, contradiction handling, uncertainty and a bounded deliverable instead of a generic web summary.",
-      "url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/capabilities/towi-evidence-research-machine-v1/index.html",
+      "url": "https://fabric.systemiacommandcenters.com/capabilities/towi-evidence-research-machine-v1",
       "provider": {
         "@type": "Organization",
         "name": "Evercraft LLC",
@@ -20,7 +20,7 @@
       "name": "Evidence-Controlled Research Brief | Evercraft capability",
       "description": "A decision-maker needs a sourced research answer with provenance, contradiction handling, uncertainty and a bounded deliverable instead of a generic web summary.",
       "about": {
-        "@id": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/capabilities/towi-evidence-research-machine-v1/index.html#evercraft-capability"
+        "@id": "https://fabric.systemiacommandcenters.com/capabilities/towi-evidence-research-machine-v1#evercraft-capability"
       }
     }
   ]

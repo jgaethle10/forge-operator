@@ -25,7 +25,7 @@
   ],
   "human_ui_required": false,
   "confirmation": "Explicit buyer authorization for source access and payment is required.",
-  "public_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/capabilities/foundry-app-escape-audit-v1/index.html",
+  "public_url": "https://fabric.systemiacommandcenters.com/capabilities/foundry-app-escape-audit-v1",
   "payment_authority": "Evercraft Payments; direct machine checkout is not exposed for this service.",
   "invocation_status": "LIVE fixed-price human review handoff through the central Machine Commerce MCP tool prepare_quote_ready_service_handoff. Discovery and qualification are machine-callable; source access, payment and paid work remain explicitly human-confirmed.",
   "live_canary_evidence": null,

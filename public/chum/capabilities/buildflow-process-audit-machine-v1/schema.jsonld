@@ -3,10 +3,10 @@
   "@graph": [
     {
       "@type": "Service",
-      "@id": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/capabilities/buildflow-process-audit-machine-v1/index.html#evercraft-capability",
+      "@id": "https://fabric.systemiacommandcenters.com/capabilities/buildflow-process-audit-machine-v1#evercraft-capability",
       "name": "Business Process Pattern Audit",
       "description": "A business has fragmented operational events and wants to discover the real recurring workflow, cycle time and exception points without replacing its current systems first.",
-      "url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/capabilities/buildflow-process-audit-machine-v1/index.html",
+      "url": "https://fabric.systemiacommandcenters.com/capabilities/buildflow-process-audit-machine-v1",
       "provider": {
         "@type": "Organization",
         "name": "Evercraft LLC",
@@ -20,7 +20,7 @@
       "name": "Business Process Pattern Audit | Evercraft capability",
       "description": "A business has fragmented operational events and wants to discover the real recurring workflow, cycle time and exception points without replacing its current systems first.",
       "about": {
-        "@id": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/capabilities/buildflow-process-audit-machine-v1/index.html#evercraft-capability"
+        "@id": "https://fabric.systemiacommandcenters.com/capabilities/buildflow-process-audit-machine-v1#evercraft-capability"
       }
     }
   ]

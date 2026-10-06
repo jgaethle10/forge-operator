@@ -20,7 +20,7 @@
   "offers": [],
   "human_ui_required": false,
   "confirmation": "Discovery and evidence comparison create no action authority. Publishing, consequential decisions, private-data access, and paid work remain separately authorized.",
-  "public_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/capabilities/worldstate-reality-delta-v1/index.html",
+  "public_url": "https://fabric.systemiacommandcenters.com/capabilities/worldstate-reality-delta-v1",
   "payment_authority": "No verified public payment path.",
   "invocation_status": "SOURCE-VERIFIED: Worldstate snapshot/delta, Context Fabric adapter/reader, observation fabric, Passport-authorized read path, and Fallen phenomenon bridge are covered by repository proofs. Public machine execution is not claimed until an external callable route is independently verified.",
   "live_canary_evidence": null,

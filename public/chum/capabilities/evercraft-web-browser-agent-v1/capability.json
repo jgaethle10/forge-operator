@@ -27,7 +27,7 @@
   "offers": [],
   "human_ui_required": false,
   "confirmation": "Public capability discovery is read-only. Authenticated browsing requires explicit user authorization. Payment must never expand browser permissions or credential access.",
-  "public_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/capabilities/evercraft-web-browser-agent-v1/index.html",
+  "public_url": "https://fabric.systemiacommandcenters.com/capabilities/evercraft-web-browser-agent-v1",
   "payment_authority": "No public machine checkout is advertised for Evercraft Web yet.",
   "invocation_status": "LIVE specialist discovery through the central MCP tool discover_web_capability. Evercraft Fetch is implemented and build-passed but remains external-canary gated; web search and owned browser execution remain held pending runtime activation, pairing/isolation and production receipts.",
   "live_canary_evidence": null,

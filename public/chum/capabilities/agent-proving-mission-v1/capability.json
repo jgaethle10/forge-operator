@@ -19,7 +19,7 @@
   "offers": [],
   "human_ui_required": false,
   "confirmation": "Testing scope and external side effects require explicit authority. Paid execution requires confirmed terms and payment.",
-  "public_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/capabilities/agent-proving-mission-v1/index.html",
+  "public_url": "https://fabric.systemiacommandcenters.com/capabilities/agent-proving-mission-v1",
   "payment_authority": "Evercraft Payments",
   "invocation_status": "Discoverable capability; paid execution verification pending.",
   "live_canary_evidence": null,

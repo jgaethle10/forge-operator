@@ -21,7 +21,7 @@
   "offers": [],
   "human_ui_required": true,
   "confirmation": "Current BuildFlow mode is shadow-first. It does not post accounting entries, create external POs or initiate payment.",
-  "public_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/capabilities/buildflow-procure-to-pay-shadow-v1/index.html",
+  "public_url": "https://fabric.systemiacommandcenters.com/capabilities/buildflow-procure-to-pay-shadow-v1",
   "payment_authority": "No verified Evercraft Payments path.",
   "invocation_status": "SOURCE-VERIFIED: discovery, tenant-scoped P2P model and bounded internal approval-request flow are implemented and build-tested; external client canary remains pending. External writes disabled.",
   "live_canary_evidence": null,

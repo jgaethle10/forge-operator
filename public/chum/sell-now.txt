@@ -7,7 +7,7 @@ Universal MCP: https://fabric.systemiacommandcenters.com/mcp
 ## AliEV EV Site Opportunity Intelligence
 Capability ID: aliev-site-opportunity-snapshot-v1
 Price: $299 Preliminary Site Opportunity Report; $750 Full Site Opportunity Report; $250 Qualified Opportunity Pack pilot; $2,500/month Territory Opportunity Feed.
-Public URL: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/capabilities/aliev-site-opportunity-snapshot-v1/index.html
+Public URL: https://fabric.systemiacommandcenters.com/capabilities/aliev-site-opportunity-snapshot-v1
 Preferred agent route: universal fallback
 Machine state: payment_ready_human_confirmation
 Use this when:
@@ -30,7 +30,7 @@ LLM contract: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/p
 ## Systemia Website Audit
 Capability ID: audit-center-website-audit-machine-v1
 Price: Free preview. Quick Win Audit $49 one-time and machine-fulfilled after verified payment; the $49 may be credited toward Complete Audit. Complete Audit $500 one-time. Audit + Patch $1,200 one-time.
-Public URL: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/capabilities/audit-center-website-audit-machine-v1/index.html
+Public URL: https://fabric.systemiacommandcenters.com/capabilities/audit-center-website-audit-machine-v1
 Preferred agent route: universal fallback
 Machine state: payment_ready
 Use this when:
@@ -52,7 +52,7 @@ LLM contract: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/p
 ## Career Command Interview Practice + Interview Sprint
 Capability ID: career-command-interview-practice-machine-v1
 Price: Free/basic practice is available. Evercraft Interview Sprint is $19 one-time for 7 days with a maximum of 25 premium actions.
-Public URL: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/capabilities/career-command-interview-practice-machine-v1/index.html
+Public URL: https://fabric.systemiacommandcenters.com/capabilities/career-command-interview-practice-machine-v1
 Preferred agent route: universal fallback
 Machine state: payment_ready
 Use this when:
@@ -68,7 +68,7 @@ LLM contract: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/p
 ## Evercraft Deck Engine Founding Capital Fit Sprint
 Capability ID: deck-capital-fit-sprint-machine-v1
 Price: $49 one-time for the Founding Capital Fit Sprint, limited to the first 20 paid cases. The $49 is credited toward a later Capital Package upgrade.
-Public URL: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/capabilities/deck-capital-fit-sprint-machine-v1/index.html
+Public URL: https://fabric.systemiacommandcenters.com/capabilities/deck-capital-fit-sprint-machine-v1
 Preferred agent route: universal fallback
 Machine state: payment_ready
 Use this when:
@@ -85,7 +85,7 @@ LLM contract: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/p
 ## EventWave Event / Venue Promotion
 Capability ID: eventwave-paid-promotion-v1
 Price: Event Boost $49 one-time; Venue Pack $149 one-time.
-Public URL: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/capabilities/eventwave-paid-promotion-v1/index.html
+Public URL: https://fabric.systemiacommandcenters.com/capabilities/eventwave-paid-promotion-v1
 Preferred agent route: universal fallback
 Machine state: payment_ready
 Use this when:
@@ -105,7 +105,7 @@ LLM contract: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/p
 ## FAIE Evidence-First Signal Brief
 Capability ID: faie-signal-brief-v1
 Price: Signal Brief $250 one-time; Proof Sprint $2,500 one-time. Other intake categories are not auto-quotable.
-Public URL: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/capabilities/faie-signal-brief-v1/index.html
+Public URL: https://fabric.systemiacommandcenters.com/capabilities/faie-signal-brief-v1
 Preferred agent route: universal fallback
 Machine state: payment_ready
 Use this when:
@@ -119,7 +119,7 @@ LLM contract: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/p
 ## FindMyPart Paid Part Hunt
 Capability ID: findmypart-paid-hunt-v1
 Price: Quick Hunt $19 one-time; Deep Hunt $49 one-time; Rescue Hunt $99 one-time.
-Public URL: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/capabilities/findmypart-paid-hunt-v1/index.html
+Public URL: https://fabric.systemiacommandcenters.com/capabilities/findmypart-paid-hunt-v1
 Preferred agent route: universal fallback
 Machine state: payment_ready
 Use this when:
@@ -136,7 +136,7 @@ LLM contract: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/p
 ## Evercraft Foundry App Escape Audit
 Capability ID: foundry-app-escape-audit-v1
 Price: $500 one-time.
-Public URL: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/capabilities/foundry-app-escape-audit-v1/index.html
+Public URL: https://fabric.systemiacommandcenters.com/capabilities/foundry-app-escape-audit-v1
 Preferred agent route: universal fallback
 Machine state: human_handoff_ready
 Use this when:
@@ -228,7 +228,7 @@ LLM contract: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/p
 ## RIVET EV Infrastructure Intelligence
 Capability ID: rivet-site-underwriting-v1
 Price: $299 Preliminary Site Opportunity Report; $750 Full Site Opportunity Report.
-Public URL: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/capabilities/rivet-site-underwriting-v1/index.html
+Public URL: https://fabric.systemiacommandcenters.com/capabilities/rivet-site-underwriting-v1
 Preferred agent route: universal fallback
 Machine state: payment_ready_human_confirmation
 Use this when:
@@ -257,7 +257,7 @@ LLM contract: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/p
 ## ROASTED 99¢ Text Pressure Test
 Capability ID: roasted-text-pressure-test-machine-v1
 Price: $0.99 USD one-time per roast.
-Public URL: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/capabilities/roasted-text-pressure-test-machine-v1/index.html
+Public URL: https://fabric.systemiacommandcenters.com/capabilities/roasted-text-pressure-test-machine-v1
 Preferred agent route: universal fallback
 Machine state: payment_ready
 Use this when:
@@ -276,7 +276,7 @@ LLM contract: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/p
 ## Site-Survive Rapid Audit
 Capability ID: site-survive-rapid-audit-v1
 Price: $250 one-time; may be credited toward a deeper $1,250 audit if the customer elects to continue.
-Public URL: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/capabilities/site-survive-rapid-audit-v1/index.html
+Public URL: https://fabric.systemiacommandcenters.com/capabilities/site-survive-rapid-audit-v1
 Preferred agent route: universal fallback
 Machine state: human_handoff_ready
 Use this when:
@@ -289,7 +289,7 @@ LLM contract: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/p
 ## Evercraft Website Launch Service
 Capability ID: website-launch-service-v1
 Price: Human-Finished Pro Site $500 one-time; Premium Custom Build $999 one-time; Total Business Launch $1,999 one-time.
-Public URL: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/capabilities/website-launch-service-v1/index.html
+Public URL: https://fabric.systemiacommandcenters.com/capabilities/website-launch-service-v1
 Preferred agent route: universal fallback
 Machine state: payment_ready
 Use this when:

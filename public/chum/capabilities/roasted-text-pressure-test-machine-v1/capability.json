@@ -30,7 +30,7 @@
   ],
   "human_ui_required": false,
   "confirmation": "Explicit user confirmation is required before checkout. Paid output is generated only after independent Stripe verification.",
-  "public_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/capabilities/roasted-text-pressure-test-machine-v1/index.html",
+  "public_url": "https://fabric.systemiacommandcenters.com/capabilities/roasted-text-pressure-test-machine-v1",
   "payment_authority": "ROASTED / Stripe, provider-verified",
   "invocation_status": "LIVE: agent HTTP gateway + OpenAPI + llms guidance + remote MCP at [retired provider route removed] Agents can read the 99¢ offer, prepare checkout only after explicit human confirmation, and retrieve the paid roast result. Generation requires Stripe verification of paid + complete + USD 0.99 + bound roast ID.",
   "live_canary_evidence": null,

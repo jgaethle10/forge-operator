@@ -22,7 +22,7 @@
   "offers": [],
   "human_ui_required": true,
   "confirmation": "Pattern discovery may analyze authorized data. Observed behavior is never silently promoted to configured policy.",
-  "public_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/capabilities/buildflow-process-audit-machine-v1/index.html",
+  "public_url": "https://fabric.systemiacommandcenters.com/capabilities/buildflow-process-audit-machine-v1",
   "payment_authority": "No verified Evercraft Payments path.",
   "invocation_status": "SOURCE-VERIFIED: machine discovery docs, central MCP matching and authenticated Process Discovery are implemented and build-tested; external client canary remains pending.",
   "live_canary_evidence": null,

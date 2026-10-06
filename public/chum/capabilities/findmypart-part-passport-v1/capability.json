@@ -23,7 +23,7 @@
   "offers": [],
   "human_ui_required": false,
   "confirmation": "No payment confirmation is required for free triage. Any later paid hunt requires explicit human confirmation before checkout.",
-  "public_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/capabilities/findmypart-part-passport-v1/index.html",
+  "public_url": "https://fabric.systemiacommandcenters.com/capabilities/findmypart-part-passport-v1",
   "payment_authority": "No charge is created by Part Passport triage.",
   "invocation_status": "LIVE: direct FindMyPart MCP tool free_part_triage and HTTP agent-gateway triage action. Part Passport is triage, not fitment proof; unknown compatibility, inventory, supplier availability, price and delivery timing may remain unknown.",
   "live_canary_evidence": null,

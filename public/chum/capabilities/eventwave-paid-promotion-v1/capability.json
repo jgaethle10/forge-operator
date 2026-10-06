@@ -36,7 +36,7 @@
   ],
   "human_ui_required": false,
   "confirmation": "Explicit purchase confirmation and verified payment are required. Source review must pass before any public placement activates.",
-  "public_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/capabilities/eventwave-paid-promotion-v1/index.html",
+  "public_url": "https://fabric.systemiacommandcenters.com/capabilities/eventwave-paid-promotion-v1",
   "payment_authority": "Evercraft Payments with provider verification",
   "invocation_status": "LIVE: EventWave HTTP agent gateway + OpenAPI + llms guidance + remote MCP at [retired provider route removed] Agents can search events, inspect $49/$149 promotion offers, prepare checkout only after explicit human confirmation, and verify payment/placement state. Source review still governs public activation.",
   "live_canary_evidence": null,

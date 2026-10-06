@@ -20,7 +20,7 @@
   "offers": [],
   "human_ui_required": true,
   "confirmation": "Shadow import does not overwrite the source or silently create canonical truth. Private records require authenticated tenant access.",
-  "public_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/capabilities/buildflow-shadow-migration-machine-v1/index.html",
+  "public_url": "https://fabric.systemiacommandcenters.com/capabilities/buildflow-shadow-migration-machine-v1",
   "payment_authority": "No verified Evercraft Payments path.",
   "invocation_status": "SOURCE-VERIFIED: discovery/routing and authenticated shadow-import flow are implemented and build-tested; external client canary remains pending. External-system writes are disabled.",
   "live_canary_evidence": null,

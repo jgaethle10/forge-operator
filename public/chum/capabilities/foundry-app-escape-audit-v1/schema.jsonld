@@ -3,10 +3,10 @@
   "@graph": [
     {
       "@type": "Service",
-      "@id": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/capabilities/foundry-app-escape-audit-v1/index.html#evercraft-capability",
+      "@id": "https://fabric.systemiacommandcenters.com/capabilities/foundry-app-escape-audit-v1#evercraft-capability",
       "name": "Evercraft Foundry App Escape Audit",
       "description": "A founder or operator needs a clear portability, dependency, security and migration map for an app tied to a builder-specific runtime.",
-      "url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/capabilities/foundry-app-escape-audit-v1/index.html",
+      "url": "https://fabric.systemiacommandcenters.com/capabilities/foundry-app-escape-audit-v1",
       "provider": {
         "@type": "Organization",
         "name": "Evercraft LLC",
@@ -20,7 +20,7 @@
       "name": "Evercraft Foundry App Escape Audit | Evercraft capability",
       "description": "A founder or operator needs a clear portability, dependency, security and migration map for an app tied to a builder-specific runtime.",
       "about": {
-        "@id": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/capabilities/foundry-app-escape-audit-v1/index.html#evercraft-capability"
+        "@id": "https://fabric.systemiacommandcenters.com/capabilities/foundry-app-escape-audit-v1#evercraft-capability"
       }
     }
   ]

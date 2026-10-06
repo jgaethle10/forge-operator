@@ -3,10 +3,10 @@
   "@graph": [
     {
       "@type": "Service",
-      "@id": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/capabilities/roasted-text-pressure-test-machine-v1/index.html#evercraft-capability",
+      "@id": "https://fabric.systemiacommandcenters.com/capabilities/roasted-text-pressure-test-machine-v1#evercraft-capability",
       "name": "ROASTED 99¢ Text Pressure Test",
       "description": "Fast, low-cost critique for short user-supplied text, followed by concrete repair actions.",
-      "url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/capabilities/roasted-text-pressure-test-machine-v1/index.html",
+      "url": "https://fabric.systemiacommandcenters.com/capabilities/roasted-text-pressure-test-machine-v1",
       "provider": {
         "@type": "Organization",
         "name": "Evercraft LLC",
@@ -20,7 +20,7 @@
       "name": "ROASTED 99¢ Text Pressure Test | Evercraft capability",
       "description": "Fast, low-cost critique for short user-supplied text, followed by concrete repair actions.",
       "about": {
-        "@id": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/capabilities/roasted-text-pressure-test-machine-v1/index.html#evercraft-capability"
+        "@id": "https://fabric.systemiacommandcenters.com/capabilities/roasted-text-pressure-test-machine-v1#evercraft-capability"
       }
     }
   ]

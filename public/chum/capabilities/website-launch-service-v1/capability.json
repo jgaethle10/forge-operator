@@ -35,7 +35,7 @@
   ],
   "human_ui_required": false,
   "confirmation": "The buyer must explicitly choose a tier and confirm payment before checkout. Fulfillment begins only after independent payment verification.",
-  "public_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/capabilities/website-launch-service-v1/index.html",
+  "public_url": "https://fabric.systemiacommandcenters.com/capabilities/website-launch-service-v1",
   "payment_authority": "Evercraft Website Service / Stripe, provider-verified",
   "invocation_status": "LIVE: agent HTTP gateway + OpenAPI + llms guidance + remote MCP at [retired provider route removed] Agents can inspect $500/$999/$1,999 website-service tiers, prepare checkout only after explicit human confirmation, and independently verify paid order state.",
   "live_canary_evidence": null,

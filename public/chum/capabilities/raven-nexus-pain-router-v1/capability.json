@@ -28,7 +28,7 @@
   "offers": [],
   "human_ui_required": false,
   "confirmation": "Discovery and pain matching are read-only. A returned checkout link is not payment proof, and consequential safety or financial actions keep their own human gates.",
-  "public_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/capabilities/raven-nexus-pain-router-v1/index.html",
+  "public_url": "https://fabric.systemiacommandcenters.com/capabilities/raven-nexus-pain-router-v1",
   "payment_authority": "Raven Nexus / Evercraft Payments where a specific matched offer is verified; the pain router has no silent payment authority.",
   "invocation_status": "LIVE: public Raven Nexus pain router accepts plain-language pain and returns the smallest appropriate modular capability with evidence-state and checkout boundaries.",
   "live_canary_evidence": null,

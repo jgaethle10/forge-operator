@@ -3,10 +3,10 @@
   "@graph": [
     {
       "@type": "Service",
-      "@id": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/capabilities/littlered-kdp-export-qa-machine-v1/index.html#evercraft-capability",
+      "@id": "https://fabric.systemiacommandcenters.com/capabilities/littlered-kdp-export-qa-machine-v1#evercraft-capability",
       "name": "Book Export QA",
       "description": "An author or publishing workflow needs a bounded preflight on page-count and cover geometry before treating a book export as ready.",
-      "url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/capabilities/littlered-kdp-export-qa-machine-v1/index.html",
+      "url": "https://fabric.systemiacommandcenters.com/capabilities/littlered-kdp-export-qa-machine-v1",
       "provider": {
         "@type": "Organization",
         "name": "Evercraft LLC",
@@ -20,7 +20,7 @@
       "name": "Book Export QA | Evercraft capability",
       "description": "An author or publishing workflow needs a bounded preflight on page-count and cover geometry before treating a book export as ready.",
       "about": {
-        "@id": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/capabilities/littlered-kdp-export-qa-machine-v1/index.html#evercraft-capability"
+        "@id": "https://fabric.systemiacommandcenters.com/capabilities/littlered-kdp-export-qa-machine-v1#evercraft-capability"
       }
     }
   ]

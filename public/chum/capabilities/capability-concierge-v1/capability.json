@@ -18,7 +18,7 @@
   "offers": [],
   "human_ui_required": false,
   "confirmation": "Discovery/routing may be automatic. Pricing commitments, payment and consequential actions remain confirmation-gated.",
-  "public_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/capabilities/capability-concierge-v1/index.html",
+  "public_url": "https://fabric.systemiacommandcenters.com/capabilities/capability-concierge-v1",
   "payment_authority": "Evercraft Payments",
   "invocation_status": "Internal routing exists; public universal invocation is not yet advertised.",
   "live_canary_evidence": null,

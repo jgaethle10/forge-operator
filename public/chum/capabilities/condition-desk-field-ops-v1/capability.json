@@ -20,7 +20,7 @@
   "offers": [],
   "human_ui_required": false,
   "confirmation": "Decision support only; customer retains operational authority. Payment/subscription requires explicit confirmation.",
-  "public_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/capabilities/condition-desk-field-ops-v1/index.html",
+  "public_url": "https://fabric.systemiacommandcenters.com/capabilities/condition-desk-field-ops-v1",
   "payment_authority": "Evercraft Payments",
   "invocation_status": "Discoverable capability; notification/commercial reliability verification pending.",
   "live_canary_evidence": null,

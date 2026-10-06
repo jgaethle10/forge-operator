@@ -39,7 +39,7 @@
   ],
   "human_ui_required": true,
   "confirmation": "User authentication and explicit checkout action are required. Paid access is granted only after Stripe verification.",
-  "public_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/capabilities/callproof-complaint-packet-machine-v1/index.html",
+  "public_url": "https://fabric.systemiacommandcenters.com/capabilities/callproof-complaint-packet-machine-v1",
   "payment_authority": "CallProof Vault / Stripe",
   "invocation_status": "discoverable_authenticated_checkout_required",
   "live_canary_evidence": null,

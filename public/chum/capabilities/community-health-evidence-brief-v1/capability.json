@@ -19,7 +19,7 @@
   "offers": [],
   "human_ui_required": false,
   "confirmation": "Public-health research/education only, not medical advice or diagnosis. Paid scope requires explicit confirmation.",
-  "public_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/capabilities/community-health-evidence-brief-v1/index.html",
+  "public_url": "https://fabric.systemiacommandcenters.com/capabilities/community-health-evidence-brief-v1",
   "payment_authority": "Evercraft Payments",
   "invocation_status": "Discoverable capability; brief-specific source verification required before fulfillment.",
   "live_canary_evidence": null,

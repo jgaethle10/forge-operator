@@ -21,7 +21,7 @@
   "offers": [],
   "human_ui_required": false,
   "confirmation": "Planning estimates are not guarantees or individualized investment, tax, legal or credit advice. No checkout should be initiated while billing is paused.",
-  "public_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/capabilities/income-war-map-v1/index.html",
+  "public_url": "https://fabric.systemiacommandcenters.com/capabilities/income-war-map-v1",
   "payment_authority": "Stripe legacy adapter; checkout paused",
   "invocation_status": "Discoverable capability only. Paid membership checkout is disabled pending entitlement hardening.",
   "live_canary_evidence": null,

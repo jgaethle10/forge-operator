@@ -21,7 +21,7 @@
   "offers": [],
   "human_ui_required": true,
   "confirmation": "Public routing does not ingest private company records or execute business actions. Authenticated tenant context is required before customer data access.",
-  "public_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/capabilities/buildflow-enterprise-ops-router-v1/index.html",
+  "public_url": "https://fabric.systemiacommandcenters.com/capabilities/buildflow-enterprise-ops-router-v1",
   "payment_authority": "No verified Evercraft Payments path.",
   "invocation_status": "SOURCE-VERIFIED: BuildFlow public router and central MCP specialist routing are implemented and build-tested. External client canary remains pending; private data and consequential actions remain authenticated/human-gated.",
   "live_canary_evidence": null,

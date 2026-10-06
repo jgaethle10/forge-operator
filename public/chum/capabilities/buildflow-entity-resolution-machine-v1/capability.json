@@ -20,7 +20,7 @@
   "offers": [],
   "human_ui_required": true,
   "confirmation": "Accepting a mapping records an adjudication; it does not silently rewrite source evidence or auto-merge canonical counterparties.",
-  "public_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/capabilities/buildflow-entity-resolution-machine-v1/index.html",
+  "public_url": "https://fabric.systemiacommandcenters.com/capabilities/buildflow-entity-resolution-machine-v1",
   "payment_authority": "No verified Evercraft Payments path.",
   "invocation_status": "SOURCE-VERIFIED: discovery and authenticated Decision Desk adjudication are implemented and build-tested; external client canary remains pending. Canonical merge remains a separate gated action.",
   "live_canary_evidence": null,
