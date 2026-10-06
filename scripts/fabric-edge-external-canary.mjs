@@ -118,6 +118,7 @@ function failureStage(checks={},message=''){
   if(checks.faie_health!==true) return 'faie_health';
   if(checks.faie_mcp!==true) return 'faie_mcp';
   if(checks.mobile_surface!==true) return 'mobile_surface';
+  if(checks.offer_storefront!==true) return 'offer_storefront';
   if(checks.policy_surfaces!==true) return 'policy_surfaces';
   if(checks.runtime_health!==true) return 'runtime_health';
   if(checks.mcp_sse_probe!==true) return 'mcp_sse_probe';
@@ -244,6 +245,26 @@ try{
     identity_verified:true,
   };
   receipt.checks.mobile_surface=true;
+
+  const offerDirectory=await getText('/offers');
+  if(!/^text\/html/i.test(offerDirectory.response.headers.get('content-type')||'')) throw new Error('offer_directory_not_html');
+  if(!/One problem\.|One clear offer\./i.test(offerDirectory.text)) throw new Error('offer_directory_identity_missing');
+
+  const requiredOffers=[
+    ['/offers/website-audit',/What you are buying|Quick Win Audit/i],
+    ['/offers/ibmi-rescue',/IBM i Estate X-Ray|Don.t touch production/i],
+    ['/offers/legacy-rescue',/Legacy Rescue Scan|software is broken/i],
+    ['/offers/findmypart',/Quick Hunt|Can.t find the part/i],
+  ];
+  receipt.offer_storefront={directory_status:offerDirectory.response.status,pages:[]};
+  for(const [path,identity] of requiredOffers){
+    const page=await getText(path);
+    const contentType=page.response.headers.get('content-type')||'';
+    if(!/^text\/html/i.test(contentType)) throw new Error('offer_page_not_html:'+path);
+    if(!identity.test(page.text)) throw new Error('offer_page_identity_missing:'+path);
+    receipt.offer_storefront.pages.push({path,status:page.response.status,identity_verified:true});
+  }
+  receipt.checks.offer_storefront=true;
 
   for(const path of ['/support','/privacy','/terms']){
     const page=await getText(path);
