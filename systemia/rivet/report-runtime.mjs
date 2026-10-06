@@ -80,11 +80,98 @@ function evidenceIndex(data){
   };
 }
 
+function sessionIntelligence(data){
+  const rows=arr(data?.nearby_observed_usage);
+  const pickNumber=(row,keys)=>{
+    for(const key of keys){
+      const value=number(row?.[key]);
+      if(value!==null && value!==undefined && Number.isFinite(value)) return value;
+    }
+    return null;
+  };
+  const dateMs=(value)=>{
+    const ms=Date.parse(clean(value));
+    return Number.isFinite(ms)?ms:null;
+  };
+  const normalized=rows.slice(0,50).map((row,index)=>{
+    const sessions=pickNumber(row,['sessions','charging_sessions_count','session_count','sessions_count']);
+    const energyKwh=pickNumber(row,['energy_kwh','kwh','energy','energy_dispensed_kwh']);
+    const chargingMinutes=pickNumber(row,['charging_minutes','charge_minutes','charging_time_minutes']);
+    const connectedMinutes=pickNumber(row,['connected_minutes','connection_minutes','connected_time_minutes']);
+    const ports=pickNumber(row,['ports','port_count','connectors','connector_count']);
+    const reliabilityPct=pickNumber(row,['reliability_pct','uptime_pct','availability_pct']);
+    const pricePerKwh=pickNumber(row,['price_per_kwh','avg_price_per_kwh','average_price_per_kwh']);
+    const occupancyPct=pickNumber(row,['occupancy_pct','utilization_pct']);
+    const start=dateMs(row?.period_start || row?.start_date || row?.start);
+    const end=dateMs(row?.period_end || row?.end_date || row?.end);
+    const periodDays=start!==null && end!==null && end>start ? (end-start)/86400000 : null;
+    const sessionsPerDay=sessions!==null && periodDays ? sessions/periodDays : pickNumber(row,['sessions_per_day','avg_sessions_per_day']);
+    const energyPerSession=energyKwh!==null && sessions && sessions>0 ? energyKwh/sessions : null;
+    const temporalPresent=Boolean(
+      row?.hourly_profile || row?.time_of_day || row?.day_of_week || row?.weekday_profile ||
+      row?.hourly_sessions || row?.daily_sessions
+    );
+    const operationalPresent=[reliabilityPct,pricePerKwh,occupancyPct].some(v=>v!==null) || Boolean(row?.failed_sessions);
+    let level=sessions!==null?1:0;
+    if(level>=1 && (energyKwh!==null || chargingMinutes!==null || connectedMinutes!==null || periodDays!==null)) level=2;
+    if(level>=2 && temporalPresent) level=3;
+    if(level>=2 && operationalPresent) level=Math.max(level,4);
+    if(row?.comparable_sites || row?.cohort || row?.ramp_curve || row?.forecast_model) level=5;
+    return {
+      record_index:index,
+      site_id:clean(row?.site_id || row?.station_id || row?.station_external_id || row?.location_id) || null,
+      site_name:clean(row?.site_name || row?.station_name || row?.name) || null,
+      source:clean(row?.source || row?.source_name) || null,
+      evidence_state:clean(row?.evidence_state || row?.data_status || 'observed') || 'observed',
+      period_start:clean(row?.period_start || row?.start_date || row?.start) || null,
+      period_end:clean(row?.period_end || row?.end_date || row?.end) || null,
+      sessions,
+      energy_kwh:energyKwh,
+      charging_minutes:chargingMinutes,
+      connected_minutes:connectedMinutes,
+      ports,
+      sessions_per_day:sessionsPerDay,
+      energy_per_session_kwh:energyPerSession,
+      reliability_pct:reliabilityPct,
+      occupancy_pct:occupancyPct,
+      price_per_kwh:pricePerKwh,
+      temporal_profile_present:temporalPresent,
+      evidence_level:level
+    };
+  });
+  const maxLevel=normalized.reduce((max,row)=>Math.max(max,row.evidence_level||0),0);
+  return {
+    schema:'evercraft.rivet.session-intelligence.v1',
+    semantics:'Observed session evidence is summarized without upgrading inventory, modeled demand, or overlapping rows into observed utilization.',
+    record_count:rows.length,
+    evidence_level:maxLevel,
+    evidence_level_label:[
+      'no_verified_observed_sessions',
+      'observed_aggregate',
+      'observed_performance',
+      'temporal_behavior',
+      'operational_quality',
+      'decision_intelligence'
+    ][maxLevel] || 'unknown',
+    coverage:{
+      with_sessions:normalized.filter(row=>row.sessions!==null).length,
+      with_energy:normalized.filter(row=>row.energy_kwh!==null).length,
+      with_verified_period:normalized.filter(row=>row.period_start&&row.period_end).length,
+      with_temporal_profile:normalized.filter(row=>row.temporal_profile_present).length,
+      with_reliability:normalized.filter(row=>row.reliability_pct!==null).length,
+      with_occupancy:normalized.filter(row=>row.occupancy_pct!==null).length,
+      with_price:normalized.filter(row=>row.price_per_kwh!==null).length
+    },
+    sites:normalized.slice(0,20)
+  };
+}
+
 function quickRead(data){
   const traffic=arr(data?.traffic);
   const chargers=arr(data?.chargers);
   const incentives=arr(data?.incentives);
   const observedUsage=arr(data?.nearby_observed_usage);
+  const sessionIntel=sessionIntelligence(data);
   const maxAadt=traffic.reduce((m,row)=>Math.max(m,number(row?.aadt)||0),0) || null;
   const utilityState=clean(data?.coverage_contract?.utility_tariff?.state || data?.coverage_contract?.utility_service_area?.state);
   const evidenceState=clean(data?.evidence_state || 'unknown');
@@ -113,7 +200,8 @@ function quickRead(data){
     traffic_rows:traffic.slice(0,12),
     chargers:chargers.slice(0,20),
     incentives:incentives.slice(0,20),
-    observed_usage:observedUsage.slice(0,12)
+    observed_usage:observedUsage.slice(0,12),
+    session_intelligence:sessionIntel
   };
 }
 
@@ -152,13 +240,17 @@ export function buildYardReport({address,reportType='preliminary_site_opportunit
     },
     metrics:{
       max_aadt:read.max_aadt,
-      charger_count:read.charger_count
+      charger_count:read.charger_count,
+      observed_usage_records:read.session_intelligence.record_count,
+      session_evidence_level:read.session_intelligence.evidence_level,
+      session_evidence_level_label:read.session_intelligence.evidence_level_label
     },
     evidence:{
       traffic:read.traffic_rows,
       chargers:read.chargers,
       incentives:read.incentives,
       observed_usage:read.observed_usage,
+      session_intelligence:read.session_intelligence,
       coverage_contract:sourceSnapshot?.coverage_contract || null,
       source_coverage_manifest:coverage,
       index:evidenceIndex(sourceSnapshot),
@@ -179,7 +271,8 @@ export function buildYardReport({address,reportType='preliminary_site_opportunit
           source_name:clean(sourceSnapshot?.charger_source_name) || null,
           source_license:clean(sourceSnapshot?.charger_source_license) || null,
           price_benchmark:sourceSnapshot?.zip_charging_price_benchmark || null,
-          observed_usage:read.observed_usage
+          observed_usage:read.observed_usage,
+          session_intelligence:read.session_intelligence
         },
         utility:{
           rate_candidates:arr(sourceSnapshot?.utility_rate_candidates).slice(0,30),
