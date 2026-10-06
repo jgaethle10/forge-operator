@@ -136,6 +136,35 @@ jobs:
           NODE
 
 
+          curl -fsS -X POST \
+            -H 'content-type: application/json' \
+            --data '{"message":"CI review a bounded internal operating plan","lane":"operations"}' \
+            http://127.0.0.1:4310/api/raven/command-plan > /tmp/raven-command-plan.json
+          node - <<'NODE'
+          const fs = require('fs');
+          const payload = JSON.parse(fs.readFileSync('/tmp/raven-command-plan.json','utf8'));
+          if (!payload.ok || payload.state !== 'planned_not_executed') throw new Error('Raven command planning failed');
+          if (payload.execution_authority_granted !== false) throw new Error('Raven planning illegally granted execution authority');
+          if (payload.systemia_authority !== 'systemia-organism') throw new Error('Raven planning lost Systemia authority');
+          NODE
+
+          raven_status=$(curl -sS -o /tmp/raven-execute.json -w '%{http_code}' -X POST \
+            -H 'content-type: application/json' \
+            --data '{"message":"CI review a bounded internal operating plan","lane":"operations"}' \
+            http://127.0.0.1:4310/api/raven/execute)
+          if [ "$raven_status" != "409" ]; then
+            echo "Expected Raven execution to fail closed without an owned Nexus bridge; got HTTP $raven_status"
+            cat /tmp/raven-execute.json
+            exit 1
+          fi
+          node - <<'NODE'
+          const fs = require('fs');
+          const payload = JSON.parse(fs.readFileSync('/tmp/raven-execute.json','utf8'));
+          if (payload.ok !== false || payload.state !== 'blocked') throw new Error('Unconfigured Raven execution did not fail closed');
+          if (payload.execution_performed !== false) throw new Error('Unconfigured Raven execution falsely claimed completion');
+          if (payload.base44_required !== false) throw new Error('Raven execution reintroduced Base44 dependency');
+          NODE
+
           curl -fsS http://127.0.0.1:4310/api/yard/overview > /tmp/yard-overview.json
           curl -fsS http://127.0.0.1:4310/api/network/overview > /tmp/network-overview.json
           curl -fsS http://127.0.0.1:4310/api/raven/overview > /tmp/raven-overview.json

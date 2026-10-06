@@ -9,6 +9,7 @@ import { authorizeEvercraftHome, verifyEvercraftSession } from "./identity.mjs";
 import { planSystemiaMission, readSystemiaInventory } from "./systemia-adapter.mjs";
 import { readNetworkOverview, readYardOverview } from "./operations-adapter.mjs";
 import { readRavenOverview } from "./raven-adapter.mjs";
+import { executeRavenCommand, planRavenCommand } from "./raven-command-adapter.mjs";
 import { ProviderCredentialVault } from "./credential-vault.mjs";
 import { normalizeProviderCredentialRequest } from "./provider-credentials.mjs";
 
@@ -120,6 +121,9 @@ export async function startEvercraftHomeServer({
   const loginLimiter = new IdentityRateLimiter();
   const credentialVault = credentialStateDir ? new ProviderCredentialVault({ stateDir: credentialStateDir }) : null;
   const instanceId = "home_" + randomUUID();
+  const ravenWorkBridgeUrl = String(serviceOrigins?.RAVEN_NEXUS_WORK_URL || "").trim();
+  const ravenWorkBridgeToken = String(serviceOrigins?.RAVEN_NEXUS_WORK_TOKEN || "").trim();
+  const ravenReceiptDir = String(serviceOrigins?.EVERCRAFT_RAVEN_RECEIPT_DIR || "").trim();
   let closed = false;
   let deploymentReceiptRef = "";
 
@@ -143,6 +147,7 @@ export async function startEvercraftHomeServer({
       accepted_signing_key_count: authMode === "passport" ? Object.keys(signingKeys).length : 0,
       session_revocation_supported: Boolean(identity),
       provider_credential_vault_configured: Boolean(credentialVault),
+      raven_readonly_execution_configured: Boolean(ravenWorkBridgeUrl && ravenWorkBridgeToken),
     };
   }
 
@@ -453,6 +458,63 @@ export async function startEvercraftHomeServer({
         return json(res, 200, { ok: true, subject: session.subject, ...result });
       } catch (error) {
         return json(res, 400, { ok: false, state: error?.message || "mission_plan_invalid" });
+      }
+    }
+
+    if (req.method === "POST" && url.pathname === "/api/raven/command-plan") {
+      const session = sessionFor(req, "home.systemia.plan");
+      if (!session.ok) return json(res, session.status, session);
+      try {
+        const body = await readJsonBody(req, 32768);
+        const result = planRavenCommand({
+          message: body.message,
+          lane: body.lane,
+        }, repoRoot);
+        return json(res, 200, {
+          ok: true,
+          subject: session.subject,
+          ...result,
+        });
+      } catch (error) {
+        return json(res, 400, {
+          ok: false,
+          state: error?.message || "raven_command_plan_failed",
+          execution_authority_granted: false,
+        });
+      }
+    }
+
+    if (req.method === "POST" && url.pathname === "/api/raven/execute") {
+      const session = sessionFor(req, "home.raven.execute");
+      if (!session.ok) return json(res, session.status, session);
+      try {
+        const body = await readJsonBody(req, 32768);
+        const result = await executeRavenCommand({
+          message: body.message,
+          lane: body.lane,
+          bridgeUrl: ravenWorkBridgeUrl,
+          bridgeToken: ravenWorkBridgeToken,
+          receiptDir: ravenReceiptDir,
+        }, repoRoot);
+        return json(res, result.state === "executed" ? 200 : 409, {
+          ok: result.state === "executed",
+          subject: session.subject,
+          authorization: {
+            scope: "home.raven.execute",
+            mode: session.mode,
+            grant_id: session.grant_id || null,
+            internal_read_only_only: true,
+          },
+          ...result,
+        });
+      } catch (error) {
+        return json(res, 400, {
+          ok: false,
+          state: error?.message || "raven_command_execution_failed",
+          execution_performed: false,
+          external_side_effects_authorized: false,
+          base44_required: false,
+        });
       }
     }
 
