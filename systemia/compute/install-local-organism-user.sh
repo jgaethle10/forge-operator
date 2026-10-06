@@ -57,6 +57,22 @@ if [[ -n "${EVERCRAFT_REMOTE_OPERATOR_ENABLED:-}" ]]; then
   esac
 fi
 
+if [[ -n "${RAVEN_INFERENCE_PROVIDER:-}" ]]; then
+  case "${RAVEN_INFERENCE_PROVIDER,,}" in
+    ollama|gemini|openai) set_env_value "RAVEN_INFERENCE_PROVIDER" "${RAVEN_INFERENCE_PROVIDER,,}" ;;
+    *) echo "RAVEN_INFERENCE_PROVIDER must be ollama, gemini, or openai." >&2; exit 2 ;;
+  esac
+fi
+if [[ -n "${RAVEN_INFERENCE_MODEL:-}" ]]; then
+  set_env_value "RAVEN_INFERENCE_MODEL" "${RAVEN_INFERENCE_MODEL}"
+fi
+if [[ -n "${RAVEN_PROVIDER_CREDENTIAL_STATE_DIR:-}" ]]; then
+  set_env_value "RAVEN_PROVIDER_CREDENTIAL_STATE_DIR" "${RAVEN_PROVIDER_CREDENTIAL_STATE_DIR}"
+fi
+if [[ -n "${RAVEN_OLLAMA_ORIGIN:-}" ]]; then
+  set_env_value "RAVEN_OLLAMA_ORIGIN" "${RAVEN_OLLAMA_ORIGIN}"
+fi
+
 rm -rf "${INSTALL_ROOT:?}/"*
 cp -a "${SOURCE_ROOT}/." "${INSTALL_ROOT}/"
 
@@ -143,6 +159,11 @@ if grep -q '^EVERCRAFT_REMOTE_OPERATOR_ENABLED=true$' "${ENV_FILE}"; then
   echo "Remote Operator: enabled; outbound control grant required."
 else
   echo "Remote Operator: disabled."
+fi
+if grep -q '^RAVEN_INFERENCE_PROVIDER=.' "${ENV_FILE}" && grep -q '^RAVEN_INFERENCE_MODEL=.' "${ENV_FILE}"; then
+  echo "Raven inference: configured; Systemia Core will mint private runtime authority files on admission."
+else
+  echo "Raven inference: not configured; private team inference remains disabled."
 fi
 echo "State: ${STATE_ROOT}"
 echo "This user-mode Chromebook/Crostini runtime is authorized compute, not Node 001 physical field certification."
