@@ -549,6 +549,39 @@ export function buildFaieInvestigation(inputState, input, { now = new Date().toI
     'Field, sensor, operator, or official-source evidence when a consequential decision depends on the result'
   ], 30);
 
+  const evidenceAcquisitionQueue = [
+    ...missingDimensions.map((dimension) => ({
+      acquisition_id: 'faie-acquisition:' + stableHash([scope.question, dimension, 'dimension_gap']),
+      dimension,
+      priority: 'P0',
+      state: 'OPEN',
+      request: evidenceNeedForDimension(dimension),
+      preferred_evidence: ['official_source', 'field_measurement', 'operator_authorized_record'],
+      external_action_taken: false,
+      human_or_separate_authority_required: true
+    })),
+    {
+      acquisition_id: 'faie-acquisition:' + stableHash([scope.question, 'geography_freshness']),
+      dimension: 'geography_freshness',
+      priority: findings.length ? 'P1' : 'P0',
+      state: 'OPEN',
+      request: 'Acquire more recent observations for the exact scoped geography.',
+      preferred_evidence: ['official_source', 'sensor', 'field_measurement'],
+      external_action_taken: false,
+      human_or_separate_authority_required: true
+    },
+    ...(sourceFamilies.length < 2 ? [{
+      acquisition_id: 'faie-acquisition:' + stableHash([scope.question, 'independent_corroboration']),
+      dimension: 'independent_corroboration',
+      priority: 'P0',
+      state: 'OPEN',
+      request: 'Acquire independent corroboration from a separate source family.',
+      preferred_evidence: ['official_source', 'independent_observation', 'operator_authorized_record'],
+      external_action_taken: false,
+      human_or_separate_authority_required: true
+    }] : [])
+  ];
+
   const decisionReadiness = findings.length &&
     !missingDimensions.length &&
     sourceFamilies.length >= 2 &&
@@ -612,6 +645,7 @@ export function buildFaieInvestigation(inputState, input, { now = new Date().toI
       decide: {
         readiness: decisionReadiness,
         next_evidence: evidenceNeeded,
+        evidence_acquisition_queue: evidenceAcquisitionQueue,
         human_review_required: true,
         action_authority: false
       }
