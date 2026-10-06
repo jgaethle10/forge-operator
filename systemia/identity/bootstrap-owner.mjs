@@ -43,6 +43,7 @@ const grant = passport.issueGrant({
     "home.read",
     "home.systemia.read",
     "home.systemia.plan",
+    "home.raven.execute",
     "home.yard.read",
     "home.network.read",
     "home.identity.sessions.manage"
