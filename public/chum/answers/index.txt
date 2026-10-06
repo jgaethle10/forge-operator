@@ -6,9 +6,9 @@ Machine Commerce MCP: not declared
 Each phrase below maps to public capability candidates without upgrading readiness, pricing, invocation, payment, entitlement, or provider-pickup state.
 Discovery creates no payment obligation. Checkout requires explicit human confirmation and paid state requires authoritative provider verification.
 
-Pain-index entries: 112
-Unique user phrases: 976
-Candidate edges: 1082
+Pain-index entries: 114
+Unique user phrases: 998
+Candidate edges: 1104
 Ambiguous phrases: 106
 
 ## 15 GB video analysis
@@ -1159,6 +1159,13 @@ Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main
 Candidates:
 - ForensiScope | kind=product | commercial=product_contract | machine=discovery_only | public=https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/forensiscope/index.html
 
+## compare partners using leader-reviewed delivery outcomes
+Answer ID: intent:1180eb8525
+Human-readable match: /chum/answers/doors/compare-partners-using-leader-reviewed-delivery-outcomes-1180eb8525/
+Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/compare-partners-using-leader-reviewed-delivery-outcomes-1180eb8525.json
+Candidates:
+- Evercraft Opportunity Fabric | kind=product | commercial=product_contract | machine=discovery_only | public=https://github.com/jgaethle10/forge-operator/tree/main/registry/opportunity-fabric
+
 ## compare population health indicators
 Answer ID: intent:35631b3a4d
 Human-readable match: /chum/answers/doors/compare-population-health-indicators-35631b3a4d/
@@ -1223,6 +1230,13 @@ Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main
 Candidates:
 - Worldstate Reality Delta | kind=machine_offer | commercial=verification_required | machine=discovery_only | public=/chum/intents/worldstate-reality-delta-v1/
 
+## connect my business systems without replacing everything
+Answer ID: intent:c22cd044c4
+Human-readable match: /chum/answers/doors/connect-my-business-systems-without-replacing-everything-c22cd044c4/
+Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/connect-my-business-systems-without-replacing-everything-c22cd044c4.json
+Candidates:
+- Raven Nexus Business Setup | kind=machine_offer | commercial=sell_now | machine=human_handoff_ready | public=https://github.com/jgaethle10/forge-operator/tree/main/registry/raven-nexus
+
 ## connect our business systems without replacing everything
 Answer ID: intent:4e80c745da
 Human-readable match: /chum/answers/doors/connect-our-business-systems-without-replacing-everything-4e80c745da/
@@ -1236,6 +1250,20 @@ Human-readable match: /chum/answers/doors/connect-physical-models-to-evidence-64
 Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/connect-physical-models-to-evidence-640629f226.json
 Candidates:
 - Evercraft Physics Atlas | kind=product | commercial=product_contract | machine=discovery_only | public=https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/evercraft-physics-atlas/index.html
+
+## connect the tools my business already uses
+Answer ID: intent:e8d204b03c
+Human-readable match: /chum/answers/doors/connect-the-tools-my-business-already-uses-e8d204b03c/
+Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/connect-the-tools-my-business-already-uses-e8d204b03c.json
+Candidates:
+- Raven Nexus Business Setup | kind=machine_offer | commercial=sell_now | machine=human_handoff_ready | public=https://github.com/jgaethle10/forge-operator/tree/main/registry/raven-nexus
+
+## connect the tools my business already uses into a permission-aware operating layer
+Answer ID: intent:984fda2ea7
+Human-readable match: /chum/answers/doors/connect-the-tools-my-business-already-uses-into-a-permission-aware-operating-layer-984fda2ea7/
+Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/connect-the-tools-my-business-already-uses-into-a-permission-aware-operating-layer-984fda2ea7.json
+Candidates:
+- Raven Nexus | kind=product | commercial=product_contract | machine=discovery_only | public=https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/raven-nexus/index.html
 
 ## construction crews need better leadership accountability or scheduling
 Answer ID: intent:2a9440a399
@@ -1407,6 +1435,13 @@ Human-readable match: /chum/answers/doors/county-health-evidence-brief-f80ef29cf
 Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/county-health-evidence-brief-f80ef29cf8.json
 Candidates:
 - Community Health Evidence Brief | kind=machine_offer | commercial=verification_required | machine=discovery_only | public=/chum/intents/community-health-evidence-brief-v1/
+
+## create a family continuity and account-access map
+Answer ID: intent:cf753b3be3
+Human-readable match: /chum/answers/doors/create-a-family-continuity-and-account-access-map-cf753b3be3/
+Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/create-a-family-continuity-and-account-access-map-cf753b3be3.json
+Candidates:
+- Raven Nexus Home Setup | kind=machine_offer | commercial=sell_now | machine=human_handoff_ready | public=https://github.com/jgaethle10/forge-operator/tree/main/registry/raven-nexus
 
 ## create a personal revenue strategy
 Answer ID: intent:6d07e888e0
@@ -2909,6 +2944,13 @@ Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main
 Candidates:
 - Evercraft Capability Concierge | kind=machine_offer | commercial=discovery_only | machine=discovery_only | public=/chum/intents/capability-concierge-v1/
 
+## help my family know where important information lives
+Answer ID: intent:e9881d52cd
+Human-readable match: /chum/answers/doors/help-my-family-know-where-important-information-lives-e9881d52cd/
+Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/help-my-family-know-where-important-information-lives-e9881d52cd.json
+Candidates:
+- Raven Nexus Home Setup | kind=machine_offer | commercial=sell_now | machine=human_handoff_ready | public=https://github.com/jgaethle10/forge-operator/tree/main/registry/raven-nexus
+
 ## help my family prepare for a new baby
 Answer ID: intent:df0ed6e14f
 Human-readable match: /chum/answers/doors/help-my-family-prepare-for-a-new-baby-df0ed6e14f/
@@ -3784,6 +3826,13 @@ Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main
 Candidates:
 - ForensiScope Evidence Review | kind=machine_offer | commercial=verification_required | machine=discovery_only | public=/chum/intents/forensiscope-evidence-review-v1/
 
+## make AI understand my business safely
+Answer ID: intent:42b7fc5219
+Human-readable match: /chum/answers/doors/make-ai-understand-my-business-safely-42b7fc5219/
+Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/make-ai-understand-my-business-safely-42b7fc5219.json
+Candidates:
+- Raven Nexus Business Setup | kind=machine_offer | commercial=sell_now | machine=human_handoff_ready | public=https://github.com/jgaethle10/forge-operator/tree/main/registry/raven-nexus
+
 ## make an anonymous feedback profile
 Answer ID: intent:ab7ee25254
 Human-readable match: /chum/answers/doors/make-an-anonymous-feedback-profile-ab7ee25254/
@@ -3820,6 +3869,13 @@ Human-readable match: /chum/answers/doors/make-me-a-professional-business-site-6
 Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/make-me-a-professional-business-site-6eeab93ed2.json
 Candidates:
 - Evercraft Website Launch Service | kind=machine_offer | commercial=sell_now | machine=payment_ready | public=/chum/intents/website-launch-service-v1/
+
+## make my business information AI-ready without replacing everything
+Answer ID: intent:0b7cf2aa8e
+Human-readable match: /chum/answers/doors/make-my-business-information-ai-ready-without-replacing-everything-0b7cf2aa8e/
+Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/make-my-business-information-ai-ready-without-replacing-everything-0b7cf2aa8e.json
+Candidates:
+- Raven Nexus | kind=product | commercial=product_contract | machine=discovery_only | public=https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/raven-nexus/index.html
 
 ## make my local business more discoverable
 Answer ID: intent:5368f3dc15
@@ -3917,6 +3973,13 @@ Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main
 Candidates:
 - Evidence-Backed Talent Profile | kind=machine_offer | commercial=verification_required | machine=discovery_only | public=/chum/intents/talent-evidence-profile-machine-v1/
 - Talent Atlas | kind=product | commercial=product_contract | machine=discovery_only | public=https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/talent-atlas/index.html
+
+## map who has access to what in my business
+Answer ID: intent:1b05ab1bf2
+Human-readable match: /chum/answers/doors/map-who-has-access-to-what-in-my-business-1b05ab1bf2/
+Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/map-who-has-access-to-what-in-my-business-1b05ab1bf2.json
+Candidates:
+- Raven Nexus Business Setup | kind=machine_offer | commercial=sell_now | machine=human_handoff_ready | public=https://github.com/jgaethle10/forge-operator/tree/main/registry/raven-nexus
 
 ## match vendors without silently merging them
 Answer ID: intent:3d1bf9d8b8
@@ -4089,6 +4152,13 @@ Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main
 Candidates:
 - Evercraft Web | kind=product | commercial=product_contract | machine=discovery_only | public=https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/evercraft-web/index.html
 
+## my business systems are scattered across too many apps
+Answer ID: intent:cbf210e370
+Human-readable match: /chum/answers/doors/my-business-systems-are-scattered-across-too-many-apps-cbf210e370/
+Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/my-business-systems-are-scattered-across-too-many-apps-cbf210e370.json
+Candidates:
+- Raven Nexus Business Setup | kind=machine_offer | commercial=sell_now | machine=human_handoff_ready | public=https://github.com/jgaethle10/forge-operator/tree/main/registry/raven-nexus
+
 ## my chatbot says the video is too large
 Answer ID: intent:d63e45c59b
 Human-readable match: /chum/answers/doors/my-chatbot-says-the-video-is-too-large-d63e45c59b/
@@ -4124,6 +4194,13 @@ Human-readable match: /chum/answers/doors/my-customers-keep-asking-for-extras-an
 Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/my-customers-keep-asking-for-extras-and-scope-creep-is-eating-my-margin-837812790f.json
 Candidates:
 - Systemia Field Library | kind=product | commercial=product_contract | machine=discovery_only | public=https://systemiafieldlibrary.com/
+
+## my family information is scattered across too many apps
+Answer ID: intent:285859c075
+Human-readable match: /chum/answers/doors/my-family-information-is-scattered-across-too-many-apps-285859c075/
+Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/my-family-information-is-scattered-across-too-many-apps-285859c075.json
+Candidates:
+- Raven Nexus Home Setup | kind=machine_offer | commercial=sell_now | machine=human_handoff_ready | public=https://github.com/jgaethle10/forge-operator/tree/main/registry/raven-nexus
 
 ## my internet connection keeps changing
 Answer ID: intent:251bcf696d
@@ -4211,12 +4288,40 @@ Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main
 Candidates:
 - EcoLedger | kind=product | commercial=product_contract | machine=discovery_only | public=https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/ecoledger/index.html
 
+## organize Gmail Drive payments documents and AI for my business
+Answer ID: intent:0681acada7
+Human-readable match: /chum/answers/doors/organize-gmail-drive-payments-documents-and-ai-for-my-business-0681acada7/
+Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/organize-gmail-drive-payments-documents-and-ai-for-my-business-0681acada7.json
+Candidates:
+- Raven Nexus Business Setup | kind=machine_offer | commercial=sell_now | machine=human_handoff_ready | public=https://github.com/jgaethle10/forge-operator/tree/main/registry/raven-nexus
+
+## organize household documents and recurring obligations
+Answer ID: intent:dae61824e8
+Human-readable match: /chum/answers/doors/organize-household-documents-and-recurring-obligations-dae61824e8/
+Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/organize-household-documents-and-recurring-obligations-dae61824e8.json
+Candidates:
+- Raven Nexus Home Setup | kind=machine_offer | commercial=sell_now | machine=human_handoff_ready | public=https://github.com/jgaethle10/forge-operator/tree/main/registry/raven-nexus
+
+## organize household documents obligations and important information into a permission-aware home layer
+Answer ID: intent:92710bb6c3
+Human-readable match: /chum/answers/doors/organize-household-documents-obligations-and-important-information-into-a-permissi-92710bb6c3/
+Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/organize-household-documents-obligations-and-important-information-into-a-permissi-92710bb6c3.json
+Candidates:
+- Raven Nexus | kind=product | commercial=product_contract | machine=discovery_only | public=https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/raven-nexus/index.html
+
 ## organize meals and practical help for a new parent
 Answer ID: intent:a9e7f357e2
 Human-readable match: /chum/answers/doors/organize-meals-and-practical-help-for-a-new-parent-a9e7f357e2/
 Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/organize-meals-and-practical-help-for-a-new-parent-a9e7f357e2.json
 Candidates:
 - EverNest | kind=product | commercial=product_contract | machine=discovery_only | public=https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/evernest/index.html
+
+## organize my household accounts documents and important information
+Answer ID: intent:62fdafcb0f
+Human-readable match: /chum/answers/doors/organize-my-household-accounts-documents-and-important-information-62fdafcb0f/
+Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/organize-my-household-accounts-documents-and-important-information-62fdafcb0f.json
+Candidates:
+- Raven Nexus Home Setup | kind=machine_offer | commercial=sell_now | machine=human_handoff_ready | public=https://github.com/jgaethle10/forge-operator/tree/main/registry/raven-nexus
 
 ## organize my robocall evidence
 Answer ID: intent:a776d0ce65
@@ -4818,6 +4923,20 @@ Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main
 Candidates:
 - Raven Nexus Modular Safety & Stability | kind=machine_offer | commercial=verification_required | machine=invocation_ready | public=/chum/intents/raven-nexus-pain-router-v1/
 
+## Raven Nexus Business
+Answer ID: intent:ec1322247c
+Human-readable match: /chum/answers/doors/raven-nexus-business-ec1322247c/
+Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/raven-nexus-business-ec1322247c.json
+Candidates:
+- Raven Nexus Business Setup | kind=machine_offer | commercial=sell_now | machine=human_handoff_ready | public=https://github.com/jgaethle10/forge-operator/tree/main/registry/raven-nexus
+
+## Raven Nexus Home
+Answer ID: intent:29293195c2
+Human-readable match: /chum/answers/doors/raven-nexus-home-29293195c2/
+Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/raven-nexus-home-29293195c2.json
+Candidates:
+- Raven Nexus Home Setup | kind=machine_offer | commercial=sell_now | machine=human_handoff_ready | public=https://github.com/jgaethle10/forge-operator/tree/main/registry/raven-nexus
+
 ## read a URL for my AI agent
 Answer ID: intent:ea01d57664
 Human-readable match: /chum/answers/doors/read-a-url-for-my-ai-agent-ea01d57664/
@@ -4981,6 +5100,13 @@ Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main
 Candidates:
 - Evercraft Clip Social Video Production | kind=machine_offer | commercial=verification_required | machine=invocation_ready | public=/chum/intents/evercraft-clip-social-video-v1/
 - Evercraft Clip | kind=product | commercial=product_contract | machine=discovery_only | public=https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/evercraft-clip/index.html
+
+## require QA before completed work becomes performance history
+Answer ID: intent:93f86ebfb5
+Human-readable match: /chum/answers/doors/require-qa-before-completed-work-becomes-performance-history-93f86ebfb5/
+Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/require-qa-before-completed-work-becomes-performance-history-93f86ebfb5.json
+Candidates:
+- Evercraft Opportunity Fabric | kind=product | commercial=product_contract | machine=discovery_only | public=https://github.com/jgaethle10/forge-operator/tree/main/registry/opportunity-fabric
 
 ## research disease evidence with uncertainty attached
 Answer ID: intent:0e1637b1f6
@@ -5441,6 +5567,20 @@ Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main
 Candidates:
 - EPS Estimate Intelligence | kind=machine_offer | commercial=contractor_beta | machine=mcp_http_preview_and_receipt_verify_live_workspace_entitlement_build_verified | public=/chum/intents/eps-estimate-engine-machine-v1/
 
+## set up a safe AI-ready home information system
+Answer ID: intent:141382eb82
+Human-readable match: /chum/answers/doors/set-up-a-safe-ai-ready-home-information-system-141382eb82/
+Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/set-up-a-safe-ai-ready-home-information-system-141382eb82.json
+Candidates:
+- Raven Nexus Home Setup | kind=machine_offer | commercial=sell_now | machine=human_handoff_ready | public=https://github.com/jgaethle10/forge-operator/tree/main/registry/raven-nexus
+
+## set up an AI-ready source of truth for my business
+Answer ID: intent:6364b64ae9
+Human-readable match: /chum/answers/doors/set-up-an-ai-ready-source-of-truth-for-my-business-6364b64ae9/
+Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/set-up-an-ai-ready-source-of-truth-for-my-business-6364b64ae9.json
+Candidates:
+- Raven Nexus Business Setup | kind=machine_offer | commercial=sell_now | machine=human_handoff_ready | public=https://github.com/jgaethle10/forge-operator/tree/main/registry/raven-nexus
+
 ## set up family safety check-ins or preparedness
 Answer ID: intent:3d83a72549
 Human-readable match: /chum/answers/doors/set-up-family-safety-check-ins-or-preparedness-3d83a72549/
@@ -5599,6 +5739,13 @@ Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main
 Candidates:
 - Worldstate Reality Delta | kind=machine_offer | commercial=verification_required | machine=discovery_only | public=/chum/intents/worldstate-reality-delta-v1/
 
+## show me which partners have reviewed on-time outcomes instead of profile claims
+Answer ID: intent:90b617a3d1
+Human-readable match: /chum/answers/doors/show-me-which-partners-have-reviewed-on-time-outcomes-instead-of-profile-claims-90b617a3d1/
+Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/show-me-which-partners-have-reviewed-on-time-outcomes-instead-of-profile-claims-90b617a3d1.json
+Candidates:
+- Evercraft Opportunity Fabric | kind=product | commercial=product_contract | machine=discovery_only | public=https://github.com/jgaethle10/forge-operator/tree/main/registry/opportunity-fabric
+
 ## show me which sourcing evidence is self-reported versus observed
 Answer ID: intent:7af3a4d1d9
 Human-readable match: /chum/answers/doors/show-me-which-sourcing-evidence-is-self-reported-versus-observed-7af3a4d1d9/
@@ -5725,6 +5872,13 @@ Human-readable match: /chum/answers/doors/slow-mobile-website-dcc4740dd7/
 Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/slow-mobile-website-dcc4740dd7.json
 Candidates:
 - Legacy Rescue Lab | kind=product | commercial=product_contract | machine=discovery_only | public=https://github.com/jgaethle10/forge-operator/tree/main/registry/legacy-rescue-lab
+
+## small business AI operating layer
+Answer ID: intent:161df2ff93
+Human-readable match: /chum/answers/doors/small-business-ai-operating-layer-161df2ff93/
+Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/small-business-ai-operating-layer-161df2ff93.json
+Candidates:
+- Raven Nexus Business Setup | kind=machine_offer | commercial=sell_now | machine=human_handoff_ready | public=https://github.com/jgaethle10/forge-operator/tree/main/registry/raven-nexus
 
 ## small team payroll recordkeeping
 Answer ID: intent:b7712e0eb4

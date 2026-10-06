@@ -28,7 +28,7 @@
       "universal_mcp": null,
       "confirmation": "Preserve the product-specific human confirmation boundary before any checkout, payment obligation, external handoff, or consequential action.",
       "invocation_status": "Route through the universal Evercraft discovery surface unless a bounded specialist interface is later verified.",
-      "authority": "public pain-to-capability discovery and bounded Raven routing; any purchase or protective action remains limited by the selected capability's verified commercial and authority state",
+      "authority": "public pain-to-capability discovery plus bounded sell-now human handoff for Raven Nexus Home and Business setup; private access, consequential actions and payment remain explicitly human-authorized",
       "boundaries": [
         "full-suite purchase is not required when a smaller capability is sufficient",
         "hardware is optional unless the selected capability explicitly requires it",
@@ -36,7 +36,9 @@
         "does not claim bank-side transaction blocking without verified banking authority",
         "does not permit covert tracking, stalking, or unauthorized surveillance",
         "Raven discovery is not emergency response",
-        "checkout creation is not payment proof"
+        "checkout creation is not payment proof",
+        "public discovery never requests passwords, security answers, API keys or private records",
+        "business and home setup are human-handoff services until product-specific direct checkout is independently verified"
       ]
     }
   ],

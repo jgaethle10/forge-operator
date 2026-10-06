@@ -14,7 +14,7 @@
     "grok",
     "generic_agent"
   ],
-  "canonical_url": "https://jgaethle10.github.io/forge-operator/apps/eps-estimator/",
+  "canonical_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/eps-estimate-engine/index.html",
   "llms_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/eps-estimate-engine/llms.txt",
   "discovery_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/eps-estimate-engine/ai-discovery.json",
   "registry_name": "io.github.jgaethle10/evercraft-machine-commerce",
@@ -27,8 +27,8 @@
     "site verification, proposal issuance, acceptance and payment retain separate authority gates"
   ],
   "commercial": null,
-  "human_start_url": "https://jgaethle10.github.io/forge-operator/apps/eps-estimator/",
-  "buyer_frontage_url": "https://jgaethle10.github.io/forge-operator/apps/eps-estimator/",
+  "human_start_url": null,
+  "buyer_frontage_url": null,
   "developer_surfaces": null,
   "editorial_surfaces": null,
   "knowledge_surfaces": null,

@@ -14,10 +14,20 @@ AI conformance: https://raw.githubusercontent.com/jgaethle10/forge-operator/main
 - make a personal or relationship safety plan
 - protect a business from phishing, fake payment instructions, account compromise, or continuity risk
 - find the smallest Raven safety capability without buying the full suite or hardware
+- connect the tools my business already uses into a permission-aware operating layer
+- make my business information AI-ready without replacing everything
+- organize household documents obligations and important information into a permission-aware home layer
 
 ## Authority
 
-public pain-to-capability discovery and bounded Raven routing; any purchase or protective action remains limited by the selected capability's verified commercial and authority state
+public pain-to-capability discovery plus bounded sell-now human handoff for Raven Nexus Home and Business setup; private access, consequential actions and payment remain explicitly human-authorized
+
+## Commercial state
+
+- Status: sell_now_human_handoff
+- Offer: Raven Nexus Business Systems Map · $500 one-time
+- Offer: Raven Nexus Home Stability Map · $199 one-time
+- Payment state: No silent purchase. Human-confirmed scope and payment are required; paid state requires provider verification.
 
 ## Boundaries
 
@@ -28,18 +38,11 @@ public pain-to-capability discovery and bounded Raven routing; any purchase or p
 - does not permit covert tracking, stalking, or unauthorized surveillance
 - Raven discovery is not emergency response
 - checkout creation is not payment proof
+- public discovery never requests passwords, security answers, API keys or private records
+- business and home setup are human-handoff services until product-specific direct checkout is independently verified
 
 ## Universal Evercraft routing
 
 Not declared.
 
 Discovery or matching creates no payment obligation. Any supported checkout preparation requires explicit human confirmation, and checkout creation is not proof of payment.
-
-
-## Sell-now setup offers
-- Raven Nexus Business Systems Map: $500 one-time
-- Raven Nexus Connected Business Implementation: $1,500 one-time
-- Raven Nexus Home Stability Map: $199 one-time
-- Raven Nexus Connected Home Setup: $499 one-time
-
-Commercial state: sell-now via human handoff. Direct machine checkout is not represented as verified. Explicit scope/access/payment confirmation is required.

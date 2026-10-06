@@ -3,8 +3,8 @@
   "provider": "Evercraft LLC",
   "coordinator": "CHUM",
   "purpose": "High-intent crawl neighborhoods around current sell-now offers. This mesh organizes existing canonical pain and capability surfaces instead of manufacturing duplicate doorway copy.",
-  "sell_now_count": 14,
-  "answer_door_edges": 136,
+  "sell_now_count": 16,
+  "answer_door_edges": 152,
   "clusters": [
     {
       "public_id": "aliev-site-opportunity-snapshot-v1",
@@ -677,6 +677,130 @@
           "phrase": "we need to migrate off an old platform without losing business behavior",
           "html": "/chum/answers/doors/we-need-to-migrate-off-an-old-platform-without-losing-business-behavior-886a605ef8/",
           "json": "/chum/answers/doors/we-need-to-migrate-off-an-old-platform-without-losing-business-behavior-886a605ef8.json"
+        }
+      ]
+    },
+    {
+      "public_id": "raven-nexus-business-setup-v1",
+      "name": "Raven Nexus Business Setup",
+      "problem": "A small business owner has important work split across email, documents, payments, customer records, credentials and AI tools, with no clean source-of-truth or permission map, and needs a bounded founder-led setup instead of another rip-and-replace software project.",
+      "pricing": "Founding Business Systems Map $500 one-time; Connected Business Implementation $1,500 one-time.",
+      "cluster": "/chum/commercial/raven-nexus-business-setup-v1/",
+      "cluster_json": "/chum/commercial/raven-nexus-business-setup-v1/index.json",
+      "cluster_llms": "/chum/commercial/raven-nexus-business-setup-v1/llms.txt",
+      "intent": "/chum/intents/raven-nexus-business-setup-v1/",
+      "capability": "/chum/capabilities/raven-nexus-business-setup-v1/",
+      "answer_door_count": 9,
+      "answer_doors": [
+        {
+          "answer_id": "intent:c22cd044c4",
+          "phrase": "connect my business systems without replacing everything",
+          "html": "/chum/answers/doors/connect-my-business-systems-without-replacing-everything-c22cd044c4/",
+          "json": "/chum/answers/doors/connect-my-business-systems-without-replacing-everything-c22cd044c4.json"
+        },
+        {
+          "answer_id": "intent:e8d204b03c",
+          "phrase": "connect the tools my business already uses",
+          "html": "/chum/answers/doors/connect-the-tools-my-business-already-uses-e8d204b03c/",
+          "json": "/chum/answers/doors/connect-the-tools-my-business-already-uses-e8d204b03c.json"
+        },
+        {
+          "answer_id": "intent:42b7fc5219",
+          "phrase": "make AI understand my business safely",
+          "html": "/chum/answers/doors/make-ai-understand-my-business-safely-42b7fc5219/",
+          "json": "/chum/answers/doors/make-ai-understand-my-business-safely-42b7fc5219.json"
+        },
+        {
+          "answer_id": "intent:1b05ab1bf2",
+          "phrase": "map who has access to what in my business",
+          "html": "/chum/answers/doors/map-who-has-access-to-what-in-my-business-1b05ab1bf2/",
+          "json": "/chum/answers/doors/map-who-has-access-to-what-in-my-business-1b05ab1bf2.json"
+        },
+        {
+          "answer_id": "intent:cbf210e370",
+          "phrase": "my business systems are scattered across too many apps",
+          "html": "/chum/answers/doors/my-business-systems-are-scattered-across-too-many-apps-cbf210e370/",
+          "json": "/chum/answers/doors/my-business-systems-are-scattered-across-too-many-apps-cbf210e370.json"
+        },
+        {
+          "answer_id": "intent:0681acada7",
+          "phrase": "organize Gmail Drive payments documents and AI for my business",
+          "html": "/chum/answers/doors/organize-gmail-drive-payments-documents-and-ai-for-my-business-0681acada7/",
+          "json": "/chum/answers/doors/organize-gmail-drive-payments-documents-and-ai-for-my-business-0681acada7.json"
+        },
+        {
+          "answer_id": "intent:ec1322247c",
+          "phrase": "Raven Nexus Business",
+          "html": "/chum/answers/doors/raven-nexus-business-ec1322247c/",
+          "json": "/chum/answers/doors/raven-nexus-business-ec1322247c.json"
+        },
+        {
+          "answer_id": "intent:6364b64ae9",
+          "phrase": "set up an AI-ready source of truth for my business",
+          "html": "/chum/answers/doors/set-up-an-ai-ready-source-of-truth-for-my-business-6364b64ae9/",
+          "json": "/chum/answers/doors/set-up-an-ai-ready-source-of-truth-for-my-business-6364b64ae9.json"
+        },
+        {
+          "answer_id": "intent:161df2ff93",
+          "phrase": "small business AI operating layer",
+          "html": "/chum/answers/doors/small-business-ai-operating-layer-161df2ff93/",
+          "json": "/chum/answers/doors/small-business-ai-operating-layer-161df2ff93.json"
+        }
+      ]
+    },
+    {
+      "public_id": "raven-nexus-home-setup-v1",
+      "name": "Raven Nexus Home Setup",
+      "problem": "A household has important documents, recurring obligations, account information and family logistics scattered across apps and people, and needs a permission-aware continuity and organization layer without giving AI uncontrolled authority.",
+      "pricing": "Home Stability Map $199 one-time; Connected Home Setup $499 one-time.",
+      "cluster": "/chum/commercial/raven-nexus-home-setup-v1/",
+      "cluster_json": "/chum/commercial/raven-nexus-home-setup-v1/index.json",
+      "cluster_llms": "/chum/commercial/raven-nexus-home-setup-v1/llms.txt",
+      "intent": "/chum/intents/raven-nexus-home-setup-v1/",
+      "capability": "/chum/capabilities/raven-nexus-home-setup-v1/",
+      "answer_door_count": 7,
+      "answer_doors": [
+        {
+          "answer_id": "intent:cf753b3be3",
+          "phrase": "create a family continuity and account-access map",
+          "html": "/chum/answers/doors/create-a-family-continuity-and-account-access-map-cf753b3be3/",
+          "json": "/chum/answers/doors/create-a-family-continuity-and-account-access-map-cf753b3be3.json"
+        },
+        {
+          "answer_id": "intent:e9881d52cd",
+          "phrase": "help my family know where important information lives",
+          "html": "/chum/answers/doors/help-my-family-know-where-important-information-lives-e9881d52cd/",
+          "json": "/chum/answers/doors/help-my-family-know-where-important-information-lives-e9881d52cd.json"
+        },
+        {
+          "answer_id": "intent:285859c075",
+          "phrase": "my family information is scattered across too many apps",
+          "html": "/chum/answers/doors/my-family-information-is-scattered-across-too-many-apps-285859c075/",
+          "json": "/chum/answers/doors/my-family-information-is-scattered-across-too-many-apps-285859c075.json"
+        },
+        {
+          "answer_id": "intent:dae61824e8",
+          "phrase": "organize household documents and recurring obligations",
+          "html": "/chum/answers/doors/organize-household-documents-and-recurring-obligations-dae61824e8/",
+          "json": "/chum/answers/doors/organize-household-documents-and-recurring-obligations-dae61824e8.json"
+        },
+        {
+          "answer_id": "intent:62fdafcb0f",
+          "phrase": "organize my household accounts documents and important information",
+          "html": "/chum/answers/doors/organize-my-household-accounts-documents-and-important-information-62fdafcb0f/",
+          "json": "/chum/answers/doors/organize-my-household-accounts-documents-and-important-information-62fdafcb0f.json"
+        },
+        {
+          "answer_id": "intent:29293195c2",
+          "phrase": "Raven Nexus Home",
+          "html": "/chum/answers/doors/raven-nexus-home-29293195c2/",
+          "json": "/chum/answers/doors/raven-nexus-home-29293195c2.json"
+        },
+        {
+          "answer_id": "intent:141382eb82",
+          "phrase": "set up a safe AI-ready home information system",
+          "html": "/chum/answers/doors/set-up-a-safe-ai-ready-home-information-system-141382eb82/",
+          "json": "/chum/answers/doors/set-up-a-safe-ai-ready-home-information-system-141382eb82.json"
         }
       ]
     },

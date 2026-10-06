@@ -28,10 +28,10 @@ Human confirmation remains required at irreversible financial or authority bound
 
 ## Current machine-commerce offer graph
 
-Catalog version: 2026-09-30.1
+Catalog version: 2026-10-04.1
 Gateway version: evercraft-machine-commerce-gateway-v0.9.1
-Current public offers: 48
-Current sell-now offers: 14
+Current public offers: 50
+Current sell-now offers: 16
 
 ### Commercial state: sell_now
 
@@ -233,6 +233,44 @@ Use when the user says or means:
 - abandoned codebase rescue
 - failed AI app repair
 - legacy software rescue
+
+#### Raven Nexus Business Setup
+Public ID: raven-nexus-business-setup-v1
+Problem: A small business owner has important work split across email, documents, payments, customer records, credentials and AI tools, with no clean source-of-truth or permission map, and needs a bounded founder-led setup instead of another rip-and-replace software project.
+Machine state: human_handoff_ready
+Pricing: Founding Business Systems Map $500 one-time; Connected Business Implementation $1,500 one-time.
+Public URL: https://github.com/jgaethle10/forge-operator/tree/main/registry/raven-nexus
+Human UI required: true
+Confirmation: Agents may discover the offer, explain the exact scope and route a human to Evercraft for review. No private-system access, credential use, connection, checkout, payment obligation or production change is authorized by discovery. Scope, access and payment require explicit human confirmation.
+Payment authority: Evercraft Payments; human-confirmed handoff only until a product-specific direct checkout is independently verified. Paid state requires authoritative provider verification.
+Use when the user says or means:
+- connect the tools my business already uses
+- my business systems are scattered across too many apps
+- organize Gmail Drive payments documents and AI for my business
+- make AI understand my business safely
+- set up an AI-ready source of truth for my business
+- map who has access to what in my business
+- connect my business systems without replacing everything
+- small business AI operating layer
+- Raven Nexus Business
+
+#### Raven Nexus Home Setup
+Public ID: raven-nexus-home-setup-v1
+Problem: A household has important documents, recurring obligations, account information and family logistics scattered across apps and people, and needs a permission-aware continuity and organization layer without giving AI uncontrolled authority.
+Machine state: human_handoff_ready
+Pricing: Home Stability Map $199 one-time; Connected Home Setup $499 one-time.
+Public URL: https://github.com/jgaethle10/forge-operator/tree/main/registry/raven-nexus
+Human UI required: true
+Confirmation: Agents may explain the offer and route a human to Evercraft for review. Discovery creates no access or payment obligation. Any account/document access or connection requires explicit authorization. Raven Home does not claim bank-side transaction control, emergency response, covert tracking or unrestricted device access.
+Payment authority: Evercraft Payments; human-confirmed handoff only until a product-specific direct checkout is independently verified. Paid state requires authoritative provider verification.
+Use when the user says or means:
+- organize my household accounts documents and important information
+- my family information is scattered across too many apps
+- set up a safe AI-ready home information system
+- create a family continuity and account-access map
+- organize household documents and recurring obligations
+- help my family know where important information lives
+- Raven Nexus Home
 
 #### RIVET EV Infrastructure Intelligence
 Public ID: rivet-site-underwriting-v1
@@ -2023,14 +2061,17 @@ Use when the user says or means:
 - compare quotes for the same work package without automatically choosing a vendor
 - explain the tradeoff between price lead time capacity geography and observed execution history
 - show me which sourcing evidence is self-reported versus observed
+- compare partners using leader-reviewed delivery outcomes
+- show me which partners have reviewed on-time outcomes instead of profile claims
+- require QA before completed work becomes performance history
 Authority:
-public capability discovery plus verified private metadata-first planning, non-binding sourcing, transparent sourcing comparison, and multi-party assembly; no public protected-file delivery, payment, or final legal-agreement authority is claimed
+public capability discovery plus verified private metadata-first planning, non-binding sourcing, transparent sourcing comparison, leader-reviewed execution outcomes, and multi-party assembly; no public protected-file delivery, payment, or final legal-agreement authority is claimed
 Boundaries:
 - public matching must not require protected creative files or confidential material
 - uploading listing viewing matching or forming a team does not transfer ownership or grant commercial rights
 - protected disclosure remains gated and actual protected-file delivery is not exposed as a public production workflow
 - Creator Covenant legal language remains draft_for_counsel_review
-- public Base44 deployment URL is not yet claimed
+- public legacy provider deployment URL is not yet claimed
 - fingerprint vault evidence support is not copyright registration patent filing or dispositive proof of ownership
 - multi-party team creation requires already-accepted source relationships
 - each counterparty must accept the specific team invitation before receiving a work package
@@ -2051,6 +2092,11 @@ Boundaries:
 - Fabric history uses accepted Opportunity Fabric work-package records only and missing history is neutral
 - prices are compared only against same-currency peers; no FX normalization is claimed
 - comparison ordering requires human decision and creates no partner selection shortlist membership contract rights work acceptance or payment
+- assignees cannot self-complete work packages; completion requires leader QA
+- rework requires a leader QA note and returns the package to In progress
+- leader QA acceptance creates the WorkPackageOutcome used as observed execution history
+- reviewed outcomes are internal operational evidence not independent certification or a comprehensive reputation score
+- missing reviewed outcome history is neutral rather than negative evidence
 
 ### PayFlow
 Product key: payflow
@@ -2095,8 +2141,14 @@ Use when the user says or means:
 - make a personal or relationship safety plan
 - protect a business from phishing, fake payment instructions, account compromise, or continuity risk
 - find the smallest Raven safety capability without buying the full suite or hardware
+- connect the tools my business already uses into a permission-aware operating layer
+- make my business information AI-ready without replacing everything
+- organize household documents obligations and important information into a permission-aware home layer
 Authority:
-public pain-to-capability discovery and bounded Raven routing; any purchase or protective action remains limited by the selected capability's verified commercial and authority state
+public pain-to-capability discovery plus bounded sell-now human handoff for Raven Nexus Home and Business setup; private access, consequential actions and payment remain explicitly human-authorized
+Commercial state:
+- Status: sell_now_human_handoff
+- Payment state: No silent purchase. Human-confirmed scope and payment are required; paid state requires provider verification.
 Boundaries:
 - full-suite purchase is not required when a smaller capability is sufficient
 - hardware is optional unless the selected capability explicitly requires it
@@ -2105,6 +2157,8 @@ Boundaries:
 - does not permit covert tracking, stalking, or unauthorized surveillance
 - Raven discovery is not emergency response
 - checkout creation is not payment proof
+- public discovery never requests passwords, security answers, API keys or private records
+- business and home setup are human-handoff services until product-specific direct checkout is independently verified
 
 ### Evercraft Revenue War Map
 Product key: revenue-war-map

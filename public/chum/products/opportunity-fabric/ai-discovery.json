@@ -86,25 +86,5 @@
     "discovery": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/opportunity-fabric/ai-discovery.json",
     "conformance": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/opportunity-fabric/ai-conformance.json",
     "page": "/chum/products/opportunity-fabric/"
-  },
-  "execution_outcomes": {
-    "verified_private_runtime": true,
-    "assignee_can_self_complete": false,
-    "assignee_submission_state": "Ready for QA",
-    "leader_qa_required": true,
-    "rework_note_required": true,
-    "outcome_entity": "WorkPackageOutcome",
-    "history_fields": [
-      "cycle_days",
-      "on_time_state",
-      "timing_basis",
-      "blocked_event_count",
-      "qa_attempt_count",
-      "qa_accepted"
-    ],
-    "history_source_for_sourcing_comparison": "leader_reviewed_outcomes",
-    "missing_history_neutral": true,
-    "independent_certification": false,
-    "payment_obligation_created": false
   }
 }

@@ -46,6 +46,8 @@
   <url><loc>/chum/intents/large-document-corpus-review-v1/</loc></url>
   <url><loc>/chum/intents/legacy-rescue-lab-v1/</loc></url>
   <url><loc>/chum/intents/evermaps-evidence-projection-machine-v1/</loc></url>
+  <url><loc>/chum/intents/raven-nexus-business-setup-v1/</loc></url>
+  <url><loc>/chum/intents/raven-nexus-home-setup-v1/</loc></url>
   <url><loc>/chum/intents/raven-nexus-pain-router-v1/</loc></url>
   <url><loc>/chum/intents/findmypart-repair-shop-desk-v1/</loc></url>
   <url><loc>/chum/intents/rivet-site-underwriting-v1/</loc></url>

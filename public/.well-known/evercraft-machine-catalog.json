@@ -7,7 +7,7 @@
   "source_schema_version": "2026-10-04.1",
   "gateway_version": "evercraft-machine-commerce-gateway-v0.9.1",
   "source_generated_at": "2026-09-30T20:21:00.000Z",
-  "generated_at": "2026-10-01T04:57:41.674Z",
+  "generated_at": "2026-10-06T14:10:26.199Z",
   "offer_count": 50,
   "sell_now_count": 16,
   "discovery_count": 34,
@@ -1371,9 +1371,7 @@
       "payment_authority": "Evercraft Payments; human-confirmed handoff only until a product-specific direct checkout is independently verified. Paid state requires authoritative provider verification.",
       "invocation_status": "SELL-NOW HUMAN HANDOFF: the $500 Business Systems Map is the smallest paid entry. Discovery is public and read-only; implementation begins only after explicit scope, access and payment confirmation.",
       "live_canary_evidence": null,
-      "catalog_version": "2026-10-04.1",
-      "routing_surface": "public_static_handoff",
-      "legacy_gateway_routed": false
+      "catalog_version": "2026-10-04.1"
     },
     {
       "public_id": "raven-nexus-home-setup-v1",
@@ -1418,9 +1416,7 @@
       "payment_authority": "Evercraft Payments; human-confirmed handoff only until a product-specific direct checkout is independently verified. Paid state requires authoritative provider verification.",
       "invocation_status": "SELL-NOW HUMAN HANDOFF: the $199 Home Stability Map is the smallest paid entry. Discovery is public and read-only; any private access or implementation remains explicitly human-authorized.",
       "live_canary_evidence": null,
-      "catalog_version": "2026-10-04.1",
-      "routing_surface": "public_static_handoff",
-      "legacy_gateway_routed": false
+      "catalog_version": "2026-10-04.1"
     },
     {
       "public_id": "raven-nexus-pain-router-v1",

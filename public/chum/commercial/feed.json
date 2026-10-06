@@ -189,6 +189,42 @@
       ]
     },
     {
+      "id": "urn:evercraft:commercial-intent:raven-nexus-business-setup-v1",
+      "external_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/capabilities/raven-nexus-business-setup-v1/index.html",
+      "title": "Raven Nexus Business Setup",
+      "summary": "A small business owner has important work split across email, documents, payments, customer records, credentials and AI tools, with no clean source-of-truth or permission map, and needs a bounded founder-led setup instead of another rip-and-replace software project.",
+      "tags": [
+        "sell_now",
+        "raven-nexus-business-setup-v1",
+        "connect my business systems without replacing everything",
+        "connect the tools my business already uses",
+        "make AI understand my business safely",
+        "map who has access to what in my business",
+        "my business systems are scattered across too many apps",
+        "organize Gmail Drive payments documents and AI for my business",
+        "Raven Nexus Business",
+        "set up an AI-ready source of truth for my business",
+        "small business AI operating layer"
+      ]
+    },
+    {
+      "id": "urn:evercraft:commercial-intent:raven-nexus-home-setup-v1",
+      "external_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/capabilities/raven-nexus-home-setup-v1/index.html",
+      "title": "Raven Nexus Home Setup",
+      "summary": "A household has important documents, recurring obligations, account information and family logistics scattered across apps and people, and needs a permission-aware continuity and organization layer without giving AI uncontrolled authority.",
+      "tags": [
+        "sell_now",
+        "raven-nexus-home-setup-v1",
+        "create a family continuity and account-access map",
+        "help my family know where important information lives",
+        "my family information is scattered across too many apps",
+        "organize household documents and recurring obligations",
+        "organize my household accounts documents and important information",
+        "Raven Nexus Home",
+        "set up a safe AI-ready home information system"
+      ]
+    },
+    {
       "id": "urn:evercraft:commercial-intent:rivet-site-underwriting-v1",
       "external_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/capabilities/rivet-site-underwriting-v1/index.html",
       "title": "RIVET EV Infrastructure Intelligence",

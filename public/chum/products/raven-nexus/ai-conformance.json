@@ -28,7 +28,7 @@
     "Raven discovery is not emergency response",
     "checkout creation is not payment proof",
     "public discovery never requests passwords, security answers, API keys or private records",
-    "Home and Business setup remain human-handoff services until direct checkout is independently verified"
+    "business and home setup are human-handoff services until product-specific direct checkout is independently verified"
   ],
   "commercial": {
     "status": "sell_now_human_handoff",
@@ -44,11 +44,10 @@
         "price": "$199 one-time"
       }
     ],
-    "direct_checkout_verified": false,
-    "paid_state_requires_provider_verification": true
+    "payment_state": "No silent purchase. Human-confirmed scope and payment are required; paid state requires provider verification."
   },
-  "human_start_url": "https://github.com/jgaethle10/forge-operator/tree/main/registry/raven-nexus",
-  "buyer_frontage_url": "https://github.com/jgaethle10/forge-operator/tree/main/registry/raven-nexus",
+  "human_start_url": null,
+  "buyer_frontage_url": null,
   "developer_surfaces": null,
   "editorial_surfaces": null,
   "knowledge_surfaces": null,
@@ -56,7 +55,7 @@
   "relationships": null,
   "proof_library": null,
   "provider_behavior_state": "not_inferred_from_publication",
-  "machine_commerce_handoff_state": "human_handoff_ready",
+  "machine_commerce_handoff_state": null,
   "machine_commerce_public_id": null,
   "machine_commerce_tool": null,
   "live_canary_evidence": null

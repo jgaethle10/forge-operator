@@ -263,6 +263,56 @@ Intent examples:
 - failed AI app repair
 - legacy software rescue
 
+## Raven Nexus Business Setup
+Public ID: raven-nexus-business-setup-v1
+Problem: A small business owner has important work split across email, documents, payments, customer records, credentials and AI tools, with no clean source-of-truth or permission map, and needs a bounded founder-led setup instead of another rip-and-replace software project.
+Pricing: Founding Business Systems Map $500 one-time; Connected Business Implementation $1,500 one-time.
+Commercial state: sell_now
+Machine state: human_handoff_ready
+Public URL: https://github.com/jgaethle10/forge-operator/tree/main/registry/raven-nexus
+Pain page: /chum/intents/raven-nexus-business-setup-v1/
+Start here: null
+Human review fallback: null
+Machine offer JSON: Not exposed until commercial verification is complete
+Universal MCP: null
+Agent continuation: Not exposed
+Consent gate: Not exposed
+Completion rule: Not exposed
+Intent examples:
+- connect the tools my business already uses
+- my business systems are scattered across too many apps
+- organize Gmail Drive payments documents and AI for my business
+- make AI understand my business safely
+- set up an AI-ready source of truth for my business
+- map who has access to what in my business
+- connect my business systems without replacing everything
+- small business AI operating layer
+- Raven Nexus Business
+
+## Raven Nexus Home Setup
+Public ID: raven-nexus-home-setup-v1
+Problem: A household has important documents, recurring obligations, account information and family logistics scattered across apps and people, and needs a permission-aware continuity and organization layer without giving AI uncontrolled authority.
+Pricing: Home Stability Map $199 one-time; Connected Home Setup $499 one-time.
+Commercial state: sell_now
+Machine state: human_handoff_ready
+Public URL: https://github.com/jgaethle10/forge-operator/tree/main/registry/raven-nexus
+Pain page: /chum/intents/raven-nexus-home-setup-v1/
+Start here: null
+Human review fallback: null
+Machine offer JSON: Not exposed until commercial verification is complete
+Universal MCP: null
+Agent continuation: Not exposed
+Consent gate: Not exposed
+Completion rule: Not exposed
+Intent examples:
+- organize my household accounts documents and important information
+- my family information is scattered across too many apps
+- set up a safe AI-ready home information system
+- create a family continuity and account-access map
+- organize household documents and recurring obligations
+- help my family know where important information lives
+- Raven Nexus Home
+
 ## RIVET EV Infrastructure Intelligence
 Public ID: rivet-site-underwriting-v1
 Problem: A property owner, fleet, charging developer, broker, installer or investor needs address-specific EV infrastructure diligence that keeps public facts, observed evidence, modeled assumptions and unresolved engineering questions separate.

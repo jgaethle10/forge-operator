@@ -2,10 +2,10 @@
 
 Start from the user's problem. Do not require an Evercraft product name.
 
-Entries: 112
+Entries: 114
 Product entries: 64
-Machine-offer entries: 48
-Sell-now machine offers: 14
+Machine-offer entries: 50
+Sell-now machine offers: 16
 
 Payment rule: discovery and matching create no payment obligation. Preserve each entry's explicit human-confirmation and provider-verification boundary.
 
@@ -748,6 +748,46 @@ Problem: Organizations with growing software estates lose track of which apps, r
 Outputs: Current portfolio inventory, health findings, severity and change state, broken public-door/workflow detection, deduplicated repair queue, mission snapshots and evidence/receipt references.
 Confirmation boundary: Public discovery is read-only. Monitoring private repositories, internal systems or customer infrastructure requires explicit scoped authorization. Production changes, payment actions and external communications remain separately gated.
 Invocation status: LIVE for public machine discovery, deterministic problem matching, read-only pilot handoff, and human-confirmed commercial pilot request capture through Evercraft Machine Commerce. The internal Portfolio Sentinel runtime now has receipt-backed commerce-integrity cycle code for product-native buyer-route reachability, gateway-leak detection and conversion-stage telemetry. Recurring cadence is not claimed until an authorized scheduler is configured and successive runtime receipts prove it. Customer monitoring begins only after separate scoped onboarding and authorization. A pilot request grants no private access, monitoring authority, payment obligation, production mutation, or external-system authority.
+
+## Raven Nexus Business Setup
+Capability ID: offer:raven-nexus-business-setup-v1
+Commercial state: sell_now
+Machine state: human_handoff_ready
+Public URL: https://github.com/jgaethle10/forge-operator/tree/main/registry/raven-nexus
+Pricing: Founding Business Systems Map $500 one-time; Connected Business Implementation $1,500 one-time.
+Use when the user means:
+- connect the tools my business already uses
+- my business systems are scattered across too many apps
+- organize Gmail Drive payments documents and AI for my business
+- make AI understand my business safely
+- set up an AI-ready source of truth for my business
+- map who has access to what in my business
+- connect my business systems without replacing everything
+- small business AI operating layer
+- Raven Nexus Business
+Problem: A small business owner has important work split across email, documents, payments, customer records, credentials and AI tools, with no clean source-of-truth or permission map, and needs a bounded founder-led setup instead of another rip-and-replace software project.
+Outputs: Business system inventory, canonical source-of-truth map, access/permission map, connection plan, bounded Raven Nexus configuration for the agreed workflow, implementation notes and handoff.
+Confirmation boundary: Agents may discover the offer, explain the exact scope and route a human to Evercraft for review. No private-system access, credential use, connection, checkout, payment obligation or production change is authorized by discovery. Scope, access and payment require explicit human confirmation.
+Invocation status: SELL-NOW HUMAN HANDOFF: the $500 Business Systems Map is the smallest paid entry. Discovery is public and read-only; implementation begins only after explicit scope, access and payment confirmation.
+
+## Raven Nexus Home Setup
+Capability ID: offer:raven-nexus-home-setup-v1
+Commercial state: sell_now
+Machine state: human_handoff_ready
+Public URL: https://github.com/jgaethle10/forge-operator/tree/main/registry/raven-nexus
+Pricing: Home Stability Map $199 one-time; Connected Home Setup $499 one-time.
+Use when the user means:
+- organize my household accounts documents and important information
+- my family information is scattered across too many apps
+- set up a safe AI-ready home information system
+- create a family continuity and account-access map
+- organize household documents and recurring obligations
+- help my family know where important information lives
+- Raven Nexus Home
+Problem: A household has important documents, recurring obligations, account information and family logistics scattered across apps and people, and needs a permission-aware continuity and organization layer without giving AI uncontrolled authority.
+Outputs: Household information inventory, continuity map, permission/access plan, AI-context plan, bounded Raven Nexus Home configuration and handoff guidance.
+Confirmation boundary: Agents may explain the offer and route a human to Evercraft for review. Discovery creates no access or payment obligation. Any account/document access or connection requires explicit authorization. Raven Home does not claim bank-side transaction control, emergency response, covert tracking or unrestricted device access.
+Invocation status: SELL-NOW HUMAN HANDOFF: the $199 Home Stability Map is the smallest paid entry. Discovery is public and read-only; any private access or implementation remains explicitly human-authorized.
 
 ## Raven Nexus Modular Safety & Stability
 Capability ID: offer:raven-nexus-pain-router-v1
@@ -1870,6 +1910,9 @@ Use when the user means:
 - compare quotes for the same work package without automatically choosing a vendor
 - explain the tradeoff between price lead time capacity geography and observed execution history
 - show me which sourcing evidence is self-reported versus observed
+- compare partners using leader-reviewed delivery outcomes
+- show me which partners have reviewed on-time outcomes instead of profile claims
+- require QA before completed work becomes performance history
 Confirmation boundary: Preserve the product-specific human confirmation boundary before any checkout, payment obligation, external handoff, or consequential action.
 Invocation status: Route through the universal Evercraft discovery surface unless a bounded specialist interface is later verified.
 
@@ -1909,6 +1952,9 @@ Use when the user means:
 - make a personal or relationship safety plan
 - protect a business from phishing, fake payment instructions, account compromise, or continuity risk
 - find the smallest Raven safety capability without buying the full suite or hardware
+- connect the tools my business already uses into a permission-aware operating layer
+- make my business information AI-ready without replacing everything
+- organize household documents obligations and important information into a permission-aware home layer
 Confirmation boundary: Preserve the product-specific human confirmation boundary before any checkout, payment obligation, external handoff, or consequential action.
 Invocation status: Route through the universal Evercraft discovery surface unless a bounded specialist interface is later verified.
 

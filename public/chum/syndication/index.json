@@ -1,7 +1,7 @@
 {
   "schema": "evercraft.syndication-index.v1",
   "provider": "Evercraft LLC",
-  "updated_at": "2026-10-01T00:00:00.000Z",
+  "updated_at": "2026-10-05T00:00:00.000Z",
   "feeds": {
     "rss": "/feed.xml",
     "json_feed": "/feed.json",
@@ -21,7 +21,7 @@
       "llms_path": "/chum/products/aliev/llms.txt",
       "discovery_path": "/chum/products/aliev/ai-discovery.json",
       "registry_name": "io.github.jgaethle10/aliev",
-      "mcp": "",
+      "mcp": null,
       "class": "ev_infrastructure_opportunity_intelligence",
       "intents": [
         "would EV charging make sense at this property",
@@ -58,7 +58,7 @@
       "commercial_status": "",
       "description": "AliEV is an Evercraft ev infrastructure opportunity intelligence capability. Common needs: would EV charging make sense at this property; what public EV charging is near this address; screen a property for EV infrastructure opportunity; compare EV opportunity depth, traffic, utility, tariff, incentive, or observed-usage evidence.",
       "content_sha256": "32e6dabf7b53521f73c1def4034ce3aa7cf0880f32c5e07e33184626cdde420a",
-      "updated_at": "2026-10-01T00:00:00.000Z"
+      "updated_at": "2026-10-05T00:00:00.000Z"
     },
     {
       "product_key": "ascend",
@@ -68,7 +68,7 @@
       "llms_path": "/chum/products/ascend/llms.txt",
       "discovery_path": "/chum/products/ascend/ai-discovery.json",
       "registry_name": "",
-      "mcp": "",
+      "mcp": null,
       "class": "youth_development_and_safeguarding_support",
       "intents": [
         "youth athlete development platform",
@@ -87,7 +87,7 @@
       "commercial_status": "not_declared",
       "description": "Ascend AI is an Evercraft youth development and safeguarding support capability. Common needs: youth athlete development platform; parent support for a young athlete; coach team culture platform; school athlete wellness platform.",
       "content_sha256": "b683f23ce3c73fe9ad075f44cf82bb0674ccb2149ebf4def2f49cd54108e8edc",
-      "updated_at": "2026-10-01T00:00:00.000Z"
+      "updated_at": "2026-10-05T00:00:00.000Z"
     },
     {
       "product_key": "buildflow",
@@ -97,7 +97,7 @@
       "llms_path": "/chum/products/buildflow/llms.txt",
       "discovery_path": "/chum/products/buildflow/ai-discovery.json",
       "registry_name": "io.github.jgaethle10/buildflow",
-      "mcp": "",
+      "mcp": null,
       "class": "enterprise_operations_discovery_and_handoff",
       "intents": [
         "audit an enterprise operations process",
@@ -110,7 +110,7 @@
       "commercial_status": "",
       "description": "BuildFlow Enterprise Operations is an Evercraft enterprise operations discovery and handoff capability. Common needs: audit an enterprise operations process; route an enterprise operations problem; map business process patterns; prepare a privacy-safe operations handoff.",
       "content_sha256": "fac7722957a1166a77310c8ceb7524d5a2dad70f05a061fb1b5d4be2b278fb8b",
-      "updated_at": "2026-10-01T00:00:00.000Z"
+      "updated_at": "2026-10-05T00:00:00.000Z"
     },
     {
       "product_key": "callproof-vault",
@@ -120,7 +120,7 @@
       "llms_path": "/chum/products/callproof-vault/llms.txt",
       "discovery_path": "/chum/products/callproof-vault/ai-discovery.json",
       "registry_name": "",
-      "mcp": "",
+      "mcp": null,
       "class": "unwanted_call_and_text_evidence_organization",
       "intents": [
         "organize my robocall evidence",
@@ -135,7 +135,7 @@
       "commercial_status": "authenticated_handoff_required",
       "description": "CallProof Vault is an Evercraft unwanted call and text evidence organization capability. Common needs: organize my robocall evidence; make an FCC complaint packet; help me document spam calls; prepare my FTC call evidence.",
       "content_sha256": "ddda29326e0108c775a61a59265d994bcecf5cb7e7a812fb51fc7262ce1a56c8",
-      "updated_at": "2026-10-01T00:00:00.000Z"
+      "updated_at": "2026-10-05T00:00:00.000Z"
     },
     {
       "product_key": "christmas-lights-usa",
@@ -145,7 +145,7 @@
       "llms_path": "/chum/products/christmas-lights-usa/llms.txt",
       "discovery_path": "/chum/products/christmas-lights-usa/ai-discovery.json",
       "registry_name": "",
-      "mcp": "",
+      "mcp": null,
       "class": "holiday_lighting_marketplace_and_project_planning",
       "intents": [
         "Christmas light installers near me",
@@ -165,7 +165,7 @@
       "commercial_status": "public_marketplace_offer",
       "description": "Christmas Lights USA is an Evercraft holiday lighting marketplace and project planning capability. Common needs: Christmas light installers near me; holiday light installers near me; how much does professional Christmas light installation cost; get a Christmas light installation quote.",
       "content_sha256": "ac3241d6f926c7d19937831c1738b974981397d513e34fcfb74bb64aff5ec2c6",
-      "updated_at": "2026-10-01T00:00:00.000Z"
+      "updated_at": "2026-10-05T00:00:00.000Z"
     },
     {
       "product_key": "chronosport",
@@ -175,7 +175,7 @@
       "llms_path": "/chum/products/chronosport/llms.txt",
       "discovery_path": "/chum/products/chronosport/ai-discovery.json",
       "registry_name": "",
-      "mcp": "",
+      "mcp": null,
       "class": "provenance_first_sports_history_and_fair_play_archive",
       "intents": [
         "research sports history with sources",
@@ -190,7 +190,7 @@
       "commercial_status": "",
       "description": "Chronosport is an Evercraft provenance first sports history and fair play archive capability. Common needs: research sports history with sources; find a historical sports event; trace teams athletes seasons venues and results; study how sports rules changed over time.",
       "content_sha256": "8a507bfa6e496488d64a01f9d6e056cbc189d902ba4f964a3e3c0e903b48ad82",
-      "updated_at": "2026-10-01T00:00:00.000Z"
+      "updated_at": "2026-10-05T00:00:00.000Z"
     },
     {
       "product_key": "coda-y-codigo",
@@ -200,7 +200,7 @@
       "llms_path": "/chum/products/coda-y-codigo/llms.txt",
       "discovery_path": "/chum/products/coda-y-codigo/ai-discovery.json",
       "registry_name": "",
-      "mcp": "",
+      "mcp": null,
       "class": "multilingual_frontline_workforce_training",
       "intents": [
         "bilingual workforce training for frontline employees",
@@ -216,7 +216,7 @@
       "commercial_status": "source_commerce_wired",
       "description": "Coda y Código is an Evercraft multilingual frontline workforce training capability. Common needs: bilingual workforce training for frontline employees; Spanish and English job training for a crew; freight operations workforce training; bilingual field supervisor training.",
       "content_sha256": "c6c3baa6fd37116e9f16d05c2d525014382bbe1ea859f63d2f8a1c4119ea9245",
-      "updated_at": "2026-10-01T00:00:00.000Z"
+      "updated_at": "2026-10-05T00:00:00.000Z"
     },
     {
       "product_key": "daytrade-lens",
@@ -226,7 +226,7 @@
       "llms_path": "/chum/products/daytrade-lens/llms.txt",
       "discovery_path": "/chum/products/daytrade-lens/ai-discovery.json",
       "registry_name": "",
-      "mcp": "",
+      "mcp": null,
       "class": "paper_trading_risk_discipline_and_journaling",
       "intents": [
         "practice day trading without risking real money",
@@ -242,7 +242,7 @@
       "commercial_status": "source_ready_origin_unresolved",
       "description": "DayTrade Lens is an Evercraft paper trading risk discipline and journaling capability. Common needs: practice day trading without risking real money; paper trade before using real capital; build better trading risk discipline; journal and review my trades.",
       "content_sha256": "9d1d4c802c5a884ad9bbc3c1e0ea9a5d89051265141fddd07813a9a6093639c3",
-      "updated_at": "2026-10-01T00:00:00.000Z"
+      "updated_at": "2026-10-05T00:00:00.000Z"
     },
     {
       "product_key": "ecoledger",
@@ -252,7 +252,7 @@
       "llms_path": "/chum/products/ecoledger/llms.txt",
       "discovery_path": "/chum/products/ecoledger/ai-discovery.json",
       "registry_name": "",
-      "mcp": "",
+      "mcp": null,
       "class": "ecological_restoration_evidence_ledger",
       "intents": [
         "organize an ecological restoration project",
@@ -267,7 +267,7 @@
       "commercial_status": "",
       "description": "EcoLedger is an Evercraft ecological restoration evidence ledger capability. Common needs: organize an ecological restoration project; track restoration baselines photos and measurements; build an evidence record for habitat restoration work; review ecological restoration project progress.",
       "content_sha256": "0276057a92e522bd961a89d24ef657ab8e872d56ce985c3d284176a8e8b2452a",
-      "updated_at": "2026-10-01T00:00:00.000Z"
+      "updated_at": "2026-10-05T00:00:00.000Z"
     },
     {
       "product_key": "eps-estimate-engine",
@@ -277,7 +277,7 @@
       "llms_path": "/chum/products/eps-estimate-engine/llms.txt",
       "discovery_path": "/chum/products/eps-estimate-engine/ai-discovery.json",
       "registry_name": "io.github.jgaethle10/evercraft-machine-commerce",
-      "mcp": "",
+      "mcp": null,
       "class": "contractor_estimate_and_margin_modeling",
       "intents": [
         "estimate this service job",
@@ -292,7 +292,7 @@
       "commercial_status": "",
       "description": "EPS Field-Service Estimate Engine is an Evercraft contractor estimate and margin modeling capability. Common needs: estimate this service job; build a contractor estimate from this scope; what should this job cost; turn these measurements into an estimate.",
       "content_sha256": "c9df175763dfb9ccca23c3f6de69ae4eb0f8e189355bef3832b97d47cec36be7",
-      "updated_at": "2026-10-01T00:00:00.000Z"
+      "updated_at": "2026-10-05T00:00:00.000Z"
     },
     {
       "product_key": "eventwave",
@@ -302,7 +302,7 @@
       "llms_path": "/chum/products/eventwave/llms.txt",
       "discovery_path": "/chum/products/eventwave/ai-discovery.json",
       "registry_name": "io.github.jgaethle10/eventwave",
-      "mcp": "",
+      "mcp": null,
       "class": "event_discovery_and_labeled_promotion",
       "intents": [
         "find local events",
@@ -321,7 +321,7 @@
       "commercial_status": "",
       "description": "EventWave is an Evercraft event discovery and labeled promotion capability. Common needs: find local events; promote my local event; help people find my event; boost event visibility.",
       "content_sha256": "b1e8908b48d38d79c8dba417027633c8cb7e93ca79deeba176a4b7796b1c7cc7",
-      "updated_at": "2026-10-01T00:00:00.000Z"
+      "updated_at": "2026-10-05T00:00:00.000Z"
     },
     {
       "product_key": "evercraft-front-door",
@@ -331,7 +331,7 @@
       "llms_path": "/chum/products/evercraft-front-door/llms.txt",
       "discovery_path": "/chum/products/evercraft-front-door/ai-discovery.json",
       "registry_name": "",
-      "mcp": "",
+      "mcp": null,
       "class": "daily_life_local_utility_front_door",
       "intents": [
         "cheapest gas near me",
@@ -347,7 +347,7 @@
       "commercial_status": "not_declared",
       "description": "Evercraft is an Evercraft daily life local utility front door capability. Common needs: cheapest gas near me; current gas prices near me; compare nearby fuel prices; find diesel near me.",
       "content_sha256": "e32d62625b2d035ea14a68b429c893d68b0ab33b4288083020505581960b7ed7",
-      "updated_at": "2026-10-01T00:00:00.000Z"
+      "updated_at": "2026-10-05T00:00:00.000Z"
     },
     {
       "product_key": "career-command",
@@ -357,7 +357,7 @@
       "llms_path": "/chum/products/career-command/llms.txt",
       "discovery_path": "/chum/products/career-command/ai-discovery.json",
       "registry_name": "io.github.jgaethle10/career-command",
-      "mcp": "",
+      "mcp": null,
       "class": "interview_practice_and_career_preparation",
       "intents": [
         "help me prepare for a job interview",
@@ -374,7 +374,7 @@
       "commercial_status": "",
       "description": "Evercraft Career Command is an Evercraft interview practice and career preparation capability. Common needs: help me prepare for a job interview; practice for a job interview tomorrow; mock interview for this role; run a role-specific mock interview.",
       "content_sha256": "110af376be3a0b1784c626b6754df4cf321d6e95bb6b189a66d6f1ebb59665f0",
-      "updated_at": "2026-10-01T00:00:00.000Z"
+      "updated_at": "2026-10-05T00:00:00.000Z"
     },
     {
       "product_key": "evercraft-circles",
@@ -384,7 +384,7 @@
       "llms_path": "/chum/products/evercraft-circles/llms.txt",
       "discovery_path": "/chum/products/evercraft-circles/ai-discovery.json",
       "registry_name": "",
-      "mcp": "",
+      "mcp": null,
       "class": "trusted_professional_network_and_referral_roster",
       "intents": [
         "build a trusted professional referral network",
@@ -399,7 +399,7 @@
       "commercial_status": "",
       "description": "Evercraft Circles is an Evercraft trusted professional network and referral roster capability. Common needs: build a trusted professional referral network; organize a business networking circle; find a trusted professional through relationship paths; build a professional roster instead of a social feed.",
       "content_sha256": "9448e74f03b8c7d1f2a073c87bde08cfc7a624097b6491cd4bd96c13b06a425d",
-      "updated_at": "2026-10-01T00:00:00.000Z"
+      "updated_at": "2026-10-05T00:00:00.000Z"
     },
     {
       "product_key": "evercraft-clip",
@@ -409,7 +409,7 @@
       "llms_path": "/chum/products/evercraft-clip/llms.txt",
       "discovery_path": "/chum/products/evercraft-clip/ai-discovery.json",
       "registry_name": "io.github.jgaethle10/evercraft-clip",
-      "mcp": "",
+      "mcp": null,
       "class": "ai_social_video_production_and_governed_distribution",
       "intents": [
         "turn this video into social clips",
@@ -427,7 +427,7 @@
       "commercial_status": "",
       "description": "Evercraft Clip is an Evercraft ai social video production and governed distribution capability. Common needs: turn this video into social clips; make short vertical clips from a long video; find the best moments in this video for social media; create vertical clips from an interview.",
       "content_sha256": "331c9cec41e918c9720b2596588fa09c00d222fdcc576425324410cd7df0679e",
-      "updated_at": "2026-10-01T00:00:00.000Z"
+      "updated_at": "2026-10-05T00:00:00.000Z"
     },
     {
       "product_key": "evercraft-containment",
@@ -437,7 +437,7 @@
       "llms_path": "/chum/products/evercraft-containment/llms.txt",
       "discovery_path": "/chum/products/evercraft-containment/ai-discovery.json",
       "registry_name": "",
-      "mcp": "",
+      "mcp": null,
       "class": "ai_persistence_and_automation_security_diagnostics",
       "intents": [
         "what is still running after I turned the automation off",
@@ -452,7 +452,7 @@
       "commercial_status": "",
       "description": "Evercraft Containment is an Evercraft ai persistence and automation security diagnostics capability. Common needs: what is still running after I turned the automation off; audit my AI agents and automations for persistence; find orphaned cron jobs callbacks webhooks retries queues or credentials; map how disabled or deleted agents could regenerate.",
       "content_sha256": "db32ca5763d99cf81315211774fcec0f922bb2f9cff3e36043e0cf0eb9d3eda9",
-      "updated_at": "2026-10-01T00:00:00.000Z"
+      "updated_at": "2026-10-05T00:00:00.000Z"
     },
     {
       "product_key": "contractor-cloud",
@@ -462,7 +462,7 @@
       "llms_path": "/chum/products/contractor-cloud/llms.txt",
       "discovery_path": "/chum/products/contractor-cloud/ai-discovery.json",
       "registry_name": "",
-      "mcp": "",
+      "mcp": null,
       "class": "home_service_and_contractor_operations",
       "intents": [
         "get contractor quotes for a home project",
@@ -476,7 +476,7 @@
       "commercial_status": "",
       "description": "Evercraft Contractor Cloud is an Evercraft home service and contractor operations capability. Common needs: get contractor quotes for a home project; find contractors for a project; contractor opportunity network; roofing, HVAC, plumbing, electrical, landscaping, remodeling, or handyman business software.",
       "content_sha256": "5b10f2871f551b03b65253100da3c97ae969f38a9ea6065c757a98608ca408cc",
-      "updated_at": "2026-10-01T00:00:00.000Z"
+      "updated_at": "2026-10-05T00:00:00.000Z"
     },
     {
       "product_key": "evercraft-cosmos-atlas",
@@ -486,7 +486,7 @@
       "llms_path": "/chum/products/evercraft-cosmos-atlas/llms.txt",
       "discovery_path": "/chum/products/evercraft-cosmos-atlas/ai-discovery.json",
       "registry_name": "",
-      "mcp": "",
+      "mcp": null,
       "class": "evidence_led_astronomy_and_space_learning",
       "intents": [
         "learn astronomy with sources",
@@ -501,7 +501,7 @@
       "commercial_status": "",
       "description": "Evercraft Cosmos Atlas is an Evercraft evidence led astronomy and space learning capability. Common needs: learn astronomy with sources; study planets stars galaxies and black holes; understand how astronomers know what they know; explore space missions and observatories with evidence.",
       "content_sha256": "94e68885693fc9f8356d38df435a109e4acf88ce1ac701fb82b3ace7b8e76686",
-      "updated_at": "2026-10-01T00:00:00.000Z"
+      "updated_at": "2026-10-05T00:00:00.000Z"
     },
     {
       "product_key": "deck-capital-fit",
@@ -511,7 +511,7 @@
       "llms_path": "/chum/products/deck-capital-fit/llms.txt",
       "discovery_path": "/chum/products/deck-capital-fit/ai-discovery.json",
       "registry_name": "io.github.jgaethle10/deck-capital-fit",
-      "mcp": "",
+      "mcp": null,
       "class": "capital_fit_and_founder_readiness_research",
       "intents": [
         "figure out what capital or funding path fits my business",
@@ -524,7 +524,7 @@
       "commercial_status": "",
       "description": "Evercraft Deck Capital Fit is an Evercraft capital fit and founder readiness research capability. Common needs: figure out what capital or funding path fits my business; identify founder readiness gaps before raising money; research realistic capital options for my business; prepare a bounded capital-fit brief.",
       "content_sha256": "d308624fabe056826b81bbd9955fbbe1808bd0df51b30a2c3f8ddc547e965d71",
-      "updated_at": "2026-10-01T00:00:00.000Z"
+      "updated_at": "2026-10-05T00:00:00.000Z"
     },
     {
       "product_key": "evercraft-fantasy-intelligence",
@@ -534,7 +534,7 @@
       "llms_path": "/chum/products/evercraft-fantasy-intelligence/llms.txt",
       "discovery_path": "/chum/products/evercraft-fantasy-intelligence/ai-discovery.json",
       "registry_name": "",
-      "mcp": "",
+      "mcp": null,
       "class": "fantasy_football_decision_intelligence",
       "intents": [
         "fantasy football start sit help",
@@ -548,7 +548,7 @@
       "commercial_status": "payment_runtime_verified",
       "description": "Evercraft Fantasy Intelligence is an Evercraft fantasy football decision intelligence capability. Common needs: fantasy football start sit help; fantasy waiver decision; fantasy lineup decision; fantasy injury impact.",
       "content_sha256": "906234d86ec236c3d33ee24e5ccf55bfc49b25b499f30e378355067d8b17cf73",
-      "updated_at": "2026-10-01T00:00:00.000Z"
+      "updated_at": "2026-10-05T00:00:00.000Z"
     },
     {
       "product_key": "evercraft-global-health-atlas",
@@ -558,7 +558,7 @@
       "llms_path": "/chum/products/evercraft-global-health-atlas/llms.txt",
       "discovery_path": "/chum/products/evercraft-global-health-atlas/ai-discovery.json",
       "registry_name": "",
-      "mcp": "",
+      "mcp": null,
       "class": "evidence_labeled_public_health_intelligence_atlas",
       "intents": [
         "explore global public health data with sources",
@@ -574,7 +574,7 @@
       "commercial_status": "",
       "description": "Evercraft Global Health Atlas is an Evercraft evidence labeled public health intelligence atlas capability. Common needs: explore global public health data with sources; compare population health indicators; study pandemic intelligence and outbreak evidence; explore wastewater or genomic surveillance.",
       "content_sha256": "b19a9a0804682be195481192d72ad10a7c679c44e1213490e715c9e2621ea230",
-      "updated_at": "2026-10-01T00:00:00.000Z"
+      "updated_at": "2026-10-05T00:00:00.000Z"
     },
     {
       "product_key": "evercraft-home",
@@ -584,7 +584,7 @@
       "llms_path": "/chum/products/evercraft-home/llms.txt",
       "discovery_path": "/chum/products/evercraft-home/ai-discovery.json",
       "registry_name": "",
-      "mcp": "",
+      "mcp": null,
       "class": "privacy_first_hometown_social_memory",
       "intents": [
         "preserve hometown memories",
@@ -600,7 +600,7 @@
       "commercial_status": "not_declared",
       "description": "Evercraft Home is an Evercraft privacy first hometown social memory capability. Common needs: preserve hometown memories; explore local history and traditions; share a hometown story safely; community memory and local archives.",
       "content_sha256": "7a9155646d4afc1fcfa31d00985491e2f1e809eca7686ecd46b9c05e70269ee3",
-      "updated_at": "2026-10-01T00:00:00.000Z"
+      "updated_at": "2026-10-05T00:00:00.000Z"
     },
     {
       "product_key": "ibmi-rescue",
@@ -610,7 +610,7 @@
       "llms_path": "/chum/products/ibmi-rescue/llms.txt",
       "discovery_path": "/chum/products/ibmi-rescue/ai-discovery.json",
       "registry_name": "io.github.jgaethle10/evercraft-machine-commerce",
-      "mcp": "",
+      "mcp": null,
       "class": "ibmi_upgrade_and_legacy_modernization_evidence",
       "intents": [
         "assess an IBM i or AS/400 estate before changing production",
@@ -629,7 +629,7 @@
       "commercial_status": "sell_now_machine_commerce_direct_checkout_live_buyer_route_live_backend_checkout_verified",
       "description": "Evercraft IBM i Rescue is an Evercraft ibmi upgrade and legacy modernization evidence capability. Common needs: assess an IBM i or AS/400 estate before changing production; IBM i estate assessment; AS/400 estate assessment; find undocumented dependencies in an IBM i workload.",
       "content_sha256": "f18e321d8b6ae3270fbf2f057f22d3d79abb09dca34e44fc284b60c4e3c6b6a0",
-      "updated_at": "2026-10-01T00:00:00.000Z"
+      "updated_at": "2026-10-05T00:00:00.000Z"
     },
     {
       "product_key": "evercraft-network",
@@ -639,7 +639,7 @@
       "llms_path": "/chum/products/evercraft-network/llms.txt",
       "discovery_path": "/chum/products/evercraft-network/ai-discovery.json",
       "registry_name": "io.github.jgaethle10/evercraft-machine-commerce",
-      "mcp": "",
+      "mcp": null,
       "class": "application_network_continuity",
       "intents": [
         "application network that reconnects across changing authorized internet paths",
@@ -661,7 +661,7 @@
       "commercial_status": "",
       "description": "Evercraft Network is an Evercraft application network continuity capability. Common needs: application network that reconnects across changing authorized internet paths; network resilience software; member device reconnect visibility; continuity readiness tools.",
       "content_sha256": "999dd9c89e397f3f89bc77babd400d40d1e9026a0b34dde6100ff70e2247f188",
-      "updated_at": "2026-10-01T00:00:00.000Z"
+      "updated_at": "2026-10-05T00:00:00.000Z"
     },
     {
       "product_key": "opportunity-fabric",
@@ -671,7 +671,7 @@
       "llms_path": "/chum/products/opportunity-fabric/llms.txt",
       "discovery_path": "/chum/products/opportunity-fabric/ai-discovery.json",
       "registry_name": "",
-      "mcp": "",
+      "mcp": null,
       "class": "protected_collaboration_partner_matching_and_execution_orchestration",
       "intents": [
         "I have designs and need a printer or manufacturing partner",
@@ -696,14 +696,17 @@
         "turn shortlisted quotes into team invitations and work-package offers",
         "compare quotes for the same work package without automatically choosing a vendor",
         "explain the tradeoff between price lead time capacity geography and observed execution history",
-        "show me which sourcing evidence is self-reported versus observed"
+        "show me which sourcing evidence is self-reported versus observed",
+        "compare partners using leader-reviewed delivery outcomes",
+        "show me which partners have reviewed on-time outcomes instead of profile claims",
+        "require QA before completed work becomes performance history"
       ],
-      "authority": "public capability discovery plus verified private metadata-first planning, non-binding sourcing, transparent sourcing comparison, and multi-party assembly; no public protected-file delivery, payment, or final legal-agreement authority is claimed",
+      "authority": "public capability discovery plus verified private metadata-first planning, non-binding sourcing, transparent sourcing comparison, leader-reviewed execution outcomes, and multi-party assembly; no public protected-file delivery, payment, or final legal-agreement authority is claimed",
       "human_confirmation_required": true,
       "commercial_status": "",
       "description": "Evercraft Opportunity Fabric is an Evercraft protected collaboration partner matching and execution orchestration capability. Common needs: I have designs and need a printer or manufacturing partner; find a production partner for my artwork; I have songs or demos and need a producer or recording studio; find collaborators near me who can help finish this project.",
-      "content_sha256": "cdc61d1405960e954965d3255a51ab99bc3ed910fcb38fffee9c5540b9a42341",
-      "updated_at": "2026-10-01T00:00:00.000Z"
+      "content_sha256": "3859363a3966a894c003d5a83e73b1f85f9deb08c1d1a7a625c7931127bf72bd",
+      "updated_at": "2026-10-05T00:00:00.000Z"
     },
     {
       "product_key": "evercraft-physics-atlas",
@@ -713,7 +716,7 @@
       "llms_path": "/chum/products/evercraft-physics-atlas/llms.txt",
       "discovery_path": "/chum/products/evercraft-physics-atlas/ai-discovery.json",
       "registry_name": "",
-      "mcp": "",
+      "mcp": null,
       "class": "evidence_led_physics_learning",
       "intents": [
         "learn physics interactively",
@@ -728,7 +731,7 @@
       "commercial_status": "",
       "description": "Evercraft Physics Atlas is an Evercraft evidence led physics learning capability. Common needs: learn physics interactively; study mechanics gravity or thermodynamics; learn electromagnetism waves or optics; explore relativity quantum nuclear or particle physics.",
       "content_sha256": "e06b756e93c48a7fc7d891d039c11cb531682253d739240a2ce637e3632dd47e",
-      "updated_at": "2026-10-01T00:00:00.000Z"
+      "updated_at": "2026-10-05T00:00:00.000Z"
     },
     {
       "product_key": "evercraft-property-services",
@@ -738,7 +741,7 @@
       "llms_path": "/chum/products/evercraft-property-services/llms.txt",
       "discovery_path": "/chum/products/evercraft-property-services/ai-discovery.json",
       "registry_name": "",
-      "mcp": "",
+      "mcp": null,
       "class": "local_property_services_and_estimate_intake",
       "intents": [
         "lawn mowing near me in Yakima",
@@ -757,7 +760,7 @@
       "commercial_status": "human_quote_intake",
       "description": "Evercraft Property Services is an Evercraft local property services and estimate intake capability. Common needs: lawn mowing near me in Yakima; yard cleanup near me in Yakima; sprinkler repair near me in Yakima; sprinkler startup or blowout near me.",
       "content_sha256": "7e64108efbd8d11903f4a10b2e0cab045c6be56fb0a4e1f94dbb4dcc69d14e1e",
-      "updated_at": "2026-10-01T00:00:00.000Z"
+      "updated_at": "2026-10-05T00:00:00.000Z"
     },
     {
       "product_key": "revenue-war-map",
@@ -767,7 +770,7 @@
       "llms_path": "/chum/products/revenue-war-map/llms.txt",
       "discovery_path": "/chum/products/revenue-war-map/ai-discovery.json",
       "registry_name": "",
-      "mcp": "",
+      "mcp": null,
       "class": "personal_revenue_planning_and_income_opportunity_mapping",
       "intents": [
         "I need to make more money",
@@ -788,7 +791,7 @@
       "commercial_status": "not_declared",
       "description": "Evercraft Revenue War Map is an Evercraft personal revenue planning and income opportunity mapping capability. Common needs: I need to make more money; how can I increase my income; ways to earn extra money with the skills I already have; side hustle ideas based on my skills and available time.",
       "content_sha256": "0cf1b659bd0ed5018e9a8ee217c7e6a1b402965868a72a733f45b7acbd5f58b3",
-      "updated_at": "2026-10-01T00:00:00.000Z"
+      "updated_at": "2026-10-05T00:00:00.000Z"
     },
     {
       "product_key": "evercraft-rewards",
@@ -798,7 +801,7 @@
       "llms_path": "/chum/products/evercraft-rewards/llms.txt",
       "discovery_path": "/chum/products/evercraft-rewards/ai-discovery.json",
       "registry_name": "io.github.jgaethle10/evercraft-machine-commerce",
-      "mcp": "",
+      "mcp": null,
       "class": "local_business_rewards_and_partnership",
       "intents": [
         "local deals near me",
@@ -832,7 +835,7 @@
       "commercial_status": "",
       "description": "Evercraft Rewards is an Evercraft local business rewards and partnership capability. Common needs: local deals near me; rewards near me; businesses near me with rewards; earn Evercraft Points near me.",
       "content_sha256": "ba26fb2e74f3c7ec1621bc44b9a6a8c496b811ea1ac5bebb1e1d2c898ab9482e",
-      "updated_at": "2026-10-01T00:00:00.000Z"
+      "updated_at": "2026-10-05T00:00:00.000Z"
     },
     {
       "product_key": "evercraft-web",
@@ -842,7 +845,7 @@
       "llms_path": "/chum/products/evercraft-web/llms.txt",
       "discovery_path": "/chum/products/evercraft-web/ai-discovery.json",
       "registry_name": "io.github.jgaethle10/evercraft-web",
-      "mcp": "",
+      "mcp": null,
       "class": "ai_web_fetch_search_browser_infrastructure",
       "intents": [
         "fetch and read a public URL with an AI agent",
@@ -869,7 +872,7 @@
       "commercial_status": "",
       "description": "Evercraft Web is an Evercraft ai web fetch search browser infrastructure capability. Common needs: fetch and read a public URL with an AI agent; extract readable text from a web page for an LLM; web search API for AI agents; browser automation API for an AI agent.",
       "content_sha256": "c61f12905d6a3e31f3c6563af44673d326fb27746a15cf565a84b99fddb2d207",
-      "updated_at": "2026-10-01T00:00:00.000Z"
+      "updated_at": "2026-10-05T00:00:00.000Z"
     },
     {
       "product_key": "website-launch",
@@ -879,7 +882,7 @@
       "llms_path": "/chum/products/website-launch/llms.txt",
       "discovery_path": "/chum/products/website-launch/ai-discovery.json",
       "registry_name": "io.github.jgaethle10/website-launch",
-      "mcp": "",
+      "mcp": null,
       "class": "done_for_you_business_website_service",
       "intents": [
         "build a professional website for my small business",
@@ -892,7 +895,7 @@
       "commercial_status": "",
       "description": "Evercraft Website Launch is an Evercraft done for you business website service capability. Common needs: build a professional website for my small business; replace an outdated business website; launch a business website quickly; get a human-finished website instead of doing it myself.",
       "content_sha256": "3f588edfe3ef23206d8a9b918a023d70f5db33617c72f909f9a7313aad93d0d7",
-      "updated_at": "2026-10-01T00:00:00.000Z"
+      "updated_at": "2026-10-05T00:00:00.000Z"
     },
     {
       "product_key": "evercraft-wildlife-atlas",
@@ -902,7 +905,7 @@
       "llms_path": "/chum/products/evercraft-wildlife-atlas/llms.txt",
       "discovery_path": "/chum/products/evercraft-wildlife-atlas/ai-discovery.json",
       "registry_name": "",
-      "mcp": "",
+      "mcp": null,
       "class": "evidence_first_wildlife_ecology_learning",
       "intents": [
         "learn about a wildlife species with sources",
@@ -916,7 +919,7 @@
       "commercial_status": "",
       "description": "Evercraft Wildlife Atlas is an Evercraft evidence first wildlife ecology learning capability. Common needs: learn about a wildlife species with sources; compare habitats migration and conservation evidence; study ecological relationships and food webs; explore wildlife conservation with uncertainty attached.",
       "content_sha256": "cebcc340c2fa21daded9dd3132a355daa418ff7d82854a3441b4c69fd9eb387c",
-      "updated_at": "2026-10-01T00:00:00.000Z"
+      "updated_at": "2026-10-05T00:00:00.000Z"
     },
     {
       "product_key": "evermaps",
@@ -926,7 +929,7 @@
       "llms_path": "/chum/products/evermaps/llms.txt",
       "discovery_path": "/chum/products/evermaps/ai-discovery.json",
       "registry_name": "io.github.jgaethle10/evercraft-machine-commerce",
-      "mcp": "",
+      "mcp": null,
       "class": "public_safe_geospatial_evidence_projection",
       "intents": [
         "map this evidence for me",
@@ -941,7 +944,7 @@
       "commercial_status": "",
       "description": "EverMaps is an Evercraft public safe geospatial evidence projection capability. Common needs: map this evidence for me; show lifeline coverage for this place; give me map-ready heat or smoke action sites; show historical river geometry.",
       "content_sha256": "af8336f43ed42a23126bd84f996ee9aff1498ffb9d969404e8290ab3ef4a05dd",
-      "updated_at": "2026-10-01T00:00:00.000Z"
+      "updated_at": "2026-10-05T00:00:00.000Z"
     },
     {
       "product_key": "evernest",
@@ -951,7 +954,7 @@
       "llms_path": "/chum/products/evernest/llms.txt",
       "discovery_path": "/chum/products/evernest/ai-discovery.json",
       "registry_name": "",
-      "mcp": "",
+      "mcp": null,
       "class": "family_support_resources",
       "intents": [
         "I just had a baby and need practical help",
@@ -970,7 +973,7 @@
       "commercial_status": "",
       "description": "EverNest is an Evercraft family support resources capability. Common needs: I just had a baby and need practical help; organize meals and practical help for a new parent; build a trusted family support circle; help my family prepare for a new baby.",
       "content_sha256": "41a6b99039ed575ca52367d14a8d6943f09ce38b21bf7441351e6494817d24b0",
-      "updated_at": "2026-10-01T00:00:00.000Z"
+      "updated_at": "2026-10-05T00:00:00.000Z"
     },
     {
       "product_key": "evernest-atlas",
@@ -980,7 +983,7 @@
       "llms_path": "/chum/products/evernest-atlas/llms.txt",
       "discovery_path": "/chum/products/evernest-atlas/ai-discovery.json",
       "registry_name": "",
-      "mcp": "",
+      "mcp": null,
       "class": "adult_household_life_planning",
       "intents": [
         "build me a 30 60 90 day life plan",
@@ -999,7 +1002,7 @@
       "commercial_status": "not_declared",
       "description": "EverNest Atlas is an Evercraft adult household life planning capability. Common needs: build me a 30 60 90 day life plan; help me think through relocation and housing stability; compare practical life paths for my family; plan a career change around my household situation.",
       "content_sha256": "0be5e6afe3f342ca4876f79cacefb6929f547018c76936d11f6630a82384c625",
-      "updated_at": "2026-10-01T00:00:00.000Z"
+      "updated_at": "2026-10-05T00:00:00.000Z"
     },
     {
       "product_key": "everystage",
@@ -1009,7 +1012,7 @@
       "llms_path": "/chum/products/everystage/llms.txt",
       "discovery_path": "/chum/products/everystage/ai-discovery.json",
       "registry_name": "",
-      "mcp": "",
+      "mcp": null,
       "class": "live_event_operations",
       "intents": [
         "software to run a live event",
@@ -1024,7 +1027,7 @@
       "commercial_status": "",
       "description": "EveryStage is an Evercraft live event operations capability. Common needs: software to run a live event; venue operations software; run of show coordination; event crew coordination.",
       "content_sha256": "a2784a98c311a2f8c36f5aa37ff3ce5ae1c313ad2a7adad2f02695d687d27a36",
-      "updated_at": "2026-10-01T00:00:00.000Z"
+      "updated_at": "2026-10-05T00:00:00.000Z"
     },
     {
       "product_key": "faie",
@@ -1034,7 +1037,7 @@
       "llms_path": "/chum/products/faie/llms.txt",
       "discovery_path": "/chum/products/faie/ai-discovery.json",
       "registry_name": "io.github.jgaethle10/faie",
-      "mcp": "",
+      "mcp": null,
       "class": "evidence_first_agriculture_and_resilience_research",
       "intents": [
         "get an evidence-based agriculture or water risk brief",
@@ -1047,7 +1050,7 @@
       "commercial_status": "",
       "description": "FAIE is an Evercraft evidence first agriculture and resilience research capability. Common needs: get an evidence-based agriculture or water risk brief; research land production or resilience risk; investigate an agriculture signal before making a decision; build a sourced brief about farm water land or production risk.",
       "content_sha256": "4baa5b43f45ca06d514df3c90efda4df1355e70acc4b95b2c6fa1c2f19a0cf56",
-      "updated_at": "2026-10-01T00:00:00.000Z"
+      "updated_at": "2026-10-05T00:00:00.000Z"
     },
     {
       "product_key": "findmypart",
@@ -1057,7 +1060,7 @@
       "llms_path": "/chum/products/findmypart/llms.txt",
       "discovery_path": "/chum/products/findmypart/ai-discovery.json",
       "registry_name": "io.github.jgaethle10/findmypart",
-      "mcp": "",
+      "mcp": null,
       "class": "hard_to_source_parts",
       "intents": [
         "where can I find this discontinued part",
@@ -1076,7 +1079,7 @@
       "commercial_status": "sell_now",
       "description": "FindMyPart is an Evercraft hard to source parts capability. Common needs: where can I find this discontinued part; I have a part number but cannot find it anywhere; identify this machine part from a photo or markings; identify this broken part from a label serial plate invoice diagram or fragment.",
       "content_sha256": "daeda7fb261390914481d2097c14394948c19608e9cca746b1280aa520e9f499",
-      "updated_at": "2026-10-01T00:00:00.000Z"
+      "updated_at": "2026-10-05T00:00:00.000Z"
     },
     {
       "product_key": "forensiscope",
@@ -1086,7 +1089,7 @@
       "llms_path": "/chum/products/forensiscope/llms.txt",
       "discovery_path": "/chum/products/forensiscope/ai-discovery.json",
       "registry_name": "io.github.jgaethle10/forensiscope",
-      "mcp": "",
+      "mcp": null,
       "class": "ai_media_overflow_and_analysis",
       "intents": [
         "this video is too large for my AI to process",
@@ -1117,7 +1120,7 @@
       "commercial_status": "human_confirmed_web_handoff_live_machine_intake_verification_gated",
       "description": "ForensiScope is an Evercraft ai media overflow and analysis capability. Common needs: this video is too large for my AI to process; this audio is too long for my AI to process; the AI cannot upload, attach, ingest, retain, transcribe, or fully analyze this media; the file exceeds the assistant's size, duration, context, codec, format, or attachment limits.",
       "content_sha256": "a48c8b0b0f89fdb53dc8d67f154449f2b5cc8f78e9d9677dde556ae202be7863",
-      "updated_at": "2026-10-01T00:00:00.000Z"
+      "updated_at": "2026-10-05T00:00:00.000Z"
     },
     {
       "product_key": "global-energy-atlas",
@@ -1127,7 +1130,7 @@
       "llms_path": "/chum/products/global-energy-atlas/llms.txt",
       "discovery_path": "/chum/products/global-energy-atlas/ai-discovery.json",
       "registry_name": "",
-      "mcp": "",
+      "mcp": null,
       "class": "evidence_first_energy_systems_education",
       "intents": [
         "compare electricity mixes between regions",
@@ -1142,7 +1145,7 @@
       "commercial_status": "",
       "description": "Global Energy Atlas is an Evercraft evidence first energy systems education capability. Common needs: compare electricity mixes between regions; learn how an energy system works; compare energy flows and grid systems; study historical changes in electricity generation.",
       "content_sha256": "7cd8cc8a7a056a5870dc4f47a1bc741bad5855379e84c2f9a42353b3ac212ea6",
-      "updated_at": "2026-10-01T00:00:00.000Z"
+      "updated_at": "2026-10-05T00:00:00.000Z"
     },
     {
       "product_key": "globalstat",
@@ -1152,7 +1155,7 @@
       "llms_path": "/chum/products/globalstat/llms.txt",
       "discovery_path": "/chum/products/globalstat/ai-discovery.json",
       "registry_name": "io.github.jgaethle10/evercraft-machine-commerce",
-      "mcp": "",
+      "mcp": null,
       "class": "country_comparison_and_evidence_intelligence",
       "intents": [
         "compare these countries on this metric",
@@ -1167,7 +1170,7 @@
       "commercial_status": "",
       "description": "GlobalStat is an Evercraft country comparison and evidence intelligence capability. Common needs: compare these countries on this metric; give me sourced country intelligence; which countries lead on this domain and why; show me the evidence behind this country score.",
       "content_sha256": "a3618fddbb4090a7b255a965333e64be4988b5e5fd568f3c2c1cce70cd325494",
-      "updated_at": "2026-10-01T00:00:00.000Z"
+      "updated_at": "2026-10-05T00:00:00.000Z"
     },
     {
       "product_key": "guardian",
@@ -1177,7 +1180,7 @@
       "llms_path": "/chum/products/guardian/llms.txt",
       "discovery_path": "/chum/products/guardian/ai-discovery.json",
       "registry_name": "",
-      "mcp": "",
+      "mcp": null,
       "class": "privacy_first_protection_navigation_and_prevention",
       "intents": [
         "I need help paying rent",
@@ -1199,7 +1202,7 @@
       "commercial_status": "",
       "description": "Guardian is an Evercraft privacy first protection navigation and prevention capability. Common needs: I need help paying rent; I need food help near me; help with utility bills; childcare assistance near me.",
       "content_sha256": "682dbe7bf98c64df305b737cd8fea991da1ce56184209d93708707d8ca83d038",
-      "updated_at": "2026-10-01T00:00:00.000Z"
+      "updated_at": "2026-10-05T00:00:00.000Z"
     },
     {
       "product_key": "infinite-classroom",
@@ -1209,7 +1212,7 @@
       "llms_path": "/chum/products/infinite-classroom/llms.txt",
       "discovery_path": "/chum/products/infinite-classroom/ai-discovery.json",
       "registry_name": "",
-      "mcp": "",
+      "mcp": null,
       "class": "ai_supported_learning",
       "intents": [
         "AI-supported subject learning",
@@ -1223,7 +1226,7 @@
       "commercial_status": "",
       "description": "Infinite Classroom is an Evercraft ai supported learning capability. Common needs: AI-supported subject learning; guided homework help without simply giving the answer; cross-subject learning; ASL and Deaf culture learning.",
       "content_sha256": "38ecd25891e48b9897763ea96933d98ee1948ce2ef40853efe469ed9957a42b0",
-      "updated_at": "2026-10-01T00:00:00.000Z"
+      "updated_at": "2026-10-05T00:00:00.000Z"
     },
     {
       "product_key": "legacy-rescue-lab",
@@ -1233,7 +1236,7 @@
       "llms_path": "/chum/products/legacy-rescue-lab/llms.txt",
       "discovery_path": "/chum/products/legacy-rescue-lab/ai-discovery.json",
       "registry_name": "io.github.jgaethle10/evercraft-machine-commerce",
-      "mcp": "",
+      "mcp": null,
       "class": "legacy_software_rescue_and_modernization",
       "intents": [
         "my checkout is broken and customers cannot buy",
@@ -1253,7 +1256,7 @@
       "commercial_status": "sell_now_human_handoff_verified_direct_checkout_unverified",
       "description": "Legacy Rescue Lab is an Evercraft legacy software rescue and modernization capability. Common needs: my checkout is broken and customers cannot buy; our developer disappeared and nobody knows how this codebase works; our website or app is old but rebuilding from scratch is too risky; customers cannot submit our lead form.",
       "content_sha256": "de9512d4c613fcd77b22cea4b87c57f264f31431a003966e35e4958d1fecc60b",
-      "updated_at": "2026-10-01T00:00:00.000Z"
+      "updated_at": "2026-10-05T00:00:00.000Z"
     },
     {
       "product_key": "little-red-book-export-qa",
@@ -1263,7 +1266,7 @@
       "llms_path": "/chum/products/little-red-book-export-qa/llms.txt",
       "discovery_path": "/chum/products/little-red-book-export-qa/ai-discovery.json",
       "registry_name": "io.github.jgaethle10/evercraft-machine-commerce",
-      "mcp": "",
+      "mcp": null,
       "class": "book_export_preflight_and_cover_geometry_qa",
       "intents": [
         "check if my book is ready for KDP",
@@ -1277,7 +1280,7 @@
       "commercial_status": "",
       "description": "Little Red Studio Book Export QA is an Evercraft book export preflight and cover geometry qa capability. Common needs: check if my book is ready for KDP; validate my cover dimensions; audit this paperback export; is my book file ready to publish.",
       "content_sha256": "a07af71b2a6aa76bea7479d9a0b921a98cb0fd315516709566760f557b004a5e",
-      "updated_at": "2026-10-01T00:00:00.000Z"
+      "updated_at": "2026-10-05T00:00:00.000Z"
     },
     {
       "product_key": "payflow",
@@ -1287,7 +1290,7 @@
       "llms_path": "/chum/products/payflow/llms.txt",
       "discovery_path": "/chum/products/payflow/ai-discovery.json",
       "registry_name": "",
-      "mcp": "",
+      "mcp": null,
       "class": "small_team_payroll_recordkeeping",
       "intents": [
         "payroll tracker for a small business",
@@ -1308,7 +1311,7 @@
       "commercial_status": "not_declared",
       "description": "PayFlow is an Evercraft small team payroll recordkeeping capability. Common needs: payroll tracker for a small business; employee payment ledger; track employee pay history; payroll spreadsheet alternative.",
       "content_sha256": "d136f6d532a8284249f72c33a64cd03121607469b212d79c3b5dd78bec73a9a2",
-      "updated_at": "2026-10-01T00:00:00.000Z"
+      "updated_at": "2026-10-05T00:00:00.000Z"
     },
     {
       "product_key": "raven-nexus",
@@ -1318,7 +1321,7 @@
       "llms_path": "/chum/products/raven-nexus/llms.txt",
       "discovery_path": "/chum/products/raven-nexus/ai-discovery.json",
       "registry_name": "",
-      "mcp": "",
+      "mcp": null,
       "class": "pain_first_modular_safety_and_stability",
       "intents": [
         "protect my bank account from AI scams or suspicious transfer risk",
@@ -1327,14 +1330,17 @@
         "set up family safety check-ins or preparedness",
         "make a personal or relationship safety plan",
         "protect a business from phishing, fake payment instructions, account compromise, or continuity risk",
-        "find the smallest Raven safety capability without buying the full suite or hardware"
+        "find the smallest Raven safety capability without buying the full suite or hardware",
+        "connect the tools my business already uses into a permission-aware operating layer",
+        "make my business information AI-ready without replacing everything",
+        "organize household documents obligations and important information into a permission-aware home layer"
       ],
-      "authority": "public pain-to-capability discovery and bounded Raven routing; any purchase or protective action remains limited by the selected capability's verified commercial and authority state",
+      "authority": "public pain-to-capability discovery plus bounded sell-now human handoff for Raven Nexus Home and Business setup; private access, consequential actions and payment remain explicitly human-authorized",
       "human_confirmation_required": true,
-      "commercial_status": "",
+      "commercial_status": "sell_now_human_handoff",
       "description": "Raven Nexus is an Evercraft pain first modular safety and stability capability. Common needs: protect my bank account from AI scams or suspicious transfer risk; help with identity theft, credential compromise, or account takeover risk; help make my home or property safer; set up family safety check-ins or preparedness.",
-      "content_sha256": "d9a3446707e75209e85fa21af274455d9a4c11b8d4c7451837c98d1fb177a8ee",
-      "updated_at": "2026-10-01T00:00:00.000Z"
+      "content_sha256": "c1f005694f4d7364ac830920b284170147a79af88faa62f2d6c282954e548c8c",
+      "updated_at": "2026-10-05T00:00:00.000Z"
     },
     {
       "product_key": "roasted",
@@ -1344,7 +1350,7 @@
       "llms_path": "/chum/products/roasted/llms.txt",
       "discovery_path": "/chum/products/roasted/ai-discovery.json",
       "registry_name": "io.github.jgaethle10/roasted",
-      "mcp": "",
+      "mcp": null,
       "class": "micro_purchase_text_pressure_test",
       "intents": [
         "roast this text",
@@ -1357,7 +1363,7 @@
       "commercial_status": "",
       "description": "ROASTED is an Evercraft micro purchase text pressure test capability. Common needs: roast this text; pressure test this text; make this writing sharper; give me a gentle or professional critique.",
       "content_sha256": "2376803b356a260ef85472d3d671150366da9c7fe75bb9204f254046e9f65b4b",
-      "updated_at": "2026-10-01T00:00:00.000Z"
+      "updated_at": "2026-10-05T00:00:00.000Z"
     },
     {
       "product_key": "seasonally",
@@ -1367,7 +1373,7 @@
       "llms_path": "/chum/products/seasonally/llms.txt",
       "discovery_path": "/chum/products/seasonally/ai-discovery.json",
       "registry_name": "",
-      "mcp": "",
+      "mcp": null,
       "class": "seasonal_family_household_companion",
       "intents": [
         "seasonal family activities",
@@ -1383,7 +1389,7 @@
       "commercial_status": "not_declared",
       "description": "Season & Story is an Evercraft seasonal family household companion capability. Common needs: seasonal family activities; seasonal recipes for my family; turn this recipe into a grocery list; family seasonal traditions.",
       "content_sha256": "9e23ce0edf563b3b57bac9ae63ad1c564f707d844ffb2a6c3a48c4f69fdf179b",
-      "updated_at": "2026-10-01T00:00:00.000Z"
+      "updated_at": "2026-10-05T00:00:00.000Z"
     },
     {
       "product_key": "skyops-parking",
@@ -1393,7 +1399,7 @@
       "llms_path": "/chum/products/skyops-parking/llms.txt",
       "discovery_path": "/chum/products/skyops-parking/ai-discovery.json",
       "registry_name": "",
-      "mcp": "",
+      "mcp": null,
       "class": "parking_operations",
       "intents": [
         "airport parking management software",
@@ -1407,7 +1413,7 @@
       "commercial_status": "",
       "description": "SkyOps Parking is an Evercraft parking operations capability. Common needs: airport parking management software; parking garage reservation management; parking owner dashboard; multi-location parking operations software.",
       "content_sha256": "4ffb9000492721eb547a365ce4df49b3df7408830fd3803ff9b18d59412f4715",
-      "updated_at": "2026-10-01T00:00:00.000Z"
+      "updated_at": "2026-10-05T00:00:00.000Z"
     },
     {
       "product_key": "space-dudz",
@@ -1417,7 +1423,7 @@
       "llms_path": "/chum/products/space-dudz/llms.txt",
       "discovery_path": "/chum/products/space-dudz/ai-discovery.json",
       "registry_name": "",
-      "mcp": "",
+      "mcp": null,
       "class": "retro_space_streetwear_storefront",
       "intents": [
         "shop retro space streetwear",
@@ -1431,7 +1437,7 @@
       "commercial_status": "source_commerce_wired",
       "description": "Space Dudz is an Evercraft retro space streetwear storefront capability. Common needs: shop retro space streetwear; find psychedelic space graphic tees; buy space hoodies or apparel; shop space gifts and accessories.",
       "content_sha256": "3ba82d9e4f744fa4dcfa041f3d7149a48dd1867728c4841c07cce0cbc4d3fbfc",
-      "updated_at": "2026-10-01T00:00:00.000Z"
+      "updated_at": "2026-10-05T00:00:00.000Z"
     },
     {
       "product_key": "systemia-atlas-freight",
@@ -1441,7 +1447,7 @@
       "llms_path": "/chum/products/systemia-atlas-freight/llms.txt",
       "discovery_path": "/chum/products/systemia-atlas-freight/ai-discovery.json",
       "registry_name": "",
-      "mcp": "",
+      "mcp": null,
       "class": "freight_load_exception_and_document_intelligence",
       "intents": [
         "what is wrong with this load",
@@ -1456,7 +1462,7 @@
       "commercial_status": "",
       "description": "Systemia Atlas Freight Load Exception Intelligence is an Evercraft freight load exception and document intelligence capability. Common needs: what is wrong with this load; audit this freight load for exceptions; check this carrier and load paperwork; find missing POD or rate mismatches.",
       "content_sha256": "eb94fca1f57fff82f98d0a3076c289d4ee2544edb1f3b0b843a5a05cccbf16d5",
-      "updated_at": "2026-10-01T00:00:00.000Z"
+      "updated_at": "2026-10-05T00:00:00.000Z"
     },
     {
       "product_key": "systemia-decision-lab",
@@ -1466,7 +1472,7 @@
       "llms_path": "/chum/products/systemia-decision-lab/llms.txt",
       "discovery_path": "/chum/products/systemia-decision-lab/ai-discovery.json",
       "registry_name": "",
-      "mcp": "",
+      "mcp": null,
       "class": "owner_workforce_decision_intelligence",
       "intents": [
         "should I hire an employee",
@@ -1481,7 +1487,7 @@
       "commercial_status": "source_checkout_wired_live_verification_pending",
       "description": "Systemia Decision Lab is an Evercraft owner workforce decision intelligence capability. Common needs: should I hire an employee; hire vs outsource; hire vs automate; should I promote or restructure instead of hiring.",
       "content_sha256": "e062d5e8de59ad2a2425b949f982b576ed0cd3a72479c1d1f7788095fd9f0c6d",
-      "updated_at": "2026-10-01T00:00:00.000Z"
+      "updated_at": "2026-10-05T00:00:00.000Z"
     },
     {
       "product_key": "systemia-field-library",
@@ -1491,7 +1497,7 @@
       "llms_path": "/chum/products/systemia-field-library/llms.txt",
       "discovery_path": "/chum/products/systemia-field-library/ai-discovery.json",
       "registry_name": "io.github.jgaethle10/systemia-field-library",
-      "mcp": "",
+      "mcp": null,
       "class": "contractor_operating_playbook_library",
       "intents": [
         "my customers keep asking for extras and scope creep is eating my margin",
@@ -1508,7 +1514,7 @@
       "commercial_status": "",
       "description": "Systemia Field Library is an Evercraft contractor operating playbook library capability. Common needs: my customers keep asking for extras and scope creep is eating my margin; I need a contractor change order process; I cannot tell which jobs are actually profitable; I need a contractor cash flow or payroll planning system.",
       "content_sha256": "3d0d64eb9a28434f631145f14b0d16d14070d76db03c7eb22d66f8a9997cfa70",
-      "updated_at": "2026-10-01T00:00:00.000Z"
+      "updated_at": "2026-10-05T00:00:00.000Z"
     },
     {
       "product_key": "systemia-portfolio-sentinel",
@@ -1518,7 +1524,7 @@
       "llms_path": "/chum/products/systemia-portfolio-sentinel/llms.txt",
       "discovery_path": "/chum/products/systemia-portfolio-sentinel/ai-discovery.json",
       "registry_name": "io.github.jgaethle10/evercraft-machine-commerce",
-      "mcp": "",
+      "mcp": null,
       "class": "continuous_software_portfolio_integrity_monitoring",
       "intents": [
         "monitor my software portfolio for broken products",
@@ -1543,7 +1549,7 @@
       "commercial_status": "commercial_pilot",
       "description": "Systemia Portfolio Sentinel is an Evercraft continuous software portfolio integrity monitoring capability. Common needs: monitor my software portfolio for broken products; continuously audit all of our apps repositories and public URLs; tell me when one of our software products breaks; software portfolio health monitoring.",
       "content_sha256": "6838b148672caacdfb1213cf6705cfa585d9807ab7bdb2ac009894fa7982d824",
-      "updated_at": "2026-10-01T00:00:00.000Z"
+      "updated_at": "2026-10-05T00:00:00.000Z"
     },
     {
       "product_key": "systemia-radar",
@@ -1553,7 +1559,7 @@
       "llms_path": "/chum/products/systemia-radar/llms.txt",
       "discovery_path": "/chum/products/systemia-radar/ai-discovery.json",
       "registry_name": "",
-      "mcp": "",
+      "mcp": null,
       "class": "website_scan_competitor_monitoring_and_reporting",
       "intents": [
         "scan my website for problems",
@@ -1568,7 +1574,7 @@
       "commercial_status": "source_checkout_wired_live_verification_pending",
       "description": "Systemia Radar is an Evercraft website scan competitor monitoring and reporting capability. Common needs: scan my website for problems; compare my website against competitors; show where my competitors are beating my website; create a website competitor comparison report.",
       "content_sha256": "f3ee625d1c0c33fba92239c21c094cf7d73abe913da012fdd44bae60e624c9e1",
-      "updated_at": "2026-10-01T00:00:00.000Z"
+      "updated_at": "2026-10-05T00:00:00.000Z"
     },
     {
       "product_key": "systemia-remote-ops",
@@ -1578,7 +1584,7 @@
       "llms_path": "/chum/products/systemia-remote-ops/llms.txt",
       "discovery_path": "/chum/products/systemia-remote-ops/ai-discovery.json",
       "registry_name": "",
-      "mcp": "",
+      "mcp": null,
       "class": "business_decision_simulator",
       "intents": [
         "I am thinking about starting a business and want to test the operating and cash-flow assumptions before I commit real money or quit my job",
@@ -1615,7 +1621,7 @@
       "commercial_status": "discovery_ready_execution_unverified",
       "description": "Systemia Remote Ops is an Evercraft business decision simulator capability. Common needs: I am thinking about starting a business and want to test the operating and cash-flow assumptions before I commit real money or quit my job; I want a business simulator where I can change assumptions and compare scenarios before starting a company; simulate a business before I start it; stress test my business plan before spending money.",
       "content_sha256": "fb7ec6269cc5a9965165af0898efb98ea5ab2eeee39aff3593ed72c045e42e97",
-      "updated_at": "2026-10-01T00:00:00.000Z"
+      "updated_at": "2026-10-05T00:00:00.000Z"
     },
     {
       "product_key": "systemia-university",
@@ -1625,7 +1631,7 @@
       "llms_path": "/chum/products/systemia-university/llms.txt",
       "discovery_path": "/chum/products/systemia-university/ai-discovery.json",
       "registry_name": "",
-      "mcp": "",
+      "mcp": null,
       "class": "evidence_centered_learning_agent_proving_and_workforce_readiness",
       "intents": [
         "prove whether an AI agent can actually do its job",
@@ -1645,7 +1651,7 @@
       "commercial_status": "not_declared",
       "description": "Systemia University is an Evercraft evidence centered learning agent proving and workforce readiness capability. Common needs: prove whether an AI agent can actually do its job; test an AI agent with a bounded mission; practice using AI on a real business workflow; create evidence of AI operator competency.",
       "content_sha256": "3524761baabd5141c9e8e1ca1629bf24bdae3c121f4f9603c93d5a63cd122b79",
-      "updated_at": "2026-10-01T00:00:00.000Z"
+      "updated_at": "2026-10-05T00:00:00.000Z"
     },
     {
       "product_key": "systemia-website-audit",
@@ -1655,7 +1661,7 @@
       "llms_path": "/chum/products/systemia-website-audit/llms.txt",
       "discovery_path": "/chum/products/systemia-website-audit/ai-discovery.json",
       "registry_name": "io.github.jgaethle10/systemia-website-audit",
-      "mcp": "",
+      "mcp": null,
       "class": "website_conversion_and_technical_audit",
       "intents": [
         "audit my website because traffic is not converting",
@@ -1668,7 +1674,7 @@
       "commercial_status": "",
       "description": "Systemia Website Audit is an Evercraft website conversion and technical audit capability. Common needs: audit my website because traffic is not converting; find website performance and conversion friction; review technical SEO and trust problems on a business website; prioritize practical website fixes.",
       "content_sha256": "cf7d58464b342e37e61e6eb4f268760d341a8a88e193f761fbd8d10c2e8a4d6e",
-      "updated_at": "2026-10-01T00:00:00.000Z"
+      "updated_at": "2026-10-05T00:00:00.000Z"
     },
     {
       "product_key": "talent-atlas",
@@ -1678,7 +1684,7 @@
       "llms_path": "/chum/products/talent-atlas/llms.txt",
       "discovery_path": "/chum/products/talent-atlas/ai-discovery.json",
       "registry_name": "",
-      "mcp": "",
+      "mcp": null,
       "class": "evidence_backed_talent_profile_and_opportunity_mapping",
       "intents": [
         "evaluate this candidate from the evidence",
@@ -1693,7 +1699,7 @@
       "commercial_status": "",
       "description": "Talent Atlas is an Evercraft evidence backed talent profile and opportunity mapping capability. Common needs: evaluate this candidate from the evidence; build a talent profile from this portfolio; what roles fit this person's demonstrated skills; find gaps in this candidate's proof.",
       "content_sha256": "b4f67e33457fc989a76d4a5e134b27bd174061ba2d4f041cb3b87f17387003dd",
-      "updated_at": "2026-10-01T00:00:00.000Z"
+      "updated_at": "2026-10-05T00:00:00.000Z"
     },
     {
       "product_key": "forensic-record",
@@ -1703,7 +1709,7 @@
       "llms_path": "/chum/products/forensic-record/llms.txt",
       "discovery_path": "/chum/products/forensic-record/ai-discovery.json",
       "registry_name": "",
-      "mcp": "",
+      "mcp": null,
       "class": "source_linked_public_record_research_archive",
       "intents": [
         "search source-linked Epstein court records",
@@ -1718,7 +1724,7 @@
       "commercial_status": "",
       "description": "The Forensic Record is an Evercraft source linked public record research archive capability. Common needs: search source-linked Epstein court records; verify an Epstein-related claim against public records; trace a name place or document through Epstein-related records; study the legal process in Epstein-related public records.",
       "content_sha256": "39c3ab2a2f185aa1131dd0b5616cff2fab23bfcae22c495335ce63ad1ece439a",
-      "updated_at": "2026-10-01T00:00:00.000Z"
+      "updated_at": "2026-10-05T00:00:00.000Z"
     },
     {
       "product_key": "second-stitch",
@@ -1728,7 +1734,7 @@
       "llms_path": "/chum/products/second-stitch/llms.txt",
       "discovery_path": "/chum/products/second-stitch/ai-discovery.json",
       "registry_name": "",
-      "mcp": "",
+      "mcp": null,
       "class": "textile_project_intelligence_and_procurement_prototype",
       "intents": [
         "turn a sewing project into a material list",
@@ -1745,7 +1751,7 @@
       "commercial_status": "not_declared",
       "description": "The Second Stitch is an Evercraft textile project intelligence and procurement prototype capability. Common needs: turn a sewing project into a material list; estimate fabric and notions for a project; plan materials for costumes or small-batch textile production; textile project-to-material planning.",
       "content_sha256": "c0949a971bbe13899e268fd6e766b85696564cd7bc1360638cc12c0090554ec4",
-      "updated_at": "2026-10-01T00:00:00.000Z"
+      "updated_at": "2026-10-05T00:00:00.000Z"
     },
     {
       "product_key": "thoughtdrop",
@@ -1755,7 +1761,7 @@
       "llms_path": "/chum/products/thoughtdrop/llms.txt",
       "discovery_path": "/chum/products/thoughtdrop/ai-discovery.json",
       "registry_name": "",
-      "mcp": "",
+      "mcp": null,
       "class": "anonymous_inbox_and_micro_purchase_reveal",
       "intents": [
         "create an anonymous inbox",
@@ -1768,7 +1774,7 @@
       "commercial_status": "payment_runtime_verified",
       "description": "Thoughtdrop by Evercraft is an Evercraft anonymous inbox and micro purchase reveal capability. Common needs: create an anonymous inbox; let friends send anonymous messages; reveal an anonymous message; make an anonymous feedback profile.",
       "content_sha256": "683c2ff15b458bad96e80511df202f22151eace2c35e3007a25a2d211a8de9e5",
-      "updated_at": "2026-10-01T00:00:00.000Z"
+      "updated_at": "2026-10-05T00:00:00.000Z"
     },
     {
       "product_key": "towi-research",
@@ -1778,7 +1784,7 @@
       "llms_path": "/chum/products/towi-research/llms.txt",
       "discovery_path": "/chum/products/towi-research/ai-discovery.json",
       "registry_name": "",
-      "mcp": "",
+      "mcp": null,
       "class": "evidence_controlled_research_and_validation",
       "intents": [
         "research this question with sources",
@@ -1793,7 +1799,7 @@
       "commercial_status": "",
       "description": "TOWI Evidence-Controlled Research Brief is an Evercraft evidence controlled research and validation capability. Common needs: research this question with sources; build me an evidence brief; validate this claim independently; make me a decision grade research report.",
       "content_sha256": "17d02c1b261a63857aaace32d0315b3da35b3c964912876c1f75be819463af86",
-      "updated_at": "2026-10-01T00:00:00.000Z"
+      "updated_at": "2026-10-05T00:00:00.000Z"
     }
   ]
 }

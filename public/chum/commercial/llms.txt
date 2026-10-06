@@ -72,6 +72,20 @@ Intent page: /chum/intents/legacy-rescue-lab-v1/
 Capability: /chum/capabilities/legacy-rescue-lab-v1/
 Exact answer doors: 15
 
+## Raven Nexus Business Setup
+Public ID: raven-nexus-business-setup-v1
+Cluster: /chum/commercial/raven-nexus-business-setup-v1/
+Intent page: /chum/intents/raven-nexus-business-setup-v1/
+Capability: /chum/capabilities/raven-nexus-business-setup-v1/
+Exact answer doors: 9
+
+## Raven Nexus Home Setup
+Public ID: raven-nexus-home-setup-v1
+Cluster: /chum/commercial/raven-nexus-home-setup-v1/
+Intent page: /chum/intents/raven-nexus-home-setup-v1/
+Capability: /chum/capabilities/raven-nexus-home-setup-v1/
+Exact answer doors: 7
+
 ## RIVET EV Infrastructure Intelligence
 Public ID: rivet-site-underwriting-v1
 Cluster: /chum/commercial/rivet-site-underwriting-v1/

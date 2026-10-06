@@ -26,7 +26,9 @@
     "does not claim bank-side transaction blocking without verified banking authority",
     "does not permit covert tracking, stalking, or unauthorized surveillance",
     "Raven discovery is not emergency response",
-    "checkout creation is not payment proof"
+    "checkout creation is not payment proof",
+    "public discovery never requests passwords, security answers, API keys or private records",
+    "business and home setup are human-handoff services until product-specific direct checkout is independently verified"
   ],
   "commercial": {
     "status": "sell_now_human_handoff",
@@ -42,12 +44,11 @@
         "price": "$199 one-time"
       }
     ],
-    "direct_checkout_verified": false,
-    "paid_state_requires_provider_verification": true
+    "payment_state": "No silent purchase. Human-confirmed scope and payment are required; paid state requires provider verification."
   },
   "machine_commerce_handoff": null,
-  "human_start_url": "https://github.com/jgaethle10/forge-operator/tree/main/registry/raven-nexus",
-  "buyer_frontage_url": "https://github.com/jgaethle10/forge-operator/tree/main/registry/raven-nexus",
+  "human_start_url": null,
+  "buyer_frontage_url": null,
   "registry_name": null,
   "mcp": null,
   "machine_commerce_mcp": null,

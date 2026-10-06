@@ -1002,6 +1002,28 @@
     },
     {
       "@type": "Service",
+      "@id": "https://github.com/jgaethle10/forge-operator#offer-raven-nexus-business-setup-v1",
+      "name": "Raven Nexus Business Setup",
+      "description": "A small business owner has important work split across email, documents, payments, customer records, credentials and AI tools, with no clean source-of-truth or permission map, and needs a bounded founder-led setup instead of another rip-and-replace software project.",
+      "url": "https://github.com/jgaethle10/forge-operator/tree/main/registry/raven-nexus",
+      "provider": {
+        "@id": "https://github.com/jgaethle10/forge-operator#evercraft"
+      },
+      "serviceType": "Evercraft machine-commerce offer"
+    },
+    {
+      "@type": "Service",
+      "@id": "https://github.com/jgaethle10/forge-operator#offer-raven-nexus-home-setup-v1",
+      "name": "Raven Nexus Home Setup",
+      "description": "A household has important documents, recurring obligations, account information and family logistics scattered across apps and people, and needs a permission-aware continuity and organization layer without giving AI uncontrolled authority.",
+      "url": "https://github.com/jgaethle10/forge-operator/tree/main/registry/raven-nexus",
+      "provider": {
+        "@id": "https://github.com/jgaethle10/forge-operator#evercraft"
+      },
+      "serviceType": "Evercraft machine-commerce offer"
+    },
+    {
+      "@type": "Service",
       "@id": "https://github.com/jgaethle10/forge-operator#offer-rivet-site-underwriting-v1",
       "name": "RIVET EV Infrastructure Intelligence",
       "description": "A property owner, fleet, charging developer, broker, installer or investor needs address-specific EV infrastructure diligence that keeps public facts, observed evidence, modeled assumptions and unresolved engineering questions separate.",

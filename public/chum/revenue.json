@@ -1,8 +1,8 @@
 {
   "schema": "evercraft.chum.revenue-watershed.v2",
   "provider": "Evercraft LLC",
-  "updated_at": "2026-10-01T04:57:41.674Z",
-  "source_schema_version": "2026-09-30.1",
+  "updated_at": "2026-10-06T14:10:26.199Z",
+  "source_schema_version": "2026-10-04.1",
   "gateway_version": "evercraft-machine-commerce-gateway-v0.9.1",
   "purpose": "Public-safe machine index of Evercraft offers that the canonical catalog currently marks sell_now. Match the user problem first. Discovery creates no obligation. Preserve explicit human confirmation and authoritative payment verification.",
   "discovery_endpoint": "/api/discover",
@@ -16,8 +16,8 @@
     "authoritative_provider_verification_required_for_paid_state": true,
     "private_topology_exposed": false
   },
-  "sell_now_count": 14,
-  "discovery_count": 48,
+  "sell_now_count": 16,
+  "discovery_count": 50,
   "offers": [
     {
       "public_id": "aliev-site-opportunity-snapshot-v1",
@@ -556,6 +556,122 @@
       "start_url": null,
       "start_url_state": "held_no_owned_public_origin",
       "pain_page": "/chum/intents/legacy-rescue-lab-v1/"
+    },
+    {
+      "public_id": "raven-nexus-business-setup-v1",
+      "name": "Raven Nexus Business Setup",
+      "problem": "A small business owner has important work split across email, documents, payments, customer records, credentials and AI tools, with no clean source-of-truth or permission map, and needs a bounded founder-led setup instead of another rip-and-replace software project.",
+      "intent_terms": [
+        "connect the tools my business already uses",
+        "my business systems are scattered across too many apps",
+        "organize Gmail Drive payments documents and AI for my business",
+        "make AI understand my business safely",
+        "set up an AI-ready source of truth for my business",
+        "map who has access to what in my business",
+        "connect my business systems without replacing everything",
+        "small business AI operating layer",
+        "Raven Nexus Business"
+      ],
+      "pricing": "Founding Business Systems Map $500 one-time; Connected Business Implementation $1,500 one-time.",
+      "offers": [
+        {
+          "offer_key": "raven_business_map_500",
+          "name": "Raven Nexus Business Systems Map",
+          "price": "$500",
+          "price_usd": 500,
+          "billing": "one_time",
+          "checkout": "human_handoff_only_until_direct_checkout_is_independently_verified"
+        },
+        {
+          "offer_key": "raven_business_impl_1500",
+          "name": "Raven Nexus Connected Business Implementation",
+          "price": "$1,500",
+          "price_usd": 1500,
+          "billing": "one_time",
+          "checkout": "human_handoff_only_until_direct_checkout_is_independently_verified"
+        }
+      ],
+      "entry_paid_offer": {
+        "offer_key": "raven_business_map_500",
+        "name": "Raven Nexus Business Systems Map",
+        "price": "$500",
+        "price_usd": 500,
+        "billing": "one_time",
+        "checkout": "human_handoff_only_until_direct_checkout_is_independently_verified",
+        "price_usd_normalized": 500
+      },
+      "commercial_state": "sell_now",
+      "machine_state": "human_handoff_ready",
+      "public_url": "https://github.com/jgaethle10/forge-operator/tree/main/registry/raven-nexus",
+      "human_ui_required": true,
+      "confirmation": "Agents may discover the offer, explain the exact scope and route a human to Evercraft for review. No private-system access, credential use, connection, checkout, payment obligation or production change is authorized by discovery. Scope, access and payment require explicit human confirmation.",
+      "payment_authority": "Evercraft Payments; human-confirmed handoff only until a product-specific direct checkout is independently verified. Paid state requires authoritative provider verification.",
+      "invocation_status": "SELL-NOW HUMAN HANDOFF: the $500 Business Systems Map is the smallest paid entry. Discovery is public and read-only; implementation begins only after explicit scope, access and payment confirmation.",
+      "catalog_version": "2026-10-04.1",
+      "agent_handoff": null,
+      "machine_review_url": null,
+      "machine_offer_url": null,
+      "universal_mcp": null,
+      "start_url": null,
+      "start_url_state": "held_no_owned_public_origin",
+      "pain_page": "/chum/intents/raven-nexus-business-setup-v1/"
+    },
+    {
+      "public_id": "raven-nexus-home-setup-v1",
+      "name": "Raven Nexus Home Setup",
+      "problem": "A household has important documents, recurring obligations, account information and family logistics scattered across apps and people, and needs a permission-aware continuity and organization layer without giving AI uncontrolled authority.",
+      "intent_terms": [
+        "organize my household accounts documents and important information",
+        "my family information is scattered across too many apps",
+        "set up a safe AI-ready home information system",
+        "create a family continuity and account-access map",
+        "organize household documents and recurring obligations",
+        "help my family know where important information lives",
+        "Raven Nexus Home"
+      ],
+      "pricing": "Home Stability Map $199 one-time; Connected Home Setup $499 one-time.",
+      "offers": [
+        {
+          "offer_key": "raven_home_map_199",
+          "name": "Raven Nexus Home Stability Map",
+          "price": "$199",
+          "price_usd": 199,
+          "billing": "one_time",
+          "checkout": "human_handoff_only_until_direct_checkout_is_independently_verified"
+        },
+        {
+          "offer_key": "raven_home_setup_499",
+          "name": "Raven Nexus Connected Home Setup",
+          "price": "$499",
+          "price_usd": 499,
+          "billing": "one_time",
+          "checkout": "human_handoff_only_until_direct_checkout_is_independently_verified"
+        }
+      ],
+      "entry_paid_offer": {
+        "offer_key": "raven_home_map_199",
+        "name": "Raven Nexus Home Stability Map",
+        "price": "$199",
+        "price_usd": 199,
+        "billing": "one_time",
+        "checkout": "human_handoff_only_until_direct_checkout_is_independently_verified",
+        "price_usd_normalized": 199
+      },
+      "commercial_state": "sell_now",
+      "machine_state": "human_handoff_ready",
+      "public_url": "https://github.com/jgaethle10/forge-operator/tree/main/registry/raven-nexus",
+      "human_ui_required": true,
+      "confirmation": "Agents may explain the offer and route a human to Evercraft for review. Discovery creates no access or payment obligation. Any account/document access or connection requires explicit authorization. Raven Home does not claim bank-side transaction control, emergency response, covert tracking or unrestricted device access.",
+      "payment_authority": "Evercraft Payments; human-confirmed handoff only until a product-specific direct checkout is independently verified. Paid state requires authoritative provider verification.",
+      "invocation_status": "SELL-NOW HUMAN HANDOFF: the $199 Home Stability Map is the smallest paid entry. Discovery is public and read-only; any private access or implementation remains explicitly human-authorized.",
+      "catalog_version": "2026-10-04.1",
+      "agent_handoff": null,
+      "machine_review_url": null,
+      "machine_offer_url": null,
+      "universal_mcp": null,
+      "start_url": null,
+      "start_url_state": "held_no_owned_public_origin",
+      "pain_page": "/chum/intents/raven-nexus-home-setup-v1/"
     },
     {
       "public_id": "rivet-site-underwriting-v1",
@@ -2300,6 +2416,122 @@
       "start_url": null,
       "start_url_state": "not_sell_now",
       "pain_page": "/chum/intents/evermaps-evidence-projection-machine-v1/"
+    },
+    {
+      "public_id": "raven-nexus-business-setup-v1",
+      "name": "Raven Nexus Business Setup",
+      "problem": "A small business owner has important work split across email, documents, payments, customer records, credentials and AI tools, with no clean source-of-truth or permission map, and needs a bounded founder-led setup instead of another rip-and-replace software project.",
+      "intent_terms": [
+        "connect the tools my business already uses",
+        "my business systems are scattered across too many apps",
+        "organize Gmail Drive payments documents and AI for my business",
+        "make AI understand my business safely",
+        "set up an AI-ready source of truth for my business",
+        "map who has access to what in my business",
+        "connect my business systems without replacing everything",
+        "small business AI operating layer",
+        "Raven Nexus Business"
+      ],
+      "pricing": "Founding Business Systems Map $500 one-time; Connected Business Implementation $1,500 one-time.",
+      "offers": [
+        {
+          "offer_key": "raven_business_map_500",
+          "name": "Raven Nexus Business Systems Map",
+          "price": "$500",
+          "price_usd": 500,
+          "billing": "one_time",
+          "checkout": "human_handoff_only_until_direct_checkout_is_independently_verified"
+        },
+        {
+          "offer_key": "raven_business_impl_1500",
+          "name": "Raven Nexus Connected Business Implementation",
+          "price": "$1,500",
+          "price_usd": 1500,
+          "billing": "one_time",
+          "checkout": "human_handoff_only_until_direct_checkout_is_independently_verified"
+        }
+      ],
+      "entry_paid_offer": {
+        "offer_key": "raven_business_map_500",
+        "name": "Raven Nexus Business Systems Map",
+        "price": "$500",
+        "price_usd": 500,
+        "billing": "one_time",
+        "checkout": "human_handoff_only_until_direct_checkout_is_independently_verified",
+        "price_usd_normalized": 500
+      },
+      "commercial_state": "sell_now",
+      "machine_state": "human_handoff_ready",
+      "public_url": "https://github.com/jgaethle10/forge-operator/tree/main/registry/raven-nexus",
+      "human_ui_required": true,
+      "confirmation": "Agents may discover the offer, explain the exact scope and route a human to Evercraft for review. No private-system access, credential use, connection, checkout, payment obligation or production change is authorized by discovery. Scope, access and payment require explicit human confirmation.",
+      "payment_authority": "Evercraft Payments; human-confirmed handoff only until a product-specific direct checkout is independently verified. Paid state requires authoritative provider verification.",
+      "invocation_status": "SELL-NOW HUMAN HANDOFF: the $500 Business Systems Map is the smallest paid entry. Discovery is public and read-only; implementation begins only after explicit scope, access and payment confirmation.",
+      "catalog_version": "2026-10-04.1",
+      "agent_handoff": null,
+      "machine_review_url": null,
+      "machine_offer_url": null,
+      "universal_mcp": null,
+      "start_url": null,
+      "start_url_state": "held_no_owned_public_origin",
+      "pain_page": "/chum/intents/raven-nexus-business-setup-v1/"
+    },
+    {
+      "public_id": "raven-nexus-home-setup-v1",
+      "name": "Raven Nexus Home Setup",
+      "problem": "A household has important documents, recurring obligations, account information and family logistics scattered across apps and people, and needs a permission-aware continuity and organization layer without giving AI uncontrolled authority.",
+      "intent_terms": [
+        "organize my household accounts documents and important information",
+        "my family information is scattered across too many apps",
+        "set up a safe AI-ready home information system",
+        "create a family continuity and account-access map",
+        "organize household documents and recurring obligations",
+        "help my family know where important information lives",
+        "Raven Nexus Home"
+      ],
+      "pricing": "Home Stability Map $199 one-time; Connected Home Setup $499 one-time.",
+      "offers": [
+        {
+          "offer_key": "raven_home_map_199",
+          "name": "Raven Nexus Home Stability Map",
+          "price": "$199",
+          "price_usd": 199,
+          "billing": "one_time",
+          "checkout": "human_handoff_only_until_direct_checkout_is_independently_verified"
+        },
+        {
+          "offer_key": "raven_home_setup_499",
+          "name": "Raven Nexus Connected Home Setup",
+          "price": "$499",
+          "price_usd": 499,
+          "billing": "one_time",
+          "checkout": "human_handoff_only_until_direct_checkout_is_independently_verified"
+        }
+      ],
+      "entry_paid_offer": {
+        "offer_key": "raven_home_map_199",
+        "name": "Raven Nexus Home Stability Map",
+        "price": "$199",
+        "price_usd": 199,
+        "billing": "one_time",
+        "checkout": "human_handoff_only_until_direct_checkout_is_independently_verified",
+        "price_usd_normalized": 199
+      },
+      "commercial_state": "sell_now",
+      "machine_state": "human_handoff_ready",
+      "public_url": "https://github.com/jgaethle10/forge-operator/tree/main/registry/raven-nexus",
+      "human_ui_required": true,
+      "confirmation": "Agents may explain the offer and route a human to Evercraft for review. Discovery creates no access or payment obligation. Any account/document access or connection requires explicit authorization. Raven Home does not claim bank-side transaction control, emergency response, covert tracking or unrestricted device access.",
+      "payment_authority": "Evercraft Payments; human-confirmed handoff only until a product-specific direct checkout is independently verified. Paid state requires authoritative provider verification.",
+      "invocation_status": "SELL-NOW HUMAN HANDOFF: the $199 Home Stability Map is the smallest paid entry. Discovery is public and read-only; any private access or implementation remains explicitly human-authorized.",
+      "catalog_version": "2026-10-04.1",
+      "agent_handoff": null,
+      "machine_review_url": null,
+      "machine_offer_url": null,
+      "universal_mcp": null,
+      "start_url": null,
+      "start_url_state": "held_no_owned_public_origin",
+      "pain_page": "/chum/intents/raven-nexus-home-setup-v1/"
     },
     {
       "public_id": "raven-nexus-pain-router-v1",

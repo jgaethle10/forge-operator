@@ -20,12 +20,12 @@
     "provider_publication_is_not_endorsement_or_pickup_proof": true
   },
   "summary": {
-    "pain_index_entries": 112,
-    "unique_user_phrases": 976,
-    "mapped_candidate_edges": 1082,
+    "pain_index_entries": 114,
+    "unique_user_phrases": 998,
+    "mapped_candidate_edges": 1104,
     "ambiguous_phrases": 106,
     "product_candidates": 64,
-    "machine_offer_candidates": 48
+    "machine_offer_candidates": 50
   },
   "doors": [
     {
@@ -3923,6 +3923,29 @@
       ]
     },
     {
+      "answer_id": "intent:1180eb8525",
+      "user_language": "compare partners using leader-reviewed delivery outcomes",
+      "normalized": "compare partners using leader reviewed delivery outcomes",
+      "relative_json": "/chum/answers/doors/compare-partners-using-leader-reviewed-delivery-outcomes-1180eb8525.json",
+      "relative_page": "/chum/answers/doors/compare-partners-using-leader-reviewed-delivery-outcomes-1180eb8525/",
+      "raw_json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/compare-partners-using-leader-reviewed-delivery-outcomes-1180eb8525.json",
+      "candidate_count": 1,
+      "candidates": [
+        {
+          "capability_id": "product:opportunity-fabric",
+          "kind": "product",
+          "product_key": "opportunity-fabric",
+          "public_id": null,
+          "name": "Evercraft Opportunity Fabric",
+          "commercial_state": "product_contract",
+          "machine_state": "discovery_only",
+          "pain_page": "/chum/products/opportunity-fabric/",
+          "public_url": "https://github.com/jgaethle10/forge-operator/tree/main/registry/opportunity-fabric",
+          "registry_name": null
+        }
+      ]
+    },
+    {
       "answer_id": "intent:35631b3a4d",
       "user_language": "compare population health indicators",
       "normalized": "compare population health indicators",
@@ -4142,6 +4165,29 @@
       ]
     },
     {
+      "answer_id": "intent:c22cd044c4",
+      "user_language": "connect my business systems without replacing everything",
+      "normalized": "connect my business systems without replacing everything",
+      "relative_json": "/chum/answers/doors/connect-my-business-systems-without-replacing-everything-c22cd044c4.json",
+      "relative_page": "/chum/answers/doors/connect-my-business-systems-without-replacing-everything-c22cd044c4/",
+      "raw_json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/connect-my-business-systems-without-replacing-everything-c22cd044c4.json",
+      "candidate_count": 1,
+      "candidates": [
+        {
+          "capability_id": "offer:raven-nexus-business-setup-v1",
+          "kind": "machine_offer",
+          "product_key": null,
+          "public_id": "raven-nexus-business-setup-v1",
+          "name": "Raven Nexus Business Setup",
+          "commercial_state": "sell_now",
+          "machine_state": "human_handoff_ready",
+          "pain_page": "/chum/intents/raven-nexus-business-setup-v1/",
+          "public_url": "https://github.com/jgaethle10/forge-operator/tree/main/registry/raven-nexus",
+          "registry_name": null
+        }
+      ]
+    },
+    {
       "answer_id": "intent:4e80c745da",
       "user_language": "connect our business systems without replacing everything",
       "normalized": "connect our business systems without replacing everything",
@@ -4183,6 +4229,52 @@
           "machine_state": "discovery_only",
           "pain_page": "/chum/products/evercraft-physics-atlas/",
           "public_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/evercraft-physics-atlas/index.html",
+          "registry_name": null
+        }
+      ]
+    },
+    {
+      "answer_id": "intent:e8d204b03c",
+      "user_language": "connect the tools my business already uses",
+      "normalized": "connect the tools my business already uses",
+      "relative_json": "/chum/answers/doors/connect-the-tools-my-business-already-uses-e8d204b03c.json",
+      "relative_page": "/chum/answers/doors/connect-the-tools-my-business-already-uses-e8d204b03c/",
+      "raw_json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/connect-the-tools-my-business-already-uses-e8d204b03c.json",
+      "candidate_count": 1,
+      "candidates": [
+        {
+          "capability_id": "offer:raven-nexus-business-setup-v1",
+          "kind": "machine_offer",
+          "product_key": null,
+          "public_id": "raven-nexus-business-setup-v1",
+          "name": "Raven Nexus Business Setup",
+          "commercial_state": "sell_now",
+          "machine_state": "human_handoff_ready",
+          "pain_page": "/chum/intents/raven-nexus-business-setup-v1/",
+          "public_url": "https://github.com/jgaethle10/forge-operator/tree/main/registry/raven-nexus",
+          "registry_name": null
+        }
+      ]
+    },
+    {
+      "answer_id": "intent:984fda2ea7",
+      "user_language": "connect the tools my business already uses into a permission-aware operating layer",
+      "normalized": "connect the tools my business already uses into a permission aware operating layer",
+      "relative_json": "/chum/answers/doors/connect-the-tools-my-business-already-uses-into-a-permission-aware-operating-layer-984fda2ea7.json",
+      "relative_page": "/chum/answers/doors/connect-the-tools-my-business-already-uses-into-a-permission-aware-operating-layer-984fda2ea7/",
+      "raw_json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/connect-the-tools-my-business-already-uses-into-a-permission-aware-operating-layer-984fda2ea7.json",
+      "candidate_count": 1,
+      "candidates": [
+        {
+          "capability_id": "product:raven-nexus",
+          "kind": "product",
+          "product_key": "raven-nexus",
+          "public_id": null,
+          "name": "Raven Nexus",
+          "commercial_state": "product_contract",
+          "machine_state": "discovery_only",
+          "pain_page": "/chum/products/raven-nexus/",
+          "public_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/raven-nexus/index.html",
           "registry_name": null
         }
       ]
@@ -4771,6 +4863,29 @@
           "machine_state": "discovery_only",
           "pain_page": "/chum/intents/community-health-evidence-brief-v1/",
           "public_url": null,
+          "registry_name": null
+        }
+      ]
+    },
+    {
+      "answer_id": "intent:cf753b3be3",
+      "user_language": "create a family continuity and account-access map",
+      "normalized": "create a family continuity and account access map",
+      "relative_json": "/chum/answers/doors/create-a-family-continuity-and-account-access-map-cf753b3be3.json",
+      "relative_page": "/chum/answers/doors/create-a-family-continuity-and-account-access-map-cf753b3be3/",
+      "raw_json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/create-a-family-continuity-and-account-access-map-cf753b3be3.json",
+      "candidate_count": 1,
+      "candidates": [
+        {
+          "capability_id": "offer:raven-nexus-home-setup-v1",
+          "kind": "machine_offer",
+          "product_key": null,
+          "public_id": "raven-nexus-home-setup-v1",
+          "name": "Raven Nexus Home Setup",
+          "commercial_state": "sell_now",
+          "machine_state": "human_handoff_ready",
+          "pain_page": "/chum/intents/raven-nexus-home-setup-v1/",
+          "public_url": "https://github.com/jgaethle10/forge-operator/tree/main/registry/raven-nexus",
           "registry_name": null
         }
       ]
@@ -9917,6 +10032,29 @@
       ]
     },
     {
+      "answer_id": "intent:e9881d52cd",
+      "user_language": "help my family know where important information lives",
+      "normalized": "help my family know where important information lives",
+      "relative_json": "/chum/answers/doors/help-my-family-know-where-important-information-lives-e9881d52cd.json",
+      "relative_page": "/chum/answers/doors/help-my-family-know-where-important-information-lives-e9881d52cd/",
+      "raw_json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/help-my-family-know-where-important-information-lives-e9881d52cd.json",
+      "candidate_count": 1,
+      "candidates": [
+        {
+          "capability_id": "offer:raven-nexus-home-setup-v1",
+          "kind": "machine_offer",
+          "product_key": null,
+          "public_id": "raven-nexus-home-setup-v1",
+          "name": "Raven Nexus Home Setup",
+          "commercial_state": "sell_now",
+          "machine_state": "human_handoff_ready",
+          "pain_page": "/chum/intents/raven-nexus-home-setup-v1/",
+          "public_url": "https://github.com/jgaethle10/forge-operator/tree/main/registry/raven-nexus",
+          "registry_name": null
+        }
+      ]
+    },
+    {
       "answer_id": "intent:df0ed6e14f",
       "user_language": "help my family prepare for a new baby",
       "normalized": "help my family prepare for a new baby",
@@ -12853,6 +12991,29 @@
       ]
     },
     {
+      "answer_id": "intent:42b7fc5219",
+      "user_language": "make AI understand my business safely",
+      "normalized": "make ai understand my business safely",
+      "relative_json": "/chum/answers/doors/make-ai-understand-my-business-safely-42b7fc5219.json",
+      "relative_page": "/chum/answers/doors/make-ai-understand-my-business-safely-42b7fc5219/",
+      "raw_json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/make-ai-understand-my-business-safely-42b7fc5219.json",
+      "candidate_count": 1,
+      "candidates": [
+        {
+          "capability_id": "offer:raven-nexus-business-setup-v1",
+          "kind": "machine_offer",
+          "product_key": null,
+          "public_id": "raven-nexus-business-setup-v1",
+          "name": "Raven Nexus Business Setup",
+          "commercial_state": "sell_now",
+          "machine_state": "human_handoff_ready",
+          "pain_page": "/chum/intents/raven-nexus-business-setup-v1/",
+          "public_url": "https://github.com/jgaethle10/forge-operator/tree/main/registry/raven-nexus",
+          "registry_name": null
+        }
+      ]
+    },
+    {
       "answer_id": "intent:ab7ee25254",
       "user_language": "make an anonymous feedback profile",
       "normalized": "make an anonymous feedback profile",
@@ -12987,6 +13148,29 @@
           "machine_state": "payment_ready",
           "pain_page": "/chum/intents/website-launch-service-v1/",
           "public_url": null,
+          "registry_name": null
+        }
+      ]
+    },
+    {
+      "answer_id": "intent:0b7cf2aa8e",
+      "user_language": "make my business information AI-ready without replacing everything",
+      "normalized": "make my business information ai ready without replacing everything",
+      "relative_json": "/chum/answers/doors/make-my-business-information-ai-ready-without-replacing-everything-0b7cf2aa8e.json",
+      "relative_page": "/chum/answers/doors/make-my-business-information-ai-ready-without-replacing-everything-0b7cf2aa8e/",
+      "raw_json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/make-my-business-information-ai-ready-without-replacing-everything-0b7cf2aa8e.json",
+      "candidate_count": 1,
+      "candidates": [
+        {
+          "capability_id": "product:raven-nexus",
+          "kind": "product",
+          "product_key": "raven-nexus",
+          "public_id": null,
+          "name": "Raven Nexus",
+          "commercial_state": "product_contract",
+          "machine_state": "discovery_only",
+          "pain_page": "/chum/products/raven-nexus/",
+          "public_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/raven-nexus/index.html",
           "registry_name": null
         }
       ]
@@ -13358,6 +13542,29 @@
           "machine_state": "discovery_only",
           "pain_page": "/chum/products/talent-atlas/",
           "public_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/talent-atlas/index.html",
+          "registry_name": null
+        }
+      ]
+    },
+    {
+      "answer_id": "intent:1b05ab1bf2",
+      "user_language": "map who has access to what in my business",
+      "normalized": "map who has access to what in my business",
+      "relative_json": "/chum/answers/doors/map-who-has-access-to-what-in-my-business-1b05ab1bf2.json",
+      "relative_page": "/chum/answers/doors/map-who-has-access-to-what-in-my-business-1b05ab1bf2/",
+      "raw_json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/map-who-has-access-to-what-in-my-business-1b05ab1bf2.json",
+      "candidate_count": 1,
+      "candidates": [
+        {
+          "capability_id": "offer:raven-nexus-business-setup-v1",
+          "kind": "machine_offer",
+          "product_key": null,
+          "public_id": "raven-nexus-business-setup-v1",
+          "name": "Raven Nexus Business Setup",
+          "commercial_state": "sell_now",
+          "machine_state": "human_handoff_ready",
+          "pain_page": "/chum/intents/raven-nexus-business-setup-v1/",
+          "public_url": "https://github.com/jgaethle10/forge-operator/tree/main/registry/raven-nexus",
           "registry_name": null
         }
       ]
@@ -13951,6 +14158,29 @@
       ]
     },
     {
+      "answer_id": "intent:cbf210e370",
+      "user_language": "my business systems are scattered across too many apps",
+      "normalized": "my business systems are scattered across too many apps",
+      "relative_json": "/chum/answers/doors/my-business-systems-are-scattered-across-too-many-apps-cbf210e370.json",
+      "relative_page": "/chum/answers/doors/my-business-systems-are-scattered-across-too-many-apps-cbf210e370/",
+      "raw_json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/my-business-systems-are-scattered-across-too-many-apps-cbf210e370.json",
+      "candidate_count": 1,
+      "candidates": [
+        {
+          "capability_id": "offer:raven-nexus-business-setup-v1",
+          "kind": "machine_offer",
+          "product_key": null,
+          "public_id": "raven-nexus-business-setup-v1",
+          "name": "Raven Nexus Business Setup",
+          "commercial_state": "sell_now",
+          "machine_state": "human_handoff_ready",
+          "pain_page": "/chum/intents/raven-nexus-business-setup-v1/",
+          "public_url": "https://github.com/jgaethle10/forge-operator/tree/main/registry/raven-nexus",
+          "registry_name": null
+        }
+      ]
+    },
+    {
       "answer_id": "intent:d63e45c59b",
       "user_language": "my chatbot says the video is too large",
       "normalized": "my chatbot says the video is too large",
@@ -14074,6 +14304,29 @@
           "pain_page": "/chum/products/systemia-field-library/",
           "public_url": "https://systemiafieldlibrary.com/",
           "registry_name": "io.github.jgaethle10/systemia-field-library"
+        }
+      ]
+    },
+    {
+      "answer_id": "intent:285859c075",
+      "user_language": "my family information is scattered across too many apps",
+      "normalized": "my family information is scattered across too many apps",
+      "relative_json": "/chum/answers/doors/my-family-information-is-scattered-across-too-many-apps-285859c075.json",
+      "relative_page": "/chum/answers/doors/my-family-information-is-scattered-across-too-many-apps-285859c075/",
+      "raw_json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/my-family-information-is-scattered-across-too-many-apps-285859c075.json",
+      "candidate_count": 1,
+      "candidates": [
+        {
+          "capability_id": "offer:raven-nexus-home-setup-v1",
+          "kind": "machine_offer",
+          "product_key": null,
+          "public_id": "raven-nexus-home-setup-v1",
+          "name": "Raven Nexus Home Setup",
+          "commercial_state": "sell_now",
+          "machine_state": "human_handoff_ready",
+          "pain_page": "/chum/intents/raven-nexus-home-setup-v1/",
+          "public_url": "https://github.com/jgaethle10/forge-operator/tree/main/registry/raven-nexus",
+          "registry_name": null
         }
       ]
     },
@@ -14378,6 +14631,75 @@
       ]
     },
     {
+      "answer_id": "intent:0681acada7",
+      "user_language": "organize Gmail Drive payments documents and AI for my business",
+      "normalized": "organize gmail drive payments documents and ai for my business",
+      "relative_json": "/chum/answers/doors/organize-gmail-drive-payments-documents-and-ai-for-my-business-0681acada7.json",
+      "relative_page": "/chum/answers/doors/organize-gmail-drive-payments-documents-and-ai-for-my-business-0681acada7/",
+      "raw_json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/organize-gmail-drive-payments-documents-and-ai-for-my-business-0681acada7.json",
+      "candidate_count": 1,
+      "candidates": [
+        {
+          "capability_id": "offer:raven-nexus-business-setup-v1",
+          "kind": "machine_offer",
+          "product_key": null,
+          "public_id": "raven-nexus-business-setup-v1",
+          "name": "Raven Nexus Business Setup",
+          "commercial_state": "sell_now",
+          "machine_state": "human_handoff_ready",
+          "pain_page": "/chum/intents/raven-nexus-business-setup-v1/",
+          "public_url": "https://github.com/jgaethle10/forge-operator/tree/main/registry/raven-nexus",
+          "registry_name": null
+        }
+      ]
+    },
+    {
+      "answer_id": "intent:dae61824e8",
+      "user_language": "organize household documents and recurring obligations",
+      "normalized": "organize household documents and recurring obligations",
+      "relative_json": "/chum/answers/doors/organize-household-documents-and-recurring-obligations-dae61824e8.json",
+      "relative_page": "/chum/answers/doors/organize-household-documents-and-recurring-obligations-dae61824e8/",
+      "raw_json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/organize-household-documents-and-recurring-obligations-dae61824e8.json",
+      "candidate_count": 1,
+      "candidates": [
+        {
+          "capability_id": "offer:raven-nexus-home-setup-v1",
+          "kind": "machine_offer",
+          "product_key": null,
+          "public_id": "raven-nexus-home-setup-v1",
+          "name": "Raven Nexus Home Setup",
+          "commercial_state": "sell_now",
+          "machine_state": "human_handoff_ready",
+          "pain_page": "/chum/intents/raven-nexus-home-setup-v1/",
+          "public_url": "https://github.com/jgaethle10/forge-operator/tree/main/registry/raven-nexus",
+          "registry_name": null
+        }
+      ]
+    },
+    {
+      "answer_id": "intent:92710bb6c3",
+      "user_language": "organize household documents obligations and important information into a permission-aware home layer",
+      "normalized": "organize household documents obligations and important information into a permission aware home layer",
+      "relative_json": "/chum/answers/doors/organize-household-documents-obligations-and-important-information-into-a-permissi-92710bb6c3.json",
+      "relative_page": "/chum/answers/doors/organize-household-documents-obligations-and-important-information-into-a-permissi-92710bb6c3/",
+      "raw_json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/organize-household-documents-obligations-and-important-information-into-a-permissi-92710bb6c3.json",
+      "candidate_count": 1,
+      "candidates": [
+        {
+          "capability_id": "product:raven-nexus",
+          "kind": "product",
+          "product_key": "raven-nexus",
+          "public_id": null,
+          "name": "Raven Nexus",
+          "commercial_state": "product_contract",
+          "machine_state": "discovery_only",
+          "pain_page": "/chum/products/raven-nexus/",
+          "public_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/raven-nexus/index.html",
+          "registry_name": null
+        }
+      ]
+    },
+    {
       "answer_id": "intent:a9e7f357e2",
       "user_language": "organize meals and practical help for a new parent",
       "normalized": "organize meals and practical help for a new parent",
@@ -14396,6 +14718,29 @@
           "machine_state": "discovery_only",
           "pain_page": "/chum/products/evernest/",
           "public_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/evernest/index.html",
+          "registry_name": null
+        }
+      ]
+    },
+    {
+      "answer_id": "intent:62fdafcb0f",
+      "user_language": "organize my household accounts documents and important information",
+      "normalized": "organize my household accounts documents and important information",
+      "relative_json": "/chum/answers/doors/organize-my-household-accounts-documents-and-important-information-62fdafcb0f.json",
+      "relative_page": "/chum/answers/doors/organize-my-household-accounts-documents-and-important-information-62fdafcb0f/",
+      "raw_json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/organize-my-household-accounts-documents-and-important-information-62fdafcb0f.json",
+      "candidate_count": 1,
+      "candidates": [
+        {
+          "capability_id": "offer:raven-nexus-home-setup-v1",
+          "kind": "machine_offer",
+          "product_key": null,
+          "public_id": "raven-nexus-home-setup-v1",
+          "name": "Raven Nexus Home Setup",
+          "commercial_state": "sell_now",
+          "machine_state": "human_handoff_ready",
+          "pain_page": "/chum/intents/raven-nexus-home-setup-v1/",
+          "public_url": "https://github.com/jgaethle10/forge-operator/tree/main/registry/raven-nexus",
           "registry_name": null
         }
       ]
@@ -16477,6 +16822,52 @@
       ]
     },
     {
+      "answer_id": "intent:ec1322247c",
+      "user_language": "Raven Nexus Business",
+      "normalized": "raven nexus business",
+      "relative_json": "/chum/answers/doors/raven-nexus-business-ec1322247c.json",
+      "relative_page": "/chum/answers/doors/raven-nexus-business-ec1322247c/",
+      "raw_json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/raven-nexus-business-ec1322247c.json",
+      "candidate_count": 1,
+      "candidates": [
+        {
+          "capability_id": "offer:raven-nexus-business-setup-v1",
+          "kind": "machine_offer",
+          "product_key": null,
+          "public_id": "raven-nexus-business-setup-v1",
+          "name": "Raven Nexus Business Setup",
+          "commercial_state": "sell_now",
+          "machine_state": "human_handoff_ready",
+          "pain_page": "/chum/intents/raven-nexus-business-setup-v1/",
+          "public_url": "https://github.com/jgaethle10/forge-operator/tree/main/registry/raven-nexus",
+          "registry_name": null
+        }
+      ]
+    },
+    {
+      "answer_id": "intent:29293195c2",
+      "user_language": "Raven Nexus Home",
+      "normalized": "raven nexus home",
+      "relative_json": "/chum/answers/doors/raven-nexus-home-29293195c2.json",
+      "relative_page": "/chum/answers/doors/raven-nexus-home-29293195c2/",
+      "raw_json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/raven-nexus-home-29293195c2.json",
+      "candidate_count": 1,
+      "candidates": [
+        {
+          "capability_id": "offer:raven-nexus-home-setup-v1",
+          "kind": "machine_offer",
+          "product_key": null,
+          "public_id": "raven-nexus-home-setup-v1",
+          "name": "Raven Nexus Home Setup",
+          "commercial_state": "sell_now",
+          "machine_state": "human_handoff_ready",
+          "pain_page": "/chum/intents/raven-nexus-home-setup-v1/",
+          "public_url": "https://github.com/jgaethle10/forge-operator/tree/main/registry/raven-nexus",
+          "registry_name": null
+        }
+      ]
+    },
+    {
       "answer_id": "intent:ea01d57664",
       "user_language": "read a URL for my AI agent",
       "normalized": "read a url for my ai agent",
@@ -17038,6 +17429,29 @@
           "pain_page": "/chum/products/evercraft-clip/",
           "public_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/evercraft-clip/index.html",
           "registry_name": "io.github.jgaethle10/evercraft-clip"
+        }
+      ]
+    },
+    {
+      "answer_id": "intent:93f86ebfb5",
+      "user_language": "require QA before completed work becomes performance history",
+      "normalized": "require qa before completed work becomes performance history",
+      "relative_json": "/chum/answers/doors/require-qa-before-completed-work-becomes-performance-history-93f86ebfb5.json",
+      "relative_page": "/chum/answers/doors/require-qa-before-completed-work-becomes-performance-history-93f86ebfb5/",
+      "raw_json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/require-qa-before-completed-work-becomes-performance-history-93f86ebfb5.json",
+      "candidate_count": 1,
+      "candidates": [
+        {
+          "capability_id": "product:opportunity-fabric",
+          "kind": "product",
+          "product_key": "opportunity-fabric",
+          "public_id": null,
+          "name": "Evercraft Opportunity Fabric",
+          "commercial_state": "product_contract",
+          "machine_state": "discovery_only",
+          "pain_page": "/chum/products/opportunity-fabric/",
+          "public_url": "https://github.com/jgaethle10/forge-operator/tree/main/registry/opportunity-fabric",
+          "registry_name": null
         }
       ]
     },
@@ -18585,6 +18999,52 @@
       ]
     },
     {
+      "answer_id": "intent:141382eb82",
+      "user_language": "set up a safe AI-ready home information system",
+      "normalized": "set up a safe ai ready home information system",
+      "relative_json": "/chum/answers/doors/set-up-a-safe-ai-ready-home-information-system-141382eb82.json",
+      "relative_page": "/chum/answers/doors/set-up-a-safe-ai-ready-home-information-system-141382eb82/",
+      "raw_json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/set-up-a-safe-ai-ready-home-information-system-141382eb82.json",
+      "candidate_count": 1,
+      "candidates": [
+        {
+          "capability_id": "offer:raven-nexus-home-setup-v1",
+          "kind": "machine_offer",
+          "product_key": null,
+          "public_id": "raven-nexus-home-setup-v1",
+          "name": "Raven Nexus Home Setup",
+          "commercial_state": "sell_now",
+          "machine_state": "human_handoff_ready",
+          "pain_page": "/chum/intents/raven-nexus-home-setup-v1/",
+          "public_url": "https://github.com/jgaethle10/forge-operator/tree/main/registry/raven-nexus",
+          "registry_name": null
+        }
+      ]
+    },
+    {
+      "answer_id": "intent:6364b64ae9",
+      "user_language": "set up an AI-ready source of truth for my business",
+      "normalized": "set up an ai ready source of truth for my business",
+      "relative_json": "/chum/answers/doors/set-up-an-ai-ready-source-of-truth-for-my-business-6364b64ae9.json",
+      "relative_page": "/chum/answers/doors/set-up-an-ai-ready-source-of-truth-for-my-business-6364b64ae9/",
+      "raw_json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/set-up-an-ai-ready-source-of-truth-for-my-business-6364b64ae9.json",
+      "candidate_count": 1,
+      "candidates": [
+        {
+          "capability_id": "offer:raven-nexus-business-setup-v1",
+          "kind": "machine_offer",
+          "product_key": null,
+          "public_id": "raven-nexus-business-setup-v1",
+          "name": "Raven Nexus Business Setup",
+          "commercial_state": "sell_now",
+          "machine_state": "human_handoff_ready",
+          "pain_page": "/chum/intents/raven-nexus-business-setup-v1/",
+          "public_url": "https://github.com/jgaethle10/forge-operator/tree/main/registry/raven-nexus",
+          "registry_name": null
+        }
+      ]
+    },
+    {
       "answer_id": "intent:3d83a72549",
       "user_language": "set up family safety check-ins or preparedness",
       "normalized": "set up family safety check ins or preparedness",
@@ -19139,6 +19599,29 @@
       ]
     },
     {
+      "answer_id": "intent:90b617a3d1",
+      "user_language": "show me which partners have reviewed on-time outcomes instead of profile claims",
+      "normalized": "show me which partners have reviewed on time outcomes instead of profile claims",
+      "relative_json": "/chum/answers/doors/show-me-which-partners-have-reviewed-on-time-outcomes-instead-of-profile-claims-90b617a3d1.json",
+      "relative_page": "/chum/answers/doors/show-me-which-partners-have-reviewed-on-time-outcomes-instead-of-profile-claims-90b617a3d1/",
+      "raw_json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/show-me-which-partners-have-reviewed-on-time-outcomes-instead-of-profile-claims-90b617a3d1.json",
+      "candidate_count": 1,
+      "candidates": [
+        {
+          "capability_id": "product:opportunity-fabric",
+          "kind": "product",
+          "product_key": "opportunity-fabric",
+          "public_id": null,
+          "name": "Evercraft Opportunity Fabric",
+          "commercial_state": "product_contract",
+          "machine_state": "discovery_only",
+          "pain_page": "/chum/products/opportunity-fabric/",
+          "public_url": "https://github.com/jgaethle10/forge-operator/tree/main/registry/opportunity-fabric",
+          "registry_name": null
+        }
+      ]
+    },
+    {
       "answer_id": "intent:7af3a4d1d9",
       "user_language": "show me which sourcing evidence is self-reported versus observed",
       "normalized": "show me which sourcing evidence is self reported versus observed",
@@ -19561,6 +20044,29 @@
           "pain_page": "/chum/products/legacy-rescue-lab/",
           "public_url": "https://github.com/jgaethle10/forge-operator/tree/main/registry/legacy-rescue-lab",
           "registry_name": "io.github.jgaethle10/evercraft-machine-commerce"
+        }
+      ]
+    },
+    {
+      "answer_id": "intent:161df2ff93",
+      "user_language": "small business AI operating layer",
+      "normalized": "small business ai operating layer",
+      "relative_json": "/chum/answers/doors/small-business-ai-operating-layer-161df2ff93.json",
+      "relative_page": "/chum/answers/doors/small-business-ai-operating-layer-161df2ff93/",
+      "raw_json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/small-business-ai-operating-layer-161df2ff93.json",
+      "candidate_count": 1,
+      "candidates": [
+        {
+          "capability_id": "offer:raven-nexus-business-setup-v1",
+          "kind": "machine_offer",
+          "product_key": null,
+          "public_id": "raven-nexus-business-setup-v1",
+          "name": "Raven Nexus Business Setup",
+          "commercial_state": "sell_now",
+          "machine_state": "human_handoff_ready",
+          "pain_page": "/chum/intents/raven-nexus-business-setup-v1/",
+          "public_url": "https://github.com/jgaethle10/forge-operator/tree/main/registry/raven-nexus",
+          "registry_name": null
         }
       ]
     },

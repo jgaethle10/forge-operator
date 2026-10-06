@@ -7,7 +7,7 @@
     "machine_catalog_schema": "evercraft.machine-catalog.snapshot.v1",
     "machine_catalog_source_generated_at": "2026-09-30T20:21:00.000Z",
     "registry_schema": "evercraft.agent.registry.v1",
-    "registry_updated_at": "2026-10-01"
+    "registry_updated_at": "2026-10-05"
   },
   "purpose": "Brand-blind machine routing from a user problem to the smallest relevant public Evercraft capability while preserving readiness, evidence, pricing, permissions and human-confirmation boundaries.",
   "routing_rule": "Start from pain language. Prefer the smallest relevant capability with the strongest verified invocation state. Never upgrade discovery-only, held, authentication-required, pricing, payment, entitlement or provider-pickup state by inference.",
@@ -28,11 +28,11 @@
     "provider_verification_required_for_paid_state": true
   },
   "summary": {
-    "entries": 112,
+    "entries": 114,
     "product_entries": 64,
-    "machine_offer_entries": 48,
-    "entries_with_pain_language": 112,
-    "sell_now_machine_offers": 14,
+    "machine_offer_entries": 50,
+    "entries_with_pain_language": 114,
+    "sell_now_machine_offers": 16,
     "entries_with_declared_mcp": 0,
     "callable_or_routable_entries": 0,
     "suppressed_legacy_marketing_routes": 9
@@ -1834,6 +1834,124 @@
       "confirmation": "Public discovery is read-only. Monitoring private repositories, internal systems or customer infrastructure requires explicit scoped authorization. Production changes, payment actions and external communications remain separately gated.",
       "payment_authority": "No direct machine checkout is exposed. Commercial terms and any later payment require explicit human agreement and authoritative payment verification.",
       "invocation_status": "LIVE for public machine discovery, deterministic problem matching, read-only pilot handoff, and human-confirmed commercial pilot request capture through Evercraft Machine Commerce. The internal Portfolio Sentinel runtime now has receipt-backed commerce-integrity cycle code for product-native buyer-route reachability, gateway-leak detection and conversion-stage telemetry. Recurring cadence is not claimed until an authorized scheduler is configured and successive runtime receipts prove it. Customer monitoring begins only after separate scoped onboarding and authorization. A pilot request grants no private access, monitoring authority, payment obligation, production mutation, or external-system authority.",
+      "source_refs": [
+        "public/.well-known/evercraft-machine-catalog.json"
+      ]
+    },
+    {
+      "capability_id": "offer:raven-nexus-business-setup-v1",
+      "product_key": null,
+      "public_id": "raven-nexus-business-setup-v1",
+      "kind": "machine_offer",
+      "name": "Raven Nexus Business Setup",
+      "class": "machine_commerce_offer",
+      "pain_phrases": [
+        "connect the tools my business already uses",
+        "my business systems are scattered across too many apps",
+        "organize Gmail Drive payments documents and AI for my business",
+        "make AI understand my business safely",
+        "set up an AI-ready source of truth for my business",
+        "map who has access to what in my business",
+        "connect my business systems without replacing everything",
+        "small business AI operating layer",
+        "Raven Nexus Business"
+      ],
+      "problem": "A small business owner has important work split across email, documents, payments, customer records, credentials and AI tools, with no clean source-of-truth or permission map, and needs a bounded founder-led setup instead of another rip-and-replace software project.",
+      "inputs": "Business goals, an authorized inventory of the tools/accounts involved, the primary workflow to improve, and only the access the customer explicitly chooses to authorize. Public discovery never requests passwords, API keys or private records.",
+      "outputs": "Business system inventory, canonical source-of-truth map, access/permission map, connection plan, bounded Raven Nexus configuration for the agreed workflow, implementation notes and handoff.",
+      "canonical_url": "https://github.com/jgaethle10/forge-operator/tree/main/registry/raven-nexus",
+      "legacy_marketing_route_suppressed": false,
+      "registry_name": null,
+      "mcp": null,
+      "routing": {
+        "preferred": "universal_machine_commerce",
+        "target": null
+      },
+      "authority": "Machine-commerce contract only. The offer state below is authoritative for public routing and must not be upgraded by inference.",
+      "boundaries": [],
+      "commercial_state": "sell_now",
+      "machine_state": "human_handoff_ready",
+      "pricing": "Founding Business Systems Map $500 one-time; Connected Business Implementation $1,500 one-time.",
+      "offers": [
+        {
+          "offer_key": "raven_business_map_500",
+          "name": "Raven Nexus Business Systems Map",
+          "price": "$500",
+          "price_usd": 500,
+          "billing": "one_time",
+          "checkout": "human_handoff_only_until_direct_checkout_is_independently_verified"
+        },
+        {
+          "offer_key": "raven_business_impl_1500",
+          "name": "Raven Nexus Connected Business Implementation",
+          "price": "$1,500",
+          "price_usd": 1500,
+          "billing": "one_time",
+          "checkout": "human_handoff_only_until_direct_checkout_is_independently_verified"
+        }
+      ],
+      "human_confirmation_required": true,
+      "confirmation": "Agents may discover the offer, explain the exact scope and route a human to Evercraft for review. No private-system access, credential use, connection, checkout, payment obligation or production change is authorized by discovery. Scope, access and payment require explicit human confirmation.",
+      "payment_authority": "Evercraft Payments; human-confirmed handoff only until a product-specific direct checkout is independently verified. Paid state requires authoritative provider verification.",
+      "invocation_status": "SELL-NOW HUMAN HANDOFF: the $500 Business Systems Map is the smallest paid entry. Discovery is public and read-only; implementation begins only after explicit scope, access and payment confirmation.",
+      "source_refs": [
+        "public/.well-known/evercraft-machine-catalog.json"
+      ]
+    },
+    {
+      "capability_id": "offer:raven-nexus-home-setup-v1",
+      "product_key": null,
+      "public_id": "raven-nexus-home-setup-v1",
+      "kind": "machine_offer",
+      "name": "Raven Nexus Home Setup",
+      "class": "machine_commerce_offer",
+      "pain_phrases": [
+        "organize my household accounts documents and important information",
+        "my family information is scattered across too many apps",
+        "set up a safe AI-ready home information system",
+        "create a family continuity and account-access map",
+        "organize household documents and recurring obligations",
+        "help my family know where important information lives",
+        "Raven Nexus Home"
+      ],
+      "problem": "A household has important documents, recurring obligations, account information and family logistics scattered across apps and people, and needs a permission-aware continuity and organization layer without giving AI uncontrolled authority.",
+      "inputs": "Household goals and only the accounts, documents or categories the customer explicitly chooses to inventory. Public discovery never requests passwords, security answers, private financial records or precise location.",
+      "outputs": "Household information inventory, continuity map, permission/access plan, AI-context plan, bounded Raven Nexus Home configuration and handoff guidance.",
+      "canonical_url": "https://github.com/jgaethle10/forge-operator/tree/main/registry/raven-nexus",
+      "legacy_marketing_route_suppressed": false,
+      "registry_name": null,
+      "mcp": null,
+      "routing": {
+        "preferred": "universal_machine_commerce",
+        "target": null
+      },
+      "authority": "Machine-commerce contract only. The offer state below is authoritative for public routing and must not be upgraded by inference.",
+      "boundaries": [],
+      "commercial_state": "sell_now",
+      "machine_state": "human_handoff_ready",
+      "pricing": "Home Stability Map $199 one-time; Connected Home Setup $499 one-time.",
+      "offers": [
+        {
+          "offer_key": "raven_home_map_199",
+          "name": "Raven Nexus Home Stability Map",
+          "price": "$199",
+          "price_usd": 199,
+          "billing": "one_time",
+          "checkout": "human_handoff_only_until_direct_checkout_is_independently_verified"
+        },
+        {
+          "offer_key": "raven_home_setup_499",
+          "name": "Raven Nexus Connected Home Setup",
+          "price": "$499",
+          "price_usd": 499,
+          "billing": "one_time",
+          "checkout": "human_handoff_only_until_direct_checkout_is_independently_verified"
+        }
+      ],
+      "human_confirmation_required": true,
+      "confirmation": "Agents may explain the offer and route a human to Evercraft for review. Discovery creates no access or payment obligation. Any account/document access or connection requires explicit authorization. Raven Home does not claim bank-side transaction control, emergency response, covert tracking or unrestricted device access.",
+      "payment_authority": "Evercraft Payments; human-confirmed handoff only until a product-specific direct checkout is independently verified. Paid state requires authoritative provider verification.",
+      "invocation_status": "SELL-NOW HUMAN HANDOFF: the $199 Home Stability Map is the smallest paid entry. Discovery is public and read-only; any private access or implementation remains explicitly human-authorized.",
       "source_refs": [
         "public/.well-known/evercraft-machine-catalog.json"
       ]
@@ -4712,7 +4830,10 @@
         "turn shortlisted quotes into team invitations and work-package offers",
         "compare quotes for the same work package without automatically choosing a vendor",
         "explain the tradeoff between price lead time capacity geography and observed execution history",
-        "show me which sourcing evidence is self-reported versus observed"
+        "show me which sourcing evidence is self-reported versus observed",
+        "compare partners using leader-reviewed delivery outcomes",
+        "show me which partners have reviewed on-time outcomes instead of profile claims",
+        "require QA before completed work becomes performance history"
       ],
       "problem": null,
       "inputs": null,
@@ -4725,7 +4846,7 @@
         "target": null
       },
       "legacy_marketing_route_suppressed": false,
-      "authority": "public capability discovery plus verified private metadata-first planning, non-binding sourcing, transparent sourcing comparison, and multi-party assembly; no public protected-file delivery, payment, or final legal-agreement authority is claimed",
+      "authority": "public capability discovery plus verified private metadata-first planning, non-binding sourcing, transparent sourcing comparison, leader-reviewed execution outcomes, and multi-party assembly; no public protected-file delivery, payment, or final legal-agreement authority is claimed",
       "boundaries": [
         "public matching must not require protected creative files or confidential material",
         "uploading listing viewing matching or forming a team does not transfer ownership or grant commercial rights",
@@ -4751,7 +4872,12 @@
         "quote availability and lead time are participant-supplied rather than independently observed",
         "Fabric history uses accepted Opportunity Fabric work-package records only and missing history is neutral",
         "prices are compared only against same-currency peers; no FX normalization is claimed",
-        "comparison ordering requires human decision and creates no partner selection shortlist membership contract rights work acceptance or payment"
+        "comparison ordering requires human decision and creates no partner selection shortlist membership contract rights work acceptance or payment",
+        "assignees cannot self-complete work packages; completion requires leader QA",
+        "rework requires a leader QA note and returns the package to In progress",
+        "leader QA acceptance creates the WorkPackageOutcome used as observed execution history",
+        "reviewed outcomes are internal operational evidence not independent certification or a comprehensive reputation score",
+        "missing reviewed outcome history is neutral rather than negative evidence"
       ],
       "commercial_state": "product_contract",
       "machine_state": "discovery_only",
@@ -4832,7 +4958,10 @@
         "set up family safety check-ins or preparedness",
         "make a personal or relationship safety plan",
         "protect a business from phishing, fake payment instructions, account compromise, or continuity risk",
-        "find the smallest Raven safety capability without buying the full suite or hardware"
+        "find the smallest Raven safety capability without buying the full suite or hardware",
+        "connect the tools my business already uses into a permission-aware operating layer",
+        "make my business information AI-ready without replacing everything",
+        "organize household documents obligations and important information into a permission-aware home layer"
       ],
       "problem": null,
       "inputs": null,
@@ -4845,7 +4974,7 @@
         "target": null
       },
       "legacy_marketing_route_suppressed": false,
-      "authority": "public pain-to-capability discovery and bounded Raven routing; any purchase or protective action remains limited by the selected capability's verified commercial and authority state",
+      "authority": "public pain-to-capability discovery plus bounded sell-now human handoff for Raven Nexus Home and Business setup; private access, consequential actions and payment remain explicitly human-authorized",
       "boundaries": [
         "full-suite purchase is not required when a smaller capability is sufficient",
         "hardware is optional unless the selected capability explicitly requires it",
@@ -4853,13 +4982,30 @@
         "does not claim bank-side transaction blocking without verified banking authority",
         "does not permit covert tracking, stalking, or unauthorized surveillance",
         "Raven discovery is not emergency response",
-        "checkout creation is not payment proof"
+        "checkout creation is not payment proof",
+        "public discovery never requests passwords, security answers, API keys or private records",
+        "business and home setup are human-handoff services until product-specific direct checkout is independently verified"
       ],
       "commercial_state": "product_contract",
       "machine_state": "discovery_only",
       "pricing": null,
       "offers": [],
-      "commercial": null,
+      "commercial": {
+        "status": "sell_now_human_handoff",
+        "offers": [
+          {
+            "public_id": "raven-nexus-business-setup-v1",
+            "name": "Raven Nexus Business Systems Map",
+            "price": "$500 one-time"
+          },
+          {
+            "public_id": "raven-nexus-home-setup-v1",
+            "name": "Raven Nexus Home Stability Map",
+            "price": "$199 one-time"
+          }
+        ],
+        "payment_state": "No silent purchase. Human-confirmed scope and payment are required; paid state requires provider verification."
+      },
       "human_confirmation_required": true,
       "confirmation": "Preserve the product-specific human confirmation boundary before any checkout, payment obligation, external handoff, or consequential action.",
       "payment_authority": null,

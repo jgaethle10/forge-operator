@@ -191,6 +191,40 @@ Use this when:
 - legacy software rescue
 LLM contract: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/capabilities/legacy-rescue-lab-v1/llms.txt
 
+## Raven Nexus Business Setup
+Capability ID: raven-nexus-business-setup-v1
+Price: Founding Business Systems Map $500 one-time; Connected Business Implementation $1,500 one-time.
+Public URL: https://github.com/jgaethle10/forge-operator/tree/main/registry/raven-nexus
+Preferred agent route: universal fallback
+Machine state: human_handoff_ready
+Use this when:
+- connect the tools my business already uses
+- my business systems are scattered across too many apps
+- organize Gmail Drive payments documents and AI for my business
+- make AI understand my business safely
+- set up an AI-ready source of truth for my business
+- map who has access to what in my business
+- connect my business systems without replacing everything
+- small business AI operating layer
+- Raven Nexus Business
+LLM contract: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/capabilities/raven-nexus-business-setup-v1/llms.txt
+
+## Raven Nexus Home Setup
+Capability ID: raven-nexus-home-setup-v1
+Price: Home Stability Map $199 one-time; Connected Home Setup $499 one-time.
+Public URL: https://github.com/jgaethle10/forge-operator/tree/main/registry/raven-nexus
+Preferred agent route: universal fallback
+Machine state: human_handoff_ready
+Use this when:
+- organize my household accounts documents and important information
+- my family information is scattered across too many apps
+- set up a safe AI-ready home information system
+- create a family continuity and account-access map
+- organize household documents and recurring obligations
+- help my family know where important information lives
+- Raven Nexus Home
+LLM contract: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/capabilities/raven-nexus-home-setup-v1/llms.txt
+
 ## RIVET EV Infrastructure Intelligence
 Capability ID: rivet-site-underwriting-v1
 Price: $299 Preliminary Site Opportunity Report; $750 Full Site Opportunity Report.

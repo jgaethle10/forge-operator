@@ -6,7 +6,7 @@
     "EPS Precise Estimator"
   ],
   "class": "contractor_estimate_and_margin_modeling",
-  "canonical_url": "https://jgaethle10.github.io/forge-operator/apps/eps-estimator/",
+  "canonical_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/eps-estimate-engine/index.html",
   "intents": [
     "estimate this service job",
     "build a contractor estimate from this scope",
@@ -20,13 +20,12 @@
   "boundaries": [
     "internal service-template prices and cost assumptions are estimation inputs, not a public machine-access price",
     "no approved external machine price or payment path is verified",
-    "site verification, proposal issuance, acceptance and payment retain separate authority gates",
-    "the public calculator is a static Evercraft-owned fallback and does not depend on legacy provider at runtime"
+    "site verification, proposal issuance, acceptance and payment retain separate authority gates"
   ],
   "commercial": null,
   "machine_commerce_handoff": null,
-  "human_start_url": "https://jgaethle10.github.io/forge-operator/apps/eps-estimator/",
-  "buyer_frontage_url": "https://jgaethle10.github.io/forge-operator/apps/eps-estimator/",
+  "human_start_url": null,
+  "buyer_frontage_url": null,
   "registry_name": "io.github.jgaethle10/evercraft-machine-commerce",
   "mcp": null,
   "machine_commerce_mcp": null,

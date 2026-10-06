@@ -1211,7 +1211,22 @@
       "page_url": "/chum/products/raven-nexus/",
       "registry_name": null,
       "mcp": null,
-      "commercial": null,
+      "commercial": {
+        "status": "sell_now_human_handoff",
+        "offers": [
+          {
+            "public_id": "raven-nexus-business-setup-v1",
+            "name": "Raven Nexus Business Systems Map",
+            "price": "$500 one-time"
+          },
+          {
+            "public_id": "raven-nexus-home-setup-v1",
+            "name": "Raven Nexus Home Stability Map",
+            "price": "$199 one-time"
+          }
+        ],
+        "payment_state": "No silent purchase. Human-confirmed scope and payment are required; paid state requires provider verification."
+      },
       "human_start_url": null,
       "buyer_frontage_url": null,
       "developer_surfaces": null,
