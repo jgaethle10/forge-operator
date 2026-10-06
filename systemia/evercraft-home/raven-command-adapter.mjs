@@ -25,7 +25,7 @@ export function ravenCommandLanes() {
 export function planRavenCommand({ message, lane = "operations" } = {}, repoRoot) {
   const objective = clean(message);
   if (objective.length < 3) throw new Error("raven_command_too_short");
-  if (objective.length > 4000) throw new Error("raven_command_too_long");
+  if (objective.length > 16000) throw new Error("raven_command_too_long");
 
   const laneKey = clean(lane).toLowerCase() || "operations";
   const laneDef = LANES[laneKey];
