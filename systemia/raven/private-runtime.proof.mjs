@@ -31,10 +31,41 @@ try {
   assert.equal(health.provider_independent_boot, true);
   assert.equal(health.external_ai_required, false);
   assert.equal(health.ai_inference_enabled, false);
+  assert.equal(health.internal_readonly_team_review_enabled, false);
   assert.equal(health.base44_required, false);
   assert.equal(health.execution_authority_granted, false);
   assert.equal(health.identity_boundary, "bound_subject");
   assert.equal(health.direct_browser_auth_supported, false);
+
+  const unconfiguredReview = await fetch(runtime.url + "/v1/team-review", {
+    method: "POST",
+    headers,
+    body: JSON.stringify({
+      schema: "evercraft.nexus.team-review.request.v1",
+      request_id: "proof-team-review",
+      mission_key: "proof-mission",
+      work_key: "proof-work",
+      work_type: "analyze",
+      objective: "Review the bounded proof mission.",
+      requested_team: "commissioned",
+      constraints: {
+        internal_analysis_only: true,
+        read_only: true,
+        no_external_messages: true,
+        no_publication: true,
+        no_deployment: true,
+        no_purchase: true,
+        no_payment: true,
+        no_account_changes: true,
+        no_credential_return: true
+      }
+    })
+  });
+  assert.equal(unconfiguredReview.status, 409);
+  const unconfiguredReviewBody = await unconfiguredReview.json();
+  assert.equal(unconfiguredReviewBody.status, "blocked");
+  assert.equal(unconfiguredReviewBody.base44_used, false);
+  assert.equal(unconfiguredReviewBody.external_side_effects_authorized, false);
 
   const denied = await fetch(runtime.url + "/v1/teams");
   assert.equal(denied.status, 401);
@@ -152,6 +183,7 @@ try {
     systemia_routing: true,
     raw_control_token_persisted: false,
     ai_inference_enabled: false,
+    team_review_fails_closed_without_inference: true,
     execution_authority_granted: false,
     provider_independent_boot: true,
     standalone_runtime_truthful: true,
