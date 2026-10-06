@@ -56,6 +56,20 @@ h1{font-size:clamp(48px,8vw,90px);line-height:.95;letter-spacing:-.065em;margin:
 .btn{display:inline-flex;align-items:center;justify-content:center;border-radius:12px;padding:12px 16px;text-decoration:none;font-weight:720;border:1px solid var(--line);background:#101b31}
 .btn.primary{background:linear-gradient(135deg,var(--blue2),var(--blue));border-color:transparent}
 .btn:hover{transform:translateY(-1px)}
+.offer-hero{padding:72px 0 30px;max-width:900px}
+.offer-hero h1{max-width:900px}
+.offer-price{font-size:clamp(30px,5vw,52px);font-weight:850;letter-spacing:-.045em;margin:18px 0 8px}
+.offer-price-note{color:var(--muted);font-size:14px}
+.offer-grid{display:grid;grid-template-columns:1.1fr .9fr;gap:16px;margin:18px 0 70px}
+.offer-panel{border:1px solid var(--line);background:linear-gradient(180deg,rgba(14,25,48,.82),rgba(9,16,30,.82));border-radius:18px;padding:24px}
+.offer-panel h2{font-size:25px;margin:0 0 14px}
+.offer-panel p,.offer-panel li{color:#c5d2e4;line-height:1.65}
+.offer-panel ul{padding-left:20px}
+.offer-panel .plain{font-size:19px;color:var(--text);font-weight:720}
+.offer-steps{display:grid;gap:10px;margin-top:16px}
+.offer-step{border:1px solid var(--line);border-radius:13px;padding:14px;background:rgba(5,9,20,.35)}
+.offer-step strong{display:block;margin-bottom:4px}
+.offer-proof{border-left:3px solid var(--green);padding:3px 0 3px 14px;color:#c8d8e9;margin-top:18px}
 .trust{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin:34px 0 76px}
 .trust div,.card,.prompt,.doc{
   border:1px solid var(--line);
@@ -101,7 +115,7 @@ footer{border-top:1px solid var(--line);padding:30px 0 48px;color:var(--muted);f
 <div class="wrap">
 <nav>
   <a class="brand" href="/"><img src="/assets/evercraft-icon.png" alt=""><span>Evercraft Fabric</span></a>
-  <div class="navlinks"><a href="/capabilities">Capabilities</a><a href="/support">Support</a><a href="/privacy">Privacy</a><a href="/terms">Terms</a></div>
+  <div class="navlinks"><a href="/offers">Offers</a><a href="/capabilities">Capabilities</a><a href="/support">Support</a><a href="/privacy">Privacy</a><a href="/terms">Terms</a></div>
 </nav>
 ${body}
 <footer><div class="footerline"><span>Evercraft LLC · Public-safe capability routing</span><span class="footerlinks"><a href="/health">System health</a><a href="/support">Support</a><a href="/privacy">Privacy</a><a href="/terms">Terms</a></span></div></footer>
@@ -142,6 +156,283 @@ export function renderMarkdownDocument(title,markdown){
   }
   if(listOpen) out.push('</ul>');
   return shell(title,'<main class="doc">'+out.join('')+'</main>');
+}
+
+
+const OFFER_PAGE_COPY={
+  'audit-center-website-audit-machine-v1':{
+    slug:'website-audit',
+    eyebrow:'Website Audit',
+    headline:"Your website is getting attention. Why isn't it getting customers?",
+    lede:'Give Evercraft the public website. We inspect the evidence, surface the highest-impact problems, and tell you what to fix first.',
+    promise:'A bounded public-web evidence snapshot, automated health score, and the top five prioritized fixes.',
+    send:['Your website URL','What you want the site to produce: calls, leads, bookings, sales, or something else','Anything you already know is broken or frustrating'],
+    get:['A public-web evidence snapshot','A website health score','The five highest-priority fixes','A clear next-step path without forcing a rebuild'],
+    steps:[
+      ['1. Give us the URL','No giant discovery process. Start with the site that exists today.'],
+      ['2. We audit what customers can actually experience','Performance, conversion friction, discoverability, and obvious public failures are evaluated from evidence.'],
+      ['3. You get the short list','The output is prioritized so you know what deserves attention first.']
+    ]
+  },
+  'ibmi-rescue-v1':{
+    slug:'ibmi-rescue',
+    eyebrow:'IBM i Rescue',
+    headline:"Don't touch production until you know what depends on it.",
+    lede:'Evercraft maps the IBM i / AS/400 estate before an upgrade or modernization move turns an undocumented dependency into an outage.',
+    promise:'Start with an IBM i Estate X-Ray. Map the estate, dependencies, jobs, integrations, risk, test needs, and rollback assumptions before production changes.',
+    send:['A bounded description of the estate or workload','Known RPG, CL, COBOL, DB2, vendor, job, or integration context','The upgrade, modernization, or maintenance decision you are trying to make'],
+    get:['An evidence-backed estate map','Undocumented dependency and integration risks','Testing and rollback requirements','A defensible next-step plan before production changes'],
+    steps:[
+      ['1. Bound the estate','Start with one estate or workload, not a giant transformation contract.'],
+      ['2. Reconstruct the evidence','Map code, jobs, integrations, vendor dependencies, and business behavior.'],
+      ['3. Decide with proof','Use the X-Ray to plan the change, deepen into a Proof Sprint, or stop before taking unnecessary risk.']
+    ]
+  },
+  'legacy-rescue-lab-v1':{
+    slug:'legacy-rescue',
+    eyebrow:'Legacy Rescue',
+    headline:'Your software is broken. Rebuilding from scratch is not the first move.',
+    lede:'Evercraft inspects the system you already have, finds the real failure surface, and gives you a rescue path before you throw away working business logic.',
+    promise:'A bounded Legacy Rescue Scan for broken checkouts, abandoned codebases, unreliable AI-built apps, old platforms, and systems nobody trusts enough to touch.',
+    send:['The public URL, repo context, or system description you are authorized to share','What is failing now','What absolutely cannot break during the rescue'],
+    get:['A bounded failure map','The highest-risk technical unknowns','A repair-vs-rebuild recommendation','A scoped rescue path with the scan fee creditable toward an authorized sprint when eligible'],
+    steps:[
+      ['1. Show us the failure','Broken checkout, dead form, abandoned code, unstable app, or migration risk.'],
+      ['2. We map what is actually happening','The scan separates visible symptoms from the underlying rescue surface.'],
+      ['3. Choose the smallest sane repair','Fix, stabilize, migrate, or rebuild only where the evidence justifies it.']
+    ]
+  },
+  'findmypart-paid-hunt-v1':{
+    slug:'findmypart',
+    eyebrow:'FindMyPart',
+    headline:"Can't find the part? Give us the trail. We'll hunt it down.",
+    lede:'For discontinued, obsolete, superseded, salvage, new-old-stock, aftermarket, cross-reference, blueprint, and fabrication-path searches when normal suppliers come up empty.',
+    promise:'Start with a Quick Hunt, then go deeper only if the part actually requires it.',
+    send:['Any part number, casting number, model, marking, dimensions, or photo details you have','What machine or assembly it belongs to','What you have already tried'],
+    get:['Candidate source paths','Supersession and cross-reference leads when available','Salvage, NOS, aftermarket, blueprint, or fabrication paths when relevant','A deeper hunt only when the evidence calls for it'],
+    steps:[
+      ['1. Give us the clues','Even partial markings and machine context can narrow the search.'],
+      ['2. We search beyond the obvious shelf','Cross references, obsolete inventory, donors, salvage, and alternate production paths are in scope.'],
+      ['3. You get the trail','We return the best sourcing path we can substantiate instead of pretending missing evidence is certainty.']
+    ]
+  }
+};
+
+export function offerSlugForCapability(publicId){
+  return OFFER_PAGE_COPY[String(publicId||'')]?.slug||null;
+}
+
+export function offerCapabilityForSlug(slug,capabilities=[]){
+  const wanted=String(slug||'').trim().toLowerCase();
+  if(!wanted) return null;
+  const id=Object.entries(OFFER_PAGE_COPY).find(([,copy])=>copy.slug===wanted)?.[0]||null;
+  return id ? (capabilities||[]).find((item)=>item.public_id===id)||null : null;
+}
+
+function entryPriceLabel(item){
+  const entry=item?.entry_paid_offer||null;
+  if(entry?.price) return entry.price;
+  if(Number.isFinite(entry?.price_usd_normalized)) return '
+  const count=Array.isArray(capabilities)&&capabilities.length
+    ? capabilities.length
+    : Number(capabilityCount)||0;
+  const featured=(Array.isArray(capabilities)?capabilities:[])
+    .filter((item)=>item.commercial_state==='sell_now'&&item.pricing)
+    .slice(0,6);
+  const featuredMarkup=featured.length
+    ? featured.map((item)=>{
+        const problem=item.use_when?.[0]||item.description;
+        const offerSlug=offerSlugForCapability(item.public_id);
+        const href=offerSlug?'/offers/'+encodeURIComponent(offerSlug):'/capabilities/'+encodeURIComponent(item.public_id);
+        return `<article class="card"><h3><a href="${href}" style="text-decoration:none">${escapeHtml(item.name)}</a></h3><p>${escapeHtml(problem)}</p><p class="price">${escapeHtml(item.pricing)}</p><div class="cardlinks"><a class="docs-link" href="${href}">${offerSlug?'See the offer':'See what it does'} →</a></div></article>`;
+      }).join('')
+    : '<article class="card"><h3>Capability catalog</h3><p>Current commercial state is available through the live directory.</p></article>';
+  return shell('Evercraft Fabric',`
+<main>
+  <section class="hero">
+    <div class="kicker"><span class="dot"></span> Evercraft Fabric is online</div>
+    <h1>Bring the problem.<br>Fabric finds the path.</h1>
+    <p class="lede">One permission-aware front door into Evercraft. Describe what you are trying to accomplish in plain language and Fabric routes you to the smallest relevant capability without turning discovery into authority.</p>
+    <div class="actions"><a class="btn primary" href="/capabilities">Explore ${count} capabilities</a><a class="btn" href="/health">View live health</a></div>
+  </section>
+
+  <div class="trust">
+    <div><strong>${count}</strong><span>public-safe capabilities</span></div>
+    <div><strong>Read only</strong><span>discovery by default</span></div>
+    <div><strong>No silent checkout</strong><span>human confirmation stays in control</span></div>
+    <div><strong>Evidence aware</strong><span>state and provenance stay explicit</span></div>
+  </div>
+
+  <section>
+    <div class="eyebrow">How it works</div>
+    <h2>Problem first. Product second.</h2>
+    <p class="sub">You should not need to memorize a software catalog. Fabric interprets the job, compares it with current published capability metadata, and returns the safest useful route it can actually support.</p>
+    <div class="grid">
+      <article class="card"><h3>1. Describe the problem</h3><p>Use normal language. Start with the work, not an Evercraft product name.</p></article>
+      <article class="card"><h3>2. Match the specialist</h3><p>Fabric ranks current capabilities and favors the narrowest truthful fit.</p></article>
+      <article class="card"><h3>3. Continue deliberately</h3><p>Connection options stay explicit. Discovery alone never creates payment or external action.</p></article>
+    </div>
+  </section>
+
+  <section>
+    <div class="eyebrow">Available now</div>
+    <h2>Useful work, not a software scavenger hunt.</h2>
+    <p class="sub">These are current public capabilities whose catalog state says they can be sold now. The offer and pricing shown here come from the same runtime metadata agents see.</p>
+    <div class="grid">${featuredMarkup}</div>
+  </section>
+
+  <section>
+    <div class="eyebrow">Try asking</div>
+    <h2>Real problems are the interface.</h2>
+    <div class="prompts">
+      <article class="prompt"><h3>Hard-to-find parts</h3><p>Route an obsolete component problem to the relevant sourcing capability.</p><code>“I need a discontinued hydraulic valve that normal suppliers cannot locate.”</code></article>
+      <article class="prompt"><h3>EV infrastructure</h3><p>Find the right site-intelligence path for a commercial property.</p><code>“Is this property a good place for EV charging?”</code></article>
+      <article class="prompt"><h3>Website conversion</h3><p>Find the bounded audit surface when traffic is not becoming leads.</p><code>“My website gets traffic but almost nobody contacts us.”</code></article>
+      <article class="prompt"><h3>Large evidence review</h3><p>Route long-form media and document evidence to an evidence-aware workflow.</p><code>“I have hours of video and need a trustworthy timeline and transcript.”</code></article>
+    </div>
+  </section>
+</main>`);
+}
+
+export function renderCapabilities(capabilities=[]){
+  const cards=capabilities.map((item)=>{
+    const docs=(item.connections||[]).find((connection)=>connection.type==='docs');
+    const detail='/capabilities/'+encodeURIComponent(item.public_id);
+    const commercial=item.commercial_state||item.state;
+    return `<article class="capability">
+      <h3>${escapeHtml(item.name)}</h3>
+      <p>${escapeHtml(item.description)}</p>
+      ${item.pricing?`<p class="price">${escapeHtml(item.pricing)}</p>`:''}
+      <span class="badge">${escapeHtml(commercial)}</span>
+      <div class="cardlinks"><a class="docs-link" href="${detail}">View capability →</a>${docs?.url?`<a class="docs-link" href="${escapeHtml(docs.url)}" rel="noreferrer">Machine guide ↗</a>`:''}</div>
+    </article>`;
+  }).join('');
+  return shell('Evercraft Fabric Capabilities',`
+<main>
+  <section class="hero">
+    <div class="eyebrow">Capability directory</div>
+    <h1>What Fabric can route today.</h1>
+    <p class="lede">${capabilities.length} public-safe capabilities. Current offer, availability and authority states come directly from the runtime catalog instead of marketing copy that can drift away from the product.</p>
+  </section>
+  <div class="capability-grid">${cards}</div>
+</main>`);
+}
+
+export function renderCapabilityDetail(item){
+  const docs=(item.connections||[]).filter((connection)=>connection.type==='docs');
+  const useWhen=(item.use_when||[]).slice(0,10);
+  const commercial=item.commercial_state||item.state;
+  const entry=item.entry_paid_offer||null;
+  const entryPrice=entry?.price||(
+    Number.isFinite(entry?.price_usd_normalized) ? '$'+entry.price_usd_normalized : ''
+  );
+  const resources=docs.length
+    ? `<div class="connection-list">${docs.map((connection)=>`<a class="connection" href="${escapeHtml(connection.url)}" rel="noreferrer"><strong>${escapeHtml(connection.label)}</strong><span>${escapeHtml(connection.type)} · ${escapeHtml(connection.state)}</span></a>`).join('')}</div>`
+    : '<p>No separate public documentation route is represented for this capability yet.</p>';
+  const prompts=useWhen.length
+    ? `<ul>${useWhen.map((value)=>`<li>“${escapeHtml(value)}”</li>`).join('')}</ul>`
+    : '<p>This capability is currently discovered from its published problem description.</p>';
+  const startState=item.start_url_state||'not_declared';
+  return shell(item.name+` · Evercraft Fabric`,`
+<main>
+  <section class="hero">
+    <div class="eyebrow">Evercraft capability</div>
+    <h1>${escapeHtml(item.name)}</h1>
+    <p class="lede">${escapeHtml(item.description)}</p>
+    <div class="actions"><a class="btn primary" href="/capabilities">Browse all capabilities</a><a class="btn" href="/health">Verify Fabric health</a></div>
+  </section>
+  <div class="detail-grid">
+    <section class="detail-panel">
+      <h2>When this is the right tool</h2>
+      ${prompts}
+    </section>
+    <section class="detail-panel">
+      <h2>Current offer</h2>
+      ${item.pricing?`<p class="strong">${escapeHtml(item.pricing)}</p>`:'<p>No fixed public price is currently represented by Fabric.</p>'}
+      ${entry?`<p><strong>Easiest published entry:</strong> ${escapeHtml(entry.name)}${entryPrice?' · '+escapeHtml(entryPrice):''}</p>`:''}
+      <p><strong>Commercial state:</strong> ${escapeHtml(commercial)}</p>
+      <p><strong>Machine state:</strong> ${escapeHtml(item.state)}</p>
+      <p><strong>Verified start-path state:</strong> ${escapeHtml(startState)}</p>
+      <p>Discovery itself does not create a charge, paid engagement, deployment, message, or other external action. Fabric will not invent a checkout or start route that the catalog has not verified.</p>
+    </section>
+    <section class="detail-panel">
+      <h2>Continue deliberately</h2>
+      <p>For an AI or agent, use capability ID <code>${escapeHtml(item.public_id)}</code> through Evercraft Fabric. A paid or human continuation is exposed only when the capability publishes a verified start path.</p>
+      ${resources}
+    </section>
+    <section class="detail-panel">
+      <h2>Why the door is trustworthy</h2>
+      <p>This page is rendered from the same live public-safe capability metadata Fabric exposes to agents. If availability, pricing, or routing state changes in the catalog, this surface changes with it.</p>
+      <p><a class="docs-link" href="/capabilities/${encodeURIComponent(item.public_id)}.json">Machine-readable capability JSON →</a></p>
+    </section>
+  </div>
+</main>`);
+}
++entry.price_usd_normalized;
+  return item?.pricing||'See current offer';
+}
+
+export function renderOffers(capabilities=[]){
+  const offers=(capabilities||[])
+    .filter((item)=>item.commercial_state==='sell_now'&&offerSlugForCapability(item.public_id))
+    .map((item)=>{
+      const copy=OFFER_PAGE_COPY[item.public_id];
+      return `<article class="card"><div class="eyebrow">${escapeHtml(copy.eyebrow)}</div><h3><a href="/offers/${escapeHtml(copy.slug)}" style="text-decoration:none">${escapeHtml(copy.headline)}</a></h3><p>${escapeHtml(copy.promise)}</p><p class="price">Starts at ${escapeHtml(entryPriceLabel(item))}</p><div class="cardlinks"><a class="btn primary" href="/offers/${escapeHtml(copy.slug)}">See the offer</a></div></article>`;
+    }).join('');
+  return shell('Evercraft Offers',`
+<main>
+  <section class="hero">
+    <div class="eyebrow">Evercraft offers</div>
+    <h1>One problem.<br>One clear offer.</h1>
+    <p class="lede">No software scavenger hunt. These pages explain the pain, the smallest useful paid entry, what you send, what you get, and what happens next.</p>
+  </section>
+  <div class="grid">${offers||'<article class="card"><h3>No public offer pages are available yet.</h3></article>'}</div>
+</main>`);
+}
+
+export function renderOfferPage(item){
+  const copy=OFFER_PAGE_COPY[item?.public_id];
+  if(!copy) return null;
+  const entry=item.entry_paid_offer||null;
+  const price=entryPriceLabel(item);
+  const offerName=entry?.name||item.name;
+  const send=copy.send.map((x)=>`<li>${escapeHtml(x)}</li>`).join('');
+  const get=copy.get.map((x)=>`<li>${escapeHtml(x)}</li>`).join('');
+  const steps=copy.steps.map(([title,body])=>`<div class="offer-step"><strong>${escapeHtml(title)}</strong><span>${escapeHtml(body)}</span></div>`).join('');
+  return shell(copy.headline+' · Evercraft',`
+<main>
+  <section class="offer-hero">
+    <div class="kicker"><span class="dot"></span> ${escapeHtml(copy.eyebrow)} · available now</div>
+    <h1>${escapeHtml(copy.headline)}</h1>
+    <p class="lede">${escapeHtml(copy.lede)}</p>
+    <div class="offer-price">${escapeHtml(price)}</div>
+    <div class="offer-price-note">${escapeHtml(offerName)} · ${escapeHtml(item.pricing||'')}</div>
+    <div class="actions">
+      <a class="btn primary" href="/capabilities/${encodeURIComponent(item.public_id)}">See technical proof</a>
+      <a class="btn" href="/offers">See other offers</a>
+    </div>
+  </section>
+
+  <div class="offer-grid">
+    <section class="offer-panel">
+      <h2>What you are buying</h2>
+      <p class="plain">${escapeHtml(copy.promise)}</p>
+      <div class="offer-proof">No giant platform commitment is required to understand the first paid step.</div>
+    </section>
+    <section class="offer-panel">
+      <h2>What you send us</h2>
+      <ul>${send}</ul>
+    </section>
+    <section class="offer-panel">
+      <h2>What you get back</h2>
+      <ul>${get}</ul>
+    </section>
+    <section class="offer-panel">
+      <h2>How it works</h2>
+      <div class="offer-steps">${steps}</div>
+    </section>
+  </div>
+</main>`);
 }
 
 export function renderFabricHome({capabilityCount=0,capabilities=[]}={}){
