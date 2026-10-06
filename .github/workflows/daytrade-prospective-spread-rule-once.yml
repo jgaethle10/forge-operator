@@ -1,0 +1,33 @@
+name: DayTrade Prospective Spread Rule Once
+
+on:
+  push:
+    branches:
+      - "systemia/daytrade-practice-camp-2026-10-06-f"
+
+permissions:
+  contents: read
+
+jobs:
+  practice:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Run frozen prospective spread rule
+        env:
+          ALPACA_TRADING: ${{ secrets.ALPACA_TRADING }}
+          ALPACA_TRADING_SECRET: ${{ secrets.ALPACA_TRADING_SECRET }}
+          DAYTRADE_PROSPECTIVE_SPREAD_OUTPUT: artifacts/daytrade-edge/prospective-spread-rule-practice-2026-10-06-f.json
+        run: node systemia/daytrade-lens/edge-prospective-spread-rule-practice.mjs
+      - name: Upload practice receipt
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: daytrade-prospective-spread-rule-${{ github.run_id }}
+          path: artifacts/daytrade-edge/prospective-spread-rule-practice-2026-10-06-f.json
+          if-no-files-found: warn
+          retention-days: 30
