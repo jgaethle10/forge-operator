@@ -99,6 +99,33 @@ Human UI:
 
 - /faie/
 
+## AgNormal / regional food-infrastructure pilot path
+
+The real FAIE UI at `/faie/` contains a one-click AgNormal regional food-infrastructure pilot scope. It does not switch to a canned demo or prewritten answer. The preset only fills the live investigation inputs and sends them through the same FAIE runtime used by every other public investigation.
+
+Regional food-infrastructure scopes are treated as multi-domain evidence problems. FAIE expects coverage across water, soil, heat, energy, infrastructure, logistics, labor, economics, policy, crop health and resilience when those dimensions are relevant. The packet exposes which dimensions are covered, which are missing, independent source-family count, strong-evidence count and decision-readiness state.
+
+The public packet follows the product workflow:
+
+    SENSE
+      -> current relevant evidence + source links
+    CHALLENGE
+      -> uncertainty + missing domains + corroboration gaps
+    DECIDE
+      -> next evidence required before consequential operator review
+
+The packet can be copied or downloaded as JSON client-side without persisting the caller's public question.
+
+Pilot acceptance gate:
+
+- real FAIE runtime, not a separate demo engine
+- no login required for the public preview
+- source lineage visible when a public provenance URL exists
+- missing evidence stays visible
+- controlled-environment coverage gaps are explicit
+- one-click Yakima Valley food-infrastructure scope is available on the real UI
+- human review remains required before consequential action
+
 ## Autonomous loop
 
 The resident runtime can continuously bridge material Systemia Radar signals into FAIE while direct Worldstate dispatches can feed the specialist with the broader domain stream. The Radar bridge is deliberately a fallback/secondary path, not a replacement for the Worldstate subscription contract.
