@@ -1,47 +1,51 @@
 {
   "schema": "evercraft.machine-commerce.distribution.v2",
-  "generated_at": "2026-10-05T22:32:00.000Z",
+  "generated_at": "2026-10-06T16:50:00.000Z",
   "public_id": "evercraft-machine-commerce",
   "registry_name": "io.github.jgaethle10/evercraft-machine-commerce",
   "live_runtime": {
-    "version": "1.2.1",
+    "version": "evercraft-fabric-1.1.0",
     "transport": "streamable-http",
-    "endpoint": null,
-    "health": null,
-    "state": "legacy_provider_retired_owned_route_pending",
-    "authority": "historical_observation_only",
-    "last_verified_at": "2026-09-25T18:32:42Z",
-    "base44_runtime_supported": false
+    "endpoint": "https://fabric.systemiacommandcenters.com/mcp",
+    "health": "https://fabric.systemiacommandcenters.com/health",
+    "state": "owned_fabric_public_https_mcp_verified",
+    "authority": "receipt_backed_owned_public_runtime",
+    "last_verified_at": "2026-10-06T16:12:06.764Z",
+    "base44_runtime_supported": false,
+    "evidence_ref": "conformance/runtime-observations/2026-10-06-evercraft-fabric-operator-edge.json",
+    "capability_count": 48,
+    "read_only": true,
+    "transactional": false
   },
   "destinations": [
     {
       "destination": "Official MCP Registry",
-      "state": "legacy_listing_observed_not_runtime_authority",
+      "state": "legacy_listing_observed_repoint_pending",
       "version": "1.2.1",
       "is_latest": false,
       "observed_at": "2026-09-25T18:32:42Z",
       "evidence_url": "https://registry.modelcontextprotocol.io/v0/servers?search=io.github.jgaethle10%2Fevercraft-machine-commerce",
-      "note": "The v1.2.1 listing was previously observed, but its legacy provider runtime is retired. Do not treat registry presence as a callable Evercraft runtime. Repoint only after an owned public runtime has an external receipt."
+      "note": "The existing registry listing is historical and must not be treated as runtime authority. The current owned universal discovery runtime is https://fabric.systemiacommandcenters.com/mcp and is independently verified; repoint the registry only through the authorized publication chain with a new receipt."
     },
     {
       "destination": "Glama",
-      "state": "legacy_listing_observed_not_runtime_authority",
+      "state": "legacy_listing_observed_repoint_pending",
       "observed_at": "2026-09-25",
       "evidence_url": "https://glama.ai/mcp/connectors?query=namespace%3Aio.github.jgaethle10",
-      "note": "Machine Commerce was previously indexed here. The legacy provider runtime is retired, so this observation is historical discovery evidence only until the directory resolves to a verified owned Evercraft runtime."
+      "note": "Historical indexing may still reference the retired runtime. Current owned universal discovery is the verified Fabric MCP; directory repoint/pickup requires a fresh external receipt."
     },
     {
       "destination": "MCP.Directory",
-      "state": "legacy_submission_stale_owned_resubmission_pending",
+      "state": "legacy_submission_stale_owned_resubmission_ready",
       "submitted_at": "2026-09-25T18:32:01Z",
       "submission_endpoint": "https://mcp.directory/api/submit-server",
       "submission_receipt": "HTTP 200: Server submitted for review!",
-      "note": "The recorded submission targeted the retired runtime era. Do not treat it as a current listing or resubmit until the owned public runtime is externally verified."
+      "note": "The historical submission targeted the retired runtime era. The owned Fabric runtime is now independently verified; a bounded resubmission may proceed only through an authorized directory transport and must capture an external receipt."
     },
     {
       "destination": "PulseMCP",
-      "state": "legacy_upstream_ingestion_not_runtime_authority",
-      "note": "Any ingestion derived from the old Official Registry entry is historical. Verify and repoint only after the owned Evercraft runtime is externally proven."
+      "state": "legacy_upstream_ingestion_repoint_pending",
+      "note": "Any ingestion derived from the old Official Registry entry is historical. The owned Fabric runtime is verified; wait for the registry/directory repoint receipt before calling PulseMCP current."
     },
     {
       "destination": "mcp.so",
@@ -89,12 +93,11 @@
       "vscode-mcp"
     ],
     "revenue_boundary": "Discovery and tool invocation are not checkout, payment, revenue, recommendation, or provider endorsement proof.",
-    "state": "legacy_instrumentation_contract_historical",
-    "runtime_authority": false,
-    "note": "The discovery event contract is historical evidence from the legacy runtime. New owned-runtime instrumentation must be independently proven before being called live."
+    "state": "owned_fabric_runtime_verified_instrumentation_reverification_pending",
+    "runtime_authority": true,
+    "note": "The owned Fabric runtime is externally verified for public read-only capability discovery. Historical Machine Commerce discovery-event instrumentation remains separate and must be reverified against the owned route before attribution claims."
   },
   "next_milestones": [
-    "owned_public_machine_commerce_runtime_verified",
     "registry_listing_repointed_to_owned_runtime",
     "independent_directory_pickup_verified_on_owned_runtime",
     "first_non_synthetic_external_tools_call_on_owned_runtime",
@@ -102,5 +105,5 @@
     "first_attributed_checkout_created",
     "first_provider_verified_payment"
   ],
-  "truth_boundary": "This artifact preserves historical directory observations but advertises no callable Machine Commerce endpoint while the owned public runtime is unverified. Directory presence is not runtime authority, recommendation, payment, or provider endorsement proof."
+  "truth_boundary": "Evercraft Fabric is the current externally verified owned universal discovery MCP. Historical registry/directory listings are not automatically current merely because the owned runtime is live; repointing, pickup, payment and revenue each require their own receipts."
 }
