@@ -1,0 +1,53 @@
+{
+  "schema": "evercraft.daytrade.prospective-spread-rule-practice-summary.v1",
+  "generated_at": "2026-10-06T19:17:00.715Z",
+  "source_run_id": 37516608667,
+  "source_artifact_id": 11438121466,
+  "source_artifact_digest": "sha256:f1d5b534fe8f3ff5e4b63123898f07a175716deb3e7ed688bbc9536dda44b245",
+  "simulation_only": true,
+  "capital_at_risk_usd": 0,
+  "rule_id": "spread-abstention-v1",
+  "frozen_threshold_bps": 3,
+  "results": [
+    {
+      "symbol": "SOXX",
+      "entry_spread_bps": 3.8816927555802403,
+      "decision": "ABSTAIN",
+      "governed_pnl_usd": 0,
+      "always_cross_pnl_usd": -0.011811555075595948,
+      "avoided_pnl_usd": 0.011811555075595948
+    },
+    {
+      "symbol": "SMH",
+      "entry_spread_bps": 1.7317789305480082,
+      "decision": "SIMULATE_MARKETABLE_LONG",
+      "governed_pnl_usd": -0.004722624519867935,
+      "always_cross_pnl_usd": -0.004722624519867935
+    },
+    {
+      "symbol": "QQQ",
+      "entry_spread_bps": 0.7886228017147173,
+      "decision": "SIMULATE_MARKETABLE_LONG",
+      "governed_pnl_usd": 0.00026286390221486045,
+      "always_cross_pnl_usd": 0.00026286390221486045
+    }
+  ],
+  "aggregate": {
+    "traded_count": 2,
+    "abstained_count": 1,
+    "governed_total_pnl_usd": -0.004459760617653075,
+    "always_cross_total_pnl_usd": -0.016271315693249022,
+    "rule_improvement_vs_always_cross_usd": 0.011811555075595948
+  },
+  "interpretation": {
+    "market_phase_et": "CLOSING",
+    "rule_was_frozen_before_snapshot": true,
+    "rule_reduced_loss_but_did_not_make_window_profitable": true,
+    "no_threshold_retuning_after_observation": true,
+    "not_independent_market_validation": true,
+    "not_signal_validation": true,
+    "not_live_authorized": true,
+    "iex_is_not_consolidated_sip_nbbo": true
+  },
+  "live_trade_authority": false
+}
