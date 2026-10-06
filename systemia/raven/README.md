@@ -96,7 +96,7 @@ Evidence rules:
 - Publication, deployment, payments, purchases, account changes and external messages remain unauthorized.
 - The gateway may boot only when an explicit provider and model are configured.
 
-API implementations were checked against current provider documentation on 2026-10-05: Gemini `generateContent`, OpenAI Responses, and Ollama `POST /api/generate`.
+API implementations were checked against current provider documentation through 2026-10-06: Gemini `generateContent` + `models.get`, OpenAI Responses + retrieve-model, and Ollama `POST /api/generate` + local model inventory.
 
 
 ## One-command local inference bootstrap
@@ -117,6 +117,6 @@ bash systemia/raven/bootstrap-local-inference.sh ollama <local-model-id>
 
 For Gemini/OpenAI, the script first checks the Evercraft encrypted provider vault. If no credential is present, it prompts in an interactive terminal with echo disabled and pipes the key over stdin directly into `seal-inference-key.mjs`. The key is never accepted as a command-line argument or environment variable and is never returned by the helper.
 
-The bootstrap then persists only provider/model/vault-path configuration through the user-mode local-organism installer, restarts the owned organism, and verifies loopback health for private Raven and the inference gateway. It deliberately does **not** make a model inference call after setup, so activation cannot silently create provider spend merely to print a green status.
+The bootstrap then persists only provider/model/vault-path configuration through the user-mode local-organism installer, restarts the owned organism, verifies loopback health for private Raven and the inference gateway, and performs a metadata-only provider/model validation. Gemini uses `models.get`, OpenAI uses the retrieve-model endpoint, and Ollama checks the local model inventory. No prompt is sent during validation.
 
-A successful bootstrap proves wiring and resident health. It does not prove the provider credential is valid until a real bounded Raven inference request is executed.
+It deliberately does **not** make a model inference call after setup, so activation cannot silently create an inference charge merely to print a green status. A successful bootstrap proves wiring plus provider-key/model visibility. The canonical Tieton acceptance remains the first bounded model-inference proof.
