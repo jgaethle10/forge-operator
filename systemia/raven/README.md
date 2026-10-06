@@ -97,3 +97,26 @@ Evidence rules:
 - The gateway may boot only when an explicit provider and model are configured.
 
 API implementations were checked against current provider documentation on 2026-10-05: Gemini `generateContent`, OpenAI Responses, and Ollama `POST /api/generate`.
+
+
+## One-command local inference bootstrap
+
+On the Chromebook or another user-owned Linux node, use:
+
+```bash
+bash systemia/raven/bootstrap-local-inference.sh <provider> <model-id>
+```
+
+Examples:
+
+```bash
+bash systemia/raven/bootstrap-local-inference.sh gemini <model-id>
+bash systemia/raven/bootstrap-local-inference.sh openai <model-id>
+bash systemia/raven/bootstrap-local-inference.sh ollama <local-model-id>
+```
+
+For Gemini/OpenAI, the script first checks the Evercraft encrypted provider vault. If no credential is present, it prompts in an interactive terminal with echo disabled and pipes the key over stdin directly into `seal-inference-key.mjs`. The key is never accepted as a command-line argument or environment variable and is never returned by the helper.
+
+The bootstrap then persists only provider/model/vault-path configuration through the user-mode local-organism installer, restarts the owned organism, and verifies loopback health for private Raven and the inference gateway. It deliberately does **not** make a model inference call after setup, so activation cannot silently create provider spend merely to print a green status.
+
+A successful bootstrap proves wiring and resident health. It does not prove the provider credential is valid until a real bounded Raven inference request is executed.

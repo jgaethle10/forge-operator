@@ -39,6 +39,8 @@ jobs:
           node --check systemia/raven/inference-gateway.mjs
           node --check systemia/raven/inference-gateway-runner.mjs
           node --check systemia/raven/resident-runner.mjs
+          node --check systemia/raven/seal-inference-key.mjs
+          bash -n systemia/raven/bootstrap-local-inference.sh
       - name: Prove Raven private runtime core
         run: node systemia/raven/private-runtime.proof.mjs
       - name: Prove Raven team review and secret boundaries
@@ -48,6 +50,7 @@ jobs:
             systemia/raven/private-runtime.team-review.test.mjs \
             systemia/raven/inference-gateway.test.mjs \
             systemia/raven/owned-inference-e2e.test.mjs \
-            systemia/raven/provider-secret-boundary.test.mjs
+            systemia/raven/provider-secret-boundary.test.mjs \
+            systemia/raven/seal-inference-key.test.mjs
       - name: Prove Raven resident runtime wiring
         run: node --test systemia/raven/resident-runner.test.mjs

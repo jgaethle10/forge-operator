@@ -46,6 +46,19 @@ The installer copies the reviewed source into `~/.local/share/evercraft/forge-op
 The service creates no public ingress. Remote Systemia admission can be layered on later as an outbound-only transport without changing the local runtime contracts.
 
 
+### Raven inference activation
+
+The local organism can activate the owned private Raven + inference residents without hand-editing its environment file:
+
+```bash
+bash systemia/raven/bootstrap-local-inference.sh <provider> <model-id>
+```
+
+The helper stores only non-secret provider/model/vault-path configuration in `~/.config/evercraft/local-organism.env`. For hosted providers, the API key is sealed separately into the Evercraft encrypted provider vault and does not enter the systemd environment file.
+
+Systemia Core remains responsible for minting the private Raven control-token files after admission. Those authority files live inside admitted Core state with mode 0600 and are not copied into the public local-organism receipt.
+
+
 
 ## Self-healing health watch
 
