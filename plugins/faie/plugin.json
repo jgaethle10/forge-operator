@@ -19,6 +19,5 @@
     "mcp"
   ],
   "skills": "./skills/",
-  "mcpServers": "./mcp.json",
-  "registryState": "PENDING"
+  "mcpServers": "./mcp.json"
 }
