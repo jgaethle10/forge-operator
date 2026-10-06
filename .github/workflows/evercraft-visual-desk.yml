@@ -1,0 +1,42 @@
+name: Evercraft Visual Desk
+
+on:
+  pull_request:
+    paths:
+      - 'systemia/visual-desk/**'
+      - 'public/visuals/**'
+      - '.github/workflows/evercraft-visual-desk.yml'
+  push:
+    branches: [main]
+    paths:
+      - 'systemia/visual-desk/**'
+      - 'public/visuals/**'
+      - '.github/workflows/evercraft-visual-desk.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  visual-desk-contract:
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Prove visual story factory
+        run: node --test systemia/visual-desk/factory.test.mjs
+
+      - name: Verify public landing surface
+        run: |
+          test -f public/visuals/index.html
+          grep -q 'Evercraft Visual Desk' public/visuals/index.html
+          grep -q 'physical world' public/visuals/index.html
+
+      - name: Preserve publication boundary
+        run: |
+          grep -q "publicationAuthority:false" systemia/visual-desk/factory.mjs
+          grep -q "visual_story_sources_missing" systemia/visual-desk/factory.mjs
