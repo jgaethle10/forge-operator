@@ -86,8 +86,8 @@
     <section class="panel">
       <h2>Start an investigation</h2>
       <div class="meta">Keep the question specific. FAIE works best when the geography and production context are explicit.</div>
-      <button class="preset" id="agnormalPreset" type="button">Load AgNormal greenhouse pilot</button>
-      <div class="pilot-note">This loads a real controlled-environment scope into the live FAIE engine. It does not switch to a canned demo or prewritten answer.</div>
+      <button class="preset" id="agnormalPreset" type="button">Load AgNormal infrastructure pilot</button>
+      <div class="pilot-note">This loads a real regional food-infrastructure scope into the live FAIE engine. It does not switch to a canned demo or prewritten answer.</div>
 
       <form id="form">
         <label for="question">Question</label>
@@ -292,9 +292,9 @@ async function loadState() {
 }
 
 document.getElementById('agnormalPreset').addEventListener('click', () => {
-  document.getElementById('question').value = 'What current evidence could materially affect controlled-environment agriculture and greenhouse feasibility and operating resilience in the Yakima Valley, especially water, heat, power, infrastructure, labor, logistics, and production continuity?';
+  document.getElementById('question').value = 'What current evidence should shape the siting, buildout, crop strategy, economics, and resilience of regionally scaled American food infrastructure in the Yakima Valley using native living soil and natural light, including water, soil, heat, energy, infrastructure, labor, logistics, policy, and production continuity?';
   document.getElementById('region').value = 'yakima-wa';
-  document.getElementById('asset').value = 'greenhouse';
+  document.getElementById('asset').value = 'regional food production infrastructure';
   document.getElementById('crop').value = '';
   document.getElementById('water').value = '';
   document.getElementById('horizon').value = '90';
