@@ -44,6 +44,8 @@ test('Fabric local runtime is read-only, tunnel-compatible, and makes no Base44 
     assert.equal(health.secure_tunnel_compatible,true);
     assert.equal(health.public_plugin_submission_ready,true);
     assert.equal(health.provider_publication_state,'external_to_runtime');
+    assert.equal(health.chum_human_review_path_template,'/api/chum/go/{public_id}');
+    assert.equal(health.chum_human_review_authority,'discovery_review_only');
     assert.equal(health.removed_legacy_base44_connections,2);
     assert.equal(health.removed_legacy_base44_mcp_connections,1);
     assert.deepEqual(health.transport_modes,['application/json','text/event-stream']);
@@ -134,6 +136,21 @@ test('Fabric public customer front door is branded, browsable, and policy-safe',
     assert.match(detail,/Quick start \$49 one-time/);
     assert.match(detail,/I need a native capability right now/);
     assert.equal(detail.includes('base44.app'),false);
+
+    const reviewResponse=await fetch(runtime.url+'/api/chum/go/native-product-v1?surface=test-suite',{
+      redirect:'manual',
+    });
+    assert.equal(reviewResponse.status,302);
+    assert.equal(
+      reviewResponse.headers.get('location'),
+      '/capabilities/native-product-v1?from=chum&surface=test-suite'
+    );
+    assert.equal(reviewResponse.headers.get('x-evercraft-authority'),'discovery-review-only');
+
+    const badReview=await fetch(runtime.url+'/api/chum/go/not-a-real-capability',{redirect:'manual'});
+    assert.equal(badReview.status,404);
+    const badReviewBody=await badReview.json();
+    assert.equal(badReviewBody.external_action_taken,false);
 
     const capabilityJson=await fetch(runtime.url+'/capabilities/native-product-v1.json').then((r)=>r.json());
     assert.equal(capabilityJson.ok,true);
