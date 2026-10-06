@@ -68,9 +68,12 @@ function publicOffer(offer) {
   ).trim() || null;
   const sourcePublicUrl = safeHttps(offer.public_url);
   const gateway = safeHttps(CONFIGURED_GATEWAY_URL);
+  const ownedFabricPublicUrl = publicId
+    ? 'https://fabric.systemiacommandcenters.com/capabilities/' + encodeURIComponent(publicId)
+    : '';
   const fallbackPublicUrl = publicId && gateway
     ? gateway + (gateway.includes('?') ? '&' : '?') + 'view=service&public_id=' + encodeURIComponent(publicId)
-    : '';
+    : ownedFabricPublicUrl;
   return {
     public_id: publicId,
     name: String(offer.name || ''),
@@ -85,7 +88,11 @@ function publicOffer(offer) {
     human_ui_required: Boolean(offer.human_ui_required),
     confirmation: String(offer.confirmation || ''),
     public_url: sourcePublicUrl || fallbackPublicUrl,
-    public_url_source: sourcePublicUrl ? 'source_catalog' : (fallbackPublicUrl ? 'owned_gateway_fallback' : 'held_no_owned_public_url'),
+    public_url_source: sourcePublicUrl
+      ? 'source_catalog'
+      : (fallbackPublicUrl
+        ? (gateway ? 'owned_gateway_fallback' : 'owned_fabric_capability_fallback')
+        : 'held_no_owned_public_url'),
     payment_authority: String(offer.payment_authority || ''),
     invocation_status: isLegacyProviderUrl(offer.invocation_status)
       ? 'HELD: legacy provider runtime retired; awaiting a verified Evercraft-owned route.'
