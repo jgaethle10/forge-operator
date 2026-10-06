@@ -16,8 +16,16 @@ const windows=[
     ],
   },
   {
-    file:"b.json",
+    file:"near.json",
     generated_at:"2026-10-06T16:01:00.000Z",
+    results:[
+      {symbol:"A",entry_spread_bps:0.1,always_cross_pnl_usd:99},
+      {symbol:"B",entry_spread_bps:0.1,always_cross_pnl_usd:99},
+    ],
+  },
+  {
+    file:"b.json",
+    generated_at:"2026-10-06T16:06:00.000Z",
     results:[
       {symbol:"A",entry_spread_bps:2.5,always_cross_pnl_usd:-0.005},
       {symbol:"B",entry_spread_bps:4.5,always_cross_pnl_usd:-0.01},
@@ -38,7 +46,10 @@ const report=buildSpreadThresholdRobustness({
   receiptDir:dir,
   thresholds:[2,3,4,5],
 });
+assert.equal(report.raw_windows,3);
 assert.equal(report.windows,2);
+assert.equal(report.near_duplicate_windows_excluded,1);
+assert.equal(report.minimum_independence_separation_ms,300000);
 assert.equal(report.instrument_decisions,4);
 assert.ok(Math.abs(report.always_cross_total_pnl_usd-(-0.025))<1e-12);
 const t2=report.threshold_grid.find(x=>x.max_entry_spread_bps===2);
