@@ -69,10 +69,13 @@ EVERCRAFT_VISUAL_ORIGIN=https://fabric.systemiacommandcenters.com/visuals \
 Each story emits:
 
 - `index.html`: responsive owned page with canonical, OpenGraph and Twitter metadata
-- `card.svg`: deterministic 1080 x 1350 social visual
-- `manifest.json`: URL, evidence and digest metadata
+- `card-feed.svg`: deterministic 1080 x 1350 feed creative
+- `card-square.svg`: deterministic 1080 x 1080 square creative
+- `card-story.svg`: deterministic 1080 x 1920 vertical/Reel creative
+- `motion.html`: deterministic 1080 x 1920 motion stage with exact-time and exact-frame render controls for Fallen workers
+- `manifest.json`: URL, evidence, platform assets and digest metadata
 - `story.json`: normalized story payload
-- `clip-handoff.json`: downstream Evercraft Clip bundle
+- `clip-handoff.json`: downstream Evercraft Clip bundle with destination-specific preferred assets
 
 The build artifact itself has `publicationAuthority:false`. Existing Clip policy, verified adapters, authorization and provider receipts remain the publication gate.
 
@@ -89,3 +92,16 @@ The target is not "post more graphics." The target is a reusable loop where ever
 3. a source/evidence package,
 4. a distribution handoff,
 5. a durable object we can update, cite and reuse.
+
+
+## Batch factory
+
+Source-backed story objects live under `systemia/visual-desk/stories`. Build every admitted story into one public surface with:
+
+```bash
+node systemia/visual-desk/build-all.mjs systemia/visual-desk/stories public/visuals
+```
+
+The batch build also emits `index.json`, giving Clip, Journal, Radar and other Evercraft systems one machine-readable inventory of the current visual catalog.
+
+The motion stage deliberately exposes `window.__evercraftRenderAt(seconds)` and `window.__evercraftRenderFrame(frame, fps)` instead of relying on wall-clock playback. This means the same story can become a deterministic Reel/Short through the existing Fallen exact-frame renderer without screen-recording a browser animation.
