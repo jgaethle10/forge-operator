@@ -12,6 +12,11 @@ on:
     branches: [main]
     paths:
       - "systemia/raven/**"
+      - "systemia/core/resident-services.json"
+      - "systemia/organism/raven-private-runtime.workflow.json"
+      - "systemia/organism/raven-inference-gateway.workflow.json"
+      - "systemia/evercraft-home/**"
+      - "nexus-work/**"
       - ".github/workflows/raven-private-runtime-core.yml"
   workflow_dispatch:
 
@@ -31,6 +36,8 @@ jobs:
         run: |
           node --check systemia/raven/private-runtime.mjs
           node --check systemia/raven/team-review-runtime.mjs
+          node --check systemia/raven/inference-gateway.mjs
+          node --check systemia/raven/inference-gateway-runner.mjs
           node --check systemia/raven/resident-runner.mjs
       - name: Prove Raven private runtime core
         run: node systemia/raven/private-runtime.proof.mjs
@@ -39,6 +46,8 @@ jobs:
           node --test \
             systemia/raven/team-review-runtime.test.mjs \
             systemia/raven/private-runtime.team-review.test.mjs \
+            systemia/raven/inference-gateway.test.mjs \
+            systemia/raven/owned-inference-e2e.test.mjs \
             systemia/raven/provider-secret-boundary.test.mjs
       - name: Prove Raven resident runtime wiring
         run: node --test systemia/raven/resident-runner.test.mjs

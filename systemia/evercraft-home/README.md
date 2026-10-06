@@ -190,6 +190,19 @@ Google Places stores a fixed non-secret vault key ID while the API key remains e
 `/credentials.html` exposes the supported providers through the private intake surface. Household Fabric runtime consumption is vault-reference-first.
 
 
+### Raven inference provider credentials
+
+Evercraft Home can seal model-provider keys for the owned Raven inference gateway:
+
+- `POST /api/credentials/providers/gemini` with `api_key`
+- `GET /api/credentials/providers/gemini/status`
+- `POST /api/credentials/providers/openai` with `api_key`
+- `GET /api/credentials/providers/openai/status`
+
+These use the same AES-256-GCM provider vault. Model selection is deliberately not stored in the secret envelope; the resident runtime must set `RAVEN_INFERENCE_PROVIDER` and `RAVEN_INFERENCE_MODEL` explicitly. The gateway reads provider secrets only from the private vault and returns only hashes/opaque credential references in internal receipts.
+
+Local Ollama requires no provider credential and therefore does not appear in the credential intake screen.
+
 ### Competition Foundry provider credentials
 
 Evercraft Home is also the owned credential-custody surface for the Systemia Competition Foundry:

@@ -7,7 +7,7 @@ import {
 } from './provider-credentials.mjs';
 
 test('provider credential intake is an explicit allowlist', () => {
-  assert.deepEqual(supportedCredentialProviders(), ['alpaca', 'google-places', 'kroger', 'kaggle', 'numerai', 'facebook-pages']);
+  assert.deepEqual(supportedCredentialProviders(), ['alpaca', 'google-places', 'kroger', 'kaggle', 'numerai', 'facebook-pages', 'gemini', 'openai']);
   assert.equal(credentialProviderSpec('unknown'), null);
   assert.throws(
     () => normalizeProviderCredentialRequest('unknown', {}),
@@ -65,4 +65,21 @@ test('Facebook Pages maps Page identity and Page token into the owned generic cr
   assert.equal(row.apiKeyId, '123456789012345');
   assert.equal(row.apiSecret, 'EAAB-owned-page-access-token-abcdefghijklmnopqrstuvwxyz');
   assert.equal(row.label, 'evercraft-clip');
+});
+
+
+test('Raven Gemini and OpenAI keys map into the owned credential envelope', () => {
+  const gemini = normalizeProviderCredentialRequest('gemini', {
+    api_key: 'AIzaSyExampleRavenInferenceKey123456789',
+  });
+  assert.equal(gemini.provider, 'gemini');
+  assert.equal(gemini.apiKeyId, 'gemini-api-key');
+  assert.equal(gemini.label, 'raven-inference');
+
+  const openai = normalizeProviderCredentialRequest('openai', {
+    api_key: 'sk-example-raven-inference-key-abcdefghijklmnopqrstuvwxyz',
+  });
+  assert.equal(openai.provider, 'openai');
+  assert.equal(openai.apiKeyId, 'openai-api-key');
+  assert.equal(openai.label, 'raven-inference');
 });

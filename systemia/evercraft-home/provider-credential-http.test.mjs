@@ -71,6 +71,28 @@ test('Home seals Google Places and Kroger credentials without echoing secret mat
     assert.equal(numeraiBody.provider, 'numerai');
     assert.equal(JSON.stringify(numeraiBody).includes(numeraiSecret), false);
 
+    const geminiSecret = 'AIzaSyRavenInferenceSecret123456789012345';
+    const geminiResponse = await fetch(runtime.url + '/api/credentials/providers/gemini', {
+      method: 'POST',
+      headers: { 'content-type': 'application/json' },
+      body: JSON.stringify({ api_key: geminiSecret }),
+    });
+    assert.equal(geminiResponse.status, 201);
+    const geminiBody = await geminiResponse.json();
+    assert.equal(geminiBody.provider, 'gemini');
+    assert.equal(JSON.stringify(geminiBody).includes(geminiSecret), false);
+
+    const openaiSecret = 'sk-raven-inference-secret-abcdefghijklmnopqrstuvwxyz';
+    const openaiResponse = await fetch(runtime.url + '/api/credentials/providers/openai', {
+      method: 'POST',
+      headers: { 'content-type': 'application/json' },
+      body: JSON.stringify({ api_key: openaiSecret }),
+    });
+    assert.equal(openaiResponse.status, 201);
+    const openaiBody = await openaiResponse.json();
+    assert.equal(openaiBody.provider, 'openai');
+    assert.equal(JSON.stringify(openaiBody).includes(openaiSecret), false);
+
     const googleStatus = await fetch(runtime.url + '/api/credentials/providers/google-places/status');
     assert.equal(googleStatus.status, 200);
     const googleStatusBody = await googleStatus.json();
@@ -89,6 +111,14 @@ test('Home seals Google Places and Kroger credentials without echoing secret mat
     const numeraiStatus = await fetch(runtime.url + '/api/credentials/providers/numerai/status');
     assert.equal(numeraiStatus.status, 200);
     assert.equal((await numeraiStatus.json()).credentials.length, 1);
+
+    const geminiStatus = await fetch(runtime.url + '/api/credentials/providers/gemini/status');
+    assert.equal(geminiStatus.status, 200);
+    assert.equal((await geminiStatus.json()).credentials.length, 1);
+
+    const openaiStatus = await fetch(runtime.url + '/api/credentials/providers/openai/status');
+    assert.equal(openaiStatus.status, 200);
+    assert.equal((await openaiStatus.json()).credentials.length, 1);
 
     const vault = new ProviderCredentialVault({ stateDir: root });
     const googlePlain = vault.readSecret(googleBody.credential.credential_ref);
@@ -115,6 +145,8 @@ test('Home seals Google Places and Kroger credentials without echoing secret mat
     assert.equal(persisted.includes(krogerSecret), false);
     assert.equal(persisted.includes(kaggleSecret), false);
     assert.equal(persisted.includes(numeraiSecret), false);
+    assert.equal(persisted.includes(geminiSecret), false);
+    assert.equal(persisted.includes(openaiSecret), false);
   } finally {
     await runtime.close();
     fs.rmSync(root, { recursive: true, force: true });

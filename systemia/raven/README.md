@@ -56,3 +56,44 @@ For text/team inference, Raven uses the provider-neutral `nexus-work/inference-c
 The default resident port is `127.0.0.1:4321` and can be changed with `RAVEN_PRIVATE_PORT`. Evercraft Home may use the same Raven control-token file to call the private `/v1/team-review` endpoint. The endpoint can perform internal read-only analysis, research and QA only. Publication, deployment, payments, purchases, account mutation and external communication remain held.
 
 Authenticated Evercraft Home can proxy into Raven through governed Evercraft Identity and Passport primitives without making Raven public.
+
+
+## Owned inference gateway
+
+Raven's model boundary is a separate loopback resident at `127.0.0.1:4322`. Raven remains the team orchestrator and Systemia remains mission authority; the inference gateway only turns a bounded internal prompt into model text plus a provider receipt.
+
+Supported v1 adapters:
+
+- `ollama` — local Ollama at `http://127.0.0.1:11434` by default. No provider credential is required.
+- `gemini` — Google Gemini `models.generateContent`; the API key is read from the Evercraft provider credential vault.
+- `openai` — OpenAI Responses API; the API key is read from the Evercraft provider credential vault.
+
+No provider or model is selected by default. No hosted provider is activated merely by source deployment.
+
+Required runtime bindings:
+
+```bash
+RAVEN_INFERENCE_GATEWAY_TOKEN_FILE=/var/lib/evercraft/raven/inference-gateway-token
+RAVEN_INFERENCE_PROVIDER=ollama|gemini|openai
+RAVEN_INFERENCE_MODEL=<explicit model id>
+```
+
+For Gemini/OpenAI:
+
+```bash
+RAVEN_PROVIDER_CREDENTIAL_STATE_DIR=/var/lib/evercraft/identity/provider-credentials
+```
+
+For local Ollama, `RAVEN_OLLAMA_ORIGIN` may override the default loopback origin.
+
+When the gateway token file is configured on the Raven private resident, Raven defaults its inference origin to `http://127.0.0.1:4322`. The same private file is used only for Raven-to-gateway authority; it is not a model-provider credential.
+
+Evidence rules:
+
+- Base44 is never an inference fallback.
+- Provider completion is not external factual verification.
+- Provider keys are not returned to Raven team results or provider receipts.
+- Publication, deployment, payments, purchases, account changes and external messages remain unauthorized.
+- The gateway may boot only when an explicit provider and model are configured.
+
+API implementations were checked against current provider documentation on 2026-10-05: Gemini `generateContent`, OpenAI Responses, and Ollama `POST /api/generate`.
