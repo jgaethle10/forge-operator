@@ -8,6 +8,16 @@
       "public_hosts": []
     },
     {
+      "service_id": "fabric",
+      "logical_uri": "evercraft://fabric",
+      "public_hosts": [],
+      "observed_hosts": [
+        "fabric.systemiacommandcenters.com"
+      ],
+      "observation_state": "public_https_mcp_verified_root_control_promotion_pending",
+      "evidence_ref": "conformance/runtime-observations/2026-10-06-evercraft-fabric-operator-edge.json"
+    },
+    {
       "service_id": "rivet",
       "logical_uri": "evercraft://rivet",
       "public_hosts": []
