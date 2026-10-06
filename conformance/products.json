@@ -640,8 +640,8 @@
       "mcp_registry": {
         "name": "io.github.jgaethle10/faie",
         "version": "1.1.0",
-        "publication_state": "published_name_endpoint_refresh_pending",
-        "endpoint_state": "owned_direct_endpoint_external_canary_verified_source_ready"
+        "publication_state": "published_receipt_backed",
+        "endpoint_state": "owned_direct_endpoint_registry_published"
       },
       "origin_llms_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/faie/llms.txt",
       "conformance_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/faie/ai-conformance.json",
@@ -657,7 +657,8 @@
       "machine_commerce_public_id": "faie-signal-brief-v1",
       "machine_commerce_handoff_state": "verified_bounded_owned_fabric_route",
       "mcp": "https://fabric.systemiacommandcenters.com/mcp/faie",
-      "live_canary_evidence": "conformance/runtime-observations/2026-10-06-faie-owned-fabric-door.json"
+      "live_canary_evidence": "conformance/runtime-observations/2026-10-06-faie-owned-fabric-door.json",
+      "registry_publication_evidence": "distribution/mcp-registry-publication-receipts/faie-1.1.0.json"
     },
     {
       "product_key": "findmypart",

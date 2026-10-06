@@ -272,7 +272,7 @@ jobs:
 
           while IFS= read -r manifest; do
             case "$manifest" in
-              mcp-registry/ibmi-rescue.json|mcp-registry/foundry-app-escape.json|mcp-registry/site-survive.json|mcp-registry/systemia-remote-ops.json)
+              mcp-registry/ibmi-rescue.json|mcp-registry/foundry-app-escape.json|mcp-registry/site-survive.json|mcp-registry/systemia-remote-ops.json|mcp-registry/faie.json)
                 old="$(mktemp)"
                 new="$(mktemp)"
                 git show "$RELEASE_SHA:$manifest" > "$old"
@@ -305,6 +305,7 @@ jobs:
             plugins/foundry-app-escape
             plugins/site-survive
             plugins/systemia-remote-ops
+            plugins/faie
             public/chum
           )
           existing_paths=()

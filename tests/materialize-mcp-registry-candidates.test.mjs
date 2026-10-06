@@ -11,6 +11,7 @@ const targets=[
   ['foundry-app-escape','io.github.jgaethle10/foundry-app-escape'],
   ['site-survive','io.github.jgaethle10/site-survive'],
   ['systemia-remote-ops','io.github.jgaethle10/systemia-remote-ops'],
+  ['faie','io.github.jgaethle10/faie'],
 ];
 
 function candidate(slug,name,{ready=false,base44=false}={}){
@@ -70,7 +71,7 @@ test('held candidates never enter the publication directory',()=>{
     const receipt=JSON.parse(fs.readFileSync(out,'utf8'));
     assert.equal(receipt.registry_publication_proven,false);
     assert.equal(receipt.materialized.length,0);
-    assert.equal(receipt.held.length,4);
+    assert.equal(receipt.held.length,5);
     for(const [slug] of targets){
       assert.equal(fs.existsSync(path.join(root,'mcp-registry',slug+'.json')),false);
     }
@@ -90,7 +91,7 @@ test('verified candidates materialize exact manifests but still do not claim pub
     execFileSync(process.execPath,[script,'--out',out],{cwd:root,stdio:'pipe'});
     const receipt=JSON.parse(fs.readFileSync(out,'utf8'));
     assert.equal(receipt.registry_publication_proven,false);
-    assert.equal(receipt.materialized.length,4);
+    assert.equal(receipt.materialized.length,5);
     for(const [slug,name] of targets){
       const manifest=JSON.parse(fs.readFileSync(path.join(root,'mcp-registry',slug+'.json'),'utf8'));
       assert.equal(manifest.name,name);

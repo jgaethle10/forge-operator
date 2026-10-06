@@ -100,14 +100,14 @@
     {
       "product": "FAIE",
       "intent": "Evidence-first food-infrastructure, agriculture, water, land, production and resilience intelligence.",
-      "registry_name": null,
-      "registry_state": "pending",
+      "registry_name": "io.github.jgaethle10/faie",
+      "registry_state": "published",
       "remote_mcp": "https://fabric.systemiacommandcenters.com/mcp/faie",
       "runtime_path": null,
       "runtime_workload_class": null,
-      "public_origin_state": "owned_public_https_external_canary_verified",
+      "public_origin_state": "external_canary_verified",
       "plugin_package": "plugins/faie",
-      "state": "public_https_verified_registry_pending",
+      "state": "registry_published_direct_mcp_existing",
       "truth_boundary": "Preserve source provenance, uncertainty, geography, and date boundaries. Do not turn modeled or incomplete evidence into certainty."
     },
     {

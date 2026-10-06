@@ -11,7 +11,7 @@ const outPath=path.resolve(
     : 'artifacts/mcp-registry-materialization-receipt.json'
 );
 
-const TARGETS=['ibmi-rescue','foundry-app-escape','site-survive','systemia-remote-ops'];
+const TARGETS=['ibmi-rescue','foundry-app-escape','site-survive','systemia-remote-ops','faie'];
 fs.mkdirSync(registryDir,{recursive:true});
 
 const materialized=[];

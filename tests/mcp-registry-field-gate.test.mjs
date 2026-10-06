@@ -43,6 +43,23 @@ function rootWithCanary({fieldVerified}){
       public_edge_admission_receipt_ref:fieldVerified?'sha256:'+'c'.repeat(64):null,
     },
   }));
+  products.push({
+    slug:'faie',
+    name:'FAIE',
+    short_description:'proof',
+    long_description:'proof',
+    category:'Business',
+    website_url:'https://fabric.systemiacommandcenters.com/faie/',
+    registry_name:null,
+    mcp_url:null,
+    state:'owned_runtime_route_pending',
+    default_prompt:'proof',
+    keywords:['faie'],
+    intent:'proof',
+    truth_boundary:'proof',
+    capability_public_ids:[],
+    public_origin_state:'owned_runtime_route_pending'
+  });
   fs.writeFileSync(
     path.join(root,'distribution/direct-plugin-specs.json'),
     JSON.stringify({
@@ -103,7 +120,9 @@ test('field-backed canary without executed tools remains held',()=>{
     const specsPath=path.join(root,'distribution/direct-plugin-specs.json');
     const specs=JSON.parse(fs.readFileSync(specsPath,'utf8'));
     for(const product of specs.products){
-      product.public_edge_canary.mcp_tool_calls_verified=false;
+      if(product.public_edge_canary){
+        product.public_edge_canary.mcp_tool_calls_verified=false;
+      }
     }
     fs.writeFileSync(specsPath,JSON.stringify(specs,null,2)+'\n');
     execFileSync(process.execPath,[script],{cwd:root,stdio:'pipe'});
