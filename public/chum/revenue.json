@@ -87,6 +87,7 @@
       "universal_mcp": null,
       "start_url": null,
       "start_url_state": "held_no_owned_public_origin",
+      "start_blocker": "owned_public_execution_origin_not_verified",
       "pain_page": "/chum/intents/aliev-site-opportunity-snapshot-v1/"
     },
     {
@@ -139,6 +140,7 @@
       "universal_mcp": null,
       "start_url": null,
       "start_url_state": "held_no_owned_public_origin",
+      "start_blocker": "owned_public_execution_origin_not_verified",
       "pain_page": "/chum/intents/career-command-interview-practice-machine-v1/"
     },
     {
@@ -191,6 +193,7 @@
       "universal_mcp": null,
       "start_url": null,
       "start_url_state": "held_no_owned_public_origin",
+      "start_blocker": "owned_public_execution_origin_not_verified",
       "pain_page": "/chum/intents/eventwave-paid-promotion-v1/"
     },
     {
@@ -239,6 +242,7 @@
       "universal_mcp": null,
       "start_url": null,
       "start_url_state": "held_no_owned_public_origin",
+      "start_blocker": "owned_public_execution_origin_not_verified",
       "pain_page": "/chum/intents/deck-capital-fit-sprint-machine-v1/"
     },
     {
@@ -281,6 +285,7 @@
       "universal_mcp": null,
       "start_url": null,
       "start_url_state": "held_no_owned_public_origin",
+      "start_blocker": "owned_public_execution_origin_not_verified",
       "pain_page": "/chum/intents/foundry-app-escape-audit-v1/"
     },
     {
@@ -347,6 +352,7 @@
       "universal_mcp": null,
       "start_url": null,
       "start_url_state": "held_no_owned_public_origin",
+      "start_blocker": "owned_public_execution_origin_not_verified",
       "pain_page": "/chum/intents/ibmi-rescue-v1/"
     },
     {
@@ -398,6 +404,7 @@
       "universal_mcp": null,
       "start_url": null,
       "start_url_state": "held_no_owned_public_origin",
+      "start_blocker": "owned_public_execution_origin_not_verified",
       "pain_page": "/chum/intents/website-launch-service-v1/"
     },
     {
@@ -444,6 +451,7 @@
       "universal_mcp": null,
       "start_url": null,
       "start_url_state": "held_no_owned_public_origin",
+      "start_blocker": "owned_public_execution_origin_not_verified",
       "pain_page": "/chum/intents/faie-signal-brief-v1/"
     },
     {
@@ -498,6 +506,7 @@
       "universal_mcp": null,
       "start_url": null,
       "start_url_state": "held_no_owned_public_origin",
+      "start_blocker": "owned_public_execution_origin_not_verified",
       "pain_page": "/chum/intents/findmypart-paid-hunt-v1/"
     },
     {
@@ -555,6 +564,7 @@
       "universal_mcp": null,
       "start_url": null,
       "start_url_state": "held_no_owned_public_origin",
+      "start_blocker": "owned_public_execution_origin_not_verified",
       "pain_page": "/chum/intents/legacy-rescue-lab-v1/"
     },
     {
@@ -614,6 +624,7 @@
       "universal_mcp": null,
       "start_url": null,
       "start_url_state": "held_no_owned_public_origin",
+      "start_blocker": "owned_public_execution_origin_not_verified",
       "pain_page": "/chum/intents/raven-nexus-business-setup-v1/"
     },
     {
@@ -671,6 +682,7 @@
       "universal_mcp": null,
       "start_url": null,
       "start_url_state": "held_no_owned_public_origin",
+      "start_blocker": "owned_public_execution_origin_not_verified",
       "pain_page": "/chum/intents/raven-nexus-home-setup-v1/"
     },
     {
@@ -735,6 +747,7 @@
       "universal_mcp": null,
       "start_url": null,
       "start_url_state": "held_no_owned_public_origin",
+      "start_blocker": "owned_public_execution_origin_not_verified",
       "pain_page": "/chum/intents/rivet-site-underwriting-v1/"
     },
     {
@@ -781,6 +794,7 @@
       "universal_mcp": null,
       "start_url": null,
       "start_url_state": "held_no_owned_public_origin",
+      "start_blocker": "owned_public_execution_origin_not_verified",
       "pain_page": "/chum/intents/roasted-text-pressure-test-machine-v1/"
     },
     {
@@ -823,6 +837,7 @@
       "universal_mcp": null,
       "start_url": null,
       "start_url_state": "held_no_owned_public_origin",
+      "start_blocker": "owned_public_execution_origin_not_verified",
       "pain_page": "/chum/intents/site-survive-rapid-audit-v1/"
     },
     {
@@ -897,6 +912,7 @@
       "universal_mcp": null,
       "start_url": null,
       "start_url_state": "held_no_owned_public_origin",
+      "start_blocker": "owned_public_execution_origin_not_verified",
       "pain_page": "/chum/intents/audit-center-website-audit-machine-v1/"
     }
   ],
@@ -929,6 +945,7 @@
       "universal_mcp": null,
       "start_url": null,
       "start_url_state": "not_sell_now",
+      "start_blocker": null,
       "pain_page": "/chum/intents/agent-proving-mission-v1/"
     },
     {
@@ -959,6 +976,7 @@
       "universal_mcp": null,
       "start_url": null,
       "start_url_state": "not_sell_now",
+      "start_blocker": null,
       "pain_page": "/chum/intents/ai-capability-install-v1/"
     },
     {
@@ -1029,6 +1047,7 @@
       "universal_mcp": null,
       "start_url": null,
       "start_url_state": "held_no_owned_public_origin",
+      "start_blocker": "owned_public_execution_origin_not_verified",
       "pain_page": "/chum/intents/aliev-site-opportunity-snapshot-v1/"
     },
     {
@@ -1059,6 +1078,7 @@
       "universal_mcp": null,
       "start_url": null,
       "start_url_state": "not_sell_now",
+      "start_blocker": null,
       "pain_page": "/chum/intents/littlered-kdp-export-qa-machine-v1/"
     },
     {
@@ -1090,6 +1110,7 @@
       "universal_mcp": null,
       "start_url": null,
       "start_url_state": "not_sell_now",
+      "start_blocker": null,
       "pain_page": "/chum/intents/buildflow-entity-resolution-machine-v1/"
     },
     {
@@ -1122,6 +1143,7 @@
       "universal_mcp": null,
       "start_url": null,
       "start_url_state": "not_sell_now",
+      "start_blocker": null,
       "pain_page": "/chum/intents/buildflow-enterprise-ops-router-v1/"
     },
     {
@@ -1153,6 +1175,7 @@
       "universal_mcp": null,
       "start_url": null,
       "start_url_state": "not_sell_now",
+      "start_blocker": null,
       "pain_page": "/chum/intents/buildflow-bounded-agent-action-v1/"
     },
     {
@@ -1185,6 +1208,7 @@
       "universal_mcp": null,
       "start_url": null,
       "start_url_state": "not_sell_now",
+      "start_blocker": null,
       "pain_page": "/chum/intents/buildflow-procure-to-pay-shadow-v1/"
     },
     {
@@ -1216,6 +1240,7 @@
       "universal_mcp": null,
       "start_url": null,
       "start_url_state": "not_sell_now",
+      "start_blocker": null,
       "pain_page": "/chum/intents/buildflow-shadow-migration-machine-v1/"
     },
     {
@@ -1249,6 +1274,7 @@
       "universal_mcp": null,
       "start_url": null,
       "start_url_state": "not_sell_now",
+      "start_blocker": null,
       "pain_page": "/chum/intents/buildflow-process-audit-machine-v1/"
     },
     {
@@ -1299,6 +1325,7 @@
       "universal_mcp": null,
       "start_url": null,
       "start_url_state": "not_sell_now",
+      "start_blocker": null,
       "pain_page": "/chum/intents/callproof-complaint-packet-machine-v1/"
     },
     {
@@ -1330,6 +1357,7 @@
       "universal_mcp": null,
       "start_url": null,
       "start_url_state": "not_sell_now",
+      "start_blocker": null,
       "pain_page": "/chum/intents/datafoundry-data-gap-audit-machine-v1/"
     },
     {
@@ -1382,6 +1410,7 @@
       "universal_mcp": null,
       "start_url": null,
       "start_url_state": "held_no_owned_public_origin",
+      "start_blocker": "owned_public_execution_origin_not_verified",
       "pain_page": "/chum/intents/career-command-interview-practice-machine-v1/"
     },
     {
@@ -1420,6 +1449,7 @@
       "universal_mcp": null,
       "start_url": null,
       "start_url_state": "not_sell_now",
+      "start_blocker": null,
       "pain_page": "/chum/intents/career-command-resume-job-fit-machine-v1/"
     },
     {
@@ -1450,6 +1480,7 @@
       "universal_mcp": null,
       "start_url": null,
       "start_url_state": "not_sell_now",
+      "start_blocker": null,
       "pain_page": "/chum/intents/community-health-evidence-brief-v1/"
     },
     {
@@ -1481,6 +1512,7 @@
       "universal_mcp": null,
       "start_url": null,
       "start_url_state": "not_sell_now",
+      "start_blocker": null,
       "pain_page": "/chum/intents/condition-desk-field-ops-v1/"
     },
     {
@@ -1512,6 +1544,7 @@
       "universal_mcp": null,
       "start_url": null,
       "start_url_state": "not_sell_now",
+      "start_blocker": null,
       "pain_page": "/chum/intents/globalstat-country-intelligence-machine-v1/"
     },
     {
@@ -1562,6 +1595,7 @@
       "universal_mcp": null,
       "start_url": null,
       "start_url_state": "not_sell_now",
+      "start_blocker": null,
       "pain_page": "/chum/intents/eps-estimate-engine-machine-v1/"
     },
     {
@@ -1614,6 +1648,7 @@
       "universal_mcp": null,
       "start_url": null,
       "start_url_state": "held_no_owned_public_origin",
+      "start_blocker": "owned_public_execution_origin_not_verified",
       "pain_page": "/chum/intents/eventwave-paid-promotion-v1/"
     },
     {
@@ -1643,6 +1678,7 @@
       "universal_mcp": null,
       "start_url": null,
       "start_url_state": "not_sell_now",
+      "start_blocker": null,
       "pain_page": "/chum/intents/capability-concierge-v1/"
     },
     {
@@ -1678,6 +1714,7 @@
       "universal_mcp": null,
       "start_url": null,
       "start_url_state": "not_sell_now",
+      "start_blocker": null,
       "pain_page": "/chum/intents/evercraft-clip-social-video-v1/"
     },
     {
@@ -1726,6 +1763,7 @@
       "universal_mcp": null,
       "start_url": null,
       "start_url_state": "held_no_owned_public_origin",
+      "start_blocker": "owned_public_execution_origin_not_verified",
       "pain_page": "/chum/intents/deck-capital-fit-sprint-machine-v1/"
     },
     {
@@ -1768,6 +1806,7 @@
       "universal_mcp": null,
       "start_url": null,
       "start_url_state": "held_no_owned_public_origin",
+      "start_blocker": "owned_public_execution_origin_not_verified",
       "pain_page": "/chum/intents/foundry-app-escape-audit-v1/"
     },
     {
@@ -1834,6 +1873,7 @@
       "universal_mcp": null,
       "start_url": null,
       "start_url_state": "held_no_owned_public_origin",
+      "start_blocker": "owned_public_execution_origin_not_verified",
       "pain_page": "/chum/intents/ibmi-rescue-v1/"
     },
     {
@@ -1879,6 +1919,7 @@
       "universal_mcp": null,
       "start_url": null,
       "start_url_state": "not_sell_now",
+      "start_blocker": null,
       "pain_page": "/chum/intents/evercraft-network-resilience-membership-v1/"
     },
     {
@@ -1917,6 +1958,7 @@
       "universal_mcp": null,
       "start_url": null,
       "start_url_state": "not_sell_now",
+      "start_blocker": null,
       "pain_page": "/chum/intents/evercraft-web-browser-agent-v1/"
     },
     {
@@ -1968,6 +2010,7 @@
       "universal_mcp": null,
       "start_url": null,
       "start_url_state": "held_no_owned_public_origin",
+      "start_blocker": "owned_public_execution_origin_not_verified",
       "pain_page": "/chum/intents/website-launch-service-v1/"
     },
     {
@@ -1999,6 +2042,7 @@
       "universal_mcp": null,
       "start_url": null,
       "start_url_state": "not_sell_now",
+      "start_blocker": null,
       "pain_page": "/chum/intents/talent-evidence-profile-machine-v1/"
     },
     {
@@ -2030,6 +2074,7 @@
       "universal_mcp": null,
       "start_url": null,
       "start_url_state": "not_sell_now",
+      "start_blocker": null,
       "pain_page": "/chum/intents/talent-proof-portal-v1/"
     },
     {
@@ -2061,6 +2106,7 @@
       "universal_mcp": null,
       "start_url": null,
       "start_url_state": "not_sell_now",
+      "start_blocker": null,
       "pain_page": "/chum/intents/towi-evidence-research-machine-v1/"
     },
     {
@@ -2107,6 +2153,7 @@
       "universal_mcp": null,
       "start_url": null,
       "start_url_state": "held_no_owned_public_origin",
+      "start_blocker": "owned_public_execution_origin_not_verified",
       "pain_page": "/chum/intents/faie-signal-brief-v1/"
     },
     {
@@ -2161,6 +2208,7 @@
       "universal_mcp": null,
       "start_url": null,
       "start_url_state": "held_no_owned_public_origin",
+      "start_blocker": "owned_public_execution_origin_not_verified",
       "pain_page": "/chum/intents/findmypart-paid-hunt-v1/"
     },
     {
@@ -2195,6 +2243,7 @@
       "universal_mcp": null,
       "start_url": null,
       "start_url_state": "not_sell_now",
+      "start_blocker": null,
       "pain_page": "/chum/intents/findmypart-part-passport-v1/"
     },
     {
@@ -2234,6 +2283,7 @@
       "universal_mcp": null,
       "start_url": null,
       "start_url_state": "not_sell_now",
+      "start_blocker": null,
       "pain_page": "/chum/intents/forensiscope-evidence-review-v1/"
     },
     {
@@ -2265,6 +2315,7 @@
       "universal_mcp": null,
       "start_url": null,
       "start_url_state": "not_sell_now",
+      "start_blocker": null,
       "pain_page": "/chum/intents/freight-load-exception-intelligence-machine-v1/"
     },
     {
@@ -2297,6 +2348,7 @@
       "universal_mcp": null,
       "start_url": null,
       "start_url_state": "not_sell_now",
+      "start_blocker": null,
       "pain_page": "/chum/intents/income-war-map-v1/"
     },
     {
@@ -2327,6 +2379,7 @@
       "universal_mcp": null,
       "start_url": null,
       "start_url_state": "not_sell_now",
+      "start_blocker": null,
       "pain_page": "/chum/intents/large-document-corpus-review-v1/"
     },
     {
@@ -2384,6 +2437,7 @@
       "universal_mcp": null,
       "start_url": null,
       "start_url_state": "held_no_owned_public_origin",
+      "start_blocker": "owned_public_execution_origin_not_verified",
       "pain_page": "/chum/intents/legacy-rescue-lab-v1/"
     },
     {
@@ -2415,6 +2469,7 @@
       "universal_mcp": null,
       "start_url": null,
       "start_url_state": "not_sell_now",
+      "start_blocker": null,
       "pain_page": "/chum/intents/evermaps-evidence-projection-machine-v1/"
     },
     {
@@ -2474,6 +2529,7 @@
       "universal_mcp": null,
       "start_url": null,
       "start_url_state": "held_no_owned_public_origin",
+      "start_blocker": "owned_public_execution_origin_not_verified",
       "pain_page": "/chum/intents/raven-nexus-business-setup-v1/"
     },
     {
@@ -2531,6 +2587,7 @@
       "universal_mcp": null,
       "start_url": null,
       "start_url_state": "held_no_owned_public_origin",
+      "start_blocker": "owned_public_execution_origin_not_verified",
       "pain_page": "/chum/intents/raven-nexus-home-setup-v1/"
     },
     {
@@ -2570,6 +2627,7 @@
       "universal_mcp": null,
       "start_url": null,
       "start_url_state": "not_sell_now",
+      "start_blocker": null,
       "pain_page": "/chum/intents/raven-nexus-pain-router-v1/"
     },
     {
@@ -2600,6 +2658,7 @@
       "universal_mcp": null,
       "start_url": null,
       "start_url_state": "not_sell_now",
+      "start_blocker": null,
       "pain_page": "/chum/intents/findmypart-repair-shop-desk-v1/"
     },
     {
@@ -2664,6 +2723,7 @@
       "universal_mcp": null,
       "start_url": null,
       "start_url_state": "held_no_owned_public_origin",
+      "start_blocker": "owned_public_execution_origin_not_verified",
       "pain_page": "/chum/intents/rivet-site-underwriting-v1/"
     },
     {
@@ -2710,6 +2770,7 @@
       "universal_mcp": null,
       "start_url": null,
       "start_url_state": "held_no_owned_public_origin",
+      "start_blocker": "owned_public_execution_origin_not_verified",
       "pain_page": "/chum/intents/roasted-text-pressure-test-machine-v1/"
     },
     {
@@ -2752,6 +2813,7 @@
       "universal_mcp": null,
       "start_url": null,
       "start_url_state": "held_no_owned_public_origin",
+      "start_blocker": "owned_public_execution_origin_not_verified",
       "pain_page": "/chum/intents/site-survive-rapid-audit-v1/"
     },
     {
@@ -2800,6 +2862,7 @@
       "universal_mcp": null,
       "start_url": null,
       "start_url_state": "not_sell_now",
+      "start_blocker": null,
       "pain_page": "/chum/intents/portfolio-sentinel-v1/"
     },
     {
@@ -2874,6 +2937,7 @@
       "universal_mcp": null,
       "start_url": null,
       "start_url_state": "held_no_owned_public_origin",
+      "start_blocker": "owned_public_execution_origin_not_verified",
       "pain_page": "/chum/intents/audit-center-website-audit-machine-v1/"
     },
     {
@@ -2903,6 +2967,7 @@
       "universal_mcp": null,
       "start_url": null,
       "start_url_state": "not_sell_now",
+      "start_blocker": null,
       "pain_page": "/chum/intents/systemia-yard-runtime-extension-v1/"
     },
     {
@@ -2934,6 +2999,7 @@
       "universal_mcp": null,
       "start_url": null,
       "start_url_state": "not_sell_now",
+      "start_blocker": null,
       "pain_page": "/chum/intents/worldstate-reality-delta-v1/"
     }
   ]

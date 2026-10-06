@@ -2,10 +2,11 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
 <id>urn:evercraft:chum:crawl-pressure</id>
 <title>Evercraft CHUM Freshness Feed</title>
-<updated>2026-10-06T16:15:13.402Z</updated>
+<updated>2026-10-06T16:15:52.705Z</updated>
 <link rel="self" href="/chum/freshness.xml"/>
 <subtitle>Content-hash-backed public discovery changes. Freshness is not proof of provider pickup.</subtitle>
-<entry><id>urn:evercraft:chum:0df896994e643d779039e059</id><title>/chum/hot/index.json</title><updated>2026-10-06T16:15:13.402Z</updated><link href="/chum/hot/index.json"/><category term="priority-80"/></entry>
+<entry><id>urn:evercraft:chum:c5910dc82ba7729311c550e0</id><title>/chum/revenue.json</title><updated>2026-10-06T16:15:52.705Z</updated><link href="/chum/revenue.json"/><category term="priority-90"/></entry>
+<entry><id>urn:evercraft:chum:0df896994e643d779039e059</id><title>/chum/hot/index.json</title><updated>2026-10-06T16:15:52.705Z</updated><link href="/chum/hot/index.json"/><category term="priority-80"/></entry>
 <entry><id>urn:evercraft:chum:5dafb6ab5cdf8759e36a224b</id><title>/chum/intents/foundry-app-escape-audit-v1/</title><updated>2026-10-06T16:12:55.160Z</updated><link href="/chum/intents/foundry-app-escape-audit-v1/"/><category term="priority-158"/></entry>
 <entry><id>urn:evercraft:chum:de0890268089abf0ed23d453</id><title>/chum/intents/website-launch-service-v1/</title><updated>2026-10-06T16:12:55.160Z</updated><link href="/chum/intents/website-launch-service-v1/"/><category term="priority-158"/></entry>
 <entry><id>urn:evercraft:chum:466afa60aec9705dd6b45b49</id><title>/chum/intents/aliev-site-opportunity-snapshot-v1/</title><updated>2026-10-06T16:12:55.160Z</updated><link href="/chum/intents/aliev-site-opportunity-snapshot-v1/"/><category term="priority-98"/></entry>
@@ -104,5 +105,4 @@
 <entry><id>urn:evercraft:chum:f8ba804bc2756ad3abb1de33</id><title>/chum/intents/buildflow-process-audit-machine-v1/</title><updated>2026-10-06T14:45:54.937Z</updated><link href="/chum/intents/buildflow-process-audit-machine-v1/"/><category term="priority-98"/></entry>
 <entry><id>urn:evercraft:chum:9d6524c9016c703c005e429e</id><title>/chum/intents/buildflow-procure-to-pay-shadow-v1/</title><updated>2026-10-06T14:45:54.937Z</updated><link href="/chum/intents/buildflow-procure-to-pay-shadow-v1/"/><category term="priority-98"/></entry>
 <entry><id>urn:evercraft:chum:3c39c6e96d3dfcb0ea37ab94</id><title>/chum/intents/buildflow-shadow-migration-machine-v1/</title><updated>2026-10-06T14:45:54.937Z</updated><link href="/chum/intents/buildflow-shadow-migration-machine-v1/"/><category term="priority-98"/></entry>
-<entry><id>urn:evercraft:chum:6207d2749b74ece51db9e6e9</id><title>/chum/intents/callproof-complaint-packet-machine-v1/</title><updated>2026-10-06T14:45:54.937Z</updated><link href="/chum/intents/callproof-complaint-packet-machine-v1/"/><category term="priority-98"/></entry>
 </feed>
