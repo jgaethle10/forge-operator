@@ -53,7 +53,7 @@ nav{display:flex;align-items:center;justify-content:space-between;padding:24px 0
 h1{font-size:clamp(48px,8vw,90px);line-height:.95;letter-spacing:-.065em;margin:22px 0 24px;max-width:880px}
 .lede{font-size:clamp(18px,2.4vw,25px);line-height:1.5;color:#c4d1e3;max-width:790px}
 .actions{display:flex;flex-wrap:wrap;gap:12px;margin-top:30px}
-.btn{display:inline-flex;align-items:center;justify-content:center;border-radius:12px;padding:12px 16px;text-decoration:none;font-weight:720;border:1px solid var(--line);background:#101b31}
+.btn{display:inline-flex;align-items:center;justify-content:center;border-radius:12px;padding:12px 16px;text-decoration:none;font-weight:720;border:1px solid var(--line);background:#101b31;cursor:pointer;font:inherit;color:inherit}
 .btn.primary{background:linear-gradient(135deg,var(--blue2),var(--blue));border-color:transparent}
 .btn:hover{transform:translateY(-1px)}
 .offer-hero{padding:72px 0 30px;max-width:900px}
@@ -70,6 +70,8 @@ h1{font-size:clamp(48px,8vw,90px);line-height:.95;letter-spacing:-.065em;margin:
 .offer-step{border:1px solid var(--line);border-radius:13px;padding:14px;background:rgba(5,9,20,.35)}
 .offer-step strong{display:block;margin-bottom:4px}
 .offer-proof{border-left:3px solid var(--green);padding:3px 0 3px 14px;color:#c8d8e9;margin-top:18px}
+.checkout-form{display:flex;flex-wrap:wrap;gap:10px;align-items:center;margin-top:30px}
+.checkout-note{width:100%;color:var(--muted);font-size:13px;line-height:1.5;max-width:690px}
 .trust{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin:34px 0 76px}
 .trust div,.card,.prompt,.doc{
   border:1px solid var(--line);
@@ -162,6 +164,7 @@ export function renderMarkdownDocument(title,markdown){
 const OFFER_PAGE_COPY={
   'audit-center-website-audit-machine-v1':{
     slug:'website-audit',
+    purchase_key:'website-audit-quick-win',
     eyebrow:'Website Audit',
     headline:"Your website is getting attention. Why isn't it getting customers?",
     lede:'Give Evercraft the public website. We inspect the evidence, surface the highest-impact problems, and tell you what to fix first.',
@@ -176,6 +179,7 @@ const OFFER_PAGE_COPY={
   },
   'ibmi-rescue-v1':{
     slug:'ibmi-rescue',
+    purchase_key:'ibmi-estate-xray',
     eyebrow:'IBM i Rescue',
     headline:"Don't touch production until you know what depends on it.",
     lede:'Evercraft maps the IBM i / AS/400 estate before an upgrade or modernization move turns an undocumented dependency into an outage.',
@@ -190,6 +194,7 @@ const OFFER_PAGE_COPY={
   },
   'legacy-rescue-lab-v1':{
     slug:'legacy-rescue',
+    purchase_key:'legacy-rescue-scan',
     eyebrow:'Legacy Rescue',
     headline:'Your software is broken. Rebuilding from scratch is not the first move.',
     lede:'Evercraft inspects the system you already have, finds the real failure surface, and gives you a rescue path before you throw away working business logic.',
@@ -204,6 +209,7 @@ const OFFER_PAGE_COPY={
   },
   'findmypart-paid-hunt-v1':{
     slug:'findmypart',
+    purchase_key:'findmypart-quick-hunt',
     eyebrow:'FindMyPart',
     headline:"Can't find the part? Give us the trail. We'll hunt it down.",
     lede:'For discontinued, obsolete, superseded, salvage, new-old-stock, aftermarket, cross-reference, blueprint, and fabrication-path searches when normal suppliers come up empty.',
@@ -227,6 +233,13 @@ export function offerCapabilityForSlug(slug,capabilities=[]){
   if(!wanted) return null;
   const id=Object.entries(OFFER_PAGE_COPY).find(([,copy])=>copy.slug===wanted)?.[0]||null;
   return id ? (capabilities||[]).find((item)=>item.public_id===id)||null : null;
+}
+
+export function offerPurchaseKeyForSlug(slug){
+  const wanted=String(slug||'').trim().toLowerCase();
+  if(!wanted) return null;
+  const copy=Object.values(OFFER_PAGE_COPY).find((item)=>item.slug===wanted);
+  return copy?.purchase_key||null;
 }
 
 function entryPriceLabel(item){
@@ -278,10 +291,12 @@ export function renderOfferPage(item){
     '<p class="lede">'+escapeHtml(copy.lede)+'</p>',
     '<div class="offer-price">'+escapeHtml(price)+'</div>',
     '<div class="offer-price-note">'+escapeHtml(offerName)+' · '+escapeHtml(item.pricing||'')+'</div>',
-    '<div class="actions">',
-    '<a class="btn primary" href="/capabilities/'+encodeURIComponent(item.public_id)+'">See technical proof</a>',
-    '<a class="btn" href="/offers">See other offers</a>',
-    '</div>',
+    '<form class="checkout-form" method="post" action="/api/offers/'+encodeURIComponent(copy.slug)+'/checkout">',
+    '<input type="hidden" name="user_confirmed" value="true">',
+    '<button class="btn primary" type="submit">Continue to checkout · '+escapeHtml(price)+'</button>',
+    '<a class="btn" href="/capabilities/'+encodeURIComponent(item.public_id)+'">See technical proof</a>',
+    '<div class="checkout-note">This button confirms this exact offer and asks Raven Nexus to prepare an unpaid Evercraft Payments checkout. No payment is recorded and fulfillment stays locked until settlement is verified.</div>',
+    '</form>',
     '</section>',
     '<div class="offer-grid">',
     '<section class="offer-panel"><h2>What you are buying</h2><p class="plain">'+escapeHtml(copy.promise)+'</p><div class="offer-proof">No giant platform commitment is required to understand the first paid step.</div></section>',
