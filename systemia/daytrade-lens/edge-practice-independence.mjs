@@ -1,4 +1,4 @@
-export const DEFAULT_MINIMUM_SEPARATION_MS=180000;
+export const DEFAULT_MINIMUM_SEPARATION_MS=300000;
 
 function toMs(value){
   const n=Date.parse(String(value??""));
