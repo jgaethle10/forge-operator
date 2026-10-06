@@ -120,3 +120,27 @@ test('public snapshot is bounded and contains no autonomous authority', () => {
   assert.equal(snapshot.signals[0].publication_authority, false);
   assert.equal(snapshot.signals[0].decision_authority, false);
 });
+
+
+test('FAIE treats controlled-environment agriculture as a multi-domain evidence problem', () => {
+  let state = emptyFaieState();
+  state = ingestFaieObservation(state, observation(), { now: NOW }).state;
+
+  const result = buildFaieInvestigation(state, {
+    question: 'What current evidence could affect controlled-environment agriculture and greenhouse resilience in the Yakima Valley?',
+    region_keys: ['yakima-wa'],
+    asset_types: ['greenhouse'],
+    horizon_days: 90
+  }, { now: NOW });
+
+  assert.ok(result.investigation.coverage.expected_dimensions.includes('water'));
+  assert.ok(result.investigation.coverage.expected_dimensions.includes('energy'));
+  assert.ok(result.investigation.coverage.expected_dimensions.includes('labor'));
+  assert.ok(result.investigation.coverage.covered_dimensions.includes('water'));
+  assert.ok(result.investigation.coverage.missing_dimensions.includes('energy'));
+  assert.equal(result.investigation.coverage.decision_readiness, 'evidence_gaps');
+  assert.equal(result.investigation.decision_packet.framework, 'SENSE_CHALLENGE_DECIDE');
+  assert.equal(result.investigation.decision_packet.decide.human_review_required, true);
+  assert.equal(result.investigation.decision_packet.decide.action_authority, false);
+  assert.ok(result.investigation.evidence_needed.some((item) => /utility tariff/i.test(item)));
+});
