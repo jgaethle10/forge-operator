@@ -106,7 +106,7 @@ function normalizedInvestigationInput(body={}){
 
 export function createFabricFaieSurface({
   runtime=null,
-  stateDir=process.env.FAIE_EDGE_STATE_DIR || path.join(os.homedir(),'.local/state/evercraft/faie'),
+  stateDir=process.env.FAIE_EDGE_STATE_DIR || path.join(os.tmpdir(),'evercraft-fabric-faIE'),
   intervalMs=Number(process.env.FAIE_INTERVAL_MS || 5*60*1000),
   fetchImpl=globalThis.fetch,
   collectorConfig=null,
@@ -142,7 +142,8 @@ export function createFabricFaieSurface({
       transport_owner:'Evercraft Fabric',
       base44_transport_enabled:false,
       public_preview_persists_queries:false,
-      deployment_region_profile:runtimeHealth.official_collectors?.region_profile_id||null
+      deployment_region_profile:runtimeHealth.official_collectors?.region_profile_id||null,
+      edge_state_persistence:process.env.FAIE_EDGE_STATE_DIR?'configured_persistent_or_operator_managed':'private_tmp_rebuildable'
     };
   }
 
