@@ -188,5 +188,12 @@ jobs:
           const archive = await json('/api/faie/investigations');
           assert.equal(archive.response.status, 503, 'internal archive must be unavailable without token');
 
+          const soilAcquire = await json('/api/faie/acquire/soil', {
+            method: 'POST',
+            headers: { 'content-type': 'application/json' },
+            body: JSON.stringify({ latitude: 46.6, longitude: -120.5, region_keys: ['yakima-wa'] })
+          });
+          assert.equal(soilAcquire.response.status, 503, 'official-source acquisition must be unavailable without internal authority');
+
           console.log('FAIE HTTP PRIVACY AND RUNTIME SMOKE PASS');
           NODE
