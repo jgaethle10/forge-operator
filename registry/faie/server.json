@@ -2,7 +2,7 @@
   "$schema": "https://static.modelcontextprotocol.io/schemas/2025-12-11/server.schema.json",
   "name": "io.github.jgaethle10/faie",
   "title": "FAIE",
-  "description": "Owned FAIE evidence runtime with verified UI and read-only specialist MCP on Evercraft Fabric.",
+  "description": "Evidence-first food-infrastructure and resilience intelligence on owned Evercraft Fabric.",
   "version": "1.1.0",
   "websiteUrl": "https://fabric.systemiacommandcenters.com/faie/",
   "remotes": [
