@@ -48,6 +48,10 @@ test('Fabric local runtime is read-only, tunnel-compatible, and makes no Base44 
     assert.equal(health.chum_human_review_authority,'discovery_review_only');
     assert.equal(health.removed_legacy_base44_connections,2);
     assert.equal(health.removed_legacy_base44_mcp_connections,1);
+    assert.equal(health.visual_desk_path,'/visuals/');
+    assert.equal(health.visual_desk_ready,true);
+    assert.ok(health.visual_desk_story_count>=1);
+    assert.equal(health.visual_desk_motion_capable,true);
     assert.deepEqual(health.transport_modes,['application/json','text/event-stream']);
 
     const sseProbe=await fetch(runtime.mcpUrl,{
@@ -194,6 +198,39 @@ test('Fabric public customer front door is branded, browsable, and policy-safe',
       const held=await journalResponse.json();
       assert.equal(held.error,'journal_asset_not_found');
     }
+
+    const visualIndexResponse=await fetch(runtime.url+'/visuals/');
+    assert.equal(visualIndexResponse.status,200);
+    assert.match(visualIndexResponse.headers.get('content-type')||'',/^text\/html/);
+    assert.equal(visualIndexResponse.headers.get('x-robots-tag'),'index, follow');
+    assert.match(await visualIndexResponse.text(),/Evercraft Visual Desk/);
+
+    const volcanoResponse=await fetch(runtime.url+'/visuals/washington-active-volcanoes/');
+    assert.equal(volcanoResponse.status,200);
+    assert.match(volcanoResponse.headers.get('content-type')||'',/^text\/html/);
+    const volcano=await volcanoResponse.text();
+    assert.match(volcano,/Washington/);
+    assert.match(volcano,/card-feed\.svg/);
+    assert.match(volcano,/usgs\.gov/);
+
+    const storyCardResponse=await fetch(runtime.url+'/visuals/washington-active-volcanoes/card-story.svg');
+    assert.equal(storyCardResponse.status,200);
+    assert.equal(storyCardResponse.headers.get('content-type'),'image/svg+xml');
+    assert.match(await storyCardResponse.text(),/height="1920"/);
+
+    const motionResponse=await fetch(runtime.url+'/visuals/washington-active-volcanoes/motion.html');
+    assert.equal(motionResponse.status,200);
+    assert.match(motionResponse.headers.get('content-security-policy')||'',/script-src 'unsafe-inline'/);
+    const motion=await motionResponse.text();
+    assert.match(motion,/__evercraftRenderAt/);
+    assert.match(motion,/__evercraftRenderFrame/);
+
+    const visualCatalogResponse=await fetch(runtime.url+'/visuals/index.json');
+    assert.equal(visualCatalogResponse.status,200);
+    const visualCatalog=await visualCatalogResponse.json();
+    assert.equal(visualCatalog.schema,'evercraft.fabric.visual-desk-index.v1');
+    assert.ok(visualCatalog.count>=1);
+    assert.ok(visualCatalog.stories.some((story)=>story.slug==='washington-active-volcanoes'));
   } finally {
     await runtime.close();
   }

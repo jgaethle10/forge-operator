@@ -28,6 +28,7 @@ import {
   renderFabricMobileApp,
 } from './fabric-mobile-site.mjs';
 import { createFabricFaieSurface } from './fabric-faie-runtime.mjs';
+import { buildVisualStory } from '../visual-desk/factory.mjs';
 
 function isLegacyBase44Connection(connection={}) {
   try {
@@ -167,6 +168,58 @@ function resolveJournalAsset(journalDir, requestUrl) {
   return target;
 }
 
+function resolveVisualAsset(visualDir, requestUrl) {
+  const parsed=new URL(requestUrl,'http://fabric.local');
+  let pathname=decodeURIComponent(parsed.pathname);
+  if(!pathname.startsWith('/visuals')) return null;
+  let relative=pathname.slice('/visuals'.length).replace(/^\/+/, '');
+  if(!relative||relative.endsWith('/')) relative+=relative?'index.html':'index.html';
+  const target=path.resolve(visualDir,relative);
+  const prefix=visualDir.endsWith(path.sep)?visualDir:visualDir+path.sep;
+  if(target!==visualDir&&!target.startsWith(prefix)) return null;
+  if(!fs.existsSync(target)||!fs.statSync(target).isFile()) return null;
+  return target;
+}
+
+function buildVisualDeskMirror({moduleDir,outputDir,origin}) {
+  const storiesDir=path.resolve(moduleDir,'../visual-desk/stories');
+  const landing=path.resolve(moduleDir,'../../public/visuals/index.html');
+  fs.rmSync(outputDir,{recursive:true,force:true});
+  fs.mkdirSync(outputDir,{recursive:true,mode:0o700});
+  if(fs.existsSync(landing)) fs.copyFileSync(landing,path.join(outputDir,'index.html'));
+
+  const files=fs.existsSync(storiesDir)
+    ? fs.readdirSync(storiesDir).filter((name)=>name.endsWith('.json')).sort()
+    : [];
+  const entries=[];
+  for(const name of files){
+    const input=JSON.parse(fs.readFileSync(path.join(storiesDir,name),'utf8'));
+    const built=buildVisualStory(input,{outputRoot:outputDir,origin});
+    entries.push({
+      slug:built.story.slug,
+      title:built.story.title,
+      canonicalUrl:built.manifest.canonicalUrl,
+      socialCardUrl:built.manifest.socialCardUrl,
+      motionStageUrl:built.manifest.assets.motionStage,
+      evidenceState:built.story.evidenceState,
+      storyDigest:built.story.digest,
+      publishedAt:built.story.publishedAt,
+    });
+  }
+  const index={
+    schema:'evercraft.fabric.visual-desk-index.v1',
+    origin:String(origin||'').replace(/\/$/,''),
+    count:entries.length,
+    stories:entries,
+  };
+  fs.writeFileSync(path.join(outputDir,'index.json'),JSON.stringify(index,null,2)+'\n',{mode:0o600});
+  return {
+    ready:fs.existsSync(path.join(outputDir,'index.html')),
+    count:entries.length,
+    origin:index.origin,
+  };
+}
+
 async function readJson(req,{maxBytes=1024*1024}={}) {
   const chunks=[];
   let bytes=0;
@@ -208,6 +261,8 @@ export async function startFabricLocalRuntime({
   faieStateDir='',
   faieCollectorConfig=null,
   faieSurfaceEnabled=true,
+  visualStateDir='',
+  visualOrigin='',
   purchaseIntentFetch=fetch,
   purchaseIntentUrl='https://base44.app/api/apps/6a7adc9666bfd8c5c2fb4069/functions/ravenNexusPurchaseIntent',
 }={}) {
@@ -293,6 +348,18 @@ export async function startFabricLocalRuntime({
   const moduleDir=path.dirname(fileURLToPath(import.meta.url));
   const pluginDir=path.resolve(moduleDir,'../../plugins/evercraft-fabric');
   const journalDir=path.resolve(moduleDir,'../../public/journal');
+  const visualStateEphemeral=!String(visualStateDir||'').trim();
+  const visualDir=path.resolve(
+    visualStateDir||path.join(os.tmpdir(),'evercraft-visual-desk-'+instanceId)
+  );
+  const resolvedVisualOrigin=String(
+    visualOrigin||process.env.EVERCRAFT_VISUAL_ORIGIN||'https://fabric.systemiacommandcenters.com/visuals'
+  ).replace(/\/$/,'');
+  const visualMirror=buildVisualDeskMirror({
+    moduleDir,
+    outputDir:visualDir,
+    origin:resolvedVisualOrigin,
+  });
   const faieSurface=faieSurfaceEnabled
     ? createFabricFaieSurface({
         stateDir:faieStateDir||undefined,
@@ -352,6 +419,11 @@ export async function startFabricLocalRuntime({
     journal_mirror_path:'/journal/',
     journal_mirror_ready:fs.existsSync(path.join(journalDir,'index.html')),
     journal_mirror_indexing:'noindex_until_dedicated_origin',
+    visual_desk_path:'/visuals/',
+    visual_desk_ready:visualMirror.ready,
+    visual_desk_story_count:visualMirror.count,
+    visual_desk_origin:visualMirror.origin,
+    visual_desk_motion_capable:visualMirror.count>0,
     faie_native_surface:Boolean(faieSurface),
     faie_public_path:faieSurface?'/faie/':null,
     faie_public_api:faieSurface?'/api/faie':null,
@@ -687,6 +759,23 @@ export async function startFabricLocalRuntime({
         return res.end(data);
       }
 
+      if ((req.method==='GET'||req.method==='HEAD') && String(req.url||'').startsWith('/visuals')) {
+        const asset=resolveVisualAsset(visualDir,String(req.url||''));
+        if(!asset) return sendJson(res,404,{error:'visual_asset_not_found'});
+        const data=fs.readFileSync(asset);
+        res.writeHead(200,{
+          'content-type':journalContentType(asset),
+          'content-length':data.length,
+          'cache-control':'public, max-age=60, must-revalidate',
+          'x-content-type-options':'nosniff',
+          'x-robots-tag':'index, follow',
+          'referrer-policy':'strict-origin-when-cross-origin',
+          'content-security-policy':"default-src 'none'; style-src 'unsafe-inline'; script-src 'unsafe-inline'; img-src 'self' data:; base-uri 'none'; frame-ancestors 'none'",
+        });
+        if(req.method==='HEAD') return res.end();
+        return res.end(data);
+      }
+
       if (req.url===challengePath) {
         if (!['GET','HEAD'].includes(req.method||'')) {
           return sendJson(res,405,{error:'method_not_allowed'});
@@ -777,6 +866,7 @@ export async function startFabricLocalRuntime({
       await new Promise((resolve,reject)=>
         server.close((error)=>error?reject(error):resolve())
       );
+      if(visualStateEphemeral) fs.rmSync(visualDir,{recursive:true,force:true});
     },
   };
 }
@@ -793,7 +883,11 @@ if (direct) {
   const challengeToken=String(arg('--openai-challenge-token',process.env.EVERCRAFT_OPENAI_CHALLENGE_TOKEN||''));
   const nodeReceiptPath=String(arg('--node-receipt',process.env.EVERCRAFT_EDGE_NODE_RECEIPT||''));
   const allocatorTokenFile=String(arg('--allocator-token-file',process.env.EVERCRAFT_EDGE_ALLOCATOR_TOKEN_FILE||''));
-  const runtime=await startFabricLocalRuntime({host,port,challengeToken,nodeReceiptPath,allocatorTokenFile});
+  const visualStateDir=String(arg('--visual-state-dir',process.env.EVERCRAFT_VISUAL_STATE_DIR||path.join(os.homedir(),'.local/state/evercraft/visual-desk/public')));
+  const visualOrigin=String(arg('--visual-origin',process.env.EVERCRAFT_VISUAL_ORIGIN||'https://fabric.systemiacommandcenters.com/visuals'));
+  const runtime=await startFabricLocalRuntime({
+    host,port,challengeToken,nodeReceiptPath,allocatorTokenFile,visualStateDir,visualOrigin
+  });
   process.stdout.write(JSON.stringify({
     ok:true,
     schema:runtime.schema,
