@@ -150,6 +150,9 @@ for(const offer of catalog.offers||[]){
     machine_review_url:machineReviewUrl(offer.public_id),
     start_url:humanStartUrl(offer,{surface:'chum_capability_page'}),
     start_url_state:humanStartState(offer),
+    start_blocker:humanStartUrl(offer,{surface:'chum_capability_page'})
+      ? null
+      : (offer.commercial_state==='sell_now' ? 'owned_public_execution_origin_not_verified' : null),
     entry_paid_offer:entryPaidOffer(offer),
     mirror:{
       page:pageUrl,
@@ -285,6 +288,7 @@ for(const offer of catalog.offers||[]){
     schema_url:record.mirror.schema,
     start_url:record.start_url,
     start_url_state:record.start_url_state,
+    start_blocker:record.start_blocker,
     machine_review_url:record.machine_review_url,
     entry_paid_offer:record.entry_paid_offer,
     preferred_agent_route:record.preferred_agent_route,
