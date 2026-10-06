@@ -1,0 +1,43 @@
+name: DayTrade Zero-Capital Practice Scheduler
+
+on:
+  push:
+    branches:
+      - "systemia/daytrade-practice-scheduler-v1"
+  schedule:
+    - cron: "45 13 * * 1-5"
+    - cron: "45 14 * * 1-5"
+    - cron: "30 17 * * 1-5"
+    - cron: "30 19 * * 1-5"
+    - cron: "30 20 * * 1-5"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  practice:
+    runs-on: ubuntu-latest
+    timeout-minutes: 6
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Prove scheduler safety contract
+        run: node systemia/daytrade-practice-scheduler.test.mjs
+      - name: Run zero-capital market-data practice
+        env:
+          ALPACA_TRADING: ${{ secrets.ALPACA_TRADING }}
+          ALPACA_TRADING_SECRET: ${{ secrets.ALPACA_TRADING_SECRET }}
+          DAYTRADE_SCHEDULE_EXPR: ${{ github.event.schedule }}
+          DAYTRADE_SCHEDULED_PRACTICE_OUTPUT: artifacts/daytrade-practice/receipt.json
+        run: node systemia/daytrade-practice-scheduler.mjs
+      - name: Upload practice receipt
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: daytrade-zero-capital-practice-${{ github.run_id }}
+          path: artifacts/daytrade-practice/receipt.json
+          if-no-files-found: error
+          retention-days: 90
