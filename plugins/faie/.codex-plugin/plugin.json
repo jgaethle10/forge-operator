@@ -1,12 +1,12 @@
 {
   "name": "faie",
   "version": "0.1.0",
-  "description": "Use FAIE directly when agriculture, water, land resilience, or production-risk decisions need a sourced evidence brief with uncertainty and evidence state preserved.",
+  "description": "Use FAIE directly when food infrastructure, agriculture, water, land, production, or resilience decisions need a sourced Sense-Challenge-Decide packet, comparative evidence readiness, explicit uncertainty, and evidence acquisition.",
   "author": {
     "name": "Evercraft LLC",
     "url": "https://github.com/jgaethle10/forge-operator"
   },
-  "homepage": "https://github.com/jgaethle10/forge-operator/tree/main/public/chum/products/faie",
+  "homepage": "https://fabric.systemiacommandcenters.com/faie/",
   "repository": "https://github.com/jgaethle10/forge-operator",
   "license": "UNLICENSED",
   "keywords": [
@@ -23,18 +23,17 @@
   "mcpServers": "./.mcp.json",
   "interface": {
     "displayName": "FAIE",
-    "shortDescription": "Build evidence briefs for agriculture and resilience decisions",
-    "longDescription": "Use FAIE directly when agriculture, water, land resilience, or production-risk decisions need a sourced evidence brief with uncertainty and evidence state preserved.",
+    "shortDescription": "Underwrite food infrastructure with evidence, challenge and thesis memory",
+    "longDescription": "Use FAIE directly when food infrastructure, agriculture, water, land, production, or resilience decisions need a sourced Sense-Challenge-Decide packet, comparative evidence readiness, explicit uncertainty, and evidence acquisition.",
     "developerName": "Evercraft LLC",
     "category": "Business",
     "capabilities": [
       "Interactive"
     ],
-    "websiteURL": "https://github.com/jgaethle10/forge-operator/tree/main/public/chum/products/faie",
+    "websiteURL": "https://fabric.systemiacommandcenters.com/faie/",
     "defaultPrompt": [
-      "Build me a sourced evidence brief for an agriculture, water, land-resilience, or production-risk decision."
+      "Underwrite this food-infrastructure or agriculture decision with sourced evidence, adversarial challenge, missing-evidence missions, and explicit uncertainty."
     ]
   },
-  "releaseState": "OWNED_RUNTIME_ROUTE_PENDING",
-  "publicOriginState": "legacy_provider_retired_owned_route_pending"
+  "registryState": "PENDING"
 }
