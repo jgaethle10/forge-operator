@@ -64,12 +64,21 @@ export function directHumanBuyerUrl() {
   return null;
 }
 
+function verifiedDirectHumanStartUrl(offer) {
+  const state=String(offer?.human_start_url_state||'').trim();
+  if(!['public_https_verified','external_canary_verified'].includes(state)) return null;
+  const url=allowedHttpsUrl(offer?.human_start_url);
+  return url?url.toString():null;
+}
+
 export function humanStartUrl(offer, {
   surface = 'chum_public_surface',
   publicOrigin = process.env.CHUM_PUBLIC_ORIGIN,
   gateway = process.env.EVERCRAFT_MACHINE_COMMERCE_GATEWAY_URL || ''
 } = {}) {
   if (offer?.commercial_state !== 'sell_now' || !offer?.public_id) return null;
+  const direct=verifiedDirectHumanStartUrl(offer);
+  if(direct) return direct;
   const origin = configuredChumPublicOrigin(publicOrigin);
   if (origin) {
     return origin + '/api/chum/go/' + encodeURIComponent(String(offer.public_id))
@@ -84,6 +93,7 @@ export function humanStartState(offer, {
   publicOrigin = process.env.CHUM_PUBLIC_ORIGIN
 } = {}) {
   if (offer?.commercial_state !== 'sell_now' || !offer?.public_id) return 'not_sell_now';
+  if (verifiedDirectHumanStartUrl(offer)) return 'owned_direct_human_start';
   if (configuredChumPublicOrigin(publicOrigin)) return 'tracked_chum_handoff_configured_origin';
   if (buyerFrontageUrl(offer)) return 'owned_buyer_frontage';
   if (machineReviewUrl(offer.public_id)) return 'owned_machine_review';
