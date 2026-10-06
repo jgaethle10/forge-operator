@@ -1,0 +1,46 @@
+{
+  "schema": "evercraft.daytrade.instrument-conditioned-spread.v1",
+  "generated_at": "2026-10-06T19:00:05.482Z",
+  "source_run_id": 37515609678,
+  "source_artifact_id": 11435934049,
+  "source_artifact_digest": "sha256:ad9ac4d7c01089907f6aabb12a3a6cbac5881cdd6a14e148b80e56cc8fec6f13",
+  "threshold_bps": 3,
+  "decisions": 15,
+  "by_symbol": {
+    "QQQ": {
+      "windows": 5,
+      "tight_count": 5,
+      "tight_mean_always_cross_pnl_usd": -0.0001049894511339744,
+      "wide_count": 0,
+      "within_symbol_comparison_ready": false
+    },
+    "SMH": {
+      "windows": 5,
+      "tight_count": 2,
+      "tight_mean_always_cross_pnl_usd": -0.005031851821556188,
+      "wide_count": 3,
+      "wide_mean_always_cross_pnl_usd": -0.008602053978832439,
+      "wide_minus_tight_mean_pnl_usd": -0.003570202157276251,
+      "within_symbol_comparison_ready": true
+    },
+    "SOXX": {
+      "windows": 5,
+      "tight_count": 2,
+      "tight_mean_always_cross_pnl_usd": 0.005737715883672223,
+      "wide_count": 3,
+      "wide_mean_always_cross_pnl_usd": -0.012150909069921076,
+      "wide_minus_tight_mean_pnl_usd": -0.0178886249535933,
+      "within_symbol_comparison_ready": true
+    }
+  },
+  "interpretation": {
+    "spread_effect_not_only_cross_ticker_identity_in_soxx_and_smh_sample": true,
+    "qqq_has_no_wide_sample_yet": true,
+    "tiny_same_day_sample": true,
+    "no_causal_claim": true,
+    "no_threshold_retuning": true,
+    "not_signal_validation": true,
+    "not_live_rule_authorization": true
+  },
+  "live_trade_authority": false
+}
