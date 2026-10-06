@@ -660,6 +660,7 @@ export function buildFaieInvestigation(inputState, input, { now = new Date().toI
     },
     unknowns,
     evidence_needed: evidenceNeeded,
+    evidence_acquisition_queue: evidenceAcquisitionQueue,
     boundaries: [
       'FAIE provides evidence support, not autonomous consequential authority.',
       'Modeled, reported, observed, and verified evidence remain distinct.',
