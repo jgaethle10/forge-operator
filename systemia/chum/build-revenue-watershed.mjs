@@ -122,7 +122,10 @@ const toPublicOffer = (offer) => ({
     : null,
   universal_mcp: UNIVERSAL_MCP || null,
   start_url: humanStartUrl(offer, { surface: 'chum_pain_page', gateway: MACHINE_COMMERCE_GATEWAY || '' }),
-  start_url_state: humanStartState(offer)
+  start_url_state: humanStartState(offer),
+  start_blocker: humanStartUrl(offer, { surface: 'chum_pain_page', gateway: MACHINE_COMMERCE_GATEWAY || '' })
+    ? null
+    : (offer.commercial_state === 'sell_now' ? 'owned_public_execution_origin_not_verified' : null)
 });
 
 const publicOffers = offers.filter((offer) => offer.commercial_state === 'sell_now').map(toPublicOffer);
@@ -177,6 +180,7 @@ const compactOffer = (offer) => ({
   universal_mcp: offer.universal_mcp,
   start_url: offer.start_url,
   start_url_state: offer.start_url_state,
+  start_blocker: offer.start_blocker,
   human_ui_required: offer.human_ui_required,
   confirmation: offer.confirmation,
   agent_handoff: offer.agent_handoff || agentHandoff(offer)
