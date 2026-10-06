@@ -36,9 +36,13 @@ test("Raven surface refuses to invent a private runtime",()=>{
   }
 });
 
-test("Raven overview stays a read surface and does not add execution endpoints",()=>{
+test("Raven planning and execution are separate bounded surfaces",()=>{
   assert.ok(server.includes('url.pathname === "/api/raven/overview"'));
-  assert.equal(server.includes('"/api/raven/execute"'),false);
+  assert.ok(server.includes('url.pathname === "/api/raven/command-plan"'));
+  assert.ok(server.includes('url.pathname === "/api/raven/execute"'));
+  assert.ok(server.includes('"home.raven.execute"'));
+  assert.ok(server.includes("RAVEN_NEXUS_WORK_URL"));
+  assert.ok(server.includes("RAVEN_NEXUS_WORK_TOKEN"));
   assert.equal(server.includes('"/api/raven/dispatch"'),false);
 });
 
