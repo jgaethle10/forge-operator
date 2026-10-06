@@ -1,4 +1,5 @@
 import { planSystemiaMission } from "./systemia-adapter.mjs";
+import { executeSystemiaRavenPlan } from "./raven-execution-adapter.mjs";
 
 const LANES = Object.freeze({
   operations: { work_type: "analyze", label: "Operations" },
@@ -61,5 +62,50 @@ export function planRavenCommand({ message, lane = "operations" } = {}, repoRoot
     evidence_semantics:
       "This proves Systemia admission and routing only. It is not a conversational AI response, specialist execution, deployment, publication, external communication, or other completed action.",
     plan: result.plan,
+  };
+}
+
+
+export async function executeRavenCommand({
+  message,
+  lane = "operations",
+  bridgeUrl = "",
+  bridgeToken = "",
+  receiptDir = "",
+  fetchImpl = globalThis.fetch,
+  now = () => new Date(),
+} = {}, repoRoot) {
+  const planned = planRavenCommand({ message, lane }, repoRoot);
+  const execution = await executeSystemiaRavenPlan({
+    systemiaPlan: planned.plan,
+    workKey: "raven-command",
+    bridgeUrl,
+    bridgeToken,
+    receiptDir,
+    fetchImpl,
+    now,
+  });
+
+  return {
+    schema: "evercraft.home.raven-command-execution.v1",
+    state: execution.ok ? "executed" : "blocked",
+    lane: planned.lane,
+    lane_label: planned.lane_label,
+    work_type: planned.work_type,
+    mission_key: planned.mission_key,
+    routed_components: planned.routed_components,
+    execution_components: planned.execution_components,
+    systemia_authority: planned.systemia_authority,
+    systemia_admission_execution_authority_granted: false,
+    execution_performed: execution.executed === true && execution.reason === "complete",
+    execution_scope: "internal_read_only_inference",
+    external_side_effects_authorized: false,
+    base44_required: false,
+    blocker: execution.blocker || null,
+    receipt: execution.receipt || null,
+    output: execution.output || null,
+    goal_state: execution.state || planned.plan.goal,
+    evidence_semantics:
+      "Systemia admitted and routed the work. A completed state proves only bounded internal Raven/Nexus inference plus a durable execution receipt; it does not authorize publication, deployment, payment, purchase, account mutation, or external messaging.",
   };
 }
