@@ -1,0 +1,32 @@
+name: DayTrade Practice Diversity Once
+
+on:
+  push:
+    branches:
+      - "systemia/daytrade-practice-diversity-2026-10-06"
+
+permissions:
+  contents: read
+
+jobs:
+  diversity:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Prove multi-day multi-phase gate
+        run: node systemia/daytrade-lens/edge-practice-diversity-readiness.test.mjs
+      - name: Score current practice diversity
+        env:
+          DAYTRADE_DIVERSITY_OUTPUT: artifacts/daytrade-edge/practice-diversity-2026-10-06.json
+        run: node systemia/daytrade-lens/edge-practice-diversity-readiness.mjs
+      - name: Upload diversity report
+        uses: actions/upload-artifact@v4
+        with:
+          name: daytrade-practice-diversity-${{ github.run_id }}
+          path: artifacts/daytrade-edge/practice-diversity-2026-10-06.json
+          if-no-files-found: error
+          retention-days: 30
