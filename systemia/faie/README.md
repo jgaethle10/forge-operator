@@ -99,11 +99,11 @@ Human UI:
 
 - /faie/
 
-## AgNormal / controlled-environment pilot path
+## AgNormal / regional food-infrastructure pilot path
 
-The real FAIE UI at `/faie/` contains a one-click AgNormal greenhouse pilot scope. It does not switch to a canned demo or prewritten answer. The preset only fills the live investigation inputs and sends them through the same FAIE runtime used by every other public investigation.
+The real FAIE UI at `/faie/` contains a one-click AgNormal regional food-infrastructure pilot scope. It does not switch to a canned demo or prewritten answer. The preset only fills the live investigation inputs and sends them through the same FAIE runtime used by every other public investigation.
 
-Controlled-environment scopes are treated as multi-domain evidence problems. FAIE expects coverage across water, heat, energy, infrastructure, logistics, labor, crop health and resilience when those dimensions are relevant. The packet exposes which dimensions are covered, which are missing, independent source-family count, strong-evidence count and decision-readiness state.
+Regional food-infrastructure scopes are treated as multi-domain evidence problems. FAIE expects coverage across water, soil, heat, energy, infrastructure, logistics, labor, economics, policy, crop health and resilience when those dimensions are relevant. The packet exposes which dimensions are covered, which are missing, independent source-family count, strong-evidence count and decision-readiness state.
 
 The public packet follows the product workflow:
 
@@ -123,7 +123,7 @@ Pilot acceptance gate:
 - source lineage visible when a public provenance URL exists
 - missing evidence stays visible
 - controlled-environment coverage gaps are explicit
-- one-click Yakima Valley greenhouse scope is available on the real UI
+- one-click Yakima Valley food-infrastructure scope is available on the real UI
 - human review remains required before consequential action
 
 ## Autonomous loop
