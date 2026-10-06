@@ -14,6 +14,7 @@ import {
 } from './fabric-directory.mjs';
 import {
   offerCapabilityForSlug,
+  offerPurchaseKeyForSlug,
   offerSlugForCapability,
   renderCapabilities,
   renderCapabilityDetail,
@@ -100,7 +101,7 @@ function browserSecurityHeaders() {
     'x-frame-options':'DENY',
     'referrer-policy':'no-referrer',
     'permissions-policy':'camera=(), microphone=(), geolocation=()',
-    'content-security-policy':"default-src 'none'; style-src 'unsafe-inline'; img-src 'self'; base-uri 'none'; frame-ancestors 'none'; form-action 'none'",
+    'content-security-policy':"default-src 'none'; style-src 'unsafe-inline'; img-src 'self'; base-uri 'none'; frame-ancestors 'none'; form-action 'self'",
   };
 }
 
@@ -178,6 +179,24 @@ async function readJson(req,{maxBytes=1024*1024}={}) {
   return raw?JSON.parse(raw):{};
 }
 
+async function readOfferInput(req,{maxBytes=8192}={}){
+  const chunks=[];
+  let bytes=0;
+  for await (const chunk of req) {
+    bytes+=chunk.length;
+    if(bytes>maxBytes) throw new Error('request_body_too_large');
+    chunks.push(chunk);
+  }
+  const raw=Buffer.concat(chunks).toString('utf8');
+  const type=String(req.headers['content-type']||'').toLowerCase();
+  if(!raw) return {};
+  if(type.includes('application/json')) return JSON.parse(raw);
+  if(type.includes('application/x-www-form-urlencoded')){
+    return Object.fromEntries(new URLSearchParams(raw).entries());
+  }
+  throw new Error('unsupported_offer_content_type');
+}
+
 export async function startFabricLocalRuntime({
   host='127.0.0.1',
   port=8787,
@@ -189,6 +208,8 @@ export async function startFabricLocalRuntime({
   faieStateDir='',
   faieCollectorConfig=null,
   faieSurfaceEnabled=true,
+  purchaseIntentFetch=fetch,
+  purchaseIntentUrl='https://base44.app/api/apps/6a7adc9666bfd8c5c2fb4069/functions/ravenNexusPurchaseIntent',
 }={}) {
   const instanceId='fabric_local_'+crypto.randomBytes(10).toString('hex');
   let deploymentReceiptRef='';
@@ -197,6 +218,13 @@ export async function startFabricLocalRuntime({
     typeof nodeAttestationProvider !== 'function'
   ) {
     throw new Error('node_attestation_provider_invalid');
+  }
+  if(typeof purchaseIntentFetch!=='function'){
+    throw new Error('purchase_intent_fetch_invalid');
+  }
+  const purchaseIntentEndpoint=new URL(String(purchaseIntentUrl||''));
+  if(purchaseIntentEndpoint.protocol!=='https:'){
+    throw new Error('purchase_intent_url_requires_https');
   }
   const staticPrepared=Array.isArray(catalog)?nativeOnlyCatalog(catalog):null;
   const preparedCatalog=()=>staticPrepared||nativeOnlyCatalog(loadFabricCatalogFromRepository());
@@ -297,6 +325,12 @@ export async function startFabricLocalRuntime({
     read_only:true,
     transactional:false,
     external_action_authority:false,
+    mcp_read_only:true,
+    human_offer_checkout_enabled:true,
+    human_offer_checkout_path_template:'/api/offers/{slug}/checkout',
+    human_offer_checkout_requires_explicit_confirmation:true,
+    payment_authority:'Evercraft Payments',
+    payment_router:'Raven Nexus',
     base44_transport_enabled:false,
     removed_legacy_base44_connections:prepared.removed_legacy_base44_connections,
     removed_legacy_base44_mcp_connections:prepared.removed_legacy_base44_mcp_connections,
@@ -365,6 +399,110 @@ export async function startFabricLocalRuntime({
           renderOffers(preparedCatalog().capabilities),
           {contentType:'text/html; charset=utf-8'}
         );
+      }
+
+      if (req.method==='POST' && String(req.url||'').startsWith('/api/offers/')) {
+        const parsed=new URL(String(req.url||''),'http://fabric.local');
+        const match=parsed.pathname.match(/^\/api\/offers\/([a-z0-9-]+)\/checkout$/i);
+        if(!match) return sendJson(res,404,{ok:false,error:'offer_checkout_route_not_found'});
+
+        const slug=decodeURIComponent(match[1]).toLowerCase();
+        const capabilityKey=offerPurchaseKeyForSlug(slug);
+        if(!capabilityKey) return sendJson(res,404,{ok:false,error:'offer_not_found'});
+
+        const body=await readOfferInput(req,{maxBytes:8192});
+        const confirmed=body?.user_confirmed===true||String(body?.user_confirmed||'').toLowerCase()==='true';
+        if(!confirmed){
+          return sendJson(res,409,{
+            ok:false,
+            error:'explicit_user_confirmation_required',
+            authority:'Evercraft Payments',
+            fulfillment_release:false,
+          });
+        }
+
+        const suppliedIdempotency=String(body?.idempotency_key||'').trim();
+        const idempotencyKey=/^[A-Za-z0-9._:-]{8,120}$/.test(suppliedIdempotency)
+          ? suppliedIdempotency
+          : 'fabric-'+slug+'-'+crypto.randomUUID();
+        const customerRef=String(body?.customer_ref||'').trim().slice(0,200);
+
+        const controller=new AbortController();
+        const timer=setTimeout(()=>controller.abort(),15000);
+        let upstream;
+        try{
+          upstream=await purchaseIntentFetch(purchaseIntentEndpoint,{
+            method:'POST',
+            headers:{
+              'content-type':'application/json',
+              'accept':'application/json',
+              'user-agent':'Evercraft-Fabric-Offer-Checkout/1.0',
+            },
+            body:JSON.stringify({
+              user_confirmed:true,
+              capability_key:capabilityKey,
+              idempotency_key:idempotencyKey,
+              customer_ref:customerRef,
+            }),
+            signal:controller.signal,
+          });
+        }finally{
+          clearTimeout(timer);
+        }
+
+        const result=await upstream.json().catch(()=>null);
+        if(!upstream.ok||result?.ok!==true){
+          return sendJson(res,upstream.status>=400&&upstream.status<600?upstream.status:502,{
+            ok:false,
+            error:String(result?.error||'evercraft_payments_checkout_unavailable'),
+            authority:'Evercraft Payments',
+            checkout_ready:false,
+            fulfillment_release:false,
+          });
+        }
+
+        let checkoutUrl=null;
+        try{
+          const candidate=new URL(String(result?.checkout_url||''));
+          if(candidate.protocol==='https:') checkoutUrl=candidate.toString();
+        }catch{}
+        if(result?.checkout_ready!==true||!checkoutUrl){
+          return sendJson(res,503,{
+            ok:false,
+            error:'evercraft_payments_checkout_not_ready',
+            authority:'Evercraft Payments',
+            order_key:result?.order_key||null,
+            gate_key:result?.gate_key||null,
+            checkout_ready:false,
+            fulfillment_release:false,
+          });
+        }
+
+        const isForm=String(req.headers['content-type']||'').toLowerCase().includes('application/x-www-form-urlencoded');
+        if(isForm){
+          res.writeHead(303,{
+            location:checkoutUrl,
+            'cache-control':'no-store',
+            'x-content-type-options':'nosniff',
+            'referrer-policy':'no-referrer',
+            'x-evercraft-payment-authority':'Evercraft Payments',
+          });
+          return res.end();
+        }
+
+        return sendJson(res,200,{
+          ok:true,
+          authority:'Evercraft Payments',
+          order_key:result.order_key,
+          capability_key:capabilityKey,
+          amount_cents:result.amount_cents,
+          currency:result.currency,
+          checkout_ready:true,
+          checkout_url:checkoutUrl,
+          payment_state:result.payment_state||'unpaid',
+          fulfillment_release:false,
+          rule:'Checkout creation is not payment. Fulfillment remains locked until authoritative provider verification.',
+        });
       }
 
       if (req.method==='GET' && String(req.url||'').startsWith('/offers/')) {
