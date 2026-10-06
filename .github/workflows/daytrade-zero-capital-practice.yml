@@ -1,0 +1,77 @@
+name: DayTrade Zero-Capital Practice
+
+on:
+  pull_request:
+    paths:
+      - "systemia/daytrade-practice/**"
+      - ".github/workflows/daytrade-zero-capital-practice.yml"
+  schedule:
+    - cron: "45 13 * * 1-5"
+    - cron: "30 16 * * 1-5"
+    - cron: "15 19 * * 1-5"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  issues: write
+
+jobs:
+  proof:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Prove market-data-only practice contract
+        run: node systemia/daytrade-practice/scheduled-zero-capital-window.test.mjs
+
+  practice:
+    if: github.event_name == 'schedule' || github.event_name == 'workflow_dispatch'
+    needs: proof
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Resolve expected market phase
+        id: phase
+        shell: bash
+        run: |
+          case "${{ github.event.schedule }}" in
+            "45 13 * * 1-5") echo "phase=OPENING" >> "$GITHUB_OUTPUT" ;;
+            "30 16 * * 1-5") echo "phase=MIDDAY" >> "$GITHUB_OUTPUT" ;;
+            "15 19 * * 1-5") echo "phase=CLOSING" >> "$GITHUB_OUTPUT" ;;
+            *) echo "phase=AUTO" >> "$GITHUB_OUTPUT" ;;
+          esac
+      - name: Run zero-capital practice window
+        env:
+          ALPACA_TRADING: ${{ secrets.ALPACA_TRADING }}
+          ALPACA_TRADING_SECRET: ${{ secrets.ALPACA_TRADING_SECRET }}
+          DAYTRADE_EXPECTED_PHASE: ${{ steps.phase.outputs.phase }}
+          DAYTRADE_PRACTICE_OUTPUT_DIR: artifacts/daytrade-practice
+        run: node systemia/daytrade-practice/scheduled-zero-capital-window.mjs
+      - name: Upload full practice receipt
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: daytrade-zero-capital-practice-${{ github.run_id }}
+          path: artifacts/daytrade-practice
+          if-no-files-found: warn
+          retention-days: 30
+      - name: Append durable ledger summary
+        if: always()
+        env:
+          GH_TOKEN: ${{ github.token }}
+        shell: bash
+        run: |
+          summary="$(find artifacts/daytrade-practice -maxdepth 1 -name '*.md' -type f | head -1 || true)"
+          if [ -n "$summary" ]; then
+            gh issue comment 946 --repo "${{ github.repository }}" --body-file "$summary"
+          else
+            printf '### DayTrade scheduled practice failure\n\nNo summary receipt was produced. GitHub run: %s\n' "${{ github.run_id }}" > /tmp/daytrade-practice-failure.md
+            gh issue comment 946 --repo "${{ github.repository }}" --body-file /tmp/daytrade-practice-failure.md
+          fi
