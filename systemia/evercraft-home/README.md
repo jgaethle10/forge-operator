@@ -79,12 +79,12 @@ The first execution slice is deliberately narrow. Systemia still admits and rout
 Runtime configuration:
 
 ```bash
-RAVEN_NEXUS_WORK_URL=https://<owned-nexus-work-bridge>
-RAVEN_NEXUS_WORK_TOKEN=<managed runtime secret>
+RAVEN_NEXUS_WORK_URL=http://127.0.0.1:4321
+RAVEN_NEXUS_WORK_TOKEN_FILE=/var/lib/evercraft/raven/control-token
 EVERCRAFT_RAVEN_RECEIPT_DIR=/var/lib/evercraft/raven-receipts
 ```
 
-If the bridge is missing or unreachable, execution fails closed and emits no fake team result. Base44 is explicitly rejected as a work-bridge transport. Completed runs produce sanitized receipt metadata and never echo the bridge token.
+If Raven or its private authority-token file is missing, execution fails closed and emits no fake team result. Home reads that token only from a permission-restricted file and never receives model-provider credentials. Base44 is explicitly rejected as a work-bridge transport. Completed runs produce sanitized receipt metadata and never echo the bridge token.
 
 This is internal inference authority only. Publication, deployments, money movement, purchases, account changes, trust changes, and external messaging remain separate gated actions.
 

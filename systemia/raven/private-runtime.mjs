@@ -223,6 +223,7 @@ export async function startRavenPrivateRuntime({
   trustedSubjectRef = "",
   runtimeLabel = "Raven Private Runtime",
   workloadClass = "systemia.raven-private-runtime.v1",
+  teamReviewExecutor = null,
 } = {}) {
   const resolvedState = path.resolve(clean(stateDir) || "");
   if (!clean(stateDir)) throw new Error("raven_state_dir_required");
@@ -251,7 +252,8 @@ export async function startRavenPrivateRuntime({
       loopback_only: true,
       provider_independent_boot: true,
       external_ai_required: false,
-      ai_inference_enabled: false,
+      ai_inference_enabled: typeof teamReviewExecutor === "function",
+      internal_readonly_team_review_enabled: typeof teamReviewExecutor === "function",
       base44_required: false,
       command_planning_enabled: true,
       execution_authority_granted: false,
@@ -275,6 +277,41 @@ export async function startRavenPrivateRuntime({
 
     if (!authorize(req)) {
       return json(res, 401, { ok: false, state: "raven_runtime_authority_required" });
+    }
+
+    if (req.method === "POST" && url.pathname === "/v1/team-review") {
+      if (typeof teamReviewExecutor !== "function") {
+        return json(res, 409, {
+          ok: false,
+          status: "blocked",
+          blocked_reason: "Raven team-review inference adapter is not configured.",
+          base44_used: false,
+          external_side_effects_authorized: false,
+        });
+      }
+      try {
+        const body = await readBody(req);
+        const result = await teamReviewExecutor(body);
+        const status = result?.status === "completed"
+          ? 200
+          : result?.status === "blocked"
+            ? 409
+            : 502;
+        return json(res, status, {
+          ok: result?.status === "completed",
+          ...result,
+          base44_used: false,
+          external_side_effects_authorized: false,
+        });
+      } catch (error) {
+        return json(res, 400, {
+          ok: false,
+          status: "failed",
+          error: error?.message || "raven_team_review_failed",
+          base44_used: false,
+          external_side_effects_authorized: false,
+        });
+      }
     }
 
     if (req.method === "GET" && url.pathname === "/v1/teams") {
