@@ -1,0 +1,32 @@
+name: DayTrade Threshold Robustness Once
+
+on:
+  push:
+    branches:
+      - "systemia/daytrade-threshold-robustness-2026-10-06"
+
+permissions:
+  contents: read
+
+jobs:
+  robustness:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Prove threshold robustness diagnostic
+        run: node systemia/daytrade-lens/edge-spread-threshold-robustness.test.mjs
+      - name: Build threshold robustness report
+        env:
+          DAYTRADE_THRESHOLD_ROBUSTNESS_OUTPUT: artifacts/daytrade-edge/spread-threshold-robustness-2026-10-06.json
+        run: node systemia/daytrade-lens/edge-spread-threshold-robustness.mjs
+      - name: Upload robustness report
+        uses: actions/upload-artifact@v4
+        with:
+          name: daytrade-threshold-robustness-${{ github.run_id }}
+          path: artifacts/daytrade-edge/spread-threshold-robustness-2026-10-06.json
+          if-no-files-found: error
+          retention-days: 30
