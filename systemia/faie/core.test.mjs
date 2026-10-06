@@ -192,3 +192,25 @@ test('FAIE keeps a thesis assumption register without pretending related evidenc
   assert.equal(freight.criticality, 'high');
   assert.equal(result.investigation.thesis_memory.verdict_authority, false);
 });
+
+
+test('FAIE evidence acquisition queue turns missing dimensions into governed missions', () => {
+  let state = emptyFaieState();
+  state = ingestFaieObservation(state, observation(), { now: NOW }).state;
+
+  const result = buildFaieInvestigation(state, {
+    question: 'What evidence should shape regional food infrastructure using living soil and natural light in Yakima?',
+    region_keys: ['yakima-wa'],
+    asset_types: ['regional food production infrastructure']
+  }, { now: NOW });
+
+  const queue = result.investigation.evidence_acquisition_queue;
+  assert.ok(queue.length >= 1);
+  assert.ok(queue.some((item) => item.dimension === 'soil'));
+  assert.ok(queue.every((item) => item.external_action_taken === false));
+  assert.ok(queue.every((item) => item.human_or_separate_authority_required === true));
+  assert.deepEqual(
+    result.investigation.decision_packet.decide.evidence_acquisition_queue,
+    queue
+  );
+});
