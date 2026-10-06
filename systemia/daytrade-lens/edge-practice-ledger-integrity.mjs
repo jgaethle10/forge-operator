@@ -124,7 +124,6 @@ export function buildPracticeLedgerIntegrity({
     !duplicateRunIds.length &&
     !duplicateArtifactIds.length &&
     !duplicateDigests.length &&
-    !overlaps.length &&
     !authorityViolations.length &&
     !ruleDrift.length;
 
@@ -138,14 +137,16 @@ export function buildPracticeLedgerIntegrity({
       duplicate_source_run_ids:duplicateRunIds,
       duplicate_source_artifact_ids:duplicateArtifactIds,
       duplicate_source_artifact_digests:duplicateDigests,
-      overlapping_windows:overlaps,
       authority_violations:authorityViolations,
       frozen_rule_drift:ruleDrift,
+    },
+    independence_exclusions:{
+      physically_overlapping_windows:overlaps,
     },
     controls:{
       duplicate_runs_cannot_count_twice:true,
       duplicate_artifacts_cannot_count_twice:true,
-      overlapping_windows_are_not_independent_practice:true,
+      overlapping_windows_are_preserved_but_not_independent_practice:true,
       frozen_rule_drift_blocks_integrity:true,
       any_live_authority_blocks_integrity:true,
     },
