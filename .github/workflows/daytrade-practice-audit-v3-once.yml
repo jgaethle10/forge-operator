@@ -1,0 +1,51 @@
+name: DayTrade Practice Audit V3 Once
+
+on:
+  push:
+    branches:
+      - "systemia/daytrade-practice-audit-2026-10-06-v3"
+
+permissions:
+  contents: read
+
+jobs:
+  audit:
+    runs-on: ubuntu-latest
+    timeout-minutes: 6
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Prove ledger integrity gate
+        run: node systemia/daytrade-lens/edge-practice-ledger-integrity.test.mjs
+      - name: Run ledger integrity
+        env:
+          DAYTRADE_LEDGER_INTEGRITY_OUTPUT: artifacts/daytrade-edge/practice-ledger-integrity-2026-10-06.json
+        run: node systemia/daytrade-lens/edge-practice-ledger-integrity.mjs
+      - name: Prove practice scorecard
+        run: node systemia/daytrade-lens/edge-practice-scorecard.test.mjs
+      - name: Build practice scorecard
+        env:
+          DAYTRADE_PRACTICE_SCORECARD_OUTPUT: artifacts/daytrade-edge/practice-scorecard-2026-10-06-updated.json
+        run: node systemia/daytrade-lens/edge-practice-scorecard.mjs
+      - name: Prove diversity gate
+        run: node systemia/daytrade-lens/edge-practice-diversity-readiness.test.mjs
+      - name: Build diversity readiness
+        env:
+          DAYTRADE_DIVERSITY_OUTPUT: artifacts/daytrade-edge/practice-diversity-2026-10-06-updated.json
+        run: node systemia/daytrade-lens/edge-practice-diversity-readiness.mjs
+      - name: Prove threshold robustness
+        run: node systemia/daytrade-lens/edge-spread-threshold-robustness.test.mjs
+      - name: Build threshold robustness
+        env:
+          DAYTRADE_THRESHOLD_ROBUSTNESS_OUTPUT: artifacts/daytrade-edge/spread-threshold-robustness-2026-10-06-updated.json
+        run: node systemia/daytrade-lens/edge-spread-threshold-robustness.mjs
+      - name: Upload practice audit
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: daytrade-practice-audit-${{ github.run_id }}
+          path: artifacts/daytrade-edge/*.json
+          if-no-files-found: warn
+          retention-days: 30
