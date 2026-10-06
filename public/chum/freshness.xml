@@ -2,11 +2,15 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
 <id>urn:evercraft:chum:crawl-pressure</id>
 <title>Evercraft CHUM Freshness Feed</title>
-<updated>2026-10-06T14:10:56.301Z</updated>
+<updated>2026-10-06T14:45:50.074Z</updated>
 <link rel="self" href="/chum/freshness.xml"/>
 <subtitle>Content-hash-backed public discovery changes. Freshness is not proof of provider pickup.</subtitle>
+<entry><id>urn:evercraft:chum:d8bcbc9c28ec3e0aa29125ea</id><title>/chum/crawler-radar.json</title><updated>2026-10-06T14:45:50.074Z</updated><link href="/chum/crawler-radar.json"/><category term="priority-80"/></entry>
+<entry><id>urn:evercraft:chum:aa9b916fd98945db10fa3cab</id><title>/chum/crawler-radar.txt</title><updated>2026-10-06T14:45:50.074Z</updated><link href="/chum/crawler-radar.txt"/><category term="priority-80"/></entry>
+<entry><id>urn:evercraft:chum:0df896994e643d779039e059</id><title>/chum/hot/index.json</title><updated>2026-10-06T14:45:50.074Z</updated><link href="/chum/hot/index.json"/><category term="priority-80"/></entry>
+<entry><id>urn:evercraft:chum:bc7689c4c0867339d0001ccc</id><title>/chum/strike/</title><updated>2026-10-06T14:45:50.074Z</updated><link href="/chum/strike/"/><category term="priority-80"/></entry>
+<entry><id>urn:evercraft:chum:494de3a9b5c21a35fdfdb6c2</id><title>/chum/strike/index.json</title><updated>2026-10-06T14:45:50.074Z</updated><link href="/chum/strike/index.json"/><category term="priority-80"/></entry>
 <entry><id>urn:evercraft:chum:770866315bf12f2c92446bfe</id><title>/chum/hot/</title><updated>2026-10-06T14:10:56.301Z</updated><link href="/chum/hot/"/><category term="priority-80"/></entry>
-<entry><id>urn:evercraft:chum:0df896994e643d779039e059</id><title>/chum/hot/index.json</title><updated>2026-10-06T14:10:56.301Z</updated><link href="/chum/hot/index.json"/><category term="priority-80"/></entry>
 <entry><id>urn:evercraft:chum:f261d7d98d8cd44fb1cfc1c4</id><title>/chum/answers/doors/find-the-smallest-raven-safety-capability-without-buying-the-full-suite-or-hardwar-0ee29c0618.json</title><updated>2026-10-06T14:10:27.346Z</updated><link href="/chum/answers/doors/find-the-smallest-raven-safety-capability-without-buying-the-full-suite-or-hardwar-0ee29c0618.json"/><category term="priority-160"/></entry>
 <entry><id>urn:evercraft:chum:a578a6e1caee77790999ed79</id><title>/chum/commercial/</title><updated>2026-10-06T14:10:27.346Z</updated><link href="/chum/commercial/"/><category term="priority-112"/></entry>
 <entry><id>urn:evercraft:chum:1f9c776a26c06d16a178e5c6</id><title>/chum/commercial/feed.json</title><updated>2026-10-06T14:10:27.346Z</updated><link href="/chum/commercial/feed.json"/><category term="priority-112"/></entry>
@@ -101,8 +105,4 @@
 <entry><id>urn:evercraft:chum:8b51813be511c64bca6b3bda</id><title>/chum/capabilities/raven-nexus-business-setup-v1/schema.jsonld</title><updated>2026-10-06T14:10:27.346Z</updated><link href="/chum/capabilities/raven-nexus-business-setup-v1/schema.jsonld"/><category term="priority-96"/></entry>
 <entry><id>urn:evercraft:chum:870f757fc10819a4b663efa8</id><title>/chum/capabilities/raven-nexus-home-setup-v1/</title><updated>2026-10-06T14:10:27.346Z</updated><link href="/chum/capabilities/raven-nexus-home-setup-v1/"/><category term="priority-96"/></entry>
 <entry><id>urn:evercraft:chum:cd81465080a6c3137779bb0a</id><title>/chum/capabilities/raven-nexus-home-setup-v1/capability.json</title><updated>2026-10-06T14:10:27.346Z</updated><link href="/chum/capabilities/raven-nexus-home-setup-v1/capability.json"/><category term="priority-96"/></entry>
-<entry><id>urn:evercraft:chum:a5dfcdfbd5868b8d71cf4917</id><title>/chum/capabilities/raven-nexus-home-setup-v1/llms.txt</title><updated>2026-10-06T14:10:27.346Z</updated><link href="/chum/capabilities/raven-nexus-home-setup-v1/llms.txt"/><category term="priority-96"/></entry>
-<entry><id>urn:evercraft:chum:8968fbea6e8403a8172afd15</id><title>/chum/capabilities/raven-nexus-home-setup-v1/schema.jsonld</title><updated>2026-10-06T14:10:27.346Z</updated><link href="/chum/capabilities/raven-nexus-home-setup-v1/schema.jsonld"/><category term="priority-96"/></entry>
-<entry><id>urn:evercraft:chum:2998abc09abf4ca1ffffc571</id><title>/chum/sell-now.html</title><updated>2026-10-06T14:10:27.346Z</updated><link href="/chum/sell-now.html"/><category term="priority-92"/></entry>
-<entry><id>urn:evercraft:chum:d7715e164565fa58cf4513ad</id><title>/chum/sell-now.json</title><updated>2026-10-06T14:10:27.346Z</updated><link href="/chum/sell-now.json"/><category term="priority-92"/></entry>
 </feed>
