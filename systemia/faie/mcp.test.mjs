@@ -134,3 +134,36 @@ test('FAIE MCP signal and health tools return bounded runtime views', async () =
     fs.rmSync(dir, { recursive: true, force: true });
   }
 });
+
+
+test('FAIE MCP carries thesis assumptions through the read-only investigation tool', async () => {
+  const dir = fs.mkdtempSync(path.join(os.tmpdir(), 'faie-mcp-thesis-'));
+  try {
+    const runtime = createFaieRuntime({
+      stateDir: dir,
+      collectorConfig: { enabled: false }
+    });
+    runtime.ingest(observation(), { now: '2026-09-30T20:00:00.000Z' });
+
+    const response = await executeFaieMcpRpc(runtime, {
+      jsonrpc: '2.0',
+      id: 5,
+      method: 'tools/call',
+      params: {
+        name: 'investigate_faie_evidence',
+        arguments: {
+          question: 'What evidence bears on this Yakima water thesis?',
+          region_keys: ['yakima-wa'],
+          thesis_assumptions: ['Yakima water availability can support the target production system.']
+        }
+      }
+    });
+
+    const memory = response.result.structuredContent.investigation.thesis_memory;
+    assert.equal(memory.assumption_count, 1);
+    assert.equal(memory.assumptions[0].verdict_authority, false);
+    assert.ok(['related_evidence_present', 'unknown'].includes(memory.assumptions[0].evaluation_state));
+  } finally {
+    fs.rmSync(dir, { recursive: true, force: true });
+  }
+});
