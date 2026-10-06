@@ -99,15 +99,15 @@
     },
     {
       "product": "FAIE",
-      "intent": "Agriculture evidence briefs for water, land resilience, and production risk.",
+      "intent": "Evidence-first food-infrastructure, agriculture, water, land, production and resilience intelligence.",
       "registry_name": null,
-      "registry_state": "not_published",
-      "remote_mcp": null,
+      "registry_state": "pending",
+      "remote_mcp": "https://fabric.systemiacommandcenters.com/mcp/faie",
       "runtime_path": null,
       "runtime_workload_class": null,
-      "public_origin_state": "legacy_provider_retired_owned_route_pending",
+      "public_origin_state": "owned_public_https_external_canary_verified",
       "plugin_package": "plugins/faie",
-      "state": "owned_runtime_route_pending",
+      "state": "public_https_verified_registry_pending",
       "truth_boundary": "Preserve source provenance, uncertainty, geography, and date boundaries. Do not turn modeled or incomplete evidence into certainty."
     },
     {
