@@ -1,0 +1,3 @@
+frozen_rule=spread-abstention-v1
+market_phase=CLOSING
+live_trade_authority=false
