@@ -1,26 +1,8 @@
 {
   "schema": "evercraft.chum.provider-probe-history.v1",
-  "updated_at": "2026-10-06T20:50:31.234Z",
+  "updated_at": "2026-10-06T21:24:59.472Z",
   "max_records": 500,
   "records": [
-    {
-      "receipt_key_sha256": "f18dbfaecb28cb54d6a6b8e239d16b94bc18f7f30120c9a18a60dc87b1c8e6c7",
-      "observed_at": "2026-10-05T23:19:41.432Z",
-      "provider": "generic_agent",
-      "provider_surface": "machine_client",
-      "product_key": "legacy-rescue-lab",
-      "case_id": "legacy-rescue-broken-checkout-002",
-      "prompt_sha256": "9324e8f7da1c1dc9db9393f24af14bd3f3d89d8e584a9a312b756bf954042970",
-      "pickup_observed": true,
-      "provider_receipt_sha256": "033f6908adc686d7908d4300f862c2967186ab082a45c460f4c3407e25af1a11",
-      "response_sha256": "f68e9a1ceb3740b70269e96408b801a15668889dee3a13a23cd1d02c7317edf8",
-      "source": "authorized_provider_probe",
-      "privacy": {
-        "full_provider_response_persisted": false,
-        "provider_session_reference_persisted": false,
-        "credentials_persisted": false
-      }
-    },
     {
       "receipt_key_sha256": "1df8335370d8a782708482b0010810bb92e1047c22cccec9b471fd175388f245",
       "observed_at": "2026-10-06T00:03:30.589Z",
@@ -8996,6 +8978,24 @@
       "pickup_observed": true,
       "provider_receipt_sha256": "44766dacabed748479c9721add8e8b408c032d4330cf02eb756dfb003f6e91af",
       "response_sha256": "432756eae19fa82bd0b52538ac94c750a00123a2c0b4b13d477c5e6edefa5255",
+      "source": "authorized_provider_probe",
+      "privacy": {
+        "full_provider_response_persisted": false,
+        "provider_session_reference_persisted": false,
+        "credentials_persisted": false
+      }
+    },
+    {
+      "receipt_key_sha256": "c85af60940a55ad57cf45274d543cd4e875c3365b1ee5db5ac445d920f251ec5",
+      "observed_at": "2026-10-06T21:24:59.472Z",
+      "provider": "generic_agent",
+      "provider_surface": "machine_client",
+      "product_key": "legacy-rescue-lab",
+      "case_id": "legacy-rescue-broken-checkout-002",
+      "prompt_sha256": "9324e8f7da1c1dc9db9393f24af14bd3f3d89d8e584a9a312b756bf954042970",
+      "pickup_observed": true,
+      "provider_receipt_sha256": "7aff0aecd4d4ed0c10c5264be5d6fb5892c5ae87c3c80fcc49bae58af4f57e8b",
+      "response_sha256": "f68e9a1ceb3740b70269e96408b801a15668889dee3a13a23cd1d02c7317edf8",
       "source": "authorized_provider_probe",
       "privacy": {
         "full_provider_response_persisted": false,
