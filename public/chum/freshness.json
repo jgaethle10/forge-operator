@@ -2,7 +2,7 @@
   "schema": "evercraft.chum.crawl-pressure.v1",
   "provider": "Evercraft LLC",
   "coordinator": "CHUM",
-  "updated_at": "2026-10-06T16:39:43.960Z",
+  "updated_at": "2026-10-06T16:40:11.839Z",
   "purpose": "Content-hash-backed freshness signals for public Evercraft discovery surfaces. A freshness signal requests attention; it does not prove indexing, ranking, recommendation, citation or provider pickup.",
   "indexnow": {
     "supported": true,
@@ -11,272 +11,29 @@
   },
   "latest_change_batch": [
     {
-      "path": "/chum/intents/forensiscope-evidence-review-v1/",
-      "last_changed": "2026-10-06T16:39:43.960Z",
-      "priority": 158
-    },
-    {
-      "path": "/chum/intents/foundry-app-escape-audit-v1/",
-      "last_changed": "2026-10-06T16:39:43.960Z",
-      "priority": 158
-    },
-    {
-      "path": "/chum/intents/website-launch-service-v1/",
-      "last_changed": "2026-10-06T16:39:43.960Z",
-      "priority": 158
-    },
-    {
-      "path": "/chum/intents/agent-proving-mission-v1/",
-      "last_changed": "2026-10-06T16:39:43.960Z",
-      "priority": 98
-    },
-    {
-      "path": "/chum/intents/ai-capability-install-v1/",
-      "last_changed": "2026-10-06T16:39:43.960Z",
-      "priority": 98
-    },
-    {
-      "path": "/chum/intents/aliev-site-opportunity-snapshot-v1/",
-      "last_changed": "2026-10-06T16:39:43.960Z",
-      "priority": 98
-    },
-    {
-      "path": "/chum/intents/audit-center-website-audit-machine-v1/",
-      "last_changed": "2026-10-06T16:39:43.960Z",
-      "priority": 98
-    },
-    {
-      "path": "/chum/intents/buildflow-bounded-agent-action-v1/",
-      "last_changed": "2026-10-06T16:39:43.960Z",
-      "priority": 98
-    },
-    {
-      "path": "/chum/intents/buildflow-enterprise-ops-router-v1/",
-      "last_changed": "2026-10-06T16:39:43.960Z",
-      "priority": 98
-    },
-    {
-      "path": "/chum/intents/buildflow-entity-resolution-machine-v1/",
-      "last_changed": "2026-10-06T16:39:43.960Z",
-      "priority": 98
-    },
-    {
-      "path": "/chum/intents/buildflow-process-audit-machine-v1/",
-      "last_changed": "2026-10-06T16:39:43.960Z",
-      "priority": 98
-    },
-    {
-      "path": "/chum/intents/buildflow-procure-to-pay-shadow-v1/",
-      "last_changed": "2026-10-06T16:39:43.960Z",
-      "priority": 98
-    },
-    {
-      "path": "/chum/intents/buildflow-shadow-migration-machine-v1/",
-      "last_changed": "2026-10-06T16:39:43.960Z",
-      "priority": 98
-    },
-    {
-      "path": "/chum/intents/callproof-complaint-packet-machine-v1/",
-      "last_changed": "2026-10-06T16:39:43.960Z",
-      "priority": 98
-    },
-    {
-      "path": "/chum/intents/capability-concierge-v1/",
-      "last_changed": "2026-10-06T16:39:43.960Z",
-      "priority": 98
-    },
-    {
-      "path": "/chum/intents/career-command-interview-practice-machine-v1/",
-      "last_changed": "2026-10-06T16:39:43.960Z",
-      "priority": 98
-    },
-    {
-      "path": "/chum/intents/career-command-resume-job-fit-machine-v1/",
-      "last_changed": "2026-10-06T16:39:43.960Z",
-      "priority": 98
-    },
-    {
-      "path": "/chum/intents/community-health-evidence-brief-v1/",
-      "last_changed": "2026-10-06T16:39:43.960Z",
-      "priority": 98
-    },
-    {
-      "path": "/chum/intents/condition-desk-field-ops-v1/",
-      "last_changed": "2026-10-06T16:39:43.960Z",
-      "priority": 98
-    },
-    {
-      "path": "/chum/intents/datafoundry-data-gap-audit-machine-v1/",
-      "last_changed": "2026-10-06T16:39:43.960Z",
-      "priority": 98
-    },
-    {
-      "path": "/chum/intents/deck-capital-fit-sprint-machine-v1/",
-      "last_changed": "2026-10-06T16:39:43.960Z",
-      "priority": 98
-    },
-    {
-      "path": "/chum/intents/eps-estimate-engine-machine-v1/",
-      "last_changed": "2026-10-06T16:39:43.960Z",
-      "priority": 98
-    },
-    {
-      "path": "/chum/intents/eventwave-paid-promotion-v1/",
-      "last_changed": "2026-10-06T16:39:43.960Z",
-      "priority": 98
-    },
-    {
-      "path": "/chum/intents/evercraft-clip-social-video-v1/",
-      "last_changed": "2026-10-06T16:39:43.960Z",
-      "priority": 98
-    },
-    {
-      "path": "/chum/intents/evercraft-network-resilience-membership-v1/",
-      "last_changed": "2026-10-06T16:39:43.960Z",
-      "priority": 98
-    },
-    {
-      "path": "/chum/intents/evercraft-web-browser-agent-v1/",
-      "last_changed": "2026-10-06T16:39:43.960Z",
-      "priority": 98
-    },
-    {
-      "path": "/chum/intents/evermaps-evidence-projection-machine-v1/",
-      "last_changed": "2026-10-06T16:39:43.960Z",
-      "priority": 98
-    },
-    {
-      "path": "/chum/intents/faie-signal-brief-v1/",
-      "last_changed": "2026-10-06T16:39:43.960Z",
-      "priority": 98
-    },
-    {
-      "path": "/chum/intents/findmypart-paid-hunt-v1/",
-      "last_changed": "2026-10-06T16:39:43.960Z",
-      "priority": 98
-    },
-    {
-      "path": "/chum/intents/findmypart-part-passport-v1/",
-      "last_changed": "2026-10-06T16:39:43.960Z",
-      "priority": 98
-    },
-    {
-      "path": "/chum/intents/findmypart-repair-shop-desk-v1/",
-      "last_changed": "2026-10-06T16:39:43.960Z",
-      "priority": 98
-    },
-    {
-      "path": "/chum/intents/freight-load-exception-intelligence-machine-v1/",
-      "last_changed": "2026-10-06T16:39:43.960Z",
-      "priority": 98
-    },
-    {
-      "path": "/chum/intents/globalstat-country-intelligence-machine-v1/",
-      "last_changed": "2026-10-06T16:39:43.960Z",
-      "priority": 98
-    },
-    {
-      "path": "/chum/intents/income-war-map-v1/",
-      "last_changed": "2026-10-06T16:39:43.960Z",
-      "priority": 98
-    },
-    {
-      "path": "/chum/intents/large-document-corpus-review-v1/",
-      "last_changed": "2026-10-06T16:39:43.960Z",
-      "priority": 98
-    },
-    {
-      "path": "/chum/intents/littlered-kdp-export-qa-machine-v1/",
-      "last_changed": "2026-10-06T16:39:43.960Z",
-      "priority": 98
-    },
-    {
-      "path": "/chum/intents/portfolio-sentinel-v1/",
-      "last_changed": "2026-10-06T16:39:43.960Z",
-      "priority": 98
-    },
-    {
-      "path": "/chum/intents/raven-nexus-pain-router-v1/",
-      "last_changed": "2026-10-06T16:39:43.960Z",
-      "priority": 98
-    },
-    {
-      "path": "/chum/intents/rivet-site-underwriting-v1/",
-      "last_changed": "2026-10-06T16:39:43.960Z",
-      "priority": 98
-    },
-    {
-      "path": "/chum/intents/roasted-text-pressure-test-machine-v1/",
-      "last_changed": "2026-10-06T16:39:43.960Z",
-      "priority": 98
-    },
-    {
-      "path": "/chum/intents/site-survive-rapid-audit-v1/",
-      "last_changed": "2026-10-06T16:39:43.960Z",
-      "priority": 98
-    },
-    {
-      "path": "/chum/intents/systemia-yard-runtime-extension-v1/",
-      "last_changed": "2026-10-06T16:39:43.960Z",
-      "priority": 98
-    },
-    {
-      "path": "/chum/intents/talent-evidence-profile-machine-v1/",
-      "last_changed": "2026-10-06T16:39:43.960Z",
-      "priority": 98
-    },
-    {
-      "path": "/chum/intents/talent-proof-portal-v1/",
-      "last_changed": "2026-10-06T16:39:43.960Z",
-      "priority": 98
-    },
-    {
-      "path": "/chum/intents/towi-evidence-research-machine-v1/",
-      "last_changed": "2026-10-06T16:39:43.960Z",
-      "priority": 98
-    },
-    {
-      "path": "/chum/intents/worldstate-reality-delta-v1/",
-      "last_changed": "2026-10-06T16:39:43.960Z",
-      "priority": 98
-    },
-    {
-      "path": "/chum/revenue.html",
-      "last_changed": "2026-10-06T16:39:43.960Z",
-      "priority": 90
-    },
-    {
-      "path": "/chum/revenue.json",
-      "last_changed": "2026-10-06T16:39:43.960Z",
-      "priority": 90
-    },
-    {
-      "path": "/chum/revenue.txt",
-      "last_changed": "2026-10-06T16:39:43.960Z",
-      "priority": 90
-    },
-    {
-      "path": "/.well-known/evercraft-agent-commerce.json",
-      "last_changed": "2026-10-06T16:39:43.960Z",
-      "priority": 84
-    },
-    {
-      "path": "/chum/agent-commerce.html",
-      "last_changed": "2026-10-06T16:39:43.960Z",
-      "priority": 80
-    },
-    {
-      "path": "/chum/agent-commerce.json",
-      "last_changed": "2026-10-06T16:39:43.960Z",
+      "path": "/chum/hot/",
+      "last_changed": "2026-10-06T16:40:11.839Z",
       "priority": 80
     },
     {
       "path": "/chum/hot/index.json",
-      "last_changed": "2026-10-06T16:39:43.960Z",
+      "last_changed": "2026-10-06T16:40:11.839Z",
       "priority": 80
     }
   ],
   "recent_surfaces": [
+    {
+      "path": "/chum/hot/",
+      "url": "/chum/hot/",
+      "last_changed": "2026-10-06T16:40:11.839Z",
+      "priority": 80
+    },
+    {
+      "path": "/chum/hot/index.json",
+      "url": "/chum/hot/index.json",
+      "last_changed": "2026-10-06T16:40:11.839Z",
+      "priority": 80
+    },
     {
       "path": "/chum/intents/forensiscope-evidence-review-v1/",
       "url": "/chum/intents/forensiscope-evidence-review-v1/",
@@ -590,12 +347,6 @@
       "priority": 80
     },
     {
-      "path": "/chum/hot/index.json",
-      "url": "/chum/hot/index.json",
-      "last_changed": "2026-10-06T16:39:43.960Z",
-      "priority": 80
-    },
-    {
       "path": "/chum/crawler-radar.json",
       "url": "/chum/crawler-radar.json",
       "last_changed": "2026-10-06T16:35:39.046Z",
@@ -611,12 +362,6 @@
       "path": "/chum/strike/index.json",
       "url": "/chum/strike/index.json",
       "last_changed": "2026-10-06T16:35:39.046Z",
-      "priority": 80
-    },
-    {
-      "path": "/chum/hot/",
-      "url": "/chum/hot/",
-      "last_changed": "2026-10-06T16:16:19.046Z",
       "priority": 80
     },
     {
