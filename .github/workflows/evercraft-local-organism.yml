@@ -14,6 +14,8 @@ on:
       - 'systemia/compute/install-local-organism-user.sh'
       - 'systemia/compute/LOCAL_ORGANISM.md'
       - 'systemia/compute/local-organism.proof.mjs'
+      - 'systemia/raven/bootstrap-local-inference.sh'
+      - 'systemia/raven/seal-inference-key.mjs'
       - 'tests/local-organism-health-watch.test.mjs'
       - '.github/workflows/evercraft-local-organism.yml'
   push:
@@ -25,6 +27,8 @@ on:
       - 'systemia/compute/install-local-organism-user.sh'
       - 'systemia/compute/LOCAL_ORGANISM.md'
       - 'systemia/compute/local-organism.proof.mjs'
+      - 'systemia/raven/bootstrap-local-inference.sh'
+      - 'systemia/raven/seal-inference-key.mjs'
       - 'tests/local-organism-health-watch.test.mjs'
       - '.github/workflows/evercraft-local-organism.yml'
 
@@ -37,8 +41,11 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: '22'
-      - name: Syntax-check user-mode installer
-        run: bash -n systemia/compute/install-local-organism-user.sh
+      - name: Syntax-check user-mode installers
+        run: |
+          bash -n systemia/compute/install-local-organism-user.sh
+          bash -n systemia/raven/bootstrap-local-inference.sh
+          node --check systemia/raven/seal-inference-key.mjs
       - name: Prove current-stack local organism and restart continuity
         run: node systemia/compute/local-organism.proof.mjs
       - name: Prove local-organism self-healing health watch
