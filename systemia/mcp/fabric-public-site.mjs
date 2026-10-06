@@ -375,3 +375,43 @@ export function renderCapabilities(capabilities=[]){
   <div class="capability-grid">${cards}</div>
 </main>`);
 }
+
+export function renderCapabilityDetail(item){
+  const docs=(item.connections||[]).filter((connection)=>connection.type==='docs');
+  const useWhen=(item.use_when||[]).slice(0,10);
+  const commercial=item.commercial_state||item.state;
+  const entry=item.entry_paid_offer||null;
+  const entryPrice=entry?.price||(
+    Number.isFinite(entry?.price_usd_normalized) ? String.fromCharCode(36)+entry.price_usd_normalized : ''
+  );
+  const resources=docs.length
+    ? '<div class="connection-list">'+docs.map((connection)=>'<a class="connection" href="'+escapeHtml(connection.url)+'" rel="noreferrer"><strong>'+escapeHtml(connection.label)+'</strong><span>'+escapeHtml(connection.type)+' · '+escapeHtml(connection.state)+'</span></a>').join('')+'</div>'
+    : '<p>No separate public documentation route is represented for this capability yet.</p>';
+  const prompts=useWhen.length
+    ? '<ul>'+useWhen.map((value)=>'<li>“'+escapeHtml(value)+'”</li>').join('')+'</ul>'
+    : '<p>This capability is currently discovered from its published problem description.</p>';
+  const startState=item.start_url_state||'not_declared';
+  return shell(item.name+' · Evercraft Fabric',[
+    '<main>',
+    '<section class="hero">',
+    '<div class="eyebrow">Evercraft capability</div>',
+    '<h1>'+escapeHtml(item.name)+'</h1>',
+    '<p class="lede">'+escapeHtml(item.description)+'</p>',
+    '<div class="actions"><a class="btn primary" href="/offers">See simple offers</a><a class="btn" href="/capabilities">Browse all capabilities</a></div>',
+    '</section>',
+    '<div class="detail-grid">',
+    '<section class="detail-panel"><h2>When this is the right tool</h2>'+prompts+'</section>',
+    '<section class="detail-panel"><h2>Current offer</h2>'
+      +(item.pricing?'<p class="strong">'+escapeHtml(item.pricing)+'</p>':'<p>No fixed public price is currently represented by Fabric.</p>')
+      +(entry?'<p><strong>Easiest published entry:</strong> '+escapeHtml(entry.name)+(entryPrice?' · '+escapeHtml(entryPrice):'')+'</p>':'')
+      +'<p><strong>Commercial state:</strong> '+escapeHtml(commercial)+'</p>'
+      +'<p><strong>Machine state:</strong> '+escapeHtml(item.state)+'</p>'
+      +'<p><strong>Verified start-path state:</strong> '+escapeHtml(startState)+'</p>'
+      +'<p>Discovery itself does not create a charge, paid engagement, deployment, message, or other external action. Fabric will not invent a checkout or start route that the catalog has not verified.</p></section>',
+    '<section class="detail-panel"><h2>Continue deliberately</h2><p>For an AI or agent, use capability ID <code>'+escapeHtml(item.public_id)+'</code> through Evercraft Fabric. A paid or human continuation is exposed only when the capability publishes a verified start path.</p>'+resources+'</section>',
+    '<section class="detail-panel"><h2>Why the door is trustworthy</h2><p>This page is rendered from the same live public-safe capability metadata Fabric exposes to agents. If availability, pricing, or routing state changes in the catalog, this surface changes with it.</p><p><a class="docs-link" href="/capabilities/'+encodeURIComponent(item.public_id)+'.json">Machine-readable capability JSON →</a></p></section>',
+    '</div>',
+    '</main>'
+  ].join('\n'));
+}
+
