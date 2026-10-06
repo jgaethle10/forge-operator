@@ -42,7 +42,7 @@ test("Raven planning and execution are separate bounded surfaces",()=>{
   assert.ok(server.includes('url.pathname === "/api/raven/execute"'));
   assert.ok(server.includes('"home.raven.execute"'));
   assert.ok(server.includes("RAVEN_NEXUS_WORK_URL"));
-  assert.ok(server.includes("RAVEN_NEXUS_WORK_TOKEN"));
+  assert.ok(server.includes("RAVEN_NEXUS_WORK_TOKEN_FILE"));
   assert.equal(server.includes('"/api/raven/dispatch"'),false);
 });
 
