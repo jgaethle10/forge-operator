@@ -1,0 +1,37 @@
+{
+  "schema": "evercraft.daytrade.spread-threshold-robustness.v1",
+  "generated_at": "2026-10-06T16:48:15.413Z",
+  "source_run_id": 37498557776,
+  "source_artifact_id": 11428422685,
+  "source_artifact_digest": "sha256:b586aae7436dcce6338acc23928e3699d912419f11829203f3325a673a8cdf17",
+  "windows": 5,
+  "instrument_decisions": 15,
+  "always_cross_total_pnl_usd": -0.061372108277698345,
+  "frozen_rule_threshold_bps": 3,
+  "frozen_rule_row": {
+    "traded_decisions": 9,
+    "abstained_decisions": 6,
+    "simulated_pnl_usd": 0.0008867808685621981,
+    "improvement_vs_always_cross_usd": 0.06225888914626054,
+    "profitable_traded_decisions": 5,
+    "losing_traded_decisions": 4
+  },
+  "threshold_grid": [
+    {"max_entry_spread_bps":0.5,"simulated_pnl_usd":-0.004729774967003664,"improvement_vs_always_cross_usd":0.05664233331069468},
+    {"max_entry_spread_bps":1,"simulated_pnl_usd":-0.000524947255669872,"improvement_vs_always_cross_usd":0.06084716102202847},
+    {"max_entry_spread_bps":2,"simulated_pnl_usd":-0.01820735492507808,"improvement_vs_always_cross_usd":0.043164753352620266},
+    {"max_entry_spread_bps":3,"simulated_pnl_usd":0.0008867808685621981,"improvement_vs_always_cross_usd":0.06225888914626054},
+    {"max_entry_spread_bps":4,"simulated_pnl_usd":-0.035578346216293966,"improvement_vs_always_cross_usd":0.02579376206140438},
+    {"max_entry_spread_bps":5,"simulated_pnl_usd":-0.061372108277698345,"improvement_vs_always_cross_usd":0}
+  ],
+  "interpretation": {
+    "adjacent_2_3_4_bps_all_nonnegative_vs_always_cross": true,
+    "three_bps_not_promoted_because_it_was_best_in_this_grid": true,
+    "post_hoc_robustness_diagnostic_only": true,
+    "same_day_selection_bias_remains": true,
+    "independent_market_validation": false,
+    "signal_validation": false,
+    "live_rule_authorized": false
+  },
+  "live_trade_authority": false
+}
