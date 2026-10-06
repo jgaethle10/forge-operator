@@ -158,6 +158,27 @@
       </ul>
     </section>
   </div>
+
+  <section class="panel" style="margin-top:18px">
+    <h2>Compare candidate regions</h2>
+    <div class="meta">Run the same FAIE rubric across two candidates. The ordering measures evidence readiness only. It does not declare which site is better.</div>
+    <div class="two">
+      <div>
+        <label for="compareLabelA">Candidate A</label>
+        <input id="compareLabelA" placeholder="Yakima Valley">
+        <label for="compareRegionA">Region key A</label>
+        <input id="compareRegionA" placeholder="yakima-wa">
+      </div>
+      <div>
+        <label for="compareLabelB">Candidate B</label>
+        <input id="compareLabelB" placeholder="Second candidate">
+        <label for="compareRegionB">Region key B</label>
+        <input id="compareRegionB" placeholder="candidate-region-key">
+      </div>
+    </div>
+    <button id="compareRun" type="button">Compare evidence readiness</button>
+    <div id="comparisonResult" style="margin-top:18px"><div class="quiet">Add two candidate regions to compare the evidence packets side by side.</div></div>
+  </section>
 </main>
 
 <footer>
@@ -271,6 +292,40 @@ function renderResult(inv) {
   });
 }
 
+function renderComparison(comparison) {
+  const el = document.getElementById('comparisonResult');
+  const candidates = Array.isArray(comparison.candidates) ? comparison.candidates : [];
+  const order = new Map((comparison.evidence_readiness_order || []).map((row) => [row.candidate_id, row.evidence_rank]));
+
+  let html = '<div class="meta">' + esc(comparison.interpretation || '') + '</div>';
+  html += '<div class="grid2" style="margin-top:12px">';
+  candidates
+    .slice()
+    .sort((a,b) => (order.get(a.candidate_id) || 99) - (order.get(b.candidate_id) || 99))
+    .forEach((candidate) => {
+      const rank = order.get(candidate.candidate_id) || '?';
+      const missing = Array.isArray(candidate.missing_dimensions) ? candidate.missing_dimensions : [];
+      html += '<article class="panel" style="padding:17px">';
+      html += '<div class="tags"><span class="tag">evidence rank ' + esc(rank) + '</span><span class="tag">' + esc(candidate.decision_readiness || 'unknown') + '</span></div>';
+      html += '<h2 style="font-size:1.25rem">' + esc(candidate.label) + '</h2>';
+      html += '<div class="coverage">';
+      html += '<span class="pill">Evidence readiness: <strong>' + Math.round((Number(candidate.evidence_readiness_score)||0)*100) + '%</strong></span>';
+      html += '<span class="pill">Sources: <strong>' + esc(candidate.independent_source_family_count || 0) + '</strong></span>';
+      html += '<span class="pill">Strong: <strong>' + esc(candidate.strong_finding_count || 0) + '</strong></span>';
+      html += '</div>';
+      if (missing.length) {
+        html += '<div class="meta" style="margin-top:10px">Missing decision dimensions</div><div class="tags" style="margin-top:8px">';
+        missing.forEach((dimension) => { html += '<span class="tag reported">' + esc(dimension) + '</span>'; });
+        html += '</div>';
+      } else {
+        html += '<div class="meta" style="margin-top:10px">No expected decision dimensions are currently missing from the evidence packet.</div>';
+      }
+      html += '</article>';
+    });
+  html += '</div>';
+  el.innerHTML = html;
+}
+
 async function loadState() {
   const statusbar = document.getElementById('statusbar');
   const signalsEl = document.getElementById('signals');
@@ -321,7 +376,63 @@ document.getElementById('agnormalPreset').addEventListener('click', () => {
     'Regional labor, utility, and distribution economics can support scaled production.'
   ].join('\n');
   document.getElementById('horizon').value = '90';
+  document.getElementById('compareLabelA').value = 'Yakima Valley';
+  document.getElementById('compareRegionA').value = 'yakima-wa';
   document.getElementById('question').focus();
+});
+
+document.getElementById('compareRun').addEventListener('click', async () => {
+  const button = document.getElementById('compareRun');
+  const labelA = document.getElementById('compareLabelA').value.trim();
+  const regionA = document.getElementById('compareRegionA').value.trim();
+  const labelB = document.getElementById('compareLabelB').value.trim();
+  const regionB = document.getElementById('compareRegionB').value.trim();
+  const question = document.getElementById('question').value.trim() ||
+    'Compare evidence readiness for regionally scaled food infrastructure.';
+  const asset = document.getElementById('asset').value.trim() || 'regional food production infrastructure';
+  const crop = document.getElementById('crop').value.trim();
+  const waterSource = document.getElementById('water').value.trim();
+  const assumptionsText = document.getElementById('assumptions').value.trim();
+  const thesisAssumptions = assumptionsText
+    ? assumptionsText.split(/\n+/).map((row) => row.trim()).filter(Boolean).slice(0, 40)
+    : [];
+  const horizonDays = Number(document.getElementById('horizon').value) || 90;
+
+  if (!labelA || !regionA || !labelB || !regionB) {
+    document.getElementById('comparisonResult').innerHTML = '<div class="quiet error">Both candidate labels and region keys are required for the human comparison form.</div>';
+    return;
+  }
+
+  button.disabled = true;
+  button.textContent = 'Comparing…';
+  document.getElementById('comparisonResult').innerHTML = '<div class="quiet">Running the same evidence rubric across both candidates…</div>';
+
+  try {
+    const response = await fetch('/api/faie/compare', {
+      method:'POST',
+      headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({
+        question,
+        asset_types:[asset],
+        crop:crop || undefined,
+        water_source:waterSource || undefined,
+        thesis_assumptions:thesisAssumptions,
+        horizon_days:horizonDays,
+        candidates:[
+          {label:labelA,region_keys:[regionA]},
+          {label:labelB,region_keys:[regionB]}
+        ]
+      })
+    });
+    const payload = await response.json();
+    if (!response.ok) throw new Error(payload.error || 'Comparison failed.');
+    renderComparison(payload);
+  } catch (error) {
+    document.getElementById('comparisonResult').innerHTML = '<div class="quiet error">' + esc(error && error.message ? error.message : error) + '</div>';
+  } finally {
+    button.disabled = false;
+    button.textContent = 'Compare evidence readiness';
+  }
 });
 
 document.getElementById('form').addEventListener('submit', async (event) => {
