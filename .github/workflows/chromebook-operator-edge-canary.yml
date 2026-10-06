@@ -5,6 +5,9 @@ on:
     branches: [main]
     paths:
       - 'systemia/mcp/fabric-local-runtime.mjs'
+      - 'systemia/mcp/fabric-faie-runtime.mjs'
+      - 'systemia/faie/**'
+      - 'public/faie/**'
       - 'systemia/compute/device-identity.mjs'
       - 'systemia/compute/operator-public-edge-admit.mjs'
       - 'scripts/fabric-edge-external-canary.mjs'
