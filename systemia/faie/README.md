@@ -94,6 +94,7 @@ Internal investigation and write surfaces require FAIE_INTERNAL_TOKEN:
 - GET /api/faie/investigations/:id/markdown
 - POST /api/faie/investigations
 - POST /api/faie/ingest
+- POST /api/faie/rivet-context
 - POST /api/faie/worldstate-dispatch
 - POST /api/faie/run
 
@@ -154,6 +155,19 @@ Pilot acceptance gate:
 - controlled-environment coverage gaps are explicit
 - one-click Yakima Valley food-infrastructure scope is available on the real UI
 - human review remains required before consequential action
+
+## Owned evidence bridges
+
+FAIE can consume neutral site evidence already acquired by other Evercraft systems rather than forcing each specialist to rebuild the same source adapters.
+
+The internal `POST /api/faie/rivet-context` route accepts an authorized RIVET/AliEV site-intelligence snapshot and converts only reusable physical-site evidence into FAIE observations:
+
+- utility service-area and tariff candidates
+- traffic and freight context
+- parcel/planning context
+- incentive/program context
+
+The bridge explicitly excludes charger inventory, EV adoption, charging-session utilization, EV sales angles and EV-specific modeled demand. It does not upgrade the upstream evidence state or create site-suitability authority.
 
 ## Autonomous loop
 
