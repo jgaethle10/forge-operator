@@ -70,6 +70,7 @@ test("live acceptance requires all six Raven lanes and writes durable receipts",
       ["commercial","operations","finance","risk","customer","challenger"].sort()
     );
     assert.equal(result.acceptance_receipt.role_provider_receipts.length,6);
+    assert.ok(result.acceptance_receipt.team_execution_receipt_ref);
     assert.ok(result.acceptance_receipt.raven_receipt_hash);
     assert.equal(result.acceptance_receipt.base44_used,false);
     assert.equal(result.acceptance_receipt.external_side_effects_authorized,false);
