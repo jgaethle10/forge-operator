@@ -359,6 +359,7 @@ export function emptyFaieState() {
     observations: {},
     signals: {},
     investigations: {},
+    comparisons: {},
     receipts: [],
     last_cycle: null
   };
@@ -682,6 +683,126 @@ export function buildFaieInvestigation(inputState, input, { now = new Date().toI
   state.receipts = [...(state.receipts || []), receipt].slice(-10000);
 
   return { state, investigation, receipt };
+}
+
+export function buildFaieComparison(inputState, input = {}, { now = new Date().toISOString() } = {}) {
+  const question = clean(input.question || input.query);
+  if (!question) throw new TypeError('question is required');
+
+  const candidates = Array.isArray(input.candidates) ? input.candidates.slice(0, 8) : [];
+  if (candidates.length < 2) throw new TypeError('at least two comparison candidates are required');
+
+  let state = structuredClone(inputState || emptyFaieState());
+  const nowIso = iso(now);
+  const rows = [];
+
+  for (let index = 0; index < candidates.length; index += 1) {
+    const candidate = candidates[index] || {};
+    const label = clean(candidate.label || candidate.name || ('Candidate ' + (index + 1))).slice(0, 160);
+    const result = buildFaieInvestigation(state, {
+      question,
+      region_keys: candidate.region_keys || candidate.regions || candidate.region,
+      asset_types: candidate.asset_types || candidate.assets || input.asset_types || input.assets,
+      crop: candidate.crop || input.crop,
+      water_source: candidate.water_source || input.water_source,
+      thesis_assumptions: candidate.thesis_assumptions || candidate.assumptions || input.thesis_assumptions || input.assumptions,
+      horizon_days: candidate.horizon_days || input.horizon_days,
+      include_weak_evidence: candidate.include_weak_evidence ?? input.include_weak_evidence
+    }, { now: nowIso });
+
+    state = result.state;
+    const investigation = result.investigation;
+    const expected = investigation.coverage.expected_dimensions || [];
+    const covered = new Set(investigation.coverage.covered_dimensions || []);
+    const dimensionCoverage = expected.length
+      ? expected.filter((dimension) => covered.has(dimension)).length / expected.length
+      : investigation.findings.length ? 1 : 0;
+
+    const evidenceReadinessScore = Number(clamp01(
+      (0.35 * investigation.confidence) +
+      (0.25 * Math.min(1, investigation.coverage.independent_source_family_count / 4)) +
+      (0.20 * Math.min(1, investigation.coverage.strong_finding_count / 3)) +
+      (0.20 * dimensionCoverage)
+    ).toFixed(3));
+
+    rows.push({
+      candidate_id: 'faie-candidate:' + stableHash([label, investigation.scope]),
+      label,
+      investigation_id: investigation.investigation_id,
+      scope: investigation.scope,
+      evidence_readiness_score: evidenceReadinessScore,
+      decision_readiness: investigation.coverage.decision_readiness,
+      confidence: investigation.confidence,
+      matched_signal_count: investigation.coverage.matched_signal_count,
+      strong_finding_count: investigation.coverage.strong_finding_count,
+      independent_source_family_count: investigation.coverage.independent_source_family_count,
+      expected_dimensions: expected,
+      covered_dimensions: investigation.coverage.covered_dimensions,
+      missing_dimensions: investigation.coverage.missing_dimensions,
+      unknowns: investigation.unknowns,
+      evidence_needed: investigation.evidence_needed,
+      evidence_acquisition_queue: investigation.evidence_acquisition_queue,
+      thesis_memory: investigation.thesis_memory,
+      site_suitability_verdict: null,
+      investment_recommendation: null
+    });
+  }
+
+  const evidenceOrder = [...rows]
+    .sort((a, b) =>
+      b.evidence_readiness_score - a.evidence_readiness_score ||
+      b.independent_source_family_count - a.independent_source_family_count ||
+      a.label.localeCompare(b.label)
+    )
+    .map((row, index) => ({
+      evidence_rank: index + 1,
+      candidate_id: row.candidate_id,
+      label: row.label,
+      evidence_readiness_score: row.evidence_readiness_score
+    }));
+
+  const dimensionUniverse = unique(rows.flatMap((row) => row.expected_dimensions), 100);
+  const comparisonId = 'faie-comparison:' + stableHash([
+    question,
+    rows.map((row) => [row.candidate_id, row.investigation_id]),
+    nowIso
+  ]);
+
+  const comparison = {
+    schema: 'evercraft.faie.comparison.v1',
+    comparison_id: comparisonId,
+    created_at: nowIso,
+    question,
+    candidate_count: rows.length,
+    candidates: rows,
+    evidence_readiness_order: evidenceOrder,
+    dimension_universe: dimensionUniverse,
+    interpretation: 'Evidence-readiness rank compares the completeness and corroboration of the current FAIE evidence packet. It is not a site-suitability score, investment recommendation, crop recommendation, or authority to act.',
+    boundaries: [
+      'A more complete evidence packet does not mean a site is better.',
+      'A less complete evidence packet may reflect missing data rather than poor underlying conditions.',
+      'Modeled, reported, observed, and verified evidence remain distinct.',
+      'Consequential siting, capital, production, regulatory, and operating decisions require human review.'
+    ],
+    decision_authority: false,
+    publication_authority: false
+  };
+
+  state.comparisons = {
+    ...(state.comparisons || {}),
+    [comparisonId]: comparison
+  };
+
+  const receipt = {
+    schema: 'evercraft.faie.comparison-receipt.v1',
+    receipt_id: 'faie-comparison-receipt:' + stableHash([comparisonId, nowIso]),
+    comparison_id: comparisonId,
+    candidate_count: rows.length,
+    created_at: nowIso
+  };
+  state.receipts = [...(state.receipts || []), receipt].slice(-10000);
+
+  return { state, comparison, receipt };
 }
 
 export function publicFaieSnapshot(inputState, { limit = 50 } = {}) {
