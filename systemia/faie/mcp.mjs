@@ -70,6 +70,96 @@ export function faieMcpTools() {
           },
           crop: { type: 'string', maxLength: 120 },
           water_source: { type: 'string', maxLength: 120 },
+          thesis_assumptions: {
+            type: 'array',
+            maxItems: 40,
+            items: {
+              anyOf: [
+                { type: 'string', minLength: 1, maxLength: 500 },
+                {
+                  type: 'object',
+                  required: ['statement'],
+                  properties: {
+                    assumption_id: { type: 'string', maxLength: 160 },
+                    statement: { type: 'string', minLength: 1, maxLength: 500 },
+                    criticality: { type: 'string', maxLength: 40 }
+                  },
+                  additionalProperties: false
+                }
+              ]
+            }
+          },
+          horizon_days: {
+            type: 'integer',
+            minimum: 1,
+            maximum: 3650,
+            default: 90
+          },
+          include_weak_evidence: {
+            type: 'boolean',
+            default: false
+          }
+        },
+        additionalProperties: false
+      },
+      annotations
+    },
+    {
+      name: 'compare_faie_candidates',
+      title: 'Compare candidate food-infrastructure or agriculture scopes by evidence readiness',
+      description: 'Run the same bounded FAIE evidence rubric across 2 to 8 candidate regions or sites. The returned rank is evidence-readiness only, not site suitability or an investment recommendation.',
+      inputSchema: {
+        type: 'object',
+        required: ['question', 'candidates'],
+        properties: {
+          question: {
+            type: 'string',
+            minLength: 3,
+            maxLength: 1200
+          },
+          candidates: {
+            type: 'array',
+            minItems: 2,
+            maxItems: 8,
+            items: {
+              type: 'object',
+              required: ['label'],
+              properties: {
+                label: { type: 'string', minLength: 1, maxLength: 160 },
+                region_keys: {
+                  type: 'array',
+                  maxItems: 50,
+                  items: { type: 'string', minLength: 1, maxLength: 160 }
+                },
+                asset_types: {
+                  type: 'array',
+                  maxItems: 30,
+                  items: { type: 'string', minLength: 1, maxLength: 160 }
+                },
+                crop: { type: 'string', maxLength: 120 },
+                water_source: { type: 'string', maxLength: 120 },
+                thesis_assumptions: {
+                  type: 'array',
+                  maxItems: 40,
+                  items: { type: 'string', minLength: 1, maxLength: 500 }
+                },
+                horizon_days: { type: 'integer', minimum: 1, maximum: 3650 }
+              },
+              additionalProperties: false
+            }
+          },
+          asset_types: {
+            type: 'array',
+            maxItems: 30,
+            items: { type: 'string', minLength: 1, maxLength: 160 }
+          },
+          crop: { type: 'string', maxLength: 120 },
+          water_source: { type: 'string', maxLength: 120 },
+          thesis_assumptions: {
+            type: 'array',
+            maxItems: 40,
+            items: { type: 'string', minLength: 1, maxLength: 500 }
+          },
           horizon_days: {
             type: 'integer',
             minimum: 1,
@@ -185,6 +275,7 @@ export async function executeFaieMcpRpc(runtime, rpc) {
       asset_types: uniqueStrings(args.asset_types, 30),
       crop: clean(args.crop, 120),
       water_source: clean(args.water_source, 120),
+      thesis_assumptions: Array.isArray(args.thesis_assumptions) ? args.thesis_assumptions.slice(0, 40) : [],
       horizon_days: boundedInt(args.horizon_days, 90, 1, 3650),
       include_weak_evidence: args.include_weak_evidence === true
     });
@@ -193,6 +284,51 @@ export async function executeFaieMcpRpc(runtime, rpc) {
       ok: true,
       product: 'FAIE',
       investigation: publicFaieInvestigation(investigation),
+      persisted: false,
+      external_action_taken: false,
+      decision_authority: false,
+      publication_authority: false
+    }));
+  }
+
+  if (tool === 'compare_faie_candidates') {
+    const question = clean(args.question, 1200);
+    if (question.length < 3) {
+      return rpcError(id, -32602, 'question must contain at least 3 characters.');
+    }
+    if (!Array.isArray(args.candidates) || args.candidates.length < 2 || args.candidates.length > 8) {
+      return rpcError(id, -32602, 'candidates must contain between 2 and 8 items.');
+    }
+
+    const candidates = args.candidates.slice(0, 8).map((candidate, index) => ({
+      label: clean(candidate?.label || ('Candidate ' + (index + 1)), 160),
+      region_keys: uniqueStrings(candidate?.region_keys, 50),
+      asset_types: uniqueStrings(candidate?.asset_types, 30),
+      crop: clean(candidate?.crop, 120),
+      water_source: clean(candidate?.water_source, 120),
+      thesis_assumptions: Array.isArray(candidate?.thesis_assumptions)
+        ? candidate.thesis_assumptions.map((item) => clean(item, 500)).filter(Boolean).slice(0, 40)
+        : [],
+      horizon_days: boundedInt(candidate?.horizon_days, boundedInt(args.horizon_days, 90, 1, 3650), 1, 3650)
+    }));
+
+    const comparison = runtime.previewComparison({
+      question,
+      candidates,
+      asset_types: uniqueStrings(args.asset_types, 30),
+      crop: clean(args.crop, 120),
+      water_source: clean(args.water_source, 120),
+      thesis_assumptions: Array.isArray(args.thesis_assumptions)
+        ? args.thesis_assumptions.map((item) => clean(item, 500)).filter(Boolean).slice(0, 40)
+        : [],
+      horizon_days: boundedInt(args.horizon_days, 90, 1, 3650),
+      include_weak_evidence: args.include_weak_evidence === true
+    });
+
+    return rpcResult(id, toolResult({
+      ok: true,
+      product: 'FAIE',
+      comparison,
       persisted: false,
       external_action_taken: false,
       decision_authority: false,

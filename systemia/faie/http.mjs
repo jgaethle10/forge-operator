@@ -1,6 +1,8 @@
 import path from 'node:path';
 import { createFaieRuntime, investigationToMarkdown } from './runtime.mjs';
 import { executeFaieMcpRpc, faieMcpTools } from './mcp.mjs';
+import { rivetSnapshotToFaieObservations } from './rivet-bridge.mjs';
+import { collectUsdaSoilAtPoint } from './soil-source.mjs';
 
 function bearer(req) {
   const header = String(req.headers?.authorization || '');
@@ -87,6 +89,25 @@ export function registerFaieRoutes(app, {
     res.json(publicInvestigation(investigation));
   });
 
+  app.get('/api/faie/comparisons', requireInternal, (req, res) => {
+    const limit = Math.max(1, Math.min(50, Number(req.query?.limit) || 10));
+    res.setHeader('Cache-Control', 'no-store');
+    res.json({
+      schema: 'evercraft.faie.comparison-index.public.v1',
+      comparisons: runtime.latestComparisons(limit)
+    });
+  });
+
+  app.get('/api/faie/comparisons/:id', requireInternal, (req, res) => {
+    const comparison = runtime.getComparison(String(req.params.id || ''));
+    if (!comparison) {
+      res.status(404).json({ ok: false, error: 'FAIE comparison not found.' });
+      return;
+    }
+    res.setHeader('Cache-Control', 'no-store');
+    res.json(comparison);
+  });
+
   app.get('/api/faie/investigations/:id/markdown', requireInternal, (req, res) => {
     const investigation = runtime.getInvestigation(String(req.params.id || ''));
     if (!investigation) {
@@ -144,6 +165,43 @@ export function registerFaieRoutes(app, {
     }
   });
 
+  app.post('/api/faie/compare', publicInvestigateLimiter, (req, res) => {
+    try {
+      const question = String(req.body?.question || req.body?.query || '').trim();
+      if (!question) {
+        res.status(400).json({ ok: false, error: 'question is required.' });
+        return;
+      }
+      if (question.length > 1200) {
+        res.status(413).json({ ok: false, error: 'question is too long.' });
+        return;
+      }
+      const candidates = Array.isArray(req.body?.candidates) ? req.body.candidates : [];
+      if (candidates.length < 2 || candidates.length > 8) {
+        res.status(400).json({ ok: false, error: 'candidates must contain between 2 and 8 items.' });
+        return;
+      }
+
+      const comparison = runtime.previewComparison({
+        question,
+        candidates,
+        asset_types: req.body?.asset_types || req.body?.assets,
+        crop: req.body?.crop,
+        water_source: req.body?.water_source,
+        thesis_assumptions: req.body?.thesis_assumptions || req.body?.assumptions,
+        horizon_days: req.body?.horizon_days,
+        include_weak_evidence: req.body?.include_weak_evidence
+      });
+
+      res.status(200).json(comparison);
+    } catch (error) {
+      res.status(400).json({
+        ok: false,
+        error: error instanceof Error ? error.message : String(error)
+      });
+    }
+  });
+
   app.post('/api/faie/investigate', publicInvestigateLimiter, (req, res) => {
     try {
       const question = String(req.body?.question || req.body?.query || '').trim();
@@ -162,11 +220,24 @@ export function registerFaieRoutes(app, {
         asset_types: req.body?.asset_types || req.body?.assets,
         crop: req.body?.crop,
         water_source: req.body?.water_source,
+        thesis_assumptions: req.body?.thesis_assumptions || req.body?.assumptions,
         horizon_days: req.body?.horizon_days,
         include_weak_evidence: req.body?.include_weak_evidence
       });
 
       res.status(200).json(publicInvestigation(investigation));
+    } catch (error) {
+      res.status(400).json({
+        ok: false,
+        error: error instanceof Error ? error.message : String(error)
+      });
+    }
+  });
+
+  app.post('/api/faie/comparisons', requireInternal, (req, res) => {
+    try {
+      const comparison = runtime.compare(req.body || {});
+      res.status(201).json(comparison);
     } catch (error) {
       res.status(400).json({
         ok: false,
@@ -192,6 +263,7 @@ export function registerFaieRoutes(app, {
         asset_types: req.body?.asset_types || req.body?.assets,
         crop: req.body?.crop,
         water_source: req.body?.water_source,
+        thesis_assumptions: req.body?.thesis_assumptions || req.body?.assumptions,
         horizon_days: req.body?.horizon_days,
         include_weak_evidence: req.body?.include_weak_evidence
       });
@@ -209,6 +281,80 @@ export function registerFaieRoutes(app, {
       res.status(decision.action === 'ignored' ? 202 : 200).json({
         ok: true,
         decision
+      });
+    } catch (error) {
+      res.status(400).json({
+        ok: false,
+        error: error instanceof Error ? error.message : String(error)
+      });
+    }
+  });
+
+  app.post('/api/faie/acquire/soil', requireInternal, async (req, res) => {
+    try {
+      const latitude = Number(req.body?.latitude);
+      const longitude = Number(req.body?.longitude);
+      const acquisition = await collectUsdaSoilAtPoint({
+        latitude,
+        longitude,
+        regionKeys: req.body?.region_keys || req.body?.regions || req.body?.region || [],
+        fetchImpl: globalThis.fetch,
+        retrievedAt: new Date().toISOString()
+      });
+
+      const decision = acquisition.observation
+        ? runtime.ingest(acquisition.observation)
+        : null;
+
+      res.status(200).json({
+        ok: true,
+        acquisition: {
+          schema: acquisition.schema,
+          source_id: acquisition.source_id,
+          retrieved_at: acquisition.retrieved_at,
+          row_count: acquisition.row_count,
+          mapunit_count: acquisition.mapunit_count,
+          receipt: acquisition.receipt
+        },
+        ingest_decision: decision,
+        external_action_taken: true,
+        external_action: 'read_official_usda_soil_data_access',
+        decision_authority: false,
+        publication_authority: false
+      });
+    } catch (error) {
+      res.status(400).json({
+        ok: false,
+        error: error instanceof Error ? error.message : String(error)
+      });
+    }
+  });
+
+  app.post('/api/faie/rivet-context', requireInternal, (req, res) => {
+    try {
+      const snapshot = req.body?.snapshot;
+      if (!snapshot || typeof snapshot !== 'object') {
+        res.status(400).json({ ok: false, error: 'snapshot is required.' });
+        return;
+      }
+
+      const bridged = rivetSnapshotToFaieObservations(snapshot, {
+        regionKeys: req.body?.region_keys || req.body?.regions || req.body?.region,
+        observedAt: req.body?.observed_at
+      });
+      const decisions = bridged.observations.map((observation) => runtime.ingest(observation));
+      res.status(200).json({
+        ok: true,
+        bridge: {
+          schema: bridged.schema,
+          observation_count: bridged.observation_count,
+          region_keys: bridged.region_keys,
+          exclusions: bridged.exclusions
+        },
+        decisions,
+        external_action_taken: false,
+        decision_authority: false,
+        publication_authority: false
       });
     } catch (error) {
       res.status(400).json({
