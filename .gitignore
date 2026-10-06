@@ -9,10 +9,6 @@ coverage/
 .vite/
 .tmp/
 tmp/
-artifacts/saban-multiplier/
-artifacts/forensiscope/
-artifacts/forensiscope-intake/
-artifacts/forensiscope-proof/
-artifacts/forensiscope-transport/
+artifacts/
 .systemia-state/
 public/journal/
