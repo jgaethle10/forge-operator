@@ -123,6 +123,10 @@
           <option value="365">1 year</option>
         </select>
 
+        <label for="assumptions">Thesis assumptions to watch</label>
+        <textarea id="assumptions" maxlength="5000" placeholder="One assumption per line. Example: Regional water availability can support the target production system."></textarea>
+        <div class="pilot-note">FAIE links evidence to these assumptions without declaring them true or false. Persisted internal investigations can carry the register forward over time.</div>
+
         <button id="run" type="submit">Investigate evidence</button>
       </form>
 
@@ -175,6 +179,7 @@ function renderResult(inv) {
   const evidenceNeeded = Array.isArray(inv.evidence_needed) ? inv.evidence_needed : [];
   const coverage = inv.coverage || {};
   const packet = inv.decision_packet || {};
+  const thesisMemory = inv.thesis_memory || {};
   const readiness = coverage.decision_readiness || packet.decide?.readiness || 'evidence_gaps';
 
   let html = '<div class="result-head"><div><h2>Field decision packet</h2><div class="meta">' + esc(inv.summary) + '</div></div><div class="confidence">' + Math.round((Number(inv.confidence)||0)*100) + '%</div></div>';
@@ -222,6 +227,18 @@ function renderResult(inv) {
     html += '<div class="tags" style="margin-top:12px">';
     missing.forEach((item) => { html += '<span class="tag reported">missing · ' + esc(item) + '</span>'; });
     html += '</div>';
+  }
+
+  const assumptions = Array.isArray(thesisMemory.assumptions) ? thesisMemory.assumptions : [];
+  if (assumptions.length) {
+    html += '<h2 style="margin-top:22px">Thesis memory</h2><div class="meta">Assumptions being watched across evidence updates. Related evidence is not treated as a verdict.</div>';
+    assumptions.forEach((assumption) => {
+      html += '<article class="finding">';
+      html += '<div class="tags"><span class="tag">' + esc(assumption.evaluation_state || 'unknown') + '</span><span class="tag">' + esc(assumption.criticality || 'material') + '</span></div>';
+      html += '<p>' + esc(assumption.statement) + '</p>';
+      html += '<small>' + esc(assumption.related_evidence_count || 0) + ' related evidence signal(s) · last evaluated ' + esc(fmt(assumption.last_evaluated_at)) + '</small>';
+      html += '</article>';
+    });
   }
 
   html += '<h2 style="margin-top:22px">Decide</h2><div class="meta">The next evidence required before a consequential operator decision should rely on this packet.</div>';
@@ -297,6 +314,12 @@ document.getElementById('agnormalPreset').addEventListener('click', () => {
   document.getElementById('asset').value = 'regional food production infrastructure';
   document.getElementById('crop').value = '';
   document.getElementById('water').value = '';
+  document.getElementById('assumptions').value = [
+    'Regional water availability can support the target production system.',
+    'Native living soil can support the target crop strategy with manageable drainage and amendment requirements.',
+    'Natural-light production remains resilient across seasonal heat, freeze, smoke, and other climate extremes.',
+    'Regional labor, utility, and distribution economics can support scaled production.'
+  ].join('\n');
   document.getElementById('horizon').value = '90';
   document.getElementById('question').focus();
 });
@@ -309,6 +332,10 @@ document.getElementById('form').addEventListener('submit', async (event) => {
   const asset = document.getElementById('asset').value.trim();
   const crop = document.getElementById('crop').value.trim();
   const waterSource = document.getElementById('water').value.trim();
+  const assumptionsText = document.getElementById('assumptions').value.trim();
+  const thesisAssumptions = assumptionsText
+    ? assumptionsText.split(/\n+/).map((row) => row.trim()).filter(Boolean).slice(0, 40)
+    : [];
   const horizonDays = Number(document.getElementById('horizon').value) || 90;
 
   if (!question) return;
@@ -326,6 +353,7 @@ document.getElementById('form').addEventListener('submit', async (event) => {
         asset_types:asset ? [asset] : [],
         crop:crop || undefined,
         water_source:waterSource || undefined,
+        thesis_assumptions:thesisAssumptions,
         horizon_days:horizonDays
       })
     });
