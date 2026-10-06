@@ -1,0 +1,87 @@
+{
+  "schema": "evercraft.daytrade.practice-analysis-v2-summary.v1",
+  "generated_at": "2026-10-06T19:19:04.334Z",
+  "source_run_id": 37518034913,
+  "source_artifact_id": 11438396574,
+  "source_artifact_digest": "sha256:896fc5ea8e189912e040bd6415ea48b3f69b48ac2182de720831699010d5787b",
+  "simulation_only": true,
+  "capital_at_risk_usd": 0,
+  "raw_prospective_windows": 8,
+  "independent_prospective_windows": 6,
+  "near_duplicate_windows_excluded": 2,
+  "distinct_market_dates_et": 1,
+  "independent_phase_counts": {
+    "OPENING": 0,
+    "MIDDAY": 3,
+    "CLOSING": 3
+  },
+  "raw_rule_scorecard": {
+    "helped_windows": 5,
+    "hurt_windows": 1,
+    "neutral_windows": 2,
+    "cumulative_rule_improvement_vs_always_cross_usd": 0.07271815631976253,
+    "cumulative_governed_pnl_usd": -0.004569896105714122,
+    "cumulative_always_cross_pnl_usd": -0.07728805242547665
+  },
+  "phase_scorecard": {
+    "MIDDAY": {
+      "windows": 5,
+      "helped": 4,
+      "hurt": 0,
+      "neutral": 1,
+      "cumulative_rule_improvement_usd": 0.06225888914626054,
+      "cumulative_governed_pnl_usd": 0.0008867808685621981,
+      "cumulative_always_cross_pnl_usd": -0.061372108277698345
+    },
+    "CLOSING": {
+      "windows": 3,
+      "helped": 1,
+      "hurt": 1,
+      "neutral": 1,
+      "cumulative_rule_improvement_usd": 0.010459267173501985,
+      "cumulative_governed_pnl_usd": -0.00545667697427632,
+      "cumulative_always_cross_pnl_usd": -0.015915944147778305
+    }
+  },
+  "threshold_robustness": {
+    "frozen_threshold_bps": 3,
+    "frozen_rule_simulated_pnl_usd": -0.004569896105714122,
+    "frozen_rule_improvement_vs_always_cross_usd": 0.07271815631976253,
+    "adjacent_2_3_4_bps_all_nonnegative_vs_always_cross": true,
+    "best_post_hoc_threshold_not_promoted": true
+  },
+  "instrument_conditioning": {
+    "SOXX": {
+      "tight_mean_always_cross_pnl_usd": 0.003262489544153387,
+      "wide_mean_always_cross_pnl_usd": -0.009382398876653042,
+      "wide_minus_tight_mean_pnl_usd": -0.01264488842080643
+    },
+    "SMH": {
+      "tight_mean_always_cross_pnl_usd": -0.0030821476376246435,
+      "wide_mean_always_cross_pnl_usd": -0.008602053978832439,
+      "wide_minus_tight_mean_pnl_usd": -0.005519906341207795
+    },
+    "QQQ": {
+      "tight_mean_always_cross_pnl_usd": 0.00013167168124361694,
+      "wide_count": 0
+    }
+  },
+  "diversity_status": "PRACTICE_DIVERSITY_NOT_READY",
+  "remaining_diversity_requirements": {
+    "minimum_prospective_windows": 20,
+    "minimum_distinct_market_dates": 5,
+    "minimum_windows_per_required_phase": 3,
+    "opening_windows_needed": 3,
+    "independent_windows_needed": 14,
+    "additional_market_dates_needed": 4
+  },
+  "interpretation": {
+    "same_day_selection_bias_remains": true,
+    "opening_phase_unobserved": true,
+    "rule_can_hurt_and_that_loss_is_preserved": true,
+    "practice_not_signal_validation": true,
+    "practice_not_live_fill_validation": true,
+    "not_live_authorized": true
+  },
+  "live_trade_authority": false
+}
