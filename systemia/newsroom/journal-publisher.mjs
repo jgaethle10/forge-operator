@@ -33,7 +33,7 @@ function validateUrl(value, field) {
   return url.toString();
 }
 
-export function validateJournalStory(input, { now = new Date() } = {}) {
+export function validateJournalStory(input, { now = new Date(), allowExpired = false } = {}) {
   const story = structuredClone(input || {});
   if (story.schema !== 'evercraft.journal.story.v1') throw new Error('Unsupported Journal story schema.');
   if (!clean(story.story_id)) throw new Error('story_id is required.');
@@ -45,9 +45,11 @@ export function validateJournalStory(input, { now = new Date() } = {}) {
   story.published_at = assertIso(story.published_at, 'published_at');
   story.updated_at = assertIso(story.updated_at || story.published_at, 'updated_at');
   story.freshness_expires_at = assertIso(story.freshness_expires_at, 'freshness_expires_at');
-  if (new Date(story.freshness_expires_at).getTime() <= now.getTime()) {
+  const freshnessExpired = new Date(story.freshness_expires_at).getTime() <= now.getTime();
+  if (freshnessExpired && !allowExpired) {
     throw new Error('Journal story freshness window has expired.');
   }
+  story.journal_freshness_state = freshnessExpired ? 'expired_archive' : 'fresh';
 
   const sensitivity = clean(story.sensitivity?.state);
   if (sensitivity !== 'public_unclassified') {
@@ -146,7 +148,7 @@ function storyUrl(publicOrigin, slug) {
   return `${normalizeJournalOrigin(publicOrigin)}/${String(slug || '').replace(/^\/+|\/+$/g,'')}/`;
 }
 
-function renderArticle(story, publicOrigin) {
+function renderArticle(story, publicOrigin, { archived = false } = {}) {
   const canonical = storyUrl(publicOrigin, story.slug);
   const description = escapeHtml(story.dek);
   const image = story.hero_visual?.url ? escapeHtml(story.hero_visual.url) : '';
@@ -207,7 +209,8 @@ section{margin:42px 0}h2{font-size:1.65rem;letter-spacing:-.02em}p{font-size:1.0
 <header><div class="brand">Evercraft <span>Journal</span></div></header>
 <main>
 <article>
-<div class="kicker">${escapeHtml(story.desk)} · ${escapeHtml(story.story_type || 'Analysis')}</div>
+<div class="kicker">${archived ? 'Archive · ' : ''}${escapeHtml(story.desk)} · ${escapeHtml(story.story_type || 'Analysis')}</div>
+${archived ? '<aside class="evidence-box"><strong>Archived analysis.</strong> This story remains available for durable reporting and source history, but its live freshness window has expired. It is not part of the current live edition.</aside>' : ''}
 <h1>${escapeHtml(story.title)}</h1>
 <p class="dek">${description}</p>
 <p class="meta">Published ${escapeHtml(new Date(story.published_at).toLocaleString('en-US',{timeZone:'America/Los_Angeles',dateStyle:'long',timeStyle:'short'}))} PT · Evidence state: ${escapeHtml(story.evidence_state || 'source-grounded')}</p>
@@ -222,10 +225,20 @@ ${uncertaintyHtml}
 </html>`;
 }
 
-function renderIndex(stories) {
+function renderIndex(stories, archivedStories = []) {
   const cards = stories.map((story) => `<article><div class="kicker">${escapeHtml(story.desk)}</div><h2><a href="./${escapeHtml(story.slug)}/">${escapeHtml(story.title)}</a></h2><p>${escapeHtml(story.dek)}</p><div class="meta">${escapeHtml(new Date(story.published_at).toISOString().slice(0,10))}</div></article>`).join('\n');
-  const latest = stories[0];
-  return `<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Evercraft Journal</title><meta name="description" content="Evercraft Journal is a source-grounded newsroom for the physical world, technology, science, infrastructure and local life."><meta property="og:site_name" content="Evercraft Journal"><meta property="og:title" content="Evercraft Journal"><meta property="og:description" content="Source-grounded reporting, analysis and education from Evercraft."><style>:root{color-scheme:dark;--bg:#080b0b;--text:#f5f5f2;--muted:#b7bdc5;--gold:#b79a56;--ice:#4fb8ff}*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--text);font-family:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;line-height:1.65}main,header,footer{width:min(960px,calc(100% - 36px));margin:auto}header{padding:48px 0 24px;border-bottom:1px solid #222b2b}h1{font-size:clamp(3rem,8vw,6rem);letter-spacing:-.06em;line-height:.95;margin:0}.sub{color:var(--muted);font-size:1.15rem;max-width:720px}.edition{color:var(--gold);font-weight:800;margin-top:16px}.grid{display:grid;gap:28px;padding:42px 0 80px}article{border-bottom:1px solid #222b2b;padding-bottom:28px}.kicker{color:var(--ice);font-size:.82rem;font-weight:800;text-transform:uppercase;letter-spacing:.1em}h2{font-size:clamp(1.6rem,4vw,2.5rem);line-height:1.08;margin:.35em 0}a{color:inherit;text-decoration:none}a:hover{color:var(--ice)}p,.meta{color:#d7dddd}.meta{font-size:.9rem}footer{border-top:1px solid #222b2b;padding:28px 0 50px;color:var(--muted)}</style></head><body><header><h1>Evercraft Journal</h1><p class="sub">A continuously refreshed, evidence-controlled newsroom built to explain what the world is doing, what changed and what the evidence can actually support.</p><div class="edition">Live edition ${escapeHtml(new Date(latest.published_at).toLocaleDateString('en-US',{timeZone:'America/Los_Angeles',weekday:'long',month:'long',day:'numeric',year:'numeric'}))}</div></header><main class="grid">${cards}</main><footer>Observed, reported, modeled and inferred are kept separate. Uncertainty stays visible.</footer></body></html>`;
+  const archiveCards = archivedStories.map((story) => `<article><div class="kicker">Archive · ${escapeHtml(story.desk)}</div><h2><a href="./${escapeHtml(story.slug)}/">${escapeHtml(story.title)}</a></h2><p>${escapeHtml(story.dek)}</p><div class="meta">Originally published ${escapeHtml(new Date(story.published_at).toISOString().slice(0,10))} · freshness window expired</div></article>`).join('\n');
+  const latest = stories[0] || null;
+  const edition = latest
+    ? `<div class="edition">Live edition ${escapeHtml(new Date(latest.published_at).toLocaleDateString('en-US',{timeZone:'America/Los_Angeles',weekday:'long',month:'long',day:'numeric',year:'numeric'}))}</div>`
+    : '<div class="edition">No current live edition · archived reporting remains available below.</div>';
+  const liveSection = latest
+    ? `<section><h2 class="section-title">Current</h2><div class="grid">${cards}</div></section>`
+    : '<section><h2 class="section-title">Current</h2><p class="sub">No source-grounded story is inside its live freshness window right now.</p></section>';
+  const archiveSection = archivedStories.length
+    ? `<section><h2 class="section-title">Archive</h2><p class="sub">Durable reporting preserved after its live freshness window closes.</p><div class="grid">${archiveCards}</div></section>`
+    : '';
+  return `<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Evercraft Journal</title><meta name="description" content="Evercraft Journal is a source-grounded newsroom for the physical world, technology, science, infrastructure and local life."><meta property="og:site_name" content="Evercraft Journal"><meta property="og:title" content="Evercraft Journal"><meta property="og:description" content="Source-grounded reporting, analysis and education from Evercraft."><style>:root{color-scheme:dark;--bg:#080b0b;--text:#f5f5f2;--muted:#b7bdc5;--gold:#b79a56;--ice:#4fb8ff}*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--text);font-family:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;line-height:1.65}main,header,footer{width:min(960px,calc(100% - 36px));margin:auto}header{padding:48px 0 24px;border-bottom:1px solid #222b2b}h1{font-size:clamp(3rem,8vw,6rem);letter-spacing:-.06em;line-height:.95;margin:0}.sub{color:var(--muted);font-size:1.15rem;max-width:720px}.edition{color:var(--gold);font-weight:800;margin-top:16px}.grid{display:grid;gap:28px;padding:18px 0 42px}section{padding-top:28px}.section-title{font-size:1rem;text-transform:uppercase;letter-spacing:.12em;color:var(--gold)}article{border-bottom:1px solid #222b2b;padding-bottom:28px}.kicker{color:var(--ice);font-size:.82rem;font-weight:800;text-transform:uppercase;letter-spacing:.1em}h2{font-size:clamp(1.6rem,4vw,2.5rem);line-height:1.08;margin:.35em 0}a{color:inherit;text-decoration:none}a:hover{color:var(--ice)}p,.meta{color:#d7dddd}.meta{font-size:.9rem}footer{border-top:1px solid #222b2b;padding:28px 0 50px;color:var(--muted)}</style></head><body><header><h1>Evercraft Journal</h1><p class="sub">A continuously refreshed, evidence-controlled newsroom built to explain what the world is doing, what changed and what the evidence can actually support.</p>${edition}</header><main>${liveSection}${archiveSection}</main><footer>Observed, reported, modeled and inferred are kept separate. Uncertainty stays visible.</footer></body></html>`;
 }
 
 function renderFeed(stories, publicOrigin) {
@@ -234,10 +247,11 @@ function renderFeed(stories, publicOrigin) {
   return `<?xml version="1.0" encoding="UTF-8"?><rss version="2.0"><channel><title>Evercraft Journal</title><link>${escapeXml(origin)}/</link><description>Source-grounded reporting, analysis and education from Evercraft.</description>${items}</channel></rss>\n`;
 }
 
-function renderLlms(stories, publicOrigin) {
+function renderLlms(stories, publicOrigin, archivedStories = []) {
   const origin = normalizeJournalOrigin(publicOrigin);
   const rows = stories.map((story) => `- ${story.title}\n  - URL: ${storyUrl(origin, story.slug)}\n  - Published: ${story.published_at}\n  - Desk: ${story.desk}\n  - Evidence: ${story.evidence_state || 'source-grounded'}\n`).join('\n');
-  return `# Evercraft Journal\n\nEvercraft Journal is Evercraft's source-grounded newsroom. Current-state claims preserve source lineage, evidence state, uncertainty and freshness. Classified or access-controlled detail is never inferred from public fragments.\n\n## Current stories\n\n${rows}\n`;
+  const archiveRows = archivedStories.map((story) => `- ${story.title}\n  - URL: ${storyUrl(origin, story.slug)}\n  - Originally published: ${story.published_at}\n  - State: archived; live freshness expired\n`).join('\n');
+  return `# Evercraft Journal\n\nEvercraft Journal is Evercraft's source-grounded newsroom. Current-state claims preserve source lineage, evidence state, uncertainty and freshness. Classified or access-controlled detail is never inferred from public fragments.\n\n## Current stories\n\n${rows || 'No story is currently inside its live freshness window.'}\n\n## Archive\n\n${archiveRows || 'No archived stories.'}\n`;
 }
 
 export function publishJournalStories(inputStories, {
@@ -246,14 +260,25 @@ export function publishJournalStories(inputStories, {
   publicOrigin = process.env.EVERCRAFT_JOURNAL_ORIGIN || 'https://journal.evercraft.global'
 } = {}) {
   const origin = normalizeJournalOrigin(publicOrigin);
-  const stories = inputStories.map((story) => validateJournalStory(story, { now }))
-    .sort((a, b) => b.published_at.localeCompare(a.published_at));
-  if (!stories.length) throw new Error('At least one approved story is required.');
+  const stories = [];
+  const archivedStories = [];
+  for (const input of inputStories) {
+    try {
+      stories.push(validateJournalStory(input, { now }));
+    } catch (error) {
+      if (!/Journal story freshness window has expired\./i.test(String(error?.message || error))) throw error;
+      archivedStories.push(validateJournalStory(input, { now, allowExpired: true }));
+    }
+  }
+  stories.sort((a, b) => b.published_at.localeCompare(a.published_at));
+  archivedStories.sort((a, b) => b.published_at.localeCompare(a.published_at));
+  if (!stories.length && !archivedStories.length) throw new Error('At least one approved story is required.');
 
   fs.mkdirSync(outDir, { recursive: true });
   const receipts = [];
 
-  for (const story of stories) {
+  for (const story of [...stories, ...archivedStories]) {
+    const archived = story.journal_freshness_state === 'expired_archive';
     const articleDir = path.join(outDir, story.slug);
     const productionDir = path.join(outDir, 'production', story.slug);
     const receiptDir = path.join(outDir, 'receipts');
@@ -261,7 +286,7 @@ export function publishJournalStories(inputStories, {
     fs.mkdirSync(productionDir, { recursive: true });
     fs.mkdirSync(receiptDir, { recursive: true });
 
-    const html = renderArticle(story, origin);
+    const html = renderArticle(story, origin, { archived });
     const articlePath = path.join(articleDir, 'index.html');
     fs.writeFileSync(articlePath, html);
 
@@ -297,16 +322,20 @@ export function publishJournalStories(inputStories, {
       article_sha256: sha256(html),
       fallen_brief_sha256: sha256(fallenBrief),
       publisher: 'evercraft-owned-static-journal-v1',
-      publication_authority: true
+      publication_authority: true,
+      publication_state: archived ? 'archived' : 'live',
+      live_edition_eligible: !archived,
+      archive_reason: archived ? 'freshness_window_expired' : null
     };
     fs.writeFileSync(path.join(receiptDir, `${story.slug}.json`), JSON.stringify(receipt, null, 2) + '\n');
     receipts.push(receipt);
   }
 
-  fs.writeFileSync(path.join(outDir, 'index.html'), renderIndex(stories));
+  fs.writeFileSync(path.join(outDir, 'index.html'), renderIndex(stories, archivedStories));
   fs.writeFileSync(path.join(outDir, 'index.json'), JSON.stringify({
     schema: 'evercraft.journal.index.v1',
     generated_at: now.toISOString(),
+    live_edition: stories.length > 0,
     stories: stories.map((story) => ({
       story_id: story.story_id,
       slug: story.slug,
@@ -317,16 +346,29 @@ export function publishJournalStories(inputStories, {
       updated_at: story.updated_at,
       evidence_state: story.evidence_state,
       canonical_url: storyUrl(origin, story.slug)
+    })),
+    archive: archivedStories.map((story) => ({
+      story_id: story.story_id,
+      slug: story.slug,
+      title: story.title,
+      dek: story.dek,
+      desk: story.desk,
+      published_at: story.published_at,
+      freshness_expires_at: story.freshness_expires_at,
+      state: 'archived',
+      canonical_url: storyUrl(origin, story.slug)
     }))
   }, null, 2) + '\n');
   fs.writeFileSync(path.join(outDir, 'feed.xml'), renderFeed(stories, origin));
-  fs.writeFileSync(path.join(outDir, 'llms.txt'), renderLlms(stories, origin));
+  fs.writeFileSync(path.join(outDir, 'llms.txt'), renderLlms(stories, origin, archivedStories));
 
   return {
     schema: 'evercraft.journal.publish-run.v1',
     built_at: now.toISOString(),
     story_count: stories.length,
-    latest_published_at: stories[0].published_at,
+    archived_story_count: archivedStories.length,
+    live_edition: stories.length > 0,
+    latest_published_at: stories[0]?.published_at || null,
     public_origin: origin,
     receipts
   };
