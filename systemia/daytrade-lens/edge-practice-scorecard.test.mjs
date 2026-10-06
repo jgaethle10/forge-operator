@@ -27,7 +27,7 @@ write("near.json","2026-10-06T16:01:00.000Z",{
   always_cross_total_pnl_usd:0,
   rule_improvement_vs_always_cross_usd:0
 });
-write("b.json","2026-10-06T16:04:00.000Z",{
+write("b.json","2026-10-06T16:06:00.000Z",{
   governed_total_pnl_usd:-0.004,
   always_cross_total_pnl_usd:-0.002,
   rule_improvement_vs_always_cross_usd:-0.002
@@ -48,7 +48,7 @@ assert.equal(score.any_live_trade_authority,false);
 assert.equal(score.prospective_spread_rule.raw_windows,3);
 assert.equal(score.prospective_spread_rule.windows,2);
 assert.equal(score.prospective_spread_rule.near_duplicate_windows_excluded,1);
-assert.equal(score.prospective_spread_rule.minimum_independence_separation_ms,180000);
+assert.equal(score.prospective_spread_rule.minimum_independence_separation_ms,300000);
 assert.equal(score.prospective_spread_rule.helped_windows,1);
 assert.equal(score.prospective_spread_rule.hurt_windows,1);
 assert.equal(score.prospective_spread_rule.neutral_windows,0);
