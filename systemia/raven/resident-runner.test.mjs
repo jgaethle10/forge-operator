@@ -35,7 +35,7 @@ test("Raven inference token uses the same private-file boundary", () => {
   }
 });
 
-test("Raven requires inference origin and token file as one binding", async () => {
+test("Raven requires a token file for an explicit inference origin", async () => {
   const root = tempRoot();
   const tokenFile = path.join(root, "control-token");
   fs.writeFileSync(tokenFile, "resident-proof-token-01234567890123456789", { mode: 0o600 });
@@ -45,7 +45,7 @@ test("Raven requires inference origin and token file as one binding", async () =
       controlTokenFile: tokenFile,
       inferenceOrigin: "https://inference.example",
       repoRoot: path.resolve("."),
-    }), /configured_together/);
+    }), /requires_token_file/);
   } finally {
     fs.rmSync(root, { recursive: true, force: true });
   }
@@ -98,8 +98,13 @@ test("resident service wiring keeps Raven optional and private", () => {
   assert.equal(service.optional_when_unconfigured, true);
   assert.equal(service.env_args["--state-dir"], "RAVEN_PRIVATE_STATE_DIR");
   assert.equal(service.env_args["--control-token-file"], "RAVEN_PRIVATE_CONTROL_TOKEN_FILE");
-  assert.equal(service.optional_env_args["--inference-origin"], "RAVEN_INFERENCE_ORIGIN");
-  assert.equal(service.optional_env_args["--inference-token-file"], "RAVEN_INFERENCE_TOKEN_FILE");
+  assert.equal(service.optional_env_args["--inference-origin"], undefined);
+  assert.equal(service.optional_env_args["--inference-token-file"], "RAVEN_INFERENCE_GATEWAY_TOKEN_FILE");
+  const inference = resident.services.find((row) => row.service_key === "raven-inference-gateway");
+  assert.ok(inference);
+  assert.equal(inference.env_args["--control-token-file"], "RAVEN_INFERENCE_GATEWAY_TOKEN_FILE");
+  assert.equal(inference.env_args["--provider"], "RAVEN_INFERENCE_PROVIDER");
+  assert.equal(inference.env_args["--model"], "RAVEN_INFERENCE_MODEL");
   assert.equal(manifest.network.bind, "127.0.0.1");
   assert.equal(manifest.network.public_bind_allowed, false);
   assert.equal(manifest.network.public_fabric_required, false);
