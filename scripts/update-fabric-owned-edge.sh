@@ -331,9 +331,15 @@ if [[ ! "$remote_url" =~ ^(https://github\.com/|git@github\.com:)jgaethle10/forg
   exit 3
 fi
 
-if [[ -n "$(as_user git -C "$REPO_ROOT" status --porcelain)" ]]; then
-  echo "HOLD: Forge checkout is dirty; refusing unattended update" >&2
+dirty_status="$(as_user git -C "$REPO_ROOT" status --porcelain --untracked-files=all)"
+non_artifact_dirty="$(printf '%s\n' "$dirty_status" | grep -vE '^\?\? artifacts/' || true)"
+if [[ -n "$non_artifact_dirty" ]]; then
+  echo "HOLD: Forge checkout has source changes; refusing unattended update" >&2
+  printf '%s\n' "$non_artifact_dirty" >&2
   exit 4
+fi
+if [[ -n "$dirty_status" ]]; then
+  echo "Evercraft update: ignoring generated artifacts/ entries in checkout preflight"
 fi
 
 before="$(as_user git -C "$REPO_ROOT" rev-parse HEAD)"
