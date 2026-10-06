@@ -114,6 +114,7 @@ function failureStage(checks={},message=''){
     return 'trusted_tls';
   }
   if(checks.customer_surface!==true) return 'customer_surface';
+  if(checks.visual_desk!==true) return 'visual_desk';
   if(checks.faie_surface!==true) return 'faie_surface';
   if(checks.faie_health!==true) return 'faie_health';
   if(checks.faie_mcp!==true) return 'faie_mcp';
@@ -184,6 +185,41 @@ try{
   const home=await getText('/');
   if(!/Evercraft Fabric|Bring the problem\./i.test(home.text)) throw new Error('fabric_home_identity_missing');
   receipt.checks.customer_surface=true;
+
+  const visualHome=await getText('/visuals/');
+  const visualContentType=visualHome.response.headers.get('content-type')||'';
+  if(!/^text\/html/i.test(visualContentType)) throw new Error('visual_desk_not_html');
+  if(!/Evercraft Visual Desk|physical world, made legible/i.test(visualHome.text)) throw new Error('visual_desk_identity_missing');
+
+  const visualCatalog=await getJson('/visuals/index.json');
+  if(visualCatalog.schema!=='evercraft.fabric.visual-desk-index.v1') throw new Error('visual_desk_catalog_schema_invalid');
+  if(Number(visualCatalog.count)<1) throw new Error('visual_desk_catalog_empty');
+  const specimen=(visualCatalog.stories||[]).find((story)=>story.slug==='washington-active-volcanoes');
+  if(!specimen) throw new Error('visual_desk_specimen_missing');
+
+  const specimenPage=await getText('/visuals/washington-active-volcanoes/');
+  if(!/Washington/i.test(specimenPage.text)||!/usgs\.gov/i.test(specimenPage.text)){
+    throw new Error('visual_desk_specimen_identity_missing');
+  }
+  const vertical=await getText('/visuals/washington-active-volcanoes/card-story.svg');
+  if(!/^image\/svg\+xml/i.test(vertical.response.headers.get('content-type')||'')){
+    throw new Error('visual_desk_story_card_not_svg');
+  }
+  if(!/height="1920"/.test(vertical.text)) throw new Error('visual_desk_story_card_shape_invalid');
+
+  const motion=await getText('/visuals/washington-active-volcanoes/motion.html');
+  if(!/__evercraftRenderAt/.test(motion.text)||!/__evercraftRenderFrame/.test(motion.text)){
+    throw new Error('visual_desk_motion_controls_missing');
+  }
+  receipt.visual_desk={
+    path:'/visuals/',
+    story_count:Number(visualCatalog.count),
+    specimen:'washington-active-volcanoes',
+    story_card:'/visuals/washington-active-volcanoes/card-story.svg',
+    motion_stage:'/visuals/washington-active-volcanoes/motion.html',
+    source_backed:/usgs\.gov/i.test(specimenPage.text),
+  };
+  receipt.checks.visual_desk=true;
 
   const faiePage=await getText('/faie/');
   const faieContentType=faiePage.response.headers.get('content-type')||'';
@@ -320,6 +356,14 @@ try{
   if(health.mobile_path!=='/mobile'||health.mobile_installable!==true){
     throw new Error('mobile_health_metadata_missing');
   }
+  if(
+    health.visual_desk_path!=='/visuals/'||
+    health.visual_desk_ready!==true||
+    Number(health.visual_desk_story_count)<1||
+    health.visual_desk_motion_capable!==true
+  ){
+    throw new Error('visual_desk_health_metadata_missing');
+  }
   receipt.health={
     service:health.service,
     server:health.server,
@@ -332,6 +376,9 @@ try{
     edge_attestation_supported:health.edge_attestation_supported===true,
     mobile_path:health.mobile_path,
     mobile_installable:health.mobile_installable===true,
+    visual_desk_path:health.visual_desk_path,
+    visual_desk_story_count:Number(health.visual_desk_story_count),
+    visual_desk_motion_capable:health.visual_desk_motion_capable===true,
   };
   receipt.checks.runtime_health=true;
 
