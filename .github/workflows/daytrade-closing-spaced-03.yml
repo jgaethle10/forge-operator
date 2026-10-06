@@ -1,0 +1,34 @@
+name: daytrade-closing-spaced-03
+
+on:
+  push:
+    branches:
+      - "systemia/daytrade-practice-closing-spaced-03"
+
+permissions:
+  contents: read
+
+jobs:
+  practice:
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Run targeted frozen prospective window
+        env:
+          ALPACA_TRADING: ${{ secrets.ALPACA_TRADING }}
+          ALPACA_TRADING_SECRET: ${{ secrets.ALPACA_TRADING_SECRET }}
+          DAYTRADE_PRACTICE_TARGET_UTC: "2026-10-06T19:16:00.000Z"
+          DAYTRADE_PROSPECTIVE_SPREAD_OUTPUT: "artifacts/daytrade-edge/prospective-spread-rule-practice-2026-10-06-closing-spaced-03.json"
+        run: node systemia/daytrade-lens/run-targeted-prospective-practice.mjs
+      - name: Upload targeted practice receipt
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: daytrade-closing-spaced-03-${{ github.run_id }}
+          path: artifacts/daytrade-edge/prospective-spread-rule-practice-2026-10-06-closing-spaced-03.json
+          if-no-files-found: warn
+          retention-days: 30
