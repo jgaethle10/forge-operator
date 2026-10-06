@@ -20,3 +20,11 @@ test('IONOS DNS helper uses targeted zone and record endpoints',()=>{
 test('IONOS DNS helper refuses ambiguous duplicate records',()=>{
   assert.match(nodeScript,/Multiple matching records exist; refusing to guess/);
 });
+
+
+test('IONOS DNS helper permits bounded TXT control challenges',()=>{
+  assert.match(nodeScript,/\['A','TXT'\]\.includes\(type\)/);
+  assert.match(nodeScript,/TXT record content must be 1-1024 characters/);
+  assert.match(nodeScript,/TXT record content must not contain control characters/);
+  assert.doesNotMatch(nodeScript,/permits A records only/);
+});
