@@ -1,0 +1,64 @@
+{
+  "schema": "evercraft.daytrade.closing-spread-tape-summary.v1",
+  "generated_at": "2026-10-06T19:02:05.603Z",
+  "source_run_id": 37515424871,
+  "source_artifact_id": 11436364060,
+  "source_artifact_digest": "sha256:455bf190019bab339edd22fda3e5bb8e79a3cfb694ac9bd2d63028bdd116b8ea",
+  "simulation_only": true,
+  "capital_at_risk_usd": 0,
+  "market_phase": "CLOSING",
+  "sample_count": 7,
+  "sample_interval_ms": 20000,
+  "summaries": [
+    {
+      "symbol": "SOXX",
+      "mean_spread_bps": 2.4101889966127183,
+      "min_spread_bps": 1.519307870857449,
+      "max_spread_bps": 4.0481732618157595,
+      "start_spread_bps": 3.374331460578222,
+      "end_spread_bps": 1.519307870857449,
+      "samples_at_or_below_3bps": 5,
+      "samples_above_3bps": 2,
+      "midpoint_change_bps": -5.6520051964710625
+    },
+    {
+      "symbol": "SMH",
+      "mean_spread_bps": 3.3499498751310317,
+      "min_spread_bps": 0.7873209828925891,
+      "max_spread_bps": 4.092490280337231,
+      "start_spread_bps": 3.7770293664034673,
+      "end_spread_bps": 0.7873209828925891,
+      "samples_at_or_below_3bps": 1,
+      "samples_above_3bps": 6,
+      "midpoint_change_bps": -5.5868559378034135
+    },
+    {
+      "symbol": "QQQ",
+      "mean_spread_bps": 0.5632168724685732,
+      "min_spread_bps": 0.39419482422159946,
+      "max_spread_bps": 0.9198604440289405,
+      "samples_at_or_below_3bps": 7,
+      "samples_above_3bps": 0,
+      "midpoint_change_bps": -1.3797906660449049
+    },
+    {
+      "symbol": "SPY",
+      "mean_spread_bps": 0.40286748480175805,
+      "min_spread_bps": 0.25636752848860844,
+      "max_spread_bps": 0.7691518818590288,
+      "samples_at_or_below_3bps": 7,
+      "samples_above_3bps": 0,
+      "midpoint_change_bps": 0.19227564636645633
+    }
+  ],
+  "interpretation": {
+    "closing_spread_state_is_dynamic": true,
+    "smh_wide_most_of_early_closing_tape": true,
+    "soxx_tightened_after_initial_wide_quote": true,
+    "qqq_and_spy_remained_tight": true,
+    "single_entry_quote_can_misrepresent_closing_liquidity": true,
+    "tape_does_not_validate_signal": true,
+    "iex_is_not_consolidated_sip_nbbo": true
+  },
+  "live_trade_authority": false
+}
