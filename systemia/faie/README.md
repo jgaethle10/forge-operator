@@ -99,6 +99,25 @@ Human UI:
 
 - /faie/
 
+
+## Saban specialist swarm
+
+FAIE is registered in the governed Saban multiplication fabric as `software_id=faie`. The bounded specialist roles are soil systems, water systems, climate/resilience, energy/infrastructure, logistics/market, labor/economics, policy/permitting, production systems, provenance, adversarial challenge, thesis memory, and reconciliation.
+
+The FAIE Saban contract is deny-by-default. It cannot independently send outreach, file public-records requests, publish, create checkout, accept contracts, move money, mutate production systems, or make consequential decisions. Its composite output must pass full role coverage, reconciliation, and source-integrity checks.
+
+Run the current proof:
+
+    npm run proof:saban-faie
+
+The current public design-partner review item lives in `systemia/faie/saban-review-queue.json`. It is a public-evidence product test, not private customer data and not an assertion about undisclosed customer architecture.
+
+## Thesis memory and evidence acquisition
+
+An investigation may include `thesis_assumptions`. FAIE assigns stable assumption IDs and links current relevant evidence without converting related evidence into a verdict. Each assumption remains explicitly bounded by `verdict_authority=false`.
+
+Missing decision dimensions are also converted into a structured `evidence_acquisition_queue`. Each queue item records the gap, priority, preferred evidence types, and the fact that no external action has been taken. Acquisition that requires field work, records requests, operator records, or other consequential steps stays human- or separately-authorized.
+
 ## AgNormal / regional food-infrastructure pilot path
 
 The real FAIE UI at `/faie/` contains a one-click AgNormal regional food-infrastructure pilot scope. It does not switch to a canned demo or prewritten answer. The preset only fills the live investigation inputs and sends them through the same FAIE runtime used by every other public investigation.
