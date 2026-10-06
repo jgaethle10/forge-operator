@@ -36,7 +36,7 @@
   "confirmation": "Explicit buyer confirmation is required before checkout. Verified payment queues a human-controlled mission; consequential claims or actions remain review-gated.",
   "public_url": "https://fabric.systemiacommandcenters.com/faie/",
   "payment_authority": "FAIE / Stripe, provider-verified",
-  "invocation_status": "LIVE READ-ONLY MCP VERIFIED: canonical product conformance records a verified bounded read-only Machine Commerce route with live canary evidence. Evidence: conformance/runtime-observations/2026-10-06-faie-owned-fabric-door.json",
+  "invocation_status": "LIVE OWNED FABRIC VERIFIED: FAIE human UI, ephemeral public investigation/comparison API, and native read-only specialist MCP are externally verified at fabric.systemiacommandcenters.com. legacy provider transport is disabled. Paid work remains human-confirmed and consequential decisions remain review-gated.",
   "live_canary_evidence": "conformance/runtime-observations/2026-10-06-faie-owned-fabric-door.json",
   "live_proof": {
     "conformance_state": "owned_runtime_live_external_canary_verified",
