@@ -163,6 +163,27 @@ function signalRelevant(observation) {
   return Object.values(DIMENSION_RULES).flat().some((term) => corpusHasTerm(corpus, term));
 }
 
+function normalizeThesisAssumptions(value) {
+  const rows = Array.isArray(value) ? value : [];
+  const normalized = [];
+  const seen = new Set();
+
+  for (const row of rows.slice(0, 40)) {
+    const statement = clean(typeof row === 'string' ? row : row?.statement).slice(0, 500);
+    if (!statement) continue;
+    const assumptionId = clean(typeof row === 'object' ? row?.assumption_id : '') ||
+      ('faie-assumption:' + stableHash(statement.toLowerCase()));
+    if (seen.has(assumptionId)) continue;
+    seen.add(assumptionId);
+    normalized.push({
+      assumption_id: assumptionId,
+      statement,
+      criticality: clean(typeof row === 'object' ? row?.criticality : '').slice(0, 40) || 'material'
+    });
+  }
+  return normalized;
+}
+
 function normalizeScope(input = {}) {
   const question = clean(input.question || input.query);
   if (!question) throw new TypeError('question is required');
@@ -172,6 +193,7 @@ function normalizeScope(input = {}) {
     asset_types: unique(input.asset_types || input.assets, 30),
     crop: clean(input.crop).slice(0, 120),
     water_source: clean(input.water_source).slice(0, 120),
+    thesis_assumptions: normalizeThesisAssumptions(input.thesis_assumptions || input.assumptions),
     horizon_days: Math.max(1, Math.min(3650, Number(input.horizon_days) || 90)),
     include_weak_evidence: Boolean(input.include_weak_evidence)
   };
@@ -267,6 +289,49 @@ function evidenceNeedForDimension(dimension) {
     policy: 'Zoning, water rights, permitting, food-safety, labor, incentive, grant, and other regulatory constraints relevant to development'
   };
   return needs[dimension] || `Additional current evidence for the ${dimension} dimension`;
+}
+
+function buildAssumptionRegister(scope, findings, nowIso) {
+  return (scope.thesis_assumptions || []).map((assumption) => {
+    const assumptionTokens = tokenSet(assumption.statement);
+    const related = findings
+      .map((finding) => {
+        const findingTokens = tokenSet([
+          finding.summary,
+          ...(finding.dimensions || []),
+          ...(finding.domains || [])
+        ].join(' '));
+        let overlap = 0;
+        for (const token of assumptionTokens) if (findingTokens.has(token)) overlap += 1;
+        const relation = assumptionTokens.size ? overlap / Math.min(10, assumptionTokens.size) : 0;
+        return { finding, relation };
+      })
+      .filter((row) => row.relation >= 0.12)
+      .sort((a, b) => b.relation - a.relation)
+      .slice(0, 8);
+
+    const stateCounts = {};
+    for (const row of related) {
+      const state = row.finding.evidence_state || 'UNKNOWN';
+      stateCounts[state] = (stateCounts[state] || 0) + 1;
+    }
+
+    return {
+      schema: 'evercraft.faie.thesis-assumption.v1',
+      assumption_id: assumption.assumption_id,
+      statement: assumption.statement,
+      criticality: assumption.criticality,
+      evaluation_state: related.length ? 'related_evidence_present' : 'unknown',
+      related_signal_ids: related.map((row) => row.finding.signal_id),
+      related_evidence_count: related.length,
+      evidence_states: stateCounts,
+      last_evaluated_at: nowIso,
+      verdict_authority: false,
+      note: related.length
+        ? 'FAIE found evidence related to this assumption. Related evidence is not itself proof that the assumption is true or false.'
+        : 'FAIE does not currently hold enough related evidence to evaluate this assumption.'
+    };
+  });
 }
 
 function investigationFinding(signal, relevance) {
@@ -491,6 +556,8 @@ export function buildFaieInvestigation(inputState, input, { now = new Date().toI
       ? 'review_ready'
       : 'evidence_gaps';
 
+  const thesisAssumptionRegister = buildAssumptionRegister(scope, findings, nowIso);
+
   const investigationId = 'faie-investigation:' + stableHash([
     scope,
     findings.map((item) => item.signal_id),
@@ -548,6 +615,13 @@ export function buildFaieInvestigation(inputState, input, { now = new Date().toI
         human_review_required: true,
         action_authority: false
       }
+    },
+    thesis_memory: {
+      schema: 'evercraft.faie.thesis-memory.v1',
+      assumption_count: thesisAssumptionRegister.length,
+      assumptions: thesisAssumptionRegister,
+      longitudinal_comparison_ready: thesisAssumptionRegister.length > 0,
+      verdict_authority: false
     },
     unknowns,
     evidence_needed: evidenceNeeded,
