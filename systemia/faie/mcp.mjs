@@ -70,6 +70,25 @@ export function faieMcpTools() {
           },
           crop: { type: 'string', maxLength: 120 },
           water_source: { type: 'string', maxLength: 120 },
+          thesis_assumptions: {
+            type: 'array',
+            maxItems: 40,
+            items: {
+              anyOf: [
+                { type: 'string', minLength: 1, maxLength: 500 },
+                {
+                  type: 'object',
+                  required: ['statement'],
+                  properties: {
+                    assumption_id: { type: 'string', maxLength: 160 },
+                    statement: { type: 'string', minLength: 1, maxLength: 500 },
+                    criticality: { type: 'string', maxLength: 40 }
+                  },
+                  additionalProperties: false
+                }
+              ]
+            }
+          },
           horizon_days: {
             type: 'integer',
             minimum: 1,
@@ -185,6 +204,7 @@ export async function executeFaieMcpRpc(runtime, rpc) {
       asset_types: uniqueStrings(args.asset_types, 30),
       crop: clean(args.crop, 120),
       water_source: clean(args.water_source, 120),
+      thesis_assumptions: Array.isArray(args.thesis_assumptions) ? args.thesis_assumptions.slice(0, 40) : [],
       horizon_days: boundedInt(args.horizon_days, 90, 1, 3650),
       include_weak_evidence: args.include_weak_evidence === true
     });
