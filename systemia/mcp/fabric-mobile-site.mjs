@@ -7,8 +7,11 @@ function escapeHtml(value=''){
     .replaceAll("'",'&#39;');
 }
 
-function resultCards(matches=[]){
+function resultCards(matches=[],query=''){
   if(!matches.length){
+    if(String(query||'').trim()){
+      return '<div class="empty"><strong>No verified Evercraft capability matched this problem yet.</strong><br><br>Fabric did not guess or invent a specialist. Add more detail and try again, or browse the published capability directory.</div>';
+    }
     return '<div class="empty">Describe a real problem above and Fabric will find the smallest relevant Evercraft capability.</div>';
   }
   return matches.map((item)=>`
@@ -87,7 +90,7 @@ footer{margin-top:40px;color:#71839e;font-size:12px;text-align:center}
 <div class="meta"><span>${Number(capabilityCount)||0} live capabilities</span><span>Read-only discovery</span></div>
 
 ${error?`<div class="error">${escapeHtml(error)}</div>`:''}
-<section class="results">${resultCards(matches)}</section>
+<section class="results">${resultCards(matches,query)}</section>
 
 <div class="install">
   <h2>Keep Evercraft on your phone</h2>
