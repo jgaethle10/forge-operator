@@ -25,6 +25,10 @@ for(const [file,generated_at,gov,always,improve,abstain,trades] of rows){
   }));
 }
 const score=buildPracticePhaseScorecard({receiptDir:dir});
+assert.equal(score.raw_windows,3);
+assert.equal(score.windows,3);
+assert.equal(score.near_duplicate_windows_excluded,0);
+assert.equal(score.minimum_independence_separation_ms,300000);
 assert.equal(score.by_phase.OPENING.windows,1);
 assert.equal(score.by_phase.MIDDAY.windows,1);
 assert.equal(score.by_phase.CLOSING.windows,1);
