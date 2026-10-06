@@ -428,14 +428,17 @@
       "product_key": "faie",
       "name": "FAIE",
       "class": "evidence_first_food_infrastructure_and_resilience_intelligence",
-      "canonical_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/faie/index.html",
+      "canonical_url": "https://fabric.systemiacommandcenters.com/faie/",
       "github_record": "./faie/README.md",
       "llms": "./faie/llms.txt",
       "registry_name": "io.github.jgaethle10/faie",
       "invocation": {
         "mode": "discovery_only",
         "url": null
-      }
+      },
+      "mcp_url": "https://fabric.systemiacommandcenters.com/mcp/faie",
+      "runtime_state": "owned_fabric_external_canary_verified",
+      "live_canary_evidence": "conformance/runtime-observations/2026-10-06-faie-owned-fabric-door.json"
     },
     {
       "product_key": "findmypart",
