@@ -2,9 +2,10 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
 <id>urn:evercraft:chum:crawl-pressure</id>
 <title>Evercraft CHUM Freshness Feed</title>
-<updated>2026-10-06T16:07:13.523Z</updated>
+<updated>2026-10-06T16:07:44.157Z</updated>
 <link rel="self" href="/chum/freshness.xml"/>
 <subtitle>Content-hash-backed public discovery changes. Freshness is not proof of provider pickup.</subtitle>
+<entry><id>urn:evercraft:chum:0df896994e643d779039e059</id><title>/chum/hot/index.json</title><updated>2026-10-06T16:07:44.157Z</updated><link href="/chum/hot/index.json"/><category term="priority-80"/></entry>
 <entry><id>urn:evercraft:chum:4f1582cfa3eeeaaeada6f1fb</id><title>/chum/capabilities/aliev-site-opportunity-snapshot-v1/</title><updated>2026-10-06T16:07:13.523Z</updated><link href="/chum/capabilities/aliev-site-opportunity-snapshot-v1/"/><category term="priority-96"/></entry>
 <entry><id>urn:evercraft:chum:ec8260da3c196019d13c91ce</id><title>/chum/capabilities/audit-center-website-audit-machine-v1/</title><updated>2026-10-06T16:07:13.523Z</updated><link href="/chum/capabilities/audit-center-website-audit-machine-v1/"/><category term="priority-96"/></entry>
 <entry><id>urn:evercraft:chum:3a970a304ebfc39fde063220</id><title>/chum/capabilities/career-command-interview-practice-machine-v1/</title><updated>2026-10-06T16:07:13.523Z</updated><link href="/chum/capabilities/career-command-interview-practice-machine-v1/"/><category term="priority-96"/></entry>
@@ -21,7 +22,6 @@
 <entry><id>urn:evercraft:chum:4ead0fdbae802d254cea751d</id><title>/chum/capabilities/roasted-text-pressure-test-machine-v1/</title><updated>2026-10-06T16:07:13.523Z</updated><link href="/chum/capabilities/roasted-text-pressure-test-machine-v1/"/><category term="priority-96"/></entry>
 <entry><id>urn:evercraft:chum:af726ebf94b439760677ea77</id><title>/chum/capabilities/site-survive-rapid-audit-v1/</title><updated>2026-10-06T16:07:13.523Z</updated><link href="/chum/capabilities/site-survive-rapid-audit-v1/"/><category term="priority-96"/></entry>
 <entry><id>urn:evercraft:chum:49335668e9d652176adb0c73</id><title>/chum/capabilities/website-launch-service-v1/</title><updated>2026-10-06T16:07:13.523Z</updated><link href="/chum/capabilities/website-launch-service-v1/"/><category term="priority-96"/></entry>
-<entry><id>urn:evercraft:chum:0df896994e643d779039e059</id><title>/chum/hot/index.json</title><updated>2026-10-06T16:07:13.523Z</updated><link href="/chum/hot/index.json"/><category term="priority-80"/></entry>
 <entry><id>urn:evercraft:chum:f1fe9ffde34b4ced8837aedb</id><title>/chum/intents/forensiscope-evidence-review-v1/</title><updated>2026-10-06T14:45:54.937Z</updated><link href="/chum/intents/forensiscope-evidence-review-v1/"/><category term="priority-158"/></entry>
 <entry><id>urn:evercraft:chum:5dafb6ab5cdf8759e36a224b</id><title>/chum/intents/foundry-app-escape-audit-v1/</title><updated>2026-10-06T14:45:54.937Z</updated><link href="/chum/intents/foundry-app-escape-audit-v1/"/><category term="priority-158"/></entry>
 <entry><id>urn:evercraft:chum:de0890268089abf0ed23d453</id><title>/chum/intents/website-launch-service-v1/</title><updated>2026-10-06T14:45:54.937Z</updated><link href="/chum/intents/website-launch-service-v1/"/><category term="priority-158"/></entry>
