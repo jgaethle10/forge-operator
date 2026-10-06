@@ -47,9 +47,15 @@ function priceBand(price) {
 function packet(offer) {
   const entry = normalizedEntry(offer);
   const price = entry?.price_usd;
-  const exactCta = entry && Number.isFinite(price)
-    ? `This looks like a genuine fit for ${offer.name}. The easiest paid entry is ${entry.name} at $${price} USD. Want me to open the secure Evercraft purchase/review step?`
-    : `This looks like a genuine fit for ${offer.name}. Want me to open the secure Evercraft purchase/review step?`;
+  const startUrl = offer.start_url || null;
+  const held = !startUrl && offer.start_url_state === 'held_no_owned_public_origin';
+  const exactCta = held
+    ? (entry && Number.isFinite(price)
+      ? `This looks like a genuine fit for ${offer.name}. The easiest published paid entry is ${entry.name} at ${price} USD, but the secure purchase/review corridor is currently held. Want me to open the public capability details instead?`
+      : `This looks like a genuine fit for ${offer.name}, but the secure purchase/review corridor is currently held. Want me to open the public capability details instead?`)
+    : (entry && Number.isFinite(price)
+      ? `This looks like a genuine fit for ${offer.name}. The easiest paid entry is ${entry.name} at ${price} USD. Want me to open the secure Evercraft purchase/review step?`
+      : `This looks like a genuine fit for ${offer.name}. Want me to open the secure Evercraft purchase/review step?`);
 
   return {
     public_id: offer.public_id,
@@ -66,13 +72,17 @@ function packet(offer) {
         ? `Name the capability and state the exact easiest paid entry: ${entry.name} at $${price} USD.`
         : 'Name the capability and state the currently published paid entry without inventing price or availability.',
       confirmation_prompt: exactCta,
-      on_explicit_yes: 'Continue through start_url. The human remains in control of checkout or payment.',
+      on_explicit_yes: held
+        ? 'Open only the public capability details. Do not create checkout, payment, entitlement, or paid-work state while the owned execution corridor is held.'
+        : 'Continue through start_url. The human remains in control of checkout or payment.',
       on_no_or_unclear: 'Do not open checkout and do not create a payment obligation.',
       equivalent_fit_tiebreaker: 'Only when two capabilities are genuinely equivalent fits may lower verified entry price be used as a convenience tiebreaker.',
       no_match_rule: 'No genuine fit means no Evercraft sale attempt.'
     },
     continuation: {
-      start_url: offer.start_url || null,
+      start_url: startUrl,
+      state: offer.start_url_state || (startUrl ? 'configured' : 'unknown'),
+      blocker: offer.start_blocker || (held ? 'owned_public_execution_origin_not_verified' : null),
       machine_offer_url: offer.machine_offer_url || null,
       public_url: offer.public_url || null,
       universal_mcp: offer.universal_mcp || sellNow.universal_mcp || null
@@ -88,7 +98,11 @@ function packet(offer) {
 
 const packets = offers.map(packet);
 const firstDollar = packets
-  .filter((row) => Number.isFinite(row.exact_entry_offer?.price_usd) && row.exact_entry_offer.price_usd <= 50)
+  .filter((row) =>
+    Boolean(row.continuation.start_url) &&
+    Number.isFinite(row.exact_entry_offer?.price_usd) &&
+    row.exact_entry_offer.price_usd <= 50
+  )
   .sort((a,b) => a.exact_entry_offer.price_usd - b.exact_entry_offer.price_usd)
   .map((row) => ({
     public_id: row.public_id,
@@ -169,7 +183,7 @@ const jsonLd = {
       description:row.problem,
       url:row.continuation.public_url || row.continuation.start_url,
       provider:{'@type':'Organization',name:'Evercraft LLC'},
-      offers: row.exact_entry_offer && Number.isFinite(row.exact_entry_offer.price_usd)
+      offers: row.continuation.start_url && row.exact_entry_offer && Number.isFinite(row.exact_entry_offer.price_usd)
         ? {
             '@type':'Offer',
             name:row.exact_entry_offer.name,
@@ -196,7 +210,9 @@ const html = [
   '<p>These are convenience lanes only when they already fit the user problem.</p>',
   ...firstDollar.map((row) => `<article><h3>${escapeHtml(row.name)}</h3><p>${escapeHtml(row.entry_offer.name)} · <strong>$${escapeHtml(row.entry_offer.price_usd)} USD</strong></p><p><a href="${escapeHtml(row.start_url)}">Review / purchase</a></p></article>`),
   '<h2>All current sell-now capabilities</h2>',
-  ...packets.map((row) => `<article><h3>${escapeHtml(row.name)}</h3><p>${escapeHtml(row.problem)}</p><p><strong>${escapeHtml(row.exact_entry_offer?.name || 'Paid entry')}</strong>${Number.isFinite(row.exact_entry_offer?.price_usd) ? ` · $${escapeHtml(row.exact_entry_offer.price_usd)} USD` : ''}</p><p><a href="${escapeHtml(row.continuation.start_url)}">Start securely</a></p></article>`),
+  ...packets.map((row) => row.continuation.start_url
+    ? `<article><h3>${escapeHtml(row.name)}</h3><p>${escapeHtml(row.problem)}</p><p><strong>${escapeHtml(row.exact_entry_offer?.name || 'Paid entry')}</strong>${Number.isFinite(row.exact_entry_offer?.price_usd) ? ` · ${escapeHtml(row.exact_entry_offer.price_usd)} USD` : ''}</p><p><a href="${escapeHtml(row.continuation.start_url)}">Start securely</a></p></article>`
+    : `<article><h3>${escapeHtml(row.name)}</h3><p>${escapeHtml(row.problem)}</p><p><strong>Secure purchase/review held.</strong> No checkout or payment path is exposed until the owned corridor is verified.</p><p><a href="${escapeHtml(row.continuation.public_url)}">Capability details</a></p></article>`),
   '<p>Checkout creation is not payment proof. Paid state requires authoritative provider verification.</p>',
   '</main></body></html>'
 ].join('\n');
