@@ -108,6 +108,7 @@ jobs:
           assert.equal(mcpHealth.body.server, 'evercraft-faie');
           assert.deepEqual(mcpHealth.body.tools, [
             'investigate_faie_evidence',
+            'compare_faie_candidates',
             'get_faie_signal_snapshot',
             'get_faie_health'
           ]);
@@ -162,8 +163,26 @@ jobs:
           assert.equal(preview.body.schema, 'evercraft.faie.investigation.v1');
           assert.equal(preview.body.status, 'insufficient_evidence');
 
+          const comparison = await json('/api/faie/compare', {
+            method: 'POST',
+            headers: { 'content-type': 'application/json' },
+            body: JSON.stringify({
+              question: 'Compare evidence readiness for food infrastructure.',
+              asset_types: ['regional food production infrastructure'],
+              candidates: [
+                { label: 'Yakima', region_keys: ['yakima-wa'] },
+                { label: 'Unknown Region', region_keys: ['unknown-region'] }
+              ]
+            })
+          });
+          assert.equal(comparison.response.status, 200);
+          assert.equal(comparison.body.schema, 'evercraft.faie.comparison.v1');
+          assert.equal(comparison.body.candidate_count, 2);
+          assert.equal(comparison.body.candidates[0].site_suitability_verdict, null);
+
           const after = await json('/api/faie/health');
           assert.equal(after.body.investigation_count, 0, 'public preview must not persist');
+          assert.equal(after.body.comparison_count, 0, 'public comparison preview must not persist');
 
           const archive = await json('/api/faie/investigations');
           assert.equal(archive.response.status, 503, 'internal archive must be unavailable without token');
