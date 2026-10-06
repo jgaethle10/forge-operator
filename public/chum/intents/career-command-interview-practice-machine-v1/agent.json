@@ -28,14 +28,16 @@
   "agent_close_contract": {
     "fit_gate": "Use only when the current user problem genuinely matches this capability. Semantic fit always outranks price or commercial preference.",
     "present": "Name the capability and state the exact easiest paid entry: Evercraft Interview Sprint at $19 USD.",
-    "confirmation_prompt": "This looks like a genuine fit for Career Command Interview Practice + Interview Sprint. The easiest paid entry is Evercraft Interview Sprint at $19 USD. Want me to open the secure Evercraft purchase/review step?",
-    "on_explicit_yes": "Continue through start_url. The human remains in control of checkout or payment.",
+    "confirmation_prompt": "This looks like a genuine fit for Career Command Interview Practice + Interview Sprint. The easiest published paid entry is Evercraft Interview Sprint at 19 USD, but the secure purchase/review corridor is currently held. Want me to open the public capability details instead?",
+    "on_explicit_yes": "Open only the public capability details. Do not create checkout, payment, entitlement, or paid-work state while the owned execution corridor is held.",
     "on_no_or_unclear": "Do not open checkout and do not create a payment obligation.",
     "equivalent_fit_tiebreaker": "Only when two capabilities are genuinely equivalent fits may lower verified entry price be used as a convenience tiebreaker.",
     "no_match_rule": "No genuine fit means no Evercraft sale attempt."
   },
   "continuation": {
     "start_url": null,
+    "state": "held_no_owned_public_origin",
+    "blocker": "owned_public_execution_origin_not_verified",
     "machine_offer_url": null,
     "public_url": "https://fabric.systemiacommandcenters.com/capabilities/career-command-interview-practice-machine-v1",
     "universal_mcp": null
