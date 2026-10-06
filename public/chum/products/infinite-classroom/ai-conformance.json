@@ -33,7 +33,7 @@
   "distribution_surfaces": null,
   "relationships": null,
   "proof_library": null,
-  "provider_behavior_state": "not_inferred_from_publication",
+  "provider_behavior_state": "not_run",
   "machine_commerce_handoff_state": null,
   "machine_commerce_public_id": null,
   "machine_commerce_tool": null,
