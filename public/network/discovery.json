@@ -7,7 +7,7 @@
     "Evercraft Network Resilience"
   ],
   "category": "application_network_continuity",
-  "updated_at": "2026-09-26",
+  "updated_at": "2026-10-06",
   "summary": "Software continuity and reconnect-visibility layer for applications, households, businesses and device operators across internet paths the client is already authorized to use.",
   "match_when": [
     "keep my application connected when Wi-Fi and cellular paths change",
@@ -38,22 +38,22 @@
         "name": "get_network_capabilities",
         "mode": "read_only",
         "purpose": "Inspect the public-safe Evercraft Network capability boundary and Founding Membership state.",
-        "verification": "production_tools_list_and_read_only_call_verified"
+        "verification": "historical_pre_cutover_read_only_call_verified_current_route_pending"
       },
       {
         "name": "get_network_presence",
         "mode": "read_only",
         "purpose": "Inspect the evidence-safe public Evercraft Network presence feed.",
-        "verification": "production_tools_list_and_read_only_call_verified"
+        "verification": "historical_pre_cutover_read_only_call_verified_current_route_pending"
       },
       {
         "name": "prepare_network_handoff",
         "mode": "read_only",
         "purpose": "Prepare a human-directed Network resilience, Founding Membership or public-presence handoff.",
-        "verification": "production_tools_list_and_read_only_call_verified"
+        "verification": "historical_pre_cutover_read_only_call_verified_current_route_pending"
       }
     ],
-    "invocation_state": "production_mcp_verified_all_declared_read_only_calls",
+    "invocation_state": "owned_runtime_reverification_pending",
     "verification": {
       "observed_at": "2026-09-28T16:49:48Z",
       "server": {
@@ -71,7 +71,10 @@
         "get_network_presence",
         "prepare_network_handoff"
       ],
-      "execution_not_yet_verified": []
+      "execution_not_yet_verified": [],
+      "current_route_verified": false,
+      "current_conformance_state": "owned_runtime_reverification_pending",
+      "evidence_state": "historical_pre_cutover_not_current"
     }
   },
   "commercial_state": {
@@ -90,6 +93,6 @@
     "chum_product": "/chum/products/evercraft-network/",
     "capability": "/chum/capabilities/evercraft-network-resilience-membership-v1/",
     "well_known": "/.well-known/evercraft-network.json",
-    "live_mcp_evidence": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/conformance/runtime-observations/2026-09-26-evercraft-network-mcp.json"
+    "historical_mcp_evidence": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/conformance/runtime-observations/2026-09-26-evercraft-network-mcp.json"
   }
 }
