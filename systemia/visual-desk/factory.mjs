@@ -130,21 +130,44 @@ function project(point,box){
 function titleLines(text,maxChars=28,maxLines=3){
   const words=String(text || '').split(/\s+/).filter(Boolean);
   const lines=[];
-  let current='';
-  for(const word of words){
-    const next=current ? current+' '+word : word;
-    if(next.length>maxChars && current){
-      lines.push(current);
-      current=word;
-      if(lines.length===maxLines-1) break;
-    } else {
-      current=next;
+  let index=0;
+  while(index<words.length && lines.length<maxLines){
+    let current=words[index++];
+    while(index<words.length && (current+' '+words[index]).length<=maxChars){
+      current+=' '+words[index++];
     }
+    if(lines.length===maxLines-1 && index<words.length){
+      current=current.replace(/[.…]+$/,'')+'…';
+      index=words.length;
+    }
+    lines.push(current);
   }
-  if(lines.length<maxLines && current) lines.push(current);
-  const used=lines.join(' ').split(/\s+/).filter(Boolean).length;
-  if(used<words.length && lines.length) lines[lines.length-1]=lines[lines.length-1]+'…';
   return lines;
+}
+
+function layoutPointLabels(story,positions,maxValue){
+  const items=story.points.map((point,index)=>{
+    const p=positions.get(point.id);
+    const radius=10+Math.sqrt(Math.abs(point.value ?? 1)/maxValue)*18;
+    return {
+      point,index,p,radius,
+      side:p.x<540?'left':'right',
+      labelY:p.y+7,
+    };
+  }).sort((a,b)=>a.p.y-b.p.y || a.p.x-b.p.x);
+
+  const last={left:-Infinity,right:-Infinity};
+  for(const item of items){
+    const preferred=item.side;
+    const alternate=preferred==='left'?'right':'left';
+    if(item.labelY-last[preferred]<48 && item.labelY-last[alternate]>=48){
+      item.side=alternate;
+    }
+    item.labelY=Math.max(item.labelY,last[item.side]+48);
+    item.labelY=Math.max(390,Math.min(948,item.labelY));
+    last[item.side]=item.labelY;
+  }
+  return items.sort((a,b)=>a.index-b.index);
 }
 
 export function renderShareCard(input){
@@ -169,26 +192,41 @@ export function renderShareCard(input){
     return '<path d="M '+a.x+' '+a.y+' Q '+cx+' '+cy+' '+b.x+' '+b.y+'" fill="none" stroke="#4FB8FF" stroke-width="4" stroke-linecap="round" opacity=".72"/>';
   }).join('\n');
 
-  const points=story.points.map(point=>{
-    const p=positions.get(point.id);
-    const radius=10+Math.sqrt(Math.abs(point.value ?? 1)/maxValue)*18;
-    const right=p.x<=760;
-    const labelX=right ? p.x+radius+10 : p.x-radius-10;
+  const points=layoutPointLabels(story,positions,maxValue).map(item=>{
+    const {point,p,radius,side,labelY}=item;
+    const right=side==='right';
+    const labelX=right ? p.x+radius+16 : p.x-radius-16;
     const anchor=right ? 'start' : 'end';
+    const leaderX=right ? labelX-8 : labelX+8;
     return [
+      '<line x1="'+p.x+'" y1="'+p.y+'" x2="'+leaderX+'" y2="'+(labelY-7)+'" stroke="#4FB8FF" stroke-width="2" opacity=".38"/>',
       '<circle cx="'+p.x+'" cy="'+p.y+'" r="'+(radius+8)+'" fill="#4FB8FF" opacity=".10"/>',
       '<circle cx="'+p.x+'" cy="'+p.y+'" r="'+radius+'" fill="#4FB8FF" stroke="#F5F5F2" stroke-width="3"/>',
-      '<text x="'+labelX+'" y="'+(p.y+7)+'" text-anchor="'+anchor+'" font-family="Arial,sans-serif" font-size="28" font-weight="700" fill="#F5F5F2">'+esc(point.label || point.id)+'</text>',
+      '<text x="'+labelX+'" y="'+labelY+'" text-anchor="'+anchor+'" font-family="Arial,sans-serif" font-size="26" font-weight="700" fill="#F5F5F2">'+esc(point.label || point.id)+'</text>',
     ].join('\n');
   }).join('\n');
 
-  const title=titleLines(story.title).map((line,index)=>
-    '<text x="92" y="'+(126+index*66)+'" font-family="Arial,sans-serif" font-size="58" font-weight="800" fill="#F5F5F2">'+esc(line)+'</text>'
+  const titleLineArray=titleLines(story.title,31,3);
+  const titleFont=titleLineArray.length>=3?54:58;
+  const title=titleLineArray.map((line,index)=>
+    '<text x="92" y="'+(126+index*60)+'" font-family="Arial,sans-serif" font-size="'+titleFont+'" font-weight="800" fill="#F5F5F2">'+esc(line)+'</text>'
   ).join('\n');
 
-  const sourceHosts=story.sourceRefs.slice(0,2).map(ref=>{
+  const subtitle=titleLines(story.subtitle,62,2).map((line,index)=>
+    '<text x="92" y="'+(290+index*32)+'" font-family="Arial,sans-serif" font-size="27" fill="#B7BDC5">'+esc(line)+'</text>'
+  ).join('\n');
+
+  const callout=titleLines(
+    story.callout || 'Open the source-backed page for context and methodology.',
+    64,
+    2
+  ).map((line,index)=>
+    '<text x="92" y="'+(1110+index*31)+'" font-family="Arial,sans-serif" font-size="22" font-weight="650" fill="#F5F5F2">'+esc(line)+'</text>'
+  ).join('\n');
+
+  const sourceHosts=[...new Set(story.sourceRefs.map(ref=>{
     try{return new URL(ref).hostname.replace(/^www\./,'');}catch{return ref;}
-  }).join(' • ');
+  }))].slice(0,3).join(' • ');
 
   return [
     '<svg xmlns="http://www.w3.org/2000/svg" width="1080" height="1350" viewBox="0 0 1080 1350">',
@@ -196,15 +234,15 @@ export function renderShareCard(input){
     '<rect width="1080" height="18" fill="#4FB8FF"/>',
     '<text x="92" y="68" font-family="Arial,sans-serif" font-size="24" font-weight="800" letter-spacing="3" fill="#4FB8FF">EVERCRAFT VISUAL DESK</text>',
     title,
-    '<text x="92" y="318" font-family="Arial,sans-serif" font-size="29" fill="#B7BDC5">'+esc(story.subtitle)+'</text>',
+    subtitle,
     '<rect x="72" y="335" width="936" height="650" rx="28" fill="#0d1418" stroke="#263740" stroke-width="2"/>',
     grid.join('\n'),
     connectors,
     points,
     '<rect x="92" y="1016" width="210" height="44" rx="22" fill="#16252d"/>',
     '<text x="197" y="1046" text-anchor="middle" font-family="Arial,sans-serif" font-size="20" font-weight="800" fill="#4FB8FF">'+esc(story.evidenceState.toUpperCase())+'</text>',
-    '<text x="92" y="1110" font-family="Arial,sans-serif" font-size="24" font-weight="650" fill="#F5F5F2">'+esc(story.callout || 'Open the source-backed page for context and methodology.')+'</text>',
-    '<text x="92" y="1188" font-family="Arial,sans-serif" font-size="20" fill="#B7BDC5">Sources: '+esc(sourceHosts)+'</text>',
+    callout,
+    '<text x="92" y="1198" font-family="Arial,sans-serif" font-size="20" fill="#B7BDC5">Sources: '+esc(sourceHosts)+'</text>',
     '<text x="92" y="1258" font-family="Arial,sans-serif" font-size="20" fill="#7f8c93">Digest '+story.digest.slice(0,16)+'</text>',
     '<text x="988" y="1258" text-anchor="end" font-family="Arial,sans-serif" font-size="22" font-weight="800" fill="#B79A56">evercraft</text>',
     '</svg>',
@@ -215,7 +253,7 @@ export function renderShareCard(input){
 
 const CARD_FORMATS={
   feed:{width:1080,height:1350,scale:1,tx:0,ty:0},
-  story:{width:1080,height:1920,scale:1,tx:0,ty:285},
+  story:{width:1080,height:1920,scale:1,tx:0,ty:210},
   square:{width:1080,height:1080,scale:0.8,tx:108,ty:0},
 };
 
@@ -261,7 +299,7 @@ export function renderMotionStage(input){
     'html,body{margin:0;width:1080px;height:1920px;overflow:hidden;background:#080B0B}body{font-family:Arial,sans-serif}',
     '#stage{position:relative;width:1080px;height:1920px;background:radial-gradient(circle at 50% 42%,#14232b 0,#080B0B 58%)}',
     '#brand{position:absolute;left:92px;top:86px;color:#4FB8FF;font:800 25px Arial;letter-spacing:4px}',
-    '#card{position:absolute;left:0;top:285px;width:1080px;height:1350px;transform-origin:50% 50%;will-change:transform}',
+    '#card{position:absolute;left:0;top:210px;width:1080px;height:1350px;transform-origin:50% 50%;will-change:transform}',
     '#card svg{display:block;width:1080px;height:1350px}',
     '#footer{position:absolute;left:92px;bottom:94px;color:#B7BDC5;font:600 24px Arial}',
     '</style></head><body>',
