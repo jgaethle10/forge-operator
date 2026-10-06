@@ -72,14 +72,16 @@ Public evidence-support surfaces:
 - GET /api/faie/health
 - GET /api/faie/signals
 - POST /api/faie/investigate
+- POST /api/faie/compare
 - GET /mcp/faie?action=health
 - POST /mcp/faie
 
 Public investigation requests are ephemeral previews. They are rate limited by the Forge runtime and are not written into the shared investigation archive.
 
-The native FAIE MCP exposes three read-only tools:
+The native FAIE MCP exposes four read-only tools:
 
 - investigate_faie_evidence
+- compare_faie_candidates
 - get_faie_signal_snapshot
 - get_faie_health
 
@@ -92,12 +94,89 @@ Internal investigation and write surfaces require FAIE_INTERNAL_TOKEN:
 - GET /api/faie/investigations/:id/markdown
 - POST /api/faie/investigations
 - POST /api/faie/ingest
+- POST /api/faie/acquire/soil
+- POST /api/faie/rivet-context
 - POST /api/faie/worldstate-dispatch
 - POST /api/faie/run
 
 Human UI:
 
 - /faie/
+
+
+## Comparative underwriting
+
+FAIE can apply the same evidence rubric across two to eight candidate regions or sites with `POST /api/faie/compare` or the read-only MCP tool `compare_faie_candidates`.
+
+The output ranks **evidence readiness**, not site suitability. A candidate with better source coverage, more independent corroboration, stronger evidence and fewer missing dimensions may rank higher even when its underlying operating conditions are worse. FAIE therefore returns `site_suitability_verdict=null` and `investment_recommendation=null` for every candidate.
+
+Public comparisons are ephemeral previews. Internal authorized comparisons may be persisted into the FAIE state and comparison archive.
+
+## Saban specialist swarm
+
+FAIE is registered in the governed Saban multiplication fabric as `software_id=faie`. The bounded specialist roles are soil systems, water systems, climate/resilience, energy/infrastructure, logistics/market, labor/economics, policy/permitting, production systems, provenance, adversarial challenge, thesis memory, and reconciliation.
+
+The FAIE Saban contract is deny-by-default. It cannot independently send outreach, file public-records requests, publish, create checkout, accept contracts, move money, mutate production systems, or make consequential decisions. Its composite output must pass full role coverage, reconciliation, and source-integrity checks.
+
+Run the current proof:
+
+    npm run proof:saban-faie
+
+The current public design-partner review item lives in `systemia/faie/saban-review-queue.json`. It is a public-evidence product test, not private customer data and not an assertion about undisclosed customer architecture.
+
+## Thesis memory and evidence acquisition
+
+An investigation may include `thesis_assumptions`. FAIE assigns stable assumption IDs and links current relevant evidence without converting related evidence into a verdict. Each assumption remains explicitly bounded by `verdict_authority=false`.
+
+Missing decision dimensions are also converted into a structured `evidence_acquisition_queue`. Each queue item records the gap, priority, preferred evidence types, and the fact that no external action has been taken. Acquisition that requires field work, records requests, operator records, or other consequential steps stays human- or separately-authorized.
+
+## AgNormal / regional food-infrastructure pilot path
+
+The real FAIE UI at `/faie/` contains a one-click AgNormal regional food-infrastructure pilot scope. It does not switch to a canned demo or prewritten answer. The preset only fills the live investigation inputs and sends them through the same FAIE runtime used by every other public investigation.
+
+Regional food-infrastructure scopes are treated as multi-domain evidence problems. FAIE expects coverage across water, soil, heat, energy, infrastructure, logistics, labor, economics, policy, crop health and resilience when those dimensions are relevant. The packet exposes which dimensions are covered, which are missing, independent source-family count, strong-evidence count and decision-readiness state.
+
+The public packet follows the product workflow:
+
+    SENSE
+      -> current relevant evidence + source links
+    CHALLENGE
+      -> uncertainty + missing domains + corroboration gaps
+    DECIDE
+      -> next evidence required before consequential operator review
+
+The packet can be copied or downloaded as JSON client-side without persisting the caller's public question.
+
+Pilot acceptance gate:
+
+- real FAIE runtime, not a separate demo engine
+- no login required for the public preview
+- source lineage visible when a public provenance URL exists
+- missing evidence stays visible
+- controlled-environment coverage gaps are explicit
+- one-click Yakima Valley food-infrastructure scope is available on the real UI
+- human review remains required before consequential action
+
+### USDA NRCS site soil acquisition
+
+The internal `POST /api/faie/acquire/soil` route performs a bounded read from USDA NRCS Soil Data Access when an exact latitude and longitude are supplied. It uses the official WGS84 map-unit intersection function and retrieves SSURGO map-unit, component, horizon and texture-related fields.
+
+Soil Data Access is treated as official mapped survey evidence, not a live field soil test. FAIE preserves the survey-area `saverest` update date as the observation timestamp when available, labels the evidence `REPORTED`, and carries an explicit field-verification requirement for consequential site, crop, engineering or capital decisions.
+
+FAIE does not substitute a regional centroid or arbitrary sample point when exact site coordinates are missing.
+
+## Owned evidence bridges
+
+FAIE can consume neutral site evidence already acquired by other Evercraft systems rather than forcing each specialist to rebuild the same source adapters.
+
+The internal `POST /api/faie/rivet-context` route accepts an authorized RIVET/AliEV site-intelligence snapshot and converts only reusable physical-site evidence into FAIE observations:
+
+- utility service-area and tariff candidates
+- traffic and freight context
+- parcel/planning context
+- incentive/program context
+
+The bridge explicitly excludes charger inventory, EV adoption, charging-session utilization, EV sales angles and EV-specific modeled demand. It does not upgrade the upstream evidence state or create site-suitability authority.
 
 ## Autonomous loop
 
