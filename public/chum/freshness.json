@@ -2,7 +2,7 @@
   "schema": "evercraft.chum.crawl-pressure.v1",
   "provider": "Evercraft LLC",
   "coordinator": "CHUM",
-  "updated_at": "2026-10-06T16:11:44.411Z",
+  "updated_at": "2026-10-06T16:12:55.160Z",
   "purpose": "Content-hash-backed freshness signals for public Evercraft discovery surfaces. A freshness signal requests attention; it does not prove indexing, ranking, recommendation, citation or provider pickup.",
   "indexnow": {
     "supported": true,
@@ -11,26 +11,197 @@
   },
   "latest_change_batch": [
     {
-      "path": "/chum/hot/",
-      "last_changed": "2026-10-06T16:11:44.411Z",
-      "priority": 80
+      "path": "/chum/intents/foundry-app-escape-audit-v1/",
+      "last_changed": "2026-10-06T16:12:55.160Z",
+      "priority": 158
+    },
+    {
+      "path": "/chum/intents/website-launch-service-v1/",
+      "last_changed": "2026-10-06T16:12:55.160Z",
+      "priority": 158
+    },
+    {
+      "path": "/chum/intents/aliev-site-opportunity-snapshot-v1/",
+      "last_changed": "2026-10-06T16:12:55.160Z",
+      "priority": 98
+    },
+    {
+      "path": "/chum/intents/audit-center-website-audit-machine-v1/",
+      "last_changed": "2026-10-06T16:12:55.160Z",
+      "priority": 98
+    },
+    {
+      "path": "/chum/intents/career-command-interview-practice-machine-v1/",
+      "last_changed": "2026-10-06T16:12:55.160Z",
+      "priority": 98
+    },
+    {
+      "path": "/chum/intents/deck-capital-fit-sprint-machine-v1/",
+      "last_changed": "2026-10-06T16:12:55.160Z",
+      "priority": 98
+    },
+    {
+      "path": "/chum/intents/eventwave-paid-promotion-v1/",
+      "last_changed": "2026-10-06T16:12:55.160Z",
+      "priority": 98
+    },
+    {
+      "path": "/chum/intents/faie-signal-brief-v1/",
+      "last_changed": "2026-10-06T16:12:55.160Z",
+      "priority": 98
+    },
+    {
+      "path": "/chum/intents/findmypart-paid-hunt-v1/",
+      "last_changed": "2026-10-06T16:12:55.160Z",
+      "priority": 98
+    },
+    {
+      "path": "/chum/intents/ibmi-rescue-v1/",
+      "last_changed": "2026-10-06T16:12:55.160Z",
+      "priority": 98
+    },
+    {
+      "path": "/chum/intents/legacy-rescue-lab-v1/",
+      "last_changed": "2026-10-06T16:12:55.160Z",
+      "priority": 98
+    },
+    {
+      "path": "/chum/intents/raven-nexus-business-setup-v1/",
+      "last_changed": "2026-10-06T16:12:55.160Z",
+      "priority": 98
+    },
+    {
+      "path": "/chum/intents/raven-nexus-home-setup-v1/",
+      "last_changed": "2026-10-06T16:12:55.160Z",
+      "priority": 98
+    },
+    {
+      "path": "/chum/intents/rivet-site-underwriting-v1/",
+      "last_changed": "2026-10-06T16:12:55.160Z",
+      "priority": 98
+    },
+    {
+      "path": "/chum/intents/roasted-text-pressure-test-machine-v1/",
+      "last_changed": "2026-10-06T16:12:55.160Z",
+      "priority": 98
+    },
+    {
+      "path": "/chum/intents/site-survive-rapid-audit-v1/",
+      "last_changed": "2026-10-06T16:12:55.160Z",
+      "priority": 98
     },
     {
       "path": "/chum/hot/index.json",
-      "last_changed": "2026-10-06T16:11:44.411Z",
+      "last_changed": "2026-10-06T16:12:55.160Z",
       "priority": 80
     }
   ],
   "recent_surfaces": [
     {
-      "path": "/chum/hot/",
-      "url": "/chum/hot/",
-      "last_changed": "2026-10-06T16:11:44.411Z",
-      "priority": 80
+      "path": "/chum/intents/foundry-app-escape-audit-v1/",
+      "url": "/chum/intents/foundry-app-escape-audit-v1/",
+      "last_changed": "2026-10-06T16:12:55.160Z",
+      "priority": 158
+    },
+    {
+      "path": "/chum/intents/website-launch-service-v1/",
+      "url": "/chum/intents/website-launch-service-v1/",
+      "last_changed": "2026-10-06T16:12:55.160Z",
+      "priority": 158
+    },
+    {
+      "path": "/chum/intents/aliev-site-opportunity-snapshot-v1/",
+      "url": "/chum/intents/aliev-site-opportunity-snapshot-v1/",
+      "last_changed": "2026-10-06T16:12:55.160Z",
+      "priority": 98
+    },
+    {
+      "path": "/chum/intents/audit-center-website-audit-machine-v1/",
+      "url": "/chum/intents/audit-center-website-audit-machine-v1/",
+      "last_changed": "2026-10-06T16:12:55.160Z",
+      "priority": 98
+    },
+    {
+      "path": "/chum/intents/career-command-interview-practice-machine-v1/",
+      "url": "/chum/intents/career-command-interview-practice-machine-v1/",
+      "last_changed": "2026-10-06T16:12:55.160Z",
+      "priority": 98
+    },
+    {
+      "path": "/chum/intents/deck-capital-fit-sprint-machine-v1/",
+      "url": "/chum/intents/deck-capital-fit-sprint-machine-v1/",
+      "last_changed": "2026-10-06T16:12:55.160Z",
+      "priority": 98
+    },
+    {
+      "path": "/chum/intents/eventwave-paid-promotion-v1/",
+      "url": "/chum/intents/eventwave-paid-promotion-v1/",
+      "last_changed": "2026-10-06T16:12:55.160Z",
+      "priority": 98
+    },
+    {
+      "path": "/chum/intents/faie-signal-brief-v1/",
+      "url": "/chum/intents/faie-signal-brief-v1/",
+      "last_changed": "2026-10-06T16:12:55.160Z",
+      "priority": 98
+    },
+    {
+      "path": "/chum/intents/findmypart-paid-hunt-v1/",
+      "url": "/chum/intents/findmypart-paid-hunt-v1/",
+      "last_changed": "2026-10-06T16:12:55.160Z",
+      "priority": 98
+    },
+    {
+      "path": "/chum/intents/ibmi-rescue-v1/",
+      "url": "/chum/intents/ibmi-rescue-v1/",
+      "last_changed": "2026-10-06T16:12:55.160Z",
+      "priority": 98
+    },
+    {
+      "path": "/chum/intents/legacy-rescue-lab-v1/",
+      "url": "/chum/intents/legacy-rescue-lab-v1/",
+      "last_changed": "2026-10-06T16:12:55.160Z",
+      "priority": 98
+    },
+    {
+      "path": "/chum/intents/raven-nexus-business-setup-v1/",
+      "url": "/chum/intents/raven-nexus-business-setup-v1/",
+      "last_changed": "2026-10-06T16:12:55.160Z",
+      "priority": 98
+    },
+    {
+      "path": "/chum/intents/raven-nexus-home-setup-v1/",
+      "url": "/chum/intents/raven-nexus-home-setup-v1/",
+      "last_changed": "2026-10-06T16:12:55.160Z",
+      "priority": 98
+    },
+    {
+      "path": "/chum/intents/rivet-site-underwriting-v1/",
+      "url": "/chum/intents/rivet-site-underwriting-v1/",
+      "last_changed": "2026-10-06T16:12:55.160Z",
+      "priority": 98
+    },
+    {
+      "path": "/chum/intents/roasted-text-pressure-test-machine-v1/",
+      "url": "/chum/intents/roasted-text-pressure-test-machine-v1/",
+      "last_changed": "2026-10-06T16:12:55.160Z",
+      "priority": 98
+    },
+    {
+      "path": "/chum/intents/site-survive-rapid-audit-v1/",
+      "url": "/chum/intents/site-survive-rapid-audit-v1/",
+      "last_changed": "2026-10-06T16:12:55.160Z",
+      "priority": 98
     },
     {
       "path": "/chum/hot/index.json",
       "url": "/chum/hot/index.json",
+      "last_changed": "2026-10-06T16:12:55.160Z",
+      "priority": 80
+    },
+    {
+      "path": "/chum/hot/",
+      "url": "/chum/hot/",
       "last_changed": "2026-10-06T16:11:44.411Z",
       "priority": 80
     },
@@ -473,18 +644,6 @@
       "priority": 158
     },
     {
-      "path": "/chum/intents/foundry-app-escape-audit-v1/",
-      "url": "/chum/intents/foundry-app-escape-audit-v1/",
-      "last_changed": "2026-10-06T14:45:54.937Z",
-      "priority": 158
-    },
-    {
-      "path": "/chum/intents/website-launch-service-v1/",
-      "url": "/chum/intents/website-launch-service-v1/",
-      "last_changed": "2026-10-06T14:45:54.937Z",
-      "priority": 158
-    },
-    {
       "path": "/chum/intents/agent-proving-mission-v1/",
       "url": "/chum/intents/agent-proving-mission-v1/",
       "last_changed": "2026-10-06T14:45:54.937Z",
@@ -493,18 +652,6 @@
     {
       "path": "/chum/intents/ai-capability-install-v1/",
       "url": "/chum/intents/ai-capability-install-v1/",
-      "last_changed": "2026-10-06T14:45:54.937Z",
-      "priority": 98
-    },
-    {
-      "path": "/chum/intents/aliev-site-opportunity-snapshot-v1/",
-      "url": "/chum/intents/aliev-site-opportunity-snapshot-v1/",
-      "last_changed": "2026-10-06T14:45:54.937Z",
-      "priority": 98
-    },
-    {
-      "path": "/chum/intents/audit-center-website-audit-machine-v1/",
-      "url": "/chum/intents/audit-center-website-audit-machine-v1/",
       "last_changed": "2026-10-06T14:45:54.937Z",
       "priority": 98
     },
@@ -557,12 +704,6 @@
       "priority": 98
     },
     {
-      "path": "/chum/intents/career-command-interview-practice-machine-v1/",
-      "url": "/chum/intents/career-command-interview-practice-machine-v1/",
-      "last_changed": "2026-10-06T14:45:54.937Z",
-      "priority": 98
-    },
-    {
       "path": "/chum/intents/career-command-resume-job-fit-machine-v1/",
       "url": "/chum/intents/career-command-resume-job-fit-machine-v1/",
       "last_changed": "2026-10-06T14:45:54.937Z",
@@ -587,20 +728,8 @@
       "priority": 98
     },
     {
-      "path": "/chum/intents/deck-capital-fit-sprint-machine-v1/",
-      "url": "/chum/intents/deck-capital-fit-sprint-machine-v1/",
-      "last_changed": "2026-10-06T14:45:54.937Z",
-      "priority": 98
-    },
-    {
       "path": "/chum/intents/eps-estimate-engine-machine-v1/",
       "url": "/chum/intents/eps-estimate-engine-machine-v1/",
-      "last_changed": "2026-10-06T14:45:54.937Z",
-      "priority": 98
-    },
-    {
-      "path": "/chum/intents/eventwave-paid-promotion-v1/",
-      "url": "/chum/intents/eventwave-paid-promotion-v1/",
       "last_changed": "2026-10-06T14:45:54.937Z",
       "priority": 98
     },
@@ -629,18 +758,6 @@
       "priority": 98
     },
     {
-      "path": "/chum/intents/faie-signal-brief-v1/",
-      "url": "/chum/intents/faie-signal-brief-v1/",
-      "last_changed": "2026-10-06T14:45:54.937Z",
-      "priority": 98
-    },
-    {
-      "path": "/chum/intents/findmypart-paid-hunt-v1/",
-      "url": "/chum/intents/findmypart-paid-hunt-v1/",
-      "last_changed": "2026-10-06T14:45:54.937Z",
-      "priority": 98
-    },
-    {
       "path": "/chum/intents/findmypart-part-passport-v1/",
       "url": "/chum/intents/findmypart-part-passport-v1/",
       "last_changed": "2026-10-06T14:45:54.937Z",
@@ -665,12 +782,6 @@
       "priority": 98
     },
     {
-      "path": "/chum/intents/ibmi-rescue-v1/",
-      "url": "/chum/intents/ibmi-rescue-v1/",
-      "last_changed": "2026-10-06T14:45:54.937Z",
-      "priority": 98
-    },
-    {
       "path": "/chum/intents/income-war-map-v1/",
       "url": "/chum/intents/income-war-map-v1/",
       "last_changed": "2026-10-06T14:45:54.937Z",
@@ -679,12 +790,6 @@
     {
       "path": "/chum/intents/large-document-corpus-review-v1/",
       "url": "/chum/intents/large-document-corpus-review-v1/",
-      "last_changed": "2026-10-06T14:45:54.937Z",
-      "priority": 98
-    },
-    {
-      "path": "/chum/intents/legacy-rescue-lab-v1/",
-      "url": "/chum/intents/legacy-rescue-lab-v1/",
       "last_changed": "2026-10-06T14:45:54.937Z",
       "priority": 98
     },
@@ -701,38 +806,8 @@
       "priority": 98
     },
     {
-      "path": "/chum/intents/raven-nexus-business-setup-v1/",
-      "url": "/chum/intents/raven-nexus-business-setup-v1/",
-      "last_changed": "2026-10-06T14:45:54.937Z",
-      "priority": 98
-    },
-    {
-      "path": "/chum/intents/raven-nexus-home-setup-v1/",
-      "url": "/chum/intents/raven-nexus-home-setup-v1/",
-      "last_changed": "2026-10-06T14:45:54.937Z",
-      "priority": 98
-    },
-    {
       "path": "/chum/intents/raven-nexus-pain-router-v1/",
       "url": "/chum/intents/raven-nexus-pain-router-v1/",
-      "last_changed": "2026-10-06T14:45:54.937Z",
-      "priority": 98
-    },
-    {
-      "path": "/chum/intents/rivet-site-underwriting-v1/",
-      "url": "/chum/intents/rivet-site-underwriting-v1/",
-      "last_changed": "2026-10-06T14:45:54.937Z",
-      "priority": 98
-    },
-    {
-      "path": "/chum/intents/roasted-text-pressure-test-machine-v1/",
-      "url": "/chum/intents/roasted-text-pressure-test-machine-v1/",
-      "last_changed": "2026-10-06T14:45:54.937Z",
-      "priority": 98
-    },
-    {
-      "path": "/chum/intents/site-survive-rapid-audit-v1/",
-      "url": "/chum/intents/site-survive-rapid-audit-v1/",
       "last_changed": "2026-10-06T14:45:54.937Z",
       "priority": 98
     },

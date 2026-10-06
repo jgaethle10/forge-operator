@@ -2,7 +2,7 @@
   "schema": "evercraft.chum.crawl-state.v1",
   "provider": "Evercraft LLC",
   "coordinator": "CHUM",
-  "updated_at": "2026-10-06T16:11:44.411Z",
+  "updated_at": "2026-10-06T16:12:55.160Z",
   "url_count": 2782,
   "doctrine": {
     "crawl_can_be_requested_not_forced": true,
@@ -141,8 +141,8 @@
     },
     "/chum/hot/index.json": {
       "path": "/chum/hot/index.json",
-      "content_sha256": "c48d04f2695e9f8813ebe8ac0de925a12ce49ef335e2049de43be3c11ef3c80a",
-      "last_changed": "2026-10-06T16:11:44.411Z",
+      "content_sha256": "fdedbd5cbb3592e5a429bda6d2323502949e5316ba68fe78c7589d12908bef3c",
+      "last_changed": "2026-10-06T16:12:55.160Z",
       "priority": 80
     },
     "/chum/strike/": {
@@ -957,8 +957,8 @@
     },
     "/chum/intents/aliev-site-opportunity-snapshot-v1/": {
       "path": "/chum/intents/aliev-site-opportunity-snapshot-v1/",
-      "content_sha256": "9775a846354e609836e39c786964aef4b20f586ea2f13f873f4731509a654c90",
-      "last_changed": "2026-10-06T14:45:54.937Z",
+      "content_sha256": "4ca2096fb5f65848bf6609b37a00b8984903ca4982f55718ea9552a57978a2f8",
+      "last_changed": "2026-10-06T16:12:55.160Z",
       "priority": 98
     },
     "/chum/capabilities/aliev-site-opportunity-snapshot-v1/": {
@@ -987,8 +987,8 @@
     },
     "/chum/intents/audit-center-website-audit-machine-v1/": {
       "path": "/chum/intents/audit-center-website-audit-machine-v1/",
-      "content_sha256": "5a5f66f5a195652df380e4506c33485dda16db101a21bf7af1e1439e3f7b57e1",
-      "last_changed": "2026-10-06T14:45:54.937Z",
+      "content_sha256": "833d84dd22a8805a390734e4dddd31abb701c3a73366ac195e16f28ff958c47e",
+      "last_changed": "2026-10-06T16:12:55.160Z",
       "priority": 98
     },
     "/chum/capabilities/audit-center-website-audit-machine-v1/": {
@@ -1257,8 +1257,8 @@
     },
     "/chum/intents/career-command-interview-practice-machine-v1/": {
       "path": "/chum/intents/career-command-interview-practice-machine-v1/",
-      "content_sha256": "c813f3f6351066165a67dd521886880dad806a2d6a0f5b84b846767f0eb8b292",
-      "last_changed": "2026-10-06T14:45:54.937Z",
+      "content_sha256": "2f9166313f1a694c74c1c0e4e738b35b8d1582af0fc4b8376d5215e9e2ee6729",
+      "last_changed": "2026-10-06T16:12:55.160Z",
       "priority": 98
     },
     "/chum/capabilities/career-command-interview-practice-machine-v1/": {
@@ -1407,8 +1407,8 @@
     },
     "/chum/intents/deck-capital-fit-sprint-machine-v1/": {
       "path": "/chum/intents/deck-capital-fit-sprint-machine-v1/",
-      "content_sha256": "98ebc327535d3563680015a492e9572af210d2913a0f7676f8957dc58825af3d",
-      "last_changed": "2026-10-06T14:45:54.937Z",
+      "content_sha256": "e57509c2a6b9b4c8fbc8330125c4a4ca9837cf2993f43eb697675ba597e5e65e",
+      "last_changed": "2026-10-06T16:12:55.160Z",
       "priority": 98
     },
     "/chum/capabilities/deck-capital-fit-sprint-machine-v1/": {
@@ -1467,8 +1467,8 @@
     },
     "/chum/intents/eventwave-paid-promotion-v1/": {
       "path": "/chum/intents/eventwave-paid-promotion-v1/",
-      "content_sha256": "3f509bfb5944db4d8ad5a9bceb7095810a922a8c774ad8b9f22460ee7ab13ad1",
-      "last_changed": "2026-10-06T14:45:54.937Z",
+      "content_sha256": "6bc064dcb42566fe3dc4b03990d5090db6dc00bedfbc7deaaa116fc1cf07156e",
+      "last_changed": "2026-10-06T16:12:55.160Z",
       "priority": 98
     },
     "/chum/capabilities/eventwave-paid-promotion-v1/": {
@@ -1617,8 +1617,8 @@
     },
     "/chum/intents/faie-signal-brief-v1/": {
       "path": "/chum/intents/faie-signal-brief-v1/",
-      "content_sha256": "e89758fab8f8081a23e62d9b1a7f1773b7bb27c0f651780d03172f21ebcc5f4e",
-      "last_changed": "2026-10-06T14:45:54.937Z",
+      "content_sha256": "4d752ce6158df2feeba8e9aa2b40860164de360867a27c1e1999c95fbdaa16e9",
+      "last_changed": "2026-10-06T16:12:55.160Z",
       "priority": 98
     },
     "/chum/capabilities/faie-signal-brief-v1/": {
@@ -1647,8 +1647,8 @@
     },
     "/chum/intents/findmypart-paid-hunt-v1/": {
       "path": "/chum/intents/findmypart-paid-hunt-v1/",
-      "content_sha256": "4610bede003266d8e33fbe23723fba59efc8d9faa63044206fa9b73e1c35f9e7",
-      "last_changed": "2026-10-06T14:45:54.937Z",
+      "content_sha256": "6fcc9933de348fe638054b9103bd4d772c5982cc63b93083fe26246611d79386",
+      "last_changed": "2026-10-06T16:12:55.160Z",
       "priority": 98
     },
     "/chum/capabilities/findmypart-paid-hunt-v1/": {
@@ -1767,8 +1767,8 @@
     },
     "/chum/intents/foundry-app-escape-audit-v1/": {
       "path": "/chum/intents/foundry-app-escape-audit-v1/",
-      "content_sha256": "5c453c0bb3da9bb5a15a2f6d6752abe650c135f9e03da75e6f6ff6d91ab7303a",
-      "last_changed": "2026-10-06T14:45:54.937Z",
+      "content_sha256": "e8adcd8bf644db2b7b2c66835b284c9169b666c4b9f42ba488ef094b15297a05",
+      "last_changed": "2026-10-06T16:12:55.160Z",
       "priority": 158
     },
     "/chum/capabilities/foundry-app-escape-audit-v1/": {
@@ -1857,8 +1857,8 @@
     },
     "/chum/intents/ibmi-rescue-v1/": {
       "path": "/chum/intents/ibmi-rescue-v1/",
-      "content_sha256": "b8ae9a3874220ec480092afd568c8b6fc8e3a2c7e46c64b8c176aec5050e6d5f",
-      "last_changed": "2026-10-06T14:45:54.937Z",
+      "content_sha256": "5fac5f37ee7ef8e62a15392635d4bad25f6b5216768e9fcee5d3c45ae39e9599",
+      "last_changed": "2026-10-06T16:12:55.160Z",
       "priority": 98
     },
     "/chum/capabilities/ibmi-rescue-v1/": {
@@ -1947,8 +1947,8 @@
     },
     "/chum/intents/legacy-rescue-lab-v1/": {
       "path": "/chum/intents/legacy-rescue-lab-v1/",
-      "content_sha256": "62ed7b2546688483dea0cbfde7d4615f12fccbead56fff7879dad556d461f97f",
-      "last_changed": "2026-10-06T14:45:54.937Z",
+      "content_sha256": "564ef2729b7e1449d275ea5e811385e0f0e1d60e26dacf174a4605658c8833f8",
+      "last_changed": "2026-10-06T16:12:55.160Z",
       "priority": 98
     },
     "/chum/capabilities/legacy-rescue-lab-v1/": {
@@ -2037,8 +2037,8 @@
     },
     "/chum/intents/raven-nexus-business-setup-v1/": {
       "path": "/chum/intents/raven-nexus-business-setup-v1/",
-      "content_sha256": "be49cda24353686129df9f3662ef9ca4bd8df41a6c390ee3232b1e7de7cb6b28",
-      "last_changed": "2026-10-06T14:45:54.937Z",
+      "content_sha256": "1b6e6a69d1d9f1d02c825abd568779ed5fb02d0af804dae34442e34a59c35014",
+      "last_changed": "2026-10-06T16:12:55.160Z",
       "priority": 98
     },
     "/chum/capabilities/raven-nexus-business-setup-v1/": {
@@ -2067,8 +2067,8 @@
     },
     "/chum/intents/raven-nexus-home-setup-v1/": {
       "path": "/chum/intents/raven-nexus-home-setup-v1/",
-      "content_sha256": "fd39c3dacab682be9cec9f0fae43bdd71a4b2d472b8d0b10da96aa27b743ac3f",
-      "last_changed": "2026-10-06T14:45:54.937Z",
+      "content_sha256": "47cfa057699b1bf6d34d32118437e1bd90ace8a84702de737f490c2193d20c2b",
+      "last_changed": "2026-10-06T16:12:55.160Z",
       "priority": 98
     },
     "/chum/capabilities/raven-nexus-home-setup-v1/": {
@@ -2127,8 +2127,8 @@
     },
     "/chum/intents/rivet-site-underwriting-v1/": {
       "path": "/chum/intents/rivet-site-underwriting-v1/",
-      "content_sha256": "9542b4ff32df15ad726744e1a9477b6fcd78c504f4786f0ec2c74acba09963f3",
-      "last_changed": "2026-10-06T14:45:54.937Z",
+      "content_sha256": "d8dd97c02fe4d850be92a164754fc7349d9cbb75f34b2fba55e2a618d0aa3df5",
+      "last_changed": "2026-10-06T16:12:55.160Z",
       "priority": 98
     },
     "/chum/capabilities/rivet-site-underwriting-v1/": {
@@ -2157,8 +2157,8 @@
     },
     "/chum/intents/roasted-text-pressure-test-machine-v1/": {
       "path": "/chum/intents/roasted-text-pressure-test-machine-v1/",
-      "content_sha256": "af7d46e9f0b4d17040a3f2c8258e2b6fa9c77be6afa17d818ea022d9d91d26b5",
-      "last_changed": "2026-10-06T14:45:54.937Z",
+      "content_sha256": "ac52df4b0438dd4709380414c7862b36b4aa651b70d075f6b6ae54aad7fc45a8",
+      "last_changed": "2026-10-06T16:12:55.160Z",
       "priority": 98
     },
     "/chum/capabilities/roasted-text-pressure-test-machine-v1/": {
@@ -2187,8 +2187,8 @@
     },
     "/chum/intents/site-survive-rapid-audit-v1/": {
       "path": "/chum/intents/site-survive-rapid-audit-v1/",
-      "content_sha256": "a677827a8cdf358869de0a6dc26b0d5d86f9e8c88adafb5fbc0a3f4e779dfff9",
-      "last_changed": "2026-10-06T14:45:54.937Z",
+      "content_sha256": "40b522357c21890b2ce173aa8daed216985ab7ab3aa147d96f79d5f67e5d4ba9",
+      "last_changed": "2026-10-06T16:12:55.160Z",
       "priority": 98
     },
     "/chum/capabilities/site-survive-rapid-audit-v1/": {
@@ -2337,8 +2337,8 @@
     },
     "/chum/intents/website-launch-service-v1/": {
       "path": "/chum/intents/website-launch-service-v1/",
-      "content_sha256": "46588fc56a2314b451fd3f3794f4ca0087427e9f7c3a260b6a83443bf4881d56",
-      "last_changed": "2026-10-06T14:45:54.937Z",
+      "content_sha256": "a5b23d364da43d2c724112c047d28825a29d8da6240c4c8e3c89aafb19be0270",
+      "last_changed": "2026-10-06T16:12:55.160Z",
       "priority": 158
     },
     "/chum/capabilities/website-launch-service-v1/": {
