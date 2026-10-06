@@ -1211,7 +1211,9 @@
       ],
       "mcp_url": "https://fabric.systemiacommandcenters.com/mcp/faie",
       "runtime_state": "owned_fabric_external_canary_verified",
-      "live_canary_evidence": "conformance/runtime-observations/2026-10-06-faie-owned-fabric-door.json"
+      "live_canary_evidence": "conformance/runtime-observations/2026-10-06-faie-owned-fabric-door.json",
+      "human_start_url": "https://fabric.systemiacommandcenters.com/faie/",
+      "human_start_url_state": "external_canary_verified"
     },
     {
       "product_key": "findmypart",
