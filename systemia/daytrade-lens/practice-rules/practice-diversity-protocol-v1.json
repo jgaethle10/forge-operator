@@ -15,12 +15,13 @@
     "CLOSING": "15:00-16:00"
   },
   "frozen_execution_rule": "spread-abstention-v1",
-  "purpose": "Prevent same-day or single-phase paper practice from being mistaken for diversified execution evidence.",
+  "purpose": "Prevent same-day, single-phase, or near-duplicate paper practice from being mistaken for diversified execution evidence.",
   "pass_does_not_mean": [
     "signal validated",
     "live fill quality validated",
     "profitability proven",
     "live trading authorized"
   ],
-  "live_trade_authority": false
+  "live_trade_authority": false,
+  "minimum_independent_window_separation_minutes": 5
 }
