@@ -10,6 +10,7 @@ const targets=[
   ['foundry-app-escape','io.github.jgaethle10/foundry-app-escape'],
   ['site-survive','io.github.jgaethle10/site-survive'],
   ['systemia-remote-ops','io.github.jgaethle10/systemia-remote-ops'],
+  ['faie','io.github.jgaethle10/faie'],
 ];
 
 for(const [slug,desiredName] of targets){
