@@ -5,6 +5,8 @@ import path from "node:path";
 import { EvercraftIdentity } from "../identity/identity.mjs";
 import { EvercraftPassport } from "../passport/passport.mjs";
 import { startEvercraftComputeNode } from "./runtime-node.mjs";
+import { startRavenPrivateRuntime } from "../raven/private-runtime.mjs";
+import { createRavenTeamReviewExecutor } from "../raven/team-review-runtime.mjs";
 
 const root = fs.mkdtempSync(path.join(os.tmpdir(), "evercraft-home-compute-"));
 const identityStateDir = path.join(root, "identity");
@@ -31,7 +33,7 @@ passport.issueGrant({
   subject_ref: "user:owner-proof",
   issuer_ref: "evercraft:identity-authority",
   product: "evercraft-home",
-  scopes: ["home.read", "home.systemia.read", "home.systemia.plan", "home.yard.read", "home.network.read", "home.identity.sessions.manage"],
+  scopes: ["home.read", "home.systemia.read", "home.systemia.plan", "home.raven.execute", "home.yard.read", "home.network.read", "home.identity.sessions.manage"],
   starts_at: new Date(Date.now() - 1000).toISOString(),
   ends_at: new Date(Date.now() + 60 * 60 * 1000).toISOString(),
   max_delegation_depth: 1,
@@ -39,8 +41,36 @@ passport.issueGrant({
   authority_receipt_ref: bootstrapped.receipt.receipt_hash,
 });
 
+const ravenToken = "home-compute-raven-control-token-01234567890123456789";
+const ravenTokenFile = path.join(root, "private", "raven-control-token");
+fs.mkdirSync(path.dirname(ravenTokenFile), { recursive: true, mode: 0o700 });
+fs.writeFileSync(ravenTokenFile, ravenToken + "\n", { mode: 0o600 });
+
+const teamReviewExecutor = createRavenTeamReviewExecutor({
+  inferenceAdapter: {
+    async infer({ role }) {
+      return {
+        text: role === "synthesis"
+          ? "FINAL VERDICT: GO WITH CHANGES. Compute handoff verified."
+          : "VERDICT: GO WITH CHANGES. Bounded proof lane " + role + ".",
+        provider: "compute-proof-provider",
+        provider_receipt: "provider-proof:" + role,
+      };
+    },
+  },
+});
+
 let node;
+let raven;
 try {
+  raven = await startRavenPrivateRuntime({
+    stateDir: path.join(root, "private", "raven-state"),
+    repoRoot: path.resolve("."),
+    port: 0,
+    controlToken: ravenToken,
+    trustedSubjectRef: "user:owner-proof",
+    teamReviewExecutor,
+  });
   node = await startEvercraftComputeNode({
     nodeId: "evercraft-home-proof-node",
     root,
@@ -74,6 +104,8 @@ try {
       input: {
         identity_state_dir: identityStateDir,
         passport_state_dir: passportStateDir,
+        raven_work_url: raven.url,
+        raven_work_token_file: ravenTokenFile,
       },
     }),
   });
@@ -85,6 +117,8 @@ try {
   assert.equal(job.result.auth_mode, "passport");
   assert.equal(job.result.private_origin_only, true);
   assert.equal(job.result.provider_independent_boot, true);
+  assert.equal(job.result.raven_readonly_execution_configured, true);
+  assert.equal(job.result.raven_work_authority_exposed, false);
   assert.match(job.result.local_url, /^http:\/\/127\.0\.0\.1:/);
 
   const managedHealth = await fetch(node.endpoint + job.result.health_path).then((response) => response.json());
@@ -99,6 +133,8 @@ try {
   assert.equal(managedHealth.accepted_signing_key_count, 1);
   assert.equal(managedHealth.external_ai_required, false);
   assert.equal(managedHealth.legacy_provider_required, false);
+  assert.equal(managedHealth.raven_readonly_execution_configured, true);
+  assert.equal(JSON.stringify(managedHealth).includes(ravenToken), false);
 
   const directHealth = await fetch(job.result.local_url + "/api/health").then((response) => response.json());
   assert.equal(directHealth.ok, true);
@@ -133,6 +169,28 @@ try {
   assert.equal(session.subject, "user:owner-proof");
   assert.equal(session.authority, "evercraft-identity+passport");
 
+  const ravenExecution = await fetch(job.result.local_url + "/api/raven/execute", {
+    method: "POST",
+    headers: {
+      cookie: cookie.split(";")[0],
+      "content-type": "application/json",
+    },
+    body: JSON.stringify({
+      message: "Review the Compute handoff before any external action.",
+      lane: "operations",
+    }),
+  });
+  assert.equal(ravenExecution.status, 200);
+  const ravenExecutionBody = await ravenExecution.json();
+  assert.equal(ravenExecutionBody.ok, true);
+  assert.equal(ravenExecutionBody.state, "executed");
+  assert.equal(ravenExecutionBody.execution_performed, true);
+  assert.equal(ravenExecutionBody.base44_required, false);
+  assert.equal(ravenExecutionBody.external_side_effects_authorized, false);
+  assert.equal(ravenExecutionBody.output.results.length, 6);
+  assert.match(ravenExecutionBody.output.summary, /Compute handoff verified/);
+  assert.equal(JSON.stringify(ravenExecutionBody).includes(ravenToken), false);
+
   const logout = await fetch(job.result.local_url + "/api/logout", {
     method: "POST",
     headers: { cookie: cookie.split(";")[0] },
@@ -161,9 +219,13 @@ try {
     server_side_logout_verified: true,
     provider_independent_boot: job.result.provider_independent_boot,
     provider_credential_vault_configured: managedHealth.provider_credential_vault_configured,
+    raven_compute_handoff_verified: true,
+    raven_secret_exposed: false,
+    base44_required: false,
   }, null, 2));
 } finally {
   if (node) await node.close();
+  if (raven) await raven.close();
   if (previousSecret === undefined) delete process.env.EVERCRAFT_IDENTITY_SECRET;
   else process.env.EVERCRAFT_IDENTITY_SECRET = previousSecret;
   fs.rmSync(root, { recursive: true, force: true });
