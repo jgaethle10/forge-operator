@@ -18,22 +18,25 @@ test('Machine Commerce distribution advertises only the verified owned Fabric ru
   assert.match(String(doc.live_runtime.evidence_ref||''),/evercraft-fabric-operator-edge\.json$/);
 });
 
-test('historical directory observations remain separate from live runtime authority',()=>{
-  for(const row of doc.destinations){
-    assert.notEqual(row.state,'verified_live',row.destination);
-  }
+test('official registry publication is verified while downstream directory observations stay separate',()=>{
   const registry=doc.destinations.find((row)=>row.destination==='Official MCP Registry');
   assert.ok(registry);
-  assert.equal(registry.state,'legacy_listing_observed_repoint_pending');
-  assert.equal(registry.is_latest,false);
-  assert.match(String(registry.note||''),/historical/i);
-  assert.match(String(registry.note||''),/repoint/i);
+  assert.equal(registry.state,'verified_published_owned_runtime');
+  assert.equal(registry.version,'1.7.0');
+  assert.equal(registry.is_latest,true);
+  assert.equal(registry.evidence_ref,'GitHubActionsRun:37499511004');
+  assert.match(String(registry.note||''),/successfully published/i);
+  assert.match(String(registry.note||''),/fabric\.systemiacommandcenters\.com\/mcp/i);
+
+  for(const row of doc.destinations.filter((row)=>row.destination!=='Official MCP Registry')){
+    assert.notEqual(row.state,'verified_live',row.destination);
+  }
 });
 
-test('owned runtime proof now precedes provider and revenue receipts',()=>{
-  assert.equal(doc.next_milestones[0],'registry_listing_repointed_to_owned_runtime');
-  assert.ok(doc.next_milestones.includes('independent_directory_pickup_verified_on_owned_runtime'));
+test('registry publication now precedes downstream pickup and revenue receipts',()=>{
+  assert.equal(doc.next_milestones[0],'independent_directory_pickup_verified_on_owned_runtime');
+  assert.ok(doc.next_milestones.includes('first_non_synthetic_external_tools_call_on_owned_runtime'));
   assert.ok(doc.next_milestones.includes('first_provider_verified_payment'));
-  assert.match(doc.truth_boundary,/current externally verified owned universal discovery MCP/i);
-  assert.match(doc.truth_boundary,/repointing, pickup, payment and revenue each require their own receipts/i);
+  assert.match(doc.truth_boundary,/Official MCP Registry v1\.7\.0 is verified published/i);
+  assert.match(doc.truth_boundary,/pickup, tool use, buyer handoff, checkout, payment and revenue remain separate receipt boundaries/i);
 });
