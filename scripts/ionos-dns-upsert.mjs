@@ -19,9 +19,13 @@ const ttl=Number(arg('--ttl','3600'));
 if(!apiKey) fail('IONOS_API_KEY is required');
 if(!zoneName || !recordName || !content) fail('Required args: --zone, --name, --content');
 if(!Number.isInteger(ttl) || ttl<60 || ttl>86400) fail('TTL must be an integer from 60 to 86400 seconds');
-if(type!=='A') fail('This launcher currently permits A records only');
-if(!/^\d{1,3}(?:\.\d{1,3}){3}$/.test(content) || content.split('.').some(x=>Number(x)>255)) {
+if(!['A','TXT'].includes(type)) fail('This launcher permits A and TXT records only');
+if(type==='A' && (!/^\d{1,3}(?:\.\d{1,3}){3}$/.test(content) || content.split('.').some(x=>Number(x)>255))) {
   fail('A record content must be a valid IPv4 address');
+}
+if(type==='TXT') {
+  if(content.length<1 || content.length>1024) fail('TXT record content must be 1-1024 characters');
+  if(/[\u0000-\u001f\u007f]/.test(content)) fail('TXT record content must not contain control characters');
 }
 if(!(recordName===zoneName || recordName.endsWith('.'+zoneName))) {
   fail('Record name must belong to the requested zone');
