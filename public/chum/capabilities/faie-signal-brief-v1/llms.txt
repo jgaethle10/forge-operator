@@ -3,10 +3,13 @@
 Capability ID: faie-signal-brief-v1
 Commercial state: sell_now
 Machine state: payment_ready
-Public URL: https://fabric.systemiacommandcenters.com/capabilities/faie-signal-brief-v1
-Preferred agent route: universal fallback
-Universal Evercraft MCP: https://fabric.systemiacommandcenters.com/mcp
-Start here: Not a current sell-now route
+Public URL: https://fabric.systemiacommandcenters.com/faie/
+Preferred agent route: direct specialist
+Direct specialist: FAIE
+MCP Registry state: endpoint refresh pending; public HTTPS execution is independently verified
+Direct MCP: https://fabric.systemiacommandcenters.com/mcp/faie
+Universal Evercraft fallback MCP: https://fabric.systemiacommandcenters.com/mcp
+Start here: https://fabric.systemiacommandcenters.com/faie/
 
 ## Use this when
 
@@ -42,7 +45,9 @@ Signal Brief $250 one-time; Proof Sprint $2,500 one-time. Other intake categorie
 
 ## Invocation and authority
 
-LIVE: FAIE HTTP agent gateway + OpenAPI + llms guidance + remote MCP at [retired provider route removed] Agents can inspect the fixed $250/$2,500 offers, prepare checkout only after explicit human confirmation, and verify payment/mission queue state. Paid work remains human-review controlled.
+Live canary evidence: conformance/runtime-observations/2026-10-06-faie-owned-fabric-door.json
+
+LIVE READ-ONLY MCP VERIFIED: FAIE human UI and native specialist MCP are externally verified on owned Evercraft Fabric. Base44 transport is disabled. Paid work remains human-confirmed and consequential actions remain review-gated.
 
 Explicit buyer confirmation is required before checkout. Verified payment queues a human-controlled mission; consequential claims or actions remain review-gated.
 
