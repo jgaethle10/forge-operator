@@ -120,7 +120,9 @@ test('field-backed canary without executed tools remains held',()=>{
     const specsPath=path.join(root,'distribution/direct-plugin-specs.json');
     const specs=JSON.parse(fs.readFileSync(specsPath,'utf8'));
     for(const product of specs.products){
-      product.public_edge_canary.mcp_tool_calls_verified=false;
+      if(product.public_edge_canary){
+        product.public_edge_canary.mcp_tool_calls_verified=false;
+      }
     }
     fs.writeFileSync(specsPath,JSON.stringify(specs,null,2)+'\n');
     execFileSync(process.execPath,[script],{cwd:root,stdio:'pipe'});
