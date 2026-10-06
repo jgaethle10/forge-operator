@@ -17,7 +17,20 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: 22
+      - name: Diagnose Alpaca credential scope
+        id: diagnose
+        env:
+          ALPACA_TRADING: ${{ secrets.ALPACA_TRADING }}
+          ALPACA_TRADING_SECRET: ${{ secrets.ALPACA_TRADING_SECRET }}
+        run: |
+          node systemia/daytrade-lens/edge-alpaca-credential-diagnosis.mjs | tee /tmp/alpaca-diagnosis.json
+          if grep -q '"paper_account_http_status":200' /tmp/alpaca-diagnosis.json; then
+            echo "paper_ok=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "paper_ok=false" >> "$GITHUB_OUTPUT"
+          fi
       - name: Run $20 SOXX paper execution probe
+        if: steps.diagnose.outputs.paper_ok == 'true'
         env:
           ALPACA_TRADING: ${{ secrets.ALPACA_TRADING }}
           ALPACA_TRADING_SECRET: ${{ secrets.ALPACA_TRADING_SECRET }}
