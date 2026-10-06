@@ -47,6 +47,7 @@ ExecStart=/bin/bash $REPO_ROOT/scripts/update-fabric-owned-edge.sh --repo-root $
 NoNewPrivileges=true
 PrivateTmp=true
 ProtectHome=read-only
+ReadWritePaths=$REPO_ROOT
 EOF
 
 sudo tee /etc/systemd/system/evercraft-fabric-update.timer >/dev/null <<EOF
