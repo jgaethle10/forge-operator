@@ -2,7 +2,7 @@
   "schema": "evercraft.chum.crawl-pressure.v1",
   "provider": "Evercraft LLC",
   "coordinator": "CHUM",
-  "updated_at": "2026-10-06T18:03:14.787Z",
+  "updated_at": "2026-10-06T18:19:20.631Z",
   "purpose": "Content-hash-backed freshness signals for public Evercraft discovery surfaces. A freshness signal requests attention; it does not prove indexing, ranking, recommendation, citation or provider pickup.",
   "indexnow": {
     "supported": true,
@@ -11,26 +11,83 @@
   },
   "latest_change_batch": [
     {
-      "path": "/chum/hot/",
-      "last_changed": "2026-10-06T18:03:14.787Z",
+      "path": "/chum/crawler-radar.json",
+      "last_changed": "2026-10-06T18:19:20.631Z",
+      "priority": 80
+    },
+    {
+      "path": "/chum/crawler-radar.txt",
+      "last_changed": "2026-10-06T18:19:20.631Z",
       "priority": 80
     },
     {
       "path": "/chum/hot/index.json",
-      "last_changed": "2026-10-06T18:03:14.787Z",
+      "last_changed": "2026-10-06T18:19:20.631Z",
+      "priority": 80
+    },
+    {
+      "path": "/chum/strike/",
+      "last_changed": "2026-10-06T18:19:20.631Z",
+      "priority": 80
+    },
+    {
+      "path": "/chum/strike/index.json",
+      "last_changed": "2026-10-06T18:19:20.631Z",
       "priority": 80
     }
   ],
   "recent_surfaces": [
     {
-      "path": "/chum/hot/",
-      "url": "/chum/hot/",
-      "last_changed": "2026-10-06T18:03:14.787Z",
+      "path": "/chum/crawler-radar.json",
+      "url": "/chum/crawler-radar.json",
+      "last_changed": "2026-10-06T18:19:20.631Z",
+      "priority": 80
+    },
+    {
+      "path": "/chum/crawler-radar.txt",
+      "url": "/chum/crawler-radar.txt",
+      "last_changed": "2026-10-06T18:19:20.631Z",
       "priority": 80
     },
     {
       "path": "/chum/hot/index.json",
       "url": "/chum/hot/index.json",
+      "last_changed": "2026-10-06T18:19:20.631Z",
+      "priority": 80
+    },
+    {
+      "path": "/chum/strike/",
+      "url": "/chum/strike/",
+      "last_changed": "2026-10-06T18:19:20.631Z",
+      "priority": 80
+    },
+    {
+      "path": "/chum/strike/index.json",
+      "url": "/chum/strike/index.json",
+      "last_changed": "2026-10-06T18:19:20.631Z",
+      "priority": 80
+    },
+    {
+      "path": "/chum/proof/forensiscope.json",
+      "url": "/chum/proof/forensiscope.json",
+      "last_changed": "2026-10-06T18:19:20.072Z",
+      "priority": 80
+    },
+    {
+      "path": "/chum/proof/index.json",
+      "url": "/chum/proof/index.json",
+      "last_changed": "2026-10-06T18:19:20.072Z",
+      "priority": 80
+    },
+    {
+      "path": "/chum/proof/rivet.json",
+      "url": "/chum/proof/rivet.json",
+      "last_changed": "2026-10-06T18:19:20.072Z",
+      "priority": 80
+    },
+    {
+      "path": "/chum/hot/",
+      "url": "/chum/hot/",
       "last_changed": "2026-10-06T18:03:14.787Z",
       "priority": 80
     },
@@ -525,30 +582,6 @@
       "url": "/schema.jsonld",
       "last_changed": "2026-10-06T18:02:46.847Z",
       "priority": 60
-    },
-    {
-      "path": "/chum/crawler-radar.json",
-      "url": "/chum/crawler-radar.json",
-      "last_changed": "2026-10-06T16:53:34.122Z",
-      "priority": 80
-    },
-    {
-      "path": "/chum/crawler-radar.txt",
-      "url": "/chum/crawler-radar.txt",
-      "last_changed": "2026-10-06T16:53:34.122Z",
-      "priority": 80
-    },
-    {
-      "path": "/chum/strike/index.json",
-      "url": "/chum/strike/index.json",
-      "last_changed": "2026-10-06T16:53:34.122Z",
-      "priority": 80
-    },
-    {
-      "path": "/chum/strike/",
-      "url": "/chum/strike/",
-      "last_changed": "2026-10-06T16:46:54.878Z",
-      "priority": 80
     },
     {
       "path": "/chum/answers/doors/account-takeover-protection-6a5072fc31.json",
@@ -1501,24 +1534,6 @@
     {
       "path": "/chum/answers/doors/internet-outage-continuity-264505af3f.json",
       "url": "/chum/answers/doors/internet-outage-continuity-264505af3f.json",
-      "last_changed": "2026-10-06T16:42:20.155Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/is-my-book-file-ready-to-publish-5208956c86.json",
-      "url": "/chum/answers/doors/is-my-book-file-ready-to-publish-5208956c86.json",
-      "last_changed": "2026-10-06T16:42:20.155Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/is-my-hotel-a-good-ev-charging-site-aff9013502.json",
-      "url": "/chum/answers/doors/is-my-hotel-a-good-ev-charging-site-aff9013502.json",
-      "last_changed": "2026-10-06T16:42:20.155Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/is-my-resume-ats-friendly-3b113a7b48.json",
-      "url": "/chum/answers/doors/is-my-resume-ats-friendly-3b113a7b48.json",
       "last_changed": "2026-10-06T16:42:20.155Z",
       "priority": 100
     }

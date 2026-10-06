@@ -1,6 +1,6 @@
 {
   "schema": "evercraft.chum.crawler-radar.v1",
-  "generated_at": "2026-10-06T16:53:33.924Z",
+  "generated_at": "2026-10-06T18:19:20.407Z",
   "coordinator": "CHUM",
   "runtime_feedback": {
     "requested": false,
@@ -9,8 +9,8 @@
   },
   "observation_count": 0,
   "negative_provider_pickup_receipts": 174,
-  "surface_count": 2782,
-  "strike_now_count": 1149,
+  "surface_count": 2800,
+  "strike_now_count": 1182,
   "doctrine": {
     "crawler_fetch_is_not_indexing": true,
     "indexing_is_not_ranking": true,
@@ -10332,6 +10332,28 @@
       ]
     },
     {
+      "path": "/chum/answers/doors/agriculture-evidence-brief-9ad9d965bc.json",
+      "product_key": null,
+      "score": 222,
+      "urgency": "strike_now",
+      "crawl_priority": 160,
+      "last_changed": "2026-10-06T18:02:46.847Z",
+      "last_observed_crawler_fetch": null,
+      "last_observed_crawler_family": null,
+      "indexnow_pending": true,
+      "negative_provider_pickup_receipts": [],
+      "reasons": [
+        "no_self_identified_crawler_fetch_observed",
+        "fresh_content_under_24h",
+        "indexnow_hash_pending"
+      ],
+      "recommended_actions": [
+        "verify_live_bytes_then_indexnow",
+        "promote_in_hot_discovery_queue",
+        "increase_internal_crosslinks_from_relevant_public_surfaces"
+      ]
+    },
+    {
       "path": "/chum/answers/doors/ai-agent-needs-approval-before-it-changes-erp-data-7ecc03f896.json",
       "product_key": null,
       "score": 222,
@@ -10910,6 +10932,28 @@
       "urgency": "strike_now",
       "crawl_priority": 160,
       "last_changed": "2026-10-06T16:42:20.155Z",
+      "last_observed_crawler_fetch": null,
+      "last_observed_crawler_family": null,
+      "indexnow_pending": true,
+      "negative_provider_pickup_receipts": [],
+      "reasons": [
+        "no_self_identified_crawler_fetch_observed",
+        "fresh_content_under_24h",
+        "indexnow_hash_pending"
+      ],
+      "recommended_actions": [
+        "verify_live_bytes_then_indexnow",
+        "promote_in_hot_discovery_queue",
+        "increase_internal_crosslinks_from_relevant_public_surfaces"
+      ]
+    },
+    {
+      "path": "/chum/answers/doors/build-a-sourced-brief-about-farm-water-land-or-production-risk-baefc8483b.json",
+      "product_key": null,
+      "score": 222,
+      "urgency": "strike_now",
+      "crawl_priority": 160,
+      "last_changed": "2026-10-06T18:02:46.847Z",
       "last_observed_crawler_fetch": null,
       "last_observed_crawler_family": null,
       "indexnow_pending": true,
@@ -11569,7 +11613,29 @@
       "score": 222,
       "urgency": "strike_now",
       "crawl_priority": 160,
-      "last_changed": "2026-10-06T16:42:20.155Z",
+      "last_changed": "2026-10-06T18:02:46.847Z",
+      "last_observed_crawler_fetch": null,
+      "last_observed_crawler_family": null,
+      "indexnow_pending": true,
+      "negative_provider_pickup_receipts": [],
+      "reasons": [
+        "no_self_identified_crawler_fetch_observed",
+        "fresh_content_under_24h",
+        "indexnow_hash_pending"
+      ],
+      "recommended_actions": [
+        "verify_live_bytes_then_indexnow",
+        "promote_in_hot_discovery_queue",
+        "increase_internal_crosslinks_from_relevant_public_surfaces"
+      ]
+    },
+    {
+      "path": "/chum/answers/doors/do-a-resilience-investigation-227f8bd16b/",
+      "product_key": null,
+      "score": 222,
+      "urgency": "strike_now",
+      "crawl_priority": 160,
+      "last_changed": "2026-10-06T18:02:46.847Z",
       "last_observed_crawler_fetch": null,
       "last_observed_crawler_family": null,
       "indexnow_pending": true,
@@ -12678,27 +12744,6 @@
       "urgency": "strike_now",
       "crawl_priority": 160,
       "last_changed": "2026-09-25T07:08:03.584Z",
-      "last_observed_crawler_fetch": null,
-      "last_observed_crawler_family": null,
-      "indexnow_pending": true,
-      "negative_provider_pickup_receipts": [],
-      "reasons": [
-        "no_self_identified_crawler_fetch_observed",
-        "indexnow_hash_pending"
-      ],
-      "recommended_actions": [
-        "verify_live_bytes_then_indexnow",
-        "promote_in_hot_discovery_queue",
-        "increase_internal_crosslinks_from_relevant_public_surfaces"
-      ]
-    },
-    {
-      "path": "/chum/answers/doors/agriculture-evidence-brief-9ad9d965bc.json",
-      "product_key": null,
-      "score": 207,
-      "urgency": "strike_now",
-      "crawl_priority": 160,
-      "last_changed": "2026-10-01T05:00:27.354Z",
       "last_observed_crawler_fetch": null,
       "last_observed_crawler_family": null,
       "indexnow_pending": true,
@@ -14710,27 +14755,6 @@
     },
     {
       "path": "/chum/answers/doors/build-a-rollback-test-and-evidence-plan-before-changing-an-ibm-i-production-system-030d199287/",
-      "product_key": null,
-      "score": 207,
-      "urgency": "strike_now",
-      "crawl_priority": 160,
-      "last_changed": "2026-10-01T05:00:27.354Z",
-      "last_observed_crawler_fetch": null,
-      "last_observed_crawler_family": null,
-      "indexnow_pending": true,
-      "negative_provider_pickup_receipts": [],
-      "reasons": [
-        "no_self_identified_crawler_fetch_observed",
-        "indexnow_hash_pending"
-      ],
-      "recommended_actions": [
-        "verify_live_bytes_then_indexnow",
-        "promote_in_hot_discovery_queue",
-        "increase_internal_crosslinks_from_relevant_public_surfaces"
-      ]
-    },
-    {
-      "path": "/chum/answers/doors/build-a-sourced-brief-about-farm-water-land-or-production-risk-baefc8483b.json",
       "product_key": null,
       "score": 207,
       "urgency": "strike_now",
@@ -17419,27 +17443,6 @@
     },
     {
       "path": "/chum/answers/doors/did-my-devices-reconnect-c4d116f491/",
-      "product_key": null,
-      "score": 207,
-      "urgency": "strike_now",
-      "crawl_priority": 160,
-      "last_changed": "2026-09-25T07:08:03.584Z",
-      "last_observed_crawler_fetch": null,
-      "last_observed_crawler_family": null,
-      "indexnow_pending": true,
-      "negative_provider_pickup_receipts": [],
-      "reasons": [
-        "no_self_identified_crawler_fetch_observed",
-        "indexnow_hash_pending"
-      ],
-      "recommended_actions": [
-        "verify_live_bytes_then_indexnow",
-        "promote_in_hot_discovery_queue",
-        "increase_internal_crosslinks_from_relevant_public_surfaces"
-      ]
-    },
-    {
-      "path": "/chum/answers/doors/do-a-resilience-investigation-227f8bd16b/",
       "product_key": null,
       "score": 207,
       "urgency": "strike_now",
