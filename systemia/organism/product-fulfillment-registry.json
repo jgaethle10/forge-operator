@@ -207,31 +207,41 @@
       "public_id": "faie-signal-brief-v1",
       "name": "FAIE Evidence-First Signal Brief",
       "execution_mode": "systemia_managed_mission",
-      "native_state": "payment_and_mission_queue_live_human_review_controlled",
+      "native_state": "payment_and_mission_queue_live_human_review_controlled_saban_specialist_review_registered",
       "intake": [
         "buyer_email",
         "question_or_signal",
         "scope",
-        "authorized_sources"
+        "authorized_sources",
+        "optional_site_candidates",
+        "optional_thesis_assumptions"
       ],
       "deliverables": [
-        "evidence-first brief",
+        "sense-challenge-decide evidence packet",
         "source ledger",
-        "confidence/uncertainty",
-        "contradictions",
+        "confidence and uncertainty",
+        "contradictions and adversarial challenge",
+        "expected covered and missing evidence dimensions",
+        "evidence acquisition queue",
+        "thesis assumption register when supplied",
+        "comparative underwriting requirements when multiple sites are in scope",
         "next-step proof plan"
       ],
       "qa": [
         "source_provenance",
+        "evidence_state_integrity",
+        "missing_is_not_zero",
+        "source_family_diversity",
         "uncertainty",
         "causal_claims",
-        "adversarial_read"
+        "adversarial_read",
+        "thesis_memory_lineage"
       ],
       "human_review_before_delivery": true,
       "specialist_roles": [
         "FAIE",
         "Systemia",
-        "Saban",
+        "Saban FAIE Specialist Swarm",
         "Evidence QA",
         "Shipping"
       ]
