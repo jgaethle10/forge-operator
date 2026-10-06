@@ -8,6 +8,11 @@ on:
       - 'systemia/mcp/fabric-local-runtime.mjs'
       - 'systemia/mcp/fabric-public-site.mjs'
       - 'tests/fabric-offer-pages.test.mjs'
+      - 'scripts/update-fabric-owned-edge.sh'
+      - 'scripts/fabric-edge-external-canary.mjs'
+      - 'tests/fabric-self-update-hardening.test.mjs'
+      - 'tests/fabric-owned-edge-updater-contract.test.mjs'
+      - 'tests/fabric-edge-external-canary-contract.test.mjs'
       - '.github/workflows/evercraft-fabric-native.yml'
   pull_request:
     paths:
