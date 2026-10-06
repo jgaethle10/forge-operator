@@ -1780,6 +1780,7 @@ export async function startEvercraftComputeNode({
             credentialStateDir: credentialStateRoot,
             yardStateDir: yardStateRoot,
             serviceOrigins: {
+              ...process.env,
               ...(ravenWorkTokenFile ? {
                 RAVEN_NEXUS_WORK_URL: ravenWorkUrlValue,
                 RAVEN_NEXUS_WORK_TOKEN_FILE: ravenWorkTokenFile,
