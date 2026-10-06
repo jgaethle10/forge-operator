@@ -86,9 +86,15 @@ function descriptionFor(offer){
 }
 function reconciledInvocationStatus(offer, productConformance){
   const current=String(offer?.invocation_status||'').trim();
-  const verifiedState=String(productConformance?.machine_commerce_handoff_state||'').includes('verified');
+  const conformanceState=String(productConformance?.conformance_state||'').trim();
+  const evidenceState=String(productConformance?.live_canary_evidence_state||'').trim();
+  const verifiedState=conformanceState==='live_read_only_mcp_verified' &&
+    String(productConformance?.machine_commerce_handoff_state||'').includes('verified');
   const evidence=String(productConformance?.live_canary_evidence||offer?.live_canary_evidence||'').trim();
-  if(!verifiedState || !evidence) return current;
+  const evidenceCurrent=!evidenceState || !/historical|stale|expired|not_current|pending/i.test(evidenceState);
+  if(!verifiedState || !evidence || !evidenceCurrent){
+    return current.startsWith('LIVE READ-ONLY MCP VERIFIED:') ? 'REVERIFICATION PENDING: prior live proof is not current for the owned runtime.' : current;
+  }
   if(current.startsWith('LIVE READ-ONLY MCP VERIFIED:')) return current;
   return 'LIVE READ-ONLY MCP VERIFIED: canonical product conformance records a verified bounded read-only Machine Commerce route with live canary evidence. Evidence: '+evidence;
 }
