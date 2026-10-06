@@ -17,7 +17,9 @@ FAIE is an approved public Evercraft discovery record. This GitHub mirror exists
 
 ## Public routes
 
-- Canonical: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/faie/index.html
+- Canonical: https://fabric.systemiacommandcenters.com/faie/
+- Direct MCP: https://fabric.systemiacommandcenters.com/mcp/faie
+- External verification receipt: conformance/runtime-observations/2026-10-06-faie-owned-fabric-door.json
 - GitHub LLM mirror: ./llms.txt
 - Runtime or CHUM llms.txt: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/faie/llms.txt
 
@@ -35,6 +37,10 @@ Human confirmation required: yes
 - unknowns contradictions and missing decision dimensions remain labeled
 - checkout creation is not payment proof
 - public or authorized evidence only
+
+## Runtime state
+
+The human FAIE surface and native specialist MCP are externally verified on owned Evercraft Fabric. Base44 transport is disabled. Official MCP Registry endpoint refresh remains an external publication state and is not inferred from runtime verification.
 
 ## Evidence state
 
