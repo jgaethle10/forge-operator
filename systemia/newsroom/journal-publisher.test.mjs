@@ -113,3 +113,43 @@ test('requires the full editorial preflight score', () => {
     now: new Date('2026-09-30T22:00:00.000Z')
   }), /10\/10/i);
 });
+
+
+test('archives expired durable reporting without presenting it as a live edition', () => {
+  const outDir = fs.mkdtempSync(path.join(os.tmpdir(), 'journal-archive-'));
+  const report = publishJournalStories([story()], {
+    outDir,
+    now: new Date('2026-10-06T16:56:00.000Z'),
+    publicOrigin: 'https://journal.test.evercraft.local'
+  });
+  assert.equal(report.story_count, 0);
+  assert.equal(report.archived_story_count, 1);
+  assert.equal(report.live_edition, false);
+  assert.equal(report.latest_published_at, null);
+
+  const indexHtml = fs.readFileSync(path.join(outDir, 'index.html'), 'utf8');
+  assert.match(indexHtml, /No current live edition/i);
+  assert.doesNotMatch(indexHtml, /Live edition (?:Monday|Tuesday|Wednesday|Thursday|Friday|Saturday|Sunday)/i);
+  assert.match(indexHtml, /Archive/i);
+
+  const articleHtml = fs.readFileSync(path.join(outDir, 'owned-journal-test', 'index.html'), 'utf8');
+  assert.match(articleHtml, /Archived analysis/i);
+  assert.match(articleHtml, /not part of the current live edition/i);
+
+  const index = JSON.parse(fs.readFileSync(path.join(outDir, 'index.json'), 'utf8'));
+  assert.equal(index.live_edition, false);
+  assert.equal(index.stories.length, 0);
+  assert.equal(index.archive.length, 1);
+  assert.equal(index.archive[0].state, 'archived');
+
+  const receipt = JSON.parse(fs.readFileSync(path.join(outDir, 'receipts', 'owned-journal-test.json'), 'utf8'));
+  assert.equal(receipt.publication_state, 'archived');
+  assert.equal(receipt.live_edition_eligible, false);
+  assert.equal(receipt.archive_reason, 'freshness_window_expired');
+
+  const feed = fs.readFileSync(path.join(outDir, 'feed.xml'), 'utf8');
+  assert.doesNotMatch(feed, /Owned Journal Test/);
+  const llms = fs.readFileSync(path.join(outDir, 'llms.txt'), 'utf8');
+  assert.match(llms, /No story is currently inside its live freshness window/i);
+  assert.match(llms, /State: archived; live freshness expired/i);
+});
