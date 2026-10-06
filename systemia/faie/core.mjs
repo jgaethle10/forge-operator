@@ -237,6 +237,10 @@ function expectedDimensionsForScope(scope) {
     add('water', 'heat', 'energy', 'infrastructure', 'logistics', 'labor', 'crop_health', 'resilience');
   }
 
+  if (includesAny(['food infrastructure', 'regional production', 'regional food', 'native soil', 'living soil', 'sunlight', 'natural light', 'food sovereignty', 'domestic food', 'site selection', 'production campus'])) {
+    add('water', 'heat', 'soil', 'energy', 'infrastructure', 'logistics', 'labor', 'economics', 'policy', 'crop_health', 'resilience');
+  }
+
   if (scope.crop) add('crop_health');
   if (scope.water_source || includesAny(['water', 'irrigation', 'aquifer', 'well', 'river', 'reservoir'])) add('water');
   if (includesAny(['heat', 'temperature', 'cooling', 'hvac'])) add('heat');
@@ -257,7 +261,10 @@ function evidenceNeedForDimension(dimension) {
     logistics: 'Inbound and outbound freight access, cold-chain needs, and market-distance evidence',
     labor: 'Local labor availability, wage pressure, seasonality, and critical-skill constraints',
     crop_health: 'Crop-specific production, yield, quality, pest, disease, and environmental-control evidence',
-    resilience: 'Continuity evidence for outages, water interruption, smoke, heat, freeze, and other credible disruptions'
+    resilience: 'Continuity evidence for outages, water interruption, smoke, heat, freeze, and other credible disruptions',
+    soil: 'Site-specific soil series, texture, organic matter, drainage, salinity, contamination, biology, and amendment constraints',
+    economics: 'Regional land, construction, operating-input, crop-margin, insurance, and distribution-cost evidence',
+    policy: 'Zoning, water rights, permitting, food-safety, labor, incentive, grant, and other regulatory constraints relevant to development'
   };
   return needs[dimension] || `Additional current evidence for the ${dimension} dimension`;
 }
