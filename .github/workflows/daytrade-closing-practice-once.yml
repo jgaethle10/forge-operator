@@ -1,0 +1,33 @@
+name: DayTrade Closing Practice Once
+
+on:
+  push:
+    branches:
+      - "systemia/daytrade-practice-closing-2026-10-06"
+
+permissions:
+  contents: read
+
+jobs:
+  practice:
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Wait for closing phase and run frozen rule
+        env:
+          ALPACA_TRADING: ${{ secrets.ALPACA_TRADING }}
+          ALPACA_TRADING_SECRET: ${{ secrets.ALPACA_TRADING_SECRET }}
+          DAYTRADE_PROSPECTIVE_SPREAD_OUTPUT: artifacts/daytrade-edge/prospective-spread-rule-practice-2026-10-06-closing.json
+        run: node systemia/daytrade-lens/run-closing-practice-2026-10-06.mjs
+      - name: Upload closing practice receipt
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: daytrade-closing-practice-${{ github.run_id }}
+          path: artifacts/daytrade-edge/prospective-spread-rule-practice-2026-10-06-closing.json
+          if-no-files-found: warn
+          retention-days: 30
