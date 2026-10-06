@@ -296,8 +296,8 @@ export function renderOffers(capabilities=[]){
     '<div class="grid">'+(offers||'<article class="card"><h3>No public offer pages are available yet.</h3></article>')+'</div>',
     '</main>'
   ].join('\n'),{
-    description:copy.lede+' '+offerName+' starts at '+price+'.',
-    canonical:'/offers/'+copy.slug,
+    description:'Simple Evercraft offers with a clear problem, first paid step, price, inputs, outputs, and next action.',
+    canonical:'/offers',
     ogType:'website',
   });
 }
@@ -333,7 +333,11 @@ export function renderOfferPage(item){
     '<section class="offer-panel"><h2>How it works</h2><div class="offer-steps">'+steps+'</div></section>',
     '</div>',
     '</main>'
-  ].join('\n'));
+  ].join('\n'),{
+    description:copy.lede+' '+offerName+' starts at '+price+'.',
+    canonical:'/offers/'+copy.slug,
+    ogType:'website',
+  });
 }
 
 export function renderFabricHome({capabilityCount=0,capabilities=[]}={}){
