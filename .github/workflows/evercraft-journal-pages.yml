@@ -49,7 +49,7 @@ jobs:
         id: journal_portable
         continue-on-error: true
         env:
-          EVERCRAFT_JOURNAL_ORIGIN: https://journal.evercraft.global
+          EVERCRAFT_JOURNAL_ORIGIN: https://fabric.systemiacommandcenters.com/journal
         run: |
           rm -rf _journal_release
           node systemia/newsroom/journal-publisher.mjs systemia/newsroom/stories _journal_release
