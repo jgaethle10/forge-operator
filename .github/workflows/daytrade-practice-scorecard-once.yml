@@ -1,0 +1,32 @@
+name: DayTrade Practice Scorecard Once
+
+on:
+  push:
+    branches:
+      - "systemia/daytrade-practice-scorecard-2026-10-06"
+
+permissions:
+  contents: read
+
+jobs:
+  scorecard:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Prove scorecard preserves losing windows
+        run: node systemia/daytrade-lens/edge-practice-scorecard.test.mjs
+      - name: Build practice scorecard
+        env:
+          DAYTRADE_PRACTICE_SCORECARD_OUTPUT: artifacts/daytrade-edge/practice-scorecard-2026-10-06.json
+        run: node systemia/daytrade-lens/edge-practice-scorecard.mjs
+      - name: Upload scorecard
+        uses: actions/upload-artifact@v4
+        with:
+          name: daytrade-practice-scorecard-${{ github.run_id }}
+          path: artifacts/daytrade-edge/practice-scorecard-2026-10-06.json
+          if-no-files-found: error
+          retention-days: 30
