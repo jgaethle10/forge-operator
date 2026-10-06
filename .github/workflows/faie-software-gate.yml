@@ -145,6 +145,7 @@ jobs:
             mcpTools.body.result.tools.map((tool) => tool.name),
             [
               'investigate_faie_evidence',
+              'compare_faie_candidates',
               'get_faie_signal_snapshot',
               'get_faie_health'
             ]
