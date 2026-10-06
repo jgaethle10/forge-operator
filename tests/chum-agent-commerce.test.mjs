@@ -23,7 +23,16 @@ for (const row of commerce.offers) {
   assert.equal(row.authority.silent_purchase_allowed, false);
   assert.equal(row.authority.checkout_is_payment_proof, false);
   assert.equal(row.authority.paid_state_requires_authoritative_provider_verification, true);
-  assert.ok(row.continuation.start_url, `${row.public_id} must have a human-controlled continuation URL`);
+  const held=row.continuation.state==='held_no_owned_public_origin';
+  if(held){
+    assert.equal(row.continuation.start_url,null,`${row.public_id} held offer must not expose an executable continuation`);
+    assert.match(String(row.continuation.public_url||''),/^https:\/\//,`${row.public_id} held offer must retain public discovery details`);
+    assert.equal(row.continuation.blocker,'owned_public_execution_origin_not_verified');
+    assert.match(row.agent_close_contract.confirmation_prompt,/currently held/i);
+    assert.doesNotMatch(row.agent_close_contract.on_explicit_yes,/Continue through start_url/i);
+  }else{
+    assert.match(String(row.continuation.start_url||''),/^https:\/\//,`${row.public_id} must have a human-controlled continuation URL`);
+  }
   assert.ok(row.agent_close_contract.confirmation_prompt, `${row.public_id} must have a concise confirmation prompt`);
 
   const intentAgent = `public/chum/intents/${row.public_id.toLowerCase().replace(/[^a-z0-9]+/g,'-').replace(/^-+|-+$/g,'').slice(0,120)}/agent.json`;
@@ -34,6 +43,7 @@ const firstDollar = commerce.first_dollar_lane.candidates;
 assert.ok(firstDollar.length >= 1, 'at least one <= $50 sell-now path should exist');
 assert.ok(firstDollar.some((row) => row.public_id === 'roasted-text-pressure-test-machine-v1'), 'ROASTED 99c path should be in the first-dollar lane');
 assert.ok(firstDollar.every((row) => Number(row.entry_offer?.price_usd) <= 50));
+assert.ok(firstDollar.every((row) => /^https:\/\//.test(String(row.start_url||''))), 'first-dollar lane must contain only executable human-confirmed continuations');
 
 const roasted = commerce.offers.find((row) => row.public_id === 'roasted-text-pressure-test-machine-v1');
 assert.ok(roasted);
