@@ -19,14 +19,14 @@
   ],
   "summary": {
     "product_count": 17,
-    "direct_callable_count": 1,
-    "zero_hop_specialist_count": 1,
-    "fallback_required_count": 16,
-    "held_route_count": 16,
+    "direct_callable_count": 0,
+    "zero_hop_specialist_count": 0,
+    "fallback_required_count": 17,
+    "held_route_count": 17,
     "registry_published_count": 0,
-    "registry_pending_count": 1,
+    "registry_pending_count": 0,
     "public_route_pending_count": 4,
-    "not_direct_callable_count": 16
+    "not_direct_callable_count": 17
   },
   "shared_blockers": {
     "direct_runtime_or_public_route": [
@@ -65,6 +65,7 @@
       "systemia-website-audit",
       "career-command",
       "eventwave",
+      "faie",
       "buildflow",
       "evercraft-web",
       "website-launch",
@@ -77,9 +78,6 @@
       "ibmi-rescue",
       "foundry-app-escape",
       "site-survive"
-    ],
-    "publish_official_mcp_registry_candidate": [
-      "faie"
     ]
   },
   "products": [
@@ -243,7 +241,7 @@
       "slug": "faie",
       "name": "FAIE",
       "state": "public_https_verified_registry_pending",
-      "direct_callable": true,
+      "direct_callable": false,
       "registry_published": false,
       "registry_name": null,
       "mcp_url": "https://fabric.systemiacommandcenters.com/mcp/faie",
@@ -253,16 +251,16 @@
         "official_mcp_registry_publication"
       ],
       "preferred_route": {
-        "mode": "direct_specialist",
-        "hops_before_specialist": 0,
+        "mode": "held_until_owned_route_verified",
+        "hops_before_specialist": null,
         "use_universal_router_first": false,
         "registry_name": null,
-        "remote_mcp": "https://fabric.systemiacommandcenters.com/mcp/faie",
-        "fallback_state": "held_owned_public_route_pending",
-        "fallback_registry_name": "io.github.jgaethle10/evercraft-machine-commerce",
-        "fallback_remote_mcp": null
+        "remote_mcp": null,
+        "desired_universal_registry_name": "io.github.jgaethle10/evercraft-machine-commerce",
+        "desired_specialist_registry_name": "io.github.jgaethle10/faie",
+        "pending_specialist_runtime_path": null
       },
-      "next_release_action": "publish_official_mcp_registry_candidate",
+      "next_release_action": "repair_direct_runtime_or_public_route",
       "registry_candidate": {
         "publication_state": "ready_for_official_registry_publication",
         "desired_registry_name": "io.github.jgaethle10/faie",
