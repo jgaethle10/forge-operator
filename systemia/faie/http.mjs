@@ -162,6 +162,7 @@ export function registerFaieRoutes(app, {
         asset_types: req.body?.asset_types || req.body?.assets,
         crop: req.body?.crop,
         water_source: req.body?.water_source,
+        thesis_assumptions: req.body?.thesis_assumptions || req.body?.assumptions,
         horizon_days: req.body?.horizon_days,
         include_weak_evidence: req.body?.include_weak_evidence
       });
@@ -192,6 +193,7 @@ export function registerFaieRoutes(app, {
         asset_types: req.body?.asset_types || req.body?.assets,
         crop: req.body?.crop,
         water_source: req.body?.water_source,
+        thesis_assumptions: req.body?.thesis_assumptions || req.body?.assumptions,
         horizon_days: req.body?.horizon_days,
         include_weak_evidence: req.body?.include_weak_evidence
       });
