@@ -26,9 +26,11 @@ The first bounded Direct Mode slice is live in source:
 - `POST /api/systemia/plan` prepares a Systemia control-plane mission plan.
 - `GET /api/yard/overview` reads sanitized persisted Yard deployment evidence.
 - `GET /api/raven/overview` reads Raven registry, provider-matrix and Nexus probe-contract evidence without claiming a private runtime.
+- `POST /api/raven/command-plan` routes a bounded founder request through Systemia without executing it.
+- `POST /api/raven/execute` is a separate Passport-gated path for internal read-only `analyze`, `research`, and `qa` work through the owned Nexus team-review bridge.
 - Planning explicitly returns `execution_authority_granted=false`.
 - The browser home includes a restrained "What do you want to do?" field that submits into that planning route.
-- No mission execution, external communication, purchase, deployment, trust change, or other consequential action is authorized by the Home planning field.
+- The execution endpoint cannot publish, deploy, purchase, pay, mutate accounts, or send external messages. Those consequence classes remain outside this v1 path.
 
 This is deliberate. Home is an operating entrance, not a way around Systemia.
 
@@ -64,10 +66,28 @@ Current Home scopes:
 - `home.read` — enter the authenticated Home.
 - `home.systemia.read` — read the Systemia inventory.
 - `home.systemia.plan` — prepare a Systemia mission plan.
+- `home.raven.execute` — execute only Systemia-admitted internal read-only Raven work.
 - `home.yard.read` — read sanitized persisted Yard deployment state.
 - `home.network.read` — read evidence-safe Evercraft Network declarations and verification metadata.
 
 Home does not issue grants to itself.
+
+## Owned Raven execution boundary
+
+The first execution slice is deliberately narrow. Systemia still admits and routes the mission, then the Home execution endpoint can hand only non-consequential internal `analyze`, `research`, or `qa` work to the owned Nexus team-review bridge.
+
+Runtime configuration:
+
+```bash
+RAVEN_NEXUS_WORK_URL=https://<owned-nexus-work-bridge>
+RAVEN_NEXUS_WORK_TOKEN=<managed runtime secret>
+EVERCRAFT_RAVEN_RECEIPT_DIR=/var/lib/evercraft/raven-receipts
+```
+
+If the bridge is missing or unreachable, execution fails closed and emits no fake team result. Base44 is explicitly rejected as a work-bridge transport. Completed runs produce sanitized receipt metadata and never echo the bridge token.
+
+This is internal inference authority only. Publication, deployments, money movement, purchases, account changes, trust changes, and external messaging remain separate gated actions.
+
 
 ## Service discovery
 
