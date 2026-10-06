@@ -166,3 +166,29 @@ test('FAIE expands AgNormal-style regional food infrastructure into buildout evi
   assert.ok(result.investigation.evidence_needed.some((item) => /land, construction/i.test(item)));
   assert.ok(result.investigation.evidence_needed.some((item) => /zoning, water rights/i.test(item)));
 });
+
+
+test('FAIE keeps a thesis assumption register without pretending related evidence is a verdict', () => {
+  let state = emptyFaieState();
+  state = ingestFaieObservation(state, observation(), { now: NOW }).state;
+
+  const result = buildFaieInvestigation(state, {
+    question: 'Should this regional food infrastructure thesis survive Yakima water constraints?',
+    region_keys: ['yakima-wa'],
+    thesis_assumptions: [
+      'Yakima water availability can support the target production system.',
+      { statement: 'Regional freight access keeps distribution practical.', criticality: 'high' }
+    ]
+  }, { now: NOW });
+
+  assert.equal(result.investigation.thesis_memory.assumption_count, 2);
+  const water = result.investigation.thesis_memory.assumptions[0];
+  assert.equal(water.evaluation_state, 'related_evidence_present');
+  assert.ok(water.related_signal_ids.length >= 1);
+  assert.equal(water.verdict_authority, false);
+
+  const freight = result.investigation.thesis_memory.assumptions[1];
+  assert.equal(freight.evaluation_state, 'unknown');
+  assert.equal(freight.criticality, 'high');
+  assert.equal(result.investigation.thesis_memory.verdict_authority, false);
+});
