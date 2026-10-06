@@ -2,7 +2,7 @@
   "schema": "evercraft.chum.crawl-state.v1",
   "provider": "Evercraft LLC",
   "coordinator": "CHUM",
-  "updated_at": "2026-10-06T20:50:03.642Z",
+  "updated_at": "2026-10-06T20:50:08.530Z",
   "url_count": 2800,
   "doctrine": {
     "crawl_can_be_requested_not_forced": true,
@@ -39,8 +39,8 @@
     },
     "/chum/capabilities.json": {
       "path": "/chum/capabilities.json",
-      "content_sha256": "a8597d9ce357c976c1b938668cc1ac76c94c8872a56ac4281e12266bb3b93e14",
-      "last_changed": "2026-10-06T20:36:30.736Z",
+      "content_sha256": "1156669f9f00a043e8ce2e38b8869b19ff7a45563dc4e0fc824c1cf5a9932444",
+      "last_changed": "2026-10-06T20:50:08.530Z",
       "priority": 80
     },
     "/chum/sell-now.html": {
@@ -51,14 +51,14 @@
     },
     "/chum/sell-now.json": {
       "path": "/chum/sell-now.json",
-      "content_sha256": "3c081d4b3ef515a4af786eeae907cd64b4101da8ef0b6f931f295b5ecc9762e7",
-      "last_changed": "2026-10-06T20:36:30.736Z",
+      "content_sha256": "66082e43fffd547da0df4d42ef798bd6dc619bac023a7ea4bc7be5df19dc31b9",
+      "last_changed": "2026-10-06T20:50:08.530Z",
       "priority": 92
     },
     "/chum/sell-now.txt": {
       "path": "/chum/sell-now.txt",
-      "content_sha256": "18d20b6df50258834950283a638fbc847ed2dc1f0c4eb55d3042cab885c64d10",
-      "last_changed": "2026-10-06T20:36:30.736Z",
+      "content_sha256": "d0c5f7a2c9953a068d32eec188c390576972703aa7d84bc395a30c737f3b1a94",
+      "last_changed": "2026-10-06T20:50:08.530Z",
       "priority": 92
     },
     "/chum/revenue.txt": {
@@ -141,8 +141,8 @@
     },
     "/chum/hot/index.json": {
       "path": "/chum/hot/index.json",
-      "content_sha256": "b7388e8b89f1de503e2359e29974c05968bd3f4c1b0ce698b73d6b25c5c2ff6b",
-      "last_changed": "2026-10-06T20:50:03.642Z",
+      "content_sha256": "e601dd739e15f8371172f8409658c4c5d7ee0f20feb979d59eb648474c31146a",
+      "last_changed": "2026-10-06T20:50:08.530Z",
       "priority": 80
     },
     "/chum/strike/": {
@@ -1623,20 +1623,20 @@
     },
     "/chum/capabilities/faie-signal-brief-v1/": {
       "path": "/chum/capabilities/faie-signal-brief-v1/",
-      "content_sha256": "6a42e083899054930062c4972f46072a23d95a36f2eb0d92a9c9bc1b0c88f221",
-      "last_changed": "2026-10-06T20:36:30.736Z",
+      "content_sha256": "275173c5e5ba4e7892c0414dcd20487e5edb25a71b11abac9eb255a0484ebdd0",
+      "last_changed": "2026-10-06T20:50:08.530Z",
       "priority": 96
     },
     "/chum/capabilities/faie-signal-brief-v1/llms.txt": {
       "path": "/chum/capabilities/faie-signal-brief-v1/llms.txt",
-      "content_sha256": "22173bf9a53e0aefbf77d960fe86c3b87c79b04ab134508d78f2926e45475ba1",
-      "last_changed": "2026-10-06T20:37:44.536Z",
+      "content_sha256": "07ff39d4a5394c1de1f8150cf69c8e6629b4bb7277eddaa39285b45678c0db5f",
+      "last_changed": "2026-10-06T20:50:08.530Z",
       "priority": 96
     },
     "/chum/capabilities/faie-signal-brief-v1/capability.json": {
       "path": "/chum/capabilities/faie-signal-brief-v1/capability.json",
-      "content_sha256": "bc382056644945e0e4dd966488c48354ac74a3100a5fe39afd0f032cb4a0d60b",
-      "last_changed": "2026-10-06T20:37:44.536Z",
+      "content_sha256": "af007112a3da251a6dec511e02161e2d004f279f4ab47e89c04c2d2a70d7104b",
+      "last_changed": "2026-10-06T20:50:08.530Z",
       "priority": 96
     },
     "/chum/capabilities/faie-signal-brief-v1/schema.jsonld": {

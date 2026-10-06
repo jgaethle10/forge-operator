@@ -5,10 +5,10 @@
   <url><loc>/chum/index.json</loc><lastmod>2026-10-06T20:36:30.736Z</lastmod></url>
   <url><loc>/chum/revenue.html</loc><lastmod>2026-10-06T20:36:30.736Z</lastmod></url>
   <url><loc>/chum/capabilities/</loc><lastmod>2026-10-06T14:10:27.346Z</lastmod></url>
-  <url><loc>/chum/capabilities.json</loc><lastmod>2026-10-06T20:36:30.736Z</lastmod></url>
+  <url><loc>/chum/capabilities.json</loc><lastmod>2026-10-06T20:50:08.530Z</lastmod></url>
   <url><loc>/chum/sell-now.html</loc><lastmod>2026-10-06T20:36:30.736Z</lastmod></url>
-  <url><loc>/chum/sell-now.json</loc><lastmod>2026-10-06T20:36:30.736Z</lastmod></url>
-  <url><loc>/chum/sell-now.txt</loc><lastmod>2026-10-06T20:36:30.736Z</lastmod></url>
+  <url><loc>/chum/sell-now.json</loc><lastmod>2026-10-06T20:50:08.530Z</lastmod></url>
+  <url><loc>/chum/sell-now.txt</loc><lastmod>2026-10-06T20:50:08.530Z</lastmod></url>
   <url><loc>/chum/revenue.txt</loc><lastmod>2026-10-06T20:36:30.736Z</lastmod></url>
   <url><loc>/chum/revenue.json</loc><lastmod>2026-10-06T20:37:44.536Z</lastmod></url>
   <url><loc>/chum/agent-commerce.json</loc><lastmod>2026-10-06T20:36:30.736Z</lastmod></url>
@@ -22,7 +22,7 @@
   <url><loc>/chum/answers/observed/</loc><lastmod>2026-09-27T06:03:00.949Z</lastmod></url>
   <url><loc>/chum/answers/observed/index.json</loc><lastmod>2026-09-27T06:03:00.949Z</lastmod></url>
   <url><loc>/chum/hot/</loc><lastmod>2026-10-06T20:40:18.411Z</lastmod></url>
-  <url><loc>/chum/hot/index.json</loc><lastmod>2026-10-06T20:50:03.642Z</lastmod></url>
+  <url><loc>/chum/hot/index.json</loc><lastmod>2026-10-06T20:50:08.530Z</lastmod></url>
   <url><loc>/chum/strike/</loc><lastmod>2026-10-06T20:40:19.032Z</lastmod></url>
   <url><loc>/chum/strike/index.json</loc><lastmod>2026-10-06T20:50:03.642Z</lastmod></url>
   <url><loc>/chum/crawler-radar.json</loc><lastmod>2026-10-06T20:50:03.642Z</lastmod></url>
@@ -272,9 +272,9 @@
   <url><loc>/chum/capabilities/evermaps-evidence-projection-machine-v1/capability.json</loc><lastmod>2026-10-06T16:41:21.859Z</lastmod></url>
   <url><loc>/chum/capabilities/evermaps-evidence-projection-machine-v1/schema.jsonld</loc><lastmod>2026-10-06T16:41:21.859Z</lastmod></url>
   <url><loc>/chum/intents/faie-signal-brief-v1/</loc><lastmod>2026-10-06T20:36:30.736Z</lastmod></url>
-  <url><loc>/chum/capabilities/faie-signal-brief-v1/</loc><lastmod>2026-10-06T20:36:30.736Z</lastmod></url>
-  <url><loc>/chum/capabilities/faie-signal-brief-v1/llms.txt</loc><lastmod>2026-10-06T20:37:44.536Z</lastmod></url>
-  <url><loc>/chum/capabilities/faie-signal-brief-v1/capability.json</loc><lastmod>2026-10-06T20:37:44.536Z</lastmod></url>
+  <url><loc>/chum/capabilities/faie-signal-brief-v1/</loc><lastmod>2026-10-06T20:50:08.530Z</lastmod></url>
+  <url><loc>/chum/capabilities/faie-signal-brief-v1/llms.txt</loc><lastmod>2026-10-06T20:50:08.530Z</lastmod></url>
+  <url><loc>/chum/capabilities/faie-signal-brief-v1/capability.json</loc><lastmod>2026-10-06T20:50:08.530Z</lastmod></url>
   <url><loc>/chum/capabilities/faie-signal-brief-v1/schema.jsonld</loc><lastmod>2026-10-06T20:36:30.736Z</lastmod></url>
   <url><loc>/chum/intents/findmypart-paid-hunt-v1/</loc><lastmod>2026-10-06T16:39:43.960Z</lastmod></url>
   <url><loc>/chum/capabilities/findmypart-paid-hunt-v1/</loc><lastmod>2026-10-06T16:41:21.859Z</lastmod></url>
