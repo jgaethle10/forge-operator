@@ -2,10 +2,14 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
 <id>urn:evercraft:chum:crawl-pressure</id>
 <title>Evercraft CHUM Freshness Feed</title>
-<updated>2026-10-06T16:46:32.561Z</updated>
+<updated>2026-10-06T16:46:54.878Z</updated>
 <link rel="self" href="/chum/freshness.xml"/>
 <subtitle>Content-hash-backed public discovery changes. Freshness is not proof of provider pickup.</subtitle>
-<entry><id>urn:evercraft:chum:0df896994e643d779039e059</id><title>/chum/hot/index.json</title><updated>2026-10-06T16:46:32.561Z</updated><link href="/chum/hot/index.json"/><category term="priority-80"/></entry>
+<entry><id>urn:evercraft:chum:d8bcbc9c28ec3e0aa29125ea</id><title>/chum/crawler-radar.json</title><updated>2026-10-06T16:46:54.878Z</updated><link href="/chum/crawler-radar.json"/><category term="priority-80"/></entry>
+<entry><id>urn:evercraft:chum:aa9b916fd98945db10fa3cab</id><title>/chum/crawler-radar.txt</title><updated>2026-10-06T16:46:54.878Z</updated><link href="/chum/crawler-radar.txt"/><category term="priority-80"/></entry>
+<entry><id>urn:evercraft:chum:0df896994e643d779039e059</id><title>/chum/hot/index.json</title><updated>2026-10-06T16:46:54.878Z</updated><link href="/chum/hot/index.json"/><category term="priority-80"/></entry>
+<entry><id>urn:evercraft:chum:bc7689c4c0867339d0001ccc</id><title>/chum/strike/</title><updated>2026-10-06T16:46:54.878Z</updated><link href="/chum/strike/"/><category term="priority-80"/></entry>
+<entry><id>urn:evercraft:chum:494de3a9b5c21a35fdfdb6c2</id><title>/chum/strike/index.json</title><updated>2026-10-06T16:46:54.878Z</updated><link href="/chum/strike/index.json"/><category term="priority-80"/></entry>
 <entry><id>urn:evercraft:chum:770866315bf12f2c92446bfe</id><title>/chum/hot/</title><updated>2026-10-06T16:45:12.539Z</updated><link href="/chum/hot/"/><category term="priority-80"/></entry>
 <entry><id>urn:evercraft:chum:d7715e164565fa58cf4513ad</id><title>/chum/sell-now.json</title><updated>2026-10-06T16:44:42.702Z</updated><link href="/chum/sell-now.json"/><category term="priority-92"/></entry>
 <entry><id>urn:evercraft:chum:c5910dc82ba7729311c550e0</id><title>/chum/revenue.json</title><updated>2026-10-06T16:44:42.702Z</updated><link href="/chum/revenue.json"/><category term="priority-90"/></entry>
@@ -101,8 +105,4 @@
 <entry><id>urn:evercraft:chum:20a52f88a105eedea7b3390e</id><title>/chum/answers/doors/find-a-donor-or-salvage-part-310843faf9.json</title><updated>2026-10-06T16:42:20.155Z</updated><link href="/chum/answers/doors/find-a-donor-or-salvage-part-310843faf9.json"/><category term="priority-160"/></entry>
 <entry><id>urn:evercraft:chum:69a2755aea2796f17ca7ac68</id><title>/chum/answers/doors/find-a-hard-to-source-part-78dcd37ecc.json</title><updated>2026-10-06T16:42:20.155Z</updated><link href="/chum/answers/doors/find-a-hard-to-source-part-78dcd37ecc.json"/><category term="priority-160"/></entry>
 <entry><id>urn:evercraft:chum:0a5c8d212a88624f54db5e39</id><title>/chum/answers/doors/find-bottlenecks-in-this-business-workflow-55d27040ce.json</title><updated>2026-10-06T16:42:20.155Z</updated><link href="/chum/answers/doors/find-bottlenecks-in-this-business-workflow-55d27040ce.json"/><category term="priority-160"/></entry>
-<entry><id>urn:evercraft:chum:520ac988b7c9c9246ada6ed8</id><title>/chum/answers/doors/find-capital-options-for-this-project-9a78204138.json</title><updated>2026-10-06T16:42:20.155Z</updated><link href="/chum/answers/doors/find-capital-options-for-this-project-9a78204138.json"/><category term="priority-160"/></entry>
-<entry><id>urn:evercraft:chum:54fc88e985f1592c7e675e0f</id><title>/chum/answers/doors/find-conflicts-in-our-business-exports-f352d58cb0.json</title><updated>2026-10-06T16:42:20.155Z</updated><link href="/chum/answers/doors/find-conflicts-in-our-business-exports-f352d58cb0.json"/><category term="priority-160"/></entry>
-<entry><id>urn:evercraft:chum:f04121492275c7117a08ada5</id><title>/chum/answers/doors/find-conversion-problems-on-my-website-071e47ffaf.json</title><updated>2026-10-06T16:42:20.155Z</updated><link href="/chum/answers/doors/find-conversion-problems-on-my-website-071e47ffaf.json"/><category term="priority-160"/></entry>
-<entry><id>urn:evercraft:chum:1ae8f8a5eccb3b45f35c99f9</id><title>/chum/answers/doors/find-ev-charging-opportunities-in-this-market-c01f603871.json</title><updated>2026-10-06T16:42:20.155Z</updated><link href="/chum/answers/doors/find-ev-charging-opportunities-in-this-market-c01f603871.json"/><category term="priority-160"/></entry>
 </feed>

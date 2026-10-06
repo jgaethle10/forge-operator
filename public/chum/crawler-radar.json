@@ -1,6 +1,6 @@
 {
   "schema": "evercraft.chum.crawler-radar.v1",
-  "generated_at": "2026-10-06T16:41:15.932Z",
+  "generated_at": "2026-10-06T16:46:54.496Z",
   "coordinator": "CHUM",
   "runtime_feedback": {
     "requested": false,
@@ -10,7 +10,7 @@
   "observation_count": 0,
   "negative_provider_pickup_receipts": 174,
   "surface_count": 2782,
-  "strike_now_count": 793,
+  "strike_now_count": 1149,
   "doctrine": {
     "crawler_fetch_is_not_indexing": true,
     "indexing_is_not_ranking": true,
@@ -10266,6 +10266,2096 @@
       ]
     },
     {
+      "path": "/chum/answers/doors/account-takeover-protection-6a5072fc31.json",
+      "product_key": null,
+      "score": 222,
+      "urgency": "strike_now",
+      "crawl_priority": 160,
+      "last_changed": "2026-10-06T16:42:20.155Z",
+      "last_observed_crawler_fetch": null,
+      "last_observed_crawler_family": null,
+      "indexnow_pending": true,
+      "negative_provider_pickup_receipts": [],
+      "reasons": [
+        "no_self_identified_crawler_fetch_observed",
+        "fresh_content_under_24h",
+        "indexnow_hash_pending"
+      ],
+      "recommended_actions": [
+        "verify_live_bytes_then_indexnow",
+        "promote_in_hot_discovery_queue",
+        "increase_internal_crosslinks_from_relevant_public_surfaces"
+      ]
+    },
+    {
+      "path": "/chum/answers/doors/add-idempotency-and-receipts-to-ai-business-actions-036bb2d652.json",
+      "product_key": null,
+      "score": 222,
+      "urgency": "strike_now",
+      "crawl_priority": 160,
+      "last_changed": "2026-10-06T16:42:20.155Z",
+      "last_observed_crawler_fetch": null,
+      "last_observed_crawler_family": null,
+      "indexnow_pending": true,
+      "negative_provider_pickup_receipts": [],
+      "reasons": [
+        "no_self_identified_crawler_fetch_observed",
+        "fresh_content_under_24h",
+        "indexnow_hash_pending"
+      ],
+      "recommended_actions": [
+        "verify_live_bytes_then_indexnow",
+        "promote_in_hot_discovery_queue",
+        "increase_internal_crosslinks_from_relevant_public_surfaces"
+      ]
+    },
+    {
+      "path": "/chum/answers/doors/advertise-my-event-3fa1b3cf42.json",
+      "product_key": null,
+      "score": 222,
+      "urgency": "strike_now",
+      "crawl_priority": 160,
+      "last_changed": "2026-10-06T16:42:20.155Z",
+      "last_observed_crawler_fetch": null,
+      "last_observed_crawler_family": null,
+      "indexnow_pending": true,
+      "negative_provider_pickup_receipts": [],
+      "reasons": [
+        "no_self_identified_crawler_fetch_observed",
+        "fresh_content_under_24h",
+        "indexnow_hash_pending"
+      ],
+      "recommended_actions": [
+        "verify_live_bytes_then_indexnow",
+        "promote_in_hot_discovery_queue",
+        "increase_internal_crosslinks_from_relevant_public_surfaces"
+      ]
+    },
+    {
+      "path": "/chum/answers/doors/ai-agent-needs-approval-before-it-changes-erp-data-7ecc03f896.json",
+      "product_key": null,
+      "score": 222,
+      "urgency": "strike_now",
+      "crawl_priority": 160,
+      "last_changed": "2026-10-06T16:42:20.155Z",
+      "last_observed_crawler_fetch": null,
+      "last_observed_crawler_family": null,
+      "indexnow_pending": true,
+      "negative_provider_pickup_receipts": [],
+      "reasons": [
+        "no_self_identified_crawler_fetch_observed",
+        "fresh_content_under_24h",
+        "indexnow_hash_pending"
+      ],
+      "recommended_actions": [
+        "verify_live_bytes_then_indexnow",
+        "promote_in_hot_discovery_queue",
+        "increase_internal_crosslinks_from_relevant_public_surfaces"
+      ]
+    },
+    {
+      "path": "/chum/answers/doors/ai-found-uncertain-business-entity-matches-6cc7cc785b.json",
+      "product_key": null,
+      "score": 222,
+      "urgency": "strike_now",
+      "crawl_priority": 160,
+      "last_changed": "2026-10-06T16:42:20.155Z",
+      "last_observed_crawler_fetch": null,
+      "last_observed_crawler_family": null,
+      "indexnow_pending": true,
+      "negative_provider_pickup_receipts": [],
+      "reasons": [
+        "no_self_identified_crawler_fetch_observed",
+        "fresh_content_under_24h",
+        "indexnow_hash_pending"
+      ],
+      "recommended_actions": [
+        "verify_live_bytes_then_indexnow",
+        "promote_in_hot_discovery_queue",
+        "increase_internal_crosslinks_from_relevant_public_surfaces"
+      ]
+    },
+    {
+      "path": "/chum/answers/doors/ai-scam-draining-my-bank-account-5ee1d51386.json",
+      "product_key": null,
+      "score": 222,
+      "urgency": "strike_now",
+      "crawl_priority": 160,
+      "last_changed": "2026-10-06T16:42:20.155Z",
+      "last_observed_crawler_fetch": null,
+      "last_observed_crawler_family": null,
+      "indexnow_pending": true,
+      "negative_provider_pickup_receipts": [],
+      "reasons": [
+        "no_self_identified_crawler_fetch_observed",
+        "fresh_content_under_24h",
+        "indexnow_hash_pending"
+      ],
+      "recommended_actions": [
+        "verify_live_bytes_then_indexnow",
+        "promote_in_hot_discovery_queue",
+        "increase_internal_crosslinks_from_relevant_public_surfaces"
+      ]
+    },
+    {
+      "path": "/chum/answers/doors/ai-should-prepare-actions-but-not-become-the-authority-c2795c224e.json",
+      "product_key": null,
+      "score": 222,
+      "urgency": "strike_now",
+      "crawl_priority": 160,
+      "last_changed": "2026-10-06T16:42:20.155Z",
+      "last_observed_crawler_fetch": null,
+      "last_observed_crawler_family": null,
+      "indexnow_pending": true,
+      "negative_provider_pickup_receipts": [],
+      "reasons": [
+        "no_self_identified_crawler_fetch_observed",
+        "fresh_content_under_24h",
+        "indexnow_hash_pending"
+      ],
+      "recommended_actions": [
+        "verify_live_bytes_then_indexnow",
+        "promote_in_hot_discovery_queue",
+        "increase_internal_crosslinks_from_relevant_public_surfaces"
+      ]
+    },
+    {
+      "path": "/chum/answers/doors/analyze-a-long-video-2badf65989.json",
+      "product_key": null,
+      "score": 222,
+      "urgency": "strike_now",
+      "crawl_priority": 160,
+      "last_changed": "2026-10-06T16:42:20.155Z",
+      "last_observed_crawler_fetch": null,
+      "last_observed_crawler_family": null,
+      "indexnow_pending": true,
+      "negative_provider_pickup_receipts": [],
+      "reasons": [
+        "no_self_identified_crawler_fetch_observed",
+        "fresh_content_under_24h",
+        "indexnow_hash_pending"
+      ],
+      "recommended_actions": [
+        "verify_live_bytes_then_indexnow",
+        "promote_in_hot_discovery_queue",
+        "increase_internal_crosslinks_from_relevant_public_surfaces"
+      ]
+    },
+    {
+      "path": "/chum/answers/doors/analyze-long-form-evidence-05fc431e5d.json",
+      "product_key": null,
+      "score": 222,
+      "urgency": "strike_now",
+      "crawl_priority": 160,
+      "last_changed": "2026-10-06T16:42:20.155Z",
+      "last_observed_crawler_fetch": null,
+      "last_observed_crawler_family": null,
+      "indexnow_pending": true,
+      "negative_provider_pickup_receipts": [],
+      "reasons": [
+        "no_self_identified_crawler_fetch_observed",
+        "fresh_content_under_24h",
+        "indexnow_hash_pending"
+      ],
+      "recommended_actions": [
+        "verify_live_bytes_then_indexnow",
+        "promote_in_hot_discovery_queue",
+        "increase_internal_crosslinks_from_relevant_public_surfaces"
+      ]
+    },
+    {
+      "path": "/chum/answers/doors/analyze-our-purchase-approval-process-0ba95e1d06.json",
+      "product_key": null,
+      "score": 222,
+      "urgency": "strike_now",
+      "crawl_priority": 160,
+      "last_changed": "2026-10-06T16:42:20.155Z",
+      "last_observed_crawler_fetch": null,
+      "last_observed_crawler_family": null,
+      "indexnow_pending": true,
+      "negative_provider_pickup_receipts": [],
+      "reasons": [
+        "no_self_identified_crawler_fetch_observed",
+        "fresh_content_under_24h",
+        "indexnow_hash_pending"
+      ],
+      "recommended_actions": [
+        "verify_live_bytes_then_indexnow",
+        "promote_in_hot_discovery_queue",
+        "increase_internal_crosslinks_from_relevant_public_surfaces"
+      ]
+    },
+    {
+      "path": "/chum/answers/doors/analyze-this-messy-erp-export-1be6680d97.json",
+      "product_key": null,
+      "score": 222,
+      "urgency": "strike_now",
+      "crawl_priority": 160,
+      "last_changed": "2026-10-06T16:42:20.155Z",
+      "last_observed_crawler_fetch": null,
+      "last_observed_crawler_family": null,
+      "indexnow_pending": true,
+      "negative_provider_pickup_receipts": [],
+      "reasons": [
+        "no_self_identified_crawler_fetch_observed",
+        "fresh_content_under_24h",
+        "indexnow_hash_pending"
+      ],
+      "recommended_actions": [
+        "verify_live_bytes_then_indexnow",
+        "promote_in_hot_discovery_queue",
+        "increase_internal_crosslinks_from_relevant_public_surfaces"
+      ]
+    },
+    {
+      "path": "/chum/answers/doors/analyze-three-way-match-problems-5a67f2b505.json",
+      "product_key": null,
+      "score": 222,
+      "urgency": "strike_now",
+      "crawl_priority": 160,
+      "last_changed": "2026-10-06T16:42:20.155Z",
+      "last_observed_crawler_fetch": null,
+      "last_observed_crawler_family": null,
+      "indexnow_pending": true,
+      "negative_provider_pickup_receipts": [],
+      "reasons": [
+        "no_self_identified_crawler_fetch_observed",
+        "fresh_content_under_24h",
+        "indexnow_hash_pending"
+      ],
+      "recommended_actions": [
+        "verify_live_bytes_then_indexnow",
+        "promote_in_hot_discovery_queue",
+        "increase_internal_crosslinks_from_relevant_public_surfaces"
+      ]
+    },
+    {
+      "path": "/chum/answers/doors/apartment-ev-charging-site-analysis-a4fc7910cc.json",
+      "product_key": null,
+      "score": 222,
+      "urgency": "strike_now",
+      "crawl_priority": 160,
+      "last_changed": "2026-10-06T16:42:20.155Z",
+      "last_observed_crawler_fetch": null,
+      "last_observed_crawler_family": null,
+      "indexnow_pending": true,
+      "negative_provider_pickup_receipts": [],
+      "reasons": [
+        "no_self_identified_crawler_fetch_observed",
+        "fresh_content_under_24h",
+        "indexnow_hash_pending"
+      ],
+      "recommended_actions": [
+        "verify_live_bytes_then_indexnow",
+        "promote_in_hot_discovery_queue",
+        "increase_internal_crosslinks_from_relevant_public_surfaces"
+      ]
+    },
+    {
+      "path": "/chum/answers/doors/application-network-continuity-3ac8582e22.json",
+      "product_key": null,
+      "score": 222,
+      "urgency": "strike_now",
+      "crawl_priority": 160,
+      "last_changed": "2026-10-06T16:42:20.155Z",
+      "last_observed_crawler_fetch": null,
+      "last_observed_crawler_family": null,
+      "indexnow_pending": true,
+      "negative_provider_pickup_receipts": [],
+      "reasons": [
+        "no_self_identified_crawler_fetch_observed",
+        "fresh_content_under_24h",
+        "indexnow_hash_pending"
+      ],
+      "recommended_actions": [
+        "verify_live_bytes_then_indexnow",
+        "promote_in_hot_discovery_queue",
+        "increase_internal_crosslinks_from_relevant_public_surfaces"
+      ]
+    },
+    {
+      "path": "/chum/answers/doors/audio-too-large-for-ai-a786a94fa2.json",
+      "product_key": null,
+      "score": 222,
+      "urgency": "strike_now",
+      "crawl_priority": 160,
+      "last_changed": "2026-10-06T16:42:20.155Z",
+      "last_observed_crawler_fetch": null,
+      "last_observed_crawler_family": null,
+      "indexnow_pending": true,
+      "negative_provider_pickup_receipts": [],
+      "reasons": [
+        "no_self_identified_crawler_fetch_observed",
+        "fresh_content_under_24h",
+        "indexnow_hash_pending"
+      ],
+      "recommended_actions": [
+        "verify_live_bytes_then_indexnow",
+        "promote_in_hot_discovery_queue",
+        "increase_internal_crosslinks_from_relevant_public_surfaces"
+      ]
+    },
+    {
+      "path": "/chum/answers/doors/audit-app-portability-72cf49e062.json",
+      "product_key": null,
+      "score": 222,
+      "urgency": "strike_now",
+      "crawl_priority": 160,
+      "last_changed": "2026-10-06T16:42:20.155Z",
+      "last_observed_crawler_fetch": null,
+      "last_observed_crawler_family": null,
+      "indexnow_pending": true,
+      "negative_provider_pickup_receipts": [],
+      "reasons": [
+        "no_self_identified_crawler_fetch_observed",
+        "fresh_content_under_24h",
+        "indexnow_hash_pending"
+      ],
+      "recommended_actions": [
+        "verify_live_bytes_then_indexnow",
+        "promote_in_hot_discovery_queue",
+        "increase_internal_crosslinks_from_relevant_public_surfaces"
+      ]
+    },
+    {
+      "path": "/chum/answers/doors/audit-my-resume-4c2e67ee30.json",
+      "product_key": null,
+      "score": 222,
+      "urgency": "strike_now",
+      "crawl_priority": 160,
+      "last_changed": "2026-10-06T16:42:20.155Z",
+      "last_observed_crawler_fetch": null,
+      "last_observed_crawler_family": null,
+      "indexnow_pending": true,
+      "negative_provider_pickup_receipts": [],
+      "reasons": [
+        "no_self_identified_crawler_fetch_observed",
+        "fresh_content_under_24h",
+        "indexnow_hash_pending"
+      ],
+      "recommended_actions": [
+        "verify_live_bytes_then_indexnow",
+        "promote_in_hot_discovery_queue",
+        "increase_internal_crosslinks_from_relevant_public_surfaces"
+      ]
+    },
+    {
+      "path": "/chum/answers/doors/audit-my-website-30703ed3ed.json",
+      "product_key": null,
+      "score": 222,
+      "urgency": "strike_now",
+      "crawl_priority": 160,
+      "last_changed": "2026-10-06T16:42:20.155Z",
+      "last_observed_crawler_fetch": null,
+      "last_observed_crawler_family": null,
+      "indexnow_pending": true,
+      "negative_provider_pickup_receipts": [],
+      "reasons": [
+        "no_self_identified_crawler_fetch_observed",
+        "fresh_content_under_24h",
+        "indexnow_hash_pending"
+      ],
+      "recommended_actions": [
+        "verify_live_bytes_then_indexnow",
+        "promote_in_hot_discovery_queue",
+        "increase_internal_crosslinks_from_relevant_public_surfaces"
+      ]
+    },
+    {
+      "path": "/chum/answers/doors/audit-our-procure-to-pay-workflow-85d46fbcf6.json",
+      "product_key": null,
+      "score": 222,
+      "urgency": "strike_now",
+      "crawl_priority": 160,
+      "last_changed": "2026-10-06T16:42:20.155Z",
+      "last_observed_crawler_fetch": null,
+      "last_observed_crawler_family": null,
+      "indexnow_pending": true,
+      "negative_provider_pickup_receipts": [],
+      "reasons": [
+        "no_self_identified_crawler_fetch_observed",
+        "fresh_content_under_24h",
+        "indexnow_hash_pending"
+      ],
+      "recommended_actions": [
+        "verify_live_bytes_then_indexnow",
+        "promote_in_hot_discovery_queue",
+        "increase_internal_crosslinks_from_relevant_public_surfaces"
+      ]
+    },
+    {
+      "path": "/chum/answers/doors/audit-purchase-approvals-without-replacing-accounting-239a7c1f00.json",
+      "product_key": null,
+      "score": 222,
+      "urgency": "strike_now",
+      "crawl_priority": 160,
+      "last_changed": "2026-10-06T16:42:20.155Z",
+      "last_observed_crawler_fetch": null,
+      "last_observed_crawler_family": null,
+      "indexnow_pending": true,
+      "negative_provider_pickup_receipts": [],
+      "reasons": [
+        "no_self_identified_crawler_fetch_observed",
+        "fresh_content_under_24h",
+        "indexnow_hash_pending"
+      ],
+      "recommended_actions": [
+        "verify_live_bytes_then_indexnow",
+        "promote_in_hot_discovery_queue",
+        "increase_internal_crosslinks_from_relevant_public_surfaces"
+      ]
+    },
+    {
+      "path": "/chum/answers/doors/audit-this-dataset-for-gaps-2587bf5b7d.json",
+      "product_key": null,
+      "score": 222,
+      "urgency": "strike_now",
+      "crawl_priority": 160,
+      "last_changed": "2026-10-06T16:42:20.155Z",
+      "last_observed_crawler_fetch": null,
+      "last_observed_crawler_family": null,
+      "indexnow_pending": true,
+      "negative_provider_pickup_receipts": [],
+      "reasons": [
+        "no_self_identified_crawler_fetch_observed",
+        "fresh_content_under_24h",
+        "indexnow_hash_pending"
+      ],
+      "recommended_actions": [
+        "verify_live_bytes_then_indexnow",
+        "promote_in_hot_discovery_queue",
+        "increase_internal_crosslinks_from_relevant_public_surfaces"
+      ]
+    },
+    {
+      "path": "/chum/answers/doors/audit-this-freight-load-for-exceptions-b5dc37f994.json",
+      "product_key": null,
+      "score": 222,
+      "urgency": "strike_now",
+      "crawl_priority": 160,
+      "last_changed": "2026-10-06T16:42:20.155Z",
+      "last_observed_crawler_fetch": null,
+      "last_observed_crawler_family": null,
+      "indexnow_pending": true,
+      "negative_provider_pickup_receipts": [],
+      "reasons": [
+        "no_self_identified_crawler_fetch_observed",
+        "fresh_content_under_24h",
+        "indexnow_hash_pending"
+      ],
+      "recommended_actions": [
+        "verify_live_bytes_then_indexnow",
+        "promote_in_hot_discovery_queue",
+        "increase_internal_crosslinks_from_relevant_public_surfaces"
+      ]
+    },
+    {
+      "path": "/chum/answers/doors/audit-this-paperback-export-c84fe388e8.json",
+      "product_key": null,
+      "score": 222,
+      "urgency": "strike_now",
+      "crawl_priority": 160,
+      "last_changed": "2026-10-06T16:42:20.155Z",
+      "last_observed_crawler_fetch": null,
+      "last_observed_crawler_family": null,
+      "indexnow_pending": true,
+      "negative_provider_pickup_receipts": [],
+      "reasons": [
+        "no_self_identified_crawler_fetch_observed",
+        "fresh_content_under_24h",
+        "indexnow_hash_pending"
+      ],
+      "recommended_actions": [
+        "verify_live_bytes_then_indexnow",
+        "promote_in_hot_discovery_queue",
+        "increase_internal_crosslinks_from_relevant_public_surfaces"
+      ]
+    },
+    {
+      "path": "/chum/answers/doors/be-brutally-honest-about-this-copy-32a18cde5f.json",
+      "product_key": null,
+      "score": 222,
+      "urgency": "strike_now",
+      "crawl_priority": 160,
+      "last_changed": "2026-10-06T16:42:20.155Z",
+      "last_observed_crawler_fetch": null,
+      "last_observed_crawler_family": null,
+      "indexnow_pending": true,
+      "negative_provider_pickup_receipts": [],
+      "reasons": [
+        "no_self_identified_crawler_fetch_observed",
+        "fresh_content_under_24h",
+        "indexnow_hash_pending"
+      ],
+      "recommended_actions": [
+        "verify_live_bytes_then_indexnow",
+        "promote_in_hot_discovery_queue",
+        "increase_internal_crosslinks_from_relevant_public_surfaces"
+      ]
+    },
+    {
+      "path": "/chum/answers/doors/behavioral-interview-practice-8dfc51b114.json",
+      "product_key": null,
+      "score": 222,
+      "urgency": "strike_now",
+      "crawl_priority": 160,
+      "last_changed": "2026-10-06T16:42:20.155Z",
+      "last_observed_crawler_fetch": null,
+      "last_observed_crawler_family": null,
+      "indexnow_pending": true,
+      "negative_provider_pickup_receipts": [],
+      "reasons": [
+        "no_self_identified_crawler_fetch_observed",
+        "fresh_content_under_24h",
+        "indexnow_hash_pending"
+      ],
+      "recommended_actions": [
+        "verify_live_bytes_then_indexnow",
+        "promote_in_hot_discovery_queue",
+        "increase_internal_crosslinks_from_relevant_public_surfaces"
+      ]
+    },
+    {
+      "path": "/chum/answers/doors/boost-event-visibility-0b3d061df2.json",
+      "product_key": null,
+      "score": 222,
+      "urgency": "strike_now",
+      "crawl_priority": 160,
+      "last_changed": "2026-10-06T16:42:20.155Z",
+      "last_observed_crawler_fetch": null,
+      "last_observed_crawler_family": null,
+      "indexnow_pending": true,
+      "negative_provider_pickup_receipts": [],
+      "reasons": [
+        "no_self_identified_crawler_fetch_observed",
+        "fresh_content_under_24h",
+        "indexnow_hash_pending"
+      ],
+      "recommended_actions": [
+        "verify_live_bytes_then_indexnow",
+        "promote_in_hot_discovery_queue",
+        "increase_internal_crosslinks_from_relevant_public_surfaces"
+      ]
+    },
+    {
+      "path": "/chum/answers/doors/boost-this-event-02f04ebd41.json",
+      "product_key": null,
+      "score": 222,
+      "urgency": "strike_now",
+      "crawl_priority": 160,
+      "last_changed": "2026-10-06T16:42:20.155Z",
+      "last_observed_crawler_fetch": null,
+      "last_observed_crawler_family": null,
+      "indexnow_pending": true,
+      "negative_provider_pickup_receipts": [],
+      "reasons": [
+        "no_self_identified_crawler_fetch_observed",
+        "fresh_content_under_24h",
+        "indexnow_hash_pending"
+      ],
+      "recommended_actions": [
+        "verify_live_bytes_then_indexnow",
+        "promote_in_hot_discovery_queue",
+        "increase_internal_crosslinks_from_relevant_public_surfaces"
+      ]
+    },
+    {
+      "path": "/chum/answers/doors/browser-automation-api-0925c49aa4.json",
+      "product_key": null,
+      "score": 222,
+      "urgency": "strike_now",
+      "crawl_priority": 160,
+      "last_changed": "2026-10-06T16:42:20.155Z",
+      "last_observed_crawler_fetch": null,
+      "last_observed_crawler_family": null,
+      "indexnow_pending": true,
+      "negative_provider_pickup_receipts": [],
+      "reasons": [
+        "no_self_identified_crawler_fetch_observed",
+        "fresh_content_under_24h",
+        "indexnow_hash_pending"
+      ],
+      "recommended_actions": [
+        "verify_live_bytes_then_indexnow",
+        "promote_in_hot_discovery_queue",
+        "increase_internal_crosslinks_from_relevant_public_surfaces"
+      ]
+    },
+    {
+      "path": "/chum/answers/doors/brutally-critique-this-message-d550264762.json",
+      "product_key": null,
+      "score": 222,
+      "urgency": "strike_now",
+      "crawl_priority": 160,
+      "last_changed": "2026-10-06T16:42:20.155Z",
+      "last_observed_crawler_fetch": null,
+      "last_observed_crawler_family": null,
+      "indexnow_pending": true,
+      "negative_provider_pickup_receipts": [],
+      "reasons": [
+        "no_self_identified_crawler_fetch_observed",
+        "fresh_content_under_24h",
+        "indexnow_hash_pending"
+      ],
+      "recommended_actions": [
+        "verify_live_bytes_then_indexnow",
+        "promote_in_hot_discovery_queue",
+        "increase_internal_crosslinks_from_relevant_public_surfaces"
+      ]
+    },
+    {
+      "path": "/chum/answers/doors/build-a-lender-ready-deck-592e365c97.json",
+      "product_key": null,
+      "score": 222,
+      "urgency": "strike_now",
+      "crawl_priority": 160,
+      "last_changed": "2026-10-06T16:42:20.155Z",
+      "last_observed_crawler_fetch": null,
+      "last_observed_crawler_family": null,
+      "indexnow_pending": true,
+      "negative_provider_pickup_receipts": [],
+      "reasons": [
+        "no_self_identified_crawler_fetch_observed",
+        "fresh_content_under_24h",
+        "indexnow_hash_pending"
+      ],
+      "recommended_actions": [
+        "verify_live_bytes_then_indexnow",
+        "promote_in_hot_discovery_queue",
+        "increase_internal_crosslinks_from_relevant_public_surfaces"
+      ]
+    },
+    {
+      "path": "/chum/answers/doors/build-a-talent-profile-from-this-portfolio-613dec5ab1.json",
+      "product_key": null,
+      "score": 222,
+      "urgency": "strike_now",
+      "crawl_priority": 160,
+      "last_changed": "2026-10-06T16:42:20.155Z",
+      "last_observed_crawler_fetch": null,
+      "last_observed_crawler_family": null,
+      "indexnow_pending": true,
+      "negative_provider_pickup_receipts": [],
+      "reasons": [
+        "no_self_identified_crawler_fetch_observed",
+        "fresh_content_under_24h",
+        "indexnow_hash_pending"
+      ],
+      "recommended_actions": [
+        "verify_live_bytes_then_indexnow",
+        "promote_in_hot_discovery_queue",
+        "increase_internal_crosslinks_from_relevant_public_surfaces"
+      ]
+    },
+    {
+      "path": "/chum/answers/doors/build-me-a-business-website-47014a0bbb.json",
+      "product_key": null,
+      "score": 222,
+      "urgency": "strike_now",
+      "crawl_priority": 160,
+      "last_changed": "2026-10-06T16:42:20.155Z",
+      "last_observed_crawler_fetch": null,
+      "last_observed_crawler_family": null,
+      "indexnow_pending": true,
+      "negative_provider_pickup_receipts": [],
+      "reasons": [
+        "no_self_identified_crawler_fetch_observed",
+        "fresh_content_under_24h",
+        "indexnow_hash_pending"
+      ],
+      "recommended_actions": [
+        "verify_live_bytes_then_indexnow",
+        "promote_in_hot_discovery_queue",
+        "increase_internal_crosslinks_from_relevant_public_surfaces"
+      ]
+    },
+    {
+      "path": "/chum/answers/doors/build-me-an-evidence-brief-6b531cab64.json",
+      "product_key": null,
+      "score": 222,
+      "urgency": "strike_now",
+      "crawl_priority": 160,
+      "last_changed": "2026-10-06T16:42:20.155Z",
+      "last_observed_crawler_fetch": null,
+      "last_observed_crawler_family": null,
+      "indexnow_pending": true,
+      "negative_provider_pickup_receipts": [],
+      "reasons": [
+        "no_self_identified_crawler_fetch_observed",
+        "fresh_content_under_24h",
+        "indexnow_hash_pending"
+      ],
+      "recommended_actions": [
+        "verify_live_bytes_then_indexnow",
+        "promote_in_hot_discovery_queue",
+        "increase_internal_crosslinks_from_relevant_public_surfaces"
+      ]
+    },
+    {
+      "path": "/chum/answers/doors/business-account-security-d61002122d.json",
+      "product_key": null,
+      "score": 222,
+      "urgency": "strike_now",
+      "crawl_priority": 160,
+      "last_changed": "2026-10-06T16:42:20.155Z",
+      "last_observed_crawler_fetch": null,
+      "last_observed_crawler_family": null,
+      "indexnow_pending": true,
+      "negative_provider_pickup_receipts": [],
+      "reasons": [
+        "no_self_identified_crawler_fetch_observed",
+        "fresh_content_under_24h",
+        "indexnow_hash_pending"
+      ],
+      "recommended_actions": [
+        "verify_live_bytes_then_indexnow",
+        "promote_in_hot_discovery_queue",
+        "increase_internal_crosslinks_from_relevant_public_surfaces"
+      ]
+    },
+    {
+      "path": "/chum/answers/doors/business-connectivity-resilience-fd7009021f.json",
+      "product_key": null,
+      "score": 222,
+      "urgency": "strike_now",
+      "crawl_priority": 160,
+      "last_changed": "2026-10-06T16:42:20.155Z",
+      "last_observed_crawler_fetch": null,
+      "last_observed_crawler_family": null,
+      "indexnow_pending": true,
+      "negative_provider_pickup_receipts": [],
+      "reasons": [
+        "no_self_identified_crawler_fetch_observed",
+        "fresh_content_under_24h",
+        "indexnow_hash_pending"
+      ],
+      "recommended_actions": [
+        "verify_live_bytes_then_indexnow",
+        "promote_in_hot_discovery_queue",
+        "increase_internal_crosslinks_from_relevant_public_surfaces"
+      ]
+    },
+    {
+      "path": "/chum/answers/doors/business-continuity-and-safety-0babb51749.json",
+      "product_key": null,
+      "score": 222,
+      "urgency": "strike_now",
+      "crawl_priority": 160,
+      "last_changed": "2026-10-06T16:42:20.155Z",
+      "last_observed_crawler_fetch": null,
+      "last_observed_crawler_family": null,
+      "indexnow_pending": true,
+      "negative_provider_pickup_receipts": [],
+      "reasons": [
+        "no_self_identified_crawler_fetch_observed",
+        "fresh_content_under_24h",
+        "indexnow_hash_pending"
+      ],
+      "recommended_actions": [
+        "verify_live_bytes_then_indexnow",
+        "promote_in_hot_discovery_queue",
+        "increase_internal_crosslinks_from_relevant_public_surfaces"
+      ]
+    },
+    {
+      "path": "/chum/answers/doors/business-outage-plan-bd1f9b74ee.json",
+      "product_key": null,
+      "score": 222,
+      "urgency": "strike_now",
+      "crawl_priority": 160,
+      "last_changed": "2026-10-06T16:42:20.155Z",
+      "last_observed_crawler_fetch": null,
+      "last_observed_crawler_family": null,
+      "indexnow_pending": true,
+      "negative_provider_pickup_receipts": [],
+      "reasons": [
+        "no_self_identified_crawler_fetch_observed",
+        "fresh_content_under_24h",
+        "indexnow_hash_pending"
+      ],
+      "recommended_actions": [
+        "verify_live_bytes_then_indexnow",
+        "promote_in_hot_discovery_queue",
+        "increase_internal_crosslinks_from_relevant_public_surfaces"
+      ]
+    },
+    {
+      "path": "/chum/answers/doors/buy-event-promotion-785fc960f0.json",
+      "product_key": null,
+      "score": 222,
+      "urgency": "strike_now",
+      "crawl_priority": 160,
+      "last_changed": "2026-10-06T16:42:20.155Z",
+      "last_observed_crawler_fetch": null,
+      "last_observed_crawler_family": null,
+      "indexnow_pending": true,
+      "negative_provider_pickup_receipts": [],
+      "reasons": [
+        "no_self_identified_crawler_fetch_observed",
+        "fresh_content_under_24h",
+        "indexnow_hash_pending"
+      ],
+      "recommended_actions": [
+        "verify_live_bytes_then_indexnow",
+        "promote_in_hot_discovery_queue",
+        "increase_internal_crosslinks_from_relevant_public_surfaces"
+      ]
+    },
+    {
+      "path": "/chum/answers/doors/buy-more-runtime-for-this-yard-execution-f138b36c09.json",
+      "product_key": null,
+      "score": 222,
+      "urgency": "strike_now",
+      "crawl_priority": 160,
+      "last_changed": "2026-10-06T16:42:20.155Z",
+      "last_observed_crawler_fetch": null,
+      "last_observed_crawler_family": null,
+      "indexnow_pending": true,
+      "negative_provider_pickup_receipts": [],
+      "reasons": [
+        "no_self_identified_crawler_fetch_observed",
+        "fresh_content_under_24h",
+        "indexnow_hash_pending"
+      ],
+      "recommended_actions": [
+        "verify_live_bytes_then_indexnow",
+        "promote_in_hot_discovery_queue",
+        "increase_internal_crosslinks_from_relevant_public_surfaces"
+      ]
+    },
+    {
+      "path": "/chum/answers/doors/cdp-browser-control-6fbc285731.json",
+      "product_key": null,
+      "score": 222,
+      "urgency": "strike_now",
+      "crawl_priority": 160,
+      "last_changed": "2026-10-06T16:42:20.155Z",
+      "last_observed_crawler_fetch": null,
+      "last_observed_crawler_family": null,
+      "indexnow_pending": true,
+      "negative_provider_pickup_receipts": [],
+      "reasons": [
+        "no_self_identified_crawler_fetch_observed",
+        "fresh_content_under_24h",
+        "indexnow_hash_pending"
+      ],
+      "recommended_actions": [
+        "verify_live_bytes_then_indexnow",
+        "promote_in_hot_discovery_queue",
+        "increase_internal_crosslinks_from_relevant_public_surfaces"
+      ]
+    },
+    {
+      "path": "/chum/answers/doors/charging-site-economics-6092dd77f1.json",
+      "product_key": null,
+      "score": 222,
+      "urgency": "strike_now",
+      "crawl_priority": 160,
+      "last_changed": "2026-10-06T16:42:20.155Z",
+      "last_observed_crawler_fetch": null,
+      "last_observed_crawler_family": null,
+      "indexnow_pending": true,
+      "negative_provider_pickup_receipts": [],
+      "reasons": [
+        "no_self_identified_crawler_fetch_observed",
+        "fresh_content_under_24h",
+        "indexnow_hash_pending"
+      ],
+      "recommended_actions": [
+        "verify_live_bytes_then_indexnow",
+        "promote_in_hot_discovery_queue",
+        "increase_internal_crosslinks_from_relevant_public_surfaces"
+      ]
+    },
+    {
+      "path": "/chum/answers/doors/check-if-my-book-is-ready-for-kdp-465dd47ba7.json",
+      "product_key": null,
+      "score": 222,
+      "urgency": "strike_now",
+      "crawl_priority": 160,
+      "last_changed": "2026-10-06T16:42:20.155Z",
+      "last_observed_crawler_fetch": null,
+      "last_observed_crawler_family": null,
+      "indexnow_pending": true,
+      "negative_provider_pickup_receipts": [],
+      "reasons": [
+        "no_self_identified_crawler_fetch_observed",
+        "fresh_content_under_24h",
+        "indexnow_hash_pending"
+      ],
+      "recommended_actions": [
+        "verify_live_bytes_then_indexnow",
+        "promote_in_hot_discovery_queue",
+        "increase_internal_crosslinks_from_relevant_public_surfaces"
+      ]
+    },
+    {
+      "path": "/chum/answers/doors/check-my-local-seo-e8e838ec7c.json",
+      "product_key": null,
+      "score": 222,
+      "urgency": "strike_now",
+      "crawl_priority": 160,
+      "last_changed": "2026-10-06T16:42:20.155Z",
+      "last_observed_crawler_fetch": null,
+      "last_observed_crawler_family": null,
+      "indexnow_pending": true,
+      "negative_provider_pickup_receipts": [],
+      "reasons": [
+        "no_self_identified_crawler_fetch_observed",
+        "fresh_content_under_24h",
+        "indexnow_hash_pending"
+      ],
+      "recommended_actions": [
+        "verify_live_bytes_then_indexnow",
+        "promote_in_hot_discovery_queue",
+        "increase_internal_crosslinks_from_relevant_public_surfaces"
+      ]
+    },
+    {
+      "path": "/chum/answers/doors/check-my-resume-against-this-job-e3b72379fe.json",
+      "product_key": null,
+      "score": 222,
+      "urgency": "strike_now",
+      "crawl_priority": 160,
+      "last_changed": "2026-10-06T16:42:20.155Z",
+      "last_observed_crawler_fetch": null,
+      "last_observed_crawler_family": null,
+      "indexnow_pending": true,
+      "negative_provider_pickup_receipts": [],
+      "reasons": [
+        "no_self_identified_crawler_fetch_observed",
+        "fresh_content_under_24h",
+        "indexnow_hash_pending"
+      ],
+      "recommended_actions": [
+        "verify_live_bytes_then_indexnow",
+        "promote_in_hot_discovery_queue",
+        "increase_internal_crosslinks_from_relevant_public_surfaces"
+      ]
+    },
+    {
+      "path": "/chum/answers/doors/check-page-count-and-cover-dpi-512896a3dd.json",
+      "product_key": null,
+      "score": 222,
+      "urgency": "strike_now",
+      "crawl_priority": 160,
+      "last_changed": "2026-10-06T16:42:20.155Z",
+      "last_observed_crawler_fetch": null,
+      "last_observed_crawler_family": null,
+      "indexnow_pending": true,
+      "negative_provider_pickup_receipts": [],
+      "reasons": [
+        "no_self_identified_crawler_fetch_observed",
+        "fresh_content_under_24h",
+        "indexnow_hash_pending"
+      ],
+      "recommended_actions": [
+        "verify_live_bytes_then_indexnow",
+        "promote_in_hot_discovery_queue",
+        "increase_internal_crosslinks_from_relevant_public_surfaces"
+      ]
+    },
+    {
+      "path": "/chum/answers/doors/check-this-carrier-and-load-paperwork-ce9a5b3527.json",
+      "product_key": null,
+      "score": 222,
+      "urgency": "strike_now",
+      "crawl_priority": 160,
+      "last_changed": "2026-10-06T16:42:20.155Z",
+      "last_observed_crawler_fetch": null,
+      "last_observed_crawler_family": null,
+      "indexnow_pending": true,
+      "negative_provider_pickup_receipts": [],
+      "reasons": [
+        "no_self_identified_crawler_fetch_observed",
+        "fresh_content_under_24h",
+        "indexnow_hash_pending"
+      ],
+      "recommended_actions": [
+        "verify_live_bytes_then_indexnow",
+        "promote_in_hot_discovery_queue",
+        "increase_internal_crosslinks_from_relevant_public_surfaces"
+      ]
+    },
+    {
+      "path": "/chum/answers/doors/cloud-browser-for-ai-4217671a37.json",
+      "product_key": null,
+      "score": 222,
+      "urgency": "strike_now",
+      "crawl_priority": 160,
+      "last_changed": "2026-10-06T16:42:20.155Z",
+      "last_observed_crawler_fetch": null,
+      "last_observed_crawler_family": null,
+      "indexnow_pending": true,
+      "negative_provider_pickup_receipts": [],
+      "reasons": [
+        "no_self_identified_crawler_fetch_observed",
+        "fresh_content_under_24h",
+        "indexnow_hash_pending"
+      ],
+      "recommended_actions": [
+        "verify_live_bytes_then_indexnow",
+        "promote_in_hot_discovery_queue",
+        "increase_internal_crosslinks_from_relevant_public_surfaces"
+      ]
+    },
+    {
+      "path": "/chum/answers/doors/commercial-ev-site-report-f593e514df.json",
+      "product_key": null,
+      "score": 222,
+      "urgency": "strike_now",
+      "crawl_priority": 160,
+      "last_changed": "2026-10-06T16:42:20.155Z",
+      "last_observed_crawler_fetch": null,
+      "last_observed_crawler_family": null,
+      "indexnow_pending": true,
+      "negative_provider_pickup_receipts": [],
+      "reasons": [
+        "no_self_identified_crawler_fetch_observed",
+        "fresh_content_under_24h",
+        "indexnow_hash_pending"
+      ],
+      "recommended_actions": [
+        "verify_live_bytes_then_indexnow",
+        "promote_in_hot_discovery_queue",
+        "increase_internal_crosslinks_from_relevant_public_surfaces"
+      ]
+    },
+    {
+      "path": "/chum/answers/doors/compare-the-real-workflow-to-company-policy-d141bd010b.json",
+      "product_key": null,
+      "score": 222,
+      "urgency": "strike_now",
+      "crawl_priority": 160,
+      "last_changed": "2026-10-06T16:42:20.155Z",
+      "last_observed_crawler_fetch": null,
+      "last_observed_crawler_family": null,
+      "indexnow_pending": true,
+      "negative_provider_pickup_receipts": [],
+      "reasons": [
+        "no_self_identified_crawler_fetch_observed",
+        "fresh_content_under_24h",
+        "indexnow_hash_pending"
+      ],
+      "recommended_actions": [
+        "verify_live_bytes_then_indexnow",
+        "promote_in_hot_discovery_queue",
+        "increase_internal_crosslinks_from_relevant_public_surfaces"
+      ]
+    },
+    {
+      "path": "/chum/answers/doors/compare-these-countries-on-this-metric-14e53d7a85.json",
+      "product_key": null,
+      "score": 222,
+      "urgency": "strike_now",
+      "crawl_priority": 160,
+      "last_changed": "2026-10-06T16:42:20.155Z",
+      "last_observed_crawler_fetch": null,
+      "last_observed_crawler_family": null,
+      "indexnow_pending": true,
+      "negative_provider_pickup_receipts": [],
+      "reasons": [
+        "no_self_identified_crawler_fetch_observed",
+        "fresh_content_under_24h",
+        "indexnow_hash_pending"
+      ],
+      "recommended_actions": [
+        "verify_live_bytes_then_indexnow",
+        "promote_in_hot_discovery_queue",
+        "increase_internal_crosslinks_from_relevant_public_surfaces"
+      ]
+    },
+    {
+      "path": "/chum/answers/doors/compare-two-recordings-c44b889ea7.json",
+      "product_key": null,
+      "score": 222,
+      "urgency": "strike_now",
+      "crawl_priority": 160,
+      "last_changed": "2026-10-06T16:42:20.155Z",
+      "last_observed_crawler_fetch": null,
+      "last_observed_crawler_family": null,
+      "indexnow_pending": true,
+      "negative_provider_pickup_receipts": [],
+      "reasons": [
+        "no_self_identified_crawler_fetch_observed",
+        "fresh_content_under_24h",
+        "indexnow_hash_pending"
+      ],
+      "recommended_actions": [
+        "verify_live_bytes_then_indexnow",
+        "promote_in_hot_discovery_queue",
+        "increase_internal_crosslinks_from_relevant_public_surfaces"
+      ]
+    },
+    {
+      "path": "/chum/answers/doors/connect-our-business-systems-without-replacing-everything-4e80c745da.json",
+      "product_key": null,
+      "score": 222,
+      "urgency": "strike_now",
+      "crawl_priority": 160,
+      "last_changed": "2026-10-06T16:42:20.155Z",
+      "last_observed_crawler_fetch": null,
+      "last_observed_crawler_family": null,
+      "indexnow_pending": true,
+      "negative_provider_pickup_receipts": [],
+      "reasons": [
+        "no_self_identified_crawler_fetch_observed",
+        "fresh_content_under_24h",
+        "indexnow_hash_pending"
+      ],
+      "recommended_actions": [
+        "verify_live_bytes_then_indexnow",
+        "promote_in_hot_discovery_queue",
+        "increase_internal_crosslinks_from_relevant_public_surfaces"
+      ]
+    },
+    {
+      "path": "/chum/answers/doors/continuity-readiness-software-b3313dda80.json",
+      "product_key": null,
+      "score": 222,
+      "urgency": "strike_now",
+      "crawl_priority": 160,
+      "last_changed": "2026-10-06T16:42:20.155Z",
+      "last_observed_crawler_fetch": null,
+      "last_observed_crawler_family": null,
+      "indexnow_pending": true,
+      "negative_provider_pickup_receipts": [],
+      "reasons": [
+        "no_self_identified_crawler_fetch_observed",
+        "fresh_content_under_24h",
+        "indexnow_hash_pending"
+      ],
+      "recommended_actions": [
+        "verify_live_bytes_then_indexnow",
+        "promote_in_hot_discovery_queue",
+        "increase_internal_crosslinks_from_relevant_public_surfaces"
+      ]
+    },
+    {
+      "path": "/chum/answers/doors/country-benchmark-with-sources-04ac1dfc19.json",
+      "product_key": null,
+      "score": 222,
+      "urgency": "strike_now",
+      "crawl_priority": 160,
+      "last_changed": "2026-10-06T16:42:20.155Z",
+      "last_observed_crawler_fetch": null,
+      "last_observed_crawler_family": null,
+      "indexnow_pending": true,
+      "negative_provider_pickup_receipts": [],
+      "reasons": [
+        "no_self_identified_crawler_fetch_observed",
+        "fresh_content_under_24h",
+        "indexnow_hash_pending"
+      ],
+      "recommended_actions": [
+        "verify_live_bytes_then_indexnow",
+        "promote_in_hot_discovery_queue",
+        "increase_internal_crosslinks_from_relevant_public_surfaces"
+      ]
+    },
+    {
+      "path": "/chum/answers/doors/credit-builder-d667e52872.json",
+      "product_key": null,
+      "score": 222,
+      "urgency": "strike_now",
+      "crawl_priority": 160,
+      "last_changed": "2026-10-06T16:42:20.155Z",
+      "last_observed_crawler_fetch": null,
+      "last_observed_crawler_family": null,
+      "indexnow_pending": true,
+      "negative_provider_pickup_receipts": [],
+      "reasons": [
+        "no_self_identified_crawler_fetch_observed",
+        "fresh_content_under_24h",
+        "indexnow_hash_pending"
+      ],
+      "recommended_actions": [
+        "verify_live_bytes_then_indexnow",
+        "promote_in_hot_discovery_queue",
+        "increase_internal_crosslinks_from_relevant_public_surfaces"
+      ]
+    },
+    {
+      "path": "/chum/answers/doors/dedupe-our-vendor-list-safely-9edf25e4db.json",
+      "product_key": null,
+      "score": 222,
+      "urgency": "strike_now",
+      "crawl_priority": 160,
+      "last_changed": "2026-10-06T16:42:20.155Z",
+      "last_observed_crawler_fetch": null,
+      "last_observed_crawler_family": null,
+      "indexnow_pending": true,
+      "negative_provider_pickup_receipts": [],
+      "reasons": [
+        "no_self_identified_crawler_fetch_observed",
+        "fresh_content_under_24h",
+        "indexnow_hash_pending"
+      ],
+      "recommended_actions": [
+        "verify_live_bytes_then_indexnow",
+        "promote_in_hot_discovery_queue",
+        "increase_internal_crosslinks_from_relevant_public_surfaces"
+      ]
+    },
+    {
+      "path": "/chum/answers/doors/design-a-plan-to-close-these-data-gaps-454b5eb8ab.json",
+      "product_key": null,
+      "score": 222,
+      "urgency": "strike_now",
+      "crawl_priority": 160,
+      "last_changed": "2026-10-06T16:42:20.155Z",
+      "last_observed_crawler_fetch": null,
+      "last_observed_crawler_family": null,
+      "indexnow_pending": true,
+      "negative_provider_pickup_receipts": [],
+      "reasons": [
+        "no_self_identified_crawler_fetch_observed",
+        "fresh_content_under_24h",
+        "indexnow_hash_pending"
+      ],
+      "recommended_actions": [
+        "verify_live_bytes_then_indexnow",
+        "promote_in_hot_discovery_queue",
+        "increase_internal_crosslinks_from_relevant_public_surfaces"
+      ]
+    },
+    {
+      "path": "/chum/answers/doors/device-reconnect-visibility-edee3d926e.json",
+      "product_key": null,
+      "score": 222,
+      "urgency": "strike_now",
+      "crawl_priority": 160,
+      "last_changed": "2026-10-06T16:42:20.155Z",
+      "last_observed_crawler_fetch": null,
+      "last_observed_crawler_family": null,
+      "indexnow_pending": true,
+      "negative_provider_pickup_receipts": [],
+      "reasons": [
+        "no_self_identified_crawler_fetch_observed",
+        "fresh_content_under_24h",
+        "indexnow_hash_pending"
+      ],
+      "recommended_actions": [
+        "verify_live_bytes_then_indexnow",
+        "promote_in_hot_discovery_queue",
+        "increase_internal_crosslinks_from_relevant_public_surfaces"
+      ]
+    },
+    {
+      "path": "/chum/answers/doors/did-my-devices-reconnect-c4d116f491.json",
+      "product_key": null,
+      "score": 222,
+      "urgency": "strike_now",
+      "crawl_priority": 160,
+      "last_changed": "2026-10-06T16:42:20.155Z",
+      "last_observed_crawler_fetch": null,
+      "last_observed_crawler_family": null,
+      "indexnow_pending": true,
+      "negative_provider_pickup_receipts": [],
+      "reasons": [
+        "no_self_identified_crawler_fetch_observed",
+        "fresh_content_under_24h",
+        "indexnow_hash_pending"
+      ],
+      "recommended_actions": [
+        "verify_live_bytes_then_indexnow",
+        "promote_in_hot_discovery_queue",
+        "increase_internal_crosslinks_from_relevant_public_surfaces"
+      ]
+    },
+    {
+      "path": "/chum/answers/doors/do-a-resilience-investigation-227f8bd16b.json",
+      "product_key": null,
+      "score": 222,
+      "urgency": "strike_now",
+      "crawl_priority": 160,
+      "last_changed": "2026-10-06T16:42:20.155Z",
+      "last_observed_crawler_fetch": null,
+      "last_observed_crawler_family": null,
+      "indexnow_pending": true,
+      "negative_provider_pickup_receipts": [],
+      "reasons": [
+        "no_self_identified_crawler_fetch_observed",
+        "fresh_content_under_24h",
+        "indexnow_hash_pending"
+      ],
+      "recommended_actions": [
+        "verify_live_bytes_then_indexnow",
+        "promote_in_hot_discovery_queue",
+        "increase_internal_crosslinks_from_relevant_public_surfaces"
+      ]
+    },
+    {
+      "path": "/chum/answers/doors/escape-vendor-lock-in-9bf9834ecc.json",
+      "product_key": null,
+      "score": 222,
+      "urgency": "strike_now",
+      "crawl_priority": 160,
+      "last_changed": "2026-10-06T16:42:20.155Z",
+      "last_observed_crawler_fetch": null,
+      "last_observed_crawler_family": null,
+      "indexnow_pending": true,
+      "negative_provider_pickup_receipts": [],
+      "reasons": [
+        "no_self_identified_crawler_fetch_observed",
+        "fresh_content_under_24h",
+        "indexnow_hash_pending"
+      ],
+      "recommended_actions": [
+        "verify_live_bytes_then_indexnow",
+        "promote_in_hot_discovery_queue",
+        "increase_internal_crosslinks_from_relevant_public_surfaces"
+      ]
+    },
+    {
+      "path": "/chum/answers/doors/ev-charger-competition-around-this-address-33f3c50a03.json",
+      "product_key": null,
+      "score": 222,
+      "urgency": "strike_now",
+      "crawl_priority": 160,
+      "last_changed": "2026-10-06T16:42:20.155Z",
+      "last_observed_crawler_fetch": null,
+      "last_observed_crawler_family": null,
+      "indexnow_pending": true,
+      "negative_provider_pickup_receipts": [],
+      "reasons": [
+        "no_self_identified_crawler_fetch_observed",
+        "fresh_content_under_24h",
+        "indexnow_hash_pending"
+      ],
+      "recommended_actions": [
+        "verify_live_bytes_then_indexnow",
+        "promote_in_hot_discovery_queue",
+        "increase_internal_crosslinks_from_relevant_public_surfaces"
+      ]
+    },
+    {
+      "path": "/chum/answers/doors/ev-charger-competition-near-this-address-aa69cb1075.json",
+      "product_key": null,
+      "score": 222,
+      "urgency": "strike_now",
+      "crawl_priority": 160,
+      "last_changed": "2026-10-06T16:42:20.155Z",
+      "last_observed_crawler_fetch": null,
+      "last_observed_crawler_family": null,
+      "indexnow_pending": true,
+      "negative_provider_pickup_receipts": [],
+      "reasons": [
+        "no_self_identified_crawler_fetch_observed",
+        "fresh_content_under_24h",
+        "indexnow_hash_pending"
+      ],
+      "recommended_actions": [
+        "verify_live_bytes_then_indexnow",
+        "promote_in_hot_discovery_queue",
+        "increase_internal_crosslinks_from_relevant_public_surfaces"
+      ]
+    },
+    {
+      "path": "/chum/answers/doors/ev-charger-feasibility-by-address-8a81d21c84.json",
+      "product_key": null,
+      "score": 222,
+      "urgency": "strike_now",
+      "crawl_priority": 160,
+      "last_changed": "2026-10-06T16:42:20.155Z",
+      "last_observed_crawler_fetch": null,
+      "last_observed_crawler_family": null,
+      "indexnow_pending": true,
+      "negative_provider_pickup_receipts": [],
+      "reasons": [
+        "no_self_identified_crawler_fetch_observed",
+        "fresh_content_under_24h",
+        "indexnow_hash_pending"
+      ],
+      "recommended_actions": [
+        "verify_live_bytes_then_indexnow",
+        "promote_in_hot_discovery_queue",
+        "increase_internal_crosslinks_from_relevant_public_surfaces"
+      ]
+    },
+    {
+      "path": "/chum/answers/doors/ev-charger-investment-report-ed6fd3f23a.json",
+      "product_key": null,
+      "score": 222,
+      "urgency": "strike_now",
+      "crawl_priority": 160,
+      "last_changed": "2026-10-06T16:42:20.155Z",
+      "last_observed_crawler_fetch": null,
+      "last_observed_crawler_family": null,
+      "indexnow_pending": true,
+      "negative_provider_pickup_receipts": [],
+      "reasons": [
+        "no_self_identified_crawler_fetch_observed",
+        "fresh_content_under_24h",
+        "indexnow_hash_pending"
+      ],
+      "recommended_actions": [
+        "verify_live_bytes_then_indexnow",
+        "promote_in_hot_discovery_queue",
+        "increase_internal_crosslinks_from_relevant_public_surfaces"
+      ]
+    },
+    {
+      "path": "/chum/answers/doors/ev-charger-site-analysis-fc320bee89.json",
+      "product_key": null,
+      "score": 222,
+      "urgency": "strike_now",
+      "crawl_priority": 160,
+      "last_changed": "2026-10-06T16:42:20.155Z",
+      "last_observed_crawler_fetch": null,
+      "last_observed_crawler_family": null,
+      "indexnow_pending": true,
+      "negative_provider_pickup_receipts": [],
+      "reasons": [
+        "no_self_identified_crawler_fetch_observed",
+        "fresh_content_under_24h",
+        "indexnow_hash_pending"
+      ],
+      "recommended_actions": [
+        "verify_live_bytes_then_indexnow",
+        "promote_in_hot_discovery_queue",
+        "increase_internal_crosslinks_from_relevant_public_surfaces"
+      ]
+    },
+    {
+      "path": "/chum/answers/doors/ev-charging-demand-near-this-property-76a21ea75b.json",
+      "product_key": null,
+      "score": 222,
+      "urgency": "strike_now",
+      "crawl_priority": 160,
+      "last_changed": "2026-10-06T16:42:20.155Z",
+      "last_observed_crawler_fetch": null,
+      "last_observed_crawler_family": null,
+      "indexnow_pending": true,
+      "negative_provider_pickup_receipts": [],
+      "reasons": [
+        "no_self_identified_crawler_fetch_observed",
+        "fresh_content_under_24h",
+        "indexnow_hash_pending"
+      ],
+      "recommended_actions": [
+        "verify_live_bytes_then_indexnow",
+        "promote_in_hot_discovery_queue",
+        "increase_internal_crosslinks_from_relevant_public_surfaces"
+      ]
+    },
+    {
+      "path": "/chum/answers/doors/ev-charging-diligence-91e2eec236.json",
+      "product_key": null,
+      "score": 222,
+      "urgency": "strike_now",
+      "crawl_priority": 160,
+      "last_changed": "2026-10-06T16:42:20.155Z",
+      "last_observed_crawler_fetch": null,
+      "last_observed_crawler_family": null,
+      "indexnow_pending": true,
+      "negative_provider_pickup_receipts": [],
+      "reasons": [
+        "no_self_identified_crawler_fetch_observed",
+        "fresh_content_under_24h",
+        "indexnow_hash_pending"
+      ],
+      "recommended_actions": [
+        "verify_live_bytes_then_indexnow",
+        "promote_in_hot_discovery_queue",
+        "increase_internal_crosslinks_from_relevant_public_surfaces"
+      ]
+    },
+    {
+      "path": "/chum/answers/doors/ev-charging-feasibility-by-address-734eac6eee.json",
+      "product_key": null,
+      "score": 222,
+      "urgency": "strike_now",
+      "crawl_priority": 160,
+      "last_changed": "2026-10-06T16:42:20.155Z",
+      "last_observed_crawler_fetch": null,
+      "last_observed_crawler_family": null,
+      "indexnow_pending": true,
+      "negative_provider_pickup_receipts": [],
+      "reasons": [
+        "no_self_identified_crawler_fetch_observed",
+        "fresh_content_under_24h",
+        "indexnow_hash_pending"
+      ],
+      "recommended_actions": [
+        "verify_live_bytes_then_indexnow",
+        "promote_in_hot_discovery_queue",
+        "increase_internal_crosslinks_from_relevant_public_surfaces"
+      ]
+    },
+    {
+      "path": "/chum/answers/doors/ev-charging-incentives-for-this-site-76fa0b5a6c.json",
+      "product_key": null,
+      "score": 222,
+      "urgency": "strike_now",
+      "crawl_priority": 160,
+      "last_changed": "2026-10-06T16:42:20.155Z",
+      "last_observed_crawler_fetch": null,
+      "last_observed_crawler_family": null,
+      "indexnow_pending": true,
+      "negative_provider_pickup_receipts": [],
+      "reasons": [
+        "no_self_identified_crawler_fetch_observed",
+        "fresh_content_under_24h",
+        "indexnow_hash_pending"
+      ],
+      "recommended_actions": [
+        "verify_live_bytes_then_indexnow",
+        "promote_in_hot_discovery_queue",
+        "increase_internal_crosslinks_from_relevant_public_surfaces"
+      ]
+    },
+    {
+      "path": "/chum/answers/doors/ev-charging-opportunity-report-43ed1d1e31.json",
+      "product_key": null,
+      "score": 222,
+      "urgency": "strike_now",
+      "crawl_priority": 160,
+      "last_changed": "2026-10-06T16:42:20.155Z",
+      "last_observed_crawler_fetch": null,
+      "last_observed_crawler_family": null,
+      "indexnow_pending": true,
+      "negative_provider_pickup_receipts": [],
+      "reasons": [
+        "no_self_identified_crawler_fetch_observed",
+        "fresh_content_under_24h",
+        "indexnow_hash_pending"
+      ],
+      "recommended_actions": [
+        "verify_live_bytes_then_indexnow",
+        "promote_in_hot_discovery_queue",
+        "increase_internal_crosslinks_from_relevant_public_surfaces"
+      ]
+    },
+    {
+      "path": "/chum/answers/doors/ev-charging-roi-for-this-property-23181c0dbc.json",
+      "product_key": null,
+      "score": 222,
+      "urgency": "strike_now",
+      "crawl_priority": 160,
+      "last_changed": "2026-10-06T16:42:20.155Z",
+      "last_observed_crawler_fetch": null,
+      "last_observed_crawler_family": null,
+      "indexnow_pending": true,
+      "negative_provider_pickup_receipts": [],
+      "reasons": [
+        "no_self_identified_crawler_fetch_observed",
+        "fresh_content_under_24h",
+        "indexnow_hash_pending"
+      ],
+      "recommended_actions": [
+        "verify_live_bytes_then_indexnow",
+        "promote_in_hot_discovery_queue",
+        "increase_internal_crosslinks_from_relevant_public_surfaces"
+      ]
+    },
+    {
+      "path": "/chum/answers/doors/ev-charging-site-analysis-by-address-1e6ee8e9ee.json",
+      "product_key": null,
+      "score": 222,
+      "urgency": "strike_now",
+      "crawl_priority": 160,
+      "last_changed": "2026-10-06T16:42:20.155Z",
+      "last_observed_crawler_fetch": null,
+      "last_observed_crawler_family": null,
+      "indexnow_pending": true,
+      "negative_provider_pickup_receipts": [],
+      "reasons": [
+        "no_self_identified_crawler_fetch_observed",
+        "fresh_content_under_24h",
+        "indexnow_hash_pending"
+      ],
+      "recommended_actions": [
+        "verify_live_bytes_then_indexnow",
+        "promote_in_hot_discovery_queue",
+        "increase_internal_crosslinks_from_relevant_public_surfaces"
+      ]
+    },
+    {
+      "path": "/chum/answers/doors/evaluate-this-address-for-ev-charging-c676bc6509.json",
+      "product_key": null,
+      "score": 222,
+      "urgency": "strike_now",
+      "crawl_priority": 160,
+      "last_changed": "2026-10-06T16:42:20.155Z",
+      "last_observed_crawler_fetch": null,
+      "last_observed_crawler_family": null,
+      "indexnow_pending": true,
+      "negative_provider_pickup_receipts": [],
+      "reasons": [
+        "no_self_identified_crawler_fetch_observed",
+        "fresh_content_under_24h",
+        "indexnow_hash_pending"
+      ],
+      "recommended_actions": [
+        "verify_live_bytes_then_indexnow",
+        "promote_in_hot_discovery_queue",
+        "increase_internal_crosslinks_from_relevant_public_surfaces"
+      ]
+    },
+    {
+      "path": "/chum/answers/doors/evaluate-this-candidate-from-the-evidence-1a2808f3be.json",
+      "product_key": null,
+      "score": 222,
+      "urgency": "strike_now",
+      "crawl_priority": 160,
+      "last_changed": "2026-10-06T16:42:20.155Z",
+      "last_observed_crawler_fetch": null,
+      "last_observed_crawler_family": null,
+      "indexnow_pending": true,
+      "negative_provider_pickup_receipts": [],
+      "reasons": [
+        "no_self_identified_crawler_fetch_observed",
+        "fresh_content_under_24h",
+        "indexnow_hash_pending"
+      ],
+      "recommended_actions": [
+        "verify_live_bytes_then_indexnow",
+        "promote_in_hot_discovery_queue",
+        "increase_internal_crosslinks_from_relevant_public_surfaces"
+      ]
+    },
+    {
+      "path": "/chum/answers/doors/evercraft-network-membership-861ace178a.json",
+      "product_key": null,
+      "score": 222,
+      "urgency": "strike_now",
+      "crawl_priority": 160,
+      "last_changed": "2026-10-06T16:42:20.155Z",
+      "last_observed_crawler_fetch": null,
+      "last_observed_crawler_family": null,
+      "indexnow_pending": true,
+      "negative_provider_pickup_receipts": [],
+      "reasons": [
+        "no_self_identified_crawler_fetch_observed",
+        "fresh_content_under_24h",
+        "indexnow_hash_pending"
+      ],
+      "recommended_actions": [
+        "verify_live_bytes_then_indexnow",
+        "promote_in_hot_discovery_queue",
+        "increase_internal_crosslinks_from_relevant_public_surfaces"
+      ]
+    },
+    {
+      "path": "/chum/answers/doors/evidence-timeline-review-2e05014564.json",
+      "product_key": null,
+      "score": 222,
+      "urgency": "strike_now",
+      "crawl_priority": 160,
+      "last_changed": "2026-10-06T16:42:20.155Z",
+      "last_observed_crawler_fetch": null,
+      "last_observed_crawler_family": null,
+      "indexnow_pending": true,
+      "negative_provider_pickup_receipts": [],
+      "reasons": [
+        "no_self_identified_crawler_fetch_observed",
+        "fresh_content_under_24h",
+        "indexnow_hash_pending"
+      ],
+      "recommended_actions": [
+        "verify_live_bytes_then_indexnow",
+        "promote_in_hot_discovery_queue",
+        "increase_internal_crosslinks_from_relevant_public_surfaces"
+      ]
+    },
+    {
+      "path": "/chum/answers/doors/export-an-ai-built-app-5cdc62676d.json",
+      "product_key": null,
+      "score": 222,
+      "urgency": "strike_now",
+      "crawl_priority": 160,
+      "last_changed": "2026-10-06T16:42:20.155Z",
+      "last_observed_crawler_fetch": null,
+      "last_observed_crawler_family": null,
+      "indexnow_pending": true,
+      "negative_provider_pickup_receipts": [],
+      "reasons": [
+        "no_self_identified_crawler_fetch_observed",
+        "fresh_content_under_24h",
+        "indexnow_hash_pending"
+      ],
+      "recommended_actions": [
+        "verify_live_bytes_then_indexnow",
+        "promote_in_hot_discovery_queue",
+        "increase_internal_crosslinks_from_relevant_public_surfaces"
+      ]
+    },
+    {
+      "path": "/chum/answers/doors/extend-this-bounded-build-run-0e2e4d2c1f.json",
+      "product_key": null,
+      "score": 222,
+      "urgency": "strike_now",
+      "crawl_priority": 160,
+      "last_changed": "2026-10-06T16:42:20.155Z",
+      "last_observed_crawler_fetch": null,
+      "last_observed_crawler_family": null,
+      "indexnow_pending": true,
+      "negative_provider_pickup_receipts": [],
+      "reasons": [
+        "no_self_identified_crawler_fetch_observed",
+        "fresh_content_under_24h",
+        "indexnow_hash_pending"
+      ],
+      "recommended_actions": [
+        "verify_live_bytes_then_indexnow",
+        "promote_in_hot_discovery_queue",
+        "increase_internal_crosslinks_from_relevant_public_surfaces"
+      ]
+    },
+    {
+      "path": "/chum/answers/doors/family-check-in-safety-90b9db7865.json",
+      "product_key": null,
+      "score": 222,
+      "urgency": "strike_now",
+      "crawl_priority": 160,
+      "last_changed": "2026-10-06T16:42:20.155Z",
+      "last_observed_crawler_fetch": null,
+      "last_observed_crawler_family": null,
+      "indexnow_pending": true,
+      "negative_provider_pickup_receipts": [],
+      "reasons": [
+        "no_self_identified_crawler_fetch_observed",
+        "fresh_content_under_24h",
+        "indexnow_hash_pending"
+      ],
+      "recommended_actions": [
+        "verify_live_bytes_then_indexnow",
+        "promote_in_hot_discovery_queue",
+        "increase_internal_crosslinks_from_relevant_public_surfaces"
+      ]
+    },
+    {
+      "path": "/chum/answers/doors/feature-my-venue-on-eventwave-91a643633e.json",
+      "product_key": null,
+      "score": 222,
+      "urgency": "strike_now",
+      "crawl_priority": 160,
+      "last_changed": "2026-10-06T16:42:20.155Z",
+      "last_observed_crawler_fetch": null,
+      "last_observed_crawler_family": null,
+      "indexnow_pending": true,
+      "negative_provider_pickup_receipts": [],
+      "reasons": [
+        "no_self_identified_crawler_fetch_observed",
+        "fresh_content_under_24h",
+        "indexnow_hash_pending"
+      ],
+      "recommended_actions": [
+        "verify_live_bytes_then_indexnow",
+        "promote_in_hot_discovery_queue",
+        "increase_internal_crosslinks_from_relevant_public_surfaces"
+      ]
+    },
+    {
+      "path": "/chum/answers/doors/fetch-a-webpage-for-my-ai-agent-fc5f02747b.json",
+      "product_key": null,
+      "score": 222,
+      "urgency": "strike_now",
+      "crawl_priority": 160,
+      "last_changed": "2026-10-06T16:42:20.155Z",
+      "last_observed_crawler_fetch": null,
+      "last_observed_crawler_family": null,
+      "indexnow_pending": true,
+      "negative_provider_pickup_receipts": [],
+      "reasons": [
+        "no_self_identified_crawler_fetch_observed",
+        "fresh_content_under_24h",
+        "indexnow_hash_pending"
+      ],
+      "recommended_actions": [
+        "verify_live_bytes_then_indexnow",
+        "promote_in_hot_discovery_queue",
+        "increase_internal_crosslinks_from_relevant_public_surfaces"
+      ]
+    },
+    {
+      "path": "/chum/answers/doors/find-a-discontinued-part-5646da09bb.json",
+      "product_key": null,
+      "score": 222,
+      "urgency": "strike_now",
+      "crawl_priority": 160,
+      "last_changed": "2026-10-06T16:42:20.155Z",
+      "last_observed_crawler_fetch": null,
+      "last_observed_crawler_family": null,
+      "indexnow_pending": true,
+      "negative_provider_pickup_receipts": [],
+      "reasons": [
+        "no_self_identified_crawler_fetch_observed",
+        "fresh_content_under_24h",
+        "indexnow_hash_pending"
+      ],
+      "recommended_actions": [
+        "verify_live_bytes_then_indexnow",
+        "promote_in_hot_discovery_queue",
+        "increase_internal_crosslinks_from_relevant_public_surfaces"
+      ]
+    },
+    {
+      "path": "/chum/answers/doors/find-a-donor-or-salvage-part-310843faf9.json",
+      "product_key": null,
+      "score": 222,
+      "urgency": "strike_now",
+      "crawl_priority": 160,
+      "last_changed": "2026-10-06T16:42:20.155Z",
+      "last_observed_crawler_fetch": null,
+      "last_observed_crawler_family": null,
+      "indexnow_pending": true,
+      "negative_provider_pickup_receipts": [],
+      "reasons": [
+        "no_self_identified_crawler_fetch_observed",
+        "fresh_content_under_24h",
+        "indexnow_hash_pending"
+      ],
+      "recommended_actions": [
+        "verify_live_bytes_then_indexnow",
+        "promote_in_hot_discovery_queue",
+        "increase_internal_crosslinks_from_relevant_public_surfaces"
+      ]
+    },
+    {
+      "path": "/chum/answers/doors/find-a-hard-to-source-part-78dcd37ecc.json",
+      "product_key": null,
+      "score": 222,
+      "urgency": "strike_now",
+      "crawl_priority": 160,
+      "last_changed": "2026-10-06T16:42:20.155Z",
+      "last_observed_crawler_fetch": null,
+      "last_observed_crawler_family": null,
+      "indexnow_pending": true,
+      "negative_provider_pickup_receipts": [],
+      "reasons": [
+        "no_self_identified_crawler_fetch_observed",
+        "fresh_content_under_24h",
+        "indexnow_hash_pending"
+      ],
+      "recommended_actions": [
+        "verify_live_bytes_then_indexnow",
+        "promote_in_hot_discovery_queue",
+        "increase_internal_crosslinks_from_relevant_public_surfaces"
+      ]
+    },
+    {
+      "path": "/chum/answers/doors/find-bottlenecks-in-this-business-workflow-55d27040ce.json",
+      "product_key": null,
+      "score": 222,
+      "urgency": "strike_now",
+      "crawl_priority": 160,
+      "last_changed": "2026-10-06T16:42:20.155Z",
+      "last_observed_crawler_fetch": null,
+      "last_observed_crawler_family": null,
+      "indexnow_pending": true,
+      "negative_provider_pickup_receipts": [],
+      "reasons": [
+        "no_self_identified_crawler_fetch_observed",
+        "fresh_content_under_24h",
+        "indexnow_hash_pending"
+      ],
+      "recommended_actions": [
+        "verify_live_bytes_then_indexnow",
+        "promote_in_hot_discovery_queue",
+        "increase_internal_crosslinks_from_relevant_public_surfaces"
+      ]
+    },
+    {
+      "path": "/chum/answers/doors/find-capital-options-for-this-project-9a78204138.json",
+      "product_key": null,
+      "score": 222,
+      "urgency": "strike_now",
+      "crawl_priority": 160,
+      "last_changed": "2026-10-06T16:42:20.155Z",
+      "last_observed_crawler_fetch": null,
+      "last_observed_crawler_family": null,
+      "indexnow_pending": true,
+      "negative_provider_pickup_receipts": [],
+      "reasons": [
+        "no_self_identified_crawler_fetch_observed",
+        "fresh_content_under_24h",
+        "indexnow_hash_pending"
+      ],
+      "recommended_actions": [
+        "verify_live_bytes_then_indexnow",
+        "promote_in_hot_discovery_queue",
+        "increase_internal_crosslinks_from_relevant_public_surfaces"
+      ]
+    },
+    {
+      "path": "/chum/answers/doors/find-conflicts-in-our-business-exports-f352d58cb0.json",
+      "product_key": null,
+      "score": 222,
+      "urgency": "strike_now",
+      "crawl_priority": 160,
+      "last_changed": "2026-10-06T16:42:20.155Z",
+      "last_observed_crawler_fetch": null,
+      "last_observed_crawler_family": null,
+      "indexnow_pending": true,
+      "negative_provider_pickup_receipts": [],
+      "reasons": [
+        "no_self_identified_crawler_fetch_observed",
+        "fresh_content_under_24h",
+        "indexnow_hash_pending"
+      ],
+      "recommended_actions": [
+        "verify_live_bytes_then_indexnow",
+        "promote_in_hot_discovery_queue",
+        "increase_internal_crosslinks_from_relevant_public_surfaces"
+      ]
+    },
+    {
+      "path": "/chum/answers/doors/find-conversion-problems-on-my-website-071e47ffaf.json",
+      "product_key": null,
+      "score": 222,
+      "urgency": "strike_now",
+      "crawl_priority": 160,
+      "last_changed": "2026-10-06T16:42:20.155Z",
+      "last_observed_crawler_fetch": null,
+      "last_observed_crawler_family": null,
+      "indexnow_pending": true,
+      "negative_provider_pickup_receipts": [],
+      "reasons": [
+        "no_self_identified_crawler_fetch_observed",
+        "fresh_content_under_24h",
+        "indexnow_hash_pending"
+      ],
+      "recommended_actions": [
+        "verify_live_bytes_then_indexnow",
+        "promote_in_hot_discovery_queue",
+        "increase_internal_crosslinks_from_relevant_public_surfaces"
+      ]
+    },
+    {
+      "path": "/chum/answers/doors/find-ev-charging-opportunities-in-this-market-c01f603871.json",
+      "product_key": null,
+      "score": 222,
+      "urgency": "strike_now",
+      "crawl_priority": 160,
+      "last_changed": "2026-10-06T16:42:20.155Z",
+      "last_observed_crawler_fetch": null,
+      "last_observed_crawler_family": null,
+      "indexnow_pending": true,
+      "negative_provider_pickup_receipts": [],
+      "reasons": [
+        "no_self_identified_crawler_fetch_observed",
+        "fresh_content_under_24h",
+        "indexnow_hash_pending"
+      ],
+      "recommended_actions": [
+        "verify_live_bytes_then_indexnow",
+        "promote_in_hot_discovery_queue",
+        "increase_internal_crosslinks_from_relevant_public_surfaces"
+      ]
+    },
+    {
+      "path": "/chum/answers/doors/find-gaps-in-this-candidate-s-proof-2c2dbfdfec.json",
+      "product_key": null,
+      "score": 222,
+      "urgency": "strike_now",
+      "crawl_priority": 160,
+      "last_changed": "2026-10-06T16:42:20.155Z",
+      "last_observed_crawler_fetch": null,
+      "last_observed_crawler_family": null,
+      "indexnow_pending": true,
+      "negative_provider_pickup_receipts": [],
+      "reasons": [
+        "no_self_identified_crawler_fetch_observed",
+        "fresh_content_under_24h",
+        "indexnow_hash_pending"
+      ],
+      "recommended_actions": [
+        "verify_live_bytes_then_indexnow",
+        "promote_in_hot_discovery_queue",
+        "increase_internal_crosslinks_from_relevant_public_surfaces"
+      ]
+    },
+    {
+      "path": "/chum/answers/doors/find-missing-pod-or-rate-mismatches-d7a7e22349.json",
+      "product_key": null,
+      "score": 222,
+      "urgency": "strike_now",
+      "crawl_priority": 160,
+      "last_changed": "2026-10-06T16:42:20.155Z",
+      "last_observed_crawler_fetch": null,
+      "last_observed_crawler_family": null,
+      "indexnow_pending": true,
+      "negative_provider_pickup_receipts": [],
+      "reasons": [
+        "no_self_identified_crawler_fetch_observed",
+        "fresh_content_under_24h",
+        "indexnow_hash_pending"
+      ],
+      "recommended_actions": [
+        "verify_live_bytes_then_indexnow",
+        "promote_in_hot_discovery_queue",
+        "increase_internal_crosslinks_from_relevant_public_surfaces"
+      ]
+    },
+    {
+      "path": "/chum/answers/doors/find-missing-purchasing-approvals-84e71137c4.json",
+      "product_key": null,
+      "score": 222,
+      "urgency": "strike_now",
+      "crawl_priority": 160,
+      "last_changed": "2026-10-06T16:42:20.155Z",
+      "last_observed_crawler_fetch": null,
+      "last_observed_crawler_family": null,
+      "indexnow_pending": true,
+      "negative_provider_pickup_receipts": [],
+      "reasons": [
+        "no_self_identified_crawler_fetch_observed",
+        "fresh_content_under_24h",
+        "indexnow_hash_pending"
+      ],
+      "recommended_actions": [
+        "verify_live_bytes_then_indexnow",
+        "promote_in_hot_discovery_queue",
+        "increase_internal_crosslinks_from_relevant_public_surfaces"
+      ]
+    },
+    {
+      "path": "/chum/answers/doors/find-obsolete-parts-for-customers-a63d0789ef.json",
+      "product_key": null,
+      "score": 222,
+      "urgency": "strike_now",
+      "crawl_priority": 160,
+      "last_changed": "2026-10-06T16:42:20.155Z",
+      "last_observed_crawler_fetch": null,
+      "last_observed_crawler_family": null,
+      "indexnow_pending": true,
+      "negative_provider_pickup_receipts": [],
+      "reasons": [
+        "no_self_identified_crawler_fetch_observed",
+        "fresh_content_under_24h",
+        "indexnow_hash_pending"
+      ],
+      "recommended_actions": [
+        "verify_live_bytes_then_indexnow",
+        "promote_in_hot_discovery_queue",
+        "increase_internal_crosslinks_from_relevant_public_surfaces"
+      ]
+    },
+    {
+      "path": "/chum/answers/doors/find-provenance-problems-in-this-data-57334a96e5.json",
+      "product_key": null,
+      "score": 222,
+      "urgency": "strike_now",
+      "crawl_priority": 160,
+      "last_changed": "2026-10-06T16:42:20.155Z",
+      "last_observed_crawler_fetch": null,
+      "last_observed_crawler_family": null,
+      "indexnow_pending": true,
+      "negative_provider_pickup_receipts": [],
+      "reasons": [
+        "no_self_identified_crawler_fetch_observed",
+        "fresh_content_under_24h",
+        "indexnow_hash_pending"
+      ],
+      "recommended_actions": [
+        "verify_live_bytes_then_indexnow",
+        "promote_in_hot_discovery_queue",
+        "increase_internal_crosslinks_from_relevant_public_surfaces"
+      ]
+    },
+    {
       "path": "/chum/answers/doors/find-the-smallest-raven-safety-capability-without-buying-the-full-suite-or-hardwar-0ee29c0618.json",
       "product_key": null,
       "score": 222,
@@ -10357,27 +12447,6 @@
       "urgency": "strike_now",
       "crawl_priority": 160,
       "last_changed": "2026-10-01T05:00:27.354Z",
-      "last_observed_crawler_fetch": null,
-      "last_observed_crawler_family": null,
-      "indexnow_pending": true,
-      "negative_provider_pickup_receipts": [],
-      "reasons": [
-        "no_self_identified_crawler_fetch_observed",
-        "indexnow_hash_pending"
-      ],
-      "recommended_actions": [
-        "verify_live_bytes_then_indexnow",
-        "promote_in_hot_discovery_queue",
-        "increase_internal_crosslinks_from_relevant_public_surfaces"
-      ]
-    },
-    {
-      "path": "/chum/answers/doors/account-takeover-protection-6a5072fc31.json",
-      "product_key": null,
-      "score": 207,
-      "urgency": "strike_now",
-      "crawl_priority": 160,
-      "last_changed": "2026-10-02T17:01:08.152Z",
       "last_observed_crawler_fetch": null,
       "last_observed_crawler_family": null,
       "indexnow_pending": true,
@@ -10498,54 +12567,12 @@
       ]
     },
     {
-      "path": "/chum/answers/doors/add-idempotency-and-receipts-to-ai-business-actions-036bb2d652.json",
-      "product_key": null,
-      "score": 207,
-      "urgency": "strike_now",
-      "crawl_priority": 160,
-      "last_changed": "2026-10-02T17:01:08.152Z",
-      "last_observed_crawler_fetch": null,
-      "last_observed_crawler_family": null,
-      "indexnow_pending": true,
-      "negative_provider_pickup_receipts": [],
-      "reasons": [
-        "no_self_identified_crawler_fetch_observed",
-        "indexnow_hash_pending"
-      ],
-      "recommended_actions": [
-        "verify_live_bytes_then_indexnow",
-        "promote_in_hot_discovery_queue",
-        "increase_internal_crosslinks_from_relevant_public_surfaces"
-      ]
-    },
-    {
       "path": "/chum/answers/doors/add-idempotency-and-receipts-to-ai-business-actions-036bb2d652/",
       "product_key": null,
       "score": 207,
       "urgency": "strike_now",
       "crawl_priority": 160,
       "last_changed": "2026-09-25T07:08:03.584Z",
-      "last_observed_crawler_fetch": null,
-      "last_observed_crawler_family": null,
-      "indexnow_pending": true,
-      "negative_provider_pickup_receipts": [],
-      "reasons": [
-        "no_self_identified_crawler_fetch_observed",
-        "indexnow_hash_pending"
-      ],
-      "recommended_actions": [
-        "verify_live_bytes_then_indexnow",
-        "promote_in_hot_discovery_queue",
-        "increase_internal_crosslinks_from_relevant_public_surfaces"
-      ]
-    },
-    {
-      "path": "/chum/answers/doors/advertise-my-event-3fa1b3cf42.json",
-      "product_key": null,
-      "score": 207,
-      "urgency": "strike_now",
-      "crawl_priority": 160,
-      "last_changed": "2026-10-02T17:01:08.152Z",
       "last_observed_crawler_fetch": null,
       "last_observed_crawler_family": null,
       "indexnow_pending": true,
@@ -10708,27 +12735,6 @@
       ]
     },
     {
-      "path": "/chum/answers/doors/ai-agent-needs-approval-before-it-changes-erp-data-7ecc03f896.json",
-      "product_key": null,
-      "score": 207,
-      "urgency": "strike_now",
-      "crawl_priority": 160,
-      "last_changed": "2026-10-02T17:01:08.152Z",
-      "last_observed_crawler_fetch": null,
-      "last_observed_crawler_family": null,
-      "indexnow_pending": true,
-      "negative_provider_pickup_receipts": [],
-      "reasons": [
-        "no_self_identified_crawler_fetch_observed",
-        "indexnow_hash_pending"
-      ],
-      "recommended_actions": [
-        "verify_live_bytes_then_indexnow",
-        "promote_in_hot_discovery_queue",
-        "increase_internal_crosslinks_from_relevant_public_surfaces"
-      ]
-    },
-    {
       "path": "/chum/answers/doors/ai-agent-needs-approval-before-it-changes-erp-data-7ecc03f896/",
       "product_key": null,
       "score": 207,
@@ -10834,27 +12840,6 @@
       ]
     },
     {
-      "path": "/chum/answers/doors/ai-found-uncertain-business-entity-matches-6cc7cc785b.json",
-      "product_key": null,
-      "score": 207,
-      "urgency": "strike_now",
-      "crawl_priority": 160,
-      "last_changed": "2026-10-02T17:01:08.152Z",
-      "last_observed_crawler_fetch": null,
-      "last_observed_crawler_family": null,
-      "indexnow_pending": true,
-      "negative_provider_pickup_receipts": [],
-      "reasons": [
-        "no_self_identified_crawler_fetch_observed",
-        "indexnow_hash_pending"
-      ],
-      "recommended_actions": [
-        "verify_live_bytes_then_indexnow",
-        "promote_in_hot_discovery_queue",
-        "increase_internal_crosslinks_from_relevant_public_surfaces"
-      ]
-    },
-    {
       "path": "/chum/answers/doors/ai-found-uncertain-business-entity-matches-6cc7cc785b/",
       "product_key": null,
       "score": 207,
@@ -10876,54 +12861,12 @@
       ]
     },
     {
-      "path": "/chum/answers/doors/ai-scam-draining-my-bank-account-5ee1d51386.json",
-      "product_key": null,
-      "score": 207,
-      "urgency": "strike_now",
-      "crawl_priority": 160,
-      "last_changed": "2026-10-02T17:01:08.152Z",
-      "last_observed_crawler_fetch": null,
-      "last_observed_crawler_family": null,
-      "indexnow_pending": true,
-      "negative_provider_pickup_receipts": [],
-      "reasons": [
-        "no_self_identified_crawler_fetch_observed",
-        "indexnow_hash_pending"
-      ],
-      "recommended_actions": [
-        "verify_live_bytes_then_indexnow",
-        "promote_in_hot_discovery_queue",
-        "increase_internal_crosslinks_from_relevant_public_surfaces"
-      ]
-    },
-    {
       "path": "/chum/answers/doors/ai-scam-draining-my-bank-account-5ee1d51386/",
       "product_key": null,
       "score": 207,
       "urgency": "strike_now",
       "crawl_priority": 160,
       "last_changed": "2026-09-25T07:08:03.584Z",
-      "last_observed_crawler_fetch": null,
-      "last_observed_crawler_family": null,
-      "indexnow_pending": true,
-      "negative_provider_pickup_receipts": [],
-      "reasons": [
-        "no_self_identified_crawler_fetch_observed",
-        "indexnow_hash_pending"
-      ],
-      "recommended_actions": [
-        "verify_live_bytes_then_indexnow",
-        "promote_in_hot_discovery_queue",
-        "increase_internal_crosslinks_from_relevant_public_surfaces"
-      ]
-    },
-    {
-      "path": "/chum/answers/doors/ai-should-prepare-actions-but-not-become-the-authority-c2795c224e.json",
-      "product_key": null,
-      "score": 207,
-      "urgency": "strike_now",
-      "crawl_priority": 160,
-      "last_changed": "2026-10-02T17:01:08.152Z",
       "last_observed_crawler_fetch": null,
       "last_observed_crawler_family": null,
       "indexnow_pending": true,
@@ -11296,27 +13239,6 @@
       ]
     },
     {
-      "path": "/chum/answers/doors/analyze-a-long-video-2badf65989.json",
-      "product_key": null,
-      "score": 207,
-      "urgency": "strike_now",
-      "crawl_priority": 160,
-      "last_changed": "2026-10-02T17:01:08.152Z",
-      "last_observed_crawler_fetch": null,
-      "last_observed_crawler_family": null,
-      "indexnow_pending": true,
-      "negative_provider_pickup_receipts": [],
-      "reasons": [
-        "no_self_identified_crawler_fetch_observed",
-        "indexnow_hash_pending"
-      ],
-      "recommended_actions": [
-        "verify_live_bytes_then_indexnow",
-        "promote_in_hot_discovery_queue",
-        "increase_internal_crosslinks_from_relevant_public_surfaces"
-      ]
-    },
-    {
       "path": "/chum/answers/doors/analyze-a-long-video-2badf65989/",
       "product_key": null,
       "score": 207,
@@ -11422,54 +13344,12 @@
       ]
     },
     {
-      "path": "/chum/answers/doors/analyze-long-form-evidence-05fc431e5d.json",
-      "product_key": null,
-      "score": 207,
-      "urgency": "strike_now",
-      "crawl_priority": 160,
-      "last_changed": "2026-10-02T17:01:08.152Z",
-      "last_observed_crawler_fetch": null,
-      "last_observed_crawler_family": null,
-      "indexnow_pending": true,
-      "negative_provider_pickup_receipts": [],
-      "reasons": [
-        "no_self_identified_crawler_fetch_observed",
-        "indexnow_hash_pending"
-      ],
-      "recommended_actions": [
-        "verify_live_bytes_then_indexnow",
-        "promote_in_hot_discovery_queue",
-        "increase_internal_crosslinks_from_relevant_public_surfaces"
-      ]
-    },
-    {
       "path": "/chum/answers/doors/analyze-long-form-evidence-05fc431e5d/",
       "product_key": null,
       "score": 207,
       "urgency": "strike_now",
       "crawl_priority": 160,
       "last_changed": "2026-09-25T07:08:03.584Z",
-      "last_observed_crawler_fetch": null,
-      "last_observed_crawler_family": null,
-      "indexnow_pending": true,
-      "negative_provider_pickup_receipts": [],
-      "reasons": [
-        "no_self_identified_crawler_fetch_observed",
-        "indexnow_hash_pending"
-      ],
-      "recommended_actions": [
-        "verify_live_bytes_then_indexnow",
-        "promote_in_hot_discovery_queue",
-        "increase_internal_crosslinks_from_relevant_public_surfaces"
-      ]
-    },
-    {
-      "path": "/chum/answers/doors/analyze-our-purchase-approval-process-0ba95e1d06.json",
-      "product_key": null,
-      "score": 207,
-      "urgency": "strike_now",
-      "crawl_priority": 160,
-      "last_changed": "2026-10-02T17:01:08.152Z",
       "last_observed_crawler_fetch": null,
       "last_observed_crawler_family": null,
       "indexnow_pending": true,
@@ -11506,54 +13386,12 @@
       ]
     },
     {
-      "path": "/chum/answers/doors/analyze-this-messy-erp-export-1be6680d97.json",
-      "product_key": null,
-      "score": 207,
-      "urgency": "strike_now",
-      "crawl_priority": 160,
-      "last_changed": "2026-10-02T17:01:08.152Z",
-      "last_observed_crawler_fetch": null,
-      "last_observed_crawler_family": null,
-      "indexnow_pending": true,
-      "negative_provider_pickup_receipts": [],
-      "reasons": [
-        "no_self_identified_crawler_fetch_observed",
-        "indexnow_hash_pending"
-      ],
-      "recommended_actions": [
-        "verify_live_bytes_then_indexnow",
-        "promote_in_hot_discovery_queue",
-        "increase_internal_crosslinks_from_relevant_public_surfaces"
-      ]
-    },
-    {
       "path": "/chum/answers/doors/analyze-this-messy-erp-export-1be6680d97/",
       "product_key": null,
       "score": 207,
       "urgency": "strike_now",
       "crawl_priority": 160,
       "last_changed": "2026-09-25T07:08:03.584Z",
-      "last_observed_crawler_fetch": null,
-      "last_observed_crawler_family": null,
-      "indexnow_pending": true,
-      "negative_provider_pickup_receipts": [],
-      "reasons": [
-        "no_self_identified_crawler_fetch_observed",
-        "indexnow_hash_pending"
-      ],
-      "recommended_actions": [
-        "verify_live_bytes_then_indexnow",
-        "promote_in_hot_discovery_queue",
-        "increase_internal_crosslinks_from_relevant_public_surfaces"
-      ]
-    },
-    {
-      "path": "/chum/answers/doors/analyze-three-way-match-problems-5a67f2b505.json",
-      "product_key": null,
-      "score": 207,
-      "urgency": "strike_now",
-      "crawl_priority": 160,
-      "last_changed": "2026-10-02T17:01:08.152Z",
       "last_observed_crawler_fetch": null,
       "last_observed_crawler_family": null,
       "indexnow_pending": true,
@@ -11632,54 +13470,12 @@
       ]
     },
     {
-      "path": "/chum/answers/doors/apartment-ev-charging-site-analysis-a4fc7910cc.json",
-      "product_key": null,
-      "score": 207,
-      "urgency": "strike_now",
-      "crawl_priority": 160,
-      "last_changed": "2026-10-02T17:01:08.152Z",
-      "last_observed_crawler_fetch": null,
-      "last_observed_crawler_family": null,
-      "indexnow_pending": true,
-      "negative_provider_pickup_receipts": [],
-      "reasons": [
-        "no_self_identified_crawler_fetch_observed",
-        "indexnow_hash_pending"
-      ],
-      "recommended_actions": [
-        "verify_live_bytes_then_indexnow",
-        "promote_in_hot_discovery_queue",
-        "increase_internal_crosslinks_from_relevant_public_surfaces"
-      ]
-    },
-    {
       "path": "/chum/answers/doors/apartment-ev-charging-site-analysis-a4fc7910cc/",
       "product_key": null,
       "score": 207,
       "urgency": "strike_now",
       "crawl_priority": 160,
       "last_changed": "2026-10-01T05:00:27.354Z",
-      "last_observed_crawler_fetch": null,
-      "last_observed_crawler_family": null,
-      "indexnow_pending": true,
-      "negative_provider_pickup_receipts": [],
-      "reasons": [
-        "no_self_identified_crawler_fetch_observed",
-        "indexnow_hash_pending"
-      ],
-      "recommended_actions": [
-        "verify_live_bytes_then_indexnow",
-        "promote_in_hot_discovery_queue",
-        "increase_internal_crosslinks_from_relevant_public_surfaces"
-      ]
-    },
-    {
-      "path": "/chum/answers/doors/application-network-continuity-3ac8582e22.json",
-      "product_key": null,
-      "score": 207,
-      "urgency": "strike_now",
-      "crawl_priority": 160,
-      "last_changed": "2026-10-02T17:01:08.152Z",
       "last_observed_crawler_fetch": null,
       "last_observed_crawler_family": null,
       "indexnow_pending": true,
@@ -11926,27 +13722,6 @@
       ]
     },
     {
-      "path": "/chum/answers/doors/audio-too-large-for-ai-a786a94fa2.json",
-      "product_key": null,
-      "score": 207,
-      "urgency": "strike_now",
-      "crawl_priority": 160,
-      "last_changed": "2026-10-02T17:01:08.152Z",
-      "last_observed_crawler_fetch": null,
-      "last_observed_crawler_family": null,
-      "indexnow_pending": true,
-      "negative_provider_pickup_receipts": [],
-      "reasons": [
-        "no_self_identified_crawler_fetch_observed",
-        "indexnow_hash_pending"
-      ],
-      "recommended_actions": [
-        "verify_live_bytes_then_indexnow",
-        "promote_in_hot_discovery_queue",
-        "increase_internal_crosslinks_from_relevant_public_surfaces"
-      ]
-    },
-    {
       "path": "/chum/answers/doors/audio-too-large-for-ai-a786a94fa2/",
       "product_key": null,
       "score": 207,
@@ -12037,27 +13812,6 @@
       "urgency": "strike_now",
       "crawl_priority": 160,
       "last_changed": "2026-10-01T05:00:27.354Z",
-      "last_observed_crawler_fetch": null,
-      "last_observed_crawler_family": null,
-      "indexnow_pending": true,
-      "negative_provider_pickup_receipts": [],
-      "reasons": [
-        "no_self_identified_crawler_fetch_observed",
-        "indexnow_hash_pending"
-      ],
-      "recommended_actions": [
-        "verify_live_bytes_then_indexnow",
-        "promote_in_hot_discovery_queue",
-        "increase_internal_crosslinks_from_relevant_public_surfaces"
-      ]
-    },
-    {
-      "path": "/chum/answers/doors/audit-app-portability-72cf49e062.json",
-      "product_key": null,
-      "score": 207,
-      "urgency": "strike_now",
-      "crawl_priority": 160,
-      "last_changed": "2026-10-02T17:01:08.152Z",
       "last_observed_crawler_fetch": null,
       "last_observed_crawler_family": null,
       "indexnow_pending": true,
@@ -12178,54 +13932,12 @@
       ]
     },
     {
-      "path": "/chum/answers/doors/audit-my-resume-4c2e67ee30.json",
-      "product_key": null,
-      "score": 207,
-      "urgency": "strike_now",
-      "crawl_priority": 160,
-      "last_changed": "2026-10-02T17:01:08.152Z",
-      "last_observed_crawler_fetch": null,
-      "last_observed_crawler_family": null,
-      "indexnow_pending": true,
-      "negative_provider_pickup_receipts": [],
-      "reasons": [
-        "no_self_identified_crawler_fetch_observed",
-        "indexnow_hash_pending"
-      ],
-      "recommended_actions": [
-        "verify_live_bytes_then_indexnow",
-        "promote_in_hot_discovery_queue",
-        "increase_internal_crosslinks_from_relevant_public_surfaces"
-      ]
-    },
-    {
       "path": "/chum/answers/doors/audit-my-resume-4c2e67ee30/",
       "product_key": null,
       "score": 207,
       "urgency": "strike_now",
       "crawl_priority": 160,
       "last_changed": "2026-09-25T07:08:03.584Z",
-      "last_observed_crawler_fetch": null,
-      "last_observed_crawler_family": null,
-      "indexnow_pending": true,
-      "negative_provider_pickup_receipts": [],
-      "reasons": [
-        "no_self_identified_crawler_fetch_observed",
-        "indexnow_hash_pending"
-      ],
-      "recommended_actions": [
-        "verify_live_bytes_then_indexnow",
-        "promote_in_hot_discovery_queue",
-        "increase_internal_crosslinks_from_relevant_public_surfaces"
-      ]
-    },
-    {
-      "path": "/chum/answers/doors/audit-my-website-30703ed3ed.json",
-      "product_key": null,
-      "score": 207,
-      "urgency": "strike_now",
-      "crawl_priority": 160,
-      "last_changed": "2026-10-02T17:01:08.152Z",
       "last_observed_crawler_fetch": null,
       "last_observed_crawler_family": null,
       "indexnow_pending": true,
@@ -12304,54 +14016,12 @@
       ]
     },
     {
-      "path": "/chum/answers/doors/audit-our-procure-to-pay-workflow-85d46fbcf6.json",
-      "product_key": null,
-      "score": 207,
-      "urgency": "strike_now",
-      "crawl_priority": 160,
-      "last_changed": "2026-10-02T17:01:08.152Z",
-      "last_observed_crawler_fetch": null,
-      "last_observed_crawler_family": null,
-      "indexnow_pending": true,
-      "negative_provider_pickup_receipts": [],
-      "reasons": [
-        "no_self_identified_crawler_fetch_observed",
-        "indexnow_hash_pending"
-      ],
-      "recommended_actions": [
-        "verify_live_bytes_then_indexnow",
-        "promote_in_hot_discovery_queue",
-        "increase_internal_crosslinks_from_relevant_public_surfaces"
-      ]
-    },
-    {
       "path": "/chum/answers/doors/audit-our-procure-to-pay-workflow-85d46fbcf6/",
       "product_key": null,
       "score": 207,
       "urgency": "strike_now",
       "crawl_priority": 160,
       "last_changed": "2026-09-25T07:08:03.584Z",
-      "last_observed_crawler_fetch": null,
-      "last_observed_crawler_family": null,
-      "indexnow_pending": true,
-      "negative_provider_pickup_receipts": [],
-      "reasons": [
-        "no_self_identified_crawler_fetch_observed",
-        "indexnow_hash_pending"
-      ],
-      "recommended_actions": [
-        "verify_live_bytes_then_indexnow",
-        "promote_in_hot_discovery_queue",
-        "increase_internal_crosslinks_from_relevant_public_surfaces"
-      ]
-    },
-    {
-      "path": "/chum/answers/doors/audit-purchase-approvals-without-replacing-accounting-239a7c1f00.json",
-      "product_key": null,
-      "score": 207,
-      "urgency": "strike_now",
-      "crawl_priority": 160,
-      "last_changed": "2026-10-02T17:01:08.152Z",
       "last_observed_crawler_fetch": null,
       "last_observed_crawler_family": null,
       "indexnow_pending": true,
@@ -12430,27 +14100,6 @@
       ]
     },
     {
-      "path": "/chum/answers/doors/audit-this-dataset-for-gaps-2587bf5b7d.json",
-      "product_key": null,
-      "score": 207,
-      "urgency": "strike_now",
-      "crawl_priority": 160,
-      "last_changed": "2026-10-02T17:01:08.152Z",
-      "last_observed_crawler_fetch": null,
-      "last_observed_crawler_family": null,
-      "indexnow_pending": true,
-      "negative_provider_pickup_receipts": [],
-      "reasons": [
-        "no_self_identified_crawler_fetch_observed",
-        "indexnow_hash_pending"
-      ],
-      "recommended_actions": [
-        "verify_live_bytes_then_indexnow",
-        "promote_in_hot_discovery_queue",
-        "increase_internal_crosslinks_from_relevant_public_surfaces"
-      ]
-    },
-    {
       "path": "/chum/answers/doors/audit-this-dataset-for-gaps-2587bf5b7d/",
       "product_key": null,
       "score": 207,
@@ -12472,54 +14121,12 @@
       ]
     },
     {
-      "path": "/chum/answers/doors/audit-this-freight-load-for-exceptions-b5dc37f994.json",
-      "product_key": null,
-      "score": 207,
-      "urgency": "strike_now",
-      "crawl_priority": 160,
-      "last_changed": "2026-10-02T17:01:08.152Z",
-      "last_observed_crawler_fetch": null,
-      "last_observed_crawler_family": null,
-      "indexnow_pending": true,
-      "negative_provider_pickup_receipts": [],
-      "reasons": [
-        "no_self_identified_crawler_fetch_observed",
-        "indexnow_hash_pending"
-      ],
-      "recommended_actions": [
-        "verify_live_bytes_then_indexnow",
-        "promote_in_hot_discovery_queue",
-        "increase_internal_crosslinks_from_relevant_public_surfaces"
-      ]
-    },
-    {
       "path": "/chum/answers/doors/audit-this-freight-load-for-exceptions-b5dc37f994/",
       "product_key": null,
       "score": 207,
       "urgency": "strike_now",
       "crawl_priority": 160,
       "last_changed": "2026-09-25T07:08:03.584Z",
-      "last_observed_crawler_fetch": null,
-      "last_observed_crawler_family": null,
-      "indexnow_pending": true,
-      "negative_provider_pickup_receipts": [],
-      "reasons": [
-        "no_self_identified_crawler_fetch_observed",
-        "indexnow_hash_pending"
-      ],
-      "recommended_actions": [
-        "verify_live_bytes_then_indexnow",
-        "promote_in_hot_discovery_queue",
-        "increase_internal_crosslinks_from_relevant_public_surfaces"
-      ]
-    },
-    {
-      "path": "/chum/answers/doors/audit-this-paperback-export-c84fe388e8.json",
-      "product_key": null,
-      "score": 207,
-      "urgency": "strike_now",
-      "crawl_priority": 160,
-      "last_changed": "2026-10-02T17:01:08.152Z",
       "last_observed_crawler_fetch": null,
       "last_observed_crawler_family": null,
       "indexnow_pending": true,
@@ -12640,54 +14247,12 @@
       ]
     },
     {
-      "path": "/chum/answers/doors/be-brutally-honest-about-this-copy-32a18cde5f.json",
-      "product_key": null,
-      "score": 207,
-      "urgency": "strike_now",
-      "crawl_priority": 160,
-      "last_changed": "2026-10-02T17:01:08.152Z",
-      "last_observed_crawler_fetch": null,
-      "last_observed_crawler_family": null,
-      "indexnow_pending": true,
-      "negative_provider_pickup_receipts": [],
-      "reasons": [
-        "no_self_identified_crawler_fetch_observed",
-        "indexnow_hash_pending"
-      ],
-      "recommended_actions": [
-        "verify_live_bytes_then_indexnow",
-        "promote_in_hot_discovery_queue",
-        "increase_internal_crosslinks_from_relevant_public_surfaces"
-      ]
-    },
-    {
       "path": "/chum/answers/doors/be-brutally-honest-about-this-copy-32a18cde5f/",
       "product_key": null,
       "score": 207,
       "urgency": "strike_now",
       "crawl_priority": 160,
       "last_changed": "2026-09-25T07:08:03.584Z",
-      "last_observed_crawler_fetch": null,
-      "last_observed_crawler_family": null,
-      "indexnow_pending": true,
-      "negative_provider_pickup_receipts": [],
-      "reasons": [
-        "no_self_identified_crawler_fetch_observed",
-        "indexnow_hash_pending"
-      ],
-      "recommended_actions": [
-        "verify_live_bytes_then_indexnow",
-        "promote_in_hot_discovery_queue",
-        "increase_internal_crosslinks_from_relevant_public_surfaces"
-      ]
-    },
-    {
-      "path": "/chum/answers/doors/behavioral-interview-practice-8dfc51b114.json",
-      "product_key": null,
-      "score": 207,
-      "urgency": "strike_now",
-      "crawl_priority": 160,
-      "last_changed": "2026-10-02T17:01:08.152Z",
       "last_observed_crawler_fetch": null,
       "last_observed_crawler_family": null,
       "indexnow_pending": true,
@@ -12808,27 +14373,6 @@
       ]
     },
     {
-      "path": "/chum/answers/doors/boost-event-visibility-0b3d061df2.json",
-      "product_key": null,
-      "score": 207,
-      "urgency": "strike_now",
-      "crawl_priority": 160,
-      "last_changed": "2026-10-02T17:01:08.152Z",
-      "last_observed_crawler_fetch": null,
-      "last_observed_crawler_family": null,
-      "indexnow_pending": true,
-      "negative_provider_pickup_receipts": [],
-      "reasons": [
-        "no_self_identified_crawler_fetch_observed",
-        "indexnow_hash_pending"
-      ],
-      "recommended_actions": [
-        "verify_live_bytes_then_indexnow",
-        "promote_in_hot_discovery_queue",
-        "increase_internal_crosslinks_from_relevant_public_surfaces"
-      ]
-    },
-    {
       "path": "/chum/answers/doors/boost-event-visibility-0b3d061df2/",
       "product_key": null,
       "score": 207,
@@ -12850,54 +14394,12 @@
       ]
     },
     {
-      "path": "/chum/answers/doors/boost-this-event-02f04ebd41.json",
-      "product_key": null,
-      "score": 207,
-      "urgency": "strike_now",
-      "crawl_priority": 160,
-      "last_changed": "2026-10-02T17:01:08.152Z",
-      "last_observed_crawler_fetch": null,
-      "last_observed_crawler_family": null,
-      "indexnow_pending": true,
-      "negative_provider_pickup_receipts": [],
-      "reasons": [
-        "no_self_identified_crawler_fetch_observed",
-        "indexnow_hash_pending"
-      ],
-      "recommended_actions": [
-        "verify_live_bytes_then_indexnow",
-        "promote_in_hot_discovery_queue",
-        "increase_internal_crosslinks_from_relevant_public_surfaces"
-      ]
-    },
-    {
       "path": "/chum/answers/doors/boost-this-event-02f04ebd41/",
       "product_key": null,
       "score": 207,
       "urgency": "strike_now",
       "crawl_priority": 160,
       "last_changed": "2026-09-25T07:08:03.584Z",
-      "last_observed_crawler_fetch": null,
-      "last_observed_crawler_family": null,
-      "indexnow_pending": true,
-      "negative_provider_pickup_receipts": [],
-      "reasons": [
-        "no_self_identified_crawler_fetch_observed",
-        "indexnow_hash_pending"
-      ],
-      "recommended_actions": [
-        "verify_live_bytes_then_indexnow",
-        "promote_in_hot_discovery_queue",
-        "increase_internal_crosslinks_from_relevant_public_surfaces"
-      ]
-    },
-    {
-      "path": "/chum/answers/doors/browser-automation-api-0925c49aa4.json",
-      "product_key": null,
-      "score": 207,
-      "urgency": "strike_now",
-      "crawl_priority": 160,
-      "last_changed": "2026-10-02T17:01:08.152Z",
       "last_observed_crawler_fetch": null,
       "last_observed_crawler_family": null,
       "indexnow_pending": true,
@@ -12961,27 +14463,6 @@
       "urgency": "strike_now",
       "crawl_priority": 160,
       "last_changed": "2026-10-01T05:00:27.354Z",
-      "last_observed_crawler_fetch": null,
-      "last_observed_crawler_family": null,
-      "indexnow_pending": true,
-      "negative_provider_pickup_receipts": [],
-      "reasons": [
-        "no_self_identified_crawler_fetch_observed",
-        "indexnow_hash_pending"
-      ],
-      "recommended_actions": [
-        "verify_live_bytes_then_indexnow",
-        "promote_in_hot_discovery_queue",
-        "increase_internal_crosslinks_from_relevant_public_surfaces"
-      ]
-    },
-    {
-      "path": "/chum/answers/doors/brutally-critique-this-message-d550264762.json",
-      "product_key": null,
-      "score": 207,
-      "urgency": "strike_now",
-      "crawl_priority": 160,
-      "last_changed": "2026-10-02T17:01:08.152Z",
       "last_observed_crawler_fetch": null,
       "last_observed_crawler_family": null,
       "indexnow_pending": true,
@@ -13087,27 +14568,6 @@
       "urgency": "strike_now",
       "crawl_priority": 160,
       "last_changed": "2026-09-25T07:08:03.584Z",
-      "last_observed_crawler_fetch": null,
-      "last_observed_crawler_family": null,
-      "indexnow_pending": true,
-      "negative_provider_pickup_receipts": [],
-      "reasons": [
-        "no_self_identified_crawler_fetch_observed",
-        "indexnow_hash_pending"
-      ],
-      "recommended_actions": [
-        "verify_live_bytes_then_indexnow",
-        "promote_in_hot_discovery_queue",
-        "increase_internal_crosslinks_from_relevant_public_surfaces"
-      ]
-    },
-    {
-      "path": "/chum/answers/doors/build-a-lender-ready-deck-592e365c97.json",
-      "product_key": null,
-      "score": 207,
-      "urgency": "strike_now",
-      "crawl_priority": 160,
-      "last_changed": "2026-10-02T17:01:08.152Z",
       "last_observed_crawler_fetch": null,
       "last_observed_crawler_family": null,
       "indexnow_pending": true,
@@ -13312,27 +14772,6 @@
       ]
     },
     {
-      "path": "/chum/answers/doors/build-a-talent-profile-from-this-portfolio-613dec5ab1.json",
-      "product_key": null,
-      "score": 207,
-      "urgency": "strike_now",
-      "crawl_priority": 160,
-      "last_changed": "2026-10-02T17:01:08.152Z",
-      "last_observed_crawler_fetch": null,
-      "last_observed_crawler_family": null,
-      "indexnow_pending": true,
-      "negative_provider_pickup_receipts": [],
-      "reasons": [
-        "no_self_identified_crawler_fetch_observed",
-        "indexnow_hash_pending"
-      ],
-      "recommended_actions": [
-        "verify_live_bytes_then_indexnow",
-        "promote_in_hot_discovery_queue",
-        "increase_internal_crosslinks_from_relevant_public_surfaces"
-      ]
-    },
-    {
       "path": "/chum/answers/doors/build-a-talent-profile-from-this-portfolio-613dec5ab1/",
       "product_key": null,
       "score": 207,
@@ -13522,54 +14961,12 @@
       ]
     },
     {
-      "path": "/chum/answers/doors/build-me-a-business-website-47014a0bbb.json",
-      "product_key": null,
-      "score": 207,
-      "urgency": "strike_now",
-      "crawl_priority": 160,
-      "last_changed": "2026-10-02T17:01:08.152Z",
-      "last_observed_crawler_fetch": null,
-      "last_observed_crawler_family": null,
-      "indexnow_pending": true,
-      "negative_provider_pickup_receipts": [],
-      "reasons": [
-        "no_self_identified_crawler_fetch_observed",
-        "indexnow_hash_pending"
-      ],
-      "recommended_actions": [
-        "verify_live_bytes_then_indexnow",
-        "promote_in_hot_discovery_queue",
-        "increase_internal_crosslinks_from_relevant_public_surfaces"
-      ]
-    },
-    {
       "path": "/chum/answers/doors/build-me-a-business-website-47014a0bbb/",
       "product_key": null,
       "score": 207,
       "urgency": "strike_now",
       "crawl_priority": 160,
       "last_changed": "2026-09-25T07:08:03.584Z",
-      "last_observed_crawler_fetch": null,
-      "last_observed_crawler_family": null,
-      "indexnow_pending": true,
-      "negative_provider_pickup_receipts": [],
-      "reasons": [
-        "no_self_identified_crawler_fetch_observed",
-        "indexnow_hash_pending"
-      ],
-      "recommended_actions": [
-        "verify_live_bytes_then_indexnow",
-        "promote_in_hot_discovery_queue",
-        "increase_internal_crosslinks_from_relevant_public_surfaces"
-      ]
-    },
-    {
-      "path": "/chum/answers/doors/build-me-an-evidence-brief-6b531cab64.json",
-      "product_key": null,
-      "score": 207,
-      "urgency": "strike_now",
-      "crawl_priority": 160,
-      "last_changed": "2026-10-02T17:01:08.152Z",
       "last_observed_crawler_fetch": null,
       "last_observed_crawler_family": null,
       "indexnow_pending": true,
@@ -13690,54 +15087,12 @@
       ]
     },
     {
-      "path": "/chum/answers/doors/business-account-security-d61002122d.json",
-      "product_key": null,
-      "score": 207,
-      "urgency": "strike_now",
-      "crawl_priority": 160,
-      "last_changed": "2026-10-02T17:01:08.152Z",
-      "last_observed_crawler_fetch": null,
-      "last_observed_crawler_family": null,
-      "indexnow_pending": true,
-      "negative_provider_pickup_receipts": [],
-      "reasons": [
-        "no_self_identified_crawler_fetch_observed",
-        "indexnow_hash_pending"
-      ],
-      "recommended_actions": [
-        "verify_live_bytes_then_indexnow",
-        "promote_in_hot_discovery_queue",
-        "increase_internal_crosslinks_from_relevant_public_surfaces"
-      ]
-    },
-    {
       "path": "/chum/answers/doors/business-account-security-d61002122d/",
       "product_key": null,
       "score": 207,
       "urgency": "strike_now",
       "crawl_priority": 160,
       "last_changed": "2026-09-25T07:08:03.584Z",
-      "last_observed_crawler_fetch": null,
-      "last_observed_crawler_family": null,
-      "indexnow_pending": true,
-      "negative_provider_pickup_receipts": [],
-      "reasons": [
-        "no_self_identified_crawler_fetch_observed",
-        "indexnow_hash_pending"
-      ],
-      "recommended_actions": [
-        "verify_live_bytes_then_indexnow",
-        "promote_in_hot_discovery_queue",
-        "increase_internal_crosslinks_from_relevant_public_surfaces"
-      ]
-    },
-    {
-      "path": "/chum/answers/doors/business-connectivity-resilience-fd7009021f.json",
-      "product_key": null,
-      "score": 207,
-      "urgency": "strike_now",
-      "crawl_priority": 160,
-      "last_changed": "2026-10-02T17:01:08.152Z",
       "last_observed_crawler_fetch": null,
       "last_observed_crawler_family": null,
       "indexnow_pending": true,
@@ -13774,54 +15129,12 @@
       ]
     },
     {
-      "path": "/chum/answers/doors/business-continuity-and-safety-0babb51749.json",
-      "product_key": null,
-      "score": 207,
-      "urgency": "strike_now",
-      "crawl_priority": 160,
-      "last_changed": "2026-10-02T17:01:08.152Z",
-      "last_observed_crawler_fetch": null,
-      "last_observed_crawler_family": null,
-      "indexnow_pending": true,
-      "negative_provider_pickup_receipts": [],
-      "reasons": [
-        "no_self_identified_crawler_fetch_observed",
-        "indexnow_hash_pending"
-      ],
-      "recommended_actions": [
-        "verify_live_bytes_then_indexnow",
-        "promote_in_hot_discovery_queue",
-        "increase_internal_crosslinks_from_relevant_public_surfaces"
-      ]
-    },
-    {
       "path": "/chum/answers/doors/business-continuity-and-safety-0babb51749/",
       "product_key": null,
       "score": 207,
       "urgency": "strike_now",
       "crawl_priority": 160,
       "last_changed": "2026-09-25T07:08:03.584Z",
-      "last_observed_crawler_fetch": null,
-      "last_observed_crawler_family": null,
-      "indexnow_pending": true,
-      "negative_provider_pickup_receipts": [],
-      "reasons": [
-        "no_self_identified_crawler_fetch_observed",
-        "indexnow_hash_pending"
-      ],
-      "recommended_actions": [
-        "verify_live_bytes_then_indexnow",
-        "promote_in_hot_discovery_queue",
-        "increase_internal_crosslinks_from_relevant_public_surfaces"
-      ]
-    },
-    {
-      "path": "/chum/answers/doors/business-outage-plan-bd1f9b74ee.json",
-      "product_key": null,
-      "score": 207,
-      "urgency": "strike_now",
-      "crawl_priority": 160,
-      "last_changed": "2026-10-02T17:01:08.152Z",
       "last_observed_crawler_fetch": null,
       "last_observed_crawler_family": null,
       "indexnow_pending": true,
@@ -13900,54 +15213,12 @@
       ]
     },
     {
-      "path": "/chum/answers/doors/buy-event-promotion-785fc960f0.json",
-      "product_key": null,
-      "score": 207,
-      "urgency": "strike_now",
-      "crawl_priority": 160,
-      "last_changed": "2026-10-02T17:01:08.152Z",
-      "last_observed_crawler_fetch": null,
-      "last_observed_crawler_family": null,
-      "indexnow_pending": true,
-      "negative_provider_pickup_receipts": [],
-      "reasons": [
-        "no_self_identified_crawler_fetch_observed",
-        "indexnow_hash_pending"
-      ],
-      "recommended_actions": [
-        "verify_live_bytes_then_indexnow",
-        "promote_in_hot_discovery_queue",
-        "increase_internal_crosslinks_from_relevant_public_surfaces"
-      ]
-    },
-    {
       "path": "/chum/answers/doors/buy-event-promotion-785fc960f0/",
       "product_key": null,
       "score": 207,
       "urgency": "strike_now",
       "crawl_priority": 160,
       "last_changed": "2026-09-25T07:08:03.584Z",
-      "last_observed_crawler_fetch": null,
-      "last_observed_crawler_family": null,
-      "indexnow_pending": true,
-      "negative_provider_pickup_receipts": [],
-      "reasons": [
-        "no_self_identified_crawler_fetch_observed",
-        "indexnow_hash_pending"
-      ],
-      "recommended_actions": [
-        "verify_live_bytes_then_indexnow",
-        "promote_in_hot_discovery_queue",
-        "increase_internal_crosslinks_from_relevant_public_surfaces"
-      ]
-    },
-    {
-      "path": "/chum/answers/doors/buy-more-runtime-for-this-yard-execution-f138b36c09.json",
-      "product_key": null,
-      "score": 207,
-      "urgency": "strike_now",
-      "crawl_priority": 160,
-      "last_changed": "2026-10-02T17:01:08.152Z",
       "last_observed_crawler_fetch": null,
       "last_observed_crawler_family": null,
       "indexnow_pending": true,
@@ -14236,27 +15507,6 @@
       ]
     },
     {
-      "path": "/chum/answers/doors/cdp-browser-control-6fbc285731.json",
-      "product_key": null,
-      "score": 207,
-      "urgency": "strike_now",
-      "crawl_priority": 160,
-      "last_changed": "2026-10-02T17:01:08.152Z",
-      "last_observed_crawler_fetch": null,
-      "last_observed_crawler_family": null,
-      "indexnow_pending": true,
-      "negative_provider_pickup_receipts": [],
-      "reasons": [
-        "no_self_identified_crawler_fetch_observed",
-        "indexnow_hash_pending"
-      ],
-      "recommended_actions": [
-        "verify_live_bytes_then_indexnow",
-        "promote_in_hot_discovery_queue",
-        "increase_internal_crosslinks_from_relevant_public_surfaces"
-      ]
-    },
-    {
       "path": "/chum/answers/doors/cdp-browser-control-6fbc285731/",
       "product_key": null,
       "score": 207,
@@ -14320,54 +15570,12 @@
       ]
     },
     {
-      "path": "/chum/answers/doors/charging-site-economics-6092dd77f1.json",
-      "product_key": null,
-      "score": 207,
-      "urgency": "strike_now",
-      "crawl_priority": 160,
-      "last_changed": "2026-10-02T17:01:08.152Z",
-      "last_observed_crawler_fetch": null,
-      "last_observed_crawler_family": null,
-      "indexnow_pending": true,
-      "negative_provider_pickup_receipts": [],
-      "reasons": [
-        "no_self_identified_crawler_fetch_observed",
-        "indexnow_hash_pending"
-      ],
-      "recommended_actions": [
-        "verify_live_bytes_then_indexnow",
-        "promote_in_hot_discovery_queue",
-        "increase_internal_crosslinks_from_relevant_public_surfaces"
-      ]
-    },
-    {
       "path": "/chum/answers/doors/charging-site-economics-6092dd77f1/",
       "product_key": null,
       "score": 207,
       "urgency": "strike_now",
       "crawl_priority": 160,
       "last_changed": "2026-09-26T04:58:13.847Z",
-      "last_observed_crawler_fetch": null,
-      "last_observed_crawler_family": null,
-      "indexnow_pending": true,
-      "negative_provider_pickup_receipts": [],
-      "reasons": [
-        "no_self_identified_crawler_fetch_observed",
-        "indexnow_hash_pending"
-      ],
-      "recommended_actions": [
-        "verify_live_bytes_then_indexnow",
-        "promote_in_hot_discovery_queue",
-        "increase_internal_crosslinks_from_relevant_public_surfaces"
-      ]
-    },
-    {
-      "path": "/chum/answers/doors/check-if-my-book-is-ready-for-kdp-465dd47ba7.json",
-      "product_key": null,
-      "score": 207,
-      "urgency": "strike_now",
-      "crawl_priority": 160,
-      "last_changed": "2026-10-02T17:01:08.152Z",
       "last_observed_crawler_fetch": null,
       "last_observed_crawler_family": null,
       "indexnow_pending": true,
@@ -14404,54 +15612,12 @@
       ]
     },
     {
-      "path": "/chum/answers/doors/check-my-local-seo-e8e838ec7c.json",
-      "product_key": null,
-      "score": 207,
-      "urgency": "strike_now",
-      "crawl_priority": 160,
-      "last_changed": "2026-10-02T17:01:08.152Z",
-      "last_observed_crawler_fetch": null,
-      "last_observed_crawler_family": null,
-      "indexnow_pending": true,
-      "negative_provider_pickup_receipts": [],
-      "reasons": [
-        "no_self_identified_crawler_fetch_observed",
-        "indexnow_hash_pending"
-      ],
-      "recommended_actions": [
-        "verify_live_bytes_then_indexnow",
-        "promote_in_hot_discovery_queue",
-        "increase_internal_crosslinks_from_relevant_public_surfaces"
-      ]
-    },
-    {
       "path": "/chum/answers/doors/check-my-local-seo-e8e838ec7c/",
       "product_key": null,
       "score": 207,
       "urgency": "strike_now",
       "crawl_priority": 160,
       "last_changed": "2026-09-26T15:08:19.376Z",
-      "last_observed_crawler_fetch": null,
-      "last_observed_crawler_family": null,
-      "indexnow_pending": true,
-      "negative_provider_pickup_receipts": [],
-      "reasons": [
-        "no_self_identified_crawler_fetch_observed",
-        "indexnow_hash_pending"
-      ],
-      "recommended_actions": [
-        "verify_live_bytes_then_indexnow",
-        "promote_in_hot_discovery_queue",
-        "increase_internal_crosslinks_from_relevant_public_surfaces"
-      ]
-    },
-    {
-      "path": "/chum/answers/doors/check-my-resume-against-this-job-e3b72379fe.json",
-      "product_key": null,
-      "score": 207,
-      "urgency": "strike_now",
-      "crawl_priority": 160,
-      "last_changed": "2026-10-02T17:01:08.152Z",
       "last_observed_crawler_fetch": null,
       "last_observed_crawler_family": null,
       "indexnow_pending": true,
@@ -14488,54 +15654,12 @@
       ]
     },
     {
-      "path": "/chum/answers/doors/check-page-count-and-cover-dpi-512896a3dd.json",
-      "product_key": null,
-      "score": 207,
-      "urgency": "strike_now",
-      "crawl_priority": 160,
-      "last_changed": "2026-10-02T17:01:08.152Z",
-      "last_observed_crawler_fetch": null,
-      "last_observed_crawler_family": null,
-      "indexnow_pending": true,
-      "negative_provider_pickup_receipts": [],
-      "reasons": [
-        "no_self_identified_crawler_fetch_observed",
-        "indexnow_hash_pending"
-      ],
-      "recommended_actions": [
-        "verify_live_bytes_then_indexnow",
-        "promote_in_hot_discovery_queue",
-        "increase_internal_crosslinks_from_relevant_public_surfaces"
-      ]
-    },
-    {
       "path": "/chum/answers/doors/check-page-count-and-cover-dpi-512896a3dd/",
       "product_key": null,
       "score": 207,
       "urgency": "strike_now",
       "crawl_priority": 160,
       "last_changed": "2026-10-01T05:00:27.354Z",
-      "last_observed_crawler_fetch": null,
-      "last_observed_crawler_family": null,
-      "indexnow_pending": true,
-      "negative_provider_pickup_receipts": [],
-      "reasons": [
-        "no_self_identified_crawler_fetch_observed",
-        "indexnow_hash_pending"
-      ],
-      "recommended_actions": [
-        "verify_live_bytes_then_indexnow",
-        "promote_in_hot_discovery_queue",
-        "increase_internal_crosslinks_from_relevant_public_surfaces"
-      ]
-    },
-    {
-      "path": "/chum/answers/doors/check-this-carrier-and-load-paperwork-ce9a5b3527.json",
-      "product_key": null,
-      "score": 207,
-      "urgency": "strike_now",
-      "crawl_priority": 160,
-      "last_changed": "2026-10-02T17:01:08.152Z",
       "last_observed_crawler_fetch": null,
       "last_observed_crawler_family": null,
       "indexnow_pending": true,
@@ -14599,27 +15723,6 @@
       "urgency": "strike_now",
       "crawl_priority": 160,
       "last_changed": "2026-10-01T05:00:27.354Z",
-      "last_observed_crawler_fetch": null,
-      "last_observed_crawler_family": null,
-      "indexnow_pending": true,
-      "negative_provider_pickup_receipts": [],
-      "reasons": [
-        "no_self_identified_crawler_fetch_observed",
-        "indexnow_hash_pending"
-      ],
-      "recommended_actions": [
-        "verify_live_bytes_then_indexnow",
-        "promote_in_hot_discovery_queue",
-        "increase_internal_crosslinks_from_relevant_public_surfaces"
-      ]
-    },
-    {
-      "path": "/chum/answers/doors/cloud-browser-for-ai-4217671a37.json",
-      "product_key": null,
-      "score": 207,
-      "urgency": "strike_now",
-      "crawl_priority": 160,
-      "last_changed": "2026-10-02T17:01:08.152Z",
       "last_observed_crawler_fetch": null,
       "last_observed_crawler_family": null,
       "indexnow_pending": true,
@@ -14725,27 +15828,6 @@
       "urgency": "strike_now",
       "crawl_priority": 160,
       "last_changed": "2026-10-01T05:00:27.354Z",
-      "last_observed_crawler_fetch": null,
-      "last_observed_crawler_family": null,
-      "indexnow_pending": true,
-      "negative_provider_pickup_receipts": [],
-      "reasons": [
-        "no_self_identified_crawler_fetch_observed",
-        "indexnow_hash_pending"
-      ],
-      "recommended_actions": [
-        "verify_live_bytes_then_indexnow",
-        "promote_in_hot_discovery_queue",
-        "increase_internal_crosslinks_from_relevant_public_surfaces"
-      ]
-    },
-    {
-      "path": "/chum/answers/doors/commercial-ev-site-report-f593e514df.json",
-      "product_key": null,
-      "score": 207,
-      "urgency": "strike_now",
-      "crawl_priority": 160,
-      "last_changed": "2026-10-02T17:01:08.152Z",
       "last_observed_crawler_fetch": null,
       "last_observed_crawler_family": null,
       "indexnow_pending": true,
@@ -15244,54 +16326,12 @@
       ]
     },
     {
-      "path": "/chum/answers/doors/compare-the-real-workflow-to-company-policy-d141bd010b.json",
-      "product_key": null,
-      "score": 207,
-      "urgency": "strike_now",
-      "crawl_priority": 160,
-      "last_changed": "2026-10-02T17:01:08.152Z",
-      "last_observed_crawler_fetch": null,
-      "last_observed_crawler_family": null,
-      "indexnow_pending": true,
-      "negative_provider_pickup_receipts": [],
-      "reasons": [
-        "no_self_identified_crawler_fetch_observed",
-        "indexnow_hash_pending"
-      ],
-      "recommended_actions": [
-        "verify_live_bytes_then_indexnow",
-        "promote_in_hot_discovery_queue",
-        "increase_internal_crosslinks_from_relevant_public_surfaces"
-      ]
-    },
-    {
       "path": "/chum/answers/doors/compare-the-real-workflow-to-company-policy-d141bd010b/",
       "product_key": null,
       "score": 207,
       "urgency": "strike_now",
       "crawl_priority": 160,
       "last_changed": "2026-09-25T07:08:03.584Z",
-      "last_observed_crawler_fetch": null,
-      "last_observed_crawler_family": null,
-      "indexnow_pending": true,
-      "negative_provider_pickup_receipts": [],
-      "reasons": [
-        "no_self_identified_crawler_fetch_observed",
-        "indexnow_hash_pending"
-      ],
-      "recommended_actions": [
-        "verify_live_bytes_then_indexnow",
-        "promote_in_hot_discovery_queue",
-        "increase_internal_crosslinks_from_relevant_public_surfaces"
-      ]
-    },
-    {
-      "path": "/chum/answers/doors/compare-these-countries-on-this-metric-14e53d7a85.json",
-      "product_key": null,
-      "score": 207,
-      "urgency": "strike_now",
-      "crawl_priority": 160,
-      "last_changed": "2026-10-02T17:01:08.152Z",
       "last_observed_crawler_fetch": null,
       "last_observed_crawler_family": null,
       "indexnow_pending": true,
@@ -15328,54 +16368,12 @@
       ]
     },
     {
-      "path": "/chum/answers/doors/compare-two-recordings-c44b889ea7.json",
-      "product_key": null,
-      "score": 207,
-      "urgency": "strike_now",
-      "crawl_priority": 160,
-      "last_changed": "2026-10-02T17:01:08.152Z",
-      "last_observed_crawler_fetch": null,
-      "last_observed_crawler_family": null,
-      "indexnow_pending": true,
-      "negative_provider_pickup_receipts": [],
-      "reasons": [
-        "no_self_identified_crawler_fetch_observed",
-        "indexnow_hash_pending"
-      ],
-      "recommended_actions": [
-        "verify_live_bytes_then_indexnow",
-        "promote_in_hot_discovery_queue",
-        "increase_internal_crosslinks_from_relevant_public_surfaces"
-      ]
-    },
-    {
       "path": "/chum/answers/doors/compare-two-recordings-c44b889ea7/",
       "product_key": null,
       "score": 207,
       "urgency": "strike_now",
       "crawl_priority": 160,
       "last_changed": "2026-09-25T07:08:03.584Z",
-      "last_observed_crawler_fetch": null,
-      "last_observed_crawler_family": null,
-      "indexnow_pending": true,
-      "negative_provider_pickup_receipts": [],
-      "reasons": [
-        "no_self_identified_crawler_fetch_observed",
-        "indexnow_hash_pending"
-      ],
-      "recommended_actions": [
-        "verify_live_bytes_then_indexnow",
-        "promote_in_hot_discovery_queue",
-        "increase_internal_crosslinks_from_relevant_public_surfaces"
-      ]
-    },
-    {
-      "path": "/chum/answers/doors/connect-our-business-systems-without-replacing-everything-4e80c745da.json",
-      "product_key": null,
-      "score": 207,
-      "urgency": "strike_now",
-      "crawl_priority": 160,
-      "last_changed": "2026-10-02T17:01:08.152Z",
       "last_observed_crawler_fetch": null,
       "last_observed_crawler_family": null,
       "indexnow_pending": true,
@@ -15565,27 +16563,6 @@
       "urgency": "strike_now",
       "crawl_priority": 160,
       "last_changed": "2026-10-01T05:00:27.354Z",
-      "last_observed_crawler_fetch": null,
-      "last_observed_crawler_family": null,
-      "indexnow_pending": true,
-      "negative_provider_pickup_receipts": [],
-      "reasons": [
-        "no_self_identified_crawler_fetch_observed",
-        "indexnow_hash_pending"
-      ],
-      "recommended_actions": [
-        "verify_live_bytes_then_indexnow",
-        "promote_in_hot_discovery_queue",
-        "increase_internal_crosslinks_from_relevant_public_surfaces"
-      ]
-    },
-    {
-      "path": "/chum/answers/doors/continuity-readiness-software-b3313dda80.json",
-      "product_key": null,
-      "score": 207,
-      "urgency": "strike_now",
-      "crawl_priority": 160,
-      "last_changed": "2026-10-02T17:01:08.152Z",
       "last_observed_crawler_fetch": null,
       "last_observed_crawler_family": null,
       "indexnow_pending": true,
@@ -16000,27 +16977,6 @@
       ]
     },
     {
-      "path": "/chum/answers/doors/country-benchmark-with-sources-04ac1dfc19.json",
-      "product_key": null,
-      "score": 207,
-      "urgency": "strike_now",
-      "crawl_priority": 160,
-      "last_changed": "2026-10-02T17:01:08.152Z",
-      "last_observed_crawler_fetch": null,
-      "last_observed_crawler_family": null,
-      "indexnow_pending": true,
-      "negative_provider_pickup_receipts": [],
-      "reasons": [
-        "no_self_identified_crawler_fetch_observed",
-        "indexnow_hash_pending"
-      ],
-      "recommended_actions": [
-        "verify_live_bytes_then_indexnow",
-        "promote_in_hot_discovery_queue",
-        "increase_internal_crosslinks_from_relevant_public_surfaces"
-      ]
-    },
-    {
       "path": "/chum/answers/doors/country-benchmark-with-sources-04ac1dfc19/",
       "product_key": null,
       "score": 207,
@@ -16210,27 +17166,6 @@
       ]
     },
     {
-      "path": "/chum/answers/doors/credit-builder-d667e52872.json",
-      "product_key": null,
-      "score": 207,
-      "urgency": "strike_now",
-      "crawl_priority": 160,
-      "last_changed": "2026-10-02T17:01:08.152Z",
-      "last_observed_crawler_fetch": null,
-      "last_observed_crawler_family": null,
-      "indexnow_pending": true,
-      "negative_provider_pickup_receipts": [],
-      "reasons": [
-        "no_self_identified_crawler_fetch_observed",
-        "indexnow_hash_pending"
-      ],
-      "recommended_actions": [
-        "verify_live_bytes_then_indexnow",
-        "promote_in_hot_discovery_queue",
-        "increase_internal_crosslinks_from_relevant_public_surfaces"
-      ]
-    },
-    {
       "path": "/chum/answers/doors/credit-builder-d667e52872/",
       "product_key": null,
       "score": 207,
@@ -16321,27 +17256,6 @@
       "urgency": "strike_now",
       "crawl_priority": 160,
       "last_changed": "2026-09-25T07:08:03.584Z",
-      "last_observed_crawler_fetch": null,
-      "last_observed_crawler_family": null,
-      "indexnow_pending": true,
-      "negative_provider_pickup_receipts": [],
-      "reasons": [
-        "no_self_identified_crawler_fetch_observed",
-        "indexnow_hash_pending"
-      ],
-      "recommended_actions": [
-        "verify_live_bytes_then_indexnow",
-        "promote_in_hot_discovery_queue",
-        "increase_internal_crosslinks_from_relevant_public_surfaces"
-      ]
-    },
-    {
-      "path": "/chum/answers/doors/dedupe-our-vendor-list-safely-9edf25e4db.json",
-      "product_key": null,
-      "score": 207,
-      "urgency": "strike_now",
-      "crawl_priority": 160,
-      "last_changed": "2026-10-02T17:01:08.152Z",
       "last_observed_crawler_fetch": null,
       "last_observed_crawler_family": null,
       "indexnow_pending": true,
@@ -16462,54 +17376,12 @@
       ]
     },
     {
-      "path": "/chum/answers/doors/design-a-plan-to-close-these-data-gaps-454b5eb8ab.json",
-      "product_key": null,
-      "score": 207,
-      "urgency": "strike_now",
-      "crawl_priority": 160,
-      "last_changed": "2026-10-02T17:01:08.152Z",
-      "last_observed_crawler_fetch": null,
-      "last_observed_crawler_family": null,
-      "indexnow_pending": true,
-      "negative_provider_pickup_receipts": [],
-      "reasons": [
-        "no_self_identified_crawler_fetch_observed",
-        "indexnow_hash_pending"
-      ],
-      "recommended_actions": [
-        "verify_live_bytes_then_indexnow",
-        "promote_in_hot_discovery_queue",
-        "increase_internal_crosslinks_from_relevant_public_surfaces"
-      ]
-    },
-    {
       "path": "/chum/answers/doors/design-a-plan-to-close-these-data-gaps-454b5eb8ab/",
       "product_key": null,
       "score": 207,
       "urgency": "strike_now",
       "crawl_priority": 160,
       "last_changed": "2026-09-25T07:08:03.584Z",
-      "last_observed_crawler_fetch": null,
-      "last_observed_crawler_family": null,
-      "indexnow_pending": true,
-      "negative_provider_pickup_receipts": [],
-      "reasons": [
-        "no_self_identified_crawler_fetch_observed",
-        "indexnow_hash_pending"
-      ],
-      "recommended_actions": [
-        "verify_live_bytes_then_indexnow",
-        "promote_in_hot_discovery_queue",
-        "increase_internal_crosslinks_from_relevant_public_surfaces"
-      ]
-    },
-    {
-      "path": "/chum/answers/doors/device-reconnect-visibility-edee3d926e.json",
-      "product_key": null,
-      "score": 207,
-      "urgency": "strike_now",
-      "crawl_priority": 160,
-      "last_changed": "2026-10-02T17:01:08.152Z",
       "last_observed_crawler_fetch": null,
       "last_observed_crawler_family": null,
       "indexnow_pending": true,
@@ -16546,27 +17418,6 @@
       ]
     },
     {
-      "path": "/chum/answers/doors/did-my-devices-reconnect-c4d116f491.json",
-      "product_key": null,
-      "score": 207,
-      "urgency": "strike_now",
-      "crawl_priority": 160,
-      "last_changed": "2026-10-02T17:01:08.152Z",
-      "last_observed_crawler_fetch": null,
-      "last_observed_crawler_family": null,
-      "indexnow_pending": true,
-      "negative_provider_pickup_receipts": [],
-      "reasons": [
-        "no_self_identified_crawler_fetch_observed",
-        "indexnow_hash_pending"
-      ],
-      "recommended_actions": [
-        "verify_live_bytes_then_indexnow",
-        "promote_in_hot_discovery_queue",
-        "increase_internal_crosslinks_from_relevant_public_surfaces"
-      ]
-    },
-    {
       "path": "/chum/answers/doors/did-my-devices-reconnect-c4d116f491/",
       "product_key": null,
       "score": 207,
@@ -16588,54 +17439,12 @@
       ]
     },
     {
-      "path": "/chum/answers/doors/do-a-resilience-investigation-227f8bd16b.json",
-      "product_key": null,
-      "score": 207,
-      "urgency": "strike_now",
-      "crawl_priority": 160,
-      "last_changed": "2026-10-02T17:01:08.152Z",
-      "last_observed_crawler_fetch": null,
-      "last_observed_crawler_family": null,
-      "indexnow_pending": true,
-      "negative_provider_pickup_receipts": [],
-      "reasons": [
-        "no_self_identified_crawler_fetch_observed",
-        "indexnow_hash_pending"
-      ],
-      "recommended_actions": [
-        "verify_live_bytes_then_indexnow",
-        "promote_in_hot_discovery_queue",
-        "increase_internal_crosslinks_from_relevant_public_surfaces"
-      ]
-    },
-    {
       "path": "/chum/answers/doors/do-a-resilience-investigation-227f8bd16b/",
       "product_key": null,
       "score": 207,
       "urgency": "strike_now",
       "crawl_priority": 160,
       "last_changed": "2026-09-25T07:08:03.584Z",
-      "last_observed_crawler_fetch": null,
-      "last_observed_crawler_family": null,
-      "indexnow_pending": true,
-      "negative_provider_pickup_receipts": [],
-      "reasons": [
-        "no_self_identified_crawler_fetch_observed",
-        "indexnow_hash_pending"
-      ],
-      "recommended_actions": [
-        "verify_live_bytes_then_indexnow",
-        "promote_in_hot_discovery_queue",
-        "increase_internal_crosslinks_from_relevant_public_surfaces"
-      ]
-    },
-    {
-      "path": "/chum/answers/doors/escape-vendor-lock-in-9bf9834ecc.json",
-      "product_key": null,
-      "score": 207,
-      "urgency": "strike_now",
-      "crawl_priority": 160,
-      "last_changed": "2026-10-02T17:01:08.152Z",
       "last_observed_crawler_fetch": null,
       "last_observed_crawler_family": null,
       "indexnow_pending": true,
@@ -16840,54 +17649,12 @@
       ]
     },
     {
-      "path": "/chum/answers/doors/ev-charger-competition-around-this-address-33f3c50a03.json",
-      "product_key": null,
-      "score": 207,
-      "urgency": "strike_now",
-      "crawl_priority": 160,
-      "last_changed": "2026-10-02T17:01:08.152Z",
-      "last_observed_crawler_fetch": null,
-      "last_observed_crawler_family": null,
-      "indexnow_pending": true,
-      "negative_provider_pickup_receipts": [],
-      "reasons": [
-        "no_self_identified_crawler_fetch_observed",
-        "indexnow_hash_pending"
-      ],
-      "recommended_actions": [
-        "verify_live_bytes_then_indexnow",
-        "promote_in_hot_discovery_queue",
-        "increase_internal_crosslinks_from_relevant_public_surfaces"
-      ]
-    },
-    {
       "path": "/chum/answers/doors/ev-charger-competition-around-this-address-33f3c50a03/",
       "product_key": null,
       "score": 207,
       "urgency": "strike_now",
       "crawl_priority": 160,
       "last_changed": "2026-09-25T07:08:03.584Z",
-      "last_observed_crawler_fetch": null,
-      "last_observed_crawler_family": null,
-      "indexnow_pending": true,
-      "negative_provider_pickup_receipts": [],
-      "reasons": [
-        "no_self_identified_crawler_fetch_observed",
-        "indexnow_hash_pending"
-      ],
-      "recommended_actions": [
-        "verify_live_bytes_then_indexnow",
-        "promote_in_hot_discovery_queue",
-        "increase_internal_crosslinks_from_relevant_public_surfaces"
-      ]
-    },
-    {
-      "path": "/chum/answers/doors/ev-charger-competition-near-this-address-aa69cb1075.json",
-      "product_key": null,
-      "score": 207,
-      "urgency": "strike_now",
-      "crawl_priority": 160,
-      "last_changed": "2026-10-02T17:01:08.152Z",
       "last_observed_crawler_fetch": null,
       "last_observed_crawler_family": null,
       "indexnow_pending": true,
@@ -16924,54 +17691,12 @@
       ]
     },
     {
-      "path": "/chum/answers/doors/ev-charger-feasibility-by-address-8a81d21c84.json",
-      "product_key": null,
-      "score": 207,
-      "urgency": "strike_now",
-      "crawl_priority": 160,
-      "last_changed": "2026-10-02T17:01:08.152Z",
-      "last_observed_crawler_fetch": null,
-      "last_observed_crawler_family": null,
-      "indexnow_pending": true,
-      "negative_provider_pickup_receipts": [],
-      "reasons": [
-        "no_self_identified_crawler_fetch_observed",
-        "indexnow_hash_pending"
-      ],
-      "recommended_actions": [
-        "verify_live_bytes_then_indexnow",
-        "promote_in_hot_discovery_queue",
-        "increase_internal_crosslinks_from_relevant_public_surfaces"
-      ]
-    },
-    {
       "path": "/chum/answers/doors/ev-charger-feasibility-by-address-8a81d21c84/",
       "product_key": null,
       "score": 207,
       "urgency": "strike_now",
       "crawl_priority": 160,
       "last_changed": "2026-10-01T05:00:27.354Z",
-      "last_observed_crawler_fetch": null,
-      "last_observed_crawler_family": null,
-      "indexnow_pending": true,
-      "negative_provider_pickup_receipts": [],
-      "reasons": [
-        "no_self_identified_crawler_fetch_observed",
-        "indexnow_hash_pending"
-      ],
-      "recommended_actions": [
-        "verify_live_bytes_then_indexnow",
-        "promote_in_hot_discovery_queue",
-        "increase_internal_crosslinks_from_relevant_public_surfaces"
-      ]
-    },
-    {
-      "path": "/chum/answers/doors/ev-charger-investment-report-ed6fd3f23a.json",
-      "product_key": null,
-      "score": 207,
-      "urgency": "strike_now",
-      "crawl_priority": 160,
-      "last_changed": "2026-10-02T17:01:08.152Z",
       "last_observed_crawler_fetch": null,
       "last_observed_crawler_family": null,
       "indexnow_pending": true,
@@ -17008,54 +17733,12 @@
       ]
     },
     {
-      "path": "/chum/answers/doors/ev-charger-site-analysis-fc320bee89.json",
-      "product_key": null,
-      "score": 207,
-      "urgency": "strike_now",
-      "crawl_priority": 160,
-      "last_changed": "2026-10-02T17:01:08.152Z",
-      "last_observed_crawler_fetch": null,
-      "last_observed_crawler_family": null,
-      "indexnow_pending": true,
-      "negative_provider_pickup_receipts": [],
-      "reasons": [
-        "no_self_identified_crawler_fetch_observed",
-        "indexnow_hash_pending"
-      ],
-      "recommended_actions": [
-        "verify_live_bytes_then_indexnow",
-        "promote_in_hot_discovery_queue",
-        "increase_internal_crosslinks_from_relevant_public_surfaces"
-      ]
-    },
-    {
       "path": "/chum/answers/doors/ev-charger-site-analysis-fc320bee89/",
       "product_key": null,
       "score": 207,
       "urgency": "strike_now",
       "crawl_priority": 160,
       "last_changed": "2026-09-25T07:08:03.584Z",
-      "last_observed_crawler_fetch": null,
-      "last_observed_crawler_family": null,
-      "indexnow_pending": true,
-      "negative_provider_pickup_receipts": [],
-      "reasons": [
-        "no_self_identified_crawler_fetch_observed",
-        "indexnow_hash_pending"
-      ],
-      "recommended_actions": [
-        "verify_live_bytes_then_indexnow",
-        "promote_in_hot_discovery_queue",
-        "increase_internal_crosslinks_from_relevant_public_surfaces"
-      ]
-    },
-    {
-      "path": "/chum/answers/doors/ev-charging-demand-near-this-property-76a21ea75b.json",
-      "product_key": null,
-      "score": 207,
-      "urgency": "strike_now",
-      "crawl_priority": 160,
-      "last_changed": "2026-10-02T17:01:08.152Z",
       "last_observed_crawler_fetch": null,
       "last_observed_crawler_family": null,
       "indexnow_pending": true,
@@ -17092,54 +17775,12 @@
       ]
     },
     {
-      "path": "/chum/answers/doors/ev-charging-diligence-91e2eec236.json",
-      "product_key": null,
-      "score": 207,
-      "urgency": "strike_now",
-      "crawl_priority": 160,
-      "last_changed": "2026-10-02T17:01:08.152Z",
-      "last_observed_crawler_fetch": null,
-      "last_observed_crawler_family": null,
-      "indexnow_pending": true,
-      "negative_provider_pickup_receipts": [],
-      "reasons": [
-        "no_self_identified_crawler_fetch_observed",
-        "indexnow_hash_pending"
-      ],
-      "recommended_actions": [
-        "verify_live_bytes_then_indexnow",
-        "promote_in_hot_discovery_queue",
-        "increase_internal_crosslinks_from_relevant_public_surfaces"
-      ]
-    },
-    {
       "path": "/chum/answers/doors/ev-charging-diligence-91e2eec236/",
       "product_key": null,
       "score": 207,
       "urgency": "strike_now",
       "crawl_priority": 160,
       "last_changed": "2026-09-26T04:58:13.847Z",
-      "last_observed_crawler_fetch": null,
-      "last_observed_crawler_family": null,
-      "indexnow_pending": true,
-      "negative_provider_pickup_receipts": [],
-      "reasons": [
-        "no_self_identified_crawler_fetch_observed",
-        "indexnow_hash_pending"
-      ],
-      "recommended_actions": [
-        "verify_live_bytes_then_indexnow",
-        "promote_in_hot_discovery_queue",
-        "increase_internal_crosslinks_from_relevant_public_surfaces"
-      ]
-    },
-    {
-      "path": "/chum/answers/doors/ev-charging-feasibility-by-address-734eac6eee.json",
-      "product_key": null,
-      "score": 207,
-      "urgency": "strike_now",
-      "crawl_priority": 160,
-      "last_changed": "2026-10-02T17:01:08.152Z",
       "last_observed_crawler_fetch": null,
       "last_observed_crawler_family": null,
       "indexnow_pending": true,
@@ -17176,54 +17817,12 @@
       ]
     },
     {
-      "path": "/chum/answers/doors/ev-charging-incentives-for-this-site-76fa0b5a6c.json",
-      "product_key": null,
-      "score": 207,
-      "urgency": "strike_now",
-      "crawl_priority": 160,
-      "last_changed": "2026-10-02T17:01:08.152Z",
-      "last_observed_crawler_fetch": null,
-      "last_observed_crawler_family": null,
-      "indexnow_pending": true,
-      "negative_provider_pickup_receipts": [],
-      "reasons": [
-        "no_self_identified_crawler_fetch_observed",
-        "indexnow_hash_pending"
-      ],
-      "recommended_actions": [
-        "verify_live_bytes_then_indexnow",
-        "promote_in_hot_discovery_queue",
-        "increase_internal_crosslinks_from_relevant_public_surfaces"
-      ]
-    },
-    {
       "path": "/chum/answers/doors/ev-charging-incentives-for-this-site-76fa0b5a6c/",
       "product_key": null,
       "score": 207,
       "urgency": "strike_now",
       "crawl_priority": 160,
       "last_changed": "2026-10-01T05:00:27.354Z",
-      "last_observed_crawler_fetch": null,
-      "last_observed_crawler_family": null,
-      "indexnow_pending": true,
-      "negative_provider_pickup_receipts": [],
-      "reasons": [
-        "no_self_identified_crawler_fetch_observed",
-        "indexnow_hash_pending"
-      ],
-      "recommended_actions": [
-        "verify_live_bytes_then_indexnow",
-        "promote_in_hot_discovery_queue",
-        "increase_internal_crosslinks_from_relevant_public_surfaces"
-      ]
-    },
-    {
-      "path": "/chum/answers/doors/ev-charging-opportunity-report-43ed1d1e31.json",
-      "product_key": null,
-      "score": 207,
-      "urgency": "strike_now",
-      "crawl_priority": 160,
-      "last_changed": "2026-10-02T17:01:08.152Z",
       "last_observed_crawler_fetch": null,
       "last_observed_crawler_family": null,
       "indexnow_pending": true,
@@ -17344,54 +17943,12 @@
       ]
     },
     {
-      "path": "/chum/answers/doors/ev-charging-roi-for-this-property-23181c0dbc.json",
-      "product_key": null,
-      "score": 207,
-      "urgency": "strike_now",
-      "crawl_priority": 160,
-      "last_changed": "2026-10-02T17:01:08.152Z",
-      "last_observed_crawler_fetch": null,
-      "last_observed_crawler_family": null,
-      "indexnow_pending": true,
-      "negative_provider_pickup_receipts": [],
-      "reasons": [
-        "no_self_identified_crawler_fetch_observed",
-        "indexnow_hash_pending"
-      ],
-      "recommended_actions": [
-        "verify_live_bytes_then_indexnow",
-        "promote_in_hot_discovery_queue",
-        "increase_internal_crosslinks_from_relevant_public_surfaces"
-      ]
-    },
-    {
       "path": "/chum/answers/doors/ev-charging-roi-for-this-property-23181c0dbc/",
       "product_key": null,
       "score": 207,
       "urgency": "strike_now",
       "crawl_priority": 160,
       "last_changed": "2026-10-01T05:00:27.354Z",
-      "last_observed_crawler_fetch": null,
-      "last_observed_crawler_family": null,
-      "indexnow_pending": true,
-      "negative_provider_pickup_receipts": [],
-      "reasons": [
-        "no_self_identified_crawler_fetch_observed",
-        "indexnow_hash_pending"
-      ],
-      "recommended_actions": [
-        "verify_live_bytes_then_indexnow",
-        "promote_in_hot_discovery_queue",
-        "increase_internal_crosslinks_from_relevant_public_surfaces"
-      ]
-    },
-    {
-      "path": "/chum/answers/doors/ev-charging-site-analysis-by-address-1e6ee8e9ee.json",
-      "product_key": null,
-      "score": 207,
-      "urgency": "strike_now",
-      "crawl_priority": 160,
-      "last_changed": "2026-10-02T17:01:08.152Z",
       "last_observed_crawler_fetch": null,
       "last_observed_crawler_family": null,
       "indexnow_pending": true,
@@ -17554,54 +18111,12 @@
       ]
     },
     {
-      "path": "/chum/answers/doors/evaluate-this-address-for-ev-charging-c676bc6509.json",
-      "product_key": null,
-      "score": 207,
-      "urgency": "strike_now",
-      "crawl_priority": 160,
-      "last_changed": "2026-10-02T17:01:08.152Z",
-      "last_observed_crawler_fetch": null,
-      "last_observed_crawler_family": null,
-      "indexnow_pending": true,
-      "negative_provider_pickup_receipts": [],
-      "reasons": [
-        "no_self_identified_crawler_fetch_observed",
-        "indexnow_hash_pending"
-      ],
-      "recommended_actions": [
-        "verify_live_bytes_then_indexnow",
-        "promote_in_hot_discovery_queue",
-        "increase_internal_crosslinks_from_relevant_public_surfaces"
-      ]
-    },
-    {
       "path": "/chum/answers/doors/evaluate-this-address-for-ev-charging-c676bc6509/",
       "product_key": null,
       "score": 207,
       "urgency": "strike_now",
       "crawl_priority": 160,
       "last_changed": "2026-09-26T04:58:13.847Z",
-      "last_observed_crawler_fetch": null,
-      "last_observed_crawler_family": null,
-      "indexnow_pending": true,
-      "negative_provider_pickup_receipts": [],
-      "reasons": [
-        "no_self_identified_crawler_fetch_observed",
-        "indexnow_hash_pending"
-      ],
-      "recommended_actions": [
-        "verify_live_bytes_then_indexnow",
-        "promote_in_hot_discovery_queue",
-        "increase_internal_crosslinks_from_relevant_public_surfaces"
-      ]
-    },
-    {
-      "path": "/chum/answers/doors/evaluate-this-candidate-from-the-evidence-1a2808f3be.json",
-      "product_key": null,
-      "score": 207,
-      "urgency": "strike_now",
-      "crawl_priority": 160,
-      "last_changed": "2026-10-02T17:01:08.152Z",
       "last_observed_crawler_fetch": null,
       "last_observed_crawler_family": null,
       "indexnow_pending": true,
@@ -17722,54 +18237,12 @@
       ]
     },
     {
-      "path": "/chum/answers/doors/evercraft-network-membership-861ace178a.json",
-      "product_key": null,
-      "score": 207,
-      "urgency": "strike_now",
-      "crawl_priority": 160,
-      "last_changed": "2026-10-02T17:01:08.152Z",
-      "last_observed_crawler_fetch": null,
-      "last_observed_crawler_family": null,
-      "indexnow_pending": true,
-      "negative_provider_pickup_receipts": [],
-      "reasons": [
-        "no_self_identified_crawler_fetch_observed",
-        "indexnow_hash_pending"
-      ],
-      "recommended_actions": [
-        "verify_live_bytes_then_indexnow",
-        "promote_in_hot_discovery_queue",
-        "increase_internal_crosslinks_from_relevant_public_surfaces"
-      ]
-    },
-    {
       "path": "/chum/answers/doors/evercraft-network-membership-861ace178a/",
       "product_key": null,
       "score": 207,
       "urgency": "strike_now",
       "crawl_priority": 160,
       "last_changed": "2026-10-01T05:00:27.354Z",
-      "last_observed_crawler_fetch": null,
-      "last_observed_crawler_family": null,
-      "indexnow_pending": true,
-      "negative_provider_pickup_receipts": [],
-      "reasons": [
-        "no_self_identified_crawler_fetch_observed",
-        "indexnow_hash_pending"
-      ],
-      "recommended_actions": [
-        "verify_live_bytes_then_indexnow",
-        "promote_in_hot_discovery_queue",
-        "increase_internal_crosslinks_from_relevant_public_surfaces"
-      ]
-    },
-    {
-      "path": "/chum/answers/doors/evidence-timeline-review-2e05014564.json",
-      "product_key": null,
-      "score": 207,
-      "urgency": "strike_now",
-      "crawl_priority": 160,
-      "last_changed": "2026-10-02T17:01:08.152Z",
       "last_observed_crawler_fetch": null,
       "last_observed_crawler_family": null,
       "indexnow_pending": true,
@@ -18100,54 +18573,12 @@
       ]
     },
     {
-      "path": "/chum/answers/doors/export-an-ai-built-app-5cdc62676d.json",
-      "product_key": null,
-      "score": 207,
-      "urgency": "strike_now",
-      "crawl_priority": 160,
-      "last_changed": "2026-10-02T17:01:08.152Z",
-      "last_observed_crawler_fetch": null,
-      "last_observed_crawler_family": null,
-      "indexnow_pending": true,
-      "negative_provider_pickup_receipts": [],
-      "reasons": [
-        "no_self_identified_crawler_fetch_observed",
-        "indexnow_hash_pending"
-      ],
-      "recommended_actions": [
-        "verify_live_bytes_then_indexnow",
-        "promote_in_hot_discovery_queue",
-        "increase_internal_crosslinks_from_relevant_public_surfaces"
-      ]
-    },
-    {
       "path": "/chum/answers/doors/export-an-ai-built-app-5cdc62676d/",
       "product_key": null,
       "score": 207,
       "urgency": "strike_now",
       "crawl_priority": 160,
       "last_changed": "2026-09-25T07:08:03.584Z",
-      "last_observed_crawler_fetch": null,
-      "last_observed_crawler_family": null,
-      "indexnow_pending": true,
-      "negative_provider_pickup_receipts": [],
-      "reasons": [
-        "no_self_identified_crawler_fetch_observed",
-        "indexnow_hash_pending"
-      ],
-      "recommended_actions": [
-        "verify_live_bytes_then_indexnow",
-        "promote_in_hot_discovery_queue",
-        "increase_internal_crosslinks_from_relevant_public_surfaces"
-      ]
-    },
-    {
-      "path": "/chum/answers/doors/extend-this-bounded-build-run-0e2e4d2c1f.json",
-      "product_key": null,
-      "score": 207,
-      "urgency": "strike_now",
-      "crawl_priority": 160,
-      "last_changed": "2026-10-02T17:01:08.152Z",
       "last_observed_crawler_fetch": null,
       "last_observed_crawler_family": null,
       "indexnow_pending": true,
@@ -18211,27 +18642,6 @@
       "urgency": "strike_now",
       "crawl_priority": 160,
       "last_changed": "2026-10-01T05:00:27.354Z",
-      "last_observed_crawler_fetch": null,
-      "last_observed_crawler_family": null,
-      "indexnow_pending": true,
-      "negative_provider_pickup_receipts": [],
-      "reasons": [
-        "no_self_identified_crawler_fetch_observed",
-        "indexnow_hash_pending"
-      ],
-      "recommended_actions": [
-        "verify_live_bytes_then_indexnow",
-        "promote_in_hot_discovery_queue",
-        "increase_internal_crosslinks_from_relevant_public_surfaces"
-      ]
-    },
-    {
-      "path": "/chum/answers/doors/family-check-in-safety-90b9db7865.json",
-      "product_key": null,
-      "score": 207,
-      "urgency": "strike_now",
-      "crawl_priority": 160,
-      "last_changed": "2026-10-02T17:01:08.152Z",
       "last_observed_crawler_fetch": null,
       "last_observed_crawler_family": null,
       "indexnow_pending": true,
@@ -18520,27 +18930,6 @@
       ]
     },
     {
-      "path": "/chum/answers/doors/feature-my-venue-on-eventwave-91a643633e.json",
-      "product_key": null,
-      "score": 207,
-      "urgency": "strike_now",
-      "crawl_priority": 160,
-      "last_changed": "2026-10-02T17:01:08.152Z",
-      "last_observed_crawler_fetch": null,
-      "last_observed_crawler_family": null,
-      "indexnow_pending": true,
-      "negative_provider_pickup_receipts": [],
-      "reasons": [
-        "no_self_identified_crawler_fetch_observed",
-        "indexnow_hash_pending"
-      ],
-      "recommended_actions": [
-        "verify_live_bytes_then_indexnow",
-        "promote_in_hot_discovery_queue",
-        "increase_internal_crosslinks_from_relevant_public_surfaces"
-      ]
-    },
-    {
       "path": "/chum/answers/doors/feature-my-venue-on-eventwave-91a643633e/",
       "product_key": null,
       "score": 207,
@@ -18589,27 +18978,6 @@
       "urgency": "strike_now",
       "crawl_priority": 160,
       "last_changed": "2026-09-25T07:08:03.584Z",
-      "last_observed_crawler_fetch": null,
-      "last_observed_crawler_family": null,
-      "indexnow_pending": true,
-      "negative_provider_pickup_receipts": [],
-      "reasons": [
-        "no_self_identified_crawler_fetch_observed",
-        "indexnow_hash_pending"
-      ],
-      "recommended_actions": [
-        "verify_live_bytes_then_indexnow",
-        "promote_in_hot_discovery_queue",
-        "increase_internal_crosslinks_from_relevant_public_surfaces"
-      ]
-    },
-    {
-      "path": "/chum/answers/doors/fetch-a-webpage-for-my-ai-agent-fc5f02747b.json",
-      "product_key": null,
-      "score": 207,
-      "urgency": "strike_now",
-      "crawl_priority": 160,
-      "last_changed": "2026-10-02T17:01:08.152Z",
       "last_observed_crawler_fetch": null,
       "last_observed_crawler_family": null,
       "indexnow_pending": true,
@@ -18772,27 +19140,6 @@
       ]
     },
     {
-      "path": "/chum/answers/doors/find-a-discontinued-part-5646da09bb.json",
-      "product_key": null,
-      "score": 207,
-      "urgency": "strike_now",
-      "crawl_priority": 160,
-      "last_changed": "2026-10-02T17:01:08.152Z",
-      "last_observed_crawler_fetch": null,
-      "last_observed_crawler_family": null,
-      "indexnow_pending": true,
-      "negative_provider_pickup_receipts": [],
-      "reasons": [
-        "no_self_identified_crawler_fetch_observed",
-        "indexnow_hash_pending"
-      ],
-      "recommended_actions": [
-        "verify_live_bytes_then_indexnow",
-        "promote_in_hot_discovery_queue",
-        "increase_internal_crosslinks_from_relevant_public_surfaces"
-      ]
-    },
-    {
       "path": "/chum/answers/doors/find-a-discontinued-part-5646da09bb/",
       "product_key": null,
       "score": 207,
@@ -18814,54 +19161,12 @@
       ]
     },
     {
-      "path": "/chum/answers/doors/find-a-donor-or-salvage-part-310843faf9.json",
-      "product_key": null,
-      "score": 207,
-      "urgency": "strike_now",
-      "crawl_priority": 160,
-      "last_changed": "2026-10-02T17:01:08.152Z",
-      "last_observed_crawler_fetch": null,
-      "last_observed_crawler_family": null,
-      "indexnow_pending": true,
-      "negative_provider_pickup_receipts": [],
-      "reasons": [
-        "no_self_identified_crawler_fetch_observed",
-        "indexnow_hash_pending"
-      ],
-      "recommended_actions": [
-        "verify_live_bytes_then_indexnow",
-        "promote_in_hot_discovery_queue",
-        "increase_internal_crosslinks_from_relevant_public_surfaces"
-      ]
-    },
-    {
       "path": "/chum/answers/doors/find-a-donor-or-salvage-part-310843faf9/",
       "product_key": null,
       "score": 207,
       "urgency": "strike_now",
       "crawl_priority": 160,
       "last_changed": "2026-09-30T20:55:21.460Z",
-      "last_observed_crawler_fetch": null,
-      "last_observed_crawler_family": null,
-      "indexnow_pending": true,
-      "negative_provider_pickup_receipts": [],
-      "reasons": [
-        "no_self_identified_crawler_fetch_observed",
-        "indexnow_hash_pending"
-      ],
-      "recommended_actions": [
-        "verify_live_bytes_then_indexnow",
-        "promote_in_hot_discovery_queue",
-        "increase_internal_crosslinks_from_relevant_public_surfaces"
-      ]
-    },
-    {
-      "path": "/chum/answers/doors/find-a-hard-to-source-part-78dcd37ecc.json",
-      "product_key": null,
-      "score": 207,
-      "urgency": "strike_now",
-      "crawl_priority": 160,
-      "last_changed": "2026-10-02T17:01:08.152Z",
       "last_observed_crawler_fetch": null,
       "last_observed_crawler_family": null,
       "indexnow_pending": true,
@@ -19024,27 +19329,6 @@
       ]
     },
     {
-      "path": "/chum/answers/doors/find-bottlenecks-in-this-business-workflow-55d27040ce.json",
-      "product_key": null,
-      "score": 207,
-      "urgency": "strike_now",
-      "crawl_priority": 160,
-      "last_changed": "2026-10-02T17:01:08.152Z",
-      "last_observed_crawler_fetch": null,
-      "last_observed_crawler_family": null,
-      "indexnow_pending": true,
-      "negative_provider_pickup_receipts": [],
-      "reasons": [
-        "no_self_identified_crawler_fetch_observed",
-        "indexnow_hash_pending"
-      ],
-      "recommended_actions": [
-        "verify_live_bytes_then_indexnow",
-        "promote_in_hot_discovery_queue",
-        "increase_internal_crosslinks_from_relevant_public_surfaces"
-      ]
-    },
-    {
       "path": "/chum/answers/doors/find-bottlenecks-in-this-business-workflow-55d27040ce/",
       "product_key": null,
       "score": 207,
@@ -19066,54 +19350,12 @@
       ]
     },
     {
-      "path": "/chum/answers/doors/find-capital-options-for-this-project-9a78204138.json",
-      "product_key": null,
-      "score": 207,
-      "urgency": "strike_now",
-      "crawl_priority": 160,
-      "last_changed": "2026-10-02T17:01:08.152Z",
-      "last_observed_crawler_fetch": null,
-      "last_observed_crawler_family": null,
-      "indexnow_pending": true,
-      "negative_provider_pickup_receipts": [],
-      "reasons": [
-        "no_self_identified_crawler_fetch_observed",
-        "indexnow_hash_pending"
-      ],
-      "recommended_actions": [
-        "verify_live_bytes_then_indexnow",
-        "promote_in_hot_discovery_queue",
-        "increase_internal_crosslinks_from_relevant_public_surfaces"
-      ]
-    },
-    {
       "path": "/chum/answers/doors/find-capital-options-for-this-project-9a78204138/",
       "product_key": null,
       "score": 207,
       "urgency": "strike_now",
       "crawl_priority": 160,
       "last_changed": "2026-09-25T07:08:03.584Z",
-      "last_observed_crawler_fetch": null,
-      "last_observed_crawler_family": null,
-      "indexnow_pending": true,
-      "negative_provider_pickup_receipts": [],
-      "reasons": [
-        "no_self_identified_crawler_fetch_observed",
-        "indexnow_hash_pending"
-      ],
-      "recommended_actions": [
-        "verify_live_bytes_then_indexnow",
-        "promote_in_hot_discovery_queue",
-        "increase_internal_crosslinks_from_relevant_public_surfaces"
-      ]
-    },
-    {
-      "path": "/chum/answers/doors/find-conflicts-in-our-business-exports-f352d58cb0.json",
-      "product_key": null,
-      "score": 207,
-      "urgency": "strike_now",
-      "crawl_priority": 160,
-      "last_changed": "2026-10-02T17:01:08.152Z",
       "last_observed_crawler_fetch": null,
       "last_observed_crawler_family": null,
       "indexnow_pending": true,
@@ -19192,27 +19434,6 @@
       ]
     },
     {
-      "path": "/chum/answers/doors/find-conversion-problems-on-my-website-071e47ffaf.json",
-      "product_key": null,
-      "score": 207,
-      "urgency": "strike_now",
-      "crawl_priority": 160,
-      "last_changed": "2026-10-02T17:01:08.152Z",
-      "last_observed_crawler_fetch": null,
-      "last_observed_crawler_family": null,
-      "indexnow_pending": true,
-      "negative_provider_pickup_receipts": [],
-      "reasons": [
-        "no_self_identified_crawler_fetch_observed",
-        "indexnow_hash_pending"
-      ],
-      "recommended_actions": [
-        "verify_live_bytes_then_indexnow",
-        "promote_in_hot_discovery_queue",
-        "increase_internal_crosslinks_from_relevant_public_surfaces"
-      ]
-    },
-    {
       "path": "/chum/answers/doors/find-conversion-problems-on-my-website-071e47ffaf/",
       "product_key": null,
       "score": 207,
@@ -19276,27 +19497,6 @@
       ]
     },
     {
-      "path": "/chum/answers/doors/find-ev-charging-opportunities-in-this-market-c01f603871.json",
-      "product_key": null,
-      "score": 207,
-      "urgency": "strike_now",
-      "crawl_priority": 160,
-      "last_changed": "2026-10-02T17:01:08.152Z",
-      "last_observed_crawler_fetch": null,
-      "last_observed_crawler_family": null,
-      "indexnow_pending": true,
-      "negative_provider_pickup_receipts": [],
-      "reasons": [
-        "no_self_identified_crawler_fetch_observed",
-        "indexnow_hash_pending"
-      ],
-      "recommended_actions": [
-        "verify_live_bytes_then_indexnow",
-        "promote_in_hot_discovery_queue",
-        "increase_internal_crosslinks_from_relevant_public_surfaces"
-      ]
-    },
-    {
       "path": "/chum/answers/doors/find-ev-charging-opportunities-in-this-market-c01f603871/",
       "product_key": null,
       "score": 207,
@@ -19345,27 +19545,6 @@
       "urgency": "strike_now",
       "crawl_priority": 160,
       "last_changed": "2026-09-25T07:08:03.584Z",
-      "last_observed_crawler_fetch": null,
-      "last_observed_crawler_family": null,
-      "indexnow_pending": true,
-      "negative_provider_pickup_receipts": [],
-      "reasons": [
-        "no_self_identified_crawler_fetch_observed",
-        "indexnow_hash_pending"
-      ],
-      "recommended_actions": [
-        "verify_live_bytes_then_indexnow",
-        "promote_in_hot_discovery_queue",
-        "increase_internal_crosslinks_from_relevant_public_surfaces"
-      ]
-    },
-    {
-      "path": "/chum/answers/doors/find-gaps-in-this-candidate-s-proof-2c2dbfdfec.json",
-      "product_key": null,
-      "score": 207,
-      "urgency": "strike_now",
-      "crawl_priority": 160,
-      "last_changed": "2026-10-02T17:01:08.152Z",
       "last_observed_crawler_fetch": null,
       "last_observed_crawler_family": null,
       "indexnow_pending": true,
@@ -19486,27 +19665,6 @@
       ]
     },
     {
-      "path": "/chum/answers/doors/find-missing-pod-or-rate-mismatches-d7a7e22349.json",
-      "product_key": null,
-      "score": 207,
-      "urgency": "strike_now",
-      "crawl_priority": 160,
-      "last_changed": "2026-10-02T17:01:08.152Z",
-      "last_observed_crawler_fetch": null,
-      "last_observed_crawler_family": null,
-      "indexnow_pending": true,
-      "negative_provider_pickup_receipts": [],
-      "reasons": [
-        "no_self_identified_crawler_fetch_observed",
-        "indexnow_hash_pending"
-      ],
-      "recommended_actions": [
-        "verify_live_bytes_then_indexnow",
-        "promote_in_hot_discovery_queue",
-        "increase_internal_crosslinks_from_relevant_public_surfaces"
-      ]
-    },
-    {
       "path": "/chum/answers/doors/find-missing-pod-or-rate-mismatches-d7a7e22349/",
       "product_key": null,
       "score": 207,
@@ -19528,54 +19686,12 @@
       ]
     },
     {
-      "path": "/chum/answers/doors/find-missing-purchasing-approvals-84e71137c4.json",
-      "product_key": null,
-      "score": 207,
-      "urgency": "strike_now",
-      "crawl_priority": 160,
-      "last_changed": "2026-10-02T17:01:08.152Z",
-      "last_observed_crawler_fetch": null,
-      "last_observed_crawler_family": null,
-      "indexnow_pending": true,
-      "negative_provider_pickup_receipts": [],
-      "reasons": [
-        "no_self_identified_crawler_fetch_observed",
-        "indexnow_hash_pending"
-      ],
-      "recommended_actions": [
-        "verify_live_bytes_then_indexnow",
-        "promote_in_hot_discovery_queue",
-        "increase_internal_crosslinks_from_relevant_public_surfaces"
-      ]
-    },
-    {
       "path": "/chum/answers/doors/find-missing-purchasing-approvals-84e71137c4/",
       "product_key": null,
       "score": 207,
       "urgency": "strike_now",
       "crawl_priority": 160,
       "last_changed": "2026-09-25T07:08:03.584Z",
-      "last_observed_crawler_fetch": null,
-      "last_observed_crawler_family": null,
-      "indexnow_pending": true,
-      "negative_provider_pickup_receipts": [],
-      "reasons": [
-        "no_self_identified_crawler_fetch_observed",
-        "indexnow_hash_pending"
-      ],
-      "recommended_actions": [
-        "verify_live_bytes_then_indexnow",
-        "promote_in_hot_discovery_queue",
-        "increase_internal_crosslinks_from_relevant_public_surfaces"
-      ]
-    },
-    {
-      "path": "/chum/answers/doors/find-obsolete-parts-for-customers-a63d0789ef.json",
-      "product_key": null,
-      "score": 207,
-      "urgency": "strike_now",
-      "crawl_priority": 160,
-      "last_changed": "2026-10-02T17:01:08.152Z",
       "last_observed_crawler_fetch": null,
       "last_observed_crawler_family": null,
       "indexnow_pending": true,
@@ -19723,27 +19839,6 @@
       "urgency": "strike_now",
       "crawl_priority": 160,
       "last_changed": "2026-09-25T07:08:03.584Z",
-      "last_observed_crawler_fetch": null,
-      "last_observed_crawler_family": null,
-      "indexnow_pending": true,
-      "negative_provider_pickup_receipts": [],
-      "reasons": [
-        "no_self_identified_crawler_fetch_observed",
-        "indexnow_hash_pending"
-      ],
-      "recommended_actions": [
-        "verify_live_bytes_then_indexnow",
-        "promote_in_hot_discovery_queue",
-        "increase_internal_crosslinks_from_relevant_public_surfaces"
-      ]
-    },
-    {
-      "path": "/chum/answers/doors/find-provenance-problems-in-this-data-57334a96e5.json",
-      "product_key": null,
-      "score": 207,
-      "urgency": "strike_now",
-      "crawl_priority": 160,
-      "last_changed": "2026-10-02T17:01:08.152Z",
       "last_observed_crawler_fetch": null,
       "last_observed_crawler_family": null,
       "indexnow_pending": true,
