@@ -3,7 +3,7 @@
   "provider": "Evercraft LLC",
   "public_id": "faie-signal-brief-v1",
   "name": "FAIE Evidence-First Signal Brief",
-  "problem": "A buyer has one bounded agriculture, land, water, production or resilience question and needs a sourced evidence-first investigation.",
+  "problem": "A buyer has a bounded agriculture, land, water, production, resilience, or food-infrastructure question and needs a sourced evidence-first investigation that separates what is known, challenged, missing, and required next.",
   "pricing": "Signal Brief $250 one-time; Proof Sprint $2,500 one-time. Other intake categories are not auto-quotable.",
   "commercial_state": "sell_now",
   "machine_state": "payment_ready",
@@ -14,17 +14,31 @@
     "investigate this agriculture signal",
     "give me an evidence brief on this region",
     "validate this environmental signal",
-    "do a resilience investigation"
+    "do a resilience investigation",
+    "underwrite this food infrastructure site",
+    "compare these agriculture production locations",
+    "stress test this food production thesis",
+    "tell me what evidence is missing before we build"
   ],
   "discovered_user_language": [
     "research this land or water question",
     "investigate this agriculture signal",
     "give me an evidence brief on this region",
     "validate this environmental signal",
-    "do a resilience investigation"
+    "do a resilience investigation",
+    "underwrite this food infrastructure site",
+    "compare these agriculture production locations",
+    "stress test this food production thesis",
+    "tell me what evidence is missing before we build"
   ],
-  "answer_door_count": 5,
+  "answer_door_count": 9,
   "answer_doors": [
+    {
+      "answer_id": "intent:8c40a2cd41",
+      "phrase": "compare these agriculture production locations",
+      "html": "/chum/answers/doors/compare-these-agriculture-production-locations-8c40a2cd41/",
+      "json": "/chum/answers/doors/compare-these-agriculture-production-locations-8c40a2cd41.json"
+    },
     {
       "answer_id": "intent:227f8bd16b",
       "phrase": "do a resilience investigation",
@@ -48,6 +62,24 @@
       "phrase": "research this land or water question",
       "html": "/chum/answers/doors/research-this-land-or-water-question-db58edbbad/",
       "json": "/chum/answers/doors/research-this-land-or-water-question-db58edbbad.json"
+    },
+    {
+      "answer_id": "intent:6e974283aa",
+      "phrase": "stress test this food production thesis",
+      "html": "/chum/answers/doors/stress-test-this-food-production-thesis-6e974283aa/",
+      "json": "/chum/answers/doors/stress-test-this-food-production-thesis-6e974283aa.json"
+    },
+    {
+      "answer_id": "intent:ea50112a02",
+      "phrase": "tell me what evidence is missing before we build",
+      "html": "/chum/answers/doors/tell-me-what-evidence-is-missing-before-we-build-ea50112a02/",
+      "json": "/chum/answers/doors/tell-me-what-evidence-is-missing-before-we-build-ea50112a02.json"
+    },
+    {
+      "answer_id": "intent:0dfb274827",
+      "phrase": "underwrite this food infrastructure site",
+      "html": "/chum/answers/doors/underwrite-this-food-infrastructure-site-0dfb274827/",
+      "json": "/chum/answers/doors/underwrite-this-food-infrastructure-site-0dfb274827.json"
     },
     {
       "answer_id": "intent:bffe897b1e",

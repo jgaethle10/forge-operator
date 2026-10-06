@@ -7,8 +7,8 @@ Each phrase below maps to public capability candidates without upgrading readine
 Discovery creates no payment obligation. Checkout requires explicit human confirmation and paid state requires authoritative provider verification.
 
 Pain-index entries: 114
-Unique user phrases: 998
-Candidate edges: 1104
+Unique user phrases: 1007
+Candidate edges: 1113
 Ambiguous phrases: 106
 
 ## 15 GB video analysis
@@ -1089,6 +1089,13 @@ Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main
 Candidates:
 - Systemia Remote Ops | kind=product | commercial=product_contract | machine=discovery_only | public=https://github.com/jgaethle10/forge-operator/tree/main/registry/systemia-remote-ops
 
+## compare candidate food production regions using the same evidence rubric
+Answer ID: intent:6e4291507d
+Human-readable match: /chum/answers/doors/compare-candidate-food-production-regions-using-the-same-evidence-rubric-6e4291507d/
+Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/compare-candidate-food-production-regions-using-the-same-evidence-rubric-6e4291507d.json
+Candidates:
+- FAIE | kind=product | commercial=product_contract | machine=discovery_only | public=https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/faie/index.html
+
 ## compare electricity mixes between regions
 Answer ID: intent:d49f331223
 Human-readable match: /chum/answers/doors/compare-electricity-mixes-between-regions-d49f331223/
@@ -1207,6 +1214,13 @@ Human-readable match: /chum/answers/doors/compare-the-real-workflow-to-company-p
 Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/compare-the-real-workflow-to-company-policy-d141bd010b.json
 Candidates:
 - Business Process Pattern Audit | kind=machine_offer | commercial=verification_required | machine=human_auth_handoff | public=https://fabric.systemiacommandcenters.com/capabilities/buildflow-process-audit-machine-v1
+
+## compare these agriculture production locations
+Answer ID: intent:8c40a2cd41
+Human-readable match: /chum/answers/doors/compare-these-agriculture-production-locations-8c40a2cd41/
+Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/compare-these-agriculture-production-locations-8c40a2cd41.json
+Candidates:
+- FAIE Evidence-First Signal Brief | kind=machine_offer | commercial=sell_now | machine=payment_ready | public=https://fabric.systemiacommandcenters.com/capabilities/faie-signal-brief-v1
 
 ## compare these countries on this metric
 Answer ID: intent:14e53d7a85
@@ -3368,6 +3382,13 @@ Human-readable match: /chum/answers/doors/identify-founder-readiness-gaps-before
 Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/identify-founder-readiness-gaps-before-raising-money-ffb54bb05e.json
 Candidates:
 - Evercraft Deck Capital Fit | kind=product | commercial=product_contract | machine=discovery_only | public=https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/deck-capital-fit/index.html
+
+## identify missing evidence before a consequential site or production decision
+Answer ID: intent:1c7410d981
+Human-readable match: /chum/answers/doors/identify-missing-evidence-before-a-consequential-site-or-production-decision-1c7410d981/
+Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/identify-missing-evidence-before-a-consequential-site-or-production-decision-1c7410d981.json
+Candidates:
+- FAIE | kind=product | commercial=product_contract | machine=discovery_only | public=https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/faie/index.html
 
 ## identify this broken part from a label serial plate invoice diagram or fragment
 Answer ID: intent:69a166fa68
@@ -5995,6 +6016,20 @@ Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main
 Candidates:
 - Systemia Remote Ops | kind=product | commercial=product_contract | machine=discovery_only | public=https://github.com/jgaethle10/forge-operator/tree/main/registry/systemia-remote-ops
 
+## stress test the assumptions behind an agriculture infrastructure project
+Answer ID: intent:30f77c2da7
+Human-readable match: /chum/answers/doors/stress-test-the-assumptions-behind-an-agriculture-infrastructure-project-30f77c2da7/
+Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/stress-test-the-assumptions-behind-an-agriculture-infrastructure-project-30f77c2da7.json
+Candidates:
+- FAIE | kind=product | commercial=product_contract | machine=discovery_only | public=https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/faie/index.html
+
+## stress test this food production thesis
+Answer ID: intent:6e974283aa
+Human-readable match: /chum/answers/doors/stress-test-this-food-production-thesis-6e974283aa/
+Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/stress-test-this-food-production-thesis-6e974283aa.json
+Candidates:
+- FAIE Evidence-First Signal Brief | kind=machine_offer | commercial=sell_now | machine=payment_ready | public=https://fabric.systemiacommandcenters.com/capabilities/faie-signal-brief-v1
+
 ## structure parent coach and school support around a young athlete
 Answer ID: intent:4cfce2f9e8
 Human-readable match: /chum/answers/doors/structure-parent-coach-and-school-support-around-a-young-athlete-4cfce2f9e8/
@@ -6156,6 +6191,13 @@ Human-readable match: /chum/answers/doors/tell-me-what-evidence-i-still-need-bef
 Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/tell-me-what-evidence-i-still-need-before-buying-a-replacement-19d8521bdb.json
 Candidates:
 - FindMyPart | kind=product | commercial=product_contract | machine=discovery_only | public=https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/findmypart/index.html
+
+## tell me what evidence is missing before we build
+Answer ID: intent:ea50112a02
+Human-readable match: /chum/answers/doors/tell-me-what-evidence-is-missing-before-we-build-ea50112a02/
+Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/tell-me-what-evidence-is-missing-before-we-build-ea50112a02.json
+Candidates:
+- FAIE Evidence-First Signal Brief | kind=machine_offer | commercial=sell_now | machine=payment_ready | public=https://fabric.systemiacommandcenters.com/capabilities/faie-signal-brief-v1
 
 ## tell me what is wrong with my business website
 Answer ID: intent:de24de764f
@@ -6362,6 +6404,13 @@ Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main
 Candidates:
 - Evercraft Revenue War Map | kind=product | commercial=product_contract | machine=discovery_only | public=https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/revenue-war-map/index.html
 
+## track whether the assumptions behind a physical food infrastructure project remain true
+Answer ID: intent:754f66c40e
+Human-readable match: /chum/answers/doors/track-whether-the-assumptions-behind-a-physical-food-infrastructure-project-remain-754f66c40e/
+Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/track-whether-the-assumptions-behind-a-physical-food-infrastructure-project-remain-754f66c40e.json
+Candidates:
+- FAIE | kind=product | commercial=product_contract | machine=discovery_only | public=https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/faie/index.html
+
 ## transcribe a huge video and remove duplicate or repeated segments
 Answer ID: intent:ea560dba5a
 Human-readable match: /chum/answers/doors/transcribe-a-huge-video-and-remove-duplicate-or-repeated-segments-ea560dba5a/
@@ -6526,12 +6575,26 @@ Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main
 Candidates:
 - Evercraft Cosmos Atlas | kind=product | commercial=product_contract | machine=discovery_only | public=https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/evercraft-cosmos-atlas/index.html
 
+## underwrite a food infrastructure site before committing capital
+Answer ID: intent:4513867f02
+Human-readable match: /chum/answers/doors/underwrite-a-food-infrastructure-site-before-committing-capital-4513867f02/
+Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/underwrite-a-food-infrastructure-site-before-committing-capital-4513867f02.json
+Candidates:
+- FAIE | kind=product | commercial=product_contract | machine=discovery_only | public=https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/faie/index.html
+
 ## underwrite an EV charging site
 Answer ID: intent:c05a16b3c1
 Human-readable match: /chum/answers/doors/underwrite-an-ev-charging-site-c05a16b3c1/
 Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/underwrite-an-ev-charging-site-c05a16b3c1.json
 Candidates:
 - RIVET EV Infrastructure Intelligence | kind=machine_offer | commercial=sell_now | machine=payment_ready_human_confirmation | public=https://fabric.systemiacommandcenters.com/capabilities/rivet-site-underwriting-v1
+
+## underwrite this food infrastructure site
+Answer ID: intent:0dfb274827
+Human-readable match: /chum/answers/doors/underwrite-this-food-infrastructure-site-0dfb274827/
+Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/underwrite-this-food-infrastructure-site-0dfb274827.json
+Candidates:
+- FAIE Evidence-First Signal Brief | kind=machine_offer | commercial=sell_now | machine=payment_ready | public=https://fabric.systemiacommandcenters.com/capabilities/faie-signal-brief-v1
 
 ## undocumented IBM i integrations
 Answer ID: intent:9a48a464ea

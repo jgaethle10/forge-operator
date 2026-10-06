@@ -137,14 +137,18 @@
       "id": "urn:evercraft:commercial-intent:faie-signal-brief-v1",
       "external_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/capabilities/faie-signal-brief-v1/index.html",
       "title": "FAIE Evidence-First Signal Brief",
-      "summary": "A buyer has one bounded agriculture, land, water, production or resilience question and needs a sourced evidence-first investigation.",
+      "summary": "A buyer has a bounded agriculture, land, water, production, resilience, or food-infrastructure question and needs a sourced evidence-first investigation that separates what is known, challenged, missing, and required next.",
       "tags": [
         "sell_now",
         "faie-signal-brief-v1",
+        "compare these agriculture production locations",
         "do a resilience investigation",
         "give me an evidence brief on this region",
         "investigate this agriculture signal",
         "research this land or water question",
+        "stress test this food production thesis",
+        "tell me what evidence is missing before we build",
+        "underwrite this food infrastructure site",
         "validate this environmental signal"
       ]
     },

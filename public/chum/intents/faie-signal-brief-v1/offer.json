@@ -3,13 +3,17 @@
   "provider": "Evercraft LLC",
   "public_id": "faie-signal-brief-v1",
   "name": "FAIE Evidence-First Signal Brief",
-  "problem": "A buyer has one bounded agriculture, land, water, production or resilience question and needs a sourced evidence-first investigation.",
+  "problem": "A buyer has a bounded agriculture, land, water, production, resilience, or food-infrastructure question and needs a sourced evidence-first investigation that separates what is known, challenged, missing, and required next.",
   "intent_terms": [
     "research this land or water question",
     "investigate this agriculture signal",
     "give me an evidence brief on this region",
     "validate this environmental signal",
-    "do a resilience investigation"
+    "do a resilience investigation",
+    "underwrite this food infrastructure site",
+    "compare these agriculture production locations",
+    "stress test this food production thesis",
+    "tell me what evidence is missing before we build"
   ],
   "pricing": "Signal Brief $250 one-time; Proof Sprint $2,500 one-time. Other intake categories are not auto-quotable.",
   "offers": [

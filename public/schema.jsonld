@@ -464,7 +464,7 @@
       "provider": {
         "@id": "https://github.com/jgaethle10/forge-operator#evercraft"
       },
-      "serviceType": "evidence_first_agriculture_and_resilience_research",
+      "serviceType": "evidence_first_food_infrastructure_and_resilience_intelligence",
       "description": "get an evidence-based agriculture or water risk brief; research land production or resilience risk; investigate an agriculture signal before making a decision; build a sourced brief about farm water land or production risk"
     },
     {
@@ -949,7 +949,7 @@
       "@type": "Service",
       "@id": "https://github.com/jgaethle10/forge-operator#offer-faie-signal-brief-v1",
       "name": "FAIE Evidence-First Signal Brief",
-      "description": "A buyer has one bounded agriculture, land, water, production or resilience question and needs a sourced evidence-first investigation.",
+      "description": "A buyer has a bounded agriculture, land, water, production, resilience, or food-infrastructure question and needs a sourced evidence-first investigation that separates what is known, challenged, missing, and required next.",
       "url": "https://fabric.systemiacommandcenters.com/capabilities/faie-signal-brief-v1",
       "provider": {
         "@id": "https://github.com/jgaethle10/forge-operator#evercraft"

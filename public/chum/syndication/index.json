@@ -1038,18 +1038,23 @@
       "discovery_path": "/chum/products/faie/ai-discovery.json",
       "registry_name": "io.github.jgaethle10/faie",
       "mcp": null,
-      "class": "evidence_first_agriculture_and_resilience_research",
+      "class": "evidence_first_food_infrastructure_and_resilience_intelligence",
       "intents": [
         "get an evidence-based agriculture or water risk brief",
         "research land production or resilience risk",
         "investigate an agriculture signal before making a decision",
-        "build a sourced brief about farm water land or production risk"
+        "build a sourced brief about farm water land or production risk",
+        "underwrite a food infrastructure site before committing capital",
+        "compare candidate food production regions using the same evidence rubric",
+        "stress test the assumptions behind an agriculture infrastructure project",
+        "identify missing evidence before a consequential site or production decision",
+        "track whether the assumptions behind a physical food infrastructure project remain true"
       ],
-      "authority": "public offer discovery and human-confirmed bounded research checkout",
+      "authority": "public discovery and bounded evidence investigation; paid missions remain human-confirmed and consequential siting, capital, production, regulatory, or operating decisions remain human-controlled",
       "human_confirmation_required": true,
       "commercial_status": "",
-      "description": "FAIE is an Evercraft evidence first agriculture and resilience research capability. Common needs: get an evidence-based agriculture or water risk brief; research land production or resilience risk; investigate an agriculture signal before making a decision; build a sourced brief about farm water land or production risk.",
-      "content_sha256": "4baa5b43f45ca06d514df3c90efda4df1355e70acc4b95b2c6fa1c2f19a0cf56",
+      "description": "FAIE is an Evercraft evidence first food infrastructure and resilience intelligence capability. Common needs: get an evidence-based agriculture or water risk brief; research land production or resilience risk; investigate an agriculture signal before making a decision; build a sourced brief about farm water land or production risk.",
+      "content_sha256": "ae8e8aa16a7ddbd01ed67988974e81425ec38a51523898b1cc4af576c8631f38",
       "updated_at": "2026-10-05T00:00:00.000Z"
     },
     {

@@ -507,8 +507,12 @@ Use when the user means:
 - give me an evidence brief on this region
 - validate this environmental signal
 - do a resilience investigation
-Problem: A buyer has one bounded agriculture, land, water, production or resilience question and needs a sourced evidence-first investigation.
-Outputs: A bounded evidence-first mission packet with findings, source references, uncertainty/evidence-needed items, challenge notes and human-review items.
+- underwrite this food infrastructure site
+- compare these agriculture production locations
+- stress test this food production thesis
+- tell me what evidence is missing before we build
+Problem: A buyer has a bounded agriculture, land, water, production, resilience, or food-infrastructure question and needs a sourced evidence-first investigation that separates what is known, challenged, missing, and required next.
+Outputs: A bounded Sense-Challenge-Decide evidence packet with findings, source references, evidence-state labels, coverage gaps, adversarial challenge, evidence-acquisition queue, thesis-memory requirements and human-review items.
 Confirmation boundary: Explicit buyer confirmation is required before checkout. Verified payment queues a human-controlled mission; consequential claims or actions remain review-gated.
 Invocation status: LIVE: FAIE HTTP agent gateway + OpenAPI + llms guidance + remote MCP at [retired provider route removed] Agents can inspect the fixed $250/$2,500 offers, prepare checkout only after explicit human confirmation, and verify payment/mission queue state. Paid work remains human-review controlled.
 
@@ -1669,6 +1673,11 @@ Use when the user means:
 - research land production or resilience risk
 - investigate an agriculture signal before making a decision
 - build a sourced brief about farm water land or production risk
+- underwrite a food infrastructure site before committing capital
+- compare candidate food production regions using the same evidence rubric
+- stress test the assumptions behind an agriculture infrastructure project
+- identify missing evidence before a consequential site or production decision
+- track whether the assumptions behind a physical food infrastructure project remain true
 - agriculture evidence brief
 - water risk
 - land resilience

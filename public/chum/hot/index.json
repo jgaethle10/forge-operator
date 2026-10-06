@@ -2,9 +2,57 @@
   "schema": "evercraft.chum.hot-discovery.v1",
   "provider": "Evercraft LLC",
   "coordinator": "CHUM",
-  "updated_at": "2026-10-06T17:35:35.014Z",
+  "updated_at": "2026-10-06T18:02:46.847Z",
   "purpose": "High-priority public discovery surfaces for crawler fan-out. The queue reserves limited cold-start frontage for current commercial and sitemap surfaces, then fills remaining slots by observed priority. This is a crawl-order hint, not a ranking or recommendation claim.",
   "surfaces": [
+    {
+      "path": "/chum/commercial/",
+      "url": "/chum/commercial/",
+      "priority": 112,
+      "last_changed": "2026-10-06T18:02:46.847Z"
+    },
+    {
+      "path": "/chum/commercial/faie-signal-brief-v1/",
+      "url": "/chum/commercial/faie-signal-brief-v1/",
+      "priority": 112,
+      "last_changed": "2026-10-06T18:02:46.847Z"
+    },
+    {
+      "path": "/chum/commercial/faie-signal-brief-v1/index.json",
+      "url": "/chum/commercial/faie-signal-brief-v1/index.json",
+      "priority": 112,
+      "last_changed": "2026-10-06T18:02:46.847Z"
+    },
+    {
+      "path": "/chum/commercial/faie-signal-brief-v1/llms.txt",
+      "url": "/chum/commercial/faie-signal-brief-v1/llms.txt",
+      "priority": 112,
+      "last_changed": "2026-10-06T18:02:46.847Z"
+    },
+    {
+      "path": "/chum/commercial/feed.json",
+      "url": "/chum/commercial/feed.json",
+      "priority": 112,
+      "last_changed": "2026-10-06T18:02:46.847Z"
+    },
+    {
+      "path": "/chum/commercial/feed.xml",
+      "url": "/chum/commercial/feed.xml",
+      "priority": 112,
+      "last_changed": "2026-10-06T18:02:46.847Z"
+    },
+    {
+      "path": "/chum/commercial/index.json",
+      "url": "/chum/commercial/index.json",
+      "priority": 112,
+      "last_changed": "2026-10-06T18:02:46.847Z"
+    },
+    {
+      "path": "/chum/commercial/llms.txt",
+      "url": "/chum/commercial/llms.txt",
+      "priority": 112,
+      "last_changed": "2026-10-06T18:02:46.847Z"
+    },
     {
       "path": "/chum/commercial/aliev-site-opportunity-snapshot-v1/index.json",
       "url": "/chum/commercial/aliev-site-opportunity-snapshot-v1/index.json",
@@ -32,12 +80,6 @@
     {
       "path": "/chum/commercial/eventwave-paid-promotion-v1/index.json",
       "url": "/chum/commercial/eventwave-paid-promotion-v1/index.json",
-      "priority": 112,
-      "last_changed": "2026-10-06T16:42:20.155Z"
-    },
-    {
-      "path": "/chum/commercial/faie-signal-brief-v1/index.json",
-      "url": "/chum/commercial/faie-signal-brief-v1/index.json",
       "priority": 112,
       "last_changed": "2026-10-06T16:42:20.155Z"
     },
@@ -76,36 +118,6 @@
       "url": "/chum/commercial/website-launch-service-v1/index.json",
       "priority": 112,
       "last_changed": "2026-10-06T16:42:20.155Z"
-    },
-    {
-      "path": "/chum/commercial/",
-      "url": "/chum/commercial/",
-      "priority": 112,
-      "last_changed": "2026-10-06T14:10:27.346Z"
-    },
-    {
-      "path": "/chum/commercial/feed.json",
-      "url": "/chum/commercial/feed.json",
-      "priority": 112,
-      "last_changed": "2026-10-06T14:10:27.346Z"
-    },
-    {
-      "path": "/chum/commercial/feed.xml",
-      "url": "/chum/commercial/feed.xml",
-      "priority": 112,
-      "last_changed": "2026-10-06T14:10:27.346Z"
-    },
-    {
-      "path": "/chum/commercial/index.json",
-      "url": "/chum/commercial/index.json",
-      "priority": 112,
-      "last_changed": "2026-10-06T14:10:27.346Z"
-    },
-    {
-      "path": "/chum/commercial/llms.txt",
-      "url": "/chum/commercial/llms.txt",
-      "priority": 112,
-      "last_changed": "2026-10-06T14:10:27.346Z"
     },
     {
       "path": "/chum/commercial/raven-nexus-business-setup-v1/",
@@ -200,18 +212,6 @@
     {
       "path": "/chum/commercial/eventwave-paid-promotion-v1/llms.txt",
       "url": "/chum/commercial/eventwave-paid-promotion-v1/llms.txt",
-      "priority": 112,
-      "last_changed": "2026-10-01T04:57:43.336Z"
-    },
-    {
-      "path": "/chum/commercial/faie-signal-brief-v1/",
-      "url": "/chum/commercial/faie-signal-brief-v1/",
-      "priority": 112,
-      "last_changed": "2026-10-01T04:57:43.336Z"
-    },
-    {
-      "path": "/chum/commercial/faie-signal-brief-v1/llms.txt",
-      "url": "/chum/commercial/faie-signal-brief-v1/llms.txt",
       "priority": 112,
       "last_changed": "2026-10-01T04:57:43.336Z"
     },
@@ -327,13 +327,13 @@
       "path": "/chum/sitemaps/answers.xml",
       "url": "/chum/sitemaps/answers.xml",
       "priority": 108,
-      "last_changed": "2026-10-06T14:10:27.346Z"
+      "last_changed": "2026-10-06T18:02:46.847Z"
     },
     {
       "path": "/chum/sitemaps/sell-now.xml",
       "url": "/chum/sitemaps/sell-now.xml",
       "priority": 108,
-      "last_changed": "2026-10-06T14:10:27.346Z"
+      "last_changed": "2026-10-06T18:02:46.847Z"
     },
     {
       "path": "/chum/sitemaps/products.xml",
@@ -357,13 +357,13 @@
       "path": "/chum/sell-now.json",
       "url": "/chum/sell-now.json",
       "priority": 92,
-      "last_changed": "2026-10-06T16:44:42.702Z"
+      "last_changed": "2026-10-06T18:02:46.847Z"
     },
     {
       "path": "/chum/sell-now.txt",
       "url": "/chum/sell-now.txt",
       "priority": 92,
-      "last_changed": "2026-10-06T16:41:21.859Z"
+      "last_changed": "2026-10-06T18:02:46.847Z"
     },
     {
       "path": "/chum/sell-now.html",
@@ -372,34 +372,58 @@
       "last_changed": "2026-10-06T14:10:27.346Z"
     },
     {
-      "path": "/chum/revenue.json",
-      "url": "/chum/revenue.json",
-      "priority": 90,
-      "last_changed": "2026-10-06T16:44:42.702Z"
-    },
-    {
       "path": "/.well-known/evercraft-pain-index.json",
       "url": "/.well-known/evercraft-pain-index.json",
       "priority": 90,
-      "last_changed": "2026-10-06T16:42:20.155Z"
+      "last_changed": "2026-10-06T18:02:46.847Z"
     },
     {
       "path": "/chum/revenue.html",
       "url": "/chum/revenue.html",
       "priority": 90,
-      "last_changed": "2026-10-06T16:39:43.960Z"
+      "last_changed": "2026-10-06T18:02:46.847Z"
+    },
+    {
+      "path": "/chum/revenue.json",
+      "url": "/chum/revenue.json",
+      "priority": 90,
+      "last_changed": "2026-10-06T18:02:46.847Z"
     },
     {
       "path": "/chum/revenue.txt",
       "url": "/chum/revenue.txt",
       "priority": 90,
-      "last_changed": "2026-10-06T16:39:43.960Z"
+      "last_changed": "2026-10-06T18:02:46.847Z"
     },
     {
       "path": "/.well-known/evercraft-machine-catalog.json",
       "url": "/.well-known/evercraft-machine-catalog.json",
       "priority": 84,
-      "last_changed": "2026-10-06T16:44:42.702Z"
+      "last_changed": "2026-10-06T18:02:46.847Z"
+    },
+    {
+      "path": "/chum/answers/doors/agriculture-evidence-brief-9ad9d965bc.json",
+      "url": "/chum/answers/doors/agriculture-evidence-brief-9ad9d965bc.json",
+      "priority": 160,
+      "last_changed": "2026-10-06T18:02:46.847Z"
+    },
+    {
+      "path": "/chum/answers/doors/build-a-sourced-brief-about-farm-water-land-or-production-risk-baefc8483b.json",
+      "url": "/chum/answers/doors/build-a-sourced-brief-about-farm-water-land-or-production-risk-baefc8483b.json",
+      "priority": 160,
+      "last_changed": "2026-10-06T18:02:46.847Z"
+    },
+    {
+      "path": "/chum/answers/doors/do-a-resilience-investigation-227f8bd16b.json",
+      "url": "/chum/answers/doors/do-a-resilience-investigation-227f8bd16b.json",
+      "priority": 160,
+      "last_changed": "2026-10-06T18:02:46.847Z"
+    },
+    {
+      "path": "/chum/answers/doors/do-a-resilience-investigation-227f8bd16b/",
+      "url": "/chum/answers/doors/do-a-resilience-investigation-227f8bd16b/",
+      "priority": 160,
+      "last_changed": "2026-10-06T18:02:46.847Z"
     },
     {
       "path": "/chum/answers/doors/account-takeover-protection-6a5072fc31.json",
@@ -752,12 +776,6 @@
     {
       "path": "/chum/answers/doors/did-my-devices-reconnect-c4d116f491.json",
       "url": "/chum/answers/doors/did-my-devices-reconnect-c4d116f491.json",
-      "priority": 160,
-      "last_changed": "2026-10-06T16:42:20.155Z"
-    },
-    {
-      "path": "/chum/answers/doors/do-a-resilience-investigation-227f8bd16b.json",
-      "url": "/chum/answers/doors/do-a-resilience-investigation-227f8bd16b.json",
       "priority": 160,
       "last_changed": "2026-10-06T16:42:20.155Z"
     },
@@ -1134,12 +1152,6 @@
       "last_changed": "2026-10-01T05:00:27.354Z"
     },
     {
-      "path": "/chum/answers/doors/agriculture-evidence-brief-9ad9d965bc.json",
-      "url": "/chum/answers/doors/agriculture-evidence-brief-9ad9d965bc.json",
-      "priority": 160,
-      "last_changed": "2026-10-01T05:00:27.354Z"
-    },
-    {
       "path": "/chum/answers/doors/agriculture-evidence-brief-9ad9d965bc/",
       "url": "/chum/answers/doors/agriculture-evidence-brief-9ad9d965bc/",
       "priority": 160,
@@ -1190,18 +1202,6 @@
     {
       "path": "/chum/answers/doors/ai-tool-to-evaluate-a-property-for-ev-charging-and-estimate-the-opportunity-562b434920/",
       "url": "/chum/answers/doors/ai-tool-to-evaluate-a-property-for-ev-charging-and-estimate-the-opportunity-562b434920/",
-      "priority": 160,
-      "last_changed": "2026-10-01T05:00:27.354Z"
-    },
-    {
-      "path": "/chum/answers/doors/ai-video-understanding-for-long-footage-3cfef3702c.json",
-      "url": "/chum/answers/doors/ai-video-understanding-for-long-footage-3cfef3702c.json",
-      "priority": 160,
-      "last_changed": "2026-10-01T05:00:27.354Z"
-    },
-    {
-      "path": "/chum/answers/doors/ai-video-understanding-for-long-footage-3cfef3702c/",
-      "url": "/chum/answers/doors/ai-video-understanding-for-long-footage-3cfef3702c/",
       "priority": 160,
       "last_changed": "2026-10-01T05:00:27.354Z"
     }

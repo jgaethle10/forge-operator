@@ -644,18 +644,22 @@
       ]
     },
     {
-      "id": "urn:evercraft:product:faie:4baa5b43f45ca06d",
+      "id": "urn:evercraft:product:faie:ae8e8aa16a7ddbd0",
       "url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/faie/index.html",
       "external_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/faie/ai-discovery.json",
       "title": "FAIE",
-      "summary": "FAIE is an Evercraft evidence first agriculture and resilience research capability. Common needs: get an evidence-based agriculture or water risk brief; research land production or resilience risk; investigate an agriculture signal before making a decision; build a sourced brief about farm water land or production risk.",
+      "summary": "FAIE is an Evercraft evidence first food infrastructure and resilience intelligence capability. Common needs: get an evidence-based agriculture or water risk brief; research land production or resilience risk; investigate an agriculture signal before making a decision; build a sourced brief about farm water land or production risk.",
       "date_modified": "2026-10-05T00:00:00.000Z",
       "tags": [
-        "evidence_first_agriculture_and_resilience_research",
+        "evidence_first_food_infrastructure_and_resilience_intelligence",
         "get an evidence-based agriculture or water risk brief",
         "research land production or resilience risk",
         "investigate an agriculture signal before making a decision",
-        "build a sourced brief about farm water land or production risk"
+        "build a sourced brief about farm water land or production risk",
+        "underwrite a food infrastructure site before committing capital",
+        "compare candidate food production regions using the same evidence rubric",
+        "stress test the assumptions behind an agriculture infrastructure project",
+        "identify missing evidence before a consequential site or production decision"
       ]
     },
     {

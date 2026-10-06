@@ -21,8 +21,8 @@
   },
   "summary": {
     "pain_index_entries": 114,
-    "unique_user_phrases": 998,
-    "mapped_candidate_edges": 1104,
+    "unique_user_phrases": 1007,
+    "mapped_candidate_edges": 1113,
     "ambiguous_phrases": 106,
     "product_candidates": 64,
     "machine_offer_candidates": 50
@@ -3693,6 +3693,29 @@
       ]
     },
     {
+      "answer_id": "intent:6e4291507d",
+      "user_language": "compare candidate food production regions using the same evidence rubric",
+      "normalized": "compare candidate food production regions using the same evidence rubric",
+      "relative_json": "/chum/answers/doors/compare-candidate-food-production-regions-using-the-same-evidence-rubric-6e4291507d.json",
+      "relative_page": "/chum/answers/doors/compare-candidate-food-production-regions-using-the-same-evidence-rubric-6e4291507d/",
+      "raw_json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/compare-candidate-food-production-regions-using-the-same-evidence-rubric-6e4291507d.json",
+      "candidate_count": 1,
+      "candidates": [
+        {
+          "capability_id": "product:faie",
+          "kind": "product",
+          "product_key": "faie",
+          "public_id": null,
+          "name": "FAIE",
+          "commercial_state": "product_contract",
+          "machine_state": "discovery_only",
+          "pain_page": "/chum/products/faie/",
+          "public_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/faie/index.html",
+          "registry_name": "io.github.jgaethle10/faie"
+        }
+      ]
+    },
+    {
       "answer_id": "intent:d49f331223",
       "user_language": "compare electricity mixes between regions",
       "normalized": "compare electricity mixes between regions",
@@ -4079,6 +4102,29 @@
           "machine_state": "human_auth_handoff",
           "pain_page": "/chum/intents/buildflow-process-audit-machine-v1/",
           "public_url": "https://fabric.systemiacommandcenters.com/capabilities/buildflow-process-audit-machine-v1",
+          "registry_name": null
+        }
+      ]
+    },
+    {
+      "answer_id": "intent:8c40a2cd41",
+      "user_language": "compare these agriculture production locations",
+      "normalized": "compare these agriculture production locations",
+      "relative_json": "/chum/answers/doors/compare-these-agriculture-production-locations-8c40a2cd41.json",
+      "relative_page": "/chum/answers/doors/compare-these-agriculture-production-locations-8c40a2cd41/",
+      "raw_json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/compare-these-agriculture-production-locations-8c40a2cd41.json",
+      "candidate_count": 1,
+      "candidates": [
+        {
+          "capability_id": "offer:faie-signal-brief-v1",
+          "kind": "machine_offer",
+          "product_key": null,
+          "public_id": "faie-signal-brief-v1",
+          "name": "FAIE Evidence-First Signal Brief",
+          "commercial_state": "sell_now",
+          "machine_state": "payment_ready",
+          "pain_page": "/chum/intents/faie-signal-brief-v1/",
+          "public_url": "https://fabric.systemiacommandcenters.com/capabilities/faie-signal-brief-v1",
           "registry_name": null
         }
       ]
@@ -11468,6 +11514,29 @@
           "pain_page": "/chum/products/deck-capital-fit/",
           "public_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/deck-capital-fit/index.html",
           "registry_name": "io.github.jgaethle10/deck-capital-fit"
+        }
+      ]
+    },
+    {
+      "answer_id": "intent:1c7410d981",
+      "user_language": "identify missing evidence before a consequential site or production decision",
+      "normalized": "identify missing evidence before a consequential site or production decision",
+      "relative_json": "/chum/answers/doors/identify-missing-evidence-before-a-consequential-site-or-production-decision-1c7410d981.json",
+      "relative_page": "/chum/answers/doors/identify-missing-evidence-before-a-consequential-site-or-production-decision-1c7410d981/",
+      "raw_json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/identify-missing-evidence-before-a-consequential-site-or-production-decision-1c7410d981.json",
+      "candidate_count": 1,
+      "candidates": [
+        {
+          "capability_id": "product:faie",
+          "kind": "product",
+          "product_key": "faie",
+          "public_id": null,
+          "name": "FAIE",
+          "commercial_state": "product_contract",
+          "machine_state": "discovery_only",
+          "pain_page": "/chum/products/faie/",
+          "public_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/faie/index.html",
+          "registry_name": "io.github.jgaethle10/faie"
         }
       ]
     },
@@ -20475,6 +20544,52 @@
       ]
     },
     {
+      "answer_id": "intent:30f77c2da7",
+      "user_language": "stress test the assumptions behind an agriculture infrastructure project",
+      "normalized": "stress test the assumptions behind an agriculture infrastructure project",
+      "relative_json": "/chum/answers/doors/stress-test-the-assumptions-behind-an-agriculture-infrastructure-project-30f77c2da7.json",
+      "relative_page": "/chum/answers/doors/stress-test-the-assumptions-behind-an-agriculture-infrastructure-project-30f77c2da7/",
+      "raw_json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/stress-test-the-assumptions-behind-an-agriculture-infrastructure-project-30f77c2da7.json",
+      "candidate_count": 1,
+      "candidates": [
+        {
+          "capability_id": "product:faie",
+          "kind": "product",
+          "product_key": "faie",
+          "public_id": null,
+          "name": "FAIE",
+          "commercial_state": "product_contract",
+          "machine_state": "discovery_only",
+          "pain_page": "/chum/products/faie/",
+          "public_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/faie/index.html",
+          "registry_name": "io.github.jgaethle10/faie"
+        }
+      ]
+    },
+    {
+      "answer_id": "intent:6e974283aa",
+      "user_language": "stress test this food production thesis",
+      "normalized": "stress test this food production thesis",
+      "relative_json": "/chum/answers/doors/stress-test-this-food-production-thesis-6e974283aa.json",
+      "relative_page": "/chum/answers/doors/stress-test-this-food-production-thesis-6e974283aa/",
+      "raw_json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/stress-test-this-food-production-thesis-6e974283aa.json",
+      "candidate_count": 1,
+      "candidates": [
+        {
+          "capability_id": "offer:faie-signal-brief-v1",
+          "kind": "machine_offer",
+          "product_key": null,
+          "public_id": "faie-signal-brief-v1",
+          "name": "FAIE Evidence-First Signal Brief",
+          "commercial_state": "sell_now",
+          "machine_state": "payment_ready",
+          "pain_page": "/chum/intents/faie-signal-brief-v1/",
+          "public_url": "https://fabric.systemiacommandcenters.com/capabilities/faie-signal-brief-v1",
+          "registry_name": null
+        }
+      ]
+    },
+    {
       "answer_id": "intent:4cfce2f9e8",
       "user_language": "structure parent coach and school support around a young athlete",
       "normalized": "structure parent coach and school support around a young athlete",
@@ -21012,6 +21127,29 @@
           "pain_page": "/chum/products/findmypart/",
           "public_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/findmypart/index.html",
           "registry_name": "io.github.jgaethle10/findmypart"
+        }
+      ]
+    },
+    {
+      "answer_id": "intent:ea50112a02",
+      "user_language": "tell me what evidence is missing before we build",
+      "normalized": "tell me what evidence is missing before we build",
+      "relative_json": "/chum/answers/doors/tell-me-what-evidence-is-missing-before-we-build-ea50112a02.json",
+      "relative_page": "/chum/answers/doors/tell-me-what-evidence-is-missing-before-we-build-ea50112a02/",
+      "raw_json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/tell-me-what-evidence-is-missing-before-we-build-ea50112a02.json",
+      "candidate_count": 1,
+      "candidates": [
+        {
+          "capability_id": "offer:faie-signal-brief-v1",
+          "kind": "machine_offer",
+          "product_key": null,
+          "public_id": "faie-signal-brief-v1",
+          "name": "FAIE Evidence-First Signal Brief",
+          "commercial_state": "sell_now",
+          "machine_state": "payment_ready",
+          "pain_page": "/chum/intents/faie-signal-brief-v1/",
+          "public_url": "https://fabric.systemiacommandcenters.com/capabilities/faie-signal-brief-v1",
+          "registry_name": null
         }
       ]
     },
@@ -21707,6 +21845,29 @@
       ]
     },
     {
+      "answer_id": "intent:754f66c40e",
+      "user_language": "track whether the assumptions behind a physical food infrastructure project remain true",
+      "normalized": "track whether the assumptions behind a physical food infrastructure project remain true",
+      "relative_json": "/chum/answers/doors/track-whether-the-assumptions-behind-a-physical-food-infrastructure-project-remain-754f66c40e.json",
+      "relative_page": "/chum/answers/doors/track-whether-the-assumptions-behind-a-physical-food-infrastructure-project-remain-754f66c40e/",
+      "raw_json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/track-whether-the-assumptions-behind-a-physical-food-infrastructure-project-remain-754f66c40e.json",
+      "candidate_count": 1,
+      "candidates": [
+        {
+          "capability_id": "product:faie",
+          "kind": "product",
+          "product_key": "faie",
+          "public_id": null,
+          "name": "FAIE",
+          "commercial_state": "product_contract",
+          "machine_state": "discovery_only",
+          "pain_page": "/chum/products/faie/",
+          "public_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/faie/index.html",
+          "registry_name": "io.github.jgaethle10/faie"
+        }
+      ]
+    },
+    {
       "answer_id": "intent:ea560dba5a",
       "user_language": "transcribe a huge video and remove duplicate or repeated segments",
       "normalized": "transcribe a huge video and remove duplicate or repeated segments",
@@ -22272,6 +22433,29 @@
       ]
     },
     {
+      "answer_id": "intent:4513867f02",
+      "user_language": "underwrite a food infrastructure site before committing capital",
+      "normalized": "underwrite a food infrastructure site before committing capital",
+      "relative_json": "/chum/answers/doors/underwrite-a-food-infrastructure-site-before-committing-capital-4513867f02.json",
+      "relative_page": "/chum/answers/doors/underwrite-a-food-infrastructure-site-before-committing-capital-4513867f02/",
+      "raw_json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/underwrite-a-food-infrastructure-site-before-committing-capital-4513867f02.json",
+      "candidate_count": 1,
+      "candidates": [
+        {
+          "capability_id": "product:faie",
+          "kind": "product",
+          "product_key": "faie",
+          "public_id": null,
+          "name": "FAIE",
+          "commercial_state": "product_contract",
+          "machine_state": "discovery_only",
+          "pain_page": "/chum/products/faie/",
+          "public_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/faie/index.html",
+          "registry_name": "io.github.jgaethle10/faie"
+        }
+      ]
+    },
+    {
       "answer_id": "intent:c05a16b3c1",
       "user_language": "underwrite an EV charging site",
       "normalized": "underwrite an ev charging site",
@@ -22290,6 +22474,29 @@
           "machine_state": "payment_ready_human_confirmation",
           "pain_page": "/chum/intents/rivet-site-underwriting-v1/",
           "public_url": "https://fabric.systemiacommandcenters.com/capabilities/rivet-site-underwriting-v1",
+          "registry_name": null
+        }
+      ]
+    },
+    {
+      "answer_id": "intent:0dfb274827",
+      "user_language": "underwrite this food infrastructure site",
+      "normalized": "underwrite this food infrastructure site",
+      "relative_json": "/chum/answers/doors/underwrite-this-food-infrastructure-site-0dfb274827.json",
+      "relative_page": "/chum/answers/doors/underwrite-this-food-infrastructure-site-0dfb274827/",
+      "raw_json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/underwrite-this-food-infrastructure-site-0dfb274827.json",
+      "candidate_count": 1,
+      "candidates": [
+        {
+          "capability_id": "offer:faie-signal-brief-v1",
+          "kind": "machine_offer",
+          "product_key": null,
+          "public_id": "faie-signal-brief-v1",
+          "name": "FAIE Evidence-First Signal Brief",
+          "commercial_state": "sell_now",
+          "machine_state": "payment_ready",
+          "pain_page": "/chum/intents/faie-signal-brief-v1/",
+          "public_url": "https://fabric.systemiacommandcenters.com/capabilities/faie-signal-brief-v1",
           "registry_name": null
         }
       ]
