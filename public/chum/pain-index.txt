@@ -514,7 +514,7 @@ Use when the user means:
 Problem: A buyer has a bounded agriculture, land, water, production, resilience, or food-infrastructure question and needs a sourced evidence-first investigation that separates what is known, challenged, missing, and required next.
 Outputs: A bounded Sense-Challenge-Decide evidence packet with findings, source references, evidence-state labels, coverage gaps, adversarial challenge, evidence-acquisition queue, thesis-memory requirements and human-review items.
 Confirmation boundary: Explicit buyer confirmation is required before checkout. Verified payment queues a human-controlled mission; consequential claims or actions remain review-gated.
-Invocation status: LIVE OWNED FABRIC VERIFIED: FAIE human UI, ephemeral public investigation/comparison API, and native read-only specialist MCP are externally verified at fabric.systemiacommandcenters.com. Base44 transport is disabled. Paid work remains human-confirmed and consequential decisions remain review-gated.
+Invocation status: LIVE OWNED FABRIC VERIFIED: FAIE human UI, ephemeral public investigation/comparison API, and native read-only specialist MCP are externally verified at fabric.systemiacommandcenters.com. legacy provider transport is disabled. Paid work remains human-confirmed and consequential decisions remain review-gated.
 
 ## FindMyPart Paid Part Hunt
 Capability ID: offer:findmypart-paid-hunt-v1
