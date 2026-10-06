@@ -48,6 +48,7 @@ export async function startRavenResident({
   deploymentReceiptFile = "",
   inferenceOrigin = "",
   inferenceTokenFile = "",
+  port = 4321,
   repoRoot = process.cwd(),
 } = {}) {
   const resolvedState = path.resolve(String(stateDir || "").trim());
@@ -71,6 +72,7 @@ export async function startRavenResident({
     host: "127.0.0.1",
     controlToken,
     trustedSubjectRef: String(trustedSubjectRef || "").trim(),
+    port: Number(port || 4321),
     runtimeLabel: "Raven Private Runtime",
     workloadClass: "systemia.raven-private-runtime.v1",
     teamReviewExecutor,
@@ -88,6 +90,7 @@ async function main() {
     deploymentReceiptFile: arg("--deployment-receipt-file", process.env.RAVEN_PRIVATE_DEPLOYMENT_RECEIPT_FILE || ""),
     inferenceOrigin: arg("--inference-origin", process.env.RAVEN_INFERENCE_ORIGIN || ""),
     inferenceTokenFile: arg("--inference-token-file", process.env.RAVEN_INFERENCE_TOKEN_FILE || ""),
+    port: Number(arg("--port", process.env.RAVEN_PRIVATE_PORT || "4321")),
     repoRoot: process.cwd(),
   });
 
@@ -104,6 +107,7 @@ async function main() {
     execution_authority_granted: false,
     internal_readonly_team_review_enabled: runtime.health().internal_readonly_team_review_enabled,
     ai_inference_enabled: runtime.health().ai_inference_enabled,
+    loopback_url: runtime.url,
   }) + "\n");
 
   let closing = false;
