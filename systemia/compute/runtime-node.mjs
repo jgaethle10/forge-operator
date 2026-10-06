@@ -257,6 +257,51 @@ function atomicJson(file, value) {
   fs.renameSync(tmp, file);
 }
 
+function loadOrCreatePrivateToken(file) {
+  fs.mkdirSync(path.dirname(file), { recursive: true, mode: 0o700 });
+  if (!fs.existsSync(file)) {
+    fs.writeFileSync(file, randomBytes(32).toString('hex') + '\n', { mode: 0o600 });
+  }
+  fs.chmodSync(file, 0o600);
+  const token = fs.readFileSync(file, 'utf8').trim();
+  if (Buffer.byteLength(token, 'utf8') < 32) {
+    throw new Error('private_runtime_token_invalid');
+  }
+  return file;
+}
+
+function normalizeRavenInferenceConfig(input = {}) {
+  const provider = String(input.raven_inference_provider || '').trim().toLowerCase();
+  const model = String(input.raven_inference_model || '').trim();
+  const configured = Boolean(provider || model);
+  if (!configured) return { configured: false, provider: '', model: '', ollama_origin: '' };
+  if (!['ollama', 'gemini', 'openai'].includes(provider)) {
+    throw new Error('raven_inference_provider_invalid');
+  }
+  if (!/^[a-zA-Z0-9._:-]{1,160}$/.test(model)) {
+    throw new Error('raven_inference_model_invalid');
+  }
+  const rawOllamaOrigin = String(input.raven_ollama_origin || '').trim();
+  if (rawOllamaOrigin && provider !== 'ollama') {
+    throw new Error('raven_ollama_origin_without_ollama_provider');
+  }
+  if (rawOllamaOrigin) {
+    const parsed = new URL(rawOllamaOrigin);
+    if (
+      parsed.protocol !== 'http:' ||
+      !['127.0.0.1', 'localhost', '::1'].includes(parsed.hostname)
+    ) {
+      throw new Error('raven_ollama_origin_must_be_loopback_http');
+    }
+  }
+  return {
+    configured: true,
+    provider,
+    model,
+    ollama_origin: rawOllamaOrigin,
+  };
+}
+
 function hashFileSha256(file) {
   const hash = createHash('sha256');
   const fd = fs.openSync(file, 'r');
@@ -1681,6 +1726,50 @@ export async function startEvercraftComputeNode({
             return send(res, 403, { error: 'evercraft_yard_state_outside_admitted_root' });
           }
 
+          const ravenWorkTokenValue = String(
+            body.input?.raven_work_token_file || ''
+          ).trim();
+          const ravenWorkTokenFile = ravenWorkTokenValue
+            ? path.resolve(ravenWorkTokenValue)
+            : '';
+          if (ravenWorkTokenFile) {
+            if (!isWithin(allowedRoot, ravenWorkTokenFile)) {
+              return send(res, 403, { error: 'evercraft_raven_token_file_outside_admitted_root' });
+            }
+            if (!fs.existsSync(ravenWorkTokenFile) || !fs.statSync(ravenWorkTokenFile).isFile()) {
+              return send(res, 422, { error: 'evercraft_raven_token_file_missing' });
+            }
+            if ((fs.statSync(ravenWorkTokenFile).mode & 0o077) !== 0) {
+              return send(res, 422, { error: 'evercraft_raven_token_file_permissions_too_open' });
+            }
+          }
+
+          const ravenWorkUrlValue = String(
+            body.input?.raven_work_url ||
+            (ravenWorkTokenFile ? 'http://127.0.0.1:4321' : '')
+          ).trim();
+          if (ravenWorkUrlValue) {
+            if (!ravenWorkTokenFile) {
+              return send(res, 422, { error: 'evercraft_raven_work_url_requires_token_file' });
+            }
+            let ravenWorkUrl;
+            try {
+              ravenWorkUrl = new URL(ravenWorkUrlValue);
+            } catch {
+              return send(res, 422, { error: 'evercraft_raven_work_url_invalid' });
+            }
+            if (
+              ravenWorkUrl.protocol !== 'http:' ||
+              !['127.0.0.1', 'localhost', '::1'].includes(ravenWorkUrl.hostname)
+            ) {
+              return send(res, 403, { error: 'evercraft_raven_work_url_must_be_loopback_http' });
+            }
+          }
+
+          const ravenReceiptDir = ravenWorkTokenFile
+            ? path.join(identityStateRoot, 'raven-execution-receipts')
+            : '';
+
           const runtime = await startEvercraftHomeServer({
             host: '127.0.0.1',
             port: Number(body.input?.port || 0),
@@ -1690,6 +1779,14 @@ export async function startEvercraftComputeNode({
             identityStateDir: identityStateRoot,
             credentialStateDir: credentialStateRoot,
             yardStateDir: yardStateRoot,
+            serviceOrigins: {
+              ...process.env,
+              ...(ravenWorkTokenFile ? {
+                RAVEN_NEXUS_WORK_URL: ravenWorkUrlValue,
+                RAVEN_NEXUS_WORK_TOKEN_FILE: ravenWorkTokenFile,
+                EVERCRAFT_RAVEN_RECEIPT_DIR: ravenReceiptDir,
+              } : {}),
+            },
           });
 
           const serviceId = `svc_${randomBytes(8).toString('hex')}`;
@@ -1713,6 +1810,8 @@ export async function startEvercraftComputeNode({
             auth_mode: runtime.authMode,
             private_origin_only: true,
             provider_independent_boot: true,
+            raven_readonly_execution_configured: Boolean(ravenWorkTokenFile),
+            raven_work_authority_exposed: false,
           };
           const receipt = chain.issue('service.started', {
             lease_id: body.lease_id,
@@ -2324,6 +2423,20 @@ export async function startEvercraftComputeNode({
             ],
           });
 
+          const ravenInference = normalizeRavenInferenceConfig(body.input || {});
+          const ravenPrivateStateRoot = path.join(stateRoot, 'raven-private');
+          const ravenPrivateBindingsRoot = path.join(stateRoot, '.private-bindings', 'raven');
+          let ravenControlTokenFile = '';
+          let ravenInferenceGatewayTokenFile = '';
+          if (ravenInference.configured) {
+            ravenControlTokenFile = loadOrCreatePrivateToken(
+              path.join(ravenPrivateBindingsRoot, 'control-token')
+            );
+            ravenInferenceGatewayTokenFile = loadOrCreatePrivateToken(
+              path.join(ravenPrivateBindingsRoot, 'inference-gateway-token')
+            );
+          }
+
           const providerCredentialStateValue = String(
             body.input?.provider_credential_state_dir ||
             process.env.EVERCRAFT_CREDENTIAL_STATE_DIR ||
@@ -2380,6 +2493,14 @@ export async function startEvercraftComputeNode({
               'eps-social-continuity'
             ),
             RAVEN_PROVIDER_CREDENTIAL_STATE_DIR: providerCredentialStateRoot,
+            RAVEN_PRIVATE_STATE_DIR: ravenInference.configured ? ravenPrivateStateRoot : '',
+            RAVEN_PRIVATE_CONTROL_TOKEN_FILE: ravenControlTokenFile,
+            RAVEN_INFERENCE_GATEWAY_TOKEN_FILE: ravenInferenceGatewayTokenFile,
+            RAVEN_INFERENCE_PROVIDER: ravenInference.provider,
+            RAVEN_INFERENCE_MODEL: ravenInference.model,
+            RAVEN_PRIVATE_PORT: ravenInference.configured ? '4321' : '',
+            RAVEN_INFERENCE_GATEWAY_PORT: ravenInference.configured ? '4322' : '',
+            RAVEN_OLLAMA_ORIGIN: ravenInference.ollama_origin,
           };
 
           if (serviceEnv.EVERCRAFT_CLIP_EPS_INGRESS_URL) {
@@ -2433,6 +2554,12 @@ export async function startEvercraftComputeNode({
             provider_credential_vault_bound: Boolean(
               serviceEnv.RAVEN_PROVIDER_CREDENTIAL_STATE_DIR
             ),
+            raven_private_runtime_configured: ravenInference.configured,
+            raven_inference_gateway_configured: ravenInference.configured,
+            raven_inference_provider: ravenInference.provider || null,
+            raven_inference_model: ravenInference.model || null,
+            raven_private_paths_exposed: false,
+            raven_secret_values_exposed: false,
           };
           const receipt = chain.issue('service.started', {
             lease_id: body.lease_id,

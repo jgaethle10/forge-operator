@@ -28,7 +28,9 @@
     "kaidance-mission-publisher",
     "public-edge-controller",
     "public-edge-activation-watch",
-    "sentinel-life-safety-watch"
+    "sentinel-life-safety-watch",
+    "raven-private-runtime",
+    "raven-inference-gateway"
   ],
   "security": {
     "lease_required": true,
@@ -42,7 +44,10 @@
     "public_edge_authority_source": "private Yard lease authority or broker-derived control grant, consumed in memory only",
     "public_edge_authority_persisted_by_watch": false,
     "public_edge_field_enrollment_required_for_production": true,
-    "public_edge_same_device_attestation_required": true
+    "public_edge_same_device_attestation_required": true,
+    "raven_authority_source": "private files generated inside admitted Systemia Core state",
+    "raven_raw_authority_in_child_environment": false,
+    "raven_raw_authority_in_deployment_receipt": false
   },
   "acceptance": [
     "capacity_offer_verified",
@@ -65,6 +70,12 @@
     "eps_social_continuity_optional_until_private_clip_binding_present",
     "eps_social_continuity_requires_provider_visible_verification_before_success",
     "sentinel_life_safety_resident_supervised",
-    "sentinel_region_profile_binding_is_explicit_and_receipted"
+    "sentinel_region_profile_binding_is_explicit_and_receipted",
+    "raven_private_runtime_optional_until_inference_configured",
+    "raven_inference_gateway_optional_until_provider_and_model_configured",
+    "raven_runtime_authority_generated_inside_admitted_core_state",
+    "raven_runtime_authority_file_mode_0600",
+    "raven_runtime_authority_not_in_deployment_receipt",
+    "raven_inference_provider_and_model_explicit"
   ]
 }

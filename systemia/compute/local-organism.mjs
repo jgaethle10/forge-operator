@@ -80,6 +80,10 @@ export async function startLocalOrganism({
   remoteOperatorEnabled = false,
   clipEpsIngressUrl = '',
   clipSharedSecretFile = '',
+  ravenInferenceProvider = '',
+  ravenInferenceModel = '',
+  ravenProviderCredentialStateDir = '',
+  ravenOllamaOrigin = '',
   placementLabels = ['opportunistic', 'private', 'outbound-only', 'personal-compute'],
 } = {}) {
   if (!root) throw new Error('root is required');
@@ -179,6 +183,10 @@ export async function startLocalOrganism({
         kaidance_deployment_id: 'kaidance-local-resident',
         clip_eps_ingress_url: String(clipEpsIngressUrl || '').trim(),
         clip_shared_secret_file: admittedClipSecretFile,
+        raven_inference_provider: String(ravenInferenceProvider || '').trim(),
+        raven_inference_model: String(ravenInferenceModel || '').trim(),
+        provider_credential_state_dir: String(ravenProviderCredentialStateDir || '').trim(),
+        raven_ollama_origin: String(ravenOllamaOrigin || '').trim(),
       },
       rollbackTarget: 'local-organism:core-previous',
       leaseTtlMs: 3_600_000,
@@ -439,6 +447,13 @@ if (isCli) {
       '--clip-shared-secret-file',
       process.env.SYSTEMIA_CLIP_SHARED_SECRET_FILE || ''
     ),
+    ravenInferenceProvider: process.env.RAVEN_INFERENCE_PROVIDER || '',
+    ravenInferenceModel: process.env.RAVEN_INFERENCE_MODEL || '',
+    ravenProviderCredentialStateDir:
+      process.env.RAVEN_PROVIDER_CREDENTIAL_STATE_DIR ||
+      process.env.EVERCRAFT_CREDENTIAL_STATE_DIR ||
+      '',
+    ravenOllamaOrigin: process.env.RAVEN_OLLAMA_ORIGIN || '',
     placementLabels: String(
       process.env.EVERCRAFT_LOCAL_NODE_LABELS ||
       'opportunistic,private,outbound-only,personal-compute'

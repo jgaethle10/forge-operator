@@ -109,6 +109,8 @@ try {
       kaidance_deployment_id: 'kaidance-for-core-proof',
       sentinel_region_profile: 'yakima-basin-wa',
       provider_credential_state_dir: providerCredentialState,
+      raven_inference_provider: 'ollama',
+      raven_inference_model: 'proof-local-model',
       openai_challenge_token: 'OpenAIChallenge_CorePrivate_abcdefghijklmnopqrstuvwxyz123456',
     },
     rollbackTarget: 'proof:core-supervisor-rollback',
@@ -123,6 +125,12 @@ try {
   assert.equal(core.result.supervised_service_count, expectedCoreServiceCount);
   assert.equal(core.result.sentinel_region_profile, 'yakima-basin-wa');
   assert.equal(core.result.provider_credential_vault_bound, true);
+  assert.equal(core.result.raven_private_runtime_configured, true);
+  assert.equal(core.result.raven_inference_gateway_configured, true);
+  assert.equal(core.result.raven_inference_provider, 'ollama');
+  assert.equal(core.result.raven_inference_model, 'proof-local-model');
+  assert.equal(core.result.raven_private_paths_exposed, false);
+  assert.equal(core.result.raven_secret_values_exposed, false);
   assert.ok(core.management.receipt_binding_hash);
   assert.equal(core.discovery.selected_node_id, 'core-compute-proof-node');
   assert.ok(core.discovery.receipt_hash);
@@ -142,6 +150,28 @@ try {
   );
   assert.ok(sentinelHealth);
   assert.equal(['running', 'healthy', 'idle'].includes(sentinelHealth.status), true);
+  const ravenPrivateHealth = route.health.services.find(
+    (service) => service.service_key === 'raven-private-runtime'
+  );
+  const ravenInferenceHealth = route.health.services.find(
+    (service) => service.service_key === 'raven-inference-gateway'
+  );
+  assert.ok(ravenPrivateHealth);
+  assert.ok(ravenInferenceHealth);
+  assert.equal(ravenPrivateHealth.status, 'running');
+  assert.equal(ravenInferenceHealth.status, 'running');
+
+  const ravenBindingRoot = path.join(coreRoot, '.private-bindings', 'raven');
+  const ravenControlTokenFile = path.join(ravenBindingRoot, 'control-token');
+  const ravenInferenceTokenFile = path.join(ravenBindingRoot, 'inference-gateway-token');
+  assert.equal(fs.existsSync(ravenControlTokenFile), true);
+  assert.equal(fs.existsSync(ravenInferenceTokenFile), true);
+  assert.equal(fs.statSync(ravenControlTokenFile).mode & 0o077, 0);
+  assert.equal(fs.statSync(ravenInferenceTokenFile).mode & 0o077, 0);
+  const ravenControlToken = fs.readFileSync(ravenControlTokenFile, 'utf8').trim();
+  const ravenInferenceToken = fs.readFileSync(ravenInferenceTokenFile, 'utf8').trim();
+  assert.ok(ravenControlToken.length >= 32);
+  assert.ok(ravenInferenceToken.length >= 32);
 
   const workspace = path.join(coreRoot, 'workspace');
   const publicEdgeMission = path.join(
@@ -216,6 +246,16 @@ try {
     false,
     'OpenAI challenge token must stay in process memory and out of persisted Core state'
   );
+  assert.equal(
+    persistedCoreState.includes(ravenControlToken),
+    false,
+    'Raven control token must stay in its private token file and out of Core JSON state'
+  );
+  assert.equal(
+    persistedCoreState.includes(ravenInferenceToken),
+    false,
+    'Raven inference gateway token must stay in its private token file and out of Core JSON state'
+  );
 
   const rawHealth = JSON.stringify(route.health);
   assert.ok(!rawHealth.includes(allocatorToken));
@@ -252,6 +292,10 @@ try {
     deployment_receipt_bound: true,
     private_paths_redacted_from_health: true,
     provider_credential_vault_bound: true,
+    raven_private_runtime_bound: true,
+    raven_inference_gateway_bound: true,
+    raven_authority_file_permissions_verified: true,
+    raven_authority_not_persisted_in_json_state: true,
     allocator_secret_redacted_from_children_and_health: true,
     openai_challenge_token_memory_only_verified: true,
     clean_stop_verified: true,
