@@ -6,10 +6,20 @@ on:
       - "feat/evercraft-os-*"
     paths:
       - "systemia/evercraft-os/**"
+      - "systemia/evercraft-home/os-adapter.mjs"
+      - "systemia/evercraft-home/os-status.test.mjs"
+      - "systemia/evercraft-home/server.mjs"
+      - "systemia/evercraft-home/public/apps.html"
+      - "systemia/evercraft-home/public/index.html"
       - ".github/workflows/evercraft-os-proof.yml"
   pull_request:
     paths:
       - "systemia/evercraft-os/**"
+      - "systemia/evercraft-home/os-adapter.mjs"
+      - "systemia/evercraft-home/os-status.test.mjs"
+      - "systemia/evercraft-home/server.mjs"
+      - "systemia/evercraft-home/public/apps.html"
+      - "systemia/evercraft-home/public/index.html"
       - ".github/workflows/evercraft-os-proof.yml"
   workflow_dispatch:
 
@@ -31,6 +41,10 @@ jobs:
         run: node systemia/evercraft-os/runtime.proof.mjs
       - name: Prove device profile contract
         run: node systemia/evercraft-os/device-profile.proof.mjs
+      - name: Prove Evercraft OS app package contract
+        run: node systemia/evercraft-os/app-package.proof.mjs
+      - name: Prove Evercraft OS app install planning
+        run: node systemia/evercraft-os/app-install-plan.proof.mjs
       - name: Prove Home OS status surface
         run: node --test systemia/evercraft-home/os-status.test.mjs
       - name: Emit boot envelope

@@ -19,7 +19,7 @@ import {
 } from "./clip-journal-publish-adapter.mjs";
 import { LineageControlRoomHomeBridge } from "./lineage-adapter.mjs";
 import { renderLineageControlRoomHtml } from "../lineage/control-room.mjs";
-import { readEvercraftOsStatus } from "./os-adapter.mjs";
+import { planEvercraftHomeOsAppInstall, readEvercraftOsApps, readEvercraftOsStatus } from "./os-adapter.mjs";
 
 const here = path.dirname(fileURLToPath(import.meta.url));
 const publicDir = path.join(here, "public");
@@ -750,6 +750,56 @@ export async function startEvercraftHomeServer({
           mutation_authority: false,
           secret_material_exposed: false,
           private_origin_exposed: false,
+        });
+      }
+    }
+
+    if (req.method === "POST" && url.pathname === "/api/os/apps/install-plan") {
+      const session = sessionFor(req);
+      if (!session.ok) return json(res, session.status, session);
+      try {
+        const body = await readJsonBody(req, 32768);
+        const result = planEvercraftHomeOsAppInstall({
+          productKey: body.product_key,
+          subjectRef: session.subject,
+          targetDeviceClass: body.target_device_class || process.env.EVERCRAFT_OS_DEVICE_CLASS || "unknown",
+          nodeId: body.node_id || process.env.EVERCRAFT_NODE_ID || null
+        });
+        return json(res, result.state === "plan_ready" ? 200 : 409, {
+          ok: result.state === "plan_ready",
+          subject: session.subject,
+          ...result
+        });
+      } catch (error) {
+        const state = String(error?.message || "os_app_install_plan_failed");
+        return json(res, state.startsWith("public_product_not_found:") ? 404 : 400, {
+          ok: false,
+          state,
+          install_performed: false,
+          grants_issued: false,
+          execution_authority_granted: false,
+          payment_authority_granted: false
+        });
+      }
+    }
+
+    if (req.method === "GET" && url.pathname === "/api/os/apps") {
+      const session = sessionFor(req);
+      if (!session.ok) return json(res, session.status, session);
+      try {
+        const productKey = url.searchParams.get("product") || null;
+        return json(res, 200, {
+          ok: true,
+          subject: session.subject,
+          ...readEvercraftOsApps({ productKey })
+        });
+      } catch (error) {
+        const state = String(error?.message || "os_app_catalog_failed");
+        return json(res, state.startsWith("public_product_not_found:") ? 404 : 400, {
+          ok: false,
+          state,
+          installation_performed: false,
+          authority_granted: false
         });
       }
     }
