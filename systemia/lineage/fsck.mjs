@@ -351,6 +351,13 @@ export async function verifyLineageIntegrity(store, {
 
   for (const path of await walkFiles(refRoot)) {
     const name = relative(refRoot, path).split(/[/\\]/).join('/');
+    if (name.endsWith('.lock')) {
+      pushError(errors, 'ref_lock_present', {
+        ref: name.slice(0, -'.lock'.length),
+        path,
+      });
+      continue;
+    }
     let id;
     try {
       id = (await readFile(path, 'utf8')).trim();
