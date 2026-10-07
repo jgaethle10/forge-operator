@@ -14,6 +14,8 @@ on:
       - 'scripts/saban-resident-watchdog.sh'
       - 'systemia/saban/capacity-resource-field-bridge.proof.mjs'
       - 'systemia/saban/capacity-organism.mjs'
+      - 'systemia/saban/capacity-lifecycle.mjs'
+      - 'tests/saban-capacity-lifecycle.test.mjs'
       - 'systemia/saban/resource-field.proof.mjs'
       - 'systemia/saban/resource-placement.proof.mjs'
       - 'systemia/saban/resource-acquirer.mjs'
@@ -73,6 +75,8 @@ jobs:
         run: node systemia/saban/resource-field.proof.mjs
       - name: Prove Capacity Organism to Resource Field bridge
         run: node systemia/saban/capacity-resource-field-bridge.proof.mjs
+      - name: Prove capacity lifecycle reclamation safety
+        run: node --test tests/saban-capacity-lifecycle.test.mjs
       - name: Prove proactive Resource Expansion Organism
         run: node systemia/saban/resource-expansion-organism.proof.mjs
       - name: Prove proactive pressure-to-capacity loop
