@@ -82,6 +82,10 @@ Implemented in this slice:
 - Fallen imports preserve authored canonical tangents when supplied; otherwise they generate deterministic UV/Gram-Schmidt tangents with explicit handedness.
 - Degenerate UV/position triangles, implicit unit/coordinate conversion and malformed authored tangents fail closed.
 - Fallen geometry import receipts bind source, provenance and resulting geometry SHA-256 digests and feed directly into the normal-map/WebGPU pipeline.
+- Fallen animation assets import directly into the canonical skeletal runtime with explicit right-handed Y-up meter units, degree rotations and provenance/rights receipts.
+- v17 performs no hidden retargeting: authored bone IDs, hierarchy, clips, states, transitions and event markers must validate directly against the World Engine animation contract.
+- Non-semantic rig/clip/state array order is canonicalized deterministically, while authored keyframe time order is preserved and unsorted curves fail closed.
+- Fallen animation import receipts bind source, provenance and canonical animation-component SHA-256 digests and prove runtime transition/event execution.
 - Worldstate evidence → world projection bridge with evidence state preserved.
 - Provider-neutral render-frame contract with sampled skeletal pose/state, navigation/debug handoff, canonical visual subframes and audio subframes.
 - Tests for replay determinism, entity collision, ground collision, canonical broad-phase ordering, ECS query ordering, scene streaming/state preservation, animation transitions/blending/events, navmesh pathfinding/arrival/freeze-resume, material/light validation, camera graph interpolation/layer masking, audio playback/loop/seek/listener switching/attenuation, snapshot restore/tamper rejection, authoritative checkpoints/client prediction/rollback convergence, geometry/WebGPU render-plan/shader/failure-boundary contracts, texture/sampler validation, textured plan bindings, texture residency/hot reload, tangent validation, normal-map residency/TBN shading, Fallen geometry import/provenance/authored-or-generated tangents, deterministic/reversible Studio edits, stale-edit rejection, asset-rights lineage, geometry hot reload, compatibility-gated runtime migration/state preservation/reset behavior, input ordering, Fallen compilation and Worldstate projection.
@@ -111,16 +115,16 @@ The engine does not gain publication authority, payment authority, emergency aut
 
 The V1 contract is deliberately small enough to prove ownership before expanding. The next compatible layers are:
 
-1. Animation authoring/import bridge for Fallen character assets.
-2. Navigation corridor smoothing / dynamic obstacle avoidance.
-3. Server-side rollback policy for explicitly admitted late inputs.
-4. Shadow-map / reflection / post-process contracts behind the visual-frame boundary.
-5. Spatial panning / occlusion / reverb-zone contracts behind the audio-frame boundary.
-6. Collaborative edit merge / conflict-resolution contracts.
-7. Saban simulation tournaments and deterministic QA at scale.
-8. Cross-frame texture retention / broader physical memory eviction for very large worlds.
-9. Native/WebGPU reference images across multiple material and lighting fixtures.
-10. Geometry import optimization for large authored scenes without weakening canonical receipts.
+1. Navigation corridor smoothing / dynamic obstacle avoidance.
+2. Server-side rollback policy for explicitly admitted late inputs.
+3. Shadow-map / reflection / post-process contracts behind the visual-frame boundary.
+4. Spatial panning / occlusion / reverb-zone contracts behind the audio-frame boundary.
+5. Collaborative edit merge / conflict-resolution contracts.
+6. Saban simulation tournaments and deterministic QA at scale.
+7. Cross-frame texture retention / broader physical memory eviction for very large worlds.
+8. Native/WebGPU reference images across multiple material and lighting fixtures.
+9. Geometry import optimization for large authored scenes without weakening canonical receipts.
+10. Explicit retargeting profiles for intentionally mapping animation between different authored rigs.
 
 ## Test
 
