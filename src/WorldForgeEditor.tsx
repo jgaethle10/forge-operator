@@ -779,22 +779,54 @@ function WorldViewport({
       ref={canvasRef}
       className="wf-viewport"
       onPointerDown={(event)=>{
-        const hit=gizmoHit(event.clientX,event.clientY);
-        if(hit){
-          dragRef.current={
-            mode:'gizmo',
-            axis:hit.axis,
-            startX:event.clientX,
-            startY:event.clientY,
-            axisScreenDx:hit.axisScreenDx,
-            axisScreenDy:hit.axisScreenDy,
-            axisWorldLength:hit.axisWorldLength,
-            delta:0,
-          };
-        }else if(viewMode==='orbit'){
-          dragRef.current={mode:'orbit',x:event.clientX,y:event.clientY,moved:false};
+        if(transformMode==='rotate'){
+          const hit=rotationGizmoHit(event.clientX,event.clientY);
+          if(hit){
+            dragRef.current={
+              mode:'rotate-gizmo',
+              axis:hit.axis,
+              startX:event.clientX,
+              startY:event.clientY,
+              centerX:hit.centerX,
+              centerY:hit.centerY,
+              deltaDeg:0,
+            };
+          }else if(viewMode==='orbit'){
+            dragRef.current={mode:'orbit',x:event.clientX,y:event.clientY,moved:false};
+          }else{
+            dragRef.current={mode:'pick',x:event.clientX,y:event.clientY,moved:false};
+          }
         }else{
-          dragRef.current={mode:'pick',x:event.clientX,y:event.clientY,moved:false};
+          const hit=axisGizmoHit(event.clientX,event.clientY);
+          if(hit){
+            if(transformMode==='scale'&&selectedNode){
+              dragRef.current={
+                mode:'scale-gizmo',
+                axis:hit.axis,
+                startX:event.clientX,
+                startY:event.clientY,
+                axisScreenDx:hit.axisScreenDx,
+                axisScreenDy:hit.axisScreenDy,
+                startScale:selectedNode.transform.scale[hit.axis],
+                value:selectedNode.transform.scale[hit.axis],
+              };
+            }else{
+              dragRef.current={
+                mode:'translate-gizmo',
+                axis:hit.axis,
+                startX:event.clientX,
+                startY:event.clientY,
+                axisScreenDx:hit.axisScreenDx,
+                axisScreenDy:hit.axisScreenDy,
+                axisWorldLength:hit.axisWorldLength,
+                delta:0,
+              };
+            }
+          }else if(viewMode==='orbit'){
+            dragRef.current={mode:'orbit',x:event.clientX,y:event.clientY,moved:false};
+          }else{
+            dragRef.current={mode:'pick',x:event.clientX,y:event.clientY,moved:false};
+          }
         }
         event.currentTarget.setPointerCapture(event.pointerId);
       }}
@@ -802,7 +834,7 @@ function WorldViewport({
         const drag=dragRef.current;
         if(!drag) return;
 
-        if(drag.mode==='gizmo'){
+        if(drag.mode==='translate-gizmo'){
           try{
             const delta=axisDragWorldDelta({
               pointerDx:event.clientX-drag.startX,
@@ -815,6 +847,7 @@ function WorldViewport({
             drag.delta=delta;
             if(selectedNode){
               setGizmoPreview({
+                mode:'translate',
                 nodeId:selectedNode.id,
                 axis:drag.axis,
                 delta,
@@ -822,6 +855,57 @@ function WorldViewport({
             }
           }catch{
             // Axis is visually degenerate at this camera angle. Keep the scene unchanged.
+          }
+          return;
+        }
+
+        if(drag.mode==='scale-gizmo'){
+          try{
+            const value=axisDragScaleValue({
+              pointerDx:event.clientX-drag.startX,
+              pointerDy:event.clientY-drag.startY,
+              axisScreenDx:drag.axisScreenDx,
+              axisScreenDy:drag.axisScreenDy,
+              startScale:drag.startScale,
+              snapStep:scaleSnapStep,
+            });
+            drag.value=value;
+            if(selectedNode){
+              setGizmoPreview({
+                mode:'scale',
+                nodeId:selectedNode.id,
+                axis:drag.axis,
+                value,
+              });
+            }
+          }catch{
+            // Degenerate screen-space scale axis. Keep the scene unchanged.
+          }
+          return;
+        }
+
+        if(drag.mode==='rotate-gizmo'){
+          try{
+            const deltaDeg=screenRotationDeltaDeg({
+              startX:drag.startX,
+              startY:drag.startY,
+              currentX:event.clientX,
+              currentY:event.clientY,
+              centerX:drag.centerX,
+              centerY:drag.centerY,
+              snapDeg:angleSnapDeg,
+            });
+            drag.deltaDeg=deltaDeg;
+            if(selectedNode){
+              setGizmoPreview({
+                mode:'rotate',
+                nodeId:selectedNode.id,
+                axis:drag.axis,
+                deltaDeg,
+              });
+            }
+          }catch{
+            // Pointer is too close to the projected ring center to define rotation.
           }
           return;
         }
@@ -844,10 +928,26 @@ function WorldViewport({
         const drag=dragRef.current;
         dragRef.current=null;
 
-        if(drag?.mode==='gizmo'){
+        if(
+          drag?.mode==='translate-gizmo'||
+          drag?.mode==='scale-gizmo'||
+          drag?.mode==='rotate-gizmo'
+        ){
           setGizmoPreview(null);
-          if(selectedNode&&Math.abs(drag.delta)>1e-9){
-            onTranslate(selectedNode.id,drag.axis,drag.delta);
+          if(selectedNode){
+            if(drag.mode==='translate-gizmo'&&Math.abs(drag.delta)>1e-9){
+              onTranslate(selectedNode.id,drag.axis,drag.delta);
+            }else if(
+              drag.mode==='scale-gizmo'&&
+              Math.abs(drag.value-drag.startScale)>1e-9
+            ){
+              onScale(selectedNode.id,drag.axis,drag.value);
+            }else if(
+              drag.mode==='rotate-gizmo'&&
+              Math.abs(drag.deltaDeg)>1e-9
+            ){
+              onRotate(selectedNode.id,drag.axis,drag.deltaDeg);
+            }
           }
           return;
         }
@@ -878,10 +978,16 @@ function WorldViewport({
       >
         {viewMode==='camera'?'Exit Camera':'Camera View'}
       </button>
-      <span>Snap {snapStep}m</span>
+      <span>
+        {transformMode==='translate'
+          ? `Move · ${snapStep}m`
+          : transformMode==='rotate'
+            ? `Rotate · ${angleSnapDeg}°`
+            : `Scale · ${scaleSnapStep}`}
+      </span>
     </div>
     <div className="wf-view-help">
-      Drag empty space to orbit · wheel to zoom · click to select · drag X/Y/Z handles to move
+      Drag empty space to orbit · wheel to zoom · click real geometry to select · drag active transform handles
     </div>
   </div>;
 }
