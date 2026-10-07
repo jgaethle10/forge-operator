@@ -35,4 +35,6 @@ test('competition worker demand targets the owned browser workload',()=>{
   assert.match(src,/demand_id:'evercraft-production-competition-worker'/);
   assert.match(src,/workload_class:'systemia\.evercraft-web-browser\.v1'/);
   assert.match(src,/memory_mb:3072/);
+  assert.match(src,/evercraft-browser-worker:main/);
+  assert.doesNotMatch(src,/evercraft-browser-worker:latest/);
 });

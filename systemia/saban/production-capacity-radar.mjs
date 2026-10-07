@@ -84,7 +84,7 @@ const profiles=[
     demand:normalizeComputeDemand({
       demand_id:'evercraft-production-competition-worker',
       workload_class:'systemia.evercraft-web-browser.v1',
-      container_image:'ghcr.io/jgaethle10/evercraft-browser-worker:latest',
+      container_image:'ghcr.io/jgaethle10/evercraft-browser-worker:main',
       cpu_units:2,
       memory_mb:3072,
       storage_gb:10,
