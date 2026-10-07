@@ -62,6 +62,38 @@ export function registerPeopleRoutes(app, {
     brain: runtime.createBrain(req.body || {}),
   })));
 
+  app.get('/api/people/brains/:brainKey', requireAdmin, handler((req) => ({
+    snapshot: runtime.brainSnapshot(req.params.brainKey),
+  })));
+
+  app.post('/api/people/brains/:brainKey/memories', requireAdmin, handler((req) => ({
+    memory: runtime.createMemory(req.params.brainKey, req.body || {}),
+  })));
+
+  app.post('/api/people/brains/:brainKey/relationships', requireAdmin, handler((req) => ({
+    relationship: runtime.createRelationship(req.params.brainKey, req.body || {}),
+  })));
+
+  app.post('/api/people/brains/:brainKey/relationships/:relationshipKey/grant', requireAdmin, handler((req) => ({
+    share: runtime.grantShare(req.params.brainKey, req.params.relationshipKey, req.body || {}),
+  })));
+
+  app.post('/api/people/brains/:brainKey/relationships/:relationshipKey/revoke', requireAdmin, handler((req) => ({
+    share: runtime.revokeShare(req.params.brainKey, req.params.relationshipKey, req.body || {}),
+  })));
+
+  app.post('/api/people/brains/:brainKey/revoke-consent', requireAdmin, handler((req) => ({
+    consent: runtime.revokeConsent(req.params.brainKey, req.body || {}),
+  })));
+
+  app.post('/api/people/brains/:brainKey/opportunities', requireAdmin, handler((req) => ({
+    opportunity: runtime.createOpportunity(req.params.brainKey, req.body || {}),
+  })));
+
+  app.post('/api/people/brains/:brainKey/opportunities/:opportunityKey/authority', requireAdmin, handler((req) => ({
+    opportunity: runtime.setOpportunityAuthority(req.params.brainKey, req.params.opportunityKey, req.body || {}),
+  })));
+
   app.post('/api/people/brains/:brainKey/invite', requireAdmin, handler((req) => ({
     invite: runtime.createInvite(req.params.brainKey, req.body || {}),
   })));
@@ -70,7 +102,7 @@ export function registerPeopleRoutes(app, {
     challenge: runtime.createEmailChallenge(req.params.brainKey, req.body || {}),
   })));
 
-  app.get('/api/people/brains/:brainKey/export', requireAdmin, handler((req) => ({
+  app.post('/api/people/brains/:brainKey/export', requireAdmin, handler((req) => ({
     export: runtime.exportBrain(req.params.brainKey),
   })));
 
