@@ -3,6 +3,7 @@ import { runWebGpuDeviceConformance } from './webgpu-conformance.mjs';
 
 const receipt=await runWebGpuDeviceConformance({
   sourceDir:process.cwd(),
+  stateDir:String(process.env.EVERCRAFT_NATIVE_BROWSER_STATE_DIR||'').trim() || null,
 });
 
 assert.equal(receipt.status,'verified');
