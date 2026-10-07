@@ -154,7 +154,17 @@ export async function importGitHistory(store, {
 
   const sourceHead = commits.at(-1);
   const lineageHead = mapping.get(sourceHead);
-  await store.writeRef(branch, lineageHead);
+  let previousHead = null;
+  try {
+    previousHead = await store.resolveRef(branch);
+  } catch {
+    previousHead = null;
+  }
+  const refUpdate = await store.writeRef(branch, lineageHead, {
+    expected: previousHead,
+    actor: { type: 'system', id: 'lineage-git-import' },
+    reason: 'git_import',
+  });
 
   const receiptId = await store.putObject('receipt', {
     schema: 'evercraft.lineage.git-import-receipt.v1',
@@ -163,7 +173,9 @@ export async function importGitHistory(store, {
     source_git_head: sourceHead,
     lineage_branch: branch,
     lineage_head: lineageHead,
+    previous_lineage_head: previousHead,
     imported_commits: commits.length,
+    ref_update: refUpdate,
     identity_mapping: Object.fromEntries(mapping),
     authority: {
       import_only: true,
@@ -180,7 +192,9 @@ export async function importGitHistory(store, {
     source_git_head: sourceHead,
     lineage_branch: branch,
     lineage_head: lineageHead,
+    previous_lineage_head: previousHead,
     imported_commits: commits.length,
+    ref_update: refUpdate,
     receipt_id: receiptId
   };
 }

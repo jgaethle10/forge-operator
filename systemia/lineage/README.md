@@ -293,3 +293,31 @@ Full `fsck` verifies:
 `--fast` keeps structural/object/manifest/chunk verification but skips reconstruction of every reachable large object's full-content hash.
 
 Dangling immutable storage is reported as a warning, not silently deleted. `fsck` never mutates the repository. Garbage collection must be a separate explicit operation so an integrity check can never destroy evidence or recovery state.
+
+
+## Atomic local refs and reflog
+
+Local branches use the same no-silent-overwrite philosophy as remote Lineage refs.
+
+Every branch update now uses a per-ref lockfile and an atomic rename. Callers may provide an expected current head, turning the update into compare-and-swap. A stale writer receives `LINEAGE_STALE_REF`; an active writer holding the critical section produces `LINEAGE_REF_LOCKED`.
+
+Normal commits capture the branch head **before** snapshot work begins. After the tree is built, the commit may move the branch only if that original head is still current. This matters for large streaming snapshots: a slow agent can finish building a perfectly valid commit object, but it cannot overwrite a faster agent that already advanced the branch. The losing commit remains an immutable dangling proposal for inspection/recovery.
+
+The same CAS path is used for:
+
+- normal commits;
+- merges;
+- rollback;
+- branch creation;
+- remote fast-forward fetch;
+- Git-history import;
+- repository initialization.
+
+Successful ref movement writes a durable JSONL reflog entry with previous/current heads, actor, reason and timestamp. Reflog targets are validated by `lineage fsck` and treated as recovery roots.
+
+```bash
+node systemia/lineage/cli.mjs reflog
+node systemia/lineage/cli.mjs reflog main 100
+```
+
+A reflog write failure is surfaced on the ref-update receipt without pretending the already-atomic ref move did not occur. Branch state remains authoritative; the warning makes any audit-log degradation explicit.

@@ -324,6 +324,7 @@ export async function verifyLineageIntegrity(store, {
   const refRoot = join(store.dir, 'refs', 'heads');
   const releaseRoot = join(store.dir, 'releases');
   const operationRoot = join(store.dir, 'operations');
+  const reflogRoot = join(store.dir, 'logs', 'refs', 'heads');
 
   const validObjects = new Map();
   const objectFiles = await walkFiles(objectRoot);
@@ -350,6 +351,13 @@ export async function verifyLineageIntegrity(store, {
 
   for (const path of await walkFiles(refRoot)) {
     const name = relative(refRoot, path).split(/[/\\]/).join('/');
+    if (name.endsWith('.lock')) {
+      pushError(errors, 'ref_lock_present', {
+        ref: name.slice(0, -'.lock'.length),
+        path,
+      });
+      continue;
+    }
     let id;
     try {
       id = (await readFile(path, 'utf8')).trim();
@@ -403,6 +411,82 @@ export async function verifyLineageIntegrity(store, {
     errors,
   });
   for (const id of operationRoots) roots.add(id);
+
+  let reflogEntries = 0;
+  for (const path of await walkFiles(reflogRoot)) {
+    let raw;
+    try {
+      raw = await readFile(path, 'utf8');
+    } catch (error) {
+      pushError(errors, 'reflog_unreadable', {
+        path,
+        error: String(error?.message || error),
+      });
+      continue;
+    }
+
+    const lines = raw.split(/\r?\n/).filter(Boolean);
+    for (let index = 0; index < lines.length; index += 1) {
+      let entry;
+      try {
+        entry = JSON.parse(lines[index]);
+      } catch (error) {
+        pushError(errors, 'reflog_entry_invalid_json', {
+          path,
+          line: index + 1,
+          error: String(error?.message || error),
+        });
+        continue;
+      }
+
+      reflogEntries += 1;
+      if (entry?.schema !== 'evercraft.lineage.reflog.v1') {
+        pushError(errors, 'reflog_entry_schema_invalid', {
+          path,
+          line: index + 1,
+          schema: entry?.schema || null,
+        });
+        continue;
+      }
+
+      for (const [field, value] of [
+        ['previous', entry.previous],
+        ['current', entry.current],
+      ]) {
+        if (value == null) continue;
+        if (!HEX64.test(String(value))) {
+          pushError(errors, 'reflog_target_invalid', {
+            path,
+            line: index + 1,
+            field,
+            target: value,
+          });
+          continue;
+        }
+        const object = validObjects.get(String(value));
+        if (!object) {
+          pushError(errors, 'reflog_target_missing', {
+            path,
+            line: index + 1,
+            field,
+            target: value,
+          });
+          continue;
+        }
+        if (object.type !== 'commit') {
+          pushError(errors, 'reflog_target_not_commit', {
+            path,
+            line: index + 1,
+            field,
+            target: value,
+            actual_type: object.type,
+          });
+          continue;
+        }
+        roots.add(String(value));
+      }
+    }
+  }
 
   const reachableObjects = new Set();
   const reachableManifests = new Set();
@@ -656,11 +740,13 @@ export async function verifyLineageIntegrity(store, {
       refs: true,
       releases: true,
       operation_receipts: true,
+      reflog: true,
       large_manifest_digests: true,
       chunk_digests: true,
       large_content_digest: Boolean(verifyLargeContent),
     },
     roots: roots.size,
+    reflog_entries: reflogEntries,
     objects: {
       stored: validObjects.size,
       reachable: reachableObjects.size,
