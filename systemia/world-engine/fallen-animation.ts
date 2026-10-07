@@ -189,8 +189,8 @@ export function animationFromFallenAsset(
   const eventCount=component.clips
     .reduce((sum,clip)=>sum+(clip.events?.length || 0),0);
 
-  const core={
-    schema:'evercraft.world-engine.fallen-animation-import.v1' as const,
+  const core:Omit<FallenAnimationImportReceipt,'digest'>={
+    schema:'evercraft.world-engine.fallen-animation-import.v1',
     sourceAssetId:asset.id,
     sourceDigest,
     sourceRef:asset.provenance.sourceRef,
