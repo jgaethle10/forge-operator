@@ -7,6 +7,7 @@ import { AuthoritativeReplicationRuntime, PredictiveReplicationRuntime, createRe
 import { compileWebGpuRenderPlan, EVERCRAFT_WEBGPU_WGSL, applyGeometryHotReload } from './webgpu.ts';
 import { applyWorldEditTransaction, createWorldAssetManifest, semanticAssetManifestDigest, semanticWorldDigest } from './studio-edit.ts';
 import { migrateWorldRuntime, verifyWorldRuntimeMigrationReceipt } from './runtime-migration.ts';
+import { buildWorldEngineReferenceFramePackage } from './reference-frame.ts';
 
 const world={
   schema:'evercraft.world-engine.world.v1',
@@ -638,8 +639,14 @@ assert.equal(
 assert.equal(liveMigration.receipt.cameraRuntimePreserved,true);
 assert.equal(verifyWorldRuntimeMigrationReceipt(liveMigration.receipt),true);
 
+const referenceFramePackage=buildWorldEngineReferenceFramePackage();
+assert.equal(referenceFramePackage.plan.draws.length,1);
+assert.equal(referenceFramePackage.plan.draws[0].materialModel,1);
+assert.deepEqual(referenceFramePackage.expected.center.rgba,[64,128,191,255]);
+assert.deepEqual(referenceFramePackage.expected.background.rgba,[5,8,13,255]);
+
 process.stdout.write(JSON.stringify({
-  schema:'evercraft.world-engine.proof.v11',
+  schema:'evercraft.world-engine.proof.v13',
   status:'passed',
   world_id:world.id,
   replay:receipt,
@@ -719,6 +726,16 @@ process.stdout.write(JSON.stringify({
     audio_scene_runtime_preserved:liveMigration.receipt.audioSceneRuntimePreserved,
     entity_notes:liveMigration.receipt.entityNotes
   },
+  reference_frame:{
+    package_digest:referenceFramePackage.digest,
+    world_definition_digest:referenceFramePackage.worldDefinitionDigest,
+    snapshot_digest:referenceFramePackage.snapshotDigest,
+    visual_frame_digest:referenceFramePackage.visualFrameDigest,
+    plan_digest:referenceFramePackage.planDigest,
+    shader_digest:referenceFramePackage.shaderDigest,
+    expected:referenceFramePackage.expected,
+    browser_pixel_execution:'separate_browser_worker_conformance_required'
+  },
   assertions:{
     deterministic_replay:true,
     fixed_timestep:true,
@@ -752,6 +769,8 @@ process.stdout.write(JSON.stringify({
     authored_transform_wins_over_runtime_position:true,
     incompatible_runtime_state_resets_explicitly:true,
     runtime_migration_receipts:true,
+    deterministic_reference_frame_package:true,
+    reference_frame_binds_world_visual_plan_and_shader:true,
     canonical_snapshot_digest:true
   }
 },null,2)+'\n');
