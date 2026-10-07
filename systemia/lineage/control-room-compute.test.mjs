@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { mkdtemp, rm, writeFile } from 'node:fs/promises';
+import { mkdir, mkdtemp, rm, writeFile } from 'node:fs/promises';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import { LineageStore } from './core.mjs';
@@ -235,6 +235,7 @@ test('Compute rejects uninitialized admitted workspace for Control Room', async 
   let compute = null;
 
   try {
+    await mkdir(workspace, { recursive: true });
     await writeFile(join(root, 'placeholder.txt'), 'root\n');
     compute = await startEvercraftComputeNode({
       nodeId: 'lineage-control-room-node',
