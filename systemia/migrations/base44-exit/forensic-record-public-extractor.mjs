@@ -91,24 +91,32 @@ export async function discoverLegacyForensicApp({
 
   const html=await fetchText(site.toString(),{sourceFetch});
   const ids=new Set(candidateIds(html));
-  if(!ids.size){
+  const probed=new Set();
+  const matches=[];
+
+  const probeCandidates=async()=>{
+    for(const id of [...ids].slice(0,64)){
+      if(probed.has(id)) continue;
+      probed.add(id);
+      const countUrl=new URL('/api/apps/'+id+'/entities/ForensicFinding/count',api);
+      try{
+        const body=await fetchJson(countUrl,{sourceFetch});
+        const count=Number(body?.count);
+        if(Number.isInteger(count)&&count>0) matches.push({id,count});
+      }catch{}
+    }
+  };
+
+  await probeCandidates();
+  if(matches.length===0){
     for(const asset of sameOriginAssets(html,site)){
       const js=await fetchText(asset,{sourceFetch,maxBytes:8*1024*1024});
       for(const id of candidateIds(js)) ids.add(id);
-      if(ids.size>=32) break;
+      await probeCandidates();
+      if(matches.length||ids.size>=64) break;
     }
   }
   if(!ids.size) throw new Error('forensic_legacy_app_candidate_not_found');
-
-  const matches=[];
-  for(const id of [...ids].slice(0,64)){
-    const countUrl=new URL('/api/apps/'+id+'/entities/ForensicFinding/count',api);
-    try{
-      const body=await fetchJson(countUrl,{sourceFetch});
-      const count=Number(body?.count);
-      if(Number.isInteger(count)&&count>0) matches.push({id,count});
-    }catch{}
-  }
   if(matches.length!==1){
     if(!matches.length) throw new Error('forensic_legacy_app_probe_no_match');
     throw new Error('forensic_legacy_app_probe_ambiguous');
