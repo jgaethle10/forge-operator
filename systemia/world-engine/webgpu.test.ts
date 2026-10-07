@@ -65,6 +65,15 @@ const emissiveTexture:TextureAsset={
   data:[64,32,16,255]
 };
 
+const normalTexture:TextureAsset={
+  schema:'evercraft.world-engine.texture.v1',
+  id:'texture:metal-normal',
+  width:1,
+  height:1,
+  format:'rgba8unorm',
+  data:[128,128,255,255]
+};
+
 function world():WorldDefinition{
   return {
     schema:'evercraft.world-engine.world.v1',
@@ -212,6 +221,17 @@ test('geometry contract validates triangle positions normals and indices',()=>{
     ()=>validateGeometryAsset(indexed),
     /webgpu_geometry_index_invalid/
   );
+
+  const badTangent=structuredClone(triangle);
+  badTangent.tangents=[
+    1,0,0,0,
+    1,0,0,1,
+    1,0,0,1
+  ];
+  assert.throws(
+    ()=>validateGeometryAsset(badTangent),
+    /webgpu_geometry_tangent_handedness_invalid/
+  );
 });
 
 test('WebGPU render plan is deterministic and binds camera material geometry and all light kinds',()=>{
@@ -312,7 +332,8 @@ test('v13 compiles base-color ORM and emissive texture bindings into the GPU pla
   assert.deepEqual(plan.draws[0].textureRefs,{
     baseColor:'texture:metal-base',
     orm:'texture:metal-orm',
-    emissive:'texture:metal-emissive'
+    emissive:'texture:metal-emissive',
+    normal:null
   });
   assert.equal(
     plan.draws[0].pipelineKey,
@@ -351,11 +372,11 @@ test('textured materials require UVs and referenced texture assets',()=>{
   );
 });
 
-test('normal maps fail closed until tangent-space geometry lands',()=>{
+test('v15 compiles linear normal maps only when tangent-space geometry is present',()=>{
   const texturedWorld=world();
   texturedWorld.visualScene!.materials[0]={
     ...texturedWorld.visualScene!.materials[0],
-    textureRefs:{normal:'texture:normal'}
+    textureRefs:{normal:normalTexture.id}
   };
   const runtime=new EvercraftWorldRuntime(texturedWorld);
   const snapshot=runtime.snapshot();
@@ -369,9 +390,43 @@ test('normal maps fail closed until tangent-space geometry lands',()=>{
     snapshot.activeEntityIds
   );
 
+  const tangentGeometry:GeometryAsset={
+    ...structuredClone(triangle),
+    tangents:[
+      1,0,0,1,
+      1,0,0,1,
+      1,0,0,1
+    ]
+  };
+  const plan=compileWebGpuRenderPlan(
+    texturedFrame,
+    [tangentGeometry],
+    {width:800,height:600},
+    [normalTexture]
+  );
+  assert.deepEqual(plan.requiredTextureIds,[normalTexture.id]);
+  assert.deepEqual(plan.draws[0].textureFlags,[0,0,0,1]);
+  assert.equal(plan.draws[0].textureRefs.normal,normalTexture.id);
+
   assert.throws(
-    ()=>compileWebGpuRenderPlan(texturedFrame,[triangle],{width:800,height:600},[]),
+    ()=>compileWebGpuRenderPlan(
+      texturedFrame,
+      [triangle],
+      {width:800,height:600},
+      [normalTexture]
+    ),
     /webgpu_normal_map_tangents_required:metal/
+  );
+
+  const srgbNormal={...normalTexture,format:'rgba8unorm-srgb' as const};
+  assert.throws(
+    ()=>compileWebGpuRenderPlan(
+      texturedFrame,
+      [tangentGeometry],
+      {width:800,height:600},
+      [srgbNormal]
+    ),
+    /webgpu_normal_map_format_must_be_linear:texture:metal-normal/
   );
 });
 
@@ -418,4 +473,7 @@ test('owned WGSL contains vertex, fragment, lighting and material paths',()=>{
   assert.match(EVERCRAFT_WEBGPU_WGSL,/textureSample/);
   assert.match(EVERCRAFT_WEBGPU_WGSL,/textureFlags/);
   assert.match(EVERCRAFT_WEBGPU_WGSL,/ormTexture/);
+  assert.match(EVERCRAFT_WEBGPU_WGSL,/normalTexture/);
+  assert.match(EVERCRAFT_WEBGPU_WGSL,/input\.tangent/);
+  assert.match(EVERCRAFT_WEBGPU_WGSL,/cross\(N, T\)/);
 });
