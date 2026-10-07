@@ -7,8 +7,14 @@ import { createHash } from 'node:crypto';
 import { startForensicRecordRuntime } from '../../forensic-record/runtime.mjs';
 import { migrateForensicRecordSnapshot } from './forensic-record-stream-migrator.mjs';
 
-const sha=(v)=>createHash('sha256').update(Buffer.from(typeof v==='string'?v:JSON.stringify(v))).digest('hex');
-const withRowSha=(row)=>({...row,_migration_row_sha256:sha(JSON.stringify(row))});
+const stable=(v)=>{
+  if(Array.isArray(v)) return v.map(stable);
+  if(v&&typeof v==='object') return Object.fromEntries(Object.keys(v).sort().map(k=>[k,stable(v[k])]));
+  return v;
+};
+const stableJson=(v)=>JSON.stringify(stable(v));
+const sha=(v)=>createHash('sha256').update(Buffer.from(typeof v==='string'?v:stableJson(v))).digest('hex');
+const withRowSha=(row)=>({...row,_migration_row_sha256:sha(stableJson(row))});
 const page=(entity,rows,cutoff)=> {
   const body={
     schema:'evercraft.forensic-record.base44-exit-batch.v1',
@@ -22,7 +28,7 @@ const page=(entity,rows,cutoff)=> {
     next_offset:rows.length,
     exhausted:true
   };
-  return {...body,page_sha256:sha(JSON.stringify(body))};
+  return {...body,page_sha256:sha(stableJson(body))};
 };
 
 const root=fs.mkdtempSync(path.join(os.tmpdir(),'forensic-record-migrate-'));
