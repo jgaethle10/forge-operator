@@ -1,4 +1,14 @@
 export {
+  animationFromFallenAsset,
+  verifyFallenAnimationImportReceipt,
+  type FallenAnimationAsset,
+  type FallenAnimationImportReceipt,
+  type FallenAnimationImportResult,
+  type FallenAnimationProvenance,
+  type FallenAnimationRightsState
+} from './fallen-animation.js';
+
+export {
   geometryFromFallenAsset,
   generateDeterministicTangents,
   verifyFallenGeometryImportReceipt,
