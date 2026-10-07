@@ -175,7 +175,8 @@ cat > "$CADDYFILE" <<'EOF'
 EOF
 
 systemctl daemon-reload
-systemctl enable --now "$HOME_SERVICE"
+systemctl enable "$HOME_SERVICE" >/dev/null
+systemctl restart "$HOME_SERVICE"
 for _ in 1 2 3 4 5 6 7 8 9 10; do
   if curl -fsS "http://127.0.0.1:$HOME_PORT/api/health" >/tmp/evercraft-home-health.json 2>/dev/null; then
     break
