@@ -36,6 +36,16 @@ const stage:VisualStage={
         sourceRefs:['source:ais-proof'],
         progress:[{t:0,value:0},{t:8,value:1,ease:'ease_in_out'}]
       }],
+      polygons:[{
+        id:'public-zone',
+        rings:[[
+          {lat:42,lon:135},{lat:42,lon:145},{lat:30,lon:145},{lat:30,lon:135},{lat:42,lon:135}
+        ]],
+        fill:'rgba(79,184,255,.08)',
+        stroke:'#4FB8FF',
+        evidenceState:'public_source',
+        sourceRefs:['source:zone-boundary']
+      }],
       evidenceState:'public_source',
       sourceRefs:['source:map-proof']
     },
@@ -120,4 +130,29 @@ test('HTML stage has deterministic frame-control hooks and no external runtime d
   assert.match(html,/evercraftFrameReady/);
   assert.doesNotMatch(html,/https:\/\//);
   assert.match(html,/ROUTE VISUALIZATION/);
+  assert.match(html,/data\.geoPolygon/);
+  assert.match(html,/fill-rule/);
+});
+
+test('geo polygons fail closed on invalid rings and modeled shapes without provenance',()=>{
+  const badRing:VisualStage=structuredClone(stage);
+  const geo=badRing.layers.find(layer=>layer.kind==='geo');
+  if(!geo||geo.kind!=='geo') throw new Error('geo_layer_missing');
+  geo.polygons=[{
+    id:'bad',
+    rings:[[{lat:1,lon:1},{lat:2,lon:2}]],
+    evidenceState:'public_source',
+    sourceRefs:['source:bad']
+  }];
+  assert.equal(validateStage(badRing).status,'rejected');
+
+  const badProvenance:VisualStage=structuredClone(stage);
+  const geo2=badProvenance.layers.find(layer=>layer.kind==='geo');
+  if(!geo2||geo2.kind!=='geo') throw new Error('geo_layer_missing');
+  geo2.polygons=[{
+    id:'modeled-zone',
+    rings:[[{lat:1,lon:1},{lat:1,lon:2},{lat:2,lon:1}]],
+    evidenceState:'modeled'
+  }];
+  assert.equal(validateStage(badProvenance).status,'rejected');
 });
