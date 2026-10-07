@@ -36,6 +36,21 @@ npm start
 
 The hosted demo contains a deliberately broken invoice calculator. Each demo run creates an isolated temporary repository, runs the failing Node test, asks Nemotron for the repair, applies only an allowed exact-text patch, reruns the real test, and shows the receipt.
 
+
+## Public demo guardrails
+
+The public HTTP demo fails closed by default. A deployment must set both a Nebius credential and `RUNBOOK_ZERO_DEMO_ENABLED=1` before `POST /api/demo` can call Token Factory.
+
+The demo also enforces a process-level inference budget and cooldown:
+
+```bash
+export RUNBOOK_ZERO_DEMO_ENABLED=1
+export RUNBOOK_ZERO_DEMO_MAX_RUNS=25
+export RUNBOOK_ZERO_DEMO_COOLDOWN_MS=4000
+```
+
+`RUNBOOK_ZERO_DEMO_MAX_RUNS` is hard-capped at 100 per process. Failed provider calls still consume the run budget. This keeps a public competition demo from becoming an unbounded inference-credit endpoint.
+
 ## CLI
 
 ```json

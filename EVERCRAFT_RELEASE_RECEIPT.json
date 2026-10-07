@@ -3,25 +3,28 @@
   "entry_key": "nebius-runbook-zero",
   "public_surface": "runbook-zero-public",
   "source_repository": "jgaethle10/forge-operator",
-  "source_merge_commit": "cc2179d48b3b563c147da9b80486048a98d4f070",
+  "source_merge_commit": "45556c6233bd00743d153fc938c1cf9f6ce3adf7",
   "raven_qa": {
     "workflow": "Raven Competition Provider Runtime",
-    "run_id": 37647549350,
-    "tests": 88,
-    "passed": 88,
+    "run_id": 37648514557,
+    "tests": 92,
+    "passed": 92,
     "failed": 0,
     "provider_state": "held_missing_credential",
     "secret_values_persisted": false,
-    "submission_authority_enabled": false
+    "submission_authority_enabled": false,
+    "public_demo_guardrails": true
   },
   "standalone_export": {
     "workflow": "Competition Public Entry Export",
-    "run_id": 37647549511,
-    "artifact_id": 11493569980,
-    "artifact_digest": "sha256:f3bc6f9c497de832aad6099786e6b563c7c72a8fea88d2010df1ccedaf217862",
+    "run_id": 37648514401,
+    "artifact_id": 11494899804,
+    "artifact_digest": "sha256:30fcd302b9a0164d25a0880d047a23485405320e75c31410dd721018a7dc6965",
     "secret_scan": "passed",
-    "root_license": "MIT"
+    "root_license": "MIT",
+    "package_tests": 12
   },
   "live_nebius_canary": "not_run_missing_credential",
-  "note": "This public branch packages source only. It does not claim live provider access, deployment, submission, or accepted terms."
+  "public_demo": "runtime_ready_not_deployed",
+  "note": "Source-only public branch. No claim of live provider access, deployment, submission, accepted terms, or paid capacity."
 }
