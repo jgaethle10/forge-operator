@@ -2,7 +2,7 @@
   "schema": "evercraft.chum.crawl-state.v1",
   "provider": "Evercraft LLC",
   "coordinator": "CHUM",
-  "updated_at": "2026-10-07T16:33:22.074Z",
+  "updated_at": "2026-10-07T16:35:00.403Z",
   "url_count": 2929,
   "doctrine": {
     "crawl_can_be_requested_not_forced": true,
@@ -135,14 +135,14 @@
     },
     "/chum/hot/": {
       "path": "/chum/hot/",
-      "content_sha256": "27a7d4c931adb607c99056c229e75856fb9f5ed4866a15b3a3a48a983e8c3d36",
-      "last_changed": "2026-10-07T04:16:00.553Z",
+      "content_sha256": "eba00abc2487e2ee2c6f6e30ac378b2bb2e51a3c2d80e41a08a74082015b0ba0",
+      "last_changed": "2026-10-07T16:35:00.403Z",
       "priority": 80
     },
     "/chum/hot/index.json": {
       "path": "/chum/hot/index.json",
-      "content_sha256": "8485cf4f2fd28e342986d93249e1156eaed925cf6348e27b1eff8de063907672",
-      "last_changed": "2026-10-07T16:33:22.074Z",
+      "content_sha256": "09d36640cd720b05353e22c1beb9e4dbba8f15fdfcf50206f099f1bb041b517f",
+      "last_changed": "2026-10-07T16:35:00.403Z",
       "priority": 80
     },
     "/chum/strike/": {
