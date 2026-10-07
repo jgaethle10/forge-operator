@@ -801,6 +801,25 @@ export default function WorldForgeEditor(){
   },[]);
 
   useEffect(()=>{
+    if(
+      runtimeDragMode&&(
+        !playSession||
+        stagedOperations.length>0||
+        selected?.physics?.mode!=='dynamic'||
+        playSession.runtimeBodies[selectedId]?.kinematic===true
+      )
+    ){
+      setRuntimeDragMode(false);
+    }
+  },[
+    runtimeDragMode,
+    playSession,
+    stagedOperations.length,
+    selected?.physics?.mode,
+    selectedId,
+  ]);
+
+  useEffect(()=>{
     if(!project) return;
     setSnapshotState('dirty');
     const timer=window.setTimeout(()=>{
