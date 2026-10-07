@@ -120,7 +120,12 @@ jobs:
             if printf '%s' "$live_yard" | grep -Fq 'Live Yard 001' \
               && printf '%s' "$live_yard" | grep -Fq 'Dispatch truck' \
               && printf '%s' "$live_yard" | grep -Fq 'Shadow' \
-              && printf '%s' "$live_yard" | grep -Fq 'Autonomy'; then
+              && printf '%s' "$live_yard" | grep -Fq 'Autonomy' \
+              && printf '%s' "$live_yard" | grep -Fq 'Truck Queue' \
+              && printf '%s' "$live_yard" | grep -Fq 'Loader Starvation' \
+              && printf '%s' "$live_yard" | grep -Fq 'Blocked Route' \
+              && printf '%s' "$live_yard" | grep -Fq 'Production Surge' \
+              && printf '%s' "$live_yard" | grep -Fq 'STOP ALL'; then
               yard_ready=true
               echo "EarthWorks Live Yard verified on attempt $attempt."
               break
@@ -164,6 +169,7 @@ jobs:
             public_page_verified:fs.existsSync('/tmp/earthworks-public-page.html'),
             public_page_url:process.env.FABRIC_ORIGIN+'/capabilities/earthworks-site-autonomy-study-v1',
             live_yard_verified:fs.existsSync('/tmp/earthworks-live-yard.html'),
+            live_yard_game_controls_verified:fs.existsSync('/tmp/earthworks-live-yard.html'),
             live_yard_url:process.env.FABRIC_ORIGIN+'/earthworks',
             transactional:false,
             payment_created:false,
