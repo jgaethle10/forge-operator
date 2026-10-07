@@ -308,3 +308,42 @@ Restore uses `writeEntryToFile`, so ordinary Lineage checkout remains streaming 
 Git export also treats manifest-backed entries specially. Instead of calling `readEntryBytes`, it streams the entry into a temporary file under the target Git directory and lets `git hash-object -w <file>` consume that file directly. The temporary materialization is deleted immediately after Git has stored the blob, and the export workspace is removed in the final cleanup path.
 
 This keeps the normal large-asset path bounded by chunk size even when crossing the Git interoperability boundary. A caller has to opt into an unbounded buffer explicitly rather than receiving one accidentally.
+
+## Reachability and reversible garbage collection
+
+Lineage treats garbage collection as a governed history operation, not a blind filesystem sweep.
+
+The collector marks live state from:
+
+- every branch ref under `.lineage/refs/heads`;
+- named release pointers;
+- operation receipt roots;
+- optional explicit roots supplied by the caller.
+
+Reachability traverses object payload references conservatively. `large_blob_ref` objects additionally retain their manifest and every digest-addressed chunk in that manifest.
+
+GC is staged:
+
+1. `gc-plan` is non-destructive. It inventories objects, manifests and chunks, computes the reachable sets, applies an age/grace window, and reports exact reclaimable bytes.
+2. `gc-quarantine` recomputes the plan before moving anything. If roots/candidates changed, the plan is rejected as stale. Candidates are atomically moved into a reversible quarantine and an operation receipt is emitted.
+3. `gc-restore` moves a quarantined run back into active storage.
+4. `gc-purge` is allowed only after the quarantine retention window has expired. Purge is explicitly irreversible and emits its own receipt.
+
+If roots change during quarantine, Lineage restores every moved file before failing. Named releases therefore protect historical commits even after a branch moves forward.
+
+Defaults:
+
+- plan/quarantine grace window: 24 hours;
+- quarantine retention: 7 days;
+- purge before retention expiry: rejected.
+
+CLI:
+
+```bash
+node systemia/lineage/cli.mjs gc-plan 24
+node systemia/lineage/cli.mjs gc-quarantine 24 168
+node systemia/lineage/cli.mjs gc-restore <run-id>
+node systemia/lineage/cli.mjs gc-purge <run-id>
+```
+
+GC never creates publication, deployment, payment, or release authority. It only manages storage reachability underneath already-governed Lineage history.
