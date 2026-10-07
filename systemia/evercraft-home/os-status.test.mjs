@@ -1,7 +1,7 @@
 import test from "node:test";
 import assert from "node:assert/strict";
 import { startEvercraftHomeServer } from "./server.mjs";
-import { readEvercraftOsStatus } from "./os-adapter.mjs";
+import { readEvercraftOsApps, readEvercraftOsStatus } from "./os-adapter.mjs";
 
 test("OS adapter preserves authority and evidence boundaries", () => {
   const status = readEvercraftOsStatus({
@@ -39,4 +39,58 @@ test("Evercraft Home exposes the OS status surface through local-loopback auth",
   assert.equal(body.boot.runtime_health_claimed, false);
   assert.equal(body.boot.execution_authority_granted, false);
   assert.equal(body.authority.execution_granted_by_status_surface, false);
+});
+
+
+test("OS app adapter exposes contract readiness without installation or authority", () => {
+  const catalog = readEvercraftOsApps();
+
+  assert.equal(catalog.schema, "evercraft.home.os-app-catalog.v1");
+  assert.equal(catalog.installation_performed, false);
+  assert.equal(catalog.authority_granted, false);
+  assert.ok(catalog.product_count >= 4);
+  assert.equal(catalog.contract_ready_count, 4);
+
+  const aliev = readEvercraftOsApps({ productKey: "aliev" });
+  assert.equal(aliev.schema, "evercraft.home.os-app.v1");
+  assert.equal(aliev.app.product_key, "aliev");
+  assert.equal(aliev.app.package_state, "contract_ready");
+  assert.equal(aliev.app.authority.execution_granted, false);
+  assert.equal(aliev.installation_performed, false);
+  assert.equal(aliev.authority_granted, false);
+});
+
+test("Evercraft Home exposes authenticated OS app catalog and app detail surfaces", async (t) => {
+  const runtime = await startEvercraftHomeServer({
+    host: "127.0.0.1",
+    port: 0,
+    authMode: "local",
+    operator: "OS Apps Proof"
+  });
+  t.after(async () => runtime.close());
+
+  const catalogResponse = await fetch(runtime.url + "/api/os/apps");
+  assert.equal(catalogResponse.status, 200);
+  const catalog = await catalogResponse.json();
+  assert.equal(catalog.ok, true);
+  assert.equal(catalog.schema, "evercraft.home.os-app-catalog.v1");
+  assert.equal(catalog.installation_performed, false);
+  assert.equal(catalog.authority_granted, false);
+  assert.equal(catalog.contract_ready_count, 4);
+
+  const appResponse = await fetch(runtime.url + "/api/os/apps?product=aliev");
+  assert.equal(appResponse.status, 200);
+  const app = await appResponse.json();
+  assert.equal(app.ok, true);
+  assert.equal(app.schema, "evercraft.home.os-app.v1");
+  assert.equal(app.app.product_key, "aliev");
+  assert.equal(app.app.package_state, "contract_ready");
+  assert.equal(app.app.authority.passport_scopes_granted, false);
+
+  const missingResponse = await fetch(runtime.url + "/api/os/apps?product=does-not-exist");
+  assert.equal(missingResponse.status, 404);
+  const missing = await missingResponse.json();
+  assert.equal(missing.ok, false);
+  assert.equal(missing.installation_performed, false);
+  assert.equal(missing.authority_granted, false);
 });
