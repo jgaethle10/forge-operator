@@ -169,3 +169,9 @@ The owned-edge installer and updater mint the credential into `/var/lib/evercraf
 Radar auto-detects that token file when it is co-resident with Fabric and uses the loopback ingest endpoint. If the file is absent, Radar leaves transport held. Remote Radar nodes require deliberate endpoint and credential provisioning rather than inheriting local trust.
 
 The production external canary verifies the ingest route without mutating production by requiring an unauthenticated request to fail with HTTP 401.
+
+## Graphics Command integration
+
+Visual Desk now routes each normalized story through `systemia/graphics-command` before materializing social assets. Graphics Command selects the visual treatment, requires hero-first mobile composition, emits 4:5 / square / 9:16 poster targets, runs the scroll-stop gate, and produces a source-bound Fallen World Intelligence stage input. Visual Desk keeps legacy cards for compatibility, but Clip-facing preferred assets are the directed posters.
+
+The production boundary remains unchanged: a passing graphics gate or successful render does not grant publication authority.
