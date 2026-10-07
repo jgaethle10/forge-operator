@@ -28,6 +28,7 @@ test('Lineage commercial package has one consistent founding-pilot offer', async
   assert(product);
   assert.equal(product.human_confirmation_required, true);
   assert.match(product.commercial.status, /human_handoff/);
+  assert.match(product.commercial.status, /pending_external_canary/);
   assert.match(
     product.commercial.offers.find((row) => row.name === 'Lineage Founding Pilot').price,
     /\$500/
@@ -37,7 +38,7 @@ test('Lineage commercial package has one consistent founding-pilot offer', async
     (row) => row.public_id === 'lineage-founding-pilot-v1'
   );
   assert(machine);
-  assert.equal(machine.commercial_state, 'sell_now');
+  assert.equal(machine.commercial_state, 'verification_required');
   assert.equal(machine.machine_state, 'human_handoff_ready');
   assert.equal(machine.public_url, null);
   assert.equal(machine.public_url_source, 'held_pending_external_canary');
