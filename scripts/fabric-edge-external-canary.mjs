@@ -221,6 +221,15 @@ try{
     body:'{}',
   });
   const negativeVisualIngestBody=await negativeVisualIngest.json().catch(()=>null);
+  if(negativeVisualIngest.status===404){
+    throw new Error('visual_desk_ingest_route_not_deployed');
+  }
+  if(
+    negativeVisualIngest.status===503&&
+    negativeVisualIngestBody?.error==='visual_ingest_not_configured'
+  ){
+    throw new Error('visual_desk_ingest_credential_not_ready');
+  }
   if(
     negativeVisualIngest.status!==401||
     negativeVisualIngestBody?.error!=='visual_ingest_unauthorized'
