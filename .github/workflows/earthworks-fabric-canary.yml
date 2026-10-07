@@ -11,6 +11,9 @@ on:
       - 'public/chum/products/earthworks-autonomy/**'
       - 'systemia/earthworks-autonomy/**'
       - 'systemia/mcp/fabric-directory.mjs'
+      - 'systemia/mcp/fabric-public-site.mjs'
+      - 'tests/evercraft-fabric-runtime.test.mjs'
+      - 'tests/fabric-offer-pages.test.mjs'
       - '.github/workflows/earthworks-fabric-canary.yml'
   schedule:
     - cron: '*/15 * * * *'
@@ -84,6 +87,11 @@ jobs:
           page="$(curl --fail --silent --show-error --retry 4 --retry-all-errors --retry-delay 2 --max-time 25 "$FABRIC_ORIGIN/capabilities/earthworks-site-autonomy-study-v1")"
           printf '%s' "$page" | grep -Fq 'EarthWorks Site Autonomy Study'
           printf '%s' "$page" | grep -Fq '$5,000'
+          printf '%s' "$page" | grep -Fq 'Discuss one material loop'
+          if printf '%s' "$page" | grep -Fq 'Continue to checkout'; then
+            echo "EarthWorks page exposed checkout before site/scope qualification." >&2
+            exit 1
+          fi
           printf '%s\n' "$page" > /tmp/earthworks-public-page.html
 
       - name: Write external receipt
