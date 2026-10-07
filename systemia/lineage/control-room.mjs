@@ -268,7 +268,17 @@ export async function buildLineageControlRoomSnapshot(store, {
   };
 }
 
-export function renderLineageControlRoomHtml() {
+function normalizeControlRoomApiPrefix(value) {
+  const raw = String(value || '/v1').trim();
+  if (!/^\/(?:[A-Za-z0-9._~-]+\/?)*$/.test(raw) || raw.includes('..')) {
+    throw new Error('Invalid Lineage Control Room API prefix');
+  }
+  return raw.length > 1 ? raw.replace(/\/$/, '') : raw;
+}
+
+export function renderLineageControlRoomHtml({ apiPrefix = '/v1' } = {}) {
+  const normalizedApiPrefix = normalizeControlRoomApiPrefix(apiPrefix);
+  const apiPrefixJson = JSON.stringify(normalizedApiPrefix).replaceAll('<', '\\u003c');
   return `<!doctype html>
 <html lang="en">
 <head>
@@ -336,6 +346,7 @@ main{padding:18px;min-width:0}.section-title{font-size:11px;color:var(--muted);f
   </section>
 </div>
 <script>
+const API_PREFIX=${apiPrefixJson};
 const state={snapshot:null,selected:null};
 const el=id=>document.getElementById(id);
 const esc=v=>String(v??'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]));
@@ -372,8 +383,8 @@ function renderStorage(){
 async function inspect(id){
   state.selected=id; const box=el('inspector');box.innerHTML='<div class="empty">Loading commit...</div>';
   try{
-    const commit=await api('/v1/commit?id='+encodeURIComponent(id));
-    let diff=null;if(commit.parents?.[0]){try{diff=await api('/v1/diff?from='+encodeURIComponent(commit.parents[0])+'&to='+encodeURIComponent(id))}catch{}}
+    const commit=await api(API_PREFIX+'/commit?id='+encodeURIComponent(id));
+    let diff=null;if(commit.parents?.[0]){try{diff=await api(API_PREFIX+'/diff?from='+encodeURIComponent(commit.parents[0])+'&to='+encodeURIComponent(id))}catch{}}
     const a=commit.authority||{};const paths=(diff?.changes||[]).slice(0,40).map(x=>'<div class="path"><b>'+esc(x.status)+'</b> · '+esc(x.path)+(x.semantic?.reason?'<div class="tiny">'+esc(x.semantic.reason)+'</div>':'')+'</div>').join('');
     box.innerHTML='<div class="detailbox"><h3>'+esc(commit.message||'(no message)')+'</h3><div class="kv"><div>Commit</div><div class="mono">'+esc(commit.short_id)+'</div><div>Actor</div><div>'+esc(commit.actor?.type)+': '+esc(commit.actor?.id)+'</div><div>Authority</div><div>mutate '+esc(a.mutation)+' · publish '+esc(a.publish)+' · pay '+esc(a.payment)+'</div><div>Parents</div><div class="mono">'+esc((commit.parents||[]).map(short).join(', ')||'root')+'</div><div>Files</div><div>'+commit.entries.length+'</div></div>'+(commit.rationale?'<div class="tiny" style="margin-top:10px">why: '+esc(commit.rationale)+'</div>':'')+'</div>'+(paths?'<div class="detailbox"><h3>Changes</h3>'+paths+'</div>':'');
   }catch(error){box.innerHTML='<div class="detailbox error">'+esc(error.message)+'</div>'}
@@ -381,7 +392,7 @@ async function inspect(id){
 async function loadSnapshot(ref='HEAD'){
   el('history').innerHTML='<div class="empty">Loading Lineage...</div>';
   try{
-    state.snapshot=await api('/v1/snapshot?ref='+encodeURIComponent(ref)+'&limit=160');
+    state.snapshot=await api(API_PREFIX+'/snapshot?ref='+encodeURIComponent(ref)+'&limit=160');
     renderBranches();renderReleases();renderHistory();renderStorage();
     if(state.snapshot.head) inspect(state.snapshot.head);
   }catch(error){el('history').innerHTML='<div class="empty error">'+esc(error.message)+'</div>'}
@@ -390,7 +401,7 @@ el('search').addEventListener('input',renderHistory);
 el('verify').onclick=async()=>{
   const status=el('integrityStat');status.textContent='verifying...';
   try{
-    const result=await api('/v1/integrity?fast=1');
+    const result=await api(API_PREFIX+'/integrity?fast=1');
     status.textContent=result.ok?'integrity OK':'integrity FAILED';
     status.className='pill '+(result.ok?'':'error');
   }catch(error){
