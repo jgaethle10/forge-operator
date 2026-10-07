@@ -29,7 +29,7 @@ import {
   renderFabricMobileApp,
 } from './fabric-mobile-site.mjs';
 import { createFabricFaieSurface } from './fabric-faie-runtime.mjs';
-import { buildVisualStory } from '../visual-desk/factory.mjs';
+import { buildVisualStory, normalizeVisualStory } from '../visual-desk/factory.mjs';
 
 function isLegacyBase44Connection(connection={}) {
   try {
@@ -221,6 +221,54 @@ function buildVisualDeskMirror({moduleDir,outputDir,origin}) {
   };
 }
 
+function refreshVisualDeskMirror({outputDir,origin}) {
+  const entries=[];
+  if(fs.existsSync(outputDir)){
+    for(const item of fs.readdirSync(outputDir,{withFileTypes:true})){
+      if(!item.isDirectory()) continue;
+      const manifestFile=path.join(outputDir,item.name,'manifest.json');
+      if(!fs.existsSync(manifestFile)) continue;
+      try{
+        const manifest=JSON.parse(fs.readFileSync(manifestFile,'utf8'));
+        if(manifest?.schema!=='evercraft.visual-story.manifest.v2') continue;
+        entries.push({
+          slug:manifest.slug,
+          title:manifest.title,
+          canonicalUrl:manifest.canonicalUrl,
+          socialCardUrl:manifest.socialCardUrl,
+          motionStageUrl:manifest.assets?.motionStage||null,
+          evidenceState:manifest.evidenceState,
+          storyDigest:manifest.storyDigest,
+          publishedAt:manifest.publishedAt,
+        });
+      }catch{}
+    }
+  }
+  entries.sort((a,b)=>
+    String(b.publishedAt||'').localeCompare(String(a.publishedAt||''))||
+    String(a.slug||'').localeCompare(String(b.slug||''))
+  );
+  const index={
+    schema:'evercraft.fabric.visual-desk-index.v1',
+    origin:String(origin||'').replace(/\/$/,''),
+    count:entries.length,
+    stories:entries,
+  };
+  fs.writeFileSync(path.join(outputDir,'index.json'),JSON.stringify(index,null,2)+'\n',{mode:0o600});
+  return {
+    ready:fs.existsSync(path.join(outputDir,'index.html')),
+    count:entries.length,
+    origin:index.origin,
+  };
+}
+
+function secureTokenMatches(expected,supplied) {
+  const a=Buffer.from(String(expected||''),'utf8');
+  const b=Buffer.from(String(supplied||''),'utf8');
+  if(!a.length||a.length!==b.length) return false;
+  return crypto.timingSafeEqual(a,b);
+}
+
 async function readJson(req,{maxBytes=1024*1024}={}) {
   const chunks=[];
   let bytes=0;
@@ -264,6 +312,7 @@ export async function startFabricLocalRuntime({
   faieSurfaceEnabled=true,
   visualStateDir='',
   visualOrigin='',
+  visualIngestToken='',
   purchaseIntentFetch=fetch,
   purchaseIntentUrl='https://base44.app/api/apps/6a7adc9666bfd8c5c2fb4069/functions/ravenNexusPurchaseIntent',
 }={}) {
@@ -356,11 +405,17 @@ export async function startFabricLocalRuntime({
   const resolvedVisualOrigin=String(
     visualOrigin||process.env.EVERCRAFT_VISUAL_ORIGIN||'https://fabric.systemiacommandcenters.com/visuals'
   ).replace(/\/$/,'');
-  const visualMirror=buildVisualDeskMirror({
+  let visualMirror=buildVisualDeskMirror({
     moduleDir,
     outputDir:visualDir,
     origin:resolvedVisualOrigin,
   });
+  const resolvedVisualIngestToken=String(visualIngestToken||'').trim();
+  if(resolvedVisualIngestToken && resolvedVisualIngestToken.length<32){
+    throw new Error('visual_ingest_token_too_short');
+  }
+  const visualIngestReady=()=>resolvedVisualIngestToken.length>=32;
+
   const faieSurface=faieSurfaceEnabled
     ? createFabricFaieSurface({
         stateDir:faieStateDir||undefined,
@@ -425,6 +480,10 @@ export async function startFabricLocalRuntime({
     visual_desk_story_count:visualMirror.count,
     visual_desk_origin:visualMirror.origin,
     visual_desk_motion_capable:visualMirror.count>0,
+    visual_desk_ingest_path:'/api/visuals/ingest',
+    visual_desk_ingest_ready:visualIngestReady(),
+    visual_desk_ingest_authority:'authenticated_materialization_only',
+    visual_desk_ingest_publication_authority:false,
     faie_native_surface:Boolean(faieSurface),
     faie_public_path:faieSurface?'/faie/':null,
     faie_public_api:faieSurface?'/api/faie':null,
@@ -454,6 +513,99 @@ export async function startFabricLocalRuntime({
 
       if (req.method==='GET' && req.url==='/health') {
         return sendJson(res,200,health());
+      }
+
+      if (req.method==='POST' && req.url==='/api/visuals/ingest') {
+        if(!visualIngestReady()){
+          return sendJson(res,503,{
+            ok:false,
+            error:'visual_ingest_not_configured',
+            publicationAuthority:false,
+          });
+        }
+        const authorization=String(req.headers.authorization||'');
+        const supplied=authorization.startsWith('Bearer ')?authorization.slice(7).trim():'';
+        if(!secureTokenMatches(resolvedVisualIngestToken,supplied)){
+          return sendJson(res,401,{
+            ok:false,
+            error:'visual_ingest_unauthorized',
+            publicationAuthority:false,
+          });
+        }
+
+        const body=await readJson(req,{maxBytes:512*1024});
+        if(body?.schema!=='evercraft.visual-desk.transport-envelope.v1'){
+          return sendJson(res,400,{ok:false,error:'visual_transport_envelope_schema_invalid',publicationAuthority:false});
+        }
+        if(body.publicationAuthority!==false){
+          return sendJson(res,400,{ok:false,error:'visual_transport_publication_authority_invalid',publicationAuthority:false});
+        }
+
+        let normalized;
+        try{
+          normalized=normalizeVisualStory(body.story);
+        }catch(error){
+          return sendJson(res,400,{
+            ok:false,
+            error:error instanceof Error?error.message:String(error),
+            publicationAuthority:false,
+          });
+        }
+        if(String(body.story_sha256||'')!==normalized.digest){
+          return sendJson(res,409,{
+            ok:false,
+            error:'visual_transport_story_digest_mismatch',
+            expected_story_sha256:normalized.digest,
+            publicationAuthority:false,
+          });
+        }
+
+        const existingFile=path.join(visualDir,normalized.slug,'story.json');
+        if(fs.existsSync(existingFile)){
+          try{
+            const existing=normalizeVisualStory(JSON.parse(fs.readFileSync(existingFile,'utf8')));
+            if(existing.digest===normalized.digest){
+              visualMirror=refreshVisualDeskMirror({outputDir:visualDir,origin:resolvedVisualOrigin});
+              return sendJson(res,200,{
+                ok:true,
+                schema:'evercraft.visual-desk.ingest-receipt.v1',
+                receipt_id:'visual-ingest:'+normalized.digest.slice(0,24),
+                status:'deduped',
+                slug:normalized.slug,
+                story_sha256:normalized.digest,
+                canonical_url:resolvedVisualOrigin+'/'+normalized.slug+'/',
+                publicationAuthority:false,
+                external_social_publish_performed:false,
+              });
+            }
+          }catch{}
+          return sendJson(res,409,{
+            ok:false,
+            error:'visual_story_slug_digest_conflict',
+            slug:normalized.slug,
+            publicationAuthority:false,
+          });
+        }
+
+        const built=buildVisualStory(body.story,{
+          outputRoot:visualDir,
+          origin:resolvedVisualOrigin,
+        });
+        visualMirror=refreshVisualDeskMirror({outputDir:visualDir,origin:resolvedVisualOrigin});
+        return sendJson(res,201,{
+          ok:true,
+          schema:'evercraft.visual-desk.ingest-receipt.v1',
+          receipt_id:'visual-ingest:'+built.story.digest.slice(0,24),
+          status:'materialized',
+          slug:built.story.slug,
+          story_sha256:built.story.digest,
+          canonical_url:built.manifest.canonicalUrl,
+          source:String(body.source||'').slice(0,120)||null,
+          source_edition_id:String(body.source_edition_id||'').slice(0,200)||null,
+          candidate_id:String(body.candidate_id||'').slice(0,200)||null,
+          publicationAuthority:false,
+          external_social_publish_performed:false,
+        });
       }
 
       if (req.method==='GET' && req.url==='/') {
@@ -902,8 +1054,17 @@ if (direct) {
   const allocatorTokenFile=String(arg('--allocator-token-file',process.env.EVERCRAFT_EDGE_ALLOCATOR_TOKEN_FILE||''));
   const visualStateDir=String(arg('--visual-state-dir',process.env.EVERCRAFT_VISUAL_STATE_DIR||''));
   const visualOrigin=String(arg('--visual-origin',process.env.EVERCRAFT_VISUAL_ORIGIN||'https://fabric.systemiacommandcenters.com/visuals'));
+  const visualIngestTokenFile=String(arg(
+    '--visual-ingest-token-file',
+    process.env.EVERCRAFT_VISUAL_INGEST_TOKEN_FILE||'/var/lib/evercraft/fabric-secrets/visual-ingest-token'
+  ));
+  let visualIngestToken=String(process.env.EVERCRAFT_VISUAL_INGEST_TOKEN||'').trim();
+  if(!visualIngestToken && visualIngestTokenFile && fs.existsSync(visualIngestTokenFile)){
+    visualIngestToken=fs.readFileSync(visualIngestTokenFile,'utf8').trim();
+  }
   const runtime=await startFabricLocalRuntime({
-    host,port,challengeToken,nodeReceiptPath,allocatorTokenFile,visualStateDir,visualOrigin
+    host,port,challengeToken,nodeReceiptPath,allocatorTokenFile,
+    visualStateDir,visualOrigin,visualIngestToken
   });
   process.stdout.write(JSON.stringify({
     ok:true,
