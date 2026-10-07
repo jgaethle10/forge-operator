@@ -149,6 +149,25 @@ function renderLabels(story,positions,format){
   ].join('\n')).join('\n');
 }
 
+function regionIdentityLayout(frame,format){
+  const labelFont=format==='story'?25:20;
+  const kickerFont=format==='story'?11:9;
+  const x=frame.draw.x+frame.draw.width-18;
+  const labelY=frame.draw.y+frame.draw.height-42;
+  const kickerY=frame.draw.y+frame.draw.height-19;
+  const labelWidth='WASHINGTON'.length*labelFont*.61;
+  const kickerWidth='PACIFIC NORTHWEST'.length*kickerFont*.61;
+  return {
+    x,labelY,kickerY,labelFont,kickerFont,
+    bounds:{
+      x1:x-Math.max(labelWidth,kickerWidth),
+      x2:x,
+      y1:labelY-labelFont*.90,
+      y2:kickerY+kickerFont*.18,
+    },
+  };
+}
+
 function labelBounds(item){
   const x1=item.anchor==='start'?item.x:item.x-item.estimate;
   const x2=item.anchor==='start'?item.x+item.estimate:item.x;
@@ -186,6 +205,7 @@ export function assessDirectedPosterLayout(story,plan,format='feed'){
   const maxValue=Math.max(1,...story.points.map(point=>Math.abs(Number(point.value)||1)));
   const labels=layoutLabels(story,positions,format);
   const labelBoxes=labels.map(item=>({id:item.point.id,label:item.label,...labelBounds(item)}));
+  const regionIdentity=regionIdentityLayout(frame,format);
   const markers=story.points.map(point=>{
     const p=positions.get(point.id);
     const base=(format==='story'?17:13)+Math.sqrt(Math.abs(Number(point.value)||1)/maxValue)*(format==='story'?15:11);
@@ -219,6 +239,17 @@ export function assessDirectedPosterLayout(story,plan,format='feed'){
     }
   }
 
+  for(const labelBox of labelBoxes){
+    if(boxesOverlap(labelBox,regionIdentity.bounds,8)){
+      issues.push('region_label_overlap:'+labelBox.id);
+    }
+  }
+  for(const marker of markers){
+    if(boxHitsCircle(regionIdentity.bounds,marker,7)){
+      issues.push('region_marker_overlap:'+marker.id);
+    }
+  }
+
   const hookLines=lines(plan.hero.hook,format==='story'?14:format==='square'?25:23,2);
   const hookWidth=Math.max(0,...hookLines.map(row=>row.length*spec.hookSize*.53));
   if(hookWidth>spec.width-144) issues.push('headline_overflow');
@@ -248,6 +279,7 @@ export function assessDirectedPosterLayout(story,plan,format='feed'){
       safeMargins:!unique.some(issue=>issue.startsWith('label_out_of_safe_bounds:')),
       headlineFits:!unique.includes('headline_overflow'),
       metricLabelsFit:!unique.some(issue=>issue.startsWith('metric_label_overflow:')),
+      regionIdentityClear:!unique.some(issue=>issue.startsWith('region_')),
     },
     publicationAuthority:false,
   };
@@ -256,6 +288,7 @@ export function assessDirectedPosterLayout(story,plan,format='feed'){
 function renderGeography(boundary,statePath,spec,format,terrain,terrainHref,frame){
   if(!boundary||!statePath) return '<g opacity=".9">'+decorativeContours(spec)+'</g>';
   const stroke=format==='story'?4:3;
+  const regionIdentity=regionIdentityLayout(frame,format);
   const x=spec.map.x;
   const y=spec.map.y;
   const w=spec.map.width;
@@ -272,8 +305,8 @@ function renderGeography(boundary,statePath,spec,format,terrain,terrainHref,fram
     terrainLayer,
     '<path class="terrain-atmosphere" d="'+statePath+'" fill="url(#terrainWash)" opacity=".46"/>',
     '<path class="geo-boundary" d="'+statePath+'" fill="none" stroke="#EAF7FC" stroke-width="1.25" stroke-opacity=".30"/>',
-    '<text class="region-label" x="'+(frame.draw.x+frame.draw.width-18)+'" y="'+(frame.draw.y+frame.draw.height-42)+'" text-anchor="end" font-family="Arial,sans-serif" font-size="'+(format==='story'?25:20)+'" font-weight="900" letter-spacing="5" fill="#EAF7FC" opacity=".30">WASHINGTON</text>',
-    '<text class="region-kicker" x="'+(frame.draw.x+frame.draw.width-18)+'" y="'+(frame.draw.y+frame.draw.height-19)+'" text-anchor="end" font-family="Arial,sans-serif" font-size="'+(format==='story'?11:9)+'" font-weight="800" letter-spacing="3" fill="#8EDBFA" opacity=".42">PACIFIC NORTHWEST</text>',
+    '<text class="region-label" x="'+regionIdentity.x+'" y="'+regionIdentity.labelY+'" text-anchor="end" font-family="Arial,sans-serif" font-size="'+regionIdentity.labelFont+'" font-weight="900" letter-spacing="5" fill="#EAF7FC" opacity=".30">WASHINGTON</text>',
+    '<text class="region-kicker" x="'+regionIdentity.x+'" y="'+regionIdentity.kickerY+'" text-anchor="end" font-family="Arial,sans-serif" font-size="'+regionIdentity.kickerFont+'" font-weight="800" letter-spacing="3" fill="#8EDBFA" opacity=".42">PACIFIC NORTHWEST</text>',
   ].join('\n');
 }
 
