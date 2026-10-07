@@ -1,0 +1,84 @@
+import assert from "node:assert/strict";
+import {summarizeSipDecisionAudit} from "./edge-delayed-sip-decision-audit.mjs";
+
+const summary=summarizeSipDecisionAudit([
+  {
+    phase:"MIDDAY",
+    symbols:[
+      {
+        symbol:"SOXX",
+        recorded_iex_spread_bps:4,
+        sip_spread_bps:1,
+        recorded_iex_decision:"ABSTAIN",
+        sip_counterfactual_decision:"SIMULATE_MARKETABLE_LONG",
+        decision_disagreement:true,
+        sip_quote_available:true,
+        entry_time_source:"exact_symbol_entry_quote_timestamp",
+      },
+      {
+        symbol:"QQQ",
+        recorded_iex_spread_bps:0.6,
+        sip_spread_bps:0.3,
+        recorded_iex_decision:"SIMULATE_MARKETABLE_LONG",
+        sip_counterfactual_decision:"SIMULATE_MARKETABLE_LONG",
+        decision_disagreement:false,
+        sip_quote_available:true,
+        entry_time_source:"exact_window_start_at",
+      }
+    ]
+  },
+  {
+    phase:"CLOSING",
+    symbols:[
+      {
+        symbol:"SOXX",
+        recorded_iex_spread_bps:3.5,
+        sip_spread_bps:1.75,
+        recorded_iex_decision:"ABSTAIN",
+        sip_counterfactual_decision:"SIMULATE_MARKETABLE_LONG",
+        decision_disagreement:true,
+        sip_quote_available:true,
+        entry_time_source:"inferred_generated_at_minus_60000ms",
+      },
+      {
+        symbol:"SMH",
+        recorded_iex_spread_bps:2,
+        sip_spread_bps:null,
+        recorded_iex_decision:"SIMULATE_MARKETABLE_LONG",
+        sip_counterfactual_decision:"UNAVAILABLE",
+        decision_disagreement:false,
+        sip_quote_available:false,
+        entry_time_source:"inferred_generated_at_minus_60000ms",
+      }
+    ]
+  }
+]);
+
+assert.equal(summary.instrument_decisions,4);
+assert.equal(summary.sip_quotes_available,3);
+assert.equal(summary.sip_quotes_unavailable,1);
+assert.equal(summary.decision_disagreements,2);
+assert.equal(summary.iex_abstain_vs_sip_trade_count,2);
+assert.equal(summary.iex_trade_vs_sip_abstain_count,0);
+assert.equal(summary.by_symbol.SOXX.available_decisions,2);
+assert.equal(summary.by_symbol.SOXX.disagreements,2);
+assert.equal(summary.by_symbol.QQQ.disagreements,0);
+assert.equal(summary.by_phase.MIDDAY.disagreements,1);
+assert.equal(summary.by_phase.CLOSING.disagreements,1);
+assert.equal(
+  summary.timing_sources.exact_symbol_entry_quote_timestamp,
+  1
+);
+assert.equal(summary.timing_sources.exact_window_start_at,1);
+assert.equal(
+  summary.timing_sources.inferred_generated_at_minus_60000ms,
+  2
+);
+
+console.log(JSON.stringify({
+  ok:true,
+  exact_timestamp_precedence_summarized:true,
+  unavailable_sip_does_not_create_false_disagreement:true,
+  by_symbol_and_phase_preserved:true,
+  no_live_authority:true
+}));
