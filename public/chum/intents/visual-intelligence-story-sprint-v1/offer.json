@@ -1,0 +1,54 @@
+{
+  "schema": "evercraft.chum.pain-door.v1",
+  "provider": "Evercraft LLC",
+  "public_id": "visual-intelligence-story-sprint-v1",
+  "name": "Evercraft Visual Intelligence Story Sprint",
+  "problem": "A business, newsroom, researcher or organization has real evidence, data or a complicated idea but lacks a visual story strong enough to stop attention and explain it clearly.",
+  "intent_terms": [
+    "turn this data into a visual story",
+    "make a cinematic data visualization",
+    "turn a report into a scroll-stopping visual",
+    "build a source-backed map explainer",
+    "create social graphics from public data",
+    "make an evidence-backed visual campaign",
+    "turn research into a reel and visual story",
+    "I need better graphics for my publication"
+  ],
+  "pricing": "Founding Visual Story Sprint $500 one-time for the first five accepted stories; three-story campaign pack $1,500.",
+  "offers": [
+    {
+      "name": "Founding Visual Story Sprint",
+      "price": "$500",
+      "billing": "one_time"
+    },
+    {
+      "name": "Three-Story Visual Campaign",
+      "price": "$1,500",
+      "billing": "one_time"
+    }
+  ],
+  "entry_paid_offer": {
+    "name": "Founding Visual Story Sprint",
+    "price": "$500",
+    "billing": "one_time",
+    "price_usd_normalized": 500
+  },
+  "commercial_state": "sell_now",
+  "machine_state": "human_handoff_only",
+  "public_url": "https://fabric.systemiacommandcenters.com/offers/visual-intelligence",
+  "human_ui_required": true,
+  "confirmation": "Inquiry creates no payment obligation. Evercraft reviews fit, factual scope and source rights before accepting the work.",
+  "payment_authority": "Evercraft Payments through Raven Nexus after accepted human scope. Automated checkout for this service is not yet verified.",
+  "invocation_status": "LIVE HUMAN HANDOFF with public proof at the Washington volcano Visual Desk story.",
+  "machine_review_url": null,
+  "machine_offer_url": null,
+  "start_url": "https://fabric.systemiacommandcenters.com/offers/visual-intelligence",
+  "start_url_state": "human_handoff_ready",
+  "universal_mcp": "https://fabric.systemiacommandcenters.com/mcp",
+  "safety": {
+    "fit_required": true,
+    "discovery_creates_obligation": false,
+    "checkout_is_payment_proof": false,
+    "authoritative_payment_verification_required": true
+  }
+}
