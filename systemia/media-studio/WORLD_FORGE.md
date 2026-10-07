@@ -405,3 +405,12 @@ World Forge keeps authoring truth and runtime truth separate while making Play M
 When a selected mesh is Dynamic, Play Mode is active, the runtime body is present, and no staged authoring changes are pending, the existing XYZ viewport gizmo switches from authored translation to a tick-bound runtime impulse controller. The snapped drag distance is multiplied by the editor's Impulse/m value, converted from Forge Z-up into World Engine Y-up coordinates, scheduled for the next runtime tick, and advanced through the existing Play step contract.
 
 The runtime interaction is ephemeral. It does not emit a World Forge mutation, does not rewrite the authored transform, and does not grant destructive or publication authority. Static and Kinematic objects keep authored-gizmo semantics, and staged authoring changes continue to block runtime inputs until applied or cleared.
+
+
+## v15 geometry-aware ray selection
+
+Viewport object picking now uses deterministic ray casting against rendered mesh geometry instead of choosing the nearest projected object origin.
+
+The editor unprojects the pointer through the active view-projection matrix, constructs a world-space ray, triangulates editable polygon faces deterministically, uses the same cube geometry represented by primitive preview meshes, transforms those triangles through the authored/runtime node transform, and selects the nearest positive triangle hit.
+
+Selection fails closed if the camera matrix is singular or unprojection is invalid. Gizmo hit-testing still takes precedence over object ray selection, so direct manipulation remains deliberate rather than accidentally selecting through a handle drag.
