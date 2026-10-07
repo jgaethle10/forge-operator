@@ -122,7 +122,19 @@ export class LineageStore {
 
   async readObject(id) {
     const parsed = JSON.parse(await readFile(this.objectPath(id), 'utf8'));
-    if (parsed.schema !== SCHEMA) throw new Error(`Unsupported object schema for ${id}`);
+    if (parsed.schema !== SCHEMA) {
+      throw new Error(`Unsupported object schema for ${id}`);
+    }
+    const actual = sha256(stable(parsed));
+    if (actual !== id) {
+      const error = new Error(
+        `Lineage object digest mismatch: expected ${id}, got ${actual}`
+      );
+      error.code = 'LINEAGE_OBJECT_DIGEST_MISMATCH';
+      error.expected = id;
+      error.actual = actual;
+      throw error;
+    }
     return parsed;
   }
 
