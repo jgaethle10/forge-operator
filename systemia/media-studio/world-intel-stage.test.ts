@@ -34,6 +34,16 @@ test('world intelligence compiler creates a dimensional sourced scene instead of
       points:[{
         id:'point-a',lat:33,lon:140,label:'TRACK A',
         evidenceState:'public_source',sourceRefs:['public-track:001']
+      }],
+      polygons:[{
+        id:'zone-a',
+        rings:[[
+          {lat:37,lon:137},{lat:37,lon:145},{lat:30,lon:145},{lat:30,lon:137},{lat:37,lon:137}
+        ]],
+        evidenceState:'public_source',
+        sourceRefs:['public-boundary:001'],
+        fill:'rgba(79,184,255,.08)',
+        stroke:'#4FB8FF'
       }]
     },
     metrics:[{
@@ -63,6 +73,9 @@ test('world intelligence compiler creates a dimensional sourced scene instead of
   const geo=mid.layers.find(layer=>layer.id==='world-geo');
   assert.ok((geo?.opacity??0)>0);
   assert.ok((geo?.geoRoutes?.[0]?.progressValue??0)>0);
+  if(!geo||geo.raw.kind!=='geo') throw new Error('geo_layer_missing');
+  assert.equal(geo.raw.polygons?.length,1);
+  assert.equal(geo.raw.polygons?.[0].id,'zone-a');
 });
 
 test('vertical compiler rearranges subject, map and metrics for social cuts',()=>{
