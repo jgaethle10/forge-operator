@@ -217,6 +217,31 @@ Current area lights are explicitly approximated as point lights because World En
 
 The browser editor exposes **Engine Bridge** only for committed canonical state. If a Stage-mode ChangeSet is pending, runtime compilation is blocked until the proposal is applied or cleared.
 
+## Physics authoring
+
+World Forge now authors physics as a first-class node component rather than hiding runtime behavior in generic metadata.
+
+A mesh may be:
+
+- **Static**: collider only, no dynamic body;
+- **Kinematic**: authored/runtime-controlled transform with infinite-mass collision behavior;
+- **Dynamic**: World Engine owns motion under gravity, damping, restitution and collision response.
+
+Physics carries an explicit collider contract:
+
+- Auto Box
+- Auto Sphere
+- explicit Box half-extents
+- explicit Sphere radius
+
+Dynamic and kinematic bodies may author mass, gravity scale, linear damping and restitution. Validation rejects non-finite or invalid mass/collider values, out-of-range restitution and physics on unsupported node kinds.
+
+Physics changes use the same typed mutation/receipt/undo/ChangeSet path as transforms, materials and geometry. The command bar also supports bounded deterministic instructions such as `make dynamic 3 kg gravity 0.8 damping 0.1 bounce 0.2 collider box`.
+
+The World Engine bridge converts authored physics into canonical rigid-body/collider components. Collider dimensions follow the Z-up → Y-up axis conversion as dimensions, not directional vectors. Automatic colliders require centered local geometry until World Engine gains collider offsets.
+
+The starter studio floor is a locked static collider so a newly dynamic object immediately has a physical surface in Play Mode.
+
 ## Runtime View
 
 Play Mode now projects the active World Engine snapshot back into World Forge view space.
