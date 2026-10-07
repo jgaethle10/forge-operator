@@ -71,10 +71,27 @@ type MutationResponse={
   error?:string;
 };
 
+type RuntimeSnapshot={
+  worldId:string;
+  worldVersion:number;
+  tick:number;
+  timeSec:number;
+  digest:string;
+  [key:string]:unknown;
+};
+
+type RuntimeOverlayRow={
+  nodeId:string;
+  entityId:string;
+  transform:Transform;
+};
+
 type EngineRuntimeState={
   world:Record<string,unknown>;
   assets:Record<string,unknown>;
   geometries:unknown[];
+  snapshot:RuntimeSnapshot;
+  overlay:RuntimeOverlayRow[];
 };
 
 const AXIS_STEP=.25;
@@ -695,6 +712,11 @@ export default function WorldForgeEditor(){
   const [shotDigest,setShotDigest]=useState('');
   const [nativePreview,setNativePreview]=useState<{svg:string;sha:string;renderer:string;solid:boolean}|null>(null);
   const [engineRuntime,setEngineRuntime]=useState<EngineRuntimeState|null>(null);
+  const [runtimePlaying,setRuntimePlaying]=useState(false);
+  const [runtimeStepping,setRuntimeStepping]=useState(false);
+  const runtimeSteppingRef=useRef(false);
+  const engineRuntimeRef=useRef<EngineRuntimeState|null>(null);
+  const projectRef=useRef<ForgeProject|null>(null);
   const [engineBridge,setEngineBridge]=useState<{
     worldId:string;
     digest:string;
@@ -761,6 +783,14 @@ export default function WorldForgeEditor(){
   },[]);
 
   useEffect(()=>{
+    projectRef.current=project;
+  },[project]);
+
+  useEffect(()=>{
+    engineRuntimeRef.current=engineRuntime;
+  },[engineRuntime]);
+
+  useEffect(()=>{
     if(!project) return;
     setSnapshotState('dirty');
     const timer=window.setTimeout(()=>{
@@ -819,6 +849,26 @@ export default function WorldForgeEditor(){
     return {...project,nodes};
   },[project,stageMode,stagedOperations]);
 
+  const displayProject=useMemo(()=>{
+    if(!viewportProject||stageMode||!engineRuntime?.overlay?.length) return viewportProject;
+    const runtimeByNode=new Map(
+      engineRuntime.overlay.map(row=>[row.nodeId,row.transform]),
+    );
+    return {
+      ...viewportProject,
+      nodes:viewportProject.nodes.map(node=>{
+        const runtimeTransform=runtimeByNode.get(node.id);
+        return runtimeTransform
+          ? {...node,transform:{
+              position:{...runtimeTransform.position},
+              rotationDeg:{...runtimeTransform.rotationDeg},
+              scale:{...runtimeTransform.scale},
+            }}
+          : node;
+      }),
+    };
+  },[viewportProject,stageMode,engineRuntime?.overlay]);
+
   const selected=viewportProject?.nodes.find(node=>node.id===selectedId)||null;
 
   function selectDefaultNode(nextProject:ForgeProject){
@@ -844,6 +894,7 @@ export default function WorldForgeEditor(){
       setReceipts([]);
       setUndoStack([]);
       setNativePreview(null);
+      setRuntimePlaying(false);
       setEngineRuntime(null);
       setEngineBridge(null);
       setShotDigest('');
@@ -896,6 +947,7 @@ export default function WorldForgeEditor(){
       setReceipts([]);
       setUndoStack([]);
       setNativePreview(null);
+      setRuntimePlaying(false);
       setEngineRuntime(null);
       setEngineBridge(null);
       setShotDigest('');
