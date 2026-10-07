@@ -50,3 +50,20 @@ test('public demo surfaces are mobile-stable and must not horizontally wiggle',(
     assert.match(html,/minmax\(0\s*,\s*1fr\)/i,'Public demo grids must allow children to shrink without forcing horizontal overflow in '+file);
   }
 });
+
+
+test('public demo inline scripts parse cleanly and documents are not structurally duplicated',()=>{
+  for(const file of collectDemoHtml()){
+    const html=fs.readFileSync(file,'utf8');
+    const closingHtml=(html.match(/<\/html>/gi)||[]).length;
+    assert.equal(closingHtml,1,'Public demo must contain exactly one closing html tag in '+file);
+    const scripts=[...html.matchAll(/<script\b[^>]*>([\s\S]*?)<\/script>/gi)];
+    for(const match of scripts){
+      assert.doesNotThrow(
+        ()=>new Function(match[1]),
+        undefined,
+        'Inline script syntax failed in '+file
+      );
+    }
+  }
+});
