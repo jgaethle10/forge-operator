@@ -405,3 +405,35 @@ Safe template names such as `.env.example`, `.env.sample`, `.env.template`, and 
 The normal remediation is to put the sensitive path in `.lineageignore`. If a sensitive fixture or intentionally versioned key-shaped artifact must enter history, the caller can explicitly allow its path with `allowSensitivePaths`. That override is written onto the tree entry and into `snapshot_policy.sensitive_overrides`.
 
 A sensitive-path override grants only snapshot inclusion. It does not grant access to secrets, publishing, deployment, payment, or any other downstream authority.
+
+
+## Lineage Control Room
+
+The Control Room is the native operator surface for Lineage history.
+
+Launch it from any initialized Lineage workspace:
+
+```bash
+node systemia/lineage/cli.mjs control-room
+```
+
+An optional port may be supplied. The server binds to loopback only and prints its local service URL.
+
+The first Control Room surface is intentionally read-only. It exposes:
+
+- all local branches and immutable heads;
+- commit DAG history with human/agent authorship;
+- commit messages, rationale, authority boundaries and change counts;
+- named release pointers and release state;
+- commit inspection with paths, hashes, storage mode and snapshot-policy metadata;
+- semantic diffs between commits;
+- 24-hour GC-plan storage visibility without performing GC;
+- on-demand Lineage integrity verification through the existing fsck engine.
+
+It does not return blob payload bytes, large-object bytes, secret contents, or private credentials. It accepts GET requests only. POST/PUT/PATCH/DELETE requests fail with a read-only error.
+
+The HTTP service binds only to `127.0.0.1`, `localhost`, or `::1`. It grants no mutation, publication, deployment, payment, release, or private-data authority.
+
+The UI is self-contained and does not load external scripts, fonts, stylesheets, analytics, or CDN assets. Its Content Security Policy is limited to its own origin plus inline UI code/styles required by the generated page.
+
+This surface is the operator-facing counterpart to Lineage's underlying immutable history engine. Future authenticated mutation controls must remain separate, explicit authority-bearing workflows rather than being inferred from access to the dashboard.
