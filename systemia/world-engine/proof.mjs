@@ -663,6 +663,49 @@ assert.equal(
   textureAssetDigest(reloadedBaseTexture)
 );
 
+const proofNormalTexture={
+  schema:'evercraft.world-engine.texture.v1',
+  id:'texture:proof-normal',
+  width:1,
+  height:1,
+  format:'rgba8unorm',
+  data:[128,128,255,255]
+};
+const normalMappedGeometry={
+  ...webgpuGeometry,
+  tangents:[
+    1,0,0,1,
+    1,0,0,1,
+    1,0,0,1
+  ]
+};
+const normalMappedWorld=structuredClone(visualWorld);
+normalMappedWorld.visualScene.materials[0]={
+  ...normalMappedWorld.visualScene.materials[0],
+  textureRefs:{normal:proofNormalTexture.id}
+};
+const normalRuntime=new EvercraftWorldRuntime(normalMappedWorld);
+const normalSnapshot=normalRuntime.snapshot();
+const normalFrame=compileVisualFrame(
+  normalSnapshot.worldId,
+  normalSnapshot.tick,
+  normalSnapshot.timeSec,
+  normalRuntime.definition.visualScene,
+  normalSnapshot.entities,
+  normalSnapshot.cameraRuntime,
+  normalSnapshot.activeEntityIds
+);
+const normalPlan=compileWebGpuRenderPlan(
+  normalFrame,
+  [normalMappedGeometry],
+  {width:1280,height:720},
+  [proofNormalTexture]
+);
+assert.deepEqual(normalPlan.requiredTextureIds,[proofNormalTexture.id]);
+assert.deepEqual(normalPlan.draws[0].textureFlags,[0,0,0,1]);
+assert.equal(normalPlan.draws[0].textureRefs.normal,proofNormalTexture.id);
+assert.equal(verifyWebGpuRenderPlan(normalPlan),true);
+
 const editAssetA={
   id:'geometry:proof-cube',
   kind:'geometry',
@@ -742,7 +785,7 @@ assert.equal(liveMigration.receipt.cameraRuntimePreserved,true);
 assert.equal(verifyWorldRuntimeMigrationReceipt(liveMigration.receipt),true);
 
 process.stdout.write(JSON.stringify({
-  schema:'evercraft.world-engine.proof.v13',
+  schema:'evercraft.world-engine.proof.v15',
   status:'passed',
   world_id:world.id,
   replay:receipt,
@@ -812,6 +855,13 @@ process.stdout.write(JSON.stringify({
     evicted:textureResidency.evictTextureIds,
     hot_reload_receipt:textureHotReload.receipt
   },
+  normal_map_runtime:{
+    plan_digest:normalPlan.digest,
+    required_texture_ids:normalPlan.requiredTextureIds,
+    texture_flags:normalPlan.draws[0].textureFlags,
+    normal_texture:normalPlan.draws[0].textureRefs.normal,
+    tangent_count:normalMappedGeometry.tangents.length/4
+  },
   studio_edit:{
     transaction_digest:edited.receipt.transactionDigest,
     edit_receipt_digest:edited.receipt.digest,
@@ -864,7 +914,9 @@ process.stdout.write(JSON.stringify({
     texture_hot_reload_receipts:true,
     textured_webgpu_plan:true,
     gpu_plan_receipt_verified_before_submission:true,
-    normal_maps_fail_closed_until_tangents:true,
+    tangent_space_geometry:true,
+    normal_map_tbn_shading:true,
+    linear_normal_map_contract:true,
     deterministic_live_world_edit:true,
     reversible_versioned_edit_receipts:true,
     explicit_asset_rights_lineage:true,
