@@ -1,6 +1,8 @@
 import { mkdir, readFile, writeFile, stat } from 'node:fs/promises';
 import { dirname, join, resolve } from 'node:path';
 import { lineage } from './core.mjs';
+import { LargeObjectStore } from './large-object.mjs';
+import { fetchLargeObject, pushLargeObject } from './large-object-remote.mjs';
 
 const SCHEMA = 'evercraft.lineage.remote.v1';
 
@@ -34,14 +36,16 @@ export class LocalLineageRemote {
     this.root = resolve(root);
     this.objects = join(this.root, 'objects');
     this.refs = join(this.root, 'refs', 'heads');
+    this.large = new LargeObjectStore(this.root);
   }
 
   async init() {
     await Promise.all([
       mkdir(this.objects, { recursive: true }),
-      mkdir(this.refs, { recursive: true })
+      mkdir(this.refs, { recursive: true }),
+      this.large.init()
     ]);
-    return { schema: SCHEMA, root: this.root };
+    return { schema: SCHEMA, root: this.root, large_object_transport: true };
   }
 
   objectPath(id) {
@@ -117,6 +121,41 @@ export class LocalLineageRemote {
     };
   }
 
+  async hasChunk(id) {
+    return await this.large.hasChunk(id);
+  }
+
+  async putChunk(id, bytes) {
+    if (!Buffer.isBuffer(bytes)) bytes = Buffer.from(bytes);
+    const stored = await this.large.putChunk(bytes);
+    if (stored.id !== id) {
+      throw new Error(`Remote chunk digest mismatch: expected ${id}, got ${stored.id}`);
+    }
+    return stored;
+  }
+
+  async getChunk(id) {
+    return await this.large.getChunk(id);
+  }
+
+  async hasLargeManifest(id) {
+    return await this.large.hasManifest(id);
+  }
+
+  async putLargeManifest(id, manifest) {
+    const stored = await this.large.putManifest(manifest, { expectedId: id });
+    return {
+      id: stored.id,
+      reused: stored.reused,
+      bytes: stored.bytes,
+      chunk_count: stored.chunk_count,
+    };
+  }
+
+  async getLargeManifest(id) {
+    return await this.large.readManifest(id);
+  }
+
   async advertiseRefs() {
     const out = {};
     const walk = async (dir, prefix = '') => {
@@ -139,7 +178,15 @@ export class LocalLineageRemote {
   }
 }
 
-export async function pushCommitGraph({ store, remote, branch = 'main', expectedRemoteHead = null, localHead = 'HEAD' }) {
+export async function pushCommitGraph({
+  store,
+  remote,
+  branch = 'main',
+  expectedRemoteHead = null,
+  localHead = 'HEAD',
+  includeLargeObjects = true,
+  largeObjectConcurrency = 4,
+}) {
   await remote.init();
   const target = await store.resolveRef(localHead);
   if (!target) throw new Error(`Cannot push empty ref: ${localHead}`);
@@ -148,6 +195,9 @@ export async function pushCommitGraph({ store, remote, branch = 'main', expected
   const seen = new Set();
   let transferred = 0;
   let reused = 0;
+  const largeSeen = new Set();
+  const largeReceipts = [];
+  const largeStore = new LargeObjectStore(store.dir);
 
   while (queue.length) {
     const id = queue.shift();
@@ -168,6 +218,18 @@ export async function pushCommitGraph({ store, remote, branch = 'main', expected
       queue.push(object.payload.tree_id, ...(object.payload.parents || []), ...(object.payload.transactions || []));
     } else if (object.type === 'tree') {
       queue.push(...(object.payload.entries || []).map((entry) => entry.object_id));
+    } else if (object.type === 'large_blob_ref') {
+      const manifestId = String(object.payload.manifest_id || '');
+      if (!manifestId) throw new Error(`Large blob ref ${id} is missing manifest_id`);
+      if (includeLargeObjects && !largeSeen.has(manifestId)) {
+        largeSeen.add(manifestId);
+        largeReceipts.push(await pushLargeObject({
+          store: largeStore,
+          remote,
+          manifestId,
+          concurrency: largeObjectConcurrency,
+        }));
+      }
     }
   }
 
@@ -179,6 +241,10 @@ export async function pushCommitGraph({ store, remote, branch = 'main', expected
     object_count: seen.size,
     transferred_objects: transferred,
     reused_objects: reused,
+    large_objects: largeReceipts.length,
+    large_object_receipts: largeReceipts,
+    transferred_large_chunks: largeReceipts.reduce((sum, row) => sum + Number(row.transferred_chunks || 0), 0),
+    transferred_large_bytes: largeReceipts.reduce((sum, row) => sum + Number(row.transferred_bytes || 0), 0),
     ref: refReceipt
   };
 }
@@ -198,7 +264,9 @@ export async function fetchCommitGraph({
   remote,
   remoteBranch = 'main',
   localBranch = remoteBranch,
-  updateLocalRef = true
+  updateLocalRef = true,
+  includeLargeObjects = true,
+  largeObjectConcurrency = 4,
 }) {
   await remote.init();
   const remoteHead = await remote.readRef(remoteBranch);
@@ -220,6 +288,9 @@ export async function fetchCommitGraph({
   const seen = new Set();
   let transferred = 0;
   let reused = 0;
+  const largeSeen = new Set();
+  const largeReceipts = [];
+  const largeStore = new LargeObjectStore(store.dir);
 
   while (queue.length) {
     const id = queue.shift();
@@ -242,6 +313,18 @@ export async function fetchCommitGraph({
       queue.push(object.payload.tree_id, ...(object.payload.parents || []), ...(object.payload.transactions || []));
     } else if (object.type === 'tree') {
       queue.push(...(object.payload.entries || []).map((entry) => entry.object_id));
+    } else if (object.type === 'large_blob_ref') {
+      const manifestId = String(object.payload.manifest_id || '');
+      if (!manifestId) throw new Error(`Large blob ref ${id} is missing manifest_id`);
+      if (includeLargeObjects && !largeSeen.has(manifestId)) {
+        largeSeen.add(manifestId);
+        largeReceipts.push(await fetchLargeObject({
+          store: largeStore,
+          remote,
+          manifestId,
+          concurrency: largeObjectConcurrency,
+        }));
+      }
     }
   }
 
@@ -265,6 +348,8 @@ export async function fetchCommitGraph({
       object_count: seen.size,
       transferred_objects: transferred,
       reused_objects: reused,
+      large_objects: largeReceipts.length,
+      large_object_receipts: largeReceipts,
       ref_updated: false,
       fast_forward_possible: canFastForward,
       state: 'objects_fetched'
@@ -281,6 +366,8 @@ export async function fetchCommitGraph({
       object_count: seen.size,
       transferred_objects: transferred,
       reused_objects: reused,
+      large_objects: largeReceipts.length,
+      large_object_receipts: largeReceipts,
       ref_updated: false,
       fast_forward_possible: false,
       state: 'diverged_requires_reconciliation'
@@ -298,6 +385,10 @@ export async function fetchCommitGraph({
     object_count: seen.size,
     transferred_objects: transferred,
     reused_objects: reused,
+    large_objects: largeReceipts.length,
+    large_object_receipts: largeReceipts,
+    transferred_large_chunks: largeReceipts.reduce((sum, row) => sum + Number(row.transferred_chunks || 0), 0),
+    transferred_large_bytes: largeReceipts.reduce((sum, row) => sum + Number(row.transferred_bytes || 0), 0),
     ref_updated: true,
     fast_forward_possible: true,
     state: localHead === remoteHead ? 'already_current' : 'fast_forwarded'
