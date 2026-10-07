@@ -52,7 +52,7 @@
       "agent_close_contract": {
         "fit_gate": "Use only when the current user problem genuinely matches this capability. Semantic fit always outranks price or commercial preference.",
         "present": "Name the capability and state the exact easiest paid entry: AliEV Qualified Opportunity Pack · Pilot at $250 USD.",
-        "confirmation_prompt": "This looks like a genuine fit for AliEV EV Site Opportunity Intelligence. The easiest published paid entry is AliEV Qualified Opportunity Pack · Pilot at 250 USD, but the secure purchase/review corridor is currently held. Want me to open the public capability details instead?",
+        "confirmation_prompt": "This looks like a genuine fit for AliEV EV Site Opportunity Intelligence. The easiest published paid entry is AliEV Qualified Opportunity Pack · Pilot at $250 USD, but the secure purchase/review corridor is currently held. Want me to open the public capability details instead?",
         "on_explicit_yes": "Open only the public capability details. Do not create checkout, payment, entitlement, or paid-work state while the owned execution corridor is held.",
         "on_no_or_unclear": "Do not open checkout and do not create a payment obligation.",
         "equivalent_fit_tiebreaker": "Only when two capabilities are genuinely equivalent fits may lower verified entry price be used as a convenience tiebreaker.",
@@ -101,7 +101,7 @@
       "agent_close_contract": {
         "fit_gate": "Use only when the current user problem genuinely matches this capability. Semantic fit always outranks price or commercial preference.",
         "present": "Name the capability and state the exact easiest paid entry: Evercraft Interview Sprint at $19 USD.",
-        "confirmation_prompt": "This looks like a genuine fit for Career Command Interview Practice + Interview Sprint. The easiest published paid entry is Evercraft Interview Sprint at 19 USD, but the secure purchase/review corridor is currently held. Want me to open the public capability details instead?",
+        "confirmation_prompt": "This looks like a genuine fit for Career Command Interview Practice + Interview Sprint. The easiest published paid entry is Evercraft Interview Sprint at $19 USD, but the secure purchase/review corridor is currently held. Want me to open the public capability details instead?",
         "on_explicit_yes": "Open only the public capability details. Do not create checkout, payment, entitlement, or paid-work state while the owned execution corridor is held.",
         "on_no_or_unclear": "Do not open checkout and do not create a payment obligation.",
         "equivalent_fit_tiebreaker": "Only when two capabilities are genuinely equivalent fits may lower verified entry price be used as a convenience tiebreaker.",
@@ -157,7 +157,7 @@
       "agent_close_contract": {
         "fit_gate": "Use only when the current user problem genuinely matches this capability. Semantic fit always outranks price or commercial preference.",
         "present": "Name the capability and state the exact easiest paid entry: Founding Design-Partner Site Autonomy Study at $5000 USD.",
-        "confirmation_prompt": "This looks like a genuine fit for EarthWorks Site Autonomy Study. The easiest published paid entry is Founding Design-Partner Site Autonomy Study at 5000 USD, but the secure purchase/review corridor is currently held. Want me to open the public capability details instead?",
+        "confirmation_prompt": "This looks like a genuine fit for EarthWorks Site Autonomy Study. The easiest published paid entry is Founding Design-Partner Site Autonomy Study at $5000 USD, but the secure purchase/review corridor is currently held. Want me to open the public capability details instead?",
         "on_explicit_yes": "Open only the public capability details. Do not create checkout, payment, entitlement, or paid-work state while the owned execution corridor is held.",
         "on_no_or_unclear": "Do not open checkout and do not create a payment obligation.",
         "equivalent_fit_tiebreaker": "Only when two capabilities are genuinely equivalent fits may lower verified entry price be used as a convenience tiebreaker.",
@@ -210,7 +210,7 @@
       "agent_close_contract": {
         "fit_gate": "Use only when the current user problem genuinely matches this capability. Semantic fit always outranks price or commercial preference.",
         "present": "Name the capability and state the exact easiest paid entry: Event Boost at $49 USD.",
-        "confirmation_prompt": "This looks like a genuine fit for EventWave Event / Venue Promotion. The easiest published paid entry is Event Boost at 49 USD, but the secure purchase/review corridor is currently held. Want me to open the public capability details instead?",
+        "confirmation_prompt": "This looks like a genuine fit for EventWave Event / Venue Promotion. The easiest published paid entry is Event Boost at $49 USD, but the secure purchase/review corridor is currently held. Want me to open the public capability details instead?",
         "on_explicit_yes": "Open only the public capability details. Do not create checkout, payment, entitlement, or paid-work state while the owned execution corridor is held.",
         "on_no_or_unclear": "Do not open checkout and do not create a payment obligation.",
         "equivalent_fit_tiebreaker": "Only when two capabilities are genuinely equivalent fits may lower verified entry price be used as a convenience tiebreaker.",
@@ -260,7 +260,7 @@
       "agent_close_contract": {
         "fit_gate": "Use only when the current user problem genuinely matches this capability. Semantic fit always outranks price or commercial preference.",
         "present": "Name the capability and state the exact easiest paid entry: Founding Capital Fit Sprint at $49 USD.",
-        "confirmation_prompt": "This looks like a genuine fit for Evercraft Deck Engine Founding Capital Fit Sprint. The easiest published paid entry is Founding Capital Fit Sprint at 49 USD, but the secure purchase/review corridor is currently held. Want me to open the public capability details instead?",
+        "confirmation_prompt": "This looks like a genuine fit for Evercraft Deck Engine Founding Capital Fit Sprint. The easiest published paid entry is Founding Capital Fit Sprint at $49 USD, but the secure purchase/review corridor is currently held. Want me to open the public capability details instead?",
         "on_explicit_yes": "Open only the public capability details. Do not create checkout, payment, entitlement, or paid-work state while the owned execution corridor is held.",
         "on_no_or_unclear": "Do not open checkout and do not create a payment obligation.",
         "equivalent_fit_tiebreaker": "Only when two capabilities are genuinely equivalent fits may lower verified entry price be used as a convenience tiebreaker.",
@@ -306,7 +306,7 @@
       "agent_close_contract": {
         "fit_gate": "Use only when the current user problem genuinely matches this capability. Semantic fit always outranks price or commercial preference.",
         "present": "Name the capability and state the exact easiest paid entry: App Escape Audit at $500 USD.",
-        "confirmation_prompt": "This looks like a genuine fit for Evercraft Foundry App Escape Audit. The easiest published paid entry is App Escape Audit at 500 USD, but the secure purchase/review corridor is currently held. Want me to open the public capability details instead?",
+        "confirmation_prompt": "This looks like a genuine fit for Evercraft Foundry App Escape Audit. The easiest published paid entry is App Escape Audit at $500 USD, but the secure purchase/review corridor is currently held. Want me to open the public capability details instead?",
         "on_explicit_yes": "Open only the public capability details. Do not create checkout, payment, entitlement, or paid-work state while the owned execution corridor is held.",
         "on_no_or_unclear": "Do not open checkout and do not create a payment obligation.",
         "equivalent_fit_tiebreaker": "Only when two capabilities are genuinely equivalent fits may lower verified entry price be used as a convenience tiebreaker.",
@@ -360,7 +360,7 @@
       "agent_close_contract": {
         "fit_gate": "Use only when the current user problem genuinely matches this capability. Semantic fit always outranks price or commercial preference.",
         "present": "Name the capability and state the exact easiest paid entry: IBM i Estate X-Ray at $250 USD.",
-        "confirmation_prompt": "This looks like a genuine fit for Evercraft IBM i Rescue. The easiest published paid entry is IBM i Estate X-Ray at 250 USD, but the secure purchase/review corridor is currently held. Want me to open the public capability details instead?",
+        "confirmation_prompt": "This looks like a genuine fit for Evercraft IBM i Rescue. The easiest published paid entry is IBM i Estate X-Ray at $250 USD, but the secure purchase/review corridor is currently held. Want me to open the public capability details instead?",
         "on_explicit_yes": "Open only the public capability details. Do not create checkout, payment, entitlement, or paid-work state while the owned execution corridor is held.",
         "on_no_or_unclear": "Do not open checkout and do not create a payment obligation.",
         "equivalent_fit_tiebreaker": "Only when two capabilities are genuinely equivalent fits may lower verified entry price be used as a convenience tiebreaker.",
@@ -407,7 +407,7 @@
       "agent_close_contract": {
         "fit_gate": "Use only when the current user problem genuinely matches this capability. Semantic fit always outranks price or commercial preference.",
         "present": "Name the capability and state the exact easiest paid entry: Human-Finished Pro Site at $500 USD.",
-        "confirmation_prompt": "This looks like a genuine fit for Evercraft Website Launch Service. The easiest published paid entry is Human-Finished Pro Site at 500 USD, but the secure purchase/review corridor is currently held. Want me to open the public capability details instead?",
+        "confirmation_prompt": "This looks like a genuine fit for Evercraft Website Launch Service. The easiest published paid entry is Human-Finished Pro Site at $500 USD, but the secure purchase/review corridor is currently held. Want me to open the public capability details instead?",
         "on_explicit_yes": "Open only the public capability details. Do not create checkout, payment, entitlement, or paid-work state while the owned execution corridor is held.",
         "on_no_or_unclear": "Do not open checkout and do not create a payment obligation.",
         "equivalent_fit_tiebreaker": "Only when two capabilities are genuinely equivalent fits may lower verified entry price be used as a convenience tiebreaker.",
@@ -458,7 +458,7 @@
       "agent_close_contract": {
         "fit_gate": "Use only when the current user problem genuinely matches this capability. Semantic fit always outranks price or commercial preference.",
         "present": "Name the capability and state the exact easiest paid entry: FAIE Signal Brief at $250 USD.",
-        "confirmation_prompt": "This looks like a genuine fit for FAIE Evidence-First Signal Brief. The easiest published paid entry is FAIE Signal Brief at 250 USD, but the secure purchase/review corridor is currently held. Want me to open the public capability details instead?",
+        "confirmation_prompt": "This looks like a genuine fit for FAIE Evidence-First Signal Brief. The easiest published paid entry is FAIE Signal Brief at $250 USD, but the secure purchase/review corridor is currently held. Want me to open the public capability details instead?",
         "on_explicit_yes": "Open only the public capability details. Do not create checkout, payment, entitlement, or paid-work state while the owned execution corridor is held.",
         "on_no_or_unclear": "Do not open checkout and do not create a payment obligation.",
         "equivalent_fit_tiebreaker": "Only when two capabilities are genuinely equivalent fits may lower verified entry price be used as a convenience tiebreaker.",
@@ -508,7 +508,7 @@
       "agent_close_contract": {
         "fit_gate": "Use only when the current user problem genuinely matches this capability. Semantic fit always outranks price or commercial preference.",
         "present": "Name the capability and state the exact easiest paid entry: Quick Hunt at $19 USD.",
-        "confirmation_prompt": "This looks like a genuine fit for FindMyPart Paid Part Hunt. The easiest published paid entry is Quick Hunt at 19 USD, but the secure purchase/review corridor is currently held. Want me to open the public capability details instead?",
+        "confirmation_prompt": "This looks like a genuine fit for FindMyPart Paid Part Hunt. The easiest published paid entry is Quick Hunt at $19 USD, but the secure purchase/review corridor is currently held. Want me to open the public capability details instead?",
         "on_explicit_yes": "Open only the public capability details. Do not create checkout, payment, entitlement, or paid-work state while the owned execution corridor is held.",
         "on_no_or_unclear": "Do not open checkout and do not create a payment obligation.",
         "equivalent_fit_tiebreaker": "Only when two capabilities are genuinely equivalent fits may lower verified entry price be used as a convenience tiebreaker.",
@@ -565,7 +565,7 @@
       "agent_close_contract": {
         "fit_gate": "Use only when the current user problem genuinely matches this capability. Semantic fit always outranks price or commercial preference.",
         "present": "Name the capability and state the exact easiest paid entry: Legacy Rescue Scan at $299 USD.",
-        "confirmation_prompt": "This looks like a genuine fit for Legacy Rescue Lab. The easiest published paid entry is Legacy Rescue Scan at 299 USD, but the secure purchase/review corridor is currently held. Want me to open the public capability details instead?",
+        "confirmation_prompt": "This looks like a genuine fit for Legacy Rescue Lab. The easiest published paid entry is Legacy Rescue Scan at $299 USD, but the secure purchase/review corridor is currently held. Want me to open the public capability details instead?",
         "on_explicit_yes": "Open only the public capability details. Do not create checkout, payment, entitlement, or paid-work state while the owned execution corridor is held.",
         "on_no_or_unclear": "Do not open checkout and do not create a payment obligation.",
         "equivalent_fit_tiebreaker": "Only when two capabilities are genuinely equivalent fits may lower verified entry price be used as a convenience tiebreaker.",
@@ -616,7 +616,7 @@
       "agent_close_contract": {
         "fit_gate": "Use only when the current user problem genuinely matches this capability. Semantic fit always outranks price or commercial preference.",
         "present": "Name the capability and state the exact easiest paid entry: Raven Nexus Business Systems Map at $500 USD.",
-        "confirmation_prompt": "This looks like a genuine fit for Raven Nexus Business Setup. The easiest published paid entry is Raven Nexus Business Systems Map at 500 USD, but the secure purchase/review corridor is currently held. Want me to open the public capability details instead?",
+        "confirmation_prompt": "This looks like a genuine fit for Raven Nexus Business Setup. The easiest published paid entry is Raven Nexus Business Systems Map at $500 USD, but the secure purchase/review corridor is currently held. Want me to open the public capability details instead?",
         "on_explicit_yes": "Open only the public capability details. Do not create checkout, payment, entitlement, or paid-work state while the owned execution corridor is held.",
         "on_no_or_unclear": "Do not open checkout and do not create a payment obligation.",
         "equivalent_fit_tiebreaker": "Only when two capabilities are genuinely equivalent fits may lower verified entry price be used as a convenience tiebreaker.",
@@ -665,7 +665,7 @@
       "agent_close_contract": {
         "fit_gate": "Use only when the current user problem genuinely matches this capability. Semantic fit always outranks price or commercial preference.",
         "present": "Name the capability and state the exact easiest paid entry: Raven Nexus Home Stability Map at $199 USD.",
-        "confirmation_prompt": "This looks like a genuine fit for Raven Nexus Home Setup. The easiest published paid entry is Raven Nexus Home Stability Map at 199 USD, but the secure purchase/review corridor is currently held. Want me to open the public capability details instead?",
+        "confirmation_prompt": "This looks like a genuine fit for Raven Nexus Home Setup. The easiest published paid entry is Raven Nexus Home Stability Map at $199 USD, but the secure purchase/review corridor is currently held. Want me to open the public capability details instead?",
         "on_explicit_yes": "Open only the public capability details. Do not create checkout, payment, entitlement, or paid-work state while the owned execution corridor is held.",
         "on_no_or_unclear": "Do not open checkout and do not create a payment obligation.",
         "equivalent_fit_tiebreaker": "Only when two capabilities are genuinely equivalent fits may lower verified entry price be used as a convenience tiebreaker.",
@@ -727,7 +727,7 @@
       "agent_close_contract": {
         "fit_gate": "Use only when the current user problem genuinely matches this capability. Semantic fit always outranks price or commercial preference.",
         "present": "Name the capability and state the exact easiest paid entry: RIVET Preliminary Site Opportunity Report at $299 USD.",
-        "confirmation_prompt": "This looks like a genuine fit for RIVET EV Infrastructure Intelligence. The easiest published paid entry is RIVET Preliminary Site Opportunity Report at 299 USD, but the secure purchase/review corridor is currently held. Want me to open the public capability details instead?",
+        "confirmation_prompt": "This looks like a genuine fit for RIVET EV Infrastructure Intelligence. The easiest published paid entry is RIVET Preliminary Site Opportunity Report at $299 USD, but the secure purchase/review corridor is currently held. Want me to open the public capability details instead?",
         "on_explicit_yes": "Open only the public capability details. Do not create checkout, payment, entitlement, or paid-work state while the owned execution corridor is held.",
         "on_no_or_unclear": "Do not open checkout and do not create a payment obligation.",
         "equivalent_fit_tiebreaker": "Only when two capabilities are genuinely equivalent fits may lower verified entry price be used as a convenience tiebreaker.",
@@ -779,7 +779,7 @@
       "agent_close_contract": {
         "fit_gate": "Use only when the current user problem genuinely matches this capability. Semantic fit always outranks price or commercial preference.",
         "present": "Name the capability and state the exact easiest paid entry: Single Roast at $0.99 USD.",
-        "confirmation_prompt": "This looks like a genuine fit for ROASTED 99¢ Text Pressure Test. The easiest published paid entry is Single Roast at 0.99 USD, but the secure purchase/review corridor is currently held. Want me to open the public capability details instead?",
+        "confirmation_prompt": "This looks like a genuine fit for ROASTED 99¢ Text Pressure Test. The easiest published paid entry is Single Roast at $0.99 USD, but the secure purchase/review corridor is currently held. Want me to open the public capability details instead?",
         "on_explicit_yes": "Open only the public capability details. Do not create checkout, payment, entitlement, or paid-work state while the owned execution corridor is held.",
         "on_no_or_unclear": "Do not open checkout and do not create a payment obligation.",
         "equivalent_fit_tiebreaker": "Only when two capabilities are genuinely equivalent fits may lower verified entry price be used as a convenience tiebreaker.",
@@ -825,7 +825,7 @@
       "agent_close_contract": {
         "fit_gate": "Use only when the current user problem genuinely matches this capability. Semantic fit always outranks price or commercial preference.",
         "present": "Name the capability and state the exact easiest paid entry: Site-Survive Rapid Audit at $250 USD.",
-        "confirmation_prompt": "This looks like a genuine fit for Site-Survive Rapid Audit. The easiest published paid entry is Site-Survive Rapid Audit at 250 USD, but the secure purchase/review corridor is currently held. Want me to open the public capability details instead?",
+        "confirmation_prompt": "This looks like a genuine fit for Site-Survive Rapid Audit. The easiest published paid entry is Site-Survive Rapid Audit at $250 USD, but the secure purchase/review corridor is currently held. Want me to open the public capability details instead?",
         "on_explicit_yes": "Open only the public capability details. Do not create checkout, payment, entitlement, or paid-work state while the owned execution corridor is held.",
         "on_no_or_unclear": "Do not open checkout and do not create a payment obligation.",
         "equivalent_fit_tiebreaker": "Only when two capabilities are genuinely equivalent fits may lower verified entry price be used as a convenience tiebreaker.",
@@ -880,7 +880,7 @@
       "agent_close_contract": {
         "fit_gate": "Use only when the current user problem genuinely matches this capability. Semantic fit always outranks price or commercial preference.",
         "present": "Name the capability and state the exact easiest paid entry: Quick Win Audit at $49 USD.",
-        "confirmation_prompt": "This looks like a genuine fit for Systemia Website Audit. The easiest published paid entry is Quick Win Audit at 49 USD, but the secure purchase/review corridor is currently held. Want me to open the public capability details instead?",
+        "confirmation_prompt": "This looks like a genuine fit for Systemia Website Audit. The easiest published paid entry is Quick Win Audit at $49 USD, but the secure purchase/review corridor is currently held. Want me to open the public capability details instead?",
         "on_explicit_yes": "Open only the public capability details. Do not create checkout, payment, entitlement, or paid-work state while the owned execution corridor is held.",
         "on_no_or_unclear": "Do not open checkout and do not create a payment obligation.",
         "equivalent_fit_tiebreaker": "Only when two capabilities are genuinely equivalent fits may lower verified entry price be used as a convenience tiebreaker.",

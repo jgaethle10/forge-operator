@@ -2,7 +2,7 @@
   "schema": "evercraft.chum.crawl-state.v1",
   "provider": "Evercraft LLC",
   "coordinator": "CHUM",
-  "updated_at": "2026-10-07T03:10:57.185Z",
+  "updated_at": "2026-10-07T03:11:10.161Z",
   "url_count": 2901,
   "doctrine": {
     "crawl_can_be_requested_not_forced": true,
@@ -75,14 +75,14 @@
     },
     "/chum/agent-commerce.json": {
       "path": "/chum/agent-commerce.json",
-      "content_sha256": "3c98d49871e023728a2257c459a9e730db18fa1564f5db90c3ccdce3bef6e50f",
-      "last_changed": "2026-10-07T03:00:11.898Z",
+      "content_sha256": "5f33bcb20b7694c154b21f41b622a1eb281e3398a675bb84e24dafefc513a112",
+      "last_changed": "2026-10-07T03:11:10.161Z",
       "priority": 80
     },
     "/chum/agent-commerce.txt": {
       "path": "/chum/agent-commerce.txt",
-      "content_sha256": "1ded886d34649be80e750700632634d59f0cb6b3ac5841b8763910343cfe2276",
-      "last_changed": "2026-10-07T02:56:26.782Z",
+      "content_sha256": "b4eefc2db9723c3d4755a11db252507e63cdfbab958825e6a8f0aa95703d4508",
+      "last_changed": "2026-10-07T03:11:10.161Z",
       "priority": 80
     },
     "/chum/agent-commerce.html": {
@@ -141,8 +141,8 @@
     },
     "/chum/hot/index.json": {
       "path": "/chum/hot/index.json",
-      "content_sha256": "d569c7660490cf93929b6bcb6000288bc3a5c0f86d269b2546de8678e1c86651",
-      "last_changed": "2026-10-07T03:10:57.185Z",
+      "content_sha256": "60f1a5deb688826e1de43511eaafff3738d7d4713385df93ccffe782d0f0ffe3",
+      "last_changed": "2026-10-07T03:11:10.161Z",
       "priority": 80
     },
     "/chum/strike/": {
@@ -777,8 +777,8 @@
     },
     "/.well-known/evercraft-agent-commerce.json": {
       "path": "/.well-known/evercraft-agent-commerce.json",
-      "content_sha256": "3c98d49871e023728a2257c459a9e730db18fa1564f5db90c3ccdce3bef6e50f",
-      "last_changed": "2026-10-07T03:00:11.898Z",
+      "content_sha256": "5f33bcb20b7694c154b21f41b622a1eb281e3398a675bb84e24dafefc513a112",
+      "last_changed": "2026-10-07T03:11:10.161Z",
       "priority": 84
     },
     "/.well-known/evercraft-agent-interfaces.json": {

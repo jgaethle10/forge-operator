@@ -2,7 +2,7 @@
   "schema": "evercraft.chum.crawl-pressure.v1",
   "provider": "Evercraft LLC",
   "coordinator": "CHUM",
-  "updated_at": "2026-10-07T03:10:57.185Z",
+  "updated_at": "2026-10-07T03:11:10.161Z",
   "purpose": "Content-hash-backed freshness signals for public Evercraft discovery surfaces. A freshness signal requests attention; it does not prove indexing, ranking, recommendation, citation or provider pickup.",
   "indexnow": {
     "supported": true,
@@ -11,32 +11,51 @@
   },
   "latest_change_batch": [
     {
-      "path": "/chum/crawler-radar.json",
-      "last_changed": "2026-10-07T03:10:57.185Z",
+      "path": "/.well-known/evercraft-agent-commerce.json",
+      "last_changed": "2026-10-07T03:11:10.161Z",
+      "priority": 84
+    },
+    {
+      "path": "/chum/agent-commerce.json",
+      "last_changed": "2026-10-07T03:11:10.161Z",
       "priority": 80
     },
     {
-      "path": "/chum/crawler-radar.txt",
-      "last_changed": "2026-10-07T03:10:57.185Z",
+      "path": "/chum/agent-commerce.txt",
+      "last_changed": "2026-10-07T03:11:10.161Z",
       "priority": 80
     },
     {
       "path": "/chum/hot/index.json",
-      "last_changed": "2026-10-07T03:10:57.185Z",
-      "priority": 80
-    },
-    {
-      "path": "/chum/strike/",
-      "last_changed": "2026-10-07T03:10:57.185Z",
-      "priority": 80
-    },
-    {
-      "path": "/chum/strike/index.json",
-      "last_changed": "2026-10-07T03:10:57.185Z",
+      "last_changed": "2026-10-07T03:11:10.161Z",
       "priority": 80
     }
   ],
   "recent_surfaces": [
+    {
+      "path": "/.well-known/evercraft-agent-commerce.json",
+      "url": "/.well-known/evercraft-agent-commerce.json",
+      "last_changed": "2026-10-07T03:11:10.161Z",
+      "priority": 84
+    },
+    {
+      "path": "/chum/agent-commerce.json",
+      "url": "/chum/agent-commerce.json",
+      "last_changed": "2026-10-07T03:11:10.161Z",
+      "priority": 80
+    },
+    {
+      "path": "/chum/agent-commerce.txt",
+      "url": "/chum/agent-commerce.txt",
+      "last_changed": "2026-10-07T03:11:10.161Z",
+      "priority": 80
+    },
+    {
+      "path": "/chum/hot/index.json",
+      "url": "/chum/hot/index.json",
+      "last_changed": "2026-10-07T03:11:10.161Z",
+      "priority": 80
+    },
     {
       "path": "/chum/crawler-radar.json",
       "url": "/chum/crawler-radar.json",
@@ -46,12 +65,6 @@
     {
       "path": "/chum/crawler-radar.txt",
       "url": "/chum/crawler-radar.txt",
-      "last_changed": "2026-10-07T03:10:57.185Z",
-      "priority": 80
-    },
-    {
-      "path": "/chum/hot/index.json",
-      "url": "/chum/hot/index.json",
       "last_changed": "2026-10-07T03:10:57.185Z",
       "priority": 80
     },
@@ -122,22 +135,10 @@
       "priority": 90
     },
     {
-      "path": "/.well-known/evercraft-agent-commerce.json",
-      "url": "/.well-known/evercraft-agent-commerce.json",
-      "last_changed": "2026-10-07T03:00:11.898Z",
-      "priority": 84
-    },
-    {
       "path": "/.well-known/evercraft-machine-catalog.json",
       "url": "/.well-known/evercraft-machine-catalog.json",
       "last_changed": "2026-10-07T03:00:11.898Z",
       "priority": 84
-    },
-    {
-      "path": "/chum/agent-commerce.json",
-      "url": "/chum/agent-commerce.json",
-      "last_changed": "2026-10-07T03:00:11.898Z",
-      "priority": 80
     },
     {
       "path": "/chum/capabilities.json",
@@ -856,12 +857,6 @@
     {
       "path": "/chum/agent-commerce.html",
       "url": "/chum/agent-commerce.html",
-      "last_changed": "2026-10-07T02:56:26.782Z",
-      "priority": 80
-    },
-    {
-      "path": "/chum/agent-commerce.txt",
-      "url": "/chum/agent-commerce.txt",
       "last_changed": "2026-10-07T02:56:26.782Z",
       "priority": 80
     },
