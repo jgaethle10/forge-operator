@@ -178,6 +178,7 @@ export async function ensureCompetitionBrowserCapacity({
     leaseSeconds:Math.ceil(Number(leaseTtlMs||30*60_000)/1000),
   });
 
+  let staleRecovery=null;
   const existing=typeof yard.deploymentStatus==="function"
     ? yard.deploymentStatus(deploymentId)
     : null;
@@ -208,14 +209,71 @@ export async function ensureCompetitionBrowserCapacity({
         lease_renewal_receipt_hash:renewed?.receipt_hash||null,
       });
     }catch(error){
-      return receipt("held_lease_renewal_failed",{
-        deployment_id:deploymentId,
-        workload_class:demand.workload_class,
-        capacity_node_id:existing.receipt?.capacity_node_id||null,
-        deployment_receipt_hash:existing.receipt?.receipt_hash||null,
-        error_code:String(error?.message||"lease_renewal_failed").slice(0,160),
-        next_action:"repair_or_reacquire_competition_capacity",
-      });
+      const errorCode=String(error?.message||"lease_renewal_failed").slice(0,160);
+      let stopState="not_attempted";
+      if(typeof yard.stopDeployment==="function"){
+        try{
+          await yard.stopDeployment(deploymentId,{
+            reason:"competition_lease_renewal_failed",
+          });
+          stopState="stopped";
+        }catch{
+          stopState="stop_failed";
+        }
+      }
+
+      if(typeof yard.invalidateDeployment!=="function"){
+        return receipt("held_lease_renewal_failed",{
+          deployment_id:deploymentId,
+          workload_class:demand.workload_class,
+          capacity_node_id:existing.receipt?.capacity_node_id||null,
+          deployment_receipt_hash:existing.receipt?.receipt_hash||null,
+          error_code:errorCode,
+          stop_state:stopState,
+          next_action:"repair_or_reacquire_competition_capacity",
+        });
+      }
+
+      try{
+        const invalidated=yard.invalidateDeployment(deploymentId,{
+          reason:"competition_lease_renewal_failed",
+          evidence:{
+            error_code:errorCode,
+            stop_state:stopState,
+          },
+        });
+        if(invalidated?.ok!==true){
+          return receipt("held_lease_renewal_failed",{
+            deployment_id:deploymentId,
+            workload_class:demand.workload_class,
+            capacity_node_id:existing.receipt?.capacity_node_id||null,
+            deployment_receipt_hash:existing.receipt?.receipt_hash||null,
+            error_code:errorCode,
+            stop_state:stopState,
+            next_action:"repair_or_reacquire_competition_capacity",
+          });
+        }
+        staleRecovery={
+          previous_deployment_receipt_hash:
+            existing.receipt?.receipt_hash||null,
+          invalidation_receipt_hash:invalidated.receipt_hash||null,
+          stop_state:stopState,
+          error_code:errorCode,
+        };
+      }catch(invalidationError){
+        return receipt("held_lease_renewal_failed",{
+          deployment_id:deploymentId,
+          workload_class:demand.workload_class,
+          capacity_node_id:existing.receipt?.capacity_node_id||null,
+          deployment_receipt_hash:existing.receipt?.receipt_hash||null,
+          error_code:errorCode,
+          invalidation_error_code:String(
+            invalidationError?.message||"deployment_invalidation_failed"
+          ).slice(0,160),
+          stop_state:stopState,
+          next_action:"repair_or_reacquire_competition_capacity",
+        });
+      }
     }
   }
 
@@ -242,6 +300,9 @@ export async function ensureCompetitionBrowserCapacity({
       discovered_offer_count:acquired.negotiation.discovered_offer_count,
       eligible_offer_count:acquired.negotiation.eligible_offer_count,
       negotiation_receipt_hash:acquired.negotiation.receipt_hash,
+      stale_deployment_invalidated:staleRecovery!==null,
+      stale_invalidation_receipt_hash:
+        staleRecovery?.invalidation_receipt_hash||null,
       next_action:"continue_saban_capacity_discovery",
     });
   }
@@ -284,5 +345,10 @@ export async function ensureCompetitionBrowserCapacity({
     deployment_receipt_hash:deployed.receipt?.receipt_hash||null,
     health_state:deployed.receipt?.health_state||null,
     route_verification:deployed.receipt?.route_verification||null,
+    stale_deployment_recovered:staleRecovery!==null,
+    stale_invalidation_receipt_hash:
+      staleRecovery?.invalidation_receipt_hash||null,
+    previous_deployment_receipt_hash:
+      staleRecovery?.previous_deployment_receipt_hash||null,
   });
 }
