@@ -19,7 +19,7 @@ import {
 } from "./clip-journal-publish-adapter.mjs";
 import { LineageControlRoomHomeBridge } from "./lineage-adapter.mjs";
 import { renderLineageControlRoomHtml } from "../lineage/control-room.mjs";
-import { readEvercraftOsStatus } from "./os-adapter.mjs";
+import { readEvercraftOsApps, readEvercraftOsStatus } from "./os-adapter.mjs";
 
 const here = path.dirname(fileURLToPath(import.meta.url));
 const publicDir = path.join(here, "public");
@@ -750,6 +750,27 @@ export async function startEvercraftHomeServer({
           mutation_authority: false,
           secret_material_exposed: false,
           private_origin_exposed: false,
+        });
+      }
+    }
+
+    if (req.method === "GET" && url.pathname === "/api/os/apps") {
+      const session = sessionFor(req);
+      if (!session.ok) return json(res, session.status, session);
+      try {
+        const productKey = url.searchParams.get("product") || null;
+        return json(res, 200, {
+          ok: true,
+          subject: session.subject,
+          ...readEvercraftOsApps({ productKey })
+        });
+      } catch (error) {
+        const state = String(error?.message || "os_app_catalog_failed");
+        return json(res, state.startsWith("public_product_not_found:") ? 404 : 400, {
+          ok: false,
+          state,
+          installation_performed: false,
+          authority_granted: false
         });
       }
     }
