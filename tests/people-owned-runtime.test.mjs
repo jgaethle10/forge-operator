@@ -138,6 +138,31 @@ test('owned People Layer completes person-sovereign lifecycle without Base44', (
   assert.equal(challengeState.assurance_after_success, 'verified_email');
 
   assert.throws(
+    () => runtime.verifyEmail(challenge.raw_token, { confirmation_text: 'VERIFY MY EMAIL' }),
+    /trusted_email_delivery_required/
+  );
+
+  const manualDelivery = runtime.recordEmailDelivery(challenge.challenge_key, {
+    provider: 'manual_other',
+    status: 'sent',
+    message_ref: 'manual:proof',
+  });
+  assert.equal(manualDelivery.trusted_mailbox_delivery, false);
+  assert.throws(
+    () => runtime.verifyEmail(challenge.raw_token, { confirmation_text: 'VERIFY MY EMAIL' }),
+    /trusted_email_delivery_required/
+  );
+
+  const trustedDelivery = runtime.recordEmailDelivery(challenge.challenge_key, {
+    provider: 'gmail_agent',
+    status: 'sent',
+    message_ref: 'gmail:proof-message',
+  });
+  assert.equal(trustedDelivery.trusted_mailbox_delivery, true);
+  assert.equal('destination_hash' in trustedDelivery, true);
+  assert.equal('email' in trustedDelivery, false);
+
+  assert.throws(
     () => runtime.verifyEmail(challenge.raw_token, { confirmation_text: 'VERIFY' }),
     /exact_confirmation_required/
   );
@@ -172,6 +197,7 @@ test('owned People Layer completes person-sovereign lifecycle without Base44', (
   assert.equal(exported.package.memories.length, 1);
   assert.equal(exported.package.relationships.length, 1);
   assert.equal(exported.package.opportunities.length, 1);
+  assert.equal(exported.package.identity_delivery_receipts.filter((row) => row.trusted_mailbox_delivery).length, 1);
   assert.match(exported.artifact_hash, /^[a-f0-9]{64}$/);
   assert.equal(exported.request.request_type, 'export');
   assert.equal(exported.request.status, 'completed');
