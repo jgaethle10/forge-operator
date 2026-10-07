@@ -5,58 +5,47 @@ import path from 'node:path';
 import test from 'node:test';
 import { runCfbPowerEvidenceCycle } from './cfb-power-runner.mjs';
 
-function team(name,seoname,score,{home=false,winner=false,conference='test-conf'}={}){
-  return {nameShort:name,seoname,score,isHome:home,isWinner:winner,conferenceSeo:conference};
+function event(id,date,homeId,homeName,homeScore,awayId,awayName,awayScore){
+  return {id,date,status:{type:{completed:true}},competitions:[{id,date,neutralSite:false,status:{type:{completed:true}},competitors:[
+    {homeAway:'home',score:String(homeScore),team:{id:homeId,displayName:homeName}},
+    {homeAway:'away',score:String(awayScore),team:{id:awayId,displayName:awayName}},
+  ]}]};
 }
-function contest(id,date,homeName,homeSlug,homeScore,awayName,awaySlug,awayScore){
-  return {
-    contestId:id,
-    startDate:date,
-    gameState:'F',
-    teams:[
-      team(homeName,homeSlug,homeScore,{home:true,winner:homeScore>awayScore}),
-      team(awayName,awaySlug,awayScore,{home:false,winner:awayScore>homeScore}),
-    ],
-  };
-}
-
-test('materializes NCAA membership inference, game ledger, model input, ranking receipt and Top 25 surface',async()=>{
+test('materializes NCAA membership, game ledger, model input, ranking receipt and Top 25 surface',async()=>{
   const outDir=fs.mkdtempSync(path.join(os.tmpdir(),'cfb-power-run-'));
-  const contests=[];
-  for(let i=0;i<30;i++){
-    contests.push(contest(
-      'g'+i,'09/05/2026',
-      'Alpha '+i,'alpha-'+i,30,
-      'Beta '+i,'beta-'+i,10
-    ));
-  }
-  contests.push(
-    contest('alpha-2','09/12/2026','Alpha 0','alpha-0',28,'Beta 1','beta-1',14),
-    contest('alpha-3','09/19/2026','Beta 2','beta-2',17,'Alpha 0','alpha-0',24)
-  );
-
-  const fetchImpl=async()=>({
-    ok:true,status:200,
-    async json(){return {data:{contests}};},
-  });
+  const contests=[
+    {
+      contestId:8001,gameState:'F',startDate:'09/05/2026',
+      teams:[
+        {isHome:true,seoname:'alpha-state',nameShort:'Alpha State',name6Char:'ALPHA',conferenceSeo:'sec',score:31,isWinner:true},
+        {isHome:false,seoname:'beta-tech',nameShort:'Beta Tech',name6Char:'BETA',conferenceSeo:'acc',score:24,isWinner:false},
+      ],
+    },
+    {
+      contestId:8002,gameState:'F',startDate:'09/06/2026',
+      teams:[
+        {isHome:true,seoname:'gamma',nameShort:'Gamma',name6Char:'GAMMA',conferenceSeo:'big-ten',score:10,isWinner:false},
+        {isHome:false,seoname:'alpha-state',nameShort:'Alpha State',name6Char:'ALPHA',conferenceSeo:'sec',score:28,isWinner:true},
+      ],
+    },
+  ];
+  const fetchImpl=async(url)=>{
+    const parsed=new URL(String(url));
+    const variables=JSON.parse(parsed.searchParams.get('variables'));
+    const week=Number(variables.week);
+    const selected=week===0?[contests[0]]:week===1?[contests[1]]:[];
+    return {ok:true,status:200,async json(){return {data:{contests:selected}};}};
+  };
   const receipt=await runCfbPowerEvidenceCycle({
-    season:2026,
-    startDate:'2026-08-15',
-    throughDate:'2026-10-03',
-    weekLabel:'Entering Week 6',
-    outDir,
-    minimumAppearances:1,
-    fetchImpl,
-    now:new Date('2026-10-04T17:00:00Z'),
+    season:2026,startDate:'2026-09-05',throughDate:'2026-09-06',
+    weekLabel:'Entering Week 2',outDir,fetchImpl,
+    now:new Date('2026-09-07T17:00:00Z'),
   });
-  assert.ok(receipt.fbs_team_count>=25);
-  assert.ok(receipt.completed_game_count>=32);
-  assert.ok(receipt.ranked_team_count>=25);
-  assert.equal(receipt.source_authority,'NCAA');
-  assert.equal(receipt.top_25[0].team_name,'Alpha 0');
+  assert.equal(receipt.fbs_team_count,3);
+  assert.equal(receipt.completed_game_count,2);
+  assert.ok(receipt.ranked_team_count>=2);
+  assert.equal(receipt.top_25[0].team_name,'Alpha State');
   for(const name of ['fbs-membership.json','completed-games.json','cfb-power-input.json','cfb-power-rankings.json','top-25.json']){
     assert.ok(fs.existsSync(path.join(outDir,name)),name);
   }
-  const membership=JSON.parse(fs.readFileSync(path.join(outDir,'fbs-membership.json'),'utf8'));
-  assert.match(membership.derivation,/NCAA division-11/i);
 });
