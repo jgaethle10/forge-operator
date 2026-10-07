@@ -12,6 +12,8 @@ on:
       - 'src/world-forge-viewport-tools.test.ts'
       - 'src/world-forge-runtime-view.ts'
       - 'src/world-forge-runtime-view.test.ts'
+      - 'src/world-forge-picking.ts'
+      - 'src/world-forge-picking.test.ts'
       - 'src/world-forge.css'
       - 'src/main.tsx'
       - 'server.ts'
