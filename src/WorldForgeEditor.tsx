@@ -657,12 +657,7 @@ function WorldViewport({
       drawVertices(GRID_LINES,vp,[.13,.16,.19,1]);
 
       for(const node of meshNodes){
-        const transform=gizmoPreview?.nodeId===node.id
-          ? {
-              ...node.transform,
-              position:positionWithPreview(node),
-            }
-          : node.transform;
+        const transform=transformWithPreview(node);
         const mvp=mat4Multiply(vp,modelMatrix(transform));
         const selected=node.id===selectedId;
         const locked=node.locked===true;
@@ -678,9 +673,15 @@ function WorldViewport({
         const base=positionWithPreview(selectedNode);
         const gizmoModel=mat4Translation(base);
         const gizmoMvp=mat4Multiply(vp,gizmoModel);
-        drawVertices(new Float32Array([0,0,0,1.35,0,0]),gizmoMvp,[1,.28,.24,1]);
-        drawVertices(new Float32Array([0,0,0,0,1.35,0]),gizmoMvp,[.31,.9,.42,1]);
-        drawVertices(new Float32Array([0,0,0,0,0,1.35]),gizmoMvp,[.3,.58,1,1]);
+        if(transformMode==='rotate'){
+          drawVertices(ROTATE_RING_X,gizmoMvp,[1,.28,.24,1]);
+          drawVertices(ROTATE_RING_Y,gizmoMvp,[.31,.9,.42,1]);
+          drawVertices(ROTATE_RING_Z,gizmoMvp,[.3,.58,1,1]);
+        }else{
+          drawVertices(new Float32Array([0,0,0,1.35,0,0]),gizmoMvp,[1,.28,.24,1]);
+          drawVertices(new Float32Array([0,0,0,0,1.35,0]),gizmoMvp,[.31,.9,.42,1]);
+          drawVertices(new Float32Array([0,0,0,0,0,1.35]),gizmoMvp,[.3,.58,1,1]);
+        }
       }
     }
 
@@ -689,7 +690,7 @@ function WorldViewport({
       gl.deleteBuffer(buffer);
       gl.deleteProgram(program);
     };
-  },[project,meshNodes,orbit,selectedId,selectedNode,activeCamera,viewMode,gizmoPreview]);
+  },[project,meshNodes,orbit,selectedId,selectedNode,activeCamera,viewMode,gizmoPreview,transformMode]);
 
   function pickGeometry(clientX:number,clientY:number){
     const canvas=canvasRef.current;
