@@ -178,7 +178,7 @@ function chunk(row,index){
   return {
     record_key:lineage('Chunk',row,index).record_key,
     source_id:clean(out.source_id),
-    content:clean(out.content),
+    content:String(out.content??''),
     summary:clean(out.summary)||null,
     page_start:Number.isFinite(Number(out.page_start))?Number(out.page_start):null,
     page_end:Number.isFinite(Number(out.page_end))?Number(out.page_end):null,
