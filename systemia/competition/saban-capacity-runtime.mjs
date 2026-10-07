@@ -1,6 +1,7 @@
 import { createHash } from "node:crypto";
 import { normalizeComputeDemand, negotiateCompute } from "../saban/compute-exchange.mjs";
 import { createEvercraftBrokerMarketAdapter } from "../saban/markets/evercraft-broker.mjs";
+import { createEvercraftYardMarketAdapter } from "../saban/markets/evercraft-yard.mjs";
 
 const sha256=(value)=>"sha256:"+createHash("sha256").update(
   typeof value==="string"?value:JSON.stringify(value)
@@ -121,20 +122,29 @@ export async function discoverCompetitionWorkerCapacity({
   demand=competitionWorkerDemand(),
 }={}){
   if(!yard) throw new Error("competition_capacity_yard_required");
-  if(!brokerDeploymentId) throw new Error("competition_capacity_broker_deployment_required");
 
-  const adapter=createEvercraftBrokerMarketAdapter({yard,brokerDeploymentId});
+  const adapters=[
+    createEvercraftYardMarketAdapter({yard}),
+  ];
+  const allowedMarkets=["evercraft-yard"];
+  if(String(brokerDeploymentId||"").trim()){
+    adapters.push(createEvercraftBrokerMarketAdapter({
+      yard,
+      brokerDeploymentId:String(brokerDeploymentId).trim(),
+    }));
+    allowedMarkets.push("evercraft-broker");
+  }
   const leaseAuthority={
     schema:"evercraft.saban.compute-authority.v1",
     approved:true,
     demand_id:demand.demand_id,
-    allowed_markets:["evercraft-broker"],
+    allowed_markets:allowedMarkets,
     allow_spend:false,
     max_total_usd:0,
   };
   const negotiation=await negotiateCompute({
     demand,
-    adapters:[adapter],
+    adapters,
     leaseAuthority,
   });
 
