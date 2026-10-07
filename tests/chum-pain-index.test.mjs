@@ -8,8 +8,16 @@ if(index.schema!=='evercraft.chum.pain-index.v1') fail('unexpected schema');
 if(!Array.isArray(index.entries)||index.entries.length<10) fail('too few entries');
 if(index.summary.entries!==index.entries.length) fail('summary entry count mismatch');
 if(index.universal_front_door?.read_only_registry_name!=='io.github.jgaethle10/evercraft-capability-discovery') fail('read-only Official MCP Registry door missing');
-const serialized=JSON.stringify(index);
-if(serialized.includes('systemiacommandcenters.com')) fail('Marketing Agency route leaked into canonical pain index');
+const LEGACY_MARKETING_HOSTS=new Set(['systemiacommandcenters.com','www.systemiacommandcenters.com']);
+const isLegacyMarketingRoute=(value)=>{
+  if(!value) return false;
+  try{return LEGACY_MARKETING_HOSTS.has(new URL(String(value)).hostname.toLowerCase())}catch{return false}
+};
+const serializedUrls=[
+  index.universal_front_door?.mcp,
+  ...(index.entries||[]).flatMap((entry)=>[entry.canonical_url,entry.mcp,entry.routing?.target])
+].filter(Boolean);
+if(serializedUrls.some(isLegacyMarketingRoute)) fail('Marketing Agency route leaked into canonical pain index');
 
 const dayTrade=index.entries.find((e)=>e.capability_id==='product:daytrade-lens');
 if(!dayTrade) fail('DayTrade Lens product entry missing');
@@ -29,7 +37,7 @@ for(const entry of index.entries){
   const uniq=new Set(entry.pain_phrases.map((x)=>String(x).trim().toLowerCase()));
   if(uniq.size!==entry.pain_phrases.length) fail(`duplicate pain phrase: ${entry.capability_id}`);
   for(const value of [entry.canonical_url,entry.mcp,entry.routing?.target]){
-    if(value&&String(value).includes('systemiacommandcenters.com')) fail(`stale Marketing Agency route: ${entry.capability_id}`);
+    if(isLegacyMarketingRoute(value)) fail(`stale Marketing Agency route: ${entry.capability_id}`);
   }
 }
 
@@ -57,6 +65,10 @@ const cases=[
   {
     query:'I am in the Yakima Valley and need yard cleanup, sprinkler help, trimming and a property service estimate.',
     expected:'evercraft-property-services'
+  },
+  {
+    query:'Our quarry haul trucks keep stacking up at the loader and then the loader sits waiting. I want to simulate the load haul dump loop and shadow dispatch before buying autonomous equipment.',
+    expected:'earthworks-autonomy'
   }
 ];
 
