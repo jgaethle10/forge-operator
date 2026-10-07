@@ -7,11 +7,12 @@ import { createFaieRuntime } from './runtime.mjs';
 import { executeFaieMcpRpc, faieMcpTools } from './mcp.mjs';
 
 function observation() {
+  const observedAt = new Date(Date.now() - 2 * 60 * 60 * 1000).toISOString();
   return {
     observation_id: 'obs:mcp-water-1',
     source_system: 'official-water-feed',
     source_family: 'Yakima Basin Authority',
-    observed_at: '2026-09-30T18:00:00.000Z',
+    observed_at: observedAt,
     region_keys: ['yakima-wa'],
     domains: ['water', 'agriculture'],
     kind: 'irrigation_supply',
@@ -72,7 +73,7 @@ test('FAIE MCP investigation uses preview path and does not persist the caller q
       stateDir: dir,
       collectorConfig: { enabled: false }
     });
-    runtime.ingest(observation(), { now: '2026-09-30T20:00:00.000Z' });
+    runtime.ingest(observation());
 
     const before = runtime.health().investigation_count;
     const response = await executeFaieMcpRpc(runtime, {
@@ -112,7 +113,7 @@ test('FAIE MCP signal and health tools return bounded runtime views', async () =
       stateDir: dir,
       collectorConfig: { enabled: false }
     });
-    runtime.ingest(observation(), { now: '2026-09-30T20:00:00.000Z' });
+    runtime.ingest(observation());
 
     const signals = await executeFaieMcpRpc(runtime, {
       jsonrpc: '2.0',
@@ -144,7 +145,7 @@ test('FAIE MCP carries thesis assumptions through the read-only investigation to
       stateDir: dir,
       collectorConfig: { enabled: false }
     });
-    runtime.ingest(observation(), { now: '2026-09-30T20:00:00.000Z' });
+    runtime.ingest(observation());
 
     const response = await executeFaieMcpRpc(runtime, {
       jsonrpc: '2.0',
@@ -177,7 +178,7 @@ test('FAIE MCP compares candidates without persisting or issuing a site verdict'
       stateDir: dir,
       collectorConfig: { enabled: false }
     });
-    runtime.ingest(observation(), { now: '2026-09-30T20:00:00.000Z' });
+    runtime.ingest(observation());
 
     const before = runtime.health().comparison_count;
     const response = await executeFaieMcpRpc(runtime, {
