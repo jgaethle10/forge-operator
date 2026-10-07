@@ -1,4 +1,5 @@
 import { getGeoBoundary, geoBoundaryProvenance } from './boundary-registry.mjs';
+import { getTerrainRelief, terrainReliefProvenance } from './terrain-registry.mjs';
 import crypto from 'node:crypto';
 
 const EVIDENCE_TO_FALLEN=Object.freeze({
@@ -87,6 +88,8 @@ export function compileGraphicsCommand(story){
   const metrics=(story?.visual?.metrics||[]).map((metric,index)=>normalizeMetric(metric,index,story.sourceRefs));
   const boundaryAsset=getGeoBoundary(story?.visual?.boundaryId);
   const boundary=geoBoundaryProvenance(story?.visual?.boundaryId);
+  const terrainAsset=getTerrainRelief(story?.visual?.terrainId);
+  const terrain=terrainReliefProvenance(story?.visual?.terrainId);
   const byId=new Map(story.points.map(point=>[point.id,point]));
   const fallenEvidence=EVIDENCE_TO_FALLEN[story.evidenceState]||'public_source';
 
@@ -99,7 +102,7 @@ export function compileGraphicsCommand(story){
       points:[{lat:from.lat,lon:from.lon},{lat:to.lat,lon:to.lon}],
       evidenceState:'synthetic_visualization',
       sourceRefs:story.sourceRefs,
-      width:treatment==='geo_spine'?5:3,
+      width:treatment==='geo_spine'?(terrain?2:5):3,
     };
   });
 
@@ -136,20 +139,38 @@ export function compileGraphicsCommand(story){
         : ['establish_subject','reveal_evidence','land_primary_metric'],
     },
     metrics,
-    geography:boundary ? {
-      boundaryId:boundary.id,
-      boundaryName:boundary.name,
-      boundarySourceRef:boundary.sourceRef,
-      boundaryRightsState:boundary.rightsState,
-      boundaryLicense:boundary.license,
-      boundarySourceSha256:boundary.sourceSha256,
-      boundaryTransform:boundary.transform,
-      projection:'source_boundary_frame',
+    geography:(boundary||terrain) ? {
+      ...(boundary ? {
+        boundaryId:boundary.id,
+        boundaryName:boundary.name,
+        boundarySourceRef:boundary.sourceRef,
+        boundaryRightsState:boundary.rightsState,
+        boundaryLicense:boundary.license,
+        boundarySourceSha256:boundary.sourceSha256,
+        boundaryTransform:boundary.transform,
+      } : {}),
+      terrain:terrain ? {
+        id:terrain.id,
+        name:terrain.name,
+        provider:terrain.provider,
+        service:terrain.service,
+        sourceRef:terrain.sourceRef,
+        exportEndpoint:terrain.exportEndpoint,
+        sourceFamily:terrain.sourceFamily,
+        rightsState:terrain.rightsState,
+        license:terrain.license,
+        sourceSha256:terrain.sourceSha256,
+        assetName:terrain.assetName,
+        width:terrain.width,
+        height:terrain.height,
+        bbox:terrain.bbox,
+      } : null,
+      projection:terrain?'equirectangular':'source_boundary_frame',
     } : null,
     provenance:{
       evidenceState:story.evidenceState,
       sourceRefs:story.sourceRefs,
-      geographySourceRefs:boundary?[boundary.sourceRef]:[],
+      geographySourceRefs:uniq([boundary?.sourceRef,terrain?.sourceRef]),
       frontOfHouse:'minimal',
       detailPlacement:'sources_and_methodology',
     },
@@ -160,7 +181,7 @@ export function compileGraphicsCommand(story){
       durationSec:12,
       aspectRatio:'9:16',
       map:{
-        projection:'mercator',
+        projection:terrain?'equirectangular':'mercator',
         centerLat:boundaryAsset?(boundaryAsset.bbox.minLat+boundaryAsset.bbox.maxLat)/2:centerLat,
         centerLon:boundaryAsset?(boundaryAsset.bbox.minLon+boundaryAsset.bbox.maxLon)/2:centerLon,
         zoom:boundaryAsset?1:mapZoom(story.points),
@@ -171,6 +192,22 @@ export function compileGraphicsCommand(story){
           west:boundaryAsset.bbox.minLon,
           paddingPct:.08,
         } : undefined,
+        terrains:terrain ? [{
+          id:terrain.id,
+          sourcePath:'./'+terrain.assetName,
+          bounds:{
+            north:terrain.bbox.maxLat,
+            south:terrain.bbox.minLat,
+            east:terrain.bbox.maxLon,
+            west:terrain.bbox.minLon,
+          },
+          opacity:.74,
+          blendMode:'multiply',
+          evidenceState:'public_source',
+          sourceRefs:[terrain.sourceRef],
+          sourceSha256:terrain.sourceSha256,
+          rightsState:terrain.rightsState,
+        }] : [],
         routes,
         points:story.points.map(point=>({
           id:point.id,
