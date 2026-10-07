@@ -418,6 +418,7 @@ try{
     health.mcp_read_only!==true||
     health.human_offer_checkout_enabled!==true||
     health.human_offer_checkout_requires_explicit_confirmation!==true||
+    health.human_offer_checkout_handoff_mode!=='explicit_evercraft_page'||
     health.payment_authority!=='Evercraft Payments'||
     health.payment_router!=='Raven Nexus'
   ){
