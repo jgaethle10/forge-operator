@@ -8,6 +8,7 @@ import { getFulfillmentProfile } from '../systemia/organism/universal-product-fu
 import { buildReceivablesPortfolio, deriveReceivableTruth } from '../systemia/commerce/receivables.mjs';
 import { selectRavenSettlementRoute } from '../systemia/commerce/raven-settlement-router.mjs';
 import { recommendReceivableFollowup } from '../systemia/commerce/receivable-followup.mjs';
+import { createRavenSettlementGateway } from '../systemia/commerce/raven-settlement-gateway.mjs';
 
 const liveCatalog = JSON.parse(fs.readFileSync('public/.well-known/evercraft-machine-catalog.json', 'utf8'));
 const liveInstantWork = buildInstantWorkCatalog(liveCatalog);
@@ -347,3 +348,84 @@ const escalationFollowup = recommendReceivableFollowup({
 assert.equal(escalationFollowup.action, 'escalation_review');
 assert.equal(escalationFollowup.eligible_to_send, true);
 assert.equal(escalationFollowup.send_requires.recheck_payment_immediately_before_send, true);
+
+
+const gatewayExecutions = [];
+const settlementGateway = createRavenSettlementGateway({
+  adapters: [{
+    adapter_key: 'fake-settlement',
+    provider: 'fake-provider',
+    rail: 'test',
+    enabled: true,
+    health: 'healthy',
+    currencies: ['USD'],
+    billing_modes: ['one_time'],
+    priority: 1,
+    estimated_fee_bps: 1,
+    estimated_fixed_fee_cents: 0,
+    estimated_settlement_minutes: 1,
+    execute: async ({ order: routedOrder, operation, params }) => {
+      gatewayExecutions.push({ routedOrder, operation, params });
+      return {
+        adapter_key: 'fake-settlement',
+        provider: 'fake-provider',
+        rail: 'test',
+        operation,
+        payload: {
+          status: 'complete',
+          payment_status: 'paid',
+          id: params.session_id || 'fake-session',
+        },
+      };
+    },
+  }],
+});
+
+const ravenHealth = settlementGateway.health();
+assert.equal(ravenHealth.authority, 'Raven Nexus');
+assert.equal(ravenHealth.payment_authority, 'Evercraft Payments');
+assert.equal(ravenHealth.doctrine.raven_executes_settlement_adapters, true);
+assert.equal(ravenHealth.doctrine.evercraft_payments_owns_paid_state, true);
+
+const gatewayObservation = await settlementGateway.execute({
+  order: {
+    order_key: 'RIVET-INVOICE-2026-1001-001',
+    amount_cents: 209300,
+    currency: 'USD',
+    billing_mode: 'one_time',
+  },
+  operation: 'checkout_session.get',
+  params: { session_id: 'cs_test_raven_boundary' },
+});
+assert.equal(gatewayObservation.authority, 'Raven Nexus');
+assert.equal(gatewayObservation.payment_authority, 'Evercraft Payments');
+assert.equal(gatewayObservation.adapter_key, 'fake-settlement');
+assert.equal(gatewayObservation.canonical_paid, false);
+assert.equal(gatewayObservation.receipt_created, false);
+assert.equal(gatewayObservation.doctrine.observation_is_not_payment_proof, true);
+assert.equal(gatewayObservation.doctrine.only_evercraft_payments_can_mint_receipt, true);
+assert.equal(gatewayExecutions.length, 1);
+
+await assert.rejects(
+  () => createRavenSettlementGateway({
+    adapters: [{
+      adapter_key: 'disabled-adapter',
+      provider: 'none',
+      rail: 'none',
+      enabled: false,
+      health: 'unavailable',
+      currencies: ['USD'],
+      billing_modes: ['one_time'],
+      execute: async () => ({}),
+    }],
+  }).execute({
+    order: {
+      order_key: 'epo_gateway_block',
+      amount_cents: 10000,
+      currency: 'USD',
+      billing_mode: 'one_time',
+    },
+    operation: 'checkout_session.list',
+  }),
+  /no eligible settlement adapter/i
+);
