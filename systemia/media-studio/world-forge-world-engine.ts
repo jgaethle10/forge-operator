@@ -156,9 +156,9 @@ export function worldEngineVectorToWorldForge(
   finite(unitScaleMeters,'unit_scale');
   if(unitScaleMeters<=0) throw new Error('world_forge_world_engine_unit_scale_invalid');
   return {
-    x:finite(value.x,'engine_vector_x')/unitScaleMeters,
-    y:-finite(value.z,'engine_vector_z')/unitScaleMeters,
-    z:finite(value.y,'engine_vector_y')/unitScaleMeters,
+    x:cleanZero(finite(value.x,'engine_vector_x')/unitScaleMeters),
+    y:cleanZero(-finite(value.z,'engine_vector_z')/unitScaleMeters),
+    z:cleanZero(finite(value.y,'engine_vector_y')/unitScaleMeters),
   };
 }
 
