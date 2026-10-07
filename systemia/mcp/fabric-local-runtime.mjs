@@ -182,6 +182,19 @@ function resolveVisualAsset(visualDir, requestUrl) {
   return target;
 }
 
+function resolveDemoAsset(demoDir, requestUrl) {
+  const parsed=new URL(requestUrl,'http://fabric.local');
+  let pathname=decodeURIComponent(parsed.pathname);
+  if(!pathname.startsWith('/demos')) return null;
+  let relative=pathname.slice('/demos'.length).replace(/^\/+/, '');
+  if(!relative||relative.endsWith('/')) relative+=relative?'index.html':'index.html';
+  const target=path.resolve(demoDir,relative);
+  const prefix=demoDir.endsWith(path.sep)?demoDir:demoDir+path.sep;
+  if(target!==demoDir&&!target.startsWith(prefix)) return null;
+  if(!fs.existsSync(target)||!fs.statSync(target).isFile()) return null;
+  return target;
+}
+
 function buildVisualDeskMirror({moduleDir,outputDir,origin}) {
   const storiesDir=path.resolve(moduleDir,'../visual-desk/stories');
   const landing=path.resolve(moduleDir,'../../public/visuals/index.html');
@@ -398,6 +411,7 @@ export async function startFabricLocalRuntime({
   const moduleDir=path.dirname(fileURLToPath(import.meta.url));
   const pluginDir=path.resolve(moduleDir,'../../plugins/evercraft-fabric');
   const journalDir=path.resolve(moduleDir,'../../public/journal');
+  const demoDir=path.resolve(moduleDir,'../../public/demos');
   const visualStateEphemeral=!String(visualStateDir||'').trim();
   const visualDir=path.resolve(
     visualStateDir||path.join(os.tmpdir(),'evercraft-visual-desk-'+instanceId)
@@ -475,6 +489,9 @@ export async function startFabricLocalRuntime({
     journal_mirror_path:'/journal/',
     journal_mirror_ready:fs.existsSync(path.join(journalDir,'index.html')),
     journal_mirror_indexing:'noindex_until_dedicated_origin',
+    demo_surface_path:'/demos/',
+    demo_surface_ready:fs.existsSync(path.join(demoDir,'hvac-lead-recovery','index.html')),
+    demo_surface_authority:'public_static_proof_only',
     visual_desk_path:'/visuals/',
     visual_desk_ready:visualMirror.ready,
     visual_desk_story_count:visualMirror.count,
@@ -923,6 +940,23 @@ export async function startFabricLocalRuntime({
           'x-content-type-options':'nosniff',
           'x-robots-tag':'noindex, nofollow',
           'referrer-policy':'strict-origin-when-cross-origin',
+        });
+        if(req.method==='HEAD') return res.end();
+        return res.end(data);
+      }
+
+      if ((req.method==='GET'||req.method==='HEAD') && String(req.url||'').startsWith('/demos')) {
+        const asset=resolveDemoAsset(demoDir,String(req.url||''));
+        if(!asset) return sendJson(res,404,{error:'demo_asset_not_found'});
+        const data=fs.readFileSync(asset);
+        res.writeHead(200,{
+          'content-type':journalContentType(asset),
+          'content-length':data.length,
+          'cache-control':'public, max-age=60, must-revalidate',
+          'x-content-type-options':'nosniff',
+          'x-robots-tag':'noindex, nofollow',
+          'referrer-policy':'strict-origin-when-cross-origin',
+          'content-security-policy':"default-src 'self'; style-src 'unsafe-inline'; script-src 'unsafe-inline'; img-src 'self' data:; base-uri 'none'; frame-ancestors 'none'; form-action 'self' mailto:",
         });
         if(req.method==='HEAD') return res.end();
         return res.end(data);
