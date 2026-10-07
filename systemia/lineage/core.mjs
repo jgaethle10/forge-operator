@@ -2,6 +2,7 @@ import { createHash, randomUUID } from 'node:crypto';
 import { mkdir, open, readFile, rename, writeFile, readdir, rm, stat } from 'node:fs/promises';
 import { dirname, extname, join, relative, resolve, sep } from 'node:path';
 import { LargeObjectStore } from './large-object.mjs';
+import { loadLineageIgnorePolicy } from './ignore.mjs';
 
 const SCHEMA = 'evercraft.lineage.v1';
 const DEFAULT_EXCLUDES = new Set(['.lineage', '.git', 'node_modules']);
@@ -313,13 +314,53 @@ export class LineageStore {
     }
   }
 
-  async listWorkspaceFiles(dir = this.root, excludes = DEFAULT_EXCLUDES) {
+  async listWorkspaceFiles(
+    dir = this.root,
+    excludes = DEFAULT_EXCLUDES,
+    { policy = null } = {}
+  ) {
     const output = [];
     for (const entry of await readdir(dir, { withFileTypes: true })) {
-      if (excludes.has(entry.name)) continue;
       const full = join(dir, entry.name);
-      if (entry.isDirectory()) output.push(...await this.listWorkspaceFiles(full, excludes));
-      else if (entry.isFile()) output.push(full);
+      const relativePath = normalizePath(relative(this.root, full));
+
+      // These boundaries are immutable even when a caller supplies a custom
+      // exclusion set. Additional excludes may hide ordinary workspace files,
+      // but never weaken Lineage's own storage/runtime boundaries.
+      if (DEFAULT_EXCLUDES.has(entry.name)) {
+        continue;
+      }
+      if (
+        excludes.has(entry.name) &&
+        relativePath !== policy?.ignoreFile
+      ) {
+        continue;
+      }
+
+      if (entry.isDirectory()) {
+        const containsIgnoreFile = Boolean(
+          policy?.ignoreFile &&
+          (
+            policy.ignoreFile === relativePath ||
+            policy.ignoreFile.startsWith(relativePath + '/')
+          )
+        );
+        if (
+          policy?.shouldIgnore(relativePath, { isDirectory: true }) &&
+          !containsIgnoreFile &&
+          !policy?.hasNegatedRules
+        ) {
+          continue;
+        }
+        output.push(
+          ...await this.listWorkspaceFiles(full, excludes, { policy })
+        );
+      } else if (entry.isFile()) {
+        if (policy?.shouldIgnore(relativePath, { isDirectory: false })) {
+          continue;
+        }
+        output.push(full);
+      }
     }
     return output.sort();
   }
@@ -328,6 +369,9 @@ export class LineageStore {
     excludes = DEFAULT_EXCLUDES,
     largeObjectThresholdBytes = DEFAULT_LARGE_OBJECT_THRESHOLD_BYTES,
     largeObjectChunking = {},
+    ignoreFile = '.lineageignore',
+    ignorePatterns = [],
+    allowSensitivePaths = [],
   } = {}) {
     await this.ensureInitialized();
     const threshold = largeObjectThresholdBytes == null
@@ -340,8 +384,26 @@ export class LineageStore {
       throw new Error('largeObjectThresholdBytes must be a non-negative integer or null');
     }
 
-    const files = await this.listWorkspaceFiles(this.root, excludes);
+    const ignore = await loadLineageIgnorePolicy(this.root, {
+      ignoreFile,
+      extraPatterns: ignorePatterns,
+      allowSensitivePaths,
+    });
+    const ignoreTopLevel = ignore.policy.ignoreFile.split('/')[0];
+    if (DEFAULT_EXCLUDES.has(ignoreTopLevel)) {
+      const error = new Error(
+        `Lineage ignore file cannot live inside hard-excluded path: ${ignore.policy.ignoreFile}`
+      );
+      error.code = 'LINEAGE_IGNORE_FILE_IN_HARD_EXCLUDE';
+      throw error;
+    }
+    const files = await this.listWorkspaceFiles(
+      this.root,
+      excludes,
+      { policy: ignore.policy }
+    );
     const entries = [];
+    const sensitiveOverrides = [];
     const largeStore = threshold === Number.POSITIVE_INFINITY
       ? null
       : new LargeObjectStore(this.dir);
@@ -352,6 +414,28 @@ export class LineageStore {
       const kind = classifyAsset(path);
       const sourceStat = await stat(full);
       if (!sourceStat.isFile()) continue;
+
+      const sensitiveReason = ignore.policy.sensitiveReason(path);
+      const sensitiveAllowed = sensitiveReason
+        ? ignore.policy.allowsSensitive(path)
+        : false;
+      if (sensitiveReason && !sensitiveAllowed) {
+        const error = new Error(
+          `Sensitive path is not allowed in Lineage history: ${path} (${sensitiveReason})`
+        );
+        error.code = 'LINEAGE_SENSITIVE_PATH_BLOCKED';
+        error.path = path;
+        error.reason = sensitiveReason;
+        error.remediation =
+          'Add the path to .lineageignore, or explicitly allow it with allowSensitivePaths for this snapshot.';
+        throw error;
+      }
+      if (sensitiveAllowed) {
+        sensitiveOverrides.push({
+          path,
+          reason: sensitiveReason,
+        });
+      }
 
       let objectId;
       let storage = 'blob';
@@ -398,10 +482,39 @@ export class LineageStore {
         bytes: byteCount,
         storage,
         manifest_id: manifestId,
+        sensitive_path_override: sensitiveAllowed
+          ? {
+              explicit: true,
+              reason: sensitiveReason,
+            }
+          : null,
       });
     }
-    const treeId = await this.putObject('tree', { entries });
-    return { tree_id: treeId, entries };
+
+    const snapshotPolicy = {
+      schema: 'evercraft.lineage.snapshot-policy.v1',
+      hard_excludes: [...DEFAULT_EXCLUDES].map(String).sort(),
+      additional_excludes: [...excludes]
+        .map(String)
+        .filter((value) => !DEFAULT_EXCLUDES.has(value))
+        .sort(),
+      ignore_file: ignore.ignore_file,
+      ignore_file_present: ignore.ignore_file_present,
+      ignore_patterns: ignore.ignore_patterns,
+      allow_sensitive_paths: ignore.allow_sensitive_paths,
+      sensitive_overrides: sensitiveOverrides.sort(
+        (a, b) => a.path.localeCompare(b.path)
+      ),
+    };
+    const treeId = await this.putObject('tree', {
+      entries,
+      snapshot_policy: snapshotPolicy,
+    });
+    return {
+      tree_id: treeId,
+      entries,
+      snapshot_policy: snapshotPolicy,
+    };
   }
 
   async readEntryBytes(entry, {
