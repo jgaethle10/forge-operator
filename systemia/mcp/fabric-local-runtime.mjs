@@ -900,7 +900,7 @@ if (direct) {
   const challengeToken=String(arg('--openai-challenge-token',process.env.EVERCRAFT_OPENAI_CHALLENGE_TOKEN||''));
   const nodeReceiptPath=String(arg('--node-receipt',process.env.EVERCRAFT_EDGE_NODE_RECEIPT||''));
   const allocatorTokenFile=String(arg('--allocator-token-file',process.env.EVERCRAFT_EDGE_ALLOCATOR_TOKEN_FILE||''));
-  const visualStateDir=String(arg('--visual-state-dir',process.env.EVERCRAFT_VISUAL_STATE_DIR||path.join(os.homedir(),'.local/state/evercraft/visual-desk/public')));
+  const visualStateDir=String(arg('--visual-state-dir',process.env.EVERCRAFT_VISUAL_STATE_DIR||''));
   const visualOrigin=String(arg('--visual-origin',process.env.EVERCRAFT_VISUAL_ORIGIN||'https://fabric.systemiacommandcenters.com/visuals'));
   const runtime=await startFabricLocalRuntime({
     host,port,challengeToken,nodeReceiptPath,allocatorTokenFile,visualStateDir,visualOrigin
