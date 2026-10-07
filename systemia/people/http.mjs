@@ -103,11 +103,11 @@ export function registerPeopleRoutes(app, {
   })));
 
   app.post('/api/people/brains/:brainKey/export', requireAdmin, handler((req) => ({
-    export: runtime.exportBrain(req.params.brainKey),
+    export: runtime.exportBrain(req.params.brainKey, req.body || {}),
   })));
 
   app.post('/api/people/brains/:brainKey/delete-request', requireAdmin, handler((req) => ({
-    request: runtime.requestDelete(req.params.brainKey),
+    request: runtime.requestDelete(req.params.brainKey, req.body || {}),
   })));
 
   app.post('/api/people/brains/:brainKey/delete', requireAdmin, handler((req) => ({
