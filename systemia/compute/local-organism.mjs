@@ -107,6 +107,8 @@ export async function startLocalOrganism({
 
   fs.mkdirSync(organismRoot, { recursive: true, mode: 0o700 });
 
+  const browserRuntimeStateDir = path.join(organismRoot, 'browser-runtime');
+  const browserBootstrapFile = path.join(browserRuntimeStateDir, 'bootstrap.json');
   let nativeBrowser = {
     schema: 'evercraft.browser.native-runtime-preflight.v1',
     ready: false,
@@ -117,6 +119,17 @@ export async function startLocalOrganism({
     browserRuntimeFactory: null,
   };
   if (nativeBrowserBootstrap === true && typeof nativeBrowserPreparer === 'function') {
+    const bootstrapStartedAt = new Date().toISOString();
+    atomicJson(browserBootstrapFile, {
+      schema: 'evercraft.browser.native-bootstrap-state.v1',
+      state: 'preparing',
+      release_ref: releaseRef,
+      authority: 'user_space_only',
+      root_privileges_used: false,
+      system_package_manager_used: false,
+      started_at: bootstrapStartedAt,
+      updated_at: bootstrapStartedAt,
+    });
     try {
       nativeBrowser = await nativeBrowserPreparer({
         sourceDir: path.join(
@@ -125,7 +138,7 @@ export async function startLocalOrganism({
           'evercraft-web',
           'browser-worker'
         ),
-        stateDir: path.join(organismRoot, 'browser-runtime'),
+        stateDir: browserRuntimeStateDir,
         allowInstall: true,
       });
     } catch (error) {
@@ -139,6 +152,22 @@ export async function startLocalOrganism({
         browserRuntimeFactory: null,
       };
     }
+    const bootstrapFinishedAt = new Date().toISOString();
+    atomicJson(browserBootstrapFile, {
+      schema: 'evercraft.browser.native-bootstrap-state.v1',
+      state: nativeBrowser.ready === true ? 'ready' : 'held',
+      release_ref: releaseRef,
+      native_browser_ready: nativeBrowser.ready === true,
+      preflight_receipt_hash: nativeBrowser.receipt_hash || null,
+      install_attempted: nativeBrowser.install_attempted === true,
+      install_state: nativeBrowser.install_state || null,
+      reason: nativeBrowser.ready === true ? null : nativeBrowser.reason || null,
+      authority: 'user_space_only',
+      root_privileges_used: false,
+      system_package_manager_used: false,
+      started_at: bootstrapStartedAt,
+      updated_at: bootstrapFinishedAt,
+    });
   }
 
   let admittedClipSecretFile = '';
