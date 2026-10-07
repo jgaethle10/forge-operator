@@ -62,10 +62,11 @@ test('resident publishes one unseen CFB story and records the provider receipt',
       journalRoot,
       credentialStateDir:path.join(root,'credentials'),
       inputState:emptyCfbClipResidentState(),
-      authorizeStory:async({resource_ref,scope})=>({
+      authorizeStory:async({resource_ref,story_resource_ref,scope})=>({
         decision:'allow',
         grant_id:'grant-cfb-publish',
         resource_ref,
+        story_resource_ref,
         scope,
       }),
       now:()=> '2026-10-07T05:30:00.000Z',
@@ -100,10 +101,11 @@ test('resident never republishes a story with a terminal provider receipt',async
     const first=await runCfbJournalPublishCycle({
       journalRoot,
       credentialStateDir:path.join(root,'credentials'),
-      authorizeStory:async({resource_ref,scope})=>({
+      authorizeStory:async({resource_ref,story_resource_ref,scope})=>({
         decision:'allow',
         grant_id:'grant-cfb-publish',
         resource_ref,
+        story_resource_ref,
         scope,
       }),
       now:()=> '2026-10-07T05:30:00.000Z',
@@ -124,10 +126,11 @@ test('resident never republishes a story with a terminal provider receipt',async
       journalRoot,
       credentialStateDir:path.join(root,'credentials'),
       inputState:first.state,
-      authorizeStory:async({resource_ref,scope})=>({
+      authorizeStory:async({resource_ref,story_resource_ref,scope})=>({
         decision:'allow',
         grant_id:'grant-cfb-publish',
         resource_ref,
+        story_resource_ref,
         scope,
       }),
       now:()=> '2026-10-07T05:35:00.000Z',
@@ -152,10 +155,11 @@ test('resident leaves preflight failures retryable instead of burning the story'
     const first=await runCfbJournalPublishCycle({
       journalRoot,
       credentialStateDir:path.join(root,'credentials'),
-      authorizeStory:async({resource_ref,scope})=>({
+      authorizeStory:async({resource_ref,story_resource_ref,scope})=>({
         decision:'allow',
         grant_id:'grant-cfb-publish',
         resource_ref,
+        story_resource_ref,
         scope,
       }),
       now:()=> '2026-10-07T05:30:00.000Z',
@@ -169,10 +173,11 @@ test('resident leaves preflight failures retryable instead of burning the story'
       journalRoot,
       credentialStateDir:path.join(root,'credentials'),
       inputState:first.state,
-      authorizeStory:async({resource_ref,scope})=>({
+      authorizeStory:async({resource_ref,story_resource_ref,scope})=>({
         decision:'allow',
         grant_id:'grant-cfb-publish',
         resource_ref,
+        story_resource_ref,
         scope,
       }),
       now:()=> '2026-10-07T05:35:00.000Z',
@@ -202,8 +207,9 @@ test('resident holds before vault or provider access when Passport denies the ex
     const result=await runCfbJournalPublishCycle({
       journalRoot,
       credentialStateDir:path.join(root,'credentials'),
-      authorizeStory:async({resource_ref,scope})=>{
-        assert.equal(resource_ref,'journal-story:'+slug);
+      authorizeStory:async({resource_ref,story_resource_ref,scope})=>{
+        assert.equal(resource_ref,'journal-series:cfb-power-rankings');
+        assert.equal(story_resource_ref,'journal-story:'+slug);
         assert.equal(scope,'home.clip.publish');
         return {decision:'deny',reason:'no_active_story_grant'};
       },
@@ -219,6 +225,7 @@ test('resident holds before vault or provider access when Passport denies the ex
     assert.equal(result.snapshot.events[0].action,'authorization_hold');
     assert.equal(Object.values(result.state.stories)[0].provider_published,false);
     assert.equal(result.snapshot.boundaries.passportAuthorizationRequired,true);
+    assert.equal(result.snapshot.boundaries.seriesResourceAuthorizationRequired,true);
   }finally{
     fs.rmSync(root,{recursive:true,force:true});
   }
