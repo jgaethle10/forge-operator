@@ -235,7 +235,7 @@ function showLogin(message=""){
   appShell.style.display="none";
   appFooter.style.display="none";
   signout.classList.remove("visible");
-  document.getElementById("lineage-link").classList.remove("visible");
+  for(const id of ["lineage-link","apps-link","credentials-link"]) document.getElementById(id).classList.remove("visible");
   document.getElementById("auth-error").textContent=message;
   setTimeout(()=>document.getElementById("login").focus(),0);
 }
@@ -257,7 +257,7 @@ function showApp(){
   appShell.style.display="";
   appFooter.style.display="";
   signout.classList.add("visible");
-  document.getElementById("lineage-link").classList.add("visible");
+  for(const id of ["lineage-link","apps-link","credentials-link"]) document.getElementById(id).classList.add("visible");
 }
 
 document.getElementById("claim-form").addEventListener("submit",async(event)=>{
