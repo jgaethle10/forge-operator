@@ -3,7 +3,10 @@ import './world-forge.css';
 import {
   axisDragWorldDelta,
   frameDistanceForScale,
+  invertViewportMatrix,
   perspectiveVerticalFovRad,
+  pickClosestRayHit,
+  viewportRayFromNdc,
 } from './world-forge-viewport-tools';
 import {
   runtimeBodiesByForgeNodeId,
@@ -213,6 +216,55 @@ const CUBE_LINES=new Float32Array([
   -1,-1,1, 1,-1,1, 1,-1,1, 1,1,1, 1,1,1, -1,1,1, -1,1,1, -1,-1,1,
   -1,-1,-1, -1,-1,1, 1,-1,-1, 1,-1,1, 1,1,-1, 1,1,1, -1,1,-1, -1,1,1,
 ].map(value=>value*.5));
+
+const CUBE_PICK_VERTICES:Vec3[]=[
+  {x:-.5,y:-.5,z:-.5},{x:.5,y:-.5,z:-.5},{x:.5,y:.5,z:-.5},{x:-.5,y:.5,z:-.5},
+  {x:-.5,y:-.5,z:.5},{x:.5,y:-.5,z:.5},{x:.5,y:.5,z:.5},{x:-.5,y:.5,z:.5},
+];
+const CUBE_PICK_TRIANGLES:Array<[number,number,number]>=[
+  [0,2,1],[0,3,2],
+  [4,5,6],[4,6,7],
+  [0,1,5],[0,5,4],
+  [1,2,6],[1,6,5],
+  [2,3,7],[2,7,6],
+  [3,0,4],[3,4,7],
+];
+
+function transformPoint(matrix:Float32Array,point:Vec3):Vec3{
+  return {
+    x:matrix[0]*point.x+matrix[4]*point.y+matrix[8]*point.z+matrix[12],
+    y:matrix[1]*point.x+matrix[5]*point.y+matrix[9]*point.z+matrix[13],
+    z:matrix[2]*point.x+matrix[6]*point.y+matrix[10]*point.z+matrix[14],
+  };
+}
+
+function nodeWorldTriangles(node:ForgeNode){
+  const local:Array<[Vec3,Vec3,Vec3]>=[];
+  const mesh=node.geometry?.kind==='editable_mesh'?node.geometry.mesh:undefined;
+  if(mesh){
+    for(const face of mesh.faces){
+      if(face.length<3) continue;
+      const a=mesh.vertices[face[0]];
+      if(!a) continue;
+      for(let i=1;i<face.length-1;i+=1){
+        const b=mesh.vertices[face[i]];
+        const d=mesh.vertices[face[i+1]];
+        if(!b||!d) continue;
+        local.push([a,b,d]);
+      }
+    }
+  }else{
+    for(const [a,b,d] of CUBE_PICK_TRIANGLES){
+      local.push([CUBE_PICK_VERTICES[a],CUBE_PICK_VERTICES[b],CUBE_PICK_VERTICES[d]]);
+    }
+  }
+  const matrix=modelMatrix(node.transform);
+  return local.map(([a,b,d])=>[
+    transformPoint(matrix,a),
+    transformPoint(matrix,b),
+    transformPoint(matrix,d),
+  ] as [Vec3,Vec3,Vec3]);
+}
 
 function editableMeshLines(node:ForgeNode){
   const mesh=node.geometry?.kind==='editable_mesh'?node.geometry.mesh:undefined;
@@ -553,27 +605,31 @@ function WorldViewport({
     };
   },[project,meshNodes,orbit,selectedId,selectedNode,activeCamera,viewMode,gizmoPreview]);
 
-  function approximatePick(clientX:number,clientY:number){
+  function rayPick(clientX:number,clientY:number){
     const canvas=canvasRef.current;
     if(!canvas) return;
     const rect=canvas.getBoundingClientRect();
-    const x=(clientX-rect.left)/rect.width*2-1;
-    const y=1-(clientY-rect.top)/rect.height*2;
+    const ndcX=(clientX-rect.left)/rect.width*2-1;
+    const ndcY=1-(clientY-rect.top)/rect.height*2;
     const {vp}=matrices(rect.width,rect.height);
 
-    let best:{id:string;distance:number}|null=null;
-    for(const node of meshNodes){
-      const p=positionWithPreview(node);
-      const px=vp[0]*p.x+vp[4]*p.y+vp[8]*p.z+vp[12];
-      const py=vp[1]*p.x+vp[5]*p.y+vp[9]*p.z+vp[13];
-      const pw=vp[3]*p.x+vp[7]*p.y+vp[11]*p.z+vp[15];
-      if(pw<=0) continue;
-      const nx=px/pw;
-      const ny=py/pw;
-      const distance=Math.hypot(nx-x,ny-y);
-      if(distance<.16&&(!best||distance<best.distance)) best={id:node.id,distance};
+    try{
+      const ray=viewportRayFromNdc({
+        ndcX,
+        ndcY,
+        inverseViewProjection:invertViewportMatrix(vp),
+      });
+      const hit=pickClosestRayHit(
+        ray,
+        meshNodes.map(node=>({
+          id:node.id,
+          triangles:nodeWorldTriangles(node),
+        })),
+      );
+      if(hit) onSelect(hit.id);
+    }catch{
+      // Invalid/singular camera math fails closed without guessing a selection.
     }
-    if(best) onSelect(best.id);
   }
 
   function frameSelected(){
@@ -673,7 +729,7 @@ function WorldViewport({
           return;
         }
 
-        if(drag&&!drag.moved) approximatePick(event.clientX,event.clientY);
+        if(drag&&!drag.moved) rayPick(event.clientX,event.clientY);
       }}
       onPointerCancel={()=>{
         dragRef.current=null;
@@ -707,8 +763,8 @@ function WorldViewport({
     </div>
     <div className="wf-view-help">
       {runtimeImpulseActive
-        ? 'Play interaction · drag X/Y/Z handles to send a tick-bound impulse · wheel to zoom · click to select'
-        : 'Drag empty space to orbit · wheel to zoom · click to select · drag X/Y/Z handles to move'}
+        ? 'Play interaction · drag X/Y/Z handles to send a tick-bound impulse · wheel to zoom · click geometry to ray-select'
+        : 'Drag empty space to orbit · wheel to zoom · click geometry to ray-select · drag X/Y/Z handles to move'}
     </div>
   </div>;
 }
