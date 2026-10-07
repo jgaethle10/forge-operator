@@ -9,6 +9,7 @@ const story={
   callout:'Five volcanoes.',
   evidenceState:'reported',
   sourceRefs:['https://www.usgs.gov/volcanoes/mount-rainier'],
+  visual:{boundaryId:'us-wa-state-outline-cc0-v1'},
   points:[
     {id:'a',label:'Mount Baker',lat:48.7,lon:-121.8,value:3286,note:'Very High threat potential'},
     {id:'b',label:'Mount Rainier',lat:46.85,lon:-121.76,value:4392,note:'Very High threat potential'},
@@ -31,6 +32,10 @@ test('directed poster makes visual payoff primary and removes audit clutter',()=
   assert.match(svg,/width="1080" height="1350"/);
   assert.match(svg,/5 ACTIVE VOLCANOES/);
   assert.match(svg,/Mount Rainier/);
+  assert.match(svg,/class="geo-boundary"/);
+  assert.match(svg,/WASHINGTON/);
+  assert.match(svg,/class="peak-marker"/);
+  assert.match(svg,/style="max-width:100%;height:auto;display:block"/);
   assert.match(svg,/VERY HIGH/);
   assert.match(svg,/usgs\.gov/);
   assert.doesNotMatch(svg,/Digest/i);
