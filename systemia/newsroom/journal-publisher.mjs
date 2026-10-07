@@ -171,8 +171,8 @@ function renderSourceList(story) {
   }).join('\n');
 }
 
-function normalizeJournalOrigin(value='https://journal.evercraft.global') {
-  const url = new URL(String(value || 'https://journal.evercraft.global'));
+function normalizeJournalOrigin(value='https://fabric.systemiacommandcenters.com/journal') {
+  const url = new URL(String(value || 'https://fabric.systemiacommandcenters.com/journal'));
   if (!['https:','http:'].includes(url.protocol)) throw new Error('Journal public origin must be http(s).');
   return url.toString().replace(/\/$/,'');
 }
@@ -324,7 +324,7 @@ function renderLlms(stories, publicOrigin, archivedStories = []) {
 export function publishJournalStories(inputStories, {
   outDir = 'public/journal',
   now = new Date(),
-  publicOrigin = process.env.EVERCRAFT_JOURNAL_ORIGIN || 'https://journal.evercraft.global'
+  publicOrigin = process.env.EVERCRAFT_JOURNAL_ORIGIN || 'https://fabric.systemiacommandcenters.com/journal'
 } = {}) {
   const origin = normalizeJournalOrigin(publicOrigin);
   const stories = [];
