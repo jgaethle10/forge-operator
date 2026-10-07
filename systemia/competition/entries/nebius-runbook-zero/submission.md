@@ -38,6 +38,7 @@ This standalone repair agent is a new competition-specific implementation. It ex
 - [x] Standalone MIT license prepared
 - [x] Raven competition QA passed with explicit nested-test false-green regression coverage
 - [x] Standalone public-repository payload exported with secret scan + integrity receipt
+- [x] Public standalone source branch published: `runbook-zero-public`
 - [ ] Nebius Token Factory key provisioned
 - [ ] Live Nemotron canary recorded
 - [ ] Dedicated public competition repository created from the verified export payload

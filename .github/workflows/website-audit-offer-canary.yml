@@ -1,0 +1,36 @@
+name: Website audit offer canary
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/website-audit-offer-canary.yml'
+      - 'systemia/mcp/fabric-public-site.mjs'
+      - 'systemia/mcp/fabric-local-runtime.mjs'
+
+permissions:
+  contents: read
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Verify live paid audit offer
+        shell: bash
+        run: |
+          set -euo pipefail
+          url="https://fabric.systemiacommandcenters.com/offers/website-audit"
+          body="$(curl --fail --silent --show-error --location --retry 24 --retry-all-errors --retry-delay 5 "$url")"
+          printf '%s' "$body" | grep -q "Your website is getting attention"
+          printf '%s' "$body" | grep -q "Quick Win Audit"
+          printf '%s' "$body" | grep -q '\$49'
+          printf '%s' "$body" | grep -q "/api/offers/website-audit/checkout"
+          printf '%s' "$body" | grep -q "Evercraft Payments"
+          {
+            echo "## Website Audit offer is live"
+            echo
+            echo "URL: $url"
+            echo 'Verified: offer copy + $49 price + human-confirmed checkout route + Evercraft Payments boundary'
+          } >> "$GITHUB_STEP_SUMMARY"
