@@ -9,10 +9,12 @@ on:
       - 'systemia/saban/capacity-lifecycle.proof.mjs'
       - 'systemia/saban/capacity-reclamation-executor.mjs'
       - 'systemia/saban/capacity-reclamation-executor.proof.mjs'
+      - 'systemia/saban/capacity-organism-resident.proof.mjs'
       - 'systemia/saban/failure-domain-audit.mjs'
       - 'systemia/saban/failure-domain-audit.proof.mjs'
       - 'systemia/saban/resource-expansion-organism.mjs'
       - 'systemia/saban/resource-expansion-organism.proof.mjs'
+      - 'systemia/saban/resource-expansion-reclamation-loop.proof.mjs'
       - 'systemia/saban/proactive-resource-loop.proof.mjs'
       - 'systemia/saban/resource-expansion-install.proof.mjs'
       - 'systemia/saban/resource-expansion-watchdog.proof.mjs'
@@ -52,6 +54,18 @@ on:
     branches: [main]
     paths:
       - 'systemia/saban/resource-field.mjs'
+      - 'systemia/saban/capacity-resource-field-bridge.mjs'
+      - 'systemia/saban/capacity-lifecycle.mjs'
+      - 'systemia/saban/capacity-lifecycle.proof.mjs'
+      - 'systemia/saban/capacity-reclamation-executor.mjs'
+      - 'systemia/saban/capacity-reclamation-executor.proof.mjs'
+      - 'systemia/saban/capacity-organism.mjs'
+      - 'systemia/saban/capacity-organism-resident.proof.mjs'
+      - 'systemia/saban/failure-domain-audit.mjs'
+      - 'systemia/saban/failure-domain-audit.proof.mjs'
+      - 'systemia/saban/resource-expansion-organism.mjs'
+      - 'systemia/saban/resource-expansion-organism.proof.mjs'
+      - 'systemia/saban/resource-expansion-reclamation-loop.proof.mjs'
       - 'systemia/saban/resource-acquirer.mjs'
       - 'systemia/saban/market-factory.mjs'
       - 'systemia/saban/formation.mjs'
@@ -81,6 +95,8 @@ jobs:
         run: node systemia/saban/capacity-resource-field-bridge.proof.mjs
       - name: Prove proactive Resource Expansion Organism
         run: node systemia/saban/resource-expansion-organism.proof.mjs
+      - name: Prove resident expansion-to-reclamation loop
+        run: node systemia/saban/resource-expansion-reclamation-loop.proof.mjs
       - name: Prove proactive pressure-to-capacity loop
         run: node systemia/saban/proactive-resource-loop.proof.mjs
       - name: Prove capacity reclamation lifecycle
@@ -89,6 +105,8 @@ jobs:
         run: node systemia/saban/capacity-reclamation-executor.proof.mjs
       - name: Prove correlated failure-domain audit
         run: node systemia/saban/failure-domain-audit.proof.mjs
+      - name: Prove resident Capacity Organism lifecycle receipts
+        run: node systemia/saban/capacity-organism-resident.proof.mjs
       - name: Validate Saban capacity installer shell syntax
         run: bash -n scripts/install-saban-capacity-organism.sh
       - name: Prove Resource Expansion installer policy
