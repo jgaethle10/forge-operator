@@ -52,3 +52,17 @@ test('external Fabric canary distinguishes deployment lag from a broken ingest a
   assert.ok(script.includes("visual_desk_ingest_credential_not_ready"));
   assert.ok(script.includes("visual_desk_ingest_auth_gate_failed"));
 });
+
+
+test('external Fabric canary proves Graphics Command poster, scroll-stop gate, and Fallen handoff',()=>{
+  assert.ok(script.includes("poster-feed.svg"));
+  assert.ok(script.includes("poster-story.svg"));
+  assert.ok(script.includes("5 ACTIVE VOLCANOES"));
+  assert.ok(script.includes("graphics-plan.json"));
+  assert.ok(script.includes("evercraft.graphics-command.plan.v1"));
+  assert.ok(script.includes("scroll-stop-report.json"));
+  assert.ok(script.includes("graphics_command_scroll_stop_not_passed"));
+  assert.ok(script.includes("fallen-stage-input.json"));
+  assert.ok(script.includes("graphics_command_fallen_geo_handoff_invalid"));
+  assert.ok(script.includes("graphics_command_verified:true"));
+});

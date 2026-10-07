@@ -37,3 +37,13 @@ test('Visual Desk ingest auth failure itself is not granted rollout grace',()=>{
     /\[ "\$error" = "visual_desk_ingest_auth_gate_failed" \].*retrying/s
   );
 });
+
+
+test('Graphics Command asset rollout receives only bounded Visual Desk deployment grace',()=>{
+  assert.match(workflow,/poster-feed\.svg/);
+  assert.match(workflow,/poster-story\.svg/);
+  assert.match(workflow,/graphics-plan\.json/);
+  assert.match(workflow,/scroll-stop-report\.json/);
+  assert.match(workflow,/fallen-stage-input\.json/);
+  assert.match(workflow,/deployment_wait_started=true/);
+});
