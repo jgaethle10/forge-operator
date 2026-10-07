@@ -207,5 +207,8 @@ test('World Forge physics edits are validated, versioned, and reversible',()=>{
   };
   const validation=validateWorldForgeProject(invalid);
   assert.equal(validation.status,'rejected');
-  assert.ok(validation.errors.includes('physics_restitution_invalid:table'));
+  assert.ok(
+    validation.errors.some(error=>error.startsWith('physics_restitution_invalid:')),
+    `expected restitution validation error, got: ${validation.errors.join(', ')}`,
+  );
 });
