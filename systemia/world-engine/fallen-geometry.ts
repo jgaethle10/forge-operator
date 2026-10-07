@@ -347,7 +347,8 @@ export function geometryFromFallenAsset(
     asset.indices
   );
 
-  const tangentSource=asset.tangents?'authored':'generated';
+  const tangentSource:FallenGeometryImportReceipt['tangentSource']=
+    asset.tangents?'authored':'generated';
   const tangents=asset.tangents
     ? [...asset.tangents]
     : generateDeterministicTangents(
@@ -376,8 +377,8 @@ export function geometryFromFallenAsset(
 
   validateGeometryAsset(geometry);
   const geometryDigest=geometryAssetDigest(geometry);
-  const core={
-    schema:'evercraft.world-engine.fallen-geometry-import.v1' as const,
+  const core:Omit<FallenGeometryImportReceipt,'digest'>={
+    schema:'evercraft.world-engine.fallen-geometry-import.v1',
     sourceAssetId:asset.id,
     sourceDigest,
     sourceRef:asset.provenance.sourceRef,
@@ -388,14 +389,12 @@ export function geometryFromFallenAsset(
     geometryDigest,
     vertexCount,
     triangleCount:(geometry.indices?.length || vertexCount)/3,
-    coordinateSystem:'right_handed_y_up' as const,
-    units:'meters' as const,
+    coordinateSystem:'right_handed_y_up',
+    units:'meters',
     tangentSource,
-    tangentGeneration:(
-      tangentSource==='authored'
-        ? 'authored'
-        : 'deterministic_uv_gram_schmidt_v1'
-    ) as 'authored'|'deterministic_uv_gram_schmidt_v1',
+    tangentGeneration:tangentSource==='authored'
+      ? 'authored'
+      : 'deterministic_uv_gram_schmidt_v1',
     generatedTangents:tangentSource==='generated'
   };
 
