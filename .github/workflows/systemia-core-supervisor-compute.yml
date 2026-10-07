@@ -33,3 +33,5 @@ jobs:
           node-version: '22'
       - name: Prove Systemia Core resident placement on Evercraft Compute
         run: node systemia/core/core-on-compute.proof.mjs
+      - name: Prove Files Companion public staging wiring
+        run: node systemia/core/forensic-record-public-staging-wiring.proof.mjs
