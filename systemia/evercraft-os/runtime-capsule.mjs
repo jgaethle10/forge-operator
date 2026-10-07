@@ -127,7 +127,7 @@ export class EvercraftOsCapabilityCapsules {
     };
   }
 
-  inspect(productKey, nodeId) {
+  inspect(productKey, nodeId, { verifyInstalledContract = true } = {}) {
     const target = this.capsulePath(productKey, nodeId);
     const manifestFile = path.join(target, "manifest.json");
     if (!fs.existsSync(manifestFile)) {
@@ -144,8 +144,10 @@ export class EvercraftOsCapabilityCapsules {
     const { manifest_hash, ...body } = manifest;
     if (manifest_hash !== sha256(body)) throw new Error("capsule_integrity_mismatch");
 
-    const expected = this.expectedManifest(productKey, nodeId);
-    if (expected.manifest_hash !== manifest_hash) throw new Error("capsule_manifest_contract_mismatch");
+    if (verifyInstalledContract) {
+      const expected = this.expectedManifest(productKey, nodeId);
+      if (expected.manifest_hash !== manifest_hash) throw new Error("capsule_manifest_contract_mismatch");
+    }
 
     return {
       schema: "evercraft.os.capability-capsule-state.v1",
@@ -211,7 +213,7 @@ export class EvercraftOsCapabilityCapsules {
       };
     }
 
-    const before = this.inspect(productKey, nodeId);
+    const before = this.inspect(productKey, nodeId, { verifyInstalledContract: false });
     fs.rmSync(target, { recursive: true, force: true });
 
     return {
