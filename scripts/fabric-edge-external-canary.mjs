@@ -258,6 +258,8 @@ try{
   if(
     !/data-visual-model="cinematic-terrain-geography-v2"/.test(directedFeed.text)||
     !/<image class="terrain-relief"/.test(directedFeed.text)||
+    !/href="data:image\/png;base64,/.test(directedFeed.text)||
+    !/data-source-sha256="[a-f0-9]{64}"/.test(directedFeed.text)||
     !/class="story-route cascade-axis"[^>]*opacity=".085"/.test(directedFeed.text)||
     /class="peak-halo"/.test(directedFeed.text)||
     /<circle class="peak-marker"/.test(directedFeed.text)
