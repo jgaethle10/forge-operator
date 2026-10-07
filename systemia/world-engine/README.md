@@ -47,10 +47,17 @@ Implemented in this slice:
 - Canonical geometry assets validate positions, normals and optional triangle indices before GPU planning.
 - Owned zero-dependency WGSL implements untextured PBR-lite/unlit material paths plus ambient, directional, point and spot lighting.
 - The browser WebGPU adapter owns device/buffer/pipeline submission only; visual-frame truth remains in World Engine.
-- WebGPU v9 fails closed on missing geometry, tampered visual receipts, unsupported textures and more than eight active lights.
+- WebGPU v9 fails closed on missing geometry, tampered visual receipts and more than eight active lights.
 - Node CI proves plan/shader contracts; a separate native Chromium conformance lane now requires actual WebGPU adapter/device acquisition, compute-buffer readback and raster texture readback.
 - Browser WebGPU conformance classifies SwiftShader/llvmpipe/lavapipe as software execution, preserves ambiguous adapters as unknown, and permits a hardware claim only when adapter metadata reports a non-software hardware signal.
 - The browser device receipt retains the exact launch profile, adapter metadata, compute/raster observations and native-browser preflight receipt hash.
+- Canonical texture assets carry exact RGBA pixel bytes, dimensions and color format with SHA-256 identity.
+- Material sampler state is canonical and normalizes address/filter modes deterministically.
+- Base-color, ORM and emissive textures compile into deterministic WebGPU plans with texture digests and explicit binding flags.
+- Textured geometry requires UVs; normal maps fail closed until tangent-space geometry lands.
+- WebGPU execution creates real texture/sampler bind groups and applies ORM channels as occlusion/roughness/metallic inputs.
+- Texture residency is budgeted deterministically from required texture IDs and emits load/retain/evict receipts.
+- Texture hot reload preserves texture identity, replaces pixel content and invalidates only the affected GPU texture cache.
 - Versioned live Studio edit transactions bind to exact world and asset-manifest digests before mutation.
 - Human, agent and code edits share the same deterministic world-edit contract and produce SHA-256 receipts.
 - Edit receipts carry inverse transactions for semantic undo while world/asset revisions remain monotonic.
@@ -68,7 +75,7 @@ Implemented in this slice:
 - Fallen Studio World → World Engine compiler.
 - Worldstate evidence → world projection bridge with evidence state preserved.
 - Provider-neutral render-frame contract with sampled skeletal pose/state, navigation/debug handoff, canonical visual subframes and audio subframes.
-- Tests for replay determinism, entity collision, ground collision, canonical broad-phase ordering, ECS query ordering, scene streaming/state preservation, animation transitions/blending/events, navmesh pathfinding/arrival/freeze-resume, material/light validation, camera graph interpolation/layer masking, audio playback/loop/seek/listener switching/attenuation, snapshot restore/tamper rejection, authoritative checkpoints/client prediction/rollback convergence, geometry/WebGPU render-plan/shader/failure-boundary contracts, deterministic/reversible Studio edits, stale-edit rejection, asset-rights lineage, geometry hot reload, compatibility-gated runtime migration/state preservation/reset behavior, input ordering, Fallen compilation and Worldstate projection.
+- Tests for replay determinism, entity collision, ground collision, canonical broad-phase ordering, ECS query ordering, scene streaming/state preservation, animation transitions/blending/events, navmesh pathfinding/arrival/freeze-resume, material/light validation, camera graph interpolation/layer masking, audio playback/loop/seek/listener switching/attenuation, snapshot restore/tamper rejection, authoritative checkpoints/client prediction/rollback convergence, geometry/WebGPU render-plan/shader/failure-boundary contracts, texture/sampler validation, textured plan bindings, texture residency/hot reload, deterministic/reversible Studio edits, stale-edit rejection, asset-rights lineage, geometry hot reload, compatibility-gated runtime migration/state preservation/reset behavior, input ordering, Fallen compilation and Worldstate projection.
 
 ## Architectural contract
 
@@ -96,7 +103,7 @@ The engine does not gain publication authority, payment authority, emergency aut
 The V1 contract is deliberately small enough to prove ownership before expanding. The next compatible layers are:
 
 1. Full World Engine reference-frame rendering through browser WebGPU with pixel-baseline receipts.
-2. Texture/sampler runtime and asset residency.
+2. Tangent-space geometry + normal-map runtime.
 3. Animation authoring/import bridge for Fallen character assets.
 4. Navigation corridor smoothing / dynamic obstacle avoidance.
 5. Server-side rollback policy for explicitly admitted late inputs.
@@ -104,7 +111,7 @@ The V1 contract is deliberately small enough to prove ownership before expanding
 7. Spatial panning / occlusion / reverb-zone contracts behind the audio-frame boundary.
 8. Collaborative edit merge / conflict-resolution contracts.
 9. Saban simulation tournaments and deterministic QA at scale.
-10. Physical memory eviction / broad-phase acceleration upgrades for very large worlds.
+10. Cross-frame texture retention / broader physical memory eviction for very large worlds.
 
 ## Test
 
