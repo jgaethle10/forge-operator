@@ -6,6 +6,12 @@ import {
   perspectiveVerticalFovRad,
 } from './world-forge-viewport-tools';
 import {
+  nativePickMesh,
+  orthographicPickRay,
+  perspectivePickRay,
+  pickNearestNativeMesh,
+} from './world-forge-picking';
+import {
   runtimeBodiesByForgeNodeId,
   runtimeTransformsByForgeNodeId,
   worldForgeDirectionToWorldEngine,
@@ -215,9 +221,19 @@ const CUBE_LINES=new Float32Array([
   -1,-1,-1, -1,-1,1, 1,-1,-1, 1,-1,1, 1,1,-1, 1,1,1, -1,1,-1, -1,1,1,
 ].map(value=>value*.5));
 
+const PLANE_LINES=new Float32Array([
+  -.5,-.5,0, .5,-.5,0,
+   .5,-.5,0, .5,.5,0,
+   .5,.5,0, -.5,.5,0,
+  -.5,.5,0, -.5,-.5,0,
+]);
+
 function editableMeshLines(node:ForgeNode){
   const mesh=node.geometry?.kind==='editable_mesh'?node.geometry.mesh:undefined;
-  if(!mesh) return CUBE_LINES;
+  if(!mesh){
+    if(node.geometry?.kind==='primitive'&&node.geometry.primitive==='plane') return PLANE_LINES;
+    return CUBE_LINES;
+  }
   const values:number[]=[];
   const seen=new Set<string>();
   for(const face of mesh.faces){
@@ -546,27 +562,72 @@ function WorldViewport({
     };
   },[project,meshNodes,orbit,selectedId,selectedNode,activeCamera,viewMode,gizmoPreview]);
 
-  function approximatePick(clientX:number,clientY:number){
+  function pickGeometry(clientX:number,clientY:number){
     const canvas=canvasRef.current;
     if(!canvas) return;
     const rect=canvas.getBoundingClientRect();
-    const x=(clientX-rect.left)/rect.width*2-1;
-    const y=1-(clientY-rect.top)/rect.height*2;
-    const {vp}=matrices(rect.width,rect.height);
 
-    let best:{id:string;distance:number}|null=null;
-    for(const node of meshNodes){
-      const p=positionWithPreview(node);
-      const px=vp[0]*p.x+vp[4]*p.y+vp[8]*p.z+vp[12];
-      const py=vp[1]*p.x+vp[5]*p.y+vp[9]*p.z+vp[13];
-      const pw=vp[3]*p.x+vp[7]*p.y+vp[11]*p.z+vp[15];
-      if(pw<=0) continue;
-      const nx=px/pw;
-      const ny=py/pw;
-      const distance=Math.hypot(nx-x,ny-y);
-      if(distance<.16&&(!best||distance<best.distance)) best={id:node.id,distance};
+    let ray;
+    if(viewMode==='camera'&&activeCamera?.camera){
+      const eye={...activeCamera.transform.position};
+      const target=activeCamera.camera.lookAt??{x:0,y:0,z:0};
+      if(activeCamera.camera.projection==='orthographic'){
+        ray=orthographicPickRay({
+          clientX,
+          clientY,
+          left:rect.left,
+          top:rect.top,
+          width:rect.width,
+          height:rect.height,
+          eye,
+          target,
+          up:{x:0,y:0,z:1},
+          orthoHeight:Math.max(.01,activeCamera.camera.orthoScale??10),
+        });
+      }else{
+        ray=perspectivePickRay({
+          clientX,
+          clientY,
+          left:rect.left,
+          top:rect.top,
+          width:rect.width,
+          height:rect.height,
+          eye,
+          target,
+          up:{x:0,y:0,z:1},
+          verticalFovRad:perspectiveVerticalFovRad({
+            focalLengthMm:activeCamera.camera.focalLengthMm??50,
+            sensorWidthMm:activeCamera.camera.sensorWidthMm??36,
+            aspect:Math.max(.01,rect.width/Math.max(1,rect.height)),
+          }),
+        });
+      }
+    }else{
+      const yaw=rad(orbit.yaw);
+      const pitch=rad(orbit.pitch);
+      const cp=Math.cos(pitch);
+      const eye={
+        x:orbit.target.x+Math.sin(yaw)*cp*orbit.distance,
+        y:orbit.target.y-Math.cos(yaw)*cp*orbit.distance,
+        z:orbit.target.z+Math.sin(pitch)*orbit.distance,
+      };
+      ray=perspectivePickRay({
+        clientX,
+        clientY,
+        left:rect.left,
+        top:rect.top,
+        width:rect.width,
+        height:rect.height,
+        eye,
+        target:{...orbit.target},
+        up:{x:0,y:0,z:1},
+        verticalFovRad:rad(52),
+      });
     }
-    if(best) onSelect(best.id);
+
+    const nativeNodes=meshNodes.filter(node=>nativePickMesh(node)!==null);
+    const hit=pickNearestNativeMesh(ray,nativeNodes);
+    if(hit) onSelect(hit.nodeId);
   }
 
   function frameSelected(){
@@ -661,7 +722,7 @@ function WorldViewport({
           return;
         }
 
-        if(drag&&!drag.moved) approximatePick(event.clientX,event.clientY);
+        if(drag&&!drag.moved) pickGeometry(event.clientX,event.clientY);
       }}
       onPointerCancel={()=>{
         dragRef.current=null;
