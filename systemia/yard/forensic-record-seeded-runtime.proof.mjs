@@ -57,7 +57,7 @@ const stateRoot=path.join(computeRoot,'forensic-seeded');
 const oldMachine=process.env.SYSTEMIA_MACHINE_KEY;
 const oldIngest=process.env.FORENSIC_RECORD_INGEST_TOKEN;
 process.env.SYSTEMIA_MACHINE_KEY='seed-proof-machine';
-process.env.FORENSIC_RECORD_INGEST_TOKEN='seed-proof-ingest';
+delete process.env.FORENSIC_RECORD_INGEST_TOKEN;
 
 const node=await startEvercraftComputeNode({root:computeRoot,nodeId:'forensic-seed-proof-node'});
 const yard=new YardOperator({stateDir:yardRoot});
@@ -86,6 +86,8 @@ try{
   assert.equal(first.result.seed_finding_rows,3);
   assert.equal(first.result.seed_unique_finding_numbers,2);
   assert.equal(first.result.seed_duplicate_number_extra_rows,1);
+  assert.equal(first.result.ingest_authority,'generated_private_compute_state');
+  assert.equal(first.result.ingest_token_exposed,false);
 
   const firstHealth=await fetch(first.result.local_url+'/health').then(r=>r.json());
   assert.equal(firstHealth.seed_receipt_present,true);
@@ -122,6 +124,8 @@ try{
     yard_seed_health_gate:true,
     restart_reuses_owned_seed:true,
     recurring_legacy_runtime_dependency:false,
+    private_ingest_authority_generated_on_node:true,
+    ingest_token_exposed:false,
     protected_ledgers_not_imported:true,
     finding_rows:secondHealth.finding_rows,
     unique_finding_numbers:secondHealth.unique_finding_numbers,
