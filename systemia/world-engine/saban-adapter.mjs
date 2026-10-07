@@ -13,6 +13,7 @@ const ROLES=new Set([
   'webgpu_guard',
   'webgpu_device_guard',
   'texture_residency_guard',
+  'reference_frame_guard',
   'studio_edit_guard',
   'runtime_migration_guard',
   'fallen_bridge_guard',
@@ -230,6 +231,21 @@ function evaluate(role,world){
         'Texture hot reload preserves asset identity, emits before/after digests and invalidates only the affected GPU cache entry.',
         'Renderer residency receipts describe what was loaded or evicted but do not become source-asset authority.',
         'WebGPU submission must verify the deterministic render-plan digest before creating draw commands or texture bindings.'
+      ],
+      findings:[]
+    };
+  }
+
+  if(role==='reference_frame_guard'){
+    return {
+      category:'reference_frame',
+      directives:[
+        'Reference-frame conformance must compile the exact owned EVERCRAFT_WEBGPU_WGSL source rather than a lookalike test shader.',
+        'The receipt must bind the exact shader SHA-256, browser preflight receipt, launch profile and expected/observed pixel values.',
+        'Pixel verification requires real WebGPU command submission and mapped texture readback inside native Chromium.',
+        'Software adapters remain valid execution proof but must never be promoted into hardware execution claims.',
+        'Reference-frame CI must rerun when World Engine renderer/shader source changes so pixel evidence cannot silently become stale.',
+        'A passing generic WebGPU device probe does not substitute for a passing World Engine reference-frame receipt.'
       ],
       findings:[]
     };
