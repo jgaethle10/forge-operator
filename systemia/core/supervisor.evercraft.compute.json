@@ -38,7 +38,8 @@
     "rivet-report-edge",
     "forensic-record-owned-runtime",
     "kaidance-mission-publisher",
-    "sentinel-life-safety-watch"
+    "sentinel-life-safety-watch",
+    "cfb-clip-publisher"
   ],
   "security": {
     "lease_required": true,
