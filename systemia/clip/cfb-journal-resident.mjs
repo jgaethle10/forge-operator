@@ -2,6 +2,7 @@ import fs from 'node:fs';
 import path from 'node:path';
 import { publishCfbJournalToFacebook } from '../newsroom/cfb-clip-facebook-publish.mjs';
 import { resolveFacebookPageCredential } from './facebook-page-credential-resolver.mjs';
+import { journalStoryResourceRef } from '../evercraft-home/clip-journal-publish-adapter.mjs';
 
 export const CFB_CLIP_RESIDENT_STATE_SCHEMA='evercraft.clip.cfb-journal-resident-state.v1';
 
@@ -56,6 +57,7 @@ export async function runCfbJournalPublishCycle({
   credentialStateDir,
   inputState=emptyCfbClipResidentState(),
   publisher=publishCfbJournalToFacebook,
+  authorizeStory=async()=>({decision:'deny',reason:'authorization_checker_missing'}),
   fetchImpl=globalThis.fetch,
   now=()=>new Date().toISOString(),
   maxPublishesPerCycle=1,
@@ -84,11 +86,48 @@ export async function runCfbJournalPublishCycle({
       continue;
     }
 
+    const resourceRef=journalStoryResourceRef(row.slug);
+    let authorization;
+    try{
+      authorization=await authorizeStory({
+        story_id:storyId,
+        slug:row.slug,
+        resource_ref:resourceRef,
+        scope:'home.clip.publish',
+      });
+    }catch(error){
+      authorization={decision:'deny',reason:error instanceof Error?error.message:String(error)};
+    }
+    if(authorization?.decision!=='allow'){
+      const reason=clean(authorization?.reason)||'home_clip_publish_not_authorized';
+      state.stories[storyId]={
+        state:'authorization_hold',
+        slug:row.slug,
+        canonical_url:clean(row.handoff.canonical_url),
+        resource_ref:resourceRef,
+        last_error:reason,
+        last_attempt_at:observedAt,
+        attempt_count:Number(previous?.attempt_count||0)+1,
+        provider_published:false,
+      };
+      events.push({
+        story_id:storyId,
+        slug:row.slug,
+        action:'authorization_hold',
+        state:'authorization_hold',
+        resource_ref:resourceRef,
+        error:reason,
+      });
+      continue;
+    }
+
     let receipt;
     try{
       receipt=await publisher({
         handoff:row.handoff,
-        authorizationRef:'system-policy:cfb-journal-resident-autopublish-v1',
+        authorizationRef:clean(authorization.grant_id)
+          ? 'passport-grant:'+clean(authorization.grant_id)
+          : clean(authorization.authorization_ref)||'passport:home.clip.publish',
         fetchImpl,
         resolveCredential:()=>resolveFacebookPageCredential({credentialStateDir}),
       });
@@ -148,12 +187,16 @@ export async function runCfbJournalPublishCycle({
       published:values.filter(row=>row.state==='published').length,
       published_postflight_failed:values.filter(row=>row.state==='published_postflight_failed').length,
       retryable_failed:values.filter(row=>row.state==='retryable_failed'||row.state==='failed').length,
+      authorization_holds:values.filter(row=>row.state==='authorization_hold').length,
       provider_publishes_this_cycle:providerPublishes,
       events,
       boundaries:{
         cfbJournalOnly:true,
         maxProviderPublishesPerCycle:Math.max(1,Number(maxPublishesPerCycle)||1),
         terminalProviderReceiptsNeverRepublished:true,
+        passportAuthorizationRequired:true,
+        storyResourceAuthorizationRequired:true,
+        credentialsResolvedOnlyAfterAuthorization:true,
         credentialsResolvedOnlyInsideResident:true,
         arbitraryUrlsAccepted:false,
       },
