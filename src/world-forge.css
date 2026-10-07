@@ -996,3 +996,15 @@
   font-size:8px;
   font-weight:800;
 }
+
+.wf-runtime-drag.active{
+  border-color:#6a57c9;
+  background:#2a2050;
+  color:#e5deff;
+}
+
+.wf-runtime-view-badge.dragging{
+  border-color:#6650bd;
+  background:rgba(34,24,72,.92);
+  color:#d9d0ff;
+}

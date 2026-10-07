@@ -9,6 +9,7 @@ import {
   worldEngineScaleToWorldForge,
   worldEngineTransformToWorldForge,
   worldForgeDirectionToWorldEngine,
+  worldForgePositionToWorldEngine,
 } from './world-forge-runtime-view.js';
 import {
   worldForgeEulerToWorldEngine,
@@ -102,5 +103,13 @@ test('Forge runtime input directions map into World Engine axes without changing
   assert.deepEqual(
     worldForgeDirectionToWorldEngine({x:2,y:3,z:4}),
     {x:2,y:4,z:-3},
+  );
+});
+
+
+test('runtime teleport position mapping uses the canonical Forge Z-up → Engine Y-up basis',()=>{
+  assert.deepEqual(
+    worldForgePositionToWorldEngine({x:3,y:-2,z:5}),
+    {x:3,y:5,z:2},
   );
 });

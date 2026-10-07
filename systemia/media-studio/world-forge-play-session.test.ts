@@ -273,3 +273,55 @@ test('Play Mode accepts tick-bound impulses without rewriting authored transform
   );
   assert.deepEqual(stoppedHero?.rigidBody?.velocity,{x:0,y:0,z:0});
 });
+
+
+test('Play Mode runtime drag teleports on the next tick and preserves authored position',()=>{
+  const project=createWorldForgeStarterProject();
+  const hero=project.nodes.find(node=>node.id==='hero-core');
+  assert.ok(hero);
+  hero!.physics={
+    mode:'dynamic',
+    massKg:1,
+    gravityScale:0,
+    linearDamping:0,
+    restitution:0,
+    collider:{type:'auto_box'},
+  };
+  const authoredPosition=structuredClone(hero!.transform.position);
+
+  const session=new WorldForgePlaySession({
+    sessionId:'play-runtime-drag',
+    project,
+  });
+
+  const moved=session.step({
+    ticks:1,
+    inputs:[
+      {
+        id:'runtime-drag-00-teleport',
+        tick:1,
+        entityId:'wfnode:hero-core',
+        kind:'teleport',
+        value:{x:2,y:3,z:-1},
+      },
+      {
+        id:'runtime-drag-01-stop',
+        tick:1,
+        entityId:'wfnode:hero-core',
+        kind:'set_velocity',
+        value:{x:0,y:0,z:0},
+      },
+    ],
+  });
+
+  const runtimeHero=moved.snapshot.entities.find(
+    entity=>entity.id==='wfnode:hero-core'
+  );
+  assert.ok(runtimeHero);
+  assert.deepEqual(runtimeHero!.transform.position,{x:2,y:3,z:-1});
+  assert.deepEqual(runtimeHero!.rigidBody?.velocity,{x:0,y:0,z:0});
+  assert.deepEqual(
+    session.project.nodes.find(node=>node.id==='hero-core')?.transform.position,
+    authoredPosition,
+  );
+});

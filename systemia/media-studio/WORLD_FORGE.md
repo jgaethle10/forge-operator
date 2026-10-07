@@ -217,6 +217,29 @@ Current area lights are explicitly approximated as point lights because World En
 
 The browser editor exposes **Engine Bridge** only for committed canonical state. If a Stage-mode ChangeSet is pending, runtime compilation is blocked until the proposal is applied or cleared.
 
+## Runtime Drag
+
+Play Mode now has an explicit **Runtime Drag** interaction mode for direct viewport manipulation of dynamic bodies.
+
+The same viewport translation gizmo is deliberately split into two meanings:
+
+- normal gizmo drag remains a World Forge authoring transform;
+- Runtime Drag emits ephemeral World Engine runtime inputs.
+
+Runtime Drag:
+
+- is available only during Play Mode;
+- requires a selected non-kinematic Dynamic mesh;
+- is blocked while staged authoring changes are pending;
+- uses the current runtime snapshot transform as the drag origin;
+- reuses deterministic viewport axis projection and snap increments;
+- converts the final Forge-space position into World Engine coordinates;
+- emits a next-tick `teleport` followed by next-tick `set_velocity(0)`;
+- advances the runtime exactly one tick;
+- never rewrites the authored World Forge transform.
+
+The viewport badge changes to **RUNTIME DRAG** while this mode is active so authoring and runtime manipulation cannot be mistaken for each other. The mode fails closed if Play stops, selection changes to a non-dynamic body, a kinematic body is selected, or staged authoring begins.
+
 ## Play interaction inputs
 
 Play Mode can now send bounded, tick-bound runtime inputs to selected dynamic bodies without rewriting authored scene state.
