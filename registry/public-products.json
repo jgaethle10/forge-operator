@@ -433,21 +433,8 @@
       "llms": "./faie/llms.txt",
       "registry_name": "io.github.jgaethle10/faie",
       "invocation": {
-        "mode": "discovery_only",
-        "url": null
-      }
-    },
-    {
-      "product_key": "fallen-sessions",
-      "name": "Fallen Sessions",
-      "class": "agent_native_music_creation",
-      "canonical_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/fallen-sessions/index.html",
-      "github_record": "./fallen-sessions/README.md",
-      "llms": "./fallen-sessions/llms.txt",
-      "registry_name": null,
-      "invocation": {
-        "mode": "discovery_only",
-        "url": null
+        "mode": "mcp",
+        "url": "https://fabric.systemiacommandcenters.com/mcp/faie"
       }
     },
     {
