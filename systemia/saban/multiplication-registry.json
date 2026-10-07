@@ -879,6 +879,7 @@
         "texture_residency_guard",
         "reference_frame_guard",
         "normal_map_guard",
+        "fallen_geometry_guard",
         "studio_edit_guard",
         "runtime_migration_guard",
         "fallen_bridge_guard",
@@ -913,7 +914,7 @@
       "assignment_strategy": "role_item_cartesian",
       "scaling": {
         "strategy": "work_conserving",
-        "max_agents_per_item": 22,
+        "max_agents_per_item": 23,
         "target_logical_per_physical_worker": 8,
         "minimum_role_item_passes": 1
       },
