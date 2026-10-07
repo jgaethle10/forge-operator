@@ -55,6 +55,17 @@ test('Fabric self updater accepts only the authorized Forge repository and fast-
   assert.doesNotMatch(updater,/git reset --hard origin\/main/);
 });
 
+test('Fabric self updater normalizes generated Journal state before dirty-checkout gating',()=>{
+  const normalizeIndex=updater.indexOf('normalizing generated public/journal surface before checkout preflight');
+  const statusIndex=updater.indexOf('status --porcelain --untracked-files=all');
+  assert.ok(normalizeIndex>=0,'generated Journal normalization must exist');
+  assert.ok(statusIndex>=0,'dirty-checkout preflight must exist');
+  assert.ok(normalizeIndex<statusIndex,'Journal normalization must happen before dirty-checkout gating');
+  assert.match(updater,/git -C "\$REPO_ROOT" restore --staged --worktree -- public\/journal/);
+  assert.match(updater,/git -C "\$REPO_ROOT" clean -fdx -- public\/journal/);
+  assert.match(updater,/classify-fabric-checkout-dirt\.mjs/);
+});
+
 test('Fabric self updater proves the release, self-heals attestation wiring, and rolls back failed runtime verification',()=>{
   assert.match(updater,/npm run test:fabric-directory/);
   assert.match(updater,/npm run test:fabric-local/);
