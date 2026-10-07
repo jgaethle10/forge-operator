@@ -30,9 +30,14 @@ async function buildSafeOwnedSpawnOffer({seed,candidate,root}={}){
   const labels=[...(capacity.placement_labels||[])].map(x=>String(x).trim().toLowerCase());
   const workloads=[...(capacity.supported_workloads||[])].map(String).sort();
   const hint=capacity.capacity_hint||{};
+  const activationId=sha({
+    node_id:String(seed.node_id||''),
+    started_at:String(seed.started_at||''),
+    device_fingerprint:String(seed.device_fingerprint||''),
+  }).slice('sha256:'.length,'sha256:'.length+16);
   const body={
     schema:'evercraft.saban.compute-offer.v1',
-    offer_id:'owned-spawn:'+String(seed.node_id||''),
+    offer_id:'owned-spawn:'+String(seed.node_id||'')+':'+activationId,
     provider_id:String(seed.node_id||''),
     market:'evercraft-owned-spawn',
     access_class:'authorized_compute',
@@ -84,6 +89,7 @@ async function buildSafeOwnedSpawnOffer({seed,candidate,root}={}){
       lifecycle_authority:'evercraft-owned',
       retirement_mode:'stop',
       lifecycle_only:true,
+      activation_id:activationId,
       scheduling_authority_serialized:false,
       allocator_authority_serialized:false,
       node_root_hash:sha(String(root||'')),
