@@ -80,6 +80,8 @@ jobs:
                  [ "$error" = "http_404:/visuals/washington-active-volcanoes/poster-story.html" ] || \
                  [ "$error" = "graphics_command_state_geometry_missing" ] || \
                  [ "$error" = "graphics_command_cinematic_geography_missing" ] || \
+                 [ "$error" = "graphics_command_terrain_relief_missing" ] || \
+                 [ "$error" = "graphics_command_terrain_lineage_missing" ] || \
                  [ "$error" = "graphics_command_boundary_lineage_missing" ] || \
                  [ "$error" = "graphics_command_fallen_polygon_missing" ] || \
                  [ "$error" = "graphics_command_responsive_preview_missing" ] || \
