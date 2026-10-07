@@ -74,6 +74,59 @@ function collectIds(value, known, out) {
   for (const item of Object.values(value)) collectIds(item, known, out);
 }
 
+function addKnownId(value, known, out) {
+  const id = String(value || '');
+  if (ID_RE.test(id) && known.has(id)) out.add(id);
+}
+
+function objectReferences(object, known) {
+  const out = new Set();
+  const payload = object?.payload || {};
+
+  if (object?.type === 'commit') {
+    addKnownId(payload.tree_id, known, out);
+    for (const id of payload.parents || []) addKnownId(id, known, out);
+    for (const id of payload.transactions || []) addKnownId(id, known, out);
+    return out;
+  }
+
+  if (object?.type === 'tree') {
+    for (const entry of payload.entries || []) {
+      addKnownId(entry?.object_id, known, out);
+    }
+    return out;
+  }
+
+  if (object?.type === 'release') {
+    addKnownId(payload.commit_id, known, out);
+    collectIds(payload.authority_receipt_refs || [], known, out);
+    return out;
+  }
+
+  if (object?.type === 'transaction') {
+    collectIds(payload.inputs || [], known, out);
+    collectIds(payload.outputs || [], known, out);
+    collectIds(payload.evidence || [], known, out);
+    return out;
+  }
+
+  if (object?.type === 'receipt') {
+    if (payload.operation === 'transaction') {
+      addKnownId(payload.transaction_id, known, out);
+    }
+    return out;
+  }
+
+  if (object?.type === 'large_blob_ref' || object?.type === 'blob') {
+    return out;
+  }
+
+  // Unknown future object types fail conservative: retain any referenced
+  // object identities until their GC semantics are explicitly defined.
+  collectIds(payload, known, out);
+  return out;
+}
+
 async function readRootFiles(dir, extractor) {
   const roots = [];
   for (const file of await walkFiles(dir)) {
@@ -208,8 +261,7 @@ export async function planGarbageCollection(store, {
     reachableObjects.add(id);
 
     const object = await store.readObject(id);
-    const references = new Set();
-    collectIds(object.payload, objects, references);
+    const references = objectReferences(object, objects);
     for (const ref of references) {
       if (!reachableObjects.has(ref)) queue.push(ref);
     }
