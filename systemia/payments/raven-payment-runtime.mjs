@@ -127,12 +127,13 @@ export async function startRavenPaymentRuntime({
     ...env,
     EVERCRAFT_CREDENTIAL_STATE_DIR:clean(credentialStateDir)||clean(env?.EVERCRAFT_CREDENTIAL_STATE_DIR),
   };
-  const stripeSecret=resolveStripeSettlementSecret(secretEnv);
-  const secretStatus=()=>stripeSettlementSecretStatus(stripeSecret);
+  const resolveStripeSecret=()=>resolveStripeSettlementSecret(secretEnv);
+  const secretStatus=()=>stripeSettlementSecretStatus(resolveStripeSecret());
 
   const execute=typeof settlementExecutor==='function'
     ? settlementExecutor
     : async({offer,orderKey,idempotencyKey})=>{
+        const stripeSecret=resolveStripeSecret();
         if(!stripeSecret) throw new Error('stripe_adapter_not_configured');
         return createStripeCheckoutSession({
           secret:stripeSecret,
