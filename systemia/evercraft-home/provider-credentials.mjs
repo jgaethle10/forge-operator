@@ -34,6 +34,11 @@ const SPECS = Object.freeze({
     label: 'competition-runbook-zero',
     environment: 'live',
   }),
+  paypal: Object.freeze({
+    provider: 'paypal',
+    label: 'competition-checkout-black-box',
+    environment: 'sandbox',
+  }),
   'facebook-pages': Object.freeze({
     provider: 'facebook-pages',
     label: 'evercraft-clip',
@@ -125,6 +130,16 @@ export function normalizeProviderCredentialRequest(provider, body = {}) {
       label: clean(body.label) || spec.label,
       apiKeyId: 'nebius-token-factory-key',
       apiSecret: clean(body.api_key),
+    };
+  }
+
+  if (spec.provider === 'paypal') {
+    return {
+      provider: spec.provider,
+      environment: clean(body.environment) || spec.environment,
+      label: clean(body.label) || spec.label,
+      apiKeyId: clean(body.client_id),
+      apiSecret: clean(body.client_secret),
     };
   }
 
