@@ -10,6 +10,9 @@ export const FORENSIC_DOMAINS=new Set([
   'rejections',
   'audits',
   'archive_meta',
+  'chunks',
+  'page_index',
+  'document_sets',
   'media'
 ]);
 
