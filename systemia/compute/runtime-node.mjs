@@ -1692,6 +1692,7 @@ export async function startEvercraftComputeNode({
               return send(res, 403, { error: 'forensic_record_public_seed_api_not_allowed' });
             }
 
+            fs.mkdirSync(allowedRoot, { recursive: true, mode: 0o750 });
             const bootstrapRoot = fs.mkdtempSync(
               path.join(allowedRoot, '.forensic-record-public-bootstrap-')
             );
