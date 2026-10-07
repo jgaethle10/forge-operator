@@ -11,6 +11,7 @@ on:
       - 'tests/fabric-offer-pages.test.mjs'
       - 'systemia/mcp/fabric-local-runtime.mjs'
       - 'systemia/evercraft-home/provider-credentials.test.mjs'
+      - 'systemia/evercraft-home/provider-credential-http.test.mjs'
       - 'systemia/evercraft-home/provider-credentials.mjs'
       - 'systemia/earthworks-autonomy/COMMERCIAL.md'
       - 'public/apps/earthworks-autonomy/capability.json'
@@ -26,6 +27,7 @@ on:
       - 'tests/fabric-offer-pages.test.mjs'
       - 'systemia/mcp/fabric-local-runtime.mjs'
       - 'systemia/evercraft-home/provider-credentials.test.mjs'
+      - 'systemia/evercraft-home/provider-credential-http.test.mjs'
       - 'systemia/evercraft-home/provider-credentials.mjs'
       - 'systemia/earthworks-autonomy/COMMERCIAL.md'
       - 'public/apps/earthworks-autonomy/capability.json'
@@ -46,7 +48,7 @@ jobs:
       - name: Prove Evercraft-owned payment routing
         run: |
           node --test systemia/payments/*.test.mjs
-          node --test systemia/evercraft-home/provider-credentials.test.mjs
+          node --test systemia/evercraft-home/provider-credentials.test.mjs systemia/evercraft-home/provider-credential-http.test.mjs
           node --test tests/fabric-offer-pages.test.mjs tests/fabric-owned-edge-installer.test.mjs
       - name: Reject Stripe-first EarthWorks commerce metadata
         run: |
