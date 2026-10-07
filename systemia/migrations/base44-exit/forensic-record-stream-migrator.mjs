@@ -23,8 +23,14 @@ export const FORENSIC_ENTITY_DOMAIN={
 export const DEFAULT_FORENSIC_ENTITIES=Object.keys(FORENSIC_ENTITY_DOMAIN);
 
 const clean=(v)=>String(v??'').trim();
+const stable=(v)=>{
+  if(Array.isArray(v)) return v.map(stable);
+  if(v&&typeof v==='object') return Object.fromEntries(Object.keys(v).sort().map(k=>[k,stable(v[k])]));
+  return v;
+};
+const stableJson=(v)=>JSON.stringify(stable(v));
 const sha=(value)=>createHash('sha256').update(
-  Buffer.isBuffer(value)?value:Buffer.from(typeof value==='string'?value:JSON.stringify(value))
+  Buffer.isBuffer(value)?value:Buffer.from(typeof value==='string'?value:stableJson(value))
 ).digest('hex');
 
 function atomicJson(file,value){
@@ -66,13 +72,13 @@ function verifyPage(page,{entity,snapshotCutoff}){
   if(clean(page.snapshot_cutoff)!==snapshotCutoff) throw new Error('forensic_migration_snapshot_cutoff_mismatch');
   const expectedPageSha=clean(page.page_sha256);
   if(!/^[a-f0-9]{64}$/i.test(expectedPageSha)) throw new Error('forensic_migration_page_sha_missing');
-  if(sha(JSON.stringify(withoutKey(page,'page_sha256')))!==expectedPageSha){
+  if(sha(stableJson(withoutKey(page,'page_sha256')))!==expectedPageSha){
     throw new Error('forensic_migration_page_sha_mismatch');
   }
   for(const row of page.rows||[]){
     const expected=clean(row?._migration_row_sha256);
     if(!/^[a-f0-9]{64}$/i.test(expected)) throw new Error('forensic_migration_row_sha_missing');
-    if(sha(JSON.stringify(withoutKey(row,'_migration_row_sha256')))!==expected){
+    if(sha(stableJson(withoutKey(row,'_migration_row_sha256')))!==expected){
       throw new Error('forensic_migration_row_sha_mismatch');
     }
   }
