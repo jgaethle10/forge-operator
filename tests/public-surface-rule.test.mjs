@@ -1,5 +1,6 @@
 import assert from 'node:assert/strict';
 import fs from 'node:fs';
+import path from 'node:path';
 import test from 'node:test';
 
 const candidates=JSON.parse(fs.readFileSync('registry/public-surface-candidates.json','utf8'));
@@ -16,17 +17,66 @@ test('demonstrable products have a truthful public surface',()=>{
     assert.ok(Array.isArray(product.intents)&&product.intents.length>0,'Missing intents for '+candidate.product_key);
     assert.ok(Array.isArray(product.boundaries)&&product.boundaries.length>0,'Missing boundaries for '+candidate.product_key);
 
+    const productRoot=path.join('public','chum','products',candidate.product_key);
+    for(const filename of ['index.html','llms.txt','ai-discovery.json','ai-conformance.json']){
+      const surface=path.join(productRoot,filename);
+      assert.ok(fs.existsSync(surface),'Missing materialized public surface '+surface);
+      assert.ok(fs.statSync(surface).size>0,'Empty materialized public surface '+surface);
+    }
+
+    const discovery=JSON.parse(fs.readFileSync(path.join(productRoot,'ai-discovery.json'),'utf8'));
+    assert.equal(discovery.product_key,candidate.product_key,'Discovery product key drift for '+candidate.product_key);
+    assert.equal(discovery.name,product.name,'Discovery product name drift for '+candidate.product_key);
+    assert.ok(Array.isArray(discovery.intents)&&discovery.intents.length>0,'Discovery intents missing for '+candidate.product_key);
+
+    const blockedHosts=['base44.app'];
+    for(const value of [product.canonical_url,product.human_start_url,candidate.owned_url_target]){
+      if(!value)continue;
+      const url=new URL(String(value));
+      assert.equal(url.protocol,'https:','Public product URL must use HTTPS for '+candidate.product_key);
+      assert.ok(!blockedHosts.some((host)=>url.hostname===host||url.hostname.endsWith('.'+host)),'Retired provider URL leaked into public surface for '+candidate.product_key);
+    }
+
+    assert.ok(Array.isArray(candidate.evidence)&&candidate.evidence.length>0,'Demonstrable candidate needs evidence for '+candidate.product_key);
+    assert.ok(candidate.activation_gate,'Demonstrable candidate needs an activation gate for '+candidate.product_key);
+
+    if(candidate.activation_gate!=='live_verified'){
+      assert.ok(!product.human_start_url,'Unverified owned-host route must not be promoted as a human start URL.');
+    }
+
     if(candidate.commercial_state==='not_for_sale_yet'){
       assert.equal(product.commercial?.status,'not_for_sale_yet');
       assert.notEqual(product.commercial?.machine_commerce_handoff?.state,'live_verified');
       assert.ok(!product.buyer_frontage_url,'Not-for-sale product must not declare buyer frontage.');
       assert.ok(!product.human_start_url,'Unverified owned-host route must not be promoted as a human start URL.');
     }
+
+    if(candidate.surface_state==='sell_now'){
+      assert.equal(product.commercial?.status,'sell_now','Sell-now candidate must declare sell_now commercial state.');
+      assert.equal(product.commercial?.machine_commerce_handoff?.state,'live_verified','Sell-now candidate requires live-verified machine commerce handoff.');
+    }
   }
 });
 
 test('inventory existence alone still does not auto-publish',()=>{
   assert.match(String(candidates.policy),/Inventory alone never grants publication/);
+});
+
+
+test('candidate states stay inside the governed public-surface state machine',()=>{
+  const allowedStates=new Set(['internal','demonstrable','commercial_ready','sell_now']);
+  const allowedCommercial=new Set(['internal','not_for_sale_yet','commercial_ready','sell_now']);
+  const keys=new Set();
+  for(const candidate of candidates.candidates||[]){
+    assert.ok(candidate.product_key,'Candidate product key is required.');
+    assert.ok(!keys.has(candidate.product_key),'Duplicate public-surface candidate '+candidate.product_key);
+    keys.add(candidate.product_key);
+    assert.ok(allowedStates.has(candidate.surface_state),'Unknown surface state '+candidate.surface_state);
+    assert.ok(allowedCommercial.has(candidate.commercial_state),'Unknown commercial state '+candidate.commercial_state);
+    if(candidate.surface_state==='internal'){
+      assert.ok(!candidate.owned_url_target,'Internal-only candidate must not advertise an owned public URL target.');
+    }
+  }
 });
 
 
