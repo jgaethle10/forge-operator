@@ -247,7 +247,7 @@ function showClaim(message=""){
   appShell.style.display="none";
   appFooter.style.display="none";
   signout.classList.remove("visible");
-  document.getElementById("lineage-link").classList.remove("visible");
+  for(const id of ["lineage-link","apps-link","credentials-link"]) document.getElementById(id).classList.remove("visible");
   document.getElementById("claim-error").textContent=message;
   setTimeout(()=>document.getElementById("claim-code").focus(),0);
 }
