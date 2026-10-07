@@ -30,6 +30,11 @@ import { planCapacityLifecycle } from './capacity-lifecycle.mjs';
 
 const MODULE_FILE=fileURLToPath(import.meta.url);
 
+function readJson(file,fallback=null){
+  try{return JSON.parse(fs.readFileSync(file,'utf8'));}
+  catch{return fallback;}
+}
+
 function atomicJson(file,value){
   fs.mkdirSync(path.dirname(file),{recursive:true,mode:0o700});
   const tmp=file+'.'+process.pid+'.'+randomBytes(4).toString('hex')+'.tmp';
@@ -209,6 +214,7 @@ export function compileCapacityOrganismState({
     capability_plan:capabilityPlan,
     workload_plan:workloadPlan,
     rebalance_plan:rebalance,
+    capacity_headroom_plan:headroomPlan,
     capacity_lifecycle_plan:lifecyclePlan,
     capacity_lifecycle:{
       decision_count:lifecyclePlan.decision_count,
@@ -378,13 +384,13 @@ export async function runCapacityOrganismOnce({
       authority_expansion:false,
     },
     capacity_headroom:{
-      reservation_count:headroomPlan.reservation_count,
-      reservations:headroomPlan.reservations,
-      skipped:headroomPlan.skipped,
-      current_pressure_always_wins:headroomPlan.current_pressure_always_wins!==false,
+      reservation_count:compiled.capacity_headroom_plan?.reservation_count||0,
+      reservations:compiled.capacity_headroom_plan?.reservations||[],
+      skipped:compiled.capacity_headroom_plan?.skipped||[],
+      current_pressure_always_wins:compiled.capacity_headroom_plan?.current_pressure_always_wins!==false,
       authority_expansion:false,
       commercial_spend_usd:0,
-      receipt_hash:headroomPlan.receipt_hash||null,
+      receipt_hash:compiled.capacity_headroom_plan?.receipt_hash||null,
     },
     capacity_autonomy:{
       safe_autonomous_action_count:autonomyPlan.safe_autonomous_action_count,
