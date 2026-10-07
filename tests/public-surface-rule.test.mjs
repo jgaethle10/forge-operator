@@ -48,6 +48,9 @@ test('public demo surfaces are mobile-stable and must not horizontally wiggle',(
     assert.match(html,/overflow-x\s*:\s*(?:hidden|clip)/i,'Public demo must suppress document-level horizontal scrolling in '+file);
     assert.match(html,/max-width\s*:\s*100%/i,'Public demo must cap responsive content at the viewport in '+file);
     assert.match(html,/minmax\(0\s*,\s*1fr\)/i,'Public demo grids must allow children to shrink without forcing horizontal overflow in '+file);
+    assert.match(html,/-webkit-text-size-adjust\s*:\s*100%/i,'Public demo must stabilize iOS text sizing in '+file);
+    assert.match(html,/font-size\s*:\s*16px/i,'Public demo form controls must avoid iOS focus zoom in '+file);
+    assert.match(html,/min-height\s*:\s*44px/i,'Public demo interactive controls must provide touch-sized targets in '+file);
   }
 });
 
