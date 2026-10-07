@@ -5,7 +5,6 @@ import os from 'node:os';
 import path from 'node:path';
 import { once } from 'node:events';
 import { createRequire } from 'node:module';
-import { pathToFileURL } from 'node:url';
 import { prepareNativeBrowserRuntime } from './native-runtime.mjs';
 import { classifyWebGpuAdapter } from './webgpu-conformance.mjs';
 
@@ -90,8 +89,7 @@ async function closeServer(server){
 
 async function loadPlaywright(sourceDir){
   const require=createRequire(path.join(sourceDir,'package.json'));
-  const entry=require.resolve('playwright');
-  return import(pathToFileURL(entry).href);
+  return require('playwright');
 }
 
 async function executeReferenceFrame(page,shaderSource){
