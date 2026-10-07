@@ -114,6 +114,10 @@ function finite(value:number,label:string){
   return value;
 }
 
+function cleanZero(value:number){
+  return Object.is(value,-0)||Math.abs(value)<1e-12?0:value;
+}
+
 function sub(a:ForgeVec3,b:ForgeVec3):ForgeVec3{
   return {x:a.x-b.x,y:a.y-b.y,z:a.z-b.z};
 }
@@ -139,17 +143,17 @@ export function worldForgeVectorToWorldEngine(
   finite(unitScaleMeters,'unit_scale');
   if(unitScaleMeters<=0) throw new Error('world_forge_world_engine_unit_scale_invalid');
   return {
-    x:finite(value.x,'vector_x')*unitScaleMeters,
-    y:finite(value.z,'vector_z')*unitScaleMeters,
-    z:-finite(value.y,'vector_y')*unitScaleMeters,
+    x:cleanZero(finite(value.x,'vector_x')*unitScaleMeters),
+    y:cleanZero(finite(value.z,'vector_z')*unitScaleMeters),
+    z:cleanZero(-finite(value.y,'vector_y')*unitScaleMeters),
   };
 }
 
 export function worldForgeDirectionToWorldEngine(value:ForgeVec3):EngineVec3{
   return {
-    x:finite(value.x,'direction_x'),
-    y:finite(value.z,'direction_z'),
-    z:-finite(value.y,'direction_y'),
+    x:cleanZero(finite(value.x,'direction_x')),
+    y:cleanZero(finite(value.z,'direction_z')),
+    z:cleanZero(-finite(value.y,'direction_y')),
   };
 }
 
