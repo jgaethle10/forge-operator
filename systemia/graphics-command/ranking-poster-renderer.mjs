@@ -6,7 +6,7 @@ import crypto from 'node:crypto';
 
 const SPECS={
   feed:{width:1080,height:1350,rows:10,heroY:226,heroH:242,listY:548,rowHeight:76,footerY:1282},
-  square:{width:1080,height:1080,rows:8,heroY:202,heroH:214,listY:474,rowHeight:72,footerY:1018},
+  square:{width:1080,height:1080,rows:8,heroY:202,heroH:214,listY:492,rowHeight:72,footerY:1018},
   story:{width:1080,height:1920,rows:15,heroY:250,heroH:266,listY:602,rowHeight:82,footerY:1848},
 };
 
