@@ -130,7 +130,7 @@ test('HTML stage has deterministic frame-control hooks and no external runtime d
   assert.match(html,/evercraftFrameReady/);
   assert.doesNotMatch(html,/https:\/\//);
   assert.match(html,/ROUTE VISUALIZATION/);
-  assert.match(html,/data\.geoPolygon/);
+  assert.match(html,/dataset\.geoPolygon/);
   assert.match(html,/fill-rule/);
 });
 
