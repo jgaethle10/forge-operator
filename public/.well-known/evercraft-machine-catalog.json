@@ -9,7 +9,7 @@
   "source_generated_at": "2026-09-30T20:21:00.000Z",
   "generated_at": "2026-10-07T00:00:00.000Z",
   "offer_count": 52,
-  "sell_now_count": 18,
+  "sell_now_count": 17,
   "discovery_count": 20,
   "safety": {
     "discovery_creates_obligation": false,
@@ -1327,7 +1327,7 @@
       "problem": "A team is using multiple AI agents or AI-assisted developers and needs collision-safe history, provenance, rationale, integrity checks and rollback beyond ordinary Git-only workflow.",
       "inputs": "One buyer-authorized Git repository, accountable operator, and current agent/developer workflow context. Private repository access requires explicit authorization.",
       "outputs": "Git history import, private Lineage Control Room, stale-writer/CAS proof, human/agent history visibility, rationale/provenance workflow, semantic diff, fsck integrity baseline, ignore/sensitive-path policy, Git export/mirror proof, and closeout architecture packet.",
-      "commercial_state": "sell_now",
+      "commercial_state": "verification_required",
       "machine_state": "human_handoff_ready",
       "pricing": "Lineage Founding Pilot $500 one-time for the first 5 external design partners. Governed Agent Workflow Sprint starts at $1,500 after scoped review.",
       "offers": [
@@ -1350,7 +1350,7 @@
       "public_url": null,
       "public_url_source": "held_pending_external_canary",
       "payment_authority": "Evercraft Payments; paid state requires authoritative verification.",
-      "invocation_status": "SOURCE PACKAGED: public page, machine discovery, LLM guide and human-confirmed pilot contract exist in source. Do not claim live public deployment, automatic repository intake, self-serve tenant creation or checkout until external canaries and payment receipts verify them.",
+      "invocation_status": "SOURCE PACKAGED: $500 founding pilot, public page source, machine discovery, LLM guide and human-confirmed handoff contract exist in source. Promotion to sell_now is held until the merged public door is externally canaried. Do not claim automatic repository intake, self-serve tenant creation, checkout or payment.",
       "live_canary_evidence": null,
       "catalog_version": "2026-10-07.1"
     },
