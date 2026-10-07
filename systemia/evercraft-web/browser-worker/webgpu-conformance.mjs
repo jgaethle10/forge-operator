@@ -27,7 +27,7 @@ const HARDWARE_MARKERS=[
   'geforce',
 ];
 
-const PROFILES=[
+export const WEBGPU_LAUNCH_PROFILES=[
   {
     id:'headless-adapter-selection',
     forcedSoftware:false,
@@ -407,7 +407,7 @@ export async function runWebGpuDeviceConformance({
     const {chromium}=await import('playwright');
 
     let selected=null;
-    for(const profile of PROFILES){
+    for(const profile of WEBGPU_LAUNCH_PROFILES){
       const result=await runProfile(chromium,profile,loopback.url);
       attempts.push({
         profile:profile.id,
