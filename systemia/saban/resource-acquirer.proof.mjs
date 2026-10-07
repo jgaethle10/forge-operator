@@ -165,6 +165,10 @@ const missingAuthority=await acquireResourceCapacity({
 });
 assert.equal(missingAuthority.mode,'compute_exchange');
 assert.equal(marketDiscoveries,1);
+assert.ok(missingAuthority.events.some((event)=>
+  event.type==='lease.granted' &&
+  event.source==='compute_exchange'
+));
 assert.equal(
   missingAuthority.execution_leases[0].runtime_authority.allocator_token,
   'proof-market-secret'

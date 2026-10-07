@@ -425,7 +425,6 @@ export async function runPoolWithAcquisition({
             diagnostics:marketFactory.diagnostics,
           },
           zero_spend_authority_generated:Boolean(zeroSpendAuthority),
-          zero_spend_authority_generated:Boolean(zeroSpendAuthority),
           market:resourceAcquisition.exchange?.selected_offer?.market||
             resourceAcquisition.exchange?.selected_market||null,
           provider_id:resourceAcquisition.exchange?.selected_offer?.provider_id||
@@ -470,6 +469,7 @@ export async function runPoolWithAcquisition({
             markets:marketFactory.markets,
             diagnostics:marketFactory.diagnostics,
           },
+          zero_spend_authority_generated:Boolean(zeroSpendAuthority),
           market:resourceAcquisition.exchange?.selected_offer?.market||lease?.market||null,
           provider_id:resourceAcquisition.exchange?.selected_offer?.provider_id||lease?.provider_id||null,
           negotiation_receipt:resourceAcquisition.exchange?.receipt_hash||null,

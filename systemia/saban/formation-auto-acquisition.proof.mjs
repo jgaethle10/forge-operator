@@ -141,6 +141,10 @@ try{
     node.receipt.pool_summary.capacity_acquisition.provider_id,
     'formation-auto-voluntary-provider'
   );
+  assert.equal(
+    node.receipt.pool_summary.capacity_acquisition.zero_spend_authority_generated,
+    true
+  );
   assert.equal(node.receipt.scheduler_summary.counts.completed,8);
   assert.equal(node.receipt.node_pool_receipt.failed_assignments,0);
   assert.equal(
