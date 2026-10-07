@@ -161,8 +161,9 @@ test('Control Room HTML is self-contained and visibly read-only', () => {
   assert.match(html, /Releases/);
   assert.match(html, /Storage/);
   assert.match(html, /Verify integrity/);
-  assert.match(html, /\/v1\/diff/);
-  assert.match(html, /\/v1\/integrity/);
+  assert.match(html, /const API_PREFIX="\/v1"/);
+  assert.match(html, /API_PREFIX\+'\/diff/);
+  assert.match(html, /API_PREFIX\+'\/integrity/);
   assert.doesNotMatch(html, /https:\/\//);
   assert.doesNotMatch(html, /<form/i);
 });
