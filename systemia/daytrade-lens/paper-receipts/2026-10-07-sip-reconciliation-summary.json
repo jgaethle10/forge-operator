@@ -1,0 +1,60 @@
+{
+  "schema": "evercraft.daytrade.sip-reconciliation-summary.v1",
+  "generated_at": "2026-10-07T16:44:09.849Z",
+  "source_run_id": 37654348981,
+  "source_artifact_id": 11496999286,
+  "source_artifact_digest": "sha256:1790f8da2a6e7cf28d2ed40ca6d7bee0ef99ff14d24e154beed4ff4f836f9973",
+  "source_commit_sha": "a83dc5ecd98a806feed88a351b88070d03082baa",
+  "simulation_only": true,
+  "capital_at_risk_usd": 0,
+  "threshold_bps": 3,
+  "delayed_historical_sip": true,
+  "max_accepted_sip_state_age_ms": 30000,
+  "counts_toward_prospective_diversity": false,
+  "aggregate": {
+    "windows": 3,
+    "instrument_decisions": 9,
+    "eligible_instrument_decisions": 6,
+    "censored_instrument_decisions": 3,
+    "decision_flips": 4,
+    "decision_flip_fraction_of_eligible": 0.6666666666666666,
+    "iex_abstain_to_sip_trade_flips": 4,
+    "iex_trade_to_sip_abstain_flips": 0,
+    "mean_iex_minus_sip_entry_spread_bps": 1.9007792970521626,
+    "original_iex_governed_pnl_usd": 0.0005282195390350353,
+    "delayed_sip_governed_touch_pnl_usd": 0.0018430829146645067
+  },
+  "window_status": [
+    {
+      "window_id": "2026-10-07-midday-01",
+      "eligible_instrument_decisions": 3,
+      "censored_instrument_decisions": 0,
+      "decision_flips": 2
+    },
+    {
+      "window_id": "2026-10-07-midday-02",
+      "eligible_instrument_decisions": 3,
+      "censored_instrument_decisions": 0,
+      "decision_flips": 2
+    },
+    {
+      "window_id": "2026-10-07-midday-03",
+      "eligible_instrument_decisions": 0,
+      "censored_instrument_decisions": 3,
+      "decision_flips": 0,
+      "censored_reason": "delayed SIP state crossed the 30-second freshness ceiling near the entitlement boundary"
+    }
+  ],
+  "interpretation": {
+    "original_iex_practice_receipts_remain_unchanged": true,
+    "rule_is_materially_feed_sensitive": true,
+    "current_rule_should_be_described_as_iex_proxy_gate": true,
+    "current_rule_should_not_be_described_as_true_consolidated_nbbo_spread_gate": true,
+    "delayed_sip_is_after_the_fact_only": true,
+    "delayed_sip_touch_is_not_real_fill": true,
+    "real_time_sip_entitlement_remains_required_for_nbbo_execution_evidence": true,
+    "not_signal_validation": true,
+    "not_live_authorized": true
+  },
+  "live_trade_authority": false
+}
