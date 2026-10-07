@@ -255,6 +255,14 @@ try{
   if(!/class="geo-boundary"/.test(directedFeed.text)||!/class="peak-marker"/.test(directedFeed.text)){
     throw new Error('graphics_command_state_geometry_missing');
   }
+  if(
+    !/data-visual-model="cinematic-geography-v1"/.test(directedFeed.text)||
+    !/class="cinematic-relief"/.test(directedFeed.text)||
+    !/class="story-route cascade-spine"[^>]*opacity=".20"/.test(directedFeed.text)||
+    /<circle class="peak-marker"/.test(directedFeed.text)
+  ){
+    throw new Error('graphics_command_cinematic_geography_missing');
+  }
   if(!/WASHINGTON/.test(directedFeed.text)) throw new Error('graphics_command_region_identity_missing');
   if(/Digest/i.test(directedFeed.text)) throw new Error('graphics_command_audit_clutter_regressed');
 
