@@ -1,0 +1,32 @@
+name: HVAC lead recovery proof canary
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'public/demos/hvac-lead-recovery/**'
+      - '.github/workflows/hvac-proof-canary.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Verify live demo
+        shell: bash
+        run: |
+          set -euo pipefail
+          url="https://jgaethle10.github.io/forge-operator/demos/hvac-lead-recovery/"
+          body="$(curl --fail --silent --show-error --location --retry 18 --retry-all-errors --retry-delay 5 "$url")"
+          printf '%s' "$body" | grep -q 'Evercraft HVAC Lead Recovery Demo'
+          printf '%s' "$body" | grep -q 'Turn this into a ready-to-work lead'
+          {
+            echo "## HVAC lead recovery proof is live"
+            echo
+            echo "URL: $url"
+            echo "Verified markers: title + interactive conversion CTA"
+          } >> "$GITHUB_STEP_SUMMARY"
