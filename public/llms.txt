@@ -154,17 +154,7 @@ Private/admin topology, credentials, user records, internal command surfaces, an
 
 Evercraft LLC
 
-<!-- EVERCRAFT_SYNDICATION_START -->
-## Evercraft syndication and discovery feeds
 
-- RSS product feed: /feed.xml
-- JSON Feed: /feed.json
-- OpenSearch description: /opensearch.xml
-- Syndication manifest: /.well-known/evercraft-syndication.json
-- Crawlable syndication hub: /chum/syndication/
-
-These surfaces expose the same truthful product catalog in additional standard formats. Publication is not proof of third-party indexing, recommendation, citation, or social-network posting.
-<!-- EVERCRAFT_SYNDICATION_END -->
 
 ## EarthWorks Autonomy
 
@@ -186,3 +176,15 @@ Public proof:
 - /apps/earthworks-autonomy/site-contract.json
 
 Evidence boundary: current public proof is software and a hardware-neutral control contract. Do not claim unsupervised production operation of full-size heavy equipment without separate verified field evidence.
+
+<!-- EVERCRAFT_SYNDICATION_START -->
+## Evercraft syndication and discovery feeds
+
+- RSS product feed: /feed.xml
+- JSON Feed: /feed.json
+- OpenSearch description: /opensearch.xml
+- Syndication manifest: /.well-known/evercraft-syndication.json
+- Crawlable syndication hub: /chum/syndication/
+
+These surfaces expose the same truthful product catalog in additional standard formats. Publication is not proof of third-party indexing, recommendation, citation, or social-network posting.
+<!-- EVERCRAFT_SYNDICATION_END -->

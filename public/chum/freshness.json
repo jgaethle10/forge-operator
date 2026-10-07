@@ -2,7 +2,7 @@
   "schema": "evercraft.chum.crawl-pressure.v1",
   "provider": "Evercraft LLC",
   "coordinator": "CHUM",
-  "updated_at": "2026-10-07T02:46:02.053Z",
+  "updated_at": "2026-10-07T02:50:27.524Z",
   "purpose": "Content-hash-backed freshness signals for public Evercraft discovery surfaces. A freshness signal requests attention; it does not prove indexing, ranking, recommendation, citation or provider pickup.",
   "indexnow": {
     "supported": true,
@@ -11,27 +11,139 @@
   },
   "latest_change_batch": [
     {
-      "path": "/chum/crawler-radar.json",
-      "last_changed": "2026-10-07T02:46:02.053Z",
-      "priority": 80
+      "path": "/.well-known/evercraft-pain-index.json",
+      "last_changed": "2026-10-07T02:50:27.524Z",
+      "priority": 90
     },
     {
-      "path": "/chum/crawler-radar.txt",
-      "last_changed": "2026-10-07T02:46:02.053Z",
-      "priority": 80
+      "path": "/llms.txt",
+      "last_changed": "2026-10-07T02:50:27.524Z",
+      "priority": 86
+    },
+    {
+      "path": "/.well-known/evercraft-syndication.json",
+      "last_changed": "2026-10-07T02:50:27.524Z",
+      "priority": 84
     },
     {
       "path": "/chum/hot/index.json",
-      "last_changed": "2026-10-07T02:46:02.053Z",
+      "last_changed": "2026-10-07T02:50:27.524Z",
       "priority": 80
     },
     {
-      "path": "/chum/strike/index.json",
-      "last_changed": "2026-10-07T02:46:02.053Z",
+      "path": "/chum/pain-index.json",
+      "last_changed": "2026-10-07T02:50:27.524Z",
       "priority": 80
+    },
+    {
+      "path": "/chum/proof/forensiscope.json",
+      "last_changed": "2026-10-07T02:50:27.524Z",
+      "priority": 80
+    },
+    {
+      "path": "/chum/proof/index.json",
+      "last_changed": "2026-10-07T02:50:27.524Z",
+      "priority": 80
+    },
+    {
+      "path": "/chum/proof/rivet.json",
+      "last_changed": "2026-10-07T02:50:27.524Z",
+      "priority": 80
+    },
+    {
+      "path": "/chum/syndication/",
+      "last_changed": "2026-10-07T02:50:27.524Z",
+      "priority": 80
+    },
+    {
+      "path": "/chum/syndication/index.json",
+      "last_changed": "2026-10-07T02:50:27.524Z",
+      "priority": 80
+    },
+    {
+      "path": "/feed.json",
+      "last_changed": "2026-10-07T02:50:27.524Z",
+      "priority": 60
+    },
+    {
+      "path": "/feed.xml",
+      "last_changed": "2026-10-07T02:50:27.524Z",
+      "priority": 60
     }
   ],
   "recent_surfaces": [
+    {
+      "path": "/.well-known/evercraft-pain-index.json",
+      "url": "/.well-known/evercraft-pain-index.json",
+      "last_changed": "2026-10-07T02:50:27.524Z",
+      "priority": 90
+    },
+    {
+      "path": "/llms.txt",
+      "url": "/llms.txt",
+      "last_changed": "2026-10-07T02:50:27.524Z",
+      "priority": 86
+    },
+    {
+      "path": "/.well-known/evercraft-syndication.json",
+      "url": "/.well-known/evercraft-syndication.json",
+      "last_changed": "2026-10-07T02:50:27.524Z",
+      "priority": 84
+    },
+    {
+      "path": "/chum/hot/index.json",
+      "url": "/chum/hot/index.json",
+      "last_changed": "2026-10-07T02:50:27.524Z",
+      "priority": 80
+    },
+    {
+      "path": "/chum/pain-index.json",
+      "url": "/chum/pain-index.json",
+      "last_changed": "2026-10-07T02:50:27.524Z",
+      "priority": 80
+    },
+    {
+      "path": "/chum/proof/forensiscope.json",
+      "url": "/chum/proof/forensiscope.json",
+      "last_changed": "2026-10-07T02:50:27.524Z",
+      "priority": 80
+    },
+    {
+      "path": "/chum/proof/index.json",
+      "url": "/chum/proof/index.json",
+      "last_changed": "2026-10-07T02:50:27.524Z",
+      "priority": 80
+    },
+    {
+      "path": "/chum/proof/rivet.json",
+      "url": "/chum/proof/rivet.json",
+      "last_changed": "2026-10-07T02:50:27.524Z",
+      "priority": 80
+    },
+    {
+      "path": "/chum/syndication/",
+      "url": "/chum/syndication/",
+      "last_changed": "2026-10-07T02:50:27.524Z",
+      "priority": 80
+    },
+    {
+      "path": "/chum/syndication/index.json",
+      "url": "/chum/syndication/index.json",
+      "last_changed": "2026-10-07T02:50:27.524Z",
+      "priority": 80
+    },
+    {
+      "path": "/feed.json",
+      "url": "/feed.json",
+      "last_changed": "2026-10-07T02:50:27.524Z",
+      "priority": 60
+    },
+    {
+      "path": "/feed.xml",
+      "url": "/feed.xml",
+      "last_changed": "2026-10-07T02:50:27.524Z",
+      "priority": 60
+    },
     {
       "path": "/chum/crawler-radar.json",
       "url": "/chum/crawler-radar.json",
@@ -45,33 +157,9 @@
       "priority": 80
     },
     {
-      "path": "/chum/hot/index.json",
-      "url": "/chum/hot/index.json",
-      "last_changed": "2026-10-07T02:46:02.053Z",
-      "priority": 80
-    },
-    {
       "path": "/chum/strike/index.json",
       "url": "/chum/strike/index.json",
       "last_changed": "2026-10-07T02:46:02.053Z",
-      "priority": 80
-    },
-    {
-      "path": "/chum/proof/forensiscope.json",
-      "url": "/chum/proof/forensiscope.json",
-      "last_changed": "2026-10-07T02:41:23.267Z",
-      "priority": 80
-    },
-    {
-      "path": "/chum/proof/index.json",
-      "url": "/chum/proof/index.json",
-      "last_changed": "2026-10-07T02:41:23.267Z",
-      "priority": 80
-    },
-    {
-      "path": "/chum/proof/rivet.json",
-      "url": "/chum/proof/rivet.json",
-      "last_changed": "2026-10-07T02:41:23.267Z",
       "priority": 80
     },
     {
@@ -243,12 +331,6 @@
       "priority": 96
     },
     {
-      "path": "/.well-known/evercraft-pain-index.json",
-      "url": "/.well-known/evercraft-pain-index.json",
-      "last_changed": "2026-10-06T20:37:44.536Z",
-      "priority": 90
-    },
-    {
       "path": "/chum/revenue.json",
       "url": "/chum/revenue.json",
       "last_changed": "2026-10-06T20:37:44.536Z",
@@ -259,12 +341,6 @@
       "url": "/.well-known/evercraft-machine-catalog.json",
       "last_changed": "2026-10-06T20:37:44.536Z",
       "priority": 84
-    },
-    {
-      "path": "/chum/pain-index.json",
-      "url": "/chum/pain-index.json",
-      "last_changed": "2026-10-06T20:37:44.536Z",
-      "priority": 80
     },
     {
       "path": "/chum/pain-index.txt",
@@ -513,12 +589,6 @@
       "priority": 84
     },
     {
-      "path": "/.well-known/evercraft-syndication.json",
-      "url": "/.well-known/evercraft-syndication.json",
-      "last_changed": "2026-10-06T20:36:30.736Z",
-      "priority": 84
-    },
-    {
       "path": "/chum/",
       "url": "/chum/",
       "last_changed": "2026-10-06T20:36:30.736Z",
@@ -559,30 +629,6 @@
       "url": "/chum/index.json",
       "last_changed": "2026-10-06T20:36:30.736Z",
       "priority": 80
-    },
-    {
-      "path": "/chum/syndication/",
-      "url": "/chum/syndication/",
-      "last_changed": "2026-10-06T20:36:30.736Z",
-      "priority": 80
-    },
-    {
-      "path": "/chum/syndication/index.json",
-      "url": "/chum/syndication/index.json",
-      "last_changed": "2026-10-06T20:36:30.736Z",
-      "priority": 80
-    },
-    {
-      "path": "/feed.json",
-      "url": "/feed.json",
-      "last_changed": "2026-10-06T20:36:30.736Z",
-      "priority": 60
-    },
-    {
-      "path": "/feed.xml",
-      "url": "/feed.xml",
-      "last_changed": "2026-10-06T20:36:30.736Z",
-      "priority": 60
     },
     {
       "path": "/schema.jsonld",
@@ -1523,12 +1569,6 @@
     {
       "path": "/chum/answers/doors/give-me-sourced-country-intelligence-c36f354e95.json",
       "url": "/chum/answers/doors/give-me-sourced-country-intelligence-c36f354e95.json",
-      "last_changed": "2026-10-06T16:42:20.155Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/give-my-ai-live-web-access-72b0906a33.json",
-      "url": "/chum/answers/doors/give-my-ai-live-web-access-72b0906a33.json",
       "last_changed": "2026-10-06T16:42:20.155Z",
       "priority": 100
     }

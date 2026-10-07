@@ -7,7 +7,7 @@
     "machine_catalog_schema": "evercraft.machine-catalog.snapshot.v1",
     "machine_catalog_source_generated_at": "2026-09-30T20:21:00.000Z",
     "registry_schema": "evercraft.agent.registry.v1",
-    "registry_updated_at": "2026-10-05"
+    "registry_updated_at": "2026-10-06"
   },
   "purpose": "Brand-blind machine routing from a user problem to the smallest relevant public Evercraft capability while preserving readiness, evidence, pricing, permissions and human-confirmation boundaries.",
   "routing_rule": "Start from pain language. Prefer the smallest relevant capability with the strongest verified invocation state. Never upgrade discovery-only, held, authentication-required, pricing, payment, entitlement or provider-pickup state by inference.",

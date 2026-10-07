@@ -2,7 +2,7 @@
   "schema": "evercraft.discovery-watershed.v3",
   "provider": "Evercraft LLC",
   "coordinator": "CHUM",
-  "updated_at": "2026-10-06",
+  "updated_at": "2026-09-30",
   "purpose": "One public map for AI systems, agents and crawlers to route natural-language pain into truthful Evercraft capability discovery and human-confirmed commerce.",
   "start_here": {
     "human_directory": "/ai",
@@ -42,10 +42,7 @@
     "commercial_intent_rss": "/chum/commercial/feed.xml",
     "commercial_intent_json": "/chum/commercial/feed.json",
     "opensearch": "/opensearch.xml",
-    "syndication_hub": "/chum/syndication/",
-    "earthworks_autonomy": "/apps/earthworks-autonomy/capability.json",
-    "earthworks_applications": "/apps/earthworks-autonomy/applications.html",
-    "earthworks_site_contract": "/apps/earthworks-autonomy/site-contract.json"
+    "syndication_hub": "/chum/syndication/"
   },
   "universal_front_door": {
     "read_only_registry_name": "io.github.jgaethle10/evercraft-capability-discovery",
@@ -77,18 +74,5 @@
     "segmented_sitemap_index": "/chum/sitemaps/index.xml",
     "hub": "/chum/syndication/",
     "manifest": "/.well-known/evercraft-syndication.json"
-  },
-  "featured_capabilities": {
-    "earthworks_autonomy": {
-      "state": "simulation_control_contract_proof",
-      "problems": [
-        "automate repetitive earthmoving haul cycles",
-        "coordinate mixed heavy equipment",
-        "simulate material movement before autonomy hardware",
-        "reduce operator exposure in controlled hazardous zones"
-      ],
-      "capability": "/apps/earthworks-autonomy/capability.json",
-      "applications": "/apps/earthworks-autonomy/applications.html"
-    }
   }
 }

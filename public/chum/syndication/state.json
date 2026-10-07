@@ -1,6 +1,6 @@
 {
   "schema": "evercraft.syndication-state.v1",
-  "updated_at": "2026-10-06T20:36:30.567Z",
+  "updated_at": "2026-10-07T02:50:27.321Z",
   "complete_mirror": true,
   "product_hashes": {
     "aliev": "32e6dabf7b53521f73c1def4034ce3aa7cf0880f32c5e07e33184626cdde420a",
@@ -22,6 +22,7 @@
     "contractor-cloud": "5b10f2871f551b03b65253100da3c97ae969f38a9ea6065c757a98608ca408cc",
     "evercraft-cosmos-atlas": "94e68885693fc9f8356d38df435a109e4acf88ce1ac701fb82b3ace7b8e76686",
     "deck-capital-fit": "d308624fabe056826b81bbd9955fbbe1808bd0df51b30a2c3f8ddc547e965d71",
+    "earthworks-autonomy": "ecc483758905c15994f46f0e3b07869bcffa21b3cc69a0bacbdcb7c1be075a20",
     "evercraft-fantasy-intelligence": "906234d86ec236c3d33ee24e5ccf55bfc49b25b499f30e378355067d8b17cf73",
     "evercraft-global-health-atlas": "b19a9a0804682be195481192d72ad10a7c679c44e1213490e715c9e2621ea230",
     "evercraft-home": "7a9155646d4afc1fcfa31d00985491e2f1e809eca7686ecd46b9c05e70269ee3",
