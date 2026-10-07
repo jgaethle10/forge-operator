@@ -25,7 +25,9 @@ jobs:
       - name: Prove hosting migration audit is read-only and drift-sensitive
         run: node --test tests/rivet-hosting-migration-fidelity.test.mjs
       - name: Emit local migration baseline receipt
-        run: node systemia/migrations/rivet-hosting/brand-fidelity-audit.mjs
+        run: |
+          mkdir -p artifacts
+          node systemia/migrations/rivet-hosting/brand-fidelity-audit.mjs > artifacts/rivet-hosting-local-baseline.json
       - name: Run Saban adversarial hosting review
         run: node systemia/saban/multiplier.mjs --software rivet-hosting-review --registry governance/rivet-hosting-migration/saban-registry.json --agents 45 --workers 5 --execute --reconcile --state artifacts/rivet-hosting-saban-state.json
       - name: Assert Saban kept the review non-authoritative
@@ -40,3 +42,12 @@ jobs:
           if(options.length!==5) throw new Error('Saban did not review all hosting options');
           if(options.some(o=>o.roles.length!==9)) throw new Error('Saban did not apply all nine review roles to every option');
           NODE
+      - name: Upload planning receipts
+        uses: actions/upload-artifact@v4
+        with:
+          name: rivet-hosting-migration-planning-receipts
+          path: |
+            artifacts/rivet-hosting-local-baseline.json
+            artifacts/saban-multiplier/rivet-hosting-review-latest.json
+          if-no-files-found: error
+          retention-days: 90
