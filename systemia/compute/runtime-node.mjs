@@ -26,6 +26,8 @@ import { startPublicEdgeRuntime } from '../network/public-edge-runtime.mjs';
 import { startFederatedServiceBridge } from '../network/federated-service-bridge.mjs';
 import { startEvercraftHomeServer } from '../evercraft-home/server.mjs';
 import { startLineageRemoteRuntime } from '../lineage/yard-remote-runtime.mjs';
+import { LineageStore } from '../lineage/core.mjs';
+import { startLineageControlRoom } from '../lineage/control-room.mjs';
 import { startEvercraftEdgeDnsRuntime } from './evercraft-edge-dns-runtime.mjs';
 import { validatePublicEdgeAdmission } from '../network/public-edge-tls.mjs';
 import { transcriptionCapabilityStatus } from '../forensiscope/transcription-engine.mjs';
@@ -93,6 +95,7 @@ const BRIDGED_WORKLOADS = new Set([
   'systemia.fabric-local-mcp.v1',
   'systemia.rivet-report-runtime.v1',
   'systemia.lineage-remote.v1',
+  'systemia.lineage-control-room.v1',
 ]);
 
 const BRIDGE_REQUEST_HEADERS = new Set([
@@ -148,10 +151,18 @@ function bridgeServiceOrigin(entry) {
   if (entry?.workload_class === 'systemia.lineage-remote.v1') {
     return String(entry?.runtime?.service_url || '');
   }
+  if (entry?.workload_class === 'systemia.lineage-control-room.v1') {
+    return String(entry?.runtime?.service_url || '');
+  }
   return '';
 }
 
 function bridgeRouteAllowed(entry, method, requestPath) {
+  if (entry?.workload_class === 'systemia.lineage-control-room.v1') {
+    if (method !== 'GET') return false;
+    if (requestPath === '/' || requestPath === '/health') return true;
+    return /^\/v1\/(?:snapshot|commit|diff|integrity)(?:\?[^#]*)?$/.test(requestPath);
+  }
   if (entry?.workload_class === 'systemia.lineage-remote.v1') {
     if (method === 'GET' && ['/health', '/v1/refs'].includes(requestPath)) return true;
     if (
@@ -909,6 +920,7 @@ export async function startEvercraftComputeNode({
     'systemia.federated-service-bridge.v1',
     'systemia.evercraft-home.v1',
     'systemia.lineage-remote.v1',
+    'systemia.lineage-control-room.v1',
     'saban.logical-agent',
     'saban.multiplier-assignment.v1',
   ]);
@@ -2690,6 +2702,73 @@ export async function startEvercraftComputeNode({
             result_schema: result.schema,
             remote_key: remoteKey,
             protocol: result.protocol,
+          });
+          return send(res, 200, {
+            ok: true,
+            node_id: nodeId,
+            workload_class: body.workload_class,
+            result,
+            receipt,
+          });
+        }
+
+        if (workloadClass === 'systemia.lineage-control-room.v1') {
+          const workspaceRoot = path.resolve(String(
+            body.input?.workspace_root || allowedRoot
+          ));
+          if (!isWithin(allowedRoot, workspaceRoot)) {
+            return send(res, 403, {
+              error: 'lineage_control_room_workspace_outside_admitted_root',
+            });
+          }
+
+          const lineageStore = new LineageStore(workspaceRoot);
+          try {
+            await lineageStore.ensureInitialized();
+          } catch {
+            return send(res, 422, {
+              error: 'lineage_control_room_workspace_not_initialized',
+            });
+          }
+
+          const runtime = await startLineageControlRoom({
+            store: lineageStore,
+            host: '127.0.0.1',
+            port: 0,
+          });
+          const serviceId = `svc_${randomBytes(8).toString('hex')}`;
+          services.set(serviceId, {
+            lease_id: body.lease_id,
+            workload_class: body.workload_class,
+            runtime,
+            service: runtime,
+            workspace_root: workspaceRoot,
+          });
+          const result = {
+            schema: 'evercraft.compute.resident-service.v1',
+            service_id: serviceId,
+            workload_class: body.workload_class,
+            service_url: null,
+            health_path: `/v1/services/${serviceId}/health`,
+            protocol: 'evercraft.lineage.control-room.v1',
+            mode: 'read_only',
+            public_route_required: false,
+            authority_material_exposed: false,
+            mutation_authority: false,
+            publication_authority: false,
+            deployment_authority: false,
+            payment_authority: false,
+            private_data_authority: false,
+          };
+          const receipt = chain.issue('service.started', {
+            lease_id: body.lease_id,
+            service_id: serviceId,
+            workload_class: body.workload_class,
+            result_schema: result.schema,
+            protocol: result.protocol,
+            mode: result.mode,
+            workspace_root_hash: sha(workspaceRoot),
+            mutation_authority: false,
           });
           return send(res, 200, {
             ok: true,
