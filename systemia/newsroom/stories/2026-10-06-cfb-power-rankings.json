@@ -7,9 +7,9 @@
   "desk": "Sports",
   "story_type": "Power Rankings",
   "status": "approved",
-  "published_at": "2026-10-07T06:43:47.672Z",
-  "updated_at": "2026-10-07T06:43:47.672Z",
-  "freshness_expires_at": "2026-10-14T06:43:47.672Z",
+  "published_at": "2026-10-07T06:45:32.692Z",
+  "updated_at": "2026-10-07T06:45:32.692Z",
+  "freshness_expires_at": "2026-10-14T06:45:32.692Z",
   "evidence_state": "model_derived_from_verified_public_results",
   "sensitivity": {
     "state": "public_unclassified",
@@ -43,7 +43,7 @@
         "week_label": "Through 2026-10-06",
         "evidence_snapshot_id": "cfb:2026:2026-10-06:e1c0f0145c20b386e5fa",
         "evidence_through_at": "2026-10-06T23:59:59.999Z",
-        "generated_at": "2026-10-07T06:43:40.052Z",
+        "generated_at": "2026-10-07T06:45:28.730Z",
         "model": {
           "model_version": "evercraft-cfbpi-0.2.0",
           "missing_data_penalty": 8,
@@ -15899,7 +15899,7 @@
     "evidence_snapshot_id": "cfb:2026:2026-10-06:e1c0f0145c20b386e5fa",
     "completed_game_count": 391,
     "top_25_count": 25,
-    "generated_at": "2026-10-07T06:43:47.672Z",
+    "generated_at": "2026-10-07T06:45:32.692Z",
     "digest": "sha256:75daf2e84d9e59b1550ec17ec57471cbeee5c078fd82e4a4e633e1b938a4ccc3"
   }
 }
