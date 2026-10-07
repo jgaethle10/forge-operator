@@ -293,3 +293,43 @@ Full `fsck` verifies:
 `--fast` keeps structural/object/manifest/chunk verification but skips reconstruction of every reachable large object's full-content hash.
 
 Dangling immutable storage is reported as a warning, not silently deleted. `fsck` never mutates the repository. Garbage collection must be a separate explicit operation so an integrity check can never destroy evidence or recovery state.
+
+
+## Reachability and reversible garbage collection
+
+Lineage treats garbage collection as a governed history operation, not a blind filesystem sweep.
+
+The collector marks live state from:
+
+- every branch ref under `.lineage/refs/heads`;
+- named release pointers;
+- operation receipt roots;
+- optional explicit roots supplied by the caller.
+
+Reachability traverses object payload references conservatively. `large_blob_ref` objects additionally retain their manifest and every digest-addressed chunk in that manifest.
+
+GC is staged:
+
+1. `gc-plan` is non-destructive. It inventories objects, manifests and chunks, computes the reachable sets, applies an age/grace window, and reports exact reclaimable bytes.
+2. `gc-quarantine` recomputes the plan before moving anything. If roots/candidates changed, the plan is rejected as stale. Candidates are atomically moved into a reversible quarantine and an operation receipt is emitted.
+3. `gc-restore` moves a quarantined run back into active storage.
+4. `gc-purge` is allowed only after the quarantine retention window has expired. Purge is explicitly irreversible and emits its own receipt.
+
+If roots change during quarantine, Lineage restores every moved file before failing. Named releases therefore protect historical commits even after a branch moves forward.
+
+Defaults:
+
+- plan/quarantine grace window: 24 hours;
+- quarantine retention: 7 days;
+- purge before retention expiry: rejected.
+
+CLI:
+
+```bash
+node systemia/lineage/cli.mjs gc-plan 24
+node systemia/lineage/cli.mjs gc-quarantine 24 168
+node systemia/lineage/cli.mjs gc-restore <run-id>
+node systemia/lineage/cli.mjs gc-purge <run-id>
+```
+
+GC never creates publication, deployment, payment, or release authority. It only manages storage reachability underneath already-governed Lineage history.
