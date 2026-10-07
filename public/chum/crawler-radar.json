@@ -1,6 +1,6 @@
 {
   "schema": "evercraft.chum.crawler-radar.v1",
-  "generated_at": "2026-10-07T17:04:13.183Z",
+  "generated_at": "2026-10-07T18:39:07.146Z",
   "coordinator": "CHUM",
   "runtime_feedback": {
     "requested": false,
@@ -9,8 +9,8 @@
   },
   "observation_count": 0,
   "negative_provider_pickup_receipts": 175,
-  "surface_count": 2929,
-  "strike_now_count": 1372,
+  "surface_count": 2967,
+  "strike_now_count": 1407,
   "doctrine": {
     "crawler_fetch_is_not_indexing": true,
     "indexing_is_not_ranking": true,
@@ -10382,28 +10382,6 @@
       ]
     },
     {
-      "path": "/chum/answers/doors/do-a-resilience-investigation-227f8bd16b/",
-      "product_key": null,
-      "score": 222,
-      "urgency": "strike_now",
-      "crawl_priority": 160,
-      "last_changed": "2026-10-06T18:02:46.847Z",
-      "last_observed_crawler_fetch": null,
-      "last_observed_crawler_family": null,
-      "indexnow_pending": true,
-      "negative_provider_pickup_receipts": [],
-      "reasons": [
-        "no_self_identified_crawler_fetch_observed",
-        "fresh_content_under_24h",
-        "indexnow_hash_pending"
-      ],
-      "recommended_actions": [
-        "verify_live_bytes_then_indexnow",
-        "promote_in_hot_discovery_queue",
-        "increase_internal_crosslinks_from_relevant_public_surfaces"
-      ]
-    },
-    {
       "path": "/chum/answers/doors/account-takeover-protection-6a5072fc31.json",
       "product_key": null,
       "score": 215,
@@ -11686,6 +11664,28 @@
       "urgency": "strike_now",
       "crawl_priority": 160,
       "last_changed": "2026-10-06T16:42:20.155Z",
+      "last_observed_crawler_fetch": null,
+      "last_observed_crawler_family": null,
+      "indexnow_pending": true,
+      "negative_provider_pickup_receipts": [],
+      "reasons": [
+        "no_self_identified_crawler_fetch_observed",
+        "fresh_content_under_72h",
+        "indexnow_hash_pending"
+      ],
+      "recommended_actions": [
+        "verify_live_bytes_then_indexnow",
+        "promote_in_hot_discovery_queue",
+        "increase_internal_crosslinks_from_relevant_public_surfaces"
+      ]
+    },
+    {
+      "path": "/chum/answers/doors/do-a-resilience-investigation-227f8bd16b/",
+      "product_key": null,
+      "score": 215,
+      "urgency": "strike_now",
+      "crawl_priority": 160,
+      "last_changed": "2026-10-06T18:02:46.847Z",
       "last_observed_crawler_fetch": null,
       "last_observed_crawler_family": null,
       "indexnow_pending": true,

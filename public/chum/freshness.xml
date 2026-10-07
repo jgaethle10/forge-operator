@@ -2,11 +2,15 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
 <id>urn:evercraft:chum:crawl-pressure</id>
 <title>Evercraft CHUM Freshness Feed</title>
-<updated>2026-10-07T17:06:08.242Z</updated>
+<updated>2026-10-07T18:39:07.388Z</updated>
 <link rel="self" href="/chum/freshness.xml"/>
 <subtitle>Content-hash-backed public discovery changes. Freshness is not proof of provider pickup.</subtitle>
+<entry><id>urn:evercraft:chum:d8bcbc9c28ec3e0aa29125ea</id><title>/chum/crawler-radar.json</title><updated>2026-10-07T18:39:07.388Z</updated><link href="/chum/crawler-radar.json"/><category term="priority-80"/></entry>
+<entry><id>urn:evercraft:chum:aa9b916fd98945db10fa3cab</id><title>/chum/crawler-radar.txt</title><updated>2026-10-07T18:39:07.388Z</updated><link href="/chum/crawler-radar.txt"/><category term="priority-80"/></entry>
+<entry><id>urn:evercraft:chum:0df896994e643d779039e059</id><title>/chum/hot/index.json</title><updated>2026-10-07T18:39:07.388Z</updated><link href="/chum/hot/index.json"/><category term="priority-80"/></entry>
+<entry><id>urn:evercraft:chum:bc7689c4c0867339d0001ccc</id><title>/chum/strike/</title><updated>2026-10-07T18:39:07.388Z</updated><link href="/chum/strike/"/><category term="priority-80"/></entry>
+<entry><id>urn:evercraft:chum:494de3a9b5c21a35fdfdb6c2</id><title>/chum/strike/index.json</title><updated>2026-10-07T18:39:07.388Z</updated><link href="/chum/strike/index.json"/><category term="priority-80"/></entry>
 <entry><id>urn:evercraft:chum:770866315bf12f2c92446bfe</id><title>/chum/hot/</title><updated>2026-10-07T17:06:08.242Z</updated><link href="/chum/hot/"/><category term="priority-80"/></entry>
-<entry><id>urn:evercraft:chum:0df896994e643d779039e059</id><title>/chum/hot/index.json</title><updated>2026-10-07T17:06:08.242Z</updated><link href="/chum/hot/index.json"/><category term="priority-80"/></entry>
 <entry><id>urn:evercraft:chum:6a2156e97d5a76ac182a54d7</id><title>/chum/sitemaps/answers.xml</title><updated>2026-10-07T17:04:29.429Z</updated><link href="/chum/sitemaps/answers.xml"/><category term="priority-108"/></entry>
 <entry><id>urn:evercraft:chum:f1ff70118477fca174734282</id><title>/chum/sitemaps/products.xml</title><updated>2026-10-07T17:04:29.429Z</updated><link href="/chum/sitemaps/products.xml"/><category term="priority-108"/></entry>
 <entry><id>urn:evercraft:chum:0e68a90fa39d25043f227434</id><title>/chum/answers/doors/audit-ai-coding-agent-changes-53fa6db09b.json</title><updated>2026-10-07T17:04:29.429Z</updated><link href="/chum/answers/doors/audit-ai-coding-agent-changes-53fa6db09b.json"/><category term="priority-100"/></entry>
@@ -73,11 +77,7 @@
 <entry><id>urn:evercraft:chum:ef5b497da68c9bc2c6f0b423</id><title>/lineage/</title><updated>2026-10-07T17:04:29.429Z</updated><link href="/lineage/"/><category term="priority-60"/></entry>
 <entry><id>urn:evercraft:chum:50784b9d14958d5ae409574d</id><title>/lineage/discovery.json</title><updated>2026-10-07T17:04:29.429Z</updated><link href="/lineage/discovery.json"/><category term="priority-60"/></entry>
 <entry><id>urn:evercraft:chum:63b39bc20528f53ce2aa50b9</id><title>/schema.jsonld</title><updated>2026-10-07T17:04:29.429Z</updated><link href="/schema.jsonld"/><category term="priority-60"/></entry>
-<entry><id>urn:evercraft:chum:d8bcbc9c28ec3e0aa29125ea</id><title>/chum/crawler-radar.json</title><updated>2026-10-07T17:04:13.344Z</updated><link href="/chum/crawler-radar.json"/><category term="priority-80"/></entry>
-<entry><id>urn:evercraft:chum:aa9b916fd98945db10fa3cab</id><title>/chum/crawler-radar.txt</title><updated>2026-10-07T17:04:13.344Z</updated><link href="/chum/crawler-radar.txt"/><category term="priority-80"/></entry>
-<entry><id>urn:evercraft:chum:494de3a9b5c21a35fdfdb6c2</id><title>/chum/strike/index.json</title><updated>2026-10-07T17:04:13.344Z</updated><link href="/chum/strike/index.json"/><category term="priority-80"/></entry>
 <entry><id>urn:evercraft:chum:85b28624a8b31b9bd8767fd1</id><title>/.well-known/evercraft-products.json</title><updated>2026-10-07T17:04:12.964Z</updated><link href="/.well-known/evercraft-products.json"/><category term="priority-88"/></entry>
-<entry><id>urn:evercraft:chum:bc7689c4c0867339d0001ccc</id><title>/chum/strike/</title><updated>2026-10-07T16:44:23.056Z</updated><link href="/chum/strike/"/><category term="priority-80"/></entry>
 <entry><id>urn:evercraft:chum:d81b34b1ff555f018084625d</id><title>/chum/answers/doors/benchmark-ai-models-on-evidence-quality-cost-latency-safety-and-reproducibility-4244546874.json</title><updated>2026-10-07T16:33:22.074Z</updated><link href="/chum/answers/doors/benchmark-ai-models-on-evidence-quality-cost-latency-safety-and-reproducibility-4244546874.json"/><category term="priority-100"/></entry>
 <entry><id>urn:evercraft:chum:1ba97531a98cec572e83a508</id><title>/chum/answers/doors/benchmark-ai-models-on-evidence-quality-cost-latency-safety-and-reproducibility-4244546874/</title><updated>2026-10-07T16:33:22.074Z</updated><link href="/chum/answers/doors/benchmark-ai-models-on-evidence-quality-cost-latency-safety-and-reproducibility-4244546874/"/><category term="priority-100"/></entry>
 <entry><id>urn:evercraft:chum:08e5552ee0a587e11f491830</id><title>/chum/answers/doors/build-an-evidence-backed-ai-workforce-profile-f850124581.json</title><updated>2026-10-07T16:33:22.074Z</updated><link href="/chum/answers/doors/build-an-evidence-backed-ai-workforce-profile-f850124581.json"/><category term="priority-100"/></entry>
