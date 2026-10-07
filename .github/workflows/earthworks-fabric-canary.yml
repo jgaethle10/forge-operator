@@ -1,0 +1,116 @@
+name: EarthWorks Public Fabric Canary
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+      - 'public/.well-known/evercraft-products.json'
+      - 'public/.well-known/evercraft-machine-catalog.json'
+      - 'public/chum/capabilities.json'
+      - 'public/chum/products/earthworks-autonomy/**'
+      - 'systemia/earthworks-autonomy/**'
+      - 'systemia/mcp/fabric-directory.mjs'
+      - '.github/workflows/earthworks-fabric-canary.yml'
+  schedule:
+    - cron: '*/15 * * * *'
+
+permissions:
+  contents: read
+
+concurrency:
+  group: earthworks-public-fabric-canary
+  cancel-in-progress: true
+
+jobs:
+  prove:
+    runs-on: ubuntu-latest
+    timeout-minutes: 4
+    env:
+      FABRIC_ORIGIN: https://fabric.systemiacommandcenters.com
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Verify owned Fabric health
+        shell: bash
+        run: |
+          set -euo pipefail
+          health="$(curl --fail --silent --show-error --retry 4 --retry-all-errors --retry-delay 2 --max-time 20 "$FABRIC_ORIGIN/health")"
+          printf '%s' "$health" | jq -e '
+            .ok == true and
+            (.service == "specialist-handoff-mcp" or .service == "evercraft-fabric-local") and
+            .runtime == "Evercraft Compute"
+          ' >/dev/null
+          printf '%s\n' "$health" > /tmp/earthworks-fabric-health.json
+
+      - name: Verify EarthWorks is discoverable through public Fabric MCP
+        shell: bash
+        run: |
+          set -euo pipefail
+          init='{"jsonrpc":"2.0","id":1,"method":"initialize","params":{"protocolVersion":"2025-03-26","capabilities":{},"clientInfo":{"name":"earthworks-public-canary","version":"1"}}}'
+          curl --fail --silent --show-error --retry 4 --retry-all-errors --retry-delay 2 --max-time 20 \
+            -H 'content-type: application/json' --data "$init" "$FABRIC_ORIGIN/mcp" \
+            | jq -e '.result.serverInfo.name == "evercraft-fabric"' >/dev/null
+
+          match='{"jsonrpc":"2.0","id":2,"method":"tools/call","params":{"name":"match_evercraft_capability","arguments":{"intent":"Our quarry haul trucks keep stacking up at the loader and the loader sometimes sits waiting. We want to simulate the load haul dump loop and shadow dispatch before buying autonomous equipment.","limit":5}}}'
+          result="$(curl --fail --silent --show-error --retry 4 --retry-all-errors --retry-delay 2 --max-time 25 \
+            -H 'content-type: application/json' --data "$match" "$FABRIC_ORIGIN/mcp")"
+          printf '%s' "$result" | jq -e '
+            .result.isError == false and
+            .result.structuredContent.transactional == false and
+            .result.structuredContent.external_action_taken == false and
+            ([.result.structuredContent.matches[].public_id] | index("earthworks-site-autonomy-study-v1")) != null
+          ' >/dev/null
+          printf '%s\n' "$result" > /tmp/earthworks-fabric-match.json
+
+          options='{"jsonrpc":"2.0","id":3,"method":"tools/call","params":{"name":"get_evercraft_connection_options","arguments":{"public_id":"earthworks-site-autonomy-study-v1"}}}'
+          connection="$(curl --fail --silent --show-error --retry 4 --retry-all-errors --retry-delay 2 --max-time 25 \
+            -H 'content-type: application/json' --data "$options" "$FABRIC_ORIGIN/mcp")"
+          printf '%s' "$connection" | jq -e '
+            .result.isError == false and
+            .result.structuredContent.public_id == "earthworks-site-autonomy-study-v1" and
+            .result.structuredContent.external_action_taken == false
+          ' >/dev/null
+          printf '%s\n' "$connection" > /tmp/earthworks-fabric-connections.json
+
+      - name: Write external receipt
+        if: success()
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p artifacts
+          node - <<'NODE'
+          const fs=require('fs');
+          const health=JSON.parse(fs.readFileSync('/tmp/earthworks-fabric-health.json','utf8'));
+          const match=JSON.parse(fs.readFileSync('/tmp/earthworks-fabric-match.json','utf8'));
+          const connections=JSON.parse(fs.readFileSync('/tmp/earthworks-fabric-connections.json','utf8'));
+          const row=(match.result?.structuredContent?.matches||[]).find(x=>x.public_id==='earthworks-site-autonomy-study-v1');
+          const receipt={
+            schema:'evercraft.earthworks.public-fabric-canary.v1',
+            verified:true,
+            origin:process.env.FABRIC_ORIGIN,
+            public_id:'earthworks-site-autonomy-study-v1',
+            health_service:health.service,
+            runtime:health.runtime,
+            capability_count:health.capability_count ?? null,
+            match_verified:Boolean(row),
+            match_score:row?.match_score ?? null,
+            commercial_state:row?.commercial_state ?? null,
+            machine_state:row?.state ?? null,
+            connection_options_verified:connections.result?.structuredContent?.public_id==='earthworks-site-autonomy-study-v1',
+            transactional:false,
+            payment_created:false,
+            equipment_control_authorized:false,
+            observed_at:new Date().toISOString()
+          };
+          fs.writeFileSync('artifacts/earthworks-public-fabric-canary.json',JSON.stringify(receipt,null,2)+'\n');
+          console.log(JSON.stringify(receipt,null,2));
+          NODE
+
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: earthworks-public-fabric-canary
+          path: artifacts/earthworks-public-fabric-canary.json
+          if-no-files-found: warn
+          retention-days: 90
