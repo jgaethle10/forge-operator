@@ -195,8 +195,9 @@ export class LineageStore {
     const started = Date.now();
 
     while (true) {
+      let handle = null;
       try {
-        const handle = await open(path, 'wx');
+        handle = await open(path, 'wx');
         await handle.writeFile(
           JSON.stringify({
             schema: 'evercraft.lineage.ref-lock.v1',
@@ -207,14 +208,19 @@ export class LineageStore {
           'utf8'
         );
         await handle.sync();
+        const acquired = handle;
         return {
           path,
           async release() {
-            try { await handle.close(); } catch {}
+            try { await acquired.close(); } catch {}
             await rm(path, { force: true });
           },
         };
       } catch (error) {
+        if (handle) {
+          try { await handle.close(); } catch {}
+          await rm(path, { force: true });
+        }
         if (error?.code !== 'EEXIST') throw error;
         if (Date.now() - started >= timeout) {
           const wrapped = new Error(`Timed out waiting for Lineage ref lock: ${branch}`);
