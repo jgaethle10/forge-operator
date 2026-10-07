@@ -72,7 +72,8 @@ import {
 import { buildWorldForgeCinematicShot } from './world-forge-cinematic.js';
 import { compileWorldForgeToWorldEngine } from './world-forge-world-engine.js';
 import { syncWorldForgeChangeSetToRuntime } from './world-forge-runtime-sync.js';
-import type { WorldDefinition } from '../world-engine/engine.js';
+import { syncWorldForgeChangeSetWithLiveRuntime } from './world-forge-runtime-migration.js';
+import type { WorldDefinition, WorldSnapshot } from '../world-engine/engine.js';
 import type { WorldAssetManifest } from '../world-engine/studio-edit.js';
 import {
   applyWorldForgeChangeSet,
@@ -227,6 +228,29 @@ function main() {
     writeJson(output, changeSet);
     console.log(`World Forge ChangeSet created: ${path.resolve(output)}`);
     console.log(`Base: v${changeSet.baseVersion} ${changeSet.baseDigest}; digest: ${changeSet.digest}`);
+    return;
+  }
+
+  if (command === 'world-forge-runtime-migrate') {
+    if (!input || !output) {
+      usage();
+      process.exitCode = 1;
+      return;
+    }
+    const payload = readJson<{
+      project:WorldForgeProject;
+      changeSet:WorldForgeChangeSet;
+      runtimeWorld:WorldDefinition;
+      runtimeAssets:WorldAssetManifest;
+      runtimeSnapshot:WorldSnapshot;
+      activateNewEntities?:boolean;
+    }>(input);
+    const migration = syncWorldForgeChangeSetWithLiveRuntime(payload);
+    writeJson(output, migration);
+    console.log(`World Forge live runtime migration: ${path.resolve(output)}`);
+    console.log(`World: ${migration.snapshot.worldId} v${migration.snapshot.worldVersion} · tick ${migration.snapshot.tick}`);
+    console.log(`Preserved/reset decisions: ${migration.receipt.preservedEntityState.length} entities`);
+    console.log(`Receipt: ${migration.receipt.digest}`);
     return;
   }
 
