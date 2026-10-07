@@ -5,6 +5,10 @@ on:
     paths:
       - 'systemia/university/**'
       - 'systemia/payments/financial-boundary*'
+      - 'systemia/payments/charter-readiness*'
+      - 'systemia/payments/charter-evidence.json'
+      - 'systemia/payments/charter-readiness*'
+      - 'systemia/payments/charter-evidence.json'
       - 'public/chum/products/systemia-university/**'
       - 'registry/systemia-university/**'
       - 'docs/EVERCRAFT_FINANCIAL_INSTITUTION_PATH_2026-10-07.md'
@@ -30,5 +34,9 @@ jobs:
         run: node --test systemia/university/proving-lane.test.mjs
       - name: Systemia University discovery contract
         run: node --test tests/systemia-university-benchmark-discovery.test.mjs
+      - name: Systemia University benchmark engine
+        run: node --test systemia/university/benchmark-engine.test.mjs
       - name: Evercraft Financial regulatory boundary
         run: node --test systemia/payments/financial-boundary.test.mjs
+      - name: Evercraft Financial charter readiness
+        run: node --test systemia/payments/charter-readiness.test.mjs
