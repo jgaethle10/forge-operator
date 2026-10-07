@@ -219,3 +219,40 @@ test('rejects malformed ranking surfaces before publication', () => {
     now: new Date('2026-09-30T22:00:00.000Z')
   }), /power_score must be 0 to 100/i);
 });
+
+
+test('publishes frozen machine evidence beside a Journal edition and binds its hash into the receipt', () => {
+  const outDir = fs.mkdtempSync(path.join(os.tmpdir(), 'journal-machine-evidence-'));
+  const fixture = story();
+  fixture.machine_evidence = {
+    schema: 'evercraft.journal.machine-evidence.v1',
+    relative_path: 'data/owned-journal-test.json',
+    payload: {
+      schema: 'evercraft.cfb.edition-evidence.v1',
+      run_id: 'cfbpi:test',
+      rankings: [{ rank: 1, team: 'Alpha State' }]
+    }
+  };
+  publishJournalStories([fixture], {
+    outDir,
+    now: new Date('2026-09-30T22:00:00.000Z'),
+    publicOrigin: 'https://journal.test.evercraft.local'
+  });
+  const evidencePath = path.join(outDir, 'data', 'owned-journal-test.json');
+  assert.ok(fs.existsSync(evidencePath));
+  const receipt = JSON.parse(fs.readFileSync(path.join(outDir, 'receipts', 'owned-journal-test.json'), 'utf8'));
+  assert.equal(receipt.machine_evidence_ref, 'data/owned-journal-test.json');
+  assert.match(receipt.machine_evidence_sha256, /^[a-f0-9]{64}$/);
+});
+
+test('rejects unsafe machine-evidence output paths', () => {
+  const fixture = story();
+  fixture.machine_evidence = {
+    schema: 'evercraft.journal.machine-evidence.v1',
+    relative_path: '../escape.json',
+    payload: { ok: true }
+  };
+  assert.throws(() => validateJournalStory(fixture, {
+    now: new Date('2026-09-30T22:00:00.000Z')
+  }), /safe data/i);
+});
