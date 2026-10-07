@@ -93,6 +93,164 @@ async function readPointerRoots(root, {
   validObjects,
   errors,
 }) {
+  for (const [id, object] of validObjects.entries()) {
+    if (object.type === 'blob') {
+      try {
+        const bytes = Buffer.from(
+          String(object.payload?.data || ''),
+          object.payload?.encoding || 'base64'
+        );
+        const actualSha = store.constructor
+          ? null
+          : null;
+        const expectedSize = Number(object.payload?.size);
+        if (!Number.isInteger(expectedSize) || expectedSize !== bytes.length) {
+          pushError(errors, 'blob_size_mismatch', {
+            object_id: id,
+            expected_size: object.payload?.size ?? null,
+            actual_size: bytes.length,
+          });
+        }
+        const { createHash } = await import('node:crypto');
+        const actualContent = createHash('sha256').update(bytes).digest('hex');
+        if (
+          object.payload?.content_sha256 &&
+          actualContent !== object.payload.content_sha256
+        ) {
+          pushError(errors, 'blob_content_digest_mismatch', {
+            object_id: id,
+            expected: object.payload.content_sha256,
+            actual: actualContent,
+          });
+        }
+      } catch (error) {
+        pushError(errors, 'blob_payload_invalid', {
+          object_id: id,
+          error: String(error?.message || error),
+        });
+      }
+    }
+
+    if (object.type === 'commit') {
+      const treeId = String(object.payload?.tree_id || '');
+      const tree = validObjects.get(treeId);
+      if (!tree || tree.type !== 'tree') {
+        pushError(errors, 'commit_tree_invalid', {
+          commit_id: id,
+          tree_id: treeId || null,
+          actual_type: tree?.type || null,
+        });
+      }
+    }
+
+    if (object.type === 'tree') {
+      const seenPaths = new Set();
+      for (const entry of object.payload?.entries || []) {
+        const entryPath = String(entry?.path || '');
+        if (!entryPath) {
+          pushError(errors, 'tree_entry_path_missing', { tree_id: id });
+        } else if (seenPaths.has(entryPath)) {
+          pushError(errors, 'tree_entry_path_duplicate', {
+            tree_id: id,
+            path: entryPath,
+          });
+        } else {
+          seenPaths.add(entryPath);
+        }
+
+        const childId = String(entry?.object_id || '');
+        const child = validObjects.get(childId);
+        if (!child) continue;
+
+        if (!['blob', 'large_blob_ref'].includes(child.type)) {
+          pushError(errors, 'tree_entry_object_wrong_type', {
+            tree_id: id,
+            path: entryPath || null,
+            object_id: childId,
+            actual_type: child.type,
+          });
+          continue;
+        }
+
+        if (child.type === 'blob') {
+          if (
+            entry?.content_sha256 &&
+            child.payload?.content_sha256 &&
+            entry.content_sha256 !== child.payload.content_sha256
+          ) {
+            pushError(errors, 'tree_entry_content_digest_mismatch', {
+              tree_id: id,
+              path: entryPath || null,
+              object_id: childId,
+            });
+          }
+          if (
+            Number.isInteger(Number(entry?.bytes)) &&
+            Number.isInteger(Number(child.payload?.size)) &&
+            Number(entry.bytes) !== Number(child.payload.size)
+          ) {
+            pushError(errors, 'tree_entry_size_mismatch', {
+              tree_id: id,
+              path: entryPath || null,
+              object_id: childId,
+              tree_bytes: Number(entry.bytes),
+              object_bytes: Number(child.payload.size),
+            });
+          }
+        }
+
+        if (child.type === 'large_blob_ref') {
+          if (
+            entry?.manifest_id &&
+            entry.manifest_id !== child.payload?.manifest_id
+          ) {
+            pushError(errors, 'tree_entry_manifest_mismatch', {
+              tree_id: id,
+              path: entryPath || null,
+              object_id: childId,
+            });
+          }
+          if (
+            entry?.content_sha256 &&
+            child.payload?.content_sha256 &&
+            entry.content_sha256 !== child.payload.content_sha256
+          ) {
+            pushError(errors, 'tree_entry_content_digest_mismatch', {
+              tree_id: id,
+              path: entryPath || null,
+              object_id: childId,
+            });
+          }
+          if (
+            Number.isInteger(Number(entry?.bytes)) &&
+            Number.isInteger(Number(child.payload?.size)) &&
+            Number(entry.bytes) !== Number(child.payload.size)
+          ) {
+            pushError(errors, 'tree_entry_size_mismatch', {
+              tree_id: id,
+              path: entryPath || null,
+              object_id: childId,
+              tree_bytes: Number(entry.bytes),
+              object_bytes: Number(child.payload.size),
+            });
+          }
+        }
+      }
+    }
+
+    if (object.type === 'release') {
+      const commitId = String(object.payload?.commit_id || '');
+      const commit = validObjects.get(commitId);
+      if (!commit || commit.type !== 'commit') {
+        pushError(errors, 'release_commit_invalid', {
+          release_id: id,
+          commit_id: commitId || null,
+          actual_type: commit?.type || null,
+        });
+      }
+    }
+  }
+
   const roots = new Set();
   for (const path of await walkFiles(root)) {
     try {
@@ -225,6 +383,7 @@ export async function verifyLineageIntegrity(store, {
 
   const reachableObjects = new Set();
   const reachableManifests = new Set();
+  const reachableLargeRefs = new Map();
   const queue = [...roots];
 
   while (queue.length) {
@@ -246,6 +405,13 @@ export async function verifyLineageIntegrity(store, {
         });
       } else {
         reachableManifests.add(manifestId);
+        reachableLargeRefs.set(id, {
+          manifest_id: manifestId,
+          content_sha256: object.payload?.content_sha256 || null,
+          size: Number(object.payload?.size),
+          chunk_count: Number(object.payload?.chunk_count),
+          media_type: object.payload?.media_type || null,
+        });
       }
     }
 
@@ -300,6 +466,76 @@ export async function verifyLineageIntegrity(store, {
         manifest_id: id,
         path,
         error: String(error?.message || error),
+      });
+    }
+  }
+
+  for (const [manifestId, manifest] of validManifests.entries()) {
+    if (!HEX64.test(String(manifest?.content_sha256 || ''))) {
+      pushError(errors, 'large_manifest_content_digest_invalid', {
+        manifest_id: manifestId,
+        content_sha256: manifest?.content_sha256 || null,
+      });
+    }
+    const declaredBytes = Number(manifest?.bytes);
+    const summedBytes = (manifest?.chunks || []).reduce(
+      (sum, chunk) => sum + Number(chunk?.bytes || 0),
+      0
+    );
+    if (!Number.isInteger(declaredBytes) || declaredBytes !== summedBytes) {
+      pushError(errors, 'large_manifest_size_mismatch', {
+        manifest_id: manifestId,
+        declared_bytes: manifest?.bytes ?? null,
+        chunk_bytes: summedBytes,
+      });
+    }
+  }
+
+  for (const [objectId, ref] of reachableLargeRefs.entries()) {
+    const manifest = validManifests.get(ref.manifest_id);
+    if (!manifest) continue;
+
+    if (
+      ref.content_sha256 &&
+      manifest.content_sha256 !== ref.content_sha256
+    ) {
+      pushError(errors, 'large_blob_ref_content_digest_mismatch', {
+        object_id: objectId,
+        manifest_id: ref.manifest_id,
+      });
+    }
+    if (
+      Number.isInteger(ref.size) &&
+      Number(manifest.bytes) !== ref.size
+    ) {
+      pushError(errors, 'large_blob_ref_size_mismatch', {
+        object_id: objectId,
+        manifest_id: ref.manifest_id,
+        ref_bytes: ref.size,
+        manifest_bytes: Number(manifest.bytes),
+      });
+    }
+    if (
+      Number.isInteger(ref.chunk_count) &&
+      Number(manifest.chunks?.length || 0) !== ref.chunk_count
+    ) {
+      pushError(errors, 'large_blob_ref_chunk_count_mismatch', {
+        object_id: objectId,
+        manifest_id: ref.manifest_id,
+        ref_chunk_count: ref.chunk_count,
+        manifest_chunk_count: Number(manifest.chunks?.length || 0),
+      });
+    }
+    if (
+      ref.media_type &&
+      manifest.media_type &&
+      ref.media_type !== manifest.media_type
+    ) {
+      pushError(errors, 'large_blob_ref_media_type_mismatch', {
+        object_id: objectId,
+        manifest_id: ref.manifest_id,
+        ref_media_type: ref.media_type,
+        manifest_media_type: manifest.media_type,
       });
     }
   }
