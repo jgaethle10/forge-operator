@@ -5,6 +5,7 @@ import { fileURLToPath } from 'node:url';
 import { compileGraphicsCommand, assessScrollStop } from '../graphics-command/director.mjs';
 import { renderDirectedPoster, assessDirectedPosterLayout } from '../graphics-command/poster-renderer.mjs';
 import { getTerrainRelief } from '../graphics-command/terrain-registry.mjs';
+import { buildShotTournamentCandidates, rankShotTournament } from '../graphics-command/shot-tournament.mjs';
 
 const DEFAULT_ORIGIN='https://fabric.systemiacommandcenters.com/visuals';
 const STATES=new Set(['observed','reported','modeled','inferred','synthetic']);
@@ -471,16 +472,35 @@ export function buildVisualStory(input,{outputRoot,origin=DEFAULT_ORIGIN}={}){
   const graphicsPlan=compileGraphicsCommand(story);
   const scrollStopReport=assessScrollStop(graphicsPlan);
   if(scrollStopReport.status!=='pass') throw new Error('visual_story_scroll_stop_gate_rejected');
-  const posterLayoutReports={
-    feed:assessDirectedPosterLayout(story,graphicsPlan,'feed'),
-    square:assessDirectedPosterLayout(story,graphicsPlan,'square'),
-    story:assessDirectedPosterLayout(story,graphicsPlan,'story'),
-  };
+
+  const shotCandidates=buildShotTournamentCandidates(story,graphicsPlan);
+  const layoutByCandidate=Object.fromEntries(
+    shotCandidates.map(candidate=>[
+      candidate.id,
+      {
+        feed:assessDirectedPosterLayout(story,graphicsPlan,'feed',candidate.strategy),
+        square:assessDirectedPosterLayout(story,graphicsPlan,'square',candidate.strategy),
+        story:assessDirectedPosterLayout(story,graphicsPlan,'story',candidate.strategy),
+      },
+    ])
+  );
+  const shotTournamentReport=rankShotTournament({
+    story,
+    plan:graphicsPlan,
+    candidates:shotCandidates,
+    layoutByCandidate,
+  });
+  const winningCandidate=shotCandidates.find(candidate=>candidate.id===shotTournamentReport.winnerId);
+  if(!winningCandidate) throw new Error('visual_story_shot_tournament_winner_missing');
+
+  const posterLayoutReports=layoutByCandidate[winningCandidate.id];
   const rejectedLayouts=Object.values(posterLayoutReports).filter(report=>report.status!=='pass');
   const posterQualityReport={
     schema:'evercraft.graphics-command.poster-quality-report.v1',
     storyDigest:story.digest,
     graphicsPlanDigest:graphicsPlan.digest,
+    shotTournamentDigest:shotTournamentReport.digest,
+    shotTournamentWinnerId:winningCandidate.id,
     status:rejectedLayouts.length?'reject':'pass',
     formats:posterLayoutReports,
     publicationAuthority:false,
@@ -518,10 +538,20 @@ export function buildVisualStory(input,{outputRoot,origin=DEFAULT_ORIGIN}={}){
       graphicsPlan:canonicalUrl+'graphics-plan.json',
       scrollStopReport:canonicalUrl+'scroll-stop-report.json',
       posterQualityReport:canonicalUrl+'poster-quality-report.json',
+      shotTournamentReport:canonicalUrl+'shot-tournament.json',
+      shotCandidates:Object.fromEntries(shotCandidates.map(candidate=>[
+        candidate.id,
+        {
+          feed:canonicalUrl+'shot-'+candidate.id+'-feed.svg',
+          story:canonicalUrl+'shot-'+candidate.id+'-story.svg',
+        }
+      ])),
       fallenStageInput:canonicalUrl+'fallen-stage-input.json',
       terrainRelief:terrain ? canonicalUrl+terrain.assetName : null,
     },
     graphicsCommandDigest:graphicsPlan.digest,
+    shotTournamentDigest:shotTournamentReport.digest,
+    shotTournamentWinnerId:winningCandidate.id,
     scrollStopStatus:scrollStopReport.status,
     posterQualityStatus:posterQualityReport.status,
     evidenceState:story.evidenceState,
@@ -546,6 +576,8 @@ export function buildVisualStory(input,{outputRoot,origin=DEFAULT_ORIGIN}={}){
     suggestedMessage:[graphicsPlan.hero.hook,graphicsPlan.hero.subhook].filter(Boolean).join(' | '),
     suggestedDestinations:['facebook','instagram','linkedin','tiktok'],
     sourceRefs:story.sourceRefs,
+    shotTournamentWinnerId:winningCandidate.id,
+    shotTournamentDigest:shotTournamentReport.digest,
   };
 
   fs.writeFileSync(path.join(outputDir,'index.html'),renderStoryHtml(story,{origin}));
@@ -554,9 +586,26 @@ export function buildVisualStory(input,{outputRoot,origin=DEFAULT_ORIGIN}={}){
   fs.writeFileSync(path.join(outputDir,'card-feed.svg'),feed);
   fs.writeFileSync(path.join(outputDir,'card-square.svg'),renderCardVariant(story,'square'));
   fs.writeFileSync(path.join(outputDir,'card-story.svg'),renderCardVariant(story,'story'));
-  fs.writeFileSync(path.join(outputDir,'poster-feed.svg'),renderDirectedPoster(story,graphicsPlan,'feed'));
-  fs.writeFileSync(path.join(outputDir,'poster-square.svg'),renderDirectedPoster(story,graphicsPlan,'square'));
-  fs.writeFileSync(path.join(outputDir,'poster-story.svg'),renderDirectedPoster(story,graphicsPlan,'story'));
+  for(const candidate of shotCandidates){
+    const candidateOptions={
+      strategy:candidate.strategy,
+      strategyId:candidate.id,
+      terrainHrefOverride:terrain?'./'+terrain.assetName:'',
+    };
+    fs.writeFileSync(
+      path.join(outputDir,'shot-'+candidate.id+'-feed.svg'),
+      renderDirectedPoster(story,graphicsPlan,'feed',candidateOptions)
+    );
+    fs.writeFileSync(
+      path.join(outputDir,'shot-'+candidate.id+'-story.svg'),
+      renderDirectedPoster(story,graphicsPlan,'story',candidateOptions)
+    );
+  }
+
+  const winnerOptions={strategy:winningCandidate.strategy,strategyId:winningCandidate.id};
+  fs.writeFileSync(path.join(outputDir,'poster-feed.svg'),renderDirectedPoster(story,graphicsPlan,'feed',winnerOptions));
+  fs.writeFileSync(path.join(outputDir,'poster-square.svg'),renderDirectedPoster(story,graphicsPlan,'square',winnerOptions));
+  fs.writeFileSync(path.join(outputDir,'poster-story.svg'),renderDirectedPoster(story,graphicsPlan,'story',winnerOptions));
   fs.writeFileSync(path.join(outputDir,'poster-feed.html'),renderPosterPreview(story,graphicsPlan,{asset:'poster-feed.svg',format:'feed'}));
   fs.writeFileSync(path.join(outputDir,'poster-square.html'),renderPosterPreview(story,graphicsPlan,{asset:'poster-square.svg',format:'square'}));
   fs.writeFileSync(path.join(outputDir,'poster-story.html'),renderPosterPreview(story,graphicsPlan,{asset:'poster-story.svg',format:'story'}));
@@ -564,12 +613,13 @@ export function buildVisualStory(input,{outputRoot,origin=DEFAULT_ORIGIN}={}){
   fs.writeFileSync(path.join(outputDir,'graphics-plan.json'),JSON.stringify(graphicsPlan,null,2)+'\n');
   fs.writeFileSync(path.join(outputDir,'scroll-stop-report.json'),JSON.stringify(scrollStopReport,null,2)+'\n');
   fs.writeFileSync(path.join(outputDir,'poster-quality-report.json'),JSON.stringify(posterQualityReport,null,2)+'\n');
+  fs.writeFileSync(path.join(outputDir,'shot-tournament.json'),JSON.stringify(shotTournamentReport,null,2)+'\n');
   fs.writeFileSync(path.join(outputDir,'fallen-stage-input.json'),JSON.stringify(graphicsPlan.fallenStageInput,null,2)+'\n');
   fs.writeFileSync(path.join(outputDir,'manifest.json'),JSON.stringify(manifest,null,2)+'\n');
   fs.writeFileSync(path.join(outputDir,'story.json'),JSON.stringify(story,null,2)+'\n');
   fs.writeFileSync(path.join(outputDir,'clip-handoff.json'),JSON.stringify(clipHandoff,null,2)+'\n');
 
-  return {story,graphicsPlan,scrollStopReport,posterQualityReport,manifest,clipHandoff,outputDir};
+  return {story,graphicsPlan,scrollStopReport,posterQualityReport,shotTournamentReport,winningCandidate,manifest,clipHandoff,outputDir};
 }
 
 const invoked=fileURLToPath(import.meta.url)===path.resolve(process.argv[1] || '');
