@@ -535,7 +535,7 @@ export async function startEvercraftHomeServer({
     }
 
     const providerCredentialMatch = url.pathname.match(
-      /^\/api\/credentials\/providers\/(google-places|kroger|kaggle|numerai|facebook-pages|gemini|openai)(\/status)?$/
+      /^\/api\/credentials\/providers\/(google-places|kroger|kaggle|numerai|stripe|facebook-pages|gemini|openai)(\/status)?$/
     );
     if (providerCredentialMatch && req.method === "GET" && providerCredentialMatch[2]) {
       const session = sessionFor(req, "home.identity.sessions.manage");
