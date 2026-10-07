@@ -88,12 +88,21 @@ test('World Forge geometry edit yields entity update plus geometry asset cache d
 
   assert.ok(sync.transaction.operations.some(operation=>operation.kind==='upsert_entity'));
   assert.ok(sync.transaction.operations.some(operation=>operation.kind==='upsert_asset'));
-  assert.ok(sync.transaction.operations.some(operation=>operation.kind==='remove_asset'));
+  assert.equal(
+    sync.transaction.operations.some(operation=>operation.kind==='remove_asset'),
+    false,
+  );
   assert.equal(sync.geometryDelta.added.length,1);
-  assert.equal(sync.geometryDelta.removed.length,1);
+  assert.equal(sync.geometryDelta.removed.length,0);
   assert.equal(sync.geometryDelta.changed.length,0);
   assert.equal(sync.receipt.boundaries.geometryCacheMutationRequired,true);
-  assert.equal(sync.geometryDelta.targetAssets.length,1);
+  assert.equal(sync.geometryDelta.targetAssets.length,2);
+  assert.ok(
+    sync.geometryDelta.targetAssets.some(
+      geometry=>geometry.id===sync.before.geometries[0].id,
+    ),
+    'shared cube geometry must remain because other starter nodes still reference it',
+  );
 });
 
 test('World Forge material edit compiles to minimal material upsert',()=>{
@@ -296,11 +305,15 @@ test('World Forge live runtime sync reconciles geometry through owned hot reload
   assert.equal(result.snapshot.tick,3);
   assert.equal(result.geometryHotReloadReceipts.length,1);
   assert.equal(result.geometryHotReloadReceipts[0].replaced,false);
-  assert.equal(result.receipt.geometryRemovedIds.length,1);
-  assert.equal(result.geometries.length,1);
-  assert.equal(
-    result.geometries[0].id,
-    result.sync.target.geometries[0].id,
+  assert.equal(result.receipt.geometryRemovedIds.length,0);
+  assert.equal(result.geometries.length,2);
+  assert.deepEqual(
+    result.geometries.map(item=>item.id).sort(),
+    result.sync.target.geometries.map(item=>item.id).sort(),
+  );
+  assert.ok(
+    result.geometries.some(item=>item.id===beforeBridge.geometries[0].id),
+    'shared starter cube remains resident after hero geometry diverges',
   );
 });
 
