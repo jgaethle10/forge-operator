@@ -205,7 +205,7 @@ export function assessDirectedPosterLayout(story,plan,format='feed'){
   const maxValue=Math.max(1,...story.points.map(point=>Math.abs(Number(point.value)||1)));
   const labels=layoutLabels(story,positions,format);
   const labelBoxes=labels.map(item=>({id:item.point.id,label:item.label,...labelBounds(item)}));
-  const regionIdentity=regionIdentityLayout(frame,format);
+  const regionIdentity=boundary?regionIdentityLayout(frame,format):null;
   const markers=story.points.map(point=>{
     const p=positions.get(point.id);
     const base=(format==='story'?17:13)+Math.sqrt(Math.abs(Number(point.value)||1)/maxValue)*(format==='story'?15:11);
@@ -239,14 +239,16 @@ export function assessDirectedPosterLayout(story,plan,format='feed'){
     }
   }
 
-  for(const labelBox of labelBoxes){
-    if(boxesOverlap(labelBox,regionIdentity.bounds,8)){
-      issues.push('region_label_overlap:'+labelBox.id);
+  if(regionIdentity){
+    for(const labelBox of labelBoxes){
+      if(boxesOverlap(labelBox,regionIdentity.bounds,8)){
+        issues.push('region_label_overlap:'+labelBox.id);
+      }
     }
-  }
-  for(const marker of markers){
-    if(boxHitsCircle(regionIdentity.bounds,marker,7)){
-      issues.push('region_marker_overlap:'+marker.id);
+    for(const marker of markers){
+      if(boxHitsCircle(regionIdentity.bounds,marker,7)){
+        issues.push('region_marker_overlap:'+marker.id);
+      }
     }
   }
 
