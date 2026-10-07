@@ -1,4 +1,3 @@
-import crypto from 'node:crypto';
 import fs from 'node:fs';
 import path from 'node:path';
 import { runOfficialCollectors } from './collectors.mjs';
@@ -22,6 +21,7 @@ import {
   compileRadarVisualStory,
   rankRadarVisualCandidates
 } from '../visual-desk/radar-adapter.mjs';
+import { visualStoryTransportDigest } from '../visual-desk/transporter.mjs';
 
 function ensureDir(dir) {
   fs.mkdirSync(dir, { recursive: true, mode: 0o700 });
@@ -46,12 +46,6 @@ function atomicWrite(file, value) {
 function appendJsonl(file, value) {
   ensureDir(path.dirname(file));
   fs.appendFileSync(file, JSON.stringify(value) + '\n', { mode: 0o600 });
-}
-
-function sha256(value) {
-  return crypto.createHash('sha256').update(
-    typeof value === 'string' ? value : JSON.stringify(value)
-  ).digest('hex');
 }
 
 function emptyVisualOutboxIndex() {
@@ -163,7 +157,7 @@ export function createRadarResident({
           source_observation_id: candidate.source_observation_id,
           visual_priority_score: candidate.visual_priority_score,
           score_factors: candidate.score_factors,
-          story_sha256: sha256(story),
+          story_sha256: visualStoryTransportDigest(story),
           source_refs: story.sourceRefs,
           publicationAuthority: false
         });
