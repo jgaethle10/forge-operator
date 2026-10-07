@@ -21,6 +21,7 @@ const bullet = values => (values || []).map(value => `- ${value}`).join('\n');
 
 const emit = has('--emit');
 const strict = has('--strict');
+const allowStaleIndex = has('--allow-stale-index');
 const inventoryPath = value('--inventory');
 
 const directory = readJson('public/.well-known/evercraft-products.json');
@@ -211,6 +212,7 @@ const summary = {
   github_mirrors_missing: missingMirrors.length,
   mcp_declared: products.filter(p => p.mcp_declared).length,
   public_index_current: indexCurrent,
+  stale_index_allowed: allowStaleIndex,
   inventory
 };
 console.log(JSON.stringify(summary));
@@ -224,6 +226,6 @@ if (emit) {
   }, null, 2) + '\n');
 }
 
-if (strict && (invalidContracts.length || missingRequiredConformance.length || missingMirrors.length || !indexCurrent)) {
-  throw new Error(`Saban discovery check failed: invalid_contracts=${invalidContracts.length}, required_conformance_missing=${missingRequiredConformance.length}, discovery_only_conformance_pending=${pendingDiscoveryConformance.length}, missing_mirrors=${missingMirrors.length}, index_current=${indexCurrent}`);
+if (strict && (invalidContracts.length || missingRequiredConformance.length || missingMirrors.length || (!indexCurrent && !allowStaleIndex))) {
+  throw new Error(`Saban discovery check failed: invalid_contracts=${invalidContracts.length}, required_conformance_missing=${missingRequiredConformance.length}, discovery_only_conformance_pending=${pendingDiscoveryConformance.length}, missing_mirrors=${missingMirrors.length}, index_current=${indexCurrent}, stale_index_allowed=${allowStaleIndex}`);
 }
