@@ -13,6 +13,10 @@ import { executeRavenCommand, planRavenCommand } from "./raven-command-adapter.m
 import { askIntelligence, intelligenceOptions } from "./intelligence-router.mjs";
 import { ProviderCredentialVault } from "./credential-vault.mjs";
 import { normalizeProviderCredentialRequest } from "./provider-credentials.mjs";
+import {
+  journalStoryResourceRef,
+  publishJournalStoryFacebookFromHome,
+} from "./clip-journal-publish-adapter.mjs";
 import { LineageControlRoomHomeBridge } from "./lineage-adapter.mjs";
 import { renderLineageControlRoomHtml } from "../lineage/control-room.mjs";
 
@@ -246,9 +250,16 @@ export async function startEvercraftHomeServer({
     return String(login || "").toLowerCase() + "@" + String(req.socket?.remoteAddress || "unknown");
   }
 
-  function sessionFor(req, scope = "home.read") {
+  function sessionFor(req, scope = "home.read", resourceRef = null) {
     if (authMode === "local") {
-      return { ok: true, subject: "local:operator", display_name: operator, authority: "development-only", mode: "local-loopback" };
+      return {
+        ok: true,
+        subject: "local:operator",
+        display_name: operator,
+        authority: "development-only",
+        mode: "local-loopback",
+        resource_ref: resourceRef || null,
+      };
     }
 
     const token = cookies(req).evercraft_session;
@@ -257,7 +268,7 @@ export async function startEvercraftHomeServer({
     try {
       const session = verifyEvercraftSession(token, signingKeys);
       identity.assertSessionActive(session);
-      const authorization = authorizeEvercraftHome(passport, session, { scope });
+      const authorization = authorizeEvercraftHome(passport, session, { scope, resourceRef });
       return {
         ok: true,
         subject: session.subject_ref,
@@ -599,6 +610,69 @@ export async function startEvercraftHomeServer({
         });
       } catch (error) {
         return json(res, 400, { ok: false, state: error?.message || "credential_store_failed" });
+      }
+    }
+
+    if (req.method === "POST" && url.pathname === "/api/clip/journal/facebook") {
+      let body;
+      let resourceRef;
+      try {
+        body = await readJsonBody(req, 8192);
+        resourceRef = journalStoryResourceRef(body.slug);
+      } catch (error) {
+        return json(res, 400, {
+          ok: false,
+          state: error?.message || "clip_journal_publish_request_invalid",
+          publication_performed: false,
+        });
+      }
+
+      const session = sessionFor(req, "home.clip.publish", resourceRef);
+      if (!session.ok) return json(res, session.status, session);
+      if (!credentialVault) {
+        return json(res, 503, {
+          ok: false,
+          state: "credential_vault_not_configured",
+          publication_performed: false,
+        });
+      }
+
+      try {
+        const receipt = await publishJournalStoryFacebookFromHome({
+          repoRoot,
+          slug: body.slug,
+          credentialStateDir,
+          authorizationRef: session.grant_id
+            ? "passport-grant:" + session.grant_id
+            : "local-development:home.clip.publish",
+        });
+        const published = receipt.state === "published";
+        return json(res, published ? 200 : 502, {
+          ok: published,
+          subject: session.subject,
+          authorization: {
+            scope: "home.clip.publish",
+            resource_ref: resourceRef,
+            mode: session.mode,
+            grant_id: session.grant_id || null,
+          },
+          publication_performed: receipt.state === "published" || receipt.state === "published_postflight_failed",
+          secret_material_returned: false,
+          receipt,
+        });
+      } catch (error) {
+        return json(res, 400, {
+          ok: false,
+          state: error?.message || "clip_journal_publish_failed",
+          authorization: {
+            scope: "home.clip.publish",
+            resource_ref: resourceRef,
+            mode: session.mode,
+            grant_id: session.grant_id || null,
+          },
+          publication_performed: false,
+          secret_material_returned: false,
+        });
       }
     }
 
