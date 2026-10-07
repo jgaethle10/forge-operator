@@ -74,8 +74,8 @@ test("verified Kaggle lane becomes autonomous only after build, QA and package",
 
 test("gate queue is deadline ordered, deduplicated, and only includes due gates", () => {
   const items = [
-    { provider: "devpost", opportunity_id: "b", title: "B", deadline: "2026-10-30T00:00:00Z", human_gates: ["accept_terms", "accept_terms"], notify_human: true },
-    { provider: "devpost", opportunity_id: "a", title: "A", deadline: "2026-10-20T00:00:00Z", human_gates: ["mfa"], notify_human: true },
+    { provider: "devpost", opportunity_id: "b", title: "B", deadline: "2026-10-30T00:00:00Z", human_gates: ["accept_terms", "accept_terms"], human_gate_packets: [{ gate: "accept_terms", actionable: true, action_url: "https://example.com/gate", action: "Complete the provider gate.", why: "Provider requires account-holder action.", after: "Systemia resumes." }], notify_human: true },
+    { provider: "devpost", opportunity_id: "a", title: "A", deadline: "2026-10-20T00:00:00Z", human_gates: ["mfa"], human_gate_packets: [{ gate: "mfa", actionable: true, action_url: "https://example.com/gate", action: "Complete the provider gate.", why: "Provider requires account-holder action.", after: "Systemia resumes." }], notify_human: true },
     { provider: "devpost", opportunity_id: "deferred", title: "Deferred", deadline: "2026-10-10T00:00:00Z", human_gates: ["accept_terms"], notify_human: false },
   ];
   const queue = compileHumanGateQueue(items);
