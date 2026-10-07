@@ -26,6 +26,12 @@
       "stale_after_seconds": 900
     },
     {
+      "source_key": "competition-saban-capacity",
+      "path": "../../artifacts/competition-provider/capacity/mission-snapshot.json",
+      "required": false,
+      "stale_after_seconds": 900
+    },
+    {
       "source_key": "evercraft-public-specialist-edge",
       "path": "../../artifacts/public-edge-activation-watch/field-mission-snapshot.json",
       "required": false,
