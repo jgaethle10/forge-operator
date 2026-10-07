@@ -821,7 +821,20 @@ export async function startFabricLocalRuntime({
         if(isForm){
           const cents=Number(result?.amount_cents);
           const amountLabel=Number.isFinite(cents)
-            ? '
+            ? String.fromCharCode(36)+(cents/100).toFixed(2).replace(/\.00$/,'')
+            : '';
+          return sendText(
+            res,
+            200,
+            renderPaymentHandoffPage({
+              slug,
+              checkoutUrl,
+              amountLabel,
+              orderKey:result?.order_key||'',
+            }),
+            {contentType:'text/html; charset=utf-8'}
+          );
+        }
 
         return sendJson(res,200,{
           ok:true,
