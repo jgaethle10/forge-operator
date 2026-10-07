@@ -153,6 +153,15 @@ export function worldForgeDirectionToWorldEngine(value:RuntimeVec3):RuntimeVec3{
   return {x:value.x,y:value.z,z:-value.y};
 }
 
+export function worldForgeAxisImpulseToWorldEngine(
+  axis:keyof RuntimeVec3,
+  amount:number,
+):RuntimeVec3{
+  const forgeImpulse:RuntimeVec3={x:0,y:0,z:0};
+  forgeImpulse[axis]=amount;
+  return worldForgeDirectionToWorldEngine(forgeImpulse);
+}
+
 export function runtimeBodiesByForgeNodeId(snapshot:any){
   const result:Record<string,RuntimeBodyView>={};
   const entities=Array.isArray(snapshot?.entities)?snapshot.entities:[];
