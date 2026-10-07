@@ -1,4 +1,5 @@
 import assert from 'node:assert/strict';
+import crypto from 'node:crypto';
 import fs from 'node:fs';
 import os from 'node:os';
 import path from 'node:path';
@@ -65,6 +66,9 @@ test('motion stage exposes deterministic exact-time render controls',()=>{
   assert.match(html,/__evercraftRenderAt/);
   assert.match(html,/__evercraftRenderFrame/);
   assert.match(html,/deterministic/);
+  assert.match(html,/evercraft\.visual-story\.motion-stage\.v2/);
+  assert.match(html,/\.story-route/);
+  assert.doesNotMatch(html,/EVERCRAFT VISUAL DESK<\/div>/);
   assert.match(html,/publicationAuthority/);
 });
 
@@ -88,8 +92,12 @@ test('build emits owned page, social card, manifest and Clip handoff',()=>{
       'index.html',
       'manifest.json',
       'motion.html',
+      'poster-feed.html',
       'poster-feed.svg',
+      'poster-quality-report.json',
+      'poster-square.html',
       'poster-square.svg',
+      'poster-story.html',
       'poster-story.svg',
       'scroll-stop-report.json',
       'story.json',
@@ -105,6 +113,8 @@ test('build emits owned page, social card, manifest and Clip handoff',()=>{
     assert.equal(manifest.schema,'evercraft.visual-story.manifest.v3');
     assert.match(manifest.socialCardUrl,/poster-feed\.svg$/);
     assert.equal(manifest.scrollStopStatus,'pass');
+    assert.equal(manifest.posterQualityStatus,'pass');
+    assert.match(manifest.assets.posterQualityReport,/poster-quality-report\.json$/);
     assert.match(manifest.assets.motionStage,/motion\.html$/);
     assert.equal(handoff.publicationAuthority,false);
     assert.equal(handoff.schema,'evercraft.visual-story.clip-handoff.v3');
@@ -112,12 +122,57 @@ test('build emits owned page, social card, manifest and Clip handoff',()=>{
     const plan=JSON.parse(fs.readFileSync(path.join(result.outputDir,'graphics-plan.json'),'utf8'));
     const gate=JSON.parse(fs.readFileSync(path.join(result.outputDir,'scroll-stop-report.json'),'utf8'));
     const fallen=JSON.parse(fs.readFileSync(path.join(result.outputDir,'fallen-stage-input.json'),'utf8'));
+    const quality=JSON.parse(fs.readFileSync(path.join(result.outputDir,'poster-quality-report.json'),'utf8'));
     assert.equal(plan.hero.visualPriority,'hero_first');
+    assert.equal(quality.status,'pass');
+    assert.equal(quality.formats.feed.status,'pass');
+    assert.equal(quality.formats.square.status,'pass');
+    assert.equal(quality.formats.story.status,'pass');
     assert.equal(gate.status,'pass');
     assert.equal(fallen.aspectRatio,'9:16');
     assert.match(html,/poster-feed\.svg/);
     assert.match(html,/Sources &amp; methodology/);
+    assert.match(html,/poster-story\.html/);
+    assert.doesNotMatch(html,/Digest [a-f0-9]{12}/);
+    const preview=fs.readFileSync(path.join(result.outputDir,'poster-story.html'),'utf8');
+    assert.match(preview,/max-height:calc\(100svh - 58px\)/);
+    assert.match(preview,/poster-story\.svg/);
     assert.deepEqual(handoff.suggestedDestinations,['facebook','instagram','linkedin','tiktok']);
+  }finally{
+    fs.rmSync(root,{recursive:true,force:true});
+  }
+});
+
+
+test('terrain-backed specimen copies the governed relief asset with exact lineage',()=>{
+  const raw=JSON.parse(fs.readFileSync(
+    new URL('./stories/washington-active-volcanoes.json',import.meta.url),
+    'utf8'
+  ));
+  const receipt=JSON.parse(fs.readFileSync(
+    new URL('../graphics-command/assets/washington-usgs-shaded-relief.receipt.json',import.meta.url),
+    'utf8'
+  ));
+  const root=fs.mkdtempSync(path.join(os.tmpdir(),'evercraft-visual-terrain-'));
+  try{
+    const result=buildVisualStory(raw,{outputRoot:root,origin:'https://visuals.evercraft.test'});
+    const reliefPath=path.join(result.outputDir,'terrain-relief.png');
+    assert.equal(fs.existsSync(reliefPath),true);
+    const digest=crypto.createHash('sha256').update(fs.readFileSync(reliefPath)).digest('hex');
+    assert.equal(digest,receipt.sha256);
+    assert.equal(result.graphicsPlan.geography?.terrain?.id,'usgs-wa-shaded-relief-3dep-v1');
+    assert.equal(result.graphicsPlan.geography?.terrain?.rightsState,'public_domain');
+    assert.match(result.manifest.assets.terrainRelief,/terrain-relief\.png$/);
+    const poster=fs.readFileSync(path.join(result.outputDir,'poster-feed.svg'),'utf8');
+    assert.match(poster,/data-visual-model="cinematic-terrain-geography-v2"/);
+    assert.match(poster,/class="terrain-relief"/);
+    assert.match(poster,/href="data:image\/png;base64,/);
+    const embedded=poster.match(/href="data:image\/png;base64,([^"]+)"/);
+    assert.ok(embedded?.[1]);
+    const embeddedDigest=crypto.createHash('sha256').update(Buffer.from(embedded[1],'base64')).digest('hex');
+    assert.equal(embeddedDigest,receipt.sha256);
+    assert.match(poster,new RegExp('data-source-sha256="'+receipt.sha256+'"'));
+    assert.doesNotMatch(poster,/class="peak-halo"/);
   }finally{
     fs.rmSync(root,{recursive:true,force:true});
   }

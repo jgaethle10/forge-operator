@@ -30,6 +30,35 @@ export interface WorldIntelPointInput {
   sourceRefs: string[];
 }
 
+export interface WorldIntelPolygonInput {
+  id: string;
+  rings: Array<Array<{lat:number;lon:number}>>;
+  label?: string;
+  fill?: string;
+  stroke?: string;
+  strokeWidth?: number;
+  opacity?: number;
+  evidenceState: EvidenceState;
+  sourceRefs: string[];
+}
+
+export interface WorldIntelTerrainInput {
+  id: string;
+  sourcePath: string;
+  bounds: {
+    north:number;
+    south:number;
+    east:number;
+    west:number;
+  };
+  opacity?: number;
+  blendMode?: 'normal' | 'multiply' | 'screen' | 'overlay';
+  evidenceState: EvidenceState;
+  sourceRefs: string[];
+  sourceSha256?: string;
+  rightsState?: string;
+}
+
 export interface WorldIntelMetricInput {
   id: string;
   label: string;
@@ -62,8 +91,17 @@ export interface WorldIntelStageInput {
     centerLat?: number;
     centerLon?: number;
     zoom?: number;
+    fitBounds?: {
+      north:number;
+      south:number;
+      east:number;
+      west:number;
+      paddingPct?:number;
+    };
     routes?: WorldIntelRouteInput[];
     points?: WorldIntelPointInput[];
+    polygons?: WorldIntelPolygonInput[];
+    terrains?: WorldIntelTerrainInput[];
   };
   metrics?: WorldIntelMetricInput[];
   timeline?: {
@@ -185,11 +223,15 @@ export function compileWorldIntelStage(input:WorldIntelStageInput):VisualStage{
   if(input.map){
     const mapRefs=[
       ...refs(input.map.routes),
-      ...refs(input.map.points)
+      ...refs(input.map.points),
+      ...refs(input.map.polygons),
+      ...refs(input.map.terrains)
     ];
     const mapItems=[
       ...(input.map.routes??[]),
-      ...(input.map.points??[])
+      ...(input.map.points??[]),
+      ...(input.map.polygons??[]),
+      ...(input.map.terrains??[])
     ];
     layers.push({
       id:'world-geo',
@@ -200,7 +242,8 @@ export function compileWorldIntelStage(input:WorldIntelStageInput):VisualStage{
       centerLat:input.map.centerLat??15,
       centerLon:input.map.centerLon??0,
       zoom:input.map.zoom??1.15,
-      grid:!input.mapPlate,
+      fitBounds:input.map.fitBounds,
+      grid:!input.mapPlate && !(input.map.terrains?.length),
       parallax:1.09,
       perspectivePx:1600,
       rotateYDeg:vertical?0:5,
@@ -217,6 +260,8 @@ export function compileWorldIntelStage(input:WorldIntelStageInput):VisualStage{
         ]
       })),
       points:input.map.points??[],
+      polygons:input.map.polygons??[],
+      terrains:input.map.terrains??[],
       evidenceState:predominantState(mapItems),
       sourceRefs:mapRefs
     });

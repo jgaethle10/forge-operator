@@ -204,14 +204,34 @@ body{display:flex;align-items:center;justify-content:center}
   };
   const wrapLon=lon=>((lon+180)%360+360)%360-180;
   const project=(lat,lon,layer)=>{
+    const merc=deg=>Math.log(Math.tan(Math.PI/4+(clamp(deg,-85,85)*Math.PI/180)/2))/(2*Math.PI);
+    if(layer.fitBounds){
+      const b=layer.fitBounds,pad=clamp(Number(b.paddingPct??.08),0,.44);
+      const west=wrapLon(b.west),east=wrapLon(b.east);
+      let lonSpan=east-west;if(lonSpan<=0)lonSpan+=360;
+      const centerLon=wrapLon(west+lonSpan/2);
+      let d=wrapLon(lon)-centerLon;if(d>180)d-=360;if(d<-180)d+=360;
+      const nx=d/360;
+      const north=clamp(b.north,-85,85),south=clamp(b.south,-85,85);
+      const yNorth=layer.projection==='mercator'?merc(north):-north/180;
+      const ySouth=layer.projection==='mercator'?merc(south):-south/180;
+      const yCenter=(yNorth+ySouth)/2;
+      const pointY=layer.projection==='mercator'?merc(clamp(lat,-85,85)):-clamp(lat,-85,85)/180;
+      const ny=yCenter-pointY;
+      const xNorm=Math.max(.000001,lonSpan/360);
+      const yNorm=Math.max(.000001,Math.abs(yNorth-ySouth));
+      const usableW=layer.width*(1-pad*2),usableH=layer.height*(1-pad*2);
+      const pixelsPerNorm=Math.min(usableW/xNorm,usableH/yNorm);
+      return {x:layer.width/2+nx*pixelsPerNorm,y:layer.height/2+ny*pixelsPerNorm};
+    }
     const centerLon=wrapLon(layer.centerLon||0);
     const centerLat=clamp(layer.centerLat||0,-85,85);
     let d=wrapLon(lon)-centerLon;if(d>180)d-=360;if(d<-180)d+=360;
     const z=Math.max(.1,layer.zoom||1);
     const nx=d/360;
-    const merc=deg=>Math.log(Math.tan(Math.PI/4+(deg*Math.PI/180)/2))/(2*Math.PI);
     const ny=layer.projection==='mercator'?merc(centerLat)-merc(clamp(lat,-85,85)):(centerLat-clamp(lat,-85,85))/180;
-    return {x:layer.width/2+nx*layer.width*z,y:layer.height/2+ny*layer.height*z};
+    const scale=Math.min(layer.width,layer.height);
+    return {x:layer.width/2+nx*scale*z,y:layer.height/2+ny*scale*z};
   };
   const routeLength=pts=>{
     let total=0;const lens=[0];
@@ -255,6 +275,21 @@ body{display:flex;align-items:center;justify-content:center}
 
   const drawGeo=(el,layer,t)=>{
     const ns='http://www.w3.org/2000/svg';el.replaceChildren();
+    for(const terrain of layer.terrains||[]){
+      const nw=project(terrain.bounds.north,terrain.bounds.west,layer);
+      const se=project(terrain.bounds.south,terrain.bounds.east,layer);
+      const image=document.createElementNS(ns,'image');
+      image.setAttribute('x',String(Math.min(nw.x,se.x)));
+      image.setAttribute('y',String(Math.min(nw.y,se.y)));
+      image.setAttribute('width',String(Math.abs(se.x-nw.x)));
+      image.setAttribute('height',String(Math.abs(se.y-nw.y)));
+      image.setAttribute('href',terrain.sourcePath);
+      image.setAttribute('preserveAspectRatio','none');
+      image.setAttribute('opacity',String(terrain.opacity??1));
+      image.setAttribute('style','mix-blend-mode:'+(terrain.blendMode||'normal'));
+      image.dataset.geoTerrain=terrain.id;
+      el.appendChild(image);
+    }
     if(layer.grid){
       for(let lon=-180;lon<=180;lon+=30){
         const a=project(-80,lon,layer),b=project(80,lon,layer);
@@ -264,6 +299,29 @@ body{display:flex;align-items:center;justify-content:center}
         const pts=[];for(let lon=-180;lon<=180;lon+=10)pts.push(project(lat,lon,layer));
         const path=document.createElementNS(ns,'polyline');path.setAttribute('points',pts.map(p=>p.x+','+p.y).join(' '));path.setAttribute('fill','none');path.setAttribute('stroke',stage.theme?.palette?.grid||'rgba(255,255,255,.08)');path.setAttribute('stroke-width','1');el.appendChild(path);
       }
+    }
+    for(const polygon of layer.polygons||[]){
+      const path=document.createElementNS(ns,'path');
+      const commands=[];
+      for(const ring of polygon.rings||[]){
+        const projected=(ring||[]).map(p=>project(p.lat,p.lon,layer));
+        if(projected.length<3) continue;
+        commands.push('M '+projected[0].x+' '+projected[0].y);
+        for(let i=1;i<projected.length;i++) commands.push('L '+projected[i].x+' '+projected[i].y);
+        commands.push('Z');
+      }
+      path.setAttribute('d',commands.join(' '));
+      path.setAttribute('fill',polygon.fill||'rgba(79,184,255,.08)');
+      path.setAttribute('fill-rule','evenodd');
+      path.setAttribute('stroke',polygon.stroke||stage.theme?.palette?.routeObserved||'rgba(255,255,255,.5)');
+      path.setAttribute('stroke-width',String(polygon.strokeWidth||2));
+      path.setAttribute('stroke-linejoin','round');
+      path.setAttribute('opacity',String(polygon.opacity??1));
+      if(['modeled','inferred','synthetic_visualization'].includes(polygon.evidenceState)){
+        path.setAttribute('stroke-dasharray','10 8');
+      }
+      path.dataset.geoPolygon=polygon.id;
+      el.appendChild(path);
     }
     for(const route of layer.routes||[]){
       const pts=route.points.map(p=>project(p.lat,p.lon,layer));

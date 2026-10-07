@@ -90,14 +90,52 @@ export interface GeoRoute {
   width?: number;
 }
 
+export interface GeoPolygon {
+  id: string;
+  rings: Array<Array<{ lat:number; lon:number }>>;
+  label?: string;
+  fill?: string;
+  stroke?: string;
+  strokeWidth?: number;
+  opacity?: number;
+  evidenceState?: EvidenceState;
+  sourceRefs?: string[];
+}
+
+export interface GeoTerrain {
+  id: string;
+  sourcePath: string;
+  bounds: {
+    north:number;
+    south:number;
+    east:number;
+    west:number;
+  };
+  opacity?: number;
+  blendMode?: 'normal' | 'multiply' | 'screen' | 'overlay';
+  evidenceState?: EvidenceState;
+  sourceRefs?: string[];
+  sourceSha256?: string;
+  rightsState?: string;
+}
+
 export interface GeoLayer extends BaseLayer {
   kind: 'geo';
   projection: 'equirectangular' | 'mercator';
   centerLat?: number;
   centerLon?: number;
   zoom?: number;
+  fitBounds?: {
+    north:number;
+    south:number;
+    east:number;
+    west:number;
+    paddingPct?:number;
+  };
   points?: GeoPoint[];
   routes?: GeoRoute[];
+  polygons?: GeoPolygon[];
+  terrains?: GeoTerrain[];
   grid?: boolean;
 }
 
@@ -371,6 +409,52 @@ export function validateStage(stage:VisualStage){
     ids.add(layer.id);
     if(!Number.isFinite(layer.z)) errors.push(`layer_z_invalid:${layer.id}`);
     if(layer.kind==='media' && !layer.sourcePath) errors.push(`media_source_missing:${layer.id}`);
+    if(layer.kind==='geo'){
+      if(layer.fitBounds){
+        const b=layer.fitBounds;
+        if(
+          !Number.isFinite(b.north)||!Number.isFinite(b.south)||
+          !Number.isFinite(b.east)||!Number.isFinite(b.west)||
+          b.north<=b.south||b.north>90||b.south<-90||
+          b.east>180||b.east<-180||b.west>180||b.west<-180||
+          (b.paddingPct!==undefined && (!Number.isFinite(b.paddingPct)||b.paddingPct<0||b.paddingPct>=.45))
+        ) errors.push(`geo_fit_bounds_invalid:${layer.id}`);
+      }
+      for(const terrain of layer.terrains??[]){
+        if(!terrain.id?.trim()) errors.push(`geo_terrain_id_missing:${layer.id}`);
+        if(!terrain.sourcePath?.trim()) errors.push(`geo_terrain_source_missing:${terrain.id||layer.id}`);
+        const b=terrain.bounds;
+        if(
+          !b || !Number.isFinite(b.north)||!Number.isFinite(b.south)||
+          !Number.isFinite(b.east)||!Number.isFinite(b.west)||
+          b.north<=b.south||b.north>90||b.south<-90||
+          b.east>180||b.east<-180||b.west>180||b.west<-180
+        ) errors.push(`geo_terrain_bounds_invalid:${terrain.id||layer.id}`);
+        if(!(terrain.sourceRefs?.length)) errors.push(`geo_terrain_provenance_missing:${terrain.id||layer.id}`);
+        if(terrain.sourceSha256 && !/^[a-f0-9]{64}$/i.test(terrain.sourceSha256)){
+          errors.push(`geo_terrain_digest_invalid:${terrain.id||layer.id}`);
+        }
+        if(terrain.opacity!==undefined && (!Number.isFinite(terrain.opacity)||terrain.opacity<0||terrain.opacity>1)){
+          errors.push(`geo_terrain_opacity_invalid:${terrain.id||layer.id}`);
+        }
+      }
+      for(const polygon of layer.polygons??[]){
+        if(!polygon.id?.trim()) errors.push(`geo_polygon_id_missing:${layer.id}`);
+        if(!Array.isArray(polygon.rings)||!polygon.rings.length) errors.push(`geo_polygon_rings_missing:${polygon.id||layer.id}`);
+        for(const ring of polygon.rings??[]){
+          if(!Array.isArray(ring)||ring.length<3) errors.push(`geo_polygon_ring_invalid:${polygon.id||layer.id}`);
+          for(const point of ring??[]){
+            if(!Number.isFinite(point?.lat)||point.lat<-90||point.lat>90||!Number.isFinite(point?.lon)||point.lon<-180||point.lon>180){
+              errors.push(`geo_polygon_coordinate_invalid:${polygon.id||layer.id}`);
+              break;
+            }
+          }
+        }
+        if(polygon.evidenceState && ['modeled','inferred','synthetic_visualization'].includes(polygon.evidenceState) && !(polygon.sourceRefs?.length)){
+          errors.push(`geo_polygon_provenance_missing:${polygon.id||layer.id}`);
+        }
+      }
+    }
     if(layer.evidenceState && ['modeled','inferred','synthetic_visualization'].includes(layer.evidenceState) && !(layer.sourceRefs?.length)){
       errors.push(`evidence_state_without_source_ref:${layer.id}`);
     }

@@ -1,3 +1,5 @@
+import { getGeoBoundary, geoBoundaryProvenance } from './boundary-registry.mjs';
+import { terrainReliefProvenance } from './terrain-registry.mjs';
 import crypto from 'node:crypto';
 
 const EVIDENCE_TO_FALLEN=Object.freeze({
@@ -84,6 +86,9 @@ export function compileGraphicsCommand(story){
   const subhook=clean(story?.visual?.subhook)||clean(story.callout)||clean(story.subtitle);
   const eyebrow=clean(story?.visual?.eyebrow)||'EVERCRAFT VISUAL DESK';
   const metrics=(story?.visual?.metrics||[]).map((metric,index)=>normalizeMetric(metric,index,story.sourceRefs));
+  const boundaryAsset=getGeoBoundary(story?.visual?.boundaryId);
+  const boundary=geoBoundaryProvenance(story?.visual?.boundaryId);
+  const terrain=terrainReliefProvenance(story?.visual?.terrainId);
   const byId=new Map(story.points.map(point=>[point.id,point]));
   const fallenEvidence=EVIDENCE_TO_FALLEN[story.evidenceState]||'public_source';
 
@@ -94,9 +99,9 @@ export function compileGraphicsCommand(story){
     return {
       id:'route-'+(index+1),
       points:[{lat:from.lat,lon:from.lon},{lat:to.lat,lon:to.lon}],
-      evidenceState:fallenEvidence,
+      evidenceState:'synthetic_visualization',
       sourceRefs:story.sourceRefs,
-      width:treatment==='geo_spine'?7:4,
+      width:treatment==='geo_spine'?(terrain?2:5):3,
     };
   });
 
@@ -133,9 +138,38 @@ export function compileGraphicsCommand(story){
         : ['establish_subject','reveal_evidence','land_primary_metric'],
     },
     metrics,
+    geography:(boundary||terrain) ? {
+      ...(boundary ? {
+        boundaryId:boundary.id,
+        boundaryName:boundary.name,
+        boundarySourceRef:boundary.sourceRef,
+        boundaryRightsState:boundary.rightsState,
+        boundaryLicense:boundary.license,
+        boundarySourceSha256:boundary.sourceSha256,
+        boundaryTransform:boundary.transform,
+      } : {}),
+      terrain:terrain ? {
+        id:terrain.id,
+        name:terrain.name,
+        provider:terrain.provider,
+        service:terrain.service,
+        sourceRef:terrain.sourceRef,
+        exportEndpoint:terrain.exportEndpoint,
+        sourceFamily:terrain.sourceFamily,
+        rightsState:terrain.rightsState,
+        license:terrain.license,
+        sourceSha256:terrain.sourceSha256,
+        assetName:terrain.assetName,
+        width:terrain.width,
+        height:terrain.height,
+        bbox:terrain.bbox,
+      } : null,
+      projection:terrain?'equirectangular':'source_boundary_frame',
+    } : null,
     provenance:{
       evidenceState:story.evidenceState,
       sourceRefs:story.sourceRefs,
+      geographySourceRefs:uniq([boundary?.sourceRef,terrain?.sourceRef]),
       frontOfHouse:'minimal',
       detailPlacement:'sources_and_methodology',
     },
@@ -146,10 +180,33 @@ export function compileGraphicsCommand(story){
       durationSec:12,
       aspectRatio:'9:16',
       map:{
-        projection:'mercator',
-        centerLat,
-        centerLon,
-        zoom:mapZoom(story.points),
+        projection:terrain?'equirectangular':'mercator',
+        centerLat:boundaryAsset?(boundaryAsset.bbox.minLat+boundaryAsset.bbox.maxLat)/2:centerLat,
+        centerLon:boundaryAsset?(boundaryAsset.bbox.minLon+boundaryAsset.bbox.maxLon)/2:centerLon,
+        zoom:boundaryAsset?1:mapZoom(story.points),
+        fitBounds:boundaryAsset ? {
+          north:boundaryAsset.bbox.maxLat,
+          south:boundaryAsset.bbox.minLat,
+          east:boundaryAsset.bbox.maxLon,
+          west:boundaryAsset.bbox.minLon,
+          paddingPct:.08,
+        } : undefined,
+        terrains:terrain ? [{
+          id:terrain.id,
+          sourcePath:'./'+terrain.assetName,
+          bounds:{
+            north:terrain.bbox.maxLat,
+            south:terrain.bbox.minLat,
+            east:terrain.bbox.maxLon,
+            west:terrain.bbox.minLon,
+          },
+          opacity:.74,
+          blendMode:'multiply',
+          evidenceState:'public_source',
+          sourceRefs:[terrain.sourceRef],
+          sourceSha256:terrain.sourceSha256,
+          rightsState:terrain.rightsState,
+        }] : [],
         routes,
         points:story.points.map(point=>({
           id:point.id,
@@ -159,6 +216,17 @@ export function compileGraphicsCommand(story){
           evidenceState:fallenEvidence,
           sourceRefs:story.sourceRefs,
         })),
+        polygons:boundaryAsset ? [{
+          id:boundaryAsset.id,
+          rings:[boundaryAsset.coordinates.map(([lon,lat])=>({lat,lon}))],
+          label:boundaryAsset.name,
+          fill:'rgba(79,184,255,.08)',
+          stroke:'#4FB8FF',
+          strokeWidth:2,
+          opacity:.9,
+          evidenceState:'public_source',
+          sourceRefs:[boundaryAsset.provenance.sourceRef],
+        }] : [],
       },
       metrics:metrics.map(metric=>({
         id:metric.id,

@@ -76,6 +76,16 @@ jobs:
                  [ "$error" = "json_http_404:/visuals/washington-active-volcanoes/graphics-plan.json" ] || \
                  [ "$error" = "json_http_404:/visuals/washington-active-volcanoes/scroll-stop-report.json" ] || \
                  [ "$error" = "json_http_404:/visuals/washington-active-volcanoes/fallen-stage-input.json" ] || \
+                 [ "$error" = "json_http_404:/visuals/washington-active-volcanoes/poster-quality-report.json" ] || \
+                 [ "$error" = "http_404:/visuals/washington-active-volcanoes/poster-story.html" ] || \
+                 [ "$error" = "graphics_command_state_geometry_missing" ] || \
+                 [ "$error" = "graphics_command_cinematic_geography_missing" ] || \
+                 [ "$error" = "graphics_command_terrain_relief_missing" ] || \
+                 [ "$error" = "graphics_command_terrain_lineage_missing" ] || \
+                 [ "$error" = "graphics_command_boundary_lineage_missing" ] || \
+                 [ "$error" = "graphics_command_fallen_polygon_missing" ] || \
+                 [ "$error" = "graphics_command_responsive_preview_missing" ] || \
+                 [ "$error" = "graphics_command_directed_motion_missing" ] || \
                  [ "$error" = "visual_desk_ingest_route_not_deployed" ] || \
                  [ "$error" = "visual_desk_ingest_credential_not_ready" ]; then
                 deployment_wait_started=true

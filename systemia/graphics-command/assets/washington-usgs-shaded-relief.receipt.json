@@ -1,0 +1,26 @@
+{
+  "schema": "evercraft.graphics-command.terrain-acquisition-receipt.v1",
+  "terrainId": "usgs-wa-shaded-relief-3dep-v1",
+  "provider": "U.S. Geological Survey / The National Map",
+  "service": "USGSShadedReliefOnly",
+  "serviceRef": "https://basemap.nationalmap.gov/arcgis/rest/services/USGSShadedReliefOnly/MapServer",
+  "exportEndpoint": "https://basemap.nationalmap.gov/arcgis/rest/services/USGSShadedReliefOnly/MapServer/export",
+  "bbox": {
+    "west": -124.84897,
+    "south": 45.54354,
+    "east": -116.91568,
+    "north": 49.00196,
+    "spatialReference": 4326
+  },
+  "image": {
+    "width": 1600,
+    "height": 900,
+    "format": "png32",
+    "transparent": false,
+    "bytes": 1148283
+  },
+  "rightsState": "public_domain",
+  "sourceFamily": "USGS The National Map / 3DEP shaded relief",
+  "sha256": "0f04cbf36461720b71e72809fa10e831bd77ca0701be09d81732fe20d7a35632",
+  "publicationAuthority": false
+}

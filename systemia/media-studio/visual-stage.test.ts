@@ -36,6 +36,27 @@ const stage:VisualStage={
         sourceRefs:['source:ais-proof'],
         progress:[{t:0,value:0},{t:8,value:1,ease:'ease_in_out'}]
       }],
+      polygons:[{
+        id:'public-zone',
+        rings:[[
+          {lat:42,lon:135},{lat:42,lon:145},{lat:30,lon:145},{lat:30,lon:135},{lat:42,lon:135}
+        ]],
+        fill:'rgba(79,184,255,.08)',
+        stroke:'#4FB8FF',
+        evidenceState:'public_source',
+        sourceRefs:['source:zone-boundary']
+      }],
+      terrains:[{
+        id:'public-relief',
+        sourcePath:'./terrain-relief.png',
+        bounds:{north:45,south:25,east:175,west:130},
+        opacity:.7,
+        blendMode:'multiply',
+        evidenceState:'public_source',
+        sourceRefs:['source:usgs-relief'],
+        sourceSha256:'a'.repeat(64),
+        rightsState:'public_domain'
+      }],
       evidenceState:'public_source',
       sourceRefs:['source:map-proof']
     },
@@ -92,6 +113,23 @@ test('geographic projection and route progress work without a map provider',()=>
   });
   assert.equal(projected.length,1);
   assert.ok(projected[0].length>=2);
+
+  const washington={
+    north:49.00196,south:45.54354,east:-116.91568,west:-124.84897,paddingPct:.08
+  };
+  const nw=projectGeo({
+    lat:washington.north,lon:washington.west,projection:'mercator',
+    width:940,height:650,fitBounds:washington
+  });
+  const se=projectGeo({
+    lat:washington.south,lon:washington.east,projection:'mercator',
+    width:940,height:650,fitBounds:washington
+  });
+  assert.equal(nw.visible,true);
+  assert.equal(se.visible,true);
+  assert.ok(nw.x<se.x);
+  assert.ok(nw.y<se.y);
+  assert.ok(nw.x>=940*.07&&se.x<=940*.93);
 });
 
 test('stage validation enforces provenance for modeled and synthetic layers',()=>{
@@ -120,4 +158,49 @@ test('HTML stage has deterministic frame-control hooks and no external runtime d
   assert.match(html,/evercraftFrameReady/);
   assert.doesNotMatch(html,/https:\/\//);
   assert.match(html,/ROUTE VISUALIZATION/);
+  assert.match(html,/dataset\.geoPolygon/);
+  assert.match(html,/dataset\.geoTerrain/);
+  assert.match(html,/mix-blend-mode/);
+  assert.match(html,/fill-rule/);
+});
+
+test('geo polygons fail closed on invalid rings and modeled shapes without provenance',()=>{
+  const badRing:VisualStage=structuredClone(stage);
+  const geo=badRing.layers.find(layer=>layer.kind==='geo');
+  if(!geo||geo.kind!=='geo') throw new Error('geo_layer_missing');
+  geo.polygons=[{
+    id:'bad',
+    rings:[[{lat:1,lon:1},{lat:2,lon:2}]],
+    evidenceState:'public_source',
+    sourceRefs:['source:bad']
+  }];
+  assert.equal(validateStage(badRing).status,'rejected');
+
+  const badProvenance:VisualStage=structuredClone(stage);
+  const geo2=badProvenance.layers.find(layer=>layer.kind==='geo');
+  if(!geo2||geo2.kind!=='geo') throw new Error('geo_layer_missing');
+  geo2.polygons=[{
+    id:'modeled-zone',
+    rings:[[{lat:1,lon:1},{lat:1,lon:2},{lat:2,lon:1}]],
+    evidenceState:'modeled'
+  }];
+  assert.equal(validateStage(badProvenance).status,'rejected');
+});
+
+
+test('geo terrain fails closed on missing provenance and invalid bounds',()=>{
+  const badTerrain:VisualStage=structuredClone(stage);
+  const geo=badTerrain.layers.find(layer=>layer.kind==='geo');
+  if(!geo||geo.kind!=='geo') throw new Error('geo_layer_missing');
+  geo.terrains=[{
+    id:'bad-terrain',
+    sourcePath:'./bad.png',
+    bounds:{north:20,south:30,east:10,west:0},
+    evidenceState:'public_source',
+    sourceRefs:[]
+  }];
+  const result=validateStage(badTerrain);
+  assert.equal(result.status,'rejected');
+  assert.ok(result.errors.some(error=>error.startsWith('geo_terrain_bounds_invalid:')));
+  assert.ok(result.errors.some(error=>error.startsWith('geo_terrain_provenance_missing:')));
 });
