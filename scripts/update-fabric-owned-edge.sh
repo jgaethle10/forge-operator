@@ -20,6 +20,7 @@ ROUTER_MAP_ENV="/etc/evercraft/router-map.env"
 ROUTER_MAP_INSTALLER=""
 SABAN_CAPACITY_INSTALLER=""
 SABAN_CAPACITY_STATE_DIR="/var/lib/evercraft/saban-capacity"
+SABAN_CAPACITY_HEALTH_FILE="/var/lib/evercraft/fabric-secrets/saban-capacity-health.json"
 
 usage() {
   cat <<'EOF'
@@ -281,12 +282,23 @@ ensure_network_observer() {
 
 write_saban_capacity_receipt() {
   local state="$1" reason="${2:-}"
-  local release_ref=""
+  local release_ref="" observed_at="" resident=false
   release_ref="$(as_user git -C "$REPO_ROOT" rev-parse HEAD 2>/dev/null || true)"
+  observed_at="$(date -u +%FT%TZ)"
+  [[ "$state" == "ready" ]] && resident=true
+
   printf '{"schema":"evercraft.fabric-saban-capacity-reconcile.v1","state":"%s","release_ref":"%s","reason":"%s","owned_host":true,"zero_spend_only":true,"public_market_discovery":false,"observed_at":"%s"}\n' \
-    "$state" "$release_ref" "$reason" "$(date -u +%FT%TZ)" \
+    "$state" "$release_ref" "$reason" "$observed_at" \
     > "$STATE_DIR/saban-capacity.json"
   chmod 0640 "$STATE_DIR/saban-capacity.json"
+
+  install -d -o root -g "$RUN_USER" -m 0750 "$(dirname "$SABAN_CAPACITY_HEALTH_FILE")"
+  local health_tmp
+  health_tmp="$(mktemp "$STATE_DIR/saban-capacity-health.XXXXXX")"
+  printf '{"schema":"evercraft.fabric-saban-capacity-health.v1","resident":%s,"state":"%s","owned_host":true,"zero_spend_only":true,"public_market_discovery":false,"observed_at":"%s"}\n' \
+    "$resident" "$state" "$observed_at" > "$health_tmp"
+  install -o "$RUN_USER" -g "$RUN_USER" -m 0640 "$health_tmp" "$SABAN_CAPACITY_HEALTH_FILE"
+  rm -f "$health_tmp"
 }
 
 verify_saban_capacity_state() {

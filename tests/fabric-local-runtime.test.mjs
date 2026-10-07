@@ -1,5 +1,8 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
+import fs from 'node:fs';
+import os from 'node:os';
+import path from 'node:path';
 import {
   nativeOnlyCatalog,
   startFabricLocalRuntime,
@@ -33,6 +36,50 @@ test('native-only bridge removes every Base44 handoff while keeping owned/public
   assert.equal(connections.some((x)=>/base44\.app/.test(x.url)),false);
   assert.equal(connections.some((x)=>x.url==='https://fabric.evercraft.example/mcp/native'),true);
   assert.equal(connections.some((x)=>x.type==='website'&&x.url==='https://example.com/'),true);
+});
+
+test('Fabric health exposes only redacted Saban Resource Field residency and fails stale receipts closed',async()=>{
+  const root=fs.mkdtempSync(path.join(os.tmpdir(),'fabric-saban-health-'));
+  const healthFile=path.join(root,'saban-capacity-health.json');
+  const write=(observed_at)=>fs.writeFileSync(healthFile,JSON.stringify({
+    schema:'evercraft.fabric-saban-capacity-health.v1',
+    resident:true,
+    state:'ready',
+    owned_host:true,
+    zero_spend_only:true,
+    public_market_discovery:false,
+    observed_at,
+    private_node_id:'must-not-leak',
+    allocator_token:'must-not-leak',
+  }));
+
+  write(new Date().toISOString());
+  const runtime=await startFabricLocalRuntime({
+    host:'127.0.0.1',
+    port:0,
+    catalog,
+    sabanCapacityHealthFile:healthFile,
+  });
+  try{
+    let health=await fetch(runtime.url+'/health').then((r)=>r.json());
+    assert.equal(health.saban_resource_field_resident,true);
+    assert.equal(health.saban_resource_field_state,'ready');
+    assert.equal(health.saban_resource_field_zero_spend_only,true);
+    assert.equal(health.saban_resource_field_public_market_discovery,false);
+    assert.equal(health.saban_resource_field_receipt_stale,false);
+    assert.ok(health.saban_resource_field_observed_at);
+    assert.equal('private_node_id' in health,false);
+    assert.equal('allocator_token' in health,false);
+
+    write('2000-01-01T00:00:00Z');
+    health=await fetch(runtime.url+'/health').then((r)=>r.json());
+    assert.equal(health.saban_resource_field_resident,false);
+    assert.equal(health.saban_resource_field_state,'ready');
+    assert.equal(health.saban_resource_field_receipt_stale,true);
+  }finally{
+    await runtime.close();
+    fs.rmSync(root,{recursive:true,force:true});
+  }
 });
 
 test('Fabric local runtime is read-only, tunnel-compatible, and makes no Base44 transport available',async()=>{
