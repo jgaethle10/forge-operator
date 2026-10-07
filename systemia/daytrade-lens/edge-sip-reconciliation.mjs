@@ -29,7 +29,7 @@ function around(timestamp,beforeMs=30000,afterMs=1000){
     end:new Date(t+afterMs).toISOString(),
   };
 }
-async function sipQuoteStateAt(symbol,timestamp,{key,secret,max_staleness_ms=5000}){
+async function sipQuoteStateAt(symbol,timestamp,{key,secret,max_state_age_ms=60000}){
   const target=new Date(timestamp).getTime();
   const range=around(timestamp);
   const rows=await fetchAlpacaQuotes(symbol,{
@@ -51,15 +51,16 @@ async function sipQuoteStateAt(symbol,timestamp,{key,secret,max_staleness_ms=500
     );
   }
   const stalenessMs=target-new Date(q.t).getTime();
-  if(stalenessMs<0||stalenessMs>max_staleness_ms){
+  if(stalenessMs<0||stalenessMs>max_state_age_ms){
     throw new Error(
-      "sip_reconciliation_quote_stale_"+symbol+"_"+stalenessMs
+      "sip_reconciliation_quote_state_too_old_"+symbol+"_"+stalenessMs
     );
   }
   return {
     ...q,
     target_time:new Date(target).toISOString(),
-    quote_staleness_ms:stalenessMs,
+    quote_state_age_ms:stalenessMs,
+    quote_state_age_over_5s:stalenessMs>5000,
     no_post_target_quote_used:true,
   };
 }
@@ -212,6 +213,7 @@ async function main(){
     interpretation:{
       delayed_sip_is_after_the_fact_only:true,
       delayed_sip_uses_latest_pre_target_quote_state:true,
+      persisted_nbbo_state_age_is_recorded_not_hidden:true,
       no_post_target_quote_lookahead:true,
       delayed_sip_touch_is_not_real_fill:true,
       decision_flip_means_feed_choice_changes_rule_outcome:true,
