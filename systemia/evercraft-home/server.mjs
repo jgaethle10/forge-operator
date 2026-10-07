@@ -140,7 +140,7 @@ export async function startEvercraftHomeServer({
   if (ownerClaimSha256 && !/^[a-f0-9]{64}$/.test(ownerClaimSha256)) {
     throw new Error("owner_claim_sha256_invalid");
   }
-  const claimLimiter = new IdentityRateLimiter({ maxFailures: 8, windowMs: 15 * 60 * 1000, lockMs: 30 * 60 * 1000 });
+  const claimLimiter = new IdentityRateLimiter({ maxFailures: 8, windowMs: 15 * 60 * 1000, blockMs: 30 * 60 * 1000 });
   const instanceId = "home_" + randomUUID();
   const ravenWorkBridgeUrl = String(serviceOrigins?.RAVEN_NEXUS_WORK_URL || "").trim();
   const ravenWorkBridgeTokenFile = String(serviceOrigins?.RAVEN_NEXUS_WORK_TOKEN_FILE || "").trim();
