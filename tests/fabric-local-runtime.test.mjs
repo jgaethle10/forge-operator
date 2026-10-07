@@ -210,7 +210,7 @@ test('Fabric public customer front door is branded, browsable, and policy-safe',
     assert.match(volcanoResponse.headers.get('content-type')||'',/^text\/html/);
     const volcano=await volcanoResponse.text();
     assert.match(volcano,/Washington/);
-    assert.match(volcano,/card-feed\.svg/);
+    assert.match(volcano,/poster-feed\.svg/);
     assert.match(volcano,/usgs\.gov/);
 
     const storyCardResponse=await fetch(runtime.url+'/visuals/washington-active-volcanoes/card-story.svg');
