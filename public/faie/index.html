@@ -317,6 +317,23 @@ const esc = (value) => String(value == null ? '' : value).replace(/[&<>"']/g, (c
 const fmt = (value) => value ? new Date(value).toLocaleString(undefined,{dateStyle:'medium',timeStyle:'short'}) : 'Unknown';
 const cls = (value) => esc(String(value || '').toLowerCase());
 
+async function fetchWithTimeout(url, options={}, timeoutMs=15000) {
+  const controller = new AbortController();
+  const timer = window.setTimeout(() => controller.abort(), timeoutMs);
+  try {
+    return await fetch(url, {...options, signal: controller.signal});
+  } finally {
+    window.clearTimeout(timer);
+  }
+}
+
+function requestErrorMessage(error) {
+  if (error && error.name === 'AbortError') {
+    return 'FAIE did not answer within 15 seconds. The request was stopped instead of hanging forever. Retry once; if it repeats, the live edge needs attention.';
+  }
+  return error && error.message ? error.message : String(error);
+}
+
 let lastInvestigation = null;
 
 function renderResult(inv) {
@@ -479,8 +496,8 @@ async function loadState() {
   const signalsEl = document.getElementById('signals');
   try {
     const [healthRes, signalsRes] = await Promise.all([
-      fetch('/api/faie/health',{cache:'no-store'}),
-      fetch('/api/faie/signals?limit=12',{cache:'no-store'})
+      fetchWithTimeout('/api/faie/health',{cache:'no-store'},8000),
+      fetchWithTimeout('/api/faie/signals?limit=12',{cache:'no-store'},8000)
     ]);
     const health = await healthRes.json();
     const state = await signalsRes.json();
@@ -602,7 +619,7 @@ document.getElementById('compareRun').addEventListener('click', async () => {
   document.getElementById('comparisonResult').innerHTML = '<div class="quiet">Running the same evidence rubric across both candidates…</div>';
 
   try {
-    const response = await fetch('/api/faie/compare', {
+    const response = await fetchWithTimeout('/api/faie/compare', {
       method:'POST',
       headers:{'Content-Type':'application/json'},
       body:JSON.stringify({
@@ -617,12 +634,12 @@ document.getElementById('compareRun').addEventListener('click', async () => {
           {label:labelB,region_keys:[regionB]}
         ]
       })
-    });
+    },15000);
     const payload = await response.json();
     if (!response.ok) throw new Error(payload.error || 'Comparison failed.');
     renderComparison(payload);
   } catch (error) {
-    document.getElementById('comparisonResult').innerHTML = '<div class="quiet error">' + esc(error && error.message ? error.message : error) + '</div>';
+    document.getElementById('comparisonResult').innerHTML = '<div class="quiet error">' + esc(requestErrorMessage(error)) + '</div>';
   } finally {
     button.disabled = false;
     button.textContent = 'Compare evidence readiness';
@@ -649,7 +666,7 @@ document.getElementById('form').addEventListener('submit', async (event) => {
   document.getElementById('result').innerHTML = '<div class="quiet">Building a bounded evidence packet…</div>';
 
   try {
-    const response = await fetch('/api/faie/investigate', {
+    const response = await fetchWithTimeout('/api/faie/investigate', {
       method:'POST',
       headers:{'Content-Type':'application/json'},
       body:JSON.stringify({
@@ -661,13 +678,13 @@ document.getElementById('form').addEventListener('submit', async (event) => {
         thesis_assumptions:thesisAssumptions,
         horizon_days:horizonDays
       })
-    });
+    },15000);
     const payload = await response.json();
     if (!response.ok) throw new Error(payload.error || 'Investigation failed.');
     renderResult(payload);
     await loadState();
   } catch (error) {
-    document.getElementById('result').innerHTML = '<div class="quiet error">' + esc(error && error.message ? error.message : error) + '</div>';
+    document.getElementById('result').innerHTML = '<div class="quiet error">' + esc(requestErrorMessage(error)) + '</div>';
   } finally {
     button.disabled = false;
     button.textContent = 'Build decision packet';
