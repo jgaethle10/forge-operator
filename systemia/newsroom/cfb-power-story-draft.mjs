@@ -31,7 +31,7 @@ export function buildCfbPowerStoryDraft({
   freshnessHours = 168,
 } = {}){
   if(ranking?.schema !== 'evercraft.cfb-power-rankings.v1') throw new Error('cfb_story_ranking_schema_invalid');
-  if(ledger?.schema !== 'evercraft.cfb.completed-game-ledger.v1') throw new Error('cfb_story_ledger_schema_invalid');
+  if(!['evercraft.cfb.completed-game-ledger.v1','evercraft.cfb.completed-game-ledger.v2'].includes(ledger?.schema)) throw new Error('cfb_story_ledger_schema_invalid');
   if(!Array.isArray(ranking.rankings) || ranking.rankings.length < 25) throw new Error('cfb_story_top_25_required');
   if(!Array.isArray(ledger.games) || !ledger.games.length) throw new Error('cfb_story_game_ledger_required');
 
@@ -84,8 +84,13 @@ export function buildCfbPowerStoryDraft({
         ledger:{
           schema:ledger.schema,
           source:ledger.source,
-          start_date:ledger.start_date,
-          end_date:ledger.end_date,
+          source_authority:ledger.source_authority || null,
+          season:ledger.season || ranking.season,
+          start_date:ledger.start_date || null,
+          end_date:ledger.end_date || ledger.through_date || throughDay,
+          through_date:ledger.through_date || throughDay,
+          fetched_weeks:ledger.fetched_weeks || null,
+          membership:ledger.membership || null,
           source_urls:ledger.source_urls,
           completed_game_count:ledger.games.length,
           games:ledger.games,
