@@ -7,6 +7,7 @@ import { createDirectHttpLineageRemote } from './http-remote.mjs';
 import { exportLineageSnapshotToGit, importGitHistory } from './git-bridge.mjs';
 import { buildHistoryGraph, writeHistoryBundle } from './history-view.mjs';
 import { ReleaseRegistry } from './release-pointer.mjs';
+import { planGarbageCollection, purgeQuarantine, quarantineGarbage, restoreQuarantine } from './gc.mjs';
 import { verifyLineageIntegrity } from './fsck.mjs';
 import { LocalLineageRemote, fetchCommitGraph, pushCommitGraph } from './remote-protocol.mjs';
 import { readFile } from 'node:fs/promises';
@@ -185,6 +186,38 @@ async function main() {
       }), null, 2));
       break;
     }
+    case 'gc-plan': {
+      const graceHours = Number(args[0] || 24);
+      if (!Number.isFinite(graceHours) || graceHours < 0) throw new Error('Usage: lineage gc-plan [grace-hours]');
+      console.log(JSON.stringify(await planGarbageCollection(store, {
+        graceMs: graceHours * 60 * 60 * 1000
+      }), null, 2));
+      break;
+    }
+    case 'gc-quarantine': {
+      const graceHours = Number(args[0] || 24);
+      const retentionHours = Number(args[1] || 168);
+      if (!Number.isFinite(graceHours) || graceHours < 0 || !Number.isFinite(retentionHours) || retentionHours < 0) {
+        throw new Error('Usage: lineage gc-quarantine [grace-hours] [retention-hours]');
+      }
+      const plan = await planGarbageCollection(store, {
+        graceMs: graceHours * 60 * 60 * 1000
+      });
+      console.log(JSON.stringify(await quarantineGarbage(store, plan, {
+        retentionMs: retentionHours * 60 * 60 * 1000
+      }), null, 2));
+      break;
+    }
+    case 'gc-restore': {
+      if (!args[0]) throw new Error('Usage: lineage gc-restore <run-id>');
+      console.log(JSON.stringify(await restoreQuarantine(store, args[0]), null, 2));
+      break;
+    }
+    case 'gc-purge': {
+      if (!args[0]) throw new Error('Usage: lineage gc-purge <run-id>');
+      console.log(JSON.stringify(await purgeQuarantine(store, args[0]), null, 2));
+      break;
+    }
     case 'fsck': {
       const fast = args.includes('--fast');
       const result = await verifyLineageIntegrity(store, {
@@ -195,7 +228,7 @@ async function main() {
       break;
     }
     default:
-      console.log(`Evercraft Lineage\n\nCommands:\n  init [branch]\n  commit [message]\n  branch <name> [from]\n  switch <branch>\n  log [ref] [limit]\n  diff [from] [to]\n  restore <ref> [target]\n  rollback <ref>\n  merge-preview <branch>\n  merge <branch>\n  large-put <file> [media-type]\n  large-verify <manifest-id>\n  large-remote-push <remote-url> <manifest-id> [concurrency]\n  large-remote-fetch <remote-url> <manifest-id> [concurrency]\n  remote-refs <remote-dir>\n  remote-push <remote-dir> [branch] [expected-head]\n  remote-fetch <remote-dir> [remote-branch] [local-branch]\n  git-import <git-repo-dir> [git-ref] [lineage-branch]\n  git-export <git-repo-dir> [lineage-ref] [git-branch] [expected-git-head]\n  history [ref] [limit]\n  history-export <out-dir> [ref] [limit]\n  release-record <manifest.json>\n  release-show <name> [channel]\n  fsck [--fast]`);
+      console.log(`Evercraft Lineage\n\nCommands:\n  init [branch]\n  commit [message]\n  branch <name> [from]\n  switch <branch>\n  log [ref] [limit]\n  diff [from] [to]\n  restore <ref> [target]\n  rollback <ref>\n  merge-preview <branch>\n  merge <branch>\n  large-put <file> [media-type]\n  large-verify <manifest-id>\n  large-remote-push <remote-url> <manifest-id> [concurrency]\n  large-remote-fetch <remote-url> <manifest-id> [concurrency]\n  remote-refs <remote-dir>\n  remote-push <remote-dir> [branch] [expected-head]\n  remote-fetch <remote-dir> [remote-branch] [local-branch]\n  git-import <git-repo-dir> [git-ref] [lineage-branch]\n  git-export <git-repo-dir> [lineage-ref] [git-branch] [expected-git-head]\n  history [ref] [limit]\n  history-export <out-dir> [ref] [limit]\n  release-record <manifest.json>\n  release-show <name> [channel]\n  gc-plan [grace-hours]\n  gc-quarantine [grace-hours] [retention-hours]\n  gc-restore <run-id>\n  gc-purge <run-id>\n  fsck [--fast]`);
   }
 }
 
