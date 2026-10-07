@@ -1,3 +1,8 @@
+import {
+  applyWorldForgeChangeSet,
+  createWorldForgeChangeSet,
+  type WorldForgeChangeSet,
+} from './world-forge-changeset.js';
 import { renderWorldForgeNativeSolidPreview } from './world-forge-native-solid-preview.js';
 import { renderWorldForgeNativePreview } from './world-forge-native-preview.js';
 import { buildWorldForgeCinematicShot } from './world-forge-cinematic.js';
@@ -234,6 +239,58 @@ export function registerWorldForgeRoutes(app:Express,deps:WorldForgeHttpDeps){
       res.status(plan.status==='accepted'?200:422).json({
         success:plan.status==='accepted',
         plan,
+      });
+    },
+  );
+
+  app.post(
+    '/api/fallen/world-forge/change-set',
+    rateLimit(240,60*60*1000),
+    (req:Request,res:Response)=>{
+      const project=req.body?.project as WorldForgeProject|undefined;
+      const operations=req.body?.operations as WorldForgeOperation[]|undefined;
+      if(!project||!Array.isArray(operations)){
+        badRequest(res,'Project and World Forge operations are required.');
+        return;
+      }
+      try{
+        const changeSet=createWorldForgeChangeSet({
+          project,
+          id:String(req.body?.id||'').slice(0,200),
+          title:String(req.body?.title||'').slice(0,300),
+          author:{
+            kind:req.body?.author?.kind==='agent'||req.body?.author?.kind==='system'
+              ? req.body.author.kind
+              : 'human',
+            id:String(req.body?.author?.id||'studio-operator').slice(0,200),
+          },
+          operations,
+          destructiveAuthority:req.body?.destructiveAuthority===true,
+        });
+        res.json({success:true,changeSet});
+      }catch(error){
+        res.status(422).json({
+          success:false,
+          error:error instanceof Error?error.message:String(error),
+        });
+      }
+    },
+  );
+
+  app.post(
+    '/api/fallen/world-forge/apply-change-set',
+    rateLimit(240,60*60*1000),
+    (req:Request,res:Response)=>{
+      const project=req.body?.project as WorldForgeProject|undefined;
+      const changeSet=req.body?.changeSet as WorldForgeChangeSet|undefined;
+      if(!project||!changeSet){
+        badRequest(res,'Project and World Forge ChangeSet are required.');
+        return;
+      }
+      const result=applyWorldForgeChangeSet({project,changeSet});
+      res.status(result.status==='applied'?200:409).json({
+        success:result.status==='applied',
+        result,
       });
     },
   );

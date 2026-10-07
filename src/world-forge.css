@@ -462,6 +462,50 @@
   border-radius:7px;
 }
 
+.wf-stage-toggle.active{
+  border-color:#4d8eb8;
+  background:#173f58;
+  color:#dff5ff;
+}
+
+.wf-stage-tray{
+  position:absolute;
+  left:50%;
+  bottom:104px;
+  transform:translateX(-50%);
+  z-index:5;
+  width:min(560px,calc(100% - 48px));
+  display:grid;
+  grid-template-columns:auto auto 1fr;
+  align-items:center;
+  gap:10px;
+  padding:8px 10px;
+  border:1px solid #31536a;
+  border-radius:8px;
+  background:rgba(10,18,25,.92);
+  color:#d9efff;
+  box-shadow:0 14px 40px rgba(0,0,0,.28);
+  backdrop-filter:blur(12px);
+}
+
+.wf-stage-tray strong{
+  color:#71c9ff;
+  font-size:9px;
+  letter-spacing:.12em;
+}
+
+.wf-stage-tray span{
+  font-size:10px;
+  font-weight:800;
+}
+
+.wf-stage-tray small{
+  color:#768a9d;
+  font-family:ui-monospace,SFMono-Regular,Menlo,monospace;
+  font-size:9px;
+  text-align:right;
+}
+
 .wf-commandbar{
   position:absolute;
   left:50%;
