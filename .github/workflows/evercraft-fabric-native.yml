@@ -11,7 +11,7 @@ on:
       - 'public/visuals/**'
       - 'public/demos/**'
       - 'tests/fabric-offer-pages.test.mjs'
-      - 'tests/rivet-aliev-owned-pages.test.mjs'
+      - 'tests/aliev-owned-page.test.mjs'
       - 'scripts/update-fabric-owned-edge.sh'
       - 'scripts/fabric-edge-external-canary.mjs'
       - '.github/workflows/chromebook-operator-edge-canary.yml'
@@ -39,7 +39,7 @@ on:
       - 'systemia/organism/public-edge-activation-watch-runner.mjs'
       - 'tests/evercraft-fabric-runtime.test.mjs'
       - 'tests/fabric-offer-pages.test.mjs'
-      - 'tests/rivet-aliev-owned-pages.test.mjs'
+      - 'tests/aliev-owned-page.test.mjs'
       - 'tests/fabric-faie-native-runtime.test.mjs'
       - 'tests/fabric-mobile-runtime.test.mjs'
       - 'tests/specialist-handoff-native-runtime.test.mjs'
@@ -71,7 +71,7 @@ jobs:
         with:
           node-version: '22'
       - name: Prove Fabric MCP, human offer storefront, and mobile door
-        run: node --test tests/evercraft-fabric-runtime.test.mjs tests/fabric-offer-pages.test.mjs tests/rivet-aliev-owned-pages.test.mjs tests/fabric-mobile-runtime.test.mjs tests/fabric-faie-native-runtime.test.mjs
+        run: node --test tests/evercraft-fabric-runtime.test.mjs tests/fabric-offer-pages.test.mjs tests/aliev-owned-page.test.mjs tests/fabric-mobile-runtime.test.mjs tests/fabric-faie-native-runtime.test.mjs
       - name: Prove specialist runtime remains safe
         run: |
           npm install --no-audit --no-fund
