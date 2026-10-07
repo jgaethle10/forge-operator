@@ -9,6 +9,7 @@ on:
       - 'systemia/compute/runtime-node.mjs'
       - 'systemia/yard/operator.mjs'
       - 'systemia/yard/forensic-record-resident-runtime.proof.mjs'
+      - 'systemia/yard/forensic-record-seeded-runtime.proof.mjs'
       - 'systemia/organism/forensic-record-**'
       - 'systemia/core/resident-services.json'
       - 'systemia/core/supervisor.evercraft.compute.json'
@@ -25,6 +26,7 @@ on:
       - 'systemia/compute/runtime-node.mjs'
       - 'systemia/yard/operator.mjs'
       - 'systemia/yard/forensic-record-resident-runtime.proof.mjs'
+      - 'systemia/yard/forensic-record-seeded-runtime.proof.mjs'
       - 'systemia/organism/forensic-record-**'
       - 'systemia/core/resident-services.json'
       - 'systemia/core/supervisor.evercraft.compute.json'
@@ -55,5 +57,7 @@ jobs:
         run: node systemia/forensic-record/owned-corpus.proof.mjs
       - name: Prove Yard / Evercraft Compute resident runtime
         run: node systemia/yard/forensic-record-resident-runtime.proof.mjs
+      - name: Prove seeded resident runtime does not keep legacy source hot
+        run: node systemia/yard/forensic-record-seeded-runtime.proof.mjs
       - name: Prove Systemia resident supervision
         run: node systemia/core/forensic-record-resident-wiring.proof.mjs
