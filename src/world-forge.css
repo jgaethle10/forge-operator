@@ -699,3 +699,66 @@
 .wf-hidden-input{
   display:none;
 }
+
+.wf-view-controls{
+  position:absolute;
+  top:14px;
+  right:14px;
+  z-index:4;
+  display:flex;
+  align-items:center;
+  gap:6px;
+  padding:6px;
+  border:1px solid #273a49;
+  border-radius:8px;
+  background:rgba(8,14,20,.82);
+  backdrop-filter:blur(10px);
+}
+
+.wf-view-controls button{
+  border:1px solid #314657;
+  background:#101b24;
+  color:#c8d9e5;
+  border-radius:6px;
+  padding:6px 8px;
+  font-size:9px;
+  font-weight:800;
+  cursor:pointer;
+}
+
+.wf-view-controls button.active{
+  border-color:#4d94c2;
+  background:#173e57;
+  color:#e1f6ff;
+}
+
+.wf-view-controls button:disabled{
+  opacity:.38;
+  cursor:not-allowed;
+}
+
+.wf-view-controls span{
+  color:#718697;
+  font:800 9px ui-monospace,SFMono-Regular,Menlo,monospace;
+  padding:0 4px;
+}
+
+.wf-snap-control{
+  display:flex;
+  align-items:center;
+  gap:5px;
+  color:#718697;
+  font-size:9px;
+  font-weight:800;
+  text-transform:uppercase;
+  letter-spacing:.06em;
+}
+
+.wf-snap-control select{
+  border:1px solid #2d4252;
+  background:#0d1820;
+  color:#d8e8f2;
+  border-radius:6px;
+  padding:5px 6px;
+  font:800 9px ui-monospace,SFMono-Regular,Menlo,monospace;
+}
