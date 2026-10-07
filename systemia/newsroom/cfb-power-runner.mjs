@@ -3,7 +3,7 @@ import fs from 'node:fs';
 import path from 'node:path';
 import { pathToFileURL } from 'node:url';
 import crypto from 'node:crypto';
-import { fetchNcaaFbsSeasonLedger } from './cfb-results-ingest.mjs';
+import { fetchNcaaFbsEvidence } from './cfb-results-ingest.mjs';
 import { buildCfbPowerIndexInputFromGames } from './cfb-results-model.mjs';
 import { buildCfbPowerRankings } from './cfb-power-index.mjs';
 
@@ -19,24 +19,23 @@ export async function runCfbPowerEvidenceCycle({
   startDate,
   throughDate,
   weekLabel,
-  minimumAppearances=3,
   outDir='_cfb_power_run',
   previousRanks={},
   fetchImpl=globalThis.fetch,
   now=new Date(),
 }={}){
   const evidenceThroughAt=new Date(throughDate+'T23:59:59.999Z').toISOString();
-  const ledger=await fetchNcaaFbsSeasonLedger({
+  const evidence=await fetchNcaaFbsEvidence({
     season,
-    throughDate,
-    minimumAppearances,
+    startDate,
+    endDate:throughDate,
     fetchImpl,
   });
-  const membership=ledger.membership;
+  const membership=evidence.membership;
+  const ledger=evidence.ledger;
   const evidenceSnapshotId='cfb:'+season+':'+throughDate+':'+sha256(JSON.stringify({
     membership:membership.teams,
     games:ledger.games,
-    source_authority:ledger.source_authority,
   })).slice(0,20);
   const input=buildCfbPowerIndexInputFromGames({
     season,
@@ -72,8 +71,8 @@ export async function runCfbPowerEvidenceCycle({
     week_label:ranking.week_label,
     evidence_snapshot_id:evidenceSnapshotId,
     evidence_through_at:evidenceThroughAt,
-    source_authority:ledger.source_authority,
-    membership_derivation:membership.derivation,
+    source_authority:ledger.source_authority || membership.source_authority || 'NCAA',
+    membership_rule:membership.membership_rule || null,
     fbs_team_count:membership.teams.length,
     completed_game_count:ledger.games.length,
     ranked_team_count:ranking.rankings.length,
