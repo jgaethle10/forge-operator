@@ -295,6 +295,20 @@ Full `fsck` verifies:
 Dangling immutable storage is reported as a warning, not silently deleted. `fsck` never mutates the repository. Garbage collection must be a separate explicit operation so an integrity check can never destroy evidence or recovery state.
 
 
+## Bounded buffering and streaming interoperability
+
+Lineage distinguishes between an explicit in-memory read and a streaming materialization.
+
+`readEntryBytes(entry)` is intentionally bounded. The default ceiling is 64 MiB, and callers may supply a smaller `maxBytes` or `null` only when they explicitly accept unbounded buffering. If an entry exceeds the configured ceiling, Lineage fails with `LINEAGE_ENTRY_TOO_LARGE_FOR_BUFFER` before materializing the large object.
+
+`writeEntryToFile(entry, target)` is the preferred path for large assets. Ordinary blobs are written directly; manifest-backed entries stream through the large-object store, verify their full content digest and size, and atomically publish the completed target.
+
+Restore uses `writeEntryToFile`, so ordinary Lineage checkout remains streaming for large assets.
+
+Git export also treats manifest-backed entries specially. Instead of calling `readEntryBytes`, it streams the entry into a temporary file under the target Git directory and lets `git hash-object -w <file>` consume that file directly. The temporary materialization is deleted immediately after Git has stored the blob, and the export workspace is removed in the final cleanup path.
+
+This keeps the normal large-asset path bounded by chunk size even when crossing the Git interoperability boundary. A caller has to opt into an unbounded buffer explicitly rather than receiving one accidentally.
+
 ## Reachability and reversible garbage collection
 
 Lineage treats garbage collection as a governed history operation, not a blind filesystem sweep.
