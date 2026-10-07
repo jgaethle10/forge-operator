@@ -13,6 +13,9 @@ test('reference-frame proof extracts and hashes the exact owned World Engine WGS
   assert.match(shader.source,/@fragment/);
   assert.match(shader.source,/textureSample/);
   assert.match(shader.source,/@group\(1\) @binding\(4\)/);
+  assert.match(shader.source,/@group\(1\) @binding\(5\)/);
+  assert.match(shader.source,/input\.tangent/);
+  assert.match(shader.source,/normalTexture/);
 
   const expected='sha256:'+crypto
     .createHash('sha256')
