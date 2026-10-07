@@ -2,6 +2,7 @@ import assert from 'node:assert/strict';
 import crypto from 'node:crypto';
 import fs from 'node:fs';
 import http from 'node:http';
+import os from 'node:os';
 import path from 'node:path';
 import { once } from 'node:events';
 import { prepareNativeBrowserRuntime } from './native-runtime.mjs';
@@ -64,17 +65,20 @@ const address=server.address();
 if(!address||typeof address==='string') throw new Error('reference_frame_loopback_invalid');
 const url=`http://127.0.0.1:${address.port}/`;
 
-const stateDir=String(process.env.EVERCRAFT_NATIVE_BROWSER_STATE_DIR||'').trim();
+const configuredState=String(process.env.EVERCRAFT_NATIVE_BROWSER_STATE_DIR||'').trim();
+const ownsState=!configuredState;
+const stateDir=configuredState
+  ? path.resolve(configuredState)
+  : fs.mkdtempSync(path.join(os.tmpdir(),'evercraft-reference-frame-browser-'));
+fs.mkdirSync(stateDir,{recursive:true});
+
 const prepared=await prepareNativeBrowserRuntime({
   sourceDir:process.cwd(),
-  stateDir:stateDir||undefined,
+  stateDir,
   allowInstall:true,
 });
 assert.equal(prepared.ready,true);
-process.env.PLAYWRIGHT_BROWSERS_PATH=path.join(
-  stateDir||process.cwd(),
-  stateDir?'browsers':'.never-used'
-);
+process.env.PLAYWRIGHT_BROWSERS_PATH=path.join(stateDir,'browsers');
 
 const {chromium}=await import('playwright');
 const attempts=[];
@@ -199,3 +203,4 @@ const core={
 };
 const receipt={...core,receipt_hash:'sha256:'+sha256(core)};
 process.stdout.write(JSON.stringify(receipt,null,2)+'\n');
+if(ownsState) fs.rmSync(stateDir,{recursive:true,force:true});
