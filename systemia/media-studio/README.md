@@ -467,3 +467,9 @@ PulseGrid receipts now retain the exact semantic operation request that produced
 Undo is state-aware rather than cosmetic. It restores transport values, track DSP parameters, individual steps, note additions/moves/resizes/deletions, and full pre-edit clip snapshots for destructive clip-length changes. Every undo is validated against the canonical session graph and creates its own receipt linked to the original receipt through `undo_of`.
 
 This makes the promise of reversible agent edits executable inside the engine rather than merely descriptive metadata.
+
+### PulseGrid 0.8 variation forks
+
+PulseGrid can fork a source clip into another scene through `clip.fork_variation` without mutating the source. The new clip receives a distinct identity while preserving musical content, and its provenance records `parent_clip_id`, source scene and the actor that created the branch.
+
+This gives agents and musicians a native “try another idea without sacrificing this one” primitive. Later edits to the variation are isolated from the source, and executable undo restores the destination scene that existed before the fork.

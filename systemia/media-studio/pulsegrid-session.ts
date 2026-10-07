@@ -1,7 +1,7 @@
 import crypto from 'node:crypto';
 
 export const PULSEGRID_SESSION_SCHEMA = 'evercraft.fallen.pulsegrid.session.v1';
-export const PULSEGRID_ENGINE_VERSION = '0.7.0';
+export const PULSEGRID_ENGINE_VERSION = '0.8.0';
 
 export type PulseGridActor = 'human' | 'agent' | 'system' | 'controller';
 
@@ -81,6 +81,7 @@ export type PulseGridOperation =
   | { type: 'track.set_delay_mix'; track_id: string; mix: number }
   | { type: 'clip.set_bars'; track_id: string; scene: number; bars: number }
   | { type: 'clip.set_step'; track_id: string; scene: number; step: number; velocity: number }
+  | { type: 'clip.fork_variation'; track_id: string; source_scene: number; destination_scene: number; name?: string }
   | {
       type: 'note.add';
       track_id: string;
@@ -391,6 +392,27 @@ export function applyPulseGridOperation(
     clip.steps[operation.step] = clamp(operation.velocity, 0, 1);
     after = clip.steps[operation.step];
     targets = [`clip:${clip.id}.steps[${operation.step}]`];
+  } else if (operation.type === 'clip.fork_variation') {
+    const track = getTrack(session, operation.track_id);
+    const sourceClip = track.clips[operation.source_scene];
+    const destinationClip = track.clips[operation.destination_scene];
+    if (!sourceClip) throw new Error('Unknown PulseGrid source scene: ' + String(operation.source_scene));
+    if (!destinationClip) throw new Error('Unknown PulseGrid destination scene: ' + String(operation.destination_scene));
+    if (operation.source_scene === operation.destination_scene) throw new Error('PulseGrid variation fork requires a different destination scene.');
+    before = structuredClone(destinationClip);
+    const fork = structuredClone(sourceClip);
+    fork.id = crypto.randomUUID();
+    fork.name = String(operation.name || sourceClip.name + ' Variation').trim().slice(0, 120) || sourceClip.name + ' Variation';
+    fork.provenance = {
+      ...fork.provenance,
+      kind: 'variation',
+      parent_clip_id: sourceClip.id,
+      parent_scene: operation.source_scene,
+      forked_by: actor,
+    };
+    track.clips[operation.destination_scene] = fork;
+    after = structuredClone(fork);
+    targets = [`track:${track.id}.scene:${operation.destination_scene}`];
   } else if (operation.type === 'note.add') {
     const { clip } = getClip(session, operation.track_id, operation.scene);
     const note = normalizeNote({ ...operation.note, id: operation.note.id || crypto.randomUUID() }, clip.id, clip.notes.length, clip.steps.length);
@@ -472,6 +494,10 @@ export function undoPulseGridReceipt(
     const { clip } = getClip(session, operation.track_id, operation.scene);
     if (operation.step < 0 || operation.step >= clip.steps.length) throw new Error('PulseGrid undo step is out of range.');
     clip.steps[operation.step] = Number(originalReceipt.before);
+  } else if (operation.type === 'clip.fork_variation') {
+    const track = getTrack(session, operation.track_id);
+    if (!track.clips[operation.destination_scene]) throw new Error('Unknown PulseGrid destination scene: ' + String(operation.destination_scene));
+    track.clips[operation.destination_scene] = structuredClone(originalReceipt.before as PulseGridClip);
   } else if (operation.type === 'note.add') {
     const { clip } = getClip(session, operation.track_id, operation.scene);
     const created = originalReceipt.after as PulseGridNote | null;
