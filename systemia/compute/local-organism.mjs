@@ -84,6 +84,7 @@ export async function startLocalOrganism({
   ravenInferenceModel = '',
   ravenProviderCredentialStateDir = '',
   ravenOllamaOrigin = '',
+  zeroSpendCapacity = true,
   placementLabels = ['opportunistic', 'private', 'outbound-only', 'personal-compute'],
 } = {}) {
   if (!root) throw new Error('root is required');
@@ -123,6 +124,7 @@ export async function startLocalOrganism({
     advertiseHost: '127.0.0.1',
     allocatorToken,
     placementLabels,
+    zeroCost: zeroSpendCapacity === true,
     remoteOperatorRoots: remoteOperatorEnabled ? {
       home: os.homedir(),
       evercraft: CODE_ROOT,
@@ -235,6 +237,7 @@ export async function startLocalOrganism({
       local_compute_scope: 'loopback_only',
       field_certification_claimed: false,
       release_ref: releaseRef,
+      zero_cost: seed.zero_cost === true,
       requested_at: new Date().toISOString(),
     };
     enrollmentRequest.receipt_hash = `sha256:${sha(enrollmentRequest)}`;
@@ -260,6 +263,7 @@ export async function startLocalOrganism({
       runtime: 'Evercraft Compute',
       deployment_surface: 'Yard Operator',
       release_ref: releaseRef,
+      zero_spend_capacity: seed.zero_cost === true,
       public_ingress: false,
       node_endpoint_scope: 'loopback_only',
       kaidance: {
@@ -454,6 +458,9 @@ if (isCli) {
       process.env.EVERCRAFT_CREDENTIAL_STATE_DIR ||
       '',
     ravenOllamaOrigin: process.env.RAVEN_OLLAMA_ORIGIN || '',
+    zeroSpendCapacity: String(
+      process.env.EVERCRAFT_LOCAL_ZERO_SPEND ?? 'true'
+    ).toLowerCase() !== 'false',
     placementLabels: String(
       process.env.EVERCRAFT_LOCAL_NODE_LABELS ||
       'opportunistic,private,outbound-only,personal-compute'
@@ -478,6 +485,7 @@ if (isCli) {
     remote_admission_request_receipt:
       organism.enrollment_request.receipt_hash,
     remote_operator: organism.receipt.remote_operator,
+    zero_spend_capacity: organism.receipt.zero_spend_capacity === true,
     public_ingress: false,
     named_cloud_required: false,
     receipt_hash: organism.receipt.receipt_hash,
