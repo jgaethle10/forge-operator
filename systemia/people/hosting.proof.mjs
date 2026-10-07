@@ -74,6 +74,7 @@ try{
   assert.equal(hosted.route.mode,'public_edge');
   assert.match(hosted.route.origin,/^http:\/\/127\.0\.0\.1:/);
   assert.equal(hosted.active_release_ref,'1'.repeat(40));
+  assert.match(hosted.instance_id,/^people_/);
 
   const healthResponse=await fetch(new URL('/health',hosted.route.origin));
   assert.equal(healthResponse.status,200);
