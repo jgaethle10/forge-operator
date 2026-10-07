@@ -51,7 +51,7 @@ jobs:
         with:
           node-version: "22"
       - name: Prove Raven competition provider runtime
-        run: node --test systemia/competition/authorization-ledger.test.mjs systemia/competition/browser-draft-runtime.test.mjs systemia/competition/control-plane.test.mjs systemia/competition/mission-admission.test.mjs systemia/competition/provider-runtime.test.mjs systemia/competition/submission-runtime.test.mjs systemia/competition/resident-wiring.test.mjs tests/competition-saban-capacity.test.mjs tests/yard-private-capacity.test.mjs systemia/raven/provider-secret-boundary.test.mjs systemia/evercraft-home/provider-credentials.test.mjs
+        run: node --test systemia/competition/authorization-ledger.test.mjs systemia/competition/browser-draft-runtime.test.mjs systemia/competition/control-plane.test.mjs systemia/competition/mission-admission.test.mjs systemia/competition/provider-runtime.test.mjs systemia/competition/submission-runtime.test.mjs systemia/competition/resident-wiring.test.mjs systemia/competition/entries/qloo-commonground/agent.test.mjs tests/competition-saban-capacity.test.mjs tests/yard-private-capacity.test.mjs systemia/raven/provider-secret-boundary.test.mjs systemia/evercraft-home/provider-credentials.test.mjs
       - name: Prove fail-closed unconfigured resident scout
         run: |
           rm -rf artifacts/competition-provider

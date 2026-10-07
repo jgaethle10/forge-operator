@@ -14,7 +14,7 @@
       "evidence": {
         "source": "https://qloo.devpost.com/rules",
         "provider": "Devpost/Qloo",
-        "checked_on": "2026-10-05"
+        "checked_on": "2026-10-06"
       },
       "rules": {
         "verification_state": "verified",
@@ -34,10 +34,14 @@
         "open-source license"
       ],
       "build": {
-        "candidate": "Systemia taste-aware local discovery/recommendation agent using Qloo",
-        "state": "not_started",
+        "candidate": "CommonGround: Qloo-grounded group taste consensus agent",
+        "state": "prototype_implemented",
         "raven_qa_state": "not_run",
-        "submission_package_ready": false
+        "submission_package_ready": false,
+        "entry_package": "systemia/competition/entries/qloo-commonground",
+        "live_provider_canary": "not_run",
+        "public_repo_state": "not_extracted",
+        "hosted_demo_state": "not_verified"
       }
     },
     {
