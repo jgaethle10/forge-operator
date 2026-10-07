@@ -155,7 +155,11 @@ try{
 
   const exportResponse=await fetch(
     deployment.result.local_url+'/api/people/brains/'+encodeURIComponent(created.brain.brain_key)+'/export',
-    {method:'POST',headers:{authorization:'Bearer '+operatorAuthority,'content-type':'application/json'},body:'{}'}
+    {
+      method:'POST',
+      headers:{authorization:'Bearer '+operatorAuthority,'content-type':'application/json'},
+      body:JSON.stringify({person_confirmation_ref:'proof:export'}),
+    }
   );
   assert.equal(exportResponse.status,200);
   const exported=(await exportResponse.json()).export;
