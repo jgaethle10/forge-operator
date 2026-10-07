@@ -19,6 +19,8 @@ on:
       - "systemia/organism/public-edge-controller-runner.mjs"
       - "systemia/organism/public-edge-activation-watch.workflow.json"
       - ".github/workflows/evercraft-home-canary.yml"
+      - "scripts/install-evercraft-home-edge.sh"
+      - "scripts/update-fabric-owned-edge.sh"
       - "tests/home-canary-contract.test.mjs"
       - ".github/workflows/evercraft-home.yml"
   push:
@@ -41,6 +43,8 @@ on:
       - "systemia/organism/public-edge-controller-runner.mjs"
       - "systemia/organism/public-edge-activation-watch.workflow.json"
       - ".github/workflows/evercraft-home-canary.yml"
+      - "scripts/install-evercraft-home-edge.sh"
+      - "scripts/update-fabric-owned-edge.sh"
       - "tests/home-canary-contract.test.mjs"
       - ".github/workflows/evercraft-home.yml"
   workflow_dispatch:
@@ -67,6 +71,11 @@ jobs:
       - name: Prove sovereign shell
         working-directory: systemia/evercraft-home
         run: npm run check
+
+      - name: Syntax-check owned-edge convergence
+        run: |
+          bash -n scripts/install-evercraft-home-edge.sh
+          bash -n scripts/update-fabric-owned-edge.sh
 
       - name: Prove Evercraft Compute resident lifecycle
         run: node systemia/compute/evercraft-home-runtime.proof.mjs
