@@ -334,7 +334,7 @@ export function renderMotionStage(input){
     'const art=document.getElementById("art");',
     'const boundaries=Array.from(art.querySelectorAll(".geo-boundary"));',
     'const routes=Array.from(art.querySelectorAll(".story-route"));',
-    'const peaks=Array.from(art.querySelectorAll(".peak-marker,.peak-halo"));',
+    'const peaks=Array.from(art.querySelectorAll(".peak-marker,.peak-summit"));',
     'const labels=Array.from(art.querySelectorAll(".story-label"));',
     'const metrics=Array.from(art.querySelectorAll(".metric-value,.metric-label"));',
     'function clamp(v){return Math.max(0,Math.min(1,v));}',
