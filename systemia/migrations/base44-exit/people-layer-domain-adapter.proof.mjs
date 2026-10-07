@@ -92,8 +92,10 @@ test('current observed legacy footprint requires no real-person migration', () =
 
   assert.equal(summary.entities.PeopleBrain.accepted, 0);
   assert.equal(summary.entities.PeopleBrain.excluded, 1);
-  assert.equal(summary.real_person_migration_required, true);
+  assert.equal(summary.real_person_migration_required, false);
+  assert.equal(summary.active_person_brains, 0);
   // Hash-only revoked QA artifacts remain importable for audit lineage, but no active person brain exists.
+  assert.equal(summary.audit_lineage_records, 2);
   assert.equal(summary.entities.PeopleInvite.accepted, 1);
   assert.equal(summary.entities.PeopleIdentityChallenge.accepted, 1);
 });
