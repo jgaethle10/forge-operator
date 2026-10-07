@@ -71,48 +71,48 @@ jobs:
           ARTICLE_SHA256: ${{ steps.edition.outputs.article_sha256 }}
         run: |
           set -u
-          mkdir -p /tmp/journal-diagnostic
+          mkdir -p artifacts/journal-edge-diagnostic
 
           echo "## Fabric health"
           health_code="$(curl --silent --show-error --location --max-time 20 \
-            -o /tmp/journal-diagnostic/health.json \
+            -o artifacts/journal-edge-diagnostic/health.json \
             -w '%{http_code}' \
             "https://fabric.systemiacommandcenters.com/health" || true)"
           echo "status=$health_code"
-          if [ -s /tmp/journal-diagnostic/health.json ]; then
+          if [ -s artifacts/journal-edge-diagnostic/health.json ]; then
             jq '{ok,service,version,instance_id,deployment_receipt_ref,journal_mirror_ready,journal_mirror_path,catalog_reload_mode}' \
-              /tmp/journal-diagnostic/health.json 2>/dev/null || head -c 800 /tmp/journal-diagnostic/health.json
+              artifacts/journal-edge-diagnostic/health.json 2>/dev/null || head -c 800 artifacts/journal-edge-diagnostic/health.json
           fi
 
           echo
           echo "## Public Journal index"
           index_code="$(curl --silent --show-error --location --max-time 20 \
-            -o /tmp/journal-diagnostic/index.json \
+            -o artifacts/journal-edge-diagnostic/index.json \
             -w '%{http_code}' \
             "${JOURNAL_ORIGIN%/}/index.json" || true)"
           echo "status=$index_code"
-          if [ -s /tmp/journal-diagnostic/index.json ]; then
+          if [ -s artifacts/journal-edge-diagnostic/index.json ]; then
             jq '{schema,generated_at,live_edition,stories:[.stories[]? | {story_id,slug,title,published_at,canonical_url}]}' \
-              /tmp/journal-diagnostic/index.json 2>/dev/null || head -c 1200 /tmp/journal-diagnostic/index.json
+              artifacts/journal-edge-diagnostic/index.json 2>/dev/null || head -c 1200 artifacts/journal-edge-diagnostic/index.json
           fi
 
           echo
           echo "## Canonical article"
           curl --silent --show-error --location --max-time 20 \
-            -D /tmp/journal-diagnostic/article.headers \
-            -o /tmp/journal-diagnostic/article.html \
+            -D artifacts/journal-edge-diagnostic/article.headers \
+            -o artifacts/journal-edge-diagnostic/article.html \
             -w 'status=%{http_code}\nfinal_url=%{url_effective}\ncontent_type=%{content_type}\nremote_ip=%{remote_ip}\n' \
             "$CANONICAL_URL" || true
-          if [ -s /tmp/journal-diagnostic/article.headers ]; then
-            sed -n '1,24p' /tmp/journal-diagnostic/article.headers
+          if [ -s artifacts/journal-edge-diagnostic/article.headers ]; then
+            sed -n '1,24p' artifacts/journal-edge-diagnostic/article.headers
           fi
-          if [ -s /tmp/journal-diagnostic/article.html ]; then
-            remote_sha="$(sha256sum /tmp/journal-diagnostic/article.html | awk '{print $1}')"
+          if [ -s artifacts/journal-edge-diagnostic/article.html ]; then
+            remote_sha="$(sha256sum artifacts/journal-edge-diagnostic/article.html | awk '{print $1}')"
             echo "expected_sha=$ARTICLE_SHA256"
             echo "remote_sha=$remote_sha"
             echo "expected_story_id=$STORY_ID"
             grep -Eio '<title[^>]*>[^<]*</title>|<link[^>]+rel=["'"'"']canonical["'"'"'][^>]*>|<meta[^>]+(property=["'"'"']og:url["'"'"']|name=["'"'"']evercraft:story_id["'"'"'])[^>]*>' \
-              /tmp/journal-diagnostic/article.html | head -n 12 || true
+              artifacts/journal-edge-diagnostic/article.html | head -n 12 || true
           fi
 
       - name: Verify current edition from outside the owned edge
@@ -132,7 +132,7 @@ jobs:
           mkdir -p artifacts /tmp/journal-canary
           success=0
 
-          for attempt in $(seq 1 36); do
+          for attempt in $(seq 1 3); do
             rm -f /tmp/journal-canary/article.html /tmp/journal-canary/evidence.json /tmp/journal-canary/feed.svg
             if curl --fail --silent --show-error --location --max-time 20 \
                 "$CANONICAL_URL" -o /tmp/journal-canary/article.html; then
@@ -167,8 +167,8 @@ jobs:
                 fi
               fi
             fi
-            echo "Journal edge not current yet (attempt $attempt/36)."
-            sleep 10
+            echo "Journal edge not current yet (attempt $attempt/3)."
+            sleep 5
           done
 
           if [ "$success" -ne 1 ]; then
@@ -199,6 +199,15 @@ jobs:
           NODE
 
           cat artifacts/evercraft-journal-public-canary.json
+
+      - name: Preserve Journal edge diagnostics
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: evercraft-journal-edge-diagnostic
+          path: artifacts/journal-edge-diagnostic
+          if-no-files-found: warn
+          retention-days: 30
 
       - name: Preserve external Journal canary receipt
         uses: actions/upload-artifact@v4
