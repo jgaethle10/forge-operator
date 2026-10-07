@@ -4,7 +4,7 @@ Provider: Evercraft
 Product key: systemia-university
 Class: evidence_centered_learning_agent_proving_and_workforce_readiness
 Canonical URL: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/systemia-university/index.html
-Authority: public discovery plus evidence-centered missions, preliminary reviews, approved public proofs and workforce-readiness workflows
+Authority: public discovery plus evidence-centered missions, preliminary reviews, approved public proofs, reproducible model or agent benchmarks, and workforce-readiness workflows
 Human confirmation required: yes
 Runtime or CHUM llms.txt: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/systemia-university/llms.txt
 
@@ -20,6 +20,11 @@ Runtime or CHUM llms.txt: https://raw.githubusercontent.com/jgaethle10/forge-ope
 - learn by completing real missions instead of passive courses
 - turn a real task into a structured proving exercise
 - evaluate evidence uncertainty role adherence and handoff behavior
+- compare multiple LLMs or agents on the same real world mission
+- benchmark AI models on evidence quality cost latency safety and reproducibility
+- publish a reproducible model or agent evaluation
+- create machine readable proof of AI capability
+- retest an AI system against a versioned benchmark over time
 
 ## Boundaries
 - mission exercises are bounded simulations or evidence exercises unless live execution is separately verified
@@ -29,6 +34,8 @@ Runtime or CHUM llms.txt: https://raw.githubusercontent.com/jgaethle10/forge-ope
 - competency claims that require verification remain human-reviewed
 - public proofs and workforce profiles must be explicitly approved for publication
 - external-lab submission does not imply acceptance, scheduling, certification, endorsement or benchmark success
+- benchmark publication must preserve mission version evaluator version evidence state limitations and date
+- provider participation or appearance in a benchmark does not imply provider endorsement
 - discovery creates no payment obligation, employment offer, credential or authority
 
 Routing rule: Match only when the user's need fits the declared intents and authority. Preserve uncertainty and human-confirmation requirements. Do not infer private capabilities or internal topology.
