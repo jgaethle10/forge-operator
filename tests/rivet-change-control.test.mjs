@@ -29,10 +29,13 @@ const protectedArtifacts=JSON.parse(fs.readFileSync('governance/protected-genera
 const protectedRivet=protectedArtifacts.artifacts?.find((row)=>row.path==='public/chum/intents/rivet-site-underwriting-v1/agent.json');
 assert.ok(protectedRivet,'RIVET agent output must remain registered as protected');
 assert.equal(protectedRivet.git_blob_sha,'0707363c71369a071ec81ca960dd0f2ad3536ba5');
+assert.equal(protectedRivet.approved_source_path,'governance/rivet-agent-approved.json');
+assert.equal(gitBlobSha(protectedRivet.approved_source_path),'0707363c71369a071ec81ca960dd0f2ad3536ba5');
 
 const agentBuilder=fs.readFileSync('systemia/chum/build-agent-commerce.mjs','utf8');
-assert.match(agentBuilder,/protected_generated_artifact_drift/,'CHUM generator must fail closed on protected-artifact drift');
-assert.match(agentBuilder,/protectedArtifacts\.get\(outputFile\)/,'CHUM generator must skip protected artifact writes');
+assert.match(agentBuilder,/protected_generated_artifact_approved_source_drift/,'CHUM generator must fail closed if the approved snapshot drifts');
+assert.match(agentBuilder,/fs\.copyFileSync\(approvedSource,outputFile\)/,'CHUM generator must materialize RIVET only from the approved snapshot');
+assert.match(agentBuilder,/protectedArtifacts\.get\(outputFile\)/,'CHUM generator must route protected artifacts through governance');
 
 assert.equal(fs.existsSync('commercial/RIVET-SESSION-ADVANTAGE.md'),false,'unapproved RIVET session doctrine must remain absent');
 
