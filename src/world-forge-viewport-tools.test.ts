@@ -10,6 +10,7 @@ import {
   rayTriangleDistance,
   snapWorldDelta,
   viewportRayFromNdc,
+  type ViewportVec3,
 } from './world-forge-viewport-tools.js';
 
 test('viewport snapping is deterministic and removes negative zero',()=>{
@@ -102,16 +103,16 @@ test('ray picking hits actual triangles and chooses the nearest geometry',()=>{
     origin:{x:0,y:0,z:-2},
     direction:{x:0,y:0,z:1},
   };
-  const near=[
+  const near:[ViewportVec3,ViewportVec3,ViewportVec3]=[
     {x:-1,y:-1,z:0},
     {x:1,y:-1,z:0},
     {x:0,y:1,z:0},
-  ] as const;
-  const far=[
+  ];
+  const far:[ViewportVec3,ViewportVec3,ViewportVec3]=[
     {x:-1,y:-1,z:3},
     {x:1,y:-1,z:3},
     {x:0,y:1,z:3},
-  ] as const;
+  ];
 
   assert.equal(
     rayTriangleDistance(ray,near[0],near[1],near[2]),
