@@ -113,6 +113,7 @@ export async function startEvercraftHomeServer({
   credentialStateDir = String(process.env.EVERCRAFT_CREDENTIAL_STATE_DIR || (identityStateDir ? path.join(identityStateDir, "provider-credentials") : "")).trim(),
   sessionTtlSeconds = Number(process.env.EVERCRAFT_HOME_SESSION_TTL_SECONDS || 1800),
   cookieSecure = String(process.env.EVERCRAFT_HOME_COOKIE_SECURE || "true").toLowerCase() !== "false",
+  cookiePath = String(process.env.EVERCRAFT_HOME_COOKIE_PATH || "/").trim(),
   serviceOrigins = process.env,
   ownerClaimSha256 = String(process.env.EVERCRAFT_OWNER_CLAIM_SHA256 || "").trim().toLowerCase(),
   ownerSubjectRef = String(process.env.EVERCRAFT_OWNER_SUBJECT_REF || "user:owner").trim(),
@@ -124,6 +125,10 @@ export async function startEvercraftHomeServer({
     throw new Error("Local auth may only bind to loopback. Configure Evercraft Identity before remote exposure.");
   }
   if (!["local", "passport"].includes(authMode)) throw new Error("unsupported_auth_mode");
+  if (!/^\/(?:[A-Za-z0-9._~-]+\/?)*$/.test(cookiePath || "/")) {
+    throw new Error("home_cookie_path_invalid");
+  }
+  const normalizedCookiePath = cookiePath || "/";
   if (authMode === "passport" && (!identitySecret || !identityStateDir || !passportStateDir)) {
     throw new Error("Passport auth requires signing material, EVERCRAFT_IDENTITY_STATE_DIR and EVERCRAFT_PASSPORT_STATE_DIR.");
   }
@@ -183,7 +188,7 @@ export async function startEvercraftHomeServer({
   function sessionCookie(token, maxAgeSeconds) {
     return [
       "evercraft_session=" + encodeURIComponent(token),
-      "Path=/",
+      "Path=" + normalizedCookiePath,
       "HttpOnly",
       "SameSite=Strict",
       cookieSecure ? "Secure" : "",
