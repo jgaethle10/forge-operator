@@ -23,6 +23,8 @@ import {
   renderOfferPage,
   renderOffers,
   renderPaymentHoldPage,
+  renderRivetLanding,
+  renderAliEvLanding,
 } from './fabric-public-site.mjs';
 import {
   fabricMobileManifest,
@@ -542,6 +544,8 @@ export async function startFabricLocalRuntime({
     public_plugin_submission_ready:true,
     mobile_path:'/mobile',
     mobile_installable:true,
+    rivet_public_path:'/rivet',
+    aliev_public_path:'/aliev',
     chum_human_review_path_template:'/api/chum/go/{public_id}',
     chum_human_review_authority:'discovery_review_only',
     journal_mirror_path:'/journal/',
@@ -588,6 +592,24 @@ export async function startFabricLocalRuntime({
 
       if (req.method==='GET' && req.url==='/health') {
         return sendJson(res,200,health());
+      }
+
+      if (req.method==='GET' && (req.url==='/rivet'||req.url==='/rivet/')) {
+        return sendText(
+          res,
+          200,
+          renderRivetLanding(),
+          {contentType:'text/html; charset=utf-8'}
+        );
+      }
+
+      if (req.method==='GET' && (req.url==='/aliev'||req.url==='/aliev/')) {
+        return sendText(
+          res,
+          200,
+          renderAliEvLanding(),
+          {contentType:'text/html; charset=utf-8'}
+        );
       }
 
       if (req.method==='POST' && req.url==='/api/visuals/ingest') {
