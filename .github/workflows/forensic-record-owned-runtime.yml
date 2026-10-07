@@ -12,6 +12,7 @@ on:
       - 'systemia/yard/forensic-record-seeded-runtime.proof.mjs'
       - 'systemia/yard/forensic-record-public-runtime.proof.mjs'
       - 'systemia/yard/forensic-record-public-edge-controller.mjs'
+      - 'systemia/yard/forensic-record-public-edge-controller.proof.mjs'
       - 'systemia/forensic-record/public-runtime.mjs'
       - 'systemia/forensic-record/public-runtime.proof.mjs'
       - 'systemia/organism/forensic-record-**'
@@ -33,6 +34,7 @@ on:
       - 'systemia/yard/forensic-record-seeded-runtime.proof.mjs'
       - 'systemia/yard/forensic-record-public-runtime.proof.mjs'
       - 'systemia/yard/forensic-record-public-edge-controller.mjs'
+      - 'systemia/yard/forensic-record-public-edge-controller.proof.mjs'
       - 'systemia/forensic-record/public-runtime.mjs'
       - 'systemia/forensic-record/public-runtime.proof.mjs'
       - 'systemia/organism/forensic-record-**'
@@ -71,6 +73,8 @@ jobs:
         run: node systemia/yard/forensic-record-seeded-runtime.proof.mjs
       - name: Prove public read-only workload through Yard
         run: node systemia/yard/forensic-record-public-runtime.proof.mjs
+      - name: Prove public staging edge with real finding canary
+        run: node systemia/yard/forensic-record-public-edge-controller.proof.mjs
       - name: Prove public staging Systemia wiring
         run: node systemia/core/forensic-record-public-staging-wiring.proof.mjs
       - name: Prove Systemia resident supervision
