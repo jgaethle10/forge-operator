@@ -1573,6 +1573,58 @@ export class YardOperator {
     return record;
   }
 
+  invalidateDeployment(deploymentId, {
+    reason = 'runtime_authority_stale',
+    evidence = {},
+  } = {}) {
+    const record = this.deploymentStatus(deploymentId);
+    if (!record) {
+      return {
+        ok: false,
+        deployment_id: deploymentId,
+        state: 'missing',
+      };
+    }
+
+    this.stopContinuityKeeper(deploymentId);
+    const previousState = record.state;
+    const previousReceiptHash = record.receipt?.receipt_hash || null;
+    const body = {
+      schema: 'evercraft.yard.deployment-invalidation-receipt.v1',
+      deployment_id: deploymentId,
+      previous_state: previousState,
+      previous_deployment_receipt_hash: previousReceiptHash,
+      reason: String(reason || 'runtime_authority_stale').slice(0, 160),
+      evidence: evidence && typeof evidence === 'object'
+        ? structuredClone(evidence)
+        : {},
+      authority_revoked_locally: true,
+      invalidated_at: new Date().toISOString(),
+    };
+    const invalidation = {
+      ...body,
+      receipt_hash: `sha256:${sha(body)}`,
+    };
+
+    record.state = 'invalidated';
+    record.invalidation = invalidation;
+    record.updated_at = invalidation.invalidated_at;
+    this.deployments.set(deploymentId, record);
+    this.#persist(record);
+
+    const secretFile = this.#secretFile(deploymentId);
+    if (fs.existsSync(secretFile)) fs.rmSync(secretFile, { force: true });
+
+    return {
+      ok: true,
+      deployment_id: deploymentId,
+      state: 'invalidated',
+      receipt_hash: invalidation.receipt_hash,
+      previous_deployment_receipt_hash: previousReceiptHash,
+      authority_revoked_locally: true,
+    };
+  }
+
   verifyDeployment(deploymentId) {
     const record = this.deploymentStatus(deploymentId);
     if (!record) return { ok: false, state: 'missing' };
