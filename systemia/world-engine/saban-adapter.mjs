@@ -12,6 +12,7 @@ const ROLES=new Set([
   'replication_guard',
   'webgpu_guard',
   'webgpu_device_guard',
+  'texture_residency_guard',
   'studio_edit_guard',
   'runtime_migration_guard',
   'fallen_bridge_guard',
@@ -192,7 +193,7 @@ function evaluate(role,world){
       directives:[
         'Renderer adapters must consume verified visual-frame receipts and must not become canonical scene authority.',
         'The CPU-side WebGPU plan must be deterministic for the same visual frame, geometry assets and viewport.',
-        'Geometry, material and light limits fail closed; unsupported textures must never be silently ignored.',
+        'Geometry, material, texture and light references must fail closed when required assets or UVs are missing.',
         'Owned WGSL and WebGPU browser execution remain replaceable backend code behind the visual-frame contract.',
         'Node CI may prove planning, shader contracts and failure boundaries but must not claim physical GPU-device execution.',
         'Browser GPU submission requires a real navigator.gpu adapter/device receipt before any hardware-execution claim.'
@@ -212,6 +213,23 @@ function evaluate(role,world){
         'Ambiguous adapter metadata remains adapter_type_unknown rather than being promoted to hardware.',
         'Hardware execution may be described only as adapter-reported hardware when the reported vendor/architecture provides a non-software signal.',
         'Conformance receipts must preserve launch profile, adapter metadata, readback results and the native browser preflight receipt.'
+      ],
+      findings:[]
+    };
+  }
+
+  if(role==='texture_residency_guard'){
+    return {
+      category:'texture_residency',
+      directives:[
+        'Texture pixels, formats and sampler state must remain canonical inputs; GPU texture objects and caches are derived acceleration state.',
+        'Every referenced texture must resolve to a validated asset digest before a WebGPU plan is accepted.',
+        'Base-color, ORM and emissive texture bindings require explicit UV geometry and deterministic sampler normalization.',
+        'Normal maps remain fail-closed until tangent-space geometry and shader contracts exist.',
+        'Residency must be budgeted deterministically from required texture IDs; missing assets or over-budget required sets fail closed.',
+        'Texture hot reload preserves asset identity, emits before/after digests and invalidates only the affected GPU cache entry.',
+        'Renderer residency receipts describe what was loaded or evicted but do not become source-asset authority.',
+        'WebGPU submission must verify the deterministic render-plan digest before creating draw commands or texture bindings.'
       ],
       findings:[]
     };

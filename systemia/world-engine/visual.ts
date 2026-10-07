@@ -1,5 +1,6 @@
 import crypto from 'node:crypto';
 import type { TransformComponent, Vec3, WorldEntity } from './engine.js';
+import { normalizeTextureSampler, type TextureSamplerDefinition } from './texture.js';
 
 export interface ColorRGB {
   r:number;
@@ -30,6 +31,7 @@ export interface MaterialDefinition {
     orm?:string;
     emissive?:string;
   };
+  sampler?:TextureSamplerDefinition;
 }
 
 export interface RenderableComponent {
@@ -221,6 +223,7 @@ export function validateMaterial(material:MaterialDefinition){
   if(alphaMode==='mask'){
     unit(material.alphaCutoff ?? .5,`material_${material.id}_alpha_cutoff`);
   }
+  if(material.sampler) normalizeTextureSampler(material.sampler);
   return true;
 }
 

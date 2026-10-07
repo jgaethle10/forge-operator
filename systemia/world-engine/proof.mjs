@@ -4,9 +4,10 @@ import { SceneStreamController } from './streaming.ts';
 import { compileVisualFrame } from './visual.ts';
 import { compileAudioFrame } from './audio.ts';
 import { AuthoritativeReplicationRuntime, PredictiveReplicationRuntime, createReplicatedInput } from './replication.ts';
-import { compileWebGpuRenderPlan, EVERCRAFT_WEBGPU_WGSL, applyGeometryHotReload } from './webgpu.ts';
+import { compileWebGpuRenderPlan, EVERCRAFT_WEBGPU_WGSL, applyGeometryHotReload, verifyWebGpuRenderPlan } from './webgpu.ts';
 import { applyWorldEditTransaction, createWorldAssetManifest, semanticAssetManifestDigest, semanticWorldDigest } from './studio-edit.ts';
 import { migrateWorldRuntime, verifyWorldRuntimeMigrationReceipt } from './runtime-migration.ts';
+import { applyTextureHotReload, planTextureResidency, textureAssetDigest } from './texture.ts';
 
 const world={
   schema:'evercraft.world-engine.world.v1',
@@ -542,6 +543,11 @@ const webgpuGeometry={
     0,0,1,
     0,0,1,
     0,0,1
+  ],
+  uvs:[
+    0,0,
+    1,0,
+    .5,1
   ]
 };
 const webgpuPlan=compileWebGpuRenderPlan(
@@ -559,6 +565,103 @@ assert.equal(webgpuPlan.draws.length,1);
 assert.equal(webgpuPlan.lights.length,1);
 assert.match(EVERCRAFT_WEBGPU_WGSL,/@vertex/);
 assert.match(EVERCRAFT_WEBGPU_WGSL,/@fragment/);
+
+const proofBaseTexture={
+  schema:'evercraft.world-engine.texture.v1',
+  id:'texture:proof-base',
+  width:2,
+  height:2,
+  format:'rgba8unorm-srgb',
+  data:[
+    255,0,0,255, 0,255,0,255,
+    0,0,255,255, 255,255,255,255
+  ]
+};
+const proofOrmTexture={
+  schema:'evercraft.world-engine.texture.v1',
+  id:'texture:proof-orm',
+  width:1,
+  height:1,
+  format:'rgba8unorm',
+  data:[255,128,64,255]
+};
+const proofEmissiveTexture={
+  schema:'evercraft.world-engine.texture.v1',
+  id:'texture:proof-emissive',
+  width:1,
+  height:1,
+  format:'rgba8unorm-srgb',
+  data:[64,32,16,255]
+};
+const texturedVisualWorld=structuredClone(visualWorld);
+texturedVisualWorld.visualScene.materials[0]={
+  ...texturedVisualWorld.visualScene.materials[0],
+  textureRefs:{
+    baseColor:proofBaseTexture.id,
+    orm:proofOrmTexture.id,
+    emissive:proofEmissiveTexture.id
+  },
+  sampler:{
+    addressModeU:'clamp-to-edge',
+    addressModeV:'repeat',
+    magFilter:'linear',
+    minFilter:'nearest'
+  }
+};
+const texturedRuntime=new EvercraftWorldRuntime(texturedVisualWorld);
+const texturedSnapshot=texturedRuntime.snapshot();
+const texturedFrame=compileVisualFrame(
+  texturedSnapshot.worldId,
+  texturedSnapshot.tick,
+  texturedSnapshot.timeSec,
+  texturedRuntime.definition.visualScene,
+  texturedSnapshot.entities,
+  texturedSnapshot.cameraRuntime,
+  texturedSnapshot.activeEntityIds
+);
+const texturedPlan=compileWebGpuRenderPlan(
+  texturedFrame,
+  [webgpuGeometry],
+  {width:1280,height:720},
+  [proofEmissiveTexture,proofBaseTexture,proofOrmTexture]
+);
+assert.deepEqual(texturedPlan.requiredTextureIds,[
+  'texture:proof-base',
+  'texture:proof-emissive',
+  'texture:proof-orm'
+]);
+assert.deepEqual(texturedPlan.draws[0].textureFlags,[1,1,1,0]);
+assert.equal(verifyWebGpuRenderPlan(texturedPlan),true);
+
+const textureResidency=planTextureResidency(
+  [proofBaseTexture.id],
+  texturedPlan.requiredTextureIds,
+  [proofBaseTexture,proofOrmTexture,proofEmissiveTexture],
+  1024
+);
+assert.deepEqual(textureResidency.retainedTextureIds,[proofBaseTexture.id]);
+assert.deepEqual(textureResidency.loadTextureIds,[
+  'texture:proof-emissive',
+  'texture:proof-orm'
+]);
+
+const reloadedBaseTexture={
+  ...proofBaseTexture,
+  data:proofBaseTexture.data.map((value,index)=>index%4===3?255:(255-value))
+};
+const textureHotReload=applyTextureHotReload(
+  [proofBaseTexture,proofOrmTexture,proofEmissiveTexture],
+  reloadedBaseTexture
+);
+assert.equal(textureHotReload.receipt.replaced,true);
+assert.equal(
+  textureHotReload.receipt.previousDigest,
+  textureAssetDigest(proofBaseTexture)
+);
+assert.equal(
+  textureHotReload.receipt.nextDigest,
+  textureAssetDigest(reloadedBaseTexture)
+);
 
 const editAssetA={
   id:'geometry:proof-cube',
@@ -639,7 +742,7 @@ assert.equal(liveMigration.receipt.cameraRuntimePreserved,true);
 assert.equal(verifyWorldRuntimeMigrationReceipt(liveMigration.receipt),true);
 
 process.stdout.write(JSON.stringify({
-  schema:'evercraft.world-engine.proof.v11',
+  schema:'evercraft.world-engine.proof.v13',
   status:'passed',
   world_id:world.id,
   replay:receipt,
@@ -696,7 +799,18 @@ process.stdout.write(JSON.stringify({
     light_count:webgpuPlan.lights.length,
     shading_model:webgpuPlan.shadingModel,
     owned_wgsl:true,
-    browser_gpu_submission:'not_exercised_in_node_ci'
+    browser_gpu_submission:'separate_v12_device_conformance'
+  },
+  texture_runtime:{
+    textured_plan_digest:texturedPlan.digest,
+    required_texture_ids:texturedPlan.requiredTextureIds,
+    texture_digests:texturedPlan.textures.map(row=>({id:row.id,digest:row.digest})),
+    sampler:texturedPlan.draws[0].sampler,
+    residency_digest:textureResidency.digest,
+    retained:textureResidency.retainedTextureIds,
+    loaded:textureResidency.loadTextureIds,
+    evicted:textureResidency.evictTextureIds,
+    hot_reload_receipt:textureHotReload.receipt
   },
   studio_edit:{
     transaction_digest:edited.receipt.transactionDigest,
@@ -744,6 +858,13 @@ process.stdout.write(JSON.stringify({
     deterministic_webgpu_render_plan:true,
     visual_frame_receipt_verified_before_gpu_plan:true,
     owned_wgsl_shader_contract:true,
+    deterministic_texture_assets:true,
+    canonical_sampler_state:true,
+    deterministic_texture_residency:true,
+    texture_hot_reload_receipts:true,
+    textured_webgpu_plan:true,
+    gpu_plan_receipt_verified_before_submission:true,
+    normal_maps_fail_closed_until_tangents:true,
     deterministic_live_world_edit:true,
     reversible_versioned_edit_receipts:true,
     explicit_asset_rights_lineage:true,
