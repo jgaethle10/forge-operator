@@ -25,6 +25,7 @@ import { nodeSeedInventoryToComputeOffers } from './nodeseed-capacity-offer.mjs'
 import { readSafeNodeSeedInventory } from './nodeseed-inventory-ingest.mjs';
 import { appendDemandHistory, forecastCapacityDemand, prewarmActionsForAuthorizedCapacity } from './capacity-demand-forecast.mjs';
 import { buildForecastHeadroomReservations } from './capacity-headroom.mjs';
+import { buildCapacityLifecyclePlan } from './capacity-lifecycle.mjs';
 import { buildResourceFieldExpansionIntents } from './capacity-resource-field-bridge.mjs';
 
 const MODULE_FILE=fileURLToPath(import.meta.url);
@@ -103,6 +104,7 @@ export function compileCapacityOrganismState({
   demandRadar=null,
   nodeSeedInventory=null,
   demandForecast=null,
+  previousLifecycleLedger=null,
   now=new Date(),
 }={}){
   const {caps,rejected}=activeCapabilities(registrySnapshot,{adapterHealth});
@@ -149,6 +151,14 @@ export function compileCapacityOrganismState({
     performanceLedger,
     previousPlan,
     reservations:headroomPlan.reservations,
+    now,
+  });
+  const lifecyclePlan=buildCapacityLifecyclePlan({
+    offers:combinedOffers,
+    fabricPlan:workloadPlan,
+    headroomPlan,
+    forecast:demandForecast,
+    previousLedger:previousLifecycleLedger,
     now,
   });
   const rebalance=planFabricRebalance({
@@ -204,6 +214,19 @@ export function compileCapacityOrganismState({
       ledger_present:Boolean(performanceLedger),
       learned_profile_count:Object.keys(performanceLedger?.profiles||{}).length,
     },
+    capacity_lifecycle:{
+      active_count:lifecyclePlan.active_count,
+      reserved_count:lifecyclePlan.reserved_count,
+      prewarm_count:lifecyclePlan.prewarm_count,
+      idle_count:lifecyclePlan.idle_count,
+      reclaim_eligible_count:lifecyclePlan.reclaim_eligible_count,
+      release_paid_lease_count:lifecyclePlan.release_paid_lease_count,
+      stop_spawned_owned_capacity_count:lifecyclePlan.stop_spawned_owned_capacity_count,
+      relinquish_voluntary_capacity_count:lifecyclePlan.relinquish_voluntary_capacity_count,
+      cool_down_owned_capacity_count:lifecyclePlan.cool_down_owned_capacity_count,
+      receipt_hash:lifecyclePlan.receipt_hash,
+      automatic_shutdown_authorized:false,
+    },
     work_demand:demandRadar,
     zero_spend_capacity_needs:demandRadar
       ? deriveZeroSpendCapacityNeeds(demandRadar)
@@ -218,6 +241,7 @@ export function compileCapacityOrganismState({
     commercial_capacity_authorized:false,
     active_device_control_from_census:false,
     observation_never_grants_authority:true,
+    _capacity_lifecycle_ledger:lifecyclePlan,
     generated_at:(now instanceof Date?now:new Date(now)).toISOString(),
   };
   return body;
@@ -251,6 +275,10 @@ export async function runCapacityOrganismOnce({
   const previousPlanFile=path.join(resolvedRoot,'heterogeneous-plan.json');
   const previousPlan=fs.existsSync(previousPlanFile)
     ? JSON.parse(fs.readFileSync(previousPlanFile,'utf8'))
+    : null;
+  const lifecycleLedgerFile=path.join(resolvedRoot,'capacity-lifecycle-ledger.json');
+  const previousLifecycleLedger=fs.existsSync(lifecycleLedgerFile)
+    ? readJson(lifecycleLedgerFile,null)
     : null;
   const checkpointFile=path.join(resolvedRoot,'fabric-checkpoints.json');
   const checkpoints=fs.existsSync(checkpointFile)
@@ -317,8 +345,9 @@ export async function runCapacityOrganismOnce({
     now,
   });
 
+  const { _capacity_lifecycle_ledger: lifecycleLedger, ...compiledPublic }=compiled;
   const receipt={
-    ...compiled,
+    ...compiledPublic,
     census:census?{
       observation_count:census.observation_count,
       receipt_hash:census.receipt_hash,
@@ -351,6 +380,19 @@ export async function runCapacityOrganismOnce({
       receipt_hash:demandForecast.receipt_hash,
       commercial_spend_usd:0,
       authority_expansion:false,
+    },
+    capacity_lifecycle:{
+      active_count:compiled.capacity_lifecycle?.active_count||0,
+      reserved_count:compiled.capacity_lifecycle?.reserved_count||0,
+      prewarm_count:compiled.capacity_lifecycle?.prewarm_count||0,
+      idle_count:compiled.capacity_lifecycle?.idle_count||0,
+      reclaim_eligible_count:compiled.capacity_lifecycle?.reclaim_eligible_count||0,
+      release_paid_lease_count:compiled.capacity_lifecycle?.release_paid_lease_count||0,
+      stop_spawned_owned_capacity_count:compiled.capacity_lifecycle?.stop_spawned_owned_capacity_count||0,
+      relinquish_voluntary_capacity_count:compiled.capacity_lifecycle?.relinquish_voluntary_capacity_count||0,
+      cool_down_owned_capacity_count:compiled.capacity_lifecycle?.cool_down_owned_capacity_count||0,
+      automatic_shutdown_authorized:false,
+      receipt_hash:compiled.capacity_lifecycle?.receipt_hash||null,
     },
     capacity_headroom:{
       reservation_count:headroomPlan.reservation_count,
@@ -403,6 +445,9 @@ export async function runCapacityOrganismOnce({
   atomicJson(path.join(resolvedRoot,'capacity-prewarm-plan.json'),prewarmPlan);
   atomicJson(path.join(resolvedRoot,'capacity-autonomy-plan.json'),autonomyPlan);
   atomicJson(path.join(resolvedRoot,'resource-field-expansion-intents.json'),resourceFieldExpansion);
+  if(lifecycleLedger){
+    atomicJson(lifecycleLedgerFile,lifecycleLedger);
+  }
   atomicJson(path.join(resolvedRoot,'authority-requests.json'),{
     schema:'evercraft.saban.capacity-authority-queue.v1',
     authority_requests:autonomyPlan.authority_requests,
@@ -434,6 +479,8 @@ async function main(){
       forecast_prewarm_workload_count:receipt.demand_forecast?.prewarm_workloads?.length||0,
       forecast_prewarm_action_count:receipt.demand_forecast?.prewarm_action_count||0,
       forecast_headroom_reservation_count:receipt.capacity_headroom?.reservation_count||0,
+      capacity_lifecycle_reclaim_eligible_count:receipt.capacity_lifecycle?.reclaim_eligible_count||0,
+      capacity_lifecycle_paid_release_count:receipt.capacity_lifecycle?.release_paid_lease_count||0,
       resource_field_expansion_intent_count:receipt.resource_field_expansion?.intent_count||0,
       resource_field_current_pressure_count:receipt.resource_field_expansion?.current_pressure_intent_count||0,
       resource_field_forecast_pressure_count:receipt.resource_field_expansion?.forecast_pressure_intent_count||0,

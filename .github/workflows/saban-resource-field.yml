@@ -5,6 +5,8 @@ on:
     paths:
       - 'systemia/saban/resource-field.mjs'
       - 'systemia/saban/capacity-resource-field-bridge.mjs'
+      - 'systemia/saban/capacity-lifecycle.mjs'
+      - 'systemia/saban/capacity-lifecycle.proof.mjs'
       - 'systemia/saban/resource-expansion-organism.mjs'
       - 'systemia/saban/resource-expansion-organism.proof.mjs'
       - 'systemia/saban/proactive-resource-loop.proof.mjs'
@@ -77,6 +79,8 @@ jobs:
         run: node systemia/saban/resource-expansion-organism.proof.mjs
       - name: Prove proactive pressure-to-capacity loop
         run: node systemia/saban/proactive-resource-loop.proof.mjs
+      - name: Prove capacity reclamation lifecycle
+        run: node systemia/saban/capacity-lifecycle.proof.mjs
       - name: Validate Saban capacity installer shell syntax
         run: bash -n scripts/install-saban-capacity-organism.sh
       - name: Prove Resource Expansion installer policy
