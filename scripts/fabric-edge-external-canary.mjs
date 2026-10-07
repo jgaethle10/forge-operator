@@ -114,6 +114,8 @@ function failureStage(checks={},message=''){
     return 'trusted_tls';
   }
   if(checks.customer_surface!==true) return 'customer_surface';
+  if(checks.rivet_surface!==true) return 'rivet_surface';
+  if(checks.aliev_surface!==true) return 'aliev_surface';
   if(checks.visual_desk!==true) return 'visual_desk';
   if(checks.faie_surface!==true) return 'faie_surface';
   if(checks.faie_health!==true) return 'faie_health';
@@ -185,6 +187,44 @@ try{
   const home=await getText('/');
   if(!/Evercraft Fabric|Bring the problem\./i.test(home.text)) throw new Error('fabric_home_identity_missing');
   receipt.checks.customer_surface=true;
+
+  const rivetPage=await getText('/rivet');
+  const rivetContentType=rivetPage.response.headers.get('content-type')||'';
+  if(!/^text\/html/i.test(rivetContentType)) throw new Error('rivet_surface_not_html');
+  if(!/RIVET reporting/i.test(rivetPage.text)||!/One address\./i.test(rivetPage.text)){
+    throw new Error('rivet_surface_identity_missing');
+  }
+  if(!/href="\/aliev"/i.test(rivetPage.text)) throw new Error('rivet_surface_aliev_link_missing');
+  if(/base44\.app/i.test(rivetPage.text)) throw new Error('rivet_surface_base44_reference');
+  receipt.rivet_surface={
+    path:'/rivet',
+    url:origin+'/rivet',
+    status:rivetPage.response.status,
+    content_type:rivetContentType,
+    identity_verified:true,
+    ali_ev_link_verified:true,
+    base44_reference_absent:true,
+  };
+  receipt.checks.rivet_surface=true;
+
+  const alievPage=await getText('/aliev');
+  const alievContentType=alievPage.response.headers.get('content-type')||'';
+  if(!/^text\/html/i.test(alievContentType)) throw new Error('aliev_surface_not_html');
+  if(!/AliEV intelligence layer/i.test(alievPage.text)||!/The engine behind/i.test(alievPage.text)){
+    throw new Error('aliev_surface_identity_missing');
+  }
+  if(!/href="\/rivet"/i.test(alievPage.text)) throw new Error('aliev_surface_rivet_link_missing');
+  if(/base44\.app/i.test(alievPage.text)) throw new Error('aliev_surface_base44_reference');
+  receipt.aliev_surface={
+    path:'/aliev',
+    url:origin+'/aliev',
+    status:alievPage.response.status,
+    content_type:alievContentType,
+    identity_verified:true,
+    rivet_link_verified:true,
+    base44_reference_absent:true,
+  };
+  receipt.checks.aliev_surface=true;
 
   const visualHome=await getText('/visuals/');
   const visualContentType=visualHome.response.headers.get('content-type')||'';
@@ -387,6 +427,9 @@ try{
     throw new Error('fabric_human_commerce_boundary_failed');
   }
   if(health.base44_transport_enabled!==false) throw new Error('base44_transport_enabled');
+  if(health.rivet_public_path!=='/rivet'||health.aliev_public_path!=='/aliev'){
+    throw new Error('commercial_product_health_metadata_missing');
+  }
   if(Number(health.capability_count)<40) throw new Error('capability_count_below_floor');
   if(health.mobile_path!=='/mobile'||health.mobile_installable!==true){
     throw new Error('mobile_health_metadata_missing');
@@ -411,6 +454,8 @@ try{
     transactional:false,
     external_action_authority:false,
     base44_transport_enabled:false,
+    rivet_public_path:health.rivet_public_path,
+    aliev_public_path:health.aliev_public_path,
     edge_attestation_supported:health.edge_attestation_supported===true,
     mobile_path:health.mobile_path,
     mobile_installable:health.mobile_installable===true,
