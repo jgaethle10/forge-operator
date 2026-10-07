@@ -204,14 +204,34 @@ body{display:flex;align-items:center;justify-content:center}
   };
   const wrapLon=lon=>((lon+180)%360+360)%360-180;
   const project=(lat,lon,layer)=>{
+    const merc=deg=>Math.log(Math.tan(Math.PI/4+(clamp(deg,-85,85)*Math.PI/180)/2))/(2*Math.PI);
+    if(layer.fitBounds){
+      const b=layer.fitBounds,pad=clamp(Number(b.paddingPct??.08),0,.44);
+      const west=wrapLon(b.west),east=wrapLon(b.east);
+      let lonSpan=east-west;if(lonSpan<=0)lonSpan+=360;
+      const centerLon=wrapLon(west+lonSpan/2);
+      let d=wrapLon(lon)-centerLon;if(d>180)d-=360;if(d<-180)d+=360;
+      const nx=d/360;
+      const north=clamp(b.north,-85,85),south=clamp(b.south,-85,85);
+      const yNorth=layer.projection==='mercator'?merc(north):-north/180;
+      const ySouth=layer.projection==='mercator'?merc(south):-south/180;
+      const yCenter=(yNorth+ySouth)/2;
+      const pointY=layer.projection==='mercator'?merc(clamp(lat,-85,85)):-clamp(lat,-85,85)/180;
+      const ny=yCenter-pointY;
+      const xNorm=Math.max(.000001,lonSpan/360);
+      const yNorm=Math.max(.000001,Math.abs(yNorth-ySouth));
+      const usableW=layer.width*(1-pad*2),usableH=layer.height*(1-pad*2);
+      const pixelsPerNorm=Math.min(usableW/xNorm,usableH/yNorm);
+      return {x:layer.width/2+nx*pixelsPerNorm,y:layer.height/2+ny*pixelsPerNorm};
+    }
     const centerLon=wrapLon(layer.centerLon||0);
     const centerLat=clamp(layer.centerLat||0,-85,85);
     let d=wrapLon(lon)-centerLon;if(d>180)d-=360;if(d<-180)d+=360;
     const z=Math.max(.1,layer.zoom||1);
     const nx=d/360;
-    const merc=deg=>Math.log(Math.tan(Math.PI/4+(deg*Math.PI/180)/2))/(2*Math.PI);
     const ny=layer.projection==='mercator'?merc(centerLat)-merc(clamp(lat,-85,85)):(centerLat-clamp(lat,-85,85))/180;
-    return {x:layer.width/2+nx*layer.width*z,y:layer.height/2+ny*layer.height*z};
+    const scale=Math.min(layer.width,layer.height);
+    return {x:layer.width/2+nx*scale*z,y:layer.height/2+ny*scale*z};
   };
   const routeLength=pts=>{
     let total=0;const lens=[0];
