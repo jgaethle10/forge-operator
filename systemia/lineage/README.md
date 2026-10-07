@@ -214,3 +214,27 @@ node systemia/lineage/cli.mjs large-verify <manifest-id>
 ```
 
 The same `pushLargeObject` / `fetchLargeObject` functions operate over a Yard relay remote. The Compute resident-service bridge explicitly allows only the Lineage ref, object, chunk, and large-manifest routes. A Yard session remains short-lived and revocable, so gaining access to remote storage does not grant broader node or application authority.
+
+
+## Manifest-backed assets inside commits
+
+Lineage does not need to embed giant Studio masters directly into commit objects.
+
+By default, workspace files at or above 8 MiB are snapshotted as `large_blob_ref` objects. Each ref records the immutable large-object manifest id, full-content SHA-256, byte size, chunk count and media type. Smaller files remain ordinary inline blobs, so existing history and lightweight workflows keep the simpler representation.
+
+The threshold can be overridden through `commit({ snapshot: { largeObjectThresholdBytes } })`; passing `null` disables automatic large-object conversion. Chunking parameters can also be supplied through `largeObjectChunking`.
+
+A tree entry can therefore describe either:
+
+```
+small file -> blob -> bytes
+large file -> large_blob_ref -> manifest -> digest-addressed chunks
+```
+
+Restore is transparent across both representations. Large refs are materialized through the local large-object store and their full content hash and byte size are rechecked before the file is written.
+
+Commit graph synchronization is fail-closed: when a graph contains a `large_blob_ref`, `pushCommitGraph` and `fetchCommitGraph` automatically transfer and verify the referenced manifest/chunks before moving the destination ref. A failed large-asset transfer may leave unreachable immutable objects for later garbage collection, but it cannot advance the visible branch head to an incomplete state.
+
+Oversized text/structured assets are not automatically materialized for semantic diffing. Instead, Lineage reports their before/after content digests and sizes with an explicit `semantic_comparison_available: false` reason. Small structured assets retain the existing semantic adapters.
+
+Git export uses `readEntryBytes`, so manifest-backed entries are reconstructed byte-exactly when crossing the Git interoperability boundary.

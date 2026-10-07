@@ -218,8 +218,9 @@ export async function exportLineageSnapshotToGit(store, {
     gitText(repoDir, ['read-tree', '--empty'], { env });
 
     for (const entry of tree.entries) {
-      const blob = await store.readObject(entry.object_id);
-      const bytes = Buffer.from(blob.payload.data, blob.payload.encoding);
+      const bytes = typeof store.readEntryBytes === 'function'
+        ? await store.readEntryBytes(entry)
+        : (() => { throw new Error('Lineage store cannot materialize tree entries'); })();
       const gitBlob = gitText(repoDir, ['hash-object', '-w', '--stdin'], { input: bytes });
       const mode = /^[0-7]{6}$/.test(entry.mode || '') ? entry.mode : '100644';
       gitText(repoDir, ['update-index', '--add', '--cacheinfo', `${mode},${gitBlob},${entry.path}`], { env });
