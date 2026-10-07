@@ -65,6 +65,9 @@ test('motion stage exposes deterministic exact-time render controls',()=>{
   assert.match(html,/__evercraftRenderAt/);
   assert.match(html,/__evercraftRenderFrame/);
   assert.match(html,/deterministic/);
+  assert.match(html,/evercraft\.visual-story\.motion-stage\.v2/);
+  assert.match(html,/\.story-route/);
+  assert.doesNotMatch(html,/EVERCRAFT VISUAL DESK<\/div>/);
   assert.match(html,/publicationAuthority/);
 });
 
@@ -88,8 +91,11 @@ test('build emits owned page, social card, manifest and Clip handoff',()=>{
       'index.html',
       'manifest.json',
       'motion.html',
+      'poster-feed.html',
       'poster-feed.svg',
+      'poster-square.html',
       'poster-square.svg',
+      'poster-story.html',
       'poster-story.svg',
       'scroll-stop-report.json',
       'story.json',
@@ -117,6 +123,11 @@ test('build emits owned page, social card, manifest and Clip handoff',()=>{
     assert.equal(fallen.aspectRatio,'9:16');
     assert.match(html,/poster-feed\.svg/);
     assert.match(html,/Sources &amp; methodology/);
+    assert.match(html,/poster-story\.html/);
+    assert.doesNotMatch(html,/Digest [a-f0-9]{12}/);
+    const preview=fs.readFileSync(path.join(result.outputDir,'poster-story.html'),'utf8');
+    assert.match(preview,/max-height:calc\(100svh - 58px\)/);
+    assert.match(preview,/poster-story\.svg/);
     assert.deepEqual(handoff.suggestedDestinations,['facebook','instagram','linkedin','tiktok']);
   }finally{
     fs.rmSync(root,{recursive:true,force:true});
