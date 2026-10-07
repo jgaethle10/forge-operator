@@ -22,3 +22,6 @@ export type {
   PulseGridTransactionInput,
   PulseGridTransactionRequest,
 } from './pulsegrid-session.js';
+
+export { PulseGridAudioEngine } from './pulsegrid-audio.js';
+export type { PulseGridAudioStatus } from './pulsegrid-audio.js';

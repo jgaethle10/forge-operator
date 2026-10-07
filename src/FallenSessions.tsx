@@ -1,6 +1,7 @@
-import React, { useMemo, useState } from 'react';
+import React, { useEffect, useMemo, useRef, useState } from 'react';
 import {
   PULSEGRID_ENGINE_VERSION,
+  PulseGridAudioEngine,
   applyPulseGridOperation,
   applyPulseGridTransaction,
   createPulseGridSession,
@@ -31,6 +32,13 @@ export default function FallenSessions(){
   const [selectedTrackId,setSelectedTrackId]=useState('keys');
   const [selectedScene,setSelectedScene]=useState(0);
   const [status,setStatus]=useState('Canonical PulseGrid session ready.');
+  const [playing,setPlaying]=useState(false);
+  const [playhead,setPlayhead]=useState(0);
+  const audioRef=useRef<PulseGridAudioEngine|null>(null);
+  if(!audioRef.current){
+    audioRef.current=new PulseGridAudioEngine();
+    audioRef.current.onStep=(step)=>setPlayhead(step);
+  }
 
   const track=useMemo(
     ()=>session.tracks.find((candidate)=>candidate.id===selectedTrackId)||session.tracks[0],
@@ -38,6 +46,33 @@ export default function FallenSessions(){
   );
   const clip=track.clips[selectedScene];
   const undoable=latestUndoableReceipt(session);
+
+  useEffect(()=>{
+    audioRef.current?.updateSession(session);
+  },[session]);
+
+  useEffect(()=>{
+    audioRef.current?.setScene(selectedScene);
+  },[selectedScene]);
+
+  useEffect(()=>()=>{ void audioRef.current?.close(); },[]);
+
+  async function togglePlay(){
+    if(playing){
+      audioRef.current?.stop();
+      setPlaying(false);
+      setPlayhead(0);
+      setStatus('Playback stopped.');
+      return;
+    }
+    try{
+      await audioRef.current?.play(session,selectedScene);
+      setPlaying(true);
+      setStatus('Playing canonical scene '+(selectedScene+1)+'.');
+    }catch(error){
+      setStatus(error instanceof Error?error.message:'Web Audio playback failed.');
+    }
+  }
 
   function apply(operation:PulseGridOperation,actor:PulseGridActor='human'){
     try{
@@ -180,6 +215,9 @@ export default function FallenSessions(){
   }
 
   function reset(){
+    audioRef.current?.stop();
+    setPlaying(false);
+    setPlayhead(0);
     const next=createPulseGridSession('First Light');
     setSession(next);
     setSelectedTrackId('keys');
@@ -206,6 +244,7 @@ export default function FallenSessions(){
       </header>
 
       <section className="fsToolbar" aria-label="Session controls">
+        <button onClick={togglePlay}>{playing?'■ Stop':'▶ Play'}</button>
         <button onClick={runLiftPlan}>✦ Atomic Chorus Lift</button>
         <button onClick={forkVariation}>Fork Variation</button>
         <button onClick={growClip} disabled={clip.bars>=16}>+ Bar</button>
@@ -266,7 +305,7 @@ export default function FallenSessions(){
                     cells.push(
                       <button
                         key={pitch+'-'+step}
-                        className={'fsNoteCell '+(note?'active ':'')+(step%4===0?'beat':'')}
+                        className={'fsNoteCell '+(note?'active ':'')+(step%4===0?'beat ':'')+(playing&&step===playhead?'playhead':'')}
                         title={noteName(pitch)+' · step '+(step+1)}
                         onClick={()=>toggleNote(pitch,step)}
                       />
@@ -281,7 +320,7 @@ export default function FallenSessions(){
               {visibleSteps.map((step)=>(
                 <button
                   key={step}
-                  className={'fsStep '+(clip.steps[step]>0?'active ':'')+(step%4===0?'beat':'')}
+                  className={'fsStep '+(clip.steps[step]>0?'active ':'')+(step%4===0?'beat ':'')+(playing&&step===playhead?'playhead':'')}
                   onClick={()=>toggleStep(step)}
                   title={'Step '+(step+1)+' · velocity '+clip.steps[step].toFixed(2)}
                 >
