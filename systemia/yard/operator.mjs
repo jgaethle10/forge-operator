@@ -812,7 +812,17 @@ export class YardOperator {
           health.public_edge_separate === true &&
           health.base44_runtime_required === false &&
           health.canonical_store === 'content-addressed-forensic-corpus-v1' &&
-          health.instance_id === job.result?.instance_id;
+          health.instance_id === job.result?.instance_id &&
+          (
+            job.result?.seed_required !== true ||
+            (
+              health.seed_receipt_present === true &&
+              health.seed_complete === true &&
+              health.seed_protected_entities_imported === false &&
+              health.seed_source_manifest_sha256 === job.result?.seed_source_manifest_sha256 &&
+              Number(health.finding_rows || 0) === Number(job.result?.seed_finding_rows || 0)
+            )
+          );
         if (!forensicHealthy) {
           try {
             await request(`${capacityEndpoint}/v1/services/${job.result.service_id}/stop`, {
@@ -2387,6 +2397,24 @@ export class YardOperator {
           health.service === 'evercraft-public-edge' &&
           health.runtime === 'Evercraft Compute' &&
           health.instance_id === record.result?.instance_id;
+      } else if (record.receipt?.workload_class === 'systemia.forensic-record-runtime.v1') {
+        ok =
+          health.ok === true &&
+          health.service === 'forensic-record-owned-runtime' &&
+          health.runtime === 'Evercraft Compute' &&
+          health.instance_id === record.result?.instance_id &&
+          health.base44_runtime_required === false &&
+          health.canonical_store === 'content-addressed-forensic-corpus-v1' &&
+          (
+            record.result?.seed_required !== true ||
+            (
+              health.seed_receipt_present === true &&
+              health.seed_complete === true &&
+              health.seed_protected_entities_imported === false &&
+              health.seed_source_manifest_sha256 === record.result?.seed_source_manifest_sha256 &&
+              Number(health.finding_rows || 0) === Number(record.result?.seed_finding_rows || 0)
+            )
+          );
       }
       return { ok, state: ok ? 'healthy' : 'degraded', health };
     } catch (error) {

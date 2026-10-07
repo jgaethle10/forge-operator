@@ -82,7 +82,23 @@
       "terminal_exhaustion_verified": true,
       "exact_source_count_reconciliation": true,
       "protected_entities_excluded": true
-    }
+    },
+    "owned_seed": {
+      "state": "verified",
+      "source_revision": "8fef03ad9d83ac6402018feca8aba5636fa0b6e3",
+      "workflow_run_id": 37636049067,
+      "artifact_id": 11490205041,
+      "artifact_size_bytes": 27560894,
+      "artifact_sha256": "sha256:75fde379da85b8f82cc6d1e6f722eaf55c6c5f4ef0cec0beacf1956314ab5d7c",
+      "source_manifest_sha256": "sha256:9c7b523a66e30500913fbc17d21bdc9e41c71be1e1f656700c66b9aa74586f52",
+      "finding_rows": 22816,
+      "unique_finding_numbers": 22356,
+      "duplicate_number_extra_rows": 460,
+      "missing_page_reference_after_normalization": 13199,
+      "missing_source_url": 22778,
+      "base44_runtime_required": false
+    },
+    "resident_seed_bootstrap_in_source": true
   },
   "migrate": [
     "forensic_finding_ledger",
@@ -119,7 +135,7 @@
     "filescompanion.com has not yet been independently verified as bound to the owned runtime.",
     "Legacy Base44 customer continuity must remain available until owned route, data reconciliation, rollback and observation receipts pass."
   ],
-  "next_action": "land normalized owned-seed generation, produce a verified seed from the successful 23,201-row public snapshot, deploy the resident forensic workload through Yard on admitted Evercraft Compute capacity, load the owned seed, then separately migrate protected audit/candidate ledgers before any filescompanion.com route cutover",
+  "next_action": "land one-shot resident seed bootstrap, let the Systemia resident reconciler seed an admitted Evercraft Compute node and prove it reuses owned state on restart; then build a read-only staging public route while protected audit/candidate ledgers continue through the separate privileged migration lane",
   "destructive_cutover_allowed": false,
   "health": {
     "state": "legacy_public_path_present_owned_cutover_started",

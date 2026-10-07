@@ -20,6 +20,8 @@ import {
 import { startRivetReportRuntime } from '../rivet/report-runtime.mjs';
 import { startAliEvSourceRuntime } from '../aliev/source-runtime.mjs';
 import { startForensicRecordRuntime } from '../forensic-record/runtime.mjs';
+import { extractPublicForensicSnapshot } from '../migrations/base44-exit/forensic-record-public-extractor.mjs';
+import { importPublicForensicSnapshot } from '../migrations/base44-exit/forensic-record-public-snapshot-importer.mjs';
 import { startSpecialistHandoffRuntime } from '../mcp/specialist-handoff-runtime.mjs';
 import { startFabricLocalRuntime } from '../mcp/fabric-local-runtime.mjs';
 import { startPublicEdgeRuntime } from '../network/public-edge-runtime.mjs';
@@ -1627,12 +1629,116 @@ export async function startEvercraftComputeNode({
           if (!isWithin(allowedRoot, stateRoot)) {
             return send(res, 403, { error: 'forensic_record_state_outside_admitted_root' });
           }
+
+          const requirePublicSeed = body.input?.require_public_seed === true;
+          const bootstrapPublicSnapshot = body.input?.bootstrap_public_snapshot === true;
+          const seedFile = path.join(stateRoot, 'seed-receipt.json');
+          let seedReceipt = null;
+          let seedState = 'not_required';
+
+          if (fs.existsSync(seedFile)) {
+            try {
+              seedReceipt = JSON.parse(fs.readFileSync(seedFile, 'utf8'));
+            } catch {
+              return send(res, 422, { error: 'forensic_record_seed_receipt_invalid' });
+            }
+            if (
+              seedReceipt?.schema !== 'evercraft.forensic-record.owned-seed-receipt.v1' ||
+              seedReceipt?.complete !== true ||
+              seedReceipt?.base44_runtime_required !== false ||
+              seedReceipt?.public_cutover_authorized !== false
+            ) {
+              return send(res, 422, { error: 'forensic_record_seed_receipt_not_admissible' });
+            }
+            seedState = 'reused_verified_seed';
+          } else if (requirePublicSeed) {
+            if (!bootstrapPublicSnapshot) {
+              return send(res, 422, { error: 'forensic_record_public_seed_required' });
+            }
+            if (fs.existsSync(stateRoot) && fs.readdirSync(stateRoot).length > 0) {
+              return send(res, 422, { error: 'forensic_record_partial_state_without_seed_receipt' });
+            }
+
+            const siteUrl = String(
+              body.input?.public_snapshot_site_url || 'https://filescompanion.com/'
+            ).trim();
+            const apiOrigin = String(
+              body.input?.public_snapshot_api_origin || 'https://base44.app'
+            ).trim();
+            let site;
+            let api;
+            try {
+              site = new URL(siteUrl);
+              api = new URL(apiOrigin);
+            } catch {
+              return send(res, 400, { error: 'forensic_record_public_seed_url_invalid' });
+            }
+            const siteLoopback = ['127.0.0.1','localhost','::1'].includes(site.hostname);
+            const apiLoopback = ['127.0.0.1','localhost','::1'].includes(api.hostname);
+            if (
+              !(
+                (site.protocol === 'https:' && site.hostname === 'filescompanion.com') ||
+                (site.protocol === 'http:' && siteLoopback)
+              )
+            ) {
+              return send(res, 403, { error: 'forensic_record_public_seed_site_not_allowed' });
+            }
+            if (
+              !(
+                (api.protocol === 'https:' && api.hostname === 'base44.app') ||
+                (api.protocol === 'http:' && apiLoopback)
+              )
+            ) {
+              return send(res, 403, { error: 'forensic_record_public_seed_api_not_allowed' });
+            }
+
+            fs.mkdirSync(allowedRoot, { recursive: true, mode: 0o750 });
+            const bootstrapRoot = fs.mkdtempSync(
+              path.join(allowedRoot, '.forensic-record-public-bootstrap-')
+            );
+            try {
+              await extractPublicForensicSnapshot({
+                siteUrl: site.toString(),
+                apiOrigin: api.origin,
+                outDir: bootstrapRoot,
+              });
+              seedReceipt = importPublicForensicSnapshot({
+                snapshotDir: bootstrapRoot,
+                stateDir: stateRoot,
+              });
+              seedState = 'bootstrapped_from_public_migration_source';
+            } finally {
+              fs.rmSync(bootstrapRoot, { recursive: true, force: true });
+            }
+          }
+
+          if (requirePublicSeed && seedReceipt?.complete !== true) {
+            return send(res, 422, { error: 'forensic_record_verified_seed_required' });
+          }
+
+          let forensicIngestToken = String(process.env.FORENSIC_RECORD_INGEST_TOKEN || '').trim();
+          let ingestAuthority = 'private_environment';
+          if (!forensicIngestToken) {
+            const privateDir = path.join(stateRoot, '.private');
+            const tokenFile = path.join(privateDir, 'ingest-token');
+            fs.mkdirSync(privateDir, { recursive: true, mode: 0o700 });
+            if (!fs.existsSync(tokenFile)) {
+              fs.writeFileSync(tokenFile, randomBytes(32).toString('hex')+'\n', { mode: 0o600 });
+            }
+            fs.chmodSync(tokenFile, 0o600);
+            forensicIngestToken = fs.readFileSync(tokenFile, 'utf8').trim();
+            if (Buffer.byteLength(forensicIngestToken, 'utf8') < 32) {
+              return send(res, 422, { error: 'forensic_record_generated_ingest_token_invalid' });
+            }
+            ingestAuthority = 'generated_private_compute_state';
+          }
+
           const runtime = await startForensicRecordRuntime({
             stateDir: stateRoot,
             host: '127.0.0.1',
             port: Number(body.input?.port || 0),
             systemiaMachineKey: process.env.SYSTEMIA_MACHINE_KEY || '',
-            ingestToken: process.env.FORENSIC_RECORD_INGEST_TOKEN || '',
+            ingestToken: forensicIngestToken,
           });
           const serviceId = `svc_${randomBytes(8).toString('hex')}`;
           services.set(serviceId, {
@@ -1650,6 +1756,14 @@ export async function startEvercraftComputeNode({
             health_path: `/v1/services/${serviceId}/health`,
             public_route_required: true,
             private_source_runtime: true,
+            seed_required: requirePublicSeed,
+            seed_state: seedState,
+            seed_source_manifest_sha256: seedReceipt?.source_manifest_sha256 || null,
+            seed_finding_rows: Number(seedReceipt?.corpus_health?.finding_rows || 0),
+            seed_unique_finding_numbers: Number(seedReceipt?.corpus_health?.unique_finding_numbers || 0),
+            seed_duplicate_number_extra_rows: Number(seedReceipt?.corpus_health?.duplicate_number_extra_rows || 0),
+            ingest_authority: ingestAuthority,
+            ingest_token_exposed: false,
             instance_id: runtime.instance_id,
           };
           const receipt = chain.issue('service.started', {
@@ -1658,6 +1772,12 @@ export async function startEvercraftComputeNode({
             workload_class: body.workload_class,
             result_schema: result.schema,
             instance_id: runtime.instance_id,
+            seed_required: requirePublicSeed,
+            seed_state: seedState,
+            seed_source_manifest_sha256: result.seed_source_manifest_sha256,
+            seed_finding_rows: result.seed_finding_rows,
+            ingest_authority: ingestAuthority,
+            ingest_token_exposed: false,
           });
           return send(res, 200, {
             ok: true,

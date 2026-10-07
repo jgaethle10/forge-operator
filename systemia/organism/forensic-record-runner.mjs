@@ -66,6 +66,19 @@ async function reconcile(){
       if(forensic.receipt?.capacity_node_id!==edge.receipt?.capacity_node_id){
         throw new Error('forensic_record_and_public_edge_node_drift');
       }
+      const local=await yard.verifyRoute(deploymentId);
+      const seeded=
+        forensic.result?.seed_required===true &&
+        local.ok===true &&
+        local.health?.seed_complete===true &&
+        local.health?.seed_protected_entities_imported===false &&
+        Number(local.health?.finding_rows||0)>0;
+      if(!seeded){
+        await yard.stopDeployment(deploymentId,{reason:'replace_unseeded_forensic_runtime'});
+        forensic=null;
+      }
+    }
+    if(forensic?.state==='ready'){
       const renewal=await yard.renewDeploymentLease(deploymentId,{ttlMs:leaseTtlMs});
       yard.startLeaseKeeper(deploymentId,{ttlMs:leaseTtlMs,renewEveryMs});
       result={
@@ -73,6 +86,9 @@ async function reconcile(){
         deployment_receipt:forensic.receipt?.receipt_hash||null,
         local_url:forensic.result?.local_url||null,
         instance_id:forensic.result?.instance_id||null,
+        seed_state:forensic.result?.seed_state||'reused_verified_seed',
+        seed_finding_rows:forensic.result?.seed_finding_rows||local.health?.finding_rows||null,
+        seed_source_manifest_sha256:forensic.result?.seed_source_manifest_sha256||local.health?.seed_source_manifest_sha256||null,
         lease_renewal_receipt:renewal.receipt_hash||null,
       };
     }else{
@@ -81,7 +97,10 @@ async function reconcile(){
         deploymentId,
         releaseRef:release,
         workloadClass:'systemia.forensic-record-runtime.v1',
-        input:{},
+        input:{
+          require_public_seed:true,
+          bootstrap_public_snapshot:true,
+        },
         rollbackTarget:'systemia:forensic-record-runtime-previous',
         leaseTtlMs,
       });
@@ -91,6 +110,9 @@ async function reconcile(){
         deployment_receipt:forensic.receipt?.receipt_hash||null,
         local_url:forensic.result?.local_url||null,
         instance_id:forensic.result?.instance_id||null,
+        seed_state:forensic.result?.seed_state||null,
+        seed_finding_rows:forensic.result?.seed_finding_rows||null,
+        seed_source_manifest_sha256:forensic.result?.seed_source_manifest_sha256||null,
       };
     }
 
@@ -104,6 +126,9 @@ async function reconcile(){
       local_runtime_state:'private_loopback_ready',
       deployment_receipt:result.deployment_receipt,
       instance_id:result.instance_id,
+      seed_state:result.seed_state||null,
+      seed_finding_rows:result.seed_finding_rows||null,
+      seed_source_manifest_sha256:result.seed_source_manifest_sha256||null,
       lease_renewal_receipt:result.lease_renewal_receipt||null,
       retrying:false,
     });

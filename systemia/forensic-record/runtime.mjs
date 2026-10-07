@@ -26,6 +26,37 @@ function send(res,status,body){
   res.end(bytes);
 }
 function unauthorized(res,error){ return send(res,401,{ok:false,error}); }
+function seedStatus(root){
+  const file=path.join(root,'seed-receipt.json');
+  if(!fs.existsSync(file)) return {
+    seed_receipt_present:false,
+    seed_complete:false,
+    seed_source_manifest_sha256:null,
+    seed_finding_rows:null,
+    seed_protected_entities_imported:null,
+  };
+  try{
+    const receipt=JSON.parse(fs.readFileSync(file,'utf8'));
+    if(receipt?.schema!=='evercraft.forensic-record.owned-seed-receipt.v1') throw new Error('schema');
+    return {
+      seed_receipt_present:true,
+      seed_complete:receipt.complete===true,
+      seed_source_manifest_sha256:clean(receipt.source_manifest_sha256)||null,
+      seed_finding_rows:Number.isFinite(Number(receipt?.corpus_health?.finding_rows))
+        ? Number(receipt.corpus_health.finding_rows)
+        : null,
+      seed_protected_entities_imported:receipt.protected_entities_imported===true,
+    };
+  }catch{
+    return {
+      seed_receipt_present:true,
+      seed_complete:false,
+      seed_source_manifest_sha256:null,
+      seed_finding_rows:null,
+      seed_protected_entities_imported:null,
+    };
+  }
+}
 
 export async function startForensicRecordRuntime({
   stateDir,
@@ -45,6 +76,7 @@ export async function startForensicRecordRuntime({
   let server=null;
   const health=()=>({
     ...forensicCorpusHealth({stateDir:root}),
+    ...seedStatus(root),
     service:'forensic-record-owned-runtime',
     runtime:'Evercraft Compute',
     instance_id:instanceId,
