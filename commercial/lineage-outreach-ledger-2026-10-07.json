@@ -1,0 +1,34 @@
+{
+  "schema": "evercraft.revenue.outreach-ledger.v1",
+  "date": "2026-10-07",
+  "product": "Evercraft Lineage",
+  "offer": "Lineage Founding Pilot",
+  "price_usd": 500,
+  "records": [
+    {
+      "company": "String",
+      "domain": "usestring.ai",
+      "channel": "email",
+      "recipient": "support@usestring.ai",
+      "recipient_source": "public_string_subprocessors_and_privacy_pages",
+      "contact_route_quality": "published_company_support_route",
+      "sent_from": "jessegaethle10@gmail.com",
+      "sent_at": "2026-10-07T10:00:00-07:00",
+      "subject": "Your coding-agent collision problem is exactly what we built Lineage for",
+      "gmail_message_id": "1a11750f3e6fb17e",
+      "gmail_thread_id": "1a11750f3e6fb17e",
+      "prior_domain_outreach_found": false,
+      "public_pain_evidence": {
+        "source": "https://usestring.ai/careers/engineering-intern",
+        "summary": "String publicly says its engineering team uses coding agents heavily and builds workflows/tools so several agents can work at once without colliding, repeating work, or quietly making the wrong call."
+      },
+      "offer_truth": {
+        "public_self_serve_saas_claimed": false,
+        "direct_repository_access_claimed": false,
+        "payment_claimed": false,
+        "pilot_scope": "one authorized repository, private Control Room, stale-writer/collision proof, provenance/rationale workflow, semantic diff, integrity baseline, Git import/export, closeout packet"
+      },
+      "next_action": "Wait for a reply in this Gmail thread. Do not contact another String employee unless a response, warm introduction, or explicit routing signal justifies it."
+    }
+  ]
+}
