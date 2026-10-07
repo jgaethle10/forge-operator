@@ -11,6 +11,7 @@ const ROLES=new Set([
   'audio_scene_guard',
   'replication_guard',
   'webgpu_guard',
+  'webgpu_device_guard',
   'studio_edit_guard',
   'runtime_migration_guard',
   'fallen_bridge_guard',
@@ -195,6 +196,22 @@ function evaluate(role,world){
         'Owned WGSL and WebGPU browser execution remain replaceable backend code behind the visual-frame contract.',
         'Node CI may prove planning, shader contracts and failure boundaries but must not claim physical GPU-device execution.',
         'Browser GPU submission requires a real navigator.gpu adapter/device receipt before any hardware-execution claim.'
+      ],
+      findings:[]
+    };
+  }
+
+  if(role==='webgpu_device_guard'){
+    return {
+      category:'webgpu_device_conformance',
+      directives:[
+        'Browser WebGPU conformance requires navigator.gpu, adapter acquisition, device acquisition, successful command submission and mapped readback.',
+        'Feature presence or shader compilation alone is not a device-execution proof.',
+        'Compute and raster readbacks must both match expected values before status can be verified.',
+        'SwiftShader, llvmpipe, lavapipe and forced software profiles must always be classified as software execution and must never create a hardware GPU claim.',
+        'Ambiguous adapter metadata remains adapter_type_unknown rather than being promoted to hardware.',
+        'Hardware execution may be described only as adapter-reported hardware when the reported vendor/architecture provides a non-software signal.',
+        'Conformance receipts must preserve launch profile, adapter metadata, readback results and the native browser preflight receipt.'
       ],
       findings:[]
     };
