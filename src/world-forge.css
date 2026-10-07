@@ -1008,3 +1008,31 @@
   background:rgba(34,24,72,.92);
   color:#d9d0ff;
 }
+
+.wf-transform-modes{
+  display:flex;
+  align-items:center;
+  gap:3px;
+  padding:3px;
+  border:1px solid #293e4d;
+  border-radius:7px;
+  background:#0b141b;
+}
+
+.wf-transform-modes button{
+  border:1px solid transparent;
+  border-radius:5px;
+  background:transparent;
+  color:#748a99;
+  padding:5px 7px;
+  font-size:8px;
+  font-weight:800;
+  letter-spacing:.05em;
+  text-transform:uppercase;
+}
+
+.wf-transform-modes button.active{
+  border-color:#3f6e8e;
+  background:#153248;
+  color:#d5efff;
+}

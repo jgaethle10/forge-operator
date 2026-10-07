@@ -217,6 +217,37 @@ Current area lights are explicitly approximated as point lights because World En
 
 The browser editor exposes **Engine Bridge** only for committed canonical state. If a Stage-mode ChangeSet is pending, runtime compilation is blocked until the proposal is applied or cleared.
 
+## Full transform modes
+
+The viewport now exposes explicit **Move / Rotate / Scale** direct-manipulation modes.
+
+### Move
+
+- world-space X/Y/Z handles;
+- screen-axis drag projects back into world displacement;
+- meter snapping uses the current World Forge snap increment;
+- Runtime Drag may reuse Move handles for ephemeral Play interaction.
+
+### Rotate
+
+- three projected world-axis rotation rings;
+- ring-segment hit testing chooses the active rotation axis;
+- pointer movement is measured as angular movement around the projected object center;
+- rotation snaps to 15° increments in this slice;
+- preview is local until pointer release;
+- release emits one canonical `set_transform` mutation.
+
+### Scale
+
+- world-axis scale handles;
+- pointer travel maps into the selected axis scale value;
+- scale snaps to 0.1 increments;
+- scale is clamped above zero;
+- preview is local until pointer release;
+- release emits one canonical `set_transform` mutation.
+
+All three authoring modes flow through the same queue-or-mutate path, so Stage mode, receipts, Undo, ChangeSets and Play live-sync remain consistent. Runtime Drag is intentionally translation-only; switching to Rotate or Scale exits runtime manipulation.
+
 ## Native geometry picking
 
 Viewport click selection now uses deterministic ray/triangle intersection against actual native World Forge geometry instead of approximate projected object centers.

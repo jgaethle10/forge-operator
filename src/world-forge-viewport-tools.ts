@@ -60,3 +60,76 @@ export function axisDragWorldDelta(input:{
   const pixelsPerWorldUnit=screenLength/input.axisWorldLength;
   return snapWorldDelta(directionalPixels/pixelsPerWorldUnit,input.snapStep);
 }
+
+
+export function snapWorldAngle(valueDeg:number,stepDeg:number){
+  if(!Number.isFinite(valueDeg)) throw new Error('world_forge_snap_angle_invalid');
+  if(!Number.isFinite(stepDeg)||stepDeg<=0) throw new Error('world_forge_snap_angle_step_invalid');
+  let snapped=Math.round(valueDeg/stepDeg)*stepDeg;
+  snapped%=360;
+  if(snapped>180) snapped-=360;
+  if(snapped<=-180) snapped+=360;
+  if(Math.abs(snapped)<1e-12) return 0;
+  return Number(snapped.toFixed(9));
+}
+
+export function screenRotationDeltaDeg(input:{
+  startX:number;
+  startY:number;
+  currentX:number;
+  currentY:number;
+  centerX:number;
+  centerY:number;
+  snapDeg:number;
+}){
+  const startRadius=Math.hypot(
+    input.startX-input.centerX,
+    input.startY-input.centerY,
+  );
+  const currentRadius=Math.hypot(
+    input.currentX-input.centerX,
+    input.currentY-input.centerY,
+  );
+  if(startRadius<4||currentRadius<4){
+    throw new Error('world_forge_rotation_gizmo_radius_degenerate');
+  }
+
+  const start=Math.atan2(
+    input.startY-input.centerY,
+    input.startX-input.centerX,
+  );
+  const current=Math.atan2(
+    input.currentY-input.centerY,
+    input.currentX-input.centerX,
+  );
+  let delta=(current-start)*180/Math.PI;
+  while(delta>180) delta-=360;
+  while(delta<=-180) delta+=360;
+  return snapWorldAngle(delta,input.snapDeg);
+}
+
+export function axisDragScaleValue(input:{
+  pointerDx:number;
+  pointerDy:number;
+  axisScreenDx:number;
+  axisScreenDy:number;
+  startScale:number;
+  snapStep:number;
+}){
+  const screenLength=Math.hypot(input.axisScreenDx,input.axisScreenDy);
+  if(screenLength<4) throw new Error('world_forge_scale_axis_screen_degenerate');
+  if(!Number.isFinite(input.startScale)||input.startScale<=0){
+    throw new Error('world_forge_scale_start_invalid');
+  }
+  if(!Number.isFinite(input.snapStep)||input.snapStep<=0){
+    throw new Error('world_forge_scale_snap_invalid');
+  }
+
+  const ux=input.axisScreenDx/screenLength;
+  const uy=input.axisScreenDy/screenLength;
+  const directionalPixels=input.pointerDx*ux+input.pointerDy*uy;
+  const sensitivity=Math.max(1,Math.abs(input.startScale));
+  const raw=input.startScale+(directionalPixels/screenLength)*sensitivity;
+  const snapped=Math.round(raw/input.snapStep)*input.snapStep;
+  return Number(Math.max(.01,snapped).toFixed(9));
+}
