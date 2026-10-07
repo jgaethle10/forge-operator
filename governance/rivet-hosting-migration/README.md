@@ -38,6 +38,12 @@ This migration package reads those assets. It does not modify them.
 
 The machine-readable comparison is in `decision-matrix.json`.
 
+Supporting planning artifacts:
+- `SABAN-REVIEW-2026-10-07.md` records the bounded adversarial review receipt and current planning read.
+- `ownership-matrix.json` captures who must own or control each operational asset.
+- `visual-baseline-plan.json` defines the partner-gated screenshot capture plan without inventing an approval tolerance.
+- `CUTOVER-RUNBOOK.md` remains dormant until explicit approval.
+
 The five lanes are:
 
 1. Evercraft-owned Fabric / Compute.
