@@ -1,0 +1,155 @@
+{
+  "schema": "evercraft.forensic-record.legacy-inventory.v1",
+  "observed_at": "2026-10-07",
+  "source_product": "The Forensic Record / Files Companion",
+  "canonical_public_url": "https://filescompanion.com/",
+  "source_role": "legacy_extraction_compatibility_and_customer_continuity_only",
+  "observations": {
+    "production_connector_query": {
+      "surface": "Base44 connected production entity query",
+      "trusted_for_live_record_presence": true
+    },
+    "app_sdk_shell": {
+      "surface": "Base44 app shell SDK",
+      "trusted_for_live_record_presence": false,
+      "note": "Observed disagreement for ForensicCandidateFinding and LegacyFindingAudit; treated as a draft/runtime-surface discrepancy, not as evidence that production rows are absent."
+    }
+  },
+  "entities": [
+    {
+      "entity": "ForensicFinding",
+      "owned_domain": "findings",
+      "count_state": "exact",
+      "rows": 22816,
+      "pagination": {
+        "mode": "keyset",
+        "key": "id",
+        "page_size": 500
+      },
+      "integrity": {
+        "min_finding_number": 1,
+        "max_finding_number": 22485,
+        "unique_finding_numbers": 22356,
+        "duplicate_number_extra_rows": 460,
+        "missing_sequence_numbers": 129
+      }
+    },
+    {
+      "entity": "Source",
+      "owned_domain": "sources",
+      "count_state": "exact",
+      "rows": 6,
+      "pagination": {
+        "mode": "offset",
+        "page_size": 500
+      }
+    },
+    {
+      "entity": "CorpusCoverage",
+      "owned_domain": "coverage",
+      "count_state": "exact",
+      "rows": 8,
+      "pagination": {
+        "mode": "offset",
+        "page_size": 500
+      }
+    },
+    {
+      "entity": "ForensicCandidateFinding",
+      "owned_domain": "candidates",
+      "count_state": "conflicted",
+      "production_connector_rows": 15,
+      "app_sdk_shell_rows": 0,
+      "pagination": {
+        "mode": "keyset",
+        "key": "id",
+        "page_size": 500
+      }
+    },
+    {
+      "entity": "FindingRejection",
+      "owned_domain": "rejections",
+      "count_state": "exact",
+      "rows": 0,
+      "pagination": {
+        "mode": "offset",
+        "page_size": 500
+      }
+    },
+    {
+      "entity": "LegacyFindingAudit",
+      "owned_domain": "audits",
+      "count_state": "conflicted_lower_bound",
+      "production_connector_rows_at_least": 10001,
+      "production_high_water_finding_number": 18040,
+      "app_sdk_shell_rows": 0,
+      "pagination": {
+        "mode": "keyset",
+        "key": "id",
+        "page_size": 500
+      }
+    },
+    {
+      "entity": "ArchiveMeta",
+      "owned_domain": "archive_meta",
+      "count_state": "exact",
+      "rows": 1,
+      "pagination": {
+        "mode": "offset",
+        "page_size": 500
+      }
+    },
+    {
+      "entity": "Chunk",
+      "owned_domain": "chunks",
+      "count_state": "exact",
+      "rows": 8,
+      "pagination": {
+        "mode": "offset",
+        "page_size": 500
+      }
+    },
+    {
+      "entity": "CorpusPageIndex",
+      "owned_domain": "page_index",
+      "count_state": "exact",
+      "rows": 341,
+      "pagination": {
+        "mode": "offset",
+        "page_size": 500
+      }
+    },
+    {
+      "entity": "DocumentSet",
+      "owned_domain": "document_sets",
+      "count_state": "exact",
+      "rows": 16,
+      "pagination": {
+        "mode": "offset",
+        "page_size": 500
+      }
+    },
+    {
+      "entity": "MediaSource",
+      "owned_domain": "media",
+      "count_state": "exact",
+      "rows": 13,
+      "pagination": {
+        "mode": "offset",
+        "page_size": 500
+      }
+    }
+  ],
+  "reconciliation": {
+    "terminal_extraction_is_authoritative_for_conflicted_counts": true,
+    "exact_counts_must_match_preflight": true,
+    "source_rows_equal_accepted_plus_excluded": true,
+    "accepted_rows_equal_ingest_submitted": true,
+    "every_entity_must_prove_terminal_exhaustion": true,
+    "duplicate_finding_numbers_are_preserved_and_flagged": true,
+    "missing_is_never_zero": true,
+    "silent_truncation_forbidden": true,
+    "private_user_entities_excluded": true
+  },
+  "blocker": "Two production data surfaces disagree on candidate/audit visibility. Final cutover must use a terminal, hashed production extraction stream and reconcile it before legacy retirement."
+}
