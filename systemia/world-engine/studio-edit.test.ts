@@ -316,6 +316,25 @@ test('asset replacement requires monotonic revision when content changes',()=>{
   );
 });
 
+test('asset lineage changes require a revision advance even when bytes stay identical',()=>{
+  const source=world();
+  const manifest=createWorldAssetManifest(source.id,[asset()]);
+  const changed=asset(SHA_A,1);
+  changed.provenance.license='Different license';
+  const tx=transaction(source,manifest,[
+    {
+      id:'asset-lineage',
+      kind:'upsert_asset',
+      asset:changed
+    }
+  ]);
+
+  assert.throws(
+    ()=>applyWorldEditTransaction(source,manifest,tx),
+    /world_edit_asset_revision_not_advanced:geometry:hero/
+  );
+});
+
 test('asset records require explicit rights and provenance instead of assuming permission',()=>{
   const source=world();
   const bad=asset();
