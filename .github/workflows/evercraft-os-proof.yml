@@ -6,10 +6,16 @@ on:
       - "feat/evercraft-os-*"
     paths:
       - "systemia/evercraft-os/**"
+      - "systemia/evercraft-home/os-adapter.mjs"
+      - "systemia/evercraft-home/os-status.test.mjs"
+      - "systemia/evercraft-home/server.mjs"
       - ".github/workflows/evercraft-os-proof.yml"
   pull_request:
     paths:
       - "systemia/evercraft-os/**"
+      - "systemia/evercraft-home/os-adapter.mjs"
+      - "systemia/evercraft-home/os-status.test.mjs"
+      - "systemia/evercraft-home/server.mjs"
       - ".github/workflows/evercraft-os-proof.yml"
   workflow_dispatch:
 
