@@ -46,6 +46,7 @@ type ForgeOperation=
   |{type:'set_transform';nodeId:string;transform:Partial<Transform>}
   |{type:'set_visibility';nodeId:string;visible:boolean}
   |{type:'set_camera';nodeId:string;camera:Partial<NonNullable<ForgeNode['camera']>>}
+  |{type:'set_geometry';nodeId:string;geometry:NonNullable<ForgeNode['geometry']>;allowDestructive?:boolean}
   |{type:'add_node';node:ForgeNode}
   |{type:'remove_node';nodeId:string;allowDestructive?:boolean};
 
@@ -690,6 +691,7 @@ export default function WorldForgeEditor(){
   const [meshAmount,setMeshAmount]=useState(.25);
   const [stageMode,setStageMode]=useState(false);
   const [stagedOperations,setStagedOperations]=useState<ForgeOperation[]>([]);
+  const [snapStep,setSnapStep]=useState(.25);
   const [snapshotState,setSnapshotState]=useState<'loading'|'saved'|'dirty'>('loading');
   const importInputRef=useRef<HTMLInputElement>(null);
 
@@ -750,7 +752,56 @@ export default function WorldForgeEditor(){
     return ()=>window.clearTimeout(timer);
   },[project]);
 
-  const selected=project?.nodes.find(node=>node.id===selectedId)||null;
+  const viewportProject=useMemo(()=>{
+    if(!project||!stageMode||!stagedOperations.length) return project;
+
+    let nodes=project.nodes.map(node=>({
+      ...node,
+      transform:{
+        position:{...node.transform.position},
+        rotationDeg:{...node.transform.rotationDeg},
+        scale:{...node.transform.scale},
+      },
+      camera:node.camera?{...node.camera,lookAt:node.camera.lookAt?{...node.camera.lookAt}:undefined}:undefined,
+      geometry:node.geometry?JSON.parse(JSON.stringify(node.geometry)):undefined,
+    }));
+
+    for(const operation of stagedOperations){
+      if(operation.type==='add_node'){
+        if(!nodes.some(node=>node.id===operation.node.id)){
+          nodes.push(JSON.parse(JSON.stringify(operation.node)) as ForgeNode);
+        }
+        continue;
+      }
+
+      if(operation.type==='remove_node'){
+        nodes=nodes.filter(node=>node.id!==operation.nodeId);
+        continue;
+      }
+
+      const index=nodes.findIndex(node=>node.id===operation.nodeId);
+      if(index<0) continue;
+      const node=nodes[index];
+
+      if(operation.type==='set_transform'){
+        node.transform={
+          position:{...node.transform.position,...operation.transform.position},
+          rotationDeg:{...node.transform.rotationDeg,...operation.transform.rotationDeg},
+          scale:{...node.transform.scale,...operation.transform.scale},
+        };
+      }else if(operation.type==='set_visibility'){
+        node.visible=operation.visible;
+      }else if(operation.type==='set_camera'){
+        node.camera=node.camera?{...node.camera,...operation.camera}:node.camera;
+      }else if(operation.type==='set_geometry'){
+        node.geometry=JSON.parse(JSON.stringify(operation.geometry));
+      }
+    }
+
+    return {...project,nodes};
+  },[project,stageMode,stagedOperations]);
+
+  const selected=viewportProject?.nodes.find(node=>node.id===selectedId)||null;
 
   function selectDefaultNode(nextProject:ForgeProject){
     const first=nextProject.nodes.find(node=>node.kind==='mesh'&&!node.locked);
@@ -776,6 +827,7 @@ export default function WorldForgeEditor(){
       setUndoStack([]);
       setNativePreview(null);
       setShotDigest('');
+      setStagedOperations([]);
       selectDefaultNode(candidate);
       setCommandNote(`${sourceLabel} loaded at v${candidate.version}. Scene validation accepted.`);
       window.localStorage.setItem(WORLD_FORGE_STORAGE_KEY,JSON.stringify(candidate));
@@ -825,6 +877,7 @@ export default function WorldForgeEditor(){
       setUndoStack([]);
       setNativePreview(null);
       setShotDigest('');
+      setStagedOperations([]);
       selectDefaultNode(payload.project);
       setCommandNote('Reset to the validated World Forge starter scene.');
       setSnapshotState('saved');
@@ -867,13 +920,22 @@ export default function WorldForgeEditor(){
     }
   }
 
+  function queueOrMutate(operations:ForgeOperation[],label:string){
+    if(stageMode){
+      setStagedOperations(current=>[...current,...operations].slice(0,100));
+      setCommandNote(`Staged: ${label}`);
+      return;
+    }
+    void mutate(operations);
+  }
+
   function transformPatch(group:'position'|'rotationDeg'|'scale',axis:keyof Vec3,value:number){
     if(!selected) return;
-    mutate([{
+    queueOrMutate([{
       type:'set_transform',
       nodeId:selected.id,
       transform:{[group]:{...selected.transform[group],[axis]:value}},
-    } as ForgeOperation]);
+    } as ForgeOperation],`${selected.name} ${group} ${axis.toUpperCase()} = ${value}`);
   }
 
   function nudge(axis:keyof Vec3,amount:number){
@@ -882,18 +944,31 @@ export default function WorldForgeEditor(){
     transformPatch('position',axis,next);
   }
 
+  function commitViewportTranslate(nodeId:string,axis:keyof Vec3,delta:number){
+    const node=viewportProject?.nodes.find(item=>item.id===nodeId);
+    if(!node||node.locked) return;
+    const value=node.transform.position[axis]+delta;
+    queueOrMutate([{
+      type:'set_transform',
+      nodeId,
+      transform:{
+        position:{...node.transform.position,[axis]:value},
+      },
+    }],`Move ${node.name} ${axis.toUpperCase()} by ${delta} m`);
+  }
+
   function cameraPatch(patch:Partial<NonNullable<ForgeNode['camera']>>){
     if(!selected||selected.kind!=='camera'||!selected.camera) return;
-    mutate([{
+    queueOrMutate([{
       type:'set_camera',
       nodeId:selected.id,
       camera:patch,
-    }]);
+    }],`Update ${selected.name} camera`);
   }
 
   function addCube(){
-    if(!project) return;
-    const index=project.nodes.filter(node=>node.kind==='mesh').length+1;
+    if(!viewportProject) return;
+    const index=viewportProject.nodes.filter(node=>node.kind==='mesh').length+1;
     const id=`cube-${Date.now().toString(36)}`;
     const node:ForgeNode={
       id,
@@ -907,7 +982,8 @@ export default function WorldForgeEditor(){
       geometry:{kind:'primitive',primitive:'cube'},
       visible:true,
     };
-    mutate([{type:'add_node',node}]).then(()=>setSelectedId(id));
+    queueOrMutate([{type:'add_node',node}],`Add ${node.name}`);
+    setSelectedId(id);
   }
 
   async function undo(){
@@ -1113,6 +1189,21 @@ export default function WorldForgeEditor(){
             if(file) void importProject(file);
           }}
         />
+        <label className="wf-snap-control">
+          <span>Snap</span>
+          <select
+            value={snapStep}
+            onChange={event=>setSnapStep(Number(event.target.value))}
+            disabled={busy}
+          >
+            <option value={.01}>0.01m</option>
+            <option value={.05}>0.05m</option>
+            <option value={.1}>0.10m</option>
+            <option value={.25}>0.25m</option>
+            <option value={.5}>0.50m</option>
+            <option value={1}>1.00m</option>
+          </select>
+        </label>
         <button onClick={()=>void renderNativePreview(false)} disabled={busy}>Wireframe</button>
         <button onClick={()=>void renderNativePreview(true)} disabled={busy}>Solid Render</button>
         <button onClick={()=>void bindCinematicShot()} disabled={busy}>Bind Shot</button>
@@ -1134,7 +1225,13 @@ export default function WorldForgeEditor(){
       </aside>
 
       <section className="wf-stage">
-        <WorldViewport project={project} selectedId={selectedId} onSelect={setSelectedId}/>
+        <WorldViewport
+          project={viewportProject??project}
+          selectedId={selectedId}
+          onSelect={setSelectedId}
+          onTranslate={commitViewportTranslate}
+          snapStep={snapStep}
+        />
         {stagedOperations.length>0&&<div className="wf-stage-tray">
           <strong>CHANGESET STAGED</strong>
           <span>{stagedOperations.length} operation{stagedOperations.length===1?'':'s'}</span>
