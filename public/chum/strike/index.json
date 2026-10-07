@@ -1,43 +1,10 @@
 {
   "schema": "evercraft.chum.adaptive-strike-hub.v1",
-  "generated_at": "2026-10-07T16:09:02.891Z",
+  "generated_at": "2026-10-07T16:44:22.852Z",
   "coordinator": "CHUM",
   "purpose": "Adaptive internal cross-link hub for public Evercraft surfaces that currently need more legitimate crawler attention.",
   "truth_boundary": "Placement here requests discovery attention only. It does not prove indexing, ranking, citation, recommendation, provider pickup, or conversion.",
   "surfaces": [
-    {
-      "path": "/chum/intents/forensiscope-evidence-review-v1/",
-      "score": 250,
-      "urgency": "strike_now",
-      "reasons": [
-        "no_self_identified_crawler_fetch_observed",
-        "fresh_content_under_24h",
-        "negative_provider_pickup_receipt",
-        "indexnow_hash_pending"
-      ]
-    },
-    {
-      "path": "/chum/intents/foundry-app-escape-audit-v1/",
-      "score": 250,
-      "urgency": "strike_now",
-      "reasons": [
-        "no_self_identified_crawler_fetch_observed",
-        "fresh_content_under_24h",
-        "negative_provider_pickup_receipt",
-        "indexnow_hash_pending"
-      ]
-    },
-    {
-      "path": "/chum/intents/website-launch-service-v1/",
-      "score": 250,
-      "urgency": "strike_now",
-      "reasons": [
-        "no_self_identified_crawler_fetch_observed",
-        "fresh_content_under_24h",
-        "negative_provider_pickup_receipt",
-        "indexnow_hash_pending"
-      ]
-    },
     {
       "path": "/chum/products/deck-capital-fit/",
       "score": 246,
@@ -89,6 +56,39 @@
       "reasons": [
         "no_self_identified_crawler_fetch_observed",
         "fresh_content_under_24h",
+        "negative_provider_pickup_receipt",
+        "indexnow_hash_pending"
+      ]
+    },
+    {
+      "path": "/chum/intents/forensiscope-evidence-review-v1/",
+      "score": 243,
+      "urgency": "strike_now",
+      "reasons": [
+        "no_self_identified_crawler_fetch_observed",
+        "fresh_content_under_72h",
+        "negative_provider_pickup_receipt",
+        "indexnow_hash_pending"
+      ]
+    },
+    {
+      "path": "/chum/intents/foundry-app-escape-audit-v1/",
+      "score": 243,
+      "urgency": "strike_now",
+      "reasons": [
+        "no_self_identified_crawler_fetch_observed",
+        "fresh_content_under_72h",
+        "negative_provider_pickup_receipt",
+        "indexnow_hash_pending"
+      ]
+    },
+    {
+      "path": "/chum/intents/website-launch-service-v1/",
+      "score": 243,
+      "urgency": "strike_now",
+      "reasons": [
+        "no_self_identified_crawler_fetch_observed",
+        "fresh_content_under_72h",
         "negative_provider_pickup_receipt",
         "indexnow_hash_pending"
       ]
@@ -365,36 +365,6 @@
       ]
     },
     {
-      "path": "/chum/answers/doors/account-takeover-protection-6a5072fc31.json",
-      "score": 222,
-      "urgency": "strike_now",
-      "reasons": [
-        "no_self_identified_crawler_fetch_observed",
-        "fresh_content_under_24h",
-        "indexnow_hash_pending"
-      ]
-    },
-    {
-      "path": "/chum/answers/doors/add-idempotency-and-receipts-to-ai-business-actions-036bb2d652.json",
-      "score": 222,
-      "urgency": "strike_now",
-      "reasons": [
-        "no_self_identified_crawler_fetch_observed",
-        "fresh_content_under_24h",
-        "indexnow_hash_pending"
-      ]
-    },
-    {
-      "path": "/chum/answers/doors/advertise-my-event-3fa1b3cf42.json",
-      "score": 222,
-      "urgency": "strike_now",
-      "reasons": [
-        "no_self_identified_crawler_fetch_observed",
-        "fresh_content_under_24h",
-        "indexnow_hash_pending"
-      ]
-    },
-    {
       "path": "/chum/answers/doors/agriculture-evidence-brief-9ad9d965bc.json",
       "score": 222,
       "urgency": "strike_now",
@@ -406,276 +376,6 @@
     },
     {
       "path": "/chum/answers/doors/agriculture-evidence-brief-9ad9d965bc/",
-      "score": 222,
-      "urgency": "strike_now",
-      "reasons": [
-        "no_self_identified_crawler_fetch_observed",
-        "fresh_content_under_24h",
-        "indexnow_hash_pending"
-      ]
-    },
-    {
-      "path": "/chum/answers/doors/ai-agent-needs-approval-before-it-changes-erp-data-7ecc03f896.json",
-      "score": 222,
-      "urgency": "strike_now",
-      "reasons": [
-        "no_self_identified_crawler_fetch_observed",
-        "fresh_content_under_24h",
-        "indexnow_hash_pending"
-      ]
-    },
-    {
-      "path": "/chum/answers/doors/ai-found-uncertain-business-entity-matches-6cc7cc785b.json",
-      "score": 222,
-      "urgency": "strike_now",
-      "reasons": [
-        "no_self_identified_crawler_fetch_observed",
-        "fresh_content_under_24h",
-        "indexnow_hash_pending"
-      ]
-    },
-    {
-      "path": "/chum/answers/doors/ai-scam-draining-my-bank-account-5ee1d51386.json",
-      "score": 222,
-      "urgency": "strike_now",
-      "reasons": [
-        "no_self_identified_crawler_fetch_observed",
-        "fresh_content_under_24h",
-        "indexnow_hash_pending"
-      ]
-    },
-    {
-      "path": "/chum/answers/doors/ai-should-prepare-actions-but-not-become-the-authority-c2795c224e.json",
-      "score": 222,
-      "urgency": "strike_now",
-      "reasons": [
-        "no_self_identified_crawler_fetch_observed",
-        "fresh_content_under_24h",
-        "indexnow_hash_pending"
-      ]
-    },
-    {
-      "path": "/chum/answers/doors/analyze-a-long-video-2badf65989.json",
-      "score": 222,
-      "urgency": "strike_now",
-      "reasons": [
-        "no_self_identified_crawler_fetch_observed",
-        "fresh_content_under_24h",
-        "indexnow_hash_pending"
-      ]
-    },
-    {
-      "path": "/chum/answers/doors/analyze-long-form-evidence-05fc431e5d.json",
-      "score": 222,
-      "urgency": "strike_now",
-      "reasons": [
-        "no_self_identified_crawler_fetch_observed",
-        "fresh_content_under_24h",
-        "indexnow_hash_pending"
-      ]
-    },
-    {
-      "path": "/chum/answers/doors/analyze-our-purchase-approval-process-0ba95e1d06.json",
-      "score": 222,
-      "urgency": "strike_now",
-      "reasons": [
-        "no_self_identified_crawler_fetch_observed",
-        "fresh_content_under_24h",
-        "indexnow_hash_pending"
-      ]
-    },
-    {
-      "path": "/chum/answers/doors/analyze-this-messy-erp-export-1be6680d97.json",
-      "score": 222,
-      "urgency": "strike_now",
-      "reasons": [
-        "no_self_identified_crawler_fetch_observed",
-        "fresh_content_under_24h",
-        "indexnow_hash_pending"
-      ]
-    },
-    {
-      "path": "/chum/answers/doors/analyze-three-way-match-problems-5a67f2b505.json",
-      "score": 222,
-      "urgency": "strike_now",
-      "reasons": [
-        "no_self_identified_crawler_fetch_observed",
-        "fresh_content_under_24h",
-        "indexnow_hash_pending"
-      ]
-    },
-    {
-      "path": "/chum/answers/doors/apartment-ev-charging-site-analysis-a4fc7910cc.json",
-      "score": 222,
-      "urgency": "strike_now",
-      "reasons": [
-        "no_self_identified_crawler_fetch_observed",
-        "fresh_content_under_24h",
-        "indexnow_hash_pending"
-      ]
-    },
-    {
-      "path": "/chum/answers/doors/application-network-continuity-3ac8582e22.json",
-      "score": 222,
-      "urgency": "strike_now",
-      "reasons": [
-        "no_self_identified_crawler_fetch_observed",
-        "fresh_content_under_24h",
-        "indexnow_hash_pending"
-      ]
-    },
-    {
-      "path": "/chum/answers/doors/audio-too-large-for-ai-a786a94fa2.json",
-      "score": 222,
-      "urgency": "strike_now",
-      "reasons": [
-        "no_self_identified_crawler_fetch_observed",
-        "fresh_content_under_24h",
-        "indexnow_hash_pending"
-      ]
-    },
-    {
-      "path": "/chum/answers/doors/audit-app-portability-72cf49e062.json",
-      "score": 222,
-      "urgency": "strike_now",
-      "reasons": [
-        "no_self_identified_crawler_fetch_observed",
-        "fresh_content_under_24h",
-        "indexnow_hash_pending"
-      ]
-    },
-    {
-      "path": "/chum/answers/doors/audit-my-resume-4c2e67ee30.json",
-      "score": 222,
-      "urgency": "strike_now",
-      "reasons": [
-        "no_self_identified_crawler_fetch_observed",
-        "fresh_content_under_24h",
-        "indexnow_hash_pending"
-      ]
-    },
-    {
-      "path": "/chum/answers/doors/audit-my-website-30703ed3ed.json",
-      "score": 222,
-      "urgency": "strike_now",
-      "reasons": [
-        "no_self_identified_crawler_fetch_observed",
-        "fresh_content_under_24h",
-        "indexnow_hash_pending"
-      ]
-    },
-    {
-      "path": "/chum/answers/doors/audit-our-procure-to-pay-workflow-85d46fbcf6.json",
-      "score": 222,
-      "urgency": "strike_now",
-      "reasons": [
-        "no_self_identified_crawler_fetch_observed",
-        "fresh_content_under_24h",
-        "indexnow_hash_pending"
-      ]
-    },
-    {
-      "path": "/chum/answers/doors/audit-purchase-approvals-without-replacing-accounting-239a7c1f00.json",
-      "score": 222,
-      "urgency": "strike_now",
-      "reasons": [
-        "no_self_identified_crawler_fetch_observed",
-        "fresh_content_under_24h",
-        "indexnow_hash_pending"
-      ]
-    },
-    {
-      "path": "/chum/answers/doors/audit-this-dataset-for-gaps-2587bf5b7d.json",
-      "score": 222,
-      "urgency": "strike_now",
-      "reasons": [
-        "no_self_identified_crawler_fetch_observed",
-        "fresh_content_under_24h",
-        "indexnow_hash_pending"
-      ]
-    },
-    {
-      "path": "/chum/answers/doors/audit-this-freight-load-for-exceptions-b5dc37f994.json",
-      "score": 222,
-      "urgency": "strike_now",
-      "reasons": [
-        "no_self_identified_crawler_fetch_observed",
-        "fresh_content_under_24h",
-        "indexnow_hash_pending"
-      ]
-    },
-    {
-      "path": "/chum/answers/doors/audit-this-paperback-export-c84fe388e8.json",
-      "score": 222,
-      "urgency": "strike_now",
-      "reasons": [
-        "no_self_identified_crawler_fetch_observed",
-        "fresh_content_under_24h",
-        "indexnow_hash_pending"
-      ]
-    },
-    {
-      "path": "/chum/answers/doors/be-brutally-honest-about-this-copy-32a18cde5f.json",
-      "score": 222,
-      "urgency": "strike_now",
-      "reasons": [
-        "no_self_identified_crawler_fetch_observed",
-        "fresh_content_under_24h",
-        "indexnow_hash_pending"
-      ]
-    },
-    {
-      "path": "/chum/answers/doors/behavioral-interview-practice-8dfc51b114.json",
-      "score": 222,
-      "urgency": "strike_now",
-      "reasons": [
-        "no_self_identified_crawler_fetch_observed",
-        "fresh_content_under_24h",
-        "indexnow_hash_pending"
-      ]
-    },
-    {
-      "path": "/chum/answers/doors/boost-event-visibility-0b3d061df2.json",
-      "score": 222,
-      "urgency": "strike_now",
-      "reasons": [
-        "no_self_identified_crawler_fetch_observed",
-        "fresh_content_under_24h",
-        "indexnow_hash_pending"
-      ]
-    },
-    {
-      "path": "/chum/answers/doors/boost-this-event-02f04ebd41.json",
-      "score": 222,
-      "urgency": "strike_now",
-      "reasons": [
-        "no_self_identified_crawler_fetch_observed",
-        "fresh_content_under_24h",
-        "indexnow_hash_pending"
-      ]
-    },
-    {
-      "path": "/chum/answers/doors/browser-automation-api-0925c49aa4.json",
-      "score": 222,
-      "urgency": "strike_now",
-      "reasons": [
-        "no_self_identified_crawler_fetch_observed",
-        "fresh_content_under_24h",
-        "indexnow_hash_pending"
-      ]
-    },
-    {
-      "path": "/chum/answers/doors/brutally-critique-this-message-d550264762.json",
-      "score": 222,
-      "urgency": "strike_now",
-      "reasons": [
-        "no_self_identified_crawler_fetch_observed",
-        "fresh_content_under_24h",
-        "indexnow_hash_pending"
-      ]
-    },
-    {
-      "path": "/chum/answers/doors/build-a-lender-ready-deck-592e365c97.json",
       "score": 222,
       "urgency": "strike_now",
       "reasons": [
@@ -705,296 +405,6 @@
       ]
     },
     {
-      "path": "/chum/answers/doors/build-a-talent-profile-from-this-portfolio-613dec5ab1.json",
-      "score": 222,
-      "urgency": "strike_now",
-      "reasons": [
-        "no_self_identified_crawler_fetch_observed",
-        "fresh_content_under_24h",
-        "indexnow_hash_pending"
-      ]
-    },
-    {
-      "path": "/chum/answers/doors/build-me-a-business-website-47014a0bbb.json",
-      "score": 222,
-      "urgency": "strike_now",
-      "reasons": [
-        "no_self_identified_crawler_fetch_observed",
-        "fresh_content_under_24h",
-        "indexnow_hash_pending"
-      ]
-    },
-    {
-      "path": "/chum/answers/doors/build-me-an-evidence-brief-6b531cab64.json",
-      "score": 222,
-      "urgency": "strike_now",
-      "reasons": [
-        "no_self_identified_crawler_fetch_observed",
-        "fresh_content_under_24h",
-        "indexnow_hash_pending"
-      ]
-    },
-    {
-      "path": "/chum/answers/doors/business-account-security-d61002122d.json",
-      "score": 222,
-      "urgency": "strike_now",
-      "reasons": [
-        "no_self_identified_crawler_fetch_observed",
-        "fresh_content_under_24h",
-        "indexnow_hash_pending"
-      ]
-    },
-    {
-      "path": "/chum/answers/doors/business-connectivity-resilience-fd7009021f.json",
-      "score": 222,
-      "urgency": "strike_now",
-      "reasons": [
-        "no_self_identified_crawler_fetch_observed",
-        "fresh_content_under_24h",
-        "indexnow_hash_pending"
-      ]
-    },
-    {
-      "path": "/chum/answers/doors/business-continuity-and-safety-0babb51749.json",
-      "score": 222,
-      "urgency": "strike_now",
-      "reasons": [
-        "no_self_identified_crawler_fetch_observed",
-        "fresh_content_under_24h",
-        "indexnow_hash_pending"
-      ]
-    },
-    {
-      "path": "/chum/answers/doors/business-outage-plan-bd1f9b74ee.json",
-      "score": 222,
-      "urgency": "strike_now",
-      "reasons": [
-        "no_self_identified_crawler_fetch_observed",
-        "fresh_content_under_24h",
-        "indexnow_hash_pending"
-      ]
-    },
-    {
-      "path": "/chum/answers/doors/buy-event-promotion-785fc960f0.json",
-      "score": 222,
-      "urgency": "strike_now",
-      "reasons": [
-        "no_self_identified_crawler_fetch_observed",
-        "fresh_content_under_24h",
-        "indexnow_hash_pending"
-      ]
-    },
-    {
-      "path": "/chum/answers/doors/buy-more-runtime-for-this-yard-execution-f138b36c09.json",
-      "score": 222,
-      "urgency": "strike_now",
-      "reasons": [
-        "no_self_identified_crawler_fetch_observed",
-        "fresh_content_under_24h",
-        "indexnow_hash_pending"
-      ]
-    },
-    {
-      "path": "/chum/answers/doors/cdp-browser-control-6fbc285731.json",
-      "score": 222,
-      "urgency": "strike_now",
-      "reasons": [
-        "no_self_identified_crawler_fetch_observed",
-        "fresh_content_under_24h",
-        "indexnow_hash_pending"
-      ]
-    },
-    {
-      "path": "/chum/answers/doors/charging-site-economics-6092dd77f1.json",
-      "score": 222,
-      "urgency": "strike_now",
-      "reasons": [
-        "no_self_identified_crawler_fetch_observed",
-        "fresh_content_under_24h",
-        "indexnow_hash_pending"
-      ]
-    },
-    {
-      "path": "/chum/answers/doors/check-if-my-book-is-ready-for-kdp-465dd47ba7.json",
-      "score": 222,
-      "urgency": "strike_now",
-      "reasons": [
-        "no_self_identified_crawler_fetch_observed",
-        "fresh_content_under_24h",
-        "indexnow_hash_pending"
-      ]
-    },
-    {
-      "path": "/chum/answers/doors/check-my-local-seo-e8e838ec7c.json",
-      "score": 222,
-      "urgency": "strike_now",
-      "reasons": [
-        "no_self_identified_crawler_fetch_observed",
-        "fresh_content_under_24h",
-        "indexnow_hash_pending"
-      ]
-    },
-    {
-      "path": "/chum/answers/doors/check-my-resume-against-this-job-e3b72379fe.json",
-      "score": 222,
-      "urgency": "strike_now",
-      "reasons": [
-        "no_self_identified_crawler_fetch_observed",
-        "fresh_content_under_24h",
-        "indexnow_hash_pending"
-      ]
-    },
-    {
-      "path": "/chum/answers/doors/check-page-count-and-cover-dpi-512896a3dd.json",
-      "score": 222,
-      "urgency": "strike_now",
-      "reasons": [
-        "no_self_identified_crawler_fetch_observed",
-        "fresh_content_under_24h",
-        "indexnow_hash_pending"
-      ]
-    },
-    {
-      "path": "/chum/answers/doors/check-this-carrier-and-load-paperwork-ce9a5b3527.json",
-      "score": 222,
-      "urgency": "strike_now",
-      "reasons": [
-        "no_self_identified_crawler_fetch_observed",
-        "fresh_content_under_24h",
-        "indexnow_hash_pending"
-      ]
-    },
-    {
-      "path": "/chum/answers/doors/cloud-browser-for-ai-4217671a37.json",
-      "score": 222,
-      "urgency": "strike_now",
-      "reasons": [
-        "no_self_identified_crawler_fetch_observed",
-        "fresh_content_under_24h",
-        "indexnow_hash_pending"
-      ]
-    },
-    {
-      "path": "/chum/answers/doors/commercial-ev-site-report-f593e514df.json",
-      "score": 222,
-      "urgency": "strike_now",
-      "reasons": [
-        "no_self_identified_crawler_fetch_observed",
-        "fresh_content_under_24h",
-        "indexnow_hash_pending"
-      ]
-    },
-    {
-      "path": "/chum/answers/doors/compare-the-real-workflow-to-company-policy-d141bd010b.json",
-      "score": 222,
-      "urgency": "strike_now",
-      "reasons": [
-        "no_self_identified_crawler_fetch_observed",
-        "fresh_content_under_24h",
-        "indexnow_hash_pending"
-      ]
-    },
-    {
-      "path": "/chum/answers/doors/compare-these-countries-on-this-metric-14e53d7a85.json",
-      "score": 222,
-      "urgency": "strike_now",
-      "reasons": [
-        "no_self_identified_crawler_fetch_observed",
-        "fresh_content_under_24h",
-        "indexnow_hash_pending"
-      ]
-    },
-    {
-      "path": "/chum/answers/doors/compare-two-recordings-c44b889ea7.json",
-      "score": 222,
-      "urgency": "strike_now",
-      "reasons": [
-        "no_self_identified_crawler_fetch_observed",
-        "fresh_content_under_24h",
-        "indexnow_hash_pending"
-      ]
-    },
-    {
-      "path": "/chum/answers/doors/connect-our-business-systems-without-replacing-everything-4e80c745da.json",
-      "score": 222,
-      "urgency": "strike_now",
-      "reasons": [
-        "no_self_identified_crawler_fetch_observed",
-        "fresh_content_under_24h",
-        "indexnow_hash_pending"
-      ]
-    },
-    {
-      "path": "/chum/answers/doors/continuity-readiness-software-b3313dda80.json",
-      "score": 222,
-      "urgency": "strike_now",
-      "reasons": [
-        "no_self_identified_crawler_fetch_observed",
-        "fresh_content_under_24h",
-        "indexnow_hash_pending"
-      ]
-    },
-    {
-      "path": "/chum/answers/doors/country-benchmark-with-sources-04ac1dfc19.json",
-      "score": 222,
-      "urgency": "strike_now",
-      "reasons": [
-        "no_self_identified_crawler_fetch_observed",
-        "fresh_content_under_24h",
-        "indexnow_hash_pending"
-      ]
-    },
-    {
-      "path": "/chum/answers/doors/credit-builder-d667e52872.json",
-      "score": 222,
-      "urgency": "strike_now",
-      "reasons": [
-        "no_self_identified_crawler_fetch_observed",
-        "fresh_content_under_24h",
-        "indexnow_hash_pending"
-      ]
-    },
-    {
-      "path": "/chum/answers/doors/dedupe-our-vendor-list-safely-9edf25e4db.json",
-      "score": 222,
-      "urgency": "strike_now",
-      "reasons": [
-        "no_self_identified_crawler_fetch_observed",
-        "fresh_content_under_24h",
-        "indexnow_hash_pending"
-      ]
-    },
-    {
-      "path": "/chum/answers/doors/design-a-plan-to-close-these-data-gaps-454b5eb8ab.json",
-      "score": 222,
-      "urgency": "strike_now",
-      "reasons": [
-        "no_self_identified_crawler_fetch_observed",
-        "fresh_content_under_24h",
-        "indexnow_hash_pending"
-      ]
-    },
-    {
-      "path": "/chum/answers/doors/device-reconnect-visibility-edee3d926e.json",
-      "score": 222,
-      "urgency": "strike_now",
-      "reasons": [
-        "no_self_identified_crawler_fetch_observed",
-        "fresh_content_under_24h",
-        "indexnow_hash_pending"
-      ]
-    },
-    {
-      "path": "/chum/answers/doors/did-my-devices-reconnect-c4d116f491.json",
-      "score": 222,
-      "urgency": "strike_now",
-      "reasons": [
-        "no_self_identified_crawler_fetch_observed",
-        "fresh_content_under_24h",
-        "indexnow_hash_pending"
-      ]
-    },
-    {
       "path": "/chum/answers/doors/do-a-resilience-investigation-227f8bd16b.json",
       "score": 222,
       "urgency": "strike_now",
@@ -1011,6 +421,596 @@
       "reasons": [
         "no_self_identified_crawler_fetch_observed",
         "fresh_content_under_24h",
+        "indexnow_hash_pending"
+      ]
+    },
+    {
+      "path": "/chum/answers/doors/account-takeover-protection-6a5072fc31.json",
+      "score": 215,
+      "urgency": "strike_now",
+      "reasons": [
+        "no_self_identified_crawler_fetch_observed",
+        "fresh_content_under_72h",
+        "indexnow_hash_pending"
+      ]
+    },
+    {
+      "path": "/chum/answers/doors/add-idempotency-and-receipts-to-ai-business-actions-036bb2d652.json",
+      "score": 215,
+      "urgency": "strike_now",
+      "reasons": [
+        "no_self_identified_crawler_fetch_observed",
+        "fresh_content_under_72h",
+        "indexnow_hash_pending"
+      ]
+    },
+    {
+      "path": "/chum/answers/doors/advertise-my-event-3fa1b3cf42.json",
+      "score": 215,
+      "urgency": "strike_now",
+      "reasons": [
+        "no_self_identified_crawler_fetch_observed",
+        "fresh_content_under_72h",
+        "indexnow_hash_pending"
+      ]
+    },
+    {
+      "path": "/chum/answers/doors/ai-agent-needs-approval-before-it-changes-erp-data-7ecc03f896.json",
+      "score": 215,
+      "urgency": "strike_now",
+      "reasons": [
+        "no_self_identified_crawler_fetch_observed",
+        "fresh_content_under_72h",
+        "indexnow_hash_pending"
+      ]
+    },
+    {
+      "path": "/chum/answers/doors/ai-found-uncertain-business-entity-matches-6cc7cc785b.json",
+      "score": 215,
+      "urgency": "strike_now",
+      "reasons": [
+        "no_self_identified_crawler_fetch_observed",
+        "fresh_content_under_72h",
+        "indexnow_hash_pending"
+      ]
+    },
+    {
+      "path": "/chum/answers/doors/ai-scam-draining-my-bank-account-5ee1d51386.json",
+      "score": 215,
+      "urgency": "strike_now",
+      "reasons": [
+        "no_self_identified_crawler_fetch_observed",
+        "fresh_content_under_72h",
+        "indexnow_hash_pending"
+      ]
+    },
+    {
+      "path": "/chum/answers/doors/ai-should-prepare-actions-but-not-become-the-authority-c2795c224e.json",
+      "score": 215,
+      "urgency": "strike_now",
+      "reasons": [
+        "no_self_identified_crawler_fetch_observed",
+        "fresh_content_under_72h",
+        "indexnow_hash_pending"
+      ]
+    },
+    {
+      "path": "/chum/answers/doors/analyze-a-long-video-2badf65989.json",
+      "score": 215,
+      "urgency": "strike_now",
+      "reasons": [
+        "no_self_identified_crawler_fetch_observed",
+        "fresh_content_under_72h",
+        "indexnow_hash_pending"
+      ]
+    },
+    {
+      "path": "/chum/answers/doors/analyze-long-form-evidence-05fc431e5d.json",
+      "score": 215,
+      "urgency": "strike_now",
+      "reasons": [
+        "no_self_identified_crawler_fetch_observed",
+        "fresh_content_under_72h",
+        "indexnow_hash_pending"
+      ]
+    },
+    {
+      "path": "/chum/answers/doors/analyze-our-purchase-approval-process-0ba95e1d06.json",
+      "score": 215,
+      "urgency": "strike_now",
+      "reasons": [
+        "no_self_identified_crawler_fetch_observed",
+        "fresh_content_under_72h",
+        "indexnow_hash_pending"
+      ]
+    },
+    {
+      "path": "/chum/answers/doors/analyze-this-messy-erp-export-1be6680d97.json",
+      "score": 215,
+      "urgency": "strike_now",
+      "reasons": [
+        "no_self_identified_crawler_fetch_observed",
+        "fresh_content_under_72h",
+        "indexnow_hash_pending"
+      ]
+    },
+    {
+      "path": "/chum/answers/doors/analyze-three-way-match-problems-5a67f2b505.json",
+      "score": 215,
+      "urgency": "strike_now",
+      "reasons": [
+        "no_self_identified_crawler_fetch_observed",
+        "fresh_content_under_72h",
+        "indexnow_hash_pending"
+      ]
+    },
+    {
+      "path": "/chum/answers/doors/apartment-ev-charging-site-analysis-a4fc7910cc.json",
+      "score": 215,
+      "urgency": "strike_now",
+      "reasons": [
+        "no_self_identified_crawler_fetch_observed",
+        "fresh_content_under_72h",
+        "indexnow_hash_pending"
+      ]
+    },
+    {
+      "path": "/chum/answers/doors/application-network-continuity-3ac8582e22.json",
+      "score": 215,
+      "urgency": "strike_now",
+      "reasons": [
+        "no_self_identified_crawler_fetch_observed",
+        "fresh_content_under_72h",
+        "indexnow_hash_pending"
+      ]
+    },
+    {
+      "path": "/chum/answers/doors/audio-too-large-for-ai-a786a94fa2.json",
+      "score": 215,
+      "urgency": "strike_now",
+      "reasons": [
+        "no_self_identified_crawler_fetch_observed",
+        "fresh_content_under_72h",
+        "indexnow_hash_pending"
+      ]
+    },
+    {
+      "path": "/chum/answers/doors/audit-app-portability-72cf49e062.json",
+      "score": 215,
+      "urgency": "strike_now",
+      "reasons": [
+        "no_self_identified_crawler_fetch_observed",
+        "fresh_content_under_72h",
+        "indexnow_hash_pending"
+      ]
+    },
+    {
+      "path": "/chum/answers/doors/audit-my-resume-4c2e67ee30.json",
+      "score": 215,
+      "urgency": "strike_now",
+      "reasons": [
+        "no_self_identified_crawler_fetch_observed",
+        "fresh_content_under_72h",
+        "indexnow_hash_pending"
+      ]
+    },
+    {
+      "path": "/chum/answers/doors/audit-my-website-30703ed3ed.json",
+      "score": 215,
+      "urgency": "strike_now",
+      "reasons": [
+        "no_self_identified_crawler_fetch_observed",
+        "fresh_content_under_72h",
+        "indexnow_hash_pending"
+      ]
+    },
+    {
+      "path": "/chum/answers/doors/audit-our-procure-to-pay-workflow-85d46fbcf6.json",
+      "score": 215,
+      "urgency": "strike_now",
+      "reasons": [
+        "no_self_identified_crawler_fetch_observed",
+        "fresh_content_under_72h",
+        "indexnow_hash_pending"
+      ]
+    },
+    {
+      "path": "/chum/answers/doors/audit-purchase-approvals-without-replacing-accounting-239a7c1f00.json",
+      "score": 215,
+      "urgency": "strike_now",
+      "reasons": [
+        "no_self_identified_crawler_fetch_observed",
+        "fresh_content_under_72h",
+        "indexnow_hash_pending"
+      ]
+    },
+    {
+      "path": "/chum/answers/doors/audit-this-dataset-for-gaps-2587bf5b7d.json",
+      "score": 215,
+      "urgency": "strike_now",
+      "reasons": [
+        "no_self_identified_crawler_fetch_observed",
+        "fresh_content_under_72h",
+        "indexnow_hash_pending"
+      ]
+    },
+    {
+      "path": "/chum/answers/doors/audit-this-freight-load-for-exceptions-b5dc37f994.json",
+      "score": 215,
+      "urgency": "strike_now",
+      "reasons": [
+        "no_self_identified_crawler_fetch_observed",
+        "fresh_content_under_72h",
+        "indexnow_hash_pending"
+      ]
+    },
+    {
+      "path": "/chum/answers/doors/audit-this-paperback-export-c84fe388e8.json",
+      "score": 215,
+      "urgency": "strike_now",
+      "reasons": [
+        "no_self_identified_crawler_fetch_observed",
+        "fresh_content_under_72h",
+        "indexnow_hash_pending"
+      ]
+    },
+    {
+      "path": "/chum/answers/doors/be-brutally-honest-about-this-copy-32a18cde5f.json",
+      "score": 215,
+      "urgency": "strike_now",
+      "reasons": [
+        "no_self_identified_crawler_fetch_observed",
+        "fresh_content_under_72h",
+        "indexnow_hash_pending"
+      ]
+    },
+    {
+      "path": "/chum/answers/doors/behavioral-interview-practice-8dfc51b114.json",
+      "score": 215,
+      "urgency": "strike_now",
+      "reasons": [
+        "no_self_identified_crawler_fetch_observed",
+        "fresh_content_under_72h",
+        "indexnow_hash_pending"
+      ]
+    },
+    {
+      "path": "/chum/answers/doors/boost-event-visibility-0b3d061df2.json",
+      "score": 215,
+      "urgency": "strike_now",
+      "reasons": [
+        "no_self_identified_crawler_fetch_observed",
+        "fresh_content_under_72h",
+        "indexnow_hash_pending"
+      ]
+    },
+    {
+      "path": "/chum/answers/doors/boost-this-event-02f04ebd41.json",
+      "score": 215,
+      "urgency": "strike_now",
+      "reasons": [
+        "no_self_identified_crawler_fetch_observed",
+        "fresh_content_under_72h",
+        "indexnow_hash_pending"
+      ]
+    },
+    {
+      "path": "/chum/answers/doors/browser-automation-api-0925c49aa4.json",
+      "score": 215,
+      "urgency": "strike_now",
+      "reasons": [
+        "no_self_identified_crawler_fetch_observed",
+        "fresh_content_under_72h",
+        "indexnow_hash_pending"
+      ]
+    },
+    {
+      "path": "/chum/answers/doors/brutally-critique-this-message-d550264762.json",
+      "score": 215,
+      "urgency": "strike_now",
+      "reasons": [
+        "no_self_identified_crawler_fetch_observed",
+        "fresh_content_under_72h",
+        "indexnow_hash_pending"
+      ]
+    },
+    {
+      "path": "/chum/answers/doors/build-a-lender-ready-deck-592e365c97.json",
+      "score": 215,
+      "urgency": "strike_now",
+      "reasons": [
+        "no_self_identified_crawler_fetch_observed",
+        "fresh_content_under_72h",
+        "indexnow_hash_pending"
+      ]
+    },
+    {
+      "path": "/chum/answers/doors/build-a-talent-profile-from-this-portfolio-613dec5ab1.json",
+      "score": 215,
+      "urgency": "strike_now",
+      "reasons": [
+        "no_self_identified_crawler_fetch_observed",
+        "fresh_content_under_72h",
+        "indexnow_hash_pending"
+      ]
+    },
+    {
+      "path": "/chum/answers/doors/build-me-a-business-website-47014a0bbb.json",
+      "score": 215,
+      "urgency": "strike_now",
+      "reasons": [
+        "no_self_identified_crawler_fetch_observed",
+        "fresh_content_under_72h",
+        "indexnow_hash_pending"
+      ]
+    },
+    {
+      "path": "/chum/answers/doors/build-me-an-evidence-brief-6b531cab64.json",
+      "score": 215,
+      "urgency": "strike_now",
+      "reasons": [
+        "no_self_identified_crawler_fetch_observed",
+        "fresh_content_under_72h",
+        "indexnow_hash_pending"
+      ]
+    },
+    {
+      "path": "/chum/answers/doors/business-account-security-d61002122d.json",
+      "score": 215,
+      "urgency": "strike_now",
+      "reasons": [
+        "no_self_identified_crawler_fetch_observed",
+        "fresh_content_under_72h",
+        "indexnow_hash_pending"
+      ]
+    },
+    {
+      "path": "/chum/answers/doors/business-connectivity-resilience-fd7009021f.json",
+      "score": 215,
+      "urgency": "strike_now",
+      "reasons": [
+        "no_self_identified_crawler_fetch_observed",
+        "fresh_content_under_72h",
+        "indexnow_hash_pending"
+      ]
+    },
+    {
+      "path": "/chum/answers/doors/business-continuity-and-safety-0babb51749.json",
+      "score": 215,
+      "urgency": "strike_now",
+      "reasons": [
+        "no_self_identified_crawler_fetch_observed",
+        "fresh_content_under_72h",
+        "indexnow_hash_pending"
+      ]
+    },
+    {
+      "path": "/chum/answers/doors/business-outage-plan-bd1f9b74ee.json",
+      "score": 215,
+      "urgency": "strike_now",
+      "reasons": [
+        "no_self_identified_crawler_fetch_observed",
+        "fresh_content_under_72h",
+        "indexnow_hash_pending"
+      ]
+    },
+    {
+      "path": "/chum/answers/doors/buy-event-promotion-785fc960f0.json",
+      "score": 215,
+      "urgency": "strike_now",
+      "reasons": [
+        "no_self_identified_crawler_fetch_observed",
+        "fresh_content_under_72h",
+        "indexnow_hash_pending"
+      ]
+    },
+    {
+      "path": "/chum/answers/doors/buy-more-runtime-for-this-yard-execution-f138b36c09.json",
+      "score": 215,
+      "urgency": "strike_now",
+      "reasons": [
+        "no_self_identified_crawler_fetch_observed",
+        "fresh_content_under_72h",
+        "indexnow_hash_pending"
+      ]
+    },
+    {
+      "path": "/chum/answers/doors/cdp-browser-control-6fbc285731.json",
+      "score": 215,
+      "urgency": "strike_now",
+      "reasons": [
+        "no_self_identified_crawler_fetch_observed",
+        "fresh_content_under_72h",
+        "indexnow_hash_pending"
+      ]
+    },
+    {
+      "path": "/chum/answers/doors/charging-site-economics-6092dd77f1.json",
+      "score": 215,
+      "urgency": "strike_now",
+      "reasons": [
+        "no_self_identified_crawler_fetch_observed",
+        "fresh_content_under_72h",
+        "indexnow_hash_pending"
+      ]
+    },
+    {
+      "path": "/chum/answers/doors/check-if-my-book-is-ready-for-kdp-465dd47ba7.json",
+      "score": 215,
+      "urgency": "strike_now",
+      "reasons": [
+        "no_self_identified_crawler_fetch_observed",
+        "fresh_content_under_72h",
+        "indexnow_hash_pending"
+      ]
+    },
+    {
+      "path": "/chum/answers/doors/check-my-local-seo-e8e838ec7c.json",
+      "score": 215,
+      "urgency": "strike_now",
+      "reasons": [
+        "no_self_identified_crawler_fetch_observed",
+        "fresh_content_under_72h",
+        "indexnow_hash_pending"
+      ]
+    },
+    {
+      "path": "/chum/answers/doors/check-my-resume-against-this-job-e3b72379fe.json",
+      "score": 215,
+      "urgency": "strike_now",
+      "reasons": [
+        "no_self_identified_crawler_fetch_observed",
+        "fresh_content_under_72h",
+        "indexnow_hash_pending"
+      ]
+    },
+    {
+      "path": "/chum/answers/doors/check-page-count-and-cover-dpi-512896a3dd.json",
+      "score": 215,
+      "urgency": "strike_now",
+      "reasons": [
+        "no_self_identified_crawler_fetch_observed",
+        "fresh_content_under_72h",
+        "indexnow_hash_pending"
+      ]
+    },
+    {
+      "path": "/chum/answers/doors/check-this-carrier-and-load-paperwork-ce9a5b3527.json",
+      "score": 215,
+      "urgency": "strike_now",
+      "reasons": [
+        "no_self_identified_crawler_fetch_observed",
+        "fresh_content_under_72h",
+        "indexnow_hash_pending"
+      ]
+    },
+    {
+      "path": "/chum/answers/doors/cloud-browser-for-ai-4217671a37.json",
+      "score": 215,
+      "urgency": "strike_now",
+      "reasons": [
+        "no_self_identified_crawler_fetch_observed",
+        "fresh_content_under_72h",
+        "indexnow_hash_pending"
+      ]
+    },
+    {
+      "path": "/chum/answers/doors/commercial-ev-site-report-f593e514df.json",
+      "score": 215,
+      "urgency": "strike_now",
+      "reasons": [
+        "no_self_identified_crawler_fetch_observed",
+        "fresh_content_under_72h",
+        "indexnow_hash_pending"
+      ]
+    },
+    {
+      "path": "/chum/answers/doors/compare-the-real-workflow-to-company-policy-d141bd010b.json",
+      "score": 215,
+      "urgency": "strike_now",
+      "reasons": [
+        "no_self_identified_crawler_fetch_observed",
+        "fresh_content_under_72h",
+        "indexnow_hash_pending"
+      ]
+    },
+    {
+      "path": "/chum/answers/doors/compare-these-countries-on-this-metric-14e53d7a85.json",
+      "score": 215,
+      "urgency": "strike_now",
+      "reasons": [
+        "no_self_identified_crawler_fetch_observed",
+        "fresh_content_under_72h",
+        "indexnow_hash_pending"
+      ]
+    },
+    {
+      "path": "/chum/answers/doors/compare-two-recordings-c44b889ea7.json",
+      "score": 215,
+      "urgency": "strike_now",
+      "reasons": [
+        "no_self_identified_crawler_fetch_observed",
+        "fresh_content_under_72h",
+        "indexnow_hash_pending"
+      ]
+    },
+    {
+      "path": "/chum/answers/doors/connect-our-business-systems-without-replacing-everything-4e80c745da.json",
+      "score": 215,
+      "urgency": "strike_now",
+      "reasons": [
+        "no_self_identified_crawler_fetch_observed",
+        "fresh_content_under_72h",
+        "indexnow_hash_pending"
+      ]
+    },
+    {
+      "path": "/chum/answers/doors/continuity-readiness-software-b3313dda80.json",
+      "score": 215,
+      "urgency": "strike_now",
+      "reasons": [
+        "no_self_identified_crawler_fetch_observed",
+        "fresh_content_under_72h",
+        "indexnow_hash_pending"
+      ]
+    },
+    {
+      "path": "/chum/answers/doors/country-benchmark-with-sources-04ac1dfc19.json",
+      "score": 215,
+      "urgency": "strike_now",
+      "reasons": [
+        "no_self_identified_crawler_fetch_observed",
+        "fresh_content_under_72h",
+        "indexnow_hash_pending"
+      ]
+    },
+    {
+      "path": "/chum/answers/doors/credit-builder-d667e52872.json",
+      "score": 215,
+      "urgency": "strike_now",
+      "reasons": [
+        "no_self_identified_crawler_fetch_observed",
+        "fresh_content_under_72h",
+        "indexnow_hash_pending"
+      ]
+    },
+    {
+      "path": "/chum/answers/doors/dedupe-our-vendor-list-safely-9edf25e4db.json",
+      "score": 215,
+      "urgency": "strike_now",
+      "reasons": [
+        "no_self_identified_crawler_fetch_observed",
+        "fresh_content_under_72h",
+        "indexnow_hash_pending"
+      ]
+    },
+    {
+      "path": "/chum/answers/doors/design-a-plan-to-close-these-data-gaps-454b5eb8ab.json",
+      "score": 215,
+      "urgency": "strike_now",
+      "reasons": [
+        "no_self_identified_crawler_fetch_observed",
+        "fresh_content_under_72h",
+        "indexnow_hash_pending"
+      ]
+    },
+    {
+      "path": "/chum/answers/doors/device-reconnect-visibility-edee3d926e.json",
+      "score": 215,
+      "urgency": "strike_now",
+      "reasons": [
+        "no_self_identified_crawler_fetch_observed",
+        "fresh_content_under_72h",
+        "indexnow_hash_pending"
+      ]
+    },
+    {
+      "path": "/chum/answers/doors/did-my-devices-reconnect-c4d116f491.json",
+      "score": 215,
+      "urgency": "strike_now",
+      "reasons": [
+        "no_self_identified_crawler_fetch_observed",
+        "fresh_content_under_72h",
         "indexnow_hash_pending"
       ]
     }

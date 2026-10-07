@@ -2,7 +2,7 @@
   "schema": "evercraft.chum.crawl-pressure.v1",
   "provider": "Evercraft LLC",
   "coordinator": "CHUM",
-  "updated_at": "2026-10-07T16:35:00.403Z",
+  "updated_at": "2026-10-07T16:44:23.056Z",
   "purpose": "Content-hash-backed freshness signals for public Evercraft discovery surfaces. A freshness signal requests attention; it does not prove indexing, ranking, recommendation, citation or provider pickup.",
   "indexnow": {
     "supported": true,
@@ -11,26 +11,65 @@
   },
   "latest_change_batch": [
     {
-      "path": "/chum/hot/",
-      "last_changed": "2026-10-07T16:35:00.403Z",
+      "path": "/chum/crawler-radar.json",
+      "last_changed": "2026-10-07T16:44:23.056Z",
+      "priority": 80
+    },
+    {
+      "path": "/chum/crawler-radar.txt",
+      "last_changed": "2026-10-07T16:44:23.056Z",
       "priority": 80
     },
     {
       "path": "/chum/hot/index.json",
-      "last_changed": "2026-10-07T16:35:00.403Z",
+      "last_changed": "2026-10-07T16:44:23.056Z",
+      "priority": 80
+    },
+    {
+      "path": "/chum/strike/",
+      "last_changed": "2026-10-07T16:44:23.056Z",
+      "priority": 80
+    },
+    {
+      "path": "/chum/strike/index.json",
+      "last_changed": "2026-10-07T16:44:23.056Z",
       "priority": 80
     }
   ],
   "recent_surfaces": [
     {
-      "path": "/chum/hot/",
-      "url": "/chum/hot/",
-      "last_changed": "2026-10-07T16:35:00.403Z",
+      "path": "/chum/crawler-radar.json",
+      "url": "/chum/crawler-radar.json",
+      "last_changed": "2026-10-07T16:44:23.056Z",
+      "priority": 80
+    },
+    {
+      "path": "/chum/crawler-radar.txt",
+      "url": "/chum/crawler-radar.txt",
+      "last_changed": "2026-10-07T16:44:23.056Z",
       "priority": 80
     },
     {
       "path": "/chum/hot/index.json",
       "url": "/chum/hot/index.json",
+      "last_changed": "2026-10-07T16:44:23.056Z",
+      "priority": 80
+    },
+    {
+      "path": "/chum/strike/",
+      "url": "/chum/strike/",
+      "last_changed": "2026-10-07T16:44:23.056Z",
+      "priority": 80
+    },
+    {
+      "path": "/chum/strike/index.json",
+      "url": "/chum/strike/index.json",
+      "last_changed": "2026-10-07T16:44:23.056Z",
+      "priority": 80
+    },
+    {
+      "path": "/chum/hot/",
+      "url": "/chum/hot/",
       "last_changed": "2026-10-07T16:35:00.403Z",
       "priority": 80
     },
@@ -291,30 +330,6 @@
       "url": "/feed.xml",
       "last_changed": "2026-10-07T16:33:22.074Z",
       "priority": 60
-    },
-    {
-      "path": "/chum/crawler-radar.json",
-      "url": "/chum/crawler-radar.json",
-      "last_changed": "2026-10-07T16:09:03.129Z",
-      "priority": 80
-    },
-    {
-      "path": "/chum/crawler-radar.txt",
-      "url": "/chum/crawler-radar.txt",
-      "last_changed": "2026-10-07T16:09:03.129Z",
-      "priority": 80
-    },
-    {
-      "path": "/chum/strike/index.json",
-      "url": "/chum/strike/index.json",
-      "last_changed": "2026-10-07T16:09:03.129Z",
-      "priority": 80
-    },
-    {
-      "path": "/chum/strike/",
-      "url": "/chum/strike/",
-      "last_changed": "2026-10-07T05:43:03.803Z",
-      "priority": 80
     },
     {
       "path": "/chum/products/deck-capital-fit/",

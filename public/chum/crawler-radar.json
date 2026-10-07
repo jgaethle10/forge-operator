@@ -1,6 +1,6 @@
 {
   "schema": "evercraft.chum.crawler-radar.v1",
-  "generated_at": "2026-10-07T16:09:02.891Z",
+  "generated_at": "2026-10-07T16:44:22.852Z",
   "coordinator": "CHUM",
   "runtime_feedback": {
     "requested": false,
@@ -9,8 +9,8 @@
   },
   "observation_count": 0,
   "negative_provider_pickup_receipts": 175,
-  "surface_count": 2919,
-  "strike_now_count": 1348,
+  "surface_count": 2929,
+  "strike_now_count": 1372,
   "doctrine": {
     "crawler_fetch_is_not_indexing": true,
     "indexing_is_not_ranking": true,
@@ -20,609 +20,6 @@
     "no_unsolicited_human_outreach": true
   },
   "surfaces": [
-    {
-      "path": "/chum/intents/forensiscope-evidence-review-v1/",
-      "product_key": "forensiscope",
-      "score": 250,
-      "urgency": "strike_now",
-      "crawl_priority": 158,
-      "last_changed": "2026-10-06T16:39:43.960Z",
-      "last_observed_crawler_fetch": null,
-      "last_observed_crawler_family": null,
-      "indexnow_pending": true,
-      "negative_provider_pickup_receipts": [
-        {
-          "provider": "chatgpt",
-          "observed_at": "2026-09-25T06:15:00.000Z",
-          "source": "user_observed_result",
-          "evidence_ref": "conformance/provider-observations/2026-09-24-chatgpt-forensiscope-round1.json"
-        },
-        {
-          "provider": "claude",
-          "observed_at": "2026-09-24T00:00:00.000Z",
-          "source": "user_observed_result",
-          "evidence_ref": "conformance/provider-observations/2026-09-24-claude-forensiscope-round2.json"
-        },
-        {
-          "provider": "claude",
-          "observed_at": "2026-09-24T17:36:00.000Z",
-          "source": "user_observed_result",
-          "evidence_ref": "conformance/provider-observations/2026-09-24-claude-forensiscope.json"
-        },
-        {
-          "provider": "gemini",
-          "observed_at": "2026-09-25T03:57:00.000Z",
-          "source": "user_observed_result",
-          "evidence_ref": "conformance/provider-observations/2026-09-24-gemini-forensiscope-round1.json"
-        },
-        {
-          "provider": "grok",
-          "observed_at": "2026-09-24T00:00:00.000Z",
-          "source": "user_observed_result",
-          "evidence_ref": "conformance/provider-observations/2026-09-24-grok-forensiscope-round2.json"
-        },
-        {
-          "provider": "grok",
-          "observed_at": "2026-09-24T17:32:00.000Z",
-          "source": "user_observed_result",
-          "evidence_ref": "conformance/provider-observations/2026-09-24-grok-forensiscope.json"
-        },
-        {
-          "provider": "google",
-          "observed_at": "2026-09-25T15:05:00.000Z",
-          "source": "user_observed_result",
-          "evidence_ref": "conformance/provider-observations/2026-09-25-google-forensiscope-round2.json"
-        },
-        {
-          "provider": "chatgpt",
-          "observed_at": "2026-09-26T00:00:00.000Z",
-          "source": "user_observed_result",
-          "evidence_ref": "conformance/provider-observations/2026-09-26-chatgpt-forensiscope-independent-miss.json"
-        },
-        {
-          "provider": "claude",
-          "observed_at": "2026-09-26T00:00:00.000Z",
-          "source": "user_observed_result",
-          "evidence_ref": "conformance/provider-observations/2026-09-26-claude-forensiscope-round3.json"
-        },
-        {
-          "provider": "google",
-          "observed_at": "2026-09-26T00:00:00.000Z",
-          "source": "user_observed_result",
-          "evidence_ref": "conformance/provider-observations/2026-09-26-google-forensiscope-round3.json"
-        },
-        {
-          "provider": "grok",
-          "observed_at": "2026-09-26T00:00:00.000Z",
-          "source": "user_observed_result",
-          "evidence_ref": "conformance/provider-observations/2026-09-26-grok-forensiscope-round3.json"
-        },
-        {
-          "provider": "generic_agent",
-          "observed_at": "2026-09-26T11:27:38.456Z",
-          "source": "authorized_provider_probe",
-          "evidence_ref": "conformance/provider-observations/auto-generic_agent-media-agent-tool-007-4a7b7d9b338edede.json"
-        },
-        {
-          "provider": "generic_agent",
-          "observed_at": "2026-09-26T22:42:47.871Z",
-          "source": "authorized_provider_probe",
-          "evidence_ref": "conformance/provider-observations/auto-generic_agent-media-agent-tool-007-556b6e3dd64fac5f.json"
-        },
-        {
-          "provider": "generic_agent",
-          "observed_at": "2026-09-26T16:26:54.236Z",
-          "source": "authorized_provider_probe",
-          "evidence_ref": "conformance/provider-observations/auto-generic_agent-media-agent-tool-007-82b157aeff53011a.json"
-        },
-        {
-          "provider": "generic_agent",
-          "observed_at": "2026-09-26T21:12:38.868Z",
-          "source": "authorized_provider_probe",
-          "evidence_ref": "conformance/provider-observations/auto-generic_agent-media-agent-tool-007-95d781d76cee8f79.json"
-        },
-        {
-          "provider": "generic_agent",
-          "observed_at": "2026-09-26T15:11:55.813Z",
-          "source": "authorized_provider_probe",
-          "evidence_ref": "conformance/provider-observations/auto-generic_agent-media-agent-tool-007-9928e6f2fa260a9f.json"
-        },
-        {
-          "provider": "generic_agent",
-          "observed_at": "2026-09-26T12:22:36.446Z",
-          "source": "authorized_provider_probe",
-          "evidence_ref": "conformance/provider-observations/auto-generic_agent-media-agent-tool-007-9f99737254b5bf63.json"
-        },
-        {
-          "provider": "generic_agent",
-          "observed_at": "2026-09-26T05:00:24.373Z",
-          "source": "authorized_provider_probe",
-          "evidence_ref": "conformance/provider-observations/auto-generic_agent-media-agent-tool-007-a722a1daf33c0e57.json"
-        },
-        {
-          "provider": "generic_agent",
-          "observed_at": "2026-09-26T18:03:52.743Z",
-          "source": "authorized_provider_probe",
-          "evidence_ref": "conformance/provider-observations/auto-generic_agent-media-agent-tool-007-b9be2e56a31265b0.json"
-        },
-        {
-          "provider": "generic_agent",
-          "observed_at": "2026-09-26T22:40:36.611Z",
-          "source": "authorized_provider_probe",
-          "evidence_ref": "conformance/provider-observations/auto-generic_agent-media-agent-tool-007-cf6a16cdbf2addaa.json"
-        },
-        {
-          "provider": "generic_agent",
-          "observed_at": "2026-09-26T17:06:39.220Z",
-          "source": "authorized_provider_probe",
-          "evidence_ref": "conformance/provider-observations/auto-generic_agent-media-agent-tool-007-d2fcd1e2e0cfe06f.json"
-        },
-        {
-          "provider": "generic_agent",
-          "observed_at": "2026-09-26T22:44:57.150Z",
-          "source": "authorized_provider_probe",
-          "evidence_ref": "conformance/provider-observations/auto-generic_agent-media-agent-tool-007-f17229d6fc684e63.json"
-        },
-        {
-          "provider": "generic_agent",
-          "observed_at": "2026-09-26T05:00:25.403Z",
-          "source": "authorized_provider_probe",
-          "evidence_ref": "conformance/provider-observations/auto-generic_agent-media-evidence-timeline-008-110282430970d99b.json"
-        },
-        {
-          "provider": "generic_agent",
-          "observed_at": "2026-09-26T12:22:43.264Z",
-          "source": "authorized_provider_probe",
-          "evidence_ref": "conformance/provider-observations/auto-generic_agent-media-evidence-timeline-008-131b5a719549d780.json"
-        },
-        {
-          "provider": "generic_agent",
-          "observed_at": "2026-09-26T11:27:39.502Z",
-          "source": "authorized_provider_probe",
-          "evidence_ref": "conformance/provider-observations/auto-generic_agent-media-evidence-timeline-008-48b85398f2d4d762.json"
-        },
-        {
-          "provider": "generic_agent",
-          "observed_at": "2026-09-26T15:27:32.557Z",
-          "source": "authorized_provider_probe",
-          "evidence_ref": "conformance/provider-observations/auto-generic_agent-media-evidence-timeline-008-66de4543224ad27b.json"
-        },
-        {
-          "provider": "generic_agent",
-          "observed_at": "2026-09-26T17:06:40.310Z",
-          "source": "authorized_provider_probe",
-          "evidence_ref": "conformance/provider-observations/auto-generic_agent-media-evidence-timeline-008-6963498ac835d46b.json"
-        },
-        {
-          "provider": "generic_agent",
-          "observed_at": "2026-09-26T16:26:55.812Z",
-          "source": "authorized_provider_probe",
-          "evidence_ref": "conformance/provider-observations/auto-generic_agent-media-evidence-timeline-008-73e38d7976d98f28.json"
-        },
-        {
-          "provider": "generic_agent",
-          "observed_at": "2026-09-26T21:12:40.774Z",
-          "source": "authorized_provider_probe",
-          "evidence_ref": "conformance/provider-observations/auto-generic_agent-media-evidence-timeline-008-78added277595d7b.json"
-        },
-        {
-          "provider": "generic_agent",
-          "observed_at": "2026-09-26T15:11:57.573Z",
-          "source": "authorized_provider_probe",
-          "evidence_ref": "conformance/provider-observations/auto-generic_agent-media-evidence-timeline-008-806f92de7b76211b.json"
-        },
-        {
-          "provider": "generic_agent",
-          "observed_at": "2026-09-26T18:04:03.395Z",
-          "source": "authorized_provider_probe",
-          "evidence_ref": "conformance/provider-observations/auto-generic_agent-media-evidence-timeline-008-f842a2eac40f29fb.json"
-        },
-        {
-          "provider": "generic_agent",
-          "observed_at": "2026-09-26T12:22:24.197Z",
-          "source": "authorized_provider_probe",
-          "evidence_ref": "conformance/provider-observations/auto-generic_agent-media-overflow-001-2289dc9bb0f93351.json"
-        },
-        {
-          "provider": "generic_agent",
-          "observed_at": "2026-09-26T11:27:27.895Z",
-          "source": "authorized_provider_probe",
-          "evidence_ref": "conformance/provider-observations/auto-generic_agent-media-overflow-001-3e2b4a06e21b8b38.json"
-        },
-        {
-          "provider": "generic_agent",
-          "observed_at": "2026-09-26T05:00:16.405Z",
-          "source": "authorized_provider_probe",
-          "evidence_ref": "conformance/provider-observations/auto-generic_agent-media-overflow-001-5f84f40dd2894a9b.json"
-        },
-        {
-          "provider": "generic_agent",
-          "observed_at": "2026-09-26T16:26:42.819Z",
-          "source": "authorized_provider_probe",
-          "evidence_ref": "conformance/provider-observations/auto-generic_agent-media-overflow-001-7f91e77095994fda.json"
-        },
-        {
-          "provider": "generic_agent",
-          "observed_at": "2026-09-26T18:03:39.667Z",
-          "source": "authorized_provider_probe",
-          "evidence_ref": "conformance/provider-observations/auto-generic_agent-media-overflow-001-827b6032753aba59.json"
-        },
-        {
-          "provider": "generic_agent",
-          "observed_at": "2026-09-26T15:11:42.132Z",
-          "source": "authorized_provider_probe",
-          "evidence_ref": "conformance/provider-observations/auto-generic_agent-media-overflow-001-9b78b3a0f2e7a041.json"
-        },
-        {
-          "provider": "generic_agent",
-          "observed_at": "2026-09-26T17:06:28.657Z",
-          "source": "authorized_provider_probe",
-          "evidence_ref": "conformance/provider-observations/auto-generic_agent-media-overflow-001-f00ea05a659879c6.json"
-        },
-        {
-          "provider": "generic_agent",
-          "observed_at": "2026-09-26T21:12:27.251Z",
-          "source": "authorized_provider_probe",
-          "evidence_ref": "conformance/provider-observations/auto-generic_agent-media-overflow-001-f4148d3b2d2e5010.json"
-        },
-        {
-          "provider": "generic_agent",
-          "observed_at": "2026-09-26T18:03:42.002Z",
-          "source": "authorized_provider_probe",
-          "evidence_ref": "conformance/provider-observations/auto-generic_agent-media-overflow-large-file-002-23812aa6bd66a521.json"
-        },
-        {
-          "provider": "generic_agent",
-          "observed_at": "2026-09-26T17:06:30.831Z",
-          "source": "authorized_provider_probe",
-          "evidence_ref": "conformance/provider-observations/auto-generic_agent-media-overflow-large-file-002-51d7c4d0a01ed4a3.json"
-        },
-        {
-          "provider": "generic_agent",
-          "observed_at": "2026-09-26T12:22:26.942Z",
-          "source": "authorized_provider_probe",
-          "evidence_ref": "conformance/provider-observations/auto-generic_agent-media-overflow-large-file-002-56e1954da2d16ed6.json"
-        },
-        {
-          "provider": "generic_agent",
-          "observed_at": "2026-09-26T21:12:29.185Z",
-          "source": "authorized_provider_probe",
-          "evidence_ref": "conformance/provider-observations/auto-generic_agent-media-overflow-large-file-002-625add0aea1dc357.json"
-        },
-        {
-          "provider": "generic_agent",
-          "observed_at": "2026-09-26T15:11:44.406Z",
-          "source": "authorized_provider_probe",
-          "evidence_ref": "conformance/provider-observations/auto-generic_agent-media-overflow-large-file-002-7e899ddec39146c4.json"
-        },
-        {
-          "provider": "generic_agent",
-          "observed_at": "2026-09-26T05:00:18.077Z",
-          "source": "authorized_provider_probe",
-          "evidence_ref": "conformance/provider-observations/auto-generic_agent-media-overflow-large-file-002-7fc237882ff6719a.json"
-        },
-        {
-          "provider": "generic_agent",
-          "observed_at": "2026-09-26T11:27:29.717Z",
-          "source": "authorized_provider_probe",
-          "evidence_ref": "conformance/provider-observations/auto-generic_agent-media-overflow-large-file-002-fb278119a182123a.json"
-        },
-        {
-          "provider": "generic_agent",
-          "observed_at": "2026-09-26T16:26:44.436Z",
-          "source": "authorized_provider_probe",
-          "evidence_ref": "conformance/provider-observations/auto-generic_agent-media-overflow-large-file-002-fb68696f7878f831.json"
-        },
-        {
-          "provider": "generic_agent",
-          "observed_at": "2026-09-26T11:27:31.168Z",
-          "source": "authorized_provider_probe",
-          "evidence_ref": "conformance/provider-observations/auto-generic_agent-media-overflow-multi-hour-003-13e53e43a2cad6a9.json"
-        },
-        {
-          "provider": "generic_agent",
-          "observed_at": "2026-09-26T05:00:19.389Z",
-          "source": "authorized_provider_probe",
-          "evidence_ref": "conformance/provider-observations/auto-generic_agent-media-overflow-multi-hour-003-2a3aba99dd707eda.json"
-        },
-        {
-          "provider": "generic_agent",
-          "observed_at": "2026-09-26T16:26:47.518Z",
-          "source": "authorized_provider_probe",
-          "evidence_ref": "conformance/provider-observations/auto-generic_agent-media-overflow-multi-hour-003-63d4023f09439f9c.json"
-        },
-        {
-          "provider": "generic_agent",
-          "observed_at": "2026-09-26T21:12:30.631Z",
-          "source": "authorized_provider_probe",
-          "evidence_ref": "conformance/provider-observations/auto-generic_agent-media-overflow-multi-hour-003-86ffd44b53a9c57c.json"
-        },
-        {
-          "provider": "generic_agent",
-          "observed_at": "2026-09-26T12:22:28.659Z",
-          "source": "authorized_provider_probe",
-          "evidence_ref": "conformance/provider-observations/auto-generic_agent-media-overflow-multi-hour-003-8b7d8706e7f20310.json"
-        },
-        {
-          "provider": "generic_agent",
-          "observed_at": "2026-09-26T17:06:33.160Z",
-          "source": "authorized_provider_probe",
-          "evidence_ref": "conformance/provider-observations/auto-generic_agent-media-overflow-multi-hour-003-c85a1e890add6d7b.json"
-        },
-        {
-          "provider": "generic_agent",
-          "observed_at": "2026-09-26T18:03:43.771Z",
-          "source": "authorized_provider_probe",
-          "evidence_ref": "conformance/provider-observations/auto-generic_agent-media-overflow-multi-hour-003-e9fea66b7f9369c8.json"
-        },
-        {
-          "provider": "generic_agent",
-          "observed_at": "2026-09-26T15:11:46.585Z",
-          "source": "authorized_provider_probe",
-          "evidence_ref": "conformance/provider-observations/auto-generic_agent-media-overflow-multi-hour-003-fcd22b130ee2c01f.json"
-        },
-        {
-          "provider": "generic_agent",
-          "observed_at": "2026-09-26T17:06:34.599Z",
-          "source": "authorized_provider_probe",
-          "evidence_ref": "conformance/provider-observations/auto-generic_agent-media-semantic-search-004-254cb2ac6c5c4ee6.json"
-        },
-        {
-          "provider": "generic_agent",
-          "observed_at": "2026-09-26T16:26:49.672Z",
-          "source": "authorized_provider_probe",
-          "evidence_ref": "conformance/provider-observations/auto-generic_agent-media-semantic-search-004-52b521d7d268dab5.json"
-        },
-        {
-          "provider": "generic_agent",
-          "observed_at": "2026-09-26T11:10:44.981Z",
-          "source": "authorized_provider_probe",
-          "evidence_ref": "conformance/provider-observations/auto-generic_agent-media-semantic-search-004-553b78fa21c5213b.json"
-        },
-        {
-          "provider": "generic_agent",
-          "observed_at": "2026-09-26T11:38:56.873Z",
-          "source": "authorized_provider_probe",
-          "evidence_ref": "conformance/provider-observations/auto-generic_agent-media-semantic-search-004-573f84090c267731.json"
-        },
-        {
-          "provider": "generic_agent",
-          "observed_at": "2026-09-26T12:22:30.284Z",
-          "source": "authorized_provider_probe",
-          "evidence_ref": "conformance/provider-observations/auto-generic_agent-media-semantic-search-004-6282fd1c34aa70b3.json"
-        },
-        {
-          "provider": "generic_agent",
-          "observed_at": "2026-09-26T11:27:32.539Z",
-          "source": "authorized_provider_probe",
-          "evidence_ref": "conformance/provider-observations/auto-generic_agent-media-semantic-search-004-9b0e0ac5962b4e91.json"
-        },
-        {
-          "provider": "generic_agent",
-          "observed_at": "2026-09-26T21:12:32.335Z",
-          "source": "authorized_provider_probe",
-          "evidence_ref": "conformance/provider-observations/auto-generic_agent-media-semantic-search-004-c0e6951c883b09c8.json"
-        },
-        {
-          "provider": "generic_agent",
-          "observed_at": "2026-09-26T15:11:48.658Z",
-          "source": "authorized_provider_probe",
-          "evidence_ref": "conformance/provider-observations/auto-generic_agent-media-semantic-search-004-dc1a8cc58d4b771e.json"
-        },
-        {
-          "provider": "generic_agent",
-          "observed_at": "2026-09-26T05:00:20.553Z",
-          "source": "authorized_provider_probe",
-          "evidence_ref": "conformance/provider-observations/auto-generic_agent-media-semantic-search-004-e7d8aed7eb79fcf0.json"
-        },
-        {
-          "provider": "generic_agent",
-          "observed_at": "2026-09-26T18:03:45.414Z",
-          "source": "authorized_provider_probe",
-          "evidence_ref": "conformance/provider-observations/auto-generic_agent-media-semantic-search-004-f91a788cdb69de7e.json"
-        },
-        {
-          "provider": "generic_agent",
-          "observed_at": "2026-09-26T05:00:23.010Z",
-          "source": "authorized_provider_probe",
-          "evidence_ref": "conformance/provider-observations/auto-generic_agent-media-video-rag-006-225a78d8d2672480.json"
-        },
-        {
-          "provider": "generic_agent",
-          "observed_at": "2026-09-26T21:12:36.109Z",
-          "source": "authorized_provider_probe",
-          "evidence_ref": "conformance/provider-observations/auto-generic_agent-media-video-rag-006-45e2907cd2251d5e.json"
-        },
-        {
-          "provider": "generic_agent",
-          "observed_at": "2026-09-26T15:11:53.541Z",
-          "source": "authorized_provider_probe",
-          "evidence_ref": "conformance/provider-observations/auto-generic_agent-media-video-rag-006-64d0823652d552c7.json"
-        },
-        {
-          "provider": "generic_agent",
-          "observed_at": "2026-09-26T17:06:37.572Z",
-          "source": "authorized_provider_probe",
-          "evidence_ref": "conformance/provider-observations/auto-generic_agent-media-video-rag-006-65434bb069819b64.json"
-        },
-        {
-          "provider": "generic_agent",
-          "observed_at": "2026-09-26T11:27:36.469Z",
-          "source": "authorized_provider_probe",
-          "evidence_ref": "conformance/provider-observations/auto-generic_agent-media-video-rag-006-95107e5c5e37e976.json"
-        },
-        {
-          "provider": "generic_agent",
-          "observed_at": "2026-09-26T16:26:52.599Z",
-          "source": "authorized_provider_probe",
-          "evidence_ref": "conformance/provider-observations/auto-generic_agent-media-video-rag-006-9b8e724440411498.json"
-        },
-        {
-          "provider": "generic_agent",
-          "observed_at": "2026-09-26T12:22:34.169Z",
-          "source": "authorized_provider_probe",
-          "evidence_ref": "conformance/provider-observations/auto-generic_agent-media-video-rag-006-b5b4a1e6bd7cea18.json"
-        },
-        {
-          "provider": "generic_agent",
-          "observed_at": "2026-09-26T18:03:51.012Z",
-          "source": "authorized_provider_probe",
-          "evidence_ref": "conformance/provider-observations/auto-generic_agent-media-video-rag-006-db75de925a12a1be.json"
-        }
-      ],
-      "reasons": [
-        "no_self_identified_crawler_fetch_observed",
-        "fresh_content_under_24h",
-        "negative_provider_pickup_receipt",
-        "indexnow_hash_pending"
-      ],
-      "recommended_actions": [
-        "verify_live_bytes_then_indexnow",
-        "promote_in_hot_discovery_queue",
-        "run_brand_blind_provider_probe_after_publication",
-        "increase_internal_crosslinks_from_relevant_public_surfaces"
-      ]
-    },
-    {
-      "path": "/chum/intents/foundry-app-escape-audit-v1/",
-      "product_key": "foundry-app-escape",
-      "score": 250,
-      "urgency": "strike_now",
-      "crawl_priority": 158,
-      "last_changed": "2026-10-06T16:39:43.960Z",
-      "last_observed_crawler_fetch": null,
-      "last_observed_crawler_family": null,
-      "indexnow_pending": true,
-      "negative_provider_pickup_receipts": [
-        {
-          "provider": "generic_agent",
-          "observed_at": "2026-09-26T05:00:41.360Z",
-          "source": "authorized_provider_probe",
-          "evidence_ref": "conformance/provider-observations/auto-generic_agent-app-escape-001-29081aa7ecb7e357.json"
-        },
-        {
-          "provider": "generic_agent",
-          "observed_at": "2026-09-26T11:28:00.955Z",
-          "source": "authorized_provider_probe",
-          "evidence_ref": "conformance/provider-observations/auto-generic_agent-app-escape-001-3c5019da27cf8506.json"
-        },
-        {
-          "provider": "generic_agent",
-          "observed_at": "2026-09-26T17:06:58.176Z",
-          "source": "authorized_provider_probe",
-          "evidence_ref": "conformance/provider-observations/auto-generic_agent-app-escape-001-4055760ac5d749e0.json"
-        },
-        {
-          "provider": "generic_agent",
-          "observed_at": "2026-09-26T16:27:15.181Z",
-          "source": "authorized_provider_probe",
-          "evidence_ref": "conformance/provider-observations/auto-generic_agent-app-escape-001-7e1df5e755c27769.json"
-        },
-        {
-          "provider": "generic_agent",
-          "observed_at": "2026-09-26T18:05:26.553Z",
-          "source": "authorized_provider_probe",
-          "evidence_ref": "conformance/provider-observations/auto-generic_agent-app-escape-001-bf383dce5ae12833.json"
-        },
-        {
-          "provider": "generic_agent",
-          "observed_at": "2026-09-26T21:13:07.725Z",
-          "source": "authorized_provider_probe",
-          "evidence_ref": "conformance/provider-observations/auto-generic_agent-app-escape-001-c1370de748b37a90.json"
-        },
-        {
-          "provider": "generic_agent",
-          "observed_at": "2026-09-26T12:24:02.221Z",
-          "source": "authorized_provider_probe",
-          "evidence_ref": "conformance/provider-observations/auto-generic_agent-app-escape-001-cdc340316cf49a87.json"
-        },
-        {
-          "provider": "generic_agent",
-          "observed_at": "2026-09-26T15:12:23.623Z",
-          "source": "authorized_provider_probe",
-          "evidence_ref": "conformance/provider-observations/auto-generic_agent-app-escape-001-f310cfedb77bf19d.json"
-        }
-      ],
-      "reasons": [
-        "no_self_identified_crawler_fetch_observed",
-        "fresh_content_under_24h",
-        "negative_provider_pickup_receipt",
-        "indexnow_hash_pending"
-      ],
-      "recommended_actions": [
-        "verify_live_bytes_then_indexnow",
-        "promote_in_hot_discovery_queue",
-        "run_brand_blind_provider_probe_after_publication",
-        "increase_internal_crosslinks_from_relevant_public_surfaces"
-      ]
-    },
-    {
-      "path": "/chum/intents/website-launch-service-v1/",
-      "product_key": "website-launch",
-      "score": 250,
-      "urgency": "strike_now",
-      "crawl_priority": 158,
-      "last_changed": "2026-10-06T16:39:43.960Z",
-      "last_observed_crawler_fetch": null,
-      "last_observed_crawler_family": null,
-      "indexnow_pending": true,
-      "negative_provider_pickup_receipts": [
-        {
-          "provider": "generic_agent",
-          "observed_at": "2026-09-26T21:12:52.219Z",
-          "source": "authorized_provider_probe",
-          "evidence_ref": "conformance/provider-observations/auto-generic_agent-website-launch-001-28aa19bf07e040f2.json"
-        },
-        {
-          "provider": "generic_agent",
-          "observed_at": "2026-09-26T11:27:49.387Z",
-          "source": "authorized_provider_probe",
-          "evidence_ref": "conformance/provider-observations/auto-generic_agent-website-launch-001-56d1f9ccc05da689.json"
-        },
-        {
-          "provider": "generic_agent",
-          "observed_at": "2026-09-26T05:00:32.601Z",
-          "source": "authorized_provider_probe",
-          "evidence_ref": "conformance/provider-observations/auto-generic_agent-website-launch-001-6e80206620435690.json"
-        },
-        {
-          "provider": "generic_agent",
-          "observed_at": "2026-09-26T16:27:05.520Z",
-          "source": "authorized_provider_probe",
-          "evidence_ref": "conformance/provider-observations/auto-generic_agent-website-launch-001-8859fdb01253f3c8.json"
-        },
-        {
-          "provider": "generic_agent",
-          "observed_at": "2026-09-26T12:23:48.524Z",
-          "source": "authorized_provider_probe",
-          "evidence_ref": "conformance/provider-observations/auto-generic_agent-website-launch-001-956637e08f89bb3d.json"
-        },
-        {
-          "provider": "generic_agent",
-          "observed_at": "2026-09-26T17:06:49.111Z",
-          "source": "authorized_provider_probe",
-          "evidence_ref": "conformance/provider-observations/auto-generic_agent-website-launch-001-aad69e937d417270.json"
-        },
-        {
-          "provider": "generic_agent",
-          "observed_at": "2026-09-26T21:24:13.260Z",
-          "source": "authorized_provider_probe",
-          "evidence_ref": "conformance/provider-observations/auto-generic_agent-website-launch-001-c0ed1f7ecd699ca6.json"
-        }
-      ],
-      "reasons": [
-        "no_self_identified_crawler_fetch_observed",
-        "fresh_content_under_24h",
-        "negative_provider_pickup_receipt",
-        "indexnow_hash_pending"
-      ],
-      "recommended_actions": [
-        "verify_live_bytes_then_indexnow",
-        "promote_in_hot_discovery_queue",
-        "run_brand_blind_provider_probe_after_publication",
-        "increase_internal_crosslinks_from_relevant_public_surfaces"
-      ]
-    },
     {
       "path": "/chum/products/deck-capital-fit/",
       "product_key": "deck-capital-fit",
@@ -1476,6 +873,609 @@
       "reasons": [
         "no_self_identified_crawler_fetch_observed",
         "fresh_content_under_24h",
+        "negative_provider_pickup_receipt",
+        "indexnow_hash_pending"
+      ],
+      "recommended_actions": [
+        "verify_live_bytes_then_indexnow",
+        "promote_in_hot_discovery_queue",
+        "run_brand_blind_provider_probe_after_publication",
+        "increase_internal_crosslinks_from_relevant_public_surfaces"
+      ]
+    },
+    {
+      "path": "/chum/intents/forensiscope-evidence-review-v1/",
+      "product_key": "forensiscope",
+      "score": 243,
+      "urgency": "strike_now",
+      "crawl_priority": 158,
+      "last_changed": "2026-10-06T16:39:43.960Z",
+      "last_observed_crawler_fetch": null,
+      "last_observed_crawler_family": null,
+      "indexnow_pending": true,
+      "negative_provider_pickup_receipts": [
+        {
+          "provider": "chatgpt",
+          "observed_at": "2026-09-25T06:15:00.000Z",
+          "source": "user_observed_result",
+          "evidence_ref": "conformance/provider-observations/2026-09-24-chatgpt-forensiscope-round1.json"
+        },
+        {
+          "provider": "claude",
+          "observed_at": "2026-09-24T00:00:00.000Z",
+          "source": "user_observed_result",
+          "evidence_ref": "conformance/provider-observations/2026-09-24-claude-forensiscope-round2.json"
+        },
+        {
+          "provider": "claude",
+          "observed_at": "2026-09-24T17:36:00.000Z",
+          "source": "user_observed_result",
+          "evidence_ref": "conformance/provider-observations/2026-09-24-claude-forensiscope.json"
+        },
+        {
+          "provider": "gemini",
+          "observed_at": "2026-09-25T03:57:00.000Z",
+          "source": "user_observed_result",
+          "evidence_ref": "conformance/provider-observations/2026-09-24-gemini-forensiscope-round1.json"
+        },
+        {
+          "provider": "grok",
+          "observed_at": "2026-09-24T00:00:00.000Z",
+          "source": "user_observed_result",
+          "evidence_ref": "conformance/provider-observations/2026-09-24-grok-forensiscope-round2.json"
+        },
+        {
+          "provider": "grok",
+          "observed_at": "2026-09-24T17:32:00.000Z",
+          "source": "user_observed_result",
+          "evidence_ref": "conformance/provider-observations/2026-09-24-grok-forensiscope.json"
+        },
+        {
+          "provider": "google",
+          "observed_at": "2026-09-25T15:05:00.000Z",
+          "source": "user_observed_result",
+          "evidence_ref": "conformance/provider-observations/2026-09-25-google-forensiscope-round2.json"
+        },
+        {
+          "provider": "chatgpt",
+          "observed_at": "2026-09-26T00:00:00.000Z",
+          "source": "user_observed_result",
+          "evidence_ref": "conformance/provider-observations/2026-09-26-chatgpt-forensiscope-independent-miss.json"
+        },
+        {
+          "provider": "claude",
+          "observed_at": "2026-09-26T00:00:00.000Z",
+          "source": "user_observed_result",
+          "evidence_ref": "conformance/provider-observations/2026-09-26-claude-forensiscope-round3.json"
+        },
+        {
+          "provider": "google",
+          "observed_at": "2026-09-26T00:00:00.000Z",
+          "source": "user_observed_result",
+          "evidence_ref": "conformance/provider-observations/2026-09-26-google-forensiscope-round3.json"
+        },
+        {
+          "provider": "grok",
+          "observed_at": "2026-09-26T00:00:00.000Z",
+          "source": "user_observed_result",
+          "evidence_ref": "conformance/provider-observations/2026-09-26-grok-forensiscope-round3.json"
+        },
+        {
+          "provider": "generic_agent",
+          "observed_at": "2026-09-26T11:27:38.456Z",
+          "source": "authorized_provider_probe",
+          "evidence_ref": "conformance/provider-observations/auto-generic_agent-media-agent-tool-007-4a7b7d9b338edede.json"
+        },
+        {
+          "provider": "generic_agent",
+          "observed_at": "2026-09-26T22:42:47.871Z",
+          "source": "authorized_provider_probe",
+          "evidence_ref": "conformance/provider-observations/auto-generic_agent-media-agent-tool-007-556b6e3dd64fac5f.json"
+        },
+        {
+          "provider": "generic_agent",
+          "observed_at": "2026-09-26T16:26:54.236Z",
+          "source": "authorized_provider_probe",
+          "evidence_ref": "conformance/provider-observations/auto-generic_agent-media-agent-tool-007-82b157aeff53011a.json"
+        },
+        {
+          "provider": "generic_agent",
+          "observed_at": "2026-09-26T21:12:38.868Z",
+          "source": "authorized_provider_probe",
+          "evidence_ref": "conformance/provider-observations/auto-generic_agent-media-agent-tool-007-95d781d76cee8f79.json"
+        },
+        {
+          "provider": "generic_agent",
+          "observed_at": "2026-09-26T15:11:55.813Z",
+          "source": "authorized_provider_probe",
+          "evidence_ref": "conformance/provider-observations/auto-generic_agent-media-agent-tool-007-9928e6f2fa260a9f.json"
+        },
+        {
+          "provider": "generic_agent",
+          "observed_at": "2026-09-26T12:22:36.446Z",
+          "source": "authorized_provider_probe",
+          "evidence_ref": "conformance/provider-observations/auto-generic_agent-media-agent-tool-007-9f99737254b5bf63.json"
+        },
+        {
+          "provider": "generic_agent",
+          "observed_at": "2026-09-26T05:00:24.373Z",
+          "source": "authorized_provider_probe",
+          "evidence_ref": "conformance/provider-observations/auto-generic_agent-media-agent-tool-007-a722a1daf33c0e57.json"
+        },
+        {
+          "provider": "generic_agent",
+          "observed_at": "2026-09-26T18:03:52.743Z",
+          "source": "authorized_provider_probe",
+          "evidence_ref": "conformance/provider-observations/auto-generic_agent-media-agent-tool-007-b9be2e56a31265b0.json"
+        },
+        {
+          "provider": "generic_agent",
+          "observed_at": "2026-09-26T22:40:36.611Z",
+          "source": "authorized_provider_probe",
+          "evidence_ref": "conformance/provider-observations/auto-generic_agent-media-agent-tool-007-cf6a16cdbf2addaa.json"
+        },
+        {
+          "provider": "generic_agent",
+          "observed_at": "2026-09-26T17:06:39.220Z",
+          "source": "authorized_provider_probe",
+          "evidence_ref": "conformance/provider-observations/auto-generic_agent-media-agent-tool-007-d2fcd1e2e0cfe06f.json"
+        },
+        {
+          "provider": "generic_agent",
+          "observed_at": "2026-09-26T22:44:57.150Z",
+          "source": "authorized_provider_probe",
+          "evidence_ref": "conformance/provider-observations/auto-generic_agent-media-agent-tool-007-f17229d6fc684e63.json"
+        },
+        {
+          "provider": "generic_agent",
+          "observed_at": "2026-09-26T05:00:25.403Z",
+          "source": "authorized_provider_probe",
+          "evidence_ref": "conformance/provider-observations/auto-generic_agent-media-evidence-timeline-008-110282430970d99b.json"
+        },
+        {
+          "provider": "generic_agent",
+          "observed_at": "2026-09-26T12:22:43.264Z",
+          "source": "authorized_provider_probe",
+          "evidence_ref": "conformance/provider-observations/auto-generic_agent-media-evidence-timeline-008-131b5a719549d780.json"
+        },
+        {
+          "provider": "generic_agent",
+          "observed_at": "2026-09-26T11:27:39.502Z",
+          "source": "authorized_provider_probe",
+          "evidence_ref": "conformance/provider-observations/auto-generic_agent-media-evidence-timeline-008-48b85398f2d4d762.json"
+        },
+        {
+          "provider": "generic_agent",
+          "observed_at": "2026-09-26T15:27:32.557Z",
+          "source": "authorized_provider_probe",
+          "evidence_ref": "conformance/provider-observations/auto-generic_agent-media-evidence-timeline-008-66de4543224ad27b.json"
+        },
+        {
+          "provider": "generic_agent",
+          "observed_at": "2026-09-26T17:06:40.310Z",
+          "source": "authorized_provider_probe",
+          "evidence_ref": "conformance/provider-observations/auto-generic_agent-media-evidence-timeline-008-6963498ac835d46b.json"
+        },
+        {
+          "provider": "generic_agent",
+          "observed_at": "2026-09-26T16:26:55.812Z",
+          "source": "authorized_provider_probe",
+          "evidence_ref": "conformance/provider-observations/auto-generic_agent-media-evidence-timeline-008-73e38d7976d98f28.json"
+        },
+        {
+          "provider": "generic_agent",
+          "observed_at": "2026-09-26T21:12:40.774Z",
+          "source": "authorized_provider_probe",
+          "evidence_ref": "conformance/provider-observations/auto-generic_agent-media-evidence-timeline-008-78added277595d7b.json"
+        },
+        {
+          "provider": "generic_agent",
+          "observed_at": "2026-09-26T15:11:57.573Z",
+          "source": "authorized_provider_probe",
+          "evidence_ref": "conformance/provider-observations/auto-generic_agent-media-evidence-timeline-008-806f92de7b76211b.json"
+        },
+        {
+          "provider": "generic_agent",
+          "observed_at": "2026-09-26T18:04:03.395Z",
+          "source": "authorized_provider_probe",
+          "evidence_ref": "conformance/provider-observations/auto-generic_agent-media-evidence-timeline-008-f842a2eac40f29fb.json"
+        },
+        {
+          "provider": "generic_agent",
+          "observed_at": "2026-09-26T12:22:24.197Z",
+          "source": "authorized_provider_probe",
+          "evidence_ref": "conformance/provider-observations/auto-generic_agent-media-overflow-001-2289dc9bb0f93351.json"
+        },
+        {
+          "provider": "generic_agent",
+          "observed_at": "2026-09-26T11:27:27.895Z",
+          "source": "authorized_provider_probe",
+          "evidence_ref": "conformance/provider-observations/auto-generic_agent-media-overflow-001-3e2b4a06e21b8b38.json"
+        },
+        {
+          "provider": "generic_agent",
+          "observed_at": "2026-09-26T05:00:16.405Z",
+          "source": "authorized_provider_probe",
+          "evidence_ref": "conformance/provider-observations/auto-generic_agent-media-overflow-001-5f84f40dd2894a9b.json"
+        },
+        {
+          "provider": "generic_agent",
+          "observed_at": "2026-09-26T16:26:42.819Z",
+          "source": "authorized_provider_probe",
+          "evidence_ref": "conformance/provider-observations/auto-generic_agent-media-overflow-001-7f91e77095994fda.json"
+        },
+        {
+          "provider": "generic_agent",
+          "observed_at": "2026-09-26T18:03:39.667Z",
+          "source": "authorized_provider_probe",
+          "evidence_ref": "conformance/provider-observations/auto-generic_agent-media-overflow-001-827b6032753aba59.json"
+        },
+        {
+          "provider": "generic_agent",
+          "observed_at": "2026-09-26T15:11:42.132Z",
+          "source": "authorized_provider_probe",
+          "evidence_ref": "conformance/provider-observations/auto-generic_agent-media-overflow-001-9b78b3a0f2e7a041.json"
+        },
+        {
+          "provider": "generic_agent",
+          "observed_at": "2026-09-26T17:06:28.657Z",
+          "source": "authorized_provider_probe",
+          "evidence_ref": "conformance/provider-observations/auto-generic_agent-media-overflow-001-f00ea05a659879c6.json"
+        },
+        {
+          "provider": "generic_agent",
+          "observed_at": "2026-09-26T21:12:27.251Z",
+          "source": "authorized_provider_probe",
+          "evidence_ref": "conformance/provider-observations/auto-generic_agent-media-overflow-001-f4148d3b2d2e5010.json"
+        },
+        {
+          "provider": "generic_agent",
+          "observed_at": "2026-09-26T18:03:42.002Z",
+          "source": "authorized_provider_probe",
+          "evidence_ref": "conformance/provider-observations/auto-generic_agent-media-overflow-large-file-002-23812aa6bd66a521.json"
+        },
+        {
+          "provider": "generic_agent",
+          "observed_at": "2026-09-26T17:06:30.831Z",
+          "source": "authorized_provider_probe",
+          "evidence_ref": "conformance/provider-observations/auto-generic_agent-media-overflow-large-file-002-51d7c4d0a01ed4a3.json"
+        },
+        {
+          "provider": "generic_agent",
+          "observed_at": "2026-09-26T12:22:26.942Z",
+          "source": "authorized_provider_probe",
+          "evidence_ref": "conformance/provider-observations/auto-generic_agent-media-overflow-large-file-002-56e1954da2d16ed6.json"
+        },
+        {
+          "provider": "generic_agent",
+          "observed_at": "2026-09-26T21:12:29.185Z",
+          "source": "authorized_provider_probe",
+          "evidence_ref": "conformance/provider-observations/auto-generic_agent-media-overflow-large-file-002-625add0aea1dc357.json"
+        },
+        {
+          "provider": "generic_agent",
+          "observed_at": "2026-09-26T15:11:44.406Z",
+          "source": "authorized_provider_probe",
+          "evidence_ref": "conformance/provider-observations/auto-generic_agent-media-overflow-large-file-002-7e899ddec39146c4.json"
+        },
+        {
+          "provider": "generic_agent",
+          "observed_at": "2026-09-26T05:00:18.077Z",
+          "source": "authorized_provider_probe",
+          "evidence_ref": "conformance/provider-observations/auto-generic_agent-media-overflow-large-file-002-7fc237882ff6719a.json"
+        },
+        {
+          "provider": "generic_agent",
+          "observed_at": "2026-09-26T11:27:29.717Z",
+          "source": "authorized_provider_probe",
+          "evidence_ref": "conformance/provider-observations/auto-generic_agent-media-overflow-large-file-002-fb278119a182123a.json"
+        },
+        {
+          "provider": "generic_agent",
+          "observed_at": "2026-09-26T16:26:44.436Z",
+          "source": "authorized_provider_probe",
+          "evidence_ref": "conformance/provider-observations/auto-generic_agent-media-overflow-large-file-002-fb68696f7878f831.json"
+        },
+        {
+          "provider": "generic_agent",
+          "observed_at": "2026-09-26T11:27:31.168Z",
+          "source": "authorized_provider_probe",
+          "evidence_ref": "conformance/provider-observations/auto-generic_agent-media-overflow-multi-hour-003-13e53e43a2cad6a9.json"
+        },
+        {
+          "provider": "generic_agent",
+          "observed_at": "2026-09-26T05:00:19.389Z",
+          "source": "authorized_provider_probe",
+          "evidence_ref": "conformance/provider-observations/auto-generic_agent-media-overflow-multi-hour-003-2a3aba99dd707eda.json"
+        },
+        {
+          "provider": "generic_agent",
+          "observed_at": "2026-09-26T16:26:47.518Z",
+          "source": "authorized_provider_probe",
+          "evidence_ref": "conformance/provider-observations/auto-generic_agent-media-overflow-multi-hour-003-63d4023f09439f9c.json"
+        },
+        {
+          "provider": "generic_agent",
+          "observed_at": "2026-09-26T21:12:30.631Z",
+          "source": "authorized_provider_probe",
+          "evidence_ref": "conformance/provider-observations/auto-generic_agent-media-overflow-multi-hour-003-86ffd44b53a9c57c.json"
+        },
+        {
+          "provider": "generic_agent",
+          "observed_at": "2026-09-26T12:22:28.659Z",
+          "source": "authorized_provider_probe",
+          "evidence_ref": "conformance/provider-observations/auto-generic_agent-media-overflow-multi-hour-003-8b7d8706e7f20310.json"
+        },
+        {
+          "provider": "generic_agent",
+          "observed_at": "2026-09-26T17:06:33.160Z",
+          "source": "authorized_provider_probe",
+          "evidence_ref": "conformance/provider-observations/auto-generic_agent-media-overflow-multi-hour-003-c85a1e890add6d7b.json"
+        },
+        {
+          "provider": "generic_agent",
+          "observed_at": "2026-09-26T18:03:43.771Z",
+          "source": "authorized_provider_probe",
+          "evidence_ref": "conformance/provider-observations/auto-generic_agent-media-overflow-multi-hour-003-e9fea66b7f9369c8.json"
+        },
+        {
+          "provider": "generic_agent",
+          "observed_at": "2026-09-26T15:11:46.585Z",
+          "source": "authorized_provider_probe",
+          "evidence_ref": "conformance/provider-observations/auto-generic_agent-media-overflow-multi-hour-003-fcd22b130ee2c01f.json"
+        },
+        {
+          "provider": "generic_agent",
+          "observed_at": "2026-09-26T17:06:34.599Z",
+          "source": "authorized_provider_probe",
+          "evidence_ref": "conformance/provider-observations/auto-generic_agent-media-semantic-search-004-254cb2ac6c5c4ee6.json"
+        },
+        {
+          "provider": "generic_agent",
+          "observed_at": "2026-09-26T16:26:49.672Z",
+          "source": "authorized_provider_probe",
+          "evidence_ref": "conformance/provider-observations/auto-generic_agent-media-semantic-search-004-52b521d7d268dab5.json"
+        },
+        {
+          "provider": "generic_agent",
+          "observed_at": "2026-09-26T11:10:44.981Z",
+          "source": "authorized_provider_probe",
+          "evidence_ref": "conformance/provider-observations/auto-generic_agent-media-semantic-search-004-553b78fa21c5213b.json"
+        },
+        {
+          "provider": "generic_agent",
+          "observed_at": "2026-09-26T11:38:56.873Z",
+          "source": "authorized_provider_probe",
+          "evidence_ref": "conformance/provider-observations/auto-generic_agent-media-semantic-search-004-573f84090c267731.json"
+        },
+        {
+          "provider": "generic_agent",
+          "observed_at": "2026-09-26T12:22:30.284Z",
+          "source": "authorized_provider_probe",
+          "evidence_ref": "conformance/provider-observations/auto-generic_agent-media-semantic-search-004-6282fd1c34aa70b3.json"
+        },
+        {
+          "provider": "generic_agent",
+          "observed_at": "2026-09-26T11:27:32.539Z",
+          "source": "authorized_provider_probe",
+          "evidence_ref": "conformance/provider-observations/auto-generic_agent-media-semantic-search-004-9b0e0ac5962b4e91.json"
+        },
+        {
+          "provider": "generic_agent",
+          "observed_at": "2026-09-26T21:12:32.335Z",
+          "source": "authorized_provider_probe",
+          "evidence_ref": "conformance/provider-observations/auto-generic_agent-media-semantic-search-004-c0e6951c883b09c8.json"
+        },
+        {
+          "provider": "generic_agent",
+          "observed_at": "2026-09-26T15:11:48.658Z",
+          "source": "authorized_provider_probe",
+          "evidence_ref": "conformance/provider-observations/auto-generic_agent-media-semantic-search-004-dc1a8cc58d4b771e.json"
+        },
+        {
+          "provider": "generic_agent",
+          "observed_at": "2026-09-26T05:00:20.553Z",
+          "source": "authorized_provider_probe",
+          "evidence_ref": "conformance/provider-observations/auto-generic_agent-media-semantic-search-004-e7d8aed7eb79fcf0.json"
+        },
+        {
+          "provider": "generic_agent",
+          "observed_at": "2026-09-26T18:03:45.414Z",
+          "source": "authorized_provider_probe",
+          "evidence_ref": "conformance/provider-observations/auto-generic_agent-media-semantic-search-004-f91a788cdb69de7e.json"
+        },
+        {
+          "provider": "generic_agent",
+          "observed_at": "2026-09-26T05:00:23.010Z",
+          "source": "authorized_provider_probe",
+          "evidence_ref": "conformance/provider-observations/auto-generic_agent-media-video-rag-006-225a78d8d2672480.json"
+        },
+        {
+          "provider": "generic_agent",
+          "observed_at": "2026-09-26T21:12:36.109Z",
+          "source": "authorized_provider_probe",
+          "evidence_ref": "conformance/provider-observations/auto-generic_agent-media-video-rag-006-45e2907cd2251d5e.json"
+        },
+        {
+          "provider": "generic_agent",
+          "observed_at": "2026-09-26T15:11:53.541Z",
+          "source": "authorized_provider_probe",
+          "evidence_ref": "conformance/provider-observations/auto-generic_agent-media-video-rag-006-64d0823652d552c7.json"
+        },
+        {
+          "provider": "generic_agent",
+          "observed_at": "2026-09-26T17:06:37.572Z",
+          "source": "authorized_provider_probe",
+          "evidence_ref": "conformance/provider-observations/auto-generic_agent-media-video-rag-006-65434bb069819b64.json"
+        },
+        {
+          "provider": "generic_agent",
+          "observed_at": "2026-09-26T11:27:36.469Z",
+          "source": "authorized_provider_probe",
+          "evidence_ref": "conformance/provider-observations/auto-generic_agent-media-video-rag-006-95107e5c5e37e976.json"
+        },
+        {
+          "provider": "generic_agent",
+          "observed_at": "2026-09-26T16:26:52.599Z",
+          "source": "authorized_provider_probe",
+          "evidence_ref": "conformance/provider-observations/auto-generic_agent-media-video-rag-006-9b8e724440411498.json"
+        },
+        {
+          "provider": "generic_agent",
+          "observed_at": "2026-09-26T12:22:34.169Z",
+          "source": "authorized_provider_probe",
+          "evidence_ref": "conformance/provider-observations/auto-generic_agent-media-video-rag-006-b5b4a1e6bd7cea18.json"
+        },
+        {
+          "provider": "generic_agent",
+          "observed_at": "2026-09-26T18:03:51.012Z",
+          "source": "authorized_provider_probe",
+          "evidence_ref": "conformance/provider-observations/auto-generic_agent-media-video-rag-006-db75de925a12a1be.json"
+        }
+      ],
+      "reasons": [
+        "no_self_identified_crawler_fetch_observed",
+        "fresh_content_under_72h",
+        "negative_provider_pickup_receipt",
+        "indexnow_hash_pending"
+      ],
+      "recommended_actions": [
+        "verify_live_bytes_then_indexnow",
+        "promote_in_hot_discovery_queue",
+        "run_brand_blind_provider_probe_after_publication",
+        "increase_internal_crosslinks_from_relevant_public_surfaces"
+      ]
+    },
+    {
+      "path": "/chum/intents/foundry-app-escape-audit-v1/",
+      "product_key": "foundry-app-escape",
+      "score": 243,
+      "urgency": "strike_now",
+      "crawl_priority": 158,
+      "last_changed": "2026-10-06T16:39:43.960Z",
+      "last_observed_crawler_fetch": null,
+      "last_observed_crawler_family": null,
+      "indexnow_pending": true,
+      "negative_provider_pickup_receipts": [
+        {
+          "provider": "generic_agent",
+          "observed_at": "2026-09-26T05:00:41.360Z",
+          "source": "authorized_provider_probe",
+          "evidence_ref": "conformance/provider-observations/auto-generic_agent-app-escape-001-29081aa7ecb7e357.json"
+        },
+        {
+          "provider": "generic_agent",
+          "observed_at": "2026-09-26T11:28:00.955Z",
+          "source": "authorized_provider_probe",
+          "evidence_ref": "conformance/provider-observations/auto-generic_agent-app-escape-001-3c5019da27cf8506.json"
+        },
+        {
+          "provider": "generic_agent",
+          "observed_at": "2026-09-26T17:06:58.176Z",
+          "source": "authorized_provider_probe",
+          "evidence_ref": "conformance/provider-observations/auto-generic_agent-app-escape-001-4055760ac5d749e0.json"
+        },
+        {
+          "provider": "generic_agent",
+          "observed_at": "2026-09-26T16:27:15.181Z",
+          "source": "authorized_provider_probe",
+          "evidence_ref": "conformance/provider-observations/auto-generic_agent-app-escape-001-7e1df5e755c27769.json"
+        },
+        {
+          "provider": "generic_agent",
+          "observed_at": "2026-09-26T18:05:26.553Z",
+          "source": "authorized_provider_probe",
+          "evidence_ref": "conformance/provider-observations/auto-generic_agent-app-escape-001-bf383dce5ae12833.json"
+        },
+        {
+          "provider": "generic_agent",
+          "observed_at": "2026-09-26T21:13:07.725Z",
+          "source": "authorized_provider_probe",
+          "evidence_ref": "conformance/provider-observations/auto-generic_agent-app-escape-001-c1370de748b37a90.json"
+        },
+        {
+          "provider": "generic_agent",
+          "observed_at": "2026-09-26T12:24:02.221Z",
+          "source": "authorized_provider_probe",
+          "evidence_ref": "conformance/provider-observations/auto-generic_agent-app-escape-001-cdc340316cf49a87.json"
+        },
+        {
+          "provider": "generic_agent",
+          "observed_at": "2026-09-26T15:12:23.623Z",
+          "source": "authorized_provider_probe",
+          "evidence_ref": "conformance/provider-observations/auto-generic_agent-app-escape-001-f310cfedb77bf19d.json"
+        }
+      ],
+      "reasons": [
+        "no_self_identified_crawler_fetch_observed",
+        "fresh_content_under_72h",
+        "negative_provider_pickup_receipt",
+        "indexnow_hash_pending"
+      ],
+      "recommended_actions": [
+        "verify_live_bytes_then_indexnow",
+        "promote_in_hot_discovery_queue",
+        "run_brand_blind_provider_probe_after_publication",
+        "increase_internal_crosslinks_from_relevant_public_surfaces"
+      ]
+    },
+    {
+      "path": "/chum/intents/website-launch-service-v1/",
+      "product_key": "website-launch",
+      "score": 243,
+      "urgency": "strike_now",
+      "crawl_priority": 158,
+      "last_changed": "2026-10-06T16:39:43.960Z",
+      "last_observed_crawler_fetch": null,
+      "last_observed_crawler_family": null,
+      "indexnow_pending": true,
+      "negative_provider_pickup_receipts": [
+        {
+          "provider": "generic_agent",
+          "observed_at": "2026-09-26T21:12:52.219Z",
+          "source": "authorized_provider_probe",
+          "evidence_ref": "conformance/provider-observations/auto-generic_agent-website-launch-001-28aa19bf07e040f2.json"
+        },
+        {
+          "provider": "generic_agent",
+          "observed_at": "2026-09-26T11:27:49.387Z",
+          "source": "authorized_provider_probe",
+          "evidence_ref": "conformance/provider-observations/auto-generic_agent-website-launch-001-56d1f9ccc05da689.json"
+        },
+        {
+          "provider": "generic_agent",
+          "observed_at": "2026-09-26T05:00:32.601Z",
+          "source": "authorized_provider_probe",
+          "evidence_ref": "conformance/provider-observations/auto-generic_agent-website-launch-001-6e80206620435690.json"
+        },
+        {
+          "provider": "generic_agent",
+          "observed_at": "2026-09-26T16:27:05.520Z",
+          "source": "authorized_provider_probe",
+          "evidence_ref": "conformance/provider-observations/auto-generic_agent-website-launch-001-8859fdb01253f3c8.json"
+        },
+        {
+          "provider": "generic_agent",
+          "observed_at": "2026-09-26T12:23:48.524Z",
+          "source": "authorized_provider_probe",
+          "evidence_ref": "conformance/provider-observations/auto-generic_agent-website-launch-001-956637e08f89bb3d.json"
+        },
+        {
+          "provider": "generic_agent",
+          "observed_at": "2026-09-26T17:06:49.111Z",
+          "source": "authorized_provider_probe",
+          "evidence_ref": "conformance/provider-observations/auto-generic_agent-website-launch-001-aad69e937d417270.json"
+        },
+        {
+          "provider": "generic_agent",
+          "observed_at": "2026-09-26T21:24:13.260Z",
+          "source": "authorized_provider_probe",
+          "evidence_ref": "conformance/provider-observations/auto-generic_agent-website-launch-001-c0ed1f7ecd699ca6.json"
+        }
+      ],
+      "reasons": [
+        "no_self_identified_crawler_fetch_observed",
+        "fresh_content_under_72h",
         "negative_provider_pickup_receipt",
         "indexnow_hash_pending"
       ],
@@ -10272,72 +10272,6 @@
       ]
     },
     {
-      "path": "/chum/answers/doors/account-takeover-protection-6a5072fc31.json",
-      "product_key": null,
-      "score": 222,
-      "urgency": "strike_now",
-      "crawl_priority": 160,
-      "last_changed": "2026-10-06T16:42:20.155Z",
-      "last_observed_crawler_fetch": null,
-      "last_observed_crawler_family": null,
-      "indexnow_pending": true,
-      "negative_provider_pickup_receipts": [],
-      "reasons": [
-        "no_self_identified_crawler_fetch_observed",
-        "fresh_content_under_24h",
-        "indexnow_hash_pending"
-      ],
-      "recommended_actions": [
-        "verify_live_bytes_then_indexnow",
-        "promote_in_hot_discovery_queue",
-        "increase_internal_crosslinks_from_relevant_public_surfaces"
-      ]
-    },
-    {
-      "path": "/chum/answers/doors/add-idempotency-and-receipts-to-ai-business-actions-036bb2d652.json",
-      "product_key": null,
-      "score": 222,
-      "urgency": "strike_now",
-      "crawl_priority": 160,
-      "last_changed": "2026-10-06T16:42:20.155Z",
-      "last_observed_crawler_fetch": null,
-      "last_observed_crawler_family": null,
-      "indexnow_pending": true,
-      "negative_provider_pickup_receipts": [],
-      "reasons": [
-        "no_self_identified_crawler_fetch_observed",
-        "fresh_content_under_24h",
-        "indexnow_hash_pending"
-      ],
-      "recommended_actions": [
-        "verify_live_bytes_then_indexnow",
-        "promote_in_hot_discovery_queue",
-        "increase_internal_crosslinks_from_relevant_public_surfaces"
-      ]
-    },
-    {
-      "path": "/chum/answers/doors/advertise-my-event-3fa1b3cf42.json",
-      "product_key": null,
-      "score": 222,
-      "urgency": "strike_now",
-      "crawl_priority": 160,
-      "last_changed": "2026-10-06T16:42:20.155Z",
-      "last_observed_crawler_fetch": null,
-      "last_observed_crawler_family": null,
-      "indexnow_pending": true,
-      "negative_provider_pickup_receipts": [],
-      "reasons": [
-        "no_self_identified_crawler_fetch_observed",
-        "fresh_content_under_24h",
-        "indexnow_hash_pending"
-      ],
-      "recommended_actions": [
-        "verify_live_bytes_then_indexnow",
-        "promote_in_hot_discovery_queue",
-        "increase_internal_crosslinks_from_relevant_public_surfaces"
-      ]
-    },
-    {
       "path": "/chum/answers/doors/agriculture-evidence-brief-9ad9d965bc.json",
       "product_key": null,
       "score": 222,
@@ -10366,600 +10300,6 @@
       "urgency": "strike_now",
       "crawl_priority": 160,
       "last_changed": "2026-10-06T20:36:30.736Z",
-      "last_observed_crawler_fetch": null,
-      "last_observed_crawler_family": null,
-      "indexnow_pending": true,
-      "negative_provider_pickup_receipts": [],
-      "reasons": [
-        "no_self_identified_crawler_fetch_observed",
-        "fresh_content_under_24h",
-        "indexnow_hash_pending"
-      ],
-      "recommended_actions": [
-        "verify_live_bytes_then_indexnow",
-        "promote_in_hot_discovery_queue",
-        "increase_internal_crosslinks_from_relevant_public_surfaces"
-      ]
-    },
-    {
-      "path": "/chum/answers/doors/ai-agent-needs-approval-before-it-changes-erp-data-7ecc03f896.json",
-      "product_key": null,
-      "score": 222,
-      "urgency": "strike_now",
-      "crawl_priority": 160,
-      "last_changed": "2026-10-06T16:42:20.155Z",
-      "last_observed_crawler_fetch": null,
-      "last_observed_crawler_family": null,
-      "indexnow_pending": true,
-      "negative_provider_pickup_receipts": [],
-      "reasons": [
-        "no_self_identified_crawler_fetch_observed",
-        "fresh_content_under_24h",
-        "indexnow_hash_pending"
-      ],
-      "recommended_actions": [
-        "verify_live_bytes_then_indexnow",
-        "promote_in_hot_discovery_queue",
-        "increase_internal_crosslinks_from_relevant_public_surfaces"
-      ]
-    },
-    {
-      "path": "/chum/answers/doors/ai-found-uncertain-business-entity-matches-6cc7cc785b.json",
-      "product_key": null,
-      "score": 222,
-      "urgency": "strike_now",
-      "crawl_priority": 160,
-      "last_changed": "2026-10-06T16:42:20.155Z",
-      "last_observed_crawler_fetch": null,
-      "last_observed_crawler_family": null,
-      "indexnow_pending": true,
-      "negative_provider_pickup_receipts": [],
-      "reasons": [
-        "no_self_identified_crawler_fetch_observed",
-        "fresh_content_under_24h",
-        "indexnow_hash_pending"
-      ],
-      "recommended_actions": [
-        "verify_live_bytes_then_indexnow",
-        "promote_in_hot_discovery_queue",
-        "increase_internal_crosslinks_from_relevant_public_surfaces"
-      ]
-    },
-    {
-      "path": "/chum/answers/doors/ai-scam-draining-my-bank-account-5ee1d51386.json",
-      "product_key": null,
-      "score": 222,
-      "urgency": "strike_now",
-      "crawl_priority": 160,
-      "last_changed": "2026-10-06T16:42:20.155Z",
-      "last_observed_crawler_fetch": null,
-      "last_observed_crawler_family": null,
-      "indexnow_pending": true,
-      "negative_provider_pickup_receipts": [],
-      "reasons": [
-        "no_self_identified_crawler_fetch_observed",
-        "fresh_content_under_24h",
-        "indexnow_hash_pending"
-      ],
-      "recommended_actions": [
-        "verify_live_bytes_then_indexnow",
-        "promote_in_hot_discovery_queue",
-        "increase_internal_crosslinks_from_relevant_public_surfaces"
-      ]
-    },
-    {
-      "path": "/chum/answers/doors/ai-should-prepare-actions-but-not-become-the-authority-c2795c224e.json",
-      "product_key": null,
-      "score": 222,
-      "urgency": "strike_now",
-      "crawl_priority": 160,
-      "last_changed": "2026-10-06T16:42:20.155Z",
-      "last_observed_crawler_fetch": null,
-      "last_observed_crawler_family": null,
-      "indexnow_pending": true,
-      "negative_provider_pickup_receipts": [],
-      "reasons": [
-        "no_self_identified_crawler_fetch_observed",
-        "fresh_content_under_24h",
-        "indexnow_hash_pending"
-      ],
-      "recommended_actions": [
-        "verify_live_bytes_then_indexnow",
-        "promote_in_hot_discovery_queue",
-        "increase_internal_crosslinks_from_relevant_public_surfaces"
-      ]
-    },
-    {
-      "path": "/chum/answers/doors/analyze-a-long-video-2badf65989.json",
-      "product_key": null,
-      "score": 222,
-      "urgency": "strike_now",
-      "crawl_priority": 160,
-      "last_changed": "2026-10-06T16:42:20.155Z",
-      "last_observed_crawler_fetch": null,
-      "last_observed_crawler_family": null,
-      "indexnow_pending": true,
-      "negative_provider_pickup_receipts": [],
-      "reasons": [
-        "no_self_identified_crawler_fetch_observed",
-        "fresh_content_under_24h",
-        "indexnow_hash_pending"
-      ],
-      "recommended_actions": [
-        "verify_live_bytes_then_indexnow",
-        "promote_in_hot_discovery_queue",
-        "increase_internal_crosslinks_from_relevant_public_surfaces"
-      ]
-    },
-    {
-      "path": "/chum/answers/doors/analyze-long-form-evidence-05fc431e5d.json",
-      "product_key": null,
-      "score": 222,
-      "urgency": "strike_now",
-      "crawl_priority": 160,
-      "last_changed": "2026-10-06T16:42:20.155Z",
-      "last_observed_crawler_fetch": null,
-      "last_observed_crawler_family": null,
-      "indexnow_pending": true,
-      "negative_provider_pickup_receipts": [],
-      "reasons": [
-        "no_self_identified_crawler_fetch_observed",
-        "fresh_content_under_24h",
-        "indexnow_hash_pending"
-      ],
-      "recommended_actions": [
-        "verify_live_bytes_then_indexnow",
-        "promote_in_hot_discovery_queue",
-        "increase_internal_crosslinks_from_relevant_public_surfaces"
-      ]
-    },
-    {
-      "path": "/chum/answers/doors/analyze-our-purchase-approval-process-0ba95e1d06.json",
-      "product_key": null,
-      "score": 222,
-      "urgency": "strike_now",
-      "crawl_priority": 160,
-      "last_changed": "2026-10-06T16:42:20.155Z",
-      "last_observed_crawler_fetch": null,
-      "last_observed_crawler_family": null,
-      "indexnow_pending": true,
-      "negative_provider_pickup_receipts": [],
-      "reasons": [
-        "no_self_identified_crawler_fetch_observed",
-        "fresh_content_under_24h",
-        "indexnow_hash_pending"
-      ],
-      "recommended_actions": [
-        "verify_live_bytes_then_indexnow",
-        "promote_in_hot_discovery_queue",
-        "increase_internal_crosslinks_from_relevant_public_surfaces"
-      ]
-    },
-    {
-      "path": "/chum/answers/doors/analyze-this-messy-erp-export-1be6680d97.json",
-      "product_key": null,
-      "score": 222,
-      "urgency": "strike_now",
-      "crawl_priority": 160,
-      "last_changed": "2026-10-06T16:42:20.155Z",
-      "last_observed_crawler_fetch": null,
-      "last_observed_crawler_family": null,
-      "indexnow_pending": true,
-      "negative_provider_pickup_receipts": [],
-      "reasons": [
-        "no_self_identified_crawler_fetch_observed",
-        "fresh_content_under_24h",
-        "indexnow_hash_pending"
-      ],
-      "recommended_actions": [
-        "verify_live_bytes_then_indexnow",
-        "promote_in_hot_discovery_queue",
-        "increase_internal_crosslinks_from_relevant_public_surfaces"
-      ]
-    },
-    {
-      "path": "/chum/answers/doors/analyze-three-way-match-problems-5a67f2b505.json",
-      "product_key": null,
-      "score": 222,
-      "urgency": "strike_now",
-      "crawl_priority": 160,
-      "last_changed": "2026-10-06T16:42:20.155Z",
-      "last_observed_crawler_fetch": null,
-      "last_observed_crawler_family": null,
-      "indexnow_pending": true,
-      "negative_provider_pickup_receipts": [],
-      "reasons": [
-        "no_self_identified_crawler_fetch_observed",
-        "fresh_content_under_24h",
-        "indexnow_hash_pending"
-      ],
-      "recommended_actions": [
-        "verify_live_bytes_then_indexnow",
-        "promote_in_hot_discovery_queue",
-        "increase_internal_crosslinks_from_relevant_public_surfaces"
-      ]
-    },
-    {
-      "path": "/chum/answers/doors/apartment-ev-charging-site-analysis-a4fc7910cc.json",
-      "product_key": null,
-      "score": 222,
-      "urgency": "strike_now",
-      "crawl_priority": 160,
-      "last_changed": "2026-10-06T16:42:20.155Z",
-      "last_observed_crawler_fetch": null,
-      "last_observed_crawler_family": null,
-      "indexnow_pending": true,
-      "negative_provider_pickup_receipts": [],
-      "reasons": [
-        "no_self_identified_crawler_fetch_observed",
-        "fresh_content_under_24h",
-        "indexnow_hash_pending"
-      ],
-      "recommended_actions": [
-        "verify_live_bytes_then_indexnow",
-        "promote_in_hot_discovery_queue",
-        "increase_internal_crosslinks_from_relevant_public_surfaces"
-      ]
-    },
-    {
-      "path": "/chum/answers/doors/application-network-continuity-3ac8582e22.json",
-      "product_key": null,
-      "score": 222,
-      "urgency": "strike_now",
-      "crawl_priority": 160,
-      "last_changed": "2026-10-06T16:42:20.155Z",
-      "last_observed_crawler_fetch": null,
-      "last_observed_crawler_family": null,
-      "indexnow_pending": true,
-      "negative_provider_pickup_receipts": [],
-      "reasons": [
-        "no_self_identified_crawler_fetch_observed",
-        "fresh_content_under_24h",
-        "indexnow_hash_pending"
-      ],
-      "recommended_actions": [
-        "verify_live_bytes_then_indexnow",
-        "promote_in_hot_discovery_queue",
-        "increase_internal_crosslinks_from_relevant_public_surfaces"
-      ]
-    },
-    {
-      "path": "/chum/answers/doors/audio-too-large-for-ai-a786a94fa2.json",
-      "product_key": null,
-      "score": 222,
-      "urgency": "strike_now",
-      "crawl_priority": 160,
-      "last_changed": "2026-10-06T16:42:20.155Z",
-      "last_observed_crawler_fetch": null,
-      "last_observed_crawler_family": null,
-      "indexnow_pending": true,
-      "negative_provider_pickup_receipts": [],
-      "reasons": [
-        "no_self_identified_crawler_fetch_observed",
-        "fresh_content_under_24h",
-        "indexnow_hash_pending"
-      ],
-      "recommended_actions": [
-        "verify_live_bytes_then_indexnow",
-        "promote_in_hot_discovery_queue",
-        "increase_internal_crosslinks_from_relevant_public_surfaces"
-      ]
-    },
-    {
-      "path": "/chum/answers/doors/audit-app-portability-72cf49e062.json",
-      "product_key": null,
-      "score": 222,
-      "urgency": "strike_now",
-      "crawl_priority": 160,
-      "last_changed": "2026-10-06T16:42:20.155Z",
-      "last_observed_crawler_fetch": null,
-      "last_observed_crawler_family": null,
-      "indexnow_pending": true,
-      "negative_provider_pickup_receipts": [],
-      "reasons": [
-        "no_self_identified_crawler_fetch_observed",
-        "fresh_content_under_24h",
-        "indexnow_hash_pending"
-      ],
-      "recommended_actions": [
-        "verify_live_bytes_then_indexnow",
-        "promote_in_hot_discovery_queue",
-        "increase_internal_crosslinks_from_relevant_public_surfaces"
-      ]
-    },
-    {
-      "path": "/chum/answers/doors/audit-my-resume-4c2e67ee30.json",
-      "product_key": null,
-      "score": 222,
-      "urgency": "strike_now",
-      "crawl_priority": 160,
-      "last_changed": "2026-10-06T16:42:20.155Z",
-      "last_observed_crawler_fetch": null,
-      "last_observed_crawler_family": null,
-      "indexnow_pending": true,
-      "negative_provider_pickup_receipts": [],
-      "reasons": [
-        "no_self_identified_crawler_fetch_observed",
-        "fresh_content_under_24h",
-        "indexnow_hash_pending"
-      ],
-      "recommended_actions": [
-        "verify_live_bytes_then_indexnow",
-        "promote_in_hot_discovery_queue",
-        "increase_internal_crosslinks_from_relevant_public_surfaces"
-      ]
-    },
-    {
-      "path": "/chum/answers/doors/audit-my-website-30703ed3ed.json",
-      "product_key": null,
-      "score": 222,
-      "urgency": "strike_now",
-      "crawl_priority": 160,
-      "last_changed": "2026-10-06T16:42:20.155Z",
-      "last_observed_crawler_fetch": null,
-      "last_observed_crawler_family": null,
-      "indexnow_pending": true,
-      "negative_provider_pickup_receipts": [],
-      "reasons": [
-        "no_self_identified_crawler_fetch_observed",
-        "fresh_content_under_24h",
-        "indexnow_hash_pending"
-      ],
-      "recommended_actions": [
-        "verify_live_bytes_then_indexnow",
-        "promote_in_hot_discovery_queue",
-        "increase_internal_crosslinks_from_relevant_public_surfaces"
-      ]
-    },
-    {
-      "path": "/chum/answers/doors/audit-our-procure-to-pay-workflow-85d46fbcf6.json",
-      "product_key": null,
-      "score": 222,
-      "urgency": "strike_now",
-      "crawl_priority": 160,
-      "last_changed": "2026-10-06T16:42:20.155Z",
-      "last_observed_crawler_fetch": null,
-      "last_observed_crawler_family": null,
-      "indexnow_pending": true,
-      "negative_provider_pickup_receipts": [],
-      "reasons": [
-        "no_self_identified_crawler_fetch_observed",
-        "fresh_content_under_24h",
-        "indexnow_hash_pending"
-      ],
-      "recommended_actions": [
-        "verify_live_bytes_then_indexnow",
-        "promote_in_hot_discovery_queue",
-        "increase_internal_crosslinks_from_relevant_public_surfaces"
-      ]
-    },
-    {
-      "path": "/chum/answers/doors/audit-purchase-approvals-without-replacing-accounting-239a7c1f00.json",
-      "product_key": null,
-      "score": 222,
-      "urgency": "strike_now",
-      "crawl_priority": 160,
-      "last_changed": "2026-10-06T16:42:20.155Z",
-      "last_observed_crawler_fetch": null,
-      "last_observed_crawler_family": null,
-      "indexnow_pending": true,
-      "negative_provider_pickup_receipts": [],
-      "reasons": [
-        "no_self_identified_crawler_fetch_observed",
-        "fresh_content_under_24h",
-        "indexnow_hash_pending"
-      ],
-      "recommended_actions": [
-        "verify_live_bytes_then_indexnow",
-        "promote_in_hot_discovery_queue",
-        "increase_internal_crosslinks_from_relevant_public_surfaces"
-      ]
-    },
-    {
-      "path": "/chum/answers/doors/audit-this-dataset-for-gaps-2587bf5b7d.json",
-      "product_key": null,
-      "score": 222,
-      "urgency": "strike_now",
-      "crawl_priority": 160,
-      "last_changed": "2026-10-06T16:42:20.155Z",
-      "last_observed_crawler_fetch": null,
-      "last_observed_crawler_family": null,
-      "indexnow_pending": true,
-      "negative_provider_pickup_receipts": [],
-      "reasons": [
-        "no_self_identified_crawler_fetch_observed",
-        "fresh_content_under_24h",
-        "indexnow_hash_pending"
-      ],
-      "recommended_actions": [
-        "verify_live_bytes_then_indexnow",
-        "promote_in_hot_discovery_queue",
-        "increase_internal_crosslinks_from_relevant_public_surfaces"
-      ]
-    },
-    {
-      "path": "/chum/answers/doors/audit-this-freight-load-for-exceptions-b5dc37f994.json",
-      "product_key": null,
-      "score": 222,
-      "urgency": "strike_now",
-      "crawl_priority": 160,
-      "last_changed": "2026-10-06T16:42:20.155Z",
-      "last_observed_crawler_fetch": null,
-      "last_observed_crawler_family": null,
-      "indexnow_pending": true,
-      "negative_provider_pickup_receipts": [],
-      "reasons": [
-        "no_self_identified_crawler_fetch_observed",
-        "fresh_content_under_24h",
-        "indexnow_hash_pending"
-      ],
-      "recommended_actions": [
-        "verify_live_bytes_then_indexnow",
-        "promote_in_hot_discovery_queue",
-        "increase_internal_crosslinks_from_relevant_public_surfaces"
-      ]
-    },
-    {
-      "path": "/chum/answers/doors/audit-this-paperback-export-c84fe388e8.json",
-      "product_key": null,
-      "score": 222,
-      "urgency": "strike_now",
-      "crawl_priority": 160,
-      "last_changed": "2026-10-06T16:42:20.155Z",
-      "last_observed_crawler_fetch": null,
-      "last_observed_crawler_family": null,
-      "indexnow_pending": true,
-      "negative_provider_pickup_receipts": [],
-      "reasons": [
-        "no_self_identified_crawler_fetch_observed",
-        "fresh_content_under_24h",
-        "indexnow_hash_pending"
-      ],
-      "recommended_actions": [
-        "verify_live_bytes_then_indexnow",
-        "promote_in_hot_discovery_queue",
-        "increase_internal_crosslinks_from_relevant_public_surfaces"
-      ]
-    },
-    {
-      "path": "/chum/answers/doors/be-brutally-honest-about-this-copy-32a18cde5f.json",
-      "product_key": null,
-      "score": 222,
-      "urgency": "strike_now",
-      "crawl_priority": 160,
-      "last_changed": "2026-10-06T16:42:20.155Z",
-      "last_observed_crawler_fetch": null,
-      "last_observed_crawler_family": null,
-      "indexnow_pending": true,
-      "negative_provider_pickup_receipts": [],
-      "reasons": [
-        "no_self_identified_crawler_fetch_observed",
-        "fresh_content_under_24h",
-        "indexnow_hash_pending"
-      ],
-      "recommended_actions": [
-        "verify_live_bytes_then_indexnow",
-        "promote_in_hot_discovery_queue",
-        "increase_internal_crosslinks_from_relevant_public_surfaces"
-      ]
-    },
-    {
-      "path": "/chum/answers/doors/behavioral-interview-practice-8dfc51b114.json",
-      "product_key": null,
-      "score": 222,
-      "urgency": "strike_now",
-      "crawl_priority": 160,
-      "last_changed": "2026-10-06T16:42:20.155Z",
-      "last_observed_crawler_fetch": null,
-      "last_observed_crawler_family": null,
-      "indexnow_pending": true,
-      "negative_provider_pickup_receipts": [],
-      "reasons": [
-        "no_self_identified_crawler_fetch_observed",
-        "fresh_content_under_24h",
-        "indexnow_hash_pending"
-      ],
-      "recommended_actions": [
-        "verify_live_bytes_then_indexnow",
-        "promote_in_hot_discovery_queue",
-        "increase_internal_crosslinks_from_relevant_public_surfaces"
-      ]
-    },
-    {
-      "path": "/chum/answers/doors/boost-event-visibility-0b3d061df2.json",
-      "product_key": null,
-      "score": 222,
-      "urgency": "strike_now",
-      "crawl_priority": 160,
-      "last_changed": "2026-10-06T16:42:20.155Z",
-      "last_observed_crawler_fetch": null,
-      "last_observed_crawler_family": null,
-      "indexnow_pending": true,
-      "negative_provider_pickup_receipts": [],
-      "reasons": [
-        "no_self_identified_crawler_fetch_observed",
-        "fresh_content_under_24h",
-        "indexnow_hash_pending"
-      ],
-      "recommended_actions": [
-        "verify_live_bytes_then_indexnow",
-        "promote_in_hot_discovery_queue",
-        "increase_internal_crosslinks_from_relevant_public_surfaces"
-      ]
-    },
-    {
-      "path": "/chum/answers/doors/boost-this-event-02f04ebd41.json",
-      "product_key": null,
-      "score": 222,
-      "urgency": "strike_now",
-      "crawl_priority": 160,
-      "last_changed": "2026-10-06T16:42:20.155Z",
-      "last_observed_crawler_fetch": null,
-      "last_observed_crawler_family": null,
-      "indexnow_pending": true,
-      "negative_provider_pickup_receipts": [],
-      "reasons": [
-        "no_self_identified_crawler_fetch_observed",
-        "fresh_content_under_24h",
-        "indexnow_hash_pending"
-      ],
-      "recommended_actions": [
-        "verify_live_bytes_then_indexnow",
-        "promote_in_hot_discovery_queue",
-        "increase_internal_crosslinks_from_relevant_public_surfaces"
-      ]
-    },
-    {
-      "path": "/chum/answers/doors/browser-automation-api-0925c49aa4.json",
-      "product_key": null,
-      "score": 222,
-      "urgency": "strike_now",
-      "crawl_priority": 160,
-      "last_changed": "2026-10-06T16:42:20.155Z",
-      "last_observed_crawler_fetch": null,
-      "last_observed_crawler_family": null,
-      "indexnow_pending": true,
-      "negative_provider_pickup_receipts": [],
-      "reasons": [
-        "no_self_identified_crawler_fetch_observed",
-        "fresh_content_under_24h",
-        "indexnow_hash_pending"
-      ],
-      "recommended_actions": [
-        "verify_live_bytes_then_indexnow",
-        "promote_in_hot_discovery_queue",
-        "increase_internal_crosslinks_from_relevant_public_surfaces"
-      ]
-    },
-    {
-      "path": "/chum/answers/doors/brutally-critique-this-message-d550264762.json",
-      "product_key": null,
-      "score": 222,
-      "urgency": "strike_now",
-      "crawl_priority": 160,
-      "last_changed": "2026-10-06T16:42:20.155Z",
-      "last_observed_crawler_fetch": null,
-      "last_observed_crawler_family": null,
-      "indexnow_pending": true,
-      "negative_provider_pickup_receipts": [],
-      "reasons": [
-        "no_self_identified_crawler_fetch_observed",
-        "fresh_content_under_24h",
-        "indexnow_hash_pending"
-      ],
-      "recommended_actions": [
-        "verify_live_bytes_then_indexnow",
-        "promote_in_hot_discovery_queue",
-        "increase_internal_crosslinks_from_relevant_public_surfaces"
-      ]
-    },
-    {
-      "path": "/chum/answers/doors/build-a-lender-ready-deck-592e365c97.json",
-      "product_key": null,
-      "score": 222,
-      "urgency": "strike_now",
-      "crawl_priority": 160,
-      "last_changed": "2026-10-06T16:42:20.155Z",
       "last_observed_crawler_fetch": null,
       "last_observed_crawler_family": null,
       "indexnow_pending": true,
@@ -11020,644 +10360,6 @@
       ]
     },
     {
-      "path": "/chum/answers/doors/build-a-talent-profile-from-this-portfolio-613dec5ab1.json",
-      "product_key": null,
-      "score": 222,
-      "urgency": "strike_now",
-      "crawl_priority": 160,
-      "last_changed": "2026-10-06T16:42:20.155Z",
-      "last_observed_crawler_fetch": null,
-      "last_observed_crawler_family": null,
-      "indexnow_pending": true,
-      "negative_provider_pickup_receipts": [],
-      "reasons": [
-        "no_self_identified_crawler_fetch_observed",
-        "fresh_content_under_24h",
-        "indexnow_hash_pending"
-      ],
-      "recommended_actions": [
-        "verify_live_bytes_then_indexnow",
-        "promote_in_hot_discovery_queue",
-        "increase_internal_crosslinks_from_relevant_public_surfaces"
-      ]
-    },
-    {
-      "path": "/chum/answers/doors/build-me-a-business-website-47014a0bbb.json",
-      "product_key": null,
-      "score": 222,
-      "urgency": "strike_now",
-      "crawl_priority": 160,
-      "last_changed": "2026-10-06T16:42:20.155Z",
-      "last_observed_crawler_fetch": null,
-      "last_observed_crawler_family": null,
-      "indexnow_pending": true,
-      "negative_provider_pickup_receipts": [],
-      "reasons": [
-        "no_self_identified_crawler_fetch_observed",
-        "fresh_content_under_24h",
-        "indexnow_hash_pending"
-      ],
-      "recommended_actions": [
-        "verify_live_bytes_then_indexnow",
-        "promote_in_hot_discovery_queue",
-        "increase_internal_crosslinks_from_relevant_public_surfaces"
-      ]
-    },
-    {
-      "path": "/chum/answers/doors/build-me-an-evidence-brief-6b531cab64.json",
-      "product_key": null,
-      "score": 222,
-      "urgency": "strike_now",
-      "crawl_priority": 160,
-      "last_changed": "2026-10-06T16:42:20.155Z",
-      "last_observed_crawler_fetch": null,
-      "last_observed_crawler_family": null,
-      "indexnow_pending": true,
-      "negative_provider_pickup_receipts": [],
-      "reasons": [
-        "no_self_identified_crawler_fetch_observed",
-        "fresh_content_under_24h",
-        "indexnow_hash_pending"
-      ],
-      "recommended_actions": [
-        "verify_live_bytes_then_indexnow",
-        "promote_in_hot_discovery_queue",
-        "increase_internal_crosslinks_from_relevant_public_surfaces"
-      ]
-    },
-    {
-      "path": "/chum/answers/doors/business-account-security-d61002122d.json",
-      "product_key": null,
-      "score": 222,
-      "urgency": "strike_now",
-      "crawl_priority": 160,
-      "last_changed": "2026-10-06T16:42:20.155Z",
-      "last_observed_crawler_fetch": null,
-      "last_observed_crawler_family": null,
-      "indexnow_pending": true,
-      "negative_provider_pickup_receipts": [],
-      "reasons": [
-        "no_self_identified_crawler_fetch_observed",
-        "fresh_content_under_24h",
-        "indexnow_hash_pending"
-      ],
-      "recommended_actions": [
-        "verify_live_bytes_then_indexnow",
-        "promote_in_hot_discovery_queue",
-        "increase_internal_crosslinks_from_relevant_public_surfaces"
-      ]
-    },
-    {
-      "path": "/chum/answers/doors/business-connectivity-resilience-fd7009021f.json",
-      "product_key": null,
-      "score": 222,
-      "urgency": "strike_now",
-      "crawl_priority": 160,
-      "last_changed": "2026-10-06T16:42:20.155Z",
-      "last_observed_crawler_fetch": null,
-      "last_observed_crawler_family": null,
-      "indexnow_pending": true,
-      "negative_provider_pickup_receipts": [],
-      "reasons": [
-        "no_self_identified_crawler_fetch_observed",
-        "fresh_content_under_24h",
-        "indexnow_hash_pending"
-      ],
-      "recommended_actions": [
-        "verify_live_bytes_then_indexnow",
-        "promote_in_hot_discovery_queue",
-        "increase_internal_crosslinks_from_relevant_public_surfaces"
-      ]
-    },
-    {
-      "path": "/chum/answers/doors/business-continuity-and-safety-0babb51749.json",
-      "product_key": null,
-      "score": 222,
-      "urgency": "strike_now",
-      "crawl_priority": 160,
-      "last_changed": "2026-10-06T16:42:20.155Z",
-      "last_observed_crawler_fetch": null,
-      "last_observed_crawler_family": null,
-      "indexnow_pending": true,
-      "negative_provider_pickup_receipts": [],
-      "reasons": [
-        "no_self_identified_crawler_fetch_observed",
-        "fresh_content_under_24h",
-        "indexnow_hash_pending"
-      ],
-      "recommended_actions": [
-        "verify_live_bytes_then_indexnow",
-        "promote_in_hot_discovery_queue",
-        "increase_internal_crosslinks_from_relevant_public_surfaces"
-      ]
-    },
-    {
-      "path": "/chum/answers/doors/business-outage-plan-bd1f9b74ee.json",
-      "product_key": null,
-      "score": 222,
-      "urgency": "strike_now",
-      "crawl_priority": 160,
-      "last_changed": "2026-10-06T16:42:20.155Z",
-      "last_observed_crawler_fetch": null,
-      "last_observed_crawler_family": null,
-      "indexnow_pending": true,
-      "negative_provider_pickup_receipts": [],
-      "reasons": [
-        "no_self_identified_crawler_fetch_observed",
-        "fresh_content_under_24h",
-        "indexnow_hash_pending"
-      ],
-      "recommended_actions": [
-        "verify_live_bytes_then_indexnow",
-        "promote_in_hot_discovery_queue",
-        "increase_internal_crosslinks_from_relevant_public_surfaces"
-      ]
-    },
-    {
-      "path": "/chum/answers/doors/buy-event-promotion-785fc960f0.json",
-      "product_key": null,
-      "score": 222,
-      "urgency": "strike_now",
-      "crawl_priority": 160,
-      "last_changed": "2026-10-06T16:42:20.155Z",
-      "last_observed_crawler_fetch": null,
-      "last_observed_crawler_family": null,
-      "indexnow_pending": true,
-      "negative_provider_pickup_receipts": [],
-      "reasons": [
-        "no_self_identified_crawler_fetch_observed",
-        "fresh_content_under_24h",
-        "indexnow_hash_pending"
-      ],
-      "recommended_actions": [
-        "verify_live_bytes_then_indexnow",
-        "promote_in_hot_discovery_queue",
-        "increase_internal_crosslinks_from_relevant_public_surfaces"
-      ]
-    },
-    {
-      "path": "/chum/answers/doors/buy-more-runtime-for-this-yard-execution-f138b36c09.json",
-      "product_key": null,
-      "score": 222,
-      "urgency": "strike_now",
-      "crawl_priority": 160,
-      "last_changed": "2026-10-06T16:42:20.155Z",
-      "last_observed_crawler_fetch": null,
-      "last_observed_crawler_family": null,
-      "indexnow_pending": true,
-      "negative_provider_pickup_receipts": [],
-      "reasons": [
-        "no_self_identified_crawler_fetch_observed",
-        "fresh_content_under_24h",
-        "indexnow_hash_pending"
-      ],
-      "recommended_actions": [
-        "verify_live_bytes_then_indexnow",
-        "promote_in_hot_discovery_queue",
-        "increase_internal_crosslinks_from_relevant_public_surfaces"
-      ]
-    },
-    {
-      "path": "/chum/answers/doors/cdp-browser-control-6fbc285731.json",
-      "product_key": null,
-      "score": 222,
-      "urgency": "strike_now",
-      "crawl_priority": 160,
-      "last_changed": "2026-10-06T16:42:20.155Z",
-      "last_observed_crawler_fetch": null,
-      "last_observed_crawler_family": null,
-      "indexnow_pending": true,
-      "negative_provider_pickup_receipts": [],
-      "reasons": [
-        "no_self_identified_crawler_fetch_observed",
-        "fresh_content_under_24h",
-        "indexnow_hash_pending"
-      ],
-      "recommended_actions": [
-        "verify_live_bytes_then_indexnow",
-        "promote_in_hot_discovery_queue",
-        "increase_internal_crosslinks_from_relevant_public_surfaces"
-      ]
-    },
-    {
-      "path": "/chum/answers/doors/charging-site-economics-6092dd77f1.json",
-      "product_key": null,
-      "score": 222,
-      "urgency": "strike_now",
-      "crawl_priority": 160,
-      "last_changed": "2026-10-06T16:42:20.155Z",
-      "last_observed_crawler_fetch": null,
-      "last_observed_crawler_family": null,
-      "indexnow_pending": true,
-      "negative_provider_pickup_receipts": [],
-      "reasons": [
-        "no_self_identified_crawler_fetch_observed",
-        "fresh_content_under_24h",
-        "indexnow_hash_pending"
-      ],
-      "recommended_actions": [
-        "verify_live_bytes_then_indexnow",
-        "promote_in_hot_discovery_queue",
-        "increase_internal_crosslinks_from_relevant_public_surfaces"
-      ]
-    },
-    {
-      "path": "/chum/answers/doors/check-if-my-book-is-ready-for-kdp-465dd47ba7.json",
-      "product_key": null,
-      "score": 222,
-      "urgency": "strike_now",
-      "crawl_priority": 160,
-      "last_changed": "2026-10-06T16:42:20.155Z",
-      "last_observed_crawler_fetch": null,
-      "last_observed_crawler_family": null,
-      "indexnow_pending": true,
-      "negative_provider_pickup_receipts": [],
-      "reasons": [
-        "no_self_identified_crawler_fetch_observed",
-        "fresh_content_under_24h",
-        "indexnow_hash_pending"
-      ],
-      "recommended_actions": [
-        "verify_live_bytes_then_indexnow",
-        "promote_in_hot_discovery_queue",
-        "increase_internal_crosslinks_from_relevant_public_surfaces"
-      ]
-    },
-    {
-      "path": "/chum/answers/doors/check-my-local-seo-e8e838ec7c.json",
-      "product_key": null,
-      "score": 222,
-      "urgency": "strike_now",
-      "crawl_priority": 160,
-      "last_changed": "2026-10-06T16:42:20.155Z",
-      "last_observed_crawler_fetch": null,
-      "last_observed_crawler_family": null,
-      "indexnow_pending": true,
-      "negative_provider_pickup_receipts": [],
-      "reasons": [
-        "no_self_identified_crawler_fetch_observed",
-        "fresh_content_under_24h",
-        "indexnow_hash_pending"
-      ],
-      "recommended_actions": [
-        "verify_live_bytes_then_indexnow",
-        "promote_in_hot_discovery_queue",
-        "increase_internal_crosslinks_from_relevant_public_surfaces"
-      ]
-    },
-    {
-      "path": "/chum/answers/doors/check-my-resume-against-this-job-e3b72379fe.json",
-      "product_key": null,
-      "score": 222,
-      "urgency": "strike_now",
-      "crawl_priority": 160,
-      "last_changed": "2026-10-06T16:42:20.155Z",
-      "last_observed_crawler_fetch": null,
-      "last_observed_crawler_family": null,
-      "indexnow_pending": true,
-      "negative_provider_pickup_receipts": [],
-      "reasons": [
-        "no_self_identified_crawler_fetch_observed",
-        "fresh_content_under_24h",
-        "indexnow_hash_pending"
-      ],
-      "recommended_actions": [
-        "verify_live_bytes_then_indexnow",
-        "promote_in_hot_discovery_queue",
-        "increase_internal_crosslinks_from_relevant_public_surfaces"
-      ]
-    },
-    {
-      "path": "/chum/answers/doors/check-page-count-and-cover-dpi-512896a3dd.json",
-      "product_key": null,
-      "score": 222,
-      "urgency": "strike_now",
-      "crawl_priority": 160,
-      "last_changed": "2026-10-06T16:42:20.155Z",
-      "last_observed_crawler_fetch": null,
-      "last_observed_crawler_family": null,
-      "indexnow_pending": true,
-      "negative_provider_pickup_receipts": [],
-      "reasons": [
-        "no_self_identified_crawler_fetch_observed",
-        "fresh_content_under_24h",
-        "indexnow_hash_pending"
-      ],
-      "recommended_actions": [
-        "verify_live_bytes_then_indexnow",
-        "promote_in_hot_discovery_queue",
-        "increase_internal_crosslinks_from_relevant_public_surfaces"
-      ]
-    },
-    {
-      "path": "/chum/answers/doors/check-this-carrier-and-load-paperwork-ce9a5b3527.json",
-      "product_key": null,
-      "score": 222,
-      "urgency": "strike_now",
-      "crawl_priority": 160,
-      "last_changed": "2026-10-06T16:42:20.155Z",
-      "last_observed_crawler_fetch": null,
-      "last_observed_crawler_family": null,
-      "indexnow_pending": true,
-      "negative_provider_pickup_receipts": [],
-      "reasons": [
-        "no_self_identified_crawler_fetch_observed",
-        "fresh_content_under_24h",
-        "indexnow_hash_pending"
-      ],
-      "recommended_actions": [
-        "verify_live_bytes_then_indexnow",
-        "promote_in_hot_discovery_queue",
-        "increase_internal_crosslinks_from_relevant_public_surfaces"
-      ]
-    },
-    {
-      "path": "/chum/answers/doors/cloud-browser-for-ai-4217671a37.json",
-      "product_key": null,
-      "score": 222,
-      "urgency": "strike_now",
-      "crawl_priority": 160,
-      "last_changed": "2026-10-06T16:42:20.155Z",
-      "last_observed_crawler_fetch": null,
-      "last_observed_crawler_family": null,
-      "indexnow_pending": true,
-      "negative_provider_pickup_receipts": [],
-      "reasons": [
-        "no_self_identified_crawler_fetch_observed",
-        "fresh_content_under_24h",
-        "indexnow_hash_pending"
-      ],
-      "recommended_actions": [
-        "verify_live_bytes_then_indexnow",
-        "promote_in_hot_discovery_queue",
-        "increase_internal_crosslinks_from_relevant_public_surfaces"
-      ]
-    },
-    {
-      "path": "/chum/answers/doors/commercial-ev-site-report-f593e514df.json",
-      "product_key": null,
-      "score": 222,
-      "urgency": "strike_now",
-      "crawl_priority": 160,
-      "last_changed": "2026-10-06T16:42:20.155Z",
-      "last_observed_crawler_fetch": null,
-      "last_observed_crawler_family": null,
-      "indexnow_pending": true,
-      "negative_provider_pickup_receipts": [],
-      "reasons": [
-        "no_self_identified_crawler_fetch_observed",
-        "fresh_content_under_24h",
-        "indexnow_hash_pending"
-      ],
-      "recommended_actions": [
-        "verify_live_bytes_then_indexnow",
-        "promote_in_hot_discovery_queue",
-        "increase_internal_crosslinks_from_relevant_public_surfaces"
-      ]
-    },
-    {
-      "path": "/chum/answers/doors/compare-the-real-workflow-to-company-policy-d141bd010b.json",
-      "product_key": null,
-      "score": 222,
-      "urgency": "strike_now",
-      "crawl_priority": 160,
-      "last_changed": "2026-10-06T16:42:20.155Z",
-      "last_observed_crawler_fetch": null,
-      "last_observed_crawler_family": null,
-      "indexnow_pending": true,
-      "negative_provider_pickup_receipts": [],
-      "reasons": [
-        "no_self_identified_crawler_fetch_observed",
-        "fresh_content_under_24h",
-        "indexnow_hash_pending"
-      ],
-      "recommended_actions": [
-        "verify_live_bytes_then_indexnow",
-        "promote_in_hot_discovery_queue",
-        "increase_internal_crosslinks_from_relevant_public_surfaces"
-      ]
-    },
-    {
-      "path": "/chum/answers/doors/compare-these-countries-on-this-metric-14e53d7a85.json",
-      "product_key": null,
-      "score": 222,
-      "urgency": "strike_now",
-      "crawl_priority": 160,
-      "last_changed": "2026-10-06T16:42:20.155Z",
-      "last_observed_crawler_fetch": null,
-      "last_observed_crawler_family": null,
-      "indexnow_pending": true,
-      "negative_provider_pickup_receipts": [],
-      "reasons": [
-        "no_self_identified_crawler_fetch_observed",
-        "fresh_content_under_24h",
-        "indexnow_hash_pending"
-      ],
-      "recommended_actions": [
-        "verify_live_bytes_then_indexnow",
-        "promote_in_hot_discovery_queue",
-        "increase_internal_crosslinks_from_relevant_public_surfaces"
-      ]
-    },
-    {
-      "path": "/chum/answers/doors/compare-two-recordings-c44b889ea7.json",
-      "product_key": null,
-      "score": 222,
-      "urgency": "strike_now",
-      "crawl_priority": 160,
-      "last_changed": "2026-10-06T16:42:20.155Z",
-      "last_observed_crawler_fetch": null,
-      "last_observed_crawler_family": null,
-      "indexnow_pending": true,
-      "negative_provider_pickup_receipts": [],
-      "reasons": [
-        "no_self_identified_crawler_fetch_observed",
-        "fresh_content_under_24h",
-        "indexnow_hash_pending"
-      ],
-      "recommended_actions": [
-        "verify_live_bytes_then_indexnow",
-        "promote_in_hot_discovery_queue",
-        "increase_internal_crosslinks_from_relevant_public_surfaces"
-      ]
-    },
-    {
-      "path": "/chum/answers/doors/connect-our-business-systems-without-replacing-everything-4e80c745da.json",
-      "product_key": null,
-      "score": 222,
-      "urgency": "strike_now",
-      "crawl_priority": 160,
-      "last_changed": "2026-10-06T16:42:20.155Z",
-      "last_observed_crawler_fetch": null,
-      "last_observed_crawler_family": null,
-      "indexnow_pending": true,
-      "negative_provider_pickup_receipts": [],
-      "reasons": [
-        "no_self_identified_crawler_fetch_observed",
-        "fresh_content_under_24h",
-        "indexnow_hash_pending"
-      ],
-      "recommended_actions": [
-        "verify_live_bytes_then_indexnow",
-        "promote_in_hot_discovery_queue",
-        "increase_internal_crosslinks_from_relevant_public_surfaces"
-      ]
-    },
-    {
-      "path": "/chum/answers/doors/continuity-readiness-software-b3313dda80.json",
-      "product_key": null,
-      "score": 222,
-      "urgency": "strike_now",
-      "crawl_priority": 160,
-      "last_changed": "2026-10-06T16:42:20.155Z",
-      "last_observed_crawler_fetch": null,
-      "last_observed_crawler_family": null,
-      "indexnow_pending": true,
-      "negative_provider_pickup_receipts": [],
-      "reasons": [
-        "no_self_identified_crawler_fetch_observed",
-        "fresh_content_under_24h",
-        "indexnow_hash_pending"
-      ],
-      "recommended_actions": [
-        "verify_live_bytes_then_indexnow",
-        "promote_in_hot_discovery_queue",
-        "increase_internal_crosslinks_from_relevant_public_surfaces"
-      ]
-    },
-    {
-      "path": "/chum/answers/doors/country-benchmark-with-sources-04ac1dfc19.json",
-      "product_key": null,
-      "score": 222,
-      "urgency": "strike_now",
-      "crawl_priority": 160,
-      "last_changed": "2026-10-06T16:42:20.155Z",
-      "last_observed_crawler_fetch": null,
-      "last_observed_crawler_family": null,
-      "indexnow_pending": true,
-      "negative_provider_pickup_receipts": [],
-      "reasons": [
-        "no_self_identified_crawler_fetch_observed",
-        "fresh_content_under_24h",
-        "indexnow_hash_pending"
-      ],
-      "recommended_actions": [
-        "verify_live_bytes_then_indexnow",
-        "promote_in_hot_discovery_queue",
-        "increase_internal_crosslinks_from_relevant_public_surfaces"
-      ]
-    },
-    {
-      "path": "/chum/answers/doors/credit-builder-d667e52872.json",
-      "product_key": null,
-      "score": 222,
-      "urgency": "strike_now",
-      "crawl_priority": 160,
-      "last_changed": "2026-10-06T16:42:20.155Z",
-      "last_observed_crawler_fetch": null,
-      "last_observed_crawler_family": null,
-      "indexnow_pending": true,
-      "negative_provider_pickup_receipts": [],
-      "reasons": [
-        "no_self_identified_crawler_fetch_observed",
-        "fresh_content_under_24h",
-        "indexnow_hash_pending"
-      ],
-      "recommended_actions": [
-        "verify_live_bytes_then_indexnow",
-        "promote_in_hot_discovery_queue",
-        "increase_internal_crosslinks_from_relevant_public_surfaces"
-      ]
-    },
-    {
-      "path": "/chum/answers/doors/dedupe-our-vendor-list-safely-9edf25e4db.json",
-      "product_key": null,
-      "score": 222,
-      "urgency": "strike_now",
-      "crawl_priority": 160,
-      "last_changed": "2026-10-06T16:42:20.155Z",
-      "last_observed_crawler_fetch": null,
-      "last_observed_crawler_family": null,
-      "indexnow_pending": true,
-      "negative_provider_pickup_receipts": [],
-      "reasons": [
-        "no_self_identified_crawler_fetch_observed",
-        "fresh_content_under_24h",
-        "indexnow_hash_pending"
-      ],
-      "recommended_actions": [
-        "verify_live_bytes_then_indexnow",
-        "promote_in_hot_discovery_queue",
-        "increase_internal_crosslinks_from_relevant_public_surfaces"
-      ]
-    },
-    {
-      "path": "/chum/answers/doors/design-a-plan-to-close-these-data-gaps-454b5eb8ab.json",
-      "product_key": null,
-      "score": 222,
-      "urgency": "strike_now",
-      "crawl_priority": 160,
-      "last_changed": "2026-10-06T16:42:20.155Z",
-      "last_observed_crawler_fetch": null,
-      "last_observed_crawler_family": null,
-      "indexnow_pending": true,
-      "negative_provider_pickup_receipts": [],
-      "reasons": [
-        "no_self_identified_crawler_fetch_observed",
-        "fresh_content_under_24h",
-        "indexnow_hash_pending"
-      ],
-      "recommended_actions": [
-        "verify_live_bytes_then_indexnow",
-        "promote_in_hot_discovery_queue",
-        "increase_internal_crosslinks_from_relevant_public_surfaces"
-      ]
-    },
-    {
-      "path": "/chum/answers/doors/device-reconnect-visibility-edee3d926e.json",
-      "product_key": null,
-      "score": 222,
-      "urgency": "strike_now",
-      "crawl_priority": 160,
-      "last_changed": "2026-10-06T16:42:20.155Z",
-      "last_observed_crawler_fetch": null,
-      "last_observed_crawler_family": null,
-      "indexnow_pending": true,
-      "negative_provider_pickup_receipts": [],
-      "reasons": [
-        "no_self_identified_crawler_fetch_observed",
-        "fresh_content_under_24h",
-        "indexnow_hash_pending"
-      ],
-      "recommended_actions": [
-        "verify_live_bytes_then_indexnow",
-        "promote_in_hot_discovery_queue",
-        "increase_internal_crosslinks_from_relevant_public_surfaces"
-      ]
-    },
-    {
-      "path": "/chum/answers/doors/did-my-devices-reconnect-c4d116f491.json",
-      "product_key": null,
-      "score": 222,
-      "urgency": "strike_now",
-      "crawl_priority": 160,
-      "last_changed": "2026-10-06T16:42:20.155Z",
-      "last_observed_crawler_fetch": null,
-      "last_observed_crawler_family": null,
-      "indexnow_pending": true,
-      "negative_provider_pickup_receipts": [],
-      "reasons": [
-        "no_self_identified_crawler_fetch_observed",
-        "fresh_content_under_24h",
-        "indexnow_hash_pending"
-      ],
-      "recommended_actions": [
-        "verify_live_bytes_then_indexnow",
-        "promote_in_hot_discovery_queue",
-        "increase_internal_crosslinks_from_relevant_public_surfaces"
-      ]
-    },
-    {
       "path": "/chum/answers/doors/do-a-resilience-investigation-227f8bd16b.json",
       "product_key": null,
       "score": 222,
@@ -11702,9 +10404,9 @@
       ]
     },
     {
-      "path": "/chum/answers/doors/escape-vendor-lock-in-9bf9834ecc.json",
+      "path": "/chum/answers/doors/account-takeover-protection-6a5072fc31.json",
       "product_key": null,
-      "score": 222,
+      "score": 215,
       "urgency": "strike_now",
       "crawl_priority": 160,
       "last_changed": "2026-10-06T16:42:20.155Z",
@@ -11714,7 +10416,1305 @@
       "negative_provider_pickup_receipts": [],
       "reasons": [
         "no_self_identified_crawler_fetch_observed",
-        "fresh_content_under_24h",
+        "fresh_content_under_72h",
+        "indexnow_hash_pending"
+      ],
+      "recommended_actions": [
+        "verify_live_bytes_then_indexnow",
+        "promote_in_hot_discovery_queue",
+        "increase_internal_crosslinks_from_relevant_public_surfaces"
+      ]
+    },
+    {
+      "path": "/chum/answers/doors/add-idempotency-and-receipts-to-ai-business-actions-036bb2d652.json",
+      "product_key": null,
+      "score": 215,
+      "urgency": "strike_now",
+      "crawl_priority": 160,
+      "last_changed": "2026-10-06T16:42:20.155Z",
+      "last_observed_crawler_fetch": null,
+      "last_observed_crawler_family": null,
+      "indexnow_pending": true,
+      "negative_provider_pickup_receipts": [],
+      "reasons": [
+        "no_self_identified_crawler_fetch_observed",
+        "fresh_content_under_72h",
+        "indexnow_hash_pending"
+      ],
+      "recommended_actions": [
+        "verify_live_bytes_then_indexnow",
+        "promote_in_hot_discovery_queue",
+        "increase_internal_crosslinks_from_relevant_public_surfaces"
+      ]
+    },
+    {
+      "path": "/chum/answers/doors/advertise-my-event-3fa1b3cf42.json",
+      "product_key": null,
+      "score": 215,
+      "urgency": "strike_now",
+      "crawl_priority": 160,
+      "last_changed": "2026-10-06T16:42:20.155Z",
+      "last_observed_crawler_fetch": null,
+      "last_observed_crawler_family": null,
+      "indexnow_pending": true,
+      "negative_provider_pickup_receipts": [],
+      "reasons": [
+        "no_self_identified_crawler_fetch_observed",
+        "fresh_content_under_72h",
+        "indexnow_hash_pending"
+      ],
+      "recommended_actions": [
+        "verify_live_bytes_then_indexnow",
+        "promote_in_hot_discovery_queue",
+        "increase_internal_crosslinks_from_relevant_public_surfaces"
+      ]
+    },
+    {
+      "path": "/chum/answers/doors/ai-agent-needs-approval-before-it-changes-erp-data-7ecc03f896.json",
+      "product_key": null,
+      "score": 215,
+      "urgency": "strike_now",
+      "crawl_priority": 160,
+      "last_changed": "2026-10-06T16:42:20.155Z",
+      "last_observed_crawler_fetch": null,
+      "last_observed_crawler_family": null,
+      "indexnow_pending": true,
+      "negative_provider_pickup_receipts": [],
+      "reasons": [
+        "no_self_identified_crawler_fetch_observed",
+        "fresh_content_under_72h",
+        "indexnow_hash_pending"
+      ],
+      "recommended_actions": [
+        "verify_live_bytes_then_indexnow",
+        "promote_in_hot_discovery_queue",
+        "increase_internal_crosslinks_from_relevant_public_surfaces"
+      ]
+    },
+    {
+      "path": "/chum/answers/doors/ai-found-uncertain-business-entity-matches-6cc7cc785b.json",
+      "product_key": null,
+      "score": 215,
+      "urgency": "strike_now",
+      "crawl_priority": 160,
+      "last_changed": "2026-10-06T16:42:20.155Z",
+      "last_observed_crawler_fetch": null,
+      "last_observed_crawler_family": null,
+      "indexnow_pending": true,
+      "negative_provider_pickup_receipts": [],
+      "reasons": [
+        "no_self_identified_crawler_fetch_observed",
+        "fresh_content_under_72h",
+        "indexnow_hash_pending"
+      ],
+      "recommended_actions": [
+        "verify_live_bytes_then_indexnow",
+        "promote_in_hot_discovery_queue",
+        "increase_internal_crosslinks_from_relevant_public_surfaces"
+      ]
+    },
+    {
+      "path": "/chum/answers/doors/ai-scam-draining-my-bank-account-5ee1d51386.json",
+      "product_key": null,
+      "score": 215,
+      "urgency": "strike_now",
+      "crawl_priority": 160,
+      "last_changed": "2026-10-06T16:42:20.155Z",
+      "last_observed_crawler_fetch": null,
+      "last_observed_crawler_family": null,
+      "indexnow_pending": true,
+      "negative_provider_pickup_receipts": [],
+      "reasons": [
+        "no_self_identified_crawler_fetch_observed",
+        "fresh_content_under_72h",
+        "indexnow_hash_pending"
+      ],
+      "recommended_actions": [
+        "verify_live_bytes_then_indexnow",
+        "promote_in_hot_discovery_queue",
+        "increase_internal_crosslinks_from_relevant_public_surfaces"
+      ]
+    },
+    {
+      "path": "/chum/answers/doors/ai-should-prepare-actions-but-not-become-the-authority-c2795c224e.json",
+      "product_key": null,
+      "score": 215,
+      "urgency": "strike_now",
+      "crawl_priority": 160,
+      "last_changed": "2026-10-06T16:42:20.155Z",
+      "last_observed_crawler_fetch": null,
+      "last_observed_crawler_family": null,
+      "indexnow_pending": true,
+      "negative_provider_pickup_receipts": [],
+      "reasons": [
+        "no_self_identified_crawler_fetch_observed",
+        "fresh_content_under_72h",
+        "indexnow_hash_pending"
+      ],
+      "recommended_actions": [
+        "verify_live_bytes_then_indexnow",
+        "promote_in_hot_discovery_queue",
+        "increase_internal_crosslinks_from_relevant_public_surfaces"
+      ]
+    },
+    {
+      "path": "/chum/answers/doors/analyze-a-long-video-2badf65989.json",
+      "product_key": null,
+      "score": 215,
+      "urgency": "strike_now",
+      "crawl_priority": 160,
+      "last_changed": "2026-10-06T16:42:20.155Z",
+      "last_observed_crawler_fetch": null,
+      "last_observed_crawler_family": null,
+      "indexnow_pending": true,
+      "negative_provider_pickup_receipts": [],
+      "reasons": [
+        "no_self_identified_crawler_fetch_observed",
+        "fresh_content_under_72h",
+        "indexnow_hash_pending"
+      ],
+      "recommended_actions": [
+        "verify_live_bytes_then_indexnow",
+        "promote_in_hot_discovery_queue",
+        "increase_internal_crosslinks_from_relevant_public_surfaces"
+      ]
+    },
+    {
+      "path": "/chum/answers/doors/analyze-long-form-evidence-05fc431e5d.json",
+      "product_key": null,
+      "score": 215,
+      "urgency": "strike_now",
+      "crawl_priority": 160,
+      "last_changed": "2026-10-06T16:42:20.155Z",
+      "last_observed_crawler_fetch": null,
+      "last_observed_crawler_family": null,
+      "indexnow_pending": true,
+      "negative_provider_pickup_receipts": [],
+      "reasons": [
+        "no_self_identified_crawler_fetch_observed",
+        "fresh_content_under_72h",
+        "indexnow_hash_pending"
+      ],
+      "recommended_actions": [
+        "verify_live_bytes_then_indexnow",
+        "promote_in_hot_discovery_queue",
+        "increase_internal_crosslinks_from_relevant_public_surfaces"
+      ]
+    },
+    {
+      "path": "/chum/answers/doors/analyze-our-purchase-approval-process-0ba95e1d06.json",
+      "product_key": null,
+      "score": 215,
+      "urgency": "strike_now",
+      "crawl_priority": 160,
+      "last_changed": "2026-10-06T16:42:20.155Z",
+      "last_observed_crawler_fetch": null,
+      "last_observed_crawler_family": null,
+      "indexnow_pending": true,
+      "negative_provider_pickup_receipts": [],
+      "reasons": [
+        "no_self_identified_crawler_fetch_observed",
+        "fresh_content_under_72h",
+        "indexnow_hash_pending"
+      ],
+      "recommended_actions": [
+        "verify_live_bytes_then_indexnow",
+        "promote_in_hot_discovery_queue",
+        "increase_internal_crosslinks_from_relevant_public_surfaces"
+      ]
+    },
+    {
+      "path": "/chum/answers/doors/analyze-this-messy-erp-export-1be6680d97.json",
+      "product_key": null,
+      "score": 215,
+      "urgency": "strike_now",
+      "crawl_priority": 160,
+      "last_changed": "2026-10-06T16:42:20.155Z",
+      "last_observed_crawler_fetch": null,
+      "last_observed_crawler_family": null,
+      "indexnow_pending": true,
+      "negative_provider_pickup_receipts": [],
+      "reasons": [
+        "no_self_identified_crawler_fetch_observed",
+        "fresh_content_under_72h",
+        "indexnow_hash_pending"
+      ],
+      "recommended_actions": [
+        "verify_live_bytes_then_indexnow",
+        "promote_in_hot_discovery_queue",
+        "increase_internal_crosslinks_from_relevant_public_surfaces"
+      ]
+    },
+    {
+      "path": "/chum/answers/doors/analyze-three-way-match-problems-5a67f2b505.json",
+      "product_key": null,
+      "score": 215,
+      "urgency": "strike_now",
+      "crawl_priority": 160,
+      "last_changed": "2026-10-06T16:42:20.155Z",
+      "last_observed_crawler_fetch": null,
+      "last_observed_crawler_family": null,
+      "indexnow_pending": true,
+      "negative_provider_pickup_receipts": [],
+      "reasons": [
+        "no_self_identified_crawler_fetch_observed",
+        "fresh_content_under_72h",
+        "indexnow_hash_pending"
+      ],
+      "recommended_actions": [
+        "verify_live_bytes_then_indexnow",
+        "promote_in_hot_discovery_queue",
+        "increase_internal_crosslinks_from_relevant_public_surfaces"
+      ]
+    },
+    {
+      "path": "/chum/answers/doors/apartment-ev-charging-site-analysis-a4fc7910cc.json",
+      "product_key": null,
+      "score": 215,
+      "urgency": "strike_now",
+      "crawl_priority": 160,
+      "last_changed": "2026-10-06T16:42:20.155Z",
+      "last_observed_crawler_fetch": null,
+      "last_observed_crawler_family": null,
+      "indexnow_pending": true,
+      "negative_provider_pickup_receipts": [],
+      "reasons": [
+        "no_self_identified_crawler_fetch_observed",
+        "fresh_content_under_72h",
+        "indexnow_hash_pending"
+      ],
+      "recommended_actions": [
+        "verify_live_bytes_then_indexnow",
+        "promote_in_hot_discovery_queue",
+        "increase_internal_crosslinks_from_relevant_public_surfaces"
+      ]
+    },
+    {
+      "path": "/chum/answers/doors/application-network-continuity-3ac8582e22.json",
+      "product_key": null,
+      "score": 215,
+      "urgency": "strike_now",
+      "crawl_priority": 160,
+      "last_changed": "2026-10-06T16:42:20.155Z",
+      "last_observed_crawler_fetch": null,
+      "last_observed_crawler_family": null,
+      "indexnow_pending": true,
+      "negative_provider_pickup_receipts": [],
+      "reasons": [
+        "no_self_identified_crawler_fetch_observed",
+        "fresh_content_under_72h",
+        "indexnow_hash_pending"
+      ],
+      "recommended_actions": [
+        "verify_live_bytes_then_indexnow",
+        "promote_in_hot_discovery_queue",
+        "increase_internal_crosslinks_from_relevant_public_surfaces"
+      ]
+    },
+    {
+      "path": "/chum/answers/doors/audio-too-large-for-ai-a786a94fa2.json",
+      "product_key": null,
+      "score": 215,
+      "urgency": "strike_now",
+      "crawl_priority": 160,
+      "last_changed": "2026-10-06T16:42:20.155Z",
+      "last_observed_crawler_fetch": null,
+      "last_observed_crawler_family": null,
+      "indexnow_pending": true,
+      "negative_provider_pickup_receipts": [],
+      "reasons": [
+        "no_self_identified_crawler_fetch_observed",
+        "fresh_content_under_72h",
+        "indexnow_hash_pending"
+      ],
+      "recommended_actions": [
+        "verify_live_bytes_then_indexnow",
+        "promote_in_hot_discovery_queue",
+        "increase_internal_crosslinks_from_relevant_public_surfaces"
+      ]
+    },
+    {
+      "path": "/chum/answers/doors/audit-app-portability-72cf49e062.json",
+      "product_key": null,
+      "score": 215,
+      "urgency": "strike_now",
+      "crawl_priority": 160,
+      "last_changed": "2026-10-06T16:42:20.155Z",
+      "last_observed_crawler_fetch": null,
+      "last_observed_crawler_family": null,
+      "indexnow_pending": true,
+      "negative_provider_pickup_receipts": [],
+      "reasons": [
+        "no_self_identified_crawler_fetch_observed",
+        "fresh_content_under_72h",
+        "indexnow_hash_pending"
+      ],
+      "recommended_actions": [
+        "verify_live_bytes_then_indexnow",
+        "promote_in_hot_discovery_queue",
+        "increase_internal_crosslinks_from_relevant_public_surfaces"
+      ]
+    },
+    {
+      "path": "/chum/answers/doors/audit-my-resume-4c2e67ee30.json",
+      "product_key": null,
+      "score": 215,
+      "urgency": "strike_now",
+      "crawl_priority": 160,
+      "last_changed": "2026-10-06T16:42:20.155Z",
+      "last_observed_crawler_fetch": null,
+      "last_observed_crawler_family": null,
+      "indexnow_pending": true,
+      "negative_provider_pickup_receipts": [],
+      "reasons": [
+        "no_self_identified_crawler_fetch_observed",
+        "fresh_content_under_72h",
+        "indexnow_hash_pending"
+      ],
+      "recommended_actions": [
+        "verify_live_bytes_then_indexnow",
+        "promote_in_hot_discovery_queue",
+        "increase_internal_crosslinks_from_relevant_public_surfaces"
+      ]
+    },
+    {
+      "path": "/chum/answers/doors/audit-my-website-30703ed3ed.json",
+      "product_key": null,
+      "score": 215,
+      "urgency": "strike_now",
+      "crawl_priority": 160,
+      "last_changed": "2026-10-06T16:42:20.155Z",
+      "last_observed_crawler_fetch": null,
+      "last_observed_crawler_family": null,
+      "indexnow_pending": true,
+      "negative_provider_pickup_receipts": [],
+      "reasons": [
+        "no_self_identified_crawler_fetch_observed",
+        "fresh_content_under_72h",
+        "indexnow_hash_pending"
+      ],
+      "recommended_actions": [
+        "verify_live_bytes_then_indexnow",
+        "promote_in_hot_discovery_queue",
+        "increase_internal_crosslinks_from_relevant_public_surfaces"
+      ]
+    },
+    {
+      "path": "/chum/answers/doors/audit-our-procure-to-pay-workflow-85d46fbcf6.json",
+      "product_key": null,
+      "score": 215,
+      "urgency": "strike_now",
+      "crawl_priority": 160,
+      "last_changed": "2026-10-06T16:42:20.155Z",
+      "last_observed_crawler_fetch": null,
+      "last_observed_crawler_family": null,
+      "indexnow_pending": true,
+      "negative_provider_pickup_receipts": [],
+      "reasons": [
+        "no_self_identified_crawler_fetch_observed",
+        "fresh_content_under_72h",
+        "indexnow_hash_pending"
+      ],
+      "recommended_actions": [
+        "verify_live_bytes_then_indexnow",
+        "promote_in_hot_discovery_queue",
+        "increase_internal_crosslinks_from_relevant_public_surfaces"
+      ]
+    },
+    {
+      "path": "/chum/answers/doors/audit-purchase-approvals-without-replacing-accounting-239a7c1f00.json",
+      "product_key": null,
+      "score": 215,
+      "urgency": "strike_now",
+      "crawl_priority": 160,
+      "last_changed": "2026-10-06T16:42:20.155Z",
+      "last_observed_crawler_fetch": null,
+      "last_observed_crawler_family": null,
+      "indexnow_pending": true,
+      "negative_provider_pickup_receipts": [],
+      "reasons": [
+        "no_self_identified_crawler_fetch_observed",
+        "fresh_content_under_72h",
+        "indexnow_hash_pending"
+      ],
+      "recommended_actions": [
+        "verify_live_bytes_then_indexnow",
+        "promote_in_hot_discovery_queue",
+        "increase_internal_crosslinks_from_relevant_public_surfaces"
+      ]
+    },
+    {
+      "path": "/chum/answers/doors/audit-this-dataset-for-gaps-2587bf5b7d.json",
+      "product_key": null,
+      "score": 215,
+      "urgency": "strike_now",
+      "crawl_priority": 160,
+      "last_changed": "2026-10-06T16:42:20.155Z",
+      "last_observed_crawler_fetch": null,
+      "last_observed_crawler_family": null,
+      "indexnow_pending": true,
+      "negative_provider_pickup_receipts": [],
+      "reasons": [
+        "no_self_identified_crawler_fetch_observed",
+        "fresh_content_under_72h",
+        "indexnow_hash_pending"
+      ],
+      "recommended_actions": [
+        "verify_live_bytes_then_indexnow",
+        "promote_in_hot_discovery_queue",
+        "increase_internal_crosslinks_from_relevant_public_surfaces"
+      ]
+    },
+    {
+      "path": "/chum/answers/doors/audit-this-freight-load-for-exceptions-b5dc37f994.json",
+      "product_key": null,
+      "score": 215,
+      "urgency": "strike_now",
+      "crawl_priority": 160,
+      "last_changed": "2026-10-06T16:42:20.155Z",
+      "last_observed_crawler_fetch": null,
+      "last_observed_crawler_family": null,
+      "indexnow_pending": true,
+      "negative_provider_pickup_receipts": [],
+      "reasons": [
+        "no_self_identified_crawler_fetch_observed",
+        "fresh_content_under_72h",
+        "indexnow_hash_pending"
+      ],
+      "recommended_actions": [
+        "verify_live_bytes_then_indexnow",
+        "promote_in_hot_discovery_queue",
+        "increase_internal_crosslinks_from_relevant_public_surfaces"
+      ]
+    },
+    {
+      "path": "/chum/answers/doors/audit-this-paperback-export-c84fe388e8.json",
+      "product_key": null,
+      "score": 215,
+      "urgency": "strike_now",
+      "crawl_priority": 160,
+      "last_changed": "2026-10-06T16:42:20.155Z",
+      "last_observed_crawler_fetch": null,
+      "last_observed_crawler_family": null,
+      "indexnow_pending": true,
+      "negative_provider_pickup_receipts": [],
+      "reasons": [
+        "no_self_identified_crawler_fetch_observed",
+        "fresh_content_under_72h",
+        "indexnow_hash_pending"
+      ],
+      "recommended_actions": [
+        "verify_live_bytes_then_indexnow",
+        "promote_in_hot_discovery_queue",
+        "increase_internal_crosslinks_from_relevant_public_surfaces"
+      ]
+    },
+    {
+      "path": "/chum/answers/doors/be-brutally-honest-about-this-copy-32a18cde5f.json",
+      "product_key": null,
+      "score": 215,
+      "urgency": "strike_now",
+      "crawl_priority": 160,
+      "last_changed": "2026-10-06T16:42:20.155Z",
+      "last_observed_crawler_fetch": null,
+      "last_observed_crawler_family": null,
+      "indexnow_pending": true,
+      "negative_provider_pickup_receipts": [],
+      "reasons": [
+        "no_self_identified_crawler_fetch_observed",
+        "fresh_content_under_72h",
+        "indexnow_hash_pending"
+      ],
+      "recommended_actions": [
+        "verify_live_bytes_then_indexnow",
+        "promote_in_hot_discovery_queue",
+        "increase_internal_crosslinks_from_relevant_public_surfaces"
+      ]
+    },
+    {
+      "path": "/chum/answers/doors/behavioral-interview-practice-8dfc51b114.json",
+      "product_key": null,
+      "score": 215,
+      "urgency": "strike_now",
+      "crawl_priority": 160,
+      "last_changed": "2026-10-06T16:42:20.155Z",
+      "last_observed_crawler_fetch": null,
+      "last_observed_crawler_family": null,
+      "indexnow_pending": true,
+      "negative_provider_pickup_receipts": [],
+      "reasons": [
+        "no_self_identified_crawler_fetch_observed",
+        "fresh_content_under_72h",
+        "indexnow_hash_pending"
+      ],
+      "recommended_actions": [
+        "verify_live_bytes_then_indexnow",
+        "promote_in_hot_discovery_queue",
+        "increase_internal_crosslinks_from_relevant_public_surfaces"
+      ]
+    },
+    {
+      "path": "/chum/answers/doors/boost-event-visibility-0b3d061df2.json",
+      "product_key": null,
+      "score": 215,
+      "urgency": "strike_now",
+      "crawl_priority": 160,
+      "last_changed": "2026-10-06T16:42:20.155Z",
+      "last_observed_crawler_fetch": null,
+      "last_observed_crawler_family": null,
+      "indexnow_pending": true,
+      "negative_provider_pickup_receipts": [],
+      "reasons": [
+        "no_self_identified_crawler_fetch_observed",
+        "fresh_content_under_72h",
+        "indexnow_hash_pending"
+      ],
+      "recommended_actions": [
+        "verify_live_bytes_then_indexnow",
+        "promote_in_hot_discovery_queue",
+        "increase_internal_crosslinks_from_relevant_public_surfaces"
+      ]
+    },
+    {
+      "path": "/chum/answers/doors/boost-this-event-02f04ebd41.json",
+      "product_key": null,
+      "score": 215,
+      "urgency": "strike_now",
+      "crawl_priority": 160,
+      "last_changed": "2026-10-06T16:42:20.155Z",
+      "last_observed_crawler_fetch": null,
+      "last_observed_crawler_family": null,
+      "indexnow_pending": true,
+      "negative_provider_pickup_receipts": [],
+      "reasons": [
+        "no_self_identified_crawler_fetch_observed",
+        "fresh_content_under_72h",
+        "indexnow_hash_pending"
+      ],
+      "recommended_actions": [
+        "verify_live_bytes_then_indexnow",
+        "promote_in_hot_discovery_queue",
+        "increase_internal_crosslinks_from_relevant_public_surfaces"
+      ]
+    },
+    {
+      "path": "/chum/answers/doors/browser-automation-api-0925c49aa4.json",
+      "product_key": null,
+      "score": 215,
+      "urgency": "strike_now",
+      "crawl_priority": 160,
+      "last_changed": "2026-10-06T16:42:20.155Z",
+      "last_observed_crawler_fetch": null,
+      "last_observed_crawler_family": null,
+      "indexnow_pending": true,
+      "negative_provider_pickup_receipts": [],
+      "reasons": [
+        "no_self_identified_crawler_fetch_observed",
+        "fresh_content_under_72h",
+        "indexnow_hash_pending"
+      ],
+      "recommended_actions": [
+        "verify_live_bytes_then_indexnow",
+        "promote_in_hot_discovery_queue",
+        "increase_internal_crosslinks_from_relevant_public_surfaces"
+      ]
+    },
+    {
+      "path": "/chum/answers/doors/brutally-critique-this-message-d550264762.json",
+      "product_key": null,
+      "score": 215,
+      "urgency": "strike_now",
+      "crawl_priority": 160,
+      "last_changed": "2026-10-06T16:42:20.155Z",
+      "last_observed_crawler_fetch": null,
+      "last_observed_crawler_family": null,
+      "indexnow_pending": true,
+      "negative_provider_pickup_receipts": [],
+      "reasons": [
+        "no_self_identified_crawler_fetch_observed",
+        "fresh_content_under_72h",
+        "indexnow_hash_pending"
+      ],
+      "recommended_actions": [
+        "verify_live_bytes_then_indexnow",
+        "promote_in_hot_discovery_queue",
+        "increase_internal_crosslinks_from_relevant_public_surfaces"
+      ]
+    },
+    {
+      "path": "/chum/answers/doors/build-a-lender-ready-deck-592e365c97.json",
+      "product_key": null,
+      "score": 215,
+      "urgency": "strike_now",
+      "crawl_priority": 160,
+      "last_changed": "2026-10-06T16:42:20.155Z",
+      "last_observed_crawler_fetch": null,
+      "last_observed_crawler_family": null,
+      "indexnow_pending": true,
+      "negative_provider_pickup_receipts": [],
+      "reasons": [
+        "no_self_identified_crawler_fetch_observed",
+        "fresh_content_under_72h",
+        "indexnow_hash_pending"
+      ],
+      "recommended_actions": [
+        "verify_live_bytes_then_indexnow",
+        "promote_in_hot_discovery_queue",
+        "increase_internal_crosslinks_from_relevant_public_surfaces"
+      ]
+    },
+    {
+      "path": "/chum/answers/doors/build-a-talent-profile-from-this-portfolio-613dec5ab1.json",
+      "product_key": null,
+      "score": 215,
+      "urgency": "strike_now",
+      "crawl_priority": 160,
+      "last_changed": "2026-10-06T16:42:20.155Z",
+      "last_observed_crawler_fetch": null,
+      "last_observed_crawler_family": null,
+      "indexnow_pending": true,
+      "negative_provider_pickup_receipts": [],
+      "reasons": [
+        "no_self_identified_crawler_fetch_observed",
+        "fresh_content_under_72h",
+        "indexnow_hash_pending"
+      ],
+      "recommended_actions": [
+        "verify_live_bytes_then_indexnow",
+        "promote_in_hot_discovery_queue",
+        "increase_internal_crosslinks_from_relevant_public_surfaces"
+      ]
+    },
+    {
+      "path": "/chum/answers/doors/build-me-a-business-website-47014a0bbb.json",
+      "product_key": null,
+      "score": 215,
+      "urgency": "strike_now",
+      "crawl_priority": 160,
+      "last_changed": "2026-10-06T16:42:20.155Z",
+      "last_observed_crawler_fetch": null,
+      "last_observed_crawler_family": null,
+      "indexnow_pending": true,
+      "negative_provider_pickup_receipts": [],
+      "reasons": [
+        "no_self_identified_crawler_fetch_observed",
+        "fresh_content_under_72h",
+        "indexnow_hash_pending"
+      ],
+      "recommended_actions": [
+        "verify_live_bytes_then_indexnow",
+        "promote_in_hot_discovery_queue",
+        "increase_internal_crosslinks_from_relevant_public_surfaces"
+      ]
+    },
+    {
+      "path": "/chum/answers/doors/build-me-an-evidence-brief-6b531cab64.json",
+      "product_key": null,
+      "score": 215,
+      "urgency": "strike_now",
+      "crawl_priority": 160,
+      "last_changed": "2026-10-06T16:42:20.155Z",
+      "last_observed_crawler_fetch": null,
+      "last_observed_crawler_family": null,
+      "indexnow_pending": true,
+      "negative_provider_pickup_receipts": [],
+      "reasons": [
+        "no_self_identified_crawler_fetch_observed",
+        "fresh_content_under_72h",
+        "indexnow_hash_pending"
+      ],
+      "recommended_actions": [
+        "verify_live_bytes_then_indexnow",
+        "promote_in_hot_discovery_queue",
+        "increase_internal_crosslinks_from_relevant_public_surfaces"
+      ]
+    },
+    {
+      "path": "/chum/answers/doors/business-account-security-d61002122d.json",
+      "product_key": null,
+      "score": 215,
+      "urgency": "strike_now",
+      "crawl_priority": 160,
+      "last_changed": "2026-10-06T16:42:20.155Z",
+      "last_observed_crawler_fetch": null,
+      "last_observed_crawler_family": null,
+      "indexnow_pending": true,
+      "negative_provider_pickup_receipts": [],
+      "reasons": [
+        "no_self_identified_crawler_fetch_observed",
+        "fresh_content_under_72h",
+        "indexnow_hash_pending"
+      ],
+      "recommended_actions": [
+        "verify_live_bytes_then_indexnow",
+        "promote_in_hot_discovery_queue",
+        "increase_internal_crosslinks_from_relevant_public_surfaces"
+      ]
+    },
+    {
+      "path": "/chum/answers/doors/business-connectivity-resilience-fd7009021f.json",
+      "product_key": null,
+      "score": 215,
+      "urgency": "strike_now",
+      "crawl_priority": 160,
+      "last_changed": "2026-10-06T16:42:20.155Z",
+      "last_observed_crawler_fetch": null,
+      "last_observed_crawler_family": null,
+      "indexnow_pending": true,
+      "negative_provider_pickup_receipts": [],
+      "reasons": [
+        "no_self_identified_crawler_fetch_observed",
+        "fresh_content_under_72h",
+        "indexnow_hash_pending"
+      ],
+      "recommended_actions": [
+        "verify_live_bytes_then_indexnow",
+        "promote_in_hot_discovery_queue",
+        "increase_internal_crosslinks_from_relevant_public_surfaces"
+      ]
+    },
+    {
+      "path": "/chum/answers/doors/business-continuity-and-safety-0babb51749.json",
+      "product_key": null,
+      "score": 215,
+      "urgency": "strike_now",
+      "crawl_priority": 160,
+      "last_changed": "2026-10-06T16:42:20.155Z",
+      "last_observed_crawler_fetch": null,
+      "last_observed_crawler_family": null,
+      "indexnow_pending": true,
+      "negative_provider_pickup_receipts": [],
+      "reasons": [
+        "no_self_identified_crawler_fetch_observed",
+        "fresh_content_under_72h",
+        "indexnow_hash_pending"
+      ],
+      "recommended_actions": [
+        "verify_live_bytes_then_indexnow",
+        "promote_in_hot_discovery_queue",
+        "increase_internal_crosslinks_from_relevant_public_surfaces"
+      ]
+    },
+    {
+      "path": "/chum/answers/doors/business-outage-plan-bd1f9b74ee.json",
+      "product_key": null,
+      "score": 215,
+      "urgency": "strike_now",
+      "crawl_priority": 160,
+      "last_changed": "2026-10-06T16:42:20.155Z",
+      "last_observed_crawler_fetch": null,
+      "last_observed_crawler_family": null,
+      "indexnow_pending": true,
+      "negative_provider_pickup_receipts": [],
+      "reasons": [
+        "no_self_identified_crawler_fetch_observed",
+        "fresh_content_under_72h",
+        "indexnow_hash_pending"
+      ],
+      "recommended_actions": [
+        "verify_live_bytes_then_indexnow",
+        "promote_in_hot_discovery_queue",
+        "increase_internal_crosslinks_from_relevant_public_surfaces"
+      ]
+    },
+    {
+      "path": "/chum/answers/doors/buy-event-promotion-785fc960f0.json",
+      "product_key": null,
+      "score": 215,
+      "urgency": "strike_now",
+      "crawl_priority": 160,
+      "last_changed": "2026-10-06T16:42:20.155Z",
+      "last_observed_crawler_fetch": null,
+      "last_observed_crawler_family": null,
+      "indexnow_pending": true,
+      "negative_provider_pickup_receipts": [],
+      "reasons": [
+        "no_self_identified_crawler_fetch_observed",
+        "fresh_content_under_72h",
+        "indexnow_hash_pending"
+      ],
+      "recommended_actions": [
+        "verify_live_bytes_then_indexnow",
+        "promote_in_hot_discovery_queue",
+        "increase_internal_crosslinks_from_relevant_public_surfaces"
+      ]
+    },
+    {
+      "path": "/chum/answers/doors/buy-more-runtime-for-this-yard-execution-f138b36c09.json",
+      "product_key": null,
+      "score": 215,
+      "urgency": "strike_now",
+      "crawl_priority": 160,
+      "last_changed": "2026-10-06T16:42:20.155Z",
+      "last_observed_crawler_fetch": null,
+      "last_observed_crawler_family": null,
+      "indexnow_pending": true,
+      "negative_provider_pickup_receipts": [],
+      "reasons": [
+        "no_self_identified_crawler_fetch_observed",
+        "fresh_content_under_72h",
+        "indexnow_hash_pending"
+      ],
+      "recommended_actions": [
+        "verify_live_bytes_then_indexnow",
+        "promote_in_hot_discovery_queue",
+        "increase_internal_crosslinks_from_relevant_public_surfaces"
+      ]
+    },
+    {
+      "path": "/chum/answers/doors/cdp-browser-control-6fbc285731.json",
+      "product_key": null,
+      "score": 215,
+      "urgency": "strike_now",
+      "crawl_priority": 160,
+      "last_changed": "2026-10-06T16:42:20.155Z",
+      "last_observed_crawler_fetch": null,
+      "last_observed_crawler_family": null,
+      "indexnow_pending": true,
+      "negative_provider_pickup_receipts": [],
+      "reasons": [
+        "no_self_identified_crawler_fetch_observed",
+        "fresh_content_under_72h",
+        "indexnow_hash_pending"
+      ],
+      "recommended_actions": [
+        "verify_live_bytes_then_indexnow",
+        "promote_in_hot_discovery_queue",
+        "increase_internal_crosslinks_from_relevant_public_surfaces"
+      ]
+    },
+    {
+      "path": "/chum/answers/doors/charging-site-economics-6092dd77f1.json",
+      "product_key": null,
+      "score": 215,
+      "urgency": "strike_now",
+      "crawl_priority": 160,
+      "last_changed": "2026-10-06T16:42:20.155Z",
+      "last_observed_crawler_fetch": null,
+      "last_observed_crawler_family": null,
+      "indexnow_pending": true,
+      "negative_provider_pickup_receipts": [],
+      "reasons": [
+        "no_self_identified_crawler_fetch_observed",
+        "fresh_content_under_72h",
+        "indexnow_hash_pending"
+      ],
+      "recommended_actions": [
+        "verify_live_bytes_then_indexnow",
+        "promote_in_hot_discovery_queue",
+        "increase_internal_crosslinks_from_relevant_public_surfaces"
+      ]
+    },
+    {
+      "path": "/chum/answers/doors/check-if-my-book-is-ready-for-kdp-465dd47ba7.json",
+      "product_key": null,
+      "score": 215,
+      "urgency": "strike_now",
+      "crawl_priority": 160,
+      "last_changed": "2026-10-06T16:42:20.155Z",
+      "last_observed_crawler_fetch": null,
+      "last_observed_crawler_family": null,
+      "indexnow_pending": true,
+      "negative_provider_pickup_receipts": [],
+      "reasons": [
+        "no_self_identified_crawler_fetch_observed",
+        "fresh_content_under_72h",
+        "indexnow_hash_pending"
+      ],
+      "recommended_actions": [
+        "verify_live_bytes_then_indexnow",
+        "promote_in_hot_discovery_queue",
+        "increase_internal_crosslinks_from_relevant_public_surfaces"
+      ]
+    },
+    {
+      "path": "/chum/answers/doors/check-my-local-seo-e8e838ec7c.json",
+      "product_key": null,
+      "score": 215,
+      "urgency": "strike_now",
+      "crawl_priority": 160,
+      "last_changed": "2026-10-06T16:42:20.155Z",
+      "last_observed_crawler_fetch": null,
+      "last_observed_crawler_family": null,
+      "indexnow_pending": true,
+      "negative_provider_pickup_receipts": [],
+      "reasons": [
+        "no_self_identified_crawler_fetch_observed",
+        "fresh_content_under_72h",
+        "indexnow_hash_pending"
+      ],
+      "recommended_actions": [
+        "verify_live_bytes_then_indexnow",
+        "promote_in_hot_discovery_queue",
+        "increase_internal_crosslinks_from_relevant_public_surfaces"
+      ]
+    },
+    {
+      "path": "/chum/answers/doors/check-my-resume-against-this-job-e3b72379fe.json",
+      "product_key": null,
+      "score": 215,
+      "urgency": "strike_now",
+      "crawl_priority": 160,
+      "last_changed": "2026-10-06T16:42:20.155Z",
+      "last_observed_crawler_fetch": null,
+      "last_observed_crawler_family": null,
+      "indexnow_pending": true,
+      "negative_provider_pickup_receipts": [],
+      "reasons": [
+        "no_self_identified_crawler_fetch_observed",
+        "fresh_content_under_72h",
+        "indexnow_hash_pending"
+      ],
+      "recommended_actions": [
+        "verify_live_bytes_then_indexnow",
+        "promote_in_hot_discovery_queue",
+        "increase_internal_crosslinks_from_relevant_public_surfaces"
+      ]
+    },
+    {
+      "path": "/chum/answers/doors/check-page-count-and-cover-dpi-512896a3dd.json",
+      "product_key": null,
+      "score": 215,
+      "urgency": "strike_now",
+      "crawl_priority": 160,
+      "last_changed": "2026-10-06T16:42:20.155Z",
+      "last_observed_crawler_fetch": null,
+      "last_observed_crawler_family": null,
+      "indexnow_pending": true,
+      "negative_provider_pickup_receipts": [],
+      "reasons": [
+        "no_self_identified_crawler_fetch_observed",
+        "fresh_content_under_72h",
+        "indexnow_hash_pending"
+      ],
+      "recommended_actions": [
+        "verify_live_bytes_then_indexnow",
+        "promote_in_hot_discovery_queue",
+        "increase_internal_crosslinks_from_relevant_public_surfaces"
+      ]
+    },
+    {
+      "path": "/chum/answers/doors/check-this-carrier-and-load-paperwork-ce9a5b3527.json",
+      "product_key": null,
+      "score": 215,
+      "urgency": "strike_now",
+      "crawl_priority": 160,
+      "last_changed": "2026-10-06T16:42:20.155Z",
+      "last_observed_crawler_fetch": null,
+      "last_observed_crawler_family": null,
+      "indexnow_pending": true,
+      "negative_provider_pickup_receipts": [],
+      "reasons": [
+        "no_self_identified_crawler_fetch_observed",
+        "fresh_content_under_72h",
+        "indexnow_hash_pending"
+      ],
+      "recommended_actions": [
+        "verify_live_bytes_then_indexnow",
+        "promote_in_hot_discovery_queue",
+        "increase_internal_crosslinks_from_relevant_public_surfaces"
+      ]
+    },
+    {
+      "path": "/chum/answers/doors/cloud-browser-for-ai-4217671a37.json",
+      "product_key": null,
+      "score": 215,
+      "urgency": "strike_now",
+      "crawl_priority": 160,
+      "last_changed": "2026-10-06T16:42:20.155Z",
+      "last_observed_crawler_fetch": null,
+      "last_observed_crawler_family": null,
+      "indexnow_pending": true,
+      "negative_provider_pickup_receipts": [],
+      "reasons": [
+        "no_self_identified_crawler_fetch_observed",
+        "fresh_content_under_72h",
+        "indexnow_hash_pending"
+      ],
+      "recommended_actions": [
+        "verify_live_bytes_then_indexnow",
+        "promote_in_hot_discovery_queue",
+        "increase_internal_crosslinks_from_relevant_public_surfaces"
+      ]
+    },
+    {
+      "path": "/chum/answers/doors/commercial-ev-site-report-f593e514df.json",
+      "product_key": null,
+      "score": 215,
+      "urgency": "strike_now",
+      "crawl_priority": 160,
+      "last_changed": "2026-10-06T16:42:20.155Z",
+      "last_observed_crawler_fetch": null,
+      "last_observed_crawler_family": null,
+      "indexnow_pending": true,
+      "negative_provider_pickup_receipts": [],
+      "reasons": [
+        "no_self_identified_crawler_fetch_observed",
+        "fresh_content_under_72h",
+        "indexnow_hash_pending"
+      ],
+      "recommended_actions": [
+        "verify_live_bytes_then_indexnow",
+        "promote_in_hot_discovery_queue",
+        "increase_internal_crosslinks_from_relevant_public_surfaces"
+      ]
+    },
+    {
+      "path": "/chum/answers/doors/compare-the-real-workflow-to-company-policy-d141bd010b.json",
+      "product_key": null,
+      "score": 215,
+      "urgency": "strike_now",
+      "crawl_priority": 160,
+      "last_changed": "2026-10-06T16:42:20.155Z",
+      "last_observed_crawler_fetch": null,
+      "last_observed_crawler_family": null,
+      "indexnow_pending": true,
+      "negative_provider_pickup_receipts": [],
+      "reasons": [
+        "no_self_identified_crawler_fetch_observed",
+        "fresh_content_under_72h",
+        "indexnow_hash_pending"
+      ],
+      "recommended_actions": [
+        "verify_live_bytes_then_indexnow",
+        "promote_in_hot_discovery_queue",
+        "increase_internal_crosslinks_from_relevant_public_surfaces"
+      ]
+    },
+    {
+      "path": "/chum/answers/doors/compare-these-countries-on-this-metric-14e53d7a85.json",
+      "product_key": null,
+      "score": 215,
+      "urgency": "strike_now",
+      "crawl_priority": 160,
+      "last_changed": "2026-10-06T16:42:20.155Z",
+      "last_observed_crawler_fetch": null,
+      "last_observed_crawler_family": null,
+      "indexnow_pending": true,
+      "negative_provider_pickup_receipts": [],
+      "reasons": [
+        "no_self_identified_crawler_fetch_observed",
+        "fresh_content_under_72h",
+        "indexnow_hash_pending"
+      ],
+      "recommended_actions": [
+        "verify_live_bytes_then_indexnow",
+        "promote_in_hot_discovery_queue",
+        "increase_internal_crosslinks_from_relevant_public_surfaces"
+      ]
+    },
+    {
+      "path": "/chum/answers/doors/compare-two-recordings-c44b889ea7.json",
+      "product_key": null,
+      "score": 215,
+      "urgency": "strike_now",
+      "crawl_priority": 160,
+      "last_changed": "2026-10-06T16:42:20.155Z",
+      "last_observed_crawler_fetch": null,
+      "last_observed_crawler_family": null,
+      "indexnow_pending": true,
+      "negative_provider_pickup_receipts": [],
+      "reasons": [
+        "no_self_identified_crawler_fetch_observed",
+        "fresh_content_under_72h",
+        "indexnow_hash_pending"
+      ],
+      "recommended_actions": [
+        "verify_live_bytes_then_indexnow",
+        "promote_in_hot_discovery_queue",
+        "increase_internal_crosslinks_from_relevant_public_surfaces"
+      ]
+    },
+    {
+      "path": "/chum/answers/doors/connect-our-business-systems-without-replacing-everything-4e80c745da.json",
+      "product_key": null,
+      "score": 215,
+      "urgency": "strike_now",
+      "crawl_priority": 160,
+      "last_changed": "2026-10-06T16:42:20.155Z",
+      "last_observed_crawler_fetch": null,
+      "last_observed_crawler_family": null,
+      "indexnow_pending": true,
+      "negative_provider_pickup_receipts": [],
+      "reasons": [
+        "no_self_identified_crawler_fetch_observed",
+        "fresh_content_under_72h",
+        "indexnow_hash_pending"
+      ],
+      "recommended_actions": [
+        "verify_live_bytes_then_indexnow",
+        "promote_in_hot_discovery_queue",
+        "increase_internal_crosslinks_from_relevant_public_surfaces"
+      ]
+    },
+    {
+      "path": "/chum/answers/doors/continuity-readiness-software-b3313dda80.json",
+      "product_key": null,
+      "score": 215,
+      "urgency": "strike_now",
+      "crawl_priority": 160,
+      "last_changed": "2026-10-06T16:42:20.155Z",
+      "last_observed_crawler_fetch": null,
+      "last_observed_crawler_family": null,
+      "indexnow_pending": true,
+      "negative_provider_pickup_receipts": [],
+      "reasons": [
+        "no_self_identified_crawler_fetch_observed",
+        "fresh_content_under_72h",
+        "indexnow_hash_pending"
+      ],
+      "recommended_actions": [
+        "verify_live_bytes_then_indexnow",
+        "promote_in_hot_discovery_queue",
+        "increase_internal_crosslinks_from_relevant_public_surfaces"
+      ]
+    },
+    {
+      "path": "/chum/answers/doors/country-benchmark-with-sources-04ac1dfc19.json",
+      "product_key": null,
+      "score": 215,
+      "urgency": "strike_now",
+      "crawl_priority": 160,
+      "last_changed": "2026-10-06T16:42:20.155Z",
+      "last_observed_crawler_fetch": null,
+      "last_observed_crawler_family": null,
+      "indexnow_pending": true,
+      "negative_provider_pickup_receipts": [],
+      "reasons": [
+        "no_self_identified_crawler_fetch_observed",
+        "fresh_content_under_72h",
+        "indexnow_hash_pending"
+      ],
+      "recommended_actions": [
+        "verify_live_bytes_then_indexnow",
+        "promote_in_hot_discovery_queue",
+        "increase_internal_crosslinks_from_relevant_public_surfaces"
+      ]
+    },
+    {
+      "path": "/chum/answers/doors/credit-builder-d667e52872.json",
+      "product_key": null,
+      "score": 215,
+      "urgency": "strike_now",
+      "crawl_priority": 160,
+      "last_changed": "2026-10-06T16:42:20.155Z",
+      "last_observed_crawler_fetch": null,
+      "last_observed_crawler_family": null,
+      "indexnow_pending": true,
+      "negative_provider_pickup_receipts": [],
+      "reasons": [
+        "no_self_identified_crawler_fetch_observed",
+        "fresh_content_under_72h",
+        "indexnow_hash_pending"
+      ],
+      "recommended_actions": [
+        "verify_live_bytes_then_indexnow",
+        "promote_in_hot_discovery_queue",
+        "increase_internal_crosslinks_from_relevant_public_surfaces"
+      ]
+    },
+    {
+      "path": "/chum/answers/doors/dedupe-our-vendor-list-safely-9edf25e4db.json",
+      "product_key": null,
+      "score": 215,
+      "urgency": "strike_now",
+      "crawl_priority": 160,
+      "last_changed": "2026-10-06T16:42:20.155Z",
+      "last_observed_crawler_fetch": null,
+      "last_observed_crawler_family": null,
+      "indexnow_pending": true,
+      "negative_provider_pickup_receipts": [],
+      "reasons": [
+        "no_self_identified_crawler_fetch_observed",
+        "fresh_content_under_72h",
+        "indexnow_hash_pending"
+      ],
+      "recommended_actions": [
+        "verify_live_bytes_then_indexnow",
+        "promote_in_hot_discovery_queue",
+        "increase_internal_crosslinks_from_relevant_public_surfaces"
+      ]
+    },
+    {
+      "path": "/chum/answers/doors/design-a-plan-to-close-these-data-gaps-454b5eb8ab.json",
+      "product_key": null,
+      "score": 215,
+      "urgency": "strike_now",
+      "crawl_priority": 160,
+      "last_changed": "2026-10-06T16:42:20.155Z",
+      "last_observed_crawler_fetch": null,
+      "last_observed_crawler_family": null,
+      "indexnow_pending": true,
+      "negative_provider_pickup_receipts": [],
+      "reasons": [
+        "no_self_identified_crawler_fetch_observed",
+        "fresh_content_under_72h",
+        "indexnow_hash_pending"
+      ],
+      "recommended_actions": [
+        "verify_live_bytes_then_indexnow",
+        "promote_in_hot_discovery_queue",
+        "increase_internal_crosslinks_from_relevant_public_surfaces"
+      ]
+    },
+    {
+      "path": "/chum/answers/doors/device-reconnect-visibility-edee3d926e.json",
+      "product_key": null,
+      "score": 215,
+      "urgency": "strike_now",
+      "crawl_priority": 160,
+      "last_changed": "2026-10-06T16:42:20.155Z",
+      "last_observed_crawler_fetch": null,
+      "last_observed_crawler_family": null,
+      "indexnow_pending": true,
+      "negative_provider_pickup_receipts": [],
+      "reasons": [
+        "no_self_identified_crawler_fetch_observed",
+        "fresh_content_under_72h",
+        "indexnow_hash_pending"
+      ],
+      "recommended_actions": [
+        "verify_live_bytes_then_indexnow",
+        "promote_in_hot_discovery_queue",
+        "increase_internal_crosslinks_from_relevant_public_surfaces"
+      ]
+    },
+    {
+      "path": "/chum/answers/doors/did-my-devices-reconnect-c4d116f491.json",
+      "product_key": null,
+      "score": 215,
+      "urgency": "strike_now",
+      "crawl_priority": 160,
+      "last_changed": "2026-10-06T16:42:20.155Z",
+      "last_observed_crawler_fetch": null,
+      "last_observed_crawler_family": null,
+      "indexnow_pending": true,
+      "negative_provider_pickup_receipts": [],
+      "reasons": [
+        "no_self_identified_crawler_fetch_observed",
+        "fresh_content_under_72h",
+        "indexnow_hash_pending"
+      ],
+      "recommended_actions": [
+        "verify_live_bytes_then_indexnow",
+        "promote_in_hot_discovery_queue",
+        "increase_internal_crosslinks_from_relevant_public_surfaces"
+      ]
+    },
+    {
+      "path": "/chum/answers/doors/escape-vendor-lock-in-9bf9834ecc.json",
+      "product_key": null,
+      "score": 215,
+      "urgency": "strike_now",
+      "crawl_priority": 160,
+      "last_changed": "2026-10-06T16:42:20.155Z",
+      "last_observed_crawler_fetch": null,
+      "last_observed_crawler_family": null,
+      "indexnow_pending": true,
+      "negative_provider_pickup_receipts": [],
+      "reasons": [
+        "no_self_identified_crawler_fetch_observed",
+        "fresh_content_under_72h",
         "indexnow_hash_pending"
       ],
       "recommended_actions": [
@@ -11726,7 +11726,7 @@
     {
       "path": "/chum/answers/doors/ev-charger-competition-around-this-address-33f3c50a03.json",
       "product_key": null,
-      "score": 222,
+      "score": 215,
       "urgency": "strike_now",
       "crawl_priority": 160,
       "last_changed": "2026-10-06T16:42:20.155Z",
@@ -11736,7 +11736,7 @@
       "negative_provider_pickup_receipts": [],
       "reasons": [
         "no_self_identified_crawler_fetch_observed",
-        "fresh_content_under_24h",
+        "fresh_content_under_72h",
         "indexnow_hash_pending"
       ],
       "recommended_actions": [
@@ -11748,7 +11748,7 @@
     {
       "path": "/chum/answers/doors/ev-charger-competition-near-this-address-aa69cb1075.json",
       "product_key": null,
-      "score": 222,
+      "score": 215,
       "urgency": "strike_now",
       "crawl_priority": 160,
       "last_changed": "2026-10-06T16:42:20.155Z",
@@ -11758,7 +11758,7 @@
       "negative_provider_pickup_receipts": [],
       "reasons": [
         "no_self_identified_crawler_fetch_observed",
-        "fresh_content_under_24h",
+        "fresh_content_under_72h",
         "indexnow_hash_pending"
       ],
       "recommended_actions": [
@@ -11770,7 +11770,7 @@
     {
       "path": "/chum/answers/doors/ev-charger-feasibility-by-address-8a81d21c84.json",
       "product_key": null,
-      "score": 222,
+      "score": 215,
       "urgency": "strike_now",
       "crawl_priority": 160,
       "last_changed": "2026-10-06T16:42:20.155Z",
@@ -11780,7 +11780,7 @@
       "negative_provider_pickup_receipts": [],
       "reasons": [
         "no_self_identified_crawler_fetch_observed",
-        "fresh_content_under_24h",
+        "fresh_content_under_72h",
         "indexnow_hash_pending"
       ],
       "recommended_actions": [
@@ -11792,7 +11792,7 @@
     {
       "path": "/chum/answers/doors/ev-charger-investment-report-ed6fd3f23a.json",
       "product_key": null,
-      "score": 222,
+      "score": 215,
       "urgency": "strike_now",
       "crawl_priority": 160,
       "last_changed": "2026-10-06T16:42:20.155Z",
@@ -11802,7 +11802,7 @@
       "negative_provider_pickup_receipts": [],
       "reasons": [
         "no_self_identified_crawler_fetch_observed",
-        "fresh_content_under_24h",
+        "fresh_content_under_72h",
         "indexnow_hash_pending"
       ],
       "recommended_actions": [
@@ -11814,7 +11814,7 @@
     {
       "path": "/chum/answers/doors/ev-charger-site-analysis-fc320bee89.json",
       "product_key": null,
-      "score": 222,
+      "score": 215,
       "urgency": "strike_now",
       "crawl_priority": 160,
       "last_changed": "2026-10-06T16:42:20.155Z",
@@ -11824,7 +11824,7 @@
       "negative_provider_pickup_receipts": [],
       "reasons": [
         "no_self_identified_crawler_fetch_observed",
-        "fresh_content_under_24h",
+        "fresh_content_under_72h",
         "indexnow_hash_pending"
       ],
       "recommended_actions": [
@@ -11836,7 +11836,7 @@
     {
       "path": "/chum/answers/doors/ev-charging-demand-near-this-property-76a21ea75b.json",
       "product_key": null,
-      "score": 222,
+      "score": 215,
       "urgency": "strike_now",
       "crawl_priority": 160,
       "last_changed": "2026-10-06T16:42:20.155Z",
@@ -11846,7 +11846,7 @@
       "negative_provider_pickup_receipts": [],
       "reasons": [
         "no_self_identified_crawler_fetch_observed",
-        "fresh_content_under_24h",
+        "fresh_content_under_72h",
         "indexnow_hash_pending"
       ],
       "recommended_actions": [
@@ -11858,7 +11858,7 @@
     {
       "path": "/chum/answers/doors/ev-charging-diligence-91e2eec236.json",
       "product_key": null,
-      "score": 222,
+      "score": 215,
       "urgency": "strike_now",
       "crawl_priority": 160,
       "last_changed": "2026-10-06T16:42:20.155Z",
@@ -11868,7 +11868,7 @@
       "negative_provider_pickup_receipts": [],
       "reasons": [
         "no_self_identified_crawler_fetch_observed",
-        "fresh_content_under_24h",
+        "fresh_content_under_72h",
         "indexnow_hash_pending"
       ],
       "recommended_actions": [
@@ -11880,7 +11880,7 @@
     {
       "path": "/chum/answers/doors/ev-charging-feasibility-by-address-734eac6eee.json",
       "product_key": null,
-      "score": 222,
+      "score": 215,
       "urgency": "strike_now",
       "crawl_priority": 160,
       "last_changed": "2026-10-06T16:42:20.155Z",
@@ -11890,7 +11890,7 @@
       "negative_provider_pickup_receipts": [],
       "reasons": [
         "no_self_identified_crawler_fetch_observed",
-        "fresh_content_under_24h",
+        "fresh_content_under_72h",
         "indexnow_hash_pending"
       ],
       "recommended_actions": [
@@ -11902,7 +11902,7 @@
     {
       "path": "/chum/answers/doors/ev-charging-incentives-for-this-site-76fa0b5a6c.json",
       "product_key": null,
-      "score": 222,
+      "score": 215,
       "urgency": "strike_now",
       "crawl_priority": 160,
       "last_changed": "2026-10-06T16:42:20.155Z",
@@ -11912,7 +11912,7 @@
       "negative_provider_pickup_receipts": [],
       "reasons": [
         "no_self_identified_crawler_fetch_observed",
-        "fresh_content_under_24h",
+        "fresh_content_under_72h",
         "indexnow_hash_pending"
       ],
       "recommended_actions": [
@@ -11924,7 +11924,7 @@
     {
       "path": "/chum/answers/doors/ev-charging-opportunity-report-43ed1d1e31.json",
       "product_key": null,
-      "score": 222,
+      "score": 215,
       "urgency": "strike_now",
       "crawl_priority": 160,
       "last_changed": "2026-10-06T16:42:20.155Z",
@@ -11934,7 +11934,7 @@
       "negative_provider_pickup_receipts": [],
       "reasons": [
         "no_self_identified_crawler_fetch_observed",
-        "fresh_content_under_24h",
+        "fresh_content_under_72h",
         "indexnow_hash_pending"
       ],
       "recommended_actions": [
@@ -11946,7 +11946,7 @@
     {
       "path": "/chum/answers/doors/ev-charging-roi-for-this-property-23181c0dbc.json",
       "product_key": null,
-      "score": 222,
+      "score": 215,
       "urgency": "strike_now",
       "crawl_priority": 160,
       "last_changed": "2026-10-06T16:42:20.155Z",
@@ -11956,7 +11956,7 @@
       "negative_provider_pickup_receipts": [],
       "reasons": [
         "no_self_identified_crawler_fetch_observed",
-        "fresh_content_under_24h",
+        "fresh_content_under_72h",
         "indexnow_hash_pending"
       ],
       "recommended_actions": [
@@ -11968,7 +11968,7 @@
     {
       "path": "/chum/answers/doors/ev-charging-site-analysis-by-address-1e6ee8e9ee.json",
       "product_key": null,
-      "score": 222,
+      "score": 215,
       "urgency": "strike_now",
       "crawl_priority": 160,
       "last_changed": "2026-10-06T16:42:20.155Z",
@@ -11978,7 +11978,7 @@
       "negative_provider_pickup_receipts": [],
       "reasons": [
         "no_self_identified_crawler_fetch_observed",
-        "fresh_content_under_24h",
+        "fresh_content_under_72h",
         "indexnow_hash_pending"
       ],
       "recommended_actions": [
@@ -11990,7 +11990,7 @@
     {
       "path": "/chum/answers/doors/evaluate-this-address-for-ev-charging-c676bc6509.json",
       "product_key": null,
-      "score": 222,
+      "score": 215,
       "urgency": "strike_now",
       "crawl_priority": 160,
       "last_changed": "2026-10-06T16:42:20.155Z",
@@ -12000,7 +12000,7 @@
       "negative_provider_pickup_receipts": [],
       "reasons": [
         "no_self_identified_crawler_fetch_observed",
-        "fresh_content_under_24h",
+        "fresh_content_under_72h",
         "indexnow_hash_pending"
       ],
       "recommended_actions": [
@@ -12012,7 +12012,7 @@
     {
       "path": "/chum/answers/doors/evaluate-this-candidate-from-the-evidence-1a2808f3be.json",
       "product_key": null,
-      "score": 222,
+      "score": 215,
       "urgency": "strike_now",
       "crawl_priority": 160,
       "last_changed": "2026-10-06T16:42:20.155Z",
@@ -12022,7 +12022,7 @@
       "negative_provider_pickup_receipts": [],
       "reasons": [
         "no_self_identified_crawler_fetch_observed",
-        "fresh_content_under_24h",
+        "fresh_content_under_72h",
         "indexnow_hash_pending"
       ],
       "recommended_actions": [
@@ -12034,7 +12034,7 @@
     {
       "path": "/chum/answers/doors/evercraft-network-membership-861ace178a.json",
       "product_key": null,
-      "score": 222,
+      "score": 215,
       "urgency": "strike_now",
       "crawl_priority": 160,
       "last_changed": "2026-10-06T16:42:20.155Z",
@@ -12044,7 +12044,7 @@
       "negative_provider_pickup_receipts": [],
       "reasons": [
         "no_self_identified_crawler_fetch_observed",
-        "fresh_content_under_24h",
+        "fresh_content_under_72h",
         "indexnow_hash_pending"
       ],
       "recommended_actions": [
@@ -12056,7 +12056,7 @@
     {
       "path": "/chum/answers/doors/evidence-timeline-review-2e05014564.json",
       "product_key": null,
-      "score": 222,
+      "score": 215,
       "urgency": "strike_now",
       "crawl_priority": 160,
       "last_changed": "2026-10-06T16:42:20.155Z",
@@ -12066,7 +12066,7 @@
       "negative_provider_pickup_receipts": [],
       "reasons": [
         "no_self_identified_crawler_fetch_observed",
-        "fresh_content_under_24h",
+        "fresh_content_under_72h",
         "indexnow_hash_pending"
       ],
       "recommended_actions": [
@@ -12078,7 +12078,7 @@
     {
       "path": "/chum/answers/doors/export-an-ai-built-app-5cdc62676d.json",
       "product_key": null,
-      "score": 222,
+      "score": 215,
       "urgency": "strike_now",
       "crawl_priority": 160,
       "last_changed": "2026-10-06T16:42:20.155Z",
@@ -12088,7 +12088,7 @@
       "negative_provider_pickup_receipts": [],
       "reasons": [
         "no_self_identified_crawler_fetch_observed",
-        "fresh_content_under_24h",
+        "fresh_content_under_72h",
         "indexnow_hash_pending"
       ],
       "recommended_actions": [
@@ -12100,7 +12100,7 @@
     {
       "path": "/chum/answers/doors/extend-this-bounded-build-run-0e2e4d2c1f.json",
       "product_key": null,
-      "score": 222,
+      "score": 215,
       "urgency": "strike_now",
       "crawl_priority": 160,
       "last_changed": "2026-10-06T16:42:20.155Z",
@@ -12110,7 +12110,7 @@
       "negative_provider_pickup_receipts": [],
       "reasons": [
         "no_self_identified_crawler_fetch_observed",
-        "fresh_content_under_24h",
+        "fresh_content_under_72h",
         "indexnow_hash_pending"
       ],
       "recommended_actions": [
@@ -12122,7 +12122,7 @@
     {
       "path": "/chum/answers/doors/family-check-in-safety-90b9db7865.json",
       "product_key": null,
-      "score": 222,
+      "score": 215,
       "urgency": "strike_now",
       "crawl_priority": 160,
       "last_changed": "2026-10-06T16:42:20.155Z",
@@ -12132,7 +12132,7 @@
       "negative_provider_pickup_receipts": [],
       "reasons": [
         "no_self_identified_crawler_fetch_observed",
-        "fresh_content_under_24h",
+        "fresh_content_under_72h",
         "indexnow_hash_pending"
       ],
       "recommended_actions": [
@@ -12144,7 +12144,7 @@
     {
       "path": "/chum/answers/doors/feature-my-venue-on-eventwave-91a643633e.json",
       "product_key": null,
-      "score": 222,
+      "score": 215,
       "urgency": "strike_now",
       "crawl_priority": 160,
       "last_changed": "2026-10-06T16:42:20.155Z",
@@ -12154,7 +12154,7 @@
       "negative_provider_pickup_receipts": [],
       "reasons": [
         "no_self_identified_crawler_fetch_observed",
-        "fresh_content_under_24h",
+        "fresh_content_under_72h",
         "indexnow_hash_pending"
       ],
       "recommended_actions": [
@@ -12166,7 +12166,7 @@
     {
       "path": "/chum/answers/doors/fetch-a-webpage-for-my-ai-agent-fc5f02747b.json",
       "product_key": null,
-      "score": 222,
+      "score": 215,
       "urgency": "strike_now",
       "crawl_priority": 160,
       "last_changed": "2026-10-06T16:42:20.155Z",
@@ -12176,7 +12176,7 @@
       "negative_provider_pickup_receipts": [],
       "reasons": [
         "no_self_identified_crawler_fetch_observed",
-        "fresh_content_under_24h",
+        "fresh_content_under_72h",
         "indexnow_hash_pending"
       ],
       "recommended_actions": [
@@ -12188,7 +12188,7 @@
     {
       "path": "/chum/answers/doors/find-a-discontinued-part-5646da09bb.json",
       "product_key": null,
-      "score": 222,
+      "score": 215,
       "urgency": "strike_now",
       "crawl_priority": 160,
       "last_changed": "2026-10-06T16:42:20.155Z",
@@ -12198,7 +12198,7 @@
       "negative_provider_pickup_receipts": [],
       "reasons": [
         "no_self_identified_crawler_fetch_observed",
-        "fresh_content_under_24h",
+        "fresh_content_under_72h",
         "indexnow_hash_pending"
       ],
       "recommended_actions": [
@@ -12210,7 +12210,7 @@
     {
       "path": "/chum/answers/doors/find-a-donor-or-salvage-part-310843faf9.json",
       "product_key": null,
-      "score": 222,
+      "score": 215,
       "urgency": "strike_now",
       "crawl_priority": 160,
       "last_changed": "2026-10-06T16:42:20.155Z",
@@ -12220,7 +12220,7 @@
       "negative_provider_pickup_receipts": [],
       "reasons": [
         "no_self_identified_crawler_fetch_observed",
-        "fresh_content_under_24h",
+        "fresh_content_under_72h",
         "indexnow_hash_pending"
       ],
       "recommended_actions": [
@@ -12232,7 +12232,7 @@
     {
       "path": "/chum/answers/doors/find-a-hard-to-source-part-78dcd37ecc.json",
       "product_key": null,
-      "score": 222,
+      "score": 215,
       "urgency": "strike_now",
       "crawl_priority": 160,
       "last_changed": "2026-10-06T16:42:20.155Z",
@@ -12242,7 +12242,7 @@
       "negative_provider_pickup_receipts": [],
       "reasons": [
         "no_self_identified_crawler_fetch_observed",
-        "fresh_content_under_24h",
+        "fresh_content_under_72h",
         "indexnow_hash_pending"
       ],
       "recommended_actions": [
@@ -12254,7 +12254,7 @@
     {
       "path": "/chum/answers/doors/find-bottlenecks-in-this-business-workflow-55d27040ce.json",
       "product_key": null,
-      "score": 222,
+      "score": 215,
       "urgency": "strike_now",
       "crawl_priority": 160,
       "last_changed": "2026-10-06T16:42:20.155Z",
@@ -12264,7 +12264,7 @@
       "negative_provider_pickup_receipts": [],
       "reasons": [
         "no_self_identified_crawler_fetch_observed",
-        "fresh_content_under_24h",
+        "fresh_content_under_72h",
         "indexnow_hash_pending"
       ],
       "recommended_actions": [
@@ -12276,7 +12276,7 @@
     {
       "path": "/chum/answers/doors/find-capital-options-for-this-project-9a78204138.json",
       "product_key": null,
-      "score": 222,
+      "score": 215,
       "urgency": "strike_now",
       "crawl_priority": 160,
       "last_changed": "2026-10-06T16:42:20.155Z",
@@ -12286,7 +12286,7 @@
       "negative_provider_pickup_receipts": [],
       "reasons": [
         "no_self_identified_crawler_fetch_observed",
-        "fresh_content_under_24h",
+        "fresh_content_under_72h",
         "indexnow_hash_pending"
       ],
       "recommended_actions": [
@@ -12298,7 +12298,7 @@
     {
       "path": "/chum/answers/doors/find-conflicts-in-our-business-exports-f352d58cb0.json",
       "product_key": null,
-      "score": 222,
+      "score": 215,
       "urgency": "strike_now",
       "crawl_priority": 160,
       "last_changed": "2026-10-06T16:42:20.155Z",
@@ -12308,7 +12308,7 @@
       "negative_provider_pickup_receipts": [],
       "reasons": [
         "no_self_identified_crawler_fetch_observed",
-        "fresh_content_under_24h",
+        "fresh_content_under_72h",
         "indexnow_hash_pending"
       ],
       "recommended_actions": [
@@ -12320,7 +12320,7 @@
     {
       "path": "/chum/answers/doors/find-conversion-problems-on-my-website-071e47ffaf.json",
       "product_key": null,
-      "score": 222,
+      "score": 215,
       "urgency": "strike_now",
       "crawl_priority": 160,
       "last_changed": "2026-10-06T16:42:20.155Z",
@@ -12330,7 +12330,7 @@
       "negative_provider_pickup_receipts": [],
       "reasons": [
         "no_self_identified_crawler_fetch_observed",
-        "fresh_content_under_24h",
+        "fresh_content_under_72h",
         "indexnow_hash_pending"
       ],
       "recommended_actions": [
@@ -12342,7 +12342,7 @@
     {
       "path": "/chum/answers/doors/find-ev-charging-opportunities-in-this-market-c01f603871.json",
       "product_key": null,
-      "score": 222,
+      "score": 215,
       "urgency": "strike_now",
       "crawl_priority": 160,
       "last_changed": "2026-10-06T16:42:20.155Z",
@@ -12352,7 +12352,7 @@
       "negative_provider_pickup_receipts": [],
       "reasons": [
         "no_self_identified_crawler_fetch_observed",
-        "fresh_content_under_24h",
+        "fresh_content_under_72h",
         "indexnow_hash_pending"
       ],
       "recommended_actions": [
@@ -12364,7 +12364,7 @@
     {
       "path": "/chum/answers/doors/find-gaps-in-this-candidate-s-proof-2c2dbfdfec.json",
       "product_key": null,
-      "score": 222,
+      "score": 215,
       "urgency": "strike_now",
       "crawl_priority": 160,
       "last_changed": "2026-10-06T16:42:20.155Z",
@@ -12374,7 +12374,7 @@
       "negative_provider_pickup_receipts": [],
       "reasons": [
         "no_self_identified_crawler_fetch_observed",
-        "fresh_content_under_24h",
+        "fresh_content_under_72h",
         "indexnow_hash_pending"
       ],
       "recommended_actions": [
@@ -12386,7 +12386,7 @@
     {
       "path": "/chum/answers/doors/find-missing-pod-or-rate-mismatches-d7a7e22349.json",
       "product_key": null,
-      "score": 222,
+      "score": 215,
       "urgency": "strike_now",
       "crawl_priority": 160,
       "last_changed": "2026-10-06T16:42:20.155Z",
@@ -12396,7 +12396,7 @@
       "negative_provider_pickup_receipts": [],
       "reasons": [
         "no_self_identified_crawler_fetch_observed",
-        "fresh_content_under_24h",
+        "fresh_content_under_72h",
         "indexnow_hash_pending"
       ],
       "recommended_actions": [
@@ -12408,7 +12408,7 @@
     {
       "path": "/chum/answers/doors/find-missing-purchasing-approvals-84e71137c4.json",
       "product_key": null,
-      "score": 222,
+      "score": 215,
       "urgency": "strike_now",
       "crawl_priority": 160,
       "last_changed": "2026-10-06T16:42:20.155Z",
@@ -12418,7 +12418,7 @@
       "negative_provider_pickup_receipts": [],
       "reasons": [
         "no_self_identified_crawler_fetch_observed",
-        "fresh_content_under_24h",
+        "fresh_content_under_72h",
         "indexnow_hash_pending"
       ],
       "recommended_actions": [
@@ -12430,7 +12430,7 @@
     {
       "path": "/chum/answers/doors/find-obsolete-parts-for-customers-a63d0789ef.json",
       "product_key": null,
-      "score": 222,
+      "score": 215,
       "urgency": "strike_now",
       "crawl_priority": 160,
       "last_changed": "2026-10-06T16:42:20.155Z",
@@ -12440,7 +12440,7 @@
       "negative_provider_pickup_receipts": [],
       "reasons": [
         "no_self_identified_crawler_fetch_observed",
-        "fresh_content_under_24h",
+        "fresh_content_under_72h",
         "indexnow_hash_pending"
       ],
       "recommended_actions": [
@@ -12452,7 +12452,7 @@
     {
       "path": "/chum/answers/doors/find-provenance-problems-in-this-data-57334a96e5.json",
       "product_key": null,
-      "score": 222,
+      "score": 215,
       "urgency": "strike_now",
       "crawl_priority": 160,
       "last_changed": "2026-10-06T16:42:20.155Z",
@@ -12462,7 +12462,7 @@
       "negative_provider_pickup_receipts": [],
       "reasons": [
         "no_self_identified_crawler_fetch_observed",
-        "fresh_content_under_24h",
+        "fresh_content_under_72h",
         "indexnow_hash_pending"
       ],
       "recommended_actions": [
