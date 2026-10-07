@@ -174,3 +174,30 @@ test('dangling immutable storage is reported but never silently deleted', async 
     await rm(root, { recursive: true, force: true });
   }
 });
+
+
+test('fsck rejects an internally dishonest blob even when its outer object id is valid', async () => {
+  const { root, store } = await healthyStore();
+  try {
+    const dishonest = await store.putObject('blob', {
+      encoding: 'base64',
+      size: 7,
+      content_sha256: '0'.repeat(64),
+      data: Buffer.from('honesty').toString('base64'),
+    });
+
+    await assert.doesNotReject(() => store.readObject(dishonest));
+    const result = await verifyLineageIntegrity(store, {
+      verifyLargeContent: false,
+    });
+
+    assert.equal(result.ok, false);
+    assert.ok(result.errors.some(
+      (row) =>
+        row.code === 'blob_content_digest_mismatch' &&
+        row.object_id === dishonest
+    ));
+  } finally {
+    await rm(root, { recursive: true, force: true });
+  }
+});
