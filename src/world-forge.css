@@ -858,3 +858,22 @@
   background:#10232d;
   color:#9dd6ef;
 }
+
+.wf-runtime-view-badge{
+  display:inline-flex;
+  align-items:center;
+  border:1px solid #3b6d88;
+  border-radius:6px;
+  background:#102735;
+  color:#9edcf7;
+  padding:5px 7px;
+  font:800 8px ui-monospace,SFMono-Regular,Menlo,monospace;
+  letter-spacing:.06em;
+  white-space:nowrap;
+}
+
+.wf-runtime-view-badge.staged{
+  border-color:#725d31;
+  background:#2c2515;
+  color:#e4cd92;
+}

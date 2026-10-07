@@ -5,9 +5,33 @@ import { createWorldForgeStarterProject } from './world-forge-http.js';
 import {
   compileWorldForgeToWorldEngine,
   verifyWorldForgeWorldEngineBridgeReceipt,
+  worldEngineEulerToWorldForge,
+  worldEngineVectorToWorldForge,
   worldForgeEulerToWorldEngine,
   worldForgeVectorToWorldEngine,
 } from './world-forge-world-engine.js';
+
+test('World Forge and World Engine transforms round-trip across coordinate systems',()=>{
+  const point={x:2.25,y:-3.5,z:4.75};
+  const enginePoint=worldForgeVectorToWorldEngine(point,.5);
+  assert.deepEqual(
+    worldEngineVectorToWorldForge(enginePoint,.5),
+    point,
+  );
+
+  const rotations=[
+    {x:0,y:0,z:0},
+    {x:12,y:-25,z:47},
+    {x:-40,y:18,z:93},
+  ];
+  for(const rotation of rotations){
+    const engineRotation=worldForgeEulerToWorldEngine(rotation);
+    const restored=worldEngineEulerToWorldForge(engineRotation);
+    assert.ok(Math.abs(restored.x-rotation.x)<1e-7);
+    assert.ok(Math.abs(restored.y-rotation.y)<1e-7);
+    assert.ok(Math.abs(restored.z-rotation.z)<1e-7);
+  }
+});
 
 test('World Forge Z-up coordinates map deterministically into World Engine Y-up',()=>{
   assert.deepEqual(

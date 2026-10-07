@@ -88,6 +88,20 @@ type PlaySessionState={
   visualParity:string;
 };
 
+type PlayRuntimeProjection={
+  projectVersion:number;
+  worldVersion:number;
+  tick:number;
+  timeSec:number;
+  snapshotDigest:string;
+  nodeTransforms:Array<{
+    nodeId:string;
+    entityId:string;
+    transform:Transform;
+  }>;
+  canonicalAuthoringMutation:false;
+};
+
 const AXIS_STEP=.25;
 const WORLD_FORGE_STORAGE_KEY='evercraft.fallen.world-forge.active-project.v1';
 
@@ -707,6 +721,7 @@ export default function WorldForgeEditor(){
   const [nativePreview,setNativePreview]=useState<{svg:string;sha:string;renderer:string;solid:boolean}|null>(null);
   const [engineRuntime,setEngineRuntime]=useState<EngineRuntimeState|null>(null);
   const [playSession,setPlaySession]=useState<PlaySessionState|null>(null);
+  const [playProjection,setPlayProjection]=useState<PlayRuntimeProjection|null>(null);
   const [engineBridge,setEngineBridge]=useState<{
     worldId:string;
     digest:string;
@@ -831,6 +846,22 @@ export default function WorldForgeEditor(){
     return {...project,nodes};
   },[project,stageMode,stagedOperations]);
 
+  const displayProject=useMemo(()=>{
+    if(!viewportProject||!playSession||stageMode||!playProjection) return viewportProject;
+    const runtimeByNode=new Map(
+      playProjection.nodeTransforms.map(item=>[item.nodeId,item.transform]),
+    );
+    return {
+      ...viewportProject,
+      nodes:viewportProject.nodes.map(node=>{
+        const runtimeTransform=runtimeByNode.get(node.id);
+        return runtimeTransform
+          ? {...node,transform:structuredClone(runtimeTransform)}
+          : node;
+      }),
+    };
+  },[viewportProject,playSession,stageMode,playProjection]);
+
   const selected=viewportProject?.nodes.find(node=>node.id===selectedId)||null;
 
   function selectDefaultNode(nextProject:ForgeProject){
@@ -879,6 +910,7 @@ export default function WorldForgeEditor(){
       }
       setEngineRuntime(null);
       setPlaySession(playStateFromPayload(payload.session,payload.snapshot));
+      setPlayProjection(payload.projection as PlayRuntimeProjection);
       setCommandNote(
         `Play Mode started at tick ${payload.snapshot.tick} · runtime world v${payload.session.worldVersion}.`
       );
@@ -903,10 +935,12 @@ export default function WorldForgeEditor(){
         throw new Error(payload.error||'Could not stop World Forge Play Mode.');
       }
       setPlaySession(null);
+      setPlayProjection(null);
       if(!silent) setCommandNote(`Play Mode stopped at tick ${current.tick}.`);
     }catch(err){
       if(!silent) throw err;
       setPlaySession(null);
+      setPlayProjection(null);
     }
   }
 
@@ -929,6 +963,7 @@ export default function WorldForgeEditor(){
         throw new Error(payload.error||'World Forge Play Mode step failed.');
       }
       setPlaySession(playStateFromPayload(payload.session,payload.result.snapshot));
+      setPlayProjection(payload.projection as PlayRuntimeProjection);
       setCommandNote(
         `Play Mode advanced ${ticks} tick${ticks===1?'':'s'} → ${payload.result.snapshot.tick}.`
       );
@@ -957,6 +992,7 @@ export default function WorldForgeEditor(){
     }
     const snapshot=payload.result.runtimeSync?.snapshot;
     setPlaySession(playStateFromPayload(payload.result.session,snapshot));
+    setPlayProjection(payload.projection as PlayRuntimeProjection);
   }
 
   async function validateAndAdoptProject(candidate:ForgeProject,sourceLabel:string){
@@ -1568,6 +1604,12 @@ export default function WorldForgeEditor(){
         {playSession&&<span className="wf-play-runtime-meta">
           {playSession.webGpuReady?'GPU READY':'RUNTIME'} · {playSession.visualParity.toUpperCase()} · {playSession.timeSec.toFixed(3)}s
         </span>}
+        {playSession&&!stageMode&&playProjection&&<span className="wf-runtime-view-badge">
+          RUNTIME VIEW · t{playProjection.tick}
+        </span>}
+        {playSession&&stageMode&&<span className="wf-runtime-view-badge staged">
+          AUTHORING PREVIEW · runtime t{playSession.tick}
+        </span>}
       </div>
     </header>
 
@@ -1587,7 +1629,7 @@ export default function WorldForgeEditor(){
 
       <section className="wf-stage">
         <WorldViewport
-          project={viewportProject??project}
+          project={displayProject??viewportProject??project}
           selectedId={selectedId}
           onSelect={setSelectedId}
           onTranslate={commitViewportTranslate}

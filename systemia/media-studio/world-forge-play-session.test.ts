@@ -182,3 +182,41 @@ test('Play Mode registry enforces identity, capacity and stop semantics',()=>{
     /world_forge_play_session_missing:one/,
   );
 });
+
+
+test('Play Mode projects runtime transforms into Forge space without mutating authored state',()=>{
+  const project=createWorldForgeStarterProject();
+  const authoredHero=structuredClone(
+    project.nodes.find(node=>node.id==='hero-core')!.transform,
+  );
+  const session=new WorldForgePlaySession({
+    sessionId:'play-runtime-projection',
+    project,
+  });
+
+  const startProjection=session.runtimeProjection();
+  const startHero=startProjection.nodeTransforms.find(item=>item.nodeId==='hero-core');
+  assert.ok(startHero);
+  assert.deepEqual(startHero!.transform.position,authoredHero.position);
+  assert.equal(startProjection.canonicalAuthoringMutation,false);
+
+  session.step({
+    ticks:1,
+    inputs:[{
+      id:'teleport-runtime-hero',
+      tick:1,
+      entityId:'wfnode:hero-core',
+      kind:'teleport',
+      value:{x:4,y:2,z:-3},
+    }],
+  });
+
+  const projection=session.runtimeProjection();
+  const runtimeHero=projection.nodeTransforms.find(item=>item.nodeId==='hero-core');
+  assert.ok(runtimeHero);
+  assert.deepEqual(runtimeHero!.transform.position,{x:4,y:3,z:2});
+  assert.equal(projection.tick,1);
+
+  const authoredAfter=session.project.nodes.find(node=>node.id==='hero-core');
+  assert.deepEqual(authoredAfter?.transform,authoredHero);
+});
