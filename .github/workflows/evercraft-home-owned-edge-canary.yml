@@ -58,7 +58,28 @@ jobs:
           done
 
           if [ "$ok" != "true" ]; then
-            jq -n               --arg origin "$HOME_ORIGIN"               --argjson attempts "$attempts"               --arg observed "$(date -u +%Y-%m-%dT%H:%M:%SZ)"               '{schema:"evercraft.home.owned-edge-canary.v1",verified:false,state:"deployment_not_observed",origin:$origin,attempts:$attempts,observed_at:$observed}'               > artifacts/evercraft-home-owned-edge-canary.json
+            safe_health='{}'
+            if jq -e 'type=="object"' /tmp/home-health.json >/dev/null 2>&1; then
+              safe_health="$(jq -c '{
+                service:(.service//null),
+                runtime:(.runtime//null),
+                authority:(.authority//null),
+                auth_mode:(.auth_mode//null),
+                instance_id:(.instance_id//null),
+                source_release_ref:(.source_release_ref//null),
+                owner_claim_available:(.owner_claim_available//null),
+                owner_bootstrapped:(.owner_bootstrapped//null),
+                base44_required:(.base44_required//null),
+                external_ai_required:(.external_ai_required//null)
+              }' /tmp/home-health.json)"
+            fi
+            jq -n \
+              --arg origin "$HOME_ORIGIN" \
+              --argjson attempts "$attempts" \
+              --argjson sampled_health "$safe_health" \
+              --arg observed "$(date -u +%Y-%m-%dT%H:%M:%SZ)" \
+              '{schema:"evercraft.home.owned-edge-canary.v1",verified:false,state:"deployment_not_observed",origin:$origin,attempts:$attempts,sampled_health:$sampled_health,secret_material_included:false,observed_at:$observed}' \
+              > artifacts/evercraft-home-owned-edge-canary.json
             cat artifacts/evercraft-home-owned-edge-canary.json
             exit 1
           fi
