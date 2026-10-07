@@ -55,6 +55,9 @@ export function createPeopleRuntime({
     return {
       schema: 'evercraft.people.owned-state.v1',
       brains: [],
+      memories: [],
+      relationships: [],
+      opportunities: [],
       invites: [],
       identity_challenges: [],
       consent_events: [],
@@ -109,6 +112,9 @@ export function createPeopleRuntime({
       schema: state.schema,
       state_dir_configured: Boolean(stateDir),
       brain_count: state.brains.filter((row) => row.lifecycle_state !== 'archived').length,
+      memory_count: state.memories.length,
+      relationship_count: state.relationships.length,
+      opportunity_count: state.opportunities.length,
       consent_event_count: state.consent_events.length,
       invite_count: state.invites.length,
       identity_challenge_count: state.identity_challenges.length,
@@ -121,6 +127,21 @@ export function createPeopleRuntime({
     return load().brains
       .filter((row) => row.lifecycle_state !== 'archived')
       .map(safeBrain);
+  }
+
+  function brainSnapshot(brainKey) {
+    const state = load();
+    const brain = findBrain(state, brainKey);
+    if (!brain) throw new Error('brain_not_found');
+    return {
+      brain: safeBrain(brain),
+      memories: state.memories.filter((row) => row.brain_key === brain.brain_key),
+      relationships: state.relationships.filter((row) => row.brain_key === brain.brain_key),
+      opportunities: state.opportunities.filter((row) => row.brain_key === brain.brain_key),
+      consent_events: state.consent_events.filter((row) => row.brain_key === brain.brain_key),
+      share_receipts: state.share_receipts.filter((row) => row.brain_key === brain.brain_key),
+      data_requests: state.data_requests.filter((row) => row.brain_key === brain.brain_key),
+    };
   }
 
   function createBrain(input = {}) {
@@ -150,6 +171,217 @@ export function createPeopleRuntime({
     state.brains.push(brain);
     save(state, { event: 'brain_created', brain_key: brain.brain_key });
     return safeBrain(brain);
+  }
+
+  function createMemory(brainKey, input = {}) {
+    const state = load();
+    const brain = findBrain(state, brainKey);
+    if (!brain) throw new Error('brain_not_found');
+    const title = clean(input.title);
+    if (!title) throw new Error('memory_title_required');
+    const memory = {
+      memory_key: key('memory'),
+      brain_key: brain.brain_key,
+      title,
+      body: clean(input.body),
+      memory_type: clean(input.memory_type) || 'other',
+      sensitivity: clean(input.sensitivity) || 'private',
+      evidence_state: clean(input.evidence_state) || 'person_stated',
+      source_refs: Array.isArray(input.source_refs) ? input.source_refs.map(clean).filter(Boolean) : [],
+      created_at: now(),
+    };
+    state.memories.push(memory);
+    save(state, { event: 'memory_created', brain_key: brain.brain_key, memory_key: memory.memory_key });
+    return structuredClone(memory);
+  }
+
+  function createRelationship(brainKey, input = {}) {
+    const state = load();
+    const brain = findBrain(state, brainKey);
+    if (!brain) throw new Error('brain_not_found');
+    const counterpartName = clean(input.counterpart_name);
+    if (!counterpartName) throw new Error('counterpart_name_required');
+    const stamp = now();
+    const relationship = {
+      relationship_key: key('relationship'),
+      brain_key: brain.brain_key,
+      counterpart_name: counterpartName,
+      counterpart_type: clean(input.counterpart_type) || 'other',
+      purpose: clean(input.purpose),
+      access_scope: [],
+      access_state: 'proposed',
+      expires_at: null,
+      created_at: stamp,
+      updated_at: stamp,
+    };
+    state.relationships.push(relationship);
+    save(state, { event: 'relationship_created', brain_key: brain.brain_key, relationship_key: relationship.relationship_key });
+    return structuredClone(relationship);
+  }
+
+  function grantShare(brainKey, relationshipKey, input = {}) {
+    const state = load();
+    const brain = findBrain(state, brainKey);
+    if (!brain) throw new Error('brain_not_found');
+    if (brain.consent_state !== 'consented') throw new Error('brain_not_consented');
+    const relationship = state.relationships.find((row) =>
+      row.brain_key === brain.brain_key && row.relationship_key === clean(relationshipKey)
+    );
+    if (!relationship) throw new Error('relationship_not_found');
+    const confirmationRef = clean(input.person_confirmation_ref);
+    if (!confirmationRef) throw new Error('person_confirmation_ref_required');
+    const scopes = Array.isArray(input.scopes) ? input.scopes.map(clean).filter(Boolean) : [];
+    if (!scopes.length) throw new Error('share_scopes_required');
+
+    const stamp = now();
+    relationship.access_scope = [...new Set(scopes)];
+    relationship.access_state = 'granted';
+    relationship.purpose = clean(input.purpose) || relationship.purpose;
+    relationship.expires_at = clean(input.expires_at) || null;
+    relationship.updated_at = stamp;
+    const receipt = {
+      share_receipt_key: key('share'),
+      brain_key: brain.brain_key,
+      relationship_key: relationship.relationship_key,
+      action: 'grant',
+      scopes: [...relationship.access_scope],
+      purpose: relationship.purpose,
+      expires_at: relationship.expires_at,
+      person_confirmation_ref: confirmationRef,
+      actor: 'person-authorized',
+      occurred_at: stamp,
+    };
+    state.share_receipts.push(receipt);
+    save(state, { event: 'share_granted', brain_key: brain.brain_key, relationship_key: relationship.relationship_key, share_receipt_key: receipt.share_receipt_key });
+    return { relationship: structuredClone(relationship), receipt: structuredClone(receipt) };
+  }
+
+  function revokeShare(brainKey, relationshipKey, input = {}) {
+    const state = load();
+    const brain = findBrain(state, brainKey);
+    if (!brain) throw new Error('brain_not_found');
+    const relationship = state.relationships.find((row) =>
+      row.brain_key === brain.brain_key && row.relationship_key === clean(relationshipKey)
+    );
+    if (!relationship) throw new Error('relationship_not_found');
+    const confirmationRef = clean(input.person_confirmation_ref);
+    if (!confirmationRef) throw new Error('person_confirmation_ref_required');
+    const priorScopes = Array.isArray(relationship.access_scope) ? [...relationship.access_scope] : [];
+    const stamp = now();
+    relationship.access_scope = [];
+    relationship.access_state = 'revoked';
+    relationship.expires_at = null;
+    relationship.updated_at = stamp;
+    const receipt = {
+      share_receipt_key: key('share'),
+      brain_key: brain.brain_key,
+      relationship_key: relationship.relationship_key,
+      action: 'revoke',
+      scopes: priorScopes,
+      purpose: relationship.purpose,
+      expires_at: null,
+      person_confirmation_ref: confirmationRef,
+      actor: 'person-authorized',
+      occurred_at: stamp,
+    };
+    state.share_receipts.push(receipt);
+    save(state, { event: 'share_revoked', brain_key: brain.brain_key, relationship_key: relationship.relationship_key, share_receipt_key: receipt.share_receipt_key });
+    return { relationship: structuredClone(relationship), receipt: structuredClone(receipt) };
+  }
+
+  function revokeConsent(brainKey, input = {}) {
+    const state = load();
+    const brain = findBrain(state, brainKey);
+    if (!brain) throw new Error('brain_not_found');
+    const confirmationRef = clean(input.person_confirmation_ref);
+    if (!confirmationRef) throw new Error('person_confirmation_ref_required');
+    const stamp = now();
+    const revokedRelationships = [];
+
+    for (const relationship of state.relationships.filter((row) => row.brain_key === brain.brain_key && row.access_state === 'granted')) {
+      const priorScopes = Array.isArray(relationship.access_scope) ? [...relationship.access_scope] : [];
+      relationship.access_scope = [];
+      relationship.access_state = 'revoked';
+      relationship.expires_at = null;
+      relationship.updated_at = stamp;
+      revokedRelationships.push(relationship.relationship_key);
+      state.share_receipts.push({
+        share_receipt_key: key('share'),
+        brain_key: brain.brain_key,
+        relationship_key: relationship.relationship_key,
+        action: 'revoke',
+        scopes: priorScopes,
+        purpose: relationship.purpose,
+        expires_at: null,
+        person_confirmation_ref: confirmationRef,
+        actor: 'consent-revocation-cascade',
+        occurred_at: stamp,
+      });
+    }
+
+    brain.consent_state = 'revoked';
+    brain.domains_enabled = [];
+    brain.updated_at = stamp;
+    const event = {
+      consent_event_key: key('consent'),
+      brain_key: brain.brain_key,
+      event_type: 'consent_revoked',
+      scopes: [],
+      policy_version: clean(input.policy_version) || 'people-layer-consent-v1',
+      person_confirmation_ref: confirmationRef,
+      actor: 'person-authorized',
+      occurred_at: stamp,
+    };
+    state.consent_events.push(event);
+    save(state, { event: 'consent_revoked', brain_key: brain.brain_key, consent_event_key: event.consent_event_key, revoked_relationships: revokedRelationships });
+    return { brain: safeBrain(brain), event: structuredClone(event), revoked_relationships: revokedRelationships };
+  }
+
+  function createOpportunity(brainKey, input = {}) {
+    const state = load();
+    const brain = findBrain(state, brainKey);
+    if (!brain) throw new Error('brain_not_found');
+    const title = clean(input.title);
+    if (!title) throw new Error('opportunity_title_required');
+    const stamp = now();
+    const opportunity = {
+      opportunity_key: key('opportunity'),
+      brain_key: brain.brain_key,
+      title,
+      opportunity_type: clean(input.opportunity_type) || 'other',
+      summary: clean(input.summary),
+      fit_rationale: clean(input.fit_rationale),
+      evidence_state: clean(input.evidence_state) || 'unknown',
+      authority_state: 'discover_only',
+      status: 'new',
+      source_refs: Array.isArray(input.source_refs) ? input.source_refs.map(clean).filter(Boolean) : [],
+      person_confirmation_ref: '',
+      created_at: stamp,
+      updated_at: stamp,
+    };
+    state.opportunities.push(opportunity);
+    save(state, { event: 'opportunity_discovered', brain_key: brain.brain_key, opportunity_key: opportunity.opportunity_key });
+    return structuredClone(opportunity);
+  }
+
+  function setOpportunityAuthority(brainKey, opportunityKey, input = {}) {
+    const state = load();
+    const brain = findBrain(state, brainKey);
+    if (!brain) throw new Error('brain_not_found');
+    const opportunity = state.opportunities.find((row) =>
+      row.brain_key === brain.brain_key && row.opportunity_key === clean(opportunityKey)
+    );
+    if (!opportunity) throw new Error('opportunity_not_found');
+    const authorityState = clean(input.authority_state);
+    if (!['authorized', 'declined'].includes(authorityState)) throw new Error('opportunity_authority_state_invalid');
+    const confirmationRef = clean(input.person_confirmation_ref);
+    if (!confirmationRef) throw new Error('person_confirmation_ref_required');
+    opportunity.authority_state = authorityState;
+    opportunity.status = authorityState === 'authorized' ? 'accepted' : 'declined';
+    opportunity.person_confirmation_ref = confirmationRef;
+    opportunity.updated_at = now();
+    save(state, { event: 'opportunity_authority_changed', brain_key: brain.brain_key, opportunity_key: opportunity.opportunity_key, authority_state: authorityState });
+    return structuredClone(opportunity);
   }
 
   function createInvite(brainKey, input = {}) {
@@ -347,14 +579,31 @@ export function createPeopleRuntime({
       schema: 'evercraft-people-brain-export-v1',
       exported_at: now(),
       brain: safeBrain(brain),
+      memories: state.memories.filter((row) => row.brain_key === brain.brain_key),
+      relationships: state.relationships.filter((row) => row.brain_key === brain.brain_key),
+      opportunities: state.opportunities.filter((row) => row.brain_key === brain.brain_key),
       consent_events: state.consent_events.filter((row) => row.brain_key === brain.brain_key),
       share_receipts: state.share_receipts.filter((row) => row.brain_key === brain.brain_key),
       data_requests: state.data_requests.filter((row) => row.brain_key === brain.brain_key),
     };
     const serialized = JSON.stringify(payload);
+    const artifactHash = sha256(serialized);
+    const stamp = now();
+    const request = {
+      request_key: key('export'),
+      brain_key: brain.brain_key,
+      request_type: 'export',
+      status: 'completed',
+      artifact_hash: artifactHash,
+      requested_at: stamp,
+      completed_at: stamp,
+    };
+    state.data_requests.push(request);
+    save(state, { event: 'brain_exported', brain_key: brain.brain_key, request_key: request.request_key, artifact_hash: artifactHash });
     return {
       package: payload,
-      artifact_hash: sha256(serialized),
+      artifact_hash: artifactHash,
+      request: structuredClone(request),
     };
   }
 
@@ -392,6 +641,9 @@ export function createPeopleRuntime({
     if (!approved) throw new Error('approved_delete_request_required');
 
     state.brains = state.brains.filter((row) => row.brain_key !== brain.brain_key);
+    state.memories = state.memories.filter((row) => row.brain_key !== brain.brain_key);
+    state.relationships = state.relationships.filter((row) => row.brain_key !== brain.brain_key);
+    state.opportunities = state.opportunities.filter((row) => row.brain_key !== brain.brain_key);
     state.invites = state.invites.filter((row) => row.brain_key !== brain.brain_key);
     state.identity_challenges = state.identity_challenges.filter((row) => row.brain_key !== brain.brain_key);
     approved.status = 'completed';
@@ -403,7 +655,15 @@ export function createPeopleRuntime({
   return {
     health,
     listBrains,
+    brainSnapshot,
     createBrain,
+    createMemory,
+    createRelationship,
+    grantShare,
+    revokeShare,
+    revokeConsent,
+    createOpportunity,
+    setOpportunityAuthority,
     createInvite,
     inspectInvite,
     acceptInvite,
