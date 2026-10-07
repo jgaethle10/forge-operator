@@ -13,9 +13,10 @@ import {
   type WorldForgeMutationReceipt,
   type WorldForgeProject,
 } from './world-forge.js';
-import type {
-  WorldDefinition,
-  WorldEntity,
+import {
+  worldDefinitionDigest,
+  type WorldDefinition,
+  type WorldEntity,
 } from '../world-engine/engine.js';
 import {
   applyWorldEditTransaction,
