@@ -30,6 +30,7 @@ for (const app of catalog.apps) {
 
 const aliev = compileEvercraftOsApp("aliev");
 assert.equal(aliev.package_state, "contract_ready");
+assert.equal(aliev.contract_version, "1.0.0");
 assert.equal(aliev.installability, "eligible_for_os_install_flow");
 assert.equal(aliev.os_services.identity.inherited, true);
 assert.equal(aliev.os_services.authorization.passport_product, "rivet");
