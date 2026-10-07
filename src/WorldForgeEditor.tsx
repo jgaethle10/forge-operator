@@ -2043,7 +2043,8 @@ export default function WorldForgeEditor(){
                   busy||
                   stagedOperations.length>0||
                   selected?.physics?.mode!=='dynamic'||
-                  Boolean(playSession.runtimeBodies[selectedId]?.kinematic)
+                  Boolean(playSession.runtimeBodies[selectedId]?.kinematic)||
+                  transformMode!=='translate'
                 }
                 title={
                   stagedOperations.length
@@ -2068,6 +2069,21 @@ export default function WorldForgeEditor(){
             if(file) void importProject(file);
           }}
         />
+        <div className="wf-transform-modes" role="group" aria-label="Transform mode">
+          {([
+            ['translate','Move'],
+            ['rotate','Rotate'],
+            ['scale','Scale'],
+          ] as const).map(([mode,label])=><button
+            key={mode}
+            type="button"
+            className={transformMode===mode?'active':''}
+            onClick={()=>setTransformMode(mode)}
+            disabled={busy}
+          >
+            {label}
+          </button>)}
+        </div>
         <label className="wf-snap-control">
           <span>Snap</span>
           <select
@@ -2144,7 +2160,12 @@ export default function WorldForgeEditor(){
           selectedId={selectedId}
           onSelect={setSelectedId}
           onTranslate={commitViewportTranslate}
+          onRotate={commitViewportRotate}
+          onScale={commitViewportScale}
+          transformMode={transformMode}
           snapStep={snapStep}
+          angleSnapDeg={15}
+          scaleSnapStep={.1}
         />
         {engineBridge&&<div className="wf-engine-bridge-status">
           <strong>WORLD ENGINE</strong>
