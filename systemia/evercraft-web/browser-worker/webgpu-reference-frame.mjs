@@ -55,7 +55,7 @@ function sha256(value){
     .digest('hex');
 }
 
-function extractOwnedShader(repoRoot){
+export function extractOwnedShader(repoRoot){
   const file=path.join(repoRoot,'systemia','world-engine','webgpu.ts');
   const source=fs.readFileSync(file,'utf8');
   const match=source.match(/export const EVERCRAFT_WEBGPU_WGSL=\`([\s\S]*?)\`;\s*\n/);
