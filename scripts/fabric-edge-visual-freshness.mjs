@@ -56,6 +56,20 @@ async function getJson(pathname){
   catch{throw new Error('json_invalid:'+pathname);}
 }
 
+async function getOptionalJson(pathname){
+  const response=await timedFetch(origin+pathname,{headers:{accept:'application/json'}});
+  const text=await response.text();
+  if(response.status===404){
+    return {exists:false,status:404,body:null};
+  }
+  if(!response.ok) throw new Error('json_http_'+response.status+':'+pathname);
+  try{
+    return {exists:true,status:response.status,body:JSON.parse(text)};
+  }catch{
+    throw new Error('json_invalid:'+pathname);
+  }
+}
+
 function marker(text,pattern){
   const match=String(text||'').match(pattern);
   return match?.[1]||null;
@@ -76,13 +90,15 @@ try{
   const expectedPoster=fs.readFileSync(expectedPosterPath);
   const expectedPosterText=expectedPoster.toString('utf8');
 
-  const [health,catalog,livePoster,livePlan,liveQuality]=await Promise.all([
+  const [health,catalog,livePoster,livePlanResult,liveQualityResult]=await Promise.all([
     getJson('/health'),
     getJson('/visuals/index.json'),
     getText('/visuals/washington-active-volcanoes/poster-feed.svg'),
-    getJson('/visuals/washington-active-volcanoes/graphics-plan.json'),
-    getJson('/visuals/washington-active-volcanoes/poster-quality-report.json'),
+    getOptionalJson('/visuals/washington-active-volcanoes/graphics-plan.json'),
+    getOptionalJson('/visuals/washington-active-volcanoes/poster-quality-report.json'),
   ]);
+  const livePlan=livePlanResult.body;
+  const liveQuality=liveQualityResult.body;
 
   const livePosterBytes=Buffer.from(livePoster.text,'utf8');
   const catalogStory=(catalog.stories||[]).find(row=>row.slug==='washington-active-volcanoes')||null;
@@ -115,8 +131,12 @@ try{
       visual_desk_story_count:Number(health.visual_desk_story_count||0),
       catalog_story_digest:catalogStory?.storyDigest||null,
       catalog_published_at:catalogStory?.publishedAt||null,
-      graphics_plan_digest:livePlan.digest||null,
-      poster_quality_status:liveQuality.status||null,
+      graphics_plan_http_status:livePlanResult.status,
+      graphics_plan_present:livePlanResult.exists,
+      graphics_plan_digest:livePlan?.digest||null,
+      poster_quality_http_status:liveQualityResult.status,
+      poster_quality_present:liveQualityResult.exists,
+      poster_quality_status:liveQuality?.status||null,
       poster_sha256:sha256(livePosterBytes),
       poster_bytes:livePosterBytes.length,
       visual_model:liveModel,
@@ -131,6 +151,8 @@ try{
 
   result.freshness={
     story_digest_match:result.live.catalog_story_digest===result.expected.story_digest,
+    graphics_plan_present:result.live.graphics_plan_present===true,
+    poster_quality_present:result.live.poster_quality_present===true,
     graphics_plan_digest_match:result.live.graphics_plan_digest===result.expected.graphics_plan_digest,
     poster_sha256_match:result.live.poster_sha256===result.expected.poster_sha256,
     visual_model_match:result.live.visual_model===result.expected.visual_model,
