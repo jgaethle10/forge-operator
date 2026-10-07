@@ -3,7 +3,7 @@ import fs from 'node:fs';
 import path from 'node:path';
 import { pathToFileURL } from 'node:url';
 import crypto from 'node:crypto';
-import { fetchEspnFbsTeams, fetchEspnCompletedFbsGames } from './cfb-results-ingest.mjs';
+import { fetchNcaaFbsEvidence } from './cfb-results-ingest.mjs';
 import { buildCfbPowerIndexInputFromGames } from './cfb-results-model.mjs';
 import { buildCfbPowerRankings } from './cfb-power-index.mjs';
 
@@ -25,14 +25,14 @@ export async function runCfbPowerEvidenceCycle({
   now=new Date(),
 }={}){
   const evidenceThroughAt=new Date(throughDate+'T23:59:59.999Z').toISOString();
-  const membership=await fetchEspnFbsTeams({fetchImpl});
-  const eligibleTeamIds=new Set(membership.teams.map(team=>team.team_id));
-  const ledger=await fetchEspnCompletedFbsGames({
+  const evidence=await fetchNcaaFbsEvidence({
+    season,
     startDate,
     endDate:throughDate,
-    eligibleTeamIds,
     fetchImpl,
   });
+  const membership=evidence.membership;
+  const ledger=evidence.ledger;
   const evidenceSnapshotId='cfb:'+season+':'+throughDate+':'+sha256(JSON.stringify({
     membership:membership.teams,
     games:ledger.games,
