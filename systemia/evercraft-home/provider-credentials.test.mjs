@@ -7,7 +7,7 @@ import {
 } from './provider-credentials.mjs';
 
 test('provider credential intake is an explicit allowlist', () => {
-  assert.deepEqual(supportedCredentialProviders(), ['alpaca', 'google-places', 'kroger', 'kaggle', 'numerai', 'qloo', 'nebius', 'facebook-pages', 'gemini', 'openai']);
+  assert.deepEqual(supportedCredentialProviders(), ['alpaca', 'google-places', 'kroger', 'kaggle', 'numerai', 'qloo', 'nebius', 'paypal', 'facebook-pages', 'gemini', 'openai']);
   assert.equal(credentialProviderSpec('unknown'), null);
   assert.throws(
     () => normalizeProviderCredentialRequest('unknown', {}),
@@ -72,6 +72,18 @@ test('Nebius Token Factory key maps into the owned competition credential envelo
   assert.equal(row.apiKeyId, 'nebius-token-factory-key');
   assert.equal(row.apiSecret, 'nebius-fixture-secret-abcdefghijklmnopqrstuvwxyz');
   assert.equal(row.label, 'competition-runbook-zero');
+});
+
+test('PayPal sandbox credentials map into the owned competition credential envelope', () => {
+  const row = normalizeProviderCredentialRequest('paypal', {
+    client_id: 'paypal-client-fixture-123456',
+    client_secret: 'paypal-secret-fixture-abcdefghijklmnopqrstuvwxyz',
+  });
+  assert.equal(row.provider, 'paypal');
+  assert.equal(row.environment, 'sandbox');
+  assert.equal(row.apiKeyId, 'paypal-client-fixture-123456');
+  assert.equal(row.apiSecret, 'paypal-secret-fixture-abcdefghijklmnopqrstuvwxyz');
+  assert.equal(row.label, 'competition-checkout-black-box');
 });
 
 test('Facebook Pages maps Page identity and Page token into the owned generic credential envelope', () => {

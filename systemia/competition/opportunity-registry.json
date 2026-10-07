@@ -96,13 +96,13 @@
       "title": "PayPal AI Hackathon",
       "value": {
         "currency": "USD",
-        "cash_prize_min_visible_in_rules": 62500
+        "cash_prize_min_visible_in_rules": 67500
       },
       "deadline": "2026-11-12T20:00:00Z",
       "evidence": {
         "source": "https://paypalaihackathon.devpost.com/rules",
         "provider": "Devpost/PayPal",
-        "checked_on": "2026-10-05"
+        "checked_on": "2026-10-06"
       },
       "rules": {
         "verification_state": "verified",
@@ -123,10 +123,15 @@
         "competition-period significant-update explanation for prior work"
       ],
       "build": {
-        "candidate": "Evercraft Payments agentic-commerce control layer with PayPal sandbox integration",
-        "state": "not_started",
+        "candidate": "Checkout Black Box: AI purchase-intent authorization and PayPal settlement reconciliation",
+        "state": "prototype_implemented",
         "raven_qa_state": "not_run",
-        "submission_package_ready": false
+        "submission_package_ready": false,
+        "entry_package": "systemia/competition/entries/paypal-checkout-black-box",
+        "live_provider_canary": "not_run",
+        "public_repo_state": "not_extracted",
+        "hosted_demo_state": "not_verified",
+        "demo_video_state": "not_recorded"
       }
     },
     {
