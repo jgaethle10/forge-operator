@@ -5,7 +5,8 @@
       "path": "public/chum/intents/rivet-site-underwriting-v1/agent.json",
       "git_blob_sha": "0707363c71369a071ec81ca960dd0f2ad3536ba5",
       "authority": "governance/RIVET_CHANGE_CONTROL.md",
-      "rule": "preserve_exactly_until_explicit_rivet_approval"
+      "rule": "preserve_exactly_until_explicit_rivet_approval",
+      "approved_source_path": "governance/rivet-agent-approved.json"
     }
   ]
 }
