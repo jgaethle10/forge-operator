@@ -128,3 +128,21 @@ The score is not a secret engagement prediction. It is an auditable weighted com
 Political/government signals, stale signals, unknown truth state, missing provenance and missing geospatial measurements fail closed. A candidate never receives publication authority.
 
 The USGS earthquake collector preserves source latitude, longitude and depth in its measurements so Radar no longer discards geometry before visual admission. Visual Desk does not draw connecting lines between earthquake points because proximity is not evidence of causation or a route.
+
+
+## Radar materialization outbox
+
+Radar does not write directly into Fabric's Visual Desk runtime directory. Those services have independent runtime boundaries and may run with private temporary filesystems.
+
+Instead, every Radar cycle materializes admitted visual candidates inside the Radar state directory:
+
+```
+visual-admission.json
+visual-desk-outbox/
+  index.json
+  radar-<signal-key>.json
+```
+
+Each story JSON is directly consumable as `evercraft.visual-story.v1`. The index binds the story to its Radar edition, signal, observation, deterministic visual-priority score, score factors, source references and SHA-256 digest. The index is the active queue; historical story files may remain for lineage even when they are no longer active.
+
+This outbox is a transport boundary, not a publication boundary. It carries `publicationAuthority:false`. A separate authenticated transporter must move admitted stories into the live Fabric Visual Desk, after which Clip remains responsible for social publication policy and provider receipts.
