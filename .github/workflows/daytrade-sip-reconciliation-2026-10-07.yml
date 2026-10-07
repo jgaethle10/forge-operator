@@ -1,0 +1,33 @@
+name: DayTrade SIP Reconciliation 2026-10-07
+
+on:
+  push:
+    branches:
+      - "systemia/daytrade-sip-reconciliation-2026-10-07"
+
+permissions:
+  contents: read
+
+jobs:
+  reconcile:
+    runs-on: ubuntu-latest
+    timeout-minutes: 6
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Reconcile IEX decisions against delayed SIP
+        env:
+          ALPACA_TRADING: ${{ secrets.ALPACA_TRADING }}
+          ALPACA_TRADING_SECRET: ${{ secrets.ALPACA_TRADING_SECRET }}
+          DAYTRADE_SIP_RECONCILIATION_OUTPUT: artifacts/daytrade-edge/sip-reconciliation-2026-10-07.json
+        run: node systemia/daytrade-lens/edge-sip-reconciliation.mjs
+      - name: Upload reconciliation receipt
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: daytrade-sip-reconciliation-${{ github.run_id }}
+          path: artifacts/daytrade-edge/sip-reconciliation-2026-10-07.json
+          if-no-files-found: error
+          retention-days: 30
