@@ -2713,12 +2713,27 @@ export async function startEvercraftComputeNode({
         }
 
         if (workloadClass === 'systemia.lineage-control-room.v1') {
-          const workspaceRoot = path.resolve(String(
+          const requestedWorkspaceRoot = path.resolve(String(
             body.input?.workspace_root || allowedRoot
           ));
-          if (!isWithin(allowedRoot, workspaceRoot)) {
+          if (!isWithin(allowedRoot, requestedWorkspaceRoot)) {
             return send(res, 403, {
               error: 'lineage_control_room_workspace_outside_admitted_root',
+            });
+          }
+
+          let workspaceRoot;
+          try {
+            const admittedRealRoot = fs.realpathSync(allowedRoot);
+            workspaceRoot = fs.realpathSync(requestedWorkspaceRoot);
+            if (!isWithin(admittedRealRoot, workspaceRoot)) {
+              return send(res, 403, {
+                error: 'lineage_control_room_workspace_outside_admitted_root',
+              });
+            }
+          } catch {
+            return send(res, 422, {
+              error: 'lineage_control_room_workspace_unreadable',
             });
           }
 
