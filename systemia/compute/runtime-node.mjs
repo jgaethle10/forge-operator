@@ -20,6 +20,7 @@ import {
 import { startRivetReportRuntime } from '../rivet/report-runtime.mjs';
 import { startAliEvSourceRuntime } from '../aliev/source-runtime.mjs';
 import { startForensicRecordRuntime } from '../forensic-record/runtime.mjs';
+import { startForensicRecordPublicRuntime } from '../forensic-record/public-runtime.mjs';
 import { extractPublicForensicSnapshot } from '../migrations/base44-exit/forensic-record-public-extractor.mjs';
 import { importPublicForensicSnapshot } from '../migrations/base44-exit/forensic-record-public-snapshot-importer.mjs';
 import { startSpecialistHandoffRuntime } from '../mcp/specialist-handoff-runtime.mjs';
@@ -914,6 +915,7 @@ export async function startEvercraftComputeNode({
     'systemia.remote-capacity-broker.v1',
     'systemia.aliev-source-runtime.v1',
     'systemia.forensic-record-runtime.v1',
+    'systemia.forensic-record-public-runtime.v1',
     'systemia.rivet-report-runtime.v1',
     'systemia.specialist-handoff-mcp.v1',
     'systemia.fabric-local-mcp.v1',
@@ -1778,6 +1780,67 @@ export async function startEvercraftComputeNode({
             seed_finding_rows: result.seed_finding_rows,
             ingest_authority: ingestAuthority,
             ingest_token_exposed: false,
+          });
+          return send(res, 200, {
+            ok: true,
+            node_id: nodeId,
+            workload_class: body.workload_class,
+            result,
+            receipt,
+          });
+        }
+
+        if (workloadClass === 'systemia.forensic-record-public-runtime.v1') {
+          const stateRoot = path.resolve(String(
+            body.input?.state_root || path.join(allowedRoot, '.evercraft', 'forensic-record-runtime')
+          ));
+          if (!isWithin(allowedRoot, stateRoot)) {
+            return send(res, 403, { error: 'forensic_record_public_state_outside_admitted_root' });
+          }
+
+          let runtime;
+          try {
+            runtime = await startForensicRecordPublicRuntime({
+              stateDir: stateRoot,
+              host: '127.0.0.1',
+              port: Number(body.input?.port || 0),
+              requireSeed: body.input?.require_seed !== false,
+              maxRequestsPerMinute: Number(body.input?.max_requests_per_minute || 240),
+            });
+          } catch (error) {
+            return send(res, 422, {
+              error: error instanceof Error ? error.message : String(error),
+            });
+          }
+
+          const serviceId = `svc_${randomBytes(8).toString('hex')}`;
+          services.set(serviceId, {
+            lease_id: body.lease_id,
+            workload_class: body.workload_class,
+            runtime,
+            service: runtime,
+          });
+          const result = {
+            schema: 'evercraft.compute.resident-service.v1',
+            service_id: serviceId,
+            workload_class: body.workload_class,
+            service_url: null,
+            local_url: runtime.service_url,
+            health_path: `/v1/services/${serviceId}/health`,
+            public_route_required: true,
+            public_read_only: true,
+            safe_projection: true,
+            write_routes_exposed: false,
+            instance_id: runtime.instance_id,
+          };
+          const receipt = chain.issue('service.started', {
+            lease_id: body.lease_id,
+            service_id: serviceId,
+            workload_class: body.workload_class,
+            result_schema: result.schema,
+            instance_id: runtime.instance_id,
+            public_read_only: true,
+            write_routes_exposed: false,
           });
           return send(res, 200, {
             ok: true,

@@ -10,6 +10,11 @@ on:
       - 'systemia/yard/operator.mjs'
       - 'systemia/yard/forensic-record-resident-runtime.proof.mjs'
       - 'systemia/yard/forensic-record-seeded-runtime.proof.mjs'
+      - 'systemia/yard/forensic-record-public-runtime.proof.mjs'
+      - 'systemia/yard/forensic-record-public-edge-controller.mjs'
+      - 'systemia/yard/forensic-record-public-edge-controller.proof.mjs'
+      - 'systemia/forensic-record/public-runtime.mjs'
+      - 'systemia/forensic-record/public-runtime.proof.mjs'
       - 'systemia/organism/forensic-record-**'
       - 'systemia/core/resident-services.json'
       - 'systemia/core/supervisor.evercraft.compute.json'
@@ -27,6 +32,11 @@ on:
       - 'systemia/yard/operator.mjs'
       - 'systemia/yard/forensic-record-resident-runtime.proof.mjs'
       - 'systemia/yard/forensic-record-seeded-runtime.proof.mjs'
+      - 'systemia/yard/forensic-record-public-runtime.proof.mjs'
+      - 'systemia/yard/forensic-record-public-edge-controller.mjs'
+      - 'systemia/yard/forensic-record-public-edge-controller.proof.mjs'
+      - 'systemia/forensic-record/public-runtime.mjs'
+      - 'systemia/forensic-record/public-runtime.proof.mjs'
       - 'systemia/organism/forensic-record-**'
       - 'systemia/core/resident-services.json'
       - 'systemia/core/supervisor.evercraft.compute.json'
@@ -55,9 +65,17 @@ jobs:
         run: node systemia/migrations/base44-exit/forensic-record-reconciliation-hardening.proof.mjs
       - name: Prove owned content-addressed corpus
         run: node systemia/forensic-record/owned-corpus.proof.mjs
+      - name: Prove public read-only projection
+        run: node systemia/forensic-record/public-runtime.proof.mjs
       - name: Prove Yard / Evercraft Compute resident runtime
         run: node systemia/yard/forensic-record-resident-runtime.proof.mjs
       - name: Prove seeded resident runtime does not keep legacy source hot
         run: node systemia/yard/forensic-record-seeded-runtime.proof.mjs
+      - name: Prove public read-only workload through Yard
+        run: node systemia/yard/forensic-record-public-runtime.proof.mjs
+      - name: Prove public staging edge with real finding canary
+        run: node systemia/yard/forensic-record-public-edge-controller.proof.mjs
+      - name: Prove public staging Systemia wiring
+        run: node systemia/core/forensic-record-public-staging-wiring.proof.mjs
       - name: Prove Systemia resident supervision
         run: node systemia/core/forensic-record-resident-wiring.proof.mjs

@@ -37,6 +37,7 @@
     "aliev-owned-source",
     "rivet-report-edge",
     "forensic-record-owned-runtime",
+    "forensic-record-public-staging",
     "kaidance-mission-publisher",
     "sentinel-life-safety-watch",
     "cfb-clip-publisher"
@@ -89,6 +90,8 @@
     "resident_compute_manifest_matches_resident_service_registry",
     "competition_capacity_resident_supervised",
     "aliev_and_rivet_resident_services_supervised",
-    "forensic_record_resident_supervised"
+    "forensic_record_resident_supervised",
+    "forensic_record_public_staging_resident_supervised",
+    "forensic_record_canonical_domain_cutover_remains_separate_gate"
   ]
 }

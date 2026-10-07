@@ -245,6 +245,20 @@
       "restart_backoff_ms": 5000
     },
     {
+      "service_key": "forensic-record-public-staging",
+      "mode": "resident",
+      "manifest": "systemia/organism/forensic-record-public-staging.workflow.json",
+      "executable": "systemia/organism/forensic-record-public-edge-runner.mjs",
+      "optional_env_args": {
+        "--hostname": "FORENSIC_RECORD_STAGING_HOSTNAME",
+        "--lease-ttl-ms": "FORENSIC_RECORD_PUBLIC_YARD_LEASE_TTL_MS",
+        "--renew-every-ms": "FORENSIC_RECORD_PUBLIC_YARD_RENEW_EVERY_MS",
+        "--interval-ms": "FORENSIC_RECORD_PUBLIC_YARD_RECONCILE_INTERVAL_MS"
+      },
+      "max_restarts_per_hour": 12,
+      "restart_backoff_ms": 5000
+    },
+    {
       "service_key": "kaidance-mission-publisher",
       "mode": "resident",
       "manifest": "systemia/organism/mission-publisher.workflow.json",
