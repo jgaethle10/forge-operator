@@ -188,7 +188,9 @@ function orientPortal(
     return {left:ordered[0],right:ordered[1]};
   }
 
-  return firstSide>secondSide
+  // Funnel signed-area convention on the XZ plane treats the
+  // lower side value as the left portal endpoint.
+  return firstSide<secondSide
     ? {left:clone(edge[0]),right:clone(edge[1])}
     : {left:clone(edge[1]),right:clone(edge[0])};
 }
