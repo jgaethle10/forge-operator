@@ -21,12 +21,12 @@
   <url><loc>/chum/answers/index.txt</loc><lastmod>2026-10-07T16:33:22.074Z</lastmod></url>
   <url><loc>/chum/answers/observed/</loc><lastmod>2026-10-07T00:56:03.369Z</lastmod></url>
   <url><loc>/chum/answers/observed/index.json</loc><lastmod>2026-10-07T00:56:03.369Z</lastmod></url>
-  <url><loc>/chum/hot/</loc><lastmod>2026-10-07T16:35:00.403Z</lastmod></url>
-  <url><loc>/chum/hot/index.json</loc><lastmod>2026-10-07T16:44:23.056Z</lastmod></url>
+  <url><loc>/chum/hot/</loc><lastmod>2026-10-07T17:04:13.344Z</lastmod></url>
+  <url><loc>/chum/hot/index.json</loc><lastmod>2026-10-07T17:04:13.344Z</lastmod></url>
   <url><loc>/chum/strike/</loc><lastmod>2026-10-07T16:44:23.056Z</lastmod></url>
-  <url><loc>/chum/strike/index.json</loc><lastmod>2026-10-07T16:44:23.056Z</lastmod></url>
-  <url><loc>/chum/crawler-radar.json</loc><lastmod>2026-10-07T16:44:23.056Z</lastmod></url>
-  <url><loc>/chum/crawler-radar.txt</loc><lastmod>2026-10-07T16:44:23.056Z</lastmod></url>
+  <url><loc>/chum/strike/index.json</loc><lastmod>2026-10-07T17:04:13.344Z</lastmod></url>
+  <url><loc>/chum/crawler-radar.json</loc><lastmod>2026-10-07T17:04:13.344Z</lastmod></url>
+  <url><loc>/chum/crawler-radar.txt</loc><lastmod>2026-10-07T17:04:13.344Z</lastmod></url>
   <url><loc>/chum/proof/</loc><lastmod>2026-09-27T14:53:47.616Z</lastmod></url>
   <url><loc>/chum/proof/index.json</loc><lastmod>2026-10-07T16:33:22.074Z</lastmod></url>
   <url><loc>/chum/proof/llms.txt</loc><lastmod>2026-09-27T14:53:47.616Z</lastmod></url>
@@ -134,8 +134,8 @@
   <url><loc>/.well-known/evercraft-agent-commerce.json</loc><lastmod>2026-10-07T03:11:10.161Z</lastmod></url>
   <url><loc>/.well-known/evercraft-agent-interfaces.json</loc><lastmod>2026-10-02T17:01:08.152Z</lastmod></url>
   <url><loc>/.well-known/evercraft-discovery.json</loc><lastmod>2026-10-07T02:56:26.782Z</lastmod></url>
-  <url><loc>/.well-known/evercraft-products.json</loc><lastmod>2026-10-07T16:33:22.074Z</lastmod></url>
-  <url><loc>/.well-known/evercraft-machine-catalog.json</loc><lastmod>2026-10-07T03:00:11.898Z</lastmod></url>
+  <url><loc>/.well-known/evercraft-products.json</loc><lastmod>2026-10-07T17:04:12.964Z</lastmod></url>
+  <url><loc>/.well-known/evercraft-machine-catalog.json</loc><lastmod>2026-10-07T17:04:12.964Z</lastmod></url>
   <url><loc>/.well-known/evercraft-chum.json</loc><lastmod>2026-10-02T17:01:08.152Z</lastmod></url>
   <url><loc>/.well-known/evercraft-media-overflow.json</loc><lastmod>2026-10-02T17:01:08.152Z</lastmod></url>
   <url><loc>/.well-known/evercraft-capabilities.json</loc><lastmod>2026-10-02T17:01:08.152Z</lastmod></url>
