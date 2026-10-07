@@ -278,7 +278,7 @@ export class EvercraftPaymentOrderStore {
           metadata,
         },
       });
-      const order=materialize([event]);
+      const order=replay([event]);
       await atomicWrite(this.orderPath(orderId),JSON.stringify(order,null,2)+'\n');
       try{
         await atomicWrite(requestFile,JSON.stringify({
