@@ -1,5 +1,5 @@
 import { createHash, randomUUID } from 'node:crypto';
-import { mkdir, readFile, writeFile, readdir, rm } from 'node:fs/promises';
+import { mkdir, readFile, writeFile, readdir, rm, stat } from 'node:fs/promises';
 import { dirname, extname, join, relative, resolve, sep } from 'node:path';
 import { LargeObjectStore } from './large-object.mjs';
 
@@ -186,22 +186,27 @@ export class LineageStore {
     if (largeStore) await largeStore.init();
 
     for (const full of files) {
-      const bytes = await readFile(full);
       const path = normalizePath(relative(this.root, full));
       const kind = classifyAsset(path);
-      const contentSha256 = sha256(bytes);
+      const sourceStat = await stat(full);
+      if (!sourceStat.isFile()) continue;
+
       let objectId;
       let storage = 'blob';
       let manifestId = null;
+      let contentSha256;
+      let byteCount;
 
-      if (largeStore && bytes.length >= threshold) {
-        const stored = await largeStore.putBuffer(bytes, {
+      if (largeStore && sourceStat.size >= threshold) {
+        const stored = await largeStore.putFile(full, {
           logicalName: path,
           mediaType: mediaTypeForPath(path),
           chunking: largeObjectChunking,
         });
         manifestId = stored.manifest_id;
         storage = 'large_object';
+        contentSha256 = stored.content_sha256;
+        byteCount = stored.bytes;
         objectId = await this.putObject('large_blob_ref', {
           schema: 'evercraft.lineage.large-blob-ref.v1',
           manifest_id: stored.manifest_id,
@@ -211,6 +216,9 @@ export class LineageStore {
           media_type: mediaTypeForPath(path),
         });
       } else {
+        const bytes = await readFile(full);
+        contentSha256 = sha256(bytes);
+        byteCount = bytes.length;
         objectId = await this.putObject('blob', {
           encoding: 'base64',
           size: bytes.length,
@@ -225,7 +233,7 @@ export class LineageStore {
         mode: '100644',
         object_id: objectId,
         content_sha256: contentSha256,
-        bytes: bytes.length,
+        bytes: byteCount,
         storage,
         manifest_id: manifestId,
       });
@@ -372,11 +380,45 @@ export class LineageStore {
     const target = resolve(targetDir);
     if (clean && target !== this.root) await rm(target, { recursive: true, force: true });
     await mkdir(target, { recursive: true });
+    const large = new LargeObjectStore(this.dir);
+
     for (const entry of tree.entries) {
-      const bytes = await this.readEntryBytes(entry);
+      const object = await this.readObject(entry.object_id);
       const out = join(target, entry.path);
       await mkdir(dirname(out), { recursive: true });
-      await writeFile(out, bytes);
+
+      if (object.type === 'blob') {
+        const bytes = Buffer.from(object.payload.data, object.payload.encoding);
+        await writeFile(out, bytes);
+        continue;
+      }
+
+      if (object.type === 'large_blob_ref') {
+        const manifestId = object.payload.manifest_id;
+        if (!manifestId) {
+          throw new Error(`Large blob ref missing manifest for ${entry.path}`);
+        }
+        const restored = await large.writeToFile(manifestId, out);
+        if (
+          object.payload.content_sha256 &&
+          restored.content_sha256 !== object.payload.content_sha256
+        ) {
+          await rm(out, { force: true });
+          throw new Error(`Large blob ref content digest mismatch for ${entry.path}`);
+        }
+        if (
+          Number.isInteger(Number(object.payload.size)) &&
+          restored.bytes !== Number(object.payload.size)
+        ) {
+          await rm(out, { force: true });
+          throw new Error(`Large blob ref size mismatch for ${entry.path}`);
+        }
+        continue;
+      }
+
+      throw new Error(
+        `Unsupported tree entry object type ${object.type} for ${entry.path}`
+      );
     }
     const receiptId = await this._recordOperation({ operation: 'restore', commit_id: tree.commit_id, target, created_at: now(), destructive: false });
     return { commit_id: tree.commit_id, files: tree.entries.length, target, receipt_id: receiptId };
