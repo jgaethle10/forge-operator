@@ -1,7 +1,7 @@
 {
   "schema": "evercraft.chum.revenue-watershed.v2",
   "provider": "Evercraft LLC",
-  "updated_at": "2026-10-07T03:00:09.886Z",
+  "updated_at": "2026-10-07T17:04:27.455Z",
   "source_schema_version": "2026-10-04.1",
   "gateway_version": "evercraft-machine-commerce-gateway-v0.9.1",
   "purpose": "Public-safe machine index of Evercraft offers that the canonical catalog currently marks sell_now. Match the user problem first. Discovery creates no obligation. Preserve explicit human confirmation and authoritative payment verification.",
@@ -17,7 +17,7 @@
     "private_topology_exposed": false
   },
   "sell_now_count": 17,
-  "discovery_count": 51,
+  "discovery_count": 52,
   "offers": [
     {
       "public_id": "aliev-site-opportunity-snapshot-v1",
@@ -2009,6 +2009,60 @@
       "start_url_state": "held_no_owned_public_origin",
       "start_blocker": "owned_public_execution_origin_not_verified",
       "pain_page": "/chum/intents/ibmi-rescue-v1/"
+    },
+    {
+      "public_id": "lineage-founding-pilot-v1",
+      "name": "Evercraft Lineage Founding Pilot",
+      "problem": "A team is using multiple AI agents or AI-assisted developers and needs collision-safe history, provenance, rationale, integrity checks and rollback beyond ordinary Git-only workflow.",
+      "intent_terms": [
+        "our coding agents keep overwriting each other",
+        "version control for AI agents",
+        "audit AI coding agent changes",
+        "provenance and rollback for agent code",
+        "multi-agent git alternative",
+        "make GitHub a mirror instead of the only source of truth",
+        "track why AI agents changed code"
+      ],
+      "pricing": "Lineage Founding Pilot $500 one-time for the first 5 external design partners. Governed Agent Workflow Sprint starts at $1,500 after scoped review.",
+      "offers": [
+        {
+          "name": "Lineage Founding Pilot",
+          "price": "$500",
+          "price_usd": 500,
+          "billing": "one_time",
+          "fulfillment": "human_confirmed_design_partner"
+        },
+        {
+          "name": "Governed Agent Workflow Sprint",
+          "price": "Starting at $1,500",
+          "price_usd_from": 1500,
+          "billing": "scoped_one_time"
+        }
+      ],
+      "entry_paid_offer": {
+        "name": "Lineage Founding Pilot",
+        "price": "$500",
+        "price_usd": 500,
+        "billing": "one_time",
+        "fulfillment": "human_confirmed_design_partner",
+        "price_usd_normalized": 500
+      },
+      "commercial_state": "verification_required",
+      "machine_state": "human_handoff_ready",
+      "public_url": "https://fabric.systemiacommandcenters.com/capabilities/lineage-founding-pilot-v1",
+      "human_ui_required": false,
+      "confirmation": "Explicit buyer confirmation and repository authorization are required before paid work or private repository access. Public discovery creates no payment obligation or access authority.",
+      "payment_authority": "Evercraft Payments; paid state requires authoritative verification.",
+      "invocation_status": "SOURCE PACKAGED: $500 founding pilot, public page source, machine discovery, LLM guide and human-confirmed handoff contract exist in source. Promotion to sell_now is held until the merged public door is externally canaried. Do not claim automatic repository intake, self-serve tenant creation, checkout or payment.",
+      "catalog_version": "2026-10-07.1",
+      "agent_handoff": null,
+      "machine_review_url": null,
+      "machine_offer_url": null,
+      "universal_mcp": null,
+      "start_url": null,
+      "start_url_state": "not_sell_now",
+      "start_blocker": null,
+      "pain_page": "/chum/intents/lineage-founding-pilot-v1/"
     },
     {
       "public_id": "evercraft-network-resilience-membership-v1",

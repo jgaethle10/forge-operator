@@ -20,12 +20,12 @@
     "provider_publication_is_not_endorsement_or_pickup_proof": true
   },
   "summary": {
-    "pain_index_entries": 117,
-    "unique_user_phrases": 1062,
-    "mapped_candidate_edges": 1168,
-    "ambiguous_phrases": 106,
-    "product_candidates": 66,
-    "machine_offer_candidates": 51
+    "pain_index_entries": 119,
+    "unique_user_phrases": 1075,
+    "mapped_candidate_edges": 1183,
+    "ambiguous_phrases": 108,
+    "product_candidates": 67,
+    "machine_offer_candidates": 52
   },
   "doors": [
     {
@@ -1365,6 +1365,29 @@
       ]
     },
     {
+      "answer_id": "intent:53fa6db09b",
+      "user_language": "audit AI coding agent changes",
+      "normalized": "audit ai coding agent changes",
+      "relative_json": "/chum/answers/doors/audit-ai-coding-agent-changes-53fa6db09b.json",
+      "relative_page": "/chum/answers/doors/audit-ai-coding-agent-changes-53fa6db09b/",
+      "raw_json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/audit-ai-coding-agent-changes-53fa6db09b.json",
+      "candidate_count": 1,
+      "candidates": [
+        {
+          "capability_id": "offer:lineage-founding-pilot-v1",
+          "kind": "machine_offer",
+          "product_key": null,
+          "public_id": "lineage-founding-pilot-v1",
+          "name": "Evercraft Lineage Founding Pilot",
+          "commercial_state": "verification_required",
+          "machine_state": "human_handoff_ready",
+          "pain_page": "/chum/intents/lineage-founding-pilot-v1/",
+          "public_url": "https://fabric.systemiacommandcenters.com/capabilities/lineage-founding-pilot-v1",
+          "registry_name": null
+        }
+      ]
+    },
+    {
       "answer_id": "intent:0e1ca78c9c",
       "user_language": "audit an enterprise operations process",
       "normalized": "audit an enterprise operations process",
@@ -1684,6 +1707,29 @@
           "pain_page": "/chum/products/little-red-book-export-qa/",
           "public_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/little-red-book-export-qa/index.html",
           "registry_name": "io.github.jgaethle10/evercraft-machine-commerce"
+        }
+      ]
+    },
+    {
+      "answer_id": "intent:83aeab1316",
+      "user_language": "audit what AI coding agents changed and why",
+      "normalized": "audit what ai coding agents changed and why",
+      "relative_json": "/chum/answers/doors/audit-what-ai-coding-agents-changed-and-why-83aeab1316.json",
+      "relative_page": "/chum/answers/doors/audit-what-ai-coding-agents-changed-and-why-83aeab1316/",
+      "raw_json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/audit-what-ai-coding-agents-changed-and-why-83aeab1316.json",
+      "candidate_count": 1,
+      "candidates": [
+        {
+          "capability_id": "product:lineage",
+          "kind": "product",
+          "product_key": "lineage",
+          "public_id": null,
+          "name": "Evercraft Lineage",
+          "commercial_state": "product_contract",
+          "machine_state": "discovery_only",
+          "pain_page": "/chum/products/lineage/",
+          "public_url": "https://jgaethle10.github.io/forge-operator/lineage/",
+          "registry_name": null
         }
       ]
     },
@@ -11011,6 +11057,29 @@
       ]
     },
     {
+      "answer_id": "intent:039f003452",
+      "user_language": "human and AI agent changes in one auditable history",
+      "normalized": "human and ai agent changes in one auditable history",
+      "relative_json": "/chum/answers/doors/human-and-ai-agent-changes-in-one-auditable-history-039f003452.json",
+      "relative_page": "/chum/answers/doors/human-and-ai-agent-changes-in-one-auditable-history-039f003452/",
+      "raw_json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/human-and-ai-agent-changes-in-one-auditable-history-039f003452.json",
+      "candidate_count": 1,
+      "candidates": [
+        {
+          "capability_id": "product:lineage",
+          "kind": "product",
+          "product_key": "lineage",
+          "public_id": null,
+          "name": "Evercraft Lineage",
+          "commercial_state": "product_contract",
+          "machine_state": "discovery_only",
+          "pain_page": "/chum/products/lineage/",
+          "public_url": "https://jgaethle10.github.io/forge-operator/lineage/",
+          "registry_name": null
+        }
+      ]
+    },
+    {
       "answer_id": "intent:6d0359b43e",
       "user_language": "I am considering opening another location and hiring more people before I sign a lease or add payroll",
       "normalized": "i am considering opening another location and hiring more people before i sign a lease or add payroll",
@@ -13739,6 +13808,41 @@
       ]
     },
     {
+      "answer_id": "intent:8d8eb8313b",
+      "user_language": "make GitHub a mirror instead of the only source of truth",
+      "normalized": "make github a mirror instead of the only source of truth",
+      "relative_json": "/chum/answers/doors/make-github-a-mirror-instead-of-the-only-source-of-truth-8d8eb8313b.json",
+      "relative_page": "/chum/answers/doors/make-github-a-mirror-instead-of-the-only-source-of-truth-8d8eb8313b/",
+      "raw_json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/make-github-a-mirror-instead-of-the-only-source-of-truth-8d8eb8313b.json",
+      "candidate_count": 2,
+      "candidates": [
+        {
+          "capability_id": "offer:lineage-founding-pilot-v1",
+          "kind": "machine_offer",
+          "product_key": null,
+          "public_id": "lineage-founding-pilot-v1",
+          "name": "Evercraft Lineage Founding Pilot",
+          "commercial_state": "verification_required",
+          "machine_state": "human_handoff_ready",
+          "pain_page": "/chum/intents/lineage-founding-pilot-v1/",
+          "public_url": "https://fabric.systemiacommandcenters.com/capabilities/lineage-founding-pilot-v1",
+          "registry_name": null
+        },
+        {
+          "capability_id": "product:lineage",
+          "kind": "product",
+          "product_key": "lineage",
+          "public_id": null,
+          "name": "Evercraft Lineage",
+          "commercial_state": "product_contract",
+          "machine_state": "discovery_only",
+          "pain_page": "/chum/products/lineage/",
+          "public_url": "https://jgaethle10.github.io/forge-operator/lineage/",
+          "registry_name": null
+        }
+      ]
+    },
+    {
       "answer_id": "intent:1b0d24ff89",
       "user_language": "make me a decision grade research report",
       "normalized": "make me a decision grade research report",
@@ -14733,6 +14837,29 @@
       ]
     },
     {
+      "answer_id": "intent:fe2f1bdbe6",
+      "user_language": "multi-agent git alternative",
+      "normalized": "multi agent git alternative",
+      "relative_json": "/chum/answers/doors/multi-agent-git-alternative-fe2f1bdbe6.json",
+      "relative_page": "/chum/answers/doors/multi-agent-git-alternative-fe2f1bdbe6/",
+      "raw_json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/multi-agent-git-alternative-fe2f1bdbe6.json",
+      "candidate_count": 1,
+      "candidates": [
+        {
+          "capability_id": "offer:lineage-founding-pilot-v1",
+          "kind": "machine_offer",
+          "product_key": null,
+          "public_id": "lineage-founding-pilot-v1",
+          "name": "Evercraft Lineage Founding Pilot",
+          "commercial_state": "verification_required",
+          "machine_state": "human_handoff_ready",
+          "pain_page": "/chum/intents/lineage-founding-pilot-v1/",
+          "public_url": "https://fabric.systemiacommandcenters.com/capabilities/lineage-founding-pilot-v1",
+          "registry_name": null
+        }
+      ]
+    },
+    {
       "answer_id": "intent:061e00f507",
       "user_language": "multi-hour video analysis",
       "normalized": "multi hour video analysis",
@@ -15558,6 +15685,41 @@
           "machine_state": "discovery_only",
           "pain_page": "/chum/intents/buildflow-enterprise-ops-router-v1/",
           "public_url": "https://fabric.systemiacommandcenters.com/capabilities/buildflow-enterprise-ops-router-v1",
+          "registry_name": null
+        }
+      ]
+    },
+    {
+      "answer_id": "intent:6c74274941",
+      "user_language": "our coding agents keep overwriting each other",
+      "normalized": "our coding agents keep overwriting each other",
+      "relative_json": "/chum/answers/doors/our-coding-agents-keep-overwriting-each-other-6c74274941.json",
+      "relative_page": "/chum/answers/doors/our-coding-agents-keep-overwriting-each-other-6c74274941/",
+      "raw_json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/our-coding-agents-keep-overwriting-each-other-6c74274941.json",
+      "candidate_count": 2,
+      "candidates": [
+        {
+          "capability_id": "offer:lineage-founding-pilot-v1",
+          "kind": "machine_offer",
+          "product_key": null,
+          "public_id": "lineage-founding-pilot-v1",
+          "name": "Evercraft Lineage Founding Pilot",
+          "commercial_state": "verification_required",
+          "machine_state": "human_handoff_ready",
+          "pain_page": "/chum/intents/lineage-founding-pilot-v1/",
+          "public_url": "https://fabric.systemiacommandcenters.com/capabilities/lineage-founding-pilot-v1",
+          "registry_name": null
+        },
+        {
+          "capability_id": "product:lineage",
+          "kind": "product",
+          "product_key": "lineage",
+          "public_id": null,
+          "name": "Evercraft Lineage",
+          "commercial_state": "product_contract",
+          "machine_state": "discovery_only",
+          "pain_page": "/chum/products/lineage/",
+          "public_url": "https://jgaethle10.github.io/forge-operator/lineage/",
           "registry_name": null
         }
       ]
@@ -17392,6 +17554,52 @@
           "machine_state": "discovery_only",
           "pain_page": "/chum/products/systemia-university/",
           "public_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/systemia-university/index.html",
+          "registry_name": null
+        }
+      ]
+    },
+    {
+      "answer_id": "intent:dba41093a0",
+      "user_language": "provenance and rollback for agent code",
+      "normalized": "provenance and rollback for agent code",
+      "relative_json": "/chum/answers/doors/provenance-and-rollback-for-agent-code-dba41093a0.json",
+      "relative_page": "/chum/answers/doors/provenance-and-rollback-for-agent-code-dba41093a0/",
+      "raw_json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/provenance-and-rollback-for-agent-code-dba41093a0.json",
+      "candidate_count": 1,
+      "candidates": [
+        {
+          "capability_id": "offer:lineage-founding-pilot-v1",
+          "kind": "machine_offer",
+          "product_key": null,
+          "public_id": "lineage-founding-pilot-v1",
+          "name": "Evercraft Lineage Founding Pilot",
+          "commercial_state": "verification_required",
+          "machine_state": "human_handoff_ready",
+          "pain_page": "/chum/intents/lineage-founding-pilot-v1/",
+          "public_url": "https://fabric.systemiacommandcenters.com/capabilities/lineage-founding-pilot-v1",
+          "registry_name": null
+        }
+      ]
+    },
+    {
+      "answer_id": "intent:7b63d1863c",
+      "user_language": "provenance and rollback for agent-generated code",
+      "normalized": "provenance and rollback for agent generated code",
+      "relative_json": "/chum/answers/doors/provenance-and-rollback-for-agent-generated-code-7b63d1863c.json",
+      "relative_page": "/chum/answers/doors/provenance-and-rollback-for-agent-generated-code-7b63d1863c/",
+      "raw_json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/provenance-and-rollback-for-agent-generated-code-7b63d1863c.json",
+      "candidate_count": 1,
+      "candidates": [
+        {
+          "capability_id": "product:lineage",
+          "kind": "product",
+          "product_key": "lineage",
+          "public_id": null,
+          "name": "Evercraft Lineage",
+          "commercial_state": "product_contract",
+          "machine_state": "discovery_only",
+          "pain_page": "/chum/products/lineage/",
+          "public_url": "https://jgaethle10.github.io/forge-operator/lineage/",
           "registry_name": null
         }
       ]
@@ -22926,6 +23134,29 @@
       ]
     },
     {
+      "answer_id": "intent:36ded47190",
+      "user_language": "track rationale and authority around AI-generated changes",
+      "normalized": "track rationale and authority around ai generated changes",
+      "relative_json": "/chum/answers/doors/track-rationale-and-authority-around-ai-generated-changes-36ded47190.json",
+      "relative_page": "/chum/answers/doors/track-rationale-and-authority-around-ai-generated-changes-36ded47190/",
+      "raw_json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/track-rationale-and-authority-around-ai-generated-changes-36ded47190.json",
+      "candidate_count": 1,
+      "candidates": [
+        {
+          "capability_id": "product:lineage",
+          "kind": "product",
+          "product_key": "lineage",
+          "public_id": null,
+          "name": "Evercraft Lineage",
+          "commercial_state": "product_contract",
+          "machine_state": "discovery_only",
+          "pain_page": "/chum/products/lineage/",
+          "public_url": "https://jgaethle10.github.io/forge-operator/lineage/",
+          "registry_name": null
+        }
+      ]
+    },
+    {
       "answer_id": "intent:531cd56642",
       "user_language": "track referrals and professional introductions",
       "normalized": "track referrals and professional introductions",
@@ -23060,6 +23291,29 @@
           "pain_page": "/chum/products/faie/",
           "public_url": "https://fabric.systemiacommandcenters.com/faie/",
           "registry_name": "io.github.jgaethle10/faie"
+        }
+      ]
+    },
+    {
+      "answer_id": "intent:09db8fa338",
+      "user_language": "track why AI agents changed code",
+      "normalized": "track why ai agents changed code",
+      "relative_json": "/chum/answers/doors/track-why-ai-agents-changed-code-09db8fa338.json",
+      "relative_page": "/chum/answers/doors/track-why-ai-agents-changed-code-09db8fa338/",
+      "raw_json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/track-why-ai-agents-changed-code-09db8fa338.json",
+      "candidate_count": 1,
+      "candidates": [
+        {
+          "capability_id": "offer:lineage-founding-pilot-v1",
+          "kind": "machine_offer",
+          "product_key": null,
+          "public_id": "lineage-founding-pilot-v1",
+          "name": "Evercraft Lineage Founding Pilot",
+          "commercial_state": "verification_required",
+          "machine_state": "human_handoff_ready",
+          "pain_page": "/chum/intents/lineage-founding-pilot-v1/",
+          "public_url": "https://fabric.systemiacommandcenters.com/capabilities/lineage-founding-pilot-v1",
+          "registry_name": null
         }
       ]
     },
@@ -24143,6 +24397,75 @@
           "machine_state": "discovery_only",
           "pain_page": "/chum/intents/ai-capability-install-v1/",
           "public_url": null,
+          "registry_name": null
+        }
+      ]
+    },
+    {
+      "answer_id": "intent:0ebaa9b3a4",
+      "user_language": "version code plus large media data or 3D assets",
+      "normalized": "version code plus large media data or 3d assets",
+      "relative_json": "/chum/answers/doors/version-code-plus-large-media-data-or-3d-assets-0ebaa9b3a4.json",
+      "relative_page": "/chum/answers/doors/version-code-plus-large-media-data-or-3d-assets-0ebaa9b3a4/",
+      "raw_json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/version-code-plus-large-media-data-or-3d-assets-0ebaa9b3a4.json",
+      "candidate_count": 1,
+      "candidates": [
+        {
+          "capability_id": "product:lineage",
+          "kind": "product",
+          "product_key": "lineage",
+          "public_id": null,
+          "name": "Evercraft Lineage",
+          "commercial_state": "product_contract",
+          "machine_state": "discovery_only",
+          "pain_page": "/chum/products/lineage/",
+          "public_url": "https://jgaethle10.github.io/forge-operator/lineage/",
+          "registry_name": null
+        }
+      ]
+    },
+    {
+      "answer_id": "intent:d899547941",
+      "user_language": "version control designed for multiple AI agents",
+      "normalized": "version control designed for multiple ai agents",
+      "relative_json": "/chum/answers/doors/version-control-designed-for-multiple-ai-agents-d899547941.json",
+      "relative_page": "/chum/answers/doors/version-control-designed-for-multiple-ai-agents-d899547941/",
+      "raw_json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/version-control-designed-for-multiple-ai-agents-d899547941.json",
+      "candidate_count": 1,
+      "candidates": [
+        {
+          "capability_id": "product:lineage",
+          "kind": "product",
+          "product_key": "lineage",
+          "public_id": null,
+          "name": "Evercraft Lineage",
+          "commercial_state": "product_contract",
+          "machine_state": "discovery_only",
+          "pain_page": "/chum/products/lineage/",
+          "public_url": "https://jgaethle10.github.io/forge-operator/lineage/",
+          "registry_name": null
+        }
+      ]
+    },
+    {
+      "answer_id": "intent:5095c63425",
+      "user_language": "version control for AI agents",
+      "normalized": "version control for ai agents",
+      "relative_json": "/chum/answers/doors/version-control-for-ai-agents-5095c63425.json",
+      "relative_page": "/chum/answers/doors/version-control-for-ai-agents-5095c63425/",
+      "raw_json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/version-control-for-ai-agents-5095c63425.json",
+      "candidate_count": 1,
+      "candidates": [
+        {
+          "capability_id": "offer:lineage-founding-pilot-v1",
+          "kind": "machine_offer",
+          "product_key": null,
+          "public_id": "lineage-founding-pilot-v1",
+          "name": "Evercraft Lineage Founding Pilot",
+          "commercial_state": "verification_required",
+          "machine_state": "human_handoff_ready",
+          "pain_page": "/chum/intents/lineage-founding-pilot-v1/",
+          "public_url": "https://fabric.systemiacommandcenters.com/capabilities/lineage-founding-pilot-v1",
           "registry_name": null
         }
       ]

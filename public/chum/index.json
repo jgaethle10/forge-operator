@@ -1,7 +1,7 @@
 {
   "schema": "evercraft.chum.public-mirror.v1",
   "provider": "Evercraft LLC",
-  "updated_at": "2026-10-06",
+  "updated_at": "2026-10-07",
   "purpose": "Product-specific machine discovery mirrors generated from Evercraft public contracts. Mirrors preserve public discovery when a product host cannot reliably serve machine files.",
   "read_only_registry_name": "io.github.jgaethle10/evercraft-capability-discovery",
   "pain_index": "/.well-known/evercraft-pain-index.json",
@@ -1200,6 +1200,47 @@
         "hub": "/legacy-rescue-lab/distribution/",
         "social_pack": "/legacy-rescue-lab/distribution/social-pack.json"
       },
+      "proof_library": null
+    },
+    {
+      "product_key": "lineage",
+      "name": "Evercraft Lineage",
+      "aliases": [
+        "Lineage",
+        "Evercraft Lineage Control Room"
+      ],
+      "canonical_url": "https://jgaethle10.github.io/forge-operator/lineage/",
+      "llms_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/lineage/llms.txt",
+      "discovery_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/lineage/ai-discovery.json",
+      "conformance_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/lineage/ai-conformance.json",
+      "page_url": "/chum/products/lineage/",
+      "registry_name": null,
+      "mcp": null,
+      "commercial": {
+        "status": "human_handoff_packaged_public_door_pending_external_canary",
+        "offers": [
+          {
+            "name": "Lineage Founding Pilot",
+            "price": "$500 one-time",
+            "availability": "first 5 external design partners"
+          },
+          {
+            "name": "Governed Agent Workflow Sprint",
+            "price": "Starting at $1,500 after scoped technical review"
+          }
+        ],
+        "payment_state": "Evercraft Payments is authoritative; a handoff or checkout is not payment proof and paid state requires authoritative verification"
+      },
+      "human_start_url": null,
+      "buyer_frontage_url": null,
+      "developer_surfaces": null,
+      "editorial_surfaces": null,
+      "knowledge_surfaces": {
+        "hub": "/lineage/",
+        "llms": "/lineage/llms.txt",
+        "discovery": "/lineage/discovery.json"
+      },
+      "distribution_surfaces": null,
       "proof_library": null
     },
     {

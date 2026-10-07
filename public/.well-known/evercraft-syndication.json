@@ -36,7 +36,7 @@
     "rule": "Only authorized brand destinations may auto-publish. Dedupe by product content hash and publish material changes, not repeated copies.",
     "current_change_queue": "/chum/syndication/social-queue.json"
   },
-  "product_count": 66,
+  "product_count": 67,
   "products": [
     {
       "product_key": "aliev",
@@ -301,6 +301,17 @@
       "registry_name": "io.github.jgaethle10/evercraft-machine-commerce",
       "mcp": null,
       "content_sha256": "f18e321d8b6ae3270fbf2f057f22d3d79abb09dca34e44fc284b60c4e3c6b6a0"
+    },
+    {
+      "product_key": "lineage",
+      "name": "Evercraft Lineage",
+      "canonical_url": "https://jgaethle10.github.io/forge-operator/lineage/",
+      "mirror": "/chum/products/lineage/",
+      "llms": "/chum/products/lineage/llms.txt",
+      "discovery": "/chum/products/lineage/ai-discovery.json",
+      "registry_name": null,
+      "mcp": null,
+      "content_sha256": "d700e0cfe859eb2a0a8c742e281b4970cc9674791af87155da572c40385684c9"
     },
     {
       "product_key": "evercraft-network",

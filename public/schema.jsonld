@@ -630,6 +630,21 @@
     },
     {
       "@type": "Service",
+      "@id": "https://jgaethle10.github.io/forge-operator/lineage/#evercraft-service",
+      "name": "Evercraft Lineage",
+      "alternateName": [
+        "Lineage",
+        "Evercraft Lineage Control Room"
+      ],
+      "url": "https://jgaethle10.github.io/forge-operator/lineage/",
+      "provider": {
+        "@id": "https://github.com/jgaethle10/forge-operator#evercraft"
+      },
+      "serviceType": "governed_multi_agent_history_and_version_control",
+      "description": "our coding agents keep overwriting each other; version control designed for multiple AI agents; audit what AI coding agents changed and why; provenance and rollback for agent-generated code"
+    },
+    {
+      "@type": "Service",
       "@id": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/little-red-book-export-qa/index.html#evercraft-service",
       "name": "Little Red Studio Book Export QA",
       "alternateName": [

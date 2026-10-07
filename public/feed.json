@@ -429,6 +429,25 @@
       ]
     },
     {
+      "id": "urn:evercraft:product:lineage:d700e0cfe859eb2a",
+      "url": "https://jgaethle10.github.io/forge-operator/lineage/",
+      "external_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/lineage/ai-discovery.json",
+      "title": "Evercraft Lineage",
+      "summary": "Evercraft Lineage is an Evercraft governed multi agent history and version control capability. Common needs: our coding agents keep overwriting each other; version control designed for multiple AI agents; audit what AI coding agents changed and why; provenance and rollback for agent-generated code.",
+      "date_modified": "2026-10-06T00:00:00.000Z",
+      "tags": [
+        "governed_multi_agent_history_and_version_control",
+        "our coding agents keep overwriting each other",
+        "version control designed for multiple AI agents",
+        "audit what AI coding agents changed and why",
+        "provenance and rollback for agent-generated code",
+        "human and AI agent changes in one auditable history",
+        "make GitHub a mirror instead of the only source of truth",
+        "version code plus large media data or 3D assets",
+        "track rationale and authority around AI-generated changes"
+      ]
+    },
+    {
       "id": "urn:evercraft:product:evercraft-network:999dd9c89e397f3f",
       "url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/evercraft-network/index.html",
       "external_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/evercraft-network/ai-discovery.json",

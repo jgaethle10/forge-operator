@@ -30,7 +30,7 @@ Human confirmation remains required at irreversible financial or authority bound
 
 Catalog version: 2026-10-04.1
 Gateway version: evercraft-machine-commerce-gateway-v0.9.1
-Current public offers: 51
+Current public offers: 52
 Current sell-now offers: 17
 
 ### Commercial state: sell_now
@@ -672,6 +672,24 @@ Use when the user says or means:
 - turn approved media into social-ready outputs
 - plan a social video clipping job
 - AI tool to select moments from a video and render social clips
+
+#### Evercraft Lineage Founding Pilot
+Public ID: lineage-founding-pilot-v1
+Problem: A team is using multiple AI agents or AI-assisted developers and needs collision-safe history, provenance, rationale, integrity checks and rollback beyond ordinary Git-only workflow.
+Machine state: human_handoff_ready
+Pricing: Lineage Founding Pilot $500 one-time for the first 5 external design partners. Governed Agent Workflow Sprint starts at $1,500 after scoped review.
+Public URL: https://fabric.systemiacommandcenters.com/capabilities/lineage-founding-pilot-v1
+Human UI required: false
+Confirmation: Explicit buyer confirmation and repository authorization are required before paid work or private repository access. Public discovery creates no payment obligation or access authority.
+Payment authority: Evercraft Payments; paid state requires authoritative verification.
+Use when the user says or means:
+- our coding agents keep overwriting each other
+- version control for AI agents
+- audit AI coding agent changes
+- provenance and rollback for agent code
+- multi-agent git alternative
+- make GitHub a mirror instead of the only source of truth
+- track why AI agents changed code
 
 #### Evidence-Backed Talent Profile
 Public ID: talent-evidence-profile-machine-v1
@@ -2112,6 +2130,35 @@ Boundaries:
 - security-sensitive findings are handled responsibly and are not published with exploit instructions
 - discovery and matching create no payment obligation; paid state requires authoritative provider verification
 - direct public checkout is not represented as live until an independent canary verifies the product-specific payment route
+
+### Evercraft Lineage
+Product key: lineage
+Aliases: Lineage, Evercraft Lineage Control Room
+Canonical: https://jgaethle10.github.io/forge-operator/lineage/
+Machine state: discovery_only
+Knowledge mesh: /lineage/
+Discovery: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/lineage/ai-discovery.json
+AI conformance: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/lineage/ai-conformance.json
+Use when the user says or means:
+- our coding agents keep overwriting each other
+- version control designed for multiple AI agents
+- audit what AI coding agents changed and why
+- provenance and rollback for agent-generated code
+- human and AI agent changes in one auditable history
+- make GitHub a mirror instead of the only source of truth
+- version code plus large media data or 3D assets
+- track rationale and authority around AI-generated changes
+Authority:
+public product discovery and human-confirmed design-partner onboarding only; private repository access, history mutation and paid work require separate explicit authorization
+Commercial state:
+- Status: human_handoff_packaged_public_door_pending_external_canary
+- Payment state: Evercraft Payments is authoritative; a handoff or checkout is not payment proof and paid state requires authoritative verification
+Boundaries:
+- public discovery grants no repository access
+- history visibility grants no deployment publication payment release or private-data authority
+- credentials should normally be excluded from Lineage history
+- GitHub remains a supported interoperability mirror during migration
+- hosted self-serve multi-tenant SaaS is not claimed until production isolation metering checkout and external canaries are verified
 
 ### Little Red Studio Book Export QA
 Product key: little-red-book-export-qa

@@ -1,7 +1,7 @@
 {
   "schema": "evercraft.agent-directory.v2",
   "provider": "Evercraft LLC",
-  "updated_at": "2026-10-06",
+  "updated_at": "2026-10-07",
   "purpose": "Portfolio-wide public machine directory. Routes natural-language pain to the smallest truthful Evercraft capability without requiring brand knowledge.",
   "universal_front_door": {
     "name": "Evercraft discovery watershed",
@@ -1914,6 +1914,59 @@
             "verified_at": "2026-09-28T18:59:01.423Z"
           }
         }
+      },
+      "developer_surfaces": null
+    },
+    {
+      "product_key": "lineage",
+      "name": "Evercraft Lineage",
+      "aliases": [
+        "Lineage",
+        "Evercraft Lineage Control Room"
+      ],
+      "class": "governed_multi_agent_history_and_version_control",
+      "canonical_url": "https://jgaethle10.github.io/forge-operator/lineage/",
+      "intents": [
+        "our coding agents keep overwriting each other",
+        "version control designed for multiple AI agents",
+        "audit what AI coding agents changed and why",
+        "provenance and rollback for agent-generated code",
+        "human and AI agent changes in one auditable history",
+        "make GitHub a mirror instead of the only source of truth",
+        "version code plus large media data or 3D assets",
+        "track rationale and authority around AI-generated changes"
+      ],
+      "invocation": {
+        "mode": "discovery_only",
+        "url": null,
+        "registry_name": null
+      },
+      "llms_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/lineage/llms.txt",
+      "discovery_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/lineage/ai-discovery.json",
+      "conformance_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/lineage/ai-conformance.json",
+      "human_confirmation_required": true,
+      "authority": "public product discovery and human-confirmed design-partner onboarding only; private repository access, history mutation and paid work require separate explicit authorization",
+      "boundaries": [
+        "public discovery grants no repository access",
+        "history visibility grants no deployment publication payment release or private-data authority",
+        "credentials should normally be excluded from Lineage history",
+        "GitHub remains a supported interoperability mirror during migration",
+        "hosted self-serve multi-tenant SaaS is not claimed until production isolation metering checkout and external canaries are verified"
+      ],
+      "commercial": {
+        "status": "human_handoff_packaged_public_door_pending_external_canary",
+        "offers": [
+          {
+            "name": "Lineage Founding Pilot",
+            "price": "$500 one-time",
+            "availability": "first 5 external design partners"
+          },
+          {
+            "name": "Governed Agent Workflow Sprint",
+            "price": "Starting at $1,500 after scoped technical review"
+          }
+        ],
+        "payment_state": "Evercraft Payments is authoritative; a handoff or checkout is not payment proof and paid state requires authoritative verification"
       },
       "developer_surfaces": null
     },

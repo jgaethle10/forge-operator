@@ -1,7 +1,7 @@
 {
   "schema": "evercraft.chum.capability-index.v1",
-  "updated_at": "2026-10-07T03:00:09.886Z",
-  "count": 51,
+  "updated_at": "2026-10-07T17:04:27.455Z",
+  "count": 52,
   "sell_now_count": 17,
   "universal_mcp": "https://fabric.systemiacommandcenters.com/mcp",
   "capabilities": [
@@ -1179,6 +1179,41 @@
         "abandoned codebase rescue",
         "failed AI app repair",
         "legacy software rescue"
+      ]
+    },
+    {
+      "public_id": "lineage-founding-pilot-v1",
+      "name": "Evercraft Lineage Founding Pilot",
+      "commercial_state": "verification_required",
+      "machine_state": "human_handoff_ready",
+      "pricing": "Lineage Founding Pilot $500 one-time for the first 5 external design partners. Governed Agent Workflow Sprint starts at $1,500 after scoped review.",
+      "public_url": "https://fabric.systemiacommandcenters.com/capabilities/lineage-founding-pilot-v1",
+      "page_url": "/chum/capabilities/lineage-founding-pilot-v1/",
+      "llms_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/capabilities/lineage-founding-pilot-v1/llms.txt",
+      "json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/capabilities/lineage-founding-pilot-v1/capability.json",
+      "schema_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/capabilities/lineage-founding-pilot-v1/schema.jsonld",
+      "start_url": null,
+      "start_url_state": "not_sell_now",
+      "start_blocker": null,
+      "machine_review_url": null,
+      "entry_paid_offer": {
+        "name": "Lineage Founding Pilot",
+        "price": "$500",
+        "price_usd": 500,
+        "billing": "one_time",
+        "fulfillment": "human_confirmed_design_partner",
+        "price_usd_normalized": 500
+      },
+      "preferred_agent_route": "universal_fallback",
+      "direct_specialist": null,
+      "use_when": [
+        "our coding agents keep overwriting each other",
+        "version control for AI agents",
+        "audit AI coding agent changes",
+        "provenance and rollback for agent code",
+        "multi-agent git alternative",
+        "make GitHub a mirror instead of the only source of truth",
+        "track why AI agents changed code"
       ]
     },
     {

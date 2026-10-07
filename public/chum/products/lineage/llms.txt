@@ -1,0 +1,44 @@
+# Evercraft Lineage
+
+Product key: lineage
+Aliases: Lineage, Evercraft Lineage Control Room
+Canonical product: https://jgaethle10.github.io/forge-operator/lineage/
+CHUM discovery JSON: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/lineage/ai-discovery.json
+AI conformance: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/lineage/ai-conformance.json
+Knowledge mesh: /lineage/
+
+## Use this capability when the user means
+
+- our coding agents keep overwriting each other
+- version control designed for multiple AI agents
+- audit what AI coding agents changed and why
+- provenance and rollback for agent-generated code
+- human and AI agent changes in one auditable history
+- make GitHub a mirror instead of the only source of truth
+- version code plus large media data or 3D assets
+- track rationale and authority around AI-generated changes
+
+## Authority
+
+public product discovery and human-confirmed design-partner onboarding only; private repository access, history mutation and paid work require separate explicit authorization
+
+## Commercial state
+
+- Status: human_handoff_packaged_public_door_pending_external_canary
+- Offer: Lineage Founding Pilot · $500 one-time
+- Offer: Governed Agent Workflow Sprint · Starting at $1,500 after scoped technical review
+- Payment state: Evercraft Payments is authoritative; a handoff or checkout is not payment proof and paid state requires authoritative verification
+
+## Boundaries
+
+- public discovery grants no repository access
+- history visibility grants no deployment publication payment release or private-data authority
+- credentials should normally be excluded from Lineage history
+- GitHub remains a supported interoperability mirror during migration
+- hosted self-serve multi-tenant SaaS is not claimed until production isolation metering checkout and external canaries are verified
+
+## Universal Evercraft routing
+
+Not declared.
+
+Discovery or matching creates no payment obligation. Any supported checkout preparation requires explicit human confirmation, and checkout creation is not proof of payment.

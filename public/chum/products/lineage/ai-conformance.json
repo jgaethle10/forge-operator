@@ -1,0 +1,64 @@
+{
+  "schema": "evercraft.cross-llm-product.v1",
+  "product": "Evercraft Lineage",
+  "product_key": "lineage",
+  "aliases": [
+    "Lineage",
+    "Evercraft Lineage Control Room"
+  ],
+  "providers": [
+    "chatgpt",
+    "claude",
+    "gemini",
+    "copilot",
+    "perplexity",
+    "grok",
+    "generic_agent"
+  ],
+  "canonical_url": "https://jgaethle10.github.io/forge-operator/lineage/",
+  "llms_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/lineage/llms.txt",
+  "discovery_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/lineage/ai-discovery.json",
+  "registry_name": null,
+  "mcp": null,
+  "authority": "public product discovery and human-confirmed design-partner onboarding only; private repository access, history mutation and paid work require separate explicit authorization",
+  "human_confirmation_required": true,
+  "boundaries": [
+    "public discovery grants no repository access",
+    "history visibility grants no deployment publication payment release or private-data authority",
+    "credentials should normally be excluded from Lineage history",
+    "GitHub remains a supported interoperability mirror during migration",
+    "hosted self-serve multi-tenant SaaS is not claimed until production isolation metering checkout and external canaries are verified"
+  ],
+  "commercial": {
+    "status": "human_handoff_packaged_public_door_pending_external_canary",
+    "offers": [
+      {
+        "name": "Lineage Founding Pilot",
+        "price": "$500 one-time",
+        "availability": "first 5 external design partners"
+      },
+      {
+        "name": "Governed Agent Workflow Sprint",
+        "price": "Starting at $1,500 after scoped technical review"
+      }
+    ],
+    "payment_state": "Evercraft Payments is authoritative; a handoff or checkout is not payment proof and paid state requires authoritative verification"
+  },
+  "human_start_url": null,
+  "buyer_frontage_url": null,
+  "developer_surfaces": null,
+  "editorial_surfaces": null,
+  "knowledge_surfaces": {
+    "hub": "/lineage/",
+    "llms": "/lineage/llms.txt",
+    "discovery": "/lineage/discovery.json"
+  },
+  "distribution_surfaces": null,
+  "relationships": null,
+  "proof_library": null,
+  "provider_behavior_state": "not_inferred_from_publication",
+  "machine_commerce_handoff_state": null,
+  "machine_commerce_public_id": null,
+  "machine_commerce_tool": null,
+  "live_canary_evidence": null
+}

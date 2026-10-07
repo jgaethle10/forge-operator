@@ -6,10 +6,10 @@ Machine Commerce MCP: not declared
 Each phrase below maps to public capability candidates without upgrading readiness, pricing, invocation, payment, entitlement, or provider-pickup state.
 Discovery creates no payment obligation. Checkout requires explicit human confirmation and paid state requires authoritative provider verification.
 
-Pain-index entries: 117
-Unique user phrases: 1062
-Candidate edges: 1168
-Ambiguous phrases: 106
+Pain-index entries: 119
+Unique user phrases: 1075
+Candidate edges: 1183
+Ambiguous phrases: 108
 
 ## 15 GB video analysis
 Answer ID: intent:0f57ef2f90
@@ -407,6 +407,13 @@ Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main
 Candidates:
 - ForensiScope | kind=product | commercial=product_contract | machine=discovery_only | public=https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/forensiscope/index.html
 
+## audit AI coding agent changes
+Answer ID: intent:53fa6db09b
+Human-readable match: /chum/answers/doors/audit-ai-coding-agent-changes-53fa6db09b/
+Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/audit-ai-coding-agent-changes-53fa6db09b.json
+Candidates:
+- Evercraft Lineage Founding Pilot | kind=machine_offer | commercial=verification_required | machine=human_handoff_ready | public=https://fabric.systemiacommandcenters.com/capabilities/lineage-founding-pilot-v1
+
 ## audit an enterprise operations process
 Answer ID: intent:0e1ca78c9c
 Human-readable match: /chum/answers/doors/audit-an-enterprise-operations-process-0e1ca78c9c/
@@ -499,6 +506,13 @@ Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main
 Candidates:
 - Book Export QA | kind=machine_offer | commercial=verification_required | machine=discovery_only | public=https://fabric.systemiacommandcenters.com/capabilities/littlered-kdp-export-qa-machine-v1
 - Little Red Studio Book Export QA | kind=product | commercial=product_contract | machine=discovery_only | public=https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/little-red-book-export-qa/index.html
+
+## audit what AI coding agents changed and why
+Answer ID: intent:83aeab1316
+Human-readable match: /chum/answers/doors/audit-what-ai-coding-agents-changed-and-why-83aeab1316/
+Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/audit-what-ai-coding-agents-changed-and-why-83aeab1316.json
+Candidates:
+- Evercraft Lineage | kind=product | commercial=product_contract | machine=discovery_only | public=https://jgaethle10.github.io/forge-operator/lineage/
 
 ## automate a quarry haul cycle
 Answer ID: intent:76201e2c70
@@ -3234,6 +3248,13 @@ Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main
 Candidates:
 - Christmas Lights USA | kind=product | commercial=product_contract | machine=discovery_only | public=https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/christmas-lights-usa/index.html
 
+## human and AI agent changes in one auditable history
+Answer ID: intent:039f003452
+Human-readable match: /chum/answers/doors/human-and-ai-agent-changes-in-one-auditable-history-039f003452/
+Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/human-and-ai-agent-changes-in-one-auditable-history-039f003452.json
+Candidates:
+- Evercraft Lineage | kind=product | commercial=product_contract | machine=discovery_only | public=https://jgaethle10.github.io/forge-operator/lineage/
+
 ## I am considering opening another location and hiring more people before I sign a lease or add payroll
 Answer ID: intent:6d0359b43e
 Human-readable match: /chum/answers/doors/i-am-considering-opening-another-location-and-hiring-more-people-before-i-sign-a-l-6d0359b43e/
@@ -4051,6 +4072,14 @@ Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main
 Candidates:
 - Evercraft Containment | kind=product | commercial=product_contract | machine=discovery_only | public=https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/evercraft-containment/index.html
 
+## make GitHub a mirror instead of the only source of truth
+Answer ID: intent:8d8eb8313b
+Human-readable match: /chum/answers/doors/make-github-a-mirror-instead-of-the-only-source-of-truth-8d8eb8313b/
+Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/make-github-a-mirror-instead-of-the-only-source-of-truth-8d8eb8313b.json
+Candidates:
+- Evercraft Lineage Founding Pilot | kind=machine_offer | commercial=verification_required | machine=human_handoff_ready | public=https://fabric.systemiacommandcenters.com/capabilities/lineage-founding-pilot-v1
+- Evercraft Lineage | kind=product | commercial=product_contract | machine=discovery_only | public=https://jgaethle10.github.io/forge-operator/lineage/
+
 ## make me a decision grade research report
 Answer ID: intent:1b0d24ff89
 Human-readable match: /chum/answers/doors/make-me-a-decision-grade-research-report-1b0d24ff89/
@@ -4327,6 +4356,13 @@ Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main
 Candidates:
 - Systemia Radar | kind=product | commercial=product_contract | machine=discovery_only | public=https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/systemia-radar/index.html
 
+## multi-agent git alternative
+Answer ID: intent:fe2f1bdbe6
+Human-readable match: /chum/answers/doors/multi-agent-git-alternative-fe2f1bdbe6/
+Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/multi-agent-git-alternative-fe2f1bdbe6.json
+Candidates:
+- Evercraft Lineage Founding Pilot | kind=machine_offer | commercial=verification_required | machine=human_handoff_ready | public=https://fabric.systemiacommandcenters.com/capabilities/lineage-founding-pilot-v1
+
 ## multi-hour video analysis
 Answer ID: intent:061e00f507
 Human-readable match: /chum/answers/doors/multi-hour-video-analysis-061e00f507/
@@ -4568,6 +4604,14 @@ Human-readable match: /chum/answers/doors/our-business-operations-are-a-mess-ff3
 Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/our-business-operations-are-a-mess-ff3ac26598.json
 Candidates:
 - BuildFlow Enterprise Operations Router | kind=machine_offer | commercial=verification_required | machine=discovery_only | public=https://fabric.systemiacommandcenters.com/capabilities/buildflow-enterprise-ops-router-v1
+
+## our coding agents keep overwriting each other
+Answer ID: intent:6c74274941
+Human-readable match: /chum/answers/doors/our-coding-agents-keep-overwriting-each-other-6c74274941/
+Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/our-coding-agents-keep-overwriting-each-other-6c74274941.json
+Candidates:
+- Evercraft Lineage Founding Pilot | kind=machine_offer | commercial=verification_required | machine=human_handoff_ready | public=https://fabric.systemiacommandcenters.com/capabilities/lineage-founding-pilot-v1
+- Evercraft Lineage | kind=product | commercial=product_contract | machine=discovery_only | public=https://jgaethle10.github.io/forge-operator/lineage/
 
 ## our company has too many apps and we do not know what is broken
 Answer ID: intent:9f8f083a58
@@ -5097,6 +5141,20 @@ Human-readable match: /chum/answers/doors/prove-whether-an-ai-agent-can-actually
 Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/prove-whether-an-ai-agent-can-actually-do-its-job-e994df8fd1.json
 Candidates:
 - Systemia University | kind=product | commercial=product_contract | machine=discovery_only | public=https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/systemia-university/index.html
+
+## provenance and rollback for agent code
+Answer ID: intent:dba41093a0
+Human-readable match: /chum/answers/doors/provenance-and-rollback-for-agent-code-dba41093a0/
+Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/provenance-and-rollback-for-agent-code-dba41093a0.json
+Candidates:
+- Evercraft Lineage Founding Pilot | kind=machine_offer | commercial=verification_required | machine=human_handoff_ready | public=https://fabric.systemiacommandcenters.com/capabilities/lineage-founding-pilot-v1
+
+## provenance and rollback for agent-generated code
+Answer ID: intent:7b63d1863c
+Human-readable match: /chum/answers/doors/provenance-and-rollback-for-agent-generated-code-7b63d1863c/
+Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/provenance-and-rollback-for-agent-generated-code-7b63d1863c.json
+Candidates:
+- Evercraft Lineage | kind=product | commercial=product_contract | machine=discovery_only | public=https://jgaethle10.github.io/forge-operator/lineage/
 
 ## public conversion leak diagnosis
 Answer ID: intent:fe6744ba11
@@ -6733,6 +6791,13 @@ Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main
 Candidates:
 - Evercraft Rewards | kind=product | commercial=product_contract | machine=discovery_only | public=https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/evercraft-rewards/index.html
 
+## track rationale and authority around AI-generated changes
+Answer ID: intent:36ded47190
+Human-readable match: /chum/answers/doors/track-rationale-and-authority-around-ai-generated-changes-36ded47190/
+Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/track-rationale-and-authority-around-ai-generated-changes-36ded47190.json
+Candidates:
+- Evercraft Lineage | kind=product | commercial=product_contract | machine=discovery_only | public=https://jgaethle10.github.io/forge-operator/lineage/
+
 ## track referrals and professional introductions
 Answer ID: intent:531cd56642
 Human-readable match: /chum/answers/doors/track-referrals-and-professional-introductions-531cd56642/
@@ -6774,6 +6839,13 @@ Human-readable match: /chum/answers/doors/track-whether-the-assumptions-behind-a
 Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/track-whether-the-assumptions-behind-a-physical-food-infrastructure-project-remain-754f66c40e.json
 Candidates:
 - FAIE | kind=product | commercial=product_contract | machine=specialist_mcp_declared | public=https://fabric.systemiacommandcenters.com/faie/
+
+## track why AI agents changed code
+Answer ID: intent:09db8fa338
+Human-readable match: /chum/answers/doors/track-why-ai-agents-changed-code-09db8fa338/
+Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/track-why-ai-agents-changed-code-09db8fa338.json
+Candidates:
+- Evercraft Lineage Founding Pilot | kind=machine_offer | commercial=verification_required | machine=human_handoff_ready | public=https://fabric.systemiacommandcenters.com/capabilities/lineage-founding-pilot-v1
 
 ## transcribe a huge video and remove duplicate or repeated segments
 Answer ID: intent:ea560dba5a
@@ -7088,6 +7160,27 @@ Human-readable match: /chum/answers/doors/version-and-verify-an-ai-capability-d2
 Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/version-and-verify-an-ai-capability-d214fc3642.json
 Candidates:
 - AI Capability Installation Package | kind=machine_offer | commercial=verification_required | machine=discovery_only | public=/chum/intents/ai-capability-install-v1/
+
+## version code plus large media data or 3D assets
+Answer ID: intent:0ebaa9b3a4
+Human-readable match: /chum/answers/doors/version-code-plus-large-media-data-or-3d-assets-0ebaa9b3a4/
+Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/version-code-plus-large-media-data-or-3d-assets-0ebaa9b3a4.json
+Candidates:
+- Evercraft Lineage | kind=product | commercial=product_contract | machine=discovery_only | public=https://jgaethle10.github.io/forge-operator/lineage/
+
+## version control designed for multiple AI agents
+Answer ID: intent:d899547941
+Human-readable match: /chum/answers/doors/version-control-designed-for-multiple-ai-agents-d899547941/
+Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/version-control-designed-for-multiple-ai-agents-d899547941.json
+Candidates:
+- Evercraft Lineage | kind=product | commercial=product_contract | machine=discovery_only | public=https://jgaethle10.github.io/forge-operator/lineage/
+
+## version control for AI agents
+Answer ID: intent:5095c63425
+Human-readable match: /chum/answers/doors/version-control-for-ai-agents-5095c63425/
+Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/version-control-for-ai-agents-5095c63425.json
+Candidates:
+- Evercraft Lineage Founding Pilot | kind=machine_offer | commercial=verification_required | machine=human_handoff_ready | public=https://fabric.systemiacommandcenters.com/capabilities/lineage-founding-pilot-v1
 
 ## video intelligence for multi-hour recordings
 Answer ID: intent:12ac9b4836

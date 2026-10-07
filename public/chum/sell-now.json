@@ -1,6 +1,6 @@
 {
   "schema": "evercraft.chum.sell-now.v1",
-  "updated_at": "2026-10-07T03:00:09.886Z",
+  "updated_at": "2026-10-07T17:04:27.455Z",
   "count": 17,
   "universal_mcp": "https://fabric.systemiacommandcenters.com/mcp",
   "rule": "These offers are publicly cataloged as sell_now. Any supported checkout still requires explicit human payment confirmation and provider verification.",

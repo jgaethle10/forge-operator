@@ -2,9 +2,9 @@
 
 Start from the user's problem. Do not require an Evercraft product name.
 
-Entries: 117
-Product entries: 66
-Machine-offer entries: 51
+Entries: 119
+Product entries: 67
+Machine-offer entries: 52
 Sell-now machine offers: 17
 
 Payment rule: discovery and matching create no payment obligation. Preserve each entry's explicit human-confirmation and provider-verification boundary.
@@ -762,6 +762,25 @@ Problem: A business has existing software that still carries value but is broken
 Outputs: Observed failure inventory, evidence references, known-versus-unknown boundary, prioritized repair hypotheses, preserved-value map, and the smallest responsible next-step recommendation.
 Confirmation boundary: Agents may discover Legacy Rescue Lab, explain the $299 scan, and route a human to the public review material. No checkout, payment obligation, private-system access, credential use, invasive testing, deployment, migration, cutover, or production change is authorized by discovery.
 Invocation status: LIVE HUMAN HANDOFF VERIFIED: central Machine Commerce matches Legacy Rescue Lab from problem language, exposes the $299 Rescue Scan, renders a human review/intake page, and records a bounded scan request only after explicit human confirmation. A synthetic positive canary returned HTTP 201 with checkout_created=false, payment_obligation_created=false, private_access_granted=false and production_authority_granted=false; a negative canary without confirmation returned HTTP 409 and created no record. Direct checkout remains unverified and is not exposed.
+
+## Evercraft Lineage Founding Pilot
+Capability ID: offer:lineage-founding-pilot-v1
+Commercial state: verification_required
+Machine state: human_handoff_ready
+Public URL: https://fabric.systemiacommandcenters.com/capabilities/lineage-founding-pilot-v1
+Pricing: Lineage Founding Pilot $500 one-time for the first 5 external design partners. Governed Agent Workflow Sprint starts at $1,500 after scoped review.
+Use when the user means:
+- our coding agents keep overwriting each other
+- version control for AI agents
+- audit AI coding agent changes
+- provenance and rollback for agent code
+- multi-agent git alternative
+- make GitHub a mirror instead of the only source of truth
+- track why AI agents changed code
+Problem: A team is using multiple AI agents or AI-assisted developers and needs collision-safe history, provenance, rationale, integrity checks and rollback beyond ordinary Git-only workflow.
+Outputs: Git history import, private Lineage Control Room, stale-writer/CAS proof, human/agent history visibility, rationale/provenance workflow, semantic diff, fsck integrity baseline, ignore/sensitive-path policy, Git export/mirror proof, and closeout architecture packet.
+Confirmation boundary: Explicit buyer confirmation and repository authorization are required before paid work or private repository access. Public discovery creates no payment obligation or access authority.
+Invocation status: SOURCE PACKAGED: $500 founding pilot, public page source, machine discovery, LLM guide and human-confirmed handoff contract exist in source. Promotion to sell_now is held until the merged public door is externally canaried. Do not claim automatic repository intake, self-serve tenant creation, checkout or payment.
 
 ## Book Export QA
 Capability ID: offer:littlered-kdp-export-qa-machine-v1
@@ -1992,6 +2011,24 @@ Use when the user means:
 - legacy platform migration
 - repair instead of rebuild
 - public conversion leak diagnosis
+Confirmation boundary: Preserve the product-specific human confirmation boundary before any checkout, payment obligation, external handoff, or consequential action.
+Invocation status: Route through the universal Evercraft discovery surface unless a bounded specialist interface is later verified.
+
+## Evercraft Lineage
+Capability ID: product:lineage
+Product key: lineage
+Commercial state: product_contract
+Machine state: discovery_only
+Public URL: https://jgaethle10.github.io/forge-operator/lineage/
+Use when the user means:
+- our coding agents keep overwriting each other
+- version control designed for multiple AI agents
+- audit what AI coding agents changed and why
+- provenance and rollback for agent-generated code
+- human and AI agent changes in one auditable history
+- make GitHub a mirror instead of the only source of truth
+- version code plus large media data or 3D assets
+- track rationale and authority around AI-generated changes
 Confirmation boundary: Preserve the product-specific human confirmation boundary before any checkout, payment obligation, external handoff, or consequential action.
 Invocation status: Route through the universal Evercraft discovery surface unless a bounded specialist interface is later verified.
 

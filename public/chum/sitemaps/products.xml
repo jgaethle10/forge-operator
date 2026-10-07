@@ -176,6 +176,10 @@
   <url><loc>/chum/products/legacy-rescue-lab/ai-conformance.json</loc></url>
   <url><loc>/chum/products/legacy-rescue-lab/ai-discovery.json</loc></url>
   <url><loc>/chum/products/legacy-rescue-lab/llms.txt</loc></url>
+  <url><loc>/chum/products/lineage/</loc></url>
+  <url><loc>/chum/products/lineage/ai-conformance.json</loc></url>
+  <url><loc>/chum/products/lineage/ai-discovery.json</loc></url>
+  <url><loc>/chum/products/lineage/llms.txt</loc></url>
   <url><loc>/chum/products/little-red-book-export-qa/</loc></url>
   <url><loc>/chum/products/little-red-book-export-qa/ai-conformance.json</loc></url>
   <url><loc>/chum/products/little-red-book-export-qa/ai-discovery.json</loc></url>

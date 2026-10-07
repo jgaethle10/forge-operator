@@ -3,7 +3,7 @@
   "provider": "Evercraft LLC",
   "generated_from": {
     "product_directory_schema": "evercraft.product-directory.v1",
-    "product_directory_updated_at": "2026-10-06",
+    "product_directory_updated_at": "2026-10-07",
     "machine_catalog_schema": "evercraft.machine-catalog.snapshot.v1",
     "machine_catalog_source_generated_at": "2026-09-30T20:21:00.000Z",
     "registry_schema": "evercraft.agent.registry.v1",
@@ -28,10 +28,10 @@
     "provider_verification_required_for_paid_state": true
   },
   "summary": {
-    "entries": 117,
-    "product_entries": 66,
-    "machine_offer_entries": 51,
-    "entries_with_pain_language": 117,
+    "entries": 119,
+    "product_entries": 67,
+    "machine_offer_entries": 52,
+    "entries_with_pain_language": 119,
     "sell_now_machine_offers": 17,
     "entries_with_declared_mcp": 1,
     "callable_or_routable_entries": 1,
@@ -1807,6 +1807,61 @@
       "confirmation": "Agents may discover Legacy Rescue Lab, explain the $299 scan, and route a human to the public review material. No checkout, payment obligation, private-system access, credential use, invasive testing, deployment, migration, cutover, or production change is authorized by discovery.",
       "payment_authority": "Human-confirmed request capture is live. No product-specific direct machine checkout is advertised. Paid state requires authoritative provider verification after a separately authorized payment path.",
       "invocation_status": "LIVE HUMAN HANDOFF VERIFIED: central Machine Commerce matches Legacy Rescue Lab from problem language, exposes the $299 Rescue Scan, renders a human review/intake page, and records a bounded scan request only after explicit human confirmation. A synthetic positive canary returned HTTP 201 with checkout_created=false, payment_obligation_created=false, private_access_granted=false and production_authority_granted=false; a negative canary without confirmation returned HTTP 409 and created no record. Direct checkout remains unverified and is not exposed.",
+      "source_refs": [
+        "public/.well-known/evercraft-machine-catalog.json"
+      ]
+    },
+    {
+      "capability_id": "offer:lineage-founding-pilot-v1",
+      "product_key": null,
+      "public_id": "lineage-founding-pilot-v1",
+      "kind": "machine_offer",
+      "name": "Evercraft Lineage Founding Pilot",
+      "class": "machine_commerce_offer",
+      "pain_phrases": [
+        "our coding agents keep overwriting each other",
+        "version control for AI agents",
+        "audit AI coding agent changes",
+        "provenance and rollback for agent code",
+        "multi-agent git alternative",
+        "make GitHub a mirror instead of the only source of truth",
+        "track why AI agents changed code"
+      ],
+      "problem": "A team is using multiple AI agents or AI-assisted developers and needs collision-safe history, provenance, rationale, integrity checks and rollback beyond ordinary Git-only workflow.",
+      "inputs": "One buyer-authorized Git repository, accountable operator, and current agent/developer workflow context. Private repository access requires explicit authorization.",
+      "outputs": "Git history import, private Lineage Control Room, stale-writer/CAS proof, human/agent history visibility, rationale/provenance workflow, semantic diff, fsck integrity baseline, ignore/sensitive-path policy, Git export/mirror proof, and closeout architecture packet.",
+      "canonical_url": "https://fabric.systemiacommandcenters.com/capabilities/lineage-founding-pilot-v1",
+      "legacy_marketing_route_suppressed": false,
+      "registry_name": null,
+      "mcp": null,
+      "routing": {
+        "preferred": "universal_machine_commerce",
+        "target": null
+      },
+      "authority": "Machine-commerce contract only. The offer state below is authoritative for public routing and must not be upgraded by inference.",
+      "boundaries": [],
+      "commercial_state": "verification_required",
+      "machine_state": "human_handoff_ready",
+      "pricing": "Lineage Founding Pilot $500 one-time for the first 5 external design partners. Governed Agent Workflow Sprint starts at $1,500 after scoped review.",
+      "offers": [
+        {
+          "name": "Lineage Founding Pilot",
+          "price": "$500",
+          "price_usd": 500,
+          "billing": "one_time",
+          "fulfillment": "human_confirmed_design_partner"
+        },
+        {
+          "name": "Governed Agent Workflow Sprint",
+          "price": "Starting at $1,500",
+          "price_usd_from": 1500,
+          "billing": "scoped_one_time"
+        }
+      ],
+      "human_confirmation_required": true,
+      "confirmation": "Explicit buyer confirmation and repository authorization are required before paid work or private repository access. Public discovery creates no payment obligation or access authority.",
+      "payment_authority": "Evercraft Payments; paid state requires authoritative verification.",
+      "invocation_status": "SOURCE PACKAGED: $500 founding pilot, public page source, machine discovery, LLM guide and human-confirmed handoff contract exist in source. Promotion to sell_now is held until the merged public door is externally canaried. Do not claim automatic repository intake, self-serve tenant creation, checkout or payment.",
       "source_refs": [
         "public/.well-known/evercraft-machine-catalog.json"
       ]
@@ -4965,6 +5020,68 @@
       "source_refs": [
         "public/.well-known/evercraft-products.json",
         "registry/catalog.json"
+      ]
+    },
+    {
+      "capability_id": "product:lineage",
+      "product_key": "lineage",
+      "kind": "product",
+      "name": "Evercraft Lineage",
+      "class": "governed_multi_agent_history_and_version_control",
+      "pain_phrases": [
+        "our coding agents keep overwriting each other",
+        "version control designed for multiple AI agents",
+        "audit what AI coding agents changed and why",
+        "provenance and rollback for agent-generated code",
+        "human and AI agent changes in one auditable history",
+        "make GitHub a mirror instead of the only source of truth",
+        "version code plus large media data or 3D assets",
+        "track rationale and authority around AI-generated changes"
+      ],
+      "problem": null,
+      "inputs": null,
+      "outputs": null,
+      "canonical_url": "https://jgaethle10.github.io/forge-operator/lineage/",
+      "registry_name": null,
+      "mcp": null,
+      "routing": {
+        "preferred": "universal_machine_commerce",
+        "target": null
+      },
+      "legacy_marketing_route_suppressed": false,
+      "authority": "public product discovery and human-confirmed design-partner onboarding only; private repository access, history mutation and paid work require separate explicit authorization",
+      "boundaries": [
+        "public discovery grants no repository access",
+        "history visibility grants no deployment publication payment release or private-data authority",
+        "credentials should normally be excluded from Lineage history",
+        "GitHub remains a supported interoperability mirror during migration",
+        "hosted self-serve multi-tenant SaaS is not claimed until production isolation metering checkout and external canaries are verified"
+      ],
+      "commercial_state": "product_contract",
+      "machine_state": "discovery_only",
+      "pricing": null,
+      "offers": [],
+      "commercial": {
+        "status": "human_handoff_packaged_public_door_pending_external_canary",
+        "offers": [
+          {
+            "name": "Lineage Founding Pilot",
+            "price": "$500 one-time",
+            "availability": "first 5 external design partners"
+          },
+          {
+            "name": "Governed Agent Workflow Sprint",
+            "price": "Starting at $1,500 after scoped technical review"
+          }
+        ],
+        "payment_state": "Evercraft Payments is authoritative; a handoff or checkout is not payment proof and paid state requires authoritative verification"
+      },
+      "human_confirmation_required": true,
+      "confirmation": "Preserve the product-specific human confirmation boundary before any checkout, payment obligation, external handoff, or consequential action.",
+      "payment_authority": null,
+      "invocation_status": "Route through the universal Evercraft discovery surface unless a bounded specialist interface is later verified.",
+      "source_refs": [
+        "public/.well-known/evercraft-products.json"
       ]
     },
     {
