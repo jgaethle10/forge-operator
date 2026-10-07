@@ -5,6 +5,7 @@ import {
   emptyCfbClipResidentState,
   runCfbJournalPublishCycle,
 } from './cfb-journal-resident.mjs';
+import { EvercraftPassport } from '../passport/passport.mjs';
 
 function arg(name,fallback=null){
   const index=process.argv.indexOf(name);
@@ -26,6 +27,9 @@ function atomicJson(file,value){
 const repoRoot=path.resolve(arg('--repo-root',process.env.SYSTEMIA_WORKSPACE_ROOT||'.'));
 const journalRoot=path.resolve(arg('--journal-root',path.join(repoRoot,'public','journal')));
 const credentialStateDir=path.resolve(arg('--credential-state-dir',process.env.EVERCRAFT_CREDENTIAL_STATE_DIR||path.join(process.env.EVERCRAFT_IDENTITY_STATE_DIR||repoRoot,'provider-credentials')));
+const passportStateDir=path.resolve(arg('--passport-state-dir',process.env.EVERCRAFT_PASSPORT_STATE_DIR||path.join(repoRoot,'artifacts','passport')));
+const subjectRef=String(arg('--subject-ref',process.env.SYSTEMIA_CFB_CLIP_SUBJECT_REF||'system:cfb-clip-publisher')).trim();
+const passport=new EvercraftPassport({stateDir:passportStateDir});
 const stateDir=path.resolve(arg('--state-dir',process.env.SYSTEMIA_CFB_CLIP_STATE_DIR||'artifacts/cfb-clip-resident'));
 const intervalMs=Math.max(30000,Number(arg('--interval-ms',process.env.SYSTEMIA_CFB_CLIP_INTERVAL_MS||300000)));
 const once=has('--once');
@@ -42,6 +46,13 @@ async function cycle(){
       journalRoot,
       credentialStateDir,
       inputState:state,
+      authorizeStory:({resource_ref,scope})=>passport.authorize({
+        subject_ref:subjectRef,
+        product:'evercraft-home',
+        scope,
+        resource_ref,
+        at:new Date().toISOString(),
+      }),
       now:()=>new Date().toISOString(),
       maxPublishesPerCycle:1,
     });
