@@ -1,4 +1,4 @@
-import { WASHINGTON_STATE_OUTLINE } from './assets/washington-state-outline.mjs';
+import { getGeoBoundary } from './boundary-registry.mjs';
 const esc=(value)=>String(value ?? '')
   .replaceAll('&','&amp;')
   .replaceAll('<','&lt;')
@@ -22,8 +22,7 @@ function pointBounds(points){
 }
 
 function boundaryForStory(story){
-  if(story?.visual?.boundaryId===WASHINGTON_STATE_OUTLINE.id) return WASHINGTON_STATE_OUTLINE;
-  return null;
+  return getGeoBoundary(story?.visual?.boundaryId);
 }
 
 function projection(box,rect){
