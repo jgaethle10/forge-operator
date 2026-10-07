@@ -93,6 +93,19 @@ test('Home seals Google Places and Kroger credentials without echoing secret mat
     assert.equal(openaiBody.provider, 'openai');
     assert.equal(JSON.stringify(openaiBody).includes(openaiSecret), false);
 
+    const stripeSecret = 'sk_live_fixture_home_owned_abcdefghijklmnopqrstuvwxyz';
+    const stripeResponse = await fetch(runtime.url + '/api/credentials/providers/stripe', {
+      method: 'POST',
+      headers: { 'content-type': 'application/json' },
+      body: JSON.stringify({ secret_key: stripeSecret }),
+    });
+    assert.equal(stripeResponse.status, 201);
+    const stripeBody = await stripeResponse.json();
+    assert.equal(stripeBody.ok, true);
+    assert.equal(stripeBody.provider, 'stripe');
+    assert.equal(stripeBody.secret_material_returned, false);
+    assert.equal(JSON.stringify(stripeBody).includes(stripeSecret), false);
+
     const googleStatus = await fetch(runtime.url + '/api/credentials/providers/google-places/status');
     assert.equal(googleStatus.status, 200);
     const googleStatusBody = await googleStatus.json();
@@ -120,6 +133,10 @@ test('Home seals Google Places and Kroger credentials without echoing secret mat
     assert.equal(openaiStatus.status, 200);
     assert.equal((await openaiStatus.json()).credentials.length, 1);
 
+    const stripeStatus = await fetch(runtime.url + '/api/credentials/providers/stripe/status');
+    assert.equal(stripeStatus.status, 200);
+    assert.equal((await stripeStatus.json()).credentials.length, 1);
+
     const vault = new ProviderCredentialVault({ stateDir: root });
     const googlePlain = vault.readSecret(googleBody.credential.credential_ref);
     assert.equal(googlePlain.api_key_id, 'google-places-api-key');
@@ -137,6 +154,10 @@ test('Home seals Google Places and Kroger credentials without echoing secret mat
     assert.equal(numeraiPlain.api_key_id, 'numerai-owned-public-id');
     assert.equal(numeraiPlain.api_secret, numeraiSecret);
 
+    const stripePlain = vault.readSecret(stripeBody.credential.credential_ref);
+    assert.equal(stripePlain.api_key_id, 'stripe-secret-key');
+    assert.equal(stripePlain.api_secret, stripeSecret);
+
     const persisted = fs.readdirSync(root)
       .filter(name => name.endsWith('.json'))
       .map(name => fs.readFileSync(path.join(root, name), 'utf8'))
@@ -147,6 +168,7 @@ test('Home seals Google Places and Kroger credentials without echoing secret mat
     assert.equal(persisted.includes(numeraiSecret), false);
     assert.equal(persisted.includes(geminiSecret), false);
     assert.equal(persisted.includes(openaiSecret), false);
+    assert.equal(persisted.includes(stripeSecret), false);
   } finally {
     await runtime.close();
     fs.rmSync(root, { recursive: true, force: true });
