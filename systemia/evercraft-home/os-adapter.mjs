@@ -1,5 +1,6 @@
 import { buildBootEnvelope } from "../evercraft-os/runtime.mjs";
 import { buildDeviceProfile } from "../evercraft-os/device-profile.mjs";
+import { buildEvercraftOsAppCatalog, compileEvercraftOsApp } from "../evercraft-os/app-package.mjs";
 
 export function readEvercraftOsStatus({
   deviceClassHint = process.env.EVERCRAFT_OS_DEVICE_CLASS || "unknown",
@@ -24,5 +25,25 @@ export function readEvercraftOsStatus({
       device_profile_is_compute_lease: false,
       status_surface_is_execution_authority: false
     }
+  };
+}
+
+
+export function readEvercraftOsApps({ productKey = null } = {}) {
+  if (productKey) {
+    return {
+      schema: "evercraft.home.os-app.v1",
+      app: compileEvercraftOsApp(productKey),
+      installation_performed: false,
+      authority_granted: false
+    };
+  }
+
+  const catalog = buildEvercraftOsAppCatalog();
+  return {
+    schema: "evercraft.home.os-app-catalog.v1",
+    ...catalog,
+    installation_performed: false,
+    authority_granted: false
   };
 }
