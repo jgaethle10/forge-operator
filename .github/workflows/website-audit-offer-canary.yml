@@ -32,5 +32,5 @@ jobs:
             echo "## Website Audit offer is live"
             echo
             echo "URL: $url"
-            echo "Verified: offer copy + $49 price + human-confirmed checkout route + Evercraft Payments boundary"
+            echo 'Verified: offer copy + $49 price + human-confirmed checkout route + Evercraft Payments boundary'
           } >> "$GITHUB_STEP_SUMMARY"
