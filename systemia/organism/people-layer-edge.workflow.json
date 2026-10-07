@@ -27,13 +27,15 @@
     "yard_deployment_receipt",
     "health_contract_verified",
     "public_https_route_verification",
-    "fresh_person_consent_canary_before_live_claim"
+    "fresh_person_consent_canary_before_live_claim",
+    "trusted_mail_adapter_receipt_before_verified_email"
   ],
   "role": "person_sovereign_owned_runtime_edge",
   "maintenance_owner": "systemia",
   "hold_state": "held_waiting_for_owned_dependencies",
   "proofs": [
     "systemia/people/compute-runtime.proof.mjs",
-    "systemia/people/hosting.proof.mjs"
+    "systemia/people/hosting.proof.mjs",
+    "systemia/people/email-delivery-contract.json"
   ]
 }
