@@ -231,3 +231,24 @@ test('fsck validates reflog recovery targets', async () => {
     await rm(root, { recursive: true, force: true });
   }
 });
+
+
+test('fsck surfaces stranded local ref locks explicitly', async () => {
+  const { root, store } = await healthyStore();
+  try {
+    const lockPath = join(store.dir, 'refs', 'heads', 'main.lock');
+    await writeFile(lockPath, 'stranded\n');
+
+    const result = await verifyLineageIntegrity(store, {
+      verifyLargeContent: false,
+    });
+    assert.equal(result.ok, false);
+    assert.ok(result.errors.some(
+      (row) =>
+        row.code === 'ref_lock_present' &&
+        row.ref === 'main'
+    ));
+  } finally {
+    await rm(root, { recursive: true, force: true });
+  }
+});
