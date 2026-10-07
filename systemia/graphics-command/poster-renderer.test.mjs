@@ -61,6 +61,15 @@ test('directed poster supports vertical story output',()=>{
 });
 
 
+test('region identity QA is inactive when a story has no geographic boundary',()=>{
+  const generic=structuredClone(story);
+  delete generic.visual;
+  const report=assessDirectedPosterLayout(generic,plan,'feed');
+  assert.equal(report.status,'pass',report.issues.join(','));
+  assert.equal(report.checks.regionIdentityClear,true);
+  assert.ok(!report.issues.some(issue=>issue.startsWith('region_')));
+});
+
 test('measured poster QA passes clean geography and rejects impossible marker collisions',()=>{
   for(const format of ['feed','square','story']){
     const report=assessDirectedPosterLayout(story,plan,format);
