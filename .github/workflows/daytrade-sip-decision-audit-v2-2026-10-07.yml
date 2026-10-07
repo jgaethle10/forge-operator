@@ -1,0 +1,32 @@
+name: DayTrade Delayed SIP Audit v2 2026-10-07
+
+on:
+  push:
+    branches:
+      - "systemia/daytrade-sip-decision-audit-v2-2026-10-07"
+
+permissions:
+  contents: read
+
+jobs:
+  audit:
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Wait for SIP embargo and audit exact timestamps
+        env:
+          ALPACA_TRADING: ${{ secrets.ALPACA_TRADING }}
+          ALPACA_TRADING_SECRET: ${{ secrets.ALPACA_TRADING_SECRET }}
+        run: node systemia/daytrade-lens/run-delayed-sip-audit-v2-2026-10-07.mjs
+      - name: Upload delayed SIP audit v2
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: daytrade-sip-decision-audit-v2-${{ github.run_id }}
+          path: artifacts/daytrade-edge/delayed-sip-decision-audit-v2-2026-10-07.json
+          if-no-files-found: error
+          retention-days: 30
