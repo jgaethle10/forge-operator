@@ -99,6 +99,20 @@ export class LineageStore {
     catch { throw new Error(`Lineage is not initialized at ${this.root}`); }
   }
 
+  async assertGcUnlocked({ allowGcLock = false } = {}) {
+    if (allowGcLock) return;
+    try {
+      const lock = await readFile(join(this.dir, 'gc.lock'), 'utf8');
+      const error = new Error('Lineage storage mutation is blocked by active garbage collection');
+      error.code = 'LINEAGE_GC_LOCKED';
+      error.lock = lock.trim() || null;
+      throw error;
+    } catch (error) {
+      if (error?.code === 'ENOENT') return;
+      throw error;
+    }
+  }
+
   async currentBranch() {
     await this.ensureInitialized();
     const head = (await readFile(join(this.dir, 'HEAD'), 'utf8')).trim();
@@ -154,6 +168,7 @@ export class LineageStore {
   }
 
   async writeRef(branch, id) {
+    await this.assertGcUnlocked();
     assertBranchName(branch);
     if (id) {
       const object = await this.readObject(id);
@@ -403,7 +418,8 @@ export class LineageStore {
     return { commit_id: commitId, tree_id: commit.payload.tree_id, entries: tree.payload.entries };
   }
 
-  async _recordOperation(payload) {
+  async _recordOperation(payload, { allowGcLock = false } = {}) {
+    await this.assertGcUnlocked({ allowGcLock });
     const receiptId = await this.putObject('receipt', { schema: 'evercraft.lineage.receipt.v1', ...payload });
     const filename = `${Date.now()}-${randomUUID()}-${receiptId.slice(0, 12)}.json`;
     await writeFile(join(this.dir, 'operations', filename), `${JSON.stringify({ receipt_id: receiptId })}\n`, 'utf8');
