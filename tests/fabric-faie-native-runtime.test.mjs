@@ -58,6 +58,11 @@ test('owned Fabric serves FAIE UI, public preview API, and native FAIE MCP witho
     assert.match(page,/Compare candidate regions/);
     assert.match(page,/AgNormal \/ Yakima Valley/);
     assert.match(page,/Run live AgNormal brief/);
+    assert.match(page,/Prepared for AgNormal · design-partner room/);
+    assert.match(page,/One real decision\. Live evidence\. No theater\./);
+    assert.match(page,/data-partner-mission="water"/);
+    assert.match(page,/data-partner-mission="diligence"/);
+    assert.doesNotMatch(page,/legacy provider_transport_enabled/);
     assert.match(page,/Official MCP Registry/);
     assert.match(page,/Human review required/);
     assert.match(page,/external action taken/);
