@@ -451,3 +451,11 @@ Non-negotiable rules:
 - public discovery state is separate from commercial readiness;
 - Fallen Sessions may be publicly discoverable while checkout remains disabled;
 - PulseGrid integrates with Fallen rather than evolving as a separate hidden DAW codebase.
+
+### PulseGrid 0.6 composition graph
+
+PulseGrid clips are no longer fixed to one 16-step bar. The canonical graph supports 1–16 bars per clip while preserving a 16-step-per-bar musical grid for the current engine.
+
+Notes now have stable IDs and semantic operations for add, move, resize and delete. Clip-length changes resize steps, probability, microtiming and automation together; shrinking a clip deterministically removes or trims out-of-range notes instead of leaving corrupt hidden state.
+
+These mutations return reversible receipts with before/after state so human UI, controllers and agents can share one edit model.
