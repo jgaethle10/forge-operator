@@ -62,6 +62,16 @@ import {
   compilePerformancePlan,
   type PerformancePlanInput,
 } from './performance-director.js';
+import {
+  applyWorldForgeOperations,
+  buildWorldForgeRenderPlan,
+  validateWorldForgeProject,
+  type WorldForgeOperation,
+  type WorldForgeProject,
+} from './world-forge.js';
+import { buildWorldForgeCinematicShot } from './world-forge-cinematic.js';
+import { renderWorldForgeNativePreview } from './world-forge-native-preview.js';
+import { renderWorldForgeNativeSolidPreview } from './world-forge-native-solid-preview.js';
 
 function readJson<T>(filePath: string): T {
   return JSON.parse(fs.readFileSync(path.resolve(filePath), 'utf8')) as T;
@@ -107,6 +117,12 @@ function usage() {
     '  npm run media:studio -- cinematic-sequence <sequence.json> <sequence-plan.json>',
     '  npm run media:studio -- cinematic-shot <shot-binding.json> <visual-request.json>',
     '  npm run media:studio -- performance-direct <payload.json> <directed-sequence.json> [performance-plan.json]',
+    '  npm run media:studio -- world-forge-validate <project.json> <validation.json>',
+    '  npm run media:studio -- world-forge-mutate <payload.json> <mutation-result.json>',
+    '  npm run media:studio -- world-forge-render-plan <payload.json> <render-plan.json>',
+    '  npm run media:studio -- world-forge-shot <payload.json> <shot.json>',
+    '  npm run media:studio -- world-forge-preview <payload.json> <preview.svg> [receipt.json]',
+    '  npm run media:studio -- world-forge-solid-preview <payload.json> <preview.svg> [receipt.json]',
   ].join('\n'));
 }
 
@@ -115,6 +131,100 @@ function main() {
 
   if (!command || command === '--help' || command === '-h') {
     usage();
+    return;
+  }
+
+  if (command === 'world-forge-validate') {
+    if (!input || !output) {
+      usage();
+      process.exitCode = 1;
+      return;
+    }
+    const project = readJson<WorldForgeProject>(input);
+    const validation = validateWorldForgeProject(project);
+    writeJson(output, validation);
+    console.log(`World Forge validation: ${validation.status}`);
+    console.log(`Digest: ${validation.digest}`);
+    if (validation.status === 'rejected') process.exitCode = 2;
+    return;
+  }
+
+  if (command === 'world-forge-mutate') {
+    if (!input || !output) {
+      usage();
+      process.exitCode = 1;
+      return;
+    }
+    const payload = readJson<{project:WorldForgeProject;operations:WorldForgeOperation[];expectedVersion?:number}>(input);
+    const result = applyWorldForgeOperations({
+      project:payload.project,
+      operations:payload.operations,
+      expectedVersion:payload.expectedVersion ?? payload.project.version,
+    });
+    writeJson(output, result);
+    console.log(`World Forge mutation: ${result.status}`);
+    console.log(`Version: ${result.project.version}; digest: ${result.validation.digest}`);
+    if (result.status === 'blocked') process.exitCode = 2;
+    return;
+  }
+
+  if (command === 'world-forge-shot') {
+    if (!input || !output) {
+      usage();
+      process.exitCode = 1;
+      return;
+    }
+    const payload = readJson<{project:WorldForgeProject;renderIntentId:string;shotId:string}>(input);
+    const shot = buildWorldForgeCinematicShot(payload);
+    writeJson(output, shot);
+    console.log(`World Forge cinematic shot created: ${path.resolve(output)}`);
+    console.log(`World digest: ${shot.projectDigest}; shot digest: ${shot.digest}`);
+    return;
+  }
+
+  if (command === 'world-forge-render-plan') {
+    if (!input || !output) {
+      usage();
+      process.exitCode = 1;
+      return;
+    }
+    const payload = readJson<{project:WorldForgeProject;renderIntentId:string}>(input);
+    const plan = buildWorldForgeRenderPlan(payload);
+    writeJson(output, plan);
+    console.log(`World Forge render plan created: ${path.resolve(output)}`);
+    console.log(`Renderer executable: ${plan.backend.executable}`);
+    return;
+  }
+
+  if (command === 'world-forge-solid-preview') {
+    if (!input || !output) {
+      usage();
+      process.exitCode = 1;
+      return;
+    }
+    const payload = readJson<{project:WorldForgeProject;renderIntentId:string}>(input);
+    const preview = renderWorldForgeNativeSolidPreview(payload);
+    fs.mkdirSync(path.dirname(path.resolve(output)), { recursive:true });
+    fs.writeFileSync(path.resolve(output), preview.svg, 'utf8');
+    if (optionalPlan) writeJson(optionalPlan, preview.receipt);
+    console.log(`World Forge native solid preview rendered: ${path.resolve(output)}`);
+    console.log(`SVG SHA-256: ${preview.receipt.svgSha256}`);
+    return;
+  }
+
+  if (command === 'world-forge-preview') {
+    if (!input || !output) {
+      usage();
+      process.exitCode = 1;
+      return;
+    }
+    const payload = readJson<{project:WorldForgeProject;renderIntentId:string}>(input);
+    const preview = renderWorldForgeNativePreview(payload);
+    fs.mkdirSync(path.dirname(path.resolve(output)), { recursive:true });
+    fs.writeFileSync(path.resolve(output), preview.svg, 'utf8');
+    if (optionalPlan) writeJson(optionalPlan, preview.receipt);
+    console.log(`World Forge native preview rendered: ${path.resolve(output)}`);
+    console.log(`SVG SHA-256: ${preview.receipt.svgSha256}`);
     return;
   }
 

@@ -1,0 +1,60 @@
+name: Fallen World Forge
+
+on:
+  pull_request:
+    paths:
+      - 'systemia/media-studio/world-forge*.ts'
+      - 'systemia/media-studio/WORLD_FORGE.md'
+      - 'systemia/media-studio/README.md'
+      - 'systemia/media-studio/cli.ts'
+      - 'src/WorldForgeEditor.tsx'
+      - 'src/world-forge.css'
+      - 'src/main.tsx'
+      - 'server.ts'
+      - 'package.json'
+      - '.github/workflows/fallen-world-forge.yml'
+  push:
+    branches:
+      - main
+    paths:
+      - 'systemia/media-studio/world-forge*.ts'
+      - 'systemia/media-studio/WORLD_FORGE.md'
+      - 'systemia/media-studio/README.md'
+      - 'systemia/media-studio/cli.ts'
+      - 'src/WorldForgeEditor.tsx'
+      - 'src/world-forge.css'
+      - 'src/main.tsx'
+      - 'server.ts'
+      - 'package.json'
+      - '.github/workflows/fallen-world-forge.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: fallen-world-forge-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  world-forge:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+
+      - name: Install
+        run: npm install --no-audit --no-fund
+
+      - name: World Forge contracts
+        run: npm run test:world-forge
+
+      - name: Typecheck integration
+        run: npm run lint
