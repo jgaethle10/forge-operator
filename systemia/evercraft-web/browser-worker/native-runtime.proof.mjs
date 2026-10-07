@@ -6,7 +6,12 @@ import {
   prepareNativeBrowserRuntime,
 } from './native-runtime.mjs';
 
-const state=fs.mkdtempSync(path.join(os.tmpdir(),'evercraft-native-browser-proof-'));
+const configuredState=String(process.env.EVERCRAFT_NATIVE_BROWSER_STATE_DIR||'').trim();
+const ownsState=!configuredState;
+const state=configuredState
+  ? path.resolve(configuredState)
+  : fs.mkdtempSync(path.join(os.tmpdir(),'evercraft-native-browser-proof-'));
+fs.mkdirSync(state,{recursive:true});
 let runtime=null;
 
 try{
@@ -99,5 +104,5 @@ try{
   if(runtime){
     try{await runtime.close();}catch{}
   }
-  fs.rmSync(state,{recursive:true,force:true});
+  if(ownsState) fs.rmSync(state,{recursive:true,force:true});
 }

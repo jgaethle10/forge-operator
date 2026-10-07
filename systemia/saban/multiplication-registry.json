@@ -875,6 +875,7 @@
         "audio_scene_guard",
         "replication_guard",
         "webgpu_guard",
+        "webgpu_device_guard",
         "studio_edit_guard",
         "runtime_migration_guard",
         "fallen_bridge_guard",
@@ -909,7 +910,7 @@
       "assignment_strategy": "role_item_cartesian",
       "scaling": {
         "strategy": "work_conserving",
-        "max_agents_per_item": 18,
+        "max_agents_per_item": 19,
         "target_logical_per_physical_worker": 8,
         "minimum_role_item_passes": 1
       },

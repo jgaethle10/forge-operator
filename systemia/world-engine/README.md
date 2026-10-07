@@ -48,7 +48,9 @@ Implemented in this slice:
 - Owned zero-dependency WGSL implements untextured PBR-lite/unlit material paths plus ambient, directional, point and spot lighting.
 - The browser WebGPU adapter owns device/buffer/pipeline submission only; visual-frame truth remains in World Engine.
 - WebGPU v9 fails closed on missing geometry, tampered visual receipts, unsupported textures and more than eight active lights.
-- Node CI proves plan/shader contracts but does not claim browser GPU-device execution.
+- Node CI proves plan/shader contracts; a separate native Chromium conformance lane now requires actual WebGPU adapter/device acquisition, compute-buffer readback and raster texture readback.
+- Browser WebGPU conformance classifies SwiftShader/llvmpipe/lavapipe as software execution, preserves ambiguous adapters as unknown, and permits a hardware claim only when adapter metadata reports a non-software hardware signal.
+- The browser device receipt retains the exact launch profile, adapter metadata, compute/raster observations and native-browser preflight receipt hash.
 - Versioned live Studio edit transactions bind to exact world and asset-manifest digests before mutation.
 - Human, agent and code edits share the same deterministic world-edit contract and produce SHA-256 receipts.
 - Edit receipts carry inverse transactions for semantic undo while world/asset revisions remain monotonic.
@@ -93,7 +95,7 @@ The engine does not gain publication authority, payment authority, emergency aut
 
 The V1 contract is deliberately small enough to prove ownership before expanding. The next compatible layers are:
 
-1. Browser GPU-device conformance receipts and visual reference-frame tests.
+1. Full World Engine reference-frame rendering through browser WebGPU with pixel-baseline receipts.
 2. Texture/sampler runtime and asset residency.
 3. Animation authoring/import bridge for Fallen character assets.
 4. Navigation corridor smoothing / dynamic obstacle avoidance.
