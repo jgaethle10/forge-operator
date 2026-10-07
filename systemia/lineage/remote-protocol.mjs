@@ -375,7 +375,14 @@ export async function fetchCommitGraph({
     };
   }
 
-  await store.writeRef(localBranch, remoteHead);
+  let refUpdate = null;
+  if (localHead !== remoteHead) {
+    refUpdate = await store.writeRef(localBranch, remoteHead, {
+      expected: localHead,
+      actor: { type: 'agent', id: 'lineage-remote-fetch' },
+      reason: 'remote_fast_forward',
+    });
+  }
   return {
     schema: 'evercraft.lineage.fetch-receipt.v1',
     remote_branch: remoteBranch,
@@ -390,7 +397,8 @@ export async function fetchCommitGraph({
     large_object_receipts: largeReceipts,
     transferred_large_chunks: largeReceipts.reduce((sum, row) => sum + Number(row.transferred_chunks || 0), 0),
     transferred_large_bytes: largeReceipts.reduce((sum, row) => sum + Number(row.transferred_bytes || 0), 0),
-    ref_updated: true,
+    ref_updated: Boolean(refUpdate),
+    ref_update: refUpdate,
     fast_forward_possible: true,
     state: localHead === remoteHead ? 'already_current' : 'fast_forwarded'
   };
