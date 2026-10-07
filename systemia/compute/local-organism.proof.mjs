@@ -38,6 +38,10 @@ try {
   assert.equal(first.seed.zero_cost, true);
   assert.equal(first.seed.placement_labels.includes('persistent-storage'), true);
   assert.equal(first.receipt.zero_spend_capacity, true);
+  assert.equal(first.receipt.native_browser_runtime.ready, false);
+  assert.equal(first.receipt.native_browser_runtime.install_attempted, false);
+  assert.equal(first.receipt.native_browser_runtime.sudo_used, false);
+  assert.equal(first.receipt.native_browser_runtime.system_package_manager_used, false);
   assert.equal(first.receipt.public_ingress, false);
   assert.equal(first.receipt.node_endpoint_scope, 'loopback_only');
   assert.equal(first.receipt.named_cloud_required, false);
@@ -141,6 +145,8 @@ try {
     ],
     loopback_only: true,
     zero_spend_capacity: true,
+    native_browser_bootstrap_receipted: true,
+    native_browser_bootstrap_network_disabled_in_proof: true,
     public_ingress: false,
     multicast_announcement: false,
     persistent_device_identity: true,
