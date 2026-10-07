@@ -85,11 +85,13 @@
         "submission_package_ready": false,
         "entry_package": "systemia/competition/entries/nebius-runbook-zero",
         "live_provider_canary": "held_missing_credential",
-        "public_repo_state": "export_ready_not_published",
+        "public_repo_state": "public_standalone_branch_published_dedicated_repo_pending",
         "hosted_demo_state": "not_verified",
         "demo_video_state": "not_recorded",
         "standalone_export_state": "verified_artifact_ready",
-        "last_verified_on": "2026-10-07"
+        "last_verified_on": "2026-10-07",
+        "public_source_url": "https://github.com/jgaethle10/forge-operator/tree/runbook-zero-public",
+        "public_source_commit": "113039852a57308faecab100814caaf54ead21f1"
       }
     },
     {
