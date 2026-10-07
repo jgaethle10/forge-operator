@@ -1,0 +1,23 @@
+{
+  "@context": "https://schema.org",
+  "@type": "Service",
+  "name": "Evercraft Visual Intelligence Story Sprint",
+  "provider": {
+    "@type": "Organization",
+    "name": "Evercraft LLC"
+  },
+  "offers": [
+    {
+      "@type": "Offer",
+      "name": "Founding Visual Story Sprint",
+      "price": "500",
+      "priceCurrency": "USD"
+    },
+    {
+      "@type": "Offer",
+      "name": "Three-Story Visual Campaign",
+      "price": "1500",
+      "priceCurrency": "USD"
+    }
+  ]
+}

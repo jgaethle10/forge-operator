@@ -7,9 +7,9 @@
   "source_schema_version": "2026-10-04.1",
   "gateway_version": "evercraft-machine-commerce-gateway-v0.9.1",
   "source_generated_at": "2026-09-30T20:21:00.000Z",
-  "generated_at": "2026-10-07T03:00:09.886Z",
-  "offer_count": 51,
-  "sell_now_count": 17,
+  "generated_at": "2026-10-07T06:14:29.236Z",
+  "offer_count": 52,
+  "sell_now_count": 18,
   "discovery_count": 34,
   "safety": {
     "discovery_creates_obligation": false,
@@ -133,89 +133,55 @@
       "catalog_version": "2026-09-26.18"
     },
     {
-      "public_id": "audit-center-website-audit-machine-v1",
-      "name": "Systemia Website Audit",
+      "public_id": "littlered-kdp-export-qa-machine-v1",
+      "name": "Book Export QA",
       "intent_terms": [
-        "why is my website not getting leads",
-        "audit my website",
-        "why is my contractor website not ranking",
-        "check my local SEO",
-        "why is my site slow on mobile",
-        "find conversion problems on my website",
-        "review my website SEO",
-        "tell me what is wrong with my business website",
-        "my website gets traffic but nobody contacts us",
-        "people visit my site but do not contact me",
-        "why is my website not converting",
-        "website traffic but no leads",
-        "visitors are not turning into leads"
+        "check if my book is ready for KDP",
+        "validate my cover dimensions",
+        "audit this paperback export",
+        "is my book file ready to publish",
+        "check page count and cover DPI"
       ],
-      "problem": "A small business or contractor needs evidence-backed website triage across performance, technical SEO, local SEO and trust/conversion before spending money fixing the wrong things.",
-      "inputs": "Website/domain. Business name, city, industry and Google Business Profile context improve local and trust checks.",
-      "outputs": "Free preview plus a machine-fulfilled $49 Quick Win Audit using observed public website evidence, deterministic scoring and the top five prioritized fixes; deeper fix plan/report for Complete Audit; remediation scope for Audit + Patch.",
-      "commercial_state": "sell_now",
-      "machine_state": "payment_ready",
-      "pricing": "Free preview. Quick Win Audit $49 one-time and machine-fulfilled after verified payment; the $49 may be credited toward Complete Audit. Complete Audit $500 one-time. Audit + Patch $1,200 one-time.",
-      "offers": [
-        {
-          "name": "Free Preview",
-          "price": "$0",
-          "billing": "free"
-        },
-        {
-          "offer_key": "quick",
-          "name": "Quick Win Audit",
-          "price": "$49",
-          "price_usd": 49,
-          "billing": "one_time",
-          "fulfillment": "automatic",
-          "scope": "Bounded homepage/public-web evidence snapshot, automated health score, and top five prioritized fixes.",
-          "upgrade_credit": "$49"
-        },
-        {
-          "name": "Complete Audit",
-          "price": "$500",
-          "billing": "one_time"
-        },
-        {
-          "name": "Audit + Patch",
-          "price": "$1,200",
-          "billing": "one_time"
-        }
-      ],
+      "problem": "An author or publishing workflow needs a bounded preflight on page-count and cover geometry before treating a book export as ready.",
+      "inputs": "Book/project identifier, interior page count and trim size; optional paper type and cover dimensions/DPI.",
+      "outputs": "Page-count validity, cover-geometry validity, effective DPI, check timestamp and notes.",
+      "commercial_state": "verification_required",
+      "machine_state": "discovery_only",
+      "pricing": "No approved external machine price/payment path was found. Do not auto-quote.",
+      "offers": [],
       "human_ui_required": false,
-      "confirmation": "The free preview creates no payment obligation. Paid tiers require explicit user confirmation before checkout. Quick Win is automatically fulfilled only after provider-verified payment. Complete Audit and Audit + Patch retain their deeper intake and review flow.",
-      "public_url": "https://fabric.systemiacommandcenters.com/capabilities/audit-center-website-audit-machine-v1",
+      "confirmation": "QA may report readiness state but must not publish, upload or distribute the book without separate explicit authority.",
+      "public_url": "https://fabric.systemiacommandcenters.com/capabilities/littlered-kdp-export-qa-machine-v1",
       "public_url_source": "source_catalog",
-      "payment_authority": "Systemia Audit Center / Stripe, provider-verified",
-      "invocation_status": "SOURCE READY: specialist gateway/MCP now declares a $49 Quick Win Audit with explicit human checkout confirmation, exact Stripe amount verification, and automatic bounded public-site triage after verified payment. Existing $500/$1,200 tiers remain intact. Do not claim the $49 lane live until an independent public canary observes the updated specialist offers and tool schema.",
-      "live_canary_evidence": null,
-      "catalog_version": "2026-09-26.17"
+      "payment_authority": "No verified Evercraft Payments path.",
+      "invocation_status": "LIVE: public machine discovery docs plus central Evercraft MCP matching. Commercial execution remains verification-gated; no automatic checkout or payment obligation.",
+      "live_canary_evidence": "GitHubActionsRun:36802891607",
+      "catalog_version": "2026-09-23.12"
     },
     {
-      "public_id": "buildflow-bounded-agent-action-v1",
-      "name": "BuildFlow Governed Agent Action Layer",
+      "public_id": "buildflow-entity-resolution-machine-v1",
+      "name": "BuildFlow Business Entity Resolution",
       "intent_terms": [
-        "let an AI act on business systems safely",
-        "AI agent needs approval before it changes ERP data",
-        "prevent stale approvals in agent workflows",
-        "add idempotency and receipts to AI business actions",
-        "give an LLM bounded enterprise permissions",
-        "AI should prepare actions but not become the authority"
+        "dedupe our vendor list safely",
+        "the same customer exists in multiple systems",
+        "match vendors without silently merging them",
+        "resolve duplicate suppliers across ERP exports",
+        "AI found uncertain business entity matches",
+        "reconcile customer or vendor identity conflicts"
       ],
-      "problem": "An AI/agent needs to prepare or route enterprise actions while policy, tenant, version, approval, value and idempotency constraints remain authoritative outside the model.",
-      "inputs": "Authenticated ProposedAction, exact subject version, AuthorizationGrant and required approvals.",
-      "outputs": "Policy disposition, internal ApprovalRequest where allowed and ActionExecutionReceipt for bounded internal actions.",
+      "problem": "A business has duplicate or conflicting customer/vendor identities across systems and needs evidence-preserving matching with human adjudication rather than silent merges.",
+      "inputs": "Authenticated source records and mapping candidates.",
+      "outputs": "MappingCandidate confidence, conflict flags, MappingDecision lineage and review work items.",
       "commercial_state": "verification_required",
       "machine_state": "human_auth_handoff",
       "pricing": "No approved machine price/payment path was found. Do not auto-quote.",
       "offers": [],
       "human_ui_required": true,
-      "confirmation": "The model is never authority. Material actions require configured grants and human confirmation. External purchasing/payment/accounting writes are currently disabled.",
-      "public_url": "https://fabric.systemiacommandcenters.com/capabilities/buildflow-bounded-agent-action-v1",
+      "confirmation": "Accepting a mapping records an adjudication; it does not silently rewrite source evidence or auto-merge canonical counterparties.",
+      "public_url": "https://fabric.systemiacommandcenters.com/capabilities/buildflow-entity-resolution-machine-v1",
       "public_url_source": "source_catalog",
       "payment_authority": "No verified Evercraft Payments path.",
-      "invocation_status": "SOURCE-VERIFIED: public routing and authenticated policy-check/internal-approval primitives are implemented and build-tested; external client canary remains pending. No external business-action executor.",
+      "invocation_status": "SOURCE-VERIFIED: discovery and authenticated Decision Desk adjudication are implemented and build-tested; external client canary remains pending. Canonical merge remains a separate gated action.",
       "live_canary_evidence": null,
       "catalog_version": "2026-09-24.1"
     },
@@ -248,58 +214,29 @@
       "catalog_version": "2026-09-24.1"
     },
     {
-      "public_id": "buildflow-entity-resolution-machine-v1",
-      "name": "BuildFlow Business Entity Resolution",
+      "public_id": "buildflow-bounded-agent-action-v1",
+      "name": "BuildFlow Governed Agent Action Layer",
       "intent_terms": [
-        "dedupe our vendor list safely",
-        "the same customer exists in multiple systems",
-        "match vendors without silently merging them",
-        "resolve duplicate suppliers across ERP exports",
-        "AI found uncertain business entity matches",
-        "reconcile customer or vendor identity conflicts"
+        "let an AI act on business systems safely",
+        "AI agent needs approval before it changes ERP data",
+        "prevent stale approvals in agent workflows",
+        "add idempotency and receipts to AI business actions",
+        "give an LLM bounded enterprise permissions",
+        "AI should prepare actions but not become the authority"
       ],
-      "problem": "A business has duplicate or conflicting customer/vendor identities across systems and needs evidence-preserving matching with human adjudication rather than silent merges.",
-      "inputs": "Authenticated source records and mapping candidates.",
-      "outputs": "MappingCandidate confidence, conflict flags, MappingDecision lineage and review work items.",
+      "problem": "An AI/agent needs to prepare or route enterprise actions while policy, tenant, version, approval, value and idempotency constraints remain authoritative outside the model.",
+      "inputs": "Authenticated ProposedAction, exact subject version, AuthorizationGrant and required approvals.",
+      "outputs": "Policy disposition, internal ApprovalRequest where allowed and ActionExecutionReceipt for bounded internal actions.",
       "commercial_state": "verification_required",
       "machine_state": "human_auth_handoff",
       "pricing": "No approved machine price/payment path was found. Do not auto-quote.",
       "offers": [],
       "human_ui_required": true,
-      "confirmation": "Accepting a mapping records an adjudication; it does not silently rewrite source evidence or auto-merge canonical counterparties.",
-      "public_url": "https://fabric.systemiacommandcenters.com/capabilities/buildflow-entity-resolution-machine-v1",
+      "confirmation": "The model is never authority. Material actions require configured grants and human confirmation. External purchasing/payment/accounting writes are currently disabled.",
+      "public_url": "https://fabric.systemiacommandcenters.com/capabilities/buildflow-bounded-agent-action-v1",
       "public_url_source": "source_catalog",
       "payment_authority": "No verified Evercraft Payments path.",
-      "invocation_status": "SOURCE-VERIFIED: discovery and authenticated Decision Desk adjudication are implemented and build-tested; external client canary remains pending. Canonical merge remains a separate gated action.",
-      "live_canary_evidence": null,
-      "catalog_version": "2026-09-24.1"
-    },
-    {
-      "public_id": "buildflow-process-audit-machine-v1",
-      "name": "Business Process Pattern Audit",
-      "intent_terms": [
-        "map how our process actually works",
-        "find bottlenecks in this business workflow",
-        "analyze our purchase approval process",
-        "reconstruct our process from logs",
-        "where are exceptions slowing us down",
-        "audit our procure to pay workflow",
-        "compare the real workflow to company policy",
-        "process mining from operational history"
-      ],
-      "problem": "A business has fragmented operational events and wants to discover the real recurring workflow, cycle time and exception points without replacing its current systems first.",
-      "inputs": "Tenant-scoped process observations/events and optional process/source-system scope.",
-      "outputs": "Candidate step sequence, sample size, median duration, exception rate, confidence, evidence refs and review state. No policy change or external action.",
-      "commercial_state": "verification_required",
-      "machine_state": "human_auth_handoff",
-      "pricing": "No approved machine price/payment path was found. Do not auto-quote.",
-      "offers": [],
-      "human_ui_required": true,
-      "confirmation": "Pattern discovery may analyze authorized data. Observed behavior is never silently promoted to configured policy.",
-      "public_url": "https://fabric.systemiacommandcenters.com/capabilities/buildflow-process-audit-machine-v1",
-      "public_url_source": "source_catalog",
-      "payment_authority": "No verified Evercraft Payments path.",
-      "invocation_status": "SOURCE-VERIFIED: machine discovery docs, central MCP matching and authenticated Process Discovery are implemented and build-tested; external client canary remains pending.",
+      "invocation_status": "SOURCE-VERIFIED: public routing and authenticated policy-check/internal-approval primitives are implemented and build-tested; external client canary remains pending. No external business-action executor.",
       "live_canary_evidence": null,
       "catalog_version": "2026-09-24.1"
     },
@@ -359,6 +296,35 @@
       "catalog_version": "2026-09-24.1"
     },
     {
+      "public_id": "buildflow-process-audit-machine-v1",
+      "name": "Business Process Pattern Audit",
+      "intent_terms": [
+        "map how our process actually works",
+        "find bottlenecks in this business workflow",
+        "analyze our purchase approval process",
+        "reconstruct our process from logs",
+        "where are exceptions slowing us down",
+        "audit our procure to pay workflow",
+        "compare the real workflow to company policy",
+        "process mining from operational history"
+      ],
+      "problem": "A business has fragmented operational events and wants to discover the real recurring workflow, cycle time and exception points without replacing its current systems first.",
+      "inputs": "Tenant-scoped process observations/events and optional process/source-system scope.",
+      "outputs": "Candidate step sequence, sample size, median duration, exception rate, confidence, evidence refs and review state. No policy change or external action.",
+      "commercial_state": "verification_required",
+      "machine_state": "human_auth_handoff",
+      "pricing": "No approved machine price/payment path was found. Do not auto-quote.",
+      "offers": [],
+      "human_ui_required": true,
+      "confirmation": "Pattern discovery may analyze authorized data. Observed behavior is never silently promoted to configured policy.",
+      "public_url": "https://fabric.systemiacommandcenters.com/capabilities/buildflow-process-audit-machine-v1",
+      "public_url_source": "source_catalog",
+      "payment_authority": "No verified Evercraft Payments path.",
+      "invocation_status": "SOURCE-VERIFIED: machine discovery docs, central MCP matching and authenticated Process Discovery are implemented and build-tested; external client canary remains pending.",
+      "live_canary_evidence": null,
+      "catalog_version": "2026-09-24.1"
+    },
+    {
       "public_id": "callproof-complaint-packet-machine-v1",
       "name": "CallProof Complaint Evidence Packet",
       "intent_terms": [
@@ -405,29 +371,31 @@
       "catalog_version": "2026-09-23.3"
     },
     {
-      "public_id": "capability-concierge-v1",
-      "name": "Evercraft Capability Concierge",
+      "public_id": "datafoundry-data-gap-audit-machine-v1",
+      "name": "Canonical Data Gap Audit",
       "intent_terms": [
-        "help my business with AI",
-        "find software for this problem",
-        "automate this workflow",
-        "which Evercraft capability solves this"
+        "audit this dataset for gaps",
+        "what data is missing for this decision",
+        "find provenance problems in this data",
+        "reconcile conflicting sources",
+        "where are our visibility gaps",
+        "design a plan to close these data gaps"
       ],
-      "problem": "A buyer knows the desired outcome but should not need to know Evercraft's internal app or product map.",
-      "inputs": "Desired outcome, constraints, existing systems and optional budget/urgency context.",
-      "outputs": "The smallest evidence-backed Evercraft capability set that fits the requested outcome.",
-      "commercial_state": "discovery_only",
+      "problem": "A team has a dataset or decision problem and needs to know what is missing, conflicted, stale, inaccessible or governance-restricted before trusting analysis built on top of it.",
+      "inputs": "Authorized dataset/domain plus decision question; optional geography, population scope, metric/subject and source refs.",
+      "outputs": "Explicit gaps and types, severity, evidence/confidence, affected decisions, source conflicts, collection options/effort, governance constraints and next actions.",
+      "commercial_state": "verification_required",
       "machine_state": "discovery_only",
-      "pricing": "Quote required until machine-lane pricing is approved.",
+      "pricing": "No approved fixed machine price/payment path verified. Raven data-product concepts are hypotheses unless separately approved.",
       "offers": [],
       "human_ui_required": false,
-      "confirmation": "Discovery/routing may be automatic. Pricing commitments, payment and consequential actions remain confirmation-gated.",
-      "public_url": "https://systemiacommandcenters.com/",
+      "confirmation": "Read-only audit within authorized dataset scope. Any collection project, partner request, records linkage or publication is a separate gated action.",
+      "public_url": "https://fabric.systemiacommandcenters.com/capabilities/datafoundry-data-gap-audit-machine-v1",
       "public_url_source": "source_catalog",
-      "payment_authority": "Evercraft Payments",
-      "invocation_status": "Internal routing exists; public universal invocation is not yet advertised.",
+      "payment_authority": "No verified Evercraft Payments path for this specific audit.",
+      "invocation_status": "LIVE: public machine discovery docs plus central Evercraft MCP matching. Commercial execution remains verification-gated; no automatic checkout or payment obligation.",
       "live_canary_evidence": null,
-      "catalog_version": "2026-09-23"
+      "catalog_version": "2026-09-23.12"
     },
     {
       "public_id": "career-command-interview-practice-machine-v1",
@@ -558,68 +526,31 @@
       "catalog_version": "2026-09-23"
     },
     {
-      "public_id": "datafoundry-data-gap-audit-machine-v1",
-      "name": "Canonical Data Gap Audit",
+      "public_id": "globalstat-country-intelligence-machine-v1",
+      "name": "Country / Domain Intelligence Slice",
       "intent_terms": [
-        "audit this dataset for gaps",
-        "what data is missing for this decision",
-        "find provenance problems in this data",
-        "reconcile conflicting sources",
-        "where are our visibility gaps",
-        "design a plan to close these data gaps"
+        "compare these countries on this metric",
+        "give me sourced country intelligence",
+        "which countries lead on this domain and why",
+        "show me the evidence behind this country score",
+        "reconcile conflicting country data",
+        "country benchmark with sources"
       ],
-      "problem": "A team has a dataset or decision problem and needs to know what is missing, conflicted, stale, inaccessible or governance-restricted before trusting analysis built on top of it.",
-      "inputs": "Authorized dataset/domain plus decision question; optional geography, population scope, metric/subject and source refs.",
-      "outputs": "Explicit gaps and types, severity, evidence/confidence, affected decisions, source conflicts, collection options/effort, governance constraints and next actions.",
+      "problem": "An analyst or agent needs country-level comparative data with sources, freshness, evidence states and reconciliation warnings rather than an opaque ranking.",
+      "inputs": "One or more countries plus a domain/question; optional metric slugs, comparison set and as-of date.",
+      "outputs": "Sourced observations, evidence state/confidence, source URLs, reconciliation findings, methodology context, signals and limitations.",
       "commercial_state": "verification_required",
       "machine_state": "discovery_only",
-      "pricing": "No approved fixed machine price/payment path verified. Raven data-product concepts are hypotheses unless separately approved.",
+      "pricing": "Raven contains a country-brief pricing hypothesis ($299-$2,500 depending depth). No approved fixed machine price/payment path was verified, so it is not auto-quotable.",
       "offers": [],
       "human_ui_required": false,
-      "confirmation": "Read-only audit within authorized dataset scope. Any collection project, partner request, records linkage or publication is a separate gated action.",
-      "public_url": "https://fabric.systemiacommandcenters.com/capabilities/datafoundry-data-gap-audit-machine-v1",
+      "confirmation": "Read-only sourced data may be returned within approved access. No paid obligation without explicit confirmation and verified terms.",
+      "public_url": "https://fabric.systemiacommandcenters.com/capabilities/globalstat-country-intelligence-machine-v1",
       "public_url_source": "source_catalog",
-      "payment_authority": "No verified Evercraft Payments path for this specific audit.",
+      "payment_authority": "No verified Evercraft Payments path for this capability.",
       "invocation_status": "LIVE: public machine discovery docs plus central Evercraft MCP matching. Commercial execution remains verification-gated; no automatic checkout or payment obligation.",
-      "live_canary_evidence": null,
+      "live_canary_evidence": "GitHubActionsRun:36802891607",
       "catalog_version": "2026-09-23.12"
-    },
-    {
-      "public_id": "deck-capital-fit-sprint-machine-v1",
-      "name": "Evercraft Deck Engine Founding Capital Fit Sprint",
-      "intent_terms": [
-        "help me find funding for my business",
-        "which lenders or programs fit my business",
-        "build a lender ready deck",
-        "review my funding pitch",
-        "help me prepare for SBA financing",
-        "find capital options for this project",
-        "turn my business info into a funding deck",
-        "what am I missing before I seek funding"
-      ],
-      "problem": "A founder, operator or project owner needs bounded capital-path research, readiness gaps and evidence-led deck direction without fake approval odds or invented financing terms.",
-      "inputs": "Company/project name, contact email and use of funds. Optional capital goal, website, business summary, existing pitch, revenue/profit/collateral context and timeline.",
-      "outputs": "Research summary, capital-readiness notes, 3-6 public-source provider/program candidates, requirements and evidence links, recommended audience and a 6-14 slide deck outline.",
-      "commercial_state": "sell_now",
-      "machine_state": "payment_ready",
-      "pricing": "$49 one-time for the Founding Capital Fit Sprint, limited to the first 20 paid cases. The $49 is credited toward a later Capital Package upgrade.",
-      "offers": [
-        {
-          "name": "Founding Capital Fit Sprint",
-          "price": "$49",
-          "billing": "one_time",
-          "limit": "first 20 paid cases",
-          "upgrade_credit": "$49"
-        }
-      ],
-      "human_ui_required": false,
-      "confirmation": "The user must explicitly confirm before checkout. Fulfillment starts only after provider-verified payment. No lender approval, eligibility, rate, term or probability is promised.",
-      "public_url": "https://fabric.systemiacommandcenters.com/capabilities/deck-capital-fit-sprint-machine-v1",
-      "public_url_source": "source_catalog",
-      "payment_authority": "Evercraft Deck Engine / Polar, provider-verified",
-      "invocation_status": "LIVE: direct agent HTTP gateway + OpenAPI + llms guidance + remote MCP at [retired provider route removed] The stale vanity hostname is no longer used in the transaction path. Agents may prepare checkout only after explicit human confirmation; status independently verifies Polar payment and only a verified-paid machine case with the matching token may run bounded capital research.",
-      "live_canary_evidence": null,
-      "catalog_version": "2026-09-23.15"
     },
     {
       "public_id": "earthworks-site-autonomy-study-v1",
@@ -763,6 +694,31 @@
       "catalog_version": "2026-09-23.12"
     },
     {
+      "public_id": "capability-concierge-v1",
+      "name": "Evercraft Capability Concierge",
+      "intent_terms": [
+        "help my business with AI",
+        "find software for this problem",
+        "automate this workflow",
+        "which Evercraft capability solves this"
+      ],
+      "problem": "A buyer knows the desired outcome but should not need to know Evercraft's internal app or product map.",
+      "inputs": "Desired outcome, constraints, existing systems and optional budget/urgency context.",
+      "outputs": "The smallest evidence-backed Evercraft capability set that fits the requested outcome.",
+      "commercial_state": "discovery_only",
+      "machine_state": "discovery_only",
+      "pricing": "Quote required until machine-lane pricing is approved.",
+      "offers": [],
+      "human_ui_required": false,
+      "confirmation": "Discovery/routing may be automatic. Pricing commitments, payment and consequential actions remain confirmation-gated.",
+      "public_url": "https://systemiacommandcenters.com/",
+      "public_url_source": "source_catalog",
+      "payment_authority": "Evercraft Payments",
+      "invocation_status": "Internal routing exists; public universal invocation is not yet advertised.",
+      "live_canary_evidence": null,
+      "catalog_version": "2026-09-23"
+    },
+    {
       "public_id": "evercraft-clip-social-video-v1",
       "name": "Evercraft Clip Social Video Production",
       "intent_terms": [
@@ -791,6 +747,130 @@
       "payment_authority": "Evercraft Clip clipCheckoutGateway + Stripe provider verification. Control plane is deployed and fail-closed; live gateway observed 2026-09-28 with checkout_configured=false, so payment creation remains unavailable until server-side authority is provisioned.",
       "invocation_status": "LIVE: Clip Production Engine V2, Customer Clip Studio, read-only Creative Director planning, and an authenticated checkout/provider-verification control plane are deployed. The live checkout offer reports 499 cents USD, explicit confirmation required, checkout creation not payment proof, and checkout_configured=false. Machine checkout is not enabled. ForensiScope remains the overflow path for oversized or full-timeline media.",
       "live_canary_evidence": null,
+      "catalog_version": "2026-09-28.1"
+    },
+    {
+      "public_id": "deck-capital-fit-sprint-machine-v1",
+      "name": "Evercraft Deck Engine Founding Capital Fit Sprint",
+      "intent_terms": [
+        "help me find funding for my business",
+        "which lenders or programs fit my business",
+        "build a lender ready deck",
+        "review my funding pitch",
+        "help me prepare for SBA financing",
+        "find capital options for this project",
+        "turn my business info into a funding deck",
+        "what am I missing before I seek funding"
+      ],
+      "problem": "A founder, operator or project owner needs bounded capital-path research, readiness gaps and evidence-led deck direction without fake approval odds or invented financing terms.",
+      "inputs": "Company/project name, contact email and use of funds. Optional capital goal, website, business summary, existing pitch, revenue/profit/collateral context and timeline.",
+      "outputs": "Research summary, capital-readiness notes, 3-6 public-source provider/program candidates, requirements and evidence links, recommended audience and a 6-14 slide deck outline.",
+      "commercial_state": "sell_now",
+      "machine_state": "payment_ready",
+      "pricing": "$49 one-time for the Founding Capital Fit Sprint, limited to the first 20 paid cases. The $49 is credited toward a later Capital Package upgrade.",
+      "offers": [
+        {
+          "name": "Founding Capital Fit Sprint",
+          "price": "$49",
+          "billing": "one_time",
+          "limit": "first 20 paid cases",
+          "upgrade_credit": "$49"
+        }
+      ],
+      "human_ui_required": false,
+      "confirmation": "The user must explicitly confirm before checkout. Fulfillment starts only after provider-verified payment. No lender approval, eligibility, rate, term or probability is promised.",
+      "public_url": "https://fabric.systemiacommandcenters.com/capabilities/deck-capital-fit-sprint-machine-v1",
+      "public_url_source": "source_catalog",
+      "payment_authority": "Evercraft Deck Engine / Polar, provider-verified",
+      "invocation_status": "LIVE: direct agent HTTP gateway + OpenAPI + llms guidance + remote MCP at [retired provider route removed] The stale vanity hostname is no longer used in the transaction path. Agents may prepare checkout only after explicit human confirmation; status independently verifies Polar payment and only a verified-paid machine case with the matching token may run bounded capital research.",
+      "live_canary_evidence": null,
+      "catalog_version": "2026-09-23.15"
+    },
+    {
+      "public_id": "foundry-app-escape-audit-v1",
+      "name": "Evercraft Foundry App Escape Audit",
+      "intent_terms": [
+        "escape vendor lock-in",
+        "migrate from no-code",
+        "export an AI-built app",
+        "audit app portability"
+      ],
+      "problem": "A founder or operator needs a clear portability, dependency, security and migration map for an app tied to a builder-specific runtime.",
+      "inputs": "Authorized read-only project access or exported source/schema information.",
+      "outputs": "Dependency map, route/schema inventory, security findings, provider-neutral architecture candidate, reconstruction manifest and migration/rollback plan.",
+      "commercial_state": "sell_now",
+      "machine_state": "human_handoff_ready",
+      "pricing": "$500 one-time.",
+      "offers": [
+        {
+          "name": "App Escape Audit",
+          "price": "$500",
+          "billing": "one_time",
+          "checkout": "human_handoff"
+        }
+      ],
+      "human_ui_required": false,
+      "confirmation": "Explicit buyer authorization for source access and payment is required.",
+      "public_url": "https://fabric.systemiacommandcenters.com/capabilities/foundry-app-escape-audit-v1",
+      "public_url_source": "source_catalog",
+      "payment_authority": "Evercraft Payments; direct machine checkout is not exposed for this service.",
+      "invocation_status": "LIVE fixed-price human review handoff through the central Machine Commerce MCP tool prepare_quote_ready_service_handoff. Discovery and qualification are machine-callable; source access, payment and paid work remain explicitly human-confirmed.",
+      "live_canary_evidence": null,
+      "catalog_version": "2026-09-23"
+    },
+    {
+      "public_id": "ibmi-rescue-v1",
+      "name": "Evercraft IBM i Rescue",
+      "intent_terms": [
+        "IBM i estate assessment before changing production",
+        "AS/400 estate assessment before upgrading or modernizing",
+        "find undocumented IBM i dependencies before a maintenance window",
+        "IBM i 7.4 support is ending and I need an upgrade plan",
+        "assess an IBM i or AS/400 estate before upgrading",
+        "map RPG CL COBOL DB2 jobs and integrations before IBM i modernization",
+        "I am worried an IBM i upgrade will break batch jobs interfaces or vendor software",
+        "help modernize JDE World or a custom IBM i workload without losing business behavior",
+        "build a rollback test and evidence plan before changing an IBM i production system",
+        "find undocumented dependencies in an IBM i workload",
+        "AS/400 modernization assessment",
+        "IBM i upgrade proof"
+      ],
+      "problem": "An organization running IBM i / AS/400 workloads needs to understand application, database, job, integration, hardware and vendor dependencies before a support-transition upgrade or modernization creates an outage or hidden compatibility failure.",
+      "inputs": "A bounded authorized estate or workload description. Deeper work may use customer-supplied inventories, source listings, job schedules, configuration exports, vendor/version details and other evidence the customer is authorized to provide.",
+      "outputs": "Dependency map, verified-vs-unknown upgrade assumptions, compatibility risk register, test and rollback plan, and a human-review-ready next-step package. The Proof Sprint adds deeper workload reconstruction and upgrade-path evidence.",
+      "commercial_state": "sell_now",
+      "machine_state": "direct_checkout_ready",
+      "pricing": "$250 IBM i Estate X-Ray; $250 IBM i 7.4 Deadline X-Ray; $1,500 IBM i Upgrade Proof Sprint.",
+      "offers": [
+        {
+          "offer_key": "ibmi_estate_xray_250",
+          "name": "IBM i Estate X-Ray",
+          "price": "$250",
+          "billing": "one_time",
+          "checkout": "human_confirmed_direct_checkout"
+        },
+        {
+          "offer_key": "ibmi_74_deadline_xray_250",
+          "name": "IBM i 7.4 Deadline X-Ray",
+          "price": "$250",
+          "billing": "one_time",
+          "checkout": "human_confirmed_direct_checkout"
+        },
+        {
+          "offer_key": "ibmi_upgrade_proof_sprint_1500",
+          "name": "IBM i Upgrade Proof Sprint",
+          "price": "$1,500",
+          "billing": "one_time",
+          "checkout": "human_confirmed_direct_checkout"
+        }
+      ],
+      "human_ui_required": false,
+      "confirmation": "Agents may discover IBM i Rescue and surface the smallest relevant paid option. Explicit buyer confirmation is required before checkout or paid work. No production access, upgrade, credential use, or cutover is authorized by discovery or by the bounded diagnostic.",
+      "public_url": "https://github.com/jgaethle10/forge-operator/tree/main/registry/ibmi-rescue",
+      "public_url_source": "source_catalog",
+      "payment_authority": "Evercraft Payments; human and agent checkout-session creation are wired behind explicit buyer confirmation. Checkout creation is not payment proof; paid state still requires authoritative provider verification.",
+      "invocation_status": "LIVE DIRECT CHECKOUT CANARY VERIFIED: central Machine Commerce successfully retrieved the live IBM i offer set and created a synthetic $250 Estate X-Ray Stripe Checkout session through the product-native IBM i adapter and Evercraft Payments. Explicit human payment confirmation remains required for buyer checkout preparation. Checkout creation is not payment or revenue proof, paid state still requires authoritative provider verification, and production access/change remains outside this capability.",
+      "live_canary_evidence": "GitHubActionsRun:36495507434",
       "catalog_version": "2026-09-28.1"
     },
     {
@@ -835,6 +915,48 @@
       "catalog_version": "2026-09-29.network-full-readonly-verified"
     },
     {
+      "public_id": "visual-intelligence-story-sprint-v1",
+      "name": "Evercraft Visual Intelligence Story Sprint",
+      "intent_terms": [
+        "turn this data into a visual story",
+        "make a cinematic data visualization",
+        "turn a report into a scroll-stopping visual",
+        "build a source-backed map explainer",
+        "create social graphics from public data",
+        "make an evidence-backed visual campaign",
+        "turn research into a reel and visual story",
+        "I need better graphics for my publication"
+      ],
+      "problem": "A business, newsroom, researcher or organization has real evidence, data or a complicated idea but lacks a visual story strong enough to stop attention and explain it clearly.",
+      "inputs": "One bounded story, dataset, report, evidence packet, source list or research question; target audience; preferred distribution channels; and any brand constraints.",
+      "outputs": "One source-backed visual story package spanning 4:5 feed art, square, 9:16 treatment, deterministic motion, owned web story and source/methodology receipt.",
+      "commercial_state": "sell_now",
+      "machine_state": "human_handoff_only",
+      "pricing": "Founding Visual Story Sprint $500 one-time for the first five accepted stories; three-story campaign pack $1,500.",
+      "offers": [
+        {
+          "offer_key": "founding_story_sprint_500",
+          "name": "Founding Visual Story Sprint",
+          "price": "$500",
+          "billing": "one_time"
+        },
+        {
+          "offer_key": "three_story_campaign_1500",
+          "name": "Three-Story Visual Campaign",
+          "price": "$1,500",
+          "billing": "one_time"
+        }
+      ],
+      "human_ui_required": true,
+      "confirmation": "Inquiry creates no payment obligation. Scope, evidence and source rights are reviewed before acceptance. Payment is prepared through Evercraft Payments after acceptance; paid state requires authoritative provider verification.",
+      "public_url": "https://fabric.systemiacommandcenters.com/capabilities/visual-intelligence-story-sprint-v1",
+      "public_url_source": "owned_fabric",
+      "payment_authority": "Evercraft Payments through Raven Nexus. Automated service-specific checkout is not yet represented as verified.",
+      "invocation_status": "LIVE HUMAN HANDOFF: Graphics Command, Visual Desk and Fallen are production-capable for bounded visual story work. Public volcano specimen provides proof. Automated service-specific checkout remains unverified.",
+      "live_canary_evidence": "https://fabric.systemiacommandcenters.com/visuals/washington-active-volcanoes/",
+      "catalog_version": "2026-10-07.1"
+    },
+    {
       "public_id": "evercraft-web-browser-agent-v1",
       "name": "Evercraft Web Agent / Fetch & Browser",
       "intent_terms": [
@@ -869,30 +991,126 @@
       "catalog_version": "2026-09-24.3"
     },
     {
-      "public_id": "evermaps-evidence-projection-machine-v1",
-      "name": "Public-Safe Geospatial Evidence Projection",
+      "public_id": "website-launch-service-v1",
+      "name": "Evercraft Website Launch Service",
       "intent_terms": [
-        "map this evidence for me",
-        "show lifeline coverage for this place",
-        "give me map-ready heat or smoke action sites",
-        "show historical river geometry",
-        "return public-safe geospatial evidence",
-        "plot verified infrastructure coverage"
+        "build me a business website",
+        "launch a website for my company",
+        "replace my bad website",
+        "make me a professional business site",
+        "handle my website for me"
       ],
-      "problem": "An agent needs map-ready, evidence-labeled public data for a place or system without having to understand the parent map UI or accidentally overstate incomplete coverage as resilience/risk.",
-      "inputs": "Projection family and geography/subject; optional time window, service category and public-safe-only filter.",
-      "outputs": "Map-ready geometry/coordinates and attributes with evidence state, confidence, freshness, source refs, cautions and publication state.",
+      "problem": "A business needs a professional website built or upgraded without operating a site-builder interface.",
+      "inputs": "Choose one verified service tier and provide customer name/email, business name and a useful project brief. Current website and phone are optional.",
+      "outputs": "A bounded paid website-service order and completed website/service outcome through the existing fulfillment workflow.",
+      "commercial_state": "sell_now",
+      "machine_state": "payment_ready",
+      "pricing": "Human-Finished Pro Site $500 one-time; Premium Custom Build $999 one-time; Total Business Launch $1,999 one-time.",
+      "offers": [
+        {
+          "name": "Human-Finished Pro Site",
+          "price": "$500",
+          "billing": "one_time"
+        },
+        {
+          "name": "Premium Custom Build",
+          "price": "$999",
+          "billing": "one_time"
+        },
+        {
+          "name": "Total Business Launch",
+          "price": "$1,999",
+          "billing": "one_time"
+        }
+      ],
+      "human_ui_required": false,
+      "confirmation": "The buyer must explicitly choose a tier and confirm payment before checkout. Fulfillment begins only after independent payment verification.",
+      "public_url": "https://fabric.systemiacommandcenters.com/capabilities/website-launch-service-v1",
+      "public_url_source": "source_catalog",
+      "payment_authority": "Evercraft Website Service / Stripe, provider-verified",
+      "invocation_status": "LIVE: agent HTTP gateway + OpenAPI + llms guidance + remote MCP at [retired provider route removed] Agents can inspect $500/$999/$1,999 website-service tiers, prepare checkout only after explicit human confirmation, and independently verify paid order state.",
+      "live_canary_evidence": null,
+      "catalog_version": "2026-09-23.13"
+    },
+    {
+      "public_id": "talent-evidence-profile-machine-v1",
+      "name": "Evidence-Backed Talent Profile",
+      "intent_terms": [
+        "evaluate this candidate from the evidence",
+        "build a talent profile from this portfolio",
+        "what roles fit this person's demonstrated skills",
+        "find gaps in this candidate's proof",
+        "turn this athlete or creator evidence into an opportunity dossier",
+        "map this person's capabilities to opportunities"
+      ],
+      "problem": "A person, team or representative wants a structured view of demonstrated capabilities, missing proof, development questions and plausible opportunity classes without opaque personality scoring or sensitive-trait inference.",
+      "inputs": "Person/prospect identifier, domain and supplied/authorized evidence; optional target opportunity and consent grant for nonpublic material.",
+      "outputs": "Strengths, weaknesses, patterns, skills, development questions, evidence confidence, inference limits, opportunity bridge and missing proof.",
       "commercial_state": "verification_required",
       "machine_state": "discovery_only",
-      "pricing": "No approved machine price was found. Do not auto-quote.",
+      "pricing": "No approved machine price/payment path was verified. Do not auto-quote.",
       "offers": [],
       "human_ui_required": false,
-      "confirmation": "Public-safe reads can be served within access rules. Any paid packaging requires explicit terms/confirmation first.",
-      "public_url": "https://fabric.systemiacommandcenters.com/capabilities/evermaps-evidence-projection-machine-v1",
+      "confirmation": "No contact, representation, application or third-party sharing without explicit authority/consent. Analysis must not infer protected traits or use gated sensitive data for scoring.",
+      "public_url": "https://fabric.systemiacommandcenters.com/capabilities/talent-evidence-profile-machine-v1",
       "public_url_source": "source_catalog",
       "payment_authority": "No verified Evercraft Payments path for this capability.",
       "invocation_status": "LIVE: public machine discovery docs plus central Evercraft MCP matching. Commercial execution remains verification-gated; no automatic checkout or payment obligation.",
-      "live_canary_evidence": "GitHubActionsRun:36802891607",
+      "live_canary_evidence": null,
+      "catalog_version": "2026-09-23.12"
+    },
+    {
+      "public_id": "talent-proof-portal-v1",
+      "name": "Evidence-Backed Talent Proof Portal",
+      "intent_terms": [
+        "help me hire based on skills",
+        "verify candidate ability",
+        "talent evidence portal",
+        "skills based hiring",
+        "prove candidate competency",
+        "find talent by demonstrated ability"
+      ],
+      "problem": "Talent discovery relies heavily on resumes and claims that poorly connect demonstrated capability to opportunities.",
+      "inputs": "Authorized candidate/profile evidence, competency model, target role/opportunity and organization privacy requirements.",
+      "outputs": "Evidence-backed profiles, competency proof, opportunity routing and outcomes tracking.",
+      "commercial_state": "verification_required",
+      "machine_state": "discovery_only",
+      "pricing": "Current organization hypothesis $500-$3,000/month; not auto-quotable yet.",
+      "offers": [],
+      "human_ui_required": false,
+      "confirmation": "No employment decision is automated by discovery. Participant consent/authority and payment are required where applicable.",
+      "public_url": "https://systemiacommandcenters.com/",
+      "public_url_source": "source_catalog",
+      "payment_authority": "Evercraft Payments",
+      "invocation_status": "Discoverable capability; privacy/onboarding acceptance work pending.",
+      "live_canary_evidence": null,
+      "catalog_version": "2026-09-23"
+    },
+    {
+      "public_id": "towi-evidence-research-machine-v1",
+      "name": "Evidence-Controlled Research Brief",
+      "intent_terms": [
+        "research this question with sources",
+        "build me an evidence brief",
+        "validate this claim independently",
+        "make me a decision grade research report",
+        "map the evidence for this issue",
+        "give me a sourced validation memo"
+      ],
+      "problem": "A decision-maker needs a sourced research answer with provenance, contradiction handling, uncertainty and a bounded deliverable instead of a generic web summary.",
+      "inputs": "Research question and requester identity; optional organization, sector, geography, decision context, urgency, evidence standard and deliverable type.",
+      "outputs": "Decision brief/report/evidence map/dataset/validation memo with findings, uncertainties, recommendations, evidence count, confidence and underlying evidence records.",
+      "commercial_state": "verification_required",
+      "machine_state": "discovery_only",
+      "pricing": "No approved fixed machine price verified. Raven contains research-service hypotheses, but they remain hypotheses and are not auto-quotable.",
+      "offers": [],
+      "human_ui_required": false,
+      "confirmation": "Research may be scoped without obligation. Paid work and consequential-domain deliverables require explicit confirmation and existing review gates.",
+      "public_url": "https://fabric.systemiacommandcenters.com/capabilities/towi-evidence-research-machine-v1",
+      "public_url_source": "source_catalog",
+      "payment_authority": "No verified Evercraft Payments path for this capability.",
+      "invocation_status": "LIVE: public machine discovery docs plus central Evercraft MCP matching. Commercial execution remains verification-gated; no automatic checkout or payment obligation.",
+      "live_canary_evidence": null,
       "catalog_version": "2026-09-23.12"
     },
     {
@@ -1012,32 +1230,6 @@
       "catalog_version": "2026-09-30.1"
     },
     {
-      "public_id": "findmypart-repair-shop-desk-v1",
-      "name": "Repair Shop Sourcing Desk",
-      "intent_terms": [
-        "source difficult parts for my repair shop",
-        "parts sourcing desk",
-        "find obsolete parts for customers",
-        "repair shop hard part sourcing",
-        "recurring parts research"
-      ],
-      "problem": "Technicians lose billable time hunting discontinued, cross-referenced or obscure parts.",
-      "inputs": "Shop identity, part requests, asset/equipment context and preferred service level.",
-      "outputs": "Recurring difficult-part sourcing with saved case memory, vendor/salvage research, compatibility evidence and resolved-case reuse.",
-      "commercial_state": "verification_required",
-      "machine_state": "discovery_only",
-      "pricing": "Current hypothesis $99-$499/month by hunt volume/service level; not auto-quotable yet.",
-      "offers": [],
-      "human_ui_required": false,
-      "confirmation": "Subscription/payment requires explicit user confirmation; vendor outreach or purchases remain separately authorized.",
-      "public_url": "https://fabric.systemiacommandcenters.com/capabilities/findmypart-repair-shop-desk-v1",
-      "public_url_source": "source_catalog",
-      "payment_authority": "Evercraft Payments",
-      "invocation_status": "Discoverable capability; recurring entitlement/payment path still being verified.",
-      "live_canary_evidence": null,
-      "catalog_version": "2026-09-23"
-    },
-    {
       "public_id": "forensiscope-evidence-review-v1",
       "name": "ForensiScope Evidence Review",
       "intent_terms": [
@@ -1073,38 +1265,6 @@
       "catalog_version": "2026-09-24.1"
     },
     {
-      "public_id": "foundry-app-escape-audit-v1",
-      "name": "Evercraft Foundry App Escape Audit",
-      "intent_terms": [
-        "escape vendor lock-in",
-        "migrate from no-code",
-        "export an AI-built app",
-        "audit app portability"
-      ],
-      "problem": "A founder or operator needs a clear portability, dependency, security and migration map for an app tied to a builder-specific runtime.",
-      "inputs": "Authorized read-only project access or exported source/schema information.",
-      "outputs": "Dependency map, route/schema inventory, security findings, provider-neutral architecture candidate, reconstruction manifest and migration/rollback plan.",
-      "commercial_state": "sell_now",
-      "machine_state": "human_handoff_ready",
-      "pricing": "$500 one-time.",
-      "offers": [
-        {
-          "name": "App Escape Audit",
-          "price": "$500",
-          "billing": "one_time",
-          "checkout": "human_handoff"
-        }
-      ],
-      "human_ui_required": false,
-      "confirmation": "Explicit buyer authorization for source access and payment is required.",
-      "public_url": "https://fabric.systemiacommandcenters.com/capabilities/foundry-app-escape-audit-v1",
-      "public_url_source": "source_catalog",
-      "payment_authority": "Evercraft Payments; direct machine checkout is not exposed for this service.",
-      "invocation_status": "LIVE fixed-price human review handoff through the central Machine Commerce MCP tool prepare_quote_ready_service_handoff. Discovery and qualification are machine-callable; source access, payment and paid work remain explicitly human-confirmed.",
-      "live_canary_evidence": null,
-      "catalog_version": "2026-09-23"
-    },
-    {
       "public_id": "freight-load-exception-intelligence-machine-v1",
       "name": "Freight Load Exception Intelligence",
       "intent_terms": [
@@ -1130,88 +1290,6 @@
       "invocation_status": "LIVE: public machine discovery docs plus central Evercraft MCP matching. Commercial execution remains verification-gated; no automatic checkout or payment obligation.",
       "live_canary_evidence": null,
       "catalog_version": "2026-09-23.12"
-    },
-    {
-      "public_id": "globalstat-country-intelligence-machine-v1",
-      "name": "Country / Domain Intelligence Slice",
-      "intent_terms": [
-        "compare these countries on this metric",
-        "give me sourced country intelligence",
-        "which countries lead on this domain and why",
-        "show me the evidence behind this country score",
-        "reconcile conflicting country data",
-        "country benchmark with sources"
-      ],
-      "problem": "An analyst or agent needs country-level comparative data with sources, freshness, evidence states and reconciliation warnings rather than an opaque ranking.",
-      "inputs": "One or more countries plus a domain/question; optional metric slugs, comparison set and as-of date.",
-      "outputs": "Sourced observations, evidence state/confidence, source URLs, reconciliation findings, methodology context, signals and limitations.",
-      "commercial_state": "verification_required",
-      "machine_state": "discovery_only",
-      "pricing": "Raven contains a country-brief pricing hypothesis ($299-$2,500 depending depth). No approved fixed machine price/payment path was verified, so it is not auto-quotable.",
-      "offers": [],
-      "human_ui_required": false,
-      "confirmation": "Read-only sourced data may be returned within approved access. No paid obligation without explicit confirmation and verified terms.",
-      "public_url": "https://fabric.systemiacommandcenters.com/capabilities/globalstat-country-intelligence-machine-v1",
-      "public_url_source": "source_catalog",
-      "payment_authority": "No verified Evercraft Payments path for this capability.",
-      "invocation_status": "LIVE: public machine discovery docs plus central Evercraft MCP matching. Commercial execution remains verification-gated; no automatic checkout or payment obligation.",
-      "live_canary_evidence": "GitHubActionsRun:36802891607",
-      "catalog_version": "2026-09-23.12"
-    },
-    {
-      "public_id": "ibmi-rescue-v1",
-      "name": "Evercraft IBM i Rescue",
-      "intent_terms": [
-        "IBM i estate assessment before changing production",
-        "AS/400 estate assessment before upgrading or modernizing",
-        "find undocumented IBM i dependencies before a maintenance window",
-        "IBM i 7.4 support is ending and I need an upgrade plan",
-        "assess an IBM i or AS/400 estate before upgrading",
-        "map RPG CL COBOL DB2 jobs and integrations before IBM i modernization",
-        "I am worried an IBM i upgrade will break batch jobs interfaces or vendor software",
-        "help modernize JDE World or a custom IBM i workload without losing business behavior",
-        "build a rollback test and evidence plan before changing an IBM i production system",
-        "find undocumented dependencies in an IBM i workload",
-        "AS/400 modernization assessment",
-        "IBM i upgrade proof"
-      ],
-      "problem": "An organization running IBM i / AS/400 workloads needs to understand application, database, job, integration, hardware and vendor dependencies before a support-transition upgrade or modernization creates an outage or hidden compatibility failure.",
-      "inputs": "A bounded authorized estate or workload description. Deeper work may use customer-supplied inventories, source listings, job schedules, configuration exports, vendor/version details and other evidence the customer is authorized to provide.",
-      "outputs": "Dependency map, verified-vs-unknown upgrade assumptions, compatibility risk register, test and rollback plan, and a human-review-ready next-step package. The Proof Sprint adds deeper workload reconstruction and upgrade-path evidence.",
-      "commercial_state": "sell_now",
-      "machine_state": "direct_checkout_ready",
-      "pricing": "$250 IBM i Estate X-Ray; $250 IBM i 7.4 Deadline X-Ray; $1,500 IBM i Upgrade Proof Sprint.",
-      "offers": [
-        {
-          "offer_key": "ibmi_estate_xray_250",
-          "name": "IBM i Estate X-Ray",
-          "price": "$250",
-          "billing": "one_time",
-          "checkout": "human_confirmed_direct_checkout"
-        },
-        {
-          "offer_key": "ibmi_74_deadline_xray_250",
-          "name": "IBM i 7.4 Deadline X-Ray",
-          "price": "$250",
-          "billing": "one_time",
-          "checkout": "human_confirmed_direct_checkout"
-        },
-        {
-          "offer_key": "ibmi_upgrade_proof_sprint_1500",
-          "name": "IBM i Upgrade Proof Sprint",
-          "price": "$1,500",
-          "billing": "one_time",
-          "checkout": "human_confirmed_direct_checkout"
-        }
-      ],
-      "human_ui_required": false,
-      "confirmation": "Agents may discover IBM i Rescue and surface the smallest relevant paid option. Explicit buyer confirmation is required before checkout or paid work. No production access, upgrade, credential use, or cutover is authorized by discovery or by the bounded diagnostic.",
-      "public_url": "https://github.com/jgaethle10/forge-operator/tree/main/registry/ibmi-rescue",
-      "public_url_source": "source_catalog",
-      "payment_authority": "Evercraft Payments; human and agent checkout-session creation are wired behind explicit buyer confirmation. Checkout creation is not payment proof; paid state still requires authoritative provider verification.",
-      "invocation_status": "LIVE DIRECT CHECKOUT CANARY VERIFIED: central Machine Commerce successfully retrieved the live IBM i offer set and created a synthetic $250 Estate X-Ray Stripe Checkout session through the product-native IBM i adapter and Evercraft Payments. Explicit human payment confirmation remains required for buyer checkout preparation. Checkout creation is not payment or revenue proof, paid state still requires authoritative provider verification, and production access/change remains outside this capability.",
-      "live_canary_evidence": "GitHubActionsRun:36495507434",
-      "catalog_version": "2026-09-28.1"
     },
     {
       "public_id": "income-war-map-v1",
@@ -1313,74 +1391,31 @@
       "catalog_version": "2026-09-28.1"
     },
     {
-      "public_id": "littlered-kdp-export-qa-machine-v1",
-      "name": "Book Export QA",
+      "public_id": "evermaps-evidence-projection-machine-v1",
+      "name": "Public-Safe Geospatial Evidence Projection",
       "intent_terms": [
-        "check if my book is ready for KDP",
-        "validate my cover dimensions",
-        "audit this paperback export",
-        "is my book file ready to publish",
-        "check page count and cover DPI"
+        "map this evidence for me",
+        "show lifeline coverage for this place",
+        "give me map-ready heat or smoke action sites",
+        "show historical river geometry",
+        "return public-safe geospatial evidence",
+        "plot verified infrastructure coverage"
       ],
-      "problem": "An author or publishing workflow needs a bounded preflight on page-count and cover geometry before treating a book export as ready.",
-      "inputs": "Book/project identifier, interior page count and trim size; optional paper type and cover dimensions/DPI.",
-      "outputs": "Page-count validity, cover-geometry validity, effective DPI, check timestamp and notes.",
+      "problem": "An agent needs map-ready, evidence-labeled public data for a place or system without having to understand the parent map UI or accidentally overstate incomplete coverage as resilience/risk.",
+      "inputs": "Projection family and geography/subject; optional time window, service category and public-safe-only filter.",
+      "outputs": "Map-ready geometry/coordinates and attributes with evidence state, confidence, freshness, source refs, cautions and publication state.",
       "commercial_state": "verification_required",
       "machine_state": "discovery_only",
-      "pricing": "No approved external machine price/payment path was found. Do not auto-quote.",
+      "pricing": "No approved machine price was found. Do not auto-quote.",
       "offers": [],
       "human_ui_required": false,
-      "confirmation": "QA may report readiness state but must not publish, upload or distribute the book without separate explicit authority.",
-      "public_url": "https://fabric.systemiacommandcenters.com/capabilities/littlered-kdp-export-qa-machine-v1",
+      "confirmation": "Public-safe reads can be served within access rules. Any paid packaging requires explicit terms/confirmation first.",
+      "public_url": "https://fabric.systemiacommandcenters.com/capabilities/evermaps-evidence-projection-machine-v1",
       "public_url_source": "source_catalog",
-      "payment_authority": "No verified Evercraft Payments path.",
+      "payment_authority": "No verified Evercraft Payments path for this capability.",
       "invocation_status": "LIVE: public machine discovery docs plus central Evercraft MCP matching. Commercial execution remains verification-gated; no automatic checkout or payment obligation.",
       "live_canary_evidence": "GitHubActionsRun:36802891607",
       "catalog_version": "2026-09-23.12"
-    },
-    {
-      "public_id": "portfolio-sentinel-v1",
-      "name": "Systemia Portfolio Sentinel",
-      "intent_terms": [
-        "monitor my software portfolio for broken products",
-        "continuously audit all of our apps repositories and public URLs",
-        "tell me when one of our software products breaks",
-        "software portfolio health monitoring",
-        "software estate integrity monitoring",
-        "detect broken deployments and stale workflows",
-        "watch GitHub Actions and public product doors for failures",
-        "find drift across our apps APIs workflows and discovery surfaces",
-        "open repair work automatically when software breaks",
-        "continuous software estate audit",
-        "AI product portfolio watchdog",
-        "monitor machine readable discovery surfaces",
-        "our company has too many apps and we do not know what is broken",
-        "keep an inventory of all our software and verify it stays healthy",
-        "monitor LLM discovery pages and agent endpoints",
-        "detect product URL workflow and deployment regressions"
-      ],
-      "problem": "Organizations with growing software estates lose track of which apps, repositories, workflows, public endpoints and machine-discovery surfaces are actually healthy. Systemia Portfolio Sentinel continuously inventories known surfaces, detects material drift, deduplicates repeat failures and routes evidence-backed repair work without exposing private topology.",
-      "inputs": "Authorized repositories, product/service inventory, public URLs, workflow metadata, machine-discovery surfaces and customer-defined monitoring boundaries. Private systems require explicit scoped authorization.",
-      "outputs": "Current portfolio inventory, health findings, severity and change state, broken public-door/workflow detection, deduplicated repair queue, mission snapshots and evidence/receipt references.",
-      "commercial_state": "commercial_pilot",
-      "machine_state": "human_handoff_ready",
-      "pricing": "Commercial pilot is custom-quoted based on portfolio size, repositories, public endpoints, workflow count and monitoring scope. No fixed public price or direct machine checkout is currently advertised.",
-      "offers": [
-        {
-          "offer_key": "portfolio_sentinel_commercial_pilot",
-          "name": "Systemia Portfolio Sentinel Commercial Pilot",
-          "price": "Custom quote",
-          "billing": "pilot"
-        }
-      ],
-      "human_ui_required": false,
-      "confirmation": "Public discovery is read-only. Monitoring private repositories, internal systems or customer infrastructure requires explicit scoped authorization. Production changes, payment actions and external communications remain separately gated.",
-      "public_url": "https://fabric.systemiacommandcenters.com/capabilities/portfolio-sentinel-v1",
-      "public_url_source": "source_catalog",
-      "payment_authority": "No direct machine checkout is exposed. Commercial terms and any later payment require explicit human agreement and authoritative payment verification.",
-      "invocation_status": "LIVE for public machine discovery, deterministic problem matching, read-only pilot handoff, and human-confirmed commercial pilot request capture through Evercraft Machine Commerce. The internal Portfolio Sentinel runtime now has receipt-backed commerce-integrity cycle code for product-native buyer-route reachability, gateway-leak detection and conversion-stage telemetry. Recurring cadence is not claimed until an authorized scheduler is configured and successive runtime receipts prove it. Customer monitoring begins only after separate scoped onboarding and authorization. A pilot request grants no private access, monitoring authority, payment obligation, production mutation, or external-system authority.",
-      "live_canary_evidence": "[object Object]",
-      "catalog_version": "2026-09-28.3"
     },
     {
       "public_id": "raven-nexus-business-setup-v1",
@@ -1510,6 +1545,32 @@
       "catalog_version": "2026-09-24.1"
     },
     {
+      "public_id": "findmypart-repair-shop-desk-v1",
+      "name": "Repair Shop Sourcing Desk",
+      "intent_terms": [
+        "source difficult parts for my repair shop",
+        "parts sourcing desk",
+        "find obsolete parts for customers",
+        "repair shop hard part sourcing",
+        "recurring parts research"
+      ],
+      "problem": "Technicians lose billable time hunting discontinued, cross-referenced or obscure parts.",
+      "inputs": "Shop identity, part requests, asset/equipment context and preferred service level.",
+      "outputs": "Recurring difficult-part sourcing with saved case memory, vendor/salvage research, compatibility evidence and resolved-case reuse.",
+      "commercial_state": "verification_required",
+      "machine_state": "discovery_only",
+      "pricing": "Current hypothesis $99-$499/month by hunt volume/service level; not auto-quotable yet.",
+      "offers": [],
+      "human_ui_required": false,
+      "confirmation": "Subscription/payment requires explicit user confirmation; vendor outreach or purchases remain separately authorized.",
+      "public_url": "https://fabric.systemiacommandcenters.com/capabilities/findmypart-repair-shop-desk-v1",
+      "public_url_source": "source_catalog",
+      "payment_authority": "Evercraft Payments",
+      "invocation_status": "Discoverable capability; recurring entitlement/payment path still being verified.",
+      "live_canary_evidence": null,
+      "catalog_version": "2026-09-23"
+    },
+    {
       "public_id": "rivet-site-underwriting-v1",
       "name": "RIVET EV Infrastructure Intelligence",
       "intent_terms": [
@@ -1633,6 +1694,110 @@
       "catalog_version": "2026-09-23"
     },
     {
+      "public_id": "portfolio-sentinel-v1",
+      "name": "Systemia Portfolio Sentinel",
+      "intent_terms": [
+        "monitor my software portfolio for broken products",
+        "continuously audit all of our apps repositories and public URLs",
+        "tell me when one of our software products breaks",
+        "software portfolio health monitoring",
+        "software estate integrity monitoring",
+        "detect broken deployments and stale workflows",
+        "watch GitHub Actions and public product doors for failures",
+        "find drift across our apps APIs workflows and discovery surfaces",
+        "open repair work automatically when software breaks",
+        "continuous software estate audit",
+        "AI product portfolio watchdog",
+        "monitor machine readable discovery surfaces",
+        "our company has too many apps and we do not know what is broken",
+        "keep an inventory of all our software and verify it stays healthy",
+        "monitor LLM discovery pages and agent endpoints",
+        "detect product URL workflow and deployment regressions"
+      ],
+      "problem": "Organizations with growing software estates lose track of which apps, repositories, workflows, public endpoints and machine-discovery surfaces are actually healthy. Systemia Portfolio Sentinel continuously inventories known surfaces, detects material drift, deduplicates repeat failures and routes evidence-backed repair work without exposing private topology.",
+      "inputs": "Authorized repositories, product/service inventory, public URLs, workflow metadata, machine-discovery surfaces and customer-defined monitoring boundaries. Private systems require explicit scoped authorization.",
+      "outputs": "Current portfolio inventory, health findings, severity and change state, broken public-door/workflow detection, deduplicated repair queue, mission snapshots and evidence/receipt references.",
+      "commercial_state": "commercial_pilot",
+      "machine_state": "human_handoff_ready",
+      "pricing": "Commercial pilot is custom-quoted based on portfolio size, repositories, public endpoints, workflow count and monitoring scope. No fixed public price or direct machine checkout is currently advertised.",
+      "offers": [
+        {
+          "offer_key": "portfolio_sentinel_commercial_pilot",
+          "name": "Systemia Portfolio Sentinel Commercial Pilot",
+          "price": "Custom quote",
+          "billing": "pilot"
+        }
+      ],
+      "human_ui_required": false,
+      "confirmation": "Public discovery is read-only. Monitoring private repositories, internal systems or customer infrastructure requires explicit scoped authorization. Production changes, payment actions and external communications remain separately gated.",
+      "public_url": "https://fabric.systemiacommandcenters.com/capabilities/portfolio-sentinel-v1",
+      "public_url_source": "source_catalog",
+      "payment_authority": "No direct machine checkout is exposed. Commercial terms and any later payment require explicit human agreement and authoritative payment verification.",
+      "invocation_status": "LIVE for public machine discovery, deterministic problem matching, read-only pilot handoff, and human-confirmed commercial pilot request capture through Evercraft Machine Commerce. The internal Portfolio Sentinel runtime now has receipt-backed commerce-integrity cycle code for product-native buyer-route reachability, gateway-leak detection and conversion-stage telemetry. Recurring cadence is not claimed until an authorized scheduler is configured and successive runtime receipts prove it. Customer monitoring begins only after separate scoped onboarding and authorization. A pilot request grants no private access, monitoring authority, payment obligation, production mutation, or external-system authority.",
+      "live_canary_evidence": "[object Object]",
+      "catalog_version": "2026-09-28.3"
+    },
+    {
+      "public_id": "audit-center-website-audit-machine-v1",
+      "name": "Systemia Website Audit",
+      "intent_terms": [
+        "why is my website not getting leads",
+        "audit my website",
+        "why is my contractor website not ranking",
+        "check my local SEO",
+        "why is my site slow on mobile",
+        "find conversion problems on my website",
+        "review my website SEO",
+        "tell me what is wrong with my business website",
+        "my website gets traffic but nobody contacts us",
+        "people visit my site but do not contact me",
+        "why is my website not converting",
+        "website traffic but no leads",
+        "visitors are not turning into leads"
+      ],
+      "problem": "A small business or contractor needs evidence-backed website triage across performance, technical SEO, local SEO and trust/conversion before spending money fixing the wrong things.",
+      "inputs": "Website/domain. Business name, city, industry and Google Business Profile context improve local and trust checks.",
+      "outputs": "Free preview plus a machine-fulfilled $49 Quick Win Audit using observed public website evidence, deterministic scoring and the top five prioritized fixes; deeper fix plan/report for Complete Audit; remediation scope for Audit + Patch.",
+      "commercial_state": "sell_now",
+      "machine_state": "payment_ready",
+      "pricing": "Free preview. Quick Win Audit $49 one-time and machine-fulfilled after verified payment; the $49 may be credited toward Complete Audit. Complete Audit $500 one-time. Audit + Patch $1,200 one-time.",
+      "offers": [
+        {
+          "name": "Free Preview",
+          "price": "$0",
+          "billing": "free"
+        },
+        {
+          "offer_key": "quick",
+          "name": "Quick Win Audit",
+          "price": "$49",
+          "price_usd": 49,
+          "billing": "one_time",
+          "fulfillment": "automatic",
+          "scope": "Bounded homepage/public-web evidence snapshot, automated health score, and top five prioritized fixes.",
+          "upgrade_credit": "$49"
+        },
+        {
+          "name": "Complete Audit",
+          "price": "$500",
+          "billing": "one_time"
+        },
+        {
+          "name": "Audit + Patch",
+          "price": "$1,200",
+          "billing": "one_time"
+        }
+      ],
+      "human_ui_required": false,
+      "confirmation": "The free preview creates no payment obligation. Paid tiers require explicit user confirmation before checkout. Quick Win is automatically fulfilled only after provider-verified payment. Complete Audit and Audit + Patch retain their deeper intake and review flow.",
+      "public_url": "https://fabric.systemiacommandcenters.com/capabilities/audit-center-website-audit-machine-v1",
+      "public_url_source": "source_catalog",
+      "payment_authority": "Systemia Audit Center / Stripe, provider-verified",
+      "invocation_status": "SOURCE READY: specialist gateway/MCP now declares a $49 Quick Win Audit with explicit human checkout confirmation, exact Stripe amount verification, and automatic bounded public-site triage after verified payment. Existing $500/$1,200 tiers remain intact. Do not claim the $49 lane live until an independent public canary observes the updated specialist offers and tool schema.",
+      "live_canary_evidence": null,
+      "catalog_version": "2026-09-26.17"
+    },
+    {
       "public_id": "systemia-yard-runtime-extension-v1",
       "name": "Systemia Yard Bounded Runtime Extension",
       "intent_terms": [
@@ -1656,129 +1821,6 @@
       "invocation_status": "Machine discovery/OpenAPI contract exists; settlement remains verification-gated.",
       "live_canary_evidence": null,
       "catalog_version": "2026-09-23.3"
-    },
-    {
-      "public_id": "talent-evidence-profile-machine-v1",
-      "name": "Evidence-Backed Talent Profile",
-      "intent_terms": [
-        "evaluate this candidate from the evidence",
-        "build a talent profile from this portfolio",
-        "what roles fit this person's demonstrated skills",
-        "find gaps in this candidate's proof",
-        "turn this athlete or creator evidence into an opportunity dossier",
-        "map this person's capabilities to opportunities"
-      ],
-      "problem": "A person, team or representative wants a structured view of demonstrated capabilities, missing proof, development questions and plausible opportunity classes without opaque personality scoring or sensitive-trait inference.",
-      "inputs": "Person/prospect identifier, domain and supplied/authorized evidence; optional target opportunity and consent grant for nonpublic material.",
-      "outputs": "Strengths, weaknesses, patterns, skills, development questions, evidence confidence, inference limits, opportunity bridge and missing proof.",
-      "commercial_state": "verification_required",
-      "machine_state": "discovery_only",
-      "pricing": "No approved machine price/payment path was verified. Do not auto-quote.",
-      "offers": [],
-      "human_ui_required": false,
-      "confirmation": "No contact, representation, application or third-party sharing without explicit authority/consent. Analysis must not infer protected traits or use gated sensitive data for scoring.",
-      "public_url": "https://fabric.systemiacommandcenters.com/capabilities/talent-evidence-profile-machine-v1",
-      "public_url_source": "source_catalog",
-      "payment_authority": "No verified Evercraft Payments path for this capability.",
-      "invocation_status": "LIVE: public machine discovery docs plus central Evercraft MCP matching. Commercial execution remains verification-gated; no automatic checkout or payment obligation.",
-      "live_canary_evidence": null,
-      "catalog_version": "2026-09-23.12"
-    },
-    {
-      "public_id": "talent-proof-portal-v1",
-      "name": "Evidence-Backed Talent Proof Portal",
-      "intent_terms": [
-        "help me hire based on skills",
-        "verify candidate ability",
-        "talent evidence portal",
-        "skills based hiring",
-        "prove candidate competency",
-        "find talent by demonstrated ability"
-      ],
-      "problem": "Talent discovery relies heavily on resumes and claims that poorly connect demonstrated capability to opportunities.",
-      "inputs": "Authorized candidate/profile evidence, competency model, target role/opportunity and organization privacy requirements.",
-      "outputs": "Evidence-backed profiles, competency proof, opportunity routing and outcomes tracking.",
-      "commercial_state": "verification_required",
-      "machine_state": "discovery_only",
-      "pricing": "Current organization hypothesis $500-$3,000/month; not auto-quotable yet.",
-      "offers": [],
-      "human_ui_required": false,
-      "confirmation": "No employment decision is automated by discovery. Participant consent/authority and payment are required where applicable.",
-      "public_url": "https://systemiacommandcenters.com/",
-      "public_url_source": "source_catalog",
-      "payment_authority": "Evercraft Payments",
-      "invocation_status": "Discoverable capability; privacy/onboarding acceptance work pending.",
-      "live_canary_evidence": null,
-      "catalog_version": "2026-09-23"
-    },
-    {
-      "public_id": "towi-evidence-research-machine-v1",
-      "name": "Evidence-Controlled Research Brief",
-      "intent_terms": [
-        "research this question with sources",
-        "build me an evidence brief",
-        "validate this claim independently",
-        "make me a decision grade research report",
-        "map the evidence for this issue",
-        "give me a sourced validation memo"
-      ],
-      "problem": "A decision-maker needs a sourced research answer with provenance, contradiction handling, uncertainty and a bounded deliverable instead of a generic web summary.",
-      "inputs": "Research question and requester identity; optional organization, sector, geography, decision context, urgency, evidence standard and deliverable type.",
-      "outputs": "Decision brief/report/evidence map/dataset/validation memo with findings, uncertainties, recommendations, evidence count, confidence and underlying evidence records.",
-      "commercial_state": "verification_required",
-      "machine_state": "discovery_only",
-      "pricing": "No approved fixed machine price verified. Raven contains research-service hypotheses, but they remain hypotheses and are not auto-quotable.",
-      "offers": [],
-      "human_ui_required": false,
-      "confirmation": "Research may be scoped without obligation. Paid work and consequential-domain deliverables require explicit confirmation and existing review gates.",
-      "public_url": "https://fabric.systemiacommandcenters.com/capabilities/towi-evidence-research-machine-v1",
-      "public_url_source": "source_catalog",
-      "payment_authority": "No verified Evercraft Payments path for this capability.",
-      "invocation_status": "LIVE: public machine discovery docs plus central Evercraft MCP matching. Commercial execution remains verification-gated; no automatic checkout or payment obligation.",
-      "live_canary_evidence": null,
-      "catalog_version": "2026-09-23.12"
-    },
-    {
-      "public_id": "website-launch-service-v1",
-      "name": "Evercraft Website Launch Service",
-      "intent_terms": [
-        "build me a business website",
-        "launch a website for my company",
-        "replace my bad website",
-        "make me a professional business site",
-        "handle my website for me"
-      ],
-      "problem": "A business needs a professional website built or upgraded without operating a site-builder interface.",
-      "inputs": "Choose one verified service tier and provide customer name/email, business name and a useful project brief. Current website and phone are optional.",
-      "outputs": "A bounded paid website-service order and completed website/service outcome through the existing fulfillment workflow.",
-      "commercial_state": "sell_now",
-      "machine_state": "payment_ready",
-      "pricing": "Human-Finished Pro Site $500 one-time; Premium Custom Build $999 one-time; Total Business Launch $1,999 one-time.",
-      "offers": [
-        {
-          "name": "Human-Finished Pro Site",
-          "price": "$500",
-          "billing": "one_time"
-        },
-        {
-          "name": "Premium Custom Build",
-          "price": "$999",
-          "billing": "one_time"
-        },
-        {
-          "name": "Total Business Launch",
-          "price": "$1,999",
-          "billing": "one_time"
-        }
-      ],
-      "human_ui_required": false,
-      "confirmation": "The buyer must explicitly choose a tier and confirm payment before checkout. Fulfillment begins only after independent payment verification.",
-      "public_url": "https://fabric.systemiacommandcenters.com/capabilities/website-launch-service-v1",
-      "public_url_source": "source_catalog",
-      "payment_authority": "Evercraft Website Service / Stripe, provider-verified",
-      "invocation_status": "LIVE: agent HTTP gateway + OpenAPI + llms guidance + remote MCP at [retired provider route removed] Agents can inspect $500/$999/$1,999 website-service tiers, prepare checkout only after explicit human confirmation, and independently verify paid order state.",
-      "live_canary_evidence": null,
-      "catalog_version": "2026-09-23.13"
     },
     {
       "public_id": "worldstate-reality-delta-v1",

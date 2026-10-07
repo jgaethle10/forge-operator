@@ -232,6 +232,24 @@ const OFFER_PAGE_COPY={
       ['3. Choose the smallest sane repair','Fix, stabilize, migrate, or rebuild only where the evidence justifies it.']
     ]
   },
+  'visual-intelligence-story-sprint-v1':{
+    slug:'visual-intelligence',
+    purchase_key:null,
+    inquiry_only:true,
+    eyebrow:'Visual Intelligence',
+    headline:'Turn the thing people should understand into the thing they cannot scroll past.',
+    lede:'Give Evercraft one bounded story, dataset, report, evidence packet, or research question. We turn it into a source-backed visual package built for feed, vertical, motion, and an owned story page.',
+    promise:'One human-finished visual story sprint with source lineage, 4:5 feed art, square, 9:16 treatment, deterministic motion, an owned web story, and visual QA before delivery.',
+    send:['The story, dataset, report, evidence packet, or research question','What the audience needs to understand','Your source links or files','Where you want to publish it and any brand constraints'],
+    get:['A 4:5 feed poster','A square social asset','A 9:16 vertical treatment','A deterministic motion stage','An owned Evercraft story page','A source/methodology receipt and human visual QA'],
+    proof_url:'https://fabric.systemiacommandcenters.com/visuals/washington-active-volcanoes/',
+    contact_subject:'Visual Intelligence Story Sprint',
+    steps:[
+      ['1. Give us the truth','Start with evidence, not a design brief. We bound the claim, sources, audience, and rights.'],
+      ['2. Graphics Command art-directs the story','Evercraft turns the evidence into competing visual treatments, then carries the chosen direction across platform formats.'],
+      ['3. Human QA before delivery','We reject weak output, preserve the source trail, and deliver the finished package only after visual and factual review.']
+    ]
+  },
   'findmypart-paid-hunt-v1':{
     slug:'findmypart',
     purchase_key:'findmypart-quick-hunt',
@@ -321,13 +339,9 @@ export function renderOfferPage(item){
     '<p class="lede">'+escapeHtml(copy.lede)+'</p>',
     '<div class="offer-price">'+escapeHtml(price)+'</div>',
     '<div class="offer-price-note">'+escapeHtml(offerName)+' · '+escapeHtml(item.pricing||'')+'</div>',
-    '<form class="checkout-form" method="post" action="/api/offers/'+encodeURIComponent(copy.slug)+'/checkout">',
-    '<input type="hidden" name="user_confirmed" value="true">',
-    '<input type="hidden" name="idempotency_key" value="'+escapeHtml(idempotencyKey)+'">',
-    '<button class="btn primary" type="submit">Continue to checkout · '+escapeHtml(price)+'</button>',
-    '<a class="btn" href="/capabilities/'+encodeURIComponent(item.public_id)+'">See technical proof</a>',
-    '<div class="checkout-note">This button confirms this exact offer and asks Raven Nexus to prepare an unpaid Evercraft Payments checkout. No payment is recorded and fulfillment stays locked until settlement is verified.</div>',
-    '</form>',
+    copy.inquiry_only
+      ? '<div class="checkout-form"><a class="btn primary" href="mailto:jessegaethle10@gmail.com?subject='+encodeURIComponent(copy.contact_subject||offerName)+'&body='+encodeURIComponent('Story or idea:\n\nWhat I need people to understand:\n\nSources or data I have:\n\nWhere I want to publish it:\n')+'">Start this sprint · '+escapeHtml(price)+'</a><a class="btn" href="'+escapeHtml(copy.proof_url||('/capabilities/'+encodeURIComponent(item.public_id)))+'">See live proof</a><div class="checkout-note">This is a scoped human handoff, not a fake checkout. Inquiry creates no payment obligation. If accepted, payment is prepared through Evercraft Payments and remains unfulfilled until settlement is verified.</div></div>'
+      : '<form class="checkout-form" method="post" action="/api/offers/'+encodeURIComponent(copy.slug)+'/checkout"><input type="hidden" name="user_confirmed" value="true"><input type="hidden" name="idempotency_key" value="'+escapeHtml(idempotencyKey)+'"><button class="btn primary" type="submit">Continue to checkout · '+escapeHtml(price)+'</button><a class="btn" href="/capabilities/'+encodeURIComponent(item.public_id)+'">See technical proof</a><div class="checkout-note">This button confirms this exact offer and asks Raven Nexus to prepare an unpaid Evercraft Payments checkout. No payment is recorded and fulfillment stays locked until settlement is verified.</div></form>',
     '</section>',
     '<div class="offer-grid">',
     '<section class="offer-panel"><h2>What you are buying</h2><p class="plain">'+escapeHtml(copy.promise)+'</p><div class="offer-proof">No giant platform commitment is required to understand the first paid step.</div></section>',
