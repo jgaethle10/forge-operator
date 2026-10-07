@@ -24,4 +24,4 @@ jobs:
           node-version: '20'
 
       - name: Run Evercraft Connect focused tests
-        run: node --test systemia/connect/connection-desk.test.mjs
+        run: node --test systemia/connect/*.test.mjs
