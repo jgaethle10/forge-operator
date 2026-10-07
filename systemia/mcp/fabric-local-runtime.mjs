@@ -32,6 +32,7 @@ import {
 } from './fabric-mobile-site.mjs';
 import { createFabricFaieSurface } from './fabric-faie-runtime.mjs';
 import { buildVisualStory, normalizeVisualStory } from '../visual-desk/factory.mjs';
+import { buildCommercialCampaign } from '../graphics-command/commercial-renderer.mjs';
 
 function isLegacyBase44Connection(connection={}) {
   try {
@@ -199,6 +200,7 @@ function resolveDemoAsset(demoDir, requestUrl) {
 
 function buildVisualDeskMirror({moduleDir,outputDir,origin}) {
   const storiesDir=path.resolve(moduleDir,'../visual-desk/stories');
+  const campaignsDir=path.resolve(moduleDir,'../graphics-command/campaigns');
   const landing=path.resolve(moduleDir,'../../public/visuals/index.html');
   fs.rmSync(outputDir,{recursive:true,force:true});
   fs.mkdirSync(outputDir,{recursive:true,mode:0o700});
@@ -220,6 +222,28 @@ function buildVisualDeskMirror({moduleDir,outputDir,origin}) {
       evidenceState:built.story.evidenceState,
       storyDigest:built.story.digest,
       publishedAt:built.story.publishedAt,
+      kind:'evidence_story',
+    });
+  }
+
+  const campaignFiles=fs.existsSync(campaignsDir)
+    ? fs.readdirSync(campaignsDir).filter((name)=>name.endsWith('.json')).sort()
+    : [];
+  for(const name of campaignFiles){
+    const input=JSON.parse(fs.readFileSync(path.join(campaignsDir,name),'utf8'));
+    if(input?.schema!=='evercraft.commercial-attention-campaign.v1') continue;
+    const built=buildCommercialCampaign(input,{outputRoot:outputDir,origin});
+    entries.push({
+      slug:built.campaign.slug,
+      title:built.campaign.product+' • '+built.campaign.offer,
+      canonicalUrl:built.manifest.assets.site,
+      socialCardUrl:built.manifest.assets.feed,
+      motionStageUrl:built.manifest.assets.motion,
+      evidenceState:built.campaign.truthState,
+      storyDigest:built.campaign.digest,
+      publishedAt:new Date().toISOString(),
+      kind:'commercial_campaign',
+      offerUrl:built.manifest.offerUrl,
     });
   }
   const index={
@@ -245,8 +269,21 @@ function refreshVisualDeskMirror({outputDir,origin}) {
       if(!fs.existsSync(manifestFile)) continue;
       try{
         const manifest=JSON.parse(fs.readFileSync(manifestFile,'utf8'));
-        if(!['evercraft.visual-story.manifest.v2','evercraft.visual-story.manifest.v3'].includes(manifest?.schema)) continue;
-        entries.push({
+        const isStory=['evercraft.visual-story.manifest.v2','evercraft.visual-story.manifest.v3'].includes(manifest?.schema);
+        const isCampaign=manifest?.schema==='evercraft.commercial-visual.manifest.v1';
+        if(!isStory&&!isCampaign) continue;
+        entries.push(isCampaign ? {
+          slug:manifest.slug,
+          title:manifest.title,
+          canonicalUrl:manifest.assets?.site||null,
+          socialCardUrl:manifest.assets?.feed||null,
+          motionStageUrl:manifest.assets?.motion||null,
+          evidenceState:manifest.truthState||'synthetic_visualization',
+          storyDigest:manifest.campaignDigest,
+          publishedAt:manifest.publishedAt||null,
+          kind:'commercial_campaign',
+          offerUrl:manifest.offerUrl||null,
+        } : {
           slug:manifest.slug,
           title:manifest.title,
           canonicalUrl:manifest.canonicalUrl,
@@ -255,6 +292,7 @@ function refreshVisualDeskMirror({outputDir,origin}) {
           evidenceState:manifest.evidenceState,
           storyDigest:manifest.storyDigest,
           publishedAt:manifest.publishedAt,
+          kind:'evidence_story',
         });
       }catch{}
     }
