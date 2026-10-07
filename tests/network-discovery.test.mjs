@@ -93,8 +93,11 @@ if(!String(machineOffer.invocation_status||'').startsWith('LIVE READ-ONLY MCP VE
 if(machineOffer.live_canary_evidence!==EVIDENCE) fail('Network machine catalog evidence drifted');
 
 const capability=JSON.parse(fs.readFileSync('public/chum/capabilities/evercraft-network-resilience-membership-v1/capability.json','utf8'));
-if(!String(capability.invocation_status||'').startsWith('LIVE READ-ONLY MCP VERIFIED:')) fail('generated Network capability did not preserve live MCP proof');
-if(capability.live_canary_evidence!==EVIDENCE) fail('generated Network capability lost live canary evidence');
+if(capability.invocation_status!=='REVERIFICATION PENDING: prior live proof is not current for the owned runtime.') fail('generated Network capability did not preserve owned-runtime reverification state');
+if(capability.live_canary_evidence!==EVIDENCE) fail('generated Network capability lost historical canary evidence');
+if(capability.live_proof?.conformance_state!=='owned_runtime_reverification_pending') fail('generated Network capability lost current conformance state');
+if(capability.live_proof?.mcp!==null) fail('generated Network capability resurrected retired MCP endpoint');
+if(capability.live_proof?.registry_name!==REGISTRY) fail('generated Network capability lost registry identity');
 if(capability.commercial_state!=='discovery_only' || capability.offers?.[0]?.billing_live!==false) fail('machine route promotion accidentally changed billing state');
 
 const networkWorkflow=fs.readFileSync('.github/workflows/network-mcp-canary.yml','utf8');
