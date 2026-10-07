@@ -161,9 +161,16 @@ export function compileGraphicsCommand(story){
       aspectRatio:'9:16',
       map:{
         projection:'mercator',
-        centerLat,
-        centerLon,
-        zoom:mapZoom(story.points),
+        centerLat:boundaryAsset?(boundaryAsset.bbox.minLat+boundaryAsset.bbox.maxLat)/2:centerLat,
+        centerLon:boundaryAsset?(boundaryAsset.bbox.minLon+boundaryAsset.bbox.maxLon)/2:centerLon,
+        zoom:boundaryAsset?1:mapZoom(story.points),
+        fitBounds:boundaryAsset ? {
+          north:boundaryAsset.bbox.maxLat,
+          south:boundaryAsset.bbox.minLat,
+          east:boundaryAsset.bbox.maxLon,
+          west:boundaryAsset.bbox.minLon,
+          paddingPct:.08,
+        } : undefined,
         routes,
         points:story.points.map(point=>({
           id:point.id,
