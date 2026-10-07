@@ -68,6 +68,32 @@ function zeroSpendFormationAcquisition(roleRow){
   };
 }
 
+function zeroSpendResidentAcquisition(roleRow){
+  const demand=roleRow?.demand||{};
+  const resources=demand.resources||{};
+  const placement=demand.placement||{};
+  const trust=demand.trust||{};
+  return {
+    enabled:true,
+    controller:'systemia/competition/saban-capacity-runner.mjs',
+    demand_id:String(demand.demand_id||'evercraft-production-competition-worker'),
+    workload_class:String(demand.workload_class||'systemia.evercraft-web-browser.v1'),
+    zero_spend_only:true,
+    allowed_markets:['evercraft-broker'],
+    require_authorized_node:true,
+    require_session_attestation:true,
+    require_device_fingerprint_match:true,
+    require_evercraft_compute_protocol:true,
+    require_persistent_storage:placement.require_persistent_storage===true,
+    cpu_units:Number(resources.cpu_units||2),
+    memory_mb:Number(resources.memory_mb||3072),
+    storage_gb:Number(resources.storage_gb||10),
+    minimum_uptime_7d:Number(trust.minimum_uptime_7d||0.95),
+    paid_market_order_authorized:false,
+    paid_lease_authorized:false,
+  };
+}
+
 function acquisitionDirective({
   radar,
   role,
@@ -82,7 +108,15 @@ function acquisitionDirective({
     demand:row.demand?structuredClone(row.demand):null,
     zero_spend_phase:{
       state:'policy_ready',
-      formation_acquisition:zeroSpendFormationAcquisition(row),
+      acquisition_mode:role==='competition_worker'
+        ? 'resident_service'
+        : 'formation',
+      formation_acquisition:role==='competition_worker'
+        ? null
+        : zeroSpendFormationAcquisition(row),
+      resident_acquisition:role==='competition_worker'
+        ? zeroSpendResidentAcquisition(row)
+        : null,
       authority_material_present:false,
       paid_market_order_authorized:false,
       paid_lease_authorized:false,
@@ -155,6 +189,7 @@ export function planProductionCapacity({
   broker={
     ready:false,
     authorized_node_count:0,
+    competition_worker_ready:false,
   },
   ambient={roles:{}},
   commercialCapacityAllowed=false,
@@ -166,9 +201,11 @@ export function planProductionCapacity({
   const ingressMarket=marketRole(radar,'public_ingress');
   const rivetMarket=marketRole(radar,'rivet_runtime');
   const alievMarket=marketRole(radar,'aliev_source_store');
+  const competitionMarket=marketRole(radar,'competition_worker');
   const ingressAmbient=ambientRole(ambient,'public_ingress');
   const rivetAmbient=ambientRole(ambient,'rivet_runtime');
   const alievAmbient=ambientRole(ambient,'aliev_source_store');
+  const competitionAmbient=ambientRole(ambient,'competition_worker');
 
   const roles=[];
 
@@ -245,6 +282,35 @@ export function planProductionCapacity({
     }));
   }
 
+  if(
+    broker.ready===true &&
+    Number(broker.authorized_node_count||0)>0 &&
+    broker.competition_worker_ready===true
+  ){
+    roles.push({
+      role:'competition_worker',
+      preferred_source:'evercraft_broker',
+      current_state:'satisfied',
+      zero_cost:true,
+      persistent_storage_required:true,
+      ambient_offer_count:competitionAmbient.eligible_count,
+      commercial_fallback_available:competitionMarket.available,
+      selected_commercial_candidate:competitionMarket.selected_candidate,
+      acquisition_gate:'none',
+    });
+  }else{
+    roles.push(unresolvedRole({
+      role:'competition_worker',
+      ambient:competitionAmbient,
+      market:competitionMarket,
+      commercialCapacityAllowed,
+      extra:{
+        persistent_storage_required:true,
+        required_workload_class:'systemia.evercraft-web-browser.v1',
+      },
+    }));
+  }
+
   const allSatisfied=roles.every(r=>r.current_state==='satisfied');
   const commercialFillable=commercialCapacityAllowed&&roles.every(
     r=>r.current_state==='satisfied'||r.commercial_fallback_available===true
@@ -279,11 +345,13 @@ export function planProductionCapacity({
     broker:{
       ready:broker.ready===true,
       authorized_node_count:Number(broker.authorized_node_count||0),
+      competition_worker_ready:broker.competition_worker_ready===true,
     },
     ambient:{
       public_ingress_offer_count:ingressAmbient.eligible_count,
       rivet_runtime_offer_count:rivetAmbient.eligible_count,
       aliev_source_store_offer_count:alievAmbient.eligible_count,
+      competition_worker_offer_count:competitionAmbient.eligible_count,
     },
     buyer_handoff:{
       schema:'evercraft.saban.capacity-buyer-handoff.v1',

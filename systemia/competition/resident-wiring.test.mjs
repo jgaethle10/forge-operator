@@ -7,6 +7,7 @@ const scoutManifest = JSON.parse(fs.readFileSync("systemia/organism/competition-
 const submitManifest = JSON.parse(fs.readFileSync("systemia/organism/competition-submission-executor.workflow.json", "utf8"));
 const controlManifest = JSON.parse(fs.readFileSync("systemia/organism/competition-control-plane.workflow.json", "utf8"));
 const draftManifest = JSON.parse(fs.readFileSync("systemia/organism/competition-browser-draft-executor.workflow.json", "utf8"));
+const capacityManifest = JSON.parse(fs.readFileSync("systemia/organism/competition-saban-capacity.workflow.json", "utf8"));
 const slice = JSON.parse(fs.readFileSync("systemia/migrations/base44-exit/slices/competition-foundry-raven-runtime.json", "utf8"));
 
 test("competition provider scout is resident-wired without Base44 or public Fabric", () => {
@@ -70,6 +71,7 @@ test("competition control plane makes Jesse an exception handler, not the operat
   assert.deepEqual(controlManifest.routing.canonical_path, [
     "systemia",
     "competition_control_plane",
+    "saban_capacity",
     "build_test",
     "raven_qa",
     "raven_nexus",
@@ -115,4 +117,33 @@ test("competition browser draft executor is resident and cannot become final sub
     "evercraft_compute",
     "authenticated_browser_delegation",
   ]);
+});
+
+
+test("competition capacity is resident-routed through Saban and remains zero-spend", () => {
+  const service = resident.services.find((row) => row.service_key === "competition-saban-capacity");
+  assert.ok(service);
+  assert.equal(service.mode, "cycle");
+  assert.equal(service.cadence_seconds, 300);
+  assert.equal(service.executable, "systemia/competition/saban-capacity-runner.mjs");
+  assert.equal(service.optional_when_unconfigured, true);
+  assert.equal(capacityManifest.authority.capacity_discovery, "autonomous");
+  assert.equal(capacityManifest.authority.owned_or_authorized_zero_cost_lease, "autonomous");
+  assert.equal(capacityManifest.authority.paid_lease, "human_gate");
+  assert.equal(capacityManifest.safety.zero_spend_default, true);
+  assert.equal(capacityManifest.safety.create_financial_obligation, false);
+  assert.equal(capacityManifest.safety.paid_market_order, false);
+  assert.equal(capacityManifest.safety.persist_allocator_token, false);
+  assert.deepEqual(capacityManifest.routing.canonical_path, [
+    "systemia",
+    "competition_control_plane",
+    "saban",
+    "yard",
+    "evercraft_compute",
+    "competition_browser_worker",
+  ]);
+  assert.equal(controlManifest.authority.capacity_discovery, "delegated_to_saban");
+  assert.equal(controlManifest.authority.zero_spend_capacity_acquisition, "autonomous_via_saban");
+  assert.equal(controlManifest.authority.paid_capacity, "human_gate");
+  assert.equal(controlManifest.safety.paid_capacity_without_human_authority, false);
 });
