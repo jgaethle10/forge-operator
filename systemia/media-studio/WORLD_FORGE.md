@@ -266,6 +266,29 @@ The resulting receipt binds the Forge ChangeSet, v9 runtime-sync receipt, source
 
 The browser editor does not yet claim to be running a live simulation loop. This contract is exposed over HTTP/CLI first and will feed the editor when an actual runtime snapshot source is attached.
 
+## Browser-controlled World Engine runtime
+
+World Forge now has a real deterministic World Engine runtime session controlled from the browser editor.
+
+The browser does not implement physics itself. It sends the canonical World Forge project, current World Engine definition and verified snapshot through the Studio runtime boundary. World Engine restores that exact snapshot, advances deterministic ticks, seals the next snapshot and returns a runtime transform overlay mapped back into World Forge's Z-up coordinates.
+
+Editor controls now include:
+
+- **Engine Bridge** initializes a real tick-0 World Engine snapshot;
+- **Play** advances six deterministic ticks per browser pulse, nominally targeting 60 ticks/sec without queueing overlapping steps;
+- **Pause** stops future step dispatch;
+- **Step** advances exactly one tick;
+- **Reset Runtime** returns to a fresh tick-0 snapshot for the current authored project;
+- runtime tick/time are visible in the top bar;
+- the viewport displays runtime transforms while runtime mode is active;
+- the Inspector continues to display authored values so current runtime state is not confused with canonical authoring state.
+
+Authoring and simulation use an explicit mutex. A new authoring mutation pauses Play, waits for any in-flight tick to finish, then applies the edit through the v10 live-snapshot migration contract. Project import, project reset, runtime reset, gizmos, Inspector edits, commands, Add Cube, staged batches and Undo all obey that exclusion rule.
+
+Stage mode pauses runtime playback and returns the viewport to the staged authoring preview. This keeps proposed authoring changes separate from the last accepted live runtime snapshot until Apply Batch commits and migrates them.
+
+The HTTP/CLI runtime-session contract also accepts deterministic World Engine inputs, enabling later interactive controls, scripted actor inputs, replay and gameplay tooling without moving simulation authority into the browser UI.
+
 ## Renderer strategy
 
 The project format must remain independent of any one renderer.
