@@ -136,9 +136,9 @@
     {
       "capability_key": "systemia.people-layer.v1",
       "name": "Evercraft People Layer",
-      "state": "source_ready_owned_runtime_binding_pending",
+      "state": "owned_runtime_candidate_ci_pending",
       "first_party_strict": true,
-      "invocation": "Forge/Systemia owned runtime /people + /api/people/*",
+      "invocation": "Evercraft Compute workload systemia.people-layer.v1 via Yard/Hosting; operator /people; API /api/people/*",
       "triggers": [
         "athlete brain",
         "player brain",
@@ -153,7 +153,9 @@
         "trusted circle",
         "person owned intelligence",
         "player owned intelligence"
-      ]
+      ],
+      "runtime_authority": "forge-operator/systemia",
+      "external_runtime_fallback": false
     }
   ]
 }
