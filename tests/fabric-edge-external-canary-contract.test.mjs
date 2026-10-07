@@ -74,4 +74,10 @@ test('external Fabric canary proves Graphics Command poster, scroll-stop gate, a
   assert.ok(script.includes("graphics_command_responsive_preview_missing"));
   assert.ok(script.includes("evercraft\\.visual-story\\.motion-stage\\.v2"));
   assert.ok(script.includes("graphics_command_directed_motion_missing"));
+  assert.ok(script.includes("poster-quality-report.json"));
+  assert.ok(script.includes("evercraft.graphics-command.poster-quality-report.v1"));
+  assert.ok(script.includes("graphics_command_poster_quality_not_passed"));
+  assert.ok(script.includes("graphics_command_layout_quality_invalid"));
+  assert.ok(script.includes("labelsNonOverlapping"));
+  assert.ok(script.includes("labelsClearOfOtherMarkers"));
 });
