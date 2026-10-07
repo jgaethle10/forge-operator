@@ -377,3 +377,31 @@ Fetch races return `local_ref_changed_requires_reconciliation`: transferred immu
 Ref writers re-check the active GC lock inside the ref critical section. This prevents a writer from passing the initial GC check, pausing, and then changing reachability after GC has begun quarantine.
 
 No CAS success creates publication, deployment, payment, or release authority. It only proves that a local history pointer moved from the expected immutable state.
+
+## Ignore and sensitive-path policy
+
+Lineage snapshots support an owned `.lineageignore` policy instead of assuming every workspace file belongs in permanent history.
+
+The policy is ordered and supports:
+
+- comments and blank lines;
+- `*`, `**`, and `?` glob matching;
+- root-anchored patterns with a leading `/`;
+- directory patterns with a trailing `/`;
+- later `!` negation rules that can re-include descendants.
+
+The ignore policy file itself is always tracked so the exact workspace-selection law travels with history. It cannot be placed inside Lineage hard boundaries such as `.git/`, `.lineage/`, or `node_modules/`. Those runtime/storage boundaries cannot be negated.
+
+Snapshot calls may also supply `ignorePatterns` and `allowSensitivePaths`. Those explicit options are recorded in the tree's `snapshot_policy` metadata so the resulting tree remains explainable.
+
+### Sensitive-path fail-closed rule
+
+An unignored path that looks like credential/private-key material blocks the snapshot before its bytes are written into Lineage object storage.
+
+Protected names include environment credential files, common package credential files, SSH private-key names, service-account/credential JSON, secret manifests, and private-key/certificate container extensions such as `.pem`, `.key`, `.p12`, and `.pfx`.
+
+Safe template names such as `.env.example`, `.env.sample`, `.env.template`, and `.env.defaults` are not blocked.
+
+The normal remediation is to put the sensitive path in `.lineageignore`. If a sensitive fixture or intentionally versioned key-shaped artifact must enter history, the caller can explicitly allow its path with `allowSensitivePaths`. That override is written onto the tree entry and into `snapshot_policy.sensitive_overrides`.
+
+A sensitive-path override grants only snapshot inclusion. It does not grant access to secrets, publishing, deployment, payment, or any other downstream authority.
