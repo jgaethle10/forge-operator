@@ -451,7 +451,7 @@ export async function quarantineGarbage(store, plan, {
         operation: 'gc_restore_quarantine',
         run_id: runId,
       },
-    });
+    }, { allowGcLock: true });
 
     return {
       ...manifest,
