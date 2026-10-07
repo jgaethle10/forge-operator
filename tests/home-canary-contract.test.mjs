@@ -60,6 +60,8 @@ test('owned-edge Home canary persists only verified external proof',()=>{
     'conformance/runtime-observations/evercraft-home-owned-edge-latest.json',
     'git rev-parse origin/main',
     'Record verified Personal Evercraft Home edge',
+    '.source_release_ref | type == "string"',
+    'source_release_ref:$source_release',
   ]){
     assert.ok(ownedEdgeWorkflow.includes(required),'missing durable Home receipt contract: '+required);
   }
