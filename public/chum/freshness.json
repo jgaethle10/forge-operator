@@ -2,7 +2,7 @@
   "schema": "evercraft.chum.crawl-pressure.v1",
   "provider": "Evercraft LLC",
   "coordinator": "CHUM",
-  "updated_at": "2026-10-07T02:56:26.782Z",
+  "updated_at": "2026-10-07T03:00:11.898Z",
   "purpose": "Content-hash-backed freshness signals for public Evercraft discovery surfaces. A freshness signal requests attention; it does not prove indexing, ranking, recommendation, citation or provider pickup.",
   "indexnow": {
     "supported": true,
@@ -11,702 +11,95 @@
   },
   "latest_change_batch": [
     {
-      "path": "/chum/commercial/",
-      "last_changed": "2026-10-07T02:56:26.782Z",
-      "priority": 112
-    },
-    {
-      "path": "/chum/commercial/earthworks-site-autonomy-study-v1/",
-      "last_changed": "2026-10-07T02:56:26.782Z",
-      "priority": 112
-    },
-    {
-      "path": "/chum/commercial/earthworks-site-autonomy-study-v1/index.json",
-      "last_changed": "2026-10-07T02:56:26.782Z",
-      "priority": 112
-    },
-    {
-      "path": "/chum/commercial/earthworks-site-autonomy-study-v1/llms.txt",
-      "last_changed": "2026-10-07T02:56:26.782Z",
-      "priority": 112
-    },
-    {
-      "path": "/chum/commercial/feed.json",
-      "last_changed": "2026-10-07T02:56:26.782Z",
-      "priority": 112
-    },
-    {
-      "path": "/chum/commercial/feed.xml",
-      "last_changed": "2026-10-07T02:56:26.782Z",
-      "priority": 112
-    },
-    {
-      "path": "/chum/commercial/index.json",
-      "last_changed": "2026-10-07T02:56:26.782Z",
-      "priority": 112
-    },
-    {
-      "path": "/chum/commercial/llms.txt",
-      "last_changed": "2026-10-07T02:56:26.782Z",
-      "priority": 112
-    },
-    {
-      "path": "/chum/sitemaps/answers.xml",
-      "last_changed": "2026-10-07T02:56:26.782Z",
-      "priority": 108
-    },
-    {
-      "path": "/chum/sitemaps/products.xml",
-      "last_changed": "2026-10-07T02:56:26.782Z",
-      "priority": 108
-    },
-    {
-      "path": "/chum/sitemaps/sell-now.xml",
-      "last_changed": "2026-10-07T02:56:26.782Z",
-      "priority": 108
-    },
-    {
-      "path": "/chum/answers/doors/ai-dispatch-for-quarry-haul-trucks-81aeebefde.json",
-      "last_changed": "2026-10-07T02:56:26.782Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/ai-dispatch-for-quarry-haul-trucks-81aeebefde/",
-      "last_changed": "2026-10-07T02:56:26.782Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/automate-a-quarry-haul-cycle-76201e2c70.json",
-      "last_changed": "2026-10-07T02:56:26.782Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/automate-a-quarry-haul-cycle-76201e2c70/",
-      "last_changed": "2026-10-07T02:56:26.782Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/automation-study-for-landfill-bulk-material-or-civil-earthwork-0d35619e34.json",
-      "last_changed": "2026-10-07T02:56:26.782Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/automation-study-for-landfill-bulk-material-or-civil-earthwork-0d35619e34/",
-      "last_changed": "2026-10-07T02:56:26.782Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/autonomous-loader-hopper-feeding-8a43e8d2f5.json",
-      "last_changed": "2026-10-07T02:56:26.782Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/autonomous-loader-hopper-feeding-8a43e8d2f5/",
-      "last_changed": "2026-10-07T02:56:26.782Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/autonomous-mixed-heavy-equipment-9634141c34.json",
-      "last_changed": "2026-10-07T02:56:26.782Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/autonomous-mixed-heavy-equipment-9634141c34/",
-      "last_changed": "2026-10-07T02:56:26.782Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/coordinate-excavators-and-haul-trucks-ba08ac0072.json",
-      "last_changed": "2026-10-07T02:56:26.782Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/coordinate-excavators-and-haul-trucks-ba08ac0072/",
-      "last_changed": "2026-10-07T02:56:26.782Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/coordinate-excavators-haul-trucks-loaders-and-dozers-216dd59b7d.json",
-      "last_changed": "2026-10-07T02:56:26.782Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/coordinate-excavators-haul-trucks-loaders-and-dozers-216dd59b7d/",
-      "last_changed": "2026-10-07T02:56:26.782Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/coordinate-excavators-haul-trucks-loaders-and-dozers-with-ai-1b4c906b0b.json",
-      "last_changed": "2026-10-07T02:56:26.782Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/coordinate-excavators-haul-trucks-loaders-and-dozers-with-ai-1b4c906b0b/",
-      "last_changed": "2026-10-07T02:56:26.782Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/coordinate-loaders-haul-trucks-and-dozers-5fb3518a72.json",
-      "last_changed": "2026-10-07T02:56:26.782Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/coordinate-loaders-haul-trucks-and-dozers-5fb3518a72/",
-      "last_changed": "2026-10-07T02:56:26.782Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/digital-twin-for-earthmoving-c2d17d72ad.json",
-      "last_changed": "2026-10-07T02:56:26.782Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/digital-twin-for-earthmoving-c2d17d72ad/",
-      "last_changed": "2026-10-07T02:56:26.782Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/digital-twin-for-earthmoving-operations-667e0c16aa.json",
-      "last_changed": "2026-10-07T02:56:26.782Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/digital-twin-for-earthmoving-operations-667e0c16aa/",
-      "last_changed": "2026-10-07T02:56:26.782Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/digital-twin-for-quarry-or-earthmoving-operations-56520749be.json",
-      "last_changed": "2026-10-07T02:56:26.782Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/digital-twin-for-quarry-or-earthmoving-operations-56520749be/",
-      "last_changed": "2026-10-07T02:56:26.782Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/evaluate-automation-for-landfill-bulk-material-or-civil-earthwork-operations-8a6ed5d6f7.json",
-      "last_changed": "2026-10-07T02:56:26.782Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/evaluate-automation-for-landfill-bulk-material-or-civil-earthwork-operations-8a6ed5d6f7/",
-      "last_changed": "2026-10-07T02:56:26.782Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/figure-out-what-part-of-my-dirt-operation-is-worth-automating-5bb898e581.json",
-      "last_changed": "2026-10-07T02:56:26.782Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/figure-out-what-part-of-my-dirt-operation-is-worth-automating-5bb898e581/",
-      "last_changed": "2026-10-07T02:56:26.782Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/find-the-bottleneck-in-a-quarry-material-flow-8b82c682a5.json",
-      "last_changed": "2026-10-07T02:56:26.782Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/find-the-bottleneck-in-a-quarry-material-flow-8b82c682a5/",
-      "last_changed": "2026-10-07T02:56:26.782Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/find-the-bottleneck-in-aggregate-material-flow-9e5ea70173.json",
-      "last_changed": "2026-10-07T02:56:26.782Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/find-the-bottleneck-in-aggregate-material-flow-9e5ea70173/",
-      "last_changed": "2026-10-07T02:56:26.782Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/increase-tons-per-hour-by-improving-fleet-coordination-312f83c4d8.json",
-      "last_changed": "2026-10-07T02:56:26.782Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/increase-tons-per-hour-by-improving-fleet-coordination-312f83c4d8/",
-      "last_changed": "2026-10-07T02:56:26.782Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/increase-tons-per-hour-through-fleet-coordination-b63ae947de.json",
-      "last_changed": "2026-10-07T02:56:26.782Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/increase-tons-per-hour-through-fleet-coordination-b63ae947de/",
-      "last_changed": "2026-10-07T02:56:26.782Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/optimize-a-load-haul-dump-loop-before-buying-autonomous-equipment-f13b0f6974.json",
-      "last_changed": "2026-10-07T02:56:26.782Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/optimize-a-load-haul-dump-loop-before-buying-autonomous-equipment-f13b0f6974/",
-      "last_changed": "2026-10-07T02:56:26.782Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/optimize-load-haul-dump-operations-82dcd0b75f.json",
-      "last_changed": "2026-10-07T02:56:26.782Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/optimize-load-haul-dump-operations-82dcd0b75f/",
-      "last_changed": "2026-10-07T02:56:26.782Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/plan-a-controlled-autonomous-heavy-equipment-pilot-26dd7ca7e7.json",
-      "last_changed": "2026-10-07T02:56:26.782Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/plan-a-controlled-autonomous-heavy-equipment-pilot-26dd7ca7e7/",
-      "last_changed": "2026-10-07T02:56:26.782Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/reduce-haul-truck-queueing-at-a-quarry-16e641e4a4.json",
-      "last_changed": "2026-10-07T02:56:26.782Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/reduce-haul-truck-queueing-at-a-quarry-16e641e4a4/",
-      "last_changed": "2026-10-07T02:56:26.782Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/reduce-haul-truck-queueing-at-a-quarry-or-aggregate-site-f653c1cb4f.json",
-      "last_changed": "2026-10-07T02:56:26.782Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/reduce-haul-truck-queueing-at-a-quarry-or-aggregate-site-f653c1cb4f/",
-      "last_changed": "2026-10-07T02:56:26.782Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/reduce-loader-idle-time-waiting-on-trucks-36df070030.json",
-      "last_changed": "2026-10-07T02:56:26.782Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/reduce-loader-idle-time-waiting-on-trucks-36df070030/",
-      "last_changed": "2026-10-07T02:56:26.782Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/reduce-loader-or-excavator-idle-time-waiting-on-haul-trucks-e9f98e9bdb.json",
-      "last_changed": "2026-10-07T02:56:26.782Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/reduce-loader-or-excavator-idle-time-waiting-on-haul-trucks-e9f98e9bdb/",
-      "last_changed": "2026-10-07T02:56:26.782Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/reduce-truck-queue-time-at-the-excavator-f102b7e8fe.json",
-      "last_changed": "2026-10-07T02:56:26.782Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/reduce-truck-queue-time-at-the-excavator-f102b7e8fe/",
-      "last_changed": "2026-10-07T02:56:26.782Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/remote-supervised-hazardous-material-handling-3b81f4e5a5.json",
-      "last_changed": "2026-10-07T02:56:26.782Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/remote-supervised-hazardous-material-handling-3b81f4e5a5/",
-      "last_changed": "2026-10-07T02:56:26.782Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/retrofit-autonomy-without-replacing-the-whole-fleet-8654679372.json",
-      "last_changed": "2026-10-07T02:56:26.782Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/retrofit-autonomy-without-replacing-the-whole-fleet-8654679372/",
-      "last_changed": "2026-10-07T02:56:26.782Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/shadow-dispatch-for-haul-trucks-and-loading-equipment-975befe325.json",
-      "last_changed": "2026-10-07T02:56:26.782Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/shadow-dispatch-for-haul-trucks-and-loading-equipment-975befe325/",
-      "last_changed": "2026-10-07T02:56:26.782Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/shadow-dispatch-for-haul-trucks-d34875db96.json",
-      "last_changed": "2026-10-07T02:56:26.782Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/shadow-dispatch-for-haul-trucks-d34875db96/",
-      "last_changed": "2026-10-07T02:56:26.782Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/should-we-automate-this-material-loop-253cf3a898.json",
-      "last_changed": "2026-10-07T02:56:26.782Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/should-we-automate-this-material-loop-253cf3a898/",
-      "last_changed": "2026-10-07T02:56:26.782Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/simulate-a-dirt-moving-fleet-25d94a145f.json",
-      "last_changed": "2026-10-07T02:56:26.782Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/simulate-a-dirt-moving-fleet-25d94a145f/",
-      "last_changed": "2026-10-07T02:56:26.782Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/simulate-an-earthmoving-fleet-before-automation-f27559010a.json",
-      "last_changed": "2026-10-07T02:56:26.782Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/simulate-an-earthmoving-fleet-before-automation-f27559010a/",
-      "last_changed": "2026-10-07T02:56:26.782Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/simulate-an-earthmoving-fleet-before-deploying-physical-autonomy-586f07a88e.json",
-      "last_changed": "2026-10-07T02:56:26.782Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/simulate-an-earthmoving-fleet-before-deploying-physical-autonomy-586f07a88e/",
-      "last_changed": "2026-10-07T02:56:26.782Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/simulate-cut-and-fill-production-c17f35b808.json",
-      "last_changed": "2026-10-07T02:56:26.782Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/simulate-cut-and-fill-production-c17f35b808/",
-      "last_changed": "2026-10-07T02:56:26.782Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/site-autonomy-study-c2beac5d27.json",
-      "last_changed": "2026-10-07T02:56:26.782Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/site-autonomy-study-c2beac5d27/",
-      "last_changed": "2026-10-07T02:56:26.782Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/site-autonomy-study-for-a-quarry-e36a2403b0.json",
-      "last_changed": "2026-10-07T02:56:26.782Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/site-autonomy-study-for-a-quarry-e36a2403b0/",
-      "last_changed": "2026-10-07T02:56:26.782Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/site-autonomy-study-for-an-aggregate-operation-fb71045687.json",
-      "last_changed": "2026-10-07T02:56:26.782Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/site-autonomy-study-for-an-aggregate-operation-fb71045687/",
-      "last_changed": "2026-10-07T02:56:26.782Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/study-autonomous-haulage-without-replacing-equipment-af306321be.json",
-      "last_changed": "2026-10-07T02:56:26.782Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/study-autonomous-haulage-without-replacing-equipment-af306321be/",
-      "last_changed": "2026-10-07T02:56:26.782Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/study-autonomous-haulage-without-replacing-my-current-equipment-3bcb4bf08e.json",
-      "last_changed": "2026-10-07T02:56:26.782Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/study-autonomous-haulage-without-replacing-my-current-equipment-3bcb4bf08e/",
-      "last_changed": "2026-10-07T02:56:26.782Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/vendor-neutral-autonomy-orchestration-for-mixed-heavy-equipment-7253edfe3f.json",
-      "last_changed": "2026-10-07T02:56:26.782Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/vendor-neutral-autonomy-orchestration-for-mixed-heavy-equipment-7253edfe3f/",
-      "last_changed": "2026-10-07T02:56:26.782Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/vendor-neutral-heavy-equipment-autonomy-orchestration-b526bf7e15.json",
-      "last_changed": "2026-10-07T02:56:26.782Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/vendor-neutral-heavy-equipment-autonomy-orchestration-b526bf7e15/",
-      "last_changed": "2026-10-07T02:56:26.782Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/what-part-of-my-dirt-operation-should-i-automate-55742954bd.json",
-      "last_changed": "2026-10-07T02:56:26.782Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/what-part-of-my-dirt-operation-should-i-automate-55742954bd/",
-      "last_changed": "2026-10-07T02:56:26.782Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/intents/earthworks-site-autonomy-study-v1/",
-      "last_changed": "2026-10-07T02:56:26.782Z",
-      "priority": 98
-    },
-    {
-      "path": "/chum/capabilities/",
-      "last_changed": "2026-10-07T02:56:26.782Z",
-      "priority": 96
-    },
-    {
-      "path": "/chum/capabilities/earthworks-site-autonomy-study-v1/",
-      "last_changed": "2026-10-07T02:56:26.782Z",
-      "priority": 96
-    },
-    {
-      "path": "/chum/capabilities/earthworks-site-autonomy-study-v1/capability.json",
-      "last_changed": "2026-10-07T02:56:26.782Z",
-      "priority": 96
-    },
-    {
-      "path": "/chum/capabilities/earthworks-site-autonomy-study-v1/llms.txt",
-      "last_changed": "2026-10-07T02:56:26.782Z",
-      "priority": 96
-    },
-    {
-      "path": "/chum/capabilities/earthworks-site-autonomy-study-v1/schema.jsonld",
-      "last_changed": "2026-10-07T02:56:26.782Z",
-      "priority": 96
-    },
-    {
-      "path": "/chum/products/earthworks-autonomy/",
-      "last_changed": "2026-10-07T02:56:26.782Z",
-      "priority": 94
-    },
-    {
-      "path": "/chum/products/earthworks-autonomy/ai-conformance.json",
-      "last_changed": "2026-10-07T02:56:26.782Z",
-      "priority": 94
-    },
-    {
-      "path": "/chum/products/earthworks-autonomy/ai-discovery.json",
-      "last_changed": "2026-10-07T02:56:26.782Z",
-      "priority": 94
-    },
-    {
-      "path": "/chum/products/earthworks-autonomy/llms.txt",
-      "last_changed": "2026-10-07T02:56:26.782Z",
-      "priority": 94
-    },
-    {
-      "path": "/chum/sell-now.html",
-      "last_changed": "2026-10-07T02:56:26.782Z",
-      "priority": 92
-    },
-    {
       "path": "/chum/sell-now.json",
-      "last_changed": "2026-10-07T02:56:26.782Z",
+      "last_changed": "2026-10-07T03:00:11.898Z",
       "priority": 92
-    },
-    {
-      "path": "/chum/sell-now.txt",
-      "last_changed": "2026-10-07T02:56:26.782Z",
-      "priority": 92
-    },
-    {
-      "path": "/.well-known/evercraft-pain-index.json",
-      "last_changed": "2026-10-07T02:56:26.782Z",
-      "priority": 90
-    },
-    {
-      "path": "/chum/revenue.html",
-      "last_changed": "2026-10-07T02:56:26.782Z",
-      "priority": 90
     },
     {
       "path": "/chum/revenue.json",
-      "last_changed": "2026-10-07T02:56:26.782Z",
+      "last_changed": "2026-10-07T03:00:11.898Z",
       "priority": 90
-    },
-    {
-      "path": "/chum/revenue.txt",
-      "last_changed": "2026-10-07T02:56:26.782Z",
-      "priority": 90
-    },
-    {
-      "path": "/.well-known/evercraft-products.json",
-      "last_changed": "2026-10-07T02:56:26.782Z",
-      "priority": 88
-    },
-    {
-      "path": "/llms-full.txt",
-      "last_changed": "2026-10-07T02:56:26.782Z",
-      "priority": 86
     },
     {
       "path": "/.well-known/evercraft-agent-commerce.json",
-      "last_changed": "2026-10-07T02:56:26.782Z",
-      "priority": 84
-    },
-    {
-      "path": "/.well-known/evercraft-agent-directory.json",
-      "last_changed": "2026-10-07T02:56:26.782Z",
-      "priority": 84
-    },
-    {
-      "path": "/.well-known/evercraft-discovery.json",
-      "last_changed": "2026-10-07T02:56:26.782Z",
+      "last_changed": "2026-10-07T03:00:11.898Z",
       "priority": 84
     },
     {
       "path": "/.well-known/evercraft-machine-catalog.json",
-      "last_changed": "2026-10-07T02:56:26.782Z",
+      "last_changed": "2026-10-07T03:00:11.898Z",
       "priority": 84
-    },
-    {
-      "path": "/.well-known/evercraft-syndication.json",
-      "last_changed": "2026-10-07T02:56:26.782Z",
-      "priority": 84
-    },
-    {
-      "path": "/chum/",
-      "last_changed": "2026-10-07T02:56:26.782Z",
-      "priority": 80
-    },
-    {
-      "path": "/chum/agent-commerce.html",
-      "last_changed": "2026-10-07T02:56:26.782Z",
-      "priority": 80
     },
     {
       "path": "/chum/agent-commerce.json",
-      "last_changed": "2026-10-07T02:56:26.782Z",
-      "priority": 80
-    },
-    {
-      "path": "/chum/agent-commerce.txt",
-      "last_changed": "2026-10-07T02:56:26.782Z",
-      "priority": 80
-    },
-    {
-      "path": "/chum/answers/",
-      "last_changed": "2026-10-07T02:56:26.782Z",
-      "priority": 80
-    },
-    {
-      "path": "/chum/answers/index.json",
-      "last_changed": "2026-10-07T02:56:26.782Z",
-      "priority": 80
-    },
-    {
-      "path": "/chum/answers/index.txt",
-      "last_changed": "2026-10-07T02:56:26.782Z",
+      "last_changed": "2026-10-07T03:00:11.898Z",
       "priority": 80
     },
     {
       "path": "/chum/capabilities.json",
-      "last_changed": "2026-10-07T02:56:26.782Z",
+      "last_changed": "2026-10-07T03:00:11.898Z",
+      "priority": 80
+    },
+    {
+      "path": "/chum/hot/",
+      "last_changed": "2026-10-07T03:00:11.898Z",
       "priority": 80
     },
     {
       "path": "/chum/hot/index.json",
-      "last_changed": "2026-10-07T02:56:26.782Z",
+      "last_changed": "2026-10-07T03:00:11.898Z",
       "priority": 80
-    },
-    {
-      "path": "/chum/index.json",
-      "last_changed": "2026-10-07T02:56:26.782Z",
-      "priority": 80
-    },
-    {
-      "path": "/chum/pain-index.json",
-      "last_changed": "2026-10-07T02:56:26.782Z",
-      "priority": 80
-    },
-    {
-      "path": "/chum/pain-index.txt",
-      "last_changed": "2026-10-07T02:56:26.782Z",
-      "priority": 80
-    },
-    {
-      "path": "/chum/sitemap.xml",
-      "last_changed": "2026-10-07T02:56:26.782Z",
-      "priority": 80
-    },
-    {
-      "path": "/chum/syndication/index.json",
-      "last_changed": "2026-10-07T02:56:26.782Z",
-      "priority": 80
-    },
-    {
-      "path": "/ai-discovery.json",
-      "last_changed": "2026-10-07T02:56:26.782Z",
-      "priority": 60
-    },
-    {
-      "path": "/feed.json",
-      "last_changed": "2026-10-07T02:56:26.782Z",
-      "priority": 60
-    },
-    {
-      "path": "/feed.xml",
-      "last_changed": "2026-10-07T02:56:26.782Z",
-      "priority": 60
-    },
-    {
-      "path": "/schema.jsonld",
-      "last_changed": "2026-10-07T02:56:26.782Z",
-      "priority": 60
     }
   ],
   "recent_surfaces": [
+    {
+      "path": "/chum/sell-now.json",
+      "url": "/chum/sell-now.json",
+      "last_changed": "2026-10-07T03:00:11.898Z",
+      "priority": 92
+    },
+    {
+      "path": "/chum/revenue.json",
+      "url": "/chum/revenue.json",
+      "last_changed": "2026-10-07T03:00:11.898Z",
+      "priority": 90
+    },
+    {
+      "path": "/.well-known/evercraft-agent-commerce.json",
+      "url": "/.well-known/evercraft-agent-commerce.json",
+      "last_changed": "2026-10-07T03:00:11.898Z",
+      "priority": 84
+    },
+    {
+      "path": "/.well-known/evercraft-machine-catalog.json",
+      "url": "/.well-known/evercraft-machine-catalog.json",
+      "last_changed": "2026-10-07T03:00:11.898Z",
+      "priority": 84
+    },
+    {
+      "path": "/chum/agent-commerce.json",
+      "url": "/chum/agent-commerce.json",
+      "last_changed": "2026-10-07T03:00:11.898Z",
+      "priority": 80
+    },
+    {
+      "path": "/chum/capabilities.json",
+      "url": "/chum/capabilities.json",
+      "last_changed": "2026-10-07T03:00:11.898Z",
+      "priority": 80
+    },
+    {
+      "path": "/chum/hot/",
+      "url": "/chum/hot/",
+      "last_changed": "2026-10-07T03:00:11.898Z",
+      "priority": 80
+    },
+    {
+      "path": "/chum/hot/index.json",
+      "url": "/chum/hot/index.json",
+      "last_changed": "2026-10-07T03:00:11.898Z",
+      "priority": 80
+    },
     {
       "path": "/chum/commercial/",
       "url": "/chum/commercial/",
@@ -1356,12 +749,6 @@
       "priority": 92
     },
     {
-      "path": "/chum/sell-now.json",
-      "url": "/chum/sell-now.json",
-      "last_changed": "2026-10-07T02:56:26.782Z",
-      "priority": 92
-    },
-    {
       "path": "/chum/sell-now.txt",
       "url": "/chum/sell-now.txt",
       "last_changed": "2026-10-07T02:56:26.782Z",
@@ -1376,12 +763,6 @@
     {
       "path": "/chum/revenue.html",
       "url": "/chum/revenue.html",
-      "last_changed": "2026-10-07T02:56:26.782Z",
-      "priority": 90
-    },
-    {
-      "path": "/chum/revenue.json",
-      "url": "/chum/revenue.json",
       "last_changed": "2026-10-07T02:56:26.782Z",
       "priority": 90
     },
@@ -1404,12 +785,6 @@
       "priority": 86
     },
     {
-      "path": "/.well-known/evercraft-agent-commerce.json",
-      "url": "/.well-known/evercraft-agent-commerce.json",
-      "last_changed": "2026-10-07T02:56:26.782Z",
-      "priority": 84
-    },
-    {
       "path": "/.well-known/evercraft-agent-directory.json",
       "url": "/.well-known/evercraft-agent-directory.json",
       "last_changed": "2026-10-07T02:56:26.782Z",
@@ -1418,12 +793,6 @@
     {
       "path": "/.well-known/evercraft-discovery.json",
       "url": "/.well-known/evercraft-discovery.json",
-      "last_changed": "2026-10-07T02:56:26.782Z",
-      "priority": 84
-    },
-    {
-      "path": "/.well-known/evercraft-machine-catalog.json",
-      "url": "/.well-known/evercraft-machine-catalog.json",
       "last_changed": "2026-10-07T02:56:26.782Z",
       "priority": 84
     },
@@ -1442,12 +811,6 @@
     {
       "path": "/chum/agent-commerce.html",
       "url": "/chum/agent-commerce.html",
-      "last_changed": "2026-10-07T02:56:26.782Z",
-      "priority": 80
-    },
-    {
-      "path": "/chum/agent-commerce.json",
-      "url": "/chum/agent-commerce.json",
       "last_changed": "2026-10-07T02:56:26.782Z",
       "priority": 80
     },
@@ -1472,18 +835,6 @@
     {
       "path": "/chum/answers/index.txt",
       "url": "/chum/answers/index.txt",
-      "last_changed": "2026-10-07T02:56:26.782Z",
-      "priority": 80
-    },
-    {
-      "path": "/chum/capabilities.json",
-      "url": "/chum/capabilities.json",
-      "last_changed": "2026-10-07T02:56:26.782Z",
-      "priority": 80
-    },
-    {
-      "path": "/chum/hot/index.json",
-      "url": "/chum/hot/index.json",
       "last_changed": "2026-10-07T02:56:26.782Z",
       "priority": 80
     },
@@ -1540,12 +891,6 @@
       "url": "/schema.jsonld",
       "last_changed": "2026-10-07T02:56:26.782Z",
       "priority": 60
-    },
-    {
-      "path": "/chum/hot/",
-      "url": "/chum/hot/",
-      "last_changed": "2026-10-07T02:53:03.499Z",
-      "priority": 80
     },
     {
       "path": "/llms.txt",

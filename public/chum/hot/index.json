@@ -2,7 +2,7 @@
   "schema": "evercraft.chum.hot-discovery.v1",
   "provider": "Evercraft LLC",
   "coordinator": "CHUM",
-  "updated_at": "2026-10-07T02:56:26.782Z",
+  "updated_at": "2026-10-07T03:00:11.898Z",
   "purpose": "High-priority public discovery surfaces for crawler fan-out. The queue reserves limited cold-start frontage for current commercial and sitemap surfaces, then fills remaining slots by observed priority. This is a crawl-order hint, not a ranking or recommendation claim.",
   "surfaces": [
     {
@@ -372,14 +372,14 @@
       "last_changed": "2026-09-26T19:35:58.578Z"
     },
     {
-      "path": "/chum/sell-now.html",
-      "url": "/chum/sell-now.html",
-      "priority": 92,
-      "last_changed": "2026-10-07T02:56:26.782Z"
-    },
-    {
       "path": "/chum/sell-now.json",
       "url": "/chum/sell-now.json",
+      "priority": 92,
+      "last_changed": "2026-10-07T03:00:11.898Z"
+    },
+    {
+      "path": "/chum/sell-now.html",
+      "url": "/chum/sell-now.html",
       "priority": 92,
       "last_changed": "2026-10-07T02:56:26.782Z"
     },
@@ -388,6 +388,12 @@
       "url": "/chum/sell-now.txt",
       "priority": 92,
       "last_changed": "2026-10-07T02:56:26.782Z"
+    },
+    {
+      "path": "/chum/revenue.json",
+      "url": "/chum/revenue.json",
+      "priority": 90,
+      "last_changed": "2026-10-07T03:00:11.898Z"
     },
     {
       "path": "/.well-known/evercraft-pain-index.json",
@@ -402,12 +408,6 @@
       "last_changed": "2026-10-07T02:56:26.782Z"
     },
     {
-      "path": "/chum/revenue.json",
-      "url": "/chum/revenue.json",
-      "priority": 90,
-      "last_changed": "2026-10-07T02:56:26.782Z"
-    },
-    {
       "path": "/chum/revenue.txt",
       "url": "/chum/revenue.txt",
       "priority": 90,
@@ -417,7 +417,7 @@
       "path": "/.well-known/evercraft-machine-catalog.json",
       "url": "/.well-known/evercraft-machine-catalog.json",
       "priority": 84,
-      "last_changed": "2026-10-07T02:56:26.782Z"
+      "last_changed": "2026-10-07T03:00:11.898Z"
     },
     {
       "path": "/chum/answers/doors/do-a-resilience-investigation-227f8bd16b.json",
