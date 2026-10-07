@@ -60,6 +60,30 @@ function pushUnique(list, value) {
   if (!list.includes(value)) list.push(value);
 }
 
+function clean(value) {
+  return String(value ?? "").replace(/\s+/g, " ").trim();
+}
+
+function buildHumanGatePacket(opportunity, gate) {
+  const details = opportunity?.human_gate_details?.[gate] || {};
+  const action_url = clean(details.action_url);
+  const action = clean(details.action);
+  const why = clean(details.why);
+  const after = clean(details.after);
+  const packet = {
+    gate,
+    action_url: action_url || null,
+    action: action || null,
+    why: why || null,
+    after: after || null,
+    deadline: opportunity?.deadline || null,
+  };
+  return {
+    ...packet,
+    actionable: Boolean(packet.action_url && packet.action && packet.why && packet.after),
+  };
+}
+
 export function classifyCompetitionOpportunity(opportunity, {
   now = new Date(),
   providerOverrides = {},
@@ -132,10 +156,18 @@ export function classifyCompetitionOpportunity(opportunity, {
   if (lower(build.raven_qa_state) !== "passed") prepActions.push("run_raven_qa");
   if (!bool(build.submission_package_ready)) prepActions.push("prepare_submission_package");
 
+  const humanGatePackets = humanGates.map((gate) => buildHumanGatePacket(opportunity, gate));
+  const incompleteHumanGatePackets = humanGatePackets.filter((packet) => !packet.actionable);
+  if (humanGates.length > 0 && incompleteHumanGatePackets.length > 0) {
+    pushUnique(teamBlockers, "human_gate_packet_incomplete");
+    prepActions.push("prepare_exact_human_gate_packet");
+  }
+
   const hardStop = teamBlockers.includes("ineligible") || dState === "closed";
   const prepRemaining = prepActions.length > 0 && !hardStop;
   const gateBlocksPreparation = bool(rules.human_gate_blocks_preparation);
   const humanGateDue = humanGates.length > 0 && (gateBlocksPreparation || !prepRemaining);
+  const humanGateActionable = humanGateDue && humanGatePackets.length > 0 && humanGatePackets.every((packet) => packet.actionable);
   const submissionReady =
     !hardStop &&
     rulesVerified(rules) &&
@@ -161,13 +193,15 @@ export function classifyCompetitionOpportunity(opportunity, {
     deadline_state: dState,
     state,
     human_gates: humanGates,
+    human_gate_packets: humanGatePackets,
     deferred_human_gates: humanGateDue ? [] : humanGates,
     human_gate_due: humanGateDue,
+    human_gate_actionable: humanGateActionable,
     team_blockers: teamBlockers,
     team_can_continue_preparation: prepRemaining,
     next_team_action: prepActions[0] || (submissionReady ? "submit_and_verify_provider_receipt" : null),
     submission_ready: submissionReady,
-    notify_human: humanGateDue && humanGates.some((gate) => HUMAN_GATE_TYPES.has(gate)),
+    notify_human: humanGateActionable && humanGates.some((gate) => HUMAN_GATE_TYPES.has(gate)),
   };
 }
 
@@ -180,6 +214,8 @@ export function compileHumanGateQueue(classifications = []) {
       const key = [item.provider, item.opportunity_id, gate].join(":");
       if (seen.has(key)) continue;
       seen.add(key);
+      const packet = (item.human_gate_packets || []).find((candidate) => candidate.gate === gate);
+      if (!packet?.actionable) continue;
       queue.push({
         gate_id: key,
         provider: item.provider,
@@ -188,6 +224,10 @@ export function compileHumanGateQueue(classifications = []) {
         gate,
         deadline: item.deadline,
         blocking_submission: true,
+        action_url: packet.action_url,
+        action: packet.action,
+        why: packet.why,
+        after: packet.after,
       });
     }
   }
