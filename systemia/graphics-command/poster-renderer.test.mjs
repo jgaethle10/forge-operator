@@ -40,5 +40,7 @@ test('directed poster makes visual payoff primary and removes audit clutter',()=
 test('directed poster supports vertical story output',()=>{
   const svg=renderDirectedPoster(story,plan,'story');
   assert.match(svg,/height="1920"/);
+  assert.match(svg,/>5 ACTIVE<\/text>/);
+  assert.match(svg,/>VOLCANOES<\/text>/);
   assert.match(svg,/WASHINGTON/);
 });
