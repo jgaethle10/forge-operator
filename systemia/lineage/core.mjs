@@ -258,6 +258,7 @@ export class LineageStore {
 
     const lock = await this._acquireRefLock(branch);
     try {
+      await this.assertGcUnlocked();
       await this._writeRefFile(branch, id || null);
     } finally {
       await lock.release();
@@ -279,6 +280,7 @@ export class LineageStore {
     const nextNormalized = next || null;
     const lock = await this._acquireRefLock(branch, options);
     try {
+      await this.assertGcUnlocked();
       const current = await this._readRefValue(branch);
       if (current !== expectedNormalized) {
         const error = new Error(
