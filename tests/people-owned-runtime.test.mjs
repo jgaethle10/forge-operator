@@ -10,7 +10,8 @@ function tempDir() {
 }
 
 test('owned People Layer completes person-sovereign lifecycle without Base44', () => {
-  const runtime = createPeopleRuntime({ stateDir: tempDir() });
+  const runtimeStateDir = tempDir();
+  const runtime = createPeopleRuntime({ stateDir: runtimeStateDir });
 
   const health = runtime.health();
   assert.equal(health.ok, true);
@@ -54,6 +55,68 @@ test('owned People Layer completes person-sovereign lifecycle without Base44', (
   assert.equal(consent.brain.consent_state, 'consented');
   assert.equal(consent.brain.identity_assurance, 'invite_possession');
 
+  const memory = runtime.createMemory(brain.brain_key, {
+    title: 'Post-career business goal',
+    body: 'Build a durable business after playing career.',
+    memory_type: 'goal',
+    sensitivity: 'private',
+    evidence_state: 'person_stated',
+  });
+  assert.equal(memory.sensitivity, 'private');
+  assert.equal(memory.evidence_state, 'person_stated');
+
+  const relationship = runtime.createRelationship(brain.brain_key, {
+    counterpart_name: 'Trusted Advisor',
+    counterpart_type: 'advisor',
+    purpose: 'Business planning',
+  });
+  assert.equal(relationship.access_state, 'proposed');
+  assert.deepEqual(relationship.access_scope, []);
+
+  assert.throws(
+    () => runtime.grantShare(brain.brain_key, relationship.relationship_key, {
+      scopes: ['goals'],
+    }),
+    /person_confirmation_ref_required/
+  );
+
+  const grant = runtime.grantShare(brain.brain_key, relationship.relationship_key, {
+    scopes: ['goals', 'opportunities'],
+    person_confirmation_ref: 'person-confirmation:share-1',
+    purpose: 'Business planning',
+  });
+  assert.equal(grant.relationship.access_state, 'granted');
+  assert.deepEqual(grant.relationship.access_scope, ['goals', 'opportunities']);
+  assert.equal(grant.receipt.action, 'grant');
+
+  const opportunity = runtime.createOpportunity(brain.brain_key, {
+    title: 'Founder accelerator',
+    opportunity_type: 'business',
+    summary: 'Potential founder development program.',
+    fit_rationale: 'Matches the person-stated business goal.',
+    evidence_state: 'reported',
+  });
+  assert.equal(opportunity.authority_state, 'discover_only');
+  assert.equal(opportunity.status, 'new');
+
+  assert.throws(
+    () => runtime.setOpportunityAuthority(brain.brain_key, opportunity.opportunity_key, {
+      authority_state: 'authorized',
+    }),
+    /person_confirmation_ref_required/
+  );
+
+  const authorizedOpportunity = runtime.setOpportunityAuthority(
+    brain.brain_key,
+    opportunity.opportunity_key,
+    {
+      authority_state: 'authorized',
+      person_confirmation_ref: 'person-confirmation:opportunity-1',
+    }
+  );
+  assert.equal(authorizedOpportunity.authority_state, 'authorized');
+  assert.equal(authorizedOpportunity.status, 'accepted');
+
   const challenge = runtime.createEmailChallenge(brain.brain_key, {
     email: 'synthetic@example.test',
     ttl_minutes: 30,
@@ -74,10 +137,37 @@ test('owned People Layer completes person-sovereign lifecycle without Base44', (
   });
   assert.equal(verified.brain.identity_assurance, 'verified_email');
 
+  const beforeRevoke = runtime.brainSnapshot(brain.brain_key);
+  assert.equal(beforeRevoke.memories.length, 1);
+  assert.equal(beforeRevoke.relationships.length, 1);
+  assert.equal(beforeRevoke.opportunities.length, 1);
+  assert.equal(beforeRevoke.share_receipts.filter((row) => row.action === 'grant').length, 1);
+
+  const revoked = runtime.revokeConsent(brain.brain_key, {
+    person_confirmation_ref: 'person-confirmation:revoke-all',
+  });
+  assert.equal(revoked.brain.consent_state, 'revoked');
+  assert.deepEqual(revoked.revoked_relationships, [relationship.relationship_key]);
+
+  const afterRevoke = runtime.brainSnapshot(brain.brain_key);
+  assert.equal(afterRevoke.relationships[0].access_state, 'revoked');
+  assert.deepEqual(afterRevoke.relationships[0].access_scope, []);
+  assert.equal(afterRevoke.share_receipts.filter((row) => row.action === 'revoke').length, 1);
+
   const exported = runtime.exportBrain(brain.brain_key);
   assert.equal(exported.package.schema, 'evercraft-people-brain-export-v1');
+  assert.equal(exported.package.memories.length, 1);
+  assert.equal(exported.package.relationships.length, 1);
+  assert.equal(exported.package.opportunities.length, 1);
   assert.match(exported.artifact_hash, /^[a-f0-9]{64}$/);
+  assert.equal(exported.request.request_type, 'export');
+  assert.equal(exported.request.status, 'completed');
 
+  const snapshotAfterExport = runtime.brainSnapshot(brain.brain_key);
+  assert.equal(snapshotAfterExport.data_requests.filter((row) => row.request_type === 'export').length, 1);
+
+  // Re-consent is intentionally separate from revocation. Identity verification still permits
+  // the owner to exercise deletion rights even while data-sharing consent is revoked.
   const deleteRequest = runtime.requestDelete(brain.brain_key);
   assert.equal(deleteRequest.status, 'approved');
 
@@ -90,6 +180,15 @@ test('owned People Layer completes person-sovereign lifecycle without Base44', (
   assert.equal(deleted.ok, true);
   assert.equal(deleted.ledger_retained, true);
   assert.equal(runtime.listBrains().length, 0);
+  assert.throws(() => runtime.brainSnapshot(brain.brain_key), /brain_not_found/);
+
+  const persistedAfterDelete = JSON.parse(fs.readFileSync(path.join(runtimeStateDir, 'state.json'), 'utf8'));
+  assert.equal(persistedAfterDelete.memories.length, 0);
+  assert.equal(persistedAfterDelete.relationships.length, 0);
+  assert.equal(persistedAfterDelete.opportunities.length, 0);
+  assert.equal(persistedAfterDelete.consent_events.length > 0, true);
+  assert.equal(persistedAfterDelete.share_receipts.length > 0, true);
+  assert.equal(persistedAfterDelete.data_requests.length > 0, true);
 });
 
 test('owned People runtime never persists raw invite tokens or raw verification email', () => {
