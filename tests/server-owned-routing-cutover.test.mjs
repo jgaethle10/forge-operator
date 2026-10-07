@@ -35,3 +35,13 @@ test("server rejects Base44 hosts even when supplied through configuration", () 
   assert.equal(source.includes("host === 'base44.app'"), true);
   assert.equal(source.includes("host.endsWith('.base44.app')"), true);
 });
+
+
+test("People Layer intent routes only to Forge/Systemia", () => {
+  const routing = JSON.parse(fs.readFileSync("registry/first-party-routing.json", "utf8"));
+  const people = routing.capabilities.find((row) => row.capability_key === "systemia.people-layer.v1");
+  assert.ok(people);
+  assert.equal(people.first_party_strict, true);
+  assert.equal(people.invocation, "Forge/Systemia owned runtime /people + /api/people/*");
+  assert.equal(JSON.stringify(people).toLowerCase().includes("base44"), false);
+});
