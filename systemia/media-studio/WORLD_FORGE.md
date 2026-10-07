@@ -107,6 +107,21 @@ The first editor slice includes:
 
 This establishes the critical invariant: a human edit and a future natural-language/agent edit use the same scene mutation language.
 
+## Viewport manipulation
+
+World Forge now has direct viewport transform tooling rather than relying only on inspector fields and command text.
+
+- the selected object renders X/Y/Z translation handles in world space;
+- pointer hit-testing uses the authored viewport projection, not fixed screen buttons;
+- dragging is projected back onto the selected world axis;
+- movement snaps through deterministic grid increments from 0.01 m to 1 m;
+- the viewport previews the snapped transform during drag;
+- release emits one typed `set_transform` mutation instead of a stream of partial writes;
+- when Stage mode is active, gizmo moves join the staged ChangeSet rather than mutating the canonical world;
+- staged transform state is reflected back into the viewport before commit.
+
+The viewport also supports **Frame Selected** and **Camera View**. Camera View is driven by the authored World Forge camera component, including perspective focal length/sensor geometry or orthographic scale, rather than a disconnected editor-only camera.
+
 ## Modeling kernel
 
 World Forge now has explicit editable-mesh topology with deterministic validation and receipt-backed edit operations.
