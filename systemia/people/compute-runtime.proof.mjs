@@ -40,6 +40,7 @@ try{
   assert.equal(deployment.receipt.health_verification,'healthy');
   assert.equal(deployment.result.base44_runtime_dependency,false);
   assert.equal(deployment.result.public_route_required,true);
+  assert.match(deployment.result.instance_id,/^people_/);
 
   const health=await fetch(deployment.result.local_url+'/health').then(r=>r.json());
   assert.equal(health.ok,true);
