@@ -67,13 +67,40 @@ function fakeFetch(url) {
   return Promise.resolve({ ok: false, status: 404, async json() { return {}; } });
 }
 
-test('resident cycle collects official sources, stages an edition, and leaves publication authority false', async () => {
+test('resident cycle collects official sources, stages an edition, transports admitted visuals, and leaves publication authority false', async () => {
   const root = fs.mkdtempSync(path.join(os.tmpdir(), 'systemia-radar-'));
+  const visualTokenFile=path.join(root,'visual-ingest-token');
+  fs.writeFileSync(visualTokenFile,'r'.repeat(64)+'\n',{mode:0o600});
+  const visualTransportCalls=[];
+  const visualTransportFetch=async(url,options={})=>{
+    const envelope=JSON.parse(String(options.body||'{}'));
+    visualTransportCalls.push({url:String(url),options,envelope});
+    return {
+      ok:true,
+      status:201,
+      async json(){
+        return {
+          ok:true,
+          schema:'evercraft.visual-desk.ingest-receipt.v1',
+          receipt_id:'visual-ingest:'+String(envelope.story_sha256||'').slice(0,24),
+          status:'materialized',
+          slug:envelope.story?.slug||null,
+          story_sha256:envelope.story_sha256,
+          canonical_url:'https://fabric.systemiacommandcenters.com/visuals/'+envelope.story?.slug+'/',
+          publicationAuthority:false,
+          external_social_publish_performed:false,
+        };
+      }
+    };
+  };
   try {
     const resident = createRadarResident({
       stateDir: root,
       fetchImpl: fakeFetch,
       materialityThreshold: 0.45,
+      visualTransportUrl:'https://fabric.systemiacommandcenters.com/api/visuals/ingest',
+      visualTransportTokenFile:visualTokenFile,
+      visualTransportFetch,
       clock: () => new Date('2026-09-30T20:00:00.000Z'),
       journalUrl: 'https://journal.evercraft.global/',
       autoReleaseOwned: true
@@ -88,6 +115,14 @@ test('resident cycle collects official sources, stages an edition, and leaves pu
     assert.ok(receipt.visual_candidate_count >= 1);
     assert.ok(receipt.visual_outbox_story_count >= 1);
     assert.equal(receipt.visual_outbox_index, 'visual-desk-outbox/index.json');
+    assert.equal(receipt.visual_transport_status,'pass');
+    assert.ok(receipt.visual_transport_delivered>=1);
+    assert.equal(receipt.visual_transport_failed,0);
+    assert.equal(visualTransportCalls.length,receipt.visual_transport_delivered);
+    assert.ok(visualTransportCalls.every((call)=>call.options.headers.authorization==='Bearer '+'r'.repeat(64)));
+    assert.ok(visualTransportCalls.every((call)=>call.envelope.schema==='evercraft.visual-desk.transport-envelope.v1'));
+    assert.ok(visualTransportCalls.every((call)=>call.envelope.publicationAuthority===false));
+    assert.ok(visualTransportCalls.every((call)=>call.envelope.story_sha256===call.options.headers['x-evercraft-idempotency-key']));
     assert.equal(receipt.owned_release.status, 'released_owned_archive');
     assert.equal(receipt.owned_release.external_social_publish_performed, false);
 
@@ -97,6 +132,9 @@ test('resident cycle collects official sources, stages an edition, and leaves pu
     assert.ok(health.latest_visual_candidate_count >= 1);
     assert.ok(health.visual_outbox_story_count >= 1);
     assert.equal(health.visual_outbox_ready, true);
+    assert.equal(health.visual_transport_configured,true);
+    assert.equal(health.visual_transport_status,'pass');
+    assert.ok(health.visual_transport_delivered>=1);
 
     const latest = resident.latest();
     assert.equal(latest.publication_authority, false);
@@ -112,6 +150,7 @@ test('resident cycle collects official sources, stages an edition, and leaves pu
       'release-candidate.json',
       'visual-admission.json',
       'visual-desk-outbox/index.json',
+      'visual-transport-receipt.json',
       'receipts.jsonl'
     ]) {
       assert.ok(fs.existsSync(path.join(root, filename)), `${filename} should be persisted`);
@@ -126,6 +165,9 @@ test('resident cycle collects official sources, stages an edition, and leaves pu
     assert.equal(visualState.outbox.publicationAuthority, false);
     assert.ok(visualState.admission.admitted.length >= 1);
     assert.ok(visualState.outbox.story_count >= 1);
+    assert.equal(visualState.transport.status,'pass');
+    assert.equal(visualState.transport.publicationAuthority,false);
+    assert.equal(visualState.transport.external_social_publish_performed,false);
 
     const outboxIndex = JSON.parse(
       fs.readFileSync(path.join(root, 'visual-desk-outbox', 'index.json'), 'utf8')
