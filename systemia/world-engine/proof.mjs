@@ -4,7 +4,7 @@ import { SceneStreamController } from './streaming.ts';
 import { compileVisualFrame } from './visual.ts';
 import { compileAudioFrame } from './audio.ts';
 import { AuthoritativeReplicationRuntime, PredictiveReplicationRuntime, createReplicatedInput } from './replication.ts';
-import { compileWebGpuRenderPlan, EVERCRAFT_WEBGPU_WGSL, applyGeometryHotReload } from './webgpu.ts';
+import { compileWebGpuRenderPlan, EVERCRAFT_WEBGPU_WGSL, applyGeometryHotReload, verifyWebGpuRenderPlan } from './webgpu.ts';
 import { applyWorldEditTransaction, createWorldAssetManifest, semanticAssetManifestDigest, semanticWorldDigest } from './studio-edit.ts';
 import { migrateWorldRuntime, verifyWorldRuntimeMigrationReceipt } from './runtime-migration.ts';
 import { applyTextureHotReload, planTextureResidency, textureAssetDigest } from './texture.ts';
@@ -631,6 +631,7 @@ assert.deepEqual(texturedPlan.requiredTextureIds,[
   'texture:proof-orm'
 ]);
 assert.deepEqual(texturedPlan.draws[0].textureFlags,[1,1,1,0]);
+assert.equal(verifyWebGpuRenderPlan(texturedPlan),true);
 
 const textureResidency=planTextureResidency(
   [proofBaseTexture.id],
@@ -862,6 +863,7 @@ process.stdout.write(JSON.stringify({
     deterministic_texture_residency:true,
     texture_hot_reload_receipts:true,
     textured_webgpu_plan:true,
+    gpu_plan_receipt_verified_before_submission:true,
     normal_maps_fail_closed_until_tangents:true,
     deterministic_live_world_edit:true,
     reversible_versioned_edit_receipts:true,
