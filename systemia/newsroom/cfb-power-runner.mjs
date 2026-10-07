@@ -1,6 +1,7 @@
 #!/usr/bin/env node
 import fs from 'node:fs';
 import path from 'node:path';
+import { pathToFileURL } from 'node:url';
 import crypto from 'node:crypto';
 import { fetchEspnFbsTeams, fetchEspnCompletedFbsGames } from './cfb-results-ingest.mjs';
 import { buildCfbPowerIndexInputFromGames } from './cfb-results-model.mjs';
@@ -91,6 +92,6 @@ async function main(){
   const receipt=await runCfbPowerEvidenceCycle({season,startDate,throughDate,weekLabel,outDir});
   console.log(JSON.stringify(receipt,null,2));
 }
-if(import.meta.url===new URL('file://'+process.argv[1]).href){
+if(process.argv[1]&&import.meta.url===pathToFileURL(path.resolve(process.argv[1])).href){
   await main();
 }
