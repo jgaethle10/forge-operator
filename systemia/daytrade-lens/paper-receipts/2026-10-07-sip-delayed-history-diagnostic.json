@@ -1,0 +1,37 @@
+{
+  "schema": "evercraft.daytrade.sip-delayed-history-diagnostic.v1",
+  "generated_at": "2026-10-07T18:41:00.398Z",
+  "source_run_id": 37668679276,
+  "source_artifact_id": 11502729641,
+  "source_artifact_digest": "sha256:a2e79e46aa26a75cec840a40d5396d73fcb215e31c88d91c8543afb7ec0667c9",
+  "read_only": true,
+  "simulation_only": true,
+  "capital_at_risk_usd": 0,
+  "target_timestamp": "2026-10-07T16:06:00.000Z",
+  "symbols": [
+    {
+      "symbol": "SOXX",
+      "iex_spread_bps": 2.7567195037899404,
+      "sip_spread_bps": 1.3780985684988585
+    },
+    {
+      "symbol": "SMH",
+      "iex_spread_bps": 4.490057729313225,
+      "sip_spread_bps": 0.8017381683482514
+    },
+    {
+      "symbol": "QQQ",
+      "iex_spread_bps": 0.5287578157009825,
+      "sip_spread_bps": 0.13217984389548415
+    }
+  ],
+  "delayed_historical_sip_access": "AVAILABLE",
+  "implication": {
+    "recent_sip_remains_unavailable": true,
+    "delayed_sip_can_validate_consolidated_nbbo_after_the_fact": true,
+    "delayed_sip_cannot_drive_real_time_decisions": true,
+    "iex_must_not_be_mislabeled_as_sip": true,
+    "feed_portability_requires_separate_validation": true
+  },
+  "live_trade_authority": false
+}
