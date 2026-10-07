@@ -2,6 +2,7 @@
 import fs from 'node:fs';
 import path from 'node:path';
 import { pathToFileURL } from 'node:url';
+import crypto from 'node:crypto';
 
 const SPECS={
   feed:{width:1080,height:1350,rows:10,titleSize:70,rowHeight:88,startY:342},
@@ -86,7 +87,7 @@ export function buildCfbRankingVisuals(ranking,{outDir='_cfb_power_run/visuals'}
     const svg=renderCfbRankingPoster(ranking,format);
     const file=path.join(outDir,'top-'+SPECS[format].rows+'-'+format+'.svg');
     fs.writeFileSync(file,svg);
-    files[format]={path:file,sha256:null};
+    files[format]={path:file,sha256:crypto.createHash('sha256').update(svg).digest('hex')};
   }
   return {schema:'evercraft.cfb.ranking-visual-receipt.v1',run_id:ranking.run_id,out_dir:outDir,files};
 }
