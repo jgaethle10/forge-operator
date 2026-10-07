@@ -110,6 +110,7 @@ export function normalizeVisualStory(input){
       hook:String(input.visual?.hook || '').trim(),
       subhook:String(input.visual?.subhook || '').trim(),
       treatment:String(input.visual?.treatment || '').trim(),
+      boundaryId:String(input.visual?.boundaryId || '').trim(),
       metrics:visualMetrics,
     },
     brand:String(input.brand || 'Evercraft Visual Desk').trim() || 'Evercraft Visual Desk',
