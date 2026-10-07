@@ -340,6 +340,34 @@ export function renderOfferPage(item){
   });
 }
 
+export function renderPaymentHoldPage({slug='',orderKey=''}={}){
+  const safeSlug=String(slug||'').trim().toLowerCase();
+  const back=safeSlug?'/offers/'+encodeURIComponent(safeSlug):'/offers';
+  const order=String(orderKey||'').trim();
+  return shell('Payment is not ready yet · Evercraft',[
+    '<main>',
+    '<section class="offer-hero">',
+    '<div class="kicker"><span class="dot"></span> Evercraft Payments</div>',
+    '<h1>No charge was made.</h1>',
+    '<p class="lede">We saved the purchase request, but the settlement rail did not open cleanly. Nothing was marked paid and no fulfillment was released.</p>',
+    '<div class="actions">',
+    '<a class="btn primary" href="'+back+'">Return to the offer</a>',
+    '<a class="btn" href="'+back+'">Try again</a>',
+    '</div>',
+    order?'<div class="checkout-note">Order reference: <code>'+escapeHtml(order)+'</code></div>':'',
+    '</section>',
+    '<section class="offer-panel">',
+    '<h2>What happened?</h2>',
+    '<p>Evercraft Payments failed closed instead of sending you into a mismatched or unverified checkout. Your offer, price, and fulfillment scope were not changed.</p>',
+    '</section>',
+    '</main>'
+  ].join('\n'),{
+    description:'Evercraft Payments did not open a settlement checkout. No charge was made.',
+    canonical:back,
+    ogType:'website',
+  });
+}
+
 export function renderFabricHome({capabilityCount=0,capabilities=[]}={}){
   const count=Array.isArray(capabilities)&&capabilities.length
     ? capabilities.length
