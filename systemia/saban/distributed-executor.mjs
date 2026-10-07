@@ -4,7 +4,11 @@ import { pathToFileURL } from 'node:url';
 import { assignmentForIndex } from './multiplier.mjs';
 import { evaluateSwarmQuality } from './quality-gate.mjs';
 import { runNodeSeedAssignmentPool } from './nodeseed-pool.mjs';
-import { negotiateCompute, normalizeComputeDemand } from './compute-exchange.mjs';
+import { normalizeComputeDemand } from './compute-exchange.mjs';
+import { acquireResourceCapacity } from './resource-acquirer.mjs';
+import { buildComputeMarketAdapters } from './market-factory.mjs';
+import { buildLocalHostCandidate, createLocalHostSpawnAdapter } from './local-host-capacity.mjs';
+import { discoverResourceFieldCandidates } from './resource-discovery.mjs';
 
 async function reconcileResults({ contract, plan, results, rootDir }) {
   if (contract.reconciler?.once_per_swarm !== true) {
@@ -38,25 +42,29 @@ export function computeDemandFromDistributedPlan({
   acquisition={},
 }={}){
   const resources=contract?.resources||{};
+  const portable=contract?.portable_execution?.golem?.enabled===true
+    ? contract.portable_execution.golem
+    : null;
+  const zeroSpendOnly=acquisition.zero_spend_only===true;
+
   return normalizeComputeDemand({
     demand_id:acquisition.demand_id||
       `distributed:${contract?.software_id||'unknown'}:${plan?.generated_at||Date.now()}`,
     workload_class:'saban.multiplier-assignment.v1',
     container_image:
       acquisition.container_image||
-      contract?.portable_execution?.golem?.image_tag||
+      portable?.image_tag||
       null,
     portable_software_id:
       acquisition.portable_software_id||
-      contract?.software_id||
-      null,
+      (portable?contract?.software_id:null),
     portable_worker_id:
       acquisition.portable_worker_id||
-      contract?.portable_execution?.golem?.worker_id||
+      portable?.worker_id||
       null,
     portable_worker_version:
       acquisition.portable_worker_version||
-      contract?.portable_execution?.golem?.worker_version||
+      portable?.worker_version||
       null,
     cpu_units:acquisition.cpu_units||
       resources.minimum_node_cpu_units||
@@ -66,9 +74,12 @@ export function computeDemandFromDistributedPlan({
       resources.minimum_node_memory_mb||
       resources.memory_mb_per_worker||
       512,
-    storage_gb:acquisition.storage_gb||0,
-    gpu_count:acquisition.gpu_count||0,
-    gpu_models:acquisition.gpu_models||[],
+    storage_gb:acquisition.storage_gb||resources.minimum_node_storage_gb||0,
+    gpu_count:acquisition.gpu_count||
+      resources.minimum_node_gpu_units||
+      resources.minimum_node_gpu_count||
+      0,
+    gpu_models:acquisition.gpu_models||resources.required_gpu_models||[],
     regions:acquisition.regions||[],
     countries:acquisition.countries||[],
     require_public_ingress:acquisition.require_public_ingress===true,
@@ -76,9 +87,9 @@ export function computeDemandFromDistributedPlan({
     minimum_uptime_7d:acquisition.minimum_uptime_7d||0,
     audited_only:acquisition.audited_only===true,
     valid_version_only:acquisition.valid_version_only!==false,
-    prefer_zero_cost:acquisition.prefer_zero_cost!==false,
-    max_total_usd:acquisition.max_total_usd??null,
-    max_hourly_usd:acquisition.max_hourly_usd??null,
+    prefer_zero_cost:zeroSpendOnly||acquisition.prefer_zero_cost!==false,
+    max_total_usd:zeroSpendOnly?0:(acquisition.max_total_usd??null),
+    max_hourly_usd:zeroSpendOnly?0:(acquisition.max_hourly_usd??null),
     market_price_ceiling:acquisition.market_price_ceiling||{},
     duration_seconds:acquisition.duration_seconds||
       Math.max(300,Number(plan?.lease_seconds||300)),
@@ -103,8 +114,7 @@ async function runNegotiatedAdapterPool({
     1,
     Math.min(
       assignments.length,
-      Math.max(1,Number(poolOptions.maxConcurrencyPerNode||1)),
-      Math.max(1,Number(lease?.max_concurrency||Number.MAX_SAFE_INTEGER))
+      Math.max(1,Number(poolOptions.maxConcurrencyPerNode||1))
     )
   );
 
@@ -223,7 +233,7 @@ async function runNegotiatedAdapterPool({
   };
 }
 
-async function runPoolWithAcquisition({
+export async function runPoolWithAcquisition({
   poolOptions,
   contract,
   plan,
@@ -243,43 +253,153 @@ async function runPoolWithAcquisition({
       throw error;
     }
 
+    const resources=contract?.resources||{};
     const demand=computeDemandFromDistributedPlan({
       contract,
       plan,
       acquisition,
     });
-    const negotiation=await negotiateCompute({
-      demand,
-      adapters:acquisition.adapters||[],
-      quoteAuthority:acquisition.quoteAuthority||null,
-      leaseAuthority:acquisition.leaseAuthority||null,
+    const need={
+      need_id:demand.demand_id,
+      workload_class:demand.workload_class,
+      topology:'single_node',
+      memory_semantics:'local',
+      resources:{
+        cpu_units:demand.resources.cpu_units,
+        memory_mb:demand.resources.memory_mb,
+        storage_gb:demand.resources.storage_gb,
+        gpu_units:demand.resources.gpu_count,
+        gpu_models:demand.resources.gpu_models,
+        vram_mb:Number(acquisition.vram_mb||resources.minimum_node_vram_mb||0),
+      },
+      required_labels:acquisition.required_labels||[],
+      forbidden_labels:acquisition.forbidden_labels||[],
+      required_transports:acquisition.required_transports||[],
+      max_hourly_usd:demand.economics.max_hourly_usd,
+      external_spend_requires_human_approval:true,
+    };
+
+    const marketFactory=await buildComputeMarketAdapters({acquisition});
+    const liveDiscovery=acquisition.auto_discover_capacity===false
+      ? {
+          schema:'evercraft.saban.resource-discovery.v1',
+          candidates:[],
+          rejected:[],
+          runtime_authorities:new Map(),
+          discovered_count:0,
+          yard_eligible_count:0,
+          attested_authorized_count:0,
+          resolution_receipt:null,
+          observed_at:new Date().toISOString(),
+        }
+      : await discoverResourceFieldCandidates({
+          need,
+          discovery:poolOptions.discoveryOptions||{},
+          allocatorToken:poolOptions.allocatorToken||'',
+          allocatorTokens:poolOptions.allocatorTokens||{},
+          timeoutMs:poolOptions.timeoutMs||1500,
+        }).catch((discoveryError)=>({
+          schema:'evercraft.saban.resource-discovery.v1',
+          candidates:[],
+          rejected:[{
+            node_id:null,
+            endpoint:null,
+            reason:String(discoveryError?.message||discoveryError),
+          }],
+          runtime_authorities:new Map(),
+          discovered_count:0,
+          yard_eligible_count:0,
+          attested_authorized_count:0,
+          resolution_receipt:null,
+          observed_at:new Date().toISOString(),
+        }));
+
+    const localCandidate=buildLocalHostCandidate({acquisition});
+    const candidates=[
+      ...(acquisition.candidates||[]),
+      ...(liveDiscovery.candidates||[]),
+      ...(localCandidate?[localCandidate]:[]),
+    ];
+    const runtimeAuthorities=new Map();
+    const configuredAuthorities=acquisition.runtimeAuthorities||{};
+    if(configuredAuthorities instanceof Map){
+      for(const [key,value] of configuredAuthorities.entries()){
+        runtimeAuthorities.set(key,value);
+      }
+    }else{
+      for(const [key,value] of Object.entries(configuredAuthorities)){
+        runtimeAuthorities.set(key,value);
+      }
+    }
+    for(const [key,value] of liveDiscovery.runtime_authorities.entries()){
+      runtimeAuthorities.set(key,value);
+    }
+    const spawnAdapters={
+      ...(acquisition.spawnAdapters||{}),
+      ...(localCandidate?{
+        owned_bootstrap_target:createLocalHostSpawnAdapter({acquisition}),
+        local_owned_host:createLocalHostSpawnAdapter({acquisition}),
+      }:{}),
+    };
+
+    const zeroSpendMarkets=(marketFactory.markets||[]).filter((market)=>
+      ['evercraft-broker','evercraft-voluntary'].includes(String(market))
+    );
+    const zeroSpendAuthority=
+      acquisition.zero_spend_only===true && zeroSpendMarkets.length
+        ? {
+            schema:'evercraft.saban.compute-authority.v1',
+            approved:true,
+            demand_id:demand.demand_id,
+            allowed_markets:zeroSpendMarkets,
+            allow_spend:false,
+            allow_market_orders:false,
+            max_total_usd:0,
+            authority_basis:'declared_zero_spend_policy',
+          }
+        : null;
+    const resourceAcquisition=await acquireResourceCapacity({
+      need,
+      candidates,
+      runtimeAuthorities,
+      spawnAdapters,
+      marketAdapters:marketFactory.adapters,
+      quoteAuthority:
+        acquisition.quoteAuthority||
+        acquisition.quote_authority||
+        zeroSpendAuthority,
+      leaseAuthority:
+        acquisition.leaseAuthority||
+        acquisition.lease_authority||
+        zeroSpendAuthority,
+      computeDemand:demand,
     });
-    const lease=negotiation.lease;
-    if(!lease){
-      const held=new Error('compute_acquisition_not_granted');
-      held.compute_negotiation=negotiation;
+
+    if(resourceAcquisition.state!=='ready'){
+      const held=new Error(
+        resourceAcquisition.next_action==='reconcile_uncertain_external_lease_before_retry'
+          ? 'compute_acquisition_reconciliation_required'
+          : 'compute_acquisition_not_granted'
+      );
+      held.compute_negotiation=resourceAcquisition.exchange||null;
+      held.resource_acquisition=resourceAcquisition;
       throw held;
     }
-    const selectedMarket=String(
-      negotiation.selected_offer?.market||lease.market||''
-    ).toLowerCase();
-    const selectedAdapter=(acquisition.adapters||[]).find((adapter)=>
-      String(adapter?.market||'').toLowerCase()===selectedMarket
-    );
 
     if(
-      lease.execution_ready===true &&
-      lease.capacity_endpoint &&
-      lease.runtime_authority?.allocator_token
+      Array.isArray(resourceAcquisition.execution_leases) &&
+      resourceAcquisition.execution_leases.length>0
     ){
-      const acquiredEndpoint=String(lease.capacity_endpoint);
-      const allocatorTokens={
-        ...(poolOptions.allocatorTokens||{}),
-        [acquiredEndpoint]:lease.runtime_authority.allocator_token,
-      };
+      const endpoints=resourceAcquisition.execution_leases
+        .map((lease)=>String(lease.capacity_endpoint))
+        .filter(Boolean);
+      const allocatorTokens={...(poolOptions.allocatorTokens||{})};
+      for(const lease of resourceAcquisition.execution_leases){
+        allocatorTokens[String(lease.capacity_endpoint)]=lease.runtime_authority.allocator_token;
+      }
       const poolReceipt=await runNodeSeedAssignmentPool({
         ...poolOptions,
-        endpoints:[acquiredEndpoint],
+        endpoints,
         discover:false,
         allocatorToken:'',
         allocatorTokens,
@@ -287,39 +407,73 @@ async function runPoolWithAcquisition({
       return {
         poolReceipt,
         acquisition:{
-          schema:'evercraft.saban.distributed-capacity-acquisition.v1',
+          schema:'evercraft.saban.distributed-capacity-acquisition.v2',
           trigger_reason:reason,
-          demand_hash:demand.demand_hash,
-          market:selectedMarket||null,
-          provider_id:negotiation.selected_offer?.provider_id||null,
-          negotiation_receipt:negotiation.receipt_hash,
-          lease_receipt:lease.receipt||null,
+          resource_acquisition_receipt:resourceAcquisition.receipt_hash,
+          resource_mode:resourceAcquisition.mode,
+          resource_field_receipt:resourceAcquisition.resource_field_receipt,
+          acquired_endpoint_count:endpoints.length,
+          local_host_candidate_added:Boolean(localCandidate),
+          live_discovery:{
+            discovered_count:liveDiscovery.discovered_count,
+            attested_authorized_count:liveDiscovery.attested_authorized_count,
+            rejected_count:(liveDiscovery.rejected||[]).length,
+            resolution_receipt:liveDiscovery.resolution_receipt,
+          },
+          market_factory:{
+            markets:marketFactory.markets,
+            diagnostics:marketFactory.diagnostics,
+          },
+          zero_spend_authority_generated:Boolean(zeroSpendAuthority),
+          zero_spend_authority_generated:Boolean(zeroSpendAuthority),
+          market:resourceAcquisition.exchange?.selected_offer?.market||
+            resourceAcquisition.exchange?.selected_market||null,
+          provider_id:resourceAcquisition.exchange?.selected_offer?.provider_id||
+            resourceAcquisition.exchange?.selected_provider||null,
+          negotiation_receipt:resourceAcquisition.exchange?.receipt_hash||
+            resourceAcquisition.exchange?.negotiation_receipt||null,
+          lease_receipt:resourceAcquisition.execution_leases[0]?.source_receipt||
+            resourceAcquisition.execution_leases[0]?.receipt||
+            resourceAcquisition.execution_leases[0]?.receipt_hash||null,
+          lease_receipts:resourceAcquisition.execution_leases
+            .map((lease)=>lease.source_receipt||lease.receipt||lease.receipt_hash||null)
+            .filter(Boolean),
+          resource_lease_receipts:resourceAcquisition.execution_leases
+            .map((lease)=>lease.receipt_hash||null)
+            .filter(Boolean),
           execution_ready:true,
           execution_fabric:'evercraft.nodeseed-pool.v1',
         },
       };
     }
 
-    if(
-      lease.execution_ready===true &&
-      selectedAdapter &&
-      typeof selectedAdapter.execute==='function'
-    ){
-      const poolReceipt=await runNegotiatedAdapterPool({
-        adapter:selectedAdapter,
-        lease,
-        poolOptions,
-      });
+    if(resourceAcquisition.adapter_execution){
+      const {adapter,lease}=resourceAcquisition.adapter_execution;
+      const poolReceipt=await runNegotiatedAdapterPool({adapter,lease,poolOptions});
       return {
         poolReceipt,
         acquisition:{
-          schema:'evercraft.saban.distributed-capacity-acquisition.v1',
+          schema:'evercraft.saban.distributed-capacity-acquisition.v2',
           trigger_reason:reason,
-          demand_hash:demand.demand_hash,
-          market:selectedMarket||null,
-          provider_id:negotiation.selected_offer?.provider_id||null,
-          negotiation_receipt:negotiation.receipt_hash,
-          lease_receipt:lease.receipt||null,
+          resource_acquisition_receipt:resourceAcquisition.receipt_hash,
+          resource_mode:resourceAcquisition.mode,
+          resource_field_receipt:resourceAcquisition.resource_field_receipt,
+          acquired_endpoint_count:0,
+          local_host_candidate_added:Boolean(localCandidate),
+          live_discovery:{
+            discovered_count:liveDiscovery.discovered_count,
+            attested_authorized_count:liveDiscovery.attested_authorized_count,
+            rejected_count:(liveDiscovery.rejected||[]).length,
+            resolution_receipt:liveDiscovery.resolution_receipt,
+          },
+          market_factory:{
+            markets:marketFactory.markets,
+            diagnostics:marketFactory.diagnostics,
+          },
+          market:resourceAcquisition.exchange?.selected_offer?.market||lease?.market||null,
+          provider_id:resourceAcquisition.exchange?.selected_offer?.provider_id||lease?.provider_id||null,
+          negotiation_receipt:resourceAcquisition.exchange?.receipt_hash||null,
+          lease_receipt:lease?.receipt||null,
           execution_ready:true,
           execution_fabric:'evercraft.negotiated-adapter-pool.v1',
         },
@@ -327,7 +481,8 @@ async function runPoolWithAcquisition({
     }
 
     const pending=new Error('acquired_compute_not_execution_ready');
-    pending.compute_negotiation=negotiation;
+    pending.compute_negotiation=resourceAcquisition.exchange||null;
+    pending.resource_acquisition=resourceAcquisition;
     throw pending;
   }
 }

@@ -56,6 +56,7 @@ kick_if_stale(){
 }
 
 ensure_active evercraft-saban-capacity.timer timer
+ensure_active evercraft-saban-resource-expansion.service service
 ensure_active evercraft-saban-probation.timer timer
 ensure_active evercraft-saban-dispatch.timer timer
 ensure_active evercraft-saban-microseed-gateway.service service
@@ -63,13 +64,14 @@ ensure_active evercraft-saban-work-api.service service
 ensure_active evercraft-saban-pairing-api.service service
 
 kick_if_stale "$STATE_DIR/capacity-organism-state.json" evercraft-saban-capacity.service capacity
+kick_if_stale "$STATE_DIR/resource-field-expansion-state.json" evercraft-saban-resource-expansion.service resource-expansion
 kick_if_stale "$STATE_DIR/probation-cycle.json" evercraft-saban-probation.service probation
 kick_if_stale "$STATE_DIR/ambient-job-dispatch-cycle.json" evercraft-saban-dispatch.service dispatch
 
 sleep 1
 
 healthy=true
-for unit in   evercraft-saban-capacity.timer   evercraft-saban-probation.timer   evercraft-saban-dispatch.timer   evercraft-saban-microseed-gateway.service   evercraft-saban-work-api.service   evercraft-saban-pairing-api.service
+for unit in   evercraft-saban-capacity.timer   evercraft-saban-resource-expansion.service   evercraft-saban-probation.timer   evercraft-saban-dispatch.timer   evercraft-saban-microseed-gateway.service   evercraft-saban-work-api.service   evercraft-saban-pairing-api.service
 do
   systemctl is-active --quiet "$unit" || healthy=false
 done
