@@ -334,6 +334,117 @@ function geometrySource(node:WorldForgeNode){
   return null;
 }
 
+function meshBounds(mesh:WorldForgeEditableMesh){
+  if(!mesh.vertices.length) throw new Error('world_forge_world_engine_mesh_bounds_empty');
+  const min={...mesh.vertices[0]};
+  const max={...mesh.vertices[0]};
+  for(const vertex of mesh.vertices.slice(1)){
+    min.x=Math.min(min.x,vertex.x);
+    min.y=Math.min(min.y,vertex.y);
+    min.z=Math.min(min.z,vertex.z);
+    max.x=Math.max(max.x,vertex.x);
+    max.y=Math.max(max.y,vertex.y);
+    max.z=Math.max(max.z,vertex.z);
+  }
+  return {
+    center:{
+      x:(min.x+max.x)/2,
+      y:(min.y+max.y)/2,
+      z:(min.z+max.z)/2,
+    },
+    halfExtents:{
+      x:(max.x-min.x)/2,
+      y:(max.y-min.y)/2,
+      z:(max.z-min.z)/2,
+    },
+  };
+}
+
+function dimensionToEngine(value:ForgeVec3,unitScaleMeters:number):EngineVec3{
+  return {
+    x:Math.abs(value.x)*unitScaleMeters,
+    y:Math.abs(value.z)*unitScaleMeters,
+    z:Math.abs(value.y)*unitScaleMeters,
+  };
+}
+
+function physicsComponents(
+  project:WorldForgeProject,
+  node:WorldForgeNode,
+  warnings:string[],
+):Pick<WorldEntity,'collider'|'rigidBody'>{
+  const physics=node.physics;
+  if(!physics) return {};
+
+  let collider:NonNullable<WorldEntity['collider']>;
+  if(physics.collider.type==='box'){
+    collider={
+      type:'box',
+      halfExtents:dimensionToEngine(
+        physics.collider.halfExtents,
+        project.unitScaleMeters,
+      ),
+    };
+  }else if(physics.collider.type==='sphere'){
+    collider={
+      type:'sphere',
+      radius:physics.collider.radius*project.unitScaleMeters,
+    };
+  }else{
+    if(node.geometry?.kind==='asset'||node.geometry?.kind==='procedural'){
+      throw new Error(`world_forge_world_engine_auto_collider_requires_local_geometry:${node.id}`);
+    }
+    const mesh=geometrySource(node);
+    if(!mesh) throw new Error(`world_forge_world_engine_auto_collider_geometry_missing:${node.id}`);
+    const bounds=meshBounds(mesh);
+    if(
+      Math.abs(bounds.center.x)>1e-7||
+      Math.abs(bounds.center.y)>1e-7||
+      Math.abs(bounds.center.z)>1e-7
+    ){
+      throw new Error(`world_forge_world_engine_auto_collider_requires_centered_geometry:${node.id}`);
+    }
+    if(physics.collider.type==='auto_sphere'){
+      const radius=Math.max(
+        bounds.halfExtents.x,
+        bounds.halfExtents.y,
+        bounds.halfExtents.z,
+      )*project.unitScaleMeters;
+      collider={type:'sphere',radius:Math.max(.001,radius)};
+    }else{
+      const half=dimensionToEngine(bounds.halfExtents,project.unitScaleMeters);
+      collider={
+        type:'box',
+        halfExtents:{
+          x:Math.max(.001,half.x),
+          y:Math.max(.001,half.y),
+          z:Math.max(.001,half.z),
+        },
+      };
+      if(
+        half.x<.001||
+        half.y<.001||
+        half.z<.001
+      ) warnings.push(`physics_auto_box_thickness_clamped:${node.id}`);
+    }
+  }
+
+  if(physics.mode==='static'){
+    return {collider};
+  }
+
+  return {
+    collider,
+    rigidBody:{
+      mass:physics.massKg??1,
+      gravityScale:physics.mode==='kinematic'?0:(physics.gravityScale??1),
+      linearDamping:physics.linearDamping??0,
+      restitution:physics.restitution??0,
+      kinematic:physics.mode==='kinematic',
+    },
+  };
+}
+
 function geometryAssetFromMesh(
   id:string,
   mesh:WorldForgeEditableMesh,
@@ -671,6 +782,12 @@ export function compileWorldForgeToWorldEngine(input:{
         coordinateSource:'right_handed_z_up',
       },
     };
+
+    if(node.physics){
+      const compiledPhysics=physicsComponents(project,node,warnings);
+      entity.collider=compiledPhysics.collider;
+      entity.rigidBody=compiledPhysics.rigidBody;
+    }
 
     if(node.kind==='mesh'){
       if(!node.geometry) throw new Error(`world_forge_world_engine_mesh_geometry_missing:${node.id}`);

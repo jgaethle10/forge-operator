@@ -182,3 +182,37 @@ test('Play Mode registry enforces identity, capacity and stop semantics',()=>{
     /world_forge_play_session_missing:one/,
   );
 });
+
+
+test('Play Mode simulates authored dynamic physics against authored static colliders',()=>{
+  const project=createWorldForgeStarterProject();
+  const floor=project.nodes.find(node=>node.id==='world-floor');
+  const hero=project.nodes.find(node=>node.id==='hero-core');
+  assert.ok(floor&&hero);
+
+  floor!.physics={
+    mode:'static',
+    collider:{type:'auto_box'},
+  };
+  hero!.physics={
+    mode:'dynamic',
+    massKg:1,
+    gravityScale:1,
+    linearDamping:.05,
+    restitution:0,
+    collider:{type:'auto_box'},
+  };
+
+  const session=new WorldForgePlaySession({
+    sessionId:'play-physics-fall',
+    project,
+  });
+  const result=session.step({ticks:120});
+  const heroRuntime=result.snapshot.entities.find(
+    entity=>entity.id==='wfnode:hero-core'
+  );
+  assert.ok(heroRuntime);
+  assert.ok(heroRuntime!.transform.position.y<1);
+  assert.ok(heroRuntime!.transform.position.y>.4);
+  assert.ok(heroRuntime!.transform.position.y<.6);
+});

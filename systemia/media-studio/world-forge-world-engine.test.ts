@@ -124,3 +124,79 @@ test('World Forge bridge refuses licensed assets with missing license lineage',(
     /world_forge_world_engine_asset_license_required:licensed-mesh/,
   );
 });
+
+
+test('World Forge physics compiles into World Engine static and dynamic bodies',()=>{
+  const project=createWorldForgeStarterProject();
+  const floor=project.nodes.find(node=>node.id==='world-floor');
+  const hero=project.nodes.find(node=>node.id==='hero-core');
+  assert.ok(floor&&hero);
+
+  floor!.physics={
+    mode:'static',
+    collider:{type:'auto_box'},
+  };
+  hero!.physics={
+    mode:'dynamic',
+    massKg:2.5,
+    gravityScale:.8,
+    linearDamping:.1,
+    restitution:.25,
+    collider:{type:'auto_box'},
+  };
+
+  const bridge=compileWorldForgeToWorldEngine({project});
+  const floorEntity=bridge.world.entities.find(entity=>entity.id==='wfnode:world-floor');
+  const heroEntity=bridge.world.entities.find(entity=>entity.id==='wfnode:hero-core');
+
+  assert.deepEqual(floorEntity?.collider,{
+    type:'box',
+    halfExtents:{x:.5,y:.5,z:.5},
+  });
+  assert.equal(floorEntity?.rigidBody,undefined);
+
+  assert.deepEqual(heroEntity?.collider,{
+    type:'box',
+    halfExtents:{x:.5,y:.5,z:.5},
+  });
+  assert.equal(heroEntity?.rigidBody?.mass,2.5);
+  assert.equal(heroEntity?.rigidBody?.gravityScale,.8);
+  assert.equal(heroEntity?.rigidBody?.linearDamping,.1);
+  assert.equal(heroEntity?.rigidBody?.restitution,.25);
+  assert.equal(heroEntity?.rigidBody?.kinematic,false);
+});
+
+test('World Forge auto collider refuses off-center editable geometry',()=>{
+  const project=createWorldForgeStarterProject();
+  const hero=project.nodes.find(node=>node.id==='hero-core');
+  assert.ok(hero);
+  hero!.geometry={
+    kind:'editable_mesh',
+    mesh:{
+      vertices:[
+        {x:0,y:0,z:0},
+        {x:1,y:0,z:0},
+        {x:1,y:1,z:0},
+        {x:0,y:1,z:0},
+        {x:0,y:0,z:1},
+        {x:1,y:0,z:1},
+        {x:1,y:1,z:1},
+        {x:0,y:1,z:1},
+      ],
+      faces:[
+        [0,3,2,1],[4,5,6,7],[0,1,5,4],
+        [1,2,6,5],[2,3,7,6],[3,0,4,7],
+      ],
+    },
+  };
+  hero!.physics={
+    mode:'dynamic',
+    massKg:1,
+    collider:{type:'auto_box'},
+  };
+
+  assert.throws(
+    ()=>compileWorldForgeToWorldEngine({project}),
+    /world_forge_world_engine_auto_collider_requires_centered_geometry:hero-core/,
+  );
+});

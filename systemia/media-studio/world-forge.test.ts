@@ -160,3 +160,55 @@ test('World Forge render planning blocks uncleared assets',()=>{
     /render_assets_not_cleared/,
   );
 });
+
+
+test('World Forge physics edits are validated, versioned, and reversible',()=>{
+  const project=specimen();
+  const result=applyWorldForgeOperations({
+    project,
+    expectedVersion:project.version,
+    operations:[{
+      type:'set_physics',
+      nodeId:'table',
+      physics:{
+        mode:'dynamic',
+        massKg:8,
+        gravityScale:1,
+        linearDamping:.15,
+        restitution:.2,
+        collider:{type:'auto_box'},
+      },
+    }],
+  });
+
+  assert.equal(result.status,'completed');
+  const table=result.project.nodes.find(node=>node.id==='table');
+  assert.equal(table?.physics?.mode,'dynamic');
+  assert.equal(table?.physics?.massKg,8);
+  assert.deepEqual(
+    result.receipt.inverseOperations[0],
+    {type:'set_physics',nodeId:'table',physics:null},
+  );
+
+  const undone=applyWorldForgeOperations({
+    project:result.project,
+    expectedVersion:result.project.version,
+    operations:result.receipt.inverseOperations,
+  });
+  assert.equal(undone.status,'completed');
+  assert.equal(undone.project.nodes.find(node=>node.id==='table')?.physics,undefined);
+
+  const invalid=structuredClone(project);
+  invalid.nodes[0].physics={
+    mode:'dynamic',
+    massKg:1,
+    restitution:1.5,
+    collider:{type:'auto_box'},
+  };
+  const validation=validateWorldForgeProject(invalid);
+  assert.equal(validation.status,'rejected');
+  assert.ok(
+    validation.errors.some(error=>error.startsWith('physics_restitution_invalid:')),
+    `expected restitution validation error, got: ${validation.errors.join(', ')}`,
+  );
+});
