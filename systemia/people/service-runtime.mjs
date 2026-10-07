@@ -2,6 +2,7 @@ import fs from 'node:fs';
 import http from 'node:http';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
+import { randomUUID } from 'node:crypto';
 import { createPeopleRuntime } from './runtime.mjs';
 
 const ROOT=path.dirname(fileURLToPath(import.meta.url));
@@ -77,6 +78,7 @@ export async function startPeopleLayerRuntime({
   if(!adminTokenFile)throw new Error('people_admin_token_file_required');
 
   const adminToken=requireSecureTokenFile(adminTokenFile);
+  const instanceId='people_'+randomUUID();
   const runtime=createPeopleRuntime({stateDir:path.resolve(stateDir)});
   const htmlFile=path.join(WEB_ROOT,'index.html');
   const cssFile=path.join(WEB_ROOT,'style.css');
@@ -96,6 +98,7 @@ export async function startPeopleLayerRuntime({
           service:'evercraft-people-layer',
           runtime:'Evercraft Compute',
           public_ui:true,
+          instance_id:instanceId,
           operator_auth:'private_token_file',
           public_person_token_flows:true,
           base44_runtime_dependency:false,
@@ -175,6 +178,7 @@ export async function startPeopleLayerRuntime({
     service:'evercraft-people-layer',
     runtime:'Evercraft Compute',
     service_url,
+    instance_id:instanceId,
     health_url:service_url+'/health',
     ui_path:'/people',
     consent_path:'/people/consent',
