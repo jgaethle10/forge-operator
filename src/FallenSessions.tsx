@@ -68,7 +68,11 @@ export default function FallenSessions(){
     try{
       await audioRef.current?.play(session,selectedScene);
       setPlaying(true);
-      setStatus('Playing canonical scene '+(selectedScene+1)+'.');
+      const audioStatus=audioRef.current?.status;
+      const timing=audioStatus?.timing_mode||'clock pending';
+      const buses=audioStatus?.track_bus_count??0;
+      const clockNote=audioStatus?.clock_error?' · '+audioStatus.clock_error:'';
+      setStatus('Playing canonical scene '+(selectedScene+1)+' · '+timing+' clock · '+buses+' reusable track buses'+clockNote);
     }catch(error){
       setStatus(error instanceof Error?error.message:'Web Audio playback failed.');
     }
