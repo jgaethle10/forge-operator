@@ -1,3 +1,4 @@
+import { createHash } from 'node:crypto';
 import { readdir, readFile } from 'node:fs/promises';
 import { join, relative } from 'node:path';
 import { LargeObjectStore } from './large-object.mjs';
@@ -108,7 +109,6 @@ async function readPointerRoots(root, {
             actual_size: bytes.length,
           });
         }
-        const { createHash } = await import('node:crypto');
         const actualContent = createHash('sha256').update(bytes).digest('hex');
         if (
           object.payload?.content_sha256 &&
@@ -137,6 +137,28 @@ async function readPointerRoots(root, {
           tree_id: treeId || null,
           actual_type: tree?.type || null,
         });
+      }
+
+      for (const parentId of object.payload?.parents || []) {
+        const parent = validObjects.get(String(parentId));
+        if (!parent || parent.type !== 'commit') {
+          pushError(errors, 'commit_parent_invalid', {
+            commit_id: id,
+            parent_id: parentId || null,
+            actual_type: parent?.type || null,
+          });
+        }
+      }
+
+      for (const transactionId of object.payload?.transactions || []) {
+        const transaction = validObjects.get(String(transactionId));
+        if (!transaction || transaction.type !== 'transaction') {
+          pushError(errors, 'commit_transaction_invalid', {
+            commit_id: id,
+            transaction_id: transactionId || null,
+            actual_type: transaction?.type || null,
+          });
+        }
       }
     }
 
