@@ -15,7 +15,17 @@ import {
   type WorldEditResult,
   type WorldEditTransaction,
 } from '../world-engine/studio-edit.js';
-import type { GeometryAsset } from '../world-engine/webgpu.js';
+import {
+  applyGeometryHotReload,
+  geometryAssetDigest,
+  type GeometryAsset,
+  type GeometryHotReloadReceipt,
+} from '../world-engine/webgpu.js';
+import {
+  migrateWorldRuntime,
+  type WorldRuntimeMigrationReceipt,
+} from '../world-engine/runtime-migration.js';
+import type { WorldSnapshot } from '../world-engine/engine.js';
 import type { MaterialDefinition } from '../world-engine/visual.js';
 import type { WorldEntity } from '../world-engine/engine.js';
 
@@ -477,6 +487,170 @@ export function compileWorldForgeLiveSync(input:{
     transaction,
     applied,
     geometryDelta:geometry,
+    receipt,
+  };
+}
+
+
+export interface WorldForgeLiveRuntimeSyncReceipt {
+  schema:'evercraft.fallen.world-forge-live-runtime-sync-receipt.v1';
+  syncReceiptDigest:string;
+  migrationReceiptDigest:string;
+  sourceSnapshotDigest:string;
+  migratedSnapshotDigest:string;
+  geometryBeforeDigest:string;
+  geometryAfterDigest:string;
+  geometryHotReloadReceiptDigests:string[];
+  geometryRemovedIds:string[];
+  runtimeStateMigrated:true;
+  geometryStateVerified:true;
+  boundaries:{
+    publicationAuthorityGranted:false;
+    productionRenderAuthorityGranted:false;
+    simulationAuthorityGranted:false;
+    existingRuntimeStatePreservedOnlyWhenCompatible:true;
+  };
+  digest:string;
+}
+
+export interface WorldForgeLiveRuntimeSyncResult {
+  schema:'evercraft.fallen.world-forge-live-runtime-sync.v1';
+  sync:WorldForgeLiveSyncResult;
+  snapshot:WorldSnapshot;
+  migrationReceipt:WorldRuntimeMigrationReceipt;
+  geometries:GeometryAsset[];
+  geometryHotReloadReceipts:GeometryHotReloadReceipt[];
+  receipt:WorldForgeLiveRuntimeSyncReceipt;
+}
+
+function geometrySetDigest(geometries:GeometryAsset[]){
+  return digest(
+    [...geometries]
+      .sort((a,b)=>a.id.localeCompare(b.id))
+      .map(geometry=>({
+        id:geometry.id,
+        digest:geometryAssetDigest(geometry),
+      })),
+  );
+}
+
+export function verifyWorldForgeLiveRuntimeSyncReceipt(
+  receipt:WorldForgeLiveRuntimeSyncReceipt,
+){
+  if(receipt?.schema!=='evercraft.fallen.world-forge-live-runtime-sync-receipt.v1') return false;
+  return receipt.digest===digest(receipt);
+}
+
+export function applyWorldForgeLiveSyncToRuntime(input:{
+  syncId:string;
+  beforeProject:WorldForgeProject;
+  afterProject:WorldForgeProject;
+  actor:{kind:'human'|'agent'|'code'|'system';id:string};
+  reason?:string;
+  previousSnapshot:WorldSnapshot;
+  currentGeometries?:GeometryAsset[];
+  tickRateHz?:number;
+}):WorldForgeLiveRuntimeSyncResult{
+  const sync=compileWorldForgeLiveSync({
+    syncId:input.syncId,
+    beforeProject:input.beforeProject,
+    afterProject:input.afterProject,
+    actor:input.actor,
+    reason:input.reason,
+    tickRateHz:input.tickRateHz,
+  });
+
+  if(input.previousSnapshot.worldId!==sync.before.world.id){
+    throw new Error('world_forge_live_runtime_snapshot_world_mismatch');
+  }
+  if(input.previousSnapshot.worldVersion!==sync.before.world.version){
+    throw new Error('world_forge_live_runtime_snapshot_version_mismatch');
+  }
+  if(input.previousSnapshot.definitionDigest!==sync.before.receipt.worldDigest){
+    throw new Error('world_forge_live_runtime_snapshot_definition_mismatch');
+  }
+
+  let geometries=structuredClone(
+    input.currentGeometries??sync.before.geometries,
+  );
+  const expectedBeforeGeometryDigest=geometrySetDigest(sync.before.geometries);
+  const actualBeforeGeometryDigest=geometrySetDigest(geometries);
+  if(actualBeforeGeometryDigest!==expectedBeforeGeometryDigest){
+    throw new Error(
+      `world_forge_live_runtime_geometry_base_mismatch:expected=${expectedBeforeGeometryDigest}:actual=${actualBeforeGeometryDigest}`,
+    );
+  }
+
+  const removed=new Set(sync.geometryDelta.removed);
+  geometries=geometries.filter(geometry=>!removed.has(geometry.id));
+
+  const hotReloadReceipts:GeometryHotReloadReceipt[]=[];
+  const reloadIds=new Set([
+    ...sync.geometryDelta.added,
+    ...sync.geometryDelta.changed,
+  ]);
+  for(const targetGeometry of sync.geometryDelta.targetAssets
+    .filter(geometry=>reloadIds.has(geometry.id))
+    .sort((a,b)=>a.id.localeCompare(b.id))){
+    const result=applyGeometryHotReload(geometries,targetGeometry);
+    geometries=result.geometries;
+    hotReloadReceipts.push(result.receipt);
+  }
+
+  const targetGeometryDigest=geometrySetDigest(sync.target.geometries);
+  const appliedGeometryDigest=geometrySetDigest(geometries);
+  if(appliedGeometryDigest!==targetGeometryDigest){
+    throw new Error(
+      `world_forge_live_runtime_geometry_target_mismatch:target=${targetGeometryDigest}:actual=${appliedGeometryDigest}`,
+    );
+  }
+
+  const migration=migrateWorldRuntime({
+    id:`wf-live:${input.syncId}`,
+    previousDefinition:sync.before.world,
+    nextDefinition:sync.applied.world,
+    previousSnapshot:input.previousSnapshot,
+  });
+
+  if(migration.snapshot.definitionDigest!==sync.applied.receipt.afterWorldDigest){
+    throw new Error('world_forge_live_runtime_migrated_definition_mismatch');
+  }
+  if(migration.snapshot.worldVersion!==sync.applied.world.version){
+    throw new Error('world_forge_live_runtime_migrated_version_mismatch');
+  }
+
+  const receiptCore:Omit<WorldForgeLiveRuntimeSyncReceipt,'digest'>={
+    schema:'evercraft.fallen.world-forge-live-runtime-sync-receipt.v1',
+    syncReceiptDigest:sync.receipt.digest,
+    migrationReceiptDigest:migration.receipt.digest,
+    sourceSnapshotDigest:input.previousSnapshot.digest,
+    migratedSnapshotDigest:migration.snapshot.digest,
+    geometryBeforeDigest:actualBeforeGeometryDigest,
+    geometryAfterDigest:appliedGeometryDigest,
+    geometryHotReloadReceiptDigests:hotReloadReceipts.map(item=>item.digest),
+    geometryRemovedIds:[...sync.geometryDelta.removed],
+    runtimeStateMigrated:true,
+    geometryStateVerified:true,
+    boundaries:{
+      publicationAuthorityGranted:false,
+      productionRenderAuthorityGranted:false,
+      simulationAuthorityGranted:false,
+      existingRuntimeStatePreservedOnlyWhenCompatible:true,
+    },
+  };
+
+  const receipt:WorldForgeLiveRuntimeSyncReceipt={
+    ...receiptCore,
+    digest:digest(receiptCore),
+  };
+
+  return {
+    schema:'evercraft.fallen.world-forge-live-runtime-sync.v1',
+    sync,
+    snapshot:migration.snapshot,
+    migrationReceipt:migration.receipt,
+    geometries,
+    geometryHotReloadReceipts:hotReloadReceipts,
     receipt,
   };
 }
