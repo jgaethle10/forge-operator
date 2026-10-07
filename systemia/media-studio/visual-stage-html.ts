@@ -265,6 +265,29 @@ body{display:flex;align-items:center;justify-content:center}
         const path=document.createElementNS(ns,'polyline');path.setAttribute('points',pts.map(p=>p.x+','+p.y).join(' '));path.setAttribute('fill','none');path.setAttribute('stroke',stage.theme?.palette?.grid||'rgba(255,255,255,.08)');path.setAttribute('stroke-width','1');el.appendChild(path);
       }
     }
+    for(const polygon of layer.polygons||[]){
+      const path=document.createElementNS(ns,'path');
+      const commands=[];
+      for(const ring of polygon.rings||[]){
+        const projected=(ring||[]).map(p=>project(p.lat,p.lon,layer));
+        if(projected.length<3) continue;
+        commands.push('M '+projected[0].x+' '+projected[0].y);
+        for(let i=1;i<projected.length;i++) commands.push('L '+projected[i].x+' '+projected[i].y);
+        commands.push('Z');
+      }
+      path.setAttribute('d',commands.join(' '));
+      path.setAttribute('fill',polygon.fill||'rgba(79,184,255,.08)');
+      path.setAttribute('fill-rule','evenodd');
+      path.setAttribute('stroke',polygon.stroke||stage.theme?.palette?.routeObserved||'rgba(255,255,255,.5)');
+      path.setAttribute('stroke-width',String(polygon.strokeWidth||2));
+      path.setAttribute('stroke-linejoin','round');
+      path.setAttribute('opacity',String(polygon.opacity??1));
+      if(['modeled','inferred','synthetic_visualization'].includes(polygon.evidenceState)){
+        path.setAttribute('stroke-dasharray','10 8');
+      }
+      path.dataset.geoPolygon=polygon.id;
+      el.appendChild(path);
+    }
     for(const route of layer.routes||[]){
       const pts=route.points.map(p=>project(p.lat,p.lon,layer));
       const shown=trim(pts,clamp(at(route.progress,t,t/stage.durationSec),0,1));
