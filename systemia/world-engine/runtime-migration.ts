@@ -276,6 +276,10 @@ export function migrateWorldRuntime(
   if(previousSnapshot.worldVersion!==previousDefinition.version){
     throw new Error('runtime_migration_source_version_mismatch');
   }
+
+  const sourceVerifier=new EvercraftWorldRuntime(previousDefinition);
+  sourceVerifier.restoreSnapshot(previousSnapshot);
+
   if(nextDefinition.version<=previousDefinition.version){
     throw new Error('runtime_migration_target_version_not_advanced');
   }
