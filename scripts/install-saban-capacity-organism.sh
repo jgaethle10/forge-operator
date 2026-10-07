@@ -7,6 +7,7 @@ CADENCE="2min"
 STATE_DIR="/var/lib/evercraft/saban-capacity"
 OWNED_HOST="false"
 PUBLIC_MARKET_DISCOVERY="false"
+AUTO_RETIRE_OWNED_HOST="false"
 
 usage(){
   cat <<'EOF'
@@ -17,6 +18,7 @@ Usage:
     [--cadence 2min] \
     [--state-dir /var/lib/evercraft/saban-capacity] \
     [--owned-host] \
+    [--auto-retire-owned-host] \
     [--public-market-discovery]
 
 Installs Saban's zero-spend ambient capacity organism.
@@ -36,7 +38,9 @@ It does NOT:
   - log into discovered devices;
   - run arbitrary code on MicroSeed devices;
   - create commercial market orders or paid leases;
-  - treat the current host as Evercraft-owned unless --owned-host is explicit.
+  - treat the current host as Evercraft-owned unless --owned-host is explicit;
+  - auto-retire a spawned local NodeSeed unless --auto-retire-owned-host is explicit;
+  - power off, reboot, suspend, or otherwise shut down the physical host.
 EOF
 }
 
@@ -47,6 +51,7 @@ while [[ $# -gt 0 ]]; do
     --cadence) CADENCE="${2:-}"; shift 2 ;;
     --state-dir) STATE_DIR="${2:-}"; shift 2 ;;
     --owned-host) OWNED_HOST="true"; shift ;;
+    --auto-retire-owned-host) AUTO_RETIRE_OWNED_HOST="true"; shift ;;
     --public-market-discovery) PUBLIC_MARKET_DISCOVERY="true"; shift ;;
     -h|--help) usage; exit 0 ;;
     *) echo "ERROR: unknown argument: $1" >&2; usage >&2; exit 2 ;;
@@ -176,6 +181,8 @@ Environment=SABAN_AMBIENT_STATE_DIR=$STATE_DIR
 Environment=SABAN_ALLOW_COMMERCIAL_CAPACITY=0
 Environment=SABAN_PUBLIC_MARKET_DISCOVERY=$PUBLIC_MARKET_DISCOVERY
 Environment=EVERCRAFT_OWNED_HOST=$OWNED_HOST
+Environment=SABAN_LOCAL_HOST_AUTO_RETIRE=$AUTO_RETIRE_OWNED_HOST
+Environment=SABAN_LOCAL_HOST_IDLE_RETIRE_CYCLES=15
 Environment=EVERCRAFT_LOCAL_NODE_ROOT=$STATE_DIR/resource-field-local-node
 Environment=SABAN_RESOURCE_EXPANSION_INTERVAL_MS=$RESOURCE_EXPANSION_INTERVAL_MS
 ExecStart=$NODE_BIN $REPO_ROOT/systemia/saban/resource-expansion-organism.mjs
@@ -443,6 +450,7 @@ echo "Registry: $STATE_DIR/registry"
 echo "Resource Expansion: resident; zero-spend safe lanes only"
 echo "Resource Expansion state: $STATE_DIR/resource-field-expansion-state.json"
 echo "Owned-host bootstrap: $OWNED_HOST"
+echo "Auto-retire spawned local NodeSeed: $AUTO_RETIRE_OWNED_HOST (physical host shutdown is never authorized)"
 echo "Public market discovery: $PUBLIC_MARKET_DISCOVERY"
 echo "MicroSeed gateway: http://127.0.0.1:8791"
 echo "Product work API: http://127.0.0.1:8793"
