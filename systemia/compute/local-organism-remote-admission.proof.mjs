@@ -6,6 +6,17 @@ import path from 'node:path';
 import { setTimeout as sleep } from 'node:timers/promises';
 import { loadOrCreateDeviceIdentity } from './device-identity.mjs';
 import { startLocalOrganism } from './local-organism.mjs';
+
+const nativeBrowserProofPreparer=async()=>({
+  schema:'evercraft.browser.native-runtime-preflight.v1',
+  ready:false,
+  mode:'native_user_playwright',
+  install_attempted:false,
+  install_state:'proof_disabled',
+  reason:'network_bootstrap_disabled_in_local_organism_proof',
+  receipt_hash:'sha256:'+'b'.repeat(64),
+  browserRuntimeFactory:null,
+});
 import { startOutboundCapacityBroker } from '../network/outbound-capacity-broker.mjs';
 
 async function freeTcpPort() {
@@ -46,6 +57,7 @@ try {
     remoteAdmissionRetryMs: 100,
     heartbeatTargetSeconds: 300,
     graceSeconds: 90,
+    nativeBrowserPreparer: nativeBrowserProofPreparer,
   });
 
   const initialHealth = await organism.health();

@@ -6,6 +6,9 @@ on:
     paths:
       - "systemia/evercraft-web/browser-worker/**"
       - "systemia/compute/runtime-node.mjs"
+      - "systemia/compute/node-seed.mjs"
+      - "systemia/compute/local-organism.mjs"
+      - "systemia/compute/install-local-organism-user.sh"
       - "systemia/yard/browser-worker-proof.mjs"
       - "systemia/yard/browser-public-route-proof.mjs"
       - "systemia/yard/browser-edge-attachment.mjs"
@@ -19,6 +22,9 @@ on:
     paths:
       - "systemia/evercraft-web/browser-worker/**"
       - "systemia/compute/runtime-node.mjs"
+      - "systemia/compute/node-seed.mjs"
+      - "systemia/compute/local-organism.mjs"
+      - "systemia/compute/install-local-organism-user.sh"
       - "systemia/yard/browser-worker-proof.mjs"
       - "systemia/yard/browser-public-route-proof.mjs"
       - "systemia/yard/operator.mjs"
@@ -48,6 +54,8 @@ jobs:
         run: PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD=1 npm install --no-audit --no-fund
       - name: Policy tests
         run: npm test
+      - name: Prove native user-space Browser Worker
+        run: node native-runtime.proof.mjs
       - name: Build worker image
         run: docker build -t evercraft/browser-worker:ci .
       - name: Smoke worker image
