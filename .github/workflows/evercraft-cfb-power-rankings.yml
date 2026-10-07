@@ -33,7 +33,8 @@ on:
         type: string
 
 permissions:
-  contents: read
+  contents: write
+  actions: write
 
 concurrency:
   group: evercraft-cfb-power-rankings-${{ github.event.pull_request.number || github.ref }}
@@ -58,6 +59,7 @@ jobs:
           node --test systemia/newsroom/cfb-power-runner.test.mjs
           node --test systemia/newsroom/cfb-power-story-draft.test.mjs
           node --test systemia/newsroom/cfb-published-edition.test.mjs
+          node --test systemia/newsroom/cfb-power-release.test.mjs
           node --test systemia/graphics-command/ranking-poster-renderer.test.mjs
 
       - name: Resolve evidence window
@@ -111,6 +113,75 @@ jobs:
           grep -q '"status": "draft"' _cfb_power_run/journal-story-draft.json
           grep -q '"contract": "evercraft.fallen.journal.production.v1"' _cfb_power_run/journal-story-draft.json
 
+      - name: Build receipt-bound approved Journal release
+        run: |
+          node systemia/newsroom/cfb-power-release.mjs \
+            _cfb_power_run/cfb-power-rankings.json \
+            _cfb_power_run/completed-games.json \
+            _cfb_power_run/journal-story-approved.json | tee _cfb_power_release-receipt.json
+          test -s _cfb_power_run/journal-story-approved.json
+          grep -q '"status": "approved"' _cfb_power_run/journal-story-approved.json
+          grep -q '"score": 10' _cfb_power_run/journal-story-approved.json
+
+      - name: Persist verified Sunday edition through the owned Journal
+        if: github.event_name != 'pull_request' && github.ref == 'refs/heads/main'
+        shell: bash
+        env:
+          EVERCRAFT_JOURNAL_ORIGIN: https://fabric.systemiacommandcenters.com/journal
+        run: |
+          set -euo pipefail
+          cp _cfb_power_run/journal-story-approved.json /tmp/cfb-journal-story.json
+          story_file="$(node -e "const s=require('/tmp/cfb-journal-story.json'); const day=s.slug.match(/(\\d{4}-\\d{2}-\\d{2})$/)?.[1]; if(!day) process.exit(2); process.stdout.write(day+'-cfb-power-rankings.json')")"
+
+          git config user.name "Evercraft CFB Rankings"
+          git config user.email "evercraft-cfb@users.noreply.github.com"
+
+          published=0
+          for ATTEMPT in 1 2 3; do
+            git fetch origin main --quiet
+            git reset --hard origin/main
+            cp /tmp/cfb-journal-story.json "systemia/newsroom/stories/$story_file"
+            rm -rf public/journal
+            npm run journal:build
+
+            git add "systemia/newsroom/stories/$story_file" public/journal
+            if git diff --cached --quiet; then
+              echo "Verified CFB edition is already current on main."
+              published=1
+              break
+            fi
+
+            git commit -m "Publish verified Evercraft CFB Power Rankings [skip ci]"
+            if git push origin HEAD:main; then
+              echo "Verified CFB edition and owned Journal artifact persisted to main."
+              published=1
+              break
+            fi
+
+            echo "Main advanced during CFB publish attempt ${ATTEMPT}/3; rebuilding against current main."
+          done
+
+          if [ "$published" -ne 1 ]; then
+            echo "CFB Journal publication lost three consecutive main-branch races." >&2
+            exit 1
+          fi
+
+      - name: Dispatch owned Journal verification and public fallback
+        if: github.event_name != 'pull_request' && github.ref == 'refs/heads/main'
+        shell: bash
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          gh workflow run evercraft-journal-owned.yml --ref main
+          gh workflow run evercraft-journal-pages.yml --ref main
+          {
+            echo "## CFB Journal handoff dispatched"
+            echo
+            echo "The verified source story and owned Journal artifact were persisted first."
+            echo "Journal verification and the public fallback deployment were then explicitly dispatched from main."
+          } >> "$GITHUB_STEP_SUMMARY"
+
       - name: Summarize Top 25
         shell: bash
         run: |
@@ -137,5 +208,6 @@ jobs:
             _cfb_power_run-receipt.json
             _cfb_power_story-draft-receipt.json
             _cfb_power_visual-receipt.json
+            _cfb_power_release-receipt.json
           if-no-files-found: error
           retention-days: 120
