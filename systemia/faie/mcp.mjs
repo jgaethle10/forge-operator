@@ -232,7 +232,7 @@ function uniqueStrings(value, maxItems, maxLength = 160) {
   )].slice(0, maxItems);
 }
 
-export async function executeFaieMcpRpc(runtime, rpc) {
+export async function executeFaieMcpRpc(runtime, rpc, { now } = {}) {
   if (!runtime) throw new Error('faie_runtime_required');
 
   const method = clean(rpc?.method, 120);
@@ -278,7 +278,7 @@ export async function executeFaieMcpRpc(runtime, rpc) {
       thesis_assumptions: Array.isArray(args.thesis_assumptions) ? args.thesis_assumptions.slice(0, 40) : [],
       horizon_days: boundedInt(args.horizon_days, 90, 1, 3650),
       include_weak_evidence: args.include_weak_evidence === true
-    });
+    }, now ? { now } : {});
 
     return rpcResult(id, toolResult({
       ok: true,
@@ -323,7 +323,7 @@ export async function executeFaieMcpRpc(runtime, rpc) {
         : [],
       horizon_days: boundedInt(args.horizon_days, 90, 1, 3650),
       include_weak_evidence: args.include_weak_evidence === true
-    });
+    }, now ? { now } : {});
 
     return rpcResult(id, toolResult({
       ok: true,
