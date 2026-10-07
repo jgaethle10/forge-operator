@@ -74,6 +74,13 @@ export interface WorldIntelStageInput {
     centerLat?: number;
     centerLon?: number;
     zoom?: number;
+    fitBounds?: {
+      north:number;
+      south:number;
+      east:number;
+      west:number;
+      paddingPct?:number;
+    };
     routes?: WorldIntelRouteInput[];
     points?: WorldIntelPointInput[];
     polygons?: WorldIntelPolygonInput[];
@@ -215,6 +222,7 @@ export function compileWorldIntelStage(input:WorldIntelStageInput):VisualStage{
       centerLat:input.map.centerLat??15,
       centerLon:input.map.centerLon??0,
       zoom:input.map.zoom??1.15,
+      fitBounds:input.map.fitBounds,
       grid:!input.mapPlate,
       parallax:1.09,
       perspectivePx:1600,
