@@ -115,15 +115,56 @@ test('navmesh validates symmetric polygon adjacency',()=>{
   );
 });
 
-test('deterministic A* preserves corridor polygons and waypoints',()=>{
+test('deterministic A* preserves corridor polygons and funnel-smooths waypoints',()=>{
   const path=findNavigationPath(mesh,{x:1,y:0,z:1},{x:7,y:0,z:7});
   assert.deepEqual(path.polygonIds,['a','b','c']);
-  assert.deepEqual(path.waypoints[0],{x:6,y:0,z:2});
-  assert.deepEqual(path.waypoints[1],{x:6,y:0,z:6});
-  assert.deepEqual(path.waypoints[2],{x:7,y:0,z:7});
+  assert.equal(path.smoothing,'funnel_v1');
+  assert.deepEqual(path.corridorPortals.map(portal=>[
+    portal.fromPolygonId,
+    portal.toPolygonId
+  ]),[
+    ['a','b'],
+    ['b','c']
+  ]);
+  assert.deepEqual(path.waypoints,[{x:7,y:0,z:7}]);
+  assert.equal(path.geometricLength,8.485281374);
 
   const second=findNavigationPath(mesh,{x:1,y:0,z:1},{x:7,y:0,z:7});
   assert.equal(path.digest,second.digest);
+});
+
+test('navmesh neighbors must share one canonical portal edge',()=>{
+  const invalid:NavigationMesh={
+    schema:'evercraft.world-engine.navmesh.v1',
+    id:'broken-portals',
+    polygons:[
+      {
+        id:'left',
+        vertices:[
+          {x:0,y:0,z:0},
+          {x:2,y:0,z:0},
+          {x:2,y:0,z:2},
+          {x:0,y:0,z:2}
+        ],
+        neighbors:['right']
+      },
+      {
+        id:'right',
+        vertices:[
+          {x:3,y:0,z:0},
+          {x:5,y:0,z:0},
+          {x:5,y:0,z:2},
+          {x:3,y:0,z:2}
+        ],
+        neighbors:['left']
+      }
+    ]
+  };
+
+  assert.throws(
+    ()=>validateNavigationMesh(invalid),
+    /navigation_polygon_neighbor_portal_missing/
+  );
 });
 
 test('tick-bound navigation target drives physics locomotion and animation state',()=>{
