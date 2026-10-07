@@ -252,6 +252,10 @@ try{
     throw new Error('graphics_command_poster_not_svg');
   }
   if(!/5 ACTIVE VOLCANOES/.test(directedFeed.text)) throw new Error('graphics_command_hook_missing');
+  if(!/class="geo-boundary"/.test(directedFeed.text)||!/class="peak-marker"/.test(directedFeed.text)){
+    throw new Error('graphics_command_state_geometry_missing');
+  }
+  if(!/WASHINGTON/.test(directedFeed.text)) throw new Error('graphics_command_region_identity_missing');
   if(/Digest/i.test(directedFeed.text)) throw new Error('graphics_command_audit_clutter_regressed');
 
   const directedStory=await getText('/visuals/washington-active-volcanoes/poster-story.svg');
@@ -265,6 +269,13 @@ try{
   if(graphicsPlan.treatment!=='geo_spine'||graphicsPlan.hero?.visualPriority!=='hero_first'){
     throw new Error('graphics_command_art_direction_invalid');
   }
+  if(
+    graphicsPlan.geography?.boundaryName!=='Washington'||
+    graphicsPlan.geography?.boundaryLicense!=='CC0-1.0'||
+    graphicsPlan.geography?.boundaryRightsState!=='public_domain'
+  ){
+    throw new Error('graphics_command_boundary_lineage_missing');
+  }
   if(graphicsPlan.publicationAuthority!==false) throw new Error('graphics_command_publication_authority_invalid');
 
   const scrollStop=await getJson('/visuals/washington-active-volcanoes/scroll-stop-report.json');
@@ -277,10 +288,26 @@ try{
   if((fallenStageInput.map?.points||[]).length!==5||(fallenStageInput.map?.routes||[]).length!==4){
     throw new Error('graphics_command_fallen_geo_handoff_invalid');
   }
+  const fallenPolygons=fallenStageInput.map?.polygons||[];
+  if(
+    fallenPolygons.length!==1||
+    fallenPolygons[0]?.id!=='us-wa-state-outline-cc0-v1'||
+    (fallenPolygons[0]?.rings?.[0]?.length||0)<70
+  ){
+    throw new Error('graphics_command_fallen_polygon_missing');
+  }
+
+  const storyPreview=await getText('/visuals/washington-active-volcanoes/poster-story.html');
+  if(!/max-height:calc\(100svh - 58px\)/.test(storyPreview.text)||!/poster-story\.svg/.test(storyPreview.text)){
+    throw new Error('graphics_command_responsive_preview_missing');
+  }
 
   const motion=await getText('/visuals/washington-active-volcanoes/motion.html');
   if(!/__evercraftRenderAt/.test(motion.text)||!/__evercraftRenderFrame/.test(motion.text)){
     throw new Error('visual_desk_motion_controls_missing');
+  }
+  if(!/evercraft\.visual-story\.motion-stage\.v2/.test(motion.text)||!/.story-route/.test(motion.text)){
+    throw new Error('graphics_command_directed_motion_missing');
   }
   const negativeVisualIngest=await timedFetch(origin+'/api/visuals/ingest',{
     method:'POST',
@@ -318,6 +345,12 @@ try{
     graphics_plan:'/visuals/washington-active-volcanoes/graphics-plan.json',
     scroll_stop_status:scrollStop.status,
     fallen_stage_aspect:fallenStageInput.aspectRatio,
+    fallen_geo_polygon_count:fallenPolygons.length,
+    boundary_name:graphicsPlan.geography.boundaryName,
+    boundary_license:graphicsPlan.geography.boundaryLicense,
+    boundary_rights_state:graphicsPlan.geography.boundaryRightsState,
+    responsive_story_preview:'/visuals/washington-active-volcanoes/poster-story.html',
+    directed_motion_v2:true,
     graphics_command_verified:true,
     motion_stage:'/visuals/washington-active-volcanoes/motion.html',
     source_backed:/usgs\.gov/i.test(specimenPage.text),
