@@ -548,6 +548,52 @@
         "Privacy/Safety QA",
         "Shipping"
       ]
+    },
+    {
+      "public_id": "earthworks-site-autonomy-study-v1",
+      "name": "Evercraft EarthWorks Site Autonomy Study",
+      "execution_mode": "systemia_managed_simulation_study",
+      "native_state": "sell_now_human_handoff_payment_order_and_physical_authority_separately_verified",
+      "intake": [
+        "buyer_email",
+        "site_identity",
+        "bounded_material_flow_loop",
+        "machine_roster_and_roles",
+        "authorized_site_or_operating_data",
+        "available_baseline_cycle_observations",
+        "selected_study_offer"
+      ],
+      "deliverables": [
+        "machine roster and role map",
+        "site zone and route graph",
+        "baseline cycle evidence",
+        "production bottleneck model",
+        "digital-twin replay",
+        "queue idle and cycle analysis",
+        "autonomy candidate ranking",
+        "telemetry and integration gap list",
+        "safety and operating-domain blockers",
+        "shadow-mode pilot plan",
+        "go instrument-first or no-go recommendation"
+      ],
+      "qa": [
+        "payment_scope_match",
+        "authorized_site_data_only",
+        "simulation_not_physical_authority",
+        "evidence_state_integrity",
+        "baseline_provenance",
+        "modeled_is_not_observed",
+        "no_actuation_without_separate_authority",
+        "safety_boundary_explicit"
+      ],
+      "human_review_before_delivery": true,
+      "specialist_roles": [
+        "EarthWorks",
+        "Systemia",
+        "Saban",
+        "Site/Autonomy QA",
+        "Shipping"
+      ]
     }
   ]
 }
