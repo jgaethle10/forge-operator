@@ -81,6 +81,20 @@ jobs:
               fi
             fi
 
+            # Product pages are deployed by the same five-minute Chromebook updater.
+            # A just-merged RIVET/AliEV route may therefore be absent briefly even
+            # while the generic edge remains healthy. Retry only that known 404
+            # deployment-lag signature; identity or policy failures stay immediate.
+            if { [ "$stage" = "rivet_surface" ] || [ "$stage" = "aliev_surface" ]; } && [ "$attempt" -lt "$max_attempts" ]; then
+              if [[ "$error" == http_404:* ]]; then
+                deployment_wait_started=true
+                echo "RIVET/AliEV deployment has not reached the owned edge yet ($error); retrying after updater window slice ($attempt/$max_attempts)."
+                sleep 20
+                attempt=$((attempt + 1))
+                continue
+              fi
+            fi
+
             # Once this exact run has proven the old Visual Desk route is still
             # deployed, allow a root 502 during the subsequent Fabric restart.
             # A 502 without that prior deployment-lag evidence remains immediate.
