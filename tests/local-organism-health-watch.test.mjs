@@ -70,6 +70,7 @@ test('health watch records a healthy local organism without restarting it', asyn
         },
         error: null,
       }),
+      sourceReleaseRefProvider: () => 'b'.repeat(40),
       now: () => new Date('2026-10-01T02:30:00.000Z'),
     });
 
@@ -110,6 +111,7 @@ test('health watch restarts and proves recovery when NodeSeed becomes unhealthy'
             error: 'connection_refused',
           },
       recoveryWaitMs: 1000,
+      sourceReleaseRefProvider: () => 'b'.repeat(40),
       now: () => new Date('2026-10-01T02:31:00.000Z'),
     });
 
@@ -139,6 +141,7 @@ test('health watch refuses a non-loopback NodeSeed receipt', async () => {
         throw new Error('request must not be attempted for non-loopback endpoint');
       },
       restartOnFailure: false,
+      sourceReleaseRefProvider: () => 'b'.repeat(40),
       now: () => new Date('2026-10-01T02:32:00.000Z'),
     });
 
@@ -165,4 +168,85 @@ test('local organism installer wires the self-healing timer and initial receipt 
   assert.match(installer, /local-organism-health-watch\.mjs/);
   assert.match(installer, /--observe-only/);
   assert.doesNotMatch(installer, /sudo|ListenStream|0\.0\.0\.0/);
+});
+
+
+test('health watch restarts a healthy organism when the deployed release trails the verified checkout', async () => {
+  const root = fixture();
+  const state = { active: true, restarted: false, restart_count: 0 };
+  const sourceRelease = 'd'.repeat(40);
+  const execImpl = (program, args) => {
+    assert.equal(program, 'systemctl');
+    if (args.includes('is-active')) return 'active\n';
+    if (args.includes('restart')) {
+      state.restart_count += 1;
+      state.restarted = true;
+      const receiptFile = path.join(root, 'local-organism-receipt.json');
+      const receipt = JSON.parse(fs.readFileSync(receiptFile, 'utf8'));
+      receipt.release_ref = sourceRelease;
+      fs.writeFileSync(receiptFile, JSON.stringify(receipt));
+      return '';
+    }
+    throw new Error('unexpected command');
+  };
+
+  try {
+    const result = await checkLocalOrganismHealth({
+      stateRoot: root,
+      execImpl,
+      requestImpl: async () => ({
+        ok: true,
+        status: 200,
+        body: {
+          ok: true,
+          runtime: 'Evercraft Compute',
+          node_id: 'penguin-proof',
+        },
+        error: null,
+      }),
+      sourceReleaseRefProvider: () => sourceRelease,
+      recoveryWaitMs: 1000,
+      now: () => new Date('2026-10-07T02:00:00.000Z'),
+    });
+
+    assert.equal(result.state, 'recovered');
+    assert.equal(result.action, 'restart');
+    assert.equal(result.before.release_current, false);
+    assert.equal(result.before.organism_release_ref, 'b'.repeat(40));
+    assert.equal(result.before.source_release_ref, sourceRelease);
+    assert.equal(result.after.release_current, true);
+    assert.equal(result.after.organism_release_ref, sourceRelease);
+    assert.equal(state.restart_count, 1);
+  } finally {
+    fs.rmSync(root, { recursive: true, force: true });
+  }
+});
+
+test('health watch does not invent release drift when checkout identity is unavailable', async () => {
+  const root = fixture();
+  const state = { active: true, restarted: false, restart_count: 0 };
+  try {
+    const result = await checkLocalOrganismHealth({
+      stateRoot: root,
+      execImpl: fakeSystemctl(state),
+      requestImpl: async () => ({
+        ok: true,
+        status: 200,
+        body: {
+          ok: true,
+          runtime: 'Evercraft Compute',
+          node_id: 'penguin-proof',
+        },
+        error: null,
+      }),
+      sourceReleaseRefProvider: () => '',
+      now: () => new Date('2026-10-07T02:01:00.000Z'),
+    });
+
+    assert.equal(result.state, 'healthy');
+    assert.equal(result.release_current, null);
+    assert.equal(state.restart_count, 0);
+  } finally {
+    fs.rmSync(root, { recursive: true, force: true });
+  }
 });
