@@ -34,6 +34,7 @@
     "remote-device-trust-watch",
     "public-edge-activation-watch",
     "public-edge-controller",
+    "forensic-record-owned-source",
     "aliev-owned-source",
     "rivet-report-edge",
     "kaidance-mission-publisher",
@@ -86,6 +87,8 @@
     "raven_inference_provider_and_model_explicit",
     "resident_compute_manifest_matches_resident_service_registry",
     "competition_capacity_resident_supervised",
-    "aliev_and_rivet_resident_services_supervised"
+    "aliev_and_rivet_resident_services_supervised",
+    "forensic_record_owned_source_resident_supervised",
+    "forensic_record_legacy_retirement_requires_reconciliation_and_public_route_receipts"
   ]
 }
