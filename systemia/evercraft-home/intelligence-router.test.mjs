@@ -23,7 +23,7 @@ test("OpenAI becomes selectable only when both model and sealed credential exist
       provider: "openai",
       environment: "live",
       label: "home-test",
-      apiKeyId: "openai",
+      apiKeyId: "openai-test-key",
       apiSecret: "test-secret-value-long-enough",
       actorRef: "user:test",
     });
