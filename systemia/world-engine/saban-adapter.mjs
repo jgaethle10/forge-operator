@@ -14,6 +14,7 @@ const ROLES=new Set([
   'webgpu_device_guard',
   'texture_residency_guard',
   'reference_frame_guard',
+  'normal_map_guard',
   'studio_edit_guard',
   'runtime_migration_guard',
   'fallen_bridge_guard',
@@ -246,6 +247,21 @@ function evaluate(role,world){
         'Software adapters remain valid execution proof but must never be promoted into hardware execution claims.',
         'Reference-frame CI must rerun when World Engine renderer/shader source changes so pixel evidence cannot silently become stale.',
         'A passing generic WebGPU device probe does not substitute for a passing World Engine reference-frame receipt.'
+      ],
+      findings:[]
+    };
+  }
+
+  if(role==='normal_map_guard'){
+    return {
+      category:'normal_map',
+      directives:[
+        'Tangent-space geometry is canonical asset data: tangent vec4 count must match vertices, xyz must be non-zero and handedness must be exactly +1 or -1.',
+        'Normal-mapped materials require authored UVs and tangents; renderer backends must not invent hidden tangent truth for canonical replay.',
+        'Normal textures must use linear rgba8unorm sampling rather than sRGB decoding and are valid only for PBR materials.',
+        'Normal texture IDs and digests participate in the same deterministic texture-residency and WebGPU-plan receipts as other material textures.',
+        'Owned WGSL reconstructs a TBN basis from transformed normal/tangent plus handedness and applies the sampled tangent-space normal before lighting.',
+        'Browser reference-frame conformance must bind a flat normal texture and the tangent vertex attribute so shader/layout drift fails visibly.'
       ],
       findings:[]
     };
