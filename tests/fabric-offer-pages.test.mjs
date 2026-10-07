@@ -93,9 +93,11 @@ test('owned Fabric serves offer pages, requires confirmation, and delegates chec
     port:0,
     catalog:[websiteAudit],
     faieSurfaceEnabled:false,
+    purchaseIntentToken:'fixture-raven-loopback-token-abcdefghijklmnopqrstuvwxyz',
     purchaseIntentFetch:async(url,init)=>{
       seen.push({
         url:String(url),
+        authorization:String(init?.headers?.authorization||''),
         body:JSON.parse(String(init?.body||'{}')),
       });
       return new Response(JSON.stringify({
@@ -160,6 +162,8 @@ test('owned Fabric serves offer pages, requires confirmation, and delegates chec
     assert.match(checkoutBody,/settlement\.example\.test\/pay\/test/);
     assert.match(checkoutBody,/Evercraft Payments/);
     assert.equal(seen.length,1);
+    assert.equal(seen[0].url,'http://127.0.0.1:8791/v1/purchase-intents');
+    assert.equal(seen[0].authorization,'Bearer fixture-raven-loopback-token-abcdefghijklmnopqrstuvwxyz');
     assert.equal(seen[0].body.user_confirmed,true);
     assert.equal(seen[0].body.capability_key,'website-audit-quick-win');
     assert.match(seen[0].body.idempotency_key,/^fabric-website-audit-/);
@@ -213,3 +217,27 @@ test('human checkout failures render a branded Evercraft Payments page instead o
   }
 });
 
+
+
+test('Fabric refuses legacy or non-loopback purchase-intent transports',async()=>{
+  await assert.rejects(
+    ()=>startFabricLocalRuntime({
+      host:'127.0.0.1',
+      port:0,
+      catalog:[websiteAudit],
+      faieSurfaceEnabled:false,
+      purchaseIntentUrl:'https://base44.app/api/apps/example/functions/ravenNexusPurchaseIntent',
+    }),
+    /base44_transport_forbidden/
+  );
+  await assert.rejects(
+    ()=>startFabricLocalRuntime({
+      host:'127.0.0.1',
+      port:0,
+      catalog:[websiteAudit],
+      faieSurfaceEnabled:false,
+      purchaseIntentUrl:'https://payments.example.test/v1/purchase-intents',
+    }),
+    /owned_loopback_raven_runtime/
+  );
+});
