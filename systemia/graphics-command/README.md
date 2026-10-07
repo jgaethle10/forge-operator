@@ -28,6 +28,20 @@ The first contract is intentionally narrow:
 - require deterministic motion treatment;
 - fail a scroll-stop gate when typography, visual dominance, provenance or multi-format readiness are not good enough.
 
-The Washington volcano specimen uses a cached USGS The National Map / 3DEP shaded-relief raster. Runtime rendering never depends on a live terrain fetch: the governed source raster is admitted once, hashed, rights-stamped, and then verified locally on every build. The `cinematic-terrain-geography-v2` poster contract rejects the legacy node-diagram grammar, including peak halos and high-emphasis connector spines.
+The Washington volcano specimen uses a cached USGS The National Map / 3DEP shaded-relief raster. Runtime rendering never depends on a live terrain fetch: the governed source raster is admitted once, hashed, rights-stamped, and then verified locally on every build. The `cinematic-terrain-geography-v3` poster contract rejects the legacy node-diagram grammar, including peak halos and high-emphasis connector spines.
+
+## Shot Tournament
+
+Graphics Command does not ship the first technically valid composition. The Visual Desk build creates three deterministic candidates before canonical poster rendering:
+
+- **Terrain Hero** prioritizes recognizable physical geography and suppresses route prominence.
+- **Balanced Relief** keeps the established terrain/marker/evidence balance.
+- **Cascade Signal** makes the evidence path more legible while preserving the geographic frame.
+
+Every candidate is measured in feed, square, and story formats. Any collision or safe-margin rejection is a hard tournament loss. Eligible candidates are ranked deterministically on terrain fit, route restraint, marker restraint, and region-label restraint. The winning candidate ID and digest are written to `shot-tournament.json`, the Visual Desk manifest, poster-quality receipt, and Clip handoff.
+
+The portable build also emits candidate feed/story SVGs for human QA. Terrain-backed candidate SVGs reference the single governed local terrain asset instead of duplicating the raster payload. The canonical poster still embeds the governed terrain bytes and preserves the exact source SHA-256.
+
+The tournament is an art-direction and selection layer only. It never changes evidence coordinates, source lineage, rights state, or publication authority.
 
 Rendering does not grant publication authority.
