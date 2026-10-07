@@ -24,7 +24,10 @@ test('Compute declares Lineage Control Room as read-only bridged resident worklo
     "payment_authority: false",
     "private_data_authority: false",
     "lineage_control_room_workspace_outside_admitted_root",
+    "lineage_control_room_workspace_unreadable",
     "lineage_control_room_workspace_not_initialized",
+    "fs.realpathSync(allowedRoot)",
+    "fs.realpathSync(requestedWorkspaceRoot)",
   ]) {
     assert.ok(
       source.includes(literal),
