@@ -481,3 +481,11 @@ PulseGrid can now apply a named musical intent as an atomic transaction through 
 A successful plan emits child receipts linked by one transaction ID plus a parent `transaction.apply` receipt containing the explicit intent, affected targets, child receipt IDs, and pre/post session-state snapshots. Undoing the parent transaction restores the complete pre-plan musical state while preserving the audit trail.
 
 This is the execution boundary for future semantic requests such as “make the chorus hit harder”: the model must resolve the request into explicit graph operations, then commit them as one validated reversible plan instead of issuing unrelated mutations.
+
+### PulseGrid 0.10 browser-native core
+
+The canonical PulseGrid session engine no longer imports Node's `crypto` module. Runtime graph IDs use `globalThis.crypto.randomUUID()` where available, with a clearly non-security fallback reserved only for local graph identity.
+
+`pulsegrid-browser.ts` is now the explicit browser entrypoint for the same canonical engine used by Node/CI. The media-studio test suite bundles that entrypoint with esbuild using `platform: browser` and fails if a Node-only dependency leaks back into the core.
+
+This removes the architectural excuse for maintaining a separate browser-side session model. The next UI integration should import this entrypoint and adapt presentation/audio execution around it rather than reimplementing musical state.
