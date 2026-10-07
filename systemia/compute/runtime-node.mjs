@@ -1715,12 +1715,29 @@ export async function startEvercraftComputeNode({
             return send(res, 422, { error: 'forensic_record_verified_seed_required' });
           }
 
+          let forensicIngestToken = String(process.env.FORENSIC_RECORD_INGEST_TOKEN || '').trim();
+          let ingestAuthority = 'private_environment';
+          if (!forensicIngestToken) {
+            const privateDir = path.join(stateRoot, '.private');
+            const tokenFile = path.join(privateDir, 'ingest-token');
+            fs.mkdirSync(privateDir, { recursive: true, mode: 0o700 });
+            if (!fs.existsSync(tokenFile)) {
+              fs.writeFileSync(tokenFile, randomBytes(32).toString('hex')+'\n', { mode: 0o600 });
+            }
+            fs.chmodSync(tokenFile, 0o600);
+            forensicIngestToken = fs.readFileSync(tokenFile, 'utf8').trim();
+            if (Buffer.byteLength(forensicIngestToken, 'utf8') < 32) {
+              return send(res, 422, { error: 'forensic_record_generated_ingest_token_invalid' });
+            }
+            ingestAuthority = 'generated_private_compute_state';
+          }
+
           const runtime = await startForensicRecordRuntime({
             stateDir: stateRoot,
             host: '127.0.0.1',
             port: Number(body.input?.port || 0),
             systemiaMachineKey: process.env.SYSTEMIA_MACHINE_KEY || '',
-            ingestToken: process.env.FORENSIC_RECORD_INGEST_TOKEN || '',
+            ingestToken: forensicIngestToken,
           });
           const serviceId = `svc_${randomBytes(8).toString('hex')}`;
           services.set(serviceId, {
@@ -1744,6 +1761,8 @@ export async function startEvercraftComputeNode({
             seed_finding_rows: Number(seedReceipt?.corpus_health?.finding_rows || 0),
             seed_unique_finding_numbers: Number(seedReceipt?.corpus_health?.unique_finding_numbers || 0),
             seed_duplicate_number_extra_rows: Number(seedReceipt?.corpus_health?.duplicate_number_extra_rows || 0),
+            ingest_authority: ingestAuthority,
+            ingest_token_exposed: false,
             instance_id: runtime.instance_id,
           };
           const receipt = chain.issue('service.started', {
@@ -1756,6 +1775,8 @@ export async function startEvercraftComputeNode({
             seed_state: seedState,
             seed_source_manifest_sha256: result.seed_source_manifest_sha256,
             seed_finding_rows: result.seed_finding_rows,
+            ingest_authority: ingestAuthority,
+            ingest_token_exposed: false,
           });
           return send(res, 200, {
             ok: true,
