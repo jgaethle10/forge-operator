@@ -1,6 +1,6 @@
 {
   "schema": "evercraft.chum.crawler-radar.v1",
-  "generated_at": "2026-10-07T13:55:31.116Z",
+  "generated_at": "2026-10-07T14:30:50.098Z",
   "coordinator": "CHUM",
   "runtime_feedback": {
     "requested": false,
@@ -12474,7 +12474,7 @@
     {
       "path": "/chum/answers/doors/find-the-smallest-raven-safety-capability-without-buying-the-full-suite-or-hardwar-0ee29c0618.json",
       "product_key": null,
-      "score": 222,
+      "score": 215,
       "urgency": "strike_now",
       "crawl_priority": 160,
       "last_changed": "2026-10-06T14:10:27.346Z",
@@ -12484,7 +12484,7 @@
       "negative_provider_pickup_receipts": [],
       "reasons": [
         "no_self_identified_crawler_fetch_observed",
-        "fresh_content_under_24h",
+        "fresh_content_under_72h",
         "indexnow_hash_pending"
       ],
       "recommended_actions": [
