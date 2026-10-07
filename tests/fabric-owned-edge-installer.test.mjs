@@ -88,6 +88,16 @@ test('Fabric self updater converges the Saban Resource Field resident as owned z
   assert.match(updater,/next update cycle will retry/);
 });
 
+test('Fabric self updater publishes a redacted Saban capacity health receipt readable by Fabric',()=>{
+  assert.match(updater,/SABAN_CAPACITY_HEALTH_FILE="\/var\/lib\/evercraft\/fabric-secrets\/saban-capacity-health\.json"/);
+  assert.match(updater,/evercraft\.fabric-saban-capacity-health\.v1/);
+  assert.match(updater,/install -o "\$RUN_USER" -g "\$RUN_USER" -m 0640 "\$health_tmp" "\$SABAN_CAPACITY_HEALTH_FILE"/);
+  assert.match(fabricRuntime,/saban_resource_field_resident/);
+  assert.match(fabricRuntime,/saban_resource_field_zero_spend_only/);
+  assert.match(fabricRuntime,/saban_resource_field_receipt_stale/);
+  assert.doesNotMatch(fabricRuntime,/saban_resource_field_allocator_token|saban_resource_field_node_id/);
+});
+
 test('Fabric self updater reasserts owned ingress without claiming ChromeOS host control',()=>{
   assert.match(updater,/reassert_owned_public_ingress/);
   assert.match(updater,/evercraft-public-edge\.service/);

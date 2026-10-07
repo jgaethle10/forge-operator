@@ -23,8 +23,6 @@ import {
   renderOfferPage,
   renderOffers,
   renderPaymentHoldPage,
-  renderRivetLanding,
-  renderAliEvLanding,
 } from './fabric-public-site.mjs';
 import {
   fabricMobileManifest,
@@ -328,6 +326,7 @@ export async function startFabricLocalRuntime({
   visualStateDir='',
   visualOrigin='',
   visualIngestToken='',
+  sabanCapacityHealthFile='',
   purchaseIntentFetch=fetch,
   purchaseIntentUrl='https://base44.app/api/apps/6a7adc9666bfd8c5c2fb4069/functions/ravenNexusPurchaseIntent',
 }={}) {
@@ -359,6 +358,55 @@ export async function startFabricLocalRuntime({
   );
   const edgeAttestationReady=()=>Boolean(nodeAttestationProvider)||
     (fs.existsSync(resolvedNodeReceipt)&&fs.existsSync(resolvedAllocatorToken));
+  const resolvedSabanCapacityHealthFile=path.resolve(
+    sabanCapacityHealthFile||
+    process.env.EVERCRAFT_SABAN_CAPACITY_HEALTH_FILE||
+    '/var/lib/evercraft/fabric-secrets/saban-capacity-health.json'
+  );
+  const readSabanCapacityHealth=()=>{
+    const unavailable={
+      resident:false,
+      state:'unavailable',
+      zero_spend_only:null,
+      public_market_discovery:null,
+      receipt_stale:null,
+      observed_at:null,
+    };
+    if(!fs.existsSync(resolvedSabanCapacityHealthFile)) return unavailable;
+    try{
+      const row=JSON.parse(fs.readFileSync(resolvedSabanCapacityHealthFile,'utf8'));
+      if(row?.schema!=='evercraft.fabric-saban-capacity-health.v1'){
+        return {...unavailable,state:'invalid_receipt',receipt_stale:true};
+      }
+      const observedAt=String(row.observed_at||'')||null;
+      const observedMs=Date.parse(observedAt||'');
+      const ageMs=Number.isFinite(observedMs)?Date.now()-observedMs:Number.POSITIVE_INFINITY;
+      const stale=
+        !Number.isFinite(observedMs)||
+        ageMs>10*60*1000||
+        ageMs<-60*1000;
+      const zeroSpend=row.zero_spend_only===true;
+      const publicDiscovery=row.public_market_discovery===true;
+      const ownedHost=row.owned_host===true;
+      const state=String(row.state||'unknown');
+      return {
+        resident:
+          row.resident===true&&
+          state==='ready'&&
+          ownedHost&&
+          zeroSpend&&
+          !publicDiscovery&&
+          !stale,
+        state,
+        zero_spend_only:zeroSpend,
+        public_market_discovery:publicDiscovery,
+        receipt_stale:stale,
+        observed_at:observedAt,
+      };
+    }catch{
+      return {...unavailable,state:'invalid_receipt',receipt_stale:true};
+    }
+  };
 
   async function nodeAttestation(nonce){
     const nonceValue=String(nonce||'').trim();
@@ -447,6 +495,7 @@ export async function startFabricLocalRuntime({
 
   const health=()=>{
     const prepared=preparedCatalog();
+    const sabanCapacity=readSabanCapacityHealth();
     return ({
     ok:true,
     service:'evercraft-fabric-local',
@@ -483,6 +532,13 @@ export async function startFabricLocalRuntime({
       : edgeAttestationReady()
         ? 'loopback_nodeseed'
         : null,
+    saban_resource_field_resident:sabanCapacity.resident,
+    saban_resource_field_state:sabanCapacity.state,
+    saban_resource_field_zero_spend_only:sabanCapacity.zero_spend_only,
+    saban_resource_field_public_market_discovery:sabanCapacity.public_market_discovery,
+    saban_resource_field_receipt_stale:sabanCapacity.receipt_stale,
+    saban_resource_field_observed_at:sabanCapacity.observed_at,
+    saban_resource_field_health_source:'owned_update_receipt',
     public_plugin_submission_ready:true,
     mobile_path:'/mobile',
     mobile_installable:true,
@@ -508,8 +564,6 @@ export async function startFabricLocalRuntime({
     faie_public_api:faieSurface?'/api/faie':null,
     faie_mcp_path:faieSurface?'/mcp/faie':null,
     faie_base44_transport_enabled:false,
-    rivet_public_path:'/rivet',
-    aliev_public_path:'/aliev',
     provider_publication_state:'external_to_runtime',
     public_submission_note:'The owned Fabric runtime and review surface are submission-ready. Provider review, approval, publication, and directory visibility are external states and are not inferred by this health endpoint.',
     catalog_reload_mode:staticPrepared?'static_injected':'hot_reload_repository',
@@ -777,14 +831,6 @@ export async function startFabricLocalRuntime({
           if(!page) return sendJson(res,404,{error:'offer_not_found'});
           return sendText(res,200,page,{contentType:'text/html; charset=utf-8'});
         }
-      }
-
-      if (req.method==='GET' && (req.url==='/rivet'||req.url==='/rivet/')) {
-        return sendText(res,200,renderRivetLanding(),{contentType:'text/html; charset=utf-8'});
-      }
-
-      if (req.method==='GET' && (req.url==='/aliev'||req.url==='/aliev/')) {
-        return sendText(res,200,renderAliEvLanding(),{contentType:'text/html; charset=utf-8'});
       }
 
       if (req.method==='GET' && (req.url==='/mobile'||req.url==='/mobile/')) {
@@ -1104,13 +1150,18 @@ if (direct) {
     '--visual-ingest-token-file',
     process.env.EVERCRAFT_VISUAL_INGEST_TOKEN_FILE||'/var/lib/evercraft/fabric-secrets/visual-ingest-token'
   ));
+  const sabanCapacityHealthFile=String(arg(
+    '--saban-capacity-health-file',
+    process.env.EVERCRAFT_SABAN_CAPACITY_HEALTH_FILE||
+      '/var/lib/evercraft/fabric-secrets/saban-capacity-health.json'
+  ));
   let visualIngestToken=String(process.env.EVERCRAFT_VISUAL_INGEST_TOKEN||'').trim();
   if(!visualIngestToken && visualIngestTokenFile && fs.existsSync(visualIngestTokenFile)){
     visualIngestToken=fs.readFileSync(visualIngestTokenFile,'utf8').trim();
   }
   const runtime=await startFabricLocalRuntime({
     host,port,challengeToken,nodeReceiptPath,allocatorTokenFile,
-    visualStateDir,visualOrigin,visualIngestToken
+    visualStateDir,visualOrigin,visualIngestToken,sabanCapacityHealthFile
   });
   process.stdout.write(JSON.stringify({
     ok:true,
