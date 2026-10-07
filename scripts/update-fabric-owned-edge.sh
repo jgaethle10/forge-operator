@@ -21,6 +21,9 @@ ROUTER_MAP_INSTALLER=""
 SABAN_CAPACITY_INSTALLER=""
 SABAN_CAPACITY_STATE_DIR="/var/lib/evercraft/saban-capacity"
 SABAN_CAPACITY_HEALTH_FILE="/var/lib/evercraft/fabric-secrets/saban-capacity-health.json"
+HOME_EDGE_INSTALLER=""
+HOME_EDGE_SERVICE="evercraft-home.service"
+HOME_LOCAL_HEALTH="http://127.0.0.1:4310/api/health"
 
 usage() {
   cat <<'EOF'
@@ -188,6 +191,7 @@ VISUAL_INGEST_TOKEN_FILE="/var/lib/evercraft/fabric-secrets/visual-ingest-token"
 NETWORK_OBSERVER_INSTALLER="$REPO_ROOT/scripts/install-fabric-network-observer.sh"
 ROUTER_MAP_INSTALLER="$REPO_ROOT/scripts/install-fabric-router-map-resident.sh"
 SABAN_CAPACITY_INSTALLER="$REPO_ROOT/scripts/install-saban-capacity-organism.sh"
+HOME_EDGE_INSTALLER="$REPO_ROOT/scripts/install-evercraft-home-edge.sh"
 
 mkdir -p "$STATE_DIR"
 chmod 0750 "$STATE_DIR"
@@ -366,6 +370,29 @@ ensure_saban_capacity_resident() {
   return 1
 }
 
+ensure_home_edge_resident() {
+  if [[ ! -f "$HOME_EDGE_INSTALLER" ]]; then
+    echo "ERROR: Evercraft Home edge installer missing from deployed Forge revision" >&2
+    return 1
+  fi
+
+  if systemctl is-active --quiet "$HOME_EDGE_SERVICE" 2>/dev/null &&
+     curl -fsS --max-time 5 "$HOME_LOCAL_HEALTH" >/tmp/evercraft-home-update-health.json 2>/dev/null &&
+     grep -Fq 'handle_path /home/*' /etc/evercraft/Caddyfile 2>/dev/null; then
+    echo "Evercraft update: Personal Home resident=healthy"
+    return 0
+  fi
+
+  echo "Evercraft update: converging Personal Home on the owned HTTPS edge"
+  if ! bash "$HOME_EDGE_INSTALLER" --repo-root "$REPO_ROOT" --user "$RUN_USER"; then
+    echo "ERROR: Evercraft Home edge convergence failed" >&2
+    return 1
+  fi
+
+  systemctl is-active --quiet "$HOME_EDGE_SERVICE" &&
+    curl -fsS --max-time 5 "$HOME_LOCAL_HEALTH" >/tmp/evercraft-home-update-health.json
+}
+
 read_health() {
   curl -fsS --max-time 5 "$HEALTH_URL" 2>/dev/null || true
 }
@@ -505,6 +532,11 @@ if [[ "$before" == "$target" ]]; then
     exit 11
   fi
 
+  if ! ensure_home_edge_resident; then
+    echo "ERROR: Fabric is healthy but Personal Home convergence failed; next update cycle will retry" >&2
+    exit 13
+  fi
+
   # Reassert every owned ingress layer we can control from Crostini.
   # ChromeOS host port-forward toggles remain outside the guest boundary.
   reassert_owned_public_ingress
@@ -569,6 +601,11 @@ fi
 if ! ensure_network_observer true; then
   echo "ERROR: Fabric update is healthy but resident network observer installation failed" >&2
   exit 11
+fi
+
+if ! ensure_home_edge_resident; then
+  echo "ERROR: Fabric update accepted but Personal Home convergence failed; next update cycle will retry" >&2
+  exit 13
 fi
 
 # A source update is also an ingress recovery opportunity.
