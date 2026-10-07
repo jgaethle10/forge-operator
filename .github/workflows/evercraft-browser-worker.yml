@@ -86,6 +86,44 @@ jobs:
           name: evercraft-webgpu-device-conformance
           path: /tmp/evercraft-webgpu-device-conformance.json
           if-no-files-found: error
+      - name: Generate canonical World Engine reference frame
+        run: |
+          npx tsx ../../../systemia/world-engine/reference-frame-export.ts > /tmp/evercraft-world-engine-reference-frame-package.json
+      - name: Render World Engine reference frame through browser WebGPU
+        run: |
+          EVERCRAFT_NATIVE_BROWSER_STATE_DIR="$RUNNER_TEMP/evercraft-native-browser" \
+          EVERCRAFT_WORLD_ENGINE_REFERENCE_FRAME_FILE="/tmp/evercraft-world-engine-reference-frame-package.json" \
+          EVERCRAFT_WORLD_ENGINE_REFERENCE_FRAME_PNG="/tmp/evercraft-world-engine-reference-frame.png" \
+          node world-engine-reference-frame.proof.mjs | tee /tmp/evercraft-world-engine-reference-frame-receipt.json
+      - name: Summarize World Engine reference frame
+        run: |
+          node <<'NODE'
+          const fs=require('node:fs');
+          const receipt=JSON.parse(fs.readFileSync('/tmp/evercraft-world-engine-reference-frame-receipt.json','utf8'));
+          const summary=[
+            '## Evercraft World Engine WebGPU reference frame',
+            '- Status: **'+receipt.status+'**',
+            '- Execution class: **'+receipt.execution_class+'**',
+            '- Hardware execution claim: **'+String(receipt.hardware_execution_claim)+'**',
+            '- World: `'+receipt.world_id+'`',
+            '- Visual frame: `'+receipt.visual_frame_digest+'`',
+            '- GPU plan: `'+receipt.plan_digest+'`',
+            '- Pixel SHA-256: `'+receipt.pixel_sha256+'`',
+            '- Center pixel: `'+JSON.stringify(receipt.center.observed)+'`',
+            '- Background pixel: `'+JSON.stringify(receipt.background.observed)+'`',
+            '- Receipt: `'+receipt.receipt_hash+'`',
+          ].join('\n');
+          fs.appendFileSync(process.env.GITHUB_STEP_SUMMARY,summary+'\n');
+          NODE
+      - name: Upload World Engine reference frame evidence
+        uses: actions/upload-artifact@v4
+        with:
+          name: evercraft-world-engine-webgpu-reference-frame
+          path: |
+            /tmp/evercraft-world-engine-reference-frame-package.json
+            /tmp/evercraft-world-engine-reference-frame-receipt.json
+            /tmp/evercraft-world-engine-reference-frame.png
+          if-no-files-found: error
       - name: Build worker image
         run: docker build -t evercraft/browser-worker:ci .
       - name: Smoke worker image
