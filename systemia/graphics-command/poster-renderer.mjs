@@ -81,9 +81,9 @@ function sourceHosts(refs){
 }
 
 const SPECS={
-  feed:{width:1080,height:1350,map:{x:72,y:300,width:936,height:720,alignY:.24},hookY:128,hookSize:82,footerY:1115},
-  square:{width:1080,height:1080,map:{x:72,y:246,width:936,height:590,alignY:.22},hookY:110,hookSize:66,footerY:890},
-  story:{width:1080,height:1920,map:{x:72,y:500,width:936,height:920,alignY:.14},hookY:155,hookSize:100,footerY:1585},
+  feed:{width:1080,height:1350,map:{x:56,y:300,width:968,height:720,alignY:.24},hookY:128,hookSize:82,footerY:1115},
+  square:{width:1080,height:1080,map:{x:56,y:246,width:968,height:590,alignY:.22},hookY:110,hookSize:66,footerY:890},
+  story:{width:1080,height:1920,map:{x:36,y:500,width:1008,height:920,alignY:.12},hookY:155,hookSize:100,footerY:1410},
 };
 
 function decorativeContours(spec){
@@ -272,8 +272,8 @@ function renderGeography(boundary,statePath,spec,format,terrain,terrainHref,fram
     terrainLayer,
     '<path class="terrain-atmosphere" d="'+statePath+'" fill="url(#terrainWash)" opacity=".46"/>',
     '<path class="geo-boundary" d="'+statePath+'" fill="none" stroke="#EAF7FC" stroke-width="1.25" stroke-opacity=".30"/>',
-    '<text class="region-label" x="'+(x+w*.50)+'" y="'+(y+h*.57)+'" text-anchor="middle" font-family="Arial,sans-serif" font-size="'+(format==='story'?55:42)+'" font-weight="900" letter-spacing="9" fill="#EAF7FC" opacity=".18">WASHINGTON</text>',
-    '<text class="region-kicker" x="'+(x+w*.50)+'" y="'+(y+h*.57+(format==='story'?38:30))+'" text-anchor="middle" font-family="Arial,sans-serif" font-size="'+(format==='story'?15:12)+'" font-weight="800" letter-spacing="4" fill="#8EDBFA" opacity=".30">PACIFIC NORTHWEST</text>',
+    '<text class="region-label" x="'+(frame.draw.x+frame.draw.width-18)+'" y="'+(frame.draw.y+frame.draw.height-42)+'" text-anchor="end" font-family="Arial,sans-serif" font-size="'+(format==='story'?25:20)+'" font-weight="900" letter-spacing="5" fill="#EAF7FC" opacity=".30">WASHINGTON</text>',
+    '<text class="region-kicker" x="'+(frame.draw.x+frame.draw.width-18)+'" y="'+(frame.draw.y+frame.draw.height-19)+'" text-anchor="end" font-family="Arial,sans-serif" font-size="'+(format==='story'?11:9)+'" font-weight="800" letter-spacing="3" fill="#8EDBFA" opacity=".42">PACIFIC NORTHWEST</text>',
   ].join('\n');
 }
 
