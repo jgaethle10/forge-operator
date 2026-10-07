@@ -133,6 +133,41 @@
     .quiet{padding:24px 8px;color:var(--muted)}
     .list{margin:10px 0 0;padding-left:20px;color:#d7ddd8}.list li{margin:7px 0;line-height:1.5}
     .error{color:var(--bad)}
+    .operation-shell{padding:4px 0 2px}
+    .operation-head{display:flex;justify-content:space-between;gap:16px;align-items:flex-start;margin-bottom:18px}
+    .operation-head strong{display:block;font-family:Georgia,"Times New Roman",serif;font-size:1.42rem;font-weight:500;margin-top:5px}
+    .operation-head small{display:block;color:var(--soft);margin-top:6px;line-height:1.45}
+    .operation-clock{font-variant-numeric:tabular-nums;font-size:.74rem;color:var(--gold);border:1px solid #4a513b;border-radius:999px;padding:7px 9px;background:#0c1510;white-space:nowrap}
+    .operation-steps{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin:12px 0 16px}
+    .operation-step{padding:10px 11px;border:1px solid #2f4035;border-radius:13px;background:#0b140f;color:var(--soft);font-size:.72rem;line-height:1.35}
+    .operation-step b{display:block;color:#dfe6e0;font-size:.68rem;letter-spacing:.08em;text-transform:uppercase;margin-bottom:3px}
+    .operation-step.active{border-color:#6a6849;background:#141a12;color:#d8dfd9}
+    .operation-step.done{border-color:#3d5f43;color:#b9d2bc}
+    .skeleton-stack{display:grid;gap:10px}
+    .skeleton-card{height:72px;border:1px solid #27372e;border-radius:15px;background:
+      linear-gradient(100deg,rgba(255,255,255,.018) 18%,rgba(255,255,255,.06) 38%,rgba(255,255,255,.018) 58%) #0b140f;
+      background-size:220% 100%;animation:faieShimmer 1.6s ease-in-out infinite}
+    @keyframes faieShimmer{0%{background-position:100% 0}100%{background-position:-120% 0}}
+    @media(prefers-reduced-motion:reduce){.skeleton-card{animation:none}}
+    .activity-hud{position:fixed;z-index:50;right:18px;bottom:18px;width:min(430px,calc(100vw - 32px));
+      border:1px solid #415447;border-radius:22px;background:rgba(9,17,12,.96);backdrop-filter:blur(18px);
+      box-shadow:0 28px 100px rgba(0,0,0,.45);padding:16px 16px 14px;opacity:0;transform:translateY(28px) scale(.98);
+      pointer-events:none;transition:opacity .22s ease,transform .22s ease}
+    .activity-hud[data-visible="true"]{opacity:1;transform:translateY(0) scale(1);pointer-events:auto}
+    .activity-row{display:flex;gap:12px;align-items:flex-start}
+    .activity-orb{width:12px;height:12px;border-radius:50%;background:var(--leaf);margin-top:5px;box-shadow:0 0 0 6px rgba(157,197,151,.08);flex:0 0 auto}
+    .activity-hud[data-state="error"] .activity-orb{background:var(--bad);box-shadow:0 0 0 6px rgba(217,141,134,.08)}
+    .activity-hud[data-state="success"] .activity-orb{background:var(--gold);box-shadow:0 0 0 6px rgba(211,182,120,.08)}
+    .activity-copy{min-width:0;flex:1}
+    .activity-kicker{display:flex;justify-content:space-between;gap:12px;color:var(--soft);font-size:.64rem;letter-spacing:.1em;text-transform:uppercase;font-weight:850}
+    .activity-title{font-weight:820;color:#eef2ee;font-size:.92rem;margin-top:4px}
+    .activity-detail{color:#aebbb3;font-size:.76rem;line-height:1.45;margin-top:4px}
+    .activity-track{height:5px;background:#17231b;border-radius:999px;overflow:hidden;margin-top:13px}
+    .activity-bar{height:100%;width:8%;border-radius:999px;background:linear-gradient(90deg,#789e7d,#d3b678);transition:width .38s ease}
+    .activity-meta{display:flex;justify-content:space-between;gap:12px;margin-top:9px;color:var(--soft);font-size:.68rem}
+    .activity-actions{display:flex;justify-content:flex-end;margin-top:10px}
+    .activity-actions button{margin:0;padding:7px 10px;font-size:.69rem;background:#111a14;color:#ccd7cf;border-color:#38493d}
+    .activity-actions button[hidden]{display:none}
     footer{border-top:1px solid var(--line);padding:28px 0 52px;color:var(--soft);font-size:.84rem;line-height:1.6}
     a{color:var(--water)}
   </style>
@@ -308,6 +343,20 @@
   </section>
 </main>
 
+<aside class="activity-hud" id="activityHud" data-visible="false" data-state="idle" role="status" aria-live="polite" aria-atomic="true">
+  <div class="activity-row">
+    <div class="activity-orb" aria-hidden="true"></div>
+    <div class="activity-copy">
+      <div class="activity-kicker"><span id="activityKind">Evercraft operation</span><span id="activityElapsed">0.0s</span></div>
+      <div class="activity-title" id="activityTitle">Ready</div>
+      <div class="activity-detail" id="activityDetail">Waiting for work.</div>
+    </div>
+  </div>
+  <div class="activity-track" aria-hidden="true"><div class="activity-bar" id="activityBar"></div></div>
+  <div class="activity-meta"><span id="activityPhase">Idle</span><span id="activityProgressLabel">0 / 0 phases</span></div>
+  <div class="activity-actions"><button type="button" id="activityCancel" hidden>Cancel operation</button></div>
+</aside>
+
 <footer>
   <div class="shell">FAIE is part of the Evercraft/Systemia evidence fabric. Owned Fabric runtime. Official MCP Registry: <strong>io.github.jgaethle10/faie</strong>. A finding is a bounded evidence interpretation, not a causal claim, forecast guarantee or instruction to take a consequential action.</div>
 </footer>
@@ -319,11 +368,18 @@ const cls = (value) => esc(String(value || '').toLowerCase());
 
 async function fetchWithTimeout(url, options={}, timeoutMs=15000) {
   const controller = new AbortController();
+  const upstreamSignal = options.signal;
+  const abortFromUpstream = () => controller.abort(upstreamSignal?.reason);
+  if (upstreamSignal) {
+    if (upstreamSignal.aborted) abortFromUpstream();
+    else upstreamSignal.addEventListener('abort',abortFromUpstream,{once:true});
+  }
   const timer = window.setTimeout(() => controller.abort(), timeoutMs);
   try {
     return await fetch(url, {...options, signal: controller.signal});
   } finally {
     window.clearTimeout(timer);
+    upstreamSignal?.removeEventListener?.('abort',abortFromUpstream);
   }
 }
 
@@ -332,6 +388,108 @@ function requestErrorMessage(error) {
     return 'FAIE did not answer within 15 seconds. The request was stopped instead of hanging forever. Retry once; if it repeats, the live edge needs attention.';
   }
   return error && error.message ? error.message : String(error);
+}
+
+const evercraftActivity = (() => {
+  const hud = document.getElementById('activityHud');
+  const kind = document.getElementById('activityKind');
+  const title = document.getElementById('activityTitle');
+  const detail = document.getElementById('activityDetail');
+  const elapsed = document.getElementById('activityElapsed');
+  const bar = document.getElementById('activityBar');
+  const phase = document.getElementById('activityPhase');
+  const progressLabel = document.getElementById('activityProgressLabel');
+  const cancelButton = document.getElementById('activityCancel');
+  let current = null;
+  let timer = null;
+  let hideTimer = null;
+
+  const tick = () => {
+    if (!current) return;
+    elapsed.textContent = ((performance.now() - current.startedAt) / 1000).toFixed(1) + 's';
+  };
+
+  const clearTimers = () => {
+    if (timer) window.clearInterval(timer);
+    if (hideTimer) window.clearTimeout(hideTimer);
+    timer = null;
+    hideTimer = null;
+  };
+
+  const render = () => {
+    if (!current) return;
+    const total = Math.max(1,current.steps.length);
+    const index = Math.max(0,Math.min(total-1,current.stepIndex));
+    const progress = current.state === 'success' ? 100 : current.state === 'error' ? Math.max(10,((index+0.35)/total)*100) : Math.max(8,((index+0.35)/total)*100);
+    hud.dataset.visible = 'true';
+    hud.dataset.state = current.state;
+    kind.textContent = current.kind;
+    title.textContent = current.title;
+    detail.textContent = current.detail;
+    phase.textContent = current.steps[index] || 'Working';
+    progressLabel.textContent = current.state === 'success' ? total + ' / ' + total + ' phases' : (index + 1) + ' / ' + total + ' phases';
+    bar.style.width = Math.min(100,progress) + '%';
+    cancelButton.hidden = !(current.state === 'active' && typeof current.cancel === 'function');
+    tick();
+  };
+
+  const start = ({kind:'activityKind'= 'Evercraft operation',title:'activityTitle'='Working',detail:'activityDetail'='',steps=['Prepare','Work','Deliver'],cancel=null}={}) => {
+    clearTimers();
+    current = {kind:activityKind,title:activityTitle,detail:activityDetail,steps,stepIndex:0,state:'active',startedAt:performance.now(),cancel};
+    render();
+    timer = window.setInterval(tick,100);
+    return current;
+  };
+
+  const update = ({stepIndex,detail:'activityDetail',title:'activityTitle'}={}) => {
+    if (!current) return;
+    if (Number.isInteger(stepIndex)) current.stepIndex = stepIndex;
+    if (typeof activityDetail === 'string') current.detail = activityDetail;
+    if (typeof activityTitle === 'string') current.title = activityTitle;
+    render();
+  };
+
+  const finish = ({title:'activityTitle'='Complete',detail:'activityDetail'='Operation completed.'}={}) => {
+    if (!current) return;
+    current.state = 'success';
+    current.stepIndex = current.steps.length - 1;
+    current.title = activityTitle;
+    current.detail = activityDetail;
+    render();
+    clearTimers();
+    hideTimer = window.setTimeout(() => { hud.dataset.visible='false'; current=null; },2600);
+  };
+
+  const fail = ({title:'activityTitle'='Operation stopped',detail:'activityDetail'='The operation did not complete.'}={}) => {
+    if (!current) return;
+    current.state = 'error';
+    current.title = activityTitle;
+    current.detail = activityDetail;
+    render();
+    clearTimers();
+    hideTimer = window.setTimeout(() => { hud.dataset.visible='false'; current=null; },5200);
+  };
+
+  cancelButton.addEventListener('click', () => {
+    if (current && typeof current.cancel === 'function') current.cancel();
+  });
+
+  return {start,update,finish,fail};
+})();
+window.EvercraftActivity = evercraftActivity;
+
+function renderOperationState(target,{title,detail,steps,activeStep=0}) {
+  const stepHtml = steps.map((label,index) =>
+    '<div class="operation-step ' + (index < activeStep ? 'done' : index === activeStep ? 'active' : '') + '">' +
+      '<b>' + (index < activeStep ? 'Complete' : index === activeStep ? 'In progress' : 'Queued') + '</b>' + esc(label) +
+    '</div>'
+  ).join('');
+  target.innerHTML =
+    '<div class="operation-shell">' +
+      '<div class="operation-head"><div><div class="section-kicker">Evercraft activity</div><strong>' + esc(title) + '</strong><small>' + esc(detail) + '</small></div><span class="operation-clock">LIVE</span></div>' +
+      '<div class="operation-steps">' + stepHtml + '</div>' +
+      '<div class="skeleton-stack"><div class="skeleton-card"></div><div class="skeleton-card"></div><div class="skeleton-card"></div></div>' +
+    '</div>';
 }
 
 let lastInvestigation = null;
@@ -446,14 +604,41 @@ function renderResult(inv) {
     }
   });
 
-  document.getElementById('downloadPacket')?.addEventListener('click', () => {
-    const blob = new Blob([JSON.stringify(lastInvestigation, null, 2)], {type:'application/json'});
-    const href = URL.createObjectURL(blob);
-    const a = document.createElement('a');
-    a.href = href;
-    a.download = 'faie-field-decision-packet.json';
-    a.click();
-    URL.revokeObjectURL(href);
+  document.getElementById('downloadPacket')?.addEventListener('click', async () => {
+    const button = document.getElementById('downloadPacket');
+    button.disabled = true;
+    button.textContent = 'Preparing packet…';
+    evercraftActivity.start({
+      kind:'Download',
+      title:'Preparing decision packet',
+      detail:'Serializing the current FAIE packet locally in your browser.',
+      steps:['Serialize packet','Verify payload','Hand off to browser']
+    });
+    try {
+      evercraftActivity.update({stepIndex:0,detail:'Serializing evidence, lineage, unknowns, and next-proof instructions.'});
+      await new Promise((resolve) => window.setTimeout(resolve,140));
+      const json = JSON.stringify(lastInvestigation, null, 2);
+      const bytes = new Blob([json]).size;
+      evercraftActivity.update({stepIndex:1,detail:'Payload ready: ' + Math.max(1,Math.round(bytes/1024)) + ' KB JSON. Preparing browser handoff.'});
+      await new Promise((resolve) => window.setTimeout(resolve,140));
+      const blob = new Blob([json], {type:'application/json'});
+      const href = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = href;
+      a.download = 'faie-field-decision-packet.json';
+      evercraftActivity.update({stepIndex:2,detail:'Passing the prepared file to your browser download manager.'});
+      a.click();
+      window.setTimeout(() => URL.revokeObjectURL(href),1000);
+      evercraftActivity.finish({title:'Download handed off',detail:'The browser download was started. FAIE does not claim the file reached disk until your browser confirms it.'});
+      button.textContent = 'Download started ✓';
+      window.setTimeout(() => { button.textContent='Download packet JSON'; },1800);
+    } catch (error) {
+      evercraftActivity.fail({title:'Download preparation failed',detail:requestErrorMessage(error)});
+      button.textContent = 'Download failed';
+      window.setTimeout(() => { button.textContent='Download packet JSON'; },1800);
+    } finally {
+      button.disabled = false;
+    }
   });
 }
 
@@ -616,10 +801,27 @@ document.getElementById('compareRun').addEventListener('click', async () => {
 
   button.disabled = true;
   button.textContent = 'Comparing…';
-  document.getElementById('comparisonResult').innerHTML = '<div class="quiet">Running the same evidence rubric across both candidates…</div>';
+  const comparisonTarget = document.getElementById('comparisonResult');
+  const compareController = new AbortController();
+  const compareSteps = ['Validate both scopes','Run the shared evidence rubric','Assemble side-by-side readiness'];
+  renderOperationState(comparisonTarget,{
+    title:'Comparing evidence readiness',
+    detail:'Both candidates are being evaluated with the same rubric. No hidden weighting is introduced.',
+    steps:compareSteps,
+    activeStep:0
+  });
+  evercraftActivity.start({
+    kind:'Comparison',
+    title:'Comparing candidate evidence',
+    detail:'Validating both candidate scopes before the shared evidence pass.',
+    steps:compareSteps,
+    cancel:()=>compareController.abort()
+  });
 
   try {
+    evercraftActivity.update({stepIndex:1,detail:'Running the same bounded FAIE evidence rubric across both candidates.'});
     const response = await fetchWithTimeout('/api/faie/compare', {
+      signal:compareController.signal,
       method:'POST',
       headers:{'Content-Type':'application/json'},
       body:JSON.stringify({
@@ -637,9 +839,12 @@ document.getElementById('compareRun').addEventListener('click', async () => {
     },15000);
     const payload = await response.json();
     if (!response.ok) throw new Error(payload.error || 'Comparison failed.');
+    evercraftActivity.update({stepIndex:2,detail:'Evidence packets returned. Building the side-by-side readiness view.'});
     renderComparison(payload);
+    evercraftActivity.finish({title:'Comparison ready',detail:'Both evidence packets are rendered with the same rubric and visible gaps.'});
   } catch (error) {
-    document.getElementById('comparisonResult').innerHTML = '<div class="quiet error">' + esc(requestErrorMessage(error)) + '</div>';
+    comparisonTarget.innerHTML = '<div class="quiet error">' + esc(requestErrorMessage(error)) + '</div>';
+    evercraftActivity.fail({title:'Comparison stopped',detail:requestErrorMessage(error)});
   } finally {
     button.disabled = false;
     button.textContent = 'Compare evidence readiness';
@@ -663,10 +868,27 @@ document.getElementById('form').addEventListener('submit', async (event) => {
   if (!question) return;
   button.disabled = true;
   button.textContent = 'Investigating…';
-  document.getElementById('result').innerHTML = '<div class="quiet">Building a bounded evidence packet…</div>';
+  const resultTarget = document.getElementById('result');
+  const investigateController = new AbortController();
+  const investigateSteps = ['Bound the question','Evaluate admitted evidence','Assemble decision packet'];
+  renderOperationState(resultTarget,{
+    title:'Building the evidence packet',
+    detail:'FAIE is preserving source state, uncertainty, contradictions, and missing proof while it works.',
+    steps:investigateSteps,
+    activeStep:0
+  });
+  evercraftActivity.start({
+    kind:'Investigation',
+    title:'Building FAIE decision packet',
+    detail:'Bounding the question and validating the operator-supplied scope.',
+    steps:investigateSteps,
+    cancel:()=>investigateController.abort()
+  });
 
   try {
+    evercraftActivity.update({stepIndex:1,detail:'Evaluating the admitted evidence field against this geography, asset, and thesis.'});
     const response = await fetchWithTimeout('/api/faie/investigate', {
+      signal:investigateController.signal,
       method:'POST',
       headers:{'Content-Type':'application/json'},
       body:JSON.stringify({
@@ -681,10 +903,13 @@ document.getElementById('form').addEventListener('submit', async (event) => {
     },15000);
     const payload = await response.json();
     if (!response.ok) throw new Error(payload.error || 'Investigation failed.');
+    evercraftActivity.update({stepIndex:2,detail:'Evidence returned. Assembling findings, challenge state, thesis memory, and next proof.'});
     renderResult(payload);
     await loadState();
+    evercraftActivity.finish({title:'Decision packet ready',detail:'The bounded packet is rendered. Findings, unknowns, and next-proof work remain visibly separated.'});
   } catch (error) {
-    document.getElementById('result').innerHTML = '<div class="quiet error">' + esc(requestErrorMessage(error)) + '</div>';
+    resultTarget.innerHTML = '<div class="quiet error">' + esc(requestErrorMessage(error)) + '</div>';
+    evercraftActivity.fail({title:'Investigation stopped',detail:requestErrorMessage(error)});
   } finally {
     button.disabled = false;
     button.textContent = 'Build decision packet';
