@@ -186,3 +186,31 @@ existing pushCommitGraph / fetchCommitGraph semantics
 The session wrapper requires connected capacity, verified device identity binding, session attestation, the Lineage workload declaration, and zero-cost capacity by default. It preserves the existing Yard receipts for inventory, grant, service start, public route and relay creation.
 
 Allocator, lease and relay credentials remain in memory only. Closing the session releases the relay and Compute lease, clears the in-memory credentials, and makes the attached remote unusable. No Lineage operation widens the Yard grant or creates downstream release authority.
+
+
+## Remote large-object replication
+
+Lineage can replicate chunked large assets across direct HTTP remotes and Yard-relayed remotes without resending unchanged content.
+
+Large-object replication preserves the same content-addressed model used locally:
+
+- every chunk is addressed by SHA-256 and verified before it is considered present;
+- manifests are addressed by the digest of their canonical JSON content and reverified on read;
+- remote `hasChunk` means the stored bytes still match the requested digest, not merely that a filename exists;
+- corrupt remote chunks are treated as missing and repaired by the next push;
+- pushes transfer only missing chunks and then the immutable manifest;
+- fetches verify every chunk and the full reconstructed content digest before success;
+- concurrency is bounded between 1 and 16 workers;
+- replication receipts report transferred and reused chunk counts/bytes;
+- storage replication carries no publication, deployment, payment, or release authority.
+
+Direct-owned remote example:
+
+```bash
+node systemia/lineage/cli.mjs large-put ./master.mov video/quicktime
+node systemia/lineage/cli.mjs large-remote-push http://127.0.0.1:49152 <manifest-id> 4
+node systemia/lineage/cli.mjs large-remote-fetch http://127.0.0.1:49152 <manifest-id> 4
+node systemia/lineage/cli.mjs large-verify <manifest-id>
+```
+
+The same `pushLargeObject` / `fetchLargeObject` functions operate over a Yard relay remote. The Compute resident-service bridge explicitly allows only the Lineage ref, object, chunk, and large-manifest routes. A Yard session remains short-lived and revocable, so gaining access to remote storage does not grant broader node or application authority.
