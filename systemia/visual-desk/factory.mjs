@@ -380,6 +380,35 @@ export function renderMotionStage(input){
   ].join('\n');
 }
 
+function sourceLabel(ref){
+  try{
+    const url=new URL(ref);
+    const host=url.hostname.replace(/^www\./,'');
+    const slug=url.pathname.split('/').filter(Boolean).pop()||host;
+    const name=slug.replace(/[._-]+/g,' ').replace(/\b\w/g,ch=>ch.toUpperCase());
+    if(host==='usgs.gov') return 'USGS • '+name;
+    if(host.endsWith('.usgs.gov')) return 'USGS • '+name;
+    if(host==='github.com') return 'Public geometry • '+name;
+    return host+' • '+name;
+  }catch{
+    return String(ref||'Source');
+  }
+}
+
+function renderPosterPreview(story,graphicsPlan,{asset,format}){
+  const ratio=format==='story'?'9:16':format==='square'?'1:1':'4:5';
+  return [
+    '<!doctype html><html lang="en"><head>',
+    '<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">',
+    '<title>'+esc(graphicsPlan.hero.hook)+' • '+esc(ratio)+' preview</title>',
+    '<style>:root{color-scheme:dark;font-family:Inter,system-ui,sans-serif;background:#050707;color:#F5F5F2}*{box-sizing:border-box}body{margin:0;min-height:100svh;background:#050707;display:grid;place-items:center;padding:env(safe-area-inset-top) 12px env(safe-area-inset-bottom)}main{width:100%;display:grid;place-items:center;gap:14px}.art{display:block;max-width:100%;max-height:calc(100svh - 58px);width:auto;height:auto;object-fit:contain;box-shadow:0 30px 90px rgba(0,0,0,.55)}nav{font-size:.8rem;color:#87939a}nav a{color:#75C8FF;text-decoration:none;margin:0 8px}</style>',
+    '</head><body><main>',
+    '<img class="art" src="./'+esc(asset)+'" alt="'+esc(graphicsPlan.hero.hook)+'">',
+    '<nav><a href="./">Story</a><span>'+esc(ratio)+' review surface</span></nav>',
+    '</main></body></html>'
+  ].join('');
+}
+
 export function renderStoryHtml(input,{origin=DEFAULT_ORIGIN}={}){
   const story=input.digest ? input : normalizeVisualStory(input);
   const graphicsPlan=compileGraphicsCommand(story);
@@ -387,14 +416,21 @@ export function renderStoryHtml(input,{origin=DEFAULT_ORIGIN}={}){
   const canonical=root+'/'+story.slug+'/';
   const cardUrl=canonical+'poster-feed.svg';
   const description=graphicsPlan.hero.subhook || story.subtitle || story.narrative || story.callout || story.title;
-  const pointCards=story.points.map(point=>
-    '<div class="point"><b>'+esc(point.label || point.id)+'</b><span>'+point.lat.toFixed(3)+', '+point.lon.toFixed(3)+'</span>'+(point.note ? '<p>'+esc(point.note)+'</p>' : '')+'</div>'
+  const locations=story.points.map(point=>
+    '<div class="location"><div><b>'+esc(point.label || point.id)+'</b><small>'+point.lat.toFixed(3)+', '+point.lon.toFixed(3)+'</small></div><span>'+esc(point.note||'')+'</span></div>'
   ).join('');
+  const sources=story.sourceRefs.map(ref=>
+    '<a class="source" href="'+esc(ref)+'" rel="noopener noreferrer"><span>'+esc(sourceLabel(ref))+'</span><small>↗</small></a>'
+  ).join('');
+  const geo=graphicsPlan.geography;
+  const geography=geo
+    ? '<a class="source geo" href="'+esc(geo.boundarySourceRef)+'" rel="noopener noreferrer"><span>'+esc(geo.boundaryName)+' boundary geometry</span><small>'+esc(geo.boundaryLicense)+' • public-domain lineage ↗</small></a>'
+    : '';
 
   return [
     '<!doctype html>',
     '<html lang="en"><head>',
-    '<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">',
+    '<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">',
     '<title>'+esc(story.title)+' | Evercraft Visual Desk</title>',
     '<meta name="description" content="'+esc(description)+'">',
     '<link rel="canonical" href="'+esc(canonical)+'">',
@@ -405,13 +441,17 @@ export function renderStoryHtml(input,{origin=DEFAULT_ORIGIN}={}){
     '<meta property="og:image" content="'+esc(cardUrl)+'">',
     '<meta name="twitter:card" content="summary_large_image">',
     '<meta name="twitter:image" content="'+esc(cardUrl)+'">',
-    '<style>:root{color-scheme:dark;font-family:Inter,system-ui,sans-serif;background:#050707;color:#F5F5F2}*{box-sizing:border-box}body{margin:0;background:#050707}main{max-width:1180px;margin:auto;padding:24px 24px 76px}.poster{display:block;width:min(100%,860px);margin:0 auto;border-radius:28px;border:1px solid #20313a;background:#071013;box-shadow:0 34px 100px rgba(0,0,0,.48)}.story{max-width:860px;margin:42px auto 0}.eyebrow{color:#4FB8FF;font-weight:850;letter-spacing:.14em;text-transform:uppercase;font-size:.82rem}h1{font-size:clamp(2rem,6vw,4.4rem);line-height:1;margin:.3em 0 .25em}.sub{font-size:clamp(1.05rem,2vw,1.35rem);line-height:1.5;color:#B7BDC5}.bodycopy{font-size:1.08rem;line-height:1.75;color:#d8dbdc;margin-top:30px}.callout{font-size:1.35rem;line-height:1.45;font-weight:800;color:#F5F5F2;margin:34px 0}details{margin-top:42px;border:1px solid #263740;border-radius:18px;background:#0d1418;padding:18px 20px}summary{cursor:pointer;font-weight:800;color:#B7BDC5}.meta{display:flex;gap:8px;flex-wrap:wrap;margin:18px 0}.badge{border:1px solid #263740;border-radius:999px;padding:7px 11px;color:#B7BDC5;font-size:.82rem}.badge strong{color:#4FB8FF}.sources{margin-top:24px;padding-top:20px;border-top:1px solid #263740}.sources a{display:block;color:#4FB8FF;overflow-wrap:anywhere;margin:.55rem 0}.points{margin-top:22px;display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:12px}.point{padding:15px;border:1px solid #263740;border-radius:14px;background:#091013}.point b{display:block;margin-bottom:6px}.point span{color:#87939a;font-size:.88rem}.point p{color:#B7BDC5;margin:.6rem 0 0}@media(max-width:700px){main{padding:12px 12px 60px}.poster{border-radius:20px}.story{margin-top:30px;padding:0 8px}details{padding:16px}}</style>',
+    '<style>:root{color-scheme:dark;font-family:Inter,system-ui,sans-serif;background:#050707;color:#F5F5F2}*{box-sizing:border-box}body{margin:0;background:#050707}main{max-width:1180px;margin:auto;padding:18px 18px 76px}.poster{display:block;width:min(100%,860px);height:auto;margin:0 auto;border-radius:28px;border:1px solid #20313a;background:#071013;box-shadow:0 34px 100px rgba(0,0,0,.48)}.formats{max-width:860px;margin:12px auto 0;display:flex;gap:8px;justify-content:flex-end}.formats a{font-size:.78rem;color:#75C8FF;text-decoration:none;border:1px solid #20313a;border-radius:999px;padding:7px 10px;background:#091013}.story{max-width:860px;margin:46px auto 0}.eyebrow{color:#4FB8FF;font-weight:850;letter-spacing:.14em;text-transform:uppercase;font-size:.82rem}h1{font-size:clamp(2rem,6vw,4.4rem);line-height:1;margin:.3em 0 .25em}.sub{font-size:clamp(1.05rem,2vw,1.35rem);line-height:1.5;color:#B7BDC5}.bodycopy{font-size:1.06rem;line-height:1.7;color:#d8dbdc;margin-top:28px}.callout{font-size:1.35rem;line-height:1.42;font-weight:820;color:#F5F5F2;margin:30px 0}details.method{margin-top:38px;border:1px solid #263740;border-radius:18px;background:#0d1418;padding:18px 20px}summary{cursor:pointer;font-weight:800;color:#D7DBDD}.meta{display:flex;gap:8px;flex-wrap:wrap;margin:18px 0}.badge{border:1px solid #263740;border-radius:999px;padding:7px 11px;color:#B7BDC5;font-size:.82rem}.badge strong{color:#4FB8FF}.locations{margin-top:18px;border-top:1px solid #1f2e35}.location{display:grid;grid-template-columns:minmax(145px,.7fr) 1.3fr;gap:18px;align-items:center;padding:13px 0;border-bottom:1px solid #1f2e35}.location b{display:block}.location small{display:block;color:#77858c;margin-top:3px}.location>span{color:#B7BDC5;text-align:right}.sources{margin-top:25px}.source{display:flex;justify-content:space-between;gap:16px;align-items:center;color:#75C8FF;text-decoration:none;padding:11px 0;border-bottom:1px solid #1f2e35}.source small{color:#7F8C93;text-align:right}.source.geo{color:#D2C5A0}.audit{margin-top:18px;border:0;background:transparent;padding:0}.audit summary{font-size:.86rem;color:#87939a}.receipt{margin-top:10px;padding:12px;border-radius:12px;background:#070B0D;color:#87939a;font:12px ui-monospace,SFMono-Regular,Menlo,monospace;overflow-wrap:anywhere}@media(max-width:700px){main{padding:10px 10px 60px}.poster{border-radius:18px}.formats{padding:0 4px}.story{margin-top:34px;padding:0 8px}details.method{padding:15px}.location{grid-template-columns:1fr;gap:5px}.location>span{text-align:left;font-size:.9rem}}</style>',
     '</head><body><main>',
     '<img class="poster" src="./poster-feed.svg" alt="'+esc(graphicsPlan.hero.hook)+'">',
+    '<div class="formats"><a href="./poster-feed.html">4:5</a><a href="./poster-square.html">1:1</a><a href="./poster-story.html">9:16</a><a href="./motion.html">Motion</a></div>',
     '<section class="story"><div class="eyebrow">'+esc(graphicsPlan.hero.eyebrow)+'</div><h1>'+esc(story.title)+'</h1><p class="sub">'+esc(story.subtitle)+'</p>',
     '<div class="bodycopy">'+(story.narrative ? '<p>'+esc(story.narrative)+'</p>' : '')+(story.callout ? '<p class="callout">'+esc(story.callout)+'</p>' : '')+'</div>',
-    '<details><summary>Sources &amp; methodology</summary><div class="meta"><span class="badge"><strong>'+esc(story.evidenceState.toUpperCase())+'</strong> evidence state</span><span class="badge">Published '+esc(story.publishedAt.slice(0,10))+'</span><span class="badge">Digest '+story.digest.slice(0,12)+'</span></div><div class="points">'+pointCards+'</div><section class="sources"><div class="eyebrow">Sources</div>'+story.sourceRefs.map(ref=>'<a href="'+esc(ref)+'" rel="noopener noreferrer">'+esc(ref)+'</a>').join('')+'</section></details>',
-    '</section></main></body></html>',
+    '<details class="method"><summary>Sources &amp; methodology</summary><div class="meta"><span class="badge"><strong>'+esc(story.evidenceState.toUpperCase())+'</strong> evidence state</span><span class="badge">'+esc(story.publishedAt.slice(0,10))+'</span></div>',
+    geography,
+    '<div class="locations">'+locations+'</div><section class="sources"><div class="eyebrow">Evidence sources</div>'+sources+'</section>',
+    '<details class="audit"><summary>Audit receipt</summary><div class="receipt">Story '+esc(story.digest)+'<br>Graphics '+esc(graphicsPlan.digest)+(geo?'<br>Boundary '+esc(geo.boundarySourceSha256):'')+'</div></details>',
+    '</details></section></main></body></html>',
     ''
   ].join('\n');
 }
@@ -438,6 +478,9 @@ export function buildVisualStory(input,{outputRoot,origin=DEFAULT_ORIGIN}={}){
       feed:canonicalUrl+'poster-feed.svg',
       square:canonicalUrl+'poster-square.svg',
       story:canonicalUrl+'poster-story.svg',
+      feedPreview:canonicalUrl+'poster-feed.html',
+      squarePreview:canonicalUrl+'poster-square.html',
+      storyPreview:canonicalUrl+'poster-story.html',
       legacyFeed:canonicalUrl+'card-feed.svg',
       legacySquare:canonicalUrl+'card-square.svg',
       legacyStory:canonicalUrl+'card-story.svg',
@@ -481,6 +524,9 @@ export function buildVisualStory(input,{outputRoot,origin=DEFAULT_ORIGIN}={}){
   fs.writeFileSync(path.join(outputDir,'poster-feed.svg'),renderDirectedPoster(story,graphicsPlan,'feed'));
   fs.writeFileSync(path.join(outputDir,'poster-square.svg'),renderDirectedPoster(story,graphicsPlan,'square'));
   fs.writeFileSync(path.join(outputDir,'poster-story.svg'),renderDirectedPoster(story,graphicsPlan,'story'));
+  fs.writeFileSync(path.join(outputDir,'poster-feed.html'),renderPosterPreview(story,graphicsPlan,{asset:'poster-feed.svg',format:'feed'}));
+  fs.writeFileSync(path.join(outputDir,'poster-square.html'),renderPosterPreview(story,graphicsPlan,{asset:'poster-square.svg',format:'square'}));
+  fs.writeFileSync(path.join(outputDir,'poster-story.html'),renderPosterPreview(story,graphicsPlan,{asset:'poster-story.svg',format:'story'}));
   fs.writeFileSync(path.join(outputDir,'motion.html'),renderMotionStage(story));
   fs.writeFileSync(path.join(outputDir,'graphics-plan.json'),JSON.stringify(graphicsPlan,null,2)+'\n');
   fs.writeFileSync(path.join(outputDir,'scroll-stop-report.json'),JSON.stringify(scrollStopReport,null,2)+'\n');
