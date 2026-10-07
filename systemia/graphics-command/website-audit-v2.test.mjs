@@ -25,6 +25,7 @@ test('Website Audit v2 builds three hook families through the existing visual sy
     'poster-hook-more-traffic-story.svg',
     'audio-brief-v2.json',
     'production-needs-v2.json',
+    'visual-requests-v2.json',
     'clip-handoff-v2.json',
     'attention-pack-v2.json',
     'creative-council-v2-reconciliation.json',
@@ -48,10 +49,10 @@ test('Website Audit v2 stops before paid provider execution but produces routabl
   assert.equal(result.audioBrief.paidGenerationAuthorized,false);
   assert.equal(result.productionInventory.providerExecutionState,'provider_ready_unrequested');
   assert.equal(result.productionInventory.paidGenerationAuthorized,false);
-  assert.equal(result.productionInventory.jobs.length,2);
+  assert.equal(result.productionInventory.jobs.length,3);
 
   const kinds=result.productionInventory.jobs.map(job=>job.need.kind).sort();
-  assert.deepEqual(kinds,['music','sfx']);
+  assert.deepEqual(kinds,['music','sfx','speech']);
   for(const job of result.productionInventory.jobs){
     assert.equal(job.need.status,'planned');
     assert.deepEqual(
@@ -60,6 +61,14 @@ test('Website Audit v2 stops before paid provider execution but produces routabl
     );
   }
 
+  assert.equal(result.visualRequests.requests.length,2);
+  assert.equal(result.visualRequests.requests.every(request=>request.task==='video'),true);
+  assert.equal(result.visualRequests.requests.every(request=>request.durationSec===6),true);
+  assert.equal(result.visualRequests.requests.every(request=>request.aspectRatio==='9:16'),true);
+  assert.equal(result.visualRequests.requests.every(request=>request.candidateCount===4),true);
+  assert.equal(result.visualRequests.requests.every(request=>request.modelDiversity===2),true);
+  assert.equal(result.visualRequests.paidGenerationAuthorized,false);
+  assert.equal(result.visualRequests.tournamentRequired,true);
   assert.equal(result.clipHandoff.publicationAuthority,false);
   assert.equal(result.manifest.publicationAuthority,false);
   assert.equal(result.manifest.offerUrl,'https://fabric.systemiacommandcenters.com/offers/website-audit');
