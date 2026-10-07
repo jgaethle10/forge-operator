@@ -135,6 +135,8 @@ function escapeXml(value) {
 }
 
 function pageDescription(product) {
+  const presentationSummary=String(product?.presentation?.summary||'').trim();
+  if(presentationSummary) return presentationSummary;
   const intents = Array.isArray(product.intents) ? product.intents.filter(Boolean) : [];
   const lead = intents.slice(0, 3).join('; ');
   return lead
@@ -374,11 +376,28 @@ for (const product of directory.products || []) {
     '<link rel="service-desc" type="application/json" href="/.well-known/agent-card.json" title="Evercraft A2A Agent Card">',
     '<link rel="alternate" type="application/json" href="./ai-discovery.json">',
     `<script type="application/ld+json">${JSON.stringify(productPageJsonLd).replace(/</g, '\\u003c')}</script>`,
-    '<style>body{font-family:system-ui,sans-serif;max-width:920px;margin:56px auto;padding:0 24px;line-height:1.6;background:#09090b;color:#fafafa}a{color:#93c5fd}.card{border:1px solid #27272a;border-radius:16px;padding:20px;margin:18px 0}.muted{color:#a1a1aa}code{background:#18181b;padding:.15rem .35rem;border-radius:.3rem}</style>',
+    '<style>body{font-family:system-ui,sans-serif;max-width:1040px;margin:56px auto;padding:0 24px;line-height:1.6;background:#09090b;color:#fafafa}a{color:#93c5fd}.card{border:1px solid #27272a;border-radius:16px;padding:20px;margin:18px 0}.muted{color:#a1a1aa}code{background:#18181b;padding:.15rem .35rem;border-radius:.3rem}.hero h1{font-size:clamp(46px,8vw,88px);line-height:.94;max-width:900px;margin:.18em 0}.lead{font-size:1.18rem;color:#c7cbd1;max-width:820px}.badges{display:flex;gap:8px;flex-wrap:wrap;margin:18px 0}.badge{border:1px solid #3f3f46;border-radius:999px;padding:5px 10px;font-size:.82rem}.feature-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:12px;margin:20px 0}.feature-grid .card{margin:0}</style>',
     '</head><body><main>',
-    '<p class="muted">EVERCRAFT · PUBLIC CAPABILITY</p>',
-    `<h1>${escapeHtml(product.name)}</h1>`,
-    `<p>${escapeHtml(pageDescription(product))}</p>`,
+    ...(product.presentation ? [
+      '<section class="hero">',
+      `<p class="muted">${escapeHtml(product.presentation.eyebrow || 'EVERCRAFT · PUBLIC CAPABILITY')}</p>`,
+      `<h1>${escapeHtml(product.presentation.headline || product.name)}</h1>`,
+      `<p class="lead">${escapeHtml(product.presentation.summary || pageDescription(product))}</p>`,
+      '<div class="badges">',
+      ...(Array.isArray(product.presentation.badges) ? product.presentation.badges.map((badge) => `<span class="badge">${escapeHtml(badge)}</span>`) : []),
+      '</div>',
+      `<p class="muted">Product: ${escapeHtml(product.name)}</p>`,
+      '</section>',
+      ...(Array.isArray(product.presentation.features) && product.presentation.features.length ? [
+        '<div class="feature-grid">',
+        ...product.presentation.features.map((feature) => `<div class="card"><h2>${escapeHtml(feature.title || '')}</h2><p>${escapeHtml(feature.body || '')}</p></div>`),
+        '</div>'
+      ] : [])
+    ] : [
+      '<p class="muted">EVERCRAFT · PUBLIC CAPABILITY</p>',
+      `<h1>${escapeHtml(product.name)}</h1>`,
+      `<p>${escapeHtml(pageDescription(product))}</p>`
+    ]),
     '<div class="card"><h2>Use this when</h2><ul>',
     ...(product.intents || []).map((intent) => `<li>${escapeHtml(intent)}</li>`),
     '</ul></div>',
