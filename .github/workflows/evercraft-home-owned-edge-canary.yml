@@ -13,7 +13,7 @@ on:
     - cron: "13,23,33,43,53 * * * *"
 
 permissions:
-  contents: read
+  contents: write
 
 concurrency:
   group: evercraft-home-owned-edge-canary
@@ -103,6 +103,31 @@ jobs:
             }' > artifacts/evercraft-home-owned-edge-canary.json
 
           cat artifacts/evercraft-home-owned-edge-canary.json
+
+      - name: Promote verified Home observation
+        if: success()
+        shell: bash
+        run: |
+          set -euo pipefail
+          git fetch origin main --quiet
+          if [ "$(git rev-parse origin/main)" != "$GITHUB_SHA" ]; then
+            echo "Main advanced during verification; holding durable receipt for the next canary."
+            exit 0
+          fi
+
+          mkdir -p conformance/runtime-observations
+          cp artifacts/evercraft-home-owned-edge-canary.json             conformance/runtime-observations/evercraft-home-owned-edge-latest.json
+
+          git add conformance/runtime-observations/evercraft-home-owned-edge-latest.json
+          if git diff --cached --quiet; then
+            echo "Durable Home observation already matches this verified state."
+            exit 0
+          fi
+
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git commit -m "Record verified Personal Evercraft Home edge"
+          git push origin HEAD:main
 
       - name: Upload Personal Home edge receipt
         if: always()
