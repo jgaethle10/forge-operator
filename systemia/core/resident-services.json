@@ -312,6 +312,23 @@
         "--subject-ref": "SYSTEMIA_CFB_CLIP_SUBJECT_REF",
         "--authority-receipt-file": "SYSTEMIA_CFB_CLIP_AUTHORITY_RECEIPT_FILE"
       }
+    },
+    {
+      "service_key": "space-dudz-clip-publisher",
+      "mode": "cycle",
+      "manifest": "systemia/organism/space-dudz-clip-publisher.workflow.json",
+      "executable": "systemia/clip/space-dudz-resident-runner.mjs",
+      "cadence_seconds": 300,
+      "optional_when_unconfigured": true,
+      "env_args": {
+        "--credential-state-dir": "EVERCRAFT_CREDENTIAL_STATE_DIR",
+        "--passport-state-dir": "EVERCRAFT_PASSPORT_STATE_DIR"
+      },
+      "optional_env_args": {
+        "--state-dir": "SYSTEMIA_SPACE_DUDZ_CLIP_STATE_DIR",
+        "--campaign": "SYSTEMIA_SPACE_DUDZ_CAMPAIGN",
+        "--authority-receipt-file": "SYSTEMIA_SPACE_DUDZ_CLIP_AUTHORITY_RECEIPT_FILE"
+      }
     }
   ]
 }
