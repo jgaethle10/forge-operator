@@ -1,0 +1,76 @@
+{
+  "schema": "evercraft.lineage.sales-demo.v1",
+  "title": "Two agents, one branch, no silent overwrite",
+  "synthetic": true,
+  "customer_data": false,
+  "scenario": {
+    "repository": "synthetic/checkout-service",
+    "base_commit": "1111111111111111111111111111111111111111111111111111111111111111",
+    "actors": [
+      {
+        "type": "agent",
+        "id": "agent-a",
+        "task": "Add retry policy to payment gateway"
+      },
+      {
+        "type": "agent",
+        "id": "agent-b",
+        "task": "Add idempotency key handling"
+      }
+    ]
+  },
+  "timeline": [
+    {
+      "step": 1,
+      "event": "both_agents_read_same_head",
+      "head": "111111111111",
+      "meaning": "Both workers start from the same immutable state."
+    },
+    {
+      "step": 2,
+      "event": "agent_a_commits",
+      "proposed_commit": "aaaaaaaaaaaa",
+      "ref_update": "success",
+      "meaning": "Agent A wins the compare-and-swap and advances the branch."
+    },
+    {
+      "step": 3,
+      "event": "agent_b_commits",
+      "proposed_commit": "bbbbbbbbbbbb",
+      "ref_update": "LINEAGE_STALE_REF",
+      "meaning": "Agent B is not allowed to silently replace Agent A's newer branch head."
+    },
+    {
+      "step": 4,
+      "event": "losing_work_preserved",
+      "commit": "bbbbbbbbbbbb",
+      "reachable_from_branch": false,
+      "meaning": "Agent B's immutable proposed commit still exists for inspection or reconciliation."
+    },
+    {
+      "step": 5,
+      "event": "control_room_review",
+      "visible": [
+        "agent identity",
+        "message",
+        "rationale",
+        "semantic changes",
+        "authority",
+        "parents"
+      ],
+      "meaning": "A human can inspect both outcomes before deciding what belongs in canonical history."
+    },
+    {
+      "step": 6,
+      "event": "reconcile",
+      "result": "explicit_merge_or_new_branch",
+      "meaning": "Conflict resolution becomes an explicit history event instead of an invisible last-writer-wins accident."
+    }
+  ],
+  "buyer_takeaway": "Lineage turns a race between autonomous workers into an inspectable reconciliation event instead of a silent overwrite.",
+  "boundaries": [
+    "This is synthetic proof data, not a customer incident.",
+    "The demo does not grant deployment or production mutation authority.",
+    "A stale proposed commit remaining in storage is not the same as it being accepted into canonical branch history."
+  ]
+}
