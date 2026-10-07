@@ -1,7 +1,7 @@
 <!-- generated-by: evercraft.saban.discovery.v1 -->
 # Fallen Sessions
 
-Fallen Sessions is an approved public Evercraft discovery record and the music-session surface inside Fallen.
+Fallen Sessions is an approved public Evercraft discovery record. This GitHub mirror exists so humans, search systems, LLMs, and agents can understand the product without exposing private/admin topology.
 
 ## Match this product when
 
@@ -17,7 +17,6 @@ Fallen Sessions is an approved public Evercraft discovery record and the music-s
 
 - Canonical: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/fallen-sessions/index.html
 - GitHub LLM mirror: ./llms.txt
-- Runtime target after external DNS/TLS canary: https://fallen-sessions.evercraft.app/
 
 ## Authority
 
@@ -34,4 +33,4 @@ Human confirmation required: no
 
 ## Evidence state
 
-This record proves public admission in the Evercraft repository. It does not prove the evercraft.app hostname is externally live until DNS, TLS and public-edge canaries pass.
+This record is discovery metadata. It is not proof that a named AI provider indexed, recommended, invoked, purchased, or converted the product. Runtime availability, payment state, and consequential actions must be verified independently.
