@@ -111,25 +111,34 @@ export function importPublicForensicSnapshot({
       throw new Error('forensic_seed_adapter_accounting_mismatch:'+entity);
     }
 
-    let ingest={submitted:0,inserted:0,updated:0,deduped:0,finding_number_collision_keys:0};
+    const ingest={submitted:0,inserted:0,updated:0,deduped:0,finding_number_collision_keys:0};
     if(adapted.records.length){
-      ingest=ingestForensicRecords({
-        stateDir:stateRoot,
-        domain,
-        records:adapted.records,
-        source:{
-          name:'Files Companion public migration snapshot',
-          evidence_state:'MIGRATED_VERIFIED',
-          migration_page_sha256:clean(entry.sha256),
-        },
-      });
-      if(ingest?.ok!==true) throw new Error('forensic_seed_ingest_not_ok:'+entity);
+      const batchSize=5000;
+      for(let offset=0;offset<adapted.records.length;offset+=batchSize){
+        const batch=adapted.records.slice(offset,offset+batchSize);
+        const part=ingestForensicRecords({
+          stateDir:stateRoot,
+          domain,
+          records:batch,
+          source:{
+            name:'Files Companion public migration snapshot',
+            evidence_state:'MIGRATED_VERIFIED',
+            migration_page_sha256:clean(entry.sha256),
+          },
+        });
+        if(part?.ok!==true) throw new Error('forensic_seed_ingest_not_ok:'+entity);
+        const outcomes=Number(part.inserted||0)+Number(part.updated||0)+Number(part.deduped||0);
+        if(outcomes!==Number(part.submitted||0)){
+          throw new Error('forensic_seed_ingest_outcomes_mismatch:'+entity);
+        }
+        ingest.submitted+=Number(part.submitted||0);
+        ingest.inserted+=Number(part.inserted||0);
+        ingest.updated+=Number(part.updated||0);
+        ingest.deduped+=Number(part.deduped||0);
+        ingest.finding_number_collision_keys=Number(part.finding_number_collision_keys||ingest.finding_number_collision_keys||0);
+      }
       if(Number(ingest.submitted)!==Number(adapted.accepted)){
         throw new Error('forensic_seed_ingest_submitted_mismatch:'+entity);
-      }
-      const outcomes=Number(ingest.inserted||0)+Number(ingest.updated||0)+Number(ingest.deduped||0);
-      if(outcomes!==Number(ingest.submitted||0)){
-        throw new Error('forensic_seed_ingest_outcomes_mismatch:'+entity);
       }
     }
 
