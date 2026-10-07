@@ -12,6 +12,8 @@ on:
       - 'tests/fabric-offer-pages.test.mjs'
       - 'scripts/update-fabric-owned-edge.sh'
       - 'scripts/fabric-edge-external-canary.mjs'
+      - '.github/workflows/chromebook-operator-edge-canary.yml'
+      - 'tests/chromebook-operator-edge-canary-workflow.test.mjs'
       - 'tests/fabric-self-update-hardening.test.mjs'
       - 'tests/fabric-owned-edge-updater-contract.test.mjs'
       - 'tests/fabric-edge-external-canary-contract.test.mjs'
@@ -81,4 +83,4 @@ jobs:
         run: |
           bash -n scripts/fabric-edge-doctor.sh
           bash -n scripts/update-fabric-owned-edge.sh
-          node --test tests/fabric-edge-doctor-contract.test.mjs tests/fabric-owned-edge-updater-contract.test.mjs tests/fabric-edge-external-canary-contract.test.mjs
+          node --test tests/fabric-edge-doctor-contract.test.mjs tests/fabric-owned-edge-updater-contract.test.mjs tests/fabric-edge-external-canary-contract.test.mjs tests/chromebook-operator-edge-canary-workflow.test.mjs
