@@ -323,6 +323,9 @@ export function compileWorldForgeLiveSync(input:{
   if(input.afterProject.version<=input.beforeProject.version){
     throw new Error('world_forge_live_sync_version_not_advanced');
   }
+  if(input.afterProject.version!==input.beforeProject.version+1){
+    throw new Error('world_forge_live_sync_revision_gap_requires_full_recompile');
+  }
 
   const before=compileWorldForgeToWorldEngine({
     project:input.beforeProject,
