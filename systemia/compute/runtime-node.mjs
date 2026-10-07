@@ -154,7 +154,7 @@ function bridgeRouteAllowed(entry, method, requestPath) {
     if (method === 'GET' && ['/health', '/v1/refs'].includes(requestPath)) return true;
     if (
       method === 'POST' &&
-      /^\/v1\/(?:ref\/(?:read|cas)|object\/(?:has|get|put))$/.test(requestPath)
+      /^\/v1\/(?:ref\/(?:read|cas)|object\/(?:has|get|put)|chunk\/(?:has|get|put)|large\/manifest\/(?:has|get|put))$/.test(requestPath)
     ) return true;
     return false;
   }
