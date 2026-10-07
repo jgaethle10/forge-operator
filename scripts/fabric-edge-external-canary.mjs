@@ -399,6 +399,23 @@ try{
     error:negativeBody.error,
     checkout_created:false,
   };
+  const missingHandoff=await timedFetch(origin+'/checkout/handoff/canary-missing-token',{
+    method:'GET',
+    headers:{
+      'accept':'text/html',
+      'user-agent':'Evercraft-Operator-Edge-Canary/1.0',
+    },
+  });
+  const missingHandoffBody=await missingHandoff.text();
+  if(missingHandoff.status!==410) throw new Error('checkout_handoff_missing_token_status_'+missingHandoff.status);
+  if(!/Evercraft Payments/i.test(missingHandoffBody)||!/No charge was made\./i.test(missingHandoffBody)){
+    throw new Error('checkout_handoff_branded_fail_closed_page_missing');
+  }
+  receipt.offer_storefront.handoff_route={
+    missing_token_status:missingHandoff.status,
+    branded_fail_closed:true,
+    checkout_created:false,
+  };
   receipt.checks.offer_storefront=true;
 
   for(const path of ['/support','/privacy','/terms']){
