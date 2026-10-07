@@ -10,6 +10,7 @@ import { planSystemiaMission, readSystemiaInventory } from "./systemia-adapter.m
 import { readNetworkOverview, readYardOverview } from "./operations-adapter.mjs";
 import { readRavenOverview } from "./raven-adapter.mjs";
 import { executeRavenCommand, planRavenCommand } from "./raven-command-adapter.mjs";
+import { askIntelligence, intelligenceOptions } from "./intelligence-router.mjs";
 import { ProviderCredentialVault } from "./credential-vault.mjs";
 import { normalizeProviderCredentialRequest } from "./provider-credentials.mjs";
 
@@ -476,6 +477,57 @@ export async function startEvercraftHomeServer({
         return json(res, 200, { ok: true, subject: session.subject, ...result });
       } catch (error) {
         return json(res, 400, { ok: false, state: error?.message || "mission_plan_invalid" });
+      }
+    }
+
+    if (req.method === "GET" && url.pathname === "/api/intelligence/options") {
+      const session = sessionFor(req);
+      if (!session.ok) return json(res, session.status, session);
+      return json(res, 200, {
+        ok: true,
+        subject: session.subject,
+        ...intelligenceOptions({
+          credentialVault,
+          ravenConfigured: Boolean(ravenWorkBridgeUrl && ravenWorkBridgeToken),
+          env: serviceOrigins,
+        }),
+      });
+    }
+
+    if (req.method === "POST" && url.pathname === "/api/intelligence/ask") {
+      const session = sessionFor(req, "home.raven.execute");
+      if (!session.ok) return json(res, session.status, session);
+      try {
+        const body = await readJsonBody(req, 65536);
+        const result = await askIntelligence({
+          provider: body.provider,
+          message: body.message,
+          lane: body.lane,
+          credentialVault,
+          credentialStateDir,
+          ravenConfigured: Boolean(ravenWorkBridgeUrl && ravenWorkBridgeToken),
+          ravenWorkBridgeUrl,
+          ravenWorkBridgeToken,
+          ravenReceiptDir,
+          env: serviceOrigins,
+        }, repoRoot);
+        return json(res, result.state === "executed" ? 200 : 409, {
+          ok: result.state === "executed",
+          subject: session.subject,
+          authorization: {
+            scope: "home.raven.execute",
+            mode: session.mode,
+            grant_id: session.grant_id || null,
+            internal_analysis_only: true,
+          },
+          ...result,
+        });
+      } catch (error) {
+        return json(res, 400, {
+          ok: false,
+          state: error?.message || "intelligence_request_failed",
+          external_side_effects_authorized: false,
+        });
       }
     }
 
