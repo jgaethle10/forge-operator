@@ -5,6 +5,7 @@ import {
   frameDistanceForScale,
   perspectiveVerticalFovRad,
 } from './world-forge-viewport-tools';
+import { runtimeTransformsByForgeNodeId } from './world-forge-runtime-view';
 
 type Vec3={x:number;y:number;z:number};
 type Transform={position:Vec3;rotationDeg:Vec3;scale:Vec3};
@@ -86,6 +87,7 @@ type PlaySessionState={
   snapshotDigest:string;
   webGpuReady:boolean;
   visualParity:string;
+  runtimeTransforms:Record<string,Transform>;
 };
 
 const AXIS_STEP=.25;
@@ -831,6 +833,21 @@ export default function WorldForgeEditor(){
     return {...project,nodes};
   },[project,stageMode,stagedOperations]);
 
+  const runtimeViewportProject=useMemo(()=>{
+    if(!viewportProject||!playSession||stagedOperations.length) return viewportProject;
+    const runtimeTransforms=playSession.runtimeTransforms;
+    if(!Object.keys(runtimeTransforms).length) return viewportProject;
+    return {
+      ...viewportProject,
+      nodes:viewportProject.nodes.map(node=>{
+        const runtimeTransform=runtimeTransforms[node.id];
+        return runtimeTransform
+          ? {...node,transform:runtimeTransform}
+          : node;
+      }),
+    };
+  },[viewportProject,playSession,stagedOperations.length]);
+
   const selected=viewportProject?.nodes.find(node=>node.id===selectedId)||null;
 
   function selectDefaultNode(nextProject:ForgeProject){
@@ -848,6 +865,7 @@ export default function WorldForgeEditor(){
       snapshotDigest:String(snapshot?.digest??''),
       webGpuReady:Boolean(session.webGpuReady),
       visualParity:String(session.visualParity??'unknown'),
+      runtimeTransforms:runtimeTransformsByForgeNodeId(snapshot),
     };
   }
 
@@ -1586,8 +1604,11 @@ export default function WorldForgeEditor(){
       </aside>
 
       <section className="wf-stage">
+        {playSession&&<div className={stagedOperations.length?'wf-runtime-view-badge authoring':'wf-runtime-view-badge'}>
+          {stagedOperations.length?'AUTHOR PREVIEW':'RUNTIME VIEW'} · t{playSession.tick}
+        </div>}
         <WorldViewport
-          project={viewportProject??project}
+          project={runtimeViewportProject??viewportProject??project}
           selectedId={selectedId}
           onSelect={setSelectedId}
           onTranslate={commitViewportTranslate}
