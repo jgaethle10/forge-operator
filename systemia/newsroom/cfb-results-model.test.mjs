@@ -42,3 +42,26 @@ test('a stronger completed-results profile produces stronger result quality',()=
   assert.ok(alpha.components.result_quality>gamma.components.result_quality);
   assert.ok(alpha.components.efficiency>gamma.components.efficiency);
 });
+
+
+test('a non-FBS opponent does not receive average-FBS schedule credit',()=>{
+  const localTeams=[
+    {team_id:'alpha',team_name:'Alpha'},
+    {team_id:'beta',team_name:'Beta'},
+  ];
+  const localGames=[
+    {game_id:'g1',date:'2026-09-05T20:00:00.000Z',neutral_site:false,home:{team_id:'alpha',team_name:'Alpha',score:42},away:{team_id:'visitor',team_name:'Visitor',score:7},source_ref:'ncaa-game:g1'},
+    {game_id:'g2',date:'2026-09-12T20:00:00.000Z',neutral_site:false,home:{team_id:'beta',team_name:'Beta',score:14},away:{team_id:'alpha',team_name:'Alpha',score:21},source_ref:'ncaa-game:g2'},
+  ];
+  const input=buildCfbPowerIndexInputFromGames({
+    season:2026,
+    weekLabel:'Entering Week 3',
+    evidenceSnapshotId:'snapshot:non-fbs',
+    evidenceThroughAt:'2026-09-13T06:59:59.999Z',
+    teams:localTeams,
+    games:localGames,
+  });
+  const alpha=input.teams.find(team=>team.team_id==='alpha');
+  assert.ok(alpha.components.schedule_strength<50);
+  assert.match(alpha.explanation,/non-FBS opponents receive reduced schedule credit/);
+});
