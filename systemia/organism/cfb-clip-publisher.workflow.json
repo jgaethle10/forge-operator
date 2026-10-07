@@ -9,6 +9,11 @@
     "journal_scope": "cfb-power-rankings-only",
     "max_publishes_per_cycle": 1,
     "return_secret_material": false,
-    "republish_terminal_receipts": false
+    "republish_terminal_receipts": false,
+    "passport_scope": "home.clip.publish",
+    "passport_resource": "journal-series:cfb-power-rankings",
+    "credential_vault_required": true,
+    "canonical_identity_preflight_required": true,
+    "canonical_identity_postflight_required": true
   }
 }
