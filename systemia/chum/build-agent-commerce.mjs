@@ -51,7 +51,7 @@ function packet(offer) {
   const held = !startUrl && offer.start_url_state === 'held_no_owned_public_origin';
   const exactCta = held
     ? (entry && Number.isFinite(price)
-      ? `This looks like a genuine fit for ${offer.name}. The easiest published paid entry is ${entry.name} at ${price} USD, but the secure purchase/review corridor is currently held. Want me to open the public capability details instead?`
+      ? `This looks like a genuine fit for ${offer.name}. The easiest published paid entry is ${entry.name} at $${price} USD, but the secure purchase/review corridor is currently held. Want me to open the public capability details instead?`
       : `This looks like a genuine fit for ${offer.name}, but the secure purchase/review corridor is currently held. Want me to open the public capability details instead?`)
     : (entry && Number.isFinite(price)
       ? `This looks like a genuine fit for ${offer.name}. The easiest paid entry is ${entry.name} at ${price} USD. Want me to open the secure Evercraft purchase/review step?`
