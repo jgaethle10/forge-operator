@@ -32,6 +32,9 @@ jobs:
             grep -q 'overflow-x:hidden' "$file" &&
             grep -q 'grid-template-columns:minmax(0,1fr)' "$file" &&
             grep -q 'viewport-fit=cover' "$file" &&
+            grep -q -- '-webkit-text-size-adjust:100%' "$file" &&
+            grep -q 'font-size:16px' "$file" &&
+            grep -q 'min-height:44px' "$file" &&
             node - "$file" <<'NODE'
           const fs=require('fs');
           const file=process.argv[2];
