@@ -231,3 +231,76 @@ The public portfolio machine-commerce catalog now externally returns the new `re
 The FindMyPart public offer endpoint has also been externally verified to serve the new conversion playbook.
 
 The public Atlas LLM surface exposes the Record Check page. At the latest external check, the generated public sitemap was still serving the previous version without the new Record Check sitemap entry, so that specific sitemap deployment must not be claimed live yet.
+
+## 2026-10-07 closed-loop conversion hardening
+
+Evercraft now distinguishes commercial evidence from infrastructure activity before treating anything as a receivable or demand signal.
+
+The central conversion sensor projects payment, distribution and fulfillment evidence into a `DistributionConversionCase` truth layer. Current public-safe live summary at the time of this update:
+
+- 53 classified conversion cases
+- 1 attributable commercial open case totaling $2,093
+- 51 quarantined machine/test artifacts
+- 1 machine-discovery lane
+- zero canonical paid conversion in the open receivable
+- no machine discovery view is promoted to human demand merely because an agent, crawler or canary touched an offer surface
+
+The quarantined population currently includes six anonymous Raven-generated checkout artifacts with no attributable customer/prospect context plus 45 QA, smoke, canary or synthetic orders. They remain observable for infrastructure QA but are excluded from commercial receivable totals and bulk reconciliation.
+
+### Offline settlement rail
+
+Raven Nexus now includes an explicit manual-check adapter while Evercraft Payments remains canonical order and receipt authority.
+
+Offline settlement states are:
+
+`requested -> instructions_sent -> remittance_claimed -> received_unverified -> deposited_pending -> cleared_verified`
+
+Failure/void paths remain explicit. None of the pre-clearance states count as payment. Only `cleared_verified`, with amount/currency invariants and settlement evidence, may create an `EvercraftPaymentReceipt` through `manual_verified`.
+
+The live $2,093 receivable has moved onto a customer-selected check rail with remittance instructions recorded as sent. Canonical paid remains false. The system therefore instructs operators not to send another card-checkout chase and instead to await remittance evidence under the receivable cadence.
+
+The verifier also refuses a second offline settlement if the order has already acquired a canonical receipt through another rail.
+
+### Prepayment fulfillment
+
+Some invoices represent work delivered before collection. The fulfillment contract now has an explicit `prepayment_fulfillment_satisfied` flag plus evidence references. Only a contract carrying that explicit attestation may close fulfillment as delivered when an offline settlement later verifies. This avoids creating phantom fulfillment work after collection.
+
+### Machine discovery is not demand
+
+FindMyPart currently has machine discovery traffic but no real customer hunt lead in the live lead ledger; all existing lead rows inspected were synthetic QA fixtures.
+
+Accordingly, agent offer/capability/LLM/OpenAPI views are classified as `machine_discovery`, not customer demand. The commercial ladder is now:
+
+`machine_discovery -> concrete_problem_submitted -> qualified -> one_recommendation -> explicit_human_yes -> checkout -> canonical_receipt -> fulfillment -> delivery -> outcome -> reentry`
+
+The FindMyPart machine-commerce catalog now routes concrete part intent to the live free qualification contract instead of the offer catalog:
+
+`https://findmypart.base44.app/functions/findMyPartAgentGateway?view=qualification`
+
+That public contract tells agents to submit the concrete part problem to free Part Passport triage, with email optional and no payment created. Triage returns one recommended hunt and a direct yes/no confirmation question. The paid offer surface now points back to qualification as the preferred next action rather than behaving as the discovery doorway.
+
+The public MCP descriptions were updated to make `free_part_triage` the preferred first tool for a concrete part problem. Paid tiers are a comparison/recommendation layer after qualification unless the human already knows what they want.
+
+### Distribution-surface verification
+
+Externally verified live surfaces:
+
+- Systemia machine-commerce natural-language intent routing points obsolete/unknown part intent to the FindMyPart qualification contract
+- FindMyPart qualification endpoint returns `findmypart.agent.qualification.v1`
+- FindMyPart offer endpoint returns both the qualification-first preferred action and the conversion playbook
+- central conversion summary reports the $2,093 attributable receivable, quarantined artifacts and machine-discovery lane
+- central code and frontend build pass
+
+Base44's public host currently auto-generates `/llms.txt` and routes several static `.json` / `.html` paths through the SPA, so repository static files such as `agents.json`, `openapi.json` and `ai-conformance.json` must not be treated as deployed merely because they exist in the app source. The live function endpoints and Systemia machine-commerce catalog are the currently verified canonical machine-distribution surfaces.
+
+### Systemia control-plane integration
+
+The existing P0 `ai-distribution-control-plane-v1` work item now consumes the Evercraft conversion summary. Its acceptance criteria explicitly reject:
+
+- checkout count as conversion
+- QA/machine artifacts as receivables
+- machine discovery as human demand
+- distribution health claims that stop before payment, fulfillment, delivery, outcome and re-entry
+
+The control plane prioritizes attributable commercial cases first, while preserving separate platform-distribution work in parallel.
+
