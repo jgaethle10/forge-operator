@@ -89,6 +89,79 @@ try{
   const accepted=await acceptedResponse.json();
   assert.equal(accepted.brain.identity_assurance,'invite_possession');
 
+  const memoryResponse=await fetch(
+    deployment.result.local_url+'/api/people/brains/'+encodeURIComponent(created.brain.brain_key)+'/memories',
+    {
+      method:'POST',
+      headers:{authorization:'Bearer '+operatorAuthority,'content-type':'application/json'},
+      body:JSON.stringify({title:'Owned runtime goal',memory_type:'goal',sensitivity:'private',evidence_state:'person_stated'}),
+    }
+  );
+  assert.equal(memoryResponse.status,201);
+
+  const relationshipResponse=await fetch(
+    deployment.result.local_url+'/api/people/brains/'+encodeURIComponent(created.brain.brain_key)+'/relationships',
+    {
+      method:'POST',
+      headers:{authorization:'Bearer '+operatorAuthority,'content-type':'application/json'},
+      body:JSON.stringify({counterpart_name:'Owned Advisor',counterpart_type:'advisor',purpose:'Career planning'}),
+    }
+  );
+  assert.equal(relationshipResponse.status,201);
+  const relationship=(await relationshipResponse.json()).relationship;
+  assert.equal(relationship.access_state,'proposed');
+
+  const grantResponse=await fetch(
+    deployment.result.local_url+'/api/people/brains/'+encodeURIComponent(created.brain.brain_key)+'/relationships/'+encodeURIComponent(relationship.relationship_key)+'/grant',
+    {
+      method:'POST',
+      headers:{authorization:'Bearer '+operatorAuthority,'content-type':'application/json'},
+      body:JSON.stringify({scopes:['goals','opportunities'],person_confirmation_ref:'proof:share'}),
+    }
+  );
+  assert.equal(grantResponse.status,200);
+
+  const opportunityResponse=await fetch(
+    deployment.result.local_url+'/api/people/brains/'+encodeURIComponent(created.brain.brain_key)+'/opportunities',
+    {
+      method:'POST',
+      headers:{authorization:'Bearer '+operatorAuthority,'content-type':'application/json'},
+      body:JSON.stringify({title:'Owned opportunity',opportunity_type:'business',summary:'Proof-only',fit_rationale:'Matches goal'}),
+    }
+  );
+  assert.equal(opportunityResponse.status,201);
+  const opportunity=(await opportunityResponse.json()).opportunity;
+  assert.equal(opportunity.authority_state,'discover_only');
+
+  const authorityResponse=await fetch(
+    deployment.result.local_url+'/api/people/brains/'+encodeURIComponent(created.brain.brain_key)+'/opportunities/'+encodeURIComponent(opportunity.opportunity_key)+'/authority',
+    {
+      method:'POST',
+      headers:{authorization:'Bearer '+operatorAuthority,'content-type':'application/json'},
+      body:JSON.stringify({authority_state:'authorized',person_confirmation_ref:'proof:opportunity'}),
+    }
+  );
+  assert.equal(authorityResponse.status,200);
+
+  const snapshotResponse=await fetch(
+    deployment.result.local_url+'/api/people/brains/'+encodeURIComponent(created.brain.brain_key),
+    {headers:{authorization:'Bearer '+operatorAuthority}}
+  );
+  assert.equal(snapshotResponse.status,200);
+  const snapshot=(await snapshotResponse.json()).snapshot;
+  assert.equal(snapshot.memories.length,1);
+  assert.equal(snapshot.relationships[0].access_state,'granted');
+  assert.equal(snapshot.opportunities[0].authority_state,'authorized');
+
+  const exportResponse=await fetch(
+    deployment.result.local_url+'/api/people/brains/'+encodeURIComponent(created.brain.brain_key)+'/export',
+    {method:'POST',headers:{authorization:'Bearer '+operatorAuthority,'content-type':'application/json'},body:'{}'}
+  );
+  assert.equal(exportResponse.status,200);
+  const exported=(await exportResponse.json()).export;
+  assert.equal(exported.package.memories.length,1);
+  assert.equal(exported.request.request_type,'export');
+
   const state=fs.readFileSync(path.join(stateRoot,'state.json'),'utf8');
   assert.equal(state.includes(invite.invite.raw_token),false);
   assert.equal(state.includes(operatorAuthority),false);
