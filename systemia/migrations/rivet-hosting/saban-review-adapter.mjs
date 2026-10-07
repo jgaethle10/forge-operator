@@ -117,7 +117,7 @@ export async function reconcile({results}){
   }));
   return {
     schema:'evercraft.rivet.hosting-review-reconciliation.v1',
-    status:'planning_review_complete',
+    status:'reconciled',
     options,
     production_lane_selected:false,
     production_mutation:false,
