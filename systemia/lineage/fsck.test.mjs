@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { mkdtemp, rm, writeFile } from 'node:fs/promises';
+import { appendFile, mkdtemp, rm, writeFile } from 'node:fs/promises';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import { LineageStore, lineage } from './core.mjs';
@@ -196,6 +196,36 @@ test('fsck rejects an internally dishonest blob even when its outer object id is
       (row) =>
         row.code === 'blob_content_digest_mismatch' &&
         row.object_id === dishonest
+    ));
+  } finally {
+    await rm(root, { recursive: true, force: true });
+  }
+});
+
+
+test('fsck validates reflog recovery targets', async () => {
+  const { root, store } = await healthyStore();
+  try {
+    const logPath = join(store.dir, 'logs', 'refs', 'heads', 'main.jsonl');
+    const missing = 'e'.repeat(64);
+    await appendFile(logPath, JSON.stringify({
+      schema: 'evercraft.lineage.reflog.v1',
+      branch: 'main',
+      previous: null,
+      current: missing,
+      actor: { type: 'agent', id: 'tampered-log' },
+      reason: 'tampered',
+      created_at: new Date().toISOString(),
+    }) + '\n');
+
+    const result = await verifyLineageIntegrity(store, {
+      verifyLargeContent: false,
+    });
+    assert.equal(result.ok, false);
+    assert.ok(result.errors.some(
+      (row) =>
+        row.code === 'reflog_target_missing' &&
+        row.target === missing
     ));
   } finally {
     await rm(root, { recursive: true, force: true });
