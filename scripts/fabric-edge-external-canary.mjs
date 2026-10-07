@@ -254,11 +254,17 @@ try{
   const faieContentType=faiePage.response.headers.get('content-type')||'';
   if(!/^text\/html/i.test(faieContentType)) throw new Error('faie_surface_not_html');
   if(!/Evidence for the physical world/i.test(faiePage.text)) throw new Error('faie_surface_identity_missing');
+  if(!/Run live AgNormal brief/i.test(faiePage.text)) throw new Error('faie_agnormal_partner_experience_missing');
+  if(!/Official MCP Registry/i.test(faiePage.text)) throw new Error('faie_registry_proof_missing');
+  if(/placeholder="greenhouse"/i.test(faiePage.text)) throw new Error('faie_undisclosed_architecture_assumption_regressed');
   if(/base44\.app/i.test(faiePage.text)) throw new Error('faie_surface_base44_reference');
   receipt.faie_surface={
     status:faiePage.response.status,
     content_type:faieContentType,
     identity_verified:true,
+    agnormal_design_partner_experience:true,
+    registry_proof_visible:true,
+    undisclosed_architecture_assumption_absent:true,
     url:origin+'/faie/',
   };
   receipt.checks.faie_surface=true;
