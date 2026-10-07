@@ -22,6 +22,7 @@ import {
   renderMarkdownDocument,
   renderOfferPage,
   renderOffers,
+  renderPaymentHoldPage,
 } from './fabric-public-site.mjs';
 import {
   fabricMobileManifest,
@@ -483,6 +484,7 @@ export async function startFabricLocalRuntime({
         if(!capabilityKey) return sendJson(res,404,{ok:false,error:'offer_not_found'});
 
         const body=await readOfferInput(req,{maxBytes:8192});
+        const isForm=String(req.headers['content-type']||'').toLowerCase().includes('application/x-www-form-urlencoded');
         const confirmed=body?.user_confirmed===true||String(body?.user_confirmed||'').toLowerCase()==='true';
         if(!confirmed){
           return sendJson(res,409,{
@@ -524,6 +526,14 @@ export async function startFabricLocalRuntime({
 
         const result=await upstream.json().catch(()=>null);
         if(!upstream.ok||result?.ok!==true){
+          if(isForm){
+            return sendText(
+              res,
+              503,
+              renderPaymentHoldPage({slug,orderKey:result?.order_key||''}),
+              {contentType:'text/html; charset=utf-8'}
+            );
+          }
           return sendJson(res,upstream.status>=400&&upstream.status<600?upstream.status:502,{
             ok:false,
             error:String(result?.error||'evercraft_payments_checkout_unavailable'),
@@ -539,6 +549,14 @@ export async function startFabricLocalRuntime({
           if(candidate.protocol==='https:') checkoutUrl=candidate.toString();
         }catch{}
         if(result?.checkout_ready!==true||!checkoutUrl){
+          if(isForm){
+            return sendText(
+              res,
+              503,
+              renderPaymentHoldPage({slug,orderKey:result?.order_key||''}),
+              {contentType:'text/html; charset=utf-8'}
+            );
+          }
           return sendJson(res,503,{
             ok:false,
             error:'evercraft_payments_checkout_not_ready',
@@ -550,7 +568,6 @@ export async function startFabricLocalRuntime({
           });
         }
 
-        const isForm=String(req.headers['content-type']||'').toLowerCase().includes('application/x-www-form-urlencoded');
         if(isForm){
           res.writeHead(303,{
             location:checkoutUrl,
