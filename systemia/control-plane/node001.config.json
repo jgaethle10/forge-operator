@@ -1,0 +1,77 @@
+{
+  "schema": "evercraft.systemia.node001-resident-config.v1",
+  "cadence_ms": 5000,
+  "triggers": [
+    {
+      "trigger_key": "payment-settled",
+      "event_type": "payment.settled",
+      "mission": {
+        "objective": "Reconcile an observed payment settlement into the Evercraft operating state.",
+        "tasks": [
+          {
+            "work_key": "reconcile-payment-settlement",
+            "work_type": "analyze"
+          }
+        ]
+      }
+    },
+    {
+      "trigger_key": "customer-reply",
+      "event_type": "customer.reply.received",
+      "mission": {
+        "objective": "Review an observed customer reply and determine the next bounded action.",
+        "tasks": [
+          {
+            "work_key": "review-customer-reply",
+            "work_type": "analyze",
+            "context_required": true
+          }
+        ]
+      }
+    },
+    {
+      "trigger_key": "deployment-failure",
+      "event_type": "deployment.failed",
+      "mission": {
+        "objective": "Diagnose an observed deployment failure without granting release authority.",
+        "tasks": [
+          {
+            "work_key": "diagnose-deployment-failure",
+            "work_type": "analyze",
+            "context_required": true
+          }
+        ]
+      }
+    }
+  ],
+  "schedules": [
+    {
+      "schedule_key": "portfolio-heartbeat",
+      "every_ms": 300000,
+      "mission": {
+        "objective": "Run one Evercraft portfolio heartbeat through Systemia admission.",
+        "tasks": [
+          {
+            "work_key": "portfolio-heartbeat",
+            "work_type": "analyze",
+            "context_required": true
+          }
+        ]
+      }
+    },
+    {
+      "schedule_key": "capacity-heartbeat",
+      "every_ms": 120000,
+      "mission": {
+        "objective": "Review current compute-capacity state and surface bounded resource actions.",
+        "tasks": [
+          {
+            "work_key": "capacity-heartbeat",
+            "work_type": "analyze",
+            "context_required": true
+          }
+        ]
+      }
+    }
+  ]
+}
