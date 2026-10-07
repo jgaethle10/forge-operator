@@ -102,6 +102,23 @@ test('geographic projection and route progress work without a map provider',()=>
   });
   assert.equal(projected.length,1);
   assert.ok(projected[0].length>=2);
+
+  const washington={
+    north:49.00196,south:45.54354,east:-116.91568,west:-124.84897,paddingPct:.08
+  };
+  const nw=projectGeo({
+    lat:washington.north,lon:washington.west,projection:'mercator',
+    width:940,height:650,fitBounds:washington
+  });
+  const se=projectGeo({
+    lat:washington.south,lon:washington.east,projection:'mercator',
+    width:940,height:650,fitBounds:washington
+  });
+  assert.equal(nw.visible,true);
+  assert.equal(se.visible,true);
+  assert.ok(nw.x<se.x);
+  assert.ok(nw.y<se.y);
+  assert.ok(nw.x>=940*.07&&se.x<=940*.93);
 });
 
 test('stage validation enforces provenance for modeled and synthetic layers',()=>{
