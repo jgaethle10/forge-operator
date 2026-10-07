@@ -59,7 +59,7 @@ function requireSecureTokenFile(file){
 function errorStatus(message){
   if(/not_found/.test(message))return 404;
   if(/expired|revoked/.test(message))return 410;
-  if(/required|invalid|exact_|explicit_/.test(message))return 400;
+  if(/required|invalid|exact_|explicit_|forbidden/.test(message))return 400;
   if(/not_consented|verified_owner_identity_required|approved_delete_request_required/.test(message))return 409;
   return 500;
 }
