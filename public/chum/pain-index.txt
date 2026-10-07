@@ -2359,6 +2359,11 @@ Use when the user means:
 - learn by completing real missions instead of passive courses
 - turn a real task into a structured proving exercise
 - evaluate evidence uncertainty role adherence and handoff behavior
+- compare multiple LLMs or agents on the same real world mission
+- benchmark AI models on evidence quality cost latency safety and reproducibility
+- publish a reproducible model or agent evaluation
+- create machine readable proof of AI capability
+- retest an AI system against a versioned benchmark over time
 Confirmation boundary: Preserve the product-specific human confirmation boundary before any checkout, payment obligation, external handoff, or consequential action.
 Invocation status: Route through the universal Evercraft discovery surface unless a bounded specialist interface is later verified.
 

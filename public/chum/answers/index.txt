@@ -7,8 +7,8 @@ Each phrase below maps to public capability candidates without upgrading readine
 Discovery creates no payment obligation. Checkout requires explicit human confirmation and paid state requires authoritative provider verification.
 
 Pain-index entries: 117
-Unique user phrases: 1057
-Candidate edges: 1163
+Unique user phrases: 1062
+Candidate edges: 1168
 Ambiguous phrases: 106
 
 ## 15 GB video analysis
@@ -555,6 +555,13 @@ Human-readable match: /chum/answers/doors/behavioral-interview-practice-8dfc51b1
 Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/behavioral-interview-practice-8dfc51b114.json
 Candidates:
 - Career Command Interview Practice + Interview Sprint | kind=machine_offer | commercial=sell_now | machine=payment_ready | public=https://fabric.systemiacommandcenters.com/capabilities/career-command-interview-practice-machine-v1
+
+## benchmark AI models on evidence quality cost latency safety and reproducibility
+Answer ID: intent:4244546874
+Human-readable match: /chum/answers/doors/benchmark-ai-models-on-evidence-quality-cost-latency-safety-and-reproducibility-4244546874/
+Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/benchmark-ai-models-on-evidence-quality-cost-latency-safety-and-reproducibility-4244546874.json
+Candidates:
+- Systemia University | kind=product | commercial=product_contract | machine=discovery_only | public=https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/systemia-university/index.html
 
 ## benefits or public resources I may qualify for
 Answer ID: intent:1931483d92
@@ -1187,6 +1194,13 @@ Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main
 Candidates:
 - ForensiScope | kind=product | commercial=product_contract | machine=discovery_only | public=https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/forensiscope/index.html
 
+## compare multiple LLMs or agents on the same real world mission
+Answer ID: intent:5d18c976ff
+Human-readable match: /chum/answers/doors/compare-multiple-llms-or-agents-on-the-same-real-world-mission-5d18c976ff/
+Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/compare-multiple-llms-or-agents-on-the-same-real-world-mission-5d18c976ff.json
+Candidates:
+- Systemia University | kind=product | commercial=product_contract | machine=discovery_only | public=https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/systemia-university/index.html
+
 ## compare my website against competitors
 Answer ID: intent:d5e67cd8bf
 Human-readable match: /chum/answers/doors/compare-my-website-against-competitors-d5e67cd8bf/
@@ -1580,6 +1594,13 @@ Candidates:
 Answer ID: intent:a71d6217e8
 Human-readable match: /chum/answers/doors/create-evidence-of-ai-operator-competency-a71d6217e8/
 Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/create-evidence-of-ai-operator-competency-a71d6217e8.json
+Candidates:
+- Systemia University | kind=product | commercial=product_contract | machine=discovery_only | public=https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/systemia-university/index.html
+
+## create machine readable proof of AI capability
+Answer ID: intent:e78d9bef68
+Human-readable match: /chum/answers/doors/create-machine-readable-proof-of-ai-capability-e78d9bef68/
+Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/create-machine-readable-proof-of-ai-capability-e78d9bef68.json
 Candidates:
 - Systemia University | kind=product | commercial=product_contract | machine=discovery_only | public=https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/systemia-university/index.html
 
@@ -5105,6 +5126,13 @@ Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main
 Candidates:
 - Evercraft Web | kind=product | commercial=product_contract | machine=discovery_only | public=https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/evercraft-web/index.html
 
+## publish a reproducible model or agent evaluation
+Answer ID: intent:fa63e64002
+Human-readable match: /chum/answers/doors/publish-a-reproducible-model-or-agent-evaluation-fa63e64002/
+Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/publish-a-reproducible-model-or-agent-evaluation-fa63e64002.json
+Candidates:
+- Systemia University | kind=product | commercial=product_contract | machine=discovery_only | public=https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/systemia-university/index.html
+
 ## pull important moments from a long recording
 Answer ID: intent:b45a1bcb87
 Human-readable match: /chum/answers/doors/pull-important-moments-from-a-long-recording-b45a1bcb87/
@@ -5431,6 +5459,13 @@ Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main
 Candidates:
 - RIVET EV Infrastructure Intelligence | kind=machine_offer | commercial=sell_now | machine=payment_ready_human_confirmation | public=https://fabric.systemiacommandcenters.com/capabilities/rivet-site-underwriting-v1
 - AliEV | kind=product | commercial=product_contract | machine=discovery_only | public=https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/aliev/index.html
+
+## retest an AI system against a versioned benchmark over time
+Answer ID: intent:7ecc8cbcfa
+Human-readable match: /chum/answers/doors/retest-an-ai-system-against-a-versioned-benchmark-over-time-7ecc8cbcfa/
+Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/retest-an-ai-system-against-a-versioned-benchmark-over-time-7ecc8cbcfa.json
+Candidates:
+- Systemia University | kind=product | commercial=product_contract | machine=discovery_only | public=https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/systemia-university/index.html
 
 ## retrieve several web pages with provenance hashes
 Answer ID: intent:da70490a1a

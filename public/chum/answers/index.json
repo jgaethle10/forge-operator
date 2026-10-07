@@ -21,8 +21,8 @@
   },
   "summary": {
     "pain_index_entries": 117,
-    "unique_user_phrases": 1057,
-    "mapped_candidate_edges": 1163,
+    "unique_user_phrases": 1062,
+    "mapped_candidate_edges": 1168,
     "ambiguous_phrases": 106,
     "product_candidates": 66,
     "machine_offer_candidates": 51
@@ -1867,6 +1867,29 @@
           "machine_state": "payment_ready",
           "pain_page": "/chum/intents/career-command-interview-practice-machine-v1/",
           "public_url": "https://fabric.systemiacommandcenters.com/capabilities/career-command-interview-practice-machine-v1",
+          "registry_name": null
+        }
+      ]
+    },
+    {
+      "answer_id": "intent:4244546874",
+      "user_language": "benchmark AI models on evidence quality cost latency safety and reproducibility",
+      "normalized": "benchmark ai models on evidence quality cost latency safety and reproducibility",
+      "relative_json": "/chum/answers/doors/benchmark-ai-models-on-evidence-quality-cost-latency-safety-and-reproducibility-4244546874.json",
+      "relative_page": "/chum/answers/doors/benchmark-ai-models-on-evidence-quality-cost-latency-safety-and-reproducibility-4244546874/",
+      "raw_json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/benchmark-ai-models-on-evidence-quality-cost-latency-safety-and-reproducibility-4244546874.json",
+      "candidate_count": 1,
+      "candidates": [
+        {
+          "capability_id": "product:systemia-university",
+          "kind": "product",
+          "product_key": "systemia-university",
+          "public_id": null,
+          "name": "Systemia University",
+          "commercial_state": "product_contract",
+          "machine_state": "discovery_only",
+          "pain_page": "/chum/products/systemia-university/",
+          "public_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/systemia-university/index.html",
           "registry_name": null
         }
       ]
@@ -4015,6 +4038,29 @@
       ]
     },
     {
+      "answer_id": "intent:5d18c976ff",
+      "user_language": "compare multiple LLMs or agents on the same real world mission",
+      "normalized": "compare multiple llms or agents on the same real world mission",
+      "relative_json": "/chum/answers/doors/compare-multiple-llms-or-agents-on-the-same-real-world-mission-5d18c976ff.json",
+      "relative_page": "/chum/answers/doors/compare-multiple-llms-or-agents-on-the-same-real-world-mission-5d18c976ff/",
+      "raw_json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/compare-multiple-llms-or-agents-on-the-same-real-world-mission-5d18c976ff.json",
+      "candidate_count": 1,
+      "candidates": [
+        {
+          "capability_id": "product:systemia-university",
+          "kind": "product",
+          "product_key": "systemia-university",
+          "public_id": null,
+          "name": "Systemia University",
+          "commercial_state": "product_contract",
+          "machine_state": "discovery_only",
+          "pain_page": "/chum/products/systemia-university/",
+          "public_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/systemia-university/index.html",
+          "registry_name": null
+        }
+      ]
+    },
+    {
       "answer_id": "intent:d5e67cd8bf",
       "user_language": "compare my website against competitors",
       "normalized": "compare my website against competitors",
@@ -5334,6 +5380,29 @@
       "relative_json": "/chum/answers/doors/create-evidence-of-ai-operator-competency-a71d6217e8.json",
       "relative_page": "/chum/answers/doors/create-evidence-of-ai-operator-competency-a71d6217e8/",
       "raw_json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/create-evidence-of-ai-operator-competency-a71d6217e8.json",
+      "candidate_count": 1,
+      "candidates": [
+        {
+          "capability_id": "product:systemia-university",
+          "kind": "product",
+          "product_key": "systemia-university",
+          "public_id": null,
+          "name": "Systemia University",
+          "commercial_state": "product_contract",
+          "machine_state": "discovery_only",
+          "pain_page": "/chum/products/systemia-university/",
+          "public_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/systemia-university/index.html",
+          "registry_name": null
+        }
+      ]
+    },
+    {
+      "answer_id": "intent:e78d9bef68",
+      "user_language": "create machine readable proof of AI capability",
+      "normalized": "create machine readable proof of ai capability",
+      "relative_json": "/chum/answers/doors/create-machine-readable-proof-of-ai-capability-e78d9bef68.json",
+      "relative_page": "/chum/answers/doors/create-machine-readable-proof-of-ai-capability-e78d9bef68/",
+      "raw_json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/create-machine-readable-proof-of-ai-capability-e78d9bef68.json",
       "candidate_count": 1,
       "candidates": [
         {
@@ -17420,6 +17489,29 @@
       ]
     },
     {
+      "answer_id": "intent:fa63e64002",
+      "user_language": "publish a reproducible model or agent evaluation",
+      "normalized": "publish a reproducible model or agent evaluation",
+      "relative_json": "/chum/answers/doors/publish-a-reproducible-model-or-agent-evaluation-fa63e64002.json",
+      "relative_page": "/chum/answers/doors/publish-a-reproducible-model-or-agent-evaluation-fa63e64002/",
+      "raw_json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/publish-a-reproducible-model-or-agent-evaluation-fa63e64002.json",
+      "candidate_count": 1,
+      "candidates": [
+        {
+          "capability_id": "product:systemia-university",
+          "kind": "product",
+          "product_key": "systemia-university",
+          "public_id": null,
+          "name": "Systemia University",
+          "commercial_state": "product_contract",
+          "machine_state": "discovery_only",
+          "pain_page": "/chum/products/systemia-university/",
+          "public_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/systemia-university/index.html",
+          "registry_name": null
+        }
+      ]
+    },
+    {
       "answer_id": "intent:b45a1bcb87",
       "user_language": "pull important moments from a long recording",
       "normalized": "pull important moments from a long recording",
@@ -18534,6 +18626,29 @@
           "pain_page": "/chum/products/aliev/",
           "public_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/aliev/index.html",
           "registry_name": "io.github.jgaethle10/aliev"
+        }
+      ]
+    },
+    {
+      "answer_id": "intent:7ecc8cbcfa",
+      "user_language": "retest an AI system against a versioned benchmark over time",
+      "normalized": "retest an ai system against a versioned benchmark over time",
+      "relative_json": "/chum/answers/doors/retest-an-ai-system-against-a-versioned-benchmark-over-time-7ecc8cbcfa.json",
+      "relative_page": "/chum/answers/doors/retest-an-ai-system-against-a-versioned-benchmark-over-time-7ecc8cbcfa/",
+      "raw_json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/retest-an-ai-system-against-a-versioned-benchmark-over-time-7ecc8cbcfa.json",
+      "candidate_count": 1,
+      "candidates": [
+        {
+          "capability_id": "product:systemia-university",
+          "kind": "product",
+          "product_key": "systemia-university",
+          "public_id": null,
+          "name": "Systemia University",
+          "commercial_state": "product_contract",
+          "machine_state": "discovery_only",
+          "pain_page": "/chum/products/systemia-university/",
+          "public_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/systemia-university/index.html",
+          "registry_name": null
         }
       ]
     },

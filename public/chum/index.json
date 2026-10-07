@@ -1662,7 +1662,9 @@
       "buyer_frontage_url": null,
       "developer_surfaces": null,
       "editorial_surfaces": null,
-      "knowledge_surfaces": null,
+      "knowledge_surfaces": {
+        "hub": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/benchmarks/systemia-university/manifest.json"
+      },
       "distribution_surfaces": null,
       "proof_library": null
     },

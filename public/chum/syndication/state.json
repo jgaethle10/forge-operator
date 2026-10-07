@@ -1,6 +1,6 @@
 {
   "schema": "evercraft.syndication-state.v1",
-  "updated_at": "2026-10-07T04:15:04.156Z",
+  "updated_at": "2026-10-07T16:33:21.934Z",
   "complete_mirror": true,
   "product_hashes": {
     "aliev": "32e6dabf7b53521f73c1def4034ce3aa7cf0880f32c5e07e33184626cdde420a",
@@ -62,7 +62,7 @@
     "systemia-portfolio-sentinel": "6838b148672caacdfb1213cf6705cfa585d9807ab7bdb2ac009894fa7982d824",
     "systemia-radar": "f3ee625d1c0c33fba92239c21c094cf7d73abe913da012fdd44bae60e624c9e1",
     "systemia-remote-ops": "fb7ec6269cc5a9965165af0898efb98ea5ab2eeee39aff3593ed72c045e42e97",
-    "systemia-university": "3524761baabd5141c9e8e1ca1629bf24bdae3c121f4f9603c93d5a63cd122b79",
+    "systemia-university": "324e37f980d302ec1b4821e24f2847560bbcf57b8b3ee8af5f78f46849ff5014",
     "systemia-website-audit": "cf7d58464b342e37e61e6eb4f268760d341a8a88e193f761fbd8d10c2e8a4d6e",
     "talent-atlas": "b4f67e33457fc989a76d4a5e134b27bd174061ba2d4f041cb3b87f17387003dd",
     "forensic-record": "39c3ab2a2f185aa1131dd0b5616cff2fab23bfcae22c495335ce63ad1ece439a",
