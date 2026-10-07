@@ -1,0 +1,98 @@
+{
+  "schema": "evercraft.daytrade.crossdate-audit-summary.v1",
+  "generated_at": "2026-10-07T16:34:10.343Z",
+  "source_run_id": 37653050051,
+  "source_artifact_id": 11496907047,
+  "source_artifact_digest": "sha256:310ba07bfd160c43e65ab526e4a8a9816937d38f4d70ce3df169d1b9c2f5e03f",
+  "simulation_only": true,
+  "capital_at_risk_usd": 0,
+  "ledger_integrity": {
+    "prospective_receipts": 13,
+    "ok": true,
+    "duplicate_source_run_ids": 0,
+    "duplicate_source_artifact_ids": 0,
+    "duplicate_source_artifact_digests": 0,
+    "authority_violations": 0,
+    "frozen_rule_drift": 0
+  },
+  "independence": {
+    "raw_windows": 13,
+    "independent_windows": 10,
+    "near_duplicate_windows_excluded": 3,
+    "minimum_separation_ms": 300000
+  },
+  "diversity": {
+    "distinct_market_dates_et": 2,
+    "market_dates_et": ["2026-10-06", "2026-10-07"],
+    "phase_counts": {
+      "OPENING": 0,
+      "MIDDAY": 6,
+      "CLOSING": 4
+    },
+    "status": "PRACTICE_DIVERSITY_NOT_READY",
+    "minimum_windows_required": 20,
+    "minimum_dates_required": 5,
+    "minimum_windows_per_required_phase": 3
+  },
+  "phase_scorecard": {
+    "MIDDAY": {
+      "windows": 6,
+      "helped": 5,
+      "hurt": 0,
+      "neutral": 1,
+      "cumulative_rule_improvement_usd": 0.06314369690119648,
+      "cumulative_governed_pnl_usd": -0.03095120138505081,
+      "cumulative_always_cross_pnl_usd": -0.09409489828624729
+    },
+    "CLOSING": {
+      "windows": 4,
+      "helped": 1,
+      "hurt": 1,
+      "neutral": 2,
+      "cumulative_rule_improvement_usd": 0.010459267173501985,
+      "cumulative_governed_pnl_usd": -0.009066565484438627,
+      "cumulative_always_cross_pnl_usd": -0.01952583265794061
+    }
+  },
+  "frozen_rule": {
+    "rule_id": "spread-abstention-v1",
+    "threshold_bps": 3,
+    "instrument_decisions": 30,
+    "traded_decisions": 20,
+    "abstained_decisions": 10,
+    "simulated_pnl_usd": -0.040017766869489435,
+    "always_cross_pnl_usd": -0.1136207309441879,
+    "improvement_vs_always_cross_usd": 0.07360296407469846,
+    "adjacent_2_3_4_bps_all_nonnegative_vs_always_cross": true
+  },
+  "instrument_conditioning": {
+    "SOXX": {
+      "tight_mean_always_cross_pnl_usd": -0.0025714915646277703,
+      "wide_mean_always_cross_pnl_usd": -0.00792256890274364,
+      "wide_minus_tight_mean_pnl_usd": -0.00535107733811587,
+      "within_symbol_comparison_ready": true
+    },
+    "SMH": {
+      "tight_mean_always_cross_pnl_usd": -0.005002396334566228,
+      "wide_mean_always_cross_pnl_usd": -0.006516887664559157,
+      "wide_minus_tight_mean_pnl_usd": -0.0015144913299929286,
+      "within_symbol_comparison_ready": true
+    },
+    "QQQ": {
+      "tight_mean_always_cross_pnl_usd": 0.000028257739641901482,
+      "wide_count": 0,
+      "within_symbol_comparison_ready": false
+    }
+  },
+  "interpretation": {
+    "execution_rule_reduces_loss_relative_to_always_cross_in_current_sample": true,
+    "governed_practice_pnl_remains_negative": true,
+    "opening_phase_remains_unobserved_prospectively": true,
+    "two_dates_are_not_independent_market_validation": true,
+    "delayed_sip_reconciliation_is_required_before_treating_iex_spread_as_true_nbbo": true,
+    "practice_not_signal_validation": true,
+    "practice_not_live_fill_validation": true,
+    "not_live_authorized": true
+  },
+  "live_trade_authority": false
+}
