@@ -80,7 +80,8 @@
       "systemia.public-edge.v1",
       "systemia.evercraft-home.v1",
       "systemia.evercraft-web-browser.v1",
-      "systemia.forensic-record-runtime.v1"
+      "systemia.forensic-record-runtime.v1",
+      "systemia.forensic-record-public-runtime.v1"
     ],
     "public_origin": {
       "workload_class": "systemia.chum-public-origin.v1",
@@ -138,6 +139,17 @@
       "health_path": "/health",
       "public_edge_separate": true,
       "base44_runtime_required": false
+    },
+    "forensic_record_public": {
+      "workload_class": "systemia.forensic-record-public-runtime.v1",
+      "mode": "public_read_only_safe_projection",
+      "shared_state_with": "systemia.forensic-record-runtime.v1",
+      "public_route_requires_independent_verification": true,
+      "health_path": "/health",
+      "write_routes_exposed": false,
+      "protected_domains_exposed": false,
+      "base44_runtime_required": false,
+      "canonical_domain_cutover": false
     }
   },
   "release_gates": [
