@@ -2379,6 +2379,10 @@ export async function startEvercraftComputeNode({
             workspaceRoot,
             'remote-device-trust-watch'
           );
+          const competitionCapacityOut = path.join(
+            workspaceRoot,
+            'competition-capacity'
+          );
           const publicEdgeOut = path.join(
             workspaceRoot,
             'public-edge-activation-watch'
@@ -2412,6 +2416,12 @@ export async function startEvercraftComputeNode({
                 source_key: 'remote-device-trust-watch',
                 path: 'remote-device-trust-watch/mission-snapshot.json',
                 required: true,
+                stale_after_seconds: 900,
+              },
+              {
+                source_key: 'competition-saban-capacity',
+                path: 'competition-capacity/mission-snapshot.json',
+                required: false,
                 stale_after_seconds: 900,
               },
               {
@@ -2477,6 +2487,9 @@ export async function startEvercraftComputeNode({
             ).trim(),
             SYSTEMIA_REMOTE_DEVICE_TRUST_WATCH_OUT_DIR:
               remoteDeviceTrustWatchOut,
+            SYSTEMIA_COMPETITION_SABAN_CAPACITY_RECEIPT:
+              path.join(competitionCapacityOut, 'latest.json'),
+            SYSTEMIA_COMPETITION_BROWSER_RELEASE_REF: releaseRef,
             SYSTEMIA_MISSION_SOURCES_CONFIG: missionSourcesConfig,
             SYSTEMIA_MISSION_PUBLISHER_LEDGER: publisherLedger,
             SYSTEMIA_SENTINEL_REGION_PROFILE: String(
