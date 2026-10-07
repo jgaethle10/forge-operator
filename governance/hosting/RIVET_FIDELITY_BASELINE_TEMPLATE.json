@@ -1,0 +1,37 @@
+{
+  "schema": "evercraft.brand-fidelity-manifest.v1",
+  "product_id": "rivet",
+  "brand_namespace": "rivet-isolated",
+  "baseline_release_ref": "60a129284c92c5e453bb67e5004f3caeaffaefb5",
+  "capture_state": "NOT_CAPTURED_NO_PRODUCTION_TOUCH",
+  "capture_authority": "RIVET_PARTNER_APPROVAL_REQUIRED",
+  "capture_notes": "This is a template only. Populate screenshot and asset receipts from the partner-approved RIVET experience after explicit migration authorization. Do not infer approval from this file.",
+  "viewports": [
+    {"id":"desktop-1440","width":1440,"height":1000},
+    {"id":"desktop-1280","width":1280,"height":900},
+    {"id":"mobile-390","width":390,"height":844},
+    {"id":"mobile-360","width":360,"height":800}
+  ],
+  "protected_tokens": {
+    "logo": "CAPTURE_REQUIRED",
+    "colors": "CAPTURE_REQUIRED",
+    "typography": "CAPTURE_REQUIRED",
+    "fonts": "CAPTURE_REQUIRED",
+    "spacing": "CAPTURE_REQUIRED",
+    "button_geometry": "CAPTURE_REQUIRED",
+    "radius": "CAPTURE_REQUIRED",
+    "iconography": "CAPTURE_REQUIRED"
+  },
+  "interaction_contract": {
+    "navigation": "CAPTURE_REQUIRED",
+    "loading_states": "CAPTURE_REQUIRED",
+    "forms": "CAPTURE_REQUIRED",
+    "animations": "CAPTURE_REQUIRED",
+    "report_flow": "CAPTURE_REQUIRED",
+    "mobile_behavior": "CAPTURE_REQUIRED",
+    "desktop_behavior": "CAPTURE_REQUIRED"
+  },
+  "screenshots": [],
+  "assets": [],
+  "accidental_parent_theme_inheritance": false
+}
