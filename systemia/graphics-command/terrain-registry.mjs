@@ -88,3 +88,10 @@ export function terrainReliefProvenance(id){
   const {assetPath,...publicRecord}=terrain;
   return publicRecord;
 }
+
+export function terrainReliefDataUri(id){
+  const terrain=getTerrainRelief(id);
+  if(!terrain) return null;
+  const body=fs.readFileSync(terrain.assetPath);
+  return 'data:image/png;base64,'+body.toString('base64');
+}
