@@ -962,6 +962,111 @@ export default function WorldForgeEditor(){
     }
   }
 
+  async function waitForRuntimeIdle(){
+    for(let attempt=0;attempt<200&&runtimeSteppingRef.current;attempt+=1){
+      await new Promise(resolve=>window.setTimeout(resolve,10));
+    }
+    if(runtimeSteppingRef.current){
+      throw new Error('World Engine runtime step did not settle before authoring mutation.');
+    }
+  }
+
+  async function stepRuntime(ticks=1){
+    const currentProject=projectRef.current;
+    const currentRuntime=engineRuntimeRef.current;
+    if(!currentProject||!currentRuntime||runtimeSteppingRef.current) return;
+
+    runtimeSteppingRef.current=true;
+    setRuntimeStepping(true);
+    try{
+      const response=await fetch('/api/fallen/world-forge/runtime-step',{
+        method:'POST',
+        headers:{'content-type':'application/json'},
+        body:JSON.stringify({
+          project:currentProject,
+          runtimeWorld:currentRuntime.world,
+          snapshot:currentRuntime.snapshot,
+          ticks,
+        }),
+      });
+      const payload=await response.json();
+      if(!response.ok||!payload.success||!payload.step){
+        throw new Error(payload.error||'World Engine runtime step failed.');
+      }
+      const latest=engineRuntimeRef.current;
+      if(!latest||latest.snapshot.digest!==currentRuntime.snapshot.digest){
+        return;
+      }
+      const next:EngineRuntimeState={
+        ...latest,
+        snapshot:payload.step.snapshot,
+        overlay:payload.step.overlay,
+      };
+      engineRuntimeRef.current=next;
+      setEngineRuntime(next);
+    }catch(err){
+      setRuntimePlaying(false);
+      setError(err instanceof Error?err.message:String(err));
+    }finally{
+      runtimeSteppingRef.current=false;
+      setRuntimeStepping(false);
+    }
+  }
+
+  async function resetRuntimeSession(){
+    const currentProject=projectRef.current;
+    if(!currentProject||busy) return;
+    setRuntimePlaying(false);
+    await waitForRuntimeIdle();
+    setBusy(true);
+    setError('');
+    try{
+      const response=await fetch('/api/fallen/world-forge/runtime-init',{
+        method:'POST',
+        headers:{'content-type':'application/json'},
+        body:JSON.stringify({project:currentProject}),
+      });
+      const payload=await response.json();
+      if(!response.ok||!payload.success||!payload.session){
+        throw new Error(payload.error||'Could not reset World Engine runtime session.');
+      }
+      const session=payload.session;
+      const bridge=session.bridge;
+      const nextRuntime:EngineRuntimeState={
+        world:bridge.world,
+        assets:bridge.assets,
+        geometries:bridge.geometries,
+        snapshot:session.snapshot,
+        overlay:session.overlay,
+      };
+      engineRuntimeRef.current=nextRuntime;
+      setEngineRuntime(nextRuntime);
+      setEngineBridge({
+        worldId:String(bridge.world.id),
+        digest:String(bridge.receipt.digest),
+        runtimeReady:Boolean(bridge.receipt.runtimeReady),
+        webGpuReady:Boolean(bridge.receipt.webGpuReady),
+        visualParity:String(bridge.receipt.visualParity),
+        geometryCount:Array.isArray(bridge.geometries)?bridge.geometries.length:0,
+        warnings:Array.isArray(bridge.receipt.warnings)?bridge.receipt.warnings.length:0,
+        blockers:Array.isArray(bridge.receipt.blockers)?bridge.receipt.blockers.length:0,
+      });
+      setCommandNote('World Engine runtime reset to canonical tick 0.');
+    }catch(err){
+      setError(err instanceof Error?err.message:String(err));
+    }finally{
+      setBusy(false);
+    }
+  }
+
+  useEffect(()=>{
+    if(!runtimePlaying) return;
+    const interval=window.setInterval(()=>{
+      void stepRuntime(6);
+    },100);
+    return ()=>window.clearInterval(interval);
+  },[runtimePlaying]);
+
   async function mutate(operations:ForgeOperation[],recordUndo=true){
     if(!project||busy) return;
     setBusy(true);
