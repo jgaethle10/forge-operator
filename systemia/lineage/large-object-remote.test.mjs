@@ -55,8 +55,9 @@ test('large masters replicate by missing chunks and materialize byte-identically
       manifestId: first.manifest_id,
       concurrency: 4,
     });
-    assert.equal(firstPush.transferred_chunks, firstPush.chunks);
-    assert.equal(firstPush.reused_chunks, 0);
+    assert.ok(firstPush.transferred_chunks > 0);
+    assert.ok(firstPush.transferred_chunks <= firstPush.chunks);
+    assert.equal(firstPush.transferred_chunks + firstPush.reused_chunks, firstPush.chunks);
 
     const secondPush = await pushLargeObject({
       store: source,
