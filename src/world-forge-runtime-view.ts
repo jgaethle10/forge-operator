@@ -173,3 +173,8 @@ export function runtimeBodiesByForgeNodeId(snapshot:any){
   }
   return result;
 }
+
+
+export function worldForgePositionToWorldEngine(value:RuntimeVec3):RuntimeVec3{
+  return {x:value.x,y:value.z,z:-value.y};
+}
