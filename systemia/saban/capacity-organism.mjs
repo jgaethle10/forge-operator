@@ -27,6 +27,7 @@ import { appendDemandHistory, forecastCapacityDemand, prewarmActionsForAuthorize
 import { buildForecastHeadroomReservations } from './capacity-headroom.mjs';
 import { buildCapacityLifecyclePlan } from './capacity-lifecycle.mjs';
 import { auditFailureDomains } from './failure-domain-audit.mjs';
+import { planFailureDomainRebalance } from './failure-domain-rebalance.mjs';
 import { buildResourceFieldExpansionIntents } from './capacity-resource-field-bridge.mjs';
 
 const MODULE_FILE=fileURLToPath(import.meta.url);
@@ -166,6 +167,12 @@ export function compileCapacityOrganismState({
     offers:combinedOffers,
     fabricPlan:workloadPlan,
   });
+  const failureDomainRebalance=planFailureDomainRebalance({
+    audit:failureDomainAudit,
+    fabricPlan:workloadPlan,
+    offers:combinedOffers,
+    checkpoints,
+  });
   const rebalance=planFabricRebalance({
     previousPlan,
     nextPlan:workloadPlan,
@@ -241,6 +248,15 @@ export function compileCapacityOrganismState({
       receipt_hash:failureDomainAudit.receipt_hash,
       sensitive_domain_values_serialized:false,
     },
+    failure_domain_rebalance:{
+      action_count:failureDomainRebalance.action_count,
+      move_count:failureDomainRebalance.move_count,
+      drain_count:failureDomainRebalance.drain_count,
+      evidence_collection_count:failureDomainRebalance.evidence_collection_count,
+      resource_expansion_count:failureDomainRebalance.resource_expansion_count,
+      receipt_hash:failureDomainRebalance.receipt_hash,
+      automatic_execution_authorized:false,
+    },
     work_demand:demandRadar,
     zero_spend_capacity_needs:demandRadar
       ? deriveZeroSpendCapacityNeeds(demandRadar)
@@ -257,6 +273,7 @@ export function compileCapacityOrganismState({
     observation_never_grants_authority:true,
     _capacity_lifecycle_ledger:lifecyclePlan,
     _failure_domain_audit:failureDomainAudit,
+    _failure_domain_rebalance:failureDomainRebalance,
     generated_at:(now instanceof Date?now:new Date(now)).toISOString(),
   };
   return body;
@@ -361,7 +378,7 @@ export async function runCapacityOrganismOnce({
     now,
   });
 
-  const { _capacity_lifecycle_ledger: lifecycleLedger, _failure_domain_audit: failureDomainAudit, ...compiledPublic }=compiled;
+  const { _capacity_lifecycle_ledger: lifecycleLedger, _failure_domain_audit: failureDomainAudit, _failure_domain_rebalance: failureDomainRebalance, ...compiledPublic }=compiled;
   const receipt={
     ...compiledPublic,
     census:census?{
@@ -467,6 +484,9 @@ export async function runCapacityOrganismOnce({
   if(failureDomainAudit){
     atomicJson(path.join(resolvedRoot,'failure-domain-audit.json'),failureDomainAudit);
   }
+  if(failureDomainRebalance){
+    atomicJson(path.join(resolvedRoot,'failure-domain-rebalance-plan.json'),failureDomainRebalance);
+  }
   atomicJson(path.join(resolvedRoot,'authority-requests.json'),{
     schema:'evercraft.saban.capacity-authority-queue.v1',
     authority_requests:autonomyPlan.authority_requests,
@@ -502,6 +522,8 @@ async function main(){
       capacity_lifecycle_paid_release_count:receipt.capacity_lifecycle?.release_paid_lease_count||0,
       failure_domain_correlated_risk_count:receipt.failure_domain_audit?.correlated_failure_risk_task_count||0,
       failure_domain_evidence_incomplete_count:receipt.failure_domain_audit?.evidence_incomplete_task_count||0,
+      failure_domain_rebalance_move_count:receipt.failure_domain_rebalance?.move_count||0,
+      failure_domain_rebalance_expand_count:receipt.failure_domain_rebalance?.resource_expansion_count||0,
       resource_field_expansion_intent_count:receipt.resource_field_expansion?.intent_count||0,
       resource_field_current_pressure_count:receipt.resource_field_expansion?.current_pressure_intent_count||0,
       resource_field_forecast_pressure_count:receipt.resource_field_expansion?.forecast_pressure_intent_count||0,
