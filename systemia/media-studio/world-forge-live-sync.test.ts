@@ -3,8 +3,12 @@ import test from 'node:test';
 
 import { applyWorldForgeOperations } from './world-forge.js';
 import { createWorldForgeStarterProject } from './world-forge-http.js';
+import { compileWorldForgeToWorldEngine } from './world-forge-world-engine.js';
+import { EvercraftWorldRuntime } from '../world-engine/engine.js';
 import {
+  applyWorldForgeLiveSyncToRuntime,
   compileWorldForgeLiveSync,
+  verifyWorldForgeLiveRuntimeSyncReceipt,
   verifyWorldForgeLiveSyncReceipt,
 } from './world-forge-live-sync.js';
 
@@ -201,4 +205,160 @@ test('World Forge live sync receipt detects tampering',()=>{
   const tampered=structuredClone(sync.receipt);
   tampered.operationCount+=1;
   assert.equal(verifyWorldForgeLiveSyncReceipt(tampered),false);
+});
+
+
+test('World Forge live runtime sync preserves running tick and migrates to edited definition',()=>{
+  const before=createWorldForgeStarterProject();
+  const beforeBridge=compileWorldForgeToWorldEngine({project:before});
+  const runtime=new EvercraftWorldRuntime(beforeBridge.world);
+  const running=runtime.run(7);
+  assert.equal(running.tick,7);
+
+  const mutation=applyWorldForgeOperations({
+    project:before,
+    expectedVersion:before.version,
+    operations:[{
+      type:'set_transform',
+      nodeId:'hero-core',
+      transform:{position:{x:1.5,y:0,z:1}},
+    }],
+  });
+  assert.equal(mutation.status,'completed');
+
+  const result=applyWorldForgeLiveSyncToRuntime({
+    syncId:'running-transform',
+    beforeProject:before,
+    afterProject:mutation.project,
+    actor:{kind:'human',id:'studio-operator'},
+    previousSnapshot:running,
+    currentGeometries:beforeBridge.geometries,
+  });
+
+  assert.equal(result.snapshot.tick,7);
+  assert.equal(result.snapshot.worldVersion,mutation.project.version);
+  assert.equal(
+    result.snapshot.definitionDigest,
+    result.sync.applied.receipt.afterWorldDigest,
+  );
+  const heroMap=result.sync.target.receipt.nodeEntityMap.find(item=>item.nodeId==='hero-core');
+  assert.ok(heroMap);
+  const hero=result.snapshot.entities.find(entity=>entity.id===heroMap!.entityId);
+  assert.ok(hero);
+  assert.deepEqual(hero!.transform.position,{x:1.5,y:1,z:0});
+  assert.equal(result.migrationReceipt.tick,7);
+  assert.equal(result.geometryHotReloadReceipts.length,0);
+  assert.equal(result.receipt.runtimeStateMigrated,true);
+  assert.equal(result.receipt.geometryStateVerified,true);
+  assert.equal(verifyWorldForgeLiveRuntimeSyncReceipt(result.receipt),true);
+});
+
+test('World Forge live runtime sync reconciles geometry through owned hot reload',()=>{
+  const before=createWorldForgeStarterProject();
+  const beforeBridge=compileWorldForgeToWorldEngine({project:before});
+  const runtime=new EvercraftWorldRuntime(beforeBridge.world);
+  const running=runtime.run(3);
+
+  const mutation=applyWorldForgeOperations({
+    project:before,
+    expectedVersion:before.version,
+    operations:[{
+      type:'set_geometry',
+      nodeId:'hero-core',
+      geometry:{
+        kind:'editable_mesh',
+        mesh:{
+          vertices:[
+            {x:-.5,y:-.5,z:-.5},{x:.5,y:-.5,z:-.5},
+            {x:.5,y:.5,z:-.5},{x:-.5,y:.5,z:-.5},
+            {x:-.5,y:-.5,z:1},{x:.5,y:-.5,z:1},
+            {x:.5,y:.5,z:1},{x:-.5,y:.5,z:1},
+          ],
+          faces:[
+            [0,3,2,1],[4,5,6,7],[0,1,5,4],
+            [1,2,6,5],[2,3,7,6],[3,0,4,7],
+          ],
+        },
+      },
+    }],
+  });
+  assert.equal(mutation.status,'completed');
+
+  const result=applyWorldForgeLiveSyncToRuntime({
+    syncId:'running-geometry',
+    beforeProject:before,
+    afterProject:mutation.project,
+    actor:{kind:'agent',id:'saban-modeler'},
+    previousSnapshot:running,
+    currentGeometries:beforeBridge.geometries,
+  });
+
+  assert.equal(result.snapshot.tick,3);
+  assert.equal(result.geometryHotReloadReceipts.length,1);
+  assert.equal(result.geometryHotReloadReceipts[0].replaced,false);
+  assert.equal(result.receipt.geometryRemovedIds.length,1);
+  assert.equal(result.geometries.length,1);
+  assert.equal(
+    result.geometries[0].id,
+    result.sync.target.geometries[0].id,
+  );
+});
+
+test('World Forge live runtime sync rejects stale runtime snapshot and geometry cache',()=>{
+  const before=createWorldForgeStarterProject();
+  const mutation=applyWorldForgeOperations({
+    project:before,
+    expectedVersion:before.version,
+    operations:[{
+      type:'set_visibility',
+      nodeId:'plinth-right',
+      visible:false,
+    }],
+  });
+  assert.equal(mutation.status,'completed');
+
+  const beforeBridge=compileWorldForgeToWorldEngine({project:before});
+  const targetBridge=compileWorldForgeToWorldEngine({project:mutation.project});
+  const staleSnapshot=new EvercraftWorldRuntime(targetBridge.world).snapshot();
+
+  assert.throws(
+    ()=>applyWorldForgeLiveSyncToRuntime({
+      syncId:'stale-runtime',
+      beforeProject:before,
+      afterProject:mutation.project,
+      actor:{kind:'system',id:'test'},
+      previousSnapshot:staleSnapshot,
+      currentGeometries:beforeBridge.geometries,
+    }),
+    /world_forge_live_runtime_snapshot_version_mismatch/,
+  );
+
+  const correctSnapshot=new EvercraftWorldRuntime(beforeBridge.world).snapshot();
+  assert.throws(
+    ()=>applyWorldForgeLiveSyncToRuntime({
+      syncId:'stale-geometry',
+      beforeProject:before,
+      afterProject:mutation.project,
+      actor:{kind:'system',id:'test'},
+      previousSnapshot:correctSnapshot,
+      currentGeometries:[],
+    }),
+    /world_forge_live_runtime_geometry_base_mismatch/,
+  );
+});
+
+test('World Forge live sync refuses revision gaps rather than collapsing lineage',()=>{
+  const before=createWorldForgeStarterProject();
+  const after=structuredClone(before);
+  after.version+=2;
+
+  assert.throws(
+    ()=>compileWorldForgeLiveSync({
+      syncId:'revision-gap',
+      beforeProject:before,
+      afterProject:after,
+      actor:{kind:'system',id:'test'},
+    }),
+    /world_forge_live_sync_revision_gap_requires_full_recompile/,
+  );
 });
