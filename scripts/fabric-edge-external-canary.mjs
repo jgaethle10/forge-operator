@@ -256,15 +256,27 @@ try{
     throw new Error('graphics_command_state_geometry_missing');
   }
   if(
-    !/data-visual-model="cinematic-geography-v1"/.test(directedFeed.text)||
-    !/class="cinematic-relief"/.test(directedFeed.text)||
-    !/class="story-route cascade-spine"[^>]*opacity=".20"/.test(directedFeed.text)||
+    !/data-visual-model="cinematic-terrain-geography-v2"/.test(directedFeed.text)||
+    !/<image class="terrain-relief"/.test(directedFeed.text)||
+    !/class="story-route cascade-axis"[^>]*opacity=".085"/.test(directedFeed.text)||
+    /class="peak-halo"/.test(directedFeed.text)||
     /<circle class="peak-marker"/.test(directedFeed.text)
   ){
     throw new Error('graphics_command_cinematic_geography_missing');
   }
   if(!/WASHINGTON/.test(directedFeed.text)) throw new Error('graphics_command_region_identity_missing');
   if(/Digest/i.test(directedFeed.text)) throw new Error('graphics_command_audit_clutter_regressed');
+
+  const terrainResponse=await timedFetch(origin+'/visuals/washington-active-volcanoes/terrain-relief.png',{
+    headers:{'user-agent':'evercraft-owned-edge-canary/1.0'}
+  });
+  if(!terrainResponse.ok) throw new Error('graphics_command_terrain_relief_missing');
+  if(!/^image\/png/i.test(terrainResponse.headers.get('content-type')||'')){
+    throw new Error('graphics_command_terrain_relief_not_png');
+  }
+  const terrainBytes=Buffer.from(await terrainResponse.arrayBuffer());
+  if(terrainBytes.length<25000) throw new Error('graphics_command_terrain_relief_too_small');
+  const terrainSha256=createHash('sha256').update(terrainBytes).digest('hex');
 
   const directedStory=await getText('/visuals/washington-active-volcanoes/poster-story.svg');
   if(!/height="1920"/.test(directedStory.text)) throw new Error('graphics_command_story_shape_invalid');
@@ -283,6 +295,15 @@ try{
     graphicsPlan.geography?.boundaryRightsState!=='public_domain'
   ){
     throw new Error('graphics_command_boundary_lineage_missing');
+  }
+  if(
+    graphicsPlan.geography?.terrain?.id!=='usgs-wa-shaded-relief-3dep-v1'||
+    graphicsPlan.geography?.terrain?.rightsState!=='public_domain'||
+    graphicsPlan.geography?.terrain?.license!=='US-PD'||
+    graphicsPlan.geography?.terrain?.sourceSha256!==terrainSha256||
+    !/USGSShadedReliefOnly/.test(graphicsPlan.geography?.terrain?.sourceRef||'')
+  ){
+    throw new Error('graphics_command_terrain_lineage_missing');
   }
   if(graphicsPlan.publicationAuthority!==false) throw new Error('graphics_command_publication_authority_invalid');
 
