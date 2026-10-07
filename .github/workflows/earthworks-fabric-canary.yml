@@ -81,6 +81,11 @@ jobs:
           ' >/dev/null
           printf '%s\n' "$connection" > /tmp/earthworks-fabric-connections.json
 
+          page="$(curl --fail --silent --show-error --retry 4 --retry-all-errors --retry-delay 2 --max-time 25 "$FABRIC_ORIGIN/capabilities/earthworks-site-autonomy-study-v1")"
+          printf '%s' "$page" | grep -Fq 'EarthWorks Site Autonomy Study'
+          printf '%s' "$page" | grep -Fq '$5,000'
+          printf '%s\n' "$page" > /tmp/earthworks-public-page.html
+
       - name: Write external receipt
         if: success()
         shell: bash
@@ -106,6 +111,8 @@ jobs:
             commercial_state:row?.commercial_state ?? null,
             machine_state:row?.state ?? null,
             connection_options_verified:connections.result?.structuredContent?.public_id==='earthworks-site-autonomy-study-v1',
+            public_page_verified:fs.existsSync('/tmp/earthworks-public-page.html'),
+            public_page_url:process.env.FABRIC_ORIGIN+'/capabilities/earthworks-site-autonomy-study-v1',
             transactional:false,
             payment_created:false,
             equipment_control_authorized:false,
