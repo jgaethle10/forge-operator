@@ -26,3 +26,17 @@ jobs:
         run: node --test tests/rivet-hosting-migration-fidelity.test.mjs
       - name: Emit local migration baseline receipt
         run: node systemia/migrations/rivet-hosting/brand-fidelity-audit.mjs
+      - name: Run Saban adversarial hosting review
+        run: node systemia/saban/multiplier.mjs --software rivet-hosting-review --registry governance/rivet-hosting-migration/saban-registry.json --agents 45 --workers 5 --execute --reconcile --state artifacts/rivet-hosting-saban-state.json
+      - name: Assert Saban kept the review non-authoritative
+        run: |
+          node - <<'NODE'
+          const fs=require('fs');
+          const p=JSON.parse(fs.readFileSync('artifacts/saban-multiplier/rivet-hosting-review-latest.json','utf8'));
+          if(p.reconciliation?.production_mutation!==false) throw new Error('Saban review gained production mutation authority');
+          if(p.reconciliation?.migration_authority_granted!==false) throw new Error('Saban review gained migration authority');
+          if(p.reconciliation?.production_lane_selected!==false) throw new Error('Saban selected a production lane without partners');
+          const options=p.reconciliation?.options||[];
+          if(options.length!==5) throw new Error('Saban did not review all hosting options');
+          if(options.some(o=>o.roles.length!==9)) throw new Error('Saban did not apply all nine review roles to every option');
+          NODE
