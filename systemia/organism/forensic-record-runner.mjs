@@ -86,6 +86,9 @@ async function reconcile(){
         deployment_receipt:forensic.receipt?.receipt_hash||null,
         local_url:forensic.result?.local_url||null,
         instance_id:forensic.result?.instance_id||null,
+        seed_state:forensic.result?.seed_state||'reused_verified_seed',
+        seed_finding_rows:forensic.result?.seed_finding_rows||local.health?.finding_rows||null,
+        seed_source_manifest_sha256:forensic.result?.seed_source_manifest_sha256||local.health?.seed_source_manifest_sha256||null,
         lease_renewal_receipt:renewal.receipt_hash||null,
       };
     }else{
