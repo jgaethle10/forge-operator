@@ -27,6 +27,7 @@ COPY --from=build /app/systemia/radar ./systemia/radar
 COPY --from=build /app/systemia/faie ./systemia/faie
 COPY --from=build /app/systemia/sentinel ./systemia/sentinel
 COPY --from=build /app/systemia/media-studio ./systemia/media-studio
+COPY --from=build /app/systemia/visual-desk ./systemia/visual-desk
 COPY --from=build /app/systemia/forensiscope ./systemia/forensiscope
 COPY --from=build /app/systemia/rivet ./systemia/rivet
 COPY --from=build /app/systemia/household-fabric ./systemia/household-fabric
