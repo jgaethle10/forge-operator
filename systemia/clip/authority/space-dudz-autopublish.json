@@ -1,0 +1,24 @@
+{
+  "schema": "evercraft.clip.operator-authority.v1",
+  "authorized": true,
+  "authority_state": "manual_authorized",
+  "authority_receipt_ref": "operator-directive:2026-10-07:evercraft-clip:space-dudz",
+  "issuer_ref": "authority:evercraft-operator",
+  "subject_ref": "system:space-dudz-clip-publisher",
+  "product": "evercraft-home",
+  "scopes": ["home.clip.publish"],
+  "resource_refs": ["brand:space-dudz"],
+  "excluded_brand_keys": ["rnb-chicken-and-soul"],
+  "starts_at": "2026-10-07T19:00:00.000Z",
+  "ends_at": "2027-10-07T19:00:00.000Z",
+  "purpose": "Autonomously publish Space Dudz design-vote campaigns through Evercraft Clip using owned credentials and provider receipts.",
+  "boundaries": {
+    "space_dudz_only": true,
+    "rnb_chicken_and_soul_excluded": true,
+    "max_provider_publishes_per_cycle": 1,
+    "provider_receipt_required": true,
+    "terminal_provider_receipts_never_republished": true,
+    "vote_is_preference_signal": true,
+    "preorder_required_before_print": true
+  }
+}
