@@ -65,6 +65,15 @@
       <button class="auth-submit" id="login-button" type="submit">Continue</button>
       <div class="auth-error" id="auth-error" role="alert"></div>
     </form>
+    <form id="claim-form" style="display:none">
+      <div class="eyebrow">First owner claim</div>
+      <h2>Make this Home yours.</h2>
+      <p class="help">Enter the one-time claim code from your private Evercraft setup message, then choose your permanent Evercraft password. The claim closes after successful use.</p>
+      <div class="auth-field"><label for="claim-code">One-time claim code</label><input id="claim-code" name="claim-code" autocomplete="one-time-code" required></div>
+      <div class="auth-field"><label for="claim-password">Create Evercraft password</label><input id="claim-password" name="claim-password" type="password" minlength="14" autocomplete="new-password" required></div>
+      <button class="auth-submit" id="claim-button" type="submit">Claim Evercraft Home</button>
+      <div class="auth-error" id="claim-error" role="alert"></div>
+    </form>
   </div>
 </section>
 <main id="app-shell">
@@ -158,6 +167,10 @@ const authScreen=document.getElementById("auth-screen");
 const appShell=document.getElementById("app-shell");
 const appFooter=document.getElementById("app-footer");
 const signout=document.getElementById("signout");
+const HOME_PREFIX=window.location.pathname==="/home"||window.location.pathname.startsWith("/home/")?"/home":"";
+const homeFetch=(pathname,init)=>fetch(HOME_PREFIX+pathname,init);
+const loginForm=document.getElementById("login-form");
+const claimForm=document.getElementById("claim-form");
 let commandMode="direct";
 let selectedIntelligence="evercraft";
 let intelligenceOptionsCache=[];
@@ -201,7 +214,7 @@ function renderIntelligenceOptions(options){
 
 async function loadIntelligenceOptions(){
   try{
-    const response=await fetch("/api/intelligence/options");
+    const response=await homeFetch("/api/intelligence/options");
     if(response.status===401){showLogin("Your session expired. Sign in again.");return;}
     const data=await response.json();
     if(!response.ok||!data.ok) throw new Error(data.state||"intelligence_options_unavailable");
@@ -216,6 +229,8 @@ document.getElementById("mode-direct").addEventListener("click",()=>setCommandMo
 document.getElementById("mode-ai").addEventListener("click",()=>setCommandMode("ai"));
 
 function showLogin(message=""){
+  claimForm.style.display="none";
+  loginForm.style.display="";
   authScreen.classList.add("visible");
   appShell.style.display="none";
   appFooter.style.display="none";
@@ -224,12 +239,58 @@ function showLogin(message=""){
   setTimeout(()=>document.getElementById("login").focus(),0);
 }
 
+function showClaim(message=""){
+  loginForm.style.display="none";
+  claimForm.style.display="";
+  authScreen.classList.add("visible");
+  appShell.style.display="none";
+  appFooter.style.display="none";
+  signout.classList.remove("visible");
+  document.getElementById("claim-error").textContent=message;
+  setTimeout(()=>document.getElementById("claim-code").focus(),0);
+}
+
 function showApp(){
   authScreen.classList.remove("visible");
   appShell.style.display="";
   appFooter.style.display="";
   signout.classList.add("visible");
 }
+
+document.getElementById("claim-form").addEventListener("submit",async(event)=>{
+  event.preventDefault();
+  const button=document.getElementById("claim-button");
+  const error=document.getElementById("claim-error");
+  const claimCode=document.getElementById("claim-code").value.trim();
+  const password=document.getElementById("claim-password").value;
+  error.textContent="";
+  if(password.length<14){error.textContent="Use at least 14 characters for your Evercraft password.";return;}
+  button.disabled=true;
+  button.textContent="Claiming…";
+  try{
+    const response=await homeFetch("/api/owner-claim",{
+      method:"POST",
+      headers:{"content-type":"application/json"},
+      body:JSON.stringify({claim_code:claimCode,password})
+    });
+    const data=await response.json();
+    if(!response.ok||!data.ok){
+      if(response.status===401) throw new Error("That one-time claim code was not accepted.");
+      if(response.status===409) throw new Error("Evercraft Home has already been claimed.");
+      if(response.status===429) throw new Error("Too many attempts. Owner claim is temporarily held.");
+      throw new Error(data.state||"Owner claim failed.");
+    }
+    document.getElementById("claim-code").value="";
+    document.getElementById("claim-password").value="";
+    document.getElementById("login").value="jesse";
+    showLogin("Evercraft Home is yours. Sign in with the password you just created.");
+  }catch(err){
+    error.textContent=String(err.message||err);
+  }finally{
+    button.disabled=false;
+    button.textContent="Claim Evercraft Home";
+  }
+});
 
 document.getElementById("login-form").addEventListener("submit",async(event)=>{
   event.preventDefault();
@@ -241,7 +302,7 @@ document.getElementById("login-form").addEventListener("submit",async(event)=>{
   button.disabled=true;
   button.textContent="Verifying…";
   try{
-    const response=await fetch("/api/login",{
+    const response=await homeFetch("/api/login",{
       method:"POST",
       headers:{"content-type":"application/json"},
       body:JSON.stringify({login,password})
@@ -268,7 +329,7 @@ document.getElementById("end-all-sessions").addEventListener("click",async()=>{
   button.disabled=true;
   status.textContent="Ending all Evercraft Home sessions…";
   try{
-    const response=await fetch("/api/sessions/revoke-all",{method:"POST"});
+    const response=await homeFetch("/api/sessions/revoke-all",{method:"POST"});
     const data=await response.json();
     if(!response.ok||!data.ok) throw new Error(data.state||"session_revoke_failed");
     showLogin("All Evercraft Home sessions were ended. Sign in again.");
@@ -280,7 +341,7 @@ document.getElementById("end-all-sessions").addEventListener("click",async()=>{
 });
 
 signout.addEventListener("click",async()=>{
-  try{await fetch("/api/logout",{method:"POST"});}catch{}
+  try{await homeFetch("/api/logout",{method:"POST"});}catch{}
   showLogin("Signed out.");
 });
 
@@ -297,7 +358,7 @@ document.getElementById("plan-form").addEventListener("submit",async(event)=>{
       const selected=intelligenceOptionsCache.find(row=>row.key===selectedIntelligence);
       if(!selected?.available){result.textContent="That intelligence option is not attached yet.";return;}
       result.textContent="Working through "+selected.label+"…";
-      const response=await fetch("/api/intelligence/ask",{
+      const response=await homeFetch("/api/intelligence/ask",{
         method:"POST",
         headers:{"content-type":"application/json"},
         body:JSON.stringify({provider:selectedIntelligence,message:objective,lane:"operations"})
@@ -314,7 +375,7 @@ document.getElementById("plan-form").addEventListener("submit",async(event)=>{
     }
 
     result.textContent="Preparing Systemia plan…";
-    const response=await fetch("/api/systemia/plan",{method:"POST",headers:{"content-type":"application/json"},body:JSON.stringify({objective,tasks:[{title:objective,work_type:"plan"}]})});
+    const response=await homeFetch("/api/systemia/plan",{method:"POST",headers:{"content-type":"application/json"},body:JSON.stringify({objective,tasks:[{title:objective,work_type:"plan"}]})});
     const data=await response.json();
     if(response.status===401){showLogin("Your session expired. Sign in again.");return;}
     if(!response.ok||!data.ok) throw new Error(data.state||"plan_failed");
@@ -332,8 +393,17 @@ document.getElementById("plan-form").addEventListener("submit",async(event)=>{
 async function load(afterLogin=false){
   document.getElementById("date").textContent=new Intl.DateTimeFormat("en-US",{weekday:"long",month:"long",day:"numeric"}).format(new Date());
 
+  try{
+    const bootstrapResponse=await homeFetch("/api/bootstrap-status");
+    const bootstrap=await bootstrapResponse.json();
+    if(bootstrapResponse.ok&&bootstrap.state==="claim_required"){
+      showClaim("");
+      return;
+    }
+  }catch{}
+
   let sessionResponse;
-  try{sessionResponse=await fetch("/api/session");}
+  try{sessionResponse=await homeFetch("/api/session");}
   catch{
     showLogin("Evercraft Identity is temporarily unreachable.");
     return;
@@ -358,11 +428,11 @@ async function load(afterLogin=false){
 
   try{
     const [overview,yard,network,systemia,raven]=await Promise.all([
-      fetch("/api/overview").then(async r=>({status:r.status,data:await r.json()})),
-      fetch("/api/yard/overview").then(r=>r.json()).catch(()=>({ok:false})),
-      fetch("/api/network/overview").then(r=>r.json()).catch(()=>({ok:false})),
-      fetch("/api/systemia/inventory").then(r=>r.json()).catch(()=>({ok:false})),
-      fetch("/api/raven/overview").then(r=>r.json()).catch(()=>({ok:false}))
+      homeFetch("/api/overview").then(async r=>({status:r.status,data:await r.json()})),
+      homeFetch("/api/yard/overview").then(r=>r.json()).catch(()=>({ok:false})),
+      homeFetch("/api/network/overview").then(r=>r.json()).catch(()=>({ok:false})),
+      homeFetch("/api/systemia/inventory").then(r=>r.json()).catch(()=>({ok:false})),
+      homeFetch("/api/raven/overview").then(r=>r.json()).catch(()=>({ok:false}))
     ]);
     if(overview.status===401){showLogin("Your session expired. Sign in again.");return;}
     if(!overview.data?.ok) throw new Error("overview_unavailable");
