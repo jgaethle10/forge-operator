@@ -13,6 +13,9 @@ on:
       - '.github/workflows/chromebook-operator-edge-canary.yml'
       - 'tests/rivet-change-control.test.mjs'
       - 'governance/RIVET_CHANGE_CONTROL.md'
+      - 'governance/rivet-proof-semantic-baseline.json'
+      - 'governance/protected-generated-artifacts.json'
+      - 'systemia/chum/build-agent-commerce.mjs'
       - '.github/workflows/rivet-change-control.yml'
   push:
     branches: [main]
@@ -27,6 +30,9 @@ on:
       - '.github/workflows/chromebook-operator-edge-canary.yml'
       - 'tests/rivet-change-control.test.mjs'
       - 'governance/RIVET_CHANGE_CONTROL.md'
+      - 'governance/rivet-proof-semantic-baseline.json'
+      - 'governance/protected-generated-artifacts.json'
+      - 'systemia/chum/build-agent-commerce.mjs'
 
 permissions:
   contents: read
