@@ -192,6 +192,25 @@ test('Evercraft Home authenticates Lineage reads without exposing Compute author
     assert.doesNotMatch(serializedHealth, /svc-lineage/);
     assert.doesNotMatch(serializedHealth, /http-bridge/);
 
+    const homePageResponse = await fetch(home.url + '/');
+    const homePage = await homePageResponse.text();
+    assert.equal(homePageResponse.status, 200);
+    assert.match(
+      homePage,
+      /id="lineage-link" href="\/lineage">Lineage<\/a>/
+    );
+    assert.match(
+      homePage,
+      /getElementById\("lineage-link"\)\.classList\.add\("visible"\)/
+    );
+    assert.match(
+      homePage,
+      /getElementById\("lineage-link"\)\.classList\.remove\("visible"\)/
+    );
+    assert.doesNotMatch(homePage, new RegExp(token));
+    assert.doesNotMatch(homePage, /svc-lineage/);
+    assert.doesNotMatch(homePage, /http-bridge/);
+
     const pageResponse = await fetch(home.url + '/lineage');
     const page = await pageResponse.text();
     assert.equal(pageResponse.status, 200);
@@ -246,6 +265,7 @@ test('Evercraft Home authenticates Lineage reads without exposing Compute author
 
     const allBrowserVisible = [
       JSON.stringify(health),
+      homePage,
       page,
       JSON.stringify(snapshot),
       JSON.stringify(integrity),
