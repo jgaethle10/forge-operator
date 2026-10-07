@@ -56,24 +56,9 @@ jobs:
 
       - name: Verify canonical portable artifact
         if: steps.journal_portable.outcome == 'success'
-        shell: bash
-        run: |
-          set -euo pipefail
-          test -f _journal_release/index.html
-          test -f _journal_release/index.json
-          test -f _journal_release/feed.xml
-          test -f _journal_release/llms.txt
-          grep -q 'Evercraft Journal' _journal_release/index.html
-          grep -q 'https://fabric.systemiacommandcenters.com/journal/' _journal_release/index.json
-          test -f _journal_release/college-football-power-rankings-2026-10-06/index.html
-          test -f _journal_release/data/college-football-power-rankings-2026-10-06.json
-          test -f _journal_release/production/college-football-power-rankings-2026-10-06/ranking-feed.svg
-          test -f _journal_release/production/college-football-power-rankings-2026-10-06/ranking-story.svg
-          grep -q 'Alabama Is No. 1' _journal_release/college-football-power-rankings-2026-10-06/index.html
-          if grep -RniE 'Black Friday|shopping assistant|optimize your cart' _journal_release; then
-            echo "Legacy shopping identity detected in canonical Journal artifact."
-            exit 1
-          fi
+        env:
+          EVERCRAFT_JOURNAL_ORIGIN: https://fabric.systemiacommandcenters.com/journal
+        run: node systemia/newsroom/journal-build-verifier.mjs _journal_release "$EVERCRAFT_JOURNAL_ORIGIN"
 
       - name: Preserve portable Journal release
         if: steps.journal_portable.outcome == 'success'
