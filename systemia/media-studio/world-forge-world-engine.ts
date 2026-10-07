@@ -157,6 +157,19 @@ export function worldForgeDirectionToWorldEngine(value:ForgeVec3):EngineVec3{
   };
 }
 
+export function worldEngineVectorToWorldForge(
+  value:EngineVec3,
+  unitScaleMeters=1,
+):ForgeVec3{
+  finite(unitScaleMeters,'unit_scale');
+  if(unitScaleMeters<=0) throw new Error('world_forge_world_engine_unit_scale_invalid');
+  return {
+    x:cleanZero(finite(value.x,'engine_vector_x')/unitScaleMeters),
+    y:cleanZero(-finite(value.z,'engine_vector_z')/unitScaleMeters),
+    z:cleanZero(finite(value.y,'engine_vector_y')/unitScaleMeters),
+  };
+}
+
 function mat3Multiply(a:Mat3,b:Mat3):Mat3{
   const out=new Array<number>(9).fill(0);
   for(let r=0;r<3;r+=1){
@@ -251,6 +264,15 @@ export function worldForgeEulerToWorldEngine(rotation:Euler3):Euler3{
   return eulerFromRzRyRx(
     forgeRotationMatrixToEngine(forgeEulerMatrix(rotation)),
   );
+}
+
+export function worldEngineEulerToWorldForge(rotation:Euler3):Euler3{
+  const engineMatrix=forgeEulerMatrix(rotation);
+  const forgeMatrix=mat3Multiply(
+    mat3Multiply(mat3Transpose(FORGE_TO_ENGINE_BASIS),engineMatrix),
+    FORGE_TO_ENGINE_BASIS,
+  );
+  return eulerFromRzRyRx(forgeMatrix);
 }
 
 function cameraLookAtMatrix(node:WorldForgeNode):Mat3|null{
