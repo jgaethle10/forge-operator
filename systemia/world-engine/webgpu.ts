@@ -582,6 +582,12 @@ export function compileWebGpuRenderPlan(
   return {...core,digest:digest(core)};
 }
 
+export function verifyWebGpuRenderPlan(plan:WebGpuRenderPlan){
+  if(plan?.schema!=='evercraft.world-engine.webgpu-plan.v1') return false;
+  const {digest:claimed,...core}=plan;
+  return typeof claimed==='string' && claimed===digest(core);
+}
+
 function floats(values:number[]){
   return new Float32Array(values);
 }
@@ -1120,6 +1126,7 @@ export class EvercraftWebGpuRenderer {
 
   render(plan:WebGpuRenderPlan){
     if(plan?.schema!=='evercraft.world-engine.webgpu-plan.v1') throw new Error('webgpu_plan_schema_invalid');
+    if(!verifyWebGpuRenderPlan(plan)) throw new Error('webgpu_plan_digest_invalid');
     if(plan.width<1||plan.height<1) throw new Error('webgpu_plan_viewport_invalid');
     if(this.canvas.width!==plan.width) this.canvas.width=plan.width;
     if(this.canvas.height!==plan.height) this.canvas.height=plan.height;
