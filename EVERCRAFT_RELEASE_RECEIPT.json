@@ -3,10 +3,11 @@
   "entry_key": "nebius-runbook-zero",
   "public_surface": "runbook-zero-public",
   "source_repository": "jgaethle10/forge-operator",
-  "source_merge_commit": "45556c6233bd00743d153fc938c1cf9f6ce3adf7",
+  "source_merge_commit": "38a334e3cda8a5ff620604c0cbf786b716343e2f",
+  "source_pr": 1131,
   "raven_qa": {
     "workflow": "Raven Competition Provider Runtime",
-    "run_id": 37648514557,
+    "run_id": 37675430130,
     "tests": 92,
     "passed": 92,
     "failed": 0,
@@ -17,14 +18,27 @@
   },
   "standalone_export": {
     "workflow": "Competition Public Entry Export",
-    "run_id": 37648514401,
-    "artifact_id": 11494899804,
-    "artifact_digest": "sha256:30fcd302b9a0164d25a0880d047a23485405320e75c31410dd721018a7dc6965",
+    "run_id": 37675430272,
+    "artifact_id": 11507062029,
+    "artifact_digest": "sha256:fd0d5e527e9b0cf83d2a22c5c6e1d146475d89d2072cb80b8f90e72e851230dc",
     "secret_scan": "passed",
     "root_license": "MIT",
-    "package_tests": 12
+    "package_tests": 12,
+    "file_count": 15
+  },
+  "judging_packet": {
+    "devpost_narrative": "published",
+    "demo_video_plan": "published",
+    "provider_feedback_capture": "published",
+    "official_judging_dimensions": [
+      "technological_implementation",
+      "design",
+      "potential_impact",
+      "quality_of_idea"
+    ]
   },
   "live_nebius_canary": "not_run_missing_credential",
   "public_demo": "runtime_ready_not_deployed",
-  "note": "Source-only public branch. No claim of live provider access, deployment, submission, accepted terms, or paid capacity."
+  "dedicated_public_repository": "pending",
+  "note": "Source-only public branch. No claim of live provider access, deployment, submission, accepted terms, eligibility attestation, or paid capacity."
 }
