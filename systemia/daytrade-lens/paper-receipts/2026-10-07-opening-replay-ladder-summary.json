@@ -1,0 +1,62 @@
+{
+  "schema": "evercraft.daytrade.opening-replay-ladder-summary.v1",
+  "generated_at": "2026-10-07T16:14:18.827Z",
+  "source_run_id": 37650404272,
+  "source_artifact_id": 11495858018,
+  "source_artifact_digest": "sha256:0ee31e84d03f54c8d56535b38b9615446e7dc23b2d1c32c4a569cbfba41fe048",
+  "market_date_et": "2026-10-07",
+  "market_phase_et": "OPENING",
+  "replay_only": true,
+  "counts_toward_prospective_diversity": false,
+  "simulation_only": true,
+  "capital_at_risk_usd": 0,
+  "feed": "iex",
+  "threshold_bps": 3,
+  "windows": [
+    {
+      "label": "09:35",
+      "governed_total_pnl_usd": -0.01908826999297375,
+      "always_cross_total_pnl_usd": -0.018828382651260966,
+      "rule_improvement_vs_always_cross_usd": -0.0002598873417127834,
+      "traded_count": 1,
+      "abstained_count": 2
+    },
+    {
+      "label": "09:45",
+      "governed_total_pnl_usd": -0.036791282735539,
+      "always_cross_total_pnl_usd": -0.06798901848750205,
+      "rule_improvement_vs_always_cross_usd": 0.03119773575196305,
+      "traded_count": 2,
+      "abstained_count": 1
+    },
+    {
+      "label": "10:00",
+      "governed_total_pnl_usd": -0.00795755968169587,
+      "always_cross_total_pnl_usd": -0.06122926739778123,
+      "rule_improvement_vs_always_cross_usd": 0.05327170771608536,
+      "traded_count": 1,
+      "abstained_count": 2
+    }
+  ],
+  "aggregate": {
+    "windows": 3,
+    "helped": 2,
+    "hurt": 1,
+    "neutral": 0,
+    "cumulative_rule_improvement_usd": 0.08420955612633563,
+    "cumulative_governed_pnl_usd": -0.06383711241020862,
+    "cumulative_always_cross_pnl_usd": -0.14804666853654425
+  },
+  "interpretation": {
+    "opening_timing_sensitivity_observed": true,
+    "rule_hurt_at_0935_but_helped_at_0945_and_1000": true,
+    "governed_opening_replay_pnl_remained_negative": true,
+    "replay_only_not_prospective": true,
+    "no_rule_retuning": true,
+    "not_signal_validation": true,
+    "not_live_fill_validation": true,
+    "iex_is_not_consolidated_sip_nbbo": true,
+    "not_live_authorized": true
+  },
+  "live_trade_authority": false
+}
