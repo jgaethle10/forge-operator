@@ -149,10 +149,10 @@
       "evidence": {
         "source": "https://www.kaggle.com/competitions/gemma-4-developer-agent/overview",
         "provider": "Kaggle/Google",
-        "checked_on": "2026-10-05"
+        "checked_on": "2026-10-06"
       },
       "rules": {
-        "verification_state": "verified_partial",
+        "verification_state": "verified",
         "eligible": null,
         "new_terms_required": true,
         "payment_required": false,
@@ -160,15 +160,21 @@
         "human_gate_blocks_preparation": false
       },
       "required_deliverables": [
-        "Gemma 4 coding/developer agent compatible with competition harness",
-        "competition submission patches/evaluation configuration",
+        "submission.zip with agent.yaml at archive root",
+        "Gemma 4 agent using gemma-4-31b-it-qat-w4a16-ct for every agent/subagent",
+        "agent config limited to competition harness tools and/or declared agent_tool subagents",
+        "patch-generating agent evaluated by Kaggle competition harness",
         "optional research paper by 2026-11-12T23:59:00Z"
       ],
       "build": {
-        "candidate": "Saban coding-agent competition harness adapted to Gemma 4 constraints",
-        "state": "not_started",
+        "candidate": "Saban: evidence-first Gemma 4 software repair agent using official graph and sandbox tools",
+        "state": "harness_scaffold_implemented",
         "raven_qa_state": "not_run",
-        "submission_package_ready": false
+        "submission_package_ready": false,
+        "entry_package": "systemia/competition/entries/gemma-saban",
+        "public_training_eval": "blocked_until_rules_access",
+        "live_kaggle_harness_verified": false,
+        "adapters_declared": false
       }
     }
   ]
