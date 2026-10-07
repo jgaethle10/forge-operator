@@ -98,7 +98,12 @@
       "missing_source_url": 22778,
       "base44_runtime_required": false
     },
-    "resident_seed_bootstrap_in_source": true
+    "resident_seed_bootstrap_in_source": true,
+    "public_read_only_runtime_in_source": true,
+    "public_safe_projection_in_source": true,
+    "public_staging_route_controller_in_source": true,
+    "public_staging_route_live_verified": false,
+    "canonical_domain_cutover_authorized": false
   },
   "migrate": [
     "forensic_finding_ledger",
@@ -129,17 +134,17 @@
     "observation_window_required": true
   },
   "blockers": [
-    "A production data-surface discrepancy exists for candidate/audit ledgers; final accounting must come from terminal hashed production extraction.",
-    "Owned normalized corpus store is not yet populated from the legacy source.",
-    "Owned research/search runtime is not yet live on an admitted Evercraft Compute node.",
-    "filescompanion.com has not yet been independently verified as bound to the owned runtime.",
-    "Legacy Base44 customer continuity must remain available until owned route, data reconciliation, rollback and observation receipts pass."
+    "Protected candidate/audit ledgers still require the separate privileged terminal migration and reconciliation lane because production data surfaces disagree on their visibility.",
+    "Owned seeded forensic runtime has verified artifacts and resident bootstrap code, but a live admitted Evercraft Compute deployment receipt has not yet been recorded in this slice.",
+    "The new read-only public staging route has not yet been independently verified over public HTTPS.",
+    "filescompanion.com remains on the legacy customer-continuity path until staging route, canonical route, rollback, and observation receipts pass.",
+    "Legacy Base44 customer continuity must remain available until owned public routing is verified and the observation window completes."
   ],
-  "next_action": "land one-shot resident seed bootstrap, let the Systemia resident reconciler seed an admitted Evercraft Compute node and prove it reuses owned state on restart; then build a read-only staging public route while protected audit/candidate ledgers continue through the separate privileged migration lane",
+  "next_action": "land the public read-only staging lane, let Systemia provision the seeded private forensic runtime and staging public sibling on existing Evercraft Compute/public-edge capacity, capture live Yard and public HTTPS receipts, then exercise search/detail canaries before any canonical filescompanion.com cutover",
   "destructive_cutover_allowed": false,
   "health": {
-    "state": "legacy_public_path_present_owned_cutover_started",
-    "truth_boundary": "The Forensic Record is already registered in Evercraft owned discovery, but the canonical public application still requires a verified owned runtime and reconciled corpus before legacy execution can be retired.",
+    "state": "owned_seed_verified_public_staging_in_build",
+    "truth_boundary": "The public corpus is now available as a verified owned seed and a read-only staging route is being built. The canonical filescompanion.com route and legacy retirement remain explicitly unapproved until live deployment, HTTPS, rollback and observation receipts pass.",
     "verified_at": "2026-10-06T21:58:00-07:00"
   }
 }
