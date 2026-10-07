@@ -86,6 +86,20 @@ try {
   assert.equal(discoverySummary.conformance_required_missing, 0);
   assert.equal(discoverySummary.discovery_only_conformance_pending, 1);
 
+  writeJson(path.join(discoveryOnly, 'registry/public-products.json'), {
+    schema: 'evercraft.saban.public-product-index.v1',
+    products: [],
+  });
+  const staleStrict = run(discoveryOnly, ['--strict']);
+  assert.notEqual(staleStrict.status, 0);
+  assert.match(staleStrict.stderr, /index_current=false/);
+
+  const staleAllowed = run(discoveryOnly, ['--strict', '--allow-stale-index']);
+  assert.equal(staleAllowed.status, 0, staleAllowed.stderr);
+  const staleAllowedSummary = JSON.parse(staleAllowed.stdout.trim());
+  assert.equal(staleAllowedSummary.public_index_current, false);
+  assert.equal(staleAllowedSummary.stale_index_allowed, true);
+
   writeFixture(callableMissing, { callable: true });
   const emitCallable = run(callableMissing, ['--emit']);
   assert.equal(emitCallable.status, 0, emitCallable.stderr);
@@ -101,6 +115,7 @@ try {
     schema: 'evercraft.saban.discovery-conformance-policy-proof.v1',
     discovery_only_without_conformance_passes_strict: true,
     callable_without_conformance_fails_strict: true,
+    stale_generated_index_requires_explicit_pr_exception: true,
     canonical_policy_verified: true,
   }, null, 2));
 } finally {
