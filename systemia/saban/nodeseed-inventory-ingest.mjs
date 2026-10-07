@@ -31,6 +31,13 @@ function safeCapacity(capacity={}){
     failure_domain:capacity.failure_domain?String(capacity.failure_domain):null,
     zero_cost:capacity.zero_cost===true,
     public_ingress:capacity.public_ingress===true,
+    utilization:{
+      active_lease_count:Math.max(0,Number(capacity.utilization?.active_lease_count||0)),
+      inflight_assignment_count:Math.max(0,Number(capacity.utilization?.inflight_assignment_count||0)),
+      resident_service_count:Math.max(0,Number(capacity.utilization?.resident_service_count||0)),
+      observed_idle:capacity.utilization?.observed_idle===true,
+      measurement_state:String(capacity.utilization?.measurement_state||'unknown'),
+    },
     capacity_hint:{
       cpu_units:Math.max(0,Number(capacity.capacity_hint?.cpu_units||0)),
       memory_mb:Math.max(0,Number(capacity.capacity_hint?.memory_mb||0)),
