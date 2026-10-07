@@ -1,9 +1,11 @@
 import { createHash, randomUUID } from 'node:crypto';
 import { mkdir, readFile, writeFile, readdir, rm } from 'node:fs/promises';
 import { dirname, extname, join, relative, resolve, sep } from 'node:path';
+import { LargeObjectStore } from './large-object.mjs';
 
 const SCHEMA = 'evercraft.lineage.v1';
 const DEFAULT_EXCLUDES = new Set(['.lineage', '.git', 'node_modules']);
+const DEFAULT_LARGE_OBJECT_THRESHOLD_BYTES = 8 * 1024 * 1024;
 
 function sha256(value) {
   return createHash('sha256').update(value).digest('hex');
@@ -23,6 +25,35 @@ function now() {
 
 function normalizePath(path) {
   return path.split(sep).join('/');
+}
+
+function mediaTypeForPath(path) {
+  const ext = extname(path).toLowerCase();
+  const types = {
+    '.json': 'application/json',
+    '.jsonl': 'application/x-ndjson',
+    '.geojson': 'application/geo+json',
+    '.csv': 'text/csv',
+    '.tsv': 'text/tab-separated-values',
+    '.txt': 'text/plain',
+    '.md': 'text/markdown',
+    '.html': 'text/html',
+    '.svg': 'image/svg+xml',
+    '.png': 'image/png',
+    '.jpg': 'image/jpeg',
+    '.jpeg': 'image/jpeg',
+    '.webp': 'image/webp',
+    '.gif': 'image/gif',
+    '.mp4': 'video/mp4',
+    '.mov': 'video/quicktime',
+    '.webm': 'video/webm',
+    '.wav': 'audio/wav',
+    '.mp3': 'audio/mpeg',
+    '.flac': 'audio/flac',
+    '.gltf': 'model/gltf+json',
+    '.glb': 'model/gltf-binary',
+  };
+  return types[ext] || 'application/octet-stream';
 }
 
 function classifyAsset(path) {
@@ -131,24 +162,104 @@ export class LineageStore {
     return output.sort();
   }
 
-  async snapshotWorkspace({ excludes = DEFAULT_EXCLUDES } = {}) {
+  async snapshotWorkspace({
+    excludes = DEFAULT_EXCLUDES,
+    largeObjectThresholdBytes = DEFAULT_LARGE_OBJECT_THRESHOLD_BYTES,
+    largeObjectChunking = {},
+  } = {}) {
     await this.ensureInitialized();
+    const threshold = largeObjectThresholdBytes == null
+      ? Number.POSITIVE_INFINITY
+      : Number(largeObjectThresholdBytes);
+    if (
+      threshold !== Number.POSITIVE_INFINITY &&
+      (!Number.isInteger(threshold) || threshold < 0)
+    ) {
+      throw new Error('largeObjectThresholdBytes must be a non-negative integer or null');
+    }
+
     const files = await this.listWorkspaceFiles(this.root, excludes);
     const entries = [];
+    const largeStore = threshold === Number.POSITIVE_INFINITY
+      ? null
+      : new LargeObjectStore(this.dir);
+    if (largeStore) await largeStore.init();
+
     for (const full of files) {
       const bytes = await readFile(full);
       const path = normalizePath(relative(this.root, full));
+      const kind = classifyAsset(path);
       const contentSha256 = sha256(bytes);
-      const objectId = await this.putObject('blob', {
-        encoding: 'base64',
-        size: bytes.length,
+      let objectId;
+      let storage = 'blob';
+      let manifestId = null;
+
+      if (largeStore && bytes.length >= threshold) {
+        const stored = await largeStore.putBuffer(bytes, {
+          logicalName: path,
+          mediaType: mediaTypeForPath(path),
+          chunking: largeObjectChunking,
+        });
+        manifestId = stored.manifest_id;
+        storage = 'large_object';
+        objectId = await this.putObject('large_blob_ref', {
+          schema: 'evercraft.lineage.large-blob-ref.v1',
+          manifest_id: stored.manifest_id,
+          content_sha256: stored.content_sha256,
+          size: stored.bytes,
+          chunk_count: stored.chunk_count,
+          media_type: mediaTypeForPath(path),
+        });
+      } else {
+        objectId = await this.putObject('blob', {
+          encoding: 'base64',
+          size: bytes.length,
+          content_sha256: contentSha256,
+          data: bytes.toString('base64'),
+        });
+      }
+
+      entries.push({
+        path,
+        kind,
+        mode: '100644',
+        object_id: objectId,
         content_sha256: contentSha256,
-        data: bytes.toString('base64'),
+        bytes: bytes.length,
+        storage,
+        manifest_id: manifestId,
       });
-      entries.push({ path, kind: classifyAsset(path), mode: '100644', object_id: objectId, content_sha256: contentSha256, bytes: bytes.length });
     }
     const treeId = await this.putObject('tree', { entries });
     return { tree_id: treeId, entries };
+  }
+
+  async readEntryBytes(entry) {
+    if (!entry?.object_id) throw new Error('Tree entry object_id is required');
+    const object = await this.readObject(entry.object_id);
+    if (object.type === 'blob') {
+      return Buffer.from(object.payload.data, object.payload.encoding);
+    }
+    if (object.type === 'large_blob_ref') {
+      const manifestId = object.payload.manifest_id;
+      if (!manifestId) throw new Error(`Large blob ref missing manifest for ${entry.path || entry.object_id}`);
+      const large = new LargeObjectStore(this.dir);
+      const bytes = await large.materialize(manifestId);
+      if (
+        object.payload.content_sha256 &&
+        sha256(bytes) !== object.payload.content_sha256
+      ) {
+        throw new Error(`Large blob ref content digest mismatch for ${entry.path || entry.object_id}`);
+      }
+      if (
+        Number.isInteger(Number(object.payload.size)) &&
+        bytes.length !== Number(object.payload.size)
+      ) {
+        throw new Error(`Large blob ref size mismatch for ${entry.path || entry.object_id}`);
+      }
+      return bytes;
+    }
+    throw new Error(`Unsupported tree entry object type ${object.type} for ${entry.path || entry.object_id}`);
   }
 
   async getTree(commitish = 'HEAD') {
@@ -262,8 +373,7 @@ export class LineageStore {
     if (clean && target !== this.root) await rm(target, { recursive: true, force: true });
     await mkdir(target, { recursive: true });
     for (const entry of tree.entries) {
-      const blob = await this.readObject(entry.object_id);
-      const bytes = Buffer.from(blob.payload.data, blob.payload.encoding);
+      const bytes = await this.readEntryBytes(entry);
       const out = join(target, entry.path);
       await mkdir(dirname(out), { recursive: true });
       await writeFile(out, bytes);
@@ -380,4 +490,4 @@ export class LineageStore {
   }
 }
 
-export const lineage = { schema: SCHEMA, classifyAsset, stable, sha256 };
+export const lineage = { schema: SCHEMA, classifyAsset, mediaTypeForPath, stable, sha256, defaultLargeObjectThresholdBytes: DEFAULT_LARGE_OBJECT_THRESHOLD_BYTES };
