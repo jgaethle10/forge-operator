@@ -57,7 +57,12 @@ test('owned Fabric serves FAIE UI, public preview API, and native FAIE MCP witho
     assert.match(page,/Underwrite the world beneath the thesis/);
     assert.match(page,/Compare candidate regions/);
     assert.match(page,/AgNormal \/ Yakima Valley/);
-    assert.match(page,/get\('pilot'\)/);
+    assert.match(page,/Run live AgNormal brief/);
+    assert.match(page,/Official MCP Registry/);
+    assert.match(page,/Human review required/);
+    assert.match(page,/external action taken/);
+    assert.doesNotMatch(page,/placeholder="greenhouse"/i);
+    assert.match(page,/params\.get\('pilot'\)/);
     assert.match(page,/=== 'agnormal'/);
     assert.match(page,/io\.github\.jgaethle10\/faie/);
     assert.equal(/base44\.app/i.test(page),false);
