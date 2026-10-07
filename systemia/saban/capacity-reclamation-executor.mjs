@@ -76,6 +76,30 @@ export async function executeCapacityReclamation({
     if(entry?.reclaim_eligible!==true) continue;
     const action=String(entry.recommended_action||'');
 
+    if(action==='reconcile_paid_lease_before_release'){
+      results.push({
+        offer_id:entry.offer_id,
+        provider_id:entry.provider_id,
+        action,
+        state:'held',
+        reason:entry.hold_reason||'lease_state_uncertain',
+        reconciliation_required:true,
+      });
+      reconciliationRequired=true;
+      continue;
+    }
+
+    if(['hold_paid_capacity_release','hold_idle_capacity'].includes(action)){
+      results.push({
+        offer_id:entry.offer_id,
+        provider_id:entry.provider_id,
+        action,
+        state:'held',
+        reason:entry.hold_reason||'lifecycle_reclamation_hold',
+      });
+      continue;
+    }
+
     if(action==='cool_down_owned_capacity'){
       results.push({
         offer_id:entry.offer_id,
@@ -105,6 +129,17 @@ export async function executeCapacityReclamation({
         action,
         state:'already_completed',
         reason:'prior_reclamation_receipt_present',
+      });
+      continue;
+    }
+
+    if(entry.reclamation_execution_ready===false){
+      results.push({
+        offer_id:entry.offer_id,
+        provider_id:entry.provider_id,
+        action,
+        state:'held',
+        reason:'lifecycle_action_not_execution_ready',
       });
       continue;
     }
@@ -212,6 +247,8 @@ export async function executeCapacityReclamation({
     already_completed_count:results.filter(x=>x.state==='already_completed').length,
     uncertain_count:results.filter(x=>x.state==='uncertain').length,
     reconciliation_required:reconciliationRequired,
+    lifecycle_execution_readiness_enforced:true,
+    lifecycle_hold_reasons_preserved:true,
     results:results.map(publicResult),
     completed_offer_ids:[...completed].sort(),
     ordinary_owned_shutdown_authorized:false,
