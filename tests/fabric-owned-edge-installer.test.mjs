@@ -159,6 +159,11 @@ test('edge installer and updater shell remain syntactically valid',()=>{
 });
 
 
+test('owned edge explicitly configures writable Visual Desk runtime state',()=>{
+  assert.match(script,/EVERCRAFT_VISUAL_STATE_DIR=\/tmp\/evercraft-visual-desk-public/);
+  assert.match(script,/EVERCRAFT_VISUAL_ORIGIN=https:\/\/\$DOMAIN\/visuals/);
+});
+
 test('Visual Desk default runtime state is compatible with ProtectHome=read-only',()=>{
   assert.match(script,/ProtectHome=read-only/);
   assert.match(fabricRuntime,/EVERCRAFT_VISUAL_STATE_DIR\|\|''/);
