@@ -71,6 +71,12 @@ type MutationResponse={
   error?:string;
 };
 
+type EngineRuntimeState={
+  world:Record<string,unknown>;
+  assets:Record<string,unknown>;
+  geometries:unknown[];
+};
+
 const AXIS_STEP=.25;
 const WORLD_FORGE_STORAGE_KEY='evercraft.fallen.world-forge.active-project.v1';
 
@@ -688,6 +694,7 @@ export default function WorldForgeEditor(){
   const [commandNote,setCommandNote]=useState('');
   const [shotDigest,setShotDigest]=useState('');
   const [nativePreview,setNativePreview]=useState<{svg:string;sha:string;renderer:string;solid:boolean}|null>(null);
+  const [engineRuntime,setEngineRuntime]=useState<EngineRuntimeState|null>(null);
   const [engineBridge,setEngineBridge]=useState<{
     worldId:string;
     digest:string;
@@ -837,6 +844,7 @@ export default function WorldForgeEditor(){
       setReceipts([]);
       setUndoStack([]);
       setNativePreview(null);
+      setEngineRuntime(null);
       setEngineBridge(null);
       setShotDigest('');
       setStagedOperations([]);
@@ -888,6 +896,7 @@ export default function WorldForgeEditor(){
       setReceipts([]);
       setUndoStack([]);
       setNativePreview(null);
+      setEngineRuntime(null);
       setEngineBridge(null);
       setShotDigest('');
       setStagedOperations([]);
@@ -906,6 +915,72 @@ export default function WorldForgeEditor(){
     setBusy(true);
     setError('');
     try{
+      if(engineRuntime){
+        const destructiveAuthority=operations.some(operation=>
+          (operation.type==='remove_node'&&operation.allowDestructive===true) ||
+          (operation.type==='set_geometry'&&operation.allowDestructive===true)
+        );
+        const createResponse=await fetch('/api/fallen/world-forge/change-set',{
+          method:'POST',
+          headers:{'content-type':'application/json'},
+          body:JSON.stringify({
+            project,
+            id:`runtime-edit-${Date.now().toString(36)}`,
+            title:'World Forge live runtime edit',
+            author:{kind:'human',id:'world-forge-editor'},
+            operations,
+            destructiveAuthority,
+          }),
+        });
+        const created=await createResponse.json();
+        if(!createResponse.ok||!created.success||!created.changeSet){
+          throw new Error(created.error||'Could not create runtime ChangeSet.');
+        }
+
+        const syncResponse=await fetch('/api/fallen/world-forge/runtime-sync',{
+          method:'POST',
+          headers:{'content-type':'application/json'},
+          body:JSON.stringify({
+            project,
+            changeSet:created.changeSet,
+            runtimeWorld:engineRuntime.world,
+            runtimeAssets:engineRuntime.assets,
+          }),
+        });
+        const synced=await syncResponse.json();
+        if(!syncResponse.ok||!synced.success||!synced.sync){
+          throw new Error(synced.error||'World Engine runtime sync was blocked.');
+        }
+
+        const sync=synced.sync;
+        const receipt=sync.forgeMutationReceipt as MutationReceipt;
+        setProject(sync.nextProject);
+        setDigest(receipt.digestAfter);
+        setReceipts(current=>[receipt,...current].slice(0,12));
+        if(recordUndo&&receipt.inverseOperations.length){
+          setUndoStack(current=>[...current,receipt.inverseOperations].slice(-50));
+        }
+        setEngineRuntime({
+          world:sync.runtime.world,
+          assets:sync.runtime.assets,
+          geometries:sync.geometries,
+        });
+        setEngineBridge({
+          worldId:String(sync.runtime.world.id),
+          digest:String(sync.bridgeReceiptAfter.digest),
+          runtimeReady:Boolean(sync.bridgeReceiptAfter.runtimeReady),
+          webGpuReady:Boolean(sync.bridgeReceiptAfter.webGpuReady),
+          visualParity:String(sync.bridgeReceiptAfter.visualParity),
+          geometryCount:Array.isArray(sync.geometries)?sync.geometries.length:0,
+          warnings:Array.isArray(sync.bridgeReceiptAfter.warnings)?sync.bridgeReceiptAfter.warnings.length:0,
+          blockers:Array.isArray(sync.bridgeReceiptAfter.blockers)?sync.bridgeReceiptAfter.blockers.length:0,
+        });
+        setCommandNote(
+          `Live synced ${operations.length} edit${operations.length===1?'':'s'} into World Engine · runtime v${sync.runtime.world.version} · ${String(sync.receipt.digest).slice(0,12)}.`
+        );
+        return;
+      }
+
       const response=await fetch('/api/fallen/world-forge/mutate',{
         method:'POST',
         headers:{'content-type':'application/json'},
@@ -1056,6 +1131,11 @@ export default function WorldForgeEditor(){
         throw new Error(payload.error||'World Forge could not compile into World Engine.');
       }
       const bridge=payload.bridge;
+      setEngineRuntime({
+        world:bridge.world,
+        assets:bridge.assets,
+        geometries:Array.isArray(bridge.geometries)?bridge.geometries:[],
+      });
       setEngineBridge({
         worldId:bridge.world.id,
         digest:bridge.receipt.digest,
@@ -1165,28 +1245,74 @@ export default function WorldForgeEditor(){
         throw new Error(created.error||'Could not create World Forge ChangeSet.');
       }
 
-      const applyResponse=await fetch('/api/fallen/world-forge/apply-change-set',{
-        method:'POST',
-        headers:{'content-type':'application/json'},
-        body:JSON.stringify({project,changeSet:created.changeSet}),
-      });
-      const applied=await applyResponse.json();
-      if(!applyResponse.ok||!applied.success||!applied.result?.mutation){
-        throw new Error(applied.result?.reason||applied.error||'World Forge ChangeSet was blocked.');
-      }
+      if(engineRuntime){
+        const syncResponse=await fetch('/api/fallen/world-forge/runtime-sync',{
+          method:'POST',
+          headers:{'content-type':'application/json'},
+          body:JSON.stringify({
+            project,
+            changeSet:created.changeSet,
+            runtimeWorld:engineRuntime.world,
+            runtimeAssets:engineRuntime.assets,
+          }),
+        });
+        const synced=await syncResponse.json();
+        if(!syncResponse.ok||!synced.success||!synced.sync){
+          throw new Error(synced.error||'World Engine runtime sync was blocked.');
+        }
 
-      const mutation=applied.result.mutation;
-      setProject(mutation.project);
-      setDigest(mutation.validation.digest);
-      setReceipts(current=>[mutation.receipt,...current].slice(0,12));
-      if(mutation.receipt.inverseOperations?.length){
-        setUndoStack(current=>[...current,mutation.receipt.inverseOperations].slice(-50));
+        const sync=synced.sync;
+        const receipt=sync.forgeMutationReceipt as MutationReceipt;
+        setProject(sync.nextProject);
+        setDigest(receipt.digestAfter);
+        setReceipts(current=>[receipt,...current].slice(0,12));
+        if(receipt.inverseOperations?.length){
+          setUndoStack(current=>[...current,receipt.inverseOperations].slice(-50));
+        }
+        setEngineRuntime({
+          world:sync.runtime.world,
+          assets:sync.runtime.assets,
+          geometries:sync.geometries,
+        });
+        setEngineBridge({
+          worldId:String(sync.runtime.world.id),
+          digest:String(sync.bridgeReceiptAfter.digest),
+          runtimeReady:Boolean(sync.bridgeReceiptAfter.runtimeReady),
+          webGpuReady:Boolean(sync.bridgeReceiptAfter.webGpuReady),
+          visualParity:String(sync.bridgeReceiptAfter.visualParity),
+          geometryCount:Array.isArray(sync.geometries)?sync.geometries.length:0,
+          warnings:Array.isArray(sync.bridgeReceiptAfter.warnings)?sync.bridgeReceiptAfter.warnings.length:0,
+          blockers:Array.isArray(sync.bridgeReceiptAfter.blockers)?sync.bridgeReceiptAfter.blockers.length:0,
+        });
+        setStagedOperations([]);
+        setStageMode(false);
+        setCommandNote(
+          `Applied + live-synced ${created.changeSet.operations.length} staged operations · World Engine v${sync.runtime.world.version} · ${String(sync.receipt.digest).slice(0,12)}.`
+        );
+      }else{
+        const applyResponse=await fetch('/api/fallen/world-forge/apply-change-set',{
+          method:'POST',
+          headers:{'content-type':'application/json'},
+          body:JSON.stringify({project,changeSet:created.changeSet}),
+        });
+        const applied=await applyResponse.json();
+        if(!applyResponse.ok||!applied.success||!applied.result?.mutation){
+          throw new Error(applied.result?.reason||applied.error||'World Forge ChangeSet was blocked.');
+        }
+
+        const mutation=applied.result.mutation;
+        setProject(mutation.project);
+        setDigest(mutation.validation.digest);
+        setReceipts(current=>[mutation.receipt,...current].slice(0,12));
+        if(mutation.receipt.inverseOperations?.length){
+          setUndoStack(current=>[...current,mutation.receipt.inverseOperations].slice(-50));
+        }
+        setStagedOperations([]);
+        setStageMode(false);
+        setCommandNote(
+          `Applied ${created.changeSet.operations.length} staged operations atomically as ${created.changeSet.id}.`
+        );
       }
-      setStagedOperations([]);
-      setStageMode(false);
-      setCommandNote(
-        `Applied ${created.changeSet.operations.length} staged operations atomically as ${created.changeSet.id}.`
-      );
     }catch(err){
       setError(err instanceof Error?err.message:String(err));
     }finally{

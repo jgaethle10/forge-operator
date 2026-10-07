@@ -217,6 +217,25 @@ Current area lights are explicitly approximated as point lights because World En
 
 The browser editor exposes **Engine Bridge** only for committed canonical state. If a Stage-mode ChangeSet is pending, runtime compilation is blocked until the proposal is applied or cleared.
 
+## Live World Engine synchronization
+
+Once a committed World Forge scene has been compiled through **Engine Bridge**, later authoring changes can stay synchronized with World Engine incrementally instead of requiring full runtime replacement.
+
+The sync path:
+
+1. validates and applies the Forge ChangeSet against the exact authored base;
+2. compiles the Forge world before and after the ChangeSet;
+3. verifies the supplied World Engine world and asset manifest are semantically identical to the expected Forge base;
+4. derives a World Engine edit transaction from the semantic difference;
+5. applies that transaction through World Engine's canonical live-authoring contract;
+6. verifies the resulting runtime world and asset manifest are semantically identical to the newly compiled Forge world;
+7. updates concrete GPU geometry assets through World Engine geometry hot-reload receipts;
+8. emits one cross-system sync receipt binding the Forge ChangeSet, Forge mutation receipt, World Engine edit receipt and geometry refresh state.
+
+Transform-only edits compile to World Engine `set_transform` operations and do not churn unchanged geometry assets. Geometry edits materialize new triangle assets and update the affected runtime entity atomically.
+
+When Engine Bridge is active in the browser editor, normal edits, gizmos, commands, Add Cube, Stage batches and Undo all use this synchronized path. A runtime semantic mismatch fails closed instead of overwriting drifted runtime state.
+
 ## Renderer strategy
 
 The project format must remain independent of any one renderer.

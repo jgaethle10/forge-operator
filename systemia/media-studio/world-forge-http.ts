@@ -1,3 +1,8 @@
+import {
+  applyWorldForgeLiveSyncToRuntime,
+  compileWorldForgeLiveSync,
+} from './world-forge-live-sync.js';
+import { syncWorldForgeChangeSetToRuntime } from './world-forge-runtime-sync.js';
 import { compileWorldForgeToWorldEngine } from './world-forge-world-engine.js';
 import {
   applyWorldForgeChangeSet,
@@ -19,6 +24,8 @@ import {
   type WorldForgeOperation,
   type WorldForgeProject,
 } from './world-forge.js';
+import type { WorldDefinition } from '../world-engine/engine.js';
+import type { WorldAssetManifest } from '../world-engine/studio-edit.js';
 
 type WorldForgeHttpDeps = {
   rateLimit: (maxRequests:number,windowMs:number)=>
@@ -407,6 +414,120 @@ export function registerWorldForgeRoutes(app:Express,deps:WorldForgeHttpDeps){
           shotId,
         });
         res.json({success:true,shot});
+      }catch(error){
+        res.status(422).json({
+          success:false,
+          error:error instanceof Error?error.message:String(error),
+        });
+      }
+    },
+  );
+
+  app.post(
+    '/api/fallen/world-forge/runtime-sync',
+    rateLimit(180,60*60*1000),
+    (req:Request,res:Response)=>{
+      const project=req.body?.project as WorldForgeProject|undefined;
+      const changeSet=req.body?.changeSet as WorldForgeChangeSet|undefined;
+      const runtimeWorld=req.body?.runtimeWorld as WorldDefinition|undefined;
+      const runtimeAssets=req.body?.runtimeAssets as WorldAssetManifest|undefined;
+      if(!project||!changeSet||!runtimeWorld||!runtimeAssets){
+        badRequest(res,'Project, ChangeSet, runtime world, and runtime assets are required.');
+        return;
+      }
+      try{
+        const sync=syncWorldForgeChangeSetToRuntime({
+          project,
+          changeSet,
+          runtimeWorld,
+          runtimeAssets,
+        });
+        res.json({success:true,sync});
+      }catch(error){
+        res.status(409).json({
+          success:false,
+          error:error instanceof Error?error.message:String(error),
+        });
+      }
+    },
+  );
+
+  app.post(
+    '/api/fallen/world-forge/world-engine/live-sync',
+    rateLimit(60,60*60*1000),
+    (req:Request,res:Response)=>{
+      const beforeProject=req.body?.beforeProject as WorldForgeProject|undefined;
+      const afterProject=req.body?.afterProject as WorldForgeProject|undefined;
+      if(!beforeProject||!afterProject){
+        badRequest(res,'Before and after World Forge projects are required.');
+        return;
+      }
+      try{
+        const sync=compileWorldForgeLiveSync({
+          syncId:String(req.body?.syncId||'').slice(0,90),
+          beforeProject,
+          afterProject,
+          actor:{
+            kind:req.body?.actor?.kind==='agent'||
+              req.body?.actor?.kind==='code'||
+              req.body?.actor?.kind==='system'
+              ? req.body.actor.kind
+              : 'human',
+            id:String(req.body?.actor?.id||'studio-operator').slice(0,120),
+          },
+          reason:typeof req.body?.reason==='string'
+            ? req.body.reason.slice(0,500)
+            : undefined,
+          tickRateHz:Number.isFinite(Number(req.body?.tickRateHz))
+            ? Number(req.body.tickRateHz)
+            : undefined,
+        });
+        res.json({success:true,sync});
+      }catch(error){
+        res.status(422).json({
+          success:false,
+          error:error instanceof Error?error.message:String(error),
+        });
+      }
+    },
+  );
+
+  app.post(
+    '/api/fallen/world-forge/world-engine/live-runtime-sync',
+    rateLimit(30,60*60*1000),
+    (req:Request,res:Response)=>{
+      const beforeProject=req.body?.beforeProject as WorldForgeProject|undefined;
+      const afterProject=req.body?.afterProject as WorldForgeProject|undefined;
+      const previousSnapshot=req.body?.previousSnapshot;
+      if(!beforeProject||!afterProject||!previousSnapshot){
+        badRequest(res,'Before project, after project and World Engine snapshot are required.');
+        return;
+      }
+      try{
+        const result=applyWorldForgeLiveSyncToRuntime({
+          syncId:String(req.body?.syncId||'').slice(0,90),
+          beforeProject,
+          afterProject,
+          actor:{
+            kind:req.body?.actor?.kind==='agent'||
+              req.body?.actor?.kind==='code'||
+              req.body?.actor?.kind==='system'
+              ? req.body.actor.kind
+              : 'human',
+            id:String(req.body?.actor?.id||'studio-operator').slice(0,120),
+          },
+          reason:typeof req.body?.reason==='string'
+            ? req.body.reason.slice(0,500)
+            : undefined,
+          previousSnapshot,
+          currentGeometries:Array.isArray(req.body?.currentGeometries)
+            ? req.body.currentGeometries
+            : undefined,
+          tickRateHz:Number.isFinite(Number(req.body?.tickRateHz))
+            ? Number(req.body.tickRateHz)
+            : undefined,
+        });
+        res.json({success:true,result});
       }catch(error){
         res.status(422).json({
           success:false,
