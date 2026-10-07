@@ -71,6 +71,23 @@ test('Fabric self updater proves the release, self-heals attestation wiring, and
   assert.match(updater,/capability_count/);
 });
 
+test('Fabric self updater converges the Saban Resource Field resident as owned zero-spend capacity',()=>{
+  assert.match(updater,/SABAN_CAPACITY_INSTALLER="\$REPO_ROOT\/scripts\/install-saban-capacity-organism\.sh"/);
+  assert.match(updater,/ensure_saban_capacity_resident\(\)/);
+  assert.match(updater,/--owned-host/);
+  assert.doesNotMatch(updater,/--public-market-discovery/);
+  assert.match(updater,/evercraft-saban-capacity\.timer/);
+  assert.match(updater,/evercraft-saban-resource-expansion\.service/);
+  assert.match(updater,/evercraft-saban-watchdog\.timer/);
+  assert.match(updater,/commercial_capacity_authorized!==false/);
+  assert.match(updater,/paid_execution_authorized!==false/);
+  assert.match(updater,/market_order_created!==false/);
+  assert.match(updater,/paid_lease_created!==false/);
+  assert.match(updater,/observation_never_grants_authority!==true/);
+  assert.match(updater,/saban_capacity_resident":true/);
+  assert.match(updater,/next update cycle will retry/);
+});
+
 test('Fabric self updater reasserts owned ingress without claiming ChromeOS host control',()=>{
   assert.match(updater,/reassert_owned_public_ingress/);
   assert.match(updater,/evercraft-public-edge\.service/);
