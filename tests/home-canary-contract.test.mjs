@@ -47,3 +47,23 @@ test('Home canary never submits credentials or creates sessions',()=>{
   assert.equal(workflow.includes('EVERCRAFT_OWNER_PASSWORD'),false);
   assert.equal(/["']password["']\s*:|password=|--data[^\n]*password|authorization:\s*basic/i.test(workflow),false);
 });
+
+
+const ownedEdgeWorkflow=fs.readFileSync(
+  '.github/workflows/evercraft-home-owned-edge-canary.yml',
+  'utf8'
+);
+
+test('owned-edge Home canary persists only verified external proof',()=>{
+  for(const required of [
+    'if: success()',
+    'conformance/runtime-observations/evercraft-home-owned-edge-latest.json',
+    'git rev-parse origin/main',
+    'Record verified Personal Evercraft Home edge',
+  ]){
+    assert.ok(ownedEdgeWorkflow.includes(required),'missing durable Home receipt contract: '+required);
+  }
+  assert.ok(ownedEdgeWorkflow.includes('permissions:\n  contents: write'));
+  assert.equal(ownedEdgeWorkflow.includes('/api/login'),false);
+  assert.equal(/EVERCRAFT_IDENTITY_SECRET|EVERCRAFT_OWNER_PASSWORD|claim_code/i.test(ownedEdgeWorkflow),false);
+});
