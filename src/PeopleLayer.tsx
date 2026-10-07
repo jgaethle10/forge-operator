@@ -444,9 +444,10 @@ function OperatorPeopleLayer() {
                   <button className="people-button quiet" onClick={createEmailChallenge} disabled={Boolean(busy) || selected.consent_state !== 'consented'}>Create 30-minute verification</button>
                 </div>
                 {verifyUrl && (
-                  <div className="people-linkbox">
-                    <input className="people-input" readOnly value={verifyUrl} />
-                    <button className="people-button quiet" onClick={() => navigator.clipboard?.writeText(verifyUrl)}>Copy</button>
+                  <div className="people-promise">
+                    <strong>Trusted delivery required</strong>
+                    <p className="people-muted">A Gmail/Resend agent must send this exact URL and record its provider message receipt before redemption can upgrade identity to verified_email.</p>
+                    <code>{verifyUrl}</code>
                   </div>
                 )}
               </div>
