@@ -91,3 +91,46 @@ test("tampered and expired sessions fail closed", () => {
   assert.throws(() => verifyEvercraftSession(signed + "x", secret, { now }), /session_signature_invalid/);
   assert.throws(() => verifyEvercraftSession(signed, secret, { now: new Date(now.getTime() + 2000) }), /session_expired/);
 });
+
+
+test("Home clip publish scope can be restricted to one Journal story resource", () => {
+  const stateDir = fs.mkdtempSync(path.join(os.tmpdir(), "evercraft-home-clip-scope-"));
+  try {
+    const passport = new EvercraftPassport({ stateDir });
+    const now = new Date();
+    const ends = new Date(now.getTime() + 60 * 60 * 1000).toISOString();
+
+    passport.issueGrant({
+      idempotency_key: "home-test-clip-story",
+      authority_state: "manual_authorized",
+      authority_receipt_ref: "receipt:test-clip-publish-authority",
+      subject_ref: "user:publisher-test",
+      issuer_ref: "authority:test",
+      product: "evercraft-home",
+      scopes: ["home.read", "home.clip.publish"],
+      resource_refs: ["journal-story:college-football-power-rankings-2026-10-06"],
+      starts_at: new Date(now.getTime() - 1000).toISOString(),
+      ends_at: ends,
+    });
+
+    const session = {
+      subject_ref: "user:publisher-test",
+      display_name: "Publisher",
+    };
+
+    const allowed = authorizeEvercraftHome(passport, session, {
+      at: now.toISOString(),
+      scope: "home.clip.publish",
+      resourceRef: "journal-story:college-football-power-rankings-2026-10-06",
+    });
+    assert.equal(allowed.decision, "allow");
+
+    assert.throws(() => authorizeEvercraftHome(passport, session, {
+      at: now.toISOString(),
+      scope: "home.clip.publish",
+      resourceRef: "journal-story:another-story",
+    }), /home_access_denied/);
+  } finally {
+    fs.rmSync(stateDir, { recursive: true, force: true });
+  }
+});
