@@ -1,0 +1,49 @@
+name: DayTrade Practice Scheduler Check
+
+on:
+  push:
+    branches:
+      - "systemia/daytrade-practice-scheduler-clean"
+  pull_request:
+    paths:
+      - "systemia/daytrade-lens/practice-rules/spread-abstention-v1.json"
+      - "systemia/daytrade-lens/edge-prospective-spread-rule-practice.mjs"
+      - "systemia/daytrade-lens/edge-scheduled-practice-runner.mjs"
+      - ".github/workflows/daytrade-practice-scheduler.yml"
+      - ".github/workflows/daytrade-practice-scheduler-check.yml"
+
+permissions:
+  contents: read
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    timeout-minutes: 3
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Syntax check practice runners
+        run: |
+          node --check systemia/daytrade-lens/edge-prospective-spread-rule-practice.mjs
+          node --check systemia/daytrade-lens/edge-scheduled-practice-runner.mjs
+      - name: Prove frozen safety contract
+        run: |
+          node --input-type=module <<'NODE'
+          import fs from "node:fs";
+          const rule=JSON.parse(fs.readFileSync(
+            "systemia/daytrade-lens/practice-rules/spread-abstention-v1.json",
+            "utf8"
+          ));
+          if(rule?.rule_id!=="spread-abstention-v1") throw new Error("rule_id");
+          if(rule?.entry_rule?.max_observed_entry_spread_bps!==3) throw new Error("threshold");
+          if(rule?.simulated_notional_usd!==20) throw new Error("notional");
+          if(rule?.live_trade_authority!==false) throw new Error("authority");
+          console.log(JSON.stringify({
+            ok:true,
+            threshold_bps:3,
+            simulated_notional_usd:20,
+            live_trade_authority:false
+          }));
+          NODE
