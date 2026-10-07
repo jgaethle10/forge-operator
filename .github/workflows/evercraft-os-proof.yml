@@ -33,6 +33,8 @@ jobs:
         run: node systemia/evercraft-os/device-profile.proof.mjs
       - name: Prove Evercraft OS app package contract
         run: node systemia/evercraft-os/app-package.proof.mjs
+      - name: Prove Evercraft OS app install planning
+        run: node systemia/evercraft-os/app-install-plan.proof.mjs
       - name: Prove Home OS status surface
         run: node --test systemia/evercraft-home/os-status.test.mjs
       - name: Emit boot envelope
