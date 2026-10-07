@@ -149,6 +149,19 @@ export function worldForgeVectorToWorldEngine(
   };
 }
 
+export function worldEngineVectorToWorldForge(
+  value:EngineVec3,
+  unitScaleMeters=1,
+):ForgeVec3{
+  finite(unitScaleMeters,'unit_scale');
+  if(unitScaleMeters<=0) throw new Error('world_forge_world_engine_unit_scale_invalid');
+  return {
+    x:finite(value.x,'engine_vector_x')/unitScaleMeters,
+    y:-finite(value.z,'engine_vector_z')/unitScaleMeters,
+    z:finite(value.y,'engine_vector_y')/unitScaleMeters,
+  };
+}
+
 export function worldForgeDirectionToWorldEngine(value:ForgeVec3):EngineVec3{
   return {
     x:cleanZero(finite(value.x,'direction_x')),
