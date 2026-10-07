@@ -24,7 +24,6 @@ import {
   renderOffers,
   renderPaymentHandoffPage,
   renderPaymentHoldPage,
-  renderRivetLanding,
   renderAliEvLanding,
 } from './fabric-public-site.mjs';
 import {
@@ -562,7 +561,6 @@ export async function startFabricLocalRuntime({
     public_plugin_submission_ready:true,
     mobile_path:'/mobile',
     mobile_installable:true,
-    rivet_public_path:'/rivet',
     aliev_public_path:'/aliev',
     chum_human_review_path_template:'/api/chum/go/{public_id}',
     chum_human_review_authority:'discovery_review_only',
@@ -634,15 +632,6 @@ export async function startFabricLocalRuntime({
             amountLabel:handoff.amountLabel,
             orderKey:handoff.orderKey,
           }),
-          {contentType:'text/html; charset=utf-8'}
-        );
-      }
-
-      if (req.method==='GET' && (req.url==='/rivet'||req.url==='/rivet/')) {
-        return sendText(
-          res,
-          200,
-          renderRivetLanding(),
           {contentType:'text/html; charset=utf-8'}
         );
       }
