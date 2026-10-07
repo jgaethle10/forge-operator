@@ -55,7 +55,37 @@ jobs:
       - name: Policy tests
         run: npm test
       - name: Prove native user-space Browser Worker
-        run: node native-runtime.proof.mjs
+        run: EVERCRAFT_NATIVE_BROWSER_STATE_DIR="$RUNNER_TEMP/evercraft-native-browser" node native-runtime.proof.mjs
+      - name: Prove browser WebGPU device execution
+        run: |
+          EVERCRAFT_NATIVE_BROWSER_STATE_DIR="$RUNNER_TEMP/evercraft-native-browser" node webgpu-device-conformance.proof.mjs | tee /tmp/evercraft-webgpu-device-conformance.json
+      - name: Summarize WebGPU device receipt
+        run: |
+          node <<'NODE'
+          const fs=require('node:fs');
+          const receipt=JSON.parse(fs.readFileSync('/tmp/evercraft-webgpu-device-conformance.json','utf8'));
+          const info=receipt.adapter_info||{};
+          const summary=[
+            '## Evercraft WebGPU device conformance',
+            '- Status: **'+receipt.status+'**',
+            '- Execution class: **'+receipt.execution_class+'**',
+            '- Hardware execution claim: **'+String(receipt.hardware_execution_claim)+'**',
+            '- Launch profile: `'+receipt.launch_profile+'`',
+            '- Adapter vendor: `'+String(info.vendor||'unreported')+'`',
+            '- Adapter architecture: `'+String(info.architecture||'unreported')+'`',
+            '- Adapter description: `'+String(info.description||'unreported')+'`',
+            '- Compute readback verified: **'+String(receipt.compute?.verified===true)+'**',
+            '- Raster readback verified: **'+String(receipt.render?.verified===true)+'**',
+            '- Receipt: `'+receipt.receipt_hash+'`',
+          ].join('\n');
+          fs.appendFileSync(process.env.GITHUB_STEP_SUMMARY,summary+'\n');
+          NODE
+      - name: Upload WebGPU device receipt
+        uses: actions/upload-artifact@v4
+        with:
+          name: evercraft-webgpu-device-conformance
+          path: /tmp/evercraft-webgpu-device-conformance.json
+          if-no-files-found: error
       - name: Build worker image
         run: docker build -t evercraft/browser-worker:ci .
       - name: Smoke worker image
