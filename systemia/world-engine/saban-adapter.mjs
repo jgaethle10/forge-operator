@@ -228,7 +228,8 @@ function evaluate(role,world){
         'Normal maps remain fail-closed until tangent-space geometry and shader contracts exist.',
         'Residency must be budgeted deterministically from required texture IDs; missing assets or over-budget required sets fail closed.',
         'Texture hot reload preserves asset identity, emits before/after digests and invalidates only the affected GPU cache entry.',
-        'Renderer residency receipts describe what was loaded or evicted but do not become source-asset authority.'
+        'Renderer residency receipts describe what was loaded or evicted but do not become source-asset authority.',
+        'WebGPU submission must verify the deterministic render-plan digest before creating draw commands or texture bindings.'
       ],
       findings:[]
     };
