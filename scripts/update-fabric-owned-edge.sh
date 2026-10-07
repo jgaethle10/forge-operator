@@ -18,6 +18,8 @@ OUTBOUND_RELAY_SERVICE="evercraft-fabric-outbound-relay.service"
 OUTBOUND_RELAY_ENV="/etc/evercraft/outbound-relay.env"
 ROUTER_MAP_ENV="/etc/evercraft/router-map.env"
 ROUTER_MAP_INSTALLER=""
+SABAN_CAPACITY_INSTALLER=""
+SABAN_CAPACITY_STATE_DIR="/var/lib/evercraft/saban-capacity"
 
 usage() {
   cat <<'EOF'
@@ -184,6 +186,7 @@ ALLOCATOR_TOKEN_FILE="$RUN_HOME/.local/state/evercraft/organism/.secrets/allocat
 VISUAL_INGEST_TOKEN_FILE="/var/lib/evercraft/fabric-secrets/visual-ingest-token"
 NETWORK_OBSERVER_INSTALLER="$REPO_ROOT/scripts/install-fabric-network-observer.sh"
 ROUTER_MAP_INSTALLER="$REPO_ROOT/scripts/install-fabric-router-map-resident.sh"
+SABAN_CAPACITY_INSTALLER="$REPO_ROOT/scripts/install-saban-capacity-organism.sh"
 
 mkdir -p "$STATE_DIR"
 chmod 0750 "$STATE_DIR"
@@ -274,6 +277,81 @@ ensure_network_observer() {
     --cadence 2min >/dev/null
   systemctl is-active --quiet evercraft-network-observer.timer
   test -s /var/lib/evercraft/network-observer/latest.json
+}
+
+write_saban_capacity_receipt() {
+  local state="$1" reason="${2:-}"
+  local release_ref=""
+  release_ref="$(as_user git -C "$REPO_ROOT" rev-parse HEAD 2>/dev/null || true)"
+  printf '{"schema":"evercraft.fabric-saban-capacity-reconcile.v1","state":"%s","release_ref":"%s","reason":"%s","owned_host":true,"zero_spend_only":true,"public_market_discovery":false,"observed_at":"%s"}\n' \
+    "$state" "$release_ref" "$reason" "$(date -u +%FT%TZ)" \
+    > "$STATE_DIR/saban-capacity.json"
+  chmod 0640 "$STATE_DIR/saban-capacity.json"
+}
+
+verify_saban_capacity_state() {
+  local capacity_file="$SABAN_CAPACITY_STATE_DIR/capacity-organism-state.json"
+  local expansion_file="$SABAN_CAPACITY_STATE_DIR/resource-field-expansion-state.json"
+
+  systemctl is-active --quiet evercraft-saban-capacity.timer || return 1
+  systemctl is-active --quiet evercraft-saban-resource-expansion.service || return 1
+  systemctl is-active --quiet evercraft-saban-watchdog.timer || return 1
+  [[ -s "$capacity_file" && -s "$expansion_file" ]] || return 1
+
+  as_user env \
+    CAPACITY_FILE="$capacity_file" \
+    EXPANSION_FILE="$expansion_file" \
+    node - <<'NODE'
+const fs=require('fs');
+const capacity=JSON.parse(fs.readFileSync(process.env.CAPACITY_FILE,'utf8'));
+const expansion=JSON.parse(fs.readFileSync(process.env.EXPANSION_FILE,'utf8'));
+
+if(capacity.schema!=='evercraft.saban.capacity-organism-state.v1') process.exit(2);
+if(capacity.commercial_capacity_authorized!==false) process.exit(3);
+if(capacity.observation_never_grants_authority!==true) process.exit(4);
+
+if(expansion.schema!=='evercraft.saban.resource-expansion-cycle.v1') process.exit(5);
+if(expansion.paid_execution_authorized!==false) process.exit(6);
+if(expansion.market_order_created!==false) process.exit(7);
+if(expansion.paid_lease_created!==false) process.exit(8);
+NODE
+}
+
+ensure_saban_capacity_resident() {
+  if verify_saban_capacity_state 2>/dev/null; then
+    write_saban_capacity_receipt "ready" "already_healthy"
+    echo "Evercraft update: Saban Resource Field resident=healthy"
+    return 0
+  fi
+
+  if [[ ! -f "$SABAN_CAPACITY_INSTALLER" ]]; then
+    write_saban_capacity_receipt "held" "installer_missing"
+    echo "ERROR: Saban capacity installer missing from deployed Forge revision" >&2
+    return 1
+  fi
+
+  echo "Evercraft update: converging Saban Resource Field resident"
+  if ! bash "$SABAN_CAPACITY_INSTALLER" \
+      --repo-root "$REPO_ROOT" \
+      --user "$RUN_USER" \
+      --cadence 2min \
+      --state-dir "$SABAN_CAPACITY_STATE_DIR" \
+      --owned-host >/dev/null; then
+    write_saban_capacity_receipt "held" "installer_failed"
+    return 1
+  fi
+
+  for _ in 1 2 3 4 5 6 7 8 9 10; do
+    if verify_saban_capacity_state 2>/dev/null; then
+      write_saban_capacity_receipt "ready" "installed_or_repaired"
+      echo "Evercraft update: Saban Resource Field resident=ready"
+      return 0
+    fi
+    sleep 1
+  done
+
+  write_saban_capacity_receipt "held" "resident_verification_failed"
+  return 1
 }
 
 read_health() {
@@ -419,8 +497,13 @@ if [[ "$before" == "$target" ]]; then
   # ChromeOS host port-forward toggles remain outside the guest boundary.
   reassert_owned_public_ingress
 
+  if ! ensure_saban_capacity_resident; then
+    echo "ERROR: Fabric is healthy but Saban Resource Field resident convergence failed; next update cycle will retry" >&2
+    exit 12
+  fi
+
   clear_env_backup
-  printf '{"schema":"evercraft.fabric-update.v1","state":"current","release_ref":"%s","capability_count":%s,"edge_attestation_expected":%s,"edge_attestation_verified":%s,"observed_at":"%s"}\n'     "$before" "$expected_count" "$EDGE_ATTESTATION_EXPECTED" "$EDGE_ATTESTATION_EXPECTED" "$(date -u +%FT%TZ)"     > "$STATE_DIR/last-update.json"
+  printf '{"schema":"evercraft.fabric-update.v1","state":"current","release_ref":"%s","capability_count":%s,"edge_attestation_expected":%s,"edge_attestation_verified":%s,"saban_capacity_resident":true,"observed_at":"%s"}\n'     "$before" "$expected_count" "$EDGE_ATTESTATION_EXPECTED" "$EDGE_ATTESTATION_EXPECTED" "$(date -u +%FT%TZ)"     > "$STATE_DIR/last-update.json"
   chmod 0640 "$STATE_DIR/last-update.json"
   exit 0
 fi
@@ -479,7 +562,15 @@ fi
 # A source update is also an ingress recovery opportunity.
 reassert_owned_public_ingress
 
+# Source and Fabric runtime are already verified at this point. Capacity
+# convergence is retried by the resident update timer rather than rolling back
+# a healthy Fabric revision and leaving newly written systemd units orphaned.
+if ! ensure_saban_capacity_resident; then
+  echo "ERROR: Fabric update accepted but Saban Resource Field resident convergence failed; next update cycle will retry" >&2
+  exit 12
+fi
+
 clear_env_backup
-printf '{"schema":"evercraft.fabric-update.v1","state":"updated","from_ref":"%s","release_ref":"%s","capability_count":%s,"edge_attestation_expected":%s,"edge_attestation_verified":%s,"observed_at":"%s"}\n'   "$before" "$target" "$expected_count" "$EDGE_ATTESTATION_EXPECTED" "$EDGE_ATTESTATION_EXPECTED" "$(date -u +%FT%TZ)"   > "$STATE_DIR/last-update.json"
+printf '{"schema":"evercraft.fabric-update.v1","state":"updated","from_ref":"%s","release_ref":"%s","capability_count":%s,"edge_attestation_expected":%s,"edge_attestation_verified":%s,"saban_capacity_resident":true,"observed_at":"%s"}\n'   "$before" "$target" "$expected_count" "$EDGE_ATTESTATION_EXPECTED" "$EDGE_ATTESTATION_EXPECTED" "$(date -u +%FT%TZ)"   > "$STATE_DIR/last-update.json"
 chmod 0640 "$STATE_DIR/last-update.json"
 echo "Evercraft Fabric updated to $target with $expected_count capabilities."
