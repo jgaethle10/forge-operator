@@ -205,7 +205,6 @@ export class LargeObjectStore {
     const buffers = [];
     for (const chunk of manifest.chunks) {
       const bytes = await this.getChunk(chunk.id);
-      const actual = chunk.id;
       if (bytes.length !== chunk.bytes) {
         throw new Error(`Chunk size mismatch for ${chunk.id}`);
       }
