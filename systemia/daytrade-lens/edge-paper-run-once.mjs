@@ -87,13 +87,25 @@ async function waitForTerminalOrder({key,secret,orderId}){
 }
 
 async function main(){
-  const key=process.env.ALPACA_TRADING;
-  const secret=process.env.ALPACA_TRADING_SECRET;
-  if(!key||!secret) throw new Error("paper_run_alpaca_credentials_missing");
+  const paperKey=process.env.ALPACA_PAPER_TRADING;
+  const paperSecret=process.env.ALPACA_PAPER_TRADING_SECRET;
+  if(!paperKey||!paperSecret){
+    throw new Error("paper_run_dedicated_paper_credentials_missing");
+  }
+
+  const marketDataKey=process.env.ALPACA_TRADING||paperKey;
+  const marketDataSecret=process.env.ALPACA_TRADING_SECRET||paperSecret;
+  if(!marketDataKey||!marketDataSecret){
+    throw new Error("paper_run_market_data_credentials_missing");
+  }
 
   const decisionAt=new Date().toISOString();
-  const quote=await latestQuote({key,secret,feed:"iex"});
-  let order=await getOrderByClientId({key,secret});
+  const quote=await latestQuote({
+    key:marketDataKey,
+    secret:marketDataSecret,
+    feed:"iex"
+  });
+  let order=await getOrderByClientId({key:paperKey,secret:paperSecret});
   let reusedExistingOrder=Boolean(order);
   let submission=null;
 
@@ -103,21 +115,21 @@ async function main(){
       side:"buy",
       notional_usd:NOTIONAL_USD,
       client_order_id:CLIENT_ORDER_ID,
-      key,
-      secret,
+      key:paperKey,
+      secret:paperSecret,
       base_url:PAPER_BASE,
       max_notional_usd:20,
       dry_run:false,
     });
     order=await waitForTerminalOrder({
-      key,
-      secret,
+      key:paperKey,
+      secret:paperSecret,
       orderId:submission.order_id,
     });
   }else{
     order=await waitForTerminalOrder({
-      key,
-      secret,
+      key:paperKey,
+      secret:paperSecret,
       orderId:clean(order.id),
     });
   }
@@ -125,8 +137,8 @@ async function main(){
   if(!order?.id) throw new Error("paper_run_order_missing");
   const fills=await fetchAlpacaOrderFillActivities({
     order_id:order.id,
-    key,
-    secret,
+    key:paperKey,
+    secret:paperSecret,
     base_url:PAPER_BASE,
   });
 
@@ -150,6 +162,14 @@ async function main(){
     generated_at:new Date().toISOString(),
     simulation_only:true,
     capital_at_risk_usd:0,
+    credential_boundary:{
+      paper_credentials_source:"ALPACA_PAPER_TRADING + ALPACA_PAPER_TRADING_SECRET",
+      market_data_credentials_source:
+        process.env.ALPACA_TRADING&&process.env.ALPACA_TRADING_SECRET
+          ?"ALPACA_TRADING read-only market data"
+          :"dedicated paper credentials",
+      generic_live_credentials_never_used_for_paper_order_calls:true,
+    },
     requested_paper_notional_usd:NOTIONAL_USD,
     symbol:SYMBOL,
     side:"buy",
