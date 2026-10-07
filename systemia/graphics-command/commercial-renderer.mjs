@@ -23,19 +23,21 @@ const SPECS={
 function wrap(text,maxChars,maxLines=2){
   const words=String(text||'').split(/\s+/).filter(Boolean);
   const out=[];
-  let row='';
-  for(const word of words){
-    const next=row?row+' '+word:word;
-    if(next.length>maxChars&&row){
-      out.push(row);
-      row=word;
-      if(out.length===maxLines-1) break;
-    }else{
-      row=next;
+  let index=0;
+  while(index<words.length&&out.length<maxLines){
+    let row=words[index++];
+    while(index<words.length&&(row+' '+words[index]).length<=maxChars){
+      row+=' '+words[index++];
     }
+    if(out.length===maxLines-1&&index<words.length){
+      while(index<words.length&&(row+' '+words[index]).length<=maxChars+4){
+        row+=' '+words[index++];
+      }
+      if(index<words.length) row=row.replace(/[.…]+$/,'')+'…';
+    }
+    out.push(row);
   }
-  if(row&&out.length<maxLines) out.push(row);
-  return out.slice(0,maxLines);
+  return out;
 }
 
 function trafficDots(spec,browser){
