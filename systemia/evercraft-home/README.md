@@ -215,3 +215,36 @@ Evercraft Home is also the owned credential-custody surface for the Systemia Com
 These routes use the same authenticated owner boundary and AES-256-GCM provider vault as the other owned provider credentials. The Systemia Core resident supervisor receives only the private vault directory binding through `RAVEN_PROVIDER_CREDENTIAL_STATE_DIR`; raw keys are never copied into mission receipts, command-line arguments, GitHub, or public Fabric.
 
 Competition provider readiness is derived directly from the Raven secret boundary. No separate credential-ready toggle is required. Kaggle/Numerai execution still preserves the competition authority contract: Raven QA before submission, existing accepted terms only, provider receipt required before success, and Numerai staking/payment/security mutation disabled.
+
+
+## Lineage Control Room handoff
+
+Evercraft Home is the authenticated human front door to the read-only Lineage Control Room.
+
+Runtime configuration:
+
+```bash
+LINEAGE_CONTROL_ROOM_BRIDGE_URL=http://127.0.0.1:<compute-port>/v1/services/<service-id>/http-bridge
+LINEAGE_CONTROL_ROOM_BRIDGE_TOKEN_FILE=/var/lib/evercraft/compute/allocator-token
+```
+
+The bridge URL and token file must be configured together. The token file must satisfy Home's private runtime-token rule, including permission-restricted file mode and minimum secret length.
+
+The Home adapter requires the Compute bridge URL to use loopback HTTP and the exact resident-service `/v1/services/:id/http-bridge` path. It does not accept a public origin or arbitrary proxy target.
+
+Authenticated Home routes reuse the existing `home.systemia.read` Passport scope:
+
+- `GET /lineage` serves the native Lineage Control Room UI with its API prefix rewritten to Home.
+- `GET /api/lineage/health`
+- `GET /api/lineage/snapshot`
+- `GET /api/lineage/commit`
+- `GET /api/lineage/diff`
+- `GET /api/lineage/integrity`
+
+Home constructs the corresponding Control Room read path itself. A browser request cannot provide an arbitrary Compute path, HTTP method, service ID, or private origin.
+
+The browser never receives the Compute bridge URL or allocator token. Home responses include only a bounded handoff receipt declaring authenticated read access, the `home.systemia.read` scope, no profile persistence, no secret-text return, no Compute-origin exposure, and `mutation_authority=false`.
+
+The Control Room HTML is shared with the native Lineage service rather than forked. Native Lineage uses `/v1`; Home renders the same UI with `/api/lineage`.
+
+This handoff does not create a new Lineage account or password. Evercraft Identity proves the user, Passport authorizes the Home scope, Compute controls the resident-service bridge, and Lineage remains a read-only history surface.
