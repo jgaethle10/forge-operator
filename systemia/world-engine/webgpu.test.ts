@@ -9,6 +9,7 @@ import {
   compileWebGpuRenderPlan,
   EVERCRAFT_WEBGPU_WGSL,
   validateGeometryAsset,
+  verifyWebGpuRenderPlan,
   type GeometryAsset
 } from './webgpu.js';
 import type { TextureAsset } from './texture.js';
@@ -240,6 +241,15 @@ test('WebGPU render plan is deterministic and binds camera material geometry and
   assert.equal(first.exposure,1.25);
   assert.equal(first.width,1280);
   assert.equal(first.height,720);
+});
+
+test('WebGPU render-plan receipt detects binding tampering before submission',()=>{
+  const plan=compileWebGpuRenderPlan(frame(),[triangle],{width:800,height:600});
+  assert.equal(verifyWebGpuRenderPlan(plan),true);
+
+  const tampered=structuredClone(plan);
+  tampered.draws[0].materialId='tampered-material';
+  assert.equal(verifyWebGpuRenderPlan(tampered),false);
 });
 
 test('WebGPU planning rejects a tampered visual frame receipt',()=>{
