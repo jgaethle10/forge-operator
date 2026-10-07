@@ -1,8 +1,0 @@
-{
-  "mcpServers": {
-    "evercraft_remote_operator": {
-      "type": "http",
-      "url": "https://<EVERCRAFT_OWNED_ORIGIN>/mcp/evercraft-remote"
-    }
-  }
-}

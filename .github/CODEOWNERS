@@ -1,7 +1,0 @@
-# RIVET is partner-approved. Changes to direct RIVET artifacts require Jesse review.
-/systemia/rivet/ @jgaethle10
-/public/chum/intents/rivet-site-underwriting-v1/ @jgaethle10
-/public/chum/proof/rivet.json @jgaethle10
-/governance/RIVET_CHANGE_CONTROL.md @jgaethle10
-/tests/rivet-change-control.test.mjs @jgaethle10
-/.github/workflows/rivet-change-control.yml @jgaethle10

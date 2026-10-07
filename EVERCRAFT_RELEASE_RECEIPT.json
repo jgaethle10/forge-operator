@@ -1,0 +1,27 @@
+{
+  "schema": "evercraft.systemia.competition-public-branch-receipt.v1",
+  "entry_key": "nebius-runbook-zero",
+  "public_surface": "runbook-zero-public",
+  "source_repository": "jgaethle10/forge-operator",
+  "source_merge_commit": "cc2179d48b3b563c147da9b80486048a98d4f070",
+  "raven_qa": {
+    "workflow": "Raven Competition Provider Runtime",
+    "run_id": 37647549350,
+    "tests": 88,
+    "passed": 88,
+    "failed": 0,
+    "provider_state": "held_missing_credential",
+    "secret_values_persisted": false,
+    "submission_authority_enabled": false
+  },
+  "standalone_export": {
+    "workflow": "Competition Public Entry Export",
+    "run_id": 37647549511,
+    "artifact_id": 11493569980,
+    "artifact_digest": "sha256:f3bc6f9c497de832aad6099786e6b563c7c72a8fea88d2010df1ccedaf217862",
+    "secret_scan": "passed",
+    "root_license": "MIT"
+  },
+  "live_nebius_canary": "not_run_missing_credential",
+  "note": "This public branch packages source only. It does not claim live provider access, deployment, submission, or accepted terms."
+}
