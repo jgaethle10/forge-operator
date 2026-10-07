@@ -67,7 +67,7 @@ ${bullet(p.intents)}
 
 - Canonical: ${p.canonical_url}
 - GitHub LLM mirror: ./llms.txt
-${safePublicRoute(c?.llms_url) ? `- Runtime or CHUM llms.txt: ${safePublicRoute(c.llms_url)}\n` : ''}${safePublicRoute(r?.mcp) ? `- Declared MCP: ${safePublicRoute(r.mcp)}\n` : ''}${safePublicRoute(r?.http_router) ? `- Bounded HTTP router: ${safePublicRoute(r.http_router)}\n` : ''}
+${safePublicRoute(c?.llms_url) ? `- Runtime or CHUM llms.txt: ${safePublicRoute(c.llms_url)}\n` : ''}${safePublicRoute(p?.knowledge_surfaces?.hub) ? `- Knowledge surface: ${safePublicRoute(p.knowledge_surfaces.hub)}\n` : ''}${safePublicRoute(r?.mcp) ? `- Declared MCP: ${safePublicRoute(r.mcp)}\n` : ''}${safePublicRoute(r?.http_router) ? `- Bounded HTTP router: ${safePublicRoute(r.http_router)}\n` : ''}
 ## Authority
 
 ${p.authority}
@@ -95,7 +95,7 @@ Class: ${p.class}
 Canonical URL: ${p.canonical_url}
 Authority: ${p.authority}
 Human confirmation required: ${p.human_confirmation_required === true ? 'yes' : 'no'}
-${c?.llms_url ? `Runtime or CHUM llms.txt: ${c.llms_url}\n` : ''}${r?.mcp ? `Declared MCP: ${r.mcp}\n` : ''}${r?.http_router ? `Bounded HTTP router: ${r.http_router}\n` : ''}
+${c?.llms_url ? `Runtime or CHUM llms.txt: ${c.llms_url}\n` : ''}${safePublicRoute(p?.knowledge_surfaces?.hub) ? `Knowledge surface: ${safePublicRoute(p.knowledge_surfaces.hub)}\n` : ''}${r?.mcp ? `Declared MCP: ${r.mcp}\n` : ''}${r?.http_router ? `Bounded HTTP router: ${r.http_router}\n` : ''}
 ## Natural-language intents
 ${bullet(p.intents)}
 
