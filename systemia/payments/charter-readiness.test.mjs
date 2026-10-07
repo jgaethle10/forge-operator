@@ -24,6 +24,13 @@ test('Washington state bank path tracks interagency charter/deposit-insurance pa
   assert.ok(path.requirements.includes('biographical_and_financial_reports'));
 });
 
+test('national bank path stays distinct with OCC as primary chartering authority',()=>{
+  const path=CHARTER_PATHS.national_bank;
+  assert.equal(path.primary_chartering_authority,'Office of the Comptroller of the Currency');
+  assert.ok(path.requirements.includes('national_bank_charter_application'));
+  assert.ok(path.requirements.includes('deposit_insurance_path'));
+});
+
 test('complete evidence can make an application packet ready without authorizing banking',()=>{
   const path=CHARTER_PATHS.federal_credit_union;
   const evidence=Object.fromEntries(path.requirements.map(key=>[key,{status:'verified',ref:'evidence://'+key}]));
