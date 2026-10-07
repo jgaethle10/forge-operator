@@ -79,6 +79,10 @@ export function createWorldForgeStarterProject():WorldForgeProject{
       },
       geometry:{kind:'primitive',primitive:'cube'},
       materialIds:['material-floor'],
+      physics:{
+        mode:'static',
+        collider:{type:'auto_box'},
+      },
       locked:true,
       tags:['environment','starter'],
     },
