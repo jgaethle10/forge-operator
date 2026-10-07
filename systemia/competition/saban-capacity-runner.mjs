@@ -1,5 +1,6 @@
 import fs from "node:fs";
 import path from "node:path";
+import { createHash } from "node:crypto";
 import { YardOperator } from "../yard/operator.mjs";
 import { buildCompetitionCapacityMissionSnapshot, ensureCompetitionBrowserCapacity } from "./saban-capacity-runtime.mjs";
 
@@ -97,16 +98,24 @@ function persist(receipt){
 }
 
 if(!brokerDeploymentId){
-  const held={
+  const heldBody={
     schema:"evercraft.systemia.competition-saban-capacity.v1",
     state:"held_broker_unconfigured",
     route:["systemia","competition_control_plane","saban","yard","evercraft_compute"],
     zero_spend_only:true,
     paid_market_order_authorized:false,
     paid_lease_authorized:false,
+    payment_attempted:false,
     authority_material_persisted:false,
+    base44_used:false,
     next_action:"continue_saban_capacity_discovery",
     observed_at:new Date().toISOString(),
+  };
+  const held={
+    ...heldBody,
+    receipt_hash:"sha256:"+createHash("sha256")
+      .update(JSON.stringify(heldBody))
+      .digest("hex"),
   };
   persist(held);
 }else{
