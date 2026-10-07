@@ -4,7 +4,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
   <title>FAIE | Evidence for the physical world</title>
-  <meta name="description" content="FAIE is Evercraft's evidence-first agriculture, land, water, production and resilience investigation engine.">
+  <meta name="description" content="FAIE is Evercraft's evidence-first intelligence layer for food infrastructure, land, water, production and resilience decisions.">
   <style>
     :root{
       color-scheme:dark;
@@ -404,6 +404,7 @@ async function loadState() {
           ? 'NWS ready'
           : 'IDLE';
     statusbar.innerHTML = [
+      ['View', document.body.dataset.pilot === 'agnormal' ? 'AGNORMAL PILOT' : 'PUBLIC'],
       ['Resident', health.resident ? 'ON' : 'OFF'],
       ['Signals', health.signal_count || 0],
       ['Official feeds', sourceLabel],
@@ -438,6 +439,7 @@ function loadFoodInfrastructurePilot({partner=false}={}) {
   document.getElementById('compareRegionA').value = 'yakima-wa';
   if (partner) {
     document.body.dataset.pilot = 'agnormal';
+    document.title = 'FAIE | AgNormal design-partner briefing';
     document.getElementById('agnormalPreset').textContent = 'AgNormal design-partner scope loaded';
     document.getElementById('pilotNote').textContent = 'Live design-partner scope loaded. Edit anything before running it. The answer still comes from current FAIE evidence, not a prewritten demo.';
   }
