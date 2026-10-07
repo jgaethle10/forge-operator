@@ -65,6 +65,8 @@ sudo tee /etc/evercraft/fabric.env >/dev/null <<EOF
 EVERCRAFT_OPENAI_CHALLENGE_TOKEN=
 EVERCRAFT_EDGE_NODE_RECEIPT=$NODE_RECEIPT
 EVERCRAFT_EDGE_ALLOCATOR_TOKEN_FILE=$ALLOCATOR_TOKEN_FILE
+EVERCRAFT_VISUAL_STATE_DIR=/tmp/evercraft-visual-desk-public
+EVERCRAFT_VISUAL_ORIGIN=https://$DOMAIN/visuals
 EOF
 sudo chmod 0600 /etc/evercraft/fabric.env
 
