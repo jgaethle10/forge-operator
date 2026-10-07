@@ -50,9 +50,11 @@ const source={
     site_id:'proof-site',
     sessions:120,
     energy_kwh:2450,
+    ports:4,
     period_start:'2026-09-01T00:00:00.000Z',
     period_end:'2026-10-01T00:00:00.000Z',
-    hourly_profile:[{hour:17,sessions:12}],
+    hourly_profile:[{hour:4,sessions:2},{hour:17,sessions:12}],
+    revenue_per_day:285,
     reliability_pct:98.4,
     occupancy_pct:42,
     price_per_kwh:0.42
@@ -113,7 +115,14 @@ assert.equal(built.evidence.session_intelligence.coverage.with_energy,1);
 assert.equal(built.evidence.session_intelligence.coverage.with_temporal_profile,1);
 assert.equal(built.evidence.session_intelligence.coverage.with_reliability,1);
 assert.equal(built.evidence.session_intelligence.sites[0].sessions_per_day,4);
+assert.equal(built.evidence.session_intelligence.sites[0].sessions_per_port_day,1);
 assert.equal(Number(built.evidence.session_intelligence.sites[0].energy_per_session_kwh.toFixed(3)),20.417);
+assert.equal(Number(built.evidence.session_intelligence.sites[0].energy_per_port_day_kwh.toFixed(3)),20.417);
+assert.deepEqual(built.evidence.session_intelligence.sites[0].busiest_hour,{hour:17,sessions:12});
+assert.deepEqual(built.evidence.session_intelligence.sites[0].quietest_hour,{hour:4,sessions:2});
+assert.equal(built.evidence.session_intelligence.sites[0].revenue_per_day,285);
+assert.equal(built.evidence.session_intelligence.coverage.with_per_port_throughput,1);
+assert.equal(built.evidence.session_intelligence.coverage.with_hourly_extrema,1);
 assert.equal(built.evidence.domains.traffic.profiles[0].period,'weekday_pm');
 assert.equal(built.evidence.domains.charging.price_benchmark.median_price_per_kwh,0.42);
 assert.equal(built.evidence.domains.utility.rate_candidates[0].rate,'EV-1');
