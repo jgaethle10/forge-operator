@@ -135,6 +135,7 @@ export async function startEvercraftHomeServer({
   ownerSubjectRef = String(process.env.EVERCRAFT_OWNER_SUBJECT_REF || "user:owner").trim(),
   ownerLogin = String(process.env.EVERCRAFT_OWNER_LOGIN || "owner").trim(),
   ownerDisplayName = String(process.env.EVERCRAFT_OWNER_DISPLAY_NAME || "Jesse").trim(),
+  sourceReleaseRef = String(process.env.EVERCRAFT_HOME_RELEASE_REF || "").trim(),
 } = {}) {
   const loopback = ["127.0.0.1", "localhost", "::1"].includes(host);
   if (authMode === "local" && !loopback) {
@@ -145,6 +146,9 @@ export async function startEvercraftHomeServer({
     throw new Error("home_cookie_path_invalid");
   }
   const normalizedCookiePath = cookiePath || "/";
+  if (sourceReleaseRef && !/^[a-f0-9]{40}$/i.test(sourceReleaseRef)) {
+    throw new Error("home_release_ref_invalid");
+  }
   if (authMode === "passport" && (!identitySecret || !identityStateDir || !passportStateDir)) {
     throw new Error("Passport auth requires signing material, EVERCRAFT_IDENTITY_STATE_DIR and EVERCRAFT_PASSPORT_STATE_DIR.");
   }
@@ -215,6 +219,7 @@ export async function startEvercraftHomeServer({
       authority: "evercraft",
       auth_mode: authMode,
       instance_id: instanceId,
+      source_release_ref: sourceReleaseRef || null,
       listen_scope: loopback ? "loopback" : "non_loopback",
       base44_required: false,
       external_ai_required: false,

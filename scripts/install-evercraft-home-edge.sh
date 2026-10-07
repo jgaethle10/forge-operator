@@ -39,6 +39,11 @@ if [[ -z "$REPO_ROOT" || ! -d "$REPO_ROOT/.git" ]]; then
   exit 2
 fi
 REPO_ROOT="$(cd "$REPO_ROOT" && pwd)"
+RELEASE_REF="$(git -C "$REPO_ROOT" rev-parse HEAD)"
+if [[ ! "$RELEASE_REF" =~ ^[a-f0-9]{40}$ ]]; then
+  echo "ERROR: Forge release ref is invalid." >&2
+  exit 3
+fi
 if [[ -z "$RUN_USER" ]]; then
   RUN_USER="$(stat -c '%U' "$REPO_ROOT")"
 fi
@@ -97,6 +102,7 @@ EVERCRAFT_CREDENTIAL_STATE_DIR=$HOME_STATE/credentials
 EVERCRAFT_HOME_SESSION_TTL_SECONDS=1800
 EVERCRAFT_HOME_COOKIE_SECURE=true
 EVERCRAFT_HOME_COOKIE_PATH=/home
+EVERCRAFT_HOME_RELEASE_REF=$RELEASE_REF
 EVERCRAFT_OWNER_CLAIM_SHA256=$CLAIM_SHA
 EVERCRAFT_OWNER_SUBJECT_REF=$OWNER_SUBJECT
 EVERCRAFT_OWNER_LOGIN=$OWNER_LOGIN
@@ -169,14 +175,15 @@ cat > "$CADDYFILE" <<'EOF'
 EOF
 
 systemctl daemon-reload
-systemctl enable --now "$HOME_SERVICE"
+systemctl enable "$HOME_SERVICE" >/dev/null
+systemctl restart "$HOME_SERVICE"
 for _ in 1 2 3 4 5 6 7 8 9 10; do
   if curl -fsS "http://127.0.0.1:$HOME_PORT/api/health" >/tmp/evercraft-home-health.json 2>/dev/null; then
     break
   fi
   sleep 1
 done
-"$NODE_BIN" -e "const h=require('/tmp/evercraft-home-health.json'); if(h.ok!==true||h.service!=='evercraft-home'||h.auth_mode!=='passport'||h.owner_claim_available!==true&&h.owner_bootstrapped!==true) process.exit(2)"
+"$NODE_BIN" -e "const h=require('/tmp/evercraft-home-health.json'); const expected=process.argv[1]; if(h.ok!==true||h.service!=='evercraft-home'||h.auth_mode!=='passport'||h.source_release_ref!==expected||h.owner_claim_available!==true&&h.owner_bootstrapped!==true) process.exit(2)" "$RELEASE_REF"
 
 caddy validate --config "$CADDYFILE" --adapter caddyfile >/dev/null
 systemctl restart evercraft-public-edge.service

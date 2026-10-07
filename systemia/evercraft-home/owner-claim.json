@@ -1,10 +1,11 @@
 {
   "schema": "evercraft.home.owner-claim.v1",
-  "claim_sha256": "4fd1308c915955b034b95ad76022738e2f517a61b28b12d915fbce353e52f83e",
+  "claim_sha256": "cf2840aa7e4d40e4ed0b0015fd3527b01a31216ab6e6caece17bf24cfcb98dff",
   "subject_ref": "user:jesse",
   "login": "jesse",
   "display_name": "Jesse",
   "single_use": true,
   "secret_material_committed": false,
-  "purpose": "first-owner bootstrap for the personal Evercraft Home front door"
+  "purpose": "first-owner bootstrap for the personal Evercraft Home front door",
+  "rotated_at": "2026-10-07T16:36:00Z"
 }

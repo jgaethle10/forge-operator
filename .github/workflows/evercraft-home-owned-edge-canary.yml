@@ -47,6 +47,7 @@ jobs:
               .base44_required == false and
               .external_ai_required == false and
               .identity_login_configured == true and
+              (.source_release_ref | type == "string" and test("^[a-f0-9]{40}$")) and
               ((.owner_claim_available == true) or (.owner_bootstrapped == true))
             ' /tmp/home-health.json >/dev/null 2>&1; then
               ok=true
@@ -81,7 +82,8 @@ jobs:
 
           owner_state="$(printf '%s' "$bootstrap" | jq -r '.state')"
           instance_id="$(jq -r '.instance_id' /tmp/home-health.json)"
-          jq -n             --arg origin "$HOME_ORIGIN"             --arg instance "$instance_id"             --arg owner_state "$owner_state"             --arg observed "$(date -u +%Y-%m-%dT%H:%M:%SZ)"             '{
+          source_release_ref="$(jq -r '.source_release_ref' /tmp/home-health.json)"
+          jq -n             --arg origin "$HOME_ORIGIN"             --arg instance "$instance_id"             --arg owner_state "$owner_state"             --arg source_release "$source_release_ref"             --arg observed "$(date -u +%Y-%m-%dT%H:%M:%SZ)"             '{
               schema:"evercraft.home.owned-edge-canary.v1",
               verified:true,
               state:"public_https_verified",
@@ -91,6 +93,7 @@ jobs:
               authority:"evercraft",
               auth_mode:"passport",
               instance_id:$instance,
+              source_release_ref:$source_release,
               owner_state:$owner_state,
               anonymous_session_denied:true,
               owner_claim_or_login_ready:true,

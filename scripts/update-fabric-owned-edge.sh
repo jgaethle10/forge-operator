@@ -376,11 +376,19 @@ ensure_home_edge_resident() {
     return 1
   fi
 
+  local expected_release current_release
+  expected_release="$(as_user git -C "$REPO_ROOT" rev-parse HEAD 2>/dev/null || true)"
+  current_release=""
+
   if systemctl is-active --quiet "$HOME_EDGE_SERVICE" 2>/dev/null &&
      curl -fsS --max-time 5 "$HOME_LOCAL_HEALTH" >/tmp/evercraft-home-update-health.json 2>/dev/null &&
      grep -Fq 'handle_path /home/*' /etc/evercraft/Caddyfile 2>/dev/null; then
-    echo "Evercraft update: Personal Home resident=healthy"
-    return 0
+    current_release="$(as_user node -e "const fs=require('fs');const h=JSON.parse(fs.readFileSync('/tmp/evercraft-home-update-health.json','utf8'));process.stdout.write(String(h.source_release_ref||''))" 2>/dev/null || true)"
+    if [[ -n "$expected_release" && "$current_release" == "$expected_release" ]]; then
+      echo "Evercraft update: Personal Home resident=healthy release=$current_release"
+      return 0
+    fi
+    echo "Evercraft update: Personal Home release drift current=${current_release:-unknown} expected=${expected_release:-unknown}"
   fi
 
   echo "Evercraft update: converging Personal Home on the owned HTTPS edge"
