@@ -1,0 +1,76 @@
+{
+  "schema": "evercraft.systemia.base44-migration-slice.v1",
+  "slice": "forensic_record_runtime",
+  "priority": 7,
+  "source": {
+    "platform": "base44",
+    "product": "The Forensic Record / Files Companion",
+    "authority": "legacy_extraction_compatibility_and_customer_continuity_only",
+    "identifiers_public": false,
+    "canonical_public_url": "https://filescompanion.com/"
+  },
+  "target": {
+    "source_control": "github",
+    "orchestration": "systemia",
+    "runtime": "yard_evercraft_compute",
+    "public_edge": "evercraft_fabric_owned_route",
+    "public_discovery": "chum_and_direct_product_registry"
+  },
+  "observed": {
+    "owned_discovery_registry_present": true,
+    "owned_chum_product_mirror_present": true,
+    "canonical_public_url_registered": "https://filescompanion.com/",
+    "legacy_finding_rows_observed": 22816,
+    "unique_finding_numbers_observed": 22356,
+    "duplicate_number_extra_rows_observed": 460,
+    "missing_sequence_numbers_observed": 129,
+    "missing_page_references_observed": 22691,
+    "missing_source_urls_observed": 22778,
+    "page_scoped_legacy_source_labels_observed": 9568,
+    "migration_adapter_landed": true,
+    "owned_runtime_live_verified": false,
+    "owned_public_route_verified": false,
+    "legacy_runtime_retired": false
+  },
+  "migrate": [
+    "forensic_finding_ledger",
+    "source_document_registry",
+    "corpus_coverage_ledger",
+    "candidate_finding_review_ledger",
+    "media_source_provenance",
+    "search_and_guided_research_runtime",
+    "citation_and_page_reference_normalization",
+    "public_read_only_route",
+    "content_notice_and_evidence_boundaries",
+    "migration_receipts_and_rollback"
+  ],
+  "acceptance": {
+    "no_new_base44_dependency": true,
+    "one_shot_extraction_only": true,
+    "evidence_labels_preserved": true,
+    "association_is_not_culpability_boundary_required": true,
+    "attorney_claim_testimony_document_fact_layers_distinct": true,
+    "missing_is_not_zero": true,
+    "source_context_access_required": true,
+    "private_journal_workspace_account_admin_not_public": true,
+    "tests_pass": true,
+    "immutable_release_ref_required": true,
+    "yard_deployment_receipt_required": true,
+    "public_route_verification_required": true,
+    "rollback_required": true,
+    "observation_window_required": true
+  },
+  "blockers": [
+    "Owned normalized corpus store is not yet populated from the legacy source.",
+    "Owned research/search runtime is not yet deployed through Yard / Evercraft Compute.",
+    "filescompanion.com has not yet been independently verified as bound to the owned runtime.",
+    "Legacy Base44 customer continuity must remain available until owned route, data reconciliation, rollback and observation receipts pass."
+  ],
+  "next_action": "extract bounded forensic entities through the one-shot adapter into the owned normalized corpus store, reconcile duplicate finding numbers and citations without deleting legacy evidence, build the read-only Systemia research runtime, deploy through Yard, verify filescompanion.com, then retire legacy execution only after replacement receipts pass",
+  "destructive_cutover_allowed": false,
+  "health": {
+    "state": "legacy_public_path_present_owned_cutover_started",
+    "truth_boundary": "The Forensic Record is already registered in Evercraft owned discovery, but the canonical public application still requires a verified owned runtime and reconciled corpus before legacy execution can be retired.",
+    "verified_at": "2026-10-06T21:58:00-07:00"
+  }
+}
