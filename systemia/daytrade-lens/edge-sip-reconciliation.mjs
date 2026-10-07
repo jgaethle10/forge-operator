@@ -21,7 +21,7 @@ function finite(v){
   return Number.isFinite(n)?n:null;
 }
 function sum(xs){return xs.reduce((a,b)=>a+b,0);}
-function around(timestamp,beforeMs=30000,afterMs=1000){
+function around(timestamp,beforeMs=300000,afterMs=1000){
   const t=new Date(timestamp).getTime();
   if(!Number.isFinite(t)) throw new Error("sip_reconciliation_timestamp_invalid");
   return {
@@ -29,7 +29,7 @@ function around(timestamp,beforeMs=30000,afterMs=1000){
     end:new Date(t+afterMs).toISOString(),
   };
 }
-async function sipQuoteStateAt(symbol,timestamp,{key,secret,max_state_age_ms=60000}){
+async function sipQuoteStateAt(symbol,timestamp,{key,secret,max_state_age_ms=300000}){
   const target=new Date(timestamp).getTime();
   const range=around(timestamp);
   const rows=await fetchAlpacaQuotes(symbol,{
