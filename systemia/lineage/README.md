@@ -347,3 +347,25 @@ node systemia/lineage/cli.mjs gc-purge <run-id>
 ```
 
 GC never creates publication, deployment, payment, or release authority. It only manages storage reachability underneath already-governed Lineage history.
+
+## Local ref concurrency
+
+Lineage local refs use compare-and-swap semantics instead of last-writer-wins updates.
+
+Every local branch update is protected by a short-lived per-ref lock. Ref files are written through a same-directory temporary file and atomic rename. Lock acquisition cleans up its own partial lock file if metadata persistence fails.
+
+The main mutation paths are optimistic:
+
+- `commit` captures the branch head before workspace snapshotting and may move the branch only if that head is unchanged after the snapshot;
+- `merge` may publish its merge commit only if the branch still points to the exact `ours` commit used by merge preview;
+- `rollback` may move the branch only from the head it actually inspected;
+- `createBranch` uses an empty-ref CAS and refuses to replace an existing branch;
+- remote fetch performs its final local ref update with CAS after object and large-asset transfer.
+
+A stale local update reports `LINEAGE_STALE_REF` with the expected, current, and proposed ref values. A stale commit also reports its immutable proposed commit/tree IDs so the work can be inspected, branched, or reconciled instead of being lost.
+
+Fetch races return `local_ref_changed_requires_reconciliation`: transferred immutable objects remain available locally, but the visible branch ref is not moved.
+
+Ref writers re-check the active GC lock inside the ref critical section. This prevents a writer from passing the initial GC check, pausing, and then changing reachability after GC has begun quarantine.
+
+No CAS success creates publication, deployment, payment, or release authority. It only proves that a local history pointer moved from the expected immutable state.
