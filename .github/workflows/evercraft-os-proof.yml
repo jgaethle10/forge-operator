@@ -31,6 +31,8 @@ jobs:
         run: node systemia/evercraft-os/runtime.proof.mjs
       - name: Prove device profile contract
         run: node systemia/evercraft-os/device-profile.proof.mjs
+      - name: Prove Home OS status surface
+        run: node --test systemia/evercraft-home/os-status.test.mjs
       - name: Emit boot envelope
         run: node systemia/evercraft-os/runtime.mjs
       - name: Emit sanitized device profile
