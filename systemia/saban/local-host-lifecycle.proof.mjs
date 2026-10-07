@@ -39,7 +39,7 @@ const held=await advanceLocalHostLifecycle({
   now:'2026-10-07T19:02:00.000Z',
 });
 assert.equal(held.state,'retirement_authority_held');
-assert.equal(held.retired,false);
+assert.equal(held.reclamation_executed,false);
 assert.equal(closes,0);
 
 const retired=await advanceLocalHostLifecycle({
@@ -55,7 +55,7 @@ const retired=await advanceLocalHostLifecycle({
   now:'2026-10-07T19:04:00.000Z',
 });
 assert.equal(retired.state,'retired');
-assert.equal(retired.retired,true);
+assert.equal(retired.reclamation_executed,true);
 assert.equal(retired.physical_host_shutdown,false);
 assert.equal(closes,1);
 
@@ -115,6 +115,7 @@ console.log(JSON.stringify({
   explicit_auto_retire_authority_required:true,
   active_lease_blocks_retirement:true,
   current_demand_blocks_retirement:true,
+  existing_reclamation_executor_is_the_side_effect_boundary:true,
   only_spawned_node_process_is_stopped:true,
   physical_host_shutdown_never_authorized:true,
 },null,2));
