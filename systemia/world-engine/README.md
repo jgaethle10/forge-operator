@@ -49,6 +49,12 @@ Implemented in this slice:
 - The browser WebGPU adapter owns device/buffer/pipeline submission only; visual-frame truth remains in World Engine.
 - WebGPU v9 fails closed on missing geometry, tampered visual receipts, unsupported textures and more than eight active lights.
 - Node CI proves plan/shader contracts but does not claim browser GPU-device execution.
+- Versioned live Studio edit transactions bind to exact world and asset-manifest digests before mutation.
+- Human, agent and code edits share the same deterministic world-edit contract and produce SHA-256 receipts.
+- Edit receipts carry inverse transactions for semantic undo while world/asset revisions remain monotonic.
+- Canonical asset manifests preserve asset identity, content digest, source provenance, rights state and license.
+- Geometry hot reload replaces the same asset identity, emits a deterministic receipt and invalidates the WebGPU buffer cache without making renderer state authoritative.
+- Live authoring fails closed on stale bases, referenced-material deletion, content changes without asset revision advancement and invalid rights lineage.
 - Deterministic behaviors for spin, constant force and oscillation.
 - Input ledger with tick-bound events.
 - Stable world-definition and snapshot SHA-256 digests.
@@ -56,7 +62,7 @@ Implemented in this slice:
 - Fallen Studio World → World Engine compiler.
 - Worldstate evidence → world projection bridge with evidence state preserved.
 - Provider-neutral render-frame contract with sampled skeletal pose/state, navigation/debug handoff, canonical visual subframes and audio subframes.
-- Tests for replay determinism, entity collision, ground collision, canonical broad-phase ordering, ECS query ordering, scene streaming/state preservation, animation transitions/blending/events, navmesh pathfinding/arrival/freeze-resume, material/light validation, camera graph interpolation/layer masking, audio playback/loop/seek/listener switching/attenuation, snapshot restore/tamper rejection, authoritative checkpoints/client prediction/rollback convergence, geometry/WebGPU render-plan/shader/failure-boundary contracts, input ordering, Fallen compilation and Worldstate projection.
+- Tests for replay determinism, entity collision, ground collision, canonical broad-phase ordering, ECS query ordering, scene streaming/state preservation, animation transitions/blending/events, navmesh pathfinding/arrival/freeze-resume, material/light validation, camera graph interpolation/layer masking, audio playback/loop/seek/listener switching/attenuation, snapshot restore/tamper rejection, authoritative checkpoints/client prediction/rollback convergence, geometry/WebGPU render-plan/shader/failure-boundary contracts, deterministic/reversible Studio edits, stale-edit rejection, asset-rights lineage and geometry hot reload, input ordering, Fallen compilation and Worldstate projection.
 
 ## Architectural contract
 
@@ -83,9 +89,9 @@ The engine does not gain publication authority, payment authority, emergency aut
 
 The V1 contract is deliberately small enough to prove ownership before expanding. The next compatible layers are:
 
-1. Asset hot-reload and live Studio editing.
-2. Browser GPU-device conformance receipts and visual reference-frame tests.
-3. Texture/sampler runtime and asset residency.
+1. Browser GPU-device conformance receipts and visual reference-frame tests.
+2. Texture/sampler runtime and asset residency.
+3. Live runtime-state migration for structural Studio edits.
 4. Animation authoring/import bridge for Fallen character assets.
 5. Navigation corridor smoothing / dynamic obstacle avoidance.
 6. Server-side rollback policy for explicitly admitted late inputs.
