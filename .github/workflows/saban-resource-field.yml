@@ -9,6 +9,8 @@ on:
       - 'systemia/saban/capacity-lifecycle.proof.mjs'
       - 'systemia/saban/capacity-reclamation-executor.mjs'
       - 'systemia/saban/capacity-reclamation-executor.proof.mjs'
+      - 'systemia/saban/failure-domain-audit.mjs'
+      - 'systemia/saban/failure-domain-audit.proof.mjs'
       - 'systemia/saban/resource-expansion-organism.mjs'
       - 'systemia/saban/resource-expansion-organism.proof.mjs'
       - 'systemia/saban/proactive-resource-loop.proof.mjs'
@@ -85,6 +87,8 @@ jobs:
         run: node systemia/saban/capacity-lifecycle.proof.mjs
       - name: Prove authority-gated capacity reclamation
         run: node systemia/saban/capacity-reclamation-executor.proof.mjs
+      - name: Prove correlated failure-domain audit
+        run: node systemia/saban/failure-domain-audit.proof.mjs
       - name: Validate Saban capacity installer shell syntax
         run: bash -n scripts/install-saban-capacity-organism.sh
       - name: Prove Resource Expansion installer policy
