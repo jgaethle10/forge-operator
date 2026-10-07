@@ -8,6 +8,8 @@ on:
       - 'systemia/media-studio/README.md'
       - 'systemia/media-studio/cli.ts'
       - 'src/WorldForgeEditor.tsx'
+      - 'src/world-forge-viewport-tools.ts'
+      - 'src/world-forge-viewport-tools.test.ts'
       - 'src/world-forge.css'
       - 'src/main.tsx'
       - 'server.ts'

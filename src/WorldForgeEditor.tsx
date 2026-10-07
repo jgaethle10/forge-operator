@@ -1,5 +1,10 @@
 import React, { useEffect, useMemo, useRef, useState } from 'react';
 import './world-forge.css';
+import {
+  axisDragWorldDelta,
+  frameDistanceForScale,
+  perspectiveVerticalFovRad,
+} from './world-forge-viewport-tools';
 
 type Vec3={x:number;y:number;z:number};
 type Transform={position:Vec3;rotationDeg:Vec3;scale:Vec3};
@@ -22,6 +27,7 @@ type ForgeNode={
     projection:string;
     focalLengthMm?:number;
     sensorWidthMm?:number;
+    orthoScale?:number;
     lookAt?:Vec3;
     near?:number;
     far?:number;
@@ -33,6 +39,7 @@ type ForgeProject={
   id:string;
   title:string;
   version:number;
+  activeCameraNodeId?:string;
   nodes:ForgeNode[];
   materials:Array<{id:string;name:string;baseColor:[number,number,number,number]}>;
 };
@@ -40,6 +47,7 @@ type ForgeOperation=
   |{type:'set_transform';nodeId:string;transform:Partial<Transform>}
   |{type:'set_visibility';nodeId:string;visible:boolean}
   |{type:'set_camera';nodeId:string;camera:Partial<NonNullable<ForgeNode['camera']>>}
+  |{type:'set_geometry';nodeId:string;geometry:NonNullable<ForgeNode['geometry']>;allowDestructive?:boolean}
   |{type:'add_node';node:ForgeNode}
   |{type:'remove_node';nodeId:string;allowDestructive?:boolean};
 
@@ -92,6 +100,16 @@ function mat4Perspective(fovRad:number,aspect:number,near:number,far:number){
   out[10]=(far+near)*nf;
   out[11]=-1;
   out[14]=2*far*near*nf;
+  return out;
+}
+function mat4Ortho(left:number,right:number,bottom:number,top:number,near:number,far:number){
+  const out=mat4Identity();
+  out[0]=2/(right-left);
+  out[5]=2/(top-bottom);
+  out[10]=-2/(far-near);
+  out[12]=-(right+left)/(right-left);
+  out[13]=-(top+bottom)/(top-bottom);
+  out[14]=-(far+near)/(far-near);
   return out;
 }
 function normalize(v:number[]){
@@ -222,19 +240,190 @@ function WorldViewport({
   project,
   selectedId,
   onSelect,
+  onTranslate,
+  snapStep,
 }:{
   project:ForgeProject;
   selectedId:string;
   onSelect:(nodeId:string)=>void;
+  onTranslate:(nodeId:string,axis:keyof Vec3,delta:number)=>void;
+  snapStep:number;
 }){
   const canvasRef=useRef<HTMLCanvasElement>(null);
-  const [orbit,setOrbit]=useState({yaw:-38,pitch:28,distance:12});
-  const dragRef=useRef<{x:number;y:number;moved:boolean}|null>(null);
+  const [orbit,setOrbit]=useState({
+    yaw:-38,
+    pitch:28,
+    distance:12,
+    target:{x:0,y:0,z:1} as Vec3,
+  });
+  const [viewMode,setViewMode]=useState<'orbit'|'camera'>('orbit');
+  const [gizmoPreview,setGizmoPreview]=useState<{
+    nodeId:string;
+    axis:keyof Vec3;
+    delta:number;
+  }|null>(null);
+  const dragRef=useRef<
+    | {mode:'orbit';x:number;y:number;moved:boolean}
+    | {mode:'pick';x:number;y:number;moved:boolean}
+    | {
+        mode:'gizmo';
+        axis:keyof Vec3;
+        startX:number;
+        startY:number;
+        axisScreenDx:number;
+        axisScreenDy:number;
+        axisWorldLength:number;
+        delta:number;
+      }
+    | null
+  >(null);
 
   const meshNodes=useMemo(
     ()=>project.nodes.filter(node=>node.kind==='mesh'&&node.visible!==false),
     [project],
   );
+  const selectedNode=useMemo(
+    ()=>project.nodes.find(node=>node.id===selectedId)??null,
+    [project,selectedId],
+  );
+  const activeCamera=useMemo(()=>{
+    const requested=project.activeCameraNodeId
+      ? project.nodes.find(node=>node.id===project.activeCameraNodeId&&node.kind==='camera')
+      : null;
+    return requested??project.nodes.find(node=>node.kind==='camera')??null;
+  },[project]);
+
+  function positionWithPreview(node:ForgeNode){
+    if(gizmoPreview?.nodeId!==node.id) return node.transform.position;
+    return {
+      ...node.transform.position,
+      [gizmoPreview.axis]:node.transform.position[gizmoPreview.axis]+gizmoPreview.delta,
+    };
+  }
+
+  function matrices(width:number,height:number){
+    const aspect=Math.max(.01,width/Math.max(1,height));
+    if(viewMode==='camera'&&activeCamera?.camera){
+      const camera=activeCamera.camera;
+      const eye=[
+        activeCamera.transform.position.x,
+        activeCamera.transform.position.y,
+        activeCamera.transform.position.z,
+      ];
+      const look=camera.lookAt??{x:0,y:0,z:0};
+      const view=mat4LookAt(eye,[look.x,look.y,look.z],[0,0,1]);
+      const near=Math.max(.001,camera.near??.05);
+      const far=Math.max(near+.1,camera.far??200);
+      const projection=camera.projection==='orthographic'
+        ? (()=>{
+            const scale=Math.max(.01,camera.orthoScale??10);
+            const halfY=scale/2;
+            const halfX=halfY*aspect;
+            return mat4Ortho(-halfX,halfX,-halfY,halfY,near,far);
+          })()
+        : mat4Perspective(
+            perspectiveVerticalFovRad({
+              focalLengthMm:camera.focalLengthMm??50,
+              sensorWidthMm:camera.sensorWidthMm??36,
+              aspect,
+            }),
+            aspect,
+            near,
+            far,
+          );
+      return {view,projection,vp:mat4Multiply(projection,view)};
+    }
+
+    const yaw=rad(orbit.yaw);
+    const pitch=rad(orbit.pitch);
+    const cp=Math.cos(pitch);
+    const eye=[
+      orbit.target.x+Math.sin(yaw)*cp*orbit.distance,
+      orbit.target.y-Math.cos(yaw)*cp*orbit.distance,
+      orbit.target.z+Math.sin(pitch)*orbit.distance,
+    ];
+    const projection=mat4Perspective(rad(52),aspect,.05,200);
+    const view=mat4LookAt(
+      eye,
+      [orbit.target.x,orbit.target.y,orbit.target.z],
+      [0,0,1],
+    );
+    return {view,projection,vp:mat4Multiply(projection,view)};
+  }
+
+  function projectToClient(point:Vec3,vp:Float32Array,rect:DOMRect){
+    const px=vp[0]*point.x+vp[4]*point.y+vp[8]*point.z+vp[12];
+    const py=vp[1]*point.x+vp[5]*point.y+vp[9]*point.z+vp[13];
+    const pw=vp[3]*point.x+vp[7]*point.y+vp[11]*point.z+vp[15];
+    if(pw<=0) return null;
+    return {
+      x:rect.left+(px/pw*.5+.5)*rect.width,
+      y:rect.top+(.5-py/pw*.5)*rect.height,
+    };
+  }
+
+  function pointSegmentDistance(
+    px:number,py:number,
+    ax:number,ay:number,
+    bx:number,by:number,
+  ){
+    const vx=bx-ax;
+    const vy=by-ay;
+    const lengthSq=vx*vx+vy*vy;
+    if(lengthSq<=1e-9) return Math.hypot(px-ax,py-ay);
+    const t=Math.max(0,Math.min(1,((px-ax)*vx+(py-ay)*vy)/lengthSq));
+    return Math.hypot(px-(ax+vx*t),py-(ay+vy*t));
+  }
+
+  function gizmoHit(clientX:number,clientY:number){
+    const canvas=canvasRef.current;
+    if(!canvas||!selectedNode||selectedNode.locked) return null;
+    const rect=canvas.getBoundingClientRect();
+    const {vp}=matrices(rect.width,rect.height);
+    const base=positionWithPreview(selectedNode);
+    const projectedBase=projectToClient(base,vp,rect);
+    if(!projectedBase) return null;
+    const length=1.35;
+    const vectors:Record<keyof Vec3,Vec3>={
+      x:{x:length,y:0,z:0},
+      y:{x:0,y:length,z:0},
+      z:{x:0,y:0,z:length},
+    };
+
+    let best:{
+      axis:keyof Vec3;
+      distance:number;
+      axisScreenDx:number;
+      axisScreenDy:number;
+      axisWorldLength:number;
+    }|null=null;
+
+    for(const axis of ['x','y','z'] as const){
+      const vector=vectors[axis];
+      const endpoint={
+        x:base.x+vector.x,
+        y:base.y+vector.y,
+        z:base.z+vector.z,
+      };
+      const projectedEnd=projectToClient(endpoint,vp,rect);
+      if(!projectedEnd) continue;
+      const distance=pointSegmentDistance(
+        clientX,clientY,
+        projectedBase.x,projectedBase.y,
+        projectedEnd.x,projectedEnd.y,
+      );
+      if(distance<=13&&(!best||distance<best.distance)){
+        best={
+          axis,
+          distance,
+          axisScreenDx:projectedEnd.x-projectedBase.x,
+          axisScreenDy:projectedEnd.y-projectedBase.y,
+          axisWorldLength:length,
+        };
+      }
+    }
+    return best;
+  }
 
   useEffect(()=>{
     const canvas=canvasRef.current;
@@ -276,22 +465,17 @@ function WorldViewport({
       gl!.clear(gl!.COLOR_BUFFER_BIT|gl!.DEPTH_BUFFER_BIT);
       gl!.useProgram(program);
 
-      const yaw=rad(orbit.yaw);
-      const pitch=rad(orbit.pitch);
-      const cp=Math.cos(pitch);
-      const eye=[
-        Math.sin(yaw)*cp*orbit.distance,
-        -Math.cos(yaw)*cp*orbit.distance,
-        Math.sin(pitch)*orbit.distance+1.25,
-      ];
-      const projection=mat4Perspective(rad(52),canvas.width/canvas.height,.05,200);
-      const view=mat4LookAt(eye,[0,0,1],[0,0,1]);
-      const vp=mat4Multiply(projection,view);
-
+      const {vp}=matrices(canvas.width,canvas.height);
       drawVertices(GRID_LINES,vp,[.13,.16,.19,1]);
 
       for(const node of meshNodes){
-        const mvp=mat4Multiply(vp,modelMatrix(node.transform));
+        const transform=gizmoPreview?.nodeId===node.id
+          ? {
+              ...node.transform,
+              position:positionWithPreview(node),
+            }
+          : node.transform;
+        const mvp=mat4Multiply(vp,modelMatrix(transform));
         const selected=node.id===selectedId;
         const locked=node.locked===true;
         const color:[number,number,number,number]=selected
@@ -301,6 +485,15 @@ function WorldViewport({
             : [.72,.63,.39,1];
         drawVertices(editableMeshLines(node),mvp,color);
       }
+
+      if(selectedNode&&!selectedNode.locked){
+        const base=positionWithPreview(selectedNode);
+        const gizmoModel=mat4Translation(base);
+        const gizmoMvp=mat4Multiply(vp,gizmoModel);
+        drawVertices(new Float32Array([0,0,0,1.35,0,0]),gizmoMvp,[1,.28,.24,1]);
+        drawVertices(new Float32Array([0,0,0,0,1.35,0]),gizmoMvp,[.31,.9,.42,1]);
+        drawVertices(new Float32Array([0,0,0,0,0,1.35]),gizmoMvp,[.3,.58,1,1]);
+      }
     }
 
     render();
@@ -308,7 +501,7 @@ function WorldViewport({
       gl.deleteBuffer(buffer);
       gl.deleteProgram(program);
     };
-  },[project,meshNodes,orbit,selectedId]);
+  },[project,meshNodes,orbit,selectedId,selectedNode,activeCamera,viewMode,gizmoPreview]);
 
   function approximatePick(clientX:number,clientY:number){
     const canvas=canvasRef.current;
@@ -316,21 +509,11 @@ function WorldViewport({
     const rect=canvas.getBoundingClientRect();
     const x=(clientX-rect.left)/rect.width*2-1;
     const y=1-(clientY-rect.top)/rect.height*2;
-    const yaw=rad(orbit.yaw);
-    const pitch=rad(orbit.pitch);
-    const cp=Math.cos(pitch);
-    const eye=[
-      Math.sin(yaw)*cp*orbit.distance,
-      -Math.cos(yaw)*cp*orbit.distance,
-      Math.sin(pitch)*orbit.distance+1.25,
-    ];
-    const projection=mat4Perspective(rad(52),rect.width/rect.height,.05,200);
-    const view=mat4LookAt(eye,[0,0,1],[0,0,1]);
-    const vp=mat4Multiply(projection,view);
+    const {vp}=matrices(rect.width,rect.height);
 
     let best:{id:string;distance:number}|null=null;
     for(const node of meshNodes){
-      const p=node.transform.position;
+      const p=positionWithPreview(node);
       const px=vp[0]*p.x+vp[4]*p.y+vp[8]*p.z+vp[12];
       const py=vp[1]*p.x+vp[5]*p.y+vp[9]*p.z+vp[13];
       const pw=vp[3]*p.x+vp[7]*p.y+vp[11]*p.z+vp[15];
@@ -343,23 +526,79 @@ function WorldViewport({
     if(best) onSelect(best.id);
   }
 
+  function frameSelected(){
+    if(!selectedNode) return;
+    setViewMode('orbit');
+    const distance=frameDistanceForScale({
+      scale:selectedNode.transform.scale,
+      verticalFovRad:rad(52),
+    });
+    setOrbit(current=>({
+      ...current,
+      target:{...positionWithPreview(selectedNode)},
+      distance,
+    }));
+  }
+
   return <div className="wf-viewport-wrap">
     <canvas
       ref={canvasRef}
       className="wf-viewport"
       onPointerDown={(event)=>{
-        dragRef.current={x:event.clientX,y:event.clientY,moved:false};
+        const hit=gizmoHit(event.clientX,event.clientY);
+        if(hit){
+          dragRef.current={
+            mode:'gizmo',
+            axis:hit.axis,
+            startX:event.clientX,
+            startY:event.clientY,
+            axisScreenDx:hit.axisScreenDx,
+            axisScreenDy:hit.axisScreenDy,
+            axisWorldLength:hit.axisWorldLength,
+            delta:0,
+          };
+        }else if(viewMode==='orbit'){
+          dragRef.current={mode:'orbit',x:event.clientX,y:event.clientY,moved:false};
+        }else{
+          dragRef.current={mode:'pick',x:event.clientX,y:event.clientY,moved:false};
+        }
         event.currentTarget.setPointerCapture(event.pointerId);
       }}
       onPointerMove={(event)=>{
         const drag=dragRef.current;
         if(!drag) return;
+
+        if(drag.mode==='gizmo'){
+          try{
+            const delta=axisDragWorldDelta({
+              pointerDx:event.clientX-drag.startX,
+              pointerDy:event.clientY-drag.startY,
+              axisScreenDx:drag.axisScreenDx,
+              axisScreenDy:drag.axisScreenDy,
+              axisWorldLength:drag.axisWorldLength,
+              snapStep,
+            });
+            drag.delta=delta;
+            if(selectedNode){
+              setGizmoPreview({
+                nodeId:selectedNode.id,
+                axis:drag.axis,
+                delta,
+              });
+            }
+          }catch{
+            // Axis is visually degenerate at this camera angle. Keep the scene unchanged.
+          }
+          return;
+        }
+
         const dx=event.clientX-drag.x;
         const dy=event.clientY-drag.y;
         if(Math.abs(dx)+Math.abs(dy)>3) drag.moved=true;
         drag.x=event.clientX;
         drag.y=event.clientY;
-        if(drag.moved){
+
+        if(drag.mode==='orbit'&&drag.moved){
           setOrbit(current=>({
             ...current,
             yaw:current.yaw-dx*.32,
@@ -370,18 +609,46 @@ function WorldViewport({
       onPointerUp={(event)=>{
         const drag=dragRef.current;
         dragRef.current=null;
+
+        if(drag?.mode==='gizmo'){
+          setGizmoPreview(null);
+          if(selectedNode&&Math.abs(drag.delta)>1e-9){
+            onTranslate(selectedNode.id,drag.axis,drag.delta);
+          }
+          return;
+        }
+
         if(drag&&!drag.moved) approximatePick(event.clientX,event.clientY);
       }}
+      onPointerCancel={()=>{
+        dragRef.current=null;
+        setGizmoPreview(null);
+      }}
       onWheel={(event)=>{
+        if(viewMode!=='orbit') return;
         event.preventDefault();
         setOrbit(current=>({
           ...current,
-          distance:Math.max(3,Math.min(40,current.distance+event.deltaY*.012)),
+          distance:Math.max(1,Math.min(80,current.distance+event.deltaY*.012)),
         }));
       }}
     />
-    <div className="wf-view-badge">WEBGL2 VIEWPORT</div>
-    <div className="wf-view-help">Drag to orbit · wheel to zoom · click object to select</div>
+    <div className="wf-view-badge">{viewMode==='camera'?'CAMERA VIEW':'WEBGL2 ORBIT'}</div>
+    <div className="wf-view-controls">
+      <button type="button" onClick={frameSelected} disabled={!selectedNode}>Frame Selected</button>
+      <button
+        type="button"
+        onClick={()=>setViewMode(current=>current==='camera'?'orbit':'camera')}
+        disabled={!activeCamera}
+        className={viewMode==='camera'?'active':''}
+      >
+        {viewMode==='camera'?'Exit Camera':'Camera View'}
+      </button>
+      <span>Snap {snapStep}m</span>
+    </div>
+    <div className="wf-view-help">
+      Drag empty space to orbit · wheel to zoom · click to select · drag X/Y/Z handles to move
+    </div>
   </div>;
 }
 
@@ -425,6 +692,7 @@ export default function WorldForgeEditor(){
   const [meshAmount,setMeshAmount]=useState(.25);
   const [stageMode,setStageMode]=useState(false);
   const [stagedOperations,setStagedOperations]=useState<ForgeOperation[]>([]);
+  const [snapStep,setSnapStep]=useState(.25);
   const [snapshotState,setSnapshotState]=useState<'loading'|'saved'|'dirty'>('loading');
   const importInputRef=useRef<HTMLInputElement>(null);
 
@@ -485,7 +753,56 @@ export default function WorldForgeEditor(){
     return ()=>window.clearTimeout(timer);
   },[project]);
 
-  const selected=project?.nodes.find(node=>node.id===selectedId)||null;
+  const viewportProject=useMemo(()=>{
+    if(!project||!stageMode||!stagedOperations.length) return project;
+
+    let nodes:ForgeNode[]=project.nodes.map(node=>({
+      ...node,
+      transform:{
+        position:{...node.transform.position},
+        rotationDeg:{...node.transform.rotationDeg},
+        scale:{...node.transform.scale},
+      },
+      camera:node.camera?{...node.camera,lookAt:node.camera.lookAt?{...node.camera.lookAt}:undefined}:undefined,
+      geometry:node.geometry?JSON.parse(JSON.stringify(node.geometry)):undefined,
+    }));
+
+    for(const operation of stagedOperations){
+      if(operation.type==='add_node'){
+        if(!nodes.some(node=>node.id===operation.node.id)){
+          nodes.push(JSON.parse(JSON.stringify(operation.node)) as ForgeNode);
+        }
+        continue;
+      }
+
+      if(operation.type==='remove_node'){
+        nodes=nodes.filter(node=>node.id!==operation.nodeId);
+        continue;
+      }
+
+      const index=nodes.findIndex(node=>node.id===operation.nodeId);
+      if(index<0) continue;
+      const node=nodes[index];
+
+      if(operation.type==='set_transform'){
+        node.transform={
+          position:{...node.transform.position,...operation.transform.position},
+          rotationDeg:{...node.transform.rotationDeg,...operation.transform.rotationDeg},
+          scale:{...node.transform.scale,...operation.transform.scale},
+        };
+      }else if(operation.type==='set_visibility'){
+        node.visible=operation.visible;
+      }else if(operation.type==='set_camera'){
+        node.camera=node.camera?{...node.camera,...operation.camera}:node.camera;
+      }else if(operation.type==='set_geometry'){
+        node.geometry=JSON.parse(JSON.stringify(operation.geometry));
+      }
+    }
+
+    return {...project,nodes};
+  },[project,stageMode,stagedOperations]);
+
+  const selected=viewportProject?.nodes.find(node=>node.id===selectedId)||null;
 
   function selectDefaultNode(nextProject:ForgeProject){
     const first=nextProject.nodes.find(node=>node.kind==='mesh'&&!node.locked);
@@ -511,6 +828,7 @@ export default function WorldForgeEditor(){
       setUndoStack([]);
       setNativePreview(null);
       setShotDigest('');
+      setStagedOperations([]);
       selectDefaultNode(candidate);
       setCommandNote(`${sourceLabel} loaded at v${candidate.version}. Scene validation accepted.`);
       window.localStorage.setItem(WORLD_FORGE_STORAGE_KEY,JSON.stringify(candidate));
@@ -560,6 +878,7 @@ export default function WorldForgeEditor(){
       setUndoStack([]);
       setNativePreview(null);
       setShotDigest('');
+      setStagedOperations([]);
       selectDefaultNode(payload.project);
       setCommandNote('Reset to the validated World Forge starter scene.');
       setSnapshotState('saved');
@@ -602,13 +921,22 @@ export default function WorldForgeEditor(){
     }
   }
 
+  function queueOrMutate(operations:ForgeOperation[],label:string){
+    if(stageMode){
+      setStagedOperations(current=>[...current,...operations].slice(0,100));
+      setCommandNote(`Staged: ${label}`);
+      return;
+    }
+    void mutate(operations);
+  }
+
   function transformPatch(group:'position'|'rotationDeg'|'scale',axis:keyof Vec3,value:number){
     if(!selected) return;
-    mutate([{
+    queueOrMutate([{
       type:'set_transform',
       nodeId:selected.id,
       transform:{[group]:{...selected.transform[group],[axis]:value}},
-    } as ForgeOperation]);
+    } as ForgeOperation],`${selected.name} ${group} ${axis.toUpperCase()} = ${value}`);
   }
 
   function nudge(axis:keyof Vec3,amount:number){
@@ -617,18 +945,31 @@ export default function WorldForgeEditor(){
     transformPatch('position',axis,next);
   }
 
+  function commitViewportTranslate(nodeId:string,axis:keyof Vec3,delta:number){
+    const node=viewportProject?.nodes.find(item=>item.id===nodeId);
+    if(!node||node.locked) return;
+    const value=node.transform.position[axis]+delta;
+    queueOrMutate([{
+      type:'set_transform',
+      nodeId,
+      transform:{
+        position:{...node.transform.position,[axis]:value},
+      },
+    }],`Move ${node.name} ${axis.toUpperCase()} by ${delta} m`);
+  }
+
   function cameraPatch(patch:Partial<NonNullable<ForgeNode['camera']>>){
     if(!selected||selected.kind!=='camera'||!selected.camera) return;
-    mutate([{
+    queueOrMutate([{
       type:'set_camera',
       nodeId:selected.id,
       camera:patch,
-    }]);
+    }],`Update ${selected.name} camera`);
   }
 
   function addCube(){
-    if(!project) return;
-    const index=project.nodes.filter(node=>node.kind==='mesh').length+1;
+    if(!viewportProject) return;
+    const index=viewportProject.nodes.filter(node=>node.kind==='mesh').length+1;
     const id=`cube-${Date.now().toString(36)}`;
     const node:ForgeNode={
       id,
@@ -642,7 +983,8 @@ export default function WorldForgeEditor(){
       geometry:{kind:'primitive',primitive:'cube'},
       visible:true,
     };
-    mutate([{type:'add_node',node}]).then(()=>setSelectedId(id));
+    queueOrMutate([{type:'add_node',node}],`Add ${node.name}`);
+    setSelectedId(id);
   }
 
   async function undo(){
@@ -848,6 +1190,21 @@ export default function WorldForgeEditor(){
             if(file) void importProject(file);
           }}
         />
+        <label className="wf-snap-control">
+          <span>Snap</span>
+          <select
+            value={snapStep}
+            onChange={event=>setSnapStep(Number(event.target.value))}
+            disabled={busy}
+          >
+            <option value={.01}>0.01m</option>
+            <option value={.05}>0.05m</option>
+            <option value={.1}>0.10m</option>
+            <option value={.25}>0.25m</option>
+            <option value={.5}>0.50m</option>
+            <option value={1}>1.00m</option>
+          </select>
+        </label>
         <button onClick={()=>void renderNativePreview(false)} disabled={busy}>Wireframe</button>
         <button onClick={()=>void renderNativePreview(true)} disabled={busy}>Solid Render</button>
         <button onClick={()=>void bindCinematicShot()} disabled={busy}>Bind Shot</button>
@@ -869,7 +1226,13 @@ export default function WorldForgeEditor(){
       </aside>
 
       <section className="wf-stage">
-        <WorldViewport project={project} selectedId={selectedId} onSelect={setSelectedId}/>
+        <WorldViewport
+          project={viewportProject??project}
+          selectedId={selectedId}
+          onSelect={setSelectedId}
+          onTranslate={commitViewportTranslate}
+          snapStep={snapStep}
+        />
         {stagedOperations.length>0&&<div className="wf-stage-tray">
           <strong>CHANGESET STAGED</strong>
           <span>{stagedOperations.length} operation{stagedOperations.length===1?'':'s'}</span>
