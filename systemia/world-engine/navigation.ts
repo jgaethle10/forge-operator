@@ -1,5 +1,13 @@
 import crypto from 'node:crypto';
 import type { Vec3 } from './engine.js';
+import {
+  buildNavigationCorridor,
+  computeNavigationSteering,
+  validateNavigationPortals,
+  type NavigationAvoidanceContext,
+  type NavigationCorridorPortal,
+  type NavigationSteeringReceipt
+} from './navigation-corridor.js';
 
 export interface NavigationPolygon {
   id:string;
@@ -21,8 +29,11 @@ export interface NavigationPath {
   start:Vec3;
   goal:Vec3;
   polygonIds:string[];
+  corridorPortals:NavigationCorridorPortal[];
   waypoints:Vec3[];
+  smoothing:'funnel_v1';
   cost:number;
+  geometricLength:number;
   digest:string;
 }
 
@@ -32,6 +43,11 @@ export interface NavigationAgentComponent {
   stoppingDistance?:number;
   initialTarget?:Vec3;
   animationMovingParameter?:string;
+  avoidanceEnabled?:boolean;
+  avoidanceTimeHorizonSec?:number;
+  avoidanceClearance?:number;
+  avoidanceNeighborDistance?:number;
+  avoidanceStrength?:number;
 }
 
 export interface NavigationAgentRuntime {
@@ -39,7 +55,12 @@ export interface NavigationAgentRuntime {
   path:NavigationPath|null;
   waypointIndex:number;
   state:'idle'|'moving'|'arrived'|'blocked';
+  preferredVelocity:Vec3;
+  avoidanceVelocity:Vec3;
   desiredVelocity:Vec3;
+  avoidanceNeighborIds:string[];
+  corridorConstrained:boolean;
+  steeringReceipt:NavigationSteeringReceipt|null;
   replanCount:number;
 }
 
@@ -153,6 +174,7 @@ export function validateNavigationMesh(mesh:NavigationMesh){
     }
   }
 
+  validateNavigationPortals(mesh);
   return true;
 }
 
@@ -168,6 +190,36 @@ export function validateNavigationAgent(component:NavigationAgentComponent,meshe
     throw new Error('navigation_agent_stopping_distance_invalid');
   }
   if(component.initialTarget) finiteVec3(component.initialTarget,'agent_initial_target');
+  if(
+    component.avoidanceTimeHorizonSec!==undefined &&
+    (!Number.isFinite(component.avoidanceTimeHorizonSec) ||
+      component.avoidanceTimeHorizonSec<=0 ||
+      component.avoidanceTimeHorizonSec>10)
+  ){
+    throw new Error('navigation_agent_avoidance_horizon_invalid');
+  }
+  if(
+    component.avoidanceClearance!==undefined &&
+    (!Number.isFinite(component.avoidanceClearance) ||
+      component.avoidanceClearance<0)
+  ){
+    throw new Error('navigation_agent_avoidance_clearance_invalid');
+  }
+  if(
+    component.avoidanceNeighborDistance!==undefined &&
+    (!Number.isFinite(component.avoidanceNeighborDistance) ||
+      component.avoidanceNeighborDistance<=0)
+  ){
+    throw new Error('navigation_agent_avoidance_neighbor_distance_invalid');
+  }
+  if(
+    component.avoidanceStrength!==undefined &&
+    (!Number.isFinite(component.avoidanceStrength) ||
+      component.avoidanceStrength<0 ||
+      component.avoidanceStrength>4)
+  ){
+    throw new Error('navigation_agent_avoidance_strength_invalid');
+  }
   return true;
 }
 
@@ -222,18 +274,29 @@ export function findNavigationPath(mesh:NavigationMesh,start:Vec3,goal:Vec3):Nav
       }
       polygonIds.reverse();
 
-      const intermediates=polygonIds.length>1
-        ? polygonIds.slice(1).map(id=>centroid(byId.get(id)!))
-        : [];
-      const waypoints=[...intermediates,clone(goal)];
+      const corridor=buildNavigationCorridor(
+        mesh,
+        polygonIds,
+        start,
+        goal
+      );
+      let geometricLength=0;
+      let cursorPoint=clone(start);
+      for(const waypoint of corridor.waypoints){
+        geometricLength+=distance(cursorPoint,waypoint);
+        cursorPoint=waypoint;
+      }
       const core={
         schema:'evercraft.world-engine.navpath.v1' as const,
         meshId:mesh.id,
         start:clone(start),
         goal:clone(goal),
         polygonIds,
-        waypoints,
-        cost:Number((gScore.get(currentId) || 0).toFixed(9))
+        corridorPortals:corridor.portals,
+        waypoints:corridor.waypoints,
+        smoothing:'funnel_v1' as const,
+        cost:Number((gScore.get(currentId) || 0).toFixed(9)),
+        geometricLength:Number(geometricLength.toFixed(9))
       };
       return {...core,digest:digest(core)};
     }
@@ -258,8 +321,11 @@ export function findNavigationPath(mesh:NavigationMesh,start:Vec3,goal:Vec3):Nav
     start:clone(start),
     goal:clone(goal),
     polygonIds:[],
+    corridorPortals:[],
     waypoints:[],
-    cost:Infinity
+    smoothing:'funnel_v1' as const,
+    cost:Infinity,
+    geometricLength:Infinity
   };
   return {...core,digest:digest({...core,cost:'unreachable'})};
 }
@@ -275,7 +341,12 @@ export function initializeNavigationAgent(
     path:null,
     waypointIndex:0,
     state:'idle',
+    preferredVelocity:clone(ZERO),
+    avoidanceVelocity:clone(ZERO),
     desiredVelocity:clone(ZERO),
+    avoidanceNeighborIds:[],
+    corridorConstrained:false,
+    steeringReceipt:null,
     replanCount:0
   };
   if(component.initialTarget){
@@ -298,7 +369,12 @@ export function setNavigationTarget(
   next.path=path;
   next.waypointIndex=0;
   next.replanCount+=1;
+  next.preferredVelocity=clone(ZERO);
+  next.avoidanceVelocity=clone(ZERO);
   next.desiredVelocity=clone(ZERO);
+  next.avoidanceNeighborIds=[];
+  next.corridorConstrained=false;
+  next.steeringReceipt=null;
   next.state=path.polygonIds.length?'moving':'blocked';
   return next;
 }
@@ -309,7 +385,12 @@ export function clearNavigationTarget(runtime:NavigationAgentRuntime):Navigation
   next.path=null;
   next.waypointIndex=0;
   next.state='idle';
+  next.preferredVelocity=clone(ZERO);
+  next.avoidanceVelocity=clone(ZERO);
   next.desiredVelocity=clone(ZERO);
+  next.avoidanceNeighborIds=[];
+  next.corridorConstrained=false;
+  next.steeringReceipt=null;
   return next;
 }
 
@@ -317,11 +398,18 @@ export function stepNavigationAgent(
   component:NavigationAgentComponent,
   runtime:NavigationAgentRuntime,
   position:Vec3,
-  dt:number
+  dt:number,
+  mesh?:NavigationMesh,
+  avoidanceContext?:NavigationAvoidanceContext
 ):NavigationAgentRuntime{
   if(!Number.isFinite(dt) || dt<0) throw new Error('navigation_dt_invalid');
   const next=clone(runtime);
+  next.preferredVelocity=clone(ZERO);
+  next.avoidanceVelocity=clone(ZERO);
   next.desiredVelocity=clone(ZERO);
+  next.avoidanceNeighborIds=[];
+  next.corridorConstrained=false;
+  next.steeringReceipt=null;
 
   if(next.state!=='moving' || !next.path || !next.target) return next;
 
@@ -346,10 +434,27 @@ export function stepNavigationAgent(
   });
   const remaining=distance(position,waypoint);
   const speed=dt<=EPS?0:Math.min(component.maxSpeed,remaining/dt);
-  next.desiredVelocity={
+  const preferredVelocity={
     x:direction.x*speed,
     y:0,
     z:direction.z*speed
   };
+
+  const steering=computeNavigationSteering({
+    component,
+    path:next.path,
+    position,
+    preferredVelocity,
+    dt,
+    mesh,
+    context:avoidanceContext
+  });
+
+  next.preferredVelocity=steering.preferredVelocity;
+  next.avoidanceVelocity=steering.avoidanceVelocity;
+  next.desiredVelocity=steering.desiredVelocity;
+  next.avoidanceNeighborIds=steering.neighborIds;
+  next.corridorConstrained=steering.corridorConstrained;
+  next.steeringReceipt=steering.receipt;
   return next;
 }
