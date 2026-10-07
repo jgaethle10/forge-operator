@@ -70,6 +70,28 @@ export const CHARTER_PATHS=Object.freeze({
       'three_year_financial_projections',
       'independent_regulatory_counsel'
     ]
+  },
+  national_bank:{
+    path_key:'national_bank',
+    ownership_model:'investor_or_other_approved_national_bank_ownership',
+    primary_chartering_authority:'Office of the Comptroller of the Currency',
+    official_sources:[
+      'https://www.occ.gov/topics/charters-and-licensing/de-novo-chartering/index-de-novo-chartering.html',
+      'https://www.fdic.gov/regulations/applications/handbook.pdf'
+    ],
+    requirements:[
+      'business_plan',
+      'organizers_directors_officers',
+      'capital_plan',
+      'market_and_business_case',
+      'occ_prefiling_engagement',
+      'national_bank_charter_application',
+      'deposit_insurance_path',
+      'records_systems_and_controls',
+      'compliance_program',
+      'financial_projections',
+      'independent_regulatory_counsel'
+    ]
   }
 });
 
