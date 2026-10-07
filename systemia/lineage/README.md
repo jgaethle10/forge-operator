@@ -364,6 +364,14 @@ The main mutation paths are optimistic:
 
 A stale local update reports `LINEAGE_STALE_REF` with the expected, current, and proposed ref values. A stale commit also reports its immutable proposed commit/tree IDs so the work can be inspected, branched, or reconciled instead of being lost.
 
+For a stale commit, the proposed commit is already a valid immutable Lineage object even though it did not win the branch ref. An operator can preserve it explicitly with:
+
+```bash
+node systemia/lineage/cli.mjs branch recovery/<name> <proposed-commit-id>
+```
+
+That creates a normal branch only if the recovery branch name is still empty, preserving the same CAS rule.
+
 Fetch races return `local_ref_changed_requires_reconciliation`: transferred immutable objects remain available locally, but the visible branch ref is not moved.
 
 Ref writers re-check the active GC lock inside the ref critical section. This prevents a writer from passing the initial GC check, pausing, and then changing reachability after GC has begun quarantine.
