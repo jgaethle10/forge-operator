@@ -51,11 +51,75 @@ function digest(value){
   return crypto.createHash('sha256').update(String(value||'')).digest('hex');
 }
 
+function decodeAttribute(value){
+  return String(value||'')
+    .replaceAll('&amp;','&')
+    .replaceAll('&quot;','"')
+    .replaceAll('&#39;',"'")
+    .replaceAll('&lt;','<')
+    .replaceAll('&gt;','>');
+}
+
+function tagAttributes(tag){
+  const attrs={};
+  for(const match of String(tag||'').matchAll(/([^\s=/>]+)\s*=\s*(["'])(.*?)\2/g)){
+    attrs[String(match[1]||'').toLowerCase()]=decodeAttribute(match[3]);
+  }
+  return attrs;
+}
+
+function normalizeIdentityUrl(value,baseUrl,{blockedHostSuffixes=DEFAULT_BLOCKED_HOST_SUFFIXES}={}){
+  if(!String(value||'').trim()) return null;
+  let absolute;
+  try{ absolute=new URL(String(value).trim(),baseUrl).toString(); }
+  catch{ throw new Error('clip_public_link_identity_url_invalid'); }
+  return assertPublicLinkShape(absolute,{blockedHostSuffixes}).toString();
+}
+
+export function readPublicPageIdentity(body,baseUrl,{blockedHostSuffixes=DEFAULT_BLOCKED_HOST_SUFFIXES}={}){
+  const html=String(body||'');
+  let canonicalUrl=null;
+  let ogUrl=null;
+  let ogTitle=null;
+  let storyId=null;
+
+  for(const match of html.matchAll(/<(link|meta)\b[^>]*>/gi)){
+    const tagName=String(match[1]||'').toLowerCase();
+    const attrs=tagAttributes(match[0]);
+    if(tagName==='link'){
+      const rel=String(attrs.rel||'').toLowerCase().split(/\s+/).filter(Boolean);
+      if(rel.includes('canonical')&&attrs.href&&!canonicalUrl){
+        canonicalUrl=normalizeIdentityUrl(attrs.href,baseUrl,{blockedHostSuffixes});
+      }
+      continue;
+    }
+
+    const key=String(attrs.property||attrs.name||'').toLowerCase();
+    if(key==='og:url'&&attrs.content&&!ogUrl){
+      ogUrl=normalizeIdentityUrl(attrs.content,baseUrl,{blockedHostSuffixes});
+    }else if(key==='og:title'&&attrs.content&&!ogTitle){
+      ogTitle=String(attrs.content).trim();
+    }else if(key==='evercraft:story_id'&&attrs.content&&!storyId){
+      storyId=String(attrs.content).trim();
+    }
+  }
+
+  const titleMatch=html.match(/<title\b[^>]*>([\s\S]*?)<\/title>/i);
+  const documentTitle=titleMatch?decodeAttribute(String(titleMatch[1]).replace(/<[^>]+>/g,'').trim()):null;
+
+  return {canonicalUrl,ogUrl,ogTitle,storyId,documentTitle};
+}
+
 export async function preflightPublicLink({
   url,
   fetchImpl=globalThis.fetch,
   blockedHostSuffixes=DEFAULT_BLOCKED_HOST_SUFFIXES,
   expectedText=[],
+  expectedCanonicalUrl='',
+  expectedOgUrl='',
+  expectedStoryId='',
+  requireCanonicalSelfMatch=false,
+  requireOpenGraphSelfMatch=false,
   maxRedirects=5,
   timeoutMs=12000,
 }={}){
@@ -117,14 +181,48 @@ export async function preflightPublicLink({
     if(missing.length) throw new Error('clip_public_link_expected_identity_missing');
 
     const finalUrl=parsed.toString();
+    const isHtml=!contentType||contentType.includes('text/html')||contentType.includes('application/xhtml+xml');
+    const identity=isHtml?readPublicPageIdentity(body,finalUrl,{blockedHostSuffixes}):{
+      canonicalUrl:null,ogUrl:null,ogTitle:null,storyId:null,documentTitle:null
+    };
+
+    const expectedCanonical=expectedCanonicalUrl
+      ?normalizeIdentityUrl(expectedCanonicalUrl,finalUrl,{blockedHostSuffixes})
+      :null;
+    const expectedOg=expectedOgUrl
+      ?normalizeIdentityUrl(expectedOgUrl,finalUrl,{blockedHostSuffixes})
+      :null;
+
+    if(expectedCanonical){
+      if(!identity.canonicalUrl) throw new Error('clip_public_link_canonical_missing');
+      if(identity.canonicalUrl!==expectedCanonical) throw new Error('clip_public_link_canonical_mismatch');
+    }
+    if(requireCanonicalSelfMatch){
+      if(!identity.canonicalUrl) throw new Error('clip_public_link_canonical_missing');
+      if(identity.canonicalUrl!==finalUrl) throw new Error('clip_public_link_canonical_not_final_url');
+    }
+    if(expectedOg){
+      if(!identity.ogUrl) throw new Error('clip_public_link_og_url_missing');
+      if(identity.ogUrl!==expectedOg) throw new Error('clip_public_link_og_url_mismatch');
+    }
+    if(requireOpenGraphSelfMatch){
+      if(!identity.ogUrl) throw new Error('clip_public_link_og_url_missing');
+      if(identity.ogUrl!==finalUrl) throw new Error('clip_public_link_og_url_not_final_url');
+    }
+    if(String(expectedStoryId||'').trim()){
+      if(!identity.storyId) throw new Error('clip_public_link_story_id_missing');
+      if(identity.storyId!==String(expectedStoryId).trim()) throw new Error('clip_public_link_story_id_mismatch');
+    }
+
     return {
-      schema:'evercraft.clip.public-link-preflight.v1',
+      schema:'evercraft.clip.public-link-preflight.v2',
       verified:true,
       requestedUrl:requested,
       finalUrl,
       status,
       redirects,
       contentType,
+      identity,
       bodyFingerprint:'sha256:'+digest(body.slice(0,131072)),
       checkedAt:new Date().toISOString(),
       boundaries:{
@@ -136,6 +234,11 @@ export async function preflightPublicLink({
         browserRenderableContentRequired:true,
         redirectsRevalidated:true,
         holdingPageRejected:true,
+        canonicalIdentityVerified:expectedCanonical?identity.canonicalUrl===expectedCanonical:null,
+        canonicalSelfMatchVerified:requireCanonicalSelfMatch?identity.canonicalUrl===finalUrl:null,
+        openGraphIdentityVerified:expectedOg?identity.ogUrl===expectedOg:null,
+        openGraphSelfMatchVerified:requireOpenGraphSelfMatch?identity.ogUrl===finalUrl:null,
+        storyIdentityVerified:String(expectedStoryId||'').trim()?identity.storyId===String(expectedStoryId).trim():null,
       },
     };
   }

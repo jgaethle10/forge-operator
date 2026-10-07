@@ -172,3 +172,83 @@ test('publishes the verified final URL after a safe redirect',async()=>{
   assert.equal(publishedLink,'https://havenlycleaning.com/intake');
   assert.equal(receipt.publicLinkPreflight.redirects.length,1);
 });
+
+
+test('Journal-bound posts cannot publish when the page canonical identity disagrees with the receipt',async()=>{
+  let called=false;
+  const req=request();
+  req.metadata.link='https://journal.evercraft.global/cfb-power-rankings-week-6/';
+  req.metadata.title='Evercraft College Football Power Rankings';
+  req.linkVerification={
+    expectedText:['Evercraft College Football Power Rankings'],
+    expectedCanonicalUrl:req.metadata.link,
+    expectedOgUrl:req.metadata.link,
+    expectedStoryId:'journal:2026-10-06:cfb-power-rankings-week-6',
+    requireCanonicalSelfMatch:true,
+    requireOpenGraphSelfMatch:true,
+  };
+  const wrongCanonical='https://journal.evercraft.global/wrong-story/';
+  const receipt=await publishClipSocialPost({
+    request:req,
+    adapters:[{
+      destination:'facebook-page',
+      verified:true,
+      async publish(){called=true;throw new Error('must_not_publish');},
+    }],
+    policy:policy(async()=>okResponse(`<html><head>
+      <title>Evercraft College Football Power Rankings</title>
+      <link rel="canonical" href="${wrongCanonical}">
+      <meta property="og:url" content="${req.metadata.link}">
+      <meta name="evercraft:story_id" content="journal:2026-10-06:cfb-power-rankings-week-6">
+    </head><body>Evercraft College Football Power Rankings</body></html>`)),
+  });
+  assert.equal(receipt.status,'failed');
+  assert.match(receipt.error,/clip_public_link_canonical_mismatch/);
+  assert.equal(receipt.boundaries.canonicalIdentityBound,true);
+  assert.equal(called,false);
+});
+
+test('Journal-bound posts publish only after canonical, OpenGraph and story identity all match',async()=>{
+  let called=false;
+  const req=request();
+  req.metadata.link='https://journal.evercraft.global/cfb-power-rankings-week-6/';
+  req.metadata.title='Evercraft College Football Power Rankings';
+  req.linkVerification={
+    expectedText:['Evercraft College Football Power Rankings'],
+    expectedCanonicalUrl:req.metadata.link,
+    expectedOgUrl:req.metadata.link,
+    expectedStoryId:'journal:2026-10-06:cfb-power-rankings-week-6',
+    requireCanonicalSelfMatch:true,
+    requireOpenGraphSelfMatch:true,
+  };
+  const receipt=await publishClipSocialPost({
+    request:req,
+    adapters:[{
+      destination:'facebook-page',
+      verified:true,
+      async publish(input){
+        called=true;
+        assert.equal(input.metadata.link,req.metadata.link);
+        return {
+          state:'published',
+          remoteId:'cfb_1',
+          url:'https://www.facebook.com/evercraft/posts/cfb_1',
+          sourceRefs:['provider:facebook-graph-api-v26'],
+        };
+      },
+    }],
+    policy:policy(async()=>okResponse(`<html><head>
+      <title>Evercraft College Football Power Rankings</title>
+      <link rel="canonical" href="${req.metadata.link}">
+      <meta property="og:url" content="${req.metadata.link}">
+      <meta property="og:title" content="Evercraft College Football Power Rankings">
+      <meta name="evercraft:story_id" content="journal:2026-10-06:cfb-power-rankings-week-6">
+    </head><body>Evercraft College Football Power Rankings</body></html>`)),
+  });
+  assert.equal(receipt.status,'published');
+  assert.equal(receipt.boundaries.canonicalIdentityBound,true);
+  assert.equal(receipt.boundaries.openGraphIdentityBound,true);
+  assert.equal(receipt.boundaries.storyIdentityBound,true);
+  assert.equal(receipt.publicLinkPreflight.identity.storyId,'journal:2026-10-06:cfb-power-rankings-week-6');
+  assert.equal(called,true);
+});

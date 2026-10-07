@@ -153,3 +153,155 @@ test('archives expired durable reporting without presenting it as a live edition
   assert.match(llms, /No story is currently inside its live freshness window/i);
   assert.match(llms, /State: archived; live freshness expired/i);
 });
+
+
+test('carries canonical article identity into the Clip handoff instead of requiring a guessed URL', () => {
+  const outDir = fs.mkdtempSync(path.join(os.tmpdir(), 'journal-clip-identity-'));
+  publishJournalStories([story()], {
+    outDir,
+    now: new Date('2026-09-30T22:00:00.000Z'),
+    publicOrigin: 'https://journal.test.evercraft.local'
+  });
+
+  const articleHtml = fs.readFileSync(path.join(outDir, 'owned-journal-test', 'index.html'), 'utf8');
+  assert.match(articleHtml, /name="evercraft:story_id" content="journal:test:owned"/);
+
+  const handoff = JSON.parse(fs.readFileSync(path.join(outDir, 'production', 'owned-journal-test', 'clip-handoff.json'), 'utf8'));
+  assert.equal(handoff.canonical_url, 'https://journal.test.evercraft.local/owned-journal-test/');
+  assert.equal(handoff.publication_receipt_ref, 'receipts/owned-journal-test.json');
+  assert.equal(handoff.link_verification.expectedCanonicalUrl, handoff.canonical_url);
+  assert.equal(handoff.link_verification.expectedOgUrl, handoff.canonical_url);
+  assert.equal(handoff.link_verification.expectedStoryId, 'journal:test:owned');
+  assert.equal(handoff.link_verification.requireCanonicalSelfMatch, true);
+  assert.equal(handoff.link_verification.requireOpenGraphSelfMatch, true);
+
+  const receipt = JSON.parse(fs.readFileSync(path.join(outDir, 'receipts', 'owned-journal-test.json'), 'utf8'));
+  assert.equal(receipt.title, 'Owned Journal Test');
+  assert.equal(receipt.clip_handoff_ref, 'production/owned-journal-test/clip-handoff.json');
+});
+
+
+test('renders a responsive ranking surface without a horizontally dependent table', () => {
+  const outDir = fs.mkdtempSync(path.join(os.tmpdir(), 'journal-ranking-'));
+  const fixture = story();
+  fixture.ranking_table = {
+    schema: 'evercraft.journal.ranking-table.v1',
+    title: 'Evercraft Top 3',
+    note: 'Results-first ranking surface.',
+    rows: [
+      { rank: 1, team_name: 'Alpha State', record: { wins: 5, losses: 0 }, movement: 2, power_score: 94.25, confidence: 0.91 },
+      { rank: 2, team_name: 'Beta Tech', record: { wins: 4, losses: 1 }, movement: 0, power_score: 91.10, confidence: 0.88 },
+      { rank: 3, team_name: 'Gamma', record: { wins: 4, losses: 1 }, movement: null, power_score: 88.75, confidence: 0.86 }
+    ]
+  };
+  publishJournalStories([fixture], {
+    outDir,
+    now: new Date('2026-09-30T22:00:00.000Z'),
+    publicOrigin: 'https://journal.test.evercraft.local'
+  });
+  const html = fs.readFileSync(path.join(outDir, 'owned-journal-test', 'index.html'), 'utf8');
+  assert.match(html, /ranking-surface/);
+  assert.match(html, /#1/);
+  assert.match(html, /Alpha State/);
+  assert.match(html, /94\.25/);
+  assert.doesNotMatch(html, /<table/i);
+});
+
+test('rejects malformed ranking surfaces before publication', () => {
+  const fixture = story();
+  fixture.ranking_table = {
+    schema: 'evercraft.journal.ranking-table.v1',
+    rows: [
+      { rank: 1, team_name: 'Alpha State', power_score: 101, confidence: 0.9 }
+    ]
+  };
+  assert.throws(() => validateJournalStory(fixture, {
+    now: new Date('2026-09-30T22:00:00.000Z')
+  }), /power_score must be 0 to 100/i);
+});
+
+
+test('publishes frozen machine evidence beside a Journal edition and binds its hash into the receipt', () => {
+  const outDir = fs.mkdtempSync(path.join(os.tmpdir(), 'journal-machine-evidence-'));
+  const fixture = story();
+  fixture.machine_evidence = {
+    schema: 'evercraft.journal.machine-evidence.v1',
+    relative_path: 'data/owned-journal-test.json',
+    payload: {
+      schema: 'evercraft.cfb.edition-evidence.v1',
+      run_id: 'cfbpi:test',
+      rankings: [{ rank: 1, team: 'Alpha State' }]
+    }
+  };
+  publishJournalStories([fixture], {
+    outDir,
+    now: new Date('2026-09-30T22:00:00.000Z'),
+    publicOrigin: 'https://journal.test.evercraft.local'
+  });
+  const evidencePath = path.join(outDir, 'data', 'owned-journal-test.json');
+  assert.ok(fs.existsSync(evidencePath));
+  const receipt = JSON.parse(fs.readFileSync(path.join(outDir, 'receipts', 'owned-journal-test.json'), 'utf8'));
+  assert.equal(receipt.machine_evidence_ref, 'data/owned-journal-test.json');
+  assert.match(receipt.machine_evidence_sha256, /^[a-f0-9]{64}$/);
+});
+
+test('rejects unsafe machine-evidence output paths', () => {
+  const fixture = story();
+  fixture.machine_evidence = {
+    schema: 'evercraft.journal.machine-evidence.v1',
+    relative_path: '../escape.json',
+    payload: { ok: true }
+  };
+  assert.throws(() => validateJournalStory(fixture, {
+    now: new Date('2026-09-30T22:00:00.000Z')
+  }), /safe data/i);
+});
+
+
+test('ranking stories generate feed, square and story visuals and bind them into Clip lineage', () => {
+  const outDir = fs.mkdtempSync(path.join(os.tmpdir(), 'journal-ranking-visuals-'));
+  const fixture = story();
+  fixture.ranking_table = {
+    schema: 'evercraft.journal.ranking-table.v1',
+    title: 'Evercraft Top 25',
+    note: 'CFBPI v0.2',
+    rows: Array.from({ length: 25 }, (_, i) => ({
+      rank: i + 1,
+      team_name: i === 0 ? 'Alabama' : 'Team ' + (i + 1),
+      record: { wins: 5, losses: i === 9 ? 1 : 0 },
+      movement: null,
+      power_score: 81.49 - i,
+      confidence: 0.95
+    }))
+  };
+  fixture.machine_evidence = {
+    schema: 'evercraft.journal.machine-evidence.v1',
+    relative_path: 'data/owned-journal-test.json',
+    payload: {
+      schema: 'evercraft.cfb.edition-evidence.v1',
+      ranking_run_id: 'cfbpi:test',
+      evidence_through_at: '2026-09-30T21:00:00.000Z',
+      model: { model_version: 'evercraft-cfbpi-0.2.0' }
+    }
+  };
+  publishJournalStories([fixture], {
+    outDir,
+    now: new Date('2026-09-30T22:00:00.000Z'),
+    publicOrigin: 'https://journal.test.evercraft.local'
+  });
+
+  for (const format of ['feed','square','story']) {
+    assert.ok(fs.existsSync(path.join(outDir, 'production', 'owned-journal-test', 'ranking-' + format + '.svg')));
+  }
+
+  const article = fs.readFileSync(path.join(outDir, 'owned-journal-test', 'index.html'), 'utf8');
+  assert.match(article, /ranking-feed\.svg/);
+  assert.match(article, /property="og:image"/);
+
+  const handoff = JSON.parse(fs.readFileSync(path.join(outDir, 'production', 'owned-journal-test', 'clip-handoff.json'), 'utf8'));
+  assert.match(handoff.ranking_visuals.feed.url, /ranking-feed\.svg$/);
+  assert.match(handoff.ranking_visuals.feed.sha256, /^[a-f0-9]{64}$/);
+
+  const receipt = JSON.parse(fs.readFileSync(path.join(outDir, 'receipts', 'owned-journal-test.json'), 'utf8'));
+  assert.equal(receipt.ranking_visuals.story.ref, 'production/owned-journal-test/ranking-story.svg');
+});

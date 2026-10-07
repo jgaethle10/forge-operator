@@ -3,6 +3,7 @@ import crypto from 'node:crypto';
 import fs from 'node:fs';
 import path from 'node:path';
 import { pathToFileURL } from 'node:url';
+import { renderCfbRankingPoster } from '../graphics-command/ranking-poster-renderer.mjs';
 
 const clean = (value) => String(value ?? '').trim();
 const unique = (values = []) => [...new Set(values.map(clean).filter(Boolean))];
@@ -85,6 +86,38 @@ export function validateJournalStory(input, { now = new Date(), allowExpired = f
     }
   }
 
+  if (story.machine_evidence) {
+    if (story.machine_evidence.schema !== 'evercraft.journal.machine-evidence.v1') {
+      throw new Error('Journal machine evidence schema is invalid.');
+    }
+    const relativePath = clean(story.machine_evidence.relative_path);
+    if (!/^data\/[a-z0-9][a-z0-9._-]*\.json$/.test(relativePath)) {
+      throw new Error('Journal machine evidence path must be a safe data/*.json path.');
+    }
+    if (!story.machine_evidence.payload || typeof story.machine_evidence.payload !== 'object' || Array.isArray(story.machine_evidence.payload)) {
+      throw new Error('Journal machine evidence payload is required.');
+    }
+  }
+
+  if (story.ranking_table) {
+    if (story.ranking_table.schema !== 'evercraft.journal.ranking-table.v1') {
+      throw new Error('Journal ranking table schema is invalid.');
+    }
+    const rows = Array.isArray(story.ranking_table.rows) ? story.ranking_table.rows : [];
+    if (!rows.length || rows.length > 50) throw new Error('Journal ranking table requires 1 to 50 rows.');
+    const ranks = new Set();
+    for (const row of rows) {
+      const rank = Number(row.rank);
+      const score = Number(row.power_score);
+      const confidence = Number(row.confidence);
+      if (!Number.isInteger(rank) || rank < 1 || ranks.has(rank)) throw new Error('Journal ranking rows require unique positive ranks.');
+      if (!clean(row.team_name)) throw new Error('Journal ranking rows require team_name.');
+      if (!Number.isFinite(score) || score < 0 || score > 100) throw new Error('Journal ranking power_score must be 0 to 100.');
+      if (!Number.isFinite(confidence) || confidence < 0 || confidence > 1) throw new Error('Journal ranking confidence must be 0 to 1.');
+      ranks.add(rank);
+    }
+  }
+
   const sections = Array.isArray(story.sections) ? story.sections : [];
   if (sections.length < 3) throw new Error('Journal stories require at least three substantive sections.');
   for (const section of sections) {
@@ -148,10 +181,39 @@ function storyUrl(publicOrigin, slug) {
   return `${normalizeJournalOrigin(publicOrigin)}/${String(slug || '').replace(/^\/+|\/+$/g,'')}/`;
 }
 
-function renderArticle(story, publicOrigin, { archived = false } = {}) {
+function renderRankingSurface(story) {
+  const table = story.ranking_table;
+  if (!table) return '';
+  const rows = table.rows.map((row) => {
+    const movement = row.movement == null
+      ? 'NEW'
+      : Number(row.movement) > 0
+        ? `↑${Math.abs(Number(row.movement))}`
+        : Number(row.movement) < 0
+          ? `↓${Math.abs(Number(row.movement))}`
+          : '•';
+    const record = row.record && Number.isInteger(Number(row.record.wins)) && Number.isInteger(Number(row.record.losses))
+      ? `${Number(row.record.wins)}-${Number(row.record.losses)}`
+      : '';
+    return `<li class="ranking-row">
+      <div class="ranking-rank">#${Number(row.rank)}</div>
+      <div class="ranking-team"><strong>${escapeHtml(row.team_name)}</strong><span>${escapeHtml(record)}</span></div>
+      <div class="ranking-move">${escapeHtml(movement)}</div>
+      <div class="ranking-score"><span>Power</span><strong>${Number(row.power_score).toFixed(2)}</strong></div>
+      <div class="ranking-confidence"><span>Confidence</span><strong>${Math.round(Number(row.confidence)*100)}%</strong></div>
+    </li>`;
+  }).join('');
+  return `<section class="ranking-surface" aria-label="${escapeHtml(table.title || 'Power rankings')}">
+    <div class="ranking-heading"><h2>${escapeHtml(table.title || 'Power rankings')}</h2><p>${escapeHtml(table.note || '')}</p></div>
+    <ol class="ranking-list">${rows}</ol>
+  </section>`;
+}
+
+function renderArticle(story, publicOrigin, { archived = false, rankingHeroUrl = '' } = {}) {
   const canonical = storyUrl(publicOrigin, story.slug);
   const description = escapeHtml(story.dek);
-  const image = story.hero_visual?.url ? escapeHtml(story.hero_visual.url) : '';
+  const imageUrl = story.hero_visual?.url || rankingHeroUrl || '';
+  const image = imageUrl ? escapeHtml(imageUrl) : '';
   const jsonLd = {
     '@context': 'https://schema.org',
     '@type': 'NewsArticle',
@@ -162,7 +224,7 @@ function renderArticle(story, publicOrigin, { archived = false } = {}) {
     author: { '@type': 'Organization', name: 'Evercraft Journal' },
     publisher: { '@type': 'Organization', name: 'Evercraft Journal' },
     mainEntityOfPage: canonical,
-    ...(image ? { image: [story.hero_visual.url] } : {})
+    ...(image ? { image: [imageUrl] } : {})
   };
 
   const sections = story.sections.map((section) =>
@@ -175,8 +237,9 @@ function renderArticle(story, publicOrigin, { archived = false } = {}) {
     : '';
 
   const heroHtml = image
-    ? `<figure class="hero"><img src="${image}" alt="${escapeHtml(story.hero_visual.alt || story.title)}"><figcaption>${escapeHtml(story.hero_visual.caption || '')}</figcaption></figure>`
+    ? `<figure class="hero"><img src="${image}" alt="${escapeHtml(story.hero_visual?.alt || (story.ranking_table ? 'Evercraft college football power ranking graphic' : story.title))}"><figcaption>${escapeHtml(story.hero_visual?.caption || (story.ranking_table ? 'The current Evercraft Top 10, generated from the frozen ranking receipt.' : ''))}</figcaption></figure>`
     : '';
+  const rankingHtml = renderRankingSurface(story);
 
   return `<!doctype html>
 <html lang="en">
@@ -185,6 +248,7 @@ function renderArticle(story, publicOrigin, { archived = false } = {}) {
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>${escapeHtml(story.title)} | Evercraft Journal</title>
 <meta name="description" content="${description}">
+<meta name="evercraft:story_id" content="${escapeHtml(story.story_id)}">
 <link rel="canonical" href="${canonical}">
 <meta property="og:site_name" content="Evercraft Journal">
 <meta property="og:type" content="article">
@@ -201,6 +265,8 @@ header{padding:28px 0 16px;border-bottom:1px solid #222b2b}.brand{font-weight:80
 main{padding:52px 0 80px}.kicker{color:var(--ice);font-size:.86rem;font-weight:800;letter-spacing:.1em;text-transform:uppercase}.meta{color:var(--muted);margin-top:12px}
 h1{font-size:clamp(2.4rem,7vw,5rem);line-height:1.02;letter-spacing:-.045em;margin:.2em 0}.dek{font-size:clamp(1.1rem,2.4vw,1.45rem);color:#d8dddd;max-width:760px}
 .hero{margin:36px 0}.hero img{display:block;width:100%;border-radius:16px}.hero figcaption{color:var(--muted);font-size:.88rem;margin-top:9px}
+.ranking-surface{margin:38px 0}.ranking-heading{display:flex;align-items:end;justify-content:space-between;gap:18px;border-bottom:1px solid #2b3535;padding-bottom:14px}.ranking-heading h2,.ranking-heading p{margin:0}.ranking-heading p{color:var(--muted);max-width:520px;text-align:right}.ranking-list{list-style:none;padding:0;margin:0}.ranking-row{display:grid;grid-template-columns:64px minmax(0,1fr) 58px 92px 112px;gap:12px;align-items:center;padding:16px 0;border-bottom:1px solid #1f2929}.ranking-rank{font-size:1.12rem;font-weight:900;color:var(--gold)}.ranking-team{min-width:0;display:flex;flex-direction:column}.ranking-team strong{font-size:1.05rem;white-space:normal}.ranking-team span,.ranking-score span,.ranking-confidence span{color:var(--muted);font-size:.74rem;text-transform:uppercase;letter-spacing:.06em}.ranking-move{font-weight:800;text-align:center}.ranking-score,.ranking-confidence{display:flex;flex-direction:column;align-items:flex-end}.ranking-score strong,.ranking-confidence strong{font-variant-numeric:tabular-nums}
+@media(max-width:640px){.ranking-heading{display:block}.ranking-heading p{text-align:left;margin-top:6px}.ranking-row{grid-template-columns:48px minmax(0,1fr) 48px}.ranking-score,.ranking-confidence{grid-column:2;align-items:flex-start;display:inline-flex;flex-direction:row;gap:8px}.ranking-confidence{margin-top:-8px}.ranking-move{grid-column:3;grid-row:1 / span 3}.ranking-team strong{font-size:1rem}}
 section{margin:42px 0}h2{font-size:1.65rem;letter-spacing:-.02em}p{font-size:1.08rem}.evidence-box{border:1px solid #2b3535;background:var(--panel);padding:22px 24px;border-radius:14px;margin:40px 0}
 .sources{border-top:1px solid #263030;padding-top:24px}.source-publisher{color:var(--muted)}footer{padding:28px 0 50px;color:var(--muted);border-top:1px solid #222b2b}
 </style>
@@ -215,6 +281,7 @@ ${archived ? '<aside class="evidence-box"><strong>Archived analysis.</strong> Th
 <p class="dek">${description}</p>
 <p class="meta">Published ${escapeHtml(new Date(story.published_at).toLocaleString('en-US',{timeZone:'America/Los_Angeles',dateStyle:'long',timeStyle:'short'}))} PT · Evidence state: ${escapeHtml(story.evidence_state || 'source-grounded')}</p>
 ${heroHtml}
+${rankingHtml}
 ${sections}
 ${uncertaintyHtml}
 <section class="sources"><h2>Sources and evidence</h2><ol>${renderSourceList(story)}</ol></section>
@@ -286,22 +353,73 @@ export function publishJournalStories(inputStories, {
     fs.mkdirSync(productionDir, { recursive: true });
     fs.mkdirSync(receiptDir, { recursive: true });
 
-    const html = renderArticle(story, origin, { archived });
+    let rankingVisuals = null;
+    if (story.ranking_table) {
+      const rankingPayload = {
+        schema: 'evercraft.cfb-power-rankings.v1',
+        run_id: story.machine_evidence?.payload?.ranking_run_id || story.story_id,
+        evidence_through_at: story.machine_evidence?.payload?.evidence_through_at || story.updated_at,
+        model: story.machine_evidence?.payload?.model || { model_version: story.ranking_table.note || 'journal-ranking' },
+        rankings: story.ranking_table.rows.map((row) => ({
+          rank: Number(row.rank),
+          team_name: row.team_name,
+          record: row.record || {},
+          power_score: Number(row.power_score),
+          confidence: Number(row.confidence)
+        }))
+      };
+      rankingVisuals = {};
+      for (const [format, minimumRows] of [['feed',10],['square',8],['story',15]]) {
+        if (rankingPayload.rankings.length < minimumRows) continue;
+        const svg = renderCfbRankingPoster(rankingPayload, format);
+        const filename = `ranking-${format}.svg`;
+        fs.writeFileSync(path.join(productionDir, filename), svg);
+        rankingVisuals[format] = {
+          ref: `production/${story.slug}/${filename}`,
+          url: `${origin}/production/${story.slug}/${filename}`,
+          sha256: sha256(svg)
+        };
+      }
+    }
+
+    const html = renderArticle(story, origin, { archived, rankingHeroUrl: rankingVisuals?.feed?.url || '' });
     const articlePath = path.join(articleDir, 'index.html');
     fs.writeFileSync(articlePath, html);
 
     const fallenBrief = JSON.stringify(story.fallen_brief, null, 2) + '\n';
     fs.writeFileSync(path.join(productionDir, 'fallen-brief.json'), fallenBrief);
 
+    let machineEvidenceSha256 = null;
+    if (story.machine_evidence) {
+      const machineEvidence = JSON.stringify(story.machine_evidence.payload, null, 2) + '\n';
+      const machinePath = path.resolve(outDir, story.machine_evidence.relative_path);
+      const outRoot = path.resolve(outDir) + path.sep;
+      if (!machinePath.startsWith(outRoot)) throw new Error('Journal machine evidence escaped output root.');
+      fs.mkdirSync(path.dirname(machinePath), { recursive: true });
+      fs.writeFileSync(machinePath, machineEvidence);
+      machineEvidenceSha256 = sha256(machineEvidence);
+    }
+
     const clipHandoff = {
       schema: 'evercraft.clip.journal-handoff.v1',
       story_id: story.story_id,
       slug: story.slug,
       title: story.title,
+      canonical_url: storyUrl(origin, story.slug),
+      publication_receipt_ref: `receipts/${story.slug}.json`,
+      link_verification: {
+        expectedText: [story.title],
+        expectedCanonicalUrl: storyUrl(origin, story.slug),
+        expectedOgUrl: storyUrl(origin, story.slug),
+        expectedStoryId: story.story_id,
+        requireCanonicalSelfMatch: true,
+        requireOpenGraphSelfMatch: true
+      },
       source_refs: story.sources.map((source) => source.source_id),
       evidence_state: story.evidence_state,
       derivatives: story.derivatives || [],
       production_grade: story.production_grade,
+      ranking_visuals: rankingVisuals,
       publication_authority: false,
       rule: 'Clip may produce approved derivatives, but this handoff alone does not grant social publication authority.'
     };
@@ -311,9 +429,11 @@ export function publishJournalStories(inputStories, {
       schema: 'evercraft.journal.publication-receipt.v1',
       story_id: story.story_id,
       slug: story.slug,
+      title: story.title,
       published_at: story.published_at,
       built_at: now.toISOString(),
       canonical_url: storyUrl(origin, story.slug),
+      clip_handoff_ref: `production/${story.slug}/clip-handoff.json`,
       evidence_state: story.evidence_state,
       source_refs: story.sources.map((source) => source.source_id),
       freshness_expires_at: story.freshness_expires_at,
@@ -321,6 +441,9 @@ export function publishJournalStories(inputStories, {
       production_grade: story.production_grade,
       article_sha256: sha256(html),
       fallen_brief_sha256: sha256(fallenBrief),
+      machine_evidence_ref: story.machine_evidence?.relative_path || null,
+      machine_evidence_sha256: machineEvidenceSha256,
+      ranking_visuals: rankingVisuals,
       publisher: 'evercraft-owned-static-journal-v1',
       publication_authority: true,
       publication_state: archived ? 'archived' : 'live',

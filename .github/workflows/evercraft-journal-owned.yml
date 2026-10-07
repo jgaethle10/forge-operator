@@ -4,6 +4,7 @@ on:
   pull_request:
     paths:
       - 'systemia/newsroom/**'
+      - 'systemia/graphics-command/ranking-poster-renderer.mjs'
       - 'systemia/worldstate/subscriptions.json'
       - 'public/journal/**'
       - 'package.json'
@@ -13,6 +14,7 @@ on:
       - main
     paths:
       - 'systemia/newsroom/**'
+      - 'systemia/graphics-command/ranking-poster-renderer.mjs'
       - 'systemia/worldstate/subscriptions.json'
       - 'public/journal/**'
       - 'package.json'
@@ -47,6 +49,16 @@ jobs:
           test -f public/journal/receipts/boeing-fa-xx-industrial-base.json
           test -f public/journal/production/boeing-fa-xx-industrial-base/fallen-brief.json
           test -f public/journal/production/boeing-fa-xx-industrial-base/clip-handoff.json
+          test -f public/journal/college-football-power-rankings-2026-10-06/index.html
+          test -f public/journal/receipts/college-football-power-rankings-2026-10-06.json
+          test -f public/journal/production/college-football-power-rankings-2026-10-06/clip-handoff.json
+          test -f public/journal/data/college-football-power-rankings-2026-10-06.json
+          test -f public/journal/production/college-football-power-rankings-2026-10-06/ranking-feed.svg
+          test -f public/journal/production/college-football-power-rankings-2026-10-06/ranking-square.svg
+          test -f public/journal/production/college-football-power-rankings-2026-10-06/ranking-story.svg
+          grep -q 'Evercraft College Football Power Rankings: Alabama Is No. 1' public/journal/college-football-power-rankings-2026-10-06/index.html
+          grep -q 'https://fabric.systemiacommandcenters.com/journal/college-football-power-rankings-2026-10-06/' public/journal/college-football-power-rankings-2026-10-06/index.html
+          grep -q '"ranking_run_id": "cfbpi:5d90b842afecc9f43c50ea34"' public/journal/data/college-football-power-rankings-2026-10-06.json
       - name: Verify no legacy shopping identity leaked
         run: |
           if grep -RniE 'Black Friday|shopping assistant|optimize your cart' public/journal; then

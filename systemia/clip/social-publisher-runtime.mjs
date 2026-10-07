@@ -14,6 +14,19 @@ function normalizedMetadata(metadata={}){
   };
 }
 
+function normalizedLinkVerification(value={}){
+  return {
+    expectedText:Array.isArray(value.expectedText)
+      ?value.expectedText.map(item=>String(item??'').trim()).filter(Boolean)
+      :[],
+    expectedCanonicalUrl:String(value.expectedCanonicalUrl??'').trim(),
+    expectedOgUrl:String(value.expectedOgUrl??'').trim(),
+    expectedStoryId:String(value.expectedStoryId??'').trim(),
+    requireCanonicalSelfMatch:value.requireCanonicalSelfMatch===true,
+    requireOpenGraphSelfMatch:value.requireOpenGraphSelfMatch===true,
+  };
+}
+
 function validateRequest(request){
   if(request?.schema!=='evercraft.clip.social-publish-request.v1') throw new Error('clip_social_publish_schema_invalid');
   if(!request.id?.trim()) throw new Error('clip_social_publish_id_missing');
@@ -23,20 +36,23 @@ function validateRequest(request){
   if(!request.authorization?.authorizationRef?.trim()) throw new Error('clip_social_publish_authorization_ref_missing');
   const metadata=normalizedMetadata(request.metadata);
   if(!metadata.message&&!metadata.link) throw new Error('clip_social_publish_content_missing');
-  return metadata;
+  return {metadata,linkVerification:normalizedLinkVerification(request.linkVerification)};
 }
 
-function contentDigestFor(request,metadata){
+function contentDigestFor(request,metadata,linkVerification){
   return hash(JSON.stringify({
-    schema:'evercraft.clip.social-content.v1',
+    schema:'evercraft.clip.social-content.v2',
     destination:request.destination,
     brandKey:request.brandKey,
     metadata,
+    linkVerification,
   }));
 }
 
 export async function publishClipSocialPost({request,adapters,policy}){
-  let metadata=validateRequest(request);
+  const validated=validateRequest(request);
+  let metadata=validated.metadata;
+  const linkVerification=validated.linkVerification;
   if(policy?.allowPublishing!==true) throw new Error('clip_social_publish_policy_disabled');
 
   const allowedDestinations=new Set(policy.allowedDestinations||[]);
@@ -49,7 +65,7 @@ export async function publishClipSocialPost({request,adapters,policy}){
   if(!adapter) throw new Error('clip_social_publish_verified_adapter_missing');
 
   const startedAt=new Date().toISOString();
-  let contentDigest=contentDigestFor(request,metadata);
+  let contentDigest=contentDigestFor(request,metadata,linkVerification);
   let linkPreflight=null;
 
   try{
@@ -59,12 +75,17 @@ export async function publishClipSocialPost({request,adapters,policy}){
         url:metadata.link,
         fetchImpl:linkPolicy.fetchImpl??globalThis.fetch,
         blockedHostSuffixes:linkPolicy.blockedHostSuffixes,
-        expectedText:linkPolicy.expectedText,
+        expectedText:linkVerification.expectedText.length?linkVerification.expectedText:linkPolicy.expectedText,
+        expectedCanonicalUrl:linkVerification.expectedCanonicalUrl||linkPolicy.expectedCanonicalUrl,
+        expectedOgUrl:linkVerification.expectedOgUrl||linkPolicy.expectedOgUrl,
+        expectedStoryId:linkVerification.expectedStoryId||linkPolicy.expectedStoryId,
+        requireCanonicalSelfMatch:linkVerification.requireCanonicalSelfMatch||linkPolicy.requireCanonicalSelfMatch===true,
+        requireOpenGraphSelfMatch:linkVerification.requireOpenGraphSelfMatch||linkPolicy.requireOpenGraphSelfMatch===true,
         maxRedirects:linkPolicy.maxRedirects,
         timeoutMs:linkPolicy.timeoutMs,
       });
       metadata={...metadata,link:linkPreflight.finalUrl};
-      contentDigest=contentDigestFor(request,metadata);
+      contentDigest=contentDigestFor(request,metadata,linkVerification);
     }
 
     const result=await adapter.publish({
@@ -92,6 +113,7 @@ export async function publishClipSocialPost({request,adapters,policy}){
       providerRequestId:result.providerRequestId||result.remoteId,
       authorizationRef:request.authorization.authorizationRef,
       publicLinkPreflight:linkPreflight,
+      linkVerification,
       sourceRefs:[
         'clip-social-content:'+contentDigest,
         ...(linkPreflight?['clip-public-link:'+linkPreflight.bodyFingerprint]:[]),
@@ -107,6 +129,9 @@ export async function publishClipSocialPost({request,adapters,policy}){
         publicLinkPreflightRequired:metadata.link?true:false,
         anonymousPublicLinkVerified:metadata.link?linkPreflight?.verified===true:false,
         legacyProviderPublicLinksBlocked:true,
+        canonicalIdentityBound:Boolean(linkVerification.expectedCanonicalUrl||linkVerification.requireCanonicalSelfMatch),
+        openGraphIdentityBound:Boolean(linkVerification.expectedOgUrl||linkVerification.requireOpenGraphSelfMatch),
+        storyIdentityBound:Boolean(linkVerification.expectedStoryId),
       },
       startedAt,
       publishedAt:new Date().toISOString(),
@@ -121,6 +146,7 @@ export async function publishClipSocialPost({request,adapters,policy}){
       contentDigest,
       authorizationRef:request.authorization.authorizationRef,
       publicLinkPreflight:linkPreflight,
+      linkVerification,
       error:error instanceof Error?error.message:String(error),
       boundaries:{
         firstPartyClipRuntime:true,
@@ -132,6 +158,9 @@ export async function publishClipSocialPost({request,adapters,policy}){
         publicLinkPreflightRequired:metadata.link?true:false,
         anonymousPublicLinkVerified:false,
         legacyProviderPublicLinksBlocked:true,
+        canonicalIdentityBound:Boolean(linkVerification.expectedCanonicalUrl||linkVerification.requireCanonicalSelfMatch),
+        openGraphIdentityBound:Boolean(linkVerification.expectedOgUrl||linkVerification.requireOpenGraphSelfMatch),
+        storyIdentityBound:Boolean(linkVerification.expectedStoryId),
       },
       startedAt,
       failedAt:new Date().toISOString(),

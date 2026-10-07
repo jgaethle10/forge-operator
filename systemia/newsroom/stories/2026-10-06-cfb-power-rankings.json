@@ -1,0 +1,1342 @@
+{
+  "schema": "evercraft.journal.story.v1",
+  "story_id": "journal:2026-10-06:cfb-power-rankings",
+  "slug": "college-football-power-rankings-2026-10-06",
+  "title": "Evercraft College Football Power Rankings: Alabama Is No. 1",
+  "dek": "The AP has Texas at No. 1. Our results-first model has Alabama. Here is the first frozen Evercraft Top 25, why it differs, and how we will keep score on ourselves.",
+  "desk": "Sports",
+  "story_type": "Power Rankings",
+  "status": "approved",
+  "published_at": "2026-10-07T04:30:00.000Z",
+  "updated_at": "2026-10-07T04:30:00.000Z",
+  "freshness_expires_at": "2026-10-11T17:00:00.000Z",
+  "evidence_state": "model_derived_from_verified_public_results",
+  "sensitivity": {
+    "state": "public_unclassified",
+    "classified_detail_policy": "do_not_infer_or_expand"
+  },
+  "sources": [
+    {
+      "source_id": "ncaa-fbs-scoreboard",
+      "label": "NCAA FBS football scores",
+      "publisher": "NCAA",
+      "url": "https://www.ncaa.com/scoreboard/football/fbs",
+      "evidence_state": "verified"
+    },
+    {
+      "source_id": "ncaa-ap-top-25",
+      "label": "Associated Press Top 25 through games October 3, 2026",
+      "publisher": "NCAA",
+      "url": "https://www.ncaa.com/rankings/football/fbs/associated-press",
+      "evidence_state": "verified"
+    },
+    {
+      "source_id": "evercraft-cfb-edition-evidence",
+      "label": "Frozen Evercraft CFBPI edition evidence",
+      "publisher": "Evercraft Journal",
+      "url": "https://fabric.systemiacommandcenters.com/journal/data/college-football-power-rankings-2026-10-06.json",
+      "evidence_state": "verified"
+    }
+  ],
+  "claims": [
+    {
+      "claim": "The Associated Press poll through games October 3 ranks Texas No. 1, Georgia No. 2, Notre Dame No. 3, Miami No. 4, Ohio State No. 5 and Alabama No. 6.",
+      "evidence_state": "verified",
+      "source_refs": [
+        "ncaa-ap-top-25"
+      ]
+    },
+    {
+      "claim": "Evercraft CFBPI v0.2 ranks Alabama No. 1 with a Power Score of 81.49, followed by Notre Dame and Texas.",
+      "evidence_state": "verified",
+      "source_refs": [
+        "evercraft-cfb-edition-evidence"
+      ]
+    },
+    {
+      "claim": "This edition is computed from 391 completed games in the frozen NCAA-derived ledger through October 6, 2026.",
+      "evidence_state": "verified",
+      "source_refs": [
+        "evercraft-cfb-edition-evidence",
+        "ncaa-fbs-scoreboard"
+      ]
+    }
+  ],
+  "ranking_table": {
+    "schema": "evercraft.journal.ranking-table.v1",
+    "title": "Evercraft Top 25",
+    "note": "CFBPI v0.2 | completed-game evidence through October 6, 2026",
+    "rows": [
+      {
+        "rank": 1,
+        "team_name": "Alabama",
+        "record": {
+          "wins": 5,
+          "losses": 0
+        },
+        "movement": null,
+        "power_score": 81.49,
+        "confidence": 0.95,
+        "ap_rank": 6
+      },
+      {
+        "rank": 2,
+        "team_name": "Notre Dame",
+        "record": {
+          "wins": 5,
+          "losses": 0
+        },
+        "movement": null,
+        "power_score": 74,
+        "confidence": 0.95,
+        "ap_rank": 3
+      },
+      {
+        "rank": 3,
+        "team_name": "Texas",
+        "record": {
+          "wins": 4,
+          "losses": 0
+        },
+        "movement": null,
+        "power_score": 73.57,
+        "confidence": 0.8645,
+        "ap_rank": 1
+      },
+      {
+        "rank": 4,
+        "team_name": "Texas Tech",
+        "record": {
+          "wins": 5,
+          "losses": 0
+        },
+        "movement": null,
+        "power_score": 68.81,
+        "confidence": 0.95,
+        "ap_rank": 11
+      },
+      {
+        "rank": 5,
+        "team_name": "Indiana",
+        "record": {
+          "wins": 5,
+          "losses": 0
+        },
+        "movement": null,
+        "power_score": 68.31,
+        "confidence": 0.95,
+        "ap_rank": 7
+      },
+      {
+        "rank": 6,
+        "team_name": "UCLA",
+        "record": {
+          "wins": 4,
+          "losses": 0
+        },
+        "movement": null,
+        "power_score": 68.09,
+        "confidence": 0.8645,
+        "ap_rank": 21
+      },
+      {
+        "rank": 7,
+        "team_name": "Georgia",
+        "record": {
+          "wins": 5,
+          "losses": 0
+        },
+        "movement": null,
+        "power_score": 68.01,
+        "confidence": 0.95,
+        "ap_rank": 2
+      },
+      {
+        "rank": 8,
+        "team_name": "Utah",
+        "record": {
+          "wins": 4,
+          "losses": 0
+        },
+        "movement": null,
+        "power_score": 67.89,
+        "confidence": 0.8645,
+        "ap_rank": 12
+      },
+      {
+        "rank": 9,
+        "team_name": "Miami (FL)",
+        "record": {
+          "wins": 5,
+          "losses": 0
+        },
+        "movement": null,
+        "power_score": 66.74,
+        "confidence": 0.95,
+        "ap_rank": 4
+      },
+      {
+        "rank": 10,
+        "team_name": "Ohio St.",
+        "record": {
+          "wins": 4,
+          "losses": 1
+        },
+        "movement": null,
+        "power_score": 66.52,
+        "confidence": 0.95,
+        "ap_rank": 5
+      },
+      {
+        "rank": 11,
+        "team_name": "BYU",
+        "record": {
+          "wins": 4,
+          "losses": 0
+        },
+        "movement": null,
+        "power_score": 66.36,
+        "confidence": 0.8645,
+        "ap_rank": 8
+      },
+      {
+        "rank": 12,
+        "team_name": "Nebraska",
+        "record": {
+          "wins": 5,
+          "losses": 0
+        },
+        "movement": null,
+        "power_score": 65.81,
+        "confidence": 0.95,
+        "ap_rank": null
+      },
+      {
+        "rank": 13,
+        "team_name": "Pittsburgh",
+        "record": {
+          "wins": 5,
+          "losses": 0
+        },
+        "movement": null,
+        "power_score": 65.75,
+        "confidence": 0.95,
+        "ap_rank": 25
+      },
+      {
+        "rank": 14,
+        "team_name": "Kentucky",
+        "record": {
+          "wins": 4,
+          "losses": 1
+        },
+        "movement": null,
+        "power_score": 65.53,
+        "confidence": 0.95,
+        "ap_rank": null
+      },
+      {
+        "rank": 15,
+        "team_name": "Mississippi St.",
+        "record": {
+          "wins": 4,
+          "losses": 1
+        },
+        "movement": null,
+        "power_score": 65.05,
+        "confidence": 0.95,
+        "ap_rank": 17
+      },
+      {
+        "rank": 16,
+        "team_name": "Houston",
+        "record": {
+          "wins": 4,
+          "losses": 1
+        },
+        "movement": null,
+        "power_score": 64.76,
+        "confidence": 0.95,
+        "ap_rank": 22
+      },
+      {
+        "rank": 17,
+        "team_name": "Wisconsin",
+        "record": {
+          "wins": 4,
+          "losses": 1
+        },
+        "movement": null,
+        "power_score": 64.25,
+        "confidence": 0.95,
+        "ap_rank": null
+      },
+      {
+        "rank": 18,
+        "team_name": "Missouri",
+        "record": {
+          "wins": 4,
+          "losses": 1
+        },
+        "movement": null,
+        "power_score": 63.94,
+        "confidence": 0.95,
+        "ap_rank": 14
+      },
+      {
+        "rank": 19,
+        "team_name": "Tennessee",
+        "record": {
+          "wins": 4,
+          "losses": 1
+        },
+        "movement": null,
+        "power_score": 63.93,
+        "confidence": 0.95,
+        "ap_rank": 15
+      },
+      {
+        "rank": 20,
+        "team_name": "LSU",
+        "record": {
+          "wins": 4,
+          "losses": 1
+        },
+        "movement": null,
+        "power_score": 63.11,
+        "confidence": 0.95,
+        "ap_rank": 10
+      },
+      {
+        "rank": 21,
+        "team_name": "Northwestern",
+        "record": {
+          "wins": 3,
+          "losses": 1
+        },
+        "movement": null,
+        "power_score": 63,
+        "confidence": 0.8645,
+        "ap_rank": null
+      },
+      {
+        "rank": 22,
+        "team_name": "Baylor",
+        "record": {
+          "wins": 4,
+          "losses": 1
+        },
+        "movement": null,
+        "power_score": 62.59,
+        "confidence": 0.95,
+        "ap_rank": null
+      },
+      {
+        "rank": 23,
+        "team_name": "James Madison",
+        "record": {
+          "wins": 5,
+          "losses": 0
+        },
+        "movement": null,
+        "power_score": 61.78,
+        "confidence": 0.95,
+        "ap_rank": null
+      },
+      {
+        "rank": 24,
+        "team_name": "Florida",
+        "record": {
+          "wins": 4,
+          "losses": 1
+        },
+        "movement": null,
+        "power_score": 61.75,
+        "confidence": 0.95,
+        "ap_rank": 16
+      },
+      {
+        "rank": 25,
+        "team_name": "Oklahoma St.",
+        "record": {
+          "wins": 3,
+          "losses": 1
+        },
+        "movement": null,
+        "power_score": 61.63,
+        "confidence": 0.8645,
+        "ap_rank": 18
+      }
+    ]
+  },
+  "machine_evidence": {
+    "schema": "evercraft.journal.machine-evidence.v1",
+    "relative_path": "data/college-football-power-rankings-2026-10-06.json",
+    "payload": {
+      "schema": "evercraft.cfb.edition-evidence.v1",
+      "edition": "2026-10-06",
+      "ranking_run_id": "cfbpi:5d90b842afecc9f43c50ea34",
+      "evidence_snapshot_id": "cfb:2026:2026-10-06:e1c0f0145c20b386e5fa",
+      "evidence_through_at": "2026-10-06T23:59:59.999Z",
+      "model": {
+        "model_version": "evercraft-cfbpi-0.2.0",
+        "missing_data_penalty": 8,
+        "components": {
+          "result_quality": 0.22,
+          "efficiency": 0.32,
+          "schedule_strength": 0.16,
+          "road_neutral": 0.08,
+          "recent_form": 0.17,
+          "availability": 0.03,
+          "turnover_sustainability": 0.02
+        }
+      },
+      "methodology": {
+        "result_model": "iterative opponent-adjusted rating with capped scoring margins",
+        "location_adjustment": "designated away +2.5, designated home -2.5, known neutral 0",
+        "fcs_opponent_baseline": -12,
+        "margin_cap": 35,
+        "iterations": 60,
+        "note": "NCAA 2026 scoreboard exposes designated home/away; neutral-site state may be unavailable for some games and is not invented."
+      },
+      "rankings_top_25": [
+        {
+          "rank": 1,
+          "team_id": "alabama",
+          "team_name": "Alabama",
+          "record": {
+            "wins": 5,
+            "losses": 0,
+            "games": 5,
+            "win_pct": 1
+          },
+          "movement": null,
+          "power_score": 81.49,
+          "confidence": 0.95,
+          "components": {
+            "result_quality": 80.823,
+            "efficiency": 91.603,
+            "schedule_strength": 62.226,
+            "road_neutral": 86.93,
+            "recent_form": 81.106,
+            "availability": null,
+            "turnover_sustainability": null
+          },
+          "best_win": "56-23 vs Mississippi St. (away)",
+          "worst_result": "48-10 vs East Carolina (home)",
+          "ap_rank": 6
+        },
+        {
+          "rank": 2,
+          "team_id": "notre-dame",
+          "team_name": "Notre Dame",
+          "record": {
+            "wins": 5,
+            "losses": 0,
+            "games": 5,
+            "win_pct": 1
+          },
+          "movement": null,
+          "power_score": 74,
+          "confidence": 0.95,
+          "components": {
+            "result_quality": 76.59,
+            "efficiency": 81.098,
+            "schedule_strength": 54.12,
+            "road_neutral": 78.47,
+            "recent_form": 76.157,
+            "availability": null,
+            "turnover_sustainability": null
+          },
+          "best_win": "41-13 vs Wisconsin (home)",
+          "worst_result": "27-10 vs Michigan St. (home)",
+          "ap_rank": 3
+        },
+        {
+          "rank": 3,
+          "team_id": "texas",
+          "team_name": "Texas",
+          "record": {
+            "wins": 4,
+            "losses": 0,
+            "games": 4,
+            "win_pct": 1
+          },
+          "movement": null,
+          "power_score": 73.57,
+          "confidence": 0.8645,
+          "components": {
+            "result_quality": 75.554,
+            "efficiency": 76.288,
+            "schedule_strength": 63.648,
+            "road_neutral": 77.832,
+            "recent_form": 75.469,
+            "availability": null,
+            "turnover_sustainability": null
+          },
+          "best_win": "20-17 vs Tennessee (away)",
+          "worst_result": "24-23 vs Ohio St. (home)",
+          "ap_rank": 1
+        },
+        {
+          "rank": 4,
+          "team_id": "texas-tech",
+          "team_name": "Texas Tech",
+          "record": {
+            "wins": 5,
+            "losses": 0,
+            "games": 5,
+            "win_pct": 1
+          },
+          "movement": null,
+          "power_score": 68.81,
+          "confidence": 0.95,
+          "components": {
+            "result_quality": 73.333,
+            "efficiency": 70.763,
+            "schedule_strength": 51.618,
+            "road_neutral": 77.237,
+            "recent_form": 73.758,
+            "availability": null,
+            "turnover_sustainability": null
+          },
+          "best_win": "35-24 vs Oregon St. (away)",
+          "worst_result": "33-10 vs Abilene Christian (home)",
+          "ap_rank": 11
+        },
+        {
+          "rank": 5,
+          "team_id": "indiana",
+          "team_name": "Indiana",
+          "record": {
+            "wins": 5,
+            "losses": 0,
+            "games": 5,
+            "win_pct": 1
+          },
+          "movement": null,
+          "power_score": 68.31,
+          "confidence": 0.95,
+          "components": {
+            "result_quality": 72.291,
+            "efficiency": 75.372,
+            "schedule_strength": 43.649,
+            "road_neutral": 75.573,
+            "recent_form": 71.888,
+            "availability": null,
+            "turnover_sustainability": null
+          },
+          "best_win": "52-16 vs North Texas (home)",
+          "worst_result": "38-0 vs Western Ky. (home)",
+          "ap_rank": 7
+        },
+        {
+          "rank": 6,
+          "team_id": "ucla",
+          "team_name": "UCLA",
+          "record": {
+            "wins": 4,
+            "losses": 0,
+            "games": 4,
+            "win_pct": 1
+          },
+          "movement": null,
+          "power_score": 68.09,
+          "confidence": 0.8645,
+          "components": {
+            "result_quality": 73.365,
+            "efficiency": 71.455,
+            "schedule_strength": 46.598,
+            "road_neutral": 77.569,
+            "recent_form": 72.928,
+            "availability": null,
+            "turnover_sustainability": null
+          },
+          "best_win": "54-3 vs Maryland (away)",
+          "worst_result": "52-38 vs Purdue (home)",
+          "ap_rank": 21
+        },
+        {
+          "rank": 7,
+          "team_id": "georgia",
+          "team_name": "Georgia",
+          "record": {
+            "wins": 5,
+            "losses": 0,
+            "games": 5,
+            "win_pct": 1
+          },
+          "movement": null,
+          "power_score": 68.01,
+          "confidence": 0.95,
+          "components": {
+            "result_quality": 72.425,
+            "efficiency": 73.744,
+            "schedule_strength": 39.595,
+            "road_neutral": 78.004,
+            "recent_form": 75.775,
+            "availability": null,
+            "turnover_sustainability": null
+          },
+          "best_win": "45-17 vs Arkansas (away)",
+          "worst_result": "70-20 vs Western Ky. (home)",
+          "ap_rank": 2
+        },
+        {
+          "rank": 8,
+          "team_id": "utah",
+          "team_name": "Utah",
+          "record": {
+            "wins": 4,
+            "losses": 0,
+            "games": 4,
+            "win_pct": 1
+          },
+          "movement": null,
+          "power_score": 67.89,
+          "confidence": 0.8645,
+          "components": {
+            "result_quality": 72.174,
+            "efficiency": 74.118,
+            "schedule_strength": 41.544,
+            "road_neutral": 77.312,
+            "recent_form": 73.233,
+            "availability": null,
+            "turnover_sustainability": null
+          },
+          "best_win": "31-17 vs Iowa St. (away)",
+          "worst_result": "66-14 vs Idaho (home)",
+          "ap_rank": 12
+        },
+        {
+          "rank": 9,
+          "team_id": "miami-fl",
+          "team_name": "Miami (FL)",
+          "record": {
+            "wins": 5,
+            "losses": 0,
+            "games": 5,
+            "win_pct": 1
+          },
+          "movement": null,
+          "power_score": 66.74,
+          "confidence": 0.95,
+          "components": {
+            "result_quality": 72.386,
+            "efficiency": 72.861,
+            "schedule_strength": 36.735,
+            "road_neutral": 74.855,
+            "recent_form": 74.542,
+            "availability": null,
+            "turnover_sustainability": null
+          },
+          "best_win": "41-13 vs Clemson (away)",
+          "worst_result": "52-3 vs Central Mich. (home)",
+          "ap_rank": 4
+        },
+        {
+          "rank": 10,
+          "team_id": "ohio-st",
+          "team_name": "Ohio St.",
+          "record": {
+            "wins": 4,
+            "losses": 1,
+            "games": 5,
+            "win_pct": 0.8
+          },
+          "movement": null,
+          "power_score": 66.52,
+          "confidence": 0.95,
+          "components": {
+            "result_quality": 67.258,
+            "efficiency": 72.75,
+            "schedule_strength": 49.203,
+            "road_neutral": 63.917,
+            "recent_form": 73.584,
+            "availability": null,
+            "turnover_sustainability": null
+          },
+          "best_win": "31-14 vs Iowa (away)",
+          "worst_result": "23-24 vs Texas (away)",
+          "ap_rank": 5
+        },
+        {
+          "rank": 11,
+          "team_id": "byu",
+          "team_name": "BYU",
+          "record": {
+            "wins": 4,
+            "losses": 0,
+            "games": 4,
+            "win_pct": 1
+          },
+          "movement": null,
+          "power_score": 66.36,
+          "confidence": 0.8645,
+          "components": {
+            "result_quality": 72.012,
+            "efficiency": 67.414,
+            "schedule_strength": 48.124,
+            "road_neutral": 73.727,
+            "recent_form": 73.016,
+            "availability": null,
+            "turnover_sustainability": null
+          },
+          "best_win": "17-10 vs TCU (away)",
+          "worst_result": "63-7 vs Utah Tech (home)",
+          "ap_rank": 8
+        },
+        {
+          "rank": 12,
+          "team_id": "nebraska",
+          "team_name": "Nebraska",
+          "record": {
+            "wins": 5,
+            "losses": 0,
+            "games": 5,
+            "win_pct": 1
+          },
+          "movement": null,
+          "power_score": 65.81,
+          "confidence": 0.95,
+          "components": {
+            "result_quality": 71.512,
+            "efficiency": 69.465,
+            "schedule_strength": 39.561,
+            "road_neutral": 76.981,
+            "recent_form": 73.214,
+            "availability": null,
+            "turnover_sustainability": null
+          },
+          "best_win": "31-13 vs Michigan St. (away)",
+          "worst_result": "56-7 vs Bowling Green (home)",
+          "ap_rank": null
+        },
+        {
+          "rank": 13,
+          "team_id": "pittsburgh",
+          "team_name": "Pittsburgh",
+          "record": {
+            "wins": 5,
+            "losses": 0,
+            "games": 5,
+            "win_pct": 1
+          },
+          "movement": null,
+          "power_score": 65.75,
+          "confidence": 0.95,
+          "components": {
+            "result_quality": 70.786,
+            "efficiency": 67.338,
+            "schedule_strength": 49.608,
+            "road_neutral": 72.698,
+            "recent_form": 70.424,
+            "availability": null,
+            "turnover_sustainability": null
+          },
+          "best_win": "35-33 vs Virginia Tech (away)",
+          "worst_result": "59-0 vs Bucknell (home)",
+          "ap_rank": 25
+        },
+        {
+          "rank": 14,
+          "team_id": "kentucky",
+          "team_name": "Kentucky",
+          "record": {
+            "wins": 4,
+            "losses": 1,
+            "games": 5,
+            "win_pct": 0.8
+          },
+          "movement": null,
+          "power_score": 65.53,
+          "confidence": 0.95,
+          "components": {
+            "result_quality": 65.482,
+            "efficiency": 63.488,
+            "schedule_strength": 59.088,
+            "road_neutral": 75.069,
+            "recent_form": 73.235,
+            "availability": null,
+            "turnover_sustainability": null
+          },
+          "best_win": "31-21 vs Texas A&M (away)",
+          "worst_result": "17-45 vs Alabama (home)",
+          "ap_rank": null
+        },
+        {
+          "rank": 15,
+          "team_id": "mississippi-st",
+          "team_name": "Mississippi St.",
+          "record": {
+            "wins": 4,
+            "losses": 1,
+            "games": 5,
+            "win_pct": 0.8
+          },
+          "movement": null,
+          "power_score": 65.05,
+          "confidence": 0.95,
+          "components": {
+            "result_quality": 66.414,
+            "efficiency": 65.286,
+            "schedule_strength": 60.646,
+            "road_neutral": 78.031,
+            "recent_form": 63.128,
+            "availability": null,
+            "turnover_sustainability": null
+          },
+          "best_win": "38-13 vs Minnesota (away)",
+          "worst_result": "23-56 vs Alabama (home)",
+          "ap_rank": 17
+        },
+        {
+          "rank": 16,
+          "team_id": "houston",
+          "team_name": "Houston",
+          "record": {
+            "wins": 4,
+            "losses": 1,
+            "games": 5,
+            "win_pct": 0.8
+          },
+          "movement": null,
+          "power_score": 64.76,
+          "confidence": 0.95,
+          "components": {
+            "result_quality": 67.278,
+            "efficiency": 69.591,
+            "schedule_strength": 57.112,
+            "road_neutral": 59.532,
+            "recent_form": 64.282,
+            "availability": null,
+            "turnover_sustainability": null
+          },
+          "best_win": "33-20 vs Oregon St. (home)",
+          "worst_result": "26-28 vs Texas Tech (away)",
+          "ap_rank": 22
+        },
+        {
+          "rank": 17,
+          "team_id": "wisconsin",
+          "team_name": "Wisconsin",
+          "record": {
+            "wins": 4,
+            "losses": 1,
+            "games": 5,
+            "win_pct": 0.8
+          },
+          "movement": null,
+          "power_score": 64.25,
+          "confidence": 0.95,
+          "components": {
+            "result_quality": 65.843,
+            "efficiency": 66.15,
+            "schedule_strength": 54.182,
+            "road_neutral": 56.704,
+            "recent_form": 73.861,
+            "availability": null,
+            "turnover_sustainability": null
+          },
+          "best_win": "31-3 vs Michigan St. (home)",
+          "worst_result": "13-41 vs Notre Dame (away)",
+          "ap_rank": null
+        },
+        {
+          "rank": 18,
+          "team_id": "missouri",
+          "team_name": "Missouri",
+          "record": {
+            "wins": 4,
+            "losses": 1,
+            "games": 5,
+            "win_pct": 0.8
+          },
+          "movement": null,
+          "power_score": 63.94,
+          "confidence": 0.95,
+          "components": {
+            "result_quality": 67.105,
+            "efficiency": 69.791,
+            "schedule_strength": 53.451,
+            "road_neutral": 59.396,
+            "recent_form": 63.104,
+            "availability": null,
+            "turnover_sustainability": null
+          },
+          "best_win": "45-17 vs Florida (home)",
+          "worst_result": "24-31 vs Mississippi St. (away)",
+          "ap_rank": 14
+        },
+        {
+          "rank": 19,
+          "team_id": "tennessee",
+          "team_name": "Tennessee",
+          "record": {
+            "wins": 4,
+            "losses": 1,
+            "games": 5,
+            "win_pct": 0.8
+          },
+          "movement": null,
+          "power_score": 63.93,
+          "confidence": 0.95,
+          "components": {
+            "result_quality": 65.719,
+            "efficiency": 69.276,
+            "schedule_strength": 50.434,
+            "road_neutral": 73.03,
+            "recent_form": 62.189,
+            "availability": null,
+            "turnover_sustainability": null
+          },
+          "best_win": "45-24 vs Georgia Tech (away)",
+          "worst_result": "17-20 vs Texas (home)",
+          "ap_rank": 15
+        },
+        {
+          "rank": 20,
+          "team_id": "lsu",
+          "team_name": "LSU",
+          "record": {
+            "wins": 4,
+            "losses": 1,
+            "games": 5,
+            "win_pct": 0.8
+          },
+          "movement": null,
+          "power_score": 63.11,
+          "confidence": 0.95,
+          "components": {
+            "result_quality": 67.333,
+            "efficiency": 75.353,
+            "schedule_strength": 49.926,
+            "road_neutral": 36.368,
+            "recent_form": 61.828,
+            "availability": null,
+            "turnover_sustainability": null
+          },
+          "best_win": "35-6 vs Texas A&M (home)",
+          "worst_result": "24-32 vs Ole Miss (away)",
+          "ap_rank": 10
+        },
+        {
+          "rank": 21,
+          "team_id": "northwestern",
+          "team_name": "Northwestern",
+          "record": {
+            "wins": 3,
+            "losses": 1,
+            "games": 4,
+            "win_pct": 0.75
+          },
+          "movement": null,
+          "power_score": 63,
+          "confidence": 0.8645,
+          "components": {
+            "result_quality": 65.143,
+            "efficiency": 69.53,
+            "schedule_strength": 54.788,
+            "road_neutral": 46.464,
+            "recent_form": 65.657,
+            "availability": null,
+            "turnover_sustainability": null
+          },
+          "best_win": "34-13 vs Penn St. (home)",
+          "worst_result": "23-29 vs Indiana (away)",
+          "ap_rank": null
+        },
+        {
+          "rank": 22,
+          "team_id": "baylor",
+          "team_name": "Baylor",
+          "record": {
+            "wins": 4,
+            "losses": 1,
+            "games": 5,
+            "win_pct": 0.8
+          },
+          "movement": null,
+          "power_score": 62.59,
+          "confidence": 0.95,
+          "components": {
+            "result_quality": 64.849,
+            "efficiency": 66.686,
+            "schedule_strength": 45.826,
+            "road_neutral": 59.378,
+            "recent_form": 71.499,
+            "availability": null,
+            "turnover_sustainability": null
+          },
+          "best_win": "55-19 vs Arizona St. (away)",
+          "worst_result": "16-17 vs Auburn (away)",
+          "ap_rank": null
+        },
+        {
+          "rank": 23,
+          "team_id": "james-madison",
+          "team_name": "James Madison",
+          "record": {
+            "wins": 5,
+            "losses": 0,
+            "games": 5,
+            "win_pct": 1
+          },
+          "movement": null,
+          "power_score": 61.78,
+          "confidence": 0.95,
+          "components": {
+            "result_quality": 69.529,
+            "efficiency": 62.844,
+            "schedule_strength": 37.316,
+            "road_neutral": 72.046,
+            "recent_form": 70.205,
+            "availability": null,
+            "turnover_sustainability": null
+          },
+          "best_win": "46-20 vs Old Dominion (away)",
+          "worst_result": "45-17 vs Marshall (home)",
+          "ap_rank": null
+        },
+        {
+          "rank": 24,
+          "team_id": "florida",
+          "team_name": "Florida",
+          "record": {
+            "wins": 4,
+            "losses": 1,
+            "games": 5,
+            "win_pct": 0.8
+          },
+          "movement": null,
+          "power_score": 61.75,
+          "confidence": 0.95,
+          "components": {
+            "result_quality": 65.425,
+            "efficiency": 66.858,
+            "schedule_strength": 53.532,
+            "road_neutral": 53.779,
+            "recent_form": 61.108,
+            "availability": null,
+            "turnover_sustainability": null
+          },
+          "best_win": "52-28 vs Ole Miss (home)",
+          "worst_result": "17-45 vs Missouri (away)",
+          "ap_rank": 16
+        },
+        {
+          "rank": 25,
+          "team_id": "oklahoma-st",
+          "team_name": "Oklahoma St.",
+          "record": {
+            "wins": 3,
+            "losses": 1,
+            "games": 4,
+            "win_pct": 0.75
+          },
+          "movement": null,
+          "power_score": 61.63,
+          "confidence": 0.8645,
+          "components": {
+            "result_quality": 62.951,
+            "efficiency": 62.445,
+            "schedule_strength": 51.536,
+            "road_neutral": 54.8,
+            "recent_form": 73.324,
+            "availability": null,
+            "turnover_sustainability": null
+          },
+          "best_win": "41-24 vs West Virginia (away)",
+          "worst_result": "10-24 vs Tulsa (away)",
+          "ap_rank": 18
+        }
+      ],
+      "ledger": {
+        "source": "ncaa-graphql-scoreboard",
+        "start_date": "2026-08-15",
+        "end_date": "2026-10-06",
+        "completed_game_count": 391,
+        "sha256": "f218d623ec4029502b7564296fdf419851fd645c7451a04558df4c4128eaedef",
+        "upstream": "NCAA persisted FBS scoreboard query, division 11, season 2026, weeks 0-15"
+      },
+      "ranking_sha256": "56ac5d6949b802e1c212e09dcf9eebfe4c504d0b35e564e29aff7194d2ca6792",
+      "consensus_comparison": {
+        "poll": "Associated Press Top 25",
+        "through_games": "2026-10-03",
+        "source": "https://www.ncaa.com/rankings/football/fbs/associated-press",
+        "ranks": [
+          {
+            "team": "Texas",
+            "rank": 1
+          },
+          {
+            "team": "Georgia",
+            "rank": 2
+          },
+          {
+            "team": "Notre Dame",
+            "rank": 3
+          },
+          {
+            "team": "Miami (FL)",
+            "rank": 4
+          },
+          {
+            "team": "Ohio St.",
+            "rank": 5
+          },
+          {
+            "team": "Alabama",
+            "rank": 6
+          },
+          {
+            "team": "Indiana",
+            "rank": 7
+          },
+          {
+            "team": "BYU",
+            "rank": 8
+          },
+          {
+            "team": "Ole Miss",
+            "rank": 9
+          },
+          {
+            "team": "LSU",
+            "rank": 10
+          },
+          {
+            "team": "Texas Tech",
+            "rank": 11
+          },
+          {
+            "team": "Utah",
+            "rank": 12
+          },
+          {
+            "team": "Oregon",
+            "rank": 13
+          },
+          {
+            "team": "Missouri",
+            "rank": 14
+          },
+          {
+            "team": "Tennessee",
+            "rank": 15
+          },
+          {
+            "team": "Florida",
+            "rank": 16
+          },
+          {
+            "team": "Mississippi St.",
+            "rank": 17
+          },
+          {
+            "team": "Oklahoma St.",
+            "rank": 18
+          },
+          {
+            "team": "Southern Cal",
+            "rank": 19
+          },
+          {
+            "team": "Iowa",
+            "rank": 20
+          },
+          {
+            "team": "UCLA",
+            "rank": 21
+          },
+          {
+            "team": "Houston",
+            "rank": 22
+          },
+          {
+            "team": "Boise St.",
+            "rank": 23
+          },
+          {
+            "team": "SMU",
+            "rank": 24
+          },
+          {
+            "team": "Pittsburgh",
+            "rank": 25
+          }
+        ]
+      }
+    }
+  },
+  "sections": [
+    {
+      "heading": "This is a power ranking, not a ballot",
+      "body": "The first Evercraft College Football Power Rankings deliberately do not start with the AP poll and shuffle a few teams for flavor. CFBPI v0.2 begins with completed NCAA game evidence, builds an iterative opponent-strength rating, caps scoring margins so one blowout cannot own a season, adjusts for designated venue, gives recent form a bounded role and leaves unsupported inputs missing instead of quietly inventing them. The result is a ranking of who has demonstrated the strongest current profile in our model, not a forecast of playoff selection and not a claim that undefeated automatically means better."
+    },
+    {
+      "heading": "Why Alabama is No. 1",
+      "body": "Alabama is the clearest separation in this edition. The Crimson Tide are 5-0 with an 81.49 Power Score, more than seven points clear of Notre Dame at No. 2. Their profile combines an 80.8 result-quality component, 91.6 opponent-adjusted efficiency and 62.2 schedule strength. The 56-23 win over Mississippi State is the model's strongest Alabama result so far. The AP poll currently has Alabama sixth, which makes this our first major disagreement with consensus and gives the ranking an immediate test: if Alabama's underlying strength is real, the next stretch should make that gap easier to defend rather than harder."
+    },
+    {
+      "heading": "Where Evercraft breaks hardest from the AP",
+      "body": "The interesting part is not that our top teams mostly look familiar. It is where the ordering refuses to follow reputation. Texas Tech is No. 4 here versus No. 11 in the AP poll. UCLA is No. 6 versus No. 21. Pittsburgh is No. 13 versus No. 25, while Kentucky, Wisconsin, Northwestern, Baylor and James Madison make our Top 25 without appearing in the AP Top 25. The other direction matters too: LSU is No. 20 here versus No. 10 in the AP poll, Florida is No. 24 versus No. 16, and Oregon sits just outside our Top 25 at No. 26 despite being No. 13 in the AP poll. Those are not bugs to hide. They are the hypotheses this franchise now has to defend with future results."
+    },
+    {
+      "heading": "The model is not pretending to know everything",
+      "body": "This edition has real blind spots and labels them. Player availability is not yet included because we do not have a governed injury and quarterback-status feed wired into the ranking cycle. Turnover sustainability is also left missing rather than estimated from incomplete data. NCAA's current scoreboard feed provides designated home and away teams but does not reliably expose neutral-site state for every game, so the venue layer is conservative. Those missing components reduce confidence instead of becoming fake zeroes. That is less dramatic than pretending the model sees everything, but it makes the historical record much more useful."
+    },
+    {
+      "heading": "We are keeping score on ourselves",
+      "body": "This edition is frozen. The ranking run ID, model version, Top 25, component scores, upstream NCAA query definition, ledger digest and AP comparison are published with the story as machine-readable evidence. Next week's edition will be a new receipt, not a rewrite of this one. That gives us a scoreboard for the scoreboard: which teams rose before consensus caught up, which outliers collapsed, whether our biggest disagreements predicted anything useful, and whether model changes actually improve future performance. If the ranking is going to become an Evercraft media property, it should earn credibility in public instead of borrowing it from a logo."
+    }
+  ],
+  "uncertainty_notes": [
+    "Player availability and quarterback status are not yet included in CFBPI v0.2.",
+    "Turnover sustainability remains intentionally missing instead of inferred from incomplete evidence.",
+    "NCAA's scoreboard data may designate home and away without exposing neutral-site state for every game.",
+    "This ranking measures current modeled team strength from completed results and is not a College Football Playoff selection projection."
+  ],
+  "production_grade": {
+    "status": "accepted",
+    "hero_kind": "data_visualization",
+    "text_primary": false,
+    "note": "The article opens into a mobile-native structured Top 25. Fallen derivatives use the same frozen ranking receipt rather than manually copied values."
+  },
+  "editorial_gate": {
+    "status": "accepted",
+    "score": 10,
+    "checks": [
+      "evidence_integrity",
+      "attribution",
+      "causal_and_uncertainty",
+      "adversarial_read",
+      "brand_compliance",
+      "platform_limits",
+      "visual_authenticity_and_rights",
+      "editorial_qa"
+    ]
+  },
+  "fallen_brief": {
+    "contract": "evercraft.fallen.journal.production.v1",
+    "package_key": "journal:2026-10-06:cfb-power-rankings",
+    "mission_key": "evercraft-cfb-power-rankings",
+    "work_key": "cfb-power-rankings-2026-10-06-visual-package",
+    "story": {
+      "title": "Evercraft College Football Power Rankings: Alabama Is No. 1",
+      "thesis": "Alabama leads the first frozen Evercraft Top 25 even though the AP has Texas No. 1.",
+      "education_goal": "Make the Top 25, major consensus disagreements, methodology and uncertainty legible in one fast visual package.",
+      "desk": "sports"
+    },
+    "evidence": {
+      "source_refs": [
+        "ncaa-fbs-scoreboard",
+        "ncaa-ap-top-25",
+        "evercraft-cfb-edition-evidence"
+      ],
+      "evidence_refs": [
+        "cfb:2026:2026-10-06:e1c0f0145c20b386e5fa",
+        "cfbpi:5d90b842afecc9f43c50ea34"
+      ],
+      "evidence_state": "model_derived_from_verified_public_results",
+      "confidence": "bounded_by_team_level_confidence",
+      "freshness_state": "fresh",
+      "uncertainty_notes": "Availability and turnover-sustainability inputs remain missing rather than guessed."
+    },
+    "rights": {
+      "visual_rights_state": "not_required"
+    },
+    "derivative_plan": [
+      {
+        "format": "social_square",
+        "angle": "Top 10 plus the five biggest disagreements with AP"
+      },
+      {
+        "format": "instagram_carousel",
+        "angle": "Top 25 in five vertical panels with movement-ready slots"
+      },
+      {
+        "format": "youtube_short",
+        "angle": "Why Evercraft has Alabama No. 1 while AP has Texas"
+      },
+      {
+        "format": "linkedin",
+        "angle": "A replayable sports ranking with receipts instead of a ballot"
+      }
+    ],
+    "visual_story": {
+      "id": "cfb-power-rankings-2026-10-06",
+      "headline": "Evercraft College Football Power Rankings",
+      "subhead": "Alabama leads CFBPI v0.2",
+      "durationSec": 35,
+      "aspectRatio": "9:16",
+      "metrics": [
+        {
+          "id": "alabama",
+          "label": "#1 Alabama",
+          "value": 81.49,
+          "unit": "Power Score",
+          "evidenceState": "modeled_from_public_results",
+          "sourceRefs": [
+            "evercraft-cfb-edition-evidence"
+          ]
+        },
+        {
+          "id": "notre-dame",
+          "label": "#2 Notre Dame",
+          "value": 74,
+          "unit": "Power Score",
+          "evidenceState": "modeled_from_public_results",
+          "sourceRefs": [
+            "evercraft-cfb-edition-evidence"
+          ]
+        },
+        {
+          "id": "texas",
+          "label": "#3 Texas",
+          "value": 73.57,
+          "unit": "Power Score",
+          "evidenceState": "modeled_from_public_results",
+          "sourceRefs": [
+            "evercraft-cfb-edition-evidence"
+          ]
+        },
+        {
+          "id": "texas-tech",
+          "label": "#4 Texas Tech",
+          "value": 68.81,
+          "unit": "Power Score",
+          "evidenceState": "modeled_from_public_results",
+          "sourceRefs": [
+            "evercraft-cfb-edition-evidence"
+          ]
+        },
+        {
+          "id": "indiana",
+          "label": "#5 Indiana",
+          "value": 68.31,
+          "unit": "Power Score",
+          "evidenceState": "modeled_from_public_results",
+          "sourceRefs": [
+            "evercraft-cfb-edition-evidence"
+          ]
+        }
+      ]
+    }
+  },
+  "derivatives": [
+    {
+      "platform": "facebook",
+      "copy": "The AP has Texas No. 1. Evercraft CFBPI v0.2 has Alabama. Our first frozen College Football Power Rankings are built from completed NCAA results, opponent strength, capped margins and visible uncertainty, with the full receipt preserved so we can score ourselves next week."
+    },
+    {
+      "platform": "linkedin",
+      "copy": "We just turned college football power rankings into a replayable evidence product. Evercraft CFBPI v0.2 currently has Alabama No. 1, Texas Tech No. 4 and UCLA No. 6. Every edition freezes the model, evidence snapshot and ranking so future results can judge the call instead of letting us rewrite history."
+    },
+    {
+      "platform": "youtube_short",
+      "hook": "Why does Evercraft have Alabama No. 1 when the AP has Texas? Here is what the results model sees.",
+      "duration_sec": 45
+    }
+  ]
+}

@@ -83,3 +83,63 @@ test('blocks developer repository pages from customer publication links',async()
   }),/clip_public_link_legacy_provider_blocked/);
   assert.equal(calls,0);
 });
+
+
+test('verifies canonical, OpenGraph and Evercraft story identity when required',async()=>{
+  const url='https://journal.evercraft.global/cfb-power-rankings-week-6/';
+  const body=`<!doctype html><html><head>
+    <title>Evercraft College Football Power Rankings</title>
+    <link rel="canonical" href="${url}">
+    <meta property="og:url" content="${url}">
+    <meta property="og:title" content="Evercraft College Football Power Rankings">
+    <meta name="evercraft:story_id" content="journal:2026-10-06:cfb-power-rankings-week-6">
+  </head><body>Evercraft College Football Power Rankings</body></html>`;
+  const result=await preflightPublicLink({
+    url,
+    expectedText:['Evercraft College Football Power Rankings'],
+    expectedCanonicalUrl:url,
+    expectedOgUrl:url,
+    expectedStoryId:'journal:2026-10-06:cfb-power-rankings-week-6',
+    requireCanonicalSelfMatch:true,
+    requireOpenGraphSelfMatch:true,
+    fetchImpl:async()=>response(200,body,{'content-type':'text/html'}),
+  });
+  assert.equal(result.verified,true);
+  assert.equal(result.identity.canonicalUrl,url);
+  assert.equal(result.identity.ogUrl,url);
+  assert.equal(result.identity.storyId,'journal:2026-10-06:cfb-power-rankings-week-6');
+  assert.equal(result.boundaries.canonicalIdentityVerified,true);
+  assert.equal(result.boundaries.openGraphIdentityVerified,true);
+  assert.equal(result.boundaries.storyIdentityVerified,true);
+});
+
+test('fails closed when a live page points its canonical tag at the wrong article',async()=>{
+  const url='https://journal.evercraft.global/cfb-power-rankings-week-6/';
+  const body=`<html><head>
+    <link rel="canonical" href="https://journal.evercraft.global/wrong-story/">
+    <meta property="og:url" content="${url}">
+    <meta name="evercraft:story_id" content="journal:2026-10-06:cfb-power-rankings-week-6">
+  </head><body>Evercraft College Football Power Rankings</body></html>`;
+  await assert.rejects(()=>preflightPublicLink({
+    url,
+    expectedCanonicalUrl:url,
+    expectedStoryId:'journal:2026-10-06:cfb-power-rankings-week-6',
+    fetchImpl:async()=>response(200,body,{'content-type':'text/html'}),
+  }),/clip_public_link_canonical_mismatch/);
+});
+
+test('fails closed when the article identity meta belongs to a different story',async()=>{
+  const url='https://journal.evercraft.global/cfb-power-rankings-week-6/';
+  const body=`<html><head>
+    <link rel="canonical" href="${url}">
+    <meta property="og:url" content="${url}">
+    <meta name="evercraft:story_id" content="journal:wrong-story">
+  </head><body>Evercraft College Football Power Rankings</body></html>`;
+  await assert.rejects(()=>preflightPublicLink({
+    url,
+    expectedCanonicalUrl:url,
+    expectedOgUrl:url,
+    expectedStoryId:'journal:2026-10-06:cfb-power-rankings-week-6',
+    fetchImpl:async()=>response(200,body,{'content-type':'text/html'}),
+  }),/clip_public_link_story_id_mismatch/);
+});

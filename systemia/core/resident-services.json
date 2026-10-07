@@ -266,6 +266,25 @@
       },
       "max_restarts_per_hour": 12,
       "restart_backoff_ms": 5000
+    },
+    {
+      "service_key": "cfb-clip-publisher",
+      "mode": "cycle",
+      "manifest": "systemia/organism/cfb-clip-publisher.workflow.json",
+      "executable": "systemia/clip/cfb-journal-resident-runner.mjs",
+      "cadence_seconds": 300,
+      "optional_when_unconfigured": true,
+      "env_args": {
+        "--credential-state-dir": "EVERCRAFT_CREDENTIAL_STATE_DIR",
+        "--passport-state-dir": "EVERCRAFT_PASSPORT_STATE_DIR"
+      },
+      "optional_env_args": {
+        "--journal-root": "SYSTEMIA_CFB_CLIP_JOURNAL_ROOT",
+        "--state-dir": "SYSTEMIA_CFB_CLIP_STATE_DIR",
+        "--interval-ms": "SYSTEMIA_CFB_CLIP_INTERVAL_MS",
+        "--subject-ref": "SYSTEMIA_CFB_CLIP_SUBJECT_REF",
+        "--authority-receipt-file": "SYSTEMIA_CFB_CLIP_AUTHORITY_RECEIPT_FILE"
+      }
     }
   ]
 }
