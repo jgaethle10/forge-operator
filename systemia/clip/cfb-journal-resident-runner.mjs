@@ -6,6 +6,7 @@ import {
   runCfbJournalPublishCycle,
 } from './cfb-journal-resident.mjs';
 import { EvercraftPassport } from '../passport/passport.mjs';
+import { authorizeCfbJournalResidentFromReceipt } from './cfb-journal-publish-authorize.mjs';
 
 function arg(name,fallback=null){
   const index=process.argv.indexOf(name);
@@ -29,7 +30,27 @@ const journalRoot=path.resolve(arg('--journal-root',path.join(repoRoot,'public',
 const credentialStateDir=path.resolve(arg('--credential-state-dir',process.env.EVERCRAFT_CREDENTIAL_STATE_DIR||path.join(process.env.EVERCRAFT_IDENTITY_STATE_DIR||repoRoot,'provider-credentials')));
 const passportStateDir=path.resolve(arg('--passport-state-dir',process.env.EVERCRAFT_PASSPORT_STATE_DIR||path.join(repoRoot,'artifacts','passport')));
 const subjectRef=String(arg('--subject-ref',process.env.SYSTEMIA_CFB_CLIP_SUBJECT_REF||'system:cfb-clip-publisher')).trim();
+const authorityReceiptFile=path.resolve(arg(
+  '--authority-receipt-file',
+  process.env.SYSTEMIA_CFB_CLIP_AUTHORITY_RECEIPT_FILE||path.join(repoRoot,'systemia','clip','authority','cfb-power-rankings-autopublish.json')
+));
 const passport=new EvercraftPassport({stateDir:passportStateDir});
+
+function installBoundedAuthority(){
+  if(!fs.existsSync(authorityReceiptFile)){
+    return {state:'missing',authority_receipt_file:authorityReceiptFile};
+  }
+  const receipt=JSON.parse(fs.readFileSync(authorityReceiptFile,'utf8'));
+  const installed=authorizeCfbJournalResidentFromReceipt({passport,receipt});
+  return {
+    state:installed.state,
+    grant_id:installed.grant_id,
+    ends_at:installed.ends_at,
+    authority_receipt_ref:installed.authority_receipt_ref,
+    authority_receipt_file:authorityReceiptFile,
+  };
+}
+const authorityInstall=installBoundedAuthority();
 const stateDir=path.resolve(arg('--state-dir',process.env.SYSTEMIA_CFB_CLIP_STATE_DIR||'artifacts/cfb-clip-resident'));
 const intervalMs=Math.max(30000,Number(arg('--interval-ms',process.env.SYSTEMIA_CFB_CLIP_INTERVAL_MS||300000)));
 const once=has('--once');
@@ -59,7 +80,7 @@ async function cycle(){
     state=result.state;
     atomicJson(stateFile,state);
     atomicJson(path.join(stateDir,'latest.json'),result.snapshot);
-    process.stdout.write(JSON.stringify({ok:true,...result.snapshot})+'\n');
+    process.stdout.write(JSON.stringify({ok:true,authority_install:authorityInstall,...result.snapshot})+'\n');
   }catch(error){
     process.stderr.write(JSON.stringify({
       ok:false,
