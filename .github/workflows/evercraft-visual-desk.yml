@@ -4,6 +4,8 @@ on:
   pull_request:
     paths:
       - 'systemia/visual-desk/**'
+      - 'systemia/radar/core.mjs'
+      - 'systemia/radar/collectors.mjs'
       - 'public/visuals/**'
       - '.github/workflows/evercraft-visual-desk.yml'
   push:
@@ -27,8 +29,8 @@ jobs:
         with:
           node-version: 22
 
-      - name: Prove visual story factory
-        run: node --test systemia/visual-desk/factory.test.mjs
+      - name: Prove visual story factory and Radar admission bridge
+        run: node --test systemia/visual-desk/factory.test.mjs systemia/visual-desk/radar-adapter.test.mjs
 
       - name: Build source-backed specimen release
         run: |
