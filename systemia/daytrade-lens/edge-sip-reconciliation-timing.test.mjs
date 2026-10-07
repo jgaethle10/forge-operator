@@ -1,7 +1,7 @@
 import assert from "node:assert/strict";
 import {normalizeAlpacaQuote} from "./edge-quote-microstructure.mjs";
 
-function selectLatestPreTarget(rows,target,maxStateAgeMs=60000){
+function selectLatestPreTarget(rows,target,maxStateAgeMs=300000){
   const targetMs=new Date(target).getTime();
   const normalized=(rows||[])
     .map(normalizeAlpacaQuote)
@@ -41,7 +41,7 @@ assert.ok(persisted);
 assert.equal(persisted.quote_state_age_over_5s,true);
 
 const tooOld=selectLatestPreTarget(
-  [{t:"2026-10-07T16:04:20.000Z",bp:100,ap:100.02}],
+  [{t:"2026-10-07T15:59:20.000Z",bp:100,ap:100.02}],
   target
 );
 assert.equal(tooOld,null);
