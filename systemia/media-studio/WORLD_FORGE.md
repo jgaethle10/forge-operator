@@ -217,6 +217,24 @@ Current area lights are explicitly approximated as point lights because World En
 
 The browser editor exposes **Engine Bridge** only for committed canonical state. If a Stage-mode ChangeSet is pending, runtime compilation is blocked until the proposal is applied or cleared.
 
+## Native geometry picking
+
+Viewport click selection now uses deterministic ray/triangle intersection against actual native World Forge geometry instead of approximate projected object centers.
+
+The picker:
+
+- builds perspective rays from Orbit View or authored perspective Camera View;
+- builds parallel orthographic rays for authored orthographic Camera View;
+- triangulates editable-mesh faces deterministically;
+- intersects cube and plane primitive surfaces directly;
+- applies full authored translation, rotation and scale before intersection;
+- returns the nearest positive surface hit;
+- selects the closest real mesh surface along the ray.
+
+Primitive viewport representation now matches native picking. Plane primitives render as planes rather than cube wireframe placeholders.
+
+External asset geometry and procedural geometry are intentionally not granted fake precision in this slice. They are excluded from native surface picking until their actual browser-side geometry is materialized. They remain selectable through the outliner.
+
 ## Runtime Drag
 
 Play Mode now has an explicit **Runtime Drag** interaction mode for direct viewport manipulation of dynamic bodies.
