@@ -56,6 +56,12 @@ function OperatorPeopleLayer() {
   const [inviteUrl, setInviteUrl] = useState('');
   const [verifyUrl, setVerifyUrl] = useState('');
   const [identityEmail, setIdentityEmail] = useState('');
+  const [snapshot, setSnapshot] = useState<any>(null);
+  const [personConfirmation, setPersonConfirmation] = useState('');
+  const [shareScopes, setShareScopes] = useState('goals, opportunities');
+  const [memoryForm, setMemoryForm] = useState({ title: '', body: '', memory_type: 'goal', sensitivity: 'private' });
+  const [relationshipForm, setRelationshipForm] = useState({ counterpart_name: '', counterpart_type: 'advisor', purpose: '' });
+  const [opportunityForm, setOpportunityForm] = useState({ title: '', opportunity_type: 'business', summary: '', fit_rationale: '' });
   const [form, setForm] = useState({
     display_name: '',
     person_type: 'athlete',
@@ -97,6 +103,40 @@ function OperatorPeopleLayer() {
   useEffect(() => {
     if (token) load();
   }, [token]);
+
+  async function loadSnapshot(brainKey: string) {
+    if (!token || !brainKey) {
+      setSnapshot(null);
+      return;
+    }
+    try {
+      const response = await api('/api/people/brains/' + encodeURIComponent(brainKey), {
+        headers: { authorization: 'Bearer ' + token },
+      });
+      const body = await response.json();
+      if (!response.ok || !body?.ok) throw new Error(body?.error || 'Brain snapshot could not load.');
+      setSnapshot(body.snapshot || null);
+    } catch (err) {
+      setError(err instanceof Error ? err.message : String(err));
+    }
+  }
+
+  useEffect(() => {
+    if (token && selected?.brain_key) loadSnapshot(selected.brain_key);
+    else setSnapshot(null);
+  }, [token, selected?.brain_key]);
+
+  async function postOwned(path: string, payload: any = {}) {
+    const response = await api(path, {
+      method: 'POST',
+      headers: { authorization: 'Bearer ' + token },
+      body: JSON.stringify(payload),
+    });
+    const body = await response.json();
+    if (!response.ok || !body?.ok) throw new Error(body?.error || 'People action failed.');
+    if (selected?.brain_key) await loadSnapshot(selected.brain_key);
+    return body;
+  }
 
   async function createBrain(event: FormEvent) {
     event.preventDefault();
@@ -170,7 +210,9 @@ function OperatorPeopleLayer() {
     setError('');
     try {
       const response = await api('/api/people/brains/' + encodeURIComponent(selected.brain_key) + '/export', {
+        method: 'POST',
         headers: { authorization: 'Bearer ' + token },
+        body: '{}',
       });
       const body = await response.json();
       if (!response.ok || !body?.ok) throw new Error(body?.error || 'Unable to export brain.');
@@ -185,6 +227,92 @@ function OperatorPeopleLayer() {
       setError(err instanceof Error ? err.message : String(err));
     } finally {
       setBusy('');
+    }
+  }
+
+  async function createMemory(event: FormEvent) {
+    event.preventDefault();
+    if (!selected) return;
+    setError('');
+    try {
+      await postOwned('/api/people/brains/' + encodeURIComponent(selected.brain_key) + '/memories', {
+        ...memoryForm,
+        evidence_state: 'person_stated',
+      });
+      setMemoryForm({ title: '', body: '', memory_type: 'goal', sensitivity: 'private' });
+    } catch (err) {
+      setError(err instanceof Error ? err.message : String(err));
+    }
+  }
+
+  async function createRelationship(event: FormEvent) {
+    event.preventDefault();
+    if (!selected) return;
+    setError('');
+    try {
+      await postOwned('/api/people/brains/' + encodeURIComponent(selected.brain_key) + '/relationships', relationshipForm);
+      setRelationshipForm({ counterpart_name: '', counterpart_type: 'advisor', purpose: '' });
+    } catch (err) {
+      setError(err instanceof Error ? err.message : String(err));
+    }
+  }
+
+  async function shareAction(relationshipKey: string, action: 'grant' | 'revoke') {
+    if (!selected) return;
+    setError('');
+    try {
+      await postOwned(
+        '/api/people/brains/' + encodeURIComponent(selected.brain_key) +
+        '/relationships/' + encodeURIComponent(relationshipKey) + '/' + action,
+        {
+          scopes: action === 'grant' ? shareScopes.split(',').map((item) => item.trim()).filter(Boolean) : undefined,
+          person_confirmation_ref: personConfirmation.trim(),
+        },
+      );
+    } catch (err) {
+      setError(err instanceof Error ? err.message : String(err));
+    }
+  }
+
+  async function createOpportunity(event: FormEvent) {
+    event.preventDefault();
+    if (!selected) return;
+    setError('');
+    try {
+      await postOwned('/api/people/brains/' + encodeURIComponent(selected.brain_key) + '/opportunities', {
+        ...opportunityForm,
+        evidence_state: 'unknown',
+      });
+      setOpportunityForm({ title: '', opportunity_type: 'business', summary: '', fit_rationale: '' });
+    } catch (err) {
+      setError(err instanceof Error ? err.message : String(err));
+    }
+  }
+
+  async function opportunityAuthority(opportunityKey: string, authority_state: 'authorized' | 'declined') {
+    if (!selected) return;
+    setError('');
+    try {
+      await postOwned(
+        '/api/people/brains/' + encodeURIComponent(selected.brain_key) +
+        '/opportunities/' + encodeURIComponent(opportunityKey) + '/authority',
+        { authority_state, person_confirmation_ref: personConfirmation.trim() },
+      );
+    } catch (err) {
+      setError(err instanceof Error ? err.message : String(err));
+    }
+  }
+
+  async function revokeConsent() {
+    if (!selected) return;
+    setError('');
+    try {
+      await postOwned('/api/people/brains/' + encodeURIComponent(selected.brain_key) + '/revoke-consent', {
+        person_confirmation_ref: personConfirmation.trim(),
+      });
+      await load();
+    } catch (err) {
+      setError(err instanceof Error ? err.message : String(err));
     }
   }
 
@@ -278,7 +406,14 @@ function OperatorPeopleLayer() {
                 <div className="people-actions">
                   <button className="people-button" onClick={createInvite} disabled={Boolean(busy)}>Create 48-hour consent invite</button>
                   <button className="people-button quiet" onClick={exportBrain} disabled={Boolean(busy)}>Export brain</button>
+                  <button className="people-button quiet" onClick={revokeConsent} disabled={Boolean(busy) || selected.consent_state !== 'consented'}>Revoke consent</button>
                 </div>
+                <input
+                  className="people-input"
+                  value={personConfirmation}
+                  onChange={(e) => setPersonConfirmation(e.target.value)}
+                  placeholder="Person confirmation reference"
+                />
                 {inviteUrl && (
                   <div className="people-linkbox">
                     <input className="people-input" readOnly value={inviteUrl} />
@@ -300,6 +435,83 @@ function OperatorPeopleLayer() {
                   </div>
                 )}
               </div>
+
+              <div className="people-two">
+                <form className="people-card people-stack" onSubmit={createMemory}>
+                  <div className="people-card-title">Memory</div>
+                  <input className="people-input" value={memoryForm.title} onChange={(e) => setMemoryForm({ ...memoryForm, title: e.target.value })} placeholder="Memory title" required />
+                  <textarea className="people-input" rows={3} value={memoryForm.body} onChange={(e) => setMemoryForm({ ...memoryForm, body: e.target.value })} placeholder="What should this brain remember?" />
+                  <div className="people-two">
+                    <select className="people-input" value={memoryForm.memory_type} onChange={(e) => setMemoryForm({ ...memoryForm, memory_type: e.target.value })}>
+                      {['goal','preference','career','performance','relationship','story','commitment','logistics','collection','fan_history','other'].map((item) => <option key={item}>{item}</option>)}
+                    </select>
+                    <select className="people-input" value={memoryForm.sensitivity} onChange={(e) => setMemoryForm({ ...memoryForm, sensitivity: e.target.value })}>
+                      {['private','trusted_circle','shareable','public_safe'].map((item) => <option key={item}>{item}</option>)}
+                    </select>
+                  </div>
+                  <button className="people-button quiet">Add memory</button>
+                  {(snapshot?.memories || []).map((item: any) => (
+                    <div className="people-promise" key={item.memory_key}>
+                      <strong>{item.title}</strong>
+                      <div className="people-muted">{item.memory_type} · {item.sensitivity} · {item.evidence_state}</div>
+                      {item.body && <div>{item.body}</div>}
+                    </div>
+                  ))}
+                </form>
+
+                <form className="people-card people-stack" onSubmit={createRelationship}>
+                  <div className="people-card-title">Trusted graph</div>
+                  <input className="people-input" value={relationshipForm.counterpart_name} onChange={(e) => setRelationshipForm({ ...relationshipForm, counterpart_name: e.target.value })} placeholder="Person / organization" required />
+                  <select className="people-input" value={relationshipForm.counterpart_type} onChange={(e) => setRelationshipForm({ ...relationshipForm, counterpart_type: e.target.value })}>
+                    {['agent','team','coach','trainer','family','sponsor','brand','creator','fan_group','vendor','advisor','other'].map((item) => <option key={item}>{item}</option>)}
+                  </select>
+                  <textarea className="people-input" rows={2} value={relationshipForm.purpose} onChange={(e) => setRelationshipForm({ ...relationshipForm, purpose: e.target.value })} placeholder="Why does this relationship exist?" />
+                  <button className="people-button quiet">Propose relationship</button>
+                  <input className="people-input" value={shareScopes} onChange={(e) => setShareScopes(e.target.value)} placeholder="Share scopes, comma separated" />
+                  {(snapshot?.relationships || []).map((item: any) => (
+                    <div className="people-promise" key={item.relationship_key}>
+                      <strong>{item.counterpart_name}</strong>
+                      <div className="people-muted">{item.counterpart_type} · {item.access_state}</div>
+                      <div className="people-muted">{item.access_scope?.length ? item.access_scope.join(' · ') : 'No access scopes'}</div>
+                      <div className="people-actions">
+                        {item.access_state === 'granted' ? (
+                          <button type="button" className="people-button quiet" onClick={() => shareAction(item.relationship_key, 'revoke')}>Revoke access</button>
+                        ) : (
+                          <button type="button" className="people-button quiet" disabled={selected.consent_state !== 'consented'} onClick={() => shareAction(item.relationship_key, 'grant')}>Grant scoped access</button>
+                        )}
+                      </div>
+                    </div>
+                  ))}
+                </form>
+              </div>
+
+              <form className="people-card people-stack" onSubmit={createOpportunity}>
+                <div className="people-card-title">Opportunity queue</div>
+                <p className="people-muted">Discovery is evidence, not permission to contact, book, pay, disclose, or execute.</p>
+                <div className="people-two">
+                  <input className="people-input" value={opportunityForm.title} onChange={(e) => setOpportunityForm({ ...opportunityForm, title: e.target.value })} placeholder="Opportunity" required />
+                  <select className="people-input" value={opportunityForm.opportunity_type} onChange={(e) => setOpportunityForm({ ...opportunityForm, opportunity_type: e.target.value })}>
+                    {['sponsorship','appearance','camp','content','travel','collectible','community','business','education','charity','career','other'].map((item) => <option key={item}>{item}</option>)}
+                  </select>
+                </div>
+                <input className="people-input" value={opportunityForm.summary} onChange={(e) => setOpportunityForm({ ...opportunityForm, summary: e.target.value })} placeholder="What is it?" />
+                <input className="people-input" value={opportunityForm.fit_rationale} onChange={(e) => setOpportunityForm({ ...opportunityForm, fit_rationale: e.target.value })} placeholder="Why this person?" />
+                <button className="people-button quiet">Add discover-only opportunity</button>
+                {(snapshot?.opportunities || []).map((item: any) => (
+                  <div className="people-promise" key={item.opportunity_key}>
+                    <strong>{item.title}</strong>
+                    <div className="people-muted">{item.opportunity_type} · {item.authority_state} · {item.status}</div>
+                    {item.summary && <div>{item.summary}</div>}
+                    {item.fit_rationale && <div className="people-muted">Fit: {item.fit_rationale}</div>}
+                    {item.authority_state === 'discover_only' && (
+                      <div className="people-actions">
+                        <button type="button" className="people-button quiet" onClick={() => opportunityAuthority(item.opportunity_key, 'authorized')}>Authorize</button>
+                        <button type="button" className="people-button quiet" onClick={() => opportunityAuthority(item.opportunity_key, 'declined')}>Decline</button>
+                      </div>
+                    )}
+                  </div>
+                ))}
+              </form>
             </>
           )}
         </section>
