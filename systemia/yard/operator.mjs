@@ -1793,7 +1793,7 @@ export class YardOperator {
         health.edge_attestation_supported === true
       );
 
-    if (!commonMatch || !brokerMatch || !browserMatch || !homeMatch || !fabricMatch) {
+    if (!commonMatch || !forensicPublicMatch || !brokerMatch || !browserMatch || !homeMatch || !fabricMatch) {
       throw new Error('public route health does not match this deployment receipt and instance');
     }
 
