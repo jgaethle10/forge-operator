@@ -105,6 +105,29 @@ export class ForensicRecordPublicEdgeController {
     });
   }
 
+  async #contentCanary(origin){
+    const response=await fetch(String(origin||'')+'/v1/findings/1',{
+      headers:{accept:'application/json'},
+    });
+    const body=await response.json().catch(()=>null);
+    if(!response.ok||body?.ok!==true||!Array.isArray(body?.results)||body.results.length<1){
+      throw new Error('forensic_public_staging_content_canary_failed');
+    }
+    for(const row of body.results){
+      if(Object.prototype.hasOwnProperty.call(row,'record_key')){
+        throw new Error('forensic_public_staging_record_key_exposed');
+      }
+      if(Object.prototype.hasOwnProperty.call(row,'migration_lineage')){
+        throw new Error('forensic_public_staging_migration_lineage_exposed');
+      }
+    }
+    return {
+      finding_number:1,
+      result_count:body.results.length,
+      safe_projection_verified:true,
+    };
+  }
+
   async #routeHealth(record){
     if(!this.binding) return {ok:false,state:'binding_missing'};
     if(this.binding.route_scope==='public_https'){
@@ -188,6 +211,7 @@ export class ForensicRecordPublicEdgeController {
       if(!this.allowLoopbackProof&&this.binding.route_verified!==true){
         throw new Error('forensic_public_staging_https_route_verification_required');
       }
+      const canary=await this.#contentCanary(this.binding.origin);
       this.yard.startLeaseKeeper(this.publicDeploymentId,{
         ttlMs:this.leaseTtlMs,
         renewEveryMs:this.renewEveryMs,
@@ -203,6 +227,9 @@ export class ForensicRecordPublicEdgeController {
         origin:this.binding.origin,
         public_read_only:true,
         safe_projection:true,
+        content_canary_verified:canary.safe_projection_verified===true,
+        canary_finding_number:canary.finding_number,
+        canary_result_count:canary.result_count,
         canonical_domain_cutover:false,
         founder_login_required:false,
       });
@@ -241,6 +268,7 @@ export class ForensicRecordPublicEdgeController {
       health=await this.#routeHealth(record);
     }
     if(!health.ok) throw new Error('forensic_public_staging_route_unhealthy:'+health.state);
+    const canary=await this.#contentCanary(this.binding.origin);
     this.yard.startLeaseKeeper(this.publicDeploymentId,{
       ttlMs:this.leaseTtlMs,
       renewEveryMs:this.renewEveryMs,
@@ -252,6 +280,9 @@ export class ForensicRecordPublicEdgeController {
       route_verified:this.binding.route_verified===true,
       origin:this.binding.origin,
       public_read_only:true,
+      content_canary_verified:canary.safe_projection_verified===true,
+      canary_finding_number:canary.finding_number,
+      canary_result_count:canary.result_count,
       canonical_domain_cutover:false,
       founder_login_required:false,
     });
