@@ -688,6 +688,16 @@ export default function WorldForgeEditor(){
   const [commandNote,setCommandNote]=useState('');
   const [shotDigest,setShotDigest]=useState('');
   const [nativePreview,setNativePreview]=useState<{svg:string;sha:string;renderer:string;solid:boolean}|null>(null);
+  const [engineBridge,setEngineBridge]=useState<{
+    worldId:string;
+    digest:string;
+    runtimeReady:boolean;
+    webGpuReady:boolean;
+    visualParity:string;
+    geometryCount:number;
+    warnings:number;
+    blockers:number;
+  }|null>(null);
   const [meshFaceIndex,setMeshFaceIndex]=useState(1);
   const [meshAmount,setMeshAmount]=useState(.25);
   const [stageMode,setStageMode]=useState(false);
@@ -827,6 +837,7 @@ export default function WorldForgeEditor(){
       setReceipts([]);
       setUndoStack([]);
       setNativePreview(null);
+      setEngineBridge(null);
       setShotDigest('');
       setStagedOperations([]);
       selectDefaultNode(candidate);
@@ -877,6 +888,7 @@ export default function WorldForgeEditor(){
       setReceipts([]);
       setUndoStack([]);
       setNativePreview(null);
+      setEngineBridge(null);
       setShotDigest('');
       setStagedOperations([]);
       selectDefaultNode(payload.project);
@@ -1018,6 +1030,45 @@ export default function WorldForgeEditor(){
         solid,
       });
       setCommandNote(`Rendered by ${payload.preview.receipt.renderer}. Production authority remains off.`);
+    }catch(err){
+      setError(err instanceof Error?err.message:String(err));
+    }finally{
+      setBusy(false);
+    }
+  }
+
+  async function compileEngineBridge(){
+    if(!project||busy) return;
+    if(stagedOperations.length){
+      setError('Apply or clear the staged ChangeSet before compiling World Engine runtime state.');
+      return;
+    }
+    setBusy(true);
+    setError('');
+    try{
+      const response=await fetch('/api/fallen/world-forge/world-engine',{
+        method:'POST',
+        headers:{'content-type':'application/json'},
+        body:JSON.stringify({project}),
+      });
+      const payload=await response.json();
+      if(!response.ok||!payload.success||!payload.bridge){
+        throw new Error(payload.error||'World Forge could not compile into World Engine.');
+      }
+      const bridge=payload.bridge;
+      setEngineBridge({
+        worldId:bridge.world.id,
+        digest:bridge.receipt.digest,
+        runtimeReady:Boolean(bridge.receipt.runtimeReady),
+        webGpuReady:Boolean(bridge.receipt.webGpuReady),
+        visualParity:String(bridge.receipt.visualParity),
+        geometryCount:Array.isArray(bridge.geometries)?bridge.geometries.length:0,
+        warnings:Array.isArray(bridge.receipt.warnings)?bridge.receipt.warnings.length:0,
+        blockers:Array.isArray(bridge.receipt.blockers)?bridge.receipt.blockers.length:0,
+      });
+      setCommandNote(
+        `World Engine bridge compiled: ${bridge.world.id} · ${bridge.receipt.visualParity} parity · ${bridge.geometries.length} geometry asset(s).`
+      );
     }catch(err){
       setError(err instanceof Error?err.message:String(err));
     }finally{
@@ -1207,7 +1258,20 @@ export default function WorldForgeEditor(){
         </label>
         <button onClick={()=>void renderNativePreview(false)} disabled={busy}>Wireframe</button>
         <button onClick={()=>void renderNativePreview(true)} disabled={busy}>Solid Render</button>
+        <button
+          onClick={()=>void compileEngineBridge()}
+          disabled={busy||stagedOperations.length>0}
+          title={stagedOperations.length?'Apply or clear staged changes first':'Compile committed scene into World Engine'}
+        >
+          Engine Bridge
+        </button>
         <button onClick={()=>void bindCinematicShot()} disabled={busy}>Bind Shot</button>
+        {engineBridge&&<span
+          className={engineBridge.webGpuReady?'wf-engine-ready':'wf-engine-partial'}
+          title={engineBridge.digest}
+        >
+          WE {engineBridge.webGpuReady?'GPU READY':'RUNTIME'} · {engineBridge.visualParity.toUpperCase()}
+        </span>}
       </div>
     </header>
 
@@ -1233,6 +1297,14 @@ export default function WorldForgeEditor(){
           onTranslate={commitViewportTranslate}
           snapStep={snapStep}
         />
+        {engineBridge&&<div className="wf-engine-bridge-status">
+          <strong>WORLD ENGINE</strong>
+          <span>{engineBridge.worldId}</span>
+          <span>{engineBridge.geometryCount} geometry</span>
+          <span>{engineBridge.warnings} warning{engineBridge.warnings===1?'':'s'}</span>
+          <span>{engineBridge.blockers} blocker{engineBridge.blockers===1?'':'s'}</span>
+          <small>{engineBridge.digest.slice(0,12)}</small>
+        </div>}
         {stagedOperations.length>0&&<div className="wf-stage-tray">
           <strong>CHANGESET STAGED</strong>
           <span>{stagedOperations.length} operation{stagedOperations.length===1?'':'s'}</span>

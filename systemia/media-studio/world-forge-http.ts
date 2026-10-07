@@ -1,3 +1,4 @@
+import { compileWorldForgeToWorldEngine } from './world-forge-world-engine.js';
 import {
   applyWorldForgeChangeSet,
   createWorldForgeChangeSet,
@@ -406,6 +407,32 @@ export function registerWorldForgeRoutes(app:Express,deps:WorldForgeHttpDeps){
           shotId,
         });
         res.json({success:true,shot});
+      }catch(error){
+        res.status(422).json({
+          success:false,
+          error:error instanceof Error?error.message:String(error),
+        });
+      }
+    },
+  );
+
+  app.post(
+    '/api/fallen/world-forge/world-engine',
+    rateLimit(60,60*60*1000),
+    (req:Request,res:Response)=>{
+      const project=req.body?.project as WorldForgeProject|undefined;
+      if(!project){
+        badRequest(res,'World Forge project is required.');
+        return;
+      }
+      try{
+        const bridge=compileWorldForgeToWorldEngine({
+          project,
+          tickRateHz:Number.isFinite(Number(req.body?.tickRateHz))
+            ? Number(req.body.tickRateHz)
+            : undefined,
+        });
+        res.json({success:true,bridge});
       }catch(error){
         res.status(422).json({
           success:false,

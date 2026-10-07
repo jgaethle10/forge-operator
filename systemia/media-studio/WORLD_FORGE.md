@@ -195,6 +195,28 @@ A stale ChangeSet may be explicitly rebased only when every touched resource sti
 
 This lets human modeling, agent lighting, camera and layout work proceed concurrently without relying on last-write-wins behavior.
 
+## World Engine runtime bridge
+
+World Forge now compiles committed authored scenes into Evercraft World Engine instead of inventing a parallel runtime.
+
+The bridge produces:
+
+- a validated `evercraft.world-engine.world.v1` definition;
+- a rights/provenance-aware World Engine asset manifest;
+- concrete `evercraft.world-engine.geometry.v1` triangle assets for supported World Forge primitives and editable meshes;
+- deterministic node → entity, material → material and asset → asset identity maps;
+- an explicit right-handed Z-up → right-handed Y-up coordinate conversion receipt;
+- camera projection conversion, including perspective focal length/sensor math and orthographic height;
+- World Forge look-at cameras converted into World Engine transform orientation;
+- light conversion with explicit warnings where the runtime model differs;
+- a digest-bound bridge receipt with runtime readiness, WebGPU readiness and visual-parity classification.
+
+The bridge does **not** silently discard semantics. Parent hierarchies require explicit flattening, general object-animation and World Forge simulation domains fail closed until dedicated mappings exist, procedural geometry requires a bake, external geometry needs a real content digest, and licensed assets require license lineage.
+
+Current area lights are explicitly approximated as point lights because World Engine does not yet have an area-light component. Modifier stacks are also called out as not baked in this first bridge. These conditions reduce visual parity rather than being hidden.
+
+The browser editor exposes **Engine Bridge** only for committed canonical state. If a Stage-mode ChangeSet is pending, runtime compilation is blocked until the proposal is applied or cleared.
+
 ## Renderer strategy
 
 The project format must remain independent of any one renderer.
