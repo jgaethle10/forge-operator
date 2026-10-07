@@ -66,6 +66,26 @@ test("Yard exposes freshly attested private capacity without leaking allocator a
     assert.equal(grant.authority_material_exposed,false);
     assert.equal(JSON.stringify(grant).includes(allocatorToken),false);
     assert.ok(grant.receipt_hash.startsWith("sha256:"));
+
+    const invalidated=yard.invalidateDeployment("yard-private-anchor",{
+      reason:"proof_stale_authority",
+      evidence:{source:"test"},
+    });
+    assert.equal(invalidated.ok,true);
+    assert.equal(invalidated.state,"invalidated");
+    assert.equal(invalidated.authority_revoked_locally,true);
+    assert.ok(invalidated.receipt_hash.startsWith("sha256:"));
+    assert.equal(
+      yard.deploymentStatus("yard-private-anchor").state,
+      "invalidated"
+    );
+
+    const afterInvalidation=await yard.listPrivateCapacityNodes();
+    assert.equal(afterInvalidation.nodes.length,0);
+    await assert.rejects(
+      ()=>yard.privateCapacityGrant("yard-private-proof-node"),
+      /private_capacity_node_not_authorized_or_live/
+    );
   }finally{
     try{
       if(yard.deploymentStatus("yard-private-anchor")){
