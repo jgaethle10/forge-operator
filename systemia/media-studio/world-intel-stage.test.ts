@@ -45,6 +45,17 @@ test('world intelligence compiler creates a dimensional sourced scene instead of
         sourceRefs:['public-boundary:001'],
         fill:'rgba(79,184,255,.08)',
         stroke:'#4FB8FF'
+      }],
+      terrains:[{
+        id:'terrain-a',
+        sourcePath:'./terrain.png',
+        bounds:{north:40,south:25,east:175,west:135},
+        opacity:.72,
+        blendMode:'multiply',
+        evidenceState:'public_source',
+        sourceRefs:['public-terrain:001'],
+        sourceSha256:'b'.repeat(64),
+        rightsState:'public_domain'
       }]
     },
     metrics:[{
@@ -77,6 +88,9 @@ test('world intelligence compiler creates a dimensional sourced scene instead of
   if(!geo||geo.raw.kind!=='geo') throw new Error('geo_layer_missing');
   assert.equal(geo.raw.polygons?.length,1);
   assert.equal(geo.raw.polygons?.[0].id,'zone-a');
+  assert.equal(geo.raw.terrains?.length,1);
+  assert.equal(geo.raw.terrains?.[0].id,'terrain-a');
+  assert.equal(geo.raw.grid,false);
   assert.equal(geo.raw.fitBounds?.north,40);
   assert.equal(geo.raw.fitBounds?.paddingPct,.08);
 });
