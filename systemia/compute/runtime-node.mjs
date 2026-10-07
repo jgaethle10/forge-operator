@@ -2757,7 +2757,6 @@ export async function startEvercraftComputeNode({
             workload_class: body.workload_class,
             runtime,
             service: runtime,
-            workspace_root: workspaceRoot,
           });
           const result = {
             schema: 'evercraft.compute.resident-service.v1',
