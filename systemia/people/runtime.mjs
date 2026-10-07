@@ -96,6 +96,7 @@ export function createPeopleRuntime({
       opportunities: [],
       invites: [],
       identity_challenges: [],
+      identity_delivery_receipts: [],
       consent_events: [],
       share_receipts: [],
       data_requests: [],
@@ -154,6 +155,7 @@ export function createPeopleRuntime({
       consent_event_count: state.consent_events.length,
       invite_count: state.invites.length,
       identity_challenge_count: state.identity_challenges.length,
+      identity_delivery_receipt_count: state.identity_delivery_receipts.length,
       base44_runtime_dependency: false,
       updated_at: state.updated_at,
     };
@@ -177,6 +179,7 @@ export function createPeopleRuntime({
       consent_events: state.consent_events.filter((row) => row.brain_key === brain.brain_key),
       share_receipts: state.share_receipts.filter((row) => row.brain_key === brain.brain_key),
       data_requests: state.data_requests.filter((row) => row.brain_key === brain.brain_key),
+      identity_delivery_receipts: state.identity_delivery_receipts.filter((row) => row.brain_key === brain.brain_key),
     };
   }
 
@@ -565,6 +568,48 @@ export function createPeopleRuntime({
     };
   }
 
+  function recordEmailDelivery(challengeKey, input = {}) {
+    const state = load();
+    const challenge = state.identity_challenges.find((row) => row.challenge_key === clean(challengeKey));
+    if (!challenge) throw new Error('challenge_not_found');
+    const provider = clean(input.provider);
+    if (!['gmail_agent', 'resend_agent', 'manual_other'].includes(provider)) throw new Error('email_delivery_provider_invalid');
+    const status = clean(input.status);
+    if (!['sent', 'failed'].includes(status)) throw new Error('email_delivery_status_invalid');
+    const stamp = now();
+    const trustedMailboxDelivery = status === 'sent' && ['gmail_agent', 'resend_agent'].includes(provider);
+    const receipt = {
+      delivery_receipt_key: key('identity-delivery'),
+      challenge_key: challenge.challenge_key,
+      brain_key: challenge.brain_key,
+      channel: 'email',
+      provider,
+      destination_hint: challenge.email_hint,
+      destination_hash: challenge.email_hash,
+      status,
+      trusted_mailbox_delivery: trustedMailboxDelivery,
+      message_ref: clean(input.message_ref),
+      failure_reason: status === 'failed' ? clean(input.failure_reason) : '',
+      actor: clean(input.actor) || 'systemia-mail-adapter',
+      occurred_at: stamp,
+    };
+    state.identity_delivery_receipts.push(receipt);
+    challenge.delivery_state = status;
+    challenge.delivery_provider = provider;
+    challenge.last_delivery_at = stamp;
+    challenge.last_message_ref = receipt.message_ref;
+    save(state, {
+      event: 'identity_email_delivery_recorded',
+      brain_key: challenge.brain_key,
+      challenge_key: challenge.challenge_key,
+      delivery_receipt_key: receipt.delivery_receipt_key,
+      provider,
+      status,
+      trusted_mailbox_delivery: trustedMailboxDelivery,
+    });
+    return structuredClone(receipt);
+  }
+
   function inspectEmailChallenge(token) {
     const state = load();
     const challenge = expireIfNeeded(activeChallenge(state, clean(token)));
@@ -581,6 +626,9 @@ export function createPeopleRuntime({
       email_hint: challenge.email_hint,
       expires_at: challenge.expires_at,
       already_verified: challenge.status === 'verified',
+      delivery_state: challenge.delivery_state || 'not_sent',
+      delivery_provider: challenge.delivery_provider || null,
+      trusted_delivery_required: true,
       assurance_after_success: 'verified_email',
     };
   }
@@ -591,6 +639,10 @@ export function createPeopleRuntime({
     if (!challenge) throw new Error('challenge_not_found');
     if (challenge.status === 'expired') throw new Error('challenge_expired');
     if (challenge.status === 'revoked') throw new Error('challenge_revoked');
+    const trustedDelivery = state.identity_delivery_receipts
+      .filter((row) => row.challenge_key === challenge.challenge_key)
+      .some((row) => row.status === 'sent' && row.trusted_mailbox_delivery === true);
+    if (!trustedDelivery) throw new Error('trusted_email_delivery_required');
     if (clean(input.confirmation_text) !== 'VERIFY MY EMAIL') throw new Error('exact_confirmation_required');
 
     const brain = findBrain(state, challenge.brain_key);
@@ -622,6 +674,7 @@ export function createPeopleRuntime({
       consent_events: state.consent_events.filter((row) => row.brain_key === brain.brain_key),
       share_receipts: state.share_receipts.filter((row) => row.brain_key === brain.brain_key),
       data_requests: state.data_requests.filter((row) => row.brain_key === brain.brain_key),
+      identity_delivery_receipts: state.identity_delivery_receipts.filter((row) => row.brain_key === brain.brain_key),
     };
     const serialized = JSON.stringify(payload);
     const artifactHash = sha256(serialized);
@@ -716,6 +769,7 @@ export function createPeopleRuntime({
     inspectInvite,
     acceptInvite,
     createEmailChallenge,
+    recordEmailDelivery,
     inspectEmailChallenge,
     verifyEmail,
     exportBrain,
