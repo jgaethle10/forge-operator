@@ -30,6 +30,11 @@ import { buildResourceFieldExpansionIntents } from './capacity-resource-field-br
 
 const MODULE_FILE=fileURLToPath(import.meta.url);
 
+function readJson(file,fallback=null){
+  try{return JSON.parse(fs.readFileSync(file,'utf8'));}
+  catch{return fallback;}
+}
+
 function atomicJson(file,value){
   fs.mkdirSync(path.dirname(file),{recursive:true,mode:0o700});
   const tmp=file+'.'+process.pid+'.'+randomBytes(4).toString('hex')+'.tmp';
@@ -220,6 +225,9 @@ export function compileCapacityOrganismState({
       prewarm_count:lifecyclePlan.prewarm_count,
       idle_count:lifecyclePlan.idle_count,
       reclaim_eligible_count:lifecyclePlan.reclaim_eligible_count,
+      reclamation_execution_ready_count:lifecyclePlan.reclamation_execution_ready_count,
+      held_reclamation_count:lifecyclePlan.held_reclamation_count,
+      reconciliation_required_count:lifecyclePlan.reconciliation_required_count,
       release_paid_lease_count:lifecyclePlan.release_paid_lease_count,
       stop_spawned_owned_capacity_count:lifecyclePlan.stop_spawned_owned_capacity_count,
       relinquish_voluntary_capacity_count:lifecyclePlan.relinquish_voluntary_capacity_count,
@@ -242,6 +250,7 @@ export function compileCapacityOrganismState({
     active_device_control_from_census:false,
     observation_never_grants_authority:true,
     _capacity_lifecycle_ledger:lifecyclePlan,
+    _capacity_headroom_plan:headroomPlan,
     generated_at:(now instanceof Date?now:new Date(now)).toISOString(),
   };
   return body;
@@ -346,7 +355,11 @@ export async function runCapacityOrganismOnce({
     now,
   });
 
-  const { _capacity_lifecycle_ledger: lifecycleLedger, ...compiledPublic }=compiled;
+  const {
+    _capacity_lifecycle_ledger:lifecycleLedger,
+    _capacity_headroom_plan:capacityHeadroomPlan,
+    ...compiledPublic
+  }=compiled;
   const receipt={
     ...compiledPublic,
     census:census?{
@@ -388,6 +401,9 @@ export async function runCapacityOrganismOnce({
       prewarm_count:compiled.capacity_lifecycle?.prewarm_count||0,
       idle_count:compiled.capacity_lifecycle?.idle_count||0,
       reclaim_eligible_count:compiled.capacity_lifecycle?.reclaim_eligible_count||0,
+      reclamation_execution_ready_count:compiled.capacity_lifecycle?.reclamation_execution_ready_count||0,
+      held_reclamation_count:compiled.capacity_lifecycle?.held_reclamation_count||0,
+      reconciliation_required_count:compiled.capacity_lifecycle?.reconciliation_required_count||0,
       release_paid_lease_count:compiled.capacity_lifecycle?.release_paid_lease_count||0,
       stop_spawned_owned_capacity_count:compiled.capacity_lifecycle?.stop_spawned_owned_capacity_count||0,
       relinquish_voluntary_capacity_count:compiled.capacity_lifecycle?.relinquish_voluntary_capacity_count||0,
@@ -396,13 +412,13 @@ export async function runCapacityOrganismOnce({
       receipt_hash:compiled.capacity_lifecycle?.receipt_hash||null,
     },
     capacity_headroom:{
-      reservation_count:headroomPlan.reservation_count,
-      reservations:headroomPlan.reservations,
-      skipped:headroomPlan.skipped,
-      current_pressure_always_wins:headroomPlan.current_pressure_always_wins!==false,
+      reservation_count:capacityHeadroomPlan?.reservation_count||0,
+      reservations:capacityHeadroomPlan?.reservations||[],
+      skipped:capacityHeadroomPlan?.skipped||[],
+      current_pressure_always_wins:capacityHeadroomPlan?.current_pressure_always_wins!==false,
       authority_expansion:false,
       commercial_spend_usd:0,
-      receipt_hash:headroomPlan.receipt_hash||null,
+      receipt_hash:capacityHeadroomPlan?.receipt_hash||null,
     },
     capacity_autonomy:{
       safe_autonomous_action_count:autonomyPlan.safe_autonomous_action_count,
@@ -481,6 +497,9 @@ async function main(){
       forecast_prewarm_action_count:receipt.demand_forecast?.prewarm_action_count||0,
       forecast_headroom_reservation_count:receipt.capacity_headroom?.reservation_count||0,
       capacity_lifecycle_reclaim_eligible_count:receipt.capacity_lifecycle?.reclaim_eligible_count||0,
+      capacity_lifecycle_execution_ready_count:receipt.capacity_lifecycle?.reclamation_execution_ready_count||0,
+      capacity_lifecycle_held_count:receipt.capacity_lifecycle?.held_reclamation_count||0,
+      capacity_lifecycle_reconciliation_required_count:receipt.capacity_lifecycle?.reconciliation_required_count||0,
       capacity_lifecycle_paid_release_count:receipt.capacity_lifecycle?.release_paid_lease_count||0,
       resource_field_expansion_intent_count:receipt.resource_field_expansion?.intent_count||0,
       resource_field_current_pressure_count:receipt.resource_field_expansion?.current_pressure_intent_count||0,
