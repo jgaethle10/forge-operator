@@ -84,4 +84,6 @@ test('external Fabric canary proves Graphics Command poster, scroll-stop gate, a
   assert.ok(script.includes("graphics_command_layout_quality_invalid"));
   assert.ok(script.includes("labelsNonOverlapping"));
   assert.ok(script.includes("labelsClearOfOtherMarkers"));
+  assert.ok(script.includes("regionIdentityClear"));
+  assert.ok(script.includes("region_identity_clear"));
 });
