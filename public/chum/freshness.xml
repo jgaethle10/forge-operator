@@ -2,10 +2,15 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
 <id>urn:evercraft:chum:crawl-pressure</id>
 <title>Evercraft CHUM Freshness Feed</title>
-<updated>2026-10-07T00:54:08.635Z</updated>
+<updated>2026-10-07T00:56:03.369Z</updated>
 <link rel="self" href="/chum/freshness.xml"/>
 <subtitle>Content-hash-backed public discovery changes. Freshness is not proof of provider pickup.</subtitle>
-<entry><id>urn:evercraft:chum:0df896994e643d779039e059</id><title>/chum/hot/index.json</title><updated>2026-10-07T00:54:08.635Z</updated><link href="/chum/hot/index.json"/><category term="priority-80"/></entry>
+<entry><id>urn:evercraft:chum:f3d4e157fde64156af719e4f</id><title>/chum/answers/observed/i-need-a-sourced-evidence-brief-on-agriculture-water-land-production-or-resilience-r-e2d810db24/llms.txt</title><updated>2026-10-07T00:56:03.369Z</updated><link href="/chum/answers/observed/i-need-a-sourced-evidence-brief-on-agriculture-water-land-production-or-resilience-r-e2d810db24/llms.txt"/><category term="priority-86"/></entry>
+<entry><id>urn:evercraft:chum:17df75fe669cae85cd0b00ed</id><title>/chum/answers/observed/</title><updated>2026-10-07T00:56:03.369Z</updated><link href="/chum/answers/observed/"/><category term="priority-80"/></entry>
+<entry><id>urn:evercraft:chum:9ba4b7d9423e2874546f2986</id><title>/chum/answers/observed/i-need-a-sourced-evidence-brief-on-agriculture-water-land-production-or-resilience-r-e2d810db24/</title><updated>2026-10-07T00:56:03.369Z</updated><link href="/chum/answers/observed/i-need-a-sourced-evidence-brief-on-agriculture-water-land-production-or-resilience-r-e2d810db24/"/><category term="priority-80"/></entry>
+<entry><id>urn:evercraft:chum:80869cbacc0717d740f0557b</id><title>/chum/answers/observed/i-need-a-sourced-evidence-brief-on-agriculture-water-land-production-or-resilience-r-e2d810db24/answer.json</title><updated>2026-10-07T00:56:03.369Z</updated><link href="/chum/answers/observed/i-need-a-sourced-evidence-brief-on-agriculture-water-land-production-or-resilience-r-e2d810db24/answer.json"/><category term="priority-80"/></entry>
+<entry><id>urn:evercraft:chum:b9d12ce14a5a7cc6d6d3da20</id><title>/chum/answers/observed/index.json</title><updated>2026-10-07T00:56:03.369Z</updated><link href="/chum/answers/observed/index.json"/><category term="priority-80"/></entry>
+<entry><id>urn:evercraft:chum:0df896994e643d779039e059</id><title>/chum/hot/index.json</title><updated>2026-10-07T00:56:03.369Z</updated><link href="/chum/hot/index.json"/><category term="priority-80"/></entry>
 <entry><id>urn:evercraft:chum:d8bcbc9c28ec3e0aa29125ea</id><title>/chum/crawler-radar.json</title><updated>2026-10-07T00:49:32.191Z</updated><link href="/chum/crawler-radar.json"/><category term="priority-80"/></entry>
 <entry><id>urn:evercraft:chum:aa9b916fd98945db10fa3cab</id><title>/chum/crawler-radar.txt</title><updated>2026-10-07T00:49:32.191Z</updated><link href="/chum/crawler-radar.txt"/><category term="priority-80"/></entry>
 <entry><id>urn:evercraft:chum:494de3a9b5c21a35fdfdb6c2</id><title>/chum/strike/index.json</title><updated>2026-10-07T00:49:32.191Z</updated><link href="/chum/strike/index.json"/><category term="priority-80"/></entry>
@@ -100,9 +105,4 @@
 <entry><id>urn:evercraft:chum:1f9c776a26c06d16a178e5c6</id><title>/chum/commercial/feed.json</title><updated>2026-10-06T18:02:46.847Z</updated><link href="/chum/commercial/feed.json"/><category term="priority-112"/></entry>
 <entry><id>urn:evercraft:chum:da60d0a564c52ed2e335322a</id><title>/chum/commercial/feed.xml</title><updated>2026-10-06T18:02:46.847Z</updated><link href="/chum/commercial/feed.xml"/><category term="priority-112"/></entry>
 <entry><id>urn:evercraft:chum:dcf7f9481fc9b965e71c1aff</id><title>/chum/commercial/index.json</title><updated>2026-10-06T18:02:46.847Z</updated><link href="/chum/commercial/index.json"/><category term="priority-112"/></entry>
-<entry><id>urn:evercraft:chum:af3d14bbaad75f3bfd440cd8</id><title>/chum/commercial/llms.txt</title><updated>2026-10-06T18:02:46.847Z</updated><link href="/chum/commercial/llms.txt"/><category term="priority-112"/></entry>
-<entry><id>urn:evercraft:chum:6a2156e97d5a76ac182a54d7</id><title>/chum/sitemaps/answers.xml</title><updated>2026-10-06T18:02:46.847Z</updated><link href="/chum/sitemaps/answers.xml"/><category term="priority-108"/></entry>
-<entry><id>urn:evercraft:chum:716a20801099ededa1fa11c1</id><title>/chum/sitemaps/sell-now.xml</title><updated>2026-10-06T18:02:46.847Z</updated><link href="/chum/sitemaps/sell-now.xml"/><category term="priority-108"/></entry>
-<entry><id>urn:evercraft:chum:e610b2719a363b9cd7a32d50</id><title>/.well-known/agent-card.json</title><updated>2026-10-06T18:02:46.847Z</updated><link href="/.well-known/agent-card.json"/><category term="priority-104"/></entry>
-<entry><id>urn:evercraft:chum:fc4ec54a9f72170ce6e9f4b5</id><title>/.well-known/agent.json</title><updated>2026-10-06T18:02:46.847Z</updated><link href="/.well-known/agent.json"/><category term="priority-102"/></entry>
 </feed>

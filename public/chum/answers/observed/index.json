@@ -2,7 +2,7 @@
   "schema": "evercraft.chum.observed-miss-index.v1",
   "provider": "Evercraft LLC",
   "purpose": "Crawlable question-to-capability pages generated only from receipt-backed user-observed or authorized brand-blind provider misses.",
-  "page_count": 22,
+  "page_count": 23,
   "rules": {
     "receipt_backed_observations_only": true,
     "accepted_observation_sources": [
@@ -105,6 +105,16 @@
       "relative_html": "/chum/answers/observed/i-need-a-software-layer-that-can-help-me-track-device-reconnect-and-application-cont-a429410e41/",
       "relative_json": "/chum/answers/observed/i-need-a-software-layer-that-can-help-me-track-device-reconnect-and-application-cont-a429410e41/answer.json",
       "relative_llms": "/chum/answers/observed/i-need-a-software-layer-that-can-help-me-track-device-reconnect-and-application-cont-a429410e41/llms.txt"
+    },
+    {
+      "product_key": "faie",
+      "user_question": "I need a sourced evidence brief on agriculture, water, land, production, or resilience risk before making a business decision. What service should I use?",
+      "observed_providers": [
+        "generic_agent"
+      ],
+      "relative_html": "/chum/answers/observed/i-need-a-sourced-evidence-brief-on-agriculture-water-land-production-or-resilience-r-e2d810db24/",
+      "relative_json": "/chum/answers/observed/i-need-a-sourced-evidence-brief-on-agriculture-water-land-production-or-resilience-r-e2d810db24/answer.json",
+      "relative_llms": "/chum/answers/observed/i-need-a-sourced-evidence-brief-on-agriculture-water-land-production-or-resilience-r-e2d810db24/llms.txt"
     },
     {
       "product_key": "forensiscope",

@@ -2,7 +2,7 @@
   "schema": "evercraft.chum.crawl-pressure.v1",
   "provider": "Evercraft LLC",
   "coordinator": "CHUM",
-  "updated_at": "2026-10-07T00:54:08.635Z",
+  "updated_at": "2026-10-07T00:56:03.369Z",
   "purpose": "Content-hash-backed freshness signals for public Evercraft discovery surfaces. A freshness signal requests attention; it does not prove indexing, ranking, recommendation, citation or provider pickup.",
   "indexnow": {
     "supported": true,
@@ -11,16 +11,71 @@
   },
   "latest_change_batch": [
     {
+      "path": "/chum/answers/observed/i-need-a-sourced-evidence-brief-on-agriculture-water-land-production-or-resilience-r-e2d810db24/llms.txt",
+      "last_changed": "2026-10-07T00:56:03.369Z",
+      "priority": 86
+    },
+    {
+      "path": "/chum/answers/observed/",
+      "last_changed": "2026-10-07T00:56:03.369Z",
+      "priority": 80
+    },
+    {
+      "path": "/chum/answers/observed/i-need-a-sourced-evidence-brief-on-agriculture-water-land-production-or-resilience-r-e2d810db24/",
+      "last_changed": "2026-10-07T00:56:03.369Z",
+      "priority": 80
+    },
+    {
+      "path": "/chum/answers/observed/i-need-a-sourced-evidence-brief-on-agriculture-water-land-production-or-resilience-r-e2d810db24/answer.json",
+      "last_changed": "2026-10-07T00:56:03.369Z",
+      "priority": 80
+    },
+    {
+      "path": "/chum/answers/observed/index.json",
+      "last_changed": "2026-10-07T00:56:03.369Z",
+      "priority": 80
+    },
+    {
       "path": "/chum/hot/index.json",
-      "last_changed": "2026-10-07T00:54:08.635Z",
+      "last_changed": "2026-10-07T00:56:03.369Z",
       "priority": 80
     }
   ],
   "recent_surfaces": [
     {
+      "path": "/chum/answers/observed/i-need-a-sourced-evidence-brief-on-agriculture-water-land-production-or-resilience-r-e2d810db24/llms.txt",
+      "url": "/chum/answers/observed/i-need-a-sourced-evidence-brief-on-agriculture-water-land-production-or-resilience-r-e2d810db24/llms.txt",
+      "last_changed": "2026-10-07T00:56:03.369Z",
+      "priority": 86
+    },
+    {
+      "path": "/chum/answers/observed/",
+      "url": "/chum/answers/observed/",
+      "last_changed": "2026-10-07T00:56:03.369Z",
+      "priority": 80
+    },
+    {
+      "path": "/chum/answers/observed/i-need-a-sourced-evidence-brief-on-agriculture-water-land-production-or-resilience-r-e2d810db24/",
+      "url": "/chum/answers/observed/i-need-a-sourced-evidence-brief-on-agriculture-water-land-production-or-resilience-r-e2d810db24/",
+      "last_changed": "2026-10-07T00:56:03.369Z",
+      "priority": 80
+    },
+    {
+      "path": "/chum/answers/observed/i-need-a-sourced-evidence-brief-on-agriculture-water-land-production-or-resilience-r-e2d810db24/answer.json",
+      "url": "/chum/answers/observed/i-need-a-sourced-evidence-brief-on-agriculture-water-land-production-or-resilience-r-e2d810db24/answer.json",
+      "last_changed": "2026-10-07T00:56:03.369Z",
+      "priority": 80
+    },
+    {
+      "path": "/chum/answers/observed/index.json",
+      "url": "/chum/answers/observed/index.json",
+      "last_changed": "2026-10-07T00:56:03.369Z",
+      "priority": 80
+    },
+    {
       "path": "/chum/hot/index.json",
       "url": "/chum/hot/index.json",
-      "last_changed": "2026-10-07T00:54:08.635Z",
+      "last_changed": "2026-10-07T00:56:03.369Z",
       "priority": 80
     },
     {
@@ -1484,36 +1539,6 @@
     {
       "path": "/chum/answers/doors/give-my-ai-live-web-access-72b0906a33.json",
       "url": "/chum/answers/doors/give-my-ai-live-web-access-72b0906a33.json",
-      "last_changed": "2026-10-06T16:42:20.155Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/give-this-approved-execution-more-time-08cf163d9a.json",
-      "url": "/chum/answers/doors/give-this-approved-execution-more-time-08cf163d9a.json",
-      "last_changed": "2026-10-06T16:42:20.155Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/handle-my-website-for-me-53ad580370.json",
-      "url": "/chum/answers/doors/handle-my-website-for-me-53ad580370.json",
-      "last_changed": "2026-10-06T16:42:20.155Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/headless-browser-api-72c6576bf2.json",
-      "url": "/chum/answers/doors/headless-browser-api-72c6576bf2.json",
-      "last_changed": "2026-10-06T16:42:20.155Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/help-an-ai-understand-how-our-company-works-16cb62033b.json",
-      "url": "/chum/answers/doors/help-an-ai-understand-how-our-company-works-16cb62033b.json",
-      "last_changed": "2026-10-06T16:42:20.155Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/help-me-document-spam-calls-6a08485e85.json",
-      "url": "/chum/answers/doors/help-me-document-spam-calls-6a08485e85.json",
       "last_changed": "2026-10-06T16:42:20.155Z",
       "priority": 100
     }

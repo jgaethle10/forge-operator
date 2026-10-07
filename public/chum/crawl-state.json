@@ -2,8 +2,8 @@
   "schema": "evercraft.chum.crawl-state.v1",
   "provider": "Evercraft LLC",
   "coordinator": "CHUM",
-  "updated_at": "2026-10-07T00:54:08.635Z",
-  "url_count": 2800,
+  "updated_at": "2026-10-07T00:56:03.369Z",
+  "url_count": 2803,
   "doctrine": {
     "crawl_can_be_requested_not_forced": true,
     "content_hash_controls_freshness": true,
@@ -123,14 +123,14 @@
     },
     "/chum/answers/observed/": {
       "path": "/chum/answers/observed/",
-      "content_sha256": "34bb411bb9a62de843523f7f0edf75578df8ea497411a79c461f5b22a0f89009",
-      "last_changed": "2026-09-27T06:03:00.949Z",
+      "content_sha256": "07999cbcbb49a6d214cc76dde0a5d2ab2fa0cfc415fb8bbce87843df3de74fd7",
+      "last_changed": "2026-10-07T00:56:03.369Z",
       "priority": 80
     },
     "/chum/answers/observed/index.json": {
       "path": "/chum/answers/observed/index.json",
-      "content_sha256": "665b821613b49cfe9fa39767771ad88c4e8932f0c1800e49f5d2d18993d4a75b",
-      "last_changed": "2026-09-27T06:03:00.949Z",
+      "content_sha256": "71abe6d6949ac26ef0b6cd1d8736d93f8f74ba77e6cb1d0137b31ed3f10a25d7",
+      "last_changed": "2026-10-07T00:56:03.369Z",
       "priority": 80
     },
     "/chum/hot/": {
@@ -141,8 +141,8 @@
     },
     "/chum/hot/index.json": {
       "path": "/chum/hot/index.json",
-      "content_sha256": "31cc2568b70e9a0331eac3510d6ecf9076f6259a2e66994a54d511a4fa3b67b9",
-      "last_changed": "2026-10-07T00:54:08.635Z",
+      "content_sha256": "1de60656acc9c20635ba46b429df31859db2b4d913ed4d1fb9672b8c672e9e6a",
+      "last_changed": "2026-10-07T00:56:03.369Z",
       "priority": 80
     },
     "/chum/strike/": {
@@ -4169,6 +4169,24 @@
       "path": "/chum/answers/observed/i-need-a-software-layer-that-can-help-me-track-device-reconnect-and-application-cont-a429410e41/llms.txt",
       "content_sha256": "a00c20c217a386cd84dd56418e51c3be9863e61e25a3be4664b37207aac29ae3",
       "last_changed": "2026-10-01T05:00:27.354Z",
+      "priority": 86
+    },
+    "/chum/answers/observed/i-need-a-sourced-evidence-brief-on-agriculture-water-land-production-or-resilience-r-e2d810db24/": {
+      "path": "/chum/answers/observed/i-need-a-sourced-evidence-brief-on-agriculture-water-land-production-or-resilience-r-e2d810db24/",
+      "content_sha256": "5ad3a5b5945d12683c5a3eafbfb1481b6183a84ae52bf4c20a39bee18c524ab0",
+      "last_changed": "2026-10-07T00:56:03.369Z",
+      "priority": 80
+    },
+    "/chum/answers/observed/i-need-a-sourced-evidence-brief-on-agriculture-water-land-production-or-resilience-r-e2d810db24/answer.json": {
+      "path": "/chum/answers/observed/i-need-a-sourced-evidence-brief-on-agriculture-water-land-production-or-resilience-r-e2d810db24/answer.json",
+      "content_sha256": "9886d5c96e9aac7568cdfbafb4974f0d213aa2938ae4e96ccc7dd6e69bccafe0",
+      "last_changed": "2026-10-07T00:56:03.369Z",
+      "priority": 80
+    },
+    "/chum/answers/observed/i-need-a-sourced-evidence-brief-on-agriculture-water-land-production-or-resilience-r-e2d810db24/llms.txt": {
+      "path": "/chum/answers/observed/i-need-a-sourced-evidence-brief-on-agriculture-water-land-production-or-resilience-r-e2d810db24/llms.txt",
+      "content_sha256": "8c99409dc868e8091757b3e780a9bfa203f14ee9a54e60b6001bbbf8b9fdcdfe",
+      "last_changed": "2026-10-07T00:56:03.369Z",
       "priority": 86
     },
     "/chum/answers/observed/i-need-a-video-rag-workflow-for-long-recordings-where-speech-and-visual-context-stay-f01012e781/": {
