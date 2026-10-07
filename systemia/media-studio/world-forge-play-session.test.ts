@@ -216,3 +216,60 @@ test('Play Mode simulates authored dynamic physics against authored static colli
   assert.ok(heroRuntime!.transform.position.y>.4);
   assert.ok(heroRuntime!.transform.position.y<.6);
 });
+
+
+test('Play Mode accepts tick-bound impulses without rewriting authored transforms',()=>{
+  const project=createWorldForgeStarterProject();
+  const hero=project.nodes.find(node=>node.id==='hero-core');
+  assert.ok(hero);
+  hero!.physics={
+    mode:'dynamic',
+    massKg:1,
+    gravityScale:0,
+    linearDamping:0,
+    restitution:0,
+    collider:{type:'auto_box'},
+  };
+
+  const authoredPosition=structuredClone(hero!.transform.position);
+  const session=new WorldForgePlaySession({
+    sessionId:'play-impulse-input',
+    project,
+  });
+
+  const kicked=session.step({
+    ticks:1,
+    inputs:[{
+      id:'kick-x',
+      tick:1,
+      entityId:'wfnode:hero-core',
+      kind:'impulse',
+      value:{x:2,y:0,z:0},
+    }],
+  });
+
+  const runtimeHero=kicked.snapshot.entities.find(
+    entity=>entity.id==='wfnode:hero-core'
+  );
+  assert.ok(runtimeHero?.rigidBody);
+  assert.equal(runtimeHero!.rigidBody!.velocity.x,2);
+  assert.ok(runtimeHero!.transform.position.x>0);
+  assert.deepEqual(session.project.nodes.find(
+    node=>node.id==='hero-core'
+  )?.transform.position,authoredPosition);
+
+  const stopped=session.step({
+    ticks:1,
+    inputs:[{
+      id:'stop-x',
+      tick:2,
+      entityId:'wfnode:hero-core',
+      kind:'set_velocity',
+      value:{x:0,y:0,z:0},
+    }],
+  });
+  const stoppedHero=stopped.snapshot.entities.find(
+    entity=>entity.id==='wfnode:hero-core'
+  );
+  assert.deepEqual(stoppedHero?.rigidBody?.velocity,{x:0,y:0,z:0});
+});

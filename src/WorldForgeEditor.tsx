@@ -5,7 +5,11 @@ import {
   frameDistanceForScale,
   perspectiveVerticalFovRad,
 } from './world-forge-viewport-tools';
-import { runtimeTransformsByForgeNodeId } from './world-forge-runtime-view';
+import {
+  runtimeBodiesByForgeNodeId,
+  runtimeTransformsByForgeNodeId,
+  worldForgeDirectionToWorldEngine,
+} from './world-forge-runtime-view';
 
 type Vec3={x:number;y:number;z:number};
 type Transform={position:Vec3;rotationDeg:Vec3;scale:Vec3};
@@ -102,6 +106,11 @@ type PlaySessionState={
   webGpuReady:boolean;
   visualParity:string;
   runtimeTransforms:Record<string,Transform>;
+  runtimeBodies:Record<string,{
+    entityId:string;
+    velocity:Vec3|null;
+    kinematic:boolean;
+  }>;
 };
 
 const AXIS_STEP=.25;
@@ -735,6 +744,7 @@ export default function WorldForgeEditor(){
   }|null>(null);
   const [meshFaceIndex,setMeshFaceIndex]=useState(1);
   const [meshAmount,setMeshAmount]=useState(.25);
+  const [playImpulse,setPlayImpulse]=useState(1);
   const [stageMode,setStageMode]=useState(false);
   const [stagedOperations,setStagedOperations]=useState<ForgeOperation[]>([]);
   const [snapStep,setSnapStep]=useState(.25);
@@ -885,6 +895,7 @@ export default function WorldForgeEditor(){
       webGpuReady:Boolean(session.webGpuReady),
       visualParity:String(session.visualParity??'unknown'),
       runtimeTransforms:runtimeTransformsByForgeNodeId(snapshot),
+      runtimeBodies:runtimeBodiesByForgeNodeId(snapshot),
     };
   }
 
@@ -947,7 +958,7 @@ export default function WorldForgeEditor(){
     }
   }
 
-  async function stepPlaySession(ticks:number){
+  async function stepPlaySession(ticks:number,inputs:any[]=[]){
     if(!playSession||busy) return;
     setBusy(true);
     setError('');
@@ -958,7 +969,7 @@ export default function WorldForgeEditor(){
         body:JSON.stringify({
           sessionId:playSession.sessionId,
           ticks,
-          inputs:[],
+          inputs,
         }),
       });
       const payload=await response.json();
@@ -974,6 +985,49 @@ export default function WorldForgeEditor(){
     }finally{
       setBusy(false);
     }
+  }
+
+  async function impulseSelected(axis:keyof Vec3,amount:number){
+    if(!playSession||!selected||selected.physics?.mode!=='dynamic') return;
+    if(stagedOperations.length){
+      setError('Apply or clear staged authoring changes before sending runtime inputs.');
+      return;
+    }
+    const body=playSession.runtimeBodies[selected.id];
+    if(!body?.entityId){
+      setError('Selected object is not present as a dynamic body in the current runtime snapshot.');
+      return;
+    }
+    const forgeImpulse={x:0,y:0,z:0};
+    forgeImpulse[axis]=amount;
+    const value=worldForgeDirectionToWorldEngine(forgeImpulse);
+    await stepPlaySession(1,[{
+      id:`editor-impulse-${Date.now().toString(36)}`,
+      tick:playSession.tick+1,
+      entityId:body.entityId,
+      kind:'impulse',
+      value,
+    }]);
+  }
+
+  async function zeroSelectedVelocity(){
+    if(!playSession||!selected||selected.physics?.mode!=='dynamic') return;
+    if(stagedOperations.length){
+      setError('Apply or clear staged authoring changes before sending runtime inputs.');
+      return;
+    }
+    const body=playSession.runtimeBodies[selected.id];
+    if(!body?.entityId){
+      setError('Selected object is not present as a dynamic body in the current runtime snapshot.');
+      return;
+    }
+    await stepPlaySession(1,[{
+      id:`editor-stop-${Date.now().toString(36)}`,
+      tick:playSession.tick+1,
+      entityId:body.entityId,
+      kind:'set_velocity',
+      value:{x:0,y:0,z:0},
+    }]);
   }
 
   async function syncPlaySessionProject(nextProject:ForgeProject){
@@ -1894,6 +1948,52 @@ export default function WorldForgeEditor(){
               <small>
                 Static = collider only · Kinematic = authored motion wins · Dynamic = World Engine simulation.
               </small>
+
+              {playSession&&selected.physics.mode==='dynamic'&&!stagedOperations.length&&(()=>{
+                const body=playSession.runtimeBodies[selected.id];
+                const speed=body?.velocity
+                  ? Math.hypot(body.velocity.x,body.velocity.y,body.velocity.z)
+                  : 0;
+                return <div className="wf-play-force">
+                  <div className="wf-play-force-head">
+                    <strong>Runtime input</strong>
+                    <span>{speed.toFixed(2)} m/s</span>
+                  </div>
+                  <NumberField
+                    label="Impulse"
+                    value={playImpulse}
+                    step={.25}
+                    onCommit={value=>setPlayImpulse(Math.max(.01,Math.abs(value)))}
+                  />
+                  <div className="wf-play-force-grid">
+                    {(['x','y','z'] as const).map(axis=><div key={axis}>
+                      <button
+                        type="button"
+                        onClick={()=>void impulseSelected(axis,-playImpulse)}
+                        disabled={busy}
+                      >
+                        -{axis.toUpperCase()}
+                      </button>
+                      <button
+                        type="button"
+                        onClick={()=>void impulseSelected(axis,playImpulse)}
+                        disabled={busy}
+                      >
+                        +{axis.toUpperCase()}
+                      </button>
+                    </div>)}
+                  </div>
+                  <button
+                    type="button"
+                    className="wf-wide-button"
+                    onClick={()=>void zeroSelectedVelocity()}
+                    disabled={busy}
+                  >
+                    Zero Velocity
+                  </button>
+                  <small>Runtime impulses are tick-bound Play inputs. They never rewrite authored transforms.</small>
+                </div>;
+              })()}
             </>}
           </fieldset>}
 

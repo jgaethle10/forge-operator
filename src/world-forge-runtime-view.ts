@@ -141,3 +141,35 @@ export function runtimeTransformsByForgeNodeId(snapshot:any){
   }
   return result;
 }
+
+
+export interface RuntimeBodyView {
+  entityId:string;
+  velocity:RuntimeVec3|null;
+  kinematic:boolean;
+}
+
+export function worldForgeDirectionToWorldEngine(value:RuntimeVec3):RuntimeVec3{
+  return {x:value.x,y:value.z,z:-value.y};
+}
+
+export function runtimeBodiesByForgeNodeId(snapshot:any){
+  const result:Record<string,RuntimeBodyView>={};
+  const entities=Array.isArray(snapshot?.entities)?snapshot.entities:[];
+  for(const entity of entities){
+    const nodeId=entity?.properties?.worldForgeNodeId;
+    if(typeof nodeId!=='string'||!nodeId) continue;
+    result[nodeId]={
+      entityId:String(entity.id),
+      velocity:entity?.rigidBody?.velocity
+        ? {
+            x:Number(entity.rigidBody.velocity.x),
+            y:Number(entity.rigidBody.velocity.y),
+            z:Number(entity.rigidBody.velocity.z),
+          }
+        : null,
+      kinematic:Boolean(entity?.rigidBody?.kinematic),
+    };
+  }
+  return result;
+}
