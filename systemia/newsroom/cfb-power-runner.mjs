@@ -19,6 +19,7 @@ export async function runCfbPowerEvidenceCycle({
   startDate,
   throughDate,
   weekLabel,
+  minimumAppearances=3,
   outDir='_cfb_power_run',
   previousRanks={},
   fetchImpl=globalThis.fetch,
@@ -36,6 +37,7 @@ export async function runCfbPowerEvidenceCycle({
   const evidenceSnapshotId='cfb:'+season+':'+throughDate+':'+sha256(JSON.stringify({
     membership:membership.teams,
     games:ledger.games,
+    source_authority:ledger.source_authority,
   })).slice(0,20);
   const input=buildCfbPowerIndexInputFromGames({
     season,
@@ -71,6 +73,8 @@ export async function runCfbPowerEvidenceCycle({
     week_label:ranking.week_label,
     evidence_snapshot_id:evidenceSnapshotId,
     evidence_through_at:evidenceThroughAt,
+    source_authority:ledger.source_authority,
+    membership_derivation:membership.derivation,
     fbs_team_count:membership.teams.length,
     completed_game_count:ledger.games.length,
     ranked_team_count:ranking.rankings.length,
