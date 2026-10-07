@@ -3,7 +3,7 @@ import assert from 'node:assert/strict';
 import { mkdtemp, rm, writeFile } from 'node:fs/promises';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
-import { LineageStore } from './core.mjs';
+import { LineageStore, lineage } from './core.mjs';
 import { verifyLineageIntegrity } from './fsck.mjs';
 import { LargeObjectStore } from './large-object.mjs';
 
@@ -55,7 +55,7 @@ test('local object tampering is detected from content-addressed identity', async
     const orphan = await store.putObject('blob', {
       encoding: 'base64',
       size: 3,
-      content_sha256: '0'.repeat(64),
+      content_sha256: lineage.sha256(Buffer.from('abc')),
       data: Buffer.from('abc').toString('base64'),
     });
 
@@ -145,7 +145,7 @@ test('dangling immutable storage is reported but never silently deleted', async 
     const orphanObject = await store.putObject('blob', {
       encoding: 'base64',
       size: 6,
-      content_sha256: '2'.repeat(64),
+      content_sha256: lineage.sha256(Buffer.from('orphan')),
       data: Buffer.from('orphan').toString('base64'),
     });
 
@@ -168,7 +168,7 @@ test('dangling immutable storage is reported but never silently deleted', async 
     assert.ok(result.large_objects.dangling_chunks.length > 0);
     assert.equal(result.mutation_performed, false);
 
-    assert.doesNotReject(() => store.readObject(orphanObject));
+    await assert.doesNotReject(() => store.readObject(orphanObject));
     assert.equal(await large.hasManifest(orphanLarge.manifest_id), true);
   } finally {
     await rm(root, { recursive: true, force: true });
