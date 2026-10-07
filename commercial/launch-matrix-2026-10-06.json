@@ -1,6 +1,6 @@
 {
   "schema": "evercraft.commercial-launch-line.v1",
-  "date": "2026-10-06",
+  "date": "2026-10-07",
   "positioning": "Governed, evidence-first execution from discovery through verified outcome.",
   "products": [
     {
@@ -166,6 +166,38 @@
       ],
       "deployment_state": "owned_public_capability_frontage_verified_direct_mcp_promotion_pending",
       "commercial_gate": "continue_owned_runtime_promotion_and_session_coverage_expansion"
+    },
+    {
+      "product": "Evercraft Lineage",
+      "launch_tier": 1,
+      "offer_state": "founding_pilot_packaged",
+      "buyer": [
+        "ai_native_engineering_teams",
+        "agent_platform_teams",
+        "technical_founders",
+        "ai_agencies",
+        "studios_with_code_data_or_large_assets"
+      ],
+      "pain_trigger": "multiple_humans_or_ai_agents_need_collision_safe_auditable_history_with_provenance_rationale_and_rollback",
+      "pricing": {
+        "founding_pilot_usd": 500,
+        "founding_pilot_slots": 5,
+        "governed_agent_workflow_sprint_usd_from": 1500
+      },
+      "edge": [
+        "local_compare_and_swap_refs",
+        "stale_writer_protection",
+        "human_and_agent_attribution",
+        "rationale_and_provenance",
+        "semantic_diffs",
+        "receipts_and_integrity_verification",
+        "large_asset_history",
+        "git_import_export",
+        "native_control_room",
+        "sensitive_path_guard"
+      ],
+      "deployment_state": "implemented_internal_runtime_and_authenticated_control_room_human_confirmed_external_pilot_packaged",
+      "commercial_gate": "external_canary_public_page_and_first_paid_repository_pilot_before_claiming_self_serve_hosted_saas"
     }
   ]
 }

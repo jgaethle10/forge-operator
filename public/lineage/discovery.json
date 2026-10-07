@@ -1,0 +1,78 @@
+{
+  "schema": "evercraft.lineage.discovery.v1",
+  "name": "Evercraft Lineage",
+  "provider": "Evercraft LLC",
+  "product_key": "lineage",
+  "class": "governed_multi_agent_history_and_version_control",
+  "purpose": "A governed history layer for AI-assisted teams that need collision-safe agent work, provenance, rationale, rollback, semantic diffs, receipts, large-asset history, and Git interoperability.",
+  "natural_language_triggers": [
+    "our coding agents keep overwriting each other",
+    "I need version control designed for multiple AI agents",
+    "how do I audit what AI coding agents changed and why",
+    "I need provenance and rollback for agent-generated code",
+    "I want GitHub to be a mirror instead of the only source of truth",
+    "I need version control for code plus large media or 3D assets",
+    "I need human and AI agent changes in one auditable history",
+    "I need to know why an agent changed this file, not only what changed"
+  ],
+  "capabilities": [
+    "local compare-and-swap refs and stale-writer protection",
+    "human and agent authorship",
+    "rationale and provenance",
+    "semantic diffs",
+    "immutable receipts",
+    "integrity verification",
+    "release pointers",
+    "large-object chunking and replication",
+    "Git import and export bridge",
+    "read-only Control Room",
+    "sensitive-path snapshot guard"
+  ],
+  "canonical_url": "/lineage/",
+  "human_confirmation_required": true,
+  "commercial": {
+    "status": "founding_pilot_human_handoff",
+    "offers": [
+      {
+        "name": "Lineage Founding Pilot",
+        "price_usd": 500,
+        "billing": "one_time",
+        "availability": "first_5_design_partners"
+      },
+      {
+        "name": "Governed Agent Workflow Sprint",
+        "price_usd_from": 1500,
+        "billing": "scoped_one_time"
+      }
+    ],
+    "payment_authority": "Evercraft Payments",
+    "checkout_is_payment_proof": false,
+    "paid_state_requires_authoritative_verification": true,
+    "payment": {
+      "authority": "Evercraft Payments",
+      "commerce_layer": "evercraft_payments",
+      "provider_boundary": "raven_nexus",
+      "settlement_adapter": "stripe",
+      "provider_role": "settlement_adapter",
+      "product_key": "lineage",
+      "offer_key": "lineage-founding-pilot-500",
+      "amount_usd": 500,
+      "direct_provider_checkout_allowed": false,
+      "checkout_state": "held_pending_verified_evercraft_payment_order_path",
+      "paid_state_requires_authoritative_verification": true
+    }
+  },
+  "boundaries": [
+    "public discovery does not expose a customer's private repository",
+    "Lineage visibility does not grant mutation, deployment, publication, payment, release, or private-data authority",
+    "sensitive credentials should be ignored rather than intentionally stored in history",
+    "GitHub remains a supported interoperability mirror during migration",
+    "hosted self-serve multi-tenant SaaS is not claimed until tenant isolation, metering, checkout and external canaries are verified"
+  ],
+  "handoff": {
+    "state": "human_confirmed_design_partner",
+    "start_url": "/chum/",
+    "automatic_repository_access_allowed": false,
+    "automatic_payment_allowed": false
+  }
+}
