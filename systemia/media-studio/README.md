@@ -458,3 +458,10 @@ npm run media:studio -- cinematic-shot ./tmp/shot-binding.json ./tmp/visual-requ
 ```
 
 This layer does not generate media or grant publication authority. It makes downstream Veo, Runway and future visual engines obey the same physical scene grammar and gives Shot Tournament/continuity QA an explicit contract to judge against.
+
+
+### Play Mode sessions
+
+The browser World Forge editor can start an ephemeral deterministic World Engine session through the owned Play Mode API. The session API supports start, status, bounded tick stepping, verified authored-revision sync, stop and bounded session listing.
+
+Play Mode is intentionally ephemeral in this slice. It is not a durable or distributed session store yet.
