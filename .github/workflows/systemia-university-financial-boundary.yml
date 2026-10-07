@@ -28,5 +28,7 @@ jobs:
           node-version: 22
       - name: Systemia University proving lane
         run: node --test systemia/university/proving-lane.test.mjs
+      - name: Systemia University discovery contract
+        run: node --test tests/systemia-university-benchmark-discovery.test.mjs
       - name: Evercraft Financial regulatory boundary
         run: node --test systemia/payments/financial-boundary.test.mjs
