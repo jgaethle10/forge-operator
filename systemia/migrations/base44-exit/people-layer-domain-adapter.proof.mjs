@@ -1,5 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
+import fs from 'node:fs';
 import {
   adaptLegacyPeopleEntity,
   summarizePeopleMigration,
@@ -98,4 +99,18 @@ test('current observed legacy footprint requires no real-person migration', () =
   assert.equal(summary.audit_lineage_records, 2);
   assert.equal(summary.entities.PeopleInvite.accepted, 1);
   assert.equal(summary.entities.PeopleIdentityChallenge.accepted, 1);
+});
+
+
+test('cutover receipt proves no real person is stranded in the legacy store', () => {
+  const receipt=JSON.parse(fs.readFileSync('systemia/migrations/base44-exit/people-layer-cutover-receipt.json','utf8'));
+  assert.equal(receipt.schema,'evercraft.people.base44-cutover-receipt.v1');
+  assert.equal(receipt.decision.real_person_data_migration_required,false);
+  assert.equal(receipt.inventory.PeopleBrain.active_person_brains,0);
+  assert.equal(receipt.inventory.PeopleMemory.count,0);
+  assert.equal(receipt.inventory.PeopleRelationship.count,0);
+  assert.equal(receipt.inventory.PeopleOpportunity.count,0);
+  assert.equal(receipt.inventory.PeopleConsentEvent.count,0);
+  assert.equal(receipt.cutover_policy.runtime_fallback_allowed,false);
+  assert.equal(receipt.cutover_policy.new_writes_allowed,false);
 });
