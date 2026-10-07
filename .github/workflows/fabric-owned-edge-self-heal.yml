@@ -4,24 +4,28 @@ on:
   pull_request:
     paths:
       - 'scripts/update-fabric-owned-edge.sh'
+      - 'scripts/rescue-fabric-journal-edge.sh'
       - 'scripts/classify-fabric-checkout-dirt.mjs'
       - 'scripts/install-fabric-owned-edge.sh'
       - 'scripts/install-fabric-router-map-resident.sh'
       - 'scripts/evercraft-public-edge-map.mjs'
       - 'tests/fabric-owned-edge-installer.test.mjs'
       - 'tests/fabric-checkout-dirt.test.mjs'
+      - 'tests/fabric-journal-rescue.test.mjs'
       - 'tests/public-edge-ingress-watch.test.mjs'
       - '.github/workflows/fabric-owned-edge-self-heal.yml'
   push:
     branches: [main]
     paths:
       - 'scripts/update-fabric-owned-edge.sh'
+      - 'scripts/rescue-fabric-journal-edge.sh'
       - 'scripts/classify-fabric-checkout-dirt.mjs'
       - 'scripts/install-fabric-owned-edge.sh'
       - 'scripts/install-fabric-router-map-resident.sh'
       - 'scripts/evercraft-public-edge-map.mjs'
       - 'tests/fabric-owned-edge-installer.test.mjs'
       - 'tests/fabric-checkout-dirt.test.mjs'
+      - 'tests/fabric-journal-rescue.test.mjs'
       - 'tests/public-edge-ingress-watch.test.mjs'
       - '.github/workflows/fabric-owned-edge-self-heal.yml'
 
@@ -38,11 +42,12 @@ jobs:
         with:
           node-version: '22'
       - name: Prove owned edge install/update contract
-        run: node --test tests/fabric-owned-edge-installer.test.mjs tests/fabric-checkout-dirt.test.mjs
+        run: node --test tests/fabric-owned-edge-installer.test.mjs tests/fabric-checkout-dirt.test.mjs tests/fabric-journal-rescue.test.mjs
       - name: Prove ingress diagnosis and bounded recovery policy
         run: node --test tests/public-edge-ingress-watch.test.mjs
       - name: Verify shell syntax
         run: |
           bash -n scripts/update-fabric-owned-edge.sh
+          bash -n scripts/rescue-fabric-journal-edge.sh
           bash -n scripts/install-fabric-owned-edge.sh
           bash -n scripts/install-fabric-router-map-resident.sh
