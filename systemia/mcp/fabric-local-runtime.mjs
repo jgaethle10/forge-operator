@@ -335,6 +335,22 @@ export async function startFabricLocalRuntime({
 }={}) {
   const instanceId='fabric_local_'+crypto.randomBytes(10).toString('hex');
   let deploymentReceiptRef='';
+  const checkoutHandoffs=new Map();
+  const createCheckoutHandoff=({slug,checkoutUrl,amountLabel,orderKey})=>{
+    const now=Date.now();
+    for(const [key,row] of checkoutHandoffs.entries()){
+      if(!row||row.expiresAt<=now) checkoutHandoffs.delete(key);
+    }
+    const token=crypto.randomBytes(24).toString('base64url');
+    checkoutHandoffs.set(token,{
+      slug:String(slug||''),
+      checkoutUrl:String(checkoutUrl||''),
+      amountLabel:String(amountLabel||''),
+      orderKey:String(orderKey||''),
+      expiresAt:now+10*60*1000,
+    });
+    return token;
+  };
   if (
     nodeAttestationProvider !== null &&
     typeof nodeAttestationProvider !== 'function'
@@ -596,6 +612,32 @@ export async function startFabricLocalRuntime({
         return sendJson(res,200,health());
       }
 
+      if (req.method==='GET' && String(req.url||'').startsWith('/checkout/handoff/')) {
+        const parsed=new URL(String(req.url||''),'http://fabric.local');
+        const tokenValue=decodeURIComponent(parsed.pathname.slice('/checkout/handoff/'.length)).replace(/\/+$/,'');
+        const handoff=checkoutHandoffs.get(tokenValue)||null;
+        if(!handoff||handoff.expiresAt<=Date.now()){
+          checkoutHandoffs.delete(tokenValue);
+          return sendText(
+            res,
+            410,
+            renderPaymentHoldPage({slug:'',orderKey:''}),
+            {contentType:'text/html; charset=utf-8'}
+          );
+        }
+        return sendText(
+          res,
+          200,
+          renderPaymentHandoffPage({
+            slug:handoff.slug,
+            checkoutUrl:handoff.checkoutUrl,
+            amountLabel:handoff.amountLabel,
+            orderKey:handoff.orderKey,
+          }),
+          {contentType:'text/html; charset=utf-8'}
+        );
+      }
+
       if (req.method==='GET' && (req.url==='/rivet'||req.url==='/rivet/')) {
         return sendText(
           res,
@@ -824,17 +866,20 @@ export async function startFabricLocalRuntime({
           const amountLabel=Number.isFinite(cents)
             ? String.fromCharCode(36)+(cents/100).toFixed(2).replace(/\.00$/,'')
             : '';
-          return sendText(
-            res,
-            200,
-            renderPaymentHandoffPage({
-              slug,
-              checkoutUrl,
-              amountLabel,
-              orderKey:result?.order_key||'',
-            }),
-            {contentType:'text/html; charset=utf-8'}
-          );
+          const handoffToken=createCheckoutHandoff({
+            slug,
+            checkoutUrl,
+            amountLabel,
+            orderKey:result?.order_key||'',
+          });
+          res.writeHead(303,{
+            location:'/checkout/handoff/'+encodeURIComponent(handoffToken),
+            'cache-control':'no-store',
+            'x-content-type-options':'nosniff',
+            'referrer-policy':'no-referrer',
+            'x-evercraft-payment-authority':'Evercraft Payments',
+          });
+          return res.end();
         }
 
         return sendJson(res,200,{
