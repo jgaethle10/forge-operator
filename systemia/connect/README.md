@@ -64,3 +64,33 @@ node --test systemia/connect/connection-desk.test.mjs
 ```
 
 This module does not send messages, initiate transactions, expose protected data, or create financial/legal obligations.
+
+
+## Recovery Radar + Capability Mesh bridge
+
+Evercraft Connect now has a source-level bridge for the Partner-Before-Purchase / Recovery lane.
+
+`fabric-bridge.mjs` can:
+
+1. convert a Recovery candidate into a metadata-first `Connection`;
+2. read Evercraft's public product directory plus live Capability Mesh declaration state;
+3. score owned Evercraft capabilities without upgrading discovery metadata into runtime proof;
+4. combine owned capability candidates with external human/company providers;
+5. preserve unmatched capability gaps instead of inventing a partner;
+6. produce a safe Opportunity Fabric handoff packet.
+
+The Opportunity Fabric handoff is deliberately non-transactional. It contains public-safe opportunity metadata and an execution-chain suggestion only. It does **not** create a ConnectionRequest, team invitation, work acceptance, payment, protected disclosure, or legal agreement.
+
+This connects the systems without collapsing their trust boundaries:
+
+```
+Recovery Radar candidate
+  -> Evercraft Connect routing
+  -> Capability Mesh evidence
+  -> EXECUTE / PARTNER / CONNECT / MONITOR
+  -> safe execution-chain proposal
+  -> human review
+  -> Opportunity Fabric private-runtime workflow, when appropriate
+```
+
+Opportunity Fabric remains the protected collaboration/execution system. Evercraft Connect is the cross-portfolio routing and connection-decision layer.
