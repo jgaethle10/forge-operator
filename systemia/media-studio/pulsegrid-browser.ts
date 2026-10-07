@@ -24,4 +24,4 @@ export type {
 } from './pulsegrid-session.js';
 
 export { PulseGridAudioEngine } from './pulsegrid-audio.js';
-export type { PulseGridAudioStatus } from './pulsegrid-audio.js';
+export type { PulseGridAudioStatus, PulseGridAudioTimingMode } from './pulsegrid-audio.js';
