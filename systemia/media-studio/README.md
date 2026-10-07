@@ -182,6 +182,7 @@ npm run media:studio -- world-forge-shot ./tmp/world-shot.json ./tmp/world-shot.
 npm run media:studio -- world-forge-preview ./tmp/world-preview.json ./tmp/world-preview.svg ./tmp/world-preview.receipt.json
 npm run media:studio -- world-forge-world-engine ./tmp/world-engine-bridge.json ./tmp/world-engine.bundle.json
 npm run media:studio -- world-forge-runtime-sync ./tmp/world-runtime-sync.json ./tmp/world-runtime-sync.result.json
+npm run media:studio -- world-forge-runtime-migrate ./tmp/world-runtime-migration.json ./tmp/world-runtime-migration.result.json
 npm run media:studio -- world-forge-change-set ./tmp/world-change-set.json ./tmp/world-change-set.contract.json
 npm run media:studio -- world-forge-apply-change-set ./tmp/world-change-set-apply.json ./tmp/world-change-set.result.json
 ```
