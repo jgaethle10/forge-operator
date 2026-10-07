@@ -5,6 +5,7 @@ import {
   PULSEGRID_SESSION_SCHEMA,
   PULSEGRID_STEPS_PER_BAR,
   applyPulseGridOperation,
+  applyPulseGridTransaction,
   createPulseGridSession,
   migratePulseGridSession,
   validatePulseGridSession,
@@ -35,7 +36,7 @@ test('PulseGrid migrates older sparse browser sessions into the canonical graph'
       clips:[{id:'keys-scene-1',steps:[1,0,0,0]}]
     }]
   });
-  assert.equal(migrated.version,'0.8.0');
+  assert.equal(migrated.version,'0.9.0');
   assert.equal(migrated.transport.bpm,128);
   assert.equal(migrated.tracks[0].clips[0].bars,1);
   assert.equal(migrated.tracks[0].clips[0].steps.length,16);
@@ -258,4 +259,83 @@ test('PulseGrid refuses to fork a variation onto its source scene',()=>{
     source_scene:0,
     destination_scene:0,
   }),/different destination scene/);
+});
+
+
+test('PulseGrid atomic edit plan commits as one reversible intent boundary',()=>{
+  const original=createPulseGridSession('Atomic Chorus');
+  const result=applyPulseGridTransaction(original,{
+    transaction_id:'tx-chorus-1',
+    intent:'Make the chorus hit harder without overwriting the source.',
+    operations:[
+      {type:'clip.fork_variation',track_id:'keys',source_scene:0,destination_scene:1,name:'Chorus Lift'},
+      {type:'clip.set_bars',track_id:'keys',scene:1,bars:2},
+      {type:'note.add',track_id:'keys',scene:1,note:{id:'lift-note',pitch:72,start:20,length:4,velocity:.94}},
+      {type:'track.set_filter',track_id:'keys',filter_hz:9800},
+      {type:'track.set_delay_mix',track_id:'keys',mix:.18},
+    ],
+  },'agent');
+
+  assert.equal(original.tracks.find((track)=>track.id==='keys')!.clips[1].notes.length,0);
+  assert.equal(result.receipt.operation,'transaction.apply');
+  assert.equal(result.receipt.transaction_id,'tx-chorus-1');
+  assert.equal(result.receipt.intent,'Make the chorus hit harder without overwriting the source.');
+  assert.equal(result.receipt.child_receipt_ids?.length,5);
+  assert.equal(result.child_receipts.length,5);
+  assert.ok(result.child_receipts.every((receipt)=>receipt.transaction_id==='tx-chorus-1'));
+  assert.ok(result.child_receipts.every((receipt)=>receipt.intent===result.receipt.intent));
+
+  const keys=result.session.tracks.find((track)=>track.id==='keys')!;
+  assert.equal(keys.clips[1].name,'Chorus Lift');
+  assert.equal(keys.clips[1].bars,2);
+  assert.equal(keys.clips[1].notes.some((note)=>note.id==='lift-note'),true);
+  assert.equal(keys.filterHz,9800);
+  assert.equal(keys.delayMix,.18);
+  assert.equal(validatePulseGridSession(result.session).ok,true);
+
+  const undone=undoPulseGridReceipt(result.session,result.receipt.id,'human');
+  assert.equal(undone.receipt.operation,'operation.undo');
+  assert.equal(undone.receipt.transaction_id,'tx-chorus-1');
+  assert.equal(undone.receipt.undo_of,result.receipt.id);
+
+  const restored=undone.session;
+  assert.deepEqual(restored.tracks,original.tracks);
+  assert.deepEqual(restored.transport,original.transport);
+  assert.deepEqual(restored.arrangement,original.arrangement);
+  assert.equal(restored.active_scene,original.active_scene);
+  assert.equal(validatePulseGridSession(restored).ok,true);
+});
+
+test('PulseGrid atomic edit plan rolls back completely when any child operation fails',()=>{
+  const original=createPulseGridSession('Rollback Proof');
+  const snapshot=structuredClone(original);
+
+  assert.throws(()=>applyPulseGridTransaction(original,{
+    transaction_id:'tx-fail-1',
+    intent:'This plan must fail atomically.',
+    operations:[
+      {type:'transport.set_tempo',bpm:146},
+      {type:'track.set_filter',track_id:'bass',filter_hz:720},
+      {type:'note.move',track_id:'keys',scene:0,note_id:'does-not-exist',start:4,pitch:64},
+      {type:'transport.set_swing',swing:18},
+    ],
+  },'agent'),/Unknown PulseGrid note/);
+
+  assert.deepEqual(original,snapshot);
+  assert.equal(original.transport.bpm,120);
+  assert.equal(original.tracks.find((track)=>track.id==='bass')!.filterHz,1200);
+  assert.equal(original.receipts.length,0);
+});
+
+test('PulseGrid atomic edit plan enforces explicit intent and bounded plan size',()=>{
+  const session=createPulseGridSession();
+  assert.throws(()=>applyPulseGridTransaction(session,{
+    intent:'   ',
+    operations:[{type:'transport.set_tempo',bpm:130}],
+  }),/intent is required/);
+
+  assert.throws(()=>applyPulseGridTransaction(session,{
+    intent:'Too many edits',
+    operations:Array.from({length:129},()=>({type:'transport.set_tempo',bpm:130} as const)),
+  }),/128-operation safety limit/);
 });
