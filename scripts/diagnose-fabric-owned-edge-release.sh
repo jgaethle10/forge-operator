@@ -86,6 +86,27 @@ printf 'update_service_active=%s\n' "$(service_state "$UPDATE_SERVICE")"
 printf 'update_timer_active=%s\n' "$(service_state "$UPDATE_TIMER")"
 printf 'update_timer_enabled=%s\n' "$(enabled_state "$UPDATE_TIMER")"
 
+runtime_health="$(curl -fsS --max-time 4 http://127.0.0.1:8787/health 2>/dev/null || true)"
+if [[ -n "$runtime_health" && "$(command -v node || true)" != "" ]]; then
+  runtime_release="$(env HEALTH_JSON="$runtime_health" node -e "
+    const h=JSON.parse(process.env.HEALTH_JSON||'{}');
+    process.stdout.write(String(h.source_release_ref||''));
+  " 2>/dev/null || true)"
+  runtime_instance="$(env HEALTH_JSON="$runtime_health" node -e "
+    const h=JSON.parse(process.env.HEALTH_JSON||'{}');
+    process.stdout.write(String(h.instance_id||''));
+  " 2>/dev/null || true)"
+  printf 'runtime_instance_id=%s\n' "${runtime_instance:-unknown}"
+  printf 'runtime_source_release_ref=%s\n' "${runtime_release:-unattested}"
+  if [[ -n "$runtime_release" && "$runtime_release" == "$local_head" ]]; then
+    printf 'runtime_vs_checkout=current\n'
+  else
+    printf 'runtime_vs_checkout=drifted_or_unattested\n'
+  fi
+else
+  printf 'runtime_health=unavailable\n'
+fi
+
 receipt="$STATE_DIR/last-update.json"
 if [[ -r "$receipt" ]]; then
   printf 'last_update_receipt=%s\n' "$receipt"
