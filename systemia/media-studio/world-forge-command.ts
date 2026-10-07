@@ -204,6 +204,73 @@ export function compileWorldForgeCommand(input:{
     }
   }
 
+  if(/\b(?:disable|remove|turn\s+off)\s+physics\b/.test(normalized)){
+    if(target.kind!=='mesh'){
+      return {
+        ...base,status:'blocked',targetNodeId:target.id,operations:[],
+        reasons:[`physics_target_not_mesh:${target.id}`],
+        explanation:'Physics commands require a selected mesh.',
+      };
+    }
+    return {
+      ...base,status:'accepted',targetNodeId:target.id,reasons:[],
+      operations:[{type:'set_physics',nodeId:target.id,physics:null}],
+      explanation:`Disable physics on ${target.name}.`,
+    };
+  }
+
+  const physicsMode=normalized.match(
+    /\b(?:make|set)\s+(?:this\s+)?(?:physics\s+(?:to\s+)?)?(dynamic|static|kinematic)\b/
+  );
+  if(physicsMode){
+    if(target.kind!=='mesh'){
+      return {
+        ...base,status:'blocked',targetNodeId:target.id,operations:[],
+        reasons:[`physics_target_not_mesh:${target.id}`],
+        explanation:'Physics commands require a selected mesh.',
+      };
+    }
+
+    const mode=physicsMode[1] as 'dynamic'|'static'|'kinematic';
+    const massMatch=normalized.match(/\b(?:mass\s*)?(\d+(?:\.\d+)?)\s*kg\b/);
+    const gravityMatch=normalized.match(/\bgravity\s*(\d+(?:\.\d+)?)\b/);
+    const dampingMatch=normalized.match(/\bdamping\s*(\d+(?:\.\d+)?)\b/);
+    const bounceMatch=normalized.match(/\b(?:bounce|restitution)\s*(\d+(?:\.\d+)?)\b/);
+    const colliderMatch=normalized.match(/\bcollider\s+(box|sphere)\b/);
+
+    const previous=target.physics;
+    const collider=
+      colliderMatch?.[1]==='sphere'?{type:'auto_sphere' as const}:
+      colliderMatch?.[1]==='box'?{type:'auto_box' as const}:
+      previous?.collider??{type:'auto_box' as const};
+
+    const physics={
+      mode,
+      massKg:mode==='static'
+        ? undefined
+        : Math.max(.001,numberFrom(massMatch?.[1],previous?.massKg??1)),
+      gravityScale:mode==='static'
+        ? undefined
+        : mode==='kinematic'
+          ? 0
+          : Math.max(0,numberFrom(gravityMatch?.[1],previous?.gravityScale??1)),
+      linearDamping:mode==='static'
+        ? undefined
+        : Math.max(0,numberFrom(dampingMatch?.[1],previous?.linearDamping??.05)),
+      restitution:Math.max(0,Math.min(1,numberFrom(bounceMatch?.[1],previous?.restitution??0))),
+      collider,
+    };
+
+    return {
+      ...base,status:'accepted',targetNodeId:target.id,reasons:[],
+      operations:[{type:'set_physics',nodeId:target.id,physics}],
+      explanation:
+        mode==='static'
+          ? `Make ${target.name} a static ${collider.type.replace('auto_','')} collider.`
+          : `Make ${target.name} ${mode} at ${physics.massKg} kg, gravity ${physics.gravityScale}, damping ${physics.linearDamping}, bounce ${physics.restitution}.`,
+    };
+  }
+
   if(/\b(delete|remove|destroy)\b/.test(normalized)){
     return {
       ...base,status:'blocked',targetNodeId:target.id,operations:[],
