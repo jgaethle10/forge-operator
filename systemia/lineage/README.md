@@ -238,3 +238,25 @@ Commit graph synchronization is fail-closed: when a graph contains a `large_blob
 Oversized text/structured assets are not automatically materialized for semantic diffing. Instead, Lineage reports their before/after content digests and sizes with an explicit `semantic_comparison_available: false` reason. Small structured assets retain the existing semantic adapters.
 
 Git export uses `readEntryBytes`, so manifest-backed entries are reconstructed byte-exactly when crossing the Git interoperability boundary.
+
+
+## Streaming large assets
+
+Lineage's native large-asset path is streaming. A film master, world cache, audio master or dataset does not need to fit in RAM to enter, verify, or restore from Lineage.
+
+`LargeObjectStore.putFile()` reads the source incrementally, maintains the same content-defined chunk boundary state as `putBuffer()`, hashes the full content incrementally, and keeps only the current bounded chunk in memory. For identical bytes and chunking settings, buffered and streamed ingest produce the same manifest id and chunk identities.
+
+`verify()` walks verified chunks sequentially and updates the full-content SHA-256 without concatenating the asset.
+
+`writeToFile()` writes verified chunks to a temporary sibling file, checks the reconstructed full-content digest and byte count, fsyncs, and only then renames the temporary file into the requested target. A corrupt or incomplete object therefore cannot publish a partial final file.
+
+Workspace snapshots inspect file size before reading content. Files above the configured large-object threshold go directly through `putFile()`; only small files use the inline blob path. Restore similarly writes manifest-backed entries through `writeToFile()` instead of materializing the full asset as one Buffer.
+
+The `materialize()` API remains as an explicit in-memory convenience for callers that genuinely want a Buffer. It is not used by the native large-file snapshot or restore path.
+
+```bash
+node systemia/lineage/cli.mjs large-put ./master.mov video/quicktime
+node systemia/lineage/cli.mjs large-verify <manifest-id>
+```
+
+Both commands use the streaming path for file-backed large assets.

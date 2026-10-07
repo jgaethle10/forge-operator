@@ -63,9 +63,8 @@ async function main() {
       break;
     case 'large-put': {
       if (!args[0]) throw new Error('Usage: lineage large-put <file> [media-type]');
-      const bytes = await readFile(args[0]);
       const large = new LargeObjectStore(join(store.dir));
-      console.log(JSON.stringify(await large.putBuffer(bytes, {
+      console.log(JSON.stringify(await large.putFile(args[0], {
         logicalName: args[0],
         mediaType: args[1] || 'application/octet-stream'
       }), null, 2));
