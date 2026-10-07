@@ -1,6 +1,9 @@
 import fs from "node:fs";
 import path from "node:path";
 import {fileURLToPath} from "node:url";
+import {
+  selectIndependentPracticeWindows,
+} from "./edge-practice-independence.mjs";
 
 const HERE=path.dirname(fileURLToPath(import.meta.url));
 const DEFAULT_RECEIPT_DIR=path.join(HERE,"paper-receipts");
@@ -17,26 +20,39 @@ export function buildInstrumentConditionedSpread({
   receiptDir=DEFAULT_RECEIPT_DIR,
   thresholdBps=3,
 }={}){
-  const decisions=[];
+  const rawWindows=[];
   for(const file of fs.readdirSync(receiptDir).filter(x=>x.endsWith(".json")).sort()){
     const row=JSON.parse(fs.readFileSync(path.join(receiptDir,file),"utf8"));
     if(
       row?.schema!=="evercraft.daytrade.prospective-spread-rule-practice-summary.v1"
     ) continue;
-    for(const r of row.results||[]){
+    const decisions=(row.results||[]).map(r=>{
       const spread=finite(r.entry_spread_bps);
       const pnl=finite(r.always_cross_pnl_usd);
-      if(!r.symbol||!Number.isFinite(spread)||!Number.isFinite(pnl)) continue;
-      decisions.push({
-        file,
-        generated_at:row.generated_at||null,
+      if(!r.symbol||!Number.isFinite(spread)||!Number.isFinite(pnl)) return null;
+      return {
         symbol:r.symbol,
         entry_spread_bps:spread,
         always_cross_pnl_usd:pnl,
         bucket:spread>thresholdBps?"WIDE":"TIGHT",
-      });
-    }
+      };
+    }).filter(Boolean);
+    rawWindows.push({
+      file,
+      generated_at:row.generated_at||null,
+      decisions,
+    });
   }
+
+  const independence=selectIndependentPracticeWindows(rawWindows);
+  const windows=independence.independent;
+  const decisions=windows.flatMap(window=>
+    window.decisions.map(decision=>({
+      file:window.file,
+      generated_at:window.generated_at,
+      ...decision,
+    }))
+  );
   const symbols=[...new Set(decisions.map(x=>x.symbol))].sort();
   const bySymbol={};
   for(const symbol of symbols){
@@ -72,12 +88,16 @@ export function buildInstrumentConditionedSpread({
     schema:"evercraft.daytrade.instrument-conditioned-spread.v1",
     generated_at:new Date().toISOString(),
     threshold_bps:Number(thresholdBps),
+    raw_windows:rawWindows.length,
+    windows:windows.length,
+    near_duplicate_windows_excluded:independence.excluded_count,
+    minimum_independence_separation_ms:independence.minimum_separation_ms,
     decisions:decisions.length,
     symbols,
     by_symbol:bySymbol,
     controls:{
       purpose:"Test whether spread effect survives conditioning on instrument rather than merely separating SOXX/SMH from QQQ.",
-      tiny_same_day_sample:true,
+      analysis_uses_independent_windows:true,
       no_causal_claim:true,
       no_threshold_retuning:true,
       not_signal_validation:true,
