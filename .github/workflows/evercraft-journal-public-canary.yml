@@ -97,6 +97,21 @@ jobs:
           fi
 
           echo
+          echo "## Canonical public-origin candidate"
+          candidate_url="https://journal.evercraft.global/${SLUG}/"
+          candidate_code="$(curl --silent --show-error --location --max-time 20 \
+            -o artifacts/journal-edge-diagnostic/canonical-candidate.html \
+            -w '%{http_code}' \
+            "$candidate_url" || true)"
+          echo "candidate_url=$candidate_url"
+          echo "status=$candidate_code"
+          if [ -s artifacts/journal-edge-diagnostic/canonical-candidate.html ]; then
+            echo "candidate_sha=$(sha256sum artifacts/journal-edge-diagnostic/canonical-candidate.html | awk '{print $1}')"
+            grep -Eio '<title[^>]*>[^<]*</title>|<link[^>]+rel=["'"'"']canonical["'"'"'][^>]*>|<meta[^>]+(property=["'"'"']og:url["'"'"']|name=["'"'"']evercraft:story_id["'"'"'])[^>]*>' \
+              artifacts/journal-edge-diagnostic/canonical-candidate.html | head -n 12 || true
+          fi
+
+          echo
           echo "## Canonical article"
           curl --silent --show-error --location --max-time 20 \
             -D artifacts/journal-edge-diagnostic/article.headers \
