@@ -82,6 +82,14 @@ test('owned People Layer completes person-sovereign lifecycle without Base44', (
     /person_confirmation_ref_required/
   );
 
+  assert.throws(
+    () => runtime.grantShare(brain.brain_key, relationship.relationship_key, {
+      scopes: ['*'],
+      person_confirmation_ref: 'person-confirmation:wildcard',
+    }),
+    /blanket_share_scope_forbidden/
+  );
+
   const grant = runtime.grantShare(brain.brain_key, relationship.relationship_key, {
     scopes: ['goals', 'opportunities'],
     person_confirmation_ref: 'person-confirmation:share-1',
