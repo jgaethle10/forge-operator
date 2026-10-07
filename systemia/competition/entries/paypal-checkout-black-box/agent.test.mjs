@@ -19,7 +19,9 @@ function fakeAi(content){
 function fakePayPal(){
   const calls=[];
   const fetchImpl=async(url,options={})=>{
-    const u=String(url); calls.push({url:u,method:options.method,headers:options.headers,body:options.body?JSON.parse(options.body):null});
+    const u=String(url);
+    const isJson=String(options.headers?.["content-type"]||"").includes("application/json");
+    calls.push({url:u,method:options.method,headers:options.headers,body:options.body?(isJson?JSON.parse(options.body):String(options.body)):null});
     if(u.endsWith("/v1/oauth2/token")){
       return {ok:true,status:200,async text(){return JSON.stringify({access_token:"sandbox-token",expires_in:3600});}};
     }
@@ -76,7 +78,7 @@ test("human authorization is signed and tampering fails before PayPal",async()=>
   const paypalFetch=fakePayPal();
   await assert.rejects(
     ()=>createAuthorizedPayPalOrder({proposal:tampered,authorization:auth},{signingKey,paypal:{fetchImpl:paypalFetch,clientId:"sandbox-client",clientSecret:"sandbox-secret-abcdefghijklmnopqrstuvwxyz"}}),
-    /authorization_hash_mismatch|proposal_tampered/
+    /authorization_hash_mismatch|proposal_tampered|authorization_amount_mismatch/
   );
   assert.equal(paypalFetch.calls.length,0);
 });
