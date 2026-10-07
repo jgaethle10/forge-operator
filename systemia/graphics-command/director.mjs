@@ -1,5 +1,5 @@
 import { getGeoBoundary, geoBoundaryProvenance } from './boundary-registry.mjs';
-import { getTerrainRelief, terrainReliefProvenance } from './terrain-registry.mjs';
+import { terrainReliefProvenance } from './terrain-registry.mjs';
 import crypto from 'node:crypto';
 
 const EVIDENCE_TO_FALLEN=Object.freeze({
@@ -88,7 +88,6 @@ export function compileGraphicsCommand(story){
   const metrics=(story?.visual?.metrics||[]).map((metric,index)=>normalizeMetric(metric,index,story.sourceRefs));
   const boundaryAsset=getGeoBoundary(story?.visual?.boundaryId);
   const boundary=geoBoundaryProvenance(story?.visual?.boundaryId);
-  const terrainAsset=getTerrainRelief(story?.visual?.terrainId);
   const terrain=terrainReliefProvenance(story?.visual?.terrainId);
   const byId=new Map(story.points.map(point=>[point.id,point]));
   const fallenEvidence=EVIDENCE_TO_FALLEN[story.evidenceState]||'public_source';
