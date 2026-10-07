@@ -93,6 +93,28 @@
     .acquisition-priority{font-size:.65rem;font-weight:900;letter-spacing:.1em;text-transform:uppercase;color:var(--gold)}
     .acquisition p{margin:0;color:#d8ded9;font-size:.84rem;line-height:1.45}
     .acquisition small{display:block;color:var(--soft);margin-top:7px;line-height:1.45}
+    .partner-room{display:none;margin:0 0 18px;padding:26px;border:1px solid #5a4b2c;border-radius:26px;background:
+      radial-gradient(circle at 92% 8%,rgba(211,182,120,.15),transparent 22rem),
+      linear-gradient(145deg,rgba(23,36,27,.98),rgba(11,20,15,.98));box-shadow:0 30px 90px rgba(0,0,0,.22)}
+    body[data-pilot="agnormal"] .partner-room{display:block}
+    .partner-room-head{display:flex;justify-content:space-between;gap:22px;align-items:flex-start}
+    .partner-room h2{font-family:Georgia,"Times New Roman",serif;font-size:clamp(2rem,4vw,3.15rem);font-weight:500;letter-spacing:-.035em;line-height:1.02;margin:7px 0 10px;max-width:780px}
+    .partner-room-head p{margin:0;max-width:780px;color:#cdd6cf;line-height:1.6}
+    .partner-live{flex:0 0 auto;display:flex;align-items:center;gap:7px;padding:8px 10px;border:1px solid #4a5d4e;border-radius:999px;color:#cfe0d2;background:#0c1710;font-size:.66rem;font-weight:900;letter-spacing:.09em;text-transform:uppercase}
+    .partner-live i{width:7px;height:7px;border-radius:50%;background:#9dc597;box-shadow:0 0 0 5px rgba(157,197,151,.08)}
+    .partner-flow{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:22px}
+    .partner-step{padding:16px;border:1px solid #34473a;border-radius:18px;background:rgba(7,15,11,.52)}
+    .partner-step span{display:block;color:var(--gold);font-size:.68rem;font-weight:900;letter-spacing:.12em;margin-bottom:8px}
+    .partner-step b{display:block;font-size:.94rem;margin-bottom:5px}
+    .partner-step p{margin:0;color:var(--soft);font-size:.79rem;line-height:1.48}
+    .partner-lenses{display:flex;justify-content:space-between;gap:20px;align-items:flex-end;margin-top:20px;padding-top:18px;border-top:1px solid #314137}
+    .partner-lenses strong{display:block;font-size:.9rem}.partner-lenses small{display:block;color:var(--soft);margin-top:4px;max-width:420px;line-height:1.4}
+    .mission-deck{display:flex;gap:8px;flex-wrap:wrap;justify-content:flex-end}
+    .mission-chip{margin:0;background:#111d16;color:#dfe8e1;border-color:#435847;padding:9px 12px;font-size:.74rem}
+    .mission-chip:hover{border-color:#8b7b51;background:#18241b;color:#fff5dc}
+    .partner-note{margin-top:18px;padding:13px 15px;border-left:3px solid var(--gold);background:rgba(211,182,120,.06);color:#cdd6cf;font-size:.84rem;line-height:1.5}
+    .partner-note strong{color:#fff0c9}
+    @media(max-width:780px){.partner-room-head,.partner-lenses{display:block}.partner-live{width:max-content;margin-top:14px}.partner-flow{grid-template-columns:1fr}.mission-deck{justify-content:flex-start;margin-top:12px}}
     .boundary{margin-top:16px;border-top:1px solid var(--line);padding-top:14px;color:var(--soft);font-size:.78rem;line-height:1.5}
     .result-head{display:flex;justify-content:space-between;gap:16px;align-items:flex-start}
     .confidence{min-width:82px;height:82px;border-radius:20px;border:1px solid #4a513b;background:
@@ -146,6 +168,31 @@
 </header>
 
 <main class="shell">
+  <section class="partner-room" id="agnormalRoom" aria-label="AgNormal design-partner room">
+    <div class="partner-room-head">
+      <div>
+        <div class="section-kicker">Prepared for AgNormal · design-partner room</div>
+        <h2>One real decision. Live evidence. No theater.</h2>
+        <p>FAIE is built to challenge the physical assumptions beneath scaled food infrastructure while preserving the operator's judgment. This room runs the same live engine, evidence rules, and provenance spine as the public product, with a Yakima Valley thesis already loaded for your team.</p>
+      </div>
+      <div class="partner-live"><i></i>live on Evercraft Fabric</div>
+    </div>
+    <div class="partner-flow">
+      <article class="partner-step"><span>01 / PROVE IT</span><b>Run the live brief</b><p>Watch FAIE build a current evidence packet instead of showing a canned result.</p></article>
+      <article class="partner-step"><span>02 / ATTACK IT</span><b>Challenge the thesis</b><p>Swap assumptions, sharpen the geography, and see what the evidence can and cannot support.</p></article>
+      <article class="partner-step"><span>03 / MAKE IT REAL</span><b>Give us one operating problem</b><p>One real site, corridor, geography, or decision is enough to turn this into a serious design-partner run.</p></article>
+    </div>
+    <div class="partner-lenses">
+      <div><strong>Try a live lens</strong><small>These buttons change the question, not the engine. Each run uses the current admitted evidence field.</small></div>
+      <div class="mission-deck">
+        <button class="mission-chip" type="button" data-partner-mission="water">Water reality</button>
+        <button class="mission-chip" type="button" data-partner-mission="climate">Climate continuity</button>
+        <button class="mission-chip" type="button" data-partner-mission="economics">Operating constraints</button>
+        <button class="mission-chip" type="button" data-partner-mission="diligence">Site diligence gaps</button>
+      </div>
+    </div>
+    <div class="partner-note"><strong>The handoff is deliberately small:</strong> Dylan's team does not need to spec an integration. Send one real problem plus the geography. FAIE returns the evidence, contradictions, missing proof, and next diligence queue for human review.</div>
+  </section>
   <div class="layout">
     <section class="panel" id="investigation">
       <div class="panel-topline"><div class="section-kicker">01 / Frame</div><span class="tag">live engine</span></div>
@@ -450,7 +497,6 @@ async function loadState() {
       ['View', document.body.dataset.pilot === 'agnormal' ? 'AGNORMAL PILOT' : 'PUBLIC'],
       ['Fabric', health.fabric_native ? 'OWNED' : 'CHECK'],
       ['Registry', 'PUBLISHED'],
-      ['Legacy transport', health.legacy provider_transport_enabled === false ? 'OFF' : 'CHECK'],
       ['Resident', health.resident ? 'ON' : 'OFF'],
       ['Signals', health.signal_count || 0],
       ['Official feeds', sourceLabel],
@@ -490,6 +536,23 @@ function loadFoodInfrastructurePilot({partner=false}={}) {
     document.getElementById('pilotNote').textContent = 'Design-partner scope loaded. The packet still comes from current FAIE evidence. FAIE does not infer undisclosed AgNormal architecture or issue a site verdict.';
   }
 }
+
+const partnerMissions = {
+  water: 'What current basin, irrigation-district, reservoir, drought, allocation, and policy evidence should shape reliance on Yakima Valley water availability for regionally scaled food production?',
+  climate: 'What current heat, smoke, freeze, seasonal weather, and continuity evidence could challenge natural-light food production at regional scale in the Yakima Valley?',
+  economics: 'What current labor, utility, transportation, cold-chain, infrastructure, and market-access evidence could constrain the economics of regionally scaled food production in the Yakima Valley?',
+  diligence: 'What evidence is still missing before a specific Yakima Valley site could be responsibly underwritten for regionally scaled food production infrastructure?'
+};
+
+document.querySelectorAll('[data-partner-mission]').forEach((button) => {
+  button.addEventListener('click', () => {
+    const mission = partnerMissions[button.dataset.partnerMission];
+    loadFoodInfrastructurePilot({partner:true});
+    if (mission) document.getElementById('question').value = mission;
+    document.getElementById('result').scrollIntoView({behavior:'smooth',block:'start'});
+    document.getElementById('form').requestSubmit();
+  });
+});
 
 document.getElementById('agnormalPreset').addEventListener('click', () => {
   loadFoodInfrastructurePilot({partner:true});
