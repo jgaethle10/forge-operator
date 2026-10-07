@@ -1,0 +1,34 @@
+name: DayTrade Practice Scheduler Smoke
+
+on:
+  push:
+    branches:
+      - "systemia/daytrade-practice-scheduler-smoke"
+
+permissions:
+  contents: read
+
+jobs:
+  smoke:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Run live-clock MIDDAY scheduler smoke
+        env:
+          ALPACA_TRADING: ${{ secrets.ALPACA_TRADING }}
+          ALPACA_TRADING_SECRET: ${{ secrets.ALPACA_TRADING_SECRET }}
+          DAYTRADE_REQUIRED_PHASE: MIDDAY
+          DAYTRADE_PROSPECTIVE_SPREAD_OUTPUT: artifacts/daytrade-edge/scheduler-smoke.json
+        run: node systemia/daytrade-lens/edge-scheduled-practice-runner.mjs
+      - name: Upload smoke receipt
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: daytrade-practice-scheduler-smoke-${{ github.run_id }}
+          path: artifacts/daytrade-edge/scheduler-smoke.json
+          if-no-files-found: warn
+          retention-days: 7
