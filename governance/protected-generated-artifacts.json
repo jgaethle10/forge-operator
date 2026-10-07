@@ -7,6 +7,13 @@
       "authority": "governance/RIVET_CHANGE_CONTROL.md",
       "rule": "preserve_exactly_until_explicit_rivet_approval",
       "approved_source_path": "governance/rivet-agent-approved.json"
+    },
+    {
+      "path": "public/chum/proof/rivet.json",
+      "git_blob_sha": "6ecf4026461177046da13f2b682454df72ee5ab5",
+      "authority": "governance/RIVET_CHANGE_CONTROL.md",
+      "rule": "preserve_exactly_until_explicit_rivet_approval",
+      "approved_source_path": "governance/rivet-proof-approved.json"
     }
   ]
 }
