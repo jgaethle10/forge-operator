@@ -1,0 +1,45 @@
+name: Node 001 Mac Control Plane
+
+on:
+  pull_request:
+    paths:
+      - "systemia/control-plane/**"
+      - "systemia/compute/node001-macos-**"
+      - "scripts/install-evercraft-node001-macos.sh"
+      - "tests/node001-macos-bootstrap.test.mjs"
+      - "package.json"
+      - ".github/workflows/node001-macos-control-plane.yml"
+  push:
+    branches: [main]
+    paths:
+      - "systemia/control-plane/**"
+      - "systemia/compute/node001-macos-**"
+      - "scripts/install-evercraft-node001-macos.sh"
+      - "tests/node001-macos-bootstrap.test.mjs"
+      - "package.json"
+      - ".github/workflows/node001-macos-control-plane.yml"
+
+permissions:
+  contents: read
+
+jobs:
+  prove:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "24"
+      - name: Syntax-check resident and Mac Node 001 tooling
+        run: |
+          node --check systemia/control-plane/resident-runtime.mjs
+          node --check systemia/control-plane/resident-runner.mjs
+          node --check systemia/compute/node001-macos-preflight.mjs
+          bash -n scripts/install-evercraft-node001-macos.sh
+      - name: Prove resident Systemia semantics
+        run: npm run proof:resident-control-plane
+      - name: Prove Mac Node 001 admission boundary
+        run: npm run proof:node001-macos
+      - name: Prove macOS bootstrap contract
+        run: npm run test:node001-macos-bootstrap
