@@ -21,9 +21,12 @@ function ranking(){
 test('feed poster is a vertical Top 10 with no horizontal table dependency',()=>{
   const svg=renderCfbRankingPoster(ranking(),'feed');
   assert.match(svg,/width="1080" height="1350"/);
-  assert.match(svg,/COLLEGE FOOTBALL/);
+  assert.match(svg,/WHO’S ACTUALLY #1\?/);
+  assert.match(svg,/EVERCRAFT HAS/);
+  assert.match(svg,/NOT A POLL/);
   assert.match(svg,/#1/);
-  assert.match(svg,/Alabama/);
+  assert.match(svg,/#1 Alabama/);
+  assert.match(svg,/\+\d+\.\d{2} over #2/);
   assert.match(svg,/81\.49/);
   assert.match(svg,/#10/);
   assert.doesNotMatch(svg,/<table/i);
