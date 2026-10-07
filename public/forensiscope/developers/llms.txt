@@ -18,8 +18,9 @@ https://jgaethle10.github.io/forge-operator/chum/
 Official MCP Registry:
 io.github.jgaethle10/forensiscope
 
-Remote MCP:
-https://jgaethle10.github.io/forge-operator/chum/
+Remote MCP: not currently published
+Owned runtime route: reverification pending
+Official registry identity is preserved, but remote invocation must not be inferred until the owned endpoint is externally reverified.
 
 Verified status:
 /forensiscope/developers/status.json

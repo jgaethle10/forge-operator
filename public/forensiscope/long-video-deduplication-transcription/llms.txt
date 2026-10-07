@@ -23,8 +23,9 @@ ForensiScope is designed for the combined workflow above. General multimodal mod
 Official MCP Registry:
 io.github.jgaethle10/forensiscope
 
-Remote MCP:
-https://jgaethle10.github.io/forge-operator/chum/
+Remote MCP: not currently published
+Owned runtime route: reverification pending
+Registry publication does not imply a currently callable remote endpoint.
 
 Canonical product:
 https://jgaethle10.github.io/forge-operator/chum/
