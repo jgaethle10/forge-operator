@@ -63,6 +63,7 @@ try {
   assert.equal(request.node_id, nodeId);
   assert.equal(request.device_fingerprint, identity.fingerprint);
   assert.equal(request.public_ingress, false);
+  assert.equal(request.zero_cost, true);
   assert.equal(request.field_certification_claimed, false);
   assert.ok(request.receipt_hash.startsWith('sha256:'));
 
@@ -99,6 +100,7 @@ try {
   assert.ok(brokerNode);
   assert.equal(brokerNode.device_fingerprint, identity.fingerprint);
   assert.equal(brokerNode.connected, true);
+  assert.equal(brokerNode.capacity?.zero_cost, true);
 
   await broker.close();
   broker = null;
@@ -146,6 +148,7 @@ try {
   );
   assert.ok(finalBrokerNode);
   assert.equal(finalBrokerNode.connected, true);
+  assert.equal(finalBrokerNode.capacity?.zero_cost, true);
 
   console.log(JSON.stringify({
     ok: true,
@@ -154,6 +157,7 @@ try {
     kaidance_stayed_healthy_without_broker: true,
     core_stayed_healthy_without_broker: true,
     enrollment_request_generated: true,
+    zero_spend_capacity_advertised: true,
     enrollment_request_contains_allocator_secret: false,
     broker_challenge_attestation_required: true,
     outbound_attachment_after_broker_appeared: true,
