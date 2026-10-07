@@ -190,3 +190,103 @@ test('large-object garbage is quarantined reversibly before retention-gated purg
     await rm(root, { recursive: true, force: true });
   }
 });
+
+
+test('audit receipts do not pin rolled-back commits forever', async () => {
+  const root = await mkdtemp(join(tmpdir(), 'lineage-gc-rollback-'));
+  try {
+    const store = new LineageStore(root);
+    await store.init();
+
+    await writeFile(join(root, 'artifact.txt'), 'v1\n');
+    const first = await store.commit({ message: 'first' });
+
+    await writeFile(join(root, 'artifact.txt'), 'v2\n');
+    const second = await store.commit({ message: 'second' });
+
+    await store.rollback(first.commit_id);
+
+    const plan = await planGarbageCollection(store, {
+      graceMs: 0,
+      nowMs: Date.now() + 1000,
+    });
+
+    assert.ok(
+      plan.candidates.objects.some((row) => row.id === second.commit_id),
+      'rolled-back descendant should be collectible after grace'
+    );
+    assert.ok(
+      !plan.candidates.objects.some((row) => row.id === first.commit_id),
+      'current branch head must remain reachable'
+    );
+  } finally {
+    await rm(root, { recursive: true, force: true });
+  }
+});
+
+test('transaction receipts retain standalone transaction detail objects', async () => {
+  const root = await mkdtemp(join(tmpdir(), 'lineage-gc-transaction-'));
+  try {
+    const store = new LineageStore(root);
+    await store.init();
+
+    const transaction = await store.recordTransaction({
+      kind: 'world.scene.camera.move',
+      actor: { type: 'agent', id: 'studio-agent' },
+      inputs: [],
+      outputs: [],
+      rationale: 'bounded camera move',
+      authority: { mutation: true, publish: false, payment: false },
+    });
+
+    const plan = await planGarbageCollection(store, {
+      graceMs: 0,
+      nowMs: Date.now() + 1000,
+    });
+
+    assert.ok(
+      !plan.candidates.objects.some(
+        (row) => row.id === transaction.transaction_id
+      ),
+      'transaction operation receipt should retain the transaction detail object'
+    );
+  } finally {
+    await rm(root, { recursive: true, force: true });
+  }
+});
+
+test('active GC lock blocks branch and release root mutations', async () => {
+  const root = await mkdtemp(join(tmpdir(), 'lineage-gc-lock-'));
+  try {
+    const store = new LineageStore(root);
+    await store.init();
+    await writeFile(join(root, 'artifact.txt'), 'v1\n');
+    await store.commit({ message: 'live' });
+
+    await writeFile(
+      join(store.dir, 'gc.lock'),
+      JSON.stringify({ schema: 'evercraft.lineage.gc-lock.v1' }) + '\n'
+    );
+
+    await assert.rejects(
+      () => store.createBranch('blocked-by-gc'),
+      (error) => error.code === 'LINEAGE_GC_LOCKED'
+    );
+
+    const releases = new ReleaseRegistry(store);
+    await assert.rejects(
+      () => releases.record({
+        name: 'blocked-release',
+        channel: 'preview',
+        state: 'candidate',
+      }),
+      (error) => error.code === 'LINEAGE_GC_LOCKED'
+    );
+
+    await rm(join(store.dir, 'gc.lock'), { force: true });
+    const branch = await store.createBranch('after-gc');
+    assert.equal(branch.branch, 'after-gc');
+  } finally {
+    await rm(root, { recursive: true, force: true });
+  }
+});
