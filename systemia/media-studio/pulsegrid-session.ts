@@ -1,7 +1,5 @@
-import crypto from 'node:crypto';
-
 export const PULSEGRID_SESSION_SCHEMA = 'evercraft.fallen.pulsegrid.session.v1';
-export const PULSEGRID_ENGINE_VERSION = '0.9.0';
+export const PULSEGRID_ENGINE_VERSION = '0.10.0';
 
 export type PulseGridActor = 'human' | 'agent' | 'system' | 'controller';
 
@@ -124,6 +122,15 @@ function clamp(value: number, min: number, max: number) {
   return Math.max(min, Math.min(max, value));
 }
 
+function randomId() {
+  const runtimeCrypto=globalThis.crypto;
+  if(runtimeCrypto && typeof runtimeCrypto.randomUUID==='function'){
+    return runtimeCrypto.randomUUID();
+  }
+  // Local graph identity fallback only. Never use this fallback for authentication or secrets.
+  return 'pg-'+Date.now().toString(36)+'-'+Math.random().toString(36).slice(2,12);
+}
+
 function vector(value: unknown, fallback: number, length: number) {
   const input = Array.isArray(value) ? value : [];
   return Array.from({ length }, (_, index) => {
@@ -225,7 +232,7 @@ export function createPulseGridSession(projectName = 'Untitled Session'): PulseG
   return {
     schema: PULSEGRID_SESSION_SCHEMA,
     version: PULSEGRID_ENGINE_VERSION,
-    session_id: crypto.randomUUID(),
+    session_id: randomId(),
     project_name: projectName.trim() || 'Untitled Session',
     transport: { bpm: 120, swing: 0, time_signature: [4, 4] },
     active_scene: 0,
@@ -435,7 +442,7 @@ export function applyPulseGridOperation(
     if (operation.source_scene === operation.destination_scene) throw new Error('PulseGrid variation fork requires a different destination scene.');
     before = structuredClone(destinationClip);
     const fork = structuredClone(sourceClip);
-    fork.id = crypto.randomUUID();
+    fork.id = randomId();
     fork.name = String(operation.name || sourceClip.name + ' Variation').trim().slice(0, 120) || sourceClip.name + ' Variation';
     fork.provenance = {
       ...fork.provenance,
@@ -449,7 +456,7 @@ export function applyPulseGridOperation(
     targets = [`track:${track.id}.scene:${operation.destination_scene}`];
   } else if (operation.type === 'note.add') {
     const { clip } = getClip(session, operation.track_id, operation.scene);
-    const note = normalizeNote({ ...operation.note, id: operation.note.id || crypto.randomUUID() }, clip.id, clip.notes.length, clip.steps.length);
+    const note = normalizeNote({ ...operation.note, id: operation.note.id || randomId() }, clip.id, clip.notes.length, clip.steps.length);
     if (clip.notes.some((candidate) => candidate.id === note.id)) throw new Error('PulseGrid note ID already exists: ' + note.id);
     before = null;
     clip.notes.push(note);
@@ -481,7 +488,7 @@ export function applyPulseGridOperation(
   }
 
   const receipt: PulseGridReceipt = {
-    id: crypto.randomUUID(),
+    id: randomId(),
     timestamp: new Date().toISOString(),
     actor,
     operation: operation.type,
@@ -510,7 +517,7 @@ export function applyPulseGridTransaction(
   if (!operations.length) throw new Error('PulseGrid transaction requires at least one operation.');
   if (operations.length > 128) throw new Error('PulseGrid transaction exceeds the 128-operation safety limit.');
 
-  const transactionId = String(input.transaction_id || crypto.randomUUID());
+  const transactionId = String(input.transaction_id || randomId());
   const before = sessionStateSnapshot(source);
   let working = cloneSession(source);
   const childReceipts: PulseGridReceipt[] = [];
@@ -525,7 +532,7 @@ export function applyPulseGridTransaction(
 
   const after = sessionStateSnapshot(working);
   const receipt: PulseGridReceipt = {
-    id: crypto.randomUUID(),
+    id: randomId(),
     timestamp: new Date().toISOString(),
     actor,
     operation: 'transaction.apply',
@@ -618,7 +625,7 @@ export function undoPulseGridReceipt(
   }
 
   const undoReceipt: PulseGridReceipt = {
-    id: crypto.randomUUID(),
+    id: randomId(),
     timestamp: new Date().toISOString(),
     actor,
     operation: 'operation.undo',

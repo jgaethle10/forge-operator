@@ -1,5 +1,6 @@
 import assert from 'node:assert/strict';
 import test from 'node:test';
+import { build } from 'esbuild';
 import {
   PULSEGRID_ENGINE_VERSION,
   PULSEGRID_SESSION_SCHEMA,
@@ -36,7 +37,7 @@ test('PulseGrid migrates older sparse browser sessions into the canonical graph'
       clips:[{id:'keys-scene-1',steps:[1,0,0,0]}]
     }]
   });
-  assert.equal(migrated.version,'0.9.0');
+  assert.equal(migrated.version,'0.10.0');
   assert.equal(migrated.transport.bpm,128);
   assert.equal(migrated.tracks[0].clips[0].bars,1);
   assert.equal(migrated.tracks[0].clips[0].steps.length,16);
@@ -338,4 +339,22 @@ test('PulseGrid atomic edit plan enforces explicit intent and bounded plan size'
     intent:'Too many edits',
     operations:Array.from({length:129},()=>({type:'transport.set_tempo',bpm:130} as const)),
   }),/128-operation safety limit/);
+});
+
+
+test('PulseGrid canonical core bundles for the browser without Node built-ins',async()=>{
+  const result=await build({
+    entryPoints:['systemia/media-studio/pulsegrid-browser.ts'],
+    bundle:true,
+    platform:'browser',
+    format:'esm',
+    target:'es2022',
+    write:false,
+    logLevel:'silent',
+  });
+  assert.equal(result.errors.length,0);
+  assert.equal(result.outputFiles.length,1);
+  const output=result.outputFiles[0].text;
+  assert.match(output,/PULSEGRID_ENGINE_VERSION/);
+  assert.doesNotMatch(output,/node:crypto/);
 });
