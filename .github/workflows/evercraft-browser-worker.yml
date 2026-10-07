@@ -5,6 +5,7 @@ on:
   pull_request:
     paths:
       - "systemia/evercraft-web/browser-worker/**"
+      - "systemia/world-engine/**"
       - "systemia/compute/runtime-node.mjs"
       - "systemia/compute/node-seed.mjs"
       - "systemia/compute/local-organism.mjs"
@@ -21,6 +22,7 @@ on:
     branches: [main]
     paths:
       - "systemia/evercraft-web/browser-worker/**"
+      - "systemia/world-engine/**"
       - "systemia/compute/runtime-node.mjs"
       - "systemia/compute/node-seed.mjs"
       - "systemia/compute/local-organism.mjs"
