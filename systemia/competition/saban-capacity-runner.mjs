@@ -1,7 +1,8 @@
 import fs from "node:fs";
 import path from "node:path";
+import { createHash } from "node:crypto";
 import { YardOperator } from "../yard/operator.mjs";
-import { ensureCompetitionBrowserCapacity } from "./saban-capacity-runtime.mjs";
+import { buildCompetitionCapacityMissionSnapshot, ensureCompetitionBrowserCapacity } from "./saban-capacity-runtime.mjs";
 
 function arg(name,fallback=""){
   const index=process.argv.indexOf(name);
@@ -73,21 +74,50 @@ const leaseTtlMs=Number(arg(
   "--lease-ttl-ms",
   process.env.SYSTEMIA_COMPETITION_BROWSER_LEASE_TTL_MS||String(30*60_000)
 ));
+const missionSnapshotFile=path.join(path.dirname(out),"mission-snapshot.json");
+
+function readJsonIfExists(file){
+  try{
+    return fs.existsSync(file)?JSON.parse(fs.readFileSync(file,"utf8")):null;
+  }catch{
+    return null;
+  }
+}
+function persist(receipt){
+  atomicJson(out,receipt);
+  const snapshot=buildCompetitionCapacityMissionSnapshot(
+    receipt,
+    readJsonIfExists(missionSnapshotFile)
+  );
+  atomicJson(missionSnapshotFile,snapshot);
+  process.stdout.write(JSON.stringify({
+    ...receipt,
+    mission_snapshot:missionSnapshotFile,
+    founder_action_required:snapshot.founder_action_required,
+  })+"\n");
+}
 
 if(!brokerDeploymentId){
-  const held={
+  const heldBody={
     schema:"evercraft.systemia.competition-saban-capacity.v1",
     state:"held_broker_unconfigured",
     route:["systemia","competition_control_plane","saban","yard","evercraft_compute"],
     zero_spend_only:true,
     paid_market_order_authorized:false,
     paid_lease_authorized:false,
+    payment_attempted:false,
     authority_material_persisted:false,
+    base44_used:false,
     next_action:"continue_saban_capacity_discovery",
     observed_at:new Date().toISOString(),
   };
-  atomicJson(out,held);
-  process.stdout.write(JSON.stringify(held)+"\n");
+  const held={
+    ...heldBody,
+    receipt_hash:"sha256:"+createHash("sha256")
+      .update(JSON.stringify(heldBody))
+      .digest("hex"),
+  };
+  persist(held);
 }else{
   const yard=new YardOperator({stateDir:yardState});
   const receipt=await ensureCompetitionBrowserCapacity({
@@ -98,6 +128,5 @@ if(!brokerDeploymentId){
     rollbackTarget,
     leaseTtlMs,
   });
-  atomicJson(out,receipt);
-  process.stdout.write(JSON.stringify(receipt)+"\n");
+  persist(receipt);
 }
