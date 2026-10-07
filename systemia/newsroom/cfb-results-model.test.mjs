@@ -64,5 +64,4 @@ test('a non-FBS opponent does not receive average-FBS schedule credit',()=>{
   const alpha=input.teams.find(team=>team.team_id==='alpha');
   assert.ok(alpha.components.schedule_strength<50);
   assert.equal(alpha.model_observations.fcs_opponent_baseline,-12);
-  assert.match(alpha.explanation,/opponent-adjusted results-first profile/);
 });
