@@ -23,6 +23,7 @@ function fakeFetch(url) {
       features: [
         {
           id: 'quake-a',
+          geometry: { coordinates: [122.05, 23.7, 18.2] },
           properties: {
             mag: 5.6,
             place: '74 km S of Yonakuni, Japan',
@@ -34,6 +35,7 @@ function fakeFetch(url) {
         },
         {
           id: 'quake-b',
+          geometry: { coordinates: [168.1, -21.0, 11.4] },
           properties: {
             mag: 5.0,
             place: '83 km NE of Tadine, New Caledonia',
@@ -82,12 +84,19 @@ test('resident cycle collects official sources, stages an edition, and leaves pu
     assert.equal(receipt.collected_observations, 3);
     assert.equal(receipt.publication_authority, false);
     assert.equal(receipt.release_gate_status, 'ready');
+    assert.ok(receipt.visual_admission_evaluated >= 1);
+    assert.ok(receipt.visual_candidate_count >= 1);
+    assert.ok(receipt.visual_outbox_story_count >= 1);
+    assert.equal(receipt.visual_outbox_index, 'visual-desk-outbox/index.json');
     assert.equal(receipt.owned_release.status, 'released_owned_archive');
     assert.equal(receipt.owned_release.external_social_publish_performed, false);
 
     const health = resident.health();
     assert.equal(health.ok, true);
     assert.ok(health.observation_count >= 3);
+    assert.ok(health.latest_visual_candidate_count >= 1);
+    assert.ok(health.visual_outbox_story_count >= 1);
+    assert.equal(health.visual_outbox_ready, true);
 
     const latest = resident.latest();
     assert.equal(latest.publication_authority, false);
@@ -101,6 +110,8 @@ test('resident cycle collects official sources, stages an edition, and leaves pu
       'linkedin-draft.json',
       'facebook-draft.json',
       'release-candidate.json',
+      'visual-admission.json',
+      'visual-desk-outbox/index.json',
       'receipts.jsonl'
     ]) {
       assert.ok(fs.existsSync(path.join(root, filename)), `${filename} should be persisted`);
@@ -109,6 +120,32 @@ test('resident cycle collects official sources, stages an edition, and leaves pu
     const packet = JSON.parse(fs.readFileSync(path.join(root, 'journal-editorial-packet.json'), 'utf8'));
     assert.equal(packet.publication_authority, false);
     assert.ok(packet.required_gates.includes('freshness_recheck'));
+
+    const visualState = resident.visualState();
+    assert.equal(visualState.publicationAuthority, false);
+    assert.equal(visualState.outbox.publicationAuthority, false);
+    assert.ok(visualState.admission.admitted.length >= 1);
+    assert.ok(visualState.outbox.story_count >= 1);
+
+    const outboxIndex = JSON.parse(
+      fs.readFileSync(path.join(root, 'visual-desk-outbox', 'index.json'), 'utf8')
+    );
+    assert.equal(outboxIndex.schema, 'evercraft.visual-desk.radar-outbox-index.v1');
+    assert.equal(outboxIndex.publicationAuthority, false);
+    assert.ok(outboxIndex.story_count >= 1);
+    const row = outboxIndex.stories[0];
+    assert.match(row.story_sha256, /^[a-f0-9]{64}$/);
+    assert.ok(row.visual_priority_score >= 0.58);
+    assert.ok(row.source_refs.length >= 1);
+
+    const story = JSON.parse(
+      fs.readFileSync(path.join(root, 'visual-desk-outbox', row.file), 'utf8')
+    );
+    assert.equal(story.schema, 'evercraft.visual-story.v1');
+    assert.equal(story.evidenceState, 'observed');
+    assert.equal(story.lines.length, 0);
+    assert.ok(story.points.length >= 2);
+    assert.ok(story.sourceRefs.some((ref) => /usgs/i.test(ref)));
 
     const releaseState = resident.releaseState();
     assert.equal(releaseState.index.releases.length, 1);
