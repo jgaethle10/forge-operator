@@ -89,11 +89,15 @@ test('commercial supply is visibility-only by default',()=>{
       assert.equal(directive.zero_spend_phase.resident_acquisition.zero_spend_only,true);
       assert.deepEqual(
         directive.zero_spend_phase.resident_acquisition.allowed_markets,
-        ['evercraft-broker']
+        ['evercraft-yard','evercraft-broker']
       );
       assert.equal(
         directive.zero_spend_phase.resident_acquisition.controller,
         'systemia/competition/saban-capacity-runner.mjs'
+      );
+      assert.equal(
+        directive.zero_spend_phase.resident_acquisition.prefer_existing_yard_authority,
+        true
       );
     }else{
       assert.equal(directive.zero_spend_phase.acquisition_mode,'formation');

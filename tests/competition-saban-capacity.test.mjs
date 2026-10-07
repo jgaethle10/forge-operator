@@ -38,6 +38,34 @@ function node({
     },
   };
 }
+const emptyPrivateCapacity={
+  async listPrivateCapacityNodes(){
+    return {
+      nodes:[],
+      receipt:{receipt_hash:"sha256:local-yard-empty"},
+    };
+  },
+  async privateCapacityGrant(){
+    throw new Error("private_capacity_grant_should_not_run");
+  },
+};
+
+function localGrant({
+  allocatorToken="local-yard-secret",
+  nodeId="node-free-1",
+}={}){
+  const grant={
+    node_id:nodeId,
+    device_fingerprint:"fp-1",
+    capacity_endpoint:"https://local-capacity.example.test",
+    receipt_hash:"sha256:local-yard-grant",
+  };
+  Object.defineProperty(grant,"runtime_authority",{
+    value:Object.freeze({allocator_token:allocatorToken}),
+    enumerable:false,
+  });
+  return grant;
+}
 
 test("competition worker demand is explicit, persistent, and zero-spend",()=>{
   const demand=competitionWorkerDemand();
@@ -76,6 +104,7 @@ test("broker refuses connected nodes that are not authorized and attested",async
 test("Saban acquires an authorized zero-cost competition NodeSeed",async()=>{
   const allocatorToken="secret-allocator-token";
   const yard={
+    ...emptyPrivateCapacity,
     async listRemoteCapacityNodes(){return {nodes:[node()]};},
     async remoteCapacityGrant(_deploymentId,nodeId){
       assert.equal(nodeId,"node-free-1");
@@ -104,6 +133,7 @@ test("Saban hands acquired capacity to Yard and deploys the browser worker",asyn
   const allocatorToken="secret-allocator-token";
   let deployed=null;
   const yard={
+    ...emptyPrivateCapacity,
     deploymentStatus(){return null;},
     async listRemoteCapacityNodes(){return {nodes:[node()]};},
     async remoteCapacityGrant(){
@@ -150,6 +180,7 @@ test("Saban hands acquired capacity to Yard and deploys the browser worker",asyn
 
 test("no authorized free node fails closed without asking for spend",async()=>{
   const yard={
+    ...emptyPrivateCapacity,
     deploymentStatus(){return null;},
     async listRemoteCapacityNodes(){return {nodes:[node({zero_cost:false})]};},
     async remoteCapacityGrant(){throw new Error("not_expected");},
@@ -275,4 +306,118 @@ test("missing zero-spend capacity stays a team-held state, not a Jesse gate",()=
   assert.equal(snapshot.founder_action_required,false);
   assert.equal(snapshot.human_gate_required,false);
   assert.equal(snapshot.next_action,"continue_saban_capacity_discovery");
+});
+
+
+test("Saban prefers freshly attested local Yard capacity over remote broker capacity",async()=>{
+  const allocatorToken="local-yard-secret";
+  let remoteGrants=0;
+  let localGrants=0;
+  const yard={
+    async listPrivateCapacityNodes(){
+      return {
+        nodes:[node()],
+        receipt:{receipt_hash:"sha256:local-yard-inventory"},
+      };
+    },
+    async privateCapacityGrant(nodeId){
+      localGrants+=1;
+      assert.equal(nodeId,"node-free-1");
+      return localGrant({allocatorToken,nodeId});
+    },
+    async listRemoteCapacityNodes(){
+      return {nodes:[{
+        ...node(),
+        node_id:"remote-free-1",
+        device_fingerprint:"fp-remote",
+        capacity:{
+          ...node().capacity,
+          device_fingerprint:"fp-remote",
+        },
+      }]};
+    },
+    async remoteCapacityGrant(){
+      remoteGrants+=1;
+      throw new Error("remote_grant_should_not_run_when_local_yard_wins");
+    },
+  };
+  const acquired=await discoverCompetitionWorkerCapacity({
+    yard,
+    brokerDeploymentId:"broker-proof",
+  });
+  assert.equal(acquired.state,"capacity_acquired");
+  assert.equal(acquired.lease.market,"evercraft-yard");
+  assert.equal(acquired.lease.provider_id,"node-free-1");
+  assert.equal(acquired.lease.zero_cost,true);
+  assert.equal(localGrants,1);
+  assert.equal(remoteGrants,0);
+  assert.equal(JSON.stringify(acquired).includes(allocatorToken),false);
+});
+
+test("local Yard capacity can deploy the competition worker with no remote broker",async()=>{
+  const allocatorToken="local-yard-secret";
+  let deployed=null;
+  const yard={
+    deploymentStatus(){return null;},
+    async listPrivateCapacityNodes(){
+      return {
+        nodes:[node()],
+        receipt:{receipt_hash:"sha256:local-yard-inventory"},
+      };
+    },
+    async privateCapacityGrant(nodeId){
+      return localGrant({allocatorToken,nodeId});
+    },
+    async deployRelease(input){
+      deployed=input;
+      assert.equal(input.allocatorToken,allocatorToken);
+      assert.equal(input.workloadClass,"systemia.evercraft-web-browser.v1");
+      return {
+        state:"ready",
+        receipt:{
+          receipt_hash:"sha256:local-browser-deployment",
+          capacity_node_id:"node-free-1",
+          workload_class:"systemia.evercraft-web-browser.v1",
+          health_state:"healthy",
+          route_verification:"private_browser_health_verified",
+        },
+      };
+    },
+  };
+  const receipt=await ensureCompetitionBrowserCapacity({
+    yard,
+    brokerDeploymentId:"",
+    releaseRef:"0123456789abcdef0123456789abcdef01234567",
+  });
+  assert.ok(deployed);
+  assert.equal(receipt.state,"deployed_zero_spend_capacity");
+  assert.equal(receipt.capacity_node_id,"node-free-1");
+  assert.equal(receipt.payment_attempted,false);
+  assert.equal(JSON.stringify(receipt).includes(allocatorToken),false);
+});
+
+test("non-zero-spend private Yard capacity is invisible to the autonomous competition lease",async()=>{
+  let privateGrants=0;
+  const yard={
+    deploymentStatus(){return null;},
+    async listPrivateCapacityNodes(){
+      return {
+        nodes:[node({zero_cost:false})],
+        receipt:{receipt_hash:"sha256:local-yard-paid-inventory"},
+      };
+    },
+    async privateCapacityGrant(){
+      privateGrants+=1;
+      throw new Error("paid_private_capacity_must_not_be_granted");
+    },
+  };
+  const receipt=await ensureCompetitionBrowserCapacity({
+    yard,
+    brokerDeploymentId:"",
+    releaseRef:"0123456789abcdef0123456789abcdef01234567",
+  });
+  assert.equal(receipt.state,"held_no_authorized_zero_spend_capacity");
+  assert.equal(receipt.paid_market_order_authorized,false);
+  assert.equal(receipt.paid_lease_authorized,false);
+  assert.equal(privateGrants,0);
 });
