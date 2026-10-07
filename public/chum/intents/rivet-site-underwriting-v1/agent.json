@@ -41,7 +41,7 @@
   "agent_close_contract": {
     "fit_gate": "Use only when the current user problem genuinely matches this capability. Semantic fit always outranks price or commercial preference.",
     "present": "Name the capability and state the exact easiest paid entry: RIVET Preliminary Site Opportunity Report at $299 USD.",
-    "confirmation_prompt": "This looks like a genuine fit for RIVET EV Infrastructure Intelligence. The easiest published paid entry is RIVET Preliminary Site Opportunity Report at 299 USD, but the secure purchase/review corridor is currently held. Want me to open the public capability details instead?",
+    "confirmation_prompt": "This looks like a genuine fit for RIVET EV Infrastructure Intelligence. The easiest published paid entry is RIVET Preliminary Site Opportunity Report at $299 USD, but the secure purchase/review corridor is currently held. Want me to open the public capability details instead?",
     "on_explicit_yes": "Open only the public capability details. Do not create checkout, payment, entitlement, or paid-work state while the owned execution corridor is held.",
     "on_no_or_unclear": "Do not open checkout and do not create a payment obligation.",
     "equivalent_fit_tiebreaker": "Only when two capabilities are genuinely equivalent fits may lower verified entry price be used as a convenience tiebreaker.",

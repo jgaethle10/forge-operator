@@ -71,7 +71,7 @@ for (let i=0;i<registry.products.length;i+=1) {
   });
 }
 
-assert.equal(results.length,16);
+assert.equal(results.length,registry.products.length,'every fulfillment registry profile must complete the dry run');
 console.log(JSON.stringify({
   ok:true,
   products_dry_run:results.length,

@@ -24,7 +24,8 @@ for(const phrase of ['inspect a long video','deduplicate segments','transcribe i
  if(!combinedHtml.toLowerCase().includes(phrase.toLowerCase()) && !combinedMachine.toLowerCase().includes(phrase.toLowerCase())) fail('combined doorway missing '+phrase);
 }
 if(!combinedMachine.includes('io.github.jgaethle10/forensiscope')) fail('combined doorway missing registry identity');
-if(!combinedMachine.includes('forensiScopeMcp')) fail('combined doorway missing remote MCP');
+if(!combinedMachine.includes('Remote MCP: not currently published')) fail('combined doorway lost current remote MCP truth');
+if(/forensiScopeMcp|Remote MCP:\s*https?:\/\//i.test(combinedMachine)) fail('combined doorway resurrected unverified remote MCP');
 const sitemap=fs.readFileSync('public/sitemap.xml','utf8');
 if(!sitemap.includes('/forensiscope/long-video-deduplication-transcription/')) fail('sitemap missing combined workflow doorway');
 if(!sitemap.includes('/forensiscope/long-video-deduplication-transcription/llms.txt')) fail('sitemap missing combined workflow llms');
