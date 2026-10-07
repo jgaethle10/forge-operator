@@ -1,0 +1,114 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/benchmarks/systemia-university/attempt.schema.json",
+  "title": "Systemia University Benchmark Attempt",
+  "type": "object",
+  "required": [
+    "schema",
+    "attempt_id",
+    "mission_key",
+    "mission_version",
+    "actor_id",
+    "claims",
+    "handoff"
+  ],
+  "properties": {
+    "schema": {
+      "const": "systemia.university.benchmark-attempt.v1"
+    },
+    "attempt_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "mission_key": {
+      "type": "string",
+      "minLength": 1
+    },
+    "mission_version": {
+      "type": "string",
+      "minLength": 1
+    },
+    "actor_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "provider": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "latency_ms": {
+      "type": [
+        "number",
+        "null"
+      ],
+      "minimum": 0
+    },
+    "monetary_cost_usd": {
+      "type": [
+        "number",
+        "null"
+      ],
+      "minimum": 0
+    },
+    "claims": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "claim_key",
+          "value",
+          "evidence_state",
+          "evidence_refs"
+        ],
+        "properties": {
+          "claim_key": {
+            "type": "string",
+            "minLength": 1
+          },
+          "value": {},
+          "evidence_state": {
+            "type": "string",
+            "minLength": 1
+          },
+          "evidence_refs": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "uncertainty": {
+            "type": "string"
+          }
+        },
+        "additionalProperties": false
+      }
+    },
+    "actions_requested": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "handoff": {
+      "type": "object",
+      "required": [
+        "limitations",
+        "next_step"
+      ],
+      "properties": {
+        "limitations": {
+          "type": "string",
+          "minLength": 1
+        },
+        "next_step": {
+          "type": "string",
+          "minLength": 1
+        }
+      },
+      "additionalProperties": false
+    }
+  },
+  "additionalProperties": false
+}

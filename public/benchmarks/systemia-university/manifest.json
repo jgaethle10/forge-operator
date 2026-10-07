@@ -1,7 +1,7 @@
 {
   "schema": "systemia.university.benchmark-manifest.v1",
   "product_key": "systemia-university",
-  "state": "seeded_no_public_verified_runs",
+  "state": "benchmark_specs_live_no_public_verified_runs",
   "purpose": "Machine-readable index for versioned, evidence-centered human and AI proving missions.",
   "runtime_contract_path": "systemia/university/proving-lane.mjs",
   "scoring_dimensions": [
@@ -31,5 +31,17 @@
     "mission and evaluator versions must be preserved",
     "provider participation does not imply endorsement",
     "private evidence must not be exposed"
+  ],
+  "submission_schema": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/benchmarks/systemia-university/attempt.schema.json",
+  "missions": [
+    {
+      "mission_key": "evidence-discipline-001",
+      "version": "1.0.0",
+      "title": "Evidence Discipline 001",
+      "mission_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/benchmarks/systemia-university/missions/evidence-discipline-001.json",
+      "evaluator": "systemia/university/benchmark-engine.mjs",
+      "evaluator_version": "1.0.0",
+      "status": "open_spec_no_verified_public_runs"
+    }
   ]
 }

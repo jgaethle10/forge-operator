@@ -5,8 +5,13 @@ on:
     paths:
       - 'systemia/university/**'
       - 'systemia/payments/financial-boundary*'
+      - 'systemia/payments/charter-readiness*'
+      - 'systemia/payments/charter-evidence.json'
+      - 'systemia/payments/financial-capabilit*'
+      - 'public/benchmarks/systemia-university/**'
       - 'public/chum/products/systemia-university/**'
       - 'registry/systemia-university/**'
+      - 'tests/systemia-university-benchmark-discovery.test.mjs'
       - 'docs/EVERCRAFT_FINANCIAL_INSTITUTION_PATH_2026-10-07.md'
       - '.github/workflows/systemia-university-financial-boundary.yml'
   push:
@@ -14,6 +19,11 @@ on:
     paths:
       - 'systemia/university/**'
       - 'systemia/payments/financial-boundary*'
+      - 'systemia/payments/charter-readiness*'
+      - 'systemia/payments/charter-evidence.json'
+      - 'systemia/payments/financial-capabilit*'
+      - 'public/benchmarks/systemia-university/**'
+      - 'tests/systemia-university-benchmark-discovery.test.mjs'
 
 permissions:
   contents: read
@@ -30,5 +40,15 @@ jobs:
         run: node --test systemia/university/proving-lane.test.mjs
       - name: Systemia University discovery contract
         run: node --test tests/systemia-university-benchmark-discovery.test.mjs
+      - name: Systemia University benchmark engine
+        run: node --test systemia/university/benchmark-engine.test.mjs
+      - name: Systemia University benchmark proof receipt
+        run: node systemia/university/benchmark-proof.mjs
       - name: Evercraft Financial regulatory boundary
         run: node --test systemia/payments/financial-boundary.test.mjs
+      - name: Evercraft Financial charter readiness
+        run: node --test systemia/payments/charter-readiness.test.mjs
+      - name: Evercraft Financial charter readiness proof receipt
+        run: node systemia/payments/charter-readiness.proof.mjs
+      - name: Evercraft Financial capability authority routing
+        run: node --test systemia/payments/financial-capability-router.test.mjs

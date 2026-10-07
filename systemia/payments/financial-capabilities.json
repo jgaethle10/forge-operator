@@ -1,0 +1,104 @@
+{
+  "schema": "evercraft.financial.capability-matrix.v1",
+  "updated_at": "2026-10-07",
+  "truth_boundary": "This matrix describes Evercraft routing authority, not a bank charter, license, deposit insurance, or provider contract.",
+  "capabilities": [
+    {
+      "capability_key": "canonical_payment_order",
+      "evercraft_role": "direct",
+      "regulated_authority_required": false,
+      "default_route": "evercraft_payments",
+      "claims_allowed": [
+        "payment_order",
+        "quoted_price",
+        "entitlement_state"
+      ]
+    },
+    {
+      "capability_key": "provider_settlement_routing",
+      "evercraft_role": "orchestrator",
+      "regulated_authority_required": false,
+      "default_route": "raven_nexus_settlement_adapter",
+      "claims_allowed": [
+        "settlement_routing"
+      ],
+      "boundary": "Authoritative provider receipt is required before paid state."
+    },
+    {
+      "capability_key": "cash_flow_intelligence",
+      "evercraft_role": "direct_on_permissioned_data",
+      "regulated_authority_required": false,
+      "default_route": "evercraft_financial_intelligence",
+      "claims_allowed": [
+        "cash_flow_analysis",
+        "scenario_analysis"
+      ]
+    },
+    {
+      "capability_key": "deposit_account",
+      "evercraft_role": "experience_and_orchestration_only",
+      "regulated_authority_required": true,
+      "default_route": "authorized_depository_rail",
+      "claims_allowed": [
+        "deposit_account"
+      ]
+    },
+    {
+      "capability_key": "insured_deposit_account",
+      "evercraft_role": "blocked_without_verified_authority",
+      "regulated_authority_required": true,
+      "deposit_insurance_authority_required": true,
+      "default_route": "authorized_insured_depository_rail",
+      "claims_allowed": [
+        "insured_deposit_account"
+      ]
+    },
+    {
+      "capability_key": "credit_union_share_account",
+      "evercraft_role": "blocked_without_verified_authority",
+      "regulated_authority_required": true,
+      "deposit_insurance_authority_required": true,
+      "default_route": "authorized_credit_union_share_rail",
+      "claims_allowed": [
+        "credit_union_share_account"
+      ]
+    },
+    {
+      "capability_key": "card_issuing",
+      "evercraft_role": "experience_and_orchestration_only",
+      "regulated_authority_required": true,
+      "default_route": "authorized_issuing_partner",
+      "claims_allowed": []
+    },
+    {
+      "capability_key": "lend_as_principal",
+      "evercraft_role": "blocked_without_verified_authority",
+      "regulated_authority_required": true,
+      "default_route": "authorized_lending_rail",
+      "claims_allowed": [
+        "lend_as_principal"
+      ]
+    },
+    {
+      "capability_key": "financing_discovery",
+      "evercraft_role": "discovery_and_handoff",
+      "regulated_authority_required": false,
+      "default_route": "qualified_partner_discovery",
+      "claims_allowed": [
+        "financing_options_discovery"
+      ],
+      "boundary": "No approval, rate, availability, or lender authority may be implied without provider evidence."
+    },
+    {
+      "capability_key": "payroll_recordkeeping",
+      "evercraft_role": "direct_recordkeeping",
+      "regulated_authority_required": false,
+      "default_route": "payflow",
+      "claims_allowed": [
+        "payroll_record",
+        "correction_ledger"
+      ],
+      "boundary": "Recordkeeping is not proof wages were transmitted."
+    }
+  ]
+}

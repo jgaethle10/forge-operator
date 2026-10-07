@@ -18,8 +18,10 @@ test('Systemia University exposes benchmark discovery intents',()=>{
 
 test('benchmark manifest starts truthful with no invented public runs',()=>{
   assert.equal(manifest.schema,'systemia.university.benchmark-manifest.v1');
-  assert.equal(manifest.state,'seeded_no_public_verified_runs');
+  assert.equal(manifest.state,'benchmark_specs_live_no_public_verified_runs');
   assert.deepEqual(manifest.public_runs,[]);
+  assert.equal(manifest.missions[0].mission_key,'evidence-discipline-001');
+  assert.equal(manifest.missions[0].status,'open_spec_no_verified_public_runs');
   assert.ok(manifest.publication_rules.includes('public runs require human verification'));
 });
 
