@@ -8,6 +8,7 @@ import { compileWebGpuRenderPlan, EVERCRAFT_WEBGPU_WGSL, applyGeometryHotReload,
 import { applyWorldEditTransaction, createWorldAssetManifest, semanticAssetManifestDigest, semanticWorldDigest } from './studio-edit.ts';
 import { migrateWorldRuntime, verifyWorldRuntimeMigrationReceipt } from './runtime-migration.ts';
 import { applyTextureHotReload, planTextureResidency, textureAssetDigest } from './texture.ts';
+import { geometryFromFallenAsset, verifyFallenGeometryImportReceipt } from './fallen-geometry.ts';
 
 const world={
   schema:'evercraft.world-engine.world.v1',
@@ -706,6 +707,69 @@ assert.deepEqual(normalPlan.draws[0].textureFlags,[0,0,0,1]);
 assert.equal(normalPlan.draws[0].textureRefs.normal,proofNormalTexture.id);
 assert.equal(verifyWebGpuRenderPlan(normalPlan),true);
 
+const fallenGeometryImport=geometryFromFallenAsset({
+  schema:'evercraft.fallen.geometry.v1',
+  id:'geometry:fallen-proof',
+  primitive:'triangles',
+  coordinateSystem:'right_handed_y_up',
+  units:'meters',
+  positions:[
+    -1,-1,0,
+    1,-1,0,
+    0,1,0
+  ],
+  normals:[
+    0,0,1,
+    0,0,1,
+    0,0,1
+  ],
+  uvs:[
+    0,0,
+    1,0,
+    .5,1
+  ],
+  provenance:{
+    sourceRef:'fallen:studio:proof-geometry',
+    rightsState:'owned',
+    license:'Evercraft-owned'
+  }
+});
+assert.equal(
+  verifyFallenGeometryImportReceipt(fallenGeometryImport.receipt),
+  true
+);
+assert.equal(fallenGeometryImport.receipt.tangentSource,'generated');
+assert.equal(fallenGeometryImport.receipt.generatedTangents,true);
+assert.equal(fallenGeometryImport.geometry.tangents.length,12);
+
+const fallenNormalWorld=structuredClone(visualWorld);
+fallenNormalWorld.visualScene.materials[0]={
+  ...fallenNormalWorld.visualScene.materials[0],
+  textureRefs:{normal:proofNormalTexture.id}
+};
+fallenNormalWorld.entities.find(
+  entity=>entity.id==='proof-object'
+).renderable.geometryRef=fallenGeometryImport.geometry.id;
+const fallenRuntime=new EvercraftWorldRuntime(fallenNormalWorld);
+const fallenSnapshot=fallenRuntime.snapshot();
+const fallenFrame=compileVisualFrame(
+  fallenSnapshot.worldId,
+  fallenSnapshot.tick,
+  fallenSnapshot.timeSec,
+  fallenRuntime.definition.visualScene,
+  fallenSnapshot.entities,
+  fallenSnapshot.cameraRuntime,
+  fallenSnapshot.activeEntityIds
+);
+const fallenRenderPlan=compileWebGpuRenderPlan(
+  fallenFrame,
+  [fallenGeometryImport.geometry],
+  {width:1280,height:720},
+  [proofNormalTexture]
+);
+assert.equal(verifyWebGpuRenderPlan(fallenRenderPlan),true);
+assert.deepEqual(fallenRenderPlan.draws[0].textureFlags,[0,0,0,1]);
+
 const editAssetA={
   id:'geometry:proof-cube',
   kind:'geometry',
@@ -785,7 +849,7 @@ assert.equal(liveMigration.receipt.cameraRuntimePreserved,true);
 assert.equal(verifyWorldRuntimeMigrationReceipt(liveMigration.receipt),true);
 
 process.stdout.write(JSON.stringify({
-  schema:'evercraft.world-engine.proof.v15',
+  schema:'evercraft.world-engine.proof.v16',
   status:'passed',
   world_id:world.id,
   replay:receipt,
@@ -862,6 +926,17 @@ process.stdout.write(JSON.stringify({
     normal_texture:normalPlan.draws[0].textureRefs.normal,
     tangent_count:normalMappedGeometry.tangents.length/4
   },
+  fallen_geometry:{
+    import_receipt_digest:fallenGeometryImport.receipt.digest,
+    source_digest:fallenGeometryImport.receipt.sourceDigest,
+    provenance_digest:fallenGeometryImport.receipt.provenanceDigest,
+    geometry_digest:fallenGeometryImport.receipt.geometryDigest,
+    tangent_source:fallenGeometryImport.receipt.tangentSource,
+    tangent_generation:fallenGeometryImport.receipt.tangentGeneration,
+    coordinate_system:fallenGeometryImport.receipt.coordinateSystem,
+    units:fallenGeometryImport.receipt.units,
+    normal_map_plan_digest:fallenRenderPlan.digest
+  },
   studio_edit:{
     transaction_digest:edited.receipt.transactionDigest,
     edit_receipt_digest:edited.receipt.digest,
@@ -917,6 +992,10 @@ process.stdout.write(JSON.stringify({
     tangent_space_geometry:true,
     normal_map_tbn_shading:true,
     linear_normal_map_contract:true,
+    deterministic_fallen_geometry_import:true,
+    explicit_fallen_geometry_coordinates_and_units:true,
+    fallen_geometry_provenance_receipts:true,
+    generated_tangents_feed_normal_map_pipeline:true,
     deterministic_live_world_edit:true,
     reversible_versioned_edit_receipts:true,
     explicit_asset_rights_lineage:true,
