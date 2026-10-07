@@ -1,5 +1,5 @@
 import { createHash, randomUUID } from 'node:crypto';
-import { mkdir, readFile, writeFile, readdir, rm, stat } from 'node:fs/promises';
+import { mkdir, open, readFile, rename, writeFile, readdir, rm, stat } from 'node:fs/promises';
 import { dirname, extname, join, relative, resolve, sep } from 'node:path';
 import { LargeObjectStore } from './large-object.mjs';
 
@@ -167,6 +167,93 @@ export class LineageStore {
     }
   }
 
+  refPath(branch) {
+    assertBranchName(branch);
+    return join(this.dir, 'refs', 'heads', branch);
+  }
+
+  refLockPath(branch) {
+    assertBranchName(branch);
+    return join(this.dir, 'locks', 'refs', `${branch}.lock`);
+  }
+
+  async _acquireRefLock(branch, {
+    timeoutMs = 5000,
+    retryMs = 10,
+  } = {}) {
+    const timeout = Number(timeoutMs);
+    const retry = Number(retryMs);
+    if (!Number.isFinite(timeout) || timeout < 0) {
+      throw new Error('timeoutMs must be a non-negative finite number');
+    }
+    if (!Number.isFinite(retry) || retry <= 0) {
+      throw new Error('retryMs must be a positive finite number');
+    }
+
+    const path = this.refLockPath(branch);
+    await mkdir(dirname(path), { recursive: true });
+    const started = Date.now();
+
+    while (true) {
+      let handle = null;
+      try {
+        handle = await open(path, 'wx');
+        await handle.writeFile(
+          JSON.stringify({
+            schema: 'evercraft.lineage.ref-lock.v1',
+            branch,
+            pid: process.pid,
+            created_at: now(),
+          }) + '\n',
+          'utf8'
+        );
+        await handle.sync();
+        const acquired = handle;
+        return {
+          path,
+          async release() {
+            try { await acquired.close(); } catch {}
+            await rm(path, { force: true });
+          },
+        };
+      } catch (error) {
+        if (handle) {
+          try { await handle.close(); } catch {}
+          await rm(path, { force: true });
+        }
+        if (error?.code !== 'EEXIST') throw error;
+        if (Date.now() - started >= timeout) {
+          const wrapped = new Error(`Timed out waiting for Lineage ref lock: ${branch}`);
+          wrapped.code = 'LINEAGE_REF_LOCK_TIMEOUT';
+          wrapped.branch = branch;
+          throw wrapped;
+        }
+        await new Promise((resolve) => setTimeout(resolve, retry));
+      }
+    }
+  }
+
+  async _readRefValue(branch) {
+    try {
+      return (await readFile(this.refPath(branch), 'utf8')).trim() || null;
+    } catch (error) {
+      if (error?.code === 'ENOENT') return null;
+      throw error;
+    }
+  }
+
+  async _writeRefFile(branch, id) {
+    const path = this.refPath(branch);
+    await mkdir(dirname(path), { recursive: true });
+    const temp = `${path}.tmp-${process.pid}-${randomUUID()}`;
+    try {
+      await writeFile(temp, id ? `${id}\n` : '', 'utf8');
+      await rename(temp, path);
+    } finally {
+      await rm(temp, { force: true });
+    }
+  }
+
   async writeRef(branch, id) {
     await this.assertGcUnlocked();
     assertBranchName(branch);
@@ -174,9 +261,56 @@ export class LineageStore {
       const object = await this.readObject(id);
       if (object.type !== 'commit') throw new Error(`Ref target is not a commit: ${id}`);
     }
-    const path = join(this.dir, 'refs', 'heads', branch);
-    await mkdir(dirname(path), { recursive: true });
-    await writeFile(path, id ? `${id}\n` : '', 'utf8');
+
+    const lock = await this._acquireRefLock(branch);
+    try {
+      await this.assertGcUnlocked();
+      await this._writeRefFile(branch, id || null);
+    } finally {
+      await lock.release();
+    }
+  }
+
+  async compareAndSwapRef(branch, expected, next, options = {}) {
+    await this.assertGcUnlocked();
+    assertBranchName(branch);
+
+    if (next) {
+      const object = await this.readObject(next);
+      if (object.type !== 'commit') {
+        throw new Error(`Ref target is not a commit: ${next}`);
+      }
+    }
+
+    const expectedNormalized = expected || null;
+    const nextNormalized = next || null;
+    const lock = await this._acquireRefLock(branch, options);
+    try {
+      await this.assertGcUnlocked();
+      const current = await this._readRefValue(branch);
+      if (current !== expectedNormalized) {
+        const error = new Error(
+          `Stale Lineage ref update for ${branch}: expected ${expectedNormalized ?? '<empty>'}, current ${current ?? '<empty>'}`
+        );
+        error.code = 'LINEAGE_STALE_REF';
+        error.branch = branch;
+        error.expected = expectedNormalized;
+        error.current = current;
+        error.next = nextNormalized;
+        throw error;
+      }
+
+      await this._writeRefFile(branch, nextNormalized);
+      return {
+        schema: 'evercraft.lineage.local-ref-cas.v1',
+        branch,
+        previous: current,
+        current: nextNormalized,
+        compare_and_swap: true,
+      };
+    } finally {
+      await lock.release();
+    }
   }
 
   async listWorkspaceFiles(dir = this.root, excludes = DEFAULT_EXCLUDES) {
@@ -428,7 +562,9 @@ export class LineageStore {
 
   async _createCommitFromTree(treeId, parents, meta = {}) {
     const branch = await this.currentBranch();
-    const previousHead = await this.resolveRef(branch);
+    const previousHead = Object.prototype.hasOwnProperty.call(meta, 'expected_head')
+      ? (meta.expected_head || null)
+      : await this.resolveRef(branch);
     const payload = {
       tree_id: treeId,
       parents: parents.filter(Boolean),
@@ -442,7 +578,15 @@ export class LineageStore {
       metadata: meta.metadata ?? {},
     };
     const commitId = await this.putObject('commit', payload);
-    await this.writeRef(branch, commitId);
+    try {
+      await this.compareAndSwapRef(branch, previousHead, commitId);
+    } catch (error) {
+      if (error?.code === 'LINEAGE_STALE_REF') {
+        error.proposed_commit_id = commitId;
+        error.proposed_tree_id = treeId;
+      }
+      throw error;
+    }
     const receiptId = await this._recordOperation({
       operation: 'commit', branch, commit_id: commitId, tree_id: treeId,
       previous_head: previousHead, parents: payload.parents, actor: payload.actor,
@@ -455,13 +599,17 @@ export class LineageStore {
     const branch = await this.currentBranch();
     const parent = await this.resolveRef(branch);
     const snapshot = await this.snapshotWorkspace(meta.snapshot ?? {});
-    return this._createCommitFromTree(snapshot.tree_id, parent ? [parent] : [], meta);
+    return this._createCommitFromTree(
+      snapshot.tree_id,
+      parent ? [parent] : [],
+      { ...meta, expected_head: parent }
+    );
   }
 
   async createBranch(name, from = 'HEAD') {
     assertBranchName(name);
     const id = await this.resolveRef(from);
-    await this.writeRef(name, id);
+    await this.compareAndSwapRef(name, null, id);
     const receiptId = await this._recordOperation({ operation: 'create_branch', branch: name, from, commit_id: id, created_at: now() });
     return { branch: name, commit_id: id, receipt_id: receiptId };
   }
@@ -532,7 +680,7 @@ export class LineageStore {
     const branch = await this.currentBranch();
     const from = await this.resolveRef(branch);
     const to = await this.resolveRef(commitish);
-    await this.writeRef(branch, to);
+    await this.compareAndSwapRef(branch, from, to);
     const receiptId = await this._recordOperation({
       operation: 'rollback', branch, from, to, actor: meta.actor ?? { type: 'human', id: 'unknown' },
       rationale: meta.rationale ?? null, created_at: now(), reversible_by: from ? { operation: 'move_ref', branch, commit_id: from } : null,
@@ -609,6 +757,7 @@ export class LineageStore {
     const treeId = await this.putObject('tree', { entries: preview.entries });
     return this._createCommitFromTree(treeId, [preview.ours, preview.theirs], {
       ...meta,
+      expected_head: preview.ours,
       message: meta.message ?? `merge ${sourceRef}`,
       metadata: { ...(meta.metadata ?? {}), merge_base: preview.base, merged_ref: sourceRef },
     });
