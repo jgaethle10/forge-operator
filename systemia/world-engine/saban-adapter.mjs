@@ -15,6 +15,7 @@ const ROLES=new Set([
   'texture_residency_guard',
   'reference_frame_guard',
   'normal_map_guard',
+  'fallen_geometry_guard',
   'studio_edit_guard',
   'runtime_migration_guard',
   'fallen_bridge_guard',
@@ -262,6 +263,21 @@ function evaluate(role,world){
         'Normal texture IDs and digests participate in the same deterministic texture-residency and WebGPU-plan receipts as other material textures.',
         'Owned WGSL reconstructs a TBN basis from transformed normal/tangent plus handedness and applies the sampled tangent-space normal before lighting.',
         'Browser reference-frame conformance must bind a flat normal texture and the tangent vertex attribute so shader/layout drift fails visibly.'
+      ],
+      findings:[]
+    };
+  }
+
+  if(role==='fallen_geometry_guard'){
+    return {
+      category:'fallen_geometry',
+      directives:[
+        'Fallen mesh imports must declare right_handed_y_up coordinates and meter units explicitly; the bridge must not guess or hide coordinate conversion.',
+        'Geometry source provenance must preserve sourceRef, rights state and license, and import receipts must bind source, provenance and resulting geometry digests.',
+        'Generated tangents must use the named deterministic UV/Gram-Schmidt algorithm and fail closed on degenerate UV or position triangles.',
+        'Authored tangents may pass through only when normalized, orthogonal to the source normal and carrying explicit +1/-1 handedness.',
+        'Every import receipt must state whether tangents were authored or generated so renderer replay does not confuse derived geometry with authoring truth.',
+        'Imported geometry must pass the canonical World Engine geometry validator and feed the existing normal-map/WebGPU path without backend-private mesh mutation.'
       ],
       findings:[]
     };
