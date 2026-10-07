@@ -1995,6 +1995,7 @@ export async function startEvercraftComputeNode({
             authenticated_operator_api: true,
             public_person_token_flows: true,
             base44_runtime_dependency: false,
+            instance_id: runtime.instance_id,
           };
           const receipt = chain.issue('service.started', {
             lease_id: body.lease_id,
