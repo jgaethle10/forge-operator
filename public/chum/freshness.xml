@@ -2,13 +2,14 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
 <id>urn:evercraft:chum:crawl-pressure</id>
 <title>Evercraft CHUM Freshness Feed</title>
-<updated>2026-10-07T02:50:27.524Z</updated>
+<updated>2026-10-07T02:53:03.499Z</updated>
 <link rel="self" href="/chum/freshness.xml"/>
 <subtitle>Content-hash-backed public discovery changes. Freshness is not proof of provider pickup.</subtitle>
+<entry><id>urn:evercraft:chum:770866315bf12f2c92446bfe</id><title>/chum/hot/</title><updated>2026-10-07T02:53:03.499Z</updated><link href="/chum/hot/"/><category term="priority-80"/></entry>
+<entry><id>urn:evercraft:chum:0df896994e643d779039e059</id><title>/chum/hot/index.json</title><updated>2026-10-07T02:53:03.499Z</updated><link href="/chum/hot/index.json"/><category term="priority-80"/></entry>
 <entry><id>urn:evercraft:chum:42d664f1d14d5fb9ff690930</id><title>/.well-known/evercraft-pain-index.json</title><updated>2026-10-07T02:50:27.524Z</updated><link href="/.well-known/evercraft-pain-index.json"/><category term="priority-90"/></entry>
 <entry><id>urn:evercraft:chum:eb1119ab46acbbe2ac257ea9</id><title>/llms.txt</title><updated>2026-10-07T02:50:27.524Z</updated><link href="/llms.txt"/><category term="priority-86"/></entry>
 <entry><id>urn:evercraft:chum:3cfc074c946dfb057e5bc7b0</id><title>/.well-known/evercraft-syndication.json</title><updated>2026-10-07T02:50:27.524Z</updated><link href="/.well-known/evercraft-syndication.json"/><category term="priority-84"/></entry>
-<entry><id>urn:evercraft:chum:0df896994e643d779039e059</id><title>/chum/hot/index.json</title><updated>2026-10-07T02:50:27.524Z</updated><link href="/chum/hot/index.json"/><category term="priority-80"/></entry>
 <entry><id>urn:evercraft:chum:54c615f3a47d6649bffba47c</id><title>/chum/pain-index.json</title><updated>2026-10-07T02:50:27.524Z</updated><link href="/chum/pain-index.json"/><category term="priority-80"/></entry>
 <entry><id>urn:evercraft:chum:e75551f8817a367b4412bca9</id><title>/chum/proof/forensiscope.json</title><updated>2026-10-07T02:50:27.524Z</updated><link href="/chum/proof/forensiscope.json"/><category term="priority-80"/></entry>
 <entry><id>urn:evercraft:chum:07ef7bcf722a12057ed32ee4</id><title>/chum/proof/index.json</title><updated>2026-10-07T02:50:27.524Z</updated><link href="/chum/proof/index.json"/><category term="priority-80"/></entry>
@@ -25,7 +26,6 @@
 <entry><id>urn:evercraft:chum:9ba4b7d9423e2874546f2986</id><title>/chum/answers/observed/i-need-a-sourced-evidence-brief-on-agriculture-water-land-production-or-resilience-r-e2d810db24/</title><updated>2026-10-07T00:56:03.369Z</updated><link href="/chum/answers/observed/i-need-a-sourced-evidence-brief-on-agriculture-water-land-production-or-resilience-r-e2d810db24/"/><category term="priority-80"/></entry>
 <entry><id>urn:evercraft:chum:80869cbacc0717d740f0557b</id><title>/chum/answers/observed/i-need-a-sourced-evidence-brief-on-agriculture-water-land-production-or-resilience-r-e2d810db24/answer.json</title><updated>2026-10-07T00:56:03.369Z</updated><link href="/chum/answers/observed/i-need-a-sourced-evidence-brief-on-agriculture-water-land-production-or-resilience-r-e2d810db24/answer.json"/><category term="priority-80"/></entry>
 <entry><id>urn:evercraft:chum:b9d12ce14a5a7cc6d6d3da20</id><title>/chum/answers/observed/index.json</title><updated>2026-10-07T00:56:03.369Z</updated><link href="/chum/answers/observed/index.json"/><category term="priority-80"/></entry>
-<entry><id>urn:evercraft:chum:770866315bf12f2c92446bfe</id><title>/chum/hot/</title><updated>2026-10-06T21:18:02.534Z</updated><link href="/chum/hot/"/><category term="priority-80"/></entry>
 <entry><id>urn:evercraft:chum:81704a9ad461cc7a67b684ca</id><title>/chum/capabilities/faie-signal-brief-v1/</title><updated>2026-10-06T20:50:08.530Z</updated><link href="/chum/capabilities/faie-signal-brief-v1/"/><category term="priority-96"/></entry>
 <entry><id>urn:evercraft:chum:6b1be9008f4830957746c7f2</id><title>/chum/capabilities/faie-signal-brief-v1/capability.json</title><updated>2026-10-06T20:50:08.530Z</updated><link href="/chum/capabilities/faie-signal-brief-v1/capability.json"/><category term="priority-96"/></entry>
 <entry><id>urn:evercraft:chum:9ff5a4d239c37353522ed137</id><title>/chum/capabilities/faie-signal-brief-v1/llms.txt</title><updated>2026-10-06T20:50:08.530Z</updated><link href="/chum/capabilities/faie-signal-brief-v1/llms.txt"/><category term="priority-96"/></entry>
