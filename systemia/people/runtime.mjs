@@ -585,10 +585,12 @@ export function createPeopleRuntime({
     return { verified: true, brain: safeBrain(brain) };
   }
 
-  function exportBrain(brainKey) {
+  function exportBrain(brainKey, input = {}) {
     const state = load();
     const brain = findBrain(state, brainKey);
     if (!brain) throw new Error('brain_not_found');
+    const confirmationRef = clean(input.person_confirmation_ref);
+    if (!confirmationRef) throw new Error('person_confirmation_ref_required');
 
     const payload = {
       schema: 'evercraft-people-brain-export-v1',
@@ -610,6 +612,7 @@ export function createPeopleRuntime({
       request_type: 'export',
       status: 'completed',
       artifact_hash: artifactHash,
+      person_confirmation_ref: confirmationRef,
       requested_at: stamp,
       completed_at: stamp,
     };
@@ -622,26 +625,36 @@ export function createPeopleRuntime({
     };
   }
 
-  function requestDelete(brainKey) {
+  function requestDelete(brainKey, input = {}) {
     const state = load();
     const brain = findBrain(state, brainKey);
     if (!brain) throw new Error('brain_not_found');
+    const confirmationRef = clean(input.person_confirmation_ref);
+    const identityVerified = ['verified_email', 'verified_account'].includes(brain.identity_assurance);
+    const approved = identityVerified && Boolean(confirmationRef);
 
     const request = {
       request_key: key('delete'),
       brain_key: brain.brain_key,
       request_type: 'delete',
-      status: ['verified_email', 'verified_account'].includes(brain.identity_assurance)
-        ? 'approved'
-        : 'pending_person_confirmation',
+      status: approved ? 'approved' : 'pending_person_confirmation',
+      person_confirmation_ref: confirmationRef,
+      identity_assurance_at_request: brain.identity_assurance,
       requested_at: now(),
     };
     state.data_requests.push(request);
-    if (request.status === 'approved') {
+    if (approved) {
       brain.lifecycle_state = 'paused';
       brain.updated_at = now();
     }
-    save(state, { event: 'delete_requested', brain_key: brain.brain_key, request_key: request.request_key, status: request.status });
+    save(state, {
+      event: 'delete_requested',
+      brain_key: brain.brain_key,
+      request_key: request.request_key,
+      status: request.status,
+      identity_verified: identityVerified,
+      person_confirmation_present: Boolean(confirmationRef),
+    });
     return request;
   }
 
