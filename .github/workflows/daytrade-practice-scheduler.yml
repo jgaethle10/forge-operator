@@ -1,0 +1,62 @@
+name: DayTrade Practice Scheduler
+
+on:
+  schedule:
+    - cron: "45 13 * * 1-5"
+    - cron: "45 14 * * 1-5"
+    - cron: "30 16 * * 1-5"
+    - cron: "30 17 * * 1-5"
+    - cron: "30 19 * * 1-5"
+    - cron: "30 20 * * 1-5"
+  workflow_dispatch:
+    inputs:
+      phase:
+        description: "Practice phase"
+        required: true
+        type: choice
+        options:
+          - OPENING
+          - MIDDAY
+          - CLOSING
+
+permissions:
+  contents: read
+
+jobs:
+  practice:
+    runs-on: ubuntu-latest
+    timeout-minutes: 6
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Resolve requested phase
+        id: phase
+        shell: bash
+        run: |
+          if [ "${{ github.event_name }}" = "workflow_dispatch" ]; then
+            PHASE="${{ inputs.phase }}"
+          else
+            case "${{ github.event.schedule }}" in
+              "45 13 * * 1-5"|"45 14 * * 1-5") PHASE="OPENING" ;;
+              "30 16 * * 1-5"|"30 17 * * 1-5") PHASE="MIDDAY" ;;
+              "30 19 * * 1-5"|"30 20 * * 1-5") PHASE="CLOSING" ;;
+              *) echo "Unknown schedule"; exit 1 ;;
+            esac
+          fi
+          echo "phase=$PHASE" >> "$GITHUB_OUTPUT"
+      - name: Run admitted zero-capital practice
+        env:
+          ALPACA_TRADING: ${{ secrets.ALPACA_TRADING }}
+          ALPACA_TRADING_SECRET: ${{ secrets.ALPACA_TRADING_SECRET }}
+          DAYTRADE_REQUIRED_PHASE: ${{ steps.phase.outputs.phase }}
+        run: node systemia/daytrade-lens/edge-scheduled-practice-runner.mjs
+      - name: Upload scheduled practice receipt
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: daytrade-scheduled-practice-${{ github.run_id }}
+          path: artifacts/daytrade-edge/scheduled-*.json
+          if-no-files-found: ignore
+          retention-days: 30
