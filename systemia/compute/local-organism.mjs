@@ -8,6 +8,7 @@ import { fileURLToPath } from 'node:url';
 import { startNodeSeed } from './node-seed.mjs';
 import { YardOperator } from '../yard/operator.mjs';
 import { RemoteAdmissionKeeper } from './remote-admission-keeper.mjs';
+import { prepareNativeBrowserRuntime } from '../evercraft-web/browser-worker/native-runtime.mjs';
 
 const MODULE_FILE = fileURLToPath(import.meta.url);
 const CODE_ROOT = path.resolve(path.dirname(MODULE_FILE), '../..');
@@ -85,6 +86,8 @@ export async function startLocalOrganism({
   ravenProviderCredentialStateDir = '',
   ravenOllamaOrigin = '',
   zeroSpendCapacity = true,
+  nativeBrowserBootstrap = true,
+  nativeBrowserPreparer = prepareNativeBrowserRuntime,
   placementLabels = ['opportunistic', 'private', 'outbound-only', 'personal-compute', 'persistent-storage'],
 } = {}) {
   if (!root) throw new Error('root is required');
@@ -103,6 +106,40 @@ export async function startLocalOrganism({
   const remoteOperatorState = path.join(controlRoot, 'remote-operator');
 
   fs.mkdirSync(organismRoot, { recursive: true, mode: 0o700 });
+
+  let nativeBrowser = {
+    schema: 'evercraft.browser.native-runtime-preflight.v1',
+    ready: false,
+    mode: 'native_user_playwright',
+    install_attempted: false,
+    install_state: 'disabled',
+    reason: 'native_browser_bootstrap_disabled',
+    browserRuntimeFactory: null,
+  };
+  if (nativeBrowserBootstrap === true && typeof nativeBrowserPreparer === 'function') {
+    try {
+      nativeBrowser = await nativeBrowserPreparer({
+        sourceDir: path.join(
+          CODE_ROOT,
+          'systemia',
+          'evercraft-web',
+          'browser-worker'
+        ),
+        stateDir: path.join(organismRoot, 'browser-runtime'),
+        allowInstall: true,
+      });
+    } catch (error) {
+      nativeBrowser = {
+        schema: 'evercraft.browser.native-runtime-preflight.v1',
+        ready: false,
+        mode: 'native_user_playwright',
+        install_attempted: false,
+        install_state: 'failed',
+        reason: String(error?.message || error).slice(0, 800),
+        browserRuntimeFactory: null,
+      };
+    }
+  }
 
   let admittedClipSecretFile = '';
   const sourceClipSecretFile = String(clipSharedSecretFile || '').trim();
@@ -125,6 +162,11 @@ export async function startLocalOrganism({
     allocatorToken,
     placementLabels,
     zeroCost: zeroSpendCapacity === true,
+    browserRuntimeFactory:
+      nativeBrowser.ready === true &&
+      typeof nativeBrowser.browserRuntimeFactory === 'function'
+        ? nativeBrowser.browserRuntimeFactory
+        : null,
     remoteOperatorRoots: remoteOperatorEnabled ? {
       home: os.homedir(),
       evercraft: CODE_ROOT,
@@ -238,6 +280,9 @@ export async function startLocalOrganism({
       field_certification_claimed: false,
       release_ref: releaseRef,
       zero_cost: seed.zero_cost === true,
+      native_browser_runtime_ready: nativeBrowser.ready === true,
+      native_browser_runtime_receipt:
+        nativeBrowser.receipt_hash || null,
       requested_at: new Date().toISOString(),
     };
     enrollmentRequest.receipt_hash = `sha256:${sha(enrollmentRequest)}`;
@@ -264,6 +309,17 @@ export async function startLocalOrganism({
       deployment_surface: 'Yard Operator',
       release_ref: releaseRef,
       zero_spend_capacity: seed.zero_cost === true,
+      native_browser_runtime: {
+        ready: nativeBrowser.ready === true,
+        mode: nativeBrowser.mode || 'native_user_playwright',
+        install_attempted: nativeBrowser.install_attempted === true,
+        install_state: nativeBrowser.install_state || null,
+        chromium_version: nativeBrowser.chromium_version || null,
+        receipt_hash: nativeBrowser.receipt_hash || null,
+        reason: nativeBrowser.ready === true ? null : nativeBrowser.reason || null,
+        sudo_used: false,
+        system_package_manager_used: false,
+      },
       public_ingress: false,
       node_endpoint_scope: 'loopback_only',
       kaidance: {
@@ -461,6 +517,9 @@ if (isCli) {
     zeroSpendCapacity: String(
       process.env.EVERCRAFT_LOCAL_ZERO_SPEND ?? 'true'
     ).toLowerCase() !== 'false',
+    nativeBrowserBootstrap: String(
+      process.env.EVERCRAFT_NATIVE_BROWSER_BOOTSTRAP ?? 'true'
+    ).toLowerCase() !== 'false',
     placementLabels: String(
       process.env.EVERCRAFT_LOCAL_NODE_LABELS ||
       'opportunistic,private,outbound-only,personal-compute,persistent-storage'
@@ -486,6 +545,7 @@ if (isCli) {
       organism.enrollment_request.receipt_hash,
     remote_operator: organism.receipt.remote_operator,
     zero_spend_capacity: organism.receipt.zero_spend_capacity === true,
+    native_browser_runtime: organism.receipt.native_browser_runtime || null,
     public_ingress: false,
     named_cloud_required: false,
     receipt_hash: organism.receipt.receipt_hash,
