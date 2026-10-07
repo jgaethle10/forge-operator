@@ -105,6 +105,10 @@ export class ReleaseRegistry {
     };
     const releaseId = await this.store.putObject('release', payload);
 
+    if (typeof this.store.assertGcUnlocked === 'function') {
+      await this.store.assertGcUnlocked();
+    }
+
     const path = this.pointerPath(channel, name);
     await mkdir(dirname(path), { recursive: true });
     await writeFile(path, `${releaseId}\n`, 'utf8');
