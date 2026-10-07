@@ -8,15 +8,11 @@
 <style>
 :root{color-scheme:dark;--bg:#07100d;--panel:#0d1715;--panel2:#101d19;--line:#263a34;--text:#f4f7f5;--muted:#91a59e;--amber:#f3a93b;--green:#59dd95;--blue:#55b8ff;--red:#ff626d;--purple:#b892ff}
 *{box-sizing:border-box}
-html{-webkit-text-size-adjust:100%;overflow-x:hidden}
-html,body{margin:0;min-height:100%;max-width:100%;background:#07100d;color:var(--text);font-family:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}
-img,svg,video,canvas,.shell,.layout,.side,.card,section,aside{max-width:100%;min-width:0}
-button,input,select,textarea{font-size:16px;max-width:100%}
-button,.btn,.mode,input[type="range"]{min-height:44px}
+html,body{margin:0;min-height:100%;max-width:100%;background:#07100d;color:var(--text);font-family:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;-webkit-text-size-adjust:100%}
 body{overflow-x:hidden;background:
 radial-gradient(circle at 75% -10%,rgba(243,169,59,.13),transparent 33rem),
 radial-gradient(circle at 0 90%,rgba(85,184,255,.08),transparent 30rem),var(--bg)}
-button{font:inherit}.shell{width:min(1480px,calc(100% - 24px));margin:auto;padding:18px 0 44px}
+button{font:inherit}.shell{width:min(1480px,calc(100% - 24px));max-width:100%;margin:auto;padding:18px 0 44px}main,section,aside,.card,canvas{max-width:100%;min-width:0}
 .top{display:flex;justify-content:space-between;align-items:flex-start;gap:18px;margin-bottom:14px}.brand{display:flex;gap:12px;align-items:center}.mark{width:42px;height:42px;border:1px solid #685129;border-radius:12px;display:grid;place-items:center;background:#171208;color:var(--amber);font-weight:950}.eyebrow{font-size:10px;letter-spacing:.18em;text-transform:uppercase;color:var(--amber);font-weight:900}.top h1{font-size:clamp(24px,4vw,44px);margin:3px 0 0;letter-spacing:-.045em;line-height:1}.truth{text-align:right;color:var(--muted);font-size:12px;max-width:440px}.truth b{color:#d9e4df}
 .layout{display:grid;grid-template-columns:minmax(0,1fr) 360px;gap:12px}.card{border:1px solid var(--line);border-radius:15px;background:linear-gradient(180deg,rgba(16,29,25,.96),rgba(9,17,15,.96));box-shadow:0 24px 70px rgba(0,0,0,.28)}
 .stage{overflow:hidden;position:relative}.stageHead{display:flex;justify-content:space-between;align-items:center;padding:12px 14px;border-bottom:1px solid var(--line);gap:10px}.stageHead strong{font-size:11px;letter-spacing:.13em;text-transform:uppercase}.statusline{display:flex;gap:10px;align-items:center;color:var(--muted);font-size:11px}.pulse{width:7px;height:7px;border-radius:50%;background:var(--green);box-shadow:0 0 12px rgba(89,221,149,.7)}
@@ -30,7 +26,7 @@ canvas{display:block;width:100%;height:auto;min-height:610px;background:linear-g
 .log{height:170px;overflow:auto;border:1px solid #23372f;border-radius:10px;background:#07100d;padding:8px;font:10px/1.45 ui-monospace,SFMono-Regular,Menlo,monospace;color:#9eb3aa}.log div{padding:2px 0;border-bottom:1px solid rgba(43,67,58,.35)}.log .event{color:#dfecE6}.log .safety{color:#ff9aa2}.log .ai{color:#74c7ff}
 .legend{display:flex;gap:12px;flex-wrap:wrap;padding:0 14px 12px;color:var(--muted);font-size:10px}.legend i{display:inline-block;width:8px;height:8px;border-radius:50%;margin-right:5px}.fineprint{margin-top:12px;color:#71877e;font-size:11px;line-height:1.5}
 @media(max-width:1000px){.layout{grid-template-columns:1fr}.side{grid-template-columns:repeat(2,1fr)}.hud{grid-template-columns:repeat(3,1fr)}}
-@media(max-width:680px){.shell{width:min(100% - 12px,1480px)}.top{display:block}.truth{text-align:left;margin-top:8px}.side{grid-template-columns:1fr}.hud{position:static;background:#07100d;padding:8px;grid-template-columns:repeat(2,1fr)}canvas{min-height:470px}.flow{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:680px){button,input,select,textarea{font-size:16px;min-height:44px}.shell{width:min(100% - 12px,1480px)}.top{display:block}.truth{text-align:left;margin-top:8px}.side{grid-template-columns:1fr}.hud{position:static;background:#07100d;padding:8px;grid-template-columns:repeat(2,1fr)}canvas{min-height:470px}.flow{grid-template-columns:repeat(2,1fr)}}
 </style>
 </head>
 <body>
