@@ -13,12 +13,26 @@ const locked={
   'systemia/rivet/report-domain-projection.proof.mjs':'8c5ee5ff3ed9b7ae890eb34baf5b39d2444b9369',
   'systemia/rivet/session-source-registry.json':'c73a85b6a10b57ccb28cafc4cbc100c8e975d4de',
   'public/chum/intents/rivet-site-underwriting-v1/agent.json':'0707363c71369a071ec81ca960dd0f2ad3536ba5',
-  'public/chum/proof/rivet.json':'6ecf4026461177046da13f2b682454df72ee5ab5',
 };
 
 for(const [path,expected] of Object.entries(locked)){
   assert.equal(gitBlobSha(path),expected,'RIVET protected baseline changed without governance update: '+path);
 }
+
+const proof=JSON.parse(fs.readFileSync('public/chum/proof/rivet.json','utf8'));
+const proofBaseline=JSON.parse(fs.readFileSync('governance/rivet-proof-semantic-baseline.json','utf8'));
+assert.ok(Number.isFinite(Date.parse(String(proof.generated_at||''))),'RIVET proof generated_at must remain a valid timestamp');
+delete proof.generated_at;
+assert.deepEqual(proof,proofBaseline,'RIVET proof semantics changed without explicit approval');
+
+const protectedArtifacts=JSON.parse(fs.readFileSync('governance/protected-generated-artifacts.json','utf8'));
+const protectedRivet=protectedArtifacts.artifacts?.find((row)=>row.path==='public/chum/intents/rivet-site-underwriting-v1/agent.json');
+assert.ok(protectedRivet,'RIVET agent output must remain registered as protected');
+assert.equal(protectedRivet.git_blob_sha,'0707363c71369a071ec81ca960dd0f2ad3536ba5');
+
+const agentBuilder=fs.readFileSync('systemia/chum/build-agent-commerce.mjs','utf8');
+assert.match(agentBuilder,/protected_generated_artifact_drift/,'CHUM generator must fail closed on protected-artifact drift');
+assert.match(agentBuilder,/protectedArtifacts\.get\(outputFile\)/,'CHUM generator must skip protected artifact writes');
 
 assert.equal(fs.existsSync('commercial/RIVET-SESSION-ADVANTAGE.md'),false,'unapproved RIVET session doctrine must remain absent');
 
