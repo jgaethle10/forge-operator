@@ -78,7 +78,41 @@ try{
   });
   assert.deepEqual(none.markets,[]);
 
-  console.log(JSON.stringify({
+  
+const declarative=await buildComputeMarketAdapters({
+  acquisition:{
+    auto_discover_markets:true,
+    zero_spend_only:true,
+    markets:{
+      evercraft_broker:{
+        enabled_if_configured:true,
+        state_dir_env:'PROOF_YARD_STATE',
+        broker_deployment_id_env:'PROOF_BROKER_ID',
+      },
+      evercraft_voluntary:{
+        enabled_if_configured:true,
+        endpoint:'http://127.0.0.1:9999',
+        control_token_env:'PROOF_VOLUNTARY_TOKEN',
+      },
+      golem:{enabled:false},
+      akash:{enabled:false},
+    },
+  },
+  env:{
+    PROOF_YARD_STATE:root,
+    PROOF_BROKER_ID:'remote-capacity-broker-proof',
+    PROOF_VOLUNTARY_TOKEN:'declarative-market-proof',
+  },
+  cwd:root,
+});
+assert.equal(declarative.declarative_market_policy,true);
+assert.ok(declarative.markets.includes('evercraft-broker'));
+assert.ok(declarative.markets.includes('evercraft-voluntary'));
+assert.equal(declarative.markets.includes('golem'),false);
+assert.equal(declarative.markets.includes('akash'),false);
+assert.equal(declarative.paid_capacity_auto_authorized,false);
+
+console.log(JSON.stringify({
     ok:true,
     schema:'evercraft.saban.compute-market-factory-proof.v1',
     yard_broker_auto_discovered:true,
@@ -87,6 +121,7 @@ try{
     public_market_discovery_supported:true,
     configured_market_credentials_detected:true,
     no_paid_capacity_auto_authority:true,
+    declarative_formation_market_policy_supported:true,
   },null,2));
 }finally{
   fs.rmSync(root,{recursive:true,force:true});

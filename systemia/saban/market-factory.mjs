@@ -65,64 +65,111 @@ export async function buildComputeMarketAdapters({
 }={}){
   const explicit=explicitAdapters(acquisition);
   const diagnostics=[];
+  const marketPolicy=
+    acquisition.markets &&
+    !Array.isArray(acquisition.markets) &&
+    typeof acquisition.markets==='object'
+      ? acquisition.markets
+      : {};
+  const requestedList=Array.isArray(acquisition.markets)
+    ? acquisition.markets
+    : Object.entries(marketPolicy)
+        .filter(([,policy])=>policy?.enabled===true)
+        .map(([market])=>market);
   const requested=new Set(uniq([
-    ...(acquisition.markets||[]),
+    ...requestedList,
     ...(acquisition.adapter_specs||[]),
   ]).map((value)=>value.toLowerCase()));
   const automatic=acquisition.auto_discover_markets!==false;
 
-  const yardStateDir=existingDir([
-    acquisition.yard_state_dir,
-    env.EVERCRAFT_YARD_STATE_DIR,
-    env.SYSTEMIA_YARD_STATE_DIR,
-    path.join(cwd,'artifacts','yard'),
-    path.join(cwd,'artifacts','systemia-yard'),
-  ]);
-  const brokerDeploymentId=String(
-    acquisition.broker_deployment_id||
-    env.EVERCRAFT_REMOTE_CAPACITY_BROKER_DEPLOYMENT_ID||
-    (yardStateDir?discoverRemoteBrokerDeployment(yardStateDir):'')||
-    ''
-  ).trim();
+  const brokerPolicy=marketPolicy.evercraft_broker||{};
+  const voluntaryPolicy=marketPolicy.evercraft_voluntary||{};
+  const golemPolicy=marketPolicy.golem;
+  const akashPolicy=marketPolicy.akash;
+
+  const envValue=(name)=>{
+    const key=String(name||'').trim();
+    return key?String(env?.[key]||'').trim():'';
+  };
+
+  const brokerAllowed=brokerPolicy.enabled!==false;
+  const voluntaryAllowed=voluntaryPolicy.enabled!==false;
+
+  const yardStateDir=brokerAllowed
+    ? existingDir([
+        acquisition.yard_state_dir,
+        envValue(brokerPolicy.state_dir_env),
+        env.EVERCRAFT_YARD_STATE_DIR,
+        env.SYSTEMIA_YARD_STATE_DIR,
+        path.join(cwd,'artifacts','yard'),
+        path.join(cwd,'artifacts','systemia-yard'),
+      ])
+    : null;
+  const brokerDeploymentId=brokerAllowed
+    ? String(
+        acquisition.broker_deployment_id||
+        brokerPolicy.broker_deployment_id||
+        envValue(brokerPolicy.broker_deployment_id_env)||
+        env.EVERCRAFT_REMOTE_CAPACITY_BROKER_DEPLOYMENT_ID||
+        (yardStateDir?discoverRemoteBrokerDeployment(yardStateDir):'')||
+        ''
+      ).trim()
+    : '';
   const yard=yardStateDir&&brokerDeploymentId
     ? new YardOperator({stateDir:yardStateDir})
     : null;
 
-  const voluntaryEndpoint=String(
-    acquisition.voluntary_endpoint||
-    env.EVERCRAFT_VOLUNTARY_COMPUTE_ENDPOINT||
-    ''
-  ).trim();
+  const voluntaryEndpoint=voluntaryAllowed
+    ? String(
+        acquisition.voluntary_endpoint||
+        voluntaryPolicy.endpoint||
+        envValue(voluntaryPolicy.endpoint_env)||
+        env.EVERCRAFT_VOLUNTARY_COMPUTE_ENDPOINT||
+        ''
+      ).trim()
+    : '';
+  const voluntaryToken=voluntaryAllowed
+    ? String(
+        acquisition.voluntary_control_token||
+        voluntaryPolicy.control_token||
+        envValue(voluntaryPolicy.control_token_env)||
+        env.EVERCRAFT_VOLUNTARY_COMPUTE_CONTROL_TOKEN||
+        ''
+      ).trim()
+    : '';
   const voluntaryControlHeaders=
     acquisition.voluntary_control_headers||
-    bearerHeaders(
-      acquisition.voluntary_control_token||
-      env.EVERCRAFT_VOLUNTARY_COMPUTE_CONTROL_TOKEN||
-      ''
-    );
+    voluntaryPolicy.control_headers||
+    bearerHeaders(voluntaryToken);
 
   const publicMarketDiscovery =
     acquisition.public_market_discovery===true ||
     truthy(env.SABAN_PUBLIC_MARKET_DISCOVERY);
 
-  const includeAkash=
-    requested.has('akash') ||
-    (
-      automatic &&
-      (
-        Boolean(String(env.AKASH_API_KEY||'').trim()) ||
-        publicMarketDiscovery
-      )
-    );
-  const includeGolem=
-    requested.has('golem') ||
-    (
-      automatic &&
-      (
-        acquisition.include_golem===true ||
-        truthy(env.SABAN_GOLEM_DISCOVERY)
-      )
-    );
+  const includeAkash=akashPolicy
+    ? akashPolicy.enabled===true
+    : (
+        requested.has('akash') ||
+        (
+          automatic &&
+          (
+            Boolean(String(env.AKASH_API_KEY||'').trim()) ||
+            publicMarketDiscovery
+          )
+        )
+      );
+  const includeGolem=golemPolicy
+    ? golemPolicy.enabled===true
+    : (
+        requested.has('golem') ||
+        (
+          automatic &&
+          (
+            acquisition.include_golem===true ||
+            truthy(env.SABAN_GOLEM_DISCOVERY)
+          )
+        )
+      );
 
   const stack=await buildSabanComputeMarketStack({
     yard,
@@ -132,11 +179,22 @@ export async function buildComputeMarketAdapters({
     includeAkash,
     akash:{
       apiKey:String(env.AKASH_API_KEY||''),
-      baseUrl:acquisition.akash_base_url||env.AKASH_BASE_URL||'https://console-api.akash.network',
-      quoteTimeoutMs:Number(acquisition.akash_quote_timeout_ms||45000),
+      baseUrl:
+        acquisition.akash_base_url||
+        akashPolicy?.base_url||
+        env.AKASH_BASE_URL||
+        'https://console-api.akash.network',
+      quoteTimeoutMs:Number(
+        acquisition.akash_quote_timeout_ms||
+        akashPolicy?.quote_timeout_ms||
+        45000
+      ),
     },
     includeGolem,
-    golem:acquisition.golem||{},
+    golem:{
+      ...(golemPolicy&&typeof golemPolicy==='object'?golemPolicy:{}),
+      ...(acquisition.golem||{}),
+    },
   });
 
   for(const row of stack.inventory){
@@ -160,11 +218,22 @@ export async function buildComputeMarketAdapters({
     });
   }
 
-  if(automatic&&!yard){
+  if(automatic&&brokerAllowed&&!yard){
     diagnostics.push({
       market:'evercraft-broker',
       state:'unavailable',
       reason:'yard_or_broker_deployment_not_found',
+    });
+  }
+  if(
+    voluntaryAllowed &&
+    voluntaryPolicy.enabled_if_configured===true &&
+    !voluntaryEndpoint
+  ){
+    diagnostics.push({
+      market:'evercraft-voluntary',
+      state:'unavailable',
+      reason:'voluntary_endpoint_not_configured',
     });
   }
 
@@ -179,13 +248,14 @@ export async function buildComputeMarketAdapters({
   }
 
   return {
-    schema:'evercraft.saban.compute-market-factory.v2',
+    schema:'evercraft.saban.compute-market-factory.v3',
     adapters:deduped,
     markets:deduped.map((adapter)=>String(adapter.market||'unknown')),
     inventory:stack.inventory,
     doctrine:stack.doctrine,
     diagnostics,
     automatic,
+    declarative_market_policy:Boolean(Object.keys(marketPolicy).length),
     yard_state_dir:yardStateDir,
     broker_deployment_id:brokerDeploymentId||null,
     voluntary_endpoint_configured:Boolean(voluntaryEndpoint),

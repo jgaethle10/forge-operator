@@ -42,11 +42,30 @@ export function computeDemandFromDistributedPlan({
   acquisition={},
 }={}){
   const resources=contract?.resources||{};
+  const portable=contract?.portable_execution?.golem?.enabled===true
+    ? contract.portable_execution.golem
+    : null;
+  const zeroSpendOnly=acquisition.zero_spend_only===true;
+
   return normalizeComputeDemand({
     demand_id:acquisition.demand_id||
       `distributed:${contract?.software_id||'unknown'}:${plan?.generated_at||Date.now()}`,
     workload_class:'saban.multiplier-assignment.v1',
-    container_image:acquisition.container_image||null,
+    container_image:
+      acquisition.container_image||
+      portable?.image_tag||
+      null,
+    portable_software_id:
+      acquisition.portable_software_id||
+      (portable?contract?.software_id:null),
+    portable_worker_id:
+      acquisition.portable_worker_id||
+      portable?.worker_id||
+      null,
+    portable_worker_version:
+      acquisition.portable_worker_version||
+      portable?.worker_version||
+      null,
     cpu_units:acquisition.cpu_units||
       resources.minimum_node_cpu_units||
       resources.cpu_units_per_worker||
@@ -56,7 +75,10 @@ export function computeDemandFromDistributedPlan({
       resources.memory_mb_per_worker||
       512,
     storage_gb:acquisition.storage_gb||resources.minimum_node_storage_gb||0,
-    gpu_count:acquisition.gpu_count||resources.minimum_node_gpu_units||resources.minimum_node_gpu_count||0,
+    gpu_count:acquisition.gpu_count||
+      resources.minimum_node_gpu_units||
+      resources.minimum_node_gpu_count||
+      0,
     gpu_models:acquisition.gpu_models||resources.required_gpu_models||[],
     regions:acquisition.regions||[],
     countries:acquisition.countries||[],
@@ -65,9 +87,9 @@ export function computeDemandFromDistributedPlan({
     minimum_uptime_7d:acquisition.minimum_uptime_7d||0,
     audited_only:acquisition.audited_only===true,
     valid_version_only:acquisition.valid_version_only!==false,
-    prefer_zero_cost:acquisition.prefer_zero_cost!==false,
-    max_total_usd:acquisition.max_total_usd??null,
-    max_hourly_usd:acquisition.max_hourly_usd??null,
+    prefer_zero_cost:zeroSpendOnly||acquisition.prefer_zero_cost!==false,
+    max_total_usd:zeroSpendOnly?0:(acquisition.max_total_usd??null),
+    max_hourly_usd:zeroSpendOnly?0:(acquisition.max_hourly_usd??null),
     market_price_ceiling:acquisition.market_price_ceiling||{},
     duration_seconds:acquisition.duration_seconds||
       Math.max(300,Number(plan?.lease_seconds||300)),
@@ -320,14 +342,36 @@ export async function runPoolWithAcquisition({
       }:{}),
     };
 
+    const zeroSpendMarkets=(marketFactory.markets||[]).filter((market)=>
+      ['evercraft-broker','evercraft-voluntary'].includes(String(market))
+    );
+    const zeroSpendAuthority=
+      acquisition.zero_spend_only===true && zeroSpendMarkets.length
+        ? {
+            schema:'evercraft.saban.compute-authority.v1',
+            approved:true,
+            demand_id:demand.demand_id,
+            allowed_markets:zeroSpendMarkets,
+            allow_spend:false,
+            allow_market_orders:false,
+            max_total_usd:0,
+            authority_basis:'declared_zero_spend_policy',
+          }
+        : null;
     const resourceAcquisition=await acquireResourceCapacity({
       need,
       candidates,
       runtimeAuthorities,
       spawnAdapters,
       marketAdapters:marketFactory.adapters,
-      quoteAuthority:acquisition.quoteAuthority||acquisition.quote_authority||null,
-      leaseAuthority:acquisition.leaseAuthority||acquisition.lease_authority||null,
+      quoteAuthority:
+        acquisition.quoteAuthority||
+        acquisition.quote_authority||
+        zeroSpendAuthority,
+      leaseAuthority:
+        acquisition.leaseAuthority||
+        acquisition.lease_authority||
+        zeroSpendAuthority,
       computeDemand:demand,
     });
 
@@ -380,6 +424,8 @@ export async function runPoolWithAcquisition({
             markets:marketFactory.markets,
             diagnostics:marketFactory.diagnostics,
           },
+          zero_spend_authority_generated:Boolean(zeroSpendAuthority),
+          zero_spend_authority_generated:Boolean(zeroSpendAuthority),
           market:resourceAcquisition.exchange?.selected_offer?.market||
             resourceAcquisition.exchange?.selected_market||null,
           provider_id:resourceAcquisition.exchange?.selected_offer?.provider_id||
