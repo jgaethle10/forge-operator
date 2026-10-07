@@ -68,23 +68,40 @@ export function buildCfbPowerStoryDraft({
         evidence_state:'verified',
       },
       {
-        source_id:'ncaa-fbs-scoreboard-data',
-        label:'NCAA FBS 2026 scoreboard data query',
-        publisher:'NCAA',
-        url:dataUrl,
-        evidence_state:'public_source',
+        source_id:'evercraft-cfb-edition-evidence',
+        label:'Frozen Evercraft CFBPI edition evidence',
+        publisher:'Evercraft Journal',
+        url:'https://fabric.systemiacommandcenters.com/journal/data/' + slug + '.json',
+        evidence_state:'verified',
       },
     ],
+    machine_evidence:{
+      schema:'evercraft.journal.machine-evidence.v1',
+      relative_path:'data/' + slug + '.json',
+      payload:{
+        schema:'evercraft.cfb.edition-evidence.v1',
+        ranking,
+        ledger:{
+          schema:ledger.schema,
+          source:ledger.source,
+          start_date:ledger.start_date,
+          end_date:ledger.end_date,
+          source_urls:ledger.source_urls,
+          completed_game_count:ledger.games.length,
+          games:ledger.games,
+        },
+      },
+    },
     claims:[
       {
         claim:'The ranking evidence ledger contains ' + ledger.games.length + ' completed games through ' + throughDay + '.',
         evidence_state:'verified',
-        source_refs:['ncaa-fbs-scoreboard','ncaa-fbs-scoreboard-data'],
+        source_refs:['ncaa-fbs-scoreboard','evercraft-cfb-edition-evidence'],
       },
       {
         claim:leader.team_name + ' ranks No. 1 in Evercraft CFBPI run ' + ranking.run_id + ', ahead of ' + runnerUp.team_name + '.',
         evidence_state:'verified',
-        source_refs:['ncaa-fbs-scoreboard-data'],
+        source_refs:['evercraft-cfb-edition-evidence'],
       },
     ],
     ranking_table:{
@@ -156,7 +173,7 @@ export function buildCfbPowerStoryDraft({
         desk:'sports',
       },
       evidence:{
-        source_refs:['ncaa-fbs-scoreboard','ncaa-fbs-scoreboard-data'],
+        source_refs:['ncaa-fbs-scoreboard','evercraft-cfb-edition-evidence'],
         evidence_refs:[ranking.evidence_snapshot_id,ranking.run_id],
         evidence_state:'model_derived_from_verified_public_results',
         confidence:'bounded_by_team_level_confidence',
