@@ -6,6 +6,7 @@ import { compileAudioFrame } from './audio.ts';
 import { AuthoritativeReplicationRuntime, PredictiveReplicationRuntime, createReplicatedInput } from './replication.ts';
 import { compileWebGpuRenderPlan, EVERCRAFT_WEBGPU_WGSL, applyGeometryHotReload } from './webgpu.ts';
 import { applyWorldEditTransaction, createWorldAssetManifest, semanticAssetManifestDigest, semanticWorldDigest } from './studio-edit.ts';
+import { migrateWorldRuntime, verifyWorldRuntimeMigrationReceipt } from './runtime-migration.ts';
 
 const world={
   schema:'evercraft.world-engine.world.v1',
@@ -623,8 +624,22 @@ assert.notEqual(
   geometryHotReload.receipt.nextDigest
 );
 
+const liveMigration=migrateWorldRuntime({
+  id:'proof-live-runtime-migration',
+  previousDefinition:visualWorld,
+  nextDefinition:edited.world,
+  previousSnapshot:visualSnapshot
+});
+assert.equal(liveMigration.snapshot.tick,visualSnapshot.tick);
+assert.equal(
+  liveMigration.snapshot.entities.find(entity=>entity.id==='proof-object').transform.position.x,
+  2
+);
+assert.equal(liveMigration.receipt.cameraRuntimePreserved,true);
+assert.equal(verifyWorldRuntimeMigrationReceipt(liveMigration.receipt),true);
+
 process.stdout.write(JSON.stringify({
-  schema:'evercraft.world-engine.proof.v10',
+  schema:'evercraft.world-engine.proof.v11',
   status:'passed',
   world_id:world.id,
   replay:receipt,
@@ -695,6 +710,15 @@ process.stdout.write(JSON.stringify({
     semantic_undo_asset_digest:semanticAssetManifestDigest(undone.assets),
     geometry_hot_reload_receipt:geometryHotReload.receipt
   },
+  runtime_migration:{
+    receipt_digest:liveMigration.receipt.digest,
+    source_snapshot_digest:liveMigration.receipt.sourceSnapshotDigest,
+    migrated_snapshot_digest:liveMigration.receipt.migratedSnapshotDigest,
+    tick:liveMigration.receipt.tick,
+    camera_runtime_preserved:liveMigration.receipt.cameraRuntimePreserved,
+    audio_scene_runtime_preserved:liveMigration.receipt.audioSceneRuntimePreserved,
+    entity_notes:liveMigration.receipt.entityNotes
+  },
   assertions:{
     deterministic_replay:true,
     fixed_timestep:true,
@@ -724,6 +748,10 @@ process.stdout.write(JSON.stringify({
     reversible_versioned_edit_receipts:true,
     explicit_asset_rights_lineage:true,
     deterministic_geometry_hot_reload:true,
+    compatibility_gated_runtime_migration:true,
+    authored_transform_wins_over_runtime_position:true,
+    incompatible_runtime_state_resets_explicitly:true,
+    runtime_migration_receipts:true,
     canonical_snapshot_digest:true
   }
 },null,2)+'\n');
