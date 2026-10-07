@@ -2,7 +2,7 @@
   "schema": "evercraft.chum.hot-discovery.v1",
   "provider": "Evercraft LLC",
   "coordinator": "CHUM",
-  "updated_at": "2026-10-07T19:46:49.701Z",
+  "updated_at": "2026-10-07T20:12:10.944Z",
   "purpose": "High-priority public discovery surfaces for crawler fan-out. The queue reserves limited cold-start frontage for current commercial and sitemap surfaces, then fills remaining slots by observed priority. This is a crawl-order hint, not a ranking or recommendation claim.",
   "surfaces": [
     {
@@ -375,7 +375,7 @@
       "path": "/chum/sell-now.json",
       "url": "/chum/sell-now.json",
       "priority": 92,
-      "last_changed": "2026-10-07T17:04:29.429Z"
+      "last_changed": "2026-10-07T20:12:10.944Z"
     },
     {
       "path": "/chum/sell-now.html",
@@ -390,14 +390,14 @@
       "last_changed": "2026-10-07T02:56:26.782Z"
     },
     {
-      "path": "/.well-known/evercraft-pain-index.json",
-      "url": "/.well-known/evercraft-pain-index.json",
-      "priority": 90,
-      "last_changed": "2026-10-07T17:04:29.429Z"
-    },
-    {
       "path": "/chum/revenue.json",
       "url": "/chum/revenue.json",
+      "priority": 90,
+      "last_changed": "2026-10-07T20:12:10.944Z"
+    },
+    {
+      "path": "/.well-known/evercraft-pain-index.json",
+      "url": "/.well-known/evercraft-pain-index.json",
       "priority": 90,
       "last_changed": "2026-10-07T17:04:29.429Z"
     },
@@ -417,7 +417,7 @@
       "path": "/.well-known/evercraft-machine-catalog.json",
       "url": "/.well-known/evercraft-machine-catalog.json",
       "priority": 84,
-      "last_changed": "2026-10-07T17:04:29.429Z"
+      "last_changed": "2026-10-07T20:12:10.944Z"
     },
     {
       "path": "/chum/answers/doors/do-a-resilience-investigation-227f8bd16b.json",
