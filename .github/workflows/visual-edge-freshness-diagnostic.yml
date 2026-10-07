@@ -1,0 +1,43 @@
+name: Visual Edge Freshness Diagnostic
+
+on:
+  pull_request:
+    paths:
+      - 'scripts/fabric-edge-visual-freshness.mjs'
+      - '.github/workflows/visual-edge-freshness-diagnostic.yml'
+      - 'systemia/graphics-command/**'
+      - 'systemia/visual-desk/**'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  probe-production-visual-freshness:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Fingerprint expected and live Visual Desk specimen
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p artifacts
+          node scripts/fabric-edge-visual-freshness.mjs \
+            --origin https://fabric.systemiacommandcenters.com \
+            > artifacts/visual-edge-freshness.json
+          cat artifacts/visual-edge-freshness.json
+
+      - name: Upload freshness receipt
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: visual-edge-freshness
+          path: artifacts/visual-edge-freshness.json
+          if-no-files-found: error
+          retention-days: 90
