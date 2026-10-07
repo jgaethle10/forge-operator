@@ -206,11 +206,17 @@ export function createLocalHostSpawnAdapter({
           announce:false,
         });
 
-        const safeOffer=await buildSafeOwnedSpawnOffer({
-          seed,
-          candidate,
-          root,
-        });
+        let safeOffer=null;
+        try{
+          safeOffer=await buildSafeOwnedSpawnOffer({
+            seed,
+            candidate,
+            root,
+          });
+        }catch(error){
+          await seed.close?.().catch(()=>{});
+          throw error;
+        }
         const result={
           schema:'evercraft.saban.local-host-activation.v1',
           execution_ready:true,
