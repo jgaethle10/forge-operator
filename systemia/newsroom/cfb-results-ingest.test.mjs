@@ -4,6 +4,8 @@ import {
   parseEspnFbsTeamIds,
   parseEspnCompletedGames,
   fetchEspnCompletedFbsGames,
+  parseNcaaFbsScoreboard,
+  fetchNcaaFbsEvidence,
 } from './cfb-results-ingest.mjs';
 
 function teamPayload(){
@@ -59,4 +61,38 @@ test('daily ingest deduplicates the same ESPN game id across source responses',a
   assert.equal(ledger.source_urls.length,2);
   assert.equal(ledger.games.length,1);
   assert.equal(ledger.games[0].game_id,'g1');
+});
+
+
+test('official NCAA scoreboard keeps an FCS opponent as evidence but not FBS membership',()=>{
+  const payload={data:{contests:[{
+    contestId:7001,gameState:'F',startDate:'10/03/2026',
+    teams:[
+      {isHome:true,seoname:'alpha-state',nameShort:'Alpha State',conferenceSeo:'sec',score:42,isWinner:true},
+      {isHome:false,seoname:'fcs-valley',nameShort:'FCS Valley',conferenceSeo:'socon',score:10,isWinner:false},
+    ],
+  }]}};
+  const games=parseNcaaFbsScoreboard(payload,{startDate:'2026-10-03',endDate:'2026-10-03'});
+  assert.equal(games.length,1);
+  assert.equal(games[0].home.fbs,true);
+  assert.equal(games[0].away.fbs,false);
+  assert.equal(games[0].source_ref,'ncaa-game:7001');
+});
+
+test('official NCAA evidence deduplicates games across weekly responses and derives FBS membership',async()=>{
+  const payload={data:{contests:[{
+    contestId:7002,gameState:'F',startDate:'10/03/2026',
+    teams:[
+      {isHome:true,seoname:'alpha-state',nameShort:'Alpha State',conferenceSeo:'sec',score:31,isWinner:true},
+      {isHome:false,seoname:'beta-tech',nameShort:'Beta Tech',conferenceSeo:'acc',score:24,isWinner:false},
+    ],
+  }]}};
+  const fetchImpl=async()=>({ok:true,status:200,async json(){return payload;}});
+  const evidence=await fetchNcaaFbsEvidence({
+    season:2026,startDate:'2026-10-03',endDate:'2026-10-03',
+    weeks:[5,6],fetchImpl,
+  });
+  assert.equal(evidence.ledger.games.length,1);
+  assert.deepEqual(evidence.membership.teams.map(team=>team.team_id),['alpha-state','beta-tech']);
+  assert.equal(evidence.membership.source,'ncaa-graphql-scoreboard');
 });
