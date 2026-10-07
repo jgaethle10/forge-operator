@@ -489,3 +489,11 @@ The canonical PulseGrid session engine no longer imports Node's `crypto` module.
 `pulsegrid-browser.ts` is now the explicit browser entrypoint for the same canonical engine used by Node/CI. The media-studio test suite bundles that entrypoint with esbuild using `platform: browser` and fails if a Node-only dependency leaks back into the core.
 
 This removes the architectural excuse for maintaining a separate browser-side session model. The next UI integration should import this entrypoint and adapt presentation/audio execution around it rather than reimplementing musical state.
+
+### PulseGrid 0.11 canonical UI
+
+The Forge React shell now exposes `/fallen-sessions` as a first-class product route. The UI imports `pulsegrid-browser.ts` directly, so editing a note, changing clip length, forking a variation, running an atomic creative plan, undoing a receipt and exporting the graph all operate on the same canonical PulseGrid engine used by CI and Systemia.
+
+The route currently emphasizes graph editing and provenance rather than pretending the browser surface has already replaced the earlier audio workstation prototype. The next integration slice is to move the proven Web Audio/MIDI execution layer behind this same canonical graph.
+
+Architecture tests enforce that the UI imports the canonical browser entrypoint and does not define its own `createPulseGridSession` implementation.
