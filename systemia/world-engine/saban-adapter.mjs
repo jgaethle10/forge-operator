@@ -16,6 +16,7 @@ const ROLES=new Set([
   'reference_frame_guard',
   'normal_map_guard',
   'fallen_geometry_guard',
+  'fallen_animation_guard',
   'studio_edit_guard',
   'runtime_migration_guard',
   'fallen_bridge_guard',
@@ -278,6 +279,21 @@ function evaluate(role,world){
         'Authored tangents may pass through only when normalized, orthogonal to the source normal and carrying explicit +1/-1 handedness.',
         'Every import receipt must state whether tangents were authored or generated so renderer replay does not confuse derived geometry with authoring truth.',
         'Imported geometry must pass the canonical World Engine geometry validator and feed the existing normal-map/WebGPU path without backend-private mesh mutation.'
+      ],
+      findings:[]
+    };
+  }
+
+  if(role==='fallen_animation_guard'){
+    return {
+      category:'fallen_animation',
+      directives:[
+        'Fallen animation imports must declare right_handed_y_up coordinates, meter units and degree rotations explicitly; the bridge must not guess conversion.',
+        'Animation provenance must preserve sourceRef, rights state and license, with source/provenance/component digests bound into the import receipt.',
+        'Direct-rig v17 import performs no hidden retargeting; bone IDs and hierarchy must validate against the authored rig exactly.',
+        'Clips, states, transitions and event markers must pass the canonical World Engine animation validator before runtime admission.',
+        'Canonical array ordering may normalize non-semantic source ordering, but keyframe time order remains authored data and unsorted keyframes fail closed.',
+        'Imported components must execute through the existing deterministic animation runtime and preserve authored events without granting renderer or provider animation authority.'
       ],
       findings:[]
     };
