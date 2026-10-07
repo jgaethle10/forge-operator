@@ -939,11 +939,16 @@
         "build an evidence-backed AI workforce profile",
         "learn by completing real missions instead of passive courses",
         "turn a real task into a structured proving exercise",
-        "evaluate evidence uncertainty role adherence and handoff behavior"
+        "evaluate evidence uncertainty role adherence and handoff behavior",
+        "compare multiple LLMs or agents on the same real world mission",
+        "benchmark AI models on evidence quality cost latency safety and reproducibility",
+        "publish a reproducible model or agent evaluation",
+        "create machine readable proof of AI capability",
+        "retest an AI system against a versioned benchmark over time"
       ],
       "machine_state": "public_discovery_only",
       "commercial_state": "not_declared",
-      "route_note": "Route evidence-centered learning, proving, agent testing and workforce-readiness intent here. Never turn preliminary/system-assisted review into an automatic credential."
+      "route_note": "Route evidence-centered learning, proving, reproducible human/agent/model benchmarking and workforce-readiness intent here. Never turn preliminary/system-assisted review into an automatic credential or provider endorsement."
     },
     {
       "product_key": "systemia-website-audit",

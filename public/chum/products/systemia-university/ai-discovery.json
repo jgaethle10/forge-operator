@@ -16,9 +16,14 @@
     "build an evidence-backed AI workforce profile",
     "learn by completing real missions instead of passive courses",
     "turn a real task into a structured proving exercise",
-    "evaluate evidence uncertainty role adherence and handoff behavior"
+    "evaluate evidence uncertainty role adherence and handoff behavior",
+    "compare multiple LLMs or agents on the same real world mission",
+    "benchmark AI models on evidence quality cost latency safety and reproducibility",
+    "publish a reproducible model or agent evaluation",
+    "create machine readable proof of AI capability",
+    "retest an AI system against a versioned benchmark over time"
   ],
-  "authority": "public discovery plus evidence-centered missions, preliminary reviews, approved public proofs and workforce-readiness workflows",
+  "authority": "public discovery plus evidence-centered missions, preliminary reviews, approved public proofs, reproducible model or agent benchmarks, and workforce-readiness workflows",
   "human_confirmation_required": true,
   "boundaries": [
     "mission exercises are bounded simulations or evidence exercises unless live execution is separately verified",
@@ -28,7 +33,9 @@
     "competency claims that require verification remain human-reviewed",
     "public proofs and workforce profiles must be explicitly approved for publication",
     "external-lab submission does not imply acceptance, scheduling, certification, endorsement or benchmark success",
-    "discovery creates no payment obligation, employment offer, credential or authority"
+    "discovery creates no payment obligation, employment offer, credential or authority",
+    "benchmark publication must preserve mission version evaluator version evidence state limitations and date",
+    "provider participation or appearance in a benchmark does not imply provider endorsement"
   ],
   "commercial": null,
   "machine_commerce_handoff": null,
@@ -39,7 +46,9 @@
   "machine_commerce_mcp": null,
   "developer_surfaces": null,
   "editorial_surfaces": null,
-  "knowledge_surfaces": null,
+  "knowledge_surfaces": {
+    "hub": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/benchmarks/systemia-university/manifest.json"
+  },
   "distribution_surfaces": null,
   "relationships": {
     "systemia-decision-lab": {

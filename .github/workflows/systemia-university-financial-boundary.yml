@@ -1,0 +1,34 @@
+name: Systemia University + Evercraft Financial Boundary
+
+on:
+  pull_request:
+    paths:
+      - 'systemia/university/**'
+      - 'systemia/payments/financial-boundary*'
+      - 'public/chum/products/systemia-university/**'
+      - 'registry/systemia-university/**'
+      - 'docs/EVERCRAFT_FINANCIAL_INSTITUTION_PATH_2026-10-07.md'
+      - '.github/workflows/systemia-university-financial-boundary.yml'
+  push:
+    branches: [main]
+    paths:
+      - 'systemia/university/**'
+      - 'systemia/payments/financial-boundary*'
+
+permissions:
+  contents: read
+
+jobs:
+  boundary-tests:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Systemia University proving lane
+        run: node --test systemia/university/proving-lane.test.mjs
+      - name: Systemia University discovery contract
+        run: node --test tests/systemia-university-benchmark-discovery.test.mjs
+      - name: Evercraft Financial regulatory boundary
+        run: node --test systemia/payments/financial-boundary.test.mjs

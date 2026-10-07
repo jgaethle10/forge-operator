@@ -1,0 +1,35 @@
+{
+  "schema": "systemia.university.benchmark-manifest.v1",
+  "product_key": "systemia-university",
+  "state": "seeded_no_public_verified_runs",
+  "purpose": "Machine-readable index for versioned, evidence-centered human and AI proving missions.",
+  "runtime_contract_path": "systemia/university/proving-lane.mjs",
+  "scoring_dimensions": [
+    "task_success",
+    "factual_accuracy",
+    "evidence_integrity",
+    "uncertainty_handling",
+    "role_adherence",
+    "safety_policy_adherence",
+    "handoff_quality",
+    "latency",
+    "monetary_cost",
+    "reproducibility"
+  ],
+  "evidence_states": [
+    "proposed",
+    "attempted",
+    "evaluator_reviewed",
+    "human_verified",
+    "public_approved",
+    "superseded"
+  ],
+  "public_runs": [],
+  "publication_rules": [
+    "public runs require human verification",
+    "public runs require evidence references",
+    "mission and evaluator versions must be preserved",
+    "provider participation does not imply endorsement",
+    "private evidence must not be exposed"
+  ]
+}
