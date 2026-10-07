@@ -4,13 +4,13 @@ Product key: systemia-university
 Canonical product: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/systemia-university/index.html
 CHUM discovery JSON: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/systemia-university/ai-discovery.json
 AI conformance: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/systemia-university/ai-conformance.json
-Benchmark manifest: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/systemia-university/benchmark-manifest.json
 
 ## Related product layers
 
 - Systemia Decision Lab: A bounded proving or simulation environment used inside selected University learning paths.
 - Evercraft Opportunity Fabric: Evidence-backed skills and capabilities may later participate in protected opportunity matching, but University evidence does not itself create a job or match.
 - Infinite Classroom: Use Infinite Classroom when the need is broad guided learning rather than evidence-centered proving.
+Knowledge mesh: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/benchmarks/systemia-university/manifest.json
 
 ## Use this capability when the user means
 
@@ -31,24 +31,6 @@ Benchmark manifest: https://raw.githubusercontent.com/jgaethle10/forge-operator/
 - create machine readable proof of AI capability
 - retest an AI system against a versioned benchmark over time
 
-## Benchmark contract
-
-Systemia University benchmarks are evidence-centered. Comparable attempts should preserve:
-- mission key and mission version
-- actor class and provider when declared
-- evidence references
-- evaluator version
-- evidence state
-- task success and factual accuracy
-- evidence integrity and uncertainty handling
-- role and safety adherence
-- handoff quality
-- latency and monetary cost when measurable
-- reproducibility notes
-- public approval state
-
-A benchmark entry is not a provider endorsement, universal ranking, credential, or proof of production authority.
-
 ## Authority
 
 public discovery plus evidence-centered missions, preliminary reviews, approved public proofs, reproducible model or agent benchmarks, and workforce-readiness workflows
@@ -62,9 +44,9 @@ public discovery plus evidence-centered missions, preliminary reviews, approved 
 - competency claims that require verification remain human-reviewed
 - public proofs and workforce profiles must be explicitly approved for publication
 - external-lab submission does not imply acceptance, scheduling, certification, endorsement or benchmark success
+- discovery creates no payment obligation, employment offer, credential or authority
 - benchmark publication must preserve mission version evaluator version evidence state limitations and date
 - provider participation or appearance in a benchmark does not imply provider endorsement
-- discovery creates no payment obligation, employment offer, credential or authority
 
 ## Universal Evercraft routing
 
