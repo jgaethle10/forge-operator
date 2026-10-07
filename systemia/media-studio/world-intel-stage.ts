@@ -42,6 +42,23 @@ export interface WorldIntelPolygonInput {
   sourceRefs: string[];
 }
 
+export interface WorldIntelTerrainInput {
+  id: string;
+  sourcePath: string;
+  bounds: {
+    north:number;
+    south:number;
+    east:number;
+    west:number;
+  };
+  opacity?: number;
+  blendMode?: 'normal' | 'multiply' | 'screen' | 'overlay';
+  evidenceState: EvidenceState;
+  sourceRefs: string[];
+  sourceSha256?: string;
+  rightsState?: string;
+}
+
 export interface WorldIntelMetricInput {
   id: string;
   label: string;
@@ -84,6 +101,7 @@ export interface WorldIntelStageInput {
     routes?: WorldIntelRouteInput[];
     points?: WorldIntelPointInput[];
     polygons?: WorldIntelPolygonInput[];
+    terrains?: WorldIntelTerrainInput[];
   };
   metrics?: WorldIntelMetricInput[];
   timeline?: {
@@ -206,12 +224,14 @@ export function compileWorldIntelStage(input:WorldIntelStageInput):VisualStage{
     const mapRefs=[
       ...refs(input.map.routes),
       ...refs(input.map.points),
-      ...refs(input.map.polygons)
+      ...refs(input.map.polygons),
+      ...refs(input.map.terrains)
     ];
     const mapItems=[
       ...(input.map.routes??[]),
       ...(input.map.points??[]),
-      ...(input.map.polygons??[])
+      ...(input.map.polygons??[]),
+      ...(input.map.terrains??[])
     ];
     layers.push({
       id:'world-geo',
@@ -223,7 +243,7 @@ export function compileWorldIntelStage(input:WorldIntelStageInput):VisualStage{
       centerLon:input.map.centerLon??0,
       zoom:input.map.zoom??1.15,
       fitBounds:input.map.fitBounds,
-      grid:!input.mapPlate,
+      grid:!input.mapPlate && !(input.map.terrains?.length),
       parallax:1.09,
       perspectivePx:1600,
       rotateYDeg:vertical?0:5,
@@ -241,6 +261,7 @@ export function compileWorldIntelStage(input:WorldIntelStageInput):VisualStage{
       })),
       points:input.map.points??[],
       polygons:input.map.polygons??[],
+      terrains:input.map.terrains??[],
       evidenceState:predominantState(mapItems),
       sourceRefs:mapRefs
     });
