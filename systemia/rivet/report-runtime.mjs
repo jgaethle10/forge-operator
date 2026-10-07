@@ -85,7 +85,6 @@ function quickRead(data){
   const chargers=arr(data?.chargers);
   const incentives=arr(data?.incentives);
   const observedUsage=arr(data?.nearby_observed_usage);
-  const sessionFreshness=data?.session_freshness && typeof data.session_freshness==='object' ? data.session_freshness : null;
   const maxAadt=traffic.reduce((m,row)=>Math.max(m,number(row?.aadt)||0),0) || null;
   const utilityState=clean(data?.coverage_contract?.utility_tariff?.state || data?.coverage_contract?.utility_service_area?.state);
   const evidenceState=clean(data?.evidence_state || 'unknown');
@@ -93,7 +92,6 @@ function quickRead(data){
   if(maxAadt) strongest.push('Observed traffic evidence includes a maximum AADT of '+maxAadt.toLocaleString()+'.');
   if(chargers.length) strongest.push(chargers.length+' nearby charging record'+(chargers.length===1?'':'s')+' returned by the source engine.');
   if(observedUsage.length) strongest.push('Observed charging-usage evidence is present and kept separate from modeled demand.');
-  if(sessionFreshness?.refreshed_at) strongest.push('Session evidence last refreshed '+sessionFreshness.refreshed_at+'.');
   if(utilityState) strongest.push('Utility/tariff coverage state: '+utilityState+'.');
   if(incentives.length) strongest.push(incentives.length+' incentive or program record'+(incentives.length===1?'':'s')+' surfaced for diligence.');
 
@@ -115,8 +113,7 @@ function quickRead(data){
     traffic_rows:traffic.slice(0,12),
     chargers:chargers.slice(0,20),
     incentives:incentives.slice(0,20),
-    observed_usage:observedUsage.slice(0,12),
-    session_freshness:sessionFreshness
+    observed_usage:observedUsage.slice(0,12)
   };
 }
 
@@ -134,22 +131,6 @@ export function buildYardReport({address,reportType='preliminary_site_opportunit
     state:clean(sourceSnapshot?.state),
     postal_code:clean(sourceSnapshot?.postal_code),
     generated_at:new Date().toISOString(),
-    freshness:{
-      session_data:{
-        schema:'evercraft.rivet.report-session-freshness.v1',
-        refreshed_at:read.session_freshness?.refreshed_at || null,
-        latest_observed_at:read.session_freshness?.latest_observed_at || null,
-        refresh_age_minutes:read.session_freshness?.refresh_age_minutes ?? null,
-        freshness_state:read.session_freshness?.freshness_state || (read.observed_usage.length?'UNKNOWN':'NO_OBSERVED_ROWS'),
-        display_label:read.session_freshness?.refreshed_at
-          ? 'Session data refreshed '+read.session_freshness.refreshed_at
-          : 'Session data refresh time unavailable',
-        observation_label:read.session_freshness?.latest_observed_at
-          ? 'Latest observed session data '+read.session_freshness.latest_observed_at
-          : 'Latest observed session timestamp unavailable',
-        semantics:'Refresh time and observation time are separate. Missing is never zero.'
-      }
-    },
     source:{
       system:'AliEV',
       app_id:ALIEV_APP_ID,
@@ -178,7 +159,6 @@ export function buildYardReport({address,reportType='preliminary_site_opportunit
       chargers:read.chargers,
       incentives:read.incentives,
       observed_usage:read.observed_usage,
-      session_freshness:read.session_freshness,
       coverage_contract:sourceSnapshot?.coverage_contract || null,
       source_coverage_manifest:coverage,
       index:evidenceIndex(sourceSnapshot),
