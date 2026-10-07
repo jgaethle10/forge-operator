@@ -96,27 +96,35 @@ function decorativeContours(spec){
 
 function renderLabels(story,positions,format){
   const font=format==='story'?27:format==='square'?18:22;
+  const xs=story.points.map(point=>positions.get(point.id)?.x).filter(Number.isFinite).sort((a,b)=>a-b);
+  const splitX=xs.length?xs[Math.floor((xs.length-1)/2)]:540;
   const rows=[...story.points]
     .map((point,index)=>({point,index,p:positions.get(point.id)}))
+    .filter(row=>row.p)
     .sort((a,b)=>a.p.y-b.p.y||a.p.x-b.p.x);
   const occupied={left:-Infinity,right:-Infinity};
-  const gap=format==='story'?58:44;
+  const gap=format==='story'?62:48;
   return rows.map(row=>{
-    const side=row.p.x<540?'left':'right';
-    const alt=side==='left'?'right':'left';
-    let use=side;
+    const label=String(row.point.label||row.point.id);
+    const estimate=label.length*font*.57;
+    let preferred=row.p.x<=splitX?'left':'right';
+    let x=preferred==='right'?row.p.x+38:row.p.x-38;
+    if(preferred==='right'&&x+estimate>1008) preferred='left';
+    if(preferred==='left'&&x-estimate<72) preferred='right';
+    const alternate=preferred==='left'?'right':'left';
+    let use=preferred;
     let y=row.p.y+7;
-    if(y-occupied[side]<gap && y-occupied[alt]>=gap) use=alt;
-    y=Math.max(row.p.y-40,Math.max(y,occupied[use]+gap));
+    if(y-occupied[preferred]<gap && y-occupied[alternate]>=gap) use=alternate;
+    y=Math.max(row.p.y-44,Math.max(y,occupied[use]+gap));
     occupied[use]=y;
     const right=use==='right';
-    const x=right?row.p.x+34:row.p.x-34;
+    x=right?row.p.x+38:row.p.x-38;
     const anchor=right?'start':'end';
-    const leaderX=right?x-10:x+10;
+    const leaderX=right?x-11:x+11;
     const threat=/very high/i.test(row.point.note||'')?'VERY HIGH':/high/i.test(row.point.note||'')?'HIGH':'';
     return [
-      '<line x1="'+row.p.x+'" y1="'+row.p.y+'" x2="'+leaderX+'" y2="'+(y-7)+'" stroke="#4FB8FF" stroke-width="2" opacity=".42"/>',
-      '<text class="story-label" x="'+x+'" y="'+y+'" text-anchor="'+anchor+'" font-family="Arial,sans-serif" font-size="'+font+'" font-weight="800" fill="#F5F5F2">'+esc(row.point.label||row.point.id)+'</text>',
+      '<line x1="'+row.p.x+'" y1="'+row.p.y+'" x2="'+leaderX+'" y2="'+(y-7)+'" stroke="#75C8FF" stroke-width="1.5" opacity=".30"/>',
+      '<text class="story-label" x="'+x+'" y="'+y+'" text-anchor="'+anchor+'" font-family="Arial,sans-serif" font-size="'+font+'" font-weight="800" fill="#F5F5F2">'+esc(label)+'</text>',
       threat?'<text class="story-label" x="'+x+'" y="'+(y+font+5)+'" text-anchor="'+anchor+'" font-family="Arial,sans-serif" font-size="'+Math.round(font*.58)+'" font-weight="800" letter-spacing="1.4" fill="'+(threat==='VERY HIGH'?'#FFB15A':'#B7BDC5')+'">'+threat+'</text>':'',
     ].join('\n');
   }).join('\n');
@@ -154,7 +162,7 @@ export function renderDirectedPoster(story,plan,format='feed'){
     const a=positions.get(line.from);
     const b=positions.get(line.to);
     if(!a||!b) return '';
-    return '<path class="story-route" d="M '+a.x+' '+a.y+' L '+b.x+' '+b.y+'" fill="none" stroke="#4FB8FF" stroke-width="'+(format==='story'?9:7)+'" stroke-linecap="round" stroke-linejoin="round" opacity=".9" filter="url(#glow)"/>';
+    return '<path class="story-route" d="M '+a.x+' '+a.y+' L '+b.x+' '+b.y+'" fill="none" stroke="#75C8FF" stroke-width="'+(format==='story'?6:4)+'" stroke-linecap="round" stroke-linejoin="round" opacity=".58"/>';
   }).join('\n');
 
   const pointSvg=story.points.map(point=>{
