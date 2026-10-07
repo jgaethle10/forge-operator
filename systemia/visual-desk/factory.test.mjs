@@ -93,6 +93,7 @@ test('build emits owned page, social card, manifest and Clip handoff',()=>{
       'motion.html',
       'poster-feed.html',
       'poster-feed.svg',
+      'poster-quality-report.json',
       'poster-square.html',
       'poster-square.svg',
       'poster-story.html',
@@ -111,6 +112,8 @@ test('build emits owned page, social card, manifest and Clip handoff',()=>{
     assert.equal(manifest.schema,'evercraft.visual-story.manifest.v3');
     assert.match(manifest.socialCardUrl,/poster-feed\.svg$/);
     assert.equal(manifest.scrollStopStatus,'pass');
+    assert.equal(manifest.posterQualityStatus,'pass');
+    assert.match(manifest.assets.posterQualityReport,/poster-quality-report\.json$/);
     assert.match(manifest.assets.motionStage,/motion\.html$/);
     assert.equal(handoff.publicationAuthority,false);
     assert.equal(handoff.schema,'evercraft.visual-story.clip-handoff.v3');
@@ -118,7 +121,12 @@ test('build emits owned page, social card, manifest and Clip handoff',()=>{
     const plan=JSON.parse(fs.readFileSync(path.join(result.outputDir,'graphics-plan.json'),'utf8'));
     const gate=JSON.parse(fs.readFileSync(path.join(result.outputDir,'scroll-stop-report.json'),'utf8'));
     const fallen=JSON.parse(fs.readFileSync(path.join(result.outputDir,'fallen-stage-input.json'),'utf8'));
+    const quality=JSON.parse(fs.readFileSync(path.join(result.outputDir,'poster-quality-report.json'),'utf8'));
     assert.equal(plan.hero.visualPriority,'hero_first');
+    assert.equal(quality.status,'pass');
+    assert.equal(quality.formats.feed.status,'pass');
+    assert.equal(quality.formats.square.status,'pass');
+    assert.equal(quality.formats.story.status,'pass');
     assert.equal(gate.status,'pass');
     assert.equal(fallen.aspectRatio,'9:16');
     assert.match(html,/poster-feed\.svg/);
