@@ -801,11 +801,12 @@ export default function WorldForgeEditor(){
   },[]);
 
   useEffect(()=>{
+    const selectedNode=project?.nodes.find(node=>node.id===selectedId);
     if(
       runtimeDragMode&&(
         !playSession||
         stagedOperations.length>0||
-        selected?.physics?.mode!=='dynamic'||
+        selectedNode?.physics?.mode!=='dynamic'||
         playSession.runtimeBodies[selectedId]?.kinematic===true
       )
     ){
@@ -815,7 +816,7 @@ export default function WorldForgeEditor(){
     runtimeDragMode,
     playSession,
     stagedOperations.length,
-    selected?.physics?.mode,
+    project,
     selectedId,
   ]);
 
