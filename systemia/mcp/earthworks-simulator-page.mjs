@@ -15,7 +15,7 @@ button,input{font:inherit}.shell{max-width:1500px;margin:auto;padding:16px}.top{
 canvas{display:block;width:100%;height:auto;aspect-ratio:16/9;background:#0a0f13;touch-action:none}.hud{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;padding:10px;border-top:1px solid var(--line)}.metric{background:#0a1015;border:1px solid #202b34;border-radius:10px;padding:9px}.metric small{display:block;color:var(--muted);font-size:10px;text-transform:uppercase;letter-spacing:.08em}.metric b{display:block;font-size:22px;margin-top:2px}.metric em{font-style:normal;color:var(--green);font-size:10px}
 .side{display:grid;gap:12px;align-content:start}.controls{padding:13px}.modeRow{display:grid;grid-template-columns:repeat(3,1fr);gap:7px;margin-bottom:12px}.mode{border:1px solid #35434f;background:#121a21;color:#bec9d1;border-radius:9px;padding:9px 6px;cursor:pointer}.mode.active{border-color:var(--amber);background:#2a1d08;color:#ffd17a}.mode[data-mode="autonomy"].active{border-color:#367b5c;background:#0d2519;color:#8ce6b4}
 .controlGrid{display:grid;grid-template-columns:1fr 1fr;gap:8px}.action{border:1px solid #33414c;background:#101820;color:var(--ink);border-radius:9px;padding:10px;cursor:pointer;text-align:left}.action:hover{border-color:#5a7181}.action strong{display:block}.action small{color:var(--muted)}.danger{border-color:#643737}.danger strong{color:#ff9b9b}
-.range{margin-top:12px;border-top:1px solid #202b34;padding-top:11px}.range label{display:flex;justify-content:space-between;color:var(--muted);font-size:11px}.range input{width:100%;accent-color:var(--amber)}
+.range{margin-top:12px;border-top:1px solid #202b34;padding-top:11px}.range label{display:flex;justify-content:space-between;color:var(--muted);font-size:11px}.range input{width:100%;accent-color:var(--amber)}.scenarioTitle{margin-top:13px;padding-top:11px;border-top:1px solid #202b34;color:var(--muted);font-size:10px;text-transform:uppercase;letter-spacing:.1em}.scenarioGrid{display:grid;grid-template-columns:1fr 1fr;gap:7px;margin-top:8px}.scenario{border:1px solid #31404a;background:#0d151b;color:#c9d4db;border-radius:8px;padding:8px;cursor:pointer;text-align:left}.scenario:hover{border-color:#607684}.scenario b{display:block;font-size:11px}.scenario span{font-size:9px;color:var(--muted)}.stop{margin-top:10px;width:100%;border:1px solid #7c3e3e;background:#271010;color:#ffb2b2;border-radius:9px;padding:10px;cursor:pointer;font-weight:900;letter-spacing:.04em}
 .flow{padding:12px}.flowline{display:grid;grid-template-columns:repeat(4,1fr);gap:6px}.node{border:1px solid #27343e;background:#0a1015;border-radius:9px;padding:9px}.node b{display:block;font-size:11px}.node span{font-size:10px;color:var(--muted)}.node.hot{border-color:#6c531d;background:#1d1709}.node.good{border-color:#2e674e;background:#0b1e15}
 .log{max-height:220px;overflow:auto;padding:10px 12px;font:11px/1.5 ui-monospace,SFMono-Regular,Menlo,monospace}.log div{padding:4px 0;border-bottom:1px solid #182128;color:#aab6be}.log .ai{color:#7fd7ff}.log .warn{color:#ffc76c}.log .good{color:#80dda9}
 .legend{display:flex;gap:12px;flex-wrap:wrap;color:var(--muted);font-size:10px;padding:0 12px 11px}.legend i{display:inline-block;width:8px;height:8px;border-radius:50%;margin-right:4px}.footer{margin-top:10px;color:#657681;font-size:11px;display:flex;justify-content:space-between;gap:20px}.footer a{color:#a9cfff}
@@ -58,6 +58,14 @@ canvas{display:block;width:100%;height:auto;aspect-ratio:16/9;background:#0a0f13
           </div>
           <div class="range"><label><span>Haul fleet</span><strong><span id="fleetLabel">5</span> trucks</strong></label><input id="fleet" type="range" min="3" max="8" value="5"></div>
           <div class="range"><label><span>Loader rate</span><strong><span id="loaderLabel">720</span> tph</strong></label><input id="loaderRate" type="range" min="480" max="900" step="20" value="720"></div>
+          <div class="scenarioTitle">Break the yard</div>
+          <div class="scenarioGrid">
+            <button class="scenario" data-scenario="queue"><b>Truck Queue</b><span>Too many trucks for the loader</span></button>
+            <button class="scenario" data-scenario="starve"><b>Loader Starvation</b><span>Too few trucks feeding the loader</span></button>
+            <button class="scenario" data-scenario="blocked"><b>Blocked Route</b><span>Haul corridor slowdown</span></button>
+            <button class="scenario" data-scenario="surge"><b>Production Surge</b><span>Raise loading target hard</span></button>
+          </div>
+          <button class="stop" id="stopAll">STOP ALL · safety hold</button>
         </div>
       </section>
 
@@ -86,7 +94,7 @@ canvas{display:block;width:100%;height:auto;aspect-ratio:16/9;background:#0a0f13
   const route=[
     {x:235,y:330},{x:360,y:265},{x:500,y:245},{x:650,y:270},{x:805,y:235},{x:920,y:300},{x:850,y:415},{x:680,y:455},{x:500,y:445},{x:340,y:410}
   ];
-  const state={mode:'manual',fleet:5,loaderRate:720,delay:0,time:360,decisions:0,manualRelease:0,optimized:0,trucks:[],history:[],last:performance.now()};
+  const state={mode:'manual',fleet:5,loaderRate:720,delay:0,time:360,decisions:0,manualRelease:0,optimized:0,stopped:false,trucks:[],history:[],last:performance.now()};
   const clamp=(v,a,b)=>Math.max(a,Math.min(b,v));
   const lerp=(a,b,t)=>a+(b-a)*t;
   function addLog(text,kind=''){state.history.unshift({text,kind});state.history=state.history.slice(0,18);$('log').innerHTML=state.history.map(x=>'<div class="'+x.kind+'">'+x.text+'</div>').join('');}
@@ -138,13 +146,14 @@ canvas{display:block;width:100%;height:auto;aspect-ratio:16/9;background:#0a0f13
     machine(190,270,'EX','EX-01 loading');machine(900,430,'CR','Crusher');
     state.trucks.forEach(truck);
     if(state.delay>0){ctx.fillStyle='#ff6262';ctx.beginPath();ctx.arc(655,270,16,0,Math.PI*2);ctx.fill();ctx.fillStyle='#fff';ctx.font='900 14px system-ui';ctx.textAlign='center';ctx.fillText('!',655,275)}
+    if(state.stopped){ctx.fillStyle='rgba(120,0,0,.42)';ctx.fillRect(0,0,1100,620);ctx.fillStyle='#ffb2b2';ctx.font='900 34px system-ui';ctx.textAlign='center';ctx.fillText('SAFETY HOLD · STOP ALL',550,315);}
     const m=metrics();ctx.fillStyle='#071016d9';ctx.fillRect(365,70,365,78);ctx.strokeStyle='#263843';ctx.strokeRect(365,70,365,78);ctx.fillStyle='#ffb020';ctx.font='800 13px system-ui';ctx.textAlign='left';ctx.fillText('EARTHWORKS SITE BRAIN',382,94);ctx.fillStyle='#d8e3e9';ctx.font='700 12px system-ui';ctx.fillText(state.mode.toUpperCase()+' · '+m.tph+' tph · '+m.queue.toFixed(1)+' min queue',382,118);ctx.fillStyle='#81949f';ctx.font='11px system-ui';ctx.fillText(state.mode==='manual'?'Human releases trucks manually.':state.mode==='shadow'?'AI recommends timing; humans remain authoritative.':'Simulation planner dispatches within software safety rules.',382,138);
   }
   function step(now){
     const dt=Math.min(.05,(now-state.last)/1000);state.last=now;state.time+=dt*5;
     const m=metrics();
     state.trucks.forEach((t,i)=>{
-      let mult=1;
+      let mult=state.stopped?0:1;
       const p=routePoint(t.p);
       if(state.delay>0&&p.seg>=3&&p.seg<=4)mult=.28;
       if(state.mode==='manual'&&p.seg===9&&i>2&&state.manualRelease<=0)mult=.08;
@@ -177,7 +186,17 @@ canvas{display:block;width:100%;height:auto;aspect-ratio:16/9;background:#0a0f13
   $('dispatch').onclick=()=>{state.manualRelease=3;state.decisions++;addLog('Human released next truck from loading queue.','good')};
   $('optimize').onclick=()=>{state.optimized=1;state.decisions++;addLog('EarthWorks recomputed truck spacing from queue + loader state.','ai');setTimeout(()=>state.optimized=0,8000)};
   $('delay').onclick=()=>{state.delay=9;state.decisions++;addLog('Road slowdown injected. Dispatch plan must absorb delay.','warn')};
-  $('reset').onclick=()=>{state.delay=0;state.optimized=0;state.time=360;resetTrucks();state.decisions++;addLog('Yard returned to baseline scenario.')};
+  $('reset').onclick=()=>{state.delay=0;state.optimized=0;state.stopped=false;state.time=360;state.fleet=5;state.loaderRate=720;$('fleet').value=5;$('fleetLabel').textContent=5;$('loaderRate').value=720;$('loaderLabel').textContent=720;resetTrucks();state.decisions++;addLog('Yard returned to baseline scenario.','good')};
+  document.querySelectorAll('.scenario').forEach(b=>b.onclick=()=>{
+    state.stopped=false;
+    const s=b.dataset.scenario;
+    if(s==='queue'){state.fleet=8;state.loaderRate=560;state.delay=0;addLog('Scenario loaded: truck queue pressure. Eight trucks are now competing for a slow loader.','warn');}
+    if(s==='starve'){state.fleet=3;state.loaderRate=880;state.delay=0;addLog('Scenario loaded: loader starvation. Loader capacity now outruns haul supply.','warn');}
+    if(s==='blocked'){state.fleet=5;state.loaderRate=720;state.delay=30;addLog('Scenario loaded: haul route blocked. EarthWorks must absorb a sustained corridor delay.','warn');}
+    if(s==='surge'){state.fleet=6;state.loaderRate=900;state.delay=0;addLog('Scenario loaded: production surge. Loading target raised to 900 tph.','warn');}
+    $('fleet').value=state.fleet;$('fleetLabel').textContent=state.fleet;$('loaderRate').value=state.loaderRate;$('loaderLabel').textContent=state.loaderRate;resetTrucks();state.decisions++;
+  });
+  $('stopAll').onclick=()=>{state.stopped=!state.stopped;state.decisions++;addLog(state.stopped?'STOP ALL asserted. Every simulated machine is held.':'Safety hold released. Simulation movement may resume.',state.stopped?'warn':'good');$('stopAll').textContent=state.stopped?'RELEASE SAFETY HOLD':'STOP ALL · safety hold';};
   $('fleet').oninput=e=>{state.fleet=+e.target.value;$('fleetLabel').textContent=state.fleet;resetTrucks();addLog('Fleet resized to '+state.fleet+' haul trucks.','warn')};
   $('loaderRate').oninput=e=>{state.loaderRate=+e.target.value;$('loaderLabel').textContent=state.loaderRate;addLog('Loader target changed to '+state.loaderRate+' tph.')};
   resetTrucks();addLog('Toy Yard 001 initialized. Start by creating queue pressure, then compare dispatch modes.','good');requestAnimationFrame(step);
