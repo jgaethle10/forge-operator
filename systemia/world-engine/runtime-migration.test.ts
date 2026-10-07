@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { EvercraftWorldRuntime, type WorldDefinition } from './engine.js';
+import { EvercraftWorldRuntime, sealWorldSnapshot, type WorldDefinition } from './engine.js';
 import {
   migrateWorldRuntime,
   verifyWorldRuntimeMigrationReceipt
@@ -281,6 +281,28 @@ test('tampered source snapshots fail before any migrated runtime is created',()=
       previousSnapshot:tampered
     }),
     /runtime_migration_source_snapshot_digest_invalid/
+  );
+});
+
+test('re-sealed but structurally impossible source snapshot is rejected',()=>{
+  const previous=baseWorld();
+  const {snapshot}=sourceSnapshot(previous);
+  const {digest:_ignored,...core}=snapshot;
+  const impossible=sealWorldSnapshot({
+    ...core,
+    timeSec:999
+  });
+  const next=structuredClone(previous);
+  next.version=2;
+
+  assert.throws(
+    ()=>migrateWorldRuntime({
+      id:'migration-impossible-source',
+      previousDefinition:previous,
+      nextDefinition:next,
+      previousSnapshot:impossible
+    }),
+    /world_snapshot_time_mismatch/
   );
 });
 
