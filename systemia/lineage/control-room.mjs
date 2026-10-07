@@ -510,16 +510,31 @@ export async function startLineageControlRoom({
   const boundPort =
     typeof address === 'object' && address ? address.port : port;
 
+  const serviceUrl = `http://${boundHost}:${boundPort}`;
   return {
     schema: 'evercraft.lineage.control-room.runtime.v1',
     mode: 'read_only',
-    service_url: `http://${boundHost}:${boundPort}`,
+    service_url: serviceUrl,
     mutation_authority: false,
     publication_authority: false,
     deployment_authority: false,
     payment_authority: false,
     private_data_authority: false,
+    async health() {
+      return {
+        schema: 'evercraft.lineage.control-room.health.v1',
+        ok: server.listening,
+        mode: 'read_only',
+        service_url: serviceUrl,
+        mutation_authority: false,
+        publication_authority: false,
+        deployment_authority: false,
+        payment_authority: false,
+        private_data_authority: false,
+      };
+    },
     async close() {
+      if (!server.listening) return;
       await new Promise((resolve) => server.close(resolve));
     },
   };
