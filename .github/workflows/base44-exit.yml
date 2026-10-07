@@ -118,6 +118,8 @@ jobs:
         run: node systemia/forensic-record/owned-corpus.proof.mjs
       - name: Prove Forensic Record on Yard / Evercraft Compute
         run: node systemia/yard/forensic-record-resident-runtime.proof.mjs
+      - name: Prove Forensic Record resident Systemia wiring
+        run: node systemia/core/forensic-record-resident-wiring.proof.mjs
       - name: Enforce zero Base44 active hot paths
         run: node scripts/validate-no-base44-hotpath.mjs
       - name: Prove owned-only CHUM IndexNow routing
