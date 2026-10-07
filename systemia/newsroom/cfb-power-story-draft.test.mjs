@@ -61,3 +61,30 @@ test('refuses to create a publishable-looking story from an incomplete ranking',
   fixture.rankings = fixture.rankings.slice(0, 20);
   assert.throws(() => buildCfbPowerStoryDraft({ranking:fixture, ledger:ledger()}), /top_25_required/);
 });
+
+
+test('accepts NCAA ledger v2 and preserves membership plus authority in machine evidence', () => {
+  const nextLedger=ledger();
+  nextLedger.schema='evercraft.cfb.completed-game-ledger.v2';
+  nextLedger.source='ncaa-sdataprod';
+  nextLedger.source_authority='NCAA';
+  nextLedger.season=2026;
+  nextLedger.through_date='2026-10-03';
+  nextLedger.fetched_weeks=[1,2,3,4,5];
+  nextLedger.membership={
+    schema:'evercraft.cfb.fbs-team-membership.v2',
+    derivation:'Repeated team appearances inside NCAA division-11 FBS scoreboard results.',
+    teams:[{team_id:'alpha-state',team_name:'Alpha State'}],
+  };
+  const story=buildCfbPowerStoryDraft({
+    ranking:ranking(),
+    ledger:nextLedger,
+    generatedAt:'2026-10-04T17:00:00Z'
+  });
+  const evidence=story.machine_evidence.payload.ledger;
+  assert.equal(evidence.schema,'evercraft.cfb.completed-game-ledger.v2');
+  assert.equal(evidence.source_authority,'NCAA');
+  assert.equal(evidence.through_date,'2026-10-03');
+  assert.deepEqual(evidence.fetched_weeks,[1,2,3,4,5]);
+  assert.equal(evidence.membership.schema,'evercraft.cfb.fbs-team-membership.v2');
+});
