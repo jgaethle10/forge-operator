@@ -116,7 +116,7 @@ jobs:
           live_yard=""
           yard_ready=false
           for attempt in $(seq 1 16); do
-            live_yard="$(curl --fail --silent --show-error --retry 2 --retry-all-errors --retry-delay 2 --max-time 25 "$FABRIC_ORIGIN/earthworks")"
+            live_yard="$(curl --fail --silent --show-error --max-time 25 "$FABRIC_ORIGIN/earthworks" 2>/dev/null || true)"
             if printf '%s' "$live_yard" | grep -Fq 'Live Yard 001' \
               && printf '%s' "$live_yard" | grep -Fq 'Dispatch truck' \
               && printf '%s' "$live_yard" | grep -Fq 'Shadow' \
