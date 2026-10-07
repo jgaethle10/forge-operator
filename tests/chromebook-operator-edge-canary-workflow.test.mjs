@@ -17,3 +17,13 @@ test('production edge canary still exits nonzero after bounded retry exhaustion'
   assert.match(workflow,/exit \"\$status\"/);
   assert.match(workflow,/failed with status \$status after \$attempt attempt/);
 });
+
+
+test('root 502 retry is admitted only after the same run observed Visual Desk deployment lag',()=>{
+  assert.match(workflow,/deployment_wait_started=false/);
+  assert.match(workflow,/deployment_wait_started=true/);
+  assert.match(workflow,/deployment_wait_started\" = \"true/);
+  assert.match(workflow,/stage\" = \"customer_surface/);
+  assert.match(workflow,/error\" = \"http_502:\//);
+  assert.match(workflow,/A 502 without that prior deployment-lag evidence remains immediate/);
+});

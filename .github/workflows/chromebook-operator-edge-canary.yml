@@ -48,6 +48,7 @@ jobs:
           max_attempts=16
           attempt=1
           status=1
+          deployment_wait_started=false
           while [ "$attempt" -le "$max_attempts" ]; do
             rm -f artifacts/fabric-operator-edge-canary.stdout.json artifacts/fabric-operator-edge-canary.stderr.json
             set +e
@@ -69,7 +70,18 @@ jobs:
             # Retry only the known deployment-lag signature for a newly added
             # Visual Desk route. All other production failures remain immediate.
             if [ "$stage" = "visual_desk" ] && [ "$error" = "http_404:/visuals/" ] && [ "$attempt" -lt "$max_attempts" ]; then
+              deployment_wait_started=true
               echo "Visual Desk route has not reached the owned edge yet; retrying after updater window slice ($attempt/$max_attempts)."
+              sleep 20
+              attempt=$((attempt + 1))
+              continue
+            fi
+
+            # Once this exact run has proven the old Visual Desk route is still
+            # deployed, allow a root 502 during the subsequent Fabric restart.
+            # A 502 without that prior deployment-lag evidence remains immediate.
+            if [ "$deployment_wait_started" = "true" ] && [ "$stage" = "customer_surface" ] && [ "$error" = "http_502:/" ] && [ "$attempt" -lt "$max_attempts" ]; then
+              echo "Owned Fabric is restarting after Visual Desk deployment; retrying ($attempt/$max_attempts)."
               sleep 20
               attempt=$((attempt + 1))
               continue
