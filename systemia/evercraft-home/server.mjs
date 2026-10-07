@@ -1,7 +1,7 @@
 import http from "node:http";
 import fs from "node:fs";
 import path from "node:path";
-import { randomUUID } from "node:crypto";
+import { createHash, randomUUID, timingSafeEqual } from "node:crypto";
 import { fileURLToPath, pathToFileURL } from "node:url";
 import { EvercraftPassport } from "../passport/passport.mjs";
 import { EvercraftIdentity, IdentityRateLimiter } from "../identity/identity.mjs";
@@ -113,13 +113,22 @@ export async function startEvercraftHomeServer({
   credentialStateDir = String(process.env.EVERCRAFT_CREDENTIAL_STATE_DIR || (identityStateDir ? path.join(identityStateDir, "provider-credentials") : "")).trim(),
   sessionTtlSeconds = Number(process.env.EVERCRAFT_HOME_SESSION_TTL_SECONDS || 1800),
   cookieSecure = String(process.env.EVERCRAFT_HOME_COOKIE_SECURE || "true").toLowerCase() !== "false",
+  cookiePath = String(process.env.EVERCRAFT_HOME_COOKIE_PATH || "/").trim(),
   serviceOrigins = process.env,
+  ownerClaimSha256 = String(process.env.EVERCRAFT_OWNER_CLAIM_SHA256 || "").trim().toLowerCase(),
+  ownerSubjectRef = String(process.env.EVERCRAFT_OWNER_SUBJECT_REF || "user:owner").trim(),
+  ownerLogin = String(process.env.EVERCRAFT_OWNER_LOGIN || "owner").trim(),
+  ownerDisplayName = String(process.env.EVERCRAFT_OWNER_DISPLAY_NAME || "Jesse").trim(),
 } = {}) {
   const loopback = ["127.0.0.1", "localhost", "::1"].includes(host);
   if (authMode === "local" && !loopback) {
     throw new Error("Local auth may only bind to loopback. Configure Evercraft Identity before remote exposure.");
   }
   if (!["local", "passport"].includes(authMode)) throw new Error("unsupported_auth_mode");
+  if (!/^\/(?:[A-Za-z0-9._~-]+\/?)*$/.test(cookiePath || "/")) {
+    throw new Error("home_cookie_path_invalid");
+  }
+  const normalizedCookiePath = cookiePath || "/";
   if (authMode === "passport" && (!identitySecret || !identityStateDir || !passportStateDir)) {
     throw new Error("Passport auth requires signing material, EVERCRAFT_IDENTITY_STATE_DIR and EVERCRAFT_PASSPORT_STATE_DIR.");
   }
@@ -133,6 +142,10 @@ export async function startEvercraftHomeServer({
     : null;
   const loginLimiter = new IdentityRateLimiter();
   const credentialVault = credentialStateDir ? new ProviderCredentialVault({ stateDir: credentialStateDir }) : null;
+  if (ownerClaimSha256 && !/^[a-f0-9]{64}$/.test(ownerClaimSha256)) {
+    throw new Error("owner_claim_sha256_invalid");
+  }
+  const claimLimiter = new IdentityRateLimiter({ maxFailures: 8, windowMs: 15 * 60 * 1000, blockMs: 30 * 60 * 1000 });
   const instanceId = "home_" + randomUUID();
   const ravenWorkBridgeUrl = String(serviceOrigins?.RAVEN_NEXUS_WORK_URL || "").trim();
   const ravenWorkBridgeTokenFile = String(serviceOrigins?.RAVEN_NEXUS_WORK_TOKEN_FILE || "").trim();
@@ -162,6 +175,8 @@ export async function startEvercraftHomeServer({
       deployment_receipt_bound: Boolean(deploymentReceiptRef),
       deployment_receipt_ref: deploymentReceiptRef || null,
       identity_login_configured: Boolean(identity),
+      owner_bootstrapped: Boolean(identity?.subjectForLogin(ownerLogin)),
+      owner_claim_available: Boolean(identity && ownerClaimSha256 && !identity.subjectForLogin(ownerLogin)),
       signing_key_id: authMode === "passport" ? identityKeyId : null,
       accepted_signing_key_count: authMode === "passport" ? Object.keys(signingKeys).length : 0,
       session_revocation_supported: Boolean(identity),
@@ -173,7 +188,7 @@ export async function startEvercraftHomeServer({
   function sessionCookie(token, maxAgeSeconds) {
     return [
       "evercraft_session=" + encodeURIComponent(token),
-      "Path=/",
+      "Path=" + normalizedCookiePath,
       "HttpOnly",
       "SameSite=Strict",
       cookieSecure ? "Secure" : "",
@@ -266,6 +281,90 @@ export async function startEvercraftHomeServer({
         timestamp: new Date().toISOString(),
       });
 
+    }
+
+    if (req.method === "GET" && url.pathname === "/api/bootstrap-status") {
+      const owner = identity?.subjectForLogin(ownerLogin) || null;
+      return json(res, 200, {
+        ok: true,
+        schema: "evercraft.home.bootstrap-status.v1",
+        state: owner ? "claimed" : ownerClaimSha256 ? "claim_required" : "claim_unavailable",
+        owner_bootstrapped: Boolean(owner),
+        claim_available: Boolean(!owner && ownerClaimSha256),
+        external_identity_provider_required: false,
+        secret_material_exposed: false,
+      });
+    }
+
+    if (req.method === "POST" && url.pathname === "/api/owner-claim") {
+      if (authMode !== "passport" || !identity || !passport) {
+        return json(res, 503, { ok: false, state: "owner_claim_not_configured" });
+      }
+      if (identity.subjectForLogin(ownerLogin)) {
+        return json(res, 409, { ok: false, state: "identity_bootstrap_already_completed" });
+      }
+      if (!ownerClaimSha256) {
+        return json(res, 503, { ok: false, state: "owner_claim_not_available" });
+      }
+      const rateKey = "owner-claim@" + String(req.socket?.remoteAddress || "unknown");
+      try {
+        claimLimiter.assertAllowed(rateKey);
+        const body = await readJsonBody(req, 32768);
+        const supplied = String(body.claim_code || "").trim();
+        const suppliedHash = createHash("sha256").update(supplied).digest("hex");
+        const expected = Buffer.from(ownerClaimSha256, "hex");
+        const actual = Buffer.from(suppliedHash, "hex");
+        if (expected.length !== actual.length || !timingSafeEqual(expected, actual)) {
+          claimLimiter.recordFailure(rateKey);
+          return json(res, 401, { ok: false, state: "owner_claim_invalid" });
+        }
+
+        const authorityReceiptRef = "owner-claim:sha256:" + ownerClaimSha256;
+        const bootstrapped = identity.bootstrapOwner({
+          subjectRef: ownerSubjectRef,
+          login: ownerLogin,
+          displayName: ownerDisplayName,
+          password: String(body.password || ""),
+          authorityReceiptRef,
+        });
+        const now = new Date();
+        const ends = new Date(now.getTime() + 3650 * 24 * 60 * 60 * 1000);
+        const grant = passport.issueGrant({
+          idempotency_key: "evercraft-home-owner-claim:" + ownerSubjectRef,
+          subject_ref: ownerSubjectRef,
+          issuer_ref: "evercraft:identity-authority",
+          product: "evercraft-home",
+          scopes: [
+            "home.read",
+            "home.systemia.read",
+            "home.systemia.plan",
+            "home.raven.execute",
+            "home.yard.read",
+            "home.network.read",
+            "home.identity.sessions.manage"
+          ],
+          starts_at: now.toISOString(),
+          ends_at: ends.toISOString(),
+          max_delegation_depth: 1,
+          authority_state: "verified_identity_authority",
+          authority_receipt_ref: bootstrapped.receipt.receipt_hash,
+          purpose: "owner_access_to_evercraft_home",
+        });
+        claimLimiter.recordSuccess(rateKey);
+        return json(res, 201, {
+          ok: true,
+          state: "claimed",
+          subject: bootstrapped.subject.subject_ref,
+          display_name: bootstrapped.subject.display_name,
+          passport_grant_id: grant.grant.grant_id,
+          claim_reusable: false,
+          external_identity_provider_used: false,
+        });
+      } catch (error) {
+        const state = String(error?.message || "owner_claim_failed");
+        const status = state === "identity_login_rate_limited" ? 429 : 400;
+        return json(res, status, { ok: false, state });
+      }
     }
 
     if (req.method === "POST" && url.pathname === "/api/login") {
