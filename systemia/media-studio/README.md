@@ -434,3 +434,21 @@ npm run media:studio -- cinematic-shot ./tmp/shot-binding.json ./tmp/visual-requ
 ```
 
 This layer does not generate media or grant publication authority. It makes downstream Veo, Runway and future visual engines obey the same physical scene grammar and gives Shot Tournament/continuity QA an explicit contract to judge against.
+
+
+## Fallen Sessions / PulseGrid
+
+Fallen Sessions is the music-production surface inside Fallen. PulseGrid is its canonical session engine.
+
+The music layer follows the same durable boundary as the rest of Fallen: the project graph is Evercraft-owned while synthesis, effects and future third-party devices remain replaceable execution departments.
+
+The canonical graph now lives in `pulsegrid-session.ts` and models transport, tracks, scenes, clips, notes, step probability, microtiming, automation, track DSP and reversible edit receipts. `pulsegrid-clock-worklet.js` provides the audio-thread timing source used by the browser engine alpha.
+
+Non-negotiable rules:
+
+- human UI, controllers, code and agents edit the same session graph;
+- machine edits return explicit reversible receipts;
+- source recordings and imported assets retain provenance;
+- public discovery state is separate from commercial readiness;
+- Fallen Sessions may be publicly discoverable while checkout remains disabled;
+- PulseGrid must integrate with Fallen rather than evolve as a separate hidden DAW codebase.
