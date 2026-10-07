@@ -1,0 +1,66 @@
+{
+  "schema": "evercraft.rivet.visual-migration-plan.v1",
+  "state": "planning_only_partner_breakpoints_and_tolerance_not_yet_approved",
+  "rule": "No screenshot baseline becomes authoritative until the partners approve the capture environment and reference images.",
+  "deterministic_capture_requirements": [
+    "same browser engine and version for baseline and staging",
+    "same viewport dimensions",
+    "same device scale factor",
+    "same font files and font-loading completion",
+    "animations disabled or frozen",
+    "network-idle or explicit ready marker before capture",
+    "no personalized or time-varying content in compared region"
+  ],
+  "proposed_viewports": [
+    {
+      "name": "mobile",
+      "width": 390,
+      "height": 844,
+      "status": "proposed"
+    },
+    {
+      "name": "tablet",
+      "width": 768,
+      "height": 1024,
+      "status": "proposed"
+    },
+    {
+      "name": "desktop",
+      "width": 1440,
+      "height": 900,
+      "status": "proposed"
+    }
+  ],
+  "proposed_paths": [
+    {
+      "path": "/rivet/",
+      "purpose": "primary public surface"
+    },
+    {
+      "path": "/rivet/mesh/",
+      "purpose": "knowledge mesh"
+    },
+    {
+      "path": "/chum/capabilities/rivet-site-underwriting-v1/",
+      "purpose": "generated capability surface"
+    },
+    {
+      "path": "/chum/intents/rivet-site-underwriting-v1/",
+      "purpose": "generated intent surface"
+    }
+  ],
+  "required_review": [
+    "logo geometry and placement",
+    "palette fidelity",
+    "typography and font weights",
+    "spacing and rhythm",
+    "button and link treatments",
+    "light default theme",
+    "Midnight dark mode",
+    "mobile reflow",
+    "focus and interaction states",
+    "report presentation when a partner-approved report fixture is available"
+  ],
+  "numeric_pixel_tolerance": "not_set_until_capture_environment_is_partner_approved",
+  "human_partner_visual_approval_required": true
+}

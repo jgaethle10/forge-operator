@@ -1,0 +1,62 @@
+{
+  "schema": "evercraft.rivet.hosting-migration-baseline.v1",
+  "captured_from_commit": "7671247d0bc5623faa05ded4842544ecf1762c4f",
+  "authority": "RIVET Brand Kit Vol.1 and current approved repository surface",
+  "approval_state": "planning_only_no_migration_authority",
+  "public_base_path": "/rivet",
+  "local_root": "public/rivet",
+  "protected_repository_blobs": {
+    "brand.css": "caa7f8dc782545d6b69522fdd6d0d6e8cdf439c7",
+    "brand.json": "0e9f21ed607af6a2b5043023bacb28f0d7144339",
+    "discovery.json": "c1eb7ebc2b4b09fa2baac14b5c570cffe7c79b88",
+    "index.html": "3012bd113b081bb98b187e9b86178cf187aa73ba",
+    "llms.txt": "1b375bb4583ba881ddc4079f338a93f4c2354910"
+  },
+  "exact_runtime_assets": [
+    "brand.json",
+    "brand.css"
+  ],
+  "page_contract": {
+    "title": "RIVET | EV infrastructure intelligence by address",
+    "required_text": [
+      "Locate. Assess. Decide.",
+      "RIVET turns location data into confident EV infrastructure decisions."
+    ],
+    "required_refs": [
+      "./brand.css",
+      "./brand.json"
+    ],
+    "forbidden_patterns": [
+      "\\bLuma\\b",
+      "RIVET\\s*\\/\\s*AliEV",
+      "aliev\\.base44\\.app"
+    ]
+  },
+  "brand_contract": {
+    "canonical_name": "RIVET",
+    "source_document": "RIVET Brand Kit",
+    "version": "Vol.1",
+    "last_updated": "2026-09-24",
+    "palette": {
+      "midnight": "#0B1424",
+      "neon": "#62D134",
+      "deep_cobalt": "#1F4AAB",
+      "bone": "#F5F2EA",
+      "slate": "#64748B"
+    },
+    "typography": {
+      "headings": "Open Sauce, Medium or bolder",
+      "body": "Public Sans"
+    },
+    "theme": {
+      "default": "light",
+      "dark_mode": "Midnight"
+    },
+    "process": [
+      "locate",
+      "assess",
+      "decide"
+    ]
+  },
+  "migration_rule": "A hosting migration may change infrastructure only. Any presentation or product change requires separate explicit RIVET approval."
+}
