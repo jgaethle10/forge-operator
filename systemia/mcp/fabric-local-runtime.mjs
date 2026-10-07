@@ -245,7 +245,7 @@ function refreshVisualDeskMirror({outputDir,origin}) {
       if(!fs.existsSync(manifestFile)) continue;
       try{
         const manifest=JSON.parse(fs.readFileSync(manifestFile,'utf8'));
-        if(manifest?.schema!=='evercraft.visual-story.manifest.v2') continue;
+        if(!['evercraft.visual-story.manifest.v2','evercraft.visual-story.manifest.v3'].includes(manifest?.schema)) continue;
         entries.push({
           slug:manifest.slug,
           title:manifest.title,

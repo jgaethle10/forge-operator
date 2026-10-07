@@ -83,9 +83,15 @@ test('build emits owned page, social card, manifest and Clip handoff',()=>{
       'card-story.svg',
       'card.svg',
       'clip-handoff.json',
+      'fallen-stage-input.json',
+      'graphics-plan.json',
       'index.html',
       'manifest.json',
       'motion.html',
+      'poster-feed.svg',
+      'poster-square.svg',
+      'poster-story.svg',
+      'scroll-stop-report.json',
       'story.json',
     ]);
 
@@ -96,11 +102,21 @@ test('build emits owned page, social card, manifest and Clip handoff',()=>{
     assert.match(html,/og:image/);
     assert.match(html,/visuals\.evercraft\.test\/cascade-test/);
     assert.equal(manifest.canonicalUrl,'https://visuals.evercraft.test/cascade-test/');
-    assert.equal(manifest.schema,'evercraft.visual-story.manifest.v2');
+    assert.equal(manifest.schema,'evercraft.visual-story.manifest.v3');
+    assert.match(manifest.socialCardUrl,/poster-feed\.svg$/);
+    assert.equal(manifest.scrollStopStatus,'pass');
     assert.match(manifest.assets.motionStage,/motion\.html$/);
     assert.equal(handoff.publicationAuthority,false);
-    assert.equal(handoff.schema,'evercraft.visual-story.clip-handoff.v2');
-    assert.match(handoff.preferredAssetByDestination.tiktok,/card-story\.svg$/);
+    assert.equal(handoff.schema,'evercraft.visual-story.clip-handoff.v3');
+    assert.match(handoff.preferredAssetByDestination.tiktok,/poster-story\.svg$/);
+    const plan=JSON.parse(fs.readFileSync(path.join(result.outputDir,'graphics-plan.json'),'utf8'));
+    const gate=JSON.parse(fs.readFileSync(path.join(result.outputDir,'scroll-stop-report.json'),'utf8'));
+    const fallen=JSON.parse(fs.readFileSync(path.join(result.outputDir,'fallen-stage-input.json'),'utf8'));
+    assert.equal(plan.hero.visualPriority,'hero_first');
+    assert.equal(gate.status,'pass');
+    assert.equal(fallen.aspectRatio,'9:16');
+    assert.match(html,/poster-feed\.svg/);
+    assert.match(html,/Sources &amp; methodology/);
     assert.deepEqual(handoff.suggestedDestinations,['facebook','instagram','linkedin','tiktok']);
   }finally{
     fs.rmSync(root,{recursive:true,force:true});
