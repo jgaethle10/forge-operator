@@ -42,8 +42,9 @@ export function readEvercraftOsApps({ productKey = null } = {}) {
 
   const catalog = buildEvercraftOsAppCatalog();
   return {
-    schema: "evercraft.home.os-app-catalog.v1",
     ...catalog,
+    schema: "evercraft.home.os-app-catalog.v1",
+    catalog_schema: catalog.schema,
     installation_performed: false,
     authority_granted: false
   };
