@@ -1,0 +1,28 @@
+name: RIVET Hosting Migration Planning Gate
+
+on:
+  pull_request:
+    paths:
+      - 'governance/rivet-hosting-migration/**'
+      - 'systemia/migrations/rivet-hosting/**'
+      - 'tests/rivet-hosting-migration-fidelity.test.mjs'
+      - '.github/workflows/rivet-hosting-migration-planning.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  planning-only-fidelity:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Prove approved RIVET brand baseline is untouched
+        run: node tests/rivet-brand.test.mjs
+      - name: Prove hosting migration audit is read-only and drift-sensitive
+        run: node --test tests/rivet-hosting-migration-fidelity.test.mjs
+      - name: Emit local migration baseline receipt
+        run: node systemia/migrations/rivet-hosting/brand-fidelity-audit.mjs
