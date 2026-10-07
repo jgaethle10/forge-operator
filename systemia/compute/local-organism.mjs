@@ -85,7 +85,7 @@ export async function startLocalOrganism({
   ravenProviderCredentialStateDir = '',
   ravenOllamaOrigin = '',
   zeroSpendCapacity = true,
-  placementLabels = ['opportunistic', 'private', 'outbound-only', 'personal-compute'],
+  placementLabels = ['opportunistic', 'private', 'outbound-only', 'personal-compute', 'persistent-storage'],
 } = {}) {
   if (!root) throw new Error('root is required');
   if (!/^[a-f0-9]{40}$/i.test(String(releaseRef || ''))) {
@@ -463,7 +463,7 @@ if (isCli) {
     ).toLowerCase() !== 'false',
     placementLabels: String(
       process.env.EVERCRAFT_LOCAL_NODE_LABELS ||
-      'opportunistic,private,outbound-only,personal-compute'
+      'opportunistic,private,outbound-only,personal-compute,persistent-storage'
     ).split(',').map((label) => label.trim().toLowerCase()).filter(Boolean),
   });
 
