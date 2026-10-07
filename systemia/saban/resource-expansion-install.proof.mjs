@@ -23,6 +23,8 @@ assert.match(source,/--owned-host\) OWNED_HOST="true"/);
 assert.match(source,/--public-market-discovery\) PUBLIC_MARKET_DISCOVERY="true"/);
 assert.ok(!source.includes('SABAN_ALLOW_COMMERCIAL_CAPACITY=1'));
 
+assert.match(script,/physical host shutdown is never authorized/);
+
 console.log(JSON.stringify({
   ok:true,
   schema:'evercraft.saban.resource-expansion-install-proof.v1',
@@ -30,5 +32,7 @@ console.log(JSON.stringify({
   public_market_discovery_requires_explicit_install_flag:true,
   commercial_capacity_disabled:true,
   resident_resource_expansion_installed:true,
+  local_auto_retire_requires_explicit_install_flag:true,
+  physical_host_shutdown_never_authorized:true,
   local_spawn_state_scoped_to_saban_state:true,
 },null,2));
