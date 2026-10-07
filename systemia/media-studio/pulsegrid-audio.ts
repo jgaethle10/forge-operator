@@ -77,6 +77,10 @@ export class PulseGridAudioEngine {
     const maxScene = Math.max(0, (this.session?.tracks[0]?.clips.length || 1) - 1);
     this.scene = Math.max(0, Math.min(Math.round(scene), maxScene));
     this.step = 0;
+    if (this.playing) {
+      this.clearUiTimers();
+      this.stopScheduledSources();
+    }
     if (this.context) {
       this.nextTime = this.context.currentTime + 0.05;
       this.configureClock();
