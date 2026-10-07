@@ -304,7 +304,9 @@
     "proof:saban-resource-expansion-organism": "node systemia/saban/resource-expansion-organism.proof.mjs",
     "proof:saban-resource-expansion-install": "node systemia/saban/resource-expansion-install.proof.mjs",
     "proof:saban-proactive-resource-loop": "node systemia/saban/proactive-resource-loop.proof.mjs",
-    "proof:saban-resource-expansion-watchdog": "node systemia/saban/resource-expansion-watchdog.proof.mjs"
+    "proof:saban-resource-expansion-watchdog": "node systemia/saban/resource-expansion-watchdog.proof.mjs",
+    "lineage:control-room": "node systemia/lineage/cli.mjs control-room",
+    "lineage:fsck": "node systemia/lineage/cli.mjs fsck"
   },
   "dependencies": {
     "@google/genai": "^2.4.0",
