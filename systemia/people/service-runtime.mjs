@@ -130,6 +130,63 @@ export async function startPeopleLayerRuntime({
         return sendJson(res,201,{ok:true,brain:runtime.createBrain(body)});
       }
 
+      let snapshotMatch=pathname.match(/^\/api\/people\/brains\/([^/]+)$/);
+      if(method==='GET'&&snapshotMatch){
+        if(!needAdmin())return;
+        return sendJson(res,200,{ok:true,snapshot:runtime.brainSnapshot(decodeURIComponent(snapshotMatch[1]))});
+      }
+
+      let memoryMatch=pathname.match(/^\/api\/people\/brains\/([^/]+)\/memories$/);
+      if(method==='POST'&&memoryMatch){
+        if(!needAdmin())return;
+        const body=await readJson(req);
+        return sendJson(res,201,{ok:true,memory:runtime.createMemory(decodeURIComponent(memoryMatch[1]),body)});
+      }
+
+      let relationshipMatch=pathname.match(/^\/api\/people\/brains\/([^/]+)\/relationships$/);
+      if(method==='POST'&&relationshipMatch){
+        if(!needAdmin())return;
+        const body=await readJson(req);
+        return sendJson(res,201,{ok:true,relationship:runtime.createRelationship(decodeURIComponent(relationshipMatch[1]),body)});
+      }
+
+      let shareMatch=pathname.match(/^\/api\/people\/brains\/([^/]+)\/relationships\/([^/]+)\/(grant|revoke)$/);
+      if(method==='POST'&&shareMatch){
+        if(!needAdmin())return;
+        const body=await readJson(req);
+        const brainKey=decodeURIComponent(shareMatch[1]);
+        const relationshipKey=decodeURIComponent(shareMatch[2]);
+        const result=shareMatch[3]==='grant'
+          ? runtime.grantShare(brainKey,relationshipKey,body)
+          : runtime.revokeShare(brainKey,relationshipKey,body);
+        return sendJson(res,200,{ok:true,share:result});
+      }
+
+      let revokeConsentMatch=pathname.match(/^\/api\/people\/brains\/([^/]+)\/revoke-consent$/);
+      if(method==='POST'&&revokeConsentMatch){
+        if(!needAdmin())return;
+        const body=await readJson(req);
+        return sendJson(res,200,{ok:true,consent:runtime.revokeConsent(decodeURIComponent(revokeConsentMatch[1]),body)});
+      }
+
+      let opportunityMatch=pathname.match(/^\/api\/people\/brains\/([^/]+)\/opportunities$/);
+      if(method==='POST'&&opportunityMatch){
+        if(!needAdmin())return;
+        const body=await readJson(req);
+        return sendJson(res,201,{ok:true,opportunity:runtime.createOpportunity(decodeURIComponent(opportunityMatch[1]),body)});
+      }
+
+      let opportunityAuthorityMatch=pathname.match(/^\/api\/people\/brains\/([^/]+)\/opportunities\/([^/]+)\/authority$/);
+      if(method==='POST'&&opportunityAuthorityMatch){
+        if(!needAdmin())return;
+        const body=await readJson(req);
+        return sendJson(res,200,{ok:true,opportunity:runtime.setOpportunityAuthority(
+          decodeURIComponent(opportunityAuthorityMatch[1]),
+          decodeURIComponent(opportunityAuthorityMatch[2]),
+          body
+        )});
+      }
+
       let match=pathname.match(/^\/api\/people\/brains\/([^/]+)\/(invite|email-challenge|export|delete-request|delete)$/);
       if(match){
         if(!needAdmin())return;
@@ -138,7 +195,7 @@ export async function startPeopleLayerRuntime({
         const body=method==='POST'?await readJson(req):{};
         if(method==='POST'&&action==='invite')return sendJson(res,201,{ok:true,invite:runtime.createInvite(brainKey,body)});
         if(method==='POST'&&action==='email-challenge')return sendJson(res,201,{ok:true,challenge:runtime.createEmailChallenge(brainKey,body)});
-        if(method==='GET'&&action==='export')return sendJson(res,200,{ok:true,export:runtime.exportBrain(brainKey)});
+        if(method==='POST'&&action==='export')return sendJson(res,200,{ok:true,export:runtime.exportBrain(brainKey)});
         if(method==='POST'&&action==='delete-request')return sendJson(res,201,{ok:true,request:runtime.requestDelete(brainKey)});
         if(method==='POST'&&action==='delete')return sendJson(res,200,{ok:true,result:runtime.completeDelete(brainKey,body.confirmation_text)});
         return sendJson(res,405,{ok:false,error:'method_not_allowed'});
