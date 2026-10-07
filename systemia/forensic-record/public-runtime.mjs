@@ -11,6 +11,7 @@ import {
   forensicPublicCss,
   forensicPublicJs,
 } from './public-ui.mjs';
+import { loadPublicForensicCollections } from './public-collections.mjs';
 
 const clean=(v)=>String(v??'').trim();
 
@@ -128,6 +129,7 @@ export async function startForensicRecordPublicRuntime({
   const root=path.resolve(stateDir);
   const seed=seedStatus(root);
   const initialHealth=forensicCorpusHealth({stateDir:root});
+  const publicData=loadPublicForensicCollections({stateDir:root});
   if(requireSeed){
     if(seed.seed_complete!==true) throw new Error('forensic_public_verified_seed_required');
     if(seed.seed_protected_entities_imported===true) throw new Error('forensic_public_seed_contains_protected_entities');
@@ -206,14 +208,105 @@ export async function startForensicRecordPublicRuntime({
           schema:'evercraft.forensic-record.public-api.v1',
           service:'forensic-record-public-runtime',
           mode:'read_only',
-          routes:['GET /health','GET /v1/stats','POST /v1/search','GET /v1/findings/:number'],
+          routes:[
+            'GET /health',
+            'GET /v1/stats',
+            'GET /v1/sources',
+            'GET /v1/coverage',
+            'GET /v1/document-sets',
+            'GET /v1/page-index',
+            'GET /v1/media',
+            'GET /v1/archive-meta',
+            'POST /v1/search',
+            'GET /v1/findings/:number'
+          ],
           evidence_boundary:'Source-linked records show what a source contains. Presence, association, allegation, testimony and adjudicated fact remain distinct.',
         });
       }
 
       if(req.method==='GET'&&url.pathname==='/v1/stats'){
         const corpus=forensicCorpusHealth({stateDir:root});
-        return send(res,200,{ok:true,...safeStats(corpus,seedStatus(root))});
+        return send(res,200,{
+          ok:true,
+          ...safeStats(corpus,seedStatus(root)),
+          public_sources:publicData.counts.sources,
+          public_coverage_sets:publicData.counts.coverage,
+          public_page_index_rows:publicData.counts.page_index,
+          public_document_sets:publicData.counts.document_sets,
+          public_media_records:publicData.counts.media,
+        });
+      }
+
+      if(req.method==='GET'&&url.pathname==='/v1/sources'){
+        const q=clean(url.searchParams.get('q')).toLowerCase();
+        const type=clean(url.searchParams.get('type')).toLowerCase();
+        const rows=publicData.collections.sources.filter(row=>
+          (!type||clean(row.doc_type).toLowerCase()===type) &&
+          (!q||[row.title,row.publisher,row.description].map(clean).join(' ').toLowerCase().includes(q))
+        );
+        return send(res,200,{
+          ok:true,
+          schema:'evercraft.forensic-record.public-sources.v1',
+          count:Math.min(rows.length,200),
+          matched_count:rows.length,
+          truncated:rows.length>200,
+          results:rows.slice(0,200),
+        });
+      }
+
+      if(req.method==='GET'&&url.pathname==='/v1/coverage'){
+        return send(res,200,{
+          ok:true,
+          schema:'evercraft.forensic-record.public-coverage.v1',
+          count:publicData.collections.coverage.length,
+          results:publicData.collections.coverage,
+        });
+      }
+
+      if(req.method==='GET'&&url.pathname==='/v1/document-sets'){
+        return send(res,200,{
+          ok:true,
+          schema:'evercraft.forensic-record.public-document-sets.v1',
+          count:publicData.collections.document_sets.length,
+          results:publicData.collections.document_sets,
+        });
+      }
+
+      if(req.method==='GET'&&url.pathname==='/v1/page-index'){
+        const corpus=clean(url.searchParams.get('corpus_id')).toLowerCase();
+        const part=clean(url.searchParams.get('part_label')).toLowerCase();
+        const review=clean(url.searchParams.get('review_status')).toLowerCase();
+        const rows=publicData.collections.page_index.filter(row=>
+          (!corpus||clean(row.corpus_id).toLowerCase()===corpus) &&
+          (!part||clean(row.part_label).toLowerCase()===part) &&
+          (!review||clean(row.review_status).toLowerCase()===review)
+        );
+        return send(res,200,{
+          ok:true,
+          schema:'evercraft.forensic-record.public-page-index.v1',
+          count:Math.min(rows.length,500),
+          matched_count:rows.length,
+          truncated:rows.length>500,
+          results:rows.slice(0,500),
+        });
+      }
+
+      if(req.method==='GET'&&url.pathname==='/v1/media'){
+        return send(res,200,{
+          ok:true,
+          schema:'evercraft.forensic-record.public-media.v1',
+          count:publicData.collections.media.length,
+          results:publicData.collections.media,
+        });
+      }
+
+      if(req.method==='GET'&&url.pathname==='/v1/archive-meta'){
+        return send(res,200,{
+          ok:true,
+          schema:'evercraft.forensic-record.public-archive-meta.v1',
+          count:publicData.collections.archive_meta.length,
+          results:publicData.collections.archive_meta,
+        });
       }
 
       const findingMatch=url.pathname.match(/^\/v1\/findings\/(\d+)$/);
