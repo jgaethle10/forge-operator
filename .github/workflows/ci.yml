@@ -165,8 +165,9 @@ jobs:
             -H 'A2A-Version: 1.0' \
             --data '{"message":{"messageId":"smoke-a2a-1","role":"ROLE_USER","parts":[{"text":"My AI cannot process this three hour video and I need the whole recording reviewed"}]}}' \
             | tee /tmp/a2a-discovery-response.json
-          curl --fail --silent -D /tmp/buyer-handoff-headers.txt -o /dev/null \
-            "http://127.0.0.1:3000/api/chum/go/roasted-text-pressure-test-machine-v1?surface=ci_buyer_frontage"
+          buyer_handoff_status="$(curl --silent -D /tmp/buyer-handoff-headers.txt -o /tmp/buyer-handoff-body.txt -w '%{http_code}' \
+            "http://127.0.0.1:3000/api/chum/go/roasted-text-pressure-test-machine-v1?surface=ci_buyer_frontage")"
+          printf '%s' "$buyer_handoff_status" > /tmp/buyer-handoff-status.txt
 
           node - <<'NODE'
           const fs = require('fs');
@@ -204,6 +205,8 @@ jobs:
           const a2aAgentCard = JSON.parse(fs.readFileSync('/tmp/a2a-agent-card.json','utf8'));
           const a2aDiscovery = JSON.parse(fs.readFileSync('/tmp/a2a-discovery-response.json','utf8'));
           const buyerHandoffHeaders = fs.readFileSync('/tmp/buyer-handoff-headers.txt','utf8');
+          const buyerHandoffBody = fs.readFileSync('/tmp/buyer-handoff-body.txt','utf8');
+          const buyerHandoffStatus = fs.readFileSync('/tmp/buyer-handoff-status.txt','utf8').trim();
 
           if (health.ok !== true) throw new Error('health.ok must be true');
           if (health.service !== 'forge-operator') throw new Error('unexpected health service');
@@ -286,11 +289,17 @@ jobs:
           if (!/^link:.*chum\/sitemaps\/index\.xml/im.test(chumHeaders)) throw new Error('CHUM response missing segmented sitemap Link header');
           if (!/^link:.*chum\/commercial\/feed\.json/im.test(chumHeaders)) throw new Error('CHUM response missing commercial intent feed Link header');
           if (!/^access-control-allow-origin:\s*\*/im.test(chumHeaders)) throw new Error('CHUM public discovery CORS missing');
-          if (!/^location:\s*https:\/\/evercraft-ai-suite-08c4d2b8\.base44\.app\/buy\/roasted-text-pressure-test-machine-v1\?/im.test(buyerHandoffHeaders)) {
-            throw new Error('CHUM human handoff did not route to the live Evercraft buyer frontage');
+          if (buyerHandoffStatus !== '503') {
+            throw new Error('Unconfigured owned buyer frontage must fail closed with 503');
           }
-          if (!/location:.*ec_surface=ci_buyer_frontage/im.test(buyerHandoffHeaders)) {
-            throw new Error('CHUM human handoff lost buyer-surface attribution');
+          if (!/Evercraft-owned buyer route is not verified yet\./i.test(buyerHandoffBody)) {
+            throw new Error('Held buyer handoff lost explicit owned-route explanation');
+          }
+          if (/^location:/im.test(buyerHandoffHeaders)) {
+            throw new Error('Held buyer handoff must not redirect anywhere');
+          }
+          if (/base44\.app/i.test(buyerHandoffHeaders + '\n' + buyerHandoffBody)) {
+            throw new Error('Held buyer handoff leaked a legacy Base44 route');
           }
           NODE
 
