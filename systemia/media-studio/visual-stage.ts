@@ -90,6 +90,18 @@ export interface GeoRoute {
   width?: number;
 }
 
+export interface GeoPolygon {
+  id: string;
+  rings: Array<Array<{ lat:number; lon:number }>>;
+  label?: string;
+  fill?: string;
+  stroke?: string;
+  strokeWidth?: number;
+  opacity?: number;
+  evidenceState?: EvidenceState;
+  sourceRefs?: string[];
+}
+
 export interface GeoLayer extends BaseLayer {
   kind: 'geo';
   projection: 'equirectangular' | 'mercator';
@@ -98,6 +110,7 @@ export interface GeoLayer extends BaseLayer {
   zoom?: number;
   points?: GeoPoint[];
   routes?: GeoRoute[];
+  polygons?: GeoPolygon[];
   grid?: boolean;
 }
 
@@ -371,6 +384,24 @@ export function validateStage(stage:VisualStage){
     ids.add(layer.id);
     if(!Number.isFinite(layer.z)) errors.push(`layer_z_invalid:${layer.id}`);
     if(layer.kind==='media' && !layer.sourcePath) errors.push(`media_source_missing:${layer.id}`);
+    if(layer.kind==='geo'){
+      for(const polygon of layer.polygons??[]){
+        if(!polygon.id?.trim()) errors.push(`geo_polygon_id_missing:${layer.id}`);
+        if(!Array.isArray(polygon.rings)||!polygon.rings.length) errors.push(`geo_polygon_rings_missing:${polygon.id||layer.id}`);
+        for(const ring of polygon.rings??[]){
+          if(!Array.isArray(ring)||ring.length<3) errors.push(`geo_polygon_ring_invalid:${polygon.id||layer.id}`);
+          for(const point of ring??[]){
+            if(!Number.isFinite(point?.lat)||point.lat<-90||point.lat>90||!Number.isFinite(point?.lon)||point.lon<-180||point.lon>180){
+              errors.push(`geo_polygon_coordinate_invalid:${polygon.id||layer.id}`);
+              break;
+            }
+          }
+        }
+        if(polygon.evidenceState && ['modeled','inferred','synthetic_visualization'].includes(polygon.evidenceState) && !(polygon.sourceRefs?.length)){
+          errors.push(`geo_polygon_provenance_missing:${polygon.id||layer.id}`);
+        }
+      }
+    }
     if(layer.evidenceState && ['modeled','inferred','synthetic_visualization'].includes(layer.evidenceState) && !(layer.sourceRefs?.length)){
       errors.push(`evidence_state_without_source_ref:${layer.id}`);
     }
