@@ -8,6 +8,7 @@ import {
 import {
   nativePickMesh,
   orthographicPickRay,
+  type PickRay,
   perspectivePickRay,
   pickNearestNativeMesh,
 } from './world-forge-picking';
@@ -567,7 +568,7 @@ function WorldViewport({
     if(!canvas) return;
     const rect=canvas.getBoundingClientRect();
 
-    let ray;
+    let ray:PickRay;
     if(viewMode==='camera'&&activeCamera?.camera){
       const eye={...activeCamera.transform.position};
       const target=activeCamera.camera.lookAt??{x:0,y:0,z:0};
