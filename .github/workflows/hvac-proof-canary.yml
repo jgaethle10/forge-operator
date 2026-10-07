@@ -31,6 +31,6 @@ jobs:
             echo "## HVAC lead recovery proof is live"
             echo
             echo "URL: $url"
-            echo "Verified markers: title + interactive lead flow + editable economics + conversion CTA
-            echo "Owned origin: fabric.systemiacommandcenters.com""
+            echo "Verified markers: title + interactive lead flow + editable economics + conversion CTA"
+            echo "Owned origin: fabric.systemiacommandcenters.com"
           } >> "$GITHUB_STEP_SUMMARY"
