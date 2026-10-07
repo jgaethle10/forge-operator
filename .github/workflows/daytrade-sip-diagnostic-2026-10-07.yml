@@ -1,0 +1,33 @@
+name: DayTrade SIP Diagnostic 2026-10-07
+
+on:
+  push:
+    branches:
+      - "systemia/daytrade-sip-diagnostic-2026-10-07"
+
+permissions:
+  contents: read
+
+jobs:
+  diagnostic:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Run read-only SIP entitlement diagnostic
+        env:
+          ALPACA_TRADING: ${{ secrets.ALPACA_TRADING }}
+          ALPACA_TRADING_SECRET: ${{ secrets.ALPACA_TRADING_SECRET }}
+          DAYTRADE_SIP_DIAGNOSTIC_OUTPUT: artifacts/daytrade-edge/sip-entitlement-diagnostic-2026-10-07.json
+        run: node systemia/daytrade-lens/edge-sip-entitlement-diagnostic.mjs
+      - name: Upload SIP diagnostic receipt
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: daytrade-sip-diagnostic-${{ github.run_id }}
+          path: artifacts/daytrade-edge/sip-entitlement-diagnostic-2026-10-07.json
+          if-no-files-found: error
+          retention-days: 30
