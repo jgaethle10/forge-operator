@@ -142,6 +142,25 @@ test('Fabric still routes explicit EV charging language after generic-language f
   assert.equal(hits[0].public_id,'aliev-site-opportunity-snapshot-v1');
 });
 
+
+test('Fabric routes quarry fleet queue and shadow-dispatch language to EarthWorks',()=>{
+  const canonical=loadFabricCatalogFromRepository();
+  const earthworks=canonical.find((x)=>x.public_id==='earthworks-site-autonomy-study-v1');
+  assert.ok(earthworks,'EarthWorks must exist in the canonical Fabric capability catalog');
+  assert.equal(earthworks.commercial_state,'sell_now');
+  assert.equal(earthworks.state,'human_handoff_only');
+  assert.equal(earthworks.entry_paid_offer?.price_usd_normalized,5000);
+  assert.ok(earthworks.connections.some((x)=>x.type==='mcp'&&x.url==='https://fabric.systemiacommandcenters.com/mcp'));
+
+  const hits=matchFabricCapabilities(
+    'Our quarry haul trucks keep stacking up at the loader and then the loader sits waiting. We want to simulate the load haul dump loop and shadow dispatch before buying autonomous equipment.',
+    canonical,
+    {limit:5}
+  );
+  assert.equal(hits[0].public_id,'earthworks-site-autonomy-study-v1');
+  assert.ok(hits[0].match_score>0);
+});
+
 test('Fabric domain guardrails do not suppress an explicitly requested website audit',()=>{
   const canonical=loadFabricCatalogFromRepository();
   const hits=matchFabricCapabilities(
