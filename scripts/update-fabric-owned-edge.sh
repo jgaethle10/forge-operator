@@ -322,7 +322,19 @@ verify_current_runtime() {
       }
     " || return 9
 
-  verify_edge_attestation_local || return 10
+  local attestation_code=10
+  for attempt in 1 2 3 4 5 6; do
+    set +e
+    verify_edge_attestation_local
+    attestation_code=$?
+    set -e
+    if [[ "$attestation_code" -eq 0 ]]; then
+      return 0
+    fi
+    echo "Evercraft update: edge attestation not ready yet (attempt $attempt/6, code $attestation_code)"
+    sleep 2
+  done
+  return 10
 }
 
 remote_url="$(as_user git -C "$REPO_ROOT" remote get-url "$REMOTE")"
