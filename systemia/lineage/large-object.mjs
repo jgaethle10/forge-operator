@@ -320,9 +320,14 @@ export class LargeObjectStore {
       await flushChunk();
     }
 
-    if (totalBytes !== sourceStat.size) {
+    const sourceAfter = await stat(source);
+    if (
+      totalBytes !== sourceStat.size ||
+      sourceAfter.size !== sourceStat.size ||
+      sourceAfter.mtimeMs !== sourceStat.mtimeMs
+    ) {
       throw new Error(
-        `Large-object source changed during ingest: expected ${sourceStat.size} bytes, read ${totalBytes}`
+        `Large-object source changed during ingest: expected stable ${sourceStat.size}-byte source`
       );
     }
 
