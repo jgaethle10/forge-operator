@@ -22,15 +22,22 @@
   "supervised_workflows": [
     "portfolio-sentinel",
     "eps-social-continuity",
+    "raven-private-runtime",
+    "raven-inference-gateway",
+    "competition-control-plane",
+    "competition-saban-capacity",
+    "competition-provider-scout",
+    "competition-browser-draft-executor",
+    "competition-submission-executor",
     "legacy-rescue-opportunity-watch",
     "node001-field-certification-watch",
     "remote-device-trust-watch",
-    "kaidance-mission-publisher",
-    "public-edge-controller",
     "public-edge-activation-watch",
-    "sentinel-life-safety-watch",
-    "raven-private-runtime",
-    "raven-inference-gateway"
+    "public-edge-controller",
+    "aliev-owned-source",
+    "rivet-report-edge",
+    "kaidance-mission-publisher",
+    "sentinel-life-safety-watch"
   ],
   "security": {
     "lease_required": true,
@@ -76,6 +83,9 @@
     "raven_runtime_authority_generated_inside_admitted_core_state",
     "raven_runtime_authority_file_mode_0600",
     "raven_runtime_authority_not_in_deployment_receipt",
-    "raven_inference_provider_and_model_explicit"
+    "raven_inference_provider_and_model_explicit",
+    "resident_compute_manifest_matches_resident_service_registry",
+    "competition_capacity_resident_supervised",
+    "aliev_and_rivet_resident_services_supervised"
   ]
 }

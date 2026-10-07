@@ -8,8 +8,35 @@ import { YardOperator } from '../yard/operator.mjs';
 
 const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
 const residentConfig = JSON.parse(fs.readFileSync(path.join(process.cwd(), 'systemia/core/resident-services.json'), 'utf8'));
+const computeManifest = JSON.parse(fs.readFileSync(path.join(process.cwd(), 'systemia/core/supervisor.evercraft.compute.json'), 'utf8'));
 const expectedCoreServiceCount = Array.isArray(residentConfig.services) ? residentConfig.services.length : 0;
 assert.ok(expectedCoreServiceCount > 0);
+
+const residentServiceKeys = (residentConfig.services || [])
+  .map((service) => String(service.service_key || ''))
+  .filter(Boolean)
+  .sort();
+const manifestServiceKeys = (computeManifest.supervised_workflows || [])
+  .map(String)
+  .filter(Boolean)
+  .sort();
+assert.deepEqual(
+  manifestServiceKeys,
+  residentServiceKeys,
+  'Evercraft Compute supervisor manifest must enumerate the exact resident service registry'
+);
+for (const required of [
+  'competition-control-plane',
+  'competition-saban-capacity',
+  'competition-provider-scout',
+  'competition-browser-draft-executor',
+  'competition-submission-executor',
+]) {
+  assert.ok(
+    manifestServiceKeys.includes(required),
+    `Evercraft Compute supervisor manifest missing ${required}`
+  );
+}
 
 async function waitForPath(target, timeoutMs = 15000, intervalMs = 200) {
   const deadline = Date.now() + timeoutMs;
