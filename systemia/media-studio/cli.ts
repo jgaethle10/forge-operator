@@ -73,7 +73,11 @@ import { buildWorldForgeCinematicShot } from './world-forge-cinematic.js';
 import { compileWorldForgeToWorldEngine } from './world-forge-world-engine.js';
 import { syncWorldForgeChangeSetToRuntime } from './world-forge-runtime-sync.js';
 import { syncWorldForgeChangeSetWithLiveRuntime } from './world-forge-runtime-migration.js';
-import type { WorldDefinition, WorldSnapshot } from '../world-engine/engine.js';
+import {
+  initializeWorldForgeRuntimeSession,
+  stepWorldForgeRuntimeSession,
+} from './world-forge-runtime-session.js';
+import type { WorldDefinition, WorldInput, WorldSnapshot } from '../world-engine/engine.js';
 import type { WorldAssetManifest } from '../world-engine/studio-edit.js';
 import {
   applyWorldForgeChangeSet,
@@ -228,6 +232,41 @@ function main() {
     writeJson(output, changeSet);
     console.log(`World Forge ChangeSet created: ${path.resolve(output)}`);
     console.log(`Base: v${changeSet.baseVersion} ${changeSet.baseDigest}; digest: ${changeSet.digest}`);
+    return;
+  }
+
+  if (command === 'world-forge-runtime-init') {
+    if (!input || !output) {
+      usage();
+      process.exitCode = 1;
+      return;
+    }
+    const project = readJson<WorldForgeProject>(input);
+    const session = initializeWorldForgeRuntimeSession({project});
+    writeJson(output, session);
+    console.log(`World Forge runtime initialized: ${path.resolve(output)}`);
+    console.log(`World: ${session.snapshot.worldId} v${session.snapshot.worldVersion} · tick ${session.snapshot.tick}`);
+    return;
+  }
+
+  if (command === 'world-forge-runtime-step') {
+    if (!input || !output) {
+      usage();
+      process.exitCode = 1;
+      return;
+    }
+    const payload = readJson<{
+      project:WorldForgeProject;
+      runtimeWorld:WorldDefinition;
+      snapshot:WorldSnapshot;
+      ticks:number;
+      inputs?:WorldInput[];
+    }>(input);
+    const step = stepWorldForgeRuntimeSession(payload);
+    writeJson(output, step);
+    console.log(`World Forge runtime stepped: ${path.resolve(output)}`);
+    console.log(`Tick: ${step.receipt.tickBefore} → ${step.receipt.tickAfter}; inputs: ${step.receipt.inputCount}`);
+    console.log(`Receipt: ${step.receipt.digest}`);
     return;
   }
 
