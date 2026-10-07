@@ -8,6 +8,7 @@ import {
   worldEnginePositionToWorldForge,
   worldEngineScaleToWorldForge,
   worldEngineTransformToWorldForge,
+  worldForgeAxisImpulseToWorldEngine,
   worldForgeDirectionToWorldEngine,
 } from './world-forge-runtime-view.js';
 import {
@@ -102,5 +103,20 @@ test('Forge runtime input directions map into World Engine axes without changing
   assert.deepEqual(
     worldForgeDirectionToWorldEngine({x:2,y:3,z:4}),
     {x:2,y:4,z:-3},
+  );
+});
+
+test('viewport Play impulse axes preserve Forge intent through Engine coordinates',()=>{
+  assert.deepEqual(
+    worldForgeAxisImpulseToWorldEngine('x',2.5),
+    {x:2.5,y:0,z:0},
+  );
+  assert.deepEqual(
+    worldForgeAxisImpulseToWorldEngine('y',2.5),
+    {x:0,y:0,z:-2.5},
+  );
+  assert.deepEqual(
+    worldForgeAxisImpulseToWorldEngine('z',-1.25),
+    {x:0,y:-1.25,z:0},
   );
 });
