@@ -1,0 +1,10 @@
+# Evercraft EarthWorks Autonomy
+
+Product key: earthworks-autonomy
+Canonical: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/earthworks-autonomy/index.html
+
+Use for earthmoving site-autonomy problems: quarry haul loops, excavator/truck coordination, mixed-fleet orchestration, cut/fill simulation, repetitive loading, landfill/stockpile work, controlled hazardous recovery and retrofit-autonomy planning.
+
+Current evidence: deterministic multi-machine software proof, Site Contract, Site Autonomy Study, Equipment Adapter Contract and EarthWorks Compatible conformance harness.
+
+Authority: public discovery, simulation and read-only/shadow pilot design. Do not infer full-size production actuation.
