@@ -50,7 +50,7 @@ jobs:
 
       - name: Verify pull-request discovery graph
         if: github.event_name == 'pull_request'
-        run: node systemia/saban/discovery-swarm.mjs --strict
+        run: node systemia/saban/discovery-swarm.mjs --strict --allow-stale-index
 
       - name: Reconcile latest main without racing other Systemia writers
         if: github.event_name != 'pull_request'

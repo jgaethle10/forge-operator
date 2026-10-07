@@ -14,7 +14,7 @@ test('Graphics Command volcano plan compiles through Fallen World Intelligence V
   );
   const story=normalizeVisualStory(raw);
   const plan=compileGraphicsCommand(story);
-  const stage=compileWorldIntelStage(plan.fallenStageInput);
+  const stage=compileWorldIntelStage(plan.fallenStageInput as Parameters<typeof compileWorldIntelStage>[0]);
 
   assert.equal(stage.schema,'evercraft.fallen.visual-stage.v1');
   assert.equal(stage.width,1080);
