@@ -244,11 +244,19 @@ for (const row of packets) {
   const outputFile=path.join(dir,'agent.json');
   const protectedRow=protectedArtifacts.get(outputFile);
   if(protectedRow){
-    if(!fs.existsSync(outputFile)) throw new Error('protected_generated_artifact_missing:'+outputFile);
-    const actual=gitBlobSha(outputFile);
     const expected=String(protectedRow.git_blob_sha||'');
-    if(actual!==expected){
-      throw new Error('protected_generated_artifact_drift:'+outputFile);
+    const approvedSource=String(protectedRow.approved_source_path||'');
+    if(!approvedSource||!fs.existsSync(approvedSource)){
+      throw new Error('protected_generated_artifact_approved_source_missing:'+outputFile);
+    }
+    const approvedActual=gitBlobSha(approvedSource);
+    if(approvedActual!==expected){
+      throw new Error('protected_generated_artifact_approved_source_drift:'+outputFile);
+    }
+    fs.mkdirSync(path.dirname(outputFile),{recursive:true});
+    fs.copyFileSync(approvedSource,outputFile);
+    if(gitBlobSha(outputFile)!==expected){
+      throw new Error('protected_generated_artifact_materialization_failed:'+outputFile);
     }
     continue;
   }
