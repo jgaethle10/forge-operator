@@ -1,4 +1,5 @@
 import assert from 'node:assert/strict';
+import crypto from 'node:crypto';
 import fs from 'node:fs';
 import os from 'node:os';
 import path from 'node:path';
@@ -137,6 +138,35 @@ test('build emits owned page, social card, manifest and Clip handoff',()=>{
     assert.match(preview,/max-height:calc\(100svh - 58px\)/);
     assert.match(preview,/poster-story\.svg/);
     assert.deepEqual(handoff.suggestedDestinations,['facebook','instagram','linkedin','tiktok']);
+  }finally{
+    fs.rmSync(root,{recursive:true,force:true});
+  }
+});
+
+
+test('terrain-backed specimen copies the governed relief asset with exact lineage',()=>{
+  const raw=JSON.parse(fs.readFileSync(
+    new URL('./stories/washington-active-volcanoes.json',import.meta.url),
+    'utf8'
+  ));
+  const receipt=JSON.parse(fs.readFileSync(
+    new URL('../graphics-command/assets/washington-usgs-shaded-relief.receipt.json',import.meta.url),
+    'utf8'
+  ));
+  const root=fs.mkdtempSync(path.join(os.tmpdir(),'evercraft-visual-terrain-'));
+  try{
+    const result=buildVisualStory(raw,{outputRoot:root,origin:'https://visuals.evercraft.test'});
+    const reliefPath=path.join(result.outputDir,'terrain-relief.png');
+    assert.equal(fs.existsSync(reliefPath),true);
+    const digest=crypto.createHash('sha256').update(fs.readFileSync(reliefPath)).digest('hex');
+    assert.equal(digest,receipt.sha256);
+    assert.equal(result.graphicsPlan.geography?.terrain?.id,'usgs-wa-shaded-relief-3dep-v1');
+    assert.equal(result.graphicsPlan.geography?.terrain?.rightsState,'public_domain');
+    assert.match(result.manifest.assets.terrainRelief,/terrain-relief\.png$/);
+    const poster=fs.readFileSync(path.join(result.outputDir,'poster-feed.svg'),'utf8');
+    assert.match(poster,/data-visual-model="cinematic-terrain-geography-v2"/);
+    assert.match(poster,/class="terrain-relief"/);
+    assert.doesNotMatch(poster,/class="peak-halo"/);
   }finally{
     fs.rmSync(root,{recursive:true,force:true});
   }
