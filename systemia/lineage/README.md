@@ -437,3 +437,33 @@ The HTTP service binds only to `127.0.0.1`, `localhost`, or `::1`. It grants no 
 The UI is self-contained and does not load external scripts, fonts, stylesheets, analytics, or CDN assets. Its Content Security Policy is limited to its own origin plus inline UI code/styles required by the generated page.
 
 This surface is the operator-facing counterpart to Lineage's underlying immutable history engine. Future authenticated mutation controls must remain separate, explicit authority-bearing workflows rather than being inferred from access to the dashboard.
+
+
+## Control Room on Evercraft Compute
+
+The Lineage Control Room can run as the resident workload `systemia.lineage-control-room.v1` inside Evercraft Compute.
+
+Compute remains the authority boundary around the service:
+
+1. an admitted Compute lease is created for the Control Room workload;
+2. the job names an initialized Lineage workspace inside the Compute node's admitted root;
+3. Compute resolves both the admitted root and workspace through real filesystem paths before opening Lineage, preventing a symlink from escaping the admitted root;
+4. the Control Room starts on loopback only;
+5. Compute retains the private service origin and returns `service_url: null`;
+6. the resident HTTP bridge permits GET requests only for `/`, `/health`, `/v1/snapshot`, `/v1/commit`, `/v1/diff`, and `/v1/integrity`;
+7. releasing or expiring the Compute lease stops the Control Room.
+
+The Compute service-start receipt records a hash of the real workspace root rather than the raw path.
+
+The resident-service result and health contract explicitly report:
+
+- `mode: read_only`;
+- `mutation_authority: false`;
+- `publication_authority: false`;
+- `deployment_authority: false`;
+- `payment_authority: false`;
+- `private_data_authority: false`;
+- `authority_material_exposed: false`;
+- `public_route_required: false`.
+
+The workload deliberately does not implement identity, passwords, public ingress, or authenticated sessions. Evercraft Identity/Passport, Home, Yard, and the Compute service bridge remain the layers responsible for admitting a human or system to the private read-only service. Access to the Control Room therefore never becomes implicit authority to mutate Lineage history.
