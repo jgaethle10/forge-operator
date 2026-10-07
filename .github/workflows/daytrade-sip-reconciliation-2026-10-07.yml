@@ -17,6 +17,8 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: 22
+      - name: Prove SIP reconciliation timing semantics
+        run: node systemia/daytrade-lens/edge-sip-reconciliation-timing.test.mjs
       - name: Reconcile IEX decisions against delayed SIP
         env:
           ALPACA_TRADING: ${{ secrets.ALPACA_TRADING }}
