@@ -1,0 +1,59 @@
+name: DayTrade Cross-Date Audit 2026-10-07 v4
+
+on:
+  push:
+    branches:
+      - "systemia/daytrade-crossdate-audit-2026-10-07-v4"
+
+permissions:
+  contents: read
+
+jobs:
+  audit:
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Prove audit components
+        run: |
+          node systemia/daytrade-lens/edge-practice-ledger-integrity.test.mjs
+          node systemia/daytrade-lens/edge-practice-phase-scorecard.test.mjs
+          node systemia/daytrade-lens/edge-spread-threshold-robustness.test.mjs
+          node systemia/daytrade-lens/edge-instrument-conditioned-spread.test.mjs
+          node systemia/daytrade-lens/edge-practice-diversity-readiness.test.mjs
+          node systemia/daytrade-lens/edge-practice-feed-portability-readiness.test.mjs
+      - name: Build ledger integrity
+        env:
+          DAYTRADE_LEDGER_INTEGRITY_OUTPUT: artifacts/daytrade-edge/audit-v4-ledger-integrity.json
+        run: node systemia/daytrade-lens/edge-practice-ledger-integrity.mjs
+      - name: Build phase scorecard
+        env:
+          DAYTRADE_PHASE_SCORECARD_OUTPUT: artifacts/daytrade-edge/audit-v4-phase-scorecard.json
+        run: node systemia/daytrade-lens/edge-practice-phase-scorecard.mjs
+      - name: Build threshold robustness
+        env:
+          DAYTRADE_THRESHOLD_ROBUSTNESS_OUTPUT: artifacts/daytrade-edge/audit-v4-threshold-robustness.json
+        run: node systemia/daytrade-lens/edge-spread-threshold-robustness.mjs
+      - name: Build instrument conditioning
+        env:
+          DAYTRADE_INSTRUMENT_SPREAD_OUTPUT: artifacts/daytrade-edge/audit-v4-instrument-conditioning.json
+        run: node systemia/daytrade-lens/edge-instrument-conditioned-spread.mjs
+      - name: Build diversity readiness
+        env:
+          DAYTRADE_DIVERSITY_OUTPUT: artifacts/daytrade-edge/audit-v4-diversity-readiness.json
+        run: node systemia/daytrade-lens/edge-practice-diversity-readiness.mjs
+      - name: Build feed portability readiness
+        env:
+          DAYTRADE_FEED_PORTABILITY_OUTPUT: artifacts/daytrade-edge/audit-v4-feed-portability.json
+        run: node systemia/daytrade-lens/edge-practice-feed-portability-readiness.mjs
+      - name: Upload audit
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: daytrade-crossdate-audit-v4-${{ github.run_id }}
+          path: artifacts/daytrade-edge/audit-v4-*.json
+          if-no-files-found: error
+          retention-days: 30
