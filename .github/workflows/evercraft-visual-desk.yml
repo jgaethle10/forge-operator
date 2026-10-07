@@ -95,6 +95,8 @@ jobs:
           grep -q 'class="geo-boundary"' _visual_desk_release/washington-active-volcanoes/poster-feed.svg
           grep -q 'data-visual-model="cinematic-terrain-geography-v2"' _visual_desk_release/washington-active-volcanoes/poster-feed.svg
           grep -q 'class="terrain-relief"' _visual_desk_release/washington-active-volcanoes/poster-feed.svg
+          grep -q 'href="data:image/png;base64,' _visual_desk_release/washington-active-volcanoes/poster-feed.svg
+          grep -q 'data-source-sha256="0f04cbf36461720b71e72809fa10e831bd77ca0701be09d81732fe20d7a35632"' _visual_desk_release/washington-active-volcanoes/poster-feed.svg
           grep -q 'class="peak-marker"' _visual_desk_release/washington-active-volcanoes/poster-feed.svg
           ! grep -q 'class="peak-halo"' _visual_desk_release/washington-active-volcanoes/poster-feed.svg
           grep -q 'max-height:calc(100svh - 58px)' _visual_desk_release/washington-active-volcanoes/poster-story.html
