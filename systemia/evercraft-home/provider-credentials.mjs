@@ -24,6 +24,11 @@ const SPECS = Object.freeze({
     label: 'competition-foundry',
     environment: 'live',
   }),
+  qloo: Object.freeze({
+    provider: 'qloo',
+    label: 'competition-commonground',
+    environment: 'live',
+  }),
   'facebook-pages': Object.freeze({
     provider: 'facebook-pages',
     label: 'evercraft-clip',
@@ -95,6 +100,16 @@ export function normalizeProviderCredentialRequest(provider, body = {}) {
       label: clean(body.label) || spec.label,
       apiKeyId: clean(body.public_id),
       apiSecret: clean(body.secret_key),
+    };
+  }
+
+  if (spec.provider === 'qloo') {
+    return {
+      provider: spec.provider,
+      environment: clean(body.environment) || spec.environment,
+      label: clean(body.label) || spec.label,
+      apiKeyId: 'qloo-api-key',
+      apiSecret: clean(body.api_key),
     };
   }
 

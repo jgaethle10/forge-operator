@@ -7,7 +7,7 @@ import {
 } from './provider-credentials.mjs';
 
 test('provider credential intake is an explicit allowlist', () => {
-  assert.deepEqual(supportedCredentialProviders(), ['alpaca', 'google-places', 'kroger', 'kaggle', 'numerai', 'facebook-pages', 'gemini', 'openai']);
+  assert.deepEqual(supportedCredentialProviders(), ['alpaca', 'google-places', 'kroger', 'kaggle', 'numerai', 'qloo', 'facebook-pages', 'gemini', 'openai']);
   assert.equal(credentialProviderSpec('unknown'), null);
   assert.throws(
     () => normalizeProviderCredentialRequest('unknown', {}),
@@ -55,6 +55,16 @@ test('Kaggle and Numerai map into the owned generic credential envelope', () => 
   assert.equal(numerai.label, 'competition-foundry');
 });
 
+
+test('Qloo maps its hackathon API key into the owned competition credential envelope', () => {
+  const row = normalizeProviderCredentialRequest('qloo', {
+    api_key: 'qloo-fixture-secret-abcdefghijklmnopqrstuvwxyz',
+  });
+  assert.equal(row.provider, 'qloo');
+  assert.equal(row.apiKeyId, 'qloo-api-key');
+  assert.equal(row.apiSecret, 'qloo-fixture-secret-abcdefghijklmnopqrstuvwxyz');
+  assert.equal(row.label, 'competition-commonground');
+});
 
 test('Facebook Pages maps Page identity and Page token into the owned generic credential envelope', () => {
   const row = normalizeProviderCredentialRequest('facebook-pages', {
