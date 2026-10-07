@@ -104,7 +104,7 @@ test('owned Fabric serves offer pages, requires confirmation, and delegates chec
         amount_cents:4900,
         currency:'usd',
         checkout_ready:true,
-        checkout_url:'https://checkout.stripe.test/pay/test',
+        checkout_url:'https://settlement.example.test/pay/test',
         payment_state:'unpaid',
         fulfillment_release:false,
       }),{
@@ -145,9 +145,13 @@ test('owned Fabric serves offer pages, requires confirmation, and delegates chec
       body:new URLSearchParams({user_confirmed:'true'}),
       redirect:'manual',
     });
-    assert.equal(checkout.status,303);
-    assert.equal(checkout.headers.get('location'),'https://checkout.stripe.test/pay/test');
-    assert.equal(checkout.headers.get('x-evercraft-payment-authority'),'Evercraft Payments');
+    assert.equal(checkout.status,200);
+    assert.match(checkout.headers.get('content-type')||'',/^text\/html/i);
+    const checkoutBody=await checkout.text();
+    assert.match(checkoutBody,/Your checkout is ready\./);
+    assert.match(checkoutBody,/Open secure checkout/);
+    assert.match(checkoutBody,/settlement\.example\.test\/pay\/test/);
+    assert.match(checkoutBody,/Evercraft Payments/);
     assert.equal(seen.length,1);
     assert.equal(seen[0].body.user_confirmed,true);
     assert.equal(seen[0].body.capability_key,'website-audit-quick-win');
