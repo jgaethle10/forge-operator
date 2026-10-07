@@ -1,0 +1,97 @@
+{
+  "schema": "evercraft.rivet.hosting-ownership-matrix.v1",
+  "state": "template_requires_partner_decision",
+  "rule": "No field may be silently assigned by Evercraft. Production authority follows the partner-approved completed matrix.",
+  "fields": [
+    {
+      "asset": "RIVET brand and Brand Kit",
+      "recommended_owner": "RIVET partners",
+      "evercraft_role": "implement only approved usage",
+      "required": true
+    },
+    {
+      "asset": "RIVET source code",
+      "recommended_owner": "to be agreed and documented",
+      "evercraft_role": "developer/operator as authorized",
+      "required": true
+    },
+    {
+      "asset": "domain registration",
+      "recommended_owner": "RIVET partners or jointly approved entity",
+      "evercraft_role": "no unilateral transfer",
+      "required": true
+    },
+    {
+      "asset": "authoritative DNS account",
+      "recommended_owner": "RIVET partners or explicitly delegated operator",
+      "evercraft_role": "changes only under cutover authority",
+      "required": true
+    },
+    {
+      "asset": "hosting account",
+      "recommended_owner": "depends on selected lane",
+      "evercraft_role": "operator only when selected",
+      "required": true
+    },
+    {
+      "asset": "TLS certificates",
+      "recommended_owner": "hosting/DNS control plane under approved account",
+      "evercraft_role": "automation as authorized",
+      "required": true
+    },
+    {
+      "asset": "production secrets",
+      "recommended_owner": "hosting operator under least-privilege policy",
+      "evercraft_role": "no plaintext embedding",
+      "required": true
+    },
+    {
+      "asset": "customer data",
+      "recommended_owner": "RIVET business entity/partners",
+      "evercraft_role": "processor only as explicitly authorized",
+      "required": true
+    },
+    {
+      "asset": "analytics data",
+      "recommended_owner": "RIVET partners",
+      "evercraft_role": "access only as authorized",
+      "required": true
+    },
+    {
+      "asset": "EV and session datasets",
+      "recommended_owner": "source-specific rights preserved",
+      "evercraft_role": "process only within source authority",
+      "required": true
+    },
+    {
+      "asset": "AliEV intelligence services",
+      "recommended_owner": "Evercraft",
+      "evercraft_role": "provider behind explicit interface",
+      "required": false
+    },
+    {
+      "asset": "backups",
+      "recommended_owner": "production operator with partner access/recovery rights",
+      "evercraft_role": "prove restore before cutover",
+      "required": true
+    },
+    {
+      "asset": "incident response authority",
+      "recommended_owner": "named operator and partner escalation owner",
+      "evercraft_role": "document exact boundary",
+      "required": true
+    },
+    {
+      "asset": "billing account",
+      "recommended_owner": "entity paying selected host",
+      "evercraft_role": "no assumption",
+      "required": true
+    },
+    {
+      "asset": "production deployment authority",
+      "recommended_owner": "named authorized operator",
+      "evercraft_role": "requires explicit release/cutover approval",
+      "required": true
+    }
+  ]
+}
