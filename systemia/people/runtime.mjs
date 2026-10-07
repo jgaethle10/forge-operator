@@ -45,6 +45,21 @@ function safeBrain(brain) {
   };
 }
 
+function publicConsentBrain(brain) {
+  if (!brain) return null;
+  return {
+    brain_key: brain.brain_key,
+    display_name: brain.display_name,
+    person_type: brain.person_type,
+    sport_or_domain: brain.sport_or_domain || '',
+    anchor_organization: brain.anchor_organization || '',
+    ownership_model: brain.ownership_model,
+    portability_state: brain.portability_state,
+    consent_state: brain.consent_state,
+    identity_assurance: brain.identity_assurance,
+  };
+}
+
 export function createPeopleRuntime({
   stateDir = process.env.PEOPLE_STATE_DIR || path.resolve('.runtime', 'people-layer'),
 } = {}) {
@@ -447,7 +462,7 @@ export function createPeopleRuntime({
         status: invite.status,
         expires_at: invite.expires_at,
       },
-      brain: safeBrain(brain),
+      brain: publicConsentBrain(brain),
       promises: [
         'You own the brain and may take your data with you.',
         'A team, agent, sponsor, employer or fan group receives no blanket access.',
