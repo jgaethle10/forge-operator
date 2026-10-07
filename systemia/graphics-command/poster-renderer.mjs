@@ -55,7 +55,7 @@ function sourceHosts(refs){
 const SPECS={
   feed:{width:1080,height:1350,map:{x:72,y:300,width:936,height:720},hookY:128,hookSize:82,footerY:1115},
   square:{width:1080,height:1080,map:{x:72,y:246,width:936,height:590},hookY:110,hookSize:66,footerY:890},
-  story:{width:1080,height:1920,map:{x:72,y:430,width:936,height:1040},hookY:155,hookSize:100,footerY:1585},
+  story:{width:1080,height:1920,map:{x:72,y:500,width:936,height:920},hookY:155,hookSize:100,footerY:1585},
 };
 
 function decorativeContours(spec){
@@ -125,7 +125,7 @@ export function renderDirectedPoster(story,plan,format='feed'){
     ].join('\n');
   }).join('\n');
 
-  const hookLines=lines(plan.hero.hook,format==='story'?20:format==='square'?25:23,2);
+  const hookLines=lines(plan.hero.hook,format==='story'?14:format==='square'?25:23,2);
   const hook=hookLines.map((row,index)=>
     '<text x="72" y="'+(spec.hookY+index*(spec.hookSize*.94))+'" font-family="Arial,sans-serif" font-size="'+spec.hookSize+'" font-weight="900" letter-spacing="-2" fill="#F5F5F2">'+esc(row)+'</text>'
   ).join('\n');
