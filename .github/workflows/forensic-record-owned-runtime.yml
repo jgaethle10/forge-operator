@@ -9,6 +9,11 @@ on:
       - 'systemia/compute/runtime-node.mjs'
       - 'systemia/yard/operator.mjs'
       - 'systemia/yard/forensic-record-resident-runtime.proof.mjs'
+      - 'systemia/organism/forensic-record-source-runner.mjs'
+      - 'systemia/organism/forensic-record-source.workflow.json'
+      - 'systemia/core/forensic-record-resident-wiring.proof.mjs'
+      - 'systemia/core/resident-services.json'
+      - 'systemia/core/supervisor.evercraft.compute.json'
       - 'evercraft.compute.json'
       - '.github/workflows/forensic-record-owned-runtime.yml'
   push:
@@ -21,6 +26,11 @@ on:
       - 'systemia/compute/runtime-node.mjs'
       - 'systemia/yard/operator.mjs'
       - 'systemia/yard/forensic-record-resident-runtime.proof.mjs'
+      - 'systemia/organism/forensic-record-source-runner.mjs'
+      - 'systemia/organism/forensic-record-source.workflow.json'
+      - 'systemia/core/forensic-record-resident-wiring.proof.mjs'
+      - 'systemia/core/resident-services.json'
+      - 'systemia/core/supervisor.evercraft.compute.json'
       - 'evercraft.compute.json'
       - '.github/workflows/forensic-record-owned-runtime.yml'
   workflow_dispatch:
@@ -47,3 +57,5 @@ jobs:
         run: node systemia/forensic-record/owned-corpus.proof.mjs
       - name: Prove Yard / Evercraft Compute resident runtime
         run: node systemia/yard/forensic-record-resident-runtime.proof.mjs
+      - name: Prove resident Systemia Core wiring
+        run: node systemia/core/forensic-record-resident-wiring.proof.mjs
