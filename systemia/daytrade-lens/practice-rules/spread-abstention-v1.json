@@ -1,0 +1,27 @@
+{
+  "schema": "evercraft.daytrade.practice-rule.v1",
+  "rule_id": "spread-abstention-v1",
+  "first_frozen_commit": "c7e62faefb5afda1e4a6ab22a418015969342985",
+  "frozen_before_first_prospective_window": true,
+  "source_evidence": [
+    "2026-10-06-practice-camp-c-summary",
+    "2026-10-06-practice-camp-d-summary"
+  ],
+  "entry_rule": {
+    "max_observed_entry_spread_bps": 3,
+    "if_spread_exceeds_threshold": "ABSTAIN",
+    "if_spread_at_or_below_threshold": "SIMULATE_MARKETABLE_LONG"
+  },
+  "symbols": ["SOXX", "SMH", "QQQ"],
+  "simulated_notional_usd": 20,
+  "hold_ms": 60000,
+  "purpose": "Prospective practice-only check of whether a frozen execution abstention rule changes later simulated outcomes.",
+  "limitations": {
+    "selected_from_same_day_prior_practice": true,
+    "not_independent_market_validation": true,
+    "not_signal_validation": true,
+    "not_live_authorized": true,
+    "iex_not_sip_nbbo": true
+  },
+  "live_trade_authority": false
+}
