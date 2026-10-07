@@ -3,6 +3,7 @@ import crypto from 'node:crypto';
 import fs from 'node:fs';
 import path from 'node:path';
 import { pathToFileURL } from 'node:url';
+import { renderCfbRankingPoster } from '../graphics-command/ranking-poster-renderer.mjs';
 
 const clean = (value) => String(value ?? '').trim();
 const unique = (values = []) => [...new Set(values.map(clean).filter(Boolean))];
@@ -208,10 +209,11 @@ function renderRankingSurface(story) {
   </section>`;
 }
 
-function renderArticle(story, publicOrigin, { archived = false } = {}) {
+function renderArticle(story, publicOrigin, { archived = false, rankingHeroUrl = '' } = {}) {
   const canonical = storyUrl(publicOrigin, story.slug);
   const description = escapeHtml(story.dek);
-  const image = story.hero_visual?.url ? escapeHtml(story.hero_visual.url) : '';
+  const imageUrl = story.hero_visual?.url || rankingHeroUrl || '';
+  const image = imageUrl ? escapeHtml(imageUrl) : '';
   const jsonLd = {
     '@context': 'https://schema.org',
     '@type': 'NewsArticle',
@@ -222,7 +224,7 @@ function renderArticle(story, publicOrigin, { archived = false } = {}) {
     author: { '@type': 'Organization', name: 'Evercraft Journal' },
     publisher: { '@type': 'Organization', name: 'Evercraft Journal' },
     mainEntityOfPage: canonical,
-    ...(image ? { image: [story.hero_visual.url] } : {})
+    ...(image ? { image: [imageUrl] } : {})
   };
 
   const sections = story.sections.map((section) =>
@@ -235,7 +237,7 @@ function renderArticle(story, publicOrigin, { archived = false } = {}) {
     : '';
 
   const heroHtml = image
-    ? `<figure class="hero"><img src="${image}" alt="${escapeHtml(story.hero_visual.alt || story.title)}"><figcaption>${escapeHtml(story.hero_visual.caption || '')}</figcaption></figure>`
+    ? `<figure class="hero"><img src="${image}" alt="${escapeHtml(story.hero_visual?.alt || (story.ranking_table ? 'Evercraft college football power ranking graphic' : story.title))}"><figcaption>${escapeHtml(story.hero_visual?.caption || (story.ranking_table ? 'The current Evercraft Top 10, generated from the frozen ranking receipt.' : ''))}</figcaption></figure>`
     : '';
   const rankingHtml = renderRankingSurface(story);
 
@@ -351,7 +353,35 @@ export function publishJournalStories(inputStories, {
     fs.mkdirSync(productionDir, { recursive: true });
     fs.mkdirSync(receiptDir, { recursive: true });
 
-    const html = renderArticle(story, origin, { archived });
+    let rankingVisuals = null;
+    if (story.ranking_table) {
+      const rankingPayload = {
+        schema: 'evercraft.cfb-power-rankings.v1',
+        run_id: story.machine_evidence?.payload?.ranking_run_id || story.story_id,
+        evidence_through_at: story.machine_evidence?.payload?.evidence_through_at || story.updated_at,
+        model: story.machine_evidence?.payload?.model || { model_version: story.ranking_table.note || 'journal-ranking' },
+        rankings: story.ranking_table.rows.map((row) => ({
+          rank: Number(row.rank),
+          team_name: row.team_name,
+          record: row.record || {},
+          power_score: Number(row.power_score),
+          confidence: Number(row.confidence)
+        }))
+      };
+      rankingVisuals = {};
+      for (const format of ['feed','square','story']) {
+        const svg = renderCfbRankingPoster(rankingPayload, format);
+        const filename = `ranking-${format}.svg`;
+        fs.writeFileSync(path.join(productionDir, filename), svg);
+        rankingVisuals[format] = {
+          ref: `production/${story.slug}/${filename}`,
+          url: `${origin}/production/${story.slug}/${filename}`,
+          sha256: sha256(svg)
+        };
+      }
+    }
+
+    const html = renderArticle(story, origin, { archived, rankingHeroUrl: rankingVisuals?.feed?.url || '' });
     const articlePath = path.join(articleDir, 'index.html');
     fs.writeFileSync(articlePath, html);
 
@@ -388,6 +418,7 @@ export function publishJournalStories(inputStories, {
       evidence_state: story.evidence_state,
       derivatives: story.derivatives || [],
       production_grade: story.production_grade,
+      ranking_visuals: rankingVisuals,
       publication_authority: false,
       rule: 'Clip may produce approved derivatives, but this handoff alone does not grant social publication authority.'
     };
@@ -411,6 +442,7 @@ export function publishJournalStories(inputStories, {
       fallen_brief_sha256: sha256(fallenBrief),
       machine_evidence_ref: story.machine_evidence?.relative_path || null,
       machine_evidence_sha256: machineEvidenceSha256,
+      ranking_visuals: rankingVisuals,
       publisher: 'evercraft-owned-static-journal-v1',
       publication_authority: true,
       publication_state: archived ? 'archived' : 'live',
