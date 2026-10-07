@@ -15,6 +15,7 @@ const shell=(title,body,{
   description=DEFAULT_DESCRIPTION,
   canonical='',
   ogType='website',
+  ogImage='',
 }={})=>{
   const canonicalUrl=canonical
     ? (String(canonical).startsWith('https://')?String(canonical):PUBLIC_ORIGIN+String(canonical))
@@ -22,6 +23,7 @@ const shell=(title,body,{
   const socialTitle=escapeHtml(title);
   const socialDescription=escapeHtml(description);
   const socialUrl=escapeHtml(canonicalUrl||PUBLIC_ORIGIN);
+  const socialImage=ogImage?escapeHtml(String(ogImage).startsWith('https://')?ogImage:PUBLIC_ORIGIN+ogImage):'';
   return `<!doctype html>
 <html lang="en">
 <head>
@@ -35,7 +37,9 @@ const shell=(title,body,{
 <meta property="og:title" content="${socialTitle}">
 <meta property="og:description" content="${socialDescription}">
 <meta property="og:url" content="${socialUrl}">
-<meta name="twitter:card" content="summary">
+${socialImage?'<meta property="og:image" content="'+socialImage+'">':''}
+<meta name="twitter:card" content="${socialImage?'summary_large_image':'summary'}">
+${socialImage?'<meta name="twitter:image" content="'+socialImage+'">':''}
 <meta name="twitter:title" content="${socialTitle}">
 <meta name="twitter:description" content="${socialDescription}">
 ${canonicalUrl?'<link rel="canonical" href="'+escapeHtml(canonicalUrl)+'">':''}
@@ -84,7 +88,10 @@ h1{font-size:clamp(48px,8vw,90px);line-height:.95;letter-spacing:-.065em;margin:
 .offer-hero h1{max-width:900px}
 .offer-price{font-size:clamp(30px,5vw,52px);font-weight:850;letter-spacing:-.045em;margin:18px 0 8px}
 .offer-price-note{color:var(--muted);font-size:14px}
-.offer-grid{display:grid;grid-template-columns:1.1fr .9fr;gap:16px;margin:18px 0 70px}
+.offer-grid{display:grid;grid-template-columns:1fr;gap:14px;margin:18px 0 70px;max-width:900px}
+.offer-visual{margin:26px 0 24px;border:1px solid var(--line);border-radius:22px;overflow:hidden;background:#07111b;box-shadow:0 28px 70px rgba(0,0,0,.26)}
+.offer-visual picture,.offer-visual img{display:block;width:100%}
+.offer-visual img{height:auto}
 .offer-panel{border:1px solid var(--line);background:linear-gradient(180deg,rgba(14,25,48,.82),rgba(9,16,30,.82));border-radius:18px;padding:24px}
 .offer-panel h2{font-size:25px;margin:0 0 14px}
 .offer-panel p,.offer-panel li{color:#c5d2e4;line-height:1.65}
@@ -192,14 +199,17 @@ const OFFER_PAGE_COPY={
     purchase_key:'website-audit-quick-win',
     eyebrow:'Website Audit',
     headline:"Your website is getting attention. Why isn't it getting customers?",
-    lede:'Give Evercraft the public website. We inspect the evidence, surface the highest-impact problems, and tell you what to fix first.',
-    promise:'A bounded public-web evidence snapshot, automated health score, and the top five prioritized fixes.',
-    send:['Your website URL','What you want the site to produce: calls, leads, bookings, sales, or something else','Anything you already know is broken or frustrating'],
-    get:['A public-web evidence snapshot','A website health score','The five highest-priority fixes','A clear next-step path without forcing a rebuild'],
+    lede:'We scan the public site and show you the five fixes worth making first.',
+    promise:'Public-web scan. Clear health snapshot. Five priority fixes.',
+    heroVisual:'/visuals/website-audit-attention/poster-hero-wide.svg',
+    heroVisualMobile:'/visuals/website-audit-attention/poster-feed.svg',
+    shareImage:'https://fabric.systemiacommandcenters.com/visuals/website-audit-attention/poster-feed.svg',
+    send:['Your website URL','What you want the site to produce','Anything you already know is frustrating'],
+    get:['Public-web evidence snapshot','Five priority fixes','A clear next move'],
     steps:[
-      ['1. Give us the URL','No giant discovery process. Start with the site that exists today.'],
-      ['2. We audit what customers can actually experience','Performance, conversion friction, discoverability, and obvious public failures are evaluated from evidence.'],
-      ['3. You get the short list','The output is prioritized so you know what deserves attention first.']
+      ['1. Send the URL','Start with the site that exists today.'],
+      ['2. We inspect the public experience','We look for the friction customers can actually encounter.'],
+      ['3. Fix what matters first','You get the short prioritized list.']
     ]
   },
   'ibmi-rescue-v1':{
@@ -319,6 +329,7 @@ export function renderOfferPage(item){
     '<div class="kicker"><span class="dot"></span> '+escapeHtml(copy.eyebrow)+' · available now</div>',
     '<h1>'+escapeHtml(copy.headline)+'</h1>',
     '<p class="lede">'+escapeHtml(copy.lede)+'</p>',
+    copy.heroVisual?'<div class="offer-visual"><picture>'+(copy.heroVisualMobile?'<source media="(max-width: 700px)" srcset="'+escapeHtml(copy.heroVisualMobile)+'">':'')+'<img src="'+escapeHtml(copy.heroVisual)+'" alt="" loading="eager"></picture></div>':'',
     '<div class="offer-price">'+escapeHtml(price)+'</div>',
     '<div class="offer-price-note">'+escapeHtml(offerName)+' · '+escapeHtml(item.pricing||'')+'</div>',
     '<form class="checkout-form" method="post" action="/api/offers/'+encodeURIComponent(copy.slug)+'/checkout">',
@@ -326,11 +337,11 @@ export function renderOfferPage(item){
     '<input type="hidden" name="idempotency_key" value="'+escapeHtml(idempotencyKey)+'">',
     '<button class="btn primary" type="submit">Continue to checkout · '+escapeHtml(price)+'</button>',
     '<a class="btn" href="/capabilities/'+encodeURIComponent(item.public_id)+'">See technical proof</a>',
-    '<div class="checkout-note">This button confirms this exact offer and asks Raven Nexus to prepare an unpaid Evercraft Payments checkout. No payment is recorded and fulfillment stays locked until settlement is verified.</div>',
+    '<div class="checkout-note">Evercraft Payments prepares the checkout. Nothing is marked paid until settlement is verified.</div>',
     '</form>',
     '</section>',
     '<div class="offer-grid">',
-    '<section class="offer-panel"><h2>What you are buying</h2><p class="plain">'+escapeHtml(copy.promise)+'</p><div class="offer-proof">No giant platform commitment is required to understand the first paid step.</div></section>',
+    '<section class="offer-panel"><h2>What you are buying</h2><p class="plain">'+escapeHtml(copy.promise)+'</p></section>',
     '<section class="offer-panel"><h2>What you send us</h2><ul>'+send+'</ul></section>',
     '<section class="offer-panel"><h2>What you get back</h2><ul>'+get+'</ul></section>',
     '<section class="offer-panel"><h2>How it works</h2><div class="offer-steps">'+steps+'</div></section>',
@@ -340,6 +351,7 @@ export function renderOfferPage(item){
     description:copy.lede+' '+offerName+' starts at '+price+'.',
     canonical:'/offers/'+copy.slug,
     ogType:'website',
+    ogImage:copy.shareImage||'',
   });
 }
 
