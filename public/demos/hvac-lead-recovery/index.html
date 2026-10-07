@@ -16,7 +16,7 @@
   --muted:#9aa9ba;
   --blue:#8fb8ff;
 }
-html,body{width:100%;max-width:100%;overflow-x:hidden}
+html{width:100%;max-width:100%;overflow-x:hidden;-webkit-text-size-adjust:100%;text-size-adjust:100%}\nbody{width:100%;max-width:100%;overflow-x:hidden}
 *{box-sizing:border-box;min-width:0}
 body{
   margin:0;
@@ -107,11 +107,13 @@ button,input,select,textarea,a{font:inherit;max-width:100%}
 label{display:block;font-size:12px;color:#aebccc;margin:16px 0 6px}
 input,select,textarea{
   width:100%;
+  min-height:44px;
   border:1px solid #2c3948;
   background:var(--panel2);
   color:#fff;
   border-radius:12px;
   padding:12px 13px;
+  font-size:16px;
 }
 textarea{resize:vertical;min-height:90px}
 .row{
@@ -129,6 +131,8 @@ textarea{resize:vertical;min-height:90px}
   font-weight:800;
   padding:14px 16px;
   cursor:pointer;
+  min-height:44px;
+  touch-action:manipulation;
 }
 .btn:active{transform:translateY(1px)}
 .pipeline{display:grid;gap:10px;margin-top:18px}
@@ -272,6 +276,12 @@ textarea{resize:vertical;min-height:90px}
   white-space:normal;
   text-align:center;
   overflow-wrap:anywhere;
+  min-height:44px;
+  touch-action:manipulation;
+}
+button:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-visible,a:focus-visible{
+  outline:3px solid #8fb8ff;
+  outline-offset:2px;
 }
 .footer{
   padding:0 0 42px;
