@@ -8,7 +8,7 @@ import { getFulfillmentProfile } from '../systemia/organism/universal-product-fu
 import { buildReceivablesPortfolio, deriveReceivableTruth } from '../systemia/commerce/receivables.mjs';
 import { selectRavenSettlementRoute } from '../systemia/commerce/raven-settlement-router.mjs';
 import { recommendReceivableFollowup } from '../systemia/commerce/receivable-followup.mjs';
-import { createRavenSettlementGateway } from '../systemia/commerce/raven-settlement-gateway.mjs';
+import { buildRavenSettlementAdapters, createRavenSettlementGateway } from '../systemia/commerce/raven-settlement-gateway.mjs';
 
 const liveCatalog = JSON.parse(fs.readFileSync('public/.well-known/evercraft-machine-catalog.json', 'utf8'));
 const liveInstantWork = buildInstantWorkCatalog(liveCatalog);
@@ -429,3 +429,17 @@ await assert.rejects(
   }),
   /no eligible settlement adapter/i
 );
+
+
+const canonicalRavenAdapters = buildRavenSettlementAdapters({
+  env: { RAVEN_STRIPE_SECRET_KEY: 'test_raven_secret' },
+  fetchImpl: async () => ({
+    ok: true,
+    json: async () => ({ id: 'fake' }),
+  }),
+});
+assert.equal(canonicalRavenAdapters.length, 1);
+assert.equal(canonicalRavenAdapters[0].adapter_key, 'evercraft-payments-central-v1');
+assert.equal(canonicalRavenAdapters[0].route_key, 'evercraft-payments-central-v1');
+assert.equal(canonicalRavenAdapters[0].provider, 'stripe');
+assert.equal(canonicalRavenAdapters[0].health, 'healthy');
