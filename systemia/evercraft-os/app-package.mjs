@@ -108,6 +108,7 @@ export function compileEvercraftOsApp(productKey, { root = repoRoot } = {}) {
             : [])
         ],
     adoption_stage: contract?.adoption_stage || "missing",
+    contract_version: contract?.contract_version || null,
     specialist_slug: contract?.specialist_slug || null,
 
     os_services: {
