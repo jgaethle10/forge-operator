@@ -37,12 +37,17 @@ jobs:
           test -f _website_audit_v2/website-audit-attention/poster-hook-more-traffic-feed.svg
           test -f _website_audit_v2/website-audit-attention/audio-brief-v2.json
           test -f _website_audit_v2/website-audit-attention/production-needs-v2.json
+          test -f _website_audit_v2/website-audit-attention/visual-requests-v2.json
           test -f _website_audit_v2/website-audit-attention/clip-handoff-v2.json
           test -f _website_audit_v2/website-audit-attention/attention-pack-v2.json
           grep -q '"creativeCouncilStatus": "reconciled"' _website_audit_v2/website-audit-attention/attention-pack-v2.json
           grep -q '"scrollStopScore": 1' _website_audit_v2/website-audit-attention/attention-pack-v2.json
           grep -q '"providerExecutionState": "provider_ready_unrequested"' _website_audit_v2/website-audit-attention/production-needs-v2.json
           grep -q '"paidGenerationAuthorized": false' _website_audit_v2/website-audit-attention/production-needs-v2.json
+          grep -q '"candidateCount": 4' _website_audit_v2/website-audit-attention/visual-requests-v2.json
+          grep -q '"modelDiversity": 2' _website_audit_v2/website-audit-attention/visual-requests-v2.json
+          grep -q '"tournamentRequired": true' _website_audit_v2/website-audit-attention/visual-requests-v2.json
+          grep -q '"paidGenerationAuthorized": false' _website_audit_v2/website-audit-attention/visual-requests-v2.json
           grep -q '"publicationAuthority": false' _website_audit_v2/website-audit-attention/attention-pack-v2.json
 
       - name: Preserve Website Audit v2 pack
