@@ -180,6 +180,45 @@
         "live_kaggle_harness_verified": false,
         "adapters_declared": false
       }
+    },
+    {
+      "opportunity_id": "nfl-big-data-bowl-2027",
+      "provider": "kaggle",
+      "title": "NFL Big Data Bowl 2027",
+      "value": {
+        "currency": "USD",
+        "total_prizes": 100000
+      },
+      "deadline_date": "2027-01-06",
+      "evidence": {
+        "source": "Gmail competition launch from Kaggle plus NFL Football Operations Big Data Bowl program page",
+        "provider": "Kaggle/NFL",
+        "checked_on": "2026-10-07"
+      },
+      "rules": {
+        "verification_state": "launch_verified_rules_not_yet_verified",
+        "eligible": null,
+        "new_terms_required": true,
+        "payment_required": false,
+        "staking_required": false,
+        "human_gate_blocks_preparation": false,
+        "human_gate_blocks_entry": true
+      },
+      "required_deliverables": [
+        "analysis of prospect movement linking NFL Scouting Combine tracking to regular-season tracking",
+        "actionable and accessible findings for coaches, scouts, and front offices",
+        "Kaggle competition submission/writeup in provider-required format after rules acceptance"
+      ],
+      "build": {
+        "candidate": "Translation Layer: combine-to-game movement signatures for hidden-talent identification, bust-risk evidence, and position-specific development",
+        "state": "intake_scaffold_implemented",
+        "raven_qa_state": "not_run",
+        "submission_package_ready": false,
+        "entry_package": "systemia/competition/entries/nfl-big-data-bowl-2027",
+        "live_provider_canary": "held_until_rules_acceptance",
+        "competition_data_access": "held_until_rules_acceptance",
+        "hosted_demo_state": "not_required_or_not_verified"
+      }
     }
   ]
 }
