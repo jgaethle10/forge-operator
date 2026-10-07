@@ -1,0 +1,33 @@
+name: DayTrade Delayed SIP Diagnostic 2026-10-07
+
+on:
+  push:
+    branches:
+      - "systemia/daytrade-sip-delayed-2026-10-07"
+
+permissions:
+  contents: read
+
+jobs:
+  diagnostic:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Test delayed historical SIP access
+        env:
+          ALPACA_TRADING: ${{ secrets.ALPACA_TRADING }}
+          ALPACA_TRADING_SECRET: ${{ secrets.ALPACA_TRADING_SECRET }}
+          DAYTRADE_SIP_DELAYED_OUTPUT: artifacts/daytrade-edge/sip-delayed-history-diagnostic-2026-10-07.json
+        run: node systemia/daytrade-lens/edge-sip-delayed-history-diagnostic.mjs
+      - name: Upload delayed SIP diagnostic
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: daytrade-sip-delayed-${{ github.run_id }}
+          path: artifacts/daytrade-edge/sip-delayed-history-diagnostic-2026-10-07.json
+          if-no-files-found: error
+          retention-days: 30
