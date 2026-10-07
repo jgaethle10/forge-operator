@@ -43,6 +43,56 @@ jobs:
         with:
           node-version: 22
 
+      - name: Acquire governed USGS Washington shaded relief candidate
+        shell: bash
+        run: |
+          set -euo pipefail
+          rm -rf _terrain_acquisition
+          mkdir -p _terrain_acquisition
+          endpoint="https://basemap.nationalmap.gov/arcgis/rest/services/USGSShadedReliefOnly/MapServer/export"
+          curl --fail --location --silent --show-error --get "$endpoint" \
+            --data-urlencode 'bbox=-124.84897,45.54354,-116.91568,49.00196' \
+            --data-urlencode 'bboxSR=4326' \
+            --data-urlencode 'imageSR=4326' \
+            --data-urlencode 'size=1600,900' \
+            --data-urlencode 'format=png32' \
+            --data-urlencode 'transparent=false' \
+            --data-urlencode 'f=image' \
+            --output _terrain_acquisition/washington-usgs-shaded-relief.png
+          node - <<'NODE'
+          const fs=require('fs');
+          const crypto=require('crypto');
+          const path='_terrain_acquisition/washington-usgs-shaded-relief.png';
+          const body=fs.readFileSync(path);
+          const png=Buffer.from([0x89,0x50,0x4e,0x47,0x0d,0x0a,0x1a,0x0a]);
+          if(body.length<25000) throw new Error('usgs_relief_candidate_too_small:'+body.length);
+          if(!body.subarray(0,8).equals(png)) throw new Error('usgs_relief_candidate_not_png');
+          const receipt={
+            schema:'evercraft.graphics-command.terrain-acquisition-receipt.v1',
+            terrainId:'usgs-wa-shaded-relief-3dep-v1',
+            provider:'U.S. Geological Survey / The National Map',
+            service:'USGSShadedReliefOnly',
+            serviceRef:'https://basemap.nationalmap.gov/arcgis/rest/services/USGSShadedReliefOnly/MapServer',
+            exportEndpoint:'https://basemap.nationalmap.gov/arcgis/rest/services/USGSShadedReliefOnly/MapServer/export',
+            bbox:{west:-124.84897,south:45.54354,east:-116.91568,north:49.00196,spatialReference:4326},
+            image:{width:1600,height:900,format:'png32',transparent:false,bytes:body.length},
+            rightsState:'public_domain',
+            sourceFamily:'USGS The National Map / 3DEP shaded relief',
+            sha256:crypto.createHash('sha256').update(body).digest('hex'),
+            publicationAuthority:false
+          };
+          fs.writeFileSync('_terrain_acquisition/receipt.json',JSON.stringify(receipt,null,2)+'\n');
+          console.log(JSON.stringify(receipt,null,2));
+          NODE
+
+      - name: Preserve governed USGS relief candidate
+        uses: actions/upload-artifact@v4
+        with:
+          name: graphics-command-usgs-wa-relief-candidate
+          path: _terrain_acquisition
+          if-no-files-found: error
+          retention-days: 90
+
       - name: Prove visual story factory and Radar admission bridge
         run: node --test systemia/graphics-command/director.test.mjs systemia/graphics-command/poster-renderer.test.mjs systemia/visual-desk/factory.test.mjs systemia/visual-desk/radar-adapter.test.mjs systemia/visual-desk/transporter.test.mjs
 
