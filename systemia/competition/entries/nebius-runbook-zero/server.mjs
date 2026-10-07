@@ -1,0 +1,8 @@
+import http from "node:http"; import fs from "node:fs"; import path from "node:path"; import { fileURLToPath } from "node:url"; import { runDemo } from "./demo.mjs";
+const __dirname=path.dirname(fileURLToPath(import.meta.url)),html=fs.readFileSync(path.join(__dirname,"public","index.html"),"utf8"),port=Math.max(1,Math.min(65535,Number(process.env.PORT||8080))); let busy=false;
+function send(res,status,body,type="application/json; charset=utf-8"){res.statusCode=status;res.setHeader("content-type",type);res.setHeader("cache-control","no-store");res.setHeader("x-content-type-options","nosniff");res.end(type.startsWith("application/json")?JSON.stringify(body,null,2):body);}
+const server=http.createServer(async(req,res)=>{const url=new URL(req.url||"/","http://localhost");
+if(req.method==="GET"&&(url.pathname==="/"||url.pathname==="/index.html")){send(res,200,html,"text/html; charset=utf-8");return;}
+if(req.method==="GET"&&url.pathname==="/health"){send(res,200,{ok:true,product:"Runbook Zero",nebius_configured:Boolean(process.env.NEBIUS_TOKEN_FACTORY_KEY||process.env.NEBIUS_API_KEY),model:process.env.NEBIUS_MODEL||"nvidia/nemotron-3-super-120b-a12b",arbitrary_shell_from_model:false});return;}
+if(req.method==="POST"&&url.pathname==="/api/demo"){if(busy){send(res,409,{ok:false,error:"demo_busy"});return;}busy=true;try{const demo=await runDemo();send(res,demo.result.state==="repaired_and_verified"?200:503,{ok:demo.result.state==="repaired_and_verified",demo});}catch(error){send(res,500,{ok:false,error:String(error?.message||"demo_failed").slice(0,300)});}finally{busy=false;}return;}
+send(res,404,{ok:false,error:"not_found"});}); server.listen(port,"0.0.0.0",()=>console.log("Runbook Zero listening on port "+port));
