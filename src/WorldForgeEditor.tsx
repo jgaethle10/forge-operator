@@ -944,6 +944,43 @@ export default function WorldForgeEditor(){
     }
   }
 
+  async function captureRuntimePose(){
+    if(!playSession||!selected||selected.locked||busy) return;
+    if(stagedOperations.length){
+      setError('Apply or clear the current staged proposal before capturing a runtime pose.');
+      return;
+    }
+    setBusy(true);
+    setError('');
+    try{
+      const response=await fetch('/api/fallen/world-forge/play/capture-pose',{
+        method:'POST',
+        headers:{'content-type':'application/json'},
+        body:JSON.stringify({
+          sessionId:playSession.sessionId,
+          nodeIds:[selected.id],
+          author:{kind:'human',id:'world-forge-editor'},
+          title:`Capture ${selected.name} runtime pose`,
+        }),
+      });
+      const payload=await response.json();
+      if(!response.ok||!payload.success||!payload.proposal?.changeSet){
+        throw new Error(payload.error||'Could not capture the runtime pose.');
+      }
+      const operations=payload.proposal.changeSet.operations as ForgeOperation[];
+      setStagedOperations(operations);
+      setStageMode(true);
+      setPlayProjection(payload.projection as PlayRuntimeProjection);
+      setCommandNote(
+        `Captured ${selected.name} runtime pose from tick ${payload.proposal.tick}. Review it in Stage Mode, then Apply Batch to make it canon.`
+      );
+    }catch(err){
+      setError(err instanceof Error?err.message:String(err));
+    }finally{
+      setBusy(false);
+    }
+  }
+
   async function stepPlaySession(ticks:number){
     if(!playSession||busy) return;
     setBusy(true);
@@ -1551,6 +1588,20 @@ export default function WorldForgeEditor(){
               </span>
               <button onClick={()=>void stepPlaySession(1)} disabled={busy}>+1 Tick</button>
               <button onClick={()=>void stepPlaySession(60)} disabled={busy}>+60 Ticks</button>
+              <button
+                className="wf-capture-pose"
+                onClick={()=>void captureRuntimePose()}
+                disabled={busy||!selected||selected.locked||stagedOperations.length>0}
+                title={
+                  selected?.locked
+                    ? 'Locked objects cannot be captured into canon'
+                    : stagedOperations.length
+                      ? 'Apply or clear the current staged proposal first'
+                      : 'Stage the selected runtime transform as an authoring proposal'
+                }
+              >
+                Capture Pose
+              </button>
               <button onClick={()=>void stopPlaySession()} disabled={busy}>■ Stop</button>
             </>}
         <input

@@ -877,3 +877,13 @@
   background:#2c2515;
   color:#e4cd92;
 }
+
+.wf-capture-pose{
+  border-color:#705d2e !important;
+  background:#2c2514 !important;
+  color:#ead493 !important;
+}
+
+.wf-capture-pose:hover:not(:disabled){
+  background:#3a311a !important;
+}
