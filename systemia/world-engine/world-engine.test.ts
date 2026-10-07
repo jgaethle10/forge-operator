@@ -1,7 +1,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import { EvercraftWorldRuntime, replayWorld, type WorldDefinition } from './engine.js';
-import { projectWorldstateIntoWorld, worldFromFallenStudio } from './bridges.js';
+import { geometryFromFallenAsset, projectWorldstateIntoWorld, worldFromFallenStudio } from './bridges.js';
 
 const demo:WorldDefinition={
   schema:'evercraft.world-engine.world.v1',
@@ -69,6 +69,111 @@ test('Fallen studio worlds compile into traversable world-engine entities',()=>{
   });
   assert.equal(world.entities.length,3);
   assert.ok(world.entities.some(entity=>entity.id==='portal:lobby:global_ops'));
+});
+
+test('Fallen geometry compiles into deterministic tangent-space World Engine assets',()=>{
+  const source={
+    schema:'evercraft.fallen.geometry.v1' as const,
+    id:'geometry:fallen-panel',
+    primitive:'triangles' as const,
+    positions:[
+      -1,-1,0,
+      1,-1,0,
+      -1,1,0
+    ],
+    normals:[
+      0,0,1,
+      0,0,1,
+      0,0,1
+    ],
+    uvs:[
+      0,0,
+      1,0,
+      0,1
+    ]
+  };
+
+  const first=geometryFromFallenAsset(source);
+  const second=geometryFromFallenAsset(structuredClone(source));
+
+  assert.deepEqual(first.geometry.tangents,[
+    1,0,0,1,
+    1,0,0,1,
+    1,0,0,1
+  ]);
+  assert.equal(first.receipt.digest,second.receipt.digest);
+  assert.equal(first.receipt.sourceDigest,second.receipt.sourceDigest);
+  assert.equal(first.receipt.geometryDigest,second.receipt.geometryDigest);
+  assert.equal(first.receipt.vertexCount,3);
+  assert.equal(first.receipt.triangleCount,1);
+  assert.equal(first.receipt.generatedTangents,true);
+  assert.equal(
+    first.receipt.tangentGeneration,
+    'deterministic_uv_gram_schmidt_v1'
+  );
+});
+
+test('Fallen indexed geometry accumulates one canonical tangent frame per vertex',()=>{
+  const result=geometryFromFallenAsset({
+    schema:'evercraft.fallen.geometry.v1',
+    id:'geometry:fallen-quad',
+    primitive:'triangles',
+    positions:[
+      -1,-1,0,
+      1,-1,0,
+      1,1,0,
+      -1,1,0
+    ],
+    normals:[
+      0,0,1,
+      0,0,1,
+      0,0,1,
+      0,0,1
+    ],
+    uvs:[
+      0,0,
+      1,0,
+      1,1,
+      0,1
+    ],
+    indices:[0,1,2,0,2,3]
+  });
+
+  assert.equal(result.geometry.tangents?.length,16);
+  for(let i=0;i<4;i++){
+    const tangent=result.geometry.tangents!.slice(i*4,i*4+4);
+    assert.ok(Math.abs(tangent[0]-1)<1e-12);
+    assert.ok(Math.abs(tangent[1])<1e-12);
+    assert.ok(Math.abs(tangent[2])<1e-12);
+    assert.equal(tangent[3],1);
+  }
+  assert.equal(result.receipt.triangleCount,2);
+});
+
+test('Fallen tangent generation fails closed on degenerate UV triangles',()=>{
+  assert.throws(
+    ()=>geometryFromFallenAsset({
+      schema:'evercraft.fallen.geometry.v1',
+      id:'geometry:bad-uvs',
+      primitive:'triangles',
+      positions:[
+        0,0,0,
+        1,0,0,
+        0,1,0
+      ],
+      normals:[
+        0,0,1,
+        0,0,1,
+        0,0,1
+      ],
+      uvs:[
+        0,0,
+        0,0,
+        0,0
+      ]
+    }),
+    /fallen_geometry_uv_triangle_degenerate:0/
+  );
 });
 
 test('Worldstate evidence can be projected without gaining decision authority',()=>{
