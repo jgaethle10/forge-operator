@@ -4,8 +4,13 @@ import test from 'node:test';
 import {
   axisDragWorldDelta,
   frameDistanceForScale,
+  invertViewportMatrix,
   perspectiveVerticalFovRad,
+  pickClosestRayHit,
+  rayTriangleDistance,
   snapWorldDelta,
+  viewportRayFromNdc,
+  type ViewportVec3,
 } from './world-forge-viewport-tools.js';
 
 test('viewport snapping is deterministic and removes negative zero',()=>{
@@ -69,4 +74,55 @@ test('screen-axis drag maps back to snapped world movement',()=>{
     snapStep:.25,
   });
   assert.equal(opposite,-.5);
+});
+
+
+test('viewport inverse matrix and NDC ray are deterministic',()=>{
+  const identity=[
+    1,0,0,0,
+    0,1,0,0,
+    0,0,1,0,
+    0,0,0,1,
+  ];
+  assert.deepEqual(invertViewportMatrix(identity),identity);
+  assert.deepEqual(
+    viewportRayFromNdc({
+      ndcX:0,
+      ndcY:0,
+      inverseViewProjection:identity,
+    }),
+    {
+      origin:{x:0,y:0,z:-1},
+      direction:{x:0,y:0,z:1},
+    },
+  );
+});
+
+test('ray picking hits actual triangles and chooses the nearest geometry',()=>{
+  const ray={
+    origin:{x:0,y:0,z:-2},
+    direction:{x:0,y:0,z:1},
+  };
+  const near:[ViewportVec3,ViewportVec3,ViewportVec3]=[
+    {x:-1,y:-1,z:0},
+    {x:1,y:-1,z:0},
+    {x:0,y:1,z:0},
+  ];
+  const far:[ViewportVec3,ViewportVec3,ViewportVec3]=[
+    {x:-1,y:-1,z:3},
+    {x:1,y:-1,z:3},
+    {x:0,y:1,z:3},
+  ];
+
+  assert.equal(
+    rayTriangleDistance(ray,near[0],near[1],near[2]),
+    2,
+  );
+  assert.deepEqual(
+    pickClosestRayHit(ray,[
+      {id:'far',triangles:[[far[0],far[1],far[2]]]},
+      {id:'near',triangles:[[near[0],near[1],near[2]]]},
+    ]),
+    {id:'near',distance:2},
+  );
 });
