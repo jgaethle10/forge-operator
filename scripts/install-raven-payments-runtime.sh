@@ -149,10 +149,6 @@ done
   if(h.base44_required!==false) process.exit(9);
 "
 
-if systemctl is-active --quiet evercraft-fabric.service; then
-  systemctl restart evercraft-fabric.service
-fi
-
 echo "Evercraft Raven Payments resident is ready."
 echo "Loopback purchase-intent: http://127.0.0.1:$PORT/v1/purchase-intents"
 echo "Stripe adapter configured: $("$NODE_BIN" -e "const h=require('/tmp/evercraft-raven-payments-health.json');process.stdout.write(String(h.settlement_adapter_configured===true))")"
