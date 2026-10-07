@@ -45,7 +45,7 @@ export class LocalLineageRemote {
       mkdir(this.refs, { recursive: true }),
       this.large.init()
     ]);
-    return { schema: SCHEMA, root: this.root, large_object_transport: true };
+    return { schema: SCHEMA, protocol: SCHEMA, root: this.root, large_object_transport: true };
   }
 
   objectPath(id) {
@@ -59,8 +59,11 @@ export class LocalLineageRemote {
 
   async hasObject(id) {
     try {
-      const s = await stat(this.objectPath(id));
-      return s.isFile();
+      const path = this.objectPath(id);
+      const s = await stat(path);
+      if (!s.isFile()) return false;
+      const bytes = await readFile(path);
+      return lineageObjectId(bytes) === id;
     } catch {
       return false;
     }
