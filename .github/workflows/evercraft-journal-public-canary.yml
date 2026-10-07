@@ -66,6 +66,7 @@ jobs:
       - name: Diagnose owned edge Journal state
         shell: bash
         env:
+          SLUG: ${{ steps.edition.outputs.slug }}
           STORY_ID: ${{ steps.edition.outputs.story_id }}
           CANONICAL_URL: ${{ steps.edition.outputs.canonical_url }}
           ARTICLE_SHA256: ${{ steps.edition.outputs.article_sha256 }}
