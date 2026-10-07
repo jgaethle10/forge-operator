@@ -1,9 +1,11 @@
 import React, { useEffect, useMemo, useRef, useState } from 'react';
 import './world-forge.css';
 import {
+  axisDragScaleValue,
   axisDragWorldDelta,
   frameDistanceForScale,
   perspectiveVerticalFovRad,
+  screenRotationDeltaDeg,
 } from './world-forge-viewport-tools';
 import {
   nativePickMesh,
@@ -262,6 +264,29 @@ function buildGrid(){
   return new Float32Array(values);
 }
 const GRID_LINES=buildGrid();
+
+function buildRotationRing(axis:keyof Vec3,radius=1.35,segments=64){
+  const values:number[]=[];
+  for(let i=0;i<segments;i+=1){
+    const a=i/segments*Math.PI*2;
+    const b=(i+1)/segments*Math.PI*2;
+    const point=(angle:number):Vec3=>{
+      const ca=Math.cos(angle)*radius;
+      const sa=Math.sin(angle)*radius;
+      if(axis==='x') return {x:0,y:ca,z:sa};
+      if(axis==='y') return {x:ca,y:0,z:sa};
+      return {x:ca,y:sa,z:0};
+    };
+    const pa=point(a);
+    const pb=point(b);
+    values.push(pa.x,pa.y,pa.z,pb.x,pb.y,pb.z);
+  }
+  return new Float32Array(values);
+}
+
+const ROTATE_RING_X=buildRotationRing('x');
+const ROTATE_RING_Y=buildRotationRing('y');
+const ROTATE_RING_Z=buildRotationRing('z');
 
 function compileShader(gl:WebGL2RenderingContext,type:number,source:string){
   const shader=gl.createShader(type);
