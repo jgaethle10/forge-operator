@@ -44,6 +44,28 @@
       ]
     },
     {
+      "id": "urn:evercraft:commercial-intent:earthworks-site-autonomy-study-v1",
+      "external_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/capabilities/earthworks-site-autonomy-study-v1/index.html",
+      "title": "EarthWorks Site Autonomy Study",
+      "summary": "A quarry, aggregate, civil-earthwork, landfill or bulk-material operator needs to know where machine coordination, queueing, idle time, route behavior or bounded autonomy could improve a real material-flow loop before buying autonomous equipment or giving software physical control.",
+      "tags": [
+        "sell_now",
+        "earthworks-site-autonomy-study-v1",
+        "automation study for landfill bulk material or civil earthwork",
+        "coordinate excavators haul trucks loaders and dozers",
+        "digital twin for earthmoving operations",
+        "find the bottleneck in aggregate material flow",
+        "increase tons per hour through fleet coordination",
+        "optimize load haul dump operations",
+        "reduce haul truck queueing at a quarry",
+        "reduce loader idle time waiting on trucks",
+        "shadow dispatch for haul trucks",
+        "simulate an earthmoving fleet before automation",
+        "site autonomy study for a quarry",
+        "study autonomous haulage without replacing equipment"
+      ]
+    },
+    {
       "id": "urn:evercraft:commercial-intent:eventwave-paid-promotion-v1",
       "external_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/capabilities/eventwave-paid-promotion-v1/index.html",
       "title": "EventWave Event / Venue Promotion",

@@ -178,6 +178,22 @@
     },
     {
       "@type": "Service",
+      "@id": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/earthworks-autonomy/index.html#evercraft-service",
+      "name": "Evercraft EarthWorks Autonomy",
+      "alternateName": [
+        "EarthWorks",
+        "Evercraft EarthWorks",
+        "EarthWorks Site Autonomy"
+      ],
+      "url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/earthworks-autonomy/index.html",
+      "provider": {
+        "@id": "https://github.com/jgaethle10/forge-operator#evercraft"
+      },
+      "serviceType": "site_autonomy_orchestration_for_earthmoving_and_material_operations",
+      "description": "reduce haul truck queueing at a quarry or aggregate site; reduce loader or excavator idle time waiting on haul trucks; optimize a load haul dump loop before buying autonomous equipment; simulate an earthmoving fleet before deploying physical autonomy"
+    },
+    {
+      "@type": "Service",
       "@id": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/ecoledger/index.html#evercraft-service",
       "name": "EcoLedger",
       "alternateName": [
@@ -929,6 +945,17 @@
       "name": "Evercraft Deck Engine Founding Capital Fit Sprint",
       "description": "A founder, operator or project owner needs bounded capital-path research, readiness gaps and evidence-led deck direction without fake approval odds or invented financing terms.",
       "url": "https://fabric.systemiacommandcenters.com/capabilities/deck-capital-fit-sprint-machine-v1",
+      "provider": {
+        "@id": "https://github.com/jgaethle10/forge-operator#evercraft"
+      },
+      "serviceType": "Evercraft machine-commerce offer"
+    },
+    {
+      "@type": "Service",
+      "@id": "https://github.com/jgaethle10/forge-operator#offer-earthworks-site-autonomy-study-v1",
+      "name": "EarthWorks Site Autonomy Study",
+      "description": "A quarry, aggregate, civil-earthwork, landfill or bulk-material operator needs to know where machine coordination, queueing, idle time, route behavior or bounded autonomy could improve a real material-flow loop before buying autonomous equipment or giving software physical control.",
+      "url": "https://fabric.systemiacommandcenters.com/capabilities/earthworks-site-autonomy-study-v1",
       "provider": {
         "@id": "https://github.com/jgaethle10/forge-operator#evercraft"
       },

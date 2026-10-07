@@ -16,6 +16,13 @@ Intent page: /chum/intents/career-command-interview-practice-machine-v1/
 Capability: /chum/capabilities/career-command-interview-practice-machine-v1/
 Exact answer doors: 7
 
+## EarthWorks Site Autonomy Study
+Public ID: earthworks-site-autonomy-study-v1
+Cluster: /chum/commercial/earthworks-site-autonomy-study-v1/
+Intent page: /chum/intents/earthworks-site-autonomy-study-v1/
+Capability: /chum/capabilities/earthworks-site-autonomy-study-v1/
+Exact answer doors: 14
+
 ## EventWave Event / Venue Promotion
 Public ID: eventwave-paid-promotion-v1
 Cluster: /chum/commercial/eventwave-paid-promotion-v1/

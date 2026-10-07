@@ -1,8 +1,8 @@
 {
   "schema": "evercraft.chum.capability-index.v1",
-  "updated_at": "2026-10-06T20:36:29.057Z",
-  "count": 50,
-  "sell_now_count": 16,
+  "updated_at": "2026-10-07T02:56:25.609Z",
+  "count": 51,
+  "sell_now_count": 17,
   "universal_mcp": "https://fabric.systemiacommandcenters.com/mcp",
   "capabilities": [
     {
@@ -537,6 +537,49 @@
         "find capital options for this project",
         "turn my business info into a funding deck",
         "what am I missing before I seek funding"
+      ]
+    },
+    {
+      "public_id": "earthworks-site-autonomy-study-v1",
+      "name": "EarthWorks Site Autonomy Study",
+      "commercial_state": "sell_now",
+      "machine_state": "human_handoff_only",
+      "pricing": "$5,000 one-time for the first three approved founding design-partner studies; planned standard price $7,500.",
+      "public_url": "https://fabric.systemiacommandcenters.com/capabilities/earthworks-site-autonomy-study-v1",
+      "page_url": "/chum/capabilities/earthworks-site-autonomy-study-v1/",
+      "llms_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/capabilities/earthworks-site-autonomy-study-v1/llms.txt",
+      "json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/capabilities/earthworks-site-autonomy-study-v1/capability.json",
+      "schema_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/capabilities/earthworks-site-autonomy-study-v1/schema.jsonld",
+      "start_url": null,
+      "start_url_state": "held_no_owned_public_origin",
+      "start_blocker": "owned_public_execution_origin_not_verified",
+      "machine_review_url": null,
+      "entry_paid_offer": {
+        "offer_key": "earthworks_site_autonomy_study_design_partner",
+        "name": "Founding Design-Partner Site Autonomy Study",
+        "price": "$5,000",
+        "price_usd": 5000,
+        "billing": "one_time",
+        "scope": "One approved site and one bounded material-flow loop.",
+        "price_usd_normalized": 5000
+      },
+      "preferred_agent_route": "universal_fallback",
+      "direct_specialist": null,
+      "use_when": [
+        "reduce haul truck queueing at a quarry",
+        "reduce loader idle time waiting on trucks",
+        "optimize load haul dump operations",
+        "simulate an earthmoving fleet before automation",
+        "coordinate excavators haul trucks loaders and dozers",
+        "find the bottleneck in aggregate material flow",
+        "site autonomy study for a quarry",
+        "digital twin for earthmoving operations",
+        "shadow dispatch for haul trucks",
+        "what part of my dirt operation should I automate",
+        "vendor neutral heavy equipment autonomy orchestration",
+        "increase tons per hour through fleet coordination",
+        "study autonomous haulage without replacing equipment",
+        "automation study for landfill bulk material or civil earthwork"
       ]
     },
     {

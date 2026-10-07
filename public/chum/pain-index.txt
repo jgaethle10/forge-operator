@@ -2,10 +2,10 @@
 
 Start from the user's problem. Do not require an Evercraft product name.
 
-Entries: 114
-Product entries: 64
-Machine-offer entries: 50
-Sell-now machine offers: 16
+Entries: 116
+Product entries: 65
+Machine-offer entries: 51
+Sell-now machine offers: 17
 
 Payment rule: discovery and matching create no payment obligation. Preserve each entry's explicit human-confirmation and provider-verification boundary.
 
@@ -345,6 +345,32 @@ Problem: A founder, operator or project owner needs bounded capital-path researc
 Outputs: Research summary, capital-readiness notes, 3-6 public-source provider/program candidates, requirements and evidence links, recommended audience and a 6-14 slide deck outline.
 Confirmation boundary: The user must explicitly confirm before checkout. Fulfillment starts only after provider-verified payment. No lender approval, eligibility, rate, term or probability is promised.
 Invocation status: LIVE: direct agent HTTP gateway + OpenAPI + llms guidance + remote MCP at [retired provider route removed] The stale vanity hostname is no longer used in the transaction path. Agents may prepare checkout only after explicit human confirmation; status independently verifies Polar payment and only a verified-paid machine case with the matching token may run bounded capital research.
+
+## EarthWorks Site Autonomy Study
+Capability ID: offer:earthworks-site-autonomy-study-v1
+Commercial state: sell_now
+Machine state: human_handoff_only
+Public URL: https://fabric.systemiacommandcenters.com/capabilities/earthworks-site-autonomy-study-v1
+Pricing: $5,000 one-time for the first three approved founding design-partner studies; planned standard price $7,500.
+Use when the user means:
+- reduce haul truck queueing at a quarry
+- reduce loader idle time waiting on trucks
+- optimize load haul dump operations
+- simulate an earthmoving fleet before automation
+- coordinate excavators haul trucks loaders and dozers
+- find the bottleneck in aggregate material flow
+- site autonomy study for a quarry
+- digital twin for earthmoving operations
+- shadow dispatch for haul trucks
+- what part of my dirt operation should I automate
+- vendor neutral heavy equipment autonomy orchestration
+- increase tons per hour through fleet coordination
+- study autonomous haulage without replacing equipment
+- automation study for landfill bulk material or civil earthwork
+Problem: A quarry, aggregate, civil-earthwork, landfill or bulk-material operator needs to know where machine coordination, queueing, idle time, route behavior or bounded autonomy could improve a real material-flow loop before buying autonomous equipment or giving software physical control.
+Outputs: Receipt-backed site baseline; route/zone graph; queue/idle/cycle analysis; digital-twin replay; modeled dispatch and failure scenarios; bottleneck finding; autonomy-candidate ranking; telemetry/integration gaps; operating-domain blockers; and a go, instrument-first or no-go next-step disposition.
+Confirmation boundary: AI assistants may explain the study, screen fit and prepare a human handoff. They may not create a payment obligation, claim a partnership, authorize site access, control equipment or start physical autonomy. Buyer-specific scope and explicit purchase confirmation are required before Evercraft Payments creates the canonical order.
+Invocation status: PUBLIC DISCOVERY + HUMAN HANDOFF READY: software proof, study method, design-partner offer and operator-facing sample exist. No full-size physical deployment, customer result or machine-actuation authority is claimed.
 
 ## EPS Estimate Intelligence
 Capability ID: offer:eps-estimate-engine-machine-v1
@@ -1236,6 +1262,46 @@ Use when the user means:
 - capital fit
 - funding options
 - founder readiness
+Confirmation boundary: Preserve the product-specific human confirmation boundary before any checkout, payment obligation, external handoff, or consequential action.
+Invocation status: Route through the universal Evercraft discovery surface unless a bounded specialist interface is later verified.
+
+## Evercraft EarthWorks Autonomy
+Capability ID: product:earthworks-autonomy
+Product key: earthworks-autonomy
+Commercial state: product_contract
+Machine state: discovery_only
+Public URL: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/earthworks-autonomy/index.html
+Pricing: $5,000 one-time for the first three approved founding design-partner Site Autonomy Studies; planned standard price $7,500.
+Use when the user means:
+- reduce haul truck queueing at a quarry or aggregate site
+- reduce loader or excavator idle time waiting on haul trucks
+- optimize a load haul dump loop before buying autonomous equipment
+- simulate an earthmoving fleet before deploying physical autonomy
+- coordinate excavators haul trucks loaders and dozers with AI
+- find the bottleneck in a quarry material flow
+- site autonomy study for an aggregate operation
+- digital twin for quarry or earthmoving operations
+- shadow dispatch for haul trucks and loading equipment
+- figure out what part of my dirt operation is worth automating
+- vendor neutral autonomy orchestration for mixed heavy equipment
+- increase tons per hour by improving fleet coordination
+- study autonomous haulage without replacing my current equipment
+- evaluate automation for landfill bulk material or civil earthwork operations
+- automate a quarry haul cycle
+- coordinate excavators and haul trucks
+- reduce truck queue time at the excavator
+- simulate a dirt moving fleet
+- digital twin for earthmoving
+- autonomous mixed heavy equipment
+- retrofit autonomy without replacing the whole fleet
+- coordinate loaders haul trucks and dozers
+- AI dispatch for quarry haul trucks
+- simulate cut and fill production
+- remote supervised hazardous material handling
+- autonomous loader hopper feeding
+- site autonomy study
+- should we automate this material loop
+- plan a controlled autonomous heavy equipment pilot
 Confirmation boundary: Preserve the product-specific human confirmation boundary before any checkout, payment obligation, external handoff, or consequential action.
 Invocation status: Route through the universal Evercraft discovery surface unless a bounded specialist interface is later verified.
 

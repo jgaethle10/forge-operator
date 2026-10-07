@@ -3,7 +3,7 @@
   "provider": "Evercraft LLC",
   "generated_from": {
     "product_directory_schema": "evercraft.product-directory.v1",
-    "product_directory_updated_at": "2026-09-30",
+    "product_directory_updated_at": "2026-10-06",
     "machine_catalog_schema": "evercraft.machine-catalog.snapshot.v1",
     "machine_catalog_source_generated_at": "2026-09-30T20:21:00.000Z",
     "registry_schema": "evercraft.agent.registry.v1",
@@ -28,11 +28,11 @@
     "provider_verification_required_for_paid_state": true
   },
   "summary": {
-    "entries": 114,
-    "product_entries": 64,
-    "machine_offer_entries": 50,
-    "entries_with_pain_language": 114,
-    "sell_now_machine_offers": 16,
+    "entries": 116,
+    "product_entries": 65,
+    "machine_offer_entries": 51,
+    "entries_with_pain_language": 116,
+    "sell_now_machine_offers": 17,
     "entries_with_declared_mcp": 1,
     "callable_or_routable_entries": 1,
     "suppressed_legacy_marketing_routes": 9
@@ -869,6 +869,71 @@
       "confirmation": "The user must explicitly confirm before checkout. Fulfillment starts only after provider-verified payment. No lender approval, eligibility, rate, term or probability is promised.",
       "payment_authority": "Evercraft Deck Engine / Polar, provider-verified",
       "invocation_status": "LIVE: direct agent HTTP gateway + OpenAPI + llms guidance + remote MCP at [retired provider route removed] The stale vanity hostname is no longer used in the transaction path. Agents may prepare checkout only after explicit human confirmation; status independently verifies Polar payment and only a verified-paid machine case with the matching token may run bounded capital research.",
+      "source_refs": [
+        "public/.well-known/evercraft-machine-catalog.json"
+      ]
+    },
+    {
+      "capability_id": "offer:earthworks-site-autonomy-study-v1",
+      "product_key": null,
+      "public_id": "earthworks-site-autonomy-study-v1",
+      "kind": "machine_offer",
+      "name": "EarthWorks Site Autonomy Study",
+      "class": "machine_commerce_offer",
+      "pain_phrases": [
+        "reduce haul truck queueing at a quarry",
+        "reduce loader idle time waiting on trucks",
+        "optimize load haul dump operations",
+        "simulate an earthmoving fleet before automation",
+        "coordinate excavators haul trucks loaders and dozers",
+        "find the bottleneck in aggregate material flow",
+        "site autonomy study for a quarry",
+        "digital twin for earthmoving operations",
+        "shadow dispatch for haul trucks",
+        "what part of my dirt operation should I automate",
+        "vendor neutral heavy equipment autonomy orchestration",
+        "increase tons per hour through fleet coordination",
+        "study autonomous haulage without replacing equipment",
+        "automation study for landfill bulk material or civil earthwork"
+      ],
+      "problem": "A quarry, aggregate, civil-earthwork, landfill or bulk-material operator needs to know where machine coordination, queueing, idle time, route behavior or bounded autonomy could improve a real material-flow loop before buying autonomous equipment or giving software physical control.",
+      "inputs": "One explicitly approved site and one bounded material-flow loop; machine roster; loading/dump zones; route or zone graph; available cycle/queue/idle observations; production objective; known operating constraints and telemetry availability.",
+      "outputs": "Receipt-backed site baseline; route/zone graph; queue/idle/cycle analysis; digital-twin replay; modeled dispatch and failure scenarios; bottleneck finding; autonomy-candidate ranking; telemetry/integration gaps; operating-domain blockers; and a go, instrument-first or no-go next-step disposition.",
+      "canonical_url": "https://fabric.systemiacommandcenters.com/capabilities/earthworks-site-autonomy-study-v1",
+      "legacy_marketing_route_suppressed": false,
+      "registry_name": null,
+      "mcp": null,
+      "routing": {
+        "preferred": "universal_machine_commerce",
+        "target": null
+      },
+      "authority": "Machine-commerce contract only. The offer state below is authoritative for public routing and must not be upgraded by inference.",
+      "boundaries": [],
+      "commercial_state": "sell_now",
+      "machine_state": "human_handoff_only",
+      "pricing": "$5,000 one-time for the first three approved founding design-partner studies; planned standard price $7,500.",
+      "offers": [
+        {
+          "offer_key": "earthworks_site_autonomy_study_design_partner",
+          "name": "Founding Design-Partner Site Autonomy Study",
+          "price": "$5,000",
+          "price_usd": 5000,
+          "billing": "one_time",
+          "scope": "One approved site and one bounded material-flow loop."
+        },
+        {
+          "offer_key": "earthworks_site_autonomy_study_standard",
+          "name": "Site Autonomy Study",
+          "price": "$7,500",
+          "price_usd": 7500,
+          "billing": "one_time",
+          "state": "planned_standard_after_founding_slots"
+        }
+      ],
+      "human_confirmation_required": true,
+      "confirmation": "AI assistants may explain the study, screen fit and prepare a human handoff. They may not create a payment obligation, claim a partnership, authorize site access, control equipment or start physical autonomy. Buyer-specific scope and explicit purchase confirmation are required before Evercraft Payments creates the canonical order.",
+      "payment_authority": "Evercraft Payments is canonical. Raven Nexus mediates the Stripe settlement adapter. A buyer-specific Evercraft Payment Order may be created only after explicit purchase intent for an approved study scope. Checkout creation is not payment proof; paid state requires authoritative settlement verification.",
+      "invocation_status": "PUBLIC DISCOVERY + HUMAN HANDOFF READY: software proof, study method, design-partner offer and operator-facing sample exist. No full-size physical deployment, customer result or machine-actuation authority is claimed.",
       "source_refs": [
         "public/.well-known/evercraft-machine-catalog.json"
       ]
@@ -3037,6 +3102,90 @@
       "source_refs": [
         "public/.well-known/evercraft-products.json",
         "registry/catalog.json"
+      ]
+    },
+    {
+      "capability_id": "product:earthworks-autonomy",
+      "product_key": "earthworks-autonomy",
+      "kind": "product",
+      "name": "Evercraft EarthWorks Autonomy",
+      "class": "site_autonomy_orchestration_for_earthmoving_and_material_operations",
+      "pain_phrases": [
+        "reduce haul truck queueing at a quarry or aggregate site",
+        "reduce loader or excavator idle time waiting on haul trucks",
+        "optimize a load haul dump loop before buying autonomous equipment",
+        "simulate an earthmoving fleet before deploying physical autonomy",
+        "coordinate excavators haul trucks loaders and dozers with AI",
+        "find the bottleneck in a quarry material flow",
+        "site autonomy study for an aggregate operation",
+        "digital twin for quarry or earthmoving operations",
+        "shadow dispatch for haul trucks and loading equipment",
+        "figure out what part of my dirt operation is worth automating",
+        "vendor neutral autonomy orchestration for mixed heavy equipment",
+        "increase tons per hour by improving fleet coordination",
+        "study autonomous haulage without replacing my current equipment",
+        "evaluate automation for landfill bulk material or civil earthwork operations",
+        "automate a quarry haul cycle",
+        "coordinate excavators and haul trucks",
+        "reduce truck queue time at the excavator",
+        "simulate a dirt moving fleet",
+        "digital twin for earthmoving",
+        "autonomous mixed heavy equipment",
+        "retrofit autonomy without replacing the whole fleet",
+        "coordinate loaders haul trucks and dozers",
+        "AI dispatch for quarry haul trucks",
+        "simulate cut and fill production",
+        "remote supervised hazardous material handling",
+        "autonomous loader hopper feeding",
+        "site autonomy study",
+        "should we automate this material loop",
+        "plan a controlled autonomous heavy equipment pilot"
+      ],
+      "problem": null,
+      "inputs": null,
+      "outputs": null,
+      "canonical_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/earthworks-autonomy/index.html",
+      "registry_name": null,
+      "mcp": null,
+      "routing": {
+        "preferred": "universal_machine_commerce",
+        "target": null
+      },
+      "legacy_marketing_route_suppressed": false,
+      "authority": "public discovery, paid site-autonomy study, simulation and shadow-mode planning for explicitly scoped material-flow loops; no production machine actuation authority is granted by discovery or study purchase",
+      "boundaries": [
+        "software simulation and control-contract proof are not full-size physical deployment proof",
+        "modeled production gains are not observed site results",
+        "a paid study does not authorize production machine control",
+        "physical autonomy requires a separate controlled operating domain, verified equipment adapter, independent stop and takeover, heartbeat fail-safe, geofence and formal safety case",
+        "EarthWorks Compatible conformance is not certification",
+        "customer site data remains tenant scoped and cross-site learning requires permissioned or de-identified derived data",
+        "checkout or payment initiation is not payment proof; paid state requires authoritative Evercraft Payments verification"
+      ],
+      "commercial_state": "product_contract",
+      "machine_state": "discovery_only",
+      "pricing": "$5,000 one-time for the first three approved founding design-partner Site Autonomy Studies; planned standard price $7,500.",
+      "offers": [],
+      "commercial": {
+        "status": "sell_now_human_handoff",
+        "pricing": "$5,000 one-time for the first three approved founding design-partner Site Autonomy Studies; planned standard price $7,500.",
+        "offers": [
+          {
+            "offer_key": "earthworks_site_autonomy_study_design_partner",
+            "name": "EarthWorks Site Autonomy Study — Founding Design Partner",
+            "price": "$5,000",
+            "billing": "one_time",
+            "scope": "One approved site and one bounded material-flow loop."
+          }
+        ],
+        "payment_state": "Buyer-specific Evercraft Payment Order is created only after explicit scope and purchase confirmation. Stripe is a settlement rail behind Raven Nexus, not the customer-facing payment product."
+      },
+      "human_confirmation_required": true,
+      "confirmation": "Preserve the product-specific human confirmation boundary before any checkout, payment obligation, external handoff, or consequential action.",
+      "payment_authority": null,
+      "invocation_status": "Route through the universal Evercraft discovery surface unless a bounded specialist interface is later verified.",
+      "source_refs": [
+        "public/.well-known/evercraft-products.json"
       ]
     },
     {

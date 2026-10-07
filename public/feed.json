@@ -339,21 +339,22 @@
       ]
     },
     {
-      "id": "urn:evercraft:product:earthworks-autonomy:ecc483758905c159",
+      "id": "urn:evercraft:product:earthworks-autonomy:c00737a04b96123c",
       "url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/earthworks-autonomy/index.html",
       "external_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/earthworks-autonomy/ai-discovery.json",
       "title": "Evercraft EarthWorks Autonomy",
-      "summary": "Evercraft EarthWorks Autonomy is an Evercraft public capability. Common needs: automate a quarry haul cycle; coordinate excavators and haul trucks; reduce truck queue time at the excavator; simulate a dirt moving fleet.",
+      "summary": "Evercraft EarthWorks Autonomy is an Evercraft site autonomy orchestration for earthmoving and material operations capability. Common needs: reduce haul truck queueing at a quarry or aggregate site; reduce loader or excavator idle time waiting on haul trucks; optimize a load haul dump loop before buying autonomous equipment; simulate an earthmoving fleet before deploying physical autonomy.",
       "date_modified": "2026-10-06T00:00:00.000Z",
       "tags": [
-        "automate a quarry haul cycle",
-        "coordinate excavators and haul trucks",
-        "reduce truck queue time at the excavator",
-        "simulate a dirt moving fleet",
-        "digital twin for earthmoving",
-        "autonomous mixed heavy equipment",
-        "retrofit autonomy without replacing the whole fleet",
-        "coordinate loaders haul trucks and dozers"
+        "site_autonomy_orchestration_for_earthmoving_and_material_operations",
+        "reduce haul truck queueing at a quarry or aggregate site",
+        "reduce loader or excavator idle time waiting on haul trucks",
+        "optimize a load haul dump loop before buying autonomous equipment",
+        "simulate an earthmoving fleet before deploying physical autonomy",
+        "coordinate excavators haul trucks loaders and dozers with AI",
+        "find the bottleneck in a quarry material flow",
+        "site autonomy study for an aggregate operation",
+        "digital twin for quarry or earthmoving operations"
       ]
     },
     {

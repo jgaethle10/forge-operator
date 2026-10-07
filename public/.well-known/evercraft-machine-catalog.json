@@ -7,7 +7,7 @@
   "source_schema_version": "2026-10-04.1",
   "gateway_version": "evercraft-machine-commerce-gateway-v0.9.1",
   "source_generated_at": "2026-09-30T20:21:00.000Z",
-  "generated_at": "2026-10-07T02:55:09.418Z",
+  "generated_at": "2026-10-07T02:56:25.609Z",
   "offer_count": 51,
   "sell_now_count": 17,
   "discovery_count": 34,
@@ -666,9 +666,11 @@
       ],
       "human_ui_required": true,
       "confirmation": "AI assistants may explain the study, screen fit and prepare a human handoff. They may not create a payment obligation, claim a partnership, authorize site access, control equipment or start physical autonomy. Buyer-specific scope and explicit purchase confirmation are required before Evercraft Payments creates the canonical order.",
-      "public_url": "",
+      "public_url": "https://fabric.systemiacommandcenters.com/capabilities/earthworks-site-autonomy-study-v1",
+      "public_url_source": "owned_fabric_capability_fallback",
       "payment_authority": "Evercraft Payments is canonical. Raven Nexus mediates the Stripe settlement adapter. A buyer-specific Evercraft Payment Order may be created only after explicit purchase intent for an approved study scope. Checkout creation is not payment proof; paid state requires authoritative settlement verification.",
       "invocation_status": "PUBLIC DISCOVERY + HUMAN HANDOFF READY: software proof, study method, design-partner offer and operator-facing sample exist. No full-size physical deployment, customer result or machine-actuation authority is claimed.",
+      "live_canary_evidence": null,
       "catalog_version": "2026-10-06.earthworks-design-partner-v1"
     },
     {
