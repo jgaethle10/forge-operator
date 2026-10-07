@@ -85,6 +85,19 @@ export function validateJournalStory(input, { now = new Date(), allowExpired = f
     }
   }
 
+  if (story.machine_evidence) {
+    if (story.machine_evidence.schema !== 'evercraft.journal.machine-evidence.v1') {
+      throw new Error('Journal machine evidence schema is invalid.');
+    }
+    const relativePath = clean(story.machine_evidence.relative_path);
+    if (!/^data\/[a-z0-9][a-z0-9._-]*\.json$/.test(relativePath)) {
+      throw new Error('Journal machine evidence path must be a safe data/*.json path.');
+    }
+    if (!story.machine_evidence.payload || typeof story.machine_evidence.payload !== 'object' || Array.isArray(story.machine_evidence.payload)) {
+      throw new Error('Journal machine evidence payload is required.');
+    }
+  }
+
   if (story.ranking_table) {
     if (story.ranking_table.schema !== 'evercraft.journal.ranking-table.v1') {
       throw new Error('Journal ranking table schema is invalid.');
@@ -345,6 +358,17 @@ export function publishJournalStories(inputStories, {
     const fallenBrief = JSON.stringify(story.fallen_brief, null, 2) + '\n';
     fs.writeFileSync(path.join(productionDir, 'fallen-brief.json'), fallenBrief);
 
+    let machineEvidenceSha256 = null;
+    if (story.machine_evidence) {
+      const machineEvidence = JSON.stringify(story.machine_evidence.payload, null, 2) + '\n';
+      const machinePath = path.resolve(outDir, story.machine_evidence.relative_path);
+      const outRoot = path.resolve(outDir) + path.sep;
+      if (!machinePath.startsWith(outRoot)) throw new Error('Journal machine evidence escaped output root.');
+      fs.mkdirSync(path.dirname(machinePath), { recursive: true });
+      fs.writeFileSync(machinePath, machineEvidence);
+      machineEvidenceSha256 = sha256(machineEvidence);
+    }
+
     const clipHandoff = {
       schema: 'evercraft.clip.journal-handoff.v1',
       story_id: story.story_id,
@@ -385,6 +409,8 @@ export function publishJournalStories(inputStories, {
       production_grade: story.production_grade,
       article_sha256: sha256(html),
       fallen_brief_sha256: sha256(fallenBrief),
+      machine_evidence_ref: story.machine_evidence?.relative_path || null,
+      machine_evidence_sha256: machineEvidenceSha256,
       publisher: 'evercraft-owned-static-journal-v1',
       publication_authority: true,
       publication_state: archived ? 'archived' : 'live',
