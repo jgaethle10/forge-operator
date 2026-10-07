@@ -39,7 +39,24 @@
     "end_to_end_migration_proof_in_ci": true,
     "legacy_private_user_entities_excluded_from_migration": true,
     "live_yard_deployment_verified": false,
-    "live_public_route_verified": false
+    "live_public_route_verified": false,
+    "legacy_entity_inventory_observed": {
+      "ForensicFinding": 22816,
+      "Source": 6,
+      "CorpusCoverage": 8,
+      "ForensicCandidateFinding": 15,
+      "FindingRejection": 0,
+      "Chunk": 8,
+      "CorpusPageIndex": 341,
+      "DocumentSet": 16,
+      "MediaSource": 13,
+      "ArchiveMeta": 1,
+      "LegacyFindingAudit": {
+        "high_water_finding_number": 18040,
+        "count_exact": false
+      }
+    },
+    "legacy_inventory_observed_at": "2026-10-06"
   },
   "migrate": [
     "forensic_finding_ledger",
