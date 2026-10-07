@@ -497,13 +497,16 @@ export function renderCapabilityDetail(item){
     ? '<ul>'+useWhen.map((value)=>'<li>“'+escapeHtml(value)+'”</li>').join('')+'</ul>'
     : '<p>This capability is currently discovered from its published problem description.</p>';
   const startState=item.start_url_state||'not_declared';
+  const heroActions=item.public_id==='earthworks-site-autonomy-study-v1'
+    ? '<div class="actions"><a class="btn primary" href="mailto:jessegaethle10@gmail.com?subject=EarthWorks%20Site%20Autonomy%20Study&body=Company%3A%20%0ASite%3A%20%0AMaterial%20loop%3A%20%0AWhat%20is%20costing%20production%3A%20">Discuss one material loop</a><a class="btn" href="/capabilities">Browse all capabilities</a></div>'
+    : '<div class="actions"><a class="btn primary" href="/offers">See simple offers</a><a class="btn" href="/capabilities">Browse all capabilities</a></div>';
   return shell(item.name+' · Evercraft Fabric',[
     '<main>',
     '<section class="hero">',
     '<div class="eyebrow">Evercraft capability</div>',
     '<h1>'+escapeHtml(item.name)+'</h1>',
     '<p class="lede">'+escapeHtml(item.description)+'</p>',
-    '<div class="actions"><a class="btn primary" href="/offers">See simple offers</a><a class="btn" href="/capabilities">Browse all capabilities</a></div>',
+    heroActions,
     '</section>',
     '<div class="detail-grid">',
     '<section class="detail-panel"><h2>When this is the right tool</h2>'+prompts+'</section>',
