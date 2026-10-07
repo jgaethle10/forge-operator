@@ -525,7 +525,6 @@ export async function startLineageControlRoom({
         schema: 'evercraft.lineage.control-room.health.v1',
         ok: server.listening,
         mode: 'read_only',
-        service_url: serviceUrl,
         mutation_authority: false,
         publication_authority: false,
         deployment_authority: false,
