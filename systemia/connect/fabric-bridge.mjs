@@ -156,8 +156,10 @@ export function composeExecutionChain(connection, {
     };
 
     const ranked = rankPotentialMatches(scopedConnection, allProviders, {
-      limit: perCapability
-    });
+      limit: Math.max(perCapability * 4, 12)
+    })
+      .filter((match) => Number(match.reasons?.capability_fit || 0) > 0)
+      .slice(0, perCapability);
 
     if (!ranked.length || ranked[0].score < 45) {
       gaps.push({
