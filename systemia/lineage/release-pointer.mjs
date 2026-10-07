@@ -1,4 +1,4 @@
-import { mkdir, readFile, writeFile } from 'node:fs/promises';
+import { mkdir, readFile, rm, writeFile } from 'node:fs/promises';
 import { dirname, join } from 'node:path';
 
 const SCHEMA = 'evercraft.lineage.release.v1';
@@ -68,6 +68,10 @@ export class ReleaseRegistry {
     }
     if (!name) throw new Error('name is required');
 
+    if (typeof this.store.assertGcUnlocked === 'function') {
+      await this.store.assertGcUnlocked();
+    }
+
     const commitId = await this.store.resolveRef(commitish);
     if (!commitId) throw new Error(`Cannot release empty ref: ${commitish}`);
     const commit = await this.store.readObject(commitId);
@@ -113,8 +117,21 @@ export class ReleaseRegistry {
     await mkdir(dirname(path), { recursive: true });
     await writeFile(path, `${releaseId}\n`, 'utf8');
 
-    const receiptId = await this.store.putObject('receipt', {
-      schema: 'evercraft.lineage.release-pointer-receipt.v1',
+    if (typeof this.store.assertGcUnlocked === 'function') {
+      try {
+        await this.store.assertGcUnlocked();
+      } catch (error) {
+        if (currentId) {
+          await writeFile(path, `${currentId}\n`, 'utf8');
+        } else {
+          await rm(path, { force: true });
+        }
+        throw error;
+      }
+    }
+
+    const receiptPayload = {
+      operation: 'release_pointer_update',
       name: String(name),
       channel: String(channel),
       previous_release_id: currentId,
@@ -127,7 +144,13 @@ export class ReleaseRegistry {
       reversible_by: currentId
         ? { operation: 'restore_release_pointer', release_id: currentId }
         : { operation: 'delete_release_pointer' }
-    });
+    };
+    const receiptId = typeof this.store._recordOperation === 'function'
+      ? await this.store._recordOperation(receiptPayload)
+      : await this.store.putObject('receipt', {
+          schema: 'evercraft.lineage.release-pointer-receipt.v1',
+          ...receiptPayload
+        });
 
     return {
       schema: SCHEMA,
