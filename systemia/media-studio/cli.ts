@@ -70,6 +70,7 @@ import {
   type WorldForgeProject,
 } from './world-forge.js';
 import { buildWorldForgeCinematicShot } from './world-forge-cinematic.js';
+import { compileWorldForgeToWorldEngine } from './world-forge-world-engine.js';
 import {
   applyWorldForgeChangeSet,
   createWorldForgeChangeSet,
@@ -223,6 +224,27 @@ function main() {
     writeJson(output, changeSet);
     console.log(`World Forge ChangeSet created: ${path.resolve(output)}`);
     console.log(`Base: v${changeSet.baseVersion} ${changeSet.baseDigest}; digest: ${changeSet.digest}`);
+    return;
+  }
+
+  if (command === 'world-forge-world-engine') {
+    if (!input || !output) {
+      usage();
+      process.exitCode = 1;
+      return;
+    }
+    const payload = readJson<{project:WorldForgeProject;tickRateHz?:number}>(input);
+    const bridge = compileWorldForgeToWorldEngine(payload);
+    writeJson(output, bridge);
+    console.log(`World Forge → World Engine bridge: ${path.resolve(output)}`);
+    console.log(`World: ${bridge.world.id} v${bridge.world.version}`);
+    console.log(`Runtime ready: ${bridge.receipt.runtimeReady}; WebGPU ready: ${bridge.receipt.webGpuReady}`);
+    if (bridge.receipt.warnings.length) {
+      console.log(`Warnings: ${bridge.receipt.warnings.join(', ')}`);
+    }
+    if (bridge.receipt.blockers.length) {
+      console.log(`Blockers: ${bridge.receipt.blockers.join(', ')}`);
+    }
     return;
   }
 
