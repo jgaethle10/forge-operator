@@ -36,7 +36,8 @@ const compute=fs.readFileSync('systemia/compute/runtime-node.mjs','utf8');
 assert.ok(compute.includes("'systemia.forensic-record-runtime.v1'"));
 assert.ok(compute.includes('FORENSIC_RECORD_INGEST_TOKEN'));
 assert.ok(compute.includes('startForensicRecordRuntime'));
-assert.equal(compute.includes('base44.app'),compute.includes('aliev_owned_source_must_not_use_base44'));
+assert.equal(compute.includes('6991f0d23322216766bbe515'),false,'Forensic runtime wiring must not embed the legacy app id');
+assert.equal(compute.includes('filescompanion.base44.app'),false,'Forensic runtime wiring must not embed a legacy Base44 origin');
 
 const supervisor=JSON.parse(fs.readFileSync('systemia/core/supervisor.evercraft.compute.json','utf8'));
 assert.ok(supervisor.supervised_workflows.includes('forensic-record-owned-source'));
