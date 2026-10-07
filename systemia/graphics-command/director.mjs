@@ -1,4 +1,4 @@
-import { geoBoundaryProvenance } from './boundary-registry.mjs';
+import { getGeoBoundary, geoBoundaryProvenance } from './boundary-registry.mjs';
 import crypto from 'node:crypto';
 
 const EVIDENCE_TO_FALLEN=Object.freeze({
@@ -85,6 +85,7 @@ export function compileGraphicsCommand(story){
   const subhook=clean(story?.visual?.subhook)||clean(story.callout)||clean(story.subtitle);
   const eyebrow=clean(story?.visual?.eyebrow)||'EVERCRAFT VISUAL DESK';
   const metrics=(story?.visual?.metrics||[]).map((metric,index)=>normalizeMetric(metric,index,story.sourceRefs));
+  const boundaryAsset=getGeoBoundary(story?.visual?.boundaryId);
   const boundary=geoBoundaryProvenance(story?.visual?.boundaryId);
   const byId=new Map(story.points.map(point=>[point.id,point]));
   const fallenEvidence=EVIDENCE_TO_FALLEN[story.evidenceState]||'public_source';
@@ -172,6 +173,17 @@ export function compileGraphicsCommand(story){
           evidenceState:fallenEvidence,
           sourceRefs:story.sourceRefs,
         })),
+        polygons:boundaryAsset ? [{
+          id:boundaryAsset.id,
+          rings:[boundaryAsset.coordinates.map(([lon,lat])=>({lat,lon}))],
+          label:boundaryAsset.name,
+          fill:'rgba(79,184,255,.08)',
+          stroke:'#4FB8FF',
+          strokeWidth:2,
+          opacity:.9,
+          evidenceState:'public_source',
+          sourceRefs:[boundaryAsset.provenance.sourceRef],
+        }] : [],
       },
       metrics:metrics.map(metric=>({
         id:metric.id,
