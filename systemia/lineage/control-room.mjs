@@ -4,6 +4,7 @@ import { join, relative, sep } from 'node:path';
 import { buildHistoryGraph } from './history-view.mjs';
 import { semanticDiff } from './semantic-diff.mjs';
 import { planGarbageCollection } from './gc.mjs';
+import { verifyLineageIntegrity } from './fsck.mjs';
 
 function normalizePath(value) {
   return String(value).split(sep).join('/');
@@ -285,7 +286,7 @@ export function renderLineageControlRoomHtml() {
 button,select,input{font:inherit;color:inherit}
 header{position:sticky;top:0;z-index:20;padding:15px 20px;border-bottom:1px solid var(--line);background:rgba(7,16,15,.94);backdrop-filter:blur(16px)}
 .brandrow{display:flex;align-items:flex-start;justify-content:space-between;gap:16px}.brand{font-weight:900;letter-spacing:.09em;text-transform:uppercase}.brand b{color:var(--gold)}.strap{color:var(--muted);font-size:.87rem;margin-top:3px}
-.readonly{border:1px solid rgba(116,230,173,.35);color:var(--green);border-radius:999px;padding:5px 9px;font:700 11px ui-monospace,SFMono-Regular,Menlo,monospace}
+.readonly{border:1px solid rgba(116,230,173,.35);color:var(--green);border-radius:999px;padding:5px 9px;font:700 11px ui-monospace,SFMono-Regular,Menlo,monospace}button{background:#10201d;border:1px solid #35534c;border-radius:10px;padding:9px 11px;cursor:pointer}button:hover{border-color:var(--green)}
 .toolbar{display:grid;grid-template-columns:minmax(180px,260px) minmax(220px,1fr) auto;gap:10px;margin-top:13px}
 select,input{width:100%;background:#0a1312;border:1px solid #304440;border-radius:10px;padding:10px 12px;outline:none}input:focus,select:focus{border-color:var(--blue)}
 .stats{display:flex;gap:7px;align-items:center;flex-wrap:wrap}.pill{border:1px solid var(--line);border-radius:999px;padding:5px 9px;color:var(--muted);white-space:nowrap}
@@ -312,7 +313,7 @@ main{padding:18px;min-width:0}.section-title{font-size:11px;color:var(--muted);f
   <div class="toolbar">
     <select id="branch"></select>
     <input id="search" type="search" placeholder="Search commits, actors, hashes, rationale">
-    <div class="stats"><span class="pill" id="commitStat">0 commits</span><span class="pill" id="releaseStat">0 releases</span></div>
+    <div class="stats"><span class="pill" id="commitStat">0 commits</span><span class="pill" id="releaseStat">0 releases</span><span class="pill" id="integrityStat">integrity unchecked</span><button id="verify" type="button">Verify integrity</button></div>
   </div>
 </header>
 <div class="shell">
@@ -386,6 +387,17 @@ async function loadSnapshot(ref='HEAD'){
   }catch(error){el('history').innerHTML='<div class="empty error">'+esc(error.message)+'</div>'}
 }
 el('search').addEventListener('input',renderHistory);
+el('verify').onclick=async()=>{
+  const status=el('integrityStat');status.textContent='verifying...';
+  try{
+    const result=await api('/v1/integrity?fast=1');
+    status.textContent=result.ok?'integrity OK':'integrity FAILED';
+    status.className='pill '+(result.ok?'':'error');
+  }catch(error){
+    status.textContent='integrity error';
+    status.className='pill error';
+  }
+};
 loadSnapshot();
 </script>
 </body>
@@ -462,6 +474,17 @@ export async function startLineageControlRoom({
           });
         }
         return sendJson(res, 200, await semanticDiff(store, from, to));
+      }
+
+      if (requestUrl.pathname === '/v1/integrity') {
+        const fast = requestUrl.searchParams.get('fast') !== '0';
+        return sendJson(
+          res,
+          200,
+          await verifyLineageIntegrity(store, {
+            verifyLargeContent: !fast,
+          })
+        );
       }
 
       return sendJson(res, 404, {
