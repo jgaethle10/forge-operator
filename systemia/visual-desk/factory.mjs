@@ -4,6 +4,7 @@ import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { compileGraphicsCommand, assessScrollStop } from '../graphics-command/director.mjs';
 import { renderDirectedPoster, assessDirectedPosterLayout } from '../graphics-command/poster-renderer.mjs';
+import { getTerrainRelief } from '../graphics-command/terrain-registry.mjs';
 
 const DEFAULT_ORIGIN='https://fabric.systemiacommandcenters.com/visuals';
 const STATES=new Set(['observed','reported','modeled','inferred','synthetic']);
@@ -111,6 +112,7 @@ export function normalizeVisualStory(input){
       subhook:String(input.visual?.subhook || '').trim(),
       treatment:String(input.visual?.treatment || '').trim(),
       boundaryId:String(input.visual?.boundaryId || '').trim(),
+      terrainId:String(input.visual?.terrainId || '').trim(),
       metrics:visualMetrics,
     },
     brand:String(input.brand || 'Evercraft Visual Desk').trim() || 'Evercraft Visual Desk',
@@ -423,9 +425,15 @@ export function renderStoryHtml(input,{origin=DEFAULT_ORIGIN}={}){
     '<a class="source" href="'+esc(ref)+'" rel="noopener noreferrer"><span>'+esc(sourceLabel(ref))+'</span><small>↗</small></a>'
   ).join('');
   const geo=graphicsPlan.geography;
-  const geography=geo
-    ? '<a class="source geo" href="'+esc(geo.boundarySourceRef)+'" rel="noopener noreferrer"><span>'+esc(geo.boundaryName)+' boundary geometry</span><small>'+esc(geo.boundaryLicense)+' • public-domain lineage ↗</small></a>'
-    : '';
+  const terrain=geo?.terrain;
+  const geography=[
+    geo?.boundarySourceRef
+      ? '<a class="source geo" href="'+esc(geo.boundarySourceRef)+'" rel="noopener noreferrer"><span>'+esc(geo.boundaryName)+' boundary geometry</span><small>'+esc(geo.boundaryLicense)+' • public-domain lineage ↗</small></a>'
+      : '',
+    terrain
+      ? '<a class="source geo" href="'+esc(terrain.sourceRef)+'" rel="noopener noreferrer"><span>'+esc(terrain.name)+' terrain relief</span><small>'+esc(terrain.license)+' • '+esc(terrain.sourceFamily)+' ↗</small></a>'
+      : '',
+  ].join('');
 
   return [
     '<!doctype html>',
@@ -450,7 +458,7 @@ export function renderStoryHtml(input,{origin=DEFAULT_ORIGIN}={}){
     '<details class="method"><summary>Sources &amp; methodology</summary><div class="meta"><span class="badge"><strong>'+esc(story.evidenceState.toUpperCase())+'</strong> evidence state</span><span class="badge">'+esc(story.publishedAt.slice(0,10))+'</span></div>',
     geography,
     '<div class="locations">'+locations+'</div><section class="sources"><div class="eyebrow">Evidence sources</div>'+sources+'</section>',
-    '<details class="audit"><summary>Audit receipt</summary><div class="receipt">Story '+esc(story.digest)+'<br>Graphics '+esc(graphicsPlan.digest)+(geo?'<br>Boundary '+esc(geo.boundarySourceSha256):'')+'</div></details>',
+    '<details class="audit"><summary>Audit receipt</summary><div class="receipt">Story '+esc(story.digest)+'<br>Graphics '+esc(graphicsPlan.digest)+(geo?.boundarySourceSha256?'<br>Boundary '+esc(geo.boundarySourceSha256):'')+(terrain?.sourceSha256?'<br>Terrain '+esc(terrain.sourceSha256):'')+'</div></details>',
     '</details></section></main></body></html>',
     ''
   ].join('\n');
@@ -459,6 +467,7 @@ export function renderStoryHtml(input,{origin=DEFAULT_ORIGIN}={}){
 export function buildVisualStory(input,{outputRoot,origin=DEFAULT_ORIGIN}={}){
   if(!outputRoot) throw new Error('visual_story_output_root_missing');
   const story=normalizeVisualStory(input);
+  const terrain=getTerrainRelief(story.visual?.terrainId);
   const graphicsPlan=compileGraphicsCommand(story);
   const scrollStopReport=assessScrollStop(graphicsPlan);
   if(scrollStopReport.status!=='pass') throw new Error('visual_story_scroll_stop_gate_rejected');
@@ -485,6 +494,9 @@ export function buildVisualStory(input,{outputRoot,origin=DEFAULT_ORIGIN}={}){
   const canonicalUrl=root+'/'+story.slug+'/';
   const outputDir=path.join(outputRoot,story.slug);
   fs.mkdirSync(outputDir,{recursive:true});
+  if(terrain){
+    fs.copyFileSync(terrain.assetPath,path.join(outputDir,terrain.assetName));
+  }
 
   const manifest={
     schema:'evercraft.visual-story.manifest.v3',
@@ -507,6 +519,7 @@ export function buildVisualStory(input,{outputRoot,origin=DEFAULT_ORIGIN}={}){
       scrollStopReport:canonicalUrl+'scroll-stop-report.json',
       posterQualityReport:canonicalUrl+'poster-quality-report.json',
       fallenStageInput:canonicalUrl+'fallen-stage-input.json',
+      terrainRelief:terrain ? canonicalUrl+terrain.assetName : null,
     },
     graphicsCommandDigest:graphicsPlan.digest,
     scrollStopStatus:scrollStopReport.status,
