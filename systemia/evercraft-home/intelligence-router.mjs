@@ -21,6 +21,47 @@ function modelFor(provider, env = {}) {
   return "";
 }
 
+function ravenInferenceReadiness(credentialVault, env = {}) {
+  const provider = clean(env.RAVEN_INFERENCE_PROVIDER, 80).toLowerCase();
+  const model = clean(env.RAVEN_INFERENCE_MODEL, 300);
+  if (!provider || !model) {
+    return {
+      ready: false,
+      state: "inference_not_configured",
+      provider: provider || null,
+      model: model || null,
+      external: provider === "openai" || provider === "gemini",
+    };
+  }
+  if (provider === "openai" || provider === "gemini") {
+    const credentialReady = hasCredential(credentialVault, provider);
+    return {
+      ready: credentialReady,
+      state: credentialReady ? "ready" : "inference_credential_not_connected",
+      provider,
+      model,
+      external: true,
+    };
+  }
+  if (provider === "ollama") {
+    const validated = String(env.RAVEN_LOCAL_INFERENCE_READY || "").toLowerCase() === "true";
+    return {
+      ready: validated,
+      state: validated ? "ready" : "local_inference_not_verified",
+      provider,
+      model,
+      external: false,
+    };
+  }
+  return {
+    ready: false,
+    state: "inference_provider_unsupported",
+    provider,
+    model,
+    external: false,
+  };
+}
+
 export function intelligenceOptions({
   credentialVault = null,
   ravenConfigured = false,
@@ -28,17 +69,25 @@ export function intelligenceOptions({
 } = {}) {
   const openaiModel = modelFor("openai", env);
   const geminiModel = modelFor("gemini", env);
+  const ravenInference = ravenInferenceReadiness(credentialVault, env);
+  const ravenReady = Boolean(ravenConfigured && ravenInference.ready);
   const options = [
     {
       key: "evercraft",
       label: "Evercraft AI",
       kind: "owned_orchestrator",
-      available: Boolean(ravenConfigured),
-      state: ravenConfigured ? "ready" : "runtime_not_attached",
-      detail: ravenConfigured
-        ? "Raven Nexus is attached behind Systemia. Evercraft keeps mission authority and receipts."
-        : "The owned Raven runtime is not attached to this Home instance yet.",
-      external_provider: false,
+      available: ravenReady,
+      state: !ravenConfigured ? "runtime_not_attached" : ravenInference.state,
+      model: ravenInference.model || null,
+      inference_provider: ravenInference.provider || null,
+      owned_orchestration: true,
+      external_inference: ravenInference.external === true,
+      detail: !ravenConfigured
+        ? "The owned Raven runtime is not attached to this Home instance yet."
+        : ravenReady
+          ? "Raven Nexus and Systemia own orchestration, policy and receipts. Inference is supplied through the configured replaceable private gateway."
+          : "Raven Nexus is attached, but its configured inference path is not ready yet.",
+      external_provider: ravenInference.external === true,
     },
     {
       key: "openai",
@@ -136,8 +185,12 @@ export async function askIntelligence({
       receipt: result.receipt,
       systemia_authority: result.systemia_authority,
       external_side_effects_authorized: false,
-      external_provider_used: false,
-      evidence_semantics: result.evidence_semantics,
+      external_provider_used: selected.external_inference === true,
+      inference_provider: selected.inference_provider || null,
+      inference_model: selected.model || null,
+      evidence_semantics: selected.external_inference === true
+        ? result.evidence_semantics + " Raven/Systemia retained orchestration authority while a replaceable external model supplied bounded inference."
+        : result.evidence_semantics,
     };
   }
 
