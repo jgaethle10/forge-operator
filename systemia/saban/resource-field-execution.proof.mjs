@@ -211,6 +211,7 @@ try{
         approved:true,
         demand_id:'distributed:chum:'+plan.generated_at,
         allowed_markets:['proof-market'],
+        allow_spend:true,
         max_total_usd:1,
       },
       max_total_usd:1,
