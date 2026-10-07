@@ -446,8 +446,8 @@
       "llms": "./faie/llms.txt",
       "registry_name": "io.github.jgaethle10/faie",
       "invocation": {
-        "mode": "mcp",
-        "url": "https://fabric.systemiacommandcenters.com/mcp/faie"
+        "mode": "discovery_only",
+        "url": null
       }
     },
     {
@@ -575,6 +575,19 @@
       "github_record": "./legacy-rescue-lab/README.md",
       "llms": "./legacy-rescue-lab/llms.txt",
       "registry_name": "io.github.jgaethle10/evercraft-machine-commerce",
+      "invocation": {
+        "mode": "discovery_only",
+        "url": null
+      }
+    },
+    {
+      "product_key": "lineage",
+      "name": "Evercraft Lineage",
+      "class": "governed_multi_agent_history_and_version_control",
+      "canonical_url": "https://jgaethle10.github.io/forge-operator/lineage/",
+      "github_record": "./lineage/README.md",
+      "llms": "./lineage/llms.txt",
+      "registry_name": null,
       "invocation": {
         "mode": "discovery_only",
         "url": null
