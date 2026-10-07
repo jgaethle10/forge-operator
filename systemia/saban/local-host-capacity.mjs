@@ -56,10 +56,10 @@ async function buildSafeOwnedSpawnOffer({seed,candidate,root}={}){
       persistent_storage:true,
     },
     trust:{
-      uptime_7d:1,
-      audited:true,
+      uptime_7d:0,
+      audited:false,
       valid_version:true,
-      attested:Boolean(seed.device_fingerprint),
+      attested:false,
     },
     economics:{
       zero_cost:true,
@@ -69,7 +69,7 @@ async function buildSafeOwnedSpawnOffer({seed,candidate,root}={}){
       native_price:null,
     },
     quote_required:false,
-    source_receipt:seed.device_fingerprint||null,
+    source_receipt:null,
     metadata:{
       source:'resource-expansion-organism',
       source_type:'owned-spawn',
@@ -82,6 +82,8 @@ async function buildSafeOwnedSpawnOffer({seed,candidate,root}={}){
         failure_domain:String(capacity.failure_domain||'local-host').toLowerCase(),
       },
       current_connection_verified:true,
+      device_identity_present:Boolean(seed.device_fingerprint),
+      independent_attestation_verified:false,
       zero_cost_verified:true,
       hardware_measurement_state:'observed_local',
       resource_expansion_spawned:true,
