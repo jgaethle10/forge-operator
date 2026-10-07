@@ -340,6 +340,34 @@ export function renderOfferPage(item){
   });
 }
 
+export function renderPaymentHandoffPage({slug='',checkoutUrl='',amountLabel='',orderKey=''}={}){
+  const safeSlug=String(slug||'').trim().toLowerCase();
+  const back=safeSlug?'/offers/'+encodeURIComponent(safeSlug):'/offers';
+  const target=String(checkoutUrl||'').trim();
+  const amount=String(amountLabel||'').trim();
+  const order=String(orderKey||'').trim();
+  return shell('Continue to secure checkout · Evercraft',[
+    '<main>',
+    '<section class="offer-hero">',
+    '<div class="kicker"><span class="dot"></span> Evercraft Payments</div>',
+    '<h1>Your checkout is ready.</h1>',
+    '<p class="lede">Evercraft Payments prepared the order successfully. Open the secure settlement page to continue. Nothing is marked paid until settlement is verified.</p>',
+    amount?'<div class="offer-price">'+escapeHtml(amount)+'</div>':'',
+    '<div class="actions">',
+    '<a class="btn primary" href="'+escapeHtml(target)+'" rel="noreferrer">Open secure checkout</a>',
+    '<a class="btn" href="'+back+'">Back to the offer</a>',
+    '</div>',
+    order?'<div class="checkout-note">Order reference: <code>'+escapeHtml(order)+'</code></div>':'',
+    '<div class="checkout-note">If your in-app browser does not open the settlement page automatically, use the blue button above. Evercraft Payments remains the payment authority.</div>',
+    '</section>',
+    '</main>'
+  ].join('\n'),{
+    description:'Your Evercraft Payments checkout is ready. Continue to the secure settlement page.',
+    canonical:back,
+    ogType:'website',
+  });
+}
+
 export function renderPaymentHoldPage({slug='',orderKey=''}={}){
   const safeSlug=String(slug||'').trim().toLowerCase();
   const back=safeSlug?'/offers/'+encodeURIComponent(safeSlug):'/offers';
