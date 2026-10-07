@@ -116,8 +116,8 @@ function renderLabels(story,positions,format){
     const threat=/very high/i.test(row.point.note||'')?'VERY HIGH':/high/i.test(row.point.note||'')?'HIGH':'';
     return [
       '<line x1="'+row.p.x+'" y1="'+row.p.y+'" x2="'+leaderX+'" y2="'+(y-7)+'" stroke="#4FB8FF" stroke-width="2" opacity=".42"/>',
-      '<text x="'+x+'" y="'+y+'" text-anchor="'+anchor+'" font-family="Arial,sans-serif" font-size="'+font+'" font-weight="800" fill="#F5F5F2">'+esc(row.point.label||row.point.id)+'</text>',
-      threat?'<text x="'+x+'" y="'+(y+font+5)+'" text-anchor="'+anchor+'" font-family="Arial,sans-serif" font-size="'+Math.round(font*.58)+'" font-weight="800" letter-spacing="1.4" fill="'+(threat==='VERY HIGH'?'#FFB15A':'#B7BDC5')+'">'+threat+'</text>':'',
+      '<text class="story-label" x="'+x+'" y="'+y+'" text-anchor="'+anchor+'" font-family="Arial,sans-serif" font-size="'+font+'" font-weight="800" fill="#F5F5F2">'+esc(row.point.label||row.point.id)+'</text>',
+      threat?'<text class="story-label" x="'+x+'" y="'+(y+font+5)+'" text-anchor="'+anchor+'" font-family="Arial,sans-serif" font-size="'+Math.round(font*.58)+'" font-weight="800" letter-spacing="1.4" fill="'+(threat==='VERY HIGH'?'#FFB15A':'#B7BDC5')+'">'+threat+'</text>':'',
     ].join('\n');
   }).join('\n');
 }
@@ -132,9 +132,9 @@ function renderGeography(boundary,statePath,spec,format){
   }).join('\n');
   return [
     '<clipPath id="geoClip"><path d="'+statePath+'"/></clipPath>',
-    '<path d="'+statePath+'" fill="url(#stateFill)" stroke="rgba(117,200,255,.55)" stroke-width="'+stroke+'" filter="url(#stateShadow)"/>',
+    '<path class="geo-boundary" d="'+statePath+'" fill="url(#stateFill)" stroke="rgba(117,200,255,.55)" stroke-width="'+stroke+'" filter="url(#stateShadow)"/>',
     '<g clip-path="url(#geoClip)">'+contourRows+'</g>',
-    '<path d="'+statePath+'" fill="none" stroke="rgba(245,245,242,.18)" stroke-width="1"/>',
+    '<path class="geo-boundary" d="'+statePath+'" fill="none" stroke="rgba(245,245,242,.18)" stroke-width="1"/>',
     '<text x="'+(spec.map.x+spec.map.width*.50)+'" y="'+(spec.map.y+spec.map.height*.56)+'" text-anchor="middle" font-family="Arial,sans-serif" font-size="'+(format==='story'?54:40)+'" font-weight="900" letter-spacing="8" fill="rgba(245,245,242,.055)">WASHINGTON</text>',
   ].join('\n');
 }
@@ -154,7 +154,7 @@ export function renderDirectedPoster(story,plan,format='feed'){
     const a=positions.get(line.from);
     const b=positions.get(line.to);
     if(!a||!b) return '';
-    return '<path d="M '+a.x+' '+a.y+' L '+b.x+' '+b.y+'" fill="none" stroke="#4FB8FF" stroke-width="'+(format==='story'?9:7)+'" stroke-linecap="round" stroke-linejoin="round" opacity=".9" filter="url(#glow)"/>';
+    return '<path class="story-route" d="M '+a.x+' '+a.y+' L '+b.x+' '+b.y+'" fill="none" stroke="#4FB8FF" stroke-width="'+(format==='story'?9:7)+'" stroke-linecap="round" stroke-linejoin="round" opacity=".9" filter="url(#glow)"/>';
   }).join('\n');
 
   const pointSvg=story.points.map(point=>{
@@ -165,10 +165,10 @@ export function renderDirectedPoster(story,plan,format='feed'){
     const peakH=radius*.9;
     const peakW=radius*.9;
     return [
-      '<circle cx="'+p.x+'" cy="'+p.y+'" r="'+(radius+18)+'" fill="#4FB8FF" opacity=".06"/>',
-      '<circle cx="'+p.x+'" cy="'+p.y+'" r="'+(radius+7)+'" fill="#071319" stroke="'+risk+'" stroke-width="3" opacity=".98" filter="url(#glow)"/>',
-      '<path d="M '+(p.x-peakW)+' '+(p.y+peakH*.65)+' L '+p.x+' '+(p.y-peakH)+' L '+(p.x+peakW)+' '+(p.y+peakH*.65)+' Z" fill="#F5F5F2" opacity=".96"/>',
-      '<path d="M '+(p.x-peakW*.32)+' '+(p.y-peakH*.18)+' L '+p.x+' '+(p.y-peakH)+' L '+(p.x+peakW*.24)+' '+(p.y-peakH*.28)+' Z" fill="'+risk+'"/>',
+      '<circle class="peak-halo" cx="'+p.x+'" cy="'+p.y+'" r="'+(radius+18)+'" fill="#4FB8FF" opacity=".06"/>',
+      '<circle class="peak-marker" cx="'+p.x+'" cy="'+p.y+'" r="'+(radius+7)+'" fill="#071319" stroke="'+risk+'" stroke-width="3" opacity=".98" filter="url(#glow)"/>',
+      '<path class="peak-marker" d="M '+(p.x-peakW)+' '+(p.y+peakH*.65)+' L '+p.x+' '+(p.y-peakH)+' L '+(p.x+peakW)+' '+(p.y+peakH*.65)+' Z" fill="#F5F5F2" opacity=".96"/>',
+      '<path class="peak-marker" d="M '+(p.x-peakW*.32)+' '+(p.y-peakH*.18)+' L '+p.x+' '+(p.y-peakH)+' L '+(p.x+peakW*.24)+' '+(p.y-peakH*.28)+' Z" fill="'+risk+'"/>',
     ].join('\n');
   }).join('\n');
 
@@ -188,8 +188,8 @@ export function renderDirectedPoster(story,plan,format='feed'){
     const x=72+index*(metricWidth+18);
     const value=String(metric.value)+(metric.unit?' '+metric.unit:'');
     return [
-      '<text x="'+x+'" y="'+spec.footerY+'" font-family="Arial,sans-serif" font-size="'+(format==='story'?58:42)+'" font-weight="900" fill="#F5F5F2">'+esc(value)+'</text>',
-      '<text x="'+x+'" y="'+(spec.footerY+(format==='story'?40:31))+'" font-family="Arial,sans-serif" font-size="'+(format==='story'?18:15)+'" font-weight="800" letter-spacing="1.6" fill="#4FB8FF">'+esc(metric.label.toUpperCase())+'</text>',
+      '<text class="metric-value" x="'+x+'" y="'+spec.footerY+'" font-family="Arial,sans-serif" font-size="'+(format==='story'?58:42)+'" font-weight="900" fill="#F5F5F2">'+esc(value)+'</text>',
+      '<text class="metric-label" x="'+x+'" y="'+(spec.footerY+(format==='story'?40:31))+'" font-family="Arial,sans-serif" font-size="'+(format==='story'?18:15)+'" font-weight="800" letter-spacing="1.6" fill="#4FB8FF">'+esc(metric.label.toUpperCase())+'</text>',
     ].join('\n');
   }).join('\n');
 
