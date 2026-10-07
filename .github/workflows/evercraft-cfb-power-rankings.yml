@@ -53,6 +53,7 @@ jobs:
           node --test systemia/newsroom/cfb-results-model.test.mjs
           node --test systemia/newsroom/cfb-power-runner.test.mjs
           node --test systemia/newsroom/cfb-power-story-draft.test.mjs
+          node --test systemia/graphics-command/ranking-poster-renderer.test.mjs
 
       - name: Resolve evidence window
         id: window
@@ -85,6 +86,15 @@ jobs:
           test -s _cfb_power_run/completed-games.json
           test -s _cfb_power_run/cfb-power-rankings.json
           test -s _cfb_power_run/top-25.json
+
+      - name: Build owned ranking visual assets
+        run: |
+          node systemia/graphics-command/ranking-poster-renderer.mjs \
+            _cfb_power_run/cfb-power-rankings.json \
+            _cfb_power_run/visuals | tee _cfb_power_visual-receipt.json
+          test -s _cfb_power_run/visuals/top-10-feed.svg
+          test -s _cfb_power_run/visuals/top-8-square.svg
+          test -s _cfb_power_run/visuals/top-15-story.svg
 
       - name: Build Journal + Fallen draft from ranking receipt
         run: |
@@ -121,5 +131,6 @@ jobs:
             _cfb_power_run
             _cfb_power_run-receipt.json
             _cfb_power_story-draft-receipt.json
+            _cfb_power_visual-receipt.json
           if-no-files-found: error
           retention-days: 120
