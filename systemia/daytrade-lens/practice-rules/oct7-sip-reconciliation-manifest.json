@@ -1,0 +1,70 @@
+{
+  "schema": "evercraft.daytrade.sip-reconciliation-manifest.v1",
+  "threshold_bps": 3,
+  "simulated_notional_usd": 20,
+  "windows": [
+    {
+      "window_id": "2026-10-07-midday-01",
+      "receipt_path": "systemia/daytrade-lens/paper-receipts/2026-10-07-midday-window-01.json",
+      "source_run_id": 37648279101,
+      "targets": {
+        "SOXX": {
+          "entry": "2026-10-07T15:58:17.934829804Z",
+          "exit": "2026-10-07T15:59:18.131326734Z"
+        },
+        "SMH": {
+          "entry": "2026-10-07T15:58:17.585966326Z",
+          "exit": "2026-10-07T15:59:17.261576413Z"
+        },
+        "QQQ": {
+          "entry": "2026-10-07T15:58:18.058787881Z",
+          "exit": "2026-10-07T15:59:18.144497767Z"
+        }
+      }
+    },
+    {
+      "window_id": "2026-10-07-midday-02",
+      "receipt_path": "systemia/daytrade-lens/paper-receipts/2026-10-07-midday-window-02.json",
+      "source_run_id": 37648967969,
+      "targets": {
+        "SOXX": {
+          "entry": "2026-10-07T16:05:30.249461490Z",
+          "exit": "2026-10-07T16:06:30.396922760Z"
+        },
+        "SMH": {
+          "entry": "2026-10-07T16:05:30.234043545Z",
+          "exit": "2026-10-07T16:06:30.401498133Z"
+        },
+        "QQQ": {
+          "entry": "2026-10-07T16:05:30.284523148Z",
+          "exit": "2026-10-07T16:06:30.501758570Z"
+        }
+      }
+    },
+    {
+      "window_id": "2026-10-07-midday-03",
+      "receipt_path": "systemia/daytrade-lens/paper-receipts/2026-10-07-midday-window-03.json",
+      "source_run_id": 37649740363,
+      "targets": {
+        "SOXX": {
+          "entry": "2026-10-07T16:13:00.293106693Z",
+          "exit": "2026-10-07T16:14:00.051035783Z"
+        },
+        "SMH": {
+          "entry": "2026-10-07T16:13:00.052717026Z",
+          "exit": "2026-10-07T16:14:00.159642071Z"
+        },
+        "QQQ": {
+          "entry": "2026-10-07T16:13:00.178224290Z",
+          "exit": "2026-10-07T16:14:00.573863717Z"
+        }
+      }
+    }
+  ],
+  "controls": {
+    "entry_and_exit_targets_come_from_original_prospective_artifacts": true,
+    "manifest_does_not_rewrite_original_decisions": true,
+    "delayed_sip_is_after_the_fact_diagnostic_only": true,
+    "live_trade_authority": false
+  }
+}
