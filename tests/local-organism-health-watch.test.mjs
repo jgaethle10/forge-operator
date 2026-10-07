@@ -250,3 +250,100 @@ test('health watch does not invent release drift when checkout identity is unava
     fs.rmSync(root, { recursive: true, force: true });
   }
 });
+
+
+test('health watch grants a bounded restart grace while native Chromium is actively bootstrapping', async () => {
+  const root = fixture();
+  const state = { active: true, restarted: false, restart_count: 0 };
+  const bootstrapDir = path.join(root, 'browser-runtime');
+  fs.mkdirSync(bootstrapDir, { recursive: true });
+  fs.writeFileSync(
+    path.join(bootstrapDir, 'bootstrap.json'),
+    JSON.stringify({
+      schema: 'evercraft.browser.native-bootstrap-state.v1',
+      state: 'preparing',
+      release_ref: 'd'.repeat(40),
+      root_privileges_used: false,
+      system_package_manager_used: false,
+      started_at: '2026-10-07T02:00:00.000Z',
+      updated_at: '2026-10-07T02:00:00.000Z',
+    })
+  );
+  try {
+    const result = await checkLocalOrganismHealth({
+      stateRoot: root,
+      execImpl: fakeSystemctl(state),
+      requestImpl: async () => ({
+        ok: false,
+        status: null,
+        body: null,
+        error: 'old_nodeseed_unreachable',
+      }),
+      sourceReleaseRefProvider: () => 'd'.repeat(40),
+      browserBootstrapGraceMs: 12 * 60_000,
+      now: () => new Date('2026-10-07T02:05:00.000Z'),
+    });
+
+    assert.equal(result.state, 'bootstrapping');
+    assert.equal(result.action, 'bootstrap_grace');
+    assert.equal(result.browser_bootstrap.active, true);
+    assert.equal(result.browser_bootstrap.root_privileges_used, false);
+    assert.equal(result.browser_bootstrap.system_package_manager_used, false);
+    assert.equal(state.restart_count, 0);
+  } finally {
+    fs.rmSync(root, { recursive: true, force: true });
+  }
+});
+
+test('health watch resumes normal recovery after native browser bootstrap grace expires', async () => {
+  const root = fixture();
+  const state = { active: true, restarted: false, restart_count: 0 };
+  const bootstrapDir = path.join(root, 'browser-runtime');
+  fs.mkdirSync(bootstrapDir, { recursive: true });
+  fs.writeFileSync(
+    path.join(bootstrapDir, 'bootstrap.json'),
+    JSON.stringify({
+      schema: 'evercraft.browser.native-bootstrap-state.v1',
+      state: 'preparing',
+      release_ref: 'b'.repeat(40),
+      root_privileges_used: false,
+      system_package_manager_used: false,
+      started_at: '2026-10-07T01:40:00.000Z',
+      updated_at: '2026-10-07T01:40:00.000Z',
+    })
+  );
+  try {
+    const result = await checkLocalOrganismHealth({
+      stateRoot: root,
+      execImpl: fakeSystemctl(state),
+      requestImpl: async () => state.restarted
+        ? {
+            ok: true,
+            status: 200,
+            body: {
+              ok: true,
+              runtime: 'Evercraft Compute',
+              node_id: 'penguin-proof',
+            },
+            error: null,
+          }
+        : {
+            ok: false,
+            status: null,
+            body: null,
+            error: 'old_nodeseed_unreachable',
+          },
+      sourceReleaseRefProvider: () => 'b'.repeat(40),
+      browserBootstrapGraceMs: 12 * 60_000,
+      recoveryWaitMs: 1000,
+      now: () => new Date('2026-10-07T02:05:00.000Z'),
+    });
+
+    assert.equal(result.state, 'recovered');
+    assert.equal(result.action, 'restart');
+    assert.equal(result.before.browser_bootstrap.active, false);
+    assert.equal(state.restart_count, 1);
+  } finally {
+    fs.rmSync(root, { recursive: true, force: true });
+  }
+});
