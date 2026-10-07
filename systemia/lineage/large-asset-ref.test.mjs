@@ -197,3 +197,48 @@ test('semantic diff does not materialize oversized large refs', async () => {
     await rm(root, { recursive: true, force: true });
   }
 });
+
+
+test('bounded entry reads reject oversized refs while streaming materialization succeeds', async () => {
+  const root = await mkdtemp(join(tmpdir(), 'lineage-buffer-bound-'));
+  const target = await mkdtemp(join(tmpdir(), 'lineage-buffer-target-'));
+  try {
+    const store = new LineageStore(root);
+    await store.init();
+    const bytes = Buffer.concat([
+      Buffer.alloc(160_000, 'M'),
+      Buffer.from('STREAM-ONLY-PATH'),
+      Buffer.alloc(160_000, 'N'),
+    ]);
+    await writeFile(join(root, 'master.mov'), bytes);
+
+    const committed = await store.commit({
+      message: 'bounded buffer contract',
+      snapshot: {
+        largeObjectThresholdBytes: 64 * 1024,
+        largeObjectChunking: chunking,
+      },
+    });
+    const tree = await store.getTree(committed.commit_id);
+    const entry = tree.entries[0];
+    assert.equal(entry.storage, 'large_object');
+
+    await assert.rejects(
+      () => store.readEntryBytes(entry, { maxBytes: 128 * 1024 }),
+      (error) =>
+        error.code === 'LINEAGE_ENTRY_TOO_LARGE_FOR_BUFFER' &&
+        error.bytes === bytes.length &&
+        error.max_bytes === 128 * 1024
+    );
+
+    const output = join(target, 'master.mov');
+    const written = await store.writeEntryToFile(entry, output);
+    assert.equal(written.object_type, 'large_blob_ref');
+    assert.equal(written.materialization_mode, 'stream');
+    assert.equal(written.bytes, bytes.length);
+    assert.deepEqual(await readFile(output), bytes);
+  } finally {
+    await rm(root, { recursive: true, force: true });
+    await rm(target, { recursive: true, force: true });
+  }
+});
