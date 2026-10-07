@@ -70,13 +70,21 @@ test('owned Fabric serves FAIE UI, public preview API, and native FAIE MCP witho
     assert.match(page,/params\.get\('pilot'\)/);
     assert.match(page,/=== 'agnormal'/);
     assert.match(page,/io\.github\.jgaethle10\/faie/);
+    assert.match(page,/partnerPath = \/\\\/faie\\\/agnormal/);
     assert.equal(/base44\.app/i.test(page),false);
+
+    const partnerPageResponse=await fetch(runtime.url+'/faie/agnormal/');
+    assert.equal(partnerPageResponse.status,200);
+    assert.match(partnerPageResponse.headers.get('content-type')||'',/^text\/html/);
+    const partnerPage=await partnerPageResponse.text();
+    assert.match(partnerPage,/Prepared for AgNormal · design-partner room/);
 
     const faieHealthResponse=await fetch(runtime.url+'/api/faie/health');
     assert.equal(faieHealthResponse.status,200);
     const faieHealth=await faieHealthResponse.json();
     assert.equal(faieHealth.fabric_native,true);
     assert.equal(faieHealth.public_surface,'/faie/');
+    assert.equal(faieHealth.design_partner_surface,'/faie/agnormal/');
     assert.equal(faieHealth.base44_transport_enabled,false);
     assert.equal(faieHealth.decision_authority,false);
 
