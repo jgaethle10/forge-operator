@@ -11,26 +11,31 @@ function event(id,date,homeId,homeName,homeScore,awayId,awayName,awayScore){
     {homeAway:'away',score:String(awayScore),team:{id:awayId,displayName:awayName}},
   ]}]};
 }
-test('materializes membership, game ledger, model input, ranking receipt and Top 25 surface',async()=>{
+test('materializes NCAA membership, game ledger, model input, ranking receipt and Top 25 surface',async()=>{
   const outDir=fs.mkdtempSync(path.join(os.tmpdir(),'cfb-power-run-'));
-  const teams={sports:[{leagues:[{teams:[
-    {team:{id:'1',displayName:'Alpha State'}},
-    {team:{id:'2',displayName:'Beta Tech'}},
-    {team:{id:'3',displayName:'Gamma'}},
-  ]}]}]};
-  const games=[
-    event('g1','2026-09-05T20:00:00Z','1','Alpha State',31,'2','Beta Tech',24),
-    event('g2','2026-09-06T20:00:00Z','3','Gamma',10,'1','Alpha State',28),
-  ];
-  const fetchImpl=async(url)=>({
-    ok:true,status:200,
-    async json(){
-      if(String(url).includes('/teams?')) return teams;
-      if(String(url).includes('dates=20260905')) return {events:[games[0]]};
-      if(String(url).includes('dates=20260906')) return {events:[games[1]]};
-      return {events:[]};
+  const contests=[
+    {
+      contestId:8001,gameState:'F',startDate:'09/05/2026',
+      teams:[
+        {isHome:true,seoname:'alpha-state',nameShort:'Alpha State',name6Char:'ALPHA',conferenceSeo:'sec',score:31,isWinner:true},
+        {isHome:false,seoname:'beta-tech',nameShort:'Beta Tech',name6Char:'BETA',conferenceSeo:'acc',score:24,isWinner:false},
+      ],
     },
-  });
+    {
+      contestId:8002,gameState:'F',startDate:'09/06/2026',
+      teams:[
+        {isHome:true,seoname:'gamma',nameShort:'Gamma',name6Char:'GAMMA',conferenceSeo:'big-ten',score:10,isWinner:false},
+        {isHome:false,seoname:'alpha-state',nameShort:'Alpha State',name6Char:'ALPHA',conferenceSeo:'sec',score:28,isWinner:true},
+      ],
+    },
+  ];
+  const fetchImpl=async(url)=>{
+    const parsed=new URL(String(url));
+    const variables=JSON.parse(parsed.searchParams.get('variables'));
+    const week=Number(variables.week);
+    const selected=week===0?[contests[0]]:week===1?[contests[1]]:[];
+    return {ok:true,status:200,async json(){return {data:{contests:selected}};}};
+  };
   const receipt=await runCfbPowerEvidenceCycle({
     season:2026,startDate:'2026-09-05',throughDate:'2026-09-06',
     weekLabel:'Entering Week 2',outDir,fetchImpl,
