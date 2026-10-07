@@ -192,23 +192,19 @@ export function forensicPublicJs(){
       const article=document.createElement('article');
       article.className='finding';
       const src=link(row.source_url);
-      article.innerHTML=`
-        <div class="finding-head">
-          <div>
-            <div class="finding-number">Finding #${esc(row.finding_number??'—')}</div>
-            <h3>${esc(row.title||'Untitled finding')}</h3>
-          </div>
-          <span class="truth">${esc(row.truth_label||'Unlabeled')}</span>
-        </div>
-        <div class="finding-meta">
-          <span>${esc(row.source_document||'Source not labeled')}</span>
-          <span>${esc(row.page_reference||'Page reference unavailable')}</span>
-          <span>${esc(row.category||'Uncategorized')}</span>
-        </div>
-        ${row.quote?`<div class="quote">${esc(row.quote)}</div>`:''}
-        ${row.significance?`<div class="significance">${esc(row.significance)}</div>`:''}
-        ${src?`<a class="source-link" href="${esc(src)}" target="_blank" rel="noopener noreferrer">Open source ↗</a>`:''}
-      `;
+      let html='';
+      html+='<div class="finding-head"><div>';
+      html+='<div class="finding-number">Finding #'+esc(row.finding_number??'—')+'</div>';
+      html+='<h3>'+esc(row.title||'Untitled finding')+'</h3></div>';
+      html+='<span class="truth">'+esc(row.truth_label||'Unlabeled')+'</span></div>';
+      html+='<div class="finding-meta">';
+      html+='<span>'+esc(row.source_document||'Source not labeled')+'</span>';
+      html+='<span>'+esc(row.page_reference||'Page reference unavailable')+'</span>';
+      html+='<span>'+esc(row.category||'Uncategorized')+'</span></div>';
+      if(row.quote) html+='<div class="quote">'+esc(row.quote)+'</div>';
+      if(row.significance) html+='<div class="significance">'+esc(row.significance)+'</div>';
+      if(src) html+='<a class="source-link" href="'+esc(src)+'" target="_blank" rel="noopener noreferrer">Open source ↗</a>';
+      article.innerHTML=html;
       results.appendChild(article);
     }
   }
@@ -238,7 +234,7 @@ export function forensicPublicJs(){
     count.textContent='';
     try{
       let r;
-      if(/^\d+$/.test(q)){
+      if(/^[0-9]+$/.test(q)){
         r=await fetch('/v1/findings/'+encodeURIComponent(q));
       }else{
         if(q.length<2) throw new Error('Enter at least two characters.');
