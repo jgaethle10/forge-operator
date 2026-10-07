@@ -285,21 +285,21 @@ export function validatePulseGridSession(session: PulseGridSession) {
     if (!track.id) errors.push('track.id');
     for (const clip of track.clips || []) {
       const expectedSteps = clip.bars * PULSEGRID_STEPS_PER_BAR;
-      if (!Number.isInteger(clip.bars) || clip.bars < 1 || clip.bars > PULSEGRID_MAX_CLIP_BARS) errors.push(\`\${track.id}.\${clip.id}.bars\`);
-      if (clip.steps_per_bar !== PULSEGRID_STEPS_PER_BAR) errors.push(\`\${track.id}.\${clip.id}.steps_per_bar\`);
-      if (clip.steps.length !== expectedSteps) errors.push(\`\${track.id}.\${clip.id}.steps\`);
-      if (clip.probabilities.length !== expectedSteps) errors.push(\`\${track.id}.\${clip.id}.probabilities_length\`);
-      if (clip.microtiming.length !== expectedSteps) errors.push(\`\${track.id}.\${clip.id}.microtiming_length\`);
-      if (clip.automation.volume.length !== expectedSteps) errors.push(\`\${track.id}.\${clip.id}.automation.volume\`);
-      if (clip.automation.filter.length !== expectedSteps) errors.push(\`\${track.id}.\${clip.id}.automation.filter\`);
-      if (clip.probabilities.some((value) => value < 0 || value > 1)) errors.push(\`\${track.id}.\${clip.id}.probabilities\`);
+      if (!Number.isInteger(clip.bars) || clip.bars < 1 || clip.bars > PULSEGRID_MAX_CLIP_BARS) errors.push(`${track.id}.${clip.id}.bars`);
+      if (clip.steps_per_bar !== PULSEGRID_STEPS_PER_BAR) errors.push(`${track.id}.${clip.id}.steps_per_bar`);
+      if (clip.steps.length !== expectedSteps) errors.push(`${track.id}.${clip.id}.steps`);
+      if (clip.probabilities.length !== expectedSteps) errors.push(`${track.id}.${clip.id}.probabilities_length`);
+      if (clip.microtiming.length !== expectedSteps) errors.push(`${track.id}.${clip.id}.microtiming_length`);
+      if (clip.automation.volume.length !== expectedSteps) errors.push(`${track.id}.${clip.id}.automation.volume`);
+      if (clip.automation.filter.length !== expectedSteps) errors.push(`${track.id}.${clip.id}.automation.filter`);
+      if (clip.probabilities.some((value) => value < 0 || value > 1)) errors.push(`${track.id}.${clip.id}.probabilities`);
       const noteIds = new Set<string>();
       for (const note of clip.notes) {
-        if (!note.id || noteIds.has(note.id)) errors.push(\`\${track.id}.\${clip.id}.note_id\`);
+        if (!note.id || noteIds.has(note.id)) errors.push(`${track.id}.${clip.id}.note_id`);
         noteIds.add(note.id);
-        if (note.pitch < 0 || note.pitch > 127) errors.push(\`\${track.id}.\${clip.id}.\${note.id}.pitch\`);
-        if (note.start < 0 || note.start >= expectedSteps) errors.push(\`\${track.id}.\${clip.id}.\${note.id}.start\`);
-        if (note.length <= 0 || note.start + note.length > expectedSteps + 1e-9) errors.push(\`\${track.id}.\${clip.id}.\${note.id}.length\`);
+        if (note.pitch < 0 || note.pitch > 127) errors.push(`${track.id}.${clip.id}.${note.id}.pitch`);
+        if (note.start < 0 || note.start >= expectedSteps) errors.push(`${track.id}.${clip.id}.${note.id}.start`);
+        if (note.length <= 0 || note.start + note.length > expectedSteps + 1e-9) errors.push(`${track.id}.${clip.id}.${note.id}.length`);
       }
     }
   }
@@ -369,26 +369,26 @@ export function applyPulseGridOperation(
     before = track.filterHz;
     track.filterHz = clamp(operation.filter_hz, 80, 19000);
     after = track.filterHz;
-    targets = [\`track:\${track.id}.filterHz\`];
+    targets = [`track:${track.id}.filterHz`];
   } else if (operation.type === 'track.set_delay_mix') {
     const track = getTrack(session, operation.track_id);
     before = track.delayMix;
     track.delayMix = clamp(operation.mix, 0, 0.65);
     after = track.delayMix;
-    targets = [\`track:\${track.id}.delayMix\`];
+    targets = [`track:${track.id}.delayMix`];
   } else if (operation.type === 'clip.set_bars') {
     const { clip } = getClip(session, operation.track_id, operation.scene);
     before = structuredClone(clip);
     resizeClip(clip, operation.bars);
     after = structuredClone(clip);
-    targets = [\`clip:\${clip.id}\`];
+    targets = [`clip:${clip.id}`];
   } else if (operation.type === 'clip.set_step') {
     const { clip } = getClip(session, operation.track_id, operation.scene);
     if (operation.step < 0 || operation.step >= clip.steps.length) throw new Error('PulseGrid step is out of range.');
     before = clip.steps[operation.step];
     clip.steps[operation.step] = clamp(operation.velocity, 0, 1);
     after = clip.steps[operation.step];
-    targets = [\`clip:\${clip.id}.steps[\${operation.step}]\`];
+    targets = [`clip:${clip.id}.steps[${operation.step}]`];
   } else if (operation.type === 'note.add') {
     const { clip } = getClip(session, operation.track_id, operation.scene);
     const note = normalizeNote({ ...operation.note, id: operation.note.id || crypto.randomUUID() }, clip.id, clip.notes.length, clip.steps.length);
@@ -396,7 +396,7 @@ export function applyPulseGridOperation(
     before = null;
     clip.notes.push(note);
     after = structuredClone(note);
-    targets = [\`clip:\${clip.id}.note:\${note.id}\`];
+    targets = [`clip:${clip.id}.note:${note.id}`];
   } else if (operation.type === 'note.move') {
     const { clip } = getClip(session, operation.track_id, operation.scene);
     const { note } = findNote(clip, operation.note_id);
@@ -405,21 +405,21 @@ export function applyPulseGridOperation(
     note.start = clamp(Math.round(operation.start), 0, Math.max(0, clip.steps.length - 1));
     note.length = clamp(note.length, 0.01, Math.max(0.01, clip.steps.length - note.start));
     after = structuredClone(note);
-    targets = [\`clip:\${clip.id}.note:\${note.id}\`];
+    targets = [`clip:${clip.id}.note:${note.id}`];
   } else if (operation.type === 'note.resize') {
     const { clip } = getClip(session, operation.track_id, operation.scene);
     const { note } = findNote(clip, operation.note_id);
     before = structuredClone(note);
     note.length = clamp(Number(operation.length), 0.01, Math.max(0.01, clip.steps.length - note.start));
     after = structuredClone(note);
-    targets = [\`clip:\${clip.id}.note:\${note.id}\`];
+    targets = [`clip:${clip.id}.note:${note.id}`];
   } else {
     const { clip } = getClip(session, operation.track_id, operation.scene);
     const { index, note } = findNote(clip, operation.note_id);
     before = structuredClone(note);
     clip.notes.splice(index, 1);
     after = null;
-    targets = [\`clip:\${clip.id}.note:\${note.id}\`];
+    targets = [`clip:${clip.id}.note:${note.id}`];
   }
 
   const receipt: PulseGridReceipt = {
