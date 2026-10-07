@@ -281,6 +281,24 @@ When Play Mode is running and Stage Mode is off, the viewport displays runtime t
 
 Runtime projection never writes simulation movement back into the authored project. Converting runtime state into canon requires a separate explicit authoring operation.
 
+### Capture Runtime Pose
+
+Play Mode can explicitly promote a simulated transform back toward authored canon without ever making runtime state authoritative by default.
+
+**Capture Pose** works as a proposal flow:
+
+1. select an unlocked object while Play Mode is running;
+2. World Engine runtime transform is projected back into Forge coordinates;
+3. the session compares runtime and authored transforms with a numeric tolerance;
+4. if they differ, World Forge creates a normal digest-bound ChangeSet containing the runtime transform;
+5. the editor places those operations into Stage Mode;
+6. the user reviews the authoring preview;
+7. **Apply Batch** commits through the normal ChangeSet boundary and live-syncs that authored revision back into the running session.
+
+The runtime pose proposal includes source tick and snapshot digest. It is marked `canonicalAuthoringMutation:false` until the normal Apply Batch path succeeds.
+
+Locked nodes cannot be captured. No-op captures fail closed rather than producing meaningless revisions.
+
 ### Server limits
 
 The first session registry is capped at 24 simultaneous sessions with a two-hour inactivity TTL. A single step call is capped at 600 ticks and 1,000 input events. Input IDs must be unique and every input tick must fall inside the requested step window.

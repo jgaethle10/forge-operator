@@ -319,6 +319,40 @@ export function registerWorldForgeRoutes(app:Express,deps:WorldForgeHttpDeps){
   );
 
   app.post(
+    '/api/fallen/world-forge/play/capture-pose',
+    rateLimit(120,60*60*1000),
+    (req:Request,res:Response)=>{
+      try{
+        const session=playSessions.get(String(req.body?.sessionId||'').slice(0,90));
+        const proposal=session.captureRuntimePose({
+          nodeIds:Array.isArray(req.body?.nodeIds)
+            ? req.body.nodeIds.map((value:unknown)=>String(value).slice(0,200))
+            : undefined,
+          author:{
+            kind:req.body?.author?.kind==='agent'||req.body?.author?.kind==='system'
+              ? req.body.author.kind
+              : 'human',
+            id:String(req.body?.author?.id||'world-forge-editor').slice(0,120),
+          },
+          title:typeof req.body?.title==='string'
+            ? req.body.title.slice(0,300)
+            : undefined,
+        });
+        res.json({
+          success:true,
+          proposal,
+          projection:session.runtimeProjection(),
+        });
+      }catch(error){
+        res.status(422).json({
+          success:false,
+          error:error instanceof Error?error.message:String(error),
+        });
+      }
+    },
+  );
+
+  app.post(
     '/api/fallen/world-forge/play/stop',
     rateLimit(120,60*60*1000),
     (req:Request,res:Response)=>{

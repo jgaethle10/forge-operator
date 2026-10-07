@@ -2,6 +2,10 @@ import crypto from 'node:crypto';
 
 import type { WorldForgeProject } from './world-forge.js';
 import {
+  createWorldForgeChangeSet,
+  type WorldForgeChangeSet,
+} from './world-forge-changeset.js';
+import {
   compileWorldForgeToWorldEngine,
   worldEngineEulerToWorldForge,
   worldEngineVectorToWorldForge,
@@ -92,6 +96,18 @@ export interface WorldForgePlaySyncResult {
   runtimeSync:WorldForgeLiveRuntimeSyncResult;
 }
 
+export interface WorldForgePlayPoseProposal {
+  schema:'evercraft.fallen.world-forge-play-pose-proposal.v1';
+  sessionId:string;
+  projectId:string;
+  projectVersion:number;
+  tick:number;
+  snapshotDigest:string;
+  changedNodeIds:string[];
+  changeSet:WorldForgeChangeSet;
+  canonicalAuthoringMutation:false;
+}
+
 function clone<T>(value:T):T{
   return structuredClone(value);
 }
@@ -145,6 +161,19 @@ function stepReceiptDigest(
   receipt:Omit<WorldForgePlayStepReceipt,'digest'>|WorldForgePlayStepReceipt,
 ){
   return digest(receipt);
+}
+
+function transformChanged(
+  a:{position:{x:number;y:number;z:number};rotationDeg:{x:number;y:number;z:number};scale:{x:number;y:number;z:number}},
+  b:{position:{x:number;y:number;z:number};rotationDeg:{x:number;y:number;z:number};scale:{x:number;y:number;z:number}},
+  epsilon=1e-7,
+){
+  for(const group of ['position','rotationDeg','scale'] as const){
+    for(const axis of ['x','y','z'] as const){
+      if(Math.abs(a[group][axis]-b[group][axis])>epsilon) return true;
+    }
+  }
+  return false;
 }
 
 export function verifyWorldForgePlayStepReceipt(receipt:WorldForgePlayStepReceipt){
@@ -269,6 +298,80 @@ export class WorldForgePlaySession {
         productionRenderAuthorityGranted:false,
         autonomousExternalActionAuthorityGranted:false,
       },
+    };
+  }
+
+  captureRuntimePose(input:{
+    nodeIds?:string[];
+    author:{kind:'human'|'agent'|'system';id:string};
+    title?:string;
+  }):WorldForgePlayPoseProposal{
+    const projection=this.runtimeProjection();
+    const projectionByNode=new Map(
+      projection.nodeTransforms.map(item=>[item.nodeId,item]),
+    );
+    const explicit=Array.isArray(input.nodeIds)&&input.nodeIds.length>0;
+    const requested=explicit
+      ? [...new Set(input.nodeIds!)].sort()
+      : this._project.nodes
+          .filter(node=>node.locked!==true)
+          .map(node=>node.id)
+          .sort();
+
+    const operations=[] as Array<{
+      type:'set_transform';
+      nodeId:string;
+      transform:{
+        position:{x:number;y:number;z:number};
+        rotationDeg:{x:number;y:number;z:number};
+        scale:{x:number;y:number;z:number};
+      };
+    }>;
+    const changedNodeIds:string[]=[];
+
+    for(const nodeId of requested){
+      const node=this._project.nodes.find(item=>item.id===nodeId);
+      if(!node) throw new Error(`world_forge_play_pose_node_missing:${nodeId}`);
+      if(node.locked){
+        if(explicit) throw new Error(`world_forge_play_pose_node_locked:${nodeId}`);
+        continue;
+      }
+      const runtime=projectionByNode.get(nodeId);
+      if(!runtime) throw new Error(`world_forge_play_pose_runtime_node_missing:${nodeId}`);
+      if(!transformChanged(node.transform,runtime.transform)) continue;
+
+      operations.push({
+        type:'set_transform',
+        nodeId,
+        transform:structuredClone(runtime.transform),
+      });
+      changedNodeIds.push(nodeId);
+    }
+
+    if(!operations.length){
+      throw new Error('world_forge_play_pose_no_transform_changes');
+    }
+
+    const changeSet=createWorldForgeChangeSet({
+      project:this._project,
+      id:`play-pose:${this.id}:t${projection.tick}`,
+      title:input.title?.trim()||`Capture runtime pose at tick ${projection.tick}`,
+      author:input.author,
+      operations,
+      destructiveAuthority:false,
+    });
+
+    this.touch();
+    return {
+      schema:'evercraft.fallen.world-forge-play-pose-proposal.v1',
+      sessionId:this.id,
+      projectId:this._project.id,
+      projectVersion:this._project.version,
+      tick:projection.tick,
+      snapshotDigest:projection.snapshotDigest,
+      changedNodeIds,
+      changeSet,
+      canonicalAuthoringMutation:false,
     };
   }
 

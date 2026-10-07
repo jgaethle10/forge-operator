@@ -2,6 +2,7 @@ import assert from 'node:assert/strict';
 import test from 'node:test';
 
 import { applyWorldForgeOperations } from './world-forge.js';
+import { applyWorldForgeChangeSet } from './world-forge-changeset.js';
 import { createWorldForgeStarterProject } from './world-forge-http.js';
 import {
   WorldForgePlaySession,
@@ -219,4 +220,120 @@ test('Play Mode projects runtime transforms into Forge space without mutating au
 
   const authoredAfter=session.project.nodes.find(node=>node.id==='hero-core');
   assert.deepEqual(authoredAfter?.transform,authoredHero);
+});
+
+
+test('Play Mode captures a runtime pose as a reviewable ChangeSet without mutating canon',()=>{
+  const project=createWorldForgeStarterProject();
+  const original=structuredClone(
+    project.nodes.find(node=>node.id==='hero-core')!.transform,
+  );
+  const session=new WorldForgePlaySession({
+    sessionId:'play-capture-pose',
+    project,
+  });
+
+  session.step({
+    ticks:1,
+    inputs:[{
+      id:'pose-hero',
+      tick:1,
+      entityId:'wfnode:hero-core',
+      kind:'teleport',
+      value:{x:2.5,y:3,z:-1.25},
+    }],
+  });
+
+  const proposal=session.captureRuntimePose({
+    nodeIds:['hero-core'],
+    author:{kind:'human',id:'world-forge-editor'},
+  });
+
+  assert.equal(proposal.canonicalAuthoringMutation,false);
+  assert.equal(proposal.tick,1);
+  assert.deepEqual(proposal.changedNodeIds,['hero-core']);
+  assert.equal(proposal.changeSet.operations.length,1);
+  assert.equal(proposal.changeSet.operations[0].type,'set_transform');
+  if(proposal.changeSet.operations[0].type==='set_transform'){
+    assert.deepEqual(
+      proposal.changeSet.operations[0].transform.position,
+      {x:2.5,y:1.25,z:3},
+    );
+  }
+
+  assert.deepEqual(
+    session.project.nodes.find(node=>node.id==='hero-core')?.transform,
+    original,
+  );
+});
+
+test('captured runtime pose can become canon and resync into the same running session without a tick jump',()=>{
+  const project=createWorldForgeStarterProject();
+  const session=new WorldForgePlaySession({
+    sessionId:'play-capture-commit',
+    project,
+  });
+
+  session.step({
+    ticks:4,
+    inputs:[{
+      id:'pose-hero-commit',
+      tick:4,
+      entityId:'wfnode:hero-core',
+      kind:'teleport',
+      value:{x:3,y:2.25,z:-.75},
+    }],
+  });
+
+  const proposal=session.captureRuntimePose({
+    nodeIds:['hero-core'],
+    author:{kind:'human',id:'world-forge-editor'},
+    title:'Keep runtime hero pose',
+  });
+  const applied=applyWorldForgeChangeSet({
+    project:session.project,
+    changeSet:proposal.changeSet,
+  });
+  assert.equal(applied.status,'applied');
+  assert.ok(applied.mutation);
+
+  const synced=session.syncProject({
+    afterProject:applied.mutation!.project,
+    actor:{kind:'human',id:'world-forge-editor'},
+    reason:'Commit captured runtime pose',
+  });
+
+  assert.equal(synced.session.tick,4);
+  const hero=synced.runtimeSync.snapshot.entities.find(
+    entity=>entity.id==='wfnode:hero-core',
+  );
+  assert.deepEqual(hero?.transform.position,{x:3,y:2.25,z:-.75});
+  assert.deepEqual(
+    session.project.nodes.find(node=>node.id==='hero-core')?.transform.position,
+    {x:3,y:.75,z:2.25},
+  );
+});
+
+test('runtime pose capture refuses locked nodes and no-op captures',()=>{
+  const project=createWorldForgeStarterProject();
+  const session=new WorldForgePlaySession({
+    sessionId:'play-capture-guards',
+    project,
+  });
+
+  assert.throws(
+    ()=>session.captureRuntimePose({
+      nodeIds:['world-floor'],
+      author:{kind:'human',id:'world-forge-editor'},
+    }),
+    /world_forge_play_pose_node_locked:world-floor/,
+  );
+
+  assert.throws(
+    ()=>session.captureRuntimePose({
+      nodeIds:['hero-core'],
+      author:{kind:'human',id:'world-forge-editor'},
+    }),
+    /world_forge_play_pose_no_transform_changes/,
+  );
 });
