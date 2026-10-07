@@ -122,13 +122,17 @@ function layoutLabels(story,positions,format){
     const anchor=right?'start':'end';
     const leaderX=right?x-11:x+11;
     const threat=/very high/i.test(row.point.note||'')?'VERY HIGH':/high/i.test(row.point.note||'')?'HIGH':'';
+    const elevation=Number.isFinite(Number(row.point.value))
+      ? String(Math.round(Number(row.point.value))).replace(/\B(?=(\d{3})+(?!\d))/g,',')+' M'
+      : '';
+    const detail=[elevation,threat].filter(Boolean).join(' · ');
     return {
       point:row.point,
       p:row.p,
       label,
       estimate,
       font,
-      x,y,anchor,leaderX,threat,
+      x,y,anchor,leaderX,threat,detail,
       side:use,
     };
   });
@@ -138,7 +142,7 @@ function renderLabels(story,positions,format){
   return layoutLabels(story,positions,format).map(item=>[
     '<line x1="'+item.p.x+'" y1="'+item.p.y+'" x2="'+item.leaderX+'" y2="'+(item.y-7)+'" stroke="#75C8FF" stroke-width="1.5" opacity=".30"/>',
     '<text class="story-label" x="'+item.x+'" y="'+item.y+'" text-anchor="'+item.anchor+'" font-family="Arial,sans-serif" font-size="'+item.font+'" font-weight="800" fill="#F5F5F2">'+esc(item.label)+'</text>',
-    item.threat?'<text class="story-label" x="'+item.x+'" y="'+(item.y+item.font+5)+'" text-anchor="'+item.anchor+'" font-family="Arial,sans-serif" font-size="'+Math.round(item.font*.58)+'" font-weight="800" letter-spacing="1.4" fill="'+(item.threat==='VERY HIGH'?'#FFB15A':'#B7BDC5')+'">'+item.threat+'</text>':'',
+    item.detail?'<text class="story-label story-label-detail" x="'+item.x+'" y="'+(item.y+item.font+5)+'" text-anchor="'+item.anchor+'" font-family="Arial,sans-serif" font-size="'+Math.round(item.font*.58)+'" font-weight="800" letter-spacing="1.2" fill="'+(item.threat==='VERY HIGH'?'#FFB15A':'#AFC0C8')+'">'+esc(item.detail)+'</text>':'',
   ].join('\n')).join('\n');
 }
 
@@ -148,7 +152,7 @@ function labelBounds(item){
   return {
     x1,x2,
     y1:item.y-item.font*.88,
-    y2:item.y+(item.threat?item.font+10:6),
+    y2:item.y+(item.detail?item.font+10:6),
   };
 }
 
@@ -245,35 +249,24 @@ export function assessDirectedPosterLayout(story,plan,format='feed'){
   };
 }
 
-function renderGeography(boundary,statePath,spec,format){
+function renderGeography(boundary,statePath,spec,format,terrain,frame){
   if(!boundary||!statePath) return '<g opacity=".9">'+decorativeContours(spec)+'</g>';
   const stroke=format==='story'?4:3;
   const x=spec.map.x;
   const y=spec.map.y;
   const w=spec.map.width;
   const h=spec.map.height;
-  const contourRows=Array.from({length:15},(_,index)=>{
-    const yy=y+h*(.055+index*.064);
-    const bend=(index%3===0?38:index%3===1?-28:18);
-    const inset=18+(index%4)*10;
-    return '<path class="cinematic-relief" d="M '+(x-inset)+' '+yy+' C '+(x+w*.20)+' '+(yy+bend)+' '+(x+w*.43)+' '+(yy-bend*.72)+' '+(x+w*.61)+' '+(yy+bend*.40)+' S '+(x+w*.86)+' '+(yy-bend*.55)+' '+(x+w+inset)+' '+(yy+6)+'" fill="none" stroke="#88D7F8" stroke-width="'+(format==='story'?2.2:1.7)+'" opacity="'+(.055+(index%4)*.012).toFixed(3)+'"/>';
-  }).join('\n');
-  const relief=[
-    '<ellipse class="cinematic-relief" cx="'+(x+w*.30)+'" cy="'+(y+h*.30)+'" rx="'+(w*.34)+'" ry="'+(h*.22)+'" fill="#4FB8FF" opacity=".055"/>',
-    '<ellipse class="cinematic-relief" cx="'+(x+w*.66)+'" cy="'+(y+h*.64)+'" rx="'+(w*.38)+'" ry="'+(h*.28)+'" fill="#0B0503" opacity=".28"/>',
-    '<path class="cinematic-relief" d="M '+(x+w*.16)+' '+(y+h*.86)+' C '+(x+w*.28)+' '+(y+h*.66)+' '+(x+w*.29)+' '+(y+h*.43)+' '+(x+w*.42)+' '+(y+h*.18)+' C '+(x+w*.49)+' '+(y+h*.33)+' '+(x+w*.48)+' '+(y+h*.59)+' '+(x+w*.61)+' '+(y+h*.91)+' Z" fill="#1A3C46" opacity=".42"/>',
-    '<path class="cinematic-relief" d="M '+(x+w*.34)+' '+(y+h*.92)+' C '+(x+w*.42)+' '+(y+h*.70)+' '+(x+w*.43)+' '+(y+h*.47)+' '+(x+w*.55)+' '+(y+h*.14)+' C '+(x+w*.60)+' '+(y+h*.37)+' '+(x+w*.62)+' '+(y+h*.65)+' '+(x+w*.72)+' '+(y+h*.94)+' Z" fill="#071319" opacity=".48"/>',
-  ].join('\n');
+  const terrainLayer=terrain
+    ? '<image class="terrain-relief" href="./'+esc(terrain.assetName)+'" x="'+frame.draw.x+'" y="'+frame.draw.y+'" width="'+frame.draw.width+'" height="'+frame.draw.height+'" preserveAspectRatio="none" clip-path="url(#geoClip)" opacity=".78" style="mix-blend-mode:multiply"/>'
+    : '<g class="terrain-relief-fallback" clip-path="url(#geoClip)" opacity=".40">'+decorativeContours(spec)+'</g>';
   return [
     '<clipPath id="geoClip"><path d="'+statePath+'"/></clipPath>',
     '<path class="geo-boundary" d="'+statePath+'" fill="url(#stateFill)" stroke="#72CFF4" stroke-width="'+stroke+'" stroke-opacity=".82" filter="url(#stateShadow)"/>',
-    '<g clip-path="url(#geoClip)">',
-    relief,
-    contourRows,
-    '</g>',
-    '<path class="geo-boundary" d="'+statePath+'" fill="none" stroke="#EAF7FC" stroke-width="1.2" stroke-opacity=".22"/>',
-    '<text class="region-label" x="'+(x+w*.50)+'" y="'+(y+h*.57)+'" text-anchor="middle" font-family="Arial,sans-serif" font-size="'+(format==='story'?55:42)+'" font-weight="900" letter-spacing="9" fill="#EAF7FC" opacity=".16">WASHINGTON</text>',
-    '<text class="region-kicker" x="'+(x+w*.50)+'" y="'+(y+h*.57+(format==='story'?38:30))+'" text-anchor="middle" font-family="Arial,sans-serif" font-size="'+(format==='story'?15:12)+'" font-weight="800" letter-spacing="4" fill="#8EDBFA" opacity=".34">PACIFIC NORTHWEST</text>',
+    terrainLayer,
+    '<path class="terrain-atmosphere" d="'+statePath+'" fill="url(#terrainWash)" opacity=".46"/>',
+    '<path class="geo-boundary" d="'+statePath+'" fill="none" stroke="#EAF7FC" stroke-width="1.25" stroke-opacity=".30"/>',
+    '<text class="region-label" x="'+(x+w*.50)+'" y="'+(y+h*.57)+'" text-anchor="middle" font-family="Arial,sans-serif" font-size="'+(format==='story'?55:42)+'" font-weight="900" letter-spacing="9" fill="#EAF7FC" opacity=".13">WASHINGTON</text>',
+    '<text class="region-kicker" x="'+(x+w*.50)+'" y="'+(y+h*.57+(format==='story'?38:30))+'" text-anchor="middle" font-family="Arial,sans-serif" font-size="'+(format==='story'?15:12)+'" font-weight="800" letter-spacing="4" fill="#8EDBFA" opacity=".30">PACIFIC NORTHWEST</text>',
   ].join('\n');
 }
 
@@ -292,7 +285,7 @@ export function renderDirectedPoster(story,plan,format='feed'){
     const a=positions.get(line.from);
     const b=positions.get(line.to);
     if(!a||!b) return '';
-    return '<path class="story-route cascade-spine" d="M '+a.x+' '+a.y+' L '+b.x+' '+b.y+'" fill="none" stroke="#B8E7FA" stroke-width="'+(format==='story'?2.6:2)+'" stroke-linecap="round" stroke-linejoin="round" stroke-dasharray="'+(format==='story'?'11 15':'8 12')+'" opacity=".20"/>';
+    return '<path class="story-route cascade-axis" d="M '+a.x+' '+a.y+' L '+b.x+' '+b.y+'" fill="none" stroke="#C7ECFA" stroke-width="'+(format==='story'?7:5)+'" stroke-linecap="round" stroke-linejoin="round" opacity=".085"/>';
   }).join('\n');
 
   const pointSvg=story.points.map(point=>{
@@ -303,8 +296,8 @@ export function renderDirectedPoster(story,plan,format='feed'){
     const peakH=radius*1.06;
     const peakW=radius*1.10;
     return [
-      '<circle class="peak-halo" cx="'+p.x+'" cy="'+p.y+'" r="'+(radius+10)+'" fill="'+risk+'" opacity=".11"/>',
-      '<path class="peak-marker" d="M '+(p.x-peakW)+' '+(p.y+peakH*.62)+' L '+p.x+' '+(p.y-peakH)+' L '+(p.x+peakW)+' '+(p.y+peakH*.62)+' Z" fill="#EDF8FC" stroke="#061014" stroke-width="4" stroke-linejoin="round" filter="url(#glow)"/>',
+      '<path class="peak-shadow" d="M '+(p.x-peakW)+' '+(p.y+peakH*.62)+' L '+p.x+' '+(p.y-peakH)+' L '+(p.x+peakW)+' '+(p.y+peakH*.62)+' Z" fill="#000" opacity=".48" transform="translate(0 5)"/>',
+      '<path class="peak-marker" d="M '+(p.x-peakW)+' '+(p.y+peakH*.62)+' L '+p.x+' '+(p.y-peakH)+' L '+(p.x+peakW)+' '+(p.y+peakH*.62)+' Z" fill="#EAF6FA" stroke="#061014" stroke-width="4" stroke-linejoin="round"/>',
       '<path class="peak-snow" d="M '+(p.x-peakW*.30)+' '+(p.y-peakH*.18)+' L '+p.x+' '+(p.y-peakH)+' L '+(p.x+peakW*.24)+' '+(p.y-peakH*.26)+' Z" fill="'+risk+'"/>',
       '<circle class="peak-summit" cx="'+p.x+'" cy="'+(p.y-peakH)+'" r="'+(format==='story'?4:3)+'" fill="'+risk+'"/>',
     ].join('\n');
@@ -334,11 +327,12 @@ export function renderDirectedPoster(story,plan,format='feed'){
   const sourceY=spec.height-58;
   const evidence=String(story.evidenceState||'').toUpperCase();
   return [
-    '<svg xmlns="http://www.w3.org/2000/svg" width="'+spec.width+'" height="'+spec.height+'" viewBox="0 0 '+spec.width+' '+spec.height+'" data-visual-model="cinematic-geography-v1" style="max-width:100%;height:auto;display:block">',
+    '<svg xmlns="http://www.w3.org/2000/svg" width="'+spec.width+'" height="'+spec.height+'" viewBox="0 0 '+spec.width+' '+spec.height+'" data-visual-model="cinematic-terrain-geography-v2" style="max-width:100%;height:auto;display:block">',
     '<defs>',
     '<radialGradient id="heroGlow" cx="50%" cy="48%" r="60%"><stop offset="0%" stop-color="#17303D"/><stop offset="58%" stop-color="#0A1013"/><stop offset="100%" stop-color="#050707"/></radialGradient>',
     '<linearGradient id="spine" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#75C8FF"/><stop offset="100%" stop-color="#2B6B95"/></linearGradient>',
-    '<linearGradient id="stateFill" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#112832"/><stop offset="52%" stop-color="#0B171D"/><stop offset="100%" stop-color="#061014"/></linearGradient>',
+    '<linearGradient id="stateFill" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#19323A"/><stop offset="52%" stop-color="#102129"/><stop offset="100%" stop-color="#091319"/></linearGradient>',
+    '<linearGradient id="terrainWash" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#5CC7E8" stop-opacity=".18"/><stop offset="48%" stop-color="#0C2028" stop-opacity=".08"/><stop offset="100%" stop-color="#020608" stop-opacity=".52"/></linearGradient>',
     '<filter id="stateShadow" x="-30%" y="-30%" width="160%" height="160%"><feDropShadow dx="0" dy="18" stdDeviation="26" flood-color="#000" flood-opacity=".45"/></filter>',
     '<filter id="glow" x="-80%" y="-80%" width="260%" height="260%"><feGaussianBlur stdDeviation="5" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>',
     '</defs>',
@@ -346,7 +340,7 @@ export function renderDirectedPoster(story,plan,format='feed'){
     '<text x="72" y="'+(format==='story'?82:58)+'" font-family="Arial,sans-serif" font-size="'+(format==='story'?24:19)+'" font-weight="900" letter-spacing="3.2" fill="#4FB8FF">'+esc(plan.hero.eyebrow.toUpperCase())+'</text>',
     hook,
     sub,
-    renderGeography(boundary,statePath,spec,format),
+    renderGeography(boundary,statePath,spec,format,plan.geography?.terrain,frame),
     routeSvg,
     pointSvg,
     renderLabels(story,positions,format),
