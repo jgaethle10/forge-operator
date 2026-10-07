@@ -7,6 +7,7 @@ on:
       - 'systemia/payments/financial-boundary*'
       - 'systemia/payments/charter-readiness*'
       - 'systemia/payments/charter-evidence.json'
+      - 'systemia/payments/financial-capabilit*'
       - 'public/benchmarks/systemia-university/**'
       - 'public/chum/products/systemia-university/**'
       - 'registry/systemia-university/**'
@@ -44,3 +45,5 @@ jobs:
         run: node --test systemia/payments/financial-boundary.test.mjs
       - name: Evercraft Financial charter readiness
         run: node --test systemia/payments/charter-readiness.test.mjs
+      - name: Evercraft Financial capability authority routing
+        run: node --test systemia/payments/financial-capability-router.test.mjs
