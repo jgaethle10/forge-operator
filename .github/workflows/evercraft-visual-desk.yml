@@ -72,6 +72,7 @@ jobs:
           test -f _visual_desk_release/washington-active-volcanoes/poster-story.html
           test -f _visual_desk_release/washington-active-volcanoes/graphics-plan.json
           test -f _visual_desk_release/washington-active-volcanoes/scroll-stop-report.json
+          test -f _visual_desk_release/washington-active-volcanoes/poster-quality-report.json
           test -f _visual_desk_release/washington-active-volcanoes/fallen-stage-input.json
           test -f _visual_desk_release/washington-active-volcanoes/motion.html
           grep -q '__evercraftRenderAt' _visual_desk_release/washington-active-volcanoes/motion.html
@@ -82,6 +83,9 @@ jobs:
           grep -q 'evercraft.visual-story.motion-stage.v2' _visual_desk_release/washington-active-volcanoes/motion.html
           grep -q '"boundaryLicense": "CC0-1.0"' _visual_desk_release/washington-active-volcanoes/graphics-plan.json
           grep -q '"status": "pass"' _visual_desk_release/washington-active-volcanoes/scroll-stop-report.json
+          grep -q '"status": "pass"' _visual_desk_release/washington-active-volcanoes/poster-quality-report.json
+          grep -q '"labelsNonOverlapping": true' _visual_desk_release/washington-active-volcanoes/poster-quality-report.json
+          grep -q '"labelsClearOfOtherMarkers": true' _visual_desk_release/washington-active-volcanoes/poster-quality-report.json
           grep -q '"aspectRatio": "9:16"' _visual_desk_release/washington-active-volcanoes/fallen-stage-input.json
           grep -q 'usgs.gov' _visual_desk_release/washington-active-volcanoes/story.json
 
