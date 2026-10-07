@@ -59,6 +59,15 @@ jobs:
       - name: Prove browser WebGPU device execution
         run: |
           EVERCRAFT_NATIVE_BROWSER_STATE_DIR="$RUNNER_TEMP/evercraft-native-browser" node webgpu-device-conformance.proof.mjs | tee /tmp/evercraft-webgpu-device-conformance.json
+      - name: Prove World Engine owned-WGSL reference frame
+        run: |
+          EVERCRAFT_NATIVE_BROWSER_STATE_DIR="$RUNNER_TEMP/evercraft-native-browser" npm run proof:webgpu-reference-frame | tee /tmp/evercraft-world-reference-frame.json
+      - name: Upload World Engine reference-frame receipt
+        uses: actions/upload-artifact@v4
+        with:
+          name: evercraft-world-engine-reference-frame
+          path: /tmp/evercraft-world-reference-frame.json
+          if-no-files-found: error
       - name: Summarize WebGPU device receipt
         run: |
           node <<'NODE'
