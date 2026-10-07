@@ -40,14 +40,34 @@ for (const row of commerce.offers) {
 }
 
 const firstDollar = commerce.first_dollar_lane.candidates;
-assert.ok(firstDollar.length >= 1, 'at least one <= $50 sell-now path should exist');
-assert.ok(firstDollar.some((row) => row.public_id === 'roasted-text-pressure-test-machine-v1'), 'ROASTED 99c path should be in the first-dollar lane');
+const cheapOffers = commerce.offers.filter((row) =>
+  Number.isFinite(row.exact_entry_offer?.price_usd) &&
+  row.exact_entry_offer.price_usd <= commerce.first_dollar_lane.max_entry_price_usd
+);
+const executableCheapOffers = cheapOffers.filter((row) => /^https:\/\//.test(String(row.continuation.start_url||'')));
+
+assert.ok(cheapOffers.length >= 1, 'at least one <= $50 published sell-now offer should exist');
+assert.equal(firstDollar.length, executableCheapOffers.length, 'first-dollar lane must contain only currently executable low-price continuations');
+assert.deepEqual(
+  firstDollar.map((row)=>row.public_id).sort(),
+  executableCheapOffers.map((row)=>row.public_id).sort(),
+  'first-dollar candidates must exactly match verified executable low-price continuations'
+);
 assert.ok(firstDollar.every((row) => Number(row.entry_offer?.price_usd) <= 50));
 assert.ok(firstDollar.every((row) => /^https:\/\//.test(String(row.start_url||''))), 'first-dollar lane must contain only executable human-confirmed continuations');
+if (executableCheapOffers.length===0) {
+  assert.equal(firstDollar.length,0,'held owned corridors must not be promoted into first-dollar checkout paths');
+  assert.ok(cheapOffers.every((row)=>row.continuation.state==='held_no_owned_public_origin'),'non-executable cheap offers must remain explicitly held');
+}
 
 const roasted = commerce.offers.find((row) => row.public_id === 'roasted-text-pressure-test-machine-v1');
 assert.ok(roasted);
 assert.equal(roasted.exact_entry_offer.price_usd, 0.99);
 assert.match(roasted.agent_close_contract.confirmation_prompt, /\$0\.99 USD/);
+assert.equal(
+  firstDollar.some((row)=>row.public_id==='roasted-text-pressure-test-machine-v1'),
+  Boolean(roasted.continuation.start_url),
+  'ROASTED belongs in first-dollar lane only when its owned continuation is verified executable'
+);
 
 console.log(JSON.stringify({ok:true,offers:commerce.offers.length,first_dollar:firstDollar.length}));
