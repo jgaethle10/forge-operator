@@ -136,6 +136,21 @@ export interface WorldForgeLightComponent {
   castShadows?:boolean;
 }
 
+export type WorldForgeColliderComponent =
+  | { type:'auto_box' }
+  | { type:'auto_sphere' }
+  | { type:'box'; halfExtents:Vec3 }
+  | { type:'sphere'; radius:number };
+
+export interface WorldForgePhysicsComponent {
+  mode:'static'|'kinematic'|'dynamic';
+  massKg?:number;
+  gravityScale?:number;
+  linearDamping?:number;
+  restitution?:number;
+  collider:WorldForgeColliderComponent;
+}
+
 export interface WorldForgeNode {
   id:string;
   name:string;
@@ -149,6 +164,7 @@ export interface WorldForgeNode {
   modifiers?:WorldForgeModifier[];
   camera?:WorldForgeCameraComponent;
   light?:WorldForgeLightComponent;
+  physics?:WorldForgePhysicsComponent;
   sourceRefs?:string[];
   tags?:string[];
   metadata?:Record<string,unknown>;
@@ -268,6 +284,7 @@ export type WorldForgeOperation =
   | { type:'set_visibility'; nodeId:string; visible:boolean }
   | { type:'set_geometry'; nodeId:string; geometry:WorldForgeGeometry; allowDestructive?:boolean }
   | { type:'set_camera'; nodeId:string; camera:Partial<WorldForgeCameraComponent> }
+  | { type:'set_physics'; nodeId:string; physics:WorldForgePhysicsComponent|null }
   | { type:'reparent_node'; nodeId:string; parentId?:string }
   | { type:'add_modifier'; nodeId:string; modifier:WorldForgeModifier }
   | { type:'remove_modifier'; nodeId:string; modifierId:string }
@@ -514,6 +531,59 @@ export function validateWorldForgeProject(project:WorldForgeProject):WorldForgeV
       }
     }
     if(node.kind==='light'&&!node.light) errors.push(`light_component_missing:${node.id}`);
+
+    if(node.physics){
+      if(node.kind!=='mesh') errors.push(`physics_target_not_mesh:${node.id}`);
+      const physics=node.physics;
+      if(physics.massKg!==undefined&&(!Number.isFinite(physics.massKg)||physics.massKg<=0)){
+        errors.push(`physics_mass_invalid:${node.id}`);
+      }
+      if(physics.mode==='dynamic'&&physics.massKg===undefined){
+        warnings.push(`physics_mass_defaulted:${node.id}`);
+      }
+      if(physics.gravityScale!==undefined&&(!Number.isFinite(physics.gravityScale)||physics.gravityScale<0)){
+        errors.push(`physics_gravity_scale_invalid:${node.id}`);
+      }
+      if(physics.linearDamping!==undefined&&(!Number.isFinite(physics.linearDamping)||physics.linearDamping<0)){
+        errors.push(`physics_linear_damping_invalid:${node.id}`);
+      }
+      if(physics.restitution!==undefined&&(
+        !Number.isFinite(physics.restitution)||
+        physics.restitution<0||
+        physics.restitution>1
+      )){
+        errors.push(`physics_restitution_invalid:${node.id}`);
+      }
+
+      const collider=physics.collider;
+      if(!collider){
+        errors.push(`physics_collider_missing:${node.id}`);
+      }else if(collider.type==='box'){
+        for(const axis of ['x','y','z'] as const){
+          if(!Number.isFinite(collider.halfExtents[axis])||collider.halfExtents[axis]<=0){
+            errors.push(`physics_box_half_extent_invalid:${node.id}:${axis}`);
+          }
+        }
+      }else if(collider.type==='sphere'){
+        if(!Number.isFinite(collider.radius)||collider.radius<=0){
+          errors.push(`physics_sphere_radius_invalid:${node.id}`);
+        }
+      }else if(
+        collider.type!=='auto_box'&&
+        collider.type!=='auto_sphere'
+      ){
+        errors.push(`physics_collider_invalid:${node.id}`);
+      }
+
+      if(physics.mode==='static'){
+        if(physics.gravityScale!==undefined&&physics.gravityScale!==0){
+          warnings.push(`physics_static_gravity_ignored:${node.id}`);
+        }
+        if(physics.massKg!==undefined){
+          warnings.push(`physics_static_mass_ignored:${node.id}`);
+        }
+      }
+    }
   }
 
   for(const graph of project.graphs) errors.push(...graphValidation(graph));
@@ -603,6 +673,13 @@ function operationInverse(project:WorldForgeProject,operation:WorldForgeOperatio
     if(!node.camera) throw new Error(`camera_component_missing:${node.id}`);
     return {type:'set_camera',nodeId:node.id,camera:clone(node.camera)};
   }
+  if(operation.type==='set_physics'){
+    return {
+      type:'set_physics',
+      nodeId:node.id,
+      physics:node.physics?clone(node.physics):null,
+    };
+  }
   if(operation.type==='reparent_node') return {type:'reparent_node',nodeId:node.id,parentId:node.parentId};
   if(operation.type==='add_modifier') return {type:'remove_modifier',nodeId:node.id,modifierId:operation.modifier.id};
   if(operation.type==='remove_modifier'){
@@ -681,6 +758,16 @@ function applyOperation(project:WorldForgeProject,operation:WorldForgeOperation)
   if(operation.type==='set_camera'){
     if(node.kind!=='camera'||!node.camera) throw new Error(`camera_target_invalid:${node.id}`);
     node.camera={...node.camera,...clone(operation.camera)};
+    return;
+  }
+
+  if(operation.type==='set_physics'){
+    if(node.kind!=='mesh') throw new Error(`physics_target_not_mesh:${node.id}`);
+    if(operation.physics===null){
+      delete node.physics;
+    }else{
+      node.physics=clone(operation.physics);
+    }
     return;
   }
 
