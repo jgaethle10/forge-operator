@@ -23,14 +23,27 @@ jobs:
           set -euo pipefail
           url="https://fabric.systemiacommandcenters.com/demos/hvac-lead-recovery/"
           body="$(curl --fail --silent --show-error --location --retry 18 --retry-all-errors --retry-delay 5 "$url")"
+          printf '%s' "$body" > /tmp/hvac-proof.html
           printf '%s' "$body" | grep -q 'Evercraft HVAC Lead Recovery Demo'
           printf '%s' "$body" | grep -q 'Turn this into a ready-to-work lead'
           printf '%s' "$body" | grep -q 'Use your own numbers'
           printf '%s' "$body" | grep -q 'Map this to my workflow'
+          printf '%s' "$body" | grep -q 'overflow-x:hidden'
+          printf '%s' "$body" | grep -q 'grid-template-columns:minmax(0,1fr)'
+          printf '%s' "$body" | grep -q 'viewport-fit=cover'
+          node <<'NODE'
+          const fs=require('fs');
+          const html=fs.readFileSync('/tmp/hvac-proof.html','utf8');
+          const closing=(html.match(/<\/html>/gi)||[]).length;
+          if(closing!==1) throw new Error('live_document_structure_invalid');
+          const scripts=[...html.matchAll(/<script\b[^>]*>([\s\S]*?)<\/script>/gi)];
+          if(!scripts.length) throw new Error('live_inline_script_missing');
+          for(const match of scripts) new Function(match[1]);
+          NODE
           {
             echo "## HVAC lead recovery proof is live"
             echo
             echo "URL: $url"
-            echo "Verified markers: title + interactive lead flow + editable economics + conversion CTA"
+            echo "Verified: interactive flow + editable economics + conversion CTA + mobile containment + inline-script syntax"
             echo "Owned origin: fabric.systemiacommandcenters.com"
           } >> "$GITHUB_STEP_SUMMARY"
