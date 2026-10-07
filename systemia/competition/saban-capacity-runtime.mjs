@@ -45,6 +45,76 @@ function receipt(state,extra={}){
   return {...body,receipt_hash:sha256(body)};
 }
 
+const READY_CAPACITY_STATES=new Set([
+  "deployed_zero_spend_capacity",
+  "renewed_ready",
+  "already_ready",
+]);
+
+const SAFE_NEXT_ACTIONS=new Set([
+  "continue_saban_capacity_discovery",
+  "bind_current_browser_worker_release",
+  "repair_yard_lease_renewal",
+  "repair_or_reacquire_competition_capacity",
+]);
+
+export function buildCompetitionCapacityMissionSnapshot(
+  capacityReceipt={},
+  previousSnapshot=null
+){
+  const capacityState=String(capacityReceipt?.state||"unknown");
+  const ready=READY_CAPACITY_STATES.has(capacityState);
+  const nextAction=SAFE_NEXT_ACTIONS.has(String(capacityReceipt?.next_action||""))
+    ? String(capacityReceipt.next_action)
+    : null;
+  const evidenceRefs=[
+    capacityReceipt?.receipt_hash,
+    capacityReceipt?.deployment_receipt_hash,
+    capacityReceipt?.lease_renewal_receipt_hash,
+    capacityReceipt?.negotiation_receipt_hash,
+  ].filter((value)=>typeof value==="string"&&value.startsWith("sha256:"));
+  const previousState=String(previousSnapshot?.capacity_state||"");
+  const previousAction=String(previousSnapshot?.next_action||"");
+  const materialChange=
+    !previousSnapshot ||
+    previousState!==capacityState ||
+    previousAction!==String(nextAction||"");
+
+  return {
+    schema:"evercraft.kaidance.mission-snapshot.v1",
+    snapshot_ref:"competition-saban-capacity:"+sha256({
+      capacity_state:capacityState,
+      next_action:nextAction,
+      evidence_refs:evidenceRefs,
+    }).slice("sha256:".length,24),
+    observed_at:capacityReceipt?.observed_at||new Date().toISOString(),
+    mission_key:"competition-autonomous-capacity-v1",
+    workflow_key:"competition-saban-capacity",
+    state:ready?"healthy":"held",
+    capacity_state:capacityState,
+    workload_class:"systemia.evercraft-web-browser.v1",
+    zero_spend_capacity_ready:ready,
+    paid_capacity_authorized:false,
+    founder_action_required:false,
+    human_gate_required:false,
+    next_action:nextAction,
+    counts:{
+      scanned:Math.max(1,Number(capacityReceipt?.discovered_offer_count||0)),
+      changed:materialChange?1:0,
+      admitted:ready&&materialChange?1:0,
+      held:!ready&&materialChange?1:0,
+    },
+    evidence_refs:evidenceRefs,
+    privacy:{
+      node_identity_exposed:false,
+      capacity_endpoint_exposed:false,
+      allocator_authority_exposed:false,
+      provider_identity_exposed:false,
+    },
+    material_change:materialChange,
+  };
+}
+
 export async function discoverCompetitionWorkerCapacity({
   yard,
   brokerDeploymentId,
