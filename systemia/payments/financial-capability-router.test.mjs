@@ -37,8 +37,8 @@ test('deposit capability can route only after required authority evidence is sup
     depositInsuranceAuthority:'verified-insurance-evidence-ref'
   });
   assert.equal(route.allowed,true);
-  assert.equal(route.route,'blocked_until_verified_authority');
-  assert.deepEqual(route.claims_allowed,[]);
+  assert.equal(route.route,'authorized_insured_depository_rail');
+  assert.deepEqual(route.claims_allowed,['insured_deposit_account']);
 });
 
 test('financing discovery stays distinct from lending authority',()=>{
