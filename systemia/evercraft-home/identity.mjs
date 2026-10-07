@@ -81,12 +81,17 @@ export function verifyEvercraftSession(token, keyringOrSecret, { now = new Date(
   };
 }
 
-export function authorizeEvercraftHome(passport, session, { at = new Date().toISOString(), scope = "home.read" } = {}) {
+export function authorizeEvercraftHome(passport, session, {
+  at = new Date().toISOString(),
+  scope = "home.read",
+  resourceRef = null,
+} = {}) {
   if (!passport || typeof passport.authorize !== "function") throw new Error("passport_required");
   const decision = passport.authorize({
     subject_ref: session.subject_ref,
     product: "evercraft-home",
     scope,
+    resource_ref: resourceRef || undefined,
     at,
   });
 
