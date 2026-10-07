@@ -195,8 +195,8 @@ export async function startPeopleLayerRuntime({
         const body=method==='POST'?await readJson(req):{};
         if(method==='POST'&&action==='invite')return sendJson(res,201,{ok:true,invite:runtime.createInvite(brainKey,body)});
         if(method==='POST'&&action==='email-challenge')return sendJson(res,201,{ok:true,challenge:runtime.createEmailChallenge(brainKey,body)});
-        if(method==='POST'&&action==='export')return sendJson(res,200,{ok:true,export:runtime.exportBrain(brainKey)});
-        if(method==='POST'&&action==='delete-request')return sendJson(res,201,{ok:true,request:runtime.requestDelete(brainKey)});
+        if(method==='POST'&&action==='export')return sendJson(res,200,{ok:true,export:runtime.exportBrain(brainKey,body)});
+        if(method==='POST'&&action==='delete-request')return sendJson(res,201,{ok:true,request:runtime.requestDelete(brainKey,body)});
         if(method==='POST'&&action==='delete')return sendJson(res,200,{ok:true,result:runtime.completeDelete(brainKey,body.confirmation_text)});
         return sendJson(res,405,{ok:false,error:'method_not_allowed'});
       }
