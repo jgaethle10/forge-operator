@@ -32,6 +32,23 @@ export function normalizeComputeDemand(input={}){
     demand_id:String(input.demand_id||'').trim()||`demand-${Date.now()}`,
     workload_class:String(input.workload_class||'saban.multiplier-assignment.v1').trim(),
     container_image:input.container_image?String(input.container_image).trim():null,
+    execution:{
+      software_id:String(
+        input.execution?.software_id||
+        input.portable_software_id||
+        ''
+      ).trim()||null,
+      portable_worker_id:String(
+        input.execution?.portable_worker_id||
+        input.portable_worker_id||
+        ''
+      ).trim()||null,
+      portable_worker_version:String(
+        input.execution?.portable_worker_version||
+        input.portable_worker_version||
+        ''
+      ).trim()||null,
+    },
     resources:{
       cpu_units:cpu,
       memory_mb:memory,
@@ -72,6 +89,9 @@ export function normalizeComputeOffer(input={}){
     offer_id:String(input.offer_id||'').trim(),
     provider_id:String(input.provider_id||'').trim(),
     market:String(input.market||'unknown').trim().toLowerCase(),
+    routing_priority:input.routing_priority==null
+      ? null
+      : Math.max(0,n(input.routing_priority,Number.MAX_SAFE_INTEGER)),
     access_class:String(input.access_class||'commercial_capacity').trim(),
     endpoint:input.endpoint?String(input.endpoint).trim():null,
     resources:{
@@ -175,10 +195,19 @@ export function evaluateComputeOffer(demandInput,offerInput){
 
 export function rankComputeOffers(demand,offers=[]){
   const evaluated=offers.map((offer)=>evaluateComputeOffer(demand,offer));
-  const eligible=evaluated.filter((x)=>x.eligible).sort((a,b)=>
-    b.score-a.score ||
-    String(a.offer.offer_id).localeCompare(String(b.offer.offer_id))
-  );
+  const eligible=evaluated.filter((x)=>x.eligible).sort((a,b)=>{
+    const ap=a.offer.routing_priority;
+    const bp=b.offer.routing_priority;
+    if(ap!=null||bp!=null){
+      const av=ap==null?Number.MAX_SAFE_INTEGER:ap;
+      const bv=bp==null?Number.MAX_SAFE_INTEGER:bp;
+      if(av!==bv) return av-bv;
+    }
+    return (
+      b.score-a.score ||
+      String(a.offer.offer_id).localeCompare(String(b.offer.offer_id))
+    );
+  });
   return {
     eligible,
     rejected:evaluated.filter((x)=>!x.eligible),
@@ -238,7 +267,14 @@ export async function negotiateCompute({
     try{
       const result=await adapter.discover({demand});
       for(const raw of result?.offers||[]){
-        discovered.push(normalizeComputeOffer({...raw,market:raw.market||market}));
+        discovered.push(normalizeComputeOffer({
+          ...raw,
+          market:raw.market||market,
+          routing_priority:
+            raw.routing_priority??
+            adapter.routing_priority??
+            null,
+        }));
       }
       events.push({
         type:'market.discovered',
@@ -273,7 +309,15 @@ export async function negotiateCompute({
             quote_count:Number(quote?.offers?.length||0),
             receipt:quote?.receipt||null,
           });
-          const quoted=(quote?.offers||[]).map((raw)=>normalizeComputeOffer({...raw,market:raw.market||selected.market}));
+          const quoted=(quote?.offers||[]).map((raw)=>normalizeComputeOffer({
+            ...raw,
+            market:raw.market||selected.market,
+            routing_priority:
+              raw.routing_priority??
+              selected.routing_priority??
+              adapter.routing_priority??
+              null,
+          }));
           ranking=rankComputeOffers(demand,quoted);
           selected=ranking.eligible[0]?.offer||null;
         }catch(error){
