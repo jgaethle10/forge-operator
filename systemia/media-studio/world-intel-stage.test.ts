@@ -25,6 +25,7 @@ test('world intelligence compiler creates a dimensional sourced scene instead of
       centerLat:25,
       centerLon:155,
       zoom:1.35,
+      fitBounds:{north:40,south:25,east:175,west:135,paddingPct:.08},
       routes:[{
         id:'route-a',
         points:[{lat:33,lon:140},{lat:31,lon:154},{lat:28,lon:168}],
@@ -76,6 +77,8 @@ test('world intelligence compiler creates a dimensional sourced scene instead of
   if(!geo||geo.raw.kind!=='geo') throw new Error('geo_layer_missing');
   assert.equal(geo.raw.polygons?.length,1);
   assert.equal(geo.raw.polygons?.[0].id,'zone-a');
+  assert.equal(geo.raw.fitBounds?.north,40);
+  assert.equal(geo.raw.fitBounds?.paddingPct,.08);
 });
 
 test('vertical compiler rearranges subject, map and metrics for social cuts',()=>{
