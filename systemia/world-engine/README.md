@@ -55,6 +55,10 @@ Implemented in this slice:
 - Canonical asset manifests preserve asset identity, content digest, source provenance, rights state and license.
 - Geometry hot reload replaces the same asset identity, emits a deterministic receipt and invalidates the WebGPU buffer cache without making renderer state authoritative.
 - Live authoring fails closed on stale bases, referenced-material deletion, content changes without asset revision advancement and invalid rights lineage.
+- Compatibility-gated live runtime migration carries a running simulation across a newer world revision without blindly copying stale state.
+- Runtime migration preserves transform/properties/motion/animation/navigation/audio independently only when each underlying definition remains compatible.
+- Authoring transform changes win over runtime position, rigid-body contract changes reset motion, changed audio clips reset playheads and removed/new entities reconcile explicitly.
+- Tick-rate changes fail closed, collision contacts reset, scene residency migrates deterministically and every preserved/reset decision is recorded in a migration receipt.
 - Deterministic behaviors for spin, constant force and oscillation.
 - Input ledger with tick-bound events.
 - Stable world-definition and snapshot SHA-256 digests.
@@ -62,7 +66,7 @@ Implemented in this slice:
 - Fallen Studio World → World Engine compiler.
 - Worldstate evidence → world projection bridge with evidence state preserved.
 - Provider-neutral render-frame contract with sampled skeletal pose/state, navigation/debug handoff, canonical visual subframes and audio subframes.
-- Tests for replay determinism, entity collision, ground collision, canonical broad-phase ordering, ECS query ordering, scene streaming/state preservation, animation transitions/blending/events, navmesh pathfinding/arrival/freeze-resume, material/light validation, camera graph interpolation/layer masking, audio playback/loop/seek/listener switching/attenuation, snapshot restore/tamper rejection, authoritative checkpoints/client prediction/rollback convergence, geometry/WebGPU render-plan/shader/failure-boundary contracts, deterministic/reversible Studio edits, stale-edit rejection, asset-rights lineage and geometry hot reload, input ordering, Fallen compilation and Worldstate projection.
+- Tests for replay determinism, entity collision, ground collision, canonical broad-phase ordering, ECS query ordering, scene streaming/state preservation, animation transitions/blending/events, navmesh pathfinding/arrival/freeze-resume, material/light validation, camera graph interpolation/layer masking, audio playback/loop/seek/listener switching/attenuation, snapshot restore/tamper rejection, authoritative checkpoints/client prediction/rollback convergence, geometry/WebGPU render-plan/shader/failure-boundary contracts, deterministic/reversible Studio edits, stale-edit rejection, asset-rights lineage, geometry hot reload, compatibility-gated runtime migration/state preservation/reset behavior, input ordering, Fallen compilation and Worldstate projection.
 
 ## Architectural contract
 
@@ -91,12 +95,12 @@ The V1 contract is deliberately small enough to prove ownership before expanding
 
 1. Browser GPU-device conformance receipts and visual reference-frame tests.
 2. Texture/sampler runtime and asset residency.
-3. Live runtime-state migration for structural Studio edits.
-4. Animation authoring/import bridge for Fallen character assets.
-5. Navigation corridor smoothing / dynamic obstacle avoidance.
-6. Server-side rollback policy for explicitly admitted late inputs.
-7. Shadow-map / reflection / post-process contracts behind the visual-frame boundary.
-8. Spatial panning / occlusion / reverb-zone contracts behind the audio-frame boundary.
+3. Animation authoring/import bridge for Fallen character assets.
+4. Navigation corridor smoothing / dynamic obstacle avoidance.
+5. Server-side rollback policy for explicitly admitted late inputs.
+6. Shadow-map / reflection / post-process contracts behind the visual-frame boundary.
+7. Spatial panning / occlusion / reverb-zone contracts behind the audio-frame boundary.
+8. Collaborative edit merge / conflict-resolution contracts.
 9. Saban simulation tournaments and deterministic QA at scale.
 10. Physical memory eviction / broad-phase acceleration upgrades for very large worlds.
 

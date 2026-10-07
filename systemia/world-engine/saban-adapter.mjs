@@ -12,6 +12,7 @@ const ROLES=new Set([
   'replication_guard',
   'webgpu_guard',
   'studio_edit_guard',
+  'runtime_migration_guard',
   'fallen_bridge_guard',
   'worldstate_bridge_guard',
   'provenance_guard',
@@ -209,6 +210,23 @@ function evaluate(role,world){
         'Asset records must preserve source, rights state, license and content digest; unknown permission must never be silently upgraded.',
         'Geometry hot reload may invalidate renderer buffers for the same asset identity, but renderer caches never become asset authority.',
         'Structural/runtime-state migration beyond the defined edit contract must remain explicit and fail closed rather than silently rewriting simulation state.'
+      ],
+      findings:[]
+    };
+  }
+
+  if(role==='runtime_migration_guard'){
+    return {
+      category:'runtime_migration',
+      directives:[
+        'Live revision migration must bind a verified source snapshot to the exact previous world-definition digest before carrying any state.',
+        'Tick rate and world identity changes are migration boundaries and must fail closed rather than reinterpret simulation time.',
+        'Each runtime domain is compatibility-gated independently: transform, properties, rigid-body motion, animation, navigation and audio may preserve or reset separately.',
+        'Authoring changes win over stale runtime values; changed transforms or incompatible component contracts must reset the affected runtime field explicitly.',
+        'Removed entities disappear, new entities receive fresh runtime state, and active scene residency reconciles deterministically.',
+        'Camera/listener selection may migrate only when their referenced entities and transition contracts still exist.',
+        'Collision contacts are ephemeral and must reset across a structural world revision.',
+        'Every migration must emit a receipt naming preserved/reset state so Studio and agents can inspect what survived.'
       ],
       findings:[]
     };
