@@ -1,4 +1,5 @@
 import { getGeoBoundary } from './boundary-registry.mjs';
+import { terrainReliefDataUri } from './terrain-registry.mjs';
 const esc=(value)=>String(value ?? '')
   .replaceAll('&','&amp;')
   .replaceAll('<','&lt;')
@@ -176,6 +177,7 @@ export function assessDirectedPosterLayout(story,plan,format='feed'){
   if(!spec) throw new Error('graphics_poster_format_invalid');
   if(plan?.schema!=='evercraft.graphics-command.plan.v1') throw new Error('graphics_poster_plan_invalid');
   const boundary=boundaryForStory(story);
+  const terrainHref=plan.geography?.terrain ? terrainReliefDataUri(story?.visual?.terrainId) : null;
   const box=boundary?.bbox || pointBounds(story.points);
   const frame=projection(box,spec.map);
   const positions=new Map(story.points.map(point=>[point.id,frame.project(point)]));
@@ -249,15 +251,15 @@ export function assessDirectedPosterLayout(story,plan,format='feed'){
   };
 }
 
-function renderGeography(boundary,statePath,spec,format,terrain,frame){
+function renderGeography(boundary,statePath,spec,format,terrain,terrainHref,frame){
   if(!boundary||!statePath) return '<g opacity=".9">'+decorativeContours(spec)+'</g>';
   const stroke=format==='story'?4:3;
   const x=spec.map.x;
   const y=spec.map.y;
   const w=spec.map.width;
   const h=spec.map.height;
-  const terrainLayer=terrain
-    ? '<image class="terrain-relief" href="./'+esc(terrain.assetName)+'" x="'+frame.draw.x+'" y="'+frame.draw.y+'" width="'+frame.draw.width+'" height="'+frame.draw.height+'" preserveAspectRatio="none" clip-path="url(#geoClip)" opacity=".78" style="mix-blend-mode:multiply"/>'
+  const terrainLayer=terrain&&terrainHref
+    ? '<image class="terrain-relief" href="'+terrainHref+'" data-source-sha256="'+esc(terrain.sourceSha256)+'" x="'+frame.draw.x+'" y="'+frame.draw.y+'" width="'+frame.draw.width+'" height="'+frame.draw.height+'" preserveAspectRatio="none" clip-path="url(#geoClip)" opacity=".78" style="mix-blend-mode:multiply"/>'
     : '<g class="terrain-relief-fallback" clip-path="url(#geoClip)" opacity=".40">'+decorativeContours(spec)+'</g>';
   return [
     '<clipPath id="geoClip"><path d="'+statePath+'"/></clipPath>',
@@ -340,7 +342,7 @@ export function renderDirectedPoster(story,plan,format='feed'){
     '<text x="72" y="'+(format==='story'?82:58)+'" font-family="Arial,sans-serif" font-size="'+(format==='story'?24:19)+'" font-weight="900" letter-spacing="3.2" fill="#4FB8FF">'+esc(plan.hero.eyebrow.toUpperCase())+'</text>',
     hook,
     sub,
-    renderGeography(boundary,statePath,spec,format,plan.geography?.terrain,frame),
+    renderGeography(boundary,statePath,spec,format,plan.geography?.terrain,terrainHref,frame),
     routeSvg,
     pointSvg,
     renderLabels(story,positions,format),
