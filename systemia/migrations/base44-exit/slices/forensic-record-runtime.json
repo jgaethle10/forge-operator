@@ -30,7 +30,16 @@
     "migration_adapter_landed": true,
     "owned_runtime_live_verified": false,
     "owned_public_route_verified": false,
-    "legacy_runtime_retired": false
+    "legacy_runtime_retired": false,
+    "owned_content_addressed_corpus_store_in_github": true,
+    "owned_read_only_research_runtime_in_github": true,
+    "owned_streaming_migrator_in_github": true,
+    "evercraft_compute_workload_class": "systemia.forensic-record-runtime.v1",
+    "yard_health_gate_in_source": true,
+    "end_to_end_migration_proof_in_ci": true,
+    "legacy_private_user_entities_excluded_from_migration": true,
+    "live_yard_deployment_verified": false,
+    "live_public_route_verified": false
   },
   "migrate": [
     "forensic_finding_ledger",
@@ -66,7 +75,7 @@
     "filescompanion.com has not yet been independently verified as bound to the owned runtime.",
     "Legacy Base44 customer continuity must remain available until owned route, data reconciliation, rollback and observation receipts pass."
   ],
-  "next_action": "extract bounded forensic entities through the one-shot adapter into the owned normalized corpus store, reconcile duplicate finding numbers and citations without deleting legacy evidence, build the read-only Systemia research runtime, deploy through Yard, verify filescompanion.com, then retire legacy execution only after replacement receipts pass",
+  "next_action": "merge the owned corpus/runtime proof after CI, provision the forensic resident workload on an admitted Evercraft Compute node, expose a bounded legacy extraction edge long enough to stream the allowlisted corpus, reconcile counts/collisions/citations, then bind and verify the public route before retiring legacy execution",
   "destructive_cutover_allowed": false,
   "health": {
     "state": "legacy_public_path_present_owned_cutover_started",
