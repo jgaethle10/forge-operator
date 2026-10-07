@@ -1,3 +1,4 @@
+import { geoBoundaryProvenance } from './boundary-registry.mjs';
 import crypto from 'node:crypto';
 
 const EVIDENCE_TO_FALLEN=Object.freeze({
@@ -84,6 +85,7 @@ export function compileGraphicsCommand(story){
   const subhook=clean(story?.visual?.subhook)||clean(story.callout)||clean(story.subtitle);
   const eyebrow=clean(story?.visual?.eyebrow)||'EVERCRAFT VISUAL DESK';
   const metrics=(story?.visual?.metrics||[]).map((metric,index)=>normalizeMetric(metric,index,story.sourceRefs));
+  const boundary=geoBoundaryProvenance(story?.visual?.boundaryId);
   const byId=new Map(story.points.map(point=>[point.id,point]));
   const fallenEvidence=EVIDENCE_TO_FALLEN[story.evidenceState]||'public_source';
 
@@ -133,9 +135,20 @@ export function compileGraphicsCommand(story){
         : ['establish_subject','reveal_evidence','land_primary_metric'],
     },
     metrics,
+    geography:boundary ? {
+      boundaryId:boundary.id,
+      boundaryName:boundary.name,
+      boundarySourceRef:boundary.sourceRef,
+      boundaryRightsState:boundary.rightsState,
+      boundaryLicense:boundary.license,
+      boundarySourceSha256:boundary.sourceSha256,
+      boundaryTransform:boundary.transform,
+      projection:'source_boundary_frame',
+    } : null,
     provenance:{
       evidenceState:story.evidenceState,
       sourceRefs:story.sourceRefs,
+      geographySourceRefs:boundary?[boundary.sourceRef]:[],
       frontOfHouse:'minimal',
       detailPlacement:'sources_and_methodology',
     },
