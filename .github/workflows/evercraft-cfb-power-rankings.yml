@@ -52,6 +52,7 @@ jobs:
           node --test systemia/newsroom/cfb-results-ingest.test.mjs
           node --test systemia/newsroom/cfb-results-model.test.mjs
           node --test systemia/newsroom/cfb-power-runner.test.mjs
+          node --test systemia/newsroom/cfb-power-story-draft.test.mjs
 
       - name: Resolve evidence window
         id: window
@@ -85,6 +86,16 @@ jobs:
           test -s _cfb_power_run/cfb-power-rankings.json
           test -s _cfb_power_run/top-25.json
 
+      - name: Build Journal + Fallen draft from ranking receipt
+        run: |
+          node systemia/newsroom/cfb-power-story-draft.mjs \
+            _cfb_power_run/cfb-power-rankings.json \
+            _cfb_power_run/completed-games.json \
+            _cfb_power_run/journal-story-draft.json | tee _cfb_power_story-draft-receipt.json
+          test -s _cfb_power_run/journal-story-draft.json
+          grep -q '"status": "draft"' _cfb_power_run/journal-story-draft.json
+          grep -q '"contract": "evercraft.fallen.journal.production.v1"' _cfb_power_run/journal-story-draft.json
+
       - name: Summarize Top 25
         shell: bash
         run: |
@@ -109,5 +120,6 @@ jobs:
           path: |
             _cfb_power_run
             _cfb_power_run-receipt.json
+            _cfb_power_story-draft-receipt.json
           if-no-files-found: error
           retention-days: 120
