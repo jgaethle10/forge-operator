@@ -86,3 +86,11 @@ jobs:
           bash -n scripts/fabric-edge-doctor.sh
           bash -n scripts/update-fabric-owned-edge.sh
           node --test tests/fabric-edge-doctor-contract.test.mjs tests/fabric-owned-edge-updater-contract.test.mjs tests/fabric-edge-external-canary-contract.test.mjs tests/chromebook-operator-edge-canary-workflow.test.mjs
+
+      - name: Reproduce resident Chromebook update proof sequence
+        run: |
+          npm run test:fabric-directory
+          npm run test:fabric-local
+          npm run test:remote-operator
+          node --test tests/fabric-edge-attestation.test.mjs tests/fabric-owned-edge-installer.test.mjs tests/fabric-outbound-relay.test.mjs
+          npm run proof:specialist-handoff-yard
