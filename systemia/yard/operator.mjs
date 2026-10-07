@@ -834,6 +834,31 @@ export class YardOperator {
         }
         healthState = 'healthy';
         routeVerification = 'private_forensic_record_health_verified_public_route_unbound';
+      } else if (workloadClass === 'systemia.forensic-record-public-runtime.v1') {
+        const forensicPublicHealthy =
+          health.ok === true &&
+          health.service === 'forensic-record-public-runtime' &&
+          health.runtime === 'Evercraft Compute' &&
+          health.mode === 'public_read_only' &&
+          health.read_only === true &&
+          health.public_safe_projection === true &&
+          health.protected_domains_exposed === false &&
+          health.write_routes_exposed === false &&
+          health.base44_runtime_required === false &&
+          health.seed_complete === true &&
+          Number(health.finding_rows || 0) > 0 &&
+          health.instance_id === job.result?.instance_id;
+        if (!forensicPublicHealthy) {
+          try {
+            await request(`${capacityEndpoint}/v1/services/${job.result.service_id}/stop`, {
+              method: 'POST',
+              body: JSON.stringify({ token: lease.token }),
+            });
+          } catch {}
+          throw new Error('Forensic Record public runtime failed initial local health verification');
+        }
+        healthState = 'healthy';
+        routeVerification = 'local_forensic_public_health_verified_public_route_unbound';
       } else if (workloadClass === 'systemia.rivet-report-runtime.v1') {
         const rivetHealthy =
           health.ok === true &&
@@ -1693,6 +1718,9 @@ export class YardOperator {
     } else if (workloadClass === 'systemia.evercraft-web-browser.v1') {
       service = 'evercraft-web-browser-edge';
       healthPath = '/health';
+    } else if (workloadClass === 'systemia.forensic-record-public-runtime.v1') {
+      service = 'forensic-record-public-runtime';
+      healthPath = '/health';
     } else if (workloadClass === 'systemia.rivet-report-runtime.v1') {
       service = 'rivet-yard-report-runtime';
       healthPath = '/health';
@@ -1721,6 +1749,18 @@ export class YardOperator {
       health.instance_id === record.result?.instance_id &&
       health.deployment_receipt_bound === true &&
       health.deployment_receipt_ref === record.receipt?.receipt_hash;
+    const forensicPublicMatch =
+      workloadClass !== 'systemia.forensic-record-public-runtime.v1' ||
+      (
+        health.mode === 'public_read_only' &&
+        health.read_only === true &&
+        health.public_safe_projection === true &&
+        health.protected_domains_exposed === false &&
+        health.write_routes_exposed === false &&
+        health.base44_runtime_required === false &&
+        health.seed_complete === true &&
+        Number(health.finding_rows || 0) > 0
+      );
     const brokerMatch =
       workloadClass !== 'systemia.remote-capacity-broker.v1' ||
       health.secure_envelope_schema === 'evercraft.secure-envelope.v1';
@@ -2215,6 +2255,78 @@ export class YardOperator {
   async verifyRoute(deploymentId) {
     const record = this.deploymentStatus(deploymentId);
     if (!record) return { ok: false, state: 'missing' };
+
+    if (record.receipt?.workload_class === 'systemia.forensic-record-public-runtime.v1') {
+      const expected = (health) =>
+        health?.ok === true &&
+        health?.service === 'forensic-record-public-runtime' &&
+        health?.runtime === 'Evercraft Compute' &&
+        health?.mode === 'public_read_only' &&
+        health?.read_only === true &&
+        health?.public_safe_projection === true &&
+        health?.protected_domains_exposed === false &&
+        health?.write_routes_exposed === false &&
+        health?.base44_runtime_required === false &&
+        health?.seed_complete === true &&
+        Number(health?.finding_rows || 0) > 0 &&
+        health?.instance_id === record.result?.instance_id &&
+        health?.deployment_receipt_ref === record.receipt?.receipt_hash;
+
+      if (record.public_route?.verified === true) {
+        try {
+          const health = await request(`${record.public_route.origin}/health`);
+          return {
+            ok: expected(health),
+            state: expected(health) ? 'public_route_verified' : 'public_route_mismatch',
+            origin: record.public_route.origin,
+            public_route_receipt: record.public_route.receipt_hash,
+            health,
+          };
+        } catch (error) {
+          return {
+            ok: false,
+            state: 'public_route_unreachable',
+            origin: record.public_route.origin,
+            error: String(error?.message || error),
+          };
+        }
+      }
+
+      if (record.management?.health_path) {
+        try {
+          const health = await request(new URL(
+            record.management.health_path,
+            record.lease.capacity_endpoint
+          ).toString());
+          const localExpected =
+            health?.ok === true &&
+            health?.service === 'forensic-record-public-runtime' &&
+            health?.runtime === 'Evercraft Compute' &&
+            health?.mode === 'public_read_only' &&
+            health?.read_only === true &&
+            health?.public_safe_projection === true &&
+            health?.protected_domains_exposed === false &&
+            health?.write_routes_exposed === false &&
+            health?.base44_runtime_required === false &&
+            health?.seed_complete === true &&
+            Number(health?.finding_rows || 0) > 0 &&
+            health?.instance_id === record.result?.instance_id;
+          return {
+            ok: false,
+            state: 'public_route_unbound',
+            local_health_ok: localExpected,
+            health,
+          };
+        } catch (error) {
+          return {
+            ok: false,
+            state: 'local_forensic_public_unreachable',
+            error: String(error?.message || error),
+          };
+        }
+      }
+      return { ok: false, state: 'public_route_unbound', local_health_ok: false };
+    }
 
     if (
       record.receipt?.workload_class === 'systemia.chum-public-origin.v1' ||
