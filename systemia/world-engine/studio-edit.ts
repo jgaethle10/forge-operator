@@ -63,6 +63,12 @@ export type WorldEditOperation =
     }
   | {
       id:string;
+      kind:'set_properties';
+      entityId:string;
+      value:Record<string,unknown>|null;
+    }
+  | {
+      id:string;
       kind:'delete_property';
       entityId:string;
       key:string;
@@ -430,25 +436,34 @@ export function applyWorldEditTransaction(
     if(operation.kind==='set_property'){
       const key=assertPlainKey(operation.key);
       const entity=assertEntityExists(world,operation.entityId);
+      const previousProperties=entity.properties?clone(entity.properties):null;
       entity.properties ||= {};
-      const existed=Object.prototype.hasOwnProperty.call(entity.properties,key);
-      const previous=clone(entity.properties[key]);
       entity.properties[key]=clone(operation.value);
-      inverse.push(existed
-        ? {
-            id:'',
-            kind:'set_property',
-            entityId:operation.entityId,
-            key,
-            value:previous
-          }
-        : {
-            id:'',
-            kind:'delete_property',
-            entityId:operation.entityId,
-            key
-          }
-      );
+      inverse.push({
+        id:'',
+        kind:'set_properties',
+        entityId:operation.entityId,
+        value:previousProperties
+      });
+      changedEntities.add(operation.entityId);
+      worldChanged=true;
+      continue;
+    }
+
+    if(operation.kind==='set_properties'){
+      const entity=assertEntityExists(world,operation.entityId);
+      const previous=entity.properties?clone(entity.properties):null;
+      if(operation.value===null){
+        delete entity.properties;
+      }else{
+        entity.properties=clone(operation.value);
+      }
+      inverse.push({
+        id:'',
+        kind:'set_properties',
+        entityId:operation.entityId,
+        value:previous
+      });
       changedEntities.add(operation.entityId);
       worldChanged=true;
       continue;
@@ -460,14 +475,14 @@ export function applyWorldEditTransaction(
       if(!entity.properties || !Object.prototype.hasOwnProperty.call(entity.properties,key)){
         throw new Error(`world_edit_property_missing:${operation.entityId}:${key}`);
       }
-      const previous=clone(entity.properties[key]);
+      const previousProperties=clone(entity.properties);
       delete entity.properties[key];
+      if(Object.keys(entity.properties).length===0) delete entity.properties;
       inverse.push({
         id:'',
-        kind:'set_property',
+        kind:'set_properties',
         entityId:operation.entityId,
-        key,
-        value:previous
+        value:previousProperties
       });
       changedEntities.add(operation.entityId);
       worldChanged=true;
