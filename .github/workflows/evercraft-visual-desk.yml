@@ -58,7 +58,7 @@ jobs:
           node -e "const fs=require('fs');const b=fs.readFileSync('$asset');const p=Buffer.from([0x89,0x50,0x4e,0x47,0x0d,0x0a,0x1a,0x0a]);if(!b.subarray(0,8).equals(p))process.exit(9)"
 
       - name: Prove visual story factory and Radar admission bridge
-        run: node --test systemia/graphics-command/director.test.mjs systemia/graphics-command/poster-renderer.test.mjs systemia/graphics-command/commercial-renderer.test.mjs systemia/visual-desk/factory.test.mjs systemia/visual-desk/radar-adapter.test.mjs systemia/visual-desk/transporter.test.mjs
+        run: node --test systemia/graphics-command/director.test.mjs systemia/graphics-command/poster-renderer.test.mjs systemia/graphics-command/shot-tournament.test.mjs systemia/graphics-command/commercial-renderer.test.mjs systemia/visual-desk/factory.test.mjs systemia/visual-desk/radar-adapter.test.mjs systemia/visual-desk/transporter.test.mjs
 
       - name: Prove Graphics Command handoff compiles through Fallen
         run: |
@@ -88,6 +88,10 @@ jobs:
           test -f _visual_desk_release/washington-active-volcanoes/graphics-plan.json
           test -f _visual_desk_release/washington-active-volcanoes/scroll-stop-report.json
           test -f _visual_desk_release/washington-active-volcanoes/poster-quality-report.json
+          test -f _visual_desk_release/washington-active-volcanoes/shot-tournament.json
+          test -f _visual_desk_release/washington-active-volcanoes/shot-terrain-hero-feed.svg
+          test -f _visual_desk_release/washington-active-volcanoes/shot-balanced-relief-feed.svg
+          test -f _visual_desk_release/washington-active-volcanoes/shot-cascade-signal-feed.svg
           test -f _visual_desk_release/washington-active-volcanoes/fallen-stage-input.json
           test -f _visual_desk_release/washington-active-volcanoes/terrain-relief.png
           test -f _visual_desk_release/washington-active-volcanoes/motion.html
@@ -105,7 +109,7 @@ jobs:
           grep -q '"scrollStopStatus": "pass"' _visual_desk_release/website-audit-attention/commercial-build-receipt.json
           grep -q '5 ACTIVE VOLCANOES' _visual_desk_release/washington-active-volcanoes/poster-feed.svg
           grep -q 'class="geo-boundary"' _visual_desk_release/washington-active-volcanoes/poster-feed.svg
-          grep -q 'data-visual-model="cinematic-terrain-geography-v2"' _visual_desk_release/washington-active-volcanoes/poster-feed.svg
+          grep -q 'data-visual-model="cinematic-terrain-geography-v3"' _visual_desk_release/washington-active-volcanoes/poster-feed.svg
           grep -q 'class="terrain-relief"' _visual_desk_release/washington-active-volcanoes/poster-feed.svg
           grep -q 'href="data:image/png;base64,' _visual_desk_release/washington-active-volcanoes/poster-feed.svg
           grep -q 'data-source-sha256="0f04cbf36461720b71e72809fa10e831bd77ca0701be09d81732fe20d7a35632"' _visual_desk_release/washington-active-volcanoes/poster-feed.svg
@@ -119,6 +123,10 @@ jobs:
           grep -q 'USGSShadedReliefOnly' _visual_desk_release/washington-active-volcanoes/graphics-plan.json
           grep -q '"status": "pass"' _visual_desk_release/washington-active-volcanoes/scroll-stop-report.json
           grep -q '"status": "pass"' _visual_desk_release/washington-active-volcanoes/poster-quality-report.json
+          grep -q '"schema": "evercraft.graphics-command.shot-tournament.v1"' _visual_desk_release/washington-active-volcanoes/shot-tournament.json
+          grep -q '"winnerId": "terrain-hero"' _visual_desk_release/washington-active-volcanoes/shot-tournament.json
+          grep -q 'data-shot-strategy="terrain-hero"' _visual_desk_release/washington-active-volcanoes/poster-feed.svg
+          grep -q 'href="./terrain-relief.png"' _visual_desk_release/washington-active-volcanoes/shot-terrain-hero-feed.svg
           grep -q '"labelsNonOverlapping": true' _visual_desk_release/washington-active-volcanoes/poster-quality-report.json
           grep -q '"labelsClearOfOtherMarkers": true' _visual_desk_release/washington-active-volcanoes/poster-quality-report.json
           grep -q '"aspectRatio": "9:16"' _visual_desk_release/washington-active-volcanoes/fallen-stage-input.json
