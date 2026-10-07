@@ -878,6 +878,7 @@
         "webgpu_device_guard",
         "texture_residency_guard",
         "reference_frame_guard",
+        "normal_map_guard",
         "studio_edit_guard",
         "runtime_migration_guard",
         "fallen_bridge_guard",
@@ -912,7 +913,7 @@
       "assignment_strategy": "role_item_cartesian",
       "scaling": {
         "strategy": "work_conserving",
-        "max_agents_per_item": 21,
+        "max_agents_per_item": 22,
         "target_logical_per_physical_worker": 8,
         "minimum_role_item_passes": 1
       },
