@@ -18,6 +18,27 @@ function key(prefix) {
   return `${prefix}:${Date.now()}:${crypto.randomUUID().slice(0, 8)}`;
 }
 
+const PERSON_TYPES=new Set(['athlete','creator','superfan','coach','staff','other']);
+const MEMORY_TYPES=new Set(['goal','preference','career','performance','relationship','story','commitment','logistics','collection','fan_history','other']);
+const SENSITIVITY_TYPES=new Set(['private','trusted_circle','shareable','public_safe']);
+const EVIDENCE_TYPES=new Set(['person_stated','imported','observed','inferred','verified','reported','unknown']);
+const COUNTERPART_TYPES=new Set(['agent','team','coach','trainer','family','sponsor','brand','creator','fan_group','vendor','advisor','other']);
+const OPPORTUNITY_TYPES=new Set(['sponsorship','appearance','camp','content','travel','collectible','community','business','education','charity','career','other']);
+const FORBIDDEN_SCOPES=new Set(['*','all','everything','blanket','full_access','unrestricted']);
+
+function enumValue(value,allowed,fallback,errorKey){
+  const candidate=clean(value)||fallback;
+  if(!allowed.has(candidate))throw new Error(errorKey);
+  return candidate;
+}
+
+function normalizeScopes(values,{allowEmpty=false}={}){
+  const scopes=Array.isArray(values)?[...new Set(values.map(clean).filter(Boolean))]:[];
+  if(!scopes.length&&!allowEmpty)throw new Error('share_scopes_required');
+  if(scopes.some((scope)=>FORBIDDEN_SCOPES.has(scope.toLowerCase())))throw new Error('blanket_share_scope_forbidden');
+  return scopes;
+}
+
 function atomicJson(file, value) {
   fs.mkdirSync(path.dirname(file), { recursive: true, mode: 0o700 });
   const temp = file + '.tmp-' + crypto.randomUUID();
@@ -168,7 +189,7 @@ export function createPeopleRuntime({
     const brain = {
       brain_key: clean(input.brain_key) || key('brain'),
       display_name: displayName,
-      person_type: clean(input.person_type) || 'athlete',
+      person_type: enumValue(input.person_type, PERSON_TYPES, 'athlete', 'person_type_invalid'),
       sport_or_domain: clean(input.sport_or_domain),
       anchor_organization: clean(input.anchor_organization),
       ownership_model: 'person_sovereign',
@@ -199,9 +220,9 @@ export function createPeopleRuntime({
       brain_key: brain.brain_key,
       title,
       body: clean(input.body),
-      memory_type: clean(input.memory_type) || 'other',
-      sensitivity: clean(input.sensitivity) || 'private',
-      evidence_state: clean(input.evidence_state) || 'person_stated',
+      memory_type: enumValue(input.memory_type, MEMORY_TYPES, 'other', 'memory_type_invalid'),
+      sensitivity: enumValue(input.sensitivity, SENSITIVITY_TYPES, 'private', 'memory_sensitivity_invalid'),
+      evidence_state: enumValue(input.evidence_state, EVIDENCE_TYPES, 'person_stated', 'memory_evidence_state_invalid'),
       source_refs: Array.isArray(input.source_refs) ? input.source_refs.map(clean).filter(Boolean) : [],
       created_at: now(),
     };
@@ -221,7 +242,7 @@ export function createPeopleRuntime({
       relationship_key: key('relationship'),
       brain_key: brain.brain_key,
       counterpart_name: counterpartName,
-      counterpart_type: clean(input.counterpart_type) || 'other',
+      counterpart_type: enumValue(input.counterpart_type, COUNTERPART_TYPES, 'other', 'counterpart_type_invalid'),
       purpose: clean(input.purpose),
       access_scope: [],
       access_state: 'proposed',
@@ -245,8 +266,7 @@ export function createPeopleRuntime({
     if (!relationship) throw new Error('relationship_not_found');
     const confirmationRef = clean(input.person_confirmation_ref);
     if (!confirmationRef) throw new Error('person_confirmation_ref_required');
-    const scopes = Array.isArray(input.scopes) ? input.scopes.map(clean).filter(Boolean) : [];
-    if (!scopes.length) throw new Error('share_scopes_required');
+    const scopes = normalizeScopes(input.scopes);
 
     const stamp = now();
     relationship.access_scope = [...new Set(scopes)];
@@ -363,10 +383,10 @@ export function createPeopleRuntime({
       opportunity_key: key('opportunity'),
       brain_key: brain.brain_key,
       title,
-      opportunity_type: clean(input.opportunity_type) || 'other',
+      opportunity_type: enumValue(input.opportunity_type, OPPORTUNITY_TYPES, 'other', 'opportunity_type_invalid'),
       summary: clean(input.summary),
       fit_rationale: clean(input.fit_rationale),
-      evidence_state: clean(input.evidence_state) || 'unknown',
+      evidence_state: enumValue(input.evidence_state, EVIDENCE_TYPES, 'unknown', 'opportunity_evidence_state_invalid'),
       authority_state: 'discover_only',
       status: 'new',
       source_refs: Array.isArray(input.source_refs) ? input.source_refs.map(clean).filter(Boolean) : [],
@@ -404,9 +424,9 @@ export function createPeopleRuntime({
     const brain = findBrain(state, brainKey);
     if (!brain) throw new Error('brain_not_found');
 
-    const scopes = Array.isArray(input.scopes)
-      ? input.scopes.map(clean).filter(Boolean)
-      : ['memory', 'relationships', 'opportunities', 'export'];
+    const scopes = input.scopes === undefined
+      ? ['memory', 'relationships', 'opportunities', 'export']
+      : normalizeScopes(input.scopes);
 
     const rawToken = crypto.randomUUID() + crypto.randomUUID();
     const ttlHours = Math.min(168, Math.max(1, Number(input.ttl_hours || 48)));
