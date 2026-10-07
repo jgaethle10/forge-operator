@@ -2,7 +2,7 @@
   "schema": "evercraft.chum.crawl-state.v1",
   "provider": "Evercraft LLC",
   "coordinator": "CHUM",
-  "updated_at": "2026-10-07T04:15:04.319Z",
+  "updated_at": "2026-10-07T04:16:00.553Z",
   "url_count": 2919,
   "doctrine": {
     "crawl_can_be_requested_not_forced": true,
@@ -135,14 +135,14 @@
     },
     "/chum/hot/": {
       "path": "/chum/hot/",
-      "content_sha256": "3c385ec33b8764f374af886fa8befe67f690750ab694468cf80f5d64daf903c9",
-      "last_changed": "2026-10-07T03:00:36.784Z",
+      "content_sha256": "27a7d4c931adb607c99056c229e75856fb9f5ed4866a15b3a3a48a983e8c3d36",
+      "last_changed": "2026-10-07T04:16:00.553Z",
       "priority": 80
     },
     "/chum/hot/index.json": {
       "path": "/chum/hot/index.json",
-      "content_sha256": "0a49ad1a956c8d37b27bba21ca18189f759db75d4a87b582103fd0f95857c855",
-      "last_changed": "2026-10-07T04:15:04.319Z",
+      "content_sha256": "da3207deef65d82536f66313cc9abcab52b4a09e5c53694f43a8cbd99c4d9001",
+      "last_changed": "2026-10-07T04:16:00.553Z",
       "priority": 80
     },
     "/chum/strike/": {
@@ -177,8 +177,8 @@
     },
     "/chum/proof/index.json": {
       "path": "/chum/proof/index.json",
-      "content_sha256": "ab656d81f3a7829334a87ce0cc7f0820248ee646c41505970acd559c973b027f",
-      "last_changed": "2026-10-07T03:10:56.459Z",
+      "content_sha256": "f0fd0cd33852e01eeaa892864d3c44360457081acc4ac5a7abf981d13346243a",
+      "last_changed": "2026-10-07T04:16:00.553Z",
       "priority": 80
     },
     "/chum/proof/llms.txt": {
@@ -189,14 +189,14 @@
     },
     "/chum/proof/forensiscope.json": {
       "path": "/chum/proof/forensiscope.json",
-      "content_sha256": "4b52da85b0d43ce7445d71199f5c47ef0eaeb7ff02cac1ccf0ca0c2c7cae9c3d",
-      "last_changed": "2026-10-07T03:10:56.459Z",
+      "content_sha256": "8689e778527ed129bc079e122994bbfba040864cbfb75347a9acccb7552d704d",
+      "last_changed": "2026-10-07T04:16:00.553Z",
       "priority": 80
     },
     "/chum/proof/rivet.json": {
       "path": "/chum/proof/rivet.json",
-      "content_sha256": "ecd5bf5ee1deef5fff2ab6df8b086cc50fd0804217e185d5d0c5911f1d6b0fbf",
-      "last_changed": "2026-10-07T03:10:56.459Z",
+      "content_sha256": "d1a602cef2e8e586808c0129a291aa070014ff1669d5aa2546b8f6456f12392a",
+      "last_changed": "2026-10-07T04:16:00.553Z",
       "priority": 80
     },
     "/chum/commercial/": {

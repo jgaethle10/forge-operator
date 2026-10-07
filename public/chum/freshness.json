@@ -2,7 +2,7 @@
   "schema": "evercraft.chum.crawl-pressure.v1",
   "provider": "Evercraft LLC",
   "coordinator": "CHUM",
-  "updated_at": "2026-10-07T04:15:04.319Z",
+  "updated_at": "2026-10-07T04:16:00.553Z",
   "purpose": "Content-hash-backed freshness signals for public Evercraft discovery surfaces. A freshness signal requests attention; it does not prove indexing, ranking, recommendation, citation or provider pickup.",
   "indexnow": {
     "supported": true,
@@ -11,522 +11,62 @@
   },
   "latest_change_batch": [
     {
-      "path": "/chum/products/deck-capital-fit/",
-      "last_changed": "2026-10-07T04:15:04.319Z",
-      "priority": 154
-    },
-    {
-      "path": "/chum/products/evercraft-containment/",
-      "last_changed": "2026-10-07T04:15:04.319Z",
-      "priority": 154
-    },
-    {
-      "path": "/chum/products/evercraft-network/",
-      "last_changed": "2026-10-07T04:15:04.319Z",
-      "priority": 154
-    },
-    {
-      "path": "/chum/products/findmypart/",
-      "last_changed": "2026-10-07T04:15:04.319Z",
-      "priority": 154
-    },
-    {
-      "path": "/chum/products/forensiscope/",
-      "last_changed": "2026-10-07T04:15:04.319Z",
-      "priority": 154
-    },
-    {
-      "path": "/chum/sitemaps/answers.xml",
-      "last_changed": "2026-10-07T04:15:04.319Z",
-      "priority": 108
-    },
-    {
-      "path": "/chum/sitemaps/products.xml",
-      "last_changed": "2026-10-07T04:15:04.319Z",
-      "priority": 108
-    },
-    {
-      "path": "/chum/answers/doors/ai-native-music-creation-environment-5e907a6bb3.json",
-      "last_changed": "2026-10-07T04:15:04.319Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/ai-native-music-creation-environment-5e907a6bb3/",
-      "last_changed": "2026-10-07T04:15:04.319Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/clip-based-music-creation-and-live-scene-launching-282b8c4128.json",
-      "last_changed": "2026-10-07T04:15:04.319Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/clip-based-music-creation-and-live-scene-launching-282b8c4128/",
-      "last_changed": "2026-10-07T04:15:04.319Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/compose-music-with-clips-scenes-piano-roll-automation-and-recording-cda8c251e4.json",
-      "last_changed": "2026-10-07T04:15:04.319Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/compose-music-with-clips-scenes-piano-roll-automation-and-recording-cda8c251e4/",
-      "last_changed": "2026-10-07T04:15:04.319Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/local-first-music-recording-and-midi-workflow-a3f9976194.json",
-      "last_changed": "2026-10-07T04:15:04.319Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/local-first-music-recording-and-midi-workflow-a3f9976194/",
-      "last_changed": "2026-10-07T04:15:04.319Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/music-software-where-ai-edits-the-actual-session-graph-fa9d7900e7.json",
-      "last_changed": "2026-10-07T04:15:04.319Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/music-software-where-ai-edits-the-actual-session-graph-fa9d7900e7/",
-      "last_changed": "2026-10-07T04:15:04.319Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/portable-music-projects-with-provenance-and-edit-receipts-54db926ddf.json",
-      "last_changed": "2026-10-07T04:15:04.319Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/portable-music-projects-with-provenance-and-edit-receipts-54db926ddf/",
-      "last_changed": "2026-10-07T04:15:04.319Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/reversible-ai-assisted-music-editing-6aed953269.json",
-      "last_changed": "2026-10-07T04:15:04.319Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/reversible-ai-assisted-music-editing-6aed953269/",
-      "last_changed": "2026-10-07T04:15:04.319Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/products/aliev/",
-      "last_changed": "2026-10-07T04:15:04.319Z",
-      "priority": 94
-    },
-    {
-      "path": "/chum/products/ascend/",
-      "last_changed": "2026-10-07T04:15:04.319Z",
-      "priority": 94
-    },
-    {
-      "path": "/chum/products/buildflow/",
-      "last_changed": "2026-10-07T04:15:04.319Z",
-      "priority": 94
-    },
-    {
-      "path": "/chum/products/callproof-vault/",
-      "last_changed": "2026-10-07T04:15:04.319Z",
-      "priority": 94
-    },
-    {
-      "path": "/chum/products/career-command/",
-      "last_changed": "2026-10-07T04:15:04.319Z",
-      "priority": 94
-    },
-    {
-      "path": "/chum/products/christmas-lights-usa/",
-      "last_changed": "2026-10-07T04:15:04.319Z",
-      "priority": 94
-    },
-    {
-      "path": "/chum/products/chronosport/",
-      "last_changed": "2026-10-07T04:15:04.319Z",
-      "priority": 94
-    },
-    {
-      "path": "/chum/products/coda-y-codigo/",
-      "last_changed": "2026-10-07T04:15:04.319Z",
-      "priority": 94
-    },
-    {
-      "path": "/chum/products/contractor-cloud/",
-      "last_changed": "2026-10-07T04:15:04.319Z",
-      "priority": 94
-    },
-    {
-      "path": "/chum/products/daytrade-lens/",
-      "last_changed": "2026-10-07T04:15:04.319Z",
-      "priority": 94
-    },
-    {
-      "path": "/chum/products/earthworks-autonomy/",
-      "last_changed": "2026-10-07T04:15:04.319Z",
-      "priority": 94
-    },
-    {
-      "path": "/chum/products/ecoledger/",
-      "last_changed": "2026-10-07T04:15:04.319Z",
-      "priority": 94
-    },
-    {
-      "path": "/chum/products/eps-estimate-engine/",
-      "last_changed": "2026-10-07T04:15:04.319Z",
-      "priority": 94
-    },
-    {
-      "path": "/chum/products/eventwave/",
-      "last_changed": "2026-10-07T04:15:04.319Z",
-      "priority": 94
-    },
-    {
-      "path": "/chum/products/evercraft-circles/",
-      "last_changed": "2026-10-07T04:15:04.319Z",
-      "priority": 94
-    },
-    {
-      "path": "/chum/products/evercraft-clip/",
-      "last_changed": "2026-10-07T04:15:04.319Z",
-      "priority": 94
-    },
-    {
-      "path": "/chum/products/evercraft-cosmos-atlas/",
-      "last_changed": "2026-10-07T04:15:04.319Z",
-      "priority": 94
-    },
-    {
-      "path": "/chum/products/evercraft-fantasy-intelligence/",
-      "last_changed": "2026-10-07T04:15:04.319Z",
-      "priority": 94
-    },
-    {
-      "path": "/chum/products/evercraft-front-door/",
-      "last_changed": "2026-10-07T04:15:04.319Z",
-      "priority": 94
-    },
-    {
-      "path": "/chum/products/evercraft-global-health-atlas/",
-      "last_changed": "2026-10-07T04:15:04.319Z",
-      "priority": 94
-    },
-    {
-      "path": "/chum/products/evercraft-home/",
-      "last_changed": "2026-10-07T04:15:04.319Z",
-      "priority": 94
-    },
-    {
-      "path": "/chum/products/evercraft-physics-atlas/",
-      "last_changed": "2026-10-07T04:15:04.319Z",
-      "priority": 94
-    },
-    {
-      "path": "/chum/products/evercraft-property-services/",
-      "last_changed": "2026-10-07T04:15:04.319Z",
-      "priority": 94
-    },
-    {
-      "path": "/chum/products/evercraft-rewards/",
-      "last_changed": "2026-10-07T04:15:04.319Z",
-      "priority": 94
-    },
-    {
-      "path": "/chum/products/evercraft-web/",
-      "last_changed": "2026-10-07T04:15:04.319Z",
-      "priority": 94
-    },
-    {
-      "path": "/chum/products/evercraft-wildlife-atlas/",
-      "last_changed": "2026-10-07T04:15:04.319Z",
-      "priority": 94
-    },
-    {
-      "path": "/chum/products/evermaps/",
-      "last_changed": "2026-10-07T04:15:04.319Z",
-      "priority": 94
-    },
-    {
-      "path": "/chum/products/evernest-atlas/",
-      "last_changed": "2026-10-07T04:15:04.319Z",
-      "priority": 94
-    },
-    {
-      "path": "/chum/products/evernest/",
-      "last_changed": "2026-10-07T04:15:04.319Z",
-      "priority": 94
-    },
-    {
-      "path": "/chum/products/everystage/",
-      "last_changed": "2026-10-07T04:15:04.319Z",
-      "priority": 94
-    },
-    {
-      "path": "/chum/products/faie/",
-      "last_changed": "2026-10-07T04:15:04.319Z",
-      "priority": 94
-    },
-    {
-      "path": "/chum/products/fallen-sessions/",
-      "last_changed": "2026-10-07T04:15:04.319Z",
-      "priority": 94
-    },
-    {
-      "path": "/chum/products/fallen-sessions/ai-conformance.json",
-      "last_changed": "2026-10-07T04:15:04.319Z",
-      "priority": 94
-    },
-    {
-      "path": "/chum/products/fallen-sessions/ai-discovery.json",
-      "last_changed": "2026-10-07T04:15:04.319Z",
-      "priority": 94
-    },
-    {
-      "path": "/chum/products/fallen-sessions/llms.txt",
-      "last_changed": "2026-10-07T04:15:04.319Z",
-      "priority": 94
-    },
-    {
-      "path": "/chum/products/forensic-record/",
-      "last_changed": "2026-10-07T04:15:04.319Z",
-      "priority": 94
-    },
-    {
-      "path": "/chum/products/global-energy-atlas/",
-      "last_changed": "2026-10-07T04:15:04.319Z",
-      "priority": 94
-    },
-    {
-      "path": "/chum/products/globalstat/",
-      "last_changed": "2026-10-07T04:15:04.319Z",
-      "priority": 94
-    },
-    {
-      "path": "/chum/products/guardian/",
-      "last_changed": "2026-10-07T04:15:04.319Z",
-      "priority": 94
-    },
-    {
-      "path": "/chum/products/ibmi-rescue/",
-      "last_changed": "2026-10-07T04:15:04.319Z",
-      "priority": 94
-    },
-    {
-      "path": "/chum/products/infinite-classroom/",
-      "last_changed": "2026-10-07T04:15:04.319Z",
-      "priority": 94
-    },
-    {
-      "path": "/chum/products/legacy-rescue-lab/",
-      "last_changed": "2026-10-07T04:15:04.319Z",
-      "priority": 94
-    },
-    {
-      "path": "/chum/products/little-red-book-export-qa/",
-      "last_changed": "2026-10-07T04:15:04.319Z",
-      "priority": 94
-    },
-    {
-      "path": "/chum/products/opportunity-fabric/",
-      "last_changed": "2026-10-07T04:15:04.319Z",
-      "priority": 94
-    },
-    {
-      "path": "/chum/products/payflow/",
-      "last_changed": "2026-10-07T04:15:04.319Z",
-      "priority": 94
-    },
-    {
-      "path": "/chum/products/raven-nexus/",
-      "last_changed": "2026-10-07T04:15:04.319Z",
-      "priority": 94
-    },
-    {
-      "path": "/chum/products/revenue-war-map/",
-      "last_changed": "2026-10-07T04:15:04.319Z",
-      "priority": 94
-    },
-    {
-      "path": "/chum/products/roasted/",
-      "last_changed": "2026-10-07T04:15:04.319Z",
-      "priority": 94
-    },
-    {
-      "path": "/chum/products/seasonally/",
-      "last_changed": "2026-10-07T04:15:04.319Z",
-      "priority": 94
-    },
-    {
-      "path": "/chum/products/second-stitch/",
-      "last_changed": "2026-10-07T04:15:04.319Z",
-      "priority": 94
-    },
-    {
-      "path": "/chum/products/skyops-parking/",
-      "last_changed": "2026-10-07T04:15:04.319Z",
-      "priority": 94
-    },
-    {
-      "path": "/chum/products/space-dudz/",
-      "last_changed": "2026-10-07T04:15:04.319Z",
-      "priority": 94
-    },
-    {
-      "path": "/chum/products/systemia-atlas-freight/",
-      "last_changed": "2026-10-07T04:15:04.319Z",
-      "priority": 94
-    },
-    {
-      "path": "/chum/products/systemia-decision-lab/",
-      "last_changed": "2026-10-07T04:15:04.319Z",
-      "priority": 94
-    },
-    {
-      "path": "/chum/products/systemia-field-library/",
-      "last_changed": "2026-10-07T04:15:04.319Z",
-      "priority": 94
-    },
-    {
-      "path": "/chum/products/systemia-portfolio-sentinel/",
-      "last_changed": "2026-10-07T04:15:04.319Z",
-      "priority": 94
-    },
-    {
-      "path": "/chum/products/systemia-radar/",
-      "last_changed": "2026-10-07T04:15:04.319Z",
-      "priority": 94
-    },
-    {
-      "path": "/chum/products/systemia-remote-ops/",
-      "last_changed": "2026-10-07T04:15:04.319Z",
-      "priority": 94
-    },
-    {
-      "path": "/chum/products/systemia-university/",
-      "last_changed": "2026-10-07T04:15:04.319Z",
-      "priority": 94
-    },
-    {
-      "path": "/chum/products/systemia-website-audit/",
-      "last_changed": "2026-10-07T04:15:04.319Z",
-      "priority": 94
-    },
-    {
-      "path": "/chum/products/talent-atlas/",
-      "last_changed": "2026-10-07T04:15:04.319Z",
-      "priority": 94
-    },
-    {
-      "path": "/chum/products/thoughtdrop/",
-      "last_changed": "2026-10-07T04:15:04.319Z",
-      "priority": 94
-    },
-    {
-      "path": "/chum/products/towi-research/",
-      "last_changed": "2026-10-07T04:15:04.319Z",
-      "priority": 94
-    },
-    {
-      "path": "/chum/products/website-launch/",
-      "last_changed": "2026-10-07T04:15:04.319Z",
-      "priority": 94
-    },
-    {
-      "path": "/.well-known/evercraft-pain-index.json",
-      "last_changed": "2026-10-07T04:15:04.319Z",
-      "priority": 90
-    },
-    {
-      "path": "/.well-known/evercraft-products.json",
-      "last_changed": "2026-10-07T04:15:04.319Z",
-      "priority": 88
-    },
-    {
-      "path": "/llms-full.txt",
-      "last_changed": "2026-10-07T04:15:04.319Z",
-      "priority": 86
-    },
-    {
-      "path": "/.well-known/evercraft-agent-directory.json",
-      "last_changed": "2026-10-07T04:15:04.319Z",
-      "priority": 84
-    },
-    {
-      "path": "/.well-known/evercraft-syndication.json",
-      "last_changed": "2026-10-07T04:15:04.319Z",
-      "priority": 84
-    },
-    {
-      "path": "/chum/",
-      "last_changed": "2026-10-07T04:15:04.319Z",
-      "priority": 80
-    },
-    {
-      "path": "/chum/answers/",
-      "last_changed": "2026-10-07T04:15:04.319Z",
-      "priority": 80
-    },
-    {
-      "path": "/chum/answers/index.json",
-      "last_changed": "2026-10-07T04:15:04.319Z",
-      "priority": 80
-    },
-    {
-      "path": "/chum/answers/index.txt",
-      "last_changed": "2026-10-07T04:15:04.319Z",
+      "path": "/chum/hot/",
+      "last_changed": "2026-10-07T04:16:00.553Z",
       "priority": 80
     },
     {
       "path": "/chum/hot/index.json",
-      "last_changed": "2026-10-07T04:15:04.319Z",
+      "last_changed": "2026-10-07T04:16:00.553Z",
       "priority": 80
     },
     {
-      "path": "/chum/index.json",
-      "last_changed": "2026-10-07T04:15:04.319Z",
+      "path": "/chum/proof/forensiscope.json",
+      "last_changed": "2026-10-07T04:16:00.553Z",
       "priority": 80
     },
     {
-      "path": "/chum/pain-index.json",
-      "last_changed": "2026-10-07T04:15:04.319Z",
+      "path": "/chum/proof/index.json",
+      "last_changed": "2026-10-07T04:16:00.553Z",
       "priority": 80
     },
     {
-      "path": "/chum/pain-index.txt",
-      "last_changed": "2026-10-07T04:15:04.319Z",
+      "path": "/chum/proof/rivet.json",
+      "last_changed": "2026-10-07T04:16:00.553Z",
       "priority": 80
-    },
-    {
-      "path": "/chum/syndication/",
-      "last_changed": "2026-10-07T04:15:04.319Z",
-      "priority": 80
-    },
-    {
-      "path": "/chum/syndication/index.json",
-      "last_changed": "2026-10-07T04:15:04.319Z",
-      "priority": 80
-    },
-    {
-      "path": "/feed.json",
-      "last_changed": "2026-10-07T04:15:04.319Z",
-      "priority": 60
-    },
-    {
-      "path": "/feed.xml",
-      "last_changed": "2026-10-07T04:15:04.319Z",
-      "priority": 60
-    },
-    {
-      "path": "/schema.jsonld",
-      "last_changed": "2026-10-07T04:15:04.319Z",
-      "priority": 60
     }
   ],
   "recent_surfaces": [
+    {
+      "path": "/chum/hot/",
+      "url": "/chum/hot/",
+      "last_changed": "2026-10-07T04:16:00.553Z",
+      "priority": 80
+    },
+    {
+      "path": "/chum/hot/index.json",
+      "url": "/chum/hot/index.json",
+      "last_changed": "2026-10-07T04:16:00.553Z",
+      "priority": 80
+    },
+    {
+      "path": "/chum/proof/forensiscope.json",
+      "url": "/chum/proof/forensiscope.json",
+      "last_changed": "2026-10-07T04:16:00.553Z",
+      "priority": 80
+    },
+    {
+      "path": "/chum/proof/index.json",
+      "url": "/chum/proof/index.json",
+      "last_changed": "2026-10-07T04:16:00.553Z",
+      "priority": 80
+    },
+    {
+      "path": "/chum/proof/rivet.json",
+      "url": "/chum/proof/rivet.json",
+      "last_changed": "2026-10-07T04:16:00.553Z",
+      "priority": 80
+    },
     {
       "path": "/chum/products/deck-capital-fit/",
       "url": "/chum/products/deck-capital-fit/",
@@ -1092,12 +632,6 @@
       "priority": 80
     },
     {
-      "path": "/chum/hot/index.json",
-      "url": "/chum/hot/index.json",
-      "last_changed": "2026-10-07T04:15:04.319Z",
-      "priority": 80
-    },
-    {
       "path": "/chum/index.json",
       "url": "/chum/index.json",
       "last_changed": "2026-10-07T04:15:04.319Z",
@@ -1200,34 +734,10 @@
       "priority": 86
     },
     {
-      "path": "/chum/proof/forensiscope.json",
-      "url": "/chum/proof/forensiscope.json",
-      "last_changed": "2026-10-07T03:10:56.459Z",
-      "priority": 80
-    },
-    {
-      "path": "/chum/proof/index.json",
-      "url": "/chum/proof/index.json",
-      "last_changed": "2026-10-07T03:10:56.459Z",
-      "priority": 80
-    },
-    {
-      "path": "/chum/proof/rivet.json",
-      "url": "/chum/proof/rivet.json",
-      "last_changed": "2026-10-07T03:10:56.459Z",
-      "priority": 80
-    },
-    {
       "path": "/forensiscope/long-video-deduplication-transcription/",
       "url": "/forensiscope/long-video-deduplication-transcription/",
       "last_changed": "2026-10-07T03:10:56.459Z",
       "priority": 60
-    },
-    {
-      "path": "/chum/hot/",
-      "url": "/chum/hot/",
-      "last_changed": "2026-10-07T03:00:36.784Z",
-      "priority": 80
     },
     {
       "path": "/chum/sell-now.json",
