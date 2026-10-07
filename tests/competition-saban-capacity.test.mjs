@@ -41,6 +41,8 @@ function node({
 test("competition worker demand is explicit, persistent, and zero-spend",()=>{
   const demand=competitionWorkerDemand();
   assert.equal(demand.workload_class,"systemia.evercraft-web-browser.v1");
+  assert.equal(demand.container_image,"ghcr.io/jgaethle10/evercraft-browser-worker:main");
+  assert.equal(demand.container_image.endsWith(":latest"),false);
   assert.equal(demand.resources.cpu_units,2);
   assert.equal(demand.resources.memory_mb,3072);
   assert.equal(demand.placement.require_persistent_storage,true);
