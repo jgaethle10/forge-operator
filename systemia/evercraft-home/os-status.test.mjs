@@ -147,3 +147,22 @@ test("Evercraft Home plans OS app installation without performing installation o
   assert.equal(held.install_performed, false);
   assert.equal(held.grants_issued, false);
 });
+
+
+test("Evercraft Home serves the native OS apps surface", async (t) => {
+  const runtime = await startEvercraftHomeServer({
+    host: "127.0.0.1",
+    port: 0,
+    authMode: "local",
+    operator: "OS Apps UI Proof"
+  });
+  t.after(async () => runtime.close());
+
+  const response = await fetch(runtime.url + "/apps.html");
+  assert.equal(response.status, 200);
+  const html = await response.text();
+  assert.match(html, /Apps inherit the spine\./);
+  assert.match(html, /\/api\/os\/apps/);
+  assert.match(html, /\/api\/os\/apps\/install-plan/);
+  assert.match(html, /A package cannot grant them to itself/);
+});
