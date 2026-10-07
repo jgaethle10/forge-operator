@@ -715,6 +715,7 @@ export default function WorldForgeEditor(){
   const [runtimePlaying,setRuntimePlaying]=useState(false);
   const [runtimeStepping,setRuntimeStepping]=useState(false);
   const runtimeSteppingRef=useRef(false);
+  const runtimeAuthoringRef=useRef(false);
   const engineRuntimeRef=useRef<EngineRuntimeState|null>(null);
   const projectRef=useRef<ForgeProject|null>(null);
   const [engineBridge,setEngineBridge]=useState<{
@@ -974,7 +975,12 @@ export default function WorldForgeEditor(){
   async function stepRuntime(ticks=1){
     const currentProject=projectRef.current;
     const currentRuntime=engineRuntimeRef.current;
-    if(!currentProject||!currentRuntime||runtimeSteppingRef.current) return;
+    if(
+      !currentProject||
+      !currentRuntime||
+      runtimeSteppingRef.current||
+      runtimeAuthoringRef.current
+    ) return;
 
     runtimeSteppingRef.current=true;
     setRuntimeStepping(true);
@@ -1072,7 +1078,13 @@ export default function WorldForgeEditor(){
     setBusy(true);
     setError('');
     try{
-      if(engineRuntime){
+      if(engineRuntimeRef.current){
+        runtimeAuthoringRef.current=true;
+        setRuntimePlaying(false);
+        await waitForRuntimeIdle();
+        const currentRuntime=engineRuntimeRef.current;
+        if(!currentRuntime) throw new Error('World Engine runtime disappeared before authoring migration.');
+
         const destructiveAuthority=operations.some(operation=>
           (operation.type==='remove_node'&&operation.allowDestructive===true) ||
           (operation.type==='set_geometry'&&operation.allowDestructive===true)
@@ -1094,22 +1106,24 @@ export default function WorldForgeEditor(){
           throw new Error(created.error||'Could not create runtime ChangeSet.');
         }
 
-        const syncResponse=await fetch('/api/fallen/world-forge/runtime-sync',{
+        const migrationResponse=await fetch('/api/fallen/world-forge/runtime-migrate',{
           method:'POST',
           headers:{'content-type':'application/json'},
           body:JSON.stringify({
             project,
             changeSet:created.changeSet,
-            runtimeWorld:engineRuntime.world,
-            runtimeAssets:engineRuntime.assets,
+            runtimeWorld:currentRuntime.world,
+            runtimeAssets:currentRuntime.assets,
+            runtimeSnapshot:currentRuntime.snapshot,
           }),
         });
-        const synced=await syncResponse.json();
-        if(!syncResponse.ok||!synced.success||!synced.sync){
-          throw new Error(synced.error||'World Engine runtime sync was blocked.');
+        const migrated=await migrationResponse.json();
+        if(!migrationResponse.ok||!migrated.success||!migrated.migration){
+          throw new Error(migrated.error||'World Engine live runtime migration was blocked.');
         }
 
-        const sync=synced.sync;
+        const migration=migrated.migration;
+        const sync=migration.sync;
         const receipt=sync.forgeMutationReceipt as MutationReceipt;
         setProject(sync.nextProject);
         setDigest(receipt.digestAfter);
@@ -1117,11 +1131,15 @@ export default function WorldForgeEditor(){
         if(recordUndo&&receipt.inverseOperations.length){
           setUndoStack(current=>[...current,receipt.inverseOperations].slice(-50));
         }
-        setEngineRuntime({
+        const nextRuntime:EngineRuntimeState={
           world:sync.runtime.world,
           assets:sync.runtime.assets,
           geometries:sync.geometries,
-        });
+          snapshot:migration.snapshot,
+          overlay:Array.isArray(migrated.overlay)?migrated.overlay:[],
+        };
+        engineRuntimeRef.current=nextRuntime;
+        setEngineRuntime(nextRuntime);
         setEngineBridge({
           worldId:String(sync.runtime.world.id),
           digest:String(sync.bridgeReceiptAfter.digest),
@@ -1133,11 +1151,10 @@ export default function WorldForgeEditor(){
           blockers:Array.isArray(sync.bridgeReceiptAfter.blockers)?sync.bridgeReceiptAfter.blockers.length:0,
         });
         setCommandNote(
-          `Live synced ${operations.length} edit${operations.length===1?'':'s'} into World Engine · runtime v${sync.runtime.world.version} · ${String(sync.receipt.digest).slice(0,12)}.`
+          `Migrated ${operations.length} authored edit${operations.length===1?'':'s'} into live World Engine state · tick ${migration.snapshot.tick} · ${String(migration.receipt.digest).slice(0,12)}.`
         );
         return;
       }
-
       const response=await fetch('/api/fallen/world-forge/mutate',{
         method:'POST',
         headers:{'content-type':'application/json'},
@@ -1161,6 +1178,7 @@ export default function WorldForgeEditor(){
     }catch(err){
       setError(err instanceof Error?err.message:String(err));
     }finally{
+      runtimeAuthoringRef.current=false;
       setBusy(false);
     }
   }
