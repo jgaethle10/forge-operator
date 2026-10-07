@@ -63,6 +63,7 @@ test('Fabric self updater converges and verifies the owned Raven Payments reside
   assert.match(updater,/payment_direct_provider_credentials_exposed!==false/);
   assert.match(updater,/payment_direct_provider_checkout_allowed!==false/);
   assert.match(updater,/node --test systemia\/payments\/\*\.test\.mjs/);
+  assert.match(updater,/"raven_payments_resident":true/);
   assert.match(fabricRuntime,/purchase_intent_base44_transport_forbidden/);
   assert.match(fabricRuntime,/purchase_intent_must_use_owned_loopback_raven_runtime/);
   assert.match(fabricRuntime,/payment_purchase_intent_transport:'owned_loopback_raven_nexus'/);
