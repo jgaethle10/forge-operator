@@ -66,6 +66,8 @@ test('external Fabric canary proves Graphics Command poster, scroll-stop gate, a
   assert.ok(script.includes("graphics_command_fallen_geo_handoff_invalid"));
   assert.ok(script.includes("graphics_command_verified:true"));
   assert.ok(script.includes("graphics_command_state_geometry_missing"));
+  assert.ok(script.includes("graphics_command_terrain_relief_missing"));
+  assert.ok(script.includes("graphics_command_terrain_lineage_missing"));
   assert.ok(script.includes("graphics_command_boundary_lineage_missing"));
   assert.ok(script.includes("CC0-1.0"));
   assert.ok(script.includes("public_domain"));
