@@ -1,0 +1,27 @@
+name: Gemma Saban Competition Scaffold
+
+on:
+  pull_request:
+    paths:
+      - "systemia/competition/entries/gemma-saban/**"
+      - ".github/workflows/gemma-saban-scaffold.yml"
+  push:
+    branches: [main]
+    paths:
+      - "systemia/competition/entries/gemma-saban/**"
+      - ".github/workflows/gemma-saban-scaffold.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+      - name: Validate Gemma competition scaffold
+        run: node systemia/competition/entries/gemma-saban/validate.mjs
