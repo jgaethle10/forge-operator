@@ -102,16 +102,36 @@ function sessionIntelligence(data){
     const reliabilityPct=pickNumber(row,['reliability_pct','uptime_pct','availability_pct']);
     const pricePerKwh=pickNumber(row,['price_per_kwh','avg_price_per_kwh','average_price_per_kwh']);
     const occupancyPct=pickNumber(row,['occupancy_pct','utilization_pct']);
+    const revenuePerDay=pickNumber(row,['revenue_per_day','avg_revenue_per_day']);
+    const hourly=arr(row?.hourly_profile || row?.hourly_sessions || row?.time_of_day);
+    const hourlyPoints=hourly
+      .map((point)=>({
+        hour:pickNumber(point,['hour','hour_of_day']),
+        sessions:pickNumber(point,['sessions','session_count','count'])
+      }))
+      .filter((point)=>point.hour!==null && point.sessions!==null);
+    const busiestHour=hourlyPoints.length
+      ? hourlyPoints.reduce((best,point)=>point.sessions>best.sessions?point:best)
+      : null;
+    const quietestHour=hourlyPoints.length
+      ? hourlyPoints.reduce((best,point)=>point.sessions<best.sessions?point:best)
+      : null;
     const start=dateMs(row?.period_start || row?.start_date || row?.start);
     const end=dateMs(row?.period_end || row?.end_date || row?.end);
     const periodDays=start!==null && end!==null && end>start ? (end-start)/86400000 : null;
     const sessionsPerDay=sessions!==null && periodDays ? sessions/periodDays : pickNumber(row,['sessions_per_day','avg_sessions_per_day']);
     const energyPerSession=energyKwh!==null && sessions && sessions>0 ? energyKwh/sessions : null;
+    const sessionsPerPortDay=sessions!==null && periodDays && ports && ports>0 ? sessions/(periodDays*ports) : null;
+    const energyPerPortDay=energyKwh!==null && periodDays && ports && ports>0 ? energyKwh/(periodDays*ports) : null;
+    const freshnessReference=dateMs(data?.retrieved_at || data?.source_coverage_manifest?.generated_at);
+    const freshnessDays=end!==null && freshnessReference!==null && freshnessReference>=end
+      ? (freshnessReference-end)/86400000
+      : null;
     const temporalPresent=Boolean(
       row?.hourly_profile || row?.time_of_day || row?.day_of_week || row?.weekday_profile ||
       row?.hourly_sessions || row?.daily_sessions
     );
-    const operationalPresent=[reliabilityPct,pricePerKwh,occupancyPct].some(v=>v!==null) || Boolean(row?.failed_sessions);
+    const operationalPresent=[reliabilityPct,pricePerKwh,occupancyPct,revenuePerDay].some(v=>v!==null) || Boolean(row?.failed_sessions);
     let level=sessions!==null?1:0;
     if(level>=1 && (energyKwh!==null || chargingMinutes!==null || connectedMinutes!==null || periodDays!==null)) level=2;
     if(level>=2 && temporalPresent) level=3;
@@ -130,11 +150,18 @@ function sessionIntelligence(data){
       charging_minutes:chargingMinutes,
       connected_minutes:connectedMinutes,
       ports,
+      period_days:periodDays,
+      freshness_days:freshnessDays,
       sessions_per_day:sessionsPerDay,
+      sessions_per_port_day:sessionsPerPortDay,
       energy_per_session_kwh:energyPerSession,
+      energy_per_port_day_kwh:energyPerPortDay,
+      revenue_per_day:revenuePerDay,
       reliability_pct:reliabilityPct,
       occupancy_pct:occupancyPct,
       price_per_kwh:pricePerKwh,
+      busiest_hour:busiestHour,
+      quietest_hour:quietestHour,
       temporal_profile_present:temporalPresent,
       evidence_level:level
     };
@@ -157,10 +184,15 @@ function sessionIntelligence(data){
       with_sessions:normalized.filter(row=>row.sessions!==null).length,
       with_energy:normalized.filter(row=>row.energy_kwh!==null).length,
       with_verified_period:normalized.filter(row=>row.period_start&&row.period_end).length,
+      with_per_port_throughput:normalized.filter(row=>row.sessions_per_port_day!==null).length,
+      with_energy_per_port_day:normalized.filter(row=>row.energy_per_port_day_kwh!==null).length,
       with_temporal_profile:normalized.filter(row=>row.temporal_profile_present).length,
+      with_hourly_extrema:normalized.filter(row=>row.busiest_hour&&row.quietest_hour).length,
       with_reliability:normalized.filter(row=>row.reliability_pct!==null).length,
       with_occupancy:normalized.filter(row=>row.occupancy_pct!==null).length,
-      with_price:normalized.filter(row=>row.price_per_kwh!==null).length
+      with_price:normalized.filter(row=>row.price_per_kwh!==null).length,
+      with_revenue:normalized.filter(row=>row.revenue_per_day!==null).length,
+      with_freshness:normalized.filter(row=>row.freshness_days!==null).length
     },
     sites:normalized.slice(0,20)
   };
