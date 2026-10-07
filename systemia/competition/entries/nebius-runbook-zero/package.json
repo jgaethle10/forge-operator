@@ -1,1 +1,16 @@
-{"name":"runbook-zero","version":"0.1.0","private":false,"type":"module","description":"A bounded autonomous repository repair agent powered by NVIDIA Nemotron on Nebius Token Factory.","license":"MIT","scripts":{"test":"node --test agent.test.mjs","start":"node server.mjs","repair":"node cli.mjs"},"engines":{"node":">=22"}}
+{
+  "name": "runbook-zero",
+  "version": "0.1.0",
+  "private": false,
+  "type": "module",
+  "description": "A bounded autonomous repository repair agent powered by NVIDIA Nemotron on Nebius Token Factory.",
+  "license": "MIT",
+  "scripts": {
+    "test": "node --test agent.test.mjs server.test.mjs",
+    "start": "node server.mjs",
+    "repair": "node cli.mjs"
+  },
+  "engines": {
+    "node": ">=22"
+  }
+}
