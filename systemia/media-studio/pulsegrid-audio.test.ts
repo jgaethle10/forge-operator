@@ -30,9 +30,10 @@ test('PulseGrid audio prefers the AudioWorklet clock and retains an explicit fal
 });
 
 test('PulseGrid audio has deterministic stop and close cleanup',()=>{
-  assert.match(audio,/activeSources\s*=\s*new Set<AudioScheduledSourceNode>/);
+  assert.match(audio,/activeSources\s*=\s*new Map<AudioScheduledSourceNode, AudioNode\[\]>/);
   assert.match(audio,/uiTimers\s*=\s*new Set/);
   assert.match(audio,/stopScheduledSources\(\)/);
+  assert.match(audio,/disposeScheduledSource\(source/);
   assert.match(audio,/clearUiTimers\(\)/);
   assert.match(audio,/this\.disposeAllTrackBuses\(\)/);
   assert.match(audio,/disposeWorkletClock\(\)/);
