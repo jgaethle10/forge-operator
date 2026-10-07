@@ -9,6 +9,18 @@ import { runtimeTransformsByForgeNodeId } from './world-forge-runtime-view';
 
 type Vec3={x:number;y:number;z:number};
 type Transform={position:Vec3;rotationDeg:Vec3;scale:Vec3};
+type ForgePhysics={
+  mode:'static'|'kinematic'|'dynamic';
+  massKg?:number;
+  gravityScale?:number;
+  linearDamping?:number;
+  restitution?:number;
+  collider:
+    |{type:'auto_box'}
+    |{type:'auto_sphere'}
+    |{type:'box';halfExtents:Vec3}
+    |{type:'sphere';radius:number};
+};
 type ForgeNode={
   id:string;
   name:string;
@@ -34,6 +46,7 @@ type ForgeNode={
     far?:number;
   };
   light?:{type:string;intensity:number;color:[number,number,number]};
+  physics?:ForgePhysics;
 };
 type ForgeProject={
   schema:string;
@@ -48,6 +61,7 @@ type ForgeOperation=
   |{type:'set_transform';nodeId:string;transform:Partial<Transform>}
   |{type:'set_visibility';nodeId:string;visible:boolean}
   |{type:'set_camera';nodeId:string;camera:Partial<NonNullable<ForgeNode['camera']>>}
+  |{type:'set_physics';nodeId:string;physics:ForgePhysics|null}
   |{type:'set_geometry';nodeId:string;geometry:NonNullable<ForgeNode['geometry']>;allowDestructive?:boolean}
   |{type:'add_node';node:ForgeNode}
   |{type:'remove_node';nodeId:string;allowDestructive?:boolean};
@@ -796,6 +810,7 @@ export default function WorldForgeEditor(){
       },
       camera:node.camera?{...node.camera,lookAt:node.camera.lookAt?{...node.camera.lookAt}:undefined}:undefined,
       geometry:node.geometry?JSON.parse(JSON.stringify(node.geometry)):undefined,
+      physics:node.physics?JSON.parse(JSON.stringify(node.physics)):undefined,
     }));
 
     for(const operation of stagedOperations){
@@ -827,6 +842,10 @@ export default function WorldForgeEditor(){
         node.camera=node.camera?{...node.camera,...operation.camera}:node.camera;
       }else if(operation.type==='set_geometry'){
         node.geometry=JSON.parse(JSON.stringify(operation.geometry));
+      }else if(operation.type==='set_physics'){
+        node.physics=operation.physics
+          ? JSON.parse(JSON.stringify(operation.physics))
+          : undefined;
       }
     }
 
@@ -1208,6 +1227,45 @@ export default function WorldForgeEditor(){
       nodeId:selected.id,
       camera:patch,
     }],`Update ${selected.name} camera`);
+  }
+
+  function setPhysicsMode(mode:ForgePhysics['mode']|null){
+    if(!selected||selected.kind!=='mesh') return;
+    if(mode===null){
+      queueOrMutate([{
+        type:'set_physics',
+        nodeId:selected.id,
+        physics:null,
+      }],`Disable physics on ${selected.name}`);
+      return;
+    }
+    const previous=selected.physics;
+    const physics:ForgePhysics={
+      mode,
+      massKg:mode==='static'?undefined:(previous?.massKg??1),
+      gravityScale:mode==='static'?undefined:(mode==='kinematic'?0:(previous?.gravityScale??1)),
+      linearDamping:mode==='static'?undefined:(previous?.linearDamping??.05),
+      restitution:previous?.restitution??0,
+      collider:previous?.collider??{type:'auto_box'},
+    };
+    queueOrMutate([{
+      type:'set_physics',
+      nodeId:selected.id,
+      physics,
+    }],`Set ${selected.name} physics to ${mode}`);
+  }
+
+  function physicsPatch(patch:Partial<ForgePhysics>){
+    if(!selected||selected.kind!=='mesh'||!selected.physics) return;
+    queueOrMutate([{
+      type:'set_physics',
+      nodeId:selected.id,
+      physics:{...selected.physics,...patch},
+    }],`Update ${selected.name} physics`);
+  }
+
+  function colliderPatch(collider:ForgePhysics['collider']){
+    physicsPatch({collider});
   }
 
   function addCube(){
@@ -1741,6 +1799,102 @@ export default function WorldForgeEditor(){
                 />)}
               </div>
             </div>
+          </fieldset>}
+
+          {selected.kind==='mesh'&&<fieldset className="wf-physics-tools" disabled={selected.locked||busy}>
+            <legend>Physics</legend>
+            <div className="wf-physics-modes">
+              {([
+                ['off','Off'],
+                ['static','Static'],
+                ['kinematic','Kinematic'],
+                ['dynamic','Dynamic'],
+              ] as const).map(([mode,label])=><button
+                key={mode}
+                type="button"
+                className={(mode==='off'&&!selected.physics)||selected.physics?.mode===mode?'active':''}
+                onClick={()=>setPhysicsMode(mode==='off'?null:mode)}
+              >
+                {label}
+              </button>)}
+            </div>
+
+            {selected.physics&&<>
+              <label className="wf-physics-select">
+                <span>Collider</span>
+                <select
+                  value={selected.physics.collider.type}
+                  onChange={event=>{
+                    const type=event.target.value;
+                    if(type==='auto_box') colliderPatch({type:'auto_box'});
+                    else if(type==='auto_sphere') colliderPatch({type:'auto_sphere'});
+                    else if(type==='box') colliderPatch({type:'box',halfExtents:{x:.5,y:.5,z:.5}});
+                    else colliderPatch({type:'sphere',radius:.5});
+                  }}
+                >
+                  <option value="auto_box">Auto Box</option>
+                  <option value="auto_sphere">Auto Sphere</option>
+                  <option value="box">Box</option>
+                  <option value="sphere">Sphere</option>
+                </select>
+              </label>
+
+              {selected.physics.collider.type==='box'&&<div className="wf-fields">
+                {(['x','y','z'] as const).map(axis=><NumberField
+                  key={axis}
+                  label={`H${axis.toUpperCase()}`}
+                  value={selected.physics!.collider.type==='box'
+                    ? selected.physics!.collider.halfExtents[axis]
+                    : .5}
+                  onCommit={value=>{
+                    if(selected.physics?.collider.type!=='box') return;
+                    colliderPatch({
+                      type:'box',
+                      halfExtents:{
+                        ...selected.physics.collider.halfExtents,
+                        [axis]:Math.max(.001,value),
+                      },
+                    });
+                  }}
+                />)}
+              </div>}
+
+              {selected.physics.collider.type==='sphere'&&<NumberField
+                label="Radius"
+                value={selected.physics.collider.radius}
+                onCommit={value=>colliderPatch({type:'sphere',radius:Math.max(.001,value)})}
+              />}
+
+              {selected.physics.mode!=='static'&&<div className="wf-physics-grid">
+                <NumberField
+                  label="Mass kg"
+                  value={selected.physics.massKg??1}
+                  step={.1}
+                  onCommit={value=>physicsPatch({massKg:Math.max(.001,value)})}
+                />
+                <NumberField
+                  label="Gravity"
+                  value={selected.physics.gravityScale??(selected.physics.mode==='kinematic'?0:1)}
+                  step={.1}
+                  onCommit={value=>physicsPatch({gravityScale:Math.max(0,value)})}
+                />
+                <NumberField
+                  label="Damping"
+                  value={selected.physics.linearDamping??0}
+                  step={.05}
+                  onCommit={value=>physicsPatch({linearDamping:Math.max(0,value)})}
+                />
+                <NumberField
+                  label="Bounce"
+                  value={selected.physics.restitution??0}
+                  step={.05}
+                  onCommit={value=>physicsPatch({restitution:Math.max(0,Math.min(1,value))})}
+                />
+              </div>}
+              <small>
+                Static = collider only · Kinematic = authored motion wins · Dynamic = World Engine simulation.
+              </small>
+            </>}
           </fieldset>}
 
           {selected.kind==='mesh'&&<fieldset className="wf-mesh-tools" disabled={selected.locked||busy}>
