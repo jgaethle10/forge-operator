@@ -1,0 +1,53 @@
+{
+  "schema": "evercraft.daytrade.sip-shadow-practice.v1",
+  "generated_at": "2026-10-07T16:07:53.493Z",
+  "source_run_id": 37649229888,
+  "source_artifact_id": 11496151540,
+  "source_artifact_digest": "sha256:df1eeaa70fa42c9f22e8f24a1a0d138cb2bf990f200509885e50e3a5d3a6a006",
+  "simulation_only": true,
+  "capital_at_risk_usd": 0,
+  "broker_order_submitted": false,
+  "live_order_submitted": false,
+  "sip_available_for_all_symbols": false,
+  "frozen_rule_feed_remains": "iex",
+  "sip_shadow_does_not_modify_frozen_rule": true,
+  "rule_threshold_bps": 3,
+  "hold_ms": 60000,
+  "rows": [
+    {
+      "symbol": "SOXX",
+      "iex_entry_spread_bps": 5.5128691038150786,
+      "iex_decision": "ABSTAIN",
+      "sip_http_status": 403,
+      "sip_decision": "UNAVAILABLE"
+    },
+    {
+      "symbol": "SMH",
+      "iex_entry_spread_bps": 1.282750216464755,
+      "iex_decision": "SIMULATE_MARKETABLE_LONG",
+      "sip_http_status": 403,
+      "sip_decision": "UNAVAILABLE"
+    },
+    {
+      "symbol": "QQQ",
+      "iex_entry_spread_bps": 0.6608206070292086,
+      "iex_decision": "SIMULATE_MARKETABLE_LONG",
+      "sip_http_status": 403,
+      "sip_decision": "UNAVAILABLE"
+    }
+  ],
+  "aggregate": {
+    "symbols_compared": 3,
+    "sip_available_for_all_symbols": false
+  },
+  "interpretation": {
+    "sip_entitlement_blocker_observed": true,
+    "sip_is_consolidated_feed_shadow_only": true,
+    "no_rule_retuning_from_shadow": true,
+    "do_not_count_as_prospective_spread_rule_window": true,
+    "sip_shadow_not_live_fill_validation": true,
+    "not_signal_validation": true,
+    "not_live_authorized": true
+  },
+  "live_trade_authority": false
+}
