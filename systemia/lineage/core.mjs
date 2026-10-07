@@ -89,7 +89,16 @@ export class LineageStore {
     ]);
     await writeFile(join(this.dir, 'HEAD'), `ref: refs/heads/${branch}\n`, 'utf8');
     const ref = join(this.dir, 'refs', 'heads', branch);
-    try { await readFile(ref, 'utf8'); } catch { await writeFile(ref, '', 'utf8'); }
+    try {
+      await readFile(ref, 'utf8');
+    } catch (error) {
+      if (error?.code !== 'ENOENT') throw error;
+      await this.writeRef(branch, null, {
+        expected: null,
+        actor: { type: 'system', id: 'lineage-init' },
+        reason: 'init',
+      });
+    }
     return { schema: SCHEMA, root: this.root, branch };
   }
 
