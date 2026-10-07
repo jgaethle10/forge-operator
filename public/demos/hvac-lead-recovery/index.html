@@ -19,8 +19,7 @@ label{display:block;font-size:12px;color:#aebccc;margin:16px 0 6px}input,select,
 .output{min-height:280px}.empty{height:280px;display:grid;place-items:center;text-align:center;color:#748294;border:1px dashed #2a3745;border-radius:16px;padding:20px}
 .lead{display:none}.lead.show{display:block}.leadhead{display:flex;justify-content:space-between;gap:10px;align-items:start;margin-bottom:18px}.urgent{background:#3a1720;color:#ffb9c7;border:1px solid #6d2838;padding:6px 9px;border-radius:999px;font-size:11px;font-weight:800}.kv{display:grid;grid-template-columns:1fr 1fr;gap:10px}.kv div{background:#0a1016;border:1px solid #263342;border-radius:12px;padding:11px}.kv span{display:block;color:#78889b;font-size:11px;text-transform:uppercase;letter-spacing:.08em}.kv strong{display:block;margin-top:4px;font-size:14px}
 .note{margin-top:12px;padding:12px;border-left:3px solid #6da7ff;background:#0b141f;color:#b8c6d6;font-size:13px;line-height:1.45}
-.roi{margin:18px 0 42px;display:grid;grid-template-columns:repeat(3,1fr);gap:12px}.metric{background:#0f151d;border:1px solid #202c39;border-radius:16px;padding:18px}.metric span{display:block;color:#7f8fa1;font-size:12px}.metric strong{display:block;font-size:28px;margin-top:5px}
-.footer{padding:0 0 42px;color:#647284;font-size:12px;line-height:1.6}
+.roi-wrap{margin:18px 0 42px}.roi{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}.metric{background:#0f151d;border:1px solid #202c39;border-radius:16px;padding:18px}.metric span{display:block;color:#7f8fa1;font-size:12px}.metric strong{display:block;font-size:28px;margin-top:5px}.roi-controls{margin-top:12px;background:#0f151d;border:1px solid #202c39;border-radius:16px;padding:18px}.roi-controls h2{margin:0 0 4px;font-size:17px}.roi-controls .row{margin-top:10px}.cta{display:flex;gap:12px;align-items:center;justify-content:space-between;margin-top:14px;padding:16px;background:#101a27;border:1px solid #28415d;border-radius:14px}.cta p{margin:0;color:#aebccc;font-size:13px;line-height:1.45}.cta a{display:inline-block;text-decoration:none;background:#f5f7fb;color:#0b1117;font-weight:800;padding:12px 15px;border-radius:12px;white-space:nowrap}.footer{padding:0 0 42px;color:#647284;font-size:12px;line-height:1.6}
 @media(max-width:780px){.grid,.row,.roi{grid-template-columns:1fr}.hero{padding-top:28px}.top{align-items:flex-start;flex-direction:column}}
 </style>
 </head>
@@ -78,10 +77,24 @@ label{display:block;font-size:12px;color:#aebccc;margin:16px 0 6px}input,select,
     </div>
   </section>
 
-  <section class="roi">
-    <div class="metric"><span>Example recovered calls / month</span><strong id="calls">8</strong></div>
-    <div class="metric"><span>Example average completed ticket</span><strong id="ticket">$450</strong></div>
-    <div class="metric"><span>Illustrative recovered revenue</span><strong id="revenue">$3,600</strong></div>
+  <section class="roi-wrap">
+    <div class="roi">
+      <div class="metric"><span>Recoverable inquiries / month</span><strong id="calls">8</strong></div>
+      <div class="metric"><span>Average completed ticket</span><strong id="ticket">$450</strong></div>
+      <div class="metric"><span>Illustrative recovered revenue</span><strong id="revenue">$3,600</strong></div>
+    </div>
+    <div class="roi-controls">
+      <h2>Use your own numbers</h2>
+      <div class="muted">Change the two assumptions below. This is simple arithmetic, not a promise of results.</div>
+      <div class="row">
+        <div><label>Potentially recoverable inquiries / month</label><input id="roiCalls" type="number" min="0" step="1" value="8" /></div>
+        <div><label>Average completed service ticket</label><input id="roiTicket" type="number" min="0" step="25" value="450" /></div>
+      </div>
+      <div class="cta">
+        <p><strong style="color:#fff">Keep the team. Catch what falls between calls.</strong><br/>If this looks relevant, the next step is mapping this proof to your existing phone, office and scheduling workflow.</p>
+        <a id="replyCta" href="mailto:jessegaethle10@gmail.com?subject=HVAC%20lead%20recovery%20demo">Map this to my workflow</a>
+      </div>
+    </div>
   </section>
 
   <div class="footer">
@@ -92,11 +105,56 @@ label{display:block;font-size:12px;color:#aebccc;margin:16px 0 6px}input,select,
 const p=new URLSearchParams(location.search);
 const business=p.get('business');
 if(business) document.getElementById('forBusiness').textContent='Prototype for '+business;
-const calls=Math.max(1,Number(p.get('calls')||8));
-const ticket=Math.max(1,Number(p.get('ticket')||450));
-document.getElementById('calls').textContent=calls;
-document.getElementById('ticket').textContent='$'+ticket.toLocaleString();
-document.getElementById('revenue').textContent='$'+(calls*ticket).toLocaleString();
+const calls=Math.max(0,Number(p.get('calls')||8));
+const ticket=Math.max(0,Number(p.get('ticket')||450));
+const roiCalls=document.getElementById('roiCalls');
+const roiTicket=document.getElementById('roiTicket');
+roiCalls.value=calls;
+roiTicket.value=ticket;
+function updateRoi(){
+  const c=Math.max(0,Number(roiCalls.value||0));
+  const t=Math.max(0,Number(roiTicket.value||0));
+  document.getElementById('calls').textContent=c.toLocaleString();
+  document.getElementById('ticket').textContent='
+document.getElementById('simulate').addEventListener('click',()=>{
+  const v=id=>document.getElementById(id).value;
+  document.getElementById('leadName').textContent=v('name');
+  document.getElementById('leadPhone').textContent=v('phone');
+  document.getElementById('leadZip').textContent=v('zip');
+  document.getElementById('leadIssue').textContent=v('issue');
+  document.getElementById('leadUrgency').textContent=v('urgency');
+  document.getElementById('leadTime').textContent=v('time');
+  document.getElementById('leadNotes').textContent=v('notes');
+  document.getElementById('empty').style.display='none';
+  document.getElementById('lead').classList.add('show');
+});
+</script>
+</body>
+</html>+t.toLocaleString();
+  document.getElementById('revenue').textContent='
+document.getElementById('simulate').addEventListener('click',()=>{
+  const v=id=>document.getElementById(id).value;
+  document.getElementById('leadName').textContent=v('name');
+  document.getElementById('leadPhone').textContent=v('phone');
+  document.getElementById('leadZip').textContent=v('zip');
+  document.getElementById('leadIssue').textContent=v('issue');
+  document.getElementById('leadUrgency').textContent=v('urgency');
+  document.getElementById('leadTime').textContent=v('time');
+  document.getElementById('leadNotes').textContent=v('notes');
+  document.getElementById('empty').style.display='none';
+  document.getElementById('lead').classList.add('show');
+});
+</script>
+</body>
+</html>+Math.round(c*t).toLocaleString();
+}
+roiCalls.addEventListener('input',updateRoi);
+roiTicket.addEventListener('input',updateRoi);
+updateRoi();
+const replyCta=document.getElementById('replyCta');
+const subject=business ? 'HVAC lead recovery demo - '+business : 'HVAC lead recovery demo';
+const body=business ? 'I looked at the lead recovery proof for '+business+'. Let’s map it to our actual workflow.' : 'I looked at the HVAC lead recovery proof. Let’s map it to our actual workflow.';
+replyCta.href='mailto:jessegaethle10@gmail.com?subject='+encodeURIComponent(subject)+'&body='+encodeURIComponent(body);
 document.getElementById('simulate').addEventListener('click',()=>{
   const v=id=>document.getElementById(id).value;
   document.getElementById('leadName').textContent=v('name');
