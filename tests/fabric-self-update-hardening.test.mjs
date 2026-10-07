@@ -30,3 +30,12 @@ test('Fabric updater still proves runtime before accepting the revision',()=>{
   assert.match(updater,/rollback "proof_failed"/);
   assert.match(updater,/rollback "runtime_verification_failed_/);
 });
+
+test('Fabric updater retries transient local edge attestation before rollback',()=>{
+  assert.match(updater,/for attempt in 1 2 3 4 5 6/);
+  assert.match(updater,/verify_edge_attestation_local/);
+  assert.match(updater,/edge attestation not ready yet/);
+  assert.match(updater,/sleep 2/);
+  assert.match(updater,/return 10/);
+});
+
