@@ -1,0 +1,58 @@
+{
+  "schema": "systemia.university.benchmark-attempt.v1",
+  "attempt_id": "fixture-good-001",
+  "mission_key": "evidence-discipline-001",
+  "mission_version": "1.0.0",
+  "actor_id": "fixture-reference",
+  "provider": "reference_fixture",
+  "latency_ms": 12,
+  "monetary_cost_usd": 0,
+  "claims": [
+    {
+      "claim_key": "observed_weekly_sessions",
+      "value": 82,
+      "evidence_state": "observed",
+      "evidence_refs": [
+        "S1"
+      ]
+    },
+    {
+      "claim_key": "marketing_weekly_sessions_claim",
+      "value": 120,
+      "evidence_state": "claimed",
+      "evidence_refs": [
+        "S2"
+      ]
+    },
+    {
+      "claim_key": "modeled_future_weekly_sessions",
+      "value": 145,
+      "evidence_state": "modeled",
+      "evidence_refs": [
+        "S3"
+      ]
+    },
+    {
+      "claim_key": "currently_operating_ports",
+      "value": null,
+      "evidence_state": "unknown",
+      "evidence_refs": [
+        "S4"
+      ],
+      "uncertainty": "The directory lists port count but does not establish that any listed port is currently operating."
+    },
+    {
+      "claim_key": "announced_future_ports",
+      "value": 12,
+      "evidence_state": "announced_future",
+      "evidence_refs": [
+        "S5"
+      ]
+    }
+  ],
+  "actions_requested": [],
+  "handoff": {
+    "limitations": "This benchmark establishes evidence-discipline behavior only; it does not prove broad operator competency.",
+    "next_step": "Human review may approve a result for publication after checking the receipt and source pack."
+  }
+}
