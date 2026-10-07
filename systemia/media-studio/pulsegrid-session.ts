@@ -1,7 +1,7 @@
 import crypto from 'node:crypto';
 
 export const PULSEGRID_SESSION_SCHEMA = 'evercraft.fallen.pulsegrid.session.v1';
-export const PULSEGRID_ENGINE_VERSION = '0.8.0';
+export const PULSEGRID_ENGINE_VERSION = '0.9.0';
 
 export type PulseGridActor = 'human' | 'agent' | 'system' | 'controller';
 
@@ -54,8 +54,11 @@ export type PulseGridReceipt = {
   before: unknown;
   after: unknown;
   reversible: boolean;
-  request?: PulseGridOperation | null;
+  request?: PulseGridOperation | PulseGridTransactionRequest | null;
   undo_of?: string | null;
+  transaction_id?: string | null;
+  child_receipt_ids?: string[] | null;
+  intent?: string | null;
 };
 
 export type PulseGridSession = {
@@ -99,6 +102,19 @@ export type PulseGridOperation =
   | { type: 'note.move'; track_id: string; scene: number; note_id: string; start: number; pitch: number }
   | { type: 'note.resize'; track_id: string; scene: number; note_id: string; length: number }
   | { type: 'note.delete'; track_id: string; scene: number; note_id: string };
+
+export type PulseGridTransactionRequest = {
+  type: 'transaction.apply';
+  transaction_id: string;
+  intent: string;
+  operations: PulseGridOperation[];
+};
+
+export type PulseGridTransactionInput = {
+  transaction_id?: string;
+  intent: string;
+  operations: PulseGridOperation[];
+};
 
 export const PULSEGRID_STEPS_PER_BAR = 16;
 export const PULSEGRID_MAX_CLIP_BARS = 16;
@@ -313,6 +329,24 @@ function cloneSession(session: PulseGridSession): PulseGridSession {
   return structuredClone(session);
 }
 
+function sessionStateSnapshot(session: PulseGridSession) {
+  return {
+    project_name: session.project_name,
+    transport: structuredClone(session.transport),
+    active_scene: session.active_scene,
+    tracks: structuredClone(session.tracks),
+    arrangement: structuredClone(session.arrangement),
+  };
+}
+
+function restoreSessionState(session: PulseGridSession, snapshot: any) {
+  session.project_name = String(snapshot?.project_name || session.project_name);
+  session.transport = structuredClone(snapshot?.transport || session.transport);
+  session.active_scene = Number.isInteger(snapshot?.active_scene) ? snapshot.active_scene : session.active_scene;
+  session.tracks = structuredClone(snapshot?.tracks || session.tracks);
+  session.arrangement = structuredClone(snapshot?.arrangement || session.arrangement);
+}
+
 function getTrack(session: PulseGridSession, trackId: string) {
   const track = session.tracks.find((candidate) => candidate.id === trackId);
   if (!track) throw new Error('Unknown PulseGrid track: ' + trackId);
@@ -465,6 +499,62 @@ export function applyPulseGridOperation(
 }
 
 
+export function applyPulseGridTransaction(
+  source: PulseGridSession,
+  input: PulseGridTransactionInput,
+  actor: PulseGridActor = 'agent',
+) {
+  const intent = String(input?.intent || '').trim();
+  const operations = Array.isArray(input?.operations) ? input.operations : [];
+  if (!intent) throw new Error('PulseGrid transaction intent is required.');
+  if (!operations.length) throw new Error('PulseGrid transaction requires at least one operation.');
+  if (operations.length > 128) throw new Error('PulseGrid transaction exceeds the 128-operation safety limit.');
+
+  const transactionId = String(input.transaction_id || crypto.randomUUID());
+  const before = sessionStateSnapshot(source);
+  let working = cloneSession(source);
+  const childReceipts: PulseGridReceipt[] = [];
+
+  for (const operation of operations) {
+    const result = applyPulseGridOperation(working, operation, actor);
+    result.receipt.transaction_id = transactionId;
+    result.receipt.intent = intent;
+    working = result.session;
+    childReceipts.push(result.receipt);
+  }
+
+  const after = sessionStateSnapshot(working);
+  const receipt: PulseGridReceipt = {
+    id: crypto.randomUUID(),
+    timestamp: new Date().toISOString(),
+    actor,
+    operation: 'transaction.apply',
+    targets: [...new Set(childReceipts.flatMap((child) => child.targets))],
+    before,
+    after,
+    reversible: true,
+    request: {
+      type: 'transaction.apply',
+      transaction_id: transactionId,
+      intent,
+      operations: structuredClone(operations),
+    },
+    undo_of: null,
+    transaction_id: transactionId,
+    child_receipt_ids: childReceipts.map((child) => child.id),
+    intent,
+  };
+  working.receipts.push(receipt);
+
+  const validation = validatePulseGridSession(working);
+  if (!validation.ok) {
+    throw new Error('PulseGrid transaction produced invalid session: ' + validation.errors.join(', '));
+  }
+
+  return { session: working, receipt, child_receipts: childReceipts };
+}
+
+
 export function undoPulseGridReceipt(
   source: PulseGridSession,
   receiptId: string,
@@ -478,7 +568,9 @@ export function undoPulseGridReceipt(
   const session = cloneSession(source);
   const operation = originalReceipt.request;
 
-  if (operation.type === 'transport.set_tempo') {
+  if (operation.type === 'transaction.apply') {
+    restoreSessionState(session, originalReceipt.before);
+  } else if (operation.type === 'transport.set_tempo') {
     session.transport.bpm = Number(originalReceipt.before);
   } else if (operation.type === 'transport.set_swing') {
     session.transport.swing = Number(originalReceipt.before);
@@ -536,6 +628,9 @@ export function undoPulseGridReceipt(
     reversible: false,
     request: null,
     undo_of: originalReceipt.id,
+    transaction_id: originalReceipt.transaction_id || null,
+    child_receipt_ids: null,
+    intent: originalReceipt.intent || null,
   };
   session.receipts.push(undoReceipt);
   return { session, receipt: undoReceipt };

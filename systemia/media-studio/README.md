@@ -473,3 +473,11 @@ This makes the promise of reversible agent edits executable inside the engine ra
 PulseGrid can fork a source clip into another scene through `clip.fork_variation` without mutating the source. The new clip receives a distinct identity while preserving musical content, and its provenance records `parent_clip_id`, source scene and the actor that created the branch.
 
 This gives agents and musicians a native “try another idea without sacrificing this one” primitive. Later edits to the variation are isolated from the source, and executable undo restores the destination scene that existed before the fork.
+
+### PulseGrid 0.9 atomic edit plans
+
+PulseGrid can now apply a named musical intent as an atomic transaction through `applyPulseGridTransaction`. A plan may contain up to 128 canonical operations. Every child edit is executed against a private working session; if any child fails, the caller receives an error and the source session remains untouched.
+
+A successful plan emits child receipts linked by one transaction ID plus a parent `transaction.apply` receipt containing the explicit intent, affected targets, child receipt IDs, and pre/post session-state snapshots. Undoing the parent transaction restores the complete pre-plan musical state while preserving the audit trail.
+
+This is the execution boundary for future semantic requests such as “make the chorus hit harder”: the model must resolve the request into explicit graph operations, then commit them as one validated reversible plan instead of issuing unrelated mutations.
