@@ -7,11 +7,13 @@ on:
       - 'systemia/mcp/fabric-directory.mjs'
       - 'systemia/mcp/fabric-local-runtime.mjs'
       - 'systemia/mcp/fabric-public-site.mjs'
+      - 'systemia/mcp/earthworks-simulator-page.mjs'
       - 'systemia/visual-desk/**'
       - 'public/visuals/**'
       - 'public/demos/**'
       - 'tests/fabric-offer-pages.test.mjs'
       - 'tests/aliev-owned-page.test.mjs'
+      - 'tests/earthworks-owned-page.test.mjs'
       - 'scripts/update-fabric-owned-edge.sh'
       - 'scripts/fabric-edge-external-canary.mjs'
       - '.github/workflows/chromebook-operator-edge-canary.yml'
@@ -40,6 +42,7 @@ on:
       - 'tests/evercraft-fabric-runtime.test.mjs'
       - 'tests/fabric-offer-pages.test.mjs'
       - 'tests/aliev-owned-page.test.mjs'
+      - 'tests/earthworks-owned-page.test.mjs'
       - 'tests/fabric-faie-native-runtime.test.mjs'
       - 'tests/fabric-mobile-runtime.test.mjs'
       - 'tests/specialist-handoff-native-runtime.test.mjs'
@@ -71,7 +74,7 @@ jobs:
         with:
           node-version: '22'
       - name: Prove Fabric MCP, human offer storefront, and mobile door
-        run: node --test tests/evercraft-fabric-runtime.test.mjs tests/fabric-offer-pages.test.mjs tests/aliev-owned-page.test.mjs tests/fabric-mobile-runtime.test.mjs tests/fabric-faie-native-runtime.test.mjs
+        run: node --test tests/evercraft-fabric-runtime.test.mjs tests/fabric-offer-pages.test.mjs tests/aliev-owned-page.test.mjs tests/earthworks-owned-page.test.mjs tests/fabric-mobile-runtime.test.mjs tests/fabric-faie-native-runtime.test.mjs
       - name: Prove specialist runtime remains safe
         run: |
           npm install --no-audit --no-fund
