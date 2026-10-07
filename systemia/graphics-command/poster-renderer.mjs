@@ -277,6 +277,7 @@ export function renderDirectedPoster(story,plan,format='feed'){
   if(!spec) throw new Error('graphics_poster_format_invalid');
   if(plan?.schema!=='evercraft.graphics-command.plan.v1') throw new Error('graphics_poster_plan_invalid');
   const boundary=boundaryForStory(story);
+  const terrainHref=plan.geography?.terrain ? terrainReliefDataUri(story?.visual?.terrainId) : null;
   const box=boundary?.bbox || pointBounds(story.points);
   const frame=projection(box,spec.map);
   const positions=new Map(story.points.map(point=>[point.id,frame.project(point)]));
