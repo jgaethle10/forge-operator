@@ -28,7 +28,9 @@ jobs:
       - name: Build Kaggle submission.zip
         run: bash systemia/competition/entries/gemma-saban/package-submission.sh
       - name: Verify agent.yaml is at archive root
-        run: unzip -p systemia/competition/entries/gemma-saban/dist/submission.zip agent.yaml | grep -q '^name: saban_swe_agent$'
+        run: |
+          first_line="$(unzip -p systemia/competition/entries/gemma-saban/dist/submission.zip agent.yaml | head -n 1)"
+          test "$first_line" = "name: saban_swe_agent"
       - name: Upload Kaggle submission artifact
         uses: actions/upload-artifact@v4
         with:
