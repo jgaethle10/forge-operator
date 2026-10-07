@@ -30,6 +30,18 @@ export interface WorldIntelPointInput {
   sourceRefs: string[];
 }
 
+export interface WorldIntelPolygonInput {
+  id: string;
+  rings: Array<Array<{lat:number;lon:number}>>;
+  label?: string;
+  fill?: string;
+  stroke?: string;
+  strokeWidth?: number;
+  opacity?: number;
+  evidenceState: EvidenceState;
+  sourceRefs: string[];
+}
+
 export interface WorldIntelMetricInput {
   id: string;
   label: string;
@@ -64,6 +76,7 @@ export interface WorldIntelStageInput {
     zoom?: number;
     routes?: WorldIntelRouteInput[];
     points?: WorldIntelPointInput[];
+    polygons?: WorldIntelPolygonInput[];
   };
   metrics?: WorldIntelMetricInput[];
   timeline?: {
@@ -185,11 +198,13 @@ export function compileWorldIntelStage(input:WorldIntelStageInput):VisualStage{
   if(input.map){
     const mapRefs=[
       ...refs(input.map.routes),
-      ...refs(input.map.points)
+      ...refs(input.map.points),
+      ...refs(input.map.polygons)
     ];
     const mapItems=[
       ...(input.map.routes??[]),
-      ...(input.map.points??[])
+      ...(input.map.points??[]),
+      ...(input.map.polygons??[])
     ];
     layers.push({
       id:'world-geo',
@@ -217,6 +232,7 @@ export function compileWorldIntelStage(input:WorldIntelStageInput):VisualStage{
         ]
       })),
       points:input.map.points??[],
+      polygons:input.map.polygons??[],
       evidenceState:predominantState(mapItems),
       sourceRefs:mapRefs
     });
