@@ -108,6 +108,13 @@ export interface GeoLayer extends BaseLayer {
   centerLat?: number;
   centerLon?: number;
   zoom?: number;
+  fitBounds?: {
+    north:number;
+    south:number;
+    east:number;
+    west:number;
+    paddingPct?:number;
+  };
   points?: GeoPoint[];
   routes?: GeoRoute[];
   polygons?: GeoPolygon[];
@@ -385,6 +392,16 @@ export function validateStage(stage:VisualStage){
     if(!Number.isFinite(layer.z)) errors.push(`layer_z_invalid:${layer.id}`);
     if(layer.kind==='media' && !layer.sourcePath) errors.push(`media_source_missing:${layer.id}`);
     if(layer.kind==='geo'){
+      if(layer.fitBounds){
+        const b=layer.fitBounds;
+        if(
+          !Number.isFinite(b.north)||!Number.isFinite(b.south)||
+          !Number.isFinite(b.east)||!Number.isFinite(b.west)||
+          b.north<=b.south||b.north>90||b.south<-90||
+          b.east>180||b.east<-180||b.west>180||b.west<-180||
+          (b.paddingPct!==undefined && (!Number.isFinite(b.paddingPct)||b.paddingPct<0||b.paddingPct>=.45))
+        ) errors.push(`geo_fit_bounds_invalid:${layer.id}`);
+      }
       for(const polygon of layer.polygons??[]){
         if(!polygon.id?.trim()) errors.push(`geo_polygon_id_missing:${layer.id}`);
         if(!Array.isArray(polygon.rings)||!polygon.rings.length) errors.push(`geo_polygon_rings_missing:${polygon.id||layer.id}`);
