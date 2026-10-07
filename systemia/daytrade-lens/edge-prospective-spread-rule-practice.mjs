@@ -139,6 +139,17 @@ async function main(){
   const receipt={
     schema:"evercraft.daytrade.prospective-spread-rule-practice.v1",
     generated_at:new Date().toISOString(),
+    window_start_at:entry.observed_at,
+    window_end_at:exit.observed_at,
+    configured_hold_ms:holdMs,
+    decision_feed:"iex",
+    market_data_provider:"alpaca",
+    entry_quote_timestamps:Object.fromEntries(
+      symbols.map(symbol=>[symbol,entry.quotes[symbol].timestamp])
+    ),
+    exit_quote_timestamps:Object.fromEntries(
+      symbols.map(symbol=>[symbol,exit.quotes[symbol].timestamp])
+    ),
     simulation_only:true,
     capital_at_risk_usd:0,
     broker_order_submitted:false,
@@ -162,6 +173,9 @@ async function main(){
       not_independent_market_validation:true,
       not_signal_validation:true,
       iex_is_not_consolidated_sip_nbbo:true,
+      decision_feed_is_explicitly_iex:true,
+      delayed_sip_feed_portability_validation_required:true,
+      iex_rule_must_not_be_assumed_equivalent_to_sip:true,
     },
     live_trade_authority:false,
   };
