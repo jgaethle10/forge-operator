@@ -56,7 +56,18 @@
         "count_exact": false
       }
     },
-    "legacy_inventory_observed_at": "2026-10-06"
+    "legacy_inventory_observed_at": "2026-10-06",
+    "legacy_surface_discrepancy": {
+      "entities": [
+        "ForensicCandidateFinding",
+        "LegacyFindingAudit"
+      ],
+      "production_connector_visible": true,
+      "app_sdk_shell_visible": false,
+      "disposition": "fail_closed_until_terminal_hashed_production_extraction"
+    },
+    "stable_migration_page_hashing": true,
+    "reconciliation_hardening_in_source": true
   },
   "migrate": [
     "forensic_finding_ledger",
@@ -87,12 +98,13 @@
     "observation_window_required": true
   },
   "blockers": [
+    "A production data-surface discrepancy exists for candidate/audit ledgers; final accounting must come from terminal hashed production extraction.",
     "Owned normalized corpus store is not yet populated from the legacy source.",
-    "Owned research/search runtime is not yet deployed through Yard / Evercraft Compute.",
+    "Owned research/search runtime is not yet live on an admitted Evercraft Compute node.",
     "filescompanion.com has not yet been independently verified as bound to the owned runtime.",
     "Legacy Base44 customer continuity must remain available until owned route, data reconciliation, rollback and observation receipts pass."
   ],
-  "next_action": "merge the owned corpus/runtime proof after CI, provision the forensic resident workload on an admitted Evercraft Compute node, expose a bounded legacy extraction edge long enough to stream the allowlisted corpus, reconcile counts/collisions/citations, then bind and verify the public route before retiring legacy execution",
+  "next_action": "land reconciliation hardening, deploy the owned forensic workload through Yard, run terminal hashed extraction from the live legacy production surface into the owned corpus, reconcile exact counts and duplicate/citation shape, then verify filescompanion.com and observe before legacy retirement",
   "destructive_cutover_allowed": false,
   "health": {
     "state": "legacy_public_path_present_owned_cutover_started",
