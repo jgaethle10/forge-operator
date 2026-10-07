@@ -543,7 +543,9 @@ export function buildVisualStory(input,{outputRoot,origin=DEFAULT_ORIGIN}={}){
         candidate.id,
         {
           feed:canonicalUrl+'shot-'+candidate.id+'-feed.svg',
+          feedPreview:canonicalUrl+'shot-'+candidate.id+'-feed.html',
           story:canonicalUrl+'shot-'+candidate.id+'-story.svg',
+          storyPreview:canonicalUrl+'shot-'+candidate.id+'-story.html',
         }
       ])),
       fallenStageInput:canonicalUrl+'fallen-stage-input.json',
@@ -592,13 +594,23 @@ export function buildVisualStory(input,{outputRoot,origin=DEFAULT_ORIGIN}={}){
       strategyId:candidate.id,
       terrainHrefOverride:terrain?'./'+terrain.assetName:'',
     };
+    const feedAsset='shot-'+candidate.id+'-feed.svg';
+    const storyAsset='shot-'+candidate.id+'-story.svg';
     fs.writeFileSync(
-      path.join(outputDir,'shot-'+candidate.id+'-feed.svg'),
+      path.join(outputDir,feedAsset),
       renderDirectedPoster(story,graphicsPlan,'feed',candidateOptions)
     );
     fs.writeFileSync(
-      path.join(outputDir,'shot-'+candidate.id+'-story.svg'),
+      path.join(outputDir,'shot-'+candidate.id+'-feed.html'),
+      renderPosterPreview(story,graphicsPlan,{asset:feedAsset,format:'feed'})
+    );
+    fs.writeFileSync(
+      path.join(outputDir,storyAsset),
       renderDirectedPoster(story,graphicsPlan,'story',candidateOptions)
+    );
+    fs.writeFileSync(
+      path.join(outputDir,'shot-'+candidate.id+'-story.html'),
+      renderPosterPreview(story,graphicsPlan,{asset:storyAsset,format:'story'})
     );
   }
 
