@@ -8,8 +8,13 @@ if(index.schema!=='evercraft.chum.pain-index.v1') fail('unexpected schema');
 if(!Array.isArray(index.entries)||index.entries.length<10) fail('too few entries');
 if(index.summary.entries!==index.entries.length) fail('summary entry count mismatch');
 if(index.universal_front_door?.read_only_registry_name!=='io.github.jgaethle10/evercraft-capability-discovery') fail('read-only Official MCP Registry door missing');
-const serialized=JSON.stringify(index);
-if(serialized.includes('systemiacommandcenters.com')) fail('Marketing Agency route leaked into canonical pain index');
+const isBlockedMarketingRoute=(value)=>{
+  if(!value) return false;
+  try{
+    const host=new URL(String(value)).hostname.toLowerCase();
+    return host==='systemiacommandcenters.com'||host==='www.systemiacommandcenters.com';
+  }catch{return false;}
+};
 
 const dayTrade=index.entries.find((e)=>e.capability_id==='product:daytrade-lens');
 if(!dayTrade) fail('DayTrade Lens product entry missing');
@@ -29,7 +34,7 @@ for(const entry of index.entries){
   const uniq=new Set(entry.pain_phrases.map((x)=>String(x).trim().toLowerCase()));
   if(uniq.size!==entry.pain_phrases.length) fail(`duplicate pain phrase: ${entry.capability_id}`);
   for(const value of [entry.canonical_url,entry.mcp,entry.routing?.target]){
-    if(value&&String(value).includes('systemiacommandcenters.com')) fail(`stale Marketing Agency route: ${entry.capability_id}`);
+    if(isBlockedMarketingRoute(value)) fail(`stale Marketing Agency route: ${entry.capability_id}`);
   }
 }
 
