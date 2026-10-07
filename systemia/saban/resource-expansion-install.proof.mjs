@@ -6,10 +6,13 @@ const source=fs.readFileSync(file,'utf8');
 
 for(const required of [
   '--owned-host',
+  '--auto-retire-owned-host',
   '--public-market-discovery',
   'evercraft-saban-resource-expansion.service',
   'SABAN_ALLOW_COMMERCIAL_CAPACITY=0',
   'Environment=EVERCRAFT_OWNED_HOST=$OWNED_HOST',
+  'Environment=SABAN_LOCAL_HOST_AUTO_RETIRE=$AUTO_RETIRE_OWNED_HOST',
+  'Environment=SABAN_LOCAL_HOST_IDLE_RETIRE_CYCLES=15',
   'Environment=SABAN_PUBLIC_MARKET_DISCOVERY=$PUBLIC_MARKET_DISCOVERY',
   'Environment=EVERCRAFT_LOCAL_NODE_ROOT=$STATE_DIR/resource-field-local-node',
   'systemia/saban/resource-expansion-organism.mjs',
@@ -18,12 +21,14 @@ for(const required of [
 }
 
 assert.match(source,/OWNED_HOST="false"/);
+assert.match(source,/AUTO_RETIRE_OWNED_HOST="false"/);
 assert.match(source,/PUBLIC_MARKET_DISCOVERY="false"/);
 assert.match(source,/--owned-host\) OWNED_HOST="true"/);
+assert.match(source,/--auto-retire-owned-host\) AUTO_RETIRE_OWNED_HOST="true"/);
 assert.match(source,/--public-market-discovery\) PUBLIC_MARKET_DISCOVERY="true"/);
 assert.ok(!source.includes('SABAN_ALLOW_COMMERCIAL_CAPACITY=1'));
 
-assert.match(script,/physical host shutdown is never authorized/);
+assert.match(source,/physical host shutdown is never authorized/);
 
 console.log(JSON.stringify({
   ok:true,
