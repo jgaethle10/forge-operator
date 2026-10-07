@@ -176,7 +176,7 @@ else
 fi
 
 if grep -q '^EVERCRAFT_NATIVE_BROWSER_BOOTSTRAP=true$' "${ENV_FILE}"; then
-  echo "Browser runtime: user-space Playwright/Chromium bootstrap enabled; no sudo or system packages."
+  echo "Browser runtime: user-space Playwright/Chromium bootstrap enabled; no root privileges or system packages."
 else
   echo "Browser runtime: native user-space bootstrap disabled."
 fi
