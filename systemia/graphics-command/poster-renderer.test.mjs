@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { renderDirectedPoster } from './poster-renderer.mjs';
+import { renderDirectedPoster, assessDirectedPosterLayout } from './poster-renderer.mjs';
 
 const story={
   schema:'evercraft.visual-story.v1',
@@ -53,4 +53,22 @@ test('directed poster supports vertical story output',()=>{
   assert.match(svg,/>5 ACTIVE<\/text>/);
   assert.match(svg,/>VOLCANOES<\/text>/);
   assert.match(svg,/WASHINGTON/);
+});
+
+
+test('measured poster QA passes clean geography and rejects impossible marker collisions',()=>{
+  for(const format of ['feed','square','story']){
+    const report=assessDirectedPosterLayout(story,plan,format);
+    assert.equal(report.status,'pass',format+': '+report.issues.join(','));
+    assert.equal(report.checks.labelsNonOverlapping,true);
+    assert.equal(report.checks.labelsClearOfOtherMarkers,true);
+    assert.equal(report.checks.safeMargins,true);
+  }
+
+  const impossible=structuredClone(story);
+  impossible.points[2]={...impossible.points[2],lat:46.2,lon:-122.18};
+  impossible.points[3]={...impossible.points[3],lat:46.2,lon:-122.18};
+  const rejected=assessDirectedPosterLayout(impossible,plan,'feed');
+  assert.equal(rejected.status,'reject');
+  assert.ok(rejected.issues.some(issue=>issue.startsWith('marker_overlap:')));
 });
