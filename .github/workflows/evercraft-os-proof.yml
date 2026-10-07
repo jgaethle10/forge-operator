@@ -1,0 +1,33 @@
+name: Evercraft OS Phase 0 proof
+
+on:
+  push:
+    branches:
+      - feat/evercraft-os-bootstrap
+    paths:
+      - "systemia/evercraft-os/**"
+      - ".github/workflows/evercraft-os-proof.yml"
+  pull_request:
+    paths:
+      - "systemia/evercraft-os/**"
+      - ".github/workflows/evercraft-os-proof.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  prove:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Use Node 20
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+      - name: Prove Evercraft OS composition
+        run: node systemia/evercraft-os/runtime.proof.mjs
+      - name: Emit boot envelope
+        run: node systemia/evercraft-os/runtime.mjs
