@@ -326,13 +326,23 @@ function WorldViewport({
   selectedId,
   onSelect,
   onTranslate,
+  onRotate,
+  onScale,
+  transformMode,
   snapStep,
+  angleSnapDeg,
+  scaleSnapStep,
 }:{
   project:ForgeProject;
   selectedId:string;
   onSelect:(nodeId:string)=>void;
   onTranslate:(nodeId:string,axis:keyof Vec3,delta:number)=>void;
+  onRotate:(nodeId:string,axis:keyof Vec3,deltaDeg:number)=>void;
+  onScale:(nodeId:string,axis:keyof Vec3,value:number)=>void;
+  transformMode:'translate'|'rotate'|'scale';
   snapStep:number;
+  angleSnapDeg:number;
+  scaleSnapStep:number;
 }){
   const canvasRef=useRef<HTMLCanvasElement>(null);
   const [orbit,setOrbit]=useState({
@@ -342,16 +352,17 @@ function WorldViewport({
     target:{x:0,y:0,z:1} as Vec3,
   });
   const [viewMode,setViewMode]=useState<'orbit'|'camera'>('orbit');
-  const [gizmoPreview,setGizmoPreview]=useState<{
-    nodeId:string;
-    axis:keyof Vec3;
-    delta:number;
-  }|null>(null);
+  const [gizmoPreview,setGizmoPreview]=useState<
+    | {mode:'translate';nodeId:string;axis:keyof Vec3;delta:number}
+    | {mode:'rotate';nodeId:string;axis:keyof Vec3;deltaDeg:number}
+    | {mode:'scale';nodeId:string;axis:keyof Vec3;value:number}
+    | null
+  >(null);
   const dragRef=useRef<
     | {mode:'orbit';x:number;y:number;moved:boolean}
     | {mode:'pick';x:number;y:number;moved:boolean}
     | {
-        mode:'gizmo';
+        mode:'translate-gizmo';
         axis:keyof Vec3;
         startX:number;
         startY:number;
@@ -359,6 +370,25 @@ function WorldViewport({
         axisScreenDy:number;
         axisWorldLength:number;
         delta:number;
+      }
+    | {
+        mode:'scale-gizmo';
+        axis:keyof Vec3;
+        startX:number;
+        startY:number;
+        axisScreenDx:number;
+        axisScreenDy:number;
+        startScale:number;
+        value:number;
+      }
+    | {
+        mode:'rotate-gizmo';
+        axis:keyof Vec3;
+        startX:number;
+        startY:number;
+        centerX:number;
+        centerY:number;
+        deltaDeg:number;
       }
     | null
   >(null);
@@ -378,12 +408,37 @@ function WorldViewport({
     return requested??project.nodes.find(node=>node.kind==='camera')??null;
   },[project]);
 
-  function positionWithPreview(node:ForgeNode){
-    if(gizmoPreview?.nodeId!==node.id) return node.transform.position;
+  function transformWithPreview(node:ForgeNode):Transform{
+    if(gizmoPreview?.nodeId!==node.id) return node.transform;
+    if(gizmoPreview.mode==='translate'){
+      return {
+        ...node.transform,
+        position:{
+          ...node.transform.position,
+          [gizmoPreview.axis]:node.transform.position[gizmoPreview.axis]+gizmoPreview.delta,
+        },
+      };
+    }
+    if(gizmoPreview.mode==='rotate'){
+      return {
+        ...node.transform,
+        rotationDeg:{
+          ...node.transform.rotationDeg,
+          [gizmoPreview.axis]:node.transform.rotationDeg[gizmoPreview.axis]+gizmoPreview.deltaDeg,
+        },
+      };
+    }
     return {
-      ...node.transform.position,
-      [gizmoPreview.axis]:node.transform.position[gizmoPreview.axis]+gizmoPreview.delta,
+      ...node.transform,
+      scale:{
+        ...node.transform.scale,
+        [gizmoPreview.axis]:gizmoPreview.value,
+      },
     };
+  }
+
+  function positionWithPreview(node:ForgeNode){
+    return transformWithPreview(node).position;
   }
 
   function matrices(width:number,height:number){
