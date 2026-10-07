@@ -407,13 +407,14 @@ async function runResidentExpansionOnce({root}={}){
       paid_lease_created:false,
       generated_at:new Date().toISOString(),
     };
-    const receipt={...idle,receipt_hash:sha(idle)};
-    atomicJson(path.join(root,'resource-field-expansion-state.json'),receipt);
-    const ownedSpawnCapacity=await persistOwnedSpawnCapacity({root});
+    const expansionReceipt={...idle,receipt_hash:sha(idle)};
     const reclamation=await runResidentReclamationOnce({root});
-    return {
-      ...receipt,
+    const ownedSpawnCapacity=await persistOwnedSpawnCapacity({root});
+    const body={
+      ...expansionReceipt,
+      expansion_receipt_hash:expansionReceipt.receipt_hash,
       owned_spawn_capacity_offer_count:ownedSpawnCapacity.offer_count,
+      owned_spawn_capacity_receipt_hash:ownedSpawnCapacity.receipt_hash,
       capacity_reclamation:{
         completed_count:reclamation.completed_count||0,
         held_count:reclamation.held_count||0,
@@ -422,6 +423,9 @@ async function runResidentExpansionOnce({root}={}){
         receipt_hash:reclamation.receipt_hash||null,
       },
     };
+    const receipt={...body,receipt_hash:sha(body)};
+    atomicJson(path.join(root,'resource-field-expansion-state.json'),receipt);
+    return receipt;
   }
 
   const queue=JSON.parse(fs.readFileSync(queueFile,'utf8'));
@@ -440,12 +444,13 @@ async function runResidentExpansionOnce({root}={}){
       allocatorToken:String(process.env.EVERCRAFT_ALLOCATOR_TOKEN||''),
     },
   });
-  atomicJson(path.join(root,'resource-field-expansion-state.json'),cycle);
-  const ownedSpawnCapacity=await persistOwnedSpawnCapacity({root});
   const reclamation=await runResidentReclamationOnce({root});
-  return {
+  const ownedSpawnCapacity=await persistOwnedSpawnCapacity({root});
+  const body={
     ...cycle,
+    expansion_receipt_hash:cycle.receipt_hash,
     owned_spawn_capacity_offer_count:ownedSpawnCapacity.offer_count,
+    owned_spawn_capacity_receipt_hash:ownedSpawnCapacity.receipt_hash,
     capacity_reclamation:{
       completed_count:reclamation.completed_count||0,
       held_count:reclamation.held_count||0,
@@ -454,6 +459,9 @@ async function runResidentExpansionOnce({root}={}){
       receipt_hash:reclamation.receipt_hash||null,
     },
   };
+  const receipt={...body,receipt_hash:sha(body)};
+  atomicJson(path.join(root,'resource-field-expansion-state.json'),receipt);
+  return receipt;
 }
 
 async function main(){
