@@ -260,3 +260,36 @@ node systemia/lineage/cli.mjs large-verify <manifest-id>
 ```
 
 Both commands use the streaming path for file-backed large assets.
+
+
+## Integrity verification
+
+Lineage treats content-addressed identity as a runtime invariant, not a naming convention.
+
+Every local `readObject(id)` re-canonicalizes the stored envelope and verifies that its SHA-256 still equals the requested object id. Local disk corruption therefore fails the same way remote corruption does.
+
+The read-only integrity walker inspects the complete local store:
+
+```bash
+node systemia/lineage/cli.mjs fsck
+node systemia/lineage/cli.mjs fsck --fast
+```
+
+Full `fsck` verifies:
+
+- every stored Lineage object envelope digest;
+- branch refs and commit targets;
+- release pointers;
+- operation receipt pointers;
+- commit/tree/reference structure;
+- blob byte counts and internal content SHA-256;
+- tree metadata against referenced blob/large-ref metadata;
+- large-object manifest identity and declared size;
+- large-blob refs against their manifests;
+- every stored chunk digest;
+- every reachable large object's reconstructed full-content SHA-256;
+- reachable vs dangling objects, manifests and chunks.
+
+`--fast` keeps structural/object/manifest/chunk verification but skips reconstruction of every reachable large object's full-content hash.
+
+Dangling immutable storage is reported as a warning, not silently deleted. `fsck` never mutates the repository. Garbage collection must be a separate explicit operation so an integrity check can never destroy evidence or recovery state.
