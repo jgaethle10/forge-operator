@@ -3,7 +3,7 @@ import path from "node:path";
 import {fileURLToPath} from "node:url";
 import {
   fetchAlpacaQuotes,
-  quoteAtOrAfter,
+  normalizeAlpacaQuote,
 } from "./edge-quote-microstructure.mjs";
 
 const HERE=path.dirname(fileURLToPath(import.meta.url));
@@ -21,7 +21,7 @@ function finite(v){
   return Number.isFinite(n)?n:null;
 }
 function sum(xs){return xs.reduce((a,b)=>a+b,0);}
-function around(timestamp,beforeMs=1000,afterMs=5000){
+function around(timestamp,beforeMs=30000,afterMs=1000){
   const t=new Date(timestamp).getTime();
   if(!Number.isFinite(t)) throw new Error("sip_reconciliation_timestamp_invalid");
   return {
@@ -29,7 +29,8 @@ function around(timestamp,beforeMs=1000,afterMs=5000){
     end:new Date(t+afterMs).toISOString(),
   };
 }
-async function sipQuoteAt(symbol,timestamp,{key,secret}){
+async function sipQuoteStateAt(symbol,timestamp,{key,secret,max_staleness_ms=5000}){
+  const target=new Date(timestamp).getTime();
   const range=around(timestamp);
   const rows=await fetchAlpacaQuotes(symbol,{
     start:range.start,
@@ -38,13 +39,29 @@ async function sipQuoteAt(symbol,timestamp,{key,secret}){
     secret,
     feed:"sip",
   });
-  const q=quoteAtOrAfter(rows,timestamp,{max_delay_ms:5000});
+  const normalized=(rows||[])
+    .map(normalizeAlpacaQuote)
+    .filter(Boolean)
+    .filter(q=>new Date(q.t).getTime()<=target)
+    .sort((a,b)=>new Date(a.t)-new Date(b.t));
+  const q=normalized.at(-1)||null;
   if(!q){
     throw new Error(
-      "sip_reconciliation_quote_missing_"+symbol+"_"+timestamp
+      "sip_reconciliation_pre_target_quote_missing_"+symbol+"_"+timestamp
     );
   }
-  return q;
+  const stalenessMs=target-new Date(q.t).getTime();
+  if(stalenessMs<0||stalenessMs>max_staleness_ms){
+    throw new Error(
+      "sip_reconciliation_quote_stale_"+symbol+"_"+stalenessMs
+    );
+  }
+  return {
+    ...q,
+    target_time:new Date(target).toISOString(),
+    quote_staleness_ms:stalenessMs,
+    no_post_target_quote_used:true,
+  };
 }
 function sipRoute(entry,exit,notional){
   const ask=finite(entry?.ask_price);
@@ -86,8 +103,8 @@ async function main(){
       const targets=spec.targets?.[symbol];
       if(!targets) throw new Error("sip_reconciliation_targets_missing_"+symbol);
       const [sipEntry,sipExit]=await Promise.all([
-        sipQuoteAt(symbol,targets.entry,{key,secret}),
-        sipQuoteAt(symbol,targets.exit,{key,secret}),
+        sipQuoteStateAt(symbol,targets.entry,{key,secret}),
+        sipQuoteStateAt(symbol,targets.exit,{key,secret}),
       ]);
       const sipSpread=finite(sipEntry.spread_bps);
       const sipDecision=
@@ -194,6 +211,8 @@ async function main(){
     },
     interpretation:{
       delayed_sip_is_after_the_fact_only:true,
+      delayed_sip_uses_latest_pre_target_quote_state:true,
+      no_post_target_quote_lookahead:true,
       delayed_sip_touch_is_not_real_fill:true,
       decision_flip_means_feed_choice_changes_rule_outcome:true,
       original_rule_was_frozen_on_iex_observations:true,
