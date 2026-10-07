@@ -9,6 +9,7 @@ import {
   runtimeBodiesByForgeNodeId,
   runtimeTransformsByForgeNodeId,
   worldForgeDirectionToWorldEngine,
+  worldForgePositionToWorldEngine,
 } from './world-forge-runtime-view';
 
 type Vec3={x:number;y:number;z:number};
@@ -745,6 +746,7 @@ export default function WorldForgeEditor(){
   const [meshFaceIndex,setMeshFaceIndex]=useState(1);
   const [meshAmount,setMeshAmount]=useState(.25);
   const [playImpulse,setPlayImpulse]=useState(1);
+  const [runtimeDragMode,setRuntimeDragMode]=useState(false);
   const [stageMode,setStageMode]=useState(false);
   const [stagedOperations,setStagedOperations]=useState<ForgeOperation[]>([]);
   const [snapStep,setSnapStep]=useState(.25);
@@ -951,10 +953,12 @@ export default function WorldForgeEditor(){
         throw new Error(payload.error||'Could not stop World Forge Play Mode.');
       }
       setPlaySession(null);
+      setRuntimeDragMode(false);
       if(!silent) setCommandNote(`Play Mode stopped at tick ${current.tick}.`);
     }catch(err){
       if(!silent) throw err;
       setPlaySession(null);
+      setRuntimeDragMode(false);
     }
   }
 
@@ -1261,7 +1265,49 @@ export default function WorldForgeEditor(){
     transformPatch('position',axis,next);
   }
 
+  async function teleportRuntimeByAxis(
+    nodeId:string,
+    axis:keyof Vec3,
+    delta:number,
+  ){
+    if(!playSession||busy||stagedOperations.length) return;
+    const node=project?.nodes.find(item=>item.id===nodeId);
+    const runtimeTransform=playSession.runtimeTransforms[nodeId];
+    const body=playSession.runtimeBodies[nodeId];
+    if(!node||node.physics?.mode!=='dynamic'||!runtimeTransform||!body?.entityId||body.kinematic){
+      setError('Runtime Drag requires a selected non-kinematic Dynamic body in the active Play session.');
+      return;
+    }
+
+    const targetForge={
+      ...runtimeTransform.position,
+      [axis]:runtimeTransform.position[axis]+delta,
+    };
+    const targetEngine=worldForgePositionToWorldEngine(targetForge);
+    const stamp=Date.now().toString(36);
+    await stepPlaySession(1,[
+      {
+        id:`editor-drag-${stamp}-00-teleport`,
+        tick:playSession.tick+1,
+        entityId:body.entityId,
+        kind:'teleport',
+        value:targetEngine,
+      },
+      {
+        id:`editor-drag-${stamp}-01-stop`,
+        tick:playSession.tick+1,
+        entityId:body.entityId,
+        kind:'set_velocity',
+        value:{x:0,y:0,z:0},
+      },
+    ]);
+  }
+
   function commitViewportTranslate(nodeId:string,axis:keyof Vec3,delta:number){
+    if(runtimeDragMode){
+      void teleportRuntimeByAxis(nodeId,axis,delta);
+      return;
+    }
     const node=viewportProject?.nodes.find(item=>item.id===nodeId);
     if(!node||node.locked) return;
     const value=node.transform.position[axis]+delta;
@@ -1645,6 +1691,25 @@ export default function WorldForgeEditor(){
               </span>
               <button onClick={()=>void stepPlaySession(1)} disabled={busy}>+1 Tick</button>
               <button onClick={()=>void stepPlaySession(60)} disabled={busy}>+60 Ticks</button>
+              <button
+                className={runtimeDragMode?'wf-runtime-drag active':'wf-runtime-drag'}
+                onClick={()=>setRuntimeDragMode(current=>!current)}
+                disabled={
+                  busy||
+                  stagedOperations.length>0||
+                  selected?.physics?.mode!=='dynamic'||
+                  Boolean(playSession.runtimeBodies[selectedId]?.kinematic)
+                }
+                title={
+                  stagedOperations.length
+                    ? 'Apply or clear staged authoring changes first'
+                    : selected?.physics?.mode!=='dynamic'
+                      ? 'Select a Dynamic mesh to enable Runtime Drag'
+                      : 'Toggle viewport gizmo between authored transforms and ephemeral runtime teleport'
+                }
+              >
+                {runtimeDragMode?'Runtime Drag ON':'Runtime Drag'}
+              </button>
               <button onClick={()=>void stopPlaySession()} disabled={busy}>■ Stop</button>
             </>}
         <input
@@ -1716,8 +1781,18 @@ export default function WorldForgeEditor(){
       </aside>
 
       <section className="wf-stage">
-        {playSession&&<div className={stagedOperations.length?'wf-runtime-view-badge authoring':'wf-runtime-view-badge'}>
-          {stagedOperations.length?'AUTHOR PREVIEW':'RUNTIME VIEW'} · t{playSession.tick}
+        {playSession&&<div className={
+          stagedOperations.length
+            ? 'wf-runtime-view-badge authoring'
+            : runtimeDragMode
+              ? 'wf-runtime-view-badge dragging'
+              : 'wf-runtime-view-badge'
+        }>
+          {stagedOperations.length
+            ? 'AUTHOR PREVIEW'
+            : runtimeDragMode
+              ? 'RUNTIME DRAG'
+              : 'RUNTIME VIEW'} · t{playSession.tick}
         </div>}
         <WorldViewport
           project={runtimeViewportProject??viewportProject??project}
