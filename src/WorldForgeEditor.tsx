@@ -423,6 +423,8 @@ export default function WorldForgeEditor(){
   const [nativePreview,setNativePreview]=useState<{svg:string;sha:string;renderer:string;solid:boolean}|null>(null);
   const [meshFaceIndex,setMeshFaceIndex]=useState(1);
   const [meshAmount,setMeshAmount]=useState(.25);
+  const [stageMode,setStageMode]=useState(false);
+  const [stagedOperations,setStagedOperations]=useState<ForgeOperation[]>([]);
   const [snapshotState,setSnapshotState]=useState<'loading'|'saved'|'dirty'>('loading');
   const importInputRef=useRef<HTMLInputElement>(null);
 
@@ -728,9 +730,15 @@ export default function WorldForgeEditor(){
         throw new Error(payload.plan?.explanation||payload.error||'World Forge could not compile that command.');
       }
       const plan=payload.plan;
-      setCommandNote(plan.explanation);
-      setBusy(false);
-      await mutate(plan.operations);
+      if(stageMode){
+        setStagedOperations(current=>[...current,...plan.operations].slice(0,100));
+        setCommandNote(`Staged: ${plan.explanation}`);
+        setBusy(false);
+      }else{
+        setCommandNote(plan.explanation);
+        setBusy(false);
+        await mutate(plan.operations);
+      }
       if(clearComposer) setCommand('');
     }catch(err){
       setError(err instanceof Error?err.message:String(err));
@@ -740,6 +748,57 @@ export default function WorldForgeEditor(){
 
   async function runCommand(){
     await executePlannedCommand(command,true);
+  }
+
+  async function applyStagedChangeSet(){
+    if(!project||!stagedOperations.length||busy) return;
+    setBusy(true);
+    setError('');
+    try{
+      const createResponse=await fetch('/api/fallen/world-forge/change-set',{
+        method:'POST',
+        headers:{'content-type':'application/json'},
+        body:JSON.stringify({
+          project,
+          id:`studio-stage-${Date.now().toString(36)}`,
+          title:'Studio staged changes',
+          author:{kind:'human',id:'world-forge-editor'},
+          operations:stagedOperations,
+          destructiveAuthority:false,
+        }),
+      });
+      const created=await createResponse.json();
+      if(!createResponse.ok||!created.success||!created.changeSet){
+        throw new Error(created.error||'Could not create World Forge ChangeSet.');
+      }
+
+      const applyResponse=await fetch('/api/fallen/world-forge/apply-change-set',{
+        method:'POST',
+        headers:{'content-type':'application/json'},
+        body:JSON.stringify({project,changeSet:created.changeSet}),
+      });
+      const applied=await applyResponse.json();
+      if(!applyResponse.ok||!applied.success||!applied.result?.mutation){
+        throw new Error(applied.result?.reason||applied.error||'World Forge ChangeSet was blocked.');
+      }
+
+      const mutation=applied.result.mutation;
+      setProject(mutation.project);
+      setDigest(mutation.validation.digest);
+      setReceipts(current=>[mutation.receipt,...current].slice(0,12));
+      if(mutation.receipt.inverseOperations?.length){
+        setUndoStack(current=>[...current,mutation.receipt.inverseOperations].slice(-50));
+      }
+      setStagedOperations([]);
+      setStageMode(false);
+      setCommandNote(
+        `Applied ${created.changeSet.operations.length} staged operations atomically as ${created.changeSet.id}.`
+      );
+    }catch(err){
+      setError(err instanceof Error?err.message:String(err));
+    }finally{
+      setBusy(false);
+    }
   }
 
   if(!project){
@@ -765,6 +824,19 @@ export default function WorldForgeEditor(){
         <button onClick={exportProject} disabled={busy}>Export</button>
         <button onClick={()=>importInputRef.current?.click()} disabled={busy}>Import</button>
         <button onClick={()=>void resetProject()} disabled={busy}>Reset</button>
+        <button
+          className={stageMode?'wf-stage-toggle active':'wf-stage-toggle'}
+          onClick={()=>setStageMode(current=>!current)}
+          disabled={busy}
+        >
+          Stage {stageMode?'ON':'OFF'}
+        </button>
+        {stagedOperations.length>0&&<>
+          <button onClick={()=>void applyStagedChangeSet()} disabled={busy}>
+            Apply Batch ({stagedOperations.length})
+          </button>
+          <button onClick={()=>setStagedOperations([])} disabled={busy}>Clear Batch</button>
+        </>}
         <input
           ref={importInputRef}
           className="wf-hidden-input"
@@ -798,6 +870,11 @@ export default function WorldForgeEditor(){
 
       <section className="wf-stage">
         <WorldViewport project={project} selectedId={selectedId} onSelect={setSelectedId}/>
+        {stagedOperations.length>0&&<div className="wf-stage-tray">
+          <strong>CHANGESET STAGED</strong>
+          <span>{stagedOperations.length} operation{stagedOperations.length===1?'':'s'}</span>
+          <small>Bound to world v{project.version} · {digest.slice(0,12)}</small>
+        </div>}
         <form
           className="wf-commandbar"
           onSubmit={event=>{

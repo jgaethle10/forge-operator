@@ -146,6 +146,25 @@ Both renderers are intentionally **preview-only**. They refuse production render
 
 The editor exposes separate **Wireframe** and **Solid Render** controls. This is the first owned renderer ladder, not a claim that World Forge has reached final offline-render quality.
 
+## Atomic ChangeSets
+
+World Forge now supports digest-bound multi-operation ChangeSets for human and agent collaboration.
+
+A ChangeSet records the target project ID, base version, base world digest, author identity, explicit destructive authority state, ordered operations and its own tamper-evident digest. Application is atomic:
+
+- the project ID must match;
+- the project version must match;
+- the base world digest must match;
+- the ChangeSet digest must verify;
+- destructive operations require explicit ChangeSet authority;
+- every operation must pass normal World Forge mutation validation;
+- if any operation fails, none of the batch is committed;
+- an accepted batch produces one project version and one normal mutation receipt.
+
+The browser editor exposes **Stage mode**. Natural-language edits can be queued, bound to the current world version/digest, then applied as one ChangeSet. This is the first collaboration primitive for Saban/human concurrent scene work without last-write-wins corruption.
+
+CLI and HTTP surfaces support separate ChangeSet creation and application so proposals can be reviewed before execution.
+
 ## Renderer strategy
 
 The project format must remain independent of any one renderer.

@@ -70,6 +70,11 @@ import {
   type WorldForgeProject,
 } from './world-forge.js';
 import { buildWorldForgeCinematicShot } from './world-forge-cinematic.js';
+import {
+  applyWorldForgeChangeSet,
+  createWorldForgeChangeSet,
+  type WorldForgeChangeSet,
+} from './world-forge-changeset.js';
 import { renderWorldForgeNativePreview } from './world-forge-native-preview.js';
 import { renderWorldForgeNativeSolidPreview } from './world-forge-native-solid-preview.js';
 
@@ -123,6 +128,8 @@ function usage() {
     '  npm run media:studio -- world-forge-shot <payload.json> <shot.json>',
     '  npm run media:studio -- world-forge-preview <payload.json> <preview.svg> [receipt.json]',
     '  npm run media:studio -- world-forge-solid-preview <payload.json> <preview.svg> [receipt.json]',
+    '  npm run media:studio -- world-forge-change-set <payload.json> <change-set.json>',
+    '  npm run media:studio -- world-forge-apply-change-set <payload.json> <result.json>',
   ].join('\n'));
 }
 
@@ -193,6 +200,44 @@ function main() {
     writeJson(output, plan);
     console.log(`World Forge render plan created: ${path.resolve(output)}`);
     console.log(`Renderer executable: ${plan.backend.executable}`);
+    return;
+  }
+
+  if (command === 'world-forge-change-set') {
+    if (!input || !output) {
+      usage();
+      process.exitCode = 1;
+      return;
+    }
+    const payload = readJson<{
+      project:WorldForgeProject;
+      id:string;
+      title:string;
+      author:{kind:'human'|'agent'|'system';id:string};
+      operations:WorldForgeOperation[];
+      destructiveAuthority?:boolean;
+    }>(input);
+    const changeSet = createWorldForgeChangeSet(payload);
+    writeJson(output, changeSet);
+    console.log(`World Forge ChangeSet created: ${path.resolve(output)}`);
+    console.log(`Base: v${changeSet.baseVersion} ${changeSet.baseDigest}; digest: ${changeSet.digest}`);
+    return;
+  }
+
+  if (command === 'world-forge-apply-change-set') {
+    if (!input || !output) {
+      usage();
+      process.exitCode = 1;
+      return;
+    }
+    const payload = readJson<{project:WorldForgeProject;changeSet:WorldForgeChangeSet}>(input);
+    const result = applyWorldForgeChangeSet(payload);
+    writeJson(output, result);
+    console.log(`World Forge ChangeSet apply: ${result.status}`);
+    if (result.status === 'blocked') {
+      console.log(`Reason: ${result.reason}`);
+      process.exitCode = 2;
+    }
     return;
   }
 

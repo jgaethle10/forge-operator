@@ -180,6 +180,8 @@ npm run media:studio -- world-forge-mutate ./tmp/world-mutation.json ./tmp/world
 npm run media:studio -- world-forge-render-plan ./tmp/world-render.json ./tmp/world-render.plan.json
 npm run media:studio -- world-forge-shot ./tmp/world-shot.json ./tmp/world-shot.contract.json
 npm run media:studio -- world-forge-preview ./tmp/world-preview.json ./tmp/world-preview.svg ./tmp/world-preview.receipt.json
+npm run media:studio -- world-forge-change-set ./tmp/world-change-set.json ./tmp/world-change-set.contract.json
+npm run media:studio -- world-forge-apply-change-set ./tmp/world-change-set-apply.json ./tmp/world-change-set.result.json
 ```
 
 The native wireframe renderer is deliberately preview-only. It emits a digest-backed receipt and does not claim production-render or publication authority.
