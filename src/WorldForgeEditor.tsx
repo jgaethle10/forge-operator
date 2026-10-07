@@ -8,7 +8,7 @@ import {
 import {
   runtimeBodiesByForgeNodeId,
   runtimeTransformsByForgeNodeId,
-  worldForgeDirectionToWorldEngine,
+  worldForgeAxisImpulseToWorldEngine,
 } from './world-forge-runtime-view';
 
 type Vec3={x:number;y:number;z:number};
@@ -283,12 +283,20 @@ function WorldViewport({
   selectedId,
   onSelect,
   onTranslate,
+  onRuntimeImpulse,
+  runtimeImpulseActive,
+  runtimeImpulseScale,
+  interactionDisabled,
   snapStep,
 }:{
   project:ForgeProject;
   selectedId:string;
   onSelect:(nodeId:string)=>void;
   onTranslate:(nodeId:string,axis:keyof Vec3,delta:number)=>void;
+  onRuntimeImpulse:(axis:keyof Vec3,amount:number)=>void;
+  runtimeImpulseActive:boolean;
+  runtimeImpulseScale:number;
+  interactionDisabled:boolean;
   snapStep:number;
 }){
   const canvasRef=useRef<HTMLCanvasElement>(null);
@@ -587,6 +595,7 @@ function WorldViewport({
       ref={canvasRef}
       className="wf-viewport"
       onPointerDown={(event)=>{
+        if(interactionDisabled) return;
         const hit=gizmoHit(event.clientX,event.clientY);
         if(hit){
           dragRef.current={
@@ -655,7 +664,11 @@ function WorldViewport({
         if(drag?.mode==='gizmo'){
           setGizmoPreview(null);
           if(selectedNode&&Math.abs(drag.delta)>1e-9){
-            onTranslate(selectedNode.id,drag.axis,drag.delta);
+            if(runtimeImpulseActive){
+              onRuntimeImpulse(drag.axis,drag.delta*runtimeImpulseScale);
+            }else{
+              onTranslate(selectedNode.id,drag.axis,drag.delta);
+            }
           }
           return;
         }
@@ -675,7 +688,11 @@ function WorldViewport({
         }));
       }}
     />
-    <div className="wf-view-badge">{viewMode==='camera'?'CAMERA VIEW':'WEBGL2 ORBIT'}</div>
+    <div className="wf-view-badge">
+      {runtimeImpulseActive
+        ? 'PLAY IMPULSE · XYZ'
+        : viewMode==='camera'?'CAMERA VIEW':'WEBGL2 ORBIT'}
+    </div>
     <div className="wf-view-controls">
       <button type="button" onClick={frameSelected} disabled={!selectedNode}>Frame Selected</button>
       <button
@@ -689,7 +706,9 @@ function WorldViewport({
       <span>Snap {snapStep}m</span>
     </div>
     <div className="wf-view-help">
-      Drag empty space to orbit · wheel to zoom · click to select · drag X/Y/Z handles to move
+      {runtimeImpulseActive
+        ? 'Play interaction · drag X/Y/Z handles to send a tick-bound impulse · wheel to zoom · click to select'
+        : 'Drag empty space to orbit · wheel to zoom · click to select · drag X/Y/Z handles to move'}
     </div>
   </div>;
 }
@@ -878,6 +897,13 @@ export default function WorldForgeEditor(){
   },[viewportProject,playSession,stagedOperations.length]);
 
   const selected=viewportProject?.nodes.find(node=>node.id===selectedId)||null;
+  const runtimeImpulseActive=Boolean(
+    playSession &&
+    selected &&
+    selected.physics?.mode==='dynamic' &&
+    stagedOperations.length===0 &&
+    playSession.runtimeBodies[selected.id]?.entityId
+  );
 
   function selectDefaultNode(nextProject:ForgeProject){
     const first=nextProject.nodes.find(node=>node.kind==='mesh'&&!node.locked);
@@ -998,9 +1024,7 @@ export default function WorldForgeEditor(){
       setError('Selected object is not present as a dynamic body in the current runtime snapshot.');
       return;
     }
-    const forgeImpulse={x:0,y:0,z:0};
-    forgeImpulse[axis]=amount;
-    const value=worldForgeDirectionToWorldEngine(forgeImpulse);
+    const value=worldForgeAxisImpulseToWorldEngine(axis,amount);
     await stepPlaySession(1,[{
       id:`editor-impulse-${Date.now().toString(36)}`,
       tick:playSession.tick+1,
@@ -1724,6 +1748,10 @@ export default function WorldForgeEditor(){
           selectedId={selectedId}
           onSelect={setSelectedId}
           onTranslate={commitViewportTranslate}
+          onRuntimeImpulse={(axis,amount)=>void impulseSelected(axis,amount)}
+          runtimeImpulseActive={runtimeImpulseActive}
+          runtimeImpulseScale={playImpulse}
+          interactionDisabled={busy}
           snapStep={snapStep}
         />
         {engineBridge&&<div className="wf-engine-bridge-status">
@@ -1960,7 +1988,7 @@ export default function WorldForgeEditor(){
                     <span>{speed.toFixed(2)} m/s</span>
                   </div>
                   <NumberField
-                    label="Impulse"
+                    label="Impulse/m"
                     value={playImpulse}
                     step={.25}
                     onCommit={value=>setPlayImpulse(Math.max(.01,Math.abs(value)))}
@@ -1991,7 +2019,7 @@ export default function WorldForgeEditor(){
                   >
                     Zero Velocity
                   </button>
-                  <small>Runtime impulses are tick-bound Play inputs. They never rewrite authored transforms.</small>
+                  <small>Runtime impulses are tick-bound Play inputs. They never rewrite authored transforms. Viewport XYZ drags use this value as impulse-per-meter scale.</small>
                 </div>;
               })()}
             </>}

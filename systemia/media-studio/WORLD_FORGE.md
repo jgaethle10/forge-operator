@@ -396,3 +396,12 @@ The V1 render plan intentionally remains non-executable until a backend is selec
 - Missing rights are not treated as permission.
 - Render completion does not grant publication authority.
 - A pretty render cannot bypass continuity, provenance or Shot Tournament rules.
+
+
+## v14 direct Play manipulation
+
+World Forge keeps authoring truth and runtime truth separate while making Play Mode directly manipulable in the viewport.
+
+When a selected mesh is Dynamic, Play Mode is active, the runtime body is present, and no staged authoring changes are pending, the existing XYZ viewport gizmo switches from authored translation to a tick-bound runtime impulse controller. The snapped drag distance is multiplied by the editor's Impulse/m value, converted from Forge Z-up into World Engine Y-up coordinates, scheduled for the next runtime tick, and advanced through the existing Play step contract.
+
+The runtime interaction is ephemeral. It does not emit a World Forge mutation, does not rewrite the authored transform, and does not grant destructive or publication authority. Static and Kinematic objects keep authored-gizmo semantics, and staged authoring changes continue to block runtime inputs until applied or cleared.
