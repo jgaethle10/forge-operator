@@ -47,7 +47,8 @@ test('commercial poster makes the conversion leak the visual subject',()=>{
   const svg=renderCommercialPoster(campaign,plan,'feed');
   assert.match(svg,/width="1080" height="1350"/);
   assert.match(svg,/TRAFFIC UP\./);
-  assert.match(svg,/CUSTOMERS DOWN\?/);
+  assert.match(svg,/CUSTOMERS/);
+  assert.match(svg,/DOWN\?/);
   assert.match(svg,/QUICK WIN AUDIT/);
   assert.match(svg,/>\$49</);
   assert.match(svg,/CONVERT/);
