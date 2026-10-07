@@ -10,7 +10,7 @@
   "generated_at": "2026-10-07T00:00:00.000Z",
   "offer_count": 52,
   "sell_now_count": 17,
-  "discovery_count": 20,
+  "discovery_count": 35,
   "safety": {
     "discovery_creates_obligation": false,
     "human_confirmation_required_for_checkout": true,
