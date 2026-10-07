@@ -18,20 +18,44 @@
       linear-gradient(180deg,#07100c,#0a120e 65%,#0b130f);color:var(--text);
       font-family:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}
     .shell{width:min(1180px,calc(100% - 32px));margin:auto}
-    header{padding:34px 0 26px;border-bottom:1px solid var(--line)}
-    .eyebrow{letter-spacing:.16em;text-transform:uppercase;font-size:.72rem;color:var(--leaf);font-weight:850}
-    h1{font-family:Georgia,"Times New Roman",serif;font-size:clamp(3rem,8vw,6.6rem);font-weight:500;
-      letter-spacing:-.06em;line-height:.9;margin:.18em 0 .14em}
-    .lede{max-width:850px;color:#d7ddd8;font-size:clamp(1rem,2vw,1.24rem);line-height:1.65}
-    .statusbar{display:flex;flex-wrap:wrap;gap:10px;margin-top:22px}
+    header{padding:34px 0 24px;border-bottom:1px solid var(--line)}
+    .hero-grid{display:grid;grid-template-columns:minmax(0,1.25fr) minmax(280px,.75fr);gap:34px;align-items:end}
+    @media(max-width:880px){.hero-grid{grid-template-columns:1fr}}
+    .eyebrow,.section-kicker{letter-spacing:.16em;text-transform:uppercase;font-size:.7rem;color:var(--leaf);font-weight:850}
+    h1{font-family:Georgia,"Times New Roman",serif;font-size:clamp(4.2rem,10vw,7.4rem);font-weight:500;
+      letter-spacing:-.07em;line-height:.82;margin:.18em 0 .16em}
+    .lede{max-width:760px;color:#d7ddd8;font-size:clamp(1.02rem,2vw,1.22rem);line-height:1.6}
+    .lede strong{color:#fff4d9;font-weight:650}
+    .promise-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:22px}
+    @media(max-width:620px){.promise-grid{grid-template-columns:1fr}}
+    .promise{padding:13px 14px;border:1px solid var(--line);border-radius:16px;background:rgba(13,22,17,.68)}
+    .promise b{display:block;color:var(--text);font-size:.86rem;margin-bottom:3px}.promise span{color:var(--soft);font-size:.75rem;line-height:1.4}
+    .hero-card{border:1px solid #3a4b40;border-radius:24px;padding:22px;background:
+      linear-gradient(160deg,rgba(26,42,31,.96),rgba(12,21,16,.95));box-shadow:0 32px 90px rgba(0,0,0,.24)}
+    .hero-card-title{font-family:Georgia,"Times New Roman",serif;font-size:1.85rem;line-height:1.05;margin:8px 0 10px}
+    .hero-card p{color:#cad5cd;line-height:1.55;font-size:.9rem;margin:0}
+    .watch-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:7px;margin-top:17px}
+    .watch-grid span{padding:8px;border-radius:10px;background:#0b140f;border:1px solid #2a3a30;color:#b6c5ba;text-align:center;font-size:.7rem}
+    .hero-link{display:inline-block;margin-top:18px;text-decoration:none;color:#edf4ee;font-weight:800;font-size:.82rem}
+    .statusbar{display:flex;flex-wrap:wrap;gap:10px;margin-top:24px}
     .pill,.tag{border:1px solid var(--line);border-radius:999px;background:#0c1510;color:var(--muted)}
     .pill{padding:8px 11px;font-size:.8rem}.pill strong{color:var(--text)}
     main{padding:28px 0 72px}
     .layout{display:grid;grid-template-columns:.85fr 1.15fr;gap:18px}
     @media(max-width:900px){.layout{grid-template-columns:1fr}}
-    .panel{background:rgba(16,25,20,.92);border:1px solid var(--line);border-radius:22px;padding:22px;
+    .panel{background:linear-gradient(180deg,rgba(17,27,21,.95),rgba(13,22,17,.94));border:1px solid var(--line);border-radius:22px;padding:22px;
       box-shadow:0 24px 80px rgba(0,0,0,.16)}
-    .panel h2{margin:0 0 8px;font-family:Georgia,"Times New Roman",serif;font-size:1.6rem;font-weight:500}
+    .panel h2{margin:0 0 8px;font-family:Georgia,"Times New Roman",serif;font-size:1.68rem;font-weight:500}
+    .panel-topline{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:8px}
+    .design-partner{display:none;margin:0 0 16px;padding:14px 15px;border-radius:16px;border:1px solid #6c5a34;
+      background:linear-gradient(135deg,rgba(87,68,30,.28),rgba(24,36,27,.75));color:#e7dcc0}
+    body[data-pilot="agnormal"] .design-partner{display:block}
+    .design-partner strong{display:block;color:#fff3cf;margin:2px 0 4px}
+    .design-partner span{font-size:.68rem;letter-spacing:.14em;text-transform:uppercase;color:var(--gold);font-weight:850}
+    .design-partner p{margin:0;color:#cfc8b5;font-size:.8rem;line-height:1.45}
+    .empty-packet{padding:20px;border:1px dashed #34483b;border-radius:18px;background:rgba(8,16,12,.48)}
+    .empty-packet strong{display:block;font-family:Georgia,"Times New Roman",serif;font-size:1.35rem;font-weight:500;margin-bottom:7px}
+    .empty-packet p{margin:0;color:var(--muted);line-height:1.55;font-size:.86rem}
     .meta{color:var(--muted);font-size:.88rem;line-height:1.55}
     label{display:block;margin:18px 0 7px;color:#d8ded9;font-size:.84rem;font-weight:760}
     textarea,input,select{width:100%;border:1px solid var(--line);border-radius:14px;background:#0b130f;color:var(--text);
@@ -53,8 +77,10 @@
     .readiness{font-weight:850;text-transform:uppercase;letter-spacing:.06em;font-size:.72rem}
     .boundary{margin-top:16px;border-top:1px solid var(--line);padding-top:14px;color:var(--soft);font-size:.78rem;line-height:1.5}
     .result-head{display:flex;justify-content:space-between;gap:16px;align-items:flex-start}
-    .confidence{min-width:74px;height:74px;border-radius:18px;border:1px solid var(--line);background:#0c1510;
-      display:grid;place-items:center;color:var(--gold);font-size:1.25rem;font-weight:850}
+    .confidence{min-width:82px;height:82px;border-radius:20px;border:1px solid #4a513b;background:
+      radial-gradient(circle at 50% 20%,rgba(211,182,120,.12),transparent 65%),#0c1510;
+      display:flex;flex-direction:column;align-items:center;justify-content:center;color:var(--gold);font-size:1.28rem;font-weight:850}
+    .confidence small{display:block;color:var(--soft);font-size:.58rem;letter-spacing:.1em;text-transform:uppercase;margin-top:2px}
     .finding{padding:17px 0;border-top:1px solid var(--line)}.finding:first-of-type{border-top:0}
     .tags{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:8px}
     .tag{padding:5px 8px;font-size:.67rem;font-weight:850;letter-spacing:.06em;text-transform:uppercase}
@@ -74,20 +100,45 @@
 <body>
 <header>
   <div class="shell">
-    <div class="eyebrow">Evercraft · Systemia specialist</div>
-    <h1>FAIE</h1>
-    <div class="lede">Evidence for the physical world. Ask a bounded question about agriculture, land, water, production or resilience and FAIE will show what the current evidence supports, what it does not support, and what still needs to be measured.</div>
+    <div class="hero-grid">
+      <div>
+        <div class="eyebrow">Evercraft / Systemia · physical-world intelligence</div>
+        <h1>FAIE</h1>
+        <div class="lede"><strong>Underwrite the world beneath the thesis.</strong> Evidence for the physical world, built to test food-infrastructure decisions against what is actually happening in water, soil, climate, energy, labor, logistics, policy and production.</div>
+        <div class="promise-grid">
+          <div class="promise"><b>Sense reality</b><span>Separate current evidence from assumption, model and noise.</span></div>
+          <div class="promise"><b>Attack assumptions</b><span>Expose what could weaken, contradict or invalidate the thesis.</span></div>
+          <div class="promise"><b>Find the next proof</b><span>Turn missing evidence into an explicit diligence queue.</span></div>
+        </div>
+      </div>
+      <aside class="hero-card">
+        <div class="section-kicker">Decision room</div>
+        <div class="hero-card-title">From thesis to evidence.</div>
+        <p>FAIE does not choose the site or pretend to know agriculture better than the operator. It continuously acquires, reconciles and challenges the external facts the thesis depends on.</p>
+        <div class="watch-grid">
+          <span>Water</span><span>Soil</span><span>Heat</span><span>Energy</span>
+          <span>Labor</span><span>Logistics</span><span>Policy</span><span>Continuity</span>
+        </div>
+        <a class="hero-link" href="#investigation">Open the decision room ↓</a>
+      </aside>
+    </div>
     <div class="statusbar" id="statusbar"><span class="pill">Loading FAIE runtime…</span></div>
   </div>
 </header>
 
 <main class="shell">
   <div class="layout">
-    <section class="panel">
-      <h2>Start an investigation</h2>
-      <div class="meta">Keep the question specific. FAIE works best when the geography and production context are explicit.</div>
-      <button class="preset" id="agnormalPreset" type="button">Load AgNormal infrastructure pilot</button>
-      <div class="pilot-note">This loads a real regional food-infrastructure scope into the live FAIE engine. It does not switch to a canned demo or prewritten answer.</div>
+    <section class="panel" id="investigation">
+      <div class="panel-topline"><div class="section-kicker">01 / Frame</div><span class="tag">live engine</span></div>
+      <div class="design-partner" id="pilotBanner">
+        <span>Design-partner briefing</span>
+        <strong>AgNormal / Yakima Valley</strong>
+        <p>This view preloads a real food-infrastructure thesis into the live FAIE engine. Nothing below is a canned answer.</p>
+      </div>
+      <h2>Frame the decision</h2>
+      <div class="meta">Start with the decision that matters. Geography, physical system and assumptions make the evidence packet sharper.</div>
+      <button class="preset" id="agnormalPreset" type="button">Load food-infrastructure pilot</button>
+      <div class="pilot-note" id="pilotNote">Loads a real regional food-infrastructure scope into the live FAIE engine. It does not switch to a canned demo or prewritten answer.</div>
 
       <form id="form">
         <label for="question">Question</label>
@@ -127,29 +178,35 @@
         <textarea id="assumptions" maxlength="5000" placeholder="One assumption per line. Example: Regional water availability can support the target production system."></textarea>
         <div class="pilot-note">FAIE links evidence to these assumptions without declaring them true or false. Persisted internal investigations can carry the register forward over time.</div>
 
-        <button id="run" type="submit">Investigate evidence</button>
+        <button id="run" type="submit">Build decision packet</button>
       </form>
 
       <div class="boundary">FAIE is evidence support, not autonomous farm control or regulatory authority. Modeled, reported, observed and verified evidence stay visibly separate.</div>
     </section>
 
     <section class="panel">
+      <div class="panel-topline"><div class="section-kicker">02 / Underwrite</div><span class="tag">sense · challenge · next proof</span></div>
       <div id="result">
-        <div class="quiet">Run an investigation to build an evidence packet.</div>
+        <div class="empty-packet">
+          <strong>The packet builds here.</strong>
+          <p>FAIE will show what the evidence supports, what could break the thesis, which assumptions are being watched, and what proof should be acquired next.</p>
+        </div>
       </div>
     </section>
   </div>
 
   <div class="grid2">
     <section class="panel">
-      <h2>Current signal field</h2>
-      <div class="meta">Newest FAIE-relevant evidence currently held by the owned runtime.</div>
+      <div class="section-kicker">Live field</div>
+      <h2>Current evidence field</h2>
+      <div class="meta">Newest admitted physical-world evidence held by the owned runtime right now.</div>
       <div id="signals" style="margin-top:16px"></div>
     </section>
 
     <section class="panel">
-      <h2>How FAIE thinks</h2>
-      <div class="meta">The engine rewards source quality, recency, relevance and independent corroboration. It does not turn a sparse feed into fake certainty.</div>
+      <div class="section-kicker">Operating doctrine</div>
+      <h2>What FAIE refuses to fake</h2>
+      <div class="meta">The engine rewards source quality, recency, relevance and independent corroboration. Sparse evidence stays sparse instead of being dressed up as confidence.</div>
       <ul class="list">
         <li>Observed and verified evidence stay distinct from reported and modeled material.</li>
         <li>Unknowns are returned explicitly instead of being filled with guesses.</li>
@@ -160,8 +217,9 @@
   </div>
 
   <section class="panel" style="margin-top:18px">
+    <div class="panel-topline"><div class="section-kicker">03 / Compare</div><span class="tag">same rubric · no hidden weighting</span></div>
     <h2>Compare candidate regions</h2>
-    <div class="meta">Run the same FAIE rubric across two candidates. The ordering measures evidence readiness only. It does not declare which site is better.</div>
+    <div class="meta">Run the same FAIE rubric across two candidates. The ordering measures evidence readiness only. A better packet does not mean a better site.</div>
     <div class="two">
       <div>
         <label for="compareLabelA">Candidate A</label>
@@ -182,7 +240,7 @@
 </main>
 
 <footer>
-  <div class="shell">FAIE is part of the Evercraft/Systemia evidence fabric. A finding is a bounded evidence interpretation, not a causal claim, forecast guarantee or instruction to take a consequential action.</div>
+  <div class="shell">FAIE is part of the Evercraft/Systemia evidence fabric. Owned Fabric runtime. Official MCP Registry: <strong>io.github.jgaethle10/faie</strong>. A finding is a bounded evidence interpretation, not a causal claim, forecast guarantee or instruction to take a consequential action.</div>
 </footer>
 
 <script>
@@ -203,7 +261,7 @@ function renderResult(inv) {
   const thesisMemory = inv.thesis_memory || {};
   const readiness = coverage.decision_readiness || packet.decide?.readiness || 'evidence_gaps';
 
-  let html = '<div class="result-head"><div><h2>Field decision packet</h2><div class="meta">' + esc(inv.summary) + '</div></div><div class="confidence">' + Math.round((Number(inv.confidence)||0)*100) + '%</div></div>';
+  let html = '<div class="result-head"><div><div class="section-kicker">Decision packet</div><h2>What the world says now</h2><div class="meta">' + esc(inv.summary) + '</div></div><div class="confidence"><span>' + Math.round((Number(inv.confidence)||0)*100) + '%</span><small>coverage</small></div></div>';
   html += '<div class="meta" style="margin-top:12px">Evidence coverage score, not event probability. Public investigations are ephemeral previews and are not added to the shared investigation archive.</div>';
   html += '<div class="coverage">';
   html += '<span class="pill">Readiness: <strong class="readiness">' + esc(String(readiness).replaceAll('_',' ')) + '</strong></span>';
@@ -234,7 +292,7 @@ function renderResult(inv) {
     html += '<div class="quiet">No evidence currently clears the relevance gate for this scope. FAIE is holding the line instead of inventing an answer.</div>';
   }
 
-  html += '<h2 style="margin-top:22px">Challenge</h2><div class="meta">What would make this packet unsafe to over-trust.</div>';
+  html += '<h2 style="margin-top:22px">Challenge</h2><div class="meta">What could weaken the thesis, invalidate confidence, or demand better evidence.</div>';
   if (unknowns.length) {
     html += '<ul class="list">';
     unknowns.forEach((item) => { html += '<li>' + esc(item) + '</li>'; });
@@ -262,7 +320,7 @@ function renderResult(inv) {
     });
   }
 
-  html += '<h2 style="margin-top:22px">Decide</h2><div class="meta">The next evidence required before a consequential operator decision should rely on this packet.</div>';
+  html += '<h2 style="margin-top:22px">Next proof</h2><div class="meta">The evidence that should be acquired before a consequential operator decision leans harder on this packet.</div>';
   if (evidenceNeeded.length) {
     html += '<ul class="list">';
     evidenceNeeded.forEach((item) => { html += '<li>' + esc(item) + '</li>'; });
@@ -363,7 +421,7 @@ async function loadState() {
   }
 }
 
-document.getElementById('agnormalPreset').addEventListener('click', () => {
+function loadFoodInfrastructurePilot({partner=false}={}) {
   document.getElementById('question').value = 'What current evidence should shape the siting, buildout, crop strategy, economics, and resilience of regionally scaled American food infrastructure in the Yakima Valley using native living soil and natural light, including water, soil, heat, energy, infrastructure, labor, logistics, policy, and production continuity?';
   document.getElementById('region').value = 'yakima-wa';
   document.getElementById('asset').value = 'regional food production infrastructure';
@@ -378,8 +436,22 @@ document.getElementById('agnormalPreset').addEventListener('click', () => {
   document.getElementById('horizon').value = '90';
   document.getElementById('compareLabelA').value = 'Yakima Valley';
   document.getElementById('compareRegionA').value = 'yakima-wa';
+  if (partner) {
+    document.body.dataset.pilot = 'agnormal';
+    document.getElementById('agnormalPreset').textContent = 'AgNormal design-partner scope loaded';
+    document.getElementById('pilotNote').textContent = 'Live design-partner scope loaded. Edit anything before running it. The answer still comes from current FAIE evidence, not a prewritten demo.';
+  }
+}
+
+document.getElementById('agnormalPreset').addEventListener('click', () => {
+  loadFoodInfrastructurePilot();
   document.getElementById('question').focus();
 });
+
+const pilotParam = new URLSearchParams(window.location.search).get('pilot');
+if (pilotParam && pilotParam.toLowerCase() === 'agnormal') {
+  loadFoodInfrastructurePilot({partner:true});
+}
 
 document.getElementById('compareRun').addEventListener('click', async () => {
   const button = document.getElementById('compareRun');
@@ -476,7 +548,7 @@ document.getElementById('form').addEventListener('submit', async (event) => {
     document.getElementById('result').innerHTML = '<div class="quiet error">' + esc(error && error.message ? error.message : error) + '</div>';
   } finally {
     button.disabled = false;
-    button.textContent = 'Investigate evidence';
+    button.textContent = 'Build decision packet';
   }
 });
 
