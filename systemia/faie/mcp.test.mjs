@@ -84,7 +84,7 @@ test('FAIE MCP investigation uses preview path and does not persist the caller q
         arguments: {
           question: 'What current evidence affects Yakima irrigation resilience?',
           region_keys: ['yakima-wa'],
-          horizon_days: 7
+          horizon_days: 3650
         }
       }
     });
