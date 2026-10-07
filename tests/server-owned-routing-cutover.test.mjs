@@ -42,6 +42,8 @@ test("People Layer intent routes only to Forge/Systemia", () => {
   const people = routing.capabilities.find((row) => row.capability_key === "systemia.people-layer.v1");
   assert.ok(people);
   assert.equal(people.first_party_strict, true);
-  assert.equal(people.invocation, "Forge/Systemia owned runtime /people + /api/people/*");
+  assert.match(people.invocation, /Evercraft Compute workload systemia\.people-layer\.v1 via Yard\/Hosting/);
+  assert.equal(people.runtime_authority, "forge-operator/systemia");
+  assert.equal(people.external_runtime_fallback, false);
   assert.equal(JSON.stringify(people).toLowerCase().includes("base44"), false);
 });
