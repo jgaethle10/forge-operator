@@ -2,7 +2,7 @@
   "schema": "evercraft.chum.crawl-pressure.v1",
   "provider": "Evercraft LLC",
   "coordinator": "CHUM",
-  "updated_at": "2026-10-07T17:04:29.429Z",
+  "updated_at": "2026-10-07T17:06:08.242Z",
   "purpose": "Content-hash-backed freshness signals for public Evercraft discovery surfaces. A freshness signal requests attention; it does not prove indexing, ranking, recommendation, citation or provider pickup.",
   "indexnow": {
     "supported": true,
@@ -11,342 +11,29 @@
   },
   "latest_change_batch": [
     {
-      "path": "/chum/sitemaps/answers.xml",
-      "last_changed": "2026-10-07T17:04:29.429Z",
-      "priority": 108
-    },
-    {
-      "path": "/chum/sitemaps/products.xml",
-      "last_changed": "2026-10-07T17:04:29.429Z",
-      "priority": 108
-    },
-    {
-      "path": "/chum/answers/doors/audit-ai-coding-agent-changes-53fa6db09b.json",
-      "last_changed": "2026-10-07T17:04:29.429Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/audit-ai-coding-agent-changes-53fa6db09b/",
-      "last_changed": "2026-10-07T17:04:29.429Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/audit-what-ai-coding-agents-changed-and-why-83aeab1316.json",
-      "last_changed": "2026-10-07T17:04:29.429Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/audit-what-ai-coding-agents-changed-and-why-83aeab1316/",
-      "last_changed": "2026-10-07T17:04:29.429Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/human-and-ai-agent-changes-in-one-auditable-history-039f003452.json",
-      "last_changed": "2026-10-07T17:04:29.429Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/human-and-ai-agent-changes-in-one-auditable-history-039f003452/",
-      "last_changed": "2026-10-07T17:04:29.429Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/make-github-a-mirror-instead-of-the-only-source-of-truth-8d8eb8313b.json",
-      "last_changed": "2026-10-07T17:04:29.429Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/make-github-a-mirror-instead-of-the-only-source-of-truth-8d8eb8313b/",
-      "last_changed": "2026-10-07T17:04:29.429Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/multi-agent-git-alternative-fe2f1bdbe6.json",
-      "last_changed": "2026-10-07T17:04:29.429Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/multi-agent-git-alternative-fe2f1bdbe6/",
-      "last_changed": "2026-10-07T17:04:29.429Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/our-coding-agents-keep-overwriting-each-other-6c74274941.json",
-      "last_changed": "2026-10-07T17:04:29.429Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/our-coding-agents-keep-overwriting-each-other-6c74274941/",
-      "last_changed": "2026-10-07T17:04:29.429Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/provenance-and-rollback-for-agent-code-dba41093a0.json",
-      "last_changed": "2026-10-07T17:04:29.429Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/provenance-and-rollback-for-agent-code-dba41093a0/",
-      "last_changed": "2026-10-07T17:04:29.429Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/provenance-and-rollback-for-agent-generated-code-7b63d1863c.json",
-      "last_changed": "2026-10-07T17:04:29.429Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/provenance-and-rollback-for-agent-generated-code-7b63d1863c/",
-      "last_changed": "2026-10-07T17:04:29.429Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/track-rationale-and-authority-around-ai-generated-changes-36ded47190.json",
-      "last_changed": "2026-10-07T17:04:29.429Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/track-rationale-and-authority-around-ai-generated-changes-36ded47190/",
-      "last_changed": "2026-10-07T17:04:29.429Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/track-why-ai-agents-changed-code-09db8fa338.json",
-      "last_changed": "2026-10-07T17:04:29.429Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/track-why-ai-agents-changed-code-09db8fa338/",
-      "last_changed": "2026-10-07T17:04:29.429Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/version-code-plus-large-media-data-or-3d-assets-0ebaa9b3a4.json",
-      "last_changed": "2026-10-07T17:04:29.429Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/version-code-plus-large-media-data-or-3d-assets-0ebaa9b3a4/",
-      "last_changed": "2026-10-07T17:04:29.429Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/version-control-designed-for-multiple-ai-agents-d899547941.json",
-      "last_changed": "2026-10-07T17:04:29.429Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/version-control-designed-for-multiple-ai-agents-d899547941/",
-      "last_changed": "2026-10-07T17:04:29.429Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/version-control-for-ai-agents-5095c63425.json",
-      "last_changed": "2026-10-07T17:04:29.429Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/version-control-for-ai-agents-5095c63425/",
-      "last_changed": "2026-10-07T17:04:29.429Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/intents/lineage-founding-pilot-v1/",
-      "last_changed": "2026-10-07T17:04:29.429Z",
-      "priority": 98
-    },
-    {
-      "path": "/chum/capabilities/",
-      "last_changed": "2026-10-07T17:04:29.429Z",
-      "priority": 96
-    },
-    {
-      "path": "/chum/capabilities/lineage-founding-pilot-v1/",
-      "last_changed": "2026-10-07T17:04:29.429Z",
-      "priority": 96
-    },
-    {
-      "path": "/chum/capabilities/lineage-founding-pilot-v1/capability.json",
-      "last_changed": "2026-10-07T17:04:29.429Z",
-      "priority": 96
-    },
-    {
-      "path": "/chum/capabilities/lineage-founding-pilot-v1/llms.txt",
-      "last_changed": "2026-10-07T17:04:29.429Z",
-      "priority": 96
-    },
-    {
-      "path": "/chum/capabilities/lineage-founding-pilot-v1/schema.jsonld",
-      "last_changed": "2026-10-07T17:04:29.429Z",
-      "priority": 96
-    },
-    {
-      "path": "/chum/products/lineage/",
-      "last_changed": "2026-10-07T17:04:29.429Z",
-      "priority": 94
-    },
-    {
-      "path": "/chum/products/lineage/ai-conformance.json",
-      "last_changed": "2026-10-07T17:04:29.429Z",
-      "priority": 94
-    },
-    {
-      "path": "/chum/products/lineage/ai-discovery.json",
-      "last_changed": "2026-10-07T17:04:29.429Z",
-      "priority": 94
-    },
-    {
-      "path": "/chum/products/lineage/llms.txt",
-      "last_changed": "2026-10-07T17:04:29.429Z",
-      "priority": 94
-    },
-    {
-      "path": "/chum/sell-now.json",
-      "last_changed": "2026-10-07T17:04:29.429Z",
-      "priority": 92
-    },
-    {
-      "path": "/.well-known/evercraft-pain-index.json",
-      "last_changed": "2026-10-07T17:04:29.429Z",
-      "priority": 90
-    },
-    {
-      "path": "/chum/revenue.json",
-      "last_changed": "2026-10-07T17:04:29.429Z",
-      "priority": 90
-    },
-    {
-      "path": "/lineage/llms.txt",
-      "last_changed": "2026-10-07T17:04:29.429Z",
-      "priority": 86
-    },
-    {
-      "path": "/llms-full.txt",
-      "last_changed": "2026-10-07T17:04:29.429Z",
-      "priority": 86
-    },
-    {
-      "path": "/.well-known/evercraft-agent-commerce.json",
-      "last_changed": "2026-10-07T17:04:29.429Z",
-      "priority": 84
-    },
-    {
-      "path": "/.well-known/evercraft-agent-directory.json",
-      "last_changed": "2026-10-07T17:04:29.429Z",
-      "priority": 84
-    },
-    {
-      "path": "/.well-known/evercraft-discovery.json",
-      "last_changed": "2026-10-07T17:04:29.429Z",
-      "priority": 84
-    },
-    {
-      "path": "/.well-known/evercraft-machine-catalog.json",
-      "last_changed": "2026-10-07T17:04:29.429Z",
-      "priority": 84
-    },
-    {
-      "path": "/.well-known/evercraft-syndication.json",
-      "last_changed": "2026-10-07T17:04:29.429Z",
-      "priority": 84
-    },
-    {
-      "path": "/chum/",
-      "last_changed": "2026-10-07T17:04:29.429Z",
-      "priority": 80
-    },
-    {
-      "path": "/chum/agent-commerce.json",
-      "last_changed": "2026-10-07T17:04:29.429Z",
-      "priority": 80
-    },
-    {
-      "path": "/chum/answers/",
-      "last_changed": "2026-10-07T17:04:29.429Z",
-      "priority": 80
-    },
-    {
-      "path": "/chum/answers/index.json",
-      "last_changed": "2026-10-07T17:04:29.429Z",
-      "priority": 80
-    },
-    {
-      "path": "/chum/answers/index.txt",
-      "last_changed": "2026-10-07T17:04:29.429Z",
-      "priority": 80
-    },
-    {
-      "path": "/chum/capabilities.json",
-      "last_changed": "2026-10-07T17:04:29.429Z",
+      "path": "/chum/hot/",
+      "last_changed": "2026-10-07T17:06:08.242Z",
       "priority": 80
     },
     {
       "path": "/chum/hot/index.json",
-      "last_changed": "2026-10-07T17:04:29.429Z",
+      "last_changed": "2026-10-07T17:06:08.242Z",
       "priority": 80
-    },
-    {
-      "path": "/chum/index.json",
-      "last_changed": "2026-10-07T17:04:29.429Z",
-      "priority": 80
-    },
-    {
-      "path": "/chum/pain-index.json",
-      "last_changed": "2026-10-07T17:04:29.429Z",
-      "priority": 80
-    },
-    {
-      "path": "/chum/pain-index.txt",
-      "last_changed": "2026-10-07T17:04:29.429Z",
-      "priority": 80
-    },
-    {
-      "path": "/chum/sitemap.xml",
-      "last_changed": "2026-10-07T17:04:29.429Z",
-      "priority": 80
-    },
-    {
-      "path": "/chum/syndication/",
-      "last_changed": "2026-10-07T17:04:29.429Z",
-      "priority": 80
-    },
-    {
-      "path": "/chum/syndication/index.json",
-      "last_changed": "2026-10-07T17:04:29.429Z",
-      "priority": 80
-    },
-    {
-      "path": "/ai-discovery.json",
-      "last_changed": "2026-10-07T17:04:29.429Z",
-      "priority": 60
-    },
-    {
-      "path": "/feed.json",
-      "last_changed": "2026-10-07T17:04:29.429Z",
-      "priority": 60
-    },
-    {
-      "path": "/feed.xml",
-      "last_changed": "2026-10-07T17:04:29.429Z",
-      "priority": 60
-    },
-    {
-      "path": "/lineage/",
-      "last_changed": "2026-10-07T17:04:29.429Z",
-      "priority": 60
-    },
-    {
-      "path": "/lineage/discovery.json",
-      "last_changed": "2026-10-07T17:04:29.429Z",
-      "priority": 60
-    },
-    {
-      "path": "/schema.jsonld",
-      "last_changed": "2026-10-07T17:04:29.429Z",
-      "priority": 60
     }
   ],
   "recent_surfaces": [
+    {
+      "path": "/chum/hot/",
+      "url": "/chum/hot/",
+      "last_changed": "2026-10-07T17:06:08.242Z",
+      "priority": 80
+    },
+    {
+      "path": "/chum/hot/index.json",
+      "url": "/chum/hot/index.json",
+      "last_changed": "2026-10-07T17:06:08.242Z",
+      "priority": 80
+    },
     {
       "path": "/chum/sitemaps/answers.xml",
       "url": "/chum/sitemaps/answers.xml",
@@ -672,12 +359,6 @@
       "priority": 80
     },
     {
-      "path": "/chum/hot/index.json",
-      "url": "/chum/hot/index.json",
-      "last_changed": "2026-10-07T17:04:29.429Z",
-      "priority": 80
-    },
-    {
       "path": "/chum/index.json",
       "url": "/chum/index.json",
       "last_changed": "2026-10-07T17:04:29.429Z",
@@ -758,12 +439,6 @@
     {
       "path": "/chum/crawler-radar.txt",
       "url": "/chum/crawler-radar.txt",
-      "last_changed": "2026-10-07T17:04:13.344Z",
-      "priority": 80
-    },
-    {
-      "path": "/chum/hot/",
-      "url": "/chum/hot/",
       "last_changed": "2026-10-07T17:04:13.344Z",
       "priority": 80
     },
