@@ -896,6 +896,7 @@ export default function WorldForgeEditor(){
       setUndoStack([]);
       setNativePreview(null);
       setRuntimePlaying(false);
+      engineRuntimeRef.current=null;
       setEngineRuntime(null);
       setEngineBridge(null);
       setShotDigest('');
@@ -949,6 +950,7 @@ export default function WorldForgeEditor(){
       setUndoStack([]);
       setNativePreview(null);
       setRuntimePlaying(false);
+      engineRuntimeRef.current=null;
       setEngineRuntime(null);
       setEngineBridge(null);
       setShotDigest('');
@@ -1543,7 +1545,10 @@ export default function WorldForgeEditor(){
         <button onClick={()=>void resetProject()} disabled={busy}>Reset</button>
         <button
           className={stageMode?'wf-stage-toggle active':'wf-stage-toggle'}
-          onClick={()=>setStageMode(current=>!current)}
+          onClick={()=>{
+            setRuntimePlaying(false);
+            setStageMode(current=>!current);
+          }}
           disabled={busy}
         >
           Stage {stageMode?'ON':'OFF'}
@@ -1589,6 +1594,31 @@ export default function WorldForgeEditor(){
         >
           Engine Bridge
         </button>
+        {engineRuntime&&<>
+          <button
+            className={runtimePlaying?'wf-runtime-live':''}
+            onClick={()=>setRuntimePlaying(current=>!current)}
+            disabled={busy||stageMode}
+          >
+            {runtimePlaying?'Pause':'Play'}
+          </button>
+          <button
+            onClick={()=>void stepRuntime(1)}
+            disabled={busy||stageMode||runtimeStepping||runtimePlaying}
+          >
+            Step
+          </button>
+          <button
+            onClick={()=>void resetRuntimeSession()}
+            disabled={busy||runtimeStepping}
+          >
+            Reset Runtime
+          </button>
+          <span className="wf-runtime-clock">
+            T{engineRuntime.snapshot.tick} · {engineRuntime.snapshot.timeSec.toFixed(2)}s
+            {runtimeStepping?' · STEP':''}
+          </span>
+        </>}
         <button onClick={()=>void bindCinematicShot()} disabled={busy}>Bind Shot</button>
         {engineBridge&&<span
           className={engineBridge.webGpuReady?'wf-engine-ready':'wf-engine-partial'}
@@ -1615,7 +1645,7 @@ export default function WorldForgeEditor(){
 
       <section className="wf-stage">
         <WorldViewport
-          project={viewportProject??project}
+          project={displayProject??viewportProject??project}
           selectedId={selectedId}
           onSelect={setSelectedId}
           onTranslate={commitViewportTranslate}
@@ -1627,6 +1657,9 @@ export default function WorldForgeEditor(){
           <span>{engineBridge.geometryCount} geometry</span>
           <span>{engineBridge.warnings} warning{engineBridge.warnings===1?'':'s'}</span>
           <span>{engineBridge.blockers} blocker{engineBridge.blockers===1?'':'s'}</span>
+          {engineRuntime&&<span className={runtimePlaying?'wf-runtime-state live':'wf-runtime-state'}>
+            {runtimePlaying?'PLAYING':'PAUSED'} · tick {engineRuntime.snapshot.tick}
+          </span>}
           <small>{engineBridge.digest.slice(0,12)}</small>
         </div>}
         {stagedOperations.length>0&&<div className="wf-stage-tray">
