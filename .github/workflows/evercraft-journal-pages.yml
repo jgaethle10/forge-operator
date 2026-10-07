@@ -29,8 +29,6 @@ jobs:
   build:
     runs-on: ubuntu-latest
     timeout-minutes: 8
-    outputs:
-      pages_enabled: ${{ steps.pages.outcome == 'success' }}
     steps:
       - uses: actions/checkout@v4
 
@@ -82,13 +80,11 @@ jobs:
 
       - name: Check or enable GitHub Pages
         id: pages
-        continue-on-error: true
         uses: actions/configure-pages@v5
         with:
           enablement: true
 
       - name: Build Pages fallback for the entire public directory
-        if: steps.pages.outcome == 'success'
         env:
           EVERCRAFT_JOURNAL_ORIGIN: https://jgaethle10.github.io/forge-operator/journal
         run: |
@@ -158,24 +154,11 @@ jobs:
           grep -q 'EPS Precise Estimator' _public_pages/apps/eps-estimator/index.html
 
       - name: Upload Pages artifact
-        if: steps.pages.outcome == 'success'
         uses: actions/upload-pages-artifact@v3
         with:
           path: _public_pages
 
-      - name: Record Pages gate without failing canonical release
-        if: steps.pages.outcome != 'success'
-        run: |
-          {
-            echo "## Evercraft public web fallback"
-            echo
-            echo "Canonical Journal artifact and product URL fabric proofs passed."
-            echo "GitHub Pages publication is held by repository/account enablement."
-            echo "Permanent Evercraft domains remain authoritative only after external DNS/TLS canaries pass."
-          } >> "$GITHUB_STEP_SUMMARY"
-
   deploy-pages:
-    if: needs.build.outputs.pages_enabled == 'true'
     environment:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
@@ -198,6 +181,15 @@ jobs:
           estimator="${base%/}/apps/eps-estimator/"
           estimator_body="$(curl --fail --silent --show-error --retry 8 --retry-all-errors --retry-delay 2 "$estimator")"
           printf '%s' "$estimator_body" | grep -q 'EPS Precise Estimator'
+          earthworks="${base%/}/apps/earthworks-autonomy/"
+          earthworks_body="$(curl --fail --silent --show-error --retry 8 --retry-all-errors --retry-delay 2 "$earthworks")"
+          printf '%s' "$earthworks_body" | grep -q 'Evercraft EarthWorks Autonomy'
+          earthworks_partner="${base%/}/apps/earthworks-autonomy/design-partner.html"
+          partner_body="$(curl --fail --silent --show-error --retry 8 --retry-all-errors --retry-delay 2 "$earthworks_partner")"
+          printf '%s' "$partner_body" | grep -q 'EarthWorks Design Partner'
+          earthworks_sample="${base%/}/apps/earthworks-autonomy/sample-study.html"
+          sample_body="$(curl --fail --silent --show-error --retry 8 --retry-all-errors --retry-delay 2 "$earthworks_sample")"
+          printf '%s' "$sample_body" | grep -q 'Synthetic sample deliverable'
           visual="${base%/}/visuals/washington-active-volcanoes/"
           visual_body="$(curl --fail --silent --show-error --retry 8 --retry-all-errors --retry-delay 2 "$visual")"
           printf '%s' "$visual_body" | grep -q 'Washington'
@@ -208,5 +200,8 @@ jobs:
             echo
             echo "Infinite Classroom: $classroom"
             echo "EPS estimator: $estimator"
+            echo "EarthWorks: $earthworks"
+            echo "EarthWorks design partner: $earthworks_partner"
+            echo "EarthWorks sample study: $earthworks_sample"
             echo "Visual Desk specimen: $visual"
           } >> "$GITHUB_STEP_SUMMARY"
