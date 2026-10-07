@@ -125,6 +125,14 @@ const spawned=await evaluateResourceExpansionIntent({
 });
 assert.equal(spawned.state,'owned_spawn_activated');
 assert.equal(spawnCalls,1);
+assert.equal(spawned.managed_capacity.schema,'evercraft.saban.managed-capacity.v1');
+assert.equal(spawned.managed_capacity.offer_id,'nodeseed:owned-local');
+assert.equal(spawned.managed_capacity.kind,'owned_spawn');
+assert.equal(spawned.managed_capacity.lifecycle_reclaimable,true);
+assert.equal(
+  spawned.managed_capacity.authority_basis,
+  'explicit_evercraft_owned_host_configuration'
+);
 assert.equal(JSON.stringify(spawned).includes('secret'),false);
 
 const zeroMarket={
@@ -229,6 +237,22 @@ assert.equal(cycle.ready_internal,2);
 assert.equal(cycle.evaluations[0].intent_id,'proof-current');
 assert.equal(cycle.paid_execution_authorized,false);
 
+const idleManaged=await runResourceExpansionCycle({
+  queue:{
+    schema:'evercraft.saban.resource-field-expansion-queue.v1',
+    intents:[],
+  },
+  previousManagedCapacity:[spawned.managed_capacity],
+  now:new Date('2026-10-07T16:05:00.000Z'),
+});
+assert.equal(idleManaged.managed_capacity_count,1);
+assert.equal(idleManaged.managed_capacity[0].state,'idle');
+assert.equal(
+  idleManaged.managed_capacity[0].authority_basis,
+  'explicit_evercraft_owned_host_configuration'
+);
+assert.equal(JSON.stringify(idleManaged).includes('secret'),false);
+
 console.log(JSON.stringify({
   ok:true,
   schema:'evercraft.saban.resource-expansion-organism-proof.v1',
@@ -237,5 +261,7 @@ console.log(JSON.stringify({
   zero_cost_market_discovery_supported:true,
   paid_market_visibility_held_for_authority:true,
   current_pressure_prioritized:true,
+  spawned_capacity_management_receipt:true,
+  managed_capacity_survives_idle_cycle:true,
   authority_material_not_serialized:true,
 },null,2));

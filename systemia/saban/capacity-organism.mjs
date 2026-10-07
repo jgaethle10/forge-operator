@@ -256,6 +256,7 @@ export function compileCapacityOrganismState({
     active_device_control_from_census:false,
     observation_never_grants_authority:true,
     _capacity_lifecycle_ledger:lifecyclePlan,
+    _capacity_headroom_plan:headroomPlan,
     _failure_domain_audit:failureDomainAudit,
     generated_at:(now instanceof Date?now:new Date(now)).toISOString(),
   };
@@ -361,7 +362,12 @@ export async function runCapacityOrganismOnce({
     now,
   });
 
-  const { _capacity_lifecycle_ledger: lifecycleLedger, _failure_domain_audit: failureDomainAudit, ...compiledPublic }=compiled;
+  const {
+    _capacity_lifecycle_ledger:lifecycleLedger,
+    _capacity_headroom_plan:headroomPlan,
+    _failure_domain_audit:failureDomainAudit,
+    ...compiledPublic
+  }=compiled;
   const receipt={
     ...compiledPublic,
     census:census?{
