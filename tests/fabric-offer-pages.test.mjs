@@ -127,3 +127,40 @@ test('owned Fabric serves offer pages, requires confirmation, and delegates chec
     await runtime.close();
   }
 });
+
+test('human checkout failures render a branded Evercraft Payments page instead of raw JSON',async()=>{
+  const runtime=await startFabricLocalRuntime({
+    host:'127.0.0.1',
+    port:0,
+    catalog:[websiteAudit],
+    faieSurfaceEnabled:false,
+    purchaseIntentFetch:async()=>new Response(JSON.stringify({
+      ok:true,
+      authority:'Evercraft Payments',
+      order_key:'RAVEN-WEBSITE-AUDIT-QUICK-WIN-FAILCLOSED',
+      checkout_ready:false,
+      fulfillment_release:false,
+    }),{
+      status:200,
+      headers:{'content-type':'application/json'},
+    }),
+  });
+  try{
+    const response=await fetch(runtime.url+'/api/offers/website-audit/checkout',{
+      method:'POST',
+      headers:{'content-type':'application/x-www-form-urlencoded'},
+      body:new URLSearchParams({user_confirmed:'true'}),
+      redirect:'manual',
+    });
+    assert.equal(response.status,503);
+    assert.match(response.headers.get('content-type')||'',/^text\/html/i);
+    const body=await response.text();
+    assert.match(body,/No charge was made\./);
+    assert.match(body,/Evercraft Payments/);
+    assert.match(body,/Return to the offer/);
+    assert.doesNotMatch(body,/evercraft_payments_checkout_not_ready|adapter_error|gate_key/);
+  }finally{
+    await runtime.close();
+  }
+});
+
