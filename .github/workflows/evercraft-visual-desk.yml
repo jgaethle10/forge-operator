@@ -93,6 +93,46 @@ jobs:
           if-no-files-found: error
           retention-days: 90
 
+      - name: Admit verified USGS relief asset onto this PR branch
+        if: >-
+          github.event_name == 'pull_request' &&
+          github.head_ref == 'feat/graphics-command-real-geography' &&
+          github.event.pull_request.head.repo.full_name == github.repository
+        shell: bash
+        env:
+          HEAD_BRANCH: ${{ github.head_ref }}
+        run: |
+          set -euo pipefail
+          test -s _terrain_acquisition/washington-usgs-shaded-relief.png
+          test -s _terrain_acquisition/receipt.json
+          expected="$(node -p "JSON.parse(require('fs').readFileSync('_terrain_acquisition/receipt.json','utf8')).sha256")"
+          actual="$(sha256sum _terrain_acquisition/washington-usgs-shaded-relief.png | awk '{print $1}')"
+          test "$actual" = "$expected"
+
+          git fetch origin "$HEAD_BRANCH"
+          git checkout -B "$HEAD_BRANCH" "origin/$HEAD_BRANCH"
+          mkdir -p systemia/graphics-command/assets
+          cp _terrain_acquisition/washington-usgs-shaded-relief.png \
+            systemia/graphics-command/assets/washington-usgs-shaded-relief.png
+          cp _terrain_acquisition/receipt.json \
+            systemia/graphics-command/assets/washington-usgs-shaded-relief.receipt.json
+
+          if git diff --quiet -- \
+            systemia/graphics-command/assets/washington-usgs-shaded-relief.png \
+            systemia/graphics-command/assets/washington-usgs-shaded-relief.receipt.json &&
+             git ls-files --error-unmatch systemia/graphics-command/assets/washington-usgs-shaded-relief.png >/dev/null 2>&1; then
+            echo "Verified relief asset already admitted."
+            exit 0
+          fi
+
+          git config user.name "Evercraft Graphics Command"
+          git config user.email "graphics-command@users.noreply.github.com"
+          git add \
+            systemia/graphics-command/assets/washington-usgs-shaded-relief.png \
+            systemia/graphics-command/assets/washington-usgs-shaded-relief.receipt.json
+          git commit -m "Graphics Command: admit verified USGS Washington shaded relief"
+          git push origin "HEAD:$HEAD_BRANCH"
+
       - name: Prove visual story factory and Radar admission bridge
         run: node --test systemia/graphics-command/director.test.mjs systemia/graphics-command/poster-renderer.test.mjs systemia/visual-desk/factory.test.mjs systemia/visual-desk/radar-adapter.test.mjs systemia/visual-desk/transporter.test.mjs
 
@@ -158,42 +198,3 @@ jobs:
           grep -q "publicationAuthority:false" systemia/visual-desk/factory.mjs
           grep -q "visual_story_sources_missing" systemia/visual-desk/factory.mjs
 
-      - name: Admit verified USGS relief asset onto this PR branch
-        if: >-
-          github.event_name == 'pull_request' &&
-          github.head_ref == 'feat/graphics-command-real-geography' &&
-          github.event.pull_request.head.repo.full_name == github.repository
-        shell: bash
-        env:
-          HEAD_BRANCH: ${{ github.head_ref }}
-        run: |
-          set -euo pipefail
-          test -s _terrain_acquisition/washington-usgs-shaded-relief.png
-          test -s _terrain_acquisition/receipt.json
-          expected="$(node -p "JSON.parse(require('fs').readFileSync('_terrain_acquisition/receipt.json','utf8')).sha256")"
-          actual="$(sha256sum _terrain_acquisition/washington-usgs-shaded-relief.png | awk '{print $1}')"
-          test "$actual" = "$expected"
-
-          git fetch origin "$HEAD_BRANCH"
-          git checkout -B "$HEAD_BRANCH" "origin/$HEAD_BRANCH"
-          mkdir -p systemia/graphics-command/assets
-          cp _terrain_acquisition/washington-usgs-shaded-relief.png \
-            systemia/graphics-command/assets/washington-usgs-shaded-relief.png
-          cp _terrain_acquisition/receipt.json \
-            systemia/graphics-command/assets/washington-usgs-shaded-relief.receipt.json
-
-          if git diff --quiet -- \
-            systemia/graphics-command/assets/washington-usgs-shaded-relief.png \
-            systemia/graphics-command/assets/washington-usgs-shaded-relief.receipt.json &&
-             git ls-files --error-unmatch systemia/graphics-command/assets/washington-usgs-shaded-relief.png >/dev/null 2>&1; then
-            echo "Verified relief asset already admitted."
-            exit 0
-          fi
-
-          git config user.name "Evercraft Graphics Command"
-          git config user.email "graphics-command@users.noreply.github.com"
-          git add \
-            systemia/graphics-command/assets/washington-usgs-shaded-relief.png \
-            systemia/graphics-command/assets/washington-usgs-shaded-relief.receipt.json
-          git commit -m "Graphics Command: admit verified USGS Washington shaded relief"
-          git push origin "HEAD:$HEAD_BRANCH"
