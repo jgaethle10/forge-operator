@@ -265,6 +265,22 @@ Stage Mode remains compatible with Play Mode. Staged edits affect the editor pre
 
 Import and Reset stop the active Play session before replacing canonical project state. The static **Engine Bridge** mode remains separate and cannot replace the stateful Play session while Play is active.
 
+### Runtime viewport projection
+
+Play Mode projects the running World Engine snapshot back into Forge coordinates for viewport display without mutating canonical authoring state.
+
+The projection:
+
+- uses the bridge's canonical node → entity identity map;
+- converts World Engine Y-up transforms back into World Forge Z-up;
+- round-trips translation, Euler rotation and scale through the explicit coordinate basis;
+- carries the source snapshot digest, tick, world version and project version;
+- is marked `canonicalAuthoringMutation:false`.
+
+When Play Mode is running and Stage Mode is off, the viewport displays runtime transforms and labels the surface **RUNTIME VIEW**. When Stage Mode is enabled, the viewport deliberately switches to **AUTHORING PREVIEW** so proposed edits can be inspected without pretending they have affected the running simulation.
+
+Runtime projection never writes simulation movement back into the authored project. Converting runtime state into canon requires a separate explicit authoring operation.
+
 ### Server limits
 
 The first session registry is capped at 24 simultaneous sessions with a two-hour inactivity TTL. A single step call is capped at 600 ticks and 1,000 input events. Input IDs must be unique and every input tick must fall inside the requested step window.
