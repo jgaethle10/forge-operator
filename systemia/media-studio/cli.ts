@@ -71,6 +71,10 @@ import {
 } from './world-forge.js';
 import { buildWorldForgeCinematicShot } from './world-forge-cinematic.js';
 import { compileWorldForgeToWorldEngine } from './world-forge-world-engine.js';
+import {
+  applyWorldForgeLiveSyncToRuntime,
+  compileWorldForgeLiveSync,
+} from './world-forge-live-sync.js';
 import { syncWorldForgeChangeSetToRuntime } from './world-forge-runtime-sync.js';
 import type { WorldDefinition } from '../world-engine/engine.js';
 import type { WorldAssetManifest } from '../world-engine/studio-edit.js';
@@ -248,6 +252,36 @@ function main() {
     console.log(`World: ${sync.runtime.world.id} v${sync.runtime.world.version}`);
     console.log(`Transaction: ${sync.transaction.id} · ${sync.transaction.operations.length} operation(s)`);
     console.log(`Receipt: ${sync.receipt.digest}`);
+    return;
+  }
+
+  if (command === 'world-forge-live-sync') {
+    if (!input || !output) {
+      usage();
+      process.exitCode = 1;
+      return;
+    }
+    const payload = readJson<Parameters<typeof compileWorldForgeLiveSync>[0]>(input);
+    const sync = compileWorldForgeLiveSync(payload);
+    writeJson(output, sync);
+    console.log(`World Forge live sync compiled: ${path.resolve(output)}`);
+    console.log(`Operations: ${sync.receipt.operationCount}; transaction: ${sync.transaction.id}`);
+    console.log(`Geometry cache mutation: ${sync.receipt.boundaries.geometryCacheMutationRequired}`);
+    return;
+  }
+
+  if (command === 'world-forge-live-runtime-sync') {
+    if (!input || !output) {
+      usage();
+      process.exitCode = 1;
+      return;
+    }
+    const payload = readJson<Parameters<typeof applyWorldForgeLiveSyncToRuntime>[0]>(input);
+    const result = applyWorldForgeLiveSyncToRuntime(payload);
+    writeJson(output, result);
+    console.log(`World Forge live runtime sync applied: ${path.resolve(output)}`);
+    console.log(`Tick preserved: ${result.snapshot.tick}; migrated snapshot: ${result.snapshot.digest}`);
+    console.log(`Geometry hot reloads: ${result.geometryHotReloadReceipts.length}`);
     return;
   }
 
