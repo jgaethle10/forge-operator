@@ -108,6 +108,8 @@ jobs:
         run: node scripts/validate-base44-credit-firewall.mjs
       - name: Validate owned execution ratchet
         run: node scripts/validate-owned-execution-ratchet.mjs
+      - name: Prove Forensic Record owned migration adapter
+        run: node systemia/migrations/base44-exit/forensic-record-domain-adapter.proof.mjs
       - name: Enforce zero Base44 active hot paths
         run: node scripts/validate-no-base44-hotpath.mjs
       - name: Prove owned-only CHUM IndexNow routing
