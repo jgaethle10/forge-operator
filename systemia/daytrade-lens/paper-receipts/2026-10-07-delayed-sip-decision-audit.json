@@ -1,0 +1,39 @@
+{
+  "schema": "evercraft.daytrade.delayed-sip-decision-audit-summary.v1",
+  "generated_at": "2026-10-07T18:43:12.651Z",
+  "source_run_id": 37668941992,
+  "source_artifact_id": 11503349519,
+  "source_artifact_digest": "sha256:21e04262b619bd53fcfb2f6eb92929eb3384af20fa02c0f615a04bb0ed1d3a5a",
+  "simulation_only": true,
+  "capital_at_risk_usd": 0,
+  "independent_windows": 11,
+  "instrument_decisions": 33,
+  "sip_quotes_available": 30,
+  "decision_disagreements": 12,
+  "disagreement_fraction_available": 0.4,
+  "iex_abstain_vs_sip_trade_count": 12,
+  "iex_trade_vs_sip_abstain_count": 0,
+  "disagreement_by_symbol": {
+    "SOXX": 7,
+    "SMH": 5,
+    "QQQ": 0
+  },
+  "disagreement_by_phase": {
+    "MIDDAY": 10,
+    "CLOSING": 2,
+    "OPENING": 0
+  },
+  "interpretation": {
+    "frozen_rule_is_feed_sensitive": true,
+    "all_observed_disagreements_were_iex_abstain_vs_sip_trade": true,
+    "semiconductor_etfs_drive_observed_disagreement": true,
+    "delayed_sip_is_after_the_fact_only": true,
+    "summary_entry_time_was_inferred_as_generated_at_minus_60000ms": true,
+    "no_sip_execution_pnl_inferred": true,
+    "threshold_not_retuned": true,
+    "iex_rule_must_not_be_assumed_equivalent_to_sip": true,
+    "not_signal_validation": true,
+    "not_live_authorized": true
+  },
+  "live_trade_authority": false
+}
