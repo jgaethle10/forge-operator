@@ -50,6 +50,11 @@ try{
   assert.ok('storage_gb' in capacity.capacity_hint);
   assert.ok('gpu_units' in capacity.capacity_hint);
   assert.ok('vram_mb' in capacity.capacity_hint);
+  assert.equal(capacity.utilization.measurement_state,'observed_runtime');
+  assert.equal(capacity.utilization.active_lease_count,0);
+  assert.equal(capacity.utilization.inflight_assignment_count,0);
+  assert.equal(capacity.utilization.resident_service_count,0);
+  assert.equal(capacity.utilization.observed_idle,true);
 
   assert.equal(await closeLocalHostCapacity({env,cwd:root}),true);
 
@@ -60,6 +65,7 @@ try{
     owned_host_becomes_spawn_target:true,
     nodeseed_bootstrapped_on_demand:true,
     hardware_inventory_advertised:true,
+    observed_runtime_utilization_advertised:true,
     allocator_secret_not_serialized:true,
   },null,2));
 }finally{

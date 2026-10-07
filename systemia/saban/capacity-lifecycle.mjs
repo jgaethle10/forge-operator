@@ -10,6 +10,18 @@ function workloadSet(offer){
   return new Set((offer?.metadata?.supported_workloads||[]).map(String));
 }
 
+function runtimeBusy(offer){
+  const utilization=offer?.metadata?.runtime_utilization||{};
+  const measurement=String(utilization.measurement_state||'').toLowerCase();
+  if(!['observed_runtime','observed'].includes(measurement)) return false;
+  return (
+    Number(utilization.active_lease_count||0)>0 ||
+    Number(utilization.inflight_assignment_count||0)>0 ||
+    Number(utilization.resident_service_count||0)>0 ||
+    utilization.observed_idle===false
+  );
+}
+
 function reclaimRecommendation(offer){
   const meta=offer?.metadata||{};
   const lifecycleAuthority=String(meta.lifecycle_authority||'').trim().toLowerCase();
@@ -140,14 +152,15 @@ function stableState({
   active,
   reserved,
   prewarm,
+  runtime_busy,
   prior,
   nowMs,
   idleReleaseCycles,
   minIdleMs,
 }){
-  if(active||reserved||prewarm){
+  if(active||reserved||prewarm||runtime_busy){
     return {
-      state:active?'active':reserved?'reserved':'prewarm',
+      state:active?'active':reserved?'reserved':prewarm?'prewarm':'runtime_busy',
       idle_cycles:0,
       idle_since:null,
       reclaim_eligible:false,
@@ -160,7 +173,9 @@ function stableState({
         ? 'active_placement'
         : reserved
           ? 'forecast_headroom_reserved'
-          : 'forecast_prewarm_supported',
+          : prewarm
+            ? 'forecast_prewarm_supported'
+            : 'observed_runtime_activity',
     };
   }
 
@@ -231,11 +246,13 @@ export function buildCapacityLifecyclePlan({
     if(!offerId) continue;
     const supported=workloadSet(offer);
     const prewarm=[...prewarmWorkloads].some(w=>supported.has(w));
+    const observedRuntimeBusy=runtimeBusy(offer);
     const state=stableState({
       offer,
       active:placed.has(offerId),
       reserved:reserved.has(offerId),
       prewarm,
+      runtime_busy:observedRuntimeBusy,
       prior:prior.get(offerId)||null,
       nowMs,
       idleReleaseCycles,
@@ -250,6 +267,8 @@ export function buildCapacityLifecyclePlan({
       active_placement:placed.has(offerId),
       forecast_reserved:reserved.has(offerId),
       forecast_prewarm_match:prewarm,
+      observed_runtime_busy:observedRuntimeBusy,
+      runtime_utilization:offer?.metadata?.runtime_utilization||null,
       ...state,
       automatic_shutdown_authorized:false,
       automatic_paid_capacity_acquisition_authorized:false,
@@ -268,6 +287,7 @@ export function buildCapacityLifecyclePlan({
     active_count:entries.filter(x=>x.state==='active').length,
     reserved_count:entries.filter(x=>x.state==='reserved').length,
     prewarm_count:entries.filter(x=>x.state==='prewarm').length,
+    runtime_busy_count:entries.filter(x=>x.state==='runtime_busy').length,
     idle_count:entries.filter(x=>x.state==='idle').length,
     reclaim_eligible_count:entries.filter(x=>x.reclaim_eligible).length,
     reclamation_execution_ready_count:entries.filter(x=>x.reclamation_execution_ready===true).length,
@@ -285,6 +305,7 @@ export function buildCapacityLifecyclePlan({
       active_work_never_reclaimed:true,
       forecast_reservations_pin_capacity:true,
       prewarm_pressure_pins_capacity:true,
+      observed_runtime_activity_pins_capacity:true,
       sustained_idle_required:true,
       paid_idle_capacity_reclaimed_before_zero_cost:true,
       owned_capacity_not_powered_off_without_explicit_execution_authority:true,

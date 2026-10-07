@@ -150,3 +150,86 @@ export async function closeLocalHostCapacity({
   live.delete(root);
   return true;
 }
+
+
+function localHostRoot({
+  acquisition={},
+  env=process.env,
+  cwd=process.cwd(),
+}={}){
+  return path.resolve(
+    acquisition.local_node_root||
+    env.EVERCRAFT_LOCAL_NODE_ROOT||
+    path.join(cwd,'artifacts','saban','local-host-node')
+  );
+}
+
+export function localHostCapacityStatus({
+  acquisition={},
+  env=process.env,
+  cwd=process.cwd(),
+}={}){
+  const root=localHostRoot({acquisition,env,cwd});
+  return {
+    schema:'evercraft.saban.local-host-capacity-status.v1',
+    live:live.has(root),
+    auto_retire_authorized:
+      acquisition.allow_local_host_auto_retire===true ||
+      truthy(env.SABAN_LOCAL_HOST_AUTO_RETIRE),
+    physical_host_shutdown_authorized:false,
+  };
+}
+
+export async function inspectLocalHostCapacity({
+  acquisition={},
+  env=process.env,
+  cwd=process.cwd(),
+  timeoutMs=1500,
+}={}){
+  const root=localHostRoot({acquisition,env,cwd});
+  const pending=live.get(root);
+  if(!pending){
+    return {
+      schema:'evercraft.saban.local-host-capacity-inspection.v1',
+      live:false,
+      observed_idle:null,
+      active_lease_count:null,
+      inflight_assignment_count:null,
+      resident_service_count:null,
+      measurement_state:'not_running',
+      auto_retire_authorized:
+        acquisition.allow_local_host_auto_retire===true ||
+        truthy(env.SABAN_LOCAL_HOST_AUTO_RETIRE),
+      physical_host_shutdown_authorized:false,
+    };
+  }
+  const activated=await pending;
+  const controller=new AbortController();
+  const timer=setTimeout(()=>controller.abort(),Math.max(100,Number(timeoutMs||1500)));
+  try{
+    const response=await fetch(String(activated.capacity_endpoint)+'/v1/capacity',{
+      signal:controller.signal,
+    });
+    const capacity=await response.json().catch(()=>({}));
+    if(!response.ok){
+      throw new Error('local_host_capacity_inspection_failed:'+response.status);
+    }
+    const utilization=capacity?.utilization||{};
+    return {
+      schema:'evercraft.saban.local-host-capacity-inspection.v1',
+      live:true,
+      observed_idle:utilization.observed_idle===true,
+      active_lease_count:Math.max(0,Number(utilization.active_lease_count||0)),
+      inflight_assignment_count:Math.max(0,Number(utilization.inflight_assignment_count||0)),
+      resident_service_count:Math.max(0,Number(utilization.resident_service_count||0)),
+      measurement_state:String(utilization.measurement_state||'unknown'),
+      capacity_endpoint:String(activated.capacity_endpoint),
+      auto_retire_authorized:
+        acquisition.allow_local_host_auto_retire===true ||
+        truthy(env.SABAN_LOCAL_HOST_AUTO_RETIRE),
+      physical_host_shutdown_authorized:false,
+    };
+  }finally{
+    clearTimeout(timer);
+  }
+}

@@ -50,6 +50,17 @@ const offers=[
   offer('voluntary',{market:'evercraft-voluntary',access:'voluntary_compute'}),
   offer('forecast-node',{workloads:['systemia.forecast.v1']}),
   offer('reserved-node'),
+  offer('runtime-busy',{
+    metadata:{
+      runtime_utilization:{
+        active_lease_count:1,
+        inflight_assignment_count:0,
+        resident_service_count:0,
+        observed_idle:false,
+        measurement_state:'observed_runtime',
+      },
+    },
+  }),
 ];
 
 const fabricPlan={
@@ -70,6 +81,8 @@ const first=buildCapacityLifecyclePlan({
 assert.equal(first.entries.find(x=>x.offer_id==='active-paid').state,'active');
 assert.equal(first.entries.find(x=>x.offer_id==='reserved-node').state,'reserved');
 assert.equal(first.entries.find(x=>x.offer_id==='forecast-node').state,'prewarm');
+assert.equal(first.entries.find(x=>x.offer_id==='runtime-busy').state,'runtime_busy');
+assert.equal(first.entries.find(x=>x.offer_id==='runtime-busy').reclaim_eligible,false);
 assert.equal(first.entries.find(x=>x.offer_id==='idle-paid').recommended_action,'observe_cooldown');
 
 const second=buildCapacityLifecyclePlan({
@@ -101,6 +114,8 @@ assert.equal(third.entries.find(x=>x.offer_id==='voluntary').recommended_action,
 assert.equal(third.entries.find(x=>x.offer_id==='active-paid').reclaim_eligible,false);
 assert.equal(third.entries.find(x=>x.offer_id==='reserved-node').reclaim_eligible,false);
 assert.equal(third.entries.find(x=>x.offer_id==='forecast-node').reclaim_eligible,false);
+assert.equal(third.entries.find(x=>x.offer_id==='runtime-busy').reclaim_eligible,false);
+assert.equal(third.entries.find(x=>x.offer_id==='runtime-busy').reason,'observed_runtime_activity');
 assert.equal(third.policy.owned_capacity_not_powered_off_without_explicit_execution_authority,true);
 assert.equal(third.policy.visibility_labels_never_grant_lifecycle_authority,true);
 assert.equal(third.policy.paid_release_requires_confirmed_lease_and_release_authority,true);
@@ -117,6 +132,7 @@ console.log(JSON.stringify({
   active_capacity_pinned:true,
   forecast_reservation_pinned:true,
   forecast_prewarm_pinned:true,
+  observed_runtime_activity_pins_capacity:true,
   sustained_idle_required:true,
   paid_idle_capacity_released_only_with_explicit_release_authority:true,
   uncertain_paid_lease_reconciles_before_release:true,

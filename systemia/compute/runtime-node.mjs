@@ -1129,6 +1129,20 @@ export async function startEvercraftComputeNode({
           lease_renewal_supported: true,
           device_fingerprint: deviceIdentity?.fingerprint || null,
           attestation_supported: Boolean(deviceIdentity),
+          utilization: {
+            active_lease_count: [...leases.values()].filter(
+              (lease) => Number(lease?.expires_at || 0) >= Date.now()
+            ).length,
+            inflight_assignment_count: sabanInflight.size,
+            resident_service_count: services.size,
+            observed_idle:
+              [...leases.values()].filter(
+                (lease) => Number(lease?.expires_at || 0) >= Date.now()
+              ).length === 0 &&
+              sabanInflight.size === 0 &&
+              services.size === 0,
+            measurement_state: 'observed_runtime'
+          },
           capacity_hint: {
             cpu_units: hardwareCapacity.cpu_units,
             memory_mb: totalMemoryMb,

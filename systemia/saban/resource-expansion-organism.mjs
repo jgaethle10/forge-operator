@@ -10,6 +10,7 @@ import { buildLocalHostCandidate, createLocalHostSpawnAdapter } from './local-ho
 import { buildComputeMarketAdapters } from './market-factory.mjs';
 import { resourceNeedToComputeDemand } from './resource-acquirer.mjs';
 import { normalizeComputeDemand, rankComputeOffers } from './compute-exchange.mjs';
+import { advanceLocalHostLifecycle } from './local-host-lifecycle.mjs';
 
 const MODULE_FILE=fileURLToPath(import.meta.url);
 const sha=(value)=>'sha256:'+createHash('sha256').update(
@@ -315,6 +316,60 @@ function cliHas(name){return process.argv.includes(name);}
 
 async function runResidentExpansionOnce({root}={}){
   const queueFile=path.join(root,'resource-field-expansion-intents.json');
+  const lifecycleFile=path.join(root,'local-host-lifecycle.json');
+  const acquisition={
+    auto_discover_markets:true,
+    public_market_discovery:
+      String(process.env.SABAN_PUBLIC_MARKET_DISCOVERY||'').toLowerCase()==='true',
+    allow_local_host_bootstrap:
+      String(process.env.EVERCRAFT_OWNED_HOST||'').toLowerCase()==='true',
+    allow_local_host_auto_retire:
+      String(process.env.SABAN_LOCAL_HOST_AUTO_RETIRE||'').toLowerCase()==='true',
+    local_node_root:String(process.env.EVERCRAFT_LOCAL_NODE_ROOT||'').trim()||undefined,
+    local_node_id:String(process.env.EVERCRAFT_LOCAL_NODE_ID||'').trim()||undefined,
+  };
+  const retireAfterCycles=Math.max(
+    1,
+    Math.floor(Number(process.env.SABAN_LOCAL_HOST_IDLE_RETIRE_CYCLES||15))
+  );
+
+  const finalize=async(cycle)=>{
+    const previousLifecycle=fs.existsSync(lifecycleFile)
+      ? JSON.parse(fs.readFileSync(lifecycleFile,'utf8'))
+      : null;
+    const lifecycle=await advanceLocalHostLifecycle({
+      cycle,
+      acquisition,
+      previous:previousLifecycle,
+      retireAfterCycles,
+      now:new Date(),
+    });
+    atomicJson(lifecycleFile,lifecycle);
+
+    const {receipt_hash:_previousReceipt,...cycleBody}=cycle;
+    const body={
+      ...cycleBody,
+      local_host_lifecycle:{
+        state:lifecycle.state,
+        live:lifecycle.live,
+        demand_present:lifecycle.demand_present,
+        idle_cycles:lifecycle.idle_cycles,
+        retire_after_cycles:lifecycle.retire_after_cycles,
+        auto_retire_authorized:lifecycle.auto_retire_authorized,
+        observed_idle:lifecycle.observed_idle,
+        active_lease_count:lifecycle.active_lease_count??null,
+        inflight_assignment_count:lifecycle.inflight_assignment_count??null,
+        resident_service_count:lifecycle.resident_service_count??null,
+        reclamation_executed:lifecycle.reclamation_executed===true,
+        physical_host_shutdown:false,
+        receipt_hash:lifecycle.receipt_hash,
+      },
+    };
+    const receipt={...body,receipt_hash:sha(body)};
+    atomicJson(path.join(root,'resource-field-expansion-state.json'),receipt);
+    return receipt;
+  };
+
   if(!fs.existsSync(queueFile)){
     const idle={
       schema:'evercraft.saban.resource-expansion-cycle.v1',
@@ -331,29 +386,18 @@ async function runResidentExpansionOnce({root}={}){
       paid_lease_created:false,
       generated_at:new Date().toISOString(),
     };
-    const receipt={...idle,receipt_hash:sha(idle)};
-    atomicJson(path.join(root,'resource-field-expansion-state.json'),receipt);
-    return receipt;
+    return finalize({...idle,receipt_hash:sha(idle)});
   }
 
   const queue=JSON.parse(fs.readFileSync(queueFile,'utf8'));
   const cycle=await runResourceExpansionCycle({
     queue,
-    acquisition:{
-      auto_discover_markets:true,
-      public_market_discovery:
-        String(process.env.SABAN_PUBLIC_MARKET_DISCOVERY||'').toLowerCase()==='true',
-      allow_local_host_bootstrap:
-        String(process.env.EVERCRAFT_OWNED_HOST||'').toLowerCase()==='true',
-      local_node_root:String(process.env.EVERCRAFT_LOCAL_NODE_ROOT||'').trim()||undefined,
-      local_node_id:String(process.env.EVERCRAFT_LOCAL_NODE_ID||'').trim()||undefined,
-    },
+    acquisition,
     poolOptions:{
       allocatorToken:String(process.env.EVERCRAFT_ALLOCATOR_TOKEN||''),
     },
   });
-  atomicJson(path.join(root,'resource-field-expansion-state.json'),cycle);
-  return cycle;
+  return finalize(cycle);
 }
 
 async function main(){
@@ -385,6 +429,9 @@ async function main(){
       paid_capacity_visible_authority_required:
         cycle.paid_capacity_visible_authority_required,
       engineering_required:cycle.engineering_required,
+      local_host_lifecycle_state:cycle.local_host_lifecycle?.state||null,
+      local_host_auto_retire_authorized:cycle.local_host_lifecycle?.auto_retire_authorized===true,
+      local_host_reclamation_executed:cycle.local_host_lifecycle?.reclamation_executed===true,
       paid_execution_authorized:false,
       receipt_hash:cycle.receipt_hash,
     })+'\n');

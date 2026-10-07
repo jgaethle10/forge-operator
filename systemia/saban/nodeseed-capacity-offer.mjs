@@ -97,6 +97,13 @@ export function nodeSeedSnapshotToComputeOffer(node={}){
       concurrency_hint_state:
         hardware.recommended_concurrency?.state||
         'inferred_from_cpu_and_memory',
+      runtime_utilization:{
+        active_lease_count:Math.max(0,Number(capacity.utilization?.active_lease_count||0)),
+        inflight_assignment_count:Math.max(0,Number(capacity.utilization?.inflight_assignment_count||0)),
+        resident_service_count:Math.max(0,Number(capacity.utilization?.resident_service_count||0)),
+        observed_idle:capacity.utilization?.observed_idle===true,
+        measurement_state:String(capacity.utilization?.measurement_state||'unknown'),
+      },
       authorization_required:true,
       arbitrary_code_execution:false,
     },
