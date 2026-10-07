@@ -450,7 +450,7 @@ async function loadState() {
       ['View', document.body.dataset.pilot === 'agnormal' ? 'AGNORMAL PILOT' : 'PUBLIC'],
       ['Fabric', health.fabric_native ? 'OWNED' : 'CHECK'],
       ['Registry', 'PUBLISHED'],
-      ['legacy provider', health.legacy provider_transport_enabled === false ? 'OFF' : 'CHECK'],
+      ['Legacy transport', health.base44_transport_enabled === false ? 'OFF' : 'CHECK'],
       ['Resident', health.resident ? 'ON' : 'OFF'],
       ['Signals', health.signal_count || 0],
       ['Official feeds', sourceLabel],
