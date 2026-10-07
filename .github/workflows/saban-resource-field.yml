@@ -35,6 +35,10 @@ on:
       - 'systemia/saban/market-factory.proof.mjs'
       - 'systemia/saban/local-host-capacity.mjs'
       - 'systemia/saban/local-host-capacity.proof.mjs'
+      - 'systemia/saban/nodeseed-capacity-offer.mjs'
+      - 'systemia/saban/nodeseed-inventory-ingest.mjs'
+      - 'systemia/saban/local-host-lifecycle.proof.mjs'
+      - 'systemia/saban/local-host-lifecycle.mjs'
       - 'systemia/saban/formation.mjs'
       - 'systemia/saban/formation-resilience.proof.mjs'
       - 'systemia/saban/distributed-executor.mjs'
@@ -106,6 +110,8 @@ jobs:
         run: node systemia/saban/resource-discovery.proof.mjs
       - name: Prove owned-host bootstrap
         run: node systemia/saban/local-host-capacity.proof.mjs
+      - name: Prove observed-idle local host lifecycle
+        run: node systemia/saban/local-host-lifecycle.proof.mjs
       - name: Prove canonical market stack
         run: node systemia/saban/market-stack.proof.mjs
       - name: Prove automatic market construction
