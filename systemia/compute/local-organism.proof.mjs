@@ -24,6 +24,7 @@ try {
   assert.equal(first.seed.endpoint.startsWith('http://127.0.0.1:'), true);
   assert.equal(first.seed.beacon, null);
   assert.equal(first.seed.zero_cost, true);
+  assert.equal(first.seed.placement_labels.includes('persistent-storage'), true);
   assert.equal(first.receipt.zero_spend_capacity, true);
   assert.equal(first.receipt.public_ingress, false);
   assert.equal(first.receipt.node_endpoint_scope, 'loopback_only');
