@@ -27,6 +27,7 @@ export interface GeometryAsset {
   positions:number[];
   normals:number[];
   uvs?:number[];
+  tangents?:number[];
   indices?:number[];
 }
 
@@ -64,6 +65,7 @@ export interface WebGpuDrawCommand {
     baseColor:string|null;
     orm:string|null;
     emissive:string|null;
+    normal:string|null;
   };
   textureFlags:[number,number,number,number];
   pipelineKey:string;
@@ -372,6 +374,29 @@ export function validateGeometryAsset(geometry:GeometryAsset){
     }
     for(const value of geometry.uvs) finite(value,`geometry_${geometry.id}_uv`);
   }
+  if(geometry.tangents){
+    const vertices=geometry.positions.length/3;
+    if(!geometry.uvs) throw new Error(`webgpu_geometry_tangents_require_uvs:${geometry.id}`);
+    if(geometry.tangents.length!==vertices*4){
+      throw new Error(`webgpu_geometry_tangents_invalid:${geometry.id}`);
+    }
+    for(let i=0;i<vertices;i++){
+      const x=geometry.tangents[i*4];
+      const y=geometry.tangents[i*4+1];
+      const z=geometry.tangents[i*4+2];
+      const handedness=geometry.tangents[i*4+3];
+      finite(x,`geometry_${geometry.id}_tangent`);
+      finite(y,`geometry_${geometry.id}_tangent`);
+      finite(z,`geometry_${geometry.id}_tangent`);
+      finite(handedness,`geometry_${geometry.id}_tangent_handedness`);
+      if(Math.sqrt(x*x+y*y+z*z)<=EPS){
+        throw new Error(`webgpu_geometry_tangent_zero:${geometry.id}`);
+      }
+      if(handedness!==1 && handedness!==-1){
+        throw new Error(`webgpu_geometry_tangent_handedness_invalid:${geometry.id}`);
+      }
+    }
+  }
   if(geometry.indices){
     if(geometry.indices.length<3 || geometry.indices.length%3!==0){
       throw new Error(`webgpu_geometry_indices_invalid:${geometry.id}`);
@@ -393,23 +418,29 @@ function materialPacket(
   geometry:GeometryAsset,
   textureMap:Map<string,TextureAsset>
 ){
-  if(material.textureRefs?.normal){
-    throw new Error(`webgpu_normal_map_tangents_required:${material.id}`);
-  }
-
   const refs={
     baseColor:material.textureRefs?.baseColor || null,
     orm:material.textureRefs?.orm || null,
-    emissive:material.textureRefs?.emissive || null
+    emissive:material.textureRefs?.emissive || null,
+    normal:material.textureRefs?.normal || null
   };
-  const referenced=[refs.baseColor,refs.orm,refs.emissive]
+  const referenced=[refs.baseColor,refs.orm,refs.emissive,refs.normal]
     .filter((value):value is string=>Boolean(value));
 
   if(referenced.length && !geometry.uvs){
     throw new Error(`webgpu_texture_uvs_required:${geometry.id}`);
   }
+  if(refs.normal && material.model!=='pbr'){
+    throw new Error(`webgpu_normal_map_requires_pbr:${material.id}`);
+  }
+  if(refs.normal && !geometry.tangents){
+    throw new Error(`webgpu_normal_map_tangents_required:${material.id}`);
+  }
   for(const id of referenced){
     if(!textureMap.has(id)) throw new Error(`webgpu_texture_missing:${id}`);
+  }
+  if(refs.normal && textureMap.get(refs.normal)?.format!=='rgba8unorm'){
+    throw new Error(`webgpu_normal_map_format_must_be_linear:${refs.normal}`);
   }
 
   return {
@@ -437,7 +468,7 @@ function materialPacket(
       refs.baseColor?1:0,
       refs.orm?1:0,
       refs.emissive?1:0,
-      0
+      refs.normal?1:0
     ] as [number,number,number,number]
   };
 }
@@ -538,7 +569,8 @@ export function compileWebGpuRenderPlan(
     draws.flatMap(draw=>[
       draw.textureRefs.baseColor,
       draw.textureRefs.orm,
-      draw.textureRefs.emissive
+      draw.textureRefs.emissive,
+      draw.textureRefs.normal
     ].filter((value):value is string=>Boolean(value)))
   )].sort();
 
@@ -594,16 +626,20 @@ function floats(values:number[]){
 
 function packGeometry(geometry:GeometryAsset){
   const vertices=geometry.positions.length/3;
-  const data=new Float32Array(vertices*8);
+  const data=new Float32Array(vertices*12);
   for(let i=0;i<vertices;i++){
-    data[i*8]=geometry.positions[i*3];
-    data[i*8+1]=geometry.positions[i*3+1];
-    data[i*8+2]=geometry.positions[i*3+2];
-    data[i*8+3]=geometry.normals[i*3];
-    data[i*8+4]=geometry.normals[i*3+1];
-    data[i*8+5]=geometry.normals[i*3+2];
-    data[i*8+6]=geometry.uvs?.[i*2] ?? 0;
-    data[i*8+7]=geometry.uvs?.[i*2+1] ?? 0;
+    data[i*12]=geometry.positions[i*3];
+    data[i*12+1]=geometry.positions[i*3+1];
+    data[i*12+2]=geometry.positions[i*3+2];
+    data[i*12+3]=geometry.normals[i*3];
+    data[i*12+4]=geometry.normals[i*3+1];
+    data[i*12+5]=geometry.normals[i*3+2];
+    data[i*12+6]=geometry.uvs?.[i*2] ?? 0;
+    data[i*12+7]=geometry.uvs?.[i*2+1] ?? 0;
+    data[i*12+8]=geometry.tangents?.[i*4] ?? 1;
+    data[i*12+9]=geometry.tangents?.[i*4+1] ?? 0;
+    data[i*12+10]=geometry.tangents?.[i*4+2] ?? 0;
+    data[i*12+11]=geometry.tangents?.[i*4+3] ?? 1;
   }
   return data;
 }
@@ -662,11 +698,13 @@ struct ObjectUniforms {
 @group(1) @binding(2) var baseColorTexture: texture_2d<f32>;
 @group(1) @binding(3) var ormTexture: texture_2d<f32>;
 @group(1) @binding(4) var emissiveTexture: texture_2d<f32>;
+@group(1) @binding(5) var normalTexture: texture_2d<f32>;
 
 struct VertexIn {
   @location(0) position: vec3<f32>,
   @location(1) normal: vec3<f32>,
   @location(2) uv: vec2<f32>,
+  @location(3) tangent: vec4<f32>,
 };
 
 struct VertexOut {
@@ -674,6 +712,7 @@ struct VertexOut {
   @location(0) worldPosition: vec3<f32>,
   @location(1) normal: vec3<f32>,
   @location(2) uv: vec2<f32>,
+  @location(3) tangent: vec4<f32>,
 };
 
 @vertex
@@ -684,6 +723,10 @@ fn vs_main(input: VertexIn) -> VertexOut {
   out.worldPosition = world.xyz;
   out.normal = normalize((object.normalMatrix * vec4<f32>(input.normal, 0.0)).xyz);
   out.uv = input.uv;
+  out.tangent = vec4(
+    normalize((object.normalMatrix * vec4<f32>(input.tangent.xyz, 0.0)).xyz),
+    input.tangent.w
+  );
   return out;
 }
 
@@ -724,7 +767,13 @@ fn fs_main(input: VertexOut) -> @location(0) vec4<f32> {
     return vec4<f32>((base.rgb + emissive) * frame.cameraExposure.w, base.a);
   }
 
-  let N = normalize(input.normal);
+  var N = normalize(input.normal);
+  if (object.textureFlags.w > 0.5) {
+    let sampledNormal = textureSample(normalTexture, materialSampler, input.uv).xyz * 2.0 - vec3<f32>(1.0);
+    let T = normalize(input.tangent.xyz - N * dot(N, input.tangent.xyz));
+    let B = normalize(cross(N, T)) * input.tangent.w;
+    N = normalize(T * sampledNormal.x + B * sampledNormal.y + N * sampledNormal.z);
+  }
   let V = normalize(frame.cameraExposure.xyz - input.worldPosition);
   var lighting = vec3<f32>(0.0);
   var specular = vec3<f32>(0.0);
@@ -831,7 +880,7 @@ export class EvercraftWebGpuRenderer {
     private readonly textureBudgetBytes:number
   ){
     this.shaderModule=device.createShaderModule({
-      label:'Evercraft World Engine v13 WGSL',
+      label:'Evercraft World Engine v15 WGSL',
       code:EVERCRAFT_WEBGPU_WGSL
     });
     this.frameLayout=device.createBindGroupLayout({
@@ -846,7 +895,8 @@ export class EvercraftWebGpuRenderer {
         {binding:1,visibility:2,sampler:{type:'filtering'}},
         {binding:2,visibility:2,texture:{sampleType:'float'}},
         {binding:3,visibility:2,texture:{sampleType:'float'}},
-        {binding:4,visibility:2,texture:{sampleType:'float'}}
+        {binding:4,visibility:2,texture:{sampleType:'float'}},
+        {binding:5,visibility:2,texture:{sampleType:'float'}}
       ]
     });
     this.pipelineLayout=device.createPipelineLayout({
@@ -979,14 +1029,16 @@ export class EvercraftWebGpuRenderer {
     return cached;
   }
 
-  private fallbackTexture(kind:'white'|'orm'|'black'){
+  private fallbackTexture(kind:'white'|'orm'|'black'|'normal'){
     const existing=this.fallbackTextures.get(kind);
     if(existing) return existing;
     const rgba=kind==='white'
       ? [255,255,255,255]
       : kind==='orm'
         ? [255,255,0,255]
-        : [0,0,0,255];
+        : kind==='normal'
+          ? [128,128,255,255]
+          : [0,0,0,255];
     const usage=(globalThis as any).GPUTextureUsage;
     const texture=this.device.createTexture({
       size:[1,1,1],
@@ -1067,11 +1119,12 @@ export class EvercraftWebGpuRenderer {
         module:this.shaderModule,
         entryPoint:'vs_main',
         buffers:[{
-          arrayStride:32,
+          arrayStride:48,
           attributes:[
             {shaderLocation:0,offset:0,format:'float32x3'},
             {shaderLocation:1,offset:12,format:'float32x3'},
-            {shaderLocation:2,offset:24,format:'float32x2'}
+            {shaderLocation:2,offset:24,format:'float32x2'},
+            {shaderLocation:3,offset:32,format:'float32x4'}
           ]
         }]
       },
@@ -1217,7 +1270,10 @@ export class EvercraftWebGpuRenderer {
       const emissiveView=draw.textureRefs.emissive
         ? this.textureCache.get(draw.textureRefs.emissive)?.view
         : this.fallbackTexture('black').view;
-      if(!baseColorView || !ormView || !emissiveView){
+      const normalView=draw.textureRefs.normal
+        ? this.textureCache.get(draw.textureRefs.normal)?.view
+        : this.fallbackTexture('normal').view;
+      if(!baseColorView || !ormView || !emissiveView || !normalView){
         throw new Error(`webgpu_texture_not_resident:${draw.entityId}`);
       }
       const objectBindGroup=this.device.createBindGroup({
@@ -1227,7 +1283,8 @@ export class EvercraftWebGpuRenderer {
           {binding:1,resource:this.sampler(draw.sampler)},
           {binding:2,resource:baseColorView},
           {binding:3,resource:ormView},
-          {binding:4,resource:emissiveView}
+          {binding:4,resource:emissiveView},
+          {binding:5,resource:normalView}
         ]
       });
       pass.setBindGroup(1,objectBindGroup);

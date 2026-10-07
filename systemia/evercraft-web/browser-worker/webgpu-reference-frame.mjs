@@ -144,6 +144,7 @@ async function executeReferenceFrame(page,shaderSource){
         {binding:2,visibility:GPUShaderStage.FRAGMENT,texture:{sampleType:'float'}},
         {binding:3,visibility:GPUShaderStage.FRAGMENT,texture:{sampleType:'float'}},
         {binding:4,visibility:GPUShaderStage.FRAGMENT,texture:{sampleType:'float'}},
+        {binding:5,visibility:GPUShaderStage.FRAGMENT,texture:{sampleType:'float'}},
       ],
     });
     const pipelineLayout=device.createPipelineLayout({
@@ -155,11 +156,12 @@ async function executeReferenceFrame(page,shaderSource){
         module,
         entryPoint:'vs_main',
         buffers:[{
-          arrayStride:32,
+          arrayStride:48,
           attributes:[
             {shaderLocation:0,offset:0,format:'float32x3'},
             {shaderLocation:1,offset:12,format:'float32x3'},
             {shaderLocation:2,offset:24,format:'float32x2'},
+            {shaderLocation:3,offset:32,format:'float32x4'},
           ],
         }],
       },
@@ -177,9 +179,9 @@ async function executeReferenceFrame(page,shaderSource){
     });
 
     const vertexData=new Float32Array([
-      -1,-1,0, 0,0,1, 0,0,
-       3,-1,0, 0,0,1, 2,0,
-      -1, 3,0, 0,0,1, 0,2,
+      -1,-1,0, 0,0,1, 0,0, 1,0,0,1,
+       3,-1,0, 0,0,1, 2,0, 1,0,0,1,
+      -1, 3,0, 0,0,1, 0,2, 1,0,0,1,
     ]);
     const vertexBuffer=device.createBuffer({
       size:vertexData.byteLength,
@@ -251,6 +253,7 @@ async function executeReferenceFrame(page,shaderSource){
     const baseTexture=createPixelTexture([64,128,192,255]);
     const ormTexture=createPixelTexture([255,255,0,255]);
     const emissiveTexture=createPixelTexture([0,0,0,255]);
+    const normalTexture=createPixelTexture([128,128,255,255]);
     const sampler=device.createSampler({
       addressModeU:'repeat',
       addressModeV:'repeat',
@@ -273,6 +276,7 @@ async function executeReferenceFrame(page,shaderSource){
         {binding:2,resource:baseTexture.createView()},
         {binding:3,resource:ormTexture.createView()},
         {binding:4,resource:emissiveTexture.createView()},
+        {binding:5,resource:normalTexture.createView()},
       ],
     });
 
@@ -341,6 +345,7 @@ async function executeReferenceFrame(page,shaderSource){
     baseTexture.destroy();
     ormTexture.destroy();
     emissiveTexture.destroy();
+    normalTexture.destroy();
     target.destroy();
     depth.destroy();
     readback.destroy();
