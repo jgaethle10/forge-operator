@@ -127,6 +127,13 @@ test('Control Room runtime is loopback-only and rejects mutation methods', async
     assert.equal(diffBody.changes.length, 1);
     assert.equal(diffBody.changes[0].path, 'world.json');
 
+    const integrity = await fetch(
+      runtime.service_url + '/v1/integrity?fast=1'
+    );
+    const integrityBody = await integrity.json();
+    assert.equal(integrity.status, 200);
+    assert.equal(integrityBody.ok, true);
+
     const mutation = await fetch(runtime.service_url + '/v1/snapshot', {
       method: 'POST',
       headers: { 'content-type': 'application/json' },
@@ -153,7 +160,9 @@ test('Control Room HTML is self-contained and visibly read-only', () => {
   assert.match(html, /Branches/);
   assert.match(html, /Releases/);
   assert.match(html, /Storage/);
+  assert.match(html, /Verify integrity/);
   assert.match(html, /\/v1\/diff/);
+  assert.match(html, /\/v1\/integrity/);
   assert.doesNotMatch(html, /https:\/\//);
   assert.doesNotMatch(html, /<form/i);
 });
