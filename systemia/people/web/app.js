@@ -280,8 +280,7 @@ async function operatorPortal(){
         try{
           const body=await api('/api/people/brains/'+encodeURIComponent(selected.brain_key)+'/email-challenge',{method:'POST',headers:auth,body:JSON.stringify({email:document.getElementById('email').value})});
           const url=location.origin+body.challenge.verification_path;
-          out.innerHTML=`<div class="linkbox"><input class="input" value="${esc(url)}" readonly><button class="btn quiet" id="copy-verify">Copy</button></div>`;
-          document.getElementById('copy-verify').onclick=()=>navigator.clipboard?.writeText(url);
+          out.innerHTML=`<div class="stack"><div class="success">Challenge prepared. A trusted Gmail/Resend agent must send this exact URL and record its provider message receipt before redemption can prove mailbox ownership.</div><div class="promise"><strong>Challenge</strong><div class="muted">${esc(body.challenge.challenge_key)}</div><code>${esc(url)}</code></div></div>`;
         }catch(error){out.innerHTML=errorBox(error.message)}
       };
 
