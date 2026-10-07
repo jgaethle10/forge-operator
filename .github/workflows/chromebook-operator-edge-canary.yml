@@ -76,6 +76,7 @@ jobs:
                  [ "$error" = "json_http_404:/visuals/washington-active-volcanoes/graphics-plan.json" ] || \
                  [ "$error" = "json_http_404:/visuals/washington-active-volcanoes/scroll-stop-report.json" ] || \
                  [ "$error" = "json_http_404:/visuals/washington-active-volcanoes/fallen-stage-input.json" ] || \
+                 [ "$error" = "json_http_404:/visuals/washington-active-volcanoes/poster-quality-report.json" ] || \
                  [ "$error" = "http_404:/visuals/washington-active-volcanoes/poster-story.html" ] || \
                  [ "$error" = "graphics_command_state_geometry_missing" ] || \
                  [ "$error" = "graphics_command_boundary_lineage_missing" ] || \
