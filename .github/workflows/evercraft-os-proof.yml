@@ -9,6 +9,8 @@ on:
       - "systemia/evercraft-home/os-adapter.mjs"
       - "systemia/evercraft-home/os-status.test.mjs"
       - "systemia/evercraft-home/server.mjs"
+      - "systemia/evercraft-home/public/apps.html"
+      - "systemia/evercraft-home/public/index.html"
       - ".github/workflows/evercraft-os-proof.yml"
   pull_request:
     paths:
@@ -16,6 +18,8 @@ on:
       - "systemia/evercraft-home/os-adapter.mjs"
       - "systemia/evercraft-home/os-status.test.mjs"
       - "systemia/evercraft-home/server.mjs"
+      - "systemia/evercraft-home/public/apps.html"
+      - "systemia/evercraft-home/public/index.html"
       - ".github/workflows/evercraft-os-proof.yml"
   workflow_dispatch:
 
