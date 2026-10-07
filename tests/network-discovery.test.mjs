@@ -12,7 +12,7 @@ const required=[
   'continuity visibility when an authorized internet path changes',
   'resilient application identity across authorized network changes'
 ];
-const MCP='https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp';
+const MCP=null;
 const REGISTRY='io.github.jgaethle10/evercraft-machine-commerce';
 const EVIDENCE='https://raw.githubusercontent.com/jgaethle10/forge-operator/main/conformance/runtime-observations/2026-09-26-evercraft-network-mcp.json';
 
@@ -52,9 +52,14 @@ if(registryProduct.live_canary_evidence!==EVIDENCE) fail('registry evidence rout
 const conformance=JSON.parse(fs.readFileSync('conformance/products.json','utf8'));
 const conf=(conformance.products||[]).find((r)=>r.product_key==='evercraft-network');
 if(!conf) fail('Network conformance source missing');
-if(conf.conformance_state!=='live_read_only_mcp_verified') fail('Network conformance state drifted');
+if(conf.conformance_state!=='owned_runtime_reverification_pending') fail('Network conformance state drifted');
+if(conf.runtime_route_state!=='owned_route_pending_external_verification') fail('Network owned runtime route state drifted');
+if(conf.live_canary_evidence_state!=='historical_pre_cutover_not_current') fail('Network live canary evidence state drifted');
+if(conf.pre_cutover_state?.conformance_state!=='live_read_only_mcp_verified') fail('Network pre-cutover conformance history missing');
 if(conf.machine_commerce_handoff_state!=='bounded_read_only_mcp_verified') fail('Network handoff state drifted');
 if(conf.mcp_registry?.name!==REGISTRY) fail('Network conformance registry missing');
+if(conf.mcp!==null) fail('retired Network provider route must remain null until owned route verification');
+if(conf.mcp_registry?.endpoint_state!=='legacy_endpoint_retired_owned_republication_pending') fail('Network registry endpoint state drifted');
 if(conf.live_canary_evidence!==EVIDENCE) fail('Network conformance evidence missing');
 
 const evidencePath='conformance/runtime-observations/2026-09-26-evercraft-network-mcp.json';
