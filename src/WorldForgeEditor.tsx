@@ -878,6 +878,9 @@ export default function WorldForgeEditor(){
   }
 
   async function validateAndAdoptProject(candidate:ForgeProject,sourceLabel:string){
+    runtimeAuthoringRef.current=true;
+    setRuntimePlaying(false);
+    await waitForRuntimeIdle();
     setBusy(true);
     setError('');
     try{
@@ -908,6 +911,7 @@ export default function WorldForgeEditor(){
     }catch(err){
       setError(err instanceof Error?err.message:String(err));
     }finally{
+      runtimeAuthoringRef.current=false;
       setBusy(false);
     }
   }
@@ -937,6 +941,9 @@ export default function WorldForgeEditor(){
 
   async function resetProject(){
     if(busy) return;
+    runtimeAuthoringRef.current=true;
+    setRuntimePlaying(false);
+    await waitForRuntimeIdle();
     setBusy(true);
     setError('');
     try{
@@ -961,6 +968,7 @@ export default function WorldForgeEditor(){
     }catch(err){
       setError(err instanceof Error?err.message:String(err));
     }finally{
+      runtimeAuthoringRef.current=false;
       setBusy(false);
     }
   }
@@ -1024,6 +1032,7 @@ export default function WorldForgeEditor(){
   async function resetRuntimeSession(){
     const currentProject=projectRef.current;
     if(!currentProject||busy) return;
+    runtimeAuthoringRef.current=true;
     setRuntimePlaying(false);
     await waitForRuntimeIdle();
     setBusy(true);
@@ -1063,6 +1072,7 @@ export default function WorldForgeEditor(){
     }catch(err){
       setError(err instanceof Error?err.message:String(err));
     }finally{
+      runtimeAuthoringRef.current=false;
       setBusy(false);
     }
   }
