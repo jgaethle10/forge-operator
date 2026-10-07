@@ -13,6 +13,8 @@ import { executeRavenCommand, planRavenCommand } from "./raven-command-adapter.m
 import { askIntelligence, intelligenceOptions } from "./intelligence-router.mjs";
 import { ProviderCredentialVault } from "./credential-vault.mjs";
 import { normalizeProviderCredentialRequest } from "./provider-credentials.mjs";
+import { LineageControlRoomHomeBridge } from "./lineage-adapter.mjs";
+import { renderLineageControlRoomHtml } from "../lineage/control-room.mjs";
 
 const here = path.dirname(fileURLToPath(import.meta.url));
 const publicDir = path.join(here, "public");
@@ -29,6 +31,15 @@ const securityHeaders = {
 function json(res, status, value) {
   res.writeHead(status, { ...securityHeaders, "cache-control": "no-store", "content-type": "application/json; charset=utf-8" });
   res.end(JSON.stringify(value));
+}
+
+function html(res, status, value) {
+  res.writeHead(status, {
+    ...securityHeaders,
+    "cache-control": "no-store",
+    "content-type": "text/html; charset=utf-8",
+  });
+  res.end(String(value));
 }
 
 function cookies(req) {
@@ -156,6 +167,37 @@ export async function startEvercraftHomeServer({
     ? readPrivateRuntimeToken(ravenWorkBridgeTokenFile, "raven_work_bridge")
     : "";
   const ravenReceiptDir = String(serviceOrigins?.EVERCRAFT_RAVEN_RECEIPT_DIR || "").trim();
+
+  const lineageControlRoomBridgeUrl = String(
+    serviceOrigins?.LINEAGE_CONTROL_ROOM_BRIDGE_URL || ""
+  ).trim();
+  const lineageControlRoomBridgeTokenFile = String(
+    serviceOrigins?.LINEAGE_CONTROL_ROOM_BRIDGE_TOKEN_FILE || ""
+  ).trim();
+  if (
+    Boolean(lineageControlRoomBridgeUrl) !==
+    Boolean(lineageControlRoomBridgeTokenFile)
+  ) {
+    throw new Error(
+      "lineage_control_room_bridge_url_and_token_file_must_be_configured_together"
+    );
+  }
+  const lineageControlRoomBridgeToken = lineageControlRoomBridgeTokenFile
+    ? readPrivateRuntimeToken(
+        lineageControlRoomBridgeTokenFile,
+        "lineage_control_room_bridge"
+      )
+    : "";
+  const lineageControlRoom = lineageControlRoomBridgeUrl
+    ? new LineageControlRoomHomeBridge({
+        bridgeUrl: lineageControlRoomBridgeUrl,
+        bridgeToken: lineageControlRoomBridgeToken,
+      })
+    : null;
+  const lineageControlRoomHtml = lineageControlRoom
+    ? renderLineageControlRoomHtml({ apiPrefix: "/api/lineage" })
+    : "";
+
   let closed = false;
   let deploymentReceiptRef = "";
 
@@ -182,6 +224,10 @@ export async function startEvercraftHomeServer({
       session_revocation_supported: Boolean(identity),
       provider_credential_vault_configured: Boolean(credentialVault),
       raven_readonly_execution_configured: Boolean(ravenWorkBridgeUrl && ravenWorkBridgeTokenFile),
+      lineage_control_room_configured: Boolean(lineageControlRoom),
+      lineage_control_room_read_only: Boolean(lineageControlRoom),
+      lineage_control_room_secret_material_exposed: false,
+      lineage_control_room_private_origin_exposed: false,
     };
   }
 
@@ -553,6 +599,83 @@ export async function startEvercraftHomeServer({
         });
       } catch (error) {
         return json(res, 400, { ok: false, state: error?.message || "credential_store_failed" });
+      }
+    }
+
+    if (req.method === "GET" && url.pathname === "/lineage") {
+      const session = sessionFor(req, "home.systemia.read");
+      if (!session.ok) return json(res, session.status, session);
+      if (!lineageControlRoom) {
+        return json(res, 503, {
+          ok: false,
+          state: "lineage_control_room_not_configured",
+        });
+      }
+      return html(res, 200, lineageControlRoomHtml);
+    }
+
+    const lineageReadRoute = (
+      req.method === "GET" &&
+      /^\/api\/lineage\/(?:health|snapshot|commit|diff|integrity)$/.test(
+        url.pathname
+      )
+    );
+    if (lineageReadRoute) {
+      const session = sessionFor(req, "home.systemia.read");
+      if (!session.ok) return json(res, session.status, session);
+      if (!lineageControlRoom) {
+        return json(res, 503, {
+          ok: false,
+          state: "lineage_control_room_not_configured",
+        });
+      }
+
+      try {
+        let result;
+        if (url.pathname === "/api/lineage/health") {
+          result = await lineageControlRoom.health();
+        } else if (url.pathname === "/api/lineage/snapshot") {
+          result = await lineageControlRoom.snapshot({
+            ref: url.searchParams.get("ref") || "HEAD",
+            limit: Number(url.searchParams.get("limit") || 160),
+          });
+        } else if (url.pathname === "/api/lineage/commit") {
+          result = await lineageControlRoom.commit(
+            url.searchParams.get("id") || ""
+          );
+        } else if (url.pathname === "/api/lineage/diff") {
+          result = await lineageControlRoom.diff(
+            url.searchParams.get("from") || "",
+            url.searchParams.get("to") || ""
+          );
+        } else {
+          result = await lineageControlRoom.integrity({
+            fast: url.searchParams.get("fast") !== "0",
+          });
+        }
+
+        return json(res, 200, {
+          ...result,
+          home_handoff: {
+            authenticated: true,
+            scope: "home.systemia.read",
+            read_only: true,
+            mutation_authority: false,
+            profile_persisted: false,
+            secret_text_returned: false,
+            compute_origin_exposed: false,
+          },
+        });
+      } catch (error) {
+        return json(res, 502, {
+          ok: false,
+          state: String(
+            error?.message || "lineage_control_room_handoff_failed"
+          ),
+          mutation_authority: false,
+          secret_material_exposed: false,
+          private_origin_exposed: false,
+        });
       }
     }
 
