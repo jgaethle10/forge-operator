@@ -2,7 +2,7 @@
   "schema": "evercraft.chum.crawl-pressure.v1",
   "provider": "Evercraft LLC",
   "coordinator": "CHUM",
-  "updated_at": "2026-10-07T20:12:10.944Z",
+  "updated_at": "2026-10-07T20:14:16.659Z",
   "purpose": "Content-hash-backed freshness signals for public Evercraft discovery surfaces. A freshness signal requests attention; it does not prove indexing, ranking, recommendation, citation or provider pickup.",
   "indexnow": {
     "supported": true,
@@ -11,57 +11,29 @@
   },
   "latest_change_batch": [
     {
-      "path": "/chum/sell-now.json",
-      "last_changed": "2026-10-07T20:12:10.944Z",
-      "priority": 92
-    },
-    {
-      "path": "/chum/revenue.json",
-      "last_changed": "2026-10-07T20:12:10.944Z",
-      "priority": 90
-    },
-    {
-      "path": "/.well-known/evercraft-agent-commerce.json",
-      "last_changed": "2026-10-07T20:12:10.944Z",
-      "priority": 84
-    },
-    {
-      "path": "/.well-known/evercraft-machine-catalog.json",
-      "last_changed": "2026-10-07T20:12:10.944Z",
-      "priority": 84
-    },
-    {
-      "path": "/chum/agent-commerce.json",
-      "last_changed": "2026-10-07T20:12:10.944Z",
-      "priority": 80
-    },
-    {
-      "path": "/chum/capabilities.json",
-      "last_changed": "2026-10-07T20:12:10.944Z",
+      "path": "/chum/hot/",
+      "last_changed": "2026-10-07T20:14:16.659Z",
       "priority": 80
     },
     {
       "path": "/chum/hot/index.json",
-      "last_changed": "2026-10-07T20:12:10.944Z",
-      "priority": 80
-    },
-    {
-      "path": "/chum/proof/forensiscope.json",
-      "last_changed": "2026-10-07T20:12:10.944Z",
-      "priority": 80
-    },
-    {
-      "path": "/chum/proof/index.json",
-      "last_changed": "2026-10-07T20:12:10.944Z",
-      "priority": 80
-    },
-    {
-      "path": "/chum/proof/rivet.json",
-      "last_changed": "2026-10-07T20:12:10.944Z",
+      "last_changed": "2026-10-07T20:14:16.659Z",
       "priority": 80
     }
   ],
   "recent_surfaces": [
+    {
+      "path": "/chum/hot/",
+      "url": "/chum/hot/",
+      "last_changed": "2026-10-07T20:14:16.659Z",
+      "priority": 80
+    },
+    {
+      "path": "/chum/hot/index.json",
+      "url": "/chum/hot/index.json",
+      "last_changed": "2026-10-07T20:14:16.659Z",
+      "priority": 80
+    },
     {
       "path": "/chum/sell-now.json",
       "url": "/chum/sell-now.json",
@@ -95,12 +67,6 @@
     {
       "path": "/chum/capabilities.json",
       "url": "/chum/capabilities.json",
-      "last_changed": "2026-10-07T20:12:10.944Z",
-      "priority": 80
-    },
-    {
-      "path": "/chum/hot/index.json",
-      "url": "/chum/hot/index.json",
       "last_changed": "2026-10-07T20:12:10.944Z",
       "priority": 80
     },
@@ -144,12 +110,6 @@
       "path": "/chum/strike/",
       "url": "/chum/strike/",
       "last_changed": "2026-10-07T18:39:07.388Z",
-      "priority": 80
-    },
-    {
-      "path": "/chum/hot/",
-      "url": "/chum/hot/",
-      "last_changed": "2026-10-07T17:06:08.242Z",
       "priority": 80
     },
     {
