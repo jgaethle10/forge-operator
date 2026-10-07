@@ -189,7 +189,6 @@
         "currency": "USD",
         "total_prizes": 100000
       },
-      "deadline_date": "2027-01-06",
       "evidence": {
         "source": "Gmail competition launch from Kaggle plus NFL Football Operations Big Data Bowl program page",
         "provider": "Kaggle/NFL",
@@ -218,7 +217,8 @@
         "live_provider_canary": "held_until_rules_acceptance",
         "competition_data_access": "held_until_rules_acceptance",
         "hosted_demo_state": "not_required_or_not_verified"
-      }
+      },
+      "deadline": "2027-01-06"
     }
   ]
 }
