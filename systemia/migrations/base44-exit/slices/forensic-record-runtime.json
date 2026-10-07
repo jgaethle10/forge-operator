@@ -67,7 +67,22 @@
       "disposition": "fail_closed_until_terminal_hashed_production_extraction"
     },
     "stable_migration_page_hashing": true,
-    "reconciliation_hardening_in_source": true
+    "reconciliation_hardening_in_source": true,
+    "public_snapshot": {
+      "state": "verified",
+      "source_revision": "92f0fc4f95fa0facf9ae244a17222a1bb5a1b65f",
+      "workflow_run_id": 37635367047,
+      "artifact_id": 11489560690,
+      "artifact_size_bytes": 3962724,
+      "artifact_sha256": "sha256:114329078136ae255f7b30d3c19b245eeddbf19235fd8baf77d46ff6da596d62",
+      "manifest_sha256": "sha256:8ddf2ac0c78007e75386fd3ae8ad403fd911ddf46fc169ad19315c0120b9bdc9",
+      "entity_count": 7,
+      "total_rows": 23201,
+      "finding_rows": 22816,
+      "terminal_exhaustion_verified": true,
+      "exact_source_count_reconciliation": true,
+      "protected_entities_excluded": true
+    }
   },
   "migrate": [
     "forensic_finding_ledger",
@@ -104,7 +119,7 @@
     "filescompanion.com has not yet been independently verified as bound to the owned runtime.",
     "Legacy Base44 customer continuity must remain available until owned route, data reconciliation, rollback and observation receipts pass."
   ],
-  "next_action": "land reconciliation hardening, deploy the owned forensic workload through Yard, run terminal hashed extraction from the live legacy production surface into the owned corpus, reconcile exact counts and duplicate/citation shape, then verify filescompanion.com and observe before legacy retirement",
+  "next_action": "land normalized owned-seed generation, produce a verified seed from the successful 23,201-row public snapshot, deploy the resident forensic workload through Yard on admitted Evercraft Compute capacity, load the owned seed, then separately migrate protected audit/candidate ledgers before any filescompanion.com route cutover",
   "destructive_cutover_allowed": false,
   "health": {
     "state": "legacy_public_path_present_owned_cutover_started",
