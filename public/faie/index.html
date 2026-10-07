@@ -567,7 +567,8 @@ document.getElementById('runAgnormalNow').addEventListener('click', () => {
 
 const params = new URLSearchParams(window.location.search);
 const pilotParam = params.get('pilot');
-if (pilotParam && pilotParam.toLowerCase() === 'agnormal') {
+const partnerPath = /\/faie\/agnormal\/?$/.test(window.location.pathname);
+if (partnerPath || (pilotParam && pilotParam.toLowerCase() === 'agnormal')) {
   loadFoodInfrastructurePilot({partner:true});
   if (params.get('autorun') === '1') {
     window.setTimeout(() => document.getElementById('form').requestSubmit(), 250);
