@@ -1831,7 +1831,7 @@
         "hosted self-serve multi-tenant SaaS is not claimed until production isolation metering checkout and external canaries are verified"
       ],
       "commercial": {
-        "status": "sell_now_human_handoff_public_door_pending_external_canary",
+        "status": "human_handoff_packaged_public_door_pending_external_canary",
         "offers": [
           {
             "name": "Lineage Founding Pilot",
