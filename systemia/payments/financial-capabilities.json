@@ -38,24 +38,30 @@
       "capability_key": "deposit_account",
       "evercraft_role": "experience_and_orchestration_only",
       "regulated_authority_required": true,
-      "default_route": "regulated_partner_or_future_charter",
-      "claims_allowed": []
+      "default_route": "authorized_depository_rail",
+      "claims_allowed": [
+        "deposit_account"
+      ]
     },
     {
       "capability_key": "insured_deposit_account",
       "evercraft_role": "blocked_without_verified_authority",
       "regulated_authority_required": true,
       "deposit_insurance_authority_required": true,
-      "default_route": "blocked_until_verified_authority",
-      "claims_allowed": []
+      "default_route": "authorized_insured_depository_rail",
+      "claims_allowed": [
+        "insured_deposit_account"
+      ]
     },
     {
       "capability_key": "credit_union_share_account",
       "evercraft_role": "blocked_without_verified_authority",
       "regulated_authority_required": true,
       "deposit_insurance_authority_required": true,
-      "default_route": "blocked_until_verified_authority",
-      "claims_allowed": []
+      "default_route": "authorized_credit_union_share_rail",
+      "claims_allowed": [
+        "credit_union_share_account"
+      ]
     },
     {
       "capability_key": "card_issuing",
@@ -68,8 +74,10 @@
       "capability_key": "lend_as_principal",
       "evercraft_role": "blocked_without_verified_authority",
       "regulated_authority_required": true,
-      "default_route": "blocked_until_verified_authority",
-      "claims_allowed": []
+      "default_route": "authorized_lending_rail",
+      "claims_allowed": [
+        "lend_as_principal"
+      ]
     },
     {
       "capability_key": "financing_discovery",
