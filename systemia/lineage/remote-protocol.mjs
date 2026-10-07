@@ -375,7 +375,39 @@ export async function fetchCommitGraph({
     };
   }
 
-  await store.writeRef(localBranch, remoteHead);
+  try {
+    if (typeof store.compareAndSwapRef === 'function') {
+      await store.compareAndSwapRef(localBranch, localHead, remoteHead);
+    } else {
+      await store.writeRef(localBranch, remoteHead);
+    }
+  } catch (error) {
+    if (error?.code === 'LINEAGE_STALE_REF') {
+      return {
+        schema: 'evercraft.lineage.fetch-receipt.v1',
+        remote_branch: remoteBranch,
+        local_branch: localBranch,
+        remote_head: remoteHead,
+        local_head_before: localHead,
+        local_head_after: error.current ?? null,
+        object_count: seen.size,
+        transferred_objects: transferred,
+        reused_objects: reused,
+        large_objects: largeReceipts.length,
+        large_object_receipts: largeReceipts,
+        ref_updated: false,
+        fast_forward_possible: false,
+        state: 'local_ref_changed_requires_reconciliation',
+        stale_ref: {
+          expected: error.expected ?? null,
+          current: error.current ?? null,
+          next: error.next ?? remoteHead,
+        },
+      };
+    }
+    throw error;
+  }
+
   return {
     schema: 'evercraft.lineage.fetch-receipt.v1',
     remote_branch: remoteBranch,
