@@ -185,6 +185,7 @@ function renderArticle(story, publicOrigin, { archived = false } = {}) {
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>${escapeHtml(story.title)} | Evercraft Journal</title>
 <meta name="description" content="${description}">
+<meta name="evercraft:story_id" content="${escapeHtml(story.story_id)}">
 <link rel="canonical" href="${canonical}">
 <meta property="og:site_name" content="Evercraft Journal">
 <meta property="og:type" content="article">
@@ -298,6 +299,16 @@ export function publishJournalStories(inputStories, {
       story_id: story.story_id,
       slug: story.slug,
       title: story.title,
+      canonical_url: storyUrl(origin, story.slug),
+      publication_receipt_ref: `receipts/${story.slug}.json`,
+      link_verification: {
+        expectedText: [story.title],
+        expectedCanonicalUrl: storyUrl(origin, story.slug),
+        expectedOgUrl: storyUrl(origin, story.slug),
+        expectedStoryId: story.story_id,
+        requireCanonicalSelfMatch: true,
+        requireOpenGraphSelfMatch: true
+      },
       source_refs: story.sources.map((source) => source.source_id),
       evidence_state: story.evidence_state,
       derivatives: story.derivatives || [],
@@ -311,9 +322,11 @@ export function publishJournalStories(inputStories, {
       schema: 'evercraft.journal.publication-receipt.v1',
       story_id: story.story_id,
       slug: story.slug,
+      title: story.title,
       published_at: story.published_at,
       built_at: now.toISOString(),
       canonical_url: storyUrl(origin, story.slug),
+      clip_handoff_ref: `production/${story.slug}/clip-handoff.json`,
       evidence_state: story.evidence_state,
       source_refs: story.sources.map((source) => source.source_id),
       freshness_expires_at: story.freshness_expires_at,
