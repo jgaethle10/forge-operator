@@ -26,8 +26,14 @@ import { readSafeNodeSeedInventory } from './nodeseed-inventory-ingest.mjs';
 import { appendDemandHistory, forecastCapacityDemand, prewarmActionsForAuthorizedCapacity } from './capacity-demand-forecast.mjs';
 import { buildForecastHeadroomReservations } from './capacity-headroom.mjs';
 import { buildResourceFieldExpansionIntents } from './capacity-resource-field-bridge.mjs';
+import { planCapacityLifecycle } from './capacity-lifecycle.mjs';
 
 const MODULE_FILE=fileURLToPath(import.meta.url);
+
+function readJson(file,fallback=null){
+  try{return JSON.parse(fs.readFileSync(file,'utf8'));}
+  catch{return fallback;}
+}
 
 function atomicJson(file,value){
   fs.mkdirSync(path.dirname(file),{recursive:true,mode:0o700});
@@ -103,6 +109,7 @@ export function compileCapacityOrganismState({
   demandRadar=null,
   nodeSeedInventory=null,
   demandForecast=null,
+  previousLifecyclePlan=null,
   now=new Date(),
 }={}){
   const {caps,rejected}=activeCapabilities(registrySnapshot,{adapterHealth});
@@ -157,6 +164,13 @@ export function compileCapacityOrganismState({
     checkpoints,
     now,
   });
+  const lifecyclePlan=planCapacityLifecycle({
+    offers:combinedOffers,
+    workloadPlan,
+    headroomPlan,
+    previousLifecyclePlan,
+    now,
+  });
   const waves=formationWaves(anatomy);
 
   const missingCapabilityRoles=(capabilityPlan.held||[]).map(x=>({
@@ -200,6 +214,18 @@ export function compileCapacityOrganismState({
     capability_plan:capabilityPlan,
     workload_plan:workloadPlan,
     rebalance_plan:rebalance,
+    capacity_headroom_plan:headroomPlan,
+    capacity_lifecycle_plan:lifecyclePlan,
+    capacity_lifecycle:{
+      decision_count:lifecyclePlan.decision_count,
+      active_count:lifecyclePlan.active_count,
+      warm_reserved_count:lifecyclePlan.warm_reserved_count,
+      idle_count:lifecyclePlan.idle_count,
+      reclaimable_count:lifecyclePlan.reclaimable_count,
+      held_count:lifecyclePlan.held_count,
+      destructive_action_count:lifecyclePlan.destructive_action_count,
+      receipt_hash:lifecyclePlan.receipt_hash,
+    },
     performance_learning:{
       ledger_present:Boolean(performanceLedger),
       learned_profile_count:Object.keys(performanceLedger?.profiles||{}).length,
@@ -260,6 +286,10 @@ export async function runCapacityOrganismOnce({
   const nodeSeedInventory=fs.existsSync(nodeSeedInventoryFile)
     ? readSafeNodeSeedInventory(nodeSeedInventoryFile)
     : null;
+  const lifecyclePlanFile=path.join(resolvedRoot,'capacity-lifecycle-plan.json');
+  const previousLifecyclePlan=fs.existsSync(lifecyclePlanFile)
+    ? JSON.parse(fs.readFileSync(lifecyclePlanFile,'utf8'))
+    : null;
   const workQueue=new AmbientWorkQueue({root:path.join(resolvedRoot,'work-queue')});
   const demandRadar=buildAmbientDemandRadar({
     jobs:workQueue.list(),
@@ -288,6 +318,7 @@ export async function runCapacityOrganismOnce({
     demandRadar,
     nodeSeedInventory,
     demandForecast,
+    previousLifecyclePlan,
     now,
   });
   const resourceFieldExpansion=buildResourceFieldExpansionIntents({
@@ -353,13 +384,13 @@ export async function runCapacityOrganismOnce({
       authority_expansion:false,
     },
     capacity_headroom:{
-      reservation_count:headroomPlan.reservation_count,
-      reservations:headroomPlan.reservations,
-      skipped:headroomPlan.skipped,
-      current_pressure_always_wins:headroomPlan.current_pressure_always_wins!==false,
+      reservation_count:compiled.capacity_headroom_plan?.reservation_count||0,
+      reservations:compiled.capacity_headroom_plan?.reservations||[],
+      skipped:compiled.capacity_headroom_plan?.skipped||[],
+      current_pressure_always_wins:compiled.capacity_headroom_plan?.current_pressure_always_wins!==false,
       authority_expansion:false,
       commercial_spend_usd:0,
-      receipt_hash:headroomPlan.receipt_hash||null,
+      receipt_hash:compiled.capacity_headroom_plan?.receipt_hash||null,
     },
     capacity_autonomy:{
       safe_autonomous_action_count:autonomyPlan.safe_autonomous_action_count,
@@ -394,6 +425,7 @@ export async function runCapacityOrganismOnce({
   atomicJson(path.join(resolvedRoot,'ambient-registry-snapshot.json'),registrySnapshot);
   atomicJson(path.join(resolvedRoot,'heterogeneous-plan.json'),compiled.workload_plan);
   atomicJson(path.join(resolvedRoot,'rebalance-plan.json'),compiled.rebalance_plan);
+  atomicJson(lifecyclePlanFile,compiled.capacity_lifecycle_plan);
   atomicJson(path.join(resolvedRoot,'ambient-demand-radar.json'),demandRadar);
   if(candidateInventory) atomicJson(path.join(resolvedRoot,'ambient-candidate-inventory.json'),candidateInventory);
   if(opportunityMap) atomicJson(path.join(resolvedRoot,'capacity-gap-opportunities.json'),opportunityMap);
@@ -434,6 +466,9 @@ async function main(){
       forecast_prewarm_workload_count:receipt.demand_forecast?.prewarm_workloads?.length||0,
       forecast_prewarm_action_count:receipt.demand_forecast?.prewarm_action_count||0,
       forecast_headroom_reservation_count:receipt.capacity_headroom?.reservation_count||0,
+      capacity_lifecycle_reclaimable_count:receipt.capacity_lifecycle?.reclaimable_count||0,
+      capacity_lifecycle_held_count:receipt.capacity_lifecycle?.held_count||0,
+      capacity_lifecycle_destructive_action_count:receipt.capacity_lifecycle?.destructive_action_count||0,
       resource_field_expansion_intent_count:receipt.resource_field_expansion?.intent_count||0,
       resource_field_current_pressure_count:receipt.resource_field_expansion?.current_pressure_intent_count||0,
       resource_field_forecast_pressure_count:receipt.resource_field_expansion?.forecast_pressure_intent_count||0,
