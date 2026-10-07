@@ -89,6 +89,45 @@ try{
   const accepted=await acceptedResponse.json();
   assert.equal(accepted.brain.identity_assurance,'invite_possession');
 
+  const challengeResponse=await fetch(
+    deployment.result.local_url+'/api/people/brains/'+encodeURIComponent(created.brain.brain_key)+'/email-challenge',
+    {
+      method:'POST',
+      headers:{authorization:'Bearer '+operatorAuthority,'content-type':'application/json'},
+      body:JSON.stringify({email:'owned-runtime@example.test'}),
+    }
+  );
+  assert.equal(challengeResponse.status,201);
+  const challenge=(await challengeResponse.json()).challenge;
+
+  const prematureVerify=await fetch(deployment.result.local_url+'/api/people/verify-email/verify',{
+    method:'POST',
+    headers:{'content-type':'application/json'},
+    body:JSON.stringify({token:challenge.raw_token,confirmation_text:'VERIFY MY EMAIL'}),
+  });
+  assert.equal(prematureVerify.status,409);
+
+  const deliveryResponse=await fetch(
+    deployment.result.local_url+'/api/people/identity-challenges/'+encodeURIComponent(challenge.challenge_key)+'/delivery',
+    {
+      method:'POST',
+      headers:{authorization:'Bearer '+operatorAuthority,'content-type':'application/json'},
+      body:JSON.stringify({provider:'gmail_agent',status:'sent',message_ref:'gmail:compute-proof'}),
+    }
+  );
+  assert.equal(deliveryResponse.status,201);
+  const delivery=(await deliveryResponse.json()).delivery;
+  assert.equal(delivery.trusted_mailbox_delivery,true);
+
+  const verifyResponse=await fetch(deployment.result.local_url+'/api/people/verify-email/verify',{
+    method:'POST',
+    headers:{'content-type':'application/json'},
+    body:JSON.stringify({token:challenge.raw_token,confirmation_text:'VERIFY MY EMAIL'}),
+  });
+  assert.equal(verifyResponse.status,200);
+  const verified=await verifyResponse.json();
+  assert.equal(verified.brain.identity_assurance,'verified_email');
+
   const memoryResponse=await fetch(
     deployment.result.local_url+'/api/people/brains/'+encodeURIComponent(created.brain.brain_key)+'/memories',
     {
