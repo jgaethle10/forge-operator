@@ -1,0 +1,50 @@
+{
+  "schema": "evercraft.daytrade.practice-rule-evidence-status.v1",
+  "rule_id": "spread-abstention-v1",
+  "frozen_rule_commit": "c7e62faefb5afda1e4a6ab22a418015969342985",
+  "frozen_threshold_bps": 3,
+  "rule_mutation_allowed_from_this_status": false,
+  "evidence_status": "IEX_PROXY_FEED_SENSITIVE",
+  "current_decision_feed": "iex",
+  "current_decision_scope": "iex_bbo_not_consolidated_nbbo",
+  "real_time_sip_access": {
+    "status": "BLOCKED",
+    "http_status": 403,
+    "reason": "subscription does not permit querying recent SIP data"
+  },
+  "delayed_historical_sip_access": {
+    "status": "AVAILABLE",
+    "after_the_fact_only": true
+  },
+  "sip_reconciliation": {
+    "source_run_id": 37654348981,
+    "eligible_instrument_decisions": 6,
+    "censored_instrument_decisions": 3,
+    "decision_flips": 4,
+    "decision_flip_fraction_of_eligible": 0.6666666666666666,
+    "iex_abstain_to_sip_trade_flips": 4,
+    "iex_trade_to_sip_abstain_flips": 0,
+    "mean_iex_minus_sip_entry_spread_bps": 1.9007792970521626
+  },
+  "allowed_interpretation": {
+    "practice_rule_is_an_iex_execution_proxy": true,
+    "same_rule_may_be_used_for_continued_zero_capital_iex_practice": true,
+    "prospective_receipts_must_preserve_iex_feed_label": true,
+    "delayed_sip_may_be_used_for_after_the_fact_reconciliation": true
+  },
+  "prohibited_interpretation": {
+    "call_rule_consolidated_nbbo_spread_gate": true,
+    "use_iex_proxy_results_as_sip_nbbo_pilot_evidence": true,
+    "authorize_live_capital_from_this_rule": true,
+    "retroactively_rewrite_original_iex_decisions": true,
+    "retune_threshold_from_reconciliation": true
+  },
+  "next_required_evidence": [
+    "real-time consolidated SIP entitlement",
+    "prospective SIP NBBO quote coverage",
+    "paper-broker order lifecycle receipts",
+    "multi-date opening/midday/closing diversity",
+    "forward signal and correlated-cluster sample readiness"
+  ],
+  "live_trade_authority": false
+}
