@@ -105,3 +105,19 @@ A product is "commercially deployed" only when:
 - fulfillment is independently verified,
 - support and safety boundaries are documented,
 - and the buyer receives a durable result or receipt.
+
+
+### 5. Evercraft Lineage
+Buyer-facing promise: give AI-assisted teams a history layer that knows who or what changed something, why it changed, detects agent collisions, preserves provenance, and can still project code back to GitHub.
+
+Initial offer:
+- First 5 external design partners: $500 Lineage Founding Pilot.
+- Governed Agent Workflow Sprint: starting at $1,500 after scoped technical review.
+
+Primary buyers: AI-native engineering teams, agent-platform teams, technical founders, AI agencies, and studios whose code, data or large assets are increasingly changed by multiple agents.
+
+Why it can win: Lineage is not another Git GUI or AI reviewer. It adds stale-writer protection, human/agent attribution, rationale/provenance, authority receipts, semantic diffs, integrity verification, release pointers, giant-asset history, Git import/export, and an owned Control Room.
+
+Current commercialization boundary: the implemented product can support human-confirmed design-partner pilots now. Public page and machine discovery are being packaged, but self-serve multi-tenant hosted SaaS, automatic repository intake, and public checkout are not claimed until tenant isolation, metering, payment, and external canaries are verified.
+
+Commercial package: `commercial/LINEAGE.md`.
