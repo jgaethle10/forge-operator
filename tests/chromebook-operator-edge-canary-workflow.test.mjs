@@ -45,6 +45,7 @@ test('Graphics Command asset rollout receives only bounded Visual Desk deploymen
   assert.match(workflow,/graphics-plan\.json/);
   assert.match(workflow,/scroll-stop-report\.json/);
   assert.match(workflow,/fallen-stage-input\.json/);
+  assert.match(workflow,/poster-quality-report\.json/);
   assert.match(workflow,/poster-story\.html/);
   assert.match(workflow,/graphics_command_state_geometry_missing/);
   assert.match(workflow,/graphics_command_boundary_lineage_missing/);
