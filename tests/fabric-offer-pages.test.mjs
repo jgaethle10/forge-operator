@@ -145,9 +145,15 @@ test('owned Fabric serves offer pages, requires confirmation, and delegates chec
       body:new URLSearchParams({user_confirmed:'true'}),
       redirect:'manual',
     });
-    assert.equal(checkout.status,200);
-    assert.match(checkout.headers.get('content-type')||'',/^text\/html/i);
-    const checkoutBody=await checkout.text();
+    assert.equal(checkout.status,303);
+    const handoffLocation=checkout.headers.get('location')||'';
+    assert.match(handoffLocation,/^\/checkout\/handoff\/[A-Za-z0-9_-]+$/);
+    assert.equal(checkout.headers.get('x-evercraft-payment-authority'),'Evercraft Payments');
+
+    const handoff=await fetch(runtime.url+handoffLocation);
+    assert.equal(handoff.status,200);
+    assert.match(handoff.headers.get('content-type')||'',/^text\/html/i);
+    const checkoutBody=await handoff.text();
     assert.match(checkoutBody,/Your checkout is ready\./);
     assert.match(checkoutBody,/Open secure checkout/);
     assert.match(checkoutBody,/settlement\.example\.test\/pay\/test/);
