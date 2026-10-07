@@ -91,7 +91,7 @@ test('commit inspector exposes metadata and paths but not blob payload bytes', a
 
     const serialized = JSON.stringify(commit);
     assert.doesNotMatch(serialized, /camera-pass/);
-    assert.doesNotMatch(serialized, /data/);
+    assert.doesNotMatch(serialized, /\"data\":/);
   } finally {
     await rm(root, { recursive: true, force: true });
   }
@@ -153,7 +153,7 @@ test('Control Room HTML is self-contained and visibly read-only', () => {
   assert.match(html, /Branches/);
   assert.match(html, /Releases/);
   assert.match(html, /Storage/);
-  assert.match(html, /semantic_diff/);
+  assert.match(html, /\/v1\/diff/);
   assert.doesNotMatch(html, /https:\/\//);
   assert.doesNotMatch(html, /<form/i);
 });
