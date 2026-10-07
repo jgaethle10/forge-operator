@@ -74,5 +74,28 @@
       "from": "adams",
       "to": "helens"
     }
-  ]
+  ],
+  "visual": {
+    "eyebrow": "WASHINGTON • CASCADE RANGE",
+    "hook": "5 ACTIVE VOLCANOES",
+    "subhook": "4 carry Very High threat potential",
+    "treatment": "geo_spine",
+    "metrics": [
+      {
+        "id": "active-volcanoes",
+        "label": "ACTIVE VOLCANOES",
+        "value": 5
+      },
+      {
+        "id": "very-high-threat",
+        "label": "VERY HIGH THREAT",
+        "value": 4
+      },
+      {
+        "id": "north-south-span",
+        "label": "MILES · BAKER → ST. HELENS",
+        "value": 179
+      }
+    ]
+  }
 }
