@@ -282,7 +282,8 @@
         "--journal-root": "SYSTEMIA_CFB_CLIP_JOURNAL_ROOT",
         "--state-dir": "SYSTEMIA_CFB_CLIP_STATE_DIR",
         "--interval-ms": "SYSTEMIA_CFB_CLIP_INTERVAL_MS",
-        "--subject-ref": "SYSTEMIA_CFB_CLIP_SUBJECT_REF"
+        "--subject-ref": "SYSTEMIA_CFB_CLIP_SUBJECT_REF",
+        "--authority-receipt-file": "SYSTEMIA_CFB_CLIP_AUTHORITY_RECEIPT_FILE"
       }
     }
   ]
