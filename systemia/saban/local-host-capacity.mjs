@@ -1,9 +1,102 @@
 import path from 'node:path';
-import { randomBytes } from 'node:crypto';
+import { createHash, randomBytes } from 'node:crypto';
 import { detectHardwareCapacity } from '../compute/hardware-inventory.mjs';
 import { startNodeSeed } from '../compute/node-seed.mjs';
 
 const live=new Map();
+const sha=(value)=>'sha256:'+createHash('sha256').update(
+  typeof value==='string'?value:JSON.stringify(value)
+).digest('hex');
+
+function clone(value){
+  return value==null?value:structuredClone(value);
+}
+
+async function buildSafeOwnedSpawnOffer({seed,candidate,root}={}){
+  const response=await fetch(new URL('/v1/capacity',seed.endpoint),{
+    method:'GET',
+    signal:AbortSignal.timeout(2500),
+  });
+  if(!response.ok){
+    throw new Error('local_host_capacity_snapshot_failed:'+response.status);
+  }
+  const capacity=await response.json();
+  if(capacity?.protocol!=='evercraft.capacity.v1'){
+    throw new Error('local_host_capacity_snapshot_invalid');
+  }
+  if(String(capacity.node_id||'')!==String(seed.node_id||'')){
+    throw new Error('local_host_capacity_node_mismatch');
+  }
+  const labels=[...(capacity.placement_labels||[])].map(x=>String(x).trim().toLowerCase());
+  const workloads=[...(capacity.supported_workloads||[])].map(String).sort();
+  const hint=capacity.capacity_hint||{};
+  const body={
+    schema:'evercraft.saban.compute-offer.v1',
+    offer_id:'owned-spawn:'+String(seed.node_id||''),
+    provider_id:String(seed.node_id||''),
+    market:'evercraft-owned-spawn',
+    access_class:'authorized_compute',
+    endpoint:String(seed.endpoint||''),
+    resources:{
+      cpu_units:Math.max(0,Number(hint.cpu_units||0)),
+      memory_mb:Math.max(0,Number(hint.memory_mb||0)),
+      storage_gb:Math.max(0,Number(hint.storage_gb||0)),
+      gpu_count:Math.max(0,Number(hint.gpu_count||hint.gpu_units||0)),
+      gpu_models:Array.isArray(hint.gpu_models)?hint.gpu_models.map(String):[],
+    },
+    placement:{
+      region:null,
+      country:null,
+      public_ingress:capacity.public_ingress===true,
+      persistent_storage:true,
+    },
+    trust:{
+      uptime_7d:1,
+      audited:true,
+      valid_version:true,
+      attested:Boolean(seed.device_fingerprint),
+    },
+    economics:{
+      zero_cost:true,
+      quoted:true,
+      hourly_usd:0,
+      total_usd:0,
+      native_price:null,
+    },
+    quote_required:false,
+    source_receipt:seed.device_fingerprint||null,
+    metadata:{
+      source:'resource-expansion-organism',
+      source_type:'owned-spawn',
+      device_id:String(seed.node_id||''),
+      device_class:'general-compute',
+      supported_workloads:workloads,
+      placement_labels:labels,
+      failure_domain:capacity.failure_domain||'local-host',
+      failure_domains:{
+        failure_domain:String(capacity.failure_domain||'local-host').toLowerCase(),
+      },
+      current_connection_verified:true,
+      zero_cost_verified:true,
+      hardware_measurement_state:'observed_local',
+      resource_expansion_spawned:true,
+      spawned_by_saban:true,
+      lifecycle_authority:'evercraft-owned',
+      retirement_mode:'stop',
+      lifecycle_only:true,
+      scheduling_authority_serialized:false,
+      allocator_authority_serialized:false,
+      node_root_hash:sha(String(root||'')),
+      ownership_basis:String(
+        candidate?.metadata?.ownership_basis||
+        'explicit_evercraft_owned_host_configuration'
+      ),
+    },
+    observed_at:new Date().toISOString(),
+  };
+  if(!body.provider_id||!body.endpoint) throw new Error('local_host_safe_offer_identity_required');
+  return {...body,offer_hash:sha(body)};
+}
 
 function truthy(value){
   return ['1','true','yes','on'].includes(String(value||'').trim().toLowerCase());
@@ -107,6 +200,11 @@ export function createLocalHostSpawnAdapter({
           announce:false,
         });
 
+        const safeOffer=await buildSafeOwnedSpawnOffer({
+          seed,
+          candidate,
+          root,
+        });
         const result={
           schema:'evercraft.saban.local-host-activation.v1',
           execution_ready:true,
@@ -115,6 +213,7 @@ export function createLocalHostSpawnAdapter({
           receipt:seed.device_fingerprint||null,
           runtime:'Evercraft Compute',
           zero_cost:true,
+          safe_offer:safeOffer,
           started_at:new Date().toISOString(),
           close:seed.close,
         };
@@ -131,6 +230,53 @@ export function createLocalHostSpawnAdapter({
       return await promise;
     },
   };
+}
+
+export async function listLocalHostCapacityOffers(){
+  const offers=[];
+  for(const [key,promise] of live.entries()){
+    try{
+      const result=await promise;
+      if(result?.safe_offer){
+        offers.push(clone(result.safe_offer));
+      }
+    }catch{
+      live.delete(key);
+    }
+  }
+  offers.sort((a,b)=>String(a.offer_id).localeCompare(String(b.offer_id)));
+  return offers;
+}
+
+export async function localHostReclamationBindings(){
+  const bindings=new Map();
+  for(const [key,promise] of live.entries()){
+    let result=null;
+    try{result=await promise;}
+    catch{
+      live.delete(key);
+      continue;
+    }
+    const offerId=String(result?.safe_offer?.offer_id||'');
+    if(!offerId)continue;
+    bindings.set(offerId,{
+      spawned_owned:true,
+      async stop({entry,authority}={}){
+        await result.close?.();
+        live.delete(key);
+        const body={
+          schema:'evercraft.saban.local-host-reclamation-receipt.v1',
+          offer_id:offerId,
+          candidate_id:String(result.candidate_id||''),
+          authority_ref:authority?.authority_id||null,
+          lifecycle_action:String(entry?.recommended_action||'stop_spawned_owned_capacity'),
+          stopped_at:new Date().toISOString(),
+        };
+        return {...body,receipt_hash:sha(body)};
+      },
+    });
+  }
+  return bindings;
 }
 
 export async function closeLocalHostCapacity({
