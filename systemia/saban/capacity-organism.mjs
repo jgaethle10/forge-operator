@@ -109,6 +109,7 @@ export function compileCapacityOrganismState({
   checkpoints={},
   demandRadar=null,
   nodeSeedInventory=null,
+  ownedSpawnInventory=null,
   demandForecast=null,
   previousLifecycleLedger=null,
   now=new Date(),
@@ -132,6 +133,16 @@ export function compileCapacityOrganismState({
         zero_spend_only:true,
       };
   const combinedOffers=[...compute.offers,...nodeSeedCompute.offers];
+  const ownedSpawnOffers=
+    ownedSpawnInventory?.schema==='evercraft.saban.owned-spawn-capacity-inventory.v1'
+      ? (ownedSpawnInventory.offers||[]).filter(offer=>
+          offer?.schema==='evercraft.saban.compute-offer.v1' &&
+          offer?.metadata?.lifecycle_only===true &&
+          offer?.metadata?.resource_expansion_spawned===true &&
+          offer?.metadata?.lifecycle_authority==='evercraft-owned'
+        )
+      : [];
+  const lifecycleOffers=[...combinedOffers,...ownedSpawnOffers];
   const headroomPlan=demandForecast
     ? buildForecastHeadroomReservations({
         forecast:demandForecast,
@@ -160,7 +171,7 @@ export function compileCapacityOrganismState({
     now,
   });
   const lifecyclePlan=buildCapacityLifecyclePlan({
-    offers:combinedOffers,
+    offers:lifecycleOffers,
     fabricPlan:workloadPlan,
     headroomPlan,
     forecast:demandForecast,
@@ -199,6 +210,14 @@ export function compileCapacityOrganismState({
     compute_offer_count:combinedOffers.length,
     microseed_compute_offer_count:compute.offers.length,
     nodeseed_compute_offer_count:nodeSeedCompute.offers.length,
+    owned_spawn_lifecycle_offer_count:ownedSpawnOffers.length,
+    owned_spawn_capacity:{
+      offer_count:ownedSpawnOffers.length,
+      scheduling_enabled:false,
+      lifecycle_tracking_enabled:true,
+      allocator_authority_serialized:false,
+      source_receipt:ownedSpawnInventory?.receipt_hash||null,
+    },
     nodeseed_compute:{
       eligible_count:nodeSeedCompute.eligible_count,
       rejected_count:nodeSeedCompute.rejected_count,
@@ -312,6 +331,10 @@ export async function runCapacityOrganismOnce({
   const nodeSeedInventory=fs.existsSync(nodeSeedInventoryFile)
     ? readSafeNodeSeedInventory(nodeSeedInventoryFile)
     : null;
+  const ownedSpawnInventoryFile=path.join(resolvedRoot,'owned-spawn-capacity-inventory.json');
+  const ownedSpawnInventory=fs.existsSync(ownedSpawnInventoryFile)
+    ? readJson(ownedSpawnInventoryFile,null)
+    : null;
   const workQueue=new AmbientWorkQueue({root:path.join(resolvedRoot,'work-queue')});
   const demandRadar=buildAmbientDemandRadar({
     jobs:workQueue.list(),
@@ -339,6 +362,7 @@ export async function runCapacityOrganismOnce({
     checkpoints,
     demandRadar,
     nodeSeedInventory,
+    ownedSpawnInventory,
     demandForecast,
     previousLifecycleLedger,
     now,
@@ -509,6 +533,7 @@ async function main(){
       compute_offer_count:receipt.compute_offer_count,
       microseed_compute_offer_count:receipt.microseed_compute_offer_count||0,
       nodeseed_compute_offer_count:receipt.nodeseed_compute_offer_count||0,
+      owned_spawn_lifecycle_offer_count:receipt.owned_spawn_lifecycle_offer_count||0,
       missing_capacity_count:receipt.missing_capacity.length,
       safe_autonomous_action_count:receipt.capacity_autonomy?.safe_autonomous_action_count||0,
       authority_request_count:receipt.capacity_autonomy?.authority_request_count||0,

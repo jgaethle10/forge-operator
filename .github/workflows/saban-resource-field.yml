@@ -10,6 +10,7 @@ on:
       - 'systemia/saban/capacity-organism-resident.proof.mjs'
       - 'systemia/saban/capacity-reclamation-executor.mjs'
       - 'systemia/saban/capacity-reclamation-executor.proof.mjs'
+      - 'systemia/saban/resident-owned-capacity-reclamation.proof.mjs'
       - 'systemia/saban/failure-domain-audit.mjs'
       - 'systemia/saban/failure-domain-audit.proof.mjs'
       - 'systemia/saban/resource-expansion-organism.mjs'
@@ -90,6 +91,8 @@ jobs:
         run: node systemia/saban/capacity-organism-resident.proof.mjs
       - name: Prove authority-gated capacity reclamation
         run: node systemia/saban/capacity-reclamation-executor.proof.mjs
+      - name: Prove resident owned-spawn reclamation end to end
+        run: node systemia/saban/resident-owned-capacity-reclamation.proof.mjs
       - name: Prove correlated failure-domain audit
         run: node systemia/saban/failure-domain-audit.proof.mjs
       - name: Validate Saban capacity installer shell syntax

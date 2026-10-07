@@ -6,10 +6,11 @@ import { fileURLToPath } from 'node:url';
 
 import { normalizeResourceNeed, planResourceField } from './resource-field.mjs';
 import { discoverResourceFieldCandidates } from './resource-discovery.mjs';
-import { buildLocalHostCandidate, createLocalHostSpawnAdapter } from './local-host-capacity.mjs';
+import { buildLocalHostCandidate, createLocalHostSpawnAdapter, listLocalHostCapacityOffers, localHostReclamationBindings } from './local-host-capacity.mjs';
 import { buildComputeMarketAdapters } from './market-factory.mjs';
 import { resourceNeedToComputeDemand } from './resource-acquirer.mjs';
 import { normalizeComputeDemand, rankComputeOffers } from './compute-exchange.mjs';
+import { executeCapacityReclamation } from './capacity-reclamation-executor.mjs';
 
 const MODULE_FILE=fileURLToPath(import.meta.url);
 const sha=(value)=>'sha256:'+createHash('sha256').update(
@@ -21,6 +22,81 @@ function atomicJson(file,value){
   const tmp=file+'.'+process.pid+'.'+randomBytes(4).toString('hex')+'.tmp';
   fs.writeFileSync(tmp,JSON.stringify(value,null,2)+'\n',{mode:0o600});
   fs.renameSync(tmp,file);
+}
+
+function readJson(file,fallback=null){
+  try{return JSON.parse(fs.readFileSync(file,'utf8'));}
+  catch{return fallback;}
+}
+
+export async function persistOwnedSpawnCapacity({root}={}){
+  const resolved=path.resolve(root);
+  const offers=await listLocalHostCapacityOffers();
+  const body={
+    schema:'evercraft.saban.owned-spawn-capacity-inventory.v1',
+    offer_count:offers.length,
+    offers,
+    scheduling_authority_serialized:false,
+    allocator_authority_serialized:false,
+    generated_at:new Date().toISOString(),
+  };
+  const receipt={...body,receipt_hash:sha(body)};
+  atomicJson(path.join(resolved,'owned-spawn-capacity-inventory.json'),receipt);
+  return receipt;
+}
+
+export async function runResidentReclamationOnce({
+  root,
+  authority=null,
+  now=new Date(),
+}={}){
+  const resolved=path.resolve(root);
+  const lifecycleFile=path.join(resolved,'capacity-lifecycle-ledger.json');
+  const authorityFile=path.join(resolved,'capacity-reclamation-authority.json');
+  const priorFile=path.join(resolved,'capacity-reclamation-run.json');
+  const lifecycle=readJson(lifecycleFile,null);
+  const explicitAuthority=authority||readJson(authorityFile,null);
+  const prior=readJson(priorFile,null);
+
+  if(lifecycle?.schema!=='evercraft.saban.capacity-lifecycle-ledger.v1'){
+    const body={
+      schema:'evercraft.saban.capacity-reclamation-run.v1',
+      state:'waiting_for_lifecycle_ledger',
+      lifecycle_receipt:null,
+      considered:0,
+      completed_count:0,
+      held_count:0,
+      advisory_count:0,
+      already_completed_count:0,
+      uncertain_count:0,
+      reconciliation_required:false,
+      results:[],
+      completed_offer_ids:[],
+      ordinary_owned_shutdown_authorized:false,
+      paid_capacity_acquisition_authorized:false,
+      secrets_serialized:false,
+      executed_at:(now instanceof Date?now:new Date(now)).toISOString(),
+    };
+    const receipt={...body,receipt_hash:sha(body)};
+    atomicJson(priorFile,receipt);
+    return receipt;
+  }
+
+  const bindings=await localHostReclamationBindings();
+  const completedOfferIds=
+    prior?.schema==='evercraft.saban.capacity-reclamation-run.v1'
+      ? prior.completed_offer_ids||[]
+      : [];
+
+  const run=await executeCapacityReclamation({
+    lifecycleLedger:lifecycle,
+    authority:explicitAuthority,
+    bindings,
+    completedOfferIds,
+    now,
+  });
+  atomicJson(priorFile,run);
+  return run;
 }
 
 function safeOffer(offer){
@@ -331,7 +407,27 @@ async function runResidentExpansionOnce({root}={}){
       paid_lease_created:false,
       generated_at:new Date().toISOString(),
     };
-    const receipt={...idle,receipt_hash:sha(idle)};
+    const expansionReceipt={...idle,receipt_hash:sha(idle)};
+    const reclamation=await runResidentReclamationOnce({root});
+    const ownedSpawnCapacity=await persistOwnedSpawnCapacity({root});
+    const {
+      receipt_hash:expansionReceiptHash,
+      ...expansionBody
+    }=expansionReceipt;
+    const body={
+      ...expansionBody,
+      expansion_receipt_hash:expansionReceiptHash,
+      owned_spawn_capacity_offer_count:ownedSpawnCapacity.offer_count,
+      owned_spawn_capacity_receipt_hash:ownedSpawnCapacity.receipt_hash,
+      capacity_reclamation:{
+        completed_count:reclamation.completed_count||0,
+        held_count:reclamation.held_count||0,
+        uncertain_count:reclamation.uncertain_count||0,
+        reconciliation_required:reclamation.reconciliation_required===true,
+        receipt_hash:reclamation.receipt_hash||null,
+      },
+    };
+    const receipt={...body,receipt_hash:sha(body)};
     atomicJson(path.join(root,'resource-field-expansion-state.json'),receipt);
     return receipt;
   }
@@ -352,8 +448,28 @@ async function runResidentExpansionOnce({root}={}){
       allocatorToken:String(process.env.EVERCRAFT_ALLOCATOR_TOKEN||''),
     },
   });
-  atomicJson(path.join(root,'resource-field-expansion-state.json'),cycle);
-  return cycle;
+  const reclamation=await runResidentReclamationOnce({root});
+  const ownedSpawnCapacity=await persistOwnedSpawnCapacity({root});
+  const {
+    receipt_hash:expansionReceiptHash,
+    ...expansionBody
+  }=cycle;
+  const body={
+    ...expansionBody,
+    expansion_receipt_hash:expansionReceiptHash,
+    owned_spawn_capacity_offer_count:ownedSpawnCapacity.offer_count,
+    owned_spawn_capacity_receipt_hash:ownedSpawnCapacity.receipt_hash,
+    capacity_reclamation:{
+      completed_count:reclamation.completed_count||0,
+      held_count:reclamation.held_count||0,
+      uncertain_count:reclamation.uncertain_count||0,
+      reconciliation_required:reclamation.reconciliation_required===true,
+      receipt_hash:reclamation.receipt_hash||null,
+    },
+  };
+  const receipt={...body,receipt_hash:sha(body)};
+  atomicJson(path.join(root,'resource-field-expansion-state.json'),receipt);
+  return receipt;
 }
 
 async function main(){
@@ -386,6 +502,14 @@ async function main(){
         cycle.paid_capacity_visible_authority_required,
       engineering_required:cycle.engineering_required,
       paid_execution_authorized:false,
+      owned_spawn_capacity_offer_count:cycle.owned_spawn_capacity_offer_count||0,
+      capacity_reclamation_completed_count:cycle.capacity_reclamation?.completed_count||0,
+      capacity_reclamation_held_count:cycle.capacity_reclamation?.held_count||0,
+      capacity_reclamation_uncertain_count:cycle.capacity_reclamation?.uncertain_count||0,
+      capacity_reclamation_reconciliation_required:
+        cycle.capacity_reclamation?.reconciliation_required===true,
+      capacity_reclamation_receipt_hash:
+        cycle.capacity_reclamation?.receipt_hash||null,
       receipt_hash:cycle.receipt_hash,
     })+'\n');
   };
