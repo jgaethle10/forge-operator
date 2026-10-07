@@ -756,7 +756,7 @@ export default function WorldForgeEditor(){
   const viewportProject=useMemo(()=>{
     if(!project||!stageMode||!stagedOperations.length) return project;
 
-    let nodes=project.nodes.map(node=>({
+    let nodes:ForgeNode[]=project.nodes.map(node=>({
       ...node,
       transform:{
         position:{...node.transform.position},
