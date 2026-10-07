@@ -1,3 +1,4 @@
+import crypto from 'node:crypto';
 import fs from 'node:fs';
 import path from 'node:path';
 import { runOfficialCollectors } from './collectors.mjs';
@@ -17,6 +18,10 @@ import {
   readRadarRelease,
   reconcileRadarCorrections
 } from './release-controller.mjs';
+import {
+  compileRadarVisualStory,
+  rankRadarVisualCandidates
+} from '../visual-desk/radar-adapter.mjs';
 
 function ensureDir(dir) {
   fs.mkdirSync(dir, { recursive: true, mode: 0o700 });
@@ -43,12 +48,31 @@ function appendJsonl(file, value) {
   fs.appendFileSync(file, JSON.stringify(value) + '\n', { mode: 0o600 });
 }
 
+function sha256(value) {
+  return crypto.createHash('sha256').update(
+    typeof value === 'string' ? value : JSON.stringify(value)
+  ).digest('hex');
+}
+
+function emptyVisualOutboxIndex() {
+  return {
+    schema: 'evercraft.visual-desk.radar-outbox-index.v1',
+    source_edition_id: null,
+    generated_at: null,
+    story_count: 0,
+    stories: [],
+    publicationAuthority: false
+  };
+}
+
 export function createRadarResident({
   stateDir = path.resolve('.runtime', 'radar'),
   fetchImpl = globalThis.fetch,
   intervalMs = 5 * 60 * 1000,
   materialityThreshold = 0.58,
   maxSignals = 8,
+  visualMinScore = 0.58,
+  visualMaxCandidates = 5,
   journalUrl = '',
   autoReleaseOwned = false,
   clock = () => new Date()
@@ -63,6 +87,9 @@ export function createRadarResident({
   const sourceHealthFile = path.join(stateDir, 'source-health.json');
   const publicSourceHealthFile = path.join(stateDir, 'public-source-health.json');
   const releaseCandidateFile = path.join(stateDir, 'release-candidate.json');
+  const visualAdmissionFile = path.join(stateDir, 'visual-admission.json');
+  const visualOutboxDir = path.join(stateDir, 'visual-desk-outbox');
+  const visualOutboxIndexFile = path.join(visualOutboxDir, 'index.json');
 
   let state = readJson(stateFile, emptyRadarState());
   let sourceHealthState = readJson(sourceHealthFile, emptySourceHealthState());
@@ -71,6 +98,8 @@ export function createRadarResident({
   let lastRun = null;
   let lastError = null;
   let lastReleaseDecision = readJson(releaseCandidateFile, null);
+  let lastVisualAdmission = readJson(visualAdmissionFile, null);
+  let visualOutboxIndex = readJson(visualOutboxIndexFile, emptyVisualOutboxIndex());
 
   async function runOnce({ externalObservations = [] } = {}) {
     if (running) {
@@ -114,6 +143,41 @@ export function createRadarResident({
       state = compiled.state;
 
       const edition = compiled.edition;
+      const visualAdmission = rankRadarVisualCandidates(edition, {
+        minScore: visualMinScore,
+        maxCandidates: visualMaxCandidates
+      });
+      const visualStories = [];
+      for (const candidate of visualAdmission.admitted || []) {
+        const compiledVisual = compileRadarVisualStory(candidate, { publishedAt: startedAt });
+        const story = compiledVisual.story;
+        const storyFile = path.join(visualOutboxDir, story.slug + '.json');
+        atomicWrite(storyFile, story);
+        visualStories.push({
+          slug: story.slug,
+          title: story.title,
+          file: path.basename(storyFile),
+          candidate_id: candidate.candidate_id,
+          source_edition_id: candidate.source_edition_id,
+          source_signal_id: candidate.source_signal_id,
+          source_observation_id: candidate.source_observation_id,
+          visual_priority_score: candidate.visual_priority_score,
+          score_factors: candidate.score_factors,
+          story_sha256: sha256(story),
+          source_refs: story.sourceRefs,
+          publicationAuthority: false
+        });
+      }
+      lastVisualAdmission = visualAdmission;
+      visualOutboxIndex = {
+        schema: 'evercraft.visual-desk.radar-outbox-index.v1',
+        source_edition_id: edition.edition_id,
+        generated_at: startedAt,
+        story_count: visualStories.length,
+        stories: visualStories,
+        publicationAuthority: false
+      };
+
       const publicEdition = publicRadarProjection(edition);
       const journalPacket = radarEditionToEditorialPacket(edition);
       const linkedinDraft = buildRadarSocialDraft(edition, {
@@ -155,6 +219,8 @@ export function createRadarResident({
       atomicWrite(sourceHealthFile, sourceHealthState);
       atomicWrite(publicSourceHealthFile, publicSourceHealthProjection(sourceHealthState));
       atomicWrite(releaseCandidateFile, releaseDecision);
+      atomicWrite(visualAdmissionFile, visualAdmission);
+      atomicWrite(visualOutboxIndexFile, visualOutboxIndex);
 
       const receipt = {
         schema: 'evercraft.systemia-radar.run-receipt.v1',
@@ -171,6 +237,12 @@ export function createRadarResident({
         propagation_candidate_count: edition.propagation_candidates?.length || 0,
         rolled_off_count: edition.rolled_off_count || 0,
         source_health: sourceHealthUpdate.summary,
+        visual_admission_evaluated: visualAdmission.evaluated,
+        visual_candidate_count: visualAdmission.admitted?.length || 0,
+        visual_held_count: visualAdmission.held?.length || 0,
+        visual_background_count: visualAdmission.background?.length || 0,
+        visual_outbox_story_count: visualOutboxIndex.story_count,
+        visual_outbox_index: 'visual-desk-outbox/index.json',
         release_gate_status: releaseDecision.status,
         owned_release: ownedReleaseReceipt,
         correction_run: correctionRun,
@@ -239,6 +311,9 @@ export function createRadarResident({
       release_gate_status: lastReleaseDecision?.status || 'not_evaluated',
       owned_release_count: listRadarReleases(stateDir).releases?.length || 0,
       correction_count: listRadarCorrections(stateDir).corrections?.length || 0,
+      latest_visual_candidate_count: lastVisualAdmission?.admitted?.length || 0,
+      visual_outbox_story_count: visualOutboxIndex?.story_count || 0,
+      visual_outbox_ready: Boolean(visualOutboxIndex && visualOutboxIndex.schema === 'evercraft.visual-desk.radar-outbox-index.v1'),
       last_run: lastRun,
       last_error: lastError,
       publication_authority: false
@@ -273,6 +348,15 @@ export function createRadarResident({
     });
   }
 
+  function visualState() {
+    return {
+      schema: 'evercraft.visual-desk.radar-outbox-state.v1',
+      admission: lastVisualAdmission ? structuredClone(lastVisualAdmission) : null,
+      outbox: structuredClone(visualOutboxIndex || emptyVisualOutboxIndex()),
+      publicationAuthority: false
+    };
+  }
+
   function releaseState() {
     const index = listRadarReleases(stateDir);
     const latestRow = index.releases?.[0] || null;
@@ -295,6 +379,7 @@ export function createRadarResident({
     latest,
     internalLatest,
     sourceHealth,
+    visualState,
     releaseLatestOwned,
     releaseState
   };
