@@ -50,6 +50,20 @@ export interface WebGpuDrawCommand {
   pipelineKey:string;
 }
 
+export interface GeometryHotReloadReceipt {
+  schema:'evercraft.world-engine.geometry-hot-reload.v1';
+  geometryId:string;
+  previousDigest:string|null;
+  nextDigest:string;
+  replaced:boolean;
+  digest:string;
+}
+
+export interface GeometryHotReloadResult {
+  geometries:GeometryAsset[];
+  receipt:GeometryHotReloadReceipt;
+}
+
 export interface WebGpuRenderPlan {
   schema:'evercraft.world-engine.webgpu-plan.v1';
   worldId:string;
@@ -272,6 +286,44 @@ function orthographic(projection:Extract<CameraProjection,{type:'orthographic'}>
     0,0,nf,0,
     -(right+left)*lr,-(top+bottom)*bt,near*nf,1
   ];
+}
+
+export function geometryAssetDigest(geometry:GeometryAsset){
+  validateGeometryAsset(geometry);
+  return digest(geometry);
+}
+
+export function applyGeometryHotReload(
+  current:GeometryAsset[],
+  next:GeometryAsset
+):GeometryHotReloadResult{
+  validateGeometryAsset(next);
+  const seen=new Set<string>();
+  for(const geometry of current){
+    validateGeometryAsset(geometry);
+    if(seen.has(geometry.id)) throw new Error(`webgpu_geometry_duplicate:${geometry.id}`);
+    seen.add(geometry.id);
+  }
+
+  const previous=current.find(geometry=>geometry.id===next.id) || null;
+  const previousDigest=previous?geometryAssetDigest(previous):null;
+  const nextDigest=geometryAssetDigest(next);
+  const geometries=[
+    ...current.filter(geometry=>geometry.id!==next.id).map(clone),
+    clone(next)
+  ].sort((a,b)=>a.id.localeCompare(b.id));
+
+  const core={
+    schema:'evercraft.world-engine.geometry-hot-reload.v1' as const,
+    geometryId:next.id,
+    previousDigest,
+    nextDigest,
+    replaced:Boolean(previous)
+  };
+  return {
+    geometries,
+    receipt:{...core,digest:digest(core)}
+  };
 }
 
 export function validateGeometryAsset(geometry:GeometryAsset){
@@ -770,6 +822,21 @@ export class EvercraftWebGpuRenderer {
     });
     this.pipelineCache.set(draw.pipelineKey,pipeline);
     return pipeline;
+  }
+
+  hotReloadGeometry(geometry:GeometryAsset){
+    const current=[...this.geometries.values()].map(clone);
+    const result=applyGeometryHotReload(current,geometry);
+    this.geometries.clear();
+    for(const item of result.geometries) this.geometries.set(item.id,clone(item));
+
+    const cached=this.geometryCache.get(geometry.id);
+    if(cached){
+      cached.vertexBuffer?.destroy?.();
+      cached.indexBuffer?.destroy?.();
+      this.geometryCache.delete(geometry.id);
+    }
+    return clone(result.receipt);
   }
 
   render(plan:WebGpuRenderPlan){
