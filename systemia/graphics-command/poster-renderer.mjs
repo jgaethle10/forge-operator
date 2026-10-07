@@ -1,3 +1,4 @@
+import { WASHINGTON_STATE_OUTLINE } from './assets/washington-state-outline.mjs';
 const esc=(value)=>String(value ?? '')
   .replaceAll('&','&amp;')
   .replaceAll('<','&lt;')
@@ -5,7 +6,7 @@ const esc=(value)=>String(value ?? '')
   .replaceAll('"','&quot;')
   .replaceAll("'",'&#039;');
 
-function bounds(points){
+function pointBounds(points){
   let minLat=Math.min(...points.map(p=>p.lat));
   let maxLat=Math.max(...points.map(p=>p.lat));
   let minLon=Math.min(...points.map(p=>p.lon));
@@ -20,13 +21,38 @@ function bounds(points){
   };
 }
 
-function project(point,box,rect){
-  const lonSpan=Math.max(.0001,box.maxLon-box.minLon);
-  const latSpan=Math.max(.0001,box.maxLat-box.minLat);
+function boundaryForStory(story){
+  if(story?.visual?.boundaryId===WASHINGTON_STATE_OUTLINE.id) return WASHINGTON_STATE_OUTLINE;
+  return null;
+}
+
+function projection(box,rect){
+  const midLat=(box.minLat+box.maxLat)/2;
+  const lonFactor=Math.cos(midLat*Math.PI/180);
+  const geoWidth=Math.max(.0001,(box.maxLon-box.minLon)*lonFactor);
+  const geoHeight=Math.max(.0001,box.maxLat-box.minLat);
+  const scale=Math.min(rect.width/geoWidth,rect.height/geoHeight);
+  const drawWidth=geoWidth*scale;
+  const drawHeight=geoHeight*scale;
+  const offsetX=rect.x+(rect.width-drawWidth)/2;
+  const offsetY=rect.y+(rect.height-drawHeight)/2;
   return {
-    x:rect.x+((point.lon-box.minLon)/lonSpan)*rect.width,
-    y:rect.y+((box.maxLat-point.lat)/latSpan)*rect.height,
+    project(point){
+      return {
+        x:offsetX+((point.lon-box.minLon)*lonFactor)*scale,
+        y:offsetY+((box.maxLat-point.lat))*scale,
+      };
+    },
+    draw:{x:offsetX,y:offsetY,width:drawWidth,height:drawHeight},
   };
+}
+
+function boundaryPath(boundary,projectPoint){
+  if(!boundary?.coordinates?.length) return '';
+  return boundary.coordinates.map(([lon,lat],index)=>{
+    const p=projectPoint({lon,lat});
+    return (index===0?'M ':'L ')+p.x.toFixed(2)+' '+p.y.toFixed(2);
+  }).join(' ')+' Z';
 }
 
 function lines(text,maxChars,maxLines){
@@ -97,21 +123,38 @@ function renderLabels(story,positions,format){
   }).join('\n');
 }
 
+function renderGeography(boundary,statePath,spec,format){
+  if(!boundary||!statePath) return '<g opacity=".9">'+decorativeContours(spec)+'</g>';
+  const stroke=format==='story'?4:3;
+  const contourRows=Array.from({length:11},(_,index)=>{
+    const y=spec.map.y+spec.map.height*(.08+index*.083);
+    const bend=(index%2===0?42:-34);
+    return '<path d="M '+(spec.map.x-90)+' '+y+' C '+(spec.map.x+spec.map.width*.28)+' '+(y+bend)+' '+(spec.map.x+spec.map.width*.55)+' '+(y-bend)+' '+(spec.map.x+spec.map.width+90)+' '+(y+8)+'" fill="none" stroke="rgba(117,200,255,.10)" stroke-width="2"/>';
+  }).join('\n');
+  return [
+    '<clipPath id="geoClip"><path d="'+statePath+'"/></clipPath>',
+    '<path d="'+statePath+'" fill="url(#stateFill)" stroke="rgba(117,200,255,.55)" stroke-width="'+stroke+'" filter="url(#stateShadow)"/>',
+    '<g clip-path="url(#geoClip)">'+contourRows+'</g>',
+    '<path d="'+statePath+'" fill="none" stroke="rgba(245,245,242,.18)" stroke-width="1"/>',
+  ].join('\n');
+}
+
 export function renderDirectedPoster(story,plan,format='feed'){
   const spec=SPECS[format];
   if(!spec) throw new Error('graphics_poster_format_invalid');
   if(plan?.schema!=='evercraft.graphics-command.plan.v1') throw new Error('graphics_poster_plan_invalid');
-  const box=bounds(story.points);
-  const positions=new Map(story.points.map(point=>[point.id,project(point,box,spec.map)]));
+  const boundary=boundaryForStory(story);
+  const box=boundary?.bbox || pointBounds(story.points);
+  const frame=projection(box,spec.map);
+  const positions=new Map(story.points.map(point=>[point.id,frame.project(point)]));
+  const statePath=boundary?boundaryPath(boundary,frame.project):'';
   const maxValue=Math.max(1,...story.points.map(point=>Math.abs(Number(point.value)||1)));
 
-  const routeSvg=(story.lines||[]).map((line,index)=>{
+  const routeSvg=(story.lines||[]).map((line)=>{
     const a=positions.get(line.from);
     const b=positions.get(line.to);
     if(!a||!b) return '';
-    const cx=(a.x+b.x)/2+(index%2?26:-26);
-    const cy=(a.y+b.y)/2;
-    return '<path d="M '+a.x+' '+a.y+' Q '+cx+' '+cy+' '+b.x+' '+b.y+'" fill="none" stroke="#4FB8FF" stroke-width="'+(format==='story'?10:8)+'" stroke-linecap="round" opacity=".84" filter="url(#glow)"/>';
+    return '<path d="M '+a.x+' '+a.y+' L '+b.x+' '+b.y+'" fill="none" stroke="#4FB8FF" stroke-width="'+(format==='story'?9:7)+'" stroke-linecap="round" stroke-linejoin="round" opacity=".9" filter="url(#glow)"/>';
   }).join('\n');
 
   const pointSvg=story.points.map(point=>{
@@ -149,18 +192,19 @@ export function renderDirectedPoster(story,plan,format='feed'){
   const sourceY=spec.height-58;
   const evidence=String(story.evidenceState||'').toUpperCase();
   return [
-    '<svg xmlns="http://www.w3.org/2000/svg" width="'+spec.width+'" height="'+spec.height+'" viewBox="0 0 '+spec.width+' '+spec.height+'">',
+    '<svg xmlns="http://www.w3.org/2000/svg" width="'+spec.width+'" height="'+spec.height+'" viewBox="0 0 '+spec.width+' '+spec.height+'" style="max-width:100%;height:auto;display:block">',
     '<defs>',
     '<radialGradient id="heroGlow" cx="50%" cy="48%" r="60%"><stop offset="0%" stop-color="#17303D"/><stop offset="58%" stop-color="#0A1013"/><stop offset="100%" stop-color="#050707"/></radialGradient>',
     '<linearGradient id="spine" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#75C8FF"/><stop offset="100%" stop-color="#2B6B95"/></linearGradient>',
+    '<linearGradient id="stateFill" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#112832"/><stop offset="52%" stop-color="#0B171D"/><stop offset="100%" stop-color="#061014"/></linearGradient>',
+    '<filter id="stateShadow" x="-30%" y="-30%" width="160%" height="160%"><feDropShadow dx="0" dy="18" stdDeviation="26" flood-color="#000" flood-opacity=".45"/></filter>',
     '<filter id="glow" x="-80%" y="-80%" width="260%" height="260%"><feGaussianBlur stdDeviation="5" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>',
     '</defs>',
     '<rect width="'+spec.width+'" height="'+spec.height+'" fill="url(#heroGlow)"/>',
     '<text x="72" y="'+(format==='story'?82:58)+'" font-family="Arial,sans-serif" font-size="'+(format==='story'?24:19)+'" font-weight="900" letter-spacing="3.2" fill="#4FB8FF">'+esc(plan.hero.eyebrow.toUpperCase())+'</text>',
     hook,
     sub,
-    '<g opacity=".9">'+decorativeContours(spec)+'</g>',
-    '<path d="M '+(spec.map.x+spec.map.width*.12)+' '+(spec.map.y+spec.map.height*.08)+' C '+(spec.map.x+spec.map.width*.48)+' '+(spec.map.y+spec.map.height*.16)+' '+(spec.map.x+spec.map.width*.25)+' '+(spec.map.y+spec.map.height*.64)+' '+(spec.map.x+spec.map.width*.72)+' '+(spec.map.y+spec.map.height*.92)+'" fill="none" stroke="url(#spine)" stroke-width="2" opacity=".16"/>',
+    renderGeography(boundary,statePath,spec,format),
     routeSvg,
     pointSvg,
     renderLabels(story,positions,format),
