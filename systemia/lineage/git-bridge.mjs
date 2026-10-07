@@ -1,4 +1,4 @@
-import { mkdir, readFile, rm } from 'node:fs/promises';
+import { mkdir, mkdtemp, readFile, rm } from 'node:fs/promises';
 import { dirname, join, resolve } from 'node:path';
 import { spawnSync } from 'node:child_process';
 import { lineage } from './core.mjs';
@@ -211,19 +211,49 @@ export async function exportLineageSnapshotToGit(store, {
   const commit = await store.readObject(tree.commit_id);
 
   const gitDir = gitText(repoDir, ['rev-parse', '--git-dir']);
-  const indexPath = resolve(repoDir, gitDir, `lineage-index-${process.pid}-${Date.now()}`);
+  const gitDirPath = resolve(repoDir, gitDir);
+  const indexPath = resolve(gitDirPath, `lineage-index-${process.pid}-${Date.now()}`);
+  const exportTempDir = await mkdtemp(join(gitDirPath, 'lineage-export-'));
   const env = { GIT_INDEX_FILE: indexPath };
 
   try {
     gitText(repoDir, ['read-tree', '--empty'], { env });
 
-    for (const entry of tree.entries) {
-      const bytes = typeof store.readEntryBytes === 'function'
-        ? await store.readEntryBytes(entry)
-        : (() => { throw new Error('Lineage store cannot materialize tree entries'); })();
-      const gitBlob = gitText(repoDir, ['hash-object', '-w', '--stdin'], { input: bytes });
-      const mode = /^[0-7]{6}$/.test(entry.mode || '') ? entry.mode : '100644';
-      gitText(repoDir, ['update-index', '--add', '--cacheinfo', `${mode},${gitBlob},${entry.path}`], { env });
+    for (let index = 0; index < tree.entries.length; index += 1) {
+      const entry = tree.entries[index];
+      const object = await store.readObject(entry.object_id);
+      let gitBlob;
+
+      if (object.type === 'large_blob_ref') {
+        if (typeof store.writeEntryToFile !== 'function') {
+          throw new Error('Lineage store cannot stream large tree entries');
+        }
+        const materialized = join(
+          exportTempDir,
+          `${String(index).padStart(6, '0')}.asset`
+        );
+        await store.writeEntryToFile(entry, materialized);
+        gitBlob = gitText(repoDir, ['hash-object', '-w', materialized]);
+        await rm(materialized, { force: true });
+      } else {
+        const bytes = typeof store.readEntryBytes === 'function'
+          ? await store.readEntryBytes(entry)
+          : (() => {
+              throw new Error('Lineage store cannot materialize tree entries');
+            })();
+        gitBlob = gitText(repoDir, ['hash-object', '-w', '--stdin'], {
+          input: bytes,
+        });
+      }
+
+      const mode = /^[0-7]{6}$/.test(entry.mode || '')
+        ? entry.mode
+        : '100644';
+      gitText(
+        repoDir,
+        ['update-index', '--add', '--cacheinfo', `${mode},${gitBlob},${entry.path}`],
+        { env }
+      );
     }
 
     const gitTree = gitText(repoDir, ['write-tree'], { env });
@@ -284,6 +314,9 @@ export async function exportLineageSnapshotToGit(store, {
       receipt_id: receiptId
     };
   } finally {
-    await rm(indexPath, { force: true });
+    await Promise.all([
+      rm(indexPath, { force: true }),
+      rm(exportTempDir, { recursive: true, force: true }),
+    ]);
   }
 }

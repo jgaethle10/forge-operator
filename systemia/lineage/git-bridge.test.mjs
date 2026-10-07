@@ -162,6 +162,15 @@ test('Git export materializes manifest-backed large entries byte-exactly', async
     const tree = await store.getTree(committed.commit_id);
     assert.equal(tree.entries[0].storage, 'large_object');
 
+    const originalReadEntryBytes = store.readEntryBytes.bind(store);
+    store.readEntryBytes = async (entry, options) => {
+      const object = await store.readObject(entry.object_id);
+      if (object.type === 'large_blob_ref') {
+        throw new Error('large_git_export_must_not_use_buffered_entry_read');
+      }
+      return originalReadEntryBytes(entry, options);
+    };
+
     const exported = await exportLineageSnapshotToGit(store, {
       commitish: committed.commit_id,
       repository: gitRoot,

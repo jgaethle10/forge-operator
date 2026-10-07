@@ -6,6 +6,7 @@ import { LargeObjectStore } from './large-object.mjs';
 const SCHEMA = 'evercraft.lineage.v1';
 const DEFAULT_EXCLUDES = new Set(['.lineage', '.git', 'node_modules']);
 const DEFAULT_LARGE_OBJECT_THRESHOLD_BYTES = 8 * 1024 * 1024;
+const DEFAULT_MAX_BUFFERED_ENTRY_BYTES = 64 * 1024 * 1024;
 
 function sha256(value) {
   return createHash('sha256').update(value).digest('hex');
@@ -254,32 +255,143 @@ export class LineageStore {
     return { tree_id: treeId, entries };
   }
 
-  async readEntryBytes(entry) {
+  async readEntryBytes(entry, {
+    maxBytes = DEFAULT_MAX_BUFFERED_ENTRY_BYTES,
+  } = {}) {
     if (!entry?.object_id) throw new Error('Tree entry object_id is required');
-    const object = await this.readObject(entry.object_id);
-    if (object.type === 'blob') {
-      return Buffer.from(object.payload.data, object.payload.encoding);
+    const limit = maxBytes == null ? Number.POSITIVE_INFINITY : Number(maxBytes);
+    if (
+      limit !== Number.POSITIVE_INFINITY &&
+      (!Number.isInteger(limit) || limit < 0)
+    ) {
+      throw new Error('maxBytes must be a non-negative integer or null');
     }
+
+    const object = await this.readObject(entry.object_id);
+    const declaredBytes = Number(entry.bytes ?? object.payload?.size ?? 0);
+    if (
+      Number.isFinite(declaredBytes) &&
+      declaredBytes > limit
+    ) {
+      const error = new Error(
+        `Tree entry ${entry.path || entry.object_id} exceeds buffered read limit: ${declaredBytes} > ${limit}`
+      );
+      error.code = 'LINEAGE_ENTRY_TOO_LARGE_FOR_BUFFER';
+      error.bytes = declaredBytes;
+      error.max_bytes = limit;
+      throw error;
+    }
+
+    if (object.type === 'blob') {
+      const bytes = Buffer.from(object.payload.data, object.payload.encoding);
+      if (bytes.length > limit) {
+        const error = new Error(
+          `Tree entry ${entry.path || entry.object_id} exceeds buffered read limit: ${bytes.length} > ${limit}`
+        );
+        error.code = 'LINEAGE_ENTRY_TOO_LARGE_FOR_BUFFER';
+        error.bytes = bytes.length;
+        error.max_bytes = limit;
+        throw error;
+      }
+      return bytes;
+    }
+
     if (object.type === 'large_blob_ref') {
       const manifestId = object.payload.manifest_id;
-      if (!manifestId) throw new Error(`Large blob ref missing manifest for ${entry.path || entry.object_id}`);
+      if (!manifestId) {
+        throw new Error(
+          `Large blob ref missing manifest for ${entry.path || entry.object_id}`
+        );
+      }
       const large = new LargeObjectStore(this.dir);
       const bytes = await large.materialize(manifestId);
       if (
         object.payload.content_sha256 &&
         sha256(bytes) !== object.payload.content_sha256
       ) {
-        throw new Error(`Large blob ref content digest mismatch for ${entry.path || entry.object_id}`);
+        throw new Error(
+          `Large blob ref content digest mismatch for ${entry.path || entry.object_id}`
+        );
       }
       if (
         Number.isInteger(Number(object.payload.size)) &&
         bytes.length !== Number(object.payload.size)
       ) {
-        throw new Error(`Large blob ref size mismatch for ${entry.path || entry.object_id}`);
+        throw new Error(
+          `Large blob ref size mismatch for ${entry.path || entry.object_id}`
+        );
       }
       return bytes;
     }
-    throw new Error(`Unsupported tree entry object type ${object.type} for ${entry.path || entry.object_id}`);
+
+    throw new Error(
+      `Unsupported tree entry object type ${object.type} for ${entry.path || entry.object_id}`
+    );
+  }
+
+  async writeEntryToFile(entry, targetPath) {
+    if (!entry?.object_id) throw new Error('Tree entry object_id is required');
+    const object = await this.readObject(entry.object_id);
+    const target = resolve(targetPath);
+    await mkdir(dirname(target), { recursive: true });
+
+    if (object.type === 'blob') {
+      const bytes = Buffer.from(object.payload.data, object.payload.encoding);
+      if (
+        object.payload.content_sha256 &&
+        sha256(bytes) !== object.payload.content_sha256
+      ) {
+        throw new Error(
+          `Blob content digest mismatch for ${entry.path || entry.object_id}`
+        );
+      }
+      await writeFile(target, bytes);
+      return {
+        ok: true,
+        object_type: 'blob',
+        target,
+        bytes: bytes.length,
+        content_sha256: object.payload.content_sha256 || sha256(bytes),
+        materialization_mode: 'buffer',
+      };
+    }
+
+    if (object.type === 'large_blob_ref') {
+      const manifestId = object.payload.manifest_id;
+      if (!manifestId) {
+        throw new Error(
+          `Large blob ref missing manifest for ${entry.path || entry.object_id}`
+        );
+      }
+      const large = new LargeObjectStore(this.dir);
+      const restored = await large.writeToFile(manifestId, target);
+      if (
+        object.payload.content_sha256 &&
+        restored.content_sha256 !== object.payload.content_sha256
+      ) {
+        await rm(target, { force: true });
+        throw new Error(
+          `Large blob ref content digest mismatch for ${entry.path || entry.object_id}`
+        );
+      }
+      if (
+        Number.isInteger(Number(object.payload.size)) &&
+        restored.bytes !== Number(object.payload.size)
+      ) {
+        await rm(target, { force: true });
+        throw new Error(
+          `Large blob ref size mismatch for ${entry.path || entry.object_id}`
+        );
+      }
+      return {
+        ...restored,
+        object_type: 'large_blob_ref',
+      };
+    }
+
+    throw new Error(
+      `Unsupported tree entry object type ${object.type} for ${entry.path || entry.object_id}`
+    );
   }
 
   async getTree(commitish = 'HEAD') {
@@ -392,45 +504,9 @@ export class LineageStore {
     const target = resolve(targetDir);
     if (clean && target !== this.root) await rm(target, { recursive: true, force: true });
     await mkdir(target, { recursive: true });
-    const large = new LargeObjectStore(this.dir);
-
     for (const entry of tree.entries) {
-      const object = await this.readObject(entry.object_id);
       const out = join(target, entry.path);
-      await mkdir(dirname(out), { recursive: true });
-
-      if (object.type === 'blob') {
-        const bytes = Buffer.from(object.payload.data, object.payload.encoding);
-        await writeFile(out, bytes);
-        continue;
-      }
-
-      if (object.type === 'large_blob_ref') {
-        const manifestId = object.payload.manifest_id;
-        if (!manifestId) {
-          throw new Error(`Large blob ref missing manifest for ${entry.path}`);
-        }
-        const restored = await large.writeToFile(manifestId, out);
-        if (
-          object.payload.content_sha256 &&
-          restored.content_sha256 !== object.payload.content_sha256
-        ) {
-          await rm(out, { force: true });
-          throw new Error(`Large blob ref content digest mismatch for ${entry.path}`);
-        }
-        if (
-          Number.isInteger(Number(object.payload.size)) &&
-          restored.bytes !== Number(object.payload.size)
-        ) {
-          await rm(out, { force: true });
-          throw new Error(`Large blob ref size mismatch for ${entry.path}`);
-        }
-        continue;
-      }
-
-      throw new Error(
-        `Unsupported tree entry object type ${object.type} for ${entry.path}`
-      );
+      await this.writeEntryToFile(entry, out);
     }
     const receiptId = await this._recordOperation({ operation: 'restore', commit_id: tree.commit_id, target, created_at: now(), destructive: false });
     return { commit_id: tree.commit_id, files: tree.entries.length, target, receipt_id: receiptId };
@@ -544,4 +620,4 @@ export class LineageStore {
   }
 }
 
-export const lineage = { schema: SCHEMA, classifyAsset, mediaTypeForPath, stable, sha256, defaultLargeObjectThresholdBytes: DEFAULT_LARGE_OBJECT_THRESHOLD_BYTES };
+export const lineage = { schema: SCHEMA, classifyAsset, mediaTypeForPath, stable, sha256, defaultLargeObjectThresholdBytes: DEFAULT_LARGE_OBJECT_THRESHOLD_BYTES, defaultMaxBufferedEntryBytes: DEFAULT_MAX_BUFFERED_ENTRY_BYTES };
