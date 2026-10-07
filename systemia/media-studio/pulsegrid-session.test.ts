@@ -35,7 +35,7 @@ test('PulseGrid migrates older sparse browser sessions into the canonical graph'
       clips:[{id:'keys-scene-1',steps:[1,0,0,0]}]
     }]
   });
-  assert.equal(migrated.version,'0.7.0');
+  assert.equal(migrated.version,'0.8.0');
   assert.equal(migrated.transport.bpm,128);
   assert.equal(migrated.tracks[0].clips[0].bars,1);
   assert.equal(migrated.tracks[0].clips[0].steps.length,16);
@@ -202,4 +202,60 @@ test('PulseGrid executable undo restores note add move resize and delete operati
   session=undoPulseGridReceipt(result.session,result.receipt.id).session;
   assert.deepEqual(session.tracks.find((track)=>track.id==='keys')!.clips[0].notes[0],beforeDelete);
   assert.equal(validatePulseGridSession(session).ok,true);
+});
+
+
+test('PulseGrid variation fork preserves source and records lineage',()=>{
+  let session=createPulseGridSession('Variation Proof');
+  ({session}=applyPulseGridOperation(session,{type:'clip.set_bars',track_id:'bass',scene:0,bars:2}));
+  ({session}=applyPulseGridOperation(session,{
+    type:'note.add',track_id:'bass',scene:0,
+    note:{id:'root-note',pitch:40,start:4,length:3,velocity:.9},
+  }));
+  const sourceBefore=structuredClone(session.tracks.find((track)=>track.id==='bass')!.clips[0]);
+  const destinationBefore=structuredClone(session.tracks.find((track)=>track.id==='bass')!.clips[1]);
+
+  const forked=applyPulseGridOperation(session,{
+    type:'clip.fork_variation',
+    track_id:'bass',
+    source_scene:0,
+    destination_scene:1,
+    name:'Bass Alt A',
+  },'agent');
+  session=forked.session;
+
+  const track=session.tracks.find((candidate)=>candidate.id==='bass')!;
+  const source=track.clips[0];
+  const variation=track.clips[1];
+
+  assert.deepEqual(source,sourceBefore);
+  assert.notEqual(variation.id,source.id);
+  assert.equal(variation.name,'Bass Alt A');
+  assert.deepEqual(variation.notes,source.notes);
+  assert.equal(variation.provenance.kind,'variation');
+  assert.equal(variation.provenance.parent_clip_id,source.id);
+  assert.equal(variation.provenance.parent_scene,0);
+  assert.equal(variation.provenance.forked_by,'agent');
+  assert.equal(forked.receipt.request?.type,'clip.fork_variation');
+
+  const changed=applyPulseGridOperation(session,{
+    type:'note.move',track_id:'bass',scene:1,note_id:'root-note',start:10,pitch:43,
+  });
+  const changedTrack=changed.session.tracks.find((candidate)=>candidate.id==='bass')!;
+  assert.equal(changedTrack.clips[1].notes[0].start,10);
+  assert.equal(changedTrack.clips[0].notes[0].start,4);
+
+  const undone=undoPulseGridReceipt(session,forked.receipt.id);
+  assert.deepEqual(undone.session.tracks.find((candidate)=>candidate.id==='bass')!.clips[1],destinationBefore);
+  assert.equal(validatePulseGridSession(undone.session).ok,true);
+});
+
+test('PulseGrid refuses to fork a variation onto its source scene',()=>{
+  const session=createPulseGridSession();
+  assert.throws(()=>applyPulseGridOperation(session,{
+    type:'clip.fork_variation',
+    track_id:'keys',
+    source_scene:0,
+    destination_scene:0,
+  }),/different destination scene/);
 });
