@@ -879,3 +879,69 @@
   background:rgba(42,34,16,.92);
   color:#e5c987;
 }
+
+.wf-physics-tools{
+  border-color:#32485a;
+}
+
+.wf-physics-modes{
+  display:grid;
+  grid-template-columns:repeat(4,minmax(0,1fr));
+  gap:5px;
+  margin-bottom:8px;
+}
+
+.wf-physics-modes button{
+  border:1px solid #304657;
+  border-radius:6px;
+  background:#0e1820;
+  color:#899eac;
+  padding:6px 4px;
+  font-size:8px;
+  font-weight:800;
+  letter-spacing:.04em;
+  text-transform:uppercase;
+}
+
+.wf-physics-modes button.active{
+  border-color:#4e8fbd;
+  background:#18394f;
+  color:#d9f2ff;
+}
+
+.wf-physics-select{
+  display:grid;
+  grid-template-columns:auto 1fr;
+  align-items:center;
+  gap:8px;
+  margin:7px 0;
+  color:#7f95a3;
+  font-size:9px;
+  font-weight:800;
+  text-transform:uppercase;
+}
+
+.wf-physics-select select{
+  min-width:0;
+  border:1px solid #2e4352;
+  border-radius:6px;
+  background:#0d171f;
+  color:#d8e6ee;
+  padding:6px 7px;
+  font:800 9px ui-monospace,SFMono-Regular,Menlo,monospace;
+}
+
+.wf-physics-grid{
+  display:grid;
+  grid-template-columns:repeat(2,minmax(0,1fr));
+  gap:6px;
+  margin-top:8px;
+}
+
+.wf-physics-tools small{
+  display:block;
+  margin-top:8px;
+  color:#687d8c;
+  font-size:9px;
+  line-height:1.45;
+}
