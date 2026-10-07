@@ -4,16 +4,16 @@ export const CFB_POWER_INDEX_INPUT_SCHEMA='evercraft.cfb-power-index-input.v1';
 export const CFB_POWER_INDEX_OUTPUT_SCHEMA='evercraft.cfb-power-rankings.v1';
 
 export const DEFAULT_CFB_POWER_MODEL=Object.freeze({
-  model_version:'evercraft-cfbpi-0.1.0',
-  missing_data_penalty:12,
+  model_version:'evercraft-cfbpi-0.2.0',
+  missing_data_penalty:8,
   components:Object.freeze({
-    result_quality:0.24,
-    efficiency:0.22,
+    result_quality:0.22,
+    efficiency:0.32,
     schedule_strength:0.16,
-    road_neutral:0.10,
-    recent_form:0.12,
-    availability:0.08,
-    turnover_sustainability:0.08,
+    road_neutral:0.08,
+    recent_form:0.17,
+    availability:0.03,
+    turnover_sustainability:0.02,
   }),
 });
 
