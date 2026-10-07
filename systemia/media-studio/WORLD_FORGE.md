@@ -217,6 +217,21 @@ Current area lights are explicitly approximated as point lights because World En
 
 The browser editor exposes **Engine Bridge** only for committed canonical state. If a Stage-mode ChangeSet is pending, runtime compilation is blocked until the proposal is applied or cleared.
 
+## Runtime View
+
+Play Mode now projects the active World Engine snapshot back into World Forge view space.
+
+World Engine is right-handed Y-up while World Forge is right-handed Z-up, so runtime transforms are converted explicitly rather than copied numerically:
+
+- position maps back into Forge's X/Y/Z frame;
+- scale axes restore Forge's authored axis order;
+- runtime Euler orientation is basis-converted back into Forge space;
+- round-trip tests cover arbitrary rotations as well as axis-aligned cases.
+
+While Play Mode is active and no uncommitted staged edits exist, the viewport renders transforms from the latest runtime snapshot. When staged edits exist, the viewport switches visibly to **AUTHOR PREVIEW** so the proposed authored state can be inspected before it is committed into the running simulation.
+
+This preserves the distinction between canonical authored state and ephemeral runtime state instead of silently mixing the two.
+
 ## Live World Engine synchronization
 
 Once a committed World Forge scene has been compiled through **Engine Bridge**, later authoring changes can stay synchronized with World Engine incrementally instead of requiring full runtime replacement.
