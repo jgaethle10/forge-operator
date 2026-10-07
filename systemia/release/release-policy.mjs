@@ -4,6 +4,7 @@ import process from 'node:process';
 export const RELEASE_POLICY_VERSION = 'systemia.release.policy.v1';
 
 const TRUST_PATH = /(^|\/)(\.github\/workflows|systemia\/release|auth|authentication|authorization|security|secrets?|credentials?|payments?|billing|stripe)(\/|\.|$)|(^|\/)firestore\.rules$/i;
+const PROTECTED_RIVET_PATH = /^(?:systemia\/rivet\/|public\/rivet\/|public\/chum\/intents\/rivet-site-underwriting-v1\/|public\/chum\/proof\/rivet\.json$|governance\/RIVET_CHANGE_CONTROL\.md$|governance\/rivet-agent-approved\.json$|governance\/rivet-proof-approved\.json$|governance\/rivet-proof-semantic-baseline\.json$|governance\/protected-generated-artifacts\.json$|tests\/rivet-change-control\.test\.mjs$)/i;
 const DESTRUCTIVE_PATH = /(^|\/)(migrations?|destructive|data-purge|schema-drop)(\/|\.|$)/i;
 const DESTRUCTIVE_PATCH = /^\+.*\b(drop\s+(table|database|schema)|truncate\s+table|rm\s+-rf|delete\s+from\s+[^\n]+\s+where\s+1\s*=\s*1)\b/im;
 const TRUST_PATCH = /^\+.*\b(api[_-]?key|private[_-]?key|secret\s*=|password\s*=|authorization\s*:|stripe[_-]?secret)\b/im;
@@ -29,7 +30,8 @@ export function classifyRelease({ changedFiles = [], patch = '' } = {}) {
   }
 
   for (const file of files) {
-    if (TRUST_PATH.test(file)) reasons.push(`trust_surface_path:${file}`);
+    if (PROTECTED_RIVET_PATH.test(file)) reasons.push(`protected_rivet_path:${file}`);
+    else if (TRUST_PATH.test(file)) reasons.push(`trust_surface_path:${file}`);
   }
   if (TRUST_PATCH.test(patch)) reasons.push('secret_or_authorization_patch_pattern');
 
