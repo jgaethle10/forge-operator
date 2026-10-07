@@ -30,6 +30,7 @@ import {
   fabricMobileManifest,
   renderFabricMobileApp,
 } from './fabric-mobile-site.mjs';
+import { renderEarthWorksSimulator } from './earthworks-simulator-page.mjs';
 import { createFabricFaieSurface } from './fabric-faie-runtime.mjs';
 import { buildVisualStory, normalizeVisualStory } from '../visual-desk/factory.mjs';
 import { buildCommercialCampaign } from '../graphics-command/commercial-renderer.mjs';
@@ -132,6 +133,21 @@ function sendMobileHtml(res,status,body) {
     'referrer-policy':'no-referrer',
     'permissions-policy':'camera=(), microphone=(), geolocation=()',
     'content-security-policy':"default-src 'self'; style-src 'unsafe-inline'; img-src 'self'; base-uri 'none'; frame-ancestors 'none'; form-action 'self'",
+  });
+  res.end(data);
+}
+
+function sendInteractiveHtml(res,status,body) {
+  const data=Buffer.from(String(body));
+  res.writeHead(status,{
+    'content-type':'text/html; charset=utf-8',
+    'content-length':data.length,
+    'cache-control':'no-store',
+    'x-content-type-options':'nosniff',
+    'x-frame-options':'DENY',
+    'referrer-policy':'no-referrer',
+    'permissions-policy':'camera=(), microphone=(), geolocation=()',
+    'content-security-policy':"default-src 'none'; style-src 'unsafe-inline'; script-src 'unsafe-inline'; connect-src 'none'; img-src 'self' data:; base-uri 'none'; frame-ancestors 'none'; form-action 'none'",
   });
   res.end(data);
 }
@@ -600,6 +616,8 @@ export async function startFabricLocalRuntime({
     mobile_path:'/mobile',
     mobile_installable:true,
     aliev_public_path:'/aliev',
+    earthworks_simulator_path:'/earthworks',
+    earthworks_simulator_authority:'interactive_software_simulation_only',
     chum_human_review_path_template:'/api/chum/go/{public_id}',
     chum_human_review_authority:'discovery_review_only',
     journal_mirror_path:'/journal/',
@@ -680,6 +698,14 @@ export async function startFabricLocalRuntime({
           200,
           renderAliEvLanding(),
           {contentType:'text/html; charset=utf-8'}
+        );
+      }
+
+      if (req.method==='GET' && (req.url==='/earthworks'||req.url==='/earthworks/')) {
+        return sendInteractiveHtml(
+          res,
+          200,
+          renderEarthWorksSimulator()
         );
       }
 
