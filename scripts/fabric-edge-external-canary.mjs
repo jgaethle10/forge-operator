@@ -555,6 +555,12 @@ try{
     throw new Error('fabric_human_commerce_boundary_failed');
   }
   if(health.base44_transport_enabled!==false) throw new Error('base44_transport_enabled');
+  if(
+    health.source_release_observed_at_startup!==true||
+    !/^[a-f0-9]{40}$/i.test(String(health.source_release_ref||''))
+  ){
+    throw new Error('fabric_source_release_attestation_missing');
+  }
   if(health.aliev_public_path!=='/aliev'){
     throw new Error('aliev_health_metadata_missing');
   }
@@ -577,6 +583,8 @@ try{
     service:health.service,
     server:health.server,
     version:health.version||null,
+    source_release_ref:health.source_release_ref,
+    source_release_observed_at_startup:true,
     capability_count:Number(health.capability_count),
     read_only:true,
     transactional:false,

@@ -127,6 +127,8 @@ try{
       instance_id:health.instance_id||null,
       service:health.service||null,
       version:health.version||null,
+      source_release_ref:health.source_release_ref||null,
+      source_release_observed_at_startup:health.source_release_observed_at_startup===true,
       capability_count:Number(health.capability_count||0),
       visual_desk_story_count:Number(health.visual_desk_story_count||0),
       catalog_story_digest:catalogStory?.storyDigest||null,
@@ -150,6 +152,7 @@ try{
   };
 
   result.freshness={
+    source_release_attested:result.live.source_release_observed_at_startup===true&&/^[a-f0-9]{40}$/i.test(String(result.live.source_release_ref||'')),
     story_digest_match:result.live.catalog_story_digest===result.expected.story_digest,
     graphics_plan_present:result.live.graphics_plan_present===true,
     poster_quality_present:result.live.poster_quality_present===true,

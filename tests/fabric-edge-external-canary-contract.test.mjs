@@ -4,6 +4,13 @@ import fs from 'node:fs';
 
 const script=fs.readFileSync('scripts/fabric-edge-external-canary.mjs','utf8');
 
+test('external Fabric canary requires boot-time source release attestation',()=>{
+  assert.ok(script.includes("fabric_source_release_attestation_missing"));
+  assert.ok(script.includes("source_release_observed_at_startup"));
+  assert.ok(script.includes("source_release_ref"));
+  assert.ok(script.includes("/^[a-f0-9]{40}$/i"));
+});
+
 test('external Fabric canary proves the mobile surface and health metadata',()=>{
   assert.ok(script.includes("getText('/mobile')"));
   assert.ok(script.includes("receipt.checks.mobile_surface=true"));

@@ -5,6 +5,7 @@ import fs from 'node:fs';
 import os from 'node:os';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
+import { execFileSync } from 'node:child_process';
 import {
   executeFabricDirectoryRpc,
   fabricDirectoryTools,
@@ -34,6 +35,18 @@ import { renderEarthWorksSimulator } from './earthworks-simulator-page.mjs';
 import { createFabricFaieSurface } from './fabric-faie-runtime.mjs';
 import { buildVisualStory, normalizeVisualStory } from '../visual-desk/factory.mjs';
 import { buildCommercialCampaign } from '../graphics-command/commercial-renderer.mjs';
+
+function detectSourceReleaseRef(repoRoot){
+  try{
+    return String(execFileSync(
+      'git',
+      ['-C',repoRoot,'rev-parse','HEAD'],
+      {encoding:'utf8',stdio:['ignore','pipe','ignore'],timeout:2000}
+    )||'').trim();
+  }catch{
+    return '';
+  }
+}
 
 function isLegacyBase44Connection(connection={}) {
   try {
@@ -382,6 +395,7 @@ export async function startFabricLocalRuntime({
   visualStateDir='',
   visualOrigin='',
   visualIngestToken='',
+  sourceReleaseRef='',
   sabanCapacityHealthFile='',
   purchaseIntentFetch=fetch,
   purchaseIntentUrl='https://base44.app/api/apps/6a7adc9666bfd8c5c2fb4069/functions/ravenNexusPurchaseIntent',
@@ -531,6 +545,10 @@ export async function startFabricLocalRuntime({
     }finally{clearTimeout(timer);}
   }
   const moduleDir=path.dirname(fileURLToPath(import.meta.url));
+  const repoRoot=path.resolve(moduleDir,'../..');
+  const resolvedSourceReleaseRef=String(
+    sourceReleaseRef||process.env.EVERCRAFT_SOURCE_RELEASE_REF||detectSourceReleaseRef(repoRoot)
+  ).trim();
   const pluginDir=path.resolve(moduleDir,'../../plugins/evercraft-fabric');
   const journalDir=path.resolve(moduleDir,'../../public/journal');
   const demoDir=path.resolve(moduleDir,'../../public/demos');
@@ -573,6 +591,8 @@ export async function startFabricLocalRuntime({
     service:'evercraft-fabric-local',
     server:'evercraft-fabric',
     version:'1.1.0',
+    source_release_ref:resolvedSourceReleaseRef||null,
+    source_release_observed_at_startup:true,
     runtime:nodeAttestationProvider?'Evercraft Compute':'Evercraft Fabric local',
     instance_id:instanceId,
     deployment_receipt_bound:Boolean(deploymentReceiptRef),
