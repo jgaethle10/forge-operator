@@ -185,3 +185,87 @@ test('fetchCommitGraph refuses to move a diverged local ref', async () => {
     await rm(remoteRoot, { recursive: true, force: true });
   }
 });
+
+
+test('fetchCommitGraph refuses a ref race that happens after ancestry validation', async () => {
+  const sourceRoot = await mkdtemp(join(tmpdir(), 'lineage-fetch-race-source-'));
+  const targetRoot = await mkdtemp(join(tmpdir(), 'lineage-fetch-race-target-'));
+  const remoteRoot = await mkdtemp(join(tmpdir(), 'lineage-fetch-race-remote-'));
+  try {
+    const source = new LineageStore(sourceRoot);
+    const target = new LineageStore(targetRoot);
+    const remote = new LocalLineageRemote(remoteRoot);
+    await source.init();
+    await target.init();
+
+    await writeFile(join(sourceRoot, 'shared.txt'), 'base\n');
+    const base = await source.commit({ message: 'base' });
+    await pushCommitGraph({
+      store: source,
+      remote,
+      branch: 'main',
+      expectedRemoteHead: null,
+    });
+    const firstFetch = await fetchCommitGraph({
+      store: target,
+      remote,
+      remoteBranch: 'main',
+      localBranch: 'main',
+    });
+    assert.equal(firstFetch.state, 'fast_forwarded');
+    assert.equal(await target.resolveRef('main'), base.commit_id);
+
+    await writeFile(join(sourceRoot, 'shared.txt'), 'remote-next\n');
+    const remoteNext = await source.commit({ message: 'remote-next' });
+    await pushCommitGraph({
+      store: source,
+      remote,
+      branch: 'main',
+      expectedRemoteHead: base.commit_id,
+    });
+
+    const localTree = await target.getTree(base.commit_id);
+    const competitor = await target.putObject('commit', {
+      tree_id: localTree.tree_id,
+      parents: [base.commit_id],
+      message: 'local competitor',
+      actor: { type: 'agent', id: 'local-competitor' },
+      rationale: null,
+      created_at: new Date().toISOString(),
+      provenance: { sources: [], evidence: [], rights: [] },
+      authority: { mutation: true, publish: false, payment: false },
+      transactions: [],
+      metadata: {},
+    });
+
+    const originalCas = target.compareAndSwapRef.bind(target);
+    let injected = false;
+    target.compareAndSwapRef = async (branch, expected, next, options) => {
+      if (!injected) {
+        injected = true;
+        await originalCas(branch, expected, competitor, options);
+      }
+      return originalCas(branch, expected, next, options);
+    };
+
+    const raced = await fetchCommitGraph({
+      store: target,
+      remote,
+      remoteBranch: 'main',
+      localBranch: 'main',
+    });
+
+    assert.equal(raced.state, 'local_ref_changed_requires_reconciliation');
+    assert.equal(raced.ref_updated, false);
+    assert.equal(raced.remote_head, remoteNext.commit_id);
+    assert.equal(raced.local_head_before, base.commit_id);
+    assert.equal(raced.local_head_after, competitor);
+    assert.equal(raced.stale_ref.expected, base.commit_id);
+    assert.equal(raced.stale_ref.current, competitor);
+    assert.equal(await target.resolveRef('main'), competitor);
+  } finally {
+    await rm(sourceRoot, { recursive: true, force: true });
+    await rm(targetRoot, { recursive: true, force: true });
+    await rm(remoteRoot, { recursive: true, force: true });
+  }
+});
