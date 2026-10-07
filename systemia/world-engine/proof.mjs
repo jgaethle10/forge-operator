@@ -9,6 +9,8 @@ import { applyWorldEditTransaction, createWorldAssetManifest, semanticAssetManif
 import { migrateWorldRuntime, verifyWorldRuntimeMigrationReceipt } from './runtime-migration.ts';
 import { applyTextureHotReload, planTextureResidency, textureAssetDigest } from './texture.ts';
 import { geometryFromFallenAsset, verifyFallenGeometryImportReceipt } from './fallen-geometry.ts';
+import { animationFromFallenAsset, verifyFallenAnimationImportReceipt } from './fallen-animation.ts';
+import { initializeAnimationRuntime, setAnimationParameter, stepAnimationRuntime } from './animation.ts';
 
 const world={
   schema:'evercraft.world-engine.world.v1',
@@ -770,6 +772,108 @@ const fallenRenderPlan=compileWebGpuRenderPlan(
 assert.equal(verifyWebGpuRenderPlan(fallenRenderPlan),true);
 assert.deepEqual(fallenRenderPlan.draws[0].textureFlags,[0,0,0,1]);
 
+const fallenAnimationImport=animationFromFallenAsset({
+  schema:'evercraft.fallen.animation.v1',
+  id:'animation:fallen-proof',
+  coordinateSystem:'right_handed_y_up',
+  units:'meters',
+  rotationUnits:'degrees',
+  rig:{
+    id:'rig:fallen-proof',
+    bones:[
+      {
+        id:'root',
+        parentId:null,
+        bind:{
+          translation:{x:0,y:0,z:0},
+          rotationDeg:{x:0,y:0,z:0},
+          scale:{x:1,y:1,z:1}
+        }
+      },
+      {
+        id:'hand',
+        parentId:'root',
+        bind:{
+          translation:{x:.5,y:1,z:0},
+          rotationDeg:{x:0,y:0,z:0},
+          scale:{x:1,y:1,z:1}
+        }
+      }
+    ]
+  },
+  clips:[
+    {
+      id:'idle',
+      durationSec:1,
+      loop:true,
+      tracks:[]
+    },
+    {
+      id:'wave',
+      durationSec:1,
+      loop:false,
+      tracks:[
+        {
+          boneId:'hand',
+          rotationDeg:[
+            {timeSec:0,value:{x:0,y:0,z:0}},
+            {timeSec:.5,value:{x:0,y:0,z:45}},
+            {timeSec:1,value:{x:0,y:0,z:0}}
+          ]
+        }
+      ],
+      events:[
+        {
+          id:'wave-start',
+          name:'wave_start',
+          timeSec:.25
+        }
+      ]
+    }
+  ],
+  states:[
+    {id:'idle',clipId:'idle',loop:true},
+    {id:'wave',clipId:'wave',loop:false}
+  ],
+  initialState:'idle',
+  transitions:[
+    {
+      id:'idle-to-wave',
+      from:'idle',
+      to:'wave',
+      blendSec:.2,
+      conditions:[
+        {parameter:'wave',operator:'truthy'}
+      ]
+    }
+  ],
+  parameters:{wave:false},
+  provenance:{
+    sourceRef:'fallen:character:proof',
+    rightsState:'owned',
+    license:'Evercraft-owned'
+  }
+});
+assert.equal(
+  verifyFallenAnimationImportReceipt(fallenAnimationImport.receipt),
+  true
+);
+let fallenAnimationRuntime=initializeAnimationRuntime(
+  fallenAnimationImport.component
+);
+setAnimationParameter(fallenAnimationRuntime,'wave',true);
+fallenAnimationRuntime=stepAnimationRuntime(
+  fallenAnimationImport.component,
+  fallenAnimationRuntime,
+  .5
+);
+assert.equal(fallenAnimationRuntime.stateId,'wave');
+assert.equal(fallenAnimationRuntime.transition,null);
+assert.equal(fallenAnimationRuntime.events[0].markerId,'wave-start');
+assert.ok(Math.abs(
+  fallenAnimationRuntime.pose.find(pose=>pose.boneId==='hand').rotationDeg.z-45
+)<1e-12);
+
 const editAssetA={
   id:'geometry:proof-cube',
   kind:'geometry',
@@ -849,7 +953,7 @@ assert.equal(liveMigration.receipt.cameraRuntimePreserved,true);
 assert.equal(verifyWorldRuntimeMigrationReceipt(liveMigration.receipt),true);
 
 process.stdout.write(JSON.stringify({
-  schema:'evercraft.world-engine.proof.v16',
+  schema:'evercraft.world-engine.proof.v17',
   status:'passed',
   world_id:world.id,
   replay:receipt,
@@ -937,6 +1041,20 @@ process.stdout.write(JSON.stringify({
     units:fallenGeometryImport.receipt.units,
     normal_map_plan_digest:fallenRenderPlan.digest
   },
+  fallen_animation:{
+    import_receipt_digest:fallenAnimationImport.receipt.digest,
+    source_digest:fallenAnimationImport.receipt.sourceDigest,
+    provenance_digest:fallenAnimationImport.receipt.provenanceDigest,
+    component_digest:fallenAnimationImport.receipt.componentDigest,
+    rig_id:fallenAnimationImport.receipt.rigId,
+    bone_count:fallenAnimationImport.receipt.boneCount,
+    clip_count:fallenAnimationImport.receipt.clipCount,
+    state_count:fallenAnimationImport.receipt.stateCount,
+    transition_count:fallenAnimationImport.receipt.transitionCount,
+    retargeting:fallenAnimationImport.receipt.retargeting,
+    runtime_state:fallenAnimationRuntime.stateId,
+    runtime_events:fallenAnimationRuntime.events.map(event=>event.markerId)
+  },
   studio_edit:{
     transaction_digest:edited.receipt.transactionDigest,
     edit_receipt_digest:edited.receipt.digest,
@@ -996,6 +1114,11 @@ process.stdout.write(JSON.stringify({
     explicit_fallen_geometry_coordinates_and_units:true,
     fallen_geometry_provenance_receipts:true,
     generated_tangents_feed_normal_map_pipeline:true,
+    deterministic_fallen_animation_import:true,
+    explicit_animation_units_coordinates_and_rotation_units:true,
+    fallen_animation_provenance_receipts:true,
+    no_hidden_animation_retargeting:true,
+    fallen_animation_runtime_execution:true,
     deterministic_live_world_edit:true,
     reversible_versioned_edit_receipts:true,
     explicit_asset_rights_lineage:true,
