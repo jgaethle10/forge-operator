@@ -421,3 +421,142 @@ test("non-zero-spend private Yard capacity is invisible to the autonomous compet
   assert.equal(receipt.paid_lease_authorized,false);
   assert.equal(privateGrants,0);
 });
+
+
+test("stale Browser Worker authority is invalidated and reacquired in the same resident cycle",async()=>{
+  const allocatorToken="fresh-local-yard-secret";
+  let renewCalls=0;
+  let stopCalls=0;
+  let invalidations=0;
+  let deployCalls=0;
+  const yard={
+    deploymentStatus(){
+      return {
+        state:"ready",
+        receipt:{
+          receipt_hash:"sha256:stale-browser-deployment",
+          capacity_node_id:"node-free-1",
+          workload_class:"systemia.evercraft-web-browser.v1",
+          health_state:"healthy",
+        },
+      };
+    },
+    async renewDeploymentLease(){
+      renewCalls+=1;
+      throw new Error("old_nodeseed_unreachable");
+    },
+    async stopDeployment(){
+      stopCalls+=1;
+      throw new Error("old_nodeseed_unreachable");
+    },
+    invalidateDeployment(deploymentId,{reason,evidence}={}){
+      invalidations+=1;
+      assert.equal(deploymentId,"competition-browser-worker");
+      assert.equal(reason,"competition_lease_renewal_failed");
+      assert.equal(evidence.error_code,"old_nodeseed_unreachable");
+      return {
+        ok:true,
+        deployment_id:deploymentId,
+        state:"invalidated",
+        receipt_hash:"sha256:stale-invalidation",
+      };
+    },
+    async listPrivateCapacityNodes(){
+      return {
+        nodes:[node()],
+        receipt:{receipt_hash:"sha256:fresh-local-yard-inventory"},
+      };
+    },
+    async privateCapacityGrant(nodeId){
+      assert.equal(nodeId,"node-free-1");
+      return localGrant({allocatorToken,nodeId});
+    },
+    async deployRelease(input){
+      deployCalls+=1;
+      assert.equal(input.allocatorToken,allocatorToken);
+      return {
+        state:"ready",
+        receipt:{
+          receipt_hash:"sha256:fresh-browser-deployment",
+          capacity_node_id:"node-free-1",
+          workload_class:"systemia.evercraft-web-browser.v1",
+          health_state:"healthy",
+          route_verification:"private_browser_health_verified",
+        },
+      };
+    },
+  };
+
+  const receipt=await ensureCompetitionBrowserCapacity({
+    yard,
+    brokerDeploymentId:"",
+    releaseRef:"0123456789abcdef0123456789abcdef01234567",
+  });
+
+  assert.equal(receipt.state,"deployed_zero_spend_capacity");
+  assert.equal(receipt.stale_deployment_recovered,true);
+  assert.equal(
+    receipt.stale_invalidation_receipt_hash,
+    "sha256:stale-invalidation"
+  );
+  assert.equal(
+    receipt.previous_deployment_receipt_hash,
+    "sha256:stale-browser-deployment"
+  );
+  assert.equal(renewCalls,1);
+  assert.equal(stopCalls,1);
+  assert.equal(invalidations,1);
+  assert.equal(deployCalls,1);
+  assert.equal(JSON.stringify(receipt).includes(allocatorToken),false);
+});
+
+test("stale Browser Worker invalidation can hold safely when no fresh zero-spend node exists",async()=>{
+  let invalidations=0;
+  const yard={
+    deploymentStatus(){
+      return {
+        state:"ready",
+        receipt:{
+          receipt_hash:"sha256:stale-browser-deployment",
+          capacity_node_id:"node-free-1",
+          workload_class:"systemia.evercraft-web-browser.v1",
+        },
+      };
+    },
+    async renewDeploymentLease(){
+      throw new Error("old_lease_missing");
+    },
+    async stopDeployment(){
+      throw new Error("old_lease_missing");
+    },
+    invalidateDeployment(){
+      invalidations+=1;
+      return {
+        ok:true,
+        state:"invalidated",
+        receipt_hash:"sha256:stale-invalidation",
+      };
+    },
+    async listPrivateCapacityNodes(){
+      return {
+        nodes:[],
+        receipt:{receipt_hash:"sha256:no-fresh-capacity"},
+      };
+    },
+  };
+
+  const receipt=await ensureCompetitionBrowserCapacity({
+    yard,
+    brokerDeploymentId:"",
+    releaseRef:"0123456789abcdef0123456789abcdef01234567",
+  });
+
+  assert.equal(receipt.state,"held_no_authorized_zero_spend_capacity");
+  assert.equal(receipt.stale_deployment_invalidated,true);
+  assert.equal(
+    receipt.stale_invalidation_receipt_hash,
+    "sha256:stale-invalidation"
+  );
+  assert.equal(receipt.paid_lease_authorized,false);
+  assert.equal(invalidations,1);
+});
