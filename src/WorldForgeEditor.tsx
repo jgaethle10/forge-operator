@@ -27,6 +27,7 @@ type ForgeNode={
     projection:string;
     focalLengthMm?:number;
     sensorWidthMm?:number;
+    orthoScale?:number;
     lookAt?:Vec3;
     near?:number;
     far?:number;
