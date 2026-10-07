@@ -1,0 +1,36 @@
+{
+  "schema": "evercraft.systemia.workflow-manifest.v1",
+  "workflow_key": "forensic-record-owned-source",
+  "mission_key": "forensic-record-owned-runtime",
+  "runtime": "systemia-core-resident",
+  "collider_compatible": false,
+  "cadence_seconds": 60,
+  "entrypoint": "systemia/organism/forensic-record-source-runner.mjs",
+  "authority": {
+    "reuse_existing_public_edge_capacity": "autonomous",
+    "deploy_private_forensic_runtime_sibling": "autonomous_after_public_edge_ready",
+    "renew_compute_leases": "autonomous",
+    "expose_forensic_runtime_publicly": false,
+    "migrate_legacy_data_automatically": false,
+    "retire_legacy_runtime": false,
+    "provision_new_external_capacity": false,
+    "use_base44_as_runtime": false,
+    "create_payment_obligation": false,
+    "founder_login_required": false
+  },
+  "truth_gates": [
+    "evercraft_public_edge_ready",
+    "immutable_release_ref",
+    "systemia_machine_key_present_on_compute_node",
+    "forensic_record_ingest_token_present_on_compute_node",
+    "private_loopback_runtime_only_before_cutover",
+    "yard_deployment_receipt",
+    "content_addressed_forensic_corpus",
+    "base44_runtime_not_required",
+    "public_cutover_requires_separate_verified_route_and_reconciliation"
+  ],
+  "role": "evidence_critical_owned_forensic_source",
+  "maintenance_owner": "systemia",
+  "hold_state": "held_waiting_for_owned_dependencies",
+  "proof": "systemia/core/forensic-record-resident-wiring.proof.mjs"
+}
