@@ -90,8 +90,11 @@ jobs:
           test -f _visual_desk_release/washington-active-volcanoes/poster-quality-report.json
           test -f _visual_desk_release/washington-active-volcanoes/shot-tournament.json
           test -f _visual_desk_release/washington-active-volcanoes/shot-terrain-hero-feed.svg
+          test -f _visual_desk_release/washington-active-volcanoes/shot-terrain-hero-feed.html
           test -f _visual_desk_release/washington-active-volcanoes/shot-balanced-relief-feed.svg
+          test -f _visual_desk_release/washington-active-volcanoes/shot-balanced-relief-feed.html
           test -f _visual_desk_release/washington-active-volcanoes/shot-cascade-signal-feed.svg
+          test -f _visual_desk_release/washington-active-volcanoes/shot-cascade-signal-feed.html
           test -f _visual_desk_release/washington-active-volcanoes/fallen-stage-input.json
           test -f _visual_desk_release/washington-active-volcanoes/terrain-relief.png
           test -f _visual_desk_release/washington-active-volcanoes/motion.html
@@ -127,6 +130,8 @@ jobs:
           grep -q '"winnerId": "terrain-hero"' _visual_desk_release/washington-active-volcanoes/shot-tournament.json
           grep -q 'data-shot-strategy="terrain-hero"' _visual_desk_release/washington-active-volcanoes/poster-feed.svg
           grep -q 'href="./terrain-relief.png"' _visual_desk_release/washington-active-volcanoes/shot-terrain-hero-feed.svg
+          grep -q 'shot-terrain-hero-feed.svg' _visual_desk_release/washington-active-volcanoes/shot-terrain-hero-feed.html
+          grep -q '4:5 review surface' _visual_desk_release/washington-active-volcanoes/shot-terrain-hero-feed.html
           grep -q '"labelsNonOverlapping": true' _visual_desk_release/washington-active-volcanoes/poster-quality-report.json
           grep -q '"labelsClearOfOtherMarkers": true' _visual_desk_release/washington-active-volcanoes/poster-quality-report.json
           grep -q '"aspectRatio": "9:16"' _visual_desk_release/washington-active-volcanoes/fallen-stage-input.json
