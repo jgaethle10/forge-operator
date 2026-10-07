@@ -89,6 +89,15 @@ test('owned Fabric serves offer pages, requires confirmation, and delegates chec
     assert.equal(directory.status,200);
     assert.match(await directory.text(),/One problem/);
 
+    const demo=await fetch(runtime.url+'/demos/hvac-lead-recovery/');
+    assert.equal(demo.status,200);
+    assert.match(demo.headers.get('content-type')||'',/^text\/html/i);
+    const demoBody=await demo.text();
+    assert.match(demoBody,/Evercraft HVAC Lead Recovery Demo/);
+    assert.match(demoBody,/Turn this into a ready-to-work lead/);
+    assert.match(demoBody,/Use your own numbers/);
+    assert.match(demoBody,/Map this to my workflow/);
+
     const offer=await fetch(runtime.url+'/offers/website-audit');
     assert.equal(offer.status,200);
     assert.match(await offer.text(),/Quick Win Audit/);
