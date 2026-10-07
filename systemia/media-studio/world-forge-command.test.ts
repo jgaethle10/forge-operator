@@ -188,3 +188,63 @@ test('World Forge command planner respects locked canonical scene objects',()=>{
   assert.equal(plan.status,'blocked');
   assert.ok(plan.reasons.some(reason=>reason.startsWith('node_locked:')));
 });
+
+
+test('World Forge command planner compiles bounded physics authoring',()=>{
+  const project=createWorldForgeStarterProject();
+
+  const dynamic=compileWorldForgeCommand({
+    project,
+    selectedNodeId:'hero-core',
+    instruction:'make dynamic 3 kg gravity 0.8 damping 0.1 bounce 0.2 collider box',
+  });
+  assert.equal(dynamic.status,'accepted');
+  assert.deepEqual(dynamic.operations,[{
+    type:'set_physics',
+    nodeId:'hero-core',
+    physics:{
+      mode:'dynamic',
+      massKg:3,
+      gravityScale:.8,
+      linearDamping:.1,
+      restitution:.2,
+      collider:{type:'auto_box'},
+    },
+  }]);
+
+  const staticPlan=compileWorldForgeCommand({
+    project,
+    selectedNodeId:'hero-core',
+    instruction:'make static collider sphere',
+  });
+  assert.equal(staticPlan.status,'accepted');
+  assert.deepEqual(staticPlan.operations,[{
+    type:'set_physics',
+    nodeId:'hero-core',
+    physics:{
+      mode:'static',
+      massKg:undefined,
+      gravityScale:undefined,
+      linearDamping:undefined,
+      restitution:0,
+      collider:{type:'auto_sphere'},
+    },
+  }]);
+
+  const disabled=compileWorldForgeCommand({
+    project:{
+      ...project,
+      nodes:project.nodes.map(node=>node.id==='hero-core'
+        ? {...node,physics:(dynamic.operations[0] as any).physics}
+        : node),
+    },
+    selectedNodeId:'hero-core',
+    instruction:'turn off physics',
+  });
+  assert.equal(disabled.status,'accepted');
+  assert.deepEqual(disabled.operations,[{
+    type:'set_physics',
+    nodeId:'hero-core',
+    physics:null,
+  }]);
+});
