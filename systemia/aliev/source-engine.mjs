@@ -19,6 +19,7 @@ function publicRecord(row){
     if(!record.evidence_state&&_meta.source.evidence_state) record.evidence_state=_meta.source.evidence_state;
     if(!record.data_status&&_meta.source.data_status) record.data_status=_meta.source.data_status;
   }
+  if(!record.source_retrieved_at&&_meta?.retrieved_at) record.source_retrieved_at=_meta.retrieved_at;
   return record;
 }
 function coverage(state,count,sourceStatus){
@@ -34,6 +35,37 @@ function refs(rows){
 }
 function records(stateDir,domain,query){
   return queryAliEvDomain({stateDir,domain,...query}).map(publicRecord);
+}
+function parsedMs(value){
+  const ms=Date.parse(clean(value));
+  return Number.isFinite(ms)?ms:null;
+}
+function newestIso(rows,fields){
+  let best=null;
+  for(const row of arr(rows)){
+    for(const field of fields){
+      const ms=parsedMs(row?.[field]);
+      if(ms!==null && (best===null || ms>best)) best=ms;
+    }
+  }
+  return best===null?null:new Date(best).toISOString();
+}
+function buildSessionFreshness(rows,collectedAt,{freshScanMinutes=90}={}){
+  const refreshedAt=newestIso(rows,['source_retrieved_at','retrieved_at','updated_at','updated_date']);
+  const latestObservedAt=newestIso(rows,['period_end','session_end','period_start','session_start','source_vintage','source_updated_at']);
+  const nowMs=parsedMs(collectedAt);
+  const refreshMs=parsedMs(refreshedAt);
+  const ageMinutes=nowMs!==null&&refreshMs!==null?Math.max(0,Math.round((nowMs-refreshMs)/60000)):null;
+  return {
+    schema:'evercraft.rivet.session-freshness.v1',
+    refreshed_at:refreshedAt,
+    latest_observed_at:latestObservedAt,
+    refresh_age_minutes:ageMinutes,
+    freshness_state:!rows.length?'NO_OBSERVED_ROWS':refreshedAt===null?'UNKNOWN':ageMinutes<=freshScanMinutes?'FRESH':'STALE',
+    fresh_scan_threshold_minutes:freshScanMinutes,
+    observed_record_count:rows.length,
+    semantics:'refreshed_at is when Evercraft last retrieved the session evidence; latest_observed_at is the newest observation contained in that evidence. A recent scan does not make old observations new.'
+  };
 }
 
 export async function censusOnelineGeocode(address,{fetchImpl=fetch,endpoint='https://geocoding.geo.census.gov/geocoder/geographies/onelineaddress'}={}){
@@ -105,6 +137,7 @@ export async function buildOwnedAliEvSiteSnapshot({
       row
     ])
   ).values()].slice(0,60);
+  const sessionFreshness=buildSessionFreshness(observedUsage,collectedAt);
   const nearbyUtilityAreas=near('utility_service_area',0.5,30);
   const utilityAreas=nearbyUtilityAreas.length?nearbyUtilityAreas:postalRows('utility_service_area',30);
   const tariffs=postalRows('utility_tariff',40);
@@ -166,6 +199,7 @@ export async function buildOwnedAliEvSiteSnapshot({
     charger_source_status:domains.charging_inventory.state,
     charger_source_name:clean(chargers[0]?.source_name)||null,
     nearby_observed_usage:observedUsage,
+    session_freshness:sessionFreshness,
     observed_usage_join:{spatial_records:spatialObservedUsage.length,station_linked_records:linkedObservedUsage.length,nearby_charger_ids:nearbyChargerIds.size},
     utility_service_area_candidates:utilityAreas,
     utility_rate_candidates:tariffs,
