@@ -9,9 +9,13 @@
   "scripts": {
     "start": "node server.mjs",
     "test": "node --test *.test.mjs",
-    "proof:webgpu-device": "node webgpu-device-conformance.proof.mjs"
+    "proof:webgpu-device": "node webgpu-device-conformance.proof.mjs",
+    "proof:world-engine-reference-frame": "node world-engine-reference-frame.proof.mjs"
   },
   "dependencies": {
     "playwright": "1.63.0"
+  },
+  "devDependencies": {
+    "tsx": "^4.21.0"
   }
 }
