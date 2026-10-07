@@ -122,3 +122,110 @@ A migration is complete only when:
 5. legacy provider observations cannot independently mark the product paid,
 6. return origins and cross-app identities remain narrowly scoped,
 7. the product passes build/type checks after migration.
+
+
+## Distribution-circle doctrine
+
+A product definition is not distribution.
+
+A checkout is not conversion.
+
+A payment is not fulfillment.
+
+A delivery is not distribution re-entry.
+
+Evercraft should treat the commercial circle as a sequence of independently evidenced states:
+
+`discovered -> qualified -> recommended -> explicitly_confirmed -> checkout_created -> payment_verified -> fulfillment_queued -> in_progress -> delivery_ready -> delivered -> outcome_captured -> distribution_reentry`
+
+Each transition must remain measurable without promoting an earlier state into a later one.
+
+### Canonical proof sources
+
+- discovery / qualification / recommendation: distribution and product-specific evidence
+- checkout creation: Evercraft Payments order + Raven attempt
+- payment: canonical `EvercraftPaymentReceipt`
+- fulfillment: `EvercraftFulfillmentJob` + immutable `EvercraftFulfillmentEvent`
+- delivery: delivered fulfillment transition with durable output reference
+- outcome: post-delivery outcome event
+- distribution re-entry: currently counted only for referral generated, repeat purchase, or approved case-study signal
+
+Customer acceptance or a completed delivery is valuable, but it is not itself counted as distribution re-entry.
+
+### Fulfillment state machine
+
+Evercraft Payments now exposes explicit fulfillment transitions:
+
+- `queued -> admitted`
+- `admitted -> in_progress`
+- `in_progress -> delivery_ready`
+- `delivery_ready -> delivered`
+
+Blocked and cancelled states remain explicit. Delivery-ready and delivered transitions require at least one durable output reference. Paid non-synthetic orders without a fulfillment job are treated as incidents and surfaced as attention items rather than silently disappearing after payment.
+
+Supported post-delivery outcomes currently include:
+
+- `customer_accepted`
+- `revision_requested`
+- `referral_generated`
+- `repeat_purchase`
+- `case_study_approved`
+- `no_response`
+
+### Distribution attribution
+
+Evercraft Payments now stamps authority-backed distribution events for:
+
+- checkout created
+- payment verified
+- fulfillment queued
+- fulfillment delivered
+- fulfillment blocked
+- post-delivery outcomes
+
+Attribution context is carried through the order from source surface, acquisition source, UTM source/medium/campaign, referral code, and other bounded product context.
+
+### Transparency Atlas distribution loop
+
+The Data Center Record Check now has:
+
+- an inquiry-bound $49 Evercraft Payments offer
+- first-party funnel events from inquiry through payment and fulfillment
+- a private lifecycle-sync token so paid / fulfilling / delivered state can return to Atlas even if the buyer closes the browser after checkout
+- Record Check discovery in the public LLM surface
+- internal CTAs from facility, local SEO and state SEO routes with UTM attribution
+- a portfolio machine-commerce capability for natural-language data-center due-diligence intent
+
+The public evidence ladder remains independent of the commercial outcome.
+
+### FindMyPart agent conversion handoff
+
+The public agent gateway now directs agents toward:
+
+`free triage -> one recommended paid hunt -> exact price -> one direct yes/no confirmation -> checkout -> canonical Evercraft receipt -> fulfillment/status`
+
+It explicitly tells agents not to dump every tier by default. A concrete triage result returns a single recommended offer and a confirmation-question template. Legitimate agent acquisition labels are preserved rather than collapsed to `other`.
+
+### Current live economic truth
+
+As of the latest 2026-10-07 ledger inspection:
+
+- canonical paid non-synthetic Evercraft orders: 0
+- fulfillment jobs: 0
+- delivered jobs: 0
+- post-delivery outcomes: 0
+- distribution re-entry events: 0
+
+At the same time, the distribution ledger already contained meaningful machine discovery activity, including 24 agent offer views, 12 agent capability views, 5 LLM-manifest views, 4 OpenAPI views, 5 agent-doc views, and 2 free-triage events.
+
+Therefore the system must not describe the distribution circle as closed yet. Attention is reaching Evercraft, but the observed bottleneck is still the handoff from discovery / qualification into explicit purchase intent and canonical paid conversion.
+
+The dashboard now makes this visible with separate counts for paid-without-fulfillment, open fulfillment, delivered work, captured outcomes, and distribution re-entry.
+
+### Deployment truth
+
+The FindMyPart public agent gateway has been externally verified to serve the new conversion playbook.
+
+The portfolio machine-commerce catalog data already includes the Transparency Atlas Record Check and externally ranks it first for a representative data-center permits / ownership / water / power intent. The new `recommended_action` response logic is committed and type-checks cleanly, but the currently public catalog endpoint was observed still serving the prior generic `next_step`, so that code change must not be claimed public until the app deployment advances.
+
+Likewise, the public Atlas LLM surface exposes the Record Check page, while the generated public sitemap observed externally was still serving the previous version without the new Record Check sitemap entry.
