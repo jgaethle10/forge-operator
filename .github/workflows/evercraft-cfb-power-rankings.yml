@@ -1,0 +1,113 @@
+name: Evercraft CFB Power Rankings
+
+on:
+  pull_request:
+    paths:
+      - 'systemia/newsroom/cfb-*.mjs'
+      - '.github/workflows/evercraft-cfb-power-rankings.yml'
+  push:
+    branches:
+      - main
+    paths:
+      - 'systemia/newsroom/cfb-*.mjs'
+      - '.github/workflows/evercraft-cfb-power-rankings.yml'
+  schedule:
+    - cron: '0 17 * * 0'
+  workflow_dispatch:
+    inputs:
+      season:
+        description: Season year
+        required: false
+        type: string
+      start_date:
+        description: Evidence start date YYYY-MM-DD
+        required: false
+        type: string
+      through_date:
+        description: Evidence through date YYYY-MM-DD
+        required: false
+        type: string
+      week_label:
+        description: Human ranking edition label
+        required: false
+        type: string
+
+permissions:
+  contents: read
+
+jobs:
+  prove-and-run:
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Prove ranking contracts
+        run: |
+          node --test systemia/newsroom/cfb-power-index.test.mjs
+          node --test systemia/newsroom/cfb-results-ingest.test.mjs
+          node --test systemia/newsroom/cfb-results-model.test.mjs
+          node --test systemia/newsroom/cfb-power-runner.test.mjs
+
+      - name: Resolve evidence window
+        id: window
+        shell: bash
+        env:
+          INPUT_SEASON: ${{ inputs.season }}
+          INPUT_START: ${{ inputs.start_date }}
+          INPUT_THROUGH: ${{ inputs.through_date }}
+          INPUT_WEEK_LABEL: ${{ inputs.week_label }}
+        run: |
+          set -euo pipefail
+          season="${INPUT_SEASON:-$(date -u +%Y)}"
+          start="${INPUT_START:-${season}-08-15}"
+          through="${INPUT_THROUGH:-$(date -u -d 'yesterday' +%F)}"
+          label="${INPUT_WEEK_LABEL:-Through ${through}}"
+          echo "season=${season}" >> "$GITHUB_OUTPUT"
+          echo "start=${start}" >> "$GITHUB_OUTPUT"
+          echo "through=${through}" >> "$GITHUB_OUTPUT"
+          echo "label=${label}" >> "$GITHUB_OUTPUT"
+
+      - name: Build live FBS evidence snapshot and rankings
+        run: |
+          rm -rf _cfb_power_run
+          node systemia/newsroom/cfb-power-runner.mjs \
+            --season "${{ steps.window.outputs.season }}" \
+            --start "${{ steps.window.outputs.start }}" \
+            --through "${{ steps.window.outputs.through }}" \
+            --week-label "${{ steps.window.outputs.label }}" \
+            --out _cfb_power_run | tee _cfb_power_run-receipt.json
+          test -s _cfb_power_run/completed-games.json
+          test -s _cfb_power_run/cfb-power-rankings.json
+          test -s _cfb_power_run/top-25.json
+
+      - name: Summarize Top 25
+        shell: bash
+        run: |
+          node <<'NODE' >> "$GITHUB_STEP_SUMMARY"
+          const fs=require('fs');
+          const top=JSON.parse(fs.readFileSync('_cfb_power_run/top-25.json','utf8'));
+          console.log('## Evercraft CFB Power Rankings');
+          console.log('');
+          console.log('Evidence through: '+top.evidence_through_at);
+          console.log('');
+          console.log('| Rank | Team | Score | Confidence |');
+          console.log('|---:|---|---:|---:|');
+          for(const row of top.rankings){
+            console.log(`| ${row.rank} | ${row.team_name} | ${row.power_score.toFixed(2)} | ${(row.confidence*100).toFixed(1)}% |`);
+          }
+          NODE
+
+      - name: Preserve ranking evidence bundle
+        uses: actions/upload-artifact@v4
+        with:
+          name: evercraft-cfb-power-rankings-${{ steps.window.outputs.through }}
+          path: |
+            _cfb_power_run
+            _cfb_power_run-receipt.json
+          if-no-files-found: error
+          retention-days: 120
