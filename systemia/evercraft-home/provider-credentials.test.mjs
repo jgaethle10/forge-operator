@@ -7,7 +7,7 @@ import {
 } from './provider-credentials.mjs';
 
 test('provider credential intake is an explicit allowlist', () => {
-  assert.deepEqual(supportedCredentialProviders(), ['alpaca', 'google-places', 'kroger', 'kaggle', 'numerai', 'qloo', 'facebook-pages', 'gemini', 'openai']);
+  assert.deepEqual(supportedCredentialProviders(), ['alpaca', 'google-places', 'kroger', 'kaggle', 'numerai', 'qloo', 'nebius', 'facebook-pages', 'gemini', 'openai']);
   assert.equal(credentialProviderSpec('unknown'), null);
   assert.throws(
     () => normalizeProviderCredentialRequest('unknown', {}),
@@ -64,6 +64,14 @@ test('Qloo maps its hackathon API key into the owned competition credential enve
   assert.equal(row.apiKeyId, 'qloo-api-key');
   assert.equal(row.apiSecret, 'qloo-fixture-secret-abcdefghijklmnopqrstuvwxyz');
   assert.equal(row.label, 'competition-commonground');
+});
+
+test('Nebius Token Factory key maps into the owned competition credential envelope', () => {
+  const row = normalizeProviderCredentialRequest('nebius', { api_key: 'nebius-fixture-secret-abcdefghijklmnopqrstuvwxyz' });
+  assert.equal(row.provider, 'nebius');
+  assert.equal(row.apiKeyId, 'nebius-token-factory-key');
+  assert.equal(row.apiSecret, 'nebius-fixture-secret-abcdefghijklmnopqrstuvwxyz');
+  assert.equal(row.label, 'competition-runbook-zero');
 });
 
 test('Facebook Pages maps Page identity and Page token into the owned generic credential envelope', () => {

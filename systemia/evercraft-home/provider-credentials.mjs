@@ -29,6 +29,11 @@ const SPECS = Object.freeze({
     label: 'competition-commonground',
     environment: 'live',
   }),
+  nebius: Object.freeze({
+    provider: 'nebius',
+    label: 'competition-runbook-zero',
+    environment: 'live',
+  }),
   'facebook-pages': Object.freeze({
     provider: 'facebook-pages',
     label: 'evercraft-clip',
@@ -109,6 +114,16 @@ export function normalizeProviderCredentialRequest(provider, body = {}) {
       environment: clean(body.environment) || spec.environment,
       label: clean(body.label) || spec.label,
       apiKeyId: 'qloo-api-key',
+      apiSecret: clean(body.api_key),
+    };
+  }
+
+  if (spec.provider === 'nebius') {
+    return {
+      provider: spec.provider,
+      environment: clean(body.environment) || spec.environment,
+      label: clean(body.label) || spec.label,
+      apiKeyId: 'nebius-token-factory-key',
       apiSecret: clean(body.api_key),
     };
   }
