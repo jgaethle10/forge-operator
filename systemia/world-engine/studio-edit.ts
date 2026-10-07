@@ -558,7 +558,10 @@ export function applyWorldEditTransaction(
         inverse.push({
           id:'',
           kind:'upsert_asset',
-          asset:previous
+          asset:{
+            ...previous,
+            revision:Math.max(previous.revision,operation.asset.revision)+1
+          }
         });
         if(previous.sha256!==operation.asset.sha256){
           hotReloadAssets.add(operation.asset.id);
@@ -578,7 +581,10 @@ export function applyWorldEditTransaction(
       inverse.push({
         id:'',
         kind:'upsert_asset',
-        asset:previous
+        asset:{
+          ...previous,
+          revision:previous.revision+1
+        }
       });
       changedAssets.add(operation.assetId);
       assetsChanged=true;
@@ -672,7 +678,11 @@ export function semanticWorldDigest(world:WorldDefinition){
 }
 
 export function semanticAssetManifestDigest(manifest:WorldAssetManifest){
-  const core=manifestCore(manifest.worldId,1,manifest.assets);
+  const normalized=manifest.assets.map(asset=>({
+    ...clone(asset),
+    revision:1
+  }));
+  const core=manifestCore(manifest.worldId,1,normalized);
   return digest(core);
 }
 
