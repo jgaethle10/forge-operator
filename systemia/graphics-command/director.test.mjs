@@ -42,6 +42,7 @@ test('Graphics Command compiles a Visual Story into a Fallen-compatible hero-fir
   assert.equal(plan.fallenStageInput.aspectRatio,'9:16');
   assert.equal(plan.fallenStageInput.map.points.length,3);
   assert.equal(plan.fallenStageInput.map.routes.length,2);
+  assert.ok(plan.fallenStageInput.map.routes.every(route=>route.evidenceState==='synthetic_visualization'));
   assert.equal(plan.fallenStageInput.map.points[0].evidenceState,'public_source');
   assert.equal(plan.geography.boundaryName,'Washington');
   assert.equal(plan.geography.boundaryLicense,'CC0-1.0');
