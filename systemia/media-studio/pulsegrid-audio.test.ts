@@ -56,3 +56,14 @@ test('PulseGrid audio remains a consumer of canonical session state',()=>{
   assert.doesNotMatch(audio,/node:/);
   assert.doesNotMatch(audio,/class\s+PulseGridSession/);
 });
+
+
+test('PulseGrid scene switches clear scheduled old-scene audio before worklet reset',()=>{
+  const sceneStart=audio.indexOf('setScene(scene: number)');
+  const playStart=audio.indexOf('async play(',sceneStart);
+  assert.ok(sceneStart>=0&&playStart>sceneStart,'Missing setScene lifecycle boundary.');
+  const sceneBody=audio.slice(sceneStart,playStart);
+  assert.match(sceneBody,/this\.clearUiTimers\(\)/);
+  assert.match(sceneBody,/this\.stopScheduledSources\(\)/);
+  assert.match(sceneBody,/type: 'reset'/);
+});
