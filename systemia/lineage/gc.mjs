@@ -401,6 +401,28 @@ async function moveCandidate(runDir, category, lineageDir, row) {
   };
 }
 
+async function restoreMovedCandidates(lineageDir, runDir, moved) {
+  const failures = [];
+  for (const category of ['chunks', 'manifests', 'objects']) {
+    for (const row of [...(moved?.[category] || [])].reverse()) {
+      const from = join(lineageDir, row.to);
+      const to = join(lineageDir, row.from);
+      try {
+        await mkdir(dirname(to), { recursive: true });
+        await rename(from, to);
+      } catch (error) {
+        failures.push({
+          category,
+          id: row.id,
+          error: String(error?.message || error),
+        });
+      }
+    }
+  }
+  await rm(runDir, { recursive: true, force: true });
+  return failures;
+}
+
 export async function quarantineGarbage(store, plan, {
   retentionMs = DEFAULT_RETENTION_MS,
   nowMs = Date.now(),
@@ -445,70 +467,82 @@ export async function quarantineGarbage(store, plan, {
       chunks: [],
     };
 
-    for (const row of plan.candidates.objects) {
-      moved.objects.push(await moveCandidate(runDir, 'objects', store.dir, row));
-    }
-    for (const row of plan.candidates.manifests) {
-      moved.manifests.push(await moveCandidate(runDir, 'manifests', store.dir, row));
-    }
-    for (const row of plan.candidates.chunks) {
-      moved.chunks.push(await moveCandidate(runDir, 'chunks', store.dir, row));
-    }
-
-    const rootsAfter = await discoverRoots(store, extraRoots);
-    const fingerprintAfter = lineage.sha256(lineage.stable(rootsAfter));
-    if (fingerprintAfter !== plan.root_fingerprint) {
-      for (const category of ['objects', 'manifests', 'chunks']) {
-        for (const row of moved[category].reverse()) {
-          const from = join(store.dir, row.to);
-          const to = join(store.dir, row.from);
-          await mkdir(dirname(to), { recursive: true });
-          await rename(from, to);
-        }
+    try {
+      for (const row of plan.candidates.objects) {
+        moved.objects.push(
+          await moveCandidate(runDir, 'objects', store.dir, row)
+        );
       }
-      await rm(runDir, { recursive: true, force: true });
-      const error = new Error('Lineage roots changed during GC quarantine; all moves were restored');
-      error.code = 'LINEAGE_GC_ROOTS_CHANGED_DURING_QUARANTINE';
+      for (const row of plan.candidates.manifests) {
+        moved.manifests.push(
+          await moveCandidate(runDir, 'manifests', store.dir, row)
+        );
+      }
+      for (const row of plan.candidates.chunks) {
+        moved.chunks.push(
+          await moveCandidate(runDir, 'chunks', store.dir, row)
+        );
+      }
+
+      const rootsAfter = await discoverRoots(store, extraRoots);
+      const fingerprintAfter = lineage.sha256(lineage.stable(rootsAfter));
+      if (fingerprintAfter !== plan.root_fingerprint) {
+        const error = new Error(
+          'Lineage roots changed during GC quarantine'
+        );
+        error.code = 'LINEAGE_GC_ROOTS_CHANGED_DURING_QUARANTINE';
+        throw error;
+      }
+
+      const manifest = {
+        schema: QUARANTINE_SCHEMA,
+        run_id: runId,
+        plan_id: plan.plan_id,
+        created_at: new Date(Number(nowMs)).toISOString(),
+        retention_until: new Date(Number(nowMs) + retention).toISOString(),
+        retention_ms: retention,
+        root_fingerprint: plan.root_fingerprint,
+        moved,
+        reclaimable_bytes: plan.reclaimable.total_bytes,
+        reversible: true,
+      };
+      await writeFile(
+        join(runDir, 'quarantine.json'),
+        JSON.stringify(manifest, null, 2) + '\n',
+        'utf8'
+      );
+
+      const receiptId = await store._recordOperation({
+        operation: 'gc_quarantine',
+        run_id: runId,
+        plan_id: plan.plan_id,
+        moved_objects: moved.objects.length,
+        moved_manifests: moved.manifests.length,
+        moved_chunks: moved.chunks.length,
+        reclaimable_bytes: plan.reclaimable.total_bytes,
+        created_at: manifest.created_at,
+        reversible_by: {
+          operation: 'gc_restore_quarantine',
+          run_id: runId,
+        },
+      }, { allowGcLock: true });
+
+      return {
+        ...manifest,
+        receipt_id: receiptId,
+      };
+    } catch (error) {
+      const rollbackFailures = await restoreMovedCandidates(
+        store.dir,
+        runDir,
+        moved
+      );
+      if (rollbackFailures.length) {
+        error.rollback_failures = rollbackFailures;
+        error.code = error.code || 'LINEAGE_GC_QUARANTINE_ROLLBACK_FAILED';
+      }
       throw error;
     }
-
-    const manifest = {
-      schema: QUARANTINE_SCHEMA,
-      run_id: runId,
-      plan_id: plan.plan_id,
-      created_at: new Date(Number(nowMs)).toISOString(),
-      retention_until: new Date(Number(nowMs) + retention).toISOString(),
-      retention_ms: retention,
-      root_fingerprint: plan.root_fingerprint,
-      moved,
-      reclaimable_bytes: plan.reclaimable.total_bytes,
-      reversible: true,
-    };
-    await writeFile(
-      join(runDir, 'quarantine.json'),
-      JSON.stringify(manifest, null, 2) + '\n',
-      'utf8'
-    );
-
-    const receiptId = await store._recordOperation({
-      operation: 'gc_quarantine',
-      run_id: runId,
-      plan_id: plan.plan_id,
-      moved_objects: moved.objects.length,
-      moved_manifests: moved.manifests.length,
-      moved_chunks: moved.chunks.length,
-      reclaimable_bytes: plan.reclaimable.total_bytes,
-      created_at: manifest.created_at,
-      reversible_by: {
-        operation: 'gc_restore_quarantine',
-        run_id: runId,
-      },
-    }, { allowGcLock: true });
-
-    return {
-      ...manifest,
-      receipt_id: receiptId,
-    };
   } finally {
     await lock.release();
   }
