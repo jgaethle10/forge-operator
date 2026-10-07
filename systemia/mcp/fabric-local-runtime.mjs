@@ -22,6 +22,7 @@ import {
   renderMarkdownDocument,
   renderOfferPage,
   renderOffers,
+  renderPaymentHandoffPage,
   renderPaymentHoldPage,
 } from './fabric-public-site.mjs';
 import {
@@ -569,14 +570,362 @@ export async function startFabricLocalRuntime({
         }
 
         if(isForm){
-          res.writeHead(303,{
-            location:checkoutUrl,
-            'cache-control':'no-store',
-            'x-content-type-options':'nosniff',
-            'referrer-policy':'no-referrer',
-            'x-evercraft-payment-authority':'Evercraft Payments',
+          const amountLabel=Number.isFinite(Number(result?.amount_cents))
+            ? '
+
+        return sendJson(res,200,{
+          ok:true,
+          authority:'Evercraft Payments',
+          order_key:result.order_key,
+          capability_key:capabilityKey,
+          amount_cents:result.amount_cents,
+          currency:result.currency,
+          checkout_ready:true,
+          checkout_url:checkoutUrl,
+          payment_state:result.payment_state||'unpaid',
+          fulfillment_release:false,
+          rule:'Checkout creation is not payment. Fulfillment remains locked until authoritative provider verification.',
+        });
+      }
+
+      if (req.method==='GET' && String(req.url||'').startsWith('/offers/')) {
+        const parsed=new URL(String(req.url||''),'http://fabric.local');
+        const slug=decodeURIComponent(parsed.pathname.slice('/offers/'.length)).replace(/\/+$/,'');
+        if(slug&&!slug.includes('/')){
+          const offer=offerCapabilityForSlug(slug,preparedCatalog().capabilities);
+          if(!offer) return sendJson(res,404,{error:'offer_not_found'});
+          const page=renderOfferPage(offer);
+          if(!page) return sendJson(res,404,{error:'offer_not_found'});
+          return sendText(res,200,page,{contentType:'text/html; charset=utf-8'});
+        }
+      }
+
+      if (req.method==='GET' && (req.url==='/mobile'||req.url==='/mobile/')) {
+        return sendMobileHtml(
+          res,
+          200,
+          renderFabricMobileApp({
+            capabilityCount:preparedCatalog().capabilities.length,
+          })
+        );
+      }
+
+      if (req.method==='GET' && String(req.url||'').startsWith('/mobile?')) {
+        const parsed=new URL(String(req.url||''),'http://fabric.local');
+        const query=String(parsed.searchParams.get('q')||'').trim().slice(0,4000);
+        let matches=[];
+        let error='';
+        if(query.length>=3){
+          const rpc=await executeFabricDirectoryRpc({
+            jsonrpc:'2.0',
+            id:'mobile-match',
+            method:'tools/call',
+            params:{
+              name:'match_evercraft_capability',
+              arguments:{intent:query,limit:5},
+            },
+          },preparedCatalog().capabilities);
+          if(rpc?.error){
+            error=String(rpc.error.message||'Fabric could not match that request.');
+          }else{
+            matches=rpc?.result?.structuredContent?.matches||[];
+          }
+        }else if(query){
+          error='Describe the problem in at least three characters.';
+        }
+        return sendMobileHtml(
+          res,
+          200,
+          renderFabricMobileApp({
+            query,
+            matches,
+            capabilityCount:preparedCatalog().capabilities.length,
+            error,
+          })
+        );
+      }
+
+      if (req.method==='GET' && req.url==='/mobile/manifest.webmanifest') {
+        return sendText(
+          res,
+          200,
+          JSON.stringify(fabricMobileManifest()),
+          {contentType:'application/manifest+json; charset=utf-8'}
+        );
+      }
+
+      if (req.method==='GET' && req.url==='/capabilities') {
+        return sendText(
+          res,
+          200,
+          renderCapabilities(preparedCatalog().capabilities),
+          {contentType:'text/html; charset=utf-8'}
+        );
+      }
+
+      if (req.method==='GET' && String(req.url||'').startsWith('/api/chum/go/')) {
+        const parsed=new URL(String(req.url||''),'http://fabric.local');
+        const raw=decodeURIComponent(parsed.pathname.slice('/api/chum/go/'.length));
+        if(!raw || raw.includes('/') || !/^[a-z0-9][a-z0-9._:-]{0,159}$/i.test(raw)){
+          return sendJson(res,400,{
+            error:'invalid_capability_id',
+            transactional:false,
+            external_action_taken:false,
           });
-          return res.end();
+        }
+        const capability=preparedCatalog().capabilities.find((item)=>item.public_id===raw);
+        if(!capability) return sendJson(res,404,{
+          error:'capability_not_found',
+          transactional:false,
+          external_action_taken:false,
+        });
+        const surface=String(parsed.searchParams.get('surface')||'chum_public_surface').slice(0,80);
+        const offerSlug=offerSlugForCapability(raw);
+        const location=offerSlug
+          ? '/offers/'+encodeURIComponent(offerSlug)+'?from=chum&surface='+encodeURIComponent(surface)
+          : '/capabilities/'+encodeURIComponent(raw)+'?from=chum&surface='+encodeURIComponent(surface);
+        res.writeHead(302,{
+          location,
+          'cache-control':'no-store',
+          'x-content-type-options':'nosniff',
+          'referrer-policy':'no-referrer',
+          'x-evercraft-authority':'discovery-review-only',
+        });
+        return res.end();
+      }
+
+      if (req.method==='GET' && req.url==='/capabilities.json') {
+        const prepared=preparedCatalog();
+        return sendJson(res,200,{
+          ok:true,
+          directory:'Evercraft Fabric',
+          capabilities:prepared.capabilities,
+          returned:prepared.capabilities.length,
+          transactional:false,
+          external_action_taken:false,
+        });
+      }
+
+      if (req.method==='GET' && String(req.url||'').startsWith('/capabilities/')) {
+        const parsed=new URL(String(req.url||''),'http://fabric.local');
+        const raw=decodeURIComponent(parsed.pathname.slice('/capabilities/'.length));
+        if(raw&&!raw.includes('/')){
+          const wantsJson=raw.endsWith('.json');
+          const publicId=wantsJson?raw.slice(0,-5):raw;
+          const capability=preparedCatalog().capabilities.find((item)=>item.public_id===publicId);
+          if(!capability) return sendJson(res,404,{error:'capability_not_found'});
+          if(wantsJson) return sendJson(res,200,{
+            ok:true,
+            directory:'Evercraft Fabric',
+            capability,
+            transactional:false,
+            external_action_taken:false,
+          });
+          return sendText(
+            res,
+            200,
+            renderCapabilityDetail(capability),
+            {contentType:'text/html; charset=utf-8'}
+          );
+        }
+      }
+
+      if (req.method==='GET' && req.url==='/assets/evercraft-icon.png') {
+        return sendBuffer(res,200,brandIcon,{contentType:'image/png'});
+      }
+
+      if (req.method==='GET' && req.url==='/privacy') {
+        return sendText(res,200,renderMarkdownDocument('Evercraft Fabric Privacy Policy',docs.privacy),{contentType:'text/html; charset=utf-8'});
+      }
+      if (req.method==='GET' && req.url==='/terms') {
+        return sendText(res,200,renderMarkdownDocument('Evercraft Fabric Terms of Service',docs.terms),{contentType:'text/html; charset=utf-8'});
+      }
+      if (req.method==='GET' && req.url==='/support') {
+        return sendText(res,200,renderMarkdownDocument('Evercraft Fabric Support',docs.support),{contentType:'text/html; charset=utf-8'});
+      }
+
+      if (req.url===edgeAttestationPath) {
+        if(req.method!=='POST') return sendJson(res,405,{error:'method_not_allowed'});
+        const body=await readJson(req,{maxBytes:4096});
+        try{
+          return sendJson(res,200,{ok:true,...await nodeAttestation(body?.nonce)});
+        }catch{
+          return sendJson(res,503,{ok:false,error:'edge_attestation_unavailable'});
+        }
+      }
+
+      if ((req.method==='GET'||req.method==='HEAD') && String(req.url||'').startsWith('/journal')) {
+        const asset=resolveJournalAsset(journalDir,String(req.url||''));
+        if(!asset) return sendJson(res,404,{error:'journal_asset_not_found'});
+        const data=fs.readFileSync(asset);
+        res.writeHead(200,{
+          'content-type':journalContentType(asset),
+          'content-length':data.length,
+          'cache-control':'public, max-age=60, must-revalidate',
+          'x-content-type-options':'nosniff',
+          'x-robots-tag':'noindex, nofollow',
+          'referrer-policy':'strict-origin-when-cross-origin',
+        });
+        if(req.method==='HEAD') return res.end();
+        return res.end(data);
+      }
+
+      if ((req.method==='GET'||req.method==='HEAD') && String(req.url||'').startsWith('/visuals')) {
+        const asset=resolveVisualAsset(visualDir,String(req.url||''));
+        if(!asset) return sendJson(res,404,{error:'visual_asset_not_found'});
+        const data=fs.readFileSync(asset);
+        res.writeHead(200,{
+          'content-type':journalContentType(asset),
+          'content-length':data.length,
+          'cache-control':'public, max-age=60, must-revalidate',
+          'x-content-type-options':'nosniff',
+          'x-robots-tag':'index, follow',
+          'referrer-policy':'strict-origin-when-cross-origin',
+          'content-security-policy':"default-src 'none'; style-src 'unsafe-inline'; script-src 'unsafe-inline'; img-src 'self' data:; base-uri 'none'; frame-ancestors 'none'",
+        });
+        if(req.method==='HEAD') return res.end();
+        return res.end(data);
+      }
+
+      if (req.url===challengePath) {
+        if (!['GET','HEAD'].includes(req.method||'')) {
+          return sendJson(res,405,{error:'method_not_allowed'});
+        }
+        if (!token) return sendJson(res,404,{error:'openai_challenge_not_configured'});
+        const data=Buffer.from(token,'utf8');
+        res.writeHead(200,{
+          'content-type':'text/plain; charset=utf-8',
+          'content-length':data.length,
+          'cache-control':'no-store',
+          'x-content-type-options':'nosniff',
+        });
+        if (req.method==='HEAD') return res.end();
+        return res.end(data);
+      }
+
+      if (req.url!=='/mcp') return sendJson(res,404,{error:'not_found'});
+
+      if (req.method==='GET') {
+        const body={
+          ok:true,
+          service:'Evercraft Fabric',
+          server:'evercraft-fabric',
+          version:'1.0.1',
+          transport:'Streamable HTTP',
+          transport_modes:['application/json','text/event-stream'],
+          tools:fabricDirectoryTools().map((tool)=>tool.name),
+          capability_count:preparedCatalog().capabilities.length,
+          read_only:true,
+          base44_transport_enabled:false,
+        };
+        if (acceptsEventStream(req)) return sendEventStream(res,200,body);
+        return sendJson(res,200,body);
+      }
+
+      if (req.method!=='POST') return sendJson(res,405,{error:'method_not_allowed'});
+      const rpc=await readJson(req);
+      const response=await executeFabricDirectoryRpc(rpc,preparedCatalog().capabilities);
+      if (response===null) {
+        res.writeHead(202,{
+          'cache-control':'no-store',
+          'mcp-protocol-version':'2025-03-26',
+        });
+        return res.end();
+      }
+      const sessionHeaders=rpc?.method==='initialize'
+        ? {'mcp-session-id':crypto.randomUUID()}
+        : {};
+      if (acceptsEventStream(req)) return sendEventStream(res,200,response,sessionHeaders);
+      return sendJson(res,200,response,sessionHeaders);
+    } catch(error) {
+      return sendJson(res,502,{
+        jsonrpc:'2.0',
+        id:null,
+        error:{
+          code:-32000,
+          message:error instanceof Error?error.message:String(error),
+        },
+      });
+    }
+  });
+
+  await new Promise((resolve,reject)=>{
+    server.once('error',reject);
+    server.listen(port,host,resolve);
+  });
+
+  const address=server.address();
+  const actualPort=typeof address==='object'&&address?address.port:port;
+  const url=`http://${host}:${actualPort}`;
+
+  return {
+    schema:'evercraft.fabric-local-runtime.v1',
+    instanceId,
+    url,
+    mcpUrl:url+'/mcp',
+    health,
+    setDeploymentReceipt(value){
+      const receipt=String(value||'').trim();
+      if(!/^(?:sha256:)?[a-f0-9]{64}$/i.test(receipt)){
+        throw new Error('deployment_receipt_ref_invalid');
+      }
+      deploymentReceiptRef=receipt;
+      return health();
+    },
+    close:async()=>{
+      await faieSurface?.close();
+      await new Promise((resolve,reject)=>
+        server.close((error)=>error?reject(error):resolve())
+      );
+      if(visualStateEphemeral) fs.rmSync(visualDir,{recursive:true,force:true});
+    },
+  };
+}
+
+function arg(name,fallback=null) {
+  const i=process.argv.indexOf(name);
+  return i>=0&&process.argv[i+1]?process.argv[i+1]:fallback;
+}
+
+const direct=process.argv[1]&&path.resolve(process.argv[1])===fileURLToPath(import.meta.url);
+if (direct) {
+  const host=String(arg('--host',process.env.EVERCRAFT_FABRIC_HOST||'127.0.0.1'));
+  const port=Number(arg('--port',process.env.EVERCRAFT_FABRIC_PORT||'8787'));
+  const challengeToken=String(arg('--openai-challenge-token',process.env.EVERCRAFT_OPENAI_CHALLENGE_TOKEN||''));
+  const nodeReceiptPath=String(arg('--node-receipt',process.env.EVERCRAFT_EDGE_NODE_RECEIPT||''));
+  const allocatorTokenFile=String(arg('--allocator-token-file',process.env.EVERCRAFT_EDGE_ALLOCATOR_TOKEN_FILE||''));
+  const visualStateDir=String(arg('--visual-state-dir',process.env.EVERCRAFT_VISUAL_STATE_DIR||''));
+  const visualOrigin=String(arg('--visual-origin',process.env.EVERCRAFT_VISUAL_ORIGIN||'https://fabric.systemiacommandcenters.com/visuals'));
+  const runtime=await startFabricLocalRuntime({
+    host,port,challengeToken,nodeReceiptPath,allocatorTokenFile,visualStateDir,visualOrigin
+  });
+  process.stdout.write(JSON.stringify({
+    ok:true,
+    schema:runtime.schema,
+    url:runtime.url,
+    mcp_url:runtime.mcpUrl,
+    ...runtime.health(),
+  },null,2)+'\n');
+  const shutdown=async()=>{
+    await runtime.close();
+    process.exit(0);
+  };
+  process.on('SIGINT',shutdown);
+  process.on('SIGTERM',shutdown);
+}
++(Number(result.amount_cents)/100).toFixed(2).replace(/\.00$/,'')
+            : '';
+          return sendText(
+            res,
+            200,
+            renderPaymentHandoffPage({
+              slug,
+              checkoutUrl,
+              amountLabel,
+              orderKey:result?.order_key||'',
+            }),
+            {contentType:'text/html; charset=utf-8'}
+          );
         }
 
         return sendJson(res,200,{
