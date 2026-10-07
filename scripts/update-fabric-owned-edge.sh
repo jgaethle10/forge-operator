@@ -24,6 +24,10 @@ SABAN_CAPACITY_HEALTH_FILE="/var/lib/evercraft/fabric-secrets/saban-capacity-hea
 HOME_EDGE_INSTALLER=""
 HOME_EDGE_SERVICE="evercraft-home.service"
 HOME_LOCAL_HEALTH="http://127.0.0.1:4310/api/health"
+RAVEN_PAYMENTS_INSTALLER=""
+RAVEN_PAYMENTS_SERVICE="evercraft-raven-payments.service"
+RAVEN_PAYMENTS_HEALTH="http://127.0.0.1:8791/health"
+RAVEN_PAYMENTS_FABRIC_ENV_CHANGED=false
 
 usage() {
   cat <<'EOF'
@@ -192,6 +196,7 @@ NETWORK_OBSERVER_INSTALLER="$REPO_ROOT/scripts/install-fabric-network-observer.s
 ROUTER_MAP_INSTALLER="$REPO_ROOT/scripts/install-fabric-router-map-resident.sh"
 SABAN_CAPACITY_INSTALLER="$REPO_ROOT/scripts/install-saban-capacity-organism.sh"
 HOME_EDGE_INSTALLER="$REPO_ROOT/scripts/install-evercraft-home-edge.sh"
+RAVEN_PAYMENTS_INSTALLER="$REPO_ROOT/scripts/install-raven-payments-runtime.sh"
 
 mkdir -p "$STATE_DIR"
 chmod 0750 "$STATE_DIR"
@@ -393,6 +398,43 @@ ensure_home_edge_resident() {
     curl -fsS --max-time 5 "$HOME_LOCAL_HEALTH" >/tmp/evercraft-home-update-health.json
 }
 
+ensure_raven_payments_resident() {
+  RAVEN_PAYMENTS_FABRIC_ENV_CHANGED=false
+  local expected_url="EVERCRAFT_PAYMENT_INTENT_URL=http://127.0.0.1:8791/v1/purchase-intents"
+  local expected_token="EVERCRAFT_PAYMENT_INTENT_TOKEN_FILE=/var/lib/evercraft/raven-secrets/payments-token"
+
+  if systemctl is-active --quiet "$RAVEN_PAYMENTS_SERVICE" 2>/dev/null &&
+     curl -fsS --max-time 5 "$RAVEN_PAYMENTS_HEALTH" >/tmp/evercraft-raven-payments-update-health.json 2>/dev/null &&
+     grep -Fxq "$expected_url" "$FABRIC_ENV" 2>/dev/null &&
+     grep -Fxq "$expected_token" "$FABRIC_ENV" 2>/dev/null; then
+    if as_user node -e "
+      const h=require('/tmp/evercraft-raven-payments-update-health.json');
+      if(h.ok!==true||h.service!=='evercraft-raven-payments') process.exit(2);
+      if(h.loopback_only!==true||h.provider_boundary!=='raven_nexus') process.exit(3);
+      if(h.canonical_order_owner!=='evercraft_payments') process.exit(4);
+      if(h.direct_provider_checkout_allowed!==false||h.base44_required!==false) process.exit(5);
+    "; then
+      echo "Evercraft update: Raven Payments resident=healthy"
+      return 0
+    fi
+  fi
+
+  if [[ ! -f "$RAVEN_PAYMENTS_INSTALLER" ]]; then
+    echo "ERROR: Raven Payments installer missing from deployed Forge revision" >&2
+    return 1
+  fi
+
+  echo "Evercraft update: converging owned Raven Payments resident"
+  if ! bash "$RAVEN_PAYMENTS_INSTALLER" --repo-root "$REPO_ROOT" --user "$RUN_USER" >/dev/null; then
+    echo "ERROR: Raven Payments convergence failed" >&2
+    return 1
+  fi
+  RAVEN_PAYMENTS_FABRIC_ENV_CHANGED=true
+
+  systemctl is-active --quiet "$RAVEN_PAYMENTS_SERVICE" &&
+    curl -fsS --max-time 5 "$RAVEN_PAYMENTS_HEALTH" >/tmp/evercraft-raven-payments-update-health.json
+}
+
 read_health() {
   curl -fsS --max-time 5 "$HEALTH_URL" 2>/dev/null || true
 }
@@ -457,6 +499,11 @@ verify_current_runtime() {
       }
       if(h.visual_desk_ingest_ready!==true) process.exit(6);
       if(h.visual_desk_ingest_publication_authority!==false) process.exit(7);
+      if(h.payment_purchase_intent_transport!=='owned_loopback_raven_nexus') process.exit(8);
+      if(h.payment_purchase_intent_authorized!==true) process.exit(9);
+      if(h.payment_direct_provider_credentials_exposed!==false) process.exit(10);
+      if(h.payment_direct_provider_checkout_allowed!==false) process.exit(11);
+      if(h.base44_transport_enabled!==false) process.exit(12);
     " || return 9
 
   local attestation_code=10
@@ -506,7 +553,11 @@ expected_count_for_current() {
 if [[ "$before" == "$target" ]]; then
   ensure_visual_ingest_token
   reconcile_edge_attestation_env
-  if [[ -n "$ENV_BACKUP" || "$VISUAL_INGEST_TOKEN_CREATED" == "true" ]]; then
+  if ! ensure_raven_payments_resident; then
+    echo "ERROR: current Fabric cannot converge owned Raven Payments" >&2
+    exit 14
+  fi
+  if [[ -n "$ENV_BACKUP" || "$VISUAL_INGEST_TOKEN_CREATED" == "true" || "$RAVEN_PAYMENTS_FABRIC_ENV_CHANGED" == "true" ]]; then
     if ! systemctl restart "$SERVICE"; then
       restore_edge_attestation_env
       systemctl restart "$SERVICE" || true
@@ -547,7 +598,7 @@ if [[ "$before" == "$target" ]]; then
   fi
 
   clear_env_backup
-  printf '{"schema":"evercraft.fabric-update.v1","state":"current","release_ref":"%s","capability_count":%s,"edge_attestation_expected":%s,"edge_attestation_verified":%s,"saban_capacity_resident":true,"observed_at":"%s"}\n'     "$before" "$expected_count" "$EDGE_ATTESTATION_EXPECTED" "$EDGE_ATTESTATION_EXPECTED" "$(date -u +%FT%TZ)"     > "$STATE_DIR/last-update.json"
+  printf '{"schema":"evercraft.fabric-update.v1","state":"current","release_ref":"%s","capability_count":%s,"edge_attestation_expected":%s,"edge_attestation_verified":%s,"saban_capacity_resident":true,"raven_payments_resident":true,"observed_at":"%s"}\n'     "$before" "$expected_count" "$EDGE_ATTESTATION_EXPECTED" "$EDGE_ATTESTATION_EXPECTED" "$(date -u +%FT%TZ)"     > "$STATE_DIR/last-update.json"
   chmod 0640 "$STATE_DIR/last-update.json"
   exit 0
 fi
@@ -573,6 +624,7 @@ if ! (
   as_user npm run test:fabric-directory &&
   as_user npm run test:fabric-local &&
   as_user npm run test:remote-operator &&
+  as_user node --test systemia/payments/*.test.mjs &&
   as_user node --test tests/fabric-edge-attestation.test.mjs tests/fabric-owned-edge-installer.test.mjs tests/fabric-outbound-relay.test.mjs &&
   as_user npm run proof:specialist-handoff-yard
 ); then
@@ -582,6 +634,10 @@ fi
 
 ensure_visual_ingest_token
 reconcile_edge_attestation_env
+if ! ensure_raven_payments_resident; then
+  rollback "raven_payments_convergence_failed"
+  exit 14
+fi
 
 if ! systemctl restart "$SERVICE"; then
   rollback "service_restart_failed"
@@ -620,6 +676,6 @@ if ! ensure_saban_capacity_resident; then
 fi
 
 clear_env_backup
-printf '{"schema":"evercraft.fabric-update.v1","state":"updated","from_ref":"%s","release_ref":"%s","capability_count":%s,"edge_attestation_expected":%s,"edge_attestation_verified":%s,"saban_capacity_resident":true,"observed_at":"%s"}\n'   "$before" "$target" "$expected_count" "$EDGE_ATTESTATION_EXPECTED" "$EDGE_ATTESTATION_EXPECTED" "$(date -u +%FT%TZ)"   > "$STATE_DIR/last-update.json"
+printf '{"schema":"evercraft.fabric-update.v1","state":"updated","from_ref":"%s","release_ref":"%s","capability_count":%s,"edge_attestation_expected":%s,"edge_attestation_verified":%s,"saban_capacity_resident":true,"raven_payments_resident":true,"observed_at":"%s"}\n'   "$before" "$target" "$expected_count" "$EDGE_ATTESTATION_EXPECTED" "$EDGE_ATTESTATION_EXPECTED" "$(date -u +%FT%TZ)"   > "$STATE_DIR/last-update.json"
 chmod 0640 "$STATE_DIR/last-update.json"
 echo "Evercraft Fabric updated to $target with $expected_count capabilities."

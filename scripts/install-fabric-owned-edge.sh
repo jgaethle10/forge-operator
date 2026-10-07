@@ -55,12 +55,13 @@ fi
 NODE_RECEIPT="$RUN_HOME/.local/state/evercraft/organism/compute/nodeseed-receipt.json"
 ALLOCATOR_TOKEN_FILE="$RUN_HOME/.local/state/evercraft/organism/.secrets/allocator-token"
 VISUAL_INGEST_TOKEN_FILE="/var/lib/evercraft/fabric-secrets/visual-ingest-token"
+RAVEN_PAYMENTS_INSTALLER="$REPO_ROOT/scripts/install-raven-payments-runtime.sh"
 
-echo "[1/9] Installing Caddy from Debian packages..."
+echo "[1/10] Installing Caddy from Debian packages..."
 sudo apt-get update
 sudo DEBIAN_FRONTEND=noninteractive apt-get install -y caddy curl ca-certificates
 
-echo "[2/9] Creating Evercraft edge configuration..."
+echo "[2/10] Creating Evercraft edge configuration..."
 sudo install -d -m 0755 /etc/evercraft
 sudo install -d -o root -g "$RUN_USER" -m 0750 "$(dirname "$VISUAL_INGEST_TOKEN_FILE")"
 if ! sudo test -s "$VISUAL_INGEST_TOKEN_FILE"; then
@@ -87,6 +88,13 @@ EVERCRAFT_ACME_EMAIL=$ACME_EMAIL
 EOF
 sudo chmod 0644 /etc/evercraft/public-edge.env
 
+echo "[3/10] Installing owned Raven Nexus payment runtime..."
+if [[ ! -f "$RAVEN_PAYMENTS_INSTALLER" ]]; then
+  echo "ERROR: Raven Payments installer missing." >&2
+  exit 3
+fi
+sudo bash "$RAVEN_PAYMENTS_INSTALLER" --repo-root "$REPO_ROOT" --user "$RUN_USER"
+
 sudo tee /etc/evercraft/Caddyfile >/dev/null <<'EOF'
 {
   http_port 18080
@@ -110,12 +118,12 @@ sudo tee /etc/evercraft/Caddyfile >/dev/null <<'EOF'
 }
 EOF
 
-echo "[3/9] Installing resident Evercraft Fabric service..."
+echo "[4/10] Installing resident Evercraft Fabric service..."
 sudo tee /etc/systemd/system/evercraft-fabric.service >/dev/null <<EOF
 [Unit]
 Description=Evercraft Fabric MCP
-After=network-online.target
-Wants=network-online.target
+After=network-online.target evercraft-raven-payments.service
+Wants=network-online.target evercraft-raven-payments.service
 
 [Service]
 Type=simple
@@ -134,7 +142,7 @@ ProtectHome=read-only
 WantedBy=multi-user.target
 EOF
 
-echo "[4/9] Installing resident TLS edge service..."
+echo "[5/10] Installing resident TLS edge service..."
 sudo systemctl disable --now caddy.service >/dev/null 2>&1 || true
 sudo tee /etc/systemd/system/evercraft-public-edge.service >/dev/null <<'EOF'
 [Unit]
@@ -160,7 +168,7 @@ ProtectHome=true
 WantedBy=multi-user.target
 EOF
 
-echo "[5/9] Installing safe OpenAI challenge-token helper..."
+echo "[6/10] Installing safe OpenAI challenge-token helper..."
 sudo tee /usr/local/sbin/evercraft-set-openai-challenge >/dev/null <<'EOF'
 #!/usr/bin/env bash
 set -euo pipefail
@@ -181,21 +189,21 @@ echo "OpenAI challenge token installed and Evercraft Fabric restarted."
 EOF
 sudo chmod 0755 /usr/local/sbin/evercraft-set-openai-challenge
 
-echo "[6/9] Enabling services..."
+echo "[7/10] Enabling services..."
 sudo systemctl daemon-reload
 sudo systemctl enable --now evercraft-fabric.service
 sudo systemctl enable --now evercraft-public-edge.service
 
-echo "[7/9] Installing fail-closed Fabric self-update heartbeat..."
+echo "[8/10] Installing fail-closed Fabric self-update heartbeat..."
 bash "$REPO_ROOT/scripts/install-fabric-self-update.sh" --repo-root "$REPO_ROOT" --cadence 5min
 
-echo "[8/9] Installing read-only node network observer..."
+echo "[9/10] Installing read-only node network observer..."
 sudo bash "$REPO_ROOT/scripts/install-fabric-network-observer.sh" \
   --repo-root "$REPO_ROOT" \
   --user "$RUN_USER" \
   --cadence 2min
 
-echo "[9/9] Local checks..."
+echo "[10/10] Local checks..."
 curl -fsS "http://127.0.0.1:$FABRIC_PORT/health" >/tmp/evercraft-fabric-health.json
 sudo bash -c '
   set -a

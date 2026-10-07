@@ -7,7 +7,7 @@ import {
 } from './provider-credentials.mjs';
 
 test('provider credential intake is an explicit allowlist', () => {
-  assert.deepEqual(supportedCredentialProviders(), ['alpaca', 'google-places', 'kroger', 'kaggle', 'numerai', 'qloo', 'nebius', 'paypal', 'facebook-pages', 'gemini', 'openai']);
+  assert.deepEqual(supportedCredentialProviders(), ['alpaca', 'google-places', 'kroger', 'kaggle', 'numerai', 'qloo', 'nebius', 'paypal', 'stripe', 'facebook-pages', 'gemini', 'openai']);
   assert.equal(credentialProviderSpec('unknown'), null);
   assert.throws(
     () => normalizeProviderCredentialRequest('unknown', {}),
@@ -84,6 +84,17 @@ test('PayPal sandbox credentials map into the owned competition credential envel
   assert.equal(row.apiKeyId, 'paypal-client-fixture-123456');
   assert.equal(row.apiSecret, 'paypal-secret-fixture-abcdefghijklmnopqrstuvwxyz');
   assert.equal(row.label, 'competition-checkout-black-box');
+});
+
+test('Stripe secret key maps into the Raven-owned Evercraft Payments credential envelope', () => {
+  const row = normalizeProviderCredentialRequest('stripe', {
+    secret_key: 'sk_live_fixture_owned_raven_secret_abcdefghijklmnopqrstuvwxyz',
+  });
+  assert.equal(row.provider, 'stripe');
+  assert.equal(row.environment, 'live');
+  assert.equal(row.apiKeyId, 'stripe-secret-key');
+  assert.equal(row.apiSecret, 'sk_live_fixture_owned_raven_secret_abcdefghijklmnopqrstuvwxyz');
+  assert.equal(row.label, 'evercraft-payments');
 });
 
 test('Facebook Pages maps Page identity and Page token into the owned generic credential envelope', () => {

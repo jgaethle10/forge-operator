@@ -384,7 +384,8 @@ export async function startFabricLocalRuntime({
   visualIngestToken='',
   sabanCapacityHealthFile='',
   purchaseIntentFetch=fetch,
-  purchaseIntentUrl='https://base44.app/api/apps/6a7adc9666bfd8c5c2fb4069/functions/ravenNexusPurchaseIntent',
+  purchaseIntentUrl='http://127.0.0.1:8791/v1/purchase-intents',
+  purchaseIntentToken='',
 }={}) {
   const instanceId='fabric_local_'+crypto.randomBytes(10).toString('hex');
   let deploymentReceiptRef='';
@@ -414,9 +415,15 @@ export async function startFabricLocalRuntime({
     throw new Error('purchase_intent_fetch_invalid');
   }
   const purchaseIntentEndpoint=new URL(String(purchaseIntentUrl||''));
-  if(purchaseIntentEndpoint.protocol!=='https:'){
-    throw new Error('purchase_intent_url_requires_https');
+  const purchaseIntentHost=purchaseIntentEndpoint.hostname.toLowerCase();
+  const purchaseIntentLoopback=['127.0.0.1','localhost','::1'].includes(purchaseIntentHost);
+  if(/(^|\.)base44\.app$/i.test(purchaseIntentHost)){
+    throw new Error('purchase_intent_base44_transport_forbidden');
   }
+  if(purchaseIntentEndpoint.protocol!=='http:'||!purchaseIntentLoopback){
+    throw new Error('purchase_intent_must_use_owned_loopback_raven_runtime');
+  }
+  const resolvedPurchaseIntentToken=String(purchaseIntentToken||'').trim();
   const staticPrepared=Array.isArray(catalog)?nativeOnlyCatalog(catalog):null;
   const preparedCatalog=()=>staticPrepared||nativeOnlyCatalog(loadFabricCatalogFromRepository());
   const token=validateOpenAiChallengeToken(challengeToken);
@@ -592,6 +599,10 @@ export async function startFabricLocalRuntime({
     human_offer_checkout_handoff_mode:'explicit_evercraft_page',
     payment_authority:'Evercraft Payments',
     payment_router:'Raven Nexus',
+    payment_purchase_intent_transport:'owned_loopback_raven_nexus',
+    payment_purchase_intent_authorized:Boolean(resolvedPurchaseIntentToken),
+    payment_direct_provider_credentials_exposed:false,
+    payment_direct_provider_checkout_allowed:false,
     base44_transport_enabled:false,
     removed_legacy_base44_connections:prepared.removed_legacy_base44_connections,
     removed_legacy_base44_mcp_connections:prepared.removed_legacy_base44_mcp_connections,
@@ -857,6 +868,7 @@ export async function startFabricLocalRuntime({
               'content-type':'application/json',
               'accept':'application/json',
               'user-agent':'Evercraft-Fabric-Offer-Checkout/1.0',
+              ...(resolvedPurchaseIntentToken?{authorization:'Bearer '+resolvedPurchaseIntentToken}:{}),
             },
             body:JSON.stringify({
               user_confirmed:true,
@@ -1284,13 +1296,26 @@ if (direct) {
     process.env.EVERCRAFT_SABAN_CAPACITY_HEALTH_FILE||
       '/var/lib/evercraft/fabric-secrets/saban-capacity-health.json'
   ));
+  const purchaseIntentUrl=String(arg(
+    '--purchase-intent-url',
+    process.env.EVERCRAFT_PAYMENT_INTENT_URL||'http://127.0.0.1:8791/v1/purchase-intents'
+  ));
+  const purchaseIntentTokenFile=String(arg(
+    '--purchase-intent-token-file',
+    process.env.EVERCRAFT_PAYMENT_INTENT_TOKEN_FILE||'/var/lib/evercraft/raven-secrets/payments-token'
+  ));
   let visualIngestToken=String(process.env.EVERCRAFT_VISUAL_INGEST_TOKEN||'').trim();
   if(!visualIngestToken && visualIngestTokenFile && fs.existsSync(visualIngestTokenFile)){
     visualIngestToken=fs.readFileSync(visualIngestTokenFile,'utf8').trim();
   }
+  let purchaseIntentToken=String(process.env.EVERCRAFT_PAYMENT_INTENT_TOKEN||'').trim();
+  if(!purchaseIntentToken && purchaseIntentTokenFile && fs.existsSync(purchaseIntentTokenFile)){
+    purchaseIntentToken=fs.readFileSync(purchaseIntentTokenFile,'utf8').trim();
+  }
   const runtime=await startFabricLocalRuntime({
     host,port,challengeToken,nodeReceiptPath,allocatorTokenFile,
-    visualStateDir,visualOrigin,visualIngestToken,sabanCapacityHealthFile
+    visualStateDir,visualOrigin,visualIngestToken,sabanCapacityHealthFile,
+    purchaseIntentUrl,purchaseIntentToken
   });
   process.stdout.write(JSON.stringify({
     ok:true,

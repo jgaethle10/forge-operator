@@ -10,6 +10,7 @@ const networkObserverInstaller=fs.readFileSync(new URL('../scripts/install-fabri
 const routerMapInstaller=fs.readFileSync(new URL('../scripts/install-fabric-router-map-resident.sh',import.meta.url),'utf8');
 const routerMapper=fs.readFileSync(new URL('../scripts/evercraft-public-edge-map.mjs',import.meta.url),'utf8');
 const fabricRuntime=fs.readFileSync(new URL('../systemia/mcp/fabric-local-runtime.mjs',import.meta.url),'utf8');
+const ravenPaymentsInstaller=fs.readFileSync(new URL('../scripts/install-raven-payments-runtime.sh',import.meta.url),'utf8');
 
 test('owned edge installer keeps Fabric private behind the TLS proxy',()=>{
   assert.match(script,/--host 127\.0\.0\.1 --port \$FABRIC_PORT/);
@@ -30,6 +31,43 @@ test('owned edge installer persists Fabric and TLS edge under systemd',()=>{
   assert.match(script,/Restart=always/);
   assert.match(script,/systemctl enable --now evercraft-fabric\.service/);
   assert.match(script,/systemctl enable --now evercraft-public-edge\.service/);
+});
+
+test('owned edge installs Raven Payments before Fabric and orders the service dependency',()=>{
+  assert.match(script,/install-raven-payments-runtime\.sh/);
+  assert.match(script,/Installing owned Raven Nexus payment runtime/);
+  assert.match(script,/After=network-online\.target evercraft-raven-payments\.service/);
+  assert.match(script,/Wants=network-online\.target evercraft-raven-payments\.service/);
+});
+
+test('Raven Payments resident is loopback-only and exposes only a token path to Fabric',()=>{
+  assert.match(ravenPaymentsInstaller,/EVERCRAFT_RAVEN_PAYMENTS_HOST=127\.0\.0\.1/);
+  assert.match(ravenPaymentsInstaller,/EVERCRAFT_RAVEN_PAYMENTS_PORT=\$PORT/);
+  assert.match(ravenPaymentsInstaller,/EVERCRAFT_CREDENTIAL_STATE_DIR=\$CREDENTIAL_STATE_DIR/);
+  assert.match(ravenPaymentsInstaller,/CREDENTIAL_STATE_DIR="\/var\/lib\/evercraft\/home\/credentials"/);
+  assert.match(ravenPaymentsInstaller,/TOKEN_FILE="\$SECRET_DIR\/payments-token"/);
+  assert.match(ravenPaymentsInstaller,/install -o root -g "\$RUN_USER" -m 0640 "\$tmp" "\$TOKEN_FILE"/);
+  assert.match(ravenPaymentsInstaller,/EVERCRAFT_PAYMENT_INTENT_URL=http:\/\/127\.0\.0\.1:%s\/v1\/purchase-intents/);
+  assert.match(ravenPaymentsInstaller,/EVERCRAFT_PAYMENT_INTENT_TOKEN_FILE=%s/);
+  assert.doesNotMatch(ravenPaymentsInstaller,/STRIPE_SECRET_KEY=.*fabric|EVERCRAFT_PAYMENT_INTENT_TOKEN=/i);
+  assert.doesNotMatch(ravenPaymentsInstaller,/base44\.app/i);
+});
+
+test('Fabric self updater converges and verifies the owned Raven Payments resident',()=>{
+  assert.match(updater,/RAVEN_PAYMENTS_INSTALLER="\$REPO_ROOT\/scripts\/install-raven-payments-runtime\.sh"/);
+  assert.match(updater,/ensure_raven_payments_resident\(\)/);
+  assert.match(updater,/evercraft-raven-payments\.service/);
+  assert.match(updater,/http:\/\/127\.0\.0\.1:8791\/health/);
+  assert.match(updater,/owned_loopback_raven_nexus/);
+  assert.match(updater,/payment_purchase_intent_authorized!==true/);
+  assert.match(updater,/payment_direct_provider_credentials_exposed!==false/);
+  assert.match(updater,/payment_direct_provider_checkout_allowed!==false/);
+  assert.match(updater,/node --test systemia\/payments\/\*\.test\.mjs/);
+  assert.match(updater,/"raven_payments_resident":true/);
+  assert.match(fabricRuntime,/purchase_intent_base44_transport_forbidden/);
+  assert.match(fabricRuntime,/purchase_intent_must_use_owned_loopback_raven_runtime/);
+  assert.match(fabricRuntime,/payment_purchase_intent_transport:'owned_loopback_raven_nexus'/);
+  assert.match(fabricRuntime,/payment_direct_provider_credentials_exposed:false/);
 });
 
 test('OpenAI verification token helper is secret-prompted and validated',()=>{
@@ -174,6 +212,7 @@ test('Fabric doctor can route around an unavailable ChromeOS host forward with a
 test('edge installer and updater shell remain syntactically valid',()=>{
   for(const rel of [
     '../scripts/install-fabric-owned-edge.sh',
+    '../scripts/install-raven-payments-runtime.sh',
     '../scripts/install-fabric-network-observer.sh',
     '../scripts/install-fabric-router-map-resident.sh',
     '../scripts/update-fabric-owned-edge.sh',
