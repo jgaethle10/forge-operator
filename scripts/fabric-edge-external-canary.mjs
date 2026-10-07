@@ -115,6 +115,7 @@ function failureStage(checks={},message=''){
   }
   if(checks.customer_surface!==true) return 'customer_surface';
   if(checks.aliev_surface!==true) return 'aliev_surface';
+  if(checks.journal_surface!==true) return 'journal_surface';
   if(checks.visual_desk!==true) return 'visual_desk';
   if(checks.faie_surface!==true) return 'faie_surface';
   if(checks.faie_health!==true) return 'faie_health';
@@ -203,6 +204,45 @@ try{
     base44_reference_absent:true,
   };
   receipt.checks.aliev_surface=true;
+
+  const journalIndex=await getJson('/journal/index.json');
+  if(journalIndex.schema!=='evercraft.journal.index.v1') throw new Error('journal_index_schema_invalid');
+  if(journalIndex.live_edition!==true||!Array.isArray(journalIndex.stories)||journalIndex.stories.length<1){
+    throw new Error('journal_live_edition_missing');
+  }
+  const journalStory=journalIndex.stories[0];
+  const journalSlug=clean(journalStory.slug);
+  const journalStoryId=clean(journalStory.story_id);
+  const journalCanonical=origin+'/journal/'+journalSlug+'/';
+  if(!journalSlug||!journalStoryId) throw new Error('journal_live_identity_missing');
+  if(clean(journalStory.canonical_url)!==journalCanonical) throw new Error('journal_index_canonical_origin_drift');
+
+  const journalArticle=await getText('/journal/'+journalSlug+'/');
+  if(!/^text\/html/i.test(journalArticle.response.headers.get('content-type')||'')){
+    throw new Error('journal_article_not_html');
+  }
+  if(!journalArticle.text.includes('<meta name="evercraft:story_id" content="'+journalStoryId+'">')){
+    throw new Error('journal_article_story_id_drift');
+  }
+  if(!journalArticle.text.includes('<link rel="canonical" href="'+journalCanonical+'">')){
+    throw new Error('journal_article_canonical_drift');
+  }
+  if(!journalArticle.text.includes('<meta property="og:url" content="'+journalCanonical+'">')){
+    throw new Error('journal_article_og_url_drift');
+  }
+  if(/journal\.evercraft\.global/i.test(journalArticle.text)){
+    throw new Error('journal_dead_canonical_domain_regressed');
+  }
+  receipt.journal_surface={
+    index:'/journal/index.json',
+    article:'/journal/'+journalSlug+'/',
+    story_id:journalStoryId,
+    slug:journalSlug,
+    canonical_url:journalCanonical,
+    identity_verified:true,
+    dead_canonical_domain_absent:true,
+  };
+  receipt.checks.journal_surface=true;
 
   const visualHome=await getText('/visuals/');
   const visualContentType=visualHome.response.headers.get('content-type')||'';
