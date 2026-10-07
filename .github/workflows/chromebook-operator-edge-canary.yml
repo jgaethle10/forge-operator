@@ -32,7 +32,7 @@ permissions:
 jobs:
   canary:
     runs-on: ubuntu-latest
-    timeout-minutes: 4
+    timeout-minutes: 8
     env:
       EVERCRAFT_OPERATOR_EDGE_ORIGIN: https://fabric.systemiacommandcenters.com
     steps:
@@ -45,10 +45,38 @@ jobs:
         run: |
           set -euo pipefail
           mkdir -p artifacts
-          set +e
-          node scripts/fabric-edge-external-canary.mjs             --origin "$EVERCRAFT_OPERATOR_EDGE_ORIGIN"             > artifacts/fabric-operator-edge-canary.stdout.json             2> artifacts/fabric-operator-edge-canary.stderr.json
-          status=$?
-          set -e
+          max_attempts=16
+          attempt=1
+          status=1
+          while [ "$attempt" -le "$max_attempts" ]; do
+            rm -f artifacts/fabric-operator-edge-canary.stdout.json artifacts/fabric-operator-edge-canary.stderr.json
+            set +e
+            node scripts/fabric-edge-external-canary.mjs               --origin "$EVERCRAFT_OPERATOR_EDGE_ORIGIN"               > artifacts/fabric-operator-edge-canary.stdout.json               2> artifacts/fabric-operator-edge-canary.stderr.json
+            status=$?
+            set -e
+            if [ "$status" -eq 0 ]; then
+              break
+            fi
+
+            candidate="artifacts/fabric-operator-edge-canary.stdout.json"
+            if [ -s artifacts/fabric-operator-edge-canary.stderr.json ]; then
+              candidate="artifacts/fabric-operator-edge-canary.stderr.json"
+            fi
+            stage="$(jq -r '.failure_stage // ""' "$candidate" 2>/dev/null || true)"
+            error="$(jq -r '.error // ""' "$candidate" 2>/dev/null || true)"
+
+            # The Chromebook updater intentionally polls every five minutes.
+            # Retry only the known deployment-lag signature for a newly added
+            # Visual Desk route. All other production failures remain immediate.
+            if [ "$stage" = "visual_desk" ] && [ "$error" = "http_404:/visuals/" ] && [ "$attempt" -lt "$max_attempts" ]; then
+              echo "Visual Desk route has not reached the owned edge yet; retrying after updater window slice ($attempt/$max_attempts)."
+              sleep 20
+              attempt=$((attempt + 1))
+              continue
+            fi
+            break
+          done
+
           if [ "$status" -eq 0 ]; then
             mv artifacts/fabric-operator-edge-canary.stdout.json               artifacts/fabric-operator-edge-canary.json
             rm -f artifacts/fabric-operator-edge-canary.stderr.json
@@ -58,10 +86,11 @@ jobs:
             else
               mv artifacts/fabric-operator-edge-canary.stdout.json                 artifacts/fabric-operator-edge-canary.json
             fi
-            echo "Operator edge canary failed with status $status." >&2
+            echo "Operator edge canary failed with status $status after $attempt attempt(s)." >&2
             cat artifacts/fabric-operator-edge-canary.json >&2 || true
             exit "$status"
           fi
+          echo "Operator edge verified after $attempt attempt(s)."
           cat artifacts/fabric-operator-edge-canary.json
 
       - name: Publish operator edge commit status
