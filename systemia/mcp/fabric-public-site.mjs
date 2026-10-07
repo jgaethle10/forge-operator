@@ -1,3 +1,4 @@
+import crypto from 'node:crypto';
 function escapeHtml(value='') {
   return String(value)
     .replaceAll('&','&amp;')
@@ -311,6 +312,7 @@ export function renderOfferPage(item){
   const send=copy.send.map((x)=>'<li>'+escapeHtml(x)+'</li>').join('');
   const get=copy.get.map((x)=>'<li>'+escapeHtml(x)+'</li>').join('');
   const steps=copy.steps.map(([title,body])=>'<div class="offer-step"><strong>'+escapeHtml(title)+'</strong><span>'+escapeHtml(body)+'</span></div>').join('');
+  const idempotencyKey='offer-'+copy.slug+'-'+crypto.randomUUID();
   return shell(copy.headline+' · Evercraft',[
     '<main>',
     '<section class="offer-hero">',
@@ -321,6 +323,7 @@ export function renderOfferPage(item){
     '<div class="offer-price-note">'+escapeHtml(offerName)+' · '+escapeHtml(item.pricing||'')+'</div>',
     '<form class="checkout-form" method="post" action="/api/offers/'+encodeURIComponent(copy.slug)+'/checkout">',
     '<input type="hidden" name="user_confirmed" value="true">',
+    '<input type="hidden" name="idempotency_key" value="'+escapeHtml(idempotencyKey)+'">',
     '<button class="btn primary" type="submit">Continue to checkout · '+escapeHtml(price)+'</button>',
     '<a class="btn" href="/capabilities/'+encodeURIComponent(item.public_id)+'">See technical proof</a>',
     '<div class="checkout-note">This button confirms this exact offer and asks Raven Nexus to prepare an unpaid Evercraft Payments checkout. No payment is recorded and fulfillment stays locked until settlement is verified.</div>',
