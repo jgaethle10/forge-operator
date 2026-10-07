@@ -8,6 +8,17 @@ import type {
 } from './visual.js';
 import { verifyVisualFrameContract } from './visual.js';
 import type { TransformComponent, Vec3 } from './engine.js';
+import {
+  applyTextureHotReload,
+  normalizeTextureSampler,
+  planTextureResidency,
+  textureAssetDigest,
+  textureSamplerKey,
+  validateTextureAsset,
+  type NormalizedTextureSampler,
+  type TextureAsset,
+  type TextureResidencyPlan
+} from './texture.js';
 
 export interface GeometryAsset {
   schema:'evercraft.world-engine.geometry.v1';
@@ -15,6 +26,7 @@ export interface GeometryAsset {
   primitive:'triangles';
   positions:number[];
   normals:number[];
+  uvs?:number[];
   indices?:number[];
 }
 
@@ -47,6 +59,13 @@ export interface WebGpuDrawCommand {
   alphaMode:'opaque'|'mask'|'blend';
   alphaCutoff:number;
   doubleSided:boolean;
+  sampler:NormalizedTextureSampler;
+  textureRefs:{
+    baseColor:string|null;
+    orm:string|null;
+    emissive:string|null;
+  };
+  textureFlags:[number,number,number,number];
   pipelineKey:string;
 }
 
@@ -79,6 +98,15 @@ export interface WebGpuRenderPlan {
   cameraPosition:[number,number,number];
   exposure:number;
   lights:WebGpuLightPacket[];
+  requiredTextureIds:string[];
+  textures:Array<{
+    id:string;
+    digest:string;
+    width:number;
+    height:number;
+    format:'rgba8unorm'|'rgba8unorm-srgb';
+    bytes:number;
+  }>;
   draws:WebGpuDrawCommand[];
   shadingModel:'evercraft-pbr-lite-v1';
   digest:string;
@@ -337,6 +365,13 @@ export function validateGeometryAsset(geometry:GeometryAsset){
     throw new Error(`webgpu_geometry_normals_invalid:${geometry.id}`);
   }
   for(const value of [...geometry.positions,...geometry.normals]) finite(value,`geometry_${geometry.id}_value`);
+  if(geometry.uvs){
+    const vertices=geometry.positions.length/3;
+    if(geometry.uvs.length!==vertices*2){
+      throw new Error(`webgpu_geometry_uvs_invalid:${geometry.id}`);
+    }
+    for(const value of geometry.uvs) finite(value,`geometry_${geometry.id}_uv`);
+  }
   if(geometry.indices){
     if(geometry.indices.length<3 || geometry.indices.length%3!==0){
       throw new Error(`webgpu_geometry_indices_invalid:${geometry.id}`);
@@ -353,10 +388,30 @@ export function validateGeometryAsset(geometry:GeometryAsset){
   return true;
 }
 
-function materialPacket(material:MaterialDefinition){
-  if(material.textureRefs && Object.values(material.textureRefs).some(Boolean)){
-    throw new Error(`webgpu_textures_not_yet_supported:${material.id}`);
+function materialPacket(
+  material:MaterialDefinition,
+  geometry:GeometryAsset,
+  textureMap:Map<string,TextureAsset>
+){
+  if(material.textureRefs?.normal){
+    throw new Error(`webgpu_normal_map_tangents_required:${material.id}`);
   }
+
+  const refs={
+    baseColor:material.textureRefs?.baseColor || null,
+    orm:material.textureRefs?.orm || null,
+    emissive:material.textureRefs?.emissive || null
+  };
+  const referenced=[refs.baseColor,refs.orm,refs.emissive]
+    .filter((value):value is string=>Boolean(value));
+
+  if(referenced.length && !geometry.uvs){
+    throw new Error(`webgpu_texture_uvs_required:${geometry.id}`);
+  }
+  for(const id of referenced){
+    if(!textureMap.has(id)) throw new Error(`webgpu_texture_missing:${id}`);
+  }
+
   return {
     baseColor:[
       material.baseColor.r,
@@ -375,7 +430,15 @@ function materialPacket(material:MaterialDefinition){
     materialModel:(material.model==='unlit'?1:0) as 0|1,
     alphaMode:material.alphaMode || 'opaque',
     alphaCutoff:material.alphaMode==='mask'?(material.alphaCutoff ?? .5):-1,
-    doubleSided:material.doubleSided===true
+    doubleSided:material.doubleSided===true,
+    sampler:normalizeTextureSampler(material.sampler),
+    textureRefs:refs,
+    textureFlags:[
+      refs.baseColor?1:0,
+      refs.orm?1:0,
+      refs.emissive?1:0,
+      0
+    ] as [number,number,number,number]
   };
 }
 
@@ -410,7 +473,8 @@ function lightPacket(row:VisualFrameContract['lights'][number]):WebGpuLightPacke
 export function compileWebGpuRenderPlan(
   frame:VisualFrameContract,
   geometries:GeometryAsset[],
-  viewport:{width:number;height:number}
+  viewport:{width:number;height:number},
+  textures:TextureAsset[]=[]
 ):WebGpuRenderPlan{
   if(frame?.schema!=='evercraft.world-engine.visual-frame.v1') throw new Error('webgpu_visual_frame_schema_invalid');
   if(!verifyVisualFrameContract(frame)) throw new Error('webgpu_visual_frame_digest_invalid');
@@ -424,6 +488,13 @@ export function compileWebGpuRenderPlan(
     validateGeometryAsset(geometry);
     if(geometryMap.has(geometry.id)) throw new Error(`webgpu_geometry_duplicate:${geometry.id}`);
     geometryMap.set(geometry.id,clone(geometry));
+  }
+
+  const textureMap=new Map<string,TextureAsset>();
+  for(const texture of textures){
+    validateTextureAsset(texture);
+    if(textureMap.has(texture.id)) throw new Error(`webgpu_texture_duplicate:${texture.id}`);
+    textureMap.set(texture.id,clone(texture));
   }
 
   const materialMap=new Map(frame.materials.map(material=>[material.id,material]));
@@ -444,7 +515,7 @@ export function compileWebGpuRenderPlan(
       if(!material) throw new Error(`webgpu_material_missing:${row.component.materialId}`);
       const model=modelMatrixForTransform(row.transform);
       const normal=transpose4(inverse4(model));
-      const packet=materialPacket(material);
+      const packet=materialPacket(material,geometry,textureMap);
       return {
         entityId:row.entityId,
         geometryId:geometry.id,
@@ -457,10 +528,32 @@ export function compileWebGpuRenderPlan(
         pipelineKey:[
           packet.materialModel,
           packet.alphaMode,
-          packet.doubleSided?'double':'back'
+          packet.doubleSided?'double':'back',
+          textureSamplerKey(packet.sampler)
         ].join(':')
       };
     });
+
+  const requiredTextureIds=[...new Set(
+    draws.flatMap(draw=>[
+      draw.textureRefs.baseColor,
+      draw.textureRefs.orm,
+      draw.textureRefs.emissive
+    ].filter((value):value is string=>Boolean(value)))
+  )].sort();
+
+  const texturePackets=requiredTextureIds.map(id=>{
+    const texture=textureMap.get(id);
+    if(!texture) throw new Error(`webgpu_texture_missing:${id}`);
+    return {
+      id,
+      digest:textureAssetDigest(texture),
+      width:texture.width,
+      height:texture.height,
+      format:texture.format,
+      bytes:texture.width*texture.height*4
+    };
+  });
 
   const core={
     schema:'evercraft.world-engine.webgpu-plan.v1' as const,
@@ -481,6 +574,8 @@ export function compileWebGpuRenderPlan(
     ] as [number,number,number],
     exposure:frame.camera.exposure,
     lights:[...frame.lights].sort((a,b)=>a.entityId.localeCompare(b.entityId)).map(lightPacket),
+    requiredTextureIds,
+    textures:texturePackets,
     draws,
     shadingModel:'evercraft-pbr-lite-v1' as const
   };
