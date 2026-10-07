@@ -39,8 +39,15 @@ jobs:
           printf 'PUBLIC_FABRIC_HEALTH=%s\n' "$health"
           printf '%s' "$health" | jq -e '
             .ok == true and
-            (.service == "specialist-handoff-mcp" or .service == "evercraft-fabric-local") and
-            .runtime == "Evercraft Compute"
+            .service == "evercraft-fabric-local" and
+            .server == "evercraft-fabric" and
+            .runtime == "Evercraft Fabric local" and
+            .read_only == true and
+            .transactional == false and
+            .external_action_authority == false and
+            .payment_authority == "Evercraft Payments" and
+            .payment_router == "Raven Nexus" and
+            .capability_count >= 51
           ' >/dev/null
           printf '%s\n' "$health" > /tmp/earthworks-fabric-health.json
 
