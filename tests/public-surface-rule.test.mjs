@@ -28,3 +28,25 @@ test('demonstrable products have a truthful public surface',()=>{
 test('inventory existence alone still does not auto-publish',()=>{
   assert.match(String(candidates.policy),/Inventory alone never grants publication/);
 });
+
+
+function collectDemoHtml(root='public/demos'){
+  if(!fs.existsSync(root)) return [];
+  const out=[];
+  for(const entry of fs.readdirSync(root,{withFileTypes:true})){
+    const full=root+'/'+entry.name;
+    if(entry.isDirectory()) out.push(...collectDemoHtml(full));
+    else if(entry.isFile()&&entry.name.endsWith('.html')) out.push(full);
+  }
+  return out;
+}
+
+test('public demo surfaces are mobile-stable and must not horizontally wiggle',()=>{
+  for(const file of collectDemoHtml()){
+    const html=fs.readFileSync(file,'utf8');
+    assert.match(html,/<meta\s+name=["']viewport["'][^>]*width=device-width/i,'Missing mobile viewport contract in '+file);
+    assert.match(html,/overflow-x\s*:\s*(?:hidden|clip)/i,'Public demo must suppress document-level horizontal scrolling in '+file);
+    assert.match(html,/max-width\s*:\s*100%/i,'Public demo must cap responsive content at the viewport in '+file);
+    assert.match(html,/minmax\(0\s*,\s*1fr\)/i,'Public demo grids must allow children to shrink without forcing horizontal overflow in '+file);
+  }
+});
