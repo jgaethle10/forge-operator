@@ -20,6 +20,7 @@ import { registerRemoteOperatorMcp } from './systemia/remote-operator/mcp-gatewa
 import { registerNotificationFabricRoutes } from './systemia/notification-fabric/http.mjs';
 import { registerRadarRoutes } from './systemia/radar/http.mjs';
 import { registerInstantWorkRoutes } from './systemia/commerce/instant-work.mjs';
+import { registerRavenSettlementRoutes } from './systemia/commerce/raven-settlement-http.mjs';
 import { routeVerifiedPayment } from './systemia/organism/portfolio-fulfillment-router.mjs';
 
 dotenv.config();
@@ -177,6 +178,7 @@ registerNotificationFabricRoutes(app);
 registerRivetReportGateway(app);
 registerSpecialistHandoffMcps(app, { gatewayUrl: machineCommerceGatewayUrl });
 registerRemoteOperatorMcp(app);
+registerRavenSettlementRoutes(app, { limiter: rateLimit(600, 60 * 60 * 1000) });
 
 const CENTRAL_MACHINE_COMMERCE_MCP =
   'https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp';
