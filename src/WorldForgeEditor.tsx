@@ -77,6 +77,17 @@ type EngineRuntimeState={
   geometries:unknown[];
 };
 
+type PlaySessionState={
+  sessionId:string;
+  projectVersion:number;
+  worldVersion:number;
+  tick:number;
+  timeSec:number;
+  snapshotDigest:string;
+  webGpuReady:boolean;
+  visualParity:string;
+};
+
 const AXIS_STEP=.25;
 const WORLD_FORGE_STORAGE_KEY='evercraft.fallen.world-forge.active-project.v1';
 
@@ -695,6 +706,7 @@ export default function WorldForgeEditor(){
   const [shotDigest,setShotDigest]=useState('');
   const [nativePreview,setNativePreview]=useState<{svg:string;sha:string;renderer:string;solid:boolean}|null>(null);
   const [engineRuntime,setEngineRuntime]=useState<EngineRuntimeState|null>(null);
+  const [playSession,setPlaySession]=useState<PlaySessionState|null>(null);
   const [engineBridge,setEngineBridge]=useState<{
     worldId:string;
     digest:string;
@@ -826,6 +838,127 @@ export default function WorldForgeEditor(){
     setSelectedId(first?.id||nextProject.nodes[0]?.id||'');
   }
 
+  function playStateFromPayload(session:any,snapshot:any):PlaySessionState{
+    return {
+      sessionId:String(session.sessionId),
+      projectVersion:Number(session.projectVersion),
+      worldVersion:Number(session.worldVersion),
+      tick:Number(snapshot?.tick??session.tick??0),
+      timeSec:Number(snapshot?.timeSec??session.timeSec??0),
+      snapshotDigest:String(snapshot?.digest??''),
+      webGpuReady:Boolean(session.webGpuReady),
+      visualParity:String(session.visualParity??'unknown'),
+    };
+  }
+
+  async function startPlaySession(){
+    if(!project||busy) return;
+    if(playSession){
+      setError('Stop Play Mode before rebuilding the static World Engine bridge.');
+      return;
+    }
+    if(stagedOperations.length){
+      setError('Apply or clear staged changes before entering Play Mode.');
+      return;
+    }
+    setBusy(true);
+    setError('');
+    try{
+      if(playSession){
+        await stopPlaySession(true);
+      }
+      const sessionId=`editor-play-${Date.now().toString(36)}`;
+      const response=await fetch('/api/fallen/world-forge/play/start',{
+        method:'POST',
+        headers:{'content-type':'application/json'},
+        body:JSON.stringify({project,sessionId}),
+      });
+      const payload=await response.json();
+      if(!response.ok||!payload.success||!payload.session||!payload.snapshot){
+        throw new Error(payload.error||'Could not start World Forge Play Mode.');
+      }
+      setEngineRuntime(null);
+      setPlaySession(playStateFromPayload(payload.session,payload.snapshot));
+      setCommandNote(
+        `Play Mode started at tick ${payload.snapshot.tick} · runtime world v${payload.session.worldVersion}.`
+      );
+    }catch(err){
+      setError(err instanceof Error?err.message:String(err));
+    }finally{
+      setBusy(false);
+    }
+  }
+
+  async function stopPlaySession(silent=false){
+    if(!playSession) return;
+    const current=playSession;
+    try{
+      const response=await fetch('/api/fallen/world-forge/play/stop',{
+        method:'POST',
+        headers:{'content-type':'application/json'},
+        body:JSON.stringify({sessionId:current.sessionId}),
+      });
+      const payload=await response.json();
+      if(!response.ok||!payload.success){
+        throw new Error(payload.error||'Could not stop World Forge Play Mode.');
+      }
+      setPlaySession(null);
+      if(!silent) setCommandNote(`Play Mode stopped at tick ${current.tick}.`);
+    }catch(err){
+      if(!silent) throw err;
+      setPlaySession(null);
+    }
+  }
+
+  async function stepPlaySession(ticks:number){
+    if(!playSession||busy) return;
+    setBusy(true);
+    setError('');
+    try{
+      const response=await fetch('/api/fallen/world-forge/play/step',{
+        method:'POST',
+        headers:{'content-type':'application/json'},
+        body:JSON.stringify({
+          sessionId:playSession.sessionId,
+          ticks,
+          inputs:[],
+        }),
+      });
+      const payload=await response.json();
+      if(!response.ok||!payload.success||!payload.result?.snapshot||!payload.session){
+        throw new Error(payload.error||'World Forge Play Mode step failed.');
+      }
+      setPlaySession(playStateFromPayload(payload.session,payload.result.snapshot));
+      setCommandNote(
+        `Play Mode advanced ${ticks} tick${ticks===1?'':'s'} → ${payload.result.snapshot.tick}.`
+      );
+    }catch(err){
+      setError(err instanceof Error?err.message:String(err));
+    }finally{
+      setBusy(false);
+    }
+  }
+
+  async function syncPlaySessionProject(nextProject:ForgeProject){
+    if(!playSession) return;
+    const response=await fetch('/api/fallen/world-forge/play/sync',{
+      method:'POST',
+      headers:{'content-type':'application/json'},
+      body:JSON.stringify({
+        sessionId:playSession.sessionId,
+        afterProject:nextProject,
+        actor:{kind:'human',id:'world-forge-editor'},
+        reason:'Committed World Forge editor revision',
+      }),
+    });
+    const payload=await response.json();
+    if(!response.ok||!payload.success||!payload.result?.session){
+      throw new Error(payload.error||'Play Mode runtime rejected the authored revision.');
+    }
+    const snapshot=payload.result.runtimeSync?.snapshot;
+    setPlaySession(playStateFromPayload(payload.result.session,snapshot));
+  }
+
   async function validateAndAdoptProject(candidate:ForgeProject,sourceLabel:string){
     setBusy(true);
     setError('');
@@ -839,6 +972,7 @@ export default function WorldForgeEditor(){
       if(!response.ok||!payload.validation||payload.validation.status!=='accepted'){
         throw new Error(payload.validation?.errors?.join(', ')||payload.error||'World Forge project validation failed.');
       }
+      if(playSession) await stopPlaySession(true);
       setProject(candidate);
       setDigest(payload.validation.digest);
       setReceipts([]);
@@ -890,6 +1024,7 @@ export default function WorldForgeEditor(){
       const response=await fetch('/api/fallen/world-forge/starter');
       const payload=await response.json();
       if(!response.ok||!payload.success) throw new Error(payload.error||'Could not reset World Forge.');
+      if(playSession) await stopPlaySession(true);
       window.localStorage.removeItem(WORLD_FORGE_STORAGE_KEY);
       setProject(payload.project);
       setDigest(payload.validation.digest);
@@ -915,7 +1050,7 @@ export default function WorldForgeEditor(){
     setBusy(true);
     setError('');
     try{
-      if(engineRuntime){
+      if(engineRuntime&&!playSession){
         const destructiveAuthority=operations.some(operation=>
           (operation.type==='remove_node'&&operation.allowDestructive===true) ||
           (operation.type==='set_geometry'&&operation.allowDestructive===true)
@@ -994,6 +1129,9 @@ export default function WorldForgeEditor(){
       if(!response.ok||!payload.success||!payload.result){
         const reason=payload.result?.receipt.rejectedOperations?.[0]?.reason;
         throw new Error(reason||payload.error||'World Forge mutation was blocked.');
+      }
+      if(playSession){
+        await syncPlaySessionProject(payload.result.project);
       }
       setProject(payload.result.project);
       setDigest(payload.result.validation.digest);
@@ -1245,7 +1383,7 @@ export default function WorldForgeEditor(){
         throw new Error(created.error||'Could not create World Forge ChangeSet.');
       }
 
-      if(engineRuntime){
+      if(engineRuntime&&!playSession){
         const syncResponse=await fetch('/api/fallen/world-forge/runtime-sync',{
           method:'POST',
           headers:{'content-type':'application/json'},
@@ -1301,6 +1439,9 @@ export default function WorldForgeEditor(){
         }
 
         const mutation=applied.result.mutation;
+        if(playSession){
+          await syncPlaySessionProject(mutation.project);
+        }
         setProject(mutation.project);
         setDigest(mutation.validation.digest);
         setReceipts(current=>[mutation.receipt,...current].slice(0,12));
@@ -1356,6 +1497,26 @@ export default function WorldForgeEditor(){
           </button>
           <button onClick={()=>setStagedOperations([])} disabled={busy}>Clear Batch</button>
         </>}
+        {!playSession
+          ? <button
+              className="wf-play-button"
+              onClick={()=>void startPlaySession()}
+              disabled={busy||stagedOperations.length>0}
+              title={stagedOperations.length?'Apply or clear staged changes first':'Start deterministic World Engine Play Mode'}
+            >
+              ▶ Play
+            </button>
+          : <>
+              <span
+                className={playSession.projectVersion===project.version?'wf-play-badge':'wf-play-badge stale'}
+                title={playSession.snapshotDigest}
+              >
+                PLAY · t{playSession.tick} · v{playSession.projectVersion}
+              </span>
+              <button onClick={()=>void stepPlaySession(1)} disabled={busy}>+1 Tick</button>
+              <button onClick={()=>void stepPlaySession(60)} disabled={busy}>+60 Ticks</button>
+              <button onClick={()=>void stopPlaySession()} disabled={busy}>■ Stop</button>
+            </>}
         <input
           ref={importInputRef}
           className="wf-hidden-input"
@@ -1386,8 +1547,14 @@ export default function WorldForgeEditor(){
         <button onClick={()=>void renderNativePreview(true)} disabled={busy}>Solid Render</button>
         <button
           onClick={()=>void compileEngineBridge()}
-          disabled={busy||stagedOperations.length>0}
-          title={stagedOperations.length?'Apply or clear staged changes first':'Compile committed scene into World Engine'}
+          disabled={busy||stagedOperations.length>0||Boolean(playSession)}
+          title={
+            playSession
+              ? 'Stop Play Mode before rebuilding the static World Engine bridge'
+              : stagedOperations.length
+                ? 'Apply or clear staged changes first'
+                : 'Compile committed scene into World Engine'
+          }
         >
           Engine Bridge
         </button>
@@ -1397,6 +1564,9 @@ export default function WorldForgeEditor(){
           title={engineBridge.digest}
         >
           WE {engineBridge.webGpuReady?'GPU READY':'RUNTIME'} · {engineBridge.visualParity.toUpperCase()}
+        </span>}
+        {playSession&&<span className="wf-play-runtime-meta">
+          {playSession.webGpuReady?'GPU READY':'RUNTIME'} · {playSession.visualParity.toUpperCase()} · {playSession.timeSec.toFixed(3)}s
         </span>}
       </div>
     </header>

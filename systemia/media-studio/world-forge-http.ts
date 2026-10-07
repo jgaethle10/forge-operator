@@ -1,3 +1,4 @@
+import { WorldForgePlaySessionRegistry } from './world-forge-play-session.js';
 import {
   applyWorldForgeLiveSyncToRuntime,
   compileWorldForgeLiveSync,
@@ -196,6 +197,143 @@ function badRequest(res:Response,error:string){
 
 export function registerWorldForgeRoutes(app:Express,deps:WorldForgeHttpDeps){
   const {rateLimit}=deps;
+  const playSessions=new WorldForgePlaySessionRegistry(24,2*60*60*1000);
+
+  app.post(
+    '/api/fallen/world-forge/play/start',
+    rateLimit(60,60*60*1000),
+    (req:Request,res:Response)=>{
+      const project=req.body?.project as WorldForgeProject|undefined;
+      const sessionId=String(req.body?.sessionId||'').slice(0,90);
+      if(!project||!sessionId){
+        badRequest(res,'World Forge project and play session ID are required.');
+        return;
+      }
+      try{
+        const session=playSessions.start({
+          sessionId,
+          project,
+          tickRateHz:Number.isFinite(Number(req.body?.tickRateHz))
+            ? Number(req.body.tickRateHz)
+            : undefined,
+        });
+        res.json({
+          success:true,
+          session:session.summary(),
+          snapshot:session.snapshot(),
+          geometries:session.geometries,
+        });
+      }catch(error){
+        res.status(422).json({
+          success:false,
+          error:error instanceof Error?error.message:String(error),
+        });
+      }
+    },
+  );
+
+  app.post(
+    '/api/fallen/world-forge/play/status',
+    rateLimit(240,60*60*1000),
+    (req:Request,res:Response)=>{
+      try{
+        const session=playSessions.get(String(req.body?.sessionId||'').slice(0,90));
+        res.json({
+          success:true,
+          session:session.summary(),
+          snapshot:session.snapshot(),
+        });
+      }catch(error){
+        res.status(404).json({
+          success:false,
+          error:error instanceof Error?error.message:String(error),
+        });
+      }
+    },
+  );
+
+  app.post(
+    '/api/fallen/world-forge/play/step',
+    rateLimit(600,60*60*1000),
+    (req:Request,res:Response)=>{
+      try{
+        const session=playSessions.get(String(req.body?.sessionId||'').slice(0,90));
+        const result=session.step({
+          ticks:Number(req.body?.ticks),
+          inputs:Array.isArray(req.body?.inputs)?req.body.inputs:[],
+        });
+        res.json({
+          success:true,
+          result,
+          session:session.summary(),
+        });
+      }catch(error){
+        res.status(422).json({
+          success:false,
+          error:error instanceof Error?error.message:String(error),
+        });
+      }
+    },
+  );
+
+  app.post(
+    '/api/fallen/world-forge/play/sync',
+    rateLimit(120,60*60*1000),
+    (req:Request,res:Response)=>{
+      const afterProject=req.body?.afterProject as WorldForgeProject|undefined;
+      if(!afterProject){
+        badRequest(res,'After-project is required for Play Mode sync.');
+        return;
+      }
+      try{
+        const session=playSessions.get(String(req.body?.sessionId||'').slice(0,90));
+        const result=session.syncProject({
+          afterProject,
+          actor:{
+            kind:req.body?.actor?.kind==='agent'||
+              req.body?.actor?.kind==='code'||
+              req.body?.actor?.kind==='system'
+              ? req.body.actor.kind
+              : 'human',
+            id:String(req.body?.actor?.id||'world-forge-editor').slice(0,120),
+          },
+          reason:typeof req.body?.reason==='string'
+            ? req.body.reason.slice(0,500)
+            : undefined,
+        });
+        res.json({success:true,result});
+      }catch(error){
+        res.status(422).json({
+          success:false,
+          error:error instanceof Error?error.message:String(error),
+        });
+      }
+    },
+  );
+
+  app.post(
+    '/api/fallen/world-forge/play/stop',
+    rateLimit(120,60*60*1000),
+    (req:Request,res:Response)=>{
+      try{
+        const sessionId=playSessions.stop(String(req.body?.sessionId||'').slice(0,90));
+        res.json({success:true,sessionId});
+      }catch(error){
+        res.status(404).json({
+          success:false,
+          error:error instanceof Error?error.message:String(error),
+        });
+      }
+    },
+  );
+
+  app.get(
+    '/api/fallen/world-forge/play/sessions',
+    rateLimit(120,60*60*1000),
+    (_req:Request,res:Response)=>{
+      res.json({success:true,sessions:playSessions.list()});
+    },
+  );
 
   app.get(
     '/api/fallen/world-forge/starter',

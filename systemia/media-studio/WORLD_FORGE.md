@@ -236,6 +236,41 @@ Transform-only edits compile to World Engine `set_transform` operations and do n
 
 When Engine Bridge is active in the browser editor, normal edits, gizmos, commands, Add Cube, Stage batches and Undo all use this synchronized path. A runtime semantic mismatch fails closed instead of overwriting drifted runtime state.
 
+## Play Mode
+
+World Forge now has a bounded stateful Play Mode backed by Evercraft World Engine.
+
+A Play session owns:
+
+- the committed World Forge project revision;
+- the compiled World Engine definition and bridge receipt;
+- the deterministic World Engine runtime snapshot;
+- the runtime geometry cache;
+- runtime tick/time;
+- explicit runtime/WebGPU/parity status.
+
+The first server implementation is intentionally ephemeral. Sessions are capped, TTL-bound and held in process memory rather than pretending to be durable distributed runtime infrastructure. This keeps the contract honest while the experience is proven.
+
+### Runtime flow
+
+1. **Play** compiles the committed Forge scene and starts a World Engine runtime at tick 0.
+2. **Step** advances the deterministic runtime by an explicit number of ticks and accepts only tick-bound inputs inside that requested window.
+3. Normal Forge edits still pass through canonical mutation/ChangeSet rules.
+4. While Play is active, an accepted authored revision is migrated into the running session before the editor adopts it.
+5. The v9 live-sync path verifies world semantics, asset semantics, geometry cache state and runtime snapshot lineage.
+6. The migrated World Engine runtime continues from the preserved tick.
+7. **Stop** destroys the ephemeral session.
+
+Stage Mode remains compatible with Play Mode. Staged edits affect the editor preview only. The running world remains on the committed revision until **Apply Batch** succeeds, at which point the single committed revision is live-synced into the session.
+
+Import and Reset stop the active Play session before replacing canonical project state. The static **Engine Bridge** mode remains separate and cannot replace the stateful Play session while Play is active.
+
+### Server limits
+
+The first session registry is capped at 24 simultaneous sessions with a two-hour inactivity TTL. A single step call is capped at 600 ticks and 1,000 input events. Input IDs must be unique and every input tick must fall inside the requested step window.
+
+Play Mode grants no publication, production-render, payment, or autonomous external-action authority.
+
 ## Renderer strategy
 
 The project format must remain independent of any one renderer.
