@@ -94,7 +94,7 @@ function decorativeContours(spec){
   }).join('\n');
 }
 
-function renderLabels(story,positions,format){
+function layoutLabels(story,positions,format){
   const font=format==='story'?27:format==='square'?18:22;
   const xs=story.points.map(point=>positions.get(point.id)?.x).filter(Number.isFinite).sort((a,b)=>a-b);
   const splitX=xs.length?xs[Math.floor((xs.length-1)/2)]:540;
@@ -122,12 +122,127 @@ function renderLabels(story,positions,format){
     const anchor=right?'start':'end';
     const leaderX=right?x-11:x+11;
     const threat=/very high/i.test(row.point.note||'')?'VERY HIGH':/high/i.test(row.point.note||'')?'HIGH':'';
-    return [
-      '<line x1="'+row.p.x+'" y1="'+row.p.y+'" x2="'+leaderX+'" y2="'+(y-7)+'" stroke="#75C8FF" stroke-width="1.5" opacity=".30"/>',
-      '<text class="story-label" x="'+x+'" y="'+y+'" text-anchor="'+anchor+'" font-family="Arial,sans-serif" font-size="'+font+'" font-weight="800" fill="#F5F5F2">'+esc(label)+'</text>',
-      threat?'<text class="story-label" x="'+x+'" y="'+(y+font+5)+'" text-anchor="'+anchor+'" font-family="Arial,sans-serif" font-size="'+Math.round(font*.58)+'" font-weight="800" letter-spacing="1.4" fill="'+(threat==='VERY HIGH'?'#FFB15A':'#B7BDC5')+'">'+threat+'</text>':'',
-    ].join('\n');
-  }).join('\n');
+    return {
+      point:row.point,
+      p:row.p,
+      label,
+      estimate,
+      font,
+      x,y,anchor,leaderX,threat,
+      side:use,
+    };
+  });
+}
+
+function renderLabels(story,positions,format){
+  return layoutLabels(story,positions,format).map(item=>[
+    '<line x1="'+item.p.x+'" y1="'+item.p.y+'" x2="'+item.leaderX+'" y2="'+(item.y-7)+'" stroke="#75C8FF" stroke-width="1.5" opacity=".30"/>',
+    '<text class="story-label" x="'+item.x+'" y="'+item.y+'" text-anchor="'+item.anchor+'" font-family="Arial,sans-serif" font-size="'+item.font+'" font-weight="800" fill="#F5F5F2">'+esc(item.label)+'</text>',
+    item.threat?'<text class="story-label" x="'+item.x+'" y="'+(item.y+item.font+5)+'" text-anchor="'+item.anchor+'" font-family="Arial,sans-serif" font-size="'+Math.round(item.font*.58)+'" font-weight="800" letter-spacing="1.4" fill="'+(item.threat==='VERY HIGH'?'#FFB15A':'#B7BDC5')+'">'+item.threat+'</text>':'',
+  ].join('\n')).join('\n');
+}
+
+function labelBounds(item){
+  const x1=item.anchor==='start'?item.x:item.x-item.estimate;
+  const x2=item.anchor==='start'?item.x+item.estimate:item.x;
+  return {
+    x1,x2,
+    y1:item.y-item.font*.88,
+    y2:item.y+(item.threat?item.font+10:6),
+  };
+}
+
+function boxesOverlap(a,b,pad=0){
+  return !(
+    a.x2+pad<=b.x1||
+    b.x2+pad<=a.x1||
+    a.y2+pad<=b.y1||
+    b.y2+pad<=a.y1
+  );
+}
+
+function boxHitsCircle(box,circle,pad=0){
+  const x=Math.max(box.x1,Math.min(circle.x,box.x2));
+  const y=Math.max(box.y1,Math.min(circle.y,box.y2));
+  return Math.hypot(circle.x-x,circle.y-y)<circle.r+pad;
+}
+
+export function assessDirectedPosterLayout(story,plan,format='feed'){
+  const spec=SPECS[format];
+  if(!spec) throw new Error('graphics_poster_format_invalid');
+  if(plan?.schema!=='evercraft.graphics-command.plan.v1') throw new Error('graphics_poster_plan_invalid');
+  const boundary=boundaryForStory(story);
+  const box=boundary?.bbox || pointBounds(story.points);
+  const frame=projection(box,spec.map);
+  const positions=new Map(story.points.map(point=>[point.id,frame.project(point)]));
+  const maxValue=Math.max(1,...story.points.map(point=>Math.abs(Number(point.value)||1)));
+  const labels=layoutLabels(story,positions,format);
+  const labelBoxes=labels.map(item=>({id:item.point.id,label:item.label,...labelBounds(item)}));
+  const markers=story.points.map(point=>{
+    const p=positions.get(point.id);
+    const base=(format==='story'?17:13)+Math.sqrt(Math.abs(Number(point.value)||1)/maxValue)*(format==='story'?15:11);
+    return {id:point.id,x:p.x,y:p.y,r:base+7};
+  });
+  const issues=[];
+
+  for(let i=0;i<labelBoxes.length;i++){
+    const boxA=labelBoxes[i];
+    if(boxA.x1<48||boxA.x2>spec.width-48||boxA.y1<spec.map.y-64||boxA.y2>spec.map.y+spec.map.height+52){
+      issues.push('label_out_of_safe_bounds:'+boxA.id);
+    }
+    for(let j=i+1;j<labelBoxes.length;j++){
+      if(boxesOverlap(boxA,labelBoxes[j],6)){
+        issues.push('label_overlap:'+boxA.id+':'+labelBoxes[j].id);
+      }
+    }
+    for(const marker of markers){
+      if(marker.id!==boxA.id&&boxHitsCircle(boxA,marker,5)){
+        issues.push('label_marker_overlap:'+boxA.id+':'+marker.id);
+      }
+    }
+  }
+
+  for(let i=0;i<markers.length;i++){
+    for(let j=i+1;j<markers.length;j++){
+      const a=markers[i],b=markers[j];
+      if(Math.hypot(a.x-b.x,a.y-b.y)<a.r+b.r+4){
+        issues.push('marker_overlap:'+a.id+':'+b.id);
+      }
+    }
+  }
+
+  const hookLines=lines(plan.hero.hook,format==='story'?14:format==='square'?25:23,2);
+  const hookWidth=Math.max(0,...hookLines.map(row=>row.length*spec.hookSize*.53));
+  if(hookWidth>spec.width-144) issues.push('headline_overflow');
+
+  const metrics=(plan.metrics||[]).slice(0,format==='square'?2:3);
+  const metricWidth=(spec.width-144-(metrics.length-1)*18)/Math.max(1,metrics.length);
+  const metricFont=format==='story'?18:15;
+  for(const metric of metrics){
+    if(String(metric.label||'').toUpperCase().length*metricFont*.56>metricWidth-8){
+      issues.push('metric_label_overflow:'+String(metric.id||metric.label||'metric'));
+    }
+  }
+
+  const unique=[...new Set(issues)].sort();
+  return {
+    schema:'evercraft.graphics-command.poster-layout-report.v1',
+    format,
+    status:unique.length?'reject':'pass',
+    issueCount:unique.length,
+    issues:unique,
+    checks:{
+      labelCount:labelBoxes.length,
+      markerCount:markers.length,
+      labelsNonOverlapping:!unique.some(issue=>issue.startsWith('label_overlap:')),
+      labelsClearOfOtherMarkers:!unique.some(issue=>issue.startsWith('label_marker_overlap:')),
+      markersNonOverlapping:!unique.some(issue=>issue.startsWith('marker_overlap:')),
+      safeMargins:!unique.some(issue=>issue.startsWith('label_out_of_safe_bounds:')),
+      headlineFits:!unique.includes('headline_overflow'),
+      metricLabelsFit:!unique.some(issue=>issue.startsWith('metric_label_overflow:')),
+    },
+    publicationAuthority:false,
+  };
 }
 
 function renderGeography(boundary,statePath,spec,format){
