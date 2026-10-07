@@ -515,7 +515,7 @@ function WorldViewport({
     return Math.hypot(px-(ax+vx*t),py-(ay+vy*t));
   }
 
-  function gizmoHit(clientX:number,clientY:number){
+  function axisGizmoHit(clientX:number,clientY:number){
     const canvas=canvasRef.current;
     if(!canvas||!selectedNode||selectedNode.locked) return null;
     const rect=canvas.getBoundingClientRect();
@@ -560,6 +560,54 @@ function WorldViewport({
           axisScreenDy:projectedEnd.y-projectedBase.y,
           axisWorldLength:length,
         };
+      }
+    }
+    return best;
+  }
+
+  function rotationGizmoHit(clientX:number,clientY:number){
+    const canvas=canvasRef.current;
+    if(!canvas||!selectedNode||selectedNode.locked) return null;
+    const rect=canvas.getBoundingClientRect();
+    const {vp}=matrices(rect.width,rect.height);
+    const base=positionWithPreview(selectedNode);
+    const projectedBase=projectToClient(base,vp,rect);
+    if(!projectedBase) return null;
+
+    const radius=1.35;
+    const segments=64;
+    let best:{
+      axis:keyof Vec3;
+      distance:number;
+      centerX:number;
+      centerY:number;
+    }|null=null;
+
+    for(const axis of ['x','y','z'] as const){
+      const point=(angle:number):Vec3=>{
+        const ca=Math.cos(angle)*radius;
+        const sa=Math.sin(angle)*radius;
+        if(axis==='x') return {x:base.x,y:base.y+ca,z:base.z+sa};
+        if(axis==='y') return {x:base.x+ca,y:base.y,z:base.z+sa};
+        return {x:base.x+ca,y:base.y+sa,z:base.z};
+      };
+
+      for(let i=0;i<segments;i+=1){
+        const a=projectToClient(point(i/segments*Math.PI*2),vp,rect);
+        const b=projectToClient(point((i+1)/segments*Math.PI*2),vp,rect);
+        if(!a||!b) continue;
+        const distance=pointSegmentDistance(
+          clientX,clientY,
+          a.x,a.y,b.x,b.y,
+        );
+        if(distance<=11&&(!best||distance<best.distance)){
+          best={
+            axis,
+            distance,
+            centerX:projectedBase.x,
+            centerY:projectedBase.y,
+          };
+        }
       }
     }
     return best;
