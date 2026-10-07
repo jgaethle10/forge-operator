@@ -140,6 +140,7 @@ export interface VisualFrameContract {
   tick:number;
   timeSec:number;
   camera:CameraSample;
+  clearColor:ColorRGB;
   materials:MaterialDefinition[];
   renderables:Array<{
     entityId:string;
@@ -511,6 +512,12 @@ export function sampleCamera(
   };
 }
 
+export function verifyVisualFrameContract(frame:VisualFrameContract){
+  if(frame?.schema!=='evercraft.world-engine.visual-frame.v1') return false;
+  const {digest:claimed,...core}=frame;
+  return typeof claimed==='string' && claimed===digest(core);
+}
+
 export function compileVisualFrame(
   worldId:string,
   tick:number,
@@ -551,6 +558,7 @@ export function compileVisualFrame(
     tick,
     timeSec,
     camera,
+    clearColor:clone(scene.clearColor || {r:0,g:0,b:0}),
     materials:[...(scene.materials || [])].sort((a,b)=>a.id.localeCompare(b.id)).map(clone),
     renderables,
     lights
