@@ -2,11 +2,13 @@ import assert from 'node:assert/strict';
 import test from 'node:test';
 
 import {
+  runtimeBodiesByForgeNodeId,
   runtimeTransformsByForgeNodeId,
   worldEngineEulerToWorldForge,
   worldEnginePositionToWorldForge,
   worldEngineScaleToWorldForge,
   worldEngineTransformToWorldForge,
+  worldForgeDirectionToWorldEngine,
 } from './world-forge-runtime-view.js';
 import {
   worldForgeEulerToWorldEngine,
@@ -75,4 +77,30 @@ test('runtime snapshot transforms are keyed by canonical World Forge node ID',()
     }),
   );
   assert.equal(Object.keys(transforms).length,1);
+});
+
+
+test('runtime body view resolves canonical entity IDs and velocity',()=>{
+  const bodies=runtimeBodiesByForgeNodeId({
+    entities:[{
+      id:'wfnode:hero-core',
+      properties:{worldForgeNodeId:'hero-core'},
+      rigidBody:{
+        velocity:{x:1,y:2,z:3},
+        kinematic:false,
+      },
+    }],
+  });
+  assert.deepEqual(bodies['hero-core'],{
+    entityId:'wfnode:hero-core',
+    velocity:{x:1,y:2,z:3},
+    kinematic:false,
+  });
+});
+
+test('Forge runtime input directions map into World Engine axes without changing magnitude',()=>{
+  assert.deepEqual(
+    worldForgeDirectionToWorldEngine({x:2,y:3,z:4}),
+    {x:2,y:4,z:-3},
+  );
 });

@@ -217,6 +217,23 @@ Current area lights are explicitly approximated as point lights because World En
 
 The browser editor exposes **Engine Bridge** only for committed canonical state. If a Stage-mode ChangeSet is pending, runtime compilation is blocked until the proposal is applied or cleared.
 
+## Play interaction inputs
+
+Play Mode can now send bounded, tick-bound runtime inputs to selected dynamic bodies without rewriting authored scene state.
+
+The editor resolves the current World Engine entity ID from the active runtime snapshot rather than assuming a string mapping. Runtime body velocity is read from that same snapshot and exposed as live speed feedback.
+
+Supported editor interactions in this slice:
+
+- configurable impulse magnitude;
+- ±X / ±Y / ±Z impulse controls in Forge coordinates;
+- automatic Forge Z-up → World Engine Y-up direction mapping;
+- Zero Velocity;
+- every interaction is scheduled for exactly the next runtime tick;
+- the action advances the session one tick and returns a new runtime snapshot.
+
+These are ephemeral World Engine inputs, not World Forge mutations. The authored transform remains unchanged unless the user separately commits an authoring edit. Staged authoring changes block runtime inputs until they are applied or cleared so proposed authoring state and runtime input state cannot be mixed ambiguously.
+
 ## Physics authoring
 
 World Forge now authors physics as a first-class node component rather than hiding runtime behavior in generic metadata.
