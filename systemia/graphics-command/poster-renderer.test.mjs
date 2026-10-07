@@ -34,8 +34,12 @@ test('directed poster makes visual payoff primary and removes audit clutter',()=
   assert.match(svg,/5 ACTIVE VOLCANOES/);
   assert.match(svg,/Mount Rainier/);
   assert.match(svg,/class="geo-boundary"/);
+  assert.match(svg,/data-visual-model="cinematic-geography-v1"/);
+  assert.match(svg,/class="cinematic-relief"/);
+  assert.match(svg,/class="story-route cascade-spine"[^>]*opacity=".20"/);
   assert.match(svg,/WASHINGTON/);
   assert.match(svg,/class="peak-marker"/);
+  assert.doesNotMatch(svg,/<circle class="peak-marker"/);
   assert.match(svg,/Mount Adams<\/text>/);
   assert.match(svg,/text-anchor="start"[^>]*>Mount Adams<\/text>/);
   assert.match(svg,/text-anchor="end"[^>]*>Mount St\. Helens<\/text>/);
