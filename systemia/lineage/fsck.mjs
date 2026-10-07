@@ -1,5 +1,5 @@
 import { readdir, readFile } from 'node:fs/promises';
-import { basename, dirname, join, relative } from 'node:path';
+import { join, relative } from 'node:path';
 import { LargeObjectStore } from './large-object.mjs';
 
 const HEX64 = /^[a-f0-9]{64}$/;
@@ -100,9 +100,6 @@ async function readPointerRoots(root, {
           String(object.payload?.data || ''),
           object.payload?.encoding || 'base64'
         );
-        const actualSha = store.constructor
-          ? null
-          : null;
         const expectedSize = Number(object.payload?.size);
         if (!Number.isInteger(expectedSize) || expectedSize !== bytes.length) {
           pushError(errors, 'blob_size_mismatch', {
@@ -185,8 +182,10 @@ async function readPointerRoots(root, {
             });
           }
           if (
-            Number.isInteger(Number(entry?.bytes)) &&
-            Number.isInteger(Number(child.payload?.size)) &&
+            entry?.bytes != null &&
+            child.payload?.size != null &&
+            Number.isInteger(Number(entry.bytes)) &&
+            Number.isInteger(Number(child.payload.size)) &&
             Number(entry.bytes) !== Number(child.payload.size)
           ) {
             pushError(errors, 'tree_entry_size_mismatch', {
@@ -222,8 +221,10 @@ async function readPointerRoots(root, {
             });
           }
           if (
-            Number.isInteger(Number(entry?.bytes)) &&
-            Number.isInteger(Number(child.payload?.size)) &&
+            entry?.bytes != null &&
+            child.payload?.size != null &&
+            Number.isInteger(Number(entry.bytes)) &&
+            Number.isInteger(Number(child.payload.size)) &&
             Number(entry.bytes) !== Number(child.payload.size)
           ) {
             pushError(errors, 'tree_entry_size_mismatch', {
