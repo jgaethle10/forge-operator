@@ -374,7 +374,7 @@ async function fetchWithTimeout(url, options={}, timeoutMs=15000) {
     if (upstreamSignal.aborted) abortFromUpstream();
     else upstreamSignal.addEventListener('abort',abortFromUpstream,{once:true});
   }
-  const timer = window.setTimeout(() => controller.abort(), timeoutMs);
+  const timer = window.setTimeout(() => controller.abort(new DOMException('FAIE request timed out','TimeoutError')), timeoutMs);
   try {
     return await fetch(url, {...options, signal: controller.signal});
   } finally {
@@ -384,8 +384,11 @@ async function fetchWithTimeout(url, options={}, timeoutMs=15000) {
 }
 
 function requestErrorMessage(error) {
-  if (error && error.name === 'AbortError') {
+  if (error && error.name === 'TimeoutError') {
     return 'FAIE did not answer within 15 seconds. The request was stopped instead of hanging forever. Retry once; if it repeats, the live edge needs attention.';
+  }
+  if (error && error.name === 'AbortError') {
+    return 'Operation canceled. No completed result is being claimed.';
   }
   return error && error.message ? error.message : String(error);
 }
@@ -433,7 +436,7 @@ const evercraftActivity = (() => {
     tick();
   };
 
-  const start = ({kind:'activityKind'= 'Evercraft operation',title:'activityTitle'='Working',detail:'activityDetail'='',steps=['Prepare','Work','Deliver'],cancel=null}={}) => {
+  const start = ({kind:activityKind='Evercraft operation',title:activityTitle='Working',detail:activityDetail='',steps=['Prepare','Work','Deliver'],cancel=null}={}) => {
     clearTimers();
     current = {kind:activityKind,title:activityTitle,detail:activityDetail,steps,stepIndex:0,state:'active',startedAt:performance.now(),cancel};
     render();
@@ -441,7 +444,7 @@ const evercraftActivity = (() => {
     return current;
   };
 
-  const update = ({stepIndex,detail:'activityDetail',title:'activityTitle'}={}) => {
+  const update = ({stepIndex,detail:activityDetail,title:activityTitle}={}) => {
     if (!current) return;
     if (Number.isInteger(stepIndex)) current.stepIndex = stepIndex;
     if (typeof activityDetail === 'string') current.detail = activityDetail;
@@ -449,7 +452,7 @@ const evercraftActivity = (() => {
     render();
   };
 
-  const finish = ({title:'activityTitle'='Complete',detail:'activityDetail'='Operation completed.'}={}) => {
+  const finish = ({title:activityTitle='Complete',detail:activityDetail='Operation completed.'}={}) => {
     if (!current) return;
     current.state = 'success';
     current.stepIndex = current.steps.length - 1;
@@ -460,7 +463,7 @@ const evercraftActivity = (() => {
     hideTimer = window.setTimeout(() => { hud.dataset.visible='false'; current=null; },2600);
   };
 
-  const fail = ({title:'activityTitle'='Operation stopped',detail:'activityDetail'='The operation did not complete.'}={}) => {
+  const fail = ({title:activityTitle='Operation stopped',detail:activityDetail='The operation did not complete.'}={}) => {
     if (!current) return;
     current.state = 'error';
     current.title = activityTitle;
@@ -815,7 +818,7 @@ document.getElementById('compareRun').addEventListener('click', async () => {
     title:'Comparing candidate evidence',
     detail:'Validating both candidate scopes before the shared evidence pass.',
     steps:compareSteps,
-    cancel:()=>compareController.abort()
+    cancel:()=>compareController.abort(new DOMException('Canceled by user','AbortError'))
   });
 
   try {
@@ -882,7 +885,7 @@ document.getElementById('form').addEventListener('submit', async (event) => {
     title:'Building FAIE decision packet',
     detail:'Bounding the question and validating the operator-supplied scope.',
     steps:investigateSteps,
-    cancel:()=>investigateController.abort()
+    cancel:()=>investigateController.abort(new DOMException('Canceled by user','AbortError'))
   });
 
   try {
