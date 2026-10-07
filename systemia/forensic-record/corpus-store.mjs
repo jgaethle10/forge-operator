@@ -213,7 +213,7 @@ export function searchForensicFindings({stateDir,findingNumber=null,sourceDocume
   }
   if(keys===null) keys=Object.values(index.entries).filter(e=>e.domain==='findings').map(e=>e.record_key);
   const needle=clean(text).toLowerCase();
-  const results=[];
+  const matched=[];
   for(const key of keys){
     const entry=index.entries[key];
     if(!entry||entry.domain!=='findings') continue;
@@ -222,9 +222,25 @@ export function searchForensicFindings({stateDir,findingNumber=null,sourceDocume
       const hay=[record.title,record.quote,record.significance,record.source_document,record.category].map(clean).join(' ').toLowerCase();
       if(!hay.includes(needle)) continue;
     }
-    results.push(record);
-    if(results.length>=Math.max(1,Math.min(Number(limit)||50,200))) break;
+    matched.push(record);
   }
+  const pageOrder=(value)=>{
+    const match=clean(value).match(/\d+/);
+    return match?Number(match[0]):Number.MAX_SAFE_INTEGER;
+  };
+  matched.sort((a,b)=>{
+    const an=Number(a.finding_number),bn=Number(b.finding_number);
+    if(Number.isFinite(an)&&Number.isFinite(bn)&&an!==bn) return an-bn;
+    const sourceCmp=clean(a.source_document).localeCompare(clean(b.source_document));
+    if(sourceCmp) return sourceCmp;
+    const pageCmp=pageOrder(a.page_reference)-pageOrder(b.page_reference);
+    if(pageCmp) return pageCmp;
+    const titleCmp=clean(a.title).localeCompare(clean(b.title));
+    if(titleCmp) return titleCmp;
+    return clean(a.record_key).localeCompare(clean(b.record_key));
+  });
+  const boundedLimit=Math.max(1,Math.min(Number(limit)||50,200));
+  const results=matched.slice(0,boundedLimit);
   return {
     schema:'evercraft.forensic-record.search-results.v1',
     finding_number:Number.isInteger(n)&&n>0?n:null,
