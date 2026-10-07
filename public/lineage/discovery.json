@@ -47,7 +47,20 @@
     ],
     "payment_authority": "Evercraft Payments",
     "checkout_is_payment_proof": false,
-    "paid_state_requires_authoritative_verification": true
+    "paid_state_requires_authoritative_verification": true,
+    "payment": {
+      "authority": "Evercraft Payments",
+      "commerce_layer": "evercraft_payments",
+      "provider_boundary": "raven_nexus",
+      "settlement_adapter": "stripe",
+      "provider_role": "settlement_adapter",
+      "product_key": "lineage",
+      "offer_key": "lineage-founding-pilot-500",
+      "amount_usd": 500,
+      "direct_provider_checkout_allowed": false,
+      "checkout_state": "held_pending_verified_evercraft_payment_order_path",
+      "paid_state_requires_authoritative_verification": true
+    }
   },
   "boundaries": [
     "public discovery does not expose a customer's private repository",
