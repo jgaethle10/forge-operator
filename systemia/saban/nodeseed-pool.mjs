@@ -495,7 +495,7 @@ function pickNode(nodes, cursor) {
   return healthy[cursor % healthy.length];
 }
 
-function meetsResourceProfile(node, profile = null) {
+export function meetsResourceProfile(node, profile = null) {
   if (!profile) return { eligible: true, reason: null };
   const hint = node.capacity_hint;
   if (!hint && profile.require_capacity_hint === true) {
@@ -510,6 +510,32 @@ function meetsResourceProfile(node, profile = null) {
     }
     if (minMemory && Number(hint.memory_mb || 0) < minMemory) {
       return { eligible: false, reason: 'insufficient_memory_capacity' };
+    }
+
+    const minStorage = Number(profile.minimum_node_storage_gb || 0);
+    const minGpu = Number(profile.minimum_node_gpu_units || profile.minimum_node_gpu_count || 0);
+    const minVram = Number(profile.minimum_node_vram_mb || 0);
+    const requiredGpuModels = (profile.required_gpu_models || [])
+      .map((value) => String(value).trim().toLowerCase())
+      .filter(Boolean);
+    const availableGpuModels = (hint.gpu_models || [])
+      .map((value) => String(value).trim().toLowerCase())
+      .filter(Boolean);
+
+    if (minStorage && Number(hint.storage_gb || 0) < minStorage) {
+      return { eligible: false, reason: 'insufficient_storage_capacity' };
+    }
+    if (minGpu && Number(hint.gpu_units || hint.gpu_count || 0) < minGpu) {
+      return { eligible: false, reason: 'insufficient_gpu_capacity' };
+    }
+    if (minVram && Number(hint.vram_mb || 0) < minVram) {
+      return { eligible: false, reason: 'insufficient_vram_capacity' };
+    }
+    if (
+      requiredGpuModels.length &&
+      !requiredGpuModels.some((model) => availableGpuModels.includes(model))
+    ) {
+      return { eligible: false, reason: 'required_gpu_model_missing' };
     }
 
     for (const executable of profile.required_executables || []) {
