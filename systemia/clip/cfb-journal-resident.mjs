@@ -86,13 +86,15 @@ export async function runCfbJournalPublishCycle({
       continue;
     }
 
-    const resourceRef=journalStoryResourceRef(row.slug);
+    const storyResourceRef=journalStoryResourceRef(row.slug);
+    const resourceRef='journal-series:cfb-power-rankings';
     let authorization;
     try{
       authorization=await authorizeStory({
         story_id:storyId,
         slug:row.slug,
         resource_ref:resourceRef,
+        story_resource_ref:storyResourceRef,
         scope:'home.clip.publish',
       });
     }catch(error){
@@ -116,6 +118,7 @@ export async function runCfbJournalPublishCycle({
         action:'authorization_hold',
         state:'authorization_hold',
         resource_ref:resourceRef,
+        story_resource_ref:storyResourceRef,
         error:reason,
       });
       continue;
@@ -195,7 +198,8 @@ export async function runCfbJournalPublishCycle({
         maxProviderPublishesPerCycle:Math.max(1,Number(maxPublishesPerCycle)||1),
         terminalProviderReceiptsNeverRepublished:true,
         passportAuthorizationRequired:true,
-        storyResourceAuthorizationRequired:true,
+        seriesResourceAuthorizationRequired:true,
+        interactiveStoryResourceAuthorizationRemainsSeparate:true,
         credentialsResolvedOnlyAfterAuthorization:true,
         credentialsResolvedOnlyInsideResident:true,
         arbitraryUrlsAccepted:false,
