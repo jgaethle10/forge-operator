@@ -7,6 +7,16 @@ on:
       - "systemia/clip/social-publisher-runtime.test.mjs"
       - "systemia/clip/facebook-page-publisher.mjs"
       - "systemia/clip/facebook-page-publisher.test.mjs"
+      - "systemia/clip/facebook-page-photo-publisher.mjs"
+      - "systemia/clip/space-dudz-facebook-publish.mjs"
+      - "systemia/clip/space-dudz-publish-authorize.mjs"
+      - "systemia/clip/space-dudz-resident.mjs"
+      - "systemia/clip/space-dudz-resident-runner.mjs"
+      - "systemia/clip/space-dudz-resident.test.mjs"
+      - "systemia/clip/campaigns/space-dudz-orbit-one/**"
+      - "systemia/clip/authority/space-dudz-autopublish.json"
+      - "systemia/graphics-command/space-dudz-social-raster.mjs"
+      - "systemia/organism/space-dudz-clip-publisher.workflow.json"
       - "systemia/clip/facebook-page-credential-resolver.mjs"
       - "systemia/clip/facebook-page-credential-resolver.test.mjs"
       - "systemia/evercraft-home/provider-credentials.mjs"
@@ -36,6 +46,16 @@ on:
       - "systemia/clip/social-publisher-runtime.test.mjs"
       - "systemia/clip/facebook-page-publisher.mjs"
       - "systemia/clip/facebook-page-publisher.test.mjs"
+      - "systemia/clip/facebook-page-photo-publisher.mjs"
+      - "systemia/clip/space-dudz-facebook-publish.mjs"
+      - "systemia/clip/space-dudz-publish-authorize.mjs"
+      - "systemia/clip/space-dudz-resident.mjs"
+      - "systemia/clip/space-dudz-resident-runner.mjs"
+      - "systemia/clip/space-dudz-resident.test.mjs"
+      - "systemia/clip/campaigns/space-dudz-orbit-one/**"
+      - "systemia/clip/authority/space-dudz-autopublish.json"
+      - "systemia/graphics-command/space-dudz-social-raster.mjs"
+      - "systemia/organism/space-dudz-clip-publisher.workflow.json"
       - "systemia/clip/facebook-page-credential-resolver.mjs"
       - "systemia/clip/facebook-page-credential-resolver.test.mjs"
       - "systemia/evercraft-home/provider-credentials.mjs"
@@ -76,6 +96,7 @@ jobs:
           node --test \
             systemia/clip/social-publisher-runtime.test.mjs \
             systemia/clip/facebook-page-publisher.test.mjs \
+            systemia/clip/space-dudz-resident.test.mjs \
             systemia/clip/facebook-page-credential-resolver.test.mjs \
             systemia/evercraft-home/provider-credentials.test.mjs \
             systemia/evercraft-home/facebook-page-credential-http.test.mjs \
