@@ -11,6 +11,26 @@ const sha = (value) =>
     .update(typeof value === 'string' ? value : JSON.stringify(value))
     .digest('hex');
 
+const CODE_ROOT = path.resolve(
+  path.dirname(fileURLToPath(import.meta.url)),
+  '../..'
+);
+
+function currentSourceReleaseRef() {
+  const explicit = String(process.env.EVERCRAFT_RELEASE_REF || '').trim();
+  if (/^[a-f0-9]{40}$/i.test(explicit)) return explicit;
+  try {
+    const value = execFileSync('git', ['rev-parse', 'HEAD'], {
+      cwd: CODE_ROOT,
+      encoding: 'utf8',
+      stdio: ['ignore', 'pipe', 'ignore'],
+    }).trim();
+    return /^[a-f0-9]{40}$/i.test(value) ? value : '';
+  } catch {
+    return '';
+  }
+}
+
 function arg(name, fallback = '') {
   const index = process.argv.indexOf(name);
   return index >= 0 && process.argv[index + 1] ? process.argv[index + 1] : fallback;
@@ -117,6 +137,7 @@ export async function checkLocalOrganismHealth({
   requestImpl = requestHealth,
   execImpl = execFileSync,
   restartOnFailure = true,
+  sourceReleaseRefProvider = currentSourceReleaseRef,
   now = () => new Date(),
   cooldownMs = 90_000,
   recoveryWaitMs = 8_000,
@@ -130,6 +151,13 @@ export async function checkLocalOrganismHealth({
   const inspect = async () => {
     const seed = readJson(seedReceiptFile);
     const organism = readJson(organismReceiptFile);
+    const sourceReleaseRef = String(sourceReleaseRefProvider?.() || '').trim();
+    const organismReleaseRef = String(organism?.release_ref || '').trim();
+    const releaseCurrent =
+      /^[a-f0-9]{40}$/i.test(sourceReleaseRef) &&
+      /^[a-f0-9]{40}$/i.test(organismReleaseRef)
+        ? sourceReleaseRef === organismReleaseRef
+        : null;
     const endpoint = loopbackEndpoint(seed?.endpoint);
     const probe = endpoint
       ? await requestImpl(endpoint)
@@ -149,6 +177,9 @@ export async function checkLocalOrganismHealth({
         node_id: probe.body?.node_id || null,
         error: probe.error,
       },
+      organism_release_ref: organismReleaseRef || null,
+      source_release_ref: sourceReleaseRef || null,
+      release_current: releaseCurrent,
       remote_operator_enabled:
         organism?.remote_operator?.enabled === true,
       remote_admission_configured:
@@ -162,7 +193,8 @@ export async function checkLocalOrganismHealth({
   const healthy =
     before.service_state === 'active' &&
     before.seed_receipt_present &&
-    before.nodeseed_health.ok === true;
+    before.nodeseed_health.ok === true &&
+    before.release_current !== false;
 
   if (healthy) {
     const body = {
@@ -221,7 +253,8 @@ export async function checkLocalOrganismHealth({
       if (
         after.service_state === 'active' &&
         after.seed_receipt_present &&
-        after.nodeseed_health.ok === true
+        after.nodeseed_health.ok === true &&
+        after.release_current !== false
       ) {
         const body = {
           schema: 'evercraft.local-organism-health-watch.v1',
