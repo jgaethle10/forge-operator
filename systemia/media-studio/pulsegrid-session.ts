@@ -1,7 +1,7 @@
 import crypto from 'node:crypto';
 
 export const PULSEGRID_SESSION_SCHEMA = 'evercraft.fallen.pulsegrid.session.v1';
-export const PULSEGRID_ENGINE_VERSION = '0.6.0';
+export const PULSEGRID_ENGINE_VERSION = '0.7.0';
 
 export type PulseGridActor = 'human' | 'agent' | 'system' | 'controller';
 
@@ -54,6 +54,8 @@ export type PulseGridReceipt = {
   before: unknown;
   after: unknown;
   reversible: boolean;
+  request?: PulseGridOperation | null;
+  undo_of?: string | null;
 };
 
 export type PulseGridSession = {
@@ -431,9 +433,84 @@ export function applyPulseGridOperation(
     before,
     after,
     reversible: true,
+    request: structuredClone(operation),
+    undo_of: null,
   };
   session.receipts.push(receipt);
   const validation = validatePulseGridSession(session);
   if (!validation.ok) throw new Error('PulseGrid operation produced invalid session: ' + validation.errors.join(', '));
   return { session, receipt };
+}
+
+
+export function undoPulseGridReceipt(
+  source: PulseGridSession,
+  receiptId: string,
+  actor: PulseGridActor = 'human',
+) {
+  const originalReceipt = source.receipts.find((candidate) => candidate.id === receiptId);
+  if (!originalReceipt) throw new Error('Unknown PulseGrid receipt: ' + receiptId);
+  if (!originalReceipt.reversible) throw new Error('PulseGrid receipt is not reversible: ' + receiptId);
+  if (!originalReceipt.request) throw new Error('PulseGrid receipt predates executable undo metadata: ' + receiptId);
+
+  const session = cloneSession(source);
+  const operation = originalReceipt.request;
+
+  if (operation.type === 'transport.set_tempo') {
+    session.transport.bpm = Number(originalReceipt.before);
+  } else if (operation.type === 'transport.set_swing') {
+    session.transport.swing = Number(originalReceipt.before);
+  } else if (operation.type === 'track.set_filter') {
+    getTrack(session, operation.track_id).filterHz = Number(originalReceipt.before);
+  } else if (operation.type === 'track.set_delay_mix') {
+    getTrack(session, operation.track_id).delayMix = Number(originalReceipt.before);
+  } else if (operation.type === 'clip.set_bars') {
+    const track = getTrack(session, operation.track_id);
+    if (!track.clips[operation.scene]) throw new Error('Unknown PulseGrid scene: ' + String(operation.scene));
+    track.clips[operation.scene] = structuredClone(originalReceipt.before as PulseGridClip);
+  } else if (operation.type === 'clip.set_step') {
+    const { clip } = getClip(session, operation.track_id, operation.scene);
+    if (operation.step < 0 || operation.step >= clip.steps.length) throw new Error('PulseGrid undo step is out of range.');
+    clip.steps[operation.step] = Number(originalReceipt.before);
+  } else if (operation.type === 'note.add') {
+    const { clip } = getClip(session, operation.track_id, operation.scene);
+    const created = originalReceipt.after as PulseGridNote | null;
+    if (!created?.id) throw new Error('PulseGrid note-add receipt has no created note identity.');
+    const existing = clip.notes.findIndex((note) => note.id === created.id);
+    if (existing < 0) throw new Error('PulseGrid created note no longer exists: ' + created.id);
+    clip.notes.splice(existing, 1);
+  } else if (operation.type === 'note.move' || operation.type === 'note.resize') {
+    const { clip } = getClip(session, operation.track_id, operation.scene);
+    const restored = structuredClone(originalReceipt.before as PulseGridNote);
+    const { index } = findNote(clip, operation.note_id);
+    clip.notes[index] = restored;
+  } else if (operation.type === 'note.delete') {
+    const { clip } = getClip(session, operation.track_id, operation.scene);
+    const restored = structuredClone(originalReceipt.before as PulseGridNote);
+    if (clip.notes.some((note) => note.id === restored.id)) {
+      throw new Error('PulseGrid deleted note already exists: ' + restored.id);
+    }
+    clip.notes.push(restored);
+    clip.notes.sort((a, b) => a.start - b.start || a.pitch - b.pitch || a.id.localeCompare(b.id));
+  }
+
+  const validation = validatePulseGridSession(session);
+  if (!validation.ok) {
+    throw new Error('PulseGrid undo produced invalid session: ' + validation.errors.join(', '));
+  }
+
+  const undoReceipt: PulseGridReceipt = {
+    id: crypto.randomUUID(),
+    timestamp: new Date().toISOString(),
+    actor,
+    operation: 'operation.undo',
+    targets: [...originalReceipt.targets],
+    before: structuredClone(originalReceipt.after),
+    after: structuredClone(originalReceipt.before),
+    reversible: false,
+    request: null,
+    undo_of: originalReceipt.id,
+  };
+  session.receipts.push(undoReceipt);
+  return { session, receipt: undoReceipt };
 }

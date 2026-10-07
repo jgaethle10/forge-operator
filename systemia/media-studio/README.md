@@ -459,3 +459,11 @@ PulseGrid clips are no longer fixed to one 16-step bar. The canonical graph supp
 Notes now have stable IDs and semantic operations for add, move, resize and delete. Clip-length changes resize steps, probability, microtiming and automation together; shrinking a clip deterministically removes or trims out-of-range notes instead of leaving corrupt hidden state.
 
 These mutations return reversible receipts with before/after state so human UI, controllers and agents can share one edit model.
+
+### PulseGrid 0.7 executable undo
+
+PulseGrid receipts now retain the exact semantic operation request that produced them, and reversible receipts can be deterministically applied in reverse through `undoPulseGridReceipt`.
+
+Undo is state-aware rather than cosmetic. It restores transport values, track DSP parameters, individual steps, note additions/moves/resizes/deletions, and full pre-edit clip snapshots for destructive clip-length changes. Every undo is validated against the canonical session graph and creates its own receipt linked to the original receipt through `undo_of`.
+
+This makes the promise of reversible agent edits executable inside the engine rather than merely descriptive metadata.

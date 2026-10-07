@@ -8,6 +8,7 @@ import {
   createPulseGridSession,
   migratePulseGridSession,
   validatePulseGridSession,
+  undoPulseGridReceipt,
 } from './pulsegrid-session.js';
 
 test('PulseGrid creates a valid canonical Fallen music session',()=>{
@@ -34,7 +35,7 @@ test('PulseGrid migrates older sparse browser sessions into the canonical graph'
       clips:[{id:'keys-scene-1',steps:[1,0,0,0]}]
     }]
   });
-  assert.equal(migrated.version,'0.6.0');
+  assert.equal(migrated.version,'0.7.0');
   assert.equal(migrated.transport.bpm,128);
   assert.equal(migrated.tracks[0].clips[0].bars,1);
   assert.equal(migrated.tracks[0].clips[0].steps.length,16);
@@ -131,5 +132,74 @@ test('PulseGrid note lifecycle is semantic, bounded and reversible',()=>{
   assert.equal(result.receipt.after,null);
   assert.equal(result.receipt.reversible,true);
   assert.equal(original.tracks.find((track)=>track.id==='keys')!.clips[0].notes.length,0);
+  assert.equal(validatePulseGridSession(session).ok,true);
+});
+
+
+test('PulseGrid executable undo restores destructive clip shrink exactly',()=>{
+  let session=createPulseGridSession('Undo Proof');
+  ({session}=applyPulseGridOperation(session,{type:'clip.set_bars',track_id:'keys',scene:0,bars:4}));
+  ({session}=applyPulseGridOperation(session,{
+    type:'note.add',track_id:'keys',scene:0,
+    note:{id:'survivor',pitch:67,start:12,length:4,velocity:.8},
+  }));
+  ({session}=applyPulseGridOperation(session,{
+    type:'note.add',track_id:'keys',scene:0,
+    note:{id:'late',pitch:76,start:50,length:8,velocity:.7},
+  }));
+  const beforeShrink=structuredClone(session.tracks.find((track)=>track.id==='keys')!.clips[0]);
+
+  const shrink=applyPulseGridOperation(session,{type:'clip.set_bars',track_id:'keys',scene:0,bars:2},'agent');
+  session=shrink.session;
+  assert.equal(session.tracks.find((track)=>track.id==='keys')!.clips[0].notes.some((note)=>note.id==='late'),false);
+  assert.equal(shrink.receipt.request?.type,'clip.set_bars');
+
+  const undone=undoPulseGridReceipt(session,shrink.receipt.id,'human');
+  const restored=undone.session.tracks.find((track)=>track.id==='keys')!.clips[0];
+  assert.deepEqual(restored,beforeShrink);
+  assert.equal(undone.receipt.operation,'operation.undo');
+  assert.equal(undone.receipt.undo_of,shrink.receipt.id);
+  assert.equal(undone.receipt.reversible,false);
+  assert.equal(validatePulseGridSession(undone.session).ok,true);
+});
+
+test('PulseGrid executable undo restores note add move resize and delete operations',()=>{
+  let session=createPulseGridSession('Note Undo');
+  const baseline=structuredClone(session.tracks.find((track)=>track.id==='keys')!.clips[0].notes);
+
+  let result=applyPulseGridOperation(session,{
+    type:'note.add',track_id:'keys',scene:0,
+    note:{id:'n-undo',pitch:60,start:2,length:2,velocity:.6},
+  },'agent');
+  session=result.session;
+  session=undoPulseGridReceipt(session,result.receipt.id).session;
+  assert.deepEqual(session.tracks.find((track)=>track.id==='keys')!.clips[0].notes,baseline);
+
+  result=applyPulseGridOperation(session,{
+    type:'note.add',track_id:'keys',scene:0,
+    note:{id:'n-undo',pitch:60,start:2,length:2,velocity:.6},
+  });
+  session=result.session;
+
+  const beforeMove=structuredClone(session.tracks.find((track)=>track.id==='keys')!.clips[0].notes[0]);
+  result=applyPulseGridOperation(session,{
+    type:'note.move',track_id:'keys',scene:0,note_id:'n-undo',start:6,pitch:65,
+  });
+  session=undoPulseGridReceipt(result.session,result.receipt.id).session;
+  assert.deepEqual(session.tracks.find((track)=>track.id==='keys')!.clips[0].notes[0],beforeMove);
+
+  const beforeResize=structuredClone(session.tracks.find((track)=>track.id==='keys')!.clips[0].notes[0]);
+  result=applyPulseGridOperation(session,{
+    type:'note.resize',track_id:'keys',scene:0,note_id:'n-undo',length:5,
+  });
+  session=undoPulseGridReceipt(result.session,result.receipt.id).session;
+  assert.deepEqual(session.tracks.find((track)=>track.id==='keys')!.clips[0].notes[0],beforeResize);
+
+  const beforeDelete=structuredClone(session.tracks.find((track)=>track.id==='keys')!.clips[0].notes[0]);
+  result=applyPulseGridOperation(session,{
+    type:'note.delete',track_id:'keys',scene:0,note_id:'n-undo',
+  });
+  session=undoPulseGridReceipt(result.session,result.receipt.id).session;
+  assert.deepEqual(session.tracks.find((track)=>track.id==='keys')!.clips[0].notes[0],beforeDelete);
   assert.equal(validatePulseGridSession(session).ok,true);
 });
