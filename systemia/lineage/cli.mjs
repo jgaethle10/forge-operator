@@ -40,6 +40,15 @@ async function main() {
     case 'log':
       console.log(JSON.stringify(await store.log(args[0] || 'HEAD', Number(args[1] || 20)), null, 2));
       break;
+    case 'reflog': {
+      const branch = args[0] || await store.currentBranch();
+      console.log(JSON.stringify(
+        await store.readRefLog(branch, Number(args[1] || 50)),
+        null,
+        2
+      ));
+      break;
+    }
     case 'diff':
       console.log(JSON.stringify(await store.diff(args[0] || 'HEAD', args[1] || null), null, 2));
       break;
@@ -195,7 +204,7 @@ async function main() {
       break;
     }
     default:
-      console.log(`Evercraft Lineage\n\nCommands:\n  init [branch]\n  commit [message]\n  branch <name> [from]\n  switch <branch>\n  log [ref] [limit]\n  diff [from] [to]\n  restore <ref> [target]\n  rollback <ref>\n  merge-preview <branch>\n  merge <branch>\n  large-put <file> [media-type]\n  large-verify <manifest-id>\n  large-remote-push <remote-url> <manifest-id> [concurrency]\n  large-remote-fetch <remote-url> <manifest-id> [concurrency]\n  remote-refs <remote-dir>\n  remote-push <remote-dir> [branch] [expected-head]\n  remote-fetch <remote-dir> [remote-branch] [local-branch]\n  git-import <git-repo-dir> [git-ref] [lineage-branch]\n  git-export <git-repo-dir> [lineage-ref] [git-branch] [expected-git-head]\n  history [ref] [limit]\n  history-export <out-dir> [ref] [limit]\n  release-record <manifest.json>\n  release-show <name> [channel]\n  fsck [--fast]`);
+      console.log(`Evercraft Lineage\n\nCommands:\n  init [branch]\n  commit [message]\n  branch <name> [from]\n  switch <branch>\n  log [ref] [limit]\n  reflog [branch] [limit]\n  diff [from] [to]\n  restore <ref> [target]\n  rollback <ref>\n  merge-preview <branch>\n  merge <branch>\n  large-put <file> [media-type]\n  large-verify <manifest-id>\n  large-remote-push <remote-url> <manifest-id> [concurrency]\n  large-remote-fetch <remote-url> <manifest-id> [concurrency]\n  remote-refs <remote-dir>\n  remote-push <remote-dir> [branch] [expected-head]\n  remote-fetch <remote-dir> [remote-branch] [local-branch]\n  git-import <git-repo-dir> [git-ref] [lineage-branch]\n  git-export <git-repo-dir> [lineage-ref] [git-branch] [expected-git-head]\n  history [ref] [limit]\n  history-export <out-dir> [ref] [limit]\n  release-record <manifest.json>\n  release-show <name> [channel]\n  fsck [--fast]`);
   }
 }
 
