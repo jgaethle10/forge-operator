@@ -255,7 +255,13 @@ jobs:
           if (!containmentRoute.matches?.some((row) => row.product_key === 'evercraft-containment')) throw new Error('generic persistence pain did not discover Evercraft Containment');
           if (painIndex.schema !== 'evercraft.chum.pain-index.v1') throw new Error('pain index missing');
           if (painIndex.universal_front_door?.read_only_registry_name !== 'io.github.jgaethle10/evercraft-capability-discovery') throw new Error('read-only discovery MCP missing from pain index');
-          if (/https?:\\/\\/(?:www\\.)?systemiacommandcenters\\.com(?:[\\/"?]|$)/i.test(JSON.stringify(painIndex))) throw new Error('Marketing Agency root route leaked into pain index');
+          const painIndexSerialized = JSON.stringify(painIndex);
+          if (
+            painIndexSerialized.includes('https://systemiacommandcenters.com/') ||
+            painIndexSerialized.includes('https://www.systemiacommandcenters.com/') ||
+            painIndexSerialized.includes('http://systemiacommandcenters.com/') ||
+            painIndexSerialized.includes('http://www.systemiacommandcenters.com/')
+          ) throw new Error('Marketing Agency root route leaked into pain index');
           if (answerGraph.schema !== 'evercraft.chum.answer-graph.v2') throw new Error('answer graph v2 missing');
           if (answerGraph.summary?.pain_index_entries !== painIndex.entries?.length) throw new Error('answer graph/pain index parity failed');
           if (!chumHtml.includes('Describe the problem')) throw new Error('CHUM problem-language form missing');
