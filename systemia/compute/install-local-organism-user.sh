@@ -46,6 +46,15 @@ set_env_value() {
   chmod 0600 "${ENV_FILE}"
 }
 
+if [[ -n "${EVERCRAFT_LOCAL_ZERO_SPEND:-}" ]]; then
+  case "${EVERCRAFT_LOCAL_ZERO_SPEND,,}" in
+    true|false) set_env_value "EVERCRAFT_LOCAL_ZERO_SPEND" "${EVERCRAFT_LOCAL_ZERO_SPEND,,}" ;;
+    *) echo "EVERCRAFT_LOCAL_ZERO_SPEND must be true or false." >&2; exit 2 ;;
+  esac
+elif ! grep -q '^EVERCRAFT_LOCAL_ZERO_SPEND=' "${ENV_FILE}"; then
+  set_env_value "EVERCRAFT_LOCAL_ZERO_SPEND" "true"
+fi
+
 if [[ -n "${EVERCRAFT_REMOTE_BROKER_URL:-}" ]]; then
   set_env_value "EVERCRAFT_REMOTE_BROKER_URL" "${EVERCRAFT_REMOTE_BROKER_URL}"
 fi
@@ -150,6 +159,11 @@ echo "Evercraft local organism installed and active."
 echo "Runtime: NodeSeed -> Evercraft Compute -> Yard -> KAIDANCE -> Systemia Core"
 echo "Network: loopback-only; no public ingress created."
 echo "Health watch: every 60s with bounded user-service restart and receipt."
+if grep -q '^EVERCRAFT_LOCAL_ZERO_SPEND=true$' "${ENV_FILE}"; then
+  echo "Capacity economics: existing local organism is zero-spend capacity."
+else
+  echo "Capacity economics: zero-spend advertisement disabled by operator configuration."
+fi
 if grep -q '^EVERCRAFT_REMOTE_BROKER_URL=.' "${ENV_FILE}"; then
   echo "Remote admission: configured through private user environment."
 else

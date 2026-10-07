@@ -23,6 +23,9 @@ try {
 
   assert.equal(first.seed.endpoint.startsWith('http://127.0.0.1:'), true);
   assert.equal(first.seed.beacon, null);
+  assert.equal(first.seed.zero_cost, true);
+  assert.equal(first.seed.placement_labels.includes('persistent-storage'), true);
+  assert.equal(first.receipt.zero_spend_capacity, true);
   assert.equal(first.receipt.public_ingress, false);
   assert.equal(first.receipt.node_endpoint_scope, 'loopback_only');
   assert.equal(first.receipt.named_cloud_required, false);
@@ -109,6 +112,7 @@ try {
     'utf8'
   ));
   assert.equal(persistedReceipt.node_id, 'chromebook-proof-node');
+  assert.equal(persistedReceipt.zero_spend_capacity, true);
   assert.equal(persistedReceipt.public_ingress, false);
   assert.equal(persistedReceipt.physical_field_certification_claimed, false);
 
@@ -123,6 +127,7 @@ try {
       'Systemia Core',
     ],
     loopback_only: true,
+    zero_spend_capacity: true,
     public_ingress: false,
     multicast_announcement: false,
     persistent_device_identity: true,
