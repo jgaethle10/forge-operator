@@ -1,26 +1,8 @@
 {
   "schema": "evercraft.chum.provider-probe-history.v1",
-  "updated_at": "2026-10-07T02:54:12.304Z",
+  "updated_at": "2026-10-07T02:56:57.077Z",
   "max_records": 500,
   "records": [
-    {
-      "receipt_key_sha256": "49465c43536daa980a469659c453aae14b11a504d3e8127f02b87619a751f129",
-      "observed_at": "2026-10-06T04:13:18.794Z",
-      "provider": "generic_agent",
-      "provider_surface": "machine_client",
-      "product_key": "forensiscope",
-      "case_id": "media-evidence-timeline-008",
-      "prompt_sha256": "86f09354540467c774bbef8322b9281d962db8634ac279e3a1801936d7e00b62",
-      "pickup_observed": false,
-      "provider_receipt_sha256": "36dddcc8713accf36b65ea74a66058e7a463c4053f8828c81ff7a630fcde0ba7",
-      "response_sha256": "5d43f8791ee5ddbed820396f445ddc2f1ad946c8c9a828d457c541decb603f6b",
-      "source": "authorized_provider_probe",
-      "privacy": {
-        "full_provider_response_persisted": false,
-        "provider_session_reference_persisted": false,
-        "credentials_persisted": false
-      }
-    },
     {
       "receipt_key_sha256": "ec2ae23db3dd9daa2de539f62b717f4d43cc12a7dcccc3b7b3342d45c7b007be",
       "observed_at": "2026-10-06T04:13:48.236Z",
@@ -8995,6 +8977,24 @@
       "prompt_sha256": "426d5b4740995186012077a46fd92e1b7d5eb0d48dc3a66c9071a4041d88b8da",
       "pickup_observed": true,
       "provider_receipt_sha256": "b3516fe7317cb1153b7fa1f07d160ef666e48e4baaff941e9497fab0b3057f79",
+      "response_sha256": "608ef7cde72f0b0355ac7f4a1acf5554052ffdbea93cae2e029560fd53c3f813",
+      "source": "authorized_provider_probe",
+      "privacy": {
+        "full_provider_response_persisted": false,
+        "provider_session_reference_persisted": false,
+        "credentials_persisted": false
+      }
+    },
+    {
+      "receipt_key_sha256": "94a8814e906a454b757c4b16a77bda07569a74d38dcbd4c70e33c9244a0d3a01",
+      "observed_at": "2026-10-07T02:56:57.077Z",
+      "provider": "generic_agent",
+      "provider_surface": "machine_client",
+      "product_key": "forensiscope",
+      "case_id": "media-recording-compare-005",
+      "prompt_sha256": "426d5b4740995186012077a46fd92e1b7d5eb0d48dc3a66c9071a4041d88b8da",
+      "pickup_observed": true,
+      "provider_receipt_sha256": "11752cd228bb12c29c7a5c9ae5739ed3a6385a8d563468f225a0b96563979337",
       "response_sha256": "608ef7cde72f0b0355ac7f4a1acf5554052ffdbea93cae2e029560fd53c3f813",
       "source": "authorized_provider_probe",
       "privacy": {
