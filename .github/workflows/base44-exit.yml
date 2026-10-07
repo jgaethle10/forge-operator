@@ -112,6 +112,8 @@ jobs:
         run: node systemia/migrations/base44-exit/forensic-record-domain-adapter.proof.mjs
       - name: Prove Forensic Record resumable migration
         run: node systemia/migrations/base44-exit/forensic-record-stream-migrator.proof.mjs
+      - name: Prove Forensic Record reconciliation hardening
+        run: node systemia/migrations/base44-exit/forensic-record-reconciliation-hardening.proof.mjs
       - name: Prove Forensic Record owned corpus runtime
         run: node systemia/forensic-record/owned-corpus.proof.mjs
       - name: Prove Forensic Record on Yard / Evercraft Compute
