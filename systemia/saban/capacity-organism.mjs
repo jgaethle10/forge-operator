@@ -26,6 +26,7 @@ import { readSafeNodeSeedInventory } from './nodeseed-inventory-ingest.mjs';
 import { appendDemandHistory, forecastCapacityDemand, prewarmActionsForAuthorizedCapacity } from './capacity-demand-forecast.mjs';
 import { buildForecastHeadroomReservations } from './capacity-headroom.mjs';
 import { buildCapacityLifecyclePlan } from './capacity-lifecycle.mjs';
+import { auditFailureDomains } from './failure-domain-audit.mjs';
 import { buildResourceFieldExpansionIntents } from './capacity-resource-field-bridge.mjs';
 
 const MODULE_FILE=fileURLToPath(import.meta.url);
@@ -161,6 +162,10 @@ export function compileCapacityOrganismState({
     previousLedger:previousLifecycleLedger,
     now,
   });
+  const failureDomainAudit=auditFailureDomains({
+    offers:combinedOffers,
+    fabricPlan:workloadPlan,
+  });
   const rebalance=planFabricRebalance({
     previousPlan,
     nextPlan:workloadPlan,
@@ -227,6 +232,15 @@ export function compileCapacityOrganismState({
       receipt_hash:lifecyclePlan.receipt_hash,
       automatic_shutdown_authorized:false,
     },
+    failure_domain_audit:{
+      replicated_task_count:failureDomainAudit.replicated_task_count,
+      independent_replicated_task_count:failureDomainAudit.independent_replicated_task_count,
+      evidence_incomplete_task_count:failureDomainAudit.evidence_incomplete_task_count,
+      correlated_failure_risk_task_count:failureDomainAudit.correlated_failure_risk_task_count,
+      required_axes:failureDomainAudit.required_axes,
+      receipt_hash:failureDomainAudit.receipt_hash,
+      sensitive_domain_values_serialized:false,
+    },
     work_demand:demandRadar,
     zero_spend_capacity_needs:demandRadar
       ? deriveZeroSpendCapacityNeeds(demandRadar)
@@ -242,6 +256,7 @@ export function compileCapacityOrganismState({
     active_device_control_from_census:false,
     observation_never_grants_authority:true,
     _capacity_lifecycle_ledger:lifecyclePlan,
+    _failure_domain_audit:failureDomainAudit,
     generated_at:(now instanceof Date?now:new Date(now)).toISOString(),
   };
   return body;
@@ -346,7 +361,7 @@ export async function runCapacityOrganismOnce({
     now,
   });
 
-  const { _capacity_lifecycle_ledger: lifecycleLedger, ...compiledPublic }=compiled;
+  const { _capacity_lifecycle_ledger: lifecycleLedger, _failure_domain_audit: failureDomainAudit, ...compiledPublic }=compiled;
   const receipt={
     ...compiledPublic,
     census:census?{
@@ -449,6 +464,9 @@ export async function runCapacityOrganismOnce({
   if(lifecycleLedger){
     atomicJson(lifecycleLedgerFile,lifecycleLedger);
   }
+  if(failureDomainAudit){
+    atomicJson(path.join(resolvedRoot,'failure-domain-audit.json'),failureDomainAudit);
+  }
   atomicJson(path.join(resolvedRoot,'authority-requests.json'),{
     schema:'evercraft.saban.capacity-authority-queue.v1',
     authority_requests:autonomyPlan.authority_requests,
@@ -482,6 +500,8 @@ async function main(){
       forecast_headroom_reservation_count:receipt.capacity_headroom?.reservation_count||0,
       capacity_lifecycle_reclaim_eligible_count:receipt.capacity_lifecycle?.reclaim_eligible_count||0,
       capacity_lifecycle_paid_release_count:receipt.capacity_lifecycle?.release_paid_lease_count||0,
+      failure_domain_correlated_risk_count:receipt.failure_domain_audit?.correlated_failure_risk_task_count||0,
+      failure_domain_evidence_incomplete_count:receipt.failure_domain_audit?.evidence_incomplete_task_count||0,
       resource_field_expansion_intent_count:receipt.resource_field_expansion?.intent_count||0,
       resource_field_current_pressure_count:receipt.resource_field_expansion?.current_pressure_intent_count||0,
       resource_field_forecast_pressure_count:receipt.resource_field_expansion?.forecast_pressure_intent_count||0,
