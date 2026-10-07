@@ -136,6 +136,7 @@ export function createFabricFaieSurface({
     return {
       ...runtimeHealth,
       public_surface:'/faie/',
+      design_partner_surface:'/faie/agnormal/',
       public_api:'/api/faie',
       public_mcp:'/mcp/faie',
       fabric_native:true,
@@ -153,11 +154,18 @@ export function createFabricFaieSurface({
     const isFaie=
       pathname==='/faie' ||
       pathname==='/faie/' ||
+      pathname==='/faie/agnormal' ||
+      pathname==='/faie/agnormal/' ||
       pathname.startsWith('/api/faie/') ||
       pathname==='/mcp/faie';
     if(!isFaie) return false;
 
-    if((req.method==='GET'||req.method==='HEAD')&&(pathname==='/faie'||pathname==='/faie/')){
+    if((req.method==='GET'||req.method==='HEAD')&&(
+      pathname==='/faie' ||
+      pathname==='/faie/' ||
+      pathname==='/faie/agnormal' ||
+      pathname==='/faie/agnormal/'
+    )){
       if(!fs.existsSync(pagePath)){
         sendJson(res,503,{ok:false,error:'faie_public_surface_unavailable'});
         return true;
