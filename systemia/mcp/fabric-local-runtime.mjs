@@ -520,6 +520,7 @@ export async function startFabricLocalRuntime({
     human_offer_checkout_enabled:true,
     human_offer_checkout_path_template:'/api/offers/{slug}/checkout',
     human_offer_checkout_requires_explicit_confirmation:true,
+    human_offer_checkout_handoff_mode:'explicit_evercraft_page',
     payment_authority:'Evercraft Payments',
     payment_router:'Raven Nexus',
     base44_transport_enabled:false,
