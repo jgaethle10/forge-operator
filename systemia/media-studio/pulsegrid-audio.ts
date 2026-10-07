@@ -258,13 +258,14 @@ export class PulseGridAudioEngine {
     this.scheduledSteps += 1;
     if (aheadMs < 0) this.lateScheduleCount += 1;
 
-    this.step = globalStep % this.loopSteps();
-    this.scheduleStep(this.step, time);
+    const scheduledStep = globalStep % this.loopSteps();
+    this.step = scheduledStep;
+    this.scheduleStep(scheduledStep, time);
 
     const delayMs = Math.max(0, aheadMs);
     const timer = globalThis.setTimeout(() => {
       this.uiTimers.delete(timer);
-      if (this.playing) this.onStep?.(this.step);
+      if (this.playing) this.onStep?.(scheduledStep);
     }, delayMs);
     this.uiTimers.add(timer);
   }
