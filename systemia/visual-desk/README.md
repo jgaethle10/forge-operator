@@ -105,3 +105,26 @@ node systemia/visual-desk/build-all.mjs systemia/visual-desk/stories public/visu
 The batch build also emits `index.json`, giving Clip, Journal, Radar and other Evercraft systems one machine-readable inventory of the current visual catalog.
 
 The motion stage deliberately exposes `window.__evercraftRenderAt(seconds)` and `window.__evercraftRenderFrame(frame, fps)` instead of relying on wall-clock playback. This means the same story can become a deterministic Reel/Short through the existing Fallen exact-frame renderer without screen-recording a browser animation.
+
+
+## Radar admission bridge
+
+Radar can now hand Visual Desk evidence-bound spatial candidates instead of forcing a human to re-key a story.
+
+The bridge is deliberately receipt-driven:
+
+```
+Radar signal
+  -> adversarial/freshness gate
+  -> deterministic visual-priority score
+  -> spatial admission
+  -> evercraft.visual-story.v1
+  -> Visual Desk factory
+  -> Clip handoff
+```
+
+The score is not a secret engagement prediction. It is an auditable weighted combination of Radar materiality, anomaly, reliability, change state, truth state, freshness, spatial richness and source density. Every factor is emitted with the candidate.
+
+Political/government signals, stale signals, unknown truth state, missing provenance and missing geospatial measurements fail closed. A candidate never receives publication authority.
+
+The USGS earthquake collector preserves source latitude, longitude and depth in its measurements so Radar no longer discards geometry before visual admission. Visual Desk does not draw connecting lines between earthquake points because proximity is not evidence of causation or a route.

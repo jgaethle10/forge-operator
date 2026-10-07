@@ -36,15 +36,26 @@ export async function collectUsgsEarthquakes({
   const payload = await fetchJson(url, { fetchImpl });
   const features = Array.isArray(payload?.features) ? payload.features : [];
   const rows = features
-    .map((feature) => ({
-      id: clean(feature?.id),
-      magnitude: Number(feature?.properties?.mag),
-      place: clean(feature?.properties?.place),
-      time: Number(feature?.properties?.time),
-      status: clean(feature?.properties?.status),
-      tsunami: Number(feature?.properties?.tsunami || 0),
-      url: clean(feature?.properties?.url)
-    }))
+    .map((feature) => {
+      const coordinates=Array.isArray(feature?.geometry?.coordinates)
+        ? feature.geometry.coordinates
+        : [];
+      const longitude=Number(coordinates[0]);
+      const latitude=Number(coordinates[1]);
+      const depthKm=Number(coordinates[2]);
+      return {
+        id: clean(feature?.id),
+        magnitude: Number(feature?.properties?.mag),
+        place: clean(feature?.properties?.place),
+        time: Number(feature?.properties?.time),
+        status: clean(feature?.properties?.status),
+        tsunami: Number(feature?.properties?.tsunami || 0),
+        url: clean(feature?.properties?.url),
+        longitude:Number.isFinite(longitude)&&longitude>=-180&&longitude<=180?longitude:null,
+        latitude:Number.isFinite(latitude)&&latitude>=-90&&latitude<=90?latitude:null,
+        depth_km:Number.isFinite(depthKm)?depthKm:null
+      };
+    })
     .filter((row) => Number.isFinite(row.magnitude))
     .sort((a, b) => b.magnitude - a.magnitude);
 
@@ -90,6 +101,9 @@ export async function collectUsgsEarthquakes({
         observed_at: Number.isFinite(row.time) ? new Date(row.time).toISOString() : null,
         status: row.status,
         tsunami_flag: row.tsunami,
+        longitude:row.longitude,
+        latitude:row.latitude,
+        depth_km:row.depth_km,
         source_url: row.url
       })),
       metadata: {
