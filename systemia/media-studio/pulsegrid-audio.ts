@@ -1,45 +1,98 @@
 import type { PulseGridSession, PulseGridTrack } from './pulsegrid-session.js';
 
+export type PulseGridClockMode = 'cold' | 'worklet' | 'fallback';
+
 export type PulseGridAudioStatus = {
   playing: boolean;
   scene: number;
   step: number;
   context_state: AudioContextState | 'cold';
+  clock_mode: PulseGridClockMode;
+  track_buses: number;
+  latency_ms: number | null;
+};
+
+type PulseGridTrackBus = {
+  input: GainNode;
+  filter: BiquadFilterNode;
+  dry: GainNode;
+  delay: DelayNode;
+  feedback: GainNode;
+  wet: GainNode;
 };
 
 export class PulseGridAudioEngine {
   private context: AudioContext | null = null;
   private master: GainNode | null = null;
-  private timer: ReturnType<typeof setInterval> | null = null;
+  private fallbackTimer: ReturnType<typeof setInterval> | null = null;
+  private clockNode: AudioWorkletNode | null = null;
+  private clockSink: GainNode | null = null;
+  private clockMode: PulseGridClockMode = 'cold';
   private session: PulseGridSession | null = null;
   private scene = 0;
   private step = 0;
   private nextTime = 0;
+  private playing = false;
   private noiseBuffer: AudioBuffer | null = null;
+  private readonly trackBuses = new Map<string, PulseGridTrackBus>();
+  private readonly activeSources = new Map<AudioScheduledSourceNode, AudioNode[]>();
+  private readonly uiTimers = new Set<ReturnType<typeof setTimeout>>();
   private readonly lookaheadMs = 25;
   private readonly scheduleAheadSeconds = 0.12;
 
   onStep: ((step: number) => void) | null = null;
+  onStatus: ((status: PulseGridAudioStatus) => void) | null = null;
 
   get status(): PulseGridAudioStatus {
+    const context = this.context as (AudioContext & { outputLatency?: number }) | null;
+    const latencySeconds = context
+      ? Math.max(0, context.baseLatency || 0) + Math.max(0, context.outputLatency || 0)
+      : 0;
     return {
-      playing: this.timer !== null,
+      playing: this.playing,
       scene: this.scene,
       step: this.step,
-      context_state: this.context?.state || 'cold',
+      context_state: context?.state || 'cold',
+      clock_mode: this.clockMode,
+      track_buses: this.trackBuses.size,
+      latency_ms: context ? Math.round(latencySeconds * 1000) : null,
     };
   }
 
   updateSession(session: PulseGridSession) {
     this.session = structuredClone(session);
-    this.scene = Math.max(0, Math.min(this.scene, Math.max(0, session.tracks[0]?.clips.length - 1 || 0)));
+    this.scene = Math.max(
+      0,
+      Math.min(this.scene, Math.max(0, session.tracks[0]?.clips.length - 1 || 0)),
+    );
+    if (this.context) {
+      this.ensureTrackBuses();
+      this.syncAllTrackBuses(this.context.currentTime);
+      this.configureClock();
+    }
+    this.emitStatus();
   }
 
   setScene(scene: number) {
     const maxScene = Math.max(0, (this.session?.tracks[0]?.clips.length || 1) - 1);
     this.scene = Math.max(0, Math.min(Math.round(scene), maxScene));
     this.step = 0;
-    if (this.context) this.nextTime = this.context.currentTime + 0.05;
+    if (this.playing) {
+      this.clearUiTimers();
+      this.stopScheduledSources();
+    }
+    if (this.context) {
+      this.nextTime = this.context.currentTime + 0.05;
+      this.configureClock();
+      if (this.playing && this.clockMode === 'worklet' && this.clockNode) {
+        this.clockNode.port.postMessage({
+          type: 'reset',
+          startTime: this.context.currentTime + 0.05,
+        });
+      }
+    }
+    this.onStep?.(0);
+    this.emitStatus();
   }
 
   async play(session: PulseGridSession, scene = session.active_scene) {
@@ -47,25 +100,58 @@ export class PulseGridAudioEngine {
     this.setScene(scene);
     const context = await this.ensureContext();
     if (context.state === 'suspended') await context.resume();
-    if (this.timer) return;
-    this.nextTime = context.currentTime + 0.06;
-    this.timer = setInterval(() => this.scheduler(), this.lookaheadMs);
-    this.scheduler();
+    if (this.playing) return;
+
+    this.playing = true;
+    this.step = 0;
+    const workletReady = await this.ensureWorkletClock();
+
+    if (!this.playing) return;
+    if (workletReady && this.clockNode) {
+      this.clockMode = 'worklet';
+      this.clockNode.port.postMessage({
+        type: 'start',
+        bpm: this.session?.transport.bpm || 120,
+        swing: this.session?.transport.swing || 0,
+        steps: this.loopSteps(),
+        lookaheadSec: this.scheduleAheadSeconds,
+        startTime: context.currentTime + 0.07,
+      });
+    } else {
+      this.startFallbackClock();
+    }
+    this.emitStatus();
   }
 
   stop() {
-    if (this.timer) clearInterval(this.timer);
-    this.timer = null;
+    this.playing = false;
+    if (this.fallbackTimer) clearInterval(this.fallbackTimer);
+    this.fallbackTimer = null;
+    if (this.clockNode) this.clockNode.port.postMessage({ type: 'stop' });
+    this.clearUiTimers();
+    this.stopScheduledSources();
+    this.disposeAllTrackBuses();
     this.step = 0;
     this.onStep?.(0);
+    this.emitStatus();
   }
 
   async close() {
     this.stop();
-    if (this.context && this.context.state !== 'closed') await this.context.close();
-    this.context = null;
+    this.disposeWorkletClock();
+    this.disposeAllTrackBuses();
+    this.master?.disconnect();
     this.master = null;
     this.noiseBuffer = null;
+    const context = this.context;
+    this.context = null;
+    this.clockMode = 'cold';
+    if (context && context.state !== 'closed') await context.close();
+    this.emitStatus();
+  }
+
+  private emitStatus() {
+    this.onStatus?.(this.status);
   }
 
   private async ensureContext() {
@@ -76,7 +162,113 @@ export class PulseGridAudioEngine {
     this.master = this.context.createGain();
     this.master.gain.value = 0.72;
     this.master.connect(this.context.destination);
+    this.ensureTrackBuses();
+    this.syncAllTrackBuses(this.context.currentTime);
+    this.emitStatus();
     return this.context;
+  }
+
+  private async ensureWorkletClock() {
+    if (this.clockNode && this.context) return true;
+    const context = this.context;
+    if (!context?.audioWorklet || typeof AudioWorkletNode === 'undefined') {
+      this.clockMode = 'fallback';
+      return false;
+    }
+
+    try {
+      const moduleUrl = new URL('./pulsegrid-clock-worklet.js', import.meta.url);
+      await context.audioWorklet.addModule(moduleUrl);
+      const node = new AudioWorkletNode(context, 'pulsegrid-clock', {
+        numberOfInputs: 0,
+        numberOfOutputs: 1,
+        outputChannelCount: [1],
+      });
+      const sink = context.createGain();
+      sink.gain.value = 0;
+      node.connect(sink).connect(context.destination);
+      node.port.onmessage = (event: MessageEvent) => {
+        const message = event.data || {};
+        if (message.type !== 'schedule' || !this.playing) return;
+        const step = Number(message.step) || 0;
+        const time = Number(message.time) || context.currentTime;
+        this.scheduleStep(step, time);
+        const delayMs = Math.max(0, (time - context.currentTime) * 1000);
+        const timer = globalThis.setTimeout(() => {
+          this.uiTimers.delete(timer);
+          if (!this.playing) return;
+          this.step = step;
+          this.onStep?.(step);
+          this.emitStatus();
+        }, delayMs);
+        this.uiTimers.add(timer);
+      };
+      this.clockNode = node;
+      this.clockSink = sink;
+      this.clockMode = 'worklet';
+      this.configureClock();
+      return true;
+    } catch (error) {
+      console.warn('PulseGrid AudioWorklet clock unavailable; using audio-context fallback.', error);
+      this.disposeWorkletClock();
+      this.clockMode = 'fallback';
+      return false;
+    }
+  }
+
+  private disposeWorkletClock() {
+    if (this.clockNode) {
+      try { this.clockNode.port.postMessage({ type: 'stop' }); } catch {}
+      this.clockNode.port.onmessage = null;
+      try { this.clockNode.disconnect(); } catch {}
+    }
+    if (this.clockSink) {
+      try { this.clockSink.disconnect(); } catch {}
+    }
+    this.clockNode = null;
+    this.clockSink = null;
+  }
+
+  private configureClock() {
+    if (!this.clockNode || !this.session) return;
+    this.clockNode.port.postMessage({
+      type: 'config',
+      bpm: this.session.transport.bpm,
+      swing: this.session.transport.swing,
+      steps: this.loopSteps(),
+      lookaheadSec: this.scheduleAheadSeconds,
+    });
+  }
+
+  private startFallbackClock() {
+    const context = this.context;
+    if (!context || !this.playing) return;
+    this.clockMode = 'fallback';
+    this.step = 0;
+    this.nextTime = context.currentTime + 0.06;
+    if (this.fallbackTimer) clearInterval(this.fallbackTimer);
+    this.fallbackTimer = setInterval(() => this.fallbackScheduler(), this.lookaheadMs);
+    this.fallbackScheduler();
+  }
+
+  private fallbackScheduler() {
+    const context = this.context;
+    if (!context || !this.session || !this.playing) return;
+    while (this.nextTime < context.currentTime + this.scheduleAheadSeconds) {
+      const scheduledStep = this.step;
+      const scheduledTime = this.nextTime;
+      this.scheduleStep(scheduledStep, scheduledTime);
+      const delayMs = Math.max(0, (scheduledTime - context.currentTime) * 1000);
+      const timer = globalThis.setTimeout(() => {
+        this.uiTimers.delete(timer);
+        if (!this.playing || this.clockMode !== 'fallback') return;
+        this.onStep?.(scheduledStep);
+        this.emitStatus();
+      }, delayMs);
+      this.uiTimers.add(timer);
+      this.nextTime += this.stepDuration(this.step);
+      this.step = (this.step + 1) % this.loopSteps();
+    }
   }
 
   private loopSteps() {
@@ -95,46 +287,109 @@ export class PulseGridAudioEngine {
     return base * (step % 2 === 0 ? 1 + amount : 1 - amount);
   }
 
-  private scheduler() {
-    const context = this.context;
-    if (!context || !this.master || !this.session || !this.timer) return;
-    while (this.nextTime < context.currentTime + this.scheduleAheadSeconds) {
-      const scheduledStep = this.step;
-      const scheduledTime = this.nextTime;
-      this.scheduleStep(scheduledStep, scheduledTime);
-      const delayMs = Math.max(0, (scheduledTime - context.currentTime) * 1000);
-      globalThis.setTimeout(() => this.onStep?.(scheduledStep), delayMs);
-      this.nextTime += this.stepDuration(this.step);
-      this.step = (this.step + 1) % this.loopSteps();
+  private ensureTrackBuses() {
+    if (!this.context || !this.master || !this.session) return;
+    const liveIds = new Set(this.session.tracks.map((track) => track.id));
+
+    for (const [trackId, bus] of this.trackBuses) {
+      if (liveIds.has(trackId)) continue;
+      this.disconnectBus(bus);
+      this.trackBuses.delete(trackId);
     }
+
+    for (const track of this.session.tracks) {
+      if (this.trackBuses.has(track.id)) continue;
+      this.trackBuses.set(track.id, this.createTrackBus());
+    }
+  }
+
+  private createTrackBus(): PulseGridTrackBus {
+    const context = this.context!;
+    const input = context.createGain();
+    const filter = context.createBiquadFilter();
+    const dry = context.createGain();
+    const delay = context.createDelay(1);
+    const feedback = context.createGain();
+    const wet = context.createGain();
+
+    filter.type = 'lowpass';
+    filter.Q.value = 0.6;
+    input.connect(filter);
+    filter.connect(dry).connect(this.master!);
+    filter.connect(delay);
+    delay.connect(feedback).connect(delay);
+    delay.connect(wet).connect(this.master!);
+    return { input, filter, dry, delay, feedback, wet };
+  }
+
+  private syncAllTrackBuses(time: number) {
+    if (!this.session) return;
+    for (const track of this.session.tracks) {
+      const bus = this.trackBuses.get(track.id);
+      if (bus) this.scheduleBus(bus, track, 1, 1, time);
+    }
+  }
+
+  private scheduleBus(
+    bus: PulseGridTrackBus,
+    track: PulseGridTrack,
+    autoVolume: number,
+    autoFilter: number,
+    time: number,
+  ) {
+    bus.input.gain.setValueAtTime(Math.max(0, track.volume * autoVolume), time);
+    bus.filter.frequency.setValueAtTime(
+      Math.max(80, Math.min(19000, track.filterHz * Math.max(0.08, autoFilter))),
+      time,
+    );
+    bus.delay.delayTime.setValueAtTime(Math.max(0.02, Math.min(0.8, track.delayTime)), time);
+    bus.feedback.gain.setValueAtTime(Math.max(0, Math.min(0.78, track.delayFeedback)), time);
+    bus.wet.gain.setValueAtTime(Math.max(0, Math.min(0.65, track.delayMix)), time);
+    bus.dry.gain.setValueAtTime(1, time);
+  }
+
+  private disconnectBus(bus: PulseGridTrackBus) {
+    for (const node of [bus.input, bus.filter, bus.dry, bus.delay, bus.feedback, bus.wet]) {
+      try { node.disconnect(); } catch {}
+    }
+  }
+
+  private disposeAllTrackBuses() {
+    for (const bus of this.trackBuses.values()) this.disconnectBus(bus);
+    this.trackBuses.clear();
   }
 
   private scheduleStep(globalStep: number, time: number) {
     if (!this.context || !this.master || !this.session) return;
+    this.ensureTrackBuses();
     const anySolo = this.session.tracks.some((track) => track.solo);
 
     for (const track of this.session.tracks) {
       if (track.muted || (anySolo && !track.solo)) continue;
       const clip = track.clips[this.scene];
-      if (!clip) continue;
+      const bus = this.trackBuses.get(track.id);
+      if (!clip || !bus) continue;
+
       const step = globalStep % clip.steps.length;
       const probability = clip.probabilities[step] ?? 1;
       const microtime = (clip.microtiming[step] ?? 0) / 1000;
       const autoVolume = clip.automation.volume[step] ?? 1;
       const autoFilter = clip.automation.filter[step] ?? 1;
-      const bus = this.createTrackBus(track, autoVolume, autoFilter);
-      const velocity = clip.steps[step] || 0;
+      this.scheduleBus(bus, track, autoVolume, autoFilter, time);
 
+      const velocity = clip.steps[step] || 0;
       if (track.type === 'drums') {
         if (velocity > 0 && Math.random() <= probability) {
-          if (step % 4 === 0 || velocity > 0.85) this.kick(bus, time + microtime, velocity);
-          if (step % 2 === 0 || step % 4 === 3) this.hat(bus, time + microtime + 0.004, Math.max(0.12, velocity * 0.34));
+          if (step % 4 === 0 || velocity > 0.85) this.kick(bus.input, time + microtime, velocity);
+          if (step % 2 === 0 || step % 4 === 3) {
+            this.hat(bus.input, time + microtime + 0.004, Math.max(0.12, velocity * 0.34));
+          }
         }
         continue;
       }
 
       if (track.type === 'audio') {
-        // Canonical audio-asset storage is intentionally not represented by the graph yet.
+        // Canonical binary audio assets are intentionally not fabricated here.
         continue;
       }
 
@@ -142,7 +397,7 @@ export class PulseGridAudioEngine {
       for (const note of noteEvents) {
         if (Math.random() > (note.probability ?? 1)) continue;
         this.note(
-          bus,
+          bus.input,
           track,
           note.pitch,
           time + (note.microtiming || 0) / 1000,
@@ -153,35 +408,9 @@ export class PulseGridAudioEngine {
 
       if (!noteEvents.length && velocity > 0 && Math.random() <= probability) {
         const pitch = track.id === 'bass' ? 36 : track.id === 'bell' ? 72 : 60;
-        this.note(bus, track, pitch, time + microtime, this.stepDuration(step) * 0.85, velocity);
+        this.note(bus.input, track, pitch, time + microtime, this.stepDuration(step) * 0.85, velocity);
       }
     }
-  }
-
-  private createTrackBus(track: PulseGridTrack, autoVolume: number, autoFilter: number) {
-    const context = this.context!;
-    const input = context.createGain();
-    const filter = context.createBiquadFilter();
-    const dry = context.createGain();
-    const delay = context.createDelay(1);
-    const feedback = context.createGain();
-    const wet = context.createGain();
-
-    input.gain.value = Math.max(0, track.volume * autoVolume);
-    filter.type = 'lowpass';
-    filter.frequency.value = Math.max(80, Math.min(19000, track.filterHz * Math.max(0.08, autoFilter)));
-    filter.Q.value = 0.6;
-    dry.gain.value = 1;
-    delay.delayTime.value = Math.max(0.02, Math.min(0.8, track.delayTime));
-    feedback.gain.value = Math.max(0, Math.min(0.78, track.delayFeedback));
-    wet.gain.value = Math.max(0, Math.min(0.65, track.delayMix));
-
-    input.connect(filter);
-    filter.connect(dry).connect(this.master!);
-    filter.connect(delay);
-    delay.connect(feedback).connect(delay);
-    delay.connect(wet).connect(this.master!);
-    return input;
   }
 
   private kick(destination: AudioNode, time: number, velocity: number) {
@@ -194,6 +423,7 @@ export class PulseGridAudioEngine {
     gain.gain.setValueAtTime(Math.max(0.001, 0.7 * velocity), time);
     gain.gain.exponentialRampToValueAtTime(0.001, time + 0.22);
     oscillator.connect(gain).connect(destination);
+    this.trackScheduledSource(oscillator, [gain]);
     oscillator.start(time);
     oscillator.stop(time + 0.24);
   }
@@ -215,6 +445,7 @@ export class PulseGridAudioEngine {
     gain.gain.setValueAtTime(Math.max(0.001, 0.18 * velocity), time);
     gain.gain.exponentialRampToValueAtTime(0.001, time + 0.055);
     source.connect(highpass).connect(gain).connect(destination);
+    this.trackScheduledSource(source, [highpass, gain]);
     source.start(time);
     source.stop(time + 0.065);
   }
@@ -236,7 +467,39 @@ export class PulseGridAudioEngine {
     gain.gain.exponentialRampToValueAtTime(Math.max(0.005, velocity * 0.18), time + 0.008);
     gain.gain.setTargetAtTime(0.0001, time + Math.max(0.03, duration - 0.06), 0.03);
     oscillator.connect(gain).connect(destination);
+    this.trackScheduledSource(oscillator, [gain]);
     oscillator.start(time);
     oscillator.stop(time + duration + 0.12);
+  }
+
+  private trackScheduledSource(source: AudioScheduledSourceNode, cleanupNodes: AudioNode[]) {
+    this.activeSources.set(source, cleanupNodes);
+    source.onended = () => this.disposeScheduledSource(source);
+  }
+
+  private disposeScheduledSource(source: AudioScheduledSourceNode) {
+    const cleanupNodes = this.activeSources.get(source) || [];
+    this.activeSources.delete(source);
+    try { source.disconnect(); } catch {}
+    for (const node of cleanupNodes) {
+      try { node.disconnect(); } catch {}
+    }
+  }
+
+  private stopScheduledSources() {
+    for (const [source, cleanupNodes] of this.activeSources) {
+      source.onended = null;
+      try { source.stop(); } catch {}
+      try { source.disconnect(); } catch {}
+      for (const node of cleanupNodes) {
+        try { node.disconnect(); } catch {}
+      }
+    }
+    this.activeSources.clear();
+  }
+
+  private clearUiTimers() {
+    for (const timer of this.uiTimers) clearTimeout(timer);
+    this.uiTimers.clear();
   }
 }

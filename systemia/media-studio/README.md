@@ -505,3 +505,13 @@ The canonical browser graph now has a Web Audio execution adapter in `pulsegrid-
 The `/fallen-sessions` route now has Play/Stop and a live playhead. Session mutations update the playback snapshot, and changing scenes retargets the same audio engine.
 
 Current audio boundary: synth and drum execution are live; canonical audio-asset storage for the Audio Take track is not yet represented in the shared graph, so imported/recorded media is intentionally not fabricated by this adapter. The earlier standalone recording/MIDI prototype remains evidence for the next asset-store migration slice.
+
+### PulseGrid 0.13 reusable DSP + worklet timing
+
+The canonical browser audio layer now keeps one reusable filter/delay bus per PulseGrid track instead of constructing a new feedback network on every scheduled step. Track buses are created and removed only as the canonical track set changes, parameter automation is scheduled onto those stable nodes, and `close()` deterministically disconnects every bus.
+
+Transport timing now prefers the existing `pulsegrid-clock-worklet.js` AudioWorklet. The worklet emits future audio-clock timestamps that the adapter uses to schedule canonical scene events. Browsers without AudioWorklet support, or environments where worklet module loading fails, fall back explicitly to the prior AudioContext lookahead scheduler.
+
+The UI exposes clock mode, browser-reported latency and live DSP-bus count. Static architecture tests prove that `scheduleStep` reuses the track-bus map, that the worklet and fallback paths both exist, that clock/DSP cleanup is explicit, and that the adapter remains a consumer of `PulseGridSession` rather than a second musical state owner.
+
+Stopping playback keeps the bounded track buses warm for the next play cycle. Closing the engine tears down the worklet, clock sink, every track bus, master node and AudioContext.

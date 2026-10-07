@@ -7,6 +7,7 @@ import {
   createPulseGridSession,
   undoPulseGridReceipt,
   type PulseGridActor,
+  type PulseGridAudioStatus,
   type PulseGridOperation,
   type PulseGridSession,
 } from '../systemia/media-studio/pulsegrid-browser';
@@ -34,10 +35,12 @@ export default function FallenSessions(){
   const [status,setStatus]=useState('Canonical PulseGrid session ready.');
   const [playing,setPlaying]=useState(false);
   const [playhead,setPlayhead]=useState(0);
+  const [audioStatus,setAudioStatus]=useState<PulseGridAudioStatus>({playing:false,scene:0,step:0,context_state:'cold',clock_mode:'cold',track_buses:0,latency_ms:null});
   const audioRef=useRef<PulseGridAudioEngine|null>(null);
   if(!audioRef.current){
     audioRef.current=new PulseGridAudioEngine();
     audioRef.current.onStep=(step)=>setPlayhead(step);
+    audioRef.current.onStatus=(next)=>{setAudioStatus(next);setPlaying(next.playing)};
   }
 
   const track=useMemo(
@@ -55,7 +58,7 @@ export default function FallenSessions(){
     audioRef.current?.setScene(selectedScene);
   },[selectedScene]);
 
-  useEffect(()=>()=>{ void audioRef.current?.close(); },[]);
+  useEffect(()=>()=>{ if(audioRef.current){audioRef.current.onStep=null;audioRef.current.onStatus=null;void audioRef.current.close();} },[]);
 
   async function togglePlay(){
     if(playing){
@@ -238,6 +241,9 @@ export default function FallenSessions(){
         </div>
         <div className="fsTruth">
           <span>Engine {PULSEGRID_ENGINE_VERSION}</span>
+          <span>Clock {audioStatus.clock_mode}</span>
+          <span>{audioStatus.latency_ms===null?'Latency cold':'Latency '+audioStatus.latency_ms+' ms'}</span>
+          <span>{audioStatus.track_buses} DSP buses</span>
           <span>Local-first</span>
           <span>Engine alpha · not for sale</span>
         </div>
