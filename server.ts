@@ -178,7 +178,7 @@ registerNotificationFabricRoutes(app);
 registerRivetReportGateway(app);
 registerSpecialistHandoffMcps(app, { gatewayUrl: machineCommerceGatewayUrl });
 registerRemoteOperatorMcp(app);
-registerRavenSettlementRoutes(app, { limiter: rateLimit(600, 60 * 60 * 1000) });
+const ravenSettlementResident = registerRavenSettlementRoutes(app, { limiter: rateLimit(600, 60 * 60 * 1000) });
 
 const CENTRAL_MACHINE_COMMERCE_MCP =
   'https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp';
@@ -473,6 +473,7 @@ app.get('/api/health', (_req: Request, res: Response) => {
       probe_state: speech.probe_state,
     },
     radar: radarResident.health(),
+    raven_settlement: ravenSettlementResident.health(),
   });
 });
 
