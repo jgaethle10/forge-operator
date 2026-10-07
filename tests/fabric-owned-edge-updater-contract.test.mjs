@@ -20,3 +20,12 @@ test('router-map config is treated as coordinates, not a secret-bearing file',()
   assert.match(script,/gateway\/LAN host\/repo\/node coordinates/);
   assert.equal(script.includes('chmod 0600 "$ROUTER_MAP_ENV"'),false);
 });
+
+
+test('owned Fabric updater creates Visual Desk ingest credential without writing the secret into source state',()=>{
+  assert.match(script,/ensure_visual_ingest_token\(\)/);
+  assert.match(script,/randomBytes\(32\)\.toString\('hex'\)/);
+  assert.match(script,/install -o "\$RUN_USER" -g "\$RUN_USER" -m 0600 "\$tmp" "\$VISUAL_INGEST_TOKEN_FILE"/);
+  assert.match(script,/VISUAL_INGEST_TOKEN_CREATED=true/);
+  assert.doesNotMatch(script,/printf .*VISUAL_INGEST_TOKEN.*last-update\.json/);
+});

@@ -173,3 +173,20 @@ test('Visual Desk default runtime state is compatible with ProtectHome=read-only
     /EVERCRAFT_VISUAL_STATE_DIR\|\|path\.join\(os\.homedir\(\),'.local\/state\/evercraft\/visual-desk\/public'\)/
   );
 });
+
+
+test('owned edge mints a private Visual Desk ingest credential without exposing the secret in fabric.env',()=>{
+  assert.match(script,/VISUAL_INGEST_TOKEN_FILE="\/var\/lib\/evercraft\/fabric-secrets\/visual-ingest-token"/);
+  assert.match(script,/randomBytes\(32\)\.toString\('hex'\)/);
+  assert.match(script,/install -o "\$RUN_USER" -g "\$RUN_USER" -m 0600 "\$TMP_VISUAL_TOKEN" "\$VISUAL_INGEST_TOKEN_FILE"/);
+  assert.match(script,/EVERCRAFT_VISUAL_INGEST_TOKEN_FILE=\$VISUAL_INGEST_TOKEN_FILE/);
+  assert.doesNotMatch(script,/EVERCRAFT_VISUAL_INGEST_TOKEN=\$VISUAL_INGEST_TOKEN/);
+});
+
+test('Fabric self updater self-heals the Visual Desk ingest credential and proves the runtime gate',()=>{
+  assert.match(updater,/ensure_visual_ingest_token/);
+  assert.match(updater,/VISUAL_INGEST_TOKEN_FILE="\/var\/lib\/evercraft\/fabric-secrets\/visual-ingest-token"/);
+  assert.match(updater,/VISUAL_INGEST_TOKEN_CREATED=true/);
+  assert.match(updater,/visual_desk_ingest_ready!==true/);
+  assert.match(updater,/visual_desk_ingest_publication_authority!==false/);
+});

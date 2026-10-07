@@ -1,4 +1,3 @@
-import crypto from 'node:crypto';
 import fs from 'node:fs';
 import path from 'node:path';
 import { runOfficialCollectors } from './collectors.mjs';
@@ -22,6 +21,10 @@ import {
   compileRadarVisualStory,
   rankRadarVisualCandidates
 } from '../visual-desk/radar-adapter.mjs';
+import {
+  transportVisualOutbox,
+  visualStoryTransportDigest
+} from '../visual-desk/transporter.mjs';
 
 function ensureDir(dir) {
   fs.mkdirSync(dir, { recursive: true, mode: 0o700 });
@@ -48,12 +51,6 @@ function appendJsonl(file, value) {
   fs.appendFileSync(file, JSON.stringify(value) + '\n', { mode: 0o600 });
 }
 
-function sha256(value) {
-  return crypto.createHash('sha256').update(
-    typeof value === 'string' ? value : JSON.stringify(value)
-  ).digest('hex');
-}
-
 function emptyVisualOutboxIndex() {
   return {
     schema: 'evercraft.visual-desk.radar-outbox-index.v1',
@@ -73,6 +70,9 @@ export function createRadarResident({
   maxSignals = 8,
   visualMinScore = 0.58,
   visualMaxCandidates = 5,
+  visualTransportUrl = '',
+  visualTransportTokenFile = '',
+  visualTransportFetch = globalThis.fetch,
   journalUrl = '',
   autoReleaseOwned = false,
   clock = () => new Date()
@@ -90,6 +90,7 @@ export function createRadarResident({
   const visualAdmissionFile = path.join(stateDir, 'visual-admission.json');
   const visualOutboxDir = path.join(stateDir, 'visual-desk-outbox');
   const visualOutboxIndexFile = path.join(visualOutboxDir, 'index.json');
+  const visualTransportReceiptFile = path.join(stateDir, 'visual-transport-receipt.json');
 
   let state = readJson(stateFile, emptyRadarState());
   let sourceHealthState = readJson(sourceHealthFile, emptySourceHealthState());
@@ -100,6 +101,7 @@ export function createRadarResident({
   let lastReleaseDecision = readJson(releaseCandidateFile, null);
   let lastVisualAdmission = readJson(visualAdmissionFile, null);
   let visualOutboxIndex = readJson(visualOutboxIndexFile, emptyVisualOutboxIndex());
+  let lastVisualTransport = readJson(visualTransportReceiptFile, null);
 
   async function runOnce({ externalObservations = [] } = {}) {
     if (running) {
@@ -163,7 +165,7 @@ export function createRadarResident({
           source_observation_id: candidate.source_observation_id,
           visual_priority_score: candidate.visual_priority_score,
           score_factors: candidate.score_factors,
-          story_sha256: sha256(story),
+          story_sha256: visualStoryTransportDigest(story),
           source_refs: story.sourceRefs,
           publicationAuthority: false
         });
@@ -222,6 +224,53 @@ export function createRadarResident({
       atomicWrite(visualAdmissionFile, visualAdmission);
       atomicWrite(visualOutboxIndexFile, visualOutboxIndex);
 
+      const transportUrl = String(visualTransportUrl || '').trim();
+      const transportTokenFile = String(visualTransportTokenFile || '').trim();
+      let visualTransport = {
+        schema: 'evercraft.visual-desk.transport-receipt.v1',
+        status: visualOutboxIndex.story_count ? 'held' : 'quiet',
+        reason: visualOutboxIndex.story_count ? 'transport_not_configured' : 'outbox_empty',
+        attempted: 0,
+        delivered: 0,
+        failed: 0,
+        publicationAuthority: false,
+        external_social_publish_performed: false,
+        observed_at: startedAt
+      };
+      if (visualOutboxIndex.story_count && transportUrl && transportTokenFile) {
+        if (!fs.existsSync(transportTokenFile)) {
+          visualTransport = {
+            ...visualTransport,
+            reason: 'transport_token_file_missing'
+          };
+        } else {
+          try {
+            const transportToken = fs.readFileSync(transportTokenFile, 'utf8').trim();
+            visualTransport = await transportVisualOutbox({
+              indexPath: visualOutboxIndexFile,
+              endpoint: transportUrl,
+              token: transportToken,
+              fetchImpl: visualTransportFetch
+            });
+          } catch (error) {
+            visualTransport = {
+              schema: 'evercraft.visual-desk.transport-receipt.v1',
+              status: 'failed',
+              reason: 'transport_exception',
+              error: error instanceof Error ? error.message : String(error),
+              attempted: visualOutboxIndex.story_count,
+              delivered: 0,
+              failed: visualOutboxIndex.story_count,
+              publicationAuthority: false,
+              external_social_publish_performed: false,
+              observed_at: clock().toISOString()
+            };
+          }
+        }
+      }
+      lastVisualTransport = visualTransport;
+      atomicWrite(visualTransportReceiptFile, visualTransport);
+
       const receipt = {
         schema: 'evercraft.systemia-radar.run-receipt.v1',
         status: 'pass',
@@ -243,6 +292,9 @@ export function createRadarResident({
         visual_background_count: visualAdmission.background?.length || 0,
         visual_outbox_story_count: visualOutboxIndex.story_count,
         visual_outbox_index: 'visual-desk-outbox/index.json',
+        visual_transport_status: visualTransport.status,
+        visual_transport_delivered: visualTransport.delivered || 0,
+        visual_transport_failed: visualTransport.failed || 0,
         release_gate_status: releaseDecision.status,
         owned_release: ownedReleaseReceipt,
         correction_run: correctionRun,
@@ -314,6 +366,9 @@ export function createRadarResident({
       latest_visual_candidate_count: lastVisualAdmission?.admitted?.length || 0,
       visual_outbox_story_count: visualOutboxIndex?.story_count || 0,
       visual_outbox_ready: Boolean(visualOutboxIndex && visualOutboxIndex.schema === 'evercraft.visual-desk.radar-outbox-index.v1'),
+      visual_transport_configured: Boolean(String(visualTransportUrl||'').trim() && String(visualTransportTokenFile||'').trim()),
+      visual_transport_status: lastVisualTransport?.status || 'not_evaluated',
+      visual_transport_delivered: lastVisualTransport?.delivered || 0,
       last_run: lastRun,
       last_error: lastError,
       publication_authority: false
@@ -353,6 +408,7 @@ export function createRadarResident({
       schema: 'evercraft.visual-desk.radar-outbox-state.v1',
       admission: lastVisualAdmission ? structuredClone(lastVisualAdmission) : null,
       outbox: structuredClone(visualOutboxIndex || emptyVisualOutboxIndex()),
+      transport: lastVisualTransport ? structuredClone(lastVisualTransport) : null,
       publicationAuthority: false
     };
   }

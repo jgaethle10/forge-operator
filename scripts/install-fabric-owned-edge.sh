@@ -54,6 +54,7 @@ if [[ -z "$RUN_HOME" ]]; then
 fi
 NODE_RECEIPT="$RUN_HOME/.local/state/evercraft/organism/compute/nodeseed-receipt.json"
 ALLOCATOR_TOKEN_FILE="$RUN_HOME/.local/state/evercraft/organism/.secrets/allocator-token"
+VISUAL_INGEST_TOKEN_FILE="/var/lib/evercraft/fabric-secrets/visual-ingest-token"
 
 echo "[1/9] Installing Caddy from Debian packages..."
 sudo apt-get update
@@ -61,12 +62,22 @@ sudo DEBIAN_FRONTEND=noninteractive apt-get install -y caddy curl ca-certificate
 
 echo "[2/9] Creating Evercraft edge configuration..."
 sudo install -d -m 0755 /etc/evercraft
+sudo install -d -o root -g "$RUN_USER" -m 0750 "$(dirname "$VISUAL_INGEST_TOKEN_FILE")"
+if ! sudo test -s "$VISUAL_INGEST_TOKEN_FILE"; then
+  VISUAL_INGEST_TOKEN="$("$NODE_BIN" -e "process.stdout.write(require('crypto').randomBytes(32).toString('hex'))")"
+  TMP_VISUAL_TOKEN="$(mktemp)"
+  printf '%s\n' "$VISUAL_INGEST_TOKEN" > "$TMP_VISUAL_TOKEN"
+  sudo install -o "$RUN_USER" -g "$RUN_USER" -m 0600 "$TMP_VISUAL_TOKEN" "$VISUAL_INGEST_TOKEN_FILE"
+  rm -f "$TMP_VISUAL_TOKEN"
+  unset VISUAL_INGEST_TOKEN
+fi
 sudo tee /etc/evercraft/fabric.env >/dev/null <<EOF
 EVERCRAFT_OPENAI_CHALLENGE_TOKEN=
 EVERCRAFT_EDGE_NODE_RECEIPT=$NODE_RECEIPT
 EVERCRAFT_EDGE_ALLOCATOR_TOKEN_FILE=$ALLOCATOR_TOKEN_FILE
 EVERCRAFT_VISUAL_STATE_DIR=/tmp/evercraft-visual-desk-public
 EVERCRAFT_VISUAL_ORIGIN=https://$DOMAIN/visuals
+EVERCRAFT_VISUAL_INGEST_TOKEN_FILE=$VISUAL_INGEST_TOKEN_FILE
 EOF
 sudo chmod 0600 /etc/evercraft/fabric.env
 

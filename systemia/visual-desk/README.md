@@ -146,3 +146,26 @@ visual-desk-outbox/
 Each story JSON is directly consumable as `evercraft.visual-story.v1`. The index binds the story to its Radar edition, signal, observation, deterministic visual-priority score, score factors, source references and SHA-256 digest. The index is the active queue; historical story files may remain for lineage even when they are no longer active.
 
 This outbox is a transport boundary, not a publication boundary. It carries `publicationAuthority:false`. A separate authenticated transporter must move admitted stories into the live Fabric Visual Desk, after which Clip remains responsible for social publication policy and provider receipts.
+
+
+## Authenticated Radar transport
+
+The Radar outbox can cross the process boundary through `systemia/visual-desk/transporter.mjs`.
+
+Fabric exposes `POST /api/visuals/ingest` only when a private ingest credential is configured. The endpoint:
+
+- requires bearer authentication,
+- validates `evercraft.visual-desk.transport-envelope.v1`,
+- recomputes the canonical Visual Desk story digest,
+- rejects digest mismatch,
+- deduplicates exact replay,
+- rejects a reused slug with different content,
+- materializes the normal owned page/cards/motion bundle,
+- refreshes the Visual Desk catalog,
+- never grants social publication authority.
+
+The owned-edge installer and updater mint the credential into `/var/lib/evercraft/fabric-secrets/visual-ingest-token` with restricted permissions. The secret itself is not written into `fabric.env` or receipts.
+
+Radar auto-detects that token file when it is co-resident with Fabric and uses the loopback ingest endpoint. If the file is absent, Radar leaves transport held. Remote Radar nodes require deliberate endpoint and credential provisioning rather than inheriting local trust.
+
+The production external canary verifies the ingest route without mutating production by requiring an unauthenticated request to fail with HTTP 401.

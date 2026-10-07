@@ -10,6 +10,7 @@ STATE_DIR="/var/lib/evercraft/fabric-update"
 FABRIC_ENV="/etc/evercraft/fabric.env"
 ENV_BACKUP=""
 EDGE_ATTESTATION_EXPECTED=false
+VISUAL_INGEST_TOKEN_CREATED=false
 PUBLIC_EDGE_SERVICE="evercraft-public-edge.service"
 ROUTER_MAP_SERVICE="evercraft-router-map.service"
 ROUTER_MAP_TIMER="evercraft-router-map.timer"
@@ -180,11 +181,28 @@ fi
 
 NODE_RECEIPT="$RUN_HOME/.local/state/evercraft/organism/compute/nodeseed-receipt.json"
 ALLOCATOR_TOKEN_FILE="$RUN_HOME/.local/state/evercraft/organism/.secrets/allocator-token"
+VISUAL_INGEST_TOKEN_FILE="/var/lib/evercraft/fabric-secrets/visual-ingest-token"
 NETWORK_OBSERVER_INSTALLER="$REPO_ROOT/scripts/install-fabric-network-observer.sh"
 ROUTER_MAP_INSTALLER="$REPO_ROOT/scripts/install-fabric-router-map-resident.sh"
 
 mkdir -p "$STATE_DIR"
 chmod 0750 "$STATE_DIR"
+
+ensure_visual_ingest_token() {
+  VISUAL_INGEST_TOKEN_CREATED=false
+  if [[ -s "$VISUAL_INGEST_TOKEN_FILE" ]]; then
+    return 0
+  fi
+
+  install -d -o root -g "$RUN_USER" -m 0750 "$(dirname "$VISUAL_INGEST_TOKEN_FILE")"
+  local tmp
+  tmp="$(mktemp "$STATE_DIR/visual-ingest-token.XXXXXX")"
+  as_user node -e "process.stdout.write(require('crypto').randomBytes(32).toString('hex')+'\\n')" > "$tmp"
+  install -o "$RUN_USER" -g "$RUN_USER" -m 0600 "$tmp" "$VISUAL_INGEST_TOKEN_FILE"
+  rm -f "$tmp"
+  VISUAL_INGEST_TOKEN_CREATED=true
+  echo "Evercraft update: Visual Desk ingest credential initialized"
+}
 
 reconcile_edge_attestation_env() {
   EDGE_ATTESTATION_EXPECTED=false
@@ -320,6 +338,8 @@ verify_current_runtime() {
         if(h.edge_attestation_supported!==true) process.exit(4);
         if(h.edge_attestation_allocator_authority_exposed!==false) process.exit(5);
       }
+      if(h.visual_desk_ingest_ready!==true) process.exit(6);
+      if(h.visual_desk_ingest_publication_authority!==false) process.exit(7);
     " || return 9
 
   local attestation_code=10
@@ -367,8 +387,9 @@ expected_count_for_current() {
 }
 
 if [[ "$before" == "$target" ]]; then
+  ensure_visual_ingest_token
   reconcile_edge_attestation_env
-  if [[ -n "$ENV_BACKUP" ]]; then
+  if [[ -n "$ENV_BACKUP" || "$VISUAL_INGEST_TOKEN_CREATED" == "true" ]]; then
     if ! systemctl restart "$SERVICE"; then
       restore_edge_attestation_env
       systemctl restart "$SERVICE" || true
@@ -432,6 +453,7 @@ if ! (
   exit 6
 fi
 
+ensure_visual_ingest_token
 reconcile_edge_attestation_env
 
 if ! systemctl restart "$SERVICE"; then
