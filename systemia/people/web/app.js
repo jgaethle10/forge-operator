@@ -252,7 +252,7 @@ async function operatorPortal(){
 
       document.getElementById('export').onclick=async()=>{
         try{
-          const body=await api('/api/people/brains/'+encodeURIComponent(selected.brain_key)+'/export',{method:'POST',headers:auth,body:'{}'});
+          const body=await api('/api/people/brains/'+encodeURIComponent(selected.brain_key)+'/export',{method:'POST',headers:auth,body:JSON.stringify({person_confirmation_ref:confirmation()})});
           const blob=new Blob([JSON.stringify(body.export.package,null,2)],{type:'application/json'});
           const href=URL.createObjectURL(blob);const a=document.createElement('a');a.href=href;a.download=selected.brain_key+'.json';a.click();URL.revokeObjectURL(href);
           await reload();
@@ -269,7 +269,7 @@ async function operatorPortal(){
 
       document.getElementById('delete-request').onclick=async()=>{
         try{
-          const body=await api('/api/people/brains/'+encodeURIComponent(selected.brain_key)+'/delete-request',{method:'POST',headers:auth,body:'{}'});
+          const body=await api('/api/people/brains/'+encodeURIComponent(selected.brain_key)+'/delete-request',{method:'POST',headers:auth,body:JSON.stringify({person_confirmation_ref:confirmation()})});
           alert('Delete request state: '+body.request.status+'. Final destruction still requires exact owner confirmation.');
           await reload();
         }catch(error){alert(error.message)}
