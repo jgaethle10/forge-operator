@@ -1,3 +1,8 @@
+import {
+  initializeWorldForgeRuntimeSession,
+  projectWorldEngineSnapshotToWorldForge,
+  stepWorldForgeRuntimeSession,
+} from './world-forge-runtime-session.js';
 import { syncWorldForgeChangeSetWithLiveRuntime } from './world-forge-runtime-migration.js';
 import { syncWorldForgeChangeSetToRuntime } from './world-forge-runtime-sync.js';
 import { compileWorldForgeToWorldEngine } from './world-forge-world-engine.js';
@@ -21,7 +26,7 @@ import {
   type WorldForgeOperation,
   type WorldForgeProject,
 } from './world-forge.js';
-import type { WorldDefinition, WorldSnapshot } from '../world-engine/engine.js';
+import type { WorldDefinition, WorldInput, WorldSnapshot } from '../world-engine/engine.js';
 import type { WorldAssetManifest } from '../world-engine/studio-edit.js';
 
 type WorldForgeHttpDeps = {
@@ -421,6 +426,60 @@ export function registerWorldForgeRoutes(app:Express,deps:WorldForgeHttpDeps){
   );
 
   app.post(
+    '/api/fallen/world-forge/runtime-init',
+    rateLimit(120,60*60*1000),
+    (req:Request,res:Response)=>{
+      const project=req.body?.project as WorldForgeProject|undefined;
+      if(!project){
+        badRequest(res,'World Forge project is required.');
+        return;
+      }
+      try{
+        const session=initializeWorldForgeRuntimeSession({project});
+        res.json({success:true,session});
+      }catch(error){
+        res.status(422).json({
+          success:false,
+          error:error instanceof Error?error.message:String(error),
+        });
+      }
+    },
+  );
+
+  app.post(
+    '/api/fallen/world-forge/runtime-step',
+    rateLimit(1200,60*60*1000),
+    (req:Request,res:Response)=>{
+      const project=req.body?.project as WorldForgeProject|undefined;
+      const runtimeWorld=req.body?.runtimeWorld as WorldDefinition|undefined;
+      const snapshot=req.body?.snapshot as WorldSnapshot|undefined;
+      const ticks=Number(req.body?.ticks);
+      const inputs=Array.isArray(req.body?.inputs)
+        ? req.body.inputs as WorldInput[]
+        : undefined;
+      if(!project||!runtimeWorld||!snapshot){
+        badRequest(res,'Project, runtime world, and runtime snapshot are required.');
+        return;
+      }
+      try{
+        const step=stepWorldForgeRuntimeSession({
+          project,
+          runtimeWorld,
+          snapshot,
+          ticks:Number.isInteger(ticks)?ticks:1,
+          inputs,
+        });
+        res.json({success:true,step});
+      }catch(error){
+        res.status(409).json({
+          success:false,
+          error:error instanceof Error?error.message:String(error),
+        });
+      }
+    },
+  );
+
+  app.post(
     '/api/fallen/world-forge/runtime-migrate',
     rateLimit(120,60*60*1000),
     (req:Request,res:Response)=>{
@@ -442,7 +501,15 @@ export function registerWorldForgeRoutes(app:Express,deps:WorldForgeHttpDeps){
           runtimeSnapshot,
           activateNewEntities:req.body?.activateNewEntities!==false,
         });
-        res.json({success:true,migration});
+        const bridge=compileWorldForgeToWorldEngine({
+          project:migration.sync.nextProject,
+        });
+        const overlay=projectWorldEngineSnapshotToWorldForge({
+          project:migration.sync.nextProject,
+          bridge,
+          snapshot:migration.snapshot,
+        });
+        res.json({success:true,migration,overlay});
       }catch(error){
         res.status(409).json({
           success:false,
