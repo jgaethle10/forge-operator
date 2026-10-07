@@ -220,12 +220,14 @@ At the same time, the distribution ledger already contained meaningful machine d
 
 Therefore the system must not describe the distribution circle as closed yet. Attention is reaching Evercraft, but the observed bottleneck is still the handoff from discovery / qualification into explicit purchase intent and canonical paid conversion.
 
-The dashboard now makes this visible with separate counts for paid-without-fulfillment, open fulfillment, delivered work, captured outcomes, and distribution re-entry.
+The dashboard now makes this visible with separate counts for paid-without-fulfillment, open fulfillment, delivered work, captured outcomes, and distribution re-entry. It also includes a 30-day demand-to-revenue funnel showing discovery signals, qualification signals, checkout intent, checkout prepared, verified paid, delivered and re-entry, with an explicit current-bottleneck diagnosis.
 
 ### Deployment truth
 
 The FindMyPart public agent gateway has been externally verified to serve the new conversion playbook.
 
-The portfolio machine-commerce catalog data already includes the Transparency Atlas Record Check and externally ranks it first for a representative data-center permits / ownership / water / power intent. The new `recommended_action` response logic is committed and type-checks cleanly, but the currently public catalog endpoint was observed still serving the prior generic `next_step`, so that code change must not be claimed public until the app deployment advances.
+The public portfolio machine-commerce catalog now externally returns the new `recommended_action` response. A representative data-center permits / ownership / water / power intent ranks Transparency Atlas Record Check first and returns the attributed $49 intake URL plus the human-confirmation boundary. A representative obsolete-machine-part sourcing intent ranks FindMyPart first and routes to the live FindMyPart offer endpoint with the triage / single-recommendation / explicit-confirmation instruction.
 
-Likewise, the public Atlas LLM surface exposes the Record Check page, while the generated public sitemap observed externally was still serving the previous version without the new Record Check sitemap entry.
+The FindMyPart public offer endpoint has also been externally verified to serve the new conversion playbook.
+
+The public Atlas LLM surface exposes the Record Check page. At the latest external check, the generated public sitemap was still serving the previous version without the new Record Check sitemap entry, so that specific sitemap deployment must not be claimed live yet.
