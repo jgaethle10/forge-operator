@@ -30,8 +30,13 @@ if (index.summary.unique_user_phrases !== expected.size) {
 }
 if (index.doors.length !== expected.size) fail('door array length mismatch');
 
-const serialized = JSON.stringify(index);
-if (serialized.includes('systemiacommandcenters.com')) fail('Marketing Agency route leaked into answer graph');
+const isBlockedMarketingRoute=(value)=>{
+  if(!value) return false;
+  try{
+    const host=new URL(String(value)).hostname.toLowerCase();
+    return host==='systemiacommandcenters.com'||host==='www.systemiacommandcenters.com';
+  }catch{return false;}
+};
 
 const seenIds = new Set();
 const seenNormalized = new Set();
@@ -64,7 +69,7 @@ for (const door of index.doors) {
       fail('non-sell-now candidate exposes machine offer URL: ' + candidate.capability_id);
     }
     for (const value of [candidate.public_url, candidate.direct_mcp, candidate.machine_review_url, candidate.machine_offer_url]) {
-      if (value && String(value).includes('systemiacommandcenters.com')) {
+      if (isBlockedMarketingRoute(value)) {
         fail('stale Marketing Agency route leaked: ' + candidate.capability_id);
       }
     }

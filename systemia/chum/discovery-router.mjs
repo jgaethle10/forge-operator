@@ -123,22 +123,33 @@ function familyIdentity(row, products = []) {
   if (row.product_key) return `product:${row.product_key}`;
 
   const rowName = normalizeText(row.name);
-  const rowHost = hostOf(row.public_url || row.canonical_url);
-  const candidates = products.filter((product) => {
+  const nameCandidates = products.filter((product) => {
     const productName = normalizeText(product.name);
-    const nameMatch = productName.length >= 4 && (
+    return productName.length >= 4 && (
       rowName === productName ||
       rowName.startsWith(productName + ' ') ||
       rowName.endsWith(' ' + productName)
     );
-    const productHost = hostOf(product.canonical_url);
-    const hostMatch = Boolean(rowHost && productHost && rowHost === productHost);
-    return nameMatch || hostMatch;
   });
 
-  if (candidates.length === 1 && candidates[0].product_key) {
-    return `product:${candidates[0].product_key}`;
+  // Product identity beats infrastructure identity. Multiple Evercraft products
+  // legitimately share the same owned Fabric host, so a shared hostname must not
+  // make a uniquely named capability look like a separate product family.
+  if (nameCandidates.length === 1 && nameCandidates[0].product_key) {
+    return `product:${nameCandidates[0].product_key}`;
   }
+
+  if (nameCandidates.length === 0) {
+    const rowHost = hostOf(row.public_url || row.canonical_url);
+    const hostCandidates = products.filter((product) => {
+      const productHost = hostOf(product.canonical_url);
+      return Boolean(rowHost && productHost && rowHost === productHost);
+    });
+    if (hostCandidates.length === 1 && hostCandidates[0].product_key) {
+      return `product:${hostCandidates[0].product_key}`;
+    }
+  }
+
   return `offer:${row.public_id}`;
 }
 
