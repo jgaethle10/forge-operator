@@ -206,6 +206,11 @@ try {
     'public-edge-activation-watch',
     'field-mission-snapshot.json'
   );
+  const competitionCapacityMission = path.join(
+    workspace,
+    'competition-capacity',
+    'mission-snapshot.json'
+  );
   assert.equal(
     fs.existsSync(path.join(workspace, 'legacy-rescue-watch', 'mission-snapshot.json')),
     true
@@ -223,6 +228,25 @@ try {
     true
   );
   assert.equal(await waitForPath(publicEdgeMission), true);
+  assert.equal(await waitForPath(competitionCapacityMission), true);
+
+  const competitionCapacitySnapshot=JSON.parse(
+    fs.readFileSync(competitionCapacityMission,'utf8')
+  );
+  assert.equal(
+    competitionCapacitySnapshot.schema,
+    'evercraft.kaidance.mission-snapshot.v1'
+  );
+  assert.equal(
+    competitionCapacitySnapshot.mission_key,
+    'competition-autonomous-capacity-v1'
+  );
+  assert.equal(competitionCapacitySnapshot.founder_action_required,false);
+  assert.equal(competitionCapacitySnapshot.human_gate_required,false);
+  assert.equal(competitionCapacitySnapshot.paid_capacity_authorized,false);
+  assert.equal(competitionCapacitySnapshot.privacy.node_identity_exposed,false);
+  assert.equal(competitionCapacitySnapshot.privacy.capacity_endpoint_exposed,false);
+  assert.equal(competitionCapacitySnapshot.privacy.allocator_authority_exposed,false);
 
   const edgeSnapshot=JSON.parse(fs.readFileSync(publicEdgeMission,'utf8'));
   assert.equal(edgeSnapshot.schema,'evercraft.kaidance.mission-snapshot.v1');
@@ -231,6 +255,15 @@ try {
   const managedMissionSources=JSON.parse(
     fs.readFileSync(path.join(workspace,'mission-sources.json'),'utf8')
   );
+  const competitionCapacitySource=(managedMissionSources.sources||[]).find(
+    (source)=>source.source_key==='competition-saban-capacity'
+  );
+  assert.ok(competitionCapacitySource);
+  assert.equal(
+    competitionCapacitySource.path,
+    'competition-capacity/mission-snapshot.json'
+  );
+
   const edgeSource=(managedMissionSources.sources||[]).find(
     (source)=>source.source_key==='evercraft-public-specialist-edge'
   );
@@ -310,6 +343,9 @@ try {
     sentinel_region_profile: core.result.sentinel_region_profile,
     private_workspace_verified: true,
     public_edge_workspace_verified:true,
+    competition_capacity_snapshot_emitted:true,
+    competition_capacity_snapshot_private_topology_redacted:true,
+    competition_capacity_release_ref_explicitly_bound:true,
     immutable_release_ref_injected:true,
     issue_403_mission_snapshot_emitted:true,
     public_edge_allocator_authority_not_persisted:true,
