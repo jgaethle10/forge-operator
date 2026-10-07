@@ -157,10 +157,19 @@ export function worldDefinitionDigest(world:WorldDefinition){
   return digest(world);
 }
 
+export function worldSnapshotDigest(snapshot:Omit<WorldSnapshot,'digest'>|WorldSnapshot){
+  const copy={...(snapshot as WorldSnapshot)} as Record<string,unknown>;
+  delete copy.digest;
+  return digest(copy);
+}
+
+export function sealWorldSnapshot(core:Omit<WorldSnapshot,'digest'>):WorldSnapshot{
+  return {...clone(core),digest:worldSnapshotDigest(core)};
+}
+
 export function verifyWorldSnapshot(snapshot:WorldSnapshot){
   if(snapshot?.schema!=='evercraft.world-engine.snapshot.v1') return false;
-  const {digest:claimed,...core}=snapshot;
-  return typeof claimed==='string' && claimed===digest(core);
+  return typeof snapshot.digest==='string' && snapshot.digest===worldSnapshotDigest(snapshot);
 }
 
 export function validateWorldDefinition(world:WorldDefinition){
@@ -644,7 +653,7 @@ export class EvercraftWorldRuntime {
       audioSceneRuntime:this.audioSceneRuntime,
       collisions:clone(this._collisions)
     };
-    return {...core,digest:digest(core)};
+    return sealWorldSnapshot(core);
   }
 }
 

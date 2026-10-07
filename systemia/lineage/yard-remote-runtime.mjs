@@ -1,6 +1,7 @@
 import http from 'node:http';
 import { Buffer } from 'node:buffer';
 import { LocalLineageRemote } from './remote-protocol.mjs';
+import { LargeObjectStore, largeObject } from './large-object.mjs';
 
 const JSON_LIMIT = 24 * 1024 * 1024;
 
@@ -43,6 +44,7 @@ export async function startLineageRemoteRuntime({
   host = '127.0.0.1',
   port = 0,
   maxObjectBytes = 16 * 1024 * 1024,
+  maxChunkBytes = 2 * 1024 * 1024,
 } = {}) {
   if (!stateDir) throw new Error('lineage_remote_state_dir_required');
   if (!['127.0.0.1', 'localhost', '::1'].includes(String(host))) {
@@ -50,7 +52,8 @@ export async function startLineageRemoteRuntime({
   }
 
   const remote = new LocalLineageRemote(stateDir);
-  await remote.init();
+  const large = new LargeObjectStore(stateDir);
+  await Promise.all([remote.init(), large.init()]);
 
   const server = http.createServer(async (req, res) => {
     try {
@@ -66,6 +69,7 @@ export async function startLineageRemoteRuntime({
           publication_authority: false,
           deployment_authority: false,
           payment_authority: false,
+          large_object_transport: true,
         });
       }
 
@@ -136,6 +140,112 @@ export async function startLineageRemoteRuntime({
         }
       }
 
+      if (req.method === 'POST' && req.url === '/v1/chunk/has') {
+        const body = await readJson(req);
+        const id = assertObjectId(body.id);
+        return send(res, 200, {
+          schema: 'evercraft.lineage.remote-chunk-presence.v1',
+          id,
+          present: await large.hasChunk(id),
+        });
+      }
+
+      if (req.method === 'POST' && req.url === '/v1/chunk/get') {
+        const body = await readJson(req);
+        const id = assertObjectId(body.id);
+        try {
+          const bytes = await large.getChunk(id);
+          return send(res, 200, {
+            schema: 'evercraft.lineage.remote-chunk.v1',
+            id,
+            bytes: bytes.length,
+            bytes_base64: bytes.toString('base64'),
+          });
+        } catch (error) {
+          if (error?.code === 'ENOENT') {
+            return send(res, 404, { error: 'lineage_chunk_not_found', id });
+          }
+          throw error;
+        }
+      }
+
+      if (req.method === 'POST' && req.url === '/v1/chunk/put') {
+        const body = await readJson(req, Math.max(JSON_LIMIT, maxChunkBytes * 3));
+        const id = assertObjectId(body.id);
+        const encoded = String(body.bytes_base64 || '');
+        if (!encoded) return send(res, 422, { error: 'lineage_chunk_bytes_required' });
+        const bytes = Buffer.from(encoded, 'base64');
+        if (bytes.length > maxChunkBytes) {
+          return send(res, 413, {
+            error: 'lineage_chunk_too_large',
+            max_chunk_bytes: maxChunkBytes,
+          });
+        }
+        const actual = largeObject.sha256(bytes);
+        if (actual !== id) {
+          return send(res, 422, {
+            error: 'lineage_chunk_digest_mismatch',
+            expected: id,
+            actual,
+          });
+        }
+        const stored = await large.putChunk(bytes);
+        return send(res, 200, {
+          schema: 'evercraft.lineage.remote-chunk-put.v1',
+          id: stored.id,
+          bytes: stored.bytes,
+          reused: stored.reused,
+        });
+      }
+
+      if (req.method === 'POST' && req.url === '/v1/large/manifest/has') {
+        const body = await readJson(req);
+        const id = assertObjectId(body.id);
+        return send(res, 200, {
+          schema: 'evercraft.lineage.remote-large-manifest-presence.v1',
+          id,
+          present: await large.hasManifest(id),
+        });
+      }
+
+      if (req.method === 'POST' && req.url === '/v1/large/manifest/get') {
+        const body = await readJson(req);
+        const id = assertObjectId(body.id);
+        try {
+          const manifest = await large.readManifest(id);
+          return send(res, 200, {
+            schema: 'evercraft.lineage.remote-large-manifest.v1',
+            id,
+            manifest,
+          });
+        } catch (error) {
+          if (error?.code === 'ENOENT') {
+            return send(res, 404, { error: 'lineage_large_manifest_not_found', id });
+          }
+          throw error;
+        }
+      }
+
+      if (req.method === 'POST' && req.url === '/v1/large/manifest/put') {
+        const body = await readJson(req);
+        const id = assertObjectId(body.id);
+        try {
+          const stored = await large.putManifest(body.manifest, { expectedId: id });
+          return send(res, 200, {
+            schema: 'evercraft.lineage.remote-large-manifest-put.v1',
+            id: stored.id,
+            reused: stored.reused,
+            bytes: stored.bytes,
+            chunk_count: stored.chunk_count,
+          });
+        } catch (error) {
+          if (error?.code === 'LARGE_OBJECT_MANIFEST_DIGEST_MISMATCH') {
+            return send(res, 422, { error: error.code });
+          }
+          throw error;
+        }
+      }
+
       if (req.method === 'POST' && req.url === '/v1/object/put') {
         const body = await readJson(req, Math.max(JSON_LIMIT, maxObjectBytes * 2));
         const id = assertObjectId(body.id);
@@ -190,6 +300,7 @@ export async function startLineageRemoteRuntime({
     service_url: serviceUrl,
     state_dir: stateDir,
     remote,
+    large_object_store: large,
     async health() {
       const refs = await remote.advertiseRefs();
       return {
@@ -201,6 +312,7 @@ export async function startLineageRemoteRuntime({
         publication_authority: false,
         deployment_authority: false,
         payment_authority: false,
+        large_object_transport: true,
       };
     },
     async close() {

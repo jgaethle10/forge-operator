@@ -86,6 +86,23 @@
       }
     },
     {
+      "service_key": "competition-saban-capacity",
+      "mode": "cycle",
+      "manifest": "systemia/organism/competition-saban-capacity.workflow.json",
+      "executable": "systemia/competition/saban-capacity-runner.mjs",
+      "cadence_seconds": 300,
+      "optional_when_unconfigured": true,
+      "optional_env_args": {
+        "--yard-state": "SYSTEMIA_YARD_STATE_DIR",
+        "--broker-deployment": "SYSTEMIA_REMOTE_BROKER_DEPLOYMENT_ID",
+        "--deployment-id": "SYSTEMIA_COMPETITION_BROWSER_DEPLOYMENT_ID",
+        "--release-ref": "SYSTEMIA_COMPETITION_BROWSER_RELEASE_REF",
+        "--rollback-target": "SYSTEMIA_COMPETITION_BROWSER_ROLLBACK_TARGET",
+        "--lease-ttl-ms": "SYSTEMIA_COMPETITION_BROWSER_LEASE_TTL_MS",
+        "--out": "SYSTEMIA_COMPETITION_SABAN_CAPACITY_RECEIPT"
+      }
+    },
+    {
       "service_key": "competition-provider-scout",
       "mode": "cycle",
       "manifest": "systemia/organism/competition-provider-scout.workflow.json",

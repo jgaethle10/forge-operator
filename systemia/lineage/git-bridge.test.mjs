@@ -133,3 +133,50 @@ test('Git export uses compare-and-swap semantics for its target branch', async (
     await rm(gitRoot, { recursive: true, force: true });
   }
 });
+
+
+test('Git export materializes manifest-backed large entries byte-exactly', async () => {
+  const lineageRoot = await mkdtemp(join(tmpdir(), 'lineage-git-large-source-'));
+  const gitRoot = await mkdtemp(join(tmpdir(), 'lineage-git-large-target-'));
+  try {
+    const store = new LineageStore(lineageRoot);
+    await store.init();
+    const bytes = Buffer.concat([
+      Buffer.alloc(120_000, 'A'),
+      Buffer.from('LARGE-LINEAGE-ASSET'),
+      Buffer.alloc(120_000, 'B'),
+    ]);
+    await writeFile(join(lineageRoot, 'large.txt'), bytes);
+    const committed = await store.commit({
+      message: 'large export',
+      snapshot: {
+        largeObjectThresholdBytes: 64 * 1024,
+        largeObjectChunking: {
+          minChunkBytes: 16 * 1024,
+          averageChunkBytes: 32 * 1024,
+          maxChunkBytes: 64 * 1024,
+        },
+      },
+    });
+
+    const tree = await store.getTree(committed.commit_id);
+    assert.equal(tree.entries[0].storage, 'large_object');
+
+    const exported = await exportLineageSnapshotToGit(store, {
+      commitish: committed.commit_id,
+      repository: gitRoot,
+      branch: 'main',
+    });
+
+    const shown = spawnSync('git', ['show', `${exported.git_commit_sha}:large.txt`], {
+      cwd: gitRoot,
+      encoding: null,
+      maxBuffer: 1024 * 1024,
+    });
+    if (shown.status !== 0) throw new Error(Buffer.from(shown.stderr || '').toString('utf8'));
+    assert.deepEqual(Buffer.from(shown.stdout), bytes);
+  } finally {
+    await rm(lineageRoot, { recursive: true, force: true });
+    await rm(gitRoot, { recursive: true, force: true });
+  }
+});

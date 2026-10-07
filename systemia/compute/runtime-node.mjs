@@ -24,6 +24,7 @@ import { startFabricLocalRuntime } from '../mcp/fabric-local-runtime.mjs';
 import { startPublicEdgeRuntime } from '../network/public-edge-runtime.mjs';
 import { startFederatedServiceBridge } from '../network/federated-service-bridge.mjs';
 import { startEvercraftHomeServer } from '../evercraft-home/server.mjs';
+import { startLineageRemoteRuntime } from '../lineage/yard-remote-runtime.mjs';
 import { startEvercraftEdgeDnsRuntime } from './evercraft-edge-dns-runtime.mjs';
 import { validatePublicEdgeAdmission } from '../network/public-edge-tls.mjs';
 import { transcriptionCapabilityStatus } from '../forensiscope/transcription-engine.mjs';
@@ -90,6 +91,7 @@ const BRIDGED_WORKLOADS = new Set([
   'systemia.specialist-handoff-mcp.v1',
   'systemia.fabric-local-mcp.v1',
   'systemia.rivet-report-runtime.v1',
+  'systemia.lineage-remote.v1',
 ]);
 
 const BRIDGE_REQUEST_HEADERS = new Set([
@@ -142,10 +144,21 @@ function bridgeServiceOrigin(entry) {
   if (entry?.workload_class === 'systemia.rivet-report-runtime.v1') {
     return String(entry?.runtime?.service_url || '');
   }
+  if (entry?.workload_class === 'systemia.lineage-remote.v1') {
+    return String(entry?.runtime?.service_url || '');
+  }
   return '';
 }
 
 function bridgeRouteAllowed(entry, method, requestPath) {
+  if (entry?.workload_class === 'systemia.lineage-remote.v1') {
+    if (method === 'GET' && ['/health', '/v1/refs'].includes(requestPath)) return true;
+    if (
+      method === 'POST' &&
+      /^\/v1\/(?:ref\/(?:read|cas)|object\/(?:has|get|put)|chunk\/(?:has|get|put)|large\/manifest\/(?:has|get|put))$/.test(requestPath)
+    ) return true;
+    return false;
+  }
   if (entry?.workload_class !== 'systemia.rivet-report-runtime.v1') return true;
   if (method === 'GET' && requestPath === '/health') return true;
   if (method === 'POST' && requestPath === '/v1/reports') return true;
@@ -243,6 +256,51 @@ function atomicJson(file, value) {
   const tmp = `${file}.${process.pid}.${randomBytes(4).toString('hex')}.tmp`;
   fs.writeFileSync(tmp, JSON.stringify(value, null, 2) + '\n', { mode: 0o600 });
   fs.renameSync(tmp, file);
+}
+
+function loadOrCreatePrivateToken(file) {
+  fs.mkdirSync(path.dirname(file), { recursive: true, mode: 0o700 });
+  if (!fs.existsSync(file)) {
+    fs.writeFileSync(file, randomBytes(32).toString('hex') + '\n', { mode: 0o600 });
+  }
+  fs.chmodSync(file, 0o600);
+  const token = fs.readFileSync(file, 'utf8').trim();
+  if (Buffer.byteLength(token, 'utf8') < 32) {
+    throw new Error('private_runtime_token_invalid');
+  }
+  return file;
+}
+
+function normalizeRavenInferenceConfig(input = {}) {
+  const provider = String(input.raven_inference_provider || '').trim().toLowerCase();
+  const model = String(input.raven_inference_model || '').trim();
+  const configured = Boolean(provider || model);
+  if (!configured) return { configured: false, provider: '', model: '', ollama_origin: '' };
+  if (!['ollama', 'gemini', 'openai'].includes(provider)) {
+    throw new Error('raven_inference_provider_invalid');
+  }
+  if (!/^[a-zA-Z0-9._:-]{1,160}$/.test(model)) {
+    throw new Error('raven_inference_model_invalid');
+  }
+  const rawOllamaOrigin = String(input.raven_ollama_origin || '').trim();
+  if (rawOllamaOrigin && provider !== 'ollama') {
+    throw new Error('raven_ollama_origin_without_ollama_provider');
+  }
+  if (rawOllamaOrigin) {
+    const parsed = new URL(rawOllamaOrigin);
+    if (
+      parsed.protocol !== 'http:' ||
+      !['127.0.0.1', 'localhost', '::1'].includes(parsed.hostname)
+    ) {
+      throw new Error('raven_ollama_origin_must_be_loopback_http');
+    }
+  }
+  return {
+    configured: true,
+    provider,
+    model,
+    ollama_origin: rawOllamaOrigin,
+  };
 }
 
 function hashFileSha256(file) {
@@ -848,6 +906,7 @@ export async function startEvercraftComputeNode({
     'systemia.evercraft-edge-dns.v1',
     'systemia.federated-service-bridge.v1',
     'systemia.evercraft-home.v1',
+    'systemia.lineage-remote.v1',
     'saban.logical-agent',
     'saban.multiplier-assignment.v1',
   ]);
@@ -1642,6 +1701,16 @@ export async function startEvercraftComputeNode({
             return send(res, 403, { error: 'evercraft_identity_state_outside_admitted_root' });
           }
 
+          const credentialStateValue = String(
+            body.input?.provider_credential_state_dir ||
+            process.env.EVERCRAFT_CREDENTIAL_STATE_DIR ||
+            path.join(identityStateRoot, 'provider-credentials')
+          ).trim();
+          const credentialStateRoot = path.resolve(credentialStateValue);
+          if (!isWithin(allowedRoot, credentialStateRoot)) {
+            return send(res, 403, { error: 'evercraft_provider_credential_state_outside_admitted_root' });
+          }
+
           const passportStateRoot = path.resolve(String(
             body.input?.passport_state_dir ||
             process.env.EVERCRAFT_PASSPORT_STATE_DIR ||
@@ -1664,6 +1733,50 @@ export async function startEvercraftComputeNode({
             return send(res, 403, { error: 'evercraft_yard_state_outside_admitted_root' });
           }
 
+          const ravenWorkTokenValue = String(
+            body.input?.raven_work_token_file || ''
+          ).trim();
+          const ravenWorkTokenFile = ravenWorkTokenValue
+            ? path.resolve(ravenWorkTokenValue)
+            : '';
+          if (ravenWorkTokenFile) {
+            if (!isWithin(allowedRoot, ravenWorkTokenFile)) {
+              return send(res, 403, { error: 'evercraft_raven_token_file_outside_admitted_root' });
+            }
+            if (!fs.existsSync(ravenWorkTokenFile) || !fs.statSync(ravenWorkTokenFile).isFile()) {
+              return send(res, 422, { error: 'evercraft_raven_token_file_missing' });
+            }
+            if ((fs.statSync(ravenWorkTokenFile).mode & 0o077) !== 0) {
+              return send(res, 422, { error: 'evercraft_raven_token_file_permissions_too_open' });
+            }
+          }
+
+          const ravenWorkUrlValue = String(
+            body.input?.raven_work_url ||
+            (ravenWorkTokenFile ? 'http://127.0.0.1:4321' : '')
+          ).trim();
+          if (ravenWorkUrlValue) {
+            if (!ravenWorkTokenFile) {
+              return send(res, 422, { error: 'evercraft_raven_work_url_requires_token_file' });
+            }
+            let ravenWorkUrl;
+            try {
+              ravenWorkUrl = new URL(ravenWorkUrlValue);
+            } catch {
+              return send(res, 422, { error: 'evercraft_raven_work_url_invalid' });
+            }
+            if (
+              ravenWorkUrl.protocol !== 'http:' ||
+              !['127.0.0.1', 'localhost', '::1'].includes(ravenWorkUrl.hostname)
+            ) {
+              return send(res, 403, { error: 'evercraft_raven_work_url_must_be_loopback_http' });
+            }
+          }
+
+          const ravenReceiptDir = ravenWorkTokenFile
+            ? path.join(identityStateRoot, 'raven-execution-receipts')
+            : '';
+
           const runtime = await startEvercraftHomeServer({
             host: '127.0.0.1',
             port: Number(body.input?.port || 0),
@@ -1671,7 +1784,16 @@ export async function startEvercraftComputeNode({
             identitySecret,
             passportStateDir: passportStateRoot,
             identityStateDir: identityStateRoot,
+            credentialStateDir: credentialStateRoot,
             yardStateDir: yardStateRoot,
+            serviceOrigins: {
+              ...process.env,
+              ...(ravenWorkTokenFile ? {
+                RAVEN_NEXUS_WORK_URL: ravenWorkUrlValue,
+                RAVEN_NEXUS_WORK_TOKEN_FILE: ravenWorkTokenFile,
+                EVERCRAFT_RAVEN_RECEIPT_DIR: ravenReceiptDir,
+              } : {}),
+            },
           });
 
           const serviceId = `svc_${randomBytes(8).toString('hex')}`;
@@ -1695,6 +1817,8 @@ export async function startEvercraftComputeNode({
             auth_mode: runtime.authMode,
             private_origin_only: true,
             provider_independent_boot: true,
+            raven_readonly_execution_configured: Boolean(ravenWorkTokenFile),
+            raven_work_authority_exposed: false,
           };
           const receipt = chain.issue('service.started', {
             lease_id: body.lease_id,
@@ -2050,6 +2174,9 @@ export async function startEvercraftComputeNode({
           });
           const serviceId = `svc_${randomBytes(8).toString('hex')}`;
           const authHandoffSupported = typeof runtime.createAuthSession === 'function';
+          const delegatedDraftAutomationSupported =
+            typeof runtime.delegatedSnapshot === 'function' &&
+            typeof runtime.delegatedAction === 'function';
           services.set(serviceId, {
             lease_id: body.lease_id,
             workload_class: body.workload_class,
@@ -2066,12 +2193,18 @@ export async function startEvercraftComputeNode({
             health_path: `/v1/services/${serviceId}/health`,
             invoke_path: `/v1/services/${serviceId}/browser`,
             auth_handoff_create_path: authHandoffSupported ? `/v1/services/${serviceId}/browser/auth-session` : null,
+            delegated_snapshot_path: delegatedDraftAutomationSupported ? `/v1/services/${serviceId}/browser/delegated/snapshot` : null,
+            delegated_action_path: delegatedDraftAutomationSupported ? `/v1/services/${serviceId}/browser/delegated/action` : null,
             public_render_path: '/v1/browser/render',
             public_handoff_path_template: authHandoffSupported ? '/handoff/{session_id}' : null,
             public_health_path: '/health',
             instance_id: runtime.instanceId || null,
             mode: authHandoffSupported ? 'public_read_only_plus_human_handoff' : 'public_read_only',
             auth_handoff_supported: authHandoffSupported,
+            delegated_draft_automation_supported: delegatedDraftAutomationSupported,
+            delegated_final_submission_authority: false,
+            delegated_payment_authority: false,
+            delegated_new_terms_authority: false,
             browser_engine: 'playwright-chromium',
             private_worker_endpoint_exposed: false,
           };
@@ -2253,6 +2386,10 @@ export async function startEvercraftComputeNode({
             workspaceRoot,
             'remote-device-trust-watch'
           );
+          const competitionCapacityOut = path.join(
+            workspaceRoot,
+            'competition-capacity'
+          );
           const publicEdgeOut = path.join(
             workspaceRoot,
             'public-edge-activation-watch'
@@ -2289,6 +2426,12 @@ export async function startEvercraftComputeNode({
                 stale_after_seconds: 900,
               },
               {
+                source_key: 'competition-saban-capacity',
+                path: 'competition-capacity/mission-snapshot.json',
+                required: false,
+                stale_after_seconds: 900,
+              },
+              {
                 source_key: 'evercraft-public-specialist-edge',
                 path: 'public-edge-activation-watch/field-mission-snapshot.json',
                 required: false,
@@ -2296,6 +2439,37 @@ export async function startEvercraftComputeNode({
               },
             ],
           });
+
+          const ravenInference = normalizeRavenInferenceConfig(body.input || {});
+          const ravenPrivateStateRoot = path.join(stateRoot, 'raven-private');
+          const ravenPrivateBindingsRoot = path.join(stateRoot, '.private-bindings', 'raven');
+          let ravenControlTokenFile = '';
+          let ravenInferenceGatewayTokenFile = '';
+          if (ravenInference.configured) {
+            ravenControlTokenFile = loadOrCreatePrivateToken(
+              path.join(ravenPrivateBindingsRoot, 'control-token')
+            );
+            ravenInferenceGatewayTokenFile = loadOrCreatePrivateToken(
+              path.join(ravenPrivateBindingsRoot, 'inference-gateway-token')
+            );
+          }
+
+          const providerCredentialStateValue = String(
+            body.input?.provider_credential_state_dir ||
+            process.env.EVERCRAFT_CREDENTIAL_STATE_DIR ||
+            (process.env.EVERCRAFT_IDENTITY_STATE_DIR
+              ? path.join(process.env.EVERCRAFT_IDENTITY_STATE_DIR, 'provider-credentials')
+              : '')
+          ).trim();
+          const providerCredentialStateRoot = providerCredentialStateValue
+            ? path.resolve(providerCredentialStateValue)
+            : '';
+          if (
+            providerCredentialStateRoot &&
+            !isWithin(allowedRoot, providerCredentialStateRoot)
+          ) {
+            return send(res, 403, { error: 'core_provider_credential_state_outside_admitted_root' });
+          }
 
           const serviceEnv = {
             NODE_ENV: String(process.env.NODE_ENV || 'production'),
@@ -2320,6 +2494,9 @@ export async function startEvercraftComputeNode({
             ).trim(),
             SYSTEMIA_REMOTE_DEVICE_TRUST_WATCH_OUT_DIR:
               remoteDeviceTrustWatchOut,
+            SYSTEMIA_COMPETITION_SABAN_CAPACITY_RECEIPT:
+              path.join(competitionCapacityOut, 'latest.json'),
+            SYSTEMIA_COMPETITION_BROWSER_RELEASE_REF: releaseRef,
             SYSTEMIA_MISSION_SOURCES_CONFIG: missionSourcesConfig,
             SYSTEMIA_MISSION_PUBLISHER_LEDGER: publisherLedger,
             SYSTEMIA_SENTINEL_REGION_PROFILE: String(
@@ -2335,6 +2512,15 @@ export async function startEvercraftComputeNode({
               workspaceRoot,
               'eps-social-continuity'
             ),
+            RAVEN_PROVIDER_CREDENTIAL_STATE_DIR: providerCredentialStateRoot,
+            RAVEN_PRIVATE_STATE_DIR: ravenInference.configured ? ravenPrivateStateRoot : '',
+            RAVEN_PRIVATE_CONTROL_TOKEN_FILE: ravenControlTokenFile,
+            RAVEN_INFERENCE_GATEWAY_TOKEN_FILE: ravenInferenceGatewayTokenFile,
+            RAVEN_INFERENCE_PROVIDER: ravenInference.provider,
+            RAVEN_INFERENCE_MODEL: ravenInference.model,
+            RAVEN_PRIVATE_PORT: ravenInference.configured ? '4321' : '',
+            RAVEN_INFERENCE_GATEWAY_PORT: ravenInference.configured ? '4322' : '',
+            RAVEN_OLLAMA_ORIGIN: ravenInference.ollama_origin,
           };
 
           if (serviceEnv.EVERCRAFT_CLIP_EPS_INGRESS_URL) {
@@ -2385,12 +2571,75 @@ export async function startEvercraftComputeNode({
             health_path: `/v1/services/${serviceId}/health`,
             supervised_service_count: health.service_count,
             sentinel_region_profile: serviceEnv.SYSTEMIA_SENTINEL_REGION_PROFILE || null,
+            provider_credential_vault_bound: Boolean(
+              serviceEnv.RAVEN_PROVIDER_CREDENTIAL_STATE_DIR
+            ),
+            raven_private_runtime_configured: ravenInference.configured,
+            raven_inference_gateway_configured: ravenInference.configured,
+            raven_inference_provider: ravenInference.provider || null,
+            raven_inference_model: ravenInference.model || null,
+            raven_private_paths_exposed: false,
+            raven_secret_values_exposed: false,
           };
           const receipt = chain.issue('service.started', {
             lease_id: body.lease_id,
             service_id: serviceId,
             workload_class: body.workload_class,
             result_schema: result.schema,
+          });
+          return send(res, 200, {
+            ok: true,
+            node_id: nodeId,
+            workload_class: body.workload_class,
+            result,
+            receipt,
+          });
+        }
+
+        if (workloadClass === 'systemia.lineage-remote.v1') {
+          const remoteKey = String(body.input?.remote_key || 'default').trim();
+          if (!/^[a-zA-Z0-9._-]{1,80}$/.test(remoteKey)) {
+            return send(res, 422, { error: 'lineage_remote_key_invalid' });
+          }
+          const stateRoot = path.resolve(String(
+            body.input?.state_root ||
+            path.join(allowedRoot, '.evercraft', 'lineage-remotes', remoteKey)
+          ));
+          if (!isWithin(allowedRoot, stateRoot)) {
+            return send(res, 403, { error: 'lineage_remote_state_outside_admitted_root' });
+          }
+
+          const runtime = await startLineageRemoteRuntime({
+            stateDir: stateRoot,
+            host: '127.0.0.1',
+            port: 0,
+            maxObjectBytes: 5 * 1024 * 1024,
+          });
+          const serviceId = `svc_${randomBytes(8).toString('hex')}`;
+          services.set(serviceId, {
+            lease_id: body.lease_id,
+            workload_class: body.workload_class,
+            runtime,
+            service: runtime,
+          });
+          const result = {
+            schema: 'evercraft.compute.resident-service.v1',
+            service_id: serviceId,
+            workload_class: body.workload_class,
+            service_url: null,
+            health_path: `/v1/services/${serviceId}/health`,
+            protocol: 'evercraft.lineage.remote.v1',
+            remote_key: remoteKey,
+            public_route_required: false,
+            authority_material_exposed: false,
+          };
+          const receipt = chain.issue('service.started', {
+            lease_id: body.lease_id,
+            service_id: serviceId,
+            workload_class: body.workload_class,
+            result_schema: result.schema,
+            remote_key: remoteKey,
+            protocol: result.protocol,
           });
           return send(res, 200, {
             ok: true,
@@ -3056,6 +3305,78 @@ export async function startEvercraftComputeNode({
             session_id_sha256: sha(String(result?.session_id || '')),
             expires_at: result?.expires_at || null,
             secret_material_recorded: false,
+          }),
+        });
+      }
+
+      const browserDelegatedSnapshot = req.url?.match(/^\/v1\/services\/([^/]+)\/browser\/delegated\/snapshot$/);
+      if (req.method === 'POST' && browserDelegatedSnapshot) {
+        const entry = services.get(browserDelegatedSnapshot[1]);
+        if (!entry) return send(res, 404, { error: 'service_not_found' });
+        const body = await readJson(req);
+        const lease = leases.get(entry.lease_id);
+        if (!lease || lease.token_hash !== sha(body.token || '')) {
+          return send(res, 401, { error: 'invalid_lease' });
+        }
+        if (entry.workload_class !== 'systemia.evercraft-web-browser.v1') {
+          return send(res, 422, { error: 'browser_delegated_snapshot_not_supported' });
+        }
+        if (typeof entry.runtime.delegatedSnapshot !== 'function') {
+          return send(res, 503, { error: 'browser_delegated_automation_unavailable' });
+        }
+        const result = await entry.runtime.delegatedSnapshot(String(body.session_id || ''));
+        return send(res, 200, {
+          ok: true,
+          service_id: browserDelegatedSnapshot[1],
+          result,
+          receipt: chain.issue('browser.delegated_snapshot.executed', {
+            service_id: browserDelegatedSnapshot[1],
+            lease_id: entry.lease_id,
+            workload_class: entry.workload_class,
+            session_id_sha256: sha(String(body.session_id || '')),
+            screenshot_sha256: result?.screenshot_sha256 || null,
+            final_submission_authority: false,
+            payment_authority: false,
+            new_terms_authority: false,
+          }),
+        });
+      }
+
+      const browserDelegatedAction = req.url?.match(/^\/v1\/services\/([^/]+)\/browser\/delegated\/action$/);
+      if (req.method === 'POST' && browserDelegatedAction) {
+        const entry = services.get(browserDelegatedAction[1]);
+        if (!entry) return send(res, 404, { error: 'service_not_found' });
+        const body = await readJson(req);
+        const lease = leases.get(entry.lease_id);
+        if (!lease || lease.token_hash !== sha(body.token || '')) {
+          return send(res, 401, { error: 'invalid_lease' });
+        }
+        if (entry.workload_class !== 'systemia.evercraft-web-browser.v1') {
+          return send(res, 422, { error: 'browser_delegated_action_not_supported' });
+        }
+        if (typeof entry.runtime.delegatedAction !== 'function') {
+          return send(res, 503, { error: 'browser_delegated_automation_unavailable' });
+        }
+        const result = await entry.runtime.delegatedAction(
+          String(body.session_id || ''),
+          body.action || {}
+        );
+        return send(res, 200, {
+          ok: true,
+          service_id: browserDelegatedAction[1],
+          result,
+          receipt: chain.issue('browser.delegated_action.executed', {
+            service_id: browserDelegatedAction[1],
+            lease_id: entry.lease_id,
+            workload_class: entry.workload_class,
+            session_id_sha256: sha(String(body.session_id || '')),
+            action_type: String(body.action?.type || ''),
+            action_intent: String(body.action?.intent || ''),
+            selector_sha256: body.action?.selector ? sha(String(body.action.selector)) : null,
+            secret_text_recorded: false,
+            final_submission_authority: false,
+            payment_authority: false,
+            new_terms_authority: false,
           }),
         });
       }

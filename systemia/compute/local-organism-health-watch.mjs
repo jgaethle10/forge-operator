@@ -11,6 +11,26 @@ const sha = (value) =>
     .update(typeof value === 'string' ? value : JSON.stringify(value))
     .digest('hex');
 
+const CODE_ROOT = path.resolve(
+  path.dirname(fileURLToPath(import.meta.url)),
+  '../..'
+);
+
+function currentSourceReleaseRef() {
+  const explicit = String(process.env.EVERCRAFT_RELEASE_REF || '').trim();
+  if (/^[a-f0-9]{40}$/i.test(explicit)) return explicit;
+  try {
+    const value = execFileSync('git', ['rev-parse', 'HEAD'], {
+      cwd: CODE_ROOT,
+      encoding: 'utf8',
+      stdio: ['ignore', 'pipe', 'ignore'],
+    }).trim();
+    return /^[a-f0-9]{40}$/i.test(value) ? value : '';
+  } catch {
+    return '';
+  }
+}
+
 function arg(name, fallback = '') {
   const index = process.argv.indexOf(name);
   return index >= 0 && process.argv[index + 1] ? process.argv[index + 1] : fallback;
@@ -117,19 +137,40 @@ export async function checkLocalOrganismHealth({
   requestImpl = requestHealth,
   execImpl = execFileSync,
   restartOnFailure = true,
+  sourceReleaseRefProvider = currentSourceReleaseRef,
   now = () => new Date(),
   cooldownMs = 90_000,
   recoveryWaitMs = 8_000,
+  browserBootstrapGraceMs = 12 * 60_000,
 } = {}) {
   if (!stateRoot) throw new Error('stateRoot is required');
   const root = path.resolve(stateRoot);
   const seedReceiptFile = path.join(root, 'compute', 'nodeseed-receipt.json');
   const organismReceiptFile = path.join(root, 'local-organism-receipt.json');
+  const browserBootstrapFile = path.join(root, 'browser-runtime', 'bootstrap.json');
   const watchFile = path.join(root, 'health-watch.json');
 
   const inspect = async () => {
     const seed = readJson(seedReceiptFile);
     const organism = readJson(organismReceiptFile);
+    const browserBootstrap = readJson(browserBootstrapFile);
+    const bootstrapStartedMs = browserBootstrap?.started_at
+      ? Date.parse(browserBootstrap.started_at)
+      : NaN;
+    const bootstrapAgeMs = Number.isFinite(bootstrapStartedMs)
+      ? Math.max(0, now().getTime() - bootstrapStartedMs)
+      : null;
+    const browserBootstrapActive =
+      browserBootstrap?.state === 'preparing' &&
+      bootstrapAgeMs !== null &&
+      bootstrapAgeMs < Math.max(60_000, Number(browserBootstrapGraceMs || 0));
+    const sourceReleaseRef = String(sourceReleaseRefProvider?.() || '').trim();
+    const organismReleaseRef = String(organism?.release_ref || '').trim();
+    const releaseCurrent =
+      /^[a-f0-9]{40}$/i.test(sourceReleaseRef) &&
+      /^[a-f0-9]{40}$/i.test(organismReleaseRef)
+        ? sourceReleaseRef === organismReleaseRef
+        : null;
     const endpoint = loopbackEndpoint(seed?.endpoint);
     const probe = endpoint
       ? await requestImpl(endpoint)
@@ -149,6 +190,19 @@ export async function checkLocalOrganismHealth({
         node_id: probe.body?.node_id || null,
         error: probe.error,
       },
+      organism_release_ref: organismReleaseRef || null,
+      source_release_ref: sourceReleaseRef || null,
+      release_current: releaseCurrent,
+      browser_bootstrap: {
+        state: browserBootstrap?.state || null,
+        active: browserBootstrapActive,
+        age_ms: bootstrapAgeMs,
+        release_ref: browserBootstrap?.release_ref || null,
+        native_browser_ready: browserBootstrap?.native_browser_ready === true,
+        root_privileges_used: browserBootstrap?.root_privileges_used === true,
+        system_package_manager_used:
+          browserBootstrap?.system_package_manager_used === true,
+      },
       remote_operator_enabled:
         organism?.remote_operator?.enabled === true,
       remote_admission_configured:
@@ -159,10 +213,33 @@ export async function checkLocalOrganismHealth({
   };
 
   const before = await inspect();
+  if (
+    before.service_state === 'active' &&
+    before.browser_bootstrap.active === true
+  ) {
+    const body = {
+      schema: 'evercraft.local-organism-health-watch.v1',
+      state: 'bootstrapping',
+      action: 'bootstrap_grace',
+      ...before,
+      bootstrap_grace_ms: Math.max(
+        60_000,
+        Number(browserBootstrapGraceMs || 0)
+      ),
+      authority: 'local_user_service_restart_only',
+      secret_material_exposed: false,
+      observed_at: now().toISOString(),
+    };
+    const result = { ...body, receipt_hash: sha(body) };
+    atomicJson(watchFile, result);
+    return result;
+  }
+
   const healthy =
     before.service_state === 'active' &&
     before.seed_receipt_present &&
-    before.nodeseed_health.ok === true;
+    before.nodeseed_health.ok === true &&
+    before.release_current !== false;
 
   if (healthy) {
     const body = {
@@ -221,7 +298,8 @@ export async function checkLocalOrganismHealth({
       if (
         after.service_state === 'active' &&
         after.seed_receipt_present &&
-        after.nodeseed_health.ok === true
+        after.nodeseed_health.ok === true &&
+        after.release_current !== false
       ) {
         const body = {
           schema: 'evercraft.local-organism-health-watch.v1',

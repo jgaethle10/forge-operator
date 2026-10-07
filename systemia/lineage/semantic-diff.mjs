@@ -1,5 +1,7 @@
 import { extname } from 'node:path';
 
+const MAX_INLINE_SEMANTIC_BYTES = 2 * 1024 * 1024;
+
 function lines(text) {
   return String(text ?? '').replace(/\r\n/g, '\n').split('\n');
 }
@@ -181,30 +183,80 @@ export function semanticSummary({ path, kind, before = null, after = null }) {
   return { adapter: 'binary', semantic_comparison_available: false };
 }
 
-async function blobText(store, entry) {
-  if (!entry) return null;
-  const object = await store.readObject(entry.object_id);
-  if (object.type !== 'blob') throw new Error(`Expected blob for ${entry.path}`);
-  const bytes = Buffer.from(object.payload.data, object.payload.encoding);
+async function semanticInput(store, entry) {
+  if (!entry) return { text: null, unavailable: 'missing' };
   const adapter = selectSemanticAdapter(entry.path, entry.kind);
-  if (adapter === 'binary') return null;
-  return bytes.toString('utf8');
+  if (adapter === 'binary') return { text: null, unavailable: 'binary' };
+
+  const object = await store.readObject(entry.object_id);
+  if (object.type === 'blob') {
+    const bytes = Buffer.from(object.payload.data, object.payload.encoding);
+    if (bytes.length > MAX_INLINE_SEMANTIC_BYTES) {
+      return { text: null, unavailable: 'semantic_size_limit' };
+    }
+    return { text: bytes.toString('utf8'), unavailable: null };
+  }
+
+  if (object.type === 'large_blob_ref') {
+    if (Number(entry.bytes || object.payload.size || 0) > MAX_INLINE_SEMANTIC_BYTES) {
+      return { text: null, unavailable: 'large_object' };
+    }
+    if (typeof store.readEntryBytes !== 'function') {
+      return { text: null, unavailable: 'large_object_materializer_missing' };
+    }
+    const bytes = await store.readEntryBytes(entry);
+    if (bytes.length > MAX_INLINE_SEMANTIC_BYTES) {
+      return { text: null, unavailable: 'semantic_size_limit' };
+    }
+    return { text: bytes.toString('utf8'), unavailable: null };
+  }
+
+  return { text: null, unavailable: `unsupported_object_type:${object.type}` };
 }
 
 export async function semanticDiff(store, from = 'HEAD', to = null) {
   const raw = await store.diff(from, to);
   const changes = [];
   for (const change of raw.changes) {
-    const beforeText = await blobText(store, change.before);
-    const afterText = await blobText(store, change.after);
+    const kind = change.after?.kind || change.before?.kind || 'artifact';
+    const adapter = selectSemanticAdapter(change.path, kind);
+
+    if (change.status === 'added' || change.status === 'deleted') {
+      changes.push({
+        ...change,
+        semantic: {
+          adapter,
+          state_change: change.status === 'added' ? 'created' : 'deleted',
+          semantic_comparison_available: false,
+          content_sha256: change.after?.content_sha256 || change.before?.content_sha256 || null,
+          bytes: change.after?.bytes ?? change.before?.bytes ?? null,
+        }
+      });
+      continue;
+    }
+
+    const beforeInput = await semanticInput(store, change.before);
+    const afterInput = await semanticInput(store, change.after);
+    const unavailable = [beforeInput.unavailable, afterInput.unavailable].filter(Boolean);
+
     changes.push({
       ...change,
-      semantic: semanticSummary({
-        path: change.path,
-        kind: change.after?.kind || change.before?.kind || 'artifact',
-        before: beforeText,
-        after: afterText
-      })
+      semantic: unavailable.length
+        ? {
+            adapter,
+            semantic_comparison_available: false,
+            reason: [...new Set(unavailable)].join(','),
+            before_content_sha256: change.before?.content_sha256 || null,
+            after_content_sha256: change.after?.content_sha256 || null,
+            before_bytes: change.before?.bytes ?? null,
+            after_bytes: change.after?.bytes ?? null,
+          }
+        : semanticSummary({
+            path: change.path,
+            kind,
+            before: beforeInput.text,
+            after: afterInput.text
+          })
     });
   }
   return { ...raw, semantic: true, changes };

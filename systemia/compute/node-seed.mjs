@@ -40,6 +40,7 @@ export async function startNodeSeed({
   placementLabels = [],
   failureDomain = '',
   zeroCost = false,
+  browserRuntimeFactory = null,
   remoteOperatorRoots = null,
   remoteOperatorStateDir = '',
   announce = true,
@@ -65,6 +66,7 @@ export async function startNodeSeed({
     placementLabels,
     failureDomain,
     zeroCost,
+    browserRuntimeFactory,
     remoteOperatorRoots,
     remoteOperatorStateDir,
   });

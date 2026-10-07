@@ -33,3 +33,22 @@ test('external Fabric canary proves Visual Desk page, catalog, social card, moti
 test('Visual Desk failure is a first-class external canary stage',()=>{
   assert.ok(script.includes("if(checks.visual_desk!==true) return 'visual_desk'"));
 });
+
+
+test('external Fabric canary proves Visual Desk ingest exists and blocks unauthenticated mutation',()=>{
+  assert.ok(script.includes("timedFetch(origin+'/api/visuals/ingest'"));
+  assert.ok(script.includes("negativeVisualIngest.status!==401"));
+  assert.ok(script.includes("visual_ingest_unauthorized"));
+  assert.ok(script.includes("visual_desk_ingest_auth_gate_failed"));
+  assert.ok(script.includes("health.visual_desk_ingest_ready!==true"));
+  assert.ok(script.includes("health.visual_desk_ingest_publication_authority!==false"));
+});
+
+
+test('external Fabric canary distinguishes deployment lag from a broken ingest auth gate',()=>{
+  assert.ok(script.includes("negativeVisualIngest.status===404"));
+  assert.ok(script.includes("visual_desk_ingest_route_not_deployed"));
+  assert.ok(script.includes("negativeVisualIngest.status===503"));
+  assert.ok(script.includes("visual_desk_ingest_credential_not_ready"));
+  assert.ok(script.includes("visual_desk_ingest_auth_gate_failed"));
+});

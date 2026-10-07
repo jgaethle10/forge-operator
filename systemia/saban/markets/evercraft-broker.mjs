@@ -27,6 +27,17 @@ export function createEvercraftBrokerMarketAdapter({
       for(const node of inventory.nodes||[]){
         if(node?.connected!==true) continue;
         const capacity=node.capacity||{};
+        const nodeFingerprint=String(node?.device_fingerprint||"");
+        const capacityFingerprint=String(capacity?.device_fingerprint||"");
+        const authorityVerified=
+          capacity.protocol==="evercraft.capacity.v1" &&
+          capacity.runtime==="Evercraft Compute" &&
+          capacity.authorized===true &&
+          capacity.session_attestation_verified===true &&
+          capacity.zero_cost===true &&
+          Boolean(nodeFingerprint) &&
+          capacityFingerprint===nodeFingerprint;
+        if(!authorityVerified) continue;
         const hint=capacity.capacity_hint||{};
         const nodeLabels=labels(node);
         const supportedWorkloads=new Set(capacity.supported_workloads||[]);
@@ -60,7 +71,8 @@ export function createEvercraftBrokerMarketAdapter({
             audited:true,
             valid_version:true,
             attested:capacity.attestation_supported===true &&
-              capacity.device_fingerprint===node.device_fingerprint,
+              capacity.session_attestation_verified===true &&
+              capacityFingerprint===nodeFingerprint,
           },
           economics:{
             zero_cost:true,
@@ -85,6 +97,7 @@ export function createEvercraftBrokerMarketAdapter({
         market:'evercraft-broker',
         broker_deployment_id:brokerDeploymentId,
         connected_offer_count:offers.length,
+        authorized_zero_cost_offer_count:offers.length,
         observed_at:new Date().toISOString(),
       };
       return {offers,receipt:{...body,receipt_hash:sha(body)}};
@@ -108,6 +121,7 @@ export function createEvercraftBrokerMarketAdapter({
         schema:'evercraft.saban.broker-capacity-acquisition.v1',
         demand_id:demand.demand_id,
         market:'evercraft-broker',
+        provider_id:grant.node_id,
         node_id:grant.node_id,
         device_fingerprint:grant.device_fingerprint,
         capacity_endpoint:grant.capacity_endpoint,

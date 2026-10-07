@@ -7,6 +7,13 @@ on:
       - 'systemia/saban/production-capacity-plan.mjs'
       - 'systemia/saban/compute-exchange.mjs'
       - 'systemia/saban/markets/akash.mjs'
+      - 'systemia/saban/markets/evercraft-broker.mjs'
+      - 'systemia/saban/markets/evercraft-yard.mjs'
+      - 'systemia/yard/operator.mjs'
+      - 'tests/yard-private-capacity.test.mjs'
+      - 'systemia/competition/saban-capacity-runtime.mjs'
+      - 'systemia/competition/saban-capacity-runner.mjs'
+      - 'tests/competition-saban-capacity.test.mjs'
       - 'tests/saban-production-capacity-radar.test.mjs'
       - 'tests/saban-production-capacity-plan.test.mjs'
       - '.github/workflows/saban-production-capacity-radar.yml'
@@ -17,6 +24,13 @@ on:
       - 'systemia/saban/production-capacity-plan.mjs'
       - 'systemia/saban/compute-exchange.mjs'
       - 'systemia/saban/markets/akash.mjs'
+      - 'systemia/saban/markets/evercraft-broker.mjs'
+      - 'systemia/saban/markets/evercraft-yard.mjs'
+      - 'systemia/yard/operator.mjs'
+      - 'tests/yard-private-capacity.test.mjs'
+      - 'systemia/competition/saban-capacity-runtime.mjs'
+      - 'systemia/competition/saban-capacity-runner.mjs'
+      - 'tests/competition-saban-capacity.test.mjs'
       - 'tests/saban-production-capacity-radar.test.mjs'
       - 'tests/saban-production-capacity-plan.test.mjs'
       - '.github/workflows/saban-production-capacity-radar.yml'
@@ -36,7 +50,7 @@ jobs:
       - name: Prove production capacity radar contract
         run: node --test tests/saban-production-capacity-radar.test.mjs
       - name: Prove production capacity planner and buyer handoff
-        run: node --test tests/saban-production-capacity-plan.test.mjs
+        run: node --test tests/saban-production-capacity-plan.test.mjs tests/competition-saban-capacity.test.mjs tests/yard-private-capacity.test.mjs
 
   live-radar:
     if: ${{ github.event_name != 'pull_request' }}

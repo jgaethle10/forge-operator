@@ -1,0 +1,36 @@
+name: HVAC lead recovery proof canary
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'public/demos/hvac-lead-recovery/**'
+      - 'systemia/mcp/fabric-local-runtime.mjs'
+      - '.github/workflows/hvac-proof-canary.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Verify live demo
+        shell: bash
+        run: |
+          set -euo pipefail
+          url="https://fabric.systemiacommandcenters.com/demos/hvac-lead-recovery/"
+          body="$(curl --fail --silent --show-error --location --retry 18 --retry-all-errors --retry-delay 5 "$url")"
+          printf '%s' "$body" | grep -q 'Evercraft HVAC Lead Recovery Demo'
+          printf '%s' "$body" | grep -q 'Turn this into a ready-to-work lead'
+          printf '%s' "$body" | grep -q 'Use your own numbers'
+          printf '%s' "$body" | grep -q 'Map this to my workflow'
+          {
+            echo "## HVAC lead recovery proof is live"
+            echo
+            echo "URL: $url"
+            echo "Verified markers: title + interactive lead flow + editable economics + conversion CTA"
+            echo "Owned origin: fabric.systemiacommandcenters.com"
+          } >> "$GITHUB_STEP_SUMMARY"

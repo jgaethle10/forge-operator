@@ -69,12 +69,16 @@ jobs:
             # The Chromebook updater intentionally polls every five minutes.
             # Retry only the known deployment-lag signature for a newly added
             # Visual Desk route. All other production failures remain immediate.
-            if [ "$stage" = "visual_desk" ] && [ "$error" = "http_404:/visuals/" ] && [ "$attempt" -lt "$max_attempts" ]; then
-              deployment_wait_started=true
-              echo "Visual Desk route has not reached the owned edge yet; retrying after updater window slice ($attempt/$max_attempts)."
-              sleep 20
-              attempt=$((attempt + 1))
-              continue
+            if [ "$stage" = "visual_desk" ] && [ "$attempt" -lt "$max_attempts" ]; then
+              if [ "$error" = "http_404:/visuals/" ] || \
+                 [ "$error" = "visual_desk_ingest_route_not_deployed" ] || \
+                 [ "$error" = "visual_desk_ingest_credential_not_ready" ]; then
+                deployment_wait_started=true
+                echo "Visual Desk deployment has not fully reached the owned edge yet ($error); retrying after updater window slice ($attempt/$max_attempts)."
+                sleep 20
+                attempt=$((attempt + 1))
+                continue
+              fi
             fi
 
             # Once this exact run has proven the old Visual Desk route is still

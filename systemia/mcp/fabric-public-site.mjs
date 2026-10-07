@@ -1,3 +1,4 @@
+import crypto from 'node:crypto';
 function escapeHtml(value='') {
   return String(value)
     .replaceAll('&','&amp;')
@@ -311,6 +312,7 @@ export function renderOfferPage(item){
   const send=copy.send.map((x)=>'<li>'+escapeHtml(x)+'</li>').join('');
   const get=copy.get.map((x)=>'<li>'+escapeHtml(x)+'</li>').join('');
   const steps=copy.steps.map(([title,body])=>'<div class="offer-step"><strong>'+escapeHtml(title)+'</strong><span>'+escapeHtml(body)+'</span></div>').join('');
+  const idempotencyKey='offer-'+copy.slug+'-'+crypto.randomUUID();
   return shell(copy.headline+' · Evercraft',[
     '<main>',
     '<section class="offer-hero">',
@@ -321,6 +323,7 @@ export function renderOfferPage(item){
     '<div class="offer-price-note">'+escapeHtml(offerName)+' · '+escapeHtml(item.pricing||'')+'</div>',
     '<form class="checkout-form" method="post" action="/api/offers/'+encodeURIComponent(copy.slug)+'/checkout">',
     '<input type="hidden" name="user_confirmed" value="true">',
+    '<input type="hidden" name="idempotency_key" value="'+escapeHtml(idempotencyKey)+'">',
     '<button class="btn primary" type="submit">Continue to checkout · '+escapeHtml(price)+'</button>',
     '<a class="btn" href="/capabilities/'+encodeURIComponent(item.public_id)+'">See technical proof</a>',
     '<div class="checkout-note">This button confirms this exact offer and asks Raven Nexus to prepare an unpaid Evercraft Payments checkout. No payment is recorded and fulfillment stays locked until settlement is verified.</div>',
@@ -336,6 +339,34 @@ export function renderOfferPage(item){
   ].join('\n'),{
     description:copy.lede+' '+offerName+' starts at '+price+'.',
     canonical:'/offers/'+copy.slug,
+    ogType:'website',
+  });
+}
+
+export function renderPaymentHandoffPage({slug='',checkoutUrl='',amountLabel='',orderKey=''}={}){
+  const safeSlug=String(slug||'').trim().toLowerCase();
+  const back=safeSlug?'/offers/'+encodeURIComponent(safeSlug):'/offers';
+  const target=String(checkoutUrl||'').trim();
+  const amount=String(amountLabel||'').trim();
+  const order=String(orderKey||'').trim();
+  return shell('Continue to secure checkout · Evercraft',[
+    '<main>',
+    '<section class="offer-hero">',
+    '<div class="kicker"><span class="dot"></span> Evercraft Payments</div>',
+    '<h1>Your checkout is ready.</h1>',
+    '<p class="lede">Evercraft Payments prepared the order successfully. Open the secure settlement page to continue. Nothing is marked paid until settlement is verified.</p>',
+    amount?'<div class="offer-price">'+escapeHtml(amount)+'</div>':'',
+    '<div class="actions">',
+    '<a class="btn primary" href="'+escapeHtml(target)+'" rel="noreferrer">Open secure checkout</a>',
+    '<a class="btn" href="'+back+'">Back to the offer</a>',
+    '</div>',
+    order?'<div class="checkout-note">Order reference: <code>'+escapeHtml(order)+'</code></div>':'',
+    '<div class="checkout-note">If your in-app browser does not open the settlement page automatically, use the blue button above. Evercraft Payments remains the payment authority.</div>',
+    '</section>',
+    '</main>'
+  ].join('\n'),{
+    description:'Your Evercraft Payments checkout is ready. Continue to the secure settlement page.',
+    canonical:back,
     ogType:'website',
   });
 }

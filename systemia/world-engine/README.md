@@ -43,6 +43,24 @@ Implemented in this slice:
 - Predictive client rollback that discards stale past predictions and replays eligible future inputs in canonical order.
 - Bounded rollback windows, idempotent input submission and fail-closed late-authority input handling.
 - Packet digests provide deterministic content integrity only; transport authentication/encryption remain separate security adapters.
+- Verified visual frames can compile into deterministic `evercraft.world-engine.webgpu-plan.v1` GPU work plans.
+- Canonical geometry assets validate positions, normals and optional triangle indices before GPU planning.
+- Owned zero-dependency WGSL implements untextured PBR-lite/unlit material paths plus ambient, directional, point and spot lighting.
+- The browser WebGPU adapter owns device/buffer/pipeline submission only; visual-frame truth remains in World Engine.
+- WebGPU v9 fails closed on missing geometry, tampered visual receipts, unsupported textures and more than eight active lights.
+- Node CI proves plan/shader contracts; a separate native Chromium conformance lane now requires actual WebGPU adapter/device acquisition, compute-buffer readback and raster texture readback.
+- Browser WebGPU conformance classifies SwiftShader/llvmpipe/lavapipe as software execution, preserves ambiguous adapters as unknown, and permits a hardware claim only when adapter metadata reports a non-software hardware signal.
+- The browser device receipt retains the exact launch profile, adapter metadata, compute/raster observations and native-browser preflight receipt hash.
+- Versioned live Studio edit transactions bind to exact world and asset-manifest digests before mutation.
+- Human, agent and code edits share the same deterministic world-edit contract and produce SHA-256 receipts.
+- Edit receipts carry inverse transactions for semantic undo while world/asset revisions remain monotonic.
+- Canonical asset manifests preserve asset identity, content digest, source provenance, rights state and license.
+- Geometry hot reload replaces the same asset identity, emits a deterministic receipt and invalidates the WebGPU buffer cache without making renderer state authoritative.
+- Live authoring fails closed on stale bases, referenced-material deletion, content changes without asset revision advancement and invalid rights lineage.
+- Compatibility-gated live runtime migration carries a running simulation across a newer world revision without blindly copying stale state.
+- Runtime migration preserves transform/properties/motion/animation/navigation/audio independently only when each underlying definition remains compatible.
+- Authoring transform changes win over runtime position, rigid-body contract changes reset motion, changed audio clips reset playheads and removed/new entities reconcile explicitly.
+- Tick-rate changes fail closed, collision contacts reset, scene residency migrates deterministically and every preserved/reset decision is recorded in a migration receipt.
 - Deterministic behaviors for spin, constant force and oscillation.
 - Input ledger with tick-bound events.
 - Stable world-definition and snapshot SHA-256 digests.
@@ -50,7 +68,7 @@ Implemented in this slice:
 - Fallen Studio World → World Engine compiler.
 - Worldstate evidence → world projection bridge with evidence state preserved.
 - Provider-neutral render-frame contract with sampled skeletal pose/state, navigation/debug handoff, canonical visual subframes and audio subframes.
-- Tests for replay determinism, entity collision, ground collision, canonical broad-phase ordering, ECS query ordering, scene streaming/state preservation, animation transitions/blending/events, navmesh pathfinding/arrival/freeze-resume, material/light validation, camera graph interpolation/layer masking, audio playback/loop/seek/listener switching/attenuation, snapshot restore/tamper rejection, authoritative checkpoints/client prediction/rollback convergence, input ordering, Fallen compilation and Worldstate projection.
+- Tests for replay determinism, entity collision, ground collision, canonical broad-phase ordering, ECS query ordering, scene streaming/state preservation, animation transitions/blending/events, navmesh pathfinding/arrival/freeze-resume, material/light validation, camera graph interpolation/layer masking, audio playback/loop/seek/listener switching/attenuation, snapshot restore/tamper rejection, authoritative checkpoints/client prediction/rollback convergence, geometry/WebGPU render-plan/shader/failure-boundary contracts, deterministic/reversible Studio edits, stale-edit rejection, asset-rights lineage, geometry hot reload, compatibility-gated runtime migration/state preservation/reset behavior, input ordering, Fallen compilation and Worldstate projection.
 
 ## Architectural contract
 
@@ -77,16 +95,16 @@ The engine does not gain publication authority, payment authority, emergency aut
 
 The V1 contract is deliberately small enough to prove ownership before expanding. The next compatible layers are:
 
-1. WebGPU / native renderer adapters.
-2. Asset hot-reload and live Studio editing.
+1. Full World Engine reference-frame rendering through browser WebGPU with pixel-baseline receipts.
+2. Texture/sampler runtime and asset residency.
 3. Animation authoring/import bridge for Fallen character assets.
 4. Navigation corridor smoothing / dynamic obstacle avoidance.
 5. Server-side rollback policy for explicitly admitted late inputs.
 6. Shadow-map / reflection / post-process contracts behind the visual-frame boundary.
 7. Spatial panning / occlusion / reverb-zone contracts behind the audio-frame boundary.
-8. Saban simulation tournaments and deterministic QA at scale.
-9. Physical memory eviction / asset residency behind the logical scene activation contract.
-10. Broad-phase acceleration upgrades for very large worlds.
+8. Collaborative edit merge / conflict-resolution contracts.
+9. Saban simulation tournaments and deterministic QA at scale.
+10. Physical memory eviction / broad-phase acceleration upgrades for very large worlds.
 
 ## Test
 

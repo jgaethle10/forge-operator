@@ -186,3 +186,110 @@ existing pushCommitGraph / fetchCommitGraph semantics
 The session wrapper requires connected capacity, verified device identity binding, session attestation, the Lineage workload declaration, and zero-cost capacity by default. It preserves the existing Yard receipts for inventory, grant, service start, public route and relay creation.
 
 Allocator, lease and relay credentials remain in memory only. Closing the session releases the relay and Compute lease, clears the in-memory credentials, and makes the attached remote unusable. No Lineage operation widens the Yard grant or creates downstream release authority.
+
+
+## Remote large-object replication
+
+Lineage can replicate chunked large assets across direct HTTP remotes and Yard-relayed remotes without resending unchanged content.
+
+Large-object replication preserves the same content-addressed model used locally:
+
+- every chunk is addressed by SHA-256 and verified before it is considered present;
+- manifests are addressed by the digest of their canonical JSON content and reverified on read;
+- remote `hasChunk` means the stored bytes still match the requested digest, not merely that a filename exists;
+- corrupt remote chunks are treated as missing and repaired by the next push;
+- pushes transfer only missing chunks and then the immutable manifest;
+- fetches verify every chunk and the full reconstructed content digest before success;
+- concurrency is bounded between 1 and 16 workers;
+- replication receipts report transferred and reused chunk counts/bytes;
+- storage replication carries no publication, deployment, payment, or release authority.
+
+Direct-owned remote example:
+
+```bash
+node systemia/lineage/cli.mjs large-put ./master.mov video/quicktime
+node systemia/lineage/cli.mjs large-remote-push http://127.0.0.1:49152 <manifest-id> 4
+node systemia/lineage/cli.mjs large-remote-fetch http://127.0.0.1:49152 <manifest-id> 4
+node systemia/lineage/cli.mjs large-verify <manifest-id>
+```
+
+The same `pushLargeObject` / `fetchLargeObject` functions operate over a Yard relay remote. The Compute resident-service bridge explicitly allows only the Lineage ref, object, chunk, and large-manifest routes. A Yard session remains short-lived and revocable, so gaining access to remote storage does not grant broader node or application authority.
+
+
+## Manifest-backed assets inside commits
+
+Lineage does not need to embed giant Studio masters directly into commit objects.
+
+By default, workspace files at or above 8 MiB are snapshotted as `large_blob_ref` objects. Each ref records the immutable large-object manifest id, full-content SHA-256, byte size, chunk count and media type. Smaller files remain ordinary inline blobs, so existing history and lightweight workflows keep the simpler representation.
+
+The threshold can be overridden through `commit({ snapshot: { largeObjectThresholdBytes } })`; passing `null` disables automatic large-object conversion. Chunking parameters can also be supplied through `largeObjectChunking`.
+
+A tree entry can therefore describe either:
+
+```
+small file -> blob -> bytes
+large file -> large_blob_ref -> manifest -> digest-addressed chunks
+```
+
+Restore is transparent across both representations. Large refs are materialized through the local large-object store and their full content hash and byte size are rechecked before the file is written.
+
+Commit graph synchronization is fail-closed: when a graph contains a `large_blob_ref`, `pushCommitGraph` and `fetchCommitGraph` automatically transfer and verify the referenced manifest/chunks before moving the destination ref. A failed large-asset transfer may leave unreachable immutable objects for later garbage collection, but it cannot advance the visible branch head to an incomplete state.
+
+Oversized text/structured assets are not automatically materialized for semantic diffing. Instead, Lineage reports their before/after content digests and sizes with an explicit `semantic_comparison_available: false` reason. Small structured assets retain the existing semantic adapters.
+
+Git export uses `readEntryBytes`, so manifest-backed entries are reconstructed byte-exactly when crossing the Git interoperability boundary.
+
+
+## Streaming large assets
+
+Lineage's native large-asset path is streaming. A film master, world cache, audio master or dataset does not need to fit in RAM to enter, verify, or restore from Lineage.
+
+`LargeObjectStore.putFile()` reads the source incrementally, maintains the same content-defined chunk boundary state as `putBuffer()`, hashes the full content incrementally, and keeps only the current bounded chunk in memory. For identical bytes and chunking settings, buffered and streamed ingest produce the same manifest id and chunk identities.
+
+`verify()` walks verified chunks sequentially and updates the full-content SHA-256 without concatenating the asset.
+
+`writeToFile()` writes verified chunks to a temporary sibling file, checks the reconstructed full-content digest and byte count, fsyncs, and only then renames the temporary file into the requested target. A corrupt or incomplete object therefore cannot publish a partial final file.
+
+Workspace snapshots inspect file size before reading content. Files above the configured large-object threshold go directly through `putFile()`; only small files use the inline blob path. Restore similarly writes manifest-backed entries through `writeToFile()` instead of materializing the full asset as one Buffer.
+
+The `materialize()` API remains as an explicit in-memory convenience for callers that genuinely want a Buffer. It is not used by the native large-file snapshot or restore path.
+
+```bash
+node systemia/lineage/cli.mjs large-put ./master.mov video/quicktime
+node systemia/lineage/cli.mjs large-verify <manifest-id>
+```
+
+Both commands use the streaming path for file-backed large assets.
+
+
+## Integrity verification
+
+Lineage treats content-addressed identity as a runtime invariant, not a naming convention.
+
+Every local `readObject(id)` re-canonicalizes the stored envelope and verifies that its SHA-256 still equals the requested object id. Local disk corruption therefore fails the same way remote corruption does.
+
+The read-only integrity walker inspects the complete local store:
+
+```bash
+node systemia/lineage/cli.mjs fsck
+node systemia/lineage/cli.mjs fsck --fast
+```
+
+Full `fsck` verifies:
+
+- every stored Lineage object envelope digest;
+- branch refs and commit targets;
+- release pointers;
+- operation receipt pointers;
+- commit/tree/reference structure;
+- blob byte counts and internal content SHA-256;
+- tree metadata against referenced blob/large-ref metadata;
+- large-object manifest identity and declared size;
+- large-blob refs against their manifests;
+- every stored chunk digest;
+- every reachable large object's reconstructed full-content SHA-256;
+- reachable vs dangling objects, manifests and chunks.
+
+`--fast` keeps structural/object/manifest/chunk verification but skips reconstruction of every reachable large object's full-content hash.
+
+Dangling immutable storage is reported as a warning, not silently deleted. `fsck` never mutates the repository. Garbage collection must be a separate explicit operation so an integrity check can never destroy evidence or recovery state.

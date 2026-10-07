@@ -10,6 +10,10 @@ const ROLES=new Set([
   'visual_scene_guard',
   'audio_scene_guard',
   'replication_guard',
+  'webgpu_guard',
+  'webgpu_device_guard',
+  'studio_edit_guard',
+  'runtime_migration_guard',
   'fallen_bridge_guard',
   'worldstate_bridge_guard',
   'provenance_guard',
@@ -177,6 +181,69 @@ function evaluate(role,world){
         'Client rollback must discard stale past predictions, replay eligible future inputs in canonical order, and converge to authoritative state.',
         'Rollback memory is bounded and checkpoints outside the configured window fail closed.',
         'Networking transport, encryption and peer authentication remain replaceable security adapters outside canonical simulation truth.'
+      ],
+      findings:[]
+    };
+  }
+
+  if(role==='webgpu_guard'){
+    return {
+      category:'webgpu',
+      directives:[
+        'Renderer adapters must consume verified visual-frame receipts and must not become canonical scene authority.',
+        'The CPU-side WebGPU plan must be deterministic for the same visual frame, geometry assets and viewport.',
+        'Geometry, material and light limits fail closed; unsupported textures must never be silently ignored.',
+        'Owned WGSL and WebGPU browser execution remain replaceable backend code behind the visual-frame contract.',
+        'Node CI may prove planning, shader contracts and failure boundaries but must not claim physical GPU-device execution.',
+        'Browser GPU submission requires a real navigator.gpu adapter/device receipt before any hardware-execution claim.'
+      ],
+      findings:[]
+    };
+  }
+
+  if(role==='webgpu_device_guard'){
+    return {
+      category:'webgpu_device_conformance',
+      directives:[
+        'Browser WebGPU conformance requires navigator.gpu, adapter acquisition, device acquisition, successful command submission and mapped readback.',
+        'Feature presence or shader compilation alone is not a device-execution proof.',
+        'Compute and raster readbacks must both match expected values before status can be verified.',
+        'SwiftShader, llvmpipe, lavapipe and forced software profiles must always be classified as software execution and must never create a hardware GPU claim.',
+        'Ambiguous adapter metadata remains adapter_type_unknown rather than being promoted to hardware.',
+        'Hardware execution may be described only as adapter-reported hardware when the reported vendor/architecture provides a non-software signal.',
+        'Conformance receipts must preserve launch profile, adapter metadata, readback results and the native browser preflight receipt.'
+      ],
+      findings:[]
+    };
+  }
+
+  if(role==='studio_edit_guard'){
+    return {
+      category:'studio_edit',
+      directives:[
+        'Live authoring transactions must bind to exact inspected world and asset-manifest digests before mutation.',
+        'Human, agent and code edits share one versioned transaction contract and every accepted edit emits a reversible receipt.',
+        'Undo restores semantic world and asset content while revision counters remain monotonic rather than falsifying history.',
+        'Asset records must preserve source, rights state, license and content digest; unknown permission must never be silently upgraded.',
+        'Geometry hot reload may invalidate renderer buffers for the same asset identity, but renderer caches never become asset authority.',
+        'Structural/runtime-state migration beyond the defined edit contract must remain explicit and fail closed rather than silently rewriting simulation state.'
+      ],
+      findings:[]
+    };
+  }
+
+  if(role==='runtime_migration_guard'){
+    return {
+      category:'runtime_migration',
+      directives:[
+        'Live revision migration must bind a verified source snapshot to the exact previous world-definition digest before carrying any state.',
+        'Tick rate and world identity changes are migration boundaries and must fail closed rather than reinterpret simulation time.',
+        'Each runtime domain is compatibility-gated independently: transform, properties, rigid-body motion, animation, navigation and audio may preserve or reset separately.',
+        'Authoring changes win over stale runtime values; changed transforms or incompatible component contracts must reset the affected runtime field explicitly.',
+        'Removed entities disappear, new entities receive fresh runtime state, and active scene residency reconciles deterministically.',
+        'Camera/listener selection may migrate only when their referenced entities and transition contracts still exist.',
+        'Collision contacts are ephemeral and must reset across a structural world revision.',
+        'Every migration must emit a receipt naming preserved/reset state so Studio and agents can inspect what survived.'
       ],
       findings:[]
     };

@@ -4,6 +4,9 @@ import { SceneStreamController } from './streaming.ts';
 import { compileVisualFrame } from './visual.ts';
 import { compileAudioFrame } from './audio.ts';
 import { AuthoritativeReplicationRuntime, PredictiveReplicationRuntime, createReplicatedInput } from './replication.ts';
+import { compileWebGpuRenderPlan, EVERCRAFT_WEBGPU_WGSL, applyGeometryHotReload } from './webgpu.ts';
+import { applyWorldEditTransaction, createWorldAssetManifest, semanticAssetManifestDigest, semanticWorldDigest } from './studio-edit.ts';
+import { migrateWorldRuntime, verifyWorldRuntimeMigrationReceipt } from './runtime-migration.ts';
 
 const world={
   schema:'evercraft.world-engine.world.v1',
@@ -526,8 +529,117 @@ authority.submitInput(futureInput);
 authority.run(2);
 assert.equal(predictor.runtime.snapshot().digest,authority.runtime.snapshot().digest);
 
+const webgpuGeometry={
+  schema:'evercraft.world-engine.geometry.v1',
+  id:'geometry:proof-cube',
+  primitive:'triangles',
+  positions:[
+    -1,-1,0,
+    1,-1,0,
+    0,1,0
+  ],
+  normals:[
+    0,0,1,
+    0,0,1,
+    0,0,1
+  ]
+};
+const webgpuPlan=compileWebGpuRenderPlan(
+  visualFrame,
+  [webgpuGeometry],
+  {width:1280,height:720}
+);
+const webgpuPlanAgain=compileWebGpuRenderPlan(
+  visualFrame,
+  [webgpuGeometry],
+  {width:1280,height:720}
+);
+assert.equal(webgpuPlan.digest,webgpuPlanAgain.digest);
+assert.equal(webgpuPlan.draws.length,1);
+assert.equal(webgpuPlan.lights.length,1);
+assert.match(EVERCRAFT_WEBGPU_WGSL,/@vertex/);
+assert.match(EVERCRAFT_WEBGPU_WGSL,/@fragment/);
+
+const editAssetA={
+  id:'geometry:proof-cube',
+  kind:'geometry',
+  revision:1,
+  sha256:'a'.repeat(64),
+  uri:'evercraft://assets/geometry/proof-cube',
+  contentType:'application/vnd.evercraft.geometry+json',
+  provenance:{
+    sourceRef:'fallen:proof-cube',
+    rightsState:'owned',
+    license:'Evercraft-owned'
+  }
+};
+const editAssetB={...editAssetA,revision:2,sha256:'b'.repeat(64)};
+const editManifest=createWorldAssetManifest(visualWorld.id,[editAssetA]);
+const originalSemanticWorldDigest=semanticWorldDigest(visualWorld);
+const originalSemanticAssetDigest=semanticAssetManifestDigest(editManifest);
+const editTransaction={
+  schema:'evercraft.world-engine.edit-transaction.v1',
+  id:'proof-live-edit',
+  worldId:visualWorld.id,
+  baseWorldDigest:visualReceipt.definitionDigest,
+  baseAssetManifestDigest:editManifest.digest,
+  actor:{kind:'agent',id:'proof-editor'},
+  reason:'prove reversible live authoring',
+  operations:[
+    {
+      id:'move-proof-object',
+      kind:'set_transform',
+      entityId:'proof-object',
+      value:{position:{x:2,y:0,z:0}}
+    },
+    {
+      id:'replace-proof-geometry',
+      kind:'upsert_asset',
+      asset:editAssetB
+    }
+  ]
+};
+const edited=applyWorldEditTransaction(visualWorld,editManifest,editTransaction);
+assert.deepEqual(edited.receipt.hotReloadAssetIds,['geometry:proof-cube']);
+const undone=applyWorldEditTransaction(
+  edited.world,
+  edited.assets,
+  edited.receipt.inverseTransaction
+);
+assert.equal(semanticWorldDigest(undone.world),originalSemanticWorldDigest);
+assert.equal(semanticAssetManifestDigest(undone.assets),originalSemanticAssetDigest);
+
+const reloadedGeometry={
+  ...webgpuGeometry,
+  positions:[
+    -2,-2,0,
+    2,-2,0,
+    0,2,0
+  ]
+};
+const geometryHotReload=applyGeometryHotReload([webgpuGeometry],reloadedGeometry);
+assert.equal(geometryHotReload.receipt.replaced,true);
+assert.notEqual(
+  geometryHotReload.receipt.previousDigest,
+  geometryHotReload.receipt.nextDigest
+);
+
+const liveMigration=migrateWorldRuntime({
+  id:'proof-live-runtime-migration',
+  previousDefinition:visualWorld,
+  nextDefinition:edited.world,
+  previousSnapshot:visualSnapshot
+});
+assert.equal(liveMigration.snapshot.tick,visualSnapshot.tick);
+assert.equal(
+  liveMigration.snapshot.entities.find(entity=>entity.id==='proof-object').transform.position.x,
+  2
+);
+assert.equal(liveMigration.receipt.cameraRuntimePreserved,true);
+assert.equal(verifyWorldRuntimeMigrationReceipt(liveMigration.receipt),true);
+
 process.stdout.write(JSON.stringify({
-  schema:'evercraft.world-engine.proof.v8',
+  schema:'evercraft.world-engine.proof.v11',
   status:'passed',
   world_id:world.id,
   replay:receipt,
@@ -577,6 +689,36 @@ process.stdout.write(JSON.stringify({
     authority_final_digest:authority.runtime.snapshot().digest,
     predictor_final_digest:predictor.runtime.snapshot().digest
   },
+  webgpu:{
+    plan_digest:webgpuPlan.digest,
+    source_visual_frame_digest:webgpuPlan.sourceVisualFrameDigest,
+    draw_count:webgpuPlan.draws.length,
+    light_count:webgpuPlan.lights.length,
+    shading_model:webgpuPlan.shadingModel,
+    owned_wgsl:true,
+    browser_gpu_submission:'not_exercised_in_node_ci'
+  },
+  studio_edit:{
+    transaction_digest:edited.receipt.transactionDigest,
+    edit_receipt_digest:edited.receipt.digest,
+    before_world_digest:edited.receipt.beforeWorldDigest,
+    after_world_digest:edited.receipt.afterWorldDigest,
+    before_asset_digest:edited.receipt.beforeAssetManifestDigest,
+    after_asset_digest:edited.receipt.afterAssetManifestDigest,
+    hot_reload_assets:edited.receipt.hotReloadAssetIds,
+    semantic_undo_world_digest:semanticWorldDigest(undone.world),
+    semantic_undo_asset_digest:semanticAssetManifestDigest(undone.assets),
+    geometry_hot_reload_receipt:geometryHotReload.receipt
+  },
+  runtime_migration:{
+    receipt_digest:liveMigration.receipt.digest,
+    source_snapshot_digest:liveMigration.receipt.sourceSnapshotDigest,
+    migrated_snapshot_digest:liveMigration.receipt.migratedSnapshotDigest,
+    tick:liveMigration.receipt.tick,
+    camera_runtime_preserved:liveMigration.receipt.cameraRuntimePreserved,
+    audio_scene_runtime_preserved:liveMigration.receipt.audioSceneRuntimePreserved,
+    entity_notes:liveMigration.receipt.entityNotes
+  },
   assertions:{
     deterministic_replay:true,
     fixed_timestep:true,
@@ -599,6 +741,17 @@ process.stdout.write(JSON.stringify({
     deterministic_replication:true,
     client_prediction_rollback:true,
     authoritative_checkpoint_convergence:true,
+    deterministic_webgpu_render_plan:true,
+    visual_frame_receipt_verified_before_gpu_plan:true,
+    owned_wgsl_shader_contract:true,
+    deterministic_live_world_edit:true,
+    reversible_versioned_edit_receipts:true,
+    explicit_asset_rights_lineage:true,
+    deterministic_geometry_hot_reload:true,
+    compatibility_gated_runtime_migration:true,
+    authored_transform_wins_over_runtime_position:true,
+    incompatible_runtime_state_resets_explicitly:true,
+    runtime_migration_receipts:true,
     canonical_snapshot_digest:true
   }
 },null,2)+'\n');

@@ -47,6 +47,18 @@ const radar={
       eligible_offer_count:31,
       selected_candidate:candidate,
     },
+    {
+      role:'competition_worker',
+      demand:{
+        demand_id:'evercraft-production-competition-worker',
+        workload_class:'systemia.evercraft-web-browser.v1',
+        resources:{cpu_units:2,memory_mb:3072,storage_gb:10,gpu_count:0,gpu_models:[]},
+        placement:{require_public_ingress:false,require_persistent_storage:true},
+        trust:{minimum_uptime_7d:0.95,audited_only:false,valid_version_only:true},
+      },
+      eligible_offer_count:31,
+      selected_candidate:candidate,
+    },
   ],
 };
 
@@ -64,33 +76,52 @@ test('commercial supply is visibility-only by default',()=>{
     assert.equal(role.preferred_source,'authorized_capacity_required');
     assert.equal(role.acquisition_gate,'commercial_disabled_by_zero_spend_policy');
   }
-  assert.equal(plan.buyer_handoff.directive_count,3);
-  assert.equal(plan.buyer_handoff.zero_spend_policy_ready_count,3);
+  assert.equal(plan.buyer_handoff.directive_count,4);
+  assert.equal(plan.buyer_handoff.zero_spend_policy_ready_count,4);
   assert.equal(plan.buyer_handoff.authority_material_present,false);
   assert.equal(plan.buyer_handoff.paid_market_order_authorized,false);
   assert.equal(plan.buyer_handoff.paid_lease_authorized,false);
   for(const directive of plan.buyer_handoff.directives){
     assert.equal(directive.zero_spend_phase.state,'policy_ready');
-    assert.equal(
-      directive.zero_spend_phase.formation_acquisition.zero_spend_only,
-      true
-    );
-    assert.equal(
-      directive.zero_spend_phase.formation_acquisition.markets.evercraft_broker.enabled_if_configured,
-      true
-    );
-    assert.equal(
-      directive.zero_spend_phase.formation_acquisition.markets.evercraft_voluntary.enabled_if_configured,
-      true
-    );
-    assert.equal(
-      directive.zero_spend_phase.formation_acquisition.markets.golem.enabled,
-      false
-    );
-    assert.equal(
-      directive.zero_spend_phase.formation_acquisition.markets.akash.enabled,
-      false
-    );
+    if(directive.role==='competition_worker'){
+      assert.equal(directive.zero_spend_phase.acquisition_mode,'resident_service');
+      assert.equal(directive.zero_spend_phase.formation_acquisition,null);
+      assert.equal(directive.zero_spend_phase.resident_acquisition.zero_spend_only,true);
+      assert.deepEqual(
+        directive.zero_spend_phase.resident_acquisition.allowed_markets,
+        ['evercraft-yard','evercraft-broker']
+      );
+      assert.equal(
+        directive.zero_spend_phase.resident_acquisition.controller,
+        'systemia/competition/saban-capacity-runner.mjs'
+      );
+      assert.equal(
+        directive.zero_spend_phase.resident_acquisition.prefer_existing_yard_authority,
+        true
+      );
+    }else{
+      assert.equal(directive.zero_spend_phase.acquisition_mode,'formation');
+      assert.equal(
+        directive.zero_spend_phase.formation_acquisition.zero_spend_only,
+        true
+      );
+      assert.equal(
+        directive.zero_spend_phase.formation_acquisition.markets.evercraft_broker.enabled_if_configured,
+        true
+      );
+      assert.equal(
+        directive.zero_spend_phase.formation_acquisition.markets.evercraft_voluntary.enabled_if_configured,
+        true
+      );
+      assert.equal(
+        directive.zero_spend_phase.formation_acquisition.markets.golem.enabled,
+        false
+      );
+      assert.equal(
+        directive.zero_spend_phase.formation_acquisition.markets.akash.enabled,
+        false
+      );
+    }
     assert.equal(
       directive.commercial_fallback.state,
       'disabled_by_zero_spend_policy'
@@ -121,6 +152,7 @@ test('authorized ambient devices satisfy roles before commercial capacity',()=>{
       public_ingress:{eligible_count:1,selected_candidate:{provider_id:'owned-gateway'}},
       rivet_runtime:{eligible_count:1,selected_candidate:{provider_id:'owned-pc'}},
       aliev_source_store:{eligible_count:1,selected_candidate:{provider_id:'owned-nas'}},
+      competition_worker:{eligible_count:1,selected_candidate:{provider_id:'owned-browser-node'}},
     },
   };
   const plan=planProductionCapacity({
@@ -142,13 +174,14 @@ test('planner prefers healthy Evercraft capacity over ambient and commercial',()
   const plan=planProductionCapacity({
     radar,
     chromebook:{authorized:true,online:true,public_ingress_ready:true,node_identity_ready:true,outbound_compute_ready:true},
-    broker:{ready:true,authorized_node_count:2},
-    ambient:{roles:{public_ingress:{eligible_count:5},rivet_runtime:{eligible_count:5},aliev_source_store:{eligible_count:5}}},
+    broker:{ready:true,authorized_node_count:2,competition_worker_ready:true},
+    ambient:{roles:{public_ingress:{eligible_count:5},rivet_runtime:{eligible_count:5},aliev_source_store:{eligible_count:5},competition_worker:{eligible_count:5}}},
   });
   assert.equal(plan.state,'ready_zero_spend');
   assert.equal(plan.roles.find(x=>x.role==='public_ingress').preferred_source,'chromebook_operator_edge');
   assert.equal(plan.roles.find(x=>x.role==='rivet_runtime').preferred_source,'evercraft_broker');
   assert.equal(plan.roles.find(x=>x.role==='aliev_source_store').preferred_source,'evercraft_broker');
+  assert.equal(plan.roles.find(x=>x.role==='competition_worker').preferred_source,'evercraft_broker');
   assert.equal(plan.buyer_handoff.directive_count,0);
 });
 
@@ -164,7 +197,7 @@ test('commercial placement requires an explicit opt-in',()=>{
   for(const role of plan.roles){
     assert.equal(role.acquisition_gate,'explicit_commercial_authority_required');
   }
-  assert.equal(plan.buyer_handoff.directive_count,3);
+  assert.equal(plan.buyer_handoff.directive_count,4);
   for(const directive of plan.buyer_handoff.directives){
     assert.equal(
       directive.commercial_fallback.state,
@@ -176,9 +209,30 @@ test('commercial placement requires an explicit opt-in',()=>{
     assert.equal(directive.commercial_fallback.hard_cost_ceiling_required,true);
     assert.equal(directive.commercial_fallback.market_order_authorized,false);
     assert.equal(directive.commercial_fallback.paid_lease_authorized,false);
-    assert.equal(
-      directive.zero_spend_phase.formation_acquisition.zero_spend_only,
-      true
-    );
+    if(directive.role==='competition_worker'){
+      assert.equal(directive.zero_spend_phase.resident_acquisition.zero_spend_only,true);
+      assert.equal(directive.zero_spend_phase.formation_acquisition,null);
+    }else{
+      assert.equal(
+        directive.zero_spend_phase.formation_acquisition.zero_spend_only,
+        true
+      );
+    }
   }
+});
+
+test('competition worker is not inferred from a generic broker heartbeat',()=>{
+  const plan=planProductionCapacity({
+    radar,
+    chromebook:{authorized:true,online:true,public_ingress_ready:true,node_identity_ready:true,outbound_compute_ready:true},
+    broker:{ready:true,authorized_node_count:2,competition_worker_ready:false},
+    ambient:{roles:{competition_worker:{eligible_count:0}}},
+  });
+  const competition=plan.roles.find(x=>x.role==='competition_worker');
+  assert.equal(competition.current_state,'unsatisfied');
+  assert.equal(competition.required_workload_class,'systemia.evercraft-web-browser.v1');
+  assert.equal(
+    plan.buyer_handoff.directives.some(x=>x.role==='competition_worker'),
+    true
+  );
 });

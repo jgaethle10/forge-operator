@@ -1,3 +1,4 @@
+import fs from 'node:fs';
 import path from 'node:path';
 import { createRadarResident } from './resident.mjs';
 import { readRadarReleaseAsset } from './release-controller.mjs';
@@ -16,14 +17,27 @@ export function registerRadarRoutes(app, {
   journalUrl = process.env.RADAR_JOURNAL_URL || 'https://journal.evercraft.global/',
   autoReleaseOwned = process.env.RADAR_OWNED_RELEASE_ENABLED == null
     ? isProd
-    : String(process.env.RADAR_OWNED_RELEASE_ENABLED).toLowerCase() === 'true'
+    : String(process.env.RADAR_OWNED_RELEASE_ENABLED).toLowerCase() === 'true',
+  visualTransportUrl = process.env.RADAR_VISUAL_TRANSPORT_URL || '',
+  visualTransportTokenFile = process.env.RADAR_VISUAL_TRANSPORT_TOKEN_FILE || ''
 } = {}) {
   const token = String(process.env.RADAR_INTERNAL_TOKEN || '').trim();
+  const localVisualTokenFile='/var/lib/evercraft/fabric-secrets/visual-ingest-token';
+  const localFabricVisualReady=fs.existsSync(localVisualTokenFile);
+  const resolvedVisualTransportTokenFile=String(
+    visualTransportTokenFile || (localFabricVisualReady ? localVisualTokenFile : '')
+  ).trim();
+  const resolvedVisualTransportUrl=String(
+    visualTransportUrl || (localFabricVisualReady ? 'http://127.0.0.1:8787/api/visuals/ingest' : '')
+  ).trim();
+
   const resident = createRadarResident({
     stateDir,
     intervalMs,
     materialityThreshold,
     maxSignals,
+    visualTransportUrl: resolvedVisualTransportUrl,
+    visualTransportTokenFile: resolvedVisualTransportTokenFile,
     journalUrl,
     autoReleaseOwned
   });

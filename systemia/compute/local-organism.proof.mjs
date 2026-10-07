@@ -4,6 +4,17 @@ import os from 'node:os';
 import path from 'node:path';
 import { startLocalOrganism } from './local-organism.mjs';
 
+const nativeBrowserProofPreparer=async()=>({
+  schema:'evercraft.browser.native-runtime-preflight.v1',
+  ready:false,
+  mode:'native_user_playwright',
+  install_attempted:false,
+  install_state:'proof_disabled',
+  reason:'network_bootstrap_disabled_in_local_organism_proof',
+  receipt_hash:'sha256:'+'b'.repeat(64),
+  browserRuntimeFactory:null,
+});
+
 const root = fs.mkdtempSync(path.join(os.tmpdir(), 'evercraft-local-organism-proof-'));
 const releaseRef = 'e293e0d75d1622f12b54249be8d403a06774e4e9';
 
@@ -17,12 +28,20 @@ try {
     releaseRef,
     heartbeatTargetSeconds: 300,
     graceSeconds: 90,
+    nativeBrowserPreparer: nativeBrowserProofPreparer,
     ravenInferenceProvider: 'ollama',
     ravenInferenceModel: 'proof-local-model',
   });
 
   assert.equal(first.seed.endpoint.startsWith('http://127.0.0.1:'), true);
   assert.equal(first.seed.beacon, null);
+  assert.equal(first.seed.zero_cost, true);
+  assert.equal(first.seed.placement_labels.includes('persistent-storage'), true);
+  assert.equal(first.receipt.zero_spend_capacity, true);
+  assert.equal(first.receipt.native_browser_runtime.ready, false);
+  assert.equal(first.receipt.native_browser_runtime.install_attempted, false);
+  assert.equal(first.receipt.native_browser_runtime.sudo_used, false);
+  assert.equal(first.receipt.native_browser_runtime.system_package_manager_used, false);
   assert.equal(first.receipt.public_ingress, false);
   assert.equal(first.receipt.node_endpoint_scope, 'loopback_only');
   assert.equal(first.receipt.named_cloud_required, false);
@@ -79,6 +98,7 @@ try {
     releaseRef,
     heartbeatTargetSeconds: 300,
     graceSeconds: 90,
+    nativeBrowserPreparer: nativeBrowserProofPreparer,
     ravenInferenceProvider: 'ollama',
     ravenInferenceModel: 'proof-local-model',
   });
@@ -109,6 +129,7 @@ try {
     'utf8'
   ));
   assert.equal(persistedReceipt.node_id, 'chromebook-proof-node');
+  assert.equal(persistedReceipt.zero_spend_capacity, true);
   assert.equal(persistedReceipt.public_ingress, false);
   assert.equal(persistedReceipt.physical_field_certification_claimed, false);
 
@@ -123,6 +144,9 @@ try {
       'Systemia Core',
     ],
     loopback_only: true,
+    zero_spend_capacity: true,
+    native_browser_bootstrap_receipted: true,
+    native_browser_bootstrap_network_disabled_in_proof: true,
     public_ingress: false,
     multicast_announcement: false,
     persistent_device_identity: true,

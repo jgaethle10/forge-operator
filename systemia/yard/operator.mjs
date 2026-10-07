@@ -247,6 +247,143 @@ export class YardOperator {
     };
   }
 
+  async listPrivateCapacityNodes({ maxAgeMs = 60_000 } = {}) {
+    const byNode = new Map();
+    for (const name of fs.readdirSync(this.stateDir)) {
+      if (!name.endsWith('.json') || name.startsWith('.')) continue;
+      const file = path.join(this.stateDir, name);
+      let record;
+      try {
+        record = JSON.parse(fs.readFileSync(file, 'utf8'));
+      } catch {
+        continue;
+      }
+      if (
+        !record?.deployment_id ||
+        record?.state !== 'ready' ||
+        !record?.receipt?.capacity_node_id
+      ) continue;
+
+      const secret = this.#loadLeaseSecret(record.deployment_id);
+      const allocatorToken = String(secret?.allocator_token || '').trim();
+      const capacityEndpoint = String(secret?.capacity_endpoint || '').trim();
+      if (!allocatorToken || !capacityEndpoint) continue;
+
+      try {
+        const capacity = await request(`${capacityEndpoint}/v1/capacity`);
+        const nodeId = String(record.receipt.capacity_node_id || '');
+        const expectedFingerprint = String(
+          record.receipt?.capacity_device_fingerprint || ''
+        );
+        if (
+          capacity?.protocol !== 'evercraft.capacity.v1' ||
+          capacity?.runtime !== 'Evercraft Compute' ||
+          String(capacity?.node_id || '') !== nodeId
+        ) continue;
+        if (
+          expectedFingerprint &&
+          String(capacity?.device_fingerprint || '') !== expectedFingerprint
+        ) continue;
+
+        const nonce = randomBytes(24).toString('hex');
+        const issued = await request(`${capacityEndpoint}/v1/attest`, {
+          method: 'POST',
+          headers: { authorization: `Bearer ${allocatorToken}` },
+          body: JSON.stringify({ nonce }),
+        });
+        const verified = verifyNodeAttestation({
+          attestation: issued.attestation,
+          expectedNonce: nonce,
+          expectedNodeId: nodeId,
+          maxAgeMs,
+        });
+        if (
+          verified.ok !== true ||
+          String(verified.device_fingerprint || '') !==
+            String(capacity.device_fingerprint || '')
+        ) continue;
+
+        byNode.set(nodeId, {
+          node_id: nodeId,
+          device_fingerprint: String(capacity.device_fingerprint || ''),
+          connected: true,
+          last_seen_at: new Date().toISOString(),
+          capacity: {
+            ...capacity,
+            authorized: true,
+            session_attestation_verified: true,
+            device_fingerprint: String(capacity.device_fingerprint || ''),
+          },
+          authority_source: {
+            deployment_id: record.deployment_id,
+            deployment_receipt: record.receipt?.receipt_hash || null,
+          },
+        });
+      } catch {
+        continue;
+      }
+    }
+
+    const nodes = [...byNode.values()];
+    const body = {
+      schema: 'evercraft.yard.private-capacity-inventory.v1',
+      node_count: nodes.length,
+      authority_material_exposed: false,
+      capacity_endpoint_exposed: false,
+      observed_at: new Date().toISOString(),
+    };
+    return {
+      nodes,
+      receipt: {
+        ...body,
+        receipt_hash: `sha256:${sha(body)}`,
+      },
+    };
+  }
+
+  async privateCapacityGrant(nodeId, { maxAgeMs = 60_000 } = {}) {
+    const requestedNodeId = String(nodeId || '').trim();
+    if (!requestedNodeId) throw new Error('private_capacity_node_id_required');
+
+    const inventory = await this.listPrivateCapacityNodes({ maxAgeMs });
+    const candidate = inventory.nodes.find(
+      (node) => String(node.node_id) === requestedNodeId
+    );
+    if (!candidate) throw new Error('private_capacity_node_not_authorized_or_live');
+
+    const sourceDeploymentId = String(
+      candidate.authority_source?.deployment_id || ''
+    );
+    const secret = this.#loadLeaseSecret(sourceDeploymentId);
+    const allocatorToken = String(secret?.allocator_token || '').trim();
+    const capacityEndpoint = String(secret?.capacity_endpoint || '').trim();
+    if (!allocatorToken || !capacityEndpoint) {
+      throw new Error('private_capacity_authority_unavailable');
+    }
+
+    const body = {
+      schema: 'evercraft.yard.private-capacity-grant.v1',
+      node_id: requestedNodeId,
+      device_fingerprint: candidate.device_fingerprint,
+      source_deployment_receipt:
+        candidate.authority_source?.deployment_receipt || null,
+      capacity_endpoint_hash: `sha256:${sha(capacityEndpoint)}`,
+      authority_material_exposed: false,
+      granted_at: new Date().toISOString(),
+    };
+    const result = {
+      ...body,
+      capacity_endpoint: capacityEndpoint,
+      receipt_hash: `sha256:${sha(body)}`,
+    };
+    Object.defineProperty(result, 'runtime_authority', {
+      value: Object.freeze({ allocator_token: allocatorToken }),
+      enumerable: false,
+      writable: false,
+    });
+    return result;
+  }
+
   async enrollFieldDeviceFromCapacity({
     capacityEndpoint,
     allocatorToken = '',
@@ -1434,6 +1571,58 @@ export class YardOperator {
     const record = JSON.parse(fs.readFileSync(file, 'utf8'));
     this.deployments.set(deploymentId, record);
     return record;
+  }
+
+  invalidateDeployment(deploymentId, {
+    reason = 'runtime_authority_stale',
+    evidence = {},
+  } = {}) {
+    const record = this.deploymentStatus(deploymentId);
+    if (!record) {
+      return {
+        ok: false,
+        deployment_id: deploymentId,
+        state: 'missing',
+      };
+    }
+
+    this.stopContinuityKeeper(deploymentId);
+    const previousState = record.state;
+    const previousReceiptHash = record.receipt?.receipt_hash || null;
+    const body = {
+      schema: 'evercraft.yard.deployment-invalidation-receipt.v1',
+      deployment_id: deploymentId,
+      previous_state: previousState,
+      previous_deployment_receipt_hash: previousReceiptHash,
+      reason: String(reason || 'runtime_authority_stale').slice(0, 160),
+      evidence: evidence && typeof evidence === 'object'
+        ? structuredClone(evidence)
+        : {},
+      authority_revoked_locally: true,
+      invalidated_at: new Date().toISOString(),
+    };
+    const invalidation = {
+      ...body,
+      receipt_hash: `sha256:${sha(body)}`,
+    };
+
+    record.state = 'invalidated';
+    record.invalidation = invalidation;
+    record.updated_at = invalidation.invalidated_at;
+    this.deployments.set(deploymentId, record);
+    this.#persist(record);
+
+    const secretFile = this.#secretFile(deploymentId);
+    if (fs.existsSync(secretFile)) fs.rmSync(secretFile, { force: true });
+
+    return {
+      ok: true,
+      deployment_id: deploymentId,
+      state: 'invalidated',
+      receipt_hash: invalidation.receipt_hash,
+      previous_deployment_receipt_hash: previousReceiptHash,
+      authority_revoked_locally: true,
+    };
   }
 
   verifyDeployment(deploymentId) {

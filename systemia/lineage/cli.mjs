@@ -2,9 +2,12 @@
 import { LineageStore } from './core.mjs';
 import { semanticDiff } from './semantic-diff.mjs';
 import { LargeObjectStore } from './large-object.mjs';
+import { fetchLargeObject, pushLargeObject } from './large-object-remote.mjs';
+import { createDirectHttpLineageRemote } from './http-remote.mjs';
 import { exportLineageSnapshotToGit, importGitHistory } from './git-bridge.mjs';
 import { buildHistoryGraph, writeHistoryBundle } from './history-view.mjs';
 import { ReleaseRegistry } from './release-pointer.mjs';
+import { verifyLineageIntegrity } from './fsck.mjs';
 import { LocalLineageRemote, fetchCommitGraph, pushCommitGraph } from './remote-protocol.mjs';
 import { readFile } from 'node:fs/promises';
 import { join } from 'node:path';
@@ -61,9 +64,8 @@ async function main() {
       break;
     case 'large-put': {
       if (!args[0]) throw new Error('Usage: lineage large-put <file> [media-type]');
-      const bytes = await readFile(args[0]);
       const large = new LargeObjectStore(join(store.dir));
-      console.log(JSON.stringify(await large.putBuffer(bytes, {
+      console.log(JSON.stringify(await large.putFile(args[0], {
         logicalName: args[0],
         mediaType: args[1] || 'application/octet-stream'
       }), null, 2));
@@ -73,6 +75,30 @@ async function main() {
       if (!args[0]) throw new Error('Usage: lineage large-verify <manifest-id>');
       const large = new LargeObjectStore(join(store.dir));
       console.log(JSON.stringify(await large.verify(args[0]), null, 2));
+      break;
+    }
+    case 'large-remote-push': {
+      if (!args[0] || !args[1]) throw new Error('Usage: lineage large-remote-push <remote-url> <manifest-id> [concurrency]');
+      const large = new LargeObjectStore(join(store.dir));
+      const remote = createDirectHttpLineageRemote(args[0]);
+      console.log(JSON.stringify(await pushLargeObject({
+        store: large,
+        remote,
+        manifestId: args[1],
+        concurrency: Number(args[2] || 4)
+      }), null, 2));
+      break;
+    }
+    case 'large-remote-fetch': {
+      if (!args[0] || !args[1]) throw new Error('Usage: lineage large-remote-fetch <remote-url> <manifest-id> [concurrency]');
+      const large = new LargeObjectStore(join(store.dir));
+      const remote = createDirectHttpLineageRemote(args[0]);
+      console.log(JSON.stringify(await fetchLargeObject({
+        store: large,
+        remote,
+        manifestId: args[1],
+        concurrency: Number(args[2] || 4)
+      }), null, 2));
       break;
     }
     case 'remote-refs': {
@@ -159,8 +185,17 @@ async function main() {
       }), null, 2));
       break;
     }
+    case 'fsck': {
+      const fast = args.includes('--fast');
+      const result = await verifyLineageIntegrity(store, {
+        verifyLargeContent: !fast
+      });
+      console.log(JSON.stringify(result, null, 2));
+      if (!result.ok) process.exitCode = 2;
+      break;
+    }
     default:
-      console.log(`Evercraft Lineage\n\nCommands:\n  init [branch]\n  commit [message]\n  branch <name> [from]\n  switch <branch>\n  log [ref] [limit]\n  diff [from] [to]\n  restore <ref> [target]\n  rollback <ref>\n  merge-preview <branch>\n  merge <branch>\n  large-put <file> [media-type]\n  large-verify <manifest-id>\n  remote-refs <remote-dir>\n  remote-push <remote-dir> [branch] [expected-head]\n  remote-fetch <remote-dir> [remote-branch] [local-branch]\n  git-import <git-repo-dir> [git-ref] [lineage-branch]\n  git-export <git-repo-dir> [lineage-ref] [git-branch] [expected-git-head]\n  history [ref] [limit]\n  history-export <out-dir> [ref] [limit]\n  release-record <manifest.json>\n  release-show <name> [channel]`);
+      console.log(`Evercraft Lineage\n\nCommands:\n  init [branch]\n  commit [message]\n  branch <name> [from]\n  switch <branch>\n  log [ref] [limit]\n  diff [from] [to]\n  restore <ref> [target]\n  rollback <ref>\n  merge-preview <branch>\n  merge <branch>\n  large-put <file> [media-type]\n  large-verify <manifest-id>\n  large-remote-push <remote-url> <manifest-id> [concurrency]\n  large-remote-fetch <remote-url> <manifest-id> [concurrency]\n  remote-refs <remote-dir>\n  remote-push <remote-dir> [branch] [expected-head]\n  remote-fetch <remote-dir> [remote-branch] [local-branch]\n  git-import <git-repo-dir> [git-ref] [lineage-branch]\n  git-export <git-repo-dir> [lineage-ref] [git-branch] [expected-git-head]\n  history [ref] [limit]\n  history-export <out-dir> [ref] [limit]\n  release-record <manifest.json>\n  release-show <name> [channel]\n  fsck [--fast]`);
   }
 }
 

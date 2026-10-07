@@ -211,6 +211,32 @@ try{
   if(!/__evercraftRenderAt/.test(motion.text)||!/__evercraftRenderFrame/.test(motion.text)){
     throw new Error('visual_desk_motion_controls_missing');
   }
+  const negativeVisualIngest=await timedFetch(origin+'/api/visuals/ingest',{
+    method:'POST',
+    headers:{
+      'content-type':'application/json',
+      'accept':'application/json',
+      'user-agent':'Evercraft-Operator-Edge-Canary/1.0',
+    },
+    body:'{}',
+  });
+  const negativeVisualIngestBody=await negativeVisualIngest.json().catch(()=>null);
+  if(negativeVisualIngest.status===404){
+    throw new Error('visual_desk_ingest_route_not_deployed');
+  }
+  if(
+    negativeVisualIngest.status===503&&
+    negativeVisualIngestBody?.error==='visual_ingest_not_configured'
+  ){
+    throw new Error('visual_desk_ingest_credential_not_ready');
+  }
+  if(
+    negativeVisualIngest.status!==401||
+    negativeVisualIngestBody?.error!=='visual_ingest_unauthorized'
+  ){
+    throw new Error('visual_desk_ingest_auth_gate_failed');
+  }
+
   receipt.visual_desk={
     path:'/visuals/',
     story_count:Number(visualCatalog.count),
@@ -218,6 +244,9 @@ try{
     story_card:'/visuals/washington-active-volcanoes/card-story.svg',
     motion_stage:'/visuals/washington-active-volcanoes/motion.html',
     source_backed:/usgs\.gov/i.test(specimenPage.text),
+    ingest_path:'/api/visuals/ingest',
+    unauthenticated_ingest_status:negativeVisualIngest.status,
+    unauthenticated_ingest_blocked:true,
   };
   receipt.checks.visual_desk=true;
 
@@ -225,11 +254,17 @@ try{
   const faieContentType=faiePage.response.headers.get('content-type')||'';
   if(!/^text\/html/i.test(faieContentType)) throw new Error('faie_surface_not_html');
   if(!/Evidence for the physical world/i.test(faiePage.text)) throw new Error('faie_surface_identity_missing');
+  if(!/Run live AgNormal brief/i.test(faiePage.text)) throw new Error('faie_agnormal_partner_experience_missing');
+  if(!/Official MCP Registry/i.test(faiePage.text)) throw new Error('faie_registry_proof_missing');
+  if(/placeholder="greenhouse"/i.test(faiePage.text)) throw new Error('faie_undisclosed_architecture_assumption_regressed');
   if(/base44\.app/i.test(faiePage.text)) throw new Error('faie_surface_base44_reference');
   receipt.faie_surface={
     status:faiePage.response.status,
     content_type:faieContentType,
     identity_verified:true,
+    agnormal_design_partner_experience:true,
+    registry_proof_visible:true,
+    undisclosed_architecture_assumption_absent:true,
     url:origin+'/faie/',
   };
   receipt.checks.faie_surface=true;
@@ -360,7 +395,10 @@ try{
     health.visual_desk_path!=='/visuals/'||
     health.visual_desk_ready!==true||
     Number(health.visual_desk_story_count)<1||
-    health.visual_desk_motion_capable!==true
+    health.visual_desk_motion_capable!==true||
+    health.visual_desk_ingest_path!=='/api/visuals/ingest'||
+    health.visual_desk_ingest_ready!==true||
+    health.visual_desk_ingest_publication_authority!==false
   ){
     throw new Error('visual_desk_health_metadata_missing');
   }
@@ -379,6 +417,9 @@ try{
     visual_desk_path:health.visual_desk_path,
     visual_desk_story_count:Number(health.visual_desk_story_count),
     visual_desk_motion_capable:health.visual_desk_motion_capable===true,
+    visual_desk_ingest_path:health.visual_desk_ingest_path,
+    visual_desk_ingest_ready:health.visual_desk_ingest_ready===true,
+    visual_desk_ingest_publication_authority:false,
   };
   receipt.checks.runtime_health=true;
 

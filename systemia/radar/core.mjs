@@ -182,6 +182,40 @@ function adversarialReview(observation, truthState, streamObservations, now) {
   };
 }
 
+function visualPointsForSignal(signal) {
+  const measurements=Array.isArray(signal?.observation?.measurements)
+    ? signal.observation.measurements
+    : [];
+  return measurements.map((row,index)=>{
+    const lat=Number(row?.latitude ?? row?.lat);
+    const lon=Number(row?.longitude ?? row?.lon ?? row?.lng);
+    if(!Number.isFinite(lat)||lat < -90||lat > 90) return null;
+    if(!Number.isFinite(lon)||lon < -180||lon > 180) return null;
+    const valueCandidates=[
+      row?.magnitude,
+      row?.value,
+      row?.intensity,
+      row?.count,
+      row?.speed,
+      row?.level
+    ];
+    const value=valueCandidates.map(Number).find(Number.isFinite);
+    return {
+      id:clean(row?.event_id||row?.id||`point-${index+1}`),
+      label:clean(row?.place||row?.label||row?.name||row?.event_id||`Point ${index+1}`),
+      lat,
+      lon,
+      value:Number.isFinite(value)?value:null,
+      note:clean(
+        row?.magnitude!==undefined&&Number.isFinite(Number(row.magnitude))
+          ? `M${Number(row.magnitude).toFixed(1)}${Number.isFinite(Number(row?.depth_km))?` • ${Number(row.depth_km).toFixed(1)} km deep`:''}`
+          : row?.note||''
+      ),
+      source_ref:clean(row?.source_url||row?.provenance_ref||'')
+    };
+  }).filter(Boolean).slice(0,25);
+}
+
 function materialityFor(signal) {
   const truthWeight = {
     UNKNOWN: 0.05,
@@ -424,6 +458,8 @@ export function compileRadarEdition(inputState, {
     truth_state: signal.truth_state,
     change_state: signal.change_state,
     materiality_score: signal.materiality_score,
+    anomaly_score: signal.anomaly_score,
+    reliability: signal.reliability,
     observed_at: signal.observed_at,
     last_verified_at: signal.last_verified_at,
     domains: signal.domains,
@@ -432,6 +468,7 @@ export function compileRadarEdition(inputState, {
     kind: signal.kind,
     source_family: signal.source_family,
     provenance_refs: signal.provenance_refs,
+    visual_points: visualPointsForSignal(signal),
     review: signal.review
   }));
 

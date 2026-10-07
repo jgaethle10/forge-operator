@@ -79,6 +79,22 @@ const profiles=[
       prefer_zero_cost:true,
     }),
   },
+  {
+    role:'competition_worker',
+    demand:normalizeComputeDemand({
+      demand_id:'evercraft-production-competition-worker',
+      workload_class:'systemia.evercraft-web-browser.v1',
+      container_image:'ghcr.io/jgaethle10/evercraft-browser-worker:main',
+      cpu_units:2,
+      memory_mb:3072,
+      storage_gb:10,
+      require_persistent_storage:true,
+      minimum_uptime_7d:0.95,
+      valid_version_only:true,
+      negotiation_level:'discover',
+      prefer_zero_cost:true,
+    }),
+  },
 ];
 
 const adapter=createAkashMarketAdapter();

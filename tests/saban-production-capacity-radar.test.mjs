@@ -4,8 +4,8 @@ import fs from 'node:fs';
 
 const src=fs.readFileSync(new URL('../systemia/saban/production-capacity-radar.mjs',import.meta.url),'utf8');
 
-test('capacity radar covers ingress, RIVET, and AliEV separately',()=>{
-  for(const role of ['public_ingress','rivet_runtime','aliev_source_store']){
+test('capacity radar covers ingress, RIVET, AliEV, and competition workers separately',()=>{
+  for(const role of ['public_ingress','rivet_runtime','aliev_source_store','competition_worker']){
     assert.match(src,new RegExp("role:'"+role+"'"));
   }
   assert.match(src,/require_public_ingress:true/);
@@ -29,4 +29,12 @@ test('capacity radar preserves authorization boundary',()=>{
   assert.match(src,/visibility_is_not_authorization:true/);
   assert.match(src,/discovered_capacity_is_not_leased_capacity:true/);
   assert.match(src,/prefer_owned_or_authorized_zero_cost_capacity:true/);
+});
+
+test('competition worker demand targets the owned browser workload',()=>{
+  assert.match(src,/demand_id:'evercraft-production-competition-worker'/);
+  assert.match(src,/workload_class:'systemia\.evercraft-web-browser\.v1'/);
+  assert.match(src,/memory_mb:3072/);
+  assert.match(src,/evercraft-browser-worker:main/);
+  assert.doesNotMatch(src,/evercraft-browser-worker:latest/);
 });
