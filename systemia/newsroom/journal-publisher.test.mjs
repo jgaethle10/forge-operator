@@ -256,3 +256,52 @@ test('rejects unsafe machine-evidence output paths', () => {
     now: new Date('2026-09-30T22:00:00.000Z')
   }), /safe data/i);
 });
+
+
+test('ranking stories generate feed, square and story visuals and bind them into Clip lineage', () => {
+  const outDir = fs.mkdtempSync(path.join(os.tmpdir(), 'journal-ranking-visuals-'));
+  const fixture = story();
+  fixture.ranking_table = {
+    schema: 'evercraft.journal.ranking-table.v1',
+    title: 'Evercraft Top 25',
+    note: 'CFBPI v0.2',
+    rows: Array.from({ length: 25 }, (_, i) => ({
+      rank: i + 1,
+      team_name: i === 0 ? 'Alabama' : 'Team ' + (i + 1),
+      record: { wins: 5, losses: i === 9 ? 1 : 0 },
+      movement: null,
+      power_score: 81.49 - i,
+      confidence: 0.95
+    }))
+  };
+  fixture.machine_evidence = {
+    schema: 'evercraft.journal.machine-evidence.v1',
+    relative_path: 'data/owned-journal-test.json',
+    payload: {
+      schema: 'evercraft.cfb.edition-evidence.v1',
+      ranking_run_id: 'cfbpi:test',
+      evidence_through_at: '2026-09-30T21:00:00.000Z',
+      model: { model_version: 'evercraft-cfbpi-0.2.0' }
+    }
+  };
+  publishJournalStories([fixture], {
+    outDir,
+    now: new Date('2026-09-30T22:00:00.000Z'),
+    publicOrigin: 'https://journal.test.evercraft.local'
+  });
+
+  for (const format of ['feed','square','story']) {
+    assert.ok(fs.existsSync(path.join(outDir, 'production', 'owned-journal-test', 'ranking-' + format + '.svg')));
+  }
+
+  const article = fs.readFileSync(path.join(outDir, 'owned-journal-test', 'index.html'), 'utf8');
+  assert.match(article, /ranking-feed\.svg/);
+  assert.match(article, /property="og:image"/);
+
+  const handoff = JSON.parse(fs.readFileSync(path.join(outDir, 'production', 'owned-journal-test', 'clip-handoff.json'), 'utf8'));
+  assert.match(handoff.ranking_visuals.feed.url, /ranking-feed\.svg$/);
+  assert.match(handoff.ranking_visuals.feed.sha256, /^[a-f0-9]{64}$/);
+
+  const receipt = JSON.parse(fs.readFileSync(path.join(outDir, 'receipts', 'owned-journal-test.json'), 'utf8'));
+  assert.equal(receipt.ranking_visuals.story.ref, 'production/owned-journal-test/ranking-story.svg');
+});
