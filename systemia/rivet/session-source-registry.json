@@ -95,29 +95,6 @@
       "evidence_class": "public_observed_site_aggregate",
       "source_url": "https://www.seattle.gov/Documents/Departments/SDOT/NewMobilityProgram/EVCROW_Evaluation_Report.pdf",
       "notes": "Monthly 2018 values: sessions [22,63,80,93,121,80,180,129,130,145,178,200]; kWh [130,721,946,1083,1309,796,1826,1499,1638,1543,1861,2155]. Official report states 3.2 average sessions/day across the period."
-    },
-    {
-      "name": "City of Charlotte Municipal EV Charging Sites",
-      "lane": "operator-utility-public",
-      "jurisdiction": "NC",
-      "status": "adapter_candidate_high_public_cc_by_4",
-      "evidence_class": "public_station_port_and_session_dataset",
-      "source_url": "https://catalog.data.gov/dataset/municipal-ev-charging-sites",
-      "source_data_url": "https://data.charlottenc.gov/api/download/v1/items/43aadeaeb850458cad6f8f9273db4806/csv?layers=0",
-      "license": "CC BY 4.0",
-      "notes": "City of Charlotte dataset first published 2026-08-07. Data.gov states it contains charging stations, ports, and charging sessions. Validate field-level session counts/site identity and commercial attribution requirements before accepting rows into EVObservedUsageAggregate."
-    },
-    {
-      "name": "Paren",
-      "lane": "licensed-utilization-provider",
-      "status": "commercial_partner_candidate",
-      "notes": "Markets station-level fast-charging utilization, reliability and session intelligence. Do not scrape or ingest proprietary data without an authorized license/partnership. Evaluate only through explicit commercial authority."
-    },
-    {
-      "name": "ChargePoint first-party session intelligence",
-      "lane": "direct-cpo-partner",
-      "status": "partnership_candidate_no_raw_access",
-      "notes": "ChargePoint publicly reports very large aggregate session volumes, but those reports do not grant raw commercial session-data rights. Treat as a direct partnership/feed candidate only; do not scrape proprietary customer/session telemetry."
     }
   ],
   "live_ingest_receipts": [

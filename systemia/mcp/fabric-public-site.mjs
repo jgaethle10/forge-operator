@@ -526,58 +526,23 @@ export function renderCapabilityDetail(item){
 
 
 
-export function renderRivetLanding(){
-  return shell('RIVET · EV charging reports',[
-    '<main>',
-    '<section class="hero">',
-    '<div class="kicker"><span class="dot"></span> RIVET reporting</div>',
-    '<h1>One address.<br>One decision-ready report.</h1>',
-    '<p class="lede">RIVET is the reporting brand for EV charging opportunity intelligence. The experience stays deliberately simple: start with a property, get a clear report, and keep observed evidence separate from modeled assumptions.</p>',
-    '<div class="actions"><a class="btn primary" href="/capabilities/rivet-site-underwriting-v1">View report options</a><a class="btn" href="/aliev">See the intelligence layer</a></div>',
-    '</section>',
-    '<div class="trust">',
-    '<div><strong>Address first</strong><span>no giant workflow to learn</span></div>',
-    '<div><strong>Observed sessions</strong><span>used when verified and spatially relevant</span></div>',
-    '<div><strong>Missing ≠ zero</strong><span>unknowns stay visible</span></div>',
-    '<div><strong>Source-backed</strong><span>provenance travels with the report</span></div>',
-    '</div>',
-    '<section><div class="eyebrow">The report</div><h2>Simple on the surface. Deep underneath.</h2>',
-    '<p class="sub">RIVET compresses the messy EV diligence stack into a report a property owner, broker, installer, fleet, charging developer or investor can actually use.</p>',
-    '<div class="grid">',
-    '<article class="card"><h3>Real nearby usage</h3><p>Where verified session evidence exists, RIVET preserves session counts, energy, period, site identity, freshness and provenance instead of substituting charger inventory for demand.</p></article>',
-    '<article class="card"><h3>Site context</h3><p>Competition, traffic, EV stock, dwell context, parcel/planning signals, utility and tariff context, incentives and known engineering unknowns stay in one evidence model.</p></article>',
-    '<article class="card"><h3>Decision framing</h3><p>Observed, public, licensed, inferred and modeled evidence remain visibly distinct so the report can be useful without pretending preliminary diligence is final engineering.</p></article>',
-    '</div></section>',
-    '<section><div class="eyebrow">Report tiers</div><h2>Buy the answer, not another dashboard.</h2><div class="grid">',
-    '<article class="card"><h3>Preliminary Site Opportunity Report</h3><p>Fast address-level diligence for whether a site deserves deeper work.</p><p class="price">$299 one-time</p></article>',
-    '<article class="card"><h3>Full Site Opportunity Report</h3><p>Deeper evidence and diligence for a serious property, sales or investment decision.</p><p class="price">$750 one-time</p></article>',
-    '<article class="card"><h3>Underlying intelligence</h3><p>AliEV is Evercraft\'s operating and intelligence layer. RIVET stays focused on packaging that depth into clear reporting.</p><div class="cardlinks"><a class="docs-link" href="/aliev">Explore AliEV →</a></div></article>',
-    '</div></section>',
-    '</main>'
-  ].join('\n'),{
-    description:'RIVET turns address-specific EV charging intelligence into a simple decision-ready report backed by explicit evidence states and provenance.',
-    canonical:'/rivet',
-    ogType:'website',
-  });
-}
-
 export function renderAliEvLanding(){
   return shell('AliEV · EV infrastructure intelligence',[
     '<main>',
     '<section class="hero">',
     '<div class="kicker"><span class="dot"></span> AliEV intelligence layer</div>',
     '<h1>The engine behind<br>the EV decision.</h1>',
-    '<p class="lede">AliEV is Evercraft\'s EV infrastructure intelligence and operating layer. It gathers and separates competition, traffic, utility, tariff, incentive, property, market and observed-session evidence so RIVET can stay brutally simple.</p>',
-    '<div class="actions"><a class="btn primary" href="/capabilities/aliev-site-opportunity-snapshot-v1">Open AliEV capability</a><a class="btn" href="/rivet">See RIVET reports</a></div>',
+    '<p class="lede">AliEV is Evercraft\'s EV infrastructure intelligence and operating layer. It gathers and separates competition, traffic, utility, tariff, incentive, property, market and observed-session evidence for EV site decisions.</p>',
+    '<div class="actions"><a class="btn primary" href="/capabilities/aliev-site-opportunity-snapshot-v1">Open AliEV capability</a></div>',
     '</section>',
     '<div class="trust">',
     '<div><strong>14 domains</strong><span>strict report coverage contract</span></div>',
     '<div><strong>Session-first</strong><span>observed usage is its own evidence class</span></div>',
     '<div><strong>Provider-neutral</strong><span>no single network defines the answer</span></div>',
-    '<div><strong>Report-ready</strong><span>RIVET consumes the evidence without exposing complexity</span></div>',
+    '<div><strong>Evidence-ready</strong><span>structured outputs preserve provenance and uncertainty</span></div>',
     '</div>',
     '<section><div class="eyebrow">What AliEV owns</div><h2>Depth without UI sprawl.</h2>',
-    '<p class="sub">AliEV can get more sophisticated without making RIVET harder to use. New data, adapters, models and evidence sources enrich the answer underneath the same address-first report flow.</p>',
+    '<p class="sub">AliEV can get more sophisticated without forcing that complexity into every consuming workflow. New data, adapters, models and evidence sources enrich the underlying EV site intelligence.</p>',
     '<div class="grid">',
     '<article class="card"><h3>Observed session intelligence</h3><p>Site-resolved session evidence, period normalization, freshness, energy and usage patterns where legitimately available.</p></article>',
     '<article class="card"><h3>Property + grid context</h3><p>Utility service area, tariff candidates, incentives, parcel/planning evidence and power constraints remain separate from final engineering claims.</p></article>',

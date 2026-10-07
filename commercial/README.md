@@ -85,25 +85,14 @@ Do not market EverScript as "our JavaScript." Position it as a governed executio
 
 Before a broad hosted launch, close the production work already documented in `everscript/README.md`: schema contracts, persistent registry/key rotation, production auth scopes, Evercraft Payments adapter, Yard quotas/isolation, full MCP invocation, signed external audit receipts, and portable sandboxing.
 
-## RIVET + AliEV commercial architecture
+## AliEV commercial architecture
 
-RIVET is the **reporting brand**. Keep its buyer flow brutally simple: address in -> decision-ready report out.
+AliEV is the Evercraft-owned EV intelligence and operating layer. It may deepen across competition, traffic, utility service area, tariffs, incentives, parcel/planning, EV stock, dwell/freight context, economics, provenance and observed session evidence while preserving evidence-state boundaries.
 
-AliEV is the Evercraft-owned **EV intelligence and operating layer** underneath RIVET. AliEV may become arbitrarily deep across competition, traffic, utility service area, tariffs, incentives, parcel/planning, EV stock, dwell/freight context, economics, provenance and observed session evidence without exposing that complexity in the RIVET buyer experience.
-
-RIVET competes by making a better report, not a busier dashboard. The strongest differentiator is session intelligence with evidence integrity: verified site-resolved observed sessions where legitimately available, plus freshness, period, energy, usage patterns, reliability and provenance as coverage grows. Missing stays missing; inventory never masquerades as utilization; modeled demand never masquerades as observed usage.
-
-The target experience remains:
-`address -> RIVET report`
-
-The target internal path is:
-`RIVET report request -> AliEV evidence assembly -> report projection -> verification -> durable report/receipt`
-
-Current owned public Fabric paths staged in this launch branch:
-- `/rivet` for the reporting brand.
+Current owned public Fabric path:
 - `/aliev` for the intelligence layer.
 
-Do not use Base44 for either public frontage.
+RIVET is intentionally excluded from this commercial document pending explicit partner-approved change authority.
 
 ## Definition of commercially deployed
 

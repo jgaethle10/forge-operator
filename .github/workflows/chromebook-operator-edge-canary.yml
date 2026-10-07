@@ -86,13 +86,13 @@ jobs:
               fi
             fi
 
-            # RIVET and AliEV deploy through the same Chromebook updater.
+            # AliEV deploys through the same Chromebook updater.
             # Retry only the known 404 deployment-lag signature. Identity,
             # policy and unexpected HTTP failures remain immediate.
-            if { [ "$stage" = "rivet_surface" ] || [ "$stage" = "aliev_surface" ]; } && [ "$attempt" -lt "$max_attempts" ]; then
+            if [ "$stage" = "aliev_surface" ] && [ "$attempt" -lt "$max_attempts" ]; then
               if [[ "$error" == http_404:* ]]; then
                 deployment_wait_started=true
-                echo "RIVET/AliEV deployment has not reached the owned edge yet ($error); retrying after updater window slice ($attempt/$max_attempts)."
+                echo "AliEV deployment has not reached the owned edge yet ($error); retrying after updater window slice ($attempt/$max_attempts)."
                 sleep 20
                 attempt=$((attempt + 1))
                 continue

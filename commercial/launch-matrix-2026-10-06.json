@@ -142,47 +142,19 @@
       "commercial_gate": "close_production_auth_payments_registry_isolation_mcp_and_external_receipt_work"
     },
     {
-      "product": "RIVET",
-      "launch_tier": 1,
-      "offer_state": "reporting_brand_sell_now",
-      "buyer": [
-        "property_owners",
-        "brokers",
-        "ev_installers",
-        "charging_developers",
-        "fleets",
-        "site_acquisition",
-        "investors"
-      ],
-      "pain_trigger": "need_a_clear_address_specific_ev_charging_decision_report_without_learning_a_complex_platform",
-      "pricing": {
-        "preliminary_report_usd": 299,
-        "full_report_usd": 750
-      },
-      "edge": [
-        "brutally_simple_address_to_report_flow",
-        "verified_observed_session_evidence_when_available",
-        "evidence_state_separation",
-        "source_provenance",
-        "decision_ready_reporting"
-      ],
-      "deployment_state": "owned_fabric_pages_staged_runtime_report_canary_exists",
-      "commercial_gate": "merge_deploy_and_external_canary_owned_rivet_page_and_report_start_path"
-    },
-    {
       "product": "AliEV",
       "launch_tier": 1,
       "offer_state": "underlying_intelligence_and_operating_layer",
       "buyer": [
-        "internal_rivet_runtime",
+        "authorized_reporting_workflows",
         "partners",
         "installers",
         "sales_teams",
         "ev_infrastructure_operators"
       ],
-      "pain_trigger": "need_deep_ev_site_intelligence_and_execution_context_under_a_simple_reporting_surface",
+      "pain_trigger": "need_deep_ev_site_intelligence_and_execution_context_for_authorized_ev_workflows",
       "pricing": {
-        "state": "not_primary_public_offer_rivet_reports_are_buyer_front_door"
+        "state": "not_primary_public_offer"
       },
       "edge": [
         "14_domain_evidence_contract",
