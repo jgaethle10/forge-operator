@@ -28,5 +28,9 @@ test('Graphics Command volcano plan compiles through Fallen World Intelligence V
   const geo=stage.layers.find(layer=>layer.kind==='geo');
   assert.equal(geo?.points?.length,5);
   assert.equal(geo?.routes?.length,4);
+  assert.equal(geo?.polygons?.length,1);
+  assert.equal(geo?.polygons?.[0].id,'us-wa-state-outline-cc0-v1');
+  assert.ok((geo?.polygons?.[0].rings?.[0]?.length??0)>=70);
+  assert.equal(geo?.polygons?.[0].evidenceState,'public_source');
   assert.equal(geo?.evidenceState,'public_source');
 });
