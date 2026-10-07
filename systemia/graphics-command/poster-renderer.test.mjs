@@ -68,6 +68,7 @@ test('measured poster QA passes clean geography and rejects impossible marker co
     assert.equal(report.checks.labelsNonOverlapping,true);
     assert.equal(report.checks.labelsClearOfOtherMarkers,true);
     assert.equal(report.checks.safeMargins,true);
+    assert.equal(report.checks.regionIdentityClear,true);
   }
 
   const impossible=structuredClone(story);
