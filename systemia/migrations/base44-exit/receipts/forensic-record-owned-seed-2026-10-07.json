@@ -1,0 +1,38 @@
+{
+  "schema": "evercraft.forensic-record.owned-seed-observation.v1",
+  "observed_at": "2026-10-07T14:22:54Z",
+  "source_revision": "8fef03ad9d83ac6402018feca8aba5636fa0b6e3",
+  "workflow": {
+    "name": "Files Companion public migration snapshot",
+    "run_id": 37636049067,
+    "conclusion": "success"
+  },
+  "snapshot": {
+    "total_rows": 23201,
+    "finding_rows": 22816,
+    "manifest_sha256": "sha256:9c7b523a66e30500913fbc17d21bdc9e41c71be1e1f656700c66b9aa74586f52"
+  },
+  "owned_seed": {
+    "complete": true,
+    "finding_rows": 22816,
+    "unique_finding_numbers": 22356,
+    "duplicate_number_extra_rows": 460,
+    "missing_page_reference_after_normalization": 13199,
+    "missing_source_url": 22778,
+    "base44_runtime_required": false,
+    "public_cutover_authorized": false
+  },
+  "artifact": {
+    "artifact_id": 11490205041,
+    "name": "forensic-record-migration-seed-8fef03ad9d83ac6402018feca8aba5636fa0b6e3",
+    "size_bytes": 27560894,
+    "archive_sha256": "sha256:75fde379da85b8f82cc6d1e6f722eaf55c6c5f4ef0cec0beacf1956314ab5d7c",
+    "expires_at": "2027-01-05T14:21:47Z"
+  },
+  "authority": {
+    "migration_evidence": true,
+    "runtime_dependency_created": false,
+    "public_cutover_authorized": false,
+    "legacy_retirement_authorized": false
+  }
+}
