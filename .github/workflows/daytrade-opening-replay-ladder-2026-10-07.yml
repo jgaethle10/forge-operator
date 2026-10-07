@@ -1,0 +1,33 @@
+name: DayTrade Opening Replay Ladder 2026-10-07
+
+on:
+  push:
+    branches:
+      - "systemia/daytrade-opening-replay-ladder-2026-10-07"
+
+permissions:
+  contents: read
+
+jobs:
+  replay:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Run opening replay ladder
+        env:
+          ALPACA_TRADING: ${{ secrets.ALPACA_TRADING }}
+          ALPACA_TRADING_SECRET: ${{ secrets.ALPACA_TRADING_SECRET }}
+          DAYTRADE_OPENING_LADDER_OUTPUT: artifacts/daytrade-edge/opening-replay-ladder-2026-10-07.json
+        run: node systemia/daytrade-lens/edge-opening-replay-ladder-2026-10-07.mjs
+      - name: Upload opening ladder
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: daytrade-opening-replay-ladder-${{ github.run_id }}
+          path: artifacts/daytrade-edge/opening-replay-ladder-2026-10-07.json
+          if-no-files-found: error
+          retention-days: 30
