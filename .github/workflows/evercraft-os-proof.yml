@@ -1,9 +1,9 @@
-name: Evercraft OS Phase 0 proof
+name: Evercraft OS proofs
 
 on:
   push:
     branches:
-      - feat/evercraft-os-bootstrap
+      - "feat/evercraft-os-*"
     paths:
       - "systemia/evercraft-os/**"
       - ".github/workflows/evercraft-os-proof.yml"
@@ -29,5 +29,9 @@ jobs:
           node-version: "20"
       - name: Prove Evercraft OS composition
         run: node systemia/evercraft-os/runtime.proof.mjs
+      - name: Prove device profile contract
+        run: node systemia/evercraft-os/device-profile.proof.mjs
       - name: Emit boot envelope
         run: node systemia/evercraft-os/runtime.mjs
+      - name: Emit sanitized device profile
+        run: EVERCRAFT_OS_DEVICE_CLASS=server node systemia/evercraft-os/device-profile.mjs
