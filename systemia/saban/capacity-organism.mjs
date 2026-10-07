@@ -316,6 +316,7 @@ export async function runCapacityOrganismOnce({
     demandRadar,
     nodeSeedInventory,
     demandForecast,
+    previousLifecycleLedger,
     now,
   });
   const resourceFieldExpansion=buildResourceFieldExpansionIntents({
