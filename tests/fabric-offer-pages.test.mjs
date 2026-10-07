@@ -29,6 +29,26 @@ const websiteAudit={
   connections:[],
 };
 
+const visualIntelligence={
+  public_id:'visual-intelligence-story-sprint-v1',
+  name:'Evercraft Visual Intelligence Story Sprint',
+  description:'Turn evidence, data, research, or a complicated idea into a source-backed visual story.',
+  keywords:['visual story','data visualization','social graphics'],
+  state:'human_handoff_only',
+  commercial_state:'sell_now',
+  pricing:'Founding Visual Story Sprint $500 one-time for the first five accepted stories; three-story campaign pack $1,500.',
+  use_when:['turn this data or research into a visual story people will actually stop for'],
+  entry_paid_offer:{
+    name:'Founding Visual Story Sprint',
+    price:'$500',
+    price_usd_normalized:500,
+    billing:'one_time',
+    fulfillment:'human_finished',
+  },
+  start_url_state:'human_handoff_ready',
+  connections:[],
+};
+
 test('human offer copy gives sell-now capabilities short memorable URLs',()=>{
   assert.equal(offerSlugForCapability(websiteAudit.public_id),'website-audit');
   assert.equal(offerCapabilityForSlug('website-audit',[websiteAudit])?.public_id,websiteAudit.public_id);
@@ -212,3 +232,25 @@ test('human checkout failures render a branded Evercraft Payments page instead o
   }
 });
 
+
+
+test('Visual Intelligence is sell-now without pretending its automated checkout exists',()=>{
+  assert.equal(offerSlugForCapability(visualIntelligence.public_id),'visual-intelligence');
+  assert.equal(offerCapabilityForSlug('visual-intelligence',[visualIntelligence])?.public_id,visualIntelligence.public_id);
+  assert.equal(offerPurchaseKeyForSlug('visual-intelligence'),null);
+
+  const directory=renderOffers([visualIntelligence]);
+  assert.match(directory,/\/offers\/visual-intelligence/);
+  assert.match(directory,/Starts at \$500/);
+
+  const page=renderOfferPage(visualIntelligence);
+  assert.match(page,/cannot scroll past/);
+  assert.match(page,/Start this sprint · \$500/);
+  assert.match(page,/mailto:jessegaethle10@gmail\.com/);
+  assert.match(page,/See live proof/);
+  assert.match(page,/washington-active-volcanoes/);
+  assert.match(page,/scoped human handoff/);
+  assert.match(page,/Evercraft Payments/);
+  assert.doesNotMatch(page,/\/api\/offers\/visual-intelligence\/checkout/);
+  assert.doesNotMatch(page,/Continue to checkout/);
+});
