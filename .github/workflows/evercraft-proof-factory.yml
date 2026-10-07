@@ -14,6 +14,10 @@ on:
       - "systemia/rivet/report-runtime.proof.mjs"
       - "systemia/rivet/national-session-sprawl.proof.mjs"
       - "tests/proof-factory.test.mjs"
+      - "tests/protected-generated-artifacts.test.mjs"
+      - "scripts/enforce-protected-generated-artifacts.mjs"
+      - "governance/protected-generated-artifacts.json"
+      - "governance/rivet-proof-approved.json"
       - "package.json"
       - ".github/workflows/evercraft-proof-factory.yml"
 
@@ -53,7 +57,9 @@ jobs:
           ffprobe -version | head -n 1
 
       - name: Prove Proof Factory contract
-        run: npm run test:proof-factory
+        run: |
+          npm run test:proof-factory
+          node --test tests/protected-generated-artifacts.test.mjs
 
       - name: Execute product proof set
         shell: bash
@@ -79,6 +85,7 @@ jobs:
           node systemia/rivet/report-runtime.proof.mjs > artifacts/rivet-proof/report-runtime-latest.json
           node systemia/rivet/national-session-sprawl.proof.mjs > artifacts/rivet-proof/session-sprawl-latest.json
           npm run proof:factory
+          node scripts/enforce-protected-generated-artifacts.mjs
 
           echo "ForensiScope distributed proof exit: ${FORENSISCOPE_DISTRIBUTED_EXIT}"
           echo "ForensiScope artifact-return proof exit: ${FORENSISCOPE_ARTIFACT_EXIT}"
@@ -132,6 +139,7 @@ jobs:
             node systemia/rivet/report-runtime.proof.mjs > artifacts/rivet-proof/report-runtime-latest.json
             node systemia/rivet/national-session-sprawl.proof.mjs > artifacts/rivet-proof/session-sprawl-latest.json
             npm run proof:factory
+            node scripts/enforce-protected-generated-artifacts.mjs
           }
 
           for ATTEMPT in 1 2 3; do
