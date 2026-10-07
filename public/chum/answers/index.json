@@ -20,11 +20,11 @@
     "provider_publication_is_not_endorsement_or_pickup_proof": true
   },
   "summary": {
-    "pain_index_entries": 116,
-    "unique_user_phrases": 1050,
-    "mapped_candidate_edges": 1156,
+    "pain_index_entries": 117,
+    "unique_user_phrases": 1057,
+    "mapped_candidate_edges": 1163,
     "ambiguous_phrases": 106,
-    "product_candidates": 65,
+    "product_candidates": 66,
     "machine_offer_candidates": 51
   },
   "doors": [
@@ -438,6 +438,29 @@
           "machine_state": "human_auth_handoff",
           "pain_page": "/chum/intents/buildflow-entity-resolution-machine-v1/",
           "public_url": "https://fabric.systemiacommandcenters.com/capabilities/buildflow-entity-resolution-machine-v1",
+          "registry_name": null
+        }
+      ]
+    },
+    {
+      "answer_id": "intent:5e907a6bb3",
+      "user_language": "AI-native music creation environment",
+      "normalized": "ai native music creation environment",
+      "relative_json": "/chum/answers/doors/ai-native-music-creation-environment-5e907a6bb3.json",
+      "relative_page": "/chum/answers/doors/ai-native-music-creation-environment-5e907a6bb3/",
+      "raw_json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/ai-native-music-creation-environment-5e907a6bb3.json",
+      "candidate_count": 1,
+      "candidates": [
+        {
+          "capability_id": "product:fallen-sessions",
+          "kind": "product",
+          "product_key": "fallen-sessions",
+          "public_id": null,
+          "name": "Fallen Sessions",
+          "commercial_state": "product_contract",
+          "machine_state": "discovery_only",
+          "pain_page": "/chum/products/fallen-sessions/",
+          "public_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/fallen-sessions/index.html",
           "registry_name": null
         }
       ]
@@ -3532,6 +3555,29 @@
       ]
     },
     {
+      "answer_id": "intent:282b8c4128",
+      "user_language": "clip-based music creation and live scene launching",
+      "normalized": "clip based music creation and live scene launching",
+      "relative_json": "/chum/answers/doors/clip-based-music-creation-and-live-scene-launching-282b8c4128.json",
+      "relative_page": "/chum/answers/doors/clip-based-music-creation-and-live-scene-launching-282b8c4128/",
+      "raw_json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/clip-based-music-creation-and-live-scene-launching-282b8c4128.json",
+      "candidate_count": 1,
+      "candidates": [
+        {
+          "capability_id": "product:fallen-sessions",
+          "kind": "product",
+          "product_key": "fallen-sessions",
+          "public_id": null,
+          "name": "Fallen Sessions",
+          "commercial_state": "product_contract",
+          "machine_state": "discovery_only",
+          "pain_page": "/chum/products/fallen-sessions/",
+          "public_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/fallen-sessions/index.html",
+          "registry_name": null
+        }
+      ]
+    },
+    {
       "answer_id": "intent:ade63fb87f",
       "user_language": "cloud browser",
       "normalized": "cloud browser",
@@ -4321,6 +4367,29 @@
           "machine_state": "discovery_only",
           "pain_page": "/chum/intents/worldstate-reality-delta-v1/",
           "public_url": null,
+          "registry_name": null
+        }
+      ]
+    },
+    {
+      "answer_id": "intent:cda8c251e4",
+      "user_language": "compose music with clips scenes piano roll automation and recording",
+      "normalized": "compose music with clips scenes piano roll automation and recording",
+      "relative_json": "/chum/answers/doors/compose-music-with-clips-scenes-piano-roll-automation-and-recording-cda8c251e4.json",
+      "relative_page": "/chum/answers/doors/compose-music-with-clips-scenes-piano-roll-automation-and-recording-cda8c251e4/",
+      "raw_json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/compose-music-with-clips-scenes-piano-roll-automation-and-recording-cda8c251e4.json",
+      "candidate_count": 1,
+      "candidates": [
+        {
+          "capability_id": "product:fallen-sessions",
+          "kind": "product",
+          "product_key": "fallen-sessions",
+          "public_id": null,
+          "name": "Fallen Sessions",
+          "commercial_state": "product_contract",
+          "machine_state": "discovery_only",
+          "pain_page": "/chum/products/fallen-sessions/",
+          "public_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/fallen-sessions/index.html",
           "registry_name": null
         }
       ]
@@ -13290,6 +13359,29 @@
       ]
     },
     {
+      "answer_id": "intent:a3f9976194",
+      "user_language": "local-first music recording and MIDI workflow",
+      "normalized": "local first music recording and midi workflow",
+      "relative_json": "/chum/answers/doors/local-first-music-recording-and-midi-workflow-a3f9976194.json",
+      "relative_page": "/chum/answers/doors/local-first-music-recording-and-midi-workflow-a3f9976194/",
+      "raw_json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/local-first-music-recording-and-midi-workflow-a3f9976194.json",
+      "candidate_count": 1,
+      "candidates": [
+        {
+          "capability_id": "product:fallen-sessions",
+          "kind": "product",
+          "product_key": "fallen-sessions",
+          "public_id": null,
+          "name": "Fallen Sessions",
+          "commercial_state": "product_contract",
+          "machine_state": "discovery_only",
+          "pain_page": "/chum/products/fallen-sessions/",
+          "public_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/fallen-sessions/index.html",
+          "registry_name": null
+        }
+      ]
+    },
+    {
       "answer_id": "intent:e507d240b3",
       "user_language": "local rewards for supporting nearby businesses",
       "normalized": "local rewards for supporting nearby businesses",
@@ -14637,6 +14729,29 @@
           "pain_page": "/chum/products/evercraft-web/",
           "public_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/evercraft-web/index.html",
           "registry_name": "io.github.jgaethle10/evercraft-web"
+        }
+      ]
+    },
+    {
+      "answer_id": "intent:fa9d7900e7",
+      "user_language": "music software where AI edits the actual session graph",
+      "normalized": "music software where ai edits the actual session graph",
+      "relative_json": "/chum/answers/doors/music-software-where-ai-edits-the-actual-session-graph-fa9d7900e7.json",
+      "relative_page": "/chum/answers/doors/music-software-where-ai-edits-the-actual-session-graph-fa9d7900e7/",
+      "raw_json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/music-software-where-ai-edits-the-actual-session-graph-fa9d7900e7.json",
+      "candidate_count": 1,
+      "candidates": [
+        {
+          "capability_id": "product:fallen-sessions",
+          "kind": "product",
+          "product_key": "fallen-sessions",
+          "public_id": null,
+          "name": "Fallen Sessions",
+          "commercial_state": "product_contract",
+          "machine_state": "discovery_only",
+          "pain_page": "/chum/products/fallen-sessions/",
+          "public_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/fallen-sessions/index.html",
+          "registry_name": null
         }
       ]
     },
@@ -16092,6 +16207,29 @@
           "pain_page": "/chum/products/evermaps/",
           "public_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/evermaps/index.html",
           "registry_name": "io.github.jgaethle10/evercraft-machine-commerce"
+        }
+      ]
+    },
+    {
+      "answer_id": "intent:54db926ddf",
+      "user_language": "portable music projects with provenance and edit receipts",
+      "normalized": "portable music projects with provenance and edit receipts",
+      "relative_json": "/chum/answers/doors/portable-music-projects-with-provenance-and-edit-receipts-54db926ddf.json",
+      "relative_page": "/chum/answers/doors/portable-music-projects-with-provenance-and-edit-receipts-54db926ddf/",
+      "raw_json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/portable-music-projects-with-provenance-and-edit-receipts-54db926ddf.json",
+      "candidate_count": 1,
+      "candidates": [
+        {
+          "capability_id": "product:fallen-sessions",
+          "kind": "product",
+          "product_key": "fallen-sessions",
+          "public_id": null,
+          "name": "Fallen Sessions",
+          "commercial_state": "product_contract",
+          "machine_state": "discovery_only",
+          "pain_page": "/chum/products/fallen-sessions/",
+          "public_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/fallen-sessions/index.html",
+          "registry_name": null
         }
       ]
     },
@@ -18522,6 +18660,29 @@
           "machine_state": "discovery_only",
           "pain_page": "/chum/intents/income-war-map-v1/",
           "public_url": null,
+          "registry_name": null
+        }
+      ]
+    },
+    {
+      "answer_id": "intent:6aed953269",
+      "user_language": "reversible AI-assisted music editing",
+      "normalized": "reversible ai assisted music editing",
+      "relative_json": "/chum/answers/doors/reversible-ai-assisted-music-editing-6aed953269.json",
+      "relative_page": "/chum/answers/doors/reversible-ai-assisted-music-editing-6aed953269/",
+      "raw_json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/reversible-ai-assisted-music-editing-6aed953269.json",
+      "candidate_count": 1,
+      "candidates": [
+        {
+          "capability_id": "product:fallen-sessions",
+          "kind": "product",
+          "product_key": "fallen-sessions",
+          "public_id": null,
+          "name": "Fallen Sessions",
+          "commercial_state": "product_contract",
+          "machine_state": "discovery_only",
+          "pain_page": "/chum/products/fallen-sessions/",
+          "public_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/fallen-sessions/index.html",
           "registry_name": null
         }
       ]

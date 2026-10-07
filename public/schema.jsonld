@@ -485,6 +485,22 @@
     },
     {
       "@type": "Service",
+      "@id": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/fallen-sessions/index.html#evercraft-service",
+      "name": "Fallen Sessions",
+      "alternateName": [
+        "PulseGrid",
+        "Fallen Music",
+        "Fallen Sessions / PulseGrid"
+      ],
+      "url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/fallen-sessions/index.html",
+      "provider": {
+        "@id": "https://github.com/jgaethle10/forge-operator#evercraft"
+      },
+      "serviceType": "agent_native_music_creation",
+      "description": "AI-native music creation environment; clip-based music creation and live scene launching; local-first music recording and MIDI workflow; reversible AI-assisted music editing"
+    },
+    {
+      "@type": "Service",
       "@id": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/findmypart/index.html#evercraft-service",
       "name": "FindMyPart",
       "alternateName": [

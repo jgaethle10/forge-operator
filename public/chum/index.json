@@ -838,6 +838,33 @@
       "proof_library": null
     },
     {
+      "product_key": "fallen-sessions",
+      "name": "Fallen Sessions",
+      "aliases": [
+        "PulseGrid",
+        "Fallen Music",
+        "Fallen Sessions / PulseGrid"
+      ],
+      "canonical_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/fallen-sessions/index.html",
+      "llms_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/fallen-sessions/llms.txt",
+      "discovery_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/fallen-sessions/ai-discovery.json",
+      "conformance_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/fallen-sessions/ai-conformance.json",
+      "page_url": "/chum/products/fallen-sessions/",
+      "registry_name": null,
+      "mcp": null,
+      "commercial": {
+        "status": "not_for_sale_yet",
+        "payment_state": "disabled_until_explicit_promotion"
+      },
+      "human_start_url": null,
+      "buyer_frontage_url": null,
+      "developer_surfaces": null,
+      "editorial_surfaces": null,
+      "knowledge_surfaces": null,
+      "distribution_surfaces": null,
+      "proof_library": null
+    },
+    {
       "product_key": "findmypart",
       "name": "FindMyPart",
       "aliases": [

@@ -2,8 +2,8 @@
   "schema": "evercraft.chum.crawl-state.v1",
   "provider": "Evercraft LLC",
   "coordinator": "CHUM",
-  "updated_at": "2026-10-07T03:11:53.884Z",
-  "url_count": 2901,
+  "updated_at": "2026-10-07T04:15:04.319Z",
+  "url_count": 2919,
   "doctrine": {
     "crawl_can_be_requested_not_forced": true,
     "content_hash_controls_freshness": true,
@@ -15,14 +15,14 @@
   "entries": {
     "/chum/": {
       "path": "/chum/",
-      "content_sha256": "b18aae504f44008d53290d151ada1fbd14772c0f97920fba7230a3e14df9fea5",
-      "last_changed": "2026-10-07T02:56:26.782Z",
+      "content_sha256": "8714ee7c6c925356dbd0d23cbb3e8e5cd8637873f28e931fa9a768c11308a63e",
+      "last_changed": "2026-10-07T04:15:04.319Z",
       "priority": 80
     },
     "/chum/index.json": {
       "path": "/chum/index.json",
-      "content_sha256": "40fb36055ffade4fa7e2410e006785eec2e4825a3be964409a0d95ecd6794372",
-      "last_changed": "2026-10-07T02:56:26.782Z",
+      "content_sha256": "3cdfea17d36416521c6c2699333c04a6e6cd95ce1359ece4df7f1d1c561fe87a",
+      "last_changed": "2026-10-07T04:15:04.319Z",
       "priority": 80
     },
     "/chum/revenue.html": {
@@ -93,32 +93,32 @@
     },
     "/chum/pain-index.json": {
       "path": "/chum/pain-index.json",
-      "content_sha256": "f0f29657ea4a61a2962e8af70f9c099bda04aa188d8655e66fd6c054b0f4cc3c",
-      "last_changed": "2026-10-07T02:56:26.782Z",
+      "content_sha256": "c12c7d50e0b674574455c450f8952b1311f08ce95e4aef7ef7caa378f6e6e9f4",
+      "last_changed": "2026-10-07T04:15:04.319Z",
       "priority": 80
     },
     "/chum/pain-index.txt": {
       "path": "/chum/pain-index.txt",
-      "content_sha256": "8d274f593b4f61b0eafeb55027f7590faad081f689f605fdbeb10fdbaba42be0",
-      "last_changed": "2026-10-07T02:56:26.782Z",
+      "content_sha256": "afbcf843d4eda400a16900967f791e0a0a97c5ee10b8eb55de79c330f89ff560",
+      "last_changed": "2026-10-07T04:15:04.319Z",
       "priority": 80
     },
     "/chum/answers/": {
       "path": "/chum/answers/",
-      "content_sha256": "e8c446606f17b9ee54af5a52955dc93f545a17099d87712f7b308477ea568de3",
-      "last_changed": "2026-10-07T02:56:26.782Z",
+      "content_sha256": "41df42776902d1c6bb8b4b8f8f60a9ebdc3dcf5d14c2c6a5b0be47adf256c96d",
+      "last_changed": "2026-10-07T04:15:04.319Z",
       "priority": 80
     },
     "/chum/answers/index.json": {
       "path": "/chum/answers/index.json",
-      "content_sha256": "9358430c99ddf1792fc4138b61c25e83da8df616a1dd31f827bb02aa757d175a",
-      "last_changed": "2026-10-07T02:56:26.782Z",
+      "content_sha256": "0afa0cbc30b39d16cd8da5ff146c39601d00a3eaa15e63b1f5322422c2f72c41",
+      "last_changed": "2026-10-07T04:15:04.319Z",
       "priority": 80
     },
     "/chum/answers/index.txt": {
       "path": "/chum/answers/index.txt",
-      "content_sha256": "4b4ee1c1bfb19876a02e12495bf7b54594e0c038b37ee15e051d6e6d3de85b4a",
-      "last_changed": "2026-10-07T02:56:26.782Z",
+      "content_sha256": "890a2045825aaa267a2f34453ab5ef5e0cad411910c8c19fff78f9235a308355",
+      "last_changed": "2026-10-07T04:15:04.319Z",
       "priority": 80
     },
     "/chum/answers/observed/": {
@@ -141,8 +141,8 @@
     },
     "/chum/hot/index.json": {
       "path": "/chum/hot/index.json",
-      "content_sha256": "ddd24c636328ccf55ae42dc2578df0efc50543f727789cd9a9ffa70f711d2334",
-      "last_changed": "2026-10-07T03:11:53.884Z",
+      "content_sha256": "0a49ad1a956c8d37b27bba21ca18189f759db75d4a87b582103fd0f95857c855",
+      "last_changed": "2026-10-07T04:15:04.319Z",
       "priority": 80
     },
     "/chum/strike/": {
@@ -243,14 +243,14 @@
     },
     "/chum/sitemaps/answers.xml": {
       "path": "/chum/sitemaps/answers.xml",
-      "content_sha256": "a44fbadffa6a0fcc26e4996409c3cd4842ed194eb2799fcca4ceb923bd8a7950",
-      "last_changed": "2026-10-07T02:56:26.782Z",
+      "content_sha256": "8163a672d38cf659abdf81f9976c0070abc1a5c24077d5561cb5f6ad98c50061",
+      "last_changed": "2026-10-07T04:15:04.319Z",
       "priority": 108
     },
     "/chum/sitemaps/products.xml": {
       "path": "/chum/sitemaps/products.xml",
-      "content_sha256": "1813a703a3b9afc2fa580dd0ce861be41673ae621a7935ce91c0fae65f8c2ddc",
-      "last_changed": "2026-10-07T02:56:26.782Z",
+      "content_sha256": "7c69355e59b1aa7095ad0e45889c9822a8fb5aceeae2582b54bac4c7dde09e99",
+      "last_changed": "2026-10-07T04:15:04.319Z",
       "priority": 108
     },
     "/chum/sitemaps/machine.xml": {
@@ -339,8 +339,8 @@
     },
     "/.well-known/evercraft-pain-index.json": {
       "path": "/.well-known/evercraft-pain-index.json",
-      "content_sha256": "f0f29657ea4a61a2962e8af70f9c099bda04aa188d8655e66fd6c054b0f4cc3c",
-      "last_changed": "2026-10-07T02:56:26.782Z",
+      "content_sha256": "c12c7d50e0b674574455c450f8952b1311f08ce95e4aef7ef7caa378f6e6e9f4",
+      "last_changed": "2026-10-07T04:15:04.319Z",
       "priority": 90
     },
     "/rivet/discovery.json": {
@@ -729,8 +729,8 @@
     },
     "/llms-full.txt": {
       "path": "/llms-full.txt",
-      "content_sha256": "7f9aa4cfffc1753016e554bb6ba8786dc08eb3766b135576d616f04401145b46",
-      "last_changed": "2026-10-07T02:56:26.782Z",
+      "content_sha256": "2c813bd48d3a9128756f9c54bfce43b67fcbdadad520e7d3c65869778e03caea",
+      "last_changed": "2026-10-07T04:15:04.319Z",
       "priority": 86
     },
     "/ai-discovery.json": {
@@ -741,8 +741,8 @@
     },
     "/schema.jsonld": {
       "path": "/schema.jsonld",
-      "content_sha256": "5182e0ab8b927062c6f8e10b8da0d3f53aade5579e9af41cf6e6204002039f48",
-      "last_changed": "2026-10-07T02:56:26.782Z",
+      "content_sha256": "1e4dc6fade5a89144ac1452d3a1a90a0b77de5951cf53025a1523457bdf1552e",
+      "last_changed": "2026-10-07T04:15:04.319Z",
       "priority": 60
     },
     "/openapi.json": {
@@ -771,8 +771,8 @@
     },
     "/.well-known/evercraft-agent-directory.json": {
       "path": "/.well-known/evercraft-agent-directory.json",
-      "content_sha256": "3fa625e381869111b4192758f0edb221532a643e806847f1f53c64c2413c9bf4",
-      "last_changed": "2026-10-07T02:56:26.782Z",
+      "content_sha256": "1640f5f022c446bd8ebe59ba119f5510c9f80f152e5900ef118d3d12bd697fc8",
+      "last_changed": "2026-10-07T04:15:04.319Z",
       "priority": 84
     },
     "/.well-known/evercraft-agent-commerce.json": {
@@ -795,8 +795,8 @@
     },
     "/.well-known/evercraft-products.json": {
       "path": "/.well-known/evercraft-products.json",
-      "content_sha256": "c3870783712829e222d934308c374df7479c350e1fbc90acfa105a73e4d6314c",
-      "last_changed": "2026-10-07T02:56:26.782Z",
+      "content_sha256": "567c2e14f20f45ad54406c3200988aaffb675277dd4f27b84e4186000551e093",
+      "last_changed": "2026-10-07T04:15:04.319Z",
       "priority": 88
     },
     "/.well-known/evercraft-machine-catalog.json": {
@@ -2427,8 +2427,8 @@
     },
     "/chum/products/aliev/": {
       "path": "/chum/products/aliev/",
-      "content_sha256": "d20e964a415c1afaf012796c9169ec1eaac6c5012eb472d5d5c75936815db64f",
-      "last_changed": "2026-10-01T04:57:43.336Z",
+      "content_sha256": "654312faaf2cd805c5fea87a4f9a3acc40de6c1140bef2524d68dc53af9f2c5d",
+      "last_changed": "2026-10-07T04:15:04.319Z",
       "priority": 94
     },
     "/chum/products/aliev/llms.txt": {
@@ -2451,8 +2451,8 @@
     },
     "/chum/products/ascend/": {
       "path": "/chum/products/ascend/",
-      "content_sha256": "32579f0db2b4c0528d0879a13c9fc795e481b71bfd4e4ac87444778a92edf432",
-      "last_changed": "2026-10-01T04:57:43.336Z",
+      "content_sha256": "cda9618c93547e0bdeaa7ca246ee477527b96ca5ef44b7d166f6b81406877a4b",
+      "last_changed": "2026-10-07T04:15:04.319Z",
       "priority": 94
     },
     "/chum/products/ascend/llms.txt": {
@@ -2475,8 +2475,8 @@
     },
     "/chum/products/buildflow/": {
       "path": "/chum/products/buildflow/",
-      "content_sha256": "7816a7eda3631c4d448cf52a2630f5e24e1bad54d118c0affef38e1f74300c50",
-      "last_changed": "2026-10-01T04:57:43.336Z",
+      "content_sha256": "d2386cf9dcfa3e8c1ff69611159e094a61dcfe39c58622a4a9298a1667905491",
+      "last_changed": "2026-10-07T04:15:04.319Z",
       "priority": 94
     },
     "/chum/products/buildflow/llms.txt": {
@@ -2499,8 +2499,8 @@
     },
     "/chum/products/callproof-vault/": {
       "path": "/chum/products/callproof-vault/",
-      "content_sha256": "69c3f4b685e5c9a8b6e78e722192c8f1186acc7491416355caac7ccad8b42ce5",
-      "last_changed": "2026-10-01T04:57:43.336Z",
+      "content_sha256": "989dae857f2ce47d7c8a0d9e1fe6cd88d910b5a69a37dd63b4613e89fb31f514",
+      "last_changed": "2026-10-07T04:15:04.319Z",
       "priority": 94
     },
     "/chum/products/callproof-vault/llms.txt": {
@@ -2523,8 +2523,8 @@
     },
     "/chum/products/career-command/": {
       "path": "/chum/products/career-command/",
-      "content_sha256": "c649be8e3c56bcea5cc3e25d14585302fdee203bb889703e31956d7d9d6fef5a",
-      "last_changed": "2026-10-01T04:57:43.336Z",
+      "content_sha256": "4292e75ab6b3fb6b3763500515094630113473ec035ab7d1bdc56232c3487cf3",
+      "last_changed": "2026-10-07T04:15:04.319Z",
       "priority": 94
     },
     "/chum/products/career-command/llms.txt": {
@@ -2547,8 +2547,8 @@
     },
     "/chum/products/christmas-lights-usa/": {
       "path": "/chum/products/christmas-lights-usa/",
-      "content_sha256": "508bd995cf0a7884d9957ac086fc96125fc162e07e87eecb9cd4feae2a062e04",
-      "last_changed": "2026-10-01T04:57:43.336Z",
+      "content_sha256": "82f216619baeacff5ad42ab7c7f8da18372a8c304eb477e53ae5aa694943ad3b",
+      "last_changed": "2026-10-07T04:15:04.319Z",
       "priority": 94
     },
     "/chum/products/christmas-lights-usa/llms.txt": {
@@ -2571,8 +2571,8 @@
     },
     "/chum/products/chronosport/": {
       "path": "/chum/products/chronosport/",
-      "content_sha256": "7eaf87067941127cb09189e9f28e44e3298cc30f9db713c7ae293c6e89092e2a",
-      "last_changed": "2026-09-28T18:59:42.997Z",
+      "content_sha256": "38c48c7c8dc33295be406e3c6a4b48140a51e385141a1b84bed502ab00c728d6",
+      "last_changed": "2026-10-07T04:15:04.319Z",
       "priority": 94
     },
     "/chum/products/chronosport/llms.txt": {
@@ -2595,8 +2595,8 @@
     },
     "/chum/products/coda-y-codigo/": {
       "path": "/chum/products/coda-y-codigo/",
-      "content_sha256": "ae2d5ed0c48c2d629a93e074dff99bbd95a7c3df20c7e81c4085e8f273c17a4f",
-      "last_changed": "2026-10-01T04:57:43.336Z",
+      "content_sha256": "d672b833eee765143963021b63f8036d8b9ad3ee9c0eefab543c24affbb9b78e",
+      "last_changed": "2026-10-07T04:15:04.319Z",
       "priority": 94
     },
     "/chum/products/coda-y-codigo/llms.txt": {
@@ -2619,8 +2619,8 @@
     },
     "/chum/products/contractor-cloud/": {
       "path": "/chum/products/contractor-cloud/",
-      "content_sha256": "97a43746ab1d3d6f3eb8b27852436d96b77fa837728decec1631d03eccc6930d",
-      "last_changed": "2026-10-01T04:57:43.336Z",
+      "content_sha256": "829ce9796ba44cf61c1d1ca0af2030d484cb58609b8975d08a61a742adb8aade",
+      "last_changed": "2026-10-07T04:15:04.319Z",
       "priority": 94
     },
     "/chum/products/contractor-cloud/llms.txt": {
@@ -2643,8 +2643,8 @@
     },
     "/chum/products/daytrade-lens/": {
       "path": "/chum/products/daytrade-lens/",
-      "content_sha256": "f69833dd42db9dbd79f156f1873750272d3c7c3b2257cdd3fdc417fc8e88a550",
-      "last_changed": "2026-09-28T18:59:42.997Z",
+      "content_sha256": "5d9546a3bbfe7f1ec3b984f24254bc599764eaeb700835bbb6c7156e8ec5e190",
+      "last_changed": "2026-10-07T04:15:04.319Z",
       "priority": 94
     },
     "/chum/products/daytrade-lens/llms.txt": {
@@ -2667,8 +2667,8 @@
     },
     "/chum/products/deck-capital-fit/": {
       "path": "/chum/products/deck-capital-fit/",
-      "content_sha256": "5f70ad41fc85819875a8820a40f857f952d27d908700b9e313be73f1643627d5",
-      "last_changed": "2026-10-01T04:57:43.336Z",
+      "content_sha256": "d04862be020c62bd07b02392dc4933c48dc4ffdbcdde60a1ac16864636a49d21",
+      "last_changed": "2026-10-07T04:15:04.319Z",
       "priority": 154
     },
     "/chum/products/deck-capital-fit/llms.txt": {
@@ -2691,8 +2691,8 @@
     },
     "/chum/products/earthworks-autonomy/": {
       "path": "/chum/products/earthworks-autonomy/",
-      "content_sha256": "12e4217b61b05c88855c70848eef35676296b0a60c14a94015854ca0bae2733a",
-      "last_changed": "2026-10-07T02:56:26.782Z",
+      "content_sha256": "606ca43a1b26d52294ae9c2a7973d0e74b0ab3e0b02682215fd2ff51080ae360",
+      "last_changed": "2026-10-07T04:15:04.319Z",
       "priority": 94
     },
     "/chum/products/earthworks-autonomy/llms.txt": {
@@ -2715,8 +2715,8 @@
     },
     "/chum/products/ecoledger/": {
       "path": "/chum/products/ecoledger/",
-      "content_sha256": "8b97635c592c5e745c2420db35047a15ef6ef9ed061ee85693e793cba8494ca4",
-      "last_changed": "2026-10-01T04:57:43.336Z",
+      "content_sha256": "3374aa4e4b75ca98ff2955e142be3bf3405466b647cd289fd2fb916385194f5d",
+      "last_changed": "2026-10-07T04:15:04.319Z",
       "priority": 94
     },
     "/chum/products/ecoledger/llms.txt": {
@@ -2739,8 +2739,8 @@
     },
     "/chum/products/eps-estimate-engine/": {
       "path": "/chum/products/eps-estimate-engine/",
-      "content_sha256": "d0f6ab796d8291783b2024322b5530e01f180fc6a619ee491b05efd31dc8e3d1",
-      "last_changed": "2026-10-06T10:17:19.933Z",
+      "content_sha256": "3bd267087c7f3a61870f8f41fb48d724fafabd4aef1f64767e4ce2f0dc6fe0bb",
+      "last_changed": "2026-10-07T04:15:04.319Z",
       "priority": 94
     },
     "/chum/products/eps-estimate-engine/llms.txt": {
@@ -2763,8 +2763,8 @@
     },
     "/chum/products/eventwave/": {
       "path": "/chum/products/eventwave/",
-      "content_sha256": "d978054a5b3440a0c3afcaf12d47db6531737e26d579f00691474ce8eec0ba0a",
-      "last_changed": "2026-10-01T04:57:43.336Z",
+      "content_sha256": "64073d029a0decf5fd977f3f88791bd7fc191ab44bab2f9f4f11b4f8b87b11b8",
+      "last_changed": "2026-10-07T04:15:04.319Z",
       "priority": 94
     },
     "/chum/products/eventwave/llms.txt": {
@@ -2787,8 +2787,8 @@
     },
     "/chum/products/evercraft-circles/": {
       "path": "/chum/products/evercraft-circles/",
-      "content_sha256": "8a64a5e65aa2149872347678e568a99e0b38d817b42ad6f1a14ca11870d07bec",
-      "last_changed": "2026-09-28T18:59:42.997Z",
+      "content_sha256": "accb4f84c610df80b0bdae75892094bf26d7be89979bb3dd69cfd5abc004b151",
+      "last_changed": "2026-10-07T04:15:04.319Z",
       "priority": 94
     },
     "/chum/products/evercraft-circles/llms.txt": {
@@ -2811,8 +2811,8 @@
     },
     "/chum/products/evercraft-clip/": {
       "path": "/chum/products/evercraft-clip/",
-      "content_sha256": "a25d0b5d1fc77228f44f953afcb16740a4e105e79e438c8d7c4fd21d008ce445",
-      "last_changed": "2026-10-01T04:57:43.336Z",
+      "content_sha256": "212bf0d68b9368986e9746d36f21a61ff4c06d684e9ceaaec2637444adf52c16",
+      "last_changed": "2026-10-07T04:15:04.319Z",
       "priority": 94
     },
     "/chum/products/evercraft-clip/llms.txt": {
@@ -2835,8 +2835,8 @@
     },
     "/chum/products/evercraft-containment/": {
       "path": "/chum/products/evercraft-containment/",
-      "content_sha256": "c6fcf9697575391d2f5e566a0381b8f0e6dd9fa000c6b106ef02d574427d3940",
-      "last_changed": "2026-10-01T04:57:43.336Z",
+      "content_sha256": "cc0b95d932567ad46b35c3cdf05c1d9b860a39c6cd2fa45cf8ca60eb6950bd47",
+      "last_changed": "2026-10-07T04:15:04.319Z",
       "priority": 154
     },
     "/chum/products/evercraft-containment/llms.txt": {
@@ -2859,8 +2859,8 @@
     },
     "/chum/products/evercraft-cosmos-atlas/": {
       "path": "/chum/products/evercraft-cosmos-atlas/",
-      "content_sha256": "0b576046987a197827fa8391ad1bf59c9c746a6e308ab13e663d79e83e5f8f1b",
-      "last_changed": "2026-10-01T04:57:43.336Z",
+      "content_sha256": "b89b363f3657937b5680e9f65f4529b712f36aec83826bb1041b3158cea20783",
+      "last_changed": "2026-10-07T04:15:04.319Z",
       "priority": 94
     },
     "/chum/products/evercraft-cosmos-atlas/llms.txt": {
@@ -2883,8 +2883,8 @@
     },
     "/chum/products/evercraft-fantasy-intelligence/": {
       "path": "/chum/products/evercraft-fantasy-intelligence/",
-      "content_sha256": "349c2bccdd824980f19e1edf19a810a2f06237ae375146f23af87067deb7bd25",
-      "last_changed": "2026-10-01T04:57:43.336Z",
+      "content_sha256": "2cf6bc1f7add0cdee5227454140d6555c19acedd2f9e1e02eb37df9c0e48a340",
+      "last_changed": "2026-10-07T04:15:04.319Z",
       "priority": 94
     },
     "/chum/products/evercraft-fantasy-intelligence/llms.txt": {
@@ -2907,8 +2907,8 @@
     },
     "/chum/products/evercraft-front-door/": {
       "path": "/chum/products/evercraft-front-door/",
-      "content_sha256": "7dcbb48d69e0f642fcbb6b11373b9b8ab6d584d5907f6d4a300a5f28333d5aa5",
-      "last_changed": "2026-10-01T04:57:43.336Z",
+      "content_sha256": "4a51894342e6032f7e7b9ec40302c372c4df675845be5bd68b1befb1317e7fd8",
+      "last_changed": "2026-10-07T04:15:04.319Z",
       "priority": 94
     },
     "/chum/products/evercraft-front-door/llms.txt": {
@@ -2931,8 +2931,8 @@
     },
     "/chum/products/evercraft-global-health-atlas/": {
       "path": "/chum/products/evercraft-global-health-atlas/",
-      "content_sha256": "b1164c42cf17b91be069a46249a9f75384460576fd703baf95cc4ff7c5f651e2",
-      "last_changed": "2026-10-01T04:57:43.336Z",
+      "content_sha256": "c4e01929887caf46ee488ed7380ef9ee50be7f00e645677e6ed84e24a2cdcadf",
+      "last_changed": "2026-10-07T04:15:04.319Z",
       "priority": 94
     },
     "/chum/products/evercraft-global-health-atlas/llms.txt": {
@@ -2955,8 +2955,8 @@
     },
     "/chum/products/evercraft-home/": {
       "path": "/chum/products/evercraft-home/",
-      "content_sha256": "d189d515a05f9191fc111652bfc87407c5cb30046f792baaf5d651f3818c1ccb",
-      "last_changed": "2026-09-28T18:59:42.997Z",
+      "content_sha256": "b83588e9aa4d13e9d53e5685f0c2a825d6bba7f059b35f64fefdc7f700f3b052",
+      "last_changed": "2026-10-07T04:15:04.319Z",
       "priority": 94
     },
     "/chum/products/evercraft-home/llms.txt": {
@@ -2979,8 +2979,8 @@
     },
     "/chum/products/evercraft-network/": {
       "path": "/chum/products/evercraft-network/",
-      "content_sha256": "30b43b295d0577a1c5f527f64d4fdc6faeba6dab0164ab29510534f25976b71d",
-      "last_changed": "2026-10-01T04:57:43.336Z",
+      "content_sha256": "0caa0d08bd52a4656f912f1909f2a6bac39a912e9e01b0f7997cd92a2d095ce1",
+      "last_changed": "2026-10-07T04:15:04.319Z",
       "priority": 154
     },
     "/chum/products/evercraft-network/llms.txt": {
@@ -3003,8 +3003,8 @@
     },
     "/chum/products/evercraft-physics-atlas/": {
       "path": "/chum/products/evercraft-physics-atlas/",
-      "content_sha256": "ff14eb0b2a358ec9abf4bc13506338da6cf94c9ce705569e1e4d03ce0b635caa",
-      "last_changed": "2026-10-01T04:57:43.336Z",
+      "content_sha256": "5d9d224473be36e927c73ebaa4839d2f5a7804d186f4f264ee6bf80cdbccf1dc",
+      "last_changed": "2026-10-07T04:15:04.319Z",
       "priority": 94
     },
     "/chum/products/evercraft-physics-atlas/llms.txt": {
@@ -3027,8 +3027,8 @@
     },
     "/chum/products/evercraft-property-services/": {
       "path": "/chum/products/evercraft-property-services/",
-      "content_sha256": "7c34a02fa515b58c6d1fcc0b082d0b66dd5a8cdeb3fb5dd06159209c56edc915",
-      "last_changed": "2026-09-28T18:59:42.997Z",
+      "content_sha256": "36f4ecb814c5a494b21d76b33e79d15671fbcb602c5b24603fcd389f1d39c4c0",
+      "last_changed": "2026-10-07T04:15:04.319Z",
       "priority": 94
     },
     "/chum/products/evercraft-property-services/llms.txt": {
@@ -3051,8 +3051,8 @@
     },
     "/chum/products/evercraft-rewards/": {
       "path": "/chum/products/evercraft-rewards/",
-      "content_sha256": "2bf56ef84de50b57117e4930027a83d2e2ac6cc708b5dc644a14b846441ac24b",
-      "last_changed": "2026-10-01T04:57:43.336Z",
+      "content_sha256": "75bb46f44f658f938b357d756702977adb959f954f09d752f790f664a6785796",
+      "last_changed": "2026-10-07T04:15:04.319Z",
       "priority": 94
     },
     "/chum/products/evercraft-rewards/llms.txt": {
@@ -3075,8 +3075,8 @@
     },
     "/chum/products/evercraft-web/": {
       "path": "/chum/products/evercraft-web/",
-      "content_sha256": "ef36c52a7780bb551549fc5e78b70436ae6b14c95c24cbf1bbf7e852490d1bdc",
-      "last_changed": "2026-10-01T04:57:43.336Z",
+      "content_sha256": "bfeeb1eda5e54737e10a65682cb877abf526f97318ebdf12971de1a37b787de0",
+      "last_changed": "2026-10-07T04:15:04.319Z",
       "priority": 94
     },
     "/chum/products/evercraft-web/llms.txt": {
@@ -3099,8 +3099,8 @@
     },
     "/chum/products/evercraft-wildlife-atlas/": {
       "path": "/chum/products/evercraft-wildlife-atlas/",
-      "content_sha256": "2700813c187cbf60dcef7e30f5c5b2083db61eac78deab631d474351c4872ae0",
-      "last_changed": "2026-10-01T04:57:43.336Z",
+      "content_sha256": "c26dca0f4aa55ad40fcb34981064fac9c43d21b8d0538d3e049eb6394d57496c",
+      "last_changed": "2026-10-07T04:15:04.319Z",
       "priority": 94
     },
     "/chum/products/evercraft-wildlife-atlas/llms.txt": {
@@ -3123,8 +3123,8 @@
     },
     "/chum/products/evermaps/": {
       "path": "/chum/products/evermaps/",
-      "content_sha256": "d63f15a79914a8e2d04b1f80e6e0a0fb7866703d4943efee69620e93b460a146",
-      "last_changed": "2026-10-01T04:57:43.336Z",
+      "content_sha256": "4975c618d44d7e5b5ad3988f3375b9d36ab96282b59419ce2b20a4ef6389ce0b",
+      "last_changed": "2026-10-07T04:15:04.319Z",
       "priority": 94
     },
     "/chum/products/evermaps/llms.txt": {
@@ -3147,8 +3147,8 @@
     },
     "/chum/products/evernest/": {
       "path": "/chum/products/evernest/",
-      "content_sha256": "449035bf7256a1ad97b06223f6943d8a99f41b70fd638ac184bc6f9afa145e69",
-      "last_changed": "2026-10-01T04:57:43.336Z",
+      "content_sha256": "0404cd71d10d44d1bb7db8d3494a5c910d9cd70395f15f07ee4d1f47981338de",
+      "last_changed": "2026-10-07T04:15:04.319Z",
       "priority": 94
     },
     "/chum/products/evernest/llms.txt": {
@@ -3171,8 +3171,8 @@
     },
     "/chum/products/evernest-atlas/": {
       "path": "/chum/products/evernest-atlas/",
-      "content_sha256": "5adec386f6773691aa17242f5a931663384aa87435873db4434932c49e780e87",
-      "last_changed": "2026-10-01T04:57:43.336Z",
+      "content_sha256": "766e5264b2ba36d86fc96695a464c059769daf787143a28da0174c37922a9fb3",
+      "last_changed": "2026-10-07T04:15:04.319Z",
       "priority": 94
     },
     "/chum/products/evernest-atlas/llms.txt": {
@@ -3195,8 +3195,8 @@
     },
     "/chum/products/everystage/": {
       "path": "/chum/products/everystage/",
-      "content_sha256": "df1838ea0a9b5d942d800cd796848231b0ab9c37dd8effc7c7bb475cd1077ceb",
-      "last_changed": "2026-10-01T04:57:43.336Z",
+      "content_sha256": "7268a377778d31c895ed27c0043f007ce7b402abe01e7072d747dcde23e5a048",
+      "last_changed": "2026-10-07T04:15:04.319Z",
       "priority": 94
     },
     "/chum/products/everystage/llms.txt": {
@@ -3219,8 +3219,8 @@
     },
     "/chum/products/faie/": {
       "path": "/chum/products/faie/",
-      "content_sha256": "6bcbf6ed21f66b43a8dfce3f61fafa706de85b0fd124eb49f892f572b47ab42f",
-      "last_changed": "2026-10-06T20:36:30.736Z",
+      "content_sha256": "45383ede7a37ad3ef7717a004e0f22749df0603fda5d8e3b9c2c1bdf571a07b3",
+      "last_changed": "2026-10-07T04:15:04.319Z",
       "priority": 94
     },
     "/chum/products/faie/llms.txt": {
@@ -3241,10 +3241,34 @@
       "last_changed": "2026-10-06T20:36:30.736Z",
       "priority": 94
     },
+    "/chum/products/fallen-sessions/": {
+      "path": "/chum/products/fallen-sessions/",
+      "content_sha256": "861a203914cf8373f7ed559a3bb71d4164389d42094ebd22a5e9faad77c02c99",
+      "last_changed": "2026-10-07T04:15:04.319Z",
+      "priority": 94
+    },
+    "/chum/products/fallen-sessions/llms.txt": {
+      "path": "/chum/products/fallen-sessions/llms.txt",
+      "content_sha256": "5f9a1aeacccac14e161a9d13a4a9b9f26d2c3400dbd74b462b34c85943764771",
+      "last_changed": "2026-10-07T04:15:04.319Z",
+      "priority": 94
+    },
+    "/chum/products/fallen-sessions/ai-discovery.json": {
+      "path": "/chum/products/fallen-sessions/ai-discovery.json",
+      "content_sha256": "2e7ad7e80b84b26ed736ef6a68403747fc5f960c2f550a09914d824515e6e053",
+      "last_changed": "2026-10-07T04:15:04.319Z",
+      "priority": 94
+    },
+    "/chum/products/fallen-sessions/ai-conformance.json": {
+      "path": "/chum/products/fallen-sessions/ai-conformance.json",
+      "content_sha256": "ddeeb6346280840e9a1f22cb869390d33b6629fc0116a5c21de261999ebd61be",
+      "last_changed": "2026-10-07T04:15:04.319Z",
+      "priority": 94
+    },
     "/chum/products/findmypart/": {
       "path": "/chum/products/findmypart/",
-      "content_sha256": "eb29e8ef6b085ca93f0a7a535cad6039d2b840563a8d1df5746dd1a56e6ac445",
-      "last_changed": "2026-10-01T04:57:43.336Z",
+      "content_sha256": "42b02907233c29d1e68ca85aeec7c0cb9a3dbb9bcb2db0082c9588df80576b2c",
+      "last_changed": "2026-10-07T04:15:04.319Z",
       "priority": 154
     },
     "/chum/products/findmypart/llms.txt": {
@@ -3267,8 +3291,8 @@
     },
     "/chum/products/forensic-record/": {
       "path": "/chum/products/forensic-record/",
-      "content_sha256": "811f386af156c5b8ab426ab6bd76cf70b8a7c288e65f7c5532c96f4a808154c9",
-      "last_changed": "2026-09-28T18:59:42.997Z",
+      "content_sha256": "fd63424a1b9eb2526d86b44bdfe1d0edcde9d0d21ca20bcad75fc2b0072c5554",
+      "last_changed": "2026-10-07T04:15:04.319Z",
       "priority": 94
     },
     "/chum/products/forensic-record/llms.txt": {
@@ -3291,8 +3315,8 @@
     },
     "/chum/products/forensiscope/": {
       "path": "/chum/products/forensiscope/",
-      "content_sha256": "fe1f6216570d23e5abcb8033cea47d8eb55057d1ccad9efef01d6c4a916406f2",
-      "last_changed": "2026-10-01T04:57:43.336Z",
+      "content_sha256": "ea997068d26fe14749307501acff9ebbd3cf32629ff9edcf740e9a32b8e134a9",
+      "last_changed": "2026-10-07T04:15:04.319Z",
       "priority": 154
     },
     "/chum/products/forensiscope/llms.txt": {
@@ -3327,8 +3351,8 @@
     },
     "/chum/products/global-energy-atlas/": {
       "path": "/chum/products/global-energy-atlas/",
-      "content_sha256": "0999ae01708290b8579d490968d2418a582ec490f9e27086d3b54f2be409da03",
-      "last_changed": "2026-10-01T04:57:43.336Z",
+      "content_sha256": "23ca16bfdb845cde501682825ed42d3d6e03c70c1bd787bd32a6e6099adcfa82",
+      "last_changed": "2026-10-07T04:15:04.319Z",
       "priority": 94
     },
     "/chum/products/global-energy-atlas/llms.txt": {
@@ -3351,8 +3375,8 @@
     },
     "/chum/products/globalstat/": {
       "path": "/chum/products/globalstat/",
-      "content_sha256": "3a2123452551303b0b9cac36a4a5ed71d162cd09478ad5edddf99803681830e8",
-      "last_changed": "2026-10-01T04:57:43.336Z",
+      "content_sha256": "b85c0a558aa0bfa04b1846b992057d8338ab5531275ed94d94aa49e7c55396e9",
+      "last_changed": "2026-10-07T04:15:04.319Z",
       "priority": 94
     },
     "/chum/products/globalstat/llms.txt": {
@@ -3375,8 +3399,8 @@
     },
     "/chum/products/guardian/": {
       "path": "/chum/products/guardian/",
-      "content_sha256": "d7a9e97d8400aa7fdd325ed3df6366719f679e7fe1effa1937a6f0cc7909d0ce",
-      "last_changed": "2026-10-01T04:57:43.336Z",
+      "content_sha256": "013d61d640ecfe1236b8f81acd4e6206ab1cdbfbe6986d395c43231ed245fb3e",
+      "last_changed": "2026-10-07T04:15:04.319Z",
       "priority": 94
     },
     "/chum/products/guardian/llms.txt": {
@@ -3399,8 +3423,8 @@
     },
     "/chum/products/ibmi-rescue/": {
       "path": "/chum/products/ibmi-rescue/",
-      "content_sha256": "dc63eabfed2059562484cc65f568279bd9cc0bea56e6d2858c5ae5962f55d97d",
-      "last_changed": "2026-10-01T04:57:43.336Z",
+      "content_sha256": "bc7b13df30cb842bf0f77bece9839ce7d2daec648b531400461d3dc4cf84d597",
+      "last_changed": "2026-10-07T04:15:04.319Z",
       "priority": 94
     },
     "/chum/products/ibmi-rescue/llms.txt": {
@@ -3423,8 +3447,8 @@
     },
     "/chum/products/infinite-classroom/": {
       "path": "/chum/products/infinite-classroom/",
-      "content_sha256": "fd636fb62b63f0327f5e795136f6a7974e121a9d70c3a047d70dd98cb518d1c1",
-      "last_changed": "2026-10-01T04:57:43.336Z",
+      "content_sha256": "dc9891a4f3b0be6a8bb3112d06b0b7df6a1c5df64e633f6d63de1695828f54a8",
+      "last_changed": "2026-10-07T04:15:04.319Z",
       "priority": 94
     },
     "/chum/products/infinite-classroom/llms.txt": {
@@ -3447,8 +3471,8 @@
     },
     "/chum/products/legacy-rescue-lab/": {
       "path": "/chum/products/legacy-rescue-lab/",
-      "content_sha256": "418563d3fdefd50443a2da7ccfe3daa0b46d6fbf31b2b4aa00bd3ba1f0cc9ad5",
-      "last_changed": "2026-10-01T04:57:43.336Z",
+      "content_sha256": "b923e6cced6456559f974c5dc345273ee708212f54faa87f9a874dafa4a1bfae",
+      "last_changed": "2026-10-07T04:15:04.319Z",
       "priority": 94
     },
     "/chum/products/legacy-rescue-lab/llms.txt": {
@@ -3537,8 +3561,8 @@
     },
     "/chum/products/little-red-book-export-qa/": {
       "path": "/chum/products/little-red-book-export-qa/",
-      "content_sha256": "64e5c7cff2fe9e891fc2981f454fb8877591b426d2b9ca4064dadc273df084ce",
-      "last_changed": "2026-10-01T04:57:43.336Z",
+      "content_sha256": "3020b9ba62545d269d47488a971405231a9355085f73856ac50d915dc714f7b2",
+      "last_changed": "2026-10-07T04:15:04.319Z",
       "priority": 94
     },
     "/chum/products/little-red-book-export-qa/llms.txt": {
@@ -3561,8 +3585,8 @@
     },
     "/chum/products/opportunity-fabric/": {
       "path": "/chum/products/opportunity-fabric/",
-      "content_sha256": "b9cd3a8f8ce29c4fac87fb0979df818317273348a3ab253a03b8430070a5b35e",
-      "last_changed": "2026-10-06T10:17:19.933Z",
+      "content_sha256": "d75fd4a391d5f2b9906ef8e36f1e2b98dfd1d457e6efb011c05491b886a6e3a7",
+      "last_changed": "2026-10-07T04:15:04.319Z",
       "priority": 94
     },
     "/chum/products/opportunity-fabric/llms.txt": {
@@ -3585,8 +3609,8 @@
     },
     "/chum/products/payflow/": {
       "path": "/chum/products/payflow/",
-      "content_sha256": "9fbdf05fd8ebf8d51a515abbff26665255ca96b4928d11d6e9b7788dae62a819",
-      "last_changed": "2026-10-01T04:57:43.336Z",
+      "content_sha256": "52a617a3de030c1924dd0eeaff6c699a63fdb5c984c024076299ba212865258f",
+      "last_changed": "2026-10-07T04:15:04.319Z",
       "priority": 94
     },
     "/chum/products/payflow/llms.txt": {
@@ -3609,8 +3633,8 @@
     },
     "/chum/products/raven-nexus/": {
       "path": "/chum/products/raven-nexus/",
-      "content_sha256": "aa3de606a7ec6562a65748346fa1fe0ddded3599b070bb21dc2a05f926ed60ca",
-      "last_changed": "2026-10-06T10:17:19.933Z",
+      "content_sha256": "3783053dc4aa5c11c7d7bbc13c710bafd92ffcf505ef928539a4cc9263ee5d49",
+      "last_changed": "2026-10-07T04:15:04.319Z",
       "priority": 94
     },
     "/chum/products/raven-nexus/llms.txt": {
@@ -3633,8 +3657,8 @@
     },
     "/chum/products/revenue-war-map/": {
       "path": "/chum/products/revenue-war-map/",
-      "content_sha256": "90243597b4a2458831a34e2faef4367b6949001905dadae43fa4b6422b8f04ea",
-      "last_changed": "2026-10-01T04:57:43.336Z",
+      "content_sha256": "089b16987122378670ca7b7e49944050e8c8143d93dcbd951b39ef8c891bdf3b",
+      "last_changed": "2026-10-07T04:15:04.319Z",
       "priority": 94
     },
     "/chum/products/revenue-war-map/llms.txt": {
@@ -3657,8 +3681,8 @@
     },
     "/chum/products/roasted/": {
       "path": "/chum/products/roasted/",
-      "content_sha256": "bb4232b795dcca3a748aa050cde57df6253d3cc3b7c4a120d40f86b6ed388887",
-      "last_changed": "2026-10-01T04:57:43.336Z",
+      "content_sha256": "5de86088fedd2ea136588f3075c68a0380972e2ee27897ee2c7638c808ce01dc",
+      "last_changed": "2026-10-07T04:15:04.319Z",
       "priority": 94
     },
     "/chum/products/roasted/llms.txt": {
@@ -3681,8 +3705,8 @@
     },
     "/chum/products/seasonally/": {
       "path": "/chum/products/seasonally/",
-      "content_sha256": "222336a76b0edc659e61cfa894265ce9f40aa3ff3f9d8c34284c1789525bca6f",
-      "last_changed": "2026-09-28T18:59:42.997Z",
+      "content_sha256": "0628b4de0596b8aa95d2ea5a938c6d77a3e0dc81cd6f241ea0e58f3af25d5c4e",
+      "last_changed": "2026-10-07T04:15:04.319Z",
       "priority": 94
     },
     "/chum/products/seasonally/llms.txt": {
@@ -3705,8 +3729,8 @@
     },
     "/chum/products/second-stitch/": {
       "path": "/chum/products/second-stitch/",
-      "content_sha256": "08d0ade1ad65b8ab2e82680c276f0db830b28534a5bddca0d34400e2c248cb50",
-      "last_changed": "2026-10-01T04:57:43.336Z",
+      "content_sha256": "cf6ca2166eec64b6333b5ebdb631118525ca466b807996dc719222462cf53957",
+      "last_changed": "2026-10-07T04:15:04.319Z",
       "priority": 94
     },
     "/chum/products/second-stitch/llms.txt": {
@@ -3729,8 +3753,8 @@
     },
     "/chum/products/skyops-parking/": {
       "path": "/chum/products/skyops-parking/",
-      "content_sha256": "df1a590ada421a883456fea3f623d1781a2a1511da74d9205ad55e7b6924fd90",
-      "last_changed": "2026-10-01T04:57:43.336Z",
+      "content_sha256": "357f99ed06ddca2ebfb5637c6c0e9191d2338c3f4692816e6fbc031820e1c554",
+      "last_changed": "2026-10-07T04:15:04.319Z",
       "priority": 94
     },
     "/chum/products/skyops-parking/llms.txt": {
@@ -3753,8 +3777,8 @@
     },
     "/chum/products/space-dudz/": {
       "path": "/chum/products/space-dudz/",
-      "content_sha256": "8b231eeb03bd68ea078e87178f32aa98eef707ccdf872f0a31b97c87ffc53856",
-      "last_changed": "2026-10-01T04:57:43.336Z",
+      "content_sha256": "14abc06ff6853aa55ddb48b93f9eac17fbe6aabb904441690e7f25c466172b61",
+      "last_changed": "2026-10-07T04:15:04.319Z",
       "priority": 94
     },
     "/chum/products/space-dudz/llms.txt": {
@@ -3777,8 +3801,8 @@
     },
     "/chum/products/systemia-atlas-freight/": {
       "path": "/chum/products/systemia-atlas-freight/",
-      "content_sha256": "3fd625a58e538042e4ac2dd4cbebb83c8557d02ecbbbbadbfbb54a75f5c32211",
-      "last_changed": "2026-10-01T04:57:43.336Z",
+      "content_sha256": "c7cf80641ce1f4d7a0ca673e4dcc8b790cce42e7f6d32210f1050260876f780d",
+      "last_changed": "2026-10-07T04:15:04.319Z",
       "priority": 94
     },
     "/chum/products/systemia-atlas-freight/llms.txt": {
@@ -3801,8 +3825,8 @@
     },
     "/chum/products/systemia-decision-lab/": {
       "path": "/chum/products/systemia-decision-lab/",
-      "content_sha256": "e32922033657563c40f0f409f7e8169d39d5b2b1d5aa136d9f98a061a8c5f8f4",
-      "last_changed": "2026-10-01T04:57:43.336Z",
+      "content_sha256": "90e0272875b79de140cfb5bdbff77cd01cc672269a6b869babf6eae48474f9af",
+      "last_changed": "2026-10-07T04:15:04.319Z",
       "priority": 94
     },
     "/chum/products/systemia-decision-lab/llms.txt": {
@@ -3825,8 +3849,8 @@
     },
     "/chum/products/systemia-field-library/": {
       "path": "/chum/products/systemia-field-library/",
-      "content_sha256": "0503e677adf48c5c933e9a382f2fb1fb64b0b9b54289e47fa31c0067c316c86b",
-      "last_changed": "2026-10-01T04:57:43.336Z",
+      "content_sha256": "574f2a321c997431b47096987a1d6c307585f52bfa9fada5e7c5daa4936d164a",
+      "last_changed": "2026-10-07T04:15:04.319Z",
       "priority": 94
     },
     "/chum/products/systemia-field-library/llms.txt": {
@@ -3849,8 +3873,8 @@
     },
     "/chum/products/systemia-portfolio-sentinel/": {
       "path": "/chum/products/systemia-portfolio-sentinel/",
-      "content_sha256": "6ae4efae5f4211bacf38cf5d806c33e1fc933e90b3effa0964a0b68f92ba72e7",
-      "last_changed": "2026-10-01T04:57:43.336Z",
+      "content_sha256": "9582d47640364cae6dc7b108f1bbfd59fca7defa4322775058a51504f779de7a",
+      "last_changed": "2026-10-07T04:15:04.319Z",
       "priority": 94
     },
     "/chum/products/systemia-portfolio-sentinel/llms.txt": {
@@ -3873,8 +3897,8 @@
     },
     "/chum/products/systemia-radar/": {
       "path": "/chum/products/systemia-radar/",
-      "content_sha256": "19abc21f00e71115c53bd77cc0d11f7ab06de6d644c4979ce8d65741b5670bdd",
-      "last_changed": "2026-10-01T04:57:43.336Z",
+      "content_sha256": "02a234935a4ca35c23eb1b71633e2ecd4fd12643c531725d34ff7bc25f18d9fd",
+      "last_changed": "2026-10-07T04:15:04.319Z",
       "priority": 94
     },
     "/chum/products/systemia-radar/llms.txt": {
@@ -3897,8 +3921,8 @@
     },
     "/chum/products/systemia-remote-ops/": {
       "path": "/chum/products/systemia-remote-ops/",
-      "content_sha256": "7063220cf14c74a0e0734248f6db47d13eac9f04c0594edd9d49608981651a72",
-      "last_changed": "2026-09-28T18:59:42.997Z",
+      "content_sha256": "0036406a28b80e8df2ac8518a218f0d3cdc0b3373240853f96693cda9d74fbaa",
+      "last_changed": "2026-10-07T04:15:04.319Z",
       "priority": 94
     },
     "/chum/products/systemia-remote-ops/llms.txt": {
@@ -3921,8 +3945,8 @@
     },
     "/chum/products/systemia-university/": {
       "path": "/chum/products/systemia-university/",
-      "content_sha256": "aafb795cdf219cbdb484316e0e80b3dc699a9c4db61cf9cde3f5fec98aba039b",
-      "last_changed": "2026-10-01T04:57:43.336Z",
+      "content_sha256": "d34e304bb395421e8c3b2884bc97733b973628384f5fb9af572b17453a806caf",
+      "last_changed": "2026-10-07T04:15:04.319Z",
       "priority": 94
     },
     "/chum/products/systemia-university/llms.txt": {
@@ -3945,8 +3969,8 @@
     },
     "/chum/products/systemia-website-audit/": {
       "path": "/chum/products/systemia-website-audit/",
-      "content_sha256": "f8e56cc745838ecfbd6b7a47c3fdd2fc6ca08b848c166f56160f81b465d36c63",
-      "last_changed": "2026-10-01T04:57:43.336Z",
+      "content_sha256": "d22f58fdc211da33c42d228244c73ed115d47bbc409a9e8efdb362e48b7ea68b",
+      "last_changed": "2026-10-07T04:15:04.319Z",
       "priority": 94
     },
     "/chum/products/systemia-website-audit/llms.txt": {
@@ -3969,8 +3993,8 @@
     },
     "/chum/products/talent-atlas/": {
       "path": "/chum/products/talent-atlas/",
-      "content_sha256": "cb4801d39b22acc699d2715d409a7397c245ed24c588ee80eec1acff375279b0",
-      "last_changed": "2026-10-01T04:57:43.336Z",
+      "content_sha256": "cb8f6e50b61f5bbd8b913e573d08c97e54823cdd5fbe5ab39744fdf63bcd26d3",
+      "last_changed": "2026-10-07T04:15:04.319Z",
       "priority": 94
     },
     "/chum/products/talent-atlas/llms.txt": {
@@ -3993,8 +4017,8 @@
     },
     "/chum/products/thoughtdrop/": {
       "path": "/chum/products/thoughtdrop/",
-      "content_sha256": "ff6c2b4bf3a973a7dd1754c661bcfc269913010bbed1bfe30bdafc667298d548",
-      "last_changed": "2026-09-28T18:59:42.997Z",
+      "content_sha256": "e7d627de8d9c236ff5fb54aa6bef9011831099a9ed46cf04909ea0ab7b340cc6",
+      "last_changed": "2026-10-07T04:15:04.319Z",
       "priority": 94
     },
     "/chum/products/thoughtdrop/llms.txt": {
@@ -4017,8 +4041,8 @@
     },
     "/chum/products/towi-research/": {
       "path": "/chum/products/towi-research/",
-      "content_sha256": "7b1d1e667c7632bdc1ed2ade996f140616af185a8e996ae61a3d3c4461a62e69",
-      "last_changed": "2026-10-01T04:57:43.336Z",
+      "content_sha256": "c48aa2a91442bebac3f5f86d29ec92b989aaefd54f170c1e3e734ee3d192680e",
+      "last_changed": "2026-10-07T04:15:04.319Z",
       "priority": 94
     },
     "/chum/products/towi-research/llms.txt": {
@@ -4041,8 +4065,8 @@
     },
     "/chum/products/website-launch/": {
       "path": "/chum/products/website-launch/",
-      "content_sha256": "f3a07585110a85e0a96d57f954ffbe0d89db8fdc76da75a808e8b869630adeda",
-      "last_changed": "2026-10-01T04:57:43.336Z",
+      "content_sha256": "7f36003bda05ee92b2bbc608c917e7d6ca307d0f8fbcdd839a2c2680351ac1c8",
+      "last_changed": "2026-10-07T04:15:04.319Z",
       "priority": 94
     },
     "/chum/products/website-launch/llms.txt": {
@@ -4692,6 +4716,18 @@
       "content_sha256": "31f275c59fccdff5d1310a1bec0c968d01ff32aca1273b07e34accca01c7db23",
       "last_changed": "2026-10-06T16:42:20.155Z",
       "priority": 160
+    },
+    "/chum/answers/doors/ai-native-music-creation-environment-5e907a6bb3/": {
+      "path": "/chum/answers/doors/ai-native-music-creation-environment-5e907a6bb3/",
+      "content_sha256": "edd4f53dc12096ec88f3c33a6b0b796674aa78bf58cab0d22c13f9ee86d74803",
+      "last_changed": "2026-10-07T04:15:04.319Z",
+      "priority": 100
+    },
+    "/chum/answers/doors/ai-native-music-creation-environment-5e907a6bb3.json": {
+      "path": "/chum/answers/doors/ai-native-music-creation-environment-5e907a6bb3.json",
+      "content_sha256": "6146caae921abe8404767fd867ea53857f61b1d46425c688f61c9376eedda074",
+      "last_changed": "2026-10-07T04:15:04.319Z",
+      "priority": 100
     },
     "/chum/answers/doors/ai-product-portfolio-watchdog-aa813adcbd/": {
       "path": "/chum/answers/doors/ai-product-portfolio-watchdog-aa813adcbd/",
@@ -6217,6 +6253,18 @@
       "last_changed": "2026-10-01T05:00:27.354Z",
       "priority": 100
     },
+    "/chum/answers/doors/clip-based-music-creation-and-live-scene-launching-282b8c4128/": {
+      "path": "/chum/answers/doors/clip-based-music-creation-and-live-scene-launching-282b8c4128/",
+      "content_sha256": "dec4c66795bc75e965cfe0ce90d6a44e60fc51730e0bf971b61282379b2a4a4b",
+      "last_changed": "2026-10-07T04:15:04.319Z",
+      "priority": 100
+    },
+    "/chum/answers/doors/clip-based-music-creation-and-live-scene-launching-282b8c4128.json": {
+      "path": "/chum/answers/doors/clip-based-music-creation-and-live-scene-launching-282b8c4128.json",
+      "content_sha256": "945500adc849ac6c891bd9ada6c264ece397dce798663616217b7957128cf245",
+      "last_changed": "2026-10-07T04:15:04.319Z",
+      "priority": 100
+    },
     "/chum/answers/doors/cloud-browser-ade63fb87f/": {
       "path": "/chum/answers/doors/cloud-browser-ade63fb87f/",
       "content_sha256": "5c307d6d2e4993a25e6d63a520edea26faa734a19d436d1d6dd43bfe22ec0a54",
@@ -6623,6 +6671,18 @@
       "path": "/chum/answers/doors/compare-verified-worldstate-before-and-after-an-event-b224712e8d.json",
       "content_sha256": "8a0592b500848f87181556649f9f11f53ea95212a4e522b9c5fbf17ebf30c905",
       "last_changed": "2026-10-02T17:01:08.152Z",
+      "priority": 100
+    },
+    "/chum/answers/doors/compose-music-with-clips-scenes-piano-roll-automation-and-recording-cda8c251e4/": {
+      "path": "/chum/answers/doors/compose-music-with-clips-scenes-piano-roll-automation-and-recording-cda8c251e4/",
+      "content_sha256": "9ecd6be86799bdb42735fcdfe53004ee8ea655db606f8124dc9f9164568bcbee",
+      "last_changed": "2026-10-07T04:15:04.319Z",
+      "priority": 100
+    },
+    "/chum/answers/doors/compose-music-with-clips-scenes-piano-roll-automation-and-recording-cda8c251e4.json": {
+      "path": "/chum/answers/doors/compose-music-with-clips-scenes-piano-roll-automation-and-recording-cda8c251e4.json",
+      "content_sha256": "b86edac05815799c829b0343ac40271662e100aba68fafa335776874665b0075",
+      "last_changed": "2026-10-07T04:15:04.319Z",
       "priority": 100
     },
     "/chum/answers/doors/connect-my-business-systems-without-replacing-everything-c22cd044c4/": {
@@ -11089,6 +11149,18 @@
       "last_changed": "2026-10-01T05:00:27.354Z",
       "priority": 100
     },
+    "/chum/answers/doors/local-first-music-recording-and-midi-workflow-a3f9976194/": {
+      "path": "/chum/answers/doors/local-first-music-recording-and-midi-workflow-a3f9976194/",
+      "content_sha256": "5e2d58cdabc9d9c7fb425e7a99600c400b4c23f4374e9047d1bc76529d7b7e33",
+      "last_changed": "2026-10-07T04:15:04.319Z",
+      "priority": 100
+    },
+    "/chum/answers/doors/local-first-music-recording-and-midi-workflow-a3f9976194.json": {
+      "path": "/chum/answers/doors/local-first-music-recording-and-midi-workflow-a3f9976194.json",
+      "content_sha256": "0673ce3657ac3d11e8d5310656919f9fbf999187956d0703adc6828517328e7f",
+      "last_changed": "2026-10-07T04:15:04.319Z",
+      "priority": 100
+    },
     "/chum/answers/doors/local-rewards-for-supporting-nearby-businesses-e507d240b3/": {
       "path": "/chum/answers/doors/local-rewards-for-supporting-nearby-businesses-e507d240b3/",
       "content_sha256": "b90b595f5f136737d9c50ddf9560e64799bcc2d8997776a41ef9d65ad1b331d5",
@@ -11723,6 +11795,18 @@
       "path": "/chum/answers/doors/multi-url-public-web-fetch-fd424feb3f.json",
       "content_sha256": "47fe12ced9bd2018890efdd6905a20a99310a97de7c429419190b0622b0c451d",
       "last_changed": "2026-10-01T05:00:27.354Z",
+      "priority": 100
+    },
+    "/chum/answers/doors/music-software-where-ai-edits-the-actual-session-graph-fa9d7900e7/": {
+      "path": "/chum/answers/doors/music-software-where-ai-edits-the-actual-session-graph-fa9d7900e7/",
+      "content_sha256": "b3b629609ab5e0c3a648dc9909889a4202e2b73e2d720a408337985c86ba40e3",
+      "last_changed": "2026-10-07T04:15:04.319Z",
+      "priority": 100
+    },
+    "/chum/answers/doors/music-software-where-ai-edits-the-actual-session-graph-fa9d7900e7.json": {
+      "path": "/chum/answers/doors/music-software-where-ai-edits-the-actual-session-graph-fa9d7900e7.json",
+      "content_sha256": "86ee47fc559b0f92bbddb0dbeba60dffeb57152c170feace8248c2feb2dcebaf",
+      "last_changed": "2026-10-07T04:15:04.319Z",
       "priority": 100
     },
     "/chum/answers/doors/my-business-systems-are-scattered-across-too-many-apps-cbf210e370/": {
@@ -12407,6 +12491,18 @@
       "path": "/chum/answers/doors/plot-verified-infrastructure-coverage-0d95c3deea.json",
       "content_sha256": "57388cec7ec1d3f8816d1a4730364dded7d1bde5afcff68a35899f8467fe1c72",
       "last_changed": "2026-10-06T16:42:20.155Z",
+      "priority": 100
+    },
+    "/chum/answers/doors/portable-music-projects-with-provenance-and-edit-receipts-54db926ddf/": {
+      "path": "/chum/answers/doors/portable-music-projects-with-provenance-and-edit-receipts-54db926ddf/",
+      "content_sha256": "309b23fa3cb521be63be74af561a5e44b8606c505332c64bbf917b50963cc332",
+      "last_changed": "2026-10-07T04:15:04.319Z",
+      "priority": 100
+    },
+    "/chum/answers/doors/portable-music-projects-with-provenance-and-edit-receipts-54db926ddf.json": {
+      "path": "/chum/answers/doors/portable-music-projects-with-provenance-and-edit-receipts-54db926ddf.json",
+      "content_sha256": "5bb4a59290d3228d7c45cfc580d13b2811a08ea888a0f730256d4563478ce0d7",
+      "last_changed": "2026-10-07T04:15:04.319Z",
       "priority": 100
     },
     "/chum/answers/doors/practice-answering-common-interview-questions-5885e960c7/": {
@@ -13619,6 +13715,18 @@
       "path": "/chum/answers/doors/revenue-war-map-c2dee983d7.json",
       "content_sha256": "f9454f660f2e7359c5925e3defb7aad47242087dcef44f581d260e3eb0098331",
       "last_changed": "2026-10-02T17:01:08.152Z",
+      "priority": 100
+    },
+    "/chum/answers/doors/reversible-ai-assisted-music-editing-6aed953269/": {
+      "path": "/chum/answers/doors/reversible-ai-assisted-music-editing-6aed953269/",
+      "content_sha256": "80d7fb44f745b1dc1f0edbe290017a303f0d9958aa0ee2262fc335e0e974721d",
+      "last_changed": "2026-10-07T04:15:04.319Z",
+      "priority": 100
+    },
+    "/chum/answers/doors/reversible-ai-assisted-music-editing-6aed953269.json": {
+      "path": "/chum/answers/doors/reversible-ai-assisted-music-editing-6aed953269.json",
+      "content_sha256": "463b67cf48f3d9f8424e57256cea6a70b5322164087d064b2f6bf023c10f7832",
+      "last_changed": "2026-10-07T04:15:04.319Z",
       "priority": 100
     },
     "/chum/answers/doors/review-authorized-surveillance-footage-eac063128d/": {
@@ -17385,14 +17493,14 @@
     },
     "/feed.xml": {
       "path": "/feed.xml",
-      "content_sha256": "01045230423ee309f481282f0ec2a79ddab387008148e45ce9a22b9cfa4d628d",
-      "last_changed": "2026-10-07T02:56:26.782Z",
+      "content_sha256": "5a3d8bb30f3fae0138c7757c7604d001529cf5f8abff8a9ba4d3713bf89c2ff6",
+      "last_changed": "2026-10-07T04:15:04.319Z",
       "priority": 60
     },
     "/feed.json": {
       "path": "/feed.json",
-      "content_sha256": "55ecee938bcfe473ab3c08ee9f1ae128e5d2cbcee49ef509a4deb41a7213e6ca",
-      "last_changed": "2026-10-07T02:56:26.782Z",
+      "content_sha256": "63eb8262ede5125d77de68d45a5372cf182ea05fbe7057124af72393ecb1a2be",
+      "last_changed": "2026-10-07T04:15:04.319Z",
       "priority": 60
     },
     "/opensearch.xml": {
@@ -17403,20 +17511,20 @@
     },
     "/.well-known/evercraft-syndication.json": {
       "path": "/.well-known/evercraft-syndication.json",
-      "content_sha256": "c4fe9f9ea03518197e0928cc163743b66b7c4124505f6b770b55a5e7bdfbc0a6",
-      "last_changed": "2026-10-07T02:56:26.782Z",
+      "content_sha256": "63bf9450a334a76ba8f6e85e5e22dadadbb0f067ca7b0cf80e300ac6e3054673",
+      "last_changed": "2026-10-07T04:15:04.319Z",
       "priority": 84
     },
     "/chum/syndication/": {
       "path": "/chum/syndication/",
-      "content_sha256": "a7a76c553e2041dde9e6ac01a2d3dd1585532fa8851167e4362de3a10f23fbc6",
-      "last_changed": "2026-10-07T02:50:27.524Z",
+      "content_sha256": "5e3de84d70dfdbe3e16023be35fa2db41fd721205fab4ac509b7ce61bd0b199f",
+      "last_changed": "2026-10-07T04:15:04.319Z",
       "priority": 80
     },
     "/chum/syndication/index.json": {
       "path": "/chum/syndication/index.json",
-      "content_sha256": "8b119bfa5518b925eef91025ebb22ee573fc6bf1a97948799ad16173c2d9c599",
-      "last_changed": "2026-10-07T02:56:26.782Z",
+      "content_sha256": "43b587673eeb8429a7fb28e293d1fe461288f1e08afc3377b164128454623bd6",
+      "last_changed": "2026-10-07T04:15:04.319Z",
       "priority": 80
     }
   }

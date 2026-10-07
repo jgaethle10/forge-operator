@@ -36,7 +36,7 @@
     "rule": "Only authorized brand destinations may auto-publish. Dedupe by product content hash and publish material changes, not repeated copies.",
     "current_change_queue": "/chum/syndication/social-queue.json"
   },
-  "product_count": 65,
+  "product_count": 66,
   "products": [
     {
       "product_key": "aliev",
@@ -455,6 +455,17 @@
       "registry_name": "io.github.jgaethle10/faie",
       "mcp": "https://fabric.systemiacommandcenters.com/mcp/faie",
       "content_sha256": "98bec1f98edee3a65826749bd4c7652ba24af0cb60bcb0db077dc286fb83fc44"
+    },
+    {
+      "product_key": "fallen-sessions",
+      "name": "Fallen Sessions",
+      "canonical_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/fallen-sessions/index.html",
+      "mirror": "/chum/products/fallen-sessions/",
+      "llms": "/chum/products/fallen-sessions/llms.txt",
+      "discovery": "/chum/products/fallen-sessions/ai-discovery.json",
+      "registry_name": null,
+      "mcp": null,
+      "content_sha256": "3a5b71844120c1545c12329fb1f99174176b1b6018eca7dbd833ee4a2e4de334"
     },
     {
       "product_key": "findmypart",

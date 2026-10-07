@@ -44,12 +44,12 @@
     "fallen": {
       "name": "Fallen",
       "relationship": "parent_media_creation_engine",
-      "description": "Fallen owns the broader media graph; Fallen Sessions is its music-session surface."
+      "description": "Fallen owns the broader media project graph, canon, provenance, rendering and production coordination. Fallen Sessions adds the music-session surface powered by PulseGrid."
     },
     "evercraft-clip": {
       "name": "Evercraft Clip",
       "relationship": "future_distribution_handoff",
-      "description": "Release-ready exports can hand off after publishing gates."
+      "description": "Release-ready music and media can hand off to Evercraft Clip after publishing gates."
     }
   },
   "proof_library": null,

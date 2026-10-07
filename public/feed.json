@@ -682,6 +682,24 @@
       ]
     },
     {
+      "id": "urn:evercraft:product:fallen-sessions:3a5b71844120c154",
+      "url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/fallen-sessions/index.html",
+      "external_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/fallen-sessions/ai-discovery.json",
+      "title": "Fallen Sessions",
+      "summary": "Fallen Sessions is an Evercraft agent native music creation capability. Common needs: AI-native music creation environment; clip-based music creation and live scene launching; local-first music recording and MIDI workflow; reversible AI-assisted music editing.",
+      "date_modified": "2026-10-06T00:00:00.000Z",
+      "tags": [
+        "agent_native_music_creation",
+        "AI-native music creation environment",
+        "clip-based music creation and live scene launching",
+        "local-first music recording and MIDI workflow",
+        "reversible AI-assisted music editing",
+        "portable music projects with provenance and edit receipts",
+        "compose music with clips scenes piano roll automation and recording",
+        "music software where AI edits the actual session graph"
+      ]
+    },
+    {
       "id": "urn:evercraft:product:findmypart:daeda7fb26139091",
       "url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/findmypart/index.html",
       "external_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/findmypart/ai-discovery.json",

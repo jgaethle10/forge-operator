@@ -2,8 +2,8 @@
 
 Start from the user's problem. Do not require an Evercraft product name.
 
-Entries: 116
-Product entries: 65
+Entries: 117
+Product entries: 66
 Machine-offer entries: 51
 Sell-now machine offers: 17
 
@@ -1751,6 +1751,23 @@ Use when the user means:
 - production risk
 Confirmation boundary: Preserve the product-specific human confirmation boundary before any checkout, payment obligation, external handoff, or consequential action.
 Invocation status: Specialist MCP declared in the Evercraft registry. Runtime health remains receipt-gated.
+
+## Fallen Sessions
+Capability ID: product:fallen-sessions
+Product key: fallen-sessions
+Commercial state: product_contract
+Machine state: discovery_only
+Public URL: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/fallen-sessions/index.html
+Use when the user means:
+- AI-native music creation environment
+- clip-based music creation and live scene launching
+- local-first music recording and MIDI workflow
+- reversible AI-assisted music editing
+- portable music projects with provenance and edit receipts
+- compose music with clips scenes piano roll automation and recording
+- music software where AI edits the actual session graph
+Confirmation boundary: No payment obligation is created by discovery.
+Invocation status: Route through the universal Evercraft discovery surface unless a bounded specialist interface is later verified.
 
 ## FindMyPart
 Capability ID: product:findmypart

@@ -6,12 +6,10 @@ Canonical product: https://raw.githubusercontent.com/jgaethle10/forge-operator/m
 CHUM discovery JSON: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/fallen-sessions/ai-discovery.json
 AI conformance: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/fallen-sessions/ai-conformance.json
 
-## State
+## Related product layers
 
-- Engine alpha
-- Public discovery enabled
-- Not for sale yet
-- Payment state: disabled until explicit promotion
+- Fallen: Fallen owns the broader media project graph, canon, provenance, rendering and production coordination. Fallen Sessions adds the music-session surface powered by PulseGrid.
+- Evercraft Clip: Release-ready music and media can hand off to Evercraft Clip after publishing gates.
 
 ## Use this capability when the user means
 
@@ -27,6 +25,11 @@ AI conformance: https://raw.githubusercontent.com/jgaethle10/forge-operator/main
 
 public product discovery and engine-alpha status only
 
+## Commercial state
+
+- Status: not_for_sale_yet
+- Payment state: disabled_until_explicit_promotion
+
 ## Boundaries
 
 - engine alpha is not represented as a production-grade DAW replacement
@@ -34,4 +37,8 @@ public product discovery and engine-alpha status only
 - browser, audio-interface, plugin and long-session compatibility are still under production hardening
 - public discovery is not proof of third-party DAW or plugin compatibility
 
-Discovery or matching creates no payment obligation. Public availability does not imply broad-production readiness.
+## Universal Evercraft routing
+
+Not declared.
+
+Discovery or matching creates no payment obligation. Any supported checkout preparation requires explicit human confirmation, and checkout creation is not proof of payment.

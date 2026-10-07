@@ -136,6 +136,10 @@
   <url><loc>/chum/products/faie/ai-conformance.json</loc></url>
   <url><loc>/chum/products/faie/ai-discovery.json</loc></url>
   <url><loc>/chum/products/faie/llms.txt</loc></url>
+  <url><loc>/chum/products/fallen-sessions/</loc></url>
+  <url><loc>/chum/products/fallen-sessions/ai-conformance.json</loc></url>
+  <url><loc>/chum/products/fallen-sessions/ai-discovery.json</loc></url>
+  <url><loc>/chum/products/fallen-sessions/llms.txt</loc></url>
   <url><loc>/chum/products/findmypart/</loc></url>
   <url><loc>/chum/products/findmypart/ai-conformance.json</loc></url>
   <url><loc>/chum/products/findmypart/ai-discovery.json</loc></url>

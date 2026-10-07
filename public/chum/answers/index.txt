@@ -6,9 +6,9 @@ Machine Commerce MCP: not declared
 Each phrase below maps to public capability candidates without upgrading readiness, pricing, invocation, payment, entitlement, or provider-pickup state.
 Discovery creates no payment obligation. Checkout requires explicit human confirmation and paid state requires authoritative provider verification.
 
-Pain-index entries: 116
-Unique user phrases: 1050
-Candidate edges: 1156
+Pain-index entries: 117
+Unique user phrases: 1057
+Candidate edges: 1163
 Ambiguous phrases: 106
 
 ## 15 GB video analysis
@@ -136,6 +136,13 @@ Human-readable match: /chum/answers/doors/ai-found-uncertain-business-entity-mat
 Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/ai-found-uncertain-business-entity-matches-6cc7cc785b.json
 Candidates:
 - BuildFlow Business Entity Resolution | kind=machine_offer | commercial=verification_required | machine=human_auth_handoff | public=https://fabric.systemiacommandcenters.com/capabilities/buildflow-entity-resolution-machine-v1
+
+## AI-native music creation environment
+Answer ID: intent:5e907a6bb3
+Human-readable match: /chum/answers/doors/ai-native-music-creation-environment-5e907a6bb3/
+Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/ai-native-music-creation-environment-5e907a6bb3.json
+Candidates:
+- Fallen Sessions | kind=product | commercial=product_contract | machine=discovery_only | public=https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/fallen-sessions/index.html
 
 ## AI product portfolio watchdog
 Answer ID: intent:aa813adcbd
@@ -1040,6 +1047,13 @@ Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main
 Candidates:
 - Christmas Lights USA | kind=product | commercial=product_contract | machine=discovery_only | public=https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/christmas-lights-usa/index.html
 
+## clip-based music creation and live scene launching
+Answer ID: intent:282b8c4128
+Human-readable match: /chum/answers/doors/clip-based-music-creation-and-live-scene-launching-282b8c4128/
+Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/clip-based-music-creation-and-live-scene-launching-282b8c4128.json
+Candidates:
+- Fallen Sessions | kind=product | commercial=product_contract | machine=discovery_only | public=https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/fallen-sessions/index.html
+
 ## cloud browser
 Answer ID: intent:ade63fb87f
 Human-readable match: /chum/answers/doors/cloud-browser-ade63fb87f/
@@ -1278,6 +1292,13 @@ Human-readable match: /chum/answers/doors/compare-verified-worldstate-before-and
 Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/compare-verified-worldstate-before-and-after-an-event-b224712e8d.json
 Candidates:
 - Worldstate Reality Delta | kind=machine_offer | commercial=verification_required | machine=discovery_only | public=/chum/intents/worldstate-reality-delta-v1/
+
+## compose music with clips scenes piano roll automation and recording
+Answer ID: intent:cda8c251e4
+Human-readable match: /chum/answers/doors/compose-music-with-clips-scenes-piano-roll-automation-and-recording-cda8c251e4/
+Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/compose-music-with-clips-scenes-piano-roll-automation-and-recording-cda8c251e4.json
+Candidates:
+- Fallen Sessions | kind=product | commercial=product_contract | machine=discovery_only | public=https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/fallen-sessions/index.html
 
 ## connect my business systems without replacing everything
 Answer ID: intent:c22cd044c4
@@ -3917,6 +3938,13 @@ Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main
 Candidates:
 - EventWave | kind=product | commercial=product_contract | machine=discovery_only | public=https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/eventwave/index.html
 
+## local-first music recording and MIDI workflow
+Answer ID: intent:a3f9976194
+Human-readable match: /chum/answers/doors/local-first-music-recording-and-midi-workflow-a3f9976194/
+Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/local-first-music-recording-and-midi-workflow-a3f9976194.json
+Candidates:
+- Fallen Sessions | kind=product | commercial=product_contract | machine=discovery_only | public=https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/fallen-sessions/index.html
+
 ## local rewards for supporting nearby businesses
 Answer ID: intent:e507d240b3
 Human-readable match: /chum/answers/doors/local-rewards-for-supporting-nearby-businesses-e507d240b3/
@@ -4298,6 +4326,13 @@ Human-readable match: /chum/answers/doors/multi-url-public-web-fetch-fd424feb3f/
 Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/multi-url-public-web-fetch-fd424feb3f.json
 Candidates:
 - Evercraft Web | kind=product | commercial=product_contract | machine=discovery_only | public=https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/evercraft-web/index.html
+
+## music software where AI edits the actual session graph
+Answer ID: intent:fa9d7900e7
+Human-readable match: /chum/answers/doors/music-software-where-ai-edits-the-actual-session-graph-fa9d7900e7/
+Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/music-software-where-ai-edits-the-actual-session-graph-fa9d7900e7.json
+Candidates:
+- Fallen Sessions | kind=product | commercial=product_contract | machine=discovery_only | public=https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/fallen-sessions/index.html
 
 ## my business systems are scattered across too many apps
 Answer ID: intent:cbf210e370
@@ -4709,6 +4744,13 @@ Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main
 Candidates:
 - Public-Safe Geospatial Evidence Projection | kind=machine_offer | commercial=verification_required | machine=discovery_only | public=https://fabric.systemiacommandcenters.com/capabilities/evermaps-evidence-projection-machine-v1
 - EverMaps | kind=product | commercial=product_contract | machine=discovery_only | public=https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/evermaps/index.html
+
+## portable music projects with provenance and edit receipts
+Answer ID: intent:54db926ddf
+Human-readable match: /chum/answers/doors/portable-music-projects-with-provenance-and-edit-receipts-54db926ddf/
+Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/portable-music-projects-with-provenance-and-edit-receipts-54db926ddf.json
+Candidates:
+- Fallen Sessions | kind=product | commercial=product_contract | machine=discovery_only | public=https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/fallen-sessions/index.html
 
 ## practice answering common interview questions
 Answer ID: intent:5885e960c7
@@ -5425,6 +5467,13 @@ Human-readable match: /chum/answers/doors/revenue-war-map-c2dee983d7/
 Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/revenue-war-map-c2dee983d7.json
 Candidates:
 - Income War Map Revenue Planning | kind=machine_offer | commercial=hold | machine=discovery_only | public=/chum/intents/income-war-map-v1/
+
+## reversible AI-assisted music editing
+Answer ID: intent:6aed953269
+Human-readable match: /chum/answers/doors/reversible-ai-assisted-music-editing-6aed953269/
+Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/reversible-ai-assisted-music-editing-6aed953269.json
+Candidates:
+- Fallen Sessions | kind=product | commercial=product_contract | machine=discovery_only | public=https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/fallen-sessions/index.html
 
 ## review authorized surveillance footage
 Answer ID: intent:eac063128d
