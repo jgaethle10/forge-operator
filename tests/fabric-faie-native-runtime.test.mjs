@@ -60,6 +60,15 @@ test('owned Fabric serves FAIE UI, public preview API, and native FAIE MCP witho
     assert.match(page,/Run live AgNormal brief/);
     assert.match(page,/fetchWithTimeout/);
     assert.match(page,/FAIE did not answer within 15 seconds/);
+    assert.match(page,/id="activityHud"/);
+    assert.match(page,/window\.EvercraftActivity = evercraftActivity/);
+    assert.match(page,/Cancel operation/);
+    assert.match(page,/Download handed off/);
+    assert.match(page,/browser download was started/);
+    assert.match(page,/operation-step/);
+    const inlineScript=page.match(/<script>([\s\S]*?)<\/script>/);
+    assert.ok(inlineScript,'FAIE should expose its inline interaction script');
+    assert.doesNotThrow(()=>new Function(inlineScript[1]),'FAIE inline interaction script must parse');
     assert.match(page,/Prepared for AgNormal · design-partner room/);
     assert.match(page,/One real decision\. Live evidence\. No theater\./);
     assert.match(page,/data-partner-mission="water"/);
