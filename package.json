@@ -176,7 +176,7 @@
     "proof:field-enrollment-packet": "node systemia/yard/field-enrollment-packet.proof.mjs",
     "test:public-route-field-preflight": "node --test tests/public-route-field-preflight.test.mjs",
     "proof:ibmi-direct-buyer-queue": "node systemia/organism/ibmi-direct-buyer-queue.proof.mjs",
-    "test:public-edge-canary-contract": "node --test tests/public-edge-canary-contract.test.mjs",
+    "test:public-edge-canary-contract": "node --test tests/public-edge-canary-contract.test.mjs tests/fabric-edge-journal-canary-contract.test.mjs",
     "proof:public-edge-admission-drift": "node systemia/compute/public-edge-admission-drift.proof.mjs",
     "test:mcp-registry-field-gate": "node --test tests/mcp-registry-field-gate.test.mjs",
     "proof:public-edge-field-mission": "node systemia/organism/public-edge-field-mission.proof.mjs",
