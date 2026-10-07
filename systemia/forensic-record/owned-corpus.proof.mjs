@@ -103,6 +103,33 @@ assert.equal(authorized.status,200);
 const body=await authorized.json();
 assert.equal(body.count,2);
 
+const publicFindingResponse=await fetch(runtime.service_url+'/v1/public/findings/18041');
+assert.equal(publicFindingResponse.status,200);
+assert.equal(publicFindingResponse.headers.get('access-control-allow-origin'),'*');
+const publicFinding=await publicFindingResponse.json();
+assert.equal(publicFinding.variant_count,2);
+assert.equal(publicFinding.duplicate_number_preserved,true);
+assert.equal(publicFinding.findings[0].page_reference,'page 17');
+assert.equal('record_key' in publicFinding.findings[0],false);
+assert.equal('migration_lineage' in publicFinding.findings[0],false);
+
+const publicSearch=await fetch(runtime.service_url+'/v1/public/search?q=legacy&limit=10').then(r=>r.json());
+assert.equal(publicSearch.ok,true);
+assert.ok(publicSearch.count>=1);
+assert.match(publicSearch.evidence_boundary,/not by itself an adjudicated fact/i);
+
+const publicMeta=await fetch(runtime.service_url+'/v1/public/meta').then(r=>r.json());
+assert.equal(publicMeta.finding_rows,3);
+assert.equal(publicMeta.unique_finding_numbers,2);
+assert.equal(publicMeta.duplicate_number_extra_rows,1);
+
+const publicWrite=await fetch(runtime.service_url+'/v1/ingest',{
+  method:'POST',
+  headers:{'content-type':'application/json'},
+  body:JSON.stringify({domain:'findings',records:[]})
+});
+assert.equal(publicWrite.status,401);
+
 runtime.setDeploymentReceipt('yard:deployment:test');
 assert.equal(runtime.health().deployment_receipt_bound,true);
 await runtime.close();
@@ -115,6 +142,10 @@ console.log(JSON.stringify({
   missing_citations_not_fabricated:true,
   version_history_preserved:true,
   read_only_search_runtime:true,
+  public_read_only_api:true,
+  public_duplicate_variants_preserved:true,
+  public_internal_lineage_redacted:true,
+  public_write_requires_auth:true,
   systemia_machine_gate:true,
   base44_runtime_required:false,
   yard_receipt_binding_supported:true
