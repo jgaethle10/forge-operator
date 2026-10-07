@@ -6,6 +6,9 @@ test('Fallen Sessions UI consumes the canonical PulseGrid browser entrypoint',()
   const ui=fs.readFileSync('src/FallenSessions.tsx','utf8');
   assert.match(ui,/from '\.\.\/systemia\/media-studio\/pulsegrid-browser'/);
   assert.match(ui,/applyPulseGridTransaction/);
+  assert.match(ui,/PulseGridAudioEngine/);
+  assert.match(ui,/audioRef\.current\?\.updateSession\(session\)/);
+  assert.match(ui,/audioRef\.current\?\.play\(session,selectedScene\)/);
   assert.match(ui,/undoPulseGridReceipt/);
   assert.match(ui,/clip\.fork_variation/);
   assert.doesNotMatch(ui,/function\s+createPulseGridSession\s*\(/);
@@ -27,4 +30,13 @@ test('Fallen Sessions UI keeps a bounded responsive shell',()=>{
   assert.match(css,/minmax\(0\s*,\s*1fr\)/i);
   assert.match(css,/-webkit-text-size-adjust\s*:\s*100%/i);
   assert.match(css,/min-height\s*:\s*44px/i);
+});
+
+
+test('PulseGrid browser entrypoint exports the canonical audio adapter',()=>{
+  const browser=fs.readFileSync('systemia/media-studio/pulsegrid-browser.ts','utf8');
+  const audio=fs.readFileSync('systemia/media-studio/pulsegrid-audio.ts','utf8');
+  assert.match(browser,/PulseGridAudioEngine/);
+  assert.match(audio,/import type \{ PulseGridSession, PulseGridTrack \} from '\.\/pulsegrid-session\.js'/);
+  assert.doesNotMatch(audio,/node:/);
 });

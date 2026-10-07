@@ -497,3 +497,11 @@ The Forge React shell now exposes `/fallen-sessions` as a first-class product ro
 The route currently emphasizes graph editing and provenance rather than pretending the browser surface has already replaced the earlier audio workstation prototype. The next integration slice is to move the proven Web Audio/MIDI execution layer behind this same canonical graph.
 
 Architecture tests enforce that the UI imports the canonical browser entrypoint and does not define its own `createPulseGridSession` implementation.
+
+### PulseGrid 0.12 canonical audio execution
+
+The canonical browser graph now has a Web Audio execution adapter in `pulsegrid-audio.ts`. The adapter does not own musical state. It accepts PulseGrid sessions, snapshots them for playback, and schedules sound from the same clips, notes, steps, probability, microtiming, track filter/delay, mute and solo state edited by the UI and agents.
+
+The `/fallen-sessions` route now has Play/Stop and a live playhead. Session mutations update the playback snapshot, and changing scenes retargets the same audio engine.
+
+Current audio boundary: synth and drum execution are live; canonical audio-asset storage for the Audio Take track is not yet represented in the shared graph, so imported/recorded media is intentionally not fabricated by this adapter. The earlier standalone recording/MIDI prototype remains evidence for the next asset-store migration slice.
