@@ -166,3 +166,31 @@ test('Control Room HTML is self-contained and visibly read-only', () => {
   assert.doesNotMatch(html, /https:\/\//);
   assert.doesNotMatch(html, /<form/i);
 });
+
+
+test('Control Room renderer can target authenticated Home API prefix without changing UI', () => {
+  const html = renderLineageControlRoomHtml({
+    apiPrefix: '/api/lineage',
+  });
+  assert.match(html, /const API_PREFIX="\/api\/lineage"/);
+  assert.match(html, /API_PREFIX\+'\/snapshot/);
+  assert.match(html, /API_PREFIX\+'\/commit/);
+  assert.match(html, /API_PREFIX\+'\/diff/);
+  assert.match(html, /API_PREFIX\+'\/integrity/);
+  assert.doesNotMatch(html, /fetch\('\/v1\//);
+});
+
+test('Control Room renderer rejects unsafe API prefixes', () => {
+  assert.throws(
+    () => renderLineageControlRoomHtml({
+      apiPrefix: 'https://example.com/api',
+    }),
+    /Invalid Lineage Control Room API prefix/
+  );
+  assert.throws(
+    () => renderLineageControlRoomHtml({
+      apiPrefix: '/../private',
+    }),
+    /Invalid Lineage Control Room API prefix/
+  );
+});
