@@ -27,7 +27,7 @@ Systemia University is an approved public Evercraft discovery record. This GitHu
 - Canonical: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/systemia-university/index.html
 - GitHub LLM mirror: ./llms.txt
 - Runtime or CHUM llms.txt: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/systemia-university/llms.txt
-- Benchmark manifest: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/systemia-university/benchmark-manifest.json
+- Knowledge surface: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/benchmarks/systemia-university/manifest.json
 
 ## Authority
 
@@ -44,10 +44,10 @@ Human confirmation required: yes
 - competency claims that require verification remain human-reviewed
 - public proofs and workforce profiles must be explicitly approved for publication
 - external-lab submission does not imply acceptance, scheduling, certification, endorsement or benchmark success
+- discovery creates no payment obligation, employment offer, credential or authority
 - benchmark publication must preserve mission version evaluator version evidence state limitations and date
 - provider participation or appearance in a benchmark does not imply provider endorsement
-- discovery creates no payment obligation, employment offer, credential or authority
 
 ## Evidence state
 
-This record is discovery metadata. It is not proof that a named AI provider indexed, recommended, invoked, purchased, converted, or benchmarked the product. Runtime availability, payment state, benchmark results, and consequential actions must be verified independently.
+This record is discovery metadata. It is not proof that a named AI provider indexed, recommended, invoked, purchased, or converted the product. Runtime availability, payment state, and consequential actions must be verified independently.
