@@ -159,7 +159,12 @@ export function worldForgeAxisImpulseToWorldEngine(
 ):RuntimeVec3{
   const forgeImpulse:RuntimeVec3={x:0,y:0,z:0};
   forgeImpulse[axis]=amount;
-  return worldForgeDirectionToWorldEngine(forgeImpulse);
+  const mapped=worldForgeDirectionToWorldEngine(forgeImpulse);
+  return {
+    x:mapped.x===0?0:mapped.x,
+    y:mapped.y===0?0:mapped.y,
+    z:mapped.z===0?0:mapped.z,
+  };
 }
 
 export function runtimeBodiesByForgeNodeId(snapshot:any){
