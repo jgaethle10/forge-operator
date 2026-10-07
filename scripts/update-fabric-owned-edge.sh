@@ -446,6 +446,7 @@ NODE
 
 verify_current_runtime() {
   local expected_count="$1"
+  local expected_release="$2"
   local health=""
   for _ in 1 2 3 4 5 6 7 8 9 10; do
     health="$(read_health)"
@@ -465,7 +466,18 @@ verify_current_runtime() {
       }
       if(h.visual_desk_ingest_ready!==true) process.exit(6);
       if(h.visual_desk_ingest_publication_authority!==false) process.exit(7);
+      if(h.source_release_observed_at_startup!==true) process.exit(8);
     " || return 9
+
+  local runtime_release
+  runtime_release="$(runuser -u "$RUN_USER" -- env HEALTH_JSON="$health" node -e "
+    const h=JSON.parse(process.env.HEALTH_JSON||'{}');
+    process.stdout.write(String(h.source_release_ref||''));
+  ")"
+  if [[ -z "$runtime_release" || "$runtime_release" != "$expected_release" ]]; then
+    echo "Evercraft update: runtime source release mismatch current=${runtime_release:-unknown} expected=${expected_release:-unknown}" >&2
+    return 14
+  fi
 
   local attestation_code=10
   for attempt in 1 2 3 4 5 6; do
@@ -525,7 +537,7 @@ if [[ "$before" == "$target" ]]; then
 
   expected_count="$(expected_count_for_current)"
   set +e
-  verify_current_runtime "$expected_count"
+  verify_current_runtime "$expected_count" "$before"
   code=$?
   set -e
   if [[ "$code" -ne 0 ]]; then
@@ -581,7 +593,7 @@ if ! (
   as_user npm run test:fabric-directory &&
   as_user npm run test:fabric-local &&
   as_user npm run test:remote-operator &&
-  as_user node --test tests/fabric-edge-attestation.test.mjs tests/fabric-owned-edge-installer.test.mjs tests/fabric-outbound-relay.test.mjs &&
+  as_user node --test tests/fabric-edge-attestation.test.mjs tests/fabric-owned-edge-installer.test.mjs tests/fabric-outbound-relay.test.mjs tests/fabric-source-release-attestation.test.mjs &&
   as_user npm run proof:specialist-handoff-yard
 ); then
   rollback "proof_failed"
@@ -598,7 +610,7 @@ fi
 
 expected_count="$(expected_count_for_current)"
 set +e
-verify_current_runtime "$expected_count"
+verify_current_runtime "$expected_count" "$target"
 code=$?
 set -e
 if [[ "$code" -ne 0 ]]; then
