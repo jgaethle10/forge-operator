@@ -33,6 +33,8 @@ test('Lineage bridge does not inherit the generic resident HTTP surface', async 
     "['/health', '/v1/refs'].includes(requestPath)",
     "ref\\/(?:read|cas)",
     "object\\/(?:has|get|put)",
+    "chunk\\/(?:has|get|put)",
+    "large\\/manifest\\/(?:has|get|put)",
     "return false;",
   ]) {
     assert.ok(policy.includes(literal), `missing bounded Lineage bridge rule: ${literal}`);

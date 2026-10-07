@@ -159,6 +159,64 @@ export class HttpLineageRemote {
     return Buffer.from(String(result.bytes_base64 || ''), 'base64');
   }
 
+  async hasChunk(id) {
+    const result = await this.request({
+      method: 'POST',
+      path: '/v1/chunk/has',
+      body: { id },
+    });
+    return result.present === true;
+  }
+
+  async putChunk(id, bytes) {
+    if (!Buffer.isBuffer(bytes)) bytes = Buffer.from(bytes);
+    const result = await this.request({
+      method: 'POST',
+      path: '/v1/chunk/put',
+      body: { id, bytes_base64: bytes.toString('base64') },
+    });
+    return {
+      id: result.id,
+      bytes: Number(result.bytes || bytes.length),
+      reused: result.reused === true,
+    };
+  }
+
+  async getChunk(id) {
+    const result = await this.request({
+      method: 'POST',
+      path: '/v1/chunk/get',
+      body: { id },
+    });
+    return Buffer.from(String(result.bytes_base64 || ''), 'base64');
+  }
+
+  async hasLargeManifest(id) {
+    const result = await this.request({
+      method: 'POST',
+      path: '/v1/large/manifest/has',
+      body: { id },
+    });
+    return result.present === true;
+  }
+
+  async putLargeManifest(id, manifest) {
+    return await this.request({
+      method: 'POST',
+      path: '/v1/large/manifest/put',
+      body: { id, manifest },
+    });
+  }
+
+  async getLargeManifest(id) {
+    const result = await this.request({
+      method: 'POST',
+      path: '/v1/large/manifest/get',
+      body: { id },
+    });
+    return result.manifest;
+  }
+
   async readRef(name) {
     const result = await this.request({
       method: 'POST',
