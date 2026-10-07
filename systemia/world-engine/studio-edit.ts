@@ -566,7 +566,9 @@ export function applyWorldEditTransaction(
         });
       }else{
         const previous=clone(assets[existingIndex]);
-        if(operation.asset.revision<=previous.revision && operation.asset.sha256!==previous.sha256){
+        const previousSemantic=digest({...previous,revision:1});
+        const nextSemantic=digest({...operation.asset,revision:1});
+        if(operation.asset.revision<=previous.revision && previousSemantic!==nextSemantic){
           throw new Error(`world_edit_asset_revision_not_advanced:${operation.asset.id}`);
         }
         assets[existingIndex]=clone(operation.asset);
