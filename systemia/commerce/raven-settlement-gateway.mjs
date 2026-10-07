@@ -82,7 +82,7 @@ const OPERATION_BUILDERS = {
 export function createStripeRavenAdapter({
   secret,
   fetchImpl = globalThis.fetch,
-  adapterKey = 'stripe-primary',
+  adapterKey = 'evercraft-payments-central-v1',
   priority = 10,
 } = {}) {
   const token = clean(secret);
@@ -110,6 +110,7 @@ export function createStripeRavenAdapter({
 
     return {
       adapter_key: adapterKey,
+      route_key: adapterKey,
       provider: 'stripe',
       rail: 'card_bank',
       operation: clean(operation),
@@ -119,6 +120,7 @@ export function createStripeRavenAdapter({
 
   return {
     adapter_key: adapterKey,
+    route_key: adapterKey,
     provider: 'stripe',
     rail: 'card_bank',
     enabled: Boolean(token),
@@ -145,7 +147,7 @@ export function buildRavenSettlementAdapters({
     createStripeRavenAdapter({
       secret,
       fetchImpl,
-      adapterKey: 'stripe-primary',
+      adapterKey: 'evercraft-payments-central-v1',
       priority: 10,
     }),
   ];
@@ -162,6 +164,7 @@ export function createRavenSettlementGateway({ adapters = [] } = {}) {
         payment_authority: 'Evercraft Payments',
         adapters: adapterList.map((adapter) => ({
           adapter_key: clean(adapter?.adapter_key),
+          route_key: clean(adapter?.route_key || adapter?.adapter_key),
           provider: clean(adapter?.provider),
           rail: clean(adapter?.rail),
           enabled: adapter?.enabled !== false,
@@ -208,6 +211,7 @@ export function createRavenSettlementGateway({ adapters = [] } = {}) {
         amount_cents: route.amount_cents,
         currency: route.currency,
         billing_mode: route.billing_mode,
+        route_key: route.selected_adapter.adapter_key,
         adapter_key: route.selected_adapter.adapter_key,
         provider: route.selected_adapter.provider,
         rail: route.selected_adapter.rail,
