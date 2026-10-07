@@ -2,7 +2,12 @@ FROM node:22-alpine AS build
 WORKDIR /app
 
 COPY package.json bun.lock ./
-RUN npm install
+RUN npm install \
+  && case "$(apk --print-arch)" in \
+       x86_64) npm install --no-save @rollup/rollup-linux-x64-musl@4.62.4 ;; \
+       aarch64) npm install --no-save @rollup/rollup-linux-arm64-musl@4.62.4 ;; \
+       *) echo "No explicit Rollup musl package for $(apk --print-arch); relying on npm optional dependencies" ;; \
+     esac
 
 COPY . .
 RUN npm run build
