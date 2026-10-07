@@ -178,7 +178,7 @@ for _ in 1 2 3 4 5 6 7 8 9 10; do
 done
 "$NODE_BIN" -e "const h=require('/tmp/evercraft-home-health.json'); if(h.ok!==true||h.service!=='evercraft-home'||h.auth_mode!=='passport'||h.owner_claim_available!==true&&h.owner_bootstrapped!==true) process.exit(2)"
 
-caddy validate --config "$CADDYFILE" --adapter caddyfile >/dev/null
+EVERCRAFT_PUBLIC_HOST="$PUBLIC_HOST" EVERCRAFT_ACME_EMAIL="$ACME_EMAIL" caddy validate --config "$CADDYFILE" --adapter caddyfile >/dev/null
 systemctl restart evercraft-public-edge.service
 
 echo "Evercraft Home edge resident is ready."
