@@ -46,6 +46,17 @@ const stage:VisualStage={
         evidenceState:'public_source',
         sourceRefs:['source:zone-boundary']
       }],
+      terrains:[{
+        id:'public-relief',
+        sourcePath:'./terrain-relief.png',
+        bounds:{north:45,south:25,east:175,west:130},
+        opacity:.7,
+        blendMode:'multiply',
+        evidenceState:'public_source',
+        sourceRefs:['source:usgs-relief'],
+        sourceSha256:'a'.repeat(64),
+        rightsState:'public_domain'
+      }],
       evidenceState:'public_source',
       sourceRefs:['source:map-proof']
     },
@@ -148,6 +159,8 @@ test('HTML stage has deterministic frame-control hooks and no external runtime d
   assert.doesNotMatch(html,/https:\/\//);
   assert.match(html,/ROUTE VISUALIZATION/);
   assert.match(html,/dataset\.geoPolygon/);
+  assert.match(html,/dataset\.geoTerrain/);
+  assert.match(html,/mix-blend-mode/);
   assert.match(html,/fill-rule/);
 });
 
@@ -172,4 +185,22 @@ test('geo polygons fail closed on invalid rings and modeled shapes without prove
     evidenceState:'modeled'
   }];
   assert.equal(validateStage(badProvenance).status,'rejected');
+});
+
+
+test('geo terrain fails closed on missing provenance and invalid bounds',()=>{
+  const badTerrain:VisualStage=structuredClone(stage);
+  const geo=badTerrain.layers.find(layer=>layer.kind==='geo');
+  if(!geo||geo.kind!=='geo') throw new Error('geo_layer_missing');
+  geo.terrains=[{
+    id:'bad-terrain',
+    sourcePath:'./bad.png',
+    bounds:{north:20,south:30,east:10,west:0},
+    evidenceState:'public_source',
+    sourceRefs:[]
+  }];
+  const result=validateStage(badTerrain);
+  assert.equal(result.status,'rejected');
+  assert.ok(result.errors.some(error=>error.startsWith('geo_terrain_bounds_invalid:')));
+  assert.ok(result.errors.some(error=>error.startsWith('geo_terrain_provenance_missing:')));
 });
