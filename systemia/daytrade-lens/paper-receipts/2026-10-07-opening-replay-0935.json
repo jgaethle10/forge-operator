@@ -1,0 +1,62 @@
+{
+  "schema": "evercraft.daytrade.opening-replay-diagnostic.v1",
+  "generated_at": "2026-10-07T15:59:04.535Z",
+  "source_run_id": 37648384497,
+  "source_artifact_id": 11494966740,
+  "source_artifact_digest": "sha256:71d938509a5ad425ae3b23d44b9378987d82b80efb3cff0f3335b01de1ba91b5",
+  "market_date_et": "2026-10-07",
+  "market_phase_et": "OPENING",
+  "entry_target": "2026-10-07T13:35:00.000Z",
+  "exit_target": "2026-10-07T13:36:00.000Z",
+  "replay_only": true,
+  "counts_toward_prospective_diversity": false,
+  "frozen_rule_preceded_market_date": true,
+  "simulation_only": true,
+  "capital_at_risk_usd": 0,
+  "feed": "iex",
+  "results": [
+    {
+      "symbol": "SOXX",
+      "entry_spread_bps": 6.738369832836358,
+      "decision": "ABSTAIN",
+      "governed_pnl_usd": 0,
+      "always_cross_pnl_usd": -0.00552705666960307,
+      "avoided_pnl_usd": 0.00552705666960307
+    },
+    {
+      "symbol": "SMH",
+      "entry_spread_bps": 3.537091224798664,
+      "decision": "ABSTAIN",
+      "governed_pnl_usd": 0,
+      "always_cross_pnl_usd": 0.005786944011315853,
+      "avoided_pnl_usd": -0.005786944011315853
+    },
+    {
+      "symbol": "QQQ",
+      "entry_spread_bps": 0.9279450656512694,
+      "decision": "SIMULATE_MARKETABLE_LONG",
+      "governed_pnl_usd": -0.01908826999297375,
+      "always_cross_pnl_usd": -0.01908826999297375,
+      "avoided_pnl_usd": 0
+    }
+  ],
+  "aggregate": {
+    "traded_count": 1,
+    "abstained_count": 2,
+    "governed_total_pnl_usd": -0.01908826999297375,
+    "always_cross_total_pnl_usd": -0.018828382651260966,
+    "rule_improvement_vs_always_cross_usd": -0.0002598873417127834
+  },
+  "interpretation": {
+    "after_the_fact_market_replay": true,
+    "frozen_rule_was_not_retuned_for_this_date": true,
+    "not_counted_as_live_prospective_window": true,
+    "useful_for_opening_regime_diagnostic_only": true,
+    "rule_hurt_slightly_in_this_replay": true,
+    "iex_is_not_consolidated_sip_nbbo": true,
+    "historical_quote_touch_is_not_real_fill": true,
+    "not_signal_validation": true,
+    "not_live_authorized": true
+  },
+  "live_trade_authority": false
+}
