@@ -543,6 +543,9 @@ test("stale Browser Worker invalidation can hold safely when no fresh zero-spend
         receipt:{receipt_hash:"sha256:no-fresh-capacity"},
       };
     },
+    async privateCapacityGrant(){
+      throw new Error("private_capacity_grant_should_not_run_without_offer");
+    },
   };
 
   const receipt=await ensureCompetitionBrowserCapacity({
