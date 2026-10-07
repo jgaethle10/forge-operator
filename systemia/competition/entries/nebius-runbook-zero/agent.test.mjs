@@ -25,3 +25,115 @@ test("verification scrubs recursive Node test-runner control variables",async()=
     fs.rmSync(root,{recursive:true,force:true});
   }
 });
+
+test("nested node --test cannot false-green when parent runner control variables are present",async()=>{
+  const root=fs.mkdtempSync(path.join(os.tmpdir(),"runbook-nested-red-"));
+  const keys=["NODE_TEST_CONTEXT","NODE_TEST_REPORTER","NODE_TEST_REPORTER_DESTINATION"];
+  const prior=Object.fromEntries(keys.map((key)=>[key,process.env[key]]));
+  try{
+    fs.writeFileSync(path.join(root,"allowed.mjs"),"export const untouched = true;\n");
+    fs.writeFileSync(path.join(root,"nested.test.mjs"),[
+      'import test from "node:test";',
+      'import assert from "node:assert/strict";',
+      'test("must really execute",()=>assert.equal(1,2));',
+      "",
+    ].join("\n"));
+    process.env.NODE_TEST_CONTEXT="child-v8";
+    process.env.NODE_TEST_REPORTER="spec";
+    process.env.NODE_TEST_REPORTER_DESTINATION="stdout";
+    const mission=normalizeRepairMission({
+      repository_path:root,
+      allowed_files:["allowed.mjs"],
+      verify_command:[process.execPath,"--test","nested.test.mjs"],
+    });
+    const result=await runVerification(mission);
+    assert.equal(result.ok,false);
+    assert.equal(result.exit_code,1);
+    assert.match(result.stdout,/# tests 1/);
+    assert.match(result.stdout,/# pass 0/);
+    assert.match(result.stdout,/# fail 1/);
+  }finally{
+    for(const key of keys){
+      if(prior[key]===undefined) delete process.env[key];
+      else process.env[key]=prior[key];
+    }
+    fs.rmSync(root,{recursive:true,force:true});
+  }
+});
+
+test("repair receipt proves real red, bounded repair, and real green rerun",async()=>{
+  const root=fs.mkdtempSync(path.join(os.tmpdir(),"runbook-proof-"));
+  try{
+    fs.writeFileSync(path.join(root,"answer.mjs"),"export const answer = 1;\n");
+    fs.writeFileSync(path.join(root,"answer.test.mjs"),[
+      'import test from "node:test";',
+      'import assert from "node:assert/strict";',
+      'import { answer } from "./answer.mjs";',
+      'test("answer",()=>assert.equal(answer,2));',
+      "",
+    ].join("\n"));
+    const fetchImpl=fakeNemotron({
+      diagnosis:"The fixture value is one instead of two.",
+      done:false,
+      edits:[{file:"answer.mjs",search:"export const answer = 1;",replace:"export const answer = 2;"}],
+    });
+    const result=await repairRepository({
+      repository_path:root,
+      allowed_files:["answer.mjs"],
+      verify_command:[process.execPath,"--test","answer.test.mjs"],
+      max_rounds:2,
+    },{fetchImpl,apiKey:"fixture-nebius-key-abcdefghijklmnopqrstuvwxyz"});
+    assert.equal(result.initial_verification.ok,false);
+    assert.equal(result.initial_verification.exit_code,1);
+    assert.match(result.initial_verification.stdout,/# tests 1/);
+    assert.match(result.initial_verification.stdout,/# fail 1/);
+    assert.equal(result.state,"repaired_and_verified");
+    assert.equal(result.final_verification.ok,true);
+    assert.equal(result.final_verification.exit_code,0);
+    assert.match(result.final_verification.stdout,/# tests 1/);
+    assert.match(result.final_verification.stdout,/# pass 1/);
+    assert.match(result.final_verification.stdout,/# fail 0/);
+    assert.equal(result.rounds[0].state,"verified");
+    assert.deepEqual(result.files_changed,["answer.mjs"]);
+    assert.equal(result.rollback_performed,false);
+  }finally{
+    fs.rmSync(root,{recursive:true,force:true});
+  }
+});
+
+test("outside-allowlist repair is held and rollback follows a real red verification",async()=>{
+  const root=fs.mkdtempSync(path.join(os.tmpdir(),"runbook-boundary-proof-"));
+  try{
+    fs.writeFileSync(path.join(root,"allowed.mjs"),"export const x=1;\n");
+    fs.writeFileSync(path.join(root,"secret.mjs"),"export const secret=1;\n");
+    fs.writeFileSync(path.join(root,"fail.test.mjs"),[
+      'import test from "node:test";',
+      'import assert from "node:assert/strict";',
+      'test("fail",()=>assert.equal(1,2));',
+      "",
+    ].join("\n"));
+    const fetchImpl=fakeNemotron({
+      diagnosis:"Try touching secret.",
+      done:false,
+      edits:[{file:"secret.mjs",search:"secret=1",replace:"secret=2"}],
+    });
+    const result=await repairRepository({
+      repository_path:root,
+      allowed_files:["allowed.mjs"],
+      verify_command:[process.execPath,"--test","fail.test.mjs"],
+      max_rounds:1,
+    },{fetchImpl,apiKey:"fixture-nebius-key-abcdefghijklmnopqrstuvwxyz"});
+    assert.equal(result.initial_verification.ok,false);
+    assert.equal(result.initial_verification.exit_code,1);
+    assert.match(result.initial_verification.stdout,/# tests 1/);
+    assert.match(result.initial_verification.stdout,/# fail 1/);
+    assert.equal(result.state,"held_error");
+    assert.equal(result.rollback_performed,true);
+    assert.match(result.error_code,/not_allowed/);
+    assert.equal(fs.readFileSync(path.join(root,"allowed.mjs"),"utf8"),"export const x=1;\n");
+    assert.equal(fs.readFileSync(path.join(root,"secret.mjs"),"utf8"),"export const secret=1;\n");
+  }finally{
+    fs.rmSync(root,{recursive:true,force:true});
+  }
+});
+
