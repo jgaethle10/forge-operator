@@ -153,3 +153,29 @@ test('archives expired durable reporting without presenting it as a live edition
   assert.match(llms, /No story is currently inside its live freshness window/i);
   assert.match(llms, /State: archived; live freshness expired/i);
 });
+
+
+test('carries canonical article identity into the Clip handoff instead of requiring a guessed URL', () => {
+  const outDir = fs.mkdtempSync(path.join(os.tmpdir(), 'journal-clip-identity-'));
+  publishJournalStories([story()], {
+    outDir,
+    now: new Date('2026-09-30T22:00:00.000Z'),
+    publicOrigin: 'https://journal.test.evercraft.local'
+  });
+
+  const articleHtml = fs.readFileSync(path.join(outDir, 'owned-journal-test', 'index.html'), 'utf8');
+  assert.match(articleHtml, /name="evercraft:story_id" content="journal:test:owned"/);
+
+  const handoff = JSON.parse(fs.readFileSync(path.join(outDir, 'production', 'owned-journal-test', 'clip-handoff.json'), 'utf8'));
+  assert.equal(handoff.canonical_url, 'https://journal.test.evercraft.local/owned-journal-test/');
+  assert.equal(handoff.publication_receipt_ref, 'receipts/owned-journal-test.json');
+  assert.equal(handoff.link_verification.expectedCanonicalUrl, handoff.canonical_url);
+  assert.equal(handoff.link_verification.expectedOgUrl, handoff.canonical_url);
+  assert.equal(handoff.link_verification.expectedStoryId, 'journal:test:owned');
+  assert.equal(handoff.link_verification.requireCanonicalSelfMatch, true);
+  assert.equal(handoff.link_verification.requireOpenGraphSelfMatch, true);
+
+  const receipt = JSON.parse(fs.readFileSync(path.join(outDir, 'receipts', 'owned-journal-test.json'), 'utf8'));
+  assert.equal(receipt.title, 'Owned Journal Test');
+  assert.equal(receipt.clip_handoff_ref, 'production/owned-journal-test/clip-handoff.json');
+});
