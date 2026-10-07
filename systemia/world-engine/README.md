@@ -58,6 +58,9 @@ Implemented in this slice:
 - WebGPU execution creates real texture/sampler bind groups and applies ORM channels as occlusion/roughness/metallic inputs.
 - Texture residency is budgeted deterministically from required texture IDs and emits load/retain/evict receipts.
 - Texture hot reload preserves texture identity, replaces pixel content and invalidates only the affected GPU texture cache.
+- Native Chromium reference-frame conformance compiles the exact owned `EVERCRAFT_WEBGPU_WGSL`, renders a known textured frame and verifies mapped pixel readback against an explicit baseline.
+- Reference-frame receipts bind the exact shader SHA-256, launch profile, browser preflight receipt and expected/observed pixel values.
+- Browser CI watches World Engine renderer changes so reference-frame evidence automatically refreshes when the shader changes.
 - Versioned live Studio edit transactions bind to exact world and asset-manifest digests before mutation.
 - Human, agent and code edits share the same deterministic world-edit contract and produce SHA-256 receipts.
 - Edit receipts carry inverse transactions for semantic undo while world/asset revisions remain monotonic.
@@ -102,16 +105,16 @@ The engine does not gain publication authority, payment authority, emergency aut
 
 The V1 contract is deliberately small enough to prove ownership before expanding. The next compatible layers are:
 
-1. Full World Engine reference-frame rendering through browser WebGPU with pixel-baseline receipts.
-2. Tangent-space geometry + normal-map runtime.
-3. Animation authoring/import bridge for Fallen character assets.
-4. Navigation corridor smoothing / dynamic obstacle avoidance.
-5. Server-side rollback policy for explicitly admitted late inputs.
-6. Shadow-map / reflection / post-process contracts behind the visual-frame boundary.
-7. Spatial panning / occlusion / reverb-zone contracts behind the audio-frame boundary.
-8. Collaborative edit merge / conflict-resolution contracts.
-9. Saban simulation tournaments and deterministic QA at scale.
-10. Cross-frame texture retention / broader physical memory eviction for very large worlds.
+1. Tangent-space geometry + normal-map runtime.
+2. Animation authoring/import bridge for Fallen character assets.
+3. Navigation corridor smoothing / dynamic obstacle avoidance.
+4. Server-side rollback policy for explicitly admitted late inputs.
+5. Shadow-map / reflection / post-process contracts behind the visual-frame boundary.
+6. Spatial panning / occlusion / reverb-zone contracts behind the audio-frame boundary.
+7. Collaborative edit merge / conflict-resolution contracts.
+8. Saban simulation tournaments and deterministic QA at scale.
+9. Cross-frame texture retention / broader physical memory eviction for very large worlds.
+10. Native/WebGPU reference images across multiple material and lighting fixtures.
 
 ## Test
 
