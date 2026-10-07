@@ -2,7 +2,7 @@
   "schema": "evercraft.chum.crawl-pressure.v1",
   "provider": "Evercraft LLC",
   "coordinator": "CHUM",
-  "updated_at": "2026-10-07T03:11:10.161Z",
+  "updated_at": "2026-10-07T03:11:53.884Z",
   "purpose": "Content-hash-backed freshness signals for public Evercraft discovery surfaces. A freshness signal requests attention; it does not prove indexing, ranking, recommendation, citation or provider pickup.",
   "indexnow": {
     "supported": true,
@@ -11,27 +11,18 @@
   },
   "latest_change_batch": [
     {
-      "path": "/.well-known/evercraft-agent-commerce.json",
-      "last_changed": "2026-10-07T03:11:10.161Z",
-      "priority": 84
-    },
-    {
-      "path": "/chum/agent-commerce.json",
-      "last_changed": "2026-10-07T03:11:10.161Z",
-      "priority": 80
-    },
-    {
-      "path": "/chum/agent-commerce.txt",
-      "last_changed": "2026-10-07T03:11:10.161Z",
-      "priority": 80
-    },
-    {
       "path": "/chum/hot/index.json",
-      "last_changed": "2026-10-07T03:11:10.161Z",
+      "last_changed": "2026-10-07T03:11:53.884Z",
       "priority": 80
     }
   ],
   "recent_surfaces": [
+    {
+      "path": "/chum/hot/index.json",
+      "url": "/chum/hot/index.json",
+      "last_changed": "2026-10-07T03:11:53.884Z",
+      "priority": 80
+    },
     {
       "path": "/.well-known/evercraft-agent-commerce.json",
       "url": "/.well-known/evercraft-agent-commerce.json",
@@ -47,12 +38,6 @@
     {
       "path": "/chum/agent-commerce.txt",
       "url": "/chum/agent-commerce.txt",
-      "last_changed": "2026-10-07T03:11:10.161Z",
-      "priority": 80
-    },
-    {
-      "path": "/chum/hot/index.json",
-      "url": "/chum/hot/index.json",
       "last_changed": "2026-10-07T03:11:10.161Z",
       "priority": 80
     },
