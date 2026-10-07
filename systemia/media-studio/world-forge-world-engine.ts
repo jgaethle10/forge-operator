@@ -253,6 +253,15 @@ export function worldForgeEulerToWorldEngine(rotation:Euler3):Euler3{
   );
 }
 
+export function worldEngineEulerToWorldForge(rotation:Euler3):Euler3{
+  const engineMatrix=forgeEulerMatrix(rotation);
+  const forgeMatrix=mat3Multiply(
+    mat3Multiply(mat3Transpose(FORGE_TO_ENGINE_BASIS),engineMatrix),
+    FORGE_TO_ENGINE_BASIS,
+  );
+  return eulerFromRzRyRx(forgeMatrix);
+}
+
 function cameraLookAtMatrix(node:WorldForgeNode):Mat3|null{
   if(node.kind!=='camera'||!node.camera?.lookAt) return null;
   const eye=node.transform.position;
