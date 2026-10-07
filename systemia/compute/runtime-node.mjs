@@ -19,6 +19,7 @@ import {
 } from '../evercraft-web/browser-worker/container-runtime.mjs';
 import { startRivetReportRuntime } from '../rivet/report-runtime.mjs';
 import { startAliEvSourceRuntime } from '../aliev/source-runtime.mjs';
+import { startForensicRecordRuntime } from '../forensic-record/runtime.mjs';
 import { startSpecialistHandoffRuntime } from '../mcp/specialist-handoff-runtime.mjs';
 import { startFabricLocalRuntime } from '../mcp/fabric-local-runtime.mjs';
 import { startPublicEdgeRuntime } from '../network/public-edge-runtime.mjs';
@@ -899,6 +900,7 @@ export async function startEvercraftComputeNode({
     'systemia.chum-public-origin.v1',
     'systemia.remote-capacity-broker.v1',
     'systemia.aliev-source-runtime.v1',
+    'systemia.forensic-record-runtime.v1',
     'systemia.rivet-report-runtime.v1',
     'systemia.specialist-handoff-mcp.v1',
     'systemia.fabric-local-mcp.v1',
@@ -1587,6 +1589,54 @@ export async function startEvercraftComputeNode({
             domain_health_url: runtime.domain_health_url,
             health_path: `/v1/services/${serviceId}/health`,
             public_route_required: false,
+            private_source_runtime: true,
+            instance_id: runtime.instance_id,
+          };
+          const receipt = chain.issue('service.started', {
+            lease_id: body.lease_id,
+            service_id: serviceId,
+            workload_class: body.workload_class,
+            result_schema: result.schema,
+            instance_id: runtime.instance_id,
+          });
+          return send(res, 200, {
+            ok: true,
+            node_id: nodeId,
+            workload_class: body.workload_class,
+            result,
+            receipt,
+          });
+        }
+
+        if (workloadClass === 'systemia.forensic-record-runtime.v1') {
+          const stateRoot = path.resolve(String(
+            body.input?.state_root || path.join(allowedRoot, '.evercraft', 'forensic-record-runtime')
+          ));
+          if (!isWithin(allowedRoot, stateRoot)) {
+            return send(res, 403, { error: 'forensic_record_state_outside_admitted_root' });
+          }
+          const runtime = await startForensicRecordRuntime({
+            stateDir: stateRoot,
+            host: '127.0.0.1',
+            port: Number(body.input?.port || 0),
+            systemiaMachineKey: process.env.SYSTEMIA_MACHINE_KEY || '',
+            ingestToken: process.env.FORENSIC_RECORD_INGEST_TOKEN || '',
+          });
+          const serviceId = `svc_${randomBytes(8).toString('hex')}`;
+          services.set(serviceId, {
+            lease_id: body.lease_id,
+            workload_class: body.workload_class,
+            runtime,
+            service: runtime,
+          });
+          const result = {
+            schema: 'evercraft.compute.resident-service.v1',
+            service_id: serviceId,
+            workload_class: body.workload_class,
+            service_url: null,
+            local_url: runtime.service_url,
+            health_path: `/v1/services/${serviceId}/health`,
+            public_route_required: true,
             private_source_runtime: true,
             instance_id: runtime.instance_id,
           };
