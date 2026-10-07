@@ -325,7 +325,8 @@ try{
       report?.checks?.labelsNonOverlapping!==true||
       report?.checks?.labelsClearOfOtherMarkers!==true||
       report?.checks?.markersNonOverlapping!==true||
-      report?.checks?.safeMargins!==true
+      report?.checks?.safeMargins!==true||
+      report?.checks?.regionIdentityClear!==true
     ){
       throw new Error('graphics_command_layout_quality_invalid:'+format);
     }
@@ -401,6 +402,7 @@ try{
           issue_count:Number(report.issueCount||0),
           labels_non_overlapping:report.checks?.labelsNonOverlapping===true,
           labels_clear_of_other_markers:report.checks?.labelsClearOfOtherMarkers===true,
+          region_identity_clear:report.checks?.regionIdentityClear===true,
         }
       ])
     ),
