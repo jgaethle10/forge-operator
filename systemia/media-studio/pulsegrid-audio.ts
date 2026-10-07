@@ -35,7 +35,7 @@ export class PulseGridAudioEngine {
   private playing = false;
   private noiseBuffer: AudioBuffer | null = null;
   private readonly trackBuses = new Map<string, PulseGridTrackBus>();
-  private readonly activeSources = new Set<AudioScheduledSourceNode>();
+  private readonly activeSources = new Map<AudioScheduledSourceNode, AudioNode[]>();
   private readonly uiTimers = new Set<ReturnType<typeof setTimeout>>();
   private readonly lookaheadMs = 25;
   private readonly scheduleAheadSeconds = 0.12;
@@ -473,20 +473,27 @@ export class PulseGridAudioEngine {
   }
 
   private trackScheduledSource(source: AudioScheduledSourceNode, cleanupNodes: AudioNode[]) {
-    this.activeSources.add(source);
-    source.onended = () => {
-      this.activeSources.delete(source);
+    this.activeSources.set(source, cleanupNodes);
+    source.onended = () => this.disposeScheduledSource(source);
+  }
+
+  private disposeScheduledSource(source: AudioScheduledSourceNode) {
+    const cleanupNodes = this.activeSources.get(source) || [];
+    this.activeSources.delete(source);
+    try { source.disconnect(); } catch {}
+    for (const node of cleanupNodes) {
+      try { node.disconnect(); } catch {}
+    }
+  }
+
+  private stopScheduledSources() {
+    for (const [source, cleanupNodes] of this.activeSources) {
+      source.onended = null;
+      try { source.stop(); } catch {}
       try { source.disconnect(); } catch {}
       for (const node of cleanupNodes) {
         try { node.disconnect(); } catch {}
       }
-    };
-  }
-
-  private stopScheduledSources() {
-    for (const source of this.activeSources) {
-      try { source.stop(); } catch {}
-      try { source.disconnect(); } catch {}
     }
     this.activeSources.clear();
   }
