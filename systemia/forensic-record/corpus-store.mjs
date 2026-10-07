@@ -68,7 +68,7 @@ function assertRecord(domain,record){
       throw new Error('forensic_finding_number_invalid');
     }
     const truth=clean(record.truth_label);
-    if(truth&&!['EVIDENCE','FACT','HYPOTHESIS','ALLEGATION','TESTIMONY','COMMENTARY','UNLABELED'].includes(truth)){
+    if(truth&&!['EVIDENCE','FACT','ASSUMPTION','HYPOTHESIS','OPINION','ALLEGATION','TESTIMONY','COMMENTARY','UNLABELED'].includes(truth)){
       throw new Error('forensic_truth_label_invalid');
     }
     if(!clean(record.evidence_boundary)) throw new Error('forensic_evidence_boundary_required');
