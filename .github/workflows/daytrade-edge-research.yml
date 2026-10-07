@@ -93,6 +93,8 @@ jobs:
       - name: Run one-shot $20 SOXX paper execution probe
         if: github.event_name == 'pull_request'
         env:
+          ALPACA_PAPER_TRADING: ${{ secrets.ALPACA_PAPER_TRADING }}
+          ALPACA_PAPER_TRADING_SECRET: ${{ secrets.ALPACA_PAPER_TRADING_SECRET }}
           ALPACA_TRADING: ${{ secrets.ALPACA_TRADING }}
           ALPACA_TRADING_SECRET: ${{ secrets.ALPACA_TRADING_SECRET }}
           DAYTRADE_PAPER_PROBE_OUTPUT: artifacts/daytrade-edge/paper-probe-2026-10-06.json
