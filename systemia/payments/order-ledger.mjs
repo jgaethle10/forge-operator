@@ -84,8 +84,9 @@ function publicOrder(order){
 }
 
 export class EvercraftPaymentOrderStore {
-  constructor(root){
+  constructor(root,{ravenReceiptVerifier=null}={}){
     this.root=path.resolve(root);
+    this.ravenReceiptVerifier=ravenReceiptVerifier;
     this.ordersDir=path.join(this.root,'orders');
     this.locksDir=path.join(this.root,'locks');
     this.requestsDir=path.join(this.root,'requests');
@@ -252,8 +253,17 @@ export class EvercraftPaymentOrderStore {
       if(error?.message==='payment_request_idempotency_conflict') throw error;
     }
 
-    const orderId='epo_'+crypto.randomUUID();
+    const orderId='epo_'+sha256(request).slice(0,32);
     return this.withLock(orderId,async()=>{
+      try{
+        const existing=JSON.parse(await fs.readFile(requestFile,'utf8'));
+        if(existing.fingerprint!==fingerprint) throw new Error('payment_request_idempotency_conflict');
+        return this.getOrder(existing.order_id);
+      }catch(error){
+        if(error?.code!=='ENOENT' && error?.message!=='payment_request_idempotency_conflict') throw error;
+        if(error?.message==='payment_request_idempotency_conflict') throw error;
+      }
+
       const event=this.makeEvent({
         orderId,
         events:[],
@@ -315,22 +325,40 @@ export class EvercraftPaymentOrderStore {
     });
   }
 
+  async verifyRavenReceipt(receipt,{purpose,order}={}){
+    if(typeof this.ravenReceiptVerifier!=='function'){
+      throw new Error('raven_receipt_verifier_required');
+    }
+    const result=await this.ravenReceiptVerifier(receipt,{
+      purpose,
+      order:publicOrder(order),
+    });
+    if(result?.ok!==true) throw new Error('raven_receipt_verification_failed');
+    const hash=String(result.receipt_hash||'').trim().toLowerCase();
+    if(!/^[a-f0-9]{64}$/.test(hash)) throw new Error('raven_receipt_hash_invalid');
+    if(result.purpose!==purpose) throw new Error('raven_receipt_purpose_mismatch');
+    if(String(result.order_id||'')!==order.order_id) throw new Error('raven_receipt_order_mismatch');
+    return {...result,receipt_hash:hash};
+  }
+
   async recordRavenHandoff(orderId,{
     checkoutRef,
-    ravenReceiptHash,
+    ravenReceipt,
     actor={type:'system',id:'raven_nexus'},
   }={}){
     const current=await this.readRaw(orderId);
     if(current.state!=='confirmed') throw new Error('payment_order_not_confirmed');
-    const receipt=String(ravenReceiptHash||'').trim().toLowerCase();
-    if(!/^[a-f0-9]{64}$/.test(receipt)) throw new Error('raven_receipt_hash_invalid');
+    const verified=await this.verifyRavenReceipt(ravenReceipt,{
+      purpose:'payment_checkout_handoff',
+      order:current,
+    });
     return this.append(orderId,{
       type:'settlement.handoff_prepared',
       actor,
       data:{
         provider_boundary:'raven_nexus',
         checkout_ref:cleanId(checkoutRef,'checkout_ref'),
-        raven_receipt_hash:receipt,
+        raven_receipt_hash:verified.receipt_hash,
       },
     });
   }
@@ -340,7 +368,7 @@ export class EvercraftPaymentOrderStore {
     amountMinor,
     currency='USD',
     status,
-    ravenReceiptHash,
+    ravenReceipt,
     actor={type:'system',id:'raven_nexus'},
   }={}){
     const current=await this.readRaw(orderId);
@@ -350,9 +378,13 @@ export class EvercraftPaymentOrderStore {
     if(amount!==current.amount_minor) throw new Error('settlement_amount_mismatch');
     if(normalizedCurrency!==current.currency) throw new Error('settlement_currency_mismatch');
     if(status!=='succeeded') throw new Error('settlement_not_succeeded');
-    const receipt=String(ravenReceiptHash||'').trim().toLowerCase();
-    if(!/^[a-f0-9]{64}$/.test(receipt)) throw new Error('raven_receipt_hash_invalid');
-    if(receipt===current.handoff?.raven_receipt_hash) throw new Error('settlement_receipt_must_be_distinct_from_handoff');
+    const verified=await this.verifyRavenReceipt(ravenReceipt,{
+      purpose:'payment_settlement_succeeded',
+      order:current,
+    });
+    if(Number(verified.amount_minor)!==amount) throw new Error('raven_receipt_amount_mismatch');
+    if(String(verified.currency||'').toUpperCase()!==normalizedCurrency) throw new Error('raven_receipt_currency_mismatch');
+    if(verified.receipt_hash===current.handoff?.raven_receipt_hash) throw new Error('settlement_receipt_must_be_distinct_from_handoff');
     return this.append(orderId,{
       type:'settlement.succeeded',
       actor,
@@ -362,7 +394,7 @@ export class EvercraftPaymentOrderStore {
         provider_event_id:cleanId(providerEventId,'provider_event_id'),
         amount_minor:amount,
         currency:normalizedCurrency,
-        raven_receipt_hash:receipt,
+        raven_receipt_hash:verified.receipt_hash,
       },
     });
   }
