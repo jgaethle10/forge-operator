@@ -1,3 +1,4 @@
+import { syncWorldForgeChangeSetToRuntime } from './world-forge-runtime-sync.js';
 import { compileWorldForgeToWorldEngine } from './world-forge-world-engine.js';
 import {
   applyWorldForgeChangeSet,
@@ -19,6 +20,8 @@ import {
   type WorldForgeOperation,
   type WorldForgeProject,
 } from './world-forge.js';
+import type { WorldDefinition } from '../world-engine/engine.js';
+import type { WorldAssetManifest } from '../world-engine/studio-edit.js';
 
 type WorldForgeHttpDeps = {
   rateLimit: (maxRequests:number,windowMs:number)=>
@@ -409,6 +412,35 @@ export function registerWorldForgeRoutes(app:Express,deps:WorldForgeHttpDeps){
         res.json({success:true,shot});
       }catch(error){
         res.status(422).json({
+          success:false,
+          error:error instanceof Error?error.message:String(error),
+        });
+      }
+    },
+  );
+
+  app.post(
+    '/api/fallen/world-forge/runtime-sync',
+    rateLimit(180,60*60*1000),
+    (req:Request,res:Response)=>{
+      const project=req.body?.project as WorldForgeProject|undefined;
+      const changeSet=req.body?.changeSet as WorldForgeChangeSet|undefined;
+      const runtimeWorld=req.body?.runtimeWorld as WorldDefinition|undefined;
+      const runtimeAssets=req.body?.runtimeAssets as WorldAssetManifest|undefined;
+      if(!project||!changeSet||!runtimeWorld||!runtimeAssets){
+        badRequest(res,'Project, ChangeSet, runtime world, and runtime assets are required.');
+        return;
+      }
+      try{
+        const sync=syncWorldForgeChangeSetToRuntime({
+          project,
+          changeSet,
+          runtimeWorld,
+          runtimeAssets,
+        });
+        res.json({success:true,sync});
+      }catch(error){
+        res.status(409).json({
           success:false,
           error:error instanceof Error?error.message:String(error),
         });

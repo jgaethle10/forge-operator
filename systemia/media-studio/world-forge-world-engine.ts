@@ -708,7 +708,7 @@ export function compileWorldForgeToWorldEngine(input:{
             uri:`world-forge://${encodeURIComponent(project.id)}/geometry/${descriptorDigest}`,
             contentType:'application/vnd.evercraft.world-engine.geometry+json',
             provenance:{
-              sourceRef:`world-forge:${projectDigest}:geometry:${descriptorDigest}`,
+              sourceRef:`world-forge:${project.id}:geometry:${descriptorDigest}`,
               rightsState:'owned',
               license:'Evercraft-owned authored geometry',
             },
@@ -791,10 +791,7 @@ export function compileWorldForgeToWorldEngine(input:{
     metadata:{
       source:'world-forge',
       sourceProjectId:project.id,
-      sourceProjectVersion:project.version,
-      sourceProjectDigest:projectDigest,
       coordinateConversion:'right_handed_z_up_to_right_handed_y_up_v1',
-      visualParity,
       renderAuthority:false,
       publicationAuthority:false,
       simulationAuthority:false,
