@@ -4,6 +4,7 @@ on:
   pull_request:
     paths:
       - 'scripts/fabric-edge-visual-freshness.mjs'
+      - 'scripts/diagnose-fabric-owned-edge-release.sh'
       - '.github/workflows/visual-edge-freshness-diagnostic.yml'
       - 'systemia/graphics-command/**'
       - 'systemia/visual-desk/**'
@@ -22,6 +23,13 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: 22
+
+      - name: Validate safe on-host release doctor
+        shell: bash
+        run: |
+          set -euo pipefail
+          bash -n scripts/diagnose-fabric-owned-edge-release.sh
+          bash scripts/diagnose-fabric-owned-edge-release.sh --help | grep -q 'performs no fetch'
 
       - name: Fingerprint expected and live Visual Desk specimen
         shell: bash
