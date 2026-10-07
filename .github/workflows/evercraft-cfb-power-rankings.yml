@@ -60,6 +60,7 @@ jobs:
           node --test systemia/newsroom/cfb-power-story-draft.test.mjs
           node --test systemia/newsroom/cfb-published-edition.test.mjs
           node --test systemia/newsroom/cfb-power-release.test.mjs
+          node --test systemia/newsroom/cfb-clip-facebook-publish.test.mjs
           node --test systemia/graphics-command/ranking-poster-renderer.test.mjs
 
       - name: Resolve evidence window
