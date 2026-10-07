@@ -179,3 +179,43 @@ test('carries canonical article identity into the Clip handoff instead of requir
   assert.equal(receipt.title, 'Owned Journal Test');
   assert.equal(receipt.clip_handoff_ref, 'production/owned-journal-test/clip-handoff.json');
 });
+
+
+test('renders a responsive ranking surface without a horizontally dependent table', () => {
+  const outDir = fs.mkdtempSync(path.join(os.tmpdir(), 'journal-ranking-'));
+  const fixture = story();
+  fixture.ranking_table = {
+    schema: 'evercraft.journal.ranking-table.v1',
+    title: 'Evercraft Top 3',
+    note: 'Results-first ranking surface.',
+    rows: [
+      { rank: 1, team_name: 'Alpha State', record: { wins: 5, losses: 0 }, movement: 2, power_score: 94.25, confidence: 0.91 },
+      { rank: 2, team_name: 'Beta Tech', record: { wins: 4, losses: 1 }, movement: 0, power_score: 91.10, confidence: 0.88 },
+      { rank: 3, team_name: 'Gamma', record: { wins: 4, losses: 1 }, movement: null, power_score: 88.75, confidence: 0.86 }
+    ]
+  };
+  publishJournalStories([fixture], {
+    outDir,
+    now: new Date('2026-09-30T22:00:00.000Z'),
+    publicOrigin: 'https://journal.test.evercraft.local'
+  });
+  const html = fs.readFileSync(path.join(outDir, 'owned-journal-test', 'index.html'), 'utf8');
+  assert.match(html, /ranking-surface/);
+  assert.match(html, /#1/);
+  assert.match(html, /Alpha State/);
+  assert.match(html, /94\.25/);
+  assert.doesNotMatch(html, /<table/i);
+});
+
+test('rejects malformed ranking surfaces before publication', () => {
+  const fixture = story();
+  fixture.ranking_table = {
+    schema: 'evercraft.journal.ranking-table.v1',
+    rows: [
+      { rank: 1, team_name: 'Alpha State', power_score: 101, confidence: 0.9 }
+    ]
+  };
+  assert.throws(() => validateJournalStory(fixture, {
+    now: new Date('2026-09-30T22:00:00.000Z')
+  }), /power_score must be 0 to 100/i);
+});
