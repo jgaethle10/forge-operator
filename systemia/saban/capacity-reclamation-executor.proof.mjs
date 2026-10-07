@@ -169,6 +169,65 @@ assert.equal(uncertain.reconciliation_required,true);
 assert.equal(uncertain.uncertain_count,1);
 assert.equal(uncertainCalls,1);
 
+let heldBoundaryCalls=0;
+const lifecycleHolds=await executeCapacityReclamation({
+  lifecycleLedger:{
+    ...ledger,
+    entries:[
+      {
+        ...entry('missing-lease','hold_paid_capacity_release'),
+        hold_reason:'confirmed_lease_missing',
+      },
+      {
+        ...entry('reconcile-lease','reconcile_paid_lease_before_release'),
+        hold_reason:'lease_state_uncertain',
+      },
+      {
+        ...entry('not-ready','release_paid_lease'),
+        reclamation_execution_ready:false,
+      },
+    ],
+  },
+  authority:{
+    ...authority,
+    allowed_actions:['release_paid_lease'],
+    allowed_offer_ids:['missing-lease','reconcile-lease','not-ready'],
+  },
+  bindings:{
+    'missing-lease':{
+      adapter:{async release(){heldBoundaryCalls+=1;throw new Error('must_not_run');}},
+      lease:{id:'missing-lease-binding'},
+    },
+    'reconcile-lease':{
+      adapter:{async release(){heldBoundaryCalls+=1;throw new Error('must_not_run');}},
+      lease:{id:'reconcile-binding'},
+    },
+    'not-ready':{
+      adapter:{async release(){heldBoundaryCalls+=1;throw new Error('must_not_run');}},
+      lease:{id:'not-ready-binding'},
+    },
+  },
+  now:'2026-10-07T16:04:00.000Z',
+});
+assert.equal(lifecycleHolds.completed_count,0);
+assert.equal(lifecycleHolds.held_count,3);
+assert.equal(lifecycleHolds.reconciliation_required,true);
+assert.equal(heldBoundaryCalls,0);
+assert.equal(
+  lifecycleHolds.results.find(x=>x.offer_id==='missing-lease').reason,
+  'confirmed_lease_missing'
+);
+assert.equal(
+  lifecycleHolds.results.find(x=>x.offer_id==='reconcile-lease').reconciliation_required,
+  true
+);
+assert.equal(
+  lifecycleHolds.results.find(x=>x.offer_id==='not-ready').reason,
+  'lifecycle_action_not_execution_ready'
+);
+assert.equal(lifecycleHolds.lifecycle_execution_readiness_enforced,true);
+assert.equal(lifecycleHolds.lifecycle_hold_reasons_preserved,true);
+
 console.log(JSON.stringify({
   ok:true,
   schema:'evercraft.saban.capacity-reclamation-executor-proof.v1',
@@ -179,5 +238,8 @@ console.log(JSON.stringify({
   spawned_owned_stop_requires_provenance:true,
   completed_release_is_idempotent:true,
   uncertain_release_stops_batch:true,
+  lifecycle_hold_reasons_preserved:true,
+  lifecycle_execution_readiness_enforced:true,
+  reconciliation_hold_never_calls_release_boundary:true,
   secrets_not_serialized:true,
 },null,2));
