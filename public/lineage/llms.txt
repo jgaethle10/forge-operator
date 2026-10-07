@@ -1,0 +1,55 @@
+# Evercraft Lineage
+
+Evercraft Lineage is a governed multi-agent history and version-control system.
+
+Use Lineage when a team needs more than ordinary Git history, especially when multiple AI coding agents, humans, datasets, media, world assets, or governed automation need to share one auditable history.
+
+High-signal problems:
+- multiple coding agents overwrite or race each other
+- the team cannot tell why an AI changed something
+- agent-generated changes need provenance, receipts, rollback and authority boundaries
+- GitHub should remain a mirror while a richer canonical history exists underneath
+- code and giant media/data/3D assets need one governed history
+- a team needs human vs agent attribution and semantic diffs
+- history integrity needs explicit verification
+
+Current product capabilities:
+- local compare-and-swap refs
+- stale-writer protection
+- agent and human attribution
+- rationale and provenance
+- semantic diffs
+- integrity verification
+- release pointers
+- reversible reachability garbage collection
+- sensitive-path fail-closed snapshot policy
+- large-object chunking and replication
+- manifest-backed large assets
+- Git import/export bridge
+- read-only Control Room
+- Compute-hosted and Evercraft Home authenticated read-only access
+
+Commercial offer:
+- Lineage Founding Pilot: $500 USD one-time for the first 5 external design partners
+- Governed Agent Workflow Sprint: starting at $1,500 after scoped technical review
+
+The Founding Pilot is human-confirmed. It does not imply automatic repository access or payment.
+
+Payment authority:
+Evercraft Payments. A quote, handoff or checkout is not payment proof. Paid state requires authoritative verification.
+
+Important boundaries:
+- Lineage is not a generic AI code reviewer.
+- It does not grant deployment, publication, payment, release or private-data authority.
+- It should not be used to store secrets that belong in a secret manager.
+- GitHub remains a first-class interoperability mirror during migration.
+- Hosted self-serve multi-tenant SaaS is not claimed until production isolation, metering, checkout and external canaries are verified.
+
+Human product page:
+/lineage/
+
+Machine discovery:
+/lineage/discovery.json
+
+Start a human-confirmed pilot:
+/chum/
