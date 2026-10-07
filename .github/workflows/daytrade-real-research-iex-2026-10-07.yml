@@ -1,0 +1,43 @@
+name: DayTrade Real Research IEX 2026-10-07
+
+on:
+  push:
+    branches:
+      - "systemia/daytrade-real-research-iex-2026-10-07"
+
+permissions:
+  contents: read
+
+jobs:
+  research:
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Prove real backfill contract
+        run: |
+          node systemia/daytrade-lens/sec-edge-backfill-contract.test.mjs
+          node systemia/daytrade-lens/edge-pilot-readiness.test.mjs
+      - name: Run real SEC to Alpaca research with IEX fallback
+        env:
+          ALPACA_TRADING: ${{ secrets.ALPACA_TRADING }}
+          ALPACA_TRADING_SECRET: ${{ secrets.ALPACA_TRADING_SECRET }}
+          EDGE_LAB_ARTIFACT_DIR: artifacts/daytrade-edge
+          EVERCRAFT_EDGE_LAB_STATE_DIR: artifacts/daytrade-edge/state
+          EDGE_LAB_SEC_LOOKBACK_DAYS: "365"
+          EDGE_LAB_SEC_PUBLICATION_DELAY_MINUTES: "10"
+          EDGE_LAB_TRANSACTION_COST_BPS: "5"
+          EDGE_LAB_ALPACA_QUOTE_FEED: "iex"
+          EDGE_LAB_QUOTE_REQUEST_INTERVAL_MS: "350"
+        run: node systemia/daytrade-lens/sec-edge-backfill.mjs
+      - name: Upload IEX research receipts
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: daytrade-real-research-iex-${{ github.run_id }}
+          path: artifacts/daytrade-edge
+          if-no-files-found: warn
+          retention-days: 30
