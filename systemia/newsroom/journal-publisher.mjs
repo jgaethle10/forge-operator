@@ -369,7 +369,8 @@ export function publishJournalStories(inputStories, {
         }))
       };
       rankingVisuals = {};
-      for (const format of ['feed','square','story']) {
+      for (const [format, minimumRows] of [['feed',10],['square',8],['story',15]]) {
+        if (rankingPayload.rankings.length < minimumRows) continue;
         const svg = renderCfbRankingPoster(rankingPayload, format);
         const filename = `ranking-${format}.svg`;
         fs.writeFileSync(path.join(productionDir, filename), svg);
