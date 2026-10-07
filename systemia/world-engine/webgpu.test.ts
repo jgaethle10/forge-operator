@@ -11,6 +11,7 @@ import {
   validateGeometryAsset,
   type GeometryAsset
 } from './webgpu.js';
+import type { TextureAsset } from './texture.js';
 
 const triangle:GeometryAsset={
   schema:'evercraft.world-engine.geometry.v1',
@@ -25,7 +26,42 @@ const triangle:GeometryAsset={
     0,0,1,
     0,0,1,
     0,0,1
+  ],
+  uvs:[
+    0,0,
+    1,0,
+    .5,1
   ]
+};
+
+const baseTexture:TextureAsset={
+  schema:'evercraft.world-engine.texture.v1',
+  id:'texture:metal-base',
+  width:2,
+  height:2,
+  format:'rgba8unorm-srgb',
+  data:[
+    255,0,0,255, 0,255,0,255,
+    0,0,255,255, 255,255,255,255
+  ]
+};
+
+const ormTexture:TextureAsset={
+  schema:'evercraft.world-engine.texture.v1',
+  id:'texture:metal-orm',
+  width:1,
+  height:1,
+  format:'rgba8unorm',
+  data:[255,128,64,255]
+};
+
+const emissiveTexture:TextureAsset={
+  schema:'evercraft.world-engine.texture.v1',
+  id:'texture:metal-emissive',
+  width:1,
+  height:1,
+  format:'rgba8unorm-srgb',
+  data:[64,32,16,255]
 };
 
 function world():WorldDefinition{
@@ -195,7 +231,7 @@ test('WebGPU render plan is deterministic and binds camera material geometry and
   assert.equal(first.draws[0].modelMatrix[12],2);
   assert.equal(first.draws[0].metallic,.5);
   assert.equal(first.draws[0].roughness,.25);
-  assert.equal(first.draws[0].pipelineKey,'0:opaque:back');
+  assert.equal(first.draws[0].pipelineKey,'0:opaque:back:repeat:repeat:linear:linear');
 
   assert.deepEqual(first.lights.map(light=>light.entityId),['ambient','point','spot','sun']);
   assert.deepEqual(first.lights.map(light=>light.kind),[0,2,3,1]);
@@ -222,21 +258,96 @@ test('WebGPU planning fails closed when a geometry asset is missing',()=>{
   );
 });
 
-test('v9 fails closed on texture sampling until texture runtime lands',()=>{
-  const visual=frame();
-  const material=visual.materials.find(item=>item.id==='metal')!;
-  material.textureRefs={baseColor:'texture:metal'};
-  // Preserve a valid frame receipt for a frame whose canonical material actually references a texture.
-  const runtime=new EvercraftWorldRuntime({
-    ...world(),
-    visualScene:{
-      ...world().visualScene!,
-      materials:[{
-        ...world().visualScene!.materials[0],
-        textureRefs:{baseColor:'texture:metal'}
-      }]
+test('v13 compiles base-color ORM and emissive texture bindings into the GPU plan',()=>{
+  const texturedWorld=world();
+  texturedWorld.visualScene!.materials[0]={
+    ...texturedWorld.visualScene!.materials[0],
+    textureRefs:{
+      baseColor:baseTexture.id,
+      orm:ormTexture.id,
+      emissive:emissiveTexture.id
+    },
+    sampler:{
+      addressModeU:'clamp-to-edge',
+      addressModeV:'mirror-repeat',
+      magFilter:'nearest',
+      minFilter:'linear'
     }
+  };
+  const runtime=new EvercraftWorldRuntime(texturedWorld);
+  const snapshot=runtime.snapshot();
+  const texturedFrame=compileVisualFrame(
+    snapshot.worldId,
+    snapshot.tick,
+    snapshot.timeSec,
+    runtime.definition.visualScene!,
+    snapshot.entities,
+    snapshot.cameraRuntime!,
+    snapshot.activeEntityIds
+  );
+
+  const plan=compileWebGpuRenderPlan(
+    texturedFrame,
+    [triangle],
+    {width:800,height:600},
+    [emissiveTexture,baseTexture,ormTexture]
+  );
+
+  assert.deepEqual(plan.requiredTextureIds,[
+    'texture:metal-base',
+    'texture:metal-emissive',
+    'texture:metal-orm'
+  ]);
+  assert.deepEqual(plan.draws[0].textureFlags,[1,1,1,0]);
+  assert.deepEqual(plan.draws[0].textureRefs,{
+    baseColor:'texture:metal-base',
+    orm:'texture:metal-orm',
+    emissive:'texture:metal-emissive'
   });
+  assert.equal(
+    plan.draws[0].pipelineKey,
+    '0:opaque:back:clamp-to-edge:mirror-repeat:nearest:linear'
+  );
+  assert.equal(plan.textures.length,3);
+});
+
+test('textured materials require UVs and referenced texture assets',()=>{
+  const texturedWorld=world();
+  texturedWorld.visualScene!.materials[0]={
+    ...texturedWorld.visualScene!.materials[0],
+    textureRefs:{baseColor:baseTexture.id}
+  };
+  const runtime=new EvercraftWorldRuntime(texturedWorld);
+  const snapshot=runtime.snapshot();
+  const texturedFrame=compileVisualFrame(
+    snapshot.worldId,
+    snapshot.tick,
+    snapshot.timeSec,
+    runtime.definition.visualScene!,
+    snapshot.entities,
+    snapshot.cameraRuntime!,
+    snapshot.activeEntityIds
+  );
+
+  const noUv=structuredClone(triangle);
+  delete noUv.uvs;
+  assert.throws(
+    ()=>compileWebGpuRenderPlan(texturedFrame,[noUv],{width:800,height:600},[baseTexture]),
+    /webgpu_texture_uvs_required:geo:triangle/
+  );
+  assert.throws(
+    ()=>compileWebGpuRenderPlan(texturedFrame,[triangle],{width:800,height:600},[]),
+    /webgpu_texture_missing:texture:metal-base/
+  );
+});
+
+test('normal maps fail closed until tangent-space geometry lands',()=>{
+  const texturedWorld=world();
+  texturedWorld.visualScene!.materials[0]={
+    ...texturedWorld.visualScene!.materials[0],
+    textureRefs:{normal:'texture:normal'}
+  };
+  const runtime=new EvercraftWorldRuntime(texturedWorld);
   const snapshot=runtime.snapshot();
   const texturedFrame=compileVisualFrame(
     snapshot.worldId,
@@ -249,8 +360,8 @@ test('v9 fails closed on texture sampling until texture runtime lands',()=>{
   );
 
   assert.throws(
-    ()=>compileWebGpuRenderPlan(texturedFrame,[triangle],{width:800,height:600}),
-    /webgpu_textures_not_yet_supported:metal/
+    ()=>compileWebGpuRenderPlan(texturedFrame,[triangle],{width:800,height:600},[]),
+    /webgpu_normal_map_tangents_required:metal/
   );
 });
 
@@ -294,4 +405,7 @@ test('owned WGSL contains vertex, fragment, lighting and material paths',()=>{
   assert.match(EVERCRAFT_WEBGPU_WGSL,/metallic/);
   assert.match(EVERCRAFT_WEBGPU_WGSL,/roughness/);
   assert.match(EVERCRAFT_WEBGPU_WGSL,/discard/);
+  assert.match(EVERCRAFT_WEBGPU_WGSL,/textureSample/);
+  assert.match(EVERCRAFT_WEBGPU_WGSL,/textureFlags/);
+  assert.match(EVERCRAFT_WEBGPU_WGSL,/ormTexture/);
 });
