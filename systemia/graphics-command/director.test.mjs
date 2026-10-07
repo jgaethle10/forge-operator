@@ -16,6 +16,7 @@ const story={
     hook:'5 ACTIVE VOLCANOES',
     subhook:'4 carry Very High threat potential',
     treatment:'geo_spine',
+    boundaryId:'us-wa-state-outline-cc0-v1',
     metrics:[
       {id:'active',label:'ACTIVE VOLCANOES',value:5},
       {id:'very-high',label:'VERY HIGH THREAT',value:4},
@@ -42,6 +43,10 @@ test('Graphics Command compiles a Visual Story into a Fallen-compatible hero-fir
   assert.equal(plan.fallenStageInput.map.points.length,3);
   assert.equal(plan.fallenStageInput.map.routes.length,2);
   assert.equal(plan.fallenStageInput.map.points[0].evidenceState,'public_source');
+  assert.equal(plan.geography.boundaryName,'Washington');
+  assert.equal(plan.geography.boundaryLicense,'CC0-1.0');
+  assert.equal(plan.geography.boundaryRightsState,'public_domain');
+  assert.match(plan.geography.boundarySourceRef,/unitedstates\/districts/);
   assert.equal(plan.publicationAuthority,false);
 });
 
