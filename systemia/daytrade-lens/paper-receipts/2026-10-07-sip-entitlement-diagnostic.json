@@ -1,0 +1,47 @@
+{
+  "schema": "evercraft.daytrade.sip-entitlement-diagnostic.v1",
+  "generated_at": "2026-10-07T16:31:24.946Z",
+  "source_run_id": 37652688366,
+  "source_artifact_id": 11496419945,
+  "source_artifact_digest": "sha256:d111efc1590c052c482e32661b7a4679cac41c11100effc707b656de16b13920",
+  "read_only": true,
+  "simulation_only": true,
+  "capital_at_risk_usd": 0,
+  "broker_order_submitted": false,
+  "live_order_submitted": false,
+  "symbols": ["SOXX", "SMH", "QQQ"],
+  "rows": [
+    {
+      "symbol": "SOXX",
+      "iex_http_status": 200,
+      "sip_http_status": 403,
+      "iex_spread_bps": 3.9709601954406155,
+      "sip_spread_bps": null,
+      "sip_error": "subscription does not permit querying recent SIP data"
+    },
+    {
+      "symbol": "SMH",
+      "iex_http_status": 200,
+      "sip_http_status": 403,
+      "iex_spread_bps": 2.891705624366636,
+      "sip_spread_bps": null,
+      "sip_error": "subscription does not permit querying recent SIP data"
+    },
+    {
+      "symbol": "QQQ",
+      "iex_http_status": 200,
+      "sip_http_status": 403,
+      "iex_spread_bps": 0.5289605924368858,
+      "sip_spread_bps": null,
+      "sip_error": "subscription does not permit querying recent SIP data"
+    }
+  ],
+  "sip_latest_quote_access": "UNAVAILABLE_OR_NOT_ENTITLED",
+  "pilot_implication": {
+    "consolidated_sip_quote_access_confirmed": false,
+    "iex_must_not_be_mislabeled_as_sip": true,
+    "failed_recent_sip_read_is_a_data_entitlement_blocker": true,
+    "historical_delayed_sip_access_not_yet_tested": true
+  },
+  "live_trade_authority": false
+}
