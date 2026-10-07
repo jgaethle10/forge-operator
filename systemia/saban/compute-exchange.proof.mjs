@@ -21,6 +21,9 @@ const fakeYard={
           capacity:{
             protocol:'evercraft.capacity.v1',
             runtime:'Evercraft Compute',
+            authorized:true,
+            session_attestation_verified:true,
+            zero_cost:true,
             attestation_supported:true,
             device_fingerprint:fingerprint,
             placement_labels:['opportunistic','private','outbound-only','personal-compute'],
@@ -36,6 +39,9 @@ const fakeYard={
           capacity:{
             protocol:'evercraft.capacity.v1',
             runtime:'Evercraft Compute',
+            authorized:true,
+            session_attestation_verified:true,
+            zero_cost:true,
             attestation_supported:true,
             device_fingerprint:'sha256:'+'b'.repeat(64),
             placement_labels:['voluntary'],

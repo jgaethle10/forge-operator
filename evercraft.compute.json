@@ -7,7 +7,10 @@
   "runtime_fabric": "Evercraft Compute",
   "provider_policy": {
     "preferred": "evercraft-owned",
-    "fallback": "none"
+    "fallback": "saban-authorized-zero-spend",
+    "commercial_fallback": "human_authorization_required",
+    "visibility_is_not_authorization": true,
+    "max_autonomous_spend_usd": 0
   },
   "release": {
     "repository": "jgaethle10/forge-operator",
@@ -75,7 +78,8 @@
       "systemia.chum-public-origin.v1",
       "systemia.specialist-handoff-mcp.v1",
       "systemia.public-edge.v1",
-      "systemia.evercraft-home.v1"
+      "systemia.evercraft-home.v1",
+      "systemia.evercraft-web-browser.v1"
     ],
     "public_origin": {
       "workload_class": "systemia.chum-public-origin.v1",
@@ -117,6 +121,14 @@
       "identity": "evercraft-owned",
       "identity_state_required": true,
       "passport_state_required": true
+    },
+    "competition_browser": {
+      "workload_class": "systemia.evercraft-web-browser.v1",
+      "placement": "saban_then_yard",
+      "require_authorized_zero_cost_node": true,
+      "require_session_attestation": true,
+      "require_persistent_storage": true,
+      "paid_capacity_authority": "human_gate"
     }
   },
   "release_gates": [

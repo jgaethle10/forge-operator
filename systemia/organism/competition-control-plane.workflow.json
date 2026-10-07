@@ -25,7 +25,10 @@
     "new_terms": "human_gate",
     "identity_mfa_captcha": "human_gate",
     "payment_or_staking": "human_gate",
-    "personal_attestation": "human_gate"
+    "personal_attestation": "human_gate",
+    "capacity_discovery": "delegated_to_saban",
+    "zero_spend_capacity_acquisition": "autonomous_via_saban",
+    "paid_capacity": "human_gate"
   },
   "runner": "systemia/competition/control-plane-runner.mjs",
   "outputs": {
@@ -36,6 +39,7 @@
     "canonical_path": [
       "systemia",
       "competition_control_plane",
+      "saban_capacity",
       "build_test",
       "raven_qa",
       "raven_nexus",
@@ -50,7 +54,8 @@
     "create_financial_obligation": false,
     "bypass_identity_controls": false,
     "invent_eligibility": false,
-    "claim_success_without_provider_receipt": false
+    "claim_success_without_provider_receipt": false,
+    "paid_capacity_without_human_authority": false
   },
   "inputs": {
     "opportunity_inbox": "artifacts/competition-provider/opportunities.json",
