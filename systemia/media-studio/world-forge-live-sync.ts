@@ -529,7 +529,7 @@ function geometrySetDigest(geometries:GeometryAsset[]){
       .sort((a,b)=>a.id.localeCompare(b.id))
       .map(geometry=>({
         id:geometry.id,
-        digest:geometryAssetDigest(geometry),
+        sha256:geometryAssetDigest(geometry),
       })),
   );
 }
