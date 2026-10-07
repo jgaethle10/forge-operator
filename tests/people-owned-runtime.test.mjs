@@ -36,6 +36,8 @@ test('owned People Layer completes person-sovereign lifecycle without Base44', (
 
   const inviteState = runtime.inspectInvite(invitation.raw_token);
   assert.equal(inviteState.brain.brain_key, brain.brain_key);
+  assert.equal('goals' in inviteState.brain, false);
+  assert.equal('owner_identity_ref' in inviteState.brain, false);
   assert.deepEqual(inviteState.invite.scopes, ['memory', 'relationships', 'opportunities', 'export']);
 
   assert.throws(
@@ -216,6 +218,8 @@ test('owned People Layer source has no Base44 runtime route', () => {
   const files = [
     'systemia/people/runtime.mjs',
     'systemia/people/http.mjs',
+    'systemia/people/service-runtime.mjs',
+    'systemia/people/web/app.js',
     'src/PeopleLayer.tsx',
   ];
   for (const file of files) {
