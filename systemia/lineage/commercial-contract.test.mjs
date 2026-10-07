@@ -2,6 +2,7 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import { readFile } from 'node:fs/promises';
 import { fileURLToPath } from 'node:url';
+import { buildPaymentRoute, assertEvercraftPaymentRoute } from '../payments/payment-routing.mjs';
 
 const root = fileURLToPath(new URL('../../', import.meta.url));
 const read = (path) => readFile(new URL('../../' + path, import.meta.url), 'utf8');
@@ -80,4 +81,45 @@ test('Lineage sales demo is explicitly synthetic and demonstrates stale-writer p
       (row) => row.event === 'losing_work_preserved' && row.reachable_from_branch === false
     )
   );
+});
+
+
+test('Lineage founding pilot routes through Evercraft Payments rather than a direct processor checkout', async () => {
+  const offer = JSON.parse(await read('commercial/lineage-offer-2026-10-07.json'));
+  const discovery = JSON.parse(await read('public/lineage/discovery.json'));
+  const route = buildPaymentRoute({
+    productKey: 'lineage',
+    offerKey: 'lineage-founding-pilot-500',
+    amount: 500,
+    currency: 'USD',
+  });
+
+  assert.equal(assertEvercraftPaymentRoute(route).ok, true);
+  assert.equal(route.commerce_layer, 'evercraft_payments');
+  assert.equal(route.provider_boundary, 'raven_nexus');
+  assert.equal(route.settlement_adapter, 'stripe');
+  assert.equal(route.direct_provider_checkout_allowed, false);
+  assert.equal(route.order_truth, 'evercraft_payments');
+
+  assert.equal(offer.payment.commerce_layer, route.commerce_layer);
+  assert.equal(offer.payment.provider_boundary, route.provider_boundary);
+  assert.equal(offer.payment.settlement_adapter, route.settlement_adapter);
+  assert.equal(offer.payment.offer_key, route.offer_key);
+  assert.equal(offer.payment.amount_usd, route.amount);
+  assert.equal(offer.payment.direct_provider_checkout_allowed, false);
+  assert.match(offer.payment.checkout_state, /^held_pending_verified_/);
+
+  assert.deepEqual(discovery.commercial.payment, {
+    authority: 'Evercraft Payments',
+    commerce_layer: 'evercraft_payments',
+    provider_boundary: 'raven_nexus',
+    settlement_adapter: 'stripe',
+    provider_role: 'settlement_adapter',
+    product_key: 'lineage',
+    offer_key: 'lineage-founding-pilot-500',
+    amount_usd: 500,
+    direct_provider_checkout_allowed: false,
+    checkout_state: 'held_pending_verified_evercraft_payment_order_path',
+    paid_state_requires_authoritative_verification: true,
+  });
 });
