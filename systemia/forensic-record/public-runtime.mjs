@@ -6,6 +6,11 @@ import {
   searchForensicFindings,
   forensicCorpusHealth,
 } from './corpus-store.mjs';
+import {
+  forensicPublicHtml,
+  forensicPublicCss,
+  forensicPublicJs,
+} from './public-ui.mjs';
 
 const clean=(v)=>String(v??'').trim();
 
@@ -76,6 +81,25 @@ function send(res,status,body,extraHeaders={}){
   });
   res.end(bytes);
 }
+
+function sendText(res,status,body,contentType,extraHeaders={}){
+  const bytes=Buffer.from(String(body??''));
+  res.writeHead(status,{
+    'content-type':contentType,
+    'content-length':bytes.length,
+    'cache-control':'no-store',
+    'x-content-type-options':'nosniff',
+    'referrer-policy':'no-referrer',
+    'x-frame-options':'DENY',
+    ...extraHeaders,
+  });
+  res.end(bytes);
+}
+
+const publicPageHeaders={
+  'content-security-policy':"default-src 'self'; img-src 'self' data:; style-src 'self'; script-src 'self'; connect-src 'self'; object-src 'none'; base-uri 'none'; frame-ancestors 'none'; form-action 'self'",
+  'permissions-policy':'camera=(), microphone=(), geolocation=(), payment=(), usb=()',
+};
 
 function safeStats(health,seed){
   return {
@@ -165,6 +189,18 @@ export async function startForensicRecordPublicRuntime({
       if(!rateAllowed(req)) return send(res,429,{ok:false,error:'rate_limited'},{'retry-after':'60'});
 
       if(req.method==='GET'&&url.pathname==='/'){
+        return sendText(res,200,forensicPublicHtml(),'text/html; charset=utf-8',publicPageHeaders);
+      }
+
+      if(req.method==='GET'&&url.pathname==='/styles.css'){
+        return sendText(res,200,forensicPublicCss(),'text/css; charset=utf-8',publicPageHeaders);
+      }
+
+      if(req.method==='GET'&&url.pathname==='/app.js'){
+        return sendText(res,200,forensicPublicJs(),'application/javascript; charset=utf-8',publicPageHeaders);
+      }
+
+      if(req.method==='GET'&&url.pathname==='/api'){
         return send(res,200,{
           ok:true,
           schema:'evercraft.forensic-record.public-api.v1',
