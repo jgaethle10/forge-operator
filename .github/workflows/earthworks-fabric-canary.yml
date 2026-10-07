@@ -36,6 +36,7 @@ jobs:
         run: |
           set -euo pipefail
           health="$(curl --fail --silent --show-error --retry 4 --retry-all-errors --retry-delay 2 --max-time 20 "$FABRIC_ORIGIN/health")"
+          printf 'PUBLIC_FABRIC_HEALTH=%s\n' "$health"
           printf '%s' "$health" | jq -e '
             .ok == true and
             (.service == "specialist-handoff-mcp" or .service == "evercraft-fabric-local") and
