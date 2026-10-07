@@ -32,6 +32,9 @@ jobs:
       - name: Prove visual story factory and Radar admission bridge
         run: node --test systemia/visual-desk/factory.test.mjs systemia/visual-desk/radar-adapter.test.mjs
 
+      - name: Prove Radar remains healthy after spatial projection
+        run: npm run test:radar
+
       - name: Build source-backed specimen release
         run: |
           rm -rf _visual_desk_release
