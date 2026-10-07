@@ -32,8 +32,11 @@ async function getJson(url,{fetchImpl=globalThis.fetch,timeoutMs=12000}={}){
   try{
     response=await fetchImpl(url,{
       headers:{
-        Accept:'application/json',
-        'User-Agent':'EvercraftCFBPowerIndex/0.1 (+https://journal.evercraft.global)',
+        Accept:'application/json, text/plain, */*',
+        'User-Agent':'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/141.0.0.0 Safari/537.36',
+        'Accept-Language':'en-US,en;q=0.9',
+        Referer:'https://www.espn.com/',
+        Origin:'https://www.espn.com',
         'Cache-Control':'no-cache',
       },
       signal:controller.signal,
