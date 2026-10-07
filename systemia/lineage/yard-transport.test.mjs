@@ -5,6 +5,8 @@ import { mkdtemp, rm, writeFile } from 'node:fs/promises';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import { LineageStore } from './core.mjs';
+import { LargeObjectStore } from './large-object.mjs';
+import { fetchLargeObject, pushLargeObject } from './large-object-remote.mjs';
 import { pushCommitGraph } from './remote-protocol.mjs';
 import { openYardLineageRemote } from './yard-transport.mjs';
 import { startLineageRemoteRuntime } from './yard-remote-runtime.mjs';
@@ -37,6 +39,7 @@ async function listen(server) {
 test('Yard Lineage session uses short-lived authority and carries normal graph push', async () => {
   const sourceRoot = await mkdtemp(join(tmpdir(), 'lineage-yard-source-'));
   const remoteRoot = await mkdtemp(join(tmpdir(), 'lineage-yard-state-'));
+  const fetchedLargeRoot = await mkdtemp(join(tmpdir(), 'lineage-yard-large-fetch-'));
   const allocatorToken = 'allocator-secret';
   const leaseToken = 'lease-secret';
   const relayToken = 'relay-secret';
@@ -205,6 +208,64 @@ test('Yard Lineage session uses short-lived authority and carries normal graph p
     assert.equal(pushed.head, commit.commit_id);
     assert.equal(await session.remote.readRef('main'), commit.commit_id);
 
+    const sourceLarge = new LargeObjectStore(source.dir);
+    const fetchedLarge = new LargeObjectStore(fetchedLargeRoot);
+    await Promise.all([sourceLarge.init(), fetchedLarge.init()]);
+
+    const v1 = Buffer.concat([
+      Buffer.alloc(180_000, 'A'),
+      Buffer.alloc(180_000, 'B'),
+      Buffer.alloc(180_000, 'C'),
+    ]);
+    const v2 = Buffer.concat([
+      Buffer.alloc(180_000, 'A'),
+      Buffer.from('SHOT-17-CAMERA-CUT'),
+      Buffer.alloc(180_000, 'B'),
+      Buffer.alloc(180_000, 'C'),
+    ]);
+    const chunking = {
+      minChunkBytes: 16 * 1024,
+      averageChunkBytes: 32 * 1024,
+      maxChunkBytes: 64 * 1024,
+    };
+
+    const master1 = await sourceLarge.putBuffer(v1, {
+      logicalName: 'fallen-master-v1.mov',
+      mediaType: 'video/quicktime',
+      chunking,
+    });
+    const master2 = await sourceLarge.putBuffer(v2, {
+      logicalName: 'fallen-master-v2.mov',
+      mediaType: 'video/quicktime',
+      chunking,
+    });
+
+    const firstMasterPush = await pushLargeObject({
+      store: sourceLarge,
+      remote: session.remote,
+      manifestId: master1.manifest_id,
+      concurrency: 4,
+    });
+    assert.equal(firstMasterPush.transferred_chunks, firstMasterPush.chunks);
+
+    const secondMasterPush = await pushLargeObject({
+      store: sourceLarge,
+      remote: session.remote,
+      manifestId: master2.manifest_id,
+      concurrency: 4,
+    });
+    assert.ok(secondMasterPush.reused_chunks > 0);
+    assert.ok(secondMasterPush.transferred_chunks < secondMasterPush.chunks);
+
+    const fetchedMaster = await fetchLargeObject({
+      store: fetchedLarge,
+      remote: session.remote,
+      manifestId: master2.manifest_id,
+      concurrency: 4,
+    });
+    assert.equal(fetchedMaster.content_sha256, master2.content_sha256);
+    assert.deepEqual(await fetchedLarge.materialize(master2.manifest_id), v2);
+
     const closed = await session.close();
     assert.equal(closed.allocator_token_retained, false);
     assert.equal(closed.lease_token_retained, false);
@@ -222,6 +283,7 @@ test('Yard Lineage session uses short-lived authority and carries normal graph p
     await new Promise((resolve) => relayServer.close(resolve));
     await rm(sourceRoot, { recursive: true, force: true });
     await rm(remoteRoot, { recursive: true, force: true });
+    await rm(fetchedLargeRoot, { recursive: true, force: true });
   }
 });
 
