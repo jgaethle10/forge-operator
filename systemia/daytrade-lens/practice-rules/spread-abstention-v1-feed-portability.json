@@ -1,0 +1,34 @@
+{
+  "schema": "evercraft.daytrade.feed-portability-policy.v1",
+  "rule_id": "spread-abstention-v1",
+  "frozen_rule_unchanged": true,
+  "source_decision_feed": "iex",
+  "recent_consolidated_sip_access": false,
+  "delayed_historical_sip_access": true,
+  "latest_decision_audit": {
+    "source_run_id": 37668941992,
+    "instrument_decisions": 33,
+    "sip_quotes_available": 30,
+    "decision_disagreements": 12,
+    "disagreement_fraction_available": 0.4,
+    "iex_abstain_vs_sip_trade_count": 12,
+    "iex_trade_vs_sip_abstain_count": 0
+  },
+  "status": "FEED_PORTABILITY_BLOCKED",
+  "pilot_readiness_blocked": true,
+  "rules": {
+    "do_not_transfer_3bps_threshold_from_iex_to_sip_without_new_validation": true,
+    "do_not_call_iex_consolidated_nbbo": true,
+    "delayed_sip_may_be_used_for_after_the_fact_validation_only": true,
+    "observed_feed_disagreement_must_be_preserved": true,
+    "threshold_must_not_be_retuned_post_hoc_from_this_audit": true
+  },
+  "clearance_requires": [
+    "real-time consolidated SIP or equivalent consolidated NBBO access",
+    "feed-specific rule semantics frozen before prospective validation",
+    "prospective multi-date and multi-phase validation on the decision feed",
+    "exact entry and exit timestamps preserved in every new receipt",
+    "broker-paper execution evidence remains separately required"
+  ],
+  "live_trade_authority": false
+}
