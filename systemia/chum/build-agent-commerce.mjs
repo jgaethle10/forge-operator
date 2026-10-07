@@ -1,11 +1,31 @@
 import fs from 'node:fs';
 import path from 'node:path';
+import {createHash} from 'node:crypto';
 
 const SELL_NOW_PATH = 'public/chum/sell-now.json';
 const OUT_JSON = 'public/chum/agent-commerce.json';
 const OUT_TEXT = 'public/chum/agent-commerce.txt';
 const OUT_HTML = 'public/chum/agent-commerce.html';
 const WELL_KNOWN = 'public/.well-known/evercraft-agent-commerce.json';
+const PROTECTED_GENERATED_ARTIFACTS = 'governance/protected-generated-artifacts.json';
+
+function gitBlobSha(file){
+  const body=fs.readFileSync(file);
+  const header=Buffer.from('blob '+body.length+'\0');
+  return createHash('sha1').update(Buffer.concat([header,body])).digest('hex');
+}
+
+function protectedArtifactMap(){
+  if(!fs.existsSync(PROTECTED_GENERATED_ARTIFACTS)) return new Map();
+  const parsed=JSON.parse(fs.readFileSync(PROTECTED_GENERATED_ARTIFACTS,'utf8'));
+  if(parsed?.schema!=='evercraft.protected-generated-artifacts.v1'){
+    throw new Error('protected_generated_artifacts_schema_invalid');
+  }
+  return new Map((parsed.artifacts||[]).map((row)=>[String(row.path||''),row]));
+}
+
+const protectedArtifacts=protectedArtifactMap();
+
 
 const sellNow = JSON.parse(fs.readFileSync(SELL_NOW_PATH, 'utf8'));
 const offers = Array.isArray(sellNow.offers) ? sellNow.offers : [];
@@ -221,7 +241,26 @@ fs.writeFileSync(OUT_HTML, html + '\n');
 for (const row of packets) {
   const dir = path.join('public/chum/intents', slugify(row.public_id));
   if (!fs.existsSync(dir)) continue;
-  fs.writeFileSync(path.join(dir, 'agent.json'), JSON.stringify({
+  const outputFile=path.join(dir,'agent.json');
+  const protectedRow=protectedArtifacts.get(outputFile);
+  if(protectedRow){
+    const expected=String(protectedRow.git_blob_sha||'');
+    const approvedSource=String(protectedRow.approved_source_path||'');
+    if(!approvedSource||!fs.existsSync(approvedSource)){
+      throw new Error('protected_generated_artifact_approved_source_missing:'+outputFile);
+    }
+    const approvedActual=gitBlobSha(approvedSource);
+    if(approvedActual!==expected){
+      throw new Error('protected_generated_artifact_approved_source_drift:'+outputFile);
+    }
+    fs.mkdirSync(path.dirname(outputFile),{recursive:true});
+    fs.copyFileSync(approvedSource,outputFile);
+    if(gitBlobSha(outputFile)!==expected){
+      throw new Error('protected_generated_artifact_materialization_failed:'+outputFile);
+    }
+    continue;
+  }
+  fs.writeFileSync(outputFile, JSON.stringify({
     schema: 'evercraft.agent-close-packet.v1',
     provider: 'Evercraft LLC',
     ...row
