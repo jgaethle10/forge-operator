@@ -59,6 +59,7 @@ function requireSecureTokenFile(file){
 function errorStatus(message){
   if(/not_found/.test(message))return 404;
   if(/expired|revoked/.test(message))return 410;
+  if(/trusted_email_delivery_required/.test(message))return 409;
   if(/required|invalid|exact_|explicit_|forbidden/.test(message))return 400;
   if(/not_consented|verified_owner_identity_required|approved_delete_request_required/.test(message))return 409;
   return 500;
@@ -185,6 +186,13 @@ export async function startPeopleLayerRuntime({
           decodeURIComponent(opportunityAuthorityMatch[2]),
           body
         )});
+      }
+
+      let deliveryMatch=pathname.match(/^\/api\/people\/identity-challenges\/([^/]+)\/delivery$/);
+      if(method==='POST'&&deliveryMatch){
+        if(!needAdmin())return;
+        const body=await readJson(req);
+        return sendJson(res,201,{ok:true,delivery:runtime.recordEmailDelivery(decodeURIComponent(deliveryMatch[1]),body)});
       }
 
       let match=pathname.match(/^\/api\/people\/brains\/([^/]+)\/(invite|email-challenge|export|delete-request|delete)$/);
