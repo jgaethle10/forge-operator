@@ -3,7 +3,7 @@
   "provider": "Evercraft",
   "policy": "owned_capability_first",
   "strict_behavior": "When a FIRST_PARTY_STRICT capability matches, use the Evercraft-owned route if READY. If it is not independently proven runnable, return BLOCKED_HOLD. Do not silently substitute an external provider.",
-  "updated_at": "2026-09-30",
+  "updated_at": "2026-10-07",
   "capabilities": [
     {
       "capability_key": "evercraft.web.fetch.v1",
@@ -131,6 +131,28 @@
         "notification system",
         "notification fabric",
         "evercraft relay"
+      ]
+    },
+    {
+      "capability_key": "systemia.people-layer.v1",
+      "name": "Evercraft People Layer",
+      "state": "source_ready_owned_runtime_binding_pending",
+      "first_party_strict": true,
+      "invocation": "Forge/Systemia owned runtime /people + /api/people/*",
+      "triggers": [
+        "athlete brain",
+        "player brain",
+        "personal ai",
+        "personal brain",
+        "portable brain",
+        "superfan brain",
+        "fan brain",
+        "career memory",
+        "player opportunities",
+        "athlete opportunities",
+        "trusted circle",
+        "person owned intelligence",
+        "player owned intelligence"
       ]
     }
   ]
