@@ -224,6 +224,7 @@ No production cutover unless all are true:
 
 ## Open blockers before any migration can be recommended as production-ready
 
+- **Governance drift already exists on current `main`:** the locked baseline test reports `systemia/rivet/report-runtime.mjs` at git-blob SHA `86b66a17fd45c1ce6f7834ae88038658f438fe3d`, while the protected baseline test expects `b1f410305111f61f6dc132b696215676710955fb`. This hosting package did not touch that file. Do not repair, repin, or reinterpret this drift without explicit RIVET owner approval.
 - The actual currently approved RIVET customer-facing URL/environment has not been captured into this package.
 - Partner-approved desktop/mobile reference screenshots have not been recorded.
 - Current production traffic, storage, database, and bandwidth measurements are not in this package.
