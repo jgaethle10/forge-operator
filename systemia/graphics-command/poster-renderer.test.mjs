@@ -13,9 +13,10 @@ const story={
   points:[
     {id:'a',label:'Mount Baker',lat:48.7,lon:-121.8,value:3286,note:'Very High threat potential'},
     {id:'b',label:'Mount Rainier',lat:46.85,lon:-121.76,value:4392,note:'Very High threat potential'},
-    {id:'c',label:'Mount Adams',lat:46.2,lon:-121.49,value:3742,note:'High threat potential'},
+    {id:'c',label:'Mount Adams',lat:46.206,lon:-121.49,value:3742,note:'High threat potential'},
+    {id:'d',label:'Mount St. Helens',lat:46.2,lon:-122.18,value:2539,note:'Very High threat potential'},
   ],
-  lines:[{from:'a',to:'b'},{from:'b',to:'c'}],
+  lines:[{from:'a',to:'b'},{from:'b',to:'c'},{from:'c',to:'d'}],
 };
 
 const plan={
@@ -35,6 +36,10 @@ test('directed poster makes visual payoff primary and removes audit clutter',()=
   assert.match(svg,/class="geo-boundary"/);
   assert.match(svg,/WASHINGTON/);
   assert.match(svg,/class="peak-marker"/);
+  assert.match(svg,/Mount Adams<\/text>/);
+  assert.match(svg,/text-anchor="start"[^>]*>Mount Adams<\/text>/);
+  assert.match(svg,/text-anchor="end"[^>]*>Mount St\. Helens<\/text>/);
+  assert.doesNotMatch(svg,/story-route[^>]*filter="url\(#glow\)"/);
   assert.match(svg,/style="max-width:100%;height:auto;display:block"/);
   assert.match(svg,/VERY HIGH/);
   assert.match(svg,/usgs\.gov/);
