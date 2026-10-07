@@ -79,7 +79,8 @@
       "systemia.specialist-handoff-mcp.v1",
       "systemia.public-edge.v1",
       "systemia.evercraft-home.v1",
-      "systemia.evercraft-web-browser.v1"
+      "systemia.evercraft-web-browser.v1",
+      "systemia.forensic-record-runtime.v1"
     ],
     "public_origin": {
       "workload_class": "systemia.chum-public-origin.v1",
@@ -129,6 +130,14 @@
       "require_session_attestation": true,
       "require_persistent_storage": true,
       "paid_capacity_authority": "human_gate"
+    },
+    "forensic_record": {
+      "workload_class": "systemia.forensic-record-runtime.v1",
+      "mode": "private_content_addressed_evidence_runtime",
+      "public_route_requires_independent_verification": true,
+      "health_path": "/health",
+      "public_edge_separate": true,
+      "base44_runtime_required": false
     }
   },
   "release_gates": [
