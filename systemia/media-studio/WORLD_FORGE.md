@@ -165,6 +165,21 @@ The browser editor exposes **Stage mode**. Natural-language edits can be queued,
 
 CLI and HTTP surfaces support separate ChangeSet creation and application so proposals can be reviewed before execution.
 
+### Safe concurrent rebasing
+
+ChangeSets now fingerprint the scene nodes they actually depend on. This allows World Forge to distinguish a globally stale world from a true resource conflict.
+
+A stale ChangeSet may be explicitly rebased only when every touched resource still matches its original fingerprint:
+
+- edits to unrelated nodes may rebase safely;
+- edits to a touched node block with a node-level conflict;
+- concurrent creation of the same node ID blocks;
+- destructive authority is preserved, never upgraded during rebase;
+- rebase records parent ChangeSet digest and prior world version/digest;
+- the rebased ChangeSet receives a new digest before it can be applied.
+
+This lets human modeling, agent lighting, camera and layout work proceed concurrently without relying on last-write-wins behavior.
+
 ## Renderer strategy
 
 The project format must remain independent of any one renderer.

@@ -73,6 +73,7 @@ import { buildWorldForgeCinematicShot } from './world-forge-cinematic.js';
 import {
   applyWorldForgeChangeSet,
   createWorldForgeChangeSet,
+  rebaseWorldForgeChangeSet,
   type WorldForgeChangeSet,
 } from './world-forge-changeset.js';
 import { renderWorldForgeNativePreview } from './world-forge-native-preview.js';
@@ -130,6 +131,7 @@ function usage() {
     '  npm run media:studio -- world-forge-solid-preview <payload.json> <preview.svg> [receipt.json]',
     '  npm run media:studio -- world-forge-change-set <payload.json> <change-set.json>',
     '  npm run media:studio -- world-forge-apply-change-set <payload.json> <result.json>',
+    '  npm run media:studio -- world-forge-rebase-change-set <payload.json> <result.json>',
   ].join('\n'));
 }
 
@@ -221,6 +223,24 @@ function main() {
     writeJson(output, changeSet);
     console.log(`World Forge ChangeSet created: ${path.resolve(output)}`);
     console.log(`Base: v${changeSet.baseVersion} ${changeSet.baseDigest}; digest: ${changeSet.digest}`);
+    return;
+  }
+
+  if (command === 'world-forge-rebase-change-set') {
+    if (!input || !output) {
+      usage();
+      process.exitCode = 1;
+      return;
+    }
+    const payload = readJson<{project:WorldForgeProject;changeSet:WorldForgeChangeSet}>(input);
+    const result = rebaseWorldForgeChangeSet(payload);
+    writeJson(output, result);
+    console.log(`World Forge ChangeSet rebase: ${result.status}`);
+    if (result.status === 'blocked') {
+      console.log(`Reason: ${result.reason}`);
+      if (result.conflicts.length) console.log(`Conflicts: ${result.conflicts.join(', ')}`);
+      process.exitCode = 2;
+    }
     return;
   }
 

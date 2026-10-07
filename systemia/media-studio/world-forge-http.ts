@@ -1,6 +1,7 @@
 import {
   applyWorldForgeChangeSet,
   createWorldForgeChangeSet,
+  rebaseWorldForgeChangeSet,
   type WorldForgeChangeSet,
 } from './world-forge-changeset.js';
 import { renderWorldForgeNativeSolidPreview } from './world-forge-native-solid-preview.js';
@@ -274,6 +275,24 @@ export function registerWorldForgeRoutes(app:Express,deps:WorldForgeHttpDeps){
           error:error instanceof Error?error.message:String(error),
         });
       }
+    },
+  );
+
+  app.post(
+    '/api/fallen/world-forge/rebase-change-set',
+    rateLimit(240,60*60*1000),
+    (req:Request,res:Response)=>{
+      const project=req.body?.project as WorldForgeProject|undefined;
+      const changeSet=req.body?.changeSet as WorldForgeChangeSet|undefined;
+      if(!project||!changeSet){
+        badRequest(res,'Project and World Forge ChangeSet are required.');
+        return;
+      }
+      const result=rebaseWorldForgeChangeSet({project,changeSet});
+      res.status(result.status==='blocked'?409:200).json({
+        success:result.status!=='blocked',
+        result,
+      });
     },
   );
 
