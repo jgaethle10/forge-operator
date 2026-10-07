@@ -6,9 +6,9 @@ Machine Commerce MCP: not declared
 Each phrase below maps to public capability candidates without upgrading readiness, pricing, invocation, payment, entitlement, or provider-pickup state.
 Discovery creates no payment obligation. Checkout requires explicit human confirmation and paid state requires authoritative provider verification.
 
-Pain-index entries: 114
-Unique user phrases: 1007
-Candidate edges: 1113
+Pain-index entries: 116
+Unique user phrases: 1050
+Candidate edges: 1156
 Ambiguous phrases: 106
 
 ## 15 GB video analysis
@@ -122,6 +122,13 @@ Human-readable match: /chum/answers/doors/ai-contractor-estimate-tool-dd0a4af1a0
 Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/ai-contractor-estimate-tool-dd0a4af1a0.json
 Candidates:
 - EPS Estimate Intelligence | kind=machine_offer | commercial=contractor_beta | machine=mcp_http_preview_and_receipt_verify_live_workspace_entitlement_build_verified | public=https://fabric.systemiacommandcenters.com/capabilities/eps-estimate-engine-machine-v1
+
+## AI dispatch for quarry haul trucks
+Answer ID: intent:81aeebefde
+Human-readable match: /chum/answers/doors/ai-dispatch-for-quarry-haul-trucks-81aeebefde/
+Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/ai-dispatch-for-quarry-haul-trucks-81aeebefde.json
+Candidates:
+- Evercraft EarthWorks Autonomy | kind=product | commercial=product_contract | machine=discovery_only | public=https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/earthworks-autonomy/index.html
 
 ## AI found uncertain business entity matches
 Answer ID: intent:6cc7cc785b
@@ -486,6 +493,13 @@ Candidates:
 - Book Export QA | kind=machine_offer | commercial=verification_required | machine=discovery_only | public=https://fabric.systemiacommandcenters.com/capabilities/littlered-kdp-export-qa-machine-v1
 - Little Red Studio Book Export QA | kind=product | commercial=product_contract | machine=discovery_only | public=https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/little-red-book-export-qa/index.html
 
+## automate a quarry haul cycle
+Answer ID: intent:76201e2c70
+Human-readable match: /chum/answers/doors/automate-a-quarry-haul-cycle-76201e2c70/
+Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/automate-a-quarry-haul-cycle-76201e2c70.json
+Candidates:
+- Evercraft EarthWorks Autonomy | kind=product | commercial=product_contract | machine=discovery_only | public=https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/earthworks-autonomy/index.html
+
 ## automate this workflow
 Answer ID: intent:2bf95f92d8
 Human-readable match: /chum/answers/doors/automate-this-workflow-2bf95f92d8/
@@ -499,6 +513,27 @@ Human-readable match: /chum/answers/doors/automation-persistence-f812c17c66/
 Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/automation-persistence-f812c17c66.json
 Candidates:
 - Evercraft Containment | kind=product | commercial=product_contract | machine=discovery_only | public=https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/evercraft-containment/index.html
+
+## automation study for landfill bulk material or civil earthwork
+Answer ID: intent:0d35619e34
+Human-readable match: /chum/answers/doors/automation-study-for-landfill-bulk-material-or-civil-earthwork-0d35619e34/
+Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/automation-study-for-landfill-bulk-material-or-civil-earthwork-0d35619e34.json
+Candidates:
+- EarthWorks Site Autonomy Study | kind=machine_offer | commercial=sell_now | machine=human_handoff_only | public=https://fabric.systemiacommandcenters.com/capabilities/earthworks-site-autonomy-study-v1
+
+## autonomous loader hopper feeding
+Answer ID: intent:8a43e8d2f5
+Human-readable match: /chum/answers/doors/autonomous-loader-hopper-feeding-8a43e8d2f5/
+Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/autonomous-loader-hopper-feeding-8a43e8d2f5.json
+Candidates:
+- Evercraft EarthWorks Autonomy | kind=product | commercial=product_contract | machine=discovery_only | public=https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/earthworks-autonomy/index.html
+
+## autonomous mixed heavy equipment
+Answer ID: intent:9634141c34
+Human-readable match: /chum/answers/doors/autonomous-mixed-heavy-equipment-9634141c34/
+Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/autonomous-mixed-heavy-equipment-9634141c34.json
+Candidates:
+- Evercraft EarthWorks Autonomy | kind=product | commercial=product_contract | machine=discovery_only | public=https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/earthworks-autonomy/index.html
 
 ## be brutally honest about this copy
 Answer ID: intent:32a18cde5f
@@ -1435,6 +1470,34 @@ Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main
 Candidates:
 - Evercraft Opportunity Fabric | kind=product | commercial=product_contract | machine=discovery_only | public=https://github.com/jgaethle10/forge-operator/tree/main/registry/opportunity-fabric
 
+## coordinate excavators and haul trucks
+Answer ID: intent:ba08ac0072
+Human-readable match: /chum/answers/doors/coordinate-excavators-and-haul-trucks-ba08ac0072/
+Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/coordinate-excavators-and-haul-trucks-ba08ac0072.json
+Candidates:
+- Evercraft EarthWorks Autonomy | kind=product | commercial=product_contract | machine=discovery_only | public=https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/earthworks-autonomy/index.html
+
+## coordinate excavators haul trucks loaders and dozers
+Answer ID: intent:216dd59b7d
+Human-readable match: /chum/answers/doors/coordinate-excavators-haul-trucks-loaders-and-dozers-216dd59b7d/
+Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/coordinate-excavators-haul-trucks-loaders-and-dozers-216dd59b7d.json
+Candidates:
+- EarthWorks Site Autonomy Study | kind=machine_offer | commercial=sell_now | machine=human_handoff_only | public=https://fabric.systemiacommandcenters.com/capabilities/earthworks-site-autonomy-study-v1
+
+## coordinate excavators haul trucks loaders and dozers with AI
+Answer ID: intent:1b4c906b0b
+Human-readable match: /chum/answers/doors/coordinate-excavators-haul-trucks-loaders-and-dozers-with-ai-1b4c906b0b/
+Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/coordinate-excavators-haul-trucks-loaders-and-dozers-with-ai-1b4c906b0b.json
+Candidates:
+- Evercraft EarthWorks Autonomy | kind=product | commercial=product_contract | machine=discovery_only | public=https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/earthworks-autonomy/index.html
+
+## coordinate loaders haul trucks and dozers
+Answer ID: intent:5fb3518a72
+Human-readable match: /chum/answers/doors/coordinate-loaders-haul-trucks-and-dozers-5fb3518a72/
+Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/coordinate-loaders-haul-trucks-and-dozers-5fb3518a72.json
+Candidates:
+- Evercraft EarthWorks Autonomy | kind=product | commercial=product_contract | machine=discovery_only | public=https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/earthworks-autonomy/index.html
+
 ## country benchmark with sources
 Answer ID: intent:04ac1dfc19
 Human-readable match: /chum/answers/doors/country-benchmark-with-sources-04ac1dfc19/
@@ -1649,6 +1712,27 @@ Human-readable match: /chum/answers/doors/did-my-devices-reconnect-c4d116f491/
 Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/did-my-devices-reconnect-c4d116f491.json
 Candidates:
 - Evercraft Network Resilience + Founding Membership | kind=machine_offer | commercial=discovery_only | machine=human_handoff_only | public=https://fabric.systemiacommandcenters.com/capabilities/evercraft-network-resilience-membership-v1
+
+## digital twin for earthmoving
+Answer ID: intent:c2d17d72ad
+Human-readable match: /chum/answers/doors/digital-twin-for-earthmoving-c2d17d72ad/
+Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/digital-twin-for-earthmoving-c2d17d72ad.json
+Candidates:
+- Evercraft EarthWorks Autonomy | kind=product | commercial=product_contract | machine=discovery_only | public=https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/earthworks-autonomy/index.html
+
+## digital twin for earthmoving operations
+Answer ID: intent:667e0c16aa
+Human-readable match: /chum/answers/doors/digital-twin-for-earthmoving-operations-667e0c16aa/
+Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/digital-twin-for-earthmoving-operations-667e0c16aa.json
+Candidates:
+- EarthWorks Site Autonomy Study | kind=machine_offer | commercial=sell_now | machine=human_handoff_only | public=https://fabric.systemiacommandcenters.com/capabilities/earthworks-site-autonomy-study-v1
+
+## digital twin for quarry or earthmoving operations
+Answer ID: intent:56520749be
+Human-readable match: /chum/answers/doors/digital-twin-for-quarry-or-earthmoving-operations-56520749be/
+Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/digital-twin-for-quarry-or-earthmoving-operations-56520749be.json
+Candidates:
+- Evercraft EarthWorks Autonomy | kind=product | commercial=product_contract | machine=discovery_only | public=https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/earthworks-autonomy/index.html
 
 ## do a resilience investigation
 Answer ID: intent:227f8bd16b
@@ -1907,6 +1991,13 @@ Human-readable match: /chum/answers/doors/evaluate-an-ai-agent-0d5e8da410/
 Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/evaluate-an-ai-agent-0d5e8da410.json
 Candidates:
 - Agent Proving Mission | kind=machine_offer | commercial=verification_required | machine=discovery_only | public=/chum/intents/agent-proving-mission-v1/
+
+## evaluate automation for landfill bulk material or civil earthwork operations
+Answer ID: intent:8a6ed5d6f7
+Human-readable match: /chum/answers/doors/evaluate-automation-for-landfill-bulk-material-or-civil-earthwork-operations-8a6ed5d6f7/
+Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/evaluate-automation-for-landfill-bulk-material-or-civil-earthwork-operations-8a6ed5d6f7.json
+Candidates:
+- Evercraft EarthWorks Autonomy | kind=product | commercial=product_contract | machine=discovery_only | public=https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/earthworks-autonomy/index.html
 
 ## evaluate evidence uncertainty role adherence and handoff behavior
 Answer ID: intent:ed3668d577
@@ -2182,6 +2273,13 @@ Human-readable match: /chum/answers/doors/figure-out-what-capital-or-funding-pat
 Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/figure-out-what-capital-or-funding-path-fits-my-business-675cfea99b.json
 Candidates:
 - Evercraft Deck Capital Fit | kind=product | commercial=product_contract | machine=discovery_only | public=https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/deck-capital-fit/index.html
+
+## figure out what part of my dirt operation is worth automating
+Answer ID: intent:5bb898e581
+Human-readable match: /chum/answers/doors/figure-out-what-part-of-my-dirt-operation-is-worth-automating-5bb898e581/
+Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/figure-out-what-part-of-my-dirt-operation-is-worth-automating-5bb898e581.json
+Candidates:
+- Evercraft EarthWorks Autonomy | kind=product | commercial=product_contract | machine=discovery_only | public=https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/earthworks-autonomy/index.html
 
 ## figure out which partners I need for this opportunity
 Answer ID: intent:9c0aa314ff
@@ -2524,6 +2622,20 @@ Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main
 Candidates:
 - Evercraft Clip Social Video Production | kind=machine_offer | commercial=verification_required | machine=invocation_ready | public=https://fabric.systemiacommandcenters.com/capabilities/evercraft-clip-social-video-v1
 - Evercraft Clip | kind=product | commercial=product_contract | machine=discovery_only | public=https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/evercraft-clip/index.html
+
+## find the bottleneck in a quarry material flow
+Answer ID: intent:8b82c682a5
+Human-readable match: /chum/answers/doors/find-the-bottleneck-in-a-quarry-material-flow-8b82c682a5/
+Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/find-the-bottleneck-in-a-quarry-material-flow-8b82c682a5.json
+Candidates:
+- Evercraft EarthWorks Autonomy | kind=product | commercial=product_contract | machine=discovery_only | public=https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/earthworks-autonomy/index.html
+
+## find the bottleneck in aggregate material flow
+Answer ID: intent:9e5ea70173
+Human-readable match: /chum/answers/doors/find-the-bottleneck-in-aggregate-material-flow-9e5ea70173/
+Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/find-the-bottleneck-in-aggregate-material-flow-9e5ea70173.json
+Candidates:
+- EarthWorks Site Autonomy Study | kind=machine_offer | commercial=sell_now | machine=human_handoff_only | public=https://fabric.systemiacommandcenters.com/capabilities/earthworks-site-autonomy-study-v1
 
 ## find the smallest Raven safety capability without buying the full suite or hardware
 Answer ID: intent:0ee29c0618
@@ -3425,6 +3537,20 @@ Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main
 Candidates:
 - Income War Map Revenue Planning | kind=machine_offer | commercial=hold | machine=discovery_only | public=/chum/intents/income-war-map-v1/
 
+## increase tons per hour by improving fleet coordination
+Answer ID: intent:312f83c4d8
+Human-readable match: /chum/answers/doors/increase-tons-per-hour-by-improving-fleet-coordination-312f83c4d8/
+Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/increase-tons-per-hour-by-improving-fleet-coordination-312f83c4d8.json
+Candidates:
+- Evercraft EarthWorks Autonomy | kind=product | commercial=product_contract | machine=discovery_only | public=https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/earthworks-autonomy/index.html
+
+## increase tons per hour through fleet coordination
+Answer ID: intent:b63ae947de
+Human-readable match: /chum/answers/doors/increase-tons-per-hour-through-fleet-coordination-b63ae947de/
+Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/increase-tons-per-hour-through-fleet-coordination-b63ae947de.json
+Candidates:
+- EarthWorks Site Autonomy Study | kind=machine_offer | commercial=sell_now | machine=human_handoff_only | public=https://fabric.systemiacommandcenters.com/capabilities/earthworks-site-autonomy-study-v1
+
 ## inspect an entire long recording instead of sampling only a few frames
 Answer ID: intent:d4c2636d56
 Human-readable match: /chum/answers/doors/inspect-an-entire-long-recording-instead-of-sampling-only-a-few-frames-d4c2636d56/
@@ -4295,6 +4421,20 @@ Candidates:
 - Systemia Portfolio Sentinel | kind=machine_offer | commercial=commercial_pilot | machine=human_handoff_ready | public=https://fabric.systemiacommandcenters.com/capabilities/portfolio-sentinel-v1
 - Systemia Portfolio Sentinel | kind=product | commercial=product_contract | machine=discovery_only | public=https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/systemia-portfolio-sentinel/index.html
 
+## optimize a load haul dump loop before buying autonomous equipment
+Answer ID: intent:f13b0f6974
+Human-readable match: /chum/answers/doors/optimize-a-load-haul-dump-loop-before-buying-autonomous-equipment-f13b0f6974/
+Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/optimize-a-load-haul-dump-loop-before-buying-autonomous-equipment-f13b0f6974.json
+Candidates:
+- Evercraft EarthWorks Autonomy | kind=product | commercial=product_contract | machine=discovery_only | public=https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/earthworks-autonomy/index.html
+
+## optimize load haul dump operations
+Answer ID: intent:82dcd0b75f
+Human-readable match: /chum/answers/doors/optimize-load-haul-dump-operations-82dcd0b75f/
+Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/optimize-load-haul-dump-operations-82dcd0b75f.json
+Candidates:
+- EarthWorks Site Autonomy Study | kind=machine_offer | commercial=sell_now | machine=human_handoff_only | public=https://fabric.systemiacommandcenters.com/capabilities/earthworks-site-autonomy-study-v1
+
 ## organize a business networking circle
 Answer ID: intent:1486d2ce74
 Human-readable match: /chum/answers/doors/organize-a-business-networking-circle-1486d2ce74/
@@ -4518,6 +4658,13 @@ Human-readable match: /chum/answers/doors/plan-a-career-change-around-my-househo
 Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/plan-a-career-change-around-my-household-situation-be266777bd.json
 Candidates:
 - EverNest Atlas | kind=product | commercial=product_contract | machine=discovery_only | public=https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/evernest-atlas/index.html
+
+## plan a controlled autonomous heavy equipment pilot
+Answer ID: intent:26dd7ca7e7
+Human-readable match: /chum/answers/doors/plan-a-controlled-autonomous-heavy-equipment-pilot-26dd7ca7e7/
+Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/plan-a-controlled-autonomous-heavy-equipment-pilot-26dd7ca7e7.json
+Candidates:
+- Evercraft EarthWorks Autonomy | kind=product | commercial=product_contract | machine=discovery_only | public=https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/earthworks-autonomy/index.html
 
 ## plan a social video clipping job
 Answer ID: intent:cb32427490
@@ -5050,12 +5197,54 @@ Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main
 Candidates:
 - Evercraft Rewards | kind=product | commercial=product_contract | machine=discovery_only | public=https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/evercraft-rewards/index.html
 
+## reduce haul truck queueing at a quarry
+Answer ID: intent:16e641e4a4
+Human-readable match: /chum/answers/doors/reduce-haul-truck-queueing-at-a-quarry-16e641e4a4/
+Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/reduce-haul-truck-queueing-at-a-quarry-16e641e4a4.json
+Candidates:
+- EarthWorks Site Autonomy Study | kind=machine_offer | commercial=sell_now | machine=human_handoff_only | public=https://fabric.systemiacommandcenters.com/capabilities/earthworks-site-autonomy-study-v1
+
+## reduce haul truck queueing at a quarry or aggregate site
+Answer ID: intent:f653c1cb4f
+Human-readable match: /chum/answers/doors/reduce-haul-truck-queueing-at-a-quarry-or-aggregate-site-f653c1cb4f/
+Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/reduce-haul-truck-queueing-at-a-quarry-or-aggregate-site-f653c1cb4f.json
+Candidates:
+- Evercraft EarthWorks Autonomy | kind=product | commercial=product_contract | machine=discovery_only | public=https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/earthworks-autonomy/index.html
+
+## reduce loader idle time waiting on trucks
+Answer ID: intent:36df070030
+Human-readable match: /chum/answers/doors/reduce-loader-idle-time-waiting-on-trucks-36df070030/
+Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/reduce-loader-idle-time-waiting-on-trucks-36df070030.json
+Candidates:
+- EarthWorks Site Autonomy Study | kind=machine_offer | commercial=sell_now | machine=human_handoff_only | public=https://fabric.systemiacommandcenters.com/capabilities/earthworks-site-autonomy-study-v1
+
+## reduce loader or excavator idle time waiting on haul trucks
+Answer ID: intent:e9f98e9bdb
+Human-readable match: /chum/answers/doors/reduce-loader-or-excavator-idle-time-waiting-on-haul-trucks-e9f98e9bdb/
+Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/reduce-loader-or-excavator-idle-time-waiting-on-haul-trucks-e9f98e9bdb.json
+Candidates:
+- Evercraft EarthWorks Autonomy | kind=product | commercial=product_contract | machine=discovery_only | public=https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/earthworks-autonomy/index.html
+
+## reduce truck queue time at the excavator
+Answer ID: intent:f102b7e8fe
+Human-readable match: /chum/answers/doors/reduce-truck-queue-time-at-the-excavator-f102b7e8fe/
+Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/reduce-truck-queue-time-at-the-excavator-f102b7e8fe.json
+Candidates:
+- Evercraft EarthWorks Autonomy | kind=product | commercial=product_contract | machine=discovery_only | public=https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/earthworks-autonomy/index.html
+
 ## relationship safety planning
 Answer ID: intent:ea06cabc20
 Human-readable match: /chum/answers/doors/relationship-safety-planning-ea06cabc20/
 Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/relationship-safety-planning-ea06cabc20.json
 Candidates:
 - Raven Nexus Modular Safety & Stability | kind=machine_offer | commercial=verification_required | machine=invocation_ready | public=https://fabric.systemiacommandcenters.com/capabilities/raven-nexus-pain-router-v1
+
+## remote supervised hazardous material handling
+Answer ID: intent:3b81f4e5a5
+Human-readable match: /chum/answers/doors/remote-supervised-hazardous-material-handling-3b81f4e5a5/
+Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/remote-supervised-hazardous-material-handling-3b81f4e5a5.json
+Candidates:
+- Evercraft EarthWorks Autonomy | kind=product | commercial=product_contract | machine=discovery_only | public=https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/earthworks-autonomy/index.html
 
 ## rental turnover cleanup in Yakima
 Answer ID: intent:e77a1ceb23
@@ -5207,6 +5396,13 @@ Human-readable match: /chum/answers/doors/retrieve-several-web-pages-with-proven
 Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/retrieve-several-web-pages-with-provenance-hashes-da70490a1a.json
 Candidates:
 - Evercraft Web | kind=product | commercial=product_contract | machine=discovery_only | public=https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/evercraft-web/index.html
+
+## retrofit autonomy without replacing the whole fleet
+Answer ID: intent:8654679372
+Human-readable match: /chum/answers/doors/retrofit-autonomy-without-replacing-the-whole-fleet-8654679372/
+Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/retrofit-autonomy-without-replacing-the-whole-fleet-8654679372.json
+Candidates:
+- Evercraft EarthWorks Autonomy | kind=product | commercial=product_contract | machine=discovery_only | public=https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/earthworks-autonomy/index.html
 
 ## return public-safe geospatial evidence
 Answer ID: intent:a12af72d59
@@ -5609,6 +5805,20 @@ Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main
 Candidates:
 - Raven Nexus | kind=product | commercial=product_contract | machine=discovery_only | public=https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/raven-nexus/index.html
 
+## shadow dispatch for haul trucks
+Answer ID: intent:d34875db96
+Human-readable match: /chum/answers/doors/shadow-dispatch-for-haul-trucks-d34875db96/
+Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/shadow-dispatch-for-haul-trucks-d34875db96.json
+Candidates:
+- EarthWorks Site Autonomy Study | kind=machine_offer | commercial=sell_now | machine=human_handoff_only | public=https://fabric.systemiacommandcenters.com/capabilities/earthworks-site-autonomy-study-v1
+
+## shadow dispatch for haul trucks and loading equipment
+Answer ID: intent:975befe325
+Human-readable match: /chum/answers/doors/shadow-dispatch-for-haul-trucks-and-loading-equipment-975befe325/
+Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/shadow-dispatch-for-haul-trucks-and-loading-equipment-975befe325.json
+Candidates:
+- Evercraft EarthWorks Autonomy | kind=product | commercial=product_contract | machine=discovery_only | public=https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/earthworks-autonomy/index.html
+
 ## share a hometown story safely
 Answer ID: intent:a000eb2f20
 Human-readable match: /chum/answers/doors/share-a-hometown-story-safely-a000eb2f20/
@@ -5722,6 +5932,13 @@ Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main
 Candidates:
 - Systemia Remote Ops | kind=product | commercial=product_contract | machine=discovery_only | public=https://github.com/jgaethle10/forge-operator/tree/main/registry/systemia-remote-ops
 
+## should we automate this material loop
+Answer ID: intent:253cf3a898
+Human-readable match: /chum/answers/doors/should-we-automate-this-material-loop-253cf3a898/
+Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/should-we-automate-this-material-loop-253cf3a898.json
+Candidates:
+- Evercraft EarthWorks Autonomy | kind=product | commercial=product_contract | machine=discovery_only | public=https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/earthworks-autonomy/index.html
+
 ## show historical river geometry
 Answer ID: intent:e09f8dfd42
 Human-readable match: /chum/answers/doors/show-historical-river-geometry-e09f8dfd42/
@@ -5809,6 +6026,13 @@ Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main
 Candidates:
 - Systemia Remote Ops | kind=product | commercial=product_contract | machine=discovery_only | public=https://github.com/jgaethle10/forge-operator/tree/main/registry/systemia-remote-ops
 
+## simulate a dirt moving fleet
+Answer ID: intent:25d94a145f
+Human-readable match: /chum/answers/doors/simulate-a-dirt-moving-fleet-25d94a145f/
+Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/simulate-a-dirt-moving-fleet-25d94a145f.json
+Candidates:
+- Evercraft EarthWorks Autonomy | kind=product | commercial=product_contract | machine=discovery_only | public=https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/earthworks-autonomy/index.html
+
 ## simulate a major capital purchase before spending
 Answer ID: intent:bff31f9fb9
 Human-readable match: /chum/answers/doors/simulate-a-major-capital-purchase-before-spending-bff31f9fb9/
@@ -5837,12 +6061,33 @@ Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main
 Candidates:
 - Systemia Remote Ops | kind=product | commercial=product_contract | machine=discovery_only | public=https://github.com/jgaethle10/forge-operator/tree/main/registry/systemia-remote-ops
 
+## simulate an earthmoving fleet before automation
+Answer ID: intent:f27559010a
+Human-readable match: /chum/answers/doors/simulate-an-earthmoving-fleet-before-automation-f27559010a/
+Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/simulate-an-earthmoving-fleet-before-automation-f27559010a.json
+Candidates:
+- EarthWorks Site Autonomy Study | kind=machine_offer | commercial=sell_now | machine=human_handoff_only | public=https://fabric.systemiacommandcenters.com/capabilities/earthworks-site-autonomy-study-v1
+
+## simulate an earthmoving fleet before deploying physical autonomy
+Answer ID: intent:586f07a88e
+Human-readable match: /chum/answers/doors/simulate-an-earthmoving-fleet-before-deploying-physical-autonomy-586f07a88e/
+Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/simulate-an-earthmoving-fleet-before-deploying-physical-autonomy-586f07a88e.json
+Candidates:
+- Evercraft EarthWorks Autonomy | kind=product | commercial=product_contract | machine=discovery_only | public=https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/earthworks-autonomy/index.html
+
 ## simulate business expansion before signing a lease
 Answer ID: intent:96623404d1
 Human-readable match: /chum/answers/doors/simulate-business-expansion-before-signing-a-lease-96623404d1/
 Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/simulate-business-expansion-before-signing-a-lease-96623404d1.json
 Candidates:
 - Systemia Remote Ops | kind=product | commercial=product_contract | machine=discovery_only | public=https://github.com/jgaethle10/forge-operator/tree/main/registry/systemia-remote-ops
+
+## simulate cut and fill production
+Answer ID: intent:c17f35b808
+Human-readable match: /chum/answers/doors/simulate-cut-and-fill-production-c17f35b808/
+Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/simulate-cut-and-fill-production-c17f35b808.json
+Candidates:
+- Evercraft EarthWorks Autonomy | kind=product | commercial=product_contract | machine=discovery_only | public=https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/earthworks-autonomy/index.html
 
 ## simulate hiring as part of a broader business expansion before adding payroll
 Answer ID: intent:5bdfbe74aa
@@ -5864,6 +6109,27 @@ Human-readable match: /chum/answers/doors/simulate-layoffs-or-restructuring-befo
 Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/simulate-layoffs-or-restructuring-before-changing-the-team-68e69ac933.json
 Candidates:
 - Systemia Remote Ops | kind=product | commercial=product_contract | machine=discovery_only | public=https://github.com/jgaethle10/forge-operator/tree/main/registry/systemia-remote-ops
+
+## site autonomy study
+Answer ID: intent:c2beac5d27
+Human-readable match: /chum/answers/doors/site-autonomy-study-c2beac5d27/
+Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/site-autonomy-study-c2beac5d27.json
+Candidates:
+- Evercraft EarthWorks Autonomy | kind=product | commercial=product_contract | machine=discovery_only | public=https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/earthworks-autonomy/index.html
+
+## site autonomy study for a quarry
+Answer ID: intent:e36a2403b0
+Human-readable match: /chum/answers/doors/site-autonomy-study-for-a-quarry-e36a2403b0/
+Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/site-autonomy-study-for-a-quarry-e36a2403b0.json
+Candidates:
+- EarthWorks Site Autonomy Study | kind=machine_offer | commercial=sell_now | machine=human_handoff_only | public=https://fabric.systemiacommandcenters.com/capabilities/earthworks-site-autonomy-study-v1
+
+## site autonomy study for an aggregate operation
+Answer ID: intent:fb71045687
+Human-readable match: /chum/answers/doors/site-autonomy-study-for-an-aggregate-operation-fb71045687/
+Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/site-autonomy-study-for-an-aggregate-operation-fb71045687.json
+Candidates:
+- Evercraft EarthWorks Autonomy | kind=product | commercial=product_contract | machine=discovery_only | public=https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/earthworks-autonomy/index.html
 
 ## site resilience audit
 Answer ID: intent:64b6ec62c2
@@ -6043,6 +6309,20 @@ Human-readable match: /chum/answers/doors/structured-web-content-extraction-for-
 Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/structured-web-content-extraction-for-ai-agents-bc8095fc5e.json
 Candidates:
 - Evercraft Web | kind=product | commercial=product_contract | machine=discovery_only | public=https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/evercraft-web/index.html
+
+## study autonomous haulage without replacing equipment
+Answer ID: intent:af306321be
+Human-readable match: /chum/answers/doors/study-autonomous-haulage-without-replacing-equipment-af306321be/
+Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/study-autonomous-haulage-without-replacing-equipment-af306321be.json
+Candidates:
+- EarthWorks Site Autonomy Study | kind=machine_offer | commercial=sell_now | machine=human_handoff_only | public=https://fabric.systemiacommandcenters.com/capabilities/earthworks-site-autonomy-study-v1
+
+## study autonomous haulage without replacing my current equipment
+Answer ID: intent:3bcb4bf08e
+Human-readable match: /chum/answers/doors/study-autonomous-haulage-without-replacing-my-current-equipment-3bcb4bf08e/
+Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/study-autonomous-haulage-without-replacing-my-current-equipment-3bcb4bf08e.json
+Candidates:
+- Evercraft EarthWorks Autonomy | kind=product | commercial=product_contract | machine=discovery_only | public=https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/earthworks-autonomy/index.html
 
 ## study ecological relationships and food webs
 Answer ID: intent:18bb832ffc
@@ -6662,6 +6942,20 @@ Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main
 Candidates:
 - FAIE Evidence-First Signal Brief | kind=machine_offer | commercial=sell_now | machine=payment_ready | public=https://fabric.systemiacommandcenters.com/faie/
 
+## vendor neutral autonomy orchestration for mixed heavy equipment
+Answer ID: intent:7253edfe3f
+Human-readable match: /chum/answers/doors/vendor-neutral-autonomy-orchestration-for-mixed-heavy-equipment-7253edfe3f/
+Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/vendor-neutral-autonomy-orchestration-for-mixed-heavy-equipment-7253edfe3f.json
+Candidates:
+- Evercraft EarthWorks Autonomy | kind=product | commercial=product_contract | machine=discovery_only | public=https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/earthworks-autonomy/index.html
+
+## vendor neutral heavy equipment autonomy orchestration
+Answer ID: intent:b526bf7e15
+Human-readable match: /chum/answers/doors/vendor-neutral-heavy-equipment-autonomy-orchestration-b526bf7e15/
+Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/vendor-neutral-heavy-equipment-autonomy-orchestration-b526bf7e15.json
+Candidates:
+- EarthWorks Site Autonomy Study | kind=machine_offer | commercial=sell_now | machine=human_handoff_only | public=https://fabric.systemiacommandcenters.com/capabilities/earthworks-site-autonomy-study-v1
+
 ## venue operations software
 Answer ID: intent:fcea37116b
 Human-readable match: /chum/answers/doors/venue-operations-software-fcea37116b/
@@ -6987,6 +7281,13 @@ Human-readable match: /chum/answers/doors/what-materially-changed-across-weather
 Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/what-materially-changed-across-weather-infrastructure-economy-health-or-hazards-0b443062e3.json
 Candidates:
 - Worldstate Reality Delta | kind=machine_offer | commercial=verification_required | machine=discovery_only | public=/chum/intents/worldstate-reality-delta-v1/
+
+## what part of my dirt operation should I automate
+Answer ID: intent:55742954bd
+Human-readable match: /chum/answers/doors/what-part-of-my-dirt-operation-should-i-automate-55742954bd/
+Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/what-part-of-my-dirt-operation-should-i-automate-55742954bd.json
+Candidates:
+- EarthWorks Site Autonomy Study | kind=machine_offer | commercial=sell_now | machine=human_handoff_only | public=https://fabric.systemiacommandcenters.com/capabilities/earthworks-site-autonomy-study-v1
 
 ## what public EV charging is near this address
 Answer ID: intent:85011db389

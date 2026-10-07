@@ -2,7 +2,7 @@
   "schema": "evercraft.syndication.v1",
   "provider": "Evercraft LLC",
   "coordinator": "CHUM",
-  "updated_at": "2026-10-05T00:00:00.000Z",
+  "updated_at": "2026-10-06T00:00:00.000Z",
   "purpose": "Fan one truthful public product graph into standard crawler, search, LLM, agent, feed and authorized publishing surfaces without duplicate doorway spam.",
   "canonical_sources": {
     "registry": "/.well-known/evercraft-products.json",
@@ -36,7 +36,7 @@
     "rule": "Only authorized brand destinations may auto-publish. Dedupe by product content hash and publish material changes, not repeated copies.",
     "current_change_queue": "/chum/syndication/social-queue.json"
   },
-  "product_count": 64,
+  "product_count": 65,
   "products": [
     {
       "product_key": "aliev",
@@ -246,6 +246,17 @@
       "registry_name": "io.github.jgaethle10/deck-capital-fit",
       "mcp": null,
       "content_sha256": "d308624fabe056826b81bbd9955fbbe1808bd0df51b30a2c3f8ddc547e965d71"
+    },
+    {
+      "product_key": "earthworks-autonomy",
+      "name": "Evercraft EarthWorks Autonomy",
+      "canonical_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/earthworks-autonomy/index.html",
+      "mirror": "/chum/products/earthworks-autonomy/",
+      "llms": "/chum/products/earthworks-autonomy/llms.txt",
+      "discovery": "/chum/products/earthworks-autonomy/ai-discovery.json",
+      "registry_name": null,
+      "mcp": null,
+      "content_sha256": "c00737a04b96123c8413d14a030c201aa618df37f629a95b4a280c0ad14373fa"
     },
     {
       "product_key": "evercraft-fantasy-intelligence",

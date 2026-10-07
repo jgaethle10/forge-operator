@@ -1,80 +1,8 @@
 {
   "schema": "evercraft.chum.provider-probe-history.v1",
-  "updated_at": "2026-10-07T01:33:46.337Z",
+  "updated_at": "2026-10-07T03:00:34.146Z",
   "max_records": 500,
   "records": [
-    {
-      "receipt_key_sha256": "cc9acd24872674b42fd089bca48bd9af6c112bade2e5ae147ec13ac7a1f90425",
-      "observed_at": "2026-10-06T04:13:15.614Z",
-      "provider": "generic_agent",
-      "provider_surface": "machine_client",
-      "product_key": "forensiscope",
-      "case_id": "media-video-rag-006",
-      "prompt_sha256": "8a935e2ff49e5f6f85dd22364881b0c5b338f6b112012c9cbe159edf50fb3631",
-      "pickup_observed": false,
-      "provider_receipt_sha256": "2962769e417b4e992d5804c5217ebd0a86916bac3bf32166462b62aaf13d1cbd",
-      "response_sha256": "9566a007ac926ab5c07cff7476c2c95c9b90b77e9656dedf5328d501f41aef3c",
-      "source": "authorized_provider_probe",
-      "privacy": {
-        "full_provider_response_persisted": false,
-        "provider_session_reference_persisted": false,
-        "credentials_persisted": false
-      }
-    },
-    {
-      "receipt_key_sha256": "fc9021da492649f7c391453f18165bc47a286ea957d7b4ab7d72bcc11b0528fb",
-      "observed_at": "2026-10-06T04:13:17.424Z",
-      "provider": "generic_agent",
-      "provider_surface": "machine_client",
-      "product_key": "forensiscope",
-      "case_id": "media-agent-tool-007",
-      "prompt_sha256": "ce2c7d83a38ecb513d2808de83693e47a1eaf5d8902debc07e2b13237a759b53",
-      "pickup_observed": false,
-      "provider_receipt_sha256": "3314a884d7efda3deeac160a497a8fa616bfa6dd358cc7d194835bf7e15554d2",
-      "response_sha256": "b9964fb09cab7ed32ab8ebbc710af86afdae5a57d457f911f3659335d2c30501",
-      "source": "authorized_provider_probe",
-      "privacy": {
-        "full_provider_response_persisted": false,
-        "provider_session_reference_persisted": false,
-        "credentials_persisted": false
-      }
-    },
-    {
-      "receipt_key_sha256": "49465c43536daa980a469659c453aae14b11a504d3e8127f02b87619a751f129",
-      "observed_at": "2026-10-06T04:13:18.794Z",
-      "provider": "generic_agent",
-      "provider_surface": "machine_client",
-      "product_key": "forensiscope",
-      "case_id": "media-evidence-timeline-008",
-      "prompt_sha256": "86f09354540467c774bbef8322b9281d962db8634ac279e3a1801936d7e00b62",
-      "pickup_observed": false,
-      "provider_receipt_sha256": "36dddcc8713accf36b65ea74a66058e7a463c4053f8828c81ff7a630fcde0ba7",
-      "response_sha256": "5d43f8791ee5ddbed820396f445ddc2f1ad946c8c9a828d457c541decb603f6b",
-      "source": "authorized_provider_probe",
-      "privacy": {
-        "full_provider_response_persisted": false,
-        "provider_session_reference_persisted": false,
-        "credentials_persisted": false
-      }
-    },
-    {
-      "receipt_key_sha256": "ec2ae23db3dd9daa2de539f62b717f4d43cc12a7dcccc3b7b3342d45c7b007be",
-      "observed_at": "2026-10-06T04:13:48.236Z",
-      "provider": "generic_agent",
-      "provider_surface": "machine_client",
-      "product_key": "aliev",
-      "case_id": "ev-property-001",
-      "prompt_sha256": "abf5d316fe0eae7c52d843a4e5c0b2a86e772b36c5b9e9e06bc2ba4b9f54b949",
-      "pickup_observed": true,
-      "provider_receipt_sha256": "f04b3720962adcc40d5606cf59886c2b721208f671e7bc1495898becbb25b527",
-      "response_sha256": "9ccdf09f93e8771527761532fcdfefc0d95e0dc7837f4aa540bdc9bf9730eb63",
-      "source": "authorized_provider_probe",
-      "privacy": {
-        "full_provider_response_persisted": false,
-        "provider_session_reference_persisted": false,
-        "credentials_persisted": false
-      }
-    },
     {
       "receipt_key_sha256": "21c36c09f74790bf194b9cbc43d52884a0066d2787771133e418cbf9798092cc",
       "observed_at": "2026-10-06T04:13:49.638Z",
@@ -8996,6 +8924,78 @@
       "pickup_observed": true,
       "provider_receipt_sha256": "79801838280e94c20b91a7d022134dacfdfdecdb8ea97cd77c89622c06d984b8",
       "response_sha256": "f68e9a1ceb3740b70269e96408b801a15668889dee3a13a23cd1d02c7317edf8",
+      "source": "authorized_provider_probe",
+      "privacy": {
+        "full_provider_response_persisted": false,
+        "provider_session_reference_persisted": false,
+        "credentials_persisted": false
+      }
+    },
+    {
+      "receipt_key_sha256": "ca8adfe91d95e10acb17560919f8861e786a4fd8b9bd5c9cd60e3a7715036308",
+      "observed_at": "2026-10-07T02:50:54.274Z",
+      "provider": "generic_agent",
+      "provider_surface": "machine_client",
+      "product_key": "forensiscope",
+      "case_id": "media-recording-compare-005",
+      "prompt_sha256": "426d5b4740995186012077a46fd92e1b7d5eb0d48dc3a66c9071a4041d88b8da",
+      "pickup_observed": true,
+      "provider_receipt_sha256": "1be1fefb97f1f211c51afa60fa46d5385be0e20a81af2ed140ecfcbbef09fef5",
+      "response_sha256": "5d9e7a39351582f50e793699b1e30c37f99515682fb2121eec424b434c3c9c46",
+      "source": "authorized_provider_probe",
+      "privacy": {
+        "full_provider_response_persisted": false,
+        "provider_session_reference_persisted": false,
+        "credentials_persisted": false
+      }
+    },
+    {
+      "receipt_key_sha256": "2cee810bfd3ed5eb933733d9ddce11359942b0c9594596f59a16314249b608ff",
+      "observed_at": "2026-10-07T02:54:12.304Z",
+      "provider": "generic_agent",
+      "provider_surface": "machine_client",
+      "product_key": "forensiscope",
+      "case_id": "media-recording-compare-005",
+      "prompt_sha256": "426d5b4740995186012077a46fd92e1b7d5eb0d48dc3a66c9071a4041d88b8da",
+      "pickup_observed": true,
+      "provider_receipt_sha256": "b3516fe7317cb1153b7fa1f07d160ef666e48e4baaff941e9497fab0b3057f79",
+      "response_sha256": "608ef7cde72f0b0355ac7f4a1acf5554052ffdbea93cae2e029560fd53c3f813",
+      "source": "authorized_provider_probe",
+      "privacy": {
+        "full_provider_response_persisted": false,
+        "provider_session_reference_persisted": false,
+        "credentials_persisted": false
+      }
+    },
+    {
+      "receipt_key_sha256": "94a8814e906a454b757c4b16a77bda07569a74d38dcbd4c70e33c9244a0d3a01",
+      "observed_at": "2026-10-07T02:56:57.077Z",
+      "provider": "generic_agent",
+      "provider_surface": "machine_client",
+      "product_key": "forensiscope",
+      "case_id": "media-recording-compare-005",
+      "prompt_sha256": "426d5b4740995186012077a46fd92e1b7d5eb0d48dc3a66c9071a4041d88b8da",
+      "pickup_observed": true,
+      "provider_receipt_sha256": "11752cd228bb12c29c7a5c9ae5739ed3a6385a8d563468f225a0b96563979337",
+      "response_sha256": "608ef7cde72f0b0355ac7f4a1acf5554052ffdbea93cae2e029560fd53c3f813",
+      "source": "authorized_provider_probe",
+      "privacy": {
+        "full_provider_response_persisted": false,
+        "provider_session_reference_persisted": false,
+        "credentials_persisted": false
+      }
+    },
+    {
+      "receipt_key_sha256": "b85e182dac8ba9741a1066d470a9f3e9d1ff1ad50ef5c0eb0f69c75a83ebb4c2",
+      "observed_at": "2026-10-07T03:00:34.146Z",
+      "provider": "generic_agent",
+      "provider_surface": "machine_client",
+      "product_key": "forensiscope",
+      "case_id": "media-video-rag-006",
+      "prompt_sha256": "8a935e2ff49e5f6f85dd22364881b0c5b338f6b112012c9cbe159edf50fb3631",
+      "pickup_observed": false,
+      "provider_receipt_sha256": "61db9d81dfab6808685821aefbdd9a675a0660335607b6608cde8362ebfc4583",
+      "response_sha256": "9566a007ac926ab5c07cff7476c2c95c9b90b77e9656dedf5328d501f41aef3c",
       "source": "authorized_provider_probe",
       "privacy": {
         "full_provider_response_persisted": false,

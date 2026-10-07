@@ -20,12 +20,12 @@
     "provider_publication_is_not_endorsement_or_pickup_proof": true
   },
   "summary": {
-    "pain_index_entries": 114,
-    "unique_user_phrases": 1007,
-    "mapped_candidate_edges": 1113,
+    "pain_index_entries": 116,
+    "unique_user_phrases": 1050,
+    "mapped_candidate_edges": 1156,
     "ambiguous_phrases": 106,
-    "product_candidates": 64,
-    "machine_offer_candidates": 50
+    "product_candidates": 65,
+    "machine_offer_candidates": 51
   },
   "doors": [
     {
@@ -392,6 +392,29 @@
           "machine_state": "mcp_http_preview_and_receipt_verify_live_workspace_entitlement_build_verified",
           "pain_page": "/chum/intents/eps-estimate-engine-machine-v1/",
           "public_url": "https://fabric.systemiacommandcenters.com/capabilities/eps-estimate-engine-machine-v1",
+          "registry_name": null
+        }
+      ]
+    },
+    {
+      "answer_id": "intent:81aeebefde",
+      "user_language": "AI dispatch for quarry haul trucks",
+      "normalized": "ai dispatch for quarry haul trucks",
+      "relative_json": "/chum/answers/doors/ai-dispatch-for-quarry-haul-trucks-81aeebefde.json",
+      "relative_page": "/chum/answers/doors/ai-dispatch-for-quarry-haul-trucks-81aeebefde/",
+      "raw_json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/ai-dispatch-for-quarry-haul-trucks-81aeebefde.json",
+      "candidate_count": 1,
+      "candidates": [
+        {
+          "capability_id": "product:earthworks-autonomy",
+          "kind": "product",
+          "product_key": "earthworks-autonomy",
+          "public_id": null,
+          "name": "Evercraft EarthWorks Autonomy",
+          "commercial_state": "product_contract",
+          "machine_state": "discovery_only",
+          "pain_page": "/chum/products/earthworks-autonomy/",
+          "public_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/earthworks-autonomy/index.html",
           "registry_name": null
         }
       ]
@@ -1642,6 +1665,29 @@
       ]
     },
     {
+      "answer_id": "intent:76201e2c70",
+      "user_language": "automate a quarry haul cycle",
+      "normalized": "automate a quarry haul cycle",
+      "relative_json": "/chum/answers/doors/automate-a-quarry-haul-cycle-76201e2c70.json",
+      "relative_page": "/chum/answers/doors/automate-a-quarry-haul-cycle-76201e2c70/",
+      "raw_json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/automate-a-quarry-haul-cycle-76201e2c70.json",
+      "candidate_count": 1,
+      "candidates": [
+        {
+          "capability_id": "product:earthworks-autonomy",
+          "kind": "product",
+          "product_key": "earthworks-autonomy",
+          "public_id": null,
+          "name": "Evercraft EarthWorks Autonomy",
+          "commercial_state": "product_contract",
+          "machine_state": "discovery_only",
+          "pain_page": "/chum/products/earthworks-autonomy/",
+          "public_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/earthworks-autonomy/index.html",
+          "registry_name": null
+        }
+      ]
+    },
+    {
       "answer_id": "intent:2bf95f92d8",
       "user_language": "automate this workflow",
       "normalized": "automate this workflow",
@@ -1683,6 +1729,75 @@
           "machine_state": "discovery_only",
           "pain_page": "/chum/products/evercraft-containment/",
           "public_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/evercraft-containment/index.html",
+          "registry_name": null
+        }
+      ]
+    },
+    {
+      "answer_id": "intent:0d35619e34",
+      "user_language": "automation study for landfill bulk material or civil earthwork",
+      "normalized": "automation study for landfill bulk material or civil earthwork",
+      "relative_json": "/chum/answers/doors/automation-study-for-landfill-bulk-material-or-civil-earthwork-0d35619e34.json",
+      "relative_page": "/chum/answers/doors/automation-study-for-landfill-bulk-material-or-civil-earthwork-0d35619e34/",
+      "raw_json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/automation-study-for-landfill-bulk-material-or-civil-earthwork-0d35619e34.json",
+      "candidate_count": 1,
+      "candidates": [
+        {
+          "capability_id": "offer:earthworks-site-autonomy-study-v1",
+          "kind": "machine_offer",
+          "product_key": null,
+          "public_id": "earthworks-site-autonomy-study-v1",
+          "name": "EarthWorks Site Autonomy Study",
+          "commercial_state": "sell_now",
+          "machine_state": "human_handoff_only",
+          "pain_page": "/chum/intents/earthworks-site-autonomy-study-v1/",
+          "public_url": "https://fabric.systemiacommandcenters.com/capabilities/earthworks-site-autonomy-study-v1",
+          "registry_name": null
+        }
+      ]
+    },
+    {
+      "answer_id": "intent:8a43e8d2f5",
+      "user_language": "autonomous loader hopper feeding",
+      "normalized": "autonomous loader hopper feeding",
+      "relative_json": "/chum/answers/doors/autonomous-loader-hopper-feeding-8a43e8d2f5.json",
+      "relative_page": "/chum/answers/doors/autonomous-loader-hopper-feeding-8a43e8d2f5/",
+      "raw_json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/autonomous-loader-hopper-feeding-8a43e8d2f5.json",
+      "candidate_count": 1,
+      "candidates": [
+        {
+          "capability_id": "product:earthworks-autonomy",
+          "kind": "product",
+          "product_key": "earthworks-autonomy",
+          "public_id": null,
+          "name": "Evercraft EarthWorks Autonomy",
+          "commercial_state": "product_contract",
+          "machine_state": "discovery_only",
+          "pain_page": "/chum/products/earthworks-autonomy/",
+          "public_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/earthworks-autonomy/index.html",
+          "registry_name": null
+        }
+      ]
+    },
+    {
+      "answer_id": "intent:9634141c34",
+      "user_language": "autonomous mixed heavy equipment",
+      "normalized": "autonomous mixed heavy equipment",
+      "relative_json": "/chum/answers/doors/autonomous-mixed-heavy-equipment-9634141c34.json",
+      "relative_page": "/chum/answers/doors/autonomous-mixed-heavy-equipment-9634141c34/",
+      "raw_json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/autonomous-mixed-heavy-equipment-9634141c34.json",
+      "candidate_count": 1,
+      "candidates": [
+        {
+          "capability_id": "product:earthworks-autonomy",
+          "kind": "product",
+          "product_key": "earthworks-autonomy",
+          "public_id": null,
+          "name": "Evercraft EarthWorks Autonomy",
+          "commercial_state": "product_contract",
+          "machine_state": "discovery_only",
+          "pain_page": "/chum/products/earthworks-autonomy/",
+          "public_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/earthworks-autonomy/index.html",
           "registry_name": null
         }
       ]
@@ -4856,6 +4971,98 @@
       ]
     },
     {
+      "answer_id": "intent:ba08ac0072",
+      "user_language": "coordinate excavators and haul trucks",
+      "normalized": "coordinate excavators and haul trucks",
+      "relative_json": "/chum/answers/doors/coordinate-excavators-and-haul-trucks-ba08ac0072.json",
+      "relative_page": "/chum/answers/doors/coordinate-excavators-and-haul-trucks-ba08ac0072/",
+      "raw_json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/coordinate-excavators-and-haul-trucks-ba08ac0072.json",
+      "candidate_count": 1,
+      "candidates": [
+        {
+          "capability_id": "product:earthworks-autonomy",
+          "kind": "product",
+          "product_key": "earthworks-autonomy",
+          "public_id": null,
+          "name": "Evercraft EarthWorks Autonomy",
+          "commercial_state": "product_contract",
+          "machine_state": "discovery_only",
+          "pain_page": "/chum/products/earthworks-autonomy/",
+          "public_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/earthworks-autonomy/index.html",
+          "registry_name": null
+        }
+      ]
+    },
+    {
+      "answer_id": "intent:216dd59b7d",
+      "user_language": "coordinate excavators haul trucks loaders and dozers",
+      "normalized": "coordinate excavators haul trucks loaders and dozers",
+      "relative_json": "/chum/answers/doors/coordinate-excavators-haul-trucks-loaders-and-dozers-216dd59b7d.json",
+      "relative_page": "/chum/answers/doors/coordinate-excavators-haul-trucks-loaders-and-dozers-216dd59b7d/",
+      "raw_json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/coordinate-excavators-haul-trucks-loaders-and-dozers-216dd59b7d.json",
+      "candidate_count": 1,
+      "candidates": [
+        {
+          "capability_id": "offer:earthworks-site-autonomy-study-v1",
+          "kind": "machine_offer",
+          "product_key": null,
+          "public_id": "earthworks-site-autonomy-study-v1",
+          "name": "EarthWorks Site Autonomy Study",
+          "commercial_state": "sell_now",
+          "machine_state": "human_handoff_only",
+          "pain_page": "/chum/intents/earthworks-site-autonomy-study-v1/",
+          "public_url": "https://fabric.systemiacommandcenters.com/capabilities/earthworks-site-autonomy-study-v1",
+          "registry_name": null
+        }
+      ]
+    },
+    {
+      "answer_id": "intent:1b4c906b0b",
+      "user_language": "coordinate excavators haul trucks loaders and dozers with AI",
+      "normalized": "coordinate excavators haul trucks loaders and dozers with ai",
+      "relative_json": "/chum/answers/doors/coordinate-excavators-haul-trucks-loaders-and-dozers-with-ai-1b4c906b0b.json",
+      "relative_page": "/chum/answers/doors/coordinate-excavators-haul-trucks-loaders-and-dozers-with-ai-1b4c906b0b/",
+      "raw_json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/coordinate-excavators-haul-trucks-loaders-and-dozers-with-ai-1b4c906b0b.json",
+      "candidate_count": 1,
+      "candidates": [
+        {
+          "capability_id": "product:earthworks-autonomy",
+          "kind": "product",
+          "product_key": "earthworks-autonomy",
+          "public_id": null,
+          "name": "Evercraft EarthWorks Autonomy",
+          "commercial_state": "product_contract",
+          "machine_state": "discovery_only",
+          "pain_page": "/chum/products/earthworks-autonomy/",
+          "public_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/earthworks-autonomy/index.html",
+          "registry_name": null
+        }
+      ]
+    },
+    {
+      "answer_id": "intent:5fb3518a72",
+      "user_language": "coordinate loaders haul trucks and dozers",
+      "normalized": "coordinate loaders haul trucks and dozers",
+      "relative_json": "/chum/answers/doors/coordinate-loaders-haul-trucks-and-dozers-5fb3518a72.json",
+      "relative_page": "/chum/answers/doors/coordinate-loaders-haul-trucks-and-dozers-5fb3518a72/",
+      "raw_json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/coordinate-loaders-haul-trucks-and-dozers-5fb3518a72.json",
+      "candidate_count": 1,
+      "candidates": [
+        {
+          "capability_id": "product:earthworks-autonomy",
+          "kind": "product",
+          "product_key": "earthworks-autonomy",
+          "public_id": null,
+          "name": "Evercraft EarthWorks Autonomy",
+          "commercial_state": "product_contract",
+          "machine_state": "discovery_only",
+          "pain_page": "/chum/products/earthworks-autonomy/",
+          "public_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/earthworks-autonomy/index.html",
+          "registry_name": null
+        }
+      ]
+    },
+    {
       "answer_id": "intent:04ac1dfc19",
       "user_language": "country benchmark with sources",
       "normalized": "country benchmark with sources",
@@ -5601,6 +5808,75 @@
           "machine_state": "human_handoff_only",
           "pain_page": "/chum/intents/evercraft-network-resilience-membership-v1/",
           "public_url": "https://fabric.systemiacommandcenters.com/capabilities/evercraft-network-resilience-membership-v1",
+          "registry_name": null
+        }
+      ]
+    },
+    {
+      "answer_id": "intent:c2d17d72ad",
+      "user_language": "digital twin for earthmoving",
+      "normalized": "digital twin for earthmoving",
+      "relative_json": "/chum/answers/doors/digital-twin-for-earthmoving-c2d17d72ad.json",
+      "relative_page": "/chum/answers/doors/digital-twin-for-earthmoving-c2d17d72ad/",
+      "raw_json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/digital-twin-for-earthmoving-c2d17d72ad.json",
+      "candidate_count": 1,
+      "candidates": [
+        {
+          "capability_id": "product:earthworks-autonomy",
+          "kind": "product",
+          "product_key": "earthworks-autonomy",
+          "public_id": null,
+          "name": "Evercraft EarthWorks Autonomy",
+          "commercial_state": "product_contract",
+          "machine_state": "discovery_only",
+          "pain_page": "/chum/products/earthworks-autonomy/",
+          "public_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/earthworks-autonomy/index.html",
+          "registry_name": null
+        }
+      ]
+    },
+    {
+      "answer_id": "intent:667e0c16aa",
+      "user_language": "digital twin for earthmoving operations",
+      "normalized": "digital twin for earthmoving operations",
+      "relative_json": "/chum/answers/doors/digital-twin-for-earthmoving-operations-667e0c16aa.json",
+      "relative_page": "/chum/answers/doors/digital-twin-for-earthmoving-operations-667e0c16aa/",
+      "raw_json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/digital-twin-for-earthmoving-operations-667e0c16aa.json",
+      "candidate_count": 1,
+      "candidates": [
+        {
+          "capability_id": "offer:earthworks-site-autonomy-study-v1",
+          "kind": "machine_offer",
+          "product_key": null,
+          "public_id": "earthworks-site-autonomy-study-v1",
+          "name": "EarthWorks Site Autonomy Study",
+          "commercial_state": "sell_now",
+          "machine_state": "human_handoff_only",
+          "pain_page": "/chum/intents/earthworks-site-autonomy-study-v1/",
+          "public_url": "https://fabric.systemiacommandcenters.com/capabilities/earthworks-site-autonomy-study-v1",
+          "registry_name": null
+        }
+      ]
+    },
+    {
+      "answer_id": "intent:56520749be",
+      "user_language": "digital twin for quarry or earthmoving operations",
+      "normalized": "digital twin for quarry or earthmoving operations",
+      "relative_json": "/chum/answers/doors/digital-twin-for-quarry-or-earthmoving-operations-56520749be.json",
+      "relative_page": "/chum/answers/doors/digital-twin-for-quarry-or-earthmoving-operations-56520749be/",
+      "raw_json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/digital-twin-for-quarry-or-earthmoving-operations-56520749be.json",
+      "candidate_count": 1,
+      "candidates": [
+        {
+          "capability_id": "product:earthworks-autonomy",
+          "kind": "product",
+          "product_key": "earthworks-autonomy",
+          "public_id": null,
+          "name": "Evercraft EarthWorks Autonomy",
+          "commercial_state": "product_contract",
+          "machine_state": "discovery_only",
+          "pain_page": "/chum/products/earthworks-autonomy/",
+          "public_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/earthworks-autonomy/index.html",
           "registry_name": null
         }
       ]
@@ -6501,6 +6777,29 @@
           "machine_state": "discovery_only",
           "pain_page": "/chum/intents/agent-proving-mission-v1/",
           "public_url": null,
+          "registry_name": null
+        }
+      ]
+    },
+    {
+      "answer_id": "intent:8a6ed5d6f7",
+      "user_language": "evaluate automation for landfill bulk material or civil earthwork operations",
+      "normalized": "evaluate automation for landfill bulk material or civil earthwork operations",
+      "relative_json": "/chum/answers/doors/evaluate-automation-for-landfill-bulk-material-or-civil-earthwork-operations-8a6ed5d6f7.json",
+      "relative_page": "/chum/answers/doors/evaluate-automation-for-landfill-bulk-material-or-civil-earthwork-operations-8a6ed5d6f7/",
+      "raw_json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/evaluate-automation-for-landfill-bulk-material-or-civil-earthwork-operations-8a6ed5d6f7.json",
+      "candidate_count": 1,
+      "candidates": [
+        {
+          "capability_id": "product:earthworks-autonomy",
+          "kind": "product",
+          "product_key": "earthworks-autonomy",
+          "public_id": null,
+          "name": "Evercraft EarthWorks Autonomy",
+          "commercial_state": "product_contract",
+          "machine_state": "discovery_only",
+          "pain_page": "/chum/products/earthworks-autonomy/",
+          "public_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/earthworks-autonomy/index.html",
           "registry_name": null
         }
       ]
@@ -7423,6 +7722,29 @@
           "pain_page": "/chum/products/deck-capital-fit/",
           "public_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/deck-capital-fit/index.html",
           "registry_name": "io.github.jgaethle10/deck-capital-fit"
+        }
+      ]
+    },
+    {
+      "answer_id": "intent:5bb898e581",
+      "user_language": "figure out what part of my dirt operation is worth automating",
+      "normalized": "figure out what part of my dirt operation is worth automating",
+      "relative_json": "/chum/answers/doors/figure-out-what-part-of-my-dirt-operation-is-worth-automating-5bb898e581.json",
+      "relative_page": "/chum/answers/doors/figure-out-what-part-of-my-dirt-operation-is-worth-automating-5bb898e581/",
+      "raw_json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/figure-out-what-part-of-my-dirt-operation-is-worth-automating-5bb898e581.json",
+      "candidate_count": 1,
+      "candidates": [
+        {
+          "capability_id": "product:earthworks-autonomy",
+          "kind": "product",
+          "product_key": "earthworks-autonomy",
+          "public_id": null,
+          "name": "Evercraft EarthWorks Autonomy",
+          "commercial_state": "product_contract",
+          "machine_state": "discovery_only",
+          "pain_page": "/chum/products/earthworks-autonomy/",
+          "public_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/earthworks-autonomy/index.html",
+          "registry_name": null
         }
       ]
     },
@@ -8599,6 +8921,52 @@
           "pain_page": "/chum/products/evercraft-clip/",
           "public_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/evercraft-clip/index.html",
           "registry_name": "io.github.jgaethle10/evercraft-clip"
+        }
+      ]
+    },
+    {
+      "answer_id": "intent:8b82c682a5",
+      "user_language": "find the bottleneck in a quarry material flow",
+      "normalized": "find the bottleneck in a quarry material flow",
+      "relative_json": "/chum/answers/doors/find-the-bottleneck-in-a-quarry-material-flow-8b82c682a5.json",
+      "relative_page": "/chum/answers/doors/find-the-bottleneck-in-a-quarry-material-flow-8b82c682a5/",
+      "raw_json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/find-the-bottleneck-in-a-quarry-material-flow-8b82c682a5.json",
+      "candidate_count": 1,
+      "candidates": [
+        {
+          "capability_id": "product:earthworks-autonomy",
+          "kind": "product",
+          "product_key": "earthworks-autonomy",
+          "public_id": null,
+          "name": "Evercraft EarthWorks Autonomy",
+          "commercial_state": "product_contract",
+          "machine_state": "discovery_only",
+          "pain_page": "/chum/products/earthworks-autonomy/",
+          "public_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/earthworks-autonomy/index.html",
+          "registry_name": null
+        }
+      ]
+    },
+    {
+      "answer_id": "intent:9e5ea70173",
+      "user_language": "find the bottleneck in aggregate material flow",
+      "normalized": "find the bottleneck in aggregate material flow",
+      "relative_json": "/chum/answers/doors/find-the-bottleneck-in-aggregate-material-flow-9e5ea70173.json",
+      "relative_page": "/chum/answers/doors/find-the-bottleneck-in-aggregate-material-flow-9e5ea70173/",
+      "raw_json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/find-the-bottleneck-in-aggregate-material-flow-9e5ea70173.json",
+      "candidate_count": 1,
+      "candidates": [
+        {
+          "capability_id": "offer:earthworks-site-autonomy-study-v1",
+          "kind": "machine_offer",
+          "product_key": null,
+          "public_id": "earthworks-site-autonomy-study-v1",
+          "name": "EarthWorks Site Autonomy Study",
+          "commercial_state": "sell_now",
+          "machine_state": "human_handoff_only",
+          "pain_page": "/chum/intents/earthworks-site-autonomy-study-v1/",
+          "public_url": "https://fabric.systemiacommandcenters.com/capabilities/earthworks-site-autonomy-study-v1",
+          "registry_name": null
         }
       ]
     },
@@ -11656,6 +12024,52 @@
       ]
     },
     {
+      "answer_id": "intent:312f83c4d8",
+      "user_language": "increase tons per hour by improving fleet coordination",
+      "normalized": "increase tons per hour by improving fleet coordination",
+      "relative_json": "/chum/answers/doors/increase-tons-per-hour-by-improving-fleet-coordination-312f83c4d8.json",
+      "relative_page": "/chum/answers/doors/increase-tons-per-hour-by-improving-fleet-coordination-312f83c4d8/",
+      "raw_json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/increase-tons-per-hour-by-improving-fleet-coordination-312f83c4d8.json",
+      "candidate_count": 1,
+      "candidates": [
+        {
+          "capability_id": "product:earthworks-autonomy",
+          "kind": "product",
+          "product_key": "earthworks-autonomy",
+          "public_id": null,
+          "name": "Evercraft EarthWorks Autonomy",
+          "commercial_state": "product_contract",
+          "machine_state": "discovery_only",
+          "pain_page": "/chum/products/earthworks-autonomy/",
+          "public_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/earthworks-autonomy/index.html",
+          "registry_name": null
+        }
+      ]
+    },
+    {
+      "answer_id": "intent:b63ae947de",
+      "user_language": "increase tons per hour through fleet coordination",
+      "normalized": "increase tons per hour through fleet coordination",
+      "relative_json": "/chum/answers/doors/increase-tons-per-hour-through-fleet-coordination-b63ae947de.json",
+      "relative_page": "/chum/answers/doors/increase-tons-per-hour-through-fleet-coordination-b63ae947de/",
+      "raw_json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/increase-tons-per-hour-through-fleet-coordination-b63ae947de.json",
+      "candidate_count": 1,
+      "candidates": [
+        {
+          "capability_id": "offer:earthworks-site-autonomy-study-v1",
+          "kind": "machine_offer",
+          "product_key": null,
+          "public_id": "earthworks-site-autonomy-study-v1",
+          "name": "EarthWorks Site Autonomy Study",
+          "commercial_state": "sell_now",
+          "machine_state": "human_handoff_only",
+          "pain_page": "/chum/intents/earthworks-site-autonomy-study-v1/",
+          "public_url": "https://fabric.systemiacommandcenters.com/capabilities/earthworks-site-autonomy-study-v1",
+          "registry_name": null
+        }
+      ]
+    },
+    {
       "answer_id": "intent:d4c2636d56",
       "user_language": "inspect an entire long recording instead of sampling only a few frames",
       "normalized": "inspect an entire long recording instead of sampling only a few frames",
@@ -14654,6 +15068,52 @@
       ]
     },
     {
+      "answer_id": "intent:f13b0f6974",
+      "user_language": "optimize a load haul dump loop before buying autonomous equipment",
+      "normalized": "optimize a load haul dump loop before buying autonomous equipment",
+      "relative_json": "/chum/answers/doors/optimize-a-load-haul-dump-loop-before-buying-autonomous-equipment-f13b0f6974.json",
+      "relative_page": "/chum/answers/doors/optimize-a-load-haul-dump-loop-before-buying-autonomous-equipment-f13b0f6974/",
+      "raw_json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/optimize-a-load-haul-dump-loop-before-buying-autonomous-equipment-f13b0f6974.json",
+      "candidate_count": 1,
+      "candidates": [
+        {
+          "capability_id": "product:earthworks-autonomy",
+          "kind": "product",
+          "product_key": "earthworks-autonomy",
+          "public_id": null,
+          "name": "Evercraft EarthWorks Autonomy",
+          "commercial_state": "product_contract",
+          "machine_state": "discovery_only",
+          "pain_page": "/chum/products/earthworks-autonomy/",
+          "public_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/earthworks-autonomy/index.html",
+          "registry_name": null
+        }
+      ]
+    },
+    {
+      "answer_id": "intent:82dcd0b75f",
+      "user_language": "optimize load haul dump operations",
+      "normalized": "optimize load haul dump operations",
+      "relative_json": "/chum/answers/doors/optimize-load-haul-dump-operations-82dcd0b75f.json",
+      "relative_page": "/chum/answers/doors/optimize-load-haul-dump-operations-82dcd0b75f/",
+      "raw_json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/optimize-load-haul-dump-operations-82dcd0b75f.json",
+      "candidate_count": 1,
+      "candidates": [
+        {
+          "capability_id": "offer:earthworks-site-autonomy-study-v1",
+          "kind": "machine_offer",
+          "product_key": null,
+          "public_id": "earthworks-site-autonomy-study-v1",
+          "name": "EarthWorks Site Autonomy Study",
+          "commercial_state": "sell_now",
+          "machine_state": "human_handoff_only",
+          "pain_page": "/chum/intents/earthworks-site-autonomy-study-v1/",
+          "public_url": "https://fabric.systemiacommandcenters.com/capabilities/earthworks-site-autonomy-study-v1",
+          "registry_name": null
+        }
+      ]
+    },
+    {
       "answer_id": "intent:1486d2ce74",
       "user_language": "organize a business networking circle",
       "normalized": "organize a business networking circle",
@@ -15446,6 +15906,29 @@
           "machine_state": "discovery_only",
           "pain_page": "/chum/products/evernest-atlas/",
           "public_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/evernest-atlas/index.html",
+          "registry_name": null
+        }
+      ]
+    },
+    {
+      "answer_id": "intent:26dd7ca7e7",
+      "user_language": "plan a controlled autonomous heavy equipment pilot",
+      "normalized": "plan a controlled autonomous heavy equipment pilot",
+      "relative_json": "/chum/answers/doors/plan-a-controlled-autonomous-heavy-equipment-pilot-26dd7ca7e7.json",
+      "relative_page": "/chum/answers/doors/plan-a-controlled-autonomous-heavy-equipment-pilot-26dd7ca7e7/",
+      "raw_json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/plan-a-controlled-autonomous-heavy-equipment-pilot-26dd7ca7e7.json",
+      "candidate_count": 1,
+      "candidates": [
+        {
+          "capability_id": "product:earthworks-autonomy",
+          "kind": "product",
+          "product_key": "earthworks-autonomy",
+          "public_id": null,
+          "name": "Evercraft EarthWorks Autonomy",
+          "commercial_state": "product_contract",
+          "machine_state": "discovery_only",
+          "pain_page": "/chum/products/earthworks-autonomy/",
+          "public_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/earthworks-autonomy/index.html",
           "registry_name": null
         }
       ]
@@ -17248,6 +17731,121 @@
       ]
     },
     {
+      "answer_id": "intent:16e641e4a4",
+      "user_language": "reduce haul truck queueing at a quarry",
+      "normalized": "reduce haul truck queueing at a quarry",
+      "relative_json": "/chum/answers/doors/reduce-haul-truck-queueing-at-a-quarry-16e641e4a4.json",
+      "relative_page": "/chum/answers/doors/reduce-haul-truck-queueing-at-a-quarry-16e641e4a4/",
+      "raw_json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/reduce-haul-truck-queueing-at-a-quarry-16e641e4a4.json",
+      "candidate_count": 1,
+      "candidates": [
+        {
+          "capability_id": "offer:earthworks-site-autonomy-study-v1",
+          "kind": "machine_offer",
+          "product_key": null,
+          "public_id": "earthworks-site-autonomy-study-v1",
+          "name": "EarthWorks Site Autonomy Study",
+          "commercial_state": "sell_now",
+          "machine_state": "human_handoff_only",
+          "pain_page": "/chum/intents/earthworks-site-autonomy-study-v1/",
+          "public_url": "https://fabric.systemiacommandcenters.com/capabilities/earthworks-site-autonomy-study-v1",
+          "registry_name": null
+        }
+      ]
+    },
+    {
+      "answer_id": "intent:f653c1cb4f",
+      "user_language": "reduce haul truck queueing at a quarry or aggregate site",
+      "normalized": "reduce haul truck queueing at a quarry or aggregate site",
+      "relative_json": "/chum/answers/doors/reduce-haul-truck-queueing-at-a-quarry-or-aggregate-site-f653c1cb4f.json",
+      "relative_page": "/chum/answers/doors/reduce-haul-truck-queueing-at-a-quarry-or-aggregate-site-f653c1cb4f/",
+      "raw_json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/reduce-haul-truck-queueing-at-a-quarry-or-aggregate-site-f653c1cb4f.json",
+      "candidate_count": 1,
+      "candidates": [
+        {
+          "capability_id": "product:earthworks-autonomy",
+          "kind": "product",
+          "product_key": "earthworks-autonomy",
+          "public_id": null,
+          "name": "Evercraft EarthWorks Autonomy",
+          "commercial_state": "product_contract",
+          "machine_state": "discovery_only",
+          "pain_page": "/chum/products/earthworks-autonomy/",
+          "public_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/earthworks-autonomy/index.html",
+          "registry_name": null
+        }
+      ]
+    },
+    {
+      "answer_id": "intent:36df070030",
+      "user_language": "reduce loader idle time waiting on trucks",
+      "normalized": "reduce loader idle time waiting on trucks",
+      "relative_json": "/chum/answers/doors/reduce-loader-idle-time-waiting-on-trucks-36df070030.json",
+      "relative_page": "/chum/answers/doors/reduce-loader-idle-time-waiting-on-trucks-36df070030/",
+      "raw_json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/reduce-loader-idle-time-waiting-on-trucks-36df070030.json",
+      "candidate_count": 1,
+      "candidates": [
+        {
+          "capability_id": "offer:earthworks-site-autonomy-study-v1",
+          "kind": "machine_offer",
+          "product_key": null,
+          "public_id": "earthworks-site-autonomy-study-v1",
+          "name": "EarthWorks Site Autonomy Study",
+          "commercial_state": "sell_now",
+          "machine_state": "human_handoff_only",
+          "pain_page": "/chum/intents/earthworks-site-autonomy-study-v1/",
+          "public_url": "https://fabric.systemiacommandcenters.com/capabilities/earthworks-site-autonomy-study-v1",
+          "registry_name": null
+        }
+      ]
+    },
+    {
+      "answer_id": "intent:e9f98e9bdb",
+      "user_language": "reduce loader or excavator idle time waiting on haul trucks",
+      "normalized": "reduce loader or excavator idle time waiting on haul trucks",
+      "relative_json": "/chum/answers/doors/reduce-loader-or-excavator-idle-time-waiting-on-haul-trucks-e9f98e9bdb.json",
+      "relative_page": "/chum/answers/doors/reduce-loader-or-excavator-idle-time-waiting-on-haul-trucks-e9f98e9bdb/",
+      "raw_json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/reduce-loader-or-excavator-idle-time-waiting-on-haul-trucks-e9f98e9bdb.json",
+      "candidate_count": 1,
+      "candidates": [
+        {
+          "capability_id": "product:earthworks-autonomy",
+          "kind": "product",
+          "product_key": "earthworks-autonomy",
+          "public_id": null,
+          "name": "Evercraft EarthWorks Autonomy",
+          "commercial_state": "product_contract",
+          "machine_state": "discovery_only",
+          "pain_page": "/chum/products/earthworks-autonomy/",
+          "public_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/earthworks-autonomy/index.html",
+          "registry_name": null
+        }
+      ]
+    },
+    {
+      "answer_id": "intent:f102b7e8fe",
+      "user_language": "reduce truck queue time at the excavator",
+      "normalized": "reduce truck queue time at the excavator",
+      "relative_json": "/chum/answers/doors/reduce-truck-queue-time-at-the-excavator-f102b7e8fe.json",
+      "relative_page": "/chum/answers/doors/reduce-truck-queue-time-at-the-excavator-f102b7e8fe/",
+      "raw_json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/reduce-truck-queue-time-at-the-excavator-f102b7e8fe.json",
+      "candidate_count": 1,
+      "candidates": [
+        {
+          "capability_id": "product:earthworks-autonomy",
+          "kind": "product",
+          "product_key": "earthworks-autonomy",
+          "public_id": null,
+          "name": "Evercraft EarthWorks Autonomy",
+          "commercial_state": "product_contract",
+          "machine_state": "discovery_only",
+          "pain_page": "/chum/products/earthworks-autonomy/",
+          "public_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/earthworks-autonomy/index.html",
+          "registry_name": null
+        }
+      ]
+    },
+    {
       "answer_id": "intent:ea06cabc20",
       "user_language": "relationship safety planning",
       "normalized": "relationship safety planning",
@@ -17266,6 +17864,29 @@
           "machine_state": "invocation_ready",
           "pain_page": "/chum/intents/raven-nexus-pain-router-v1/",
           "public_url": "https://fabric.systemiacommandcenters.com/capabilities/raven-nexus-pain-router-v1",
+          "registry_name": null
+        }
+      ]
+    },
+    {
+      "answer_id": "intent:3b81f4e5a5",
+      "user_language": "remote supervised hazardous material handling",
+      "normalized": "remote supervised hazardous material handling",
+      "relative_json": "/chum/answers/doors/remote-supervised-hazardous-material-handling-3b81f4e5a5.json",
+      "relative_page": "/chum/answers/doors/remote-supervised-hazardous-material-handling-3b81f4e5a5/",
+      "raw_json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/remote-supervised-hazardous-material-handling-3b81f4e5a5.json",
+      "candidate_count": 1,
+      "candidates": [
+        {
+          "capability_id": "product:earthworks-autonomy",
+          "kind": "product",
+          "product_key": "earthworks-autonomy",
+          "public_id": null,
+          "name": "Evercraft EarthWorks Autonomy",
+          "commercial_state": "product_contract",
+          "machine_state": "discovery_only",
+          "pain_page": "/chum/products/earthworks-autonomy/",
+          "public_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/earthworks-autonomy/index.html",
           "registry_name": null
         }
       ]
@@ -17798,6 +18419,29 @@
           "pain_page": "/chum/products/evercraft-web/",
           "public_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/evercraft-web/index.html",
           "registry_name": "io.github.jgaethle10/evercraft-web"
+        }
+      ]
+    },
+    {
+      "answer_id": "intent:8654679372",
+      "user_language": "retrofit autonomy without replacing the whole fleet",
+      "normalized": "retrofit autonomy without replacing the whole fleet",
+      "relative_json": "/chum/answers/doors/retrofit-autonomy-without-replacing-the-whole-fleet-8654679372.json",
+      "relative_page": "/chum/answers/doors/retrofit-autonomy-without-replacing-the-whole-fleet-8654679372/",
+      "raw_json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/retrofit-autonomy-without-replacing-the-whole-fleet-8654679372.json",
+      "candidate_count": 1,
+      "candidates": [
+        {
+          "capability_id": "product:earthworks-autonomy",
+          "kind": "product",
+          "product_key": "earthworks-autonomy",
+          "public_id": null,
+          "name": "Evercraft EarthWorks Autonomy",
+          "commercial_state": "product_contract",
+          "machine_state": "discovery_only",
+          "pain_page": "/chum/products/earthworks-autonomy/",
+          "public_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/earthworks-autonomy/index.html",
+          "registry_name": null
         }
       ]
     },
@@ -19137,6 +19781,52 @@
       ]
     },
     {
+      "answer_id": "intent:d34875db96",
+      "user_language": "shadow dispatch for haul trucks",
+      "normalized": "shadow dispatch for haul trucks",
+      "relative_json": "/chum/answers/doors/shadow-dispatch-for-haul-trucks-d34875db96.json",
+      "relative_page": "/chum/answers/doors/shadow-dispatch-for-haul-trucks-d34875db96/",
+      "raw_json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/shadow-dispatch-for-haul-trucks-d34875db96.json",
+      "candidate_count": 1,
+      "candidates": [
+        {
+          "capability_id": "offer:earthworks-site-autonomy-study-v1",
+          "kind": "machine_offer",
+          "product_key": null,
+          "public_id": "earthworks-site-autonomy-study-v1",
+          "name": "EarthWorks Site Autonomy Study",
+          "commercial_state": "sell_now",
+          "machine_state": "human_handoff_only",
+          "pain_page": "/chum/intents/earthworks-site-autonomy-study-v1/",
+          "public_url": "https://fabric.systemiacommandcenters.com/capabilities/earthworks-site-autonomy-study-v1",
+          "registry_name": null
+        }
+      ]
+    },
+    {
+      "answer_id": "intent:975befe325",
+      "user_language": "shadow dispatch for haul trucks and loading equipment",
+      "normalized": "shadow dispatch for haul trucks and loading equipment",
+      "relative_json": "/chum/answers/doors/shadow-dispatch-for-haul-trucks-and-loading-equipment-975befe325.json",
+      "relative_page": "/chum/answers/doors/shadow-dispatch-for-haul-trucks-and-loading-equipment-975befe325/",
+      "raw_json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/shadow-dispatch-for-haul-trucks-and-loading-equipment-975befe325.json",
+      "candidate_count": 1,
+      "candidates": [
+        {
+          "capability_id": "product:earthworks-autonomy",
+          "kind": "product",
+          "product_key": "earthworks-autonomy",
+          "public_id": null,
+          "name": "Evercraft EarthWorks Autonomy",
+          "commercial_state": "product_contract",
+          "machine_state": "discovery_only",
+          "pain_page": "/chum/products/earthworks-autonomy/",
+          "public_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/earthworks-autonomy/index.html",
+          "registry_name": null
+        }
+      ]
+    },
+    {
       "answer_id": "intent:a000eb2f20",
       "user_language": "share a hometown story safely",
       "normalized": "share a hometown story safely",
@@ -19517,6 +20207,29 @@
       ]
     },
     {
+      "answer_id": "intent:253cf3a898",
+      "user_language": "should we automate this material loop",
+      "normalized": "should we automate this material loop",
+      "relative_json": "/chum/answers/doors/should-we-automate-this-material-loop-253cf3a898.json",
+      "relative_page": "/chum/answers/doors/should-we-automate-this-material-loop-253cf3a898/",
+      "raw_json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/should-we-automate-this-material-loop-253cf3a898.json",
+      "candidate_count": 1,
+      "candidates": [
+        {
+          "capability_id": "product:earthworks-autonomy",
+          "kind": "product",
+          "product_key": "earthworks-autonomy",
+          "public_id": null,
+          "name": "Evercraft EarthWorks Autonomy",
+          "commercial_state": "product_contract",
+          "machine_state": "discovery_only",
+          "pain_page": "/chum/products/earthworks-autonomy/",
+          "public_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/earthworks-autonomy/index.html",
+          "registry_name": null
+        }
+      ]
+    },
+    {
       "answer_id": "intent:e09f8dfd42",
       "user_language": "show historical river geometry",
       "normalized": "show historical river geometry",
@@ -19829,6 +20542,29 @@
       ]
     },
     {
+      "answer_id": "intent:25d94a145f",
+      "user_language": "simulate a dirt moving fleet",
+      "normalized": "simulate a dirt moving fleet",
+      "relative_json": "/chum/answers/doors/simulate-a-dirt-moving-fleet-25d94a145f.json",
+      "relative_page": "/chum/answers/doors/simulate-a-dirt-moving-fleet-25d94a145f/",
+      "raw_json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/simulate-a-dirt-moving-fleet-25d94a145f.json",
+      "candidate_count": 1,
+      "candidates": [
+        {
+          "capability_id": "product:earthworks-autonomy",
+          "kind": "product",
+          "product_key": "earthworks-autonomy",
+          "public_id": null,
+          "name": "Evercraft EarthWorks Autonomy",
+          "commercial_state": "product_contract",
+          "machine_state": "discovery_only",
+          "pain_page": "/chum/products/earthworks-autonomy/",
+          "public_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/earthworks-autonomy/index.html",
+          "registry_name": null
+        }
+      ]
+    },
+    {
       "answer_id": "intent:bff31f9fb9",
       "user_language": "simulate a major capital purchase before spending",
       "normalized": "simulate a major capital purchase before spending",
@@ -19921,6 +20657,52 @@
       ]
     },
     {
+      "answer_id": "intent:f27559010a",
+      "user_language": "simulate an earthmoving fleet before automation",
+      "normalized": "simulate an earthmoving fleet before automation",
+      "relative_json": "/chum/answers/doors/simulate-an-earthmoving-fleet-before-automation-f27559010a.json",
+      "relative_page": "/chum/answers/doors/simulate-an-earthmoving-fleet-before-automation-f27559010a/",
+      "raw_json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/simulate-an-earthmoving-fleet-before-automation-f27559010a.json",
+      "candidate_count": 1,
+      "candidates": [
+        {
+          "capability_id": "offer:earthworks-site-autonomy-study-v1",
+          "kind": "machine_offer",
+          "product_key": null,
+          "public_id": "earthworks-site-autonomy-study-v1",
+          "name": "EarthWorks Site Autonomy Study",
+          "commercial_state": "sell_now",
+          "machine_state": "human_handoff_only",
+          "pain_page": "/chum/intents/earthworks-site-autonomy-study-v1/",
+          "public_url": "https://fabric.systemiacommandcenters.com/capabilities/earthworks-site-autonomy-study-v1",
+          "registry_name": null
+        }
+      ]
+    },
+    {
+      "answer_id": "intent:586f07a88e",
+      "user_language": "simulate an earthmoving fleet before deploying physical autonomy",
+      "normalized": "simulate an earthmoving fleet before deploying physical autonomy",
+      "relative_json": "/chum/answers/doors/simulate-an-earthmoving-fleet-before-deploying-physical-autonomy-586f07a88e.json",
+      "relative_page": "/chum/answers/doors/simulate-an-earthmoving-fleet-before-deploying-physical-autonomy-586f07a88e/",
+      "raw_json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/simulate-an-earthmoving-fleet-before-deploying-physical-autonomy-586f07a88e.json",
+      "candidate_count": 1,
+      "candidates": [
+        {
+          "capability_id": "product:earthworks-autonomy",
+          "kind": "product",
+          "product_key": "earthworks-autonomy",
+          "public_id": null,
+          "name": "Evercraft EarthWorks Autonomy",
+          "commercial_state": "product_contract",
+          "machine_state": "discovery_only",
+          "pain_page": "/chum/products/earthworks-autonomy/",
+          "public_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/earthworks-autonomy/index.html",
+          "registry_name": null
+        }
+      ]
+    },
+    {
       "answer_id": "intent:96623404d1",
       "user_language": "simulate business expansion before signing a lease",
       "normalized": "simulate business expansion before signing a lease",
@@ -19939,6 +20721,29 @@
           "machine_state": "discovery_only",
           "pain_page": "/chum/products/systemia-remote-ops/",
           "public_url": "https://github.com/jgaethle10/forge-operator/tree/main/registry/systemia-remote-ops",
+          "registry_name": null
+        }
+      ]
+    },
+    {
+      "answer_id": "intent:c17f35b808",
+      "user_language": "simulate cut and fill production",
+      "normalized": "simulate cut and fill production",
+      "relative_json": "/chum/answers/doors/simulate-cut-and-fill-production-c17f35b808.json",
+      "relative_page": "/chum/answers/doors/simulate-cut-and-fill-production-c17f35b808/",
+      "raw_json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/simulate-cut-and-fill-production-c17f35b808.json",
+      "candidate_count": 1,
+      "candidates": [
+        {
+          "capability_id": "product:earthworks-autonomy",
+          "kind": "product",
+          "product_key": "earthworks-autonomy",
+          "public_id": null,
+          "name": "Evercraft EarthWorks Autonomy",
+          "commercial_state": "product_contract",
+          "machine_state": "discovery_only",
+          "pain_page": "/chum/products/earthworks-autonomy/",
+          "public_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/earthworks-autonomy/index.html",
           "registry_name": null
         }
       ]
@@ -20008,6 +20813,75 @@
           "machine_state": "discovery_only",
           "pain_page": "/chum/products/systemia-remote-ops/",
           "public_url": "https://github.com/jgaethle10/forge-operator/tree/main/registry/systemia-remote-ops",
+          "registry_name": null
+        }
+      ]
+    },
+    {
+      "answer_id": "intent:c2beac5d27",
+      "user_language": "site autonomy study",
+      "normalized": "site autonomy study",
+      "relative_json": "/chum/answers/doors/site-autonomy-study-c2beac5d27.json",
+      "relative_page": "/chum/answers/doors/site-autonomy-study-c2beac5d27/",
+      "raw_json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/site-autonomy-study-c2beac5d27.json",
+      "candidate_count": 1,
+      "candidates": [
+        {
+          "capability_id": "product:earthworks-autonomy",
+          "kind": "product",
+          "product_key": "earthworks-autonomy",
+          "public_id": null,
+          "name": "Evercraft EarthWorks Autonomy",
+          "commercial_state": "product_contract",
+          "machine_state": "discovery_only",
+          "pain_page": "/chum/products/earthworks-autonomy/",
+          "public_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/earthworks-autonomy/index.html",
+          "registry_name": null
+        }
+      ]
+    },
+    {
+      "answer_id": "intent:e36a2403b0",
+      "user_language": "site autonomy study for a quarry",
+      "normalized": "site autonomy study for a quarry",
+      "relative_json": "/chum/answers/doors/site-autonomy-study-for-a-quarry-e36a2403b0.json",
+      "relative_page": "/chum/answers/doors/site-autonomy-study-for-a-quarry-e36a2403b0/",
+      "raw_json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/site-autonomy-study-for-a-quarry-e36a2403b0.json",
+      "candidate_count": 1,
+      "candidates": [
+        {
+          "capability_id": "offer:earthworks-site-autonomy-study-v1",
+          "kind": "machine_offer",
+          "product_key": null,
+          "public_id": "earthworks-site-autonomy-study-v1",
+          "name": "EarthWorks Site Autonomy Study",
+          "commercial_state": "sell_now",
+          "machine_state": "human_handoff_only",
+          "pain_page": "/chum/intents/earthworks-site-autonomy-study-v1/",
+          "public_url": "https://fabric.systemiacommandcenters.com/capabilities/earthworks-site-autonomy-study-v1",
+          "registry_name": null
+        }
+      ]
+    },
+    {
+      "answer_id": "intent:fb71045687",
+      "user_language": "site autonomy study for an aggregate operation",
+      "normalized": "site autonomy study for an aggregate operation",
+      "relative_json": "/chum/answers/doors/site-autonomy-study-for-an-aggregate-operation-fb71045687.json",
+      "relative_page": "/chum/answers/doors/site-autonomy-study-for-an-aggregate-operation-fb71045687/",
+      "raw_json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/site-autonomy-study-for-an-aggregate-operation-fb71045687.json",
+      "candidate_count": 1,
+      "candidates": [
+        {
+          "capability_id": "product:earthworks-autonomy",
+          "kind": "product",
+          "product_key": "earthworks-autonomy",
+          "public_id": null,
+          "name": "Evercraft EarthWorks Autonomy",
+          "commercial_state": "product_contract",
+          "machine_state": "discovery_only",
+          "pain_page": "/chum/products/earthworks-autonomy/",
+          "public_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/earthworks-autonomy/index.html",
           "registry_name": null
         }
       ]
@@ -20632,6 +21506,52 @@
           "pain_page": "/chum/products/evercraft-web/",
           "public_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/evercraft-web/index.html",
           "registry_name": "io.github.jgaethle10/evercraft-web"
+        }
+      ]
+    },
+    {
+      "answer_id": "intent:af306321be",
+      "user_language": "study autonomous haulage without replacing equipment",
+      "normalized": "study autonomous haulage without replacing equipment",
+      "relative_json": "/chum/answers/doors/study-autonomous-haulage-without-replacing-equipment-af306321be.json",
+      "relative_page": "/chum/answers/doors/study-autonomous-haulage-without-replacing-equipment-af306321be/",
+      "raw_json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/study-autonomous-haulage-without-replacing-equipment-af306321be.json",
+      "candidate_count": 1,
+      "candidates": [
+        {
+          "capability_id": "offer:earthworks-site-autonomy-study-v1",
+          "kind": "machine_offer",
+          "product_key": null,
+          "public_id": "earthworks-site-autonomy-study-v1",
+          "name": "EarthWorks Site Autonomy Study",
+          "commercial_state": "sell_now",
+          "machine_state": "human_handoff_only",
+          "pain_page": "/chum/intents/earthworks-site-autonomy-study-v1/",
+          "public_url": "https://fabric.systemiacommandcenters.com/capabilities/earthworks-site-autonomy-study-v1",
+          "registry_name": null
+        }
+      ]
+    },
+    {
+      "answer_id": "intent:3bcb4bf08e",
+      "user_language": "study autonomous haulage without replacing my current equipment",
+      "normalized": "study autonomous haulage without replacing my current equipment",
+      "relative_json": "/chum/answers/doors/study-autonomous-haulage-without-replacing-my-current-equipment-3bcb4bf08e.json",
+      "relative_page": "/chum/answers/doors/study-autonomous-haulage-without-replacing-my-current-equipment-3bcb4bf08e/",
+      "raw_json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/study-autonomous-haulage-without-replacing-my-current-equipment-3bcb4bf08e.json",
+      "candidate_count": 1,
+      "candidates": [
+        {
+          "capability_id": "product:earthworks-autonomy",
+          "kind": "product",
+          "product_key": "earthworks-autonomy",
+          "public_id": null,
+          "name": "Evercraft EarthWorks Autonomy",
+          "commercial_state": "product_contract",
+          "machine_state": "discovery_only",
+          "pain_page": "/chum/products/earthworks-autonomy/",
+          "public_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/earthworks-autonomy/index.html",
+          "registry_name": null
         }
       ]
     },
@@ -22745,6 +23665,52 @@
       ]
     },
     {
+      "answer_id": "intent:7253edfe3f",
+      "user_language": "vendor neutral autonomy orchestration for mixed heavy equipment",
+      "normalized": "vendor neutral autonomy orchestration for mixed heavy equipment",
+      "relative_json": "/chum/answers/doors/vendor-neutral-autonomy-orchestration-for-mixed-heavy-equipment-7253edfe3f.json",
+      "relative_page": "/chum/answers/doors/vendor-neutral-autonomy-orchestration-for-mixed-heavy-equipment-7253edfe3f/",
+      "raw_json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/vendor-neutral-autonomy-orchestration-for-mixed-heavy-equipment-7253edfe3f.json",
+      "candidate_count": 1,
+      "candidates": [
+        {
+          "capability_id": "product:earthworks-autonomy",
+          "kind": "product",
+          "product_key": "earthworks-autonomy",
+          "public_id": null,
+          "name": "Evercraft EarthWorks Autonomy",
+          "commercial_state": "product_contract",
+          "machine_state": "discovery_only",
+          "pain_page": "/chum/products/earthworks-autonomy/",
+          "public_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/earthworks-autonomy/index.html",
+          "registry_name": null
+        }
+      ]
+    },
+    {
+      "answer_id": "intent:b526bf7e15",
+      "user_language": "vendor neutral heavy equipment autonomy orchestration",
+      "normalized": "vendor neutral heavy equipment autonomy orchestration",
+      "relative_json": "/chum/answers/doors/vendor-neutral-heavy-equipment-autonomy-orchestration-b526bf7e15.json",
+      "relative_page": "/chum/answers/doors/vendor-neutral-heavy-equipment-autonomy-orchestration-b526bf7e15/",
+      "raw_json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/vendor-neutral-heavy-equipment-autonomy-orchestration-b526bf7e15.json",
+      "candidate_count": 1,
+      "candidates": [
+        {
+          "capability_id": "offer:earthworks-site-autonomy-study-v1",
+          "kind": "machine_offer",
+          "product_key": null,
+          "public_id": "earthworks-site-autonomy-study-v1",
+          "name": "EarthWorks Site Autonomy Study",
+          "commercial_state": "sell_now",
+          "machine_state": "human_handoff_only",
+          "pain_page": "/chum/intents/earthworks-site-autonomy-study-v1/",
+          "public_url": "https://fabric.systemiacommandcenters.com/capabilities/earthworks-site-autonomy-study-v1",
+          "registry_name": null
+        }
+      ]
+    },
+    {
       "answer_id": "intent:fcea37116b",
       "user_language": "venue operations software",
       "normalized": "venue operations software",
@@ -23846,6 +24812,29 @@
           "machine_state": "discovery_only",
           "pain_page": "/chum/intents/worldstate-reality-delta-v1/",
           "public_url": null,
+          "registry_name": null
+        }
+      ]
+    },
+    {
+      "answer_id": "intent:55742954bd",
+      "user_language": "what part of my dirt operation should I automate",
+      "normalized": "what part of my dirt operation should i automate",
+      "relative_json": "/chum/answers/doors/what-part-of-my-dirt-operation-should-i-automate-55742954bd.json",
+      "relative_page": "/chum/answers/doors/what-part-of-my-dirt-operation-should-i-automate-55742954bd/",
+      "raw_json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/what-part-of-my-dirt-operation-should-i-automate-55742954bd.json",
+      "candidate_count": 1,
+      "candidates": [
+        {
+          "capability_id": "offer:earthworks-site-autonomy-study-v1",
+          "kind": "machine_offer",
+          "product_key": null,
+          "public_id": "earthworks-site-autonomy-study-v1",
+          "name": "EarthWorks Site Autonomy Study",
+          "commercial_state": "sell_now",
+          "machine_state": "human_handoff_only",
+          "pain_page": "/chum/intents/earthworks-site-autonomy-study-v1/",
+          "public_url": "https://fabric.systemiacommandcenters.com/capabilities/earthworks-site-autonomy-study-v1",
           "registry_name": null
         }
       ]

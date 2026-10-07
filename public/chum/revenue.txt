@@ -59,6 +59,37 @@ Intent examples:
 - prepare me for a recruiter screen
 - behavioral interview practice
 
+## EarthWorks Site Autonomy Study
+Public ID: earthworks-site-autonomy-study-v1
+Problem: A quarry, aggregate, civil-earthwork, landfill or bulk-material operator needs to know where machine coordination, queueing, idle time, route behavior or bounded autonomy could improve a real material-flow loop before buying autonomous equipment or giving software physical control.
+Pricing: $5,000 one-time for the first three approved founding design-partner studies; planned standard price $7,500.
+Commercial state: sell_now
+Machine state: human_handoff_only
+Public URL: https://fabric.systemiacommandcenters.com/capabilities/earthworks-site-autonomy-study-v1
+Pain page: /chum/intents/earthworks-site-autonomy-study-v1/
+Start here: null
+Human review fallback: null
+Machine offer JSON: Not exposed until commercial verification is complete
+Universal MCP: null
+Agent continuation: Not exposed
+Consent gate: Not exposed
+Completion rule: Not exposed
+Intent examples:
+- reduce haul truck queueing at a quarry
+- reduce loader idle time waiting on trucks
+- optimize load haul dump operations
+- simulate an earthmoving fleet before automation
+- coordinate excavators haul trucks loaders and dozers
+- find the bottleneck in aggregate material flow
+- site autonomy study for a quarry
+- digital twin for earthmoving operations
+- shadow dispatch for haul trucks
+- what part of my dirt operation should I automate
+- vendor neutral heavy equipment autonomy orchestration
+- increase tons per hour through fleet coordination
+- study autonomous haulage without replacing equipment
+- automation study for landfill bulk material or civil earthwork
+
 ## EventWave Event / Venue Promotion
 Public ID: eventwave-paid-promotion-v1
 Problem: An organizer or venue wants a bounded paid EventWave placement with verified payment, source review and controlled activation.

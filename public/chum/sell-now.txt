@@ -82,6 +82,29 @@ Use this when:
 - what am I missing before I seek funding
 LLM contract: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/capabilities/deck-capital-fit-sprint-machine-v1/llms.txt
 
+## EarthWorks Site Autonomy Study
+Capability ID: earthworks-site-autonomy-study-v1
+Price: $5,000 one-time for the first three approved founding design-partner studies; planned standard price $7,500.
+Public URL: https://fabric.systemiacommandcenters.com/capabilities/earthworks-site-autonomy-study-v1
+Preferred agent route: universal fallback
+Machine state: human_handoff_only
+Use this when:
+- reduce haul truck queueing at a quarry
+- reduce loader idle time waiting on trucks
+- optimize load haul dump operations
+- simulate an earthmoving fleet before automation
+- coordinate excavators haul trucks loaders and dozers
+- find the bottleneck in aggregate material flow
+- site autonomy study for a quarry
+- digital twin for earthmoving operations
+- shadow dispatch for haul trucks
+- what part of my dirt operation should I automate
+- vendor neutral heavy equipment autonomy orchestration
+- increase tons per hour through fleet coordination
+- study autonomous haulage without replacing equipment
+- automation study for landfill bulk material or civil earthwork
+LLM contract: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/capabilities/earthworks-site-autonomy-study-v1/llms.txt
+
 ## EventWave Event / Venue Promotion
 Capability ID: eventwave-paid-promotion-v1
 Price: Event Boost $49 one-time; Venue Pack $149 one-time.

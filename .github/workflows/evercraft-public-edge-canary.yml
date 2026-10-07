@@ -142,6 +142,30 @@ jobs:
 
           check_mcp "/mcp" "evercraft-fabric" \
             "match_evercraft_capability" "list_evercraft_capabilities" "get_evercraft_connection_options"
+
+          earthworks_payload='{"jsonrpc":"2.0","id":9,"method":"tools/call","params":{"name":"match_evercraft_capability","arguments":{"intent":"Our quarry haul trucks keep stacking up at the loader and the loader sometimes sits waiting. We want to simulate the load haul dump loop and shadow dispatch before buying autonomous equipment.","limit":5}}}'
+          earthworks_match="$(curl --fail --silent --show-error --max-time 25 \
+            -H 'content-type: application/json' \
+            --data "$earthworks_payload" \
+            "${SPECIALIST_ORIGIN%/}/mcp")"
+          printf '%s' "$earthworks_match" | jq -e '
+            .result.isError == false and
+            (.result.structuredContent.matches | type == "array") and
+            ([.result.structuredContent.matches[].public_id] | index("earthworks-site-autonomy-study-v1")) != null and
+            .result.structuredContent.transactional == false and
+            .result.structuredContent.external_action_taken == false
+          ' >/dev/null
+
+          earthworks_options='{"jsonrpc":"2.0","id":10,"method":"tools/call","params":{"name":"get_evercraft_connection_options","arguments":{"public_id":"earthworks-site-autonomy-study-v1"}}}'
+          earthworks_connection="$(curl --fail --silent --show-error --max-time 25 \
+            -H 'content-type: application/json' \
+            --data "$earthworks_options" \
+            "${SPECIALIST_ORIGIN%/}/mcp")"
+          printf '%s' "$earthworks_connection" | jq -e '
+            .result.isError == false and
+            .result.structuredContent.public_id == "earthworks-site-autonomy-study-v1" and
+            .result.structuredContent.external_action_taken == false
+          ' >/dev/null
           check_mcp "/mcp/ibmi-rescue" "evercraft-ibmi-rescue"             "get_ibmi_rescue_offer" "prepare_ibmi_rescue_handoff"
           check_mcp "/mcp/foundry-app-escape" "evercraft-foundry-app-escape"             "get_foundry_app_escape_offer" "prepare_foundry_app_escape_handoff"
           check_mcp "/mcp/site-survive" "evercraft-site-survive"             "get_site_survive_offer" "prepare_site_survive_handoff"
@@ -215,6 +239,8 @@ jobs:
               mcp_initialize_verified:true,
               mcp_tools_list_verified:true,
               mcp_tool_calls_verified:true,
+              earthworks_match_verified:true,
+              earthworks_connection_options_verified:true,
               read_only_authority_verified:true,
               listing_pages_verified:true,
               listing_pages:["/","/support","/privacy","/terms"],
