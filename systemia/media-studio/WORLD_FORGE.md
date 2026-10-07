@@ -236,6 +236,36 @@ Transform-only edits compile to World Engine `set_transform` operations and do n
 
 When Engine Bridge is active in the browser editor, normal edits, gizmos, commands, Add Cube, Stage batches and Undo all use this synchronized path. A runtime semantic mismatch fails closed instead of overwriting drifted runtime state.
 
+## Running snapshot migration
+
+World Forge authoring edits can now migrate an actual running World Engine snapshot after the verified definition/asset/geometry sync.
+
+This layer delegates preservation policy to World Engine's existing compatibility-gated runtime migration machinery. World Forge does not invent a second simulation-state copier.
+
+The migration contract verifies that the incoming snapshot:
+
+- has a valid World Engine snapshot digest;
+- belongs to the exact pre-edit world ID;
+- matches the exact pre-edit world version;
+- references the exact pre-edit World Engine definition digest.
+
+After the Forge ChangeSet and World Engine definition sync succeed, World Engine migrates the running snapshot into the new definition and records per-entity preserve/reset decisions.
+
+Important semantics:
+
+- if an authored transform definition is unchanged, compatible live runtime transform state may survive;
+- if World Forge intentionally changes an authored transform, the new authored transform wins and runtime transform state resets;
+- renderable/geometry changes can preserve compatible transform/motion/animation/navigation/audio state because those policies remain component-specific;
+- new entities are reconciled and can be activated explicitly;
+- removed entities are recorded;
+- collision contacts reset by design;
+- camera/audio runtime state survive only when World Engine's own compatibility checks allow it;
+- simulation tick does not jump merely because authoring changed.
+
+The resulting receipt binds the Forge ChangeSet, v9 runtime-sync receipt, source/migrated snapshot digests, World Engine migration receipt, entity preserve/reset notes and authority boundaries.
+
+The browser editor does not yet claim to be running a live simulation loop. This contract is exposed over HTTP/CLI first and will feed the editor when an actual runtime snapshot source is attached.
+
 ## Renderer strategy
 
 The project format must remain independent of any one renderer.

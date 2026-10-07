@@ -1,3 +1,4 @@
+import { syncWorldForgeChangeSetWithLiveRuntime } from './world-forge-runtime-migration.js';
 import { syncWorldForgeChangeSetToRuntime } from './world-forge-runtime-sync.js';
 import { compileWorldForgeToWorldEngine } from './world-forge-world-engine.js';
 import {
@@ -20,7 +21,7 @@ import {
   type WorldForgeOperation,
   type WorldForgeProject,
 } from './world-forge.js';
-import type { WorldDefinition } from '../world-engine/engine.js';
+import type { WorldDefinition, WorldSnapshot } from '../world-engine/engine.js';
 import type { WorldAssetManifest } from '../world-engine/studio-edit.js';
 
 type WorldForgeHttpDeps = {
@@ -412,6 +413,38 @@ export function registerWorldForgeRoutes(app:Express,deps:WorldForgeHttpDeps){
         res.json({success:true,shot});
       }catch(error){
         res.status(422).json({
+          success:false,
+          error:error instanceof Error?error.message:String(error),
+        });
+      }
+    },
+  );
+
+  app.post(
+    '/api/fallen/world-forge/runtime-migrate',
+    rateLimit(120,60*60*1000),
+    (req:Request,res:Response)=>{
+      const project=req.body?.project as WorldForgeProject|undefined;
+      const changeSet=req.body?.changeSet as WorldForgeChangeSet|undefined;
+      const runtimeWorld=req.body?.runtimeWorld as WorldDefinition|undefined;
+      const runtimeAssets=req.body?.runtimeAssets as WorldAssetManifest|undefined;
+      const runtimeSnapshot=req.body?.runtimeSnapshot as WorldSnapshot|undefined;
+      if(!project||!changeSet||!runtimeWorld||!runtimeAssets||!runtimeSnapshot){
+        badRequest(res,'Project, ChangeSet, runtime world, runtime assets, and runtime snapshot are required.');
+        return;
+      }
+      try{
+        const migration=syncWorldForgeChangeSetWithLiveRuntime({
+          project,
+          changeSet,
+          runtimeWorld,
+          runtimeAssets,
+          runtimeSnapshot,
+          activateNewEntities:req.body?.activateNewEntities!==false,
+        });
+        res.json({success:true,migration});
+      }catch(error){
+        res.status(409).json({
           success:false,
           error:error instanceof Error?error.message:String(error),
         });
