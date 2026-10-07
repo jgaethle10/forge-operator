@@ -410,9 +410,13 @@ async function runResidentExpansionOnce({root}={}){
     const expansionReceipt={...idle,receipt_hash:sha(idle)};
     const reclamation=await runResidentReclamationOnce({root});
     const ownedSpawnCapacity=await persistOwnedSpawnCapacity({root});
+    const {
+      receipt_hash:expansionReceiptHash,
+      ...expansionBody
+    }=expansionReceipt;
     const body={
-      ...expansionReceipt,
-      expansion_receipt_hash:expansionReceipt.receipt_hash,
+      ...expansionBody,
+      expansion_receipt_hash:expansionReceiptHash,
       owned_spawn_capacity_offer_count:ownedSpawnCapacity.offer_count,
       owned_spawn_capacity_receipt_hash:ownedSpawnCapacity.receipt_hash,
       capacity_reclamation:{
@@ -446,9 +450,13 @@ async function runResidentExpansionOnce({root}={}){
   });
   const reclamation=await runResidentReclamationOnce({root});
   const ownedSpawnCapacity=await persistOwnedSpawnCapacity({root});
+  const {
+    receipt_hash:expansionReceiptHash,
+    ...expansionBody
+  }=cycle;
   const body={
-    ...cycle,
-    expansion_receipt_hash:cycle.receipt_hash,
+    ...expansionBody,
+    expansion_receipt_hash:expansionReceiptHash,
     owned_spawn_capacity_offer_count:ownedSpawnCapacity.offer_count,
     owned_spawn_capacity_receipt_hash:ownedSpawnCapacity.receipt_hash,
     capacity_reclamation:{
