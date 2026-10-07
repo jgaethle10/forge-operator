@@ -1,0 +1,54 @@
+{
+  "schema": "evercraft.daytrade.delayed-sip-diagnostic.v1",
+  "generated_at": "2026-10-07T16:33:32.866Z",
+  "source_run_id": 37652965936,
+  "source_artifact_id": 11498055469,
+  "source_artifact_digest": "sha256:ee698f65c719d4a56c821dab3e1a7e6e798bba0f666000fddb43fb4e45787716",
+  "market_window": {
+    "start": "2026-10-07T16:00:00.000Z",
+    "end": "2026-10-07T16:01:00.000Z"
+  },
+  "read_only": true,
+  "simulation_only": true,
+  "capital_at_risk_usd": 0,
+  "broker_order_submitted": false,
+  "live_order_submitted": false,
+  "delayed_historical_sip_access": "AVAILABLE",
+  "rows": [
+    {
+      "symbol": "SOXX",
+      "iex_http_status": 200,
+      "sip_http_status": 200,
+      "iex_quote_count": 1000,
+      "sip_quote_count": 502,
+      "iex_spread_bps": 3.6232196620059933,
+      "sip_spread_bps": 1.0352502717542165
+    },
+    {
+      "symbol": "SMH",
+      "iex_http_status": 200,
+      "sip_http_status": 200,
+      "iex_quote_count": 1000,
+      "sip_quote_count": 266,
+      "iex_spread_bps": 4.175231243576421,
+      "sip_spread_bps": 0.8028452836846509
+    },
+    {
+      "symbol": "QQQ",
+      "iex_http_status": 200,
+      "sip_http_status": 200,
+      "iex_quote_count": 1000,
+      "sip_quote_count": 1000,
+      "iex_spread_bps": 0.39664963276818754,
+      "sip_spread_bps": 0.13221479615771775
+    }
+  ],
+  "pilot_implication": {
+    "delayed_sip_can_validate_consolidated_quotes_after_the_fact": true,
+    "delayed_sip_cannot_drive_real_time_entry_decisions": true,
+    "recent_live_sip_still_returns_403": true,
+    "real_time_sip_entitlement_remains_a_pilot_blocker": true,
+    "iex_must_not_be_mislabeled_as_sip": true
+  },
+  "live_trade_authority": false
+}
