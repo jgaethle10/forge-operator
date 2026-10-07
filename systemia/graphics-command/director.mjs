@@ -97,9 +97,9 @@ export function compileGraphicsCommand(story){
     return {
       id:'route-'+(index+1),
       points:[{lat:from.lat,lon:from.lon},{lat:to.lat,lon:to.lon}],
-      evidenceState:fallenEvidence,
+      evidenceState:'synthetic_visualization',
       sourceRefs:story.sourceRefs,
-      width:treatment==='geo_spine'?7:4,
+      width:treatment==='geo_spine'?5:3,
     };
   });
 
