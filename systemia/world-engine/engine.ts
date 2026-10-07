@@ -2,6 +2,7 @@ import crypto from 'node:crypto';
 import { resolveEntityCollisions, type CollisionContact } from './spatial.js';
 import { initializeAnimationRuntime, setAnimationParameter, stepAnimationRuntime, validateAnimationComponent, type AnimationParameter, type AnimationRuntimeState, type SkeletalAnimationComponent } from './animation.js';
 import { clearNavigationTarget, initializeNavigationAgent, setNavigationTarget, stepNavigationAgent, validateNavigationAgent, validateNavigationMesh, type NavigationAgentComponent, type NavigationAgentRuntime, type NavigationMesh } from './navigation.js';
+import type { NavigationObstacleObservation } from './navigation-corridor.js';
 import { activateCamera, initializeCameraRuntime, stepCameraRuntime, validateVisualScene, type CameraComponent, type CameraRuntimeState, type LightComponent, type RenderableComponent, type VisualSceneDefinition } from './visual.js';
 import { activateAudioListener, clearAudioRuntimeEvents, initializeAudioEmitter, initializeAudioSceneRuntime, pauseAudio, playAudio, seekAudio, stepAudioEmitter, stopAudio, validateAudioScene, type AudioClipDefinition, type AudioEmitterComponent, type AudioEmitterRuntime, type AudioListenerComponent, type AudioSceneDefinition, type AudioSceneRuntime } from './audio.js';
 
@@ -280,6 +281,21 @@ function colliderBottom(entity:RuntimeEntity){
   return entity.transform.position.y-colliderVerticalExtent(entity);
 }
 
+function colliderHorizontalRadius(entity:RuntimeEntity){
+  const collider=entity.collider;
+  if(!collider) return 0;
+  const scale=entity.transform.scale || {x:1,y:1,z:1};
+  if(collider.type==='sphere'){
+    return collider.radius*Math.max(
+      Math.abs(scale.x),
+      Math.abs(scale.z)
+    );
+  }
+  const hx=collider.halfExtents.x*Math.abs(scale.x);
+  const hz=collider.halfExtents.z*Math.abs(scale.z);
+  return Math.sqrt(hx*hx+hz*hz);
+}
+
 export class EvercraftWorldRuntime {
   readonly definition:WorldDefinition;
   readonly definitionDigest:string;
@@ -523,6 +539,17 @@ export class EvercraftWorldRuntime {
     const ordered=[...this.state.values()]
       .filter(entity=>this.activeEntityIdsSet.has(entity.id))
       .sort((a,b)=>a.id.localeCompare(b.id));
+
+    const navigationObstacles:NavigationObstacleObservation[]=ordered
+      .filter(entity=>Boolean(entity.collider))
+      .map(entity=>({
+        id:entity.id,
+        position:clone(entity.transform.position),
+        velocity:clone(entity.rigidBody?.velocity || ZERO),
+        radius:colliderHorizontalRadius(entity),
+        verticalRadius:colliderVerticalExtent(entity)
+      }));
+
     for(const entity of ordered){
       this.applyBehaviors(entity,nextTime);
       if(entity.navigationAgent && entity.navigationRuntime){
@@ -532,7 +559,14 @@ export class EvercraftWorldRuntime {
           entity.navigationAgent,
           entity.navigationRuntime,
           entity.transform.position,
-          this.dt
+          this.dt,
+          mesh,
+          {
+            selfId:entity.id,
+            selfRadius:colliderHorizontalRadius(entity),
+            selfVerticalRadius:colliderVerticalExtent(entity),
+            obstacles:navigationObstacles
+          }
         );
         if(entity.rigidBody){
           entity.rigidBody.velocity.x=entity.navigationRuntime.desiredVelocity.x;
