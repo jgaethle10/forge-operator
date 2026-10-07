@@ -1044,6 +1044,7 @@ export default function WorldForgeEditor(){
   const [meshAmount,setMeshAmount]=useState(.25);
   const [playImpulse,setPlayImpulse]=useState(1);
   const [runtimeDragMode,setRuntimeDragMode]=useState(false);
+  const [transformMode,setTransformMode]=useState<'translate'|'rotate'|'scale'>('translate');
   const [stageMode,setStageMode]=useState(false);
   const [stagedOperations,setStagedOperations]=useState<ForgeOperation[]>([]);
   const [snapStep,setSnapStep]=useState(.25);
@@ -1104,7 +1105,8 @@ export default function WorldForgeEditor(){
         !playSession||
         stagedOperations.length>0||
         selectedNode?.physics?.mode!=='dynamic'||
-        playSession.runtimeBodies[selectedId]?.kinematic===true
+        playSession.runtimeBodies[selectedId]?.kinematic===true||
+        transformMode!=='translate'
       )
     ){
       setRuntimeDragMode(false);
@@ -1115,6 +1117,7 @@ export default function WorldForgeEditor(){
     stagedOperations.length,
     project,
     selectedId,
+    transformMode,
   ]);
 
   useEffect(()=>{
@@ -1635,6 +1638,31 @@ export default function WorldForgeEditor(){
         position:{...node.transform.position,[axis]:value},
       },
     }],`Move ${node.name} ${axis.toUpperCase()} by ${delta} m`);
+  }
+
+  function commitViewportRotate(nodeId:string,axis:keyof Vec3,deltaDeg:number){
+    const node=viewportProject?.nodes.find(item=>item.id===nodeId);
+    if(!node||node.locked) return;
+    const value=node.transform.rotationDeg[axis]+deltaDeg;
+    queueOrMutate([{
+      type:'set_transform',
+      nodeId,
+      transform:{
+        rotationDeg:{...node.transform.rotationDeg,[axis]:value},
+      },
+    }],`Rotate ${node.name} ${axis.toUpperCase()} by ${deltaDeg}°`);
+  }
+
+  function commitViewportScale(nodeId:string,axis:keyof Vec3,value:number){
+    const node=viewportProject?.nodes.find(item=>item.id===nodeId);
+    if(!node||node.locked) return;
+    queueOrMutate([{
+      type:'set_transform',
+      nodeId,
+      transform:{
+        scale:{...node.transform.scale,[axis]:Math.max(.01,value)},
+      },
+    }],`Scale ${node.name} ${axis.toUpperCase()} to ${value}`);
   }
 
   function cameraPatch(patch:Partial<NonNullable<ForgeNode['camera']>>){
