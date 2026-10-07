@@ -212,7 +212,7 @@ function OperatorPeopleLayer() {
       const response = await api('/api/people/brains/' + encodeURIComponent(selected.brain_key) + '/export', {
         method: 'POST',
         headers: { authorization: 'Bearer ' + token },
-        body: '{}',
+        body: JSON.stringify({ person_confirmation_ref: personConfirmation.trim() }),
       });
       const body = await response.json();
       if (!response.ok || !body?.ok) throw new Error(body?.error || 'Unable to export brain.');
@@ -316,6 +316,20 @@ function OperatorPeopleLayer() {
     }
   }
 
+  async function requestDelete() {
+    if (!selected) return;
+    setError('');
+    try {
+      const body = await postOwned('/api/people/brains/' + encodeURIComponent(selected.brain_key) + '/delete-request', {
+        person_confirmation_ref: personConfirmation.trim(),
+      });
+      setError('Delete request state: ' + body.request.status + '. Final destruction still requires exact owner confirmation.');
+      await load();
+    } catch (err) {
+      setError(err instanceof Error ? err.message : String(err));
+    }
+  }
+
   if (!token) return <TokenGate token={token} setToken={setToken} />;
 
   return (
@@ -407,6 +421,7 @@ function OperatorPeopleLayer() {
                   <button className="people-button" onClick={createInvite} disabled={Boolean(busy)}>Create 48-hour consent invite</button>
                   <button className="people-button quiet" onClick={exportBrain} disabled={Boolean(busy)}>Export brain</button>
                   <button className="people-button quiet" onClick={revokeConsent} disabled={Boolean(busy) || selected.consent_state !== 'consented'}>Revoke consent</button>
+                  <button className="people-button quiet" onClick={requestDelete} disabled={Boolean(busy)}>Request deletion</button>
                 </div>
                 <input
                   className="people-input"
