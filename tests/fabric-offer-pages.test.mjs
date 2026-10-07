@@ -4,6 +4,7 @@ import {
   offerCapabilityForSlug,
   offerPurchaseKeyForSlug,
   offerSlugForCapability,
+  renderCapabilityDetail,
   renderOfferPage,
   renderOffers,
 } from '../systemia/mcp/fabric-public-site.mjs';
@@ -54,6 +55,34 @@ test('human offer copy gives sell-now capabilities short memorable URLs',()=>{
   assert.match(page,/rel="canonical" href="https:\/\/fabric\.systemiacommandcenters\.com\/offers\/website-audit"/);
   assert.match(page,/name="twitter:card" content="summary"/);
   assert.doesNotMatch(page,/machine state|start_url_state|preferred_agent_route/i);
+});
+
+test('EarthWorks capability page offers a scoped human inquiry instead of checkout',()=>{
+  const earthworks={
+    public_id:'earthworks-site-autonomy-study-v1',
+    name:'EarthWorks Site Autonomy Study',
+    description:'Study one bounded material-flow loop before physical autonomy.',
+    keywords:['quarry','haul trucks','shadow dispatch'],
+    state:'human_handoff_only',
+    commercial_state:'sell_now',
+    pricing:'$5,000 one-time for the first three approved founding design-partner studies; planned standard price $7,500.',
+    use_when:['reduce haul truck queueing at a quarry'],
+    entry_paid_offer:{
+      name:'Founding Design-Partner Site Autonomy Study',
+      price:'$5,000',
+      price_usd_normalized:5000,
+      billing:'one_time',
+    },
+    start_url_state:'held_no_owned_public_origin',
+    connections:[],
+  };
+  const page=renderCapabilityDetail(earthworks);
+  assert.match(page,/EarthWorks Site Autonomy Study/);
+  assert.match(page,/\$5,000/);
+  assert.match(page,/Discuss one material loop/);
+  assert.match(page,/mailto:jessegaethle10@gmail\.com/);
+  assert.doesNotMatch(page,/Continue to checkout/);
+  assert.doesNotMatch(page,/\/api\/offers\/earthworks/);
 });
 
 test('owned Fabric serves offer pages, requires confirmation, and delegates checkout to Raven',async()=>{
