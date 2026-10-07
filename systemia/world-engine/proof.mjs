@@ -4,7 +4,8 @@ import { SceneStreamController } from './streaming.ts';
 import { compileVisualFrame } from './visual.ts';
 import { compileAudioFrame } from './audio.ts';
 import { AuthoritativeReplicationRuntime, PredictiveReplicationRuntime, createReplicatedInput } from './replication.ts';
-import { compileWebGpuRenderPlan, EVERCRAFT_WEBGPU_WGSL } from './webgpu.ts';
+import { compileWebGpuRenderPlan, EVERCRAFT_WEBGPU_WGSL, applyGeometryHotReload } from './webgpu.ts';
+import { applyWorldEditTransaction, createWorldAssetManifest, semanticAssetManifestDigest, semanticWorldDigest } from './studio-edit.ts';
 
 const world={
   schema:'evercraft.world-engine.world.v1',
@@ -558,8 +559,72 @@ assert.equal(webgpuPlan.lights.length,1);
 assert.match(EVERCRAFT_WEBGPU_WGSL,/@vertex/);
 assert.match(EVERCRAFT_WEBGPU_WGSL,/@fragment/);
 
+const editAssetA={
+  id:'geometry:proof-cube',
+  kind:'geometry',
+  revision:1,
+  sha256:'a'.repeat(64),
+  uri:'evercraft://assets/geometry/proof-cube',
+  contentType:'application/vnd.evercraft.geometry+json',
+  provenance:{
+    sourceRef:'fallen:proof-cube',
+    rightsState:'owned',
+    license:'Evercraft-owned'
+  }
+};
+const editAssetB={...editAssetA,revision:2,sha256:'b'.repeat(64)};
+const editManifest=createWorldAssetManifest(visualWorld.id,[editAssetA]);
+const originalSemanticWorldDigest=semanticWorldDigest(visualWorld);
+const originalSemanticAssetDigest=semanticAssetManifestDigest(editManifest);
+const editTransaction={
+  schema:'evercraft.world-engine.edit-transaction.v1',
+  id:'proof-live-edit',
+  worldId:visualWorld.id,
+  baseWorldDigest:visualReceipt.definitionDigest,
+  baseAssetManifestDigest:editManifest.digest,
+  actor:{kind:'agent',id:'proof-editor'},
+  reason:'prove reversible live authoring',
+  operations:[
+    {
+      id:'move-proof-object',
+      kind:'set_transform',
+      entityId:'proof-object',
+      value:{position:{x:2,y:0,z:0}}
+    },
+    {
+      id:'replace-proof-geometry',
+      kind:'upsert_asset',
+      asset:editAssetB
+    }
+  ]
+};
+const edited=applyWorldEditTransaction(visualWorld,editManifest,editTransaction);
+assert.deepEqual(edited.receipt.hotReloadAssetIds,['geometry:proof-cube']);
+const undone=applyWorldEditTransaction(
+  edited.world,
+  edited.assets,
+  edited.receipt.inverseTransaction
+);
+assert.equal(semanticWorldDigest(undone.world),originalSemanticWorldDigest);
+assert.equal(semanticAssetManifestDigest(undone.assets),originalSemanticAssetDigest);
+
+const reloadedGeometry={
+  ...webgpuGeometry,
+  positions:[
+    -2,-2,0,
+    2,-2,0,
+    0,2,0
+  ]
+};
+const geometryHotReload=applyGeometryHotReload([webgpuGeometry],reloadedGeometry);
+assert.equal(geometryHotReload.receipt.replaced,true);
+assert.notEqual(
+  geometryHotReload.receipt.previousDigest,
+  geometryHotReload.receipt.nextDigest
+);
+
 process.stdout.write(JSON.stringify({
-  schema:'evercraft.world-engine.proof.v9',
+  schema:'evercraft.world-engine.proof.v10',
   status:'passed',
   world_id:world.id,
   replay:receipt,
@@ -618,6 +683,18 @@ process.stdout.write(JSON.stringify({
     owned_wgsl:true,
     browser_gpu_submission:'not_exercised_in_node_ci'
   },
+  studio_edit:{
+    transaction_digest:edited.receipt.transactionDigest,
+    edit_receipt_digest:edited.receipt.digest,
+    before_world_digest:edited.receipt.beforeWorldDigest,
+    after_world_digest:edited.receipt.afterWorldDigest,
+    before_asset_digest:edited.receipt.beforeAssetManifestDigest,
+    after_asset_digest:edited.receipt.afterAssetManifestDigest,
+    hot_reload_assets:edited.receipt.hotReloadAssetIds,
+    semantic_undo_world_digest:semanticWorldDigest(undone.world),
+    semantic_undo_asset_digest:semanticAssetManifestDigest(undone.assets),
+    geometry_hot_reload_receipt:geometryHotReload.receipt
+  },
   assertions:{
     deterministic_replay:true,
     fixed_timestep:true,
@@ -643,6 +720,10 @@ process.stdout.write(JSON.stringify({
     deterministic_webgpu_render_plan:true,
     visual_frame_receipt_verified_before_gpu_plan:true,
     owned_wgsl_shader_contract:true,
+    deterministic_live_world_edit:true,
+    reversible_versioned_edit_receipts:true,
+    explicit_asset_rights_lineage:true,
+    deterministic_geometry_hot_reload:true,
     canonical_snapshot_digest:true
   }
 },null,2)+'\n');

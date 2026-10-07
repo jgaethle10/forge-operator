@@ -11,6 +11,7 @@ const ROLES=new Set([
   'audio_scene_guard',
   'replication_guard',
   'webgpu_guard',
+  'studio_edit_guard',
   'fallen_bridge_guard',
   'worldstate_bridge_guard',
   'provenance_guard',
@@ -193,6 +194,21 @@ function evaluate(role,world){
         'Owned WGSL and WebGPU browser execution remain replaceable backend code behind the visual-frame contract.',
         'Node CI may prove planning, shader contracts and failure boundaries but must not claim physical GPU-device execution.',
         'Browser GPU submission requires a real navigator.gpu adapter/device receipt before any hardware-execution claim.'
+      ],
+      findings:[]
+    };
+  }
+
+  if(role==='studio_edit_guard'){
+    return {
+      category:'studio_edit',
+      directives:[
+        'Live authoring transactions must bind to exact inspected world and asset-manifest digests before mutation.',
+        'Human, agent and code edits share one versioned transaction contract and every accepted edit emits a reversible receipt.',
+        'Undo restores semantic world and asset content while revision counters remain monotonic rather than falsifying history.',
+        'Asset records must preserve source, rights state, license and content digest; unknown permission must never be silently upgraded.',
+        'Geometry hot reload may invalidate renderer buffers for the same asset identity, but renderer caches never become asset authority.',
+        'Structural/runtime-state migration beyond the defined edit contract must remain explicit and fail closed rather than silently rewriting simulation state.'
       ],
       findings:[]
     };
