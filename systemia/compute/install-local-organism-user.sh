@@ -159,25 +159,7 @@ echo "Evercraft local organism installed and active."
 echo "Runtime: NodeSeed -> Evercraft Compute -> Yard -> KAIDANCE -> Systemia Core"
 echo "Network: loopback-only; no public ingress created."
 echo "Health watch: every 60s with bounded user-service restart and receipt."
-if grep -q '^EVERCRAFT_LOCAL_ZERO_SPEND=true
-if grep -q '^EVERCRAFT_REMOTE_BROKER_URL=.' "${ENV_FILE}"; then
-  echo "Remote admission: configured through private user environment."
-else
-  echo "Remote admission: not configured; enrollment request will still be generated."
-fi
-if grep -q '^EVERCRAFT_REMOTE_OPERATOR_ENABLED=true$' "${ENV_FILE}"; then
-  echo "Remote Operator: enabled; outbound control grant required."
-else
-  echo "Remote Operator: disabled."
-fi
-if grep -q '^RAVEN_INFERENCE_PROVIDER=.' "${ENV_FILE}" && grep -q '^RAVEN_INFERENCE_MODEL=.' "${ENV_FILE}"; then
-  echo "Raven inference: configured; Systemia Core will mint private runtime authority files on admission."
-else
-  echo "Raven inference: not configured; private team inference remains disabled."
-fi
-echo "State: ${STATE_ROOT}"
-echo "This user-mode Chromebook/Crostini runtime is authorized compute, not Node 001 physical field certification."
- "${ENV_FILE}"; then
+if grep -q '^EVERCRAFT_LOCAL_ZERO_SPEND=true$' "${ENV_FILE}"; then
   echo "Capacity economics: existing local organism is zero-spend capacity."
 else
   echo "Capacity economics: zero-spend advertisement disabled by operator configuration."
