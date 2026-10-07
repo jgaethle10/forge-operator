@@ -143,6 +143,16 @@ export async function buildWebsiteAuditV2({
   fs.writeFileSync(path.join(dir,'audio-brief-v2.json'),JSON.stringify(audioBrief,null,2)+'\n','utf8');
 
   const productionJobs=[];
+  const speechPrompt=(audioBrief.sonicHook||[]).join(' ');
+  if(speechPrompt){
+    productionJobs.push(productionNeed({
+      id:campaign.slug+'-speech-v2',
+      kind:'speech',
+      prompt:speechPrompt,
+      durationSec:built.plan.motion.targetDurationSec,
+      continuityDigest:built.plan.digest,
+    }));
+  }
   if(audioBrief.musicPrompt){
     productionJobs.push(productionNeed({
       id:campaign.slug+'-music-v2',
@@ -175,12 +185,74 @@ export async function buildWebsiteAuditV2({
     'utf8'
   );
 
+  const visualRequests={
+    schema:'evercraft.graphics-command.visual-request-inventory.v2',
+    campaignId:campaign.id,
+    requests:[
+      {
+        schema:'evercraft.fallen.visual-shot-request.v1',
+        id:campaign.slug+'-hook-sequence-v2',
+        needId:campaign.slug+'-hook-sequence-v2',
+        task:'video',
+        prompt:[
+          'Premium vertical commercial visualization.',
+          'A flood of visitor signals enters a browser-shaped conversion path while some energy visibly leaks away through friction points.',
+          'The browser and conversion path are the physical subject, not a dashboard wall.',
+          'No fake analytics values, no fake customer results, no documentary claim.',
+          'Leave deliberate negative space for the hook: TRAFFIC UP. CUSTOMERS DOWN?',
+          'Fast, tactile, expensive, modern motion. Avoid generic neon sci-fi UI.'
+        ].join(' '),
+        durationSec:6,
+        aspectRatio:'9:16',
+        targetResolution:'1080p',
+        continuityDigest:built.plan.digest,
+        requires:['commercial_rights','provenance_receipt','timing_control'],
+        references:[],
+        candidateCount:4,
+        modelDiversity:2,
+        sourceRefs:campaign.sourceRefs,
+      },
+      {
+        schema:'evercraft.fallen.visual-shot-request.v1',
+        id:campaign.slug+'-diagnose-cta-sequence-v2',
+        needId:campaign.slug+'-diagnose-cta-sequence-v2',
+        task:'video',
+        prompt:[
+          'Premium vertical commercial visualization continuing the same browser-shaped conversion system.',
+          'A restrained scan passes through clarity, speed, trust, mobile, and CTA dimensions without inventing findings.',
+          'The chaos resolves into five prioritized fix markers, then a clean $49 Quick Win Audit lockup.',
+          'Synthetic visualization only. No fake health score, fake metrics, or fake customer evidence.',
+          'Motion must communicate diagnosis becoming priority, not decorative interface animation.'
+        ].join(' '),
+        durationSec:6,
+        aspectRatio:'9:16',
+        targetResolution:'1080p',
+        continuityDigest:built.plan.digest,
+        requires:['commercial_rights','provenance_receipt','timing_control'],
+        references:[],
+        candidateCount:4,
+        modelDiversity:2,
+        sourceRefs:campaign.sourceRefs,
+      },
+    ],
+    providerExecutionState:'provider_plan_unrequested',
+    paidGenerationAuthorized:false,
+    tournamentRequired:true,
+    publicationAuthority:false,
+  };
+  fs.writeFileSync(
+    path.join(dir,'visual-requests-v2.json'),
+    JSON.stringify(visualRequests,null,2)+'\n',
+    'utf8'
+  );
+
   const clipHandoff={
     ...built.manifest.clipHandoff,
     schema:'evercraft.clip.visual-handoff.v2',
     variants:variantAssets,
     audioBrief:String(origin).replace(/\/$/,'')+'/'+campaign.slug+'/audio-brief-v2.json',
     productionNeeds:String(origin).replace(/\/$/,'')+'/'+campaign.slug+'/production-needs-v2.json',
+    visualRequests:String(origin).replace(/\/$/,'')+'/'+campaign.slug+'/visual-requests-v2.json',
     providerExecutionState:'provider_ready_unrequested',
     paidGenerationAuthorized:false,
     publicationAuthority:false,
@@ -198,6 +270,7 @@ export async function buildWebsiteAuditV2({
     hookVariants:variantAssets,
     audioBrief:clipHandoff.audioBrief,
     productionNeeds:clipHandoff.productionNeeds,
+    visualRequests:clipHandoff.visualRequests,
     offerUrl:campaign.offerUrl,
     priceUsd:campaign.priceUsd,
     providerExecutionState:'provider_ready_unrequested',
@@ -206,7 +279,7 @@ export async function buildWebsiteAuditV2({
   };
   fs.writeFileSync(path.join(dir,'attention-pack-v2.json'),JSON.stringify(manifest,null,2)+'\n','utf8');
 
-  return {built,council,variantAssets,audioBrief,productionInventory,clipHandoff,manifest,dir};
+  return {built,council,variantAssets,audioBrief,productionInventory,visualRequests,clipHandoff,manifest,dir};
 }
 
 if(import.meta.url===new URL(process.argv[1]||'', 'file://').href){
