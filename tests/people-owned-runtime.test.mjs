@@ -156,7 +156,10 @@ test('owned People Layer completes person-sovereign lifecycle without Base44', (
   assert.deepEqual(afterRevoke.relationships[0].access_scope, []);
   assert.equal(afterRevoke.share_receipts.filter((row) => row.action === 'revoke').length, 1);
 
-  const exported = runtime.exportBrain(brain.brain_key);
+  assert.throws(() => runtime.exportBrain(brain.brain_key), /person_confirmation_ref_required/);
+  const exported = runtime.exportBrain(brain.brain_key, {
+    person_confirmation_ref: 'person-confirmation:export-1',
+  });
   assert.equal(exported.package.schema, 'evercraft-people-brain-export-v1');
   assert.equal(exported.package.memories.length, 1);
   assert.equal(exported.package.relationships.length, 1);
@@ -170,7 +173,11 @@ test('owned People Layer completes person-sovereign lifecycle without Base44', (
 
   // Re-consent is intentionally separate from revocation. Identity verification still permits
   // the owner to exercise deletion rights even while data-sharing consent is revoked.
-  const deleteRequest = runtime.requestDelete(brain.brain_key);
+  const pendingDelete = runtime.requestDelete(brain.brain_key);
+  assert.equal(pendingDelete.status, 'pending_person_confirmation');
+  const deleteRequest = runtime.requestDelete(brain.brain_key, {
+    person_confirmation_ref: 'person-confirmation:delete-1',
+  });
   assert.equal(deleteRequest.status, 'approved');
 
   assert.throws(
