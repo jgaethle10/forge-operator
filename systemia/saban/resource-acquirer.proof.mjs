@@ -159,6 +159,7 @@ const missingAuthority=await acquireResourceCapacity({
     approved:true,
     demand_id:'missing-runtime-authority',
     allowed_markets:['proof-market'],
+    allow_spend:true,
     max_total_usd:1,
   },
 });
@@ -192,6 +193,7 @@ const rejectedThenMarket=await acquireResourceCapacity({
     approved:true,
     demand_id:'unauthorized-fallback',
     allowed_markets:['proof-market'],
+    allow_spend:true,
     max_total_usd:1,
   },
 });
