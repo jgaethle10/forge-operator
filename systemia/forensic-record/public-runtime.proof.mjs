@@ -53,6 +53,34 @@ try{
 
   const runtime=await startForensicRecordPublicRuntime({stateDir:root,maxRequestsPerMinute:1000});
   try{
+    const pageResponse=await fetch(runtime.service_url+'/');
+    assert.equal(pageResponse.status,200);
+    assert.match(String(pageResponse.headers.get('content-type')||''),/^text\/html/);
+    assert.match(String(pageResponse.headers.get('content-security-policy')||''),/default-src 'self'/);
+    assert.equal(pageResponse.headers.get('x-frame-options'),'DENY');
+    const page=await pageResponse.text();
+    assert.match(page,/The Forensic Record/);
+    assert.match(page,/Association is not culpability/);
+    assert.match(page,/src="\/app\.js"/);
+    assert.match(page,/href="\/styles\.css"/);
+
+    const cssResponse=await fetch(runtime.service_url+'/styles.css');
+    assert.equal(cssResponse.status,200);
+    assert.match(String(cssResponse.headers.get('content-type')||''),/^text\/css/);
+    assert.match(await cssResponse.text(),/--accent:/);
+
+    const jsResponse=await fetch(runtime.service_url+'/app.js');
+    assert.equal(jsResponse.status,200);
+    assert.match(String(jsResponse.headers.get('content-type')||''),/^application\/javascript/);
+    const clientJs=await jsResponse.text();
+    assert.match(clientJs,/fetch\('\/v1\/stats'\)/);
+    assert.match(clientJs,/forensic-record-content-notice/);
+    assert.doesNotMatch(clientJs,/migration_lineage/);
+
+    const api=await fetch(runtime.service_url+'/api').then(r=>r.json());
+    assert.equal(api.mode,'read_only');
+    assert.ok(api.routes.includes('POST /v1/search'));
+
     const h=await fetch(runtime.service_url+'/health').then(r=>r.json());
     assert.equal(h.ok,true);
     assert.equal(h.service,'forensic-record-public-runtime');
@@ -108,6 +136,8 @@ try{
       safe_projection:true,
       collision_visibility:true,
       public_search_bounded:true,
+      owned_web_interface:true,
+      strict_content_security_policy:true,
       protected_domains_exposed:false,
       write_routes_exposed:false,
       base44_runtime_required:false
