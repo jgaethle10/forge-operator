@@ -94,3 +94,56 @@ test("Evercraft Home exposes authenticated OS app catalog and app detail surface
   assert.equal(missing.installation_performed, false);
   assert.equal(missing.authority_granted, false);
 });
+
+
+test("Evercraft Home plans OS app installation without performing installation or issuing grants", async (t) => {
+  const runtime = await startEvercraftHomeServer({
+    host: "127.0.0.1",
+    port: 0,
+    authMode: "local",
+    operator: "OS Install Plan Proof"
+  });
+  t.after(async () => runtime.close());
+
+  const response = await fetch(runtime.url + "/api/os/apps/install-plan", {
+    method: "POST",
+    headers: { "content-type": "application/json" },
+    body: JSON.stringify({
+      product_key: "aliev",
+      target_device_class: "laptop",
+      node_id: "node-home-proof"
+    })
+  });
+
+  assert.equal(response.status, 200);
+  const body = await response.json();
+  assert.equal(body.ok, true);
+  assert.equal(body.schema, "evercraft.os.app-install-plan.v1");
+  assert.equal(body.state, "plan_ready");
+  assert.equal(body.product_key, "aliev");
+  assert.equal(body.subject_ref, "local:operator");
+  assert.equal(body.requested_authorization.passport_product, "rivet");
+  assert.equal(body.requested_authorization.grant_issued, false);
+  assert.equal(body.context_binding.access_granted, false);
+  assert.equal(body.execution_binding.authority_granted, false);
+  assert.equal(body.commerce_binding.payment_authority_granted, false);
+  assert.equal(body.capacity_binding.compute_lease_granted, false);
+  assert.equal(body.install_performed, false);
+  assert.equal(body.grants_issued, false);
+  assert.equal(body.runtime_started, false);
+
+  const heldResponse = await fetch(runtime.url + "/api/os/apps/install-plan", {
+    method: "POST",
+    headers: { "content-type": "application/json" },
+    body: JSON.stringify({
+      product_key: "evernest-atlas",
+      target_device_class: "phone"
+    })
+  });
+  assert.equal(heldResponse.status, 409);
+  const held = await heldResponse.json();
+  assert.equal(held.ok, false);
+  assert.equal(held.state, "held");
+  assert.equal(held.install_performed, false);
+  assert.equal(held.grants_issued, false);
+});
