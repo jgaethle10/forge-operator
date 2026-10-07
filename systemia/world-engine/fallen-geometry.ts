@@ -347,7 +347,8 @@ export function geometryFromFallenAsset(
     asset.indices
   );
 
-  const tangentSource=asset.tangents?'authored':'generated';
+  const tangentSource:'authored'|'generated'=
+    asset.tangents?'authored':'generated';
   const tangents=asset.tangents
     ? [...asset.tangents]
     : generateDeterministicTangents(
