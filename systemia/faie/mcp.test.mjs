@@ -6,6 +6,8 @@ import path from 'node:path';
 import { createFaieRuntime } from './runtime.mjs';
 import { executeFaieMcpRpc, faieMcpTools } from './mcp.mjs';
 
+const TEST_NOW = '2026-09-30T20:00:00.000Z';
+
 function observation() {
   return {
     observation_id: 'obs:mcp-water-1',
@@ -72,7 +74,7 @@ test('FAIE MCP investigation uses preview path and does not persist the caller q
       stateDir: dir,
       collectorConfig: { enabled: false }
     });
-    runtime.ingest(observation(), { now: '2026-09-30T20:00:00.000Z' });
+    runtime.ingest(observation(), { now: TEST_NOW });
 
     const before = runtime.health().investigation_count;
     const response = await executeFaieMcpRpc(runtime, {
@@ -87,7 +89,7 @@ test('FAIE MCP investigation uses preview path and does not persist the caller q
           horizon_days: 7
         }
       }
-    });
+    }, { now: TEST_NOW });
 
     const payload = response.result.structuredContent;
     assert.equal(payload.ok, true);
@@ -112,7 +114,7 @@ test('FAIE MCP signal and health tools return bounded runtime views', async () =
       stateDir: dir,
       collectorConfig: { enabled: false }
     });
-    runtime.ingest(observation(), { now: '2026-09-30T20:00:00.000Z' });
+    runtime.ingest(observation(), { now: TEST_NOW });
 
     const signals = await executeFaieMcpRpc(runtime, {
       jsonrpc: '2.0',
@@ -144,7 +146,7 @@ test('FAIE MCP carries thesis assumptions through the read-only investigation to
       stateDir: dir,
       collectorConfig: { enabled: false }
     });
-    runtime.ingest(observation(), { now: '2026-09-30T20:00:00.000Z' });
+    runtime.ingest(observation(), { now: TEST_NOW });
 
     const response = await executeFaieMcpRpc(runtime, {
       jsonrpc: '2.0',
@@ -158,7 +160,7 @@ test('FAIE MCP carries thesis assumptions through the read-only investigation to
           thesis_assumptions: ['Yakima water availability can support the target production system.']
         }
       }
-    });
+    }, { now: TEST_NOW });
 
     const memory = response.result.structuredContent.investigation.thesis_memory;
     assert.equal(memory.assumption_count, 1);
@@ -177,7 +179,7 @@ test('FAIE MCP compares candidates without persisting or issuing a site verdict'
       stateDir: dir,
       collectorConfig: { enabled: false }
     });
-    runtime.ingest(observation(), { now: '2026-09-30T20:00:00.000Z' });
+    runtime.ingest(observation(), { now: TEST_NOW });
 
     const before = runtime.health().comparison_count;
     const response = await executeFaieMcpRpc(runtime, {
@@ -195,7 +197,7 @@ test('FAIE MCP compares candidates without persisting or issuing a site verdict'
           ]
         }
       }
-    });
+    }, { now: TEST_NOW });
 
     const payload = response.result.structuredContent;
     assert.equal(payload.persisted, false);

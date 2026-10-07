@@ -81,3 +81,12 @@ The verification command is supplied by the operator. Nemotron cannot create or 
 ## Competition packaging
 
 This directory is self-contained and carries its own MIT license so it can be extracted to a dedicated public repository without relicensing the wider Evercraft monorepo.
+
+## Competition judging packet
+
+- `submission.md`: Devpost-ready project narrative and current evidence boundary.
+- `DEMO_VIDEO_PLAN.md`: sub-three-minute judge-facing demo shot plan.
+- `PROVIDER_FEEDBACK_CAPTURE.md`: structured live-use feedback capture for Nebius Token Factory and NVIDIA Nemotron.
+
+The feedback file intentionally leaves live-provider observations pending until a legitimate Token Factory canary has executed.
+
