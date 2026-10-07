@@ -64,7 +64,9 @@ test('Lineage public commercial package does not claim unverified self-serve dep
   assert.equal(discovery.handoff.automatic_repository_access_allowed, false);
   assert.equal(discovery.handoff.automatic_payment_allowed, false);
   assert.equal(machine.live_canary_evidence, null);
-  assert.match(machine.invocation_status, /Do not claim live public deployment/);
+  assert.match(machine.invocation_status, /Promotion to sell_now is held until .*externally canaried/);
+  assert.match(machine.invocation_status, /Do not claim automatic repository intake/);
+  assert.match(machine.invocation_status, /checkout or payment/);
   assert.match(page, /self-serve checkout remain verification-gated/);
 });
 
