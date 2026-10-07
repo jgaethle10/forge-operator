@@ -102,6 +102,23 @@ export interface GeoPolygon {
   sourceRefs?: string[];
 }
 
+export interface GeoTerrain {
+  id: string;
+  sourcePath: string;
+  bounds: {
+    north:number;
+    south:number;
+    east:number;
+    west:number;
+  };
+  opacity?: number;
+  blendMode?: 'normal' | 'multiply' | 'screen' | 'overlay';
+  evidenceState?: EvidenceState;
+  sourceRefs?: string[];
+  sourceSha256?: string;
+  rightsState?: string;
+}
+
 export interface GeoLayer extends BaseLayer {
   kind: 'geo';
   projection: 'equirectangular' | 'mercator';
@@ -118,6 +135,7 @@ export interface GeoLayer extends BaseLayer {
   points?: GeoPoint[];
   routes?: GeoRoute[];
   polygons?: GeoPolygon[];
+  terrains?: GeoTerrain[];
   grid?: boolean;
 }
 
@@ -401,6 +419,24 @@ export function validateStage(stage:VisualStage){
           b.east>180||b.east<-180||b.west>180||b.west<-180||
           (b.paddingPct!==undefined && (!Number.isFinite(b.paddingPct)||b.paddingPct<0||b.paddingPct>=.45))
         ) errors.push(`geo_fit_bounds_invalid:${layer.id}`);
+      }
+      for(const terrain of layer.terrains??[]){
+        if(!terrain.id?.trim()) errors.push(`geo_terrain_id_missing:${layer.id}`);
+        if(!terrain.sourcePath?.trim()) errors.push(`geo_terrain_source_missing:${terrain.id||layer.id}`);
+        const b=terrain.bounds;
+        if(
+          !b || !Number.isFinite(b.north)||!Number.isFinite(b.south)||
+          !Number.isFinite(b.east)||!Number.isFinite(b.west)||
+          b.north<=b.south||b.north>90||b.south<-90||
+          b.east>180||b.east<-180||b.west>180||b.west<-180
+        ) errors.push(`geo_terrain_bounds_invalid:${terrain.id||layer.id}`);
+        if(!(terrain.sourceRefs?.length)) errors.push(`geo_terrain_provenance_missing:${terrain.id||layer.id}`);
+        if(terrain.sourceSha256 && !/^[a-f0-9]{64}$/i.test(terrain.sourceSha256)){
+          errors.push(`geo_terrain_digest_invalid:${terrain.id||layer.id}`);
+        }
+        if(terrain.opacity!==undefined && (!Number.isFinite(terrain.opacity)||terrain.opacity<0||terrain.opacity>1)){
+          errors.push(`geo_terrain_opacity_invalid:${terrain.id||layer.id}`);
+        }
       }
       for(const polygon of layer.polygons??[]){
         if(!polygon.id?.trim()) errors.push(`geo_polygon_id_missing:${layer.id}`);
