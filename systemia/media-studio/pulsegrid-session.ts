@@ -140,7 +140,7 @@ function normalizeNote(raw: any, clipId: string, index: number, clipSteps: numbe
   const start = clamp(Math.round(Number(raw?.start) || 0), 0, Math.max(0, clipSteps - 1));
   const maxLength = Math.max(0.01, clipSteps - start);
   return {
-    id: String(raw?.id || \`\${clipId}-note-\${index + 1}\`),
+    id: String(raw?.id || `${clipId}-note-${index + 1}`),
     pitch: clamp(Math.round(Number(raw?.pitch) || 60), 0, 127),
     start,
     length: clamp(Number(raw?.length) || 1, 0.01, maxLength),
