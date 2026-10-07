@@ -275,6 +275,21 @@ body{display:flex;align-items:center;justify-content:center}
 
   const drawGeo=(el,layer,t)=>{
     const ns='http://www.w3.org/2000/svg';el.replaceChildren();
+    for(const terrain of layer.terrains||[]){
+      const nw=project(terrain.bounds.north,terrain.bounds.west,layer);
+      const se=project(terrain.bounds.south,terrain.bounds.east,layer);
+      const image=document.createElementNS(ns,'image');
+      image.setAttribute('x',String(Math.min(nw.x,se.x)));
+      image.setAttribute('y',String(Math.min(nw.y,se.y)));
+      image.setAttribute('width',String(Math.abs(se.x-nw.x)));
+      image.setAttribute('height',String(Math.abs(se.y-nw.y)));
+      image.setAttribute('href',terrain.sourcePath);
+      image.setAttribute('preserveAspectRatio','none');
+      image.setAttribute('opacity',String(terrain.opacity??1));
+      image.setAttribute('style','mix-blend-mode:'+(terrain.blendMode||'normal'));
+      image.dataset.geoTerrain=terrain.id;
+      el.appendChild(image);
+    }
     if(layer.grid){
       for(let lon=-180;lon<=180;lon+=30){
         const a=project(-80,lon,layer),b=project(80,lon,layer);
