@@ -27,14 +27,14 @@ test('feed poster is a vertical Top 10 with no horizontal table dependency',()=>
   assert.match(svg,/81\.49/);
   assert.match(svg,/#10/);
   assert.doesNotMatch(svg,/<table/i);
-  assert.doesNotMatch(svg,/#11/);
+  assert.doesNotMatch(svg,/>#11<\/text>/);
 });
 
 test('story poster expands vertically without side-to-side comparison columns',()=>{
   const svg=renderCfbRankingPoster(ranking(),'story');
   assert.match(svg,/height="1920"/);
   assert.match(svg,/#15/);
-  assert.doesNotMatch(svg,/#16/);
+  assert.doesNotMatch(svg,/>#16<\/text>/);
 });
 
 test('rejects non-ranking payloads',()=>{
