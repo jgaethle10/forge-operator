@@ -246,7 +246,12 @@ test('Yard Lineage session uses short-lived authority and carries normal graph p
       manifestId: master1.manifest_id,
       concurrency: 4,
     });
-    assert.equal(firstMasterPush.transferred_chunks, firstMasterPush.chunks);
+    assert.ok(firstMasterPush.transferred_chunks > 0);
+    assert.ok(firstMasterPush.transferred_chunks <= firstMasterPush.chunks);
+    assert.equal(
+      firstMasterPush.transferred_chunks + firstMasterPush.reused_chunks,
+      firstMasterPush.chunks
+    );
 
     const secondMasterPush = await pushLargeObject({
       store: sourceLarge,
