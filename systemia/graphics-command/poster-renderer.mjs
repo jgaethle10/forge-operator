@@ -135,6 +135,7 @@ function renderGeography(boundary,statePath,spec,format){
     '<path d="'+statePath+'" fill="url(#stateFill)" stroke="rgba(117,200,255,.55)" stroke-width="'+stroke+'" filter="url(#stateShadow)"/>',
     '<g clip-path="url(#geoClip)">'+contourRows+'</g>',
     '<path d="'+statePath+'" fill="none" stroke="rgba(245,245,242,.18)" stroke-width="1"/>',
+    '<text x="'+(spec.map.x+spec.map.width*.50)+'" y="'+(spec.map.y+spec.map.height*.56)+'" text-anchor="middle" font-family="Arial,sans-serif" font-size="'+(format==='story'?54:40)+'" font-weight="900" letter-spacing="8" fill="rgba(245,245,242,.055)">WASHINGTON</text>',
   ].join('\n');
 }
 
@@ -158,12 +159,16 @@ export function renderDirectedPoster(story,plan,format='feed'){
 
   const pointSvg=story.points.map(point=>{
     const p=positions.get(point.id);
-    const radius=(format==='story'?18:14)+Math.sqrt(Math.abs(Number(point.value)||1)/maxValue)*(format==='story'?18:13);
+    const radius=(format==='story'?17:13)+Math.sqrt(Math.abs(Number(point.value)||1)/maxValue)*(format==='story'?15:11);
+    const veryHigh=/very high/i.test(point.note||'');
+    const risk=veryHigh?'#FFB15A':'#D2C5A0';
+    const peakH=radius*.9;
+    const peakW=radius*.9;
     return [
-      '<circle cx="'+p.x+'" cy="'+p.y+'" r="'+(radius+18)+'" fill="#4FB8FF" opacity=".08"/>',
-      '<circle cx="'+p.x+'" cy="'+p.y+'" r="'+(radius+8)+'" fill="#4FB8FF" opacity=".16"/>',
-      '<circle cx="'+p.x+'" cy="'+p.y+'" r="'+radius+'" fill="#071319" stroke="#75C8FF" stroke-width="5" filter="url(#glow)"/>',
-      '<circle cx="'+p.x+'" cy="'+p.y+'" r="'+Math.max(5,radius*.34)+'" fill="#F5F5F2"/>',
+      '<circle cx="'+p.x+'" cy="'+p.y+'" r="'+(radius+18)+'" fill="#4FB8FF" opacity=".06"/>',
+      '<circle cx="'+p.x+'" cy="'+p.y+'" r="'+(radius+7)+'" fill="#071319" stroke="'+risk+'" stroke-width="3" opacity=".98" filter="url(#glow)"/>',
+      '<path d="M '+(p.x-peakW)+' '+(p.y+peakH*.65)+' L '+p.x+' '+(p.y-peakH)+' L '+(p.x+peakW)+' '+(p.y+peakH*.65)+' Z" fill="#F5F5F2" opacity=".96"/>',
+      '<path d="M '+(p.x-peakW*.32)+' '+(p.y-peakH*.18)+' L '+p.x+' '+(p.y-peakH)+' L '+(p.x+peakW*.24)+' '+(p.y-peakH*.28)+' Z" fill="'+risk+'"/>',
     ].join('\n');
   }).join('\n');
 
