@@ -9,6 +9,9 @@ test('Fallen Sessions UI consumes the canonical PulseGrid browser entrypoint',()
   assert.match(ui,/PulseGridAudioEngine/);
   assert.match(ui,/audioRef\.current\?\.updateSession\(session\)/);
   assert.match(ui,/audioRef\.current\?\.play\(session,selectedScene\)/);
+  assert.match(ui,/audioStatus\.clock_mode/);
+  assert.match(ui,/audioStatus\.track_buses/);
+  assert.match(ui,/audioStatus\.latency_ms/);
   assert.match(ui,/undoPulseGridReceipt/);
   assert.match(ui,/clip\.fork_variation/);
   assert.doesNotMatch(ui,/function\s+createPulseGridSession\s*\(/);
