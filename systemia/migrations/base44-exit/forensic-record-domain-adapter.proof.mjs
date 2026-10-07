@@ -59,6 +59,35 @@ const coverage=adaptLegacyForensicRecordEntity({
 assert.equal(coverage.records[0].pages_reviewed,49);
 assert.deepEqual(coverage.records[0].reviewed_ranges,['1-47','51','91']);
 
+const audit=adaptLegacyForensicRecordEntity({
+  entityName:'LegacyFindingAudit',
+  rows:[{
+    id:'audit-1',audit_id:'bounded-recon-18041',finding_id:'f-1',finding_number:18041,
+    source_document:'Ghislaine Maxwell Deposition',audit_status:'privacy_risk',
+    recommended_action:'review',risk_codes:['victim_or_personal_privacy']
+  }]
+});
+assert.equal(audit.accepted,1);
+assert.equal(audit.records[0].recommended_action,'review');
+
+const rejection=adaptLegacyForensicRecordEntity({
+  entityName:'FindingRejection',
+  rows:[{
+    id:'reject-1',reason_code:'association_overreach',rejected_at:'2026-08-01T00:00:00Z',
+    source_document:'Some filing, page 44',candidate_title:'Overstated association'
+  }]
+});
+assert.equal(rejection.accepted,1);
+assert.equal(rejection.records[0].source_document,'Some filing');
+assert.equal(rejection.records[0].page_reference,'page 44');
+
+const chunk=adaptLegacyForensicRecordEntity({
+  entityName:'Chunk',
+  rows:[{id:'chunk-1',source_id:'source-1',content:'Source context',page_start:44,page_end:44,chunk_index:0}]
+});
+assert.equal(chunk.accepted,1);
+assert.equal(chunk.records[0].content,'Source context');
+
 assert.throws(
   ()=>adaptLegacyForensicRecordEntity({entityName:'UserNote',rows:[]}),
   /unsupported_forensic_record_legacy_entity/
@@ -72,5 +101,8 @@ console.log(JSON.stringify({
   missing_source_url_preserved_as_missing:true,
   epistemic_label_preserved:true,
   corpus_coverage_preserved:true,
+  audit_ledger_preserved:true,
+  rejection_ledger_preserved:true,
+  source_context_chunks_preserved:true,
   private_admin_entity_not_admitted:true
 },null,2));
