@@ -4,23 +4,34 @@ on:
   pull_request:
     paths:
       - 'systemia/**'
+      - 'scripts/install-evercraft-node001-macos.sh'
+      - 'package.json'
+      - 'infra/evercraft-edge/**'
+      - 'registry/**'
       - '.github/workflows/node001-field-kit.yml'
   push:
     branches:
       - main
     paths:
       - 'systemia/**'
+      - 'scripts/install-evercraft-node001-macos.sh'
+      - 'package.json'
+      - 'infra/evercraft-edge/**'
+      - 'registry/**'
       - '.github/workflows/node001-field-kit.yml'
+
+permissions:
+  contents: read
 
 jobs:
   prove:
     runs-on: ubuntu-latest
-    timeout-minutes: 5
+    timeout-minutes: 7
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
         with:
-          node-version: '22'
+          node-version: '24'
       - name: Syntax-check field tooling
         run: |
           node --check systemia/compute/field-preflight.mjs
@@ -28,8 +39,11 @@ jobs:
           node --check systemia/compute/field-offline-check.mjs
           node --check systemia/compute/public-edge-field-admit.mjs
           node --check systemia/compute/public-edge-field-admit.proof.mjs
+          node --check systemia/compute/node001-macos-preflight.mjs
+          node --check systemia/control-plane/resident-runner.mjs
           bash -n systemia/compute/install-node-seed.sh
-      - name: Confirm CI cannot pass physical preflight
+          bash -n scripts/install-evercraft-node001-macos.sh
+      - name: Confirm CI cannot pass physical Linux field preflight
         run: |
           set +e
           node systemia/compute/field-preflight.mjs --root /tmp/evercraft-field-proof > /tmp/preflight.json
@@ -39,13 +53,37 @@ jobs:
           echo "preflight_exit_code=$code"
       - name: Prove public edge field admission
         run: node systemia/compute/public-edge-field-admit.proof.mjs
+      - name: Prove Mac Node 001 contracts
+        run: |
+          npm run proof:node001-macos
+          npm run proof:resident-control-plane
+          npm run test:node001-macos-bootstrap
       - name: Build portable field kit artifact
         run: |
-          mkdir -p dist/evercraft-node001-field-kit
-          cp -a systemia dist/evercraft-node001-field-kit/systemia
+          KIT=dist/evercraft-node001-field-kit
+          rm -rf "$KIT"
+          mkdir -p "$KIT/scripts" "$KIT/infra"
+          cp -a systemia "$KIT/systemia"
+          cp -a registry "$KIT/registry"
+          cp -a infra/evercraft-edge "$KIT/infra/evercraft-edge"
+          cp scripts/install-evercraft-node001-macos.sh "$KIT/scripts/"
+          cp package.json "$KIT/package.json"
+          cat > "$KIT/NODE001-README.txt" <<'EOF'
+          Evercraft Node 001 portable field kit
+
+          macOS Apple-silicon bootstrap:
+            sudo bash scripts/install-evercraft-node001-macos.sh
+
+          The installer performs its own Darwin/arm64/Node/RAM/disk/launchd preflight.
+          Initial authority is private-worker only. The kit does not itself prove
+          purchase, physical installation, enrollment, public ingress, or production health.
+          EOF
           tar -C dist -czf dist/evercraft-node001-field-kit.tgz evercraft-node001-field-kit
+          sha256sum dist/evercraft-node001-field-kit.tgz > dist/evercraft-node001-field-kit.tgz.sha256
       - uses: actions/upload-artifact@v4
         with:
           name: evercraft-node001-field-kit
-          path: dist/evercraft-node001-field-kit.tgz
+          path: |
+            dist/evercraft-node001-field-kit.tgz
+            dist/evercraft-node001-field-kit.tgz.sha256
           if-no-files-found: error

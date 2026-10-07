@@ -1,0 +1,38 @@
+{
+  "schema": "evercraft.compute.node-profile.v1",
+  "node_id": "evercraft-node001",
+  "name": "Evercraft Node 001",
+  "purpose": "Always-on private orchestration and compute anchor for Systemia and Saban.",
+  "target": {
+    "platform": "darwin",
+    "architecture": "arm64",
+    "device_class": "mac-mini",
+    "memory_gib_preferred": 24,
+    "memory_gib_minimum": 16,
+    "storage_gib_preferred": 512,
+    "network": "wired-ethernet-preferred"
+  },
+  "roles": [
+    "private_worker",
+    "systemia_resident_control_plane",
+    "saban_capacity_node",
+    "build_test_worker",
+    "local_state_anchor"
+  ],
+  "placement_labels": [
+    "node001",
+    "mac-mini",
+    "arm64",
+    "private-worker",
+    "control-plane",
+    "always-on"
+  ],
+  "authority": {
+    "public_edge": false,
+    "payment_authority": false,
+    "publish_authority": false,
+    "trust_change_authority": false,
+    "resident_wakeups_grant_execution_authority": false
+  },
+  "truth_boundary": "This profile is a target declaration. It does not prove that physical hardware has been purchased, installed, enrolled, online, externally reachable, or healthy."
+}
