@@ -2,6 +2,8 @@ import crypto from 'node:crypto';
 import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
+import { compileGraphicsCommand, assessScrollStop } from '../graphics-command/director.mjs';
+import { renderDirectedPoster } from '../graphics-command/poster-renderer.mjs';
 
 const DEFAULT_ORIGIN='https://fabric.systemiacommandcenters.com/visuals';
 const STATES=new Set(['observed','reported','modeled','inferred','synthetic']);
@@ -84,6 +86,14 @@ export function normalizeVisualStory(input){
     return {from,to,label:String(line?.label || '').trim()};
   });
 
+  const visualMetrics=(input.visual?.metrics ?? []).map((metric,index)=>({
+    id:String(metric?.id || 'metric-'+(index+1)).trim(),
+    label:String(metric?.label || '').trim(),
+    value:asNumber(metric?.value,'visual_metric_'+index+'_value'),
+    unit:String(metric?.unit || '').trim(),
+    decimals:Number.isInteger(metric?.decimals)?metric.decimals:0,
+    sourceRefs:[...new Set((metric?.sourceRefs ?? sourceRefs).map(String).map(v=>v.trim()).filter(Boolean))],
+  }));
   const story={
     schema:'evercraft.visual-story.v1',
     slug:slugify(input.slug || title),
@@ -95,6 +105,13 @@ export function normalizeVisualStory(input){
     sourceRefs,
     points,
     lines,
+    visual:{
+      eyebrow:String(input.visual?.eyebrow || '').trim(),
+      hook:String(input.visual?.hook || '').trim(),
+      subhook:String(input.visual?.subhook || '').trim(),
+      treatment:String(input.visual?.treatment || '').trim(),
+      metrics:visualMetrics,
+    },
     brand:String(input.brand || 'Evercraft Visual Desk').trim() || 'Evercraft Visual Desk',
     publishedAt:input.publishedAt ? new Date(input.publishedAt).toISOString() : new Date().toISOString(),
   };
@@ -347,10 +364,11 @@ export function renderMotionStage(input){
 
 export function renderStoryHtml(input,{origin=DEFAULT_ORIGIN}={}){
   const story=input.digest ? input : normalizeVisualStory(input);
+  const graphicsPlan=compileGraphicsCommand(story);
   const root=String(origin || DEFAULT_ORIGIN).replace(/\/$/,'');
   const canonical=root+'/'+story.slug+'/';
-  const cardUrl=canonical+'card-feed.svg';
-  const description=story.subtitle || story.narrative || story.callout || story.title;
+  const cardUrl=canonical+'poster-feed.svg';
+  const description=graphicsPlan.hero.subhook || story.subtitle || story.narrative || story.callout || story.title;
   const pointCards=story.points.map(point=>
     '<div class="point"><b>'+esc(point.label || point.id)+'</b><span>'+point.lat.toFixed(3)+', '+point.lon.toFixed(3)+'</span>'+(point.note ? '<p>'+esc(point.note)+'</p>' : '')+'</div>'
   ).join('');
@@ -363,20 +381,19 @@ export function renderStoryHtml(input,{origin=DEFAULT_ORIGIN}={}){
     '<meta name="description" content="'+esc(description)+'">',
     '<link rel="canonical" href="'+esc(canonical)+'">',
     '<meta property="og:type" content="article">',
-    '<meta property="og:title" content="'+esc(story.title)+'">',
+    '<meta property="og:title" content="'+esc(graphicsPlan.hero.hook)+'">',
     '<meta property="og:description" content="'+esc(description)+'">',
     '<meta property="og:url" content="'+esc(canonical)+'">',
     '<meta property="og:image" content="'+esc(cardUrl)+'">',
     '<meta name="twitter:card" content="summary_large_image">',
     '<meta name="twitter:image" content="'+esc(cardUrl)+'">',
-    '<style>:root{color-scheme:dark;font-family:Inter,system-ui,sans-serif;background:#080B0B;color:#F5F5F2}*{box-sizing:border-box}body{margin:0;background:#080B0B}main{max-width:1180px;margin:auto;padding:42px 24px 72px}.eyebrow{color:#4FB8FF;font-weight:800;letter-spacing:.14em;text-transform:uppercase}.hero{display:grid;grid-template-columns:minmax(0,1fr) minmax(320px,.72fr);gap:38px;align-items:start}h1{font-size:clamp(2.5rem,7vw,5.7rem);line-height:.96;margin:.3em 0 .25em}.sub{font-size:clamp(1.15rem,2.2vw,1.55rem);line-height:1.45;color:#B7BDC5}.card{width:100%;border-radius:24px;border:1px solid #263740;background:#0d1418}.meta{display:flex;gap:10px;flex-wrap:wrap;margin:20px 0}.badge{border:1px solid #263740;border-radius:999px;padding:8px 12px;color:#B7BDC5;font-size:.88rem}.badge strong{color:#4FB8FF}article{font-size:1.08rem;line-height:1.75;color:#d8dbdc;margin-top:42px;max-width:850px}.sources{margin-top:42px;border-top:1px solid #263740;padding-top:28px}.sources a{display:block;color:#4FB8FF;overflow-wrap:anywhere;margin:.5rem 0}.points{margin-top:28px;display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:12px}.point{padding:16px;border:1px solid #263740;border-radius:16px;background:#0d1418}.point b{display:block;margin-bottom:6px}@media(max-width:850px){.hero{grid-template-columns:1fr}main{padding-top:26px}}</style>',
+    '<style>:root{color-scheme:dark;font-family:Inter,system-ui,sans-serif;background:#050707;color:#F5F5F2}*{box-sizing:border-box}body{margin:0;background:#050707}main{max-width:1180px;margin:auto;padding:24px 24px 76px}.poster{display:block;width:min(100%,860px);margin:0 auto;border-radius:28px;border:1px solid #20313a;background:#071013;box-shadow:0 34px 100px rgba(0,0,0,.48)}.story{max-width:860px;margin:42px auto 0}.eyebrow{color:#4FB8FF;font-weight:850;letter-spacing:.14em;text-transform:uppercase;font-size:.82rem}h1{font-size:clamp(2rem,6vw,4.4rem);line-height:1;margin:.3em 0 .25em}.sub{font-size:clamp(1.05rem,2vw,1.35rem);line-height:1.5;color:#B7BDC5}.bodycopy{font-size:1.08rem;line-height:1.75;color:#d8dbdc;margin-top:30px}.callout{font-size:1.35rem;line-height:1.45;font-weight:800;color:#F5F5F2;margin:34px 0}details{margin-top:42px;border:1px solid #263740;border-radius:18px;background:#0d1418;padding:18px 20px}summary{cursor:pointer;font-weight:800;color:#B7BDC5}.meta{display:flex;gap:8px;flex-wrap:wrap;margin:18px 0}.badge{border:1px solid #263740;border-radius:999px;padding:7px 11px;color:#B7BDC5;font-size:.82rem}.badge strong{color:#4FB8FF}.sources{margin-top:24px;padding-top:20px;border-top:1px solid #263740}.sources a{display:block;color:#4FB8FF;overflow-wrap:anywhere;margin:.55rem 0}.points{margin-top:22px;display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:12px}.point{padding:15px;border:1px solid #263740;border-radius:14px;background:#091013}.point b{display:block;margin-bottom:6px}.point span{color:#87939a;font-size:.88rem}.point p{color:#B7BDC5;margin:.6rem 0 0}@media(max-width:700px){main{padding:12px 12px 60px}.poster{border-radius:20px}.story{margin-top:30px;padding:0 8px}details{padding:16px}}</style>',
     '</head><body><main>',
-    '<div class="eyebrow">'+esc(story.brand)+'</div>',
-    '<section class="hero"><div><h1>'+esc(story.title)+'</h1><p class="sub">'+esc(story.subtitle)+'</p><div class="meta"><span class="badge"><strong>'+esc(story.evidenceState.toUpperCase())+'</strong> evidence state</span><span class="badge">Published '+esc(story.publishedAt.slice(0,10))+'</span><span class="badge">Digest '+story.digest.slice(0,12)+'</span></div></div>',
-    '<img class="card" src="./card.svg" alt="'+esc(story.title)+'"></section>',
-    '<article>'+(story.narrative ? '<p>'+esc(story.narrative)+'</p>' : '')+(story.callout ? '<p><strong>'+esc(story.callout)+'</strong></p>' : '')+'<div class="points">'+pointCards+'</div>',
-    '<section class="sources"><div class="eyebrow">Sources</div>'+story.sourceRefs.map(ref=>'<a href="'+esc(ref)+'" rel="noopener noreferrer">'+esc(ref)+'</a>').join('')+'</section>',
-    '</article></main></body></html>',
+    '<img class="poster" src="./poster-feed.svg" alt="'+esc(graphicsPlan.hero.hook)+'">',
+    '<section class="story"><div class="eyebrow">'+esc(graphicsPlan.hero.eyebrow)+'</div><h1>'+esc(story.title)+'</h1><p class="sub">'+esc(story.subtitle)+'</p>',
+    '<div class="bodycopy">'+(story.narrative ? '<p>'+esc(story.narrative)+'</p>' : '')+(story.callout ? '<p class="callout">'+esc(story.callout)+'</p>' : '')+'</div>',
+    '<details><summary>Sources &amp; methodology</summary><div class="meta"><span class="badge"><strong>'+esc(story.evidenceState.toUpperCase())+'</strong> evidence state</span><span class="badge">Published '+esc(story.publishedAt.slice(0,10))+'</span><span class="badge">Digest '+story.digest.slice(0,12)+'</span></div><div class="points">'+pointCards+'</div><section class="sources"><div class="eyebrow">Sources</div>'+story.sourceRefs.map(ref=>'<a href="'+esc(ref)+'" rel="noopener noreferrer">'+esc(ref)+'</a>').join('')+'</section></details>',
+    '</section></main></body></html>',
     ''
   ].join('\n');
 }
@@ -384,23 +401,35 @@ export function renderStoryHtml(input,{origin=DEFAULT_ORIGIN}={}){
 export function buildVisualStory(input,{outputRoot,origin=DEFAULT_ORIGIN}={}){
   if(!outputRoot) throw new Error('visual_story_output_root_missing');
   const story=normalizeVisualStory(input);
+  const graphicsPlan=compileGraphicsCommand(story);
+  const scrollStopReport=assessScrollStop(graphicsPlan);
+  if(scrollStopReport.status!=='pass') throw new Error('visual_story_scroll_stop_gate_rejected');
+
   const root=String(origin || DEFAULT_ORIGIN).replace(/\/$/,'');
   const canonicalUrl=root+'/'+story.slug+'/';
   const outputDir=path.join(outputRoot,story.slug);
   fs.mkdirSync(outputDir,{recursive:true});
 
   const manifest={
-    schema:'evercraft.visual-story.manifest.v2',
+    schema:'evercraft.visual-story.manifest.v3',
     slug:story.slug,
     title:story.title,
     canonicalUrl,
-    socialCardUrl:canonicalUrl+'card-feed.svg',
+    socialCardUrl:canonicalUrl+'poster-feed.svg',
     assets:{
-      feed:canonicalUrl+'card-feed.svg',
-      square:canonicalUrl+'card-square.svg',
-      story:canonicalUrl+'card-story.svg',
+      feed:canonicalUrl+'poster-feed.svg',
+      square:canonicalUrl+'poster-square.svg',
+      story:canonicalUrl+'poster-story.svg',
+      legacyFeed:canonicalUrl+'card-feed.svg',
+      legacySquare:canonicalUrl+'card-square.svg',
+      legacyStory:canonicalUrl+'card-story.svg',
       motionStage:canonicalUrl+'motion.html',
+      graphicsPlan:canonicalUrl+'graphics-plan.json',
+      scrollStopReport:canonicalUrl+'scroll-stop-report.json',
+      fallenStageInput:canonicalUrl+'fallen-stage-input.json',
     },
+    graphicsCommandDigest:graphicsPlan.digest,
+    scrollStopStatus:scrollStopReport.status,
     evidenceState:story.evidenceState,
     sourceRefs:story.sourceRefs,
     storyDigest:story.digest,
@@ -408,7 +437,7 @@ export function buildVisualStory(input,{outputRoot,origin=DEFAULT_ORIGIN}={}){
   };
 
   const clipHandoff={
-    schema:'evercraft.visual-story.clip-handoff.v2',
+    schema:'evercraft.visual-story.clip-handoff.v3',
     publicationAuthority:false,
     brandKey:'evercraft',
     canonicalUrl,
@@ -420,7 +449,7 @@ export function buildVisualStory(input,{outputRoot,origin=DEFAULT_ORIGIN}={}){
       linkedin:manifest.assets.feed,
       tiktok:manifest.assets.story,
     },
-    suggestedMessage:[story.title,story.subtitle].filter(Boolean).join(' | '),
+    suggestedMessage:[graphicsPlan.hero.hook,graphicsPlan.hero.subhook].filter(Boolean).join(' | '),
     suggestedDestinations:['facebook','instagram','linkedin','tiktok'],
     sourceRefs:story.sourceRefs,
   };
@@ -431,12 +460,18 @@ export function buildVisualStory(input,{outputRoot,origin=DEFAULT_ORIGIN}={}){
   fs.writeFileSync(path.join(outputDir,'card-feed.svg'),feed);
   fs.writeFileSync(path.join(outputDir,'card-square.svg'),renderCardVariant(story,'square'));
   fs.writeFileSync(path.join(outputDir,'card-story.svg'),renderCardVariant(story,'story'));
+  fs.writeFileSync(path.join(outputDir,'poster-feed.svg'),renderDirectedPoster(story,graphicsPlan,'feed'));
+  fs.writeFileSync(path.join(outputDir,'poster-square.svg'),renderDirectedPoster(story,graphicsPlan,'square'));
+  fs.writeFileSync(path.join(outputDir,'poster-story.svg'),renderDirectedPoster(story,graphicsPlan,'story'));
   fs.writeFileSync(path.join(outputDir,'motion.html'),renderMotionStage(story));
+  fs.writeFileSync(path.join(outputDir,'graphics-plan.json'),JSON.stringify(graphicsPlan,null,2)+'\n');
+  fs.writeFileSync(path.join(outputDir,'scroll-stop-report.json'),JSON.stringify(scrollStopReport,null,2)+'\n');
+  fs.writeFileSync(path.join(outputDir,'fallen-stage-input.json'),JSON.stringify(graphicsPlan.fallenStageInput,null,2)+'\n');
   fs.writeFileSync(path.join(outputDir,'manifest.json'),JSON.stringify(manifest,null,2)+'\n');
   fs.writeFileSync(path.join(outputDir,'story.json'),JSON.stringify(story,null,2)+'\n');
   fs.writeFileSync(path.join(outputDir,'clip-handoff.json'),JSON.stringify(clipHandoff,null,2)+'\n');
 
-  return {story,manifest,clipHandoff,outputDir};
+  return {story,graphicsPlan,scrollStopReport,manifest,clipHandoff,outputDir};
 }
 
 const invoked=fileURLToPath(import.meta.url)===path.resolve(process.argv[1] || '');
