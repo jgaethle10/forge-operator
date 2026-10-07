@@ -7,6 +7,9 @@ on:
       - 'systemia/core/resident-services.json'
       - 'systemia/core/supervisor.evercraft.compute.json'
       - 'systemia/core/core-on-compute.proof.mjs'
+      - 'systemia/core/forensic-record-resident-wiring.proof.mjs'
+      - 'systemia/organism/forensic-record-source-runner.mjs'
+      - 'systemia/organism/forensic-record-source.workflow.json'
       - 'systemia/compute/runtime-node.mjs'
       - 'systemia/yard/operator.mjs'
       - '.github/workflows/systemia-core-supervisor-compute.yml'
@@ -18,6 +21,9 @@ on:
       - 'systemia/core/resident-services.json'
       - 'systemia/core/supervisor.evercraft.compute.json'
       - 'systemia/core/core-on-compute.proof.mjs'
+      - 'systemia/core/forensic-record-resident-wiring.proof.mjs'
+      - 'systemia/organism/forensic-record-source-runner.mjs'
+      - 'systemia/organism/forensic-record-source.workflow.json'
       - 'systemia/compute/runtime-node.mjs'
       - 'systemia/yard/operator.mjs'
       - '.github/workflows/systemia-core-supervisor-compute.yml'
@@ -33,3 +39,5 @@ jobs:
           node-version: '22'
       - name: Prove Systemia Core resident placement on Evercraft Compute
         run: node systemia/core/core-on-compute.proof.mjs
+      - name: Prove Files Companion resident wiring
+        run: node systemia/core/forensic-record-resident-wiring.proof.mjs
