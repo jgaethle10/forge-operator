@@ -28,6 +28,8 @@ concurrency:
 
 jobs:
   build:
+    outputs:
+      pages_enabled: ${{ steps.page_state.outputs.enabled }}
     runs-on: ubuntu-latest
     timeout-minutes: 8
     steps:
@@ -71,11 +73,29 @@ jobs:
 
       - name: Check or enable GitHub Pages
         id: pages
+        continue-on-error: true
         uses: actions/configure-pages@v5
         with:
           enablement: true
 
+      - name: Record Pages fallback availability
+        id: page_state
+        shell: bash
+        run: |
+          if [ "${{ steps.pages.outcome }}" = "success" ]; then
+            echo "enabled=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "enabled=false" >> "$GITHUB_OUTPUT"
+            {
+              echo "## GitHub Pages fallback unavailable"
+              echo
+              echo "The portable Evercraft Journal artifact verified successfully, but this GitHub integration cannot create or enable the Pages site."
+              echo "The owned Journal remains authoritative; Pages is an optional fallback."
+            } >> "$GITHUB_STEP_SUMMARY"
+          fi
+
       - name: Build Pages fallback for the entire public directory
+        if: steps.page_state.outputs.enabled == 'true'
         env:
           EVERCRAFT_JOURNAL_ORIGIN: https://fabric.systemiacommandcenters.com/journal
         run: |
@@ -145,11 +165,13 @@ jobs:
           grep -q 'EPS Precise Estimator' _public_pages/apps/eps-estimator/index.html
 
       - name: Upload Pages artifact
+        if: steps.page_state.outputs.enabled == 'true'
         uses: actions/upload-pages-artifact@v3
         with:
           path: _public_pages
 
   deploy-pages:
+    if: needs.build.outputs.pages_enabled == 'true'
     environment:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
