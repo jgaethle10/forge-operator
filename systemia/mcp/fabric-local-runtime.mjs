@@ -488,7 +488,7 @@ export async function startFabricLocalRuntime({
     chum_human_review_authority:'discovery_review_only',
     journal_mirror_path:'/journal/',
     journal_mirror_ready:fs.existsSync(path.join(journalDir,'index.html')),
-    journal_mirror_indexing:'noindex_until_dedicated_origin',
+    journal_mirror_indexing:'index_follow_canonical_public_origin',
     demo_surface_path:'/demos/',
     demo_surface_ready:fs.existsSync(path.join(demoDir,'hvac-lead-recovery','index.html')),
     demo_surface_authority:'public_static_proof_only',
@@ -938,7 +938,7 @@ export async function startFabricLocalRuntime({
           'content-length':data.length,
           'cache-control':'public, max-age=60, must-revalidate',
           'x-content-type-options':'nosniff',
-          'x-robots-tag':'noindex, nofollow',
+          'x-robots-tag':'index, follow',
           'referrer-policy':'strict-origin-when-cross-origin',
         });
         if(req.method==='HEAD') return res.end();
