@@ -78,6 +78,7 @@ jobs:
           node systemia/daytrade-lens/edge-order-execution-receipt.test.mjs
           node systemia/daytrade-lens/edge-order-execution-fetch.test.mjs
           node systemia/daytrade-lens/edge-paper-order-probe.test.mjs
+          node systemia/daytrade-lens/edge-paper-credential-boundary.test.mjs
           node systemia/daytrade-lens/edge-practice-scorecard.test.mjs
           node systemia/daytrade-lens/edge-spread-threshold-robustness.test.mjs
           node systemia/daytrade-lens/edge-practice-diversity-readiness.test.mjs
