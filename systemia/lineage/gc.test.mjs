@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { mkdtemp, rm, writeFile } from 'node:fs/promises';
+import { mkdir, mkdtemp, readFile, rm, writeFile } from 'node:fs/promises';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import { LineageStore } from './core.mjs';
@@ -286,6 +286,71 @@ test('active GC lock blocks branch and release root mutations', async () => {
     await rm(join(store.dir, 'gc.lock'), { force: true });
     const branch = await store.createBranch('after-gc');
     assert.equal(branch.branch, 'after-gc');
+  } finally {
+    await rm(root, { recursive: true, force: true });
+  }
+});
+
+
+test('partial quarantine failure restores every object already moved', async () => {
+  const root = await mkdtemp(join(tmpdir(), 'lineage-gc-partial-rollback-'));
+  try {
+    const store = new LineageStore(root);
+    await store.init();
+    await writeFile(join(root, 'live.txt'), 'live\n');
+    await store.commit({ message: 'live' });
+
+    const orphanA = await store.putObject('receipt', {
+      schema: 'test.orphan-a.v1',
+      value: 'a',
+    });
+    const orphanB = await store.putObject('receipt', {
+      schema: 'test.orphan-b.v1',
+      value: 'b',
+    });
+
+    const nowMs = Date.now() + 1000;
+    const plan = await planGarbageCollection(store, {
+      graceMs: 0,
+      nowMs,
+    });
+    const orphanRows = plan.candidates.objects
+      .filter((row) => row.id === orphanA || row.id === orphanB)
+      .sort((a, b) => a.id.localeCompare(b.id));
+    assert.equal(orphanRows.length, 2);
+
+    const runId =
+      new Date(nowMs + 1).toISOString().replace(/[:.]/g, '-') +
+      '-' +
+      plan.plan_id.slice(0, 12);
+    const runDir = join(store.dir, 'quarantine', runId);
+    const sabotaged = orphanRows[1];
+    const relativeSource = sabotaged.path
+      .slice(store.dir.length + 1)
+      .split('\\').join('/');
+    const blockedTarget = join(
+      runDir,
+      'objects',
+      ...relativeSource.split('/')
+    );
+
+    await mkdir(blockedTarget, { recursive: true });
+    await writeFile(join(blockedTarget, 'blocker'), 'block');
+
+    await assert.rejects(
+      () => quarantineGarbage(store, plan, {
+        retentionMs: 1000,
+        nowMs: nowMs + 1,
+      })
+    );
+
+    assert.equal((await store.readObject(orphanA)).type, 'receipt');
+    assert.equal((await store.readObject(orphanB)).type, 'receipt');
+
+    await assert.rejects(
+      () => readFile(join(runDir, 'quarantine.json'), 'utf8'),
+      (error) => error?.code === 'ENOENT'
+    );
   } finally {
     await rm(root, { recursive: true, force: true });
   }
