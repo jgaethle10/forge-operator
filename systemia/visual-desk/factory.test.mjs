@@ -166,6 +166,12 @@ test('terrain-backed specimen copies the governed relief asset with exact lineag
     const poster=fs.readFileSync(path.join(result.outputDir,'poster-feed.svg'),'utf8');
     assert.match(poster,/data-visual-model="cinematic-terrain-geography-v2"/);
     assert.match(poster,/class="terrain-relief"/);
+    assert.match(poster,/href="data:image\/png;base64,/);
+    const embedded=poster.match(/href="data:image\/png;base64,([^"]+)"/);
+    assert.ok(embedded?.[1]);
+    const embeddedDigest=crypto.createHash('sha256').update(Buffer.from(embedded[1],'base64')).digest('hex');
+    assert.equal(embeddedDigest,receipt.sha256);
+    assert.match(poster,new RegExp('data-source-sha256="'+receipt.sha256+'"'));
     assert.doesNotMatch(poster,/class="peak-halo"/);
   }finally{
     fs.rmSync(root,{recursive:true,force:true});
