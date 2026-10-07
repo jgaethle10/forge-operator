@@ -36,8 +36,10 @@
     "public-edge-controller",
     "aliev-owned-source",
     "rivet-report-edge",
+    "forensic-record-owned-runtime",
     "kaidance-mission-publisher",
-    "sentinel-life-safety-watch"
+    "sentinel-life-safety-watch",
+    "cfb-clip-publisher"
   ],
   "security": {
     "lease_required": true,
@@ -86,6 +88,7 @@
     "raven_inference_provider_and_model_explicit",
     "resident_compute_manifest_matches_resident_service_registry",
     "competition_capacity_resident_supervised",
-    "aliev_and_rivet_resident_services_supervised"
+    "aliev_and_rivet_resident_services_supervised",
+    "forensic_record_resident_supervised"
   ]
 }

@@ -12,6 +12,9 @@ on:
       - 'systemia/core/resident-supervisor.proof.mjs'
       - 'systemia/core/public-edge-resident-wiring.proof.mjs'
       - 'systemia/core/rivet-report-resident-wiring.proof.mjs'
+      - 'systemia/core/forensic-record-resident-wiring.proof.mjs'
+      - 'systemia/organism/forensic-record-runner.mjs'
+      - 'systemia/organism/forensic-record.workflow.json'
       - 'systemia/organism/rivet-report-edge-runner.mjs'
       - 'systemia/organism/rivet-report-edge.workflow.json'
       - 'systemia/core/RESIDENT_SUPERVISOR.md'
@@ -38,6 +41,9 @@ on:
       - 'systemia/core/resident-supervisor.proof.mjs'
       - 'systemia/core/public-edge-resident-wiring.proof.mjs'
       - 'systemia/core/rivet-report-resident-wiring.proof.mjs'
+      - 'systemia/core/forensic-record-resident-wiring.proof.mjs'
+      - 'systemia/organism/forensic-record-runner.mjs'
+      - 'systemia/organism/forensic-record.workflow.json'
       - 'systemia/organism/rivet-report-edge-runner.mjs'
       - 'systemia/organism/rivet-report-edge.workflow.json'
       - 'systemia/core/RESIDENT_SUPERVISOR.md'
@@ -70,5 +76,7 @@ jobs:
         run: node systemia/core/public-edge-resident-wiring.proof.mjs
       - name: Prove RIVET resident report edge wiring
         run: node systemia/core/rivet-report-resident-wiring.proof.mjs
+      - name: Prove Files Companion resident wiring
+        run: node systemia/core/forensic-record-resident-wiring.proof.mjs
       - name: Prove Sentinel resident registration
         run: npm run test:sentinel-resident
