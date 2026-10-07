@@ -4,6 +4,17 @@ import os from 'node:os';
 import path from 'node:path';
 import { startLocalOrganism } from './local-organism.mjs';
 
+const nativeBrowserProofPreparer=async()=>({
+  schema:'evercraft.browser.native-runtime-preflight.v1',
+  ready:false,
+  mode:'native_user_playwright',
+  install_attempted:false,
+  install_state:'proof_disabled',
+  reason:'network_bootstrap_disabled_in_local_organism_proof',
+  receipt_hash:'sha256:'+'b'.repeat(64),
+  browserRuntimeFactory:null,
+});
+
 const root = fs.mkdtempSync(path.join(os.tmpdir(), 'evercraft-local-organism-proof-'));
 const releaseRef = 'e293e0d75d1622f12b54249be8d403a06774e4e9';
 
@@ -17,6 +28,7 @@ try {
     releaseRef,
     heartbeatTargetSeconds: 300,
     graceSeconds: 90,
+    nativeBrowserPreparer: nativeBrowserProofPreparer,
     ravenInferenceProvider: 'ollama',
     ravenInferenceModel: 'proof-local-model',
   });
@@ -82,6 +94,7 @@ try {
     releaseRef,
     heartbeatTargetSeconds: 300,
     graceSeconds: 90,
+    nativeBrowserPreparer: nativeBrowserProofPreparer,
     ravenInferenceProvider: 'ollama',
     ravenInferenceModel: 'proof-local-model',
   });
