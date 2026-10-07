@@ -577,7 +577,9 @@ export function createPeopleRuntime({
     const status = clean(input.status);
     if (!['sent', 'failed'].includes(status)) throw new Error('email_delivery_status_invalid');
     const stamp = now();
+    const messageRef = clean(input.message_ref);
     const trustedMailboxDelivery = status === 'sent' && ['gmail_agent', 'resend_agent'].includes(provider);
+    if (trustedMailboxDelivery && !messageRef) throw new Error('trusted_email_message_ref_required');
     const receipt = {
       delivery_receipt_key: key('identity-delivery'),
       challenge_key: challenge.challenge_key,
@@ -588,7 +590,7 @@ export function createPeopleRuntime({
       destination_hash: challenge.email_hash,
       status,
       trusted_mailbox_delivery: trustedMailboxDelivery,
-      message_ref: clean(input.message_ref),
+      message_ref: messageRef,
       failure_reason: status === 'failed' ? clean(input.failure_reason) : '',
       actor: clean(input.actor) || 'systemia-mail-adapter',
       occurred_at: stamp,
