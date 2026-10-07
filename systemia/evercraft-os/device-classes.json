@@ -1,0 +1,54 @@
+{
+  "schema": "evercraft.os.device-classes.v1",
+  "classes": {
+    "unknown": {
+      "planning_hints": [],
+      "notes": "No form-factor claim is made without an explicit class hint or future trusted hardware evidence."
+    },
+    "laptop": {
+      "planning_hints": [
+        "interactive_human_surface",
+        "portable",
+        "battery_sensitive",
+        "opportunistic_compute"
+      ],
+      "notes": "Planning hints do not prove a battery, camera, microphone, sensor, or accelerator exists."
+    },
+    "desktop": {
+      "planning_hints": [
+        "interactive_human_surface",
+        "stationary",
+        "sustained_compute_candidate"
+      ],
+      "notes": "Sustained compute remains subject to NodeSeed/Yard capacity evidence and policy."
+    },
+    "phone": {
+      "planning_hints": [
+        "interactive_human_surface",
+        "mobile",
+        "battery_sensitive",
+        "sensor_candidate",
+        "opportunistic_compute"
+      ],
+      "notes": "The class does not imply camera, microphone, GPS, secure element, telephony, or sensor permission."
+    },
+    "tablet": {
+      "planning_hints": [
+        "interactive_human_surface",
+        "portable",
+        "battery_sensitive",
+        "sensor_candidate",
+        "opportunistic_compute"
+      ],
+      "notes": "Hardware and permission claims require separate evidence."
+    },
+    "server": {
+      "planning_hints": [
+        "headless_candidate",
+        "continuous_residency_candidate",
+        "sustained_compute_candidate"
+      ],
+      "notes": "Continuous residency and compute capacity still require runtime evidence."
+    }
+  }
+}
