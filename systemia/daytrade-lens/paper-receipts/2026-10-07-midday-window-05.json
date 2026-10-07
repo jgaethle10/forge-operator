@@ -1,0 +1,65 @@
+{
+  "schema": "evercraft.daytrade.prospective-spread-rule-practice-summary.v1",
+  "generated_at": "2026-10-07T18:42:21.352Z",
+  "window_start_at": "2026-10-07T18:41:21.128Z",
+  "window_end_at": "2026-10-07T18:42:21.304Z",
+  "decision_feed": "iex",
+  "source_run_id": 37668724400,
+  "source_artifact_id": 11503843257,
+  "source_artifact_digest": "sha256:b147009849bf95a579429294df906b8e90b0ae131c4102ef0c07e1a946806561",
+  "simulation_only": true,
+  "capital_at_risk_usd": 0,
+  "rule_id": "spread-abstention-v1",
+  "frozen_threshold_bps": 3,
+  "results": [
+    {
+      "symbol": "SOXX",
+      "entry_quote_timestamp": "2026-10-07T18:41:20.014115041Z",
+      "exit_quote_timestamp": "2026-10-07T18:42:20.824346629Z",
+      "entry_spread_bps": 2.4130442276532515,
+      "decision": "SIMULATE_MARKETABLE_LONG",
+      "governed_pnl_usd": -0.009651012494614974,
+      "always_cross_pnl_usd": -0.009651012494614974,
+      "avoided_pnl_usd": 0
+    },
+    {
+      "symbol": "SMH",
+      "entry_quote_timestamp": "2026-10-07T18:41:20.889218151Z",
+      "exit_quote_timestamp": "2026-10-07T18:42:21.266780363Z",
+      "entry_spread_bps": 1.4451447151865733,
+      "decision": "SIMULATE_MARKETABLE_LONG",
+      "governed_pnl_usd": -0.0061012812690677265,
+      "always_cross_pnl_usd": -0.0061012812690677265,
+      "avoided_pnl_usd": 0
+    },
+    {
+      "symbol": "QQQ",
+      "entry_quote_timestamp": "2026-10-07T18:41:20.930791641Z",
+      "exit_quote_timestamp": "2026-10-07T18:42:21.313150811Z",
+      "entry_spread_bps": 0.528268994573057,
+      "decision": "SIMULATE_MARKETABLE_LONG",
+      "governed_pnl_usd": -0.0021130201661350156,
+      "always_cross_pnl_usd": -0.0021130201661350156,
+      "avoided_pnl_usd": 0
+    }
+  ],
+  "aggregate": {
+    "traded_count": 3,
+    "abstained_count": 0,
+    "governed_total_pnl_usd": -0.017865313929817717,
+    "always_cross_total_pnl_usd": -0.017865313929817717,
+    "rule_improvement_vs_always_cross_usd": 0
+  },
+  "interpretation": {
+    "market_phase_et": "MIDDAY",
+    "market_date_et": "2026-10-07",
+    "late_midday_regime": true,
+    "rule_had_no_incremental_effect": true,
+    "all_three_simulated_routes_lost": true,
+    "not_signal_validation": true,
+    "iex_is_not_consolidated_sip_nbbo": true,
+    "feed_portability_blocked": true,
+    "not_live_authorized": true
+  },
+  "live_trade_authority": false
+}
