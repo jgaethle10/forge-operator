@@ -34,8 +34,10 @@ function projection(box,rect){
   const scale=Math.min(rect.width/geoWidth,rect.height/geoHeight);
   const drawWidth=geoWidth*scale;
   const drawHeight=geoHeight*scale;
-  const offsetX=rect.x+(rect.width-drawWidth)/2;
-  const offsetY=rect.y+(rect.height-drawHeight)/2;
+  const alignX=Number.isFinite(Number(rect.alignX))?Math.max(0,Math.min(1,Number(rect.alignX))):.5;
+  const alignY=Number.isFinite(Number(rect.alignY))?Math.max(0,Math.min(1,Number(rect.alignY))):.5;
+  const offsetX=rect.x+(rect.width-drawWidth)*alignX;
+  const offsetY=rect.y+(rect.height-drawHeight)*alignY;
   return {
     project(point){
       return {
@@ -79,9 +81,9 @@ function sourceHosts(refs){
 }
 
 const SPECS={
-  feed:{width:1080,height:1350,map:{x:72,y:300,width:936,height:720},hookY:128,hookSize:82,footerY:1115},
-  square:{width:1080,height:1080,map:{x:72,y:246,width:936,height:590},hookY:110,hookSize:66,footerY:890},
-  story:{width:1080,height:1920,map:{x:72,y:500,width:936,height:920},hookY:155,hookSize:100,footerY:1585},
+  feed:{width:1080,height:1350,map:{x:72,y:300,width:936,height:720,alignY:.24},hookY:128,hookSize:82,footerY:1115},
+  square:{width:1080,height:1080,map:{x:72,y:246,width:936,height:590,alignY:.22},hookY:110,hookSize:66,footerY:890},
+  story:{width:1080,height:1920,map:{x:72,y:500,width:936,height:920,alignY:.14},hookY:155,hookSize:100,footerY:1585},
 };
 
 function decorativeContours(spec){
@@ -259,7 +261,10 @@ function renderGeography(boundary,statePath,spec,format,terrain,terrainHref,fram
   const w=spec.map.width;
   const h=spec.map.height;
   const terrainLayer=terrain&&terrainHref
-    ? '<image class="terrain-relief" href="'+terrainHref+'" data-source-sha256="'+esc(terrain.sourceSha256)+'" x="'+frame.draw.x+'" y="'+frame.draw.y+'" width="'+frame.draw.width+'" height="'+frame.draw.height+'" preserveAspectRatio="none" clip-path="url(#geoClip)" opacity=".78" style="mix-blend-mode:multiply"/>'
+    ? [
+        '<image class="terrain-relief" href="'+terrainHref+'" data-source-sha256="'+esc(terrain.sourceSha256)+'" x="'+frame.draw.x+'" y="'+frame.draw.y+'" width="'+frame.draw.width+'" height="'+frame.draw.height+'" preserveAspectRatio="none" clip-path="url(#geoClip)" opacity=".94" style="mix-blend-mode:multiply"/>',
+        '<image class="terrain-relief-highlight" href="'+terrainHref+'" x="'+frame.draw.x+'" y="'+frame.draw.y+'" width="'+frame.draw.width+'" height="'+frame.draw.height+'" preserveAspectRatio="none" clip-path="url(#geoClip)" opacity=".105"/>'
+      ].join('\\n')
     : '<g class="terrain-relief-fallback" clip-path="url(#geoClip)" opacity=".40">'+decorativeContours(spec)+'</g>';
   return [
     '<clipPath id="geoClip"><path d="'+statePath+'"/></clipPath>',
@@ -267,7 +272,7 @@ function renderGeography(boundary,statePath,spec,format,terrain,terrainHref,fram
     terrainLayer,
     '<path class="terrain-atmosphere" d="'+statePath+'" fill="url(#terrainWash)" opacity=".46"/>',
     '<path class="geo-boundary" d="'+statePath+'" fill="none" stroke="#EAF7FC" stroke-width="1.25" stroke-opacity=".30"/>',
-    '<text class="region-label" x="'+(x+w*.50)+'" y="'+(y+h*.57)+'" text-anchor="middle" font-family="Arial,sans-serif" font-size="'+(format==='story'?55:42)+'" font-weight="900" letter-spacing="9" fill="#EAF7FC" opacity=".13">WASHINGTON</text>',
+    '<text class="region-label" x="'+(x+w*.50)+'" y="'+(y+h*.57)+'" text-anchor="middle" font-family="Arial,sans-serif" font-size="'+(format==='story'?55:42)+'" font-weight="900" letter-spacing="9" fill="#EAF7FC" opacity=".18">WASHINGTON</text>',
     '<text class="region-kicker" x="'+(x+w*.50)+'" y="'+(y+h*.57+(format==='story'?38:30))+'" text-anchor="middle" font-family="Arial,sans-serif" font-size="'+(format==='story'?15:12)+'" font-weight="800" letter-spacing="4" fill="#8EDBFA" opacity=".30">PACIFIC NORTHWEST</text>',
   ].join('\n');
 }
@@ -288,7 +293,7 @@ export function renderDirectedPoster(story,plan,format='feed'){
     const a=positions.get(line.from);
     const b=positions.get(line.to);
     if(!a||!b) return '';
-    return '<path class="story-route cascade-axis" d="M '+a.x+' '+a.y+' L '+b.x+' '+b.y+'" fill="none" stroke="#C7ECFA" stroke-width="'+(format==='story'?7:5)+'" stroke-linecap="round" stroke-linejoin="round" opacity=".085"/>';
+    return '<path class="story-route cascade-axis" d="M '+a.x+' '+a.y+' L '+b.x+' '+b.y+'" fill="none" stroke="#C7ECFA" stroke-width="'+(format==='story'?7:5)+'" stroke-linecap="round" stroke-linejoin="round" opacity=".055"/>';
   }).join('\n');
 
   const pointSvg=story.points.map(point=>{
