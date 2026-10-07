@@ -19,6 +19,7 @@ import {
 } from "./clip-journal-publish-adapter.mjs";
 import { LineageControlRoomHomeBridge } from "./lineage-adapter.mjs";
 import { renderLineageControlRoomHtml } from "../lineage/control-room.mjs";
+import { readEvercraftOsStatus } from "./os-adapter.mjs";
 
 const here = path.dirname(fileURLToPath(import.meta.url));
 const publicDir = path.join(here, "public");
@@ -751,6 +752,16 @@ export async function startEvercraftHomeServer({
           private_origin_exposed: false,
         });
       }
+    }
+
+    if (req.method === "GET" && url.pathname === "/api/os/status") {
+      const session = sessionFor(req);
+      if (!session.ok) return json(res, session.status, session);
+      return json(res, 200, {
+        ok: true,
+        subject: session.subject,
+        ...readEvercraftOsStatus(),
+      });
     }
 
     if (req.method === "GET" && url.pathname === "/api/systemia/inventory") {
