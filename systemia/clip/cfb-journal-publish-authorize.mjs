@@ -14,6 +14,60 @@ function arg(name,fallback=''){
   return index>=0?clean(process.argv[index+1]):fallback;
 }
 
+export const CFB_CLIP_AUTHORITY_RECEIPT_SCHEMA='evercraft.clip.operator-authority.v1';
+
+export function validateCfbClipAuthorityReceipt(input){
+  const receipt=structuredClone(input||{});
+  if(receipt.schema!==CFB_CLIP_AUTHORITY_RECEIPT_SCHEMA) throw new Error('cfb_clip_authority_receipt_schema_invalid');
+  if(receipt.authorized!==true) throw new Error('cfb_clip_authority_receipt_not_authorized');
+  if(clean(receipt.authority_state)!=='manual_authorized') throw new Error('cfb_clip_authority_state_invalid');
+  if(clean(receipt.subject_ref)!==SUBJECT_REF) throw new Error('cfb_clip_authority_subject_invalid');
+  if(clean(receipt.product)!==PRODUCT) throw new Error('cfb_clip_authority_product_invalid');
+
+  const scopes=Array.isArray(receipt.scopes)?receipt.scopes.map(clean).filter(Boolean):[];
+  if(scopes.length!==1||scopes[0]!==SCOPE) throw new Error('cfb_clip_authority_scope_invalid');
+
+  const resources=Array.isArray(receipt.resource_refs)?receipt.resource_refs.map(clean).filter(Boolean):[];
+  if(resources.length!==1||resources[0]!==RESOURCE_REF) throw new Error('cfb_clip_authority_resource_invalid');
+
+  const excluded=(receipt.excluded_brand_keys||[]).map(value=>clean(value).toLowerCase()).filter(Boolean);
+  if(!excluded.includes('rnb-chicken-and-soul')) throw new Error('cfb_clip_authority_rnb_exclusion_required');
+
+  const startsAt=new Date(receipt.starts_at);
+  const endsAt=new Date(receipt.ends_at);
+  if(!Number.isFinite(startsAt.getTime())||!Number.isFinite(endsAt.getTime())||startsAt>=endsAt){
+    throw new Error('cfb_clip_authority_window_invalid');
+  }
+
+  const authorityReceiptRef=clean(receipt.authority_receipt_ref);
+  if(!authorityReceiptRef) throw new Error('cfb_clip_authority_receipt_ref_required');
+
+  return {
+    ...receipt,
+    authority_receipt_ref:authorityReceiptRef,
+    issuer_ref:clean(receipt.issuer_ref)||'authority:evercraft-operator',
+    subject_ref:SUBJECT_REF,
+    product:PRODUCT,
+    scopes:[SCOPE],
+    resource_refs:[RESOURCE_REF],
+    excluded_brand_keys:[...new Set(excluded)].sort(),
+    starts_at:startsAt.toISOString(),
+    ends_at:endsAt.toISOString(),
+  };
+}
+
+export function authorizeCfbJournalResidentFromReceipt({passport,receipt}={}){
+  const verified=validateCfbClipAuthorityReceipt(receipt);
+  return authorizeCfbJournalResident({
+    passport,
+    authorityReceiptRef:verified.authority_receipt_ref,
+    startsAt:verified.starts_at,
+    endsAt:verified.ends_at,
+    issuerRef:verified.issuer_ref,
+    subjectRef:verified.subject_ref,
+  });
+}
+
 export function authorizeCfbJournalResident({
   passport,
   authorityReceiptRef,
