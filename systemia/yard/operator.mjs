@@ -803,6 +803,27 @@ export class YardOperator {
         }
         healthState = 'healthy';
         routeVerification = 'private_aliev_source_health_verified';
+      } else if (workloadClass === 'systemia.forensic-record-runtime.v1') {
+        const forensicHealthy =
+          health.ok === true &&
+          health.service === 'forensic-record-owned-runtime' &&
+          health.runtime === 'Evercraft Compute' &&
+          health.private_source_runtime === true &&
+          health.public_edge_separate === true &&
+          health.base44_runtime_required === false &&
+          health.canonical_store === 'content-addressed-forensic-corpus-v1' &&
+          health.instance_id === job.result?.instance_id;
+        if (!forensicHealthy) {
+          try {
+            await request(`${capacityEndpoint}/v1/services/${job.result.service_id}/stop`, {
+              method: 'POST',
+              body: JSON.stringify({ token: lease.token }),
+            });
+          } catch {}
+          throw new Error('Forensic Record runtime failed initial local health verification');
+        }
+        healthState = 'healthy';
+        routeVerification = 'private_forensic_record_health_verified_public_route_unbound';
       } else if (workloadClass === 'systemia.rivet-report-runtime.v1') {
         const rivetHealthy =
           health.ok === true &&
