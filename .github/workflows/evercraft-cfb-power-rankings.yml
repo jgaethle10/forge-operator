@@ -145,7 +145,8 @@ jobs:
             rm -rf public/journal
             npm run journal:build
 
-            git add "systemia/newsroom/stories/$story_file" public/journal
+            git add "systemia/newsroom/stories/$story_file"
+          git add -f public/journal
             if git diff --cached --quiet; then
               echo "Verified CFB edition is already current on main."
               published=1
