@@ -2,6 +2,7 @@ import test from "node:test";
 import assert from "node:assert/strict";
 import {
   competitionWorkerDemand,
+  buildCompetitionCapacityMissionSnapshot,
   discoverCompetitionWorkerCapacity,
   ensureCompetitionBrowserCapacity,
 } from "../systemia/competition/saban-capacity-runtime.mjs";
@@ -231,4 +232,47 @@ test("missing immutable release is held before Saban issues a capacity grant",as
   assert.equal(receipt.state,"held_immutable_release_missing");
   assert.equal(discoveryCalls,0);
   assert.equal(grants,0);
+});
+
+
+test("competition capacity mission snapshot exposes state without private topology",()=>{
+  const snapshot=buildCompetitionCapacityMissionSnapshot({
+    schema:"evercraft.systemia.competition-saban-capacity.v1",
+    state:"deployed_zero_spend_capacity",
+    observed_at:"2026-10-07T01:40:00.000Z",
+    receipt_hash:"sha256:"+"a".repeat(64),
+    deployment_receipt_hash:"sha256:"+"b".repeat(64),
+    capacity_node_id:"private-node-name",
+    acquired_provider_id:"private-provider-name",
+    capacity_endpoint:"https://private-capacity.example.test",
+    allocator_token:"do-not-leak",
+  });
+  assert.equal(snapshot.schema,"evercraft.kaidance.mission-snapshot.v1");
+  assert.equal(snapshot.state,"healthy");
+  assert.equal(snapshot.zero_spend_capacity_ready,true);
+  assert.equal(snapshot.founder_action_required,false);
+  assert.equal(snapshot.human_gate_required,false);
+  assert.equal(snapshot.paid_capacity_authorized,false);
+  assert.equal(snapshot.privacy.node_identity_exposed,false);
+  assert.equal(snapshot.privacy.capacity_endpoint_exposed,false);
+  assert.equal(snapshot.privacy.allocator_authority_exposed,false);
+  const encoded=JSON.stringify(snapshot);
+  assert.equal(encoded.includes("private-node-name"),false);
+  assert.equal(encoded.includes("private-provider-name"),false);
+  assert.equal(encoded.includes("private-capacity.example.test"),false);
+  assert.equal(encoded.includes("do-not-leak"),false);
+});
+
+test("missing zero-spend capacity stays a team-held state, not a Jesse gate",()=>{
+  const snapshot=buildCompetitionCapacityMissionSnapshot({
+    state:"held_no_authorized_zero_spend_capacity",
+    observed_at:"2026-10-07T01:40:00.000Z",
+    discovered_offer_count:0,
+    next_action:"continue_saban_capacity_discovery",
+  });
+  assert.equal(snapshot.state,"held");
+  assert.equal(snapshot.zero_spend_capacity_ready,false);
+  assert.equal(snapshot.founder_action_required,false);
+  assert.equal(snapshot.human_gate_required,false);
+  assert.equal(snapshot.next_action,"continue_saban_capacity_discovery");
 });
