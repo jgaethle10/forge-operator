@@ -1,5 +1,6 @@
 export const PULSEGRID_SESSION_SCHEMA = 'evercraft.fallen.pulsegrid.session.v1';
 export const PULSEGRID_ENGINE_VERSION = '0.14.0';
+export const PULSEGRID_ARRANGEMENT_BARS = 16;
 
 export type PulseGridActor = 'human' | 'agent' | 'system' | 'controller';
 
@@ -126,6 +127,7 @@ export type PulseGridOperation =
       step: number;
       value: number;
     }
+  | { type: 'arrangement.set_slot'; track_id: string; bar: number; scene: number | null }
   | { type: 'clip.fork_variation'; track_id: string; source_scene: number; destination_scene: number; name?: string }
   | { type: 'asset.register_audio'; asset: PulseGridAudioAssetInput }
   | { type: 'clip.attach_audio_asset'; track_id: string; scene: number; asset_id: string | null }
@@ -348,7 +350,7 @@ export function createPulseGridSession(projectName = 'Untitled Session'): PulseG
     active_scene: 0,
     assets: [],
     tracks,
-    arrangement: tracks.map(() => Array.from({ length: 16 }, () => null)),
+    arrangement: tracks.map(() => Array.from({ length: PULSEGRID_ARRANGEMENT_BARS }, () => null)),
     receipts: [],
   };
 }
@@ -412,13 +414,13 @@ export function migratePulseGridSession(raw: any): PulseGridSession {
 
   if (Array.isArray(raw?.arrangement)) {
     base.arrangement = base.tracks.map((_, trackIndex) =>
-      Array.from({ length: 16 }, (_, bar) => {
+      Array.from({ length: PULSEGRID_ARRANGEMENT_BARS }, (_, bar) => {
         const value = raw.arrangement?.[trackIndex]?.[bar];
         return Number.isInteger(value) && value >= 0 && value < SCENES ? value : null;
       }),
     );
   } else {
-    base.arrangement = base.tracks.map(() => Array.from({ length: 16 }, () => null));
+    base.arrangement = base.tracks.map(() => Array.from({ length: PULSEGRID_ARRANGEMENT_BARS }, () => null));
   }
 
   base.receipts = Array.isArray(raw?.receipts) ? raw.receipts.slice(-1000) : [];
@@ -434,6 +436,22 @@ export function validatePulseGridSession(session: PulseGridSession) {
   if (!Number.isFinite(session.transport?.bpm) || session.transport.bpm < 20 || session.transport.bpm > 400) errors.push('transport.bpm');
   if (!Array.isArray(session.tracks) || session.tracks.length === 0) errors.push('tracks');
   if (!Array.isArray(session.assets)) errors.push('assets');
+  if (!Array.isArray(session.arrangement) || session.arrangement.length !== session.tracks.length) {
+    errors.push('arrangement');
+  } else {
+    session.arrangement.forEach((row, trackIndex) => {
+      if (!Array.isArray(row) || row.length !== PULSEGRID_ARRANGEMENT_BARS) {
+        errors.push(`arrangement.${trackIndex}.length`);
+        return;
+      }
+      const clipCount = session.tracks[trackIndex]?.clips.length || 0;
+      row.forEach((scene, bar) => {
+        if (scene !== null && (!Number.isInteger(scene) || scene < 0 || scene >= clipCount)) {
+          errors.push(`arrangement.${trackIndex}.${bar}`);
+        }
+      });
+    });
+  }
 
   const assetIds=new Set<string>();
   const assetById=new Map<string,PulseGridAudioAsset>();
@@ -626,6 +644,27 @@ export function applyPulseGridOperation(
     lane[operation.step] = clamp(Number(operation.value), 0, 1);
     after = lane[operation.step];
     targets = [`clip:${clip.id}.automation.${operation.parameter}[${operation.step}]`];
+  } else if (operation.type === 'arrangement.set_slot') {
+    const trackIndex = session.tracks.findIndex((candidate) => candidate.id === operation.track_id);
+    if (trackIndex < 0) throw new Error('Unknown PulseGrid track: ' + operation.track_id);
+    if (!Number.isInteger(operation.bar) || operation.bar < 0 || operation.bar >= PULSEGRID_ARRANGEMENT_BARS) {
+      throw new Error('PulseGrid arrangement bar is out of range.');
+    }
+    const track = session.tracks[trackIndex];
+    if (
+      operation.scene !== null &&
+      (!Number.isInteger(operation.scene) || operation.scene < 0 || operation.scene >= track.clips.length)
+    ) {
+      throw new Error('PulseGrid arrangement scene is out of range.');
+    }
+    const row = session.arrangement[trackIndex];
+    if (!Array.isArray(row) || row.length !== PULSEGRID_ARRANGEMENT_BARS) {
+      throw new Error('PulseGrid arrangement row is invalid.');
+    }
+    before = row[operation.bar] ?? null;
+    row[operation.bar] = operation.scene;
+    after = row[operation.bar];
+    targets = [`arrangement:${track.id}.bar:${operation.bar}`];
   } else if (operation.type === 'clip.fork_variation') {
     const track = getTrack(session, operation.track_id);
     const sourceClip = track.clips[operation.source_scene];
@@ -845,6 +884,18 @@ export function undoPulseGridReceipt(
     const { clip } = getClip(session, operation.track_id, operation.scene);
     if (operation.step < 0 || operation.step >= clip.steps.length) throw new Error('PulseGrid undo automation step is out of range.');
     clip.automation[operation.parameter][operation.step] = Number(originalReceipt.before);
+  } else if (operation.type === 'arrangement.set_slot') {
+    const trackIndex = session.tracks.findIndex((candidate) => candidate.id === operation.track_id);
+    if (trackIndex < 0) throw new Error('Unknown PulseGrid track: ' + operation.track_id);
+    if (!Number.isInteger(operation.bar) || operation.bar < 0 || operation.bar >= PULSEGRID_ARRANGEMENT_BARS) {
+      throw new Error('PulseGrid undo arrangement bar is out of range.');
+    }
+    const row = session.arrangement[trackIndex];
+    if (!Array.isArray(row) || row.length !== PULSEGRID_ARRANGEMENT_BARS) {
+      throw new Error('PulseGrid arrangement row is invalid.');
+    }
+    const restored = originalReceipt.before;
+    row[operation.bar] = restored === null ? null : Number(restored);
   } else if (operation.type === 'clip.fork_variation') {
     const track = getTrack(session, operation.track_id);
     if (!track.clips[operation.destination_scene]) throw new Error('Unknown PulseGrid destination scene: ' + String(operation.destination_scene));

@@ -34,3 +34,16 @@
 .fsAudioClipState{border:1px solid #2b333b;border-radius:10px;background:#0c1014;padding:14px;min-height:120px;display:grid;align-content:start;gap:8px}
 .fsAudioClipState strong{font-size:15px}
 .fsAudioClipState p{margin:0;max-width:100%;overflow-wrap:anywhere;color:#84919a;font:10px ui-monospace,SFMono-Regular,Menlo,monospace}
+
+
+.fsArrangement{margin-top:12px;padding:10px;border:1px solid #2b333b;border-radius:10px;background:#0c1014;min-width:0}
+.fsArrangementHead{display:flex;align-items:end;justify-content:space-between;gap:14px;margin-bottom:8px}
+.fsArrangementHead strong{display:block;margin-top:4px;font-size:12px}
+.fsArrangementHead p{margin:0;max-width:520px;color:#71808a;font-size:9px;text-align:right}
+.fsArrangementScroll{max-width:100%;overflow-x:auto;border:1px solid #222a31;border-radius:8px}
+.fsArrangement table{border-collapse:collapse;min-width:980px;width:100%}
+.fsArrangement th,.fsArrangement td{border-right:1px solid #222a31;border-bottom:1px solid #222a31;padding:4px;text-align:center}
+.fsArrangement th:first-child{position:sticky;left:0;z-index:1;background:#0c1014;text-align:left;min-width:110px}
+.fsArrangement thead th{font-size:8px;color:#7d8992;background:#10161b}
+.fsArrangement select{width:46px;background:#11161b;color:#edf2f6;border:1px solid #303841;border-radius:5px;padding:5px 3px;font-size:9px}
+@media(max-width:720px){.fsArrangementHead{display:block}.fsArrangementHead p{margin-top:7px;text-align:left}}
