@@ -83,3 +83,20 @@ A successful boot receipt proves:
 - no public ingress was created by the supervisor.
 
 It does not prove every Evercraft backend, specialist runtime, external provider, payment rail, or remote node is healthy.
+
+
+## Receipt-aware health recovery
+
+The installer also creates a 60-second systemd user timer.
+
+The health observer first verifies the canonical boot receipt. Only after that does it probe the loopback Home URL recorded in the receipt.
+
+Recovery is deliberately narrow:
+
+- verified boot receipt + healthy loopback Home → healthy, no restart;
+- verified boot receipt + unreachable Home → restart recommended;
+- invalid/tampered boot receipt → held, no automatic restart;
+- verified non-loopback Home target → held, no probe and no restart;
+- capsule hold with healthy Home → remains a repairable held state, not a restart loop.
+
+When the health observer exits with the dedicated recovery code, systemd activates the bounded recovery unit and restarts only the Evercraft OS user supervisor.
