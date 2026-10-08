@@ -93,7 +93,9 @@ test('Systemia admission + delegated Passport authority + worker receipt -> nati
     await new LineageStore(f.lineageRoot).init();
     const result = await f.coordinator.invoke(f.input);
     assert.equal(result.state, 'completed');
-    assert.equal(result.execution_performed, false);
+    assert.equal(result.worker_outcome_verified, true);
+    assert.equal(result.systemia_outcome_acknowledged, true);
+    assert.equal(result.external_delivery_verified, false);
     assert.match(result.worker_receipt_digest, /^sha256:[a-f0-9]{64}$/);
     assert.ok(result.lineage_transaction_id);
     assert.ok(result.lineage_receipt_id);
