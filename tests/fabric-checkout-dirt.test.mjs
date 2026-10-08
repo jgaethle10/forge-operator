@@ -9,7 +9,7 @@ test('clean checkout stays clean',()=>{
   assert.deepEqual(result.blocking_lines,[]);
 });
 
-test('generated Journal drift is reconcilable instead of blocking the updater',()=>{
+test('generated Journal drift is identified for the updater to hold without deletion',()=>{
   const result=classifyFabricCheckoutDirt([
     ' M public/journal/index.json',
     ' M public/journal/college-football-power-rankings-2026-10-06/index.html',
