@@ -146,6 +146,9 @@ test('exact 7.4 checkout cannot redirect a buyer to an arbitrary HTTPS URL',asyn
   'https://user:password@checkout.stripe.com/c/pay/forged',
   'https://checkout.stripe.com:8443/c/pay/forged',
   'http://checkout.stripe.com/c/pay/forged',
+  'https://checkout.stripe.com/',
+  'https://checkout.stripe.com/anything-else',
+  'https://fabric.systemiacommandcenters.com/offers/ibmi-rescue',
  ]){
   let calls=0;
   const runtime=await startFabricLocalRuntime({
