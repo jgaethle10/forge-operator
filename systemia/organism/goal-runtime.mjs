@@ -6,6 +6,11 @@ export const FORCED_HUMAN_GATE_WORK_TYPES = Object.freeze([
   'trust_change','external_message','outreach','external_purchase','payment',
 ]);
 const forcedHumanGateTypes = new Set(FORCED_HUMAN_GATE_WORK_TYPES);
+export const FORCED_HUMAN_GATE_IMPACTS = Object.freeze([
+  'payment','financial_obligation','contract','legal','employment','safety',
+  'trust_boundary','destructive_release','external_message','external_purchase',
+]);
+const forcedHumanGateImpacts = new Set(FORCED_HUMAN_GATE_IMPACTS);
 
 function clean(value) {
   return String(value ?? '').replace(/\s+/g, ' ').trim();
@@ -34,9 +39,10 @@ function normalizeTask(raw, goalKey, missionKey) {
   const workKey = clean(raw?.work_key || raw?.key);
   if (!workKey) throw new Error('every goal task requires work_key');
   const workType = clean(raw?.work_type || 'execute').toLowerCase();
+  const impact = clean(raw?.impact).toLowerCase();
   const humanGateRequired = Boolean(
     raw?.human_gate_required || raw?.founder_attention_required ||
-    forcedHumanGateTypes.has(workType)
+    forcedHumanGateTypes.has(workType) || forcedHumanGateImpacts.has(impact)
   );
   return {
     mission_key: clean(raw?.mission_key || missionKey || goalKey),
@@ -45,6 +51,7 @@ function normalizeTask(raw, goalKey, missionKey) {
     dedupe_key: clean(raw?.dedupe_key || `${goalKey}:${workKey}`),
     title: clean(raw?.title || workKey),
     work_type: workType,
+    impact,
     dependency_keys: uniqueStrings(raw?.dependency_keys || []),
     assigned_agents: uniqueStrings(raw?.assigned_agents || [], 50),
     status: 'pending',
