@@ -130,6 +130,7 @@ export function planNativeConnect({
       capability: p.capability,
       candidates: p.candidates.map((c) => ({
         ...c,
+        case_id: caseRecord.case_id,
         proposal_id: digest([planId, p.capability, c.provider_type, c.provider_id]).slice(0, 32)
       }))
     })),
