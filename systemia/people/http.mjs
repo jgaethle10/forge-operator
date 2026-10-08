@@ -100,9 +100,12 @@ export function registerPeopleRoutes(app, {
     invite: runtime.createInvite(req.params.brainKey, req.body || {}),
   })));
 
-  app.post('/api/people/brains/:brainKey/email-challenge', requireAdmin, handler((req) => ({
-    challenge: runtime.createEmailChallenge(req.params.brainKey, req.body || {}),
-  })));
+  // Legacy monolith has no isolated trusted mail dispatcher.
+  // Never return an unredeemed mailbox token to a Systemia operator.
+  app.post('/api/people/brains/:brainKey/email-challenge', requireAdmin, (_req, res) => {
+    res.setHeader('Cache-Control', 'no-store');
+    res.status(503).json({ ok: false, error: 'trusted_email_dispatch_unavailable' });
+  });
 
   app.post('/api/people/identity-challenges/:challengeKey/delivery', requireAdmin, handler((req) => ({
     delivery: runtime.recordEmailDelivery(req.params.challengeKey, req.body || {}),
