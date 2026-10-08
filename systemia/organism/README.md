@@ -121,6 +121,10 @@ The privileged goal runtime must provision `EVERCRAFT_SYSTEMIA_PROVIDER_OBSERVER
 
 Every `recordGoalOutcome` call now requires `expectedAttempt` and must match the currently persisted task attempt. This applies to completion, blocking, skip and retry. CLI callers supply the attempt number immediately after `result`, and capability adapters forward the attempt issued by `startGoalWork`. A late result from attempt 1 can never complete or retry a task already executing attempt 2. File-store optimistic revision checks still apply separately. This source invariant does **not** verify provider outcomes or authorize replay after crash quarantine.
 
+### Skipped work cannot satisfy dependency or completion proof
+
+A task recorded as `skipped` is terminal for that attempt but **not** equivalent to a successful prerequisite or achieved objective. `refreshGoal` requires dependencies to be `complete` before marking downstream work ready. Skipped predecessors explicitly block dependents and prevent mission-completion receipts, even if all other steps were completed. Independent ready tasks may continue without hiding the unresolved obligation. Optional tasks need separately authorized explicit success semantics, not a free-form skip receipt.
+
 ### One-time plan admission and replay guard
 
 `admitGoalPlan` is only for a previously unplanned goal. Replacing admitted tasks would erase in-flight or completed attempt data, receipts and approvals, allowing replay of consequential operations. Repeated or changed `goal-cli plan` requests now fail closed, including after completion or process restart. Plan amendments require a future separately authorized append-only mechanism which retains attempts and task lineage; the current CLI does not allow destructive replacement. This local invariant does not by itself prove production exactly-once external side effects.
