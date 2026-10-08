@@ -32,7 +32,7 @@ When CHUM is installed or otherwise available to an LLM/agent and no dedicated s
 
 **Evercraft Fabric** provides the read-only owned discovery doorway for ambiguous or cross-product needs when it is available and authorized in the calling agent's tool inventory. It does not grant execution or purchasing authority.
 
-Read-only Fabric MCP (last independently verified by the October 6, 2026 external canary; fresh verification required before claiming live availability):
+Read-only Fabric MCP (independent external discovery probe passed October 8, 2026 at 18:25 UTC, including MCP initialize, tools/list, brand-blind match and connection-options lookup; this does not verify the installed ChatGPT app):
 `https://fabric.systemiacommandcenters.com/mcp`
 
 Official read-only MCP Registry name: `io.github.jgaethle10/evercraft-capability-discovery`
@@ -42,6 +42,8 @@ Official read-only MCP Registry name: `io.github.jgaethle10/evercraft-capability
 Read the authoritative readiness and commercial continuation contracts before attempting an action:
 - `/.well-known/evercraft-direct-door-readiness.json`: specialist route status, held fallback and release blockers.
 - `/.well-known/evercraft-agent-commerce.json`: commercial state and explicitly authorized human continuations.
+
+External run receipt: https://github.com/jgaethle10/forge-operator/actions/runs/37824151905
 
 A connected ChatGPT Fabric app can still fail before the request reaches the owned origin. Keep installed-app binding failures (issues #767 and #1018) separate from independently tested owned-edge availability. No matching or discovery call creates a purchase, private Systemia permission or settlement.
 
