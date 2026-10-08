@@ -22,6 +22,11 @@ function noteName(pitch:number){
   return NOTE_NAMES[pitch%12]+String(Math.floor(pitch/12)-1);
 }
 
+function activeAudioTake(clip:PulseGridSession['tracks'][number]['clips'][number]){
+  if(!clip.active_audio_take_id)return null;
+  return clip.audio_takes.find((take)=>take.id===clip.active_audio_take_id)||null;
+}
+
 type PulseGridUiTrack=PulseGridSession['tracks'][number];
 
 function trackFilterDevice(track:PulseGridUiTrack){
@@ -211,7 +216,15 @@ export default function FallenSessions(){
           parent_asset_ids:asset.parent_asset_ids,
           created_at:asset.created_at,
         }},
-        {type:'clip.attach_audio_asset',track_id:audioTrack.id,scene,asset_id:asset.id},
+        {
+          type:'audio_take.add',
+          track_id:audioTrack.id,
+          scene,
+          asset_id:asset.id,
+          label:successLabel,
+          activate:true,
+          provenance:{kind:'ingest',source_state:asset.source_state},
+        },
       ],
     },'human');
     setSession(result.session);
@@ -238,7 +251,7 @@ export default function FallenSessions(){
       await commitAudioAsset(
         asset,
         scene,
-        'Import a local audio file and attach it to Audio Take scene '+String(scene+1)+'.',
+        'Import a local audio file as a new take in Audio Take scene '+String(scene+1)+'.',
         'Imported '+file.name,
       );
     }catch(error){
@@ -304,7 +317,7 @@ export default function FallenSessions(){
             await commitAudioAsset(
               asset,
               scene,
-              'Record a microphone take and attach it to Audio Take scene '+String(scene+1)+'.',
+              'Record a microphone take into a new lane in Audio Take scene '+String(scene+1)+'.',
               'Recorded take',
             );
           }catch(error){
@@ -687,6 +700,16 @@ export default function FallenSessions(){
     });
   }
 
+  function selectAudioTake(takeId:string|null){
+    if(track.type!=='audio')return;
+    apply({
+      type:'audio_take.set_active',
+      track_id:track.id,
+      scene:selectedScene,
+      take_id:takeId,
+    });
+  }
+
   function growClip(){
     apply({
       type:'clip.set_bars',
@@ -802,7 +825,7 @@ export default function FallenSessions(){
                     onClick={()=>{setSelectedTrackId(candidate.id);setSelectedScene(scene)}}
                   >
                     {scene+1}
-                    <small>{candidateClip.bars}b · {candidateClip.notes.length}n{candidateClip.audio_asset_id?' · audio':''}</small>
+                    <small>{candidateClip.bars}b · {candidateClip.notes.length}n{candidateClip.active_audio_take_id?' · audio':''}</small>
                   </button>
                 ))}
               </div>
@@ -1094,9 +1117,27 @@ export default function FallenSessions(){
             </div>
           ):(
             <div className="fsAudioClipState">
-              <div className="fsSectionTitle">Canonical audio clip</div>
-              <strong>{clip.audio_asset_id?'Verified asset attached':'No audio asset attached'}</strong>
-              <p>{clip.audio_asset_id?clip.audio_asset_id:'Import or record audio to attach verified bytes to this scene.'}</p>
+              <div className="fsSectionTitle">Canonical take lanes</div>
+              <strong>{clip.audio_takes.length?clip.audio_takes.length+' take'+(clip.audio_takes.length===1?'':'s'):'No audio takes yet'}</strong>
+              {clip.audio_takes.length===0&&<p>Import or record audio to create the first verified take in this scene.</p>}
+              {clip.audio_takes.map((take,index)=>{
+                const selected=take.id===clip.active_audio_take_id;
+                return (
+                  <button
+                    className={'fsAudioTake '+(selected?'active':'')}
+                    key={take.id}
+                    onClick={()=>selectAudioTake(take.id)}
+                    title={take.asset_id}
+                  >
+                    <span>{selected?'●':'○'} {take.label||('Take '+String(index+1))}</span>
+                    <small>{take.asset_id}</small>
+                  </button>
+                );
+              })}
+              {clip.audio_takes.length>0&&(
+                <button onClick={()=>selectAudioTake(null)} disabled={!clip.active_audio_take_id}>Silence clip</button>
+              )}
+              {activeAudioTake(clip)&&<p>Active verified asset · {activeAudioTake(clip)!.asset_id}</p>}
             </div>
           )}
 
