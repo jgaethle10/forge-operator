@@ -479,3 +479,22 @@ Solid mode uses native World Forge triangle and flat-normal buffers, the same ge
 This is an **interactive authoring preview**, not production render authority. It does not add textures, shadows, environment lighting, path tracing, publication authority, or offline-render authority. World Engine remains the canonical runtime/simulation layer, and its WebGPU render plan remains the target for deeper runtime visual parity rather than silently redefining runtime truth inside the editor.
 
 The focused World Forge CI lane explicitly watches and runs the native viewport mesh contracts so buffer generation cannot bypass product verification.
+
+
+## Runtime-bound World Engine WebGPU frames
+
+Play Mode can now compile its **current live runtime snapshot** into the canonical World Engine WebGPU render plan.
+
+The Play session owns this bridge because it already owns the deterministic World Engine runtime, current camera runtime, active-entity residency, compiled geometry cache, tick/time lineage, and migrated runtime state. The new Play WebGPU frame therefore derives from runtime truth rather than recompiling authored Forge transforms in the browser.
+
+Each frame binds:
+
+- Play session ID;
+- project + world version;
+- runtime tick + time;
+- runtime snapshot digest;
+- canonical World Engine visual-frame digest through the WebGPU plan;
+- current compiled GeometryAssets;
+- explicit boundaries that keep production-render and publication authority off.
+
+The HTTP surface is `POST /api/fallen/world-forge/play/webgpu-frame` with a bounded viewport size. This is a runtime visualization contract, not a bake-back into authored World Forge state.
