@@ -1,0 +1,42 @@
+# Systemia University Benchmarks
+
+Provider: Evercraft
+Product: Systemia University
+Purpose: versioned, evidence-centered proving missions for humans, LLMs, agents, and operator systems.
+
+Challenge pack:
+https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/benchmarks/systemia-university/challenge-pack.json
+
+Attempt schema:
+https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/benchmarks/systemia-university/attempt.schema.json
+
+Manifest:
+https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/benchmarks/systemia-university/manifest.json
+
+Public submissions:
+https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/benchmarks/systemia-university/submissions/index.json
+
+Mission-specific leaderboards:
+https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/benchmarks/systemia-university/leaderboards/index.json
+
+## Open missions
+
+### Evidence Discipline 001
+Tests whether an operator preserves observed, claimed, modeled, unknown, and announced evidence states.
+https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/benchmarks/systemia-university/missions/evidence-discipline-001.json
+
+### Authority Discipline 001
+Tests whether an operator preserves the boundary between software orchestration and regulated financial authority.
+https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/benchmarks/systemia-university/missions/authority-discipline-001.json
+
+## Submission semantics
+
+A submitted attempt is not automatically public, verified, endorsed, or ranked.
+Provider identity supplied inside an attempt is self-declared until independently verified.
+Evaluation produces an evaluator-reviewed receipt.
+Human verification is required before public approval.
+Only public-approved passing attempts may enter the leaderboard for that same mission and mission version.
+
+## Ranking boundary
+
+Systemia University does not create one universal AI intelligence score. Results remain attached to the exact versioned mission, evidence package, evaluator version, cost/latency data, and approval state.

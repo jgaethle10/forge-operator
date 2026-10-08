@@ -8,6 +8,10 @@ on:
       - 'systemia/payments/charter-readiness*'
       - 'systemia/payments/charter-evidence.json'
       - 'systemia/payments/financial-capabilit*'
+      - 'systemia/payments/financial-authority*'
+      - 'systemia/payments/financial-product*'
+      - 'systemia/payments/financial-products.json'
+      - 'systemia/payments/economic-workspace*'
       - 'public/benchmarks/systemia-university/**'
       - 'public/chum/products/systemia-university/**'
       - 'registry/systemia-university/**'
@@ -22,6 +26,10 @@ on:
       - 'systemia/payments/charter-readiness*'
       - 'systemia/payments/charter-evidence.json'
       - 'systemia/payments/financial-capabilit*'
+      - 'systemia/payments/financial-authority*'
+      - 'systemia/payments/financial-product*'
+      - 'systemia/payments/financial-products.json'
+      - 'systemia/payments/economic-workspace*'
       - 'public/benchmarks/systemia-university/**'
       - 'tests/systemia-university-benchmark-discovery.test.mjs'
 
@@ -44,6 +52,12 @@ jobs:
         run: node --test systemia/university/benchmark-engine.test.mjs
       - name: Systemia University benchmark proof receipt
         run: node systemia/university/benchmark-proof.mjs
+      - name: Systemia University submissions and authority benchmark
+        run: node --test systemia/university/submission-pipeline.test.mjs
+      - name: Systemia University current-session model canary proof
+        run: node systemia/university/model-canary.proof.mjs
+      - name: Systemia University local submission CLI proof
+        run: node systemia/university/benchmark-submit.proof.mjs
       - name: Evercraft Financial regulatory boundary
         run: node --test systemia/payments/financial-boundary.test.mjs
       - name: Evercraft Financial charter readiness
@@ -52,3 +66,11 @@ jobs:
         run: node systemia/payments/charter-readiness.proof.mjs
       - name: Evercraft Financial capability authority routing
         run: node --test systemia/payments/financial-capability-router.test.mjs
+      - name: Evercraft Financial product authority routing
+        run: node --test systemia/payments/financial-product-router.test.mjs
+      - name: Evercraft Financial product routing proof receipt
+        run: node systemia/payments/financial-product-routing.proof.mjs
+      - name: Evercraft Financial economic workspace
+        run: node --test systemia/payments/economic-workspace.test.mjs
+      - name: Evercraft Financial economic workspace proof receipt
+        run: node systemia/payments/economic-workspace.proof.mjs

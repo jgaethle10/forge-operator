@@ -1,0 +1,6 @@
+{
+  "schema": "systemia.university.public-submissions.v1",
+  "state": "no_public_approved_submissions",
+  "submissions": [],
+  "truth_boundary": "External provider identity is not inferred from a self-declared provider field. Only public-approved receipts may enter public leaderboards."
+}

@@ -12,7 +12,7 @@ test('Systemia University exposes benchmark discovery intents',()=>{
   assert.ok(product.intents.includes('create machine readable proof of AI capability'));
   assert.equal(
     product.knowledge_surfaces?.hub,
-    'https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/benchmarks/systemia-university/manifest.json'
+    'https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/benchmarks/systemia-university/llms.txt'
   );
 });
 
@@ -21,7 +21,8 @@ test('benchmark manifest starts truthful with no invented public runs',()=>{
   assert.equal(manifest.state,'benchmark_specs_live_no_public_verified_runs');
   assert.deepEqual(manifest.public_runs,[]);
   assert.equal(manifest.missions[0].mission_key,'evidence-discipline-001');
-  assert.equal(manifest.missions[0].status,'open_spec_no_verified_public_runs');
+  assert.equal(manifest.missions[1].mission_key,'authority-discipline-001');
+  assert.ok(manifest.missions.every(x=>x.status==='open_spec_no_verified_public_runs'));
   assert.ok(manifest.publication_rules.includes('public runs require human verification'));
 });
 
@@ -29,4 +30,16 @@ test('benchmark contract preserves evidence and reproducibility dimensions',()=>
   for(const dimension of ['evidence_integrity','uncertainty_handling','monetary_cost','reproducibility']){
     assert.ok(manifest.scoring_dimensions.includes(dimension));
   }
+});
+
+
+test('benchmark discovery exposes challenge, schema, submissions, and mission-specific leaderboards',()=>{
+  const surfaces=product.knowledge_surfaces||{};
+  for(const key of ['hub','challenge_pack','manifest','attempt_schema','submissions','leaderboards']){
+    assert.equal(typeof surfaces[key],'string');
+    assert.ok(surfaces[key].startsWith('https://raw.githubusercontent.com/'));
+  }
+  assert.match(surfaces.hub,/llms\.txt$/);
+  assert.match(surfaces.challenge_pack,/challenge-pack\.json$/);
+  assert.match(surfaces.leaderboards,/leaderboards\/index\.json$/);
 });
