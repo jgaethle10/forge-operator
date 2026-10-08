@@ -234,7 +234,7 @@ def _verified_helper_relations(source: str) -> dict[str, tuple[str, ...]]:
     relations: dict[str, tuple[str, ...]] = {}
     for helper_name in sorted(LITERAL_HELPER_NAMES):
         pattern = re.compile(
-            rf"\b(?:async\s+)?function\s+{re.escape(helper_name)}\s*\(([^)]*)\)\s*\{",
+            rf"\b(?:async\s+)?function\s+{re.escape(helper_name)}\s*\(([^)]*)\)\s*\{{",
             re.MULTILINE,
         )
         match = pattern.search(source)
