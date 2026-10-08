@@ -1047,7 +1047,9 @@ export async function startFabricLocalRuntime({
         if(slug&&!slug.includes('/')){
           const offer=offerCapabilityForSlug(slug,preparedCatalog().capabilities);
           if(!offer) return sendJson(res,404,{error:'offer_not_found'});
-          const page=renderOfferPage(offer);
+          const page=renderOfferPage(offer,{
+            checkoutEnabled:Boolean(purchaseIntentEndpoint),
+          });
           if(!page) return sendJson(res,404,{error:'offer_not_found'});
           return sendText(res,200,page,{contentType:'text/html; charset=utf-8'});
         }
