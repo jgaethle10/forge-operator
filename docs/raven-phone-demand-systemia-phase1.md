@@ -50,6 +50,12 @@ A 202 reply means only a durable **review candidate** was stored, not Systemia m
 - A Raven `ravenVoiceTwilioInspect` function exists for admin-gated, read-only provider inspection, but no authenticated provider response has been captured in this PR. Source code does not establish that the phone's configured URLs, inbound delivery, status callbacks, A2P eligibility or provider failures are healthy.
 - The present handler remains review-candidate-only: no Systemia admission, owner assignment, Relay acknowledgment, provider-verified delivery, authorized return contact or settlement is proved.
 
+### Repeatable read-only provider inspection (not yet executed with provider credentials)
+
+`node systemia/autonomy/raven-twilio-readonly-inspect.mjs` reads only the pre-existing number `+15095672403` using `TWILIO_ACCOUNT_SID` and `TWILIO_AUTH_TOKEN` made available securely to an authorized runtime. No credentials are checked into the repository or emitted to logs. The inspector makes only three Twilio GET requests (IncomingPhoneNumbers, Calls, Messages). It emits masked event references, recent inbound direction/status/error metadata and public HTTPS host/path hints without caller identities, bodies or webhook query strings. Synthetic tests enforce no POST and privacy minimization.
+
+This tool has **not** been run with production Twilio credentials in this work session. Output, even when authenticated, establishes observed provider account configuration and limited event metadata, **not** signed webhook delivery, customer consent, Systemia acknowledgment or settlement. Do not treat a missing inbound event in its bounded recent page as proof that no inbound events occurred.
+
 **Release gate remains closed:** gather authenticated provider-side number/webhook and event evidence; validate one real customer-initiated voice/SMS call through Raven and the owned ingress; demonstrate safe opt-out, Passport/Interaction Ledger decisions, Systemia ownership and human acknowledgment; then propose a separately approved reversible cutover with rollback receipt.
 
 No production environment settings, DNS, Base44 webhooks, Twilio URLs, secrets, or phone numbers were changed by this pull request.
