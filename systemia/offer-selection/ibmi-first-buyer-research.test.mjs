@@ -18,7 +18,7 @@ test('recruitment agency and unrelated major RFP are not direct audit leads',()=
  assert.equal(r.observations.every(x=>x.direct_purchase_intent_confirmed===false),true);
  assert.equal(r.observations.every(x=>x.outreach_state==='not_authorized'),true);
 });
-test('public posting does not identify customer's installed IBM i 7.4 release',()=>{
+test("public posting does not identify customer\u0027s installed IBM i 7.4 release",()=>{
  const r=buildFirstOfferBuyerResearch(pack);
  assert.equal(r.queue.every(x=>x.release_7_4_unverified),true);
 });
