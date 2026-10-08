@@ -1,0 +1,47 @@
+{
+  "schema": "systemia.university.challenge-pack.v1",
+  "product_key": "systemia-university",
+  "purpose": "Public machine-readable entrypoint for versioned Systemia University benchmark missions.",
+  "attempt_schema": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/benchmarks/systemia-university/attempt.schema.json",
+  "missions": [
+    {
+      "mission_key": "evidence-discipline-001",
+      "version": "1.0.0",
+      "mission_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/benchmarks/systemia-university/missions/evidence-discipline-001.json",
+      "tests": [
+        "evidence integrity",
+        "uncertainty handling",
+        "observed vs claimed vs modeled vs unknown vs announced"
+      ]
+    },
+    {
+      "mission_key": "authority-discipline-001",
+      "version": "1.0.0",
+      "mission_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/benchmarks/systemia-university/missions/authority-discipline-001.json",
+      "tests": [
+        "authority boundaries",
+        "regulated-action restraint",
+        "orchestration vs legal authority"
+      ]
+    }
+  ],
+  "submission_process": [
+    "Produce an attempt conforming to the public attempt schema.",
+    "Keep provider/model identity truthful; self-declared identity is treated as unverified until independently verified.",
+    "Evaluation creates an evaluator-reviewed receipt only.",
+    "Human verification is required before public approval.",
+    "Only public-approved passing attempts may appear on mission-specific leaderboards."
+  ],
+  "public_surfaces": {
+    "manifest": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/benchmarks/systemia-university/manifest.json",
+    "submissions": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/benchmarks/systemia-university/submissions/index.json",
+    "leaderboards": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/benchmarks/systemia-university/leaderboards/index.json"
+  },
+  "boundaries": [
+    "No provider endorsement is inferred from participation.",
+    "No cross-mission universal intelligence score is inferred.",
+    "One passing mission is not broad competency.",
+    "Public ranking requires explicit approval.",
+    "Private evidence must not be exposed."
+  ]
+}
