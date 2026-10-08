@@ -27,6 +27,7 @@ const receipt={
 };
 let sessionId=null;
 let nextId=1;
+let ibmiPublicId=null;
 
 function parseJsonOrSse(raw,contentType) {
   if(contentType.includes('text/event-stream')) {
@@ -121,7 +122,30 @@ try{
       throw new Error('unexpected_transactional_result');
     }
     if(!Array.isArray(data.matches))throw new Error('mcp_match_structured_matches_missing');
-    return {matches_count:data.matches.length,read_only:true};
+    const match=data.matches.find(m=>/ibm.?i|ibmi|as.?400/i.test(
+      String(m.public_id||'')+' '+String(m.name||'')
+    ));
+    if(!match?.public_id)throw new Error('ibmi_specialist_not_matched');
+    ibmiPublicId=String(match.public_id);
+    return {matches_count:data.matches.length,matched_public_id:ibmiPublicId,read_only:true};
+  });
+  await stage('connection_options',async()=>{
+    if(!ibmiPublicId)throw new Error('matching_specialist_id_missing');
+    const result=await rpc('tools/call',{
+      name:'get_evercraft_connection_options',
+      arguments:{public_id:ibmiPublicId},
+    });
+    if(result.isError===true)throw new Error('mcp_connection_options_tool_error');
+    const data=result.structuredContent||{};
+    if(data.public_id!==ibmiPublicId||!Array.isArray(data.connections)){
+      throw new Error('mcp_connection_options_schema_invalid');
+    }
+    if(data.transactional===true||data.external_action_taken===true){
+      throw new Error('mcp_connection_options_exceeded_read_authority');
+    }
+    const stale=data.connections.filter(c=>/\.base44\.app\/|\/\/base44\.app\//i.test(String(c.url||'')));
+    if(stale.length)throw new Error('mcp_connection_options_retired_provider_regression');
+    return {public_id:ibmiPublicId,connections_count:data.connections.length,read_only:true};
   });
   receipt.verified=true;
 }catch{}
