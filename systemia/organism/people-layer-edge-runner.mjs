@@ -25,8 +25,15 @@ const sharedStateRoot=path.resolve(
 );
 const yardState=path.resolve(arg('--yard-state',path.join(sharedStateRoot,'yard')));
 const hostingState=path.resolve(arg('--hosting-state',path.join(sharedStateRoot,'people-hosting')));
-const peopleState=path.resolve(arg('--people-state',process.env.PEOPLE_STATE_DIR||''));
-const adminAuthorityFile=path.resolve(arg('--admin-token-file',process.env.PEOPLE_ADMIN_TOKEN_FILE||''));
+const peopleStateRaw=String(arg('--people-state',process.env.PEOPLE_STATE_DIR||'')||'').trim();
+const adminAuthorityRaw=String(arg('--admin-token-file',process.env.PEOPLE_ADMIN_TOKEN_FILE||'')||'').trim();
+const mailPublicKeysRaw=String(arg('--mail-public-keys',process.env.PEOPLE_MAIL_DELIVERY_PUBLIC_KEYS_FILE||'')||'').trim();
+if(!peopleStateRaw)throw new Error('people_state_dir_required');
+if(!adminAuthorityRaw)throw new Error('people_admin_token_file_required');
+if(!mailPublicKeysRaw)throw new Error('people_mail_public_keys_file_required');
+const peopleState=path.resolve(peopleStateRaw);
+const adminAuthorityFile=path.resolve(adminAuthorityRaw);
+const mailPublicKeysFile=path.resolve(mailPublicKeysRaw);
 const hostname=String(arg('--hostname',process.env.PEOPLE_YARD_HOSTNAME||'people'));
 const intervalMs=Math.max(5000,Number(arg('--interval-ms','60000')));
 const release=releaseRef();
@@ -37,6 +44,7 @@ let lastState='';
 
 process.env.PEOPLE_STATE_DIR=peopleState;
 process.env.PEOPLE_ADMIN_TOKEN_FILE=adminAuthorityFile;
+process.env.PEOPLE_MAIL_DELIVERY_PUBLIC_KEYS_FILE=mailPublicKeysFile;
 
 function emit(payload){
   console.log(JSON.stringify({
