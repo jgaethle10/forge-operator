@@ -132,9 +132,7 @@ try {
   assert.equal(sitemap.includes('old.invalid'), false);
 
   const segmented = await fetch(runtime.url + '/chum/sitemaps/answers.xml').then((r) => r.text());
-  assert.match(segmented, new RegExp(runtime.url.replace(/[.*+?^${}()|[\]\\]/g, '\\  assert.equal(sitemap.includes('old.invalid'), false);
-
-  const robots') + '/chum/answers/example/'));
+  assert.ok(segmented.includes('<loc>' + runtime.url + '/chum/answers/example/</loc>'));
   assert.doesNotMatch(segmented, /<loc>\/chum\//);
 
   const nestedIndex = await fetch(runtime.url + '/chum/sitemaps/index.xml').then((r) => r.text());
