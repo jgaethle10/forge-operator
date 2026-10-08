@@ -15,6 +15,7 @@ on:
       - 'tests/fabric-checkout-dirt.test.mjs'
       - 'tests/fabric-journal-rescue.test.mjs'
       - 'tests/fabric-journal-preservation.test.mjs'
+      - 'systemia/mcp/FABRIC_JOURNAL_SAFE_CUTOVER.md'
       - 'tests/public-edge-ingress-watch.test.mjs'
       - '.github/workflows/fabric-owned-edge-self-heal.yml'
   push:
@@ -32,6 +33,7 @@ on:
       - 'tests/fabric-checkout-dirt.test.mjs'
       - 'tests/fabric-journal-rescue.test.mjs'
       - 'tests/fabric-journal-preservation.test.mjs'
+      - 'systemia/mcp/FABRIC_JOURNAL_SAFE_CUTOVER.md'
       - 'tests/public-edge-ingress-watch.test.mjs'
       - '.github/workflows/fabric-owned-edge-self-heal.yml'
 
