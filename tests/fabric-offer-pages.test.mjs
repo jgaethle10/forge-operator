@@ -271,6 +271,10 @@ const ibmiRescue={
 };
 
 test('7.4 public route and purchase SKU remain distinct from general Estate X-Ray',async()=>{
+  const directory=renderOffers([ibmiRescue]);
+  assert.match(directory,/\/offers\/ibmi-74-deadline-xray/);
+  assert.match(directory,/Review the scope/);
+  assert.match(directory,/\$250 proposed bounded assessment/);
   assert.equal(offerCapabilityForSlug('ibmi-74-deadline-xray',[ibmiRescue])?.public_id,'ibmi-rescue-v1');
   assert.equal(offerPurchaseKeyForSlug('ibmi-74-deadline-xray'),'ibmi_74_deadline_xray_250');
   assert.equal(offerPurchaseKeyForSlug('ibmi-rescue'),'ibmi-estate-xray');
