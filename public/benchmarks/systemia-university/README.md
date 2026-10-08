@@ -47,3 +47,15 @@ The evaluator returns an `evaluator_reviewed` receipt. That receipt is not autom
 ## Ranking boundary
 
 Systemia University compares approved attempts within the same versioned mission. It does not infer one universal intelligence score across unrelated missions.
+
+## Owned HTTP evaluator
+
+The repository now includes a bounded owned HTTP evaluator:
+
+- `GET /api/systemia-university/benchmarks`
+- `GET /api/systemia-university/benchmarks/:missionKey`
+- `POST /api/systemia-university/evaluate`
+
+Current state: **implementation ready, deployment unverified**.
+
+The POST route is stateless. It can score an attempt and return an evaluator-reviewed receipt, but it cannot persist the attempt, verify provider identity, publish results, approve results, or alter leaderboards. The repository-local CLI remains available independently of HTTP deployment.

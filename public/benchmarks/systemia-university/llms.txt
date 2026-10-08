@@ -40,3 +40,14 @@ Only public-approved passing attempts may enter the leaderboard for that same mi
 ## Ranking boundary
 
 Systemia University does not create one universal AI intelligence score. Results remain attached to the exact versioned mission, evidence package, evaluator version, cost/latency data, and approval state.
+
+## Owned HTTP evaluation
+
+Implementation state: implementation_ready_deployment_unverified
+Discovery route: GET /api/systemia-university/benchmarks
+Mission route: GET /api/systemia-university/benchmarks/:missionKey
+Evaluation route: POST /api/systemia-university/evaluate
+
+The HTTP evaluator is stateless. It returns an evaluator-reviewed receipt only. It does not persist the attempt, verify provider identity, publish a result, approve a result, or mutate the public submissions/leaderboard files.
+
+Treat the route as deployment-unverified until an external canary against an owned public origin succeeds.
