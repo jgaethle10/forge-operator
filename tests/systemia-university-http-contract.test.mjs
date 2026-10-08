@@ -21,6 +21,10 @@ test('server registers University routes behind existing rate limiting and disco
   assert.match(server,/publicEvaluateLimiter:\s*rateLimit\(30,\s*60 \* 60 \* 1000\)/);
   assert.match(server,/pathname\.startsWith\('\/api\/systemia-university\/'\)/);
   assert.match(server,/Systemia University Benchmarks/);
+  const registrationIndex=server.indexOf('registerUniversityBenchmarkRoutes(app');
+  const discoveryMiddlewareIndex=server.indexOf("res.setHeader('X-CHUM-Crawl-Pressure', 'v1')");
+  assert.ok(discoveryMiddlewareIndex>=0);
+  assert.ok(registrationIndex>discoveryMiddlewareIndex);
 });
 
 test('public contracts do not claim deployment before an external canary',()=>{
