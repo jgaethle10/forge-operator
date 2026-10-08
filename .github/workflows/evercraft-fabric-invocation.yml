@@ -31,4 +31,5 @@ jobs:
       - name: Validate private invocation and native Lineage completion gate
         run: |
           node --check systemia/fabric-invocation/native-invocation.mjs
-          node --test systemia/fabric-invocation/native-invocation.test.mjs
+          node --check systemia/fabric-invocation/browser-worker-adapter.mjs
+          node --test systemia/fabric-invocation/*.test.mjs
