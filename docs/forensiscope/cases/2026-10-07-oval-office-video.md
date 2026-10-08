@@ -75,6 +75,12 @@ This document records a retrieved and hashed CBS-distributed MP4; the hash is a 
 - SHA-256 (retrieved CBS representation): `e6702b05af53eaef399ca1ac3b8ca8bc74daa1b2095801f8debdf62180dc274d`
 - Tool: FFmpeg 7.0.2; observations are not an authenticity certification
 
+## New: machine-readable receipt and reproducible source checks
+
+The case now has a [machine-readable evidence JSON](https://github.com/jgaethle10/forge-operator/blob/main/docs/forensiscope/cases/2026-10-07-oval-office-evidence.json) containing all three retrieved representation fingerprints, source media technical properties, confidence boundaries and missing-comparison gates. Evercraft also published an inspectable [SHA-256 media receipt utility](https://github.com/jgaethle10/forge-operator/blob/main/tools/forensiscope/media_source_receipt.py).
+
+On October 8, the CBS and Fox files were retrieved a second time and both matched their previously recorded SHA-256 hashes. The utility's `--expect` check rejected an intentionally incorrect digest with a nonzero exit. Source-only parsing was checked to avoid treating FFmpeg's *decoded output* audio as an input-media audio track (one CBS input-audio stream, zero in the downloaded Fox video-only rendition). These checks make the technical source-handling reproducible, **not** the missing Facebook-post authenticity determination.
+
 ## Editorial controls
 
 Public facts are linked. Prior December 2025 edited footage is **not** represented as the October 2026 clip. No inferences are made about a visible person's health or mental state. Finalized ForensiScope runtime analysis receipt and full-source comparison remain pending. No reused third-party image/video is embedded in this report.
