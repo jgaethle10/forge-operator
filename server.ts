@@ -204,13 +204,6 @@ registerRivetReportGateway(app);
 registerHouseholdFabricGateway(app);
 registerSpecialistHandoffMcps(app, { gatewayUrl: machineCommerceGatewayUrl });
 registerRemoteOperatorMcp(app);
-registerUniversityBenchmarkRoutes(app, {
-  benchmarkRoot: path.resolve(
-    __dirname,
-    isProd ? 'dist/benchmarks/systemia-university' : 'public/benchmarks/systemia-university'
-  ),
-  publicEvaluateLimiter: rateLimit(30, 60 * 60 * 1000)
-});
 
 const CENTRAL_MACHINE_COMMERCE_MCP = centralMachineCommerceMcp;
 
@@ -307,6 +300,14 @@ app.use((req: Request, res: Response, next: NextFunction) => {
   }
 
   next();
+});
+
+registerUniversityBenchmarkRoutes(app, {
+  benchmarkRoot: path.resolve(
+    __dirname,
+    isProd ? 'dist/benchmarks/systemia-university' : 'public/benchmarks/systemia-university'
+  ),
+  publicEvaluateLimiter: rateLimit(30, 60 * 60 * 1000)
 });
 
 function requestOrigin(req: Request): string {
