@@ -1742,6 +1742,9 @@ export class YardOperator {
     } else if (workloadClass === 'systemia.forensic-record-public-runtime.v1') {
       service = 'forensic-record-public-runtime';
       healthPath = '/health';
+    } else if (workloadClass === 'systemia.people-layer.v1') {
+      service = 'evercraft-people-layer';
+      healthPath = '/health';
     } else if (workloadClass === 'systemia.rivet-report-runtime.v1') {
       service = 'rivet-yard-report-runtime';
       healthPath = '/health';
