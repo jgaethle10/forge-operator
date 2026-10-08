@@ -56,6 +56,9 @@ test('human offer copy gives sell-now capabilities short memorable URLs',()=>{
   assert.match(page,/name="twitter:card" content="summary_large_image"/);
   assert.match(page,/property="og:image" content="https:\/\/fabric\.systemiacommandcenters\.com\/visuals\/website-audit-attention\/poster-feed\.svg"/);
   assert.doesNotMatch(page,/machine state|start_url_state|preferred_agent_route/i);
+  const heldStatic=renderOfferPage(websiteAudit,{checkoutEnabled:false});
+  assert.match(heldStatic,/checkout held/i);
+  assert.doesNotMatch(heldStatic,/Continue to checkout/i);
 });
 
 test('EarthWorks capability page offers a scoped human inquiry instead of checkout',()=>{
@@ -93,9 +96,11 @@ test('owned Fabric serves offer pages, requires confirmation, and delegates chec
     port:0,
     catalog:[websiteAudit],
     faieSurfaceEnabled:false,
+    purchaseIntentUrl:'https://payments.systemiacommandcenters.com/purchase-intent',
     purchaseIntentFetch:async(url,init)=>{
       seen.push({
         url:String(url),
+        redirect:init?.redirect,
         body:JSON.parse(String(init?.body||'{}')),
       });
       return new Response(JSON.stringify({
@@ -160,6 +165,8 @@ test('owned Fabric serves offer pages, requires confirmation, and delegates chec
     assert.match(checkoutBody,/settlement\.example\.test\/pay\/test/);
     assert.match(checkoutBody,/Evercraft Payments/);
     assert.equal(seen.length,1);
+    assert.equal(seen[0].url,'https://payments.systemiacommandcenters.com/purchase-intent');
+    assert.equal(seen[0].redirect,'error');
     assert.equal(seen[0].body.user_confirmed,true);
     assert.equal(seen[0].body.capability_key,'website-audit-quick-win');
     assert.match(seen[0].body.idempotency_key,/^fabric-website-audit-/);
@@ -177,12 +184,91 @@ test('owned Fabric serves offer pages, requires confirmation, and delegates chec
   }
 });
 
+test('unconfigured purchase-intent transport holds checkout without calling any upstream',async()=>{
+  let calls=0;
+  const runtime=await startFabricLocalRuntime({
+    host:'127.0.0.1',
+    port:0,
+    catalog:[websiteAudit],
+    faieSurfaceEnabled:false,
+    purchaseIntentFetch:async()=>{ calls++; throw new Error('must_not_call_unconfigured_checkout'); },
+  });
+  try{
+    const health=await (await fetch(runtime.url+'/health')).json();
+    assert.equal(health.base44_transport_enabled,false);
+    assert.equal(health.human_offer_checkout_enabled,false);
+    assert.equal(health.human_offer_checkout_transport_host,null);
+    assert.equal(health.human_offer_checkout_transport_state,'held_no_owned_purchase_intent_transport');
+
+    const heldPage=await fetch(runtime.url+'/offers/website-audit');
+    assert.equal(heldPage.status,200);
+    const heldHtml=await heldPage.text();
+    assert.match(heldHtml,/checkout held/i);
+    assert.match(heldHtml,/Secure purchase\/review is temporarily unavailable/i);
+    assert.doesNotMatch(heldHtml,/Continue to checkout|<form class="checkout-form"/i);
+
+    const unconfirmed=await fetch(runtime.url+'/api/offers/website-audit/checkout',{
+      method:'POST',headers:{'content-type':'application/json'},
+      body:JSON.stringify({user_confirmed:false}),
+    });
+    assert.equal(unconfirmed.status,409);
+    const confirmed=await fetch(runtime.url+'/api/offers/website-audit/checkout',{
+      method:'POST',headers:{'content-type':'application/json'},
+      body:JSON.stringify({user_confirmed:true}),
+    });
+    assert.equal(confirmed.status,503);
+    const body=await confirmed.json();
+    assert.equal(body.error,'evercraft_payments_owned_purchase_intent_unconfigured');
+    assert.equal(body.checkout_ready,false);
+    assert.equal(body.fulfillment_release,false);
+    assert.equal(calls,0);
+  }finally{
+    await runtime.close();
+  }
+});
+
+test('legacy Base44 checkout transport is rejected at startup',async()=>{
+  await assert.rejects(
+    startFabricLocalRuntime({
+      host:'127.0.0.1',
+      port:0,
+      catalog:[websiteAudit],
+      faieSurfaceEnabled:false,
+      purchaseIntentUrl:'https://base44.app/api/apps/legacy/functions/ravenNexusPurchaseIntent',
+    }),
+    /purchase_intent_legacy_base44_transport_forbidden/
+  );
+});
+
+test('purchase-intent transport rejects unknown hosts, ports, credentials and URL side channels',async()=>{
+  const cases=[
+    ['https://checkout.evil.test/purchase-intent',/purchase_intent_owned_hostname_required/],
+    ['https://payments.systemiacommandcenters.com.evil.test/purchase-intent',/purchase_intent_owned_hostname_required/],
+    ['https://payments.systemiacommandcenters.com:8443/purchase-intent',/purchase_intent_nonstandard_port_forbidden/],
+    ['https://payments.systemiacommandcenters.com/purchase-intent?secret=abc',/purchase_intent_url_query_or_fragment_forbidden/],
+    ['https://payments.systemiacommandcenters.com/purchase-intent#fragment',/purchase_intent_url_query_or_fragment_forbidden/],
+    ['https://username:password@payments.systemiacommandcenters.com/purchase-intent',/purchase_intent_url_embedded_credentials_forbidden/],
+    ['http://payments.systemiacommandcenters.com/purchase-intent',/purchase_intent_url_requires_https/],
+  ];
+  for(const [purchaseIntentUrl,expected] of cases){
+    await assert.rejects(
+      startFabricLocalRuntime({
+        host:'127.0.0.1',port:0,catalog:[websiteAudit],
+        faieSurfaceEnabled:false,purchaseIntentUrl,
+      }),
+      expected,
+      purchaseIntentUrl
+    );
+  }
+});
+
 test('human checkout failures render a branded Evercraft Payments page instead of raw JSON',async()=>{
   const runtime=await startFabricLocalRuntime({
     host:'127.0.0.1',
     port:0,
     catalog:[websiteAudit],
     faieSurfaceEnabled:false,
+    purchaseIntentUrl:'https://payments.systemiacommandcenters.com/purchase-intent',
     purchaseIntentFetch:async()=>new Response(JSON.stringify({
       ok:true,
       authority:'Evercraft Payments',

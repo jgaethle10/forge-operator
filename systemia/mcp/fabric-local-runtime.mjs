@@ -396,7 +396,7 @@ export async function startFabricLocalRuntime({
   sabanCapacityHealthFile='',
   releaseRefFile='',
   purchaseIntentFetch=fetch,
-  purchaseIntentUrl='https://base44.app/api/apps/6a7adc9666bfd8c5c2fb4069/functions/ravenNexusPurchaseIntent',
+  purchaseIntentUrl='',
 }={}) {
   const instanceId='fabric_local_'+crypto.randomBytes(10).toString('hex');
   const resolvedReleaseRefFile=String(
@@ -433,9 +433,38 @@ export async function startFabricLocalRuntime({
   if(typeof purchaseIntentFetch!=='function'){
     throw new Error('purchase_intent_fetch_invalid');
   }
-  const purchaseIntentEndpoint=new URL(String(purchaseIntentUrl||''));
-  if(purchaseIntentEndpoint.protocol!=='https:'){
-    throw new Error('purchase_intent_url_requires_https');
+  // No checkout transport is safer than an implicit legacy provider fallback.
+  // The deployment must explicitly inject a verified Evercraft-owned HTTPS
+  // purchase-intent endpoint before enabling the buyer continuation.
+  const purchaseIntentAddress=String(purchaseIntentUrl||'').trim();
+  const purchaseIntentEndpoint=purchaseIntentAddress
+    ? new URL(purchaseIntentAddress)
+    : null;
+  if(purchaseIntentEndpoint){
+    if(purchaseIntentEndpoint.protocol!=='https:'){
+      throw new Error('purchase_intent_url_requires_https');
+    }
+    if(isLegacyBase44Connection({url:purchaseIntentEndpoint.toString()})){
+      throw new Error('purchase_intent_legacy_base44_transport_forbidden');
+    }
+    if(purchaseIntentEndpoint.username||purchaseIntentEndpoint.password){
+      throw new Error('purchase_intent_url_embedded_credentials_forbidden');
+    }
+    // This is a buyer-data and economic-order authority boundary, not an
+    // arbitrary webhook. Explicit configuration alone does not prove trust.
+    // Until another owner domain is verified and admitted, keep this bound to
+    // the known Evercraft-owned Systemia domain and its subdomains.
+    const purchaseHost=purchaseIntentEndpoint.hostname.toLowerCase();
+    if(purchaseHost!=='systemiacommandcenters.com'&&
+       !purchaseHost.endsWith('.systemiacommandcenters.com')){
+      throw new Error('purchase_intent_owned_hostname_required');
+    }
+    if(purchaseIntentEndpoint.port&&purchaseIntentEndpoint.port!=='443'){
+      throw new Error('purchase_intent_nonstandard_port_forbidden');
+    }
+    if(purchaseIntentEndpoint.search||purchaseIntentEndpoint.hash){
+      throw new Error('purchase_intent_url_query_or_fragment_forbidden');
+    }
   }
   const staticPrepared=Array.isArray(catalog)?nativeOnlyCatalog(catalog):null;
   const preparedCatalog=()=>staticPrepared||nativeOnlyCatalog(loadFabricCatalogFromRepository());
@@ -608,7 +637,11 @@ export async function startFabricLocalRuntime({
     transactional:false,
     external_action_authority:false,
     mcp_read_only:true,
-    human_offer_checkout_enabled:true,
+    human_offer_checkout_enabled:Boolean(purchaseIntentEndpoint),
+    human_offer_checkout_transport_state:purchaseIntentEndpoint
+      ? 'configured_awaiting_external_owned_route_verification'
+      : 'held_no_owned_purchase_intent_transport',
+    human_offer_checkout_transport_host:purchaseIntentEndpoint?.hostname||null,
     human_offer_checkout_path_template:'/api/offers/{slug}/checkout',
     human_offer_checkout_requires_explicit_confirmation:true,
     human_offer_checkout_handoff_mode:'explicit_evercraft_page',
@@ -881,6 +914,21 @@ export async function startFabricLocalRuntime({
           });
         }
 
+        if(!purchaseIntentEndpoint){
+          if(isForm){
+            return sendText(res,503,renderPaymentHoldPage({slug}),{
+              contentType:'text/html; charset=utf-8',
+            });
+          }
+          return sendJson(res,503,{
+            ok:false,
+            error:'evercraft_payments_owned_purchase_intent_unconfigured',
+            authority:'Evercraft Payments',
+            checkout_ready:false,
+            fulfillment_release:false,
+          });
+        }
+
         const suppliedIdempotency=String(body?.idempotency_key||'').trim();
         const idempotencyKey=/^[A-Za-z0-9._:-]{8,120}$/.test(suppliedIdempotency)
           ? suppliedIdempotency
@@ -893,6 +941,9 @@ export async function startFabricLocalRuntime({
         try{
           upstream=await purchaseIntentFetch(purchaseIntentEndpoint,{
             method:'POST',
+            // An upstream redirect could leak purchase-intent and buyer data
+            // to an unverified host. Never follow it automatically.
+            redirect:'error',
             headers:{
               'content-type':'application/json',
               'accept':'application/json',
@@ -996,7 +1047,9 @@ export async function startFabricLocalRuntime({
         if(slug&&!slug.includes('/')){
           const offer=offerCapabilityForSlug(slug,preparedCatalog().capabilities);
           if(!offer) return sendJson(res,404,{error:'offer_not_found'});
-          const page=renderOfferPage(offer);
+          const page=renderOfferPage(offer,{
+            checkoutEnabled:Boolean(purchaseIntentEndpoint),
+          });
           if(!page) return sendJson(res,404,{error:'offer_not_found'});
           return sendText(res,200,page,{contentType:'text/html; charset=utf-8'});
         }
