@@ -1,0 +1,35 @@
+name: Research-to-Fabric Discovery
+
+on:
+  pull_request:
+    paths:
+      - 'public/research/**'
+      - 'systemia/chum/public-origin-runtime.mjs'
+      - 'tests/chum-public-origin-runtime.test.mjs'
+      - 'tests/chum-research-atlas.test.mjs'
+      - 'package.json'
+      - '.github/workflows/research-discovery.yml'
+  push:
+    branches: [main]
+    paths:
+      - 'public/research/**'
+      - 'systemia/chum/public-origin-runtime.mjs'
+      - 'tests/chum-public-origin-runtime.test.mjs'
+      - 'tests/chum-research-atlas.test.mjs'
+      - 'package.json'
+      - '.github/workflows/research-discovery.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Validate absolute public sitemaps and research draft safety
+        run: npm run test:chum-public-origin
