@@ -396,7 +396,7 @@ export async function startFabricLocalRuntime({
   sabanCapacityHealthFile='',
   releaseRefFile='',
   purchaseIntentFetch=fetch,
-  purchaseIntentUrl='https://base44.app/api/apps/6a7adc9666bfd8c5c2fb4069/functions/ravenNexusPurchaseIntent',
+  purchaseIntentUrl='',
 }={}) {
   const instanceId='fabric_local_'+crypto.randomBytes(10).toString('hex');
   const resolvedReleaseRefFile=String(
@@ -433,9 +433,23 @@ export async function startFabricLocalRuntime({
   if(typeof purchaseIntentFetch!=='function'){
     throw new Error('purchase_intent_fetch_invalid');
   }
-  const purchaseIntentEndpoint=new URL(String(purchaseIntentUrl||''));
-  if(purchaseIntentEndpoint.protocol!=='https:'){
-    throw new Error('purchase_intent_url_requires_https');
+  // No checkout transport is safer than an implicit legacy provider fallback.
+  // The deployment must explicitly inject a verified Evercraft-owned HTTPS
+  // purchase-intent endpoint before enabling the buyer continuation.
+  const purchaseIntentAddress=String(purchaseIntentUrl||'').trim();
+  const purchaseIntentEndpoint=purchaseIntentAddress
+    ? new URL(purchaseIntentAddress)
+    : null;
+  if(purchaseIntentEndpoint){
+    if(purchaseIntentEndpoint.protocol!=='https:'){
+      throw new Error('purchase_intent_url_requires_https');
+    }
+    if(isLegacyBase44Connection({url:purchaseIntentEndpoint.toString()})){
+      throw new Error('purchase_intent_legacy_base44_transport_forbidden');
+    }
+    if(purchaseIntentEndpoint.username||purchaseIntentEndpoint.password){
+      throw new Error('purchase_intent_url_embedded_credentials_forbidden');
+    }
   }
   const staticPrepared=Array.isArray(catalog)?nativeOnlyCatalog(catalog):null;
   const preparedCatalog=()=>staticPrepared||nativeOnlyCatalog(loadFabricCatalogFromRepository());
@@ -608,7 +622,11 @@ export async function startFabricLocalRuntime({
     transactional:false,
     external_action_authority:false,
     mcp_read_only:true,
-    human_offer_checkout_enabled:true,
+    human_offer_checkout_enabled:Boolean(purchaseIntentEndpoint),
+    human_offer_checkout_transport_state:purchaseIntentEndpoint
+      ? 'configured_awaiting_external_owned_route_verification'
+      : 'held_no_owned_purchase_intent_transport',
+    human_offer_checkout_transport_host:purchaseIntentEndpoint?.hostname||null,
     human_offer_checkout_path_template:'/api/offers/{slug}/checkout',
     human_offer_checkout_requires_explicit_confirmation:true,
     human_offer_checkout_handoff_mode:'explicit_evercraft_page',
@@ -877,6 +895,21 @@ export async function startFabricLocalRuntime({
             ok:false,
             error:'explicit_user_confirmation_required',
             authority:'Evercraft Payments',
+            fulfillment_release:false,
+          });
+        }
+
+        if(!purchaseIntentEndpoint){
+          if(isForm){
+            return sendText(res,503,renderPaymentHoldPage({slug}),{
+              contentType:'text/html; charset=utf-8',
+            });
+          }
+          return sendJson(res,503,{
+            ok:false,
+            error:'evercraft_payments_owned_purchase_intent_unconfigured',
+            authority:'Evercraft Payments',
+            checkout_ready:false,
             fulfillment_release:false,
           });
         }
