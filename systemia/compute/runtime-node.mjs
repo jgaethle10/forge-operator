@@ -540,11 +540,13 @@ export async function startEvercraftComputeNode({
   failureDomain = '',
   zeroCost = false,
   browserRuntimeFactory = null,
+  browserLeaseClock = () => Date.now(),
   remoteOperatorRoots = null,
   remoteOperatorStateDir = '',
   maxStagedBlobBytes = Number(process.env.EVERCRAFT_MAX_STAGED_BLOB_BYTES || 2147483648),
 } = {}) {
   if (!root) throw new Error('root is required');
+  if (typeof browserLeaseClock !== 'function') throw new Error('browserLeaseClock must be a function');
   const loopbackHost = host === '127.0.0.1' || host === '::1' || host === 'localhost';
   const allocatorTokenHash = allocatorToken ? sha(String(allocatorToken)) : null;
   if (!loopbackHost && !allocatorTokenHash) {
@@ -3587,7 +3589,7 @@ export async function startEvercraftComputeNode({
         }
         // A valid token does not extend the lease. Deny synchronously even
         // before the background lease monitor has retired its service.
-        if (lease.expires_at <= Date.now()) {
+        if (lease.expires_at <= browserLeaseClock()) {
           return send(res, 410, { error: 'expired_lease' });
         }
         if (entry.workload_class !== 'systemia.evercraft-web-browser.v1') {
