@@ -128,11 +128,16 @@ export function planRavenPhoneDemand(envelope) {
     route = lane === 'rivet_partner_hold' ? 'partner_governance_review' : 'systemia_intake_review';
   }
 
+  // Provider SID + event phase, not Raven's mutable record/idempotency key, owns replay identity.
+  // An SMS MessageSid can arrive again with a new local record ID after a webhook retry.
+  // Voice phases remain distinct for one CallSid; never conflate call-start and later updates.
+  const providerPhase = asText(data.event_type) || 'unspecified';
   const stableKey = hmac(secretKey, [
-    data.source_system, data.channel, data.provider_event_ref, data.idempotency_key,
+    data.source_system, data.provider_type, data.channel, data.provider_event_ref, providerPhase,
   ].join('\x1f')).toString('hex');
-  const conversationKey = hmac(secretKey,
-    data.source_system + '\x1f' + data.channel + '\x1f' + data.provider_event_ref).toString('hex');
+  const conversationKey = hmac(secretKey, [
+    data.source_system, data.provider_type, data.channel, data.provider_event_ref,
+  ].join('\x1f')).toString('hex');
   return Object.freeze({
     schema: 'evercraft.systemia.raven-phone-demand-candidate.v1',
     observed_at: attestedAt, source: 'raven_nexus', channel: data.channel,
