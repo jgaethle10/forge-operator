@@ -78,6 +78,25 @@ test('Synthetic and stale proofs cannot become live launch readiness',()=>{
  assert.ok(r.held_gates.find(g=>g.key==='public_page').reasons.includes('independent_owned_https_offer_unproved'));
 });
 
+test('An HTTPS offer URL on an unowned origin never passes the source-evidence contract',()=>{
+ for(const url of [
+  'https://attacker.example/offers/ibmi-74-deadline-xray',
+  'https://fabric.systemiacommandcenters.com.attacker.example/offers/ibmi-74-deadline-xray',
+  'https://localhost/offers/ibmi-74-deadline-xray',
+  'https://127.0.0.1/offers/ibmi-74-deadline-xray',
+  'https://fabric.systemiacommandcenters.com:8443/offers/ibmi-74-deadline-xray',
+ ]){
+  const r=firstOfferReadiness({now:NOW,evidence:{public_page:edge({url})}});
+  const gate=r.required_gates.find(g=>g.key==='public_page');
+  assert.equal(gate.state,'held',url);
+  assert.ok(gate.reasons.includes('independent_owned_https_offer_unproved'),url);
+  assert.equal(r.declared_external_live,false);
+ }
+ const good=firstOfferReadiness({now:NOW,evidence:{public_page:edge()}});
+ assert.equal(good.required_gates.find(g=>g.key==='public_page').state,'source_asserted_requires_authoritative_recheck');
+ assert.equal(good.declared_external_live,false);
+});
+
 test('Even perfect-looking submitted receipts require independent authentication',()=>{
  const r=firstOfferReadiness({now:NOW,evidence:{
   specialist:spec(),lineage:lineage(),public_page:edge(),commerce:checkout()
