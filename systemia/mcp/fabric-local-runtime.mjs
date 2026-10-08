@@ -938,10 +938,10 @@ export async function startFabricLocalRuntime({
           const candidate=new URL(String(result?.checkout_url||''));
           const stripeCheckoutSession=
             candidate.hostname==='checkout.stripe.com' &&
-            /^\\/(?:c\\/pay|pay)\\/[^/]{8,}$/.test(candidate.pathname);
+            /^\/(?:c\/pay|pay)\/[^/]{8,}$/.test(candidate.pathname);
           const ownedExactCheckout=
             candidate.hostname==='fabric.systemiacommandcenters.com' &&
-            /^\\/payments\\/checkout\\/ibmi-74-deadline-xray\\/[^/]{8,}$/.test(candidate.pathname);
+            /^\/payments\/checkout\/ibmi-74-deadline-xray\/[^/]{8,}$/.test(candidate.pathname);
           const approvedIBMi74Handoff=
             (stripeCheckoutSession||ownedExactCheckout) &&
             candidate.protocol==='https:' &&
