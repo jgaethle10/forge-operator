@@ -30,6 +30,7 @@ try{
 
   runtime=await prepared.browserRuntimeFactory({
     maxConcurrency:1,
+    jobStateDir:path.join(state,'durable-jobs'),
   });
 
   const health=await runtime.health();
@@ -37,6 +38,7 @@ try{
   assert.equal(health.service,'evercraft-owned-browser-worker');
   assert.equal(health.runtime,'Evercraft Compute');
   assert.equal(health.execution_mode,'native_user_playwright');
+  assert.equal(health.durable_jobs_enabled,true);
 
   const browse=await runtime.browse({
     url:'https://example.com/',
@@ -50,6 +52,93 @@ try{
   assert.equal(browse.ok,true);
   assert.match(String(browse.final_url||''),/^https:\/\/example\.com/);
   assert.ok(String(browse.evidence_receipt_sha256||'').match(/^[a-f0-9]{64}$/));
+
+  // The same native worker executes, screenshots, retries and receipts these jobs.
+  // No simulated browser is substituted for the real Chromium canary.
+  const idempotencySuffix=String(Date.now())+'-'+process.pid;
+  const canaryJob={
+    url:'https://example.com/',
+    actions:[
+      {type:'wait_for_selector',selector:'h1',timeout_ms:5000},
+      {type:'scroll',x:0,y:100},
+    ],
+    timeout_ms:15000,
+    include_screenshot:true,
+    include_screenshot_base64:false,
+  };
+  const canaryEnvelope={
+    idempotency_key:'browser-native-'+idempotencySuffix,
+    mission_key:'systemia-browser-native-proof',
+    work_key:'browser-native-readonly-001',
+    job:canaryJob,
+  };
+  const submitted=await runtime.submitReadOnlyJob(canaryEnvelope);
+  assert.equal(submitted.ok,true);
+  assert.match(submitted.job.id,/^[0-9a-f-]{36}$/);
+  const duplicate=await runtime.submitReadOnlyJob(canaryEnvelope);
+  assert.equal(duplicate.job.id,submitted.job.id);
+  assert.equal(duplicate.job.deduplicated,true);
+
+  async function pollJob(id,timeoutMs=90000){
+    const deadline=Date.now()+timeoutMs;
+    while(Date.now()<deadline){
+      const response=await runtime.readReadOnlyJob(id);
+      if(['completed','failed','cancelled'].includes(response.job.state)) return response.job;
+      await new Promise((resolve)=>setTimeout(resolve,250));
+    }
+    throw new Error('native_durable_job_poll_timeout');
+  }
+
+  const successfulJob=await pollJob(submitted.job.id);
+  assert.equal(successfulJob.state,'completed',JSON.stringify(successfulJob));
+  assert.equal(successfulJob.result.http_status,200);
+  assert.equal(successfulJob.result.action_count,2);
+  assert.match(successfulJob.result.evidence_receipt_sha256,/^[a-f0-9]{64}$/);
+  assert.match(successfulJob.result.screenshot_sha256,/^[a-f0-9]{64}$/);
+  assert.match(successfulJob.result.text_sha256,/^[a-f0-9]{64}$/);
+
+  const failureJob=await runtime.submitReadOnlyJob({
+    idempotency_key:'browser-fail-'+idempotencySuffix,
+    mission_key:'systemia-browser-native-proof',
+    work_key:'browser-native-failure-001',
+    job:{
+      url:'https://example.com/',
+      timeout_ms:3000,
+      actions:[{type:'wait_for_selector',selector:'#evercraft-nonexistent-sentinel',timeout_ms:200}],
+    }
+  });
+  const controlledFailure=await pollJob(failureJob.job.id);
+  assert.equal(controlledFailure.state,'failed');
+  assert.equal(controlledFailure.attempts,2);
+  assert.equal(controlledFailure.failure_reason,'browser_job_execution_failed');
+
+  const durableEvidence={
+    schema:'evercraft.browser.native-durable-proof.v1',
+    execution_class:'native_user_playwright_ci_not_production',
+    authorized_source:'https://example.com/',
+    completed_job_id:successfulJob.id,
+    evidence_receipt_sha256:successfulJob.result.evidence_receipt_sha256,
+    screenshot_sha256:successfulJob.result.screenshot_sha256,
+    text_sha256:successfulJob.result.text_sha256,
+    observed_action_count:successfulJob.result.action_count,
+    idempotent_duplicate_verified:true,
+    controlled_failure_job_id:controlledFailure.id,
+    controlled_failure_attempts:controlledFailure.attempts,
+    failure_state:controlledFailure.state,
+    simulated_restart_proved_by:'durable-jobs.test.mjs',
+    production_deployment_verified:false,
+  };
+  fs.writeFileSync(path.join(state,'durable-proof.json'),JSON.stringify(durableEvidence,null,2)+'\n',{mode:0o600});
+  if(process.env.GITHUB_STEP_SUMMARY){
+    fs.appendFileSync(process.env.GITHUB_STEP_SUMMARY,
+      '## Evercraft Browser native durable-job evidence\n'+
+      '- Execution class: native user-space Chromium CI, not production\n'+
+      '- Job: '+successfulJob.id+'\n'+
+      '- Screenshot SHA-256: '+successfulJob.result.screenshot_sha256+'\n'+
+      '- Evidence receipt SHA-256: '+successfulJob.result.evidence_receipt_sha256+'\n'+
+      '- Controlled failure attempts: '+controlledFailure.attempts+'\n'+
+      '- Production release gate: HOLD\n');
+  }
 
   const session=await runtime.createAuthSession({
     url:'https://example.com/',
@@ -90,6 +179,7 @@ try{
     mode:'native_user_playwright',
     chromium_version:prepared.chromium_version,
     browser_worker_health:true,
+    durable_browser_job:durableEvidence,
     live_https_browse:true,
     authenticated_handoff:true,
     delegated_draft_automation:true,
