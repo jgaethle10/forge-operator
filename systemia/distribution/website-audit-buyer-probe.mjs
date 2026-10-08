@@ -46,7 +46,7 @@ export async function inspectWebsiteAuditBuyerPage({
     receipt.html_sha256=toHash(html);
     const hasBrand=/Evercraft/i.test(html);
     const hasOffer=/Quick Win Audit/i.test(html)&&/website/i.test(html);
-    const hasPrice=/\\$49(?:\\b|<)/.test(html);
+    const hasPrice=/\$49(?:\b|<)/.test(html);
     const hasCheckout=html.includes('/api/offers/website-audit/checkout')&&/method=["']?post/i.test(html);
     const hasAuthority=/Evercraft Payments/i.test(html);
     const unsafe=/(?:guaranteed rankings|guaranteed new customers|payment successfully received|checkout already verified)/i.test(html);
