@@ -3585,6 +3585,11 @@ export async function startEvercraftComputeNode({
         if (!lease || lease.token_hash !== sha(body.token || '')) {
           return send(res, 401, { error: 'invalid_lease' });
         }
+        // A valid token does not extend the lease. Deny synchronously even
+        // before the background lease monitor has retired its service.
+        if (lease.expires_at <= Date.now()) {
+          return send(res, 410, { error: 'expired_lease' });
+        }
         if (entry.workload_class !== 'systemia.evercraft-web-browser.v1') {
           return send(res, 422, { error: 'browser_invoke_not_supported' });
         }
