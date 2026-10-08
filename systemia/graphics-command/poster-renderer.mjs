@@ -1,5 +1,6 @@
 import { getGeoBoundary } from './boundary-registry.mjs';
 import { terrainReliefDataUri } from './terrain-registry.mjs';
+import { normalizeVisualStrategy } from './shot-tournament.mjs';
 const esc=(value)=>String(value ?? '')
   .replaceAll('&','&amp;')
   .replaceAll('<','&lt;')
@@ -193,11 +194,12 @@ function boxHitsCircle(box,circle,pad=0){
   return Math.hypot(circle.x-x,circle.y-y)<circle.r+pad;
 }
 
-export function assessDirectedPosterLayout(story,plan,format='feed'){
+export function assessDirectedPosterLayout(story,plan,format='feed',strategyInput={}){
   const spec=SPECS[format];
   if(!spec) throw new Error('graphics_poster_format_invalid');
   if(plan?.schema!=='evercraft.graphics-command.plan.v1') throw new Error('graphics_poster_plan_invalid');
   const boundary=boundaryForStory(story);
+  const strategy=normalizeVisualStrategy(strategyInput);
   const terrainHref=plan.geography?.terrain ? terrainReliefDataUri(story?.visual?.terrainId) : null;
   const box=boundary?.bbox || pointBounds(story.points);
   const frame=projection(box,spec.map);
@@ -208,7 +210,7 @@ export function assessDirectedPosterLayout(story,plan,format='feed'){
   const regionIdentity=boundary?regionIdentityLayout(frame,format):null;
   const markers=story.points.map(point=>{
     const p=positions.get(point.id);
-    const base=(format==='story'?17:13)+Math.sqrt(Math.abs(Number(point.value)||1)/maxValue)*(format==='story'?15:11);
+    const base=((format==='story'?17:13)+Math.sqrt(Math.abs(Number(point.value)||1)/maxValue)*(format==='story'?15:11))*strategy.pointScale;
     return {id:point.id,x:p.x,y:p.y,r:base+7};
   });
   const issues=[];
@@ -287,7 +289,7 @@ export function assessDirectedPosterLayout(story,plan,format='feed'){
   };
 }
 
-function renderGeography(boundary,statePath,spec,format,terrain,terrainHref,frame){
+function renderGeography(boundary,statePath,spec,format,terrain,terrainHref,frame,strategy){
   if(!boundary||!statePath) return '<g opacity=".9">'+decorativeContours(spec)+'</g>';
   const stroke=format==='story'?4:3;
   const regionIdentity=regionIdentityLayout(frame,format);
@@ -297,27 +299,30 @@ function renderGeography(boundary,statePath,spec,format,terrain,terrainHref,fram
   const h=spec.map.height;
   const terrainLayer=terrain&&terrainHref
     ? [
-        '<image class="terrain-relief" href="'+terrainHref+'" data-source-sha256="'+esc(terrain.sourceSha256)+'" x="'+frame.draw.x+'" y="'+frame.draw.y+'" width="'+frame.draw.width+'" height="'+frame.draw.height+'" preserveAspectRatio="none" clip-path="url(#geoClip)" opacity=".94" style="mix-blend-mode:multiply"/>',
-        '<image class="terrain-relief-highlight" href="'+terrainHref+'" x="'+frame.draw.x+'" y="'+frame.draw.y+'" width="'+frame.draw.width+'" height="'+frame.draw.height+'" preserveAspectRatio="none" clip-path="url(#geoClip)" opacity=".105"/>'
+        '<image class="terrain-relief" href="'+terrainHref+'" data-source-sha256="'+esc(terrain.sourceSha256)+'" x="'+frame.draw.x+'" y="'+frame.draw.y+'" width="'+frame.draw.width+'" height="'+frame.draw.height+'" preserveAspectRatio="none" clip-path="url(#geoClip)" opacity="'+strategy.terrainBaseOpacity+'" style="mix-blend-mode:multiply"/>',
+        '<image class="terrain-relief-highlight" href="'+terrainHref+'" x="'+frame.draw.x+'" y="'+frame.draw.y+'" width="'+frame.draw.width+'" height="'+frame.draw.height+'" preserveAspectRatio="none" clip-path="url(#geoClip)" opacity="'+strategy.terrainHighlightOpacity+'"/>'
       ].join('\\n')
     : '<g class="terrain-relief-fallback" clip-path="url(#geoClip)" opacity=".40">'+decorativeContours(spec)+'</g>';
   return [
     '<clipPath id="geoClip"><path d="'+statePath+'"/></clipPath>',
-    '<path class="geo-boundary" d="'+statePath+'" fill="url(#stateFill)" stroke="#72CFF4" stroke-width="'+stroke+'" stroke-opacity=".82" filter="url(#stateShadow)"/>',
+    '<path class="geo-boundary" d="'+statePath+'" fill="url(#stateFill)" stroke="#72CFF4" stroke-width="'+stroke+'" stroke-opacity="'+strategy.boundaryStrokeOpacity+'" filter="url(#stateShadow)"/>',
     terrainLayer,
-    '<path class="terrain-atmosphere" d="'+statePath+'" fill="url(#terrainWash)" opacity=".46"/>',
+    '<path class="terrain-atmosphere" d="'+statePath+'" fill="url(#terrainWash)" opacity="'+strategy.atmosphereOpacity+'"/>',
     '<path class="geo-boundary" d="'+statePath+'" fill="none" stroke="#EAF7FC" stroke-width="1.25" stroke-opacity=".30"/>',
-    '<text class="region-label" x="'+regionIdentity.x+'" y="'+regionIdentity.labelY+'" text-anchor="end" font-family="Arial,sans-serif" font-size="'+regionIdentity.labelFont+'" font-weight="900" letter-spacing="5" fill="#EAF7FC" opacity=".30">WASHINGTON</text>',
-    '<text class="region-kicker" x="'+regionIdentity.x+'" y="'+regionIdentity.kickerY+'" text-anchor="end" font-family="Arial,sans-serif" font-size="'+regionIdentity.kickerFont+'" font-weight="800" letter-spacing="3" fill="#8EDBFA" opacity=".42">PACIFIC NORTHWEST</text>',
+    '<text class="region-label" x="'+regionIdentity.x+'" y="'+regionIdentity.labelY+'" text-anchor="end" font-family="Arial,sans-serif" font-size="'+regionIdentity.labelFont+'" font-weight="900" letter-spacing="5" fill="#EAF7FC" opacity="'+strategy.regionLabelOpacity+'">WASHINGTON</text>',
+    '<text class="region-kicker" x="'+regionIdentity.x+'" y="'+regionIdentity.kickerY+'" text-anchor="end" font-family="Arial,sans-serif" font-size="'+regionIdentity.kickerFont+'" font-weight="800" letter-spacing="3" fill="#8EDBFA" opacity="'+strategy.regionKickerOpacity+'">PACIFIC NORTHWEST</text>',
   ].join('\n');
 }
 
-export function renderDirectedPoster(story,plan,format='feed'){
+export function renderDirectedPoster(story,plan,format='feed',options={}){
   const spec=SPECS[format];
   if(!spec) throw new Error('graphics_poster_format_invalid');
   if(plan?.schema!=='evercraft.graphics-command.plan.v1') throw new Error('graphics_poster_plan_invalid');
+  const strategy=normalizeVisualStrategy(options?.strategy||{});
   const boundary=boundaryForStory(story);
-  const terrainHref=plan.geography?.terrain ? terrainReliefDataUri(story?.visual?.terrainId) : null;
+  const terrainHref=plan.geography?.terrain
+    ? (String(options?.terrainHrefOverride||'').trim()||terrainReliefDataUri(story?.visual?.terrainId))
+    : null;
   const box=boundary?.bbox || pointBounds(story.points);
   const frame=projection(box,spec.map);
   const positions=new Map(story.points.map(point=>[point.id,frame.project(point)]));
@@ -328,12 +333,13 @@ export function renderDirectedPoster(story,plan,format='feed'){
     const a=positions.get(line.from);
     const b=positions.get(line.to);
     if(!a||!b) return '';
-    return '<path class="story-route cascade-axis" d="M '+a.x+' '+a.y+' L '+b.x+' '+b.y+'" fill="none" stroke="#C7ECFA" stroke-width="'+(format==='story'?7:5)+'" stroke-linecap="round" stroke-linejoin="round" opacity=".055"/>';
+    const width=(format==='story'?7:5)*strategy.routeWidthScale;
+    return '<path class="story-route cascade-axis" d="M '+a.x+' '+a.y+' L '+b.x+' '+b.y+'" fill="none" stroke="#C7ECFA" stroke-width="'+width.toFixed(2)+'" stroke-linecap="round" stroke-linejoin="round" opacity="'+strategy.routeOpacity+'"/>';
   }).join('\n');
 
   const pointSvg=story.points.map(point=>{
     const p=positions.get(point.id);
-    const radius=(format==='story'?17:13)+Math.sqrt(Math.abs(Number(point.value)||1)/maxValue)*(format==='story'?15:11);
+    const radius=((format==='story'?17:13)+Math.sqrt(Math.abs(Number(point.value)||1)/maxValue)*(format==='story'?15:11))*strategy.pointScale;
     const veryHigh=/very high/i.test(point.note||'');
     const risk=veryHigh?'#FFB15A':'#D2C5A0';
     const peakH=radius*1.06;
@@ -370,7 +376,7 @@ export function renderDirectedPoster(story,plan,format='feed'){
   const sourceY=spec.height-58;
   const evidence=String(story.evidenceState||'').toUpperCase();
   return [
-    '<svg xmlns="http://www.w3.org/2000/svg" width="'+spec.width+'" height="'+spec.height+'" viewBox="0 0 '+spec.width+' '+spec.height+'" data-visual-model="cinematic-terrain-geography-v2" style="max-width:100%;height:auto;display:block">',
+    '<svg xmlns="http://www.w3.org/2000/svg" width="'+spec.width+'" height="'+spec.height+'" viewBox="0 0 '+spec.width+' '+spec.height+'" data-visual-model="cinematic-terrain-geography-v3" data-shot-strategy="'+esc(String(options?.strategyId||'baseline'))+'" style="max-width:100%;height:auto;display:block">',
     '<defs>',
     '<radialGradient id="heroGlow" cx="50%" cy="48%" r="60%"><stop offset="0%" stop-color="#17303D"/><stop offset="58%" stop-color="#0A1013"/><stop offset="100%" stop-color="#050707"/></radialGradient>',
     '<linearGradient id="spine" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#75C8FF"/><stop offset="100%" stop-color="#2B6B95"/></linearGradient>',
@@ -383,7 +389,7 @@ export function renderDirectedPoster(story,plan,format='feed'){
     '<text x="72" y="'+(format==='story'?82:58)+'" font-family="Arial,sans-serif" font-size="'+(format==='story'?24:19)+'" font-weight="900" letter-spacing="3.2" fill="#4FB8FF">'+esc(plan.hero.eyebrow.toUpperCase())+'</text>',
     hook,
     sub,
-    renderGeography(boundary,statePath,spec,format,plan.geography?.terrain,terrainHref,frame),
+    renderGeography(boundary,statePath,spec,format,plan.geography?.terrain,terrainHref,frame,strategy),
     routeSvg,
     pointSvg,
     renderLabels(story,positions,format),
