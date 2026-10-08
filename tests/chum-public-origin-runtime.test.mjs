@@ -10,6 +10,11 @@ const publicRoot = path.join(root, 'public');
 fs.mkdirSync(path.join(publicRoot, 'chum', 'hot'), { recursive: true });
 fs.mkdirSync(path.join(publicRoot, 'chum', 'products', 'infinite-classroom'), { recursive: true });
 fs.mkdirSync(path.join(publicRoot, '.well-known'), { recursive: true });
+fs.mkdirSync(path.join(publicRoot, 'research', 'sample-draft'), { recursive: true });
+fs.writeFileSync(path.join(publicRoot, 'research', 'index.html'), '<meta name="robots" content="noindex,follow"><h1>Research Atlas</h1>\n');
+fs.writeFileSync(path.join(publicRoot, 'research', 'sample-draft', 'index.html'), '<meta name="robots" content="noindex,follow"><h1>Draft</h1>\n');
+fs.writeFileSync(path.join(publicRoot, 'research', 'discovery.json'), '{"publication_state":"review_pending"}\n');
+
 fs.writeFileSync(path.join(root, 'secret.txt'), 'PRIVATE-NOT-PUBLIC\n');
 fs.writeFileSync(path.join(publicRoot, 'chum', 'index.html'), '<h1>CHUM</h1>\n');
 fs.writeFileSync(path.join(publicRoot, 'chum', 'hot', 'index.html'), '<h1>HOT</h1>\n');
@@ -126,6 +131,18 @@ try {
   assert.equal(chum.status, 200);
   assert.match(await chum.text(), /CHUM/);
   assert.match(chum.headers.get('link') || '', /sitemap\.xml/);
+
+  const draftHub = await fetch(runtime.url + '/research/');
+  assert.equal(draftHub.status, 200);
+  assert.equal(draftHub.headers.get('x-robots-tag'), 'noindex, follow');
+  assert.match(await draftHub.text(), /noindex,follow/);
+  const draftArticle = await fetch(runtime.url + '/research/sample-draft/');
+  assert.equal(draftArticle.status, 200);
+  assert.equal(draftArticle.headers.get('x-robots-tag'), 'noindex, follow');
+  const draftMachine = await fetch(runtime.url + '/research/discovery.json');
+  assert.equal(draftMachine.status, 200);
+  assert.equal(draftMachine.headers.get('x-robots-tag'), 'noindex, follow');
+  assert.equal(chum.headers.get('x-robots-tag'), 'index, follow');
 
   const sitemap = await fetch(runtime.url + '/sitemap.xml').then((r) => r.text());
   assert.equal(sitemap.includes(runtime.url + '/chum/'), true);
