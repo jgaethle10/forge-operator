@@ -21,3 +21,14 @@ const destructivePatch=classifyRelease({changedFiles:['src/db.ts'],patch:'+ awai
 assert.equal(destructivePatch.riskClass,'destructive');
 
 console.log('Systemia release policy tests: PASS');
+
+
+import fs from 'node:fs';
+const publishWorkflow=fs.readFileSync('.github/workflows/publish-runtime.yml','utf8');
+assert.match(publishWorkflow,/push:\n\s+branches:\n\s+- main/);
+assert.doesNotMatch(publishWorkflow,/workflow_run:/);
+assert.match(publishWorkflow,/github\.event_name == 'push'/);
+assert.match(publishWorkflow,/SHA="\$\{\{ github\.sha \}\}"/);
+assert.match(publishWorkflow,/Verify exact release candidate/);
+assert.match(publishWorkflow,/run: npm run check/);
+assert.match(publishWorkflow,/Build production container/);
