@@ -1,0 +1,83 @@
+import test from 'node:test';
+import assert from 'node:assert/strict';
+import {offerCapabilityForSlug,offerPurchaseKeyForSlug,renderOfferPage} from '../systemia/mcp/fabric-public-site.mjs';
+import {startFabricLocalRuntime} from '../systemia/mcp/fabric-local-runtime.mjs';
+
+const ibmi={
+ public_id:'ibmi-rescue-v1',name:'Evercraft IBM i Rescue',commercial_state:'sell_now',
+ machine_state:'direct_checkout_ready',pricing:'$250 IBM i Estate X-Ray; $250 IBM i 7.4 Deadline X-Ray; $1,500 Proof Sprint.',
+ entry_paid_offer:{name:'IBM i Estate X-Ray',price:'$250',price_usd_normalized:250,billing:'one_time'},
+ use_when:['IBM i 7.4 support transition'],connections:[]
+};
+
+test('IBM i 7.4 has separate exact $250 offer identity, not the generic Estate checkout',()=>{
+ assert.equal(offerCapabilityForSlug('ibmi-74-deadline-xray',[ibmi])?.public_id,'ibmi-rescue-v1');
+ assert.equal(offerPurchaseKeyForSlug('ibmi-74-deadline-xray'),'ibmi_74_deadline_xray_250');
+ assert.equal(offerPurchaseKeyForSlug('ibmi-rescue'),'ibmi-estate-xray');
+ const html=renderOfferPage(ibmi,{slug:'ibmi-74-deadline-xray'});
+ assert.match(html,/IBM i 7\.4 Deadline X-Ray/);
+ assert.match(html,/October 1, 2026/);
+ assert.match(html,/\$250/);
+ assert.match(html,/support assumptions/);
+ assert.match(html,/illustrative sample X-Ray/);
+ assert.match(html,/checkout verification pending/);
+ assert.match(html,/action="\/api\/offers\/ibmi-74-deadline-xray\/checkout"/);
+ assert.match(html,/rel="canonical" href="https:\/\/fabric\.systemiacommandcenters\.com\/offers\/ibmi-74-deadline-xray"/);
+ assert.equal(renderOfferPage({...ibmi,public_id:'website-audit-v1'},{slug:'ibmi-74-deadline-xray'}),null);
+ const generic=renderOfferPage(ibmi);
+ assert.match(generic,/action="\/api\/offers\/ibmi-rescue\/checkout"/);
+ assert.doesNotMatch(generic,/checkout verification pending/);
+});
+
+test('IBM i 7.4 exact SKU requires human confirmation and passes through Evercraft Payments',async()=>{
+ const sent=[];
+ const runtime=await startFabricLocalRuntime({
+  host:'127.0.0.1',port:0,catalog:[ibmi],faieSurfaceEnabled:false,
+  purchaseIntentFetch:async(_url,init)=>{
+   const data=JSON.parse(init.body);
+   sent.push(data);
+   if(data.capability_key!=='ibmi_74_deadline_xray_250')return new Response(JSON.stringify({ok:false,error:'wrong_offer_key'}),{status:422});
+   return new Response(JSON.stringify({ok:true,order_key:'synthetic-ibmi-74-test',amount_cents:25000,
+    currency:'usd',checkout_ready:true,checkout_url:'https://settlement.example.test/ibmi-74-demo',
+    payment_state:'unpaid',fulfillment_release:false}),{status:200});
+  }
+ });
+ try{
+  const page=await fetch(runtime.url+'/offers/ibmi-74-deadline-xray');
+  assert.equal(page.status,200);
+  assert.match(await page.text(),/IBM i 7\.4 Deadline X-Ray/);
+  const denied=await fetch(runtime.url+'/api/offers/ibmi-74-deadline-xray/checkout',{
+    method:'POST',headers:{'content-type':'application/json'},body:'{}'});
+  assert.equal(denied.status,409);
+  assert.equal(sent.length,0);
+  const checkout=await fetch(runtime.url+'/api/offers/ibmi-74-deadline-xray/checkout',{
+    method:'POST',headers:{'content-type':'application/x-www-form-urlencoded'},
+    body:new URLSearchParams({user_confirmed:'true'}),redirect:'manual'
+  });
+  assert.equal(checkout.status,303);
+  assert.match(checkout.headers.get('location'),/^\/checkout\/handoff\//);
+  assert.equal(sent.length,1);
+  assert.equal(sent[0].capability_key,'ibmi_74_deadline_xray_250');
+  assert.equal(sent[0].user_confirmed,true);
+  const handoff=await fetch(runtime.url+checkout.headers.get('location'));
+  assert.equal(handoff.status,200);
+  assert.match(await handoff.text(),/Open secure checkout/);
+ }finally{await runtime.close()}
+});
+
+test('unsupported live payment adapter fails closed rather than redirecting to unrelated offer',async()=>{
+ const sent=[];
+ const runtime=await startFabricLocalRuntime({host:'127.0.0.1',port:0,catalog:[ibmi],faieSurfaceEnabled:false,
+ purchaseIntentFetch:async(_url,init)=>{
+  sent.push(JSON.parse(init.body));
+  return new Response(JSON.stringify({ok:false,error:'unknown_offer_key'}),{status:422});
+ }});
+ try{
+  const res=await fetch(runtime.url+'/api/offers/ibmi-74-deadline-xray/checkout',{
+   method:'POST',headers:{'content-type':'application/x-www-form-urlencoded'},
+   body:new URLSearchParams({user_confirmed:'true'}),redirect:'manual'});
+  assert.equal(res.status,503);
+  assert.match(await res.text(),/No charge was made/);
+  assert.equal(sent[0].capability_key,'ibmi_74_deadline_xray_250');
+ }finally{await runtime.close()}
+});
