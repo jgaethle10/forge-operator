@@ -40,7 +40,9 @@ def inspect(path, ffmpeg):
     cmd = [ffmpeg, "-hide_banner", "-i", str(path), "-t", "0",
            "-f", "null", "-"]
     result = subprocess.run(cmd, capture_output=True, text=True, timeout=45)
-    output = result.stderr
+    # FFmpeg prints *both* input and decoded output streams in stderr.
+    # Stop at stream mapping so the receipt describes source media only.
+    output = result.stderr.split("Stream mapping:", 1)[0].split("Output #0,", 1)[0]
     duration = re.search(r"Duration:\s*(\d+):(\d+):(\d+(?:\.\d+)?)", output)
     if not duration:
         raise ValueError("No readable duration: " + path.name)
