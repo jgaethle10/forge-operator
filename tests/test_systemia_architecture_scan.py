@@ -37,7 +37,7 @@ class ArchitectureScannerTests(unittest.TestCase):
 
             payload = self.run_scan(root)
 
-            self.assertEqual(payload["scanner_version"], "systemia-architecture-scan/1.3")
+            self.assertEqual(payload["scanner_version"], "systemia-architecture-scan/1.4")
             self.assertEqual(payload["scan_mode"], "static_only")
             self.assertFalse(payload["evidence_boundary"]["executes_scanned_code"])
             self.assertFalse(payload["evidence_boundary"]["claims_runtime_behavior"])
@@ -104,6 +104,111 @@ class ArchitectureScannerTests(unittest.TestCase):
                 ("workflow", "systemiaEPSPublishIngress"),
                 {(n["node_type"], n["display_name"]) for n in payload["nodes"]},
             )
+    def test_verified_literal_entity_helpers_add_only_source_grounded_edges(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            (root / "helpers.ts").write_text(
+                "async function createIfMissing(sr: any, entity: string, keyField: string, key: string, payload: any) {\n"
+                "  const prior = await sr.entities[entity].filter({ [keyField]: key }, '-created_date', 1)\n"
+                "  if (prior?.length) return prior[0]\n"
+                "  return await sr.entities[entity].create(payload)\n"
+                "}\n"
+                "async function one(sr: any, entity: string, query: any) {\n"
+                "  const rows = await sr.entities[entity].filter(query, '-created_date', 1)\n"
+                "  return rows?.[0] || null\n"
+                "}\n"
+                "await createIfMissing(sr, 'ColliderArtifact', 'artifact_key', key, payload)\n"
+                "const mission = await one(sr, 'MissionLedger', {mission_key: 'm'})\n",
+                encoding="utf-8",
+            )
+            (root / "unverified.ts").write_text(
+                "async function createIfMissing(sr: any, entity: string) { return null }\n"
+                "await createIfMissing(sr, 'ShouldNotAppear')\n",
+                encoding="utf-8",
+            )
+
+            payload = self.run_scan(root)
+            helper_edges = [
+                e for e in payload["edges"]
+                if e.get("parser_mode") == "base44_verified_literal_helper_access"
+            ]
+            triples = {
+                (
+                    e["relation_type"],
+                    next(
+                        n["display_name"]
+                        for n in payload["nodes"]
+                        if n["node_key"] == e["to_node_key"]
+                    ),
+                    e["source_location"],
+                )
+                for e in helper_edges
+            }
+
+            self.assertTrue(any(r == "reads" and target == "ColliderArtifact" for r, target, _ in triples))
+            self.assertTrue(any(r == "writes" and target == "ColliderArtifact" for r, target, _ in triples))
+            self.assertTrue(any(r == "reads" and target == "MissionLedger" for r, target, _ in triples))
+            self.assertNotIn(
+                ("entity", "ShouldNotAppear"),
+                {(n["node_type"], n["display_name"]) for n in payload["nodes"]},
+            )
+            self.assertTrue(all(e["agreement_state"] == "declared_only" for e in helper_edges))
+
+    def test_optional_function_manifests_are_declared_only_and_malformed_manifest_warns(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            good = root / "demo"
+            good.mkdir()
+            (good / "entry.ts").write_text("export default {}\n", encoding="utf-8")
+            (good / "function.jsonc").write_text(
+                json.dumps({
+                    "name": "demoOps",
+                    "entry": "entry.ts",
+                    "automations": [{
+                        "type": "scheduled",
+                        "name": "demo_every_5",
+                        "is_active": False,
+                        "schedule_mode": "recurring",
+                        "schedule_type": "simple",
+                        "repeat_unit": "minutes",
+                        "repeat_interval": 5,
+                        "ends_type": "never",
+                    }],
+                }),
+                encoding="utf-8",
+            )
+            bad = root / "bad"
+            bad.mkdir()
+            (bad / "entry.ts").write_text("export default {}\n", encoding="utf-8")
+            (bad / "function.jsonc").write_text(
+                r'{\n  "name": "badOps"\n}\n',
+                encoding="utf-8",
+            )
+
+            payload = self.run_scan(root)
+
+            self.assertEqual(payload["counts"]["code_files"], 2)
+            self.assertEqual(payload["counts"]["manifest_files"], 2)
+            self.assertEqual(payload["counts"]["files"], 4)
+            self.assertFalse(payload["evidence_boundary"]["manifest_absence_is_negative_evidence"])
+            self.assertFalse(payload["evidence_boundary"]["claims_provider_deployment_from_manifest"])
+            self.assertTrue(any("Malformed function.jsonc" in w["message"] for w in payload["warnings"]))
+
+            nodes = {n["locator"]: n for n in payload["nodes"]}
+            self.assertIn("workflow:demoOps", nodes)
+            self.assertIn("automation:demo_every_5", nodes)
+            automation_meta = json.loads(nodes["automation:demo_every_5"]["notes"])
+            self.assertEqual(automation_meta["evidence_lane"], "declared_only")
+            self.assertFalse(automation_meta["is_active"])
+
+            manifest_edges = [
+                e for e in payload["edges"]
+                if e.get("parser_mode", "").startswith("base44_function_manifest")
+            ]
+            self.assertTrue(any(e["relation_type"] == "owns" for e in manifest_edges))
+            self.assertTrue(any(e["relation_type"] == "invokes" for e in manifest_edges))
+            self.assertTrue(all(e["agreement_state"] == "declared_only" for e in manifest_edges))
+
     def test_output_is_deterministic_for_unchanged_tree(self):
         with tempfile.TemporaryDirectory() as tmp:
             root = Path(tmp)
