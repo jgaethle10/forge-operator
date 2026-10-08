@@ -68,6 +68,27 @@ export interface WorldForgePlayWebGpuFrame {
   };
 }
 
+export interface WorldForgePlayTimelineEntry {
+  schema:'evercraft.fallen.world-forge-play-timeline-entry.v1';
+  sessionId:string;
+  projectVersion:number;
+  worldId:string;
+  worldVersion:number;
+  fromTick:number;
+  toTick:number;
+  tickCount:number;
+  inputs:WorldInput[];
+  inputCount:number;
+  segmentCount:number;
+  firstStepReceiptDigest:string;
+  lastStepReceiptDigest:string;
+  beforeSnapshotDigest:string;
+  afterSnapshotDigest:string;
+  createdAt:string;
+  updatedAt:string;
+  digest:string;
+}
+
 export interface WorldForgePlayStepReceipt {
   schema:'evercraft.fallen.world-forge-play-step-receipt.v1';
   sessionId:string;
@@ -161,6 +182,19 @@ export function verifyWorldForgePlayStepReceipt(receipt:WorldForgePlayStepReceip
   return receipt.digest===stepReceiptDigest(receipt);
 }
 
+function timelineEntryDigest(
+  entry:Omit<WorldForgePlayTimelineEntry,'digest'>|WorldForgePlayTimelineEntry,
+){
+  return digest(entry);
+}
+
+export function verifyWorldForgePlayTimelineEntry(
+  entry:WorldForgePlayTimelineEntry,
+){
+  if(entry?.schema!=='evercraft.fallen.world-forge-play-timeline-entry.v1') return false;
+  return entry.digest===timelineEntryDigest(entry);
+}
+
 export class WorldForgePlaySession {
   readonly id:string;
   readonly createdAt:string;
@@ -170,6 +204,7 @@ export class WorldForgePlaySession {
   private _runtime:EvercraftWorldRuntime;
   private _geometries:GeometryAsset[];
   private _geometryDigests:Record<string,string>;
+  private _timeline:WorldForgePlayTimelineEntry[]=[];
   private _lastAccessAt:string;
 
   constructor(input:{
@@ -205,6 +240,71 @@ export class WorldForgePlaySession {
   snapshot(){
     this.touch();
     return this._runtime.snapshot();
+  }
+
+  timeline(limit=24){
+    if(!Number.isInteger(limit)||limit<1||limit>240){
+      throw new Error('world_forge_play_timeline_limit_invalid');
+    }
+    this.touch();
+    return clone(this._timeline.slice(-limit));
+  }
+
+  private recordTimeline(
+    inputs:WorldInput[],
+    receipt:WorldForgePlayStepReceipt,
+  ){
+    const last=this._timeline[this._timeline.length-1];
+    const canCoalesce=
+      inputs.length===0&&
+      last?.inputCount===0&&
+      last.toTick===receipt.fromTick&&
+      last.projectVersion===this._project.version&&
+      last.worldVersion===this._runtime.definition.version;
+
+    if(canCoalesce&&last){
+      const core:Omit<WorldForgePlayTimelineEntry,'digest'>={
+        ...last,
+        toTick:receipt.toTick,
+        tickCount:last.tickCount+receipt.tickCount,
+        segmentCount:last.segmentCount+1,
+        lastStepReceiptDigest:receipt.digest,
+        afterSnapshotDigest:receipt.afterSnapshotDigest,
+        updatedAt:receipt.createdAt,
+      };
+      this._timeline[this._timeline.length-1]={
+        ...core,
+        digest:timelineEntryDigest(core),
+      };
+      return;
+    }
+
+    const core:Omit<WorldForgePlayTimelineEntry,'digest'>={
+      schema:'evercraft.fallen.world-forge-play-timeline-entry.v1',
+      sessionId:this.id,
+      projectVersion:this._project.version,
+      worldId:receipt.worldId,
+      worldVersion:this._runtime.definition.version,
+      fromTick:receipt.fromTick,
+      toTick:receipt.toTick,
+      tickCount:receipt.tickCount,
+      inputs:clone(inputs),
+      inputCount:inputs.length,
+      segmentCount:1,
+      firstStepReceiptDigest:receipt.digest,
+      lastStepReceiptDigest:receipt.digest,
+      beforeSnapshotDigest:receipt.beforeSnapshotDigest,
+      afterSnapshotDigest:receipt.afterSnapshotDigest,
+      createdAt:receipt.createdAt,
+      updatedAt:receipt.createdAt,
+    };
+    this._timeline.push({
+      ...core,
+      digest:timelineEntryDigest(core),
+    });
+    if(this._timeline.length>240){
+      this._timeline=this._timeline.slice(-240);
+    }
   }
 
   webGpuFrame(viewport:{width:number;height:number}):WorldForgePlayWebGpuFrame{
@@ -331,6 +431,7 @@ export class WorldForgePlaySession {
       ...receiptCore,
       digest:stepReceiptDigest(receiptCore),
     };
+    this.recordTimeline(inputs,receipt);
 
     return {
       snapshot:after,
