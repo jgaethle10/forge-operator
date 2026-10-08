@@ -277,6 +277,7 @@ export async function startNativeBrowserRuntime({
   maxConcurrency=2,
   startTimeoutMs=DEFAULT_START_TIMEOUT_MS,
   jobStateDir='',
+  systemiaJobKey='',
 }={}){
   const root=path.resolve(String(sourceDir||''));
   const browserRoot=path.resolve(String(browsersPath||''));
@@ -288,7 +289,10 @@ export async function startNativeBrowserRuntime({
   }
   const port=await reserveLoopbackPort();
   const workerToken=crypto.randomBytes(32).toString('hex');
-  const jobSigningKey=crypto.randomBytes(32).toString('hex');
+  if(systemiaJobKey && Buffer.byteLength(String(systemiaJobKey))<32){
+    throw new Error('native_browser_systemia_signing_key_invalid');
+  }
+  const jobSigningKey=String(systemiaJobKey||crypto.randomBytes(32).toString('hex'));
   const authOperatorToken=crypto.randomBytes(32).toString('hex');
   const child=spawn(process.execPath,['server.mjs'],{
     cwd:root,
