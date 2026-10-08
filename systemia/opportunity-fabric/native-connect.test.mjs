@@ -5,7 +5,8 @@ import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import { LineageStore } from '../lineage/core.mjs';
 import {
-  normalizeLegacyConnectCase, nativeProvider, planNativeConnect,
+  normalizeLegacyConnectCase, normalizeLegacyConnectNode, normalizeLegacyFabricMember,
+  previewNativeConnectMigration, nativeProvider, planNativeConnect,
   reviewNativeConnectProposal, recordSafeNativeConnectTransaction
 } from './native-connect.mjs';
 
@@ -146,4 +147,52 @@ test('Lineage transaction stores only sanitized routing evidence, never private 
       assert.ok(!serialized.includes(secret),'private payload in Lineage transaction: '+secret);
     }
   } finally {await rm(dir,{recursive:true,force:true});}
+});
+
+test('legacy private ConnectNode adapter drops sensitive fields and refuses foreign owner',()=>{
+  const node=normalizeLegacyConnectNode({
+    node_key:'trusted-1',owner_user_id:'owner-1',label:'Known Plumber',
+    capabilities:['plumbing'],relationship_state:'Warm',
+    private_contact_email:'NEVER_EXPOSE_EMAIL',
+    private_notes:'NEVER_EXPOSE_NOTES',source_ref:'NEVER_EXPOSE_SOURCE'
+  },{ownerId:'owner-1'});
+  assert.equal(node.kind,'connect_node');
+  assert.equal(node.id,'trusted-1');
+  assert.equal(node.owner_id,'owner-1');
+  assert.equal(JSON.stringify(node).includes('NEVER_EXPOSE'),false);
+  assert.throws(()=>normalizeLegacyConnectNode({node_key:'x',owner_user_id:'other',capabilities:['plumbing']},{ownerId:'owner-1'}),/cross_owner/);
+});
+
+test('legacy Fabric member adapter uses declared executable capabilities only',()=>{
+  const member=normalizeLegacyFabricMember({
+    id:'member-7',created_by_id:'another',
+    name:'Maker Person',role:'Specialist',specialty:'space surgeon',
+    can_do:['repair'],tags:['space surgeon'],contact_email:'NEVER_EXPOSE_EMAIL',
+    availability:'Booked'
+  });
+  assert.deepEqual(member.capabilities,['repair']);
+  assert.equal(member.availability,'Booked');
+  assert.equal(JSON.stringify(member).includes('NEVER_EXPOSE_EMAIL'),false);
+});
+
+test('migration preflight emits aggregate counts only and remains non-mutating',()=>{
+  const report=previewNativeConnectMigration({
+    ownerId:'owner-1',
+    cases:[raw(),{...raw(),case_key:'recovery-002',do_not_contact:true},{...raw(),case_key:'recovery-001'}],
+    nodes:[
+      {node_key:'node-1',owner_user_id:'owner-1',capabilities:['operator'],private_notes:'NEVER_EXPOSE_NOTES'},
+      {node_key:'node-2',owner_user_id:'other',capabilities:['operator']},
+      {node_key:'node-1',owner_user_id:'owner-1',capabilities:['capital']}
+    ]
+  });
+  assert.equal(report.cases_inspected,3);
+  assert.equal(report.cases_on_hold,1);
+  assert.equal(report.duplicate_case_ids,1);
+  assert.equal(report.nodes_invalid,1);
+  assert.equal(report.duplicate_node_ids,1);
+  assert.equal(report.blockers_present,true);
+  assert.equal(report.ready_for_production_cutover,false);
+  assert.equal(report.data_exported,false);
+  const serialized=JSON.stringify(report);
+  for(const secret of ['SECRET','Private Family Enterprise','NEVER_EXPOSE'])assert.equal(serialized.includes(secret),false);
 });
