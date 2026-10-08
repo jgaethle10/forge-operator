@@ -15,6 +15,7 @@ import {
   pickNearestNativeMesh,
 } from './world-forge-picking';
 import { nativeViewportTriangleData } from './world-forge-viewport-mesh';
+import { WorldEngineWebGpuClient } from './world-engine-webgpu-client';
 import {
   runtimeBodiesByForgeNodeId,
   runtimeTransformsByForgeNodeId,
@@ -365,6 +366,129 @@ function createSolidProgram(gl:WebGL2RenderingContext){
   return program;
 }
 
+type RuntimeWebGpuExecutionState='off'|'loading'|'active'|'fallback'|'error';
+
+function RuntimeWorldEngineLayer({
+  session,
+  enabled,
+  onState,
+}:{
+  session:PlaySessionState|null;
+  enabled:boolean;
+  onState:(state:RuntimeWebGpuExecutionState)=>void;
+}){
+  const canvasRef=useRef<HTMLCanvasElement>(null);
+  const clientRef=useRef<WorldEngineWebGpuClient|null>(null);
+  const sessionRef=useRef('');
+  const [viewportEpoch,setViewportEpoch]=useState(0);
+
+  useEffect(()=>{
+    const canvas=canvasRef.current;
+    const parent=canvas?.parentElement;
+    if(!canvas||!parent||typeof ResizeObserver==='undefined') return;
+    const observer=new ResizeObserver(()=>setViewportEpoch(value=>value+1));
+    observer.observe(parent);
+    return ()=>observer.disconnect();
+  },[]);
+
+  useEffect(()=>()=>{
+    clientRef.current?.dispose();
+    clientRef.current=null;
+    sessionRef.current='';
+  },[]);
+
+  useEffect(()=>{
+    const canvas=canvasRef.current;
+    if(!canvas) return;
+
+    if(!enabled||!session){
+      canvas.style.visibility='hidden';
+      clientRef.current?.dispose();
+      clientRef.current=null;
+      sessionRef.current='';
+      onState('off');
+      return;
+    }
+
+    if(!WorldEngineWebGpuClient.isSupported()){
+      canvas.style.visibility='hidden';
+      clientRef.current?.dispose();
+      clientRef.current=null;
+      sessionRef.current='';
+      onState('fallback');
+      return;
+    }
+
+    let cancelled=false;
+    onState(clientRef.current?'active':'loading');
+
+    async function renderRuntime(){
+      try{
+        const dpr=Math.min(2,window.devicePixelRatio||1);
+        const width=Math.max(1,Math.round(canvas!.clientWidth*dpr));
+        const height=Math.max(1,Math.round(canvas!.clientHeight*dpr));
+        const response=await fetch('/api/fallen/world-forge/play/webgpu-frame',{
+          method:'POST',
+          headers:{'content-type':'application/json'},
+          body:JSON.stringify({
+            sessionId:session!.sessionId,
+            width,
+            height,
+          }),
+        });
+        const payload=await response.json();
+        if(
+          !response.ok||
+          !payload.success||
+          !payload.frame?.plan||
+          !Array.isArray(payload.frame?.geometries)
+        ){
+          throw new Error(payload.error||'World Engine WebGPU frame request failed.');
+        }
+        if(cancelled) return;
+
+        if(!clientRef.current||sessionRef.current!==session!.sessionId){
+          clientRef.current?.dispose();
+          clientRef.current=await WorldEngineWebGpuClient.create(
+            canvas!,
+            payload.frame.geometries,
+          );
+          sessionRef.current=session!.sessionId;
+        }else{
+          clientRef.current.replaceGeometries(payload.frame.geometries);
+        }
+        if(cancelled) return;
+
+        clientRef.current.render(payload.frame.plan);
+        canvas!.style.visibility='visible';
+        onState('active');
+      }catch(err){
+        if(cancelled) return;
+        canvas!.style.visibility='hidden';
+        const message=err instanceof Error?err.message:String(err);
+        onState(message.includes('unavailable')?'fallback':'error');
+      }
+    }
+
+    void renderRuntime();
+    return ()=>{cancelled=true;};
+  },[
+    enabled,
+    session?.sessionId,
+    session?.tick,
+    session?.worldVersion,
+    session?.projectVersion,
+    viewportEpoch,
+    onState,
+  ]);
+
+  return <canvas
+    ref={canvasRef}
+    className="wf-runtime-webgpu-canvas"
+    aria-hidden="true"
+  />;
+}
+
 function WorldViewport({
   project,
   selectedId,
@@ -376,6 +500,7 @@ function WorldViewport({
   snapStep,
   angleSnapDeg,
   scaleSnapStep,
+  runtimeUnderlayActive,
 }:{
   project:ForgeProject;
   selectedId:string;
@@ -387,6 +512,7 @@ function WorldViewport({
   snapStep:number;
   angleSnapDeg:number;
   scaleSnapStep:number;
+  runtimeUnderlayActive:boolean;
 }){
   const canvasRef=useRef<HTMLCanvasElement>(null);
   const [orbit,setOrbit]=useState({
@@ -733,7 +859,7 @@ function WorldViewport({
       resize();
       gl!.enable(gl!.DEPTH_TEST);
       gl!.depthFunc(gl!.LEQUAL);
-      gl!.clearColor(.018,.021,.026,1);
+      gl!.clearColor(.018,.021,.026,runtimeUnderlayActive?0:1);
       gl!.clear(gl!.COLOR_BUFFER_BIT|gl!.DEPTH_BUFFER_BIT);
       const {vp}=matrices(canvas.width,canvas.height);
       drawVertices(GRID_LINES,vp,[.13,.16,.19,1]);
@@ -744,11 +870,11 @@ function WorldViewport({
         const selected=node.id===selectedId;
         const locked=node.locked===true;
 
-        if(shadingMode==='solid'){
+        if(!runtimeUnderlayActive&&shadingMode==='solid'){
           drawSolid(node,transform,mvp);
         }
 
-        if(shadingMode==='wireframe'||selected){
+        if((!runtimeUnderlayActive&&shadingMode==='wireframe')||selected){
           const color:[number,number,number,number]=selected
             ? [.31,.75,1,1]
             : locked
@@ -782,7 +908,7 @@ function WorldViewport({
       gl.deleteProgram(lineProgram);
       gl.deleteProgram(solidProgram);
     };
-  },[project,meshNodes,orbit,selectedId,selectedNode,activeCamera,viewMode,gizmoPreview,transformMode,shadingMode]);
+  },[project,meshNodes,orbit,selectedId,selectedNode,activeCamera,viewMode,gizmoPreview,transformMode,shadingMode,runtimeUnderlayActive]);
 
   function pickGeometry(clientX:number,clientY:number){
     const canvas=canvasRef.current;
@@ -1060,9 +1186,11 @@ function WorldViewport({
       }}
     />
     <div className="wf-view-badge">
-      {viewMode==='camera'
-        ? `CAMERA · ${shadingMode.toUpperCase()}`
-        : `WEBGL2 · ${shadingMode.toUpperCase()}`}
+      {runtimeUnderlayActive
+        ? 'WORLD ENGINE · WEBGPU'
+        : viewMode==='camera'
+          ? `CAMERA · ${shadingMode.toUpperCase()}`
+          : `WEBGL2 · ${shadingMode.toUpperCase()}`}
     </div>
     <div className="wf-view-controls">
       <button type="button" onClick={frameSelected} disabled={!selectedNode}>Frame Selected</button>
@@ -1078,6 +1206,8 @@ function WorldViewport({
         type="button"
         onClick={()=>setShadingMode(current=>current==='solid'?'wireframe':'solid')}
         className={shadingMode==='solid'?'active':''}
+        disabled={runtimeUnderlayActive}
+        title={runtimeUnderlayActive?'Play Mode is rendering from the canonical World Engine WebGPU plan':'Toggle authoring preview shading'}
       >
         {shadingMode==='solid'?'Solid':'Wire'}
       </button>
@@ -1147,6 +1277,7 @@ export default function WorldForgeEditor(){
   const [meshAmount,setMeshAmount]=useState(.25);
   const [playImpulse,setPlayImpulse]=useState(1);
   const [runtimeDragMode,setRuntimeDragMode]=useState(false);
+  const [runtimeWebGpuState,setRuntimeWebGpuState]=useState<RuntimeWebGpuExecutionState>('off');
   const [transformMode,setTransformMode]=useState<'translate'|'rotate'|'scale'>('translate');
   const [stageMode,setStageMode]=useState(false);
   const [stagedOperations,setStagedOperations]=useState<ForgeOperation[]>([]);
@@ -2225,7 +2356,16 @@ export default function WorldForgeEditor(){
           WE {engineBridge.webGpuReady?'GPU READY':'RUNTIME'} · {engineBridge.visualParity.toUpperCase()}
         </span>}
         {playSession&&<span className="wf-play-runtime-meta">
-          {playSession.webGpuReady?'GPU READY':'RUNTIME'} · {playSession.visualParity.toUpperCase()} · {playSession.timeSec.toFixed(3)}s
+          {runtimeWebGpuState==='active'
+            ? 'WEBGPU LIVE'
+            : runtimeWebGpuState==='loading'
+              ? 'WEBGPU STARTING'
+              : runtimeWebGpuState==='fallback'
+                ? 'WEBGL FALLBACK'
+                : runtimeWebGpuState==='error'
+                  ? 'WEBGPU ERROR'
+                  : playSession.webGpuReady?'GPU READY':'RUNTIME'}
+          {' · '}{playSession.visualParity.toUpperCase()} · {playSession.timeSec.toFixed(3)}s
         </span>}
       </div>
     </header>
@@ -2245,6 +2385,11 @@ export default function WorldForgeEditor(){
       </aside>
 
       <section className="wf-stage">
+        <RuntimeWorldEngineLayer
+          session={playSession}
+          enabled={Boolean(playSession&&playSession.webGpuReady&&!stagedOperations.length)}
+          onState={setRuntimeWebGpuState}
+        />
         {playSession&&<div className={
           stagedOperations.length
             ? 'wf-runtime-view-badge authoring'
@@ -2269,6 +2414,7 @@ export default function WorldForgeEditor(){
           snapStep={snapStep}
           angleSnapDeg={15}
           scaleSnapStep={.1}
+          runtimeUnderlayActive={runtimeWebGpuState==='active'&&!stagedOperations.length}
         />
         {engineBridge&&<div className="wf-engine-bridge-status">
           <strong>WORLD ENGINE</strong>
