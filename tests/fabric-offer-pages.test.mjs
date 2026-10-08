@@ -56,6 +56,9 @@ test('human offer copy gives sell-now capabilities short memorable URLs',()=>{
   assert.match(page,/name="twitter:card" content="summary_large_image"/);
   assert.match(page,/property="og:image" content="https:\/\/fabric\.systemiacommandcenters\.com\/visuals\/website-audit-attention\/poster-feed\.svg"/);
   assert.doesNotMatch(page,/machine state|start_url_state|preferred_agent_route/i);
+  const heldStatic=renderOfferPage(websiteAudit,{checkoutEnabled:false});
+  assert.match(heldStatic,/checkout held/i);
+  assert.doesNotMatch(heldStatic,/Continue to checkout/i);
 });
 
 test('EarthWorks capability page offers a scoped human inquiry instead of checkout',()=>{
@@ -196,6 +199,13 @@ test('unconfigured purchase-intent transport holds checkout without calling any 
     assert.equal(health.human_offer_checkout_enabled,false);
     assert.equal(health.human_offer_checkout_transport_host,null);
     assert.equal(health.human_offer_checkout_transport_state,'held_no_owned_purchase_intent_transport');
+
+    const heldPage=await fetch(runtime.url+'/offers/website-audit');
+    assert.equal(heldPage.status,200);
+    const heldHtml=await heldPage.text();
+    assert.match(heldHtml,/checkout held/i);
+    assert.match(heldHtml,/Secure purchase\/review is temporarily unavailable/i);
+    assert.doesNotMatch(heldHtml,/Continue to checkout|<form class="checkout-form"/i);
 
     const unconfirmed=await fetch(runtime.url+'/api/offers/website-audit/checkout',{
       method:'POST',headers:{'content-type':'application/json'},
