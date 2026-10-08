@@ -546,3 +546,21 @@ Arrangement semantics are explicit:
 Audio-track assets are preloaded only from canonical arrangement scene references. Restricted assets stay excluded and missing local bytes remain silence. An audio asset starts once at the beginning of a contiguous arrangement run and is bounded to that run so it cannot bleed into the next scene assignment.
 
 Audio status now reports scene-vs-arrangement playback mode plus the current arrangement bar. Fallen Sessions exposes separate scene and arrangement transport controls and refuses to start an empty arrangement.
+
+
+### PulseGrid 0.26 canonical owned device graph
+
+Track DSP authority now lives in typed PulseGrid devices rather than special-case filter/delay fields on the track.
+
+Each canonical track carries one owned filter device and one owned delay device:
+
+- Filter: enabled state, frequency, Q
+- Delay: enabled state, mix, time, feedback
+
+New sessions store only the device graph. Legacy sessions that still contain `filterHz`, `delayMix`, `delayTime` or `delayFeedback` are migrated once into canonical devices; those legacy fields are not retained in the migrated graph.
+
+Human, agent and transaction edits use reversible `device.set_parameter` and `device.set_enabled` operations with explicit device/parameter receipt targets. The older `track.set_filter` and `track.set_delay_mix` operations remain compatibility aliases for older plans, but they mutate the same canonical device records and do not recreate legacy track state.
+
+The browser audio adapter reads device parameters directly when scheduling the reusable Web Audio buses. Disabling the filter opens the cutoff to the canonical bypass value; disabling the delay sets wet mix and feedback to zero. Fallen Sessions exposes the same owned device chain and routes parameter gestures through canonical operations on release.
+
+This is deliberately an Evercraft-owned first device graph. Third-party plugin hosting remains an adapter problem for a later layer and must not become canonical session authority.

@@ -483,14 +483,23 @@ export class PulseGridAudioEngine {
     autoFilter: number,
     time: number,
   ) {
+    const filter=track.devices.find((device)=>device.type==='filter');
+    const delay=track.devices.find((device)=>device.type==='delay');
+    const filterFrequency=filter&&filter.enabled?filter.parameters.frequency:19000;
+    const filterQ=filter&&filter.enabled?filter.parameters.q:0.6;
+    const delayTime=delay?.parameters.time??0.24;
+    const delayFeedback=delay&&delay.enabled?delay.parameters.feedback:0;
+    const delayMix=delay&&delay.enabled?delay.parameters.mix:0;
+
     bus.input.gain.setValueAtTime(Math.max(0, track.volume * autoVolume), time);
     bus.filter.frequency.setValueAtTime(
-      Math.max(80, Math.min(19000, track.filterHz * Math.max(0.08, autoFilter))),
+      Math.max(80, Math.min(19000, filterFrequency * Math.max(0.08, autoFilter))),
       time,
     );
-    bus.delay.delayTime.setValueAtTime(Math.max(0.02, Math.min(0.8, track.delayTime)), time);
-    bus.feedback.gain.setValueAtTime(Math.max(0, Math.min(0.78, track.delayFeedback)), time);
-    bus.wet.gain.setValueAtTime(Math.max(0, Math.min(0.65, track.delayMix)), time);
+    bus.filter.Q.setValueAtTime(Math.max(0.1,Math.min(24,filterQ)),time);
+    bus.delay.delayTime.setValueAtTime(Math.max(0.02, Math.min(0.8, delayTime)), time);
+    bus.feedback.gain.setValueAtTime(Math.max(0, Math.min(0.78, delayFeedback)), time);
+    bus.wet.gain.setValueAtTime(Math.max(0, Math.min(0.65, delayMix)), time);
     bus.dry.gain.setValueAtTime(1, time);
   }
 

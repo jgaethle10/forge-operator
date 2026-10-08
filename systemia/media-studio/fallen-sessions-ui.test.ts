@@ -282,3 +282,43 @@ test('Fallen Sessions arrangement transport invokes the canonical audio schedule
   assert.match(ui,/Arrangement bar \{audioStatus\.arrangement_bar\+1\}/);
   assert.match(ui,/Contiguous repeated scene cells preserve clip phase across bars/);
 });
+
+
+test('Fallen Sessions edits DSP through canonical device operations',()=>{
+  const ui=fs.readFileSync('src/FallenSessions.tsx','utf8');
+  assert.match(ui,/type:'device\.set_parameter'/);
+  assert.match(ui,/type:'device\.set_enabled'/);
+  assert.match(ui,/track\.devices\.map\(\(device\)=>/);
+  assert.match(ui,/Owned device chain/);
+  assert.doesNotMatch(ui,/track\.filterHz/);
+  assert.doesNotMatch(ui,/track\.delayMix/);
+  assert.doesNotMatch(ui,/candidate\.filterHz/);
+  assert.doesNotMatch(ui,/candidate\.delayMix/);
+});
+
+test('Fallen Sessions device sliders commit on release rather than receipt-spamming on change',()=>{
+  const ui=fs.readFileSync('src/FallenSessions.tsx','utf8');
+  assert.match(ui,/onPointerUp=\{\(event\)=>setDeviceParameter/);
+  assert.match(ui,/onKeyUp=\{\(event\)=>setDeviceParameter/);
+  assert.doesNotMatch(ui,/onChange=\{\(event\)=>setDeviceParameter/);
+});
+
+test('Fallen Sessions Atomic Chorus Lift targets the canonical device graph',()=>{
+  const ui=fs.readFileSync('src/FallenSessions.tsx','utf8');
+  const liftStart=ui.indexOf('function runLiftPlan()');
+  const forkStart=ui.indexOf('function forkVariation()',liftStart+1);
+  const liftBody=ui.slice(liftStart,forkStart>liftStart?forkStart:undefined);
+  assert.match(liftBody,/type:'device\.set_parameter'/);
+  assert.match(liftBody,/parameter:'frequency'/);
+  assert.match(liftBody,/parameter:'mix'/);
+  assert.doesNotMatch(liftBody,/type:'track\.set_filter'/);
+  assert.doesNotMatch(liftBody,/type:'track\.set_delay_mix'/);
+});
+
+test('Fallen Sessions device editor stays responsive',()=>{
+  const css=fs.readFileSync('src/fallen-sessions.css','utf8');
+  assert.match(css,/\.fsDevices/);
+  assert.match(css,/\.fsDeviceParams/);
+  assert.match(css,/grid-template-columns:repeat\(3,minmax\(0,1fr\)\)/);
+  assert.match(css,/@media\(max-width:720px\).*\.fsDeviceParams\{grid-template-columns:minmax\(0,1fr\)\}/s);
+});

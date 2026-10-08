@@ -47,3 +47,15 @@
 .fsArrangement thead th{font-size:8px;color:#7d8992;background:#10161b}
 .fsArrangement select{width:46px;background:#11161b;color:#edf2f6;border:1px solid #303841;border-radius:5px;padding:5px 3px;font-size:9px}
 @media(max-width:720px){.fsArrangementHead{display:block}.fsArrangementHead p{margin-top:7px;text-align:left}}
+
+
+.fsDevices{margin:10px 0;padding:10px;border:1px solid #2b333b;border-radius:10px;background:#0c1014;display:grid;gap:8px}
+.fsDevice{border:1px solid #252d34;border-radius:8px;padding:9px;background:#10161b;display:grid;gap:8px}
+.fsDevice.disabled{opacity:.55}
+.fsDeviceTitle{display:flex;align-items:center;gap:8px;min-width:0}
+.fsDeviceTitle strong{font-size:11px}
+.fsDeviceTitle small{margin-left:auto;color:#6f7b85;font:8px ui-monospace,SFMono-Regular,Menlo,monospace;overflow-wrap:anywhere}
+.fsDeviceParams{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}
+.fsDeviceParams label{display:grid;gap:4px;color:#8f9ba5;font-size:9px}
+.fsDeviceParams input[type="range"]{width:100%}
+@media(max-width:720px){.fsDeviceParams{grid-template-columns:minmax(0,1fr)}.fsDeviceTitle{align-items:flex-start;flex-wrap:wrap}.fsDeviceTitle small{width:100%;margin-left:25px}}

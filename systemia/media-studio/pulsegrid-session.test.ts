@@ -65,14 +65,19 @@ test('PulseGrid infers multi-bar length from legacy clip data',()=>{
   assert.equal(validatePulseGridSession(migrated).ok,true);
 });
 
-test('PulseGrid semantic edits return reversible receipts',()=>{
+test('PulseGrid legacy filter command remains a device-graph compatibility alias',()=>{
   const original=createPulseGridSession();
+  const originalBass=original.tracks.find((track)=>track.id==='bass')!;
+  const originalFilter=originalBass.devices.find((device)=>device.type==='filter');
+  assert.equal(originalFilter?.type==='filter'?originalFilter.parameters.frequency:null,1200);
+
   const {session,receipt}=applyPulseGridOperation(original,{type:'track.set_filter',track_id:'bass',filter_hz:880},'agent');
-  assert.equal(original.tracks.find((track)=>track.id==='bass')?.filterHz,1200);
-  assert.equal(session.tracks.find((track)=>track.id==='bass')?.filterHz,880);
+  const bass=session.tracks.find((track)=>track.id==='bass')!;
+  const filter=bass.devices.find((device)=>device.type==='filter');
+  assert.equal(filter?.type==='filter'?filter.parameters.frequency:null,880);
   assert.equal(receipt.actor,'agent');
   assert.equal(receipt.reversible,true);
-  assert.deepEqual(receipt.targets,['track:bass.filterHz']);
+  assert.deepEqual(receipt.targets,['track:bass.device:bass-filter.parameters.frequency']);
 });
 
 
@@ -266,6 +271,9 @@ test('PulseGrid refuses to fork a variation onto its source scene',()=>{
 
 test('PulseGrid atomic edit plan commits as one reversible intent boundary',()=>{
   const original=createPulseGridSession('Atomic Chorus');
+  const originalKeys=original.tracks.find((track)=>track.id==='keys')!;
+  const filter=originalKeys.devices.find((device)=>device.type==='filter')!;
+  const delay=originalKeys.devices.find((device)=>device.type==='delay')!;
   const result=applyPulseGridTransaction(original,{
     transaction_id:'tx-chorus-1',
     intent:'Make the chorus hit harder without overwriting the source.',
@@ -273,8 +281,8 @@ test('PulseGrid atomic edit plan commits as one reversible intent boundary',()=>
       {type:'clip.fork_variation',track_id:'keys',source_scene:0,destination_scene:1,name:'Chorus Lift'},
       {type:'clip.set_bars',track_id:'keys',scene:1,bars:2},
       {type:'note.add',track_id:'keys',scene:1,note:{id:'lift-note',pitch:72,start:20,length:4,velocity:.94}},
-      {type:'track.set_filter',track_id:'keys',filter_hz:9800},
-      {type:'track.set_delay_mix',track_id:'keys',mix:.18},
+      {type:'device.set_parameter',track_id:'keys',device_id:filter.id,parameter:'frequency',value:9800},
+      {type:'device.set_parameter',track_id:'keys',device_id:delay.id,parameter:'mix',value:.18},
     ],
   },'agent');
 
@@ -291,8 +299,10 @@ test('PulseGrid atomic edit plan commits as one reversible intent boundary',()=>
   assert.equal(keys.clips[1].name,'Chorus Lift');
   assert.equal(keys.clips[1].bars,2);
   assert.equal(keys.clips[1].notes.some((note)=>note.id==='lift-note'),true);
-  assert.equal(keys.filterHz,9800);
-  assert.equal(keys.delayMix,.18);
+  const editedFilter=keys.devices.find((device)=>device.type==='filter');
+  const editedDelay=keys.devices.find((device)=>device.type==='delay');
+  assert.equal(editedFilter?.type==='filter'?editedFilter.parameters.frequency:null,9800);
+  assert.equal(editedDelay?.type==='delay'?editedDelay.parameters.mix:null,.18);
   assert.equal(validatePulseGridSession(result.session).ok,true);
 
   const undone=undoPulseGridReceipt(result.session,result.receipt.id,'human');
@@ -325,7 +335,8 @@ test('PulseGrid atomic edit plan rolls back completely when any child operation 
 
   assert.deepEqual(original,snapshot);
   assert.equal(original.transport.bpm,120);
-  assert.equal(original.tracks.find((track)=>track.id==='bass')!.filterHz,1200);
+  const rollbackFilter=original.tracks.find((track)=>track.id==='bass')!.devices.find((device)=>device.type==='filter');
+  assert.equal(rollbackFilter?.type==='filter'?rollbackFilter.parameters.frequency:null,1200);
   assert.equal(original.receipts.length,0);
 });
 
@@ -571,4 +582,80 @@ test('PulseGrid validation rejects malformed arrangement rows and scene referenc
   validation=validatePulseGridSession(invalidScene);
   assert.equal(validation.ok,false);
   assert.ok(validation.errors.includes('arrangement.0.0'));
+});
+
+
+test('PulseGrid canonical tracks store DSP only in typed device chains',()=>{
+  const session=createPulseGridSession('Device Graph Proof');
+  for(const track of session.tracks){
+    assert.equal('filterHz' in track,false);
+    assert.equal('delayMix' in track,false);
+    assert.equal('delayTime' in track,false);
+    assert.equal('delayFeedback' in track,false);
+    assert.equal(track.devices.length,2);
+    assert.equal(track.devices.filter((device)=>device.type==='filter').length,1);
+    assert.equal(track.devices.filter((device)=>device.type==='delay').length,1);
+  }
+  assert.equal(validatePulseGridSession(session).ok,true);
+});
+
+test('PulseGrid migrates legacy DSP fields into canonical devices once',()=>{
+  const migrated=migratePulseGridSession({
+    project_name:'Legacy DSP',
+    tracks:[{
+      id:'keys',
+      name:'Keys',
+      type:'synth',
+      filterHz:4321,
+      delayMix:.31,
+      delayTime:.42,
+      delayFeedback:.37,
+      clips:[],
+    }],
+  });
+  const keys=migrated.tracks[0];
+  const filter=keys.devices.find((device)=>device.type==='filter');
+  const delay=keys.devices.find((device)=>device.type==='delay');
+  assert.equal(filter?.type==='filter'?filter.parameters.frequency:null,4321);
+  assert.equal(delay?.type==='delay'?delay.parameters.mix:null,.31);
+  assert.equal(delay?.type==='delay'?delay.parameters.time:null,.42);
+  assert.equal(delay?.type==='delay'?delay.parameters.feedback:null,.37);
+  assert.equal('filterHz' in keys,false);
+  assert.equal(validatePulseGridSession(migrated).ok,true);
+});
+
+test('PulseGrid generic device parameter edits are bounded, targeted and reversible',()=>{
+  let session=createPulseGridSession('Device Edit');
+  const keys=session.tracks.find((track)=>track.id==='keys')!;
+  const filter=keys.devices.find((device)=>device.type==='filter')!;
+  const result=applyPulseGridOperation(session,{
+    type:'device.set_parameter',
+    track_id:'keys',
+    device_id:filter.id,
+    parameter:'frequency',
+    value:99999,
+  },'human');
+  session=result.session;
+  const edited=session.tracks.find((track)=>track.id==='keys')!.devices.find((device)=>device.id===filter.id);
+  assert.equal(edited?.type==='filter'?edited.parameters.frequency:null,19000);
+  assert.deepEqual(result.receipt.targets,[`track:keys.device:${filter.id}.parameters.frequency`]);
+
+  const undone=undoPulseGridReceipt(session,result.receipt.id,'human');
+  const restored=undone.session.tracks.find((track)=>track.id==='keys')!.devices.find((device)=>device.id===filter.id);
+  assert.equal(restored?.type==='filter'?restored.parameters.frequency:null,7000);
+});
+
+test('PulseGrid device enable state is canonical and reversible',()=>{
+  let session=createPulseGridSession();
+  const delay=session.tracks.find((track)=>track.id==='bell')!.devices.find((device)=>device.type==='delay')!;
+  const result=applyPulseGridOperation(session,{
+    type:'device.set_enabled',
+    track_id:'bell',
+    device_id:delay.id,
+    enabled:false,
+  });
+  session=result.session;
+  assert.equal(session.tracks.find((track)=>track.id==='bell')!.devices.find((device)=>device.id===delay.id)?.enabled,false);
+  const undone=undoPulseGridReceipt(session,result.receipt.id);
+  assert.equal(undone.session.tracks.find((track)=>track.id==='bell')!.devices.find((device)=>device.id===delay.id)?.enabled,true);
 });

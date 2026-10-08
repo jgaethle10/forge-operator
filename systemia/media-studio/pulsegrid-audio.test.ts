@@ -109,7 +109,29 @@ test('PulseGrid arrangement audio assets start once per contiguous run and are b
 });
 
 
-test('PulseGrid arrangement empty slots are silence and never fall back to the selected scene',()=>{
+test('PulseGrid audio reads DSP from the canonical device graph only',()=>{
+  assert.match(audio,/track\.devices\.find\(\(device\)=>device\.type==='filter'\)/);
+  assert.match(audio,/track\.devices\.find\(\(device\)=>device\.type==='delay'\)/);
+  assert.match(audio,/filter\.parameters\.frequency/);
+  assert.match(audio,/filter\.parameters\.q/);
+  assert.match(audio,/delay\.parameters\.mix/);
+  assert.match(audio,/delay\.parameters\.time/);
+  assert.match(audio,/delay\.parameters\.feedback/);
+  assert.doesNotMatch(audio,/track\.filterHz/);
+  assert.doesNotMatch(audio,/track\.delayMix/);
+  assert.doesNotMatch(audio,/track\.delayTime/);
+  assert.doesNotMatch(audio,/track\.delayFeedback/);
+});
+
+test('PulseGrid device enable state changes actual DSP behavior without a parallel bypass model',()=>{
+  assert.match(audio,/filter&&filter\.enabled\?filter\.parameters\.frequency:19000/);
+  assert.match(audio,/delay&&delay\.enabled\?delay\.parameters\.feedback:0/);
+  assert.match(audio,/delay&&delay\.enabled\?delay\.parameters\.mix:0/);
+  assert.doesNotMatch(audio,/private\s+devices\s*=/);
+});
+
+
+test('PulseGrid arrangement empty slots remain silent under the device-graph runtime',()=>{
   assert.match(audio,/const clip = this\.playbackMode === 'arrangement'[\s\S]*\? arrangementPosition\?\.clip[\s\S]*: track\.clips\[this\.scene\]/);
   assert.doesNotMatch(audio,/arrangementPosition\?\.clip \|\| track\.clips\[this\.scene\]/);
 });
