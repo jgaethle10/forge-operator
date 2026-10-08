@@ -33,6 +33,11 @@ check('barnet_commercial_ingest_blocked',barnet?.allowed_for_rivet_session_count
 check('penndot_operations_not_sessions',penn?.allowed_for_rivet_session_count===false&&penn?.allowed_evidence_class==='operational_status_candidate');
 check('candidate_keys_unique',sources.length===new Set(sources.map(s=>s.source_id)).size);
 check('all_held_sources_fail_closed',sources.every(s=>s.allowed_for_rivet_session_count===false));
+const ottawa=sources.find(s=>s.source_id==='ca-on-ottawa-city-public-charging-sessions');
+check('ottawa_city_open_data_rights_preserved',ottawa?.licence==='City of Ottawa Open Data Licence 2.0'&&/commercial_use_allowed/.test(ottawa?.commercial_rights||''));
+check('ottawa_attribution_preserved',/Contains information licensed under/.test(ottawa?.required_attribution||''));
+check('ottawa_source_access_blocks_live_ingest',ottawa?.live_api_probe_status==='BLOCKED_HTTP_499_TOKEN_REQUIRED'&&ottawa?.allowed_for_rivet_session_count===false);
+check('ottawa_privacy_excludes_personal_fields',ottawa?.prohibited_fields?.includes('Card_number')&&ottawa?.prohibited_fields?.includes('Session_ID')&&/Never fetch/.test(ottawa?.privacy_rule||''));
 check('nyc_audit_distinguishes_publisher_from_ingested',nycAudit.month_partitions.every(p=>p.ingested_into_EVOpsSession_verified===false));
 check('nyc_audit_source_rows_reconcile_statuses',nycAudit.month_partitions.every(p=>p.source_rows===Object.values(p.statuses).reduce((a,b)=>a+b,0)));
 check('nyc_audit_excludes_aborted_invalid',nycAudit.month_partitions.every(p=>p.excluded_status_rows===(p.statuses.ABORTED||0)+(p.statuses.INVALID||0)));
