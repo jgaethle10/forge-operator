@@ -55,14 +55,15 @@ test('Fabric self updater accepts only the authorized Forge repository and fast-
   assert.doesNotMatch(updater,/git reset --hard origin\/main/);
 });
 
-test('Fabric self updater normalizes generated Journal state before dirty-checkout gating',()=>{
-  const normalizeIndex=updater.indexOf('normalizing generated public/journal surface before checkout preflight');
+test('Fabric self updater preserves Journal evidence before dirty-checkout gating',()=>{
+  const scanIndex=updater.indexOf('ls-files --others --ignored --exclude-standard -- public/journal');
+  const holdIndex=updater.indexOf('HOLD: Journal evidence has uncommitted or ignored files');
   const statusIndex=updater.indexOf('status --porcelain --untracked-files=all');
-  assert.ok(normalizeIndex>=0,'generated Journal normalization must exist');
-  assert.ok(statusIndex>=0,'dirty-checkout preflight must exist');
-  assert.ok(normalizeIndex<statusIndex,'Journal normalization must happen before dirty-checkout gating');
-  assert.match(updater,/git -C "\$REPO_ROOT" restore --staged --worktree -- public\/journal/);
-  assert.match(updater,/git -C "\$REPO_ROOT" clean -fdx -- public\/journal/);
+  const fetchIndex=updater.indexOf('fetch --prune "$REMOTE" "$BRANCH"');
+  assert.ok(scanIndex>=0&&statusIndex>=0&&holdIndex>=0,'Journal preservation preflight must exist');
+  assert.ok(scanIndex<statusIndex&&statusIndex<holdIndex&&holdIndex<fetchIndex,'preflight must HOLD before fetch');
+  assert.doesNotMatch(updater,/git -C "\$REPO_ROOT" restore --staged --worktree -- public\/journal/);
+  assert.doesNotMatch(updater,/git -C "\$REPO_ROOT" clean -fdx -- public\/journal/);
   assert.match(updater,/classify-fabric-checkout-dirt\.mjs/);
 });
 
