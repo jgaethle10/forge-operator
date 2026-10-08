@@ -2,12 +2,12 @@
   "schema": "evercraft.cfb.edition-evidence.v1",
   "ranking": {
     "schema": "evercraft.cfb-power-rankings.v1",
-    "run_id": "cfbpi:c0a0e97d3356b3d52d57c04f",
+    "run_id": "cfbpi:cd08f777eee25c5c5dc3a1b6",
     "season": 2026,
     "week_label": "Through 2026-10-07",
     "evidence_snapshot_id": "cfb:2026:2026-10-07:4df1aa713c1f6469888a",
     "evidence_through_at": "2026-10-07T23:59:59.999Z",
-    "generated_at": "2026-10-08T13:30:29.072Z",
+    "generated_at": "2026-10-08T13:31:33.152Z",
     "model": {
       "model_version": "evercraft-cfbpi-0.2.0",
       "missing_data_penalty": 8,
@@ -31,9 +31,9 @@
     "rankings": [
       {
         "rank": 1,
-        "previous_rank": null,
-        "movement": null,
-        "movement_state": "new",
+        "previous_rank": 1,
+        "movement": 0,
+        "movement_state": "unchanged",
         "team_id": "alabama",
         "team_name": "Alabama",
         "record": {
@@ -74,9 +74,9 @@
       },
       {
         "rank": 2,
-        "previous_rank": null,
-        "movement": null,
-        "movement_state": "new",
+        "previous_rank": 2,
+        "movement": 0,
+        "movement_state": "unchanged",
         "team_id": "notre-dame",
         "team_name": "Notre Dame",
         "record": {
@@ -117,9 +117,9 @@
       },
       {
         "rank": 3,
-        "previous_rank": null,
-        "movement": null,
-        "movement_state": "new",
+        "previous_rank": 3,
+        "movement": 0,
+        "movement_state": "unchanged",
         "team_id": "texas",
         "team_name": "Texas",
         "record": {
@@ -159,9 +159,9 @@
       },
       {
         "rank": 4,
-        "previous_rank": null,
-        "movement": null,
-        "movement_state": "new",
+        "previous_rank": 4,
+        "movement": 0,
+        "movement_state": "unchanged",
         "team_id": "texas-tech",
         "team_name": "Texas Tech",
         "record": {
@@ -202,9 +202,9 @@
       },
       {
         "rank": 5,
-        "previous_rank": null,
-        "movement": null,
-        "movement_state": "new",
+        "previous_rank": 5,
+        "movement": 0,
+        "movement_state": "unchanged",
         "team_id": "indiana",
         "team_name": "Indiana",
         "record": {
@@ -245,9 +245,9 @@
       },
       {
         "rank": 6,
-        "previous_rank": null,
-        "movement": null,
-        "movement_state": "new",
+        "previous_rank": 6,
+        "movement": 0,
+        "movement_state": "unchanged",
         "team_id": "ucla",
         "team_name": "UCLA",
         "record": {
@@ -287,9 +287,9 @@
       },
       {
         "rank": 7,
-        "previous_rank": null,
-        "movement": null,
-        "movement_state": "new",
+        "previous_rank": 8,
+        "movement": 1,
+        "movement_state": "up",
         "team_id": "utah",
         "team_name": "Utah",
         "record": {
@@ -329,9 +329,9 @@
       },
       {
         "rank": 8,
-        "previous_rank": null,
-        "movement": null,
-        "movement_state": "new",
+        "previous_rank": 7,
+        "movement": -1,
+        "movement_state": "down",
         "team_id": "georgia",
         "team_name": "Georgia",
         "record": {
@@ -372,9 +372,9 @@
       },
       {
         "rank": 9,
-        "previous_rank": null,
-        "movement": null,
-        "movement_state": "new",
+        "previous_rank": 9,
+        "movement": 0,
+        "movement_state": "unchanged",
         "team_id": "miami-fl",
         "team_name": "Miami (FL)",
         "record": {
@@ -415,9 +415,9 @@
       },
       {
         "rank": 10,
-        "previous_rank": null,
-        "movement": null,
-        "movement_state": "new",
+        "previous_rank": 10,
+        "movement": 0,
+        "movement_state": "unchanged",
         "team_id": "ohio-st",
         "team_name": "Ohio St.",
         "record": {
@@ -458,9 +458,9 @@
       },
       {
         "rank": 11,
-        "previous_rank": null,
-        "movement": null,
-        "movement_state": "new",
+        "previous_rank": 11,
+        "movement": 0,
+        "movement_state": "unchanged",
         "team_id": "byu",
         "team_name": "BYU",
         "record": {
@@ -500,9 +500,9 @@
       },
       {
         "rank": 12,
-        "previous_rank": null,
-        "movement": null,
-        "movement_state": "new",
+        "previous_rank": 12,
+        "movement": 0,
+        "movement_state": "unchanged",
         "team_id": "nebraska",
         "team_name": "Nebraska",
         "record": {
@@ -543,9 +543,9 @@
       },
       {
         "rank": 13,
-        "previous_rank": null,
-        "movement": null,
-        "movement_state": "new",
+        "previous_rank": 13,
+        "movement": 0,
+        "movement_state": "unchanged",
         "team_id": "pittsburgh",
         "team_name": "Pittsburgh",
         "record": {
@@ -586,9 +586,9 @@
       },
       {
         "rank": 14,
-        "previous_rank": null,
-        "movement": null,
-        "movement_state": "new",
+        "previous_rank": 14,
+        "movement": 0,
+        "movement_state": "unchanged",
         "team_id": "kentucky",
         "team_name": "Kentucky",
         "record": {
@@ -629,9 +629,9 @@
       },
       {
         "rank": 15,
-        "previous_rank": null,
-        "movement": null,
-        "movement_state": "new",
+        "previous_rank": 15,
+        "movement": 0,
+        "movement_state": "unchanged",
         "team_id": "mississippi-st",
         "team_name": "Mississippi St.",
         "record": {
@@ -672,9 +672,9 @@
       },
       {
         "rank": 16,
-        "previous_rank": null,
-        "movement": null,
-        "movement_state": "new",
+        "previous_rank": 16,
+        "movement": 0,
+        "movement_state": "unchanged",
         "team_id": "houston",
         "team_name": "Houston",
         "record": {
@@ -715,9 +715,9 @@
       },
       {
         "rank": 17,
-        "previous_rank": null,
-        "movement": null,
-        "movement_state": "new",
+        "previous_rank": 17,
+        "movement": 0,
+        "movement_state": "unchanged",
         "team_id": "wisconsin",
         "team_name": "Wisconsin",
         "record": {
@@ -758,9 +758,9 @@
       },
       {
         "rank": 18,
-        "previous_rank": null,
-        "movement": null,
-        "movement_state": "new",
+        "previous_rank": 18,
+        "movement": 0,
+        "movement_state": "unchanged",
         "team_id": "missouri",
         "team_name": "Missouri",
         "record": {
@@ -801,9 +801,9 @@
       },
       {
         "rank": 19,
-        "previous_rank": null,
-        "movement": null,
-        "movement_state": "new",
+        "previous_rank": 19,
+        "movement": 0,
+        "movement_state": "unchanged",
         "team_id": "tennessee",
         "team_name": "Tennessee",
         "record": {
@@ -844,9 +844,9 @@
       },
       {
         "rank": 20,
-        "previous_rank": null,
-        "movement": null,
-        "movement_state": "new",
+        "previous_rank": 20,
+        "movement": 0,
+        "movement_state": "unchanged",
         "team_id": "lsu",
         "team_name": "LSU",
         "record": {
@@ -887,9 +887,9 @@
       },
       {
         "rank": 21,
-        "previous_rank": null,
-        "movement": null,
-        "movement_state": "new",
+        "previous_rank": 21,
+        "movement": 0,
+        "movement_state": "unchanged",
         "team_id": "northwestern",
         "team_name": "Northwestern",
         "record": {
@@ -929,9 +929,9 @@
       },
       {
         "rank": 22,
-        "previous_rank": null,
-        "movement": null,
-        "movement_state": "new",
+        "previous_rank": 22,
+        "movement": 0,
+        "movement_state": "unchanged",
         "team_id": "baylor",
         "team_name": "Baylor",
         "record": {
@@ -972,9 +972,9 @@
       },
       {
         "rank": 23,
-        "previous_rank": null,
-        "movement": null,
-        "movement_state": "new",
+        "previous_rank": 24,
+        "movement": 1,
+        "movement_state": "up",
         "team_id": "florida",
         "team_name": "Florida",
         "record": {
@@ -1015,9 +1015,9 @@
       },
       {
         "rank": 24,
-        "previous_rank": null,
-        "movement": null,
-        "movement_state": "new",
+        "previous_rank": 23,
+        "movement": -1,
+        "movement_state": "down",
         "team_id": "james-madison",
         "team_name": "James Madison",
         "record": {
@@ -1058,9 +1058,9 @@
       },
       {
         "rank": 25,
-        "previous_rank": null,
-        "movement": null,
-        "movement_state": "new",
+        "previous_rank": 25,
+        "movement": 0,
+        "movement_state": "unchanged",
         "team_id": "oklahoma-st",
         "team_name": "Oklahoma St.",
         "record": {
@@ -1100,9 +1100,9 @@
       },
       {
         "rank": 26,
-        "previous_rank": null,
-        "movement": null,
-        "movement_state": "new",
+        "previous_rank": 26,
+        "movement": 0,
+        "movement_state": "unchanged",
         "team_id": "oregon",
         "team_name": "Oregon",
         "record": {
@@ -1142,9 +1142,9 @@
       },
       {
         "rank": 27,
-        "previous_rank": null,
-        "movement": null,
-        "movement_state": "new",
+        "previous_rank": 27,
+        "movement": 0,
+        "movement_state": "unchanged",
         "team_id": "oregon-st",
         "team_name": "Oregon St.",
         "record": {
@@ -1185,9 +1185,9 @@
       },
       {
         "rank": 28,
-        "previous_rank": null,
-        "movement": null,
-        "movement_state": "new",
+        "previous_rank": 29,
+        "movement": 1,
+        "movement_state": "up",
         "team_id": "north-dakota-st",
         "team_name": "North Dakota St.",
         "record": {
@@ -1228,9 +1228,9 @@
       },
       {
         "rank": 29,
-        "previous_rank": null,
-        "movement": null,
-        "movement_state": "new",
+        "previous_rank": 28,
+        "movement": -1,
+        "movement_state": "down",
         "team_id": "florida-st",
         "team_name": "Florida St.",
         "record": {
@@ -1271,9 +1271,9 @@
       },
       {
         "rank": 30,
-        "previous_rank": null,
-        "movement": null,
-        "movement_state": "new",
+        "previous_rank": 31,
+        "movement": 1,
+        "movement_state": "up",
         "team_id": "boise-st",
         "team_name": "Boise St.",
         "record": {
@@ -1314,9 +1314,9 @@
       },
       {
         "rank": 31,
-        "previous_rank": null,
-        "movement": null,
-        "movement_state": "new",
+        "previous_rank": 30,
+        "movement": -1,
+        "movement_state": "down",
         "team_id": "ucf",
         "team_name": "UCF",
         "record": {
@@ -1357,9 +1357,9 @@
       },
       {
         "rank": 32,
-        "previous_rank": null,
-        "movement": null,
-        "movement_state": "new",
+        "previous_rank": 32,
+        "movement": 0,
+        "movement_state": "unchanged",
         "team_id": "duke",
         "team_name": "Duke",
         "record": {
@@ -1399,9 +1399,9 @@
       },
       {
         "rank": 33,
-        "previous_rank": null,
-        "movement": null,
-        "movement_state": "new",
+        "previous_rank": 33,
+        "movement": 0,
+        "movement_state": "unchanged",
         "team_id": "virginia-tech",
         "team_name": "Virginia Tech",
         "record": {
@@ -1442,9 +1442,9 @@
       },
       {
         "rank": 34,
-        "previous_rank": null,
-        "movement": null,
-        "movement_state": "new",
+        "previous_rank": 34,
+        "movement": 0,
+        "movement_state": "unchanged",
         "team_id": "arizona",
         "team_name": "Arizona",
         "record": {
@@ -1485,9 +1485,9 @@
       },
       {
         "rank": 35,
-        "previous_rank": null,
-        "movement": null,
-        "movement_state": "new",
+        "previous_rank": 35,
+        "movement": 0,
+        "movement_state": "unchanged",
         "team_id": "iowa",
         "team_name": "Iowa",
         "record": {
@@ -1528,9 +1528,9 @@
       },
       {
         "rank": 36,
-        "previous_rank": null,
-        "movement": null,
-        "movement_state": "new",
+        "previous_rank": 36,
+        "movement": 0,
+        "movement_state": "unchanged",
         "team_id": "liberty",
         "team_name": "Liberty",
         "record": {
@@ -1571,9 +1571,9 @@
       },
       {
         "rank": 37,
-        "previous_rank": null,
-        "movement": null,
-        "movement_state": "new",
+        "previous_rank": 38,
+        "movement": 1,
+        "movement_state": "up",
         "team_id": "southern-california",
         "team_name": "Southern California",
         "record": {
@@ -1615,9 +1615,9 @@
       },
       {
         "rank": 38,
-        "previous_rank": null,
-        "movement": null,
-        "movement_state": "new",
+        "previous_rank": 39,
+        "movement": 1,
+        "movement_state": "up",
         "team_id": "minnesota",
         "team_name": "Minnesota",
         "record": {
@@ -1658,9 +1658,9 @@
       },
       {
         "rank": 39,
-        "previous_rank": null,
-        "movement": null,
-        "movement_state": "new",
+        "previous_rank": 37,
+        "movement": -2,
+        "movement_state": "down",
         "team_id": "new-mexico",
         "team_name": "New Mexico",
         "record": {
@@ -1701,9 +1701,9 @@
       },
       {
         "rank": 40,
-        "previous_rank": null,
-        "movement": null,
-        "movement_state": "new",
+        "previous_rank": 40,
+        "movement": 0,
+        "movement_state": "unchanged",
         "team_id": "toledo",
         "team_name": "Toledo",
         "record": {
@@ -1744,9 +1744,9 @@
       },
       {
         "rank": 41,
-        "previous_rank": null,
-        "movement": null,
-        "movement_state": "new",
+        "previous_rank": 41,
+        "movement": 0,
+        "movement_state": "unchanged",
         "team_id": "utsa",
         "team_name": "UTSA",
         "record": {
@@ -1787,9 +1787,9 @@
       },
       {
         "rank": 42,
-        "previous_rank": null,
-        "movement": null,
-        "movement_state": "new",
+        "previous_rank": 42,
+        "movement": 0,
+        "movement_state": "unchanged",
         "team_id": "wake-forest",
         "team_name": "Wake Forest",
         "record": {
@@ -1830,9 +1830,9 @@
       },
       {
         "rank": 43,
-        "previous_rank": null,
-        "movement": null,
-        "movement_state": "new",
+        "previous_rank": 43,
+        "movement": 0,
+        "movement_state": "unchanged",
         "team_id": "north-carolina",
         "team_name": "North Carolina",
         "record": {
@@ -1872,9 +1872,9 @@
       },
       {
         "rank": 44,
-        "previous_rank": null,
-        "movement": null,
-        "movement_state": "new",
+        "previous_rank": 44,
+        "movement": 0,
+        "movement_state": "unchanged",
         "team_id": "penn-st",
         "team_name": "Penn St.",
         "record": {
@@ -1915,9 +1915,9 @@
       },
       {
         "rank": 45,
-        "previous_rank": null,
-        "movement": null,
-        "movement_state": "new",
+        "previous_rank": 46,
+        "movement": 1,
+        "movement_state": "up",
         "team_id": "ole-miss",
         "team_name": "Ole Miss",
         "record": {
@@ -1957,9 +1957,9 @@
       },
       {
         "rank": 46,
-        "previous_rank": null,
-        "movement": null,
-        "movement_state": "new",
+        "previous_rank": 45,
+        "movement": -1,
+        "movement_state": "down",
         "team_id": "georgia-st",
         "team_name": "Georgia St.",
         "record": {
@@ -2000,9 +2000,9 @@
       },
       {
         "rank": 47,
-        "previous_rank": null,
-        "movement": null,
-        "movement_state": "new",
+        "previous_rank": 47,
+        "movement": 0,
+        "movement_state": "unchanged",
         "team_id": "clemson",
         "team_name": "Clemson",
         "record": {
@@ -2043,9 +2043,9 @@
       },
       {
         "rank": 48,
-        "previous_rank": null,
-        "movement": null,
-        "movement_state": "new",
+        "previous_rank": 48,
+        "movement": 0,
+        "movement_state": "unchanged",
         "team_id": "texas-am",
         "team_name": "Texas A&M",
         "record": {
@@ -2086,9 +2086,9 @@
       },
       {
         "rank": 49,
-        "previous_rank": null,
-        "movement": null,
-        "movement_state": "new",
+        "previous_rank": 49,
+        "movement": 0,
+        "movement_state": "unchanged",
         "team_id": "auburn",
         "team_name": "Auburn",
         "record": {
@@ -2129,9 +2129,9 @@
       },
       {
         "rank": 50,
-        "previous_rank": null,
-        "movement": null,
-        "movement_state": "new",
+        "previous_rank": 50,
+        "movement": 0,
+        "movement_state": "unchanged",
         "team_id": "iowa-st",
         "team_name": "Iowa St.",
         "record": {
@@ -2172,9 +2172,9 @@
       },
       {
         "rank": 51,
-        "previous_rank": null,
-        "movement": null,
-        "movement_state": "new",
+        "previous_rank": 51,
+        "movement": 0,
+        "movement_state": "unchanged",
         "team_id": "smu",
         "team_name": "SMU",
         "record": {
@@ -2215,9 +2215,9 @@
       },
       {
         "rank": 52,
-        "previous_rank": null,
-        "movement": null,
-        "movement_state": "new",
+        "previous_rank": 52,
+        "movement": 0,
+        "movement_state": "unchanged",
         "team_id": "west-virginia",
         "team_name": "West Virginia",
         "record": {
@@ -2258,9 +2258,9 @@
       },
       {
         "rank": 53,
-        "previous_rank": null,
-        "movement": null,
-        "movement_state": "new",
+        "previous_rank": 53,
+        "movement": 0,
+        "movement_state": "unchanged",
         "team_id": "fresno-st",
         "team_name": "Fresno St.",
         "record": {
@@ -2301,9 +2301,9 @@
       },
       {
         "rank": 54,
-        "previous_rank": null,
-        "movement": null,
-        "movement_state": "new",
+        "previous_rank": 57,
+        "movement": 3,
+        "movement_state": "up",
         "team_id": "fla-atlantic",
         "team_name": "Fla. Atlantic",
         "record": {
@@ -2344,9 +2344,9 @@
       },
       {
         "rank": 55,
-        "previous_rank": null,
-        "movement": null,
-        "movement_state": "new",
+        "previous_rank": 54,
+        "movement": -1,
+        "movement_state": "down",
         "team_id": "south-carolina",
         "team_name": "South Carolina",
         "record": {
@@ -2387,9 +2387,9 @@
       },
       {
         "rank": 56,
-        "previous_rank": null,
-        "movement": null,
-        "movement_state": "new",
+        "previous_rank": 58,
+        "movement": 2,
+        "movement_state": "up",
         "team_id": "south-fla",
         "team_name": "South Fla.",
         "record": {
@@ -2430,9 +2430,9 @@
       },
       {
         "rank": 57,
-        "previous_rank": null,
-        "movement": null,
-        "movement_state": "new",
+        "previous_rank": 55,
+        "movement": -2,
+        "movement_state": "down",
         "team_id": "north-texas",
         "team_name": "North Texas",
         "record": {
@@ -2473,9 +2473,9 @@
       },
       {
         "rank": 58,
-        "previous_rank": null,
-        "movement": null,
-        "movement_state": "new",
+        "previous_rank": 56,
+        "movement": -2,
+        "movement_state": "down",
         "team_id": "tcu",
         "team_name": "TCU",
         "record": {
@@ -2516,9 +2516,9 @@
       },
       {
         "rank": 59,
-        "previous_rank": null,
-        "movement": null,
-        "movement_state": "new",
+        "previous_rank": 59,
+        "movement": 0,
+        "movement_state": "unchanged",
         "team_id": "air-force",
         "team_name": "Air Force",
         "record": {
@@ -2558,9 +2558,9 @@
       },
       {
         "rank": 60,
-        "previous_rank": null,
-        "movement": null,
-        "movement_state": "new",
+        "previous_rank": 60,
+        "movement": 0,
+        "movement_state": "unchanged",
         "team_id": "memphis",
         "team_name": "Memphis",
         "record": {
@@ -2601,9 +2601,9 @@
       },
       {
         "rank": 61,
-        "previous_rank": null,
-        "movement": null,
-        "movement_state": "new",
+        "previous_rank": 61,
+        "movement": 0,
+        "movement_state": "unchanged",
         "team_id": "purdue",
         "team_name": "Purdue",
         "record": {
@@ -2644,9 +2644,9 @@
       },
       {
         "rank": 62,
-        "previous_rank": null,
-        "movement": null,
-        "movement_state": "new",
+        "previous_rank": 62,
+        "movement": 0,
+        "movement_state": "unchanged",
         "team_id": "kansas-st",
         "team_name": "Kansas St.",
         "record": {
@@ -2686,9 +2686,9 @@
       },
       {
         "rank": 63,
-        "previous_rank": null,
-        "movement": null,
-        "movement_state": "new",
+        "previous_rank": 64,
+        "movement": 1,
+        "movement_state": "up",
         "team_id": "louisiana-tech",
         "team_name": "Louisiana Tech",
         "record": {
@@ -2728,9 +2728,9 @@
       },
       {
         "rank": 64,
-        "previous_rank": null,
-        "movement": null,
-        "movement_state": "new",
+        "previous_rank": 63,
+        "movement": -1,
+        "movement_state": "down",
         "team_id": "texas-st",
         "team_name": "Texas St.",
         "record": {
@@ -2771,9 +2771,9 @@
       },
       {
         "rank": 65,
-        "previous_rank": null,
-        "movement": null,
-        "movement_state": "new",
+        "previous_rank": 65,
+        "movement": 0,
+        "movement_state": "unchanged",
         "team_id": "massachusetts",
         "team_name": "Massachusetts",
         "record": {
@@ -2814,9 +2814,9 @@
       },
       {
         "rank": 66,
-        "previous_rank": null,
-        "movement": null,
-        "movement_state": "new",
+        "previous_rank": 68,
+        "movement": 2,
+        "movement_state": "up",
         "team_id": "army",
         "team_name": "Army West Point",
         "record": {
@@ -2856,9 +2856,9 @@
       },
       {
         "rank": 67,
-        "previous_rank": null,
-        "movement": null,
-        "movement_state": "new",
+        "previous_rank": 66,
+        "movement": -1,
+        "movement_state": "down",
         "team_id": "virginia",
         "team_name": "Virginia",
         "record": {
@@ -2899,9 +2899,9 @@
       },
       {
         "rank": 68,
-        "previous_rank": null,
-        "movement": null,
-        "movement_state": "new",
+        "previous_rank": 67,
+        "movement": -1,
+        "movement_state": "down",
         "team_id": "oklahoma",
         "team_name": "Oklahoma",
         "record": {
@@ -2941,9 +2941,9 @@
       },
       {
         "rank": 69,
-        "previous_rank": null,
-        "movement": null,
-        "movement_state": "new",
+        "previous_rank": 69,
+        "movement": 0,
+        "movement_state": "unchanged",
         "team_id": "east-carolina",
         "team_name": "East Carolina",
         "record": {
@@ -2983,9 +2983,9 @@
       },
       {
         "rank": 70,
-        "previous_rank": null,
-        "movement": null,
-        "movement_state": "new",
+        "previous_rank": 70,
+        "movement": 0,
+        "movement_state": "unchanged",
         "team_id": "michigan-st",
         "team_name": "Michigan St.",
         "record": {
@@ -3026,9 +3026,9 @@
       },
       {
         "rank": 71,
-        "previous_rank": null,
-        "movement": null,
-        "movement_state": "new",
+        "previous_rank": 71,
+        "movement": 0,
+        "movement_state": "unchanged",
         "team_id": "la-lafayette",
         "team_name": "Louisiana",
         "record": {
@@ -3069,9 +3069,9 @@
       },
       {
         "rank": 72,
-        "previous_rank": null,
-        "movement": null,
-        "movement_state": "new",
+        "previous_rank": 90,
+        "movement": 18,
+        "movement_state": "up",
         "team_id": "jacksonville-st",
         "team_name": "Jacksonville St.",
         "record": {
@@ -3113,9 +3113,9 @@
       },
       {
         "rank": 73,
-        "previous_rank": null,
-        "movement": null,
-        "movement_state": "new",
+        "previous_rank": 72,
+        "movement": -1,
+        "movement_state": "down",
         "team_id": "cincinnati",
         "team_name": "Cincinnati",
         "record": {
@@ -3156,9 +3156,9 @@
       },
       {
         "rank": 74,
-        "previous_rank": null,
-        "movement": null,
-        "movement_state": "new",
+        "previous_rank": 73,
+        "movement": -1,
+        "movement_state": "down",
         "team_id": "syracuse",
         "team_name": "Syracuse",
         "record": {
@@ -3198,9 +3198,9 @@
       },
       {
         "rank": 75,
-        "previous_rank": null,
-        "movement": null,
-        "movement_state": "new",
+        "previous_rank": 75,
+        "movement": 0,
+        "movement_state": "unchanged",
         "team_id": "temple",
         "team_name": "Temple",
         "record": {
@@ -3241,9 +3241,9 @@
       },
       {
         "rank": 76,
-        "previous_rank": null,
-        "movement": null,
-        "movement_state": "new",
+        "previous_rank": 74,
+        "movement": -2,
+        "movement_state": "down",
         "team_id": "louisville",
         "team_name": "Louisville",
         "record": {
@@ -3284,9 +3284,9 @@
       },
       {
         "rank": 77,
-        "previous_rank": null,
-        "movement": null,
-        "movement_state": "new",
+        "previous_rank": 76,
+        "movement": -1,
+        "movement_state": "down",
         "team_id": "north-carolina-st",
         "team_name": "NC State",
         "record": {
@@ -3327,9 +3327,9 @@
       },
       {
         "rank": 78,
-        "previous_rank": null,
-        "movement": null,
-        "movement_state": "new",
+        "previous_rank": 77,
+        "movement": -1,
+        "movement_state": "down",
         "team_id": "tulsa",
         "team_name": "Tulsa",
         "record": {
@@ -3370,9 +3370,9 @@
       },
       {
         "rank": 79,
-        "previous_rank": null,
-        "movement": null,
-        "movement_state": "new",
+        "previous_rank": 78,
+        "movement": -1,
+        "movement_state": "down",
         "team_id": "vanderbilt",
         "team_name": "Vanderbilt",
         "record": {
@@ -3413,9 +3413,9 @@
       },
       {
         "rank": 80,
-        "previous_rank": null,
-        "movement": null,
-        "movement_state": "new",
+        "previous_rank": 79,
+        "movement": -1,
+        "movement_state": "down",
         "team_id": "michigan",
         "team_name": "Michigan",
         "record": {
@@ -3456,9 +3456,9 @@
       },
       {
         "rank": 81,
-        "previous_rank": null,
-        "movement": null,
-        "movement_state": "new",
+        "previous_rank": 81,
+        "movement": 0,
+        "movement_state": "unchanged",
         "team_id": "maryland",
         "team_name": "Maryland",
         "record": {
@@ -3499,9 +3499,9 @@
       },
       {
         "rank": 82,
-        "previous_rank": null,
-        "movement": null,
-        "movement_state": "new",
+        "previous_rank": 80,
+        "movement": -2,
+        "movement_state": "down",
         "team_id": "kansas",
         "team_name": "Kansas",
         "record": {
@@ -3542,9 +3542,9 @@
       },
       {
         "rank": 83,
-        "previous_rank": null,
-        "movement": null,
-        "movement_state": "new",
+        "previous_rank": 82,
+        "movement": -1,
+        "movement_state": "down",
         "team_id": "western-mich",
         "team_name": "Western Mich.",
         "record": {
@@ -3585,9 +3585,9 @@
       },
       {
         "rank": 84,
-        "previous_rank": null,
-        "movement": null,
-        "movement_state": "new",
+        "previous_rank": 83,
+        "movement": -1,
+        "movement_state": "down",
         "team_id": "arizona-st",
         "team_name": "Arizona St.",
         "record": {
@@ -3627,9 +3627,9 @@
       },
       {
         "rank": 85,
-        "previous_rank": null,
-        "movement": null,
-        "movement_state": "new",
+        "previous_rank": 84,
+        "movement": -1,
+        "movement_state": "down",
         "team_id": "illinois",
         "team_name": "Illinois",
         "record": {
@@ -3670,9 +3670,9 @@
       },
       {
         "rank": 86,
-        "previous_rank": null,
-        "movement": null,
-        "movement_state": "new",
+        "previous_rank": 85,
+        "movement": -1,
+        "movement_state": "down",
         "team_id": "arkansas",
         "team_name": "Arkansas",
         "record": {
@@ -3713,9 +3713,9 @@
       },
       {
         "rank": 87,
-        "previous_rank": null,
-        "movement": null,
-        "movement_state": "new",
+        "previous_rank": 87,
+        "movement": 0,
+        "movement_state": "unchanged",
         "team_id": "washington",
         "team_name": "Washington",
         "record": {
@@ -3756,9 +3756,9 @@
       },
       {
         "rank": 88,
-        "previous_rank": null,
-        "movement": null,
-        "movement_state": "new",
+        "previous_rank": 86,
+        "movement": -2,
+        "movement_state": "down",
         "team_id": "ohio",
         "team_name": "Ohio",
         "record": {
@@ -3799,9 +3799,9 @@
       },
       {
         "rank": 89,
-        "previous_rank": null,
-        "movement": null,
-        "movement_state": "new",
+        "previous_rank": 88,
+        "movement": -1,
+        "movement_state": "down",
         "team_id": "appalachian-st",
         "team_name": "App State",
         "record": {
@@ -3841,9 +3841,9 @@
       },
       {
         "rank": 90,
-        "previous_rank": null,
-        "movement": null,
-        "movement_state": "new",
+        "previous_rank": 89,
+        "movement": -1,
+        "movement_state": "down",
         "team_id": "ga-southern",
         "team_name": "Ga. Southern",
         "record": {
@@ -3884,9 +3884,9 @@
       },
       {
         "rank": 91,
-        "previous_rank": null,
-        "movement": null,
-        "movement_state": "new",
+        "previous_rank": 91,
+        "movement": 0,
+        "movement_state": "unchanged",
         "team_id": "colorado",
         "team_name": "Colorado",
         "record": {
@@ -3927,9 +3927,9 @@
       },
       {
         "rank": 92,
-        "previous_rank": null,
-        "movement": null,
-        "movement_state": "new",
+        "previous_rank": 92,
+        "movement": 0,
+        "movement_state": "unchanged",
         "team_id": "san-diego-st",
         "team_name": "San Diego St.",
         "record": {
@@ -3970,9 +3970,9 @@
       },
       {
         "rank": 93,
-        "previous_rank": null,
-        "movement": null,
-        "movement_state": "new",
+        "previous_rank": 98,
+        "movement": 5,
+        "movement_state": "up",
         "team_id": "fiu",
         "team_name": "FIU",
         "record": {
@@ -4013,9 +4013,9 @@
       },
       {
         "rank": 94,
-        "previous_rank": null,
-        "movement": null,
-        "movement_state": "new",
+        "previous_rank": 93,
+        "movement": -1,
+        "movement_state": "down",
         "team_id": "eastern-mich",
         "team_name": "Eastern Mich.",
         "record": {
@@ -4057,9 +4057,9 @@
       },
       {
         "rank": 95,
-        "previous_rank": null,
-        "movement": null,
-        "movement_state": "new",
+        "previous_rank": 94,
+        "movement": -1,
+        "movement_state": "down",
         "team_id": "california",
         "team_name": "California",
         "record": {
@@ -4100,9 +4100,9 @@
       },
       {
         "rank": 96,
-        "previous_rank": null,
-        "movement": null,
-        "movement_state": "new",
+        "previous_rank": 95,
+        "movement": -1,
+        "movement_state": "down",
         "team_id": "uconn",
         "team_name": "UConn",
         "record": {
@@ -4143,9 +4143,9 @@
       },
       {
         "rank": 97,
-        "previous_rank": null,
-        "movement": null,
-        "movement_state": "new",
+        "previous_rank": 96,
+        "movement": -1,
+        "movement_state": "down",
         "team_id": "troy",
         "team_name": "Troy",
         "record": {
@@ -4186,9 +4186,9 @@
       },
       {
         "rank": 98,
-        "previous_rank": null,
-        "movement": null,
-        "movement_state": "new",
+        "previous_rank": 97,
+        "movement": -1,
+        "movement_state": "down",
         "team_id": "unlv",
         "team_name": "UNLV",
         "record": {
@@ -4229,9 +4229,9 @@
       },
       {
         "rank": 99,
-        "previous_rank": null,
-        "movement": null,
-        "movement_state": "new",
+        "previous_rank": 99,
+        "movement": 0,
+        "movement_state": "unchanged",
         "team_id": "sam-houston-st",
         "team_name": "Sam Houston",
         "record": {
@@ -4271,9 +4271,9 @@
       },
       {
         "rank": 100,
-        "previous_rank": null,
-        "movement": null,
-        "movement_state": "new",
+        "previous_rank": 100,
+        "movement": 0,
+        "movement_state": "unchanged",
         "team_id": "south-ala",
         "team_name": "South Alabama",
         "record": {
@@ -4314,9 +4314,9 @@
       },
       {
         "rank": 101,
-        "previous_rank": null,
-        "movement": null,
-        "movement_state": "new",
+        "previous_rank": 101,
+        "movement": 0,
+        "movement_state": "unchanged",
         "team_id": "arkansas-st",
         "team_name": "Arkansas St.",
         "record": {
@@ -4357,9 +4357,9 @@
       },
       {
         "rank": 102,
-        "previous_rank": null,
-        "movement": null,
-        "movement_state": "new",
+        "previous_rank": 102,
+        "movement": 0,
+        "movement_state": "unchanged",
         "team_id": "tulane",
         "team_name": "Tulane",
         "record": {
@@ -4399,9 +4399,9 @@
       },
       {
         "rank": 103,
-        "previous_rank": null,
-        "movement": null,
-        "movement_state": "new",
+        "previous_rank": 105,
+        "movement": 2,
+        "movement_state": "up",
         "team_id": "uab",
         "team_name": "UAB",
         "record": {
@@ -4442,9 +4442,9 @@
       },
       {
         "rank": 104,
-        "previous_rank": null,
-        "movement": null,
-        "movement_state": "new",
+        "previous_rank": 104,
+        "movement": 0,
+        "movement_state": "unchanged",
         "team_id": "san-jose-st",
         "team_name": "San Jose St.",
         "record": {
@@ -4485,9 +4485,9 @@
       },
       {
         "rank": 105,
-        "previous_rank": null,
-        "movement": null,
-        "movement_state": "new",
+        "previous_rank": 103,
+        "movement": -2,
+        "movement_state": "down",
         "team_id": "central-mich",
         "team_name": "Central Mich.",
         "record": {
@@ -4528,9 +4528,9 @@
       },
       {
         "rank": 106,
-        "previous_rank": null,
-        "movement": null,
-        "movement_state": "new",
+        "previous_rank": 107,
+        "movement": 1,
+        "movement_state": "up",
         "team_id": "miami-oh",
         "team_name": "Miami (OH)",
         "record": {
@@ -4571,9 +4571,9 @@
       },
       {
         "rank": 107,
-        "previous_rank": null,
-        "movement": null,
-        "movement_state": "new",
+        "previous_rank": 108,
+        "movement": 1,
+        "movement_state": "up",
         "team_id": "marshall",
         "team_name": "Marshall",
         "record": {
@@ -4614,9 +4614,9 @@
       },
       {
         "rank": 108,
-        "previous_rank": null,
-        "movement": null,
-        "movement_state": "new",
+        "previous_rank": 109,
+        "movement": 1,
+        "movement_state": "up",
         "team_id": "colorado-st",
         "team_name": "Colorado St.",
         "record": {
@@ -4657,9 +4657,9 @@
       },
       {
         "rank": 109,
-        "previous_rank": null,
-        "movement": null,
-        "movement_state": "new",
+        "previous_rank": 110,
+        "movement": 1,
+        "movement_state": "up",
         "team_id": "boston-college",
         "team_name": "Boston College",
         "record": {
@@ -4700,9 +4700,9 @@
       },
       {
         "rank": 110,
-        "previous_rank": null,
-        "movement": null,
-        "movement_state": "new",
+        "previous_rank": 111,
+        "movement": 1,
+        "movement_state": "up",
         "team_id": "utah-st",
         "team_name": "Utah St.",
         "record": {
@@ -4743,9 +4743,9 @@
       },
       {
         "rank": 111,
-        "previous_rank": null,
-        "movement": null,
-        "movement_state": "new",
+        "previous_rank": 112,
+        "movement": 1,
+        "movement_state": "up",
         "team_id": "delaware",
         "team_name": "Delaware",
         "record": {
@@ -4786,9 +4786,9 @@
       },
       {
         "rank": 112,
-        "previous_rank": null,
-        "movement": null,
-        "movement_state": "new",
+        "previous_rank": 113,
+        "movement": 1,
+        "movement_state": "up",
         "team_id": "rice",
         "team_name": "Rice",
         "record": {
@@ -4829,9 +4829,9 @@
       },
       {
         "rank": 113,
-        "previous_rank": null,
-        "movement": null,
-        "movement_state": "new",
+        "previous_rank": 114,
+        "movement": 1,
+        "movement_state": "up",
         "team_id": "rutgers",
         "team_name": "Rutgers",
         "record": {
@@ -4872,9 +4872,9 @@
       },
       {
         "rank": 114,
-        "previous_rank": null,
-        "movement": null,
-        "movement_state": "new",
+        "previous_rank": 115,
+        "movement": 1,
+        "movement_state": "up",
         "team_id": "navy",
         "team_name": "Navy",
         "record": {
@@ -4914,9 +4914,9 @@
       },
       {
         "rank": 115,
-        "previous_rank": null,
-        "movement": null,
-        "movement_state": "new",
+        "previous_rank": 106,
+        "movement": -9,
+        "movement_state": "down",
         "team_id": "kennesaw-st",
         "team_name": "Kennesaw St.",
         "record": {
@@ -4957,9 +4957,9 @@
       },
       {
         "rank": 116,
-        "previous_rank": null,
-        "movement": null,
-        "movement_state": "new",
+        "previous_rank": 116,
+        "movement": 0,
+        "movement_state": "unchanged",
         "team_id": "kent-st",
         "team_name": "Kent St.",
         "record": {
@@ -5000,9 +5000,9 @@
       },
       {
         "rank": 117,
-        "previous_rank": null,
-        "movement": null,
-        "movement_state": "new",
+        "previous_rank": 119,
+        "movement": 2,
+        "movement_state": "up",
         "team_id": "washington-st",
         "team_name": "Washington St.",
         "record": {
@@ -5043,9 +5043,9 @@
       },
       {
         "rank": 118,
-        "previous_rank": null,
-        "movement": null,
-        "movement_state": "new",
+        "previous_rank": 118,
+        "movement": 0,
+        "movement_state": "unchanged",
         "team_id": "georgia-tech",
         "team_name": "Georgia Tech",
         "record": {
@@ -5085,9 +5085,9 @@
       },
       {
         "rank": 119,
-        "previous_rank": null,
-        "movement": null,
-        "movement_state": "new",
+        "previous_rank": 120,
+        "movement": 1,
+        "movement_state": "up",
         "team_id": "missouri-st",
         "team_name": "Missouri St.",
         "record": {
@@ -5127,9 +5127,9 @@
       },
       {
         "rank": 120,
-        "previous_rank": null,
-        "movement": null,
-        "movement_state": "new",
+        "previous_rank": 121,
+        "movement": 1,
+        "movement_state": "up",
         "team_id": "coastal-caro",
         "team_name": "Coastal Carolina",
         "record": {
@@ -5170,9 +5170,9 @@
       },
       {
         "rank": 121,
-        "previous_rank": null,
-        "movement": null,
-        "movement_state": "new",
+        "previous_rank": 117,
+        "movement": -4,
+        "movement_state": "down",
         "team_id": "new-mexico-st",
         "team_name": "New Mexico St.",
         "record": {
@@ -5214,9 +5214,9 @@
       },
       {
         "rank": 122,
-        "previous_rank": null,
-        "movement": null,
-        "movement_state": "new",
+        "previous_rank": 122,
+        "movement": 0,
+        "movement_state": "unchanged",
         "team_id": "bowling-green",
         "team_name": "Bowling Green",
         "record": {
@@ -5257,9 +5257,9 @@
       },
       {
         "rank": 123,
-        "previous_rank": null,
-        "movement": null,
-        "movement_state": "new",
+        "previous_rank": 123,
+        "movement": 0,
+        "movement_state": "unchanged",
         "team_id": "middle-tenn",
         "team_name": "Middle Tenn.",
         "record": {
@@ -5300,9 +5300,9 @@
       },
       {
         "rank": 124,
-        "previous_rank": null,
-        "movement": null,
-        "movement_state": "new",
+        "previous_rank": 124,
+        "movement": 0,
+        "movement_state": "unchanged",
         "team_id": "western-ky",
         "team_name": "Western Ky.",
         "record": {
@@ -5343,9 +5343,9 @@
       },
       {
         "rank": 125,
-        "previous_rank": null,
-        "movement": null,
-        "movement_state": "new",
+        "previous_rank": 126,
+        "movement": 1,
+        "movement_state": "up",
         "team_id": "buffalo",
         "team_name": "Buffalo",
         "record": {
@@ -5386,9 +5386,9 @@
       },
       {
         "rank": 126,
-        "previous_rank": null,
-        "movement": null,
-        "movement_state": "new",
+        "previous_rank": 125,
+        "movement": -1,
+        "movement_state": "down",
         "team_id": "old-dominion",
         "team_name": "Old Dominion",
         "record": {
@@ -5429,9 +5429,9 @@
       },
       {
         "rank": 127,
-        "previous_rank": null,
-        "movement": null,
-        "movement_state": "new",
+        "previous_rank": 127,
+        "movement": 0,
+        "movement_state": "unchanged",
         "team_id": "stanford",
         "team_name": "Stanford",
         "record": {
@@ -5472,9 +5472,9 @@
       },
       {
         "rank": 128,
-        "previous_rank": null,
-        "movement": null,
-        "movement_state": "new",
+        "previous_rank": 128,
+        "movement": 0,
+        "movement_state": "unchanged",
         "team_id": "ball-st",
         "team_name": "Ball St.",
         "record": {
@@ -5515,9 +5515,9 @@
       },
       {
         "rank": 129,
-        "previous_rank": null,
-        "movement": null,
-        "movement_state": "new",
+        "previous_rank": 129,
+        "movement": 0,
+        "movement_state": "unchanged",
         "team_id": "utep",
         "team_name": "UTEP",
         "record": {
@@ -5558,9 +5558,9 @@
       },
       {
         "rank": 130,
-        "previous_rank": null,
-        "movement": null,
-        "movement_state": "new",
+        "previous_rank": 130,
+        "movement": 0,
+        "movement_state": "unchanged",
         "team_id": "nevada",
         "team_name": "Nevada",
         "record": {
@@ -5600,9 +5600,9 @@
       },
       {
         "rank": 131,
-        "previous_rank": null,
-        "movement": null,
-        "movement_state": "new",
+        "previous_rank": 131,
+        "movement": 0,
+        "movement_state": "unchanged",
         "team_id": "wyoming",
         "team_name": "Wyoming",
         "record": {
@@ -5643,9 +5643,9 @@
       },
       {
         "rank": 132,
-        "previous_rank": null,
-        "movement": null,
-        "movement_state": "new",
+        "previous_rank": 132,
+        "movement": 0,
+        "movement_state": "unchanged",
         "team_id": "sacramento-st",
         "team_name": "Sacramento St.",
         "record": {
@@ -5686,9 +5686,9 @@
       },
       {
         "rank": 133,
-        "previous_rank": null,
-        "movement": null,
-        "movement_state": "new",
+        "previous_rank": 133,
+        "movement": 0,
+        "movement_state": "unchanged",
         "team_id": "southern-miss",
         "team_name": "Southern Miss.",
         "record": {
@@ -5729,9 +5729,9 @@
       },
       {
         "rank": 134,
-        "previous_rank": null,
-        "movement": null,
-        "movement_state": "new",
+        "previous_rank": 134,
+        "movement": 0,
+        "movement_state": "unchanged",
         "team_id": "northern-ill",
         "team_name": "NIU",
         "record": {
@@ -5771,9 +5771,9 @@
       },
       {
         "rank": 135,
-        "previous_rank": null,
-        "movement": null,
-        "movement_state": "new",
+        "previous_rank": 135,
+        "movement": 0,
+        "movement_state": "unchanged",
         "team_id": "akron",
         "team_name": "Akron",
         "record": {
@@ -5814,9 +5814,9 @@
       },
       {
         "rank": 136,
-        "previous_rank": null,
-        "movement": null,
-        "movement_state": "new",
+        "previous_rank": 136,
+        "movement": 0,
+        "movement_state": "unchanged",
         "team_id": "la-monroe",
         "team_name": "ULM",
         "record": {
@@ -5857,9 +5857,9 @@
       },
       {
         "rank": 137,
-        "previous_rank": null,
-        "movement": null,
-        "movement_state": "new",
+        "previous_rank": 138,
+        "movement": 1,
+        "movement_state": "up",
         "team_id": "charlotte",
         "team_name": "Charlotte",
         "record": {
@@ -5900,9 +5900,9 @@
       },
       {
         "rank": 138,
-        "previous_rank": null,
-        "movement": null,
-        "movement_state": "new",
+        "previous_rank": 137,
+        "movement": -1,
+        "movement_state": "down",
         "team_id": "hawaii",
         "team_name": "Hawaii",
         "record": {

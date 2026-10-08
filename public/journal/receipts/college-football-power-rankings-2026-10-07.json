@@ -3,8 +3,8 @@
   "story_id": "journal:2026-10-07:cfb-power-rankings",
   "slug": "college-football-power-rankings-2026-10-07",
   "title": "Evercraft College Football Power Rankings: Alabama Leads the Field",
-  "published_at": "2026-10-08T13:30:34.328Z",
-  "built_at": "2026-10-08T13:30:47.569Z",
+  "published_at": "2026-10-08T13:31:39.502Z",
+  "built_at": "2026-10-08T13:31:40.371Z",
   "canonical_url": "https://fabric.systemiacommandcenters.com/journal/college-football-power-rankings-2026-10-07/",
   "clip_handoff_ref": "production/college-football-power-rankings-2026-10-07/clip-handoff.json",
   "evidence_state": "model_derived_from_verified_public_results",
@@ -12,7 +12,7 @@
     "ncaa-fbs-scoreboard",
     "evercraft-cfb-edition-evidence"
   ],
-  "freshness_expires_at": "2026-10-15T13:30:34.328Z",
+  "freshness_expires_at": "2026-10-15T13:31:39.502Z",
   "editorial_gate": {
     "status": "accepted",
     "score": 10,
@@ -28,7 +28,7 @@
       "ranking_receipt_consistency",
       "source_lineage_consistency"
     ],
-    "release_preflight_digest": "sha256:2ef2f6c1683ea27db2fffd4861df7da5d94d1ebfe1dfb6c5d97e237eef737fea"
+    "release_preflight_digest": "sha256:33d2557459d002df1094ab2607a7d20ce9e64f7be383f84c26aeadfaeb1168fa"
   },
   "production_grade": {
     "status": "accepted",
@@ -36,10 +36,10 @@
     "text_primary": false,
     "note": "The ranking surface is structured data. Fallen should build the social and motion visual package from the same Top 25 receipt."
   },
-  "article_sha256": "16cc280ebd473595fbeaa90d8bd43d5b6a7f24a4b535925d7e4af735dbafa28c",
-  "fallen_brief_sha256": "fa93d466530d9383e5e17ee605d0dadb995aac02211fbf5e4b301af731f33c80",
+  "article_sha256": "5d12ed93a7031b9523b190e682e308ede37919969cb457e238746b6d9bb84245",
+  "fallen_brief_sha256": "3df7b5e89a6304d964e92c4919c2b9da7cd24d08fd782f18416d1f0930c1ce95",
   "machine_evidence_ref": "data/college-football-power-rankings-2026-10-07.json",
-  "machine_evidence_sha256": "fd4217bb1df0765a75ca65c8b6b7c99bbe3b9381a13d52c70f07ae369ff8f065",
+  "machine_evidence_sha256": "1c2ff99842a1fa6a92c53c4cadacc9250278c2c5f93b5a469628f232e00b248b",
   "ranking_visuals": {
     "feed": {
       "ref": "production/college-football-power-rankings-2026-10-07/ranking-feed.svg",
