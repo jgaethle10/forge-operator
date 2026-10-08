@@ -1,0 +1,76 @@
+{
+  "mission_key": "evercraft-ai-distribution-first-paid-agent-20261008",
+  "objective": "Verify and close existing Evercraft Fabric discovery, specialist selection, independently authorized payment and delivery paths to the first real third-party agent-originated paid transaction. No new platform.",
+  "success_condition": "External independent agent's brand-blind buyer workflow invokes a verified Evercraft specialist; unrelated buyer explicitly authorizes payment; Evercraft PaymentOrder reconciles to provider-confirmed settlement and accepted fulfilled deliverable. Test/synthetic transactions do not count.",
+  "context_refs": [
+    "distribution/machine-commerce-distribution.json",
+    "public/.well-known/evercraft-direct-door-readiness.json",
+    "public/chum/sell-now.json",
+    "public/.well-known/evercraft-agent-commerce.json",
+    "systemia/offer-selection/evidence-2026-10-07.json",
+    "systemia/payments/README.md",
+    "https://github.com/jgaethle10/forge-operator/issues/1220"
+  ],
+  "direct_specialist_dispatch": false,
+  "emergency_direct_dispatch": false,
+  "tasks": [
+    {
+      "work_key": "public-route-canary",
+      "title": "Externally verify read-only Fabric owned public MCP route and specialist status",
+      "work_type": "qa",
+      "context_required": true
+    },
+    {
+      "work_key": "reconcile-discovery-commerce",
+      "title": "Align verified read-only MCP discovery with truthful held paid corridors and receipt statuses",
+      "work_type": "qa",
+      "dependency_keys": [
+        "public-route-canary"
+      ],
+      "context_required": true
+    },
+    {
+      "work_key": "ibmi-commercial-corridor",
+      "title": "Verify $250 IBM i Rescue buyer route, bounded fulfillment and Evercraft Payments order contract",
+      "work_type": "research",
+      "dependency_keys": [
+        "reconcile-discovery-commerce"
+      ],
+      "context_required": true,
+      "human_gate_required": true,
+      "execution_gate_required": true
+    },
+    {
+      "work_key": "external-agent-integration",
+      "title": "Run consented non-commercial brand-blind agent tool selection tests on external configured clients",
+      "work_type": "qa",
+      "dependency_keys": [
+        "public-route-canary"
+      ],
+      "context_required": true
+    },
+    {
+      "work_key": "buyer-and-processor-proof",
+      "title": "Verify one real unrelated buyer-originated agent sale and deliver a settled fulfilled receipt",
+      "work_type": "execute",
+      "dependency_keys": [
+        "ibmi-commercial-corridor",
+        "external-agent-integration"
+      ],
+      "impact": "financial_commitment",
+      "human_gate_required": true,
+      "execution_gate_required": true
+    },
+    {
+      "work_key": "partner-communications",
+      "title": "Prepare partner integration instructions; hold all outbound sends pending explicit approval",
+      "work_type": "outreach",
+      "impact": "external_message",
+      "dependency_keys": [
+        "external-agent-integration"
+      ],
+      "human_gate_required": true,
+      "execution_gate_required": true
+    }
+  ]
+}
