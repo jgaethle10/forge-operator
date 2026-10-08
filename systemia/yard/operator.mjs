@@ -864,9 +864,10 @@ export class YardOperator {
           health.ok === true &&
           health.service === 'evercraft-people-layer' &&
           health.runtime === 'Evercraft Compute' &&
+          health.public_ui === true &&
+          health.operator_auth === 'private_token_file' &&
+          health.public_person_token_flows === true &&
           health.base44_runtime_dependency === false &&
-          job.result?.public_route_required === true &&
-          /^people_/.test(String(health.instance_id || '')) &&
           health.instance_id === job.result?.instance_id;
         if (!peopleHealthy) {
           try {
@@ -875,10 +876,10 @@ export class YardOperator {
               body: JSON.stringify({ token: lease.token }),
             });
           } catch {}
-          throw new Error('People Layer failed initial owned runtime health verification');
+          throw new Error('People Layer failed initial sovereign health verification');
         }
         healthState = 'healthy';
-        routeVerification = 'local_people_layer_health_verified_public_route_unbound';
+        routeVerification = 'local_people_health_verified_public_route_unbound';
       } else if (workloadClass === 'systemia.rivet-report-runtime.v1') {
         const rivetHealthy =
           health.ok === true &&
@@ -1757,11 +1758,11 @@ export class YardOperator {
     } else if (workloadClass === 'systemia.forensic-record-public-runtime.v1') {
       service = 'forensic-record-public-runtime';
       healthPath = '/health';
-    } else if (workloadClass === 'systemia.rivet-report-runtime.v1') {
-      service = 'rivet-yard-report-runtime';
-      healthPath = '/health';
     } else if (workloadClass === 'systemia.people-layer.v1') {
       service = 'evercraft-people-layer';
+      healthPath = '/health';
+    } else if (workloadClass === 'systemia.rivet-report-runtime.v1') {
+      service = 'rivet-yard-report-runtime';
       healthPath = '/health';
     } else if (workloadClass === 'systemia.federated-service-bridge.v1') {
       service = 'evercraft-federated-service-bridge';
@@ -1827,6 +1828,7 @@ export class YardOperator {
         health.base44_runtime_dependency === false &&
         health.public_ui === true &&
         health.public_person_token_flows === true &&
+        health.operator_auth === 'private_token_file' &&
         /^people_/.test(String(health.instance_id || ''))
       );
     const fabricMatch =

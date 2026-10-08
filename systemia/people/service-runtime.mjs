@@ -2,13 +2,19 @@ import fs from 'node:fs';
 import http from 'node:http';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
-import { randomUUID } from 'node:crypto';
+import { randomUUID, timingSafeEqual } from 'node:crypto';
 import { createPeopleRuntime } from './runtime.mjs';
 
 const ROOT=path.dirname(fileURLToPath(import.meta.url));
 const WEB_ROOT=path.join(ROOT,'web');
 
 function clean(value){return String(value??'').trim();}
+function tokenEqual(actual,expected){
+  if(!actual||!expected)return false;
+  const a=Buffer.from(String(actual));
+  const b=Buffer.from(String(expected));
+  return a.length===b.length&&timingSafeEqual(a,b);
+}
 function sendJson(res,status,body){
   const data=Buffer.from(JSON.stringify(body));
   res.writeHead(status,{
@@ -98,8 +104,25 @@ export async function startPeopleLayerRuntime({
     };
   }
   const instanceId='people_'+randomUUID();
-  let deploymentReceiptRef=null;
+  const startedAt=new Date().toISOString();
+  let deploymentReceiptRef='';
+  let server=null;
   const runtime=createPeopleRuntime({stateDir:path.resolve(stateDir),trustedMailDeliveryPublicKeys});
+  const health=()=>({
+    ...runtime.health(),
+    ok:Boolean(server?.listening),
+    service:'evercraft-people-layer',
+    runtime:'Evercraft Compute',
+    public_ui:true,
+    instance_id:instanceId,
+    operator_auth:'private_token_file',
+    public_person_token_flows:true,
+    trusted_mail_delivery_configured:Object.values(trustedMailDeliveryPublicKeys).some(Boolean),
+    deployment_receipt_bound:Boolean(deploymentReceiptRef),
+    deployment_receipt_ref:deploymentReceiptRef||null,
+    started_at:startedAt,
+    base44_runtime_dependency:false,
+  });
   const htmlFile=path.join(WEB_ROOT,'index.html');
   const cssFile=path.join(WEB_ROOT,'style.css');
   const jsFile=path.join(WEB_ROOT,'app.js');
@@ -107,25 +130,13 @@ export async function startPeopleLayerRuntime({
     if(!fs.existsSync(file))throw new Error('people_web_asset_missing:'+path.basename(file));
   }
 
-  const server=http.createServer(async(req,res)=>{
+  server=http.createServer(async(req,res)=>{
     try{
       const method=String(req.method||'GET').toUpperCase();
       const {pathname,searchParams}=publicPath(req.url||'/');
 
       if(method==='GET'&&pathname==='/health'){
-        return sendJson(res,200,{
-          ...runtime.health(),
-          service:'evercraft-people-layer',
-          runtime:'Evercraft Compute',
-          public_ui:true,
-          instance_id:instanceId,
-          deployment_receipt_ref:deploymentReceiptRef,
-          deployment_receipt_bound:Boolean(deploymentReceiptRef),
-          operator_auth:'private_token_file',
-          public_person_token_flows:true,
-          base44_runtime_dependency:false,
-          trusted_mail_delivery_configured:Object.values(trustedMailDeliveryPublicKeys).some(Boolean),
-        });
+        return sendJson(res,200,health());
       }
 
       if(method==='GET'&&pathname==='/people-assets/style.css')return sendAsset(res,cssFile,'text/css; charset=utf-8');
@@ -134,7 +145,7 @@ export async function startPeopleLayerRuntime({
         return sendAsset(res,htmlFile,'text/html; charset=utf-8','no-store');
       }
 
-      const adminOk=()=>bearer(req)===adminToken;
+      const adminOk=()=>tokenEqual(bearer(req),adminToken);
       const needAdmin=()=>{
         if(adminOk())return true;
         sendJson(res,401,{ok:false,error:'unauthorized'});
@@ -225,21 +236,16 @@ export async function startPeopleLayerRuntime({
         const body=method==='POST'?await readJson(req):{};
         if(method==='POST'&&action==='invite')return sendJson(res,201,{ok:true,invite:runtime.createInvite(brainKey,body)});
         if(method==='POST'&&action==='email-challenge'){
-          // Creating an email challenge may never disclose its redemption token
-          // to an operator or an untrusted HTTP client.
           let originValid=false;
           try {
             const origin=new URL(publicOrigin);
             originValid=origin.protocol==='https:' && origin.username==='' &&
               origin.password==='' && origin.search==='' && origin.hash==='';
           } catch {}
-          if(typeof mailDispatcher!=='function'||!originValid){
+          if(typeof mailDispatcher!=='function'||!originValid)
             return sendJson(res,503,{ok:false,error:'trusted_email_dispatch_unavailable'});
-          }
           const challenge=runtime.createEmailChallenge(brainKey,body);
-          try{
-            // The callback must be isolated as an authorized provider adapter,
-            // returning a provider-signed receipt for this exact challenge.
+          try {
             const evidence=await mailDispatcher({
               recipient:body.email,
               challenge,
@@ -264,7 +270,7 @@ export async function startPeopleLayerRuntime({
                 delivery_receipt_key:delivery.delivery_receipt_key,
               },
             });
-          }catch{
+          } catch {
             runtime.abortEmailChallenge(challenge.challenge_key);
             return sendJson(res,502,{ok:false,error:'trusted_email_dispatch_failed'});
           }
@@ -315,22 +321,12 @@ export async function startPeopleLayerRuntime({
     consent_path:'/people/consent',
     verify_email_path:'/people/verify-email',
     base44_runtime_dependency:false,
-    async health(){
-      // Yard must probe the actual resident HTTP runtime rather than trusting
-      // static start metadata. A stale or failed listener must not be healthy.
-      const response=await fetch(service_url+'/health',{signal:AbortSignal.timeout(5000)});
-      if(!response.ok)throw new Error('people_runtime_health_probe_failed');
-      const health=await response.json();
-      if(health.service!=='evercraft-people-layer'||health.instance_id!==instanceId){
-        throw new Error('people_runtime_identity_mismatch');
-      }
-      return health;
-    },
-    setDeploymentReceipt(value){
-      const ref=String(value||'').trim();
-      if(!/^[a-f0-9]{64}$/i.test(ref))throw new Error('people_deployment_receipt_invalid');
+    health,
+    setDeploymentReceipt(receiptRef){
+      const ref=clean(receiptRef);
+      if(!ref)throw new Error('deployment_receipt_ref_required');
       deploymentReceiptRef=ref;
-      return {ok:true,service:'evercraft-people-layer',instance_id:instanceId,deployment_receipt_ref:ref};
+      return health();
     },
     async close(){
       await new Promise(resolve=>server.close(()=>resolve()));

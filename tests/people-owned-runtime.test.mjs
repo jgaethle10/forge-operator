@@ -300,3 +300,31 @@ test('owned People Layer source has no Base44 runtime route', () => {
     assert.equal(source.includes('/api/apps/'), false, file + ' must not proxy a provider app runtime');
   }
 });
+
+
+test('owned People routes reject raw admin credential env path', () => {
+  const httpSource=fs.readFileSync('systemia/people/http.mjs','utf8');
+  const serviceSource=fs.readFileSync('systemia/people/service-runtime.mjs','utf8');
+
+  assert.equal(httpSource.includes("process.env.PEOPLE_ADMIN_TOKEN ||"), false);
+  assert.equal(httpSource.includes('PEOPLE_ADMIN_TOKEN_FILE'), true, 'Forge route must resolve operator authority from the private-file binding');
+
+  assert.equal(serviceSource.includes("process.env.PEOPLE_ADMIN_TOKEN ||"), false);
+  assert.equal(serviceSource.includes('requireSecureTokenFile(adminTokenFile)'), true, 'Compute service must require the admitted private authority file passed by its workload launcher');
+  assert.equal(serviceSource.includes('people_admin_token_file_permissions_too_open'), true, 'Compute service must reject broadly readable authority files');
+});
+
+
+test('People resident requires all private bindings before launch', () => {
+  const registry=JSON.parse(fs.readFileSync('systemia/core/resident-services.json','utf8'));
+  const service=registry.services.find((row)=>row.service_key==='people-layer-edge');
+  assert.ok(service);
+  assert.equal(service.env_args['--people-state'],'PEOPLE_STATE_DIR');
+  assert.equal(service.env_args['--admin-token-file'],'PEOPLE_ADMIN_TOKEN_FILE');
+  assert.equal(service.env_args['--mail-public-keys'],'PEOPLE_MAIL_DELIVERY_PUBLIC_KEYS_FILE');
+
+  const runner=fs.readFileSync('systemia/organism/people-layer-edge-runner.mjs','utf8');
+  assert.equal(runner.includes("throw new Error('people_state_dir_required')"),true);
+  assert.equal(runner.includes("throw new Error('people_admin_token_file_required')"),true);
+  assert.equal(runner.includes("throw new Error('people_mail_public_keys_file_required')"),true);
+});

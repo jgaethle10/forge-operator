@@ -1,4 +1,6 @@
+import fs from 'node:fs';
 import path from 'node:path';
+import crypto from 'node:crypto';
 import { createPeopleRuntime } from './runtime.mjs';
 
 function bearer(req) {
@@ -12,7 +14,7 @@ function errorStatus(message) {
   if (/expired|revoked/.test(message)) return 410;
   if (/unauthorized/i.test(message)) return 401;
   if(/challenge_not_active|mail_delivery_destination_mismatch|trusted_mail_delivery_already_recorded/.test(message))return 409;
-  if (/trusted_email_delivery_required/.test(message)) return 409;
+  if (/trusted_email_delivery_required|trusted_mail_attestation_required/.test(message)) return 409;
   if (/required|invalid|exact_|explicit_|forbidden/.test(message)) return 400;
   if (/not_consented|verified_owner_identity_required|approved_delete_request_required/.test(message)) return 409;
   return 500;
@@ -20,16 +22,47 @@ function errorStatus(message) {
 
 export function registerPeopleRoutes(app, {
   stateDir = process.env.PEOPLE_STATE_DIR || path.resolve('.runtime', 'people-layer'),
+  adminTokenFile = process.env.PEOPLE_ADMIN_TOKEN_FILE || '',
+  mailDeliveryPublicKeysFile = process.env.PEOPLE_MAIL_DELIVERY_PUBLIC_KEYS_FILE || '',
 } = {}) {
-  const runtime = createPeopleRuntime({ stateDir });
-  const adminToken = String(process.env.PEOPLE_ADMIN_TOKEN || '').trim();
+  function readPrivateText(file) {
+    const value = String(file || '').trim();
+    if (!value) return '';
+    const resolved = path.resolve(value);
+    if (!fs.existsSync(resolved) || !fs.statSync(resolved).isFile()) return '';
+    if ((fs.statSync(resolved).mode & 0o077) !== 0) return '';
+    return fs.readFileSync(resolved, 'utf8').trim();
+  }
+
+  const adminToken = readPrivateText(adminTokenFile);
+  let trustedMailDeliveryPublicKeys = {};
+  const mailKeysRaw = readPrivateText(mailDeliveryPublicKeysFile);
+  if (mailKeysRaw) {
+    try {
+      const parsed = JSON.parse(mailKeysRaw);
+      if (parsed && typeof parsed === 'object' && !Array.isArray(parsed)) {
+        trustedMailDeliveryPublicKeys = {
+          gmail_agent: typeof parsed.gmail_agent === 'string' ? parsed.gmail_agent : '',
+          resend_agent: typeof parsed.resend_agent === 'string' ? parsed.resend_agent : '',
+        };
+      }
+    } catch {}
+  }
+  const runtime = createPeopleRuntime({ stateDir, trustedMailDeliveryPublicKeys });
+
+  function tokenEqual(actual, expected) {
+    if (!actual || !expected) return false;
+    const a = Buffer.from(actual);
+    const b = Buffer.from(expected);
+    return a.length === b.length && crypto.timingSafeEqual(a, b);
+  }
 
   function requireAdmin(req, res, next) {
     if (!adminToken) {
       res.status(503).json({ ok: false, error: 'people_admin_authority_not_configured' });
       return;
     }
-    if (bearer(req) !== adminToken) {
+    if (!tokenEqual(bearer(req), adminToken)) {
       res.status(401).json({ ok: false, error: 'unauthorized' });
       return;
     }
@@ -100,8 +133,8 @@ export function registerPeopleRoutes(app, {
     invite: runtime.createInvite(req.params.brainKey, req.body || {}),
   })));
 
-  // Legacy monolith has no isolated trusted mail dispatcher.
-  // Never return an unredeemed mailbox token to a Systemia operator.
+  // This monolith has no isolated trusted provider dispatcher.
+  // Do not release a verification token to operator credentials.
   app.post('/api/people/brains/:brainKey/email-challenge', requireAdmin, (_req, res) => {
     res.setHeader('Cache-Control', 'no-store');
     res.status(503).json({ ok: false, error: 'trusted_email_dispatch_unavailable' });
