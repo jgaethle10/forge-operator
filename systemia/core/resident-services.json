@@ -253,7 +253,8 @@
       "optional_when_unconfigured": true,
       "env_args": {
         "--people-state": "PEOPLE_STATE_DIR",
-        "--admin-token-file": "PEOPLE_ADMIN_TOKEN_FILE"
+        "--admin-token-file": "PEOPLE_ADMIN_TOKEN_FILE",
+        "--mail-public-keys": "PEOPLE_MAIL_DELIVERY_PUBLIC_KEYS_FILE"
       },
       "optional_env_args": {
         "--hostname": "PEOPLE_YARD_HOSTNAME",
