@@ -6,8 +6,9 @@ Date: 2026-10-07
 
 - Base44 app: `6ab85d74fe2093703c6247e0`
 - Existing Opportunity Fabric source runtime: `evercraft-opportunity-fabric-runtime-v1.7.0`
-- Verified checkpoint: `6ac6fb8c71f49b897f3a23f5`
-- Checkpoint git commit: `4b8a7cc4a1b450dcab1a3c036851da12fbf09e96`
+- Initial source/checkpoint: `6ac6fb8c71f49b897f3a23f5` / `4b8a7cc4a1b450dcab1a3c036851da12fbf09e96`
+- **Final v1.7.1 checkpoint including README doctrine:** `6ac6fbe16d29ae742985ddbf`
+- **Final checkpoint commit:** `136cb1a99ed4388266ac03b91785e6fdc68c323b`
 - Subsystem change level: v1.7.1 behavioral hardening; the runtime's `VERSION` constant remains v1.7.0 and this receipt does not pretend otherwise.
 
 ## Real runtime-handler behavioral tests
@@ -36,7 +37,7 @@ Existing `Passed`/ `Closed` disposal remains possible for old proposals even aft
 
 `package.json` now runs behavioral tests during the normal production build and includes a separate `npm run test:connect` command.
 
-Executed against the checkpointed source:
+Executed and revalidated after the README update, before the final checkpoint:
 
 ```text
 npm run test:connect
