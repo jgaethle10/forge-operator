@@ -106,7 +106,7 @@ test('owned Fabric serves offer pages, requires confirmation, and delegates chec
         amount_cents:4900,
         currency:'usd',
         checkout_ready:true,
-        checkout_url:'https://settlement.example.test/pay/test',
+        checkout_url:'https://checkout.stripe.com/c/pay/test_session',
         payment_state:'unpaid',
         fulfillment_release:false,
       }),{
@@ -158,7 +158,7 @@ test('owned Fabric serves offer pages, requires confirmation, and delegates chec
     const checkoutBody=await handoff.text();
     assert.match(checkoutBody,/Your checkout is ready\./);
     assert.match(checkoutBody,/Open secure checkout/);
-    assert.match(checkoutBody,/settlement\.example\.test\/pay\/test/);
+    assert.match(checkoutBody,/checkout\.stripe\.com\/c\/pay\/test_session/);
     assert.match(checkoutBody,/Evercraft Payments/);
     assert.equal(seen.length,1);
     assert.equal(seen[0].body.user_confirmed,true);
@@ -301,6 +301,7 @@ test('7.4 checkout sends exact SKU and rejects a mismatched same-price Estate ch
       seen.push(JSON.parse(init.body));
       return new Response(JSON.stringify({
         ok:true,
+        authority:'Evercraft Payments',
         order_key:'IBMI-TEST-123',
         offer_key:wrongOffer?'ibmi_estate_xray_250':'ibmi_74_deadline_xray_250',
         amount_cents:25000,currency:'USD',
