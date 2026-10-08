@@ -3,6 +3,7 @@ import test from 'node:test';
 
 import {
   WorldEngineWebGpuClient,
+  diffGeometryDigests,
   validateWorldEngineWebGpuClientPayload,
 } from './world-engine-webgpu-client.js';
 import type { GeometryAsset, WebGpuRenderPlan } from '../systemia/world-engine/webgpu.js';
@@ -82,4 +83,25 @@ test('browser WebGPU client validates canonical plan geometry bindings',()=>{
 
 test('browser WebGPU support probe is bounded to navigator.gpu availability',()=>{
   assert.equal(typeof WorldEngineWebGpuClient.isSupported(),'boolean');
+});
+
+
+test('geometry digest diff preserves unchanged GPU buffer lineage',()=>{
+  const first='a'.repeat(64);
+  const second='b'.repeat(64);
+  const third='c'.repeat(64);
+  const fourth='d'.repeat(64);
+
+  assert.deepEqual(
+    diffGeometryDigests(
+      {hero:first,floor:second,old:fourth},
+      {hero:first,floor:third,next:fourth},
+    ),
+    {
+      added:['next'],
+      changed:['floor'],
+      removed:['old'],
+      unchanged:['hero'],
+    },
+  );
 });
