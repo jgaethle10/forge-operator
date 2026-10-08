@@ -1,0 +1,25 @@
+name: Owned Offer Original Artwork
+on:
+  pull_request:
+    paths:
+      - 'systemia/mcp/offer-illustrations.mjs'
+      - 'systemia/mcp/fabric-public-site.mjs'
+      - 'tests/offer-illustrations.test.mjs'
+      - '.github/workflows/owned-offer-original-art-ci.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  distinctive-offer-art:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Unique artwork and existing checkout contract
+        run: node --test tests/offer-illustrations.test.mjs tests/fabric-offer-pages.test.mjs
+      - name: Safe consumer frontend source
+        run: |
+          if grep -qi 'base44.app' systemia/mcp/offer-illustrations.mjs; then echo 'provider leakage' >&2; exit 1; fi
