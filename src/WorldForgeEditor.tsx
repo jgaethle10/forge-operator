@@ -5,6 +5,7 @@ import {
   axisDragWorldDelta,
   frameDistanceForScale,
   perspectiveVerticalFovRad,
+  resolveWorldForgeViewportViewMode,
   screenRotationDeltaDeg,
 } from './world-forge-viewport-tools';
 import {
@@ -585,6 +586,14 @@ function WorldViewport({
     return requested??project.nodes.find(node=>node.kind==='camera')??null;
   },[project]);
 
+  const viewportView=resolveWorldForgeViewportViewMode({
+    requestedMode:viewMode,
+    runtimeUnderlayActive,
+    hasActiveCamera:Boolean(activeCamera?.camera),
+  });
+  const effectiveViewMode=viewportView.mode;
+  const runtimeCameraLocked=viewportView.runtimeCameraLocked;
+
   function transformWithPreview(node:ForgeNode):Transform{
     if(gizmoPreview?.nodeId!==node.id) return node.transform;
     if(gizmoPreview.mode==='translate'){
@@ -620,7 +629,7 @@ function WorldViewport({
 
   function matrices(width:number,height:number){
     const aspect=Math.max(.01,width/Math.max(1,height));
-    if(viewMode==='camera'&&activeCamera?.camera){
+    if(effectiveViewMode==='camera'&&activeCamera?.camera){
       const camera=activeCamera.camera;
       const eye=[
         activeCamera.transform.position.x,
@@ -922,7 +931,7 @@ function WorldViewport({
     const rect=canvas.getBoundingClientRect();
 
     let ray:PickRay;
-    if(viewMode==='camera'&&activeCamera?.camera){
+    if(effectiveViewMode==='camera'&&activeCamera?.camera){
       const eye={...activeCamera.transform.position};
       const target=activeCamera.camera.lookAt??{x:0,y:0,z:0};
       if(activeCamera.camera.projection==='orthographic'){
@@ -1015,7 +1024,7 @@ function WorldViewport({
               centerY:hit.centerY,
               deltaDeg:0,
             };
-          }else if(viewMode==='orbit'){
+          }else if(effectiveViewMode==='orbit'){
             dragRef.current={mode:'orbit',x:event.clientX,y:event.clientY,moved:false};
           }else{
             dragRef.current={mode:'pick',x:event.clientX,y:event.clientY,moved:false};
@@ -1046,7 +1055,7 @@ function WorldViewport({
                 delta:0,
               };
             }
-          }else if(viewMode==='orbit'){
+          }else if(effectiveViewMode==='orbit'){
             dragRef.current={mode:'orbit',x:event.clientX,y:event.clientY,moved:false};
           }else{
             dragRef.current={mode:'pick',x:event.clientX,y:event.clientY,moved:false};
@@ -1183,7 +1192,7 @@ function WorldViewport({
         setGizmoPreview(null);
       }}
       onWheel={(event)=>{
-        if(viewMode!=='orbit') return;
+        if(effectiveViewMode!=='orbit') return;
         event.preventDefault();
         setOrbit(current=>({
           ...current,
@@ -1193,20 +1202,30 @@ function WorldViewport({
     />
     <div className="wf-view-badge">
       {runtimeUnderlayActive
-        ? 'WORLD ENGINE · WEBGPU'
-        : viewMode==='camera'
+        ? 'WORLD ENGINE · WEBGPU · RUNTIME CAMERA'
+        : effectiveViewMode==='camera'
           ? `CAMERA · ${shadingMode.toUpperCase()}`
           : `WEBGL2 · ${shadingMode.toUpperCase()}`}
     </div>
     <div className="wf-view-controls">
-      <button type="button" onClick={frameSelected} disabled={!selectedNode}>Frame Selected</button>
+      <button
+        type="button"
+        onClick={frameSelected}
+        disabled={!selectedNode||runtimeCameraLocked}
+        title={runtimeCameraLocked?'Runtime WebGPU uses the canonical World Engine camera':'Frame selected object'}
+      >
+        Frame Selected
+      </button>
       <button
         type="button"
         onClick={()=>setViewMode(current=>current==='camera'?'orbit':'camera')}
-        disabled={!activeCamera}
-        className={viewMode==='camera'?'active':''}
+        disabled={!activeCamera||runtimeCameraLocked}
+        className={effectiveViewMode==='camera'?'active':''}
+        title={runtimeCameraLocked?'Runtime WebGPU camera parity is locked during Play':'Toggle authored camera view'}
       >
-        {viewMode==='camera'?'Exit Camera':'Camera View'}
+        {runtimeCameraLocked
+          ? 'Runtime Camera'
+          : effectiveViewMode==='camera'?'Exit Camera':'Camera View'}
       </button>
       <button
         type="button"
@@ -1226,7 +1245,9 @@ function WorldViewport({
       </span>
     </div>
     <div className="wf-view-help">
-      Drag empty space to orbit · wheel to zoom · click real geometry to select · drag active transform handles
+      {runtimeCameraLocked
+        ? 'World Engine WebGPU camera locked for visual parity · click geometry to select · drag active transform handles'
+        : 'Drag empty space to orbit · wheel to zoom · click real geometry to select · drag active transform handles'}
     </div>
   </div>;
 }
