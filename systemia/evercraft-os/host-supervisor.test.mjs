@@ -197,3 +197,43 @@ test("user host installer stays user-mode and creates no public listener contrac
   assert.doesNotMatch(script, /0\.0\.0\.0/);
   assert.match(script, /evercraft-os-host\.service/);
 });
+
+
+test("host startup fails closed when Evercraft Home cannot start", async () => {
+  const root = tempRoot();
+  const nodeId = "node-host-start-failure";
+  const ctx = setupInstalled(root, nodeId);
+  const capsules = new EvercraftOsCapabilityCapsules({
+    rootDir: path.join(root, "capsules"),
+    installLedger: ctx.ledger
+  });
+
+  const host = new EvercraftOsHostSupervisor({
+    stateDir: path.join(root, "host"),
+    nodeId,
+    deviceClass: "laptop",
+    installLedger: ctx.ledger,
+    capsules,
+    homeStarter: async () => {
+      throw new Error("proof_home_start_failure");
+    },
+    homePort: 0,
+    reconcileEveryMs: 60_000
+  });
+
+  try {
+    await assert.rejects(
+      () => host.start(),
+      /proof_home_start_failure/
+    );
+
+    const status = host.status();
+    assert.equal(status.state, "stopped");
+    assert.equal(status.home.running, false);
+    assert.equal(status.started_at, null);
+    assert.equal(status.boundaries.app_launch_performed_by_supervisor, false);
+  } finally {
+    await host.close();
+    fs.rmSync(root, { recursive: true, force: true });
+  }
+});
