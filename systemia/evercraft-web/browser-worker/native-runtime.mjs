@@ -275,6 +275,7 @@ export async function startNativeBrowserRuntime({
   browsersPath,
   maxConcurrency=2,
   startTimeoutMs=DEFAULT_START_TIMEOUT_MS,
+  jobStateDir='',
 }={}){
   const root=path.resolve(String(sourceDir||''));
   const browserRoot=path.resolve(String(browsersPath||''));
@@ -298,6 +299,7 @@ export async function startNativeBrowserRuntime({
         Math.max(1,Math.min(8,Number(maxConcurrency)||2))
       ),
       PLAYWRIGHT_BROWSERS_PATH:browserRoot,
+      EVERCRAFT_BROWSER_JOB_STATE_DIR:jobStateDir ? path.resolve(jobStateDir) : '',
     },
     stdio:['ignore','pipe','pipe'],
   });
@@ -356,6 +358,32 @@ export async function startNativeBrowserRuntime({
           },
           body:JSON.stringify(job||{}),
         },Math.max(35_000,Number(job?.timeout_ms||15_000)+5000));
+      },
+      async submitReadOnlyJob(envelope){
+        return fetchJson(`${url}/v1/jobs`,{
+          method:'POST',
+          headers:{
+            'content-type':'application/json',
+            authorization:`Bearer ${workerToken}`,
+          },
+          body:JSON.stringify(envelope||{}),
+        },10_000);
+      },
+      async readReadOnlyJob(jobId){
+        return fetchJson(
+          `${url}/v1/jobs/${encodeURIComponent(String(jobId||''))}`,
+          {headers:{authorization:`Bearer ${workerToken}`}},
+          10_000
+        );
+      },
+      async cancelReadOnlyJob(jobId){
+        return fetchJson(
+          `${url}/v1/jobs/${encodeURIComponent(String(jobId||''))}`,
+          {
+            method:'DELETE',
+            headers:{authorization:`Bearer ${workerToken}`},
+          },10_000
+        );
       },
       async createAuthSession(job){
         return fetchJson(`${url}/v1/auth-browser/sessions`,{
