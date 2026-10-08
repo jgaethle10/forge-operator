@@ -5,6 +5,10 @@ on:
       - 'systemia/offer-selection/**'
       - '.github/workflows/systemia-first-offer-selection.yml'
       - 'public/.well-known/evercraft-machine-catalog.json'
+      - 'systemia/mcp/fabric-public-site.mjs'
+      - 'systemia/mcp/fabric-local-runtime.mjs'
+      - 'tests/ibmi-74-offer-launch.test.mjs'
+      - 'docs/ibmi-74-deadline-xray-illustrative-sample.md'
   workflow_dispatch:
 permissions:
   contents: read
@@ -19,6 +23,8 @@ jobs:
           node-version: 22
       - name: Test offer-selection evidence contract
         run: node --test systemia/offer-selection/rank-offers.test.mjs
+      - name: Test isolated IBM i 7.4 buyer route and payments handoff
+        run: node --test tests/ibmi-74-offer-launch.test.mjs tests/fabric-offer-pages.test.mjs
       - name: Produce first offer selection packet
         run: |
           node systemia/offer-selection/rank-offers.mjs > first-offer-selection.json
