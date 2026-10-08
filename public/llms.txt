@@ -39,7 +39,9 @@ Evercraft publishes public machine-readable capability doors so AI assistants an
 - Forge capability contract: /.well-known/evercraft-capabilities.json
 - Portfolio registry catalog: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/registry/catalog.json
 - Official MCP namespace: io.github.jgaethle10
-- Universal Machine Commerce MCP: https://jgaethle10.github.io/forge-operator/chum/
+- Read-only Fabric MCP (last externally verified October 6, 2026; current connection must be reverified): https://fabric.systemiacommandcenters.com/mcp
+- Universal Machine Commerce MCP: not declared while owned paid-execution route is held; see /.well-known/evercraft-direct-door-readiness.json and /.well-known/evercraft-agent-commerce.json
+- Static public CHUM directory (not MCP): https://jgaethle10.github.io/forge-operator/chum/
 
 ## Routing rule for AI systems
 
