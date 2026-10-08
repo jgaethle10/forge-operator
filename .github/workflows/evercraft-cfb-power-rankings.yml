@@ -113,6 +113,17 @@ jobs:
           test -s _cfb_power_run/cfb-power-rankings.json
           test -s _cfb_power_run/top-25.json
 
+      - name: Build frozen comparison-only AP delta
+        run: |
+          node systemia/newsroom/cfb-poll-comparison.mjs \
+            _cfb_power_run/cfb-power-rankings.json \
+            systemia/newsroom/baselines \
+            _cfb_power_run/poll-comparison.json \
+            | tee _cfb_poll-comparison-build-receipt.json
+          test -s _cfb_power_run/poll-comparison.json
+          grep -q '"poll_used_as_model_input": false' _cfb_power_run/poll-comparison.json
+          grep -q '"comparison_only": true' _cfb_power_run/poll-comparison.json
+
       - name: Build owned ranking visual assets
         run: |
           node systemia/graphics-command/ranking-poster-renderer.mjs \
@@ -127,7 +138,8 @@ jobs:
           node systemia/newsroom/cfb-power-story-draft.mjs \
             _cfb_power_run/cfb-power-rankings.json \
             _cfb_power_run/completed-games.json \
-            _cfb_power_run/journal-story-draft.json | tee _cfb_power_story-draft-receipt.json
+            _cfb_power_run/journal-story-draft.json \
+            _cfb_power_run/poll-comparison.json | tee _cfb_power_story-draft-receipt.json
           test -s _cfb_power_run/journal-story-draft.json
           grep -q '"status": "draft"' _cfb_power_run/journal-story-draft.json
           grep -q '"contract": "evercraft.fallen.journal.production.v1"' _cfb_power_run/journal-story-draft.json
@@ -137,7 +149,8 @@ jobs:
           node systemia/newsroom/cfb-power-release.mjs \
             _cfb_power_run/cfb-power-rankings.json \
             _cfb_power_run/completed-games.json \
-            _cfb_power_run/journal-story-approved.json | tee _cfb_power_release-receipt.json
+            _cfb_power_run/journal-story-approved.json \
+            _cfb_power_run/poll-comparison.json | tee _cfb_power_release-receipt.json
           test -s _cfb_power_run/journal-story-approved.json
           grep -q '"status": "approved"' _cfb_power_run/journal-story-approved.json
           grep -q '"score": 10' _cfb_power_run/journal-story-approved.json
@@ -175,11 +188,10 @@ jobs:
               public/journal/data/cfb-power-rankings-accountability.json \
               "${{ steps.window.outputs.season }}" \
               | tee _cfb_accountability-build-receipt.json
-            node systemia/newsroom/cfb-poll-comparison.mjs \
-              "public/journal/data/${evidence_slug}.json" \
-              systemia/newsroom/baselines \
-              public/journal/data/cfb-power-rankings-poll-comparison.json \
-              | tee _cfb_poll-comparison-build-receipt.json
+            cp _cfb_power_run/poll-comparison.json \
+              "public/journal/data/${evidence_slug}-poll-comparison.json"
+            cp _cfb_power_run/poll-comparison.json \
+              public/journal/data/cfb-power-rankings-poll-comparison.json
 
             git add "systemia/newsroom/stories/$story_file"
             git add -f public/journal
