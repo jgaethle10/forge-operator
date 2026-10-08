@@ -53,6 +53,7 @@ jobs:
         run: node --test systemia/lineage/commercial-contract.test.mjs
 
       - name: Verify Lineage public Fabric door
+        if: github.event_name != 'pull_request'
         shell: bash
         run: |
           set -euo pipefail
@@ -142,7 +143,7 @@ jobs:
           printf '%s\n' "$llms" > /tmp/lineage-llms.txt
 
       - name: Write external receipt
-        if: success()
+        if: success() && github.event_name != 'pull_request'
         shell: bash
         run: |
           set -euo pipefail
