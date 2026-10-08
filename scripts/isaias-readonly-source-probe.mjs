@@ -15,7 +15,9 @@ try{
   const summary={
     state:packet.status,
     advisory:packet.advisory,
-    fema_rows_acquired:packet.facilities.features.length,
+    fema_rows_acquired:packet.facilities?.features.length??null,
+    fema_state:packet.facility_state,
+    fema_error:packet.facility_error,
     records_class:'agency_reported_not_verified_for_public_shelter_instructions',
     sources:packet.source_receipts.map(x=>({id:x.id,sha256:x.sha256,retrieved_at:x.retrieved_at})),
     combined_hazard_intersections:null,
@@ -23,6 +25,7 @@ try{
     artifact_path:pathname
   };
   process.stdout.write(JSON.stringify(summary,null,2)+'\n');
+  if(packet.facility_state==='held')process.exitCode=2;
 }catch(e){
   const error=e instanceof Error?e.message:String(e);
   if(error==='nhc_advisory_identity_mismatch'){
