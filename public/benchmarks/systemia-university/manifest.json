@@ -53,5 +53,6 @@
       "status": "open_spec_no_verified_public_runs"
     }
   ],
-  "submissions_index": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/benchmarks/systemia-university/submissions/index.json"
+  "submissions_index": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/benchmarks/systemia-university/submissions/index.json",
+  "leaderboard_index": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/benchmarks/systemia-university/leaderboards/index.json"
 }
