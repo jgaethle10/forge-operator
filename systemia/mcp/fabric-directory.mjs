@@ -334,13 +334,48 @@ function scoreEntry(intent,entry,{frequency,total}){
   return Math.max(0,Math.round(score*100)/100);
 }
 
+
+/**
+ * Disambiguate the exact support-transition product from the same-priced
+ * general IBM i Estate X-Ray. Returns a non-executable informational proposal;
+ * neither the published catalog nor this match establishes a paid corridor.
+ */
+export function ibmi74OfferForIntent(intent,publicId){
+  if(publicId!=='ibmi-rescue-v1') return null;
+  const phrase=String(intent||'').toLowerCase();
+  if(!/(?:\b7[.\s-]?4\b)/.test(phrase)||
+     !/(support|upgrad|compatib|deadline|transition|life.?cycle|migra|vendor|rollback|maintenan)/.test(phrase)){
+    return null;
+  }
+  return {
+    offer_key:'ibmi_74_deadline_xray_250',
+    name:'IBM i 7.4 Deadline X-Ray',
+    amount_cents:25000,
+    currency:'USD',
+    amount_source:'published_catalog_offer_not_live_checkout_verification',
+    route_state:'held_paid_corridor_not_independently_verified',
+    suggested_public_page_path:'/offers/ibmi-74-deadline-xray',
+    public_page_live_verified:false,
+    checkout_url:null,
+    order_created:false,
+    settlement_verified:false,
+    action:'Explain the public offer scope; do not initiate checkout or assume availability.'
+  };
+}
+
 export function matchFabricCapabilities(intent,catalog,{limit=5}={}){
   const normalized=normalizeFabricCatalog(catalog);
   const max=Math.max(1,Math.min(20,Number(limit||5)));
   const frequency=buildDocumentFrequency(normalized);
   const total=normalized.length;
   return normalized
-    .map((entry)=>({...entry,match_score:scoreEntry(intent,entry,{frequency,total})}))
+    .map((entry)=>({
+      ...entry,
+      match_score:scoreEntry(intent,entry,{frequency,total}),
+      ...(ibmi74OfferForIntent(intent,entry.public_id)
+        ? {suggested_bounded_offer:ibmi74OfferForIntent(intent,entry.public_id)}
+        : {}),
+    }))
     .filter((entry)=>entry.match_score>0)
     .sort((a,b)=>b.match_score-a.match_score||a.name.localeCompare(b.name))
     .slice(0,max);
