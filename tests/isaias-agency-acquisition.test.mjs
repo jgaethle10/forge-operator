@@ -12,7 +12,7 @@ test('locked official advisory #8 is parsed without inventing revisions',()=>{
  assert.equal(parseIsaiasAdvisory8(nhcText).max_wind_mph,85);
  assert.throws(()=>parseIsaiasAdvisory8(nhcText.replace('Number 8','Number 9')),/identity/);
  assert.throws(()=>parseIsaiasAdvisory8(nhcText.replace('85 MPH','95 MPH')),/values/);
- assert.match(ISAIAS_NHC_ADVISORY_8,/081456/);
+ assert.match(ISAIAS_NHC_ADVISORY_8,/al092026\.public\.008\.shtml/);
 });
 test('bounded read-only acquisition preserves provenance and does not claim open shelter',async()=>{
  const result=await acquireIsaiasReadOnly({fetchImpl:fetcher,retrievedAt:'2026-10-08T19:00:00Z'});
