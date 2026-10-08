@@ -19,6 +19,8 @@
 3. `planNativeConnect`: metadata-only matching on declared capabilities, explicit source health, owner authorization, DNC/hold and availability exclusions, deterministic proposal identifiers, and explicit unmatched needs. No incidental location/label similarity can create a fit.
 4. `reviewNativeConnectProposal`: fail-closed, current-state revalidation of case ownership, case need, member availability/capability and private-node ownership before human review approval. Approval generates **no contact, payment, disclosure, team membership or legal obligation**.
 5. `recordSafeNativeConnectTransaction`: writes a minimal, redacted proposed-plan transaction through the existing LineageStore. The Lineage receipt represents a provenance event, *not* deployment, consent or payment authority.
+6. `normalizeLegacyConnectNode` and `normalizeLegacyFabricMember`: explicit allowlist adapters that discard contact details and do not infer specialty from a role or tag.
+7. `previewNativeConnectMigration`: owner-scoped aggregate preflight to detect invalid records, holds, duplicates and likely cutover blockers without creating exports or migrating private data.
 
 Run:
 
