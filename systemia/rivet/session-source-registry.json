@@ -262,6 +262,45 @@
       "allowed_for_rivet_session_count": false,
       "commercial_ingest_state": "HOLD_UNTIL_DATA_ACCESS_SCHEMA_AND_TERMS_VERIFIED",
       "next_action": "Inspect official third-party operational data guidance; do not reclassify uptime/status as charging sessions."
+    },
+    {
+      "source_id": "ca-on-ottawa-city-public-charging-sessions",
+      "publisher": "City of Ottawa, Ontario, Canada",
+      "publisher_primary_page": "https://ottawa.ca/en/living-ottawa/environment-conservation-and-climate/reducing-greenhouse-gas-emissions/transportation/electric-vehicles/how-city-supporting-electric-vehicles",
+      "catalog_url": "https://data.urbandatacentre.ca/en/catalogue/open-ottawa-9de005-electric-vehicle-charging-stations-usage-data",
+      "source_url": "https://services.arcgis.com/G6F8XLCl5KtAlZ2G/arcgis/rest/services/Electric_Vehicle_Charging_Stations_Usage_Data/FeatureServer/0",
+      "licence_url": "https://ottawa.ca/en/city-hall/open-transparent-and-accountable-government/open-data/open-data-licence-version-20",
+      "licence": "City of Ottawa Open Data Licence 2.0",
+      "commercial_rights": "commercial_use_allowed_subject_to_attribution_excludes_personal_information",
+      "required_attribution": "Contains information licensed under the Open Government Licence – City of Ottawa.",
+      "dataset_subject": "municipal public charging event observations, station/location/connection periods/kWh",
+      "publication_claimed_cadence": "monthly",
+      "dataset_reported_row_count_from_catalog": 22455,
+      "source_fields_publicly_listed": [
+        "Station",
+        "Site",
+        "Address",
+        "Session_start_date",
+        "Session_end_date",
+        "Total_kWh",
+        "End_Reason",
+        "Card_number",
+        "Session_ID"
+      ],
+      "prohibited_fields": [
+        "Card_number",
+        "Session_ID",
+        "User Identifier Number",
+        "Transaction_ID"
+      ],
+      "privacy_rule": "Never fetch, hash, persist, distribute, or join personal/card/user/session IDs; only authorized aggregate station-period counts/kWh and non-identifying station context, after publisher access is authorized.",
+      "live_api_probe_status": "BLOCKED_HTTP_499_TOKEN_REQUIRED",
+      "observed_session_status": "source_schema_verified_not_retrieved",
+      "commercial_ingest_state": "HELD_PENDING_AUTHORIZED_SOURCE_ACCESS_AND_PRIVACY_SAFE_ADAPTER",
+      "allowed_for_rivet_session_count": false,
+      "allowed_evidence_class": "candidate_session_level_publication_pending_access",
+      "next_action": "Obtain authorized read of primary ArcGIS layer and verify current record count, latest observation, station precision, non-personal columns, and aggregation. Only then produce deduped EVObservedUsageAggregate records and source receipts.",
+      "evidence_note": "Catalogue and City identify true session fields and monthly updates, but an anonymous exact ArcGIS /query?returnCountOnly=true returned JSON error 499 Token Required. Do not attempt to evade access controls or use PII."
     }
   ]
 }
