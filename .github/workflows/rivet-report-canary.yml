@@ -9,6 +9,9 @@ on:
       - "systemia/network/outbound-node-agent.mjs"
       - "tests/rivet-outbound-service-relay.test.mjs"
       - "systemia/organism/rivet-report-edge-runner.mjs"
+      - "systemia/organism/rivet-session-freshness-runner.mjs"
+      - "systemia/organism/rivet-session-freshness.workflow.json"
+      - "tests/rivet-session-freshness-runner.test.mjs"
       - "systemia/organism/rivet-report-edge.workflow.json"
       - "systemia/core/resident-services.json"
       - "systemia/core/rivet-report-resident-wiring.proof.mjs"
@@ -26,6 +29,9 @@ on:
       - "systemia/network/outbound-node-agent.mjs"
       - "tests/rivet-outbound-service-relay.test.mjs"
       - "systemia/organism/rivet-report-edge-runner.mjs"
+      - "systemia/organism/rivet-session-freshness-runner.mjs"
+      - "systemia/organism/rivet-session-freshness.workflow.json"
+      - "tests/rivet-session-freshness-runner.test.mjs"
       - "systemia/organism/rivet-report-edge.workflow.json"
       - "systemia/core/resident-services.json"
       - "systemia/core/rivet-report-resident-wiring.proof.mjs"
@@ -45,6 +51,7 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: 22
+      - run: node --test tests/rivet-session-freshness-runner.test.mjs
       - run: node systemia/rivet/http-gateway-readiness.proof.mjs
       - run: npm run proof:rivet-yard
       - run: node systemia/rivet/report-domain-projection.proof.mjs
