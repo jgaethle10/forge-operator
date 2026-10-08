@@ -128,6 +128,7 @@ function failureStage(checks={},message=''){
   if(checks.device_attestation!==true) return 'device_attestation';
   if(checks.mcp_initialize!==true) return 'mcp_initialize';
   if(checks.mcp_tools!==true) return 'mcp_tools';
+  if(checks.lineage_surface!==true) return 'lineage_surface';
   if(checks.public_catalog!==true) return 'public_catalog';
   return 'unknown';
 }
@@ -709,6 +710,39 @@ try{
   if(!payload||Number(payload.total)<40) throw new Error('fabric_catalog_unavailable');
   if(payload.transactional!==false||payload.external_action_taken!==false) throw new Error('fabric_catalog_side_effect_boundary_failed');
   if(/base44\.app/i.test(JSON.stringify(payload.capabilities||[]))) throw new Error('base44_route_leaked_into_catalog');
+
+  const lineage=(payload.capabilities||[]).find((item)=>item.public_id==='lineage-founding-pilot-v1');
+  if(!lineage) throw new Error('lineage_catalog_missing');
+  if(lineage.state!=='human_handoff_ready') throw new Error('lineage_machine_state_drift');
+  if(lineage.commercial_state!=='verification_required') throw new Error('lineage_commercial_state_drift');
+  if(Number(lineage.entry_paid_offer?.price_usd_normalized)!==500) throw new Error('lineage_founding_pilot_price_drift');
+
+  const lineagePath='/capabilities/lineage-founding-pilot-v1';
+  const lineagePage=await getText(lineagePath);
+  const lineageType=lineagePage.response.headers.get('content-type')||'';
+  if(!/^text\/html/i.test(lineageType)) throw new Error('lineage_public_page_not_html');
+  if(!/Evercraft Lineage Founding Pilot/i.test(lineagePage.text)) throw new Error('lineage_public_page_identity_missing');
+  if(!/\$500/.test(lineagePage.text)) throw new Error('lineage_public_page_price_missing');
+  if(/base44\.app/i.test(lineagePage.text)) throw new Error('lineage_public_page_base44_reference');
+  if(/buy\.stripe\.com/i.test(lineagePage.text)) throw new Error('lineage_direct_processor_checkout_leak');
+  if(/Continue to checkout/i.test(lineagePage.text)) throw new Error('lineage_unverified_checkout_leak');
+
+  receipt.lineage_surface={
+    path:lineagePath,
+    url:origin+lineagePath,
+    status:lineagePage.response.status,
+    content_type:lineageType,
+    public_id:lineage.public_id,
+    machine_state:lineage.state,
+    commercial_state:lineage.commercial_state,
+    price_usd:Number(lineage.entry_paid_offer?.price_usd_normalized),
+    human_confirmed:true,
+    automatic_repository_access:false,
+    automatic_payment:false,
+    direct_processor_checkout:false,
+  };
+  receipt.checks.lineage_surface=true;
+
   receipt.catalog_total=Number(payload.total);
   receipt.checks.public_catalog=true;
 
