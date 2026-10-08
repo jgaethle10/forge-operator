@@ -97,6 +97,7 @@ test('owned Fabric serves offer pages, requires confirmation, and delegates chec
     purchaseIntentFetch:async(url,init)=>{
       seen.push({
         url:String(url),
+        redirect:init?.redirect,
         body:JSON.parse(String(init?.body||'{}')),
       });
       return new Response(JSON.stringify({
@@ -161,6 +162,7 @@ test('owned Fabric serves offer pages, requires confirmation, and delegates chec
     assert.match(checkoutBody,/checkout\.stripe\.com\/c\/pay\/test_session/);
     assert.match(checkoutBody,/Evercraft Payments/);
     assert.equal(seen.length,1);
+    assert.equal(seen[0].redirect,'error');
     assert.equal(seen[0].body.user_confirmed,true);
     assert.equal(seen[0].body.capability_key,'website-audit-quick-win');
     assert.match(seen[0].body.idempotency_key,/^fabric-website-audit-/);
@@ -335,5 +337,36 @@ test('7.4 checkout sends exact SKU and rejects a mismatched same-price Estate ch
     assert.equal(body.payment_state,'unpaid');
     assert.equal(body.fulfillment_release,false);
     assert.equal(seen.length,2);
+  }finally{await runtime.close();}
+});
+
+test('payment adapter network uncertainty holds both JSON and human forms',async()=>{
+  const runtime=await startFabricLocalRuntime({
+    host:'127.0.0.1',port:0,catalog:[websiteAudit],faieSurfaceEnabled:false,
+    purchaseIntentUrl:'https://fabric.systemiacommandcenters.com/api/internal/approved-intent',
+    purchaseIntentFetch:async(_url,init)=>{
+      assert.equal(init.redirect,'error');
+      throw new Error('simulated_backend_timeout');
+    },
+  });
+  try{
+    const api=await fetch(runtime.url+'/api/offers/website-audit/checkout',{
+      method:'POST',headers:{'content-type':'application/json'},
+      body:JSON.stringify({user_confirmed:true}),
+    });
+    assert.equal(api.status,503);
+    const body=await api.json();
+    assert.equal(body.error,'purchase_intent_response_unverified');
+    assert.equal(body.checkout_ready,false);
+    assert.equal(body.payment_verified,false);
+    assert.equal(body.fulfillment_release,false);
+    const form=await fetch(runtime.url+'/api/offers/website-audit/checkout',{
+      method:'POST',headers:{'content-type':'application/x-www-form-urlencoded'},
+      body:new URLSearchParams({user_confirmed:'true'})
+    });
+    assert.equal(form.status,503);
+    const html=await form.text();
+    assert.match(html,/Checkout is not confirmed/);
+    assert.doesNotMatch(html,/Open secure checkout/);
   }finally{await runtime.close();}
 });
