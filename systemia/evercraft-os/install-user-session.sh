@@ -2,7 +2,7 @@
 set -euo pipefail
 
 SOURCE_ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/../.." && pwd)"
-INSTALL_ROOT="${EVERCRAFT_USER_INSTALL_ROOT:-$HOME/.local/share/evercraft/forge-operator}"
+INSTALL_ROOT="${EVERCRAFT_OS_INSTALL_ROOT:-$HOME/.local/share/evercraft/evercraft-os}"
 STATE_ROOT="${EVERCRAFT_OS_STATE_ROOT:-$HOME/.local/state/evercraft/os}"
 UNIT_DIR="$HOME/.config/systemd/user"
 UNIT_FILE="$UNIT_DIR/evercraft-os.service"
@@ -60,7 +60,6 @@ cat > "$UNIT_FILE" <<EOF
 [Unit]
 Description=Evercraft OS user-session supervisor
 After=default.target evercraft-local-organism.service
-Wants=evercraft-local-organism.service
 StartLimitIntervalSec=0
 
 [Service]
