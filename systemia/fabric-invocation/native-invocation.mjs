@@ -139,10 +139,13 @@ export class FabricNativeInvocation {
         actor_ref: actor, tenant_key: tenant, capability_key: capability,
         mission_key: mission, work_key: work,
       });
+      const authorizationExpiryMs = Date.parse(String(auth?.expires_at || ''));
       if (auth?.decision !== 'allow' || !RECEIPT.test(String(auth.receipt_hash || '')) ||
           auth.actor_ref !== actor || auth.tenant_key !== tenant ||
-          auth.capability_key !== capability) {
-        throw new Error('fabric_authorization_denied');
+          auth.capability_key !== capability ||
+          !Number.isFinite(authorizationExpiryMs) ||
+          authorizationExpiryMs <= this.now().getTime() + this.timeoutMs + 1000) {
+        throw new Error('fabric_authorization_denied_or_expiring');
       }
       const events = readEvents(file);
       if (events.length) {
