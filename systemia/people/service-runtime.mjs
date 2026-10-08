@@ -266,6 +266,19 @@ export async function startPeopleLayerRuntime({
     consent_path:'/people/consent',
     verify_email_path:'/people/verify-email',
     base44_runtime_dependency:false,
+    async health(){
+      return {
+        ...runtime.health(),
+        service:'evercraft-people-layer',
+        runtime:'Evercraft Compute',
+        public_ui:true,
+        instance_id:instanceId,
+        operator_auth:'private_token_file',
+        public_person_token_flows:true,
+        trusted_mail_delivery_configured:Object.values(trustedMailDeliveryPublicKeys).some(Boolean),
+        base44_runtime_dependency:false,
+      };
+    },
     async close(){
       await new Promise(resolve=>server.close(()=>resolve()));
     },
