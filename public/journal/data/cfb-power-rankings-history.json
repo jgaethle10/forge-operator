@@ -1,0 +1,830 @@
+{
+  "schema": "evercraft.cfb.ranking-history.v1",
+  "season": 2026,
+  "edition_count": 2,
+  "generated_from": "persisted_evercraft_journal_edition_evidence",
+  "editions": [
+    {
+      "run_id": "cfbpi:5d90b842afecc9f43c50ea34",
+      "season": 2026,
+      "week_label": "Through 2026-10-06",
+      "model_version": "evercraft-cfbpi-0.2.0",
+      "evidence_snapshot_id": "cfb:2026:2026-10-06:e1c0f0145c20b386e5fa",
+      "evidence_through_at": "2026-10-06T23:59:59.999Z",
+      "generated_at": "2026-10-07T06:45:28.730Z",
+      "top_25": [
+        {
+          "rank": 1,
+          "previous_rank": null,
+          "movement": null,
+          "movement_state": "new",
+          "team_id": "alabama",
+          "team_name": "Alabama",
+          "power_score": 81.49,
+          "confidence": 0.95,
+          "record": {
+            "wins": 5,
+            "losses": 0,
+            "games": 5,
+            "win_pct": 1
+          }
+        },
+        {
+          "rank": 2,
+          "previous_rank": null,
+          "movement": null,
+          "movement_state": "new",
+          "team_id": "notre-dame",
+          "team_name": "Notre Dame",
+          "power_score": 74,
+          "confidence": 0.95,
+          "record": {
+            "wins": 5,
+            "losses": 0,
+            "games": 5,
+            "win_pct": 1
+          }
+        },
+        {
+          "rank": 3,
+          "previous_rank": null,
+          "movement": null,
+          "movement_state": "new",
+          "team_id": "texas",
+          "team_name": "Texas",
+          "power_score": 73.57,
+          "confidence": 0.8645,
+          "record": {
+            "wins": 4,
+            "losses": 0,
+            "games": 4,
+            "win_pct": 1
+          }
+        },
+        {
+          "rank": 4,
+          "previous_rank": null,
+          "movement": null,
+          "movement_state": "new",
+          "team_id": "texas-tech",
+          "team_name": "Texas Tech",
+          "power_score": 68.81,
+          "confidence": 0.95,
+          "record": {
+            "wins": 5,
+            "losses": 0,
+            "games": 5,
+            "win_pct": 1
+          }
+        },
+        {
+          "rank": 5,
+          "previous_rank": null,
+          "movement": null,
+          "movement_state": "new",
+          "team_id": "indiana",
+          "team_name": "Indiana",
+          "power_score": 68.31,
+          "confidence": 0.95,
+          "record": {
+            "wins": 5,
+            "losses": 0,
+            "games": 5,
+            "win_pct": 1
+          }
+        },
+        {
+          "rank": 6,
+          "previous_rank": null,
+          "movement": null,
+          "movement_state": "new",
+          "team_id": "ucla",
+          "team_name": "UCLA",
+          "power_score": 68.09,
+          "confidence": 0.8645,
+          "record": {
+            "wins": 4,
+            "losses": 0,
+            "games": 4,
+            "win_pct": 1
+          }
+        },
+        {
+          "rank": 7,
+          "previous_rank": null,
+          "movement": null,
+          "movement_state": "new",
+          "team_id": "georgia",
+          "team_name": "Georgia",
+          "power_score": 68.01,
+          "confidence": 0.95,
+          "record": {
+            "wins": 5,
+            "losses": 0,
+            "games": 5,
+            "win_pct": 1
+          }
+        },
+        {
+          "rank": 8,
+          "previous_rank": null,
+          "movement": null,
+          "movement_state": "new",
+          "team_id": "utah",
+          "team_name": "Utah",
+          "power_score": 67.89,
+          "confidence": 0.8645,
+          "record": {
+            "wins": 4,
+            "losses": 0,
+            "games": 4,
+            "win_pct": 1
+          }
+        },
+        {
+          "rank": 9,
+          "previous_rank": null,
+          "movement": null,
+          "movement_state": "new",
+          "team_id": "miami-fl",
+          "team_name": "Miami (FL)",
+          "power_score": 66.74,
+          "confidence": 0.95,
+          "record": {
+            "wins": 5,
+            "losses": 0,
+            "games": 5,
+            "win_pct": 1
+          }
+        },
+        {
+          "rank": 10,
+          "previous_rank": null,
+          "movement": null,
+          "movement_state": "new",
+          "team_id": "ohio-st",
+          "team_name": "Ohio St.",
+          "power_score": 66.52,
+          "confidence": 0.95,
+          "record": {
+            "wins": 4,
+            "losses": 1,
+            "games": 5,
+            "win_pct": 0.8
+          }
+        },
+        {
+          "rank": 11,
+          "previous_rank": null,
+          "movement": null,
+          "movement_state": "new",
+          "team_id": "byu",
+          "team_name": "BYU",
+          "power_score": 66.36,
+          "confidence": 0.8645,
+          "record": {
+            "wins": 4,
+            "losses": 0,
+            "games": 4,
+            "win_pct": 1
+          }
+        },
+        {
+          "rank": 12,
+          "previous_rank": null,
+          "movement": null,
+          "movement_state": "new",
+          "team_id": "nebraska",
+          "team_name": "Nebraska",
+          "power_score": 65.81,
+          "confidence": 0.95,
+          "record": {
+            "wins": 5,
+            "losses": 0,
+            "games": 5,
+            "win_pct": 1
+          }
+        },
+        {
+          "rank": 13,
+          "previous_rank": null,
+          "movement": null,
+          "movement_state": "new",
+          "team_id": "pittsburgh",
+          "team_name": "Pittsburgh",
+          "power_score": 65.75,
+          "confidence": 0.95,
+          "record": {
+            "wins": 5,
+            "losses": 0,
+            "games": 5,
+            "win_pct": 1
+          }
+        },
+        {
+          "rank": 14,
+          "previous_rank": null,
+          "movement": null,
+          "movement_state": "new",
+          "team_id": "kentucky",
+          "team_name": "Kentucky",
+          "power_score": 65.53,
+          "confidence": 0.95,
+          "record": {
+            "wins": 4,
+            "losses": 1,
+            "games": 5,
+            "win_pct": 0.8
+          }
+        },
+        {
+          "rank": 15,
+          "previous_rank": null,
+          "movement": null,
+          "movement_state": "new",
+          "team_id": "mississippi-st",
+          "team_name": "Mississippi St.",
+          "power_score": 65.05,
+          "confidence": 0.95,
+          "record": {
+            "wins": 4,
+            "losses": 1,
+            "games": 5,
+            "win_pct": 0.8
+          }
+        },
+        {
+          "rank": 16,
+          "previous_rank": null,
+          "movement": null,
+          "movement_state": "new",
+          "team_id": "houston",
+          "team_name": "Houston",
+          "power_score": 64.76,
+          "confidence": 0.95,
+          "record": {
+            "wins": 4,
+            "losses": 1,
+            "games": 5,
+            "win_pct": 0.8
+          }
+        },
+        {
+          "rank": 17,
+          "previous_rank": null,
+          "movement": null,
+          "movement_state": "new",
+          "team_id": "wisconsin",
+          "team_name": "Wisconsin",
+          "power_score": 64.25,
+          "confidence": 0.95,
+          "record": {
+            "wins": 4,
+            "losses": 1,
+            "games": 5,
+            "win_pct": 0.8
+          }
+        },
+        {
+          "rank": 18,
+          "previous_rank": null,
+          "movement": null,
+          "movement_state": "new",
+          "team_id": "missouri",
+          "team_name": "Missouri",
+          "power_score": 63.94,
+          "confidence": 0.95,
+          "record": {
+            "wins": 4,
+            "losses": 1,
+            "games": 5,
+            "win_pct": 0.8
+          }
+        },
+        {
+          "rank": 19,
+          "previous_rank": null,
+          "movement": null,
+          "movement_state": "new",
+          "team_id": "tennessee",
+          "team_name": "Tennessee",
+          "power_score": 63.93,
+          "confidence": 0.95,
+          "record": {
+            "wins": 4,
+            "losses": 1,
+            "games": 5,
+            "win_pct": 0.8
+          }
+        },
+        {
+          "rank": 20,
+          "previous_rank": null,
+          "movement": null,
+          "movement_state": "new",
+          "team_id": "lsu",
+          "team_name": "LSU",
+          "power_score": 63.11,
+          "confidence": 0.95,
+          "record": {
+            "wins": 4,
+            "losses": 1,
+            "games": 5,
+            "win_pct": 0.8
+          }
+        },
+        {
+          "rank": 21,
+          "previous_rank": null,
+          "movement": null,
+          "movement_state": "new",
+          "team_id": "northwestern",
+          "team_name": "Northwestern",
+          "power_score": 63,
+          "confidence": 0.8645,
+          "record": {
+            "wins": 3,
+            "losses": 1,
+            "games": 4,
+            "win_pct": 0.75
+          }
+        },
+        {
+          "rank": 22,
+          "previous_rank": null,
+          "movement": null,
+          "movement_state": "new",
+          "team_id": "baylor",
+          "team_name": "Baylor",
+          "power_score": 62.59,
+          "confidence": 0.95,
+          "record": {
+            "wins": 4,
+            "losses": 1,
+            "games": 5,
+            "win_pct": 0.8
+          }
+        },
+        {
+          "rank": 23,
+          "previous_rank": null,
+          "movement": null,
+          "movement_state": "new",
+          "team_id": "james-madison",
+          "team_name": "James Madison",
+          "power_score": 61.78,
+          "confidence": 0.95,
+          "record": {
+            "wins": 5,
+            "losses": 0,
+            "games": 5,
+            "win_pct": 1
+          }
+        },
+        {
+          "rank": 24,
+          "previous_rank": null,
+          "movement": null,
+          "movement_state": "new",
+          "team_id": "florida",
+          "team_name": "Florida",
+          "power_score": 61.75,
+          "confidence": 0.95,
+          "record": {
+            "wins": 4,
+            "losses": 1,
+            "games": 5,
+            "win_pct": 0.8
+          }
+        },
+        {
+          "rank": 25,
+          "previous_rank": null,
+          "movement": null,
+          "movement_state": "new",
+          "team_id": "oklahoma-st",
+          "team_name": "Oklahoma St.",
+          "power_score": 61.63,
+          "confidence": 0.8645,
+          "record": {
+            "wins": 3,
+            "losses": 1,
+            "games": 4,
+            "win_pct": 0.75
+          }
+        }
+      ]
+    },
+    {
+      "run_id": "cfbpi:cd08f777eee25c5c5dc3a1b6",
+      "season": 2026,
+      "week_label": "Through 2026-10-07",
+      "model_version": "evercraft-cfbpi-0.2.0",
+      "evidence_snapshot_id": "cfb:2026:2026-10-07:4df1aa713c1f6469888a",
+      "evidence_through_at": "2026-10-07T23:59:59.999Z",
+      "generated_at": "2026-10-08T13:41:14.788Z",
+      "top_25": [
+        {
+          "rank": 1,
+          "previous_rank": 1,
+          "movement": 0,
+          "movement_state": "unchanged",
+          "team_id": "alabama",
+          "team_name": "Alabama",
+          "power_score": 81.4,
+          "confidence": 0.95,
+          "record": {
+            "wins": 5,
+            "losses": 0,
+            "games": 5,
+            "win_pct": 1
+          }
+        },
+        {
+          "rank": 2,
+          "previous_rank": 2,
+          "movement": 0,
+          "movement_state": "unchanged",
+          "team_id": "notre-dame",
+          "team_name": "Notre Dame",
+          "power_score": 74.09,
+          "confidence": 0.95,
+          "record": {
+            "wins": 5,
+            "losses": 0,
+            "games": 5,
+            "win_pct": 1
+          }
+        },
+        {
+          "rank": 3,
+          "previous_rank": 3,
+          "movement": 0,
+          "movement_state": "unchanged",
+          "team_id": "texas",
+          "team_name": "Texas",
+          "power_score": 73.55,
+          "confidence": 0.8645,
+          "record": {
+            "wins": 4,
+            "losses": 0,
+            "games": 4,
+            "win_pct": 1
+          }
+        },
+        {
+          "rank": 4,
+          "previous_rank": 4,
+          "movement": 0,
+          "movement_state": "unchanged",
+          "team_id": "texas-tech",
+          "team_name": "Texas Tech",
+          "power_score": 68.84,
+          "confidence": 0.95,
+          "record": {
+            "wins": 5,
+            "losses": 0,
+            "games": 5,
+            "win_pct": 1
+          }
+        },
+        {
+          "rank": 5,
+          "previous_rank": 5,
+          "movement": 0,
+          "movement_state": "unchanged",
+          "team_id": "indiana",
+          "team_name": "Indiana",
+          "power_score": 68.2,
+          "confidence": 0.95,
+          "record": {
+            "wins": 5,
+            "losses": 0,
+            "games": 5,
+            "win_pct": 1
+          }
+        },
+        {
+          "rank": 6,
+          "previous_rank": 6,
+          "movement": 0,
+          "movement_state": "unchanged",
+          "team_id": "ucla",
+          "team_name": "UCLA",
+          "power_score": 68.15,
+          "confidence": 0.8645,
+          "record": {
+            "wins": 4,
+            "losses": 0,
+            "games": 4,
+            "win_pct": 1
+          }
+        },
+        {
+          "rank": 7,
+          "previous_rank": 8,
+          "movement": 1,
+          "movement_state": "up",
+          "team_id": "utah",
+          "team_name": "Utah",
+          "power_score": 67.94,
+          "confidence": 0.8645,
+          "record": {
+            "wins": 4,
+            "losses": 0,
+            "games": 4,
+            "win_pct": 1
+          }
+        },
+        {
+          "rank": 8,
+          "previous_rank": 7,
+          "movement": -1,
+          "movement_state": "down",
+          "team_id": "georgia",
+          "team_name": "Georgia",
+          "power_score": 67.87,
+          "confidence": 0.95,
+          "record": {
+            "wins": 5,
+            "losses": 0,
+            "games": 5,
+            "win_pct": 1
+          }
+        },
+        {
+          "rank": 9,
+          "previous_rank": 9,
+          "movement": 0,
+          "movement_state": "unchanged",
+          "team_id": "miami-fl",
+          "team_name": "Miami (FL)",
+          "power_score": 66.69,
+          "confidence": 0.95,
+          "record": {
+            "wins": 5,
+            "losses": 0,
+            "games": 5,
+            "win_pct": 1
+          }
+        },
+        {
+          "rank": 10,
+          "previous_rank": 10,
+          "movement": 0,
+          "movement_state": "unchanged",
+          "team_id": "ohio-st",
+          "team_name": "Ohio St.",
+          "power_score": 66.57,
+          "confidence": 0.95,
+          "record": {
+            "wins": 4,
+            "losses": 1,
+            "games": 5,
+            "win_pct": 0.8
+          }
+        },
+        {
+          "rank": 11,
+          "previous_rank": 11,
+          "movement": 0,
+          "movement_state": "unchanged",
+          "team_id": "byu",
+          "team_name": "BYU",
+          "power_score": 66.38,
+          "confidence": 0.8645,
+          "record": {
+            "wins": 4,
+            "losses": 0,
+            "games": 4,
+            "win_pct": 1
+          }
+        },
+        {
+          "rank": 12,
+          "previous_rank": 12,
+          "movement": 0,
+          "movement_state": "unchanged",
+          "team_id": "nebraska",
+          "team_name": "Nebraska",
+          "power_score": 65.88,
+          "confidence": 0.95,
+          "record": {
+            "wins": 5,
+            "losses": 0,
+            "games": 5,
+            "win_pct": 1
+          }
+        },
+        {
+          "rank": 13,
+          "previous_rank": 13,
+          "movement": 0,
+          "movement_state": "unchanged",
+          "team_id": "pittsburgh",
+          "team_name": "Pittsburgh",
+          "power_score": 65.79,
+          "confidence": 0.95,
+          "record": {
+            "wins": 5,
+            "losses": 0,
+            "games": 5,
+            "win_pct": 1
+          }
+        },
+        {
+          "rank": 14,
+          "previous_rank": 14,
+          "movement": 0,
+          "movement_state": "unchanged",
+          "team_id": "kentucky",
+          "team_name": "Kentucky",
+          "power_score": 65.55,
+          "confidence": 0.95,
+          "record": {
+            "wins": 4,
+            "losses": 1,
+            "games": 5,
+            "win_pct": 0.8
+          }
+        },
+        {
+          "rank": 15,
+          "previous_rank": 15,
+          "movement": 0,
+          "movement_state": "unchanged",
+          "team_id": "mississippi-st",
+          "team_name": "Mississippi St.",
+          "power_score": 65.1,
+          "confidence": 0.95,
+          "record": {
+            "wins": 4,
+            "losses": 1,
+            "games": 5,
+            "win_pct": 0.8
+          }
+        },
+        {
+          "rank": 16,
+          "previous_rank": 16,
+          "movement": 0,
+          "movement_state": "unchanged",
+          "team_id": "houston",
+          "team_name": "Houston",
+          "power_score": 64.76,
+          "confidence": 0.95,
+          "record": {
+            "wins": 4,
+            "losses": 1,
+            "games": 5,
+            "win_pct": 0.8
+          }
+        },
+        {
+          "rank": 17,
+          "previous_rank": 17,
+          "movement": 0,
+          "movement_state": "unchanged",
+          "team_id": "wisconsin",
+          "team_name": "Wisconsin",
+          "power_score": 64.35,
+          "confidence": 0.95,
+          "record": {
+            "wins": 4,
+            "losses": 1,
+            "games": 5,
+            "win_pct": 0.8
+          }
+        },
+        {
+          "rank": 18,
+          "previous_rank": 18,
+          "movement": 0,
+          "movement_state": "unchanged",
+          "team_id": "missouri",
+          "team_name": "Missouri",
+          "power_score": 64.02,
+          "confidence": 0.95,
+          "record": {
+            "wins": 4,
+            "losses": 1,
+            "games": 5,
+            "win_pct": 0.8
+          }
+        },
+        {
+          "rank": 19,
+          "previous_rank": 19,
+          "movement": 0,
+          "movement_state": "unchanged",
+          "team_id": "tennessee",
+          "team_name": "Tennessee",
+          "power_score": 63.72,
+          "confidence": 0.95,
+          "record": {
+            "wins": 4,
+            "losses": 1,
+            "games": 5,
+            "win_pct": 0.8
+          }
+        },
+        {
+          "rank": 20,
+          "previous_rank": 20,
+          "movement": 0,
+          "movement_state": "unchanged",
+          "team_id": "lsu",
+          "team_name": "LSU",
+          "power_score": 63.17,
+          "confidence": 0.95,
+          "record": {
+            "wins": 4,
+            "losses": 1,
+            "games": 5,
+            "win_pct": 0.8
+          }
+        },
+        {
+          "rank": 21,
+          "previous_rank": 21,
+          "movement": 0,
+          "movement_state": "unchanged",
+          "team_id": "northwestern",
+          "team_name": "Northwestern",
+          "power_score": 63.03,
+          "confidence": 0.8645,
+          "record": {
+            "wins": 3,
+            "losses": 1,
+            "games": 4,
+            "win_pct": 0.75
+          }
+        },
+        {
+          "rank": 22,
+          "previous_rank": 22,
+          "movement": 0,
+          "movement_state": "unchanged",
+          "team_id": "baylor",
+          "team_name": "Baylor",
+          "power_score": 62.65,
+          "confidence": 0.95,
+          "record": {
+            "wins": 4,
+            "losses": 1,
+            "games": 5,
+            "win_pct": 0.8
+          }
+        },
+        {
+          "rank": 23,
+          "previous_rank": 24,
+          "movement": 1,
+          "movement_state": "up",
+          "team_id": "florida",
+          "team_name": "Florida",
+          "power_score": 61.89,
+          "confidence": 0.95,
+          "record": {
+            "wins": 4,
+            "losses": 1,
+            "games": 5,
+            "win_pct": 0.8
+          }
+        },
+        {
+          "rank": 24,
+          "previous_rank": 23,
+          "movement": -1,
+          "movement_state": "down",
+          "team_id": "james-madison",
+          "team_name": "James Madison",
+          "power_score": 61.83,
+          "confidence": 0.95,
+          "record": {
+            "wins": 5,
+            "losses": 0,
+            "games": 5,
+            "win_pct": 1
+          }
+        },
+        {
+          "rank": 25,
+          "previous_rank": 25,
+          "movement": 0,
+          "movement_state": "unchanged",
+          "team_id": "oklahoma-st",
+          "team_name": "Oklahoma St.",
+          "power_score": 61.66,
+          "confidence": 0.8645,
+          "record": {
+            "wins": 3,
+            "losses": 1,
+            "games": 4,
+            "win_pct": 0.75
+          }
+        }
+      ]
+    }
+  ]
+}
