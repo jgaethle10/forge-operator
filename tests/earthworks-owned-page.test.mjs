@@ -15,7 +15,7 @@ assert.match(html,/Production Surge/);
 assert.match(html,/STOP ALL/);
 assert.match(html,/Quarry digital twin/);
 assert.match(html,/Simulation only/);
-assert.match(html,/type="module" src="\\/earthworks\\/app\\.mjs"/);
+assert.ok(html.includes('<script type="module" src="/earthworks/app.mjs"></script>'));
 assert.doesNotMatch(html,/base44\.app/i);
 
 const runtime=await startFabricLocalRuntime({
