@@ -93,3 +93,14 @@ test('source cycle lineage is required for current verification',()=>{
     assert(h.issues.includes('source_cycle_lineage_missing'));
   }finally{fs.rmSync(dir,{recursive:true,force:true})}
 });
+
+test('complete JSON without trailing newline is a torn append and cannot verify',()=>{
+  const dir=temp();
+  try{
+    const f=ledger(dir,receipt);
+    fs.writeFileSync(f,JSON.stringify(receipt));
+    const h=readFreshnessHealth({ledgerPath:f,slotStateDir:dir,now:new Date(at)});
+    assert.equal(h.ok,false);
+    assert(h.issues.includes('receipt_ledger_invalid_or_unreadable'));
+  }finally{fs.rmSync(dir,{recursive:true,force:true})}
+});
