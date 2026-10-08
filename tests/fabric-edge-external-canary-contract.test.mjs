@@ -87,3 +87,27 @@ test('external Fabric canary proves Graphics Command poster, scroll-stop gate, a
   assert.ok(script.includes("regionIdentityClear"));
   assert.ok(script.includes("region_identity_clear"));
 });
+
+
+test('Lineage founding pilot is a first-class external production invariant',()=>{
+  assert.ok(script.includes("if(checks.lineage_surface!==true) return 'lineage_surface'"));
+  assert.ok(script.includes("lineage-founding-pilot-v1"));
+  assert.ok(script.includes("lineage_catalog_missing"));
+  assert.ok(script.includes("lineage_machine_state_drift"));
+  assert.ok(script.includes("lineage_commercial_state_drift"));
+  assert.ok(script.includes("lineage_founding_pilot_price_drift"));
+  assert.ok(script.includes("getText(lineagePath)"));
+  assert.ok(script.includes("Evercraft Lineage Founding Pilot"));
+  assert.ok(script.includes("lineage_direct_processor_checkout_leak"));
+  assert.ok(script.includes("lineage_unverified_checkout_leak"));
+  assert.ok(script.includes("receipt.checks.lineage_surface=true"));
+});
+
+test('Lineage external proof preserves human-confirmed authority boundaries',()=>{
+  assert.ok(script.includes("machine_state:lineage.state"));
+  assert.ok(script.includes("commercial_state:lineage.commercial_state"));
+  assert.ok(script.includes("human_confirmed:true"));
+  assert.ok(script.includes("automatic_repository_access:false"));
+  assert.ok(script.includes("automatic_payment:false"));
+  assert.ok(script.includes("direct_processor_checkout:false"));
+});
