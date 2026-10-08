@@ -8,6 +8,9 @@ on:
       - 'systemia/mcp/fabric-public-site.mjs'
       - 'systemia/mcp/fabric-local-runtime.mjs'
       - 'tests/ibmi-74-offer-launch.test.mjs'
+      - 'systemia/chum/ibmi-74-offer-contract.mjs'
+      - 'systemia/chum/ibmi-74-offer-contract.test.mjs'
+      - 'systemia/chum/ibmi-rescue-canary.mjs'
       - 'docs/ibmi-74-deadline-xray-illustrative-sample.md'
   workflow_dispatch:
 permissions:
@@ -25,6 +28,8 @@ jobs:
         run: node --test systemia/offer-selection/rank-offers.test.mjs
       - name: Test isolated IBM i 7.4 buyer route and payments handoff
         run: node --test tests/ibmi-74-offer-launch.test.mjs tests/fabric-offer-pages.test.mjs
+      - name: Confirm distinct IBM i 7.4 tier readiness does not infer payment
+        run: node --test systemia/chum/ibmi-74-offer-contract.test.mjs
       - name: Produce first offer selection packet
         run: |
           node systemia/offer-selection/rank-offers.mjs > first-offer-selection.json
