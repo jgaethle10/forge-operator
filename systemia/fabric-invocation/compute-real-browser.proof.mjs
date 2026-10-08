@@ -15,6 +15,8 @@ import { prepareNativeBrowserRuntime } from '../evercraft-web/browser-worker/nat
 import { startEvercraftComputeNode } from '../compute/runtime-node.mjs';
 import { LineageStore } from '../lineage/core.mjs';
 import { EvercraftPassport } from '../passport/passport.mjs';
+import { EvercraftIdentity } from '../identity/identity.mjs';
+import { createEvercraftFabricSessionVerifier } from './signed-identity-verifier.mjs';
 import { createFabricPassportVerifier } from './passport-verifier.mjs';
 import { createGoalState, admitGoalPlan, startGoalWork, recordGoalOutcome } from '../organism/goal-runtime.mjs';
 import { FabricNativeInvocation } from './native-invocation.mjs';
@@ -96,11 +98,38 @@ try {
     }),
     plan: [{ work_key: 'render-example', work_type: 'browser_read' }],
   });
+  // CI-only private Identity store. Its signed, revocable session is real;
+  // the operator, password and tenant binding are synthetic CI fixtures.
+  const subjectRef = 'user:local-chromium-operator';
+  const tenantKey = 'tenant:evercraft';
+  const signingSecret = 'evercraft-local-canary-only-identity-secret-2026-10-07';
+  const identityStateDir = path.join(root, 'identity');
+  const identity = new EvercraftIdentity({ stateDir: identityStateDir });
+  const bootstrap = identity.bootstrapOwner({
+    subjectRef, login: 'chromiumcioperator', displayName: 'CI Operator',
+    password: 'Chromium-Fabric-Only-Strong-CI-Password-2026!',
+    authorityReceiptRef: proof('local-canary-identity-bootstrap'),
+  });
+  assert.equal(bootstrap.state, 'bootstrapped');
+  const authenticated = identity.authenticatePassword({
+    login: 'chromiumcioperator',
+    password: 'Chromium-Fabric-Only-Strong-CI-Password-2026!',
+  });
+  const session = identity.issueSession(authenticated, {
+    signingSecret, signingKeyId: 'ci-local-1',
+    ttlSeconds: 1200,
+  });
+  const identityVerifier = createEvercraftFabricSessionVerifier({
+    identityStateDir,
+    signingKeys: { 'ci-local-1': signingSecret },
+    trustedSessionSource: async () => session.token,
+    trustedTenantResolver: async () => tenantKey,
+  });
   const passportStateDir = path.join(root, 'passport');
   const passport = new EvercraftPassport({ stateDir: passportStateDir });
   const localGrant = passport.issueGrant({
     idempotency_key: 'chromium-canary:passport:grant',
-    subject_ref: 'agent:local-chromium-canary',
+    subject_ref: subjectRef,
     issuer_ref: 'operator:systemia-local-canary',
     product: 'systemia', scopes: ['fabric.browser.public.read'],
     resource_refs: ['mission:chromium-fabric-canary'],
@@ -111,13 +140,7 @@ try {
   assert.equal(localGrant.state, 'granted');
   const nativePassportVerifier = createFabricPassportVerifier({
     stateDir: passportStateDir,
-    identityVerifier: async () => ({
-      verified: true,
-      actor_ref: 'agent:local-chromium-canary',
-      tenant_key: 'tenant:evercraft',
-      receipt_hash: proof('local-canary-private-identity-attestation'),
-      expires_at: new Date(Date.now() + 120_000).toISOString(),
-    }),
+    identityVerifier,
   });
   const fabric = new FabricNativeInvocation({
     stateDir: path.join(root, 'journal'), lineageRoot, timeoutMs: 28_000,
@@ -144,7 +167,7 @@ try {
   const request = {
     mission_key: 'mission:chromium-fabric-canary',
     work_key: 'render-example',
-    actor_ref: 'agent:local-chromium-canary',
+    actor_ref: subjectRef,
     tenant_key: 'tenant:evercraft',
     capability_key: PUBLIC_BROWSER_CAPABILITY,
     idempotency_key: 'local-chromium-canary:001',
@@ -174,7 +197,10 @@ try {
     production_deployment_verified: false,
     private_authority_wired_to_production: false,
     real_native_passport_grant_checked: true,
-    identity_verification_mode: 'ephemeral_ci_fixture',
+    identity_verification_mode: 'ephemeral_ci_signed_session_and_revocation_ledger',
+    actual_hmac_signature_verified: true,
+    native_identity_subject_active: true,
+    trusted_tenant_resolver_is_ci_fixture: true,
     real_browser_process: true,
     real_compute_http_lease: true,
     browser_runtime: 'Evercraft-owned Playwright/Chromium',
