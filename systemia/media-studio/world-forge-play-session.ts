@@ -14,7 +14,12 @@ import {
   type WorldInput,
   type WorldSnapshot,
 } from '../world-engine/engine.js';
-import type { GeometryAsset } from '../world-engine/webgpu.js';
+import { compileVisualFrame } from '../world-engine/visual.js';
+import {
+  compileWebGpuRenderPlan,
+  type GeometryAsset,
+  type WebGpuRenderPlan,
+} from '../world-engine/webgpu.js';
 
 export interface WorldForgePlaySessionSummary {
   schema:'evercraft.fallen.world-forge-play-session-summary.v1';
@@ -39,6 +44,24 @@ export interface WorldForgePlaySessionSummary {
     publicationAuthorityGranted:false;
     productionRenderAuthorityGranted:false;
     autonomousExternalActionAuthorityGranted:false;
+  };
+}
+
+export interface WorldForgePlayWebGpuFrame {
+  schema:'evercraft.fallen.world-forge-play-webgpu-frame.v1';
+  sessionId:string;
+  projectVersion:number;
+  worldVersion:number;
+  tick:number;
+  timeSec:number;
+  snapshotDigest:string;
+  plan:WebGpuRenderPlan;
+  geometries:GeometryAsset[];
+  boundaries:{
+    runtimeTruth:true;
+    ephemeralSession:true;
+    productionRenderAuthorityGranted:false;
+    publicationAuthorityGranted:false;
   };
 }
 
@@ -169,6 +192,55 @@ export class WorldForgePlaySession {
   snapshot(){
     this.touch();
     return this._runtime.snapshot();
+  }
+
+  webGpuFrame(viewport:{width:number;height:number}):WorldForgePlayWebGpuFrame{
+    if(
+      !Number.isInteger(viewport.width)||
+      !Number.isInteger(viewport.height)||
+      viewport.width<1||viewport.width>8192||
+      viewport.height<1||viewport.height>8192
+    ){
+      throw new Error('world_forge_play_webgpu_viewport_invalid');
+    }
+    const snapshot=this._runtime.snapshot();
+    const visualScene=this._runtime.definition.visualScene;
+    const cameraRuntime=this._runtime.cameraRuntime;
+    if(!visualScene||!cameraRuntime){
+      throw new Error('world_forge_play_webgpu_visual_state_missing');
+    }
+    const visualFrame=compileVisualFrame(
+      this._runtime.definition.id,
+      snapshot.tick,
+      snapshot.timeSec,
+      visualScene,
+      snapshot.entities,
+      cameraRuntime,
+      this._runtime.activeEntityIds,
+    );
+    const plan=compileWebGpuRenderPlan(
+      visualFrame,
+      this._geometries,
+      viewport,
+    );
+    this.touch();
+    return {
+      schema:'evercraft.fallen.world-forge-play-webgpu-frame.v1',
+      sessionId:this.id,
+      projectVersion:this._project.version,
+      worldVersion:this._runtime.definition.version,
+      tick:snapshot.tick,
+      timeSec:snapshot.timeSec,
+      snapshotDigest:snapshot.digest,
+      plan,
+      geometries:clone(this._geometries),
+      boundaries:{
+        runtimeTruth:true,
+        ephemeralSession:true,
+        productionRenderAuthorityGranted:false,
+        publicationAuthorityGranted:false,
+      },
+    };
   }
 
   summary():WorldForgePlaySessionSummary{

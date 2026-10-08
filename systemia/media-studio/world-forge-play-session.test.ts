@@ -325,3 +325,37 @@ test('Play Mode runtime drag teleports on the next tick and preserves authored p
     authoredPosition,
   );
 });
+
+
+test('Play Mode WebGPU frame is bound to the live runtime snapshot',()=>{
+  const project=createWorldForgeStarterProject();
+  const session=new WorldForgePlaySession({
+    sessionId:'play-webgpu-frame',
+    project,
+  });
+
+  const first=session.webGpuFrame({width:640,height:360});
+  assert.equal(first.schema,'evercraft.fallen.world-forge-play-webgpu-frame.v1');
+  assert.equal(first.tick,0);
+  assert.equal(first.plan.tick,0);
+  assert.equal(first.plan.width,640);
+  assert.equal(first.plan.height,360);
+  assert.equal(first.boundaries.runtimeTruth,true);
+  assert.equal(first.boundaries.productionRenderAuthorityGranted,false);
+  assert.ok(first.geometries.length>0);
+  assert.ok(first.plan.draws.length>0);
+
+  session.step({ticks:2});
+  const second=session.webGpuFrame({width:800,height:450});
+  assert.equal(second.tick,2);
+  assert.equal(second.plan.tick,2);
+  assert.equal(second.plan.width,800);
+  assert.equal(second.plan.height,450);
+  assert.notEqual(second.snapshotDigest,first.snapshotDigest);
+  assert.notEqual(second.plan.digest,first.plan.digest);
+
+  assert.throws(
+    ()=>session.webGpuFrame({width:0,height:450}),
+    /world_forge_play_webgpu_viewport_invalid/,
+  );
+});
