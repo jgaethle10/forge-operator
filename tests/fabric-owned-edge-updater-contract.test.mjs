@@ -39,6 +39,19 @@ test('owned Fabric updater verifies the EarthWorks Live Yard is resident, not ju
   assert.match(script,/STOP ALL/);
 });
 
+test('owned Fabric updater binds resident health to the exact checkout release',()=>{
+  assert.match(script,/RUNTIME_RELEASE_REF_FILE="\$STATE_DIR\/runtime-release-ref"/);
+  assert.match(script,/write_runtime_release_ref\(\)/);
+  assert.match(script,/install -o root -g "\$RUN_USER" -m 0640 "\$tmp" "\$RUNTIME_RELEASE_REF_FILE"/);
+  assert.match(script,/EXPECTED_RELEASE="\$expected_release"/);
+  assert.match(script,/source_release_ref/);
+  assert.match(script,/write_runtime_release_ref "\$before"/);
+  assert.match(script,/write_runtime_release_ref "\$target"/);
+  assert.match(script,/verify_current_runtime "\$expected_count" "\$before"/);
+  assert.match(script,/verify_current_runtime "\$expected_count" "\$target"/);
+  assert.match(script,/write_runtime_release_ref "\$before" \|\| true/);
+});
+
 test('current checkout repairs stale resident Fabric process with one bounded restart',()=>{
   assert.match(script,/resident Fabric runtime drifted/);
   assert.match(script,/restarting once/);

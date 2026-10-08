@@ -7,6 +7,7 @@ BRANCH="main"
 SERVICE="evercraft-fabric.service"
 HEALTH_URL="http://127.0.0.1:8787/health"
 STATE_DIR="/var/lib/evercraft/fabric-update"
+RUNTIME_RELEASE_REF_FILE="$STATE_DIR/runtime-release-ref"
 FABRIC_ENV="/etc/evercraft/fabric.env"
 ENV_BACKUP=""
 EDGE_ATTESTATION_EXPECTED=false
@@ -195,6 +196,19 @@ HOME_EDGE_INSTALLER="$REPO_ROOT/scripts/install-evercraft-home-edge.sh"
 
 mkdir -p "$STATE_DIR"
 chmod 0750 "$STATE_DIR"
+
+write_runtime_release_ref() {
+  local release="${1:-}"
+  if [[ ! "$release" =~ ^[a-fA-F0-9]{40,64}$ ]]; then
+    echo "ERROR: invalid Fabric runtime release ref" >&2
+    return 1
+  fi
+  local tmp
+  tmp="$(mktemp "$STATE_DIR/runtime-release-ref.XXXXXX")"
+  printf '%s\n' "${release,,}" > "$tmp"
+  install -o root -g "$RUN_USER" -m 0640 "$tmp" "$RUNTIME_RELEASE_REF_FILE"
+  rm -f "$tmp"
+}
 
 ensure_visual_ingest_token() {
   VISUAL_INGEST_TOKEN_CREATED=false
@@ -446,6 +460,7 @@ NODE
 
 verify_current_runtime() {
   local expected_count="$1"
+  local expected_release="$2"
   local health=""
   for _ in 1 2 3 4 5 6 7 8 9 10; do
     health="$(read_health)"
@@ -454,11 +469,13 @@ verify_current_runtime() {
   done
   [[ -n "$health" ]] || return 8
 
-  runuser -u "$RUN_USER" -- env     HEALTH_JSON="$health"     EXPECTED_COUNT="$expected_count"     EDGE_ATTESTATION_EXPECTED="$EDGE_ATTESTATION_EXPECTED"     node -e "
+  runuser -u "$RUN_USER" -- env     HEALTH_JSON="$health"     EXPECTED_COUNT="$expected_count"     EXPECTED_RELEASE="$expected_release"     EDGE_ATTESTATION_EXPECTED="$EDGE_ATTESTATION_EXPECTED"     node -e "
       const h=JSON.parse(process.env.HEALTH_JSON||'{}');
       const expected=Number(process.env.EXPECTED_COUNT||0);
+      const expectedRelease=String(process.env.EXPECTED_RELEASE||'').toLowerCase();
       if(h.ok!==true || h.service!=='evercraft-fabric-local') process.exit(2);
       if(Number(h.capability_count)!==expected) process.exit(3);
+      if(String(h.source_release_ref||'').toLowerCase()!==expectedRelease) process.exit(10);
       if(process.env.EDGE_ATTESTATION_EXPECTED==='true') {
         if(h.edge_attestation_supported!==true) process.exit(4);
         if(h.edge_attestation_allocator_authority_exposed!==false) process.exit(5);
@@ -556,6 +573,7 @@ expected_count_for_current() {
 }
 
 if [[ "$before" == "$target" ]]; then
+  write_runtime_release_ref "$before"
   ensure_visual_ingest_token
   reconcile_edge_attestation_env
   if [[ -n "$ENV_BACKUP" || "$VISUAL_INGEST_TOKEN_CREATED" == "true" ]]; then
@@ -569,7 +587,7 @@ if [[ "$before" == "$target" ]]; then
 
   expected_count="$(expected_count_for_current)"
   set +e
-  verify_current_runtime "$expected_count"
+  verify_current_runtime "$expected_count" "$before"
   code=$?
   set -e
   if [[ "$code" -ne 0 ]]; then
@@ -581,7 +599,7 @@ if [[ "$before" == "$target" ]]; then
       exit 7
     fi
     set +e
-    verify_current_runtime "$expected_count"
+    verify_current_runtime "$expected_count" "$before"
     code=$?
     set -e
   fi
@@ -625,6 +643,7 @@ fi
 rollback() {
   local reason="${1:-update_failed}"
   as_user git -C "$REPO_ROOT" reset --hard "$before" >/dev/null
+  write_runtime_release_ref "$before" || true
   restore_edge_attestation_env
   systemctl restart "$SERVICE" || true
   printf '{"schema":"evercraft.fabric-update.v1","state":"rolled_back","from_ref":"%s","attempted_ref":"%s","reason":"%s","observed_at":"%s"}\n'     "$before" "$target" "$reason" "$(date -u +%FT%TZ)" > "$STATE_DIR/last-update.json"
@@ -647,6 +666,7 @@ fi
 
 ensure_visual_ingest_token
 reconcile_edge_attestation_env
+write_runtime_release_ref "$target"
 
 if ! systemctl restart "$SERVICE"; then
   rollback "service_restart_failed"
@@ -655,7 +675,7 @@ fi
 
 expected_count="$(expected_count_for_current)"
 set +e
-verify_current_runtime "$expected_count"
+verify_current_runtime "$expected_count" "$target"
 code=$?
 set -e
 if [[ "$code" -ne 0 ]]; then

@@ -14,6 +14,7 @@ const arg=(name,fallback='')=>{
 };
 const timeoutMs=Number(arg('--timeout-ms','12000'));
 const origin=clean(arg('--origin','https://fabric.systemiacommandcenters.com')).replace(/\/$/,'');
+const requireFresh=process.argv.includes('--require-fresh');
 if(!/^https:\/\//i.test(origin)) throw new Error('visual_freshness_origin_requires_https');
 
 async function timedFetch(url,options={}){
@@ -127,6 +128,8 @@ try{
       instance_id:health.instance_id||null,
       service:health.service||null,
       version:health.version||null,
+      source_release_ref:health.source_release_ref||null,
+      source_release_ref_bound:health.source_release_ref_bound===true,
       capability_count:Number(health.capability_count||0),
       visual_desk_story_count:Number(health.visual_desk_story_count||0),
       catalog_story_digest:catalogStory?.storyDigest||null,
@@ -163,6 +166,7 @@ try{
   result.state=checks.every(Boolean)?'fresh':'stale';
   result.receipt_hash='sha256:'+sha256(JSON.stringify({...result,receipt_hash:undefined}));
   process.stdout.write(JSON.stringify(result,null,2)+'\n');
+  if(requireFresh&&result.state!=='fresh') process.exitCode=1;
 }finally{
   fs.rmSync(tmp,{recursive:true,force:true});
 }

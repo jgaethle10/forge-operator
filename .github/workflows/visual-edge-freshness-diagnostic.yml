@@ -8,6 +8,15 @@ on:
       - '.github/workflows/visual-edge-freshness-diagnostic.yml'
       - 'systemia/graphics-command/**'
       - 'systemia/visual-desk/**'
+  push:
+    branches: [main]
+    paths:
+      - 'scripts/fabric-edge-visual-freshness.mjs'
+      - 'scripts/update-fabric-owned-edge.sh'
+      - 'systemia/mcp/fabric-local-runtime.mjs'
+      - '.github/workflows/visual-edge-freshness-diagnostic.yml'
+      - 'systemia/graphics-command/**'
+      - 'systemia/visual-desk/**'
   workflow_dispatch:
 
 permissions:
@@ -16,7 +25,7 @@ permissions:
 jobs:
   probe-production-visual-freshness:
     runs-on: ubuntu-latest
-    timeout-minutes: 5
+    timeout-minutes: 8
     steps:
       - uses: actions/checkout@v4
 
@@ -36,10 +45,46 @@ jobs:
         run: |
           set -euo pipefail
           mkdir -p artifacts
-          node scripts/fabric-edge-visual-freshness.mjs \
-            --origin https://fabric.systemiacommandcenters.com \
-            > artifacts/visual-edge-freshness.json
+
+          if [ "$GITHUB_EVENT_NAME" != "push" ]; then
+            node scripts/fabric-edge-visual-freshness.mjs \
+              --origin https://fabric.systemiacommandcenters.com \
+              > artifacts/visual-edge-freshness.json
+            cat artifacts/visual-edge-freshness.json
+            exit 0
+          fi
+
+          max_attempts=16
+          attempt=1
+          status=1
+          while [ "$attempt" -le "$max_attempts" ]; do
+            set +e
+            node scripts/fabric-edge-visual-freshness.mjs \
+              --origin https://fabric.systemiacommandcenters.com \
+              --require-fresh \
+              > artifacts/visual-edge-freshness.json
+            status=$?
+            set -e
+
+            if [ "$status" -eq 0 ]; then
+              break
+            fi
+
+            state="$(jq -r '.state // "unknown"' artifacts/visual-edge-freshness.json 2>/dev/null || echo unknown)"
+            if [ "$state" != "stale" ] || [ "$attempt" -ge "$max_attempts" ]; then
+              break
+            fi
+
+            echo "Visual Desk is still stale; waiting for the owned updater ($attempt/$max_attempts)."
+            sleep 20
+            attempt=$((attempt + 1))
+          done
+
           cat artifacts/visual-edge-freshness.json
+          if [ "$status" -ne 0 ]; then
+            echo "Visual Desk failed to converge after $attempt attempt(s)." >&2
+            exit "$status"
+          fi
 
       - name: Upload freshness receipt
         if: always()
