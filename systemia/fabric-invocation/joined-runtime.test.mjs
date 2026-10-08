@@ -80,6 +80,7 @@ test('joined local Systemia -> Fabric -> typed owned-browser adapter -> Lineage 
       authorizationVerifier: async ({ actor_ref, tenant_key, capability_key }) => ({
         decision: 'allow', receipt_hash: receipt('passport-local-authorization'),
         actor_ref, tenant_key, capability_key,
+        expires_at: new Date(Date.now() + 60000).toISOString(),
       }),
       missionOutcomeWriter: async ({ mission_key, work_key, correlation_id, lineage_receipt_id }) => {
         mission = startGoalWork({ state: mission, workKey: work_key });
