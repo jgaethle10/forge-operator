@@ -37,7 +37,7 @@ test('IBM i 7.4 exact SKU requires human confirmation and passes through Evercra
    const data=JSON.parse(init.body);
    sent.push(data);
    if(data.capability_key!=='ibmi_74_deadline_xray_250')return new Response(JSON.stringify({ok:false,error:'wrong_offer_key'}),{status:422});
-   return new Response(JSON.stringify({ok:true,order_key:'synthetic-ibmi-74-test',amount_cents:25000,
+   return new Response(JSON.stringify({ok:true,order_key:'synthetic-ibmi-74-test',offer_key:'ibmi_74_deadline_xray_250',amount_cents:25000,
     currency:'usd',checkout_ready:true,checkout_url:'https://settlement.example.test/ibmi-74-demo',
     payment_state:'unpaid',fulfillment_release:false}),{status:200});
   }
@@ -80,4 +80,30 @@ test('unsupported live payment adapter fails closed rather than redirecting to u
   assert.match(await res.text(),/No charge was made/);
   assert.equal(sent[0].capability_key,'ibmi_74_deadline_xray_250');
  }finally{await runtime.close()}
+});
+
+test('the 7.4 buyer is never redirected to a mismatched price or generic Estate X-Ray',async()=>{
+ for(const bad of [
+  {offer_key:'ibmi_estate_xray_250',amount_cents:25000,currency:'usd'},
+  {offer_key:'ibmi_74_deadline_xray_250',amount_cents:150000,currency:'usd'},
+  {offer_key:'ibmi_74_deadline_xray_250',amount_cents:25000,currency:'cad'},
+  {amount_cents:25000,currency:'usd'},
+ ]){
+  const runtime=await startFabricLocalRuntime({
+    host:'127.0.0.1',port:0,catalog:[ibmi],faieSurfaceEnabled:false,
+    purchaseIntentFetch:async()=>new Response(JSON.stringify({
+      ok:true,checkout_ready:true,checkout_url:'https://settlement.example.test/never-redirect',
+      order_key:'synthetic-price-mismatch',...bad
+    }),{status:200})
+  });
+  try{
+   const res=await fetch(runtime.url+'/api/offers/ibmi-74-deadline-xray/checkout',{
+     method:'POST',headers:{'content-type':'application/x-www-form-urlencoded'},
+     body:new URLSearchParams({user_confirmed:'true'}),redirect:'manual'
+   });
+   assert.equal(res.status,503);
+   assert.equal(res.headers.get('location'),null);
+   assert.match(await res.text(),/No charge was made/);
+  }finally{await runtime.close()}
+ }
 });
