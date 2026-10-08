@@ -8,6 +8,7 @@ COPY policy.mjs secure-proxy.mjs snapshot-contract.mjs delegated-session-policy.
 
 ENV NODE_ENV=production
 ENV PORT=8787
+RUN install -d -m 0700 -o pwuser -g pwuser /var/lib/evercraft-browser-jobs
 USER pwuser
 EXPOSE 8787
 
