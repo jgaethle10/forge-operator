@@ -1966,9 +1966,28 @@ export async function startEvercraftComputeNode({
             return send(res, 422, { error: 'people_admin_token_file_permissions_too_open' });
           }
 
+          const mailKeysValue = String(
+            body.input?.mail_delivery_public_keys_file ||
+            process.env.PEOPLE_MAIL_DELIVERY_PUBLIC_KEYS_FILE ||
+            ''
+          ).trim();
+          const mailDeliveryPublicKeysFile = mailKeysValue ? path.resolve(mailKeysValue) : undefined;
+          if (mailDeliveryPublicKeysFile) {
+            if (!isWithin(allowedRoot, mailDeliveryPublicKeysFile)) {
+              return send(res, 403, { error: 'people_mail_public_keys_file_outside_admitted_root' });
+            }
+            if (!fs.existsSync(mailDeliveryPublicKeysFile) || !fs.statSync(mailDeliveryPublicKeysFile).isFile()) {
+              return send(res, 422, { error: 'people_mail_public_keys_file_missing' });
+            }
+            if ((fs.statSync(mailDeliveryPublicKeysFile).mode & 0o077) !== 0) {
+              return send(res, 422, { error: 'people_mail_public_keys_file_permissions_too_open' });
+            }
+          }
+
           const runtime = await startPeopleLayerRuntime({
             stateDir: stateRoot,
             adminTokenFile,
+            mailDeliveryPublicKeysFile,
             host: '127.0.0.1',
             port: Number(body.input?.port || 0),
           });
