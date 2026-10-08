@@ -69,3 +69,27 @@ A real, authorized buyer requests the IBM i 7.4 X-Ray; an approved specialist ca
 ## Governance
 
 No RIVET or partner-controlled product modifications. No stealth emails, posts, offers, contracts, payments, third-party infrastructure purchases, access grants or production deployments. Missing credentials and provider connectivity remain `held`. The Company Board may describe blockers and recommended next operations, never self-authorize the action.
+
+## P0 public ingress field reconciliation (read-only before repair)
+
+An independent external Offer #1 GET probe on October 7 resolved the public A record but timed out opening TCP port 443. **This does not identify the failing node**. It might be an upstream path, host/ChromeOS forward, public IP binding, router/firewall, or the local TLS listener. Green GitHub builds, local port 8787, and local edge 8443 do not establish internet ingress.
+
+The updated `scripts/fabric-edge-doctor.sh` on main is read-only with respect to router mapping **without `--repair`**. It still writes an operational receipt to `/tmp/evercraft-fabric-edge-doctor.json` and performs bounded local probes. On the **actual authorized Chromebook host**, from an updated trusted checkout:
+
+```sh
+sudo bash scripts/fabric-edge-doctor.sh
+# No --repair, --trigger-canary, or --maintain-saban
+```
+
+Treat the receipt as private operational evidence and preserve it away from public GitHub artifacts because it contains network identity/address details. Do not upload secrets. Reconcile locally with an independently obtained external probe:
+
+```sh
+node systemia/organism/first-offer-ingress-triage.mjs \
+  /path/to/independent-external-probe.json \
+  /tmp/offer1-private-triage.json \
+  /tmp/evercraft-fabric-edge-doctor.json
+```
+
+**No network mutation** is performed by the triage tool; its untrusted file inputs are never elevated to release authority. If local Fabric or edge 8443 is failing, fix that before NAT. If both local services are healthy and independent public TCP 443 still times out, inspect ChromeOS forwarding, router/upstream restrictions and the existing approved outbound-relay path without inferring which one is broken. Any repair, reroute, DNS change, checkout, or customer communication remains separately authorized and receipted.
+
+The CI run omits private doctor evidence and publishes the safe default diagnosis, specifically `collect_fresh_unmodified_local_fabric_edge_doctor_receipt` when 443 is blocked but no local receipt is present. Do not imply the external probe or local doctor's supplied JSON was cryptographically authenticated without actual authority receipts.
