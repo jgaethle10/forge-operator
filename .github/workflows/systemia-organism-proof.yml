@@ -34,3 +34,5 @@ jobs:
           node-version: 22
       - name: Run deterministic organism and goal-runtime proofs
         run: npm run proof:systemia
+      - name: Reject competing persistent goal writers and identity swaps
+        run: node --test systemia/organism/goal-store-concurrency.test.mjs
