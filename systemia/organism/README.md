@@ -125,6 +125,12 @@ Every `recordGoalOutcome` call now requires `expectedAttempt` and must match the
 
 `admitGoalPlan` is only for a previously unplanned goal. Replacing admitted tasks would erase in-flight or completed attempt data, receipts and approvals, allowing replay of consequential operations. Repeated or changed `goal-cli plan` requests now fail closed, including after completion or process restart. Plan amendments require a future separately authorized append-only mechanism which retains attempts and task lineage; the current CLI does not allow destructive replacement. This local invariant does not by itself prove production exactly-once external side effects.
 
+### Volatile capability execution is read-only only
+
+The legacy `executeGoalWorkWithAdapter` helper does **not** persist `startGoalWork` before the callback, so it may only execute an ungated adapter explicitly classified as `read-only`. It fails closed with `durable_dispatch_required` for all non-read-only adapters, all adapters declaring a human gate, and all goal tasks with a human gate, even if a valid signed approval is present. The hold includes `durable_checkpoint_persisted:false` and does not change the mission state or invoke the callback. Provider identity mismatches still fail before dispatch. To execute state-changing or gated work, use the explicit file-backed `executePersistedGoalWork` path, and only after independent operational authorization and adapter controls.
+
+`read-only` is a developer-declared capability classification, **not** a security sandbox or cryptographic proof of harmless callback code. Only vetted adapters with no externally observable mutation should use that path. Neither in-memory execution nor a synthetic callback receipt establishes production delivery or independently verified outcomes.
+
 ### Durable pre-dispatch execution checkpoint
 
 `goal-durable-dispatch.mjs` provides an **explicit**, operator-invoked file-backed adapter execution path. It validates registry and provider eligibility, and requires a matching signed human-gate contract before invoking any non-read-only adapter. It then commits a `startGoalWork` revision to the local goal store **before** calling `adapter.execute`. This prevents crashes in the adapter from leaving the persisted state looking like work was never started. Concurrent requests for the same work cannot both start a second attempt through the same local file state. The disk CAS and `attempt_key` fences remain in force.
