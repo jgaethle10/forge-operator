@@ -22,6 +22,7 @@ function validateAdapter(adapter) {
   return {
     ...adapter,
     capability_key: key,
+    provider_key: clean(adapter.provider_key).toLowerCase(),
     work_types: workTypes.map((value) => value.toLowerCase()),
     human_gate_required: Boolean(adapter.human_gate_required),
     authority: clean(adapter.authority || 'bounded'),
@@ -96,6 +97,23 @@ export async function executeGoalWorkWithAdapter({
         result: 'held',
         capability_key: adapter.capability_key,
         authority: adapter.authority,
+        observed_at: now instanceof Date ? now.toISOString() : new Date(now).toISOString(),
+      },
+    };
+  }
+
+  if (work.provider_key && work.provider_key !== adapter.provider_key) {
+    return {
+      ok: false,
+      executed: false,
+      reason: 'provider_binding_mismatch',
+      state,
+      receipt: {
+        schema: 'evercraft.capability-route-receipt.v1',
+        work_key: work.work_key,
+        result: 'held',
+        capability_key: adapter.capability_key,
+        declared_provider_key: work.provider_key,
         observed_at: now instanceof Date ? now.toISOString() : new Date(now).toISOString(),
       },
     };
