@@ -93,6 +93,7 @@ test('owned Fabric serves offer pages, requires confirmation, and delegates chec
     port:0,
     catalog:[websiteAudit],
     faieSurfaceEnabled:false,
+    purchaseIntentUrl:'https://fabric.systemiacommandcenters.com/api/internal/test-payment-intent',
     purchaseIntentFetch:async(url,init)=>{
       seen.push({
         url:String(url),
@@ -183,6 +184,7 @@ test('human checkout failures render a branded Evercraft Payments page instead o
     port:0,
     catalog:[websiteAudit],
     faieSurfaceEnabled:false,
+    purchaseIntentUrl:'https://fabric.systemiacommandcenters.com/api/internal/test-payment-intent',
     purchaseIntentFetch:async()=>new Response(JSON.stringify({
       ok:true,
       authority:'Evercraft Payments',
@@ -213,3 +215,42 @@ test('human checkout failures render a branded Evercraft Payments page instead o
   }
 });
 
+
+test('default Fabric checkout holds without a configured approved owned backend', async()=>{
+  let calls=0;
+  const runtime=await startFabricLocalRuntime({
+    host:'127.0.0.1',port:0,catalog:[websiteAudit],faieSurfaceEnabled:false,
+    purchaseIntentUrl:'',
+    purchaseIntentFetch:async()=>{calls++;throw new Error('unapproved_dispatch');},
+  });
+  try {
+    const health=await fetch(runtime.url+'/health').then(r=>r.json());
+    assert.equal(health.human_offer_checkout_enabled,false);
+    assert.equal(health.purchase_intent_backend_state,'held_no_owned_backend');
+    const response=await fetch(runtime.url+'/api/offers/website-audit/checkout',{
+      method:'POST',
+      headers:{'content-type':'application/json'},
+      body:JSON.stringify({user_confirmed:true})
+    });
+    assert.equal(response.status,503);
+    const body=await response.json();
+    assert.equal(body.error,'owned_payment_backend_not_configured');
+    assert.equal(body.checkout_ready,false);
+    assert.equal(body.fulfillment_release,false);
+    assert.equal(calls,0);
+  }finally { await runtime.close(); }
+});
+
+test('retired and unrelated purchase backends cannot be configured', async()=>{
+  for(const backend of [
+    'https://base44.app/api/apps/retired',
+    'https://provider.base44.app/api/checkout',
+    'https://evil.example/checkout',
+    'http://fabric.systemiacommandcenters.com/checkout',
+    'https://fabric.systemiacommandcenters.com@evil.example/checkout',
+  ]) await assert.rejects(
+    startFabricLocalRuntime({host:'127.0.0.1',port:0,catalog:[websiteAudit],
+      faieSurfaceEnabled:false,purchaseIntentUrl:backend}),
+    /purchase_intent_requires_approved_owned_https_backend/
+  );
+});
