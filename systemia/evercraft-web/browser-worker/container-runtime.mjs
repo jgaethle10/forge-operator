@@ -2,6 +2,7 @@ import crypto from 'node:crypto';
 import path from 'node:path';
 import { spawnSync } from 'node:child_process';
 import { startBrowserPublicAdapter } from './public-adapter.mjs';
+import { signDurableJobRequest } from './systemia-admission.mjs';
 
 const DEFAULT_BUILD_TIMEOUT_MS = 10 * 60_000;
 const DEFAULT_START_TIMEOUT_MS = 30_000;
@@ -193,6 +194,31 @@ export async function startBrowserContainer({
           },
           body: JSON.stringify(job || {}),
         }, Math.max(35_000, Number(job?.timeout_ms || 15_000) + 5000));
+      },
+      async submitReadOnlyJob(envelope) {
+        if(!durableJobVolume) throw new Error('browser_durable_job_volume_not_configured');
+        const endpoint='/v1/jobs',raw=JSON.stringify(envelope||{});
+        return fetchJson(`${url}${endpoint}`,{
+          method:'POST',
+          headers:{'content-type':'application/json',
+            ...signDurableJobRequest(systemiaJobKey,{method:'POST',path:endpoint,body:raw})},
+          body:raw,
+        },10000);
+      },
+      async readReadOnlyJob(jobId) {
+        if(!durableJobVolume) throw new Error('browser_durable_job_volume_not_configured');
+        const endpoint=`/v1/jobs/${encodeURIComponent(String(jobId||''))}`;
+        return fetchJson(`${url}${endpoint}`,{
+          headers:signDurableJobRequest(systemiaJobKey,{method:'GET',path:endpoint,body:''}),
+        },10000);
+      },
+      async cancelReadOnlyJob(jobId) {
+        if(!durableJobVolume) throw new Error('browser_durable_job_volume_not_configured');
+        const endpoint=`/v1/jobs/${encodeURIComponent(String(jobId||''))}`;
+        return fetchJson(`${url}${endpoint}`,{
+          method:'DELETE',
+          headers:signDurableJobRequest(systemiaJobKey,{method:'DELETE',path:endpoint,body:''}),
+        },10000);
       },
       async createAuthSession(job) {
         return fetchJson(`${url}/v1/auth-browser/sessions`, {
