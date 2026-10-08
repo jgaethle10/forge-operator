@@ -37,11 +37,11 @@ function writeRoutes(root) {
       registry_published: true,
       blocking_gates: [],
       preferred_route: {
-        mode: "direct_specialist",
+        mode: "registered_internal_specialist",
         hops_before_specialist: 0,
         use_universal_router_first: false,
         registry_name: "io.github.jgaethle10/aliev",
-        remote_mcp: "https://example.test/aliev"
+        registered_dispatcher: "aliev"
       }
     }]
   }, null, 2));
@@ -226,8 +226,7 @@ test("installed AliEV capsule launches through Systemia + Execution Gate into ow
         report_type: "full_site_opportunity"
       },
       meterSubjectRef: "org:os-launch-proof",
-      idempotencyKey: "os-launch:aliev:proof",
-      requireDirectSpecialist: true
+      idempotencyKey: "os-launch:aliev:proof"
     });
 
     assert.equal(prepared.state, "prepared");
@@ -236,6 +235,8 @@ test("installed AliEV capsule launches through Systemia + Execution Gate into ow
     assert.equal(prepared.dispatch_decision.execution_gate_required, true);
     assert.equal(prepared.dispatch_decision.contract_action_scope, "report.generate");
     assert.equal(prepared.ticket.specialist_slug, "aliev");
+    assert.equal(prepared.ticket.dispatch_route_mode, "registered_internal_specialist");
+    assert.equal(prepared.ticket.public_direct_route_claimed, false);
     assert.equal(prepared.ticket.dispatch_allowed, false);
     assert.equal(gate.getLease(prepared.ticket.execution_gate_lease_id).state, "prepared");
 
@@ -313,13 +314,11 @@ test("missing specialist dispatcher holds before execution permit consumption", 
       idempotencyKey: "os-launch:no-dispatcher"
     });
 
-    assert.equal(prepared.state, "prepared");
-    const result = await launcher.execute({ ticket: prepared.ticket });
-    assert.equal(result.state, "held");
-    assert.equal(result.reason, "specialist_dispatcher_not_registered");
-    assert.equal(result.permit_consumed, false);
-    assert.equal(result.dispatch_performed, false);
-    assert.equal(gate.getLease(prepared.ticket.execution_gate_lease_id).state, "prepared");
+    assert.equal(prepared.state, "held");
+    assert.equal(prepared.reason, "specialist_dispatcher_not_registered");
+    assert.equal(prepared.execution_gate_prepared, false);
+    assert.equal(prepared.execution_authority_granted, false);
+    assert.equal(prepared.dispatch_performed, false);
   } finally {
     fs.rmSync(root, { recursive: true, force: true });
   }
