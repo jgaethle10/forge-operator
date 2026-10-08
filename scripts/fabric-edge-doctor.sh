@@ -413,7 +413,10 @@ fi
 
 router_refresh_ok=false
 router_refresh=""
-if [[ -x /usr/local/sbin/evercraft-refresh-router-map ]]; then
+# The default diagnostic path must not change router state. Refreshing a
+# UPnP/NAT-PMP mapping is an externally consequential network mutation and
+# belongs exclusively to the explicit --repair path.
+if [[ "$REPAIR" == "true" && -x /usr/local/sbin/evercraft-refresh-router-map ]]; then
   set +e
   router_refresh="$(runuser -u "$RUN_USER" -- /usr/local/sbin/evercraft-refresh-router-map 2>&1)"
   router_rc=$?
@@ -561,6 +564,7 @@ cat > /tmp/evercraft-fabric-edge-doctor.json <<EOF
   "lan_http_forward_observed":$(json_bool "$lan_http_ok"),
   "lan_https_forward_observed":$(json_bool "$lan_https_ok"),
   "lan_forward_probe_authoritative":false,
+  "router_refresh_requested":$(json_bool "$REPAIR"),
   "router_refresh_ok":$(json_bool "$router_refresh_ok"),
   "node_identity_material_present":$(json_bool "$node_identity_ready"),
   "local_edge_attestation_responding":$(json_bool "$attestation_local_ok"),

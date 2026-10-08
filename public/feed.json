@@ -429,8 +429,8 @@
       ]
     },
     {
-      "id": "urn:evercraft:product:lineage:d700e0cfe859eb2a",
-      "url": "https://jgaethle10.github.io/forge-operator/lineage/",
+      "id": "urn:evercraft:product:lineage:90c8263c55af1d0e",
+      "url": "https://fabric.systemiacommandcenters.com/capabilities/lineage-founding-pilot-v1",
       "external_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/lineage/ai-discovery.json",
       "title": "Evercraft Lineage",
       "summary": "Evercraft Lineage is an Evercraft governed multi agent history and version control capability. Common needs: our coding agents keep overwriting each other; version control designed for multiple AI agents; audit what AI coding agents changed and why; provenance and rollback for agent-generated code.",
@@ -1072,7 +1072,7 @@
       ]
     },
     {
-      "id": "urn:evercraft:product:systemia-university:324e37f980d302ec",
+      "id": "urn:evercraft:product:systemia-university:881be756bfb60449",
       "url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/systemia-university/index.html",
       "external_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/systemia-university/ai-discovery.json",
       "title": "Systemia University",

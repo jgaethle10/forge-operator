@@ -100,12 +100,26 @@ test('build emits owned page, social card, manifest and Clip handoff',()=>{
       'poster-story.html',
       'poster-story.svg',
       'scroll-stop-report.json',
+      'shot-balanced-relief-feed.html',
+      'shot-balanced-relief-feed.svg',
+      'shot-balanced-relief-story.html',
+      'shot-balanced-relief-story.svg',
+      'shot-cascade-signal-feed.html',
+      'shot-cascade-signal-feed.svg',
+      'shot-cascade-signal-story.html',
+      'shot-cascade-signal-story.svg',
+      'shot-terrain-hero-feed.html',
+      'shot-terrain-hero-feed.svg',
+      'shot-terrain-hero-story.html',
+      'shot-terrain-hero-story.svg',
+      'shot-tournament.json',
       'story.json',
     ]);
 
     const html=fs.readFileSync(path.join(result.outputDir,'index.html'),'utf8');
     const manifest=JSON.parse(fs.readFileSync(path.join(result.outputDir,'manifest.json'),'utf8'));
     const handoff=JSON.parse(fs.readFileSync(path.join(result.outputDir,'clip-handoff.json'),'utf8'));
+    const tournament=JSON.parse(fs.readFileSync(path.join(result.outputDir,'shot-tournament.json'),'utf8'));
 
     assert.match(html,/og:image/);
     assert.match(html,/visuals\.evercraft\.test\/cascade-test/);
@@ -114,10 +128,18 @@ test('build emits owned page, social card, manifest and Clip handoff',()=>{
     assert.match(manifest.socialCardUrl,/poster-feed\.svg$/);
     assert.equal(manifest.scrollStopStatus,'pass');
     assert.equal(manifest.posterQualityStatus,'pass');
+    assert.equal(manifest.shotTournamentWinnerId,'terrain-hero');
+    assert.match(manifest.shotTournamentDigest,/^[a-f0-9]{64}$/);
     assert.match(manifest.assets.posterQualityReport,/poster-quality-report\.json$/);
+    assert.match(manifest.assets.shotTournamentReport,/shot-tournament\.json$/);
+    assert.match(manifest.assets.shotCandidates['terrain-hero'].feed,/shot-terrain-hero-feed\.svg$/);
+    assert.match(manifest.assets.shotCandidates['terrain-hero'].feedPreview,/shot-terrain-hero-feed\.html$/);
+    assert.match(manifest.assets.shotCandidates['terrain-hero'].storyPreview,/shot-terrain-hero-story\.html$/);
     assert.match(manifest.assets.motionStage,/motion\.html$/);
     assert.equal(handoff.publicationAuthority,false);
     assert.equal(handoff.schema,'evercraft.visual-story.clip-handoff.v3');
+    assert.equal(handoff.shotTournamentWinnerId,'terrain-hero');
+    assert.equal(handoff.shotTournamentDigest,manifest.shotTournamentDigest);
     assert.match(handoff.preferredAssetByDestination.tiktok,/poster-story\.svg$/);
     const plan=JSON.parse(fs.readFileSync(path.join(result.outputDir,'graphics-plan.json'),'utf8'));
     const gate=JSON.parse(fs.readFileSync(path.join(result.outputDir,'scroll-stop-report.json'),'utf8'));
@@ -125,6 +147,12 @@ test('build emits owned page, social card, manifest and Clip handoff',()=>{
     const quality=JSON.parse(fs.readFileSync(path.join(result.outputDir,'poster-quality-report.json'),'utf8'));
     assert.equal(plan.hero.visualPriority,'hero_first');
     assert.equal(quality.status,'pass');
+    assert.equal(quality.shotTournamentWinnerId,'terrain-hero');
+    assert.equal(quality.shotTournamentDigest,tournament.digest);
+    assert.equal(tournament.schema,'evercraft.graphics-command.shot-tournament.v1');
+    assert.equal(tournament.winnerId,'terrain-hero');
+    assert.equal(tournament.candidateCount,3);
+    assert.equal(tournament.humanReviewRequired,true);
     assert.equal(quality.formats.feed.status,'pass');
     assert.equal(quality.formats.square.status,'pass');
     assert.equal(quality.formats.story.status,'pass');
@@ -164,7 +192,7 @@ test('terrain-backed specimen copies the governed relief asset with exact lineag
     assert.equal(result.graphicsPlan.geography?.terrain?.rightsState,'public_domain');
     assert.match(result.manifest.assets.terrainRelief,/terrain-relief\.png$/);
     const poster=fs.readFileSync(path.join(result.outputDir,'poster-feed.svg'),'utf8');
-    assert.match(poster,/data-visual-model="cinematic-terrain-geography-v2"/);
+    assert.match(poster,/data-visual-model="cinematic-terrain-geography-v3"/);
     assert.match(poster,/class="terrain-relief"/);
     assert.match(poster,/href="data:image\/png;base64,/);
     const embedded=poster.match(/href="data:image\/png;base64,([^"]+)"/);
@@ -172,7 +200,15 @@ test('terrain-backed specimen copies the governed relief asset with exact lineag
     const embeddedDigest=crypto.createHash('sha256').update(Buffer.from(embedded[1],'base64')).digest('hex');
     assert.equal(embeddedDigest,receipt.sha256);
     assert.match(poster,new RegExp('data-source-sha256="'+receipt.sha256+'"'));
+    assert.match(poster,/data-shot-strategy="terrain-hero"/);
     assert.doesNotMatch(poster,/class="peak-halo"/);
+    const candidate=fs.readFileSync(path.join(result.outputDir,'shot-terrain-hero-feed.svg'),'utf8');
+    assert.match(candidate,/data-shot-strategy="terrain-hero"/);
+    assert.match(candidate,/href="\.\/terrain-relief\.png"/);
+    assert.doesNotMatch(candidate,/href="data:image\/png;base64,/);
+    const preview=fs.readFileSync(path.join(result.outputDir,'shot-terrain-hero-feed.html'),'utf8');
+    assert.match(preview,/shot-terrain-hero-feed\.svg/);
+    assert.match(preview,/4:5 review surface/);
   }finally{
     fs.rmSync(root,{recursive:true,force:true});
   }

@@ -1,3 +1,14 @@
+export {
+  geometryFromFallenAsset,
+  generateDeterministicTangents,
+  verifyFallenGeometryImportReceipt,
+  type FallenGeometryAsset,
+  type FallenGeometryImportReceipt,
+  type FallenGeometryImportResult,
+  type FallenGeometryProvenance,
+  type FallenGeometryRightsState
+} from './fallen-geometry.js';
+
 import type { WorldDefinition, WorldEntity } from './engine.js';
 import { compileVisualFrame, type VisualFrameContract } from './visual.js';
 import { compileAudioFrame, type AudioFrameContract } from './audio.js';

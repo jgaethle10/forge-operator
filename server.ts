@@ -22,6 +22,7 @@ import { registerNotificationFabricRoutes } from './systemia/notification-fabric
 import { registerRadarRoutes } from './systemia/radar/http.mjs';
 import { registerFaieRoutes } from './systemia/faie/http.mjs';
 import { registerPeopleRoutes } from './systemia/people/http.mjs';
+import { registerUniversityBenchmarkRoutes } from './systemia/university/http.mjs';
 
 dotenv.config();
 
@@ -213,6 +214,7 @@ const CHUM_DISCOVERY_LINKS = [
   '</llms-full.txt>; rel="describedby"; type="text/plain"',
   '</.well-known/evercraft-pain-index.json>; rel="service-desc"; type="application/json"',
   '</.well-known/evercraft-products.json>; rel="service-desc"; type="application/json"',
+  '</api/systemia-university/benchmarks>; rel="service-desc"; type="application/json"; title="Systemia University Benchmarks"',
   '</openapi.json>; rel="service-desc"; type="application/json"',
   '</sitemap.xml>; rel="sitemap"; type="application/xml"',
   '</chum/sitemaps/index.xml>; rel="sitemap"; type="application/xml"; title="Evercraft Segmented Sitemap Index"',
@@ -256,6 +258,7 @@ function isChumDiscoverySurface(pathname: string): boolean {
     pathname === '/api/discover' ||
     pathname === '/api/revenue-watershed' ||
     pathname === '/api/chum/crawler-radar' ||
+    pathname.startsWith('/api/systemia-university/') ||
     pathname.startsWith('/api/household-fabric/') ||
     pathname.startsWith('/household-fabric') ||
     pathname.startsWith('/household');
@@ -299,6 +302,14 @@ app.use((req: Request, res: Response, next: NextFunction) => {
   }
 
   next();
+});
+
+registerUniversityBenchmarkRoutes(app, {
+  benchmarkRoot: path.resolve(
+    __dirname,
+    isProd ? 'dist/benchmarks/systemia-university' : 'public/benchmarks/systemia-university'
+  ),
+  publicEvaluateLimiter: rateLimit(30, 60 * 60 * 1000)
 });
 
 function requestOrigin(req: Request): string {

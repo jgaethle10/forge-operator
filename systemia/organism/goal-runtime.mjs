@@ -1,4 +1,16 @@
+import { verifyGoalHumanApproval } from './goal-human-approval.mjs';
 const TERMINAL = new Set(['complete', 'skipped']);
+// Must stay aligned with Systemia control-plane machine-contract.json.
+// Consequential work may not opt out of its human gate through a raw plan.
+export const FORCED_HUMAN_GATE_WORK_TYPES = Object.freeze([
+  'trust_change','external_message','outreach','external_purchase','payment',
+]);
+const forcedHumanGateTypes = new Set(FORCED_HUMAN_GATE_WORK_TYPES);
+export const FORCED_HUMAN_GATE_IMPACTS = Object.freeze([
+  'payment','financial_obligation','contract','legal','employment','safety',
+  'trust_boundary','destructive_release','external_message','external_purchase',
+]);
+const forcedHumanGateImpacts = new Set(FORCED_HUMAN_GATE_IMPACTS);
 
 function clean(value) {
   return String(value ?? '').replace(/\s+/g, ' ').trim();
@@ -26,14 +38,23 @@ function assertGoalState(state) {
 function normalizeTask(raw, goalKey, missionKey) {
   const workKey = clean(raw?.work_key || raw?.key);
   if (!workKey) throw new Error('every goal task requires work_key');
-  const humanGateRequired = Boolean(raw?.human_gate_required || raw?.founder_attention_required);
+  const workType = clean(raw?.work_type || 'execute').toLowerCase();
+  const impact = clean(raw?.impact).toLowerCase();
+  const humanGateRequired = Boolean(
+    raw?.human_gate_required || raw?.founder_attention_required ||
+    forcedHumanGateTypes.has(workType) || forcedHumanGateImpacts.has(impact)
+  );
   return {
     mission_key: clean(raw?.mission_key || missionKey || goalKey),
     goal_key: goalKey,
     work_key: workKey,
     dedupe_key: clean(raw?.dedupe_key || `${goalKey}:${workKey}`),
     title: clean(raw?.title || workKey),
-    work_type: clean(raw?.work_type || 'execute').toLowerCase(),
+    work_type: workType,
+    impact,
+    // Explicit provider binding for future privileged recovery observation.
+    // An unspecified provider cannot later be invented by a signed observer.
+    provider_key: clean(raw?.provider_key).toLowerCase(),
     dependency_keys: uniqueStrings(raw?.dependency_keys || []),
     assigned_agents: uniqueStrings(raw?.assigned_agents || [], 50),
     status: 'pending',
@@ -79,10 +100,12 @@ function summarize(tasks) {
 
 function deriveGoalStatus(tasks) {
   if (tasks.length === 0) return 'planning';
-  if (tasks.every((task) => TERMINAL.has(task.status))) return 'complete';
+  // Skipped work may terminate its own attempt, not certify mission success.
+  if (tasks.every((task) => task.status === 'complete')) return 'complete';
   if (tasks.some((task) => task.status === 'executing')) return 'executing';
   if (tasks.some((task) => task.status === 'blocked')) return 'blocked';
   if (tasks.some((task) => task.human_gate_unresolved && task.status !== 'complete')) return 'waiting';
+  if (tasks.some((task) => task.status === 'skipped')) return 'blocked';
   return 'ready';
 }
 
@@ -111,6 +134,12 @@ export function createGoalState({ goalKey, objective, successCondition = '', con
 
 export function admitGoalPlan({ state, plan = [], now = new Date() }) {
   assertGoalState(state);
+  // Admission is not an update/retry operation. Replacing admitted work can
+  // erase in-flight/terminal receipts and make consequential work runnable twice.
+  // Revised plans must be a separately authorized, append-only operation.
+  if (state.status !== 'planning' || !Array.isArray(state.tasks) || state.tasks.length !== 0) {
+    throw new Error('goal plan already admitted: replacement would risk duplicate execution');
+  }
   if (!Array.isArray(plan) || plan.length === 0) throw new Error('non-empty plan is required');
   const seen = new Set();
   const tasks = plan.map((raw) => {
@@ -128,32 +157,49 @@ export function admitGoalPlan({ state, plan = [], now = new Date() }) {
   return refreshGoal(next, now);
 }
 
-export function authorizeGoalWork({ state, workKey, authorizationRef, now = new Date() }) {
+export function authorizeGoalWork({ state, workKey, approval, trustedPublicKeys = {}, now = new Date() }) {
   assertGoalState(state);
   const key = clean(workKey);
-  const ref = clean(authorizationRef);
-  if (!ref) throw new Error('authorizationRef is required');
   const next = clone(state);
   const task = next.tasks.find((item) => item.work_key === key);
   if (!task) throw new Error(`unknown work_key ${key}`);
   if (!task.human_gate_required) throw new Error(`${key} does not require a human gate`);
+  if (task.status !== 'pending' && task.status !== 'blocked') throw new Error('cannot authorize task in current state');
+  // A caller-supplied string is never approval. Validate source authority,
+  // scope, mission, task, bounded validity and a real Ed25519 signature.
+  const checked = verifyGoalHumanApproval({ approval, state: next, workKey: key, trustedPublicKeys, now });
   task.human_gate_unresolved = false;
-  task.authorization_refs = uniqueStrings([...(task.authorization_refs || []), ref]);
+  task.authorization_refs = uniqueStrings([...(task.authorization_refs || []), checked.receipt_ref]);
+  task.authorization_proof = clone(approval);
   task.updated_at = nowIso(now);
   next.revision += 1;
   next.updated_at = nowIso(now);
   return refreshGoal(next, now);
 }
 
-export function startGoalWork({ state, workKey, now = new Date() }) {
+export function startGoalWork({ state, workKey, trustedPublicKeys = {}, now = new Date() }) {
   assertGoalState(state);
   const refreshed = refreshGoal(clone(state), now);
   const task = refreshed.tasks.find((item) => item.work_key === clean(workKey));
   if (!task) throw new Error(`unknown work_key ${clean(workKey)}`);
   if (!refreshed.next_work_keys.includes(task.work_key)) throw new Error(`${task.work_key} is not ready`);
+  if (task.human_gate_required) {
+    // Recheck at the actual dispatch boundary, even for previously persisted
+    // "authorized" state from an older runtime or an expired approval.
+    if (!task.authorization_proof) throw new Error('signed human approval required before execution');
+    verifyGoalHumanApproval({
+      approval: task.authorization_proof,state: refreshed,workKey:task.work_key,
+      trustedPublicKeys,now,
+    });
+  }
   task.status = 'executing';
   task.attempt = Number(task.attempt || 0) + 1;
-  task.updated_at = nowIso(now);
+  // Stable key per attempt for downstream idempotency; it does not itself grant dispatch authority.
+  task.attempt_key = `${task.dedupe_key}:attempt:${task.attempt}`;
+  task.attempt_provider_key = task.provider_key || null;
+  task.execution_started_at = nowIso(now);
+  task.last_heartbeat_at = task.execution_started_at;
+  task.updated_at = task.execution_started_at;
   refreshed.revision += 1;
   refreshed.updated_at = nowIso(now);
   refreshed.status = 'executing';
@@ -161,13 +207,40 @@ export function startGoalWork({ state, workKey, now = new Date() }) {
   return refreshed;
 }
 
-export function recordGoalOutcome({ state, workKey, result, receiptRef = '', evidenceRefs = [], blocker = '', now = new Date() }) {
+export function heartbeatGoalWork({ state, workKey, expectedAttempt, now = new Date() }) {
+  assertGoalState(state);
+  const next = clone(state);
+  const task = next.tasks.find((item) => item.work_key === clean(workKey));
+  if (!task) throw new Error(`unknown work_key ${clean(workKey)}`);
+  if (task.status !== 'executing' || task.recovery_hold) throw new Error('work is not actively executing');
+  if (!Number.isInteger(expectedAttempt) || expectedAttempt < 1 || task.attempt !== expectedAttempt) {
+    throw new Error('attempt mismatch: refuse stale heartbeat');
+  }
+  const at = nowIso(now);
+  const old = Date.parse(task.updated_at);
+  const stamp = Date.parse(at);
+  if (!Number.isFinite(stamp) || !Number.isFinite(old) || stamp < old) {
+    throw new Error('nonmonotonic heartbeat timestamp');
+  }
+  task.last_heartbeat_at = at;
+  task.updated_at = at;
+  next.revision += 1;
+  next.updated_at = at;
+  return refreshGoal(next, now);
+}
+
+export function recordGoalOutcome({ state, workKey, expectedAttempt, result, receiptRef = '', evidenceRefs = [], blocker = '', now = new Date() }) {
   assertGoalState(state);
   const normalized = clean(result).toLowerCase();
   if (!['complete', 'blocked', 'retry', 'skipped'].includes(normalized)) throw new Error(`unsupported result ${normalized}`);
   const next = clone(state);
   const task = next.tasks.find((item) => item.work_key === clean(workKey));
   if (!task) throw new Error(`unknown work_key ${clean(workKey)}`);
+  if (task.recovery_hold) throw new Error('interrupted attempt requires authoritative reconciliation before outcome or retry');
+  // A late worker or CLI caller cannot complete or retry a newer execution.
+  if (!Number.isSafeInteger(expectedAttempt) || expectedAttempt < 1 || task.attempt !== expectedAttempt) {
+    throw new Error('attempt mismatch: missing or stale execution outcome');
+  }
   if (task.status !== 'executing' && !(normalized === 'retry' && task.status === 'blocked')) {
     throw new Error(`${task.work_key} is not executing`);
   }
@@ -202,9 +275,10 @@ export function recordGoalOutcome({ state, workKey, result, receiptRef = '', evi
 export function refreshGoal(state, now = new Date()) {
   assertGoalState(state);
   const next = clone(state);
-  const terminal = new Set(next.tasks.filter((task) => TERMINAL.has(task.status)).map((task) => task.work_key));
+  const completed = new Set(next.tasks.filter((task) => task.status === 'complete').map((task) => task.work_key));
+  const skipped = new Set(next.tasks.filter((task) => task.status === 'skipped').map((task) => task.work_key));
   const ready = [];
-  const blockers = [];
+  const blockers = [...[...skipped].map(key => `Skipped work ${key} cannot establish mission success.`)];
   for (const task of next.tasks) {
     if (TERMINAL.has(task.status) || task.status === 'executing') continue;
     if (task.status === 'blocked') {
@@ -215,7 +289,11 @@ export function refreshGoal(state, now = new Date()) {
       blockers.push(`Human gate unresolved for ${task.work_key}.`);
       continue;
     }
-    if (task.dependency_keys.every((dep) => terminal.has(dep))) ready.push(task.work_key);
+    if (task.dependency_keys.some((dep) => skipped.has(dep))) {
+      blockers.push(`Skipped prerequisite prevents ${task.work_key}: ${task.dependency_keys.filter(dep => skipped.has(dep)).join(', ')}.`);
+      continue;
+    }
+    if (task.dependency_keys.every((dep) => completed.has(dep))) ready.push(task.work_key);
   }
   next.next_work_keys = uniqueStrings(ready);
   next.blockers = uniqueStrings(blockers);
@@ -240,7 +318,8 @@ export function goalSnapshot(state) {
     next_work_keys: refreshed.next_work_keys,
     blockers: refreshed.blockers,
     evidence_refs: refreshed.evidence_refs,
-    updated_at: refreshed.updated_at,
+    // Read-only snapshots must report the actual persisted modification time.
+    updated_at: state.updated_at,
   };
 }
 

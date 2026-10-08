@@ -1,0 +1,38 @@
+name: Systemia IBM i 7.4 Exact Tier Read-Only
+on:
+  pull_request:
+    paths:
+      - 'systemia/chum/ibmi-74-owned-tier-canary.mjs'
+      - 'systemia/chum/ibmi-74-owned-tier-canary.test.mjs'
+      - 'systemia/chum/ibmi-74-offer-contract.mjs'
+      - 'systemia/chum/ibmi-74-offer-contract.test.mjs'
+      - '.github/workflows/systemia-ibmi-74-tier-readonly.yml'
+  workflow_dispatch:
+  schedule:
+    - cron: '13 */12 * * *'
+permissions:
+  contents: read
+jobs:
+  read-only-tier:
+    runs-on: ubuntu-latest
+    timeout-minutes: 4
+    env:
+      EVERCRAFT_MACHINE_COMMERCE_GATEWAY_URL: ${{ vars.EVERCRAFT_MACHINE_COMMERCE_GATEWAY_URL }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Prove distinct 7.4 SKU contract and nontransactional gateway inspection
+        run: node --test systemia/chum/ibmi-74-offer-contract.test.mjs systemia/chum/ibmi-74-owned-tier-canary.test.mjs
+      - name: GET only (no payment, checkout session, user outreach or authorization)
+        run: node systemia/chum/ibmi-74-owned-tier-canary.mjs ibmi-74-tier-readonly.json
+      - name: Record tier listing evidence without releasing commerce
+        run: |
+          node -e "const p=require('./ibmi-74-tier-readonly.json'); if(p.checkout_attempted||p.checkout_verified||p.payment_attempted||p.provider_settlement_verified||p.public_release_authorized||p.outbound_contact_authorized)process.exit(1)"
+          node -e "const fs=require('fs'); const p=require('./ibmi-74-tier-readonly.json'); fs.appendFileSync(process.env.GITHUB_STEP_SUMMARY, '### IBM i 7.4 owned tier check\\n\\nTier status: '+p.status+'\\n\\nReason: '+p.reason+'\\n\\nExact USD price verified: '+p.exact_price_verified+'\\n\\nCheckout/payment/fulfillment: NOT VERIFIED\\n')"
+      - uses: actions/upload-artifact@v4
+        with:
+          name: ibmi-74-tier-readonly
+          path: ibmi-74-tier-readonly.json
+          retention-days: 14

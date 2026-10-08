@@ -63,6 +63,9 @@ export function proofFirstState(input={},now=new Date()){
   }else if(cooldownActive){
     state='cooldown';
     reason='outbound_cooldown_active';
+  }else if(input.human_approval_state!=='explicit' || !String(input.human_approval_ref||'').trim()){
+    state='awaiting_human_approval';
+    reason='explicit_human_approval_required';
   }
 
   return {
@@ -78,6 +81,8 @@ export function proofFirstState(input={},now=new Date()){
     cooldown_hours:cooldownHours,
     cooldown_until:cooldownUntil?.toISOString()||null,
     requires_interaction_ledger_preflight:true,
+    requires_explicit_human_approval:true,
+    human_approval_ref:input.human_approval_state==='explicit' ? String(input.human_approval_ref||'').trim()||null : null,
     auto_send_authority:false,
   };
 }
@@ -124,6 +129,8 @@ export function admitProofFirstOutreach(input={},now=new Date()){
     admitted:state.state==='outreach_ready',
     next_action:state.state==='outreach_ready'
       ? 'prepare_exact_message_permit'
+      : state.state==='awaiting_human_approval'
+        ? 'present_exact_message_for_human_approval_do_not_send'
       : state.state==='waiting_reply'
         ? 'wait_for_inbound_or_material_new_signal'
         : state.state==='cooldown'

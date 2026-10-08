@@ -2,11 +2,13 @@ import React, { useEffect, useMemo, useRef, useState } from 'react';
 import {
   PULSEGRID_ENGINE_VERSION,
   PulseGridAudioEngine,
+  PulseGridBrowserAudioAssetVault,
   applyPulseGridOperation,
   applyPulseGridTransaction,
   createPulseGridSession,
   undoPulseGridReceipt,
   type PulseGridActor,
+  type PulseGridAudioAsset,
   type PulseGridAudioStatus,
   type PulseGridOperation,
   type PulseGridSession,
@@ -20,6 +22,15 @@ function noteName(pitch:number){
   return NOTE_NAMES[pitch%12]+String(Math.floor(pitch/12)-1);
 }
 
+type HeldMidiNote={
+  trackId:string;
+  scene:number;
+  pitch:number;
+  velocity:number;
+  startedAt:number;
+  startStep:number;
+};
+
 function latestUndoableReceipt(session:PulseGridSession){
   const undone=new Set(session.receipts.map((receipt)=>receipt.undo_of).filter(Boolean));
   const transactionChildren=new Set(session.receipts.flatMap((receipt)=>receipt.child_receipt_ids||[]));
@@ -32,14 +43,33 @@ export default function FallenSessions(){
   const [session,setSession]=useState<PulseGridSession>(()=>createPulseGridSession('First Light'));
   const [selectedTrackId,setSelectedTrackId]=useState('keys');
   const [selectedScene,setSelectedScene]=useState(0);
+  const [selectedNoteId,setSelectedNoteId]=useState<string|null>(null);
+  const [draggedNoteId,setDraggedNoteId]=useState<string|null>(null);
   const [status,setStatus]=useState('Canonical PulseGrid session ready.');
   const [playing,setPlaying]=useState(false);
+  const [recording,setRecording]=useState(false);
+  const [midiEnabled,setMidiEnabled]=useState(false);
+  const [midiInputs,setMidiInputs]=useState(0);
+  const [automationParam,setAutomationParam]=useState<'volume'|'filter'>('volume');
   const [playhead,setPlayhead]=useState(0);
-  const [audioStatus,setAudioStatus]=useState<PulseGridAudioStatus>({playing:false,scene:0,step:0,context_state:'cold',clock_mode:'cold',track_buses:0,latency_ms:null});
+  const [audioStatus,setAudioStatus]=useState<PulseGridAudioStatus>({playing:false,scene:0,step:0,context_state:'cold',clock_mode:'cold',track_buses:0,latency_ms:null,cached_audio_assets:0});
+  const sessionRef=useRef(session);
+  const selectedTrackRef=useRef(selectedTrackId);
+  const selectedSceneRef=useRef(selectedScene);
+  const playheadRef=useRef(0);
+  const midiAccessRef=useRef<any>(null);
+  const heldMidiNotesRef=useRef(new Map<string,HeldMidiNote>());
+  const vaultRef=useRef<PulseGridBrowserAudioAssetVault|null>(null);
+  const fileInputRef=useRef<HTMLInputElement|null>(null);
+  const recorderRef=useRef<MediaRecorder|null>(null);
+  const recordingStreamRef=useRef<MediaStream|null>(null);
+  const recordingSceneRef=useRef(0);
   const audioRef=useRef<PulseGridAudioEngine|null>(null);
+  if(!vaultRef.current)vaultRef.current=new PulseGridBrowserAudioAssetVault();
   if(!audioRef.current){
     audioRef.current=new PulseGridAudioEngine();
-    audioRef.current.onStep=(step)=>setPlayhead(step);
+    audioRef.current.setAudioAssetResolver((asset)=>vaultRef.current!.getVerifiedBlob(asset));
+    audioRef.current.onStep=(step)=>{playheadRef.current=step;setPlayhead(step)};
     audioRef.current.onStatus=(next)=>{setAudioStatus(next);setPlaying(next.playing)};
   }
 
@@ -48,17 +78,45 @@ export default function FallenSessions(){
     [session,selectedTrackId],
   );
   const clip=track.clips[selectedScene];
+  const selectedNote=selectedNoteId?clip.notes.find((note)=>note.id===selectedNoteId)||null:null;
   const undoable=latestUndoableReceipt(session);
 
   useEffect(()=>{
+    sessionRef.current=session;
     audioRef.current?.updateSession(session);
   },[session]);
 
   useEffect(()=>{
+    selectedTrackRef.current=selectedTrackId;
+    setSelectedNoteId(null);
+  },[selectedTrackId]);
+
+  useEffect(()=>{
+    selectedSceneRef.current=selectedScene;
+    setSelectedNoteId(null);
     audioRef.current?.setScene(selectedScene);
   },[selectedScene]);
 
-  useEffect(()=>()=>{ if(audioRef.current){audioRef.current.onStep=null;audioRef.current.onStatus=null;void audioRef.current.close();} },[]);
+  useEffect(()=>()=>{ 
+    const recorder=recorderRef.current;
+    if(recorder){
+      recorder.ondataavailable=null;
+      recorder.onstop=null;
+      recorder.onerror=null;
+      try{if(recorder.state!=='inactive')recorder.stop()}catch{}
+    }
+    recorderRef.current=null;
+    recordingStreamRef.current?.getTracks().forEach((mediaTrack)=>mediaTrack.stop());
+    recordingStreamRef.current=null;
+    const midiAccess=midiAccessRef.current;
+    if(midiAccess){
+      midiAccess.onstatechange=null;
+      for(const input of midiAccess.inputs.values())input.onmidimessage=null;
+    }
+    midiAccessRef.current=null;
+    heldMidiNotesRef.current.clear();
+    if(audioRef.current){audioRef.current.onStep=null;audioRef.current.onStatus=null;void audioRef.current.close();}
+  },[]);
 
   async function togglePlay(){
     if(playing){
@@ -86,6 +144,268 @@ export default function FallenSessions(){
     }catch(error){
       setStatus(error instanceof Error?error.message:'PulseGrid operation failed.');
       return null;
+    }
+  }
+
+  async function commitAudioAsset(
+    asset:PulseGridAudioAsset,
+    scene:number,
+    intent:string,
+    successLabel:string,
+  ){
+    const current=sessionRef.current;
+    const audioTrack=current.tracks.find((candidate)=>candidate.type==='audio');
+    if(!audioTrack)throw new Error('No canonical audio track is available.');
+
+    const result=applyPulseGridTransaction(current,{
+      intent,
+      operations:[
+        {type:'asset.register_audio',asset:{
+          digest:asset.digest,
+          mime_type:asset.mime_type,
+          byte_length:asset.byte_length,
+          duration_sec:asset.duration_sec,
+          sample_rate:asset.sample_rate,
+          channels:asset.channels,
+          source_name:asset.source_name,
+          source_refs:asset.source_refs,
+          source_state:asset.source_state,
+          rights:asset.rights,
+          parent_asset_ids:asset.parent_asset_ids,
+          created_at:asset.created_at,
+        }},
+        {type:'clip.attach_audio_asset',track_id:audioTrack.id,scene,asset_id:asset.id},
+      ],
+    },'human');
+    setSession(result.session);
+    setSelectedTrackId(audioTrack.id);
+    setSelectedScene(scene);
+    setStatus(
+      successLabel+' · '+asset.duration_sec.toFixed(2)+'s · '+
+      asset.sample_rate+' Hz · '+asset.channels+'ch · rights '+asset.rights
+    );
+  }
+
+  async function importAudioFile(file:File){
+    const vault=vaultRef.current;
+    if(!vault)return;
+    const scene=selectedScene;
+    setStatus('Hashing and verifying '+file.name+'…');
+    try{
+      const asset=await vault.ingest(file,{
+        source_name:file.name,
+        source_refs:['local-file:'+file.name],
+        source_state:'imported',
+        rights:'unknown',
+      });
+      await commitAudioAsset(
+        asset,
+        scene,
+        'Import a local audio file and attach it to Audio Take scene '+String(scene+1)+'.',
+        'Imported '+file.name,
+      );
+    }catch(error){
+      setStatus(error instanceof Error?error.message:'Audio import failed.');
+    }finally{
+      if(fileInputRef.current)fileInputRef.current.value='';
+    }
+  }
+
+  async function toggleRecording(){
+    if(recording){
+      recorderRef.current?.stop();
+      return;
+    }
+    if(!navigator.mediaDevices?.getUserMedia||typeof MediaRecorder==='undefined'){
+      setStatus('Microphone recording is unavailable in this browser.');
+      return;
+    }
+
+    audioRef.current?.stop();
+    setPlaying(false);
+    setPlayhead(0);
+    recordingSceneRef.current=selectedScene;
+    setStatus('Requesting microphone access…');
+
+    try{
+      const stream=await navigator.mediaDevices.getUserMedia({audio:true});
+      recordingStreamRef.current=stream;
+      const preferred='audio/webm;codecs=opus';
+      const options=MediaRecorder.isTypeSupported(preferred)?{mimeType:preferred}:undefined;
+      const recorder=new MediaRecorder(stream,options);
+      const chunks:BlobPart[]=[];
+      recorderRef.current=recorder;
+
+      recorder.ondataavailable=(event)=>{
+        if(event.data.size>0)chunks.push(event.data);
+      };
+      recorder.onerror=()=>{
+        setStatus('Microphone recording failed.');
+        try{if(recorder.state!=='inactive')recorder.stop()}catch{}
+      };
+      recorder.onstop=()=>{
+        const scene=recordingSceneRef.current;
+        const stoppedAt=new Date().toISOString();
+        const mimeType=recorder.mimeType||'audio/webm';
+        const blob=new Blob(chunks,{type:mimeType});
+        recordingStreamRef.current?.getTracks().forEach((mediaTrack)=>mediaTrack.stop());
+        recordingStreamRef.current=null;
+        recorderRef.current=null;
+        setRecording(false);
+        void (async()=>{
+          try{
+            if(blob.size<=0)throw new Error('The microphone take was empty.');
+            const vault=vaultRef.current;
+            if(!vault)throw new Error('PulseGrid audio vault is unavailable.');
+            setStatus('Hashing and verifying recorded take…');
+            const asset=await vault.ingest(blob,{
+              source_name:'recording-'+stoppedAt.replace(/[:.]/g,'-'),
+              source_refs:['media-recorder:'+stoppedAt],
+              source_state:'recording',
+              rights:'unknown',
+            });
+            await commitAudioAsset(
+              asset,
+              scene,
+              'Record a microphone take and attach it to Audio Take scene '+String(scene+1)+'.',
+              'Recorded take',
+            );
+          }catch(error){
+            setStatus(error instanceof Error?error.message:'Recording ingest failed.');
+          }
+        })();
+      };
+
+      recorder.start(250);
+      setRecording(true);
+      setStatus('Recording microphone · scene '+String(selectedScene+1));
+    }catch(error){
+      recordingStreamRef.current?.getTracks().forEach((mediaTrack)=>mediaTrack.stop());
+      recordingStreamRef.current=null;
+      recorderRef.current=null;
+      setRecording(false);
+      setStatus(error instanceof Error?error.message:'Microphone access failed.');
+    }
+  }
+
+  function chooseAudioFile(){
+    fileInputRef.current?.click();
+  }
+
+  function bindMidiInputs(access:any){
+    let count=0;
+    for(const input of access.inputs.values()){
+      count+=1;
+      input.onmidimessage=(event:any)=>handleMidiMessage(input,event);
+    }
+    setMidiInputs(count);
+    setStatus(count?('MIDI ready · '+count+' input'+(count===1?'':'s')):'MIDI enabled · no inputs detected');
+  }
+
+  function handleMidiMessage(input:any,event:any){
+    const data=Array.from(event?.data||[]) as number[];
+    if(data.length<3)return;
+    const statusByte=Number(data[0])||0;
+    const command=statusByte&0xf0;
+    const channel=statusByte&0x0f;
+    const pitch=Math.max(0,Math.min(127,Math.round(Number(data[1])||0)));
+    const rawVelocity=Math.max(0,Math.min(127,Math.round(Number(data[2])||0)));
+    const isNoteOn=command===0x90&&rawVelocity>0;
+    const isNoteOff=command===0x80||(command===0x90&&rawVelocity===0);
+    if(!isNoteOn&&!isNoteOff)return;
+
+    const key=String(input?.id||'midi')+':'+channel+':'+pitch;
+    if(isNoteOn){
+      const current=sessionRef.current;
+      const trackId=selectedTrackRef.current;
+      const scene=selectedSceneRef.current;
+      const targetTrack=current.tracks.find((candidate)=>candidate.id===trackId);
+      if(!targetTrack||targetTrack.type!=='synth'){
+        setStatus('Select a synth track before recording MIDI notes.');
+        return;
+      }
+      const targetClip=targetTrack.clips[scene];
+      if(!targetClip)return;
+      heldMidiNotesRef.current.set(key,{
+        trackId,
+        scene,
+        pitch,
+        velocity:rawVelocity/127,
+        startedAt:performance.now(),
+        startStep:Math.max(0,Math.min(targetClip.steps.length-1,playheadRef.current%targetClip.steps.length)),
+      });
+      return;
+    }
+
+    const held=heldMidiNotesRef.current.get(key);
+    if(!held)return;
+    heldMidiNotesRef.current.delete(key);
+
+    const current=sessionRef.current;
+    const targetTrack=current.tracks.find((candidate)=>candidate.id===held.trackId);
+    const targetClip=targetTrack?.clips[held.scene];
+    if(!targetTrack||targetTrack.type!=='synth'||!targetClip)return;
+
+    const elapsedMs=Math.max(1,performance.now()-held.startedAt);
+    const stepMs=60000/Math.max(20,current.transport.bpm)/4;
+    const maxLength=Math.max(.25,targetClip.steps.length-held.startStep);
+    const length=Math.max(.25,Math.min(maxLength,elapsedMs/stepMs));
+
+    try{
+      const result=applyPulseGridOperation(current,{
+        type:'note.add',
+        track_id:held.trackId,
+        scene:held.scene,
+        note:{
+          pitch:held.pitch,
+          start:held.startStep,
+          length,
+          velocity:held.velocity,
+          probability:1,
+          microtiming:0,
+        },
+      },'controller');
+      setSession(result.session);
+      setStatus(
+        'MIDI note committed · '+noteName(held.pitch)+' · '+
+        length.toFixed(2)+' steps · '+Math.round(held.velocity*127)+' velocity'
+      );
+    }catch(error){
+      setStatus(error instanceof Error?error.message:'MIDI note commit failed.');
+    }
+  }
+
+  async function toggleMidi(){
+    if(midiEnabled){
+      const access=midiAccessRef.current;
+      if(access){
+        access.onstatechange=null;
+        for(const input of access.inputs.values())input.onmidimessage=null;
+      }
+      midiAccessRef.current=null;
+      heldMidiNotesRef.current.clear();
+      setMidiEnabled(false);
+      setMidiInputs(0);
+      setStatus('MIDI disconnected.');
+      return;
+    }
+
+    const midiNavigator=navigator as Navigator&{
+      requestMIDIAccess?:()=>Promise<any>;
+    };
+    if(typeof midiNavigator.requestMIDIAccess!=='function'){
+      setStatus('Web MIDI is unavailable in this browser.');
+      return;
+    }
+
+    try{
+      const access=await midiNavigator.requestMIDIAccess();
+      midiAccessRef.current=access;
+      access.onstatechange=()=>bindMidiInputs(access);
+      bindMidiInputs(access);
+      setMidiEnabled(true);
+    }catch(error){
+      setStatus(error instanceof Error?error.message:'MIDI access failed.');
     }
   }
 
@@ -159,18 +479,93 @@ export default function FallenSessions(){
     }
   }
 
-  function toggleNote(pitch:number,step:number){
+  function selectOrCreateNote(pitch:number,step:number){
     const existing=clip.notes.find((note)=>note.pitch===pitch&&Math.round(note.start)===step);
     if(existing){
-      apply({type:'note.delete',track_id:track.id,scene:selectedScene,note_id:existing.id});
-    }else{
-      apply({
-        type:'note.add',
-        track_id:track.id,
-        scene:selectedScene,
-        note:{pitch,start:step,length:1,velocity:.78,probability:1,microtiming:0},
-      });
+      setSelectedNoteId(existing.id);
+      setStatus('Selected '+noteName(existing.pitch)+' · step '+String(Math.round(existing.start)+1));
+      return;
     }
+    const result=apply({
+      type:'note.add',
+      track_id:track.id,
+      scene:selectedScene,
+      note:{pitch,start:step,length:1,velocity:.78,probability:1,microtiming:0},
+    });
+    const created=result?.receipt.after as {id?:string}|null|undefined;
+    if(created?.id)setSelectedNoteId(created.id);
+  }
+
+  function deleteNote(noteId:string){
+    const result=apply({type:'note.delete',track_id:track.id,scene:selectedScene,note_id:noteId});
+    if(result&&selectedNoteId===noteId)setSelectedNoteId(null);
+  }
+
+  function setNoteExpression(values:{velocity?:number;probability?:number;microtiming?:number}){
+    if(!selectedNote)return;
+    apply({
+      type:'note.set_expression',
+      track_id:track.id,
+      scene:selectedScene,
+      note_id:selectedNote.id,
+      ...values,
+    });
+  }
+
+  function resizeSelectedNote(length:number){
+    if(!selectedNote)return;
+    apply({
+      type:'note.resize',
+      track_id:track.id,
+      scene:selectedScene,
+      note_id:selectedNote.id,
+      length,
+    });
+  }
+
+  function moveNote(noteId:string,pitch:number,start:number){
+    const occupied=clip.notes.some((candidate)=>
+      candidate.id!==noteId &&
+      candidate.pitch===pitch &&
+      Math.round(candidate.start)===Math.round(start)
+    );
+    if(occupied){
+      setStatus('That piano-roll cell already contains a note.');
+      setDraggedNoteId(null);
+      return;
+    }
+    const result=apply({
+      type:'note.move',
+      track_id:track.id,
+      scene:selectedScene,
+      note_id:noteId,
+      start,
+      pitch,
+    });
+    if(result){
+      setSelectedNoteId(noteId);
+      setDraggedNoteId(null);
+    }
+  }
+
+  function moveSelectedNote(values:{pitch?:number;start?:number}){
+    if(!selectedNote)return;
+    moveNote(
+      selectedNote.id,
+      values.pitch??selectedNote.pitch,
+      values.start??selectedNote.start,
+    );
+  }
+
+  function commitAutomationPoint(step:number,value:number){
+    apply({
+      type:'clip.set_automation_point',
+      track_id:track.id,
+      scene:selectedScene,
+      parameter:automationParam,
+      step,
+      value,
+    });
   }
 
   function toggleStep(step:number){
@@ -229,6 +624,7 @@ export default function FallenSessions(){
   }
 
   const visibleSteps=clip.steps.map((_,index)=>index);
+  const automationValues=clip.automation[automationParam];
   const latestReceipts=[...session.receipts].slice(-10).reverse();
 
   return (
@@ -244,13 +640,25 @@ export default function FallenSessions(){
           <span>Clock {audioStatus.clock_mode}</span>
           <span>{audioStatus.latency_ms===null?'Latency cold':'Latency '+audioStatus.latency_ms+' ms'}</span>
           <span>{audioStatus.track_buses} DSP buses</span>
+          <span>{audioStatus.cached_audio_assets} audio asset{audioStatus.cached_audio_assets===1?'':'s'} cached</span>
+          <span>{midiEnabled?(midiInputs+' MIDI input'+(midiInputs===1?'':'s')):'MIDI off'}</span>
           <span>Local-first</span>
           <span>Engine alpha · not for sale</span>
         </div>
       </header>
 
+      <input
+        ref={fileInputRef}
+        type="file"
+        accept="audio/*"
+        hidden
+        onChange={(event)=>{const file=event.target.files?.[0];if(file)void importAudioFile(file)}}
+      />
       <section className="fsToolbar" aria-label="Session controls">
-        <button onClick={togglePlay}>{playing?'■ Stop':'▶ Play'}</button>
+        <button onClick={togglePlay} disabled={recording}>{playing?'■ Stop':'▶ Play'}</button>
+        <button onClick={toggleRecording}>{recording?'■ Stop Recording':'● Record'}</button>
+        <button onClick={toggleMidi}>{midiEnabled?'Disconnect MIDI':'Enable MIDI'}</button>
+        <button onClick={chooseAudioFile} disabled={recording}>Import Audio</button>
         <button onClick={runLiftPlan}>✦ Atomic Chorus Lift</button>
         <button onClick={forkVariation}>Fork Variation</button>
         <button onClick={growClip} disabled={clip.bars>=16}>+ Bar</button>
@@ -278,7 +686,7 @@ export default function FallenSessions(){
                     onClick={()=>{setSelectedTrackId(candidate.id);setSelectedScene(scene)}}
                   >
                     {scene+1}
-                    <small>{candidateClip.bars}b · {candidateClip.notes.length}n</small>
+                    <small>{candidateClip.bars}b · {candidateClip.notes.length}n{candidateClip.audio_asset_id?' · audio':''}</small>
                   </button>
                 ))}
               </div>
@@ -311,15 +719,107 @@ export default function FallenSessions(){
                     cells.push(
                       <button
                         key={pitch+'-'+step}
-                        className={'fsNoteCell '+(note?'active ':'')+(step%4===0?'beat ':'')+(playing&&step===playhead?'playhead':'')}
-                        title={noteName(pitch)+' · step '+(step+1)}
-                        onClick={()=>toggleNote(pitch,step)}
+                        className={'fsNoteCell '+(note?'active ':'')+(note?.id===selectedNoteId?'selected ':'')+(note?.id===draggedNoteId?'dragging ':'')+(step%4===0?'beat ':'')+(playing&&step===playhead?'playhead':'')}
+                        title={note?(noteName(pitch)+' · step '+(step+1)+' · drag to move · double-click to delete'):(noteName(pitch)+' · step '+(step+1))}
+                        draggable={Boolean(note)}
+                        onDragStart={(event)=>{
+                          if(!note)return;
+                          setDraggedNoteId(note.id);
+                          setSelectedNoteId(note.id);
+                          event.dataTransfer.effectAllowed='move';
+                          event.dataTransfer.setData('text/plain',note.id);
+                        }}
+                        onDragEnd={()=>setDraggedNoteId(null)}
+                        onDragOver={(event)=>{
+                          if(!draggedNoteId)return;
+                          event.preventDefault();
+                          event.dataTransfer.dropEffect='move';
+                        }}
+                        onDrop={(event)=>{
+                          if(!draggedNoteId)return;
+                          event.preventDefault();
+                          moveNote(draggedNoteId,pitch,step);
+                        }}
+                        onClick={()=>selectOrCreateNote(pitch,step)}
+                        onDoubleClick={()=>{if(note)deleteNote(note.id)}}
                       />
                     );
                   }
                   return cells;
                 })}
               </div>
+              {selectedNote&&(
+                <div className="fsNoteInspector">
+                  <div className="fsSectionTitle">Selected note · {noteName(selectedNote.pitch)}</div>
+                  <label>
+                    <span>Start step</span>
+                    <input
+                      type="number"
+                      min={1}
+                      max={clip.steps.length}
+                      step={1}
+                      value={Math.round(selectedNote.start)+1}
+                      onChange={(event)=>moveSelectedNote({start:Number(event.target.value)-1})}
+                    />
+                  </label>
+                  <label>
+                    <span>Pitch {noteName(selectedNote.pitch)}</span>
+                    <input
+                      type="number"
+                      min={0}
+                      max={127}
+                      step={1}
+                      value={selectedNote.pitch}
+                      onChange={(event)=>moveSelectedNote({pitch:Number(event.target.value)})}
+                    />
+                  </label>
+                  <label>
+                    <span>Length</span>
+                    <input
+                      type="number"
+                      min={0.25}
+                      max={Math.max(.25,clip.steps.length-selectedNote.start)}
+                      step={0.25}
+                      value={Number(selectedNote.length.toFixed(2))}
+                      onChange={(event)=>resizeSelectedNote(Number(event.target.value))}
+                    />
+                  </label>
+                  <label>
+                    <span>Velocity {Math.round(selectedNote.velocity*127)}</span>
+                    <input
+                      type="range"
+                      min={0}
+                      max={1}
+                      step={0.01}
+                      value={selectedNote.velocity}
+                      onChange={(event)=>setNoteExpression({velocity:Number(event.target.value)})}
+                    />
+                  </label>
+                  <label>
+                    <span>Probability {Math.round(selectedNote.probability*100)}%</span>
+                    <input
+                      type="range"
+                      min={0}
+                      max={1}
+                      step={0.01}
+                      value={selectedNote.probability}
+                      onChange={(event)=>setNoteExpression({probability:Number(event.target.value)})}
+                    />
+                  </label>
+                  <label>
+                    <span>Microtiming {Math.round(selectedNote.microtiming)} ms</span>
+                    <input
+                      type="range"
+                      min={-100}
+                      max={100}
+                      step={1}
+                      value={selectedNote.microtiming}
+                      onChange={(event)=>setNoteExpression({microtiming:Number(event.target.value)})}
+                    />
+                  </label>
+                  <button onClick={()=>deleteNote(selectedNote.id)}>Delete note</button>
+                </div>
+              )}
             </div>
           ):(
             <div className="fsStepGrid">
@@ -335,6 +835,48 @@ export default function FallenSessions(){
               ))}
             </div>
           )}
+
+          <div className="fsAutomation">
+            <div className="fsAutomationHead">
+              <div>
+                <div className="fsSectionTitle">Clip automation</div>
+                <strong>{automationParam==='volume'?'Track volume':'Filter scale'}</strong>
+              </div>
+              <label>
+                <span>Lane</span>
+                <select
+                  value={automationParam}
+                  onChange={(event)=>setAutomationParam(event.target.value as 'volume'|'filter')}
+                >
+                  <option value="volume">Track volume</option>
+                  <option value="filter">Filter scale</option>
+                </select>
+              </label>
+            </div>
+            <div className="fsAutomationLane" aria-label={automationParam+' automation'}>
+              {visibleSteps.map((step)=>{
+                const value=automationValues[step]??1;
+                return (
+                  <label className="fsAutomationPoint" key={clip.id+'-'+automationParam+'-'+step+'-'+value}>
+                    <input
+                      type="range"
+                      min={0}
+                      max={1}
+                      step={0.01}
+                      defaultValue={value}
+                      aria-label={automationParam+' automation step '+String(step+1)}
+                      onPointerUp={(event)=>commitAutomationPoint(step,Number(event.currentTarget.value))}
+                      onKeyUp={(event)=>commitAutomationPoint(step,Number(event.currentTarget.value))}
+                    />
+                    <small>{step+1}</small>
+                  </label>
+                );
+              })}
+            </div>
+            <p className="fsAutomationHint">
+              Drag a point, then release to commit one canonical receipt. Keyboard changes commit on key release.
+            </p>
+          </div>
 
           <div className="fsProvenance">
             <strong>Clip provenance</strong>

@@ -1,0 +1,129 @@
+{
+  "contract": "evercraft.fallen.journal.production.v1",
+  "package_key": "journal:2026-10-07:cfb-power-rankings",
+  "mission_key": "evercraft-cfb-power-rankings",
+  "work_key": "cfb-power-rankings-2026-10-07-visual-package",
+  "story": {
+    "title": "Evercraft College Football Power Rankings: Alabama Leads the Field",
+    "thesis": "Alabama leads a results-first Evercraft Top 25 built from NCAA evidence through 2026-10-07.",
+    "education_goal": "Show the ranking clearly, make movement and uncertainty legible, and give each derivative one canonical source article.",
+    "desk": "sports"
+  },
+  "evidence": {
+    "source_refs": [
+      "ncaa-fbs-scoreboard",
+      "evercraft-cfb-edition-evidence"
+    ],
+    "evidence_refs": [
+      "cfb:2026:2026-10-07:4df1aa713c1f6469888a",
+      "cfbpi:cd08f777eee25c5c5dc3a1b6"
+    ],
+    "evidence_state": "model_derived_from_verified_public_results",
+    "confidence": "bounded_by_team_level_confidence",
+    "freshness_state": "fresh",
+    "uncertainty_notes": "Availability and turnover-sustainability inputs remain missing rather than guessed."
+  },
+  "rights": {
+    "visual_rights_state": "not_required"
+  },
+  "derivative_plan": [
+    {
+      "format": "social_square",
+      "angle": "Top 10 with Power Score and movement"
+    },
+    {
+      "format": "instagram_carousel",
+      "angle": "Top 25 in five clean ranking panels"
+    },
+    {
+      "format": "social_square",
+      "angle": "Largest Evercraft versus AP Top 25 ranking gaps"
+    },
+    {
+      "format": "youtube_short",
+      "angle": "The five teams Evercraft rates highest right now"
+    },
+    {
+      "format": "linkedin",
+      "angle": "How a receipt-backed sports ranking differs from a ballot"
+    }
+  ],
+  "visual_story": {
+    "id": "cfb-power-rankings-2026-10-07",
+    "headline": "Evercraft College Football Power Rankings",
+    "subhead": "Evidence through 2026-10-07",
+    "durationSec": 35,
+    "aspectRatio": "9:16",
+    "metrics": [
+      {
+        "id": "alabama",
+        "label": "#1 Alabama",
+        "value": 81.4,
+        "unit": "Power Score",
+        "evidenceState": "modeled_from_public_results",
+        "sourceRefs": [
+          "ncaa-game:6604294",
+          "ncaa-game:6604093",
+          "ncaa-game:6603963",
+          "ncaa-game:6603926",
+          "ncaa-game:6604339"
+        ]
+      },
+      {
+        "id": "notre-dame",
+        "label": "#2 Notre Dame",
+        "value": 74.09,
+        "unit": "Power Score",
+        "evidenceState": "modeled_from_public_results",
+        "sourceRefs": [
+          "ncaa-game:6604115",
+          "ncaa-game:6604138",
+          "ncaa-game:6604139",
+          "ncaa-game:6604140",
+          "ncaa-game:6604141"
+        ]
+      },
+      {
+        "id": "texas",
+        "label": "#3 Texas",
+        "value": 73.55,
+        "unit": "Power Score",
+        "evidenceState": "modeled_from_public_results",
+        "sourceRefs": [
+          "ncaa-game:6604218",
+          "ncaa-game:6640723",
+          "ncaa-game:6604273",
+          "ncaa-game:6604023"
+        ]
+      },
+      {
+        "id": "texas-tech",
+        "label": "#4 Texas Tech",
+        "value": 68.84,
+        "unit": "Power Score",
+        "evidenceState": "modeled_from_public_results",
+        "sourceRefs": [
+          "ncaa-game:6603982",
+          "ncaa-game:6604300",
+          "ncaa-game:6604067",
+          "ncaa-game:6603880",
+          "ncaa-game:6640617"
+        ]
+      },
+      {
+        "id": "indiana",
+        "label": "#5 Indiana",
+        "value": 68.2,
+        "unit": "Power Score",
+        "evidenceState": "modeled_from_public_results",
+        "sourceRefs": [
+          "ncaa-game:6603946",
+          "ncaa-game:6603697",
+          "ncaa-game:6603947",
+          "ncaa-game:6603948",
+          "ncaa-game:6603949"
+        ]
+      }
+    ]
+  }
+}

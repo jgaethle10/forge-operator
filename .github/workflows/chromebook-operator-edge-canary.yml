@@ -5,6 +5,10 @@ on:
     branches: [main]
     paths:
       - 'systemia/mcp/fabric-local-runtime.mjs'
+      - 'public/.well-known/evercraft-products.json'
+      - 'public/.well-known/evercraft-machine-catalog.json'
+      - 'public/chum/capabilities/lineage-founding-pilot-v1/**'
+      - 'public/chum/capabilities.json'
       - 'systemia/mcp/fabric-public-site.mjs'
       - 'systemia/mcp/fabric-faie-runtime.mjs'
       - 'systemia/faie/**'
@@ -103,6 +107,20 @@ jobs:
               if [[ "$error" == http_404:* ]]; then
                 deployment_wait_started=true
                 echo "AliEV deployment has not reached the owned edge yet ($error); retrying after updater window slice ($attempt/$max_attempts)."
+                sleep 20
+                attempt=$((attempt + 1))
+                continue
+              fi
+            fi
+
+            # Lineage deploys through the same resident Fabric catalog updater.
+            # Retry only absence signatures that can occur while main is converging.
+            # Identity, price, authority, and checkout-boundary failures remain immediate.
+            if [ "$stage" = "lineage_surface" ] && [ "$attempt" -lt "$max_attempts" ]; then
+              if [ "$error" = "lineage_catalog_missing" ] || \
+                 [ "$error" = "http_404:/capabilities/lineage-founding-pilot-v1" ]; then
+                deployment_wait_started=true
+                echo "Lineage deployment has not reached the owned edge yet ($error); retrying after updater window slice ($attempt/$max_attempts)."
                 sleep 20
                 attempt=$((attempt + 1))
                 continue

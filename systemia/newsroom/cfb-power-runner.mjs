@@ -90,8 +90,19 @@ async function main(){
   const throughDate=arg('through');
   const weekLabel=arg('week-label','Current');
   const outDir=arg('out','_cfb_power_run');
-  if(!startDate||!throughDate) throw new Error('Usage: --start YYYY-MM-DD --through YYYY-MM-DD [--season 2026] [--week-label "Entering Week 6"]');
-  const receipt=await runCfbPowerEvidenceCycle({season,startDate,throughDate,weekLabel,outDir});
+  const previousRanksPath=arg('previous-ranks','');
+  if(!startDate||!throughDate) throw new Error('Usage: --start YYYY-MM-DD --through YYYY-MM-DD [--season 2026] [--week-label "Entering Week 6"] [--previous-ranks file.json]');
+  let previousRanks={};
+  if(previousRanksPath){
+    const parsed=JSON.parse(fs.readFileSync(previousRanksPath,'utf8'));
+    previousRanks=parsed?.previous_ranks&&typeof parsed.previous_ranks==='object'
+      ? parsed.previous_ranks
+      : parsed;
+    if(!previousRanks||typeof previousRanks!=='object'||Array.isArray(previousRanks)){
+      throw new Error('cfb_power_previous_ranks_invalid');
+    }
+  }
+  const receipt=await runCfbPowerEvidenceCycle({season,startDate,throughDate,weekLabel,outDir,previousRanks});
   console.log(JSON.stringify(receipt,null,2));
 }
 if(process.argv[1]&&import.meta.url===pathToFileURL(path.resolve(process.argv[1])).href){

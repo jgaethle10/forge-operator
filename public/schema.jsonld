@@ -630,13 +630,13 @@
     },
     {
       "@type": "Service",
-      "@id": "https://jgaethle10.github.io/forge-operator/lineage/#evercraft-service",
+      "@id": "https://fabric.systemiacommandcenters.com/capabilities/lineage-founding-pilot-v1#evercraft-service",
       "name": "Evercraft Lineage",
       "alternateName": [
         "Lineage",
         "Evercraft Lineage Control Room"
       ],
-      "url": "https://jgaethle10.github.io/forge-operator/lineage/",
+      "url": "https://fabric.systemiacommandcenters.com/capabilities/lineage-founding-pilot-v1",
       "provider": {
         "@id": "https://github.com/jgaethle10/forge-operator#evercraft"
       },

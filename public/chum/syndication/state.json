@@ -1,6 +1,6 @@
 {
   "schema": "evercraft.syndication-state.v1",
-  "updated_at": "2026-10-07T17:04:29.265Z",
+  "updated_at": "2026-10-08T06:27:28.566Z",
   "complete_mirror": true,
   "product_hashes": {
     "aliev": "32e6dabf7b53521f73c1def4034ce3aa7cf0880f32c5e07e33184626cdde420a",
@@ -27,7 +27,7 @@
     "evercraft-global-health-atlas": "b19a9a0804682be195481192d72ad10a7c679c44e1213490e715c9e2621ea230",
     "evercraft-home": "7a9155646d4afc1fcfa31d00985491e2f1e809eca7686ecd46b9c05e70269ee3",
     "ibmi-rescue": "f18e321d8b6ae3270fbf2f057f22d3d79abb09dca34e44fc284b60c4e3c6b6a0",
-    "lineage": "d700e0cfe859eb2a0a8c742e281b4970cc9674791af87155da572c40385684c9",
+    "lineage": "90c8263c55af1d0ee1f8d77c7eb52b96cdaa6d4d37c75bf9542805c22a9a8063",
     "evercraft-network": "999dd9c89e397f3f89bc77babd400d40d1e9026a0b34dde6100ff70e2247f188",
     "opportunity-fabric": "3859363a3966a894c003d5a83e73b1f85f9deb08c1d1a7a625c7931127bf72bd",
     "evercraft-physics-atlas": "e06b756e93c48a7fc7d891d039c11cb531682253d739240a2ce637e3632dd47e",
@@ -63,7 +63,7 @@
     "systemia-portfolio-sentinel": "6838b148672caacdfb1213cf6705cfa585d9807ab7bdb2ac009894fa7982d824",
     "systemia-radar": "f3ee625d1c0c33fba92239c21c094cf7d73abe913da012fdd44bae60e624c9e1",
     "systemia-remote-ops": "fb7ec6269cc5a9965165af0898efb98ea5ab2eeee39aff3593ed72c045e42e97",
-    "systemia-university": "324e37f980d302ec1b4821e24f2847560bbcf57b8b3ee8af5f78f46849ff5014",
+    "systemia-university": "881be756bfb60449d70c9561bd026b55c6ee753c706eda539eb25a6e8eab5b2b",
     "systemia-website-audit": "cf7d58464b342e37e61e6eb4f268760d341a8a88e193f761fbd8d10c2e8a4d6e",
     "talent-atlas": "b4f67e33457fc989a76d4a5e134b27bd174061ba2d4f041cb3b87f17387003dd",
     "forensic-record": "39c3ab2a2f185aa1131dd0b5616cff2fab23bfcae22c495335ce63ad1ece439a",

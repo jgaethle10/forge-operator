@@ -1,0 +1,66 @@
+{
+  "schema": "evercraft.rivet.session-freshness-deployment-gate.v1",
+  "mission_key": "rivet-aliev-session-freshness-organism-2026-10-07",
+  "evidence_checked_at": "2026-10-08T01:27:19Z",
+  "scope": "Session freshness source ingestion, historical integrity audit and RIVET report display",
+  "operational_truth": {
+    "active_session_source_refresh_manual": "PASS",
+    "active_refresh_latest_verified_at": "2026-10-08T01:20:15.519Z",
+    "active_refresh_critical_source_operations_passed": 7,
+    "active_refresh_critical_source_operations_failed": 0,
+    "active_refresh_receipt_id": "6ac6efcfcc2e8eff338d3f1d",
+    "historical_first_cycle_eligible_broad": 336,
+    "historical_first_cycle_probed": 24,
+    "historical_first_cycle_warnings": 2,
+    "historical_first_cycle_truth": "Broad selection before regex tightening; DOEE assistance program and old Evercraft Energy URL were false-positive/dead links",
+    "narrowed_inventory_rows_inspected": 1158,
+    "narrowed_session_source_urls": 133,
+    "narrowed_target_sweep_hours": 6,
+    "narrowed_historical_supervisor_cycle_executed": false,
+    "note": "Narrowed selection behavior was validated by unit contract and read-only inventory audit, not a post-hardening authenticated production cycle."
+  },
+  "package_proofs": {
+    "aliev_base44_checkpoint": "6ac6f10383af31f99ad64fec",
+    "aliev_base44_checkpoint_commit": "a6c302db19ec3dfab1eeb91eec3b3ee515d9bd85",
+    "aliev_freshness_contract": "19/19 PASS",
+    "aliev_session_data_contract": "20/20 PASS",
+    "aliev_rivet_report_snapshot_contract": "9/9 PASS",
+    "aliev_build": "PASS",
+    "rivet_customer_build": "PASS (before narrowed watcher)",
+    "owned_runner_commit": "93bcc4163e668190ef1958c3ec7a1d3092292e91",
+    "owned_systemia_service_registration_commit": "89a3bafc3ed5b2e65bf56b260e378a64c741c021",
+    "owned_ci_workflow_run": "https://github.com/jgaethle10/forge-operator/actions/runs/37712992981",
+    "owned_ci_result": "SUCCESS"
+  },
+  "authorization": {
+    "compatibility_refresh_endpoint": "https://aliev.base44.app/api/functions/refreshSessionFreshness",
+    "anonymous_refresh_probe": "REJECTED_401",
+    "caller_authority": "AliEV app admin OR x-systemia-machine-key matching server SYSTEMIA_MACHINE_KEY",
+    "runner_authority": "Systemia resident supervisor, explicitly configured ALIEV_SESSION_REFRESH_URL, machine key from runtime env or protected file",
+    "owned_supervisor_status": "registered_not_activated",
+    "compatibility_workflow_status": "definition_installed_automatic_execution_unverified",
+    "runtime_config_credential_verified": false,
+    "production_hourly_receipt_sequence_verified": false
+  },
+  "user_visible_freshness": {
+    "report_ui_and_pdf_source_change": "IMPLEMENTED_AND_BUILD_PASS",
+    "source_refresh_timestamp": "session_freshness.refreshed_at",
+    "latest_actual_observation": "session_freshness.latest_observed_at",
+    "new_fresh_generated_customer_report_verified": false
+  },
+  "next_gate": [
+    "Provision allowed machine credential to Systemia resident without logging token; verify compatibility service matches secret",
+    "Configure ALIEV_SESSION_REFRESH_URL on Evercraft Compute with exact known authenticated endpoint",
+    "Independently verify hourly Systemia supervisor cycle produces fresh EVOpsSourceRecord receipt",
+    "Verify narrowed 133-source rotating historical watch runs in less than expected task timeout",
+    "Verify production RIVET report UI and PDF render both timestamps from a new report; preserve partner-approved design",
+    "Promote ingestion to owned AliEV collectors after owned runtime parity, not before"
+  ],
+  "prohibitions": [
+    "Do not call a green cron definition proof of automatic execution",
+    "Do not conflate source recheck timestamp with latest observed session",
+    "Do not invent new private session-data rights",
+    "Do not weaken report/customer authorization or RIVET brand controls",
+    "Do not retire Base44 compatibility until independently verified owned route"
+  ]
+}

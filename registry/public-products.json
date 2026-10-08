@@ -584,7 +584,7 @@
       "product_key": "lineage",
       "name": "Evercraft Lineage",
       "class": "governed_multi_agent_history_and_version_control",
-      "canonical_url": "https://jgaethle10.github.io/forge-operator/lineage/",
+      "canonical_url": "https://fabric.systemiacommandcenters.com/capabilities/lineage-founding-pilot-v1",
       "github_record": "./lineage/README.md",
       "llms": "./lineage/llms.txt",
       "registry_name": null,

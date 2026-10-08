@@ -1,0 +1,17 @@
+{
+  "schema": "systemia.university.leaderboard-index.v1",
+  "state": "no_public_approved_submissions",
+  "truth_boundary": "Leaderboards compare approved attempts within the same versioned mission. No cross-mission universal intelligence score is inferred.",
+  "missions": [
+    {
+      "mission_key": "evidence-discipline-001",
+      "mission_version": "1.0.0",
+      "entries": []
+    },
+    {
+      "mission_key": "authority-discipline-001",
+      "mission_version": "1.0.0",
+      "entries": []
+    }
+  ]
+}

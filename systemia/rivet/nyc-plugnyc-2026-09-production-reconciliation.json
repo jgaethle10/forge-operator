@@ -1,0 +1,86 @@
+{
+  "schema": "evercraft.rivet.observed-session-production-reconciliation.v1",
+  "mission_key": "rivet-aliev-session-freshness-organism-2026-10-07",
+  "evidence_type": "readback_verified_existing_production_data_repair",
+  "source": {
+    "name": "NYC DOT PlugNYC Municipal Lots and Garages Charging Data",
+    "socrata_id": "kj7g-u4gp",
+    "url": "https://data.cityofnewyork.us/Transportation/Electric-Vehicle-EV-Charging-Data-Municipal-Lots-a/kj7g-u4gp",
+    "source_record_id": "6a985da9bb42b23fa3da05e2"
+  },
+  "partition": "2026-09",
+  "current_source_publication_through": "2026-09-08",
+  "observed_window": {
+    "start_inclusive": "2026-09-01T00:00:00.000Z",
+    "end_exclusive": "2026-09-09T00:00:00.000Z",
+    "days": 8,
+    "coverage_state": "partial_publisher_lag_or_current_month",
+    "calendar_month_complete": false
+  },
+  "production_records": {
+    "canonical_entity": "EVObservedUsageAggregate",
+    "record_count": 46,
+    "distinct_station_ids": 46,
+    "facility_label_count": 10,
+    "geolocated_records": 46,
+    "valid_observed_sessions": 954,
+    "energy_kwh": 20531.092,
+    "excluded_invalid_or_aborted_source_rows": 187,
+    "source_rows": 1141
+  },
+  "edits": {
+    "inserted_new_session_aggregates": 0,
+    "existing_rows_repaired": 46,
+    "exact_facility_geo_join_records": 40,
+    "previous_geo_rows_preserved": 6,
+    "period_end_changed_from": "2026-10-01T00:00:00.000Z",
+    "period_end_changed_to": "2026-09-09T00:00:00.000Z",
+    "period_granularity": "custom",
+    "data_status": "imported",
+    "derived_metrics_publisher_watermark": "2026-09-08T00:00:00.000Z",
+    "spatial_precision": "facility_anchor_not_exact_physical_charger",
+    "location_lineage": "Identical September source facility labels matched to single-coordinate August source-verified facility anchors. No invented charger GPS."
+  },
+  "live_readback": {
+    "rows_verified": 46,
+    "records_with_correct_interval": 46,
+    "records_with_verified_facility_anchor": 46,
+    "records_with_source_coverage_metadata": 46,
+    "missing_required_fields": 0,
+    "counts_unchanged_after_repair": true,
+    "aliev_public_http_status": 200,
+    "rivet_public_http_status": 200
+  },
+  "non_overlap_policy": [
+    "These are existing source records, not 954 newly acquired sessions.",
+    "Historical registry baseline may already include these sessions; never add 954 without reconciling source-period overlap.",
+    "Raw EVOpsSession transaction records and observed site/period aggregates overlap and must not be summed together.",
+    "Source status INVALID/ABORTED excluded from successful observed charging counts.",
+    "A date when Evercraft checked a dataset is not the publisher observation date.",
+    "Facility coordinates are verified anchors, not physical charger GPS.",
+    "Incomplete September publication is not evidence of low remaining-month utilization."
+  ],
+  "activation_gates": {
+    "base44_hourly_cron_fired_and_receipt_verified": false,
+    "systemia_machine_key_live_verified": false,
+    "source_individual_raw_backfill_completed_verified": false,
+    "new_partner_facing_rivet_report_generated_from_repaired_rows_verified": false,
+    "recent_rivet_customer_report_delivered_verified": false
+  },
+  "code_validation": {
+    "aliev_nyc_publisher_watermark_contract": "4/4 PASS",
+    "aliev_session_freshness_contract": "28/28 PASS",
+    "aliev_historical_watcher_contract": "6/6 PASS",
+    "aliev_session_data_contract": "20/20 PASS",
+    "aliev_rivet_report_snapshot_contract": "9/9 PASS",
+    "aliev_full_build": "PASS",
+    "aliev_checkpoint_id": "6ac7077793e08d053e8ba2b7",
+    "aliev_checkpoint_commit": "5319d94ddf4fe955a2ec9031ae3c24954e392a2f"
+  },
+  "next_gates": [
+    "Run authenticated Systemia scheduled cycle and verify new receipt timestamps",
+    "Run authorized read-only report canary with NYC coordinate near an actual facility",
+    "Prove report-visible session refreshed and latest observed fields on a freshly generated report, preserving partner-approved branding",
+    "Reconcile NYC 46 station aggregates against historical non-overlap baseline"
+  ]
+}

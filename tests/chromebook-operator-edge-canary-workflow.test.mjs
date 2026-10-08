@@ -56,3 +56,21 @@ test('Graphics Command asset rollout receives only bounded Visual Desk deploymen
   assert.match(workflow,/graphics_command_directed_motion_missing/);
   assert.match(workflow,/deployment_wait_started=true/);
 });
+
+
+test('Lineage catalog rollout gets only bounded absence grace',()=>{
+  assert.match(workflow,/public\/chum\/capabilities\.json/);
+  assert.match(workflow,/public\/chum\/capabilities\/lineage-founding-pilot-v1\/\*\*/);
+  assert.match(workflow,/stage\" = \"lineage_surface/);
+  assert.match(workflow,/lineage_catalog_missing/);
+  assert.match(workflow,/http_404:\/capabilities\/lineage-founding-pilot-v1/);
+  assert.match(workflow,/Lineage deployment has not reached the owned edge yet/);
+  assert.match(workflow,/deployment_wait_started=true/);
+});
+
+test('Lineage policy failures do not receive rollout grace',()=>{
+  assert.doesNotMatch(workflow,/lineage_machine_state_drift.*retrying/s);
+  assert.doesNotMatch(workflow,/lineage_commercial_state_drift.*retrying/s);
+  assert.doesNotMatch(workflow,/lineage_founding_pilot_price_drift.*retrying/s);
+  assert.doesNotMatch(workflow,/lineage_unverified_checkout_leak.*retrying/s);
+});

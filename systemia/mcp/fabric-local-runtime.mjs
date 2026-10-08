@@ -147,7 +147,7 @@ function sendInteractiveHtml(res,status,body) {
     'x-frame-options':'DENY',
     'referrer-policy':'no-referrer',
     'permissions-policy':'camera=(), microphone=(), geolocation=()',
-    'content-security-policy':"default-src 'none'; style-src 'unsafe-inline'; script-src 'unsafe-inline'; connect-src 'none'; img-src 'self' data:; base-uri 'none'; frame-ancestors 'none'; form-action 'none'",
+    'content-security-policy':"default-src 'none'; style-src 'unsafe-inline'; script-src 'self'; connect-src 'none'; img-src 'self' data:; base-uri 'none'; frame-ancestors 'none'; form-action 'none'",
   });
   res.end(data);
 }
@@ -331,6 +331,17 @@ function refreshVisualDeskMirror({outputDir,origin}) {
   };
 }
 
+function readSourceReleaseRef(file){
+  const value=String(file||'').trim();
+  if(!value) return null;
+  try{
+    const release=fs.readFileSync(value,'utf8').trim().toLowerCase();
+    return /^[a-f0-9]{40,64}$/.test(release)?release:null;
+  }catch{
+    return null;
+  }
+}
+
 function secureTokenMatches(expected,supplied) {
   const a=Buffer.from(String(expected||''),'utf8');
   const b=Buffer.from(String(supplied||''),'utf8');
@@ -383,10 +394,19 @@ export async function startFabricLocalRuntime({
   visualOrigin='',
   visualIngestToken='',
   sabanCapacityHealthFile='',
+  releaseRefFile='',
   purchaseIntentFetch=fetch,
   purchaseIntentUrl='https://base44.app/api/apps/6a7adc9666bfd8c5c2fb4069/functions/ravenNexusPurchaseIntent',
 }={}) {
   const instanceId='fabric_local_'+crypto.randomBytes(10).toString('hex');
+  const resolvedReleaseRefFile=String(
+    releaseRefFile||
+    process.env.EVERCRAFT_FABRIC_RELEASE_REF_FILE||
+    '/var/lib/evercraft/fabric-update/runtime-release-ref'
+  ).trim();
+  // Capture once at process boot. Health must describe the code that built the
+  // resident mirrors, not whatever marker a later updater writes on disk.
+  const sourceReleaseRef=readSourceReleaseRef(resolvedReleaseRefFile);
   let deploymentReceiptRef='';
   const checkoutHandoffs=new Map();
   const createCheckoutHandoff=({slug,checkoutUrl,amountLabel,orderKey})=>{
@@ -575,6 +595,8 @@ export async function startFabricLocalRuntime({
     version:'1.1.0',
     runtime:nodeAttestationProvider?'Evercraft Compute':'Evercraft Fabric local',
     instance_id:instanceId,
+    source_release_ref:sourceReleaseRef,
+    source_release_ref_bound:Boolean(sourceReleaseRef),
     deployment_receipt_bound:Boolean(deploymentReceiptRef),
     deployment_receipt_ref:deploymentReceiptRef||null,
     transport:'Streamable HTTP',
@@ -698,6 +720,24 @@ export async function startFabricLocalRuntime({
           200,
           renderAliEvLanding(),
           {contentType:'text/html; charset=utf-8'}
+        );
+      }
+
+      if (req.method==='GET' && req.url==='/earthworks/controller.mjs') {
+        return sendBuffer(
+          res,
+          200,
+          fs.readFileSync(path.resolve(moduleDir,'../earthworks-autonomy/fleet-controller.mjs')),
+          {contentType:'application/javascript; charset=utf-8',cacheControl:'no-store'}
+        );
+      }
+
+      if (req.method==='GET' && req.url==='/earthworks/app.mjs') {
+        return sendBuffer(
+          res,
+          200,
+          fs.readFileSync(path.resolve(moduleDir,'./earthworks-simulator-app.mjs')),
+          {contentType:'application/javascript; charset=utf-8',cacheControl:'no-store'}
         );
       }
 
@@ -1284,13 +1324,18 @@ if (direct) {
     process.env.EVERCRAFT_SABAN_CAPACITY_HEALTH_FILE||
       '/var/lib/evercraft/fabric-secrets/saban-capacity-health.json'
   ));
+  const releaseRefFile=String(arg(
+    '--release-ref-file',
+    process.env.EVERCRAFT_FABRIC_RELEASE_REF_FILE||
+      '/var/lib/evercraft/fabric-update/runtime-release-ref'
+  ));
   let visualIngestToken=String(process.env.EVERCRAFT_VISUAL_INGEST_TOKEN||'').trim();
   if(!visualIngestToken && visualIngestTokenFile && fs.existsSync(visualIngestTokenFile)){
     visualIngestToken=fs.readFileSync(visualIngestTokenFile,'utf8').trim();
   }
   const runtime=await startFabricLocalRuntime({
     host,port,challengeToken,nodeReceiptPath,allocatorTokenFile,
-    visualStateDir,visualOrigin,visualIngestToken,sabanCapacityHealthFile
+    visualStateDir,visualOrigin,visualIngestToken,sabanCapacityHealthFile,releaseRefFile
   });
   process.stdout.write(JSON.stringify({
     ok:true,

@@ -29,3 +29,32 @@ test('owned Fabric updater creates Visual Desk ingest credential without writing
   assert.match(script,/VISUAL_INGEST_TOKEN_CREATED=true/);
   assert.doesNotMatch(script,/printf .*VISUAL_INGEST_TOKEN.*last-update\.json/);
 });
+
+
+test('owned Fabric updater verifies the EarthWorks Live Yard is resident, not just catalog-equivalent',()=>{
+  assert.match(script,/earthworks_simulator_path!=='\/earthworks'/);
+  assert.match(script,/earthworks_simulator_authority!=='interactive_software_simulation_only'/);
+  assert.match(script,/http:\/\/127\.0\.0\.1:8787\/earthworks/);
+  assert.match(script,/Live Yard 001/);
+  assert.match(script,/STOP ALL/);
+});
+
+test('owned Fabric updater binds resident health to the exact checkout release',()=>{
+  assert.match(script,/RUNTIME_RELEASE_REF_FILE="\$STATE_DIR\/runtime-release-ref"/);
+  assert.match(script,/write_runtime_release_ref\(\)/);
+  assert.match(script,/install -o root -g "\$RUN_USER" -m 0640 "\$tmp" "\$RUNTIME_RELEASE_REF_FILE"/);
+  assert.match(script,/EXPECTED_RELEASE="\$expected_release"/);
+  assert.match(script,/source_release_ref/);
+  assert.match(script,/write_runtime_release_ref "\$before"/);
+  assert.match(script,/write_runtime_release_ref "\$target"/);
+  assert.match(script,/verify_current_runtime "\$expected_count" "\$before"/);
+  assert.match(script,/verify_current_runtime "\$expected_count" "\$target"/);
+  assert.match(script,/write_runtime_release_ref "\$before" \|\| true/);
+});
+
+test('current checkout repairs stale resident Fabric process with one bounded restart',()=>{
+  assert.match(script,/resident Fabric runtime drifted/);
+  assert.match(script,/restarting once/);
+  assert.match(script,/systemctl restart "\$SERVICE"/);
+  assert.match(script,/current Fabric verification failed after one bounded restart/);
+});

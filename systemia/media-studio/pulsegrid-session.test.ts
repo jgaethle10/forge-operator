@@ -37,7 +37,7 @@ test('PulseGrid migrates older sparse browser sessions into the canonical graph'
       clips:[{id:'keys-scene-1',steps:[1,0,0,0]}]
     }]
   });
-  assert.equal(migrated.version,'0.10.0');
+  assert.equal(migrated.version,PULSEGRID_ENGINE_VERSION);
   assert.equal(migrated.transport.bpm,128);
   assert.equal(migrated.tracks[0].clips[0].bars,1);
   assert.equal(migrated.tracks[0].clips[0].steps.length,16);
@@ -357,4 +357,104 @@ test('PulseGrid canonical core bundles for the browser without Node built-ins',a
   const output=result.outputFiles[0].text;
   assert.match(output,/PULSEGRID_ENGINE_VERSION/);
   assert.doesNotMatch(output,/node:crypto/);
+});
+
+
+test('PulseGrid note expression edits are bounded, receipt-backed and reversible',()=>{
+  let session=createPulseGridSession('Expression Proof');
+  let result=applyPulseGridOperation(session,{
+    type:'note.add',track_id:'keys',scene:0,
+    note:{id:'expr-note',pitch:67,start:4,length:2,velocity:.5,probability:.8,microtiming:10},
+  },'controller');
+  session=result.session;
+  const before=structuredClone(session.tracks.find((track)=>track.id==='keys')!.clips[0].notes[0]);
+
+  result=applyPulseGridOperation(session,{
+    type:'note.set_expression',
+    track_id:'keys',
+    scene:0,
+    note_id:'expr-note',
+    velocity:1.8,
+    probability:-1,
+    microtiming:1600,
+  },'human');
+  session=result.session;
+  const edited=session.tracks.find((track)=>track.id==='keys')!.clips[0].notes[0];
+  assert.equal(edited.velocity,1);
+  assert.equal(edited.probability,0);
+  assert.equal(edited.microtiming,1000);
+  assert.equal(result.receipt.operation,'note.set_expression');
+  assert.deepEqual(result.receipt.targets,[`clip:${session.tracks.find((track)=>track.id==='keys')!.clips[0].id}.note:expr-note.expression`]);
+
+  const undone=undoPulseGridReceipt(session,result.receipt.id,'human');
+  assert.deepEqual(
+    undone.session.tracks.find((track)=>track.id==='keys')!.clips[0].notes[0],
+    before,
+  );
+  assert.equal(validatePulseGridSession(undone.session).ok,true);
+});
+
+test('PulseGrid rejects empty note expression operations',()=>{
+  let session=createPulseGridSession();
+  session=applyPulseGridOperation(session,{
+    type:'note.add',track_id:'keys',scene:0,
+    note:{id:'expr-empty',pitch:60,start:0},
+  }).session;
+  assert.throws(()=>applyPulseGridOperation(session,{
+    type:'note.set_expression',
+    track_id:'keys',
+    scene:0,
+    note_id:'expr-empty',
+  }),/requires at least one value/);
+});
+
+
+test('PulseGrid automation point edits are bounded, targeted and reversible',()=>{
+  let session=createPulseGridSession('Automation Proof');
+  const clip=session.tracks.find((track)=>track.id==='keys')!.clips[0];
+  const before=clip.automation.filter[3];
+
+  const result=applyPulseGridOperation(session,{
+    type:'clip.set_automation_point',
+    track_id:'keys',
+    scene:0,
+    parameter:'filter',
+    step:3,
+    value:2.5,
+  },'human');
+  session=result.session;
+  const edited=session.tracks.find((track)=>track.id==='keys')!.clips[0];
+  assert.equal(edited.automation.filter[3],1);
+  assert.equal(result.receipt.before,before);
+  assert.equal(result.receipt.after,1);
+  assert.deepEqual(result.receipt.targets,[`clip:${edited.id}.automation.filter[3]`]);
+
+  const undone=undoPulseGridReceipt(session,result.receipt.id,'human');
+  assert.equal(
+    undone.session.tracks.find((track)=>track.id==='keys')!.clips[0].automation.filter[3],
+    before,
+  );
+  assert.equal(validatePulseGridSession(undone.session).ok,true);
+});
+
+test('PulseGrid automation rejects out-of-range steps and clamps lane values',()=>{
+  const session=createPulseGridSession();
+  assert.throws(()=>applyPulseGridOperation(session,{
+    type:'clip.set_automation_point',
+    track_id:'keys',
+    scene:0,
+    parameter:'volume',
+    step:999,
+    value:.5,
+  }),/automation step is out of range/);
+
+  const result=applyPulseGridOperation(session,{
+    type:'clip.set_automation_point',
+    track_id:'keys',
+    scene:0,
+    parameter:'volume',
+    step:0,
+    value:-4,
+  });
+  assert.equal(result.session.tracks.find((track)=>track.id==='keys')!.clips[0].automation.volume[0],0);
 });

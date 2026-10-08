@@ -10,7 +10,9 @@ function iso(value, field){
   return d.toISOString();
 }
 function dateLabel(value){
-  return new Date(value).toLocaleDateString('en-US', {
+  const raw=clean(value);
+  const normalized=/^\d{4}-\d{2}-\d{2}$/.test(raw)?raw+'T12:00:00.000Z':raw;
+  return new Date(normalized).toLocaleDateString('en-US', {
     timeZone:'America/Los_Angeles',
     month:'long',
     day:'numeric',
@@ -23,12 +25,50 @@ function topNames(rows, count=5){
 function recordLabel(row){
   return String(row.record?.wins ?? 0) + '-' + String(row.record?.losses ?? 0);
 }
+function movementSection(top25){
+  const changed=top25.filter(row=>Number.isFinite(Number(row.movement))&&Number(row.movement)!==0);
+  if(!changed.length) return null;
+  const risers=[...changed].filter(row=>Number(row.movement)>0)
+    .sort((a,b)=>Number(b.movement)-Number(a.movement)||Number(a.rank)-Number(b.rank));
+  const fallers=[...changed].filter(row=>Number(row.movement)<0)
+    .sort((a,b)=>Number(a.movement)-Number(b.movement)||Number(a.rank)-Number(b.rank));
+  const describe=(rows,direction)=>rows.slice(0,4).map(row=>{
+    const amount=Math.abs(Number(row.movement));
+    return row.team_name+' '+direction+' '+amount+' to No. '+row.rank;
+  }).join('; ');
+  const parts=[];
+  if(risers.length) parts.push('Risers: '+describe(risers,'up'));
+  if(fallers.length) parts.push('Fallers: '+describe(fallers,'down'));
+  return {
+    heading:'Movement since the last edition',
+    body:parts.join('. ')+'. Movement is computed against the latest strictly earlier persisted Evercraft edition, so a rerun of the same evidence window cannot manufacture a new arrow.',
+  };
+}
+function pollComparisonSection(comparison){
+  if(!comparison) return null;
+  if(comparison.schema!=='evercraft.cfb.poll-comparison.v1') throw new Error('cfb_story_poll_comparison_schema_invalid');
+  if(comparison.authority_boundary?.poll_used_as_model_input!==false||comparison.authority_boundary?.comparison_only!==true){
+    throw new Error('cfb_story_poll_comparison_authority_invalid');
+  }
+  const rows=(comparison.largest_disagreements||[]).slice(0,5);
+  if(!rows.length) return null;
+  const wording=rows.map(row=>{
+    const gap=Math.abs(Number(row.rank_delta));
+    const direction=Number(row.rank_delta)>0?'higher':'lower';
+    return row.team_name+' '+gap+' spots '+direction+' (Evercraft No. '+row.evercraft_rank+', '+comparison.poll.poll_name+' No. '+row.poll_rank+')';
+  }).join('; ');
+  return {
+    heading:'Where Evercraft disagrees with '+comparison.poll.poll_name,
+    body:'Against the '+comparison.poll.poll_name+' published '+dateLabel(comparison.poll.published_date)+', the largest current gaps are: '+wording+'. These disagreements are frozen for later accountability. They are not evidence that Evercraft or the poll is already correct, and the poll is never used as an input to the Power Index.',
+  };
+}
 
 export function buildCfbPowerStoryDraft({
   ranking,
   ledger,
   generatedAt = new Date().toISOString(),
   freshnessHours = 168,
+  pollComparison = null,
 } = {}){
   if(ranking?.schema !== 'evercraft.cfb-power-rankings.v1') throw new Error('cfb_story_ranking_schema_invalid');
   if(!['evercraft.cfb.completed-game-ledger.v1','evercraft.cfb.completed-game-ledger.v2'].includes(ledger?.schema)) throw new Error('cfb_story_ledger_schema_invalid');
@@ -44,6 +84,31 @@ export function buildCfbPowerStoryDraft({
   const runnerUp = top25[1];
   const dataUrl = ledger.source_urls?.at(-1);
   if(!clean(dataUrl)) throw new Error('cfb_story_ncaa_data_url_required');
+  if(pollComparison&&clean(pollComparison.ranking_run_id)!==clean(ranking.run_id)){
+    throw new Error('cfb_story_poll_comparison_run_mismatch');
+  }
+  const movement = movementSection(top25);
+  const pollSection = pollComparisonSection(pollComparison);
+  const sections = [
+      {
+        heading:'What the model sees right now',
+        body:'The first five positions in this edition are ' + topNames(top25, 5) + '. This is not a ballot and it is not designed to copy one. The ordering comes from the season ledger attached to ranking run ' + ranking.run_id + '. Completed results are adjusted for opponent strength and designated venue, scoring margins are capped so one demolition cannot own an entire résumé, and the most recent games matter without erasing the rest of the season. The top line is therefore a snapshot of demonstrated team strength through the evidence cutoff, not a prediction that the current order will survive the next Saturday.',
+      },
+      movement,
+      pollSection,
+      {
+        heading:'Why ' + leader.team_name + ' is No. 1',
+        body:leader.team_name + ' is ' + recordLabel(leader) + ' and owns a Power Score of ' + leader.power_score.toFixed(2) + ' with ' + Math.round(leader.confidence * 100) + ' percent model confidence. Its current component profile combines a result-quality score of ' + Number(leader.components.result_quality).toFixed(1) + ', opponent-adjusted efficiency of ' + Number(leader.components.efficiency).toFixed(1) + ', schedule strength of ' + Number(leader.components.schedule_strength).toFixed(1) + ' and recent-form score of ' + Number(leader.components.recent_form).toFixed(1) + '. The important part is not any single number. The lead survives several independent pieces of the current results ledger rather than depending on poll reputation or one headline win.',
+      },
+      {
+        heading:'Where uncertainty still lives',
+        body:'This edition deliberately leaves availability and turnover-sustainability inputs unfilled when they are not backed by a governed evidence feed. Missing information is not converted into zero and modeled values are not labeled as observations. Every team therefore carries an explicit confidence value and a missing-component list in the machine-readable ranking receipt. That makes this edition more conservative than a ranking that quietly guesses at injuries, quarterback availability or turnover luck, and it gives future versions a clean place to improve as those evidence lanes become reliable.',
+      },
+      {
+        heading:'What happens next',
+        body:'The ranking is designed to move when the evidence moves. Each new completed-game ledger can be replayed against the same versioned model, compared with the prior published edition and scored later against what happened on the field. Verified player availability and deeper efficiency measures can be added as governed evidence lanes without rewriting history. The comparison and accountability ledgers preserve where Evercraft disagreed with consensus and whether those directional calls held up later. The goal is not to win an argument on publication day. It is to build a public record showing where Evercraft was early, where it was wrong and whether the model becomes more predictive as the season develops.',
+      },
+    ].filter(Boolean);
 
   return {
     schema:'evercraft.journal.story.v1',
@@ -74,6 +139,13 @@ export function buildCfbPowerStoryDraft({
         url:'https://fabric.systemiacommandcenters.com/journal/data/' + slug + '.json',
         evidence_state:'verified',
       },
+      ...(pollComparison?[{
+        source_id:'cfb-poll-baseline-' + pollComparison.poll.poll_id,
+        label:pollComparison.poll.poll_name + ' comparison baseline published ' + pollComparison.poll.published_date,
+        publisher:pollComparison.poll.source_authority,
+        url:pollComparison.poll.source_url,
+        evidence_state:'verified',
+      }]:[]),
     ],
     machine_evidence:{
       schema:'evercraft.journal.machine-evidence.v1',
@@ -81,6 +153,7 @@ export function buildCfbPowerStoryDraft({
       payload:{
         schema:'evercraft.cfb.edition-evidence.v1',
         ranking,
+        poll_comparison:pollComparison,
         ledger:{
           schema:ledger.schema,
           source:ledger.source,
@@ -101,13 +174,22 @@ export function buildCfbPowerStoryDraft({
       {
         claim:'The ranking evidence ledger contains ' + ledger.games.length + ' completed games through ' + throughDay + '.',
         evidence_state:'verified',
-        source_refs:['ncaa-fbs-scoreboard','evercraft-cfb-edition-evidence'],
+        source_refs:[
+          'ncaa-fbs-scoreboard',
+          'evercraft-cfb-edition-evidence',
+          ...(pollComparison?['cfb-poll-baseline-' + pollComparison.poll.poll_id]:[]),
+        ],
       },
       {
         claim:leader.team_name + ' ranks No. 1 in Evercraft CFBPI run ' + ranking.run_id + ', ahead of ' + runnerUp.team_name + '.',
         evidence_state:'verified',
         source_refs:['evercraft-cfb-edition-evidence'],
       },
+      ...(pollComparison&&pollComparison.largest_disagreements?.length?[{
+        claim:'Evercraft and ' + pollComparison.poll.poll_name + ' differ by at least ' + pollComparison.largest_disagreements[0].absolute_gap + ' ranking positions on ' + pollComparison.largest_disagreements[0].team_name + ' in this frozen comparison.',
+        evidence_state:'verified',
+        source_refs:['evercraft-cfb-edition-evidence','cfb-poll-baseline-' + pollComparison.poll.poll_id],
+      }]:[]),
     ],
     ranking_table:{
       schema:'evercraft.journal.ranking-table.v1',
@@ -122,24 +204,7 @@ export function buildCfbPowerStoryDraft({
         confidence:row.confidence,
       })),
     },
-    sections:[
-      {
-        heading:'What the model sees right now',
-        body:'The first five positions in this edition are ' + topNames(top25, 5) + '. This is not a ballot and it is not designed to copy one. The ordering comes from the season ledger attached to ranking run ' + ranking.run_id + '. Completed results are adjusted for opponent strength and designated venue, scoring margins are capped so one demolition cannot own an entire résumé, and the most recent games matter without erasing the rest of the season. The top line is therefore a snapshot of demonstrated team strength through the evidence cutoff, not a prediction that the current order will survive the next Saturday.',
-      },
-      {
-        heading:'Why ' + leader.team_name + ' is No. 1',
-        body:leader.team_name + ' is ' + recordLabel(leader) + ' and owns a Power Score of ' + leader.power_score.toFixed(2) + ' with ' + Math.round(leader.confidence * 100) + ' percent model confidence. Its current component profile combines a result-quality score of ' + Number(leader.components.result_quality).toFixed(1) + ', opponent-adjusted efficiency of ' + Number(leader.components.efficiency).toFixed(1) + ', schedule strength of ' + Number(leader.components.schedule_strength).toFixed(1) + ' and recent-form score of ' + Number(leader.components.recent_form).toFixed(1) + '. The important part is not any single number. The lead survives several independent pieces of the current results ledger rather than depending on poll reputation or one headline win.',
-      },
-      {
-        heading:'Where uncertainty still lives',
-        body:'This edition deliberately leaves availability and turnover-sustainability inputs unfilled when they are not backed by a governed evidence feed. Missing information is not converted into zero and modeled values are not labeled as observations. Every team therefore carries an explicit confidence value and a missing-component list in the machine-readable ranking receipt. That makes this edition more conservative than a ranking that quietly guesses at injuries, quarterback availability or turnover luck, and it gives future versions a clean place to improve as those evidence lanes become reliable.',
-      },
-      {
-        heading:'What happens next',
-        body:'The ranking is designed to move when the evidence moves. Each new completed-game ledger can be replayed against the same versioned model, compared with the prior published edition and scored later against what happened on the field. Future editions can add verified player availability, deeper efficiency measures and consensus-poll comparison without rewriting history. The goal is not to win an argument on publication day. It is to build a public record showing where Evercraft was early, where it was wrong and whether the model becomes more predictive as the season develops.',
-      },
-    ],
+    sections,
     uncertainty_notes:[
       'Player availability is not yet included unless a governed evidence feed is added.',
       'Turnover sustainability is intentionally missing in this edition rather than inferred.',
@@ -189,6 +254,7 @@ export function buildCfbPowerStoryDraft({
       derivative_plan:[
         {format:'social_square', angle:'Top 10 with Power Score and movement'},
         {format:'instagram_carousel', angle:'Top 25 in five clean ranking panels'},
+        ...(pollComparison?[{format:'social_square', angle:'Largest Evercraft versus '+pollComparison.poll.poll_name+' ranking gaps'}]:[]),
         {format:'youtube_short', angle:'The five teams Evercraft rates highest right now'},
         {format:'linkedin', angle:'How a receipt-backed sports ranking differs from a ballot'},
       ],
@@ -230,9 +296,11 @@ async function main(){
   const rankingPath = process.argv[2] || '_cfb_power_run/cfb-power-rankings.json';
   const ledgerPath = process.argv[3] || '_cfb_power_run/completed-games.json';
   const outputPath = process.argv[4] || '_cfb_power_run/journal-story-draft.json';
+  const pollComparisonPath = process.argv[5] || '';
   const ranking = JSON.parse(fs.readFileSync(rankingPath, 'utf8'));
   const ledger = JSON.parse(fs.readFileSync(ledgerPath, 'utf8'));
-  const story = buildCfbPowerStoryDraft({ranking, ledger});
+  const pollComparison = pollComparisonPath ? JSON.parse(fs.readFileSync(pollComparisonPath,'utf8')) : null;
+  const story = buildCfbPowerStoryDraft({ranking, ledger, pollComparison});
   fs.mkdirSync(path.dirname(outputPath), {recursive:true});
   fs.writeFileSync(outputPath, JSON.stringify(story, null, 2) + '\n');
   console.log(JSON.stringify({

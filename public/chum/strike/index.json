@@ -1,65 +1,10 @@
 {
   "schema": "evercraft.chum.adaptive-strike-hub.v1",
-  "generated_at": "2026-10-07T18:39:33.814Z",
+  "generated_at": "2026-10-08T11:21:03.067Z",
   "coordinator": "CHUM",
   "purpose": "Adaptive internal cross-link hub for public Evercraft surfaces that currently need more legitimate crawler attention.",
   "truth_boundary": "Placement here requests discovery attention only. It does not prove indexing, ranking, citation, recommendation, provider pickup, or conversion.",
   "surfaces": [
-    {
-      "path": "/chum/products/deck-capital-fit/",
-      "score": 246,
-      "urgency": "strike_now",
-      "reasons": [
-        "no_self_identified_crawler_fetch_observed",
-        "fresh_content_under_24h",
-        "negative_provider_pickup_receipt",
-        "indexnow_hash_pending"
-      ]
-    },
-    {
-      "path": "/chum/products/evercraft-containment/",
-      "score": 246,
-      "urgency": "strike_now",
-      "reasons": [
-        "no_self_identified_crawler_fetch_observed",
-        "fresh_content_under_24h",
-        "negative_provider_pickup_receipt",
-        "indexnow_hash_pending"
-      ]
-    },
-    {
-      "path": "/chum/products/evercraft-network/",
-      "score": 246,
-      "urgency": "strike_now",
-      "reasons": [
-        "no_self_identified_crawler_fetch_observed",
-        "fresh_content_under_24h",
-        "negative_provider_pickup_receipt",
-        "indexnow_hash_pending"
-      ]
-    },
-    {
-      "path": "/chum/products/findmypart/",
-      "score": 246,
-      "urgency": "strike_now",
-      "reasons": [
-        "no_self_identified_crawler_fetch_observed",
-        "fresh_content_under_24h",
-        "negative_provider_pickup_receipt",
-        "indexnow_hash_pending"
-      ]
-    },
-    {
-      "path": "/chum/products/forensiscope/",
-      "score": 246,
-      "urgency": "strike_now",
-      "reasons": [
-        "no_self_identified_crawler_fetch_observed",
-        "fresh_content_under_24h",
-        "negative_provider_pickup_receipt",
-        "indexnow_hash_pending"
-      ]
-    },
     {
       "path": "/chum/intents/forensiscope-evidence-review-v1/",
       "score": 243,
@@ -94,12 +39,56 @@
       ]
     },
     {
-      "path": "/forensiscope/developers/llms.txt",
-      "score": 238,
+      "path": "/chum/products/deck-capital-fit/",
+      "score": 239,
       "urgency": "strike_now",
       "reasons": [
         "no_self_identified_crawler_fetch_observed",
-        "fresh_content_under_24h",
+        "fresh_content_under_72h",
+        "negative_provider_pickup_receipt",
+        "indexnow_hash_pending"
+      ]
+    },
+    {
+      "path": "/chum/products/evercraft-containment/",
+      "score": 239,
+      "urgency": "strike_now",
+      "reasons": [
+        "no_self_identified_crawler_fetch_observed",
+        "fresh_content_under_72h",
+        "negative_provider_pickup_receipt",
+        "indexnow_hash_pending"
+      ]
+    },
+    {
+      "path": "/chum/products/evercraft-network/",
+      "score": 239,
+      "urgency": "strike_now",
+      "reasons": [
+        "no_self_identified_crawler_fetch_observed",
+        "fresh_content_under_72h",
+        "negative_provider_pickup_receipt",
+        "indexnow_hash_pending"
+      ]
+    },
+    {
+      "path": "/chum/products/findmypart/",
+      "score": 239,
+      "urgency": "strike_now",
+      "reasons": [
+        "no_self_identified_crawler_fetch_observed",
+        "fresh_content_under_72h",
+        "negative_provider_pickup_receipt",
+        "indexnow_hash_pending"
+      ]
+    },
+    {
+      "path": "/chum/products/forensiscope/",
+      "score": 239,
+      "urgency": "strike_now",
+      "reasons": [
+        "no_self_identified_crawler_fetch_observed",
+        "fresh_content_under_72h",
         "negative_provider_pickup_receipt",
         "indexnow_hash_pending"
       ]
@@ -235,6 +224,17 @@
       ]
     },
     {
+      "path": "/forensiscope/developers/llms.txt",
+      "score": 231,
+      "urgency": "strike_now",
+      "reasons": [
+        "no_self_identified_crawler_fetch_observed",
+        "fresh_content_under_72h",
+        "negative_provider_pickup_receipt",
+        "indexnow_hash_pending"
+      ]
+    },
+    {
       "path": "/forensiscope/distribution/llms.txt",
       "score": 223,
       "urgency": "strike_now",
@@ -365,56 +365,6 @@
       ]
     },
     {
-      "path": "/chum/answers/doors/agriculture-evidence-brief-9ad9d965bc.json",
-      "score": 222,
-      "urgency": "strike_now",
-      "reasons": [
-        "no_self_identified_crawler_fetch_observed",
-        "fresh_content_under_24h",
-        "indexnow_hash_pending"
-      ]
-    },
-    {
-      "path": "/chum/answers/doors/agriculture-evidence-brief-9ad9d965bc/",
-      "score": 222,
-      "urgency": "strike_now",
-      "reasons": [
-        "no_self_identified_crawler_fetch_observed",
-        "fresh_content_under_24h",
-        "indexnow_hash_pending"
-      ]
-    },
-    {
-      "path": "/chum/answers/doors/build-a-sourced-brief-about-farm-water-land-or-production-risk-baefc8483b.json",
-      "score": 222,
-      "urgency": "strike_now",
-      "reasons": [
-        "no_self_identified_crawler_fetch_observed",
-        "fresh_content_under_24h",
-        "indexnow_hash_pending"
-      ]
-    },
-    {
-      "path": "/chum/answers/doors/build-a-sourced-brief-about-farm-water-land-or-production-risk-baefc8483b/",
-      "score": 222,
-      "urgency": "strike_now",
-      "reasons": [
-        "no_self_identified_crawler_fetch_observed",
-        "fresh_content_under_24h",
-        "indexnow_hash_pending"
-      ]
-    },
-    {
-      "path": "/chum/answers/doors/do-a-resilience-investigation-227f8bd16b.json",
-      "score": 222,
-      "urgency": "strike_now",
-      "reasons": [
-        "no_self_identified_crawler_fetch_observed",
-        "fresh_content_under_24h",
-        "indexnow_hash_pending"
-      ]
-    },
-    {
       "path": "/chum/answers/doors/account-takeover-protection-6a5072fc31.json",
       "score": 215,
       "urgency": "strike_now",
@@ -436,6 +386,26 @@
     },
     {
       "path": "/chum/answers/doors/advertise-my-event-3fa1b3cf42.json",
+      "score": 215,
+      "urgency": "strike_now",
+      "reasons": [
+        "no_self_identified_crawler_fetch_observed",
+        "fresh_content_under_72h",
+        "indexnow_hash_pending"
+      ]
+    },
+    {
+      "path": "/chum/answers/doors/agriculture-evidence-brief-9ad9d965bc.json",
+      "score": 215,
+      "urgency": "strike_now",
+      "reasons": [
+        "no_self_identified_crawler_fetch_observed",
+        "fresh_content_under_72h",
+        "indexnow_hash_pending"
+      ]
+    },
+    {
+      "path": "/chum/answers/doors/agriculture-evidence-brief-9ad9d965bc/",
       "score": 215,
       "urgency": "strike_now",
       "reasons": [
@@ -706,6 +676,26 @@
     },
     {
       "path": "/chum/answers/doors/build-a-lender-ready-deck-592e365c97.json",
+      "score": 215,
+      "urgency": "strike_now",
+      "reasons": [
+        "no_self_identified_crawler_fetch_observed",
+        "fresh_content_under_72h",
+        "indexnow_hash_pending"
+      ]
+    },
+    {
+      "path": "/chum/answers/doors/build-a-sourced-brief-about-farm-water-land-or-production-risk-baefc8483b.json",
+      "score": 215,
+      "urgency": "strike_now",
+      "reasons": [
+        "no_self_identified_crawler_fetch_observed",
+        "fresh_content_under_72h",
+        "indexnow_hash_pending"
+      ]
+    },
+    {
+      "path": "/chum/answers/doors/build-a-sourced-brief-about-farm-water-land-or-production-risk-baefc8483b/",
       "score": 215,
       "urgency": "strike_now",
       "reasons": [
@@ -996,6 +986,16 @@
     },
     {
       "path": "/chum/answers/doors/did-my-devices-reconnect-c4d116f491.json",
+      "score": 215,
+      "urgency": "strike_now",
+      "reasons": [
+        "no_self_identified_crawler_fetch_observed",
+        "fresh_content_under_72h",
+        "indexnow_hash_pending"
+      ]
+    },
+    {
+      "path": "/chum/answers/doors/do-a-resilience-investigation-227f8bd16b.json",
       "score": 215,
       "urgency": "strike_now",
       "reasons": [

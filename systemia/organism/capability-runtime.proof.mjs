@@ -1,4 +1,6 @@
 import assert from 'node:assert/strict';
+import {generateKeyPairSync,sign} from 'node:crypto';
+import {humanApprovalMessage} from './goal-human-approval.mjs';
 import {
   admitGoalPlan,
   authorizeGoalWork,
@@ -10,6 +12,22 @@ import {
   selectCapabilityAdapter,
 } from './capability-runtime.mjs';
 
+const {publicKey,privateKey}=generateKeyPairSync('ed25519');
+const trustedPublicKeys={'systemia-human-gate-v1':publicKey.export({format:'pem',type:'spki'})};
+const approvalClaims={
+ schema:'evercraft.goal.human-approval-claims.v1',
+ mission_key:'capability-runtime-proof',goal_key:'capability-runtime-proof',
+ work_key:'commercial',scope:'systemia.goal.authorize',approved:true,
+ receipt_ref:'human:approval:capability-proof',
+ issued_at:'2026-09-24T19:41:00.000Z',expires_at:'2026-09-24T20:41:00.000Z',
+};
+const signedApproval={
+ schema:'evercraft.goal.human-approval-envelope.v1',
+ key_id:'systemia-human-gate-v1',claims:approvalClaims,
+ signature_base64:sign(null,humanApprovalMessage(approvalClaims),privateKey).toString('base64'),
+};
+
+let commercialCalls=0;
 const registry = createCapabilityRegistry([
   {
     capability_key: 'research.readonly.v1',
@@ -29,6 +47,7 @@ const registry = createCapabilityRegistry([
     authority: 'human-confirmed',
     human_gate_required: true,
     async execute({ work }) {
+      commercialCalls += 1;
       return {
         result: 'complete',
         receipt_ref: `exec:${work.work_key}`,
@@ -70,31 +89,31 @@ assert.equal(research.state.tasks[0].status, 'complete');
 state = research.state;
 
 const held = await executeGoalWorkWithAdapter({
-  state,
-  workKey: 'commercial',
-  registry,
-  now: new Date('2026-09-24T19:42:00Z'),
-}).catch((error) => ({ error }));
-
-assert.ok(held.error);
-assert.match(held.error.message, /not ready/);
+  state, workKey:'commercial',registry,
+  now:new Date('2026-09-24T19:42:00Z'),
+});
+assert.equal(held.executed,false);
+assert.equal(held.reason,'durable_dispatch_required');
+assert.equal(commercialCalls,0);
 
 state = authorizeGoalWork({
   state,
-  workKey: 'commercial',
-  authorizationRef: 'human:approval:capability-proof',
-  now: new Date('2026-09-24T19:43:00Z'),
+  workKey:'commercial',approval:signedApproval,trustedPublicKeys,
+  now:new Date('2026-09-24T19:43:00Z'),
 });
 
-const commercial = await executeGoalWorkWithAdapter({
-  state,
-  workKey: 'commercial',
-  registry,
-  now: new Date('2026-09-24T19:44:00Z'),
+// Even a verified signature never upgrades an in-memory callback to a durable
+// dispatch. The original mission and authorization remain unchanged.
+const signedButVolatile = await executeGoalWorkWithAdapter({
+  state, workKey:'commercial',registry,trustedPublicKeys,
+  now:new Date('2026-09-24T19:44:00Z'),
 });
-assert.equal(commercial.ok, true);
-assert.equal(commercial.state.status, 'complete');
-assert.equal(commercial.receipt.authority, 'human-confirmed');
+assert.equal(signedButVolatile.ok,false);
+assert.equal(signedButVolatile.executed,false);
+assert.equal(signedButVolatile.reason,'durable_dispatch_required');
+assert.equal(signedButVolatile.receipt.durable_checkpoint_persisted,false);
+assert.equal(signedButVolatile.state.tasks.find(t=>t.work_key==='commercial').status,'pending');
+assert.equal(commercialCalls,0);
 
 const noAdapterRegistry = createCapabilityRegistry([]);
 const unavailable = await executeGoalWorkWithAdapter({
@@ -141,4 +160,5 @@ console.log(JSON.stringify({
   preserved_human_gate: true,
   no_adapter_fails_closed: true,
   adapter_gate_cannot_be_weakened_by_plan: true,
+  volatile_stateful_dispatch_held: true,
 }, null, 2));

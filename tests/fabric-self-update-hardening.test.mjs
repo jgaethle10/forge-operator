@@ -14,7 +14,13 @@ test('Fabric self-updater keeps home read-only but explicitly admits its Forge c
 
 test('Fabric updater fails closed on source changes while ignoring generated artifacts',()=>{
   assert.match(updater,/status --porcelain --untracked-files=all/);
-  assert.match(updater,/grep -vE '\^\\\?\\\? artifacts\/'/);
+  // The previous grep-based untracked-file exclusion was superseded by the
+  // shared classifier; require that fail-closed source protection remains wired.
+  assert.match(updater,/classify-fabric-checkout-dirt\.mjs/);
+  assert.match(updater,/as_user node "\$DIRT_CLASSIFIER" --blocking-lines/);
+  assert.match(updater,/as_user node "\$DIRT_CLASSIFIER" --journal-dirty/);
+  assert.match(updater,/if \[\[ -n "\$blocking_dirty" \]\]/);
+  assert.match(updater,/checkout-drift classifier missing; refusing unattended update/);
   assert.match(updater,/checkout has source changes; refusing unattended update/);
   assert.match(updater,/ignoring generated artifacts\/ entries in checkout preflight/);
   assert.match(updater,/merge-base --is-ancestor/);

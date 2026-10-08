@@ -1,6 +1,6 @@
 {
   "schema": "evercraft.chum.crawler-radar.v1",
-  "generated_at": "2026-10-07T18:39:33.814Z",
+  "generated_at": "2026-10-08T11:21:03.067Z",
   "coordinator": "CHUM",
   "runtime_feedback": {
     "requested": false,
@@ -9,8 +9,8 @@
   },
   "observation_count": 0,
   "negative_provider_pickup_receipts": 175,
-  "surface_count": 2967,
-  "strike_now_count": 1407,
+  "surface_count": 2964,
+  "strike_now_count": 1342,
   "doctrine": {
     "crawler_fetch_is_not_indexing": true,
     "indexing_is_not_ranking": true,
@@ -20,869 +20,6 @@
     "no_unsolicited_human_outreach": true
   },
   "surfaces": [
-    {
-      "path": "/chum/products/deck-capital-fit/",
-      "product_key": "deck-capital-fit",
-      "score": 246,
-      "urgency": "strike_now",
-      "crawl_priority": 154,
-      "last_changed": "2026-10-07T04:15:04.319Z",
-      "last_observed_crawler_fetch": null,
-      "last_observed_crawler_family": null,
-      "indexnow_pending": true,
-      "negative_provider_pickup_receipts": [
-        {
-          "provider": "generic_agent",
-          "observed_at": "2026-09-26T16:27:04.034Z",
-          "source": "authorized_provider_probe",
-          "evidence_ref": "conformance/provider-observations/auto-generic_agent-capital-fit-001-01b93be69463882a.json"
-        },
-        {
-          "provider": "generic_agent",
-          "observed_at": "2026-09-26T20:54:00.448Z",
-          "source": "authorized_provider_probe",
-          "evidence_ref": "conformance/provider-observations/auto-generic_agent-capital-fit-001-01f5df2b824918b8.json"
-        },
-        {
-          "provider": "generic_agent",
-          "observed_at": "2026-09-26T12:23:46.386Z",
-          "source": "authorized_provider_probe",
-          "evidence_ref": "conformance/provider-observations/auto-generic_agent-capital-fit-001-15f5b2276c7ab7ac.json"
-        },
-        {
-          "provider": "generic_agent",
-          "observed_at": "2026-09-26T18:05:11.184Z",
-          "source": "authorized_provider_probe",
-          "evidence_ref": "conformance/provider-observations/auto-generic_agent-capital-fit-001-19f519a8e4c9105b.json"
-        },
-        {
-          "provider": "generic_agent",
-          "observed_at": "2026-09-26T17:06:47.842Z",
-          "source": "authorized_provider_probe",
-          "evidence_ref": "conformance/provider-observations/auto-generic_agent-capital-fit-001-2b5def755f027cb5.json"
-        },
-        {
-          "provider": "generic_agent",
-          "observed_at": "2026-09-26T05:00:31.478Z",
-          "source": "authorized_provider_probe",
-          "evidence_ref": "conformance/provider-observations/auto-generic_agent-capital-fit-001-547a00af10ba674d.json"
-        },
-        {
-          "provider": "generic_agent",
-          "observed_at": "2026-09-26T15:12:07.754Z",
-          "source": "authorized_provider_probe",
-          "evidence_ref": "conformance/provider-observations/auto-generic_agent-capital-fit-001-9ea9f908d2f3e85b.json"
-        },
-        {
-          "provider": "generic_agent",
-          "observed_at": "2026-09-26T21:12:50.895Z",
-          "source": "authorized_provider_probe",
-          "evidence_ref": "conformance/provider-observations/auto-generic_agent-capital-fit-001-df13c49c29adaf41.json"
-        },
-        {
-          "provider": "generic_agent",
-          "observed_at": "2026-09-26T11:27:47.706Z",
-          "source": "authorized_provider_probe",
-          "evidence_ref": "conformance/provider-observations/auto-generic_agent-capital-fit-001-e2ef32443c25aa59.json"
-        }
-      ],
-      "reasons": [
-        "no_self_identified_crawler_fetch_observed",
-        "fresh_content_under_24h",
-        "negative_provider_pickup_receipt",
-        "indexnow_hash_pending"
-      ],
-      "recommended_actions": [
-        "verify_live_bytes_then_indexnow",
-        "promote_in_hot_discovery_queue",
-        "run_brand_blind_provider_probe_after_publication",
-        "increase_internal_crosslinks_from_relevant_public_surfaces"
-      ]
-    },
-    {
-      "path": "/chum/products/evercraft-containment/",
-      "product_key": "evercraft-containment",
-      "score": 246,
-      "urgency": "strike_now",
-      "crawl_priority": 154,
-      "last_changed": "2026-10-07T04:15:04.319Z",
-      "last_observed_crawler_fetch": null,
-      "last_observed_crawler_family": null,
-      "indexnow_pending": true,
-      "negative_provider_pickup_receipts": [
-        {
-          "provider": "generic_agent",
-          "observed_at": "2026-09-26T17:06:54.992Z",
-          "source": "authorized_provider_probe",
-          "evidence_ref": "conformance/provider-observations/auto-generic_agent-containment-persistence-001-1d6565bdbedede2b.json"
-        },
-        {
-          "provider": "generic_agent",
-          "observed_at": "2026-09-26T16:27:11.899Z",
-          "source": "authorized_provider_probe",
-          "evidence_ref": "conformance/provider-observations/auto-generic_agent-containment-persistence-001-29fbc5abb55d2cf4.json"
-        },
-        {
-          "provider": "generic_agent",
-          "observed_at": "2026-09-26T11:27:56.779Z",
-          "source": "authorized_provider_probe",
-          "evidence_ref": "conformance/provider-observations/auto-generic_agent-containment-persistence-001-6150ae389b3f7d81.json"
-        },
-        {
-          "provider": "generic_agent",
-          "observed_at": "2026-09-26T18:05:22.696Z",
-          "source": "authorized_provider_probe",
-          "evidence_ref": "conformance/provider-observations/auto-generic_agent-containment-persistence-001-74569bf39d1b2580.json"
-        },
-        {
-          "provider": "generic_agent",
-          "observed_at": "2026-09-26T15:12:18.940Z",
-          "source": "authorized_provider_probe",
-          "evidence_ref": "conformance/provider-observations/auto-generic_agent-containment-persistence-001-84986aa9be1252d3.json"
-        },
-        {
-          "provider": "generic_agent",
-          "observed_at": "2026-09-26T12:23:56.979Z",
-          "source": "authorized_provider_probe",
-          "evidence_ref": "conformance/provider-observations/auto-generic_agent-containment-persistence-001-a636fb7a6ae09c41.json"
-        },
-        {
-          "provider": "generic_agent",
-          "observed_at": "2026-09-26T21:13:02.627Z",
-          "source": "authorized_provider_probe",
-          "evidence_ref": "conformance/provider-observations/auto-generic_agent-containment-persistence-001-d68b278db0e72138.json"
-        },
-        {
-          "provider": "generic_agent",
-          "observed_at": "2026-09-26T05:00:38.336Z",
-          "source": "authorized_provider_probe",
-          "evidence_ref": "conformance/provider-observations/auto-generic_agent-containment-persistence-001-ec0bcd05eae1a83c.json"
-        }
-      ],
-      "reasons": [
-        "no_self_identified_crawler_fetch_observed",
-        "fresh_content_under_24h",
-        "negative_provider_pickup_receipt",
-        "indexnow_hash_pending"
-      ],
-      "recommended_actions": [
-        "verify_live_bytes_then_indexnow",
-        "promote_in_hot_discovery_queue",
-        "run_brand_blind_provider_probe_after_publication",
-        "increase_internal_crosslinks_from_relevant_public_surfaces"
-      ]
-    },
-    {
-      "path": "/chum/products/evercraft-network/",
-      "product_key": "evercraft-network",
-      "score": 246,
-      "urgency": "strike_now",
-      "crawl_priority": 154,
-      "last_changed": "2026-10-07T04:15:04.319Z",
-      "last_observed_crawler_fetch": null,
-      "last_observed_crawler_family": null,
-      "indexnow_pending": true,
-      "negative_provider_pickup_receipts": [
-        {
-          "provider": "generic_agent",
-          "observed_at": "2026-09-26T06:16:58.567Z",
-          "source": "authorized_provider_probe",
-          "evidence_ref": "conformance/provider-observations/auto-generic_agent-network-business-resilience-002-0615d66dc72adb4c.json"
-        },
-        {
-          "provider": "generic_agent",
-          "observed_at": "2026-09-26T16:27:24.331Z",
-          "source": "authorized_provider_probe",
-          "evidence_ref": "conformance/provider-observations/auto-generic_agent-network-business-resilience-002-2f37944e5052e797.json"
-        },
-        {
-          "provider": "generic_agent",
-          "observed_at": "2026-09-26T12:24:13.964Z",
-          "source": "authorized_provider_probe",
-          "evidence_ref": "conformance/provider-observations/auto-generic_agent-network-business-resilience-002-450a858b4c3ca5d3.json"
-        },
-        {
-          "provider": "generic_agent",
-          "observed_at": "2026-09-26T06:34:23.070Z",
-          "source": "authorized_provider_probe",
-          "evidence_ref": "conformance/provider-observations/auto-generic_agent-network-business-resilience-002-4e23a6f52d6b6065.json"
-        },
-        {
-          "provider": "generic_agent",
-          "observed_at": "2026-09-26T15:12:36.385Z",
-          "source": "authorized_provider_probe",
-          "evidence_ref": "conformance/provider-observations/auto-generic_agent-network-business-resilience-002-64f2c63c7d6cb940.json"
-        },
-        {
-          "provider": "generic_agent",
-          "observed_at": "2026-09-26T21:13:22.361Z",
-          "source": "authorized_provider_probe",
-          "evidence_ref": "conformance/provider-observations/auto-generic_agent-network-business-resilience-002-7f0846a44b8a9347.json"
-        },
-        {
-          "provider": "generic_agent",
-          "observed_at": "2026-09-26T11:28:11.058Z",
-          "source": "authorized_provider_probe",
-          "evidence_ref": "conformance/provider-observations/auto-generic_agent-network-business-resilience-002-a5a3be10dbc2b144.json"
-        },
-        {
-          "provider": "generic_agent",
-          "observed_at": "2026-09-26T05:00:50.489Z",
-          "source": "authorized_provider_probe",
-          "evidence_ref": "conformance/provider-observations/auto-generic_agent-network-business-resilience-002-b50b7597134b27bb.json"
-        },
-        {
-          "provider": "generic_agent",
-          "observed_at": "2026-09-26T17:07:06.599Z",
-          "source": "authorized_provider_probe",
-          "evidence_ref": "conformance/provider-observations/auto-generic_agent-network-business-resilience-002-bccb611d895af8fc.json"
-        },
-        {
-          "provider": "generic_agent",
-          "observed_at": "2026-09-26T06:28:30.049Z",
-          "source": "authorized_provider_probe",
-          "evidence_ref": "conformance/provider-observations/auto-generic_agent-network-business-resilience-002-bf5f0a48dcd9732f.json"
-        },
-        {
-          "provider": "generic_agent",
-          "observed_at": "2026-09-26T18:05:40.059Z",
-          "source": "authorized_provider_probe",
-          "evidence_ref": "conformance/provider-observations/auto-generic_agent-network-business-resilience-002-ca5b7b4e741c34b3.json"
-        },
-        {
-          "provider": "generic_agent",
-          "observed_at": "2026-09-26T21:13:20.448Z",
-          "source": "authorized_provider_probe",
-          "evidence_ref": "conformance/provider-observations/auto-generic_agent-network-continuity-001-03df3b6d39643714.json"
-        },
-        {
-          "provider": "generic_agent",
-          "observed_at": "2026-09-26T11:28:09.130Z",
-          "source": "authorized_provider_probe",
-          "evidence_ref": "conformance/provider-observations/auto-generic_agent-network-continuity-001-32ae9241a8754723.json"
-        },
-        {
-          "provider": "generic_agent",
-          "observed_at": "2026-09-26T15:12:34.503Z",
-          "source": "authorized_provider_probe",
-          "evidence_ref": "conformance/provider-observations/auto-generic_agent-network-continuity-001-3e25485bf26921f9.json"
-        },
-        {
-          "provider": "generic_agent",
-          "observed_at": "2026-09-26T17:07:05.502Z",
-          "source": "authorized_provider_probe",
-          "evidence_ref": "conformance/provider-observations/auto-generic_agent-network-continuity-001-5077546084b72b13.json"
-        },
-        {
-          "provider": "generic_agent",
-          "observed_at": "2026-09-26T18:05:38.128Z",
-          "source": "authorized_provider_probe",
-          "evidence_ref": "conformance/provider-observations/auto-generic_agent-network-continuity-001-70b4a46386f1b706.json"
-        },
-        {
-          "provider": "generic_agent",
-          "observed_at": "2026-09-26T12:24:12.656Z",
-          "source": "authorized_provider_probe",
-          "evidence_ref": "conformance/provider-observations/auto-generic_agent-network-continuity-001-a6d1cface17820b4.json"
-        },
-        {
-          "provider": "generic_agent",
-          "observed_at": "2026-09-26T05:00:49.026Z",
-          "source": "authorized_provider_probe",
-          "evidence_ref": "conformance/provider-observations/auto-generic_agent-network-continuity-001-fb8fe632142a6c3e.json"
-        },
-        {
-          "provider": "generic_agent",
-          "observed_at": "2026-09-26T16:27:23.237Z",
-          "source": "authorized_provider_probe",
-          "evidence_ref": "conformance/provider-observations/auto-generic_agent-network-continuity-001-fc4fe6d5449ad81e.json"
-        },
-        {
-          "provider": "generic_agent",
-          "observed_at": "2026-09-26T15:12:38.181Z",
-          "source": "authorized_provider_probe",
-          "evidence_ref": "conformance/provider-observations/auto-generic_agent-network-device-reconnect-003-042dab635908df52.json"
-        },
-        {
-          "provider": "generic_agent",
-          "observed_at": "2026-09-26T21:13:24.207Z",
-          "source": "authorized_provider_probe",
-          "evidence_ref": "conformance/provider-observations/auto-generic_agent-network-device-reconnect-003-54db661616785a83.json"
-        },
-        {
-          "provider": "generic_agent",
-          "observed_at": "2026-09-26T12:24:15.525Z",
-          "source": "authorized_provider_probe",
-          "evidence_ref": "conformance/provider-observations/auto-generic_agent-network-device-reconnect-003-577a947fa5553b1d.json"
-        },
-        {
-          "provider": "generic_agent",
-          "observed_at": "2026-09-26T18:05:41.909Z",
-          "source": "authorized_provider_probe",
-          "evidence_ref": "conformance/provider-observations/auto-generic_agent-network-device-reconnect-003-b62de3a5a4983cb5.json"
-        },
-        {
-          "provider": "generic_agent",
-          "observed_at": "2026-09-26T11:28:12.158Z",
-          "source": "authorized_provider_probe",
-          "evidence_ref": "conformance/provider-observations/auto-generic_agent-network-device-reconnect-003-ba91191c99a5c792.json"
-        },
-        {
-          "provider": "generic_agent",
-          "observed_at": "2026-09-26T05:00:51.496Z",
-          "source": "authorized_provider_probe",
-          "evidence_ref": "conformance/provider-observations/auto-generic_agent-network-device-reconnect-003-d72b4495d12255c1.json"
-        },
-        {
-          "provider": "generic_agent",
-          "observed_at": "2026-09-26T16:27:26.125Z",
-          "source": "authorized_provider_probe",
-          "evidence_ref": "conformance/provider-observations/auto-generic_agent-network-device-reconnect-003-e88e9945c51eb854.json"
-        },
-        {
-          "provider": "generic_agent",
-          "observed_at": "2026-09-26T17:07:07.667Z",
-          "source": "authorized_provider_probe",
-          "evidence_ref": "conformance/provider-observations/auto-generic_agent-network-device-reconnect-003-ee988958b13a3e52.json"
-        }
-      ],
-      "reasons": [
-        "no_self_identified_crawler_fetch_observed",
-        "fresh_content_under_24h",
-        "negative_provider_pickup_receipt",
-        "indexnow_hash_pending"
-      ],
-      "recommended_actions": [
-        "verify_live_bytes_then_indexnow",
-        "promote_in_hot_discovery_queue",
-        "run_brand_blind_provider_probe_after_publication",
-        "increase_internal_crosslinks_from_relevant_public_surfaces"
-      ]
-    },
-    {
-      "path": "/chum/products/findmypart/",
-      "product_key": "findmypart",
-      "score": 246,
-      "urgency": "strike_now",
-      "crawl_priority": 154,
-      "last_changed": "2026-10-07T04:15:04.319Z",
-      "last_observed_crawler_fetch": null,
-      "last_observed_crawler_family": null,
-      "indexnow_pending": true,
-      "negative_provider_pickup_receipts": [
-        {
-          "provider": "generic_agent",
-          "observed_at": "2026-09-26T15:12:01.590Z",
-          "source": "authorized_provider_probe",
-          "evidence_ref": "conformance/provider-observations/auto-generic_agent-hard-part-001-080208c25280b48e.json"
-        },
-        {
-          "provider": "generic_agent",
-          "observed_at": "2026-09-26T11:27:42.783Z",
-          "source": "authorized_provider_probe",
-          "evidence_ref": "conformance/provider-observations/auto-generic_agent-hard-part-001-251d48b6000ad488.json"
-        },
-        {
-          "provider": "generic_agent",
-          "observed_at": "2026-09-26T21:12:44.975Z",
-          "source": "authorized_provider_probe",
-          "evidence_ref": "conformance/provider-observations/auto-generic_agent-hard-part-001-7549be0746b2049a.json"
-        },
-        {
-          "provider": "generic_agent",
-          "observed_at": "2026-09-26T16:26:59.138Z",
-          "source": "authorized_provider_probe",
-          "evidence_ref": "conformance/provider-observations/auto-generic_agent-hard-part-001-8555e7187453a126.json"
-        },
-        {
-          "provider": "generic_agent",
-          "observed_at": "2026-09-26T05:00:27.697Z",
-          "source": "authorized_provider_probe",
-          "evidence_ref": "conformance/provider-observations/auto-generic_agent-hard-part-001-e7847b0134854b12.json"
-        },
-        {
-          "provider": "generic_agent",
-          "observed_at": "2026-09-26T17:06:42.825Z",
-          "source": "authorized_provider_probe",
-          "evidence_ref": "conformance/provider-observations/auto-generic_agent-hard-part-001-e7c82a11d272dd74.json"
-        }
-      ],
-      "reasons": [
-        "no_self_identified_crawler_fetch_observed",
-        "fresh_content_under_24h",
-        "negative_provider_pickup_receipt",
-        "indexnow_hash_pending"
-      ],
-      "recommended_actions": [
-        "verify_live_bytes_then_indexnow",
-        "promote_in_hot_discovery_queue",
-        "run_brand_blind_provider_probe_after_publication",
-        "increase_internal_crosslinks_from_relevant_public_surfaces"
-      ]
-    },
-    {
-      "path": "/chum/products/forensiscope/",
-      "product_key": "forensiscope",
-      "score": 246,
-      "urgency": "strike_now",
-      "crawl_priority": 154,
-      "last_changed": "2026-10-07T04:15:04.319Z",
-      "last_observed_crawler_fetch": null,
-      "last_observed_crawler_family": null,
-      "indexnow_pending": true,
-      "negative_provider_pickup_receipts": [
-        {
-          "provider": "chatgpt",
-          "observed_at": "2026-09-25T06:15:00.000Z",
-          "source": "user_observed_result",
-          "evidence_ref": "conformance/provider-observations/2026-09-24-chatgpt-forensiscope-round1.json"
-        },
-        {
-          "provider": "claude",
-          "observed_at": "2026-09-24T00:00:00.000Z",
-          "source": "user_observed_result",
-          "evidence_ref": "conformance/provider-observations/2026-09-24-claude-forensiscope-round2.json"
-        },
-        {
-          "provider": "claude",
-          "observed_at": "2026-09-24T17:36:00.000Z",
-          "source": "user_observed_result",
-          "evidence_ref": "conformance/provider-observations/2026-09-24-claude-forensiscope.json"
-        },
-        {
-          "provider": "gemini",
-          "observed_at": "2026-09-25T03:57:00.000Z",
-          "source": "user_observed_result",
-          "evidence_ref": "conformance/provider-observations/2026-09-24-gemini-forensiscope-round1.json"
-        },
-        {
-          "provider": "grok",
-          "observed_at": "2026-09-24T00:00:00.000Z",
-          "source": "user_observed_result",
-          "evidence_ref": "conformance/provider-observations/2026-09-24-grok-forensiscope-round2.json"
-        },
-        {
-          "provider": "grok",
-          "observed_at": "2026-09-24T17:32:00.000Z",
-          "source": "user_observed_result",
-          "evidence_ref": "conformance/provider-observations/2026-09-24-grok-forensiscope.json"
-        },
-        {
-          "provider": "google",
-          "observed_at": "2026-09-25T15:05:00.000Z",
-          "source": "user_observed_result",
-          "evidence_ref": "conformance/provider-observations/2026-09-25-google-forensiscope-round2.json"
-        },
-        {
-          "provider": "chatgpt",
-          "observed_at": "2026-09-26T00:00:00.000Z",
-          "source": "user_observed_result",
-          "evidence_ref": "conformance/provider-observations/2026-09-26-chatgpt-forensiscope-independent-miss.json"
-        },
-        {
-          "provider": "claude",
-          "observed_at": "2026-09-26T00:00:00.000Z",
-          "source": "user_observed_result",
-          "evidence_ref": "conformance/provider-observations/2026-09-26-claude-forensiscope-round3.json"
-        },
-        {
-          "provider": "google",
-          "observed_at": "2026-09-26T00:00:00.000Z",
-          "source": "user_observed_result",
-          "evidence_ref": "conformance/provider-observations/2026-09-26-google-forensiscope-round3.json"
-        },
-        {
-          "provider": "grok",
-          "observed_at": "2026-09-26T00:00:00.000Z",
-          "source": "user_observed_result",
-          "evidence_ref": "conformance/provider-observations/2026-09-26-grok-forensiscope-round3.json"
-        },
-        {
-          "provider": "generic_agent",
-          "observed_at": "2026-09-26T11:27:38.456Z",
-          "source": "authorized_provider_probe",
-          "evidence_ref": "conformance/provider-observations/auto-generic_agent-media-agent-tool-007-4a7b7d9b338edede.json"
-        },
-        {
-          "provider": "generic_agent",
-          "observed_at": "2026-09-26T22:42:47.871Z",
-          "source": "authorized_provider_probe",
-          "evidence_ref": "conformance/provider-observations/auto-generic_agent-media-agent-tool-007-556b6e3dd64fac5f.json"
-        },
-        {
-          "provider": "generic_agent",
-          "observed_at": "2026-09-26T16:26:54.236Z",
-          "source": "authorized_provider_probe",
-          "evidence_ref": "conformance/provider-observations/auto-generic_agent-media-agent-tool-007-82b157aeff53011a.json"
-        },
-        {
-          "provider": "generic_agent",
-          "observed_at": "2026-09-26T21:12:38.868Z",
-          "source": "authorized_provider_probe",
-          "evidence_ref": "conformance/provider-observations/auto-generic_agent-media-agent-tool-007-95d781d76cee8f79.json"
-        },
-        {
-          "provider": "generic_agent",
-          "observed_at": "2026-09-26T15:11:55.813Z",
-          "source": "authorized_provider_probe",
-          "evidence_ref": "conformance/provider-observations/auto-generic_agent-media-agent-tool-007-9928e6f2fa260a9f.json"
-        },
-        {
-          "provider": "generic_agent",
-          "observed_at": "2026-09-26T12:22:36.446Z",
-          "source": "authorized_provider_probe",
-          "evidence_ref": "conformance/provider-observations/auto-generic_agent-media-agent-tool-007-9f99737254b5bf63.json"
-        },
-        {
-          "provider": "generic_agent",
-          "observed_at": "2026-09-26T05:00:24.373Z",
-          "source": "authorized_provider_probe",
-          "evidence_ref": "conformance/provider-observations/auto-generic_agent-media-agent-tool-007-a722a1daf33c0e57.json"
-        },
-        {
-          "provider": "generic_agent",
-          "observed_at": "2026-09-26T18:03:52.743Z",
-          "source": "authorized_provider_probe",
-          "evidence_ref": "conformance/provider-observations/auto-generic_agent-media-agent-tool-007-b9be2e56a31265b0.json"
-        },
-        {
-          "provider": "generic_agent",
-          "observed_at": "2026-09-26T22:40:36.611Z",
-          "source": "authorized_provider_probe",
-          "evidence_ref": "conformance/provider-observations/auto-generic_agent-media-agent-tool-007-cf6a16cdbf2addaa.json"
-        },
-        {
-          "provider": "generic_agent",
-          "observed_at": "2026-09-26T17:06:39.220Z",
-          "source": "authorized_provider_probe",
-          "evidence_ref": "conformance/provider-observations/auto-generic_agent-media-agent-tool-007-d2fcd1e2e0cfe06f.json"
-        },
-        {
-          "provider": "generic_agent",
-          "observed_at": "2026-09-26T22:44:57.150Z",
-          "source": "authorized_provider_probe",
-          "evidence_ref": "conformance/provider-observations/auto-generic_agent-media-agent-tool-007-f17229d6fc684e63.json"
-        },
-        {
-          "provider": "generic_agent",
-          "observed_at": "2026-09-26T05:00:25.403Z",
-          "source": "authorized_provider_probe",
-          "evidence_ref": "conformance/provider-observations/auto-generic_agent-media-evidence-timeline-008-110282430970d99b.json"
-        },
-        {
-          "provider": "generic_agent",
-          "observed_at": "2026-09-26T12:22:43.264Z",
-          "source": "authorized_provider_probe",
-          "evidence_ref": "conformance/provider-observations/auto-generic_agent-media-evidence-timeline-008-131b5a719549d780.json"
-        },
-        {
-          "provider": "generic_agent",
-          "observed_at": "2026-09-26T11:27:39.502Z",
-          "source": "authorized_provider_probe",
-          "evidence_ref": "conformance/provider-observations/auto-generic_agent-media-evidence-timeline-008-48b85398f2d4d762.json"
-        },
-        {
-          "provider": "generic_agent",
-          "observed_at": "2026-09-26T15:27:32.557Z",
-          "source": "authorized_provider_probe",
-          "evidence_ref": "conformance/provider-observations/auto-generic_agent-media-evidence-timeline-008-66de4543224ad27b.json"
-        },
-        {
-          "provider": "generic_agent",
-          "observed_at": "2026-09-26T17:06:40.310Z",
-          "source": "authorized_provider_probe",
-          "evidence_ref": "conformance/provider-observations/auto-generic_agent-media-evidence-timeline-008-6963498ac835d46b.json"
-        },
-        {
-          "provider": "generic_agent",
-          "observed_at": "2026-09-26T16:26:55.812Z",
-          "source": "authorized_provider_probe",
-          "evidence_ref": "conformance/provider-observations/auto-generic_agent-media-evidence-timeline-008-73e38d7976d98f28.json"
-        },
-        {
-          "provider": "generic_agent",
-          "observed_at": "2026-09-26T21:12:40.774Z",
-          "source": "authorized_provider_probe",
-          "evidence_ref": "conformance/provider-observations/auto-generic_agent-media-evidence-timeline-008-78added277595d7b.json"
-        },
-        {
-          "provider": "generic_agent",
-          "observed_at": "2026-09-26T15:11:57.573Z",
-          "source": "authorized_provider_probe",
-          "evidence_ref": "conformance/provider-observations/auto-generic_agent-media-evidence-timeline-008-806f92de7b76211b.json"
-        },
-        {
-          "provider": "generic_agent",
-          "observed_at": "2026-09-26T18:04:03.395Z",
-          "source": "authorized_provider_probe",
-          "evidence_ref": "conformance/provider-observations/auto-generic_agent-media-evidence-timeline-008-f842a2eac40f29fb.json"
-        },
-        {
-          "provider": "generic_agent",
-          "observed_at": "2026-09-26T12:22:24.197Z",
-          "source": "authorized_provider_probe",
-          "evidence_ref": "conformance/provider-observations/auto-generic_agent-media-overflow-001-2289dc9bb0f93351.json"
-        },
-        {
-          "provider": "generic_agent",
-          "observed_at": "2026-09-26T11:27:27.895Z",
-          "source": "authorized_provider_probe",
-          "evidence_ref": "conformance/provider-observations/auto-generic_agent-media-overflow-001-3e2b4a06e21b8b38.json"
-        },
-        {
-          "provider": "generic_agent",
-          "observed_at": "2026-09-26T05:00:16.405Z",
-          "source": "authorized_provider_probe",
-          "evidence_ref": "conformance/provider-observations/auto-generic_agent-media-overflow-001-5f84f40dd2894a9b.json"
-        },
-        {
-          "provider": "generic_agent",
-          "observed_at": "2026-09-26T16:26:42.819Z",
-          "source": "authorized_provider_probe",
-          "evidence_ref": "conformance/provider-observations/auto-generic_agent-media-overflow-001-7f91e77095994fda.json"
-        },
-        {
-          "provider": "generic_agent",
-          "observed_at": "2026-09-26T18:03:39.667Z",
-          "source": "authorized_provider_probe",
-          "evidence_ref": "conformance/provider-observations/auto-generic_agent-media-overflow-001-827b6032753aba59.json"
-        },
-        {
-          "provider": "generic_agent",
-          "observed_at": "2026-09-26T15:11:42.132Z",
-          "source": "authorized_provider_probe",
-          "evidence_ref": "conformance/provider-observations/auto-generic_agent-media-overflow-001-9b78b3a0f2e7a041.json"
-        },
-        {
-          "provider": "generic_agent",
-          "observed_at": "2026-09-26T17:06:28.657Z",
-          "source": "authorized_provider_probe",
-          "evidence_ref": "conformance/provider-observations/auto-generic_agent-media-overflow-001-f00ea05a659879c6.json"
-        },
-        {
-          "provider": "generic_agent",
-          "observed_at": "2026-09-26T21:12:27.251Z",
-          "source": "authorized_provider_probe",
-          "evidence_ref": "conformance/provider-observations/auto-generic_agent-media-overflow-001-f4148d3b2d2e5010.json"
-        },
-        {
-          "provider": "generic_agent",
-          "observed_at": "2026-09-26T18:03:42.002Z",
-          "source": "authorized_provider_probe",
-          "evidence_ref": "conformance/provider-observations/auto-generic_agent-media-overflow-large-file-002-23812aa6bd66a521.json"
-        },
-        {
-          "provider": "generic_agent",
-          "observed_at": "2026-09-26T17:06:30.831Z",
-          "source": "authorized_provider_probe",
-          "evidence_ref": "conformance/provider-observations/auto-generic_agent-media-overflow-large-file-002-51d7c4d0a01ed4a3.json"
-        },
-        {
-          "provider": "generic_agent",
-          "observed_at": "2026-09-26T12:22:26.942Z",
-          "source": "authorized_provider_probe",
-          "evidence_ref": "conformance/provider-observations/auto-generic_agent-media-overflow-large-file-002-56e1954da2d16ed6.json"
-        },
-        {
-          "provider": "generic_agent",
-          "observed_at": "2026-09-26T21:12:29.185Z",
-          "source": "authorized_provider_probe",
-          "evidence_ref": "conformance/provider-observations/auto-generic_agent-media-overflow-large-file-002-625add0aea1dc357.json"
-        },
-        {
-          "provider": "generic_agent",
-          "observed_at": "2026-09-26T15:11:44.406Z",
-          "source": "authorized_provider_probe",
-          "evidence_ref": "conformance/provider-observations/auto-generic_agent-media-overflow-large-file-002-7e899ddec39146c4.json"
-        },
-        {
-          "provider": "generic_agent",
-          "observed_at": "2026-09-26T05:00:18.077Z",
-          "source": "authorized_provider_probe",
-          "evidence_ref": "conformance/provider-observations/auto-generic_agent-media-overflow-large-file-002-7fc237882ff6719a.json"
-        },
-        {
-          "provider": "generic_agent",
-          "observed_at": "2026-09-26T11:27:29.717Z",
-          "source": "authorized_provider_probe",
-          "evidence_ref": "conformance/provider-observations/auto-generic_agent-media-overflow-large-file-002-fb278119a182123a.json"
-        },
-        {
-          "provider": "generic_agent",
-          "observed_at": "2026-09-26T16:26:44.436Z",
-          "source": "authorized_provider_probe",
-          "evidence_ref": "conformance/provider-observations/auto-generic_agent-media-overflow-large-file-002-fb68696f7878f831.json"
-        },
-        {
-          "provider": "generic_agent",
-          "observed_at": "2026-09-26T11:27:31.168Z",
-          "source": "authorized_provider_probe",
-          "evidence_ref": "conformance/provider-observations/auto-generic_agent-media-overflow-multi-hour-003-13e53e43a2cad6a9.json"
-        },
-        {
-          "provider": "generic_agent",
-          "observed_at": "2026-09-26T05:00:19.389Z",
-          "source": "authorized_provider_probe",
-          "evidence_ref": "conformance/provider-observations/auto-generic_agent-media-overflow-multi-hour-003-2a3aba99dd707eda.json"
-        },
-        {
-          "provider": "generic_agent",
-          "observed_at": "2026-09-26T16:26:47.518Z",
-          "source": "authorized_provider_probe",
-          "evidence_ref": "conformance/provider-observations/auto-generic_agent-media-overflow-multi-hour-003-63d4023f09439f9c.json"
-        },
-        {
-          "provider": "generic_agent",
-          "observed_at": "2026-09-26T21:12:30.631Z",
-          "source": "authorized_provider_probe",
-          "evidence_ref": "conformance/provider-observations/auto-generic_agent-media-overflow-multi-hour-003-86ffd44b53a9c57c.json"
-        },
-        {
-          "provider": "generic_agent",
-          "observed_at": "2026-09-26T12:22:28.659Z",
-          "source": "authorized_provider_probe",
-          "evidence_ref": "conformance/provider-observations/auto-generic_agent-media-overflow-multi-hour-003-8b7d8706e7f20310.json"
-        },
-        {
-          "provider": "generic_agent",
-          "observed_at": "2026-09-26T17:06:33.160Z",
-          "source": "authorized_provider_probe",
-          "evidence_ref": "conformance/provider-observations/auto-generic_agent-media-overflow-multi-hour-003-c85a1e890add6d7b.json"
-        },
-        {
-          "provider": "generic_agent",
-          "observed_at": "2026-09-26T18:03:43.771Z",
-          "source": "authorized_provider_probe",
-          "evidence_ref": "conformance/provider-observations/auto-generic_agent-media-overflow-multi-hour-003-e9fea66b7f9369c8.json"
-        },
-        {
-          "provider": "generic_agent",
-          "observed_at": "2026-09-26T15:11:46.585Z",
-          "source": "authorized_provider_probe",
-          "evidence_ref": "conformance/provider-observations/auto-generic_agent-media-overflow-multi-hour-003-fcd22b130ee2c01f.json"
-        },
-        {
-          "provider": "generic_agent",
-          "observed_at": "2026-09-26T17:06:34.599Z",
-          "source": "authorized_provider_probe",
-          "evidence_ref": "conformance/provider-observations/auto-generic_agent-media-semantic-search-004-254cb2ac6c5c4ee6.json"
-        },
-        {
-          "provider": "generic_agent",
-          "observed_at": "2026-09-26T16:26:49.672Z",
-          "source": "authorized_provider_probe",
-          "evidence_ref": "conformance/provider-observations/auto-generic_agent-media-semantic-search-004-52b521d7d268dab5.json"
-        },
-        {
-          "provider": "generic_agent",
-          "observed_at": "2026-09-26T11:10:44.981Z",
-          "source": "authorized_provider_probe",
-          "evidence_ref": "conformance/provider-observations/auto-generic_agent-media-semantic-search-004-553b78fa21c5213b.json"
-        },
-        {
-          "provider": "generic_agent",
-          "observed_at": "2026-09-26T11:38:56.873Z",
-          "source": "authorized_provider_probe",
-          "evidence_ref": "conformance/provider-observations/auto-generic_agent-media-semantic-search-004-573f84090c267731.json"
-        },
-        {
-          "provider": "generic_agent",
-          "observed_at": "2026-09-26T12:22:30.284Z",
-          "source": "authorized_provider_probe",
-          "evidence_ref": "conformance/provider-observations/auto-generic_agent-media-semantic-search-004-6282fd1c34aa70b3.json"
-        },
-        {
-          "provider": "generic_agent",
-          "observed_at": "2026-09-26T11:27:32.539Z",
-          "source": "authorized_provider_probe",
-          "evidence_ref": "conformance/provider-observations/auto-generic_agent-media-semantic-search-004-9b0e0ac5962b4e91.json"
-        },
-        {
-          "provider": "generic_agent",
-          "observed_at": "2026-09-26T21:12:32.335Z",
-          "source": "authorized_provider_probe",
-          "evidence_ref": "conformance/provider-observations/auto-generic_agent-media-semantic-search-004-c0e6951c883b09c8.json"
-        },
-        {
-          "provider": "generic_agent",
-          "observed_at": "2026-09-26T15:11:48.658Z",
-          "source": "authorized_provider_probe",
-          "evidence_ref": "conformance/provider-observations/auto-generic_agent-media-semantic-search-004-dc1a8cc58d4b771e.json"
-        },
-        {
-          "provider": "generic_agent",
-          "observed_at": "2026-09-26T05:00:20.553Z",
-          "source": "authorized_provider_probe",
-          "evidence_ref": "conformance/provider-observations/auto-generic_agent-media-semantic-search-004-e7d8aed7eb79fcf0.json"
-        },
-        {
-          "provider": "generic_agent",
-          "observed_at": "2026-09-26T18:03:45.414Z",
-          "source": "authorized_provider_probe",
-          "evidence_ref": "conformance/provider-observations/auto-generic_agent-media-semantic-search-004-f91a788cdb69de7e.json"
-        },
-        {
-          "provider": "generic_agent",
-          "observed_at": "2026-09-26T05:00:23.010Z",
-          "source": "authorized_provider_probe",
-          "evidence_ref": "conformance/provider-observations/auto-generic_agent-media-video-rag-006-225a78d8d2672480.json"
-        },
-        {
-          "provider": "generic_agent",
-          "observed_at": "2026-09-26T21:12:36.109Z",
-          "source": "authorized_provider_probe",
-          "evidence_ref": "conformance/provider-observations/auto-generic_agent-media-video-rag-006-45e2907cd2251d5e.json"
-        },
-        {
-          "provider": "generic_agent",
-          "observed_at": "2026-09-26T15:11:53.541Z",
-          "source": "authorized_provider_probe",
-          "evidence_ref": "conformance/provider-observations/auto-generic_agent-media-video-rag-006-64d0823652d552c7.json"
-        },
-        {
-          "provider": "generic_agent",
-          "observed_at": "2026-09-26T17:06:37.572Z",
-          "source": "authorized_provider_probe",
-          "evidence_ref": "conformance/provider-observations/auto-generic_agent-media-video-rag-006-65434bb069819b64.json"
-        },
-        {
-          "provider": "generic_agent",
-          "observed_at": "2026-09-26T11:27:36.469Z",
-          "source": "authorized_provider_probe",
-          "evidence_ref": "conformance/provider-observations/auto-generic_agent-media-video-rag-006-95107e5c5e37e976.json"
-        },
-        {
-          "provider": "generic_agent",
-          "observed_at": "2026-09-26T16:26:52.599Z",
-          "source": "authorized_provider_probe",
-          "evidence_ref": "conformance/provider-observations/auto-generic_agent-media-video-rag-006-9b8e724440411498.json"
-        },
-        {
-          "provider": "generic_agent",
-          "observed_at": "2026-09-26T12:22:34.169Z",
-          "source": "authorized_provider_probe",
-          "evidence_ref": "conformance/provider-observations/auto-generic_agent-media-video-rag-006-b5b4a1e6bd7cea18.json"
-        },
-        {
-          "provider": "generic_agent",
-          "observed_at": "2026-09-26T18:03:51.012Z",
-          "source": "authorized_provider_probe",
-          "evidence_ref": "conformance/provider-observations/auto-generic_agent-media-video-rag-006-db75de925a12a1be.json"
-        }
-      ],
-      "reasons": [
-        "no_self_identified_crawler_fetch_observed",
-        "fresh_content_under_24h",
-        "negative_provider_pickup_receipt",
-        "indexnow_hash_pending"
-      ],
-      "recommended_actions": [
-        "verify_live_bytes_then_indexnow",
-        "promote_in_hot_discovery_queue",
-        "run_brand_blind_provider_probe_after_publication",
-        "increase_internal_crosslinks_from_relevant_public_surfaces"
-      ]
-    },
     {
       "path": "/chum/intents/forensiscope-evidence-review-v1/",
       "product_key": "forensiscope",
@@ -1487,12 +624,412 @@
       ]
     },
     {
-      "path": "/forensiscope/developers/llms.txt",
-      "product_key": "forensiscope",
-      "score": 238,
+      "path": "/chum/products/deck-capital-fit/",
+      "product_key": "deck-capital-fit",
+      "score": 239,
       "urgency": "strike_now",
-      "crawl_priority": 146,
-      "last_changed": "2026-10-07T03:10:56.459Z",
+      "crawl_priority": 154,
+      "last_changed": "2026-10-07T04:15:04.319Z",
+      "last_observed_crawler_fetch": null,
+      "last_observed_crawler_family": null,
+      "indexnow_pending": true,
+      "negative_provider_pickup_receipts": [
+        {
+          "provider": "generic_agent",
+          "observed_at": "2026-09-26T16:27:04.034Z",
+          "source": "authorized_provider_probe",
+          "evidence_ref": "conformance/provider-observations/auto-generic_agent-capital-fit-001-01b93be69463882a.json"
+        },
+        {
+          "provider": "generic_agent",
+          "observed_at": "2026-09-26T20:54:00.448Z",
+          "source": "authorized_provider_probe",
+          "evidence_ref": "conformance/provider-observations/auto-generic_agent-capital-fit-001-01f5df2b824918b8.json"
+        },
+        {
+          "provider": "generic_agent",
+          "observed_at": "2026-09-26T12:23:46.386Z",
+          "source": "authorized_provider_probe",
+          "evidence_ref": "conformance/provider-observations/auto-generic_agent-capital-fit-001-15f5b2276c7ab7ac.json"
+        },
+        {
+          "provider": "generic_agent",
+          "observed_at": "2026-09-26T18:05:11.184Z",
+          "source": "authorized_provider_probe",
+          "evidence_ref": "conformance/provider-observations/auto-generic_agent-capital-fit-001-19f519a8e4c9105b.json"
+        },
+        {
+          "provider": "generic_agent",
+          "observed_at": "2026-09-26T17:06:47.842Z",
+          "source": "authorized_provider_probe",
+          "evidence_ref": "conformance/provider-observations/auto-generic_agent-capital-fit-001-2b5def755f027cb5.json"
+        },
+        {
+          "provider": "generic_agent",
+          "observed_at": "2026-09-26T05:00:31.478Z",
+          "source": "authorized_provider_probe",
+          "evidence_ref": "conformance/provider-observations/auto-generic_agent-capital-fit-001-547a00af10ba674d.json"
+        },
+        {
+          "provider": "generic_agent",
+          "observed_at": "2026-09-26T15:12:07.754Z",
+          "source": "authorized_provider_probe",
+          "evidence_ref": "conformance/provider-observations/auto-generic_agent-capital-fit-001-9ea9f908d2f3e85b.json"
+        },
+        {
+          "provider": "generic_agent",
+          "observed_at": "2026-09-26T21:12:50.895Z",
+          "source": "authorized_provider_probe",
+          "evidence_ref": "conformance/provider-observations/auto-generic_agent-capital-fit-001-df13c49c29adaf41.json"
+        },
+        {
+          "provider": "generic_agent",
+          "observed_at": "2026-09-26T11:27:47.706Z",
+          "source": "authorized_provider_probe",
+          "evidence_ref": "conformance/provider-observations/auto-generic_agent-capital-fit-001-e2ef32443c25aa59.json"
+        }
+      ],
+      "reasons": [
+        "no_self_identified_crawler_fetch_observed",
+        "fresh_content_under_72h",
+        "negative_provider_pickup_receipt",
+        "indexnow_hash_pending"
+      ],
+      "recommended_actions": [
+        "verify_live_bytes_then_indexnow",
+        "promote_in_hot_discovery_queue",
+        "run_brand_blind_provider_probe_after_publication",
+        "increase_internal_crosslinks_from_relevant_public_surfaces"
+      ]
+    },
+    {
+      "path": "/chum/products/evercraft-containment/",
+      "product_key": "evercraft-containment",
+      "score": 239,
+      "urgency": "strike_now",
+      "crawl_priority": 154,
+      "last_changed": "2026-10-07T04:15:04.319Z",
+      "last_observed_crawler_fetch": null,
+      "last_observed_crawler_family": null,
+      "indexnow_pending": true,
+      "negative_provider_pickup_receipts": [
+        {
+          "provider": "generic_agent",
+          "observed_at": "2026-09-26T17:06:54.992Z",
+          "source": "authorized_provider_probe",
+          "evidence_ref": "conformance/provider-observations/auto-generic_agent-containment-persistence-001-1d6565bdbedede2b.json"
+        },
+        {
+          "provider": "generic_agent",
+          "observed_at": "2026-09-26T16:27:11.899Z",
+          "source": "authorized_provider_probe",
+          "evidence_ref": "conformance/provider-observations/auto-generic_agent-containment-persistence-001-29fbc5abb55d2cf4.json"
+        },
+        {
+          "provider": "generic_agent",
+          "observed_at": "2026-09-26T11:27:56.779Z",
+          "source": "authorized_provider_probe",
+          "evidence_ref": "conformance/provider-observations/auto-generic_agent-containment-persistence-001-6150ae389b3f7d81.json"
+        },
+        {
+          "provider": "generic_agent",
+          "observed_at": "2026-09-26T18:05:22.696Z",
+          "source": "authorized_provider_probe",
+          "evidence_ref": "conformance/provider-observations/auto-generic_agent-containment-persistence-001-74569bf39d1b2580.json"
+        },
+        {
+          "provider": "generic_agent",
+          "observed_at": "2026-09-26T15:12:18.940Z",
+          "source": "authorized_provider_probe",
+          "evidence_ref": "conformance/provider-observations/auto-generic_agent-containment-persistence-001-84986aa9be1252d3.json"
+        },
+        {
+          "provider": "generic_agent",
+          "observed_at": "2026-09-26T12:23:56.979Z",
+          "source": "authorized_provider_probe",
+          "evidence_ref": "conformance/provider-observations/auto-generic_agent-containment-persistence-001-a636fb7a6ae09c41.json"
+        },
+        {
+          "provider": "generic_agent",
+          "observed_at": "2026-09-26T21:13:02.627Z",
+          "source": "authorized_provider_probe",
+          "evidence_ref": "conformance/provider-observations/auto-generic_agent-containment-persistence-001-d68b278db0e72138.json"
+        },
+        {
+          "provider": "generic_agent",
+          "observed_at": "2026-09-26T05:00:38.336Z",
+          "source": "authorized_provider_probe",
+          "evidence_ref": "conformance/provider-observations/auto-generic_agent-containment-persistence-001-ec0bcd05eae1a83c.json"
+        }
+      ],
+      "reasons": [
+        "no_self_identified_crawler_fetch_observed",
+        "fresh_content_under_72h",
+        "negative_provider_pickup_receipt",
+        "indexnow_hash_pending"
+      ],
+      "recommended_actions": [
+        "verify_live_bytes_then_indexnow",
+        "promote_in_hot_discovery_queue",
+        "run_brand_blind_provider_probe_after_publication",
+        "increase_internal_crosslinks_from_relevant_public_surfaces"
+      ]
+    },
+    {
+      "path": "/chum/products/evercraft-network/",
+      "product_key": "evercraft-network",
+      "score": 239,
+      "urgency": "strike_now",
+      "crawl_priority": 154,
+      "last_changed": "2026-10-07T04:15:04.319Z",
+      "last_observed_crawler_fetch": null,
+      "last_observed_crawler_family": null,
+      "indexnow_pending": true,
+      "negative_provider_pickup_receipts": [
+        {
+          "provider": "generic_agent",
+          "observed_at": "2026-09-26T06:16:58.567Z",
+          "source": "authorized_provider_probe",
+          "evidence_ref": "conformance/provider-observations/auto-generic_agent-network-business-resilience-002-0615d66dc72adb4c.json"
+        },
+        {
+          "provider": "generic_agent",
+          "observed_at": "2026-09-26T16:27:24.331Z",
+          "source": "authorized_provider_probe",
+          "evidence_ref": "conformance/provider-observations/auto-generic_agent-network-business-resilience-002-2f37944e5052e797.json"
+        },
+        {
+          "provider": "generic_agent",
+          "observed_at": "2026-09-26T12:24:13.964Z",
+          "source": "authorized_provider_probe",
+          "evidence_ref": "conformance/provider-observations/auto-generic_agent-network-business-resilience-002-450a858b4c3ca5d3.json"
+        },
+        {
+          "provider": "generic_agent",
+          "observed_at": "2026-09-26T06:34:23.070Z",
+          "source": "authorized_provider_probe",
+          "evidence_ref": "conformance/provider-observations/auto-generic_agent-network-business-resilience-002-4e23a6f52d6b6065.json"
+        },
+        {
+          "provider": "generic_agent",
+          "observed_at": "2026-09-26T15:12:36.385Z",
+          "source": "authorized_provider_probe",
+          "evidence_ref": "conformance/provider-observations/auto-generic_agent-network-business-resilience-002-64f2c63c7d6cb940.json"
+        },
+        {
+          "provider": "generic_agent",
+          "observed_at": "2026-09-26T21:13:22.361Z",
+          "source": "authorized_provider_probe",
+          "evidence_ref": "conformance/provider-observations/auto-generic_agent-network-business-resilience-002-7f0846a44b8a9347.json"
+        },
+        {
+          "provider": "generic_agent",
+          "observed_at": "2026-09-26T11:28:11.058Z",
+          "source": "authorized_provider_probe",
+          "evidence_ref": "conformance/provider-observations/auto-generic_agent-network-business-resilience-002-a5a3be10dbc2b144.json"
+        },
+        {
+          "provider": "generic_agent",
+          "observed_at": "2026-09-26T05:00:50.489Z",
+          "source": "authorized_provider_probe",
+          "evidence_ref": "conformance/provider-observations/auto-generic_agent-network-business-resilience-002-b50b7597134b27bb.json"
+        },
+        {
+          "provider": "generic_agent",
+          "observed_at": "2026-09-26T17:07:06.599Z",
+          "source": "authorized_provider_probe",
+          "evidence_ref": "conformance/provider-observations/auto-generic_agent-network-business-resilience-002-bccb611d895af8fc.json"
+        },
+        {
+          "provider": "generic_agent",
+          "observed_at": "2026-09-26T06:28:30.049Z",
+          "source": "authorized_provider_probe",
+          "evidence_ref": "conformance/provider-observations/auto-generic_agent-network-business-resilience-002-bf5f0a48dcd9732f.json"
+        },
+        {
+          "provider": "generic_agent",
+          "observed_at": "2026-09-26T18:05:40.059Z",
+          "source": "authorized_provider_probe",
+          "evidence_ref": "conformance/provider-observations/auto-generic_agent-network-business-resilience-002-ca5b7b4e741c34b3.json"
+        },
+        {
+          "provider": "generic_agent",
+          "observed_at": "2026-09-26T21:13:20.448Z",
+          "source": "authorized_provider_probe",
+          "evidence_ref": "conformance/provider-observations/auto-generic_agent-network-continuity-001-03df3b6d39643714.json"
+        },
+        {
+          "provider": "generic_agent",
+          "observed_at": "2026-09-26T11:28:09.130Z",
+          "source": "authorized_provider_probe",
+          "evidence_ref": "conformance/provider-observations/auto-generic_agent-network-continuity-001-32ae9241a8754723.json"
+        },
+        {
+          "provider": "generic_agent",
+          "observed_at": "2026-09-26T15:12:34.503Z",
+          "source": "authorized_provider_probe",
+          "evidence_ref": "conformance/provider-observations/auto-generic_agent-network-continuity-001-3e25485bf26921f9.json"
+        },
+        {
+          "provider": "generic_agent",
+          "observed_at": "2026-09-26T17:07:05.502Z",
+          "source": "authorized_provider_probe",
+          "evidence_ref": "conformance/provider-observations/auto-generic_agent-network-continuity-001-5077546084b72b13.json"
+        },
+        {
+          "provider": "generic_agent",
+          "observed_at": "2026-09-26T18:05:38.128Z",
+          "source": "authorized_provider_probe",
+          "evidence_ref": "conformance/provider-observations/auto-generic_agent-network-continuity-001-70b4a46386f1b706.json"
+        },
+        {
+          "provider": "generic_agent",
+          "observed_at": "2026-09-26T12:24:12.656Z",
+          "source": "authorized_provider_probe",
+          "evidence_ref": "conformance/provider-observations/auto-generic_agent-network-continuity-001-a6d1cface17820b4.json"
+        },
+        {
+          "provider": "generic_agent",
+          "observed_at": "2026-09-26T05:00:49.026Z",
+          "source": "authorized_provider_probe",
+          "evidence_ref": "conformance/provider-observations/auto-generic_agent-network-continuity-001-fb8fe632142a6c3e.json"
+        },
+        {
+          "provider": "generic_agent",
+          "observed_at": "2026-09-26T16:27:23.237Z",
+          "source": "authorized_provider_probe",
+          "evidence_ref": "conformance/provider-observations/auto-generic_agent-network-continuity-001-fc4fe6d5449ad81e.json"
+        },
+        {
+          "provider": "generic_agent",
+          "observed_at": "2026-09-26T15:12:38.181Z",
+          "source": "authorized_provider_probe",
+          "evidence_ref": "conformance/provider-observations/auto-generic_agent-network-device-reconnect-003-042dab635908df52.json"
+        },
+        {
+          "provider": "generic_agent",
+          "observed_at": "2026-09-26T21:13:24.207Z",
+          "source": "authorized_provider_probe",
+          "evidence_ref": "conformance/provider-observations/auto-generic_agent-network-device-reconnect-003-54db661616785a83.json"
+        },
+        {
+          "provider": "generic_agent",
+          "observed_at": "2026-09-26T12:24:15.525Z",
+          "source": "authorized_provider_probe",
+          "evidence_ref": "conformance/provider-observations/auto-generic_agent-network-device-reconnect-003-577a947fa5553b1d.json"
+        },
+        {
+          "provider": "generic_agent",
+          "observed_at": "2026-09-26T18:05:41.909Z",
+          "source": "authorized_provider_probe",
+          "evidence_ref": "conformance/provider-observations/auto-generic_agent-network-device-reconnect-003-b62de3a5a4983cb5.json"
+        },
+        {
+          "provider": "generic_agent",
+          "observed_at": "2026-09-26T11:28:12.158Z",
+          "source": "authorized_provider_probe",
+          "evidence_ref": "conformance/provider-observations/auto-generic_agent-network-device-reconnect-003-ba91191c99a5c792.json"
+        },
+        {
+          "provider": "generic_agent",
+          "observed_at": "2026-09-26T05:00:51.496Z",
+          "source": "authorized_provider_probe",
+          "evidence_ref": "conformance/provider-observations/auto-generic_agent-network-device-reconnect-003-d72b4495d12255c1.json"
+        },
+        {
+          "provider": "generic_agent",
+          "observed_at": "2026-09-26T16:27:26.125Z",
+          "source": "authorized_provider_probe",
+          "evidence_ref": "conformance/provider-observations/auto-generic_agent-network-device-reconnect-003-e88e9945c51eb854.json"
+        },
+        {
+          "provider": "generic_agent",
+          "observed_at": "2026-09-26T17:07:07.667Z",
+          "source": "authorized_provider_probe",
+          "evidence_ref": "conformance/provider-observations/auto-generic_agent-network-device-reconnect-003-ee988958b13a3e52.json"
+        }
+      ],
+      "reasons": [
+        "no_self_identified_crawler_fetch_observed",
+        "fresh_content_under_72h",
+        "negative_provider_pickup_receipt",
+        "indexnow_hash_pending"
+      ],
+      "recommended_actions": [
+        "verify_live_bytes_then_indexnow",
+        "promote_in_hot_discovery_queue",
+        "run_brand_blind_provider_probe_after_publication",
+        "increase_internal_crosslinks_from_relevant_public_surfaces"
+      ]
+    },
+    {
+      "path": "/chum/products/findmypart/",
+      "product_key": "findmypart",
+      "score": 239,
+      "urgency": "strike_now",
+      "crawl_priority": 154,
+      "last_changed": "2026-10-07T04:15:04.319Z",
+      "last_observed_crawler_fetch": null,
+      "last_observed_crawler_family": null,
+      "indexnow_pending": true,
+      "negative_provider_pickup_receipts": [
+        {
+          "provider": "generic_agent",
+          "observed_at": "2026-09-26T15:12:01.590Z",
+          "source": "authorized_provider_probe",
+          "evidence_ref": "conformance/provider-observations/auto-generic_agent-hard-part-001-080208c25280b48e.json"
+        },
+        {
+          "provider": "generic_agent",
+          "observed_at": "2026-09-26T11:27:42.783Z",
+          "source": "authorized_provider_probe",
+          "evidence_ref": "conformance/provider-observations/auto-generic_agent-hard-part-001-251d48b6000ad488.json"
+        },
+        {
+          "provider": "generic_agent",
+          "observed_at": "2026-09-26T21:12:44.975Z",
+          "source": "authorized_provider_probe",
+          "evidence_ref": "conformance/provider-observations/auto-generic_agent-hard-part-001-7549be0746b2049a.json"
+        },
+        {
+          "provider": "generic_agent",
+          "observed_at": "2026-09-26T16:26:59.138Z",
+          "source": "authorized_provider_probe",
+          "evidence_ref": "conformance/provider-observations/auto-generic_agent-hard-part-001-8555e7187453a126.json"
+        },
+        {
+          "provider": "generic_agent",
+          "observed_at": "2026-09-26T05:00:27.697Z",
+          "source": "authorized_provider_probe",
+          "evidence_ref": "conformance/provider-observations/auto-generic_agent-hard-part-001-e7847b0134854b12.json"
+        },
+        {
+          "provider": "generic_agent",
+          "observed_at": "2026-09-26T17:06:42.825Z",
+          "source": "authorized_provider_probe",
+          "evidence_ref": "conformance/provider-observations/auto-generic_agent-hard-part-001-e7c82a11d272dd74.json"
+        }
+      ],
+      "reasons": [
+        "no_self_identified_crawler_fetch_observed",
+        "fresh_content_under_72h",
+        "negative_provider_pickup_receipt",
+        "indexnow_hash_pending"
+      ],
+      "recommended_actions": [
+        "verify_live_bytes_then_indexnow",
+        "promote_in_hot_discovery_queue",
+        "run_brand_blind_provider_probe_after_publication",
+        "increase_internal_crosslinks_from_relevant_public_surfaces"
+      ]
+    },
+    {
+      "path": "/chum/products/forensiscope/",
+      "product_key": "forensiscope",
+      "score": 239,
+      "urgency": "strike_now",
+      "crawl_priority": 154,
+      "last_changed": "2026-10-07T04:15:04.319Z",
       "last_observed_crawler_fetch": null,
       "last_observed_crawler_family": null,
       "indexnow_pending": true,
@@ -1938,7 +1475,7 @@
       ],
       "reasons": [
         "no_self_identified_crawler_fetch_observed",
-        "fresh_content_under_24h",
+        "fresh_content_under_72h",
         "negative_provider_pickup_receipt",
         "indexnow_hash_pending"
       ],
@@ -4255,6 +3792,469 @@
       ],
       "reasons": [
         "no_self_identified_crawler_fetch_observed",
+        "negative_provider_pickup_receipt",
+        "indexnow_hash_pending"
+      ],
+      "recommended_actions": [
+        "verify_live_bytes_then_indexnow",
+        "promote_in_hot_discovery_queue",
+        "run_brand_blind_provider_probe_after_publication",
+        "increase_internal_crosslinks_from_relevant_public_surfaces"
+      ]
+    },
+    {
+      "path": "/forensiscope/developers/llms.txt",
+      "product_key": "forensiscope",
+      "score": 231,
+      "urgency": "strike_now",
+      "crawl_priority": 146,
+      "last_changed": "2026-10-07T03:10:56.459Z",
+      "last_observed_crawler_fetch": null,
+      "last_observed_crawler_family": null,
+      "indexnow_pending": true,
+      "negative_provider_pickup_receipts": [
+        {
+          "provider": "chatgpt",
+          "observed_at": "2026-09-25T06:15:00.000Z",
+          "source": "user_observed_result",
+          "evidence_ref": "conformance/provider-observations/2026-09-24-chatgpt-forensiscope-round1.json"
+        },
+        {
+          "provider": "claude",
+          "observed_at": "2026-09-24T00:00:00.000Z",
+          "source": "user_observed_result",
+          "evidence_ref": "conformance/provider-observations/2026-09-24-claude-forensiscope-round2.json"
+        },
+        {
+          "provider": "claude",
+          "observed_at": "2026-09-24T17:36:00.000Z",
+          "source": "user_observed_result",
+          "evidence_ref": "conformance/provider-observations/2026-09-24-claude-forensiscope.json"
+        },
+        {
+          "provider": "gemini",
+          "observed_at": "2026-09-25T03:57:00.000Z",
+          "source": "user_observed_result",
+          "evidence_ref": "conformance/provider-observations/2026-09-24-gemini-forensiscope-round1.json"
+        },
+        {
+          "provider": "grok",
+          "observed_at": "2026-09-24T00:00:00.000Z",
+          "source": "user_observed_result",
+          "evidence_ref": "conformance/provider-observations/2026-09-24-grok-forensiscope-round2.json"
+        },
+        {
+          "provider": "grok",
+          "observed_at": "2026-09-24T17:32:00.000Z",
+          "source": "user_observed_result",
+          "evidence_ref": "conformance/provider-observations/2026-09-24-grok-forensiscope.json"
+        },
+        {
+          "provider": "google",
+          "observed_at": "2026-09-25T15:05:00.000Z",
+          "source": "user_observed_result",
+          "evidence_ref": "conformance/provider-observations/2026-09-25-google-forensiscope-round2.json"
+        },
+        {
+          "provider": "chatgpt",
+          "observed_at": "2026-09-26T00:00:00.000Z",
+          "source": "user_observed_result",
+          "evidence_ref": "conformance/provider-observations/2026-09-26-chatgpt-forensiscope-independent-miss.json"
+        },
+        {
+          "provider": "claude",
+          "observed_at": "2026-09-26T00:00:00.000Z",
+          "source": "user_observed_result",
+          "evidence_ref": "conformance/provider-observations/2026-09-26-claude-forensiscope-round3.json"
+        },
+        {
+          "provider": "google",
+          "observed_at": "2026-09-26T00:00:00.000Z",
+          "source": "user_observed_result",
+          "evidence_ref": "conformance/provider-observations/2026-09-26-google-forensiscope-round3.json"
+        },
+        {
+          "provider": "grok",
+          "observed_at": "2026-09-26T00:00:00.000Z",
+          "source": "user_observed_result",
+          "evidence_ref": "conformance/provider-observations/2026-09-26-grok-forensiscope-round3.json"
+        },
+        {
+          "provider": "generic_agent",
+          "observed_at": "2026-09-26T11:27:38.456Z",
+          "source": "authorized_provider_probe",
+          "evidence_ref": "conformance/provider-observations/auto-generic_agent-media-agent-tool-007-4a7b7d9b338edede.json"
+        },
+        {
+          "provider": "generic_agent",
+          "observed_at": "2026-09-26T22:42:47.871Z",
+          "source": "authorized_provider_probe",
+          "evidence_ref": "conformance/provider-observations/auto-generic_agent-media-agent-tool-007-556b6e3dd64fac5f.json"
+        },
+        {
+          "provider": "generic_agent",
+          "observed_at": "2026-09-26T16:26:54.236Z",
+          "source": "authorized_provider_probe",
+          "evidence_ref": "conformance/provider-observations/auto-generic_agent-media-agent-tool-007-82b157aeff53011a.json"
+        },
+        {
+          "provider": "generic_agent",
+          "observed_at": "2026-09-26T21:12:38.868Z",
+          "source": "authorized_provider_probe",
+          "evidence_ref": "conformance/provider-observations/auto-generic_agent-media-agent-tool-007-95d781d76cee8f79.json"
+        },
+        {
+          "provider": "generic_agent",
+          "observed_at": "2026-09-26T15:11:55.813Z",
+          "source": "authorized_provider_probe",
+          "evidence_ref": "conformance/provider-observations/auto-generic_agent-media-agent-tool-007-9928e6f2fa260a9f.json"
+        },
+        {
+          "provider": "generic_agent",
+          "observed_at": "2026-09-26T12:22:36.446Z",
+          "source": "authorized_provider_probe",
+          "evidence_ref": "conformance/provider-observations/auto-generic_agent-media-agent-tool-007-9f99737254b5bf63.json"
+        },
+        {
+          "provider": "generic_agent",
+          "observed_at": "2026-09-26T05:00:24.373Z",
+          "source": "authorized_provider_probe",
+          "evidence_ref": "conformance/provider-observations/auto-generic_agent-media-agent-tool-007-a722a1daf33c0e57.json"
+        },
+        {
+          "provider": "generic_agent",
+          "observed_at": "2026-09-26T18:03:52.743Z",
+          "source": "authorized_provider_probe",
+          "evidence_ref": "conformance/provider-observations/auto-generic_agent-media-agent-tool-007-b9be2e56a31265b0.json"
+        },
+        {
+          "provider": "generic_agent",
+          "observed_at": "2026-09-26T22:40:36.611Z",
+          "source": "authorized_provider_probe",
+          "evidence_ref": "conformance/provider-observations/auto-generic_agent-media-agent-tool-007-cf6a16cdbf2addaa.json"
+        },
+        {
+          "provider": "generic_agent",
+          "observed_at": "2026-09-26T17:06:39.220Z",
+          "source": "authorized_provider_probe",
+          "evidence_ref": "conformance/provider-observations/auto-generic_agent-media-agent-tool-007-d2fcd1e2e0cfe06f.json"
+        },
+        {
+          "provider": "generic_agent",
+          "observed_at": "2026-09-26T22:44:57.150Z",
+          "source": "authorized_provider_probe",
+          "evidence_ref": "conformance/provider-observations/auto-generic_agent-media-agent-tool-007-f17229d6fc684e63.json"
+        },
+        {
+          "provider": "generic_agent",
+          "observed_at": "2026-09-26T05:00:25.403Z",
+          "source": "authorized_provider_probe",
+          "evidence_ref": "conformance/provider-observations/auto-generic_agent-media-evidence-timeline-008-110282430970d99b.json"
+        },
+        {
+          "provider": "generic_agent",
+          "observed_at": "2026-09-26T12:22:43.264Z",
+          "source": "authorized_provider_probe",
+          "evidence_ref": "conformance/provider-observations/auto-generic_agent-media-evidence-timeline-008-131b5a719549d780.json"
+        },
+        {
+          "provider": "generic_agent",
+          "observed_at": "2026-09-26T11:27:39.502Z",
+          "source": "authorized_provider_probe",
+          "evidence_ref": "conformance/provider-observations/auto-generic_agent-media-evidence-timeline-008-48b85398f2d4d762.json"
+        },
+        {
+          "provider": "generic_agent",
+          "observed_at": "2026-09-26T15:27:32.557Z",
+          "source": "authorized_provider_probe",
+          "evidence_ref": "conformance/provider-observations/auto-generic_agent-media-evidence-timeline-008-66de4543224ad27b.json"
+        },
+        {
+          "provider": "generic_agent",
+          "observed_at": "2026-09-26T17:06:40.310Z",
+          "source": "authorized_provider_probe",
+          "evidence_ref": "conformance/provider-observations/auto-generic_agent-media-evidence-timeline-008-6963498ac835d46b.json"
+        },
+        {
+          "provider": "generic_agent",
+          "observed_at": "2026-09-26T16:26:55.812Z",
+          "source": "authorized_provider_probe",
+          "evidence_ref": "conformance/provider-observations/auto-generic_agent-media-evidence-timeline-008-73e38d7976d98f28.json"
+        },
+        {
+          "provider": "generic_agent",
+          "observed_at": "2026-09-26T21:12:40.774Z",
+          "source": "authorized_provider_probe",
+          "evidence_ref": "conformance/provider-observations/auto-generic_agent-media-evidence-timeline-008-78added277595d7b.json"
+        },
+        {
+          "provider": "generic_agent",
+          "observed_at": "2026-09-26T15:11:57.573Z",
+          "source": "authorized_provider_probe",
+          "evidence_ref": "conformance/provider-observations/auto-generic_agent-media-evidence-timeline-008-806f92de7b76211b.json"
+        },
+        {
+          "provider": "generic_agent",
+          "observed_at": "2026-09-26T18:04:03.395Z",
+          "source": "authorized_provider_probe",
+          "evidence_ref": "conformance/provider-observations/auto-generic_agent-media-evidence-timeline-008-f842a2eac40f29fb.json"
+        },
+        {
+          "provider": "generic_agent",
+          "observed_at": "2026-09-26T12:22:24.197Z",
+          "source": "authorized_provider_probe",
+          "evidence_ref": "conformance/provider-observations/auto-generic_agent-media-overflow-001-2289dc9bb0f93351.json"
+        },
+        {
+          "provider": "generic_agent",
+          "observed_at": "2026-09-26T11:27:27.895Z",
+          "source": "authorized_provider_probe",
+          "evidence_ref": "conformance/provider-observations/auto-generic_agent-media-overflow-001-3e2b4a06e21b8b38.json"
+        },
+        {
+          "provider": "generic_agent",
+          "observed_at": "2026-09-26T05:00:16.405Z",
+          "source": "authorized_provider_probe",
+          "evidence_ref": "conformance/provider-observations/auto-generic_agent-media-overflow-001-5f84f40dd2894a9b.json"
+        },
+        {
+          "provider": "generic_agent",
+          "observed_at": "2026-09-26T16:26:42.819Z",
+          "source": "authorized_provider_probe",
+          "evidence_ref": "conformance/provider-observations/auto-generic_agent-media-overflow-001-7f91e77095994fda.json"
+        },
+        {
+          "provider": "generic_agent",
+          "observed_at": "2026-09-26T18:03:39.667Z",
+          "source": "authorized_provider_probe",
+          "evidence_ref": "conformance/provider-observations/auto-generic_agent-media-overflow-001-827b6032753aba59.json"
+        },
+        {
+          "provider": "generic_agent",
+          "observed_at": "2026-09-26T15:11:42.132Z",
+          "source": "authorized_provider_probe",
+          "evidence_ref": "conformance/provider-observations/auto-generic_agent-media-overflow-001-9b78b3a0f2e7a041.json"
+        },
+        {
+          "provider": "generic_agent",
+          "observed_at": "2026-09-26T17:06:28.657Z",
+          "source": "authorized_provider_probe",
+          "evidence_ref": "conformance/provider-observations/auto-generic_agent-media-overflow-001-f00ea05a659879c6.json"
+        },
+        {
+          "provider": "generic_agent",
+          "observed_at": "2026-09-26T21:12:27.251Z",
+          "source": "authorized_provider_probe",
+          "evidence_ref": "conformance/provider-observations/auto-generic_agent-media-overflow-001-f4148d3b2d2e5010.json"
+        },
+        {
+          "provider": "generic_agent",
+          "observed_at": "2026-09-26T18:03:42.002Z",
+          "source": "authorized_provider_probe",
+          "evidence_ref": "conformance/provider-observations/auto-generic_agent-media-overflow-large-file-002-23812aa6bd66a521.json"
+        },
+        {
+          "provider": "generic_agent",
+          "observed_at": "2026-09-26T17:06:30.831Z",
+          "source": "authorized_provider_probe",
+          "evidence_ref": "conformance/provider-observations/auto-generic_agent-media-overflow-large-file-002-51d7c4d0a01ed4a3.json"
+        },
+        {
+          "provider": "generic_agent",
+          "observed_at": "2026-09-26T12:22:26.942Z",
+          "source": "authorized_provider_probe",
+          "evidence_ref": "conformance/provider-observations/auto-generic_agent-media-overflow-large-file-002-56e1954da2d16ed6.json"
+        },
+        {
+          "provider": "generic_agent",
+          "observed_at": "2026-09-26T21:12:29.185Z",
+          "source": "authorized_provider_probe",
+          "evidence_ref": "conformance/provider-observations/auto-generic_agent-media-overflow-large-file-002-625add0aea1dc357.json"
+        },
+        {
+          "provider": "generic_agent",
+          "observed_at": "2026-09-26T15:11:44.406Z",
+          "source": "authorized_provider_probe",
+          "evidence_ref": "conformance/provider-observations/auto-generic_agent-media-overflow-large-file-002-7e899ddec39146c4.json"
+        },
+        {
+          "provider": "generic_agent",
+          "observed_at": "2026-09-26T05:00:18.077Z",
+          "source": "authorized_provider_probe",
+          "evidence_ref": "conformance/provider-observations/auto-generic_agent-media-overflow-large-file-002-7fc237882ff6719a.json"
+        },
+        {
+          "provider": "generic_agent",
+          "observed_at": "2026-09-26T11:27:29.717Z",
+          "source": "authorized_provider_probe",
+          "evidence_ref": "conformance/provider-observations/auto-generic_agent-media-overflow-large-file-002-fb278119a182123a.json"
+        },
+        {
+          "provider": "generic_agent",
+          "observed_at": "2026-09-26T16:26:44.436Z",
+          "source": "authorized_provider_probe",
+          "evidence_ref": "conformance/provider-observations/auto-generic_agent-media-overflow-large-file-002-fb68696f7878f831.json"
+        },
+        {
+          "provider": "generic_agent",
+          "observed_at": "2026-09-26T11:27:31.168Z",
+          "source": "authorized_provider_probe",
+          "evidence_ref": "conformance/provider-observations/auto-generic_agent-media-overflow-multi-hour-003-13e53e43a2cad6a9.json"
+        },
+        {
+          "provider": "generic_agent",
+          "observed_at": "2026-09-26T05:00:19.389Z",
+          "source": "authorized_provider_probe",
+          "evidence_ref": "conformance/provider-observations/auto-generic_agent-media-overflow-multi-hour-003-2a3aba99dd707eda.json"
+        },
+        {
+          "provider": "generic_agent",
+          "observed_at": "2026-09-26T16:26:47.518Z",
+          "source": "authorized_provider_probe",
+          "evidence_ref": "conformance/provider-observations/auto-generic_agent-media-overflow-multi-hour-003-63d4023f09439f9c.json"
+        },
+        {
+          "provider": "generic_agent",
+          "observed_at": "2026-09-26T21:12:30.631Z",
+          "source": "authorized_provider_probe",
+          "evidence_ref": "conformance/provider-observations/auto-generic_agent-media-overflow-multi-hour-003-86ffd44b53a9c57c.json"
+        },
+        {
+          "provider": "generic_agent",
+          "observed_at": "2026-09-26T12:22:28.659Z",
+          "source": "authorized_provider_probe",
+          "evidence_ref": "conformance/provider-observations/auto-generic_agent-media-overflow-multi-hour-003-8b7d8706e7f20310.json"
+        },
+        {
+          "provider": "generic_agent",
+          "observed_at": "2026-09-26T17:06:33.160Z",
+          "source": "authorized_provider_probe",
+          "evidence_ref": "conformance/provider-observations/auto-generic_agent-media-overflow-multi-hour-003-c85a1e890add6d7b.json"
+        },
+        {
+          "provider": "generic_agent",
+          "observed_at": "2026-09-26T18:03:43.771Z",
+          "source": "authorized_provider_probe",
+          "evidence_ref": "conformance/provider-observations/auto-generic_agent-media-overflow-multi-hour-003-e9fea66b7f9369c8.json"
+        },
+        {
+          "provider": "generic_agent",
+          "observed_at": "2026-09-26T15:11:46.585Z",
+          "source": "authorized_provider_probe",
+          "evidence_ref": "conformance/provider-observations/auto-generic_agent-media-overflow-multi-hour-003-fcd22b130ee2c01f.json"
+        },
+        {
+          "provider": "generic_agent",
+          "observed_at": "2026-09-26T17:06:34.599Z",
+          "source": "authorized_provider_probe",
+          "evidence_ref": "conformance/provider-observations/auto-generic_agent-media-semantic-search-004-254cb2ac6c5c4ee6.json"
+        },
+        {
+          "provider": "generic_agent",
+          "observed_at": "2026-09-26T16:26:49.672Z",
+          "source": "authorized_provider_probe",
+          "evidence_ref": "conformance/provider-observations/auto-generic_agent-media-semantic-search-004-52b521d7d268dab5.json"
+        },
+        {
+          "provider": "generic_agent",
+          "observed_at": "2026-09-26T11:10:44.981Z",
+          "source": "authorized_provider_probe",
+          "evidence_ref": "conformance/provider-observations/auto-generic_agent-media-semantic-search-004-553b78fa21c5213b.json"
+        },
+        {
+          "provider": "generic_agent",
+          "observed_at": "2026-09-26T11:38:56.873Z",
+          "source": "authorized_provider_probe",
+          "evidence_ref": "conformance/provider-observations/auto-generic_agent-media-semantic-search-004-573f84090c267731.json"
+        },
+        {
+          "provider": "generic_agent",
+          "observed_at": "2026-09-26T12:22:30.284Z",
+          "source": "authorized_provider_probe",
+          "evidence_ref": "conformance/provider-observations/auto-generic_agent-media-semantic-search-004-6282fd1c34aa70b3.json"
+        },
+        {
+          "provider": "generic_agent",
+          "observed_at": "2026-09-26T11:27:32.539Z",
+          "source": "authorized_provider_probe",
+          "evidence_ref": "conformance/provider-observations/auto-generic_agent-media-semantic-search-004-9b0e0ac5962b4e91.json"
+        },
+        {
+          "provider": "generic_agent",
+          "observed_at": "2026-09-26T21:12:32.335Z",
+          "source": "authorized_provider_probe",
+          "evidence_ref": "conformance/provider-observations/auto-generic_agent-media-semantic-search-004-c0e6951c883b09c8.json"
+        },
+        {
+          "provider": "generic_agent",
+          "observed_at": "2026-09-26T15:11:48.658Z",
+          "source": "authorized_provider_probe",
+          "evidence_ref": "conformance/provider-observations/auto-generic_agent-media-semantic-search-004-dc1a8cc58d4b771e.json"
+        },
+        {
+          "provider": "generic_agent",
+          "observed_at": "2026-09-26T05:00:20.553Z",
+          "source": "authorized_provider_probe",
+          "evidence_ref": "conformance/provider-observations/auto-generic_agent-media-semantic-search-004-e7d8aed7eb79fcf0.json"
+        },
+        {
+          "provider": "generic_agent",
+          "observed_at": "2026-09-26T18:03:45.414Z",
+          "source": "authorized_provider_probe",
+          "evidence_ref": "conformance/provider-observations/auto-generic_agent-media-semantic-search-004-f91a788cdb69de7e.json"
+        },
+        {
+          "provider": "generic_agent",
+          "observed_at": "2026-09-26T05:00:23.010Z",
+          "source": "authorized_provider_probe",
+          "evidence_ref": "conformance/provider-observations/auto-generic_agent-media-video-rag-006-225a78d8d2672480.json"
+        },
+        {
+          "provider": "generic_agent",
+          "observed_at": "2026-09-26T21:12:36.109Z",
+          "source": "authorized_provider_probe",
+          "evidence_ref": "conformance/provider-observations/auto-generic_agent-media-video-rag-006-45e2907cd2251d5e.json"
+        },
+        {
+          "provider": "generic_agent",
+          "observed_at": "2026-09-26T15:11:53.541Z",
+          "source": "authorized_provider_probe",
+          "evidence_ref": "conformance/provider-observations/auto-generic_agent-media-video-rag-006-64d0823652d552c7.json"
+        },
+        {
+          "provider": "generic_agent",
+          "observed_at": "2026-09-26T17:06:37.572Z",
+          "source": "authorized_provider_probe",
+          "evidence_ref": "conformance/provider-observations/auto-generic_agent-media-video-rag-006-65434bb069819b64.json"
+        },
+        {
+          "provider": "generic_agent",
+          "observed_at": "2026-09-26T11:27:36.469Z",
+          "source": "authorized_provider_probe",
+          "evidence_ref": "conformance/provider-observations/auto-generic_agent-media-video-rag-006-95107e5c5e37e976.json"
+        },
+        {
+          "provider": "generic_agent",
+          "observed_at": "2026-09-26T16:26:52.599Z",
+          "source": "authorized_provider_probe",
+          "evidence_ref": "conformance/provider-observations/auto-generic_agent-media-video-rag-006-9b8e724440411498.json"
+        },
+        {
+          "provider": "generic_agent",
+          "observed_at": "2026-09-26T12:22:34.169Z",
+          "source": "authorized_provider_probe",
+          "evidence_ref": "conformance/provider-observations/auto-generic_agent-media-video-rag-006-b5b4a1e6bd7cea18.json"
+        },
+        {
+          "provider": "generic_agent",
+          "observed_at": "2026-09-26T18:03:51.012Z",
+          "source": "authorized_provider_probe",
+          "evidence_ref": "conformance/provider-observations/auto-generic_agent-media-video-rag-006-db75de925a12a1be.json"
+        }
+      ],
+      "reasons": [
+        "no_self_identified_crawler_fetch_observed",
+        "fresh_content_under_72h",
         "negative_provider_pickup_receipt",
         "indexnow_hash_pending"
       ],
@@ -10272,116 +10272,6 @@
       ]
     },
     {
-      "path": "/chum/answers/doors/agriculture-evidence-brief-9ad9d965bc.json",
-      "product_key": null,
-      "score": 222,
-      "urgency": "strike_now",
-      "crawl_priority": 160,
-      "last_changed": "2026-10-06T20:36:30.736Z",
-      "last_observed_crawler_fetch": null,
-      "last_observed_crawler_family": null,
-      "indexnow_pending": true,
-      "negative_provider_pickup_receipts": [],
-      "reasons": [
-        "no_self_identified_crawler_fetch_observed",
-        "fresh_content_under_24h",
-        "indexnow_hash_pending"
-      ],
-      "recommended_actions": [
-        "verify_live_bytes_then_indexnow",
-        "promote_in_hot_discovery_queue",
-        "increase_internal_crosslinks_from_relevant_public_surfaces"
-      ]
-    },
-    {
-      "path": "/chum/answers/doors/agriculture-evidence-brief-9ad9d965bc/",
-      "product_key": null,
-      "score": 222,
-      "urgency": "strike_now",
-      "crawl_priority": 160,
-      "last_changed": "2026-10-06T20:36:30.736Z",
-      "last_observed_crawler_fetch": null,
-      "last_observed_crawler_family": null,
-      "indexnow_pending": true,
-      "negative_provider_pickup_receipts": [],
-      "reasons": [
-        "no_self_identified_crawler_fetch_observed",
-        "fresh_content_under_24h",
-        "indexnow_hash_pending"
-      ],
-      "recommended_actions": [
-        "verify_live_bytes_then_indexnow",
-        "promote_in_hot_discovery_queue",
-        "increase_internal_crosslinks_from_relevant_public_surfaces"
-      ]
-    },
-    {
-      "path": "/chum/answers/doors/build-a-sourced-brief-about-farm-water-land-or-production-risk-baefc8483b.json",
-      "product_key": null,
-      "score": 222,
-      "urgency": "strike_now",
-      "crawl_priority": 160,
-      "last_changed": "2026-10-06T20:36:30.736Z",
-      "last_observed_crawler_fetch": null,
-      "last_observed_crawler_family": null,
-      "indexnow_pending": true,
-      "negative_provider_pickup_receipts": [],
-      "reasons": [
-        "no_self_identified_crawler_fetch_observed",
-        "fresh_content_under_24h",
-        "indexnow_hash_pending"
-      ],
-      "recommended_actions": [
-        "verify_live_bytes_then_indexnow",
-        "promote_in_hot_discovery_queue",
-        "increase_internal_crosslinks_from_relevant_public_surfaces"
-      ]
-    },
-    {
-      "path": "/chum/answers/doors/build-a-sourced-brief-about-farm-water-land-or-production-risk-baefc8483b/",
-      "product_key": null,
-      "score": 222,
-      "urgency": "strike_now",
-      "crawl_priority": 160,
-      "last_changed": "2026-10-06T20:36:30.736Z",
-      "last_observed_crawler_fetch": null,
-      "last_observed_crawler_family": null,
-      "indexnow_pending": true,
-      "negative_provider_pickup_receipts": [],
-      "reasons": [
-        "no_self_identified_crawler_fetch_observed",
-        "fresh_content_under_24h",
-        "indexnow_hash_pending"
-      ],
-      "recommended_actions": [
-        "verify_live_bytes_then_indexnow",
-        "promote_in_hot_discovery_queue",
-        "increase_internal_crosslinks_from_relevant_public_surfaces"
-      ]
-    },
-    {
-      "path": "/chum/answers/doors/do-a-resilience-investigation-227f8bd16b.json",
-      "product_key": null,
-      "score": 222,
-      "urgency": "strike_now",
-      "crawl_priority": 160,
-      "last_changed": "2026-10-06T20:37:44.536Z",
-      "last_observed_crawler_fetch": null,
-      "last_observed_crawler_family": null,
-      "indexnow_pending": true,
-      "negative_provider_pickup_receipts": [],
-      "reasons": [
-        "no_self_identified_crawler_fetch_observed",
-        "fresh_content_under_24h",
-        "indexnow_hash_pending"
-      ],
-      "recommended_actions": [
-        "verify_live_bytes_then_indexnow",
-        "promote_in_hot_discovery_queue",
-        "increase_internal_crosslinks_from_relevant_public_surfaces"
-      ]
-    },
-    {
       "path": "/chum/answers/doors/account-takeover-protection-6a5072fc31.json",
       "product_key": null,
       "score": 215,
@@ -10432,6 +10322,50 @@
       "urgency": "strike_now",
       "crawl_priority": 160,
       "last_changed": "2026-10-06T16:42:20.155Z",
+      "last_observed_crawler_fetch": null,
+      "last_observed_crawler_family": null,
+      "indexnow_pending": true,
+      "negative_provider_pickup_receipts": [],
+      "reasons": [
+        "no_self_identified_crawler_fetch_observed",
+        "fresh_content_under_72h",
+        "indexnow_hash_pending"
+      ],
+      "recommended_actions": [
+        "verify_live_bytes_then_indexnow",
+        "promote_in_hot_discovery_queue",
+        "increase_internal_crosslinks_from_relevant_public_surfaces"
+      ]
+    },
+    {
+      "path": "/chum/answers/doors/agriculture-evidence-brief-9ad9d965bc.json",
+      "product_key": null,
+      "score": 215,
+      "urgency": "strike_now",
+      "crawl_priority": 160,
+      "last_changed": "2026-10-06T20:36:30.736Z",
+      "last_observed_crawler_fetch": null,
+      "last_observed_crawler_family": null,
+      "indexnow_pending": true,
+      "negative_provider_pickup_receipts": [],
+      "reasons": [
+        "no_self_identified_crawler_fetch_observed",
+        "fresh_content_under_72h",
+        "indexnow_hash_pending"
+      ],
+      "recommended_actions": [
+        "verify_live_bytes_then_indexnow",
+        "promote_in_hot_discovery_queue",
+        "increase_internal_crosslinks_from_relevant_public_surfaces"
+      ]
+    },
+    {
+      "path": "/chum/answers/doors/agriculture-evidence-brief-9ad9d965bc/",
+      "product_key": null,
+      "score": 215,
+      "urgency": "strike_now",
+      "crawl_priority": 160,
+      "last_changed": "2026-10-06T20:36:30.736Z",
       "last_observed_crawler_fetch": null,
       "last_observed_crawler_family": null,
       "indexnow_pending": true,
@@ -11026,6 +10960,50 @@
       "urgency": "strike_now",
       "crawl_priority": 160,
       "last_changed": "2026-10-06T16:42:20.155Z",
+      "last_observed_crawler_fetch": null,
+      "last_observed_crawler_family": null,
+      "indexnow_pending": true,
+      "negative_provider_pickup_receipts": [],
+      "reasons": [
+        "no_self_identified_crawler_fetch_observed",
+        "fresh_content_under_72h",
+        "indexnow_hash_pending"
+      ],
+      "recommended_actions": [
+        "verify_live_bytes_then_indexnow",
+        "promote_in_hot_discovery_queue",
+        "increase_internal_crosslinks_from_relevant_public_surfaces"
+      ]
+    },
+    {
+      "path": "/chum/answers/doors/build-a-sourced-brief-about-farm-water-land-or-production-risk-baefc8483b.json",
+      "product_key": null,
+      "score": 215,
+      "urgency": "strike_now",
+      "crawl_priority": 160,
+      "last_changed": "2026-10-06T20:36:30.736Z",
+      "last_observed_crawler_fetch": null,
+      "last_observed_crawler_family": null,
+      "indexnow_pending": true,
+      "negative_provider_pickup_receipts": [],
+      "reasons": [
+        "no_self_identified_crawler_fetch_observed",
+        "fresh_content_under_72h",
+        "indexnow_hash_pending"
+      ],
+      "recommended_actions": [
+        "verify_live_bytes_then_indexnow",
+        "promote_in_hot_discovery_queue",
+        "increase_internal_crosslinks_from_relevant_public_surfaces"
+      ]
+    },
+    {
+      "path": "/chum/answers/doors/build-a-sourced-brief-about-farm-water-land-or-production-risk-baefc8483b/",
+      "product_key": null,
+      "score": 215,
+      "urgency": "strike_now",
+      "crawl_priority": 160,
+      "last_changed": "2026-10-06T20:36:30.736Z",
       "last_observed_crawler_fetch": null,
       "last_observed_crawler_family": null,
       "indexnow_pending": true,
@@ -11664,6 +11642,28 @@
       "urgency": "strike_now",
       "crawl_priority": 160,
       "last_changed": "2026-10-06T16:42:20.155Z",
+      "last_observed_crawler_fetch": null,
+      "last_observed_crawler_family": null,
+      "indexnow_pending": true,
+      "negative_provider_pickup_receipts": [],
+      "reasons": [
+        "no_self_identified_crawler_fetch_observed",
+        "fresh_content_under_72h",
+        "indexnow_hash_pending"
+      ],
+      "recommended_actions": [
+        "verify_live_bytes_then_indexnow",
+        "promote_in_hot_discovery_queue",
+        "increase_internal_crosslinks_from_relevant_public_surfaces"
+      ]
+    },
+    {
+      "path": "/chum/answers/doors/do-a-resilience-investigation-227f8bd16b.json",
+      "product_key": null,
+      "score": 215,
+      "urgency": "strike_now",
+      "crawl_priority": 160,
+      "last_changed": "2026-10-06T20:37:44.536Z",
       "last_observed_crawler_fetch": null,
       "last_observed_crawler_family": null,
       "indexnow_pending": true,

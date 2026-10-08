@@ -1,0 +1,136 @@
+{
+  "schema": "evercraft.cfb.poll-baseline.v1",
+  "poll_id": "ap-top25",
+  "poll_name": "AP Top 25",
+  "published_date": "2026-10-04",
+  "source_authority": "Associated Press",
+  "source_url": "https://apnews.com/article/college-football-rankings-top-25-7db03c4123afa589863a8b53f4db520c",
+  "use_policy": "comparison_only_never_model_input",
+  "rankings": [
+    {
+      "rank": 1,
+      "team_id": "texas",
+      "team_name": "Texas"
+    },
+    {
+      "rank": 2,
+      "team_id": "georgia",
+      "team_name": "Georgia"
+    },
+    {
+      "rank": 3,
+      "team_id": "notre-dame",
+      "team_name": "Notre Dame"
+    },
+    {
+      "rank": 4,
+      "team_id": "miami-fl",
+      "team_name": "Miami (FL)"
+    },
+    {
+      "rank": 5,
+      "team_id": "ohio-st",
+      "team_name": "Ohio St."
+    },
+    {
+      "rank": 6,
+      "team_id": "alabama",
+      "team_name": "Alabama"
+    },
+    {
+      "rank": 7,
+      "team_id": "indiana",
+      "team_name": "Indiana"
+    },
+    {
+      "rank": 8,
+      "team_id": "byu",
+      "team_name": "BYU"
+    },
+    {
+      "rank": 9,
+      "team_id": "mississippi",
+      "team_name": "Mississippi"
+    },
+    {
+      "rank": 10,
+      "team_id": "lsu",
+      "team_name": "LSU"
+    },
+    {
+      "rank": 11,
+      "team_id": "texas-tech",
+      "team_name": "Texas Tech"
+    },
+    {
+      "rank": 12,
+      "team_id": "utah",
+      "team_name": "Utah"
+    },
+    {
+      "rank": 13,
+      "team_id": "oregon",
+      "team_name": "Oregon"
+    },
+    {
+      "rank": 14,
+      "team_id": "missouri",
+      "team_name": "Missouri"
+    },
+    {
+      "rank": 15,
+      "team_id": "tennessee",
+      "team_name": "Tennessee"
+    },
+    {
+      "rank": 16,
+      "team_id": "florida",
+      "team_name": "Florida"
+    },
+    {
+      "rank": 17,
+      "team_id": "mississippi-st",
+      "team_name": "Mississippi St."
+    },
+    {
+      "rank": 18,
+      "team_id": "oklahoma-st",
+      "team_name": "Oklahoma St."
+    },
+    {
+      "rank": 19,
+      "team_id": "usc",
+      "team_name": "USC"
+    },
+    {
+      "rank": 20,
+      "team_id": "iowa",
+      "team_name": "Iowa"
+    },
+    {
+      "rank": 21,
+      "team_id": "ucla",
+      "team_name": "UCLA"
+    },
+    {
+      "rank": 22,
+      "team_id": "houston",
+      "team_name": "Houston"
+    },
+    {
+      "rank": 23,
+      "team_id": "boise-st",
+      "team_name": "Boise State"
+    },
+    {
+      "rank": 24,
+      "team_id": "smu",
+      "team_name": "SMU"
+    },
+    {
+      "rank": 25,
+      "team_id": "pittsburgh",
+      "team_name": "Pittsburgh"
+    }
+  ]
+}

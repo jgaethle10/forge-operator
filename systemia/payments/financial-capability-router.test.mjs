@@ -19,6 +19,16 @@ test('insured deposit account fails closed without both authorities',()=>{
   assert.ok(route.blockers.includes('deposit_insurance_authority_required'));
 });
 
+test('arbitrary regulated authority string is insufficient without verified evidence state',()=>{
+  const route=routeFinancialCapability({
+    capabilityKey:'deposit_account',
+    matrix,
+    regulatedAuthority:'yep-we-are-a-bank'
+  });
+  assert.equal(route.allowed,false);
+  assert.ok(route.blockers.includes('regulated_authority_required'));
+});
+
 test('regulated authority alone is insufficient for insured deposit claim',()=>{
   const route=routeFinancialCapability({
     capabilityKey:'insured_deposit_account',
@@ -34,7 +44,9 @@ test('deposit capability can route only after required authority evidence is sup
     capabilityKey:'insured_deposit_account',
     matrix,
     regulatedAuthority:'verified-charter-evidence-ref',
-    depositInsuranceAuthority:'verified-insurance-evidence-ref'
+    depositInsuranceAuthority:'verified-insurance-evidence-ref',
+    regulatedAuthorityVerified:true,
+    depositInsuranceAuthorityVerified:true
   });
   assert.equal(route.allowed,true);
   assert.equal(route.route,'authorized_insured_depository_rail');

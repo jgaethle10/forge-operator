@@ -22,6 +22,7 @@ function validateAdapter(adapter) {
   return {
     ...adapter,
     capability_key: key,
+    provider_key: clean(adapter.provider_key).toLowerCase(),
     work_types: workTypes.map((value) => value.toLowerCase()),
     human_gate_required: Boolean(adapter.human_gate_required),
     authority: clean(adapter.authority || 'bounded'),
@@ -61,6 +62,7 @@ export async function executeGoalWorkWithAdapter({
   workKey,
   registry,
   context = {},
+  trustedPublicKeys = {},
   now = new Date(),
 }) {
   const work = state?.tasks?.find((task) => task.work_key === clean(workKey));
@@ -100,7 +102,49 @@ export async function executeGoalWorkWithAdapter({
     };
   }
 
-  const started = startGoalWork({ state, workKey: work.work_key, now });
+  if (work.provider_key && work.provider_key !== adapter.provider_key) {
+    return {
+      ok: false,
+      executed: false,
+      reason: 'provider_binding_mismatch',
+      state,
+      receipt: {
+        schema: 'evercraft.capability-route-receipt.v1',
+        work_key: work.work_key,
+        result: 'held',
+        capability_key: adapter.capability_key,
+        declared_provider_key: work.provider_key,
+        observed_at: now instanceof Date ? now.toISOString() : new Date(now).toISOString(),
+      },
+    };
+  }
+
+  // This legacy executor has no durable pre-dispatch commit. A caller cannot
+  // use signed approval or a misleading read-only adapter declaration to
+  // perform gated or state-changing work without persistent attempt lineage.
+  // Those operations must go through executePersistedGoalWork instead.
+  if (adapter.authority !== 'read-only' || adapter.human_gate_required || work.human_gate_required) {
+    return {
+      ok: false,
+      executed: false,
+      reason: 'durable_dispatch_required',
+      state,
+      receipt: {
+        schema: 'evercraft.capability-route-receipt.v1',
+        work_key: work.work_key,
+        result: 'held',
+        capability_key: adapter.capability_key,
+        authority: adapter.authority,
+        durable_checkpoint_persisted: false,
+        external_effect_verified: false,
+        observed_at: now instanceof Date ? now.toISOString() : new Date(now).toISOString(),
+      },
+    };
+  }
+
+  // Trust anchors are supplied only by the privileged execution host, never
+  // copied from adapter output, task context, or caller-submitted approval JSON.
+  const started = startGoalWork({ state, workKey: work.work_key, trustedPublicKeys, now });
   const liveWork = started.tasks.find((task) => task.work_key === work.work_key);
 
   let outcome;
@@ -128,6 +172,7 @@ export async function executeGoalWorkWithAdapter({
   const next = recordGoalOutcome({
     state: started,
     workKey: work.work_key,
+    expectedAttempt: liveWork.attempt,
     result,
     receiptRef,
     evidenceRefs,

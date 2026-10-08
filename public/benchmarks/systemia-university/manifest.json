@@ -42,6 +42,24 @@
       "evaluator": "systemia/university/benchmark-engine.mjs",
       "evaluator_version": "1.0.0",
       "status": "open_spec_no_verified_public_runs"
+    },
+    {
+      "mission_key": "authority-discipline-001",
+      "version": "1.0.0",
+      "title": "Authority Discipline 001",
+      "mission_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/benchmarks/systemia-university/missions/authority-discipline-001.json",
+      "evaluator": "systemia/university/benchmark-engine.mjs",
+      "evaluator_version": "1.0.0",
+      "status": "open_spec_no_verified_public_runs"
     }
-  ]
+  ],
+  "submissions_index": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/benchmarks/systemia-university/submissions/index.json",
+  "leaderboard_index": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/benchmarks/systemia-university/leaderboards/index.json",
+  "remote_evaluation": {
+    "state": "implementation_ready_deployment_unverified",
+    "discovery_path": "/api/systemia-university/benchmarks",
+    "evaluate_path": "/api/systemia-university/evaluate",
+    "persistence": false,
+    "public_write": false
+  }
 }

@@ -42,6 +42,36 @@ function ledger(){
     source_urls:['https://sdataprod.ncaa.com/?variables=test-week-5'],
   };
 }
+function pollComparison(runId='cfbpi:test123'){
+  return {
+    schema:'evercraft.cfb.poll-comparison.v1',
+    ranking_run_id:runId,
+    authority_boundary:{
+      poll_used_as_model_input:false,
+      comparison_only:true,
+      disagreement_is_not_outcome_truth:true,
+    },
+    poll:{
+      poll_id:'ap-top25',
+      poll_name:'AP Top 25',
+      published_date:'2026-10-04',
+      source_authority:'Associated Press',
+      source_url:'https://example.test/ap',
+    },
+    summary:{overlap_count:20},
+    largest_disagreements:[
+      {
+        team_id:'team-1',
+        team_name:'Alpha State',
+        evercraft_rank:1,
+        poll_rank:9,
+        rank_delta:8,
+        absolute_gap:8,
+      },
+    ],
+  };
+}
+
 test('turns one ranking receipt into a Journal draft with a native Top 25 and Fallen brief', () => {
   const story = buildCfbPowerStoryDraft({
     ranking:ranking(),
@@ -87,4 +117,46 @@ test('accepts NCAA ledger v2 and preserves membership plus authority in machine 
   assert.equal(evidence.through_date,'2026-10-03');
   assert.deepEqual(evidence.fetched_weeks,[1,2,3,4,5]);
   assert.equal(evidence.membership.schema,'evercraft.cfb.fbs-team-membership.v2');
+});
+
+test('surfaces receipt-backed movement and comparison-only poll disagreements',()=>{
+  const fixture=ranking();
+  fixture.rankings[0].previous_rank=3;
+  fixture.rankings[0].movement=2;
+  fixture.rankings[0].movement_state='up';
+  fixture.rankings[1].previous_rank=1;
+  fixture.rankings[1].movement=-1;
+  fixture.rankings[1].movement_state='down';
+  const comparison=pollComparison(fixture.run_id);
+  const story=buildCfbPowerStoryDraft({
+    ranking:fixture,
+    ledger:ledger(),
+    pollComparison:comparison,
+    generatedAt:'2026-10-04T17:00:00Z',
+  });
+  const movement=story.sections.find(section=>section.heading==='Movement since the last edition');
+  const poll=story.sections.find(section=>section.heading==='Where Evercraft disagrees with AP Top 25');
+  assert.ok(movement);
+  assert.match(movement.body,/Alpha State up 2 to No\. 1/);
+  assert.ok(poll);
+  assert.match(poll.body,/not evidence that Evercraft or the poll is already correct/);
+  assert.match(poll.body,/published October 4, 2026/);
+  assert.equal(story.machine_evidence.payload.poll_comparison.ranking_run_id,fixture.run_id);
+  assert.equal(story.sources.some(source=>source.source_id==='cfb-poll-baseline-ap-top25'),true);
+  assert.equal(story.claims.some(claim=>claim.evidence_state==='verified'&&claim.source_refs?.includes('cfb-poll-baseline-ap-top25')),true);
+});
+
+test('poll comparison must match the exact ranking run and remain comparison-only',()=>{
+  assert.throws(()=>buildCfbPowerStoryDraft({
+    ranking:ranking(),
+    ledger:ledger(),
+    pollComparison:pollComparison('wrong-run'),
+  }),/poll_comparison_run_mismatch/);
+  const invalid=pollComparison();
+  invalid.authority_boundary.poll_used_as_model_input=true;
+  assert.throws(()=>buildCfbPowerStoryDraft({
+    ranking:ranking(),
+    ledger:ledger(),
+    pollComparison:invalid,
+  }),/poll_comparison_authority_invalid/);
 });

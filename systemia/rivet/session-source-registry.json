@@ -175,5 +175,132 @@
     "unresolved_reason": "NYC source location is N/A; geography intentionally not invented.",
     "physical_site_count_note": "Do not infer physical-site count from station_external_id across schemas because some historical sources use charge-box IDs or site-family IDs.",
     "as_of": "2026-09-26T23:30:00Z"
-  }
+  },
+  "admission_policy": {
+    "schema": "evercraft.rivet.session-source-admission.v1",
+    "observed_session_requirements": [
+      "Session count, actual charging transaction, or metered-session energy must be explicit in publisher data fields or primary report.",
+      "Source access and commercial-use rights must be known; public visibility alone does not grant commercial redistribution.",
+      "Station inventory and announced deployment must never be counted as observed sessions.",
+      "Source scan timestamp and newest observation date are separately displayed.",
+      "Partially updated months must not be represented as complete.",
+      "Geography precision, source overlap, and evidence vintage must survive projection to customer reports."
+    ],
+    "freshness_lookback": {
+      "key": "nyc-plugnyc",
+      "source_metadata_last_updated": "2026-09-08",
+      "publisher_declared_frequency": "daily",
+      "known_issue": "Source can publish with a lag; current-month-only scans are not sufficient.",
+      "individual_sessions": {
+        "months_relative_to_current": [
+          0,
+          -1,
+          -2
+        ],
+        "max_pages_per_month_per_cycle": [
+          8,
+          3,
+          2
+        ],
+        "page_limit": 250,
+        "resume_offsets_in_receipt": true,
+        "dedupe": "source session fingerprint and existing EVOpsSession source_ref"
+      },
+      "monthly_observed_aggregates": {
+        "current_month": "each refresh cycle; explicitly partial",
+        "two_prior_months": "daily backfill and correction recheck"
+      },
+      "current_production_execution_status": "code_build_verified_scheduled_authenticated_cycle_not_yet_verified"
+    }
+  },
+  "new_source_admission_queue": [
+    {
+      "source_id": "us-nc-charlotte-municipal-ev-charging-sites-2026",
+      "publisher": "City of Charlotte, NC",
+      "source_url": "https://services.arcgis.com/9Nl857LBlQVyzq54/arcgis/rest/services/Municipal_EV_Charging_Sites/FeatureServer/0",
+      "catalog_url": "https://catalog.data.gov/dataset/municipal-ev-charging-sites",
+      "publication_status": "public_accessible",
+      "license": "CC-BY-4.0",
+      "observed_session_status": "NO_SESSION_FIELDS_IN_PUBLISHED_LAYER",
+      "allowed_evidence_class": "charger_inventory_only",
+      "allowed_for_rivet_session_count": false,
+      "admissible_for_rivet_station_inventory": true,
+      "source_fields_verified": [
+        "Reference_Station_ID",
+        "Reference_Station_Name",
+        "Reference_Address",
+        "Ports_at_Location",
+        "Latitude",
+        "Longitude",
+        "Vendor_Name"
+      ],
+      "refresh_target": "daily_inventory",
+      "next_action": "Look for separately published Charlotte station/port charging-session usage statistics; no observed-session ingest from this layer.",
+      "note": "Catalog description references sessions, but published FeatureServer layer does not contain session counts/energy. Attribution required."
+    },
+    {
+      "source_id": "gb-london-barnet-charging-transactions",
+      "publisher": "London Borough of Barnet",
+      "source_url": "https://www.data.gov.uk/dataset/16c7326b-57fe-4803-88f8-9286c387f68a/electric-vehicle-charging-transactions",
+      "publication_status": "public_csv_links",
+      "source_metadata_updated": "2026-09-25",
+      "license": "not_set_for_dataset",
+      "observed_session_status": "published_transaction_level_csv_reported",
+      "allowed_evidence_class": "candidate_only",
+      "allowed_for_rivet_session_count": false,
+      "commercial_ingest_state": "HELD_PENDING_DATASET_LICENSE_CONFIRMATION",
+      "next_action": "Confirm dataset-specific commercial reuse and attribution terms with publisher. Inspect observation periods and schema before a governed adaptor.",
+      "note": "General portal OGL notice is not proof that an individual dataset with 'Licence: Not set' is cleared."
+    },
+    {
+      "source_id": "us-pa-penndot-nevi-operations-access",
+      "publisher": "Pennsylvania Department of Transportation",
+      "source_url": "https://www.pa.gov/agencies/penndot/research-planning-and-innovation/electric-vehicles-and-alternative-fuels/national-electric-vehicle-infrastructure-nevi-formula-program",
+      "publication_status": "official_program_page",
+      "observed_session_status": "existing_quarterly_statewide_usage_separate_from_live_station_operations",
+      "allowed_evidence_class": "operational_status_candidate",
+      "allowed_for_rivet_session_count": false,
+      "commercial_ingest_state": "HOLD_UNTIL_DATA_ACCESS_SCHEMA_AND_TERMS_VERIFIED",
+      "next_action": "Inspect official third-party operational data guidance; do not reclassify uptime/status as charging sessions."
+    },
+    {
+      "source_id": "ca-on-ottawa-city-public-charging-sessions",
+      "publisher": "City of Ottawa, Ontario, Canada",
+      "publisher_primary_page": "https://ottawa.ca/en/living-ottawa/environment-conservation-and-climate/reducing-greenhouse-gas-emissions/transportation/electric-vehicles/how-city-supporting-electric-vehicles",
+      "catalog_url": "https://data.urbandatacentre.ca/en/catalogue/open-ottawa-9de005-electric-vehicle-charging-stations-usage-data",
+      "source_url": "https://services.arcgis.com/G6F8XLCl5KtAlZ2G/arcgis/rest/services/Electric_Vehicle_Charging_Stations_Usage_Data/FeatureServer/0",
+      "licence_url": "https://ottawa.ca/en/city-hall/open-transparent-and-accountable-government/open-data/open-data-licence-version-20",
+      "licence": "City of Ottawa Open Data Licence 2.0",
+      "commercial_rights": "commercial_use_allowed_subject_to_attribution_excludes_personal_information",
+      "required_attribution": "Contains information licensed under the Open Government Licence – City of Ottawa.",
+      "dataset_subject": "municipal public charging event observations, station/location/connection periods/kWh",
+      "publication_claimed_cadence": "monthly",
+      "dataset_reported_row_count_from_catalog": 22455,
+      "source_fields_publicly_listed": [
+        "Station",
+        "Site",
+        "Address",
+        "Session_start_date",
+        "Session_end_date",
+        "Total_kWh",
+        "End_Reason",
+        "Card_number",
+        "Session_ID"
+      ],
+      "prohibited_fields": [
+        "Card_number",
+        "Session_ID",
+        "User Identifier Number",
+        "Transaction_ID"
+      ],
+      "privacy_rule": "Never fetch, hash, persist, distribute, or join personal/card/user/session IDs; only authorized aggregate station-period counts/kWh and non-identifying station context, after publisher access is authorized.",
+      "live_api_probe_status": "BLOCKED_HTTP_499_TOKEN_REQUIRED",
+      "observed_session_status": "source_schema_verified_not_retrieved",
+      "commercial_ingest_state": "HELD_PENDING_AUTHORIZED_SOURCE_ACCESS_AND_PRIVACY_SAFE_ADAPTER",
+      "allowed_for_rivet_session_count": false,
+      "allowed_evidence_class": "candidate_session_level_publication_pending_access",
+      "next_action": "Obtain authorized read of primary ArcGIS layer and verify current record count, latest observation, station precision, non-personal columns, and aggregation. Only then produce deduped EVObservedUsageAggregate records and source receipts.",
+      "evidence_note": "Catalogue and City identify true session fields and monthly updates, but an anonymous exact ArcGIS /query?returnCountOnly=true returned JSON error 499 Token Required. Do not attempt to evade access controls or use PII."
+    }
+  ]
 }
