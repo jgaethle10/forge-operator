@@ -2,10 +2,10 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import {inspectWebsiteAuditBuyerPage,formatWebsiteAuditBuyerProbe,WEBSITE_AUDIT_URL} from './website-audit-buyer-probe.mjs';
 
-const html = \`<!doctype html><html><title>Evercraft Quick Win Audit</title>
+const html = `<!doctype html><html><title>Evercraft Quick Win Audit</title>
 <h1>Your website is getting attention</h1><p>Website Quick Win Audit $49</p>
 <form method="post" action="/api/offers/website-audit/checkout">
-<button>Continue through Evercraft Payments</button></form></html>\`;
+<button>Continue through Evercraft Payments</button></form></html>`;
 const respond=(body=html,status=200,headers={'content-type':'text/html; charset=utf-8'})=>
   new Response(body,{status,headers});
 
