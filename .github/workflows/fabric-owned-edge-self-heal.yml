@@ -14,6 +14,7 @@ on:
       - 'tests/fabric-owned-edge-installer.test.mjs'
       - 'tests/fabric-checkout-dirt.test.mjs'
       - 'tests/fabric-journal-rescue.test.mjs'
+      - 'tests/fabric-journal-preservation.test.mjs'
       - 'tests/public-edge-ingress-watch.test.mjs'
       - '.github/workflows/fabric-owned-edge-self-heal.yml'
   push:
@@ -30,6 +31,7 @@ on:
       - 'tests/fabric-owned-edge-installer.test.mjs'
       - 'tests/fabric-checkout-dirt.test.mjs'
       - 'tests/fabric-journal-rescue.test.mjs'
+      - 'tests/fabric-journal-preservation.test.mjs'
       - 'tests/public-edge-ingress-watch.test.mjs'
       - '.github/workflows/fabric-owned-edge-self-heal.yml'
 
@@ -46,7 +48,7 @@ jobs:
         with:
           node-version: '22'
       - name: Prove owned edge install/update contract
-        run: node --test tests/fabric-owned-edge-installer.test.mjs tests/fabric-checkout-dirt.test.mjs tests/fabric-journal-rescue.test.mjs
+        run: node --test tests/fabric-owned-edge-installer.test.mjs tests/fabric-checkout-dirt.test.mjs tests/fabric-journal-rescue.test.mjs tests/fabric-journal-preservation.test.mjs tests/fabric-self-update-hardening.test.mjs tests/fabric-owned-edge-updater-contract.test.mjs
       - name: Prove ingress diagnosis and bounded recovery policy
         run: node --test tests/public-edge-ingress-watch.test.mjs
       - name: Prove edge doctor cannot mutate router mapping in default diagnostic mode
