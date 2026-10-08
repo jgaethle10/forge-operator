@@ -1,23 +1,8 @@
-import fs from "node:fs";
-import { createHash } from "node:crypto";
 import { buildBootEnvelope } from "../evercraft-os/runtime.mjs";
 import { buildDeviceProfile } from "../evercraft-os/device-profile.mjs";
 import { buildEvercraftOsAppCatalog, compileEvercraftOsApp } from "../evercraft-os/app-package.mjs";
 import { planEvercraftOsAppInstall } from "../evercraft-os/app-install-plan.mjs";
-
-function canonical(value) {
-  if (Array.isArray(value)) return value.map(canonical);
-  if (value && typeof value === "object") {
-    return Object.fromEntries(Object.keys(value).sort().map((key) => [key, canonical(value[key])]));
-  }
-  return value;
-}
-
-function sha256(value) {
-  return "sha256:" + createHash("sha256")
-    .update(typeof value === "string" ? value : JSON.stringify(canonical(value)))
-    .digest("hex");
-}
+import { readEvercraftOsUserSessionBootReceipt } from "../evercraft-os/boot-receipt.mjs";
 
 function readUserSessionBootReceipt(file) {
   const configured = String(file || "").trim();
@@ -29,24 +14,9 @@ function readUserSessionBootReceipt(file) {
       state: null
     };
   }
-  if (!fs.existsSync(configured)) {
-    return {
-      configured: true,
-      present: false,
-      integrity: "not_present",
-      state: null
-    };
-  }
 
   try {
-    const stat = fs.statSync(configured);
-    if (!stat.isFile() || stat.size > 512 * 1024) throw new Error("boot_receipt_file_invalid");
-    const receipt = JSON.parse(fs.readFileSync(configured, "utf8"));
-    if (receipt?.schema !== "evercraft.os.user-session-boot-receipt.v1") {
-      throw new Error("boot_receipt_schema_invalid");
-    }
-    const { receipt_hash, ...body } = receipt;
-    if (receipt_hash !== sha256(body)) throw new Error("boot_receipt_integrity_mismatch");
+    const receipt = readEvercraftOsUserSessionBootReceipt(configured);
     return {
       configured: true,
       present: true,
@@ -54,7 +24,7 @@ function readUserSessionBootReceipt(file) {
       state: receipt.state,
       node_id: receipt.node_id,
       device_class: receipt.device_class,
-      receipt_hash,
+      receipt_hash: receipt.receipt_hash,
       booted_at: receipt.booted_at,
       capsule_hold_count: receipt.capsule_reconciliation?.hold_count ?? null,
       home_listen_scope: receipt.home?.listen_scope || null,
@@ -62,16 +32,16 @@ function readUserSessionBootReceipt(file) {
         receipt.authority?.execution_granted_by_supervisor === true
     };
   } catch (error) {
+    const missing = String(error?.code || "") === "ENOENT";
     return {
       configured: true,
-      present: true,
-      integrity: "hold",
-      state: "held",
-      reason: String(error?.message || error)
+      present: !missing,
+      integrity: missing ? "not_present" : "hold",
+      state: missing ? null : "held",
+      ...(missing ? {} : { reason: String(error?.message || error) })
     };
   }
 }
-
 
 export function readEvercraftOsStatus({
   deviceClassHint = process.env.EVERCRAFT_OS_DEVICE_CLASS || "unknown",
