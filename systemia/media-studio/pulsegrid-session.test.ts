@@ -358,3 +358,52 @@ test('PulseGrid canonical core bundles for the browser without Node built-ins',a
   assert.match(output,/PULSEGRID_ENGINE_VERSION/);
   assert.doesNotMatch(output,/node:crypto/);
 });
+
+
+test('PulseGrid note expression edits are bounded, receipt-backed and reversible',()=>{
+  let session=createPulseGridSession('Expression Proof');
+  let result=applyPulseGridOperation(session,{
+    type:'note.add',track_id:'keys',scene:0,
+    note:{id:'expr-note',pitch:67,start:4,length:2,velocity:.5,probability:.8,microtiming:10},
+  },'controller');
+  session=result.session;
+  const before=structuredClone(session.tracks.find((track)=>track.id==='keys')!.clips[0].notes[0]);
+
+  result=applyPulseGridOperation(session,{
+    type:'note.set_expression',
+    track_id:'keys',
+    scene:0,
+    note_id:'expr-note',
+    velocity:1.8,
+    probability:-1,
+    microtiming:1600,
+  },'human');
+  session=result.session;
+  const edited=session.tracks.find((track)=>track.id==='keys')!.clips[0].notes[0];
+  assert.equal(edited.velocity,1);
+  assert.equal(edited.probability,0);
+  assert.equal(edited.microtiming,1000);
+  assert.equal(result.receipt.operation,'note.set_expression');
+  assert.deepEqual(result.receipt.targets,[`clip:${session.tracks.find((track)=>track.id==='keys')!.clips[0].id}.note:expr-note.expression`]);
+
+  const undone=undoPulseGridReceipt(session,result.receipt.id,'human');
+  assert.deepEqual(
+    undone.session.tracks.find((track)=>track.id==='keys')!.clips[0].notes[0],
+    before,
+  );
+  assert.equal(validatePulseGridSession(undone.session).ok,true);
+});
+
+test('PulseGrid rejects empty note expression operations',()=>{
+  let session=createPulseGridSession();
+  session=applyPulseGridOperation(session,{
+    type:'note.add',track_id:'keys',scene:0,
+    note:{id:'expr-empty',pitch:60,start:0},
+  }).session;
+  assert.throws(()=>applyPulseGridOperation(session,{
+    type:'note.set_expression',
+    track_id:'keys',
+    scene:0,
+    note_id:'expr-empty',
+  }),/requires at least one value/);
+});

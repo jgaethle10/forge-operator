@@ -4,3 +4,12 @@
 @media(max-width:720px){.fallenSessions{padding:12px}.fsTop{display:block}.fsTruth{justify-content:flex-start;margin-top:12px}.fsWorkspace{grid-template-columns:minmax(0,1fr)}.fsReceipts{grid-column:auto}.fsEditorHead{display:block}.fsClipMeta{justify-content:flex-start;margin-top:8px}.fsToolbar{display:grid;grid-template-columns:repeat(2,minmax(0,1fr))}.fallenSessions button{font-size:16px}.fsTrackName span{font-size:10px}}
 
 .fsNoteCell.playhead,.fsStep.playhead{outline:2px solid #ffffff;outline-offset:-2px;box-shadow:0 0 0 2px rgba(184,255,68,.2)}
+
+.fsNoteCell.selected{outline:2px solid #fff;outline-offset:1px}
+.fsNoteInspector{margin-top:10px;padding:10px;border:1px solid #2b333b;border-radius:9px;background:#101419;display:grid;grid-template-columns:repeat(4,minmax(120px,1fr)) auto;gap:8px;align-items:end}
+.fsNoteInspector label{display:grid;gap:5px;min-width:0;color:#9ca8b1;font-size:10px}
+.fsNoteInspector label span{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.fsNoteInspector input{width:100%;min-width:0;background:#0b0f13;color:#edf2f6;border:1px solid #303841;border-radius:6px;padding:7px}
+.fsNoteInspector button{border:1px solid #493034;background:#24171a;color:#ffc2c8;border-radius:7px;padding:7px 10px;cursor:pointer}
+@media(max-width:920px){.fsNoteInspector{grid-template-columns:repeat(2,minmax(0,1fr))}.fsNoteInspector button{grid-column:1/-1}}
+@media(max-width:520px){.fsNoteInspector{grid-template-columns:minmax(0,1fr)}}

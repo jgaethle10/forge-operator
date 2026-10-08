@@ -124,3 +124,31 @@ test('Fallen Sessions MIDI disconnect clears device handlers and held-note state
   assert.match(ui,/access\.onstatechange=null/);
   assert.match(ui,/heldMidiNotesRef\.current\.clear\(\)/);
 });
+
+
+test('Fallen Sessions note expression inspector edits canonical note state',()=>{
+  const ui=fs.readFileSync('src/FallenSessions.tsx','utf8');
+  assert.match(ui,/selectedNoteId/);
+  assert.match(ui,/type:'note\.set_expression'/);
+  assert.match(ui,/type:'note\.resize'/);
+  assert.match(ui,/velocity:Number\(event\.target\.value\)/);
+  assert.match(ui,/probability:Number\(event\.target\.value\)/);
+  assert.match(ui,/microtiming:Number\(event\.target\.value\)/);
+  assert.doesNotMatch(ui,/selectedNote\.velocity\s*=/);
+  assert.doesNotMatch(ui,/selectedNote\.probability\s*=/);
+  assert.doesNotMatch(ui,/selectedNote\.microtiming\s*=/);
+});
+
+test('Fallen Sessions piano roll selects existing notes and reserves double-click for delete',()=>{
+  const ui=fs.readFileSync('src/FallenSessions.tsx','utf8');
+  assert.match(ui,/setSelectedNoteId\(existing\.id\)/);
+  assert.match(ui,/onDoubleClick=\{\(\)=>\{if\(note\)deleteNote\(note\.id\)\}\}/);
+  assert.match(ui,/fsNoteCell.*selected/);
+});
+
+test('Fallen Sessions note inspector remains responsive without widening the workspace',()=>{
+  const css=fs.readFileSync('src/fallen-sessions.css','utf8');
+  assert.match(css,/\.fsNoteInspector/);
+  assert.match(css,/grid-template-columns:repeat\(4,minmax\(120px,1fr\)\)/);
+  assert.match(css,/@media\(max-width:520px\).*\.fsNoteInspector\{grid-template-columns:minmax\(0,1fr\)\}/s);
+});

@@ -43,6 +43,7 @@ export default function FallenSessions(){
   const [session,setSession]=useState<PulseGridSession>(()=>createPulseGridSession('First Light'));
   const [selectedTrackId,setSelectedTrackId]=useState('keys');
   const [selectedScene,setSelectedScene]=useState(0);
+  const [selectedNoteId,setSelectedNoteId]=useState<string|null>(null);
   const [status,setStatus]=useState('Canonical PulseGrid session ready.');
   const [playing,setPlaying]=useState(false);
   const [recording,setRecording]=useState(false);
@@ -75,6 +76,7 @@ export default function FallenSessions(){
     [session,selectedTrackId],
   );
   const clip=track.clips[selectedScene];
+  const selectedNote=selectedNoteId?clip.notes.find((note)=>note.id===selectedNoteId)||null:null;
   const undoable=latestUndoableReceipt(session);
 
   useEffect(()=>{
@@ -84,10 +86,12 @@ export default function FallenSessions(){
 
   useEffect(()=>{
     selectedTrackRef.current=selectedTrackId;
+    setSelectedNoteId(null);
   },[selectedTrackId]);
 
   useEffect(()=>{
     selectedSceneRef.current=selectedScene;
+    setSelectedNoteId(null);
     audioRef.current?.setScene(selectedScene);
   },[selectedScene]);
 
@@ -473,18 +477,48 @@ export default function FallenSessions(){
     }
   }
 
-  function toggleNote(pitch:number,step:number){
+  function selectOrCreateNote(pitch:number,step:number){
     const existing=clip.notes.find((note)=>note.pitch===pitch&&Math.round(note.start)===step);
     if(existing){
-      apply({type:'note.delete',track_id:track.id,scene:selectedScene,note_id:existing.id});
-    }else{
-      apply({
-        type:'note.add',
-        track_id:track.id,
-        scene:selectedScene,
-        note:{pitch,start:step,length:1,velocity:.78,probability:1,microtiming:0},
-      });
+      setSelectedNoteId(existing.id);
+      setStatus('Selected '+noteName(existing.pitch)+' · step '+String(Math.round(existing.start)+1));
+      return;
     }
+    const result=apply({
+      type:'note.add',
+      track_id:track.id,
+      scene:selectedScene,
+      note:{pitch,start:step,length:1,velocity:.78,probability:1,microtiming:0},
+    });
+    const created=result?.receipt.after as {id?:string}|null|undefined;
+    if(created?.id)setSelectedNoteId(created.id);
+  }
+
+  function deleteNote(noteId:string){
+    const result=apply({type:'note.delete',track_id:track.id,scene:selectedScene,note_id:noteId});
+    if(result&&selectedNoteId===noteId)setSelectedNoteId(null);
+  }
+
+  function setNoteExpression(values:{velocity?:number;probability?:number;microtiming?:number}){
+    if(!selectedNote)return;
+    apply({
+      type:'note.set_expression',
+      track_id:track.id,
+      scene:selectedScene,
+      note_id:selectedNote.id,
+      ...values,
+    });
+  }
+
+  function resizeSelectedNote(length:number){
+    if(!selectedNote)return;
+    apply({
+      type:'note.resize',
+      track_id:track.id,
+      scene:selectedScene,
+      note_id:selectedNote.id,
+      length,
+    });
   }
 
   function toggleStep(step:number){
@@ -637,15 +671,66 @@ export default function FallenSessions(){
                     cells.push(
                       <button
                         key={pitch+'-'+step}
-                        className={'fsNoteCell '+(note?'active ':'')+(step%4===0?'beat ':'')+(playing&&step===playhead?'playhead':'')}
-                        title={noteName(pitch)+' · step '+(step+1)}
-                        onClick={()=>toggleNote(pitch,step)}
+                        className={'fsNoteCell '+(note?'active ':'')+(note?.id===selectedNoteId?'selected ':'')+(step%4===0?'beat ':'')+(playing&&step===playhead?'playhead':'')}
+                        title={note?(noteName(pitch)+' · step '+(step+1)+' · double-click to delete'):(noteName(pitch)+' · step '+(step+1))}
+                        onClick={()=>selectOrCreateNote(pitch,step)}
+                        onDoubleClick={()=>{if(note)deleteNote(note.id)}}
                       />
                     );
                   }
                   return cells;
                 })}
               </div>
+              {selectedNote&&(
+                <div className="fsNoteInspector">
+                  <div className="fsSectionTitle">Selected note · {noteName(selectedNote.pitch)}</div>
+                  <label>
+                    <span>Length</span>
+                    <input
+                      type="number"
+                      min={0.25}
+                      max={Math.max(.25,clip.steps.length-selectedNote.start)}
+                      step={0.25}
+                      value={Number(selectedNote.length.toFixed(2))}
+                      onChange={(event)=>resizeSelectedNote(Number(event.target.value))}
+                    />
+                  </label>
+                  <label>
+                    <span>Velocity {Math.round(selectedNote.velocity*127)}</span>
+                    <input
+                      type="range"
+                      min={0}
+                      max={1}
+                      step={0.01}
+                      value={selectedNote.velocity}
+                      onChange={(event)=>setNoteExpression({velocity:Number(event.target.value)})}
+                    />
+                  </label>
+                  <label>
+                    <span>Probability {Math.round(selectedNote.probability*100)}%</span>
+                    <input
+                      type="range"
+                      min={0}
+                      max={1}
+                      step={0.01}
+                      value={selectedNote.probability}
+                      onChange={(event)=>setNoteExpression({probability:Number(event.target.value)})}
+                    />
+                  </label>
+                  <label>
+                    <span>Microtiming {Math.round(selectedNote.microtiming)} ms</span>
+                    <input
+                      type="range"
+                      min={-100}
+                      max={100}
+                      step={1}
+                      value={selectedNote.microtiming}
+                      onChange={(event)=>setNoteExpression({microtiming:Number(event.target.value)})}
+                    />
+                  </label>
+                  <button onClick={()=>deleteNote(selectedNote.id)}>Delete note</button>
+                </div>
+              )}
             </div>
           ):(
             <div className="fsStepGrid">
