@@ -38,6 +38,7 @@ COPY --from=build /app/systemia/visual-desk ./systemia/visual-desk
 COPY --from=build /app/systemia/forensiscope ./systemia/forensiscope
 COPY --from=build /app/systemia/rivet ./systemia/rivet
 COPY --from=build /app/systemia/household-fabric ./systemia/household-fabric
+COPY --from=build /app/systemia/people ./systemia/people
 COPY --from=build /app/systemia/beast-mode ./systemia/beast-mode
 COPY --from=build /app/registry ./registry
 COPY --from=build /app/dist ./dist
