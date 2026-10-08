@@ -101,11 +101,14 @@ test('owned Fabric serves offer pages, requires confirmation, and delegates chec
       return new Response(JSON.stringify({
         ok:true,
         authority:'Evercraft Payments',
+        payment_runtime:'central',
+        offer_key:'systemia.website_audit_quick_win_49.v1',
+        capability_key:'website-audit-quick-win',
         order_key:'RAVEN-WEBSITE-AUDIT-QUICK-WIN-TEST',
         amount_cents:4900,
         currency:'usd',
         checkout_ready:true,
-        checkout_url:'https://settlement.example.test/pay/test',
+        checkout_url:'https://checkout.stripe.com/c/pay/cs_test_safe_fixture',
         payment_state:'unpaid',
         fulfillment_release:false,
       }),{
@@ -157,7 +160,7 @@ test('owned Fabric serves offer pages, requires confirmation, and delegates chec
     const checkoutBody=await handoff.text();
     assert.match(checkoutBody,/Your checkout is ready\./);
     assert.match(checkoutBody,/Open secure checkout/);
-    assert.match(checkoutBody,/settlement\.example\.test\/pay\/test/);
+    assert.match(checkoutBody,/checkout\.stripe\.com\/c\/pay\/cs_test_safe_fixture/);
     assert.match(checkoutBody,/Evercraft Payments/);
     assert.equal(seen.length,1);
     assert.equal(seen[0].body.user_confirmed,true);
