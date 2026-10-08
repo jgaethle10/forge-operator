@@ -1,0 +1,30 @@
+name: Website Audit Measured Distribution
+on:
+  pull_request:
+    paths:
+      - 'systemia/distribution/website-audit-growth-loop.mjs'
+      - 'systemia/distribution/website-audit-growth-loop.test.mjs'
+      - 'systemia/commercial-intelligence/**'
+      - '.github/workflows/website-audit-measured-distribution.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  prove-wave:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Test attribution and payment truth
+        run: node --test systemia/distribution/website-audit-growth-loop.test.mjs
+      - name: Test Rockies and FAIE commercial routing gates
+        run: node --test systemia/commercial-intelligence/signal-to-demand.test.mjs
+      - name: Test commercial bottleneck decision contracts
+        run: node --test systemia/commercial-intelligence/commercial-decisions.test.mjs
+      - name: Produce staged placements
+        run: |
+          node systemia/distribution/website-audit-growth-loop.mjs > /tmp/website-audit-wave.json
+          grep -q 'staged_not_published' /tmp/website-audit-wave.json
+          grep -q 'not_closed_without_real_publication_visits_settlement_and_delivery' /tmp/website-audit-wave.json
