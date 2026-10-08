@@ -154,3 +154,27 @@ A private-case request can no longer treat an existing generic pending connectio
 **Sandbox results:** `node tests/opportunity_fabric_authority_contract_test.mjs` PASS; `npm run test:connect` PASS with **28/28** executable mocked-handler behavioral cases and security smoke; `npm run build` PASS; targeted UI ESLint PASS. The regression suite now covers malicious attempted note disclosure, legacy request-key replay, generic pending-request conflict, and normal public-request behavior. Only the known stale Browserslist warning appeared.
 
 **No production release claim:** This checkpoint was saved in the Base44 sandbox, not independently deployed and authenticated against a public host. No real outreach or monetary/recovery outcome is claimed. Canonical `systemia/opportunity-fabric/runtime.json` stays unchanged pending deployment proof and owner/non-owner runtime verification.
+
+## Safe read-only production authentication canary (2026-10-07)
+
+**Base44 checkpoint:** `6ac718507b63eb4591f03ec9`  
+**Source commit:** `719e21a35b76a4ec88475ba826cee7bebd47c676`.
+
+Added `scripts/connect-production-auth-canary.mjs` and `tests/connect-production-auth-canary.test.mjs` to the Base44 source. The script is an explicit release-verification fixture, **not a claim that production is deployed**.
+
+The canary requires four operator-provided environment variables:
+- `CONNECT_CANARY_ENDPOINT`: HTTPS URL of the published trusted function
+- `CONNECT_CANARY_OWNER_BEARER`: synthetic-case owner authentication bearer
+- `CONNECT_CANARY_NONOWNER_BEARER`: independent non-owner authentication bearer
+- `CONNECT_CANARY_SYNTHETIC_CASE_ID`: an owner-private **synthetic test case**, not a customer's sensitive case
+
+The script issues only fail-closed `plan_connect_case_route` denial probes:
+1. Anonymous request must return `401 authentication_required`.
+2. Authenticated owner requesting a random absent case must return `404 connect_case_not_found`.
+3. Non-owner requesting the owned synthetic case must return `403 connect_case_owner_required`.
+
+The script does **not** authenticate against real accounts yet, mutate entities, create cases/proposals, send outreach, publish cases or print raw response bodies/secrets. Redirects are rejected; credentials are environment-only. It fails on missing configuration or ambiguous responses and cannot independently prove entity-level RLS or public deployment.
+
+`npm run test:connect` and `npm run build` now include the canary's four offline unit tests. Checkpoint verification: **32/32 tests PASS**, authority contract PASS, security smoke PASS, build PASS, Node syntax check PASS; stale Browserslist warning is non-blocking.
+
+**Release gate still open:** authenticated production deployment of v1.7 is unverified. Do not advance `systemia/opportunity-fabric/runtime.json` from its evidence-backed published state or claim actual contact, consent verification or recovered value before dedicated live tests.
