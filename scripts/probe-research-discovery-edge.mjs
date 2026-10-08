@@ -28,12 +28,12 @@ for (const route of routes) {
     } else {
       const body = await response.text();
       if (route.requireAbsoluteLoc) {
-        const locs = [...body.matchAll(/<loc>([^<]+)<\\/loc>/g)].map(m => m[1]);
+        const locs = [...body.matchAll(/<loc>([^<]+)<\/loc>/g)].map(m => m[1]);
         record.location_count = locs.length;
-        record.relative_locations = locs.filter(loc => !/^https:\\/\\//i.test(loc)).length;
+        record.relative_locations = locs.filter(loc => !/^https:\/\//i.test(loc)).length;
         record.state = locs.length && !record.relative_locations ? 'absolute_urls_verified' : 'invalid_sitemap_locations';
       } else if (route.requireNoindex) {
-        const noindex = /\\bnoindex\\b/i.test(record.x_robots_tag || '') || /<meta\\s+name=["']robots["']\\s+content=["'][^"']*noindex/i.test(body);
+        const noindex = /\bnoindex\b/i.test(record.x_robots_tag || '') || /<meta\s+name=["']robots["']\s+content=["'][^"']*noindex/i.test(body);
         record.state = noindex ? 'draft_noindex_verified' : 'draft_indexable_blocker';
       } else {
         record.state = 'reachable';
@@ -64,7 +64,7 @@ const report = {
 };
 const dir = path.join('artifacts', 'chum');
 fs.mkdirSync(dir, { recursive: true });
-fs.writeFileSync(path.join(dir, 'research-edge-probe.json'), JSON.stringify(report, null, 2) + '\\n');
+fs.writeFileSync(path.join(dir, 'research-edge-probe.json'), JSON.stringify(report, null, 2) + '\n');
 console.log(JSON.stringify(report, null, 2));
 const summary = [
   '## Research-to-Fabric external production probe',
@@ -78,5 +78,5 @@ const summary = [
   'An external probe is not indexing, search impressions, external LLM recommendation or payment evidence.',
   'A draft PR does not itself deploy the code. Missing preview routes are not counted as an approved release.',
   ''
-].join('\\n');
+].join('\n');
 if (process.env.GITHUB_STEP_SUMMARY) fs.appendFileSync(process.env.GITHUB_STEP_SUMMARY, summary);
