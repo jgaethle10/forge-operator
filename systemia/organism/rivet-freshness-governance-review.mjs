@@ -60,7 +60,7 @@ export function reviewRivetFreshnessDecision(){
   current_source_behavior_only:true,
   assessment_authority:false,
   customer_suitability_proved:false,
-  independently_verified_observed_session_rows:0,
+  synthetic_observed_session_rows:0,
   baseline_decision:baseline.decision.label,
   with_refresh_decision:withRefresh.decision.label,
   baseline_strongest_count:baseline.decision.strongest_points.length,
