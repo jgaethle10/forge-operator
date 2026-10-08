@@ -55,6 +55,12 @@ export function verifyProviderRecoveryObservation({
     claims.attempt_key!==hold.attempt_key||claims.source_method!==METHOD){
   throw Error('provider observation attempt or scope mismatch');
  }
+ // The task's chosen provider must be pinned before execution. Do not let
+ // a provider signer invent or substitute a provider after the attempt crashed.
+ if(!task.attempt_provider_key||task.attempt_provider_key!==task.provider_key||
+    claims.provider_key!==task.attempt_provider_key){
+  throw Error('provider observation does not match execution provider');
+ }
  if(!['completed','not_found','unknown'].includes(claims.outcome)||
    !/^[a-z0-9][a-z0-9._-]{2,63}$/.test(claims.provider_key)||
    !/^sha256:[0-9a-f]{64}$/.test(claims.upstream_response_sha256)||
