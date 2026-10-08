@@ -49,6 +49,7 @@ async function makeCompute({ tamper = '', healthMismatch = false } = {}) {
       const receipt = { ...receiptBody, receipt_hash: sha(receiptBody) };
       if (tamper === 'compute_receipt') receipt.receipt_hash = sha('forged');
       reply = { ok: true, service_id: serviceId, result: evidence, receipt };
+      if (tamper === 'oversize') reply = { ok: true, data: 'x'.repeat(3 * 1024 * 1024) };
     } else {
       res.writeHead(404).end();
       return;
@@ -148,4 +149,16 @@ test('private runtime does not accept an arbitrary public host, missing authorit
   assert.throws(() => createComputeBrowserLeaseRuntime({
     ...base, origin: 'http://127.0.0.1:8787/', leaseProvider: null,
   }), /fabric_compute_lease_provider_required/);
+});
+
+
+test('Compute response is size-bounded before buffering oversized worker output', async () => {
+  const f = await makeCompute({ tamper: 'oversize' });
+  try {
+    await assert.rejects(
+      f.browser.browse({ url: 'https://example.org/', timeout_ms: 2000 }),
+      /fabric_compute_response_too_large/,
+    );
+    assert.equal(f.requests.filter((request) => request.method === 'POST').length, 1);
+  } finally { await f.close(); }
 });
