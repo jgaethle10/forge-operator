@@ -3,8 +3,8 @@
   "story_id": "journal:2026-10-07:cfb-power-rankings",
   "slug": "college-football-power-rankings-2026-10-07",
   "title": "Evercraft College Football Power Rankings: Alabama Leads the Field",
-  "published_at": "2026-10-08T13:47:01.883Z",
-  "built_at": "2026-10-08T13:47:28.313Z",
+  "published_at": "2026-10-08T13:47:33.759Z",
+  "built_at": "2026-10-08T13:47:35.294Z",
   "canonical_url": "https://fabric.systemiacommandcenters.com/journal/college-football-power-rankings-2026-10-07/",
   "clip_handoff_ref": "production/college-football-power-rankings-2026-10-07/clip-handoff.json",
   "evidence_state": "model_derived_from_verified_public_results",
@@ -12,7 +12,7 @@
     "ncaa-fbs-scoreboard",
     "evercraft-cfb-edition-evidence"
   ],
-  "freshness_expires_at": "2026-10-15T13:47:01.883Z",
+  "freshness_expires_at": "2026-10-15T13:47:33.759Z",
   "editorial_gate": {
     "status": "accepted",
     "score": 10,
@@ -36,10 +36,10 @@
     "text_primary": false,
     "note": "The ranking surface is structured data. Fallen should build the social and motion visual package from the same Top 25 receipt."
   },
-  "article_sha256": "82445f139945d60e6de43c80ddf534a68c2af3dd3f37a24e846ad402c4a1219b",
+  "article_sha256": "d36ea4de5629267bba677dca539be4dbe20aa13538fe8bf61979dfad1899a0b2",
   "fallen_brief_sha256": "3df7b5e89a6304d964e92c4919c2b9da7cd24d08fd782f18416d1f0930c1ce95",
   "machine_evidence_ref": "data/college-football-power-rankings-2026-10-07.json",
-  "machine_evidence_sha256": "188eebdcf54e21ae93d58a0a795d265ae9cd26b5f9c584c82f600ff395b23ff3",
+  "machine_evidence_sha256": "d51838439ced422dc6ae0b2a7e284691280305816b7f2ce854717e6f0f6a984d",
   "ranking_visuals": {
     "feed": {
       "ref": "production/college-football-power-rankings-2026-10-07/ranking-feed.svg",
