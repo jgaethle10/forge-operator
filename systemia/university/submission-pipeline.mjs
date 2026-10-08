@@ -125,3 +125,24 @@ export function buildPublicLeaderboard(submissions=[]){
     (a.latency_ms??Number.POSITIVE_INFINITY)-(b.latency_ms??Number.POSITIVE_INFINITY)
   );
 }
+
+
+export function buildMissionLeaderboard(submissions=[],missionKey){
+  if(!missionKey) throw new Error('missionKey required');
+  return buildPublicLeaderboard(submissions).filter(x=>x.mission_key===missionKey);
+}
+
+export function buildLeaderboardIndex({submissions=[],missions=[]}={}){
+  return {
+    schema:'systemia.university.leaderboard-index.v1',
+    truth_boundary:'Leaderboards compare approved attempts within the same versioned mission. No cross-mission universal intelligence score is inferred.',
+    missions:(missions||[]).map(mission=>({
+      mission_key:mission.mission_key,
+      mission_version:mission.version,
+      entries:buildMissionLeaderboard(
+        submissions.filter(x=>x.mission_version===mission.version),
+        mission.mission_key
+      )
+    }))
+  };
+}
