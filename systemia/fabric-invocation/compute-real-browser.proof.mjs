@@ -14,6 +14,8 @@ import { createHash } from 'node:crypto';
 import { prepareNativeBrowserRuntime } from '../evercraft-web/browser-worker/native-runtime.mjs';
 import { startEvercraftComputeNode } from '../compute/runtime-node.mjs';
 import { LineageStore } from '../lineage/core.mjs';
+import { EvercraftPassport } from '../passport/passport.mjs';
+import { createFabricPassportVerifier } from './passport-verifier.mjs';
 import { createGoalState, admitGoalPlan, startGoalWork, recordGoalOutcome } from '../organism/goal-runtime.mjs';
 import { FabricNativeInvocation } from './native-invocation.mjs';
 import { createPrivateBrowserWorkerAdapter, PUBLIC_BROWSER_CAPABILITY } from './browser-worker-adapter.mjs';
@@ -94,6 +96,29 @@ try {
     }),
     plan: [{ work_key: 'render-example', work_type: 'browser_read' }],
   });
+  const passportStateDir = path.join(root, 'passport');
+  const passport = new EvercraftPassport({ stateDir: passportStateDir });
+  const localGrant = passport.issueGrant({
+    idempotency_key: 'chromium-canary:passport:grant',
+    subject_ref: 'agent:local-chromium-canary',
+    issuer_ref: 'operator:systemia-local-canary',
+    product: 'systemia', scopes: ['fabric.browser.public.read'],
+    resource_refs: ['mission:chromium-fabric-canary'],
+    authority_state: 'manual_authorized',
+    authority_receipt_ref: proof('local-canary-identity-issued-grant'),
+    ends_at: new Date(Date.now() + 120_000).toISOString(),
+  });
+  assert.equal(localGrant.state, 'issued');
+  const nativePassportVerifier = createFabricPassportVerifier({
+    stateDir: passportStateDir,
+    identityVerifier: async () => ({
+      verified: true,
+      actor_ref: 'agent:local-chromium-canary',
+      tenant_key: 'tenant:evercraft',
+      receipt_hash: proof('local-canary-private-identity-attestation'),
+      expires_at: new Date(Date.now() + 120_000).toISOString(),
+    }),
+  });
   const fabric = new FabricNativeInvocation({
     stateDir: path.join(root, 'journal'), lineageRoot, timeoutMs: 28_000,
     workerInvoker: browser.workerInvoker,
@@ -103,11 +128,7 @@ try {
       admission_receipt_hash: proof('local-canary-systemia-admission'),
       allowed_capabilities: [PUBLIC_BROWSER_CAPABILITY],
     }),
-    authorizationVerifier: async ({ actor_ref, tenant_key, capability_key }) => ({
-      decision: 'allow', actor_ref, tenant_key, capability_key,
-      expires_at: new Date(Date.now() + 90_000).toISOString(),
-      receipt_hash: proof('local-canary-passport'),
-    }),
+    authorizationVerifier: nativePassportVerifier,
     missionOutcomeWriter: async ({ mission_key, work_key, correlation_id, lineage_receipt_id }) => {
       goal = startGoalWork({ state: goal, workKey: work_key });
       goal = recordGoalOutcome({
@@ -152,6 +173,8 @@ try {
     proof_scope: 'github_actions_ephemeral_compute_chromium',
     production_deployment_verified: false,
     private_authority_wired_to_production: false,
+    real_native_passport_grant_checked: true,
+    identity_verification_mode: 'ephemeral_ci_fixture',
     real_browser_process: true,
     real_compute_http_lease: true,
     browser_runtime: 'Evercraft-owned Playwright/Chromium',
