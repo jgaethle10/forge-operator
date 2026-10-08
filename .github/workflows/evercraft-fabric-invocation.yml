@@ -1,0 +1,61 @@
+name: Evercraft Fabric Native Invocation
+
+on:
+  pull_request:
+    paths:
+      - 'systemia/fabric-invocation/**'
+      - 'systemia/lineage/**'
+      - 'systemia/organism/goal-runtime.mjs'
+      - '.github/workflows/evercraft-fabric-invocation.yml'
+  push:
+    branches: [main]
+    paths:
+      - 'systemia/fabric-invocation/**'
+      - 'systemia/lineage/**'
+      - 'systemia/organism/goal-runtime.mjs'
+      - '.github/workflows/evercraft-fabric-invocation.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  private-invocation-evidence:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Validate private invocation and native Lineage completion gate
+        run: |
+          node --check systemia/fabric-invocation/native-invocation.mjs
+          node --check systemia/fabric-invocation/browser-worker-adapter.mjs
+          node --check systemia/fabric-invocation/compute-browser-lease.mjs
+          node --check systemia/fabric-invocation/passport-verifier.mjs
+          node --check systemia/fabric-invocation/signed-identity-verifier.mjs
+          node --check systemia/fabric-invocation/systemia-goal-ack.mjs
+          node --test systemia/fabric-invocation/*.test.mjs
+
+  physical-chromium-compute-lineage-canary:
+    runs-on: ubuntu-latest
+    timeout-minutes: 18
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Install owned Browser Worker dependencies
+        working-directory: systemia/evercraft-web/browser-worker
+        run: PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD=1 npm install --no-audit --no-fund
+      - name: Real Chromium -> owned Compute lease -> Fabric -> native Lineage -> local Systemia
+        env:
+          EVERCRAFT_FABRIC_CHROMIUM_RECEIPT_PATH: ${{ runner.temp }}/fabric-chromium-receipt.json
+        run: node systemia/fabric-invocation/compute-real-browser.proof.mjs
+      - name: Upload nonsecret Chromium evidence receipt
+        uses: actions/upload-artifact@v4
+        with:
+          name: fabric-real-chromium-local-canary
+          path: ${{ runner.temp }}/fabric-chromium-receipt.json
+          if-no-files-found: error
