@@ -543,8 +543,12 @@ export class EvercraftExecutionGate {
   startExecution(input) {
     return this.#mutate(() => {
       const idempotencyKey = requiredString(input?.idempotency_key, 'idempotency_key');
+      const leaseId = requiredString(input?.lease_id, 'lease_id');
       const duplicate = this.operationIdempotency.get(idempotencyKey);
       if (duplicate) {
+        if (duplicate.lease_id !== leaseId || !['started', 'start_failed'].includes(duplicate.state)) {
+          throw new Error('execution_gate_idempotency_binding_conflict');
+        }
         return {
           state: duplicate.state,
           lease: duplicate,
@@ -553,7 +557,6 @@ export class EvercraftExecutionGate {
         };
       }
 
-      const leaseId = requiredString(input?.lease_id, 'lease_id');
       const current = this.latest.get(leaseId);
       if (!current) throw new Error('lease_not_found');
       if (current.state === 'started') {
@@ -659,10 +662,15 @@ export class EvercraftExecutionGate {
   completeExecution(input) {
     return this.#mutate(() => {
       const idempotencyKey = requiredString(input?.idempotency_key, 'idempotency_key');
-      const duplicate = this.operationIdempotency.get(idempotencyKey);
-      if (duplicate) return { state: duplicate.state, lease: duplicate, duplicate: true };
-
       const leaseId = requiredString(input?.lease_id, 'lease_id');
+      const duplicate = this.operationIdempotency.get(idempotencyKey);
+      if (duplicate) {
+        if (duplicate.lease_id !== leaseId || duplicate.state !== 'completed') {
+          throw new Error('execution_gate_idempotency_binding_conflict');
+        }
+        return { state: duplicate.state, lease: duplicate, duplicate: true };
+      }
+
       const current = this.latest.get(leaseId);
       if (!current) throw new Error('lease_not_found');
       if (current.state !== 'started') throw new Error('lease_not_started');
@@ -695,10 +703,15 @@ export class EvercraftExecutionGate {
   cancelExecution(input) {
     return this.#mutate(() => {
       const idempotencyKey = requiredString(input?.idempotency_key, 'idempotency_key');
-      const duplicate = this.operationIdempotency.get(idempotencyKey);
-      if (duplicate) return { state: duplicate.state, lease: duplicate, duplicate: true };
-
       const leaseId = requiredString(input?.lease_id, 'lease_id');
+      const duplicate = this.operationIdempotency.get(idempotencyKey);
+      if (duplicate) {
+        if (duplicate.lease_id !== leaseId || duplicate.state !== 'cancelled') {
+          throw new Error('execution_gate_idempotency_binding_conflict');
+        }
+        return { state: duplicate.state, lease: duplicate, duplicate: true };
+      }
+
       const current = this.latest.get(leaseId);
       if (!current) throw new Error('lease_not_found');
       if (current.state !== 'prepared') throw new Error('only_prepared_lease_can_cancel');
