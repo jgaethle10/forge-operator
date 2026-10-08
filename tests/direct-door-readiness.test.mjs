@@ -152,6 +152,19 @@ const aiDiscoveryDoc = fs.readFileSync('AI-DISCOVERY.md', 'utf8');
 assert.match(aiDiscoveryDoc, /evercraft-direct-door-readiness\.json/i);
 assert.match(aiDiscoveryDoc, /never add an umbrella routing hop/i);
 
+// A static directory is not an executable MCP server. Held commerce routes
+// must never silently fall back to retired provider transports.
+assert.match(aiDiscoveryDoc, /Machine Commerce[^\\n]*HELD|currently \\*\\*HELD\\*\\*/i);
+assert.match(aiDiscoveryDoc, /evercraft-agent-commerce\\.json/i);
+assert.doesNotMatch(aiDiscoveryDoc, /base44\\.app|machineCommerceMcp|ravenNexusPainRouter/i);
+const aiConnectDoc = fs.readFileSync('AI-CONNECT.md', 'utf8');
+assert.match(aiConnectDoc, /owned read-only Fabric MCP URL/i);
+assert.match(aiConnectDoc, /no verified owned universal Machine Commerce remote MCP URL/i);
+assert.doesNotMatch(aiConnectDoc, /base44\\.app|machineCommerceMcp|fieldLibraryAgentMcp/i);
+assert.match(topLevelLlms, /Universal Machine Commerce MCP: not declared/i);
+assert.match(topLevelLlms, /Static public CHUM directory \\(not MCP\\)/i);
+assert.doesNotMatch(topLevelLlms, /Universal Machine Commerce MCP: https?:/i);
+
 for (const discoveryPath of [
   'public/.well-known/evercraft-discovery.json',
   'public/ai-discovery.json',
