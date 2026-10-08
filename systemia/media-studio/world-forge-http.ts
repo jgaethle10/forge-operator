@@ -257,6 +257,28 @@ export function registerWorldForgeRoutes(app:Express,deps:WorldForgeHttpDeps){
   );
 
   app.post(
+    '/api/fallen/world-forge/play/timeline',
+    rateLimit(240,60*60*1000),
+    (req:Request,res:Response)=>{
+      try{
+        const session=playSessions.get(String(req.body?.sessionId||'').slice(0,90));
+        const limit=Number.isInteger(Number(req.body?.limit))
+          ? Number(req.body.limit)
+          : 24;
+        res.json({
+          success:true,
+          timeline:session.timeline(limit),
+        });
+      }catch(error){
+        res.status(422).json({
+          success:false,
+          error:error instanceof Error?error.message:String(error),
+        });
+      }
+    },
+  );
+
+  app.post(
     '/api/fallen/world-forge/play/webgpu-frame',
     rateLimit(240,60*60*1000),
     (req:Request,res:Response)=>{
@@ -290,6 +312,7 @@ export function registerWorldForgeRoutes(app:Express,deps:WorldForgeHttpDeps){
           success:true,
           result,
           session:session.summary(),
+          timeline:session.timeline(12),
         });
       }catch(error){
         res.status(422).json({
