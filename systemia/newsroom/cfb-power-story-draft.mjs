@@ -151,6 +151,7 @@ export function buildCfbPowerStoryDraft({
       payload:{
         schema:'evercraft.cfb.edition-evidence.v1',
         ranking,
+        poll_comparison:pollComparison,
         ledger:{
           schema:ledger.schema,
           source:ledger.source,
@@ -171,13 +172,22 @@ export function buildCfbPowerStoryDraft({
       {
         claim:'The ranking evidence ledger contains ' + ledger.games.length + ' completed games through ' + throughDay + '.',
         evidence_state:'verified',
-        source_refs:['ncaa-fbs-scoreboard','evercraft-cfb-edition-evidence'],
+        source_refs:[
+          'ncaa-fbs-scoreboard',
+          'evercraft-cfb-edition-evidence',
+          ...(pollComparison?['cfb-poll-baseline-' + pollComparison.poll.poll_id]:[]),
+        ],
       },
       {
         claim:leader.team_name + ' ranks No. 1 in Evercraft CFBPI run ' + ranking.run_id + ', ahead of ' + runnerUp.team_name + '.',
         evidence_state:'verified',
         source_refs:['evercraft-cfb-edition-evidence'],
       },
+      ...(pollComparison&&pollComparison.largest_disagreements?.length?[{
+        claim:'Evercraft and ' + pollComparison.poll.poll_name + ' differ by at least ' + pollComparison.largest_disagreements[0].absolute_gap + ' ranking positions on ' + pollComparison.largest_disagreements[0].team_name + ' in this frozen comparison.',
+        evidence_state:'verified_comparison_only',
+        source_refs:['evercraft-cfb-edition-evidence','cfb-poll-baseline-' + pollComparison.poll.poll_id],
+      }]:[]),
     ],
     ranking_table:{
       schema:'evercraft.journal.ranking-table.v1',
@@ -242,6 +252,7 @@ export function buildCfbPowerStoryDraft({
       derivative_plan:[
         {format:'social_square', angle:'Top 10 with Power Score and movement'},
         {format:'instagram_carousel', angle:'Top 25 in five clean ranking panels'},
+        ...(pollComparison?[{format:'social_square', angle:'Largest Evercraft versus '+pollComparison.poll.poll_name+' ranking gaps'}]:[]),
         {format:'youtube_short', angle:'The five teams Evercraft rates highest right now'},
         {format:'linkedin', angle:'How a receipt-backed sports ranking differs from a ballot'},
       ],
