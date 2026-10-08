@@ -102,6 +102,10 @@ A recovery hold uses both expected attempt number and last heartbeat time, valid
 
 This local adapter is neither a multi-host distributed lease nor evidence of production resident scheduling. The completion and authority gates stay independent.
 
+### Attempt-fenced result recording
+
+Every `recordGoalOutcome` call now requires `expectedAttempt` and must match the currently persisted task attempt. This applies to completion, blocking, skip and retry. CLI callers supply the attempt number immediately after `result`, and capability adapters forward the attempt issued by `startGoalWork`. A late result from attempt 1 can never complete or retry a task already executing attempt 2. File-store optimistic revision checks still apply separately. This source invariant does **not** verify provider outcomes or authorize replay after crash quarantine.
+
 ### One-time plan admission and replay guard
 
 `admitGoalPlan` is only for a previously unplanned goal. Replacing admitted tasks would erase in-flight or completed attempt data, receipts and approvals, allowing replay of consequential operations. Repeated or changed `goal-cli plan` requests now fail closed, including after completion or process restart. Plan amendments require a future separately authorized append-only mechanism which retains attempts and task lineage; the current CLI does not allow destructive replacement. This local invariant does not by itself prove production exactly-once external side effects.
@@ -120,7 +124,7 @@ npm run goal -- plan ./state/customer-goal.json ./plan.json
 npm run goal -- status ./state/customer-goal.json
 npm run goal -- authorize ./state/customer-goal.json gated-work ./signed-human-approval.json
 npm run goal -- start ./state/customer-goal.json work-key
-npm run goal -- outcome ./state/customer-goal.json work-key complete exec:receipt "" evidence:ref
+npm run goal -- outcome ./state/customer-goal.json work-key complete 1 exec:receipt "" evidence:ref
 npm run goal -- receipt ./state/customer-goal.json acceptance:ref
 ```
 
