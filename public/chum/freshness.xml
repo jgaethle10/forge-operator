@@ -2,10 +2,10 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
 <id>urn:evercraft:chum:crawl-pressure</id>
 <title>Evercraft CHUM Freshness Feed</title>
-<updated>2026-10-08T00:41:15.978Z</updated>
+<updated>2026-10-08T00:42:37.496Z</updated>
 <link rel="self" href="/chum/freshness.xml"/>
 <subtitle>Content-hash-backed public discovery changes. Freshness is not proof of provider pickup.</subtitle>
-<entry><id>urn:evercraft:chum:0df896994e643d779039e059</id><title>/chum/hot/index.json</title><updated>2026-10-08T00:41:15.978Z</updated><link href="/chum/hot/index.json"/><category term="priority-80"/></entry>
+<entry><id>urn:evercraft:chum:0df896994e643d779039e059</id><title>/chum/hot/index.json</title><updated>2026-10-08T00:42:37.496Z</updated><link href="/chum/hot/index.json"/><category term="priority-80"/></entry>
 <entry><id>urn:evercraft:chum:1812acb915d73558df05abcc</id><title>/chum/products/systemia-university/ai-conformance.json</title><updated>2026-10-08T00:32:26.614Z</updated><link href="/chum/products/systemia-university/ai-conformance.json"/><category term="priority-94"/></entry>
 <entry><id>urn:evercraft:chum:4815001afe881c64aa6f6890</id><title>/chum/products/systemia-university/ai-discovery.json</title><updated>2026-10-08T00:32:26.614Z</updated><link href="/chum/products/systemia-university/ai-discovery.json"/><category term="priority-94"/></entry>
 <entry><id>urn:evercraft:chum:b87924764a5e9f1846bf8e30</id><title>/chum/products/systemia-university/llms.txt</title><updated>2026-10-08T00:32:26.614Z</updated><link href="/chum/products/systemia-university/llms.txt"/><category term="priority-94"/></entry>
