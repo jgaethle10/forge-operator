@@ -44,3 +44,5 @@ jobs:
         run: node --test systemia/organism/goal-plan-replay.test.mjs
       - name: Reject stale worker outcomes using exact attempt identity
         run: node --test systemia/organism/goal-attempt-fence.test.mjs
+      - name: Reject self-reported or stale provider recovery claims
+        run: node --test systemia/organism/goal-provider-observation.test.mjs
