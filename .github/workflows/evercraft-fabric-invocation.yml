@@ -35,6 +35,7 @@ jobs:
           node --check systemia/fabric-invocation/compute-browser-lease.mjs
           node --check systemia/fabric-invocation/passport-verifier.mjs
           node --check systemia/fabric-invocation/signed-identity-verifier.mjs
+          node --check systemia/fabric-invocation/systemia-goal-ack.mjs
           node --test systemia/fabric-invocation/*.test.mjs
 
   physical-chromium-compute-lineage-canary:
