@@ -43,3 +43,16 @@ test('benchmark discovery exposes challenge, schema, submissions, and mission-sp
   assert.match(surfaces.challenge_pack,/challenge-pack\.json$/);
   assert.match(surfaces.leaderboards,/leaderboards\/index\.json$/);
 });
+
+
+test('remote evaluator stays deployment-unverified until an external canary exists',()=>{
+  assert.equal(manifest.remote_evaluation.state,'implementation_ready_deployment_unverified');
+  assert.equal(manifest.remote_evaluation.persistence,false);
+  assert.equal(manifest.remote_evaluation.public_write,false);
+  const pack=JSON.parse(fs.readFileSync('public/benchmarks/systemia-university/challenge-pack.json','utf8'));
+  assert.equal(pack.submission_mode,'local_cli_and_owned_http_stateless_evaluation');
+  assert.equal(pack.remote_evaluation.state,'implementation_ready_deployment_unverified');
+  assert.equal(pack.remote_evaluation.persistence,false);
+  assert.equal(pack.remote_evaluation.public_write,false);
+  assert.equal(pack.remote_evaluation.provider_identity_verification,false);
+});
