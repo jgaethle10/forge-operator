@@ -2,6 +2,7 @@ import crypto from 'node:crypto';
 import http from 'node:http';
 import { chromium } from 'playwright';
 import { DurableBrowserJobs } from './durable-jobs.mjs';
+import { verifyDurableJobRequest } from './systemia-admission.mjs';
 import { createSecureOutboundProxy } from './secure-proxy.mjs';
 import { HEADING_SELECTOR, MAX_HEADINGS } from './snapshot-contract.mjs';
 import { AuthenticatedBrowserSessionManager, renderHumanBrowserHandoffPage } from './authenticated-handoff.mjs';
@@ -14,6 +15,8 @@ import {
 
 const PORT = Math.max(1, Math.min(65535, Number(process.env.PORT || 8787)));
 const WORKER_TOKEN = String(process.env.EVERCRAFT_BROWSER_WORKER_TOKEN || '');
+const SYSTEMIA_JOB_KEY = String(process.env.EVERCRAFT_BROWSER_SYSTEMIA_JOB_KEY || '');
+const signedJobNonces = new Map();
 const MAX_CONCURRENCY = Math.max(1, Math.min(8, Number(process.env.EVERCRAFT_BROWSER_MAX_CONCURRENCY || 2)));
 const MAX_BODY_BYTES = 64 * 1024;
 const MAX_SCREENSHOT_BYTES = 3 * 1024 * 1024;
@@ -79,7 +82,7 @@ function browserClaim(req) {
   return String(req.headers['x-evercraft-browser-claim'] || '').trim();
 }
 
-async function readJson(req) {
+async function readJson(req, {includeRaw=false} = {}) {
   let size = 0;
   const chunks = [];
   for await (const chunk of req) {
@@ -88,9 +91,9 @@ async function readJson(req) {
     chunks.push(chunk);
   }
   const raw = Buffer.concat(chunks).toString('utf8');
-  if (!raw) return {};
   try {
-    return JSON.parse(raw);
+    const data = raw ? JSON.parse(raw) : {};
+    return includeRaw ? {data,raw} : data;
   } catch {
     throw new Error('invalid_json');
   }
@@ -354,7 +357,8 @@ const server = http.createServer(async (req,res) => {
         mode:'public_read_only',
         active_jobs:activeJobs,
         max_concurrency:MAX_CONCURRENCY,
-        durable_jobs_enabled:Boolean(durableJobs),
+        durable_jobs_enabled:Boolean(durableJobs && SYSTEMIA_JOB_KEY.length >= 32),
+        durable_jobs_admission:'systemia_hmac_sha256_v1',
         durable_job_metrics:durableJobs?.metrics() || null,
         authenticated_handoff_available:Boolean(authSessions),
         authenticated_handoff_mode:authSessions ? 'human_authorized_ephemeral' : 'disabled',
@@ -491,9 +495,11 @@ const server = http.createServer(async (req,res) => {
     }
 
     if (pathname === '/v1/jobs' && req.method === 'POST') {
-      if (!authorized(req)) return json(res,401,{ok:false,error:'unauthorized'});
-      if (!durableJobs) return json(res,503,{ok:false,error:'durable_job_volume_not_configured'});
-      const body = await readJson(req);
+      if (!durableJobs || SYSTEMIA_JOB_KEY.length < 32) return json(res,503,{ok:false,error:'durable_job_admission_unconfigured'});
+      const {data:body,raw} = await readJson(req,{includeRaw:true});
+      verifyDurableJobRequest(SYSTEMIA_JOB_KEY,{
+        headers:req.headers,method:req.method,path:pathname,body:raw,nonces:signedJobNonces
+      });
       const job = sanitizeJob(body.job);
       const record = durableJobs.submit({
         job,
@@ -506,8 +512,10 @@ const server = http.createServer(async (req,res) => {
 
     const durableMatch = pathname.match(/^\/v1\/jobs\/([0-9a-f-]{36})$/);
     if (durableMatch && (req.method === 'GET' || req.method === 'DELETE')) {
-      if (!authorized(req)) return json(res,401,{ok:false,error:'unauthorized'});
-      if (!durableJobs) return json(res,503,{ok:false,error:'durable_job_volume_not_configured'});
+      if (!durableJobs || SYSTEMIA_JOB_KEY.length < 32) return json(res,503,{ok:false,error:'durable_job_admission_unconfigured'});
+      verifyDurableJobRequest(SYSTEMIA_JOB_KEY,{
+        headers:req.headers,method:req.method,path:pathname,body:'',nonces:signedJobNonces
+      });
       const record = req.method === 'DELETE'
         ? durableJobs.cancel(durableMatch[1])
         : durableJobs.get(durableMatch[1]);
@@ -587,7 +595,7 @@ const server = http.createServer(async (req,res) => {
       'delegated_fill_scope_missing',
       'delegated_click_scope_missing'
     ]);
-    const status = authErrors.has(message) ? 401 : missingErrors.has(message) ? 404 : message === 'durable_job_idempotency_conflict' ? 409 : message.startsWith('durable_job_') || safeClientErrors.has(message) || message.startsWith('unsupported_action') || message.startsWith('invalid_selector') || message.startsWith('invalid_anchor_selector') ? 400 : 500;
+    const status = message === 'durable_job_admission_unconfigured' || message === 'durable_job_replay_cache_full' ? 503 : message === 'durable_job_signature_invalid' || message === 'durable_job_request_replayed' ? 401 : authErrors.has(message) ? 401 : missingErrors.has(message) ? 404 : message === 'durable_job_idempotency_conflict' ? 409 : message.startsWith('durable_job_') || safeClientErrors.has(message) || message.startsWith('unsupported_action') || message.startsWith('invalid_selector') || message.startsWith('invalid_anchor_selector') ? 400 : 500;
     json(res,status,{ok:false,error:message,engine:ENGINE});
   }
 });
