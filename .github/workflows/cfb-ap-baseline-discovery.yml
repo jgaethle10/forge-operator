@@ -1,0 +1,61 @@
+name: CFB AP Baseline Discovery
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/cfb-ap-baseline-discovery.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  inspect:
+    runs-on: ubuntu-latest
+    timeout-minutes: 3
+    steps:
+      - uses: actions/checkout@v4
+      - name: Inspect official AP Top 25 hub data contract without mutation
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p artifacts
+          url='https://apnews.com/hub/ap-top-25-college-football-poll'
+          curl --fail --silent --show-error --location --max-time 30 \
+            -A 'Evercraft-CFB-Baseline-Discovery/1.0' \
+            "$url" -o /tmp/ap-top25.html
+
+          node <<'NODE' > artifacts/ap-top25-discovery.json
+          const fs=require('fs');
+          const html=fs.readFileSync('/tmp/ap-top25.html','utf8');
+          const urls=[...html.matchAll(/https?:\\/\\/[^"'<>\\s]+/g)].map(m=>m[0].replace(/&amp;/g,'&'));
+          const interesting=[...new Set(urls.filter(u=>/(poll|top.?25|graphql|api|fan)/i.test(u)))].slice(0,200);
+          const scripts=[...html.matchAll(/<script[^>]+src=["']([^"']+)["']/gi)].map(m=>m[1]).slice(0,100);
+          const markers={};
+          for(const key of ['__NEXT_DATA__','__APOLLO_STATE__','AP Top 25','Fan Poll','api','graphql']){
+            markers[key]=html.toLowerCase().includes(key.toLowerCase());
+          }
+          const jsonScripts=[...html.matchAll(/<script([^>]*)>([\\s\\S]*?)<\\/script>/gi)]
+            .filter(m=>/application\\/(json|ld\\+json)/i.test(m[1])||/__NEXT_DATA__|apollo/i.test(m[1]))
+            .map(m=>({attrs:m[1].slice(0,300),body:m[2].slice(0,3000)}))
+            .slice(0,20);
+          process.stdout.write(JSON.stringify({
+            schema:'evercraft.cfb.ap-baseline-discovery.v1',
+            source_url:'https://apnews.com/hub/ap-top-25-college-football-poll',
+            mutation_performed:false,
+            html_bytes:Buffer.byteLength(html),
+            markers,
+            interesting_urls:interesting,
+            script_sources:scripts,
+            json_script_count:jsonScripts.length,
+            json_scripts:jsonScripts,
+          },null,2)+'\n');
+          NODE
+          cat artifacts/ap-top25-discovery.json
+      - name: Preserve discovery receipt
+        uses: actions/upload-artifact@v4
+        with:
+          name: cfb-ap-baseline-discovery
+          path: artifacts/ap-top25-discovery.json
+          retention-days: 30
