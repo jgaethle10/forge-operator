@@ -1,6 +1,7 @@
 import fs from 'node:fs';
 import path from 'node:path';
 import crypto from 'node:crypto';
+import { verifyMailDeliveryEvidence } from './mail-delivery.mjs';
 
 function clean(value) {
   return String(value ?? '').trim();
@@ -83,6 +84,7 @@ function publicConsentBrain(brain) {
 
 export function createPeopleRuntime({
   stateDir = process.env.PEOPLE_STATE_DIR || path.resolve('.runtime', 'people-layer'),
+  trustedMailDeliveryPublicKeys = {},
 } = {}) {
   const stateFile = path.join(stateDir, 'state.json');
   const auditFile = path.join(stateDir, 'audit.jsonl');
@@ -572,6 +574,7 @@ export function createPeopleRuntime({
     const state = load();
     const challenge = state.identity_challenges.find((row) => row.challenge_key === clean(challengeKey));
     if (!challenge) throw new Error('challenge_not_found');
+    if (challenge.status !== 'active' || Date.parse(challenge.expires_at) <= Date.now()) throw new Error('challenge_not_active');
     const provider = clean(input.provider);
     if (!['gmail_agent', 'resend_agent', 'manual_other'].includes(provider)) throw new Error('email_delivery_provider_invalid');
     const status = clean(input.status);
@@ -580,6 +583,22 @@ export function createPeopleRuntime({
     const messageRef = clean(input.message_ref);
     const trustedMailboxDelivery = status === 'sent' && ['gmail_agent', 'resend_agent'].includes(provider);
     if (trustedMailboxDelivery && !messageRef) throw new Error('trusted_email_message_ref_required');
+    if (trustedMailboxDelivery) {
+      if (clean(input.destination_hash) !== challenge.email_hash) throw new Error('mail_delivery_destination_mismatch');
+      const evidence = {
+        challenge_key: challenge.challenge_key,
+        destination_hash: challenge.email_hash,
+        provider,
+        status,
+        message_ref: messageRef,
+      };
+      if (!verifyMailDeliveryEvidence(evidence, input.evidence_signature, trustedMailDeliveryPublicKeys[provider])) {
+        throw new Error('trusted_mail_attestation_required');
+      }
+      if (state.identity_delivery_receipts.some((row) => row.challenge_key === challenge.challenge_key && row.trusted_mailbox_delivery === true)) {
+        throw new Error('trusted_mail_delivery_already_recorded');
+      }
+    }
     const receipt = {
       delivery_receipt_key: key('identity-delivery'),
       challenge_key: challenge.challenge_key,
@@ -590,6 +609,8 @@ export function createPeopleRuntime({
       destination_hash: challenge.email_hash,
       status,
       trusted_mailbox_delivery: trustedMailboxDelivery,
+      attestation_verified: trustedMailboxDelivery,
+      evidence_signature_hash: trustedMailboxDelivery ? sha256(input.evidence_signature) : '',
       message_ref: messageRef,
       failure_reason: status === 'failed' ? clean(input.failure_reason) : '',
       actor: clean(input.actor) || 'systemia-mail-adapter',
