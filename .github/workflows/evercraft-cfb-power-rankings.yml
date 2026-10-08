@@ -55,6 +55,7 @@ jobs:
         run: |
           node --test systemia/newsroom/cfb-power-index.test.mjs
           node --test systemia/newsroom/cfb-ranking-history.test.mjs
+          node --test systemia/newsroom/cfb-ranking-accountability.test.mjs
           node --test systemia/newsroom/cfb-results-ingest.test.mjs
           node --test systemia/newsroom/cfb-results-model.test.mjs
           node --test systemia/newsroom/cfb-power-runner.test.mjs
@@ -163,7 +164,13 @@ jobs:
               public/journal/data \
               public/journal/data/cfb-power-rankings-history.json \
               "${{ steps.window.outputs.season }}" \
-              | tee /tmp/cfb-history-build-receipt.json
+              | tee _cfb_history-build-receipt.json
+            node systemia/newsroom/cfb-ranking-accountability.mjs \
+              _cfb_power_run/completed-games.json \
+              public/journal/data \
+              public/journal/data/cfb-power-rankings-accountability.json \
+              "${{ steps.window.outputs.season }}" \
+              | tee _cfb_accountability-build-receipt.json
 
             git add "systemia/newsroom/stories/$story_file"
             git add -f public/journal
@@ -232,5 +239,7 @@ jobs:
             _cfb_power_visual-receipt.json
             _cfb_power_release-receipt.json
             _cfb_previous-ranks.json
+            _cfb_history-build-receipt.json
+            _cfb_accountability-build-receipt.json
           if-no-files-found: error
           retention-days: 120
