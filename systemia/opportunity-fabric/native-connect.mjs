@@ -82,6 +82,92 @@ export function nativeProvider(input = {}) {
   };
 }
 
+export function normalizeLegacyConnectNode(input = {}, { ownerId } = {}) {
+  const owner = text(ownerId, 180);
+  const id = text(input.node_key || input.id, 180);
+  if (!owner || !id) throw new Error('node_owner_and_id_required');
+  if (input.owner_user_id && text(input.owner_user_id, 180) !== owner) {
+    throw new Error('cross_owner_legacy_node_rejected');
+  }
+  if (!tags(input.capabilities).length) throw new Error('legacy_node_capabilities_required');
+  return nativeProvider({
+    id,
+    owner_id: owner,
+    kind: 'connect_node',
+    label: input.label,
+    capabilities: input.capabilities,
+    record_state: input.record_state || 'active',
+    relationship_state: input.relationship_state || 'Known',
+    evidence_state: input.evidence_state || 'unknown',
+    do_not_contact: input.do_not_contact === true
+  });
+}
+
+export function normalizeLegacyFabricMember(input = {}) {
+  // Members owned by a different account are NOT silently re-enrolled. This
+  // adapter is for a trusted, consented native directory import only.
+  const owner = text(input.created_by_id, 180);
+  const id = text(input.id, 180);
+  if (!owner || !id) throw new Error('legacy_member_owner_and_id_required');
+  return nativeProvider({
+    id,
+    owner_id: owner,
+    kind: 'fabric_member',
+    label: input.name,
+    // A role, vague specialty or generic tag is not proof of actual ability.
+    capabilities: input.can_do,
+    record_state: 'active',
+    availability: input.availability,
+    evidence_state: 'self_reported'
+  });
+}
+
+export function previewNativeConnectMigration({ cases = [], nodes = [], ownerId } = {}) {
+  const owner = text(ownerId, 180);
+  if (!owner) throw new Error('verified_owner_required');
+  if (!Array.isArray(cases) || !Array.isArray(nodes)) throw new Error('migration_arrays_required');
+  let invalidCases = 0, invalidNodes = 0, heldCases = 0, heldNodes = 0;
+  const caseIds = new Set(), nodeIds = new Set();
+  let duplicateCases = 0, duplicateNodes = 0;
+  for (const item of cases) {
+    try {
+      if (item.owner_user_id && text(item.owner_user_id, 180) !== owner) throw new Error('owner_mismatch');
+      const record = normalizeLegacyConnectCase(item, { ownerId: owner });
+      if (caseIds.has(record.case_id)) duplicateCases += 1;
+      caseIds.add(record.case_id);
+      if (!live(record)) heldCases += 1;
+    } catch { invalidCases += 1; }
+  }
+  for (const item of nodes) {
+    try {
+      const node = normalizeLegacyConnectNode(item, { ownerId: owner });
+      if (nodeIds.has(node.id)) duplicateNodes += 1;
+      nodeIds.add(node.id);
+      if (!live(node)) heldNodes += 1;
+    } catch { invalidNodes += 1; }
+  }
+  // Aggregate counts only. Not an export, never a public listing, and no raw
+  // business, family, contact or source records leave this function.
+  return {
+    schema: 'evercraft.connect.migration-preflight.v1',
+    source: 'base44_legacy',
+    cases_inspected: cases.length,
+    nodes_inspected: nodes.length,
+    cases_invalid: invalidCases,
+    nodes_invalid: invalidNodes,
+    cases_on_hold: heldCases,
+    nodes_on_hold: heldNodes,
+    duplicate_case_ids: duplicateCases,
+    duplicate_node_ids: duplicateNodes,
+    blockers_present: Boolean(invalidCases || invalidNodes || duplicateCases || duplicateNodes),
+    ready_for_production_cutover: false,
+    data_exported: false,
+    consent_inferred: false,
+    requires_authorized_encrypted_export: true,
+    requires_tenant_isolation_and_authenticated_import: true
+  };
+}
+
 export function planNativeConnect({
   caseRecord,
   actorId,
