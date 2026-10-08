@@ -32,6 +32,7 @@ import {
 } from './fabric-mobile-site.mjs';
 import { renderEarthWorksSimulator } from './earthworks-simulator-page.mjs';
 import { createFabricFaieSurface } from './fabric-faie-runtime.mjs';
+import { verifyWebsiteAuditCheckoutHandoff } from './website-audit-checkout-boundary.mjs';
 import { buildVisualStory, normalizeVisualStory } from '../visual-desk/factory.mjs';
 import { buildCommercialCampaign } from '../graphics-command/commercial-renderer.mjs';
 
@@ -894,7 +895,12 @@ export async function startFabricLocalRuntime({
           const candidate=new URL(String(result?.checkout_url||''));
           if(candidate.protocol==='https:') checkoutUrl=candidate.toString();
         }catch{}
-        if(result?.checkout_ready!==true||!checkoutUrl){
+        // Keep the $49 public buyer handoff bound to exact approved price, product
+        // and Stripe-owned destination. Raven's success assertion is not provider proof.
+        const exactAuditHandoff=slug==='website-audit'
+          ? verifyWebsiteAuditCheckoutHandoff(result)
+          : {valid:true};
+        if(result?.checkout_ready!==true||!checkoutUrl||!exactAuditHandoff.valid){
           if(isForm){
             return sendText(
               res,
