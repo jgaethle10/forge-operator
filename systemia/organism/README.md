@@ -73,6 +73,22 @@ Planning and continuity are separate from capability availability. Phone calls, 
 Run `npm run proof:goal-runtime` for the deterministic continuity proof, or `npm run proof:systemia` for the full organism plus goal-runtime proof set.
 
 
+### Interrupted work and safe recovery holds
+
+A persisted task can remain `executing` after its worker disappears. This does **not** prove that an external action failed. Systemia now persists an attempt-specific deduplication key and heartbeat, and exposes a conservative recovery inspection. Inspection only classifies stale work as **suspected interruption**. Nothing is automatically resent, published, charged, or retried.
+
+The local operator flow is:
+
+```bash
+npm run goal -- heartbeat ./state/mission.json work-key 1
+npm run goal -- recovery-scan ./state/mission.json 3600000
+npm run goal -- recovery-hold ./state/mission.json work-key 1 2026-10-07T12:00:00.000Z 3600000
+```
+
+A recovery hold uses both expected attempt number and last heartbeat time, validated against the current goal state. If anything changed, the hold fails without overwriting newer work. A held task keeps its attempt identity and becomes `blocked` with `effect_state: unknown`. Ordinary `outcome ... retry` cannot clear it. This is deliberately a **quarantine**, not autonomous replay; an authenticated source-specific outcome-reconciliation adapter and separately authorized release operation remain future requirements. A stale heartbeat alone does not prove a worker is dead. Only call `recovery-hold` after checking the owner/worker and relevant source operation.
+
+This local adapter is neither a multi-host distributed lease nor evidence of production resident scheduling. The completion and authority gates stay independent.
+
 ### Durable file adapter and CLI
 
 `goal-store.mjs` provides an atomic JSON-file persistence adapter with optimistic revision checks. It is intentionally storage-simple so Yard Operator or another runtime adapter can swap in a database later without changing the goal-state contract. The file adapter survives process and chat boundaries and rejects stale writers instead of silently overwriting newer mission state.
