@@ -1,0 +1,34 @@
+{
+  "schema": "evercraft.systemia.ibmi.public-buyer-observation-pack.v1",
+  "as_of": "2026-10-07",
+  "source_rule": "Publicly available job ad or procurement text is evidence of technology use or stated sourcing scope, not request for Evercraft services, not confirmation of IBM i release version, not a contact permit.",
+  "observations": [
+    {
+      "company": "ECHO Incorporated",
+      "source_type": "job_board",
+      "url": "https://www.linkedin.com/jobs/view/ibm-system-administrator-at-echo-incorporated-4445207596",
+      "observed_at": "2026-10-07T23:00:00Z",
+      "audience_type": "identified_employer",
+      "source_state": "public_job_post_unconfirmed_still_open",
+      "text": "IBM System Administrator at ECHO Incorporated: IBM i AS/400 iSeries, IBM Power Systems, Infor XA ERP, BRMS, SQL Db2, batch job scheduling; coordinate maintenance firmware updates, operations and modernization ERP migration initiatives. Skills advertisement is not proof of planned IBM i 7.4 upgrade or willingness to pay for assessment."
+    },
+    {
+      "company": "Undisclosed employer via HRize LLC",
+      "source_type": "job_board",
+      "url": "https://www.linkedin.com/jobs/view/ibm-i-as-400-cobol-systems-engineer-application-support-specialist-at-hrize-llc-4443898488",
+      "observed_at": "2026-10-07T23:00:00Z",
+      "audience_type": "unnamed_end_buyer_third_party_recruiter",
+      "source_state": "public_job_post_unconfirmed_still_open",
+      "text": "IBM i AS/400 COBOL Systems Engineer / Application Support Specialist. Help strategic migration from IBM i to Hyland OnBase WorkView, data migration planning, system integration and validation; IBM i COBOL CL RPG SQL DB2 batch jobs documentation and backup recovery. The employer is not independently identified and no buying intent is established."
+    },
+    {
+      "company": "Government of Bermuda - Information and Digital Technologies",
+      "source_type": "official_company",
+      "url": "https://www2.gov.bm/procurement-notices/ibmi-infrastructure-upgrade",
+      "observed_at": "2026-10-07T23:00:00Z",
+      "audience_type": "formal_competitive_procurement_large_infrastructure",
+      "source_state": "procurement_notice_2026-08-19_closing_2026-10-16",
+      "text": "Government of Bermuda request for proposal BDA-CAB-IDT-IBMi-RFP-2026-08: replace end-of-support Power9 environment with Power11 and Power10, infrastructure supply, installation, configuration, migration, testing and commissioning for IBM i AS400 platform; deadline October 16, 2026. This is an infrastructure RFP, not a purchase request for a $250 IBM i 7.4 assessment."
+    }
+  ]
+}

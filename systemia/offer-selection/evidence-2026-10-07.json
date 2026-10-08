@@ -1,0 +1,149 @@
+{
+  "schema": "evercraft.systemia.offer-selection-evidence.v1",
+  "as_of": "2026-10-07",
+  "mission_key": "systemia-first-commercial-offer-2026-10-07",
+  "objective": "Choose one existing offer for a 14-day source-to-settlement market validation. Not a claim of current sales.",
+  "research_basis": "Published IBM lifecycle and vendor survey, live catalog snapshot, owned fulfillment code, competitor comparison and observed operator outreach uncertainty. Scores are explicitly analyst hypotheses, not observed conversion models.",
+  "weights": {
+    "time_specific_buyer_trigger": 25,
+    "independent_market_evidence": 20,
+    "fulfillment_readiness": 20,
+    "buyer_channel_access": 15,
+    "unit_economics_headroom": 10,
+    "compelling_differentiation": 10
+  },
+  "sources": [
+    {
+      "id": "ibm-release-74",
+      "url": "https://www.ibm.com/support/pages/ibm-i74x",
+      "evidence": "IBM i 7.4 standard support ended 2026-09-30; service extension available through 2029-09-30. Does not mean customer's software ceases to function."
+    },
+    {
+      "id": "fortra-2026",
+      "url": "https://power.fortra.com/resources/guides/ibm-i-marketplace-survey-results",
+      "evidence": "Fortra's 2026 IBM i Marketplace Survey describes 320 respondents, top concern IBM i skills, and 70% planning hardware/software upgrade; vendor/community sample, not buying intent."
+    },
+    {
+      "id": "ibm-upgrade",
+      "url": "https://www.ibm.com/support/pages/migration-and-upgrades",
+      "evidence": "IBM describes release-specific upgrade planning checklists, platform/software prerequisites, pre-upgrade verification and compatibility considerations."
+    },
+    {
+      "id": "ibmi-community",
+      "url": "https://www.reddit.com/r/IBMi/comments/1wu10fh/end_of_standard_support_for_ibmi_74_is_today/",
+      "evidence": "Practitioners discussed 7.4 standard-support end on Sept 30, 2026; qualitative discussion only, no purchase proof."
+    },
+    {
+      "id": "semrush-free",
+      "url": "https://www.semrush.com/siteaudit/",
+      "evidence": "Free SEO Checker advertises actionable audit recommendations, making generic $49 scan less differentiated."
+    },
+    {
+      "id": "home-service-lead",
+      "url": "https://seenonmain.com/research/2026-home-service-lead-response-report",
+      "evidence": "August 2026 sample of 1,965 home-service sites found online contact/response signal gaps; research vendor, not observed direct revenue; lead recovery is not yet one of the verified catalog sell-now offers."
+    }
+  ],
+  "candidates": [
+    {
+      "public_id": "ibmi-rescue-v1",
+      "entry_offer": "IBM i 7.4 Deadline X-Ray",
+      "offer_key": "ibmi_74_deadline_xray_250",
+      "ratings": {
+        "time_specific_buyer_trigger": 5,
+        "independent_market_evidence": 4,
+        "fulfillment_readiness": 4,
+        "buyer_channel_access": 2,
+        "unit_economics_headroom": 4,
+        "compelling_differentiation": 4
+      },
+      "rationale": "Official standard-support transition occurred 7 days ago; Fortra reports skill and upgrade demand; owned direct checkout and bounded paid fulfillment contracts exist. Buyer access and real orders are unproved.",
+      "evidence_ids": [
+        "ibm-release-74",
+        "fortra-2026",
+        "ibm-upgrade",
+        "ibmi-community"
+      ],
+      "first_party_order_evidence": "not_verified",
+      "partner_channel": "IBM i MSPs, upgrade consultancies, ERP integrators and trusted IBM i user communities; no verified partner pipeline",
+      "critical_unknowns": [
+        "Live direct checkout and provider-settled order path must be freshly tested",
+        "Can the approved IBM i specialist actually deliver one bounded $250 package at adequate margin?",
+        "No confirmed paid customer and no qualified buyer reply identified this turn",
+        "Need current public example with no confidential information"
+      ]
+    },
+    {
+      "public_id": "findmypart-paid-hunt-v1",
+      "entry_offer": "Quick Hunt",
+      "ratings": {
+        "time_specific_buyer_trigger": 4,
+        "independent_market_evidence": 2,
+        "fulfillment_readiness": 3,
+        "buyer_channel_access": 3,
+        "unit_economics_headroom": 2,
+        "compelling_differentiation": 3
+      },
+      "rationale": "Pain is concrete and search-intent-friendly, but this turn did not verify measurable current paid demand, provider outcomes or per-hunt labor economics.",
+      "evidence_ids": [],
+      "first_party_order_evidence": "not_verified"
+    },
+    {
+      "public_id": "website-launch-service-v1",
+      "entry_offer": "Human-Finished Pro Site",
+      "ratings": {
+        "time_specific_buyer_trigger": 3,
+        "independent_market_evidence": 3,
+        "fulfillment_readiness": 3,
+        "buyer_channel_access": 3,
+        "unit_economics_headroom": 3,
+        "compelling_differentiation": 2
+      },
+      "rationale": "Specific purchasable transformation, but website-building market is crowded; delivery and customer acquisition need measured verification.",
+      "evidence_ids": [
+        "semrush-free"
+      ],
+      "first_party_order_evidence": "not_verified"
+    },
+    {
+      "public_id": "foundry-app-escape-audit-v1",
+      "entry_offer": "App Escape Audit",
+      "ratings": {
+        "time_specific_buyer_trigger": 3,
+        "independent_market_evidence": 2,
+        "fulfillment_readiness": 3,
+        "buyer_channel_access": 2,
+        "unit_economics_headroom": 4,
+        "compelling_differentiation": 3
+      },
+      "rationale": "Potential differentiation for lock-in pain, but no dated population-level buyer signal or native direct checkout proof found.",
+      "evidence_ids": [],
+      "first_party_order_evidence": "not_verified"
+    },
+    {
+      "public_id": "audit-center-website-audit-machine-v1",
+      "entry_offer": "Quick Win Audit",
+      "ratings": {
+        "time_specific_buyer_trigger": 2,
+        "independent_market_evidence": 3,
+        "fulfillment_readiness": 3,
+        "buyer_channel_access": 3,
+        "unit_economics_headroom": 2,
+        "compelling_differentiation": 1
+      },
+      "rationale": "Low-friction price and existing visual work, but free SEO checkers undercut generic scanning, outreach reply evidence is limited, and current public canary requires re-verification.",
+      "evidence_ids": [
+        "semrush-free",
+        "home-service-lead"
+      ],
+      "first_party_order_evidence": "not_verified"
+    }
+  ],
+  "boundaries": {
+    "no_paid_order_confirmed": true,
+    "only_discovery_readiness_established": true,
+    "no_partner_controlled_rivet_changes": true,
+    "score_is_hypothesis_not_actual_demand": true,
+    "source_generated_at_may_be_older_than_catalog_publication": true
+  }
+}
