@@ -541,3 +541,25 @@ While the runtime WebGPU layer is active:
 - picking, selection wireframes, grid overlays, and transform gizmos use the same camera projection as the World Engine underlay.
 
 If WebGPU falls back, Play stops, or Author Preview takes over because staged edits exist, the user’s previously requested Orbit/Camera mode becomes effective again. The lock changes visualization only; it does not mutate authored camera state or runtime camera state.
+
+
+## Continuous deterministic playback
+
+Play Mode now supports **Run / Pause** in addition to explicit +1 and +60 tick stepping.
+
+Continuous playback is a wall-clock pacing driver around the existing deterministic World Engine tick contract. It does not introduce a second simulation loop. The browser calculates a bounded tick budget from elapsed wall time, canonical session tick rate, selected playback rate, and fractional tick carry, then calls the same Play step endpoint already used by manual stepping.
+
+Playback behavior:
+
+- Play starts a session and begins running automatically;
+- Pause stops scheduling new tick batches without destroying the session;
+- paused sessions retain +1 Tick and +60 Ticks for deterministic inspection;
+- rates are bounded to 0.25×, 0.5×, 1×, or 2× in the editor;
+- each client batch is bounded to prevent runaway catch-up;
+- long tab suspension is capped rather than causing a simulation stampede when the page wakes;
+- fractional ticks carry forward deterministically;
+- runtime input actions pause continuous playback before applying a precise next-tick input;
+- entering Runtime Drag or staging authoring changes pauses continuous playback;
+- any continuous-step error fails closed by pausing the driver.
+
+World Engine remains the only simulation authority. Wall-clock pacing decides only how many deterministic ticks to request, never what those ticks mean.

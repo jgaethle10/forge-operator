@@ -19,6 +19,7 @@ test('World Forge Play Mode starts at deterministic tick zero and steps inputs',
   const start=session.summary();
   assert.equal(start.tick,0);
   assert.equal(start.projectVersion,project.version);
+  assert.equal(start.tickRateHz,60);
   assert.equal(start.runtimeReady,true);
   assert.equal(start.boundaries.ephemeralSession,true);
   assert.equal(start.boundaries.publicationAuthorityGranted,false);

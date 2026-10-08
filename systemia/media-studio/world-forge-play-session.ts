@@ -29,6 +29,7 @@ export interface WorldForgePlaySessionSummary {
   projectVersion:number;
   worldId:string;
   worldVersion:number;
+  tickRateHz:number;
   worldDefinitionDigest:string;
   projectDigest:string;
   tick:number;
@@ -278,6 +279,7 @@ export class WorldForgePlaySession {
       projectVersion:this._project.version,
       worldId:this._bridge.world.id,
       worldVersion:this._runtime.definition.version,
+      tickRateHz:this._runtime.definition.tickRateHz,
       worldDefinitionDigest:this._runtime.definitionDigest,
       projectDigest:this._bridge.receipt.projectDigest,
       tick:snapshot.tick,
