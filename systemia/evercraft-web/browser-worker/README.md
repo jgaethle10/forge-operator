@@ -106,3 +106,33 @@ The delegated path is intentionally split:
 This removes repetitive competition-form work without treating authentication as blanket legal authority.
 
 The delegation source and tests are still **candidate capability**, not proof of a production-authenticated provider session. Promotion requires the existing verified public handoff gate plus an external canary that demonstrates human login, human grant, private Yard delegated action, rejection of a prohibited action, revoke, and session destruction.
+
+
+## Candidate durable read-only jobs (not production-promoted)
+
+The worker now includes an optional, single-owner filesystem-backed asynchronous job ledger. It is off by default. Enable only with a private persistent disk or volume mounted writable by the worker user:
+
+    EVERCRAFT_BROWSER_JOB_STATE_DIR=/var/lib/evercraft-browser-jobs
+
+The worker's existing private bearer token is required on every job operation:
+
+- POST /v1/jobs: create a bounded public read-only job (202); retries use the same idempotency_key (200).
+- GET /v1/jobs/:id: inspect status, failure category and bounded completion receipt.
+- DELETE /v1/jobs/:id: cancel an active or pending job.
+
+Example body (send only through Systemia's authorized private Yard/Compute lease):
+
+    {"idempotency_key":"mission-001-page-001","mission_key":"systemia-browser-mission-001","work_key":"browser-work-001","job":{"url":"https://example.com/","include_screenshot":true,"actions":[{"type":"wait_for_selector","selector":"h1"}]}}
+
+Privacy/recovery boundaries:
+
+- Persisted jobs are public read-only; there is no authenticated-session replay. URLs containing query strings, fragments, or embedded credentials are rejected rather than persisted.
+- Persisted completion results contain evidence hashes, safe URL and title, not page body, screenshot bytes, cookies, Authorization headers or browser profile state.
+- Per-job idempotency keys bind to payload and Systemia lineage; duplicate keys with different requests fail closed.
+- Atomic 0600 file writes, directory fsync, bounded retries and startup requeue for interrupted jobs are implemented. Jobs with exhausted attempts become terminal failures.
+- Cancellation aborts the browser context, and a late completion may not overwrite a cancelled record.
+- Single process per directory only. This version does not implement a distributed lease, encrypted credential vault, or signed Systemia admission.
+- A durable volume is mandatory for real restart persistence. Ephemeral container storage is not crash-survivable.
+- durable-jobs.test.mjs covers idempotency, cancellation, redaction, retry and simulated crash recovery. durable-jobs.proof.mjs is a real-browser canary for an authorized public page, intended for execution in Docker/CI with a writable durable volume. A source file is not a passing canary.
+
+Known integration gate: Systemia's current browserWorkerOps expects /v1/run and x-evercraft-key with a distinct action/snapshot schema; this worker's read-only endpoint is /v1/browse with a bearer token. A signed, versioned Yard/Compute transport adapter and confirmed runtime configuration are required before advertising end-to-end readiness. Do not silently alias these contracts or treat a static configuration value as runtime proof.
