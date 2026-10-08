@@ -262,9 +262,4 @@ export class FabricNativeInvocation {
     }
   }
 
-  status(idempotencyKey) {
-    const key = required(idempotencyKey, 'idempotency_key');
-    const file = path.join(this.stateDir, digest(key).slice(7) + '.jsonl');
-    return resultFromEvents(readEvents(file));
-  }
 }
