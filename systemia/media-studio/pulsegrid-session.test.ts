@@ -407,3 +407,54 @@ test('PulseGrid rejects empty note expression operations',()=>{
     note_id:'expr-empty',
   }),/requires at least one value/);
 });
+
+
+test('PulseGrid automation point edits are bounded, targeted and reversible',()=>{
+  let session=createPulseGridSession('Automation Proof');
+  const clip=session.tracks.find((track)=>track.id==='keys')!.clips[0];
+  const before=clip.automation.filter[3];
+
+  const result=applyPulseGridOperation(session,{
+    type:'clip.set_automation_point',
+    track_id:'keys',
+    scene:0,
+    parameter:'filter',
+    step:3,
+    value:2.5,
+  },'human');
+  session=result.session;
+  const edited=session.tracks.find((track)=>track.id==='keys')!.clips[0];
+  assert.equal(edited.automation.filter[3],1);
+  assert.equal(result.receipt.before,before);
+  assert.equal(result.receipt.after,1);
+  assert.deepEqual(result.receipt.targets,[`clip:${edited.id}.automation.filter[3]`]);
+
+  const undone=undoPulseGridReceipt(session,result.receipt.id,'human');
+  assert.equal(
+    undone.session.tracks.find((track)=>track.id==='keys')!.clips[0].automation.filter[3],
+    before,
+  );
+  assert.equal(validatePulseGridSession(undone.session).ok,true);
+});
+
+test('PulseGrid automation rejects out-of-range steps and clamps lane values',()=>{
+  const session=createPulseGridSession();
+  assert.throws(()=>applyPulseGridOperation(session,{
+    type:'clip.set_automation_point',
+    track_id:'keys',
+    scene:0,
+    parameter:'volume',
+    step:999,
+    value:.5,
+  }),/automation step is out of range/);
+
+  const result=applyPulseGridOperation(session,{
+    type:'clip.set_automation_point',
+    track_id:'keys',
+    scene:0,
+    parameter:'volume',
+    step:0,
+    value:-4,
+  });
+  assert.equal(result.session.tracks.find((track)=>track.id==='keys')!.clips[0].automation.volume[0],0);
+});

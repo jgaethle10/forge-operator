@@ -50,6 +50,7 @@ export default function FallenSessions(){
   const [recording,setRecording]=useState(false);
   const [midiEnabled,setMidiEnabled]=useState(false);
   const [midiInputs,setMidiInputs]=useState(0);
+  const [automationParam,setAutomationParam]=useState<'volume'|'filter'>('volume');
   const [playhead,setPlayhead]=useState(0);
   const [audioStatus,setAudioStatus]=useState<PulseGridAudioStatus>({playing:false,scene:0,step:0,context_state:'cold',clock_mode:'cold',track_buses:0,latency_ms:null,cached_audio_assets:0});
   const sessionRef=useRef(session);
@@ -556,6 +557,17 @@ export default function FallenSessions(){
     );
   }
 
+  function commitAutomationPoint(step:number,value:number){
+    apply({
+      type:'clip.set_automation_point',
+      track_id:track.id,
+      scene:selectedScene,
+      parameter:automationParam,
+      step,
+      value,
+    });
+  }
+
   function toggleStep(step:number){
     apply({
       type:'clip.set_step',
@@ -612,6 +624,7 @@ export default function FallenSessions(){
   }
 
   const visibleSteps=clip.steps.map((_,index)=>index);
+  const automationValues=clip.automation[automationParam];
   const latestReceipts=[...session.receipts].slice(-10).reverse();
 
   return (
@@ -822,6 +835,48 @@ export default function FallenSessions(){
               ))}
             </div>
           )}
+
+          <div className="fsAutomation">
+            <div className="fsAutomationHead">
+              <div>
+                <div className="fsSectionTitle">Clip automation</div>
+                <strong>{automationParam==='volume'?'Track volume':'Filter scale'}</strong>
+              </div>
+              <label>
+                <span>Lane</span>
+                <select
+                  value={automationParam}
+                  onChange={(event)=>setAutomationParam(event.target.value as 'volume'|'filter')}
+                >
+                  <option value="volume">Track volume</option>
+                  <option value="filter">Filter scale</option>
+                </select>
+              </label>
+            </div>
+            <div className="fsAutomationLane" aria-label={automationParam+' automation'}>
+              {visibleSteps.map((step)=>{
+                const value=automationValues[step]??1;
+                return (
+                  <label className="fsAutomationPoint" key={clip.id+'-'+automationParam+'-'+step+'-'+value}>
+                    <input
+                      type="range"
+                      min={0}
+                      max={1}
+                      step={0.01}
+                      defaultValue={value}
+                      aria-label={automationParam+' automation step '+String(step+1)}
+                      onPointerUp={(event)=>commitAutomationPoint(step,Number(event.currentTarget.value))}
+                      onKeyUp={(event)=>commitAutomationPoint(step,Number(event.currentTarget.value))}
+                    />
+                    <small>{step+1}</small>
+                  </label>
+                );
+              })}
+            </div>
+            <p className="fsAutomationHint">
+              Drag a point, then release to commit one canonical receipt. Keyboard changes commit on key release.
+            </p>
+          </div>
 
           <div className="fsProvenance">
             <strong>Clip provenance</strong>

@@ -109,6 +109,14 @@ export type PulseGridOperation =
   | { type: 'track.set_delay_mix'; track_id: string; mix: number }
   | { type: 'clip.set_bars'; track_id: string; scene: number; bars: number }
   | { type: 'clip.set_step'; track_id: string; scene: number; step: number; velocity: number }
+  | {
+      type: 'clip.set_automation_point';
+      track_id: string;
+      scene: number;
+      parameter: 'volume' | 'filter';
+      step: number;
+      value: number;
+    }
   | { type: 'clip.fork_variation'; track_id: string; source_scene: number; destination_scene: number; name?: string }
   | { type: 'asset.register_audio'; asset: PulseGridAudioAssetInput }
   | { type: 'clip.attach_audio_asset'; track_id: string; scene: number; asset_id: string | null }
@@ -573,6 +581,16 @@ export function applyPulseGridOperation(
     clip.steps[operation.step] = clamp(operation.velocity, 0, 1);
     after = clip.steps[operation.step];
     targets = [`clip:${clip.id}.steps[${operation.step}]`];
+  } else if (operation.type === 'clip.set_automation_point') {
+    const { clip } = getClip(session, operation.track_id, operation.scene);
+    if (operation.step < 0 || operation.step >= clip.steps.length) {
+      throw new Error('PulseGrid automation step is out of range.');
+    }
+    const lane = clip.automation[operation.parameter];
+    before = lane[operation.step];
+    lane[operation.step] = clamp(Number(operation.value), 0, 1);
+    after = lane[operation.step];
+    targets = [`clip:${clip.id}.automation.${operation.parameter}[${operation.step}]`];
   } else if (operation.type === 'clip.fork_variation') {
     const track = getTrack(session, operation.track_id);
     const sourceClip = track.clips[operation.source_scene];
@@ -781,6 +799,10 @@ export function undoPulseGridReceipt(
     const { clip } = getClip(session, operation.track_id, operation.scene);
     if (operation.step < 0 || operation.step >= clip.steps.length) throw new Error('PulseGrid undo step is out of range.');
     clip.steps[operation.step] = Number(originalReceipt.before);
+  } else if (operation.type === 'clip.set_automation_point') {
+    const { clip } = getClip(session, operation.track_id, operation.scene);
+    if (operation.step < 0 || operation.step >= clip.steps.length) throw new Error('PulseGrid undo automation step is out of range.');
+    clip.automation[operation.parameter][operation.step] = Number(originalReceipt.before);
   } else if (operation.type === 'clip.fork_variation') {
     const track = getTrack(session, operation.track_id);
     if (!track.clips[operation.destination_scene]) throw new Error('Unknown PulseGrid destination scene: ' + String(operation.destination_scene));

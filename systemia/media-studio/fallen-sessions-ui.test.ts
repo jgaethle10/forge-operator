@@ -187,3 +187,30 @@ test('Fallen Sessions renders an explicit drag state for movable notes',()=>{
   assert.match(css,/\.fsNoteCell\[draggable="true"\]\{cursor:grab\}/);
   assert.match(css,/\.fsNoteCell\.dragging/);
 });
+
+
+test('Fallen Sessions automation lane commits canonical points on release',()=>{
+  const ui=fs.readFileSync('src/FallenSessions.tsx','utf8');
+  assert.match(ui,/type:'clip\.set_automation_point'/);
+  assert.match(ui,/parameter:automationParam/);
+  assert.match(ui,/onPointerUp=\{\(event\)=>commitAutomationPoint/);
+  assert.match(ui,/onKeyUp=\{\(event\)=>commitAutomationPoint/);
+  assert.doesNotMatch(ui,/onChange=\{\(event\)=>commitAutomationPoint/);
+});
+
+test('Fallen Sessions automation switches between canonical volume and filter lanes',()=>{
+  const ui=fs.readFileSync('src/FallenSessions.tsx','utf8');
+  assert.match(ui,/useState<'volume'\|'filter'>\('volume'\)/);
+  assert.match(ui,/clip\.automation\[automationParam\]/);
+  assert.match(ui,/<option value="volume">Track volume<\/option>/);
+  assert.match(ui,/<option value="filter">Filter scale<\/option>/);
+});
+
+test('Fallen Sessions automation lane stays bounded and horizontally scrollable',()=>{
+  const css=fs.readFileSync('src/fallen-sessions.css','utf8');
+  assert.match(css,/\.fsAutomationLane/);
+  assert.match(css,/grid-auto-flow:column/);
+  assert.match(css,/max-width:100%/);
+  assert.match(css,/overflow-x:auto/);
+  assert.match(css,/writing-mode:vertical-lr/);
+});
