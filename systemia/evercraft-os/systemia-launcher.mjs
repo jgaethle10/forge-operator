@@ -88,8 +88,7 @@ export class EvercraftOsSystemiaLauncher {
     resourceRef = null,
     request,
     meterSubjectRef = null,
-    idempotencyKey = null,
-    requireDirectSpecialist = false
+    idempotencyKey = null
   } = {}) {
     const product = requiredText(productKey, "product_key");
     const node = requiredText(nodeId, "node_id");
@@ -143,6 +142,23 @@ export class EvercraftOsSystemiaLauncher {
       };
     }
 
+    const registeredDispatcher = this.dispatchers.get(policy.route.specialist_slug);
+    if (!registeredDispatcher) {
+      return {
+        schema: "evercraft.os.systemia-launch-preparation.v1",
+        state: "held",
+        reason: "specialist_dispatcher_not_registered",
+        product_key: product,
+        node_id: node,
+        specialist_slug: policy.route.specialist_slug,
+        systemia_admission: admission.receipt,
+        dispatch_decision: decision,
+        execution_gate_prepared: false,
+        execution_authority_granted: false,
+        dispatch_performed: false
+      };
+    }
+
     const key = idempotencyKey || "evercraft-os-launch:" + product + ":" + sha256({
       node_id: node,
       actor_ref: actor,
@@ -159,11 +175,14 @@ export class EvercraftOsSystemiaLauncher {
       request,
       meter_subject_ref: meterSubjectRef,
       idempotency_key: key,
-      require_direct_specialist: requireDirectSpecialist,
+      require_direct_specialist: false,
       root: this.rootDir
     });
 
-    const prepared = this.executionGate.prepareExecution(compiled.execution_gate_input);
+    const prepared = this.executionGate.prepareExecution({
+      ...compiled.execution_gate_input,
+      route_mode: "registered_internal"
+    });
     if (prepared.state !== "prepared") {
       return {
         schema: "evercraft.os.systemia-launch-preparation.v1",
@@ -188,6 +207,8 @@ export class EvercraftOsSystemiaLauncher {
       request,
       request_fingerprint: prepared.lease.request_fingerprint,
       specialist_slug: prepared.lease.specialist_slug,
+      dispatch_route_mode: "registered_internal_specialist",
+      public_direct_route_claimed: false,
       execution_gate_lease_id: prepared.lease.lease_id,
       capsule_manifest_hash: capsule.manifest_hash,
       package_fingerprint: capsule.package_fingerprint,
@@ -244,6 +265,10 @@ export class EvercraftOsSystemiaLauncher {
     }
     if (lease.specialist_slug !== ticket.specialist_slug) {
       throw new Error("os_launcher_execution_lease_route_mismatch");
+    }
+
+    if (ticket.dispatch_route_mode !== "registered_internal_specialist") {
+      throw new Error("os_launcher_dispatch_route_mode_invalid");
     }
 
     const dispatcher = this.dispatchers.get(ticket.specialist_slug);
@@ -322,6 +347,8 @@ export class EvercraftOsSystemiaLauncher {
       actor_ref: ticket.actor_ref,
       scope: ticket.scope,
       specialist_slug: ticket.specialist_slug,
+      dispatch_route_mode: ticket.dispatch_route_mode,
+      public_direct_route_used: false,
       execution_gate_lease_id: lease.lease_id,
       request_fingerprint: ticket.request_fingerprint,
       state: outcomeState,
