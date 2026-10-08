@@ -58,6 +58,7 @@ jobs:
           set -euo pipefail
 
           health="$(curl --fail --silent --show-error --retry 4 --retry-all-errors --retry-delay 2 --max-time 20 "$FABRIC_ORIGIN/health")"
+          printf 'LINEAGE_FABRIC_HEALTH=%s\n' "$(printf '%s' "$health" | jq -c '{ok,service,runtime,read_only,transactional,external_action_authority,payment_authority,payment_router,capability_count}')"
           printf '%s' "$health" | jq -e '
             .ok == true and
             .service == "evercraft-fabric-local" and
