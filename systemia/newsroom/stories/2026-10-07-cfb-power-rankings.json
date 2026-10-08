@@ -7,9 +7,9 @@
   "desk": "Sports",
   "story_type": "Power Rankings",
   "status": "approved",
-  "published_at": "2026-10-08T13:45:04.292Z",
-  "updated_at": "2026-10-08T13:45:04.292Z",
-  "freshness_expires_at": "2026-10-15T13:45:04.292Z",
+  "published_at": "2026-10-08T13:46:07.231Z",
+  "updated_at": "2026-10-08T13:46:07.231Z",
+  "freshness_expires_at": "2026-10-15T13:46:07.231Z",
   "evidence_state": "model_derived_from_verified_public_results",
   "sensitivity": {
     "state": "public_unclassified",
@@ -43,7 +43,7 @@
         "week_label": "Through 2026-10-07",
         "evidence_snapshot_id": "cfb:2026:2026-10-07:4df1aa713c1f6469888a",
         "evidence_through_at": "2026-10-07T23:59:59.999Z",
-        "generated_at": "2026-10-08T13:45:01.074Z",
+        "generated_at": "2026-10-08T13:46:01.102Z",
         "model": {
           "model_version": "evercraft-cfbpi-0.2.0",
           "missing_data_penalty": 8,
@@ -15750,6 +15750,10 @@
       "body": "The first five positions in this edition are #1 Alabama, #2 Notre Dame, #3 Texas, #4 Texas Tech, #5 Indiana. This is not a ballot and it is not designed to copy one. The ordering comes from the season ledger attached to ranking run cfbpi:cd08f777eee25c5c5dc3a1b6. Completed results are adjusted for opponent strength and designated venue, scoring margins are capped so one demolition cannot own an entire résumé, and the most recent games matter without erasing the rest of the season. The top line is therefore a snapshot of demonstrated team strength through the evidence cutoff, not a prediction that the current order will survive the next Saturday."
     },
     {
+      "heading": "Movement since the last edition",
+      "body": "Risers: Utah up 1 to No. 7; Florida up 1 to No. 23. Fallers: Georgia down 1 to No. 8; James Madison down 1 to No. 24. Movement is computed against the latest strictly earlier persisted Evercraft edition, so a rerun of the same evidence window cannot manufacture a new arrow."
+    },
+    {
       "heading": "Why Alabama is No. 1",
       "body": "Alabama is 5-0 and owns a Power Score of 81.40 with 95 percent model confidence. Its current component profile combines a result-quality score of 80.8, opponent-adjusted efficiency of 91.5, schedule strength of 62.1 and recent-form score of 81.0. The important part is not any single number. The lead survives several independent pieces of the current results ledger rather than depending on poll reputation or one headline win."
     },
@@ -15759,7 +15763,7 @@
     },
     {
       "heading": "What happens next",
-      "body": "The ranking is designed to move when the evidence moves. Each new completed-game ledger can be replayed against the same versioned model, compared with the prior published edition and scored later against what happened on the field. Future editions can add verified player availability, deeper efficiency measures and consensus-poll comparison without rewriting history. The goal is not to win an argument on publication day. It is to build a public record showing where Evercraft was early, where it was wrong and whether the model becomes more predictive as the season develops."
+      "body": "The ranking is designed to move when the evidence moves. Each new completed-game ledger can be replayed against the same versioned model, compared with the prior published edition and scored later against what happened on the field. Verified player availability and deeper efficiency measures can be added as governed evidence lanes without rewriting history. The comparison and accountability ledgers preserve where Evercraft disagreed with consensus and whether those directional calls held up later. The goal is not to win an argument on publication day. It is to build a public record showing where Evercraft was early, where it was wrong and whether the model becomes more predictive as the season develops."
     }
   ],
   "uncertainty_notes": [
@@ -15951,7 +15955,7 @@
     "evidence_snapshot_id": "cfb:2026:2026-10-07:4df1aa713c1f6469888a",
     "completed_game_count": 393,
     "top_25_count": 25,
-    "generated_at": "2026-10-08T13:45:04.292Z",
+    "generated_at": "2026-10-08T13:46:07.231Z",
     "digest": "sha256:33d2557459d002df1094ab2607a7d20ce9e64f7be383f84c26aeadfaeb1168fa"
   }
 }
