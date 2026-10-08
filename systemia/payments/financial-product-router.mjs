@@ -36,7 +36,9 @@ export function routeFinancialProduct({
       capabilityKey,
       matrix,
       regulatedAuthority:resolved.ok?resolved.authority.evidence_ref:null,
-      depositInsuranceAuthority:resolved.ok?resolved.authority.insurance_authority_ref:null
+      depositInsuranceAuthority:resolved.ok?resolved.authority.insurance_authority_ref:null,
+      regulatedAuthorityVerified:resolved.ok,
+      depositInsuranceAuthorityVerified:resolved.ok && Boolean(resolved.authority.insurance_authority_ref)
     });
   });
 
