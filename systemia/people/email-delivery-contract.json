@@ -2,22 +2,30 @@
   "schema": "evercraft.people.email-verification-delivery-contract.v1",
   "purpose": "Prove mailbox possession without making the People runtime dependent on a specific email vendor.",
   "sequence": [
-    "Admin or authorized Systemia operator creates an email challenge using the intended raw email address.",
+    "Authorized Systemia operator requests verification by email address. The owned HTTP handler never returns the challenge token or URL.",
     "People persists only SHA-256(email), masked email hint, challenge token hash, expiry, and challenge state.",
-    "A trusted Gmail/Resend transport adapter sends the exact verification URL to the raw email address and must obtain a provider-confirmed sent result containing a provider message reference.",
-    "The separate mail adapter signs provider, sent status, provider-issued message reference, challenge key, and destination hash with its private Ed25519 key. The protected delivery-receipt endpoint verifies its signature against an approved public key loaded from owned restricted Compute configuration.",
+    "If a separate trusted dispatcher and explicit owned HTTPS origin are unavailable, the challenge endpoint returns HTTP 503 without creating a token.",
+    "The runtime creates and passes the token only into trusted in-process dispatch; the separate provider adapter obtains a sent receipt, signs its challenge-specific evidence, and People validates the evidence before returning masked status.",
     "People derives the destination hash from the challenge record and never requires the raw email again.",
     "Only after a qualifying sent receipt exists may redemption of the exact verification token plus VERIFY MY EMAIL upgrade identity assurance to verified_email."
   ],
-  "qualifying_providers": ["gmail_agent", "resend_agent"],
-  "non_qualifying_providers": ["manual_other"],
+  "qualifying_providers": [
+    "gmail_agent",
+    "resend_agent"
+  ],
+  "non_qualifying_providers": [
+    "manual_other"
+  ],
   "invariants": [
     "Manual copy or forwarding does not prove mailbox possession.",
     "A trusted sent receipt without a provider message reference, matching destination hash, and valid provider signature is rejected.",
     "Raw recipient email is not persisted in People state or delivery receipts.",
     "Challenge token is persisted only as SHA-256.",
     "Mail providers are replaceable; private adapter signing keys never reside in People runtime and operator API access alone cannot create a trusted sent receipt.",
-    "No verified_email claim exists before both trusted delivery and person redemption."
+    "No verified_email claim exists before both trusted delivery and person redemption.",
+    "Operator HTTP responses and browser views never contain the raw verification token or copyable redemption URL.",
+    "Unconfigured dispatch fails closed, with no challenge created and no email identity assurance.",
+    "Failed send or invalid signed evidence revokes the pending challenge."
   ],
   "attestation_schema": "evercraft.people.mail-delivery-attestation.v1",
   "public_key_configuration": "PEOPLE_MAIL_DELIVERY_PUBLIC_KEYS_FILE inside admitted Evercraft Compute root, mode 0600; absent keys mean no trusted email delivery",
