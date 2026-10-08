@@ -240,7 +240,9 @@ export async function startPeopleLayerRuntime({
           try {
             const origin=new URL(publicOrigin);
             originValid=origin.protocol==='https:' && origin.username==='' &&
-              origin.password==='' && origin.search==='' && origin.hash==='';
+              origin.password==='' && origin.search==='' && origin.hash==='' &&
+              origin.pathname==='/' &&
+              !/(^|\.)base44\.app$/i.test(origin.hostname);
           } catch {}
           if(typeof mailDispatcher!=='function'||!originValid)
             return sendJson(res,503,{ok:false,error:'trusted_email_dispatch_unavailable'});
