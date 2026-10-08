@@ -93,8 +93,6 @@ export async function inspectIBMi74Tier({
   receipt.reason=proof.reason;
   receipt.tier_listed=proof.ready;
   receipt.exact_price_verified=proof.ready&&proof.currency==='usd';
-  // A listing with omitted currency is not proof of USD merchant currency.
-  if(proof.ready&&proof.currency==='not_returned')receipt.reason='listed_currency_unverified';
   return receipt;
  }catch(e){
   receipt.reason='gateway_network_or_tls_error';
