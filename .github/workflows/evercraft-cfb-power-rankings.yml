@@ -4,12 +4,14 @@ on:
   pull_request:
     paths:
       - 'systemia/newsroom/cfb-*.mjs'
+      - 'systemia/newsroom/baselines/*.json'
       - '.github/workflows/evercraft-cfb-power-rankings.yml'
   push:
     branches:
       - main
     paths:
       - 'systemia/newsroom/cfb-*.mjs'
+      - 'systemia/newsroom/baselines/*.json'
       - '.github/workflows/evercraft-cfb-power-rankings.yml'
   schedule:
     - cron: '0 17 * * 0'
@@ -56,6 +58,7 @@ jobs:
           node --test systemia/newsroom/cfb-power-index.test.mjs
           node --test systemia/newsroom/cfb-ranking-history.test.mjs
           node --test systemia/newsroom/cfb-ranking-accountability.test.mjs
+          node --test systemia/newsroom/cfb-poll-comparison.test.mjs
           node --test systemia/newsroom/cfb-results-ingest.test.mjs
           node --test systemia/newsroom/cfb-results-model.test.mjs
           node --test systemia/newsroom/cfb-power-runner.test.mjs
@@ -148,6 +151,7 @@ jobs:
           set -euo pipefail
           cp _cfb_power_run/journal-story-approved.json /tmp/cfb-journal-story.json
           story_file="$(node -e "const s=require('/tmp/cfb-journal-story.json'); const day=s.slug.match(/(\\d{4}-\\d{2}-\\d{2})$/)?.[1]; if(!day) process.exit(2); process.stdout.write(day+'-cfb-power-rankings.json')")"
+          evidence_slug="$(node -e "const s=require('/tmp/cfb-journal-story.json'); if(!s.slug) process.exit(2); process.stdout.write(s.slug)")"
 
           git config user.name "Evercraft CFB Rankings"
           git config user.email "evercraft-cfb@users.noreply.github.com"
@@ -171,6 +175,11 @@ jobs:
               public/journal/data/cfb-power-rankings-accountability.json \
               "${{ steps.window.outputs.season }}" \
               | tee _cfb_accountability-build-receipt.json
+            node systemia/newsroom/cfb-poll-comparison.mjs \
+              "public/journal/data/${evidence_slug}.json" \
+              systemia/newsroom/baselines \
+              public/journal/data/cfb-power-rankings-poll-comparison.json \
+              | tee _cfb_poll-comparison-build-receipt.json
 
             git add "systemia/newsroom/stories/$story_file"
             git add -f public/journal
@@ -241,5 +250,6 @@ jobs:
             _cfb_previous-ranks.json
             _cfb_history-build-receipt.json
             _cfb_accountability-build-receipt.json
+            _cfb_poll-comparison-build-receipt.json
           if-no-files-found: error
           retention-days: 120
