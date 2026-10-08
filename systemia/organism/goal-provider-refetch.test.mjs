@@ -142,7 +142,11 @@ test('provider lookup exception is not treated as evidence of failed action',asy
   let calls=0;
   await assert.rejects(()=>collect(file,{adapter:adapter(async()=>{
    calls++;throw Error('timeout with secret token that must not be persisted')
-  })}),/timeout with secret token/);
+  })}),error=>{
+   assert.match(error.message,/provider refetch unavailable: outcome unknown/);
+   assert.equal(error.message.includes('secret token'),false);
+   return true;
+  });
   assert.equal(calls,1);
   const saved=await readGoalState(file);
   assert.equal(saved.revision,4);
