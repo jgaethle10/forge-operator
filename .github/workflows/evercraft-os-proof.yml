@@ -57,6 +57,8 @@ jobs:
         run: node --test systemia/evercraft-os/user-supervisor-health.test.mjs
       - name: Validate Linux user-session installer syntax
         run: bash -n systemia/evercraft-os/install-user-session.sh
+      - name: Prove Linux user-session installer contract
+        run: node --test systemia/evercraft-os/install-user-session.test.mjs
       - name: Prove Home OS status surface
         run: node --test systemia/evercraft-home/os-status.test.mjs
       - name: Emit boot envelope
