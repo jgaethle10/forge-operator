@@ -83,12 +83,12 @@ function resultFromEvents(events, duplicate = false) {
 export class FabricNativeInvocation {
   constructor({
     stateDir, missionLoader, authorizationVerifier, workerInvoker,
-    workerReceiptVerifier, lineageRoot, now = () => new Date(),
+    workerReceiptVerifier, missionOutcomeWriter, lineageRoot, now = () => new Date(),
     timeoutMs = 5000, maxPayloadBytes = MAX_PAYLOAD,
   } = {}) {
     if (!stateDir || !lineageRoot) throw new Error('fabric_private_storage_required');
     for (const [label, fn] of Object.entries({
-      missionLoader, authorizationVerifier, workerInvoker, workerReceiptVerifier,
+      missionLoader, authorizationVerifier, workerInvoker, workerReceiptVerifier, missionOutcomeWriter,
     })) {
       if (typeof fn !== 'function') throw new Error('fabric_' + label + '_required');
     }
@@ -101,6 +101,7 @@ export class FabricNativeInvocation {
     this.authorizationVerifier = authorizationVerifier;
     this.workerInvoker = workerInvoker;
     this.workerReceiptVerifier = workerReceiptVerifier;
+    this.missionOutcomeWriter = missionOutcomeWriter;
     this.now = now;
     this.timeoutMs = timeoutMs;
     this.maxPayloadBytes = Math.min(MAX_PAYLOAD, maxPayloadBytes);
@@ -224,9 +225,10 @@ export class FabricNativeInvocation {
       }, this.now);
       events.push(record);
 
+      let transaction;
       try {
         const lineage = new LineageStore(this.lineageRoot);
-        const transaction = await lineage.recordTransaction({
+        transaction = await lineage.recordTransaction({
           kind: 'fabric.capability.invocation',
           actor: { type: 'agent', id: actor },
           scope: capability,
@@ -242,16 +244,50 @@ export class FabricNativeInvocation {
         if (object?.type !== 'transaction' || receipt?.type !== 'receipt') {
           throw new Error('fabric_lineage_evidence_unverified');
         }
-        record = appendEvent(file, events, 'completed', {
+        record = appendEvent(file, events, 'lineage_recorded', {
           correlation_id: correlation, worker_receipt_digest: workerHash,
           lineage_transaction_id: transaction.transaction_id,
           lineage_receipt_id: transaction.receipt_id,
-          external_delivery_verified: false,
         }, this.now);
         events.push(record);
       } catch {
         record = appendEvent(file, events, 'evidence_pending', {
           correlation_id: correlation, worker_receipt_digest: workerHash,
+          automatic_retry_permitted: false,
+        }, this.now);
+        events.push(record);
+        return resultFromEvents(events);
+      }
+
+      try {
+        const acknowledged = await this.missionOutcomeWriter({
+          mission_key: mission, work_key: work,
+          capability_key: capability, correlation_id: correlation,
+          lineage_transaction_id: transaction.transaction_id,
+          lineage_receipt_id: transaction.receipt_id,
+          worker_receipt_digest: workerHash,
+        });
+        if (acknowledged?.state !== 'recorded' ||
+            acknowledged.mission_key !== mission ||
+            acknowledged.work_key !== work ||
+            acknowledged.correlation_id !== correlation ||
+            acknowledged.lineage_receipt_id !== transaction.receipt_id ||
+            !RECEIPT.test(String(acknowledged.receipt_hash || ''))) {
+          throw new Error('fabric_systemia_outcome_ack_unverified');
+        }
+        record = appendEvent(file, events, 'completed', {
+          correlation_id: correlation, worker_receipt_digest: workerHash,
+          lineage_transaction_id: transaction.transaction_id,
+          lineage_receipt_id: transaction.receipt_id,
+          systemia_outcome_receipt_hash: acknowledged.receipt_hash,
+          external_delivery_verified: false,
+        }, this.now);
+        events.push(record);
+      } catch {
+        record = appendEvent(file, events, 'systemia_ack_pending', {
+          correlation_id: correlation, worker_receipt_digest: workerHash,
+          lineage_transaction_id: transaction.transaction_id,
+          lineage_receipt_id: transaction.receipt_id,
           automatic_retry_permitted: false,
         }, this.now);
         events.push(record);
