@@ -5,10 +5,12 @@ on:
     branches: [main]
     paths:
       - 'systemia/proof-first-sales/**'
+      - 'systemia/operator-gates/**'
       - '.github/workflows/proof-first-sales.yml'
   pull_request:
     paths:
       - 'systemia/proof-first-sales/**'
+      - 'systemia/operator-gates/**'
       - '.github/workflows/proof-first-sales.yml'
 
 permissions:
@@ -24,4 +26,6 @@ jobs:
         with:
           node-version: 22
       - name: Prove pain-to-proof-to-contact gates
-        run: node --test systemia/proof-first-sales/*.test.mjs
+        run: |
+          node --test systemia/operator-gates/*.test.mjs
+          node --test systemia/proof-first-sales/*.test.mjs
