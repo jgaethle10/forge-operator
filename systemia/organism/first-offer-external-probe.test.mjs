@@ -49,10 +49,27 @@ test('HTTP holds and redirect do not become launch evidence',async()=>{
 });
 test('transport errors, unexpected content and oversized payload remain held',async()=>{
  const fails=[
-   await inspectFirstOfferBuyerPage({request:async()=>{throw new TypeError('fetch failed')}}),
+   await inspectFirstOfferBuyerPage({request:async()=>{throw new TypeError('fetch failed')},diagnose:async()=>({dns:'resolved',tcp_443:'reachable'})}),
    await inspectFirstOfferBuyerPage({request:req(response('{}',{contentType:'application/json'}))}),
    await inspectFirstOfferBuyerPage({request:req(response('x'.repeat(150001)))}),
  ];
- assert.deepEqual(fails.map(x=>x.reason),['network_or_tls_unavailable','not_html','oversized_response']);
+ assert.deepEqual(fails.map(x=>x.reason),['http_or_tls_handshake_unavailable','not_html','oversized_response']);
  assert.ok(fails.every(x=>x.verified===false));
+});
+
+test('an external network failure resolves to the correct actionable gate',async()=>{
+ const lookupCases=[
+  [{dns:'error',dns_error_code:'ENOTFOUND',tcp_443:'not_tested'},'public_dns_unresolved'],
+  [{dns:'resolved',ipv4_count:1,tcp_443:'timeout'},'public_tcp_443_unreachable'],
+  [{dns:'resolved',ipv4_count:1,tcp_443:'reachable'},'http_or_tls_handshake_unavailable']
+ ];
+ for(const [diagnostic,reason] of lookupCases){
+  const r=await inspectFirstOfferBuyerPage({
+   request:async()=>{throw new Error('connection unavailable');},
+   diagnose:async()=>diagnostic
+  });
+  assert.equal(r.reason,reason);
+  assert.deepEqual(r.ingress,diagnostic);
+  assert.equal(r.payment_verified,false);
+ }
 });
