@@ -78,13 +78,14 @@ jobs:
           match='{"jsonrpc":"2.0","id":2,"method":"tools/call","params":{"name":"match_evercraft_capability","arguments":{"intent":"Our coding agents keep overwriting each other. We need collision-safe history, agent provenance, rationale, rollback and GitHub to remain a mirror.","limit":5}}}'
           result="$(curl --fail --silent --show-error --retry 4 --retry-all-errors --retry-delay 2 --max-time 25 \
             -H 'content-type: application/json' --data "$match" "$FABRIC_ORIGIN/mcp")"
+          printf '%s\n' "$result" > /tmp/lineage-fabric-match.json
+          printf 'LINEAGE_MATCH_IDS=%s\n' "$(printf '%s' "$result" | jq -c '[.result.structuredContent.matches[].public_id]')"
           printf '%s' "$result" | jq -e --arg id "$PUBLIC_ID" '
             .result.isError == false and
             .result.structuredContent.transactional == false and
             .result.structuredContent.external_action_taken == false and
             ([.result.structuredContent.matches[].public_id] | index($id)) != null
           ' >/dev/null
-          printf '%s\n' "$result" > /tmp/lineage-fabric-match.json
 
           options='{"jsonrpc":"2.0","id":3,"method":"tools/call","params":{"name":"get_evercraft_connection_options","arguments":{"public_id":"lineage-founding-pilot-v1"}}}'
           connection="$(curl --fail --silent --show-error --retry 4 --retry-all-errors --retry-delay 2 --max-time 25 \
