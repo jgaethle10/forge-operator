@@ -168,3 +168,28 @@ test('exact 7.4 checkout cannot redirect a buyer to an arbitrary HTTPS URL',asyn
   }finally{await runtime.close()}
  }
 });
+
+test('upstream checkout claiming paid cannot give Offer 1 a false settlement receipt',async()=>{
+ const runtime=await startFabricLocalRuntime({
+  purchaseIntentUrl:'https://fabric.systemiacommandcenters.com/__synthetic_not_deployed__/purchase-intent',
+  host:'127.0.0.1',port:0,catalog:[ibmi],faieSurfaceEnabled:false,
+  purchaseIntentFetch:async()=>new Response(JSON.stringify({
+   ok:true,order_key:'synthetic-unverified-paid-flag',
+   offer_key:'ibmi_74_deadline_xray_250',amount_cents:25000,currency:'usd',
+   checkout_ready:true,payment_state:'paid',fulfillment_release:true,
+   checkout_url:'https://checkout.stripe.com/c/pay/cs_test_synthetic_unpaid'
+  }),{status:200})
+ });
+ try{
+  const result=await fetch(runtime.url+'/api/offers/ibmi-74-deadline-xray/checkout',{
+   method:'POST',headers:{'content-type':'application/json'},
+   body:JSON.stringify({user_confirmed:true})
+  });
+  assert.equal(result.status,200);
+  const data=await result.json();
+  assert.equal(data.payment_state,'unpaid');
+  assert.equal(data.fulfillment_release,false);
+  assert.equal(data.amount_cents,25000);
+  assert.equal(data.currency,'usd');
+ }finally{await runtime.close()}
+});
