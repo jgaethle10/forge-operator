@@ -125,6 +125,14 @@ Every `recordGoalOutcome` call now requires `expectedAttempt` and must match the
 
 `admitGoalPlan` is only for a previously unplanned goal. Replacing admitted tasks would erase in-flight or completed attempt data, receipts and approvals, allowing replay of consequential operations. Repeated or changed `goal-cli plan` requests now fail closed, including after completion or process restart. Plan amendments require a future separately authorized append-only mechanism which retains attempts and task lineage; the current CLI does not allow destructive replacement. This local invariant does not by itself prove production exactly-once external side effects.
 
+### Durable pre-dispatch execution checkpoint
+
+`goal-durable-dispatch.mjs` provides an **explicit**, operator-invoked file-backed adapter execution path. It validates registry and provider eligibility, and requires a matching signed human-gate contract before invoking any non-read-only adapter. It then commits a `startGoalWork` revision to the local goal store **before** calling `adapter.execute`. This prevents crashes in the adapter from leaving the persisted state looking like work was never started. Concurrent requests for the same work cannot both start a second attempt through the same local file state. The disk CAS and `attempt_key` fences remain in force.
+
+After execution, a strictly declared local **read-only** adapter may complete from its bounded source receipt, but its output does not establish production deployment or independently verified provider outcomes. Every external/bounded/human-confirmed adapter outcome, including self-reported success, exception, retry and skip, is conservatively quarantined as `effect_state:unknown` pending source-specific authenticated reconciliation. This includes the case where an upstream action succeeded but its acknowledgment was lost. No automatic retry or human-authority bypass occurs. If the process dies before it can persist its final outcome, the checkpoint remains `executing` and the existing stale-attempt recovery scanner can identify it.
+
+This local library **does not** create a resident worker supervisor, distributed exactly-once dispatch, production deployment, durable Lineage remote receipt, or customer/payment verification. Runtime-specific adapters still require independent authorization, credentials, observation, and secure deployment. Tests use synthetic adapters only.
+
 ### Durable file adapter and CLI
 
 `goal-store.mjs` provides an atomic JSON-file persistence adapter with optimistic revision checks. It is intentionally storage-simple so Yard Operator or another runtime adapter can swap in a database later without changing the goal-state contract. The file adapter survives process and chat boundaries and rejects stale writers instead of silently overwriting newer mission state.
