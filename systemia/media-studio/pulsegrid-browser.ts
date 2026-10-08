@@ -19,6 +19,7 @@ export type {
   PulseGridAudioAssetInput,
   PulseGridAudioAssetRights,
   PulseGridAudioAssetSourceState,
+  PulseGridAudioTake,
   PulseGridClip,
   PulseGridDelayDevice,
   PulseGridDevice,
