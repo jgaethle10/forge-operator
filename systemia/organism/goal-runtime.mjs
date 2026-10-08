@@ -153,12 +153,38 @@ export function startGoalWork({ state, workKey, now = new Date() }) {
   if (!refreshed.next_work_keys.includes(task.work_key)) throw new Error(`${task.work_key} is not ready`);
   task.status = 'executing';
   task.attempt = Number(task.attempt || 0) + 1;
-  task.updated_at = nowIso(now);
+  // Stable key per attempt for downstream idempotency; it does not itself grant dispatch authority.
+  task.attempt_key = `${task.dedupe_key}:attempt:${task.attempt}`;
+  task.execution_started_at = nowIso(now);
+  task.last_heartbeat_at = task.execution_started_at;
+  task.updated_at = task.execution_started_at;
   refreshed.revision += 1;
   refreshed.updated_at = nowIso(now);
   refreshed.status = 'executing';
   refreshed.next_work_keys = refreshed.next_work_keys.filter((key) => key !== task.work_key);
   return refreshed;
+}
+
+export function heartbeatGoalWork({ state, workKey, expectedAttempt, now = new Date() }) {
+  assertGoalState(state);
+  const next = clone(state);
+  const task = next.tasks.find((item) => item.work_key === clean(workKey));
+  if (!task) throw new Error(`unknown work_key ${clean(workKey)}`);
+  if (task.status !== 'executing' || task.recovery_hold) throw new Error('work is not actively executing');
+  if (!Number.isInteger(expectedAttempt) || expectedAttempt < 1 || task.attempt !== expectedAttempt) {
+    throw new Error('attempt mismatch: refuse stale heartbeat');
+  }
+  const at = nowIso(now);
+  const old = Date.parse(task.updated_at);
+  const stamp = Date.parse(at);
+  if (!Number.isFinite(stamp) || !Number.isFinite(old) || stamp < old) {
+    throw new Error('nonmonotonic heartbeat timestamp');
+  }
+  task.last_heartbeat_at = at;
+  task.updated_at = at;
+  next.revision += 1;
+  next.updated_at = at;
+  return refreshGoal(next, now);
 }
 
 export function recordGoalOutcome({ state, workKey, result, receiptRef = '', evidenceRefs = [], blocker = '', now = new Date() }) {
@@ -168,6 +194,7 @@ export function recordGoalOutcome({ state, workKey, result, receiptRef = '', evi
   const next = clone(state);
   const task = next.tasks.find((item) => item.work_key === clean(workKey));
   if (!task) throw new Error(`unknown work_key ${clean(workKey)}`);
+  if (task.recovery_hold) throw new Error('interrupted attempt requires authoritative reconciliation before outcome or retry');
   if (task.status !== 'executing' && !(normalized === 'retry' && task.status === 'blocked')) {
     throw new Error(`${task.work_key} is not executing`);
   }
