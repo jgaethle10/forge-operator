@@ -117,7 +117,7 @@ function installAndMaterialize(root, { passport, actor, nodeId }) {
     product: "evercraft-os",
     scope: "app.install",
     resource_ref: appResourceRef("aliev", nodeId),
-    at: "2026-10-07T20:00:00.000Z"
+    at: new Date().toISOString()
   });
   assert.equal(auth.decision, "allow");
 
@@ -128,8 +128,7 @@ function installAndMaterialize(root, { passport, actor, nodeId }) {
     scope: "app.install",
     resource_ref: appResourceRef("aliev", nodeId),
     request_fingerprint: request.request_fingerprint,
-    ttl_seconds: 900,
-    minted_at: "2026-10-07T20:00:01.000Z"
+    ttl_seconds: 900
   }).permit;
 
   installLedger.install({
@@ -273,7 +272,7 @@ test("installed AliEV capsule launches through Systemia + Execution Gate into ow
   }
 });
 
-test("missing specialist dispatcher holds before execution permit consumption", () => {
+test("missing specialist dispatcher holds before execution permit consumption", async () => {
   const root = tempRoot();
   try {
     const actor = "subject:no-dispatcher";
@@ -315,19 +314,18 @@ test("missing specialist dispatcher holds before execution permit consumption", 
     });
 
     assert.equal(prepared.state, "prepared");
-    return launcher.execute({ ticket: prepared.ticket }).then((result) => {
-      assert.equal(result.state, "held");
-      assert.equal(result.reason, "specialist_dispatcher_not_registered");
-      assert.equal(result.permit_consumed, false);
-      assert.equal(result.dispatch_performed, false);
-      assert.equal(gate.getLease(prepared.ticket.execution_gate_lease_id).state, "prepared");
-    });
+    const result = await launcher.execute({ ticket: prepared.ticket });
+    assert.equal(result.state, "held");
+    assert.equal(result.reason, "specialist_dispatcher_not_registered");
+    assert.equal(result.permit_consumed, false);
+    assert.equal(result.dispatch_performed, false);
+    assert.equal(gate.getLease(prepared.ticket.execution_gate_lease_id).state, "prepared");
   } finally {
-    // async assertion chain owns no long-lived runtime
+    fs.rmSync(root, { recursive: true, force: true });
   }
 });
 
-test("tampered launch ticket fails before execution starts", () => {
+test("tampered launch ticket fails before execution starts", async () => {
   const root = tempRoot();
   try {
     const actor = "subject:tamper";
@@ -377,7 +375,7 @@ test("tampered launch ticket fails before execution starts", () => {
       }
     };
 
-    assert.rejects(
+    await assert.rejects(
       () => launcher.execute({ ticket: tampered }),
       /os_launcher_ticket_integrity_mismatch/
     );
