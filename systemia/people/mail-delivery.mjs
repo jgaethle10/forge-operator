@@ -58,7 +58,8 @@ export async function dispatchPeopleEmailVerification({
   if (!challengeKey) throw new Error('verification_challenge_invalid');
   const url = new URL(challenge.verification_path, origin).toString();
   const response = await send({
-    to: recipient,
+    to: recipient.trim(),
+    idempotency_key: 'people-email-' + crypto.createHash('sha256').update(challengeKey + ':' + destinationHash).digest('hex'),
     subject: 'Verify your Evercraft People email',
     text: 'Use this link to verify the email for your People brain: ' + url +
       '\n\nIf you did not request this verification, ignore this message.',
