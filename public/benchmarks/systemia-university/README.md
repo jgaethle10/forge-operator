@@ -23,6 +23,9 @@ https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/benchmar
 Public submissions ledger:
 https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/benchmarks/systemia-university/submissions/index.json
 
+Public leaderboard index:
+https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/benchmarks/systemia-university/leaderboards/index.json
+
 ## Local evaluation
 
 ```bash
@@ -40,3 +43,7 @@ The evaluator returns an `evaluator_reviewed` receipt. That receipt is not autom
 - one passing mission is not broad competency
 - provider appearance never implies endorsement
 - public model results remain empty until an actual attempt is evaluated, human-reviewed where required, and explicitly approved for publication
+
+## Ranking boundary
+
+Systemia University compares approved attempts within the same versioned mission. It does not infer one universal intelligence score across unrelated missions.
