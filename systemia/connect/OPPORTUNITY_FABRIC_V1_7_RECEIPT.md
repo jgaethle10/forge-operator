@@ -107,3 +107,24 @@ The Base44 source checkpoint has advanced to `6ac703b8c3e4803a619a7b6f`, git com
 - Canonical `systemia/opportunity-fabric/runtime.json` remains at previously verified v1.5.0 `not_claimed_public` state. Do not mutate it without verified public deployment and independent production access proof.
 
 **Evidence scope:** checkpoint and executable local/mocked-runtime tests. No authenticated public runtime deployment, protected disclosure, outreach, member onboarding, or recovery outcome is asserted.
+
+## Governed Connect → protected Fabric handshake addendum (2026-10-07)
+
+**Verified Base44 source checkpoint:** `6ac705fc8903c241c18ca621`  
+**Checkpoint commit:** `8b78b94cb078d57721f10cd957c4a86dc3f4cd16`  
+**Runtime source string:** `evercraft-opportunity-fabric-runtime-v1.7.0` (unchanged, not proof of publication).
+
+This iteration closes a missing owner-controlled path from an *approved member proposal* into Fabric's existing protected connection workflow. The Connection Desk now presents **Review protected request**, which only opens the existing Creator Covenant modal. The modal still requires a separate deliberate **Send protected request** action; neither route planning nor approval sends outreach. No private case details are automatically populated into the outbound safe note.
+
+For `create_connection` calls referencing `source_proposal_id`, the trusted runtime freshly validates a proposal owned by the requester, Approved status, target member identity, current case/Project ownership and active state, current capability need, current member availability/overlap, and for a private ConnectCase an affirmative `Public-safe routing approved` or stronger consent state. Private case holds, withdrawn capability, booked members and missing consent block sending. The new receipt metadata records `connect_proposal_revalidated` without serializing private problem/source/notes.
+
+**Security fix:** `request_key` replay lookup is now explicitly requester-scoped and target-checked, rather than querying a globally known request key and returning another user's request. Replay is checked only after validation of current caller and, where applicable, proposed handoff authority.
+
+**Sandbox verification:**
+- `node tests/opportunity_fabric_authority_contract_test.mjs`: PASS.
+- `npm run test:connect`: PASS, **22/22** executable mocked-handler behavioral tests plus security smoke.
+- `npm run build`: PASS, including authority and 22 behavior tests (stale caniuse-lite warning only).
+- Targeted ESLint on `ConnectionDesk.jsx` and `ConnectionModal.jsx`: PASS.
+- Regression fixtures now cover consent withholding, a successful explicitly approved simulated request (no outbound network), holds, changed member capability, idempotent replay and cross-account request-key isolation.
+
+**Truth boundary:** This is source/checkpoint, local executable test, build and lint evidence. No real member was contacted, no production request was sent, no authenticated two-user production test was run, and v1.7 public deployment is not verified. Leave `systemia/opportunity-fabric/runtime.json` at its previously verified production state until independent deployment and access checks are complete.
