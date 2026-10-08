@@ -12,7 +12,7 @@ const sites={type:'FeatureCollection',features:[
  {type:'Feature',properties:{record_id:'FEMA-TEST-3',status:'open'},geometry:{type:'Point',coordinates:[-85,30]}}
 ]};
 const metadata={
- forecastEvidence:{source_url:'https://www.nhc.noaa.gov/gis/',cyclone_id:'AL092026',issued_at:'2026-10-08T15:00:00Z',record_id:'AL092026-008-TEST'},
+ forecastEvidence:{source_url:'https://www.nhc.noaa.gov/gis/',cyclone_id:'AL092026',issued_at:'2026-10-08T15:00:00Z',record_id:'AL092026-008-TEST',layer_semantics:'official_wind_probability_threshold',threshold_percent:34},
  facilityEvidence:{source_url:'https://gis.fema.gov/arcgis/rest/services/NSS/OpenShelters/FeatureServer',retrieved_at:'2026-10-08T16:00:00Z',record_id:'FEMA-TEST-SHELTERS'}
 };
 test('no source evidence produces unknown, not zero',()=>{
@@ -44,4 +44,17 @@ test('invalid geometry, source ambiguity and duplicated facility IDs reject',()=
  const dup={...sites,features:[sites.features[0],sites.features[0]]};
  assert.throws(()=>joinIsaiasForecastAndLifelines({forecast,facilities:dup,...metadata}),/duplicated/);
  assert.throws(()=>geometryContainsPoint(forecast.features[0].geometry,[220,31]),/invalid_geojson_point/);
+});
+
+test('forecast cone and non-hazard polygon are never labeled exposed facilities',()=>{
+ const coneMetadata={...metadata.forecastEvidence,layer_semantics:'forecast_uncertainty_cone'};
+ const x=joinIsaiasForecastAndLifelines({forecast,facilities:sites,forecastEvidence:coneMetadata,facilityEvidence:metadata.facilityEvidence});
+ assert.equal(x.state,'held');
+ assert.equal(x.reason,'forecast_layer_not_a_verified_hazard');
+ assert.equal(x.forecast_exposure_candidates_count,null);
+});
+test('wind probability layers require quantitative threshold',()=>{
+ const bad={...metadata.forecastEvidence,threshold_percent:undefined};
+ const x=joinIsaiasForecastAndLifelines({forecast,facilities:sites,forecastEvidence:bad,facilityEvidence:metadata.facilityEvidence});
+ assert.equal(x.reason,'wind_probability_threshold_missing');
 });
