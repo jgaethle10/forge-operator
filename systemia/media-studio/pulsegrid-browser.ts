@@ -30,3 +30,6 @@ export type {
 
 export { PulseGridAudioEngine } from './pulsegrid-audio.js';
 export type { PulseGridAudioStatus } from './pulsegrid-audio.js';
+
+export { PulseGridBrowserAudioAssetVault, pulseGridSha256Hex } from './pulsegrid-asset-vault.js';
+export type { PulseGridAudioAssetIngestOptions } from './pulsegrid-asset-vault.js';
