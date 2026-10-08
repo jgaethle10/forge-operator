@@ -48,3 +48,23 @@ test('PulseGrid browser entrypoint exports the canonical audio adapter',()=>{
   assert.match(audio,/PulseGridTrack/);
   assert.doesNotMatch(audio,/node:/);
 });
+
+
+test('Fallen Sessions imports audio through vault plus one canonical transaction',()=>{
+  const ui=fs.readFileSync('src/FallenSessions.tsx','utf8');
+  assert.match(ui,/importAudioFile/);
+  assert.match(ui,/vault\.ingest/);
+  assert.match(ui,/asset\.register_audio/);
+  assert.match(ui,/clip\.attach_audio_asset/);
+  assert.match(ui,/applyPulseGridTransaction/);
+  assert.match(ui,/rights:'unknown'/);
+  assert.doesNotMatch(ui,/rights:'owned'/);
+});
+
+test('Fallen Sessions audio picker remains browser-local and audio-scoped',()=>{
+  const ui=fs.readFileSync('src/FallenSessions.tsx','utf8');
+  assert.match(ui,/type="file"/);
+  assert.match(ui,/accept="audio\/\*"/);
+  assert.match(ui,/local-file:/);
+  assert.doesNotMatch(ui,/fetch\(/);
+});
