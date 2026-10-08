@@ -512,6 +512,62 @@
         "compatibility_guaranteed": false,
         "private_vendor_analytics_session_command_center_sales_data_public": false
       }
+    },
+    {
+      "product_key": "lineage",
+      "contract_version": "1.0.0",
+      "owner": "systemia",
+      "adoption_stage": "discovery_only",
+      "authority": {
+        "state": "not_required",
+        "reason": "The public Lineage founding-pilot surface is discovery and human-confirmed design-partner onboarding only. History visibility, Fabric discovery, and Control Room inspection grant no repository mutation, release, deployment, publication, payment, or private-data authority."
+      },
+      "context": {
+        "state": "not_required",
+        "reason": "No shared Context Fabric namespace is declared for customer repository contents or private Lineage history. Public discovery metadata is non-sensitive and private repository access requires separate explicit authorization."
+      },
+      "meter": {
+        "state": "not_required",
+        "reason": "The $500 founding pilot is a human-confirmed one-time offer. Public discovery creates no payment obligation, checkout is not payment proof, and no shared machine-usage Meter contract is established."
+      },
+      "intake": {
+        "state": "not_required",
+        "reason": "Public Fabric discovery does not ingest repositories. One buyer-authorized Git repository may be accepted only after explicit human confirmation and repository authorization through the pilot onboarding boundary."
+      },
+      "execution": {
+        "state": "not_required",
+        "reason": "No shared public machine mutation action is declared. Public Fabric may discover and explain Lineage, but may not import repositories, move refs, reconcile branches, mutate history, publish releases, deploy, or create payment obligations."
+      },
+      "relationship": {
+        "state": "not_required",
+        "reason": "Public Lineage discovery does not contact prospects, repository collaborators, vendors, or other third parties. Buyer outreach and onboarding remain separately authorized human actions."
+      },
+      "receipt_reconciliation": {
+        "state": "not_required",
+        "reason": "Lineage has native history and integrity receipts, but no shared Context Receipt Bridge contract is declared for external pilot repositories at this discovery-only stage."
+      },
+      "rollback": {
+        "state": "declared",
+        "policy": "Remove the public discovery admission or disable future shared-runtime bindings without deleting Lineage history, granting mutation authority, changing GitHub interoperability, or weakening Evercraft Payments and repository-authorization boundaries."
+      },
+      "compatibility": {
+        "intended_product_classes": [
+          "governed_multi_agent_history_and_version_control"
+        ]
+      },
+      "boundaries": {
+        "shared_runtime_contracted": false,
+        "public_discovery_only": true,
+        "automatic_repository_access": false,
+        "automatic_history_mutation": false,
+        "automatic_release_or_deployment_authority": false,
+        "automatic_payment": false,
+        "checkout_creation_is_payment_proof": false,
+        "payment_authority": "Evercraft Payments",
+        "settlement_boundary": "Raven Nexus",
+        "github_interoperability_preserved": true,
+        "hosted_self_serve_multi_tenant_saas_claimed": false
+      }
     }
   ]
 }
