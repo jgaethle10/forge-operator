@@ -1,0 +1,34 @@
+name: Evercraft Fabric Native Invocation
+
+on:
+  pull_request:
+    paths:
+      - 'systemia/fabric-invocation/**'
+      - 'systemia/lineage/**'
+      - 'systemia/organism/goal-runtime.mjs'
+      - '.github/workflows/evercraft-fabric-invocation.yml'
+  push:
+    branches: [main]
+    paths:
+      - 'systemia/fabric-invocation/**'
+      - 'systemia/lineage/**'
+      - 'systemia/organism/goal-runtime.mjs'
+      - '.github/workflows/evercraft-fabric-invocation.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  private-invocation-evidence:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Validate private invocation and native Lineage completion gate
+        run: |
+          node --check systemia/fabric-invocation/native-invocation.mjs
+          node --test systemia/fabric-invocation/native-invocation.test.mjs
