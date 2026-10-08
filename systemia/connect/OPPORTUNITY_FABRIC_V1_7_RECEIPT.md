@@ -178,3 +178,14 @@ The script does **not** authenticate against real accounts yet, mutate entities,
 `npm run test:connect` and `npm run build` now include the canary's four offline unit tests. Checkpoint verification: **32/32 tests PASS**, authority contract PASS, security smoke PASS, build PASS, Node syntax check PASS; stale Browserslist warning is non-blocking.
 
 **Release gate still open:** authenticated production deployment of v1.7 is unverified. Do not advance `systemia/opportunity-fabric/runtime.json` from its evidence-backed published state or claim actual contact, consent verification or recovered value before dedicated live tests.
+
+## Dedicated non-mutating production access probe (2026-10-07)
+
+The canary is now strengthened with a dedicated trusted-runtime action `probe_connect_case_access`, rather than reusing the route planner. This probes actual authenticated ownership without creating a plan, matching members, generating proposals, changing the case or writing receipts. Its positive response contains only `ok`, `owner_access`, `private_content_returned:false` and `mutation_created:false`. A non-owner receives 403 even if the acting account has admin role, so elevated test identities cannot accidentally turn the canary into a planner mutation.
+
+The operator canary now exclusively invokes `probe_connect_case_access` for anonymous 401, owner-authenticated nonexistent-record 404, and synthetic-case non-owner 403 assertions. The 4 canary offline unit tests were updated, and an actual trusted-handler behavioral test covers owner 200, stranger 403, nonexistent 404, unauthenticated 401, no private fields and zero write operations.
+
+**Source checkpoint:** `6ac718e8d4bf9f33fbeb1d6e`, Base44 git commit `f3a0917a8222687089fdeab83635ae03e68d3517`.  
+**Verified sandbox results:** `npm run test:connect` PASS (**33/33** executable tests and security smoke); `npm run build` PASS (authority contract plus 33 tests and Vite build).
+
+This source verification does not assert authenticated production deployment or a live canary run. No real private business case was probed or created; no external contact occurred. Preserve canonical deployment state until an actual published endpoint, owner/non-owner synthetic accounts and recorded live results exist.
