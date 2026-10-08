@@ -1,5 +1,6 @@
 #!/usr/bin/env node
 import fs from 'node:fs';
+import {checkIBMi74TierListing} from './ibmi-74-offer-contract.mjs';
 
 function ownedGateway(value) {
   const raw = String(value || '').trim();
@@ -93,6 +94,12 @@ assert(
   tiers
 );
 
+const deadlineListing = checkIBMi74TierListing(tiers);
+assert(deadlineListing.ready, 'ibmi_74_deadline_listing_invalid', deadlineListing);
+// A generic Estate X-Ray synthetic checkout is NOT a payment-path verification
+// for this distinct 7.4 SKU. Report tier listing separately from checkout proof.
+const deadlineTierListed = true;
+
 const requestId = `qa-ibmi-machine-commerce-${Date.now()}`;
 const checkout = await jsonRequest(GATEWAY, {
   method: 'POST',
@@ -139,6 +146,10 @@ const receipt = {
   machine_state: catalog.payload.offer.machine_state,
   continuation_mode: catalog.payload.continuation.mode,
   offer_key: checkout.payload.checkout.offer_key,
+  deadline_offer_key: 'ibmi_74_deadline_xray_250',
+  deadline_tier_listed: deadlineTierListed,
+  deadline_checkout_verified: false,
+  deadline_payment_verified: false,
   amount_cents: checkout.payload.checkout.amount_cents,
   payment_proof: checkout.payload.payment_proof,
   payment_created: checkout.payload.payment_created,

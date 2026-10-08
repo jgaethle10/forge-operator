@@ -1,0 +1,108 @@
+{
+  "schema": "evercraft.systemia.ibmi-74-field-candidates.v1",
+  "as_of": "2026-10-07",
+  "mission_key": "systemia-first-commercial-offer-2026-10-07",
+  "offer_key": "ibmi_74_deadline_xray_250",
+  "identity_rule": "Public evidence of IBM i usage, upgrades or expert services does not equal consent, a purchase intent for Evercraft or reviewer availability.",
+  "candidates": [
+    {
+      "id": "bermuda-ibmi-rfp-2026-08",
+      "type": "verified_public_procurement_adjacent",
+      "entity": "Government of Bermuda, Department of Information and Digital Technologies",
+      "source_url": "https://www.gov.bm/procurement-notices/ibmi-infrastructure-upgrade",
+      "observed_facts": [
+        "Active procurement notice published 2026-08-19",
+        "Closing date 2026-10-16 at 17:00 Bermuda local",
+        "Scope covers IBM Power11/Power10 environment, infrastructure supply, installation, configuration, migration and commissioning"
+      ],
+      "need_state": "observed_procurement_for_major_infrastructure",
+      "fit_to_250_xray": "low",
+      "direct_buyer_for_offer": false,
+      "contact_authorized": false,
+      "next_action": "Read full RFP and supplier criteria; only explore a bounded subcontract/partner advisory role if independently qualified bidder requests it. Do not present as a $250 customer."
+    },
+    {
+      "id": "common-ibmi-community",
+      "type": "education_and_introduction_channel",
+      "entity": "COMMON",
+      "source_url": "https://www.common.org/events/list/",
+      "observed_facts": [
+        "COMMON runs education and IBM i user-group events",
+        "NAViGATE at IBM TechXchange listed October 26-29, 2026"
+      ],
+      "need_state": "community_education_not_buyer_intent",
+      "fit_to_250_xray": "channel_candidate",
+      "contact_authorized": false,
+      "next_action": "After verified public proof, review community posting and sponsor rules; contribute a factual 7.4 support-transition guide, not spam."
+    },
+    {
+      "id": "ipower-directory",
+      "type": "business_directory_submission_opportunity",
+      "entity": "The i Power Directory",
+      "source_url": "https://theipowerdirectory.com/",
+      "observed_facts": [
+        "Independent directory for IBM i consulting firms, tools and resources",
+        "Describes free submissions reviewed before listing"
+      ],
+      "need_state": "owned_distribution_application_not_traffic_proof",
+      "fit_to_250_xray": "potential_self_submit_after_live_verified",
+      "contact_authorized": false,
+      "next_action": "After URL, expert QA and checkout verified, submit a truthful listing with no inflated accreditation claims."
+    },
+    {
+      "id": "ja-technology-solutions",
+      "type": "specialist_capacity_research",
+      "entity": "JA Technology Solutions",
+      "source_url": "https://jatechnologysolutions.com/ibm-i-as400-consulting/",
+      "observed_facts": [
+        "Publicly describes independent IBM i support, integration and modernization consulting"
+      ],
+      "need_state": "supplier_capability_marketing_not_capacity_commitment",
+      "fit_to_250_xray": "candidate_human_reviewer_or_partner",
+      "contact_authorized": false,
+      "next_action": "Verify credentials, independence, availability, conflict handling, data permissions, expected fee and written bounded QA scope before any customer commitments."
+    },
+    {
+      "id": "programmers-io",
+      "type": "specialist_capacity_research",
+      "entity": "Programmers.io",
+      "source_url": "https://programmers.io/",
+      "observed_facts": [
+        "Advertises IBM i experts and modernization services"
+      ],
+      "need_state": "supplier_capability_marketing_not_capacity_commitment",
+      "fit_to_250_xray": "candidate_human_reviewer_or_channel_if mutually_acceptable",
+      "contact_authorized": false,
+      "next_action": "Research partnership structure and expert rate; large provider is not assumed willing to review $250 audits."
+    },
+    {
+      "id": "prodapt-rpg-contract",
+      "type": "public_market_skills_signal",
+      "entity": "Prodapt AS/400 RPG Developer role",
+      "source_url": "https://careers.prodapt.com/jobs/20005",
+      "observed_facts": [
+        "Current listing explicitly describes RPG/CL/DB2 maintenance and integration skills",
+        "Published closing date 2026-10-28"
+      ],
+      "need_state": "observed_staffing_demand_not_upgrade_purchase",
+      "fit_to_250_xray": "context_only",
+      "direct_buyer_for_offer": false,
+      "contact_authorized": false,
+      "next_action": "Use as evidence of skill demand in a sourced educational piece only; do not treat hiring as consent or an audit purchase."
+    }
+  ],
+  "pipeline": {
+    "verified_named_buyers_of_250_audit": 0,
+    "verified_specialist_capacity": 0,
+    "authorized_external_outreach": 0,
+    "confirmed_provider_settled_orders": null,
+    "traffic_coverage": "not_measured",
+    "claimed_revenue_usd": null
+  },
+  "gates": [
+    "Live public exact offer path and provider canary",
+    "Qualified IBM i reviewer signs off on specimen and bounded delivery",
+    "Interaction Ledger approved one-to-one contacts or community permissions",
+    "Provider-verified non-synthetic settlement and Systemia Shipping receipt"
+  ]
+}
