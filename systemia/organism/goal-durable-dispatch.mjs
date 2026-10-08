@@ -17,6 +17,11 @@ function boundAdapter(registry,work){
  if(adapter.human_gate_required&&!work.human_gate_required){
   return {adapter:null,reason:'adapter_requires_human_gate'};
  }
+ // An adapter with external effects cannot opt out by omitting a gate,
+ // even if a raw plan labels the task generic research/execute.
+ if(adapter.authority!=='read-only'&&!(adapter.human_gate_required&&work.human_gate_required)){
+  return {adapter:null,reason:'stateful_adapter_requires_signed_human_gate'};
+ }
  if(work.provider_key&&adapter.provider_key!==work.provider_key){
   return {adapter:null,reason:'provider_binding_mismatch'};
  }
