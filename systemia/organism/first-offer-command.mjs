@@ -54,12 +54,14 @@ const GATES = Object.freeze([
 ]);
 
 const clean = v => String(v ?? '').trim();
-const ISO = d => d instanceof Date ? d.toISOString() : new Date(d).toISOString();
+// A plausible-looking URL is never evidence of an Evercraft-owned deployment.
+// Keep the approved origin explicit. A new production host requires source review.
+const APPROVED_OFFER_HOSTNAMES = new Set(['fabric.systemiacommandcenters.com']);
 const urlIsOwnedOffer = value => {
   try{
     const url = new URL(clean(value));
     return url.protocol === 'https:' && !url.username && !url.password &&
-      !/(^|\.)base44\.app$/i.test(url.hostname) &&
+      url.port === '' && APPROVED_OFFER_HOSTNAMES.has(url.hostname) &&
       url.pathname === '/offers/ibmi-74-deadline-xray';
   }catch{return false;}
 };
