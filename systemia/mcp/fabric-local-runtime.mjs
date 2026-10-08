@@ -889,6 +889,30 @@ export async function startFabricLocalRuntime({
           });
         }
 
+        // The 7.4 campaign is a distinct $250 product. Never direct a buyer
+        // to an arbitrary, mismatched or unidentifiable upstream checkout.
+        // A synthetic offer-page test or generic Estate X-Ray is not purchase truth.
+        if(slug==='ibmi-74-deadline-xray'){
+          const upstreamOffer=String(result?.offer_key||result?.capability_key||'').trim();
+          const amount=Number(result?.amount_cents);
+          const currency=String(result?.currency||'').trim().toLowerCase();
+          const exactOffer=upstreamOffer==='ibmi_74_deadline_xray_250';
+          const exactPrice=Number.isInteger(amount)&&amount===25000&&currency==='usd';
+          if(!exactOffer||!exactPrice){
+            if(isForm){
+              return sendText(res,503,renderPaymentHoldPage({slug,orderKey:result?.order_key||''}),{
+                contentType:'text/html; charset=utf-8'
+              });
+            }
+            return sendJson(res,503,{
+              ok:false,error:'exact_ibmi_74_checkout_not_verified',
+              authority:'Evercraft Payments',checkout_ready:false,fulfillment_release:false,
+              expected_offer_key:'ibmi_74_deadline_xray_250',
+              expected_amount_cents:25000,currency:'usd',
+            });
+          }
+        }
+
         let checkoutUrl=null;
         try{
           const candidate=new URL(String(result?.checkout_url||''));
@@ -956,7 +980,7 @@ export async function startFabricLocalRuntime({
         if(slug&&!slug.includes('/')){
           const offer=offerCapabilityForSlug(slug,preparedCatalog().capabilities);
           if(!offer) return sendJson(res,404,{error:'offer_not_found'});
-          const page=renderOfferPage(offer);
+          const page=renderOfferPage(offer,{slug});
           if(!page) return sendJson(res,404,{error:'offer_not_found'});
           return sendText(res,200,page,{contentType:'text/html; charset=utf-8'});
         }
