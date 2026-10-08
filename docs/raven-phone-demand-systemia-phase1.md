@@ -41,4 +41,15 @@ Owned Fabric source now registers POST /api/communications/raven-inbound, using 
 
 A 202 reply means only a durable **review candidate** was stored, not Systemia mission admission, owner acknowledgment, Twilio event verification, consent, publication, payment or delivery. Health advertises raven_phone_private_ingress_ready and configured_not_externally_verified separately. This is a single-writer/on-host proof, not a multi-node shared transactional queue. Do not enable a multi-replica route until durability/locking, retention/deletion, and private replay-state ownership are independently verified.
 
+## October 7 continuation: replay and private-store hardening
+
+- Provider replay identity now binds `source_system + provider_type + channel + provider_event_ref + event_type` using HMAC; changing Raven's local `source_record_ref` or `idempotency_key` does **not** create a second inbound event for the same provider SID and phase. Distinct phases for a voice call remain separately auditable. The private conversation identity stays bound to the provider call/message reference.
+- The owned ingress now writes and fsyncs a mode-0600 temporary receipt, atomically hard-links it into the final provider-event slot without overwrite, and fsyncs the directory. An existing final file is accepted as a duplicate only after checking privacy permissions, JSON validity, schema and event identity. Invalid previous records return a durable-store failure, not a success receipt.
+- Regression tests cover recreated local Raven records with one provider SID, separate voice phases, and corrupt/truncated receipt replay. These are synthetic code proofs, not production delivery.
+- Existing Raven `secretaryInbound` still sends EPS-style AgentMessage and DispatchOrder records before any STOP-specific suppression handling, and `ravenVoiceTurn` remains EPS-oriented. Source-only detection is **not** production SMS opt-out enforcement or portfolio-wide voice routing. Do not modify live handlers until a staffed rollout includes STOP suppression, safe owner routing, authorized callback permissions and rollback.
+- A Raven `ravenVoiceTwilioInspect` function exists for admin-gated, read-only provider inspection, but no authenticated provider response has been captured in this PR. Source code does not establish that the phone's configured URLs, inbound delivery, status callbacks, A2P eligibility or provider failures are healthy.
+- The present handler remains review-candidate-only: no Systemia admission, owner assignment, Relay acknowledgment, provider-verified delivery, authorized return contact or settlement is proved.
+
+**Release gate remains closed:** gather authenticated provider-side number/webhook and event evidence; validate one real customer-initiated voice/SMS call through Raven and the owned ingress; demonstrate safe opt-out, Passport/Interaction Ledger decisions, Systemia ownership and human acknowledgment; then propose a separately approved reversible cutover with rollback receipt.
+
 No production environment settings, DNS, Base44 webhooks, Twilio URLs, secrets, or phone numbers were changed by this pull request.
