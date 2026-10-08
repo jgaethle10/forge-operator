@@ -936,7 +936,18 @@ export async function startFabricLocalRuntime({
         let checkoutUrl=null;
         try{
           const candidate=new URL(String(result?.checkout_url||''));
-          if(candidate.protocol==='https:') checkoutUrl=candidate.toString();
+          const approvedIBMi74Handoff=
+            (candidate.hostname==='checkout.stripe.com' ||
+             candidate.hostname==='fabric.systemiacommandcenters.com') &&
+            candidate.protocol==='https:' &&
+            !candidate.username && !candidate.password && !candidate.port;
+          // Exact Offer #1 money cannot be redirected to an arbitrary HTTPS
+          // address supplied by a compromised or wrong purchase-intent adapter.
+          // Other generic Fabric offers retain their current legacy behavior.
+          if(candidate.protocol==='https:' &&
+             (slug!=='ibmi-74-deadline-xray'||approvedIBMi74Handoff)){
+            checkoutUrl=candidate.toString();
+          }
         }catch{}
         if(result?.checkout_ready!==true||!checkoutUrl){
           if(isForm){
