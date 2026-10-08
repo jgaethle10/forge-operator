@@ -4,7 +4,7 @@ WORKDIR /app
 COPY package.json ./
 ENV PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD=1
 RUN npm install --omit=dev --no-audit --no-fund
-COPY policy.mjs secure-proxy.mjs snapshot-contract.mjs delegated-session-policy.mjs authenticated-handoff.mjs server.mjs ./
+COPY policy.mjs secure-proxy.mjs snapshot-contract.mjs delegated-session-policy.mjs authenticated-handoff.mjs durable-jobs.mjs server.mjs ./
 
 ENV NODE_ENV=production
 ENV PORT=8787
