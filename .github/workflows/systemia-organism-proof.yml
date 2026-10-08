@@ -48,3 +48,5 @@ jobs:
         run: node --test systemia/organism/goal-provider-observation.test.mjs
       - name: Commit durable execution checkpoint before adapter callback
         run: node --test systemia/organism/goal-durable-dispatch.test.mjs
+      - name: Forbid volatile stateful and gated adapter execution
+        run: node --test systemia/organism/capability-volatile-dispatch.test.mjs
