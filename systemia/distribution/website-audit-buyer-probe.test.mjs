@@ -56,5 +56,5 @@ test('transport failures are explicit unknown rather than fabricated zero or gre
 test('oversized body and invalid observation time are blocked',async()=>{
   const oversized=await inspectWebsiteAuditBuyerPage({request:async()=>respond(html+'a'.repeat(250000))});
   assert.equal(oversized.reason,'oversized_content');
-  assert.throws(()=>inspectWebsiteAuditBuyerPage({now:'nonsense'}),/valid_observation_time_required/);
+  await assert.rejects(inspectWebsiteAuditBuyerPage({now:'nonsense'}),/valid_observation_time_required/);
 });
