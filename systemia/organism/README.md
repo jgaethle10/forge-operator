@@ -84,7 +84,7 @@ npm run goal -- authorize ./state/mission.json gated-work ./signed-human-approva
 npm run goal -- start ./state/mission.json gated-work
 ```
 
-The signature is verified once at authorization and **again at dispatch**, preventing an expired persisted claim from authorizing new execution. The file-based CLI does not itself generate approvals or appoint new issuers. This protects the local Systemia goal gate only; Passport, interaction preflight, payment, deployment, and other product-specific authorities still apply independently. External signer provisioning, revocation, credential rotation, and production deployment are not asserted as complete by these source tests.
+The signature is verified once at authorization and **again at dispatch**, preventing an expired persisted claim from authorizing new execution. The goal planner also force-enables human gates for consequential work types from the Systemia control-plane contract: `trust_change`, `external_message`, `outreach`, `external_purchase`, and `payment`, even if a caller submits `human_gate_required:false`. The file-based CLI does not itself generate approvals or appoint new issuers. This protects the local Systemia goal gate only; Passport, interaction preflight, payment, deployment, and other product-specific authorities still apply independently. External signer provisioning, revocation, credential rotation, and production deployment are not asserted as complete by these source tests.
 
 ### Interrupted work and safe recovery holds
 
