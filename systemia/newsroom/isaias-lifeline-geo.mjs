@@ -55,6 +55,14 @@ const officialForecast=(url)=>{try{
 export function joinIsaiasForecastAndLifelines({forecast,facilities,forecastEvidence,facilityEvidence}={}){
   if(!forecast||!facilities||!forecastEvidence||!facilityEvidence)return held('authoritative_input_missing');
   if(!officialForecast(forecastEvidence.source_url)||forecastEvidence.cyclone_id!=='AL092026')return held('nhc_source_identity_unverified');
+  // A track cone is a forecast uncertainty envelope, not a storm surge, wind, or damage hazard.
+  const semantics=String(forecastEvidence.layer_semantics||'');
+  if(!['official_storm_surge_inundation','official_wind_probability_threshold'].includes(semantics))
+    return held('forecast_layer_not_a_verified_hazard');
+  if(semantics==='official_wind_probability_threshold'&&!Number.isFinite(forecastEvidence.threshold_percent))
+    return held('wind_probability_threshold_missing');
+  if(semantics==='official_storm_surge_inundation'&&!forecastEvidence.vertical_datum)
+    return held('storm_surge_vertical_datum_missing');
   if(!/^https:\/\//.test(String(facilityEvidence.source_url||'')))return held('facility_source_unverified');
   if(!forecastEvidence.issued_at||!facilityEvidence.retrieved_at||!forecastEvidence.record_id||!facilityEvidence.record_id)
     return held('source_lineage_incomplete');
