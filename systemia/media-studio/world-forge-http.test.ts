@@ -73,6 +73,7 @@ test('World Forge HTTP registers bounded Play Mode lifecycle routes',()=>{
   for(const route of [
     'POST /api/fallen/world-forge/play/start',
     'POST /api/fallen/world-forge/play/status',
+    'POST /api/fallen/world-forge/play/webgpu-frame',
     'POST /api/fallen/world-forge/play/step',
     'POST /api/fallen/world-forge/play/sync',
     'POST /api/fallen/world-forge/play/stop',
@@ -143,6 +144,18 @@ test('World Forge Play Mode HTTP start → step → status → stop lifecycle is
   assert.equal(status.statusCode,200);
   assert.equal(status.payload.success,true);
   assert.equal(status.payload.snapshot.tick,5);
+
+  const webgpu=invoke(
+    'POST /api/fallen/world-forge/play/webgpu-frame',
+    {sessionId,width:640,height:360},
+  );
+  assert.equal(webgpu.statusCode,200);
+  assert.equal(webgpu.payload.success,true);
+  assert.equal(webgpu.payload.frame.tick,5);
+  assert.equal(webgpu.payload.frame.plan.tick,5);
+  assert.equal(webgpu.payload.frame.plan.width,640);
+  assert.equal(webgpu.payload.frame.plan.height,360);
+  assert.ok(webgpu.payload.frame.geometries.length>0);
 
   const stopped=invoke(
     'POST /api/fallen/world-forge/play/stop',
