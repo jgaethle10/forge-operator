@@ -82,6 +82,25 @@ export function reconcileFirstOfferIngress({external,doctor=null,now=new Date()}
    // A page GET proves page text only. Commercial and deployment gates remain separate.
    return decided('buyer_page_get_visible','verify_yard_release_specialist_and_exact_provider_checkout');
  }
+ // A real HTTP response over the exact HTTPS origin is narrower evidence than
+ // a verified customer offer. Distinguish missing route from broken ingress.
+ const httpStatus=Number(external.http_status);
+ if(Number.isInteger(httpStatus)&&httpStatus>=300&&httpStatus<=599){
+   if(httpStatus===404)return decided('specific_offer_route_http_404',
+     'verify_yard_release_reverse_proxy_route_and_7_4_offer_page_binding',
+     ['route_not_deployed','reverse_proxy_path_mismatch','stale_origin_release']);
+   if(httpStatus===401||httpStatus===403)return decided('specific_offer_route_access_denied',
+     'inspect_public_offer_access_policy_without_bypassing_authorization');
+   if(httpStatus===502||httpStatus===503||httpStatus===504)return decided('offer_edge_upstream_http_failure',
+     'inspect_owned_edge_upstream_service_health_and_release_binding');
+   if(httpStatus>=300&&httpStatus<400)return decided('offer_route_redirect_unverified',
+     'verify_redirect_destination_and_approved_owned_origin');
+   return decided('offer_route_http_error','inspect_owned_offer_route_response_and_release_binding');
+ }
+ if(httpStatus===200&&external.verified!==true){
+   return decided('offer_page_contract_unverified',
+     'repair_exact_public_offer_copy_price_form_or_html_contract');
+ }
  if(external.ingress?.dns==='error'||external.ingress?.dns==='no_ipv4'){
    return decided('public_dns_unresolved','verify_authoritative_dns_and_expected_public_address');
  }
