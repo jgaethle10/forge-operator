@@ -54,5 +54,12 @@
     }
   ],
   "submissions_index": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/benchmarks/systemia-university/submissions/index.json",
-  "leaderboard_index": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/benchmarks/systemia-university/leaderboards/index.json"
+  "leaderboard_index": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/benchmarks/systemia-university/leaderboards/index.json",
+  "remote_evaluation": {
+    "state": "implementation_ready_deployment_unverified",
+    "discovery_path": "/api/systemia-university/benchmarks",
+    "evaluate_path": "/api/systemia-university/evaluate",
+    "persistence": false,
+    "public_write": false
+  }
 }
