@@ -1048,3 +1048,29 @@
   background:#153248;
   color:#d5efff;
 }
+
+.wf-playback-control{
+  display:flex;
+  align-items:center;
+  gap:5px;
+  color:#79a58f;
+  font-size:8px;
+  font-weight:800;
+  text-transform:uppercase;
+  letter-spacing:.05em;
+}
+
+.wf-playback-control select{
+  border:1px solid #315c49;
+  background:#0e2119;
+  color:#b9e8ce;
+  border-radius:6px;
+  padding:5px 6px;
+  font:800 8px ui-monospace,SFMono-Regular,Menlo,monospace;
+}
+
+.wf-play-button.active{
+  border-color:#3f8c62 !important;
+  background:#17442f !important;
+  color:#d2f7e1 !important;
+}
