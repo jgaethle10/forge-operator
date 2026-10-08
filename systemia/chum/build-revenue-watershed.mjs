@@ -1,6 +1,7 @@
 import fs from 'node:fs';
 import path from 'node:path';
 import { humanStartState, humanStartUrl, machineReviewUrl } from './start-corridor.mjs';
+import { verifiedReadonlyUniversalMcp } from './verified-universal-mcp.mjs';
 
 function safeConfiguredHttps(value) {
   const raw = String(value || '').trim();
@@ -17,7 +18,15 @@ function safeConfiguredHttps(value) {
 }
 
 const MACHINE_COMMERCE_GATEWAY = safeConfiguredHttps(process.env.EVERCRAFT_MACHINE_COMMERCE_GATEWAY_URL);
-const UNIVERSAL_MCP = safeConfiguredHttps(process.env.EVERCRAFT_UNIVERSAL_MCP_URL);
+// Receipt-backed read-only MCP discovery is independent of the paid gateway.
+// A previous external canary is source evidence, not proof of live-now reachability.
+const distribution = JSON.parse(fs.readFileSync('distribution/machine-commerce-distribution.json','utf8'));
+const RECEIPTED_READONLY_MCP = verifiedReadonlyUniversalMcp(distribution);
+const requestedMcp = String(process.env.EVERCRAFT_UNIVERSAL_MCP_URL || '').trim();
+if(requestedMcp && safeConfiguredHttps(requestedMcp) !== RECEIPTED_READONLY_MCP){
+  throw new Error('universal_mcp_override_not_in_verified_owned_distribution');
+}
+const UNIVERSAL_MCP = RECEIPTED_READONLY_MCP;
 
 const BLOCKED_PUBLIC_HOSTS = new Set([
   'systemiacommandcenters.com',
