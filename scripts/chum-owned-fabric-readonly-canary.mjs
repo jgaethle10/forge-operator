@@ -115,6 +115,40 @@ try{
     transactional:false,
     paid_execution_not_verified:true
   };
+  // Public page presence is a separate release gate from MCP discovery.
+  // Safe GET only, never submit a checkout request or assume payment readiness.
+  try{
+    const publicPageUrl=new URL('/offers/ibmi-74-deadline-xray',new URL(endpoint).origin);
+    const controller=new AbortController();
+    const timer=setTimeout(()=>controller.abort(),10000);
+    let response;
+    try{
+      response=await fetch(publicPageUrl,{
+        method:'GET',redirect:'manual',signal:controller.signal,
+        headers:{accept:'text/html','user-agent':'Evercraft-IBM-i-74-Public-ReadOnly-Canary/1.0'}
+      });
+    }finally{clearTimeout(timer);}
+    const page=response.status===200?String(await response.text()).slice(0,262144):'';
+    const identityPresent=/IBM i 7\\.4 Deadline X-Ray/i.test(page)
+      && /ibmi-74-deadline-xray/.test(page);
+    const checkoutVisible=/Continue to checkout/i.test(page);
+    receipt.checks.ibm_i_74_public_offer_page={
+      state:response.status===200&&identityPresent?'public_page_verified':'held_or_unverified',
+      http_status:response.status,
+      correct_offer_identity:identityPresent,
+      checkout_cta_visible:checkoutVisible,
+      no_purchase_attempt:true,
+      payment_verified:false,
+      note:'A reachable page is not payment authorization, checkout proof, settlement, or delivery.'
+    };
+  }catch(error){
+    receipt.checks.ibm_i_74_public_offer_page={
+      state:'held_or_unverified',
+      reason:String(error?.name||'network_failure').slice(0,80),
+      no_purchase_attempt:true,
+      payment_verified:false
+    };
+  }
   receipt.status='pass';
 }catch(error){
   receipt.status='fail';
