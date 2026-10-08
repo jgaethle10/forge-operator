@@ -568,6 +568,113 @@
         "github_interoperability_preserved": true,
         "hosted_self_serve_multi_tenant_saas_claimed": false
       }
+    },
+    {
+      "product_key": "earthworks-autonomy",
+      "contract_version": "1.0.0",
+      "owner": "systemia",
+      "adoption_stage": "discovery_only",
+      "authority": {
+        "state": "not_required",
+        "reason": "The public EarthWorks surface is discovery, bounded software simulation, study qualification, and human-confirmed Site Autonomy Study sales only. It grants no production equipment actuation, dispatch, safety, payment, or physical autonomy authority."
+      },
+      "context": {
+        "state": "not_required",
+        "reason": "No shared Context Fabric namespace is declared for customer site telemetry, equipment state, maps, production data, or operating-domain details. Customer site data remains separately scoped and permissioned."
+      },
+      "meter": {
+        "state": "not_required",
+        "reason": "The $5,000 founding Site Autonomy Study is a human-confirmed one-time scoped offer, not a shared machine-usage meter. Checkout initiation is not payment proof and paid state remains authoritative in Evercraft Payments."
+      },
+      "intake": {
+        "state": "not_required",
+        "reason": "Public discovery and self-screening do not authorize ingestion of private site or equipment data. Detailed site inputs require an approved bounded study and explicit customer authorization."
+      },
+      "execution": {
+        "state": "not_required",
+        "reason": "The public product is limited to simulation, shadow-mode planning, and study workflows. No shared Execution Gate action for full-size physical machine control is declared; production autonomy requires a separate verified safety and operating-domain contract."
+      },
+      "relationship": {
+        "state": "not_required",
+        "reason": "Public discovery does not contact equipment vendors, operators, employees, customers, or third parties. Design-partner outreach and study onboarding are separately authorized human actions."
+      },
+      "receipt_reconciliation": {
+        "state": "not_required",
+        "reason": "EarthWorks simulation and study artifacts may carry receipts, but no shared Context Receipt Bridge contract is declared for customer site operations at this discovery-only stage."
+      },
+      "rollback": {
+        "state": "declared",
+        "policy": "Remove public discovery or future shared-runtime bindings without converting simulations into physical authority, exposing customer site data, changing payment truth, or weakening stop, takeover, heartbeat, geofence, and safety-case requirements."
+      },
+      "compatibility": {
+        "intended_product_classes": [
+          "site_autonomy_orchestration_for_earthmoving_and_material_operations"
+        ]
+      },
+      "boundaries": {
+        "shared_runtime_contracted": false,
+        "public_discovery_only": true,
+        "simulation_is_physical_deployment_proof": false,
+        "production_machine_actuation_authority": false,
+        "paid_study_authorizes_machine_control": false,
+        "customer_site_data_public": false,
+        "payment_authority": "Evercraft Payments",
+        "buyer_specific_payment_order_requires_explicit_purchase_confirmation": true
+      }
+    },
+    {
+      "product_key": "fallen-sessions",
+      "contract_version": "1.0.0",
+      "owner": "systemia",
+      "adoption_stage": "discovery_only",
+      "authority": {
+        "state": "not_required",
+        "reason": "Fallen Sessions is publicly admitted as an engine-alpha discovery surface only. Discovery grants no authority to mutate private music sessions, publish media, invoke external plugins, distribute releases, or perform paid actions."
+      },
+      "context": {
+        "state": "not_required",
+        "reason": "No shared Context Fabric namespace is declared for private music sessions, recordings, MIDI, automation, stems, or artist project state. Creative project data remains inside the product boundary."
+      },
+      "meter": {
+        "state": "not_required",
+        "reason": "Fallen Sessions is not for sale yet and no live checkout or shared usage-meter contract is established."
+      },
+      "intake": {
+        "state": "not_required",
+        "reason": "Public discovery does not accept private audio, MIDI, project files, plugins, or recordings. Any future media intake requires separate authenticated and rights-aware authorization."
+      },
+      "execution": {
+        "state": "not_required",
+        "reason": "No public shared machine execution action is declared. Engine-alpha browser/audio behavior and reversible local edits do not establish remote execution, rendering, publishing, or plugin authority."
+      },
+      "relationship": {
+        "state": "not_required",
+        "reason": "Public discovery does not contact collaborators, labels, platforms, audiences, or other third parties. Future distribution handoff to Evercraft Clip remains separately gated."
+      },
+      "receipt_reconciliation": {
+        "state": "not_required",
+        "reason": "PulseGrid and Fallen can produce provenance and reversible edit receipts, but no shared Context Receipt Bridge contract is declared for external music projects at this discovery-only stage."
+      },
+      "rollback": {
+        "state": "declared",
+        "policy": "Remove public discovery or future shared-runtime bindings without deleting creative state, enabling media publication, changing ownership/provenance semantics, or representing engine alpha as a production-grade DAW."
+      },
+      "compatibility": {
+        "intended_product_classes": [
+          "agent_native_music_creation"
+        ]
+      },
+      "boundaries": {
+        "shared_runtime_contracted": false,
+        "public_discovery_only": true,
+        "engine_alpha": true,
+        "production_grade_daw_claimed": false,
+        "for_sale": false,
+        "checkout_enabled": false,
+        "private_media_intake_contracted": false,
+        "publishing_authority": false,
+        "third_party_plugin_compatibility_proven": false
+      }
     }
   ]
 }
