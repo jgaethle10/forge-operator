@@ -2,7 +2,7 @@
 // Adapts EXISTING Raven writeCommunicationsBridge HMAC format. No outbound/payment authority.
 import { createHmac, timingSafeEqual } from 'node:crypto';
 
-const verifiedEnvelopes = new WeakSet();
+const verifiedEnvelopes = new WeakMap();
 const MAX_BYTES = 65536;
 const MAX_CLOCK_SKEW_MS = 5 * 60 * 1000;
 const CHANNELS = new Set(['voice', 'sms']);
@@ -63,12 +63,9 @@ export function verifyRavenPhoneBridge({
   if (eventAt === null || eventAt > at + MAX_CLOCK_SKEW_MS) throw new Error('bridge_event_time_invalid');
 
   // Freeze payload identity: the classifier accepts only an envelope verified in this process.
-  const envelope = Object.freeze({
-    data: Object.freeze(data),
-    attestedAt: new Date(at).toISOString(),
-    secretKey: secret, // Private in-process only; never serialize this envelope.
-  });
-  verifiedEnvelopes.add(envelope);
+  // Keep payload and signing secret outside the returned object, even if serialized by accident.
+  const envelope = Object.freeze({ attestation: 'verified_in_process' });
+  verifiedEnvelopes.set(envelope, { data: Object.freeze(data), attestedAt: new Date(at).toISOString(), secretKey: secret });
   return envelope;
 }
 
@@ -104,8 +101,9 @@ function chooseLane(data, text) {
 }
 
 export function planRavenPhoneDemand(envelope) {
-  if (!verifiedEnvelopes.has(envelope)) throw new Error('verified_bridge_envelope_required');
-  const { data, secretKey, attestedAt } = envelope;
+  const verified = envelope && verifiedEnvelopes.get(envelope);
+  if (!verified) throw new Error('verified_bridge_envelope_required');
+  const { data, secretKey, attestedAt } = verified;
   const fullText = [asText(data.text_content), asText(data.content_summary), asText(data.intent)].filter(Boolean).join(' ').slice(0, 12000);
   const customerText = asText(data.text_content);
   let intent, route, lane, confidence;
