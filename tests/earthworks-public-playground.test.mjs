@@ -3,18 +3,42 @@ import fs from 'node:fs';
 import test from 'node:test';
 
 const canonical=fs.readFileSync('systemia/earthworks-autonomy/fleet-controller.mjs','utf8');
-const publicController=fs.readFileSync('public/demos/earthworks-autonomy/controller.mjs','utf8');
+const nativeApp=fs.readFileSync('systemia/mcp/earthworks-simulator-app.mjs','utf8');
 const page=fs.readFileSync('public/demos/earthworks-autonomy/index.html','utf8');
-const app=fs.readFileSync('public/demos/earthworks-autonomy/app.mjs','utf8');
 
-test('public EarthWorks playground ships the canonical fleet controller byte-for-byte',()=>{
-  assert.equal(publicController,canonical);
-  assert.match(publicController,/export function createFleetController/);
-  assert.match(publicController,/currentLoadTruckId/);
-  assert.match(publicController,/STOP ALL/);
+function between(source,begin,end){
+  const start=source.indexOf(begin);
+  assert.notEqual(start,-1,'missing begin marker '+begin);
+  const contentStart=start+begin.length;
+  const finish=source.indexOf(end,contentStart);
+  assert.notEqual(finish,-1,'missing end marker '+end);
+  return source.slice(contentStart,finish);
+}
+
+test('public EarthWorks playground embeds the canonical fleet controller exactly',()=>{
+  const embedded=between(
+    page,
+    '/* EARTHWORKS_CANONICAL_CONTROLLER_BEGIN */\n',
+    '\n/* EARTHWORKS_CANONICAL_CONTROLLER_END */'
+  );
+  assert.equal(embedded,canonical.replace(/\bexport\s+/g,''));
+  assert.match(embedded,/function createFleetController/);
+  assert.match(embedded,/currentLoadTruckId/);
+  assert.match(embedded,/STOP ALL/);
 });
 
-test('public EarthWorks playground binds its UI to the canonical controller module',()=>{
+test('public EarthWorks playground embeds the same Live Yard app without module transport dependency',()=>{
+  const embeddedApp=between(
+    page,
+    '/* EARTHWORKS_LIVE_YARD_APP_BEGIN */\n',
+    '\n/* EARTHWORKS_LIVE_YARD_APP_END */'
+  );
+  const expected=nativeApp.replace(
+    /^import\s+\{[^}]+\}\s+from\s+'\/earthworks\/controller\.mjs';\s*/,
+    ''
+  );
+  assert.equal(embeddedApp,expected);
+
   assert.match(page,/Live Yard 001/);
   assert.match(page,/data-mode="manual"/);
   assert.match(page,/data-mode="shadow"/);
@@ -24,15 +48,8 @@ test('public EarthWorks playground binds its UI to the canonical controller modu
   assert.match(page,/Blocked Route/);
   assert.match(page,/Production Surge/);
   assert.match(page,/STOP ALL/);
-  assert.ok(page.includes('<script type="module" src="./app.mjs"></script>'));
+  assert.match(page,/controller\.stopAll/);
+  assert.match(page,/controller\.resume/);
+  assert.doesNotMatch(page,/type="module"/);
   assert.doesNotMatch(page,/base44\.app/i);
-
-  assert.match(app,/from '\.\/controller\.mjs'/);
-  assert.match(app,/createFleetController/);
-  assert.match(app,/controller\.stopAll/);
-  assert.match(app,/controller\.resume/);
-  for(const state of ['queue','approach','loading','haul','dump','return']){
-    assert.ok(app.includes("truck.state==='"+state+"'"),'missing rendered controller state '+state);
-  }
-  assert.doesNotMatch(app,/base44\.app/i);
 });
