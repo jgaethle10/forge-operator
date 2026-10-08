@@ -3,269 +3,89 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>EarthWorks Autonomy Playground | Evercraft</title>
-<meta name="description" content="Hands-on browser simulation of Evercraft EarthWorks Autonomy. Coordinate excavators, haul trucks, loaders and material flow in a simulated quarry loop.">
+<meta name="theme-color" content="#070a0e">
+<title>EarthWorks Live Yard · Evercraft</title>
+<meta name="description" content="A hands-on browser simulation of Evercraft EarthWorks site autonomy orchestration for haul, loading, queueing and shadow dispatch.">
 <style>
-:root{color-scheme:dark;--bg:#07100d;--panel:#0d1715;--panel2:#101d19;--line:#263a34;--text:#f4f7f5;--muted:#91a59e;--amber:#f3a93b;--green:#59dd95;--blue:#55b8ff;--red:#ff626d;--purple:#b892ff}
-*{box-sizing:border-box}
-html,body{margin:0;min-height:100%;max-width:100%;background:#07100d;color:var(--text);font-family:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;-webkit-text-size-adjust:100%}
-body{overflow-x:hidden;background:
-radial-gradient(circle at 75% -10%,rgba(243,169,59,.13),transparent 33rem),
-radial-gradient(circle at 0 90%,rgba(85,184,255,.08),transparent 30rem),var(--bg)}
-button{font:inherit}.shell{width:min(1480px,calc(100% - 24px));max-width:100%;margin:auto;padding:18px 0 44px}main,section,aside,.card,canvas{max-width:100%;min-width:0}
-.top{display:flex;justify-content:space-between;align-items:flex-start;gap:18px;margin-bottom:14px}.brand{display:flex;gap:12px;align-items:center}.mark{width:42px;height:42px;border:1px solid #685129;border-radius:12px;display:grid;place-items:center;background:#171208;color:var(--amber);font-weight:950}.eyebrow{font-size:10px;letter-spacing:.18em;text-transform:uppercase;color:var(--amber);font-weight:900}.top h1{font-size:clamp(24px,4vw,44px);margin:3px 0 0;letter-spacing:-.045em;line-height:1}.truth{text-align:right;color:var(--muted);font-size:12px;max-width:440px}.truth b{color:#d9e4df}
-.layout{display:grid;grid-template-columns:minmax(0,1fr) 360px;gap:12px}.card{border:1px solid var(--line);border-radius:15px;background:linear-gradient(180deg,rgba(16,29,25,.96),rgba(9,17,15,.96));box-shadow:0 24px 70px rgba(0,0,0,.28)}
-.stage{overflow:hidden;position:relative}.stageHead{display:flex;justify-content:space-between;align-items:center;padding:12px 14px;border-bottom:1px solid var(--line);gap:10px}.stageHead strong{font-size:11px;letter-spacing:.13em;text-transform:uppercase}.statusline{display:flex;gap:10px;align-items:center;color:var(--muted);font-size:11px}.pulse{width:7px;height:7px;border-radius:50%;background:var(--green);box-shadow:0 0 12px rgba(89,221,149,.7)}
-canvas{display:block;width:100%;height:auto;min-height:610px;background:linear-gradient(155deg,#15251f,#0d1713)}
-.hud{position:absolute;left:12px;right:12px;bottom:12px;display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:7px;pointer-events:none}.metric{background:rgba(7,14,12,.88);border:1px solid rgba(60,91,80,.8);border-radius:10px;padding:9px}.metric small{display:block;color:var(--muted);font-size:9px;text-transform:uppercase;letter-spacing:.09em}.metric b{display:block;font-size:20px;margin-top:2px}.good{color:var(--green)}.warn{color:var(--amber)}.bad{color:var(--red)}
-.side{display:grid;gap:12px;align-content:start}.panel{padding:15px}.panel h2{font-size:13px;text-transform:uppercase;letter-spacing:.1em;margin:0 0 12px;color:#d8e3de}.modegrid{display:grid;grid-template-columns:repeat(3,1fr);gap:6px}.mode{border:1px solid #32483f;border-radius:9px;background:#0c1613;color:#a8bbb3;padding:9px 6px;cursor:pointer;font-size:11px;font-weight:800}.mode.active{border-color:var(--amber);background:#21190b;color:#ffd99b}.mode:hover{transform:translateY(-1px)}
-.controlgrid{display:grid;grid-template-columns:1fr 1fr;gap:7px}.btn{border:1px solid #344d43;border-radius:9px;background:#12201c;color:#eaf2ee;padding:10px;cursor:pointer;font-size:12px;font-weight:750}.btn:hover{background:#182a24}.btn.red{border-color:#62343a;color:#ffb3b9;background:#211012}.btn.amber{border-color:#684f27;color:#ffd595;background:#21190d}
-.sliderrow{display:grid;grid-template-columns:1fr auto;gap:8px;align-items:center;margin:11px 0}.sliderrow label{font-size:12px;color:#b4c5bd}.sliderrow output{font:12px ui-monospace,SFMono-Regular,Menlo,monospace;color:#fff}.sliderrow input{grid-column:1/-1;width:100%;accent-color:var(--amber)}
-.score{display:grid;grid-template-columns:1fr 1fr;gap:8px}.scorebox{border:1px solid #2a3d35;border-radius:10px;padding:10px;background:#0a1210}.scorebox span{display:block;color:var(--muted);font-size:10px;text-transform:uppercase;letter-spacing:.08em}.scorebox b{font-size:20px}.objective{border-left:3px solid var(--amber);padding:9px 11px;background:#17130b;border-radius:4px;color:#c9d4cf;font-size:12px;line-height:1.5;margin-top:10px}
-.flow{padding:13px 14px;display:grid;grid-template-columns:repeat(7,1fr);gap:5px;margin-top:12px}.flowstep{position:relative;text-align:center;border:1px solid #263b33;border-radius:10px;padding:10px 5px;background:#0c1613}.flowstep b{display:block;font-size:11px}.flowstep span{display:block;color:var(--muted);font-size:9px;margin-top:3px}.flowstep.active{border-color:#356e53;box-shadow:inset 0 0 0 1px rgba(89,221,149,.2)}.flowstep.active b{color:var(--green)}
-.log{height:170px;overflow:auto;border:1px solid #23372f;border-radius:10px;background:#07100d;padding:8px;font:10px/1.45 ui-monospace,SFMono-Regular,Menlo,monospace;color:#9eb3aa}.log div{padding:2px 0;border-bottom:1px solid rgba(43,67,58,.35)}.log .event{color:#dfecE6}.log .safety{color:#ff9aa2}.log .ai{color:#74c7ff}
-.legend{display:flex;gap:12px;flex-wrap:wrap;padding:0 14px 12px;color:var(--muted);font-size:10px}.legend i{display:inline-block;width:8px;height:8px;border-radius:50%;margin-right:5px}.fineprint{margin-top:12px;color:#71877e;font-size:11px;line-height:1.5}
-@media(max-width:1000px){.layout{grid-template-columns:1fr}.side{grid-template-columns:repeat(2,1fr)}.hud{grid-template-columns:repeat(3,1fr)}}
-@media(max-width:680px){button,input,select,textarea{font-size:16px;min-height:44px}.shell{width:min(100% - 12px,1480px)}.top{display:block}.truth{text-align:left;margin-top:8px}.side{grid-template-columns:1fr}.hud{position:static;background:#07100d;padding:8px;grid-template-columns:repeat(2,1fr)}canvas{min-height:470px}.flow{grid-template-columns:repeat(2,1fr)}}
+:root{color-scheme:dark;--bg:#070a0e;--panel:#0d1319;--line:#24303a;--ink:#edf3f7;--muted:#8fa0ac;--amber:#ffb020;--green:#62db9a;--blue:#5cb8ff;--red:#ff6262}
+*{box-sizing:border-box}body{margin:0;background:radial-gradient(circle at 80% 0,#17242d 0,#070a0e 42%);color:var(--ink);font:14px/1.45 Inter,ui-sans-serif,system-ui,-apple-system,sans-serif;overflow-x:hidden}
+button,input{font:inherit}.shell{max-width:1500px;margin:auto;padding:16px}.top{display:flex;gap:14px;align-items:center;justify-content:space-between;margin-bottom:12px}.brand{display:flex;gap:10px;align-items:center}.mark{width:34px;height:34px;border:1px solid #465866;border-radius:9px;display:grid;place-items:center;background:#111923;font-weight:900;color:var(--amber)}h1{margin:0;font-size:18px}.kicker{color:var(--amber);text-transform:uppercase;letter-spacing:.15em;font-size:10px;font-weight:900}.truth{color:var(--muted);font-size:11px;max-width:600px;text-align:right}
+.layout{display:grid;grid-template-columns:minmax(0,1fr) 360px;gap:12px}.card{border:1px solid var(--line);background:linear-gradient(180deg,#10171e,#0b1015);border-radius:14px;overflow:hidden}.stageHead,.panelHead{padding:11px 13px;border-bottom:1px solid var(--line);display:flex;align-items:center;justify-content:space-between}.stageHead strong,.panelHead strong{font-size:11px;letter-spacing:.12em;text-transform:uppercase}.live{display:flex;align-items:center;gap:7px;color:var(--green);font-size:11px}.dot{width:8px;height:8px;background:var(--green);border-radius:50%;box-shadow:0 0 14px rgba(98,219,154,.75)}
+canvas{display:block;width:100%;height:auto;aspect-ratio:16/9;background:#0a0f13;touch-action:none}.hud{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;padding:10px;border-top:1px solid var(--line)}.metric{background:#0a1015;border:1px solid #202b34;border-radius:10px;padding:9px}.metric small{display:block;color:var(--muted);font-size:10px;text-transform:uppercase;letter-spacing:.08em}.metric b{display:block;font-size:22px;margin-top:2px}.metric em{font-style:normal;color:var(--green);font-size:10px}
+.side{display:grid;gap:12px;align-content:start}.controls{padding:13px}.modeRow{display:grid;grid-template-columns:repeat(3,1fr);gap:7px;margin-bottom:12px}.mode{border:1px solid #35434f;background:#121a21;color:#bec9d1;border-radius:9px;padding:9px 6px;cursor:pointer}.mode.active{border-color:var(--amber);background:#2a1d08;color:#ffd17a}.mode[data-mode="autonomy"].active{border-color:#367b5c;background:#0d2519;color:#8ce6b4}
+.controlGrid{display:grid;grid-template-columns:1fr 1fr;gap:8px}.action{border:1px solid #33414c;background:#101820;color:var(--ink);border-radius:9px;padding:10px;cursor:pointer;text-align:left}.action:hover{border-color:#5a7181}.action strong{display:block}.action small{color:var(--muted)}.danger{border-color:#643737}.danger strong{color:#ff9b9b}
+.range{margin-top:12px;border-top:1px solid #202b34;padding-top:11px}.range label{display:flex;justify-content:space-between;color:var(--muted);font-size:11px}.range input{width:100%;accent-color:var(--amber)}.scenarioTitle{margin-top:13px;padding-top:11px;border-top:1px solid #202b34;color:var(--muted);font-size:10px;text-transform:uppercase;letter-spacing:.1em}.scenarioGrid{display:grid;grid-template-columns:1fr 1fr;gap:7px;margin-top:8px}.scenario{border:1px solid #31404a;background:#0d151b;color:#c9d4db;border-radius:8px;padding:8px;cursor:pointer;text-align:left}.scenario:hover{border-color:#607684}.scenario b{display:block;font-size:11px}.scenario span{font-size:9px;color:var(--muted)}.stop{margin-top:10px;width:100%;border:1px solid #7c3e3e;background:#271010;color:#ffb2b2;border-radius:9px;padding:10px;cursor:pointer;font-weight:900;letter-spacing:.04em}
+.flow{padding:12px}.flowline{display:grid;grid-template-columns:repeat(4,1fr);gap:6px}.node{border:1px solid #27343e;background:#0a1015;border-radius:9px;padding:9px}.node b{display:block;font-size:11px}.node span{font-size:10px;color:var(--muted)}.node.hot{border-color:#6c531d;background:#1d1709}.node.good{border-color:#2e674e;background:#0b1e15}
+.log{max-height:220px;overflow:auto;padding:10px 12px;font:11px/1.5 ui-monospace,SFMono-Regular,Menlo,monospace}.log div{padding:4px 0;border-bottom:1px solid #182128;color:#aab6be}.log .ai{color:#7fd7ff}.log .warn{color:#ffc76c}.log .good{color:#80dda9}
+.legend{display:flex;gap:12px;flex-wrap:wrap;color:var(--muted);font-size:10px;padding:0 12px 11px}.legend i{display:inline-block;width:8px;height:8px;border-radius:50%;margin-right:4px}.footer{margin-top:10px;color:#657681;font-size:11px;display:flex;justify-content:space-between;gap:20px}.footer a{color:#a9cfff}
+@media(max-width:980px){.layout{grid-template-columns:1fr}.side{grid-template-columns:1fr 1fr}.logCard{grid-column:1/-1}.truth{display:none}}@media(max-width:680px){.shell{padding:9px}.side{grid-template-columns:1fr}.hud{grid-template-columns:1fr 1fr}.top{align-items:flex-start}.flowline{grid-template-columns:1fr 1fr}}
 </style>
 </head>
 <body>
 <div class="shell">
-  <header class="top">
-    <div class="brand"><div class="mark">EW</div><div><div class="eyebrow">Evercraft EarthWorks</div><h1>Autonomy Playground</h1></div></div>
-    <div class="truth"><b>Interactive concept simulation.</b> The fleet behavior and metrics below are modeled for demonstration. This is not evidence of a full-size autonomous deployment.</div>
-  </header>
-
-  <main class="layout">
-    <section>
-      <div class="card stage">
-        <div class="stageHead"><strong>Quarry Loop 001</strong><div class="statusline"><span class="pulse"></span><span id="modeLabel">Shadow Dispatch</span><span>•</span><span id="clock">00:00</span></div></div>
-        <canvas id="world" width="1060" height="660"></canvas>
-        <div class="hud">
-          <div class="metric"><small>Production</small><b id="tph">0 tph</b></div>
-          <div class="metric"><small>Tonnes moved</small><b id="tons">0 t</b></div>
-          <div class="metric"><small>Avg cycle</small><b id="cycle">0.0 min</b></div>
-          <div class="metric"><small>Queue time</small><b id="queue">0.0 min</b></div>
-          <div class="metric"><small>Fleet utilization</small><b id="util">0%</b></div>
-        </div>
-      </div>
-
-      <div class="card flow">
-        <div class="flowstep active"><b>Excavate</b><span id="flowDig">ready</span></div>
-        <div class="flowstep active"><b>Load</b><span id="flowLoad">0 queued</span></div>
-        <div class="flowstep active"><b>Haul</b><span id="flowHaul">0 moving</span></div>
-        <div class="flowstep active"><b>Dump</b><span id="flowDump">0 dumping</span></div>
-        <div class="flowstep active"><b>Return</b><span id="flowReturn">0 returning</span></div>
-        <div class="flowstep active"><b>Stockpile</b><span id="flowStock">0 t</span></div>
-        <div class="flowstep"><b>Next</b><span>physical pilot</span></div>
-      </div>
-      <div class="legend">
-        <span><i style="background:#59dd95"></i>Haul route</span>
-        <span><i style="background:#55b8ff"></i>Return route</span>
-        <span><i style="background:#f3a93b"></i>Work zone</span>
-        <span><i style="background:#ff626d"></i>Safety / stop</span>
-        <span><i style="background:#b892ff"></i>AI dispatch decision</span>
+  <div class="top">
+    <div class="brand"><div class="mark">EW</div><div><div class="kicker">Evercraft EarthWorks</div><h1>Live Yard 001</h1></div></div>
+    <div class="truth">Interactive software demonstration. Simulation only. No physical machine control, customer production result, or certified autonomy claim.</div>
+  </div>
+  <div class="layout">
+    <section class="card">
+      <div class="stageHead"><strong>Quarry digital twin</strong><span class="live"><span class="dot"></span><span id="modeLabel">Manual dispatch</span></span></div>
+      <canvas id="yard" width="1100" height="620" aria-label="Interactive EarthWorks quarry simulation"></canvas>
+      <div class="legend"><span><i style="background:#62db9a"></i>active haul route</span><span><i style="background:#5cb8ff"></i>return route</span><span><i style="background:#ffb020"></i>work zone</span><span><i style="background:#ff6262"></i>delay / queue pressure</span></div>
+      <div class="hud">
+        <div class="metric"><small>Production</small><b><span id="tph">0</span> tph</b><em id="tphDelta">baseline</em></div>
+        <div class="metric"><small>Queue time</small><b><span id="queue">0.0</span> min</b><em id="queueDelta">live</em></div>
+        <div class="metric"><small>Cycle time</small><b><span id="cycle">0.0</span> min</b><em id="cycleDelta">live</em></div>
+        <div class="metric"><small>Loader utilization</small><b><span id="util">0</span>%</b><em id="utilDelta">live</em></div>
       </div>
     </section>
 
     <aside class="side">
-      <section class="card panel">
-        <h2>Dispatch Authority</h2>
-        <div class="modegrid">
-          <button class="mode" data-mode="manual">Manual</button>
-          <button class="mode active" data-mode="shadow">Shadow</button>
-          <button class="mode" data-mode="auto">Autonomous</button>
-        </div>
-        <div class="objective"><strong>Mission:</strong> move 1,000 simulated tonnes with zero safety violations. Try different fleet sizes and dispatch modes. Watch the queue, not just the truck count.</div>
-      </section>
-
-      <section class="card panel">
-        <h2>Fleet Controls</h2>
-        <div class="sliderrow"><label>Haul trucks</label><output id="truckOut">4</output><input id="truckCount" type="range" min="2" max="8" value="4"></div>
-        <div class="sliderrow"><label>Loader rate</label><output id="loadOut">780 tph</output><input id="loaderRate" type="range" min="420" max="1050" step="30" value="780"></div>
-        <div class="sliderrow"><label>Haul distance</label><output id="distOut">1.2 km</output><input id="haulDistance" type="range" min="0.6" max="2.4" step="0.1" value="1.2"></div>
-      </section>
-
-      <section class="card panel">
-        <h2>Scenario Buttons</h2>
-        <div class="controlgrid">
-          <button id="inject" class="btn amber">Truck failure</button>
-          <button id="clear" class="btn">Clear failure</button>
-          <button id="traffic" class="btn">Slow haul route</button>
-          <button id="reset" class="btn">Reset mission</button>
-          <button id="stop" class="btn red" style="grid-column:1/-1">STOP ALL</button>
-        </div>
-      </section>
-
-      <section class="card panel">
-        <h2>Mission Score</h2>
-        <div class="score">
-          <div class="scorebox"><span>Score</span><b id="score">0</b></div>
-          <div class="scorebox"><span>Safety</span><b id="safety" class="good">100</b></div>
-          <div class="scorebox"><span>Idle penalty</span><b id="idlePenalty">0</b></div>
-          <div class="scorebox"><span>Best tph</span><b id="bestTph">0</b></div>
+      <section class="card">
+        <div class="panelHead"><strong>Dispatch controls</strong><span id="simClock">06:00</span></div>
+        <div class="controls">
+          <div class="modeRow">
+            <button class="mode active" data-mode="manual">Manual</button>
+            <button class="mode" data-mode="shadow">Shadow</button>
+            <button class="mode" data-mode="autonomy">Autonomy</button>
+          </div>
+          <div class="controlGrid">
+            <button class="action" id="dispatch"><strong>Dispatch truck</strong><small>Release the next queued truck</small></button>
+            <button class="action" id="optimize"><strong>Optimize loop</strong><small>Re-time releases from current state</small></button>
+            <button class="action danger" id="delay"><strong>Inject road delay</strong><small>Add a temporary haul slowdown</small></button>
+            <button class="action" id="reset"><strong>Reset yard</strong><small>Return to baseline</small></button>
+          </div>
+          <div class="range"><label><span>Haul fleet</span><strong><span id="fleetLabel">5</span> trucks</strong></label><input id="fleet" type="range" min="3" max="8" value="5"></div>
+          <div class="range"><label><span>Stockpile loader rate</span><strong><span id="loaderLabel">720</span> tph</strong></label><input id="loaderRate" type="range" min="480" max="900" step="20" value="720"></div>
+          <div class="scenarioTitle">Break the yard</div>
+          <div class="scenarioGrid">
+            <button class="scenario" data-scenario="queue"><b>Truck Queue</b><span>Too many trucks for the loader</span></button>
+            <button class="scenario" data-scenario="starve"><b>Loader Starvation</b><span>Too few trucks feeding the loader</span></button>
+            <button class="scenario" data-scenario="blocked"><b>Blocked Route</b><span>Haul corridor slowdown</span></button>
+            <button class="scenario" data-scenario="surge"><b>Production Surge</b><span>Raise loading target hard</span></button>
+          </div>
+          <button class="stop" id="stopAll">STOP ALL · safety hold</button>
         </div>
       </section>
 
-      <section class="card panel">
-        <h2>Systemia Event Stream</h2>
-        <div id="log" class="log"></div>
-        <div class="fineprint">This playground demonstrates the EarthWorks job graph, fleet-state transitions, queue effects, dispatch policy, safety stop semantics and simulated production feedback. Physical machine authority is intentionally absent.</div>
+      <section class="card">
+        <div class="panelHead"><strong>Production flow</strong><span>synthetic</span></div>
+        <div class="flow"><div class="flowline">
+          <div class="node" id="nLoad"><b>Load</b><span id="loadState">stable</span></div>
+          <div class="node" id="nHaul"><b>Haul</b><span id="haulState">5 active</span></div>
+          <div class="node" id="nDump"><b>Dump</b><span id="dumpState">clear</span></div>
+          <div class="node" id="nReturn"><b>Return</b><span id="returnState">flowing</span></div>
+        </div></div>
+      </section>
+
+      <section class="card logCard">
+        <div class="panelHead"><strong>EarthWorks decision log</strong><span id="score">0 decisions</span></div>
+        <div class="log" id="log"></div>
       </section>
     </aside>
-  </main>
+  </div>
+  <div class="footer"><span>Think of this as the toy yard for the real system: job graph + digital twin + dispatch + safety constraints + evidence.</span><a href="/capabilities/earthworks-site-autonomy-study-v1">EarthWorks Site Autonomy Study →</a></div>
 </div>
-<script>
-(()=>{
-const canvas=document.getElementById('world'),ctx=canvas.getContext('2d');
-const $=id=>document.getElementById(id);
-const state={mode:'shadow',time:0,tons:0,stock:0,bestTph:0,stopped:false,slow:false,failed:null,events:[],trucks:[],loaderRate:780,haulDistance:1.2,truckCount:4,cycles:[],queueSamples:[],idlePenalty:0};
-const zones={load:{x:245,y:230,r:70},dump:{x:820,y:210,r:66},stock:{x:760,y:450,r:82},safe:{x:530,y:465,r:58}};
-const pathOut=[{x:285,y:250},{x:400,y:180},{x:555,y:145},{x:705,y:165},{x:820,y:210}];
-const pathBack=[{x:820,y:250},{x:720,y:355},{x:570,y:385},{x:405,y:350},{x:300,y:280}];
-
-function log(msg,type='event'){state.events.unshift({t:state.time,msg,type});state.events=state.events.slice(0,70);$('log').innerHTML=state.events.map(e=>'<div class="'+e.type+'">['+fmt(e.t)+'] '+e.msg+'</div>').join('');}
-function fmt(s){const m=Math.floor(s/60),x=Math.floor(s%60);return String(m).padStart(2,'0')+':'+String(x).padStart(2,'0')}
-function makeTruck(i){
-  return {id:'HT-'+String(i+1).padStart(2,'0'),phase:'queue',progress:Math.random()*.3,load:0,cycleStart:state.time,wait:0,x:0,y:0,active:true};
-}
-function rebuildFleet(){
-  const old=state.trucks;state.trucks=[];
-  for(let i=0;i<state.truckCount;i++){state.trucks.push(old[i]||makeTruck(i));}
-  if(state.failed && !state.trucks.some(t=>t.id===state.failed)) state.failed=null;
-  log('Fleet roster set to '+state.truckCount+' haul trucks','ai');
-}
-function pointOn(points,t){
-  const p=Math.max(0,Math.min(.9999,t))*(points.length-1),i=Math.floor(p),f=p-i,a=points[i],b=points[Math.min(i+1,points.length-1)];
-  return{x:a.x+(b.x-a.x)*f,y:a.y+(b.y-a.y)*f};
-}
-function laneOffset(id){return((Number(id.slice(3))%3)-1)*8}
-function effectiveSpeed(){
-  const d=state.haulDistance;
-  return (state.slow?.52:1)*(1.2/d);
-}
-function dispatchSpacing(t){
-  if(state.mode==='manual') return 1.75;
-  if(state.mode==='shadow') return 1.1;
-  return .72;
-}
-function tick(dt){
-  if(state.stopped){draw();return}
-  state.time+=dt;
-  const active=state.trucks.filter(t=>t.id!==state.failed);
-  const loadQueue=active.filter(t=>t.phase==='queue');
-  const loading=active.find(t=>t.phase==='loading');
-  const speed=effectiveSpeed();
-  for(const t of active){
-    if(t.phase==='queue'){
-      t.wait+=dt;
-      const idx=loadQueue.indexOf(t);
-      const gate=!loading && idx===0;
-      const spacing=state.mode==='manual'?1.8:state.mode==='shadow'?1.0:.45;
-      t.progress=Math.min(1,t.progress+dt*.5);
-      if(gate && t.wait>=spacing){
-        t.phase='loading';t.progress=0;t.load=0;
-        log(t.id+' admitted to Load Zone A',state.mode==='manual'?'event':'ai');
-      }
-    }else if(t.phase==='loading'){
-      const secondsToLoad=3600*42/state.loaderRate;
-      t.progress+=dt/secondsToLoad;t.load=Math.min(42,42*t.progress);
-      if(t.progress>=1){t.phase='haul';t.progress=0;log(t.id+' loaded 42 t → haul','event')}
-    }else if(t.phase==='haul'){
-      t.progress+=dt*(.035*speed);
-      if(t.progress>=1){t.phase='dumping';t.progress=0}
-    }else if(t.phase==='dumping'){
-      t.progress+=dt/.85;
-      if(t.progress>=1){state.tons+=42;state.stock+=42;t.phase='return';t.progress=0;log(t.id+' dumped 42 t','event')}
-    }else if(t.phase==='return'){
-      t.progress+=dt*(.045*speed);
-      if(t.progress>=1){
-        t.phase='queue';t.progress=0;t.load=0;
-        const cyc=(state.time-t.cycleStart)/60;state.cycles.push(cyc);state.cycles=state.cycles.slice(-30);t.cycleStart=state.time;t.wait=0;
-      }
-    }
-  }
-  if(state.mode==='auto'){
-    const q=active.filter(t=>t.phase==='queue').length;
-    if(q>2) state.idlePenalty+=dt*.06;
-  }else{
-    state.idlePenalty+=dt*(state.mode==='manual'?.12:.075);
-  }
-  const q=active.filter(t=>t.phase==='queue').length;
-  state.queueSamples.push(q);state.queueSamples=state.queueSamples.slice(-80);
-  draw();updateHud();
-}
-function avg(arr){return arr.length?arr.reduce((a,b)=>a+b,0)/arr.length:0}
-function updateHud(){
-  const hours=Math.max(state.time/3600,.0001),tph=Math.round(state.tons/hours);
-  state.bestTph=Math.max(state.bestTph,tph);
-  const cyc=state.cycles.length?avg(state.cycles):((state.haulDistance*2/18)*60+4.2);
-  const qAvg=avg(state.queueSamples),util=Math.max(0,Math.min(99,Math.round(100-(qAvg/state.truckCount*27)-(state.failed?11:0)-(state.stopped?100:0))));
-  $('tph').textContent=tph+' tph';$('tons').textContent=Math.round(state.tons)+' t';$('cycle').textContent=cyc.toFixed(1)+' min';$('queue').textContent=(qAvg*1.15).toFixed(1)+' min';$('util').textContent=util+'%';
-  $('clock').textContent=fmt(state.time);$('bestTph').textContent=state.bestTph;$('idlePenalty').textContent=Math.round(state.idlePenalty);
-  $('score').textContent=Math.max(0,Math.round(state.tons*1.2+state.bestTph*.35-state.idlePenalty*3));
-  $('flowLoad').textContent=state.trucks.filter(t=>t.phase==='queue').length+' queued';
-  $('flowHaul').textContent=state.trucks.filter(t=>t.phase==='haul').length+' moving';
-  $('flowDump').textContent=state.trucks.filter(t=>t.phase==='dumping').length+' dumping';
-  $('flowReturn').textContent=state.trucks.filter(t=>t.phase==='return').length+' returning';
-  $('flowStock').textContent=Math.round(state.stock)+' t';
-  $('modeLabel').textContent=state.mode==='manual'?'Manual Dispatch':state.mode==='shadow'?'Shadow Dispatch':'Autonomous Dispatch';
-}
-function circle(x,y,r,fill,stroke='#40554c'){ctx.beginPath();ctx.arc(x,y,r,0,Math.PI*2);ctx.fillStyle=fill;ctx.fill();ctx.lineWidth=2;ctx.strokeStyle=stroke;ctx.stroke()}
-function route(points,color){
-  ctx.beginPath();points.forEach((p,i)=>i?ctx.lineTo(p.x,p.y):ctx.moveTo(p.x,p.y));ctx.strokeStyle=color;ctx.lineWidth=7;ctx.lineCap='round';ctx.globalAlpha=.75;ctx.stroke();ctx.globalAlpha=1;
-}
-function label(x,y,title,sub,color='#fff'){
-  ctx.font='700 12px system-ui';const w=Math.max(ctx.measureText(title).width,ctx.measureText(sub).width)+18;
-  ctx.fillStyle='rgba(4,10,8,.88)';ctx.strokeStyle='rgba(92,122,108,.7)';ctx.lineWidth=1;ctx.beginPath();ctx.roundRect(x,y,w,44,8);ctx.fill();ctx.stroke();
-  ctx.fillStyle=color;ctx.fillText(title,x+9,y+17);ctx.font='10px system-ui';ctx.fillStyle='#9bb0a7';ctx.fillText(sub,x+9,y+33)
-}
-function machine(x,y,type,id,color='#f3a93b',angle=0){
-  ctx.save();ctx.translate(x,y);ctx.rotate(angle);ctx.fillStyle=color;ctx.strokeStyle='#1d241f';ctx.lineWidth=2;
-  if(type==='truck'){ctx.fillRect(-15,-9,25,18);ctx.fillRect(10,-6,9,12);circle(-8,11,4,'#101410');circle(13,9,4,'#101410')}
-  else if(type==='exc'){ctx.fillRect(-14,-9,22,18);circle(-7,12,5,'#101410');ctx.beginPath();ctx.moveTo(7,-2);ctx.lineTo(26,-15);ctx.lineTo(31,-12);ctx.strokeStyle=color;ctx.lineWidth=5;ctx.stroke()}
-  else if(type==='loader'){ctx.fillRect(-13,-9,22,18);circle(-8,11,5,'#101410');circle(10,11,5,'#101410');ctx.beginPath();ctx.moveTo(8,1);ctx.lineTo(24,6);ctx.strokeStyle=color;ctx.lineWidth=6;ctx.stroke()}
-  ctx.restore();ctx.font='700 9px ui-monospace';ctx.fillStyle='#dce7e1';ctx.fillText(id,x-18,y-16)
-}
-function draw(){
-  ctx.clearRect(0,0,canvas.width,canvas.height);
-  const g=ctx.createLinearGradient(0,0,canvas.width,canvas.height);g.addColorStop(0,'#1d3028');g.addColorStop(.45,'#12231c');g.addColorStop(1,'#0d1915');ctx.fillStyle=g;ctx.fillRect(0,0,canvas.width,canvas.height);
-  ctx.globalAlpha=.18;for(let i=0;i<14;i++){ctx.beginPath();ctx.arc(120+i*73,80+(i%4)*135,80+(i%3)*18,0,Math.PI*2);ctx.strokeStyle='#60786c';ctx.lineWidth=1;ctx.stroke()}ctx.globalAlpha=1;
-  route(pathOut,'#59dd95');route(pathBack,'#55b8ff');
-  circle(zones.load.x,zones.load.y,zones.load.r,'rgba(243,169,59,.08)','#8b682f');circle(zones.dump.x,zones.dump.y,zones.dump.r,'rgba(85,184,255,.07)','#35677f');circle(zones.stock.x,zones.stock.y,zones.stock.r,'rgba(184,146,255,.07)','#665487');circle(zones.safe.x,zones.safe.y,zones.safe.r,'rgba(255,98,109,.08)','#8c3c44');
-  ctx.setLineDash([8,8]);ctx.strokeStyle='#ff626d';ctx.lineWidth=2;ctx.beginPath();ctx.arc(zones.safe.x,zones.safe.y,zones.safe.r,0,Math.PI*2);ctx.stroke();ctx.setLineDash([]);
-  machine(210,205,'exc','EX-01');machine(748,430,'loader','WL-01');
-  label(155,115,'Load Zone A',Math.round(state.loaderRate)+' tph target','#ffd28d');label(780,105,'Dump / Crusher','42 t per cycle','#8ed4ff');label(675,520,'Stockpile B',Math.round(state.stock)+' t moved','#c8adff');label(475,520,'Safety Zone','No entry','#ff9da5');
-  const active=state.trucks;
-  for(let i=0;i<active.length;i++){
-    const t=active[i];let p;
-    if(t.phase==='queue') p={x:300-i*34,y:278+i*17};
-    else if(t.phase==='loading') p={x:280,y:245};
-    else if(t.phase==='haul') p=pointOn(pathOut,t.progress);
-    else if(t.phase==='dumping') p={x:830,y:220};
-    else p=pointOn(pathBack,t.progress);
-    t.x=p.x;t.y=p.y;
-    const failed=t.id===state.failed;
-    machine(p.x,p.y,'truck',t.id,failed?'#ff626d':'#e0a23f');
-    if(failed) label(p.x+12,p.y-50,'FAULT',t.id+' held','#ff8c95');
-  }
-  if(state.mode!=='manual'&&!state.stopped){
-    ctx.strokeStyle=state.mode==='auto'?'#b892ff':'rgba(184,146,255,.55)';ctx.lineWidth=2;ctx.setLineDash([4,5]);ctx.beginPath();ctx.moveTo(165,330);ctx.quadraticCurveTo(410,290,620,310);ctx.stroke();ctx.setLineDash([]);label(115,315,state.mode==='auto'?'AI dispatch active':'AI shadow recommendations',state.mode==='auto'?'commands admitted':'humans remain authoritative','#cbb7ff')
-  }
-  if(state.stopped){ctx.fillStyle='rgba(70,7,12,.47)';ctx.fillRect(0,0,canvas.width,canvas.height);ctx.font='900 56px system-ui';ctx.fillStyle='#ff7f88';ctx.textAlign='center';ctx.fillText('STOP ALL',canvas.width/2,canvas.height/2);ctx.font='16px system-ui';ctx.fillStyle='#ffd7da';ctx.fillText('Fleet held • no dispatch progression',canvas.width/2,canvas.height/2+30);ctx.textAlign='left'}
-}
-document.querySelectorAll('.mode').forEach(b=>b.onclick=()=>{state.mode=b.dataset.mode;document.querySelectorAll('.mode').forEach(x=>x.classList.toggle('active',x===b));log('Dispatch authority → '+state.mode.toUpperCase(),state.mode==='manual'?'event':'ai');updateHud()});
-$('truckCount').oninput=e=>{state.truckCount=+e.target.value;$('truckOut').textContent=state.truckCount;rebuildFleet()};
-$('loaderRate').oninput=e=>{state.loaderRate=+e.target.value;$('loadOut').textContent=state.loaderRate+' tph';log('Loader target → '+state.loaderRate+' tph','event')};
-$('haulDistance').oninput=e=>{state.haulDistance=+e.target.value;$('distOut').textContent=state.haulDistance.toFixed(1)+' km';log('Haul distance → '+state.haulDistance.toFixed(1)+' km','event')};
-$('inject').onclick=()=>{const choices=state.trucks.filter(t=>t.id!==state.failed);if(!choices.length)return;state.failed=choices[Math.floor(Math.random()*choices.length)].id;log(state.failed+' failure injected • truck held','safety')};
-$('clear').onclick=()=>{if(state.failed)log(state.failed+' returned to service','event');state.failed=null};
-$('traffic').onclick=()=>{state.slow=!state.slow;log('Haul route slowdown '+(state.slow?'ON':'OFF'),state.slow?'safety':'event');$('traffic').textContent=state.slow?'Restore route':'Slow haul route'};
-$('stop').onclick=()=>{state.stopped=!state.stopped;log(state.stopped?'STOP ALL asserted':'Fleet resumed after stop gate',state.stopped?'safety':'event');$('stop').textContent=state.stopped?'RESUME FLEET':'STOP ALL';draw()};
-$('reset').onclick=()=>{state.time=0;state.tons=0;state.stock=0;state.bestTph=0;state.failed=null;state.stopped=false;state.slow=false;state.cycles=[];state.queueSamples=[];state.idlePenalty=0;state.events=[];rebuildFleet();log('Mission reset • Quarry Loop 001','event');draw();updateHud()};
-state.trucks=Array.from({length:state.truckCount},(_,i)=>makeTruck(i));log('EarthWorks simulation initialized','event');log('Shadow mode active • AI observes and recommends','ai');updateHud();draw();
-let last=performance.now(),acc=0;function frame(now){const dt=Math.min(.07,(now-last)/1000);last=now;acc+=dt;while(acc>=.04){tick(.12);acc-=.04}requestAnimationFrame(frame)}requestAnimationFrame(frame);
-})();
-</script>
+<script type="module" src="./app.mjs"></script>
 </body>
 </html>
