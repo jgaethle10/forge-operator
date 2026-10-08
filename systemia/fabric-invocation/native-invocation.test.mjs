@@ -29,6 +29,7 @@ function fixture() {
   let dispatchCount = 0;
   let disposition = 'ok';
   let ackUnavailable = false;
+  let authorityExpiresAt = Date.now() + 60000;
   const coordinator = new FabricNativeInvocation({
     stateDir, lineageRoot, timeoutMs: 20,
     missionLoader: async (key) => ({
@@ -41,7 +42,7 @@ function fixture() {
       decision: permitted ? 'allow' : 'deny',
       receipt_hash: proof('passport:verified'),
       actor_ref, tenant_key, capability_key,
-      expires_at: new Date(Date.now() + 60000).toISOString(),
+      expires_at: new Date(authorityExpiresAt).toISOString(),
     }),
     workerInvoker: async ({ capability_key, payload, correlation_id }) => {
       dispatchCount++;
@@ -83,6 +84,8 @@ function fixture() {
     deny: () => { permitted = false; },
     setWorker: (next) => { disposition = next; },
     setAckUnavailable: (next) => { ackUnavailable = next; },
+    expireCredential: () => { authorityExpiresAt = Date.now() - 1000; },
+    nearExpireCredential: () => { authorityExpiresAt = Date.now() + 500; },
     goalState: () => goal,
     close: () => fs.rmSync(root, { recursive: true, force: true }),
   };
@@ -224,4 +227,17 @@ test('Systemia outcome failure holds durable Lineage evidence without claiming m
     assert.equal(duplicate.duplicate, true);
     assert.equal(f.dispatchCount(), 1);
   } finally { f.close(); }
+});
+
+test('expired and near-expiring credentials deny execution before worker dispatch', async () => {
+  for (const expiry of ['expireCredential', 'nearExpireCredential']) {
+    const f = fixture();
+    try {
+      await new LineageStore(f.lineageRoot).init();
+      f[expiry]();
+      await assert.rejects(f.coordinator.invoke(f.input), /fabric_authorization_denied_or_expiring/);
+      assert.equal(f.dispatchCount(), 0);
+      assert.equal(fs.readdirSync(f.stateDir).filter((name) => name.endsWith('.jsonl')).length, 0);
+    } finally { f.close(); }
+  }
 });
