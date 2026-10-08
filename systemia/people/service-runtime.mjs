@@ -118,6 +118,7 @@ export async function startPeopleLayerRuntime({
           public_ui:true,
           instance_id:instanceId,
           deployment_receipt_ref:deploymentReceiptRef,
+          deployment_receipt_bound:Boolean(deploymentReceiptRef),
           operator_auth:'private_token_file',
           public_person_token_flows:true,
           base44_runtime_dependency:false,
