@@ -108,7 +108,7 @@ try {
     authority_receipt_ref: proof('local-canary-identity-issued-grant'),
     ends_at: new Date(Date.now() + 120_000).toISOString(),
   });
-  assert.equal(localGrant.state, 'issued');
+  assert.equal(localGrant.state, 'granted');
   const nativePassportVerifier = createFabricPassportVerifier({
     stateDir: passportStateDir,
     identityVerifier: async () => ({
