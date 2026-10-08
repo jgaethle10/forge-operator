@@ -81,6 +81,40 @@ try{
   const content=Array.isArray(response.content)?response.content:[];
   if(!content.length && !response.structuredContent) throw new Error('public_readonly_result_empty');
   receipt.checks.public_tool_call={pass:true,has_content:Boolean(content.length||response.structuredContent)};
+  // Exercise a real buyer problem against the live public matcher.
+  // This is proof of tool-level retrieval, NOT model-originated selection.
+  const matched=await rpc(4,'tools/call',{
+    name:'match_evercraft_capability',
+    arguments:{
+      intent:'We operate an IBM i 7.4 system with RPG jobs and vendor integrations. Standard support changed and we need dependency, compatibility and rollback risks before upgrading.',
+      limit:5
+    }
+  });
+  if(matched.isError===true) throw new Error('public_match_tool_error');
+  const candidates=matched.structuredContent?.matches||[];
+  const ibmi=candidates.find(x=>x.public_id==='ibmi-rescue-v1');
+  receipt.checks.ibm_i_74_semantic_match={
+    pass:Boolean(ibmi),
+    match_count:candidates.length,
+    matching_public_id:ibmi?.public_id||null,
+    rank:ibmi?candidates.findIndex(x=>x.public_id==='ibmi-rescue-v1')+1:null,
+    selection_authority:'server_side_matching_only'
+  };
+  if(!ibmi) throw new Error('ibmi_74_not_found_in_live_public_matcher');
+
+  const options=await rpc(5,'tools/call',{
+    name:'get_evercraft_connection_options',
+    arguments:{public_id:'ibmi-rescue-v1'}
+  });
+  if(options.isError===true||options.structuredContent?.public_id!=='ibmi-rescue-v1'){
+    throw new Error('ibmi_74_public_connection_options_missing');
+  }
+  receipt.checks.ibm_i_public_connection_options={
+    pass:true,
+    connection_types:(options.structuredContent?.connections||[]).map(x=>x.type).slice(0,12),
+    transactional:false,
+    paid_execution_not_verified:true
+  };
   receipt.status='pass';
 }catch(error){
   receipt.status='fail';
