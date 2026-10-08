@@ -246,7 +246,9 @@ export class FabricNativeInvocation {
           lineage.readObject(transaction.transaction_id),
           lineage.readObject(transaction.receipt_id),
         ]);
-        if (object?.type !== 'transaction' || receipt?.type !== 'receipt') {
+        if (object?.type !== 'transaction' || receipt?.type !== 'receipt' ||
+            receipt.payload?.operation !== 'transaction' ||
+            receipt.payload?.transaction_id !== transaction.transaction_id) {
           throw new Error('fabric_lineage_evidence_unverified');
         }
         record = appendEvent(file, events, 'lineage_recorded', {
@@ -357,6 +359,8 @@ export class FabricNativeInvocation {
         lineage.readObject(transactionId), lineage.readObject(receiptId),
       ]);
       if (tx?.type !== 'transaction' || txReceipt?.type !== 'receipt' ||
+          txReceipt.payload?.operation !== 'transaction' ||
+          txReceipt.payload?.transaction_id !== transactionId ||
           tx.payload?.kind !== 'fabric.capability.invocation' ||
           tx.payload?.actor?.id !== actor || tx.payload?.scope !== capability ||
           tx.payload?.inputs?.[0]?.mission_key !== mission ||
