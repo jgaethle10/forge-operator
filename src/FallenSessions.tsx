@@ -8,6 +8,7 @@ import {
   createPulseGridSession,
   undoPulseGridReceipt,
   type PulseGridActor,
+  type PulseGridAudioAsset,
   type PulseGridAudioStatus,
   type PulseGridOperation,
   type PulseGridSession,
@@ -35,10 +36,15 @@ export default function FallenSessions(){
   const [selectedScene,setSelectedScene]=useState(0);
   const [status,setStatus]=useState('Canonical PulseGrid session ready.');
   const [playing,setPlaying]=useState(false);
+  const [recording,setRecording]=useState(false);
   const [playhead,setPlayhead]=useState(0);
   const [audioStatus,setAudioStatus]=useState<PulseGridAudioStatus>({playing:false,scene:0,step:0,context_state:'cold',clock_mode:'cold',track_buses:0,latency_ms:null,cached_audio_assets:0});
+  const sessionRef=useRef(session);
   const vaultRef=useRef<PulseGridBrowserAudioAssetVault|null>(null);
   const fileInputRef=useRef<HTMLInputElement|null>(null);
+  const recorderRef=useRef<MediaRecorder|null>(null);
+  const recordingStreamRef=useRef<MediaStream|null>(null);
+  const recordingSceneRef=useRef(0);
   const audioRef=useRef<PulseGridAudioEngine|null>(null);
   if(!vaultRef.current)vaultRef.current=new PulseGridBrowserAudioAssetVault();
   if(!audioRef.current){
@@ -56,6 +62,7 @@ export default function FallenSessions(){
   const undoable=latestUndoableReceipt(session);
 
   useEffect(()=>{
+    sessionRef.current=session;
     audioRef.current?.updateSession(session);
   },[session]);
 
@@ -63,7 +70,19 @@ export default function FallenSessions(){
     audioRef.current?.setScene(selectedScene);
   },[selectedScene]);
 
-  useEffect(()=>()=>{ if(audioRef.current){audioRef.current.onStep=null;audioRef.current.onStatus=null;void audioRef.current.close();} },[]);
+  useEffect(()=>()=>{ 
+    const recorder=recorderRef.current;
+    if(recorder){
+      recorder.ondataavailable=null;
+      recorder.onstop=null;
+      recorder.onerror=null;
+      try{if(recorder.state!=='inactive')recorder.stop()}catch{}
+    }
+    recorderRef.current=null;
+    recordingStreamRef.current?.getTracks().forEach((mediaTrack)=>mediaTrack.stop());
+    recordingStreamRef.current=null;
+    if(audioRef.current){audioRef.current.onStep=null;audioRef.current.onStatus=null;void audioRef.current.close();}
+  },[]);
 
   async function togglePlay(){
     if(playing){
@@ -94,15 +113,49 @@ export default function FallenSessions(){
     }
   }
 
+  async function commitAudioAsset(
+    asset:PulseGridAudioAsset,
+    scene:number,
+    intent:string,
+    successLabel:string,
+  ){
+    const current=sessionRef.current;
+    const audioTrack=current.tracks.find((candidate)=>candidate.type==='audio');
+    if(!audioTrack)throw new Error('No canonical audio track is available.');
+
+    const result=applyPulseGridTransaction(current,{
+      intent,
+      operations:[
+        {type:'asset.register_audio',asset:{
+          digest:asset.digest,
+          mime_type:asset.mime_type,
+          byte_length:asset.byte_length,
+          duration_sec:asset.duration_sec,
+          sample_rate:asset.sample_rate,
+          channels:asset.channels,
+          source_name:asset.source_name,
+          source_refs:asset.source_refs,
+          source_state:asset.source_state,
+          rights:asset.rights,
+          parent_asset_ids:asset.parent_asset_ids,
+          created_at:asset.created_at,
+        }},
+        {type:'clip.attach_audio_asset',track_id:audioTrack.id,scene,asset_id:asset.id},
+      ],
+    },'human');
+    setSession(result.session);
+    setSelectedTrackId(audioTrack.id);
+    setSelectedScene(scene);
+    setStatus(
+      successLabel+' · '+asset.duration_sec.toFixed(2)+'s · '+
+      asset.sample_rate+' Hz · '+asset.channels+'ch · rights '+asset.rights
+    );
+  }
+
   async function importAudioFile(file:File){
     const vault=vaultRef.current;
     if(!vault)return;
-    const audioTrack=session.tracks.find((candidate)=>candidate.type==='audio');
-    if(!audioTrack){
-      setStatus('No canonical audio track is available.');
-      return;
-    }
-
+    const scene=selectedScene;
     setStatus('Hashing and verifying '+file.name+'…');
     try{
       const asset=await vault.ingest(file,{
@@ -111,36 +164,93 @@ export default function FallenSessions(){
         source_state:'imported',
         rights:'unknown',
       });
-      const result=applyPulseGridTransaction(session,{
-        intent:'Import a local audio file and attach it to Audio Take scene '+String(selectedScene+1)+'.',
-        operations:[
-          {type:'asset.register_audio',asset:{
-            digest:asset.digest,
-            mime_type:asset.mime_type,
-            byte_length:asset.byte_length,
-            duration_sec:asset.duration_sec,
-            sample_rate:asset.sample_rate,
-            channels:asset.channels,
-            source_name:asset.source_name,
-            source_refs:asset.source_refs,
-            source_state:asset.source_state,
-            rights:asset.rights,
-            parent_asset_ids:asset.parent_asset_ids,
-            created_at:asset.created_at,
-          }},
-          {type:'clip.attach_audio_asset',track_id:audioTrack.id,scene:selectedScene,asset_id:asset.id},
-        ],
-      },'human');
-      setSession(result.session);
-      setSelectedTrackId(audioTrack.id);
-      setStatus(
-        'Imported '+file.name+' · '+asset.duration_sec.toFixed(2)+'s · '+
-        asset.sample_rate+' Hz · '+asset.channels+'ch · rights unknown'
+      await commitAudioAsset(
+        asset,
+        scene,
+        'Import a local audio file and attach it to Audio Take scene '+String(scene+1)+'.',
+        'Imported '+file.name,
       );
     }catch(error){
       setStatus(error instanceof Error?error.message:'Audio import failed.');
     }finally{
       if(fileInputRef.current)fileInputRef.current.value='';
+    }
+  }
+
+  async function toggleRecording(){
+    if(recording){
+      recorderRef.current?.stop();
+      return;
+    }
+    if(!navigator.mediaDevices?.getUserMedia||typeof MediaRecorder==='undefined'){
+      setStatus('Microphone recording is unavailable in this browser.');
+      return;
+    }
+
+    audioRef.current?.stop();
+    setPlaying(false);
+    setPlayhead(0);
+    recordingSceneRef.current=selectedScene;
+    setStatus('Requesting microphone access…');
+
+    try{
+      const stream=await navigator.mediaDevices.getUserMedia({audio:true});
+      recordingStreamRef.current=stream;
+      const preferred='audio/webm;codecs=opus';
+      const options=MediaRecorder.isTypeSupported(preferred)?{mimeType:preferred}:undefined;
+      const recorder=new MediaRecorder(stream,options);
+      const chunks:BlobPart[]=[];
+      recorderRef.current=recorder;
+
+      recorder.ondataavailable=(event)=>{
+        if(event.data.size>0)chunks.push(event.data);
+      };
+      recorder.onerror=()=>{
+        setStatus('Microphone recording failed.');
+        try{if(recorder.state!=='inactive')recorder.stop()}catch{}
+      };
+      recorder.onstop=()=>{
+        const scene=recordingSceneRef.current;
+        const stoppedAt=new Date().toISOString();
+        const mimeType=recorder.mimeType||'audio/webm';
+        const blob=new Blob(chunks,{type:mimeType});
+        recordingStreamRef.current?.getTracks().forEach((mediaTrack)=>mediaTrack.stop());
+        recordingStreamRef.current=null;
+        recorderRef.current=null;
+        setRecording(false);
+        void (async()=>{
+          try{
+            if(blob.size<=0)throw new Error('The microphone take was empty.');
+            const vault=vaultRef.current;
+            if(!vault)throw new Error('PulseGrid audio vault is unavailable.');
+            setStatus('Hashing and verifying recorded take…');
+            const asset=await vault.ingest(blob,{
+              source_name:'recording-'+stoppedAt.replace(/[:.]/g,'-'),
+              source_refs:['media-recorder:'+stoppedAt],
+              source_state:'recording',
+              rights:'unknown',
+            });
+            await commitAudioAsset(
+              asset,
+              scene,
+              'Record a microphone take and attach it to Audio Take scene '+String(scene+1)+'.',
+              'Recorded take',
+            );
+          }catch(error){
+            setStatus(error instanceof Error?error.message:'Recording ingest failed.');
+          }
+        })();
+      };
+
+      recorder.start(250);
+      setRecording(true);
+      setStatus('Recording microphone · scene '+String(selectedScene+1));
+    }catch(error){
+      recordingStreamRef.current?.getTracks().forEach((mediaTrack)=>mediaTrack.stop());
+      recordingStreamRef.current=null;
+      recorderRef.current=null;
+      setRecording(false);
+      setStatus(error instanceof Error?error.message:'Microphone access failed.');
     }
   }
 
@@ -317,8 +427,9 @@ export default function FallenSessions(){
         onChange={(event)=>{const file=event.target.files?.[0];if(file)void importAudioFile(file)}}
       />
       <section className="fsToolbar" aria-label="Session controls">
-        <button onClick={togglePlay}>{playing?'■ Stop':'▶ Play'}</button>
-        <button onClick={chooseAudioFile}>Import Audio</button>
+        <button onClick={togglePlay} disabled={recording}>{playing?'■ Stop':'▶ Play'}</button>
+        <button onClick={toggleRecording}>{recording?'■ Stop Recording':'● Record'}</button>
+        <button onClick={chooseAudioFile} disabled={recording}>Import Audio</button>
         <button onClick={runLiftPlan}>✦ Atomic Chorus Lift</button>
         <button onClick={forkVariation}>Fork Variation</button>
         <button onClick={growClip} disabled={clip.bars>=16}>+ Bar</button>
