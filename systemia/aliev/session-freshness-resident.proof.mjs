@@ -14,6 +14,7 @@ const responseAt='2026-10-08T01:32:05.000Z';
 const cycle={
   ok:true,state:'refreshed',refreshed_at:'2026-10-08T01:32:03.000Z',
   receipt_source_record_id:'source-receipt-verified',
+  results:[{name:'ingestNYCPlugNYCObservedUsage',ok:true},{name:'ingestNYCPlugNYCSessions',ok:true},{name:'penndot_nevi_observed_usage',ok:true},{name:'ingestCaryObservedUsage',ok:true}],
   historical_watch:{eligible_source_count:133,probed_source_count:23,estimated_full_sweep_hours:6,warning_count:0},
   failed_sources:[]
 };
@@ -79,4 +80,13 @@ test('UTC shadow slot only once per distinct hour',async()=>{
 });
 test('production resident is disabled by default',async()=>{
   await assert.rejects(()=>startOwnedSessionFreshnessResident({enabled:false}),/resident_disabled_until_explicit_enablement/);
+});
+
+test('missing dynamic or historical receipt coverage is never VERIFIED',async()=>{
+  await assert.rejects(()=>invokeSessionRefresh({endpoint,machineKey:'fake-unit-test-key',fetchImpl:mock({...cycle,results:undefined}),now:clocks()}),/dynamic_source_results_contract_required/);
+  await assert.rejects(()=>invokeSessionRefresh({endpoint,machineKey:'fake-unit-test-key',fetchImpl:mock({...cycle,historical_watch:undefined}),now:clocks()}),/historical_watch_contract_required/);
+});
+test('breached historical sweep SLA is degraded even with zero HTTP errors',async()=>{
+  const result=await invokeSessionRefresh({endpoint,machineKey:'fake-unit-test-key',fetchImpl:mock({...cycle,historical_watch:{...cycle.historical_watch,estimated_full_sweep_hours:14}}),now:clocks()});
+  assert.equal(result.state,'DEGRADED');assert.equal(result.ok,false);
 });
