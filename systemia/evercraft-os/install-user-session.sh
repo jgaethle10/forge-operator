@@ -2,7 +2,10 @@
 set -euo pipefail
 
 SOURCE_ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/../.." && pwd)"
-INSTALL_ROOT="${EVERCRAFT_OS_INSTALL_ROOT:-$HOME/.local/share/evercraft/evercraft-os}"
+INSTALL_BASE="${EVERCRAFT_OS_INSTALL_ROOT:-$HOME/.local/share/evercraft/evercraft-os}"
+RELEASES_ROOT="$INSTALL_BASE/releases"
+CURRENT_LINK="$INSTALL_BASE/current"
+PREVIOUS_LINK="$INSTALL_BASE/previous"
 STATE_ROOT="${EVERCRAFT_OS_STATE_ROOT:-$HOME/.local/state/evercraft/os}"
 UNIT_DIR="$HOME/.config/systemd/user"
 UNIT_FILE="$UNIT_DIR/evercraft-os.service"
@@ -30,8 +33,8 @@ if [[ -z "$SYSTEMCTL_BIN" ]]; then
   exit 3
 fi
 
-mkdir -p "$INSTALL_ROOT" "$STATE_ROOT" "$UNIT_DIR" "$ENV_DIR"
-chmod 0700 "$STATE_ROOT" "$ENV_DIR"
+mkdir -p "$INSTALL_BASE" "$RELEASES_ROOT" "$STATE_ROOT" "$UNIT_DIR" "$ENV_DIR"
+chmod 0700 "$INSTALL_BASE" "$RELEASES_ROOT" "$STATE_ROOT" "$ENV_DIR"
 
 if [[ ! -f "$ENV_FILE" ]]; then
   : > "$ENV_FILE"
@@ -57,8 +60,39 @@ set_env_value "EVERCRAFT_HOME_AUTH" "${EVERCRAFT_HOME_AUTH:-local}"
 set_env_value "EVERCRAFT_HOME_PORT" "${EVERCRAFT_HOME_PORT:-4310}"
 set_env_value "EVERCRAFT_OS_DEVICE_CLASS" "${EVERCRAFT_OS_DEVICE_CLASS:-desktop}"
 
-rm -rf "${INSTALL_ROOT:?}/"*
-cp -a "$SOURCE_ROOT/." "$INSTALL_ROOT/"
+SOURCE_REF="$(git -C "$SOURCE_ROOT" rev-parse HEAD 2>/dev/null || true)"
+if [[ ! "$SOURCE_REF" =~ ^[a-fA-F0-9]{40}$ ]]; then
+  SOURCE_REF="$(
+    {
+      sha256sum "$SOURCE_ROOT/systemia/evercraft-os/user-supervisor.mjs"
+      sha256sum "$SOURCE_ROOT/systemia/evercraft-os/boot-receipt.mjs"
+      sha256sum "$SOURCE_ROOT/systemia/evercraft-home/server.mjs"
+    } | sha256sum | awk '{print substr($1,1,40)}'
+  )"
+fi
+RELEASE_ID="${SOURCE_REF,,}"
+RELEASE_DIR="$RELEASES_ROOT/$RELEASE_ID"
+
+if [[ ! -d "$RELEASE_DIR" ]]; then
+  STAGE_DIR="$RELEASES_ROOT/.stage-$RELEASE_ID-$"
+  rm -rf "$STAGE_DIR"
+  mkdir -p "$STAGE_DIR"
+  cp -a "$SOURCE_ROOT/." "$STAGE_DIR/"
+  mv "$STAGE_DIR" "$RELEASE_DIR"
+fi
+
+if [[ -L "$CURRENT_LINK" ]]; then
+  PRIOR_TARGET="$(readlink -f "$CURRENT_LINK" || true)"
+  if [[ -n "$PRIOR_TARGET" && -d "$PRIOR_TARGET" && "$PRIOR_TARGET" != "$RELEASE_DIR" ]]; then
+    ln -sfn "$PRIOR_TARGET" "$PREVIOUS_LINK.new"
+    mv -Tf "$PREVIOUS_LINK.new" "$PREVIOUS_LINK"
+  fi
+fi
+
+ln -sfn "$RELEASE_DIR" "$CURRENT_LINK.new"
+mv -Tf "$CURRENT_LINK.new" "$CURRENT_LINK"
+INSTALL_ROOT="$CURRENT_LINK"
+set_env_value "EVERCRAFT_RELEASE_REF" "$RELEASE_ID"
 
 cat > "$UNIT_FILE" <<EOF
 [Unit]
@@ -132,8 +166,9 @@ WantedBy=timers.target
 EOF
 
 systemctl --user daemon-reload
-systemctl --user enable --now evercraft-os.service
+systemctl --user enable evercraft-os.service
 systemctl --user enable --now evercraft-os-health.timer
+systemctl --user restart evercraft-os.service
 sleep 2
 
 if ! systemctl --user is-active --quiet evercraft-os.service; then
@@ -176,6 +211,11 @@ console.log(JSON.stringify({
 ' "$STATE_ROOT/boot/latest.json"
 
 echo "Evercraft OS user-session supervisor is active."
+echo "Release: $RELEASE_ID"
+echo "Current release: $CURRENT_LINK -> $RELEASE_DIR"
+if [[ -L "$PREVIOUS_LINK" ]]; then
+  echo "Rollback release: $(readlink -f "$PREVIOUS_LINK")"
+fi
 echo "Home: loopback only."
 echo "Privilege: no root runtime required."
 echo "Health watch: every 60s; only verified boot + unreachable loopback Home recommends restart."
