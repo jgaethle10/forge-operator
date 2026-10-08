@@ -6,6 +6,7 @@ import {
   createGoalCompletionReceipt,
   createGoalState,
   goalSnapshot,
+  heartbeatGoalWork,
   recordGoalOutcome,
   startGoalWork,
 } from './goal-runtime.mjs';
@@ -14,6 +15,7 @@ import {
   mutateGoalState,
   readGoalState,
 } from './goal-store.mjs';
+import { inspectInterruptedGoalWork, holdInterruptedGoalWork } from './goal-recovery.mjs';
 
 function fail(message) {
   console.error(JSON.stringify({ ok: false, error: message }));
@@ -61,6 +63,29 @@ try {
       evidenceRefs,
     }));
     output({ state: goalSnapshot(result.state), storage_receipt: result.receipt });
+  } else if (command === 'heartbeat') {
+    const [file,workKey,expectedAttempt] = args;
+    if(!file||!workKey||!expectedAttempt)throw new Error('usage: heartbeat <file> <workKey> <expectedAttempt>');
+    const result=await mutateGoalState(file,state=>heartbeatGoalWork({
+      state,workKey,expectedAttempt:Number(expectedAttempt),
+    }));
+    output({state:goalSnapshot(result.state),storage_receipt:result.receipt});
+  } else if (command === 'recovery-scan') {
+    const [file,staleAfterMs='3600000']=args;
+    if(!file)throw new Error('usage: recovery-scan <file> [staleAfterMs]');
+    const state=await readGoalState(file);
+    output({inspection:inspectInterruptedGoalWork({state,staleAfterMs:Number(staleAfterMs)})});
+  } else if (command === 'recovery-hold') {
+    const [file,workKey,expectedAttempt,expectedUpdatedAt,staleAfterMs='3600000']=args;
+    if(!file||!workKey||!expectedAttempt||!expectedUpdatedAt)throw new Error(
+      'usage: recovery-hold <file> <workKey> <expectedAttempt> <expectedUpdatedAt> [staleAfterMs]'
+    );
+    const result=await mutateGoalState(file,state=>holdInterruptedGoalWork({
+      state,workKey,expectedAttempt:Number(expectedAttempt),expectedUpdatedAt,
+      staleAfterMs:Number(staleAfterMs),
+    }));
+    output({state:goalSnapshot(result.state),storage_receipt:result.receipt,
+      operator_warning:'attempt held; verify actual upstream outcome before any retry'});
   } else if (command === 'status') {
     const [file] = args;
     if (!file) throw new Error('usage: status <file>');
@@ -72,7 +97,7 @@ try {
     const state = await readGoalState(file);
     output({ receipt: createGoalCompletionReceipt({ state, successEvidenceRefs }) });
   } else {
-    throw new Error('commands: init, plan, authorize, start, outcome, status, receipt');
+    throw new Error('commands: init, plan, authorize, start, heartbeat, recovery-scan, recovery-hold, outcome, status, receipt');
   }
 } catch (error) {
   fail(error instanceof Error ? error.message : String(error));
