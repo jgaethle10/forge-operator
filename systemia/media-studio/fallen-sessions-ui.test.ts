@@ -68,3 +68,30 @@ test('Fallen Sessions audio picker remains browser-local and audio-scoped',()=>{
   assert.match(ui,/local-file:/);
   assert.doesNotMatch(ui,/fetch\(/);
 });
+
+
+test('Fallen Sessions microphone recording uses the canonical asset pipeline',()=>{
+  const ui=fs.readFileSync('src/FallenSessions.tsx','utf8');
+  assert.match(ui,/navigator\.mediaDevices\.getUserMedia/);
+  assert.match(ui,/new MediaRecorder/);
+  assert.match(ui,/source_state:'recording'/);
+  assert.match(ui,/rights:'unknown'/);
+  assert.match(ui,/vault\.ingest\(blob/);
+  assert.match(ui,/commitAudioAsset/);
+  assert.match(ui,/applyPulseGridTransaction/);
+});
+
+test('Fallen Sessions recording pins destination scene but commits against latest graph state',()=>{
+  const ui=fs.readFileSync('src/FallenSessions.tsx','utf8');
+  assert.match(ui,/recordingSceneRef\.current=selectedScene/);
+  assert.match(ui,/const current=sessionRef\.current/);
+  assert.match(ui,/const scene=recordingSceneRef\.current/);
+});
+
+test('Fallen Sessions recorder cleanup severs callbacks before unmount teardown',()=>{
+  const ui=fs.readFileSync('src/FallenSessions.tsx','utf8');
+  assert.match(ui,/recorder\.ondataavailable=null/);
+  assert.match(ui,/recorder\.onstop=null/);
+  assert.match(ui,/recorder\.onerror=null/);
+  assert.match(ui,/getTracks\(\)\.forEach/);
+});
