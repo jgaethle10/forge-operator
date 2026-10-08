@@ -1,5 +1,5 @@
 export const PULSEGRID_SESSION_SCHEMA = 'evercraft.fallen.pulsegrid.session.v1';
-export const PULSEGRID_ENGINE_VERSION = '0.26.0';
+export const PULSEGRID_ENGINE_VERSION = '0.27.0';
 export const PULSEGRID_ARRANGEMENT_BARS = 16;
 
 export type PulseGridActor = 'human' | 'agent' | 'system' | 'controller';
@@ -39,6 +39,15 @@ export type PulseGridNote = {
   microtiming: number;
 };
 
+export type PulseGridAudioTake = {
+  id: string;
+  asset_id: string;
+  label: string;
+  created_at: string;
+  created_by: PulseGridActor;
+  provenance: Record<string, unknown>;
+};
+
 export type PulseGridClip = {
   id: string;
   name: string;
@@ -48,7 +57,8 @@ export type PulseGridClip = {
   probabilities: number[];
   microtiming: number[];
   notes: PulseGridNote[];
-  audio_asset_id: string | null;
+  audio_takes: PulseGridAudioTake[];
+  active_audio_take_id: string | null;
   automation: {
     volume: number[];
     filter: number[];
@@ -158,6 +168,17 @@ export type PulseGridOperation =
   | { type: 'arrangement.set_slot'; track_id: string; bar: number; scene: number | null }
   | { type: 'clip.fork_variation'; track_id: string; source_scene: number; destination_scene: number; name?: string }
   | { type: 'asset.register_audio'; asset: PulseGridAudioAssetInput }
+  | {
+      type: 'audio_take.add';
+      track_id: string;
+      scene: number;
+      asset_id: string;
+      take_id?: string;
+      label?: string;
+      activate?: boolean;
+      provenance?: Record<string, unknown>;
+    }
+  | { type: 'audio_take.set_active'; track_id: string; scene: number; take_id: string | null }
   | { type: 'clip.attach_audio_asset'; track_id: string; scene: number; asset_id: string | null }
   | {
       type: 'note.add';
@@ -313,10 +334,51 @@ function normalizeNote(raw: any, clipId: string, index: number, clipSteps: numbe
   };
 }
 
+function normalizeAudioTake(raw:any,clipId:string,index:number):PulseGridAudioTake|null{
+  const assetId=String(raw?.asset_id||raw?.assetId||'').trim();
+  if(!assetId)return null;
+  const actor:PulseGridActor=
+    raw?.created_by==='human'||raw?.created_by==='agent'||raw?.created_by==='controller'
+      ? raw.created_by
+      : 'system';
+  return {
+    id:String(raw?.id||`${clipId}-take-${index+1}`),
+    asset_id:assetId,
+    label:String(raw?.label||`Take ${index+1}`).trim().slice(0,120)||`Take ${index+1}`,
+    created_at:String(raw?.created_at||'1970-01-01T00:00:00.000Z'),
+    created_by:actor,
+    provenance:raw?.provenance&&typeof raw.provenance==='object'?{...raw.provenance}:{kind:'migrated'},
+  };
+}
+
 function migrateClip(raw: any, fallbackId: string): PulseGridClip {
   const bars = inferredBars(raw);
   const clipSteps = bars * PULSEGRID_STEPS_PER_BAR;
   const id = String(raw?.id || fallbackId);
+  const legacyAssetId=raw?.audio_asset_id||raw?.audioAssetId
+    ? String(raw.audio_asset_id||raw.audioAssetId)
+    : null;
+  const audioTakes=Array.isArray(raw?.audio_takes)
+    ? raw.audio_takes
+        .map((take:any,index:number)=>normalizeAudioTake(take,id,index))
+        .filter((take:PulseGridAudioTake|null):take is PulseGridAudioTake=>Boolean(take))
+        .slice(0,128)
+    : legacyAssetId
+      ? [{
+          id:id+'-legacy-take',
+          asset_id:legacyAssetId,
+          label:'Legacy take',
+          created_at:'1970-01-01T00:00:00.000Z',
+          created_by:'system' as PulseGridActor,
+          provenance:{kind:'legacy-single-attachment'},
+        }]
+      : [];
+  const requestedActive=String(raw?.active_audio_take_id||raw?.activeAudioTakeId||'').trim();
+  const activeTakeId=requestedActive&&audioTakes.some((take)=>take.id===requestedActive)
+    ? requestedActive
+    : legacyAssetId&&audioTakes.length
+      ? audioTakes[0].id
+      : null;
   return {
     id,
     name: String(raw?.name || fallbackId),
@@ -328,9 +390,8 @@ function migrateClip(raw: any, fallbackId: string): PulseGridClip {
     notes: Array.isArray(raw?.notes)
       ? raw.notes.map((note: any, index: number) => normalizeNote(note, id, index, clipSteps))
       : [],
-    audio_asset_id: raw?.audio_asset_id || raw?.audioAssetId
-      ? String(raw.audio_asset_id || raw.audioAssetId)
-      : null,
+    audio_takes:audioTakes,
+    active_audio_take_id:activeTakeId,
     automation: {
       volume: vector(raw?.automation?.volume, 1, clipSteps).map((value) => clamp(value, 0, 1)),
       filter: vector(raw?.automation?.filter, 1, clipSteps).map((value) => clamp(value, 0, 1)),
@@ -440,7 +501,10 @@ export function migratePulseGridSession(raw: any): PulseGridSession {
       const clips=Array.from({ length: SCENES }, (_, scene) =>
         migrateClip(track?.clips?.[scene], `${id}-scene-${scene + 1}`),
       );
-      if(type!=='audio') clips.forEach((clip)=>{clip.audio_asset_id=null});
+      if(type!=='audio') clips.forEach((clip)=>{
+        clip.audio_takes=[];
+        clip.active_audio_take_id=null;
+      });
       return {
         id,
         name: String(track?.name || fallback.name),
@@ -457,7 +521,11 @@ export function migratePulseGridSession(raw: any): PulseGridSession {
   const migratedAssetIds=new Set(base.assets.map((asset)=>asset.id));
   for(const track of base.tracks){
     for(const clip of track.clips){
-      if(clip.audio_asset_id&&!migratedAssetIds.has(clip.audio_asset_id)) clip.audio_asset_id=null;
+      clip.audio_takes=clip.audio_takes.filter((take)=>migratedAssetIds.has(take.asset_id));
+      if(
+        clip.active_audio_take_id &&
+        !clip.audio_takes.some((take)=>take.id===clip.active_audio_take_id)
+      ) clip.active_audio_take_id=null;
     }
   }
 
@@ -557,12 +625,21 @@ export function validatePulseGridSession(session: PulseGridSession) {
       if (clip.automation.volume.length !== expectedSteps) errors.push(`${track.id}.${clip.id}.automation.volume`);
       if (clip.automation.filter.length !== expectedSteps) errors.push(`${track.id}.${clip.id}.automation.filter`);
       if (clip.probabilities.some((value) => value < 0 || value > 1)) errors.push(`${track.id}.${clip.id}.probabilities`);
-      if(clip.audio_asset_id){
-        const asset=assetById.get(clip.audio_asset_id);
-        if(track.type!=='audio') errors.push(`${track.id}.${clip.id}.audio_asset_track_type`);
-        if(!asset) errors.push(`${track.id}.${clip.id}.audio_asset_missing`);
-        else if(asset.rights==='restricted') errors.push(`${track.id}.${clip.id}.audio_asset_restricted`);
+      const takeIds=new Set<string>();
+      if(track.type!=='audio'&&(clip.audio_takes.length||clip.active_audio_take_id)){
+        errors.push(`${track.id}.${clip.id}.audio_takes_track_type`);
       }
+      for(const take of clip.audio_takes){
+        if(!take.id||takeIds.has(take.id)) errors.push(`${track.id}.${clip.id}.audio_take_id`);
+        takeIds.add(take.id);
+        const asset=assetById.get(take.asset_id);
+        if(!asset) errors.push(`${track.id}.${clip.id}.${take.id}.asset_missing`);
+        else if(asset.rights==='restricted') errors.push(`${track.id}.${clip.id}.${take.id}.asset_restricted`);
+      }
+      if(
+        clip.active_audio_take_id!==null &&
+        !clip.audio_takes.some((take)=>take.id===clip.active_audio_take_id)
+      ) errors.push(`${track.id}.${clip.id}.active_audio_take_id`);
       const noteIds = new Set<string>();
       for (const note of clip.notes) {
         if (!note.id || noteIds.has(note.id)) errors.push(`${track.id}.${clip.id}.note_id`);
@@ -834,18 +911,65 @@ export function applyPulseGridOperation(
       after=structuredClone(incoming);
     }
     targets=[`asset:${incoming.id}`];
+  } else if (operation.type === 'audio_take.add') {
+    const {track,clip}=getClip(session,operation.track_id,operation.scene);
+    if(track.type!=='audio') throw new Error('PulseGrid audio takes can only be added to audio tracks.');
+    const asset=session.assets.find((candidate)=>candidate.id===operation.asset_id);
+    if(!asset) throw new Error('Unknown PulseGrid audio asset: '+operation.asset_id);
+    if(asset.rights==='restricted') throw new Error('Restricted PulseGrid audio asset cannot become a take.');
+    const takeId=String(operation.take_id||randomId());
+    if(clip.audio_takes.some((take)=>take.id===takeId)) throw new Error('PulseGrid audio take ID already exists: '+takeId);
+    before={takes:structuredClone(clip.audio_takes),active_take_id:clip.active_audio_take_id};
+    const take:PulseGridAudioTake={
+      id:takeId,
+      asset_id:asset.id,
+      label:String(operation.label||'Take '+String(clip.audio_takes.length+1)).trim().slice(0,120)||'Take',
+      created_at:new Date().toISOString(),
+      created_by:actor,
+      provenance:operation.provenance&&typeof operation.provenance==='object'
+        ? {...operation.provenance}
+        : {kind:'audio-take'},
+    };
+    clip.audio_takes.push(take);
+    if(operation.activate!==false)clip.active_audio_take_id=take.id;
+    after={takes:structuredClone(clip.audio_takes),active_take_id:clip.active_audio_take_id};
+    targets=[`clip:${clip.id}.audio_takes`,`clip:${clip.id}.active_audio_take_id`];
+  } else if (operation.type === 'audio_take.set_active') {
+    const {track,clip}=getClip(session,operation.track_id,operation.scene);
+    if(track.type!=='audio') throw new Error('PulseGrid audio takes can only be selected on audio tracks.');
+    if(operation.take_id!==null&&!clip.audio_takes.some((take)=>take.id===operation.take_id)){
+      throw new Error('Unknown PulseGrid audio take: '+operation.take_id);
+    }
+    before=clip.active_audio_take_id;
+    clip.active_audio_take_id=operation.take_id;
+    after=clip.active_audio_take_id;
+    targets=[`clip:${clip.id}.active_audio_take_id`];
   } else if (operation.type === 'clip.attach_audio_asset') {
     const {track,clip}=getClip(session,operation.track_id,operation.scene);
     if(track.type!=='audio') throw new Error('PulseGrid audio assets can only attach to audio tracks.');
-    if(operation.asset_id){
+    before={takes:structuredClone(clip.audio_takes),active_take_id:clip.active_audio_take_id};
+    if(operation.asset_id===null){
+      clip.active_audio_take_id=null;
+    }else{
       const asset=session.assets.find((candidate)=>candidate.id===operation.asset_id);
       if(!asset) throw new Error('Unknown PulseGrid audio asset: '+operation.asset_id);
       if(asset.rights==='restricted') throw new Error('Restricted PulseGrid audio asset cannot be attached.');
+      let take=clip.audio_takes.find((candidate)=>candidate.asset_id===asset.id);
+      if(!take){
+        take={
+          id:randomId(),
+          asset_id:asset.id,
+          label:'Compatibility take',
+          created_at:new Date().toISOString(),
+          created_by:actor,
+          provenance:{kind:'compatibility-attachment'},
+        };
+        clip.audio_takes.push(take);
+      }
+      clip.active_audio_take_id=take.id;
     }
-    before=clip.audio_asset_id;
-    clip.audio_asset_id=operation.asset_id;
-    after=clip.audio_asset_id;
-    targets=[`clip:${clip.id}.audio_asset_id`];
+    after={takes:structuredClone(clip.audio_takes),active_take_id:clip.active_audio_take_id};
+    targets=[`clip:${clip.id}.active_audio_take_id`];
   } else if (operation.type === 'note.add') {
     const { clip } = getClip(session, operation.track_id, operation.scene);
     const note = normalizeNote({ ...operation.note, id: operation.note.id || randomId() }, clip.id, clip.notes.length, clip.steps.length);
@@ -1046,13 +1170,50 @@ export function undoPulseGridReceipt(
       if(index>=0) session.assets[index]=structuredClone(prior);
       else session.assets.push(structuredClone(prior));
     }else if(index>=0){
-      const stillReferenced=session.tracks.some((track)=>track.clips.some((clip)=>clip.audio_asset_id===registered.id));
+      const stillReferenced=session.tracks.some((track)=>track.clips.some((clip)=>
+        clip.audio_takes.some((take)=>take.asset_id===registered.id)
+      ));
       if(stillReferenced) throw new Error('PulseGrid audio asset cannot be undone while still attached.');
       session.assets.splice(index,1);
     }
+  } else if(operation.type==='audio_take.add'){
+    const {clip}=getClip(session,operation.track_id,operation.scene);
+    const restored=originalReceipt.before as {takes:PulseGridAudioTake[];active_take_id:string|null};
+    clip.audio_takes=structuredClone(restored.takes);
+    clip.active_audio_take_id=restored.active_take_id;
+  } else if(operation.type==='audio_take.set_active'){
+    const {clip}=getClip(session,operation.track_id,operation.scene);
+    clip.active_audio_take_id=originalReceipt.before===null?null:String(originalReceipt.before);
   } else if(operation.type==='clip.attach_audio_asset'){
     const {clip}=getClip(session,operation.track_id,operation.scene);
-    clip.audio_asset_id=(originalReceipt.before as string|null)||null;
+    if(
+      originalReceipt.before &&
+      typeof originalReceipt.before==='object' &&
+      'takes' in (originalReceipt.before as Record<string,unknown>)
+    ){
+      const restored=originalReceipt.before as {takes:PulseGridAudioTake[];active_take_id:string|null};
+      clip.audio_takes=structuredClone(restored.takes);
+      clip.active_audio_take_id=restored.active_take_id;
+    }else{
+      const legacyAssetId=originalReceipt.before===null?null:String(originalReceipt.before);
+      if(legacyAssetId===null){
+        clip.active_audio_take_id=null;
+      }else{
+        let take=clip.audio_takes.find((candidate)=>candidate.asset_id===legacyAssetId);
+        if(!take){
+          take={
+            id:randomId(),
+            asset_id:legacyAssetId,
+            label:'Legacy undo take',
+            created_at:new Date().toISOString(),
+            created_by:'system',
+            provenance:{kind:'legacy-undo'},
+          };
+          clip.audio_takes.push(take);
+        }
+        clip.active_audio_take_id=take.id;
+      }
+    }
   } else if (operation.type === 'note.add') {
     const { clip } = getClip(session, operation.track_id, operation.scene);
     const created = originalReceipt.after as PulseGridNote | null;
