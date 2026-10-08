@@ -119,6 +119,29 @@ export async function executeGoalWorkWithAdapter({
     };
   }
 
+  // This legacy executor has no durable pre-dispatch commit. A caller cannot
+  // use signed approval or a misleading read-only adapter declaration to
+  // perform gated or state-changing work without persistent attempt lineage.
+  // Those operations must go through executePersistedGoalWork instead.
+  if (adapter.authority !== 'read-only' || adapter.human_gate_required || work.human_gate_required) {
+    return {
+      ok: false,
+      executed: false,
+      reason: 'durable_dispatch_required',
+      state,
+      receipt: {
+        schema: 'evercraft.capability-route-receipt.v1',
+        work_key: work.work_key,
+        result: 'held',
+        capability_key: adapter.capability_key,
+        authority: adapter.authority,
+        durable_checkpoint_persisted: false,
+        external_effect_verified: false,
+        observed_at: now instanceof Date ? now.toISOString() : new Date(now).toISOString(),
+      },
+    };
+  }
+
   // Trust anchors are supplied only by the privileged execution host, never
   // copied from adapter output, task context, or caller-submitted approval JSON.
   const started = startGoalWork({ state, workKey: work.work_key, trustedPublicKeys, now });
