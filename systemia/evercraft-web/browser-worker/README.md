@@ -114,7 +114,7 @@ The worker now includes an optional, single-owner filesystem-backed asynchronous
 
     EVERCRAFT_BROWSER_JOB_STATE_DIR=/var/lib/evercraft-browser-jobs
 
-The worker's existing private bearer token is required on every job operation:
+Every durable job operation now requires a valid Systemia HMAC-SHA256 request signature, not the legacy raw browser bearer token. Supply x-evercraft-timestamp, x-evercraft-nonce and x-evercraft-signature over the timestamp, nonce, uppercase HTTP method, exact route and SHA-256 of the raw request body. Reused nonces, stale timestamps, altered paths and unsigned calls fail closed. The worker requires BOTH a writable persistent job state directory and a private EVERCRAFT_BROWSER_SYSTEMIA_JOB_KEY (at least 32 bytes).
 
 - POST /v1/jobs: create a bounded public read-only job (202); retries use the same idempotency_key (200).
 - GET /v1/jobs/:id: inspect status, failure category and bounded completion receipt.
@@ -131,8 +131,15 @@ Privacy/recovery boundaries:
 - Per-job idempotency keys bind to payload and Systemia lineage; duplicate keys with different requests fail closed.
 - Atomic 0600 file writes, directory fsync, bounded retries and startup requeue for interrupted jobs are implemented. Jobs with exhausted attempts become terminal failures.
 - Cancellation aborts the browser context, and a late completion may not overwrite a cancelled record.
-- Single process per directory only. This version does not implement a distributed lease, encrypted credential vault, or signed Systemia admission.
+- Single process per directory only. Signed Systemia admission is implemented, but there is no distributed queue lease or independently verified production secret vault; do not share one volume between active workers.
 - A durable volume is mandatory for real restart persistence. Ephemeral container storage is not crash-survivable.
-- durable-jobs.test.mjs covers idempotency, cancellation, redaction, retry and simulated crash recovery. durable-jobs.proof.mjs is a real-browser canary for an authorized public page, intended for execution in Docker/CI with a writable durable volume. A source file is not a passing canary.
+- durable-jobs.test.mjs and systemia-admission.test.mjs cover idempotency, cancellation, redaction, retry, signed request integrity and replay denial. The native CI proof kills a real worker with SIGKILL and confirms on-disk recovery and evidence. The signed Docker canary executes a real public page through the unprivileged image and uploads its JSON receipt. Neither test proves a persistent production deployment.
 
-Known integration gate: Systemia's current browserWorkerOps expects /v1/run and x-evercraft-key with a distinct action/snapshot schema; this worker's read-only endpoint is /v1/browse with a bearer token. A signed, versioned Yard/Compute transport adapter and confirmed runtime configuration are required before advertising end-to-end readiness. Do not silently alias these contracts or treat a static configuration value as runtime proof.
+Integration state: Systemia browserWorkerOps retains its separate legacy /v1/run interface for existing browser profiles and adds durable_submit, durable_status and durable_cancel over signed /v1/jobs routes. This capability is registered as web.browser.public.durable.v1 with a BLOCKED CapabilityRegistry status and DISABLED ExecutionPolicy. Submit requires an admitted ColliderWorkItem, an active registry + policy, verified runtime URL and private signing key; simply providing environment variables cannot promote it. An owned, reachable production deployment and an independent external canary remain unverified, so leave the capability held.
+
+### Candidate deployment knobs (not activation)
+- Native runtime: pass `jobStateDir` and `systemiaJobKey` to startNativeBrowserRuntime. If no stable key is supplied, a short-lived key is generated only for its local owner caller.
+- Yard Docker runtime: pass `durableJobVolume` and `systemiaJobKey` together to startBrowserContainer. A stable named volume is mounted to /var/lib/evercraft-browser-jobs; keep a single writer. Docker environment-based secrets are not equivalent to a production secret manager.
+- Systemia browserWorkerOps: configure EVERCRAFT_BROWSER_DURABLE_RUNTIME_URL (owned HTTPS private route) and EVERCRAFT_BROWSER_SYSTEMIA_JOB_KEY to the same privately provisioned key. Do not share it with clients or include it in receipts.
+- Required before promotion: owner-hosted external canary, verified private network placement, rotation/secret provisioning, durable volume ownership and restart, cancellation after timeout, absence of leaked credentials, and signed job status/receipt retrieval.
+
