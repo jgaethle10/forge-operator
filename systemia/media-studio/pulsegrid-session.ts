@@ -1,5 +1,5 @@
 export const PULSEGRID_SESSION_SCHEMA = 'evercraft.fallen.pulsegrid.session.v1';
-export const PULSEGRID_ENGINE_VERSION = '0.14.0';
+export const PULSEGRID_ENGINE_VERSION = '0.26.0';
 export const PULSEGRID_ARRANGEMENT_BARS = 16;
 
 export type PulseGridActor = 'human' | 'agent' | 'system' | 'controller';
@@ -56,6 +56,29 @@ export type PulseGridClip = {
   provenance: Record<string, unknown>;
 };
 
+export type PulseGridFilterDevice = {
+  id: string;
+  type: 'filter';
+  enabled: boolean;
+  parameters: {
+    frequency: number;
+    q: number;
+  };
+};
+
+export type PulseGridDelayDevice = {
+  id: string;
+  type: 'delay';
+  enabled: boolean;
+  parameters: {
+    mix: number;
+    time: number;
+    feedback: number;
+  };
+};
+
+export type PulseGridDevice = PulseGridFilterDevice | PulseGridDelayDevice;
+
 export type PulseGridTrack = {
   id: string;
   name: string;
@@ -63,10 +86,7 @@ export type PulseGridTrack = {
   volume: number;
   muted: boolean;
   solo: boolean;
-  filterHz: number;
-  delayMix: number;
-  delayTime: number;
-  delayFeedback: number;
+  devices: PulseGridDevice[];
   clips: PulseGridClip[];
 };
 
@@ -108,6 +128,14 @@ export type PulseGridOperation =
   | { type: 'transport.set_swing'; swing: number }
   | { type: 'track.set_filter'; track_id: string; filter_hz: number }
   | { type: 'track.set_delay_mix'; track_id: string; mix: number }
+  | {
+      type: 'device.set_parameter';
+      track_id: string;
+      device_id: string;
+      parameter: 'frequency' | 'q' | 'mix' | 'time' | 'feedback';
+      value: number;
+    }
+  | { type: 'device.set_enabled'; track_id: string; device_id: string; enabled: boolean }
   | { type: 'clip.set_bars'; track_id: string; scene: number; bars: number }
   | { type: 'clip.set_step'; track_id: string; scene: number; step: number; velocity: number }
   | {
@@ -313,9 +341,36 @@ function migrateClip(raw: any, fallbackId: string): PulseGridClip {
   };
 }
 
+function migrateTrackDevices(trackId:string,rawTrack:any):PulseGridDevice[]{
+  const rawDevices=Array.isArray(rawTrack?.devices)?rawTrack.devices:[];
+  const rawFilter=rawDevices.find((device:any)=>device?.type==='filter');
+  const rawDelay=rawDevices.find((device:any)=>device?.type==='delay');
+  const defaultFilter=trackId==='bass'?1200:trackId==='drums'?12000:7000;
+  const defaultDelayMix=trackId==='bell'?0.18:trackId==='keys'?0.08:0;
+  return [
+    {
+      id:String(rawFilter?.id||trackId+'-filter'),
+      type:'filter',
+      enabled:rawFilter?.enabled!==false,
+      parameters:{
+        frequency:clamp(Number(rawFilter?.parameters?.frequency??rawTrack?.filterHz??defaultFilter),80,19000),
+        q:clamp(Number(rawFilter?.parameters?.q??0.6),0.1,24),
+      },
+    },
+    {
+      id:String(rawDelay?.id||trackId+'-delay'),
+      type:'delay',
+      enabled:rawDelay?.enabled!==false,
+      parameters:{
+        mix:clamp(Number(rawDelay?.parameters?.mix??rawTrack?.delayMix??defaultDelayMix),0,0.65),
+        time:clamp(Number(rawDelay?.parameters?.time??rawTrack?.delayTime??0.24),0.02,0.8),
+        feedback:clamp(Number(rawDelay?.parameters?.feedback??rawTrack?.delayFeedback??0.22),0,0.78),
+      },
+    },
+  ];
+}
+
 function defaultTrack(id: string, name: string, type: PulseGridTrack['type']): PulseGridTrack {
-  const filterHz = id === 'bass' ? 1200 : id === 'drums' ? 12000 : 7000;
-  const delayMix = id === 'bell' ? 0.18 : id === 'keys' ? 0.08 : 0;
   return {
     id,
     name,
@@ -323,10 +378,7 @@ function defaultTrack(id: string, name: string, type: PulseGridTrack['type']): P
     volume: 0.8,
     muted: false,
     solo: false,
-    filterHz,
-    delayMix,
-    delayTime: 0.24,
-    delayFeedback: 0.22,
+    devices:migrateTrackDevices(id,{}),
     clips: Array.from({ length: SCENES }, (_, scene) =>
       migrateClip({}, `${id}-scene-${scene + 1}`),
     ),
@@ -396,10 +448,7 @@ export function migratePulseGridSession(raw: any): PulseGridSession {
         volume: clamp(Number(track?.volume ?? fallback.volume), 0, 1),
         muted: Boolean(track?.muted),
         solo: Boolean(track?.solo),
-        filterHz: clamp(Number(track?.filterHz ?? fallback.filterHz), 80, 19000),
-        delayMix: clamp(Number(track?.delayMix ?? fallback.delayMix), 0, 0.65),
-        delayTime: clamp(Number(track?.delayTime ?? fallback.delayTime), 0.02, 0.8),
-        delayFeedback: clamp(Number(track?.delayFeedback ?? fallback.delayFeedback), 0, 0.78),
+        devices:migrateTrackDevices(id,track),
         clips,
       };
     });
@@ -476,6 +525,28 @@ export function validatePulseGridSession(session: PulseGridSession) {
 
   for (const track of session.tracks || []) {
     if (!track.id) errors.push('track.id');
+    if(!Array.isArray(track.devices)) {
+      errors.push(`${track.id}.devices`);
+    } else {
+      const ids=new Set<string>();
+      const filterDevices=track.devices.filter((device)=>device.type==='filter');
+      const delayDevices=track.devices.filter((device)=>device.type==='delay');
+      if(filterDevices.length!==1) errors.push(`${track.id}.devices.filter_count`);
+      if(delayDevices.length!==1) errors.push(`${track.id}.devices.delay_count`);
+      for(const device of track.devices){
+        if(!device.id||ids.has(device.id)) errors.push(`${track.id}.device.id`);
+        ids.add(device.id);
+        if(typeof device.enabled!=='boolean') errors.push(`${track.id}.${device.id}.enabled`);
+        if(device.type==='filter'){
+          if(device.parameters.frequency<80||device.parameters.frequency>19000) errors.push(`${track.id}.${device.id}.frequency`);
+          if(device.parameters.q<0.1||device.parameters.q>24) errors.push(`${track.id}.${device.id}.q`);
+        }else if(device.type==='delay'){
+          if(device.parameters.mix<0||device.parameters.mix>0.65) errors.push(`${track.id}.${device.id}.mix`);
+          if(device.parameters.time<0.02||device.parameters.time>0.8) errors.push(`${track.id}.${device.id}.time`);
+          if(device.parameters.feedback<0||device.parameters.feedback>0.78) errors.push(`${track.id}.${device.id}.feedback`);
+        }
+      }
+    }
     for (const clip of track.clips || []) {
       const expectedSteps = clip.bars * PULSEGRID_STEPS_PER_BAR;
       if (!Number.isInteger(clip.bars) || clip.bars < 1 || clip.bars > PULSEGRID_MAX_CLIP_BARS) errors.push(`${track.id}.${clip.id}.bars`);
@@ -535,6 +606,48 @@ function getTrack(session: PulseGridSession, trackId: string) {
   return track;
 }
 
+function getDevice(track:PulseGridTrack,deviceId:string){
+  const device=track.devices.find((candidate)=>candidate.id===deviceId);
+  if(!device) throw new Error('Unknown PulseGrid device: '+deviceId);
+  return device;
+}
+
+function getFilterDevice(track:PulseGridTrack){
+  const device=track.devices.find((candidate):candidate is PulseGridFilterDevice=>candidate.type==='filter');
+  if(!device) throw new Error('PulseGrid track has no filter device: '+track.id);
+  return device;
+}
+
+function getDelayDevice(track:PulseGridTrack){
+  const device=track.devices.find((candidate):candidate is PulseGridDelayDevice=>candidate.type==='delay');
+  if(!device) throw new Error('PulseGrid track has no delay device: '+track.id);
+  return device;
+}
+
+function getDeviceParameter(device:PulseGridDevice,parameter:string){
+  if(device.type==='filter'){
+    if(parameter==='frequency') return device.parameters.frequency;
+    if(parameter==='q') return device.parameters.q;
+    throw new Error('PulseGrid filter device does not support parameter: '+parameter);
+  }
+  if(parameter==='mix') return device.parameters.mix;
+  if(parameter==='time') return device.parameters.time;
+  if(parameter==='feedback') return device.parameters.feedback;
+  throw new Error('PulseGrid delay device does not support parameter: '+parameter);
+}
+
+function setDeviceParameter(device:PulseGridDevice,parameter:string,value:number){
+  if(device.type==='filter'){
+    if(parameter==='frequency') return device.parameters.frequency=clamp(value,80,19000);
+    if(parameter==='q') return device.parameters.q=clamp(value,0.1,24);
+    throw new Error('PulseGrid filter device does not support parameter: '+parameter);
+  }
+  if(parameter==='mix') return device.parameters.mix=clamp(value,0,0.65);
+  if(parameter==='time') return device.parameters.time=clamp(value,0.02,0.8);
+  if(parameter==='feedback') return device.parameters.feedback=clamp(value,0,0.78);
+  throw new Error('PulseGrid delay device does not support parameter: '+parameter);
+}
+
 function getClip(session: PulseGridSession, trackId: string, scene: number) {
   const track = getTrack(session, trackId);
   const clip = track.clips[scene];
@@ -583,18 +696,33 @@ export function applyPulseGridOperation(
     session.transport.swing = clamp(operation.swing, 0, 80);
     after = session.transport.swing;
     targets = ['transport.swing'];
+  } else if (operation.type === 'device.set_parameter') {
+    const track=getTrack(session,operation.track_id);
+    const device=getDevice(track,operation.device_id);
+    before=getDeviceParameter(device,operation.parameter);
+    after=setDeviceParameter(device,operation.parameter,Number(operation.value));
+    targets=[`track:${track.id}.device:${device.id}.parameters.${operation.parameter}`];
+  } else if (operation.type === 'device.set_enabled') {
+    const track=getTrack(session,operation.track_id);
+    const device=getDevice(track,operation.device_id);
+    before=device.enabled;
+    device.enabled=Boolean(operation.enabled);
+    after=device.enabled;
+    targets=[`track:${track.id}.device:${device.id}.enabled`];
   } else if (operation.type === 'track.set_filter') {
     const track = getTrack(session, operation.track_id);
-    before = track.filterHz;
-    track.filterHz = clamp(operation.filter_hz, 80, 19000);
-    after = track.filterHz;
-    targets = [`track:${track.id}.filterHz`];
+    const filter=getFilterDevice(track);
+    before = filter.parameters.frequency;
+    filter.parameters.frequency = clamp(operation.filter_hz, 80, 19000);
+    after = filter.parameters.frequency;
+    targets = [`track:${track.id}.device:${filter.id}.parameters.frequency`];
   } else if (operation.type === 'track.set_delay_mix') {
     const track = getTrack(session, operation.track_id);
-    before = track.delayMix;
-    track.delayMix = clamp(operation.mix, 0, 0.65);
-    after = track.delayMix;
-    targets = [`track:${track.id}.delayMix`];
+    const delay=getDelayDevice(track);
+    before = delay.parameters.mix;
+    delay.parameters.mix = clamp(operation.mix, 0, 0.65);
+    after = delay.parameters.mix;
+    targets = [`track:${track.id}.device:${delay.id}.parameters.mix`];
   } else if (operation.type === 'clip.set_bars') {
     const { clip } = getClip(session, operation.track_id, operation.scene);
     before = structuredClone(clip);
@@ -861,10 +989,19 @@ export function undoPulseGridReceipt(
     session.transport.bpm = Number(originalReceipt.before);
   } else if (operation.type === 'transport.set_swing') {
     session.transport.swing = Number(originalReceipt.before);
+  } else if (operation.type === 'device.set_parameter') {
+    const track=getTrack(session,operation.track_id);
+    const device=getDevice(track,operation.device_id);
+    setDeviceParameter(device,operation.parameter,Number(originalReceipt.before));
+  } else if (operation.type === 'device.set_enabled') {
+    const track=getTrack(session,operation.track_id);
+    getDevice(track,operation.device_id).enabled=Boolean(originalReceipt.before);
   } else if (operation.type === 'track.set_filter') {
-    getTrack(session, operation.track_id).filterHz = Number(originalReceipt.before);
+    const track=getTrack(session,operation.track_id);
+    getFilterDevice(track).parameters.frequency=Number(originalReceipt.before);
   } else if (operation.type === 'track.set_delay_mix') {
-    getTrack(session, operation.track_id).delayMix = Number(originalReceipt.before);
+    const track=getTrack(session,operation.track_id);
+    getDelayDevice(track).parameters.mix=Number(originalReceipt.before);
   } else if (operation.type === 'clip.set_bars') {
     const track = getTrack(session, operation.track_id);
     if (!track.clips[operation.scene]) throw new Error('Unknown PulseGrid scene: ' + String(operation.scene));

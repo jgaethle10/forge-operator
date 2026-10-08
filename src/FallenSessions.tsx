@@ -22,6 +22,18 @@ function noteName(pitch:number){
   return NOTE_NAMES[pitch%12]+String(Math.floor(pitch/12)-1);
 }
 
+type PulseGridUiTrack=PulseGridSession['tracks'][number];
+
+function trackFilterDevice(track:PulseGridUiTrack){
+  const device=track.devices.find((candidate)=>candidate.type==='filter');
+  return device?.type==='filter'?device:null;
+}
+
+function trackDelayDevice(track:PulseGridUiTrack){
+  const device=track.devices.find((candidate)=>candidate.type==='delay');
+  return device?.type==='delay'?device:null;
+}
+
 type HeldMidiNote={
   trackId:string;
   scene:number;
@@ -448,6 +460,8 @@ export default function FallenSessions(){
 
   function runLiftPlan(){
     const destination=(selectedScene+1)%track.clips.length;
+    const filter=trackFilterDevice(track);
+    const delay=trackDelayDevice(track);
     const operations:PulseGridOperation[]=[
       {
         type:'clip.fork_variation',
@@ -462,17 +476,25 @@ export default function FallenSessions(){
         scene:destination,
         bars:Math.max(2,clip.bars),
       },
-      {
-        type:'track.set_filter',
-        track_id:track.id,
-        filter_hz:Math.min(19000,Math.round(track.filterHz*1.18)),
-      },
-      {
-        type:'track.set_delay_mix',
-        track_id:track.id,
-        mix:Math.min(.45,Number((track.delayMix+.08).toFixed(2))),
-      },
     ];
+    if(filter){
+      operations.push({
+        type:'device.set_parameter',
+        track_id:track.id,
+        device_id:filter.id,
+        parameter:'frequency',
+        value:Math.min(19000,Math.round(filter.parameters.frequency*1.18)),
+      });
+    }
+    if(delay){
+      operations.push({
+        type:'device.set_parameter',
+        track_id:track.id,
+        device_id:delay.id,
+        parameter:'mix',
+        value:Math.min(.45,Number((delay.parameters.mix+.08).toFixed(2))),
+      });
+    }
 
     if(track.type==='synth'){
       operations.push({
@@ -642,6 +664,29 @@ export default function FallenSessions(){
     });
   }
 
+  function setDeviceParameter(
+    deviceId:string,
+    parameter:'frequency'|'q'|'mix'|'time'|'feedback',
+    value:number,
+  ){
+    apply({
+      type:'device.set_parameter',
+      track_id:track.id,
+      device_id:deviceId,
+      parameter,
+      value,
+    });
+  }
+
+  function setDeviceEnabled(deviceId:string,enabled:boolean){
+    apply({
+      type:'device.set_enabled',
+      track_id:track.id,
+      device_id:deviceId,
+      enabled,
+    });
+  }
+
   function growClip(){
     apply({
       type:'clip.set_bars',
@@ -744,7 +789,10 @@ export default function FallenSessions(){
             <div className={'fsTrack '+(candidate.id===track.id?'active':'')} key={candidate.id}>
               <button className="fsTrackName" onClick={()=>setSelectedTrackId(candidate.id)}>
                 <strong>{candidate.name}</strong>
-                <span>{candidate.type} · filter {Math.round(candidate.filterHz)} Hz · delay {Math.round(candidate.delayMix*100)}%</span>
+                <span>
+                  {candidate.type} · filter {Math.round(trackFilterDevice(candidate)?.parameters.frequency??19000)} Hz
+                  {' · '}delay {Math.round((trackDelayDevice(candidate)?.parameters.mix??0)*100)}%
+                </span>
               </button>
               <div className="fsScenes">
                 {candidate.clips.map((candidateClip,scene)=>(
@@ -773,6 +821,95 @@ export default function FallenSessions(){
               <span>{clip.steps.length} steps</span>
               <span>{clip.notes.length} notes</span>
             </div>
+          </div>
+
+          <div className="fsDevices">
+            <div className="fsSectionTitle">Owned device chain</div>
+            {track.devices.map((device)=>(
+              <article className={'fsDevice '+(!device.enabled?'disabled':'')} key={device.id}>
+                <label className="fsDeviceTitle">
+                  <input
+                    type="checkbox"
+                    checked={device.enabled}
+                    onChange={(event)=>setDeviceEnabled(device.id,event.target.checked)}
+                  />
+                  <strong>{device.type==='filter'?'Evercraft Filter':'Evercraft Delay'}</strong>
+                  <small>{device.id}</small>
+                </label>
+                {device.type==='filter'?(
+                  <div className="fsDeviceParams">
+                    <label>
+                      <span>Frequency {Math.round(device.parameters.frequency)} Hz</span>
+                      <input
+                        key={device.id+'-frequency-'+device.parameters.frequency}
+                        type="range"
+                        min={80}
+                        max={19000}
+                        step={10}
+                        defaultValue={device.parameters.frequency}
+                        onPointerUp={(event)=>setDeviceParameter(device.id,'frequency',Number(event.currentTarget.value))}
+                        onKeyUp={(event)=>setDeviceParameter(device.id,'frequency',Number(event.currentTarget.value))}
+                      />
+                    </label>
+                    <label>
+                      <span>Q {device.parameters.q.toFixed(2)}</span>
+                      <input
+                        key={device.id+'-q-'+device.parameters.q}
+                        type="range"
+                        min={0.1}
+                        max={24}
+                        step={0.1}
+                        defaultValue={device.parameters.q}
+                        onPointerUp={(event)=>setDeviceParameter(device.id,'q',Number(event.currentTarget.value))}
+                        onKeyUp={(event)=>setDeviceParameter(device.id,'q',Number(event.currentTarget.value))}
+                      />
+                    </label>
+                  </div>
+                ):(
+                  <div className="fsDeviceParams">
+                    <label>
+                      <span>Mix {Math.round(device.parameters.mix*100)}%</span>
+                      <input
+                        key={device.id+'-mix-'+device.parameters.mix}
+                        type="range"
+                        min={0}
+                        max={0.65}
+                        step={0.01}
+                        defaultValue={device.parameters.mix}
+                        onPointerUp={(event)=>setDeviceParameter(device.id,'mix',Number(event.currentTarget.value))}
+                        onKeyUp={(event)=>setDeviceParameter(device.id,'mix',Number(event.currentTarget.value))}
+                      />
+                    </label>
+                    <label>
+                      <span>Time {Math.round(device.parameters.time*1000)} ms</span>
+                      <input
+                        key={device.id+'-time-'+device.parameters.time}
+                        type="range"
+                        min={0.02}
+                        max={0.8}
+                        step={0.01}
+                        defaultValue={device.parameters.time}
+                        onPointerUp={(event)=>setDeviceParameter(device.id,'time',Number(event.currentTarget.value))}
+                        onKeyUp={(event)=>setDeviceParameter(device.id,'time',Number(event.currentTarget.value))}
+                      />
+                    </label>
+                    <label>
+                      <span>Feedback {Math.round(device.parameters.feedback*100)}%</span>
+                      <input
+                        key={device.id+'-feedback-'+device.parameters.feedback}
+                        type="range"
+                        min={0}
+                        max={0.78}
+                        step={0.01}
+                        defaultValue={device.parameters.feedback}
+                        onPointerUp={(event)=>setDeviceParameter(device.id,'feedback',Number(event.currentTarget.value))}
+                        onKeyUp={(event)=>setDeviceParameter(device.id,'feedback',Number(event.currentTarget.value))}
+                      />
+                    </label>
+                  </div>
+                )}
+              </article>
+            ))}
           </div>
 
           {track.type==='synth'?(
