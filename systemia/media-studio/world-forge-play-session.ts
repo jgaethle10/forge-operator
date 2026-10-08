@@ -235,6 +235,18 @@ export class WorldForgePlaySession {
       this._geometries,
       viewport,
     );
+    const referencedGeometryIds=new Set(
+      plan.draws.map(draw=>draw.geometryId),
+    );
+    const frameGeometries=this._geometries.filter(
+      geometry=>referencedGeometryIds.has(geometry.id),
+    );
+    const frameGeometryDigests=Object.fromEntries(
+      frameGeometries.map(geometry=>[
+        geometry.id,
+        this._geometryDigests[geometry.id],
+      ]),
+    );
     this.touch();
     return {
       schema:'evercraft.fallen.world-forge-play-webgpu-frame.v1',
@@ -245,8 +257,8 @@ export class WorldForgePlaySession {
       timeSec:snapshot.timeSec,
       snapshotDigest:snapshot.digest,
       plan,
-      geometries:clone(this._geometries),
-      geometryDigests:clone(this._geometryDigests),
+      geometries:clone(frameGeometries),
+      geometryDigests:clone(frameGeometryDigests),
       boundaries:{
         runtimeTruth:true,
         ephemeralSession:true,
