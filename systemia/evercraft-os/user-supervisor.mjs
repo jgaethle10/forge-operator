@@ -172,15 +172,24 @@ export async function startEvercraftOsUserSupervisor({
     nodeId: node
   });
 
+  const bootReceiptFile = path.join(bootRoot, "latest.json");
+  const serviceOrigins = {
+    ...process.env,
+    ...(homeOptions.serviceOrigins || {}),
+    EVERCRAFT_OS_DEVICE_CLASS: deviceClass,
+    EVERCRAFT_NODE_ID: node,
+    EVERCRAFT_OS_BOOT_RECEIPT_FILE: bootReceiptFile
+  };
   const home = await startEvercraftHomeServer({
+    ...homeOptions,
     host,
     port: homePort,
     authMode: homeAuthMode,
     operator: homeOperator,
     passportStateDir,
     sourceReleaseRef,
-    cookieSecure: false,
-    ...homeOptions
+    cookieSecure: homeOptions.cookieSecure ?? false,
+    serviceOrigins
   });
 
   try {
@@ -232,7 +241,7 @@ export async function startEvercraftOsUserSupervisor({
       }
     };
     const receipt = { ...body, receipt_hash: sha256(body) };
-    atomicJson(path.join(bootRoot, "latest.json"), receipt);
+    atomicJson(bootReceiptFile, receipt);
     appendJsonl(path.join(bootRoot, "events.jsonl"), receipt);
     home.setDeploymentReceipt(receipt.receipt_hash);
 
