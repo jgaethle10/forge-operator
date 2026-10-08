@@ -348,19 +348,28 @@ test('new specialist-only door is blocked for explicit review rather than auto-p
 
 test('new current-trunk products are explicitly contracted without overclaiming shared runtime', () => {
   const mesh = renderCapabilityMesh(process.cwd());
+  const earthworks = mesh.products.find((row) => row.product_key === 'earthworks-autonomy');
   const evernest = mesh.products.find((row) => row.product_key === 'evernest-atlas');
+  const fallen = mesh.products.find((row) => row.product_key === 'fallen-sessions');
+  const lineage = mesh.products.find((row) => row.product_key === 'lineage');
   const opportunity = mesh.products.find((row) => row.product_key === 'opportunity-fabric');
   const university = mesh.products.find((row) => row.product_key === 'systemia-university');
 
-  assert.equal(evernest.contract_state, 'complete_declaration');
+  for (const row of [earthworks, evernest, fallen, lineage, opportunity, university]) {
+    assert.equal(row.contract_state, 'complete_declaration');
+  }
+  assert.equal(earthworks.adoption_stage, 'discovery_only');
   assert.equal(evernest.adoption_stage, 'discovery_only');
-  assert.equal(opportunity.contract_state, 'complete_declaration');
+  assert.equal(fallen.adoption_stage, 'discovery_only');
+  assert.equal(lineage.adoption_stage, 'discovery_only');
   assert.equal(opportunity.adoption_stage, 'private_runtime');
-  assert.equal(university.contract_state, 'complete_declaration');
   assert.equal(university.adoption_stage, 'discovery_only');
   assert.equal(mesh.ratchet.state, 'pass');
   assert.deepEqual(mesh.ratchet.new_public_products.sort(), [
+    'earthworks-autonomy',
     'evernest-atlas',
+    'fallen-sessions',
+    'lineage',
     'opportunity-fabric',
     'systemia-university',
   ]);
