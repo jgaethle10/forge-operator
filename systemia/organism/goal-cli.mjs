@@ -64,11 +64,12 @@ try {
     }));
     output({ state: goalSnapshot(result.state), storage_receipt: result.receipt });
   } else if (command === 'outcome') {
-    const [file, workKey, resultName, receiptRef = '', blocker = '', ...evidenceRefs] = args;
-    if (!file || !workKey || !resultName) throw new Error('usage: outcome <file> <workKey> <result> [receiptRef] [blocker] [evidenceRef...]');
+    const [file, workKey, resultName, expectedAttempt, receiptRef = '', blocker = '', ...evidenceRefs] = args;
+    if (!file || !workKey || !resultName || !expectedAttempt) throw new Error('usage: outcome <file> <workKey> <result> <expectedAttempt> [receiptRef] [blocker] [evidenceRef...]');
     const result = await mutateGoalState(file, (state) => recordGoalOutcome({
       state,
       workKey,
+      expectedAttempt: Number(expectedAttempt),
       result: resultName,
       receiptRef,
       blocker,
