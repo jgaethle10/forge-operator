@@ -52,8 +52,36 @@ async function boundedJson(fetchImpl, url, options, timeoutMs, maxBytes = MAX_BO
     if (!response || !response.ok || response.status < 200 || response.status >= 300) {
       throw new Error('fabric_compute_private_route_request_failed');
     }
-    const text = await response.text();
-    if (Buffer.byteLength(text) > maxBytes) throw new Error('fabric_compute_response_too_large');
+    // Bounded response streaming. Checking size after response.text() would
+    // let a faulty local Compute service exhaust Fabric memory first.
+    const declaredLength = Number(response.headers?.get?.('content-length'));
+    if (Number.isFinite(declaredLength) && declaredLength > maxBytes) {
+      throw new Error('fabric_compute_response_too_large');
+    }
+    let text;
+    if (response.body && typeof response.body.getReader === 'function') {
+      const reader = response.body.getReader();
+      const chunks = [];
+      let size = 0;
+      try {
+        while (true) {
+          const { done, value } = await reader.read();
+          if (done) break;
+          size += value.byteLength;
+          if (size > maxBytes) throw new Error('fabric_compute_response_too_large');
+          chunks.push(Buffer.from(value));
+        }
+      } catch (error) {
+        await reader.cancel().catch(() => {});
+        throw error;
+      }
+      text = Buffer.concat(chunks, size).toString('utf8');
+    } else {
+      text = await response.text();
+      if (Buffer.byteLength(text) > maxBytes) {
+        throw new Error('fabric_compute_response_too_large');
+      }
+    }
     let payload;
     try { payload = JSON.parse(text); }
     catch { throw new Error('fabric_compute_response_invalid_json'); }
