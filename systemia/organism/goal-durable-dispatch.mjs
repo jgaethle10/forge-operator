@@ -95,6 +95,10 @@ export async function executePersistedGoalWork({
   exception=true;
  }
  const result=clean(outcome?.result).toLowerCase();
+ // Only persist a bounded status token; never pass provider error prose or
+ // echoed request secrets into the durable recovery receipt.
+ const resultCode=exception?'exception':
+  ['complete','blocked','retry','skipped'].includes(result)?result:'invalid';
  const receiptRef=clean(outcome?.receipt_ref);
  const evidenceRefs=unique(outcome?.evidence_refs);
  const localReadonlyComplete=adapter.authority==='read-only'&&
@@ -108,7 +112,7 @@ export async function executePersistedGoalWork({
   ? recordGoalOutcome({state,workKey:workName,expectedAttempt:attempt,
      result:'complete',receiptRef,evidenceRefs,now})
   : quarantineUncertainOutcome({state,workKey:workName,
-     expectedAttempt:attempt,sourceResult:result||'invalid',now})
+     expectedAttempt:attempt,sourceResult:resultCode,now})
  );
  return {
   schema:'evercraft.goal.durable-dispatch-receipt.v1',
