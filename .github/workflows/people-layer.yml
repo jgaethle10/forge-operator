@@ -58,9 +58,6 @@ jobs:
         with:
           node-version: 22
 
-      - name: Install dependencies
-        run: npm install --no-audit --no-fund
-
       - name: Prove signed mailbox delivery boundary
         run: node --test tests/people-mail-delivery.test.mjs
 
@@ -78,6 +75,9 @@ jobs:
 
       - name: Prove People Layer through Evercraft Hosting
         run: node systemia/people/hosting.proof.mjs
+
+      - name: Install dependencies for browser build
+        run: npm install --no-audit --no-fund
 
       - name: Build owned browser surfaces
         run: npm run build
