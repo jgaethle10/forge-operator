@@ -318,7 +318,9 @@ export function goalSnapshot(state) {
     next_work_keys: refreshed.next_work_keys,
     blockers: refreshed.blockers,
     evidence_refs: refreshed.evidence_refs,
-    updated_at: refreshed.updated_at,
+    // Reading a snapshot is not a storage mutation. Never fabricate a fresh
+    // mission heartbeat merely because an observer requested current status.
+    updated_at: state.updated_at,
   };
 }
 
