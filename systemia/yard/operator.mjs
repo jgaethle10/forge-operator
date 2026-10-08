@@ -2454,6 +2454,7 @@ export class YardOperator {
       record.receipt?.workload_class === 'systemia.fabric-local-mcp.v1' ||
       record.receipt?.workload_class === 'systemia.specialist-handoff-mcp.v1' ||
       record.receipt?.workload_class === 'systemia.evercraft-web-browser.v1' ||
+      record.receipt?.workload_class === 'systemia.forge-operator-runtime.v1' ||
       record.receipt?.workload_class === 'systemia.evercraft-home.v1'
     ) {
       const broker =
@@ -2466,10 +2467,14 @@ export class YardOperator {
         record.receipt?.workload_class === 'systemia.specialist-handoff-mcp.v1';
       const browser =
         record.receipt?.workload_class === 'systemia.evercraft-web-browser.v1';
+      const forge =
+        record.receipt?.workload_class === 'systemia.forge-operator-runtime.v1';
       const home =
         record.receipt?.workload_class === 'systemia.evercraft-home.v1';
       const service = home
         ? 'evercraft-home'
+        : forge
+        ? 'forge-operator'
         : browser
         ? 'evercraft-web-browser-edge'
         : broker
@@ -2483,7 +2488,9 @@ export class YardOperator {
                 : 'chum-public-origin';
       const healthPath = home
         ? '/api/health'
-        : browser
+        : forge
+          ? '/api/health'
+          : browser
           ? '/health'
           : broker
           ? '/v1/remote/health'
@@ -2511,6 +2518,18 @@ export class YardOperator {
             (!browser || (
               health.mode === 'public_read_only' &&
               health.raw_worker_publicly_exposed === false
+            )) &&
+            (!forge || (
+              health.runtime === 'Evercraft Compute' &&
+              health.workload_class === 'systemia.forge-operator-runtime.v1' &&
+              health.immutable_container === true &&
+              health.release_ref === record.receipt?.release_ref &&
+              health.image_digest === record.result?.image_digest &&
+              health.release_execution_receipt_ref === record.result?.release_execution_receipt_ref &&
+              health.university_benchmark_ingress_ready === true &&
+              health.university_remote_persistence === false &&
+              health.university_public_write_allowed === false &&
+              health.secret_material_exposed === false
             )) &&
             (!home || (
               health.runtime === 'Evercraft Compute' &&
@@ -2560,6 +2579,18 @@ export class YardOperator {
                     health.auth_mode === 'passport' &&
                     health.identity_login_configured === true &&
                     health.session_revocation_supported === true
+                  : forge
+                    ? health.service === 'forge-operator' &&
+                      health.runtime === 'Evercraft Compute' &&
+                      health.workload_class === 'systemia.forge-operator-runtime.v1' &&
+                      health.immutable_container === true &&
+                      health.release_ref === record.receipt?.release_ref &&
+                      health.image_digest === record.result?.image_digest &&
+                      health.release_execution_receipt_ref === record.result?.release_execution_receipt_ref &&
+                      health.university_benchmark_ingress_ready === true &&
+                      health.university_remote_persistence === false &&
+                      health.university_public_write_allowed === false &&
+                      health.secret_material_exposed === false
                   : browser
                     ? health.service === 'evercraft-owned-browser-worker' &&
                       health.runtime === 'Evercraft Compute' &&
@@ -2583,6 +2614,8 @@ export class YardOperator {
             ok: false,
             state: home
               ? 'local_home_unreachable'
+              : forge
+                ? 'local_forge_operator_unreachable'
               : browser
                 ? 'local_browser_unreachable'
                 : broker
@@ -2621,6 +2654,22 @@ export class YardOperator {
           health.runtime === 'Evercraft Compute' &&
           health.mode === 'public_read_only' &&
           health.instance_id === record.result?.instance_id &&
+          health.deployment_receipt_ref === record.receipt?.receipt_hash;
+      } else if (record.receipt?.workload_class === 'systemia.forge-operator-runtime.v1') {
+        ok =
+          health.ok === true &&
+          health.service === 'forge-operator' &&
+          health.runtime === 'Evercraft Compute' &&
+          health.workload_class === 'systemia.forge-operator-runtime.v1' &&
+          health.instance_id === record.result?.instance_id &&
+          health.immutable_container === true &&
+          health.release_ref === record.receipt?.release_ref &&
+          health.image_digest === record.result?.image_digest &&
+          health.release_execution_receipt_ref === record.result?.release_execution_receipt_ref &&
+          health.university_benchmark_ingress_ready === true &&
+          health.university_remote_persistence === false &&
+          health.university_public_write_allowed === false &&
+          health.secret_material_exposed === false &&
           health.deployment_receipt_ref === record.receipt?.receipt_hash;
       } else if (record.receipt?.workload_class === 'systemia.public-edge.v1') {
         ok =
