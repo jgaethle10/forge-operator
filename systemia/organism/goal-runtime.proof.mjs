@@ -1,4 +1,6 @@
 import assert from 'node:assert/strict';
+import { generateKeyPairSync, sign } from 'node:crypto';
+import { humanApprovalMessage } from './goal-human-approval.mjs';
 import {
   admitGoalPlan,
   authorizeGoalWork,
@@ -10,6 +12,20 @@ import {
 } from './goal-runtime.mjs';
 
 const t0 = new Date('2026-09-24T17:00:00Z');
+const {publicKey,privateKey}=generateKeyPairSync('ed25519');
+const trustedPublicKeys={'systemia-human-gate-v1':publicKey.export({format:'pem',type:'spki'})};
+const claims={
+ schema:'evercraft.goal.human-approval-claims.v1',
+ mission_key:'systemia-outcome-engine',goal_key:'goal-runtime-proof',
+ work_key:'commit-money',scope:'systemia.goal.authorize',approved:true,
+ receipt_ref:'human:approval:001',
+ issued_at:'2026-09-24T17:00:00.000Z',expires_at:'2026-09-24T18:00:00.000Z',
+};
+const signedApproval={
+ schema:'evercraft.goal.human-approval-envelope.v1',
+ key_id:'systemia-human-gate-v1',claims,
+ signature_base64:sign(null,humanApprovalMessage(claims),privateKey).toString('base64'),
+};
 let state = createGoalState({
   goalKey: 'goal-runtime-proof',
   missionKey: 'systemia-outcome-engine',
@@ -41,10 +57,21 @@ assert.ok(state.blockers.some((entry) => entry.includes('commit-money')));
 
 const serialized = JSON.stringify(state);
 state = JSON.parse(serialized);
-state = authorizeGoalWork({ state, workKey: 'commit-money', authorizationRef: 'human:approval:001', now: new Date('2026-09-24T17:05:00Z') });
+assert.throws(
+ () => authorizeGoalWork({ state, workKey:'commit-money', authorizationRef:'human:approval:001',now:new Date('2026-09-24T17:05:00Z') }),
+ /signed human approval envelope required/
+);
+state = authorizeGoalWork({
+ state, workKey:'commit-money', approval:signedApproval, trustedPublicKeys,
+ now:new Date('2026-09-24T17:05:00Z'),
+});
 assert.deepEqual(state.next_work_keys, ['commit-money']);
 
-state = startGoalWork({ state, workKey: 'commit-money', now: new Date('2026-09-24T17:06:00Z') });
+assert.throws(
+ () => startGoalWork({state,workKey:'commit-money',now:new Date('2026-09-24T17:06:00Z')}),
+ /trusted human approval signer missing/
+);
+state = startGoalWork({ state, workKey: 'commit-money', trustedPublicKeys, now: new Date('2026-09-24T17:06:00Z') });
 state = recordGoalOutcome({ state, workKey: 'commit-money', result: 'complete', receiptRef: 'exec:commercial', now: new Date('2026-09-24T17:07:00Z') });
 assert.deepEqual(state.next_work_keys, ['verify']);
 
