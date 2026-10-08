@@ -14,6 +14,7 @@ on:
   push:
     branches: [main]
     paths:
+      - 'public/demos/earthworks-autonomy/**'
       - 'public/.well-known/evercraft-products.json'
       - 'public/.well-known/evercraft-machine-catalog.json'
       - 'public/chum/capabilities.json'
@@ -26,6 +27,7 @@ on:
       - 'systemia/mcp/earthworks-simulator-app.mjs'
       - 'tests/evercraft-fabric-runtime.test.mjs'
       - 'tests/earthworks-owned-page.test.mjs'
+      - 'tests/earthworks-public-playground.test.mjs'
       - 'tests/fabric-offer-pages.test.mjs'
       - '.github/workflows/earthworks-fabric-canary.yml'
   schedule:
