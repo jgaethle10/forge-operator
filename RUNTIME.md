@@ -67,3 +67,49 @@ A local healthy service does not become `CHUM_PUBLIC_ORIGIN` by inference. Yard 
 ## RIVET Yard report gateway
 
 When both `SYSTEMIA_MACHINE_KEY` and `RIVET_REPORT_GATEWAY_TOKEN` are configured, Forge exposes `POST /api/rivet/reports` as an authenticated server-to-server compatibility edge for the migrating RIVET UI. `GET /api/rivet/report-health` reports only safe configuration state. The gateway fails closed when either secret is absent and does not grant customer or payment authority. Base44 remains a temporary UI/data/auth compatibility client until the live Yard route and fresh-report canary are independently verified.
+
+
+## Full Forge Operator workload admission
+
+The complete Forge Operator application is an admitted Evercraft Compute workload under:
+
+`systemia.forge-operator-runtime.v1`
+
+This workload is intentionally different from the read-only `systemia.chum-public-origin.v1` discovery service.
+
+### Immutable deployment identity
+
+Yard may deploy full Forge only when all of the following are supplied and verified:
+
+- an exact 40-character mainline release SHA
+- the GHCR `sha256:` image digest from the ReleaseExecutionReceipt
+- a reference to that ReleaseExecutionReceipt
+- an Evercraft Compute node that actually advertises `systemia.forge-operator-runtime.v1`
+- the required runtime environment, including `GEMINI_API_KEY`
+
+Compute does not expose a generic arbitrary-container execution surface. The workload implementation only launches the canonical Forge repository image and runs it by digest.
+
+### Deployment states are not interchangeable
+
+1. **source_merged**: code exists on main.
+2. **release_artifact_published**: an immutable container digest and ReleaseExecutionReceipt exist.
+3. **compute_deployed**: Yard has leased Evercraft Compute capacity, started that exact digest, passed local health, and bound a DeploymentReceipt.
+4. **public_route_verified**: the Evercraft public edge independently proves the live HTTPS origin matches the exact Compute instance and DeploymentReceipt.
+
+No earlier state implies a later state.
+
+### Systemia University runtime gate
+
+A full Forge deployment is unhealthy for this workload if its local runtime does not expose the bounded Systemia University benchmark surface:
+
+- `GET /api/systemia-university/benchmarks`
+- `GET /api/systemia-university/benchmarks/:missionKey`
+- `POST /api/systemia-university/evaluate`
+
+The benchmark evaluator must continue to report:
+
+- remote persistence: false
+- public write authority: false
+- evaluator-reviewed receipts only
+
+A public route is not verified merely because an HTTP endpoint responds. Yard requires the public `/api/health` response to bind the immutable release SHA, image digest, Compute instance ID, and DeploymentReceipt.
