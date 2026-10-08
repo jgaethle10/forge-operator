@@ -1,0 +1,44 @@
+name: Evercraft Public Relay Host
+
+on:
+  pull_request:
+    paths:
+      - 'systemia/yard/public-relay-host-controller.mjs'
+      - 'systemia/yard/public-relay-host.proof.mjs'
+      - 'systemia/yard/public-route-broker.mjs'
+      - 'systemia/yard/operator.mjs'
+      - 'systemia/network/outbound-capacity-broker.mjs'
+      - 'systemia/network/outbound-node-agent.mjs'
+      - 'systemia/network/federated-service-bridge.mjs'
+      - 'systemia/network/public-edge-runtime.mjs'
+      - 'systemia/compute/runtime-node.mjs'
+      - '.github/workflows/public-relay-host.yml'
+  push:
+    branches:
+      - main
+    paths:
+      - 'systemia/yard/public-relay-host-controller.mjs'
+      - 'systemia/yard/public-relay-host.proof.mjs'
+      - 'systemia/yard/public-route-broker.mjs'
+      - 'systemia/yard/operator.mjs'
+      - 'systemia/network/outbound-capacity-broker.mjs'
+      - 'systemia/network/outbound-node-agent.mjs'
+      - 'systemia/network/federated-service-bridge.mjs'
+      - 'systemia/network/public-edge-runtime.mjs'
+      - 'systemia/compute/runtime-node.mjs'
+      - '.github/workflows/public-relay-host.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  prove:
+    runs-on: ubuntu-latest
+    timeout-minutes: 6
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Prove public relay host composition
+        run: node systemia/yard/public-relay-host.proof.mjs
