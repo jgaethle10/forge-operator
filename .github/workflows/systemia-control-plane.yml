@@ -11,6 +11,9 @@ on:
       - "systemia/compute/**"
       - "systemia/network/**"
       - "systemia/chum/**"
+      - "systemia/mcp/**"
+      - "tests/fabric-offer-pages.test.mjs"
+      - "tests/fabric-local-runtime.test.mjs"
       - "systemia/collider/**"
       - "systemia/beast-mode/**"
       - "systemia/media-studio/**"
@@ -34,6 +37,9 @@ on:
       - "systemia/compute/**"
       - "systemia/network/**"
       - "systemia/chum/**"
+      - "systemia/mcp/**"
+      - "tests/fabric-offer-pages.test.mjs"
+      - "tests/fabric-local-runtime.test.mjs"
       - "systemia/collider/**"
       - "systemia/beast-mode/**"
       - "systemia/media-studio/**"
@@ -61,6 +67,9 @@ jobs:
       - run: npm run proof:control-plane
       - name: Verify external-agent commerce truth and Systemia authority gates
         run: node --test tests/chum-universal-mcp-truth.test.mjs tests/chum-commerce-door-status.test.mjs tests/systemia-ai-agent-distribution-mission.test.mjs
+
+      - name: Prove owned Fabric checkout fail-closed and buyer-page truth
+        run: node --test tests/fabric-offer-pages.test.mjs tests/fabric-local-runtime.test.mjs
 
       - name: Externally probe owned Fabric read-only MCP without commerce or private data
         id: fabric_public_readonly_probe
