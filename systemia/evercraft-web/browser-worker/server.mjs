@@ -1,6 +1,7 @@
 import crypto from 'node:crypto';
 import http from 'node:http';
 import { chromium } from 'playwright';
+import { DurableBrowserJobs } from './durable-jobs.mjs';
 import { createSecureOutboundProxy } from './secure-proxy.mjs';
 import { HEADING_SELECTOR, MAX_HEADINGS } from './snapshot-contract.mjs';
 import { AuthenticatedBrowserSessionManager, renderHumanBrowserHandoffPage } from './authenticated-handoff.mjs';
@@ -171,7 +172,7 @@ async function extractPage(page, maxTextChars) {
   }, {limit:maxTextChars, headingSelector:HEADING_SELECTOR, maxHeadings:MAX_HEADINGS});
 }
 
-async function browse(job) {
+async function browse(job, signal = null) {
   const startedAt = new Date();
   const browser = await getBrowser();
   const outboundProxy = await outboundProxyPromise;
@@ -184,6 +185,13 @@ async function browse(job) {
     ignoreHTTPSErrors:false,
     userAgent:'Evercraft-Web-Owned-Browser/1.0'
   });
+
+  if (signal?.aborted) {
+    await context.close().catch(() => {});
+    throw new Error('browser_job_cancelled');
+  }
+  const abortBrowser = () => { void context.close().catch(() => {}); };
+  signal?.addEventListener('abort',abortBrowser,{once:true});
 
   const blocked = [];
   const consoleErrors = [];
@@ -321,9 +329,19 @@ async function browse(job) {
       evidence_receipt_sha256:sha256(JSON.stringify(evidence))
     };
   } finally {
+    signal?.removeEventListener('abort',abortBrowser);
     await context.close().catch(() => {});
   }
 }
+
+// Durable jobs are intentionally disabled unless a persistent private volume is provided.
+// Admission still requires the private worker bearer and a Systemia lineage reference.
+const JOB_STATE_DIR = String(process.env.EVERCRAFT_BROWSER_JOB_STATE_DIR || '').trim();
+const durableJobs = JOB_STATE_DIR ? new DurableBrowserJobs({
+  directory: JOB_STATE_DIR,
+  execute: (job, signal) => browse(job,signal),
+  concurrency: MAX_CONCURRENCY,
+}) : null;
 
 const server = http.createServer(async (req,res) => {
   try {
@@ -336,6 +354,8 @@ const server = http.createServer(async (req,res) => {
         mode:'public_read_only',
         active_jobs:activeJobs,
         max_concurrency:MAX_CONCURRENCY,
+        durable_jobs_enabled:Boolean(durableJobs),
+        durable_job_metrics:durableJobs?.metrics() || null,
         authenticated_handoff_available:Boolean(authSessions),
         authenticated_handoff_mode:authSessions ? 'human_authorized_ephemeral' : 'disabled',
         delegated_draft_automation_available:Boolean(authSessions)
@@ -470,6 +490,30 @@ const server = http.createServer(async (req,res) => {
       return;
     }
 
+    if (pathname === '/v1/jobs' && req.method === 'POST') {
+      if (!authorized(req)) return json(res,401,{ok:false,error:'unauthorized'});
+      if (!durableJobs) return json(res,503,{ok:false,error:'durable_job_volume_not_configured'});
+      const body = await readJson(req);
+      const job = sanitizeJob(body.job);
+      const record = durableJobs.submit({
+        job,
+        idempotency_key:body.idempotency_key,
+        mission_key:body.mission_key,
+        work_key:body.work_key,
+      });
+      return json(res,record.deduplicated ? 200 : 202,{ok:true,job:record});
+    }
+
+    const durableMatch = pathname.match(/^\/v1\/jobs\/([0-9a-f-]{36})$/);
+    if (durableMatch && (req.method === 'GET' || req.method === 'DELETE')) {
+      if (!authorized(req)) return json(res,401,{ok:false,error:'unauthorized'});
+      if (!durableJobs) return json(res,503,{ok:false,error:'durable_job_volume_not_configured'});
+      const record = req.method === 'DELETE'
+        ? durableJobs.cancel(durableMatch[1])
+        : durableJobs.get(durableMatch[1]);
+      return record ? json(res,200,{ok:true,job:record}) : json(res,404,{ok:false,error:'job_not_found'});
+    }
+
     if (req.method !== 'POST' || pathname !== '/v1/browse') {
       json(res,404,{ok:false,error:'not_found'});
       return;
@@ -543,7 +587,7 @@ const server = http.createServer(async (req,res) => {
       'delegated_fill_scope_missing',
       'delegated_click_scope_missing'
     ]);
-    const status = authErrors.has(message) ? 401 : missingErrors.has(message) ? 404 : safeClientErrors.has(message) || message.startsWith('unsupported_action') || message.startsWith('invalid_selector') || message.startsWith('invalid_anchor_selector') ? 400 : 500;
+    const status = authErrors.has(message) ? 401 : missingErrors.has(message) ? 404 : message === 'durable_job_idempotency_conflict' ? 409 : message.startsWith('durable_job_') || safeClientErrors.has(message) || message.startsWith('unsupported_action') || message.startsWith('invalid_selector') || message.startsWith('invalid_anchor_selector') ? 400 : 500;
     json(res,status,{ok:false,error:message,engine:ENGINE});
   }
 });
@@ -554,6 +598,7 @@ server.listen(PORT,'0.0.0.0',() => {
 
 async function shutdown(signal) {
   server.close();
+  durableJobs?.close();
   if (authSessions) await authSessions.closeAll().catch(() => {});
   if (browserPromise) {
     try {
