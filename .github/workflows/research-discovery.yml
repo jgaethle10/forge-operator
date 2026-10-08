@@ -1,0 +1,53 @@
+name: Research-to-Fabric Discovery
+
+on:
+  pull_request:
+    paths:
+      - 'public/research/**'
+      - 'scripts/probe-research-discovery-edge.mjs'
+      - 'systemia/chum/public-origin-runtime.mjs'
+      - 'systemia/mcp/fabric-static-discovery.mjs'
+      - 'systemia/mcp/fabric-local-runtime.mjs'
+      - 'tests/fabric-research-discovery-mount.test.mjs'
+      - 'tests/chum-public-origin-runtime.test.mjs'
+      - 'tests/chum-research-atlas.test.mjs'
+      - 'package.json'
+      - '.github/workflows/research-discovery.yml'
+  push:
+    branches: [main]
+    paths:
+      - 'public/research/**'
+      - 'scripts/probe-research-discovery-edge.mjs'
+      - 'systemia/chum/public-origin-runtime.mjs'
+      - 'systemia/mcp/fabric-static-discovery.mjs'
+      - 'systemia/mcp/fabric-local-runtime.mjs'
+      - 'tests/fabric-research-discovery-mount.test.mjs'
+      - 'tests/chum-public-origin-runtime.test.mjs'
+      - 'tests/chum-research-atlas.test.mjs'
+      - 'package.json'
+      - '.github/workflows/research-discovery.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Validate absolute public sitemaps and research draft safety
+        run: npm run test:chum-public-origin
+      - name: Probe public Fabric edge and record external release state
+        if: always()
+        run: node scripts/probe-research-discovery-edge.mjs
+      - name: Retain external public-edge receipt
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: research-discovery-edge-receipt
+          path: artifacts/chum/research-edge-probe.json
+          if-no-files-found: warn

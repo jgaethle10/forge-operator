@@ -1,0 +1,75 @@
+{
+  "schema": "evercraft.research-discovery.v1",
+  "owner": "Evercraft LLC",
+  "coordinator": "Systemia intake #1215; admission not confirmed",
+  "created_at": "2026-10-08",
+  "publication_state": "review_pending",
+  "policy": {
+    "noindex_until_editorial_review": true,
+    "no_health_or_personal_record_publication": true,
+    "no_claim_of_llm_pickup_or_search_indexing": true,
+    "no_auto_payment_or_external_action": true,
+    "source_and_risk_review_before_promotion": true
+  },
+  "records": [
+    {
+      "slug": "how-to-compare-dog-and-cat-food-labels",
+      "lane": "pet_nutrition",
+      "query": "How do I compare dog and cat food labels?",
+      "description": "A practical evidence-first checklist for comparing pet-food labels, nutritional adequacy and life-stage claims.",
+      "canonical_url": "https://fabric.systemiacommandcenters.com/research/how-to-compare-dog-and-cat-food-labels/",
+      "visibility": "draft_noindex",
+      "review_status": "editorial_review_pending",
+      "source_urls": [
+        "https://www.fda.gov/animal-veterinary/animal-health-literacy/complete-and-balanced-pet-food",
+        "https://www.aafco.org/consumers/understanding-pet-food/selecting-the-right-pet-food/",
+        "https://www.aafco.org/consumers/understanding-pet-food/reading-labels/"
+      ],
+      "capability_route": {
+        "label": "Explore Evercraft's public capability directory",
+        "url": "/chum/",
+        "state": "general_discovery_only"
+      },
+      "limitations": "Educational overview only. Animal health, diagnosis and therapeutic feeding decisions require veterinary evaluation."
+    },
+    {
+      "slug": "how-to-read-clinical-treatment-research",
+      "lane": "medical_science",
+      "query": "How can I tell whether a medical treatment study is convincing?",
+      "description": "Understand trial design, comparison groups, outcomes and uncertainty before repeating a treatment claim.",
+      "canonical_url": "https://fabric.systemiacommandcenters.com/research/how-to-read-clinical-treatment-research/",
+      "visibility": "draft_noindex",
+      "review_status": "editorial_review_pending",
+      "source_urls": [
+        "https://www.nih.gov/about-nih/science-health-public-trust/tools/understanding-clinical-studies",
+        "https://www.nih.gov/health-information/nih-clinical-research-trials-you/basics"
+      ],
+      "capability_route": {
+        "label": "Explore the Global Health Atlas discovery record",
+        "url": "/chum/products/evercraft-global-health-atlas/",
+        "state": "discovery_only_not_clinical_service"
+      },
+      "limitations": "Editorial/clinical subject-matter review is required before search indexing. Research education, not personal medical advice."
+    },
+    {
+      "slug": "how-to-request-and-verify-washington-public-records",
+      "lane": "civic_records",
+      "query": "How do I request and verify Washington local-government public records?",
+      "description": "A practical starting point for identifying government records, making a Washington PRA request and checking source context.",
+      "canonical_url": "https://fabric.systemiacommandcenters.com/research/how-to-request-and-verify-washington-public-records/",
+      "visibility": "draft_noindex",
+      "review_status": "editorial_review_pending",
+      "source_urls": [
+        "https://app.leg.wa.gov/RCW/default.aspx?Cite=42.56.080",
+        "https://app.leg.wa.gov/RCW/?cite=42.56.520",
+        "https://www.atg.wa.gov/open-government"
+      ],
+      "capability_route": {
+        "label": "Explore Evercraft's evidence-research capability",
+        "url": "/chum/capabilities/towi-evidence-research-machine-v1/",
+        "state": "discovery_only_verification_required"
+      },
+      "limitations": "General research workflow, not legal advice. Do not disclose private records or identifying details without a lawful and ethical basis."
+    }
+  ]
+}

@@ -98,7 +98,7 @@
     "test:forensiscope-developer-hub": "npm run chum:mirror && node tests/forensiscope-developer-hub.test.mjs",
     "proof:beast-mode": "node systemia/beast-mode/proof.mjs",
     "beast-mode:first-seven": "node systemia/beast-mode/proof.mjs",
-    "test:chum-public-origin": "node tests/chum-public-origin-runtime.test.mjs",
+    "test:chum-public-origin": "node tests/chum-public-origin-runtime.test.mjs && node tests/chum-research-atlas.test.mjs && node tests/fabric-research-discovery-mount.test.mjs",
     "proof:yard-chum-public-origin": "node systemia/yard/chum-public-origin-proof.mjs",
     "test:forensiscope-editorial": "npm run chum:mirror && node tests/forensiscope-editorial.test.mjs",
     "proof:partition-reconciliation": "node systemia/network/partition-reconciliation-proof.mjs",

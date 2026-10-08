@@ -32,6 +32,7 @@ import {
 } from './fabric-mobile-site.mjs';
 import { renderEarthWorksSimulator } from './earthworks-simulator-page.mjs';
 import { createFabricFaieSurface } from './fabric-faie-runtime.mjs';
+import { serveFabricStaticDiscovery } from './fabric-static-discovery.mjs';
 import { buildVisualStory, normalizeVisualStory } from '../visual-desk/factory.mjs';
 import { buildCommercialCampaign } from '../graphics-command/commercial-renderer.mjs';
 
@@ -390,6 +391,7 @@ export async function startFabricLocalRuntime({
   faieStateDir='',
   faieCollectorConfig=null,
   faieSurfaceEnabled=true,
+  discoveryPublicRoot='',
   visualStateDir='',
   visualOrigin='',
   visualIngestToken='',
@@ -552,6 +554,7 @@ export async function startFabricLocalRuntime({
   }
   const moduleDir=path.dirname(fileURLToPath(import.meta.url));
   const pluginDir=path.resolve(moduleDir,'../../plugins/evercraft-fabric');
+  const discoveryRoot=path.resolve(discoveryPublicRoot||path.resolve(moduleDir,'../../public'));
   const journalDir=path.resolve(moduleDir,'../../public/journal');
   const demoDir=path.resolve(moduleDir,'../../public/demos');
   const visualStateEphemeral=!String(visualStateDir||'').trim();
@@ -687,6 +690,8 @@ export async function startFabricLocalRuntime({
       if (req.method==='GET' && req.url==='/health') {
         return sendJson(res,200,health());
       }
+
+      if (serveFabricStaticDiscovery(req,res,{publicRoot:discoveryRoot})) return;
 
       if (req.method==='GET' && String(req.url||'').startsWith('/checkout/handoff/')) {
         const parsed=new URL(String(req.url||''),'http://fabric.local');

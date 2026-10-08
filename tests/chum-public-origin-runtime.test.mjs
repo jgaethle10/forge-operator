@@ -10,6 +10,11 @@ const publicRoot = path.join(root, 'public');
 fs.mkdirSync(path.join(publicRoot, 'chum', 'hot'), { recursive: true });
 fs.mkdirSync(path.join(publicRoot, 'chum', 'products', 'infinite-classroom'), { recursive: true });
 fs.mkdirSync(path.join(publicRoot, '.well-known'), { recursive: true });
+fs.mkdirSync(path.join(publicRoot, 'research', 'sample-draft'), { recursive: true });
+fs.writeFileSync(path.join(publicRoot, 'research', 'index.html'), '<meta name="robots" content="noindex,follow"><h1>Research Atlas</h1>\n');
+fs.writeFileSync(path.join(publicRoot, 'research', 'sample-draft', 'index.html'), '<meta name="robots" content="noindex,follow"><h1>Draft</h1>\n');
+fs.writeFileSync(path.join(publicRoot, 'research', 'discovery.json'), '{"publication_state":"review_pending"}\n');
+
 fs.writeFileSync(path.join(root, 'secret.txt'), 'PRIVATE-NOT-PUBLIC\n');
 fs.writeFileSync(path.join(publicRoot, 'chum', 'index.html'), '<h1>CHUM</h1>\n');
 fs.writeFileSync(path.join(publicRoot, 'chum', 'hot', 'index.html'), '<h1>HOT</h1>\n');
@@ -25,6 +30,22 @@ fs.writeFileSync(path.join(publicRoot, 'sitemap.xml'), [
   '</urlset>',
   ''
 ].join('\n'));
+fs.mkdirSync(path.join(publicRoot, 'chum', 'sitemaps'), { recursive: true });
+fs.writeFileSync(path.join(publicRoot, 'chum', 'sitemaps', 'answers.xml'), [
+  '<?xml version="1.0" encoding="UTF-8"?>',
+  '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">',
+  '  <url><loc>/chum/answers/example/</loc></url>',
+  '</urlset>',
+  ''
+].join('\n'));
+fs.writeFileSync(path.join(publicRoot, 'chum', 'sitemaps', 'index.xml'), [
+  '<?xml version="1.0" encoding="UTF-8"?>',
+  '<sitemapindex xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">',
+  '  <sitemap><loc>/chum/sitemaps/answers.xml</loc></sitemap>',
+  '</sitemapindex>',
+  ''
+].join('\n'));
+fs.writeFileSync(path.join(publicRoot, 'chum', 'sitemap.xml'), '<urlset><url><loc>/chum/</loc></url></urlset>\n');
 fs.writeFileSync(path.join(publicRoot, '8aef5f814d0b9c2896c1bc753c65c9bc.txt'), '8aef5f814d0b9c2896c1bc753c65c9bc\n');
 fs.writeFileSync(path.join(publicRoot, 'chum', 'crawl-state.json'), JSON.stringify({
   schema: 'evercraft.chum.crawl-state.v1',
@@ -111,9 +132,37 @@ try {
   assert.match(await chum.text(), /CHUM/);
   assert.match(chum.headers.get('link') || '', /sitemap\.xml/);
 
+  const draftHub = await fetch(runtime.url + '/research/');
+  assert.equal(draftHub.status, 200);
+  assert.equal(draftHub.headers.get('x-robots-tag'), 'noindex, follow');
+  assert.match(await draftHub.text(), /noindex,follow/);
+  const draftArticle = await fetch(runtime.url + '/research/sample-draft/');
+  assert.equal(draftArticle.status, 200);
+  assert.equal(draftArticle.headers.get('x-robots-tag'), 'noindex, follow');
+  const draftMachine = await fetch(runtime.url + '/research/discovery.json');
+  assert.equal(draftMachine.status, 200);
+  assert.equal(draftMachine.headers.get('x-robots-tag'), 'noindex, follow');
+  assert.equal(chum.headers.get('x-robots-tag'), 'index, follow');
+
   const sitemap = await fetch(runtime.url + '/sitemap.xml').then((r) => r.text());
   assert.equal(sitemap.includes(runtime.url + '/chum/'), true);
   assert.equal(sitemap.includes('old.invalid'), false);
+
+  const segmented = await fetch(runtime.url + '/chum/sitemaps/answers.xml').then((r) => r.text());
+  assert.ok(segmented.includes('<loc>' + runtime.url + '/chum/answers/example/</loc>'));
+  assert.doesNotMatch(segmented, /<loc>\/chum\//);
+
+  const nestedIndex = await fetch(runtime.url + '/chum/sitemaps/index.xml').then((r) => r.text());
+  assert.ok(nestedIndex.includes('<loc>' + runtime.url + '/chum/sitemaps/answers.xml</loc>'));
+  const chumSitemap = await fetch(runtime.url + '/chum/sitemap.xml').then((r) => r.text());
+  assert.ok(chumSitemap.includes('<loc>' + runtime.url + '/chum/</loc>'));
+
+  const proxiedSitemap = await requestWithHost('/chum/sitemaps/answers.xml', '127.0.0.1:4310', {
+    'x-forwarded-host': 'fabric.systemiacommandcenters.com',
+    'x-forwarded-proto': 'https',
+  });
+  assert.equal(proxiedSitemap.status, 200);
+  assert.ok(proxiedSitemap.body.includes('https://fabric.systemiacommandcenters.com/chum/answers/example/'));
 
   const robots = await fetch(runtime.url + '/robots.txt').then((r) => r.text());
   assert.equal(robots.includes('Sitemap: ' + runtime.url + '/sitemap.xml'), true);
