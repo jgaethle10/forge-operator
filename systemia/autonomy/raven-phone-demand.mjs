@@ -105,7 +105,8 @@ export function planRavenPhoneDemand(envelope) {
   if (!verified) throw new Error('verified_bridge_envelope_required');
   const { data, secretKey, attestedAt } = verified;
   const fullText = [asText(data.text_content), asText(data.content_summary), asText(data.intent)].filter(Boolean).join(' ').slice(0, 12000);
-  const customerText = asText(data.text_content);
+  // Raven's existing SMS bridge uses content_summary, not text_content. An explicit STOP must never be routed as sales.
+  const customerText = asText(data.text_content) || (data.channel === 'sms' ? asText(data.content_summary) : '');
   let intent, route, lane, confidence;
   if (data.channel === 'sms' && OPT_OUT.test(customerText)) {
     intent = 'opt_out'; route = 'compliance_suppression_review';
