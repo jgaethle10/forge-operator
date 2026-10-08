@@ -73,6 +73,10 @@ Planning and continuity are separate from capability availability. Phone calls, 
 Run `npm run proof:goal-runtime` for the deterministic continuity proof, or `npm run proof:systemia` for the full organism plus goal-runtime proof set.
 
 
+### Snapshot timestamp integrity
+
+`goalSnapshot` computes a current read-only view of readiness and blockers while reporting the **persisted** mission `updated_at`. Querying `goal-cli status` must not manufacture a new mission heartbeat: freshness belongs to accepted state mutations, worker heartbeats, and durable execution checkpoints only. Repeated reads now return the unchanged last-update timestamp and revision until a real write occurs. This is a local source invariant, not evidence of live provider activity.
+
 ### Signed human-gate authorization
 
 A string such as `human:approved` is **not authorization**. For a task with `human_gate_required`, Systemia now needs a signed, bounded human-approval envelope (Ed25519) whose canonical claims bind to the exact `mission_key`, `goal_key`, `work_key`, `systemia.goal.authorize` scope, receipt reference, and issue/expiry times (maximum 24 hours). Signing credentials are **not** part of this repository; an authorized approval issuer must own and protect the private key.
