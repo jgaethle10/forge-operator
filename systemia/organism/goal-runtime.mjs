@@ -318,7 +318,8 @@ export function goalSnapshot(state) {
     next_work_keys: refreshed.next_work_keys,
     blockers: refreshed.blockers,
     evidence_refs: refreshed.evidence_refs,
-    updated_at: refreshed.updated_at,
+    // Read-only snapshots must report the actual persisted modification time.
+    updated_at: state.updated_at,
   };
 }
 

@@ -34,6 +34,8 @@ jobs:
           node-version: 22
       - name: Run deterministic organism and goal-runtime proofs
         run: npm run proof:systemia
+      - name: Snapshot reads cannot fabricate mission heartbeat freshness
+        run: node --test systemia/organism/goal-snapshot-freshness.test.mjs
       - name: Reject competing persistent goal writers and identity swaps
         run: node --test systemia/organism/goal-store-concurrency.test.mjs
       - name: Prove interrupted work is held without replay across restart
