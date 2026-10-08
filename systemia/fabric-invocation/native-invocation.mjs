@@ -135,18 +135,24 @@ export class FabricNativeInvocation {
     try {
       // Authenticate every request, even a duplicate status read. A replay
       // must not turn an expired or revoked credential into a read grant.
-      const auth = await this.authorizationVerifier({
-        actor_ref: actor, tenant_key: tenant, capability_key: capability,
-        mission_key: mission, work_key: work,
-      });
-      const authorizationExpiryMs = Date.parse(String(auth?.expires_at || ''));
-      if (auth?.decision !== 'allow' || !RECEIPT.test(String(auth.receipt_hash || '')) ||
-          auth.actor_ref !== actor || auth.tenant_key !== tenant ||
-          auth.capability_key !== capability ||
-          !Number.isFinite(authorizationExpiryMs) ||
-          authorizationExpiryMs <= this.now().getTime() + this.timeoutMs + 1000) {
-        throw new Error('fabric_authorization_denied_or_expiring');
-      }
+      const verifyAuthority = async () => {
+        const decision = await this.authorizationVerifier({
+          actor_ref: actor, tenant_key: tenant, capability_key: capability,
+          mission_key: mission, work_key: work,
+        });
+        const expiry = Date.parse(String(decision?.expires_at || ''));
+        if (decision?.decision !== 'allow' ||
+            !RECEIPT.test(String(decision.receipt_hash || '')) ||
+            decision.actor_ref !== actor || decision.tenant_key !== tenant ||
+            decision.capability_key !== capability ||
+            (decision.resource_ref != null && decision.resource_ref !== mission) ||
+            !Number.isFinite(expiry) ||
+            expiry <= this.now().getTime() + this.timeoutMs + 1000) {
+          throw new Error('fabric_authorization_denied_or_expiring');
+        }
+        return decision;
+      };
+      let auth = await verifyAuthority();
       const events = readEvents(file);
       if (events.length) {
         if (events[0].detail.binding_hash !== binding) {
@@ -168,6 +174,10 @@ export class FabricNativeInvocation {
           !loaded.allowed_capabilities.includes(capability)) {
         throw new Error('fabric_systemia_admission_not_verified');
       }
+      // Mission admission can require I/O. Passport grants or signed sessions
+      // may be revoked or expire during that wait, so re-check immediately
+      // before the durable dispatch decision. A denied refresh writes no job.
+      auth = await verifyAuthority();
       const correlation = digest(tenant + ':' + mission + ':' + work + ':' + idempotency);
       const initial = {
         binding_hash: binding, correlation_id: correlation,
