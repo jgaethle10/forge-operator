@@ -2,22 +2,39 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import {mkdtemp,rm} from 'node:fs/promises';
 import {join} from 'node:path';
+import {generateKeyPairSync,sign} from 'node:crypto';
+import {humanApprovalMessage} from './goal-human-approval.mjs';
 import {tmpdir} from 'node:os';
-import {createGoalState,admitGoalPlan,recordGoalOutcome} from './goal-runtime.mjs';
+import {createGoalState,admitGoalPlan,recordGoalOutcome,authorizeGoalWork} from './goal-runtime.mjs';
 import {createGoalStateFile,readGoalState} from './goal-store.mjs';
 import {createCapabilityRegistry} from './capability-runtime.mjs';
 import {executePersistedGoalWork} from './goal-durable-dispatch.mjs';
 
 const NOW=new Date('2026-10-07T20:00:00.000Z');
-async function fixture(fn,{workType='research',providerKey='',humanGate=false}={}){
+const {publicKey,privateKey}=generateKeyPairSync('ed25519');
+const trustedPublicKeys={'systemia-human-gate-v1':publicKey.export({type:'spki',format:'pem'})};
+const approvalClaims={
+ schema:'evercraft.goal.human-approval-claims.v1',
+ mission_key:'durable-mission',goal_key:'durable-goal',work_key:'work',
+ scope:'systemia.goal.authorize',approved:true,receipt_ref:'human:approved:durable',
+ issued_at:'2026-10-07T19:55:00.000Z',expires_at:'2026-10-07T20:55:00.000Z',
+};
+const signedApproval={
+ schema:'evercraft.goal.human-approval-envelope.v1',key_id:'systemia-human-gate-v1',
+ claims:approvalClaims,signature_base64:sign(null,humanApprovalMessage(approvalClaims),privateKey).toString('base64')
+};
+async function fixture(fn,{workType='research',providerKey='',humanGate=false,authorize=false}={}){
  const dir=await mkdtemp(join(tmpdir(),'systemia-durable-dispatch-'));
  const file=join(dir,'goal.json');
  try{
-  const state=admitGoalPlan({
+  let state=admitGoalPlan({
    state:createGoalState({goalKey:'durable-goal',missionKey:'durable-mission',
     objective:'One durable attempt before external execution',now:NOW}),
    plan:[{work_key:'work',work_type:workType,provider_key:providerKey,
     human_gate_required:humanGate}],now:NOW,
+  });
+  if(authorize)state=authorizeGoalWork({
+   state,workKey:'work',approval:signedApproval,trustedPublicKeys,now:NOW
   });
   await createGoalStateFile(file,state);
   return await fn(file);
@@ -57,7 +74,7 @@ test('exception after an external call is quarantined, never auto retried',async
     calls++;
     observed=(await readGoalState(file)).tasks[0].status==='executing';
     throw Error('sensitive upstream failed after action');
-   },'bounded')
+   },'read-only')
   });
   assert.equal(observed,true);
   assert.equal(out.result,'provider_reconciliation_required');
@@ -73,12 +90,13 @@ test('exception after an external call is quarantined, never auto retried',async
   assert.equal(calls,1);
  });
 });
-test('adapter self-reported completion for a bounded operation is still quarantined',async()=>{
+test('signed but stateful adapter self-reported completion is still quarantined',async()=>{
  await fixture(async file=>{
   const out=await executePersistedGoalWork({
-   filePath:file,workKey:'work',now:NOW,registry:registry(async()=>({
+   filePath:file,workKey:'work',now:NOW,trustedPublicKeys,
+   registry:registry(async()=>({
     result:'complete',receipt_ref:'claimed:provider:success'
-   }),'bounded')
+   }),'bounded',{humanGate:true})
   });
   assert.equal(out.ok,false);
   const stored=await readGoalState(file);
@@ -88,6 +106,19 @@ test('adapter self-reported completion for a bounded operation is still quaranti
   assert.throws(()=>recordGoalOutcome({
    state:stored,workKey:'work',expectedAttempt:1,result:'retry',now:NOW
   }),/authoritative reconciliation/);
+ },{humanGate:true,authorize:true});
+});
+test('ungated stateful adapter never runs, even with an innocent work type',async()=>{
+ await fixture(async file=>{
+  let called=false;
+  const out=await executePersistedGoalWork({
+   filePath:file,workKey:'work',now:NOW,
+   registry:registry(async()=>{called=true;return {result:'complete',receipt_ref:'bad'};},'bounded')
+  });
+  assert.equal(out.executed,false);
+  assert.equal(out.reason,'stateful_adapter_requires_signed_human_gate');
+  assert.equal(called,false);
+  assert.equal((await readGoalState(file)).tasks[0].status,'pending');
  });
 });
 test('simultaneous request cannot start a duplicate side effect while first adapter runs',async()=>{
