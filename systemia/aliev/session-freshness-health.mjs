@@ -8,13 +8,15 @@ export const HEALTH_SCHEMA='evercraft.rivet.owned-session-freshness-health.v1';
 
 export function freshnessDeploymentPreflight({
   endpoint=process.env.ALIEV_SESSION_REFRESH_URL,
+  trustedOrigin=process.env.ALIEV_SESSION_REFRESH_TRUSTED_ORIGIN,
   machineKey=process.env.SYSTEMIA_MACHINE_KEY,
   ledgerPath=process.env.EVERCRAFT_FRESHNESS_RECEIPT_LEDGER,
   slotStateDir=process.env.EVERCRAFT_FRESHNESS_SLOT_DIR,
   enabled=process.env.EVERCRAFT_FRESHNESS_RESIDENT_ENABLE==='1'
 }={}){
   const missing=[];
-  try{validateRefreshEndpoint(endpoint)}catch{missing.push('refresh_endpoint_invalid_or_missing')}
+  if(!clean(trustedOrigin))missing.push('trusted_refresh_origin_not_pinned');
+  try{validateRefreshEndpoint(endpoint,{trustedOrigin})}catch{missing.push('refresh_endpoint_invalid_or_untrusted')}
   if(!clean(machineKey))missing.push('systemia_machine_identity_not_provisioned');
   if(!clean(ledgerPath)||!path.isAbsolute(clean(ledgerPath)))missing.push('absolute_receipt_ledger_required');
   if(!clean(slotStateDir)||!path.isAbsolute(clean(slotStateDir)))missing.push('absolute_slot_directory_required');
@@ -24,7 +26,7 @@ export function freshnessDeploymentPreflight({
     state:missing.length?'HELD':'CONFIGURED_NOT_YET_LIVE_PROVEN',
     ready_for_live_canary:missing.length===0,
     gaps:missing,
-    configured_endpoint_origin:missing.includes('refresh_endpoint_invalid_or_missing')?null:new URL(endpoint).origin,
+    configured_endpoint_origin:missing.includes('refresh_endpoint_invalid_or_untrusted')?null:new URL(endpoint).origin,
     machine_credential_exposed:false,
     live_invocation_verified:false,
     deployment_attested:false
