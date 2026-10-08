@@ -7,12 +7,14 @@ export {
   applyPulseGridTransaction,
   createPulseGridSession,
   migratePulseGridSession,
+  pulseGridAudioAssetId,
   undoPulseGridReceipt,
   validatePulseGridSession,
 } from './pulsegrid-session.js';
 
 export type {
   PulseGridActor,
+  PulseGridAudioAssetRecord,
   PulseGridClip,
   PulseGridNote,
   PulseGridOperation,
@@ -25,3 +27,17 @@ export type {
 
 export { PulseGridAudioEngine } from './pulsegrid-audio.js';
 export type { PulseGridAudioStatus } from './pulsegrid-audio.js';
+
+export {
+  PulseGridIndexedDbAudioAssetStore,
+  PulseGridMemoryAudioAssetStore,
+  createPulseGridAudioAssetStore,
+  preparePulseGridAudioAsset,
+  sha256Hex,
+  verifyPulseGridAudioAssetBytes,
+} from './pulsegrid-audio-assets.js';
+export type {
+  PulseGridAudioAssetMetadata,
+  PulseGridAudioAssetStore,
+  PulseGridPreparedAudioAsset,
+} from './pulsegrid-audio-assets.js';

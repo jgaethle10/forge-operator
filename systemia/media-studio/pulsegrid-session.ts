@@ -1,5 +1,5 @@
 export const PULSEGRID_SESSION_SCHEMA = 'evercraft.fallen.pulsegrid.session.v1';
-export const PULSEGRID_ENGINE_VERSION = '0.10.0';
+export const PULSEGRID_ENGINE_VERSION = '0.14.0';
 
 export type PulseGridActor = 'human' | 'agent' | 'system' | 'controller';
 
@@ -26,7 +26,26 @@ export type PulseGridClip = {
     volume: number[];
     filter: number[];
   };
+  audio_asset_id: string | null;
   provenance: Record<string, unknown>;
+};
+
+export type PulseGridAudioAssetRecord = {
+  id: string;
+  kind: 'audio';
+  content_hash: string;
+  content_hash_algorithm: 'sha256';
+  source_filename: string | null;
+  mime_type: string;
+  byte_length: number;
+  duration_seconds: number | null;
+  sample_rate: number | null;
+  channel_count: number | null;
+  created_at: string;
+  created_by: PulseGridActor;
+  provenance: Record<string, unknown>;
+  rights: Record<string, unknown>;
+  parent_asset_ids: string[];
 };
 
 export type PulseGridTrack = {
@@ -70,6 +89,9 @@ export type PulseGridSession = {
     time_signature: [number, number];
   };
   active_scene: number;
+  assets: {
+    audio: PulseGridAudioAssetRecord[];
+  };
   tracks: PulseGridTrack[];
   arrangement: Array<Array<number | null>>;
   receipts: PulseGridReceipt[];
@@ -80,6 +102,8 @@ export type PulseGridOperation =
   | { type: 'transport.set_swing'; swing: number }
   | { type: 'track.set_filter'; track_id: string; filter_hz: number }
   | { type: 'track.set_delay_mix'; track_id: string; mix: number }
+  | { type: 'asset.register_audio'; asset: PulseGridAudioAssetRecord }
+  | { type: 'clip.set_audio_asset'; track_id: string; scene: number; asset_id: string | null }
   | { type: 'clip.set_bars'; track_id: string; scene: number; bars: number }
   | { type: 'clip.set_step'; track_id: string; scene: number; step: number; velocity: number }
   | { type: 'clip.fork_variation'; track_id: string; source_scene: number; destination_scene: number; name?: string }
@@ -117,6 +141,50 @@ export type PulseGridTransactionInput = {
 export const PULSEGRID_STEPS_PER_BAR = 16;
 export const PULSEGRID_MAX_CLIP_BARS = 16;
 const SCENES = 4;
+const SHA256_HEX = /^[a-f0-9]{64}$/;
+
+export function pulseGridAudioAssetId(contentHash: string) {
+  const normalized = String(contentHash || '').trim().toLowerCase();
+  if (!SHA256_HEX.test(normalized)) throw new Error('PulseGrid audio content hash must be a 64-character SHA-256 hex digest.');
+  return 'audio:sha256:' + normalized;
+}
+
+function normalizeAudioAsset(raw: any): PulseGridAudioAssetRecord | null {
+  const contentHash = String(raw?.content_hash || '').trim().toLowerCase();
+  if (!SHA256_HEX.test(contentHash)) return null;
+  const id = pulseGridAudioAssetId(contentHash);
+  const actor: PulseGridActor =
+    raw?.created_by === 'human' || raw?.created_by === 'agent' || raw?.created_by === 'controller'
+      ? raw.created_by
+      : 'system';
+  const optionalNumber = (value: unknown, integer = false) => {
+    if (value === null || value === undefined || value === '') return null;
+    const number = Number(value);
+    if (!Number.isFinite(number) || number < 0) return null;
+    return integer ? Math.round(number) : number;
+  };
+  return {
+    id,
+    kind: 'audio',
+    content_hash: contentHash,
+    content_hash_algorithm: 'sha256',
+    source_filename: typeof raw?.source_filename === 'string' && raw.source_filename.trim()
+      ? raw.source_filename.trim().slice(0, 512)
+      : null,
+    mime_type: String(raw?.mime_type || 'application/octet-stream').trim().slice(0, 255) || 'application/octet-stream',
+    byte_length: Math.max(0, Math.round(Number(raw?.byte_length) || 0)),
+    duration_seconds: optionalNumber(raw?.duration_seconds),
+    sample_rate: optionalNumber(raw?.sample_rate, true),
+    channel_count: optionalNumber(raw?.channel_count, true),
+    created_at: String(raw?.created_at || '1970-01-01T00:00:00.000Z'),
+    created_by: actor,
+    provenance: raw?.provenance && typeof raw.provenance === 'object' ? { ...raw.provenance } : {},
+    rights: raw?.rights && typeof raw.rights === 'object' ? { ...raw.rights } : {},
+    parent_asset_ids: Array.isArray(raw?.parent_asset_ids)
+      ? [...new Set(raw.parent_asset_ids.map((value: unknown) => String(value || '')).filter(Boolean))].slice(0, 128)
+      : [],
+  };
+}
 
 function clamp(value: number, min: number, max: number) {
   return Math.max(min, Math.min(max, value));
@@ -195,6 +263,7 @@ function migrateClip(raw: any, fallbackId: string): PulseGridClip {
       volume: vector(raw?.automation?.volume, 1, clipSteps).map((value) => clamp(value, 0, 1)),
       filter: vector(raw?.automation?.filter, 1, clipSteps).map((value) => clamp(value, 0, 1)),
     },
+    audio_asset_id: typeof raw?.audio_asset_id === 'string' && raw.audio_asset_id ? raw.audio_asset_id : null,
     provenance: raw?.provenance && typeof raw.provenance === 'object'
       ? { ...raw.provenance }
       : { kind: 'migrated' },
@@ -236,6 +305,7 @@ export function createPulseGridSession(projectName = 'Untitled Session'): PulseG
     project_name: projectName.trim() || 'Untitled Session',
     transport: { bpm: 120, swing: 0, time_signature: [4, 4] },
     active_scene: 0,
+    assets: { audio: [] },
     tracks,
     arrangement: tracks.map(() => Array.from({ length: 16 }, () => null)),
     receipts: [],
@@ -255,6 +325,15 @@ export function migratePulseGridSession(raw: any): PulseGridSession {
     ],
   };
   base.active_scene = clamp(Math.round(Number(raw?.active_scene ?? raw?.activeScene ?? 0)), 0, SCENES - 1);
+  base.assets.audio = Array.isArray(raw?.assets?.audio)
+    ? raw.assets.audio
+        .map((asset: any) => normalizeAudioAsset(asset))
+        .filter((asset: PulseGridAudioAssetRecord | null): asset is PulseGridAudioAssetRecord => Boolean(asset))
+        .filter((asset: PulseGridAudioAssetRecord, index: number, assets: PulseGridAudioAssetRecord[]) =>
+          assets.findIndex((candidate) => candidate.id === asset.id) === index,
+        )
+        .slice(0, 4096)
+    : [];
 
   if (Array.isArray(raw?.tracks)) {
     base.tracks = raw.tracks.slice(0, 32).map((track: any, trackIndex: number) => {
@@ -284,6 +363,15 @@ export function migratePulseGridSession(raw: any): PulseGridSession {
     });
   }
 
+  const migratedAssetIds = new Set(base.assets.audio.map((asset) => asset.id));
+  for (const track of base.tracks) {
+    for (const clip of track.clips) {
+      if (track.type !== 'audio' || !clip.audio_asset_id || !migratedAssetIds.has(clip.audio_asset_id)) {
+        clip.audio_asset_id = null;
+      }
+    }
+  }
+
   if (Array.isArray(raw?.arrangement)) {
     base.arrangement = base.tracks.map((_, trackIndex) =>
       Array.from({ length: 16 }, (_, bar) => {
@@ -306,6 +394,23 @@ export function validatePulseGridSession(session: PulseGridSession) {
   if (session.schema !== PULSEGRID_SESSION_SCHEMA) errors.push('schema');
   if (!session.session_id) errors.push('session_id');
   if (!Number.isFinite(session.transport?.bpm) || session.transport.bpm < 20 || session.transport.bpm > 400) errors.push('transport.bpm');
+  if (!Array.isArray(session.assets?.audio)) errors.push('assets.audio');
+  const assetIds = new Set<string>();
+  for (const asset of session.assets?.audio || []) {
+    if (asset.kind !== 'audio') errors.push('asset.kind');
+    if (asset.content_hash_algorithm !== 'sha256' || !SHA256_HEX.test(asset.content_hash)) errors.push(`asset:${asset.id}.content_hash`);
+    let expectedId = '';
+    try { expectedId = pulseGridAudioAssetId(asset.content_hash); } catch {}
+    if (!asset.id || asset.id !== expectedId || assetIds.has(asset.id)) errors.push(`asset:${asset.id}.id`);
+    assetIds.add(asset.id);
+    if (!Number.isInteger(asset.byte_length) || asset.byte_length < 0) errors.push(`asset:${asset.id}.byte_length`);
+    if (asset.duration_seconds !== null && (!Number.isFinite(asset.duration_seconds) || asset.duration_seconds < 0)) errors.push(`asset:${asset.id}.duration_seconds`);
+    if (asset.sample_rate !== null && (!Number.isInteger(asset.sample_rate) || asset.sample_rate <= 0)) errors.push(`asset:${asset.id}.sample_rate`);
+    if (asset.channel_count !== null && (!Number.isInteger(asset.channel_count) || asset.channel_count <= 0)) errors.push(`asset:${asset.id}.channel_count`);
+    if (!Array.isArray(asset.parent_asset_ids) || asset.parent_asset_ids.some((id) => typeof id !== 'string' || !id.startsWith('audio:sha256:'))) {
+      errors.push(`asset:${asset.id}.parent_asset_ids`);
+    }
+  }
   if (!Array.isArray(session.tracks) || session.tracks.length === 0) errors.push('tracks');
   for (const track of session.tracks || []) {
     if (!track.id) errors.push('track.id');
@@ -318,6 +423,10 @@ export function validatePulseGridSession(session: PulseGridSession) {
       if (clip.microtiming.length !== expectedSteps) errors.push(`${track.id}.${clip.id}.microtiming_length`);
       if (clip.automation.volume.length !== expectedSteps) errors.push(`${track.id}.${clip.id}.automation.volume`);
       if (clip.automation.filter.length !== expectedSteps) errors.push(`${track.id}.${clip.id}.automation.filter`);
+      if (clip.audio_asset_id !== null) {
+        if (track.type !== 'audio') errors.push(`${track.id}.${clip.id}.audio_asset_track_type`);
+        if (!assetIds.has(clip.audio_asset_id)) errors.push(`${track.id}.${clip.id}.audio_asset_id`);
+      }
       if (clip.probabilities.some((value) => value < 0 || value > 1)) errors.push(`${track.id}.${clip.id}.probabilities`);
       const noteIds = new Set<string>();
       for (const note of clip.notes) {
@@ -341,6 +450,7 @@ function sessionStateSnapshot(session: PulseGridSession) {
     project_name: session.project_name,
     transport: structuredClone(session.transport),
     active_scene: session.active_scene,
+    assets: structuredClone(session.assets),
     tracks: structuredClone(session.tracks),
     arrangement: structuredClone(session.arrangement),
   };
@@ -350,6 +460,7 @@ function restoreSessionState(session: PulseGridSession, snapshot: any) {
   session.project_name = String(snapshot?.project_name || session.project_name);
   session.transport = structuredClone(snapshot?.transport || session.transport);
   session.active_scene = Number.isInteger(snapshot?.active_scene) ? snapshot.active_scene : session.active_scene;
+  session.assets = structuredClone(snapshot?.assets || session.assets);
   session.tracks = structuredClone(snapshot?.tracks || session.tracks);
   session.arrangement = structuredClone(snapshot?.arrangement || session.arrangement);
 }
@@ -420,6 +531,33 @@ export function applyPulseGridOperation(
     track.delayMix = clamp(operation.mix, 0, 0.65);
     after = track.delayMix;
     targets = [`track:${track.id}.delayMix`];
+  } else if (operation.type === 'asset.register_audio') {
+    const asset = normalizeAudioAsset(operation.asset);
+    if (!asset) throw new Error('PulseGrid audio asset has an invalid SHA-256 content hash.');
+    const existingIndex = session.assets.audio.findIndex((candidate) => candidate.id === asset.id);
+    if (existingIndex >= 0) {
+      const existing = session.assets.audio[existingIndex];
+      if (JSON.stringify(existing) !== JSON.stringify(asset)) {
+        throw new Error('PulseGrid audio asset content hash is already registered with different metadata: ' + asset.id);
+      }
+      before = structuredClone(existing);
+      after = structuredClone(existing);
+    } else {
+      before = null;
+      session.assets.audio.push(asset);
+      after = structuredClone(asset);
+    }
+    targets = [`asset:${asset.id}`];
+  } else if (operation.type === 'clip.set_audio_asset') {
+    const { track, clip } = getClip(session, operation.track_id, operation.scene);
+    if (track.type !== 'audio') throw new Error('PulseGrid audio assets can only be bound to audio tracks.');
+    if (operation.asset_id !== null && !session.assets.audio.some((asset) => asset.id === operation.asset_id)) {
+      throw new Error('Unknown PulseGrid audio asset: ' + String(operation.asset_id));
+    }
+    before = clip.audio_asset_id;
+    clip.audio_asset_id = operation.asset_id;
+    after = clip.audio_asset_id;
+    targets = [`clip:${clip.id}.audio_asset_id`];
   } else if (operation.type === 'clip.set_bars') {
     const { clip } = getClip(session, operation.track_id, operation.scene);
     before = structuredClone(clip);
@@ -585,6 +723,21 @@ export function undoPulseGridReceipt(
     getTrack(session, operation.track_id).filterHz = Number(originalReceipt.before);
   } else if (operation.type === 'track.set_delay_mix') {
     getTrack(session, operation.track_id).delayMix = Number(originalReceipt.before);
+  } else if (operation.type === 'asset.register_audio') {
+    const registered = originalReceipt.after as PulseGridAudioAssetRecord | null;
+    const assetId = registered?.id || operation.asset.id;
+    const index = session.assets.audio.findIndex((asset) => asset.id === assetId);
+    if (originalReceipt.before === null) {
+      if (index < 0) throw new Error('PulseGrid registered audio asset no longer exists: ' + assetId);
+      session.assets.audio.splice(index, 1);
+    } else {
+      const restored = structuredClone(originalReceipt.before as PulseGridAudioAssetRecord);
+      if (index >= 0) session.assets.audio[index] = restored;
+      else session.assets.audio.push(restored);
+    }
+  } else if (operation.type === 'clip.set_audio_asset') {
+    const { clip } = getClip(session, operation.track_id, operation.scene);
+    clip.audio_asset_id = originalReceipt.before === null ? null : String(originalReceipt.before);
   } else if (operation.type === 'clip.set_bars') {
     const track = getTrack(session, operation.track_id);
     if (!track.clips[operation.scene]) throw new Error('Unknown PulseGrid scene: ' + String(operation.scene));

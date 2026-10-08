@@ -37,7 +37,7 @@ test('PulseGrid migrates older sparse browser sessions into the canonical graph'
       clips:[{id:'keys-scene-1',steps:[1,0,0,0]}]
     }]
   });
-  assert.equal(migrated.version,'0.10.0');
+  assert.equal(migrated.version,'0.14.0');
   assert.equal(migrated.transport.bpm,128);
   assert.equal(migrated.tracks[0].clips[0].bars,1);
   assert.equal(migrated.tracks[0].clips[0].steps.length,16);
