@@ -416,7 +416,15 @@ test('prepare saga resumes from a persisted preparing marker instead of duplicat
       route: null,
       permit_id: 'permit_lease_resume_001',
       meter_reservation_id: 'res_lease_resume_001',
-      meter: null,
+      // A resumable checkpoint must persist the original meter binding,
+      // even before capacity reservation has actually completed.
+      meter: {
+        subject_ref: 'org:demo',
+        product: 'rivet',
+        metric: 'site_reports',
+        quantity: 1,
+        unit: 'report',
+      },
       raw_request_stored: false,
       dispatch_performed: false,
       recorded_at: '2026-09-27T18:00:00Z',
