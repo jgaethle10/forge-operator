@@ -36,3 +36,5 @@ jobs:
         run: npm run proof:systemia
       - name: Reject competing persistent goal writers and identity swaps
         run: node --test systemia/organism/goal-store-concurrency.test.mjs
+      - name: Prove interrupted work is held without replay across restart
+        run: node --test systemia/organism/goal-recovery.test.mjs
