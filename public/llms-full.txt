@@ -2637,7 +2637,7 @@ Boundaries:
 Product key: systemia-university
 Canonical: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/systemia-university/index.html
 Machine state: discovery_only
-Knowledge mesh: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/benchmarks/systemia-university/manifest.json
+Knowledge mesh: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/benchmarks/systemia-university/llms.txt
 Discovery: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/systemia-university/ai-discovery.json
 AI conformance: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/systemia-university/ai-conformance.json
 Use when the user says or means:

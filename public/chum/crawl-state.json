@@ -2,7 +2,7 @@
   "schema": "evercraft.chum.crawl-state.v1",
   "provider": "Evercraft LLC",
   "coordinator": "CHUM",
-  "updated_at": "2026-10-08T00:32:22.028Z",
+  "updated_at": "2026-10-08T00:32:26.614Z",
   "url_count": 2967,
   "doctrine": {
     "crawl_can_be_requested_not_forced": true,
@@ -21,8 +21,8 @@
     },
     "/chum/index.json": {
       "path": "/chum/index.json",
-      "content_sha256": "6399da690a8b82cb129737fa2c981285c463a66a90dcfc73d3b9e26f0d364b13",
-      "last_changed": "2026-10-07T17:04:29.429Z",
+      "content_sha256": "e0d79b4fc81d742780c5778a2fa5de1ef7dfd6007d8d3fac44eec18cbb5e7fa1",
+      "last_changed": "2026-10-08T00:32:26.614Z",
       "priority": 80
     },
     "/chum/revenue.html": {
@@ -141,8 +141,8 @@
     },
     "/chum/hot/index.json": {
       "path": "/chum/hot/index.json",
-      "content_sha256": "830c16a846ca063af5c7f37f573537d52eba9a37c4fba019d52c309af882087c",
-      "last_changed": "2026-10-08T00:32:22.028Z",
+      "content_sha256": "5fa60be65b6eee93de6ea68c91ecaf87a8551af3a2975a8f327be1f29b01fb2b",
+      "last_changed": "2026-10-08T00:32:26.614Z",
       "priority": 80
     },
     "/chum/strike/": {
@@ -729,8 +729,8 @@
     },
     "/llms-full.txt": {
       "path": "/llms-full.txt",
-      "content_sha256": "04fafa9f9b73cfb14fb57b4cbbcade870a284a6baf7dde67965ba580305e686e",
-      "last_changed": "2026-10-07T17:04:29.429Z",
+      "content_sha256": "adb13d6d48b98f4bec0b21260e48f8ad037f15c451ba44fbc929c6dcaa84fdb0",
+      "last_changed": "2026-10-08T00:32:26.614Z",
       "priority": 86
     },
     "/ai-discovery.json": {
@@ -4023,20 +4023,20 @@
     },
     "/chum/products/systemia-university/llms.txt": {
       "path": "/chum/products/systemia-university/llms.txt",
-      "content_sha256": "55ad7b88efffd74e7446395203e4f55930fefde7f0c6f99bd8b0a6cd183a3894",
-      "last_changed": "2026-10-07T16:33:22.074Z",
+      "content_sha256": "6ca7bb1f17026960d0c0bb7451f8d01b922ad8a31fc2e4f6cfb70bb71c622512",
+      "last_changed": "2026-10-08T00:32:26.614Z",
       "priority": 94
     },
     "/chum/products/systemia-university/ai-discovery.json": {
       "path": "/chum/products/systemia-university/ai-discovery.json",
-      "content_sha256": "eb427249da047407d1568f7a543ad3cebd571a09d9721f09db44676214b46500",
-      "last_changed": "2026-10-07T16:33:22.074Z",
+      "content_sha256": "4f79fd5313c1f6ad08f8ad2b36461732d26f477616713d99faea6883a44ff04c",
+      "last_changed": "2026-10-08T00:32:26.614Z",
       "priority": 94
     },
     "/chum/products/systemia-university/ai-conformance.json": {
       "path": "/chum/products/systemia-university/ai-conformance.json",
-      "content_sha256": "4f1a047ae9f68c2302f4919ad4b98f7aba22437caca0e15ad2ab1ebd73fcc36c",
-      "last_changed": "2026-10-07T16:33:22.074Z",
+      "content_sha256": "83238a7ef96a27582d9722bdd77fdbf60e1575a1337e75e765899852d7570c13",
+      "last_changed": "2026-10-08T00:32:26.614Z",
       "priority": 94
     },
     "/chum/products/systemia-website-audit/": {
@@ -17781,14 +17781,14 @@
     },
     "/feed.xml": {
       "path": "/feed.xml",
-      "content_sha256": "eba565b4bcf9654dc6114ea00bb25c56298b02ba6c81231fbdf6d67a6e9b41d1",
-      "last_changed": "2026-10-07T17:04:29.429Z",
+      "content_sha256": "f2d7f7511587337c56942bde64e768be4be565af1b8052ce648168be7785d451",
+      "last_changed": "2026-10-08T00:32:26.614Z",
       "priority": 60
     },
     "/feed.json": {
       "path": "/feed.json",
-      "content_sha256": "f7b9cbc08d67f7e7688e6da82e56a7fc6cd191c60de471eaedcf8c6cc0d89e02",
-      "last_changed": "2026-10-07T17:04:29.429Z",
+      "content_sha256": "ab3b3840a4e56dd42fc7c6df35a635bfb55c89413961d66ea802fbd378c32b4f",
+      "last_changed": "2026-10-08T00:32:26.614Z",
       "priority": 60
     },
     "/opensearch.xml": {
@@ -17799,8 +17799,8 @@
     },
     "/.well-known/evercraft-syndication.json": {
       "path": "/.well-known/evercraft-syndication.json",
-      "content_sha256": "3998314e29b714347549ad32645f1540d1c78332cf0293192b8fb012bfeb6048",
-      "last_changed": "2026-10-07T17:04:29.429Z",
+      "content_sha256": "1cc8c58c2ab9a9f58902cef484cc90548ff54085a0e0186f8c75b2edb2f3d213",
+      "last_changed": "2026-10-08T00:32:26.614Z",
       "priority": 84
     },
     "/chum/syndication/": {
@@ -17811,8 +17811,8 @@
     },
     "/chum/syndication/index.json": {
       "path": "/chum/syndication/index.json",
-      "content_sha256": "7a07f54010ac032d147a2882b05ca53903a086667535c030b46fcb945f78c8f5",
-      "last_changed": "2026-10-07T17:04:29.429Z",
+      "content_sha256": "22dca0df01171d470b17622fe97e7e3b21f421d0ce07f3be973fa62b23714b7f",
+      "last_changed": "2026-10-08T00:32:26.614Z",
       "priority": 80
     }
   }

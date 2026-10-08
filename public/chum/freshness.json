@@ -2,7 +2,7 @@
   "schema": "evercraft.chum.crawl-pressure.v1",
   "provider": "Evercraft LLC",
   "coordinator": "CHUM",
-  "updated_at": "2026-10-08T00:32:22.028Z",
+  "updated_at": "2026-10-08T00:32:26.614Z",
   "purpose": "Content-hash-backed freshness signals for public Evercraft discovery surfaces. A freshness signal requests attention; it does not prove indexing, ranking, recommendation, citation or provider pickup.",
   "indexnow": {
     "supported": true,
@@ -11,27 +11,117 @@
   },
   "latest_change_batch": [
     {
-      "path": "/chum/crawler-radar.json",
-      "last_changed": "2026-10-08T00:32:22.028Z",
-      "priority": 80
+      "path": "/chum/products/systemia-university/ai-conformance.json",
+      "last_changed": "2026-10-08T00:32:26.614Z",
+      "priority": 94
     },
     {
-      "path": "/chum/crawler-radar.txt",
-      "last_changed": "2026-10-08T00:32:22.028Z",
-      "priority": 80
+      "path": "/chum/products/systemia-university/ai-discovery.json",
+      "last_changed": "2026-10-08T00:32:26.614Z",
+      "priority": 94
+    },
+    {
+      "path": "/chum/products/systemia-university/llms.txt",
+      "last_changed": "2026-10-08T00:32:26.614Z",
+      "priority": 94
+    },
+    {
+      "path": "/llms-full.txt",
+      "last_changed": "2026-10-08T00:32:26.614Z",
+      "priority": 86
+    },
+    {
+      "path": "/.well-known/evercraft-syndication.json",
+      "last_changed": "2026-10-08T00:32:26.614Z",
+      "priority": 84
     },
     {
       "path": "/chum/hot/index.json",
-      "last_changed": "2026-10-08T00:32:22.028Z",
+      "last_changed": "2026-10-08T00:32:26.614Z",
       "priority": 80
     },
     {
-      "path": "/chum/strike/index.json",
-      "last_changed": "2026-10-08T00:32:22.028Z",
+      "path": "/chum/index.json",
+      "last_changed": "2026-10-08T00:32:26.614Z",
       "priority": 80
+    },
+    {
+      "path": "/chum/syndication/index.json",
+      "last_changed": "2026-10-08T00:32:26.614Z",
+      "priority": 80
+    },
+    {
+      "path": "/feed.json",
+      "last_changed": "2026-10-08T00:32:26.614Z",
+      "priority": 60
+    },
+    {
+      "path": "/feed.xml",
+      "last_changed": "2026-10-08T00:32:26.614Z",
+      "priority": 60
     }
   ],
   "recent_surfaces": [
+    {
+      "path": "/chum/products/systemia-university/ai-conformance.json",
+      "url": "/chum/products/systemia-university/ai-conformance.json",
+      "last_changed": "2026-10-08T00:32:26.614Z",
+      "priority": 94
+    },
+    {
+      "path": "/chum/products/systemia-university/ai-discovery.json",
+      "url": "/chum/products/systemia-university/ai-discovery.json",
+      "last_changed": "2026-10-08T00:32:26.614Z",
+      "priority": 94
+    },
+    {
+      "path": "/chum/products/systemia-university/llms.txt",
+      "url": "/chum/products/systemia-university/llms.txt",
+      "last_changed": "2026-10-08T00:32:26.614Z",
+      "priority": 94
+    },
+    {
+      "path": "/llms-full.txt",
+      "url": "/llms-full.txt",
+      "last_changed": "2026-10-08T00:32:26.614Z",
+      "priority": 86
+    },
+    {
+      "path": "/.well-known/evercraft-syndication.json",
+      "url": "/.well-known/evercraft-syndication.json",
+      "last_changed": "2026-10-08T00:32:26.614Z",
+      "priority": 84
+    },
+    {
+      "path": "/chum/hot/index.json",
+      "url": "/chum/hot/index.json",
+      "last_changed": "2026-10-08T00:32:26.614Z",
+      "priority": 80
+    },
+    {
+      "path": "/chum/index.json",
+      "url": "/chum/index.json",
+      "last_changed": "2026-10-08T00:32:26.614Z",
+      "priority": 80
+    },
+    {
+      "path": "/chum/syndication/index.json",
+      "url": "/chum/syndication/index.json",
+      "last_changed": "2026-10-08T00:32:26.614Z",
+      "priority": 80
+    },
+    {
+      "path": "/feed.json",
+      "url": "/feed.json",
+      "last_changed": "2026-10-08T00:32:26.614Z",
+      "priority": 60
+    },
+    {
+      "path": "/feed.xml",
+      "url": "/feed.xml",
+      "last_changed": "2026-10-08T00:32:26.614Z",
+      "priority": 60
+    },
     {
       "path": "/chum/crawler-radar.json",
       "url": "/chum/crawler-radar.json",
@@ -41,12 +131,6 @@
     {
       "path": "/chum/crawler-radar.txt",
       "url": "/chum/crawler-radar.txt",
-      "last_changed": "2026-10-08T00:32:22.028Z",
-      "priority": 80
-    },
-    {
-      "path": "/chum/hot/index.json",
-      "url": "/chum/hot/index.json",
       "last_changed": "2026-10-08T00:32:22.028Z",
       "priority": 80
     },
@@ -369,12 +453,6 @@
       "priority": 86
     },
     {
-      "path": "/llms-full.txt",
-      "url": "/llms-full.txt",
-      "last_changed": "2026-10-07T17:04:29.429Z",
-      "priority": 86
-    },
-    {
       "path": "/.well-known/evercraft-agent-directory.json",
       "url": "/.well-known/evercraft-agent-directory.json",
       "last_changed": "2026-10-07T17:04:29.429Z",
@@ -383,12 +461,6 @@
     {
       "path": "/.well-known/evercraft-discovery.json",
       "url": "/.well-known/evercraft-discovery.json",
-      "last_changed": "2026-10-07T17:04:29.429Z",
-      "priority": 84
-    },
-    {
-      "path": "/.well-known/evercraft-syndication.json",
-      "url": "/.well-known/evercraft-syndication.json",
       "last_changed": "2026-10-07T17:04:29.429Z",
       "priority": 84
     },
@@ -417,12 +489,6 @@
       "priority": 80
     },
     {
-      "path": "/chum/index.json",
-      "url": "/chum/index.json",
-      "last_changed": "2026-10-07T17:04:29.429Z",
-      "priority": 80
-    },
-    {
       "path": "/chum/pain-index.json",
       "url": "/chum/pain-index.json",
       "last_changed": "2026-10-07T17:04:29.429Z",
@@ -447,26 +513,8 @@
       "priority": 80
     },
     {
-      "path": "/chum/syndication/index.json",
-      "url": "/chum/syndication/index.json",
-      "last_changed": "2026-10-07T17:04:29.429Z",
-      "priority": 80
-    },
-    {
       "path": "/ai-discovery.json",
       "url": "/ai-discovery.json",
-      "last_changed": "2026-10-07T17:04:29.429Z",
-      "priority": 60
-    },
-    {
-      "path": "/feed.json",
-      "url": "/feed.json",
-      "last_changed": "2026-10-07T17:04:29.429Z",
-      "priority": 60
-    },
-    {
-      "path": "/feed.xml",
-      "url": "/feed.xml",
       "last_changed": "2026-10-07T17:04:29.429Z",
       "priority": 60
     },
@@ -617,24 +665,6 @@
     {
       "path": "/chum/products/systemia-university/",
       "url": "/chum/products/systemia-university/",
-      "last_changed": "2026-10-07T16:33:22.074Z",
-      "priority": 94
-    },
-    {
-      "path": "/chum/products/systemia-university/ai-conformance.json",
-      "url": "/chum/products/systemia-university/ai-conformance.json",
-      "last_changed": "2026-10-07T16:33:22.074Z",
-      "priority": 94
-    },
-    {
-      "path": "/chum/products/systemia-university/ai-discovery.json",
-      "url": "/chum/products/systemia-university/ai-discovery.json",
-      "last_changed": "2026-10-07T16:33:22.074Z",
-      "priority": 94
-    },
-    {
-      "path": "/chum/products/systemia-university/llms.txt",
-      "url": "/chum/products/systemia-university/llms.txt",
       "last_changed": "2026-10-07T16:33:22.074Z",
       "priority": 94
     },
