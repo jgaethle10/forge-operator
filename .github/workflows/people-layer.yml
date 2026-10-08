@@ -6,6 +6,7 @@ on:
       - 'systemia/people/**'
       - 'systemia/migrations/base44-exit/people-layer-*'
       - 'systemia/compute/runtime-node.mjs'
+      - 'systemia/yard/operator.mjs'
       - 'systemia/core/resident-services.json'
       - 'systemia/core/supervisor.evercraft.compute.json'
       - 'systemia/organism/people-layer-edge-*'
