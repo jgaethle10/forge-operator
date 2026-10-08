@@ -96,6 +96,7 @@ export async function startPeopleLayerRuntime({
     };
   }
   const instanceId='people_'+randomUUID();
+  let deploymentReceiptRef=null;
   const runtime=createPeopleRuntime({stateDir:path.resolve(stateDir),trustedMailDeliveryPublicKeys});
   const htmlFile=path.join(WEB_ROOT,'index.html');
   const cssFile=path.join(WEB_ROOT,'style.css');
@@ -116,6 +117,7 @@ export async function startPeopleLayerRuntime({
           runtime:'Evercraft Compute',
           public_ui:true,
           instance_id:instanceId,
+          deployment_receipt_ref:deploymentReceiptRef,
           operator_auth:'private_token_file',
           public_person_token_flows:true,
           base44_runtime_dependency:false,
@@ -276,6 +278,12 @@ export async function startPeopleLayerRuntime({
         throw new Error('people_runtime_identity_mismatch');
       }
       return health;
+    },
+    setDeploymentReceipt(value){
+      const ref=String(value||'').trim();
+      if(!/^[a-f0-9]{64}$/i.test(ref))throw new Error('people_deployment_receipt_invalid');
+      deploymentReceiptRef=ref;
+      return {ok:true,service:'evercraft-people-layer',instance_id:instanceId,deployment_receipt_ref:ref};
     },
     async close(){
       await new Promise(resolve=>server.close(()=>resolve()));
