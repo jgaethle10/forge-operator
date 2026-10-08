@@ -290,7 +290,7 @@
     "saban:golem:preflight": "node systemia/saban/golem-requestor/preflight.mjs",
     "proof:saban-faie": "node systemia/saban/multiplier.mjs --software faie --agents 12 --workers 4 --execute --reconcile",
     "test:fabric-faie-native": "node --test tests/fabric-faie-native-runtime.test.mjs",
-    "test:world-forge": "node --import tsx --test systemia/media-studio/world-forge*.test.ts src/world-forge-viewport-tools.test.ts src/world-forge-runtime-view.test.ts src/world-forge-picking.test.ts src/world-forge-viewport-mesh.test.ts"
+    "test:world-forge": "node --import tsx --test systemia/media-studio/world-forge*.test.ts src/world-forge-viewport-tools.test.ts src/world-forge-runtime-view.test.ts src/world-forge-picking.test.ts src/world-forge-viewport-mesh.test.ts src/world-engine-webgpu-client.test.ts"
   },
   "dependencies": {
     "@google/genai": "^2.4.0",
