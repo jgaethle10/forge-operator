@@ -154,11 +154,17 @@ export function createUniversityBenchmarkService({benchmarkRoot}={}){
   };
 }
 
-export function registerUniversityBenchmarkRoutes(app,{
-  benchmarkRoot,
-  publicEvaluateLimiter=null
-}={}){
+/**
+ * @param {any} app
+ * @param {{ benchmarkRoot: string, publicEvaluateLimiter?: Function | null }} options
+ */
+export function registerUniversityBenchmarkRoutes(app,options){
   if(!app) throw new Error('app required');
+  if(!options?.benchmarkRoot) throw new Error('benchmarkRoot required');
+  const {
+    benchmarkRoot,
+    publicEvaluateLimiter=null
+  }=options;
   const service=createUniversityBenchmarkService({benchmarkRoot});
 
   app.get('/api/systemia-university/benchmarks',(_req,res)=>{
