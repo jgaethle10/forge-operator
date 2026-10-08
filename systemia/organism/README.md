@@ -77,6 +77,8 @@ Run `npm run proof:goal-runtime` for the deterministic continuity proof, or `npm
 
 `goal-store.mjs` provides an atomic JSON-file persistence adapter with optimistic revision checks. It is intentionally storage-simple so Yard Operator or another runtime adapter can swap in a database later without changing the goal-state contract. The file adapter survives process and chat boundaries and rejects stale writers instead of silently overwriting newer mission state.
 
+Concurrent writers now take a cross-process exclusive `<state-file>.lock` directory before checking the stored revision and atomically replacing the JSON. Only one writer can commit a given revision; competing writers must reload the latest goal and retry their *decision*, not replay the old state. An existing lock fails closed. If a worker crashes leaving an orphaned lock, the owning operations supervisor must first verify no writer is alive and inspect the saved JSON before explicitly removing that specific lock directory. Do not implement blind age-based lock deletion or assume a file rename is a verified customer outcome. This adapter protects local file coordination; it does **not** establish multi-host consensus or durable Lineage production persistence.
+
 `goal-cli.mjs` exposes the runtime as a small operator surface:
 
 ```bash
