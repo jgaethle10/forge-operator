@@ -74,7 +74,7 @@ RELEASE_ID="${SOURCE_REF,,}"
 RELEASE_DIR="$RELEASES_ROOT/$RELEASE_ID"
 
 if [[ ! -d "$RELEASE_DIR" ]]; then
-  STAGE_DIR="$RELEASES_ROOT/.stage-$RELEASE_ID-$"
+  STAGE_DIR="$RELEASES_ROOT/.stage-$RELEASE_ID-$RANDOM-$RANDOM"
   rm -rf "$STAGE_DIR"
   mkdir -p "$STAGE_DIR"
   cp -a "$SOURCE_ROOT/." "$STAGE_DIR/"
@@ -165,18 +165,18 @@ Unit=evercraft-os-health.service
 WantedBy=timers.target
 EOF
 
-systemctl --user daemon-reload
-systemctl --user enable evercraft-os.service
-systemctl --user enable --now evercraft-os-health.timer
-systemctl --user restart evercraft-os.service
+"$SYSTEMCTL_BIN" --user daemon-reload
+"$SYSTEMCTL_BIN" --user enable evercraft-os.service
+"$SYSTEMCTL_BIN" --user enable --now evercraft-os-health.timer
+"$SYSTEMCTL_BIN" --user restart evercraft-os.service
 sleep 2
 
-if ! systemctl --user is-active --quiet evercraft-os.service; then
-  systemctl --user status evercraft-os.service --no-pager || true
+if ! "$SYSTEMCTL_BIN" --user is-active --quiet evercraft-os.service; then
+  "$SYSTEMCTL_BIN" --user status evercraft-os.service --no-pager || true
   exit 4
 fi
-if ! systemctl --user is-active --quiet evercraft-os-health.timer; then
-  systemctl --user status evercraft-os-health.timer --no-pager || true
+if ! "$SYSTEMCTL_BIN" --user is-active --quiet evercraft-os-health.timer; then
+  "$SYSTEMCTL_BIN" --user status evercraft-os-health.timer --no-pager || true
   exit 5
 fi
 
