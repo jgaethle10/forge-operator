@@ -26,6 +26,10 @@ on:
       - 'systemia/payments/charter-readiness*'
       - 'systemia/payments/charter-evidence.json'
       - 'systemia/payments/financial-capabilit*'
+      - 'systemia/payments/financial-authority*'
+      - 'systemia/payments/financial-product*'
+      - 'systemia/payments/financial-products.json'
+      - 'systemia/payments/economic-workspace*'
       - 'public/benchmarks/systemia-university/**'
       - 'tests/systemia-university-benchmark-discovery.test.mjs'
 
