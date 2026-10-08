@@ -300,3 +300,12 @@ test('owned People Layer source has no Base44 runtime route', () => {
     assert.equal(source.includes('/api/apps/'), false, file + ' must not proxy a provider app runtime');
   }
 });
+
+
+test('owned People routes reject raw admin credential env path', () => {
+  for (const file of ['systemia/people/http.mjs','systemia/people/service-runtime.mjs']) {
+    const source=fs.readFileSync(file,'utf8');
+    assert.equal(source.includes("process.env.PEOPLE_ADMIN_TOKEN ||"), false, file + ' must not read a raw admin token from the environment');
+    assert.equal(source.includes('PEOPLE_ADMIN_TOKEN_FILE'), true, file + ' must use private-file authority');
+  }
+});
