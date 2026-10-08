@@ -21,6 +21,7 @@ export function normalizeMachineCommerceGateway(input){
    throw new Error('owned_https_machine_commerce_gateway_required');
  }
  if(u.hostname==='localhost'||u.hostname.endsWith('.localhost')||
+   u.hostname.includes(':') || u.hostname.startsWith('[') ||
    /^(?:127\.|0\.|10\.|169\.254\.|192\.168\.|172\.(?:1[6-9]|2[0-9]|3[01])\.)/.test(u.hostname)){
    throw new Error('private_or_loopback_gateway_prohibited');
  }
