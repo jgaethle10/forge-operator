@@ -5,6 +5,7 @@ import path from 'node:path';
 import { spawn, spawnSync } from 'node:child_process';
 import { once } from 'node:events';
 import { startBrowserPublicAdapter } from './public-adapter.mjs';
+import { signDurableJobRequest } from './systemia-admission.mjs';
 
 const DEFAULT_START_TIMEOUT_MS=30_000;
 const DEFAULT_INSTALL_TIMEOUT_MS=10*60_000;
@@ -287,6 +288,7 @@ export async function startNativeBrowserRuntime({
   }
   const port=await reserveLoopbackPort();
   const workerToken=crypto.randomBytes(32).toString('hex');
+  const jobSigningKey=crypto.randomBytes(32).toString('hex');
   const authOperatorToken=crypto.randomBytes(32).toString('hex');
   const child=spawn(process.execPath,['server.mjs'],{
     cwd:root,
@@ -294,6 +296,7 @@ export async function startNativeBrowserRuntime({
       ...process.env,
       PORT:String(port),
       EVERCRAFT_BROWSER_WORKER_TOKEN:workerToken,
+      EVERCRAFT_BROWSER_SYSTEMIA_JOB_KEY:jobSigningKey,
       EVERCRAFT_AUTH_BROWSER_OPERATOR_TOKEN:authOperatorToken,
       EVERCRAFT_BROWSER_MAX_CONCURRENCY:String(
         Math.max(1,Math.min(8,Number(maxConcurrency)||2))
@@ -360,30 +363,29 @@ export async function startNativeBrowserRuntime({
         },Math.max(35_000,Number(job?.timeout_ms||15_000)+5000));
       },
       async submitReadOnlyJob(envelope){
-        return fetchJson(`${url}/v1/jobs`,{
+        const endpoint='/v1/jobs';
+        const raw=JSON.stringify(envelope||{});
+        return fetchJson(`${url}${endpoint}`,{
           method:'POST',
           headers:{
             'content-type':'application/json',
-            authorization:`Bearer ${workerToken}`,
+            ...signDurableJobRequest(jobSigningKey,{method:'POST',path:endpoint,body:raw}),
           },
-          body:JSON.stringify(envelope||{}),
+          body:raw,
         },10_000);
       },
       async readReadOnlyJob(jobId){
-        return fetchJson(
-          `${url}/v1/jobs/${encodeURIComponent(String(jobId||''))}`,
-          {headers:{authorization:`Bearer ${workerToken}`}},
-          10_000
-        );
+        const endpoint=`/v1/jobs/${encodeURIComponent(String(jobId||''))}`;
+        return fetchJson(`${url}${endpoint}`,{
+          headers:signDurableJobRequest(jobSigningKey,{method:'GET',path:endpoint,body:''}),
+        },10_000);
       },
       async cancelReadOnlyJob(jobId){
-        return fetchJson(
-          `${url}/v1/jobs/${encodeURIComponent(String(jobId||''))}`,
-          {
-            method:'DELETE',
-            headers:{authorization:`Bearer ${workerToken}`},
-          },10_000
-        );
+        const endpoint=`/v1/jobs/${encodeURIComponent(String(jobId||''))}`;
+        return fetchJson(`${url}${endpoint}`,{
+          method:'DELETE',
+          headers:signDurableJobRequest(jobSigningKey,{method:'DELETE',path:endpoint,body:''}),
+        },10_000);
       },
       async createAuthSession(job){
         return fetchJson(`${url}/v1/auth-browser/sessions`,{
