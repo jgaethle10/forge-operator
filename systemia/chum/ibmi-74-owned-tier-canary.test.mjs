@@ -61,8 +61,9 @@ test('wrong currency/price and duplicate exact keys fail closed',async()=>{
 });
 test('missing currency cannot be promoted to verified USD merchant currency',async()=>{
  const r=await inspect(request(payload([tier({currency:undefined})])));
- assert.equal(r.status,'listed_not_checkout_verified');
- assert.equal(r.reason,'listed_currency_unverified');
+ assert.equal(r.status,'held');
+ assert.equal(r.reason,'deadline_currency_missing');
+ assert.equal(r.tier_listed,false);
  assert.equal(r.exact_price_verified,false);
 });
 test('redirect, HTTP error, wrong identity and malformed JSON stay held',async()=>{
