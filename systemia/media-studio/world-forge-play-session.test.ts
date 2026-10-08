@@ -401,7 +401,13 @@ test('Play WebGPU geometry digest lineage changes only when authored geometry ch
   assert.ok(secondHeroDraw);
   const secondHeroGeometryId=secondHeroDraw!.geometryId;
   assert.notEqual(secondHeroGeometryId,firstHeroGeometryId);
-  assert.equal(second.geometryDigests[firstHeroGeometryId],undefined);
+  assert.equal(second.geometryDigests[firstHeroGeometryId],firstHeroDigest);
+  assert.equal(
+    second.plan.draws.some(
+      draw=>draw.entityId!=='wfnode:hero-core'&&draw.geometryId===firstHeroGeometryId,
+    ),
+    true,
+  );
   assert.ok(second.geometryDigests[secondHeroGeometryId]);
   assert.notEqual(second.geometryDigests[secondHeroGeometryId],firstHeroDigest);
 });
