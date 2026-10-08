@@ -9,7 +9,7 @@ import {
 import {inspectInterruptedGoalWork,holdInterruptedGoalWork} from './goal-recovery.mjs';
 import {createGoalStateFile,mutateGoalState,readGoalState} from './goal-store.mjs';
 
-const T0='2026-10-07T12:00:00Z';
+const T0='2026-10-07T12:00:00.000Z';
 const later=(minutes)=>new Date(Date.parse(T0)+minutes*60000);
 function running(){
  let state=createGoalState({goalKey:'goal-1',missionKey:'mission-1',
