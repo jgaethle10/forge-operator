@@ -63,41 +63,43 @@ function normalizeFema(raw){
   return {type:'FeatureCollection',features};
 }
 export async function acquireIsaiasReadOnly({fetchImpl=fetch,retrievedAt=new Date().toISOString()}={}){
+  const options={method:'GET',redirect:'manual',headers:{accept:'text/html,application/geo+json,application/json'}};
+  // Preserve a verified NHC receipt even if the unrelated FEMA endpoint is unavailable.
+  const nhcResponse=await fetchImpl(ISAIAS_NHC_ADVISORY_8,options);
+  assertOfficial(nhcResponse,'www.nhc.noaa.gov');
+  const nhcRaw=await boundedText(nhcResponse,500000);
+  const advisory=parseIsaiasAdvisory8(nhcRaw);
+  const sourceReceipts=[{id:'NHC-AL092026-008',url:ISAIAS_NHC_ADVISORY_8,sha256:sha256(nhcRaw),
+    retrieved_at:retrievedAt,advisory_issued_at:advisory.issued_at,semantic_role:'historical_advisory_not_latest'}];
   const femaUrl=new URL(FEMA_SHELTERS_LAYER);
   femaUrl.searchParams.set('where',"state IN ('AL','FL','MS','LA')");
   femaUrl.searchParams.set('outFields','shelter_id,shelter_name,state,city,shelter_status');
   femaUrl.searchParams.set('outSR','4326');
   femaUrl.searchParams.set('returnGeometry','true');
   femaUrl.searchParams.set('f','geojson');
-  const options={method:'GET',redirect:'manual',headers:{accept:'text/html,application/geo+json,application/json'}};
-  const [nhcResponse,femaResponse]=await Promise.all([
-    fetchImpl(ISAIAS_NHC_ADVISORY_8,options),
-    fetchImpl(femaUrl.href,options)
-  ]);
-  assertOfficial(nhcResponse,'www.nhc.noaa.gov');
-  assertOfficial(femaResponse,'gis.fema.gov');
-  const [nhcRaw,femaRaw]=await Promise.all([
-    boundedText(nhcResponse,500000),
-    boundedText(femaResponse,6000000)
-  ]);
-  const advisory=parseIsaiasAdvisory8(nhcRaw);
-  const facilities=normalizeFema(femaRaw);
+
+  let facilities=null,facilityState='held',facilityError=null;
+  try{
+    const femaResponse=await fetchImpl(femaUrl.href,options);
+    assertOfficial(femaResponse,'gis.fema.gov');
+    const raw=await boundedText(femaResponse,6000000);
+    facilities=normalizeFema(raw);
+    facilityState='acquired_pending_status_review';
+    sourceReceipts.push({id:'FEMA-OPEN-SHELTERS',url:femaUrl.href,sha256:sha256(raw),
+      retrieved_at:retrievedAt,semantic_role:'agency_reported_shelter_rows_not_independently_open_verified'});
+  }catch(e){
+    facilityError=String(e instanceof Error?e.message:e).slice(0,100);
+  }
   return {
     schema:'evercraft.isaias-agency-readonly-acquisition.v1',
     collected_at:retrievedAt,
     authority:'NHC + FEMA',
-    status:'acquired_pending_independent_source_and_status_review',
-    advisory,
-    facilities,
-    source_receipts:[
-      {id:'NHC-AL092026-008',url:ISAIAS_NHC_ADVISORY_8,sha256:sha256(nhcRaw),
-        retrieved_at:retrievedAt,advisory_issued_at:advisory.issued_at,semantic_role:'historical_advisory_not_latest'},
-      {id:'FEMA-OPEN-SHELTERS',url:femaUrl.href,sha256:sha256(femaRaw),
-        retrieved_at:retrievedAt,semantic_role:'agency_reported_shelter_rows_not_independently_open_verified'}
-    ],
+    status:facilities?'acquired_pending_independent_source_and_status_review':'nhc_verified_fema_held',
+    advisory,facilities,facility_state:facilityState,facility_error:facilityError,
+    source_receipts:sourceReceipts,
     forecast_polygon:null,
     public_hazard_intersections:null,
     confirmed_impacts:null,
-    warning:'This packet contains agency-reported facility positions and a dated advisory, not shelter recommendations, an exposure overlay, or confirmed impacts.'
+    warning:'Historical NOAA advisory is verified independently of FEMA availability. No facility is endorsed as open and no polygon intersections or actual impacts are asserted.'
   };
 }
