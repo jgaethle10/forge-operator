@@ -32,4 +32,5 @@ jobs:
         run: |
           node --check systemia/fabric-invocation/native-invocation.mjs
           node --check systemia/fabric-invocation/browser-worker-adapter.mjs
+          node --check systemia/fabric-invocation/compute-browser-lease.mjs
           node --test systemia/fabric-invocation/*.test.mjs
