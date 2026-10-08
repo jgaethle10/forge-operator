@@ -30,10 +30,15 @@ jobs:
         run: node --test systemia/offer-selection/ibmi-first-buyer-research.test.mjs
       - name: Prove general Fabric offer-page and payment handoff only
         run: node --test tests/fabric-offer-pages.test.mjs
-      - name: Confirm protected 7.4 route integration has not been claimed by evidence-only scope
+      - name: Prove evidence and optional 7.4 route integration without asserting deployment
         run: |
-          test ! -e tests/ibmi-74-offer-launch.test.mjs
-          node -e "const fs=require('fs'); const s=fs.readFileSync('systemia/offer-selection/README.md','utf8'); if(!/NOT collected revenue|NOT collected revenue/i.test(s))process.exit(1)"
+          node -e "const fs=require('fs'); const s=fs.readFileSync('systemia/offer-selection/README.md','utf8'); if(!/NOT collected revenue/i.test(s))process.exit(1)"
+          if test -e tests/ibmi-74-offer-launch.test.mjs; then
+            node --test tests/ibmi-74-offer-launch.test.mjs
+            node -e "const fs=require('fs'); const runtime=fs.readFileSync('systemia/mcp/fabric-local-runtime.mjs','utf8'); const site=fs.readFileSync('systemia/mcp/fabric-public-site.mjs','utf8'); if(!runtime.includes('exact_ibmi_74_checkout_not_verified')||!site.includes('ibmi_74_deadline_xray_250')) process.exit(1)"
+          else
+            echo "Offer 1 route not implemented in this source; selection evidence only"
+          fi
 
       - name: Confirm distinct IBM i 7.4 tier readiness does not infer payment
         run: node --test systemia/chum/ibmi-74-offer-contract.test.mjs

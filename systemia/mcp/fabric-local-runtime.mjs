@@ -831,6 +831,26 @@ export async function startFabricLocalRuntime({
 
         const body=await readOfferInput(req,{maxBytes:8192});
         const isForm=String(req.headers['content-type']||'').toLowerCase().includes('application/x-www-form-urlencoded');
+        // Offer #1 must never quietly route a new $250 buyer through the legacy
+        // Base44 purchase-intent default. A separately reviewed owned endpoint is
+        // required before an actual 7.4 checkout may be prepared.
+        if(slug==='ibmi-74-deadline-xray' && (
+          purchaseIntentEndpoint.hostname!=='fabric.systemiacommandcenters.com' ||
+          purchaseIntentEndpoint.protocol!=='https:' ||
+          purchaseIntentEndpoint.username || purchaseIntentEndpoint.password ||
+          purchaseIntentEndpoint.port
+        )){
+          if(isForm){
+            return sendText(res,503,renderPaymentHoldPage({slug,orderKey:''}),{
+              contentType:'text/html; charset=utf-8'
+            });
+          }
+          return sendJson(res,503,{
+            ok:false,error:'owned_ibmi_74_purchase_intent_not_configured',
+            authority:'Evercraft Payments',checkout_ready:false,
+            payment_attempted:false,fulfillment_release:false
+          });
+        }
         const confirmed=body?.user_confirmed===true||String(body?.user_confirmed||'').toLowerCase()==='true';
         if(!confirmed){
           return sendJson(res,409,{
@@ -889,10 +909,50 @@ export async function startFabricLocalRuntime({
           });
         }
 
+        // The 7.4 campaign is a distinct $250 product. Never direct a buyer
+        // to an arbitrary, mismatched or unidentifiable upstream checkout.
+        // A synthetic offer-page test or generic Estate X-Ray is not purchase truth.
+        if(slug==='ibmi-74-deadline-xray'){
+          const upstreamOffer=String(result?.offer_key||result?.capability_key||'').trim();
+          const amount=Number(result?.amount_cents);
+          const currency=String(result?.currency||'').trim().toLowerCase();
+          const exactOffer=upstreamOffer==='ibmi_74_deadline_xray_250';
+          const exactPrice=Number.isInteger(amount)&&amount===25000&&currency==='usd';
+          if(!exactOffer||!exactPrice){
+            if(isForm){
+              return sendText(res,503,renderPaymentHoldPage({slug,orderKey:result?.order_key||''}),{
+                contentType:'text/html; charset=utf-8'
+              });
+            }
+            return sendJson(res,503,{
+              ok:false,error:'exact_ibmi_74_checkout_not_verified',
+              authority:'Evercraft Payments',checkout_ready:false,fulfillment_release:false,
+              expected_offer_key:'ibmi_74_deadline_xray_250',
+              expected_amount_cents:25000,currency:'usd',
+            });
+          }
+        }
+
         let checkoutUrl=null;
         try{
           const candidate=new URL(String(result?.checkout_url||''));
-          if(candidate.protocol==='https:') checkoutUrl=candidate.toString();
+          const stripeCheckoutSession=
+            candidate.hostname==='checkout.stripe.com' &&
+            /^\/(?:c\/pay|pay)\/[^\/]{8,}$/.test(candidate.pathname);
+          const ownedExactCheckout=
+            candidate.hostname==='fabric.systemiacommandcenters.com' &&
+            /^\/payments\/checkout\/ibmi-74-deadline-xray\/[^\/]{8,}$/.test(candidate.pathname);
+          const approvedIBMi74Handoff=
+            (stripeCheckoutSession||ownedExactCheckout) &&
+            candidate.protocol==='https:' &&
+            !candidate.username && !candidate.password && !candidate.port;
+          // Exact Offer #1 money cannot be redirected to an arbitrary HTTPS
+          // address supplied by a compromised or wrong purchase-intent adapter.
+          // Other generic Fabric offers retain their current legacy behavior.
+          if(candidate.protocol==='https:' &&
+             (slug!=='ibmi-74-deadline-xray'||approvedIBMi74Handoff)){
+            checkoutUrl=candidate.toString();
+          }
         }catch{}
         if(result?.checkout_ready!==true||!checkoutUrl){
           if(isForm){
@@ -944,7 +1004,9 @@ export async function startFabricLocalRuntime({
           currency:result.currency,
           checkout_ready:true,
           checkout_url:checkoutUrl,
-          payment_state:result.payment_state||'unpaid',
+          // Preparing a 7.4 checkout never establishes payment settlement.
+          // Never echo an unverified provider 'paid' assertion as order truth.
+          payment_state:slug==='ibmi-74-deadline-xray'?'unpaid':result.payment_state||'unpaid',
           fulfillment_release:false,
           rule:'Checkout creation is not payment. Fulfillment remains locked until authoritative provider verification.',
         });
@@ -956,7 +1018,7 @@ export async function startFabricLocalRuntime({
         if(slug&&!slug.includes('/')){
           const offer=offerCapabilityForSlug(slug,preparedCatalog().capabilities);
           if(!offer) return sendJson(res,404,{error:'offer_not_found'});
-          const page=renderOfferPage(offer);
+          const page=renderOfferPage(offer,{slug});
           if(!page) return sendJson(res,404,{error:'offer_not_found'});
           return sendText(res,200,page,{contentType:'text/html; charset=utf-8'});
         }
