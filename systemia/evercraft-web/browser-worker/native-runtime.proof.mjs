@@ -205,7 +205,7 @@ try{
   }
   assert.ok(runningBeforeCrash,'must observe real running job before crash');
   assert.equal(runningBeforeCrash.attempts,1);
-  const childPid=Number(/^browser_native_(\\d+)$/.exec(runtime.instanceId)?.[1]||0);
+  const childPid=Number(/^browser_native_(\d+)$/.exec(runtime.instanceId)?.[1]||0);
   assert.ok(Number.isInteger(childPid)&&childPid>1,'owned child pid must be known');
   process.kill(childPid,'SIGKILL');
   // SIGKILL prevents graceful cancellation/receipt mutation. A genuine
@@ -247,16 +247,16 @@ try{
     production_deployment_verified:false,
   };
   durableEvidence.real_process_restart=crashRecoveryEvidence;
-  fs.writeFileSync(path.join(state,'durable-proof.json'),JSON.stringify(durableEvidence,null,2)+'\\n',{mode:0o600});
+  fs.writeFileSync(path.join(state,'durable-proof.json'),JSON.stringify(durableEvidence,null,2)+'\n',{mode:0o600});
   if(process.env.GITHUB_STEP_SUMMARY){
     fs.appendFileSync(process.env.GITHUB_STEP_SUMMARY,
-      '## Real Browser Worker process-crash recovery\\n'+
-      '- Fault: SIGKILL to owned worker while job RUNNING\\n'+
-      '- Recovered job ID: '+recovered.id+'\\n'+
-      '- Attempts: '+recovered.attempts+'\\n'+
-      '- Recovery count: '+recovered.recovery_count+'\\n'+
-      '- Evidence receipt SHA-256: '+recovered.result.evidence_receipt_sha256+'\\n'+
-      '- Execution class: native CI, not deployed production\\n');
+      '## Real Browser Worker process-crash recovery\n'+
+      '- Fault: SIGKILL to owned worker while job RUNNING\n'+
+      '- Recovered job ID: '+recovered.id+'\n'+
+      '- Attempts: '+recovered.attempts+'\n'+
+      '- Recovery count: '+recovered.recovery_count+'\n'+
+      '- Evidence receipt SHA-256: '+recovered.result.evidence_receipt_sha256+'\n'+
+      '- Execution class: native CI, not deployed production\n');
   }
 
   console.log(JSON.stringify({
