@@ -128,3 +128,16 @@ For `create_connection` calls referencing `source_proposal_id`, the trusted runt
 - Regression fixtures now cover consent withholding, a successful explicitly approved simulated request (no outbound network), holds, changed member capability, idempotent replay and cross-account request-key isolation.
 
 **Truth boundary:** This is source/checkpoint, local executable test, build and lint evidence. No real member was contacted, no production request was sent, no authenticated two-user production test was run, and v1.7 public deployment is not verified. Leave `systemia/opportunity-fabric/runtime.json` at its previously verified production state until independent deployment and access checks are complete.
+
+## Owner-private case review/consent continuation (2026-10-07)
+
+Base44 sandbox checkpoint: `6ac706ba061caa161535b194`  
+Sandbox checkpoint git commit: `9ec913e1b1974301fad21eaf3f765152ce99455e`.
+
+`ConnectionDesk.jsx` now supports reopening a non-archived private `ConnectCase` by its original `case_key` and preserving existing private problem/provenance, capability needs, external candidate reference, sensitivity, routing state and consent on edit. A deliberate owner action may change hold/route state or record consent. The save uses the existing trusted `upsert_connect_case` action; the UI does not directly mutate protected entities. The consent selector expressly states that this is an **owner-recorded assertion**, not independent evidence of the affected party's authorization.
+
+An executable handler test covers an originally held/do-not-contact case being intentionally updated by the owner and then routed, reviewed and prepared as a protected member request. Its case record is updated rather than duplicated, no public Project is created, and private problem text is absent from outbound request/receipt evidence.
+
+**Verification on this checkpoint:** `npm run test:connect` PASS (**23/23** executable mocked-handler cases plus security smoke); `npm run build` PASS (authority contract and 23 behavioral tests); targeted ESLint on modified UI PASS. A non-blocking stale Browserslist data warning remains.
+
+**Deployment boundary remains unchanged.** These are sandbox/source and mock-handler proofs. No production publication, actual external connection, independently verified consent, recovery outcome, or production multi-user privacy test was established. Do not advance the canonical deployed-runtime record without separate evidence.
