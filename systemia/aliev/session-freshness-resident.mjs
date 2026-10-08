@@ -40,13 +40,21 @@ function receiptFromBody(body,{requestedAt,endpoint,receivedAt}){
      Date.parse(refreshedAt)<Date.parse(requestedAt)-120000)throw new Error('refresh_timestamp_outside_invocation_window');
   if(!Array.isArray(body.failed_sources))throw new Error('failed_sources_contract_required');
   if(!Array.isArray(body.results) || body.results.length<4)throw new Error('dynamic_source_results_contract_required');
+  const requiredDynamic=['ingestNYCPlugNYCObservedUsage','ingestNYCPlugNYCSessions','penndot_nevi_observed_usage','ingestCaryObservedUsage'];
+  const operations=body.results.map(row=>({name:clean(row?.name),ok:row?.ok===true}));
+  if(!requiredDynamic.every(name=>operations.some(row=>row.name===name)))throw new Error('required_dynamic_sources_not_reconciled');
+  const sourceFailures=operations.filter(row=>!row.ok).map(row=>row.name||'unnamed_source');
   const watch=body.historical_watch;
   if(!watch || !Number.isSafeInteger(watch.warning_count) || watch.warning_count<0)throw new Error('historical_watch_contract_required');
-  const failedSources=body.failed_sources.map(clean).filter(Boolean);
+  const failedSources=[...new Set([...body.failed_sources.map(clean).filter(Boolean),...sourceFailures])];
   const warningCount=watch.warning_count;
-  const sweepHours=Number(watch.estimated_full_sweep_hours);
-  const inventoryUnknown=watch.eligible_source_count===null || watch.probed_source_count===null;
-  const missedSweepSla=Number.isFinite(sweepHours)&&sweepHours>6;
+  const countValid=Number.isSafeInteger(watch.eligible_source_count)&&watch.eligible_source_count>=0 &&
+    Number.isSafeInteger(watch.probed_source_count)&&watch.probed_source_count>=0 &&
+    watch.probed_source_count<=watch.eligible_source_count;
+  const sweepHours=watch.estimated_full_sweep_hours;
+  const sweepValid=Number.isSafeInteger(sweepHours)&&sweepHours>=0;
+  const inventoryUnknown=!countValid || !sweepValid;
+  const missedSweepSla=sweepValid&&sweepHours>6;
   const degraded=body.ok!==true || state==='completed_with_source_failures' || failedSources.length>0 ||
     warningCount>0 || inventoryUnknown || missedSweepSla;
   return {
