@@ -64,7 +64,6 @@ jobs:
 
       - name: Externally probe owned Fabric read-only MCP without commerce or private data
         id: fabric_public_readonly_probe
-        continue-on-error: true
         run: node scripts/chum-owned-fabric-readonly-canary.mjs
 
       - name: Upload independently observed read-only MCP receipt
@@ -73,4 +72,19 @@ jobs:
         with:
           name: owned-fabric-readonly-mcp-receipt
           path: artifacts/chum/owned-fabric-readonly-mcp-canary.json
+          if-no-files-found: warn
+
+      - name: Inspect IBM i 7.4 exact paid tier without purchase
+        env:
+          EVERCRAFT_MACHINE_COMMERCE_GATEWAY_URL: ${{ vars.EVERCRAFT_MACHINE_COMMERCE_GATEWAY_URL }}
+        run: |
+          node systemia/chum/ibmi-74-owned-tier-canary.mjs artifacts/chum/ibmi-74-tier-readonly.json
+          node -e "const fs=require('fs');const r=JSON.parse(fs.readFileSync('artifacts/chum/ibmi-74-tier-readonly.json'));if(r.checkout_attempted||r.checkout_verified||r.payment_attempted||r.provider_settlement_verified||r.public_release_authorized)process.exit(1);fs.appendFileSync(process.env.GITHUB_STEP_SUMMARY,'### IBM i 7.4 commercial corridor\nStatus: '+r.status+'\nReason: '+r.reason+'\nBuyer checkout/payment: NOT VERIFIED\n');"
+
+      - name: Upload independently checked IBM i 7.4 tier listing receipt
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: ibmi-74-agent-commerce-tier-readonly
+          path: artifacts/chum/ibmi-74-tier-readonly.json
           if-no-files-found: warn
