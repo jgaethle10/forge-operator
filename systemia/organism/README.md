@@ -89,6 +89,10 @@ A recovery hold uses both expected attempt number and last heartbeat time, valid
 
 This local adapter is neither a multi-host distributed lease nor evidence of production resident scheduling. The completion and authority gates stay independent.
 
+### Single-admission goal plans and replay protection
+
+`admitGoalPlan` only accepts a previously unplanned goal (`status: planning` and no tasks). A second `goal-cli plan` call is **not** an edit operation: resetting tasks could erase completion receipts or make an already sent message, purchase, or deployment eligible for another execution. Attempts to re-admit the same or a different plan now fail closed without changing local persisted state. Genuine amendments must use a separately designed, explicitly authorized append-only plan-revision operation that preserves existing task IDs, attempts, dependencies, and evidence; this PR does not introduce that operation. A successful source regression test is not a production distributed-consensus or exactly-once side-effect guarantee.
+
 ### Durable file adapter and CLI
 
 `goal-store.mjs` provides an atomic JSON-file persistence adapter with optimistic revision checks. It is intentionally storage-simple so Yard Operator or another runtime adapter can swap in a database later without changing the goal-state contract. The file adapter survives process and chat boundaries and rejects stale writers instead of silently overwriting newer mission state.
