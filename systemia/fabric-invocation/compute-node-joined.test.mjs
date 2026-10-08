@@ -54,6 +54,8 @@ test('actual owned Compute Node lease -> Browser Worker service -> Fabric -> nat
   const deployment = proof('attested-local-test-deployment');
   const instance = 'browser_native_test_8';
   let browseCalls = 0;
+  let authenticatedCalls = 0;
+  let delegatedCalls = 0;
   let browserLeaseNow = Date.now();
   let node;
   try {
@@ -73,6 +75,18 @@ test('actual owned Compute Node lease -> Browser Worker service -> Fabric -> nat
         async browse(job) {
           browseCalls++;
           return fakeWorkerEvidence(job);
+        },
+        async createAuthSession() {
+          authenticatedCalls++;
+          return { ok: true, session_id: 'never-while-expired' };
+        },
+        async delegatedSnapshot() {
+          delegatedCalls++;
+          return { ok: true };
+        },
+        async delegatedAction() {
+          delegatedCalls++;
+          return { ok: true };
         },
         async close() {},
       }),
@@ -183,6 +197,22 @@ test('actual owned Compute Node lease -> Browser Worker service -> Fabric -> nat
     });
     assert.equal(expired.status, 410);
     assert.equal((await expired.json()).error, 'expired_lease');
+    assert.equal(browseCalls, 1);
+
+    for (const [endpoint, body] of [
+      ['browser/auth-session', { job: { url: 'https://example.org/' } }],
+      ['browser/delegated/snapshot', { session_id: 'session:old' }],
+      ['browser/delegated/action', { session_id: 'session:old', action: { type: 'wait', ms: 10 } }],
+    ]) {
+      const response = await fetch(node.endpoint + '/v1/services/' + serviceId + '/' + endpoint, {
+        method: 'POST', headers: { 'content-type': 'application/json' },
+        body: JSON.stringify({ token: granted.token, ...body }),
+      });
+      assert.equal(response.status, 410, endpoint);
+      assert.equal((await response.json()).error, 'expired_lease', endpoint);
+    }
+    assert.equal(authenticatedCalls, 0);
+    assert.equal(delegatedCalls, 0);
     assert.equal(browseCalls, 1);
   } finally {
     if (node) await node.close();
