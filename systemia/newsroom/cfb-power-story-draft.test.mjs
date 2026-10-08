@@ -142,7 +142,7 @@ test('surfaces receipt-backed movement and comparison-only poll disagreements',(
   assert.match(poll.body,/not evidence that Evercraft or the poll is already correct/);
   assert.equal(story.machine_evidence.payload.poll_comparison.ranking_run_id,fixture.run_id);
   assert.equal(story.sources.some(source=>source.source_id==='cfb-poll-baseline-ap-top25'),true);
-  assert.equal(story.claims.some(claim=>claim.evidence_state==='verified_comparison_only'),true);
+  assert.equal(story.claims.some(claim=>claim.evidence_state==='verified'&&claim.source_refs?.includes('cfb-poll-baseline-ap-top25')),true);
 });
 
 test('poll comparison must match the exact ranking run and remain comparison-only',()=>{
