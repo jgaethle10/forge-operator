@@ -1,0 +1,20 @@
+{
+  "schema": "evercraft.systemia.workflow-manifest.v1",
+  "workflow_key": "space-dudz-clip-publisher",
+  "runtime": "systemia-core-resident",
+  "cadence_seconds": 300,
+  "entrypoint": "systemia/clip/space-dudz-resident-runner.mjs",
+  "purpose": "Publish Space Dudz Graphics Command candidates through Evercraft Clip, one provider-receipted candidate per cycle, without republishing terminal receipts.",
+  "safety": {
+    "brand_scope": "space-dudz-only",
+    "max_publishes_per_cycle": 1,
+    "return_secret_material": false,
+    "republish_terminal_receipts": false,
+    "passport_scope": "home.clip.publish",
+    "passport_resource": "brand:space-dudz",
+    "credential_vault_required": true,
+    "rnb_chicken_and_soul_excluded": true,
+    "vote_is_preference_signal": true,
+    "preorder_required_before_print": true
+  }
+}

@@ -40,7 +40,9 @@
     "forensic-record-public-staging",
     "kaidance-mission-publisher",
     "sentinel-life-safety-watch",
-    "cfb-clip-publisher"
+    "cfb-clip-publisher",
+    "rivet-session-freshness",
+    "space-dudz-clip-publisher"
   ],
   "security": {
     "lease_required": true,
@@ -92,6 +94,7 @@
     "aliev_and_rivet_resident_services_supervised",
     "forensic_record_resident_supervised",
     "forensic_record_public_staging_resident_supervised",
-    "forensic_record_canonical_domain_cutover_remains_separate_gate"
+    "forensic_record_canonical_domain_cutover_remains_separate_gate",
+    "space_dudz_clip_publisher_supervised"
   ]
 }
