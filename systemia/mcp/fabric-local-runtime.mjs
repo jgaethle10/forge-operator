@@ -999,7 +999,9 @@ export async function startFabricLocalRuntime({
           currency:result.currency,
           checkout_ready:true,
           checkout_url:checkoutUrl,
-          payment_state:result.payment_state||'unpaid',
+          // Preparing a 7.4 checkout never establishes payment settlement.
+          // Never echo an unverified provider 'paid' assertion as order truth.
+          payment_state:slug==='ibmi-74-deadline-xray'?'unpaid':result.payment_state||'unpaid',
           fulfillment_release:false,
           rule:'Checkout creation is not payment. Fulfillment remains locked until authoritative provider verification.',
         });
