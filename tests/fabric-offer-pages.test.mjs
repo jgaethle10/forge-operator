@@ -93,10 +93,11 @@ test('owned Fabric serves offer pages, requires confirmation, and delegates chec
     port:0,
     catalog:[websiteAudit],
     faieSurfaceEnabled:false,
-    purchaseIntentUrl:'https://payments.example.test/purchase-intent',
+    purchaseIntentUrl:'https://payments.systemiacommandcenters.com/purchase-intent',
     purchaseIntentFetch:async(url,init)=>{
       seen.push({
         url:String(url),
+        redirect:init?.redirect,
         body:JSON.parse(String(init?.body||'{}')),
       });
       return new Response(JSON.stringify({
@@ -161,6 +162,8 @@ test('owned Fabric serves offer pages, requires confirmation, and delegates chec
     assert.match(checkoutBody,/settlement\.example\.test\/pay\/test/);
     assert.match(checkoutBody,/Evercraft Payments/);
     assert.equal(seen.length,1);
+    assert.equal(seen[0].url,'https://payments.systemiacommandcenters.com/purchase-intent');
+    assert.equal(seen[0].redirect,'error');
     assert.equal(seen[0].body.user_confirmed,true);
     assert.equal(seen[0].body.capability_key,'website-audit-quick-win');
     assert.match(seen[0].body.idempotency_key,/^fabric-website-audit-/);
@@ -227,13 +230,35 @@ test('legacy Base44 checkout transport is rejected at startup',async()=>{
   );
 });
 
+test('purchase-intent transport rejects unknown hosts, ports, credentials and URL side channels',async()=>{
+  const cases=[
+    ['https://checkout.evil.test/purchase-intent',/purchase_intent_owned_hostname_required/],
+    ['https://payments.systemiacommandcenters.com.evil.test/purchase-intent',/purchase_intent_owned_hostname_required/],
+    ['https://payments.systemiacommandcenters.com:8443/purchase-intent',/purchase_intent_nonstandard_port_forbidden/],
+    ['https://payments.systemiacommandcenters.com/purchase-intent?secret=abc',/purchase_intent_url_query_or_fragment_forbidden/],
+    ['https://payments.systemiacommandcenters.com/purchase-intent#fragment',/purchase_intent_url_query_or_fragment_forbidden/],
+    ['https://username:password@payments.systemiacommandcenters.com/purchase-intent',/purchase_intent_url_embedded_credentials_forbidden/],
+    ['http://payments.systemiacommandcenters.com/purchase-intent',/purchase_intent_url_requires_https/],
+  ];
+  for(const [purchaseIntentUrl,expected] of cases){
+    await assert.rejects(
+      startFabricLocalRuntime({
+        host:'127.0.0.1',port:0,catalog:[websiteAudit],
+        faieSurfaceEnabled:false,purchaseIntentUrl,
+      }),
+      expected,
+      purchaseIntentUrl
+    );
+  }
+});
+
 test('human checkout failures render a branded Evercraft Payments page instead of raw JSON',async()=>{
   const runtime=await startFabricLocalRuntime({
     host:'127.0.0.1',
     port:0,
     catalog:[websiteAudit],
     faieSurfaceEnabled:false,
-    purchaseIntentUrl:'https://payments.example.test/purchase-intent',
+    purchaseIntentUrl:'https://payments.systemiacommandcenters.com/purchase-intent',
     purchaseIntentFetch:async()=>new Response(JSON.stringify({
       ok:true,
       authority:'Evercraft Payments',
