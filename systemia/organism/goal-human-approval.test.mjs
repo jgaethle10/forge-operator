@@ -1,7 +1,8 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import { generateKeyPairSync, sign } from 'node:crypto';
-import {createGoalState,admitGoalPlan,authorizeGoalWork,startGoalWork} from './goal-runtime.mjs';
+import {createGoalState,admitGoalPlan,authorizeGoalWork,startGoalWork,FORCED_HUMAN_GATE_WORK_TYPES} from './goal-runtime.mjs';
+import {readFileSync} from 'node:fs';
 import {humanApprovalMessage,verifyGoalHumanApproval} from './goal-human-approval.mjs';
 
 const NOW=new Date('2026-10-07T19:00:00Z');
@@ -103,4 +104,22 @@ test('injected untrusted envelope public key is never used as an authority',()=>
  assert.throws(()=>authorizeGoalWork({
   state,workKey:'charge',approval:foreign,trustedPublicKeys,now:NOW
  }),/trusted human approval signer missing/);
+});
+
+test('all consequential control-plane work types force a human gate in the goal planner',()=>{
+ const contract=JSON.parse(readFileSync(new URL('../control-plane/machine-contract.json',import.meta.url),'utf8'));
+ assert.deepEqual([...FORCED_HUMAN_GATE_WORK_TYPES].sort(),[...contract.consequential_work_types].sort());
+ const plan=admitGoalPlan({
+   state:createGoalState({goalKey:'forced-gates',objective:'Protect consequential tasks',now:NOW}),
+   plan:contract.consequential_work_types.map((work_type,i)=>({
+     work_key:'danger-'+i,work_type,human_gate_required:false
+   })),
+   now:NOW
+ });
+ for(const task of plan.tasks){
+   assert.equal(task.human_gate_required,true,task.work_type);
+   assert.equal(task.human_gate_unresolved,true,task.work_type);
+   assert.ok(!plan.next_work_keys.includes(task.work_key));
+   assert.throws(()=>startGoalWork({state:plan,workKey:task.work_key,now:NOW}),/not ready/);
+ }
 });
