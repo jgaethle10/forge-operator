@@ -18,7 +18,7 @@ function signedPayload({channel='sms',text='I would like a fence estimate',id='s
     channel,direction:'inbound',occurred_at:timestamp,
     from_address:'redacted-fixture-sender',to_address:'redacted-fixture-receiver',
     event_type:eventType|| (channel==='voice'?'call_started':'message_received'),
-    ...(channel==='sms'?{text_content:text}:{content_summary:text,provider_status:providerStatus||'in_progress'}),
+    ...(channel==='sms'?{content_summary:text,content_permitted:false}:{content_summary:text,provider_status:providerStatus||'in_progress'}),
   };
   const body=JSON.stringify(payload);
   const signature=createHmac('sha256',token).update(timestamp+'.'+body).digest('hex');
