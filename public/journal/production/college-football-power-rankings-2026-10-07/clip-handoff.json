@@ -17,7 +17,8 @@
   },
   "source_refs": [
     "ncaa-fbs-scoreboard",
-    "evercraft-cfb-edition-evidence"
+    "evercraft-cfb-edition-evidence",
+    "cfb-poll-baseline-ap-top25"
   ],
   "evidence_state": "model_derived_from_verified_public_results",
   "derivatives": [
