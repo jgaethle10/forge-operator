@@ -169,8 +169,8 @@ test('concurrent hold change during provider lookup defeats stale CAS observatio
 });
 test('malformed, oversized or unsafe provider evidence refuses signing or persistence',async()=>{
  for(const upstream_evidence of [
-  {secret:'x'.repeat(70000)},
-  {constructor:'not_allowed',attempt_key:'refetch-goal:deliver:attempt:1',provider_record_ref:'provider:record:123',record_state:'completed'},
+  {...evidence(),secret:'x'.repeat(70000)},
+  {...evidence(),constructor:'not_allowed'},
   {...evidence(),extra:()=>42},
  ]){
   await withState(async file=>{
