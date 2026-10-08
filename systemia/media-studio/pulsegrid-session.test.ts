@@ -458,3 +458,62 @@ test('PulseGrid automation rejects out-of-range steps and clamps lane values',()
   });
   assert.equal(result.session.tracks.find((track)=>track.id==='keys')!.clips[0].automation.volume[0],0);
 });
+
+
+test('PulseGrid step expression edits are bounded, atomic and reversible',()=>{
+  let session=createPulseGridSession('Step Expression Proof');
+  session=applyPulseGridOperation(session,{
+    type:'clip.set_step',
+    track_id:'drums',
+    scene:0,
+    step:2,
+    velocity:.6,
+  }).session;
+  const beforeClip=session.tracks.find((track)=>track.id==='drums')!.clips[0];
+  const before={
+    velocity:beforeClip.steps[2],
+    probability:beforeClip.probabilities[2],
+    microtiming:beforeClip.microtiming[2],
+  };
+
+  const result=applyPulseGridOperation(session,{
+    type:'clip.set_step_expression',
+    track_id:'drums',
+    scene:0,
+    step:2,
+    velocity:1.8,
+    probability:-.5,
+    microtiming:1400,
+  },'human');
+  session=result.session;
+  const edited=session.tracks.find((track)=>track.id==='drums')!.clips[0];
+  assert.equal(edited.steps[2],1);
+  assert.equal(edited.probabilities[2],0);
+  assert.equal(edited.microtiming[2],1000);
+  assert.deepEqual(result.receipt.before,before);
+  assert.deepEqual(result.receipt.targets,[`clip:${edited.id}.step_expression[2]`]);
+
+  const undone=undoPulseGridReceipt(session,result.receipt.id,'human');
+  const restored=undone.session.tracks.find((track)=>track.id==='drums')!.clips[0];
+  assert.equal(restored.steps[2],before.velocity);
+  assert.equal(restored.probabilities[2],before.probability);
+  assert.equal(restored.microtiming[2],before.microtiming);
+  assert.equal(validatePulseGridSession(undone.session).ok,true);
+});
+
+test('PulseGrid step expression rejects empty edits and invalid indexes',()=>{
+  const session=createPulseGridSession();
+  assert.throws(()=>applyPulseGridOperation(session,{
+    type:'clip.set_step_expression',
+    track_id:'drums',
+    scene:0,
+    step:0,
+  }),/requires at least one value/);
+  assert.throws(()=>applyPulseGridOperation(session,{
+    type:'clip.set_step_expression',
+    track_id:'drums',
+    scene:0,
+    step:999,
+    velocity:.5,
+  }),/step expression index is out of range/);
+});

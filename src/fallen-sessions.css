@@ -28,3 +28,9 @@
 .fsAutomationPoint small{font-size:8px;color:#697681}
 .fsAutomationHint{margin:7px 0 0;color:#71808a;font-size:9px}
 @media(max-width:520px){.fsAutomationHead{display:block}.fsAutomationHead label{margin-top:8px}.fsAutomationPoint input[type="range"]{height:82px}}
+
+
+.fsStep.selected{outline:2px solid #fff;outline-offset:1px}
+.fsAudioClipState{border:1px solid #2b333b;border-radius:10px;background:#0c1014;padding:14px;min-height:120px;display:grid;align-content:start;gap:8px}
+.fsAudioClipState strong{font-size:15px}
+.fsAudioClipState p{margin:0;max-width:100%;overflow-wrap:anywhere;color:#84919a;font:10px ui-monospace,SFMono-Regular,Menlo,monospace}
