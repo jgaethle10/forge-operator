@@ -59,7 +59,7 @@ try{
   const canaryJob={
     url:'https://example.com/',
     actions:[
-      {type:'wait_for_selector',selector:'h1',timeout_ms:5000},
+      {type:'wait_for_selector',selector:'body',timeout_ms:5000},
       {type:'scroll',x:0,y:100},
     ],
     timeout_ms:15000,
