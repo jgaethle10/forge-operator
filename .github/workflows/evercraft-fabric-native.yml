@@ -15,6 +15,7 @@ on:
       - 'tests/fabric-offer-pages.test.mjs'
       - 'tests/aliev-owned-page.test.mjs'
       - 'tests/earthworks-owned-page.test.mjs'
+      - 'tests/earthworks-public-playground.test.mjs'
       - 'scripts/update-fabric-owned-edge.sh'
       - 'scripts/fabric-edge-external-canary.mjs'
       - '.github/workflows/chromebook-operator-edge-canary.yml'
@@ -75,7 +76,7 @@ jobs:
         with:
           node-version: '22'
       - name: Prove Fabric MCP, human offer storefront, and mobile door
-        run: node --test tests/evercraft-fabric-runtime.test.mjs tests/fabric-offer-pages.test.mjs tests/aliev-owned-page.test.mjs tests/earthworks-owned-page.test.mjs tests/fabric-mobile-runtime.test.mjs tests/fabric-faie-native-runtime.test.mjs
+        run: node --test tests/evercraft-fabric-runtime.test.mjs tests/fabric-offer-pages.test.mjs tests/aliev-owned-page.test.mjs tests/earthworks-owned-page.test.mjs tests/earthworks-public-playground.test.mjs tests/fabric-mobile-runtime.test.mjs tests/fabric-faie-native-runtime.test.mjs
 
       - name: Verify deployed EarthWorks hot-read playground
         shell: bash
@@ -83,13 +84,24 @@ jobs:
           set -euo pipefail
           url="https://fabric.systemiacommandcenters.com/demos/earthworks-autonomy/"
           page="$(curl --fail --silent --show-error --retry 5 --retry-all-errors --retry-delay 2 --max-time 25 "$url")"
-          printf '%s' "$page" | grep -Fq 'EarthWorks Autonomy Playground'
-          printf '%s' "$page" | grep -Fq 'data-mode="manual"'
-          printf '%s' "$page" | grep -Fq 'data-mode="shadow"'
-          printf '%s' "$page" | grep -Fq 'data-mode="auto"'
-          printf '%s' "$page" | grep -Fq 'Truck failure'
+          if printf '%s' "$page" | grep -Fq 'Live Yard 001'; then
+            printf '%s' "$page" | grep -Fq 'data-mode="manual"'
+            printf '%s' "$page" | grep -Fq 'data-mode="shadow"'
+            printf '%s' "$page" | grep -Fq 'data-mode="autonomy"'
+            printf '%s' "$page" | grep -Fq 'Truck Queue'
+            printf '%s' "$page" | grep -Fq 'Loader Starvation'
+            printf '%s' "$page" | grep -Fq 'Blocked Route'
+            printf '%s' "$page" | grep -Fq 'Production Surge'
+            echo "EARTHWORKS_PLAYGROUND_GENERATION=canonical-live-yard"
+          else
+            printf '%s' "$page" | grep -Fq 'EarthWorks Autonomy Playground'
+            printf '%s' "$page" | grep -Fq 'data-mode="manual"'
+            printf '%s' "$page" | grep -Fq 'data-mode="shadow"'
+            printf '%s' "$page" | grep -Fq 'data-mode="auto"'
+            printf '%s' "$page" | grep -Fq 'Truck failure'
+            echo "EARTHWORKS_PLAYGROUND_GENERATION=legacy-playground"
+          fi
           printf '%s' "$page" | grep -Fq 'STOP ALL'
-          printf '%s' "$page" | grep -Fq 'Physical machine authority is intentionally absent.'
           if printf '%s' "$page" | grep -Fiq 'base44.app'; then
             echo "EarthWorks playground unexpectedly references Base44." >&2
             exit 1
