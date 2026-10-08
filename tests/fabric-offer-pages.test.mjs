@@ -255,3 +255,84 @@ test('retired and unrelated purchase backends cannot be configured', async()=>{
     /purchase_intent_requires_approved_owned_https_backend/
   );
 });
+
+const ibmiRescue={
+  public_id:'ibmi-rescue-v1',
+  name:'Evercraft IBM i Rescue',
+  description:'A bounded IBM i / AS400 support-transition risk assessment.',
+  keywords:['ibm i 7.4 support','rpg','upgrade'],
+  state:'direct_checkout_ready',
+  commercial_state:'sell_now',
+  pricing:'$250 IBM i Estate X-Ray; $250 IBM i 7.4 Deadline X-Ray.',
+  entry_paid_offer:{name:'IBM i Estate X-Ray',price:'$250',price_usd_normalized:250,billing:'one_time'},
+  connections:[],
+};
+
+test('7.4 public route and purchase SKU remain distinct from general Estate X-Ray',async()=>{
+  assert.equal(offerCapabilityForSlug('ibmi-74-deadline-xray',[ibmiRescue])?.public_id,'ibmi-rescue-v1');
+  assert.equal(offerPurchaseKeyForSlug('ibmi-74-deadline-xray'),'ibmi_74_deadline_xray_250');
+  assert.equal(offerPurchaseKeyForSlug('ibmi-rescue'),'ibmi-estate-xray');
+  const page=renderOfferPage(ibmiRescue,{slug:'ibmi-74-deadline-xray',checkoutEnabled:false});
+  assert.match(page,/September 30, 2026/);
+  assert.match(page,/IBM i 7\.4 Deadline X-Ray/);
+  assert.match(page,/\$250/);
+  assert.match(page,/purchase corridor held/);
+  assert.doesNotMatch(page,/Continue to checkout/);
+  const runtime=await startFabricLocalRuntime({
+    host:'127.0.0.1',port:0,catalog:[ibmiRescue],faieSurfaceEnabled:false,purchaseIntentUrl:''
+  });
+  try{
+    const result=await fetch(runtime.url+'/offers/ibmi-74-deadline-xray');
+    assert.equal(result.status,200);
+    const body=await result.text();
+    assert.match(body,/IBM i 7\.4 support changed/);
+    assert.match(body,/purchase corridor held/);
+    assert.doesNotMatch(body,/Continue to checkout/);
+  }finally{await runtime.close();}
+});
+
+test('7.4 checkout sends exact SKU and rejects a mismatched same-price Estate checkout',async()=>{
+  const seen=[];
+  let wrongOffer=true;
+  const runtime=await startFabricLocalRuntime({
+    host:'127.0.0.1',port:0,catalog:[ibmiRescue],faieSurfaceEnabled:false,
+    purchaseIntentUrl:'https://fabric.systemiacommandcenters.com/api/internal/test-payment-intent',
+    purchaseIntentFetch:async(url,init)=>{
+      seen.push(JSON.parse(init.body));
+      return new Response(JSON.stringify({
+        ok:true,
+        order_key:'IBMI-TEST-123',
+        offer_key:wrongOffer?'ibmi_estate_xray_250':'ibmi_74_deadline_xray_250',
+        amount_cents:25000,currency:'USD',
+        checkout_ready:true,checkout_url:'https://checkout.stripe.com/c/pay/test',
+        payment_state:'unpaid',fulfillment_release:false,
+      }),{status:200,headers:{'content-type':'application/json'}});
+    },
+  });
+  try{
+    const url=runtime.url+'/api/offers/ibmi-74-deadline-xray/checkout';
+    let result=await fetch(url,{
+      method:'POST',headers:{'content-type':'application/json'},
+      body:JSON.stringify({user_confirmed:true}),
+    });
+    assert.equal(result.status,503);
+    let body=await result.json();
+    assert.equal(body.error,'ibmi_74_checkout_contract_not_verified');
+    assert.equal(body.fulfillment_release,false);
+    assert.equal(seen[0].offer_key,'ibmi_74_deadline_xray_250');
+    assert.equal(seen[0].capability_key,'ibmi_74_deadline_xray_250');
+
+    wrongOffer=false;
+    result=await fetch(url,{
+      method:'POST',headers:{'content-type':'application/json'},
+      body:JSON.stringify({user_confirmed:true}),
+    });
+    assert.equal(result.status,200);
+    body=await result.json();
+    assert.equal(body.amount_cents,25000);
+    assert.equal(body.checkout_ready,true);
+    assert.equal(body.payment_state,'unpaid');
+    assert.equal(body.fulfillment_release,false);
+    assert.equal(seen.length,2);
+  }finally{await runtime.close();}
+});
