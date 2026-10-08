@@ -127,6 +127,8 @@ try{
       instance_id:health.instance_id||null,
       service:health.service||null,
       version:health.version||null,
+      source_release_ref:health.source_release_ref||null,
+      source_release_ref_bound:health.source_release_ref_bound===true,
       capability_count:Number(health.capability_count||0),
       visual_desk_story_count:Number(health.visual_desk_story_count||0),
       catalog_story_digest:catalogStory?.storyDigest||null,
