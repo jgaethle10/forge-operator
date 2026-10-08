@@ -21,6 +21,8 @@ jobs:
         run: node --test systemia/distribution/website-audit-growth-loop.test.mjs
       - name: Test Rockies and FAIE commercial routing gates
         run: node --test systemia/commercial-intelligence/signal-to-demand.test.mjs
+      - name: Test commercial bottleneck decision contracts
+        run: node --test systemia/commercial-intelligence/commercial-decisions.test.mjs
       - name: Produce staged placements
         run: |
           node systemia/distribution/website-audit-growth-loop.mjs > /tmp/website-audit-wave.json
