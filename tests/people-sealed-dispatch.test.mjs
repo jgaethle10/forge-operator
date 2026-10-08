@@ -20,6 +20,15 @@ test('mailbox redemption secret is never returned to an operator',async()=>{
     stateDir:path.join(root,'state'),adminTokenFile:authorityFile,
     mailDeliveryPublicKeysFile:keysFile,publicOrigin:'https://people.example.test',
     mailDispatcher:async({recipient,challenge})=>{
+      if(recipient==='rejected@example.test'){
+        const rejectedEvidence={
+          challenge_key:challenge.challenge_key,
+          destination_hash:emailDestinationHash(recipient),
+          provider:'resend_agent',status:'sent',message_ref:'resend:synthetic-rejected',
+          evidence_signature:'not-valid',
+        };
+        return rejectedEvidence;
+      }
       assert.equal(recipient,'pilot@example.test');
       recipientLink=challenge.raw_token;
       const evidence={
@@ -60,8 +69,15 @@ test('mailbox redemption secret is never returned to an operator',async()=>{
     },false);
     assert.equal(verified.status,200);
     assert.equal(verified.json.brain.identity_assurance,'verified_email');
+    const failed=await api('/api/people/brains/'+encodeURIComponent(key)+'/email-challenge',{email:'rejected@example.test'});
+    assert.equal(failed.status,502);
+    assert.equal(failed.json.error,'trusted_email_dispatch_failed');
+    assert.equal('challenge' in failed.json,false);
     const state=fs.readFileSync(path.join(root,'state','state.json'),'utf8');
     assert.equal(state.includes(recipientLink),false);
+    const rejectedRecord=JSON.parse(state).identity_challenges.find(x=>x.email_hash===emailDestinationHash('rejected@example.test'));
+    assert.ok(rejectedRecord);
+    assert.equal(rejectedRecord.status,'revoked');
   }finally{
     await service.close();
     fs.rmSync(root,{recursive:true,force:true});
