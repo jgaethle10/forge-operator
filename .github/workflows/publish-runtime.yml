@@ -1,13 +1,9 @@
 name: Publish Forge runtime image
 
 on:
-  workflow_run:
-    workflows:
-      - Forge checks
+  push:
     branches:
       - main
-    types:
-      - completed
   workflow_dispatch:
     inputs:
       sha:
@@ -29,15 +25,14 @@ permissions:
   actions: read
 
 concurrency:
-  group: systemia-runtime-release-${{ github.event.workflow_run.head_sha || inputs.sha || github.sha }}
+  group: systemia-runtime-release-${{ inputs.sha || github.sha }}
   cancel-in-progress: false
 
 jobs:
   authorize:
     if: >
       github.event_name == 'workflow_dispatch' ||
-      (github.event.workflow_run.conclusion == 'success' &&
-       github.event.workflow_run.head_branch == 'main')
+      (github.event_name == 'push' && github.ref == 'refs/heads/main')
     runs-on: ubuntu-latest
     outputs:
       sha: ${{ steps.gate.outputs.sha }}
@@ -52,8 +47,8 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-          if [ "${{ github.event_name }}" = "workflow_run" ]; then
-            SHA="${{ github.event.workflow_run.head_sha }}"
+          if [ "${{ github.event_name }}" = "push" ]; then
+            SHA="${{ github.sha }}"
           else
             SHA="${{ inputs.sha }}"
           fi
@@ -90,7 +85,7 @@ jobs:
 
           MODE="auto_policy"
           ALLOWED="false"
-          if [ "${{ github.event_name }}" = "workflow_run" ]; then
+          if [ "${{ github.event_name }}" = "push" ]; then
             if [ "$RISK" = "routine_public" ] && [ "$AUTO" = "true" ]; then
               ALLOWED="true"
             fi
