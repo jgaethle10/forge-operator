@@ -58,6 +58,13 @@ jobs:
         run: npm test
       - name: Prove native user-space Browser Worker
         run: EVERCRAFT_NATIVE_BROWSER_STATE_DIR="$RUNNER_TEMP/evercraft-native-browser" node native-runtime.proof.mjs
+      - name: Upload native browser execution and crash-recovery receipt
+        uses: actions/upload-artifact@v4
+        with:
+          name: evercraft-browser-native-crash-recovery
+          path: ${{ runner.temp }}/evercraft-native-browser/durable-proof.json
+          if-no-files-found: error
+          retention-days: 30
       - name: Prove browser WebGPU device execution
         run: |
           EVERCRAFT_NATIVE_BROWSER_STATE_DIR="$RUNNER_TEMP/evercraft-native-browser" node webgpu-device-conformance.proof.mjs | tee /tmp/evercraft-webgpu-device-conformance.json
