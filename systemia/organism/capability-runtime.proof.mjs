@@ -1,4 +1,6 @@
 import assert from 'node:assert/strict';
+import {generateKeyPairSync,sign} from 'node:crypto';
+import {humanApprovalMessage} from './goal-human-approval.mjs';
 import {
   admitGoalPlan,
   authorizeGoalWork,
@@ -9,6 +11,21 @@ import {
   executeGoalWorkWithAdapter,
   selectCapabilityAdapter,
 } from './capability-runtime.mjs';
+
+const {publicKey,privateKey}=generateKeyPairSync('ed25519');
+const trustedPublicKeys={'systemia-human-gate-v1':publicKey.export({format:'pem',type:'spki'})};
+const approvalClaims={
+ schema:'evercraft.goal.human-approval-claims.v1',
+ mission_key:'capability-runtime-proof',goal_key:'capability-runtime-proof',
+ work_key:'commercial',scope:'systemia.goal.authorize',approved:true,
+ receipt_ref:'human:approval:capability-proof',
+ issued_at:'2026-09-24T19:41:00.000Z',expires_at:'2026-09-24T20:41:00.000Z',
+};
+const signedApproval={
+ schema:'evercraft.goal.human-approval-envelope.v1',
+ key_id:'systemia-human-gate-v1',claims:approvalClaims,
+ signature_base64:sign(null,humanApprovalMessage(approvalClaims),privateKey).toString('base64'),
+};
 
 const registry = createCapabilityRegistry([
   {
@@ -82,14 +99,24 @@ assert.match(held.error.message, /not ready/);
 state = authorizeGoalWork({
   state,
   workKey: 'commercial',
-  authorizationRef: 'human:approval:capability-proof',
+  approval: signedApproval,
+  trustedPublicKeys,
   now: new Date('2026-09-24T19:43:00Z'),
 });
+
+await assert.rejects(
+  () => executeGoalWorkWithAdapter({
+    state, workKey:'commercial',registry,
+    now:new Date('2026-09-24T19:44:00Z'),
+  }),
+  /trusted human approval signer missing/
+);
 
 const commercial = await executeGoalWorkWithAdapter({
   state,
   workKey: 'commercial',
   registry,
+  trustedPublicKeys,
   now: new Date('2026-09-24T19:44:00Z'),
 });
 assert.equal(commercial.ok, true);
