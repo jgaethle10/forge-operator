@@ -95,7 +95,14 @@ export async function refetchAndStoreProviderObservation({
  });
  // An exception/timeout from the adapter is NOT evidence that the operation
  // failed. Leave the original hold untouched for later manual reconciliation.
- const response=await adapter.refetchAttempt(request);
+ let response;
+ try {
+  response=await adapter.refetchAttempt(request);
+ } catch {
+  // Provider error bodies may contain bearer tokens, request headers or PII.
+  // A failed lookup is UNKNOWN, not proof that an upstream action did not run.
+  throw Error('provider refetch unavailable: outcome unknown; hold unchanged');
+ }
  const responseKeys=['provider_key','attempt_key','lookup_mode',
   'outcome','upstream_receipt_ref','upstream_evidence'];
  if(!exact(response,responseKeys)||response.provider_key!==providerKey||
