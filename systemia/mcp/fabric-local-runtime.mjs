@@ -936,9 +936,14 @@ export async function startFabricLocalRuntime({
         let checkoutUrl=null;
         try{
           const candidate=new URL(String(result?.checkout_url||''));
+          const stripeCheckoutSession=
+            candidate.hostname==='checkout.stripe.com' &&
+            /^\\/(?:c\\/pay|pay)\\/[^/]{8,}$/.test(candidate.pathname);
+          const ownedExactCheckout=
+            candidate.hostname==='fabric.systemiacommandcenters.com' &&
+            /^\\/payments\\/checkout\\/ibmi-74-deadline-xray\\/[^/]{8,}$/.test(candidate.pathname);
           const approvedIBMi74Handoff=
-            (candidate.hostname==='checkout.stripe.com' ||
-             candidate.hostname==='fabric.systemiacommandcenters.com') &&
+            (stripeCheckoutSession||ownedExactCheckout) &&
             candidate.protocol==='https:' &&
             !candidate.username && !candidate.password && !candidate.port;
           // Exact Offer #1 money cannot be redirected to an arbitrary HTTPS
