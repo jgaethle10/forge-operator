@@ -25,6 +25,28 @@ try{
   process.stdout.write(JSON.stringify(summary,null,2)+'\n');
 }catch(e){
   const error=e instanceof Error?e.message:String(e);
+  if(error==='nhc_advisory_identity_mismatch'){
+    // Public source diagnostics only. Show no content, cookies, or request headers.
+    try{
+      const targets=[
+        'https://www.nhc.noaa.gov/mobile/text/refresh/MIATCPAT4%2Bhtml/081456.shtml',
+        'https://www.nhc.noaa.gov/archive/2026/al09/al092026.public.008.shtml'
+      ];
+      for(const url of targets){
+        try{
+          const x=await fetch(url,{redirect:'manual'});
+          const body=await x.text();
+          const plain=body.replace(/<[^>]+>/g,' ').replace(/\\s+/g,' ');
+          process.stderr.write(JSON.stringify({
+            source_probe:url, status:x.status, response_url:x.url,
+            length:body.length, nhc_id_present:/AL092026/.test(body),
+            title_present:/Isaias/i.test(plain), bulletin_present:/Advisory\\s+Number\\s+8/i.test(plain)
+          })+'\\n');
+        }catch(ex){process.stderr.write(JSON.stringify({source_probe:url,transport_error:String(ex).slice(0,160)})+'\\n');}
+      }
+    }catch{}
+  }
+
   const held={
     schema:'evercraft.isaias-agency-readonly-acquisition.v1',
     state:'held_external_source_not_verified',
