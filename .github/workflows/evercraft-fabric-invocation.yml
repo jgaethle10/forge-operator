@@ -34,3 +34,25 @@ jobs:
           node --check systemia/fabric-invocation/browser-worker-adapter.mjs
           node --check systemia/fabric-invocation/compute-browser-lease.mjs
           node --test systemia/fabric-invocation/*.test.mjs
+
+  physical-chromium-compute-lineage-canary:
+    runs-on: ubuntu-latest
+    timeout-minutes: 18
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Install owned Browser Worker dependencies
+        working-directory: systemia/evercraft-web/browser-worker
+        run: PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD=1 npm install --no-audit --no-fund
+      - name: Real Chromium -> owned Compute lease -> Fabric -> native Lineage -> local Systemia
+        env:
+          EVERCRAFT_FABRIC_CHROMIUM_RECEIPT_PATH: ${{ runner.temp }}/fabric-chromium-receipt.json
+        run: node systemia/fabric-invocation/compute-real-browser.proof.mjs
+      - name: Upload nonsecret Chromium evidence receipt
+        uses: actions/upload-artifact@v4
+        with:
+          name: fabric-real-chromium-local-canary
+          path: ${{ runner.temp }}/fabric-chromium-receipt.json
+          if-no-files-found: error
