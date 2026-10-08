@@ -6,7 +6,7 @@ export const OWNED_FRESHNESS_SCHEMA='evercraft.rivet.owned-session-freshness-rec
 export const DEFAULT_MINUTE=32; // Base44 compatibility cron runs at :12 UTC.
 const clean=value=>String(value??'').trim();
 
-export function validateRefreshEndpoint(endpoint){
+export function validateRefreshEndpoint(endpoint,{trustedOrigin}={}){
   let url;
   try{url=new URL(clean(endpoint))}catch{throw new Error('refresh_endpoint_invalid')}
   if(url.protocol!=='https:' || url.username || url.password || url.search || url.hash ||
@@ -15,6 +15,15 @@ export function validateRefreshEndpoint(endpoint){
   }
   if(!url.hostname || url.hostname==='localhost' || url.hostname.endsWith('.local') ||
      /^\d+\.\d+\.\d+\.\d+$/.test(url.hostname))throw new Error('refresh_endpoint_host_invalid');
+  // Never send machine credentials to a host learned only from the request URL.
+  if(!clean(trustedOrigin))throw new Error('trusted_refresh_origin_required');
+  let trusted;
+  try{trusted=new URL(clean(trustedOrigin))}catch{throw new Error('trusted_refresh_origin_invalid')}
+  if(trusted.protocol!=='https:' || trusted.username || trusted.password || trusted.search || trusted.hash ||
+     trusted.pathname!=='/' || trusted.origin!==clean(trustedOrigin).replace(/\/$/,'')){
+    throw new Error('trusted_refresh_origin_invalid');
+  }
+  if(url.origin!==trusted.origin)throw new Error('refresh_endpoint_origin_not_admitted');
   return url.toString();
 }
 function requireIso(value,label){
@@ -74,9 +83,9 @@ function receiptFromBody(body,{requestedAt,endpoint,receivedAt}){
   };
 }
 export async function invokeSessionRefresh({
-  endpoint,machineKey,fetchImpl=fetch,now=()=>new Date().toISOString(),timeoutMs=90000
+  endpoint,machineKey,trustedOrigin=process.env.ALIEV_SESSION_REFRESH_TRUSTED_ORIGIN,fetchImpl=fetch,now=()=>new Date().toISOString(),timeoutMs=90000
 }={}){
-  const url=validateRefreshEndpoint(endpoint);
+  const url=validateRefreshEndpoint(endpoint,{trustedOrigin});
   if(!clean(machineKey))throw new Error('SYSTEMIA_MACHINE_KEY_required');
   if(!Number.isInteger(timeoutMs)||timeoutMs<1000||timeoutMs>110000)throw new Error('timeout_ms_invalid');
   const requestedAt=requireIso(now(),'request_time');
@@ -100,6 +109,7 @@ export function appendLocalReceipt(ledgerPath,receipt){
 }
 export async function runOwnedFreshnessOnce({
   endpoint=process.env.ALIEV_SESSION_REFRESH_URL,
+  trustedOrigin=process.env.ALIEV_SESSION_REFRESH_TRUSTED_ORIGIN,
   machineKey=process.env.SYSTEMIA_MACHINE_KEY,
   ledgerPath=process.env.EVERCRAFT_FRESHNESS_RECEIPT_LEDGER,
   fetchImpl=fetch,now=()=>new Date().toISOString()
@@ -107,10 +117,19 @@ export async function runOwnedFreshnessOnce({
   if(!clean(ledgerPath))throw new Error('EVERCRAFT_FRESHNESS_RECEIPT_LEDGER_required');
   let result;
   try{
-    result=await invokeSessionRefresh({endpoint,machineKey,fetchImpl,now});
+    result=await invokeSessionRefresh({endpoint,machineKey,trustedOrigin,fetchImpl,now});
   }catch(error){
+    // Never serialize arbitrary network/SDK exception text: it may contain
+    // response content, configuration values, credentials, or private URLs.
+    const reason=clean(error instanceof Error?error.message:error);
+    const safe=/^refresh_http_[1-5][0-9]{2}$/.test(reason)?reason:
+      reason==='refresh_endpoint_origin_not_admitted'?'refresh_endpoint_origin_not_admitted':
+      reason==='trusted_refresh_origin_required'?'trusted_refresh_origin_required':
+      reason==='trusted_refresh_origin_invalid'?'trusted_refresh_origin_invalid':
+      reason==='SYSTEMIA_MACHINE_KEY_required'?'machine_identity_unavailable':
+      'owned_refresh_invocation_failed';
     result={schema:OWNED_FRESHNESS_SCHEMA,ok:false,state:'FAILED',
-      attempted_at:now(),error_code:clean(error instanceof Error?error.message:error).slice(0,180)};
+      attempted_at:now(),error_code:safe};
   }
   return appendLocalReceipt(ledgerPath,result);
 }
