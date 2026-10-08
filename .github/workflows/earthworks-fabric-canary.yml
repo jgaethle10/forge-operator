@@ -31,7 +31,7 @@ concurrency:
 jobs:
   prove:
     runs-on: ubuntu-latest
-    timeout-minutes: 4
+    timeout-minutes: 8
     env:
       FABRIC_ORIGIN: https://fabric.systemiacommandcenters.com
     steps:

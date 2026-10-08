@@ -465,7 +465,17 @@ verify_current_runtime() {
       }
       if(h.visual_desk_ingest_ready!==true) process.exit(6);
       if(h.visual_desk_ingest_publication_authority!==false) process.exit(7);
+      if(h.earthworks_simulator_path!=='/earthworks') process.exit(8);
+      if(h.earthworks_simulator_authority!=='interactive_software_simulation_only') process.exit(9);
     " || return 9
+
+  local earthworks_page=""
+  earthworks_page="$(curl -fsS --max-time 5 "http://127.0.0.1:8787/earthworks" 2>/dev/null || true)"
+  [[ -n "$earthworks_page" ]] || return 14
+  printf '%s' "$earthworks_page" | grep -Fq 'Live Yard 001' || return 14
+  printf '%s' "$earthworks_page" | grep -Fq 'Shadow' || return 14
+  printf '%s' "$earthworks_page" | grep -Fq 'Autonomy' || return 14
+  printf '%s' "$earthworks_page" | grep -Fq 'STOP ALL' || return 14
 
   local attestation_code=10
   for attempt in 1 2 3 4 5 6; do
@@ -563,9 +573,22 @@ if [[ "$before" == "$target" ]]; then
   code=$?
   set -e
   if [[ "$code" -ne 0 ]]; then
+    echo "Evercraft update: current checkout is aligned but resident Fabric runtime drifted (verification code $code); restarting once"
+    if ! systemctl restart "$SERVICE"; then
+      restore_edge_attestation_env
+      [[ -n "$ENV_BACKUP" ]] && systemctl restart "$SERVICE" || true
+      echo "ERROR: Fabric restart failed while repairing resident runtime drift" >&2
+      exit 7
+    fi
+    set +e
+    verify_current_runtime "$expected_count"
+    code=$?
+    set -e
+  fi
+  if [[ "$code" -ne 0 ]]; then
     restore_edge_attestation_env
     [[ -n "$ENV_BACKUP" ]] && systemctl restart "$SERVICE" || true
-    echo "ERROR: current Fabric verification failed ($code)" >&2
+    echo "ERROR: current Fabric verification failed after one bounded restart ($code)" >&2
     exit "$code"
   fi
 
