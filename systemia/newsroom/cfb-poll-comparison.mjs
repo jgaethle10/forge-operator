@@ -115,6 +115,7 @@ export function latestPollBaseline({
   baselineDir='systemia/newsroom/baselines',
   pollId='ap-top25',
   at,
+  maxAgeDays=8,
 }={}){
   const cutoff=new Date(at);
   if(!Number.isFinite(cutoff.getTime())) throw new Error('cfb_poll_baseline_cutoff_invalid');
@@ -133,7 +134,14 @@ export function latestPollBaseline({
     })
     .filter(Boolean)
     .sort((a,b)=>a.date-b.date);
-  return candidates.at(-1)||null;
+  const selected=candidates.at(-1)||null;
+  if(!selected) return null;
+  const cutoffDay=Date.parse(new Date(cutoff).toISOString().slice(0,10)+'T00:00:00.000Z');
+  const pollDay=Date.parse(selected.baseline.published_date+'T00:00:00.000Z');
+  const ageDays=Math.max(0,Math.floor((cutoffDay-pollDay)/86400000));
+  if(!Number.isInteger(Number(maxAgeDays))||Number(maxAgeDays)<0) throw new Error('cfb_poll_baseline_max_age_invalid');
+  if(ageDays>Number(maxAgeDays)) throw new Error('cfb_poll_baseline_stale');
+  return {...selected,age_days:ageDays,max_age_days:Number(maxAgeDays)};
 }
 
 async function main(){
@@ -150,6 +158,9 @@ async function main(){
   const selected=latestPollBaseline({baselineDir,pollId:'ap-top25',at:ranking.generated_at||ranking.evidence_through_at});
   if(!selected) throw new Error('cfb_poll_comparison_no_baseline_available');
   const report=compareCfbRankingToPoll({ranking,baseline:selected.baseline});
+  report.poll.age_days_at_comparison=selected.age_days;
+  report.poll.max_age_days=selected.max_age_days;
+  report.poll.freshness_state='current_or_previous_week_official_baseline';
   fs.mkdirSync(path.dirname(output),{recursive:true});
   fs.writeFileSync(output,JSON.stringify(report,null,2)+'\n');
   process.stdout.write(JSON.stringify({
@@ -158,6 +169,8 @@ async function main(){
     ranking_run_id:report.ranking_run_id,
     poll_id:report.poll.poll_id,
     poll_published_date:report.poll.published_date,
+    poll_age_days:report.poll.age_days_at_comparison,
+    poll_freshness_state:report.poll.freshness_state,
     overlap_count:report.summary.overlap_count,
     mean_absolute_rank_gap:report.summary.mean_absolute_rank_gap,
   },null,2)+'\n');
