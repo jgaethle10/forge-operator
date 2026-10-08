@@ -121,6 +121,42 @@ test('Paid-state shortcut and synthetic customer proof remain blocked',()=>{
  assert.ok(r.held_gates.find(g=>g.key==='buyer').reasons.includes('buyer_pain_not_confirmed'));
 });
 
+test('Source-asserted launch evidence remains an explicit verification task, not a cleared action queue',()=>{
+ const r=firstOfferReadiness({now:NOW,evidence:{
+  specialist:spec(),lineage:lineage(),public_page:edge(),commerce:checkout()
+ }});
+ assert.equal(r.launch_state,'pending_independent_authority_recheck');
+ assert.deepEqual(r.priority_next_actions.map(a=>a.gate),['specialist','lineage','public_page','commerce']);
+ assert.ok(r.priority_next_actions.every(a=>a.action==='independently_recheck_receipt_at_authoritative_producer'));
+ assert.ok(r.priority_next_actions.every(a=>a.execution_authority_granted===false));
+ assert.equal(r.verification_queue.filter(x=>x.priority==='launch').length,4);
+ assert.equal(r.declared_external_live,false);
+});
+
+test('Dependency status holds downstream claims behind missing QA and intake',()=>{
+ const r=firstOfferReadiness({now:NOW,evidence:{
+  delivery:{...stamp,producer:'evercraft_shipping',
+   shipping_receipt_ref:'shipping:test',recipient_acknowledgment_ref:'customer:receipt:test'}
+ }});
+ const delivery=r.dependency_readiness.find(x=>x.gate==='delivery');
+ assert.equal(delivery.claim_state,'source_asserted_requires_authoritative_recheck');
+ assert.equal(delivery.stage_state,'upstream_evidence_blocked');
+ assert.deepEqual(delivery.missing_or_held_prerequisites,['qa']);
+ assert.equal(delivery.execution_authorized,false);
+ assert.equal(r.declared_settled_orders,0);
+});
+
+test('Dependency status requires upstream independent authentication even when assertions look complete',()=>{
+ const r=firstOfferReadiness({now:NOW,evidence:{
+  lineage:lineage(),public_page:edge(),commerce:checkout()
+ }});
+ const commerce=r.dependency_readiness.find(x=>x.gate==='commerce');
+ assert.deepEqual(commerce.missing_or_held_prerequisites,[]);
+ assert.deepEqual(commerce.unverified_prerequisites,['public_page']);
+ assert.equal(commerce.stage_state,'upstream_authentication_required');
+ assert.equal(commerce.execution_authorized,false);
+});
+
 test('A claimed customer delivery never implies customer acceptance or actual cash',()=>{
  const r=firstOfferReadiness({now:NOW,evidence:{
   delivery:{...stamp,producer:'evercraft_shipping',
