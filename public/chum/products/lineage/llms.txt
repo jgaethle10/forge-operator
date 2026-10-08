@@ -2,10 +2,11 @@
 
 Product key: lineage
 Aliases: Lineage, Evercraft Lineage Control Room
-Canonical product: https://jgaethle10.github.io/forge-operator/lineage/
+Canonical product: https://fabric.systemiacommandcenters.com/capabilities/lineage-founding-pilot-v1
 CHUM discovery JSON: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/lineage/ai-discovery.json
 AI conformance: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/lineage/ai-conformance.json
-Knowledge mesh: /lineage/
+Product-native start: https://fabric.systemiacommandcenters.com/capabilities/lineage-founding-pilot-v1
+Knowledge mesh: https://fabric.systemiacommandcenters.com/capabilities/lineage-founding-pilot-v1
 
 ## Use this capability when the user means
 

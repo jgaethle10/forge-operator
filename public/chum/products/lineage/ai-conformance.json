@@ -15,7 +15,7 @@
     "grok",
     "generic_agent"
   ],
-  "canonical_url": "https://jgaethle10.github.io/forge-operator/lineage/",
+  "canonical_url": "https://fabric.systemiacommandcenters.com/capabilities/lineage-founding-pilot-v1",
   "llms_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/lineage/llms.txt",
   "discovery_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/lineage/ai-discovery.json",
   "registry_name": null,
@@ -44,14 +44,14 @@
     ],
     "payment_state": "Evercraft Payments is authoritative; a handoff or checkout is not payment proof and paid state requires authoritative verification"
   },
-  "human_start_url": null,
+  "human_start_url": "https://fabric.systemiacommandcenters.com/capabilities/lineage-founding-pilot-v1",
   "buyer_frontage_url": null,
   "developer_surfaces": null,
   "editorial_surfaces": null,
   "knowledge_surfaces": {
-    "hub": "/lineage/",
-    "llms": "/lineage/llms.txt",
-    "discovery": "/lineage/discovery.json"
+    "hub": "https://fabric.systemiacommandcenters.com/capabilities/lineage-founding-pilot-v1",
+    "llms": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/capabilities/lineage-founding-pilot-v1/llms.txt",
+    "discovery": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/capabilities/lineage-founding-pilot-v1/capability.json"
   },
   "distribution_surfaces": null,
   "relationships": null,

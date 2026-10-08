@@ -2134,9 +2134,9 @@ Boundaries:
 ### Evercraft Lineage
 Product key: lineage
 Aliases: Lineage, Evercraft Lineage Control Room
-Canonical: https://jgaethle10.github.io/forge-operator/lineage/
+Canonical: https://fabric.systemiacommandcenters.com/capabilities/lineage-founding-pilot-v1
 Machine state: discovery_only
-Knowledge mesh: /lineage/
+Knowledge mesh: https://fabric.systemiacommandcenters.com/capabilities/lineage-founding-pilot-v1
 Discovery: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/lineage/ai-discovery.json
 AI conformance: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/lineage/ai-conformance.json
 Use when the user says or means:

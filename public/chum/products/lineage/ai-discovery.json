@@ -7,7 +7,7 @@
     "Evercraft Lineage Control Room"
   ],
   "class": "governed_multi_agent_history_and_version_control",
-  "canonical_url": "https://jgaethle10.github.io/forge-operator/lineage/",
+  "canonical_url": "https://fabric.systemiacommandcenters.com/capabilities/lineage-founding-pilot-v1",
   "intents": [
     "our coding agents keep overwriting each other",
     "version control designed for multiple AI agents",
@@ -43,7 +43,7 @@
     "payment_state": "Evercraft Payments is authoritative; a handoff or checkout is not payment proof and paid state requires authoritative verification"
   },
   "machine_commerce_handoff": null,
-  "human_start_url": null,
+  "human_start_url": "https://fabric.systemiacommandcenters.com/capabilities/lineage-founding-pilot-v1",
   "buyer_frontage_url": null,
   "registry_name": null,
   "mcp": null,
@@ -51,9 +51,9 @@
   "developer_surfaces": null,
   "editorial_surfaces": null,
   "knowledge_surfaces": {
-    "hub": "/lineage/",
-    "llms": "/lineage/llms.txt",
-    "discovery": "/lineage/discovery.json"
+    "hub": "https://fabric.systemiacommandcenters.com/capabilities/lineage-founding-pilot-v1",
+    "llms": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/capabilities/lineage-founding-pilot-v1/llms.txt",
+    "discovery": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/capabilities/lineage-founding-pilot-v1/capability.json"
   },
   "distribution_surfaces": null,
   "relationships": null,

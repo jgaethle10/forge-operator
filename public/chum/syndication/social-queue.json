@@ -1,6 +1,6 @@
 {
   "schema": "evercraft.syndication-social-queue.v1",
-  "generated_at": "2026-10-07T17:04:29.265Z",
+  "generated_at": "2026-10-08T06:27:28.566Z",
   "bootstrap": false,
   "policy": "Material product changes enter once per content hash only when a customer-grade HTTPS destination exists. Raw source hosts, legacy-provider URLs, and stale unsafe queue items are rejected before Evercraft Clip independently preflights the final customer destination.",
   "items": [
@@ -100,6 +100,17 @@
       "discovery_path": "/chum/products/lineage/ai-discovery.json",
       "text": "Evercraft Lineage: Evercraft Lineage is an Evercraft governed multi agent history and version control capability. Common needs: our coding agents keep overwriting each other; version control designed for multiple AI agents; audit what AI coding agents changed and why; provenance and rollback for agent-generated code.",
       "content_sha256": "d700e0cfe859eb2a0a8c742e281b4970cc9674791af87155da572c40385684c9",
+      "requires_authorized_destination": true,
+      "requires_anonymous_link_preflight": true
+    },
+    {
+      "dedupe_key": "lineage:90c8263c55af1d0ee1f8d77c7eb52b96cdaa6d4d37c75bf9542805c22a9a8063",
+      "product_key": "lineage",
+      "name": "Evercraft Lineage",
+      "canonical_url": "https://fabric.systemiacommandcenters.com/capabilities/lineage-founding-pilot-v1",
+      "discovery_path": "/chum/products/lineage/ai-discovery.json",
+      "text": "Evercraft Lineage: Evercraft Lineage is an Evercraft governed multi agent history and version control capability. Common needs: our coding agents keep overwriting each other; version control designed for multiple AI agents; audit what AI coding agents changed and why; provenance and rollback for agent-generated code.",
+      "content_sha256": "90c8263c55af1d0ee1f8d77c7eb52b96cdaa6d4d37c75bf9542805c22a9a8063",
       "requires_authorized_destination": true,
       "requires_anonymous_link_preflight": true
     },
