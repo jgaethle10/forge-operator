@@ -1,6 +1,7 @@
 import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
+import { DEADLINE_KEY, DEADLINE_AMOUNT_CENTS } from '../chum/ibmi-74-offer-contract.mjs';
 
 const STOP_WORDS=new Set([
   'a','an','and','are','as','at','be','by','for','from','how','i','in','is','it',
@@ -348,9 +349,9 @@ export function ibmi74OfferForIntent(intent,publicId){
     return null;
   }
   return {
-    offer_key:'ibmi_74_deadline_xray_250',
+    offer_key:DEADLINE_KEY,
     name:'IBM i 7.4 Deadline X-Ray',
-    amount_cents:25000,
+    amount_cents:DEADLINE_AMOUNT_CENTS,
     currency:'USD',
     amount_source:'published_catalog_offer_not_live_checkout_verification',
     route_state:'held_paid_corridor_not_independently_verified',
