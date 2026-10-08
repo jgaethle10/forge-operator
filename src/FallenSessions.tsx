@@ -53,7 +53,7 @@ export default function FallenSessions(){
   const [midiInputs,setMidiInputs]=useState(0);
   const [automationParam,setAutomationParam]=useState<'volume'|'filter'>('volume');
   const [playhead,setPlayhead]=useState(0);
-  const [audioStatus,setAudioStatus]=useState<PulseGridAudioStatus>({playing:false,scene:0,step:0,context_state:'cold',clock_mode:'cold',track_buses:0,latency_ms:null,cached_audio_assets:0});
+  const [audioStatus,setAudioStatus]=useState<PulseGridAudioStatus>({playing:false,scene:0,step:0,context_state:'cold',clock_mode:'cold',track_buses:0,latency_ms:null,cached_audio_assets:0,playback_mode:'scene',arrangement_bar:null});
   const sessionRef=useRef(session);
   const selectedTrackRef=useRef(selectedTrackId);
   const selectedSceneRef=useRef(selectedScene);
@@ -135,6 +135,28 @@ export default function FallenSessions(){
       setStatus('Playing canonical scene '+(selectedScene+1)+'.');
     }catch(error){
       setStatus(error instanceof Error?error.message:'Web Audio playback failed.');
+    }
+  }
+
+  async function toggleArrangementPlay(){
+    if(playing){
+      audioRef.current?.stop();
+      setPlaying(false);
+      setPlayhead(0);
+      setStatus('Playback stopped.');
+      return;
+    }
+    const hasArrangement=session.arrangement.some((row)=>row.some((scene)=>scene!==null));
+    if(!hasArrangement){
+      setStatus('Arrangement is empty. Assign at least one scene before playback.');
+      return;
+    }
+    try{
+      await audioRef.current?.playArrangement(session);
+      setPlaying(true);
+      setStatus('Playing canonical arrangement from bar 1.');
+    }catch(error){
+      setStatus(error instanceof Error?error.message:'Arrangement playback failed.');
     }
   }
 
@@ -684,6 +706,8 @@ export default function FallenSessions(){
           <span>{audioStatus.latency_ms===null?'Latency cold':'Latency '+audioStatus.latency_ms+' ms'}</span>
           <span>{audioStatus.track_buses} DSP buses</span>
           <span>{audioStatus.cached_audio_assets} audio asset{audioStatus.cached_audio_assets===1?'':'s'} cached</span>
+          <span>Transport {audioStatus.playback_mode}</span>
+          {audioStatus.arrangement_bar!==null&&<span>Arrangement bar {audioStatus.arrangement_bar+1}</span>}
           <span>{midiEnabled?(midiInputs+' MIDI input'+(midiInputs===1?'':'s')):'MIDI off'}</span>
           <span>Local-first</span>
           <span>Engine alpha · not for sale</span>
@@ -698,7 +722,8 @@ export default function FallenSessions(){
         onChange={(event)=>{const file=event.target.files?.[0];if(file)void importAudioFile(file)}}
       />
       <section className="fsToolbar" aria-label="Session controls">
-        <button onClick={togglePlay} disabled={recording}>{playing?'■ Stop':'▶ Play'}</button>
+        <button onClick={togglePlay} disabled={recording}>{playing?'■ Stop':'▶ Play Scene'}</button>
+        <button onClick={toggleArrangementPlay} disabled={recording}>{playing&&audioStatus.playback_mode==='arrangement'?'■ Stop Arrangement':'▶ Arrangement'}</button>
         <button onClick={toggleRecording}>{recording?'■ Stop Recording':'● Record'}</button>
         <button onClick={toggleMidi}>{midiEnabled?'Disconnect MIDI':'Enable MIDI'}</button>
         <button onClick={chooseAudioFile} disabled={recording}>Import Audio</button>
@@ -986,7 +1011,7 @@ export default function FallenSessions(){
                 <div className="fsSectionTitle">Canonical arrangement</div>
                 <strong>16-bar commitment timeline</strong>
               </div>
-              <p>Timeline slots are receipt-backed now. Transport remains scene playback until the arrangement scheduler lands.</p>
+              <p>Timeline slots now drive canonical arrangement transport. Contiguous repeated scene cells preserve clip phase across bars.</p>
             </div>
             <div className="fsArrangementScroll">
               <table>
