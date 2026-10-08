@@ -396,7 +396,7 @@ export async function startFabricLocalRuntime({
   sabanCapacityHealthFile='',
   releaseRefFile='',
   purchaseIntentFetch=fetch,
-  purchaseIntentUrl='https://base44.app/api/apps/6a7adc9666bfd8c5c2fb4069/functions/ravenNexusPurchaseIntent',
+  purchaseIntentUrl=process.env.EVERCRAFT_OWNED_PURCHASE_INTENT_URL||'',
 }={}) {
   const instanceId='fabric_local_'+crypto.randomBytes(10).toString('hex');
   const resolvedReleaseRefFile=String(
@@ -433,9 +433,17 @@ export async function startFabricLocalRuntime({
   if(typeof purchaseIntentFetch!=='function'){
     throw new Error('purchase_intent_fetch_invalid');
   }
-  const purchaseIntentEndpoint=new URL(String(purchaseIntentUrl||''));
-  if(purchaseIntentEndpoint.protocol!=='https:'){
-    throw new Error('purchase_intent_url_requires_https');
+  // A missing owned payment adapter is a HOLD, not an implicit retired-provider fallback.
+  const configuredPurchaseUrl=String(purchaseIntentUrl||'').trim();
+  let purchaseIntentEndpoint=null;
+  if(configuredPurchaseUrl){
+    const candidate=new URL(configuredPurchaseUrl);
+    if(candidate.protocol!=='https:'||
+       candidate.username||candidate.password||candidate.hash||
+       candidate.hostname!=='fabric.systemiacommandcenters.com'){
+      throw new Error('purchase_intent_requires_approved_owned_https_backend');
+    }
+    purchaseIntentEndpoint=candidate;
   }
   const staticPrepared=Array.isArray(catalog)?nativeOnlyCatalog(catalog):null;
   const preparedCatalog=()=>staticPrepared||nativeOnlyCatalog(loadFabricCatalogFromRepository());
@@ -608,7 +616,8 @@ export async function startFabricLocalRuntime({
     transactional:false,
     external_action_authority:false,
     mcp_read_only:true,
-    human_offer_checkout_enabled:true,
+    human_offer_checkout_enabled:Boolean(purchaseIntentEndpoint),
+    purchase_intent_backend_state:purchaseIntentEndpoint?'configured_owned_backend_unverified_settlement':'held_no_owned_backend',
     human_offer_checkout_path_template:'/api/offers/{slug}/checkout',
     human_offer_checkout_requires_explicit_confirmation:true,
     human_offer_checkout_handoff_mode:'explicit_evercraft_page',
@@ -877,6 +886,21 @@ export async function startFabricLocalRuntime({
             ok:false,
             error:'explicit_user_confirmation_required',
             authority:'Evercraft Payments',
+            fulfillment_release:false,
+          });
+        }
+
+        if(!purchaseIntentEndpoint){
+          if(isForm){
+            return sendText(res,503,renderPaymentHoldPage({slug}),{
+              contentType:'text/html; charset=utf-8'
+            });
+          }
+          return sendJson(res,503,{
+            ok:false,
+            error:'owned_payment_backend_not_configured',
+            authority:'Evercraft Payments',
+            checkout_ready:false,
             fulfillment_release:false,
           });
         }
