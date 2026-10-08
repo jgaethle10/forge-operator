@@ -110,6 +110,15 @@ export type PulseGridOperation =
   | { type: 'clip.set_bars'; track_id: string; scene: number; bars: number }
   | { type: 'clip.set_step'; track_id: string; scene: number; step: number; velocity: number }
   | {
+      type: 'clip.set_step_expression';
+      track_id: string;
+      scene: number;
+      step: number;
+      velocity?: number;
+      probability?: number;
+      microtiming?: number;
+    }
+  | {
       type: 'clip.set_automation_point';
       track_id: string;
       scene: number;
@@ -581,6 +590,32 @@ export function applyPulseGridOperation(
     clip.steps[operation.step] = clamp(operation.velocity, 0, 1);
     after = clip.steps[operation.step];
     targets = [`clip:${clip.id}.steps[${operation.step}]`];
+  } else if (operation.type === 'clip.set_step_expression') {
+    const { clip } = getClip(session, operation.track_id, operation.scene);
+    if (operation.step < 0 || operation.step >= clip.steps.length) {
+      throw new Error('PulseGrid step expression index is out of range.');
+    }
+    if (
+      operation.velocity === undefined &&
+      operation.probability === undefined &&
+      operation.microtiming === undefined
+    ) {
+      throw new Error('PulseGrid step expression requires at least one value.');
+    }
+    before = {
+      velocity: clip.steps[operation.step],
+      probability: clip.probabilities[operation.step],
+      microtiming: clip.microtiming[operation.step],
+    };
+    if (operation.velocity !== undefined) clip.steps[operation.step] = clamp(Number(operation.velocity), 0, 1);
+    if (operation.probability !== undefined) clip.probabilities[operation.step] = clamp(Number(operation.probability), 0, 1);
+    if (operation.microtiming !== undefined) clip.microtiming[operation.step] = clamp(Number(operation.microtiming), -1000, 1000);
+    after = {
+      velocity: clip.steps[operation.step],
+      probability: clip.probabilities[operation.step],
+      microtiming: clip.microtiming[operation.step],
+    };
+    targets = [`clip:${clip.id}.step_expression[${operation.step}]`];
   } else if (operation.type === 'clip.set_automation_point') {
     const { clip } = getClip(session, operation.track_id, operation.scene);
     if (operation.step < 0 || operation.step >= clip.steps.length) {
@@ -799,6 +834,13 @@ export function undoPulseGridReceipt(
     const { clip } = getClip(session, operation.track_id, operation.scene);
     if (operation.step < 0 || operation.step >= clip.steps.length) throw new Error('PulseGrid undo step is out of range.');
     clip.steps[operation.step] = Number(originalReceipt.before);
+  } else if (operation.type === 'clip.set_step_expression') {
+    const { clip } = getClip(session, operation.track_id, operation.scene);
+    if (operation.step < 0 || operation.step >= clip.steps.length) throw new Error('PulseGrid undo step expression index is out of range.');
+    const restored = originalReceipt.before as {velocity:number;probability:number;microtiming:number};
+    clip.steps[operation.step] = Number(restored.velocity);
+    clip.probabilities[operation.step] = Number(restored.probability);
+    clip.microtiming[operation.step] = Number(restored.microtiming);
   } else if (operation.type === 'clip.set_automation_point') {
     const { clip } = getClip(session, operation.track_id, operation.scene);
     if (operation.step < 0 || operation.step >= clip.steps.length) throw new Error('PulseGrid undo automation step is out of range.');

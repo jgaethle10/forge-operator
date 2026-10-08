@@ -44,6 +44,7 @@ export default function FallenSessions(){
   const [selectedTrackId,setSelectedTrackId]=useState('keys');
   const [selectedScene,setSelectedScene]=useState(0);
   const [selectedNoteId,setSelectedNoteId]=useState<string|null>(null);
+  const [selectedStepIndex,setSelectedStepIndex]=useState<number|null>(null);
   const [draggedNoteId,setDraggedNoteId]=useState<string|null>(null);
   const [status,setStatus]=useState('Canonical PulseGrid session ready.');
   const [playing,setPlaying]=useState(false);
@@ -89,11 +90,13 @@ export default function FallenSessions(){
   useEffect(()=>{
     selectedTrackRef.current=selectedTrackId;
     setSelectedNoteId(null);
+    setSelectedStepIndex(null);
   },[selectedTrackId]);
 
   useEffect(()=>{
     selectedSceneRef.current=selectedScene;
     setSelectedNoteId(null);
+    setSelectedStepIndex(null);
     audioRef.current?.setScene(selectedScene);
   },[selectedScene]);
 
@@ -568,13 +571,43 @@ export default function FallenSessions(){
     });
   }
 
-  function toggleStep(step:number){
-    apply({
+  function selectStep(step:number){
+    setSelectedStepIndex(step);
+    if(clip.steps[step]<=0){
+      apply({
+        type:'clip.set_step',
+        track_id:track.id,
+        scene:selectedScene,
+        step,
+        velocity:.82,
+      });
+      return;
+    }
+    setStatus(
+      'Selected step '+String(step+1)+' · velocity '+Math.round(clip.steps[step]*127)+
+      ' · probability '+Math.round((clip.probabilities[step]??1)*100)+'%'
+    );
+  }
+
+  function clearStep(step:number){
+    const result=apply({
       type:'clip.set_step',
       track_id:track.id,
       scene:selectedScene,
       step,
-      velocity:clip.steps[step]>0?0:.82,
+      velocity:0,
+    });
+    if(result)setSelectedStepIndex(step);
+  }
+
+  function commitStepExpression(values:{velocity?:number;probability?:number;microtiming?:number}){
+    if(selectedStepIndex===null)return;
+    apply({
+      type:'clip.set_step_expression',
+      track_id:track.id,
+      scene:selectedScene,
+      step:selectedStepIndex,
+      ...values,
     });
   }
 
@@ -821,18 +854,77 @@ export default function FallenSessions(){
                 </div>
               )}
             </div>
+          ):track.type==='drums'?(
+            <div className="fsStepEditor">
+              <div className="fsStepGrid">
+                {visibleSteps.map((step)=>(
+                  <button
+                    key={step}
+                    className={'fsStep '+(clip.steps[step]>0?'active ':'')+(selectedStepIndex===step?'selected ':'')+(step%4===0?'beat ':'')+(playing&&step===playhead?'playhead':'')}
+                    onClick={()=>selectStep(step)}
+                    onDoubleClick={()=>clearStep(step)}
+                    title={
+                      'Step '+(step+1)+
+                      ' · velocity '+clip.steps[step].toFixed(2)+
+                      ' · probability '+Math.round((clip.probabilities[step]??1)*100)+'%'+
+                      ' · microtiming '+Math.round(clip.microtiming[step]??0)+'ms'
+                    }
+                  >
+                    {step+1}
+                  </button>
+                ))}
+              </div>
+              {selectedStepIndex!==null&&(
+                <div className="fsNoteInspector fsStepInspector">
+                  <div className="fsSectionTitle">Selected step · {selectedStepIndex+1}</div>
+                  <label>
+                    <span>Velocity {Math.round((clip.steps[selectedStepIndex]??0)*127)}</span>
+                    <input
+                      key={'step-velocity-'+selectedStepIndex+'-'+clip.steps[selectedStepIndex]}
+                      type="range"
+                      min={0}
+                      max={1}
+                      step={0.01}
+                      defaultValue={clip.steps[selectedStepIndex]??0}
+                      onPointerUp={(event)=>commitStepExpression({velocity:Number(event.currentTarget.value)})}
+                      onKeyUp={(event)=>commitStepExpression({velocity:Number(event.currentTarget.value)})}
+                    />
+                  </label>
+                  <label>
+                    <span>Probability {Math.round((clip.probabilities[selectedStepIndex]??1)*100)}%</span>
+                    <input
+                      key={'step-probability-'+selectedStepIndex+'-'+clip.probabilities[selectedStepIndex]}
+                      type="range"
+                      min={0}
+                      max={1}
+                      step={0.01}
+                      defaultValue={clip.probabilities[selectedStepIndex]??1}
+                      onPointerUp={(event)=>commitStepExpression({probability:Number(event.currentTarget.value)})}
+                      onKeyUp={(event)=>commitStepExpression({probability:Number(event.currentTarget.value)})}
+                    />
+                  </label>
+                  <label>
+                    <span>Microtiming {Math.round(clip.microtiming[selectedStepIndex]??0)} ms</span>
+                    <input
+                      key={'step-microtime-'+selectedStepIndex+'-'+clip.microtiming[selectedStepIndex]}
+                      type="range"
+                      min={-100}
+                      max={100}
+                      step={1}
+                      defaultValue={clip.microtiming[selectedStepIndex]??0}
+                      onPointerUp={(event)=>commitStepExpression({microtiming:Number(event.currentTarget.value)})}
+                      onKeyUp={(event)=>commitStepExpression({microtiming:Number(event.currentTarget.value)})}
+                    />
+                  </label>
+                  <button onClick={()=>clearStep(selectedStepIndex)}>Clear step</button>
+                </div>
+              )}
+            </div>
           ):(
-            <div className="fsStepGrid">
-              {visibleSteps.map((step)=>(
-                <button
-                  key={step}
-                  className={'fsStep '+(clip.steps[step]>0?'active ':'')+(step%4===0?'beat ':'')+(playing&&step===playhead?'playhead':'')}
-                  onClick={()=>toggleStep(step)}
-                  title={'Step '+(step+1)+' · velocity '+clip.steps[step].toFixed(2)}
-                >
-                  {step+1}
-                </button>
-              ))}
+            <div className="fsAudioClipState">
+              <div className="fsSectionTitle">Canonical audio clip</div>
+              <strong>{clip.audio_asset_id?'Verified asset attached':'No audio asset attached'}</strong>
+              <p>{clip.audio_asset_id?clip.audio_asset_id:'Import or record audio to attach verified bytes to this scene.'}</p>
             </div>
           )}
 

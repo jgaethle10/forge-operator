@@ -214,3 +214,40 @@ test('Fallen Sessions automation lane stays bounded and horizontally scrollable'
   assert.match(css,/overflow-x:auto/);
   assert.match(css,/writing-mode:vertical-lr/);
 });
+
+
+test('Fallen Sessions drum step inspector edits canonical step expression',()=>{
+  const ui=fs.readFileSync('src/FallenSessions.tsx','utf8');
+  assert.match(ui,/type:'clip\.set_step_expression'/);
+  assert.match(ui,/selectedStepIndex/);
+  assert.match(ui,/commitStepExpression/);
+  assert.match(ui,/probability:Number\(event\.currentTarget\.value\)/);
+  assert.match(ui,/microtiming:Number\(event\.currentTarget\.value\)/);
+  assert.match(ui,/velocity:Number\(event\.currentTarget\.value\)/);
+});
+
+test('Fallen Sessions drum expression commits sliders on release rather than every movement',()=>{
+  const ui=fs.readFileSync('src/FallenSessions.tsx','utf8');
+  assert.match(ui,/onPointerUp=\{\(event\)=>commitStepExpression/);
+  assert.match(ui,/onKeyUp=\{\(event\)=>commitStepExpression/);
+  assert.doesNotMatch(ui,/onChange=\{\(event\)=>commitStepExpression/);
+});
+
+test('Fallen Sessions step grid selects, activates and double-click clears',()=>{
+  const ui=fs.readFileSync('src/FallenSessions.tsx','utf8');
+  const css=fs.readFileSync('src/fallen-sessions.css','utf8');
+  assert.match(ui,/function selectStep\(step:number\)/);
+  assert.match(ui,/velocity:\.82/);
+  assert.match(ui,/onDoubleClick=\{\(\)=>clearStep\(step\)\}/);
+  assert.match(ui,/selectedStepIndex===step/);
+  assert.match(css,/\.fsStep\.selected/);
+});
+
+test('Fallen Sessions does not render decorative drum controls for audio tracks',()=>{
+  const ui=fs.readFileSync('src/FallenSessions.tsx','utf8');
+  assert.match(ui,/track\.type==='drums'/);
+  assert.match(ui,/Canonical audio clip/);
+  assert.match(ui,/Verified asset attached/);
+  assert.match(ui,/No audio asset attached/);
+  assert.match(ui,/Import or record audio to attach verified bytes/);
+});
