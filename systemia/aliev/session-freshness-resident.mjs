@@ -1,5 +1,6 @@
 import fs from 'node:fs';
 import path from 'node:path';
+import {claimFreshnessSlot,finishFreshnessSlot} from './session-freshness-slot.mjs';
 
 export const OWNED_FRESHNESS_SCHEMA='evercraft.rivet.owned-session-freshness-receipt.v1';
 export const DEFAULT_MINUTE=32; // Base44 compatibility cron runs at :12 UTC.
@@ -114,20 +115,33 @@ export async function startOwnedSessionFreshnessResident({
   enabled=process.env.EVERCRAFT_FRESHNESS_RESIDENT_ENABLE==='1',
   minute=DEFAULT_MINUTE,
   periodMs=15000,
+  slotStateDir=process.env.EVERCRAFT_FRESHNESS_SLOT_DIR,
   run=()=>runOwnedFreshnessOnce(),
   clock=()=>new Date(),
   onError=error=>console.error('owned_session_freshness_error',clean(error?.message||error))
 }={}){
   if(!enabled)throw new Error('resident_disabled_until_explicit_enablement');
   if(!Number.isInteger(periodMs)||periodMs<1000)throw new Error('poll_period_invalid');
+  if(!clean(slotStateDir))throw new Error('durable_slot_state_directory_required');
   let lastSlot=null,active=false,closed=false;
   const tick=async()=>{
     if(closed||active)return;
     const slot=utcSlot(clock(),minute);
     if(!slot||slot===lastSlot)return;
-    // Slot admission happens before networking; a failed run cannot spray retries.
-    lastSlot=slot;active=true;
-    try{await run()}catch(error){onError(error)}finally{active=false}
+    let lease;
+    try{lease=claimFreshnessSlot({stateDir:slotStateDir,slot})}
+    catch(error){onError(error);return}
+    lastSlot=slot;
+    if(!lease.admitted)return;
+    active=true;
+    try{
+      const receipt=await run();
+      finishFreshnessSlot(lease,{receipt});
+    }catch(error){
+      onError(error);
+      try{finishFreshnessSlot(lease,{receipt:{ok:false,state:'FAILED'}})}
+      catch(finalizeError){onError(finalizeError)}
+    }finally{active=false}
   };
   const timer=setInterval(()=>{void tick()},periodMs);
   timer.unref?.();
