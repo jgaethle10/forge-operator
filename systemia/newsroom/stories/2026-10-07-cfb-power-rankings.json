@@ -7,9 +7,9 @@
   "desk": "Sports",
   "story_type": "Power Rankings",
   "status": "approved",
-  "published_at": "2026-10-08T13:52:17.872Z",
-  "updated_at": "2026-10-08T13:52:17.872Z",
-  "freshness_expires_at": "2026-10-15T13:52:17.872Z",
+  "published_at": "2026-10-08T13:55:30.177Z",
+  "updated_at": "2026-10-08T13:55:30.177Z",
+  "freshness_expires_at": "2026-10-15T13:55:30.177Z",
   "evidence_state": "model_derived_from_verified_public_results",
   "sensitivity": {
     "state": "public_unclassified",
@@ -50,7 +50,7 @@
         "week_label": "Through 2026-10-07",
         "evidence_snapshot_id": "cfb:2026:2026-10-07:4df1aa713c1f6469888a",
         "evidence_through_at": "2026-10-07T23:59:59.999Z",
-        "generated_at": "2026-10-08T13:52:13.650Z",
+        "generated_at": "2026-10-08T13:55:26.242Z",
         "model": {
           "model_version": "evercraft-cfbpi-0.2.0",
           "missing_data_penalty": 8,
@@ -5991,14 +5991,17 @@
         "ranking_run_id": "cfbpi:cd08f777eee25c5c5dc3a1b6",
         "ranking_evidence_snapshot_id": "cfb:2026:2026-10-07:4df1aa713c1f6469888a",
         "ranking_evidence_through_at": "2026-10-07T23:59:59.999Z",
-        "ranking_generated_at": "2026-10-08T13:52:13.650Z",
+        "ranking_generated_at": "2026-10-08T13:55:26.242Z",
         "model_version": "evercraft-cfbpi-0.2.0",
         "poll": {
           "poll_id": "ap-top25",
           "poll_name": "AP Top 25",
           "published_date": "2026-10-04",
           "source_authority": "Associated Press",
-          "source_url": "https://apnews.com/article/college-football-rankings-top-25-7db03c4123afa589863a8b53f4db520c"
+          "source_url": "https://apnews.com/article/college-football-rankings-top-25-7db03c4123afa589863a8b53f4db520c",
+          "age_days_at_comparison": 4,
+          "max_age_days": 8,
+          "freshness_state": "current_or_previous_week_official_baseline"
         },
         "authority_boundary": {
           "poll_used_as_model_input": false,
@@ -16398,7 +16401,7 @@
     "evidence_snapshot_id": "cfb:2026:2026-10-07:4df1aa713c1f6469888a",
     "completed_game_count": 393,
     "top_25_count": 25,
-    "generated_at": "2026-10-08T13:52:17.872Z",
+    "generated_at": "2026-10-08T13:55:30.177Z",
     "digest": "sha256:2bf11811e48342dc5f398a57e003bfab51830174de837a90c30e17680e2f1130"
   }
 }
