@@ -19,7 +19,11 @@ export function buildFirstOfferBuyerResearch(pack){
    observation_state:observation.source_state,
    role_of_source:noContactAllowed?'context_not_target':'research_only_not_qualified_buyer',
    outreach_state:'not_authorized',
-   independent_7_4_release_evidence: Boolean(finding.observed_release==='7.4'),
+   // Public postings can mention a release without proving the operator runs it.
+   // No customer-authenticated asset inventory is present in this research pack.
+   mentioned_release: finding.observed_release||null,
+   independent_7_4_release_evidence:false,
+   installed_release_verified:false,
    direct_purchase_intent_confirmed:false,
    decision: noContactAllowed?'hold_due_to_target_mismatch':'verify_actual_release_and_business_trigger_before_any_contact',
    derived_from_source_ref:observation.url
@@ -29,7 +33,8 @@ export function buildFirstOfferBuyerResearch(pack){
   buyers:classified.map(row=>({
    company:row.company,source_name:row.company,source_ref:row.derived_from_source_ref,
    observed_at:row.observed_at,score:row.score,evidence_quality:row.evidence_quality,
-   technology_use_state:row.technology_use_state,release_state:row.release_state,observed_release:row.observed_release,
+   technology_use_state:row.technology_use_state,
+   release_state:'unknown',observed_release:null,
    recommended_offer_key:row.recommended_offer_key,upgrade_need_state:row.upgrade_need_state
   }))
  });
@@ -41,7 +46,8 @@ export function buildFirstOfferBuyerResearch(pack){
    const origin=classified.find(item=>item.derived_from_source_ref===row.source_ref);
    return {...row,queue_state:origin?.decision==='hold_due_to_target_mismatch'?'hold':row.queue_state,
     contact_state:'unverified',outreach_state:'not_authorized',
-    release_7_4_unverified:row.observed_release!=='7.4',
+    release_7_4_unverified:true,
+    installed_release_source:'not_verified_from_public_observation',
     buyer_intent_unverified:true,reason:origin?.decision||'reverify_before_contact'};
   }),
   verified_buyer_count:0,permissioned_contact_count:0,real_payment_count:null,
