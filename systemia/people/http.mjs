@@ -11,6 +11,7 @@ function errorStatus(message) {
   if (/not_found/.test(message)) return 404;
   if (/expired|revoked/.test(message)) return 410;
   if (/unauthorized/i.test(message)) return 401;
+  if(/challenge_not_active|mail_delivery_destination_mismatch|trusted_mail_delivery_already_recorded/.test(message))return 409;
   if (/trusted_email_delivery_required/.test(message)) return 409;
   if (/required|invalid|exact_|explicit_|forbidden/.test(message)) return 400;
   if (/not_consented|verified_owner_identity_required|approved_delete_request_required/.test(message)) return 409;
