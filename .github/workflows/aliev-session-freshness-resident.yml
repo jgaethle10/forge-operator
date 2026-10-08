@@ -4,12 +4,14 @@ on:
   pull_request:
     paths:
       - 'systemia/aliev/session-freshness-resident.mjs'
+      - 'systemia/aliev/session-freshness-slot.mjs'
       - 'systemia/aliev/session-freshness-resident.proof.mjs'
       - '.github/workflows/aliev-session-freshness-resident.yml'
   push:
     branches: [main]
     paths:
       - 'systemia/aliev/session-freshness-resident.mjs'
+      - 'systemia/aliev/session-freshness-slot.mjs'
       - 'systemia/aliev/session-freshness-resident.proof.mjs'
       - '.github/workflows/aliev-session-freshness-resident.yml'
   workflow_dispatch:
