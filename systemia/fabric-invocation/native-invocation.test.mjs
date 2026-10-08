@@ -241,3 +241,91 @@ test('expired and near-expiring credentials deny execution before worker dispatc
     } finally { f.close(); }
   }
 });
+
+
+test('explicit recovery reconciles a Lineage-backed Systemia acknowledgment without redispatch', async () => {
+  const f = fixture();
+  try {
+    await new LineageStore(f.lineageRoot).init();
+    f.setAckUnavailable(true);
+    const pending = await f.coordinator.invoke(f.input);
+    assert.equal(pending.state, 'systemia_ack_pending');
+    assert.equal(f.dispatchCount(), 1);
+    const unavailable = await f.coordinator.reconcileSystemiaOutcome(f.input);
+    assert.equal(unavailable.reconciled, false);
+    assert.equal(unavailable.state, 'systemia_ack_pending');
+    assert.equal(f.dispatchCount(), 1);
+    f.setAckUnavailable(false);
+    const recovered = await f.coordinator.reconcileSystemiaOutcome(f.input);
+    assert.equal(recovered.state, 'completed');
+    assert.equal(recovered.reconciled, true);
+    assert.equal(recovered.systemia_outcome_acknowledged, true);
+    assert.equal(recovered.lineage_receipt_id, pending.lineage_receipt_id);
+    assert.equal(f.goalState().tasks[0].status, 'complete');
+    assert.equal(f.dispatchCount(), 1);
+    const second = await f.coordinator.reconcileSystemiaOutcome(f.input);
+    assert.equal(second.reconciled, false);
+    assert.equal(second.duplicate, true);
+    assert.equal(f.dispatchCount(), 1);
+  } finally { f.close(); }
+});
+
+test('reconciliation enforces fresh authorization and original tenant and request binding', async () => {
+  const f = fixture();
+  try {
+    await new LineageStore(f.lineageRoot).init();
+    f.setAckUnavailable(true);
+    await f.coordinator.invoke(f.input);
+    await assert.rejects(
+      f.coordinator.reconcileSystemiaOutcome({
+        ...f.input, tenant_key: 'tenant:other',
+      }),
+      /fabric_idempotency_binding_conflict/,
+    );
+    await assert.rejects(
+      f.coordinator.reconcileSystemiaOutcome({
+        ...f.input, payload: { url: 'https://different.example.org/' },
+      }),
+      /fabric_idempotency_binding_conflict/,
+    );
+    f.expireCredential();
+    await assert.rejects(
+      f.coordinator.reconcileSystemiaOutcome(f.input),
+      /fabric_authorization_denied_or_expiring/,
+    );
+    assert.equal(f.dispatchCount(), 1);
+  } finally { f.close(); }
+});
+
+test('reconciliation fails closed if native Lineage evidence has been removed', async () => {
+  const f = fixture();
+  try {
+    await new LineageStore(f.lineageRoot).init();
+    f.setAckUnavailable(true);
+    const pending = await f.coordinator.invoke(f.input);
+    assert.equal(pending.state, 'systemia_ack_pending');
+    f.setAckUnavailable(false);
+    fs.rmSync(path.join(f.lineageRoot, '.lineage'), { recursive: true, force: true });
+    await assert.rejects(f.coordinator.reconcileSystemiaOutcome(f.input));
+    assert.equal(f.goalState().tasks[0].status, 'pending');
+    assert.equal(f.dispatchCount(), 1);
+  } finally { f.close(); }
+});
+
+test('reconciliation cannot rerun a worker with unknown outcome or create a new invocation', async () => {
+  const f = fixture();
+  try {
+    await new LineageStore(f.lineageRoot).init();
+    f.setWorker('hang');
+    const unknown = await f.coordinator.invoke(f.input);
+    assert.equal(unknown.state, 'outcome_unknown');
+    const reconciled = await f.coordinator.reconcileSystemiaOutcome(f.input);
+    assert.equal(reconciled.state, 'outcome_unknown');
+    assert.equal(reconciled.reconciled, false);
+    assert.equal(f.dispatchCount(), 1);
+    await assert.rejects(
+      f.coordinator.reconcileSystemiaOutcome({ ...f.input, idempotency_key: 'missing:key' }),
+      /fabric_reconcile_invocation_not_found/,
+    );
+  } finally { f.close(); }
+});
