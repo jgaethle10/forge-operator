@@ -40,3 +40,5 @@ jobs:
         run: node --test systemia/organism/goal-recovery.test.mjs
       - name: Reject forged, expired and self-authorized human gate approvals
         run: node --test systemia/organism/goal-human-approval.test.mjs
+      - name: Prevent mission plan re-admission from resetting completed work
+        run: node --test systemia/organism/goal-plan-replay.test.mjs
