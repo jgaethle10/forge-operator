@@ -257,6 +257,26 @@ export function registerWorldForgeRoutes(app:Express,deps:WorldForgeHttpDeps){
   );
 
   app.post(
+    '/api/fallen/world-forge/play/webgpu-frame',
+    rateLimit(240,60*60*1000),
+    (req:Request,res:Response)=>{
+      try{
+        const session=playSessions.get(String(req.body?.sessionId||'').slice(0,90));
+        const frame=session.webGpuFrame({
+          width:Number(req.body?.width),
+          height:Number(req.body?.height),
+        });
+        res.json({success:true,frame});
+      }catch(error){
+        res.status(422).json({
+          success:false,
+          error:error instanceof Error?error.message:String(error),
+        });
+      }
+    },
+  );
+
+  app.post(
     '/api/fallen/world-forge/play/step',
     rateLimit(600,60*60*1000),
     (req:Request,res:Response)=>{
