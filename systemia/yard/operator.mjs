@@ -1760,6 +1760,9 @@ export class YardOperator {
     } else if (workloadClass === 'systemia.rivet-report-runtime.v1') {
       service = 'rivet-yard-report-runtime';
       healthPath = '/health';
+    } else if (workloadClass === 'systemia.people-layer.v1') {
+      service = 'evercraft-people-layer';
+      healthPath = '/health';
     } else if (workloadClass === 'systemia.federated-service-bridge.v1') {
       service = 'evercraft-federated-service-bridge';
       healthPath = '/__evercraft/health';
@@ -1818,6 +1821,14 @@ export class YardOperator {
         health.external_ai_required === false &&
         health.legacy_provider_required === false
       );
+    const peopleMatch =
+      workloadClass !== 'systemia.people-layer.v1' ||
+      (
+        health.base44_runtime_dependency === false &&
+        health.public_ui === true &&
+        health.public_person_token_flows === true &&
+        /^people_/.test(String(health.instance_id || ''))
+      );
     const fabricMatch =
       workloadClass !== 'systemia.fabric-local-mcp.v1' ||
       (
@@ -1829,7 +1840,7 @@ export class YardOperator {
         health.edge_attestation_supported === true
       );
 
-    if (!commonMatch || !forensicPublicMatch || !brokerMatch || !browserMatch || !homeMatch || !fabricMatch) {
+    if (!commonMatch || !forensicPublicMatch || !brokerMatch || !browserMatch || !homeMatch || !peopleMatch || !fabricMatch) {
       throw new Error('public route health does not match this deployment receipt and instance');
     }
 
