@@ -60,7 +60,7 @@ A dispatcher is registered by specialist slug. The current first owned dispatche
 
 The dispatcher does not receive raw provider credentials from the capsule. The RIVET dispatcher reads its private team token from a permission-restricted file owned by the runtime boundary.
 
-If no dispatcher is registered, the launch remains held while the Execution Gate lease stays prepared. The action permit is not consumed.
+If no dispatcher is registered, the launch is held before Execution Gate preparation. No execution permit is minted and no Meter reservation is created.
 
 ## First real end-to-end proof
 
