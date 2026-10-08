@@ -42,6 +42,13 @@ test('opt-out text takes priority and never authorizes sales contact', () => {
   assert.equal(result.next_gate, 'compliance_suppression_review');
   assert.equal(result.outbound_authorized, false);
 });
+test('Raven native SMS signed summary honors STOP even when no text_content is present', () => {
+  const { text_content, ...native } = message;
+  const result = plan({ ...native, content_summary: 'STOP', content_permitted: false });
+  assert.equal(result.intent_class, 'opt_out');
+  assert.equal(result.next_gate, 'compliance_suppression_review');
+  assert.equal(result.outbound_authorized, false);
+});
 test('partner-governed product remains held', () => {
   const result = plan({ ...message, text_content: 'Interested in RIVET pricing' });
   assert.equal(result.next_gate, 'partner_governance_review');
