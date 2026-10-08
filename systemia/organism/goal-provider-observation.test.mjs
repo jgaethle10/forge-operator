@@ -131,9 +131,11 @@ test('stale, overlong, future, pre-hold, and malformed evidence is not admitted'
  assert.throws(()=>record(state,signed(),later(80)),/expired or outside hold window/);
  for(const bad of [
   {upstream_response_sha256:'sha256:fabricated'},
-  {upstream_receipt_ref:'x'},{provider_key:'BAD PROVIDER'},
+  {upstream_receipt_ref:'x'},
   {outcome:'approved_to_retry'}
  ])assert.throws(()=>record(state,signed(bad)),/evidence shape invalid/);
+ assert.throws(()=>record(state,signed({provider_key:'BAD PROVIDER'})),
+  /does not match execution provider/);
 });
 test('unsignable added fields and duplicate or changed reconciliations remain held',()=>{
  const state=held();
