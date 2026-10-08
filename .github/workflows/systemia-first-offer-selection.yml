@@ -1,0 +1,31 @@
+name: Systemia First Offer Evidence Decision
+on:
+  pull_request:
+    paths:
+      - 'systemia/offer-selection/**'
+      - '.github/workflows/systemia-first-offer-selection.yml'
+      - 'public/.well-known/evercraft-machine-catalog.json'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  rank-and-prove:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Test offer-selection evidence contract
+        run: node --test systemia/offer-selection/rank-offers.test.mjs
+      - name: Produce first offer selection packet
+        run: |
+          node systemia/offer-selection/rank-offers.mjs > first-offer-selection.json
+          node -e "const d=require('./first-offer-selection.json'); if(d.first_offer.public_id!=='ibmi-rescue-v1'||d.first_offer.is_sales_proven||!d.no_outreach_authority) process.exit(1)"
+      - name: Preserve Systemia selection packet
+        uses: actions/upload-artifact@v4
+        with:
+          name: systemia-first-offer-selection
+          path: first-offer-selection.json
+          retention-days: 30
