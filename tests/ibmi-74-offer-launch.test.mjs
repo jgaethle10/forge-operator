@@ -4,7 +4,7 @@ import {offerCapabilityForSlug,offerPurchaseKeyForSlug,renderOfferPage} from '..
 import {startFabricLocalRuntime} from '../systemia/mcp/fabric-local-runtime.mjs';
 
 const ibmi={
- public_id:'ibmi-rescue-v1',name:'Evercraft IBM i Rescue',commercial_state:'sell_now',
+ public_id:'ibmi-rescue-v1',name:'Evercraft IBM i Rescue',description:'Bounded IBM i application and integration upgrade-risk research.',keywords:['IBM i upgrade','IBM i 7.4'],commercial_state:'sell_now',
  machine_state:'direct_checkout_ready',pricing:'$250 IBM i Estate X-Ray; $250 IBM i 7.4 Deadline X-Ray; $1,500 Proof Sprint.',
  entry_paid_offer:{name:'IBM i Estate X-Ray',price:'$250',price_usd_normalized:250,billing:'one_time'},
  use_when:['IBM i 7.4 support transition'],connections:[]
