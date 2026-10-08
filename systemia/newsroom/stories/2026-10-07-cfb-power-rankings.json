@@ -7,9 +7,9 @@
   "desk": "Sports",
   "story_type": "Power Rankings",
   "status": "approved",
-  "published_at": "2026-10-08T13:46:37.997Z",
-  "updated_at": "2026-10-08T13:46:37.997Z",
-  "freshness_expires_at": "2026-10-15T13:46:37.997Z",
+  "published_at": "2026-10-08T13:47:01.883Z",
+  "updated_at": "2026-10-08T13:47:01.883Z",
+  "freshness_expires_at": "2026-10-15T13:47:01.883Z",
   "evidence_state": "model_derived_from_verified_public_results",
   "sensitivity": {
     "state": "public_unclassified",
@@ -43,7 +43,7 @@
         "week_label": "Through 2026-10-07",
         "evidence_snapshot_id": "cfb:2026:2026-10-07:4df1aa713c1f6469888a",
         "evidence_through_at": "2026-10-07T23:59:59.999Z",
-        "generated_at": "2026-10-08T13:46:34.356Z",
+        "generated_at": "2026-10-08T13:46:57.119Z",
         "model": {
           "model_version": "evercraft-cfbpi-0.2.0",
           "missing_data_penalty": 8,
@@ -15794,7 +15794,7 @@
       "ranking_receipt_consistency",
       "source_lineage_consistency"
     ],
-    "release_preflight_digest": "sha256:33d2557459d002df1094ab2607a7d20ce9e64f7be383f84c26aeadfaeb1168fa"
+    "release_preflight_digest": "sha256:8a5e5d93186f566cd3f006864bd6d89e92e8c27bfff3e824552c49560ca014e6"
   },
   "fallen_brief": {
     "contract": "evercraft.fallen.journal.production.v1",
@@ -15956,7 +15956,7 @@
     "evidence_snapshot_id": "cfb:2026:2026-10-07:4df1aa713c1f6469888a",
     "completed_game_count": 393,
     "top_25_count": 25,
-    "generated_at": "2026-10-08T13:46:37.997Z",
-    "digest": "sha256:33d2557459d002df1094ab2607a7d20ce9e64f7be383f84c26aeadfaeb1168fa"
+    "generated_at": "2026-10-08T13:47:01.883Z",
+    "digest": "sha256:8a5e5d93186f566cd3f006864bd6d89e92e8c27bfff3e824552c49560ca014e6"
   }
 }
