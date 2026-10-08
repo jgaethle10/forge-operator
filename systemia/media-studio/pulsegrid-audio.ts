@@ -2,6 +2,7 @@ import {
   PULSEGRID_ARRANGEMENT_BARS,
   PULSEGRID_STEPS_PER_BAR,
   type PulseGridAudioAsset,
+  type PulseGridClip,
   type PulseGridSession,
   type PulseGridTrack,
 } from './pulsegrid-session.js';
@@ -217,6 +218,11 @@ export class PulseGridAudioEngine {
     this.onStatus?.(this.status);
   }
 
+  private activeAudioAssetId(clip:PulseGridClip){
+    if(!clip.active_audio_take_id)return null;
+    return clip.audio_takes.find((take)=>take.id===clip.active_audio_take_id)?.asset_id||null;
+  }
+
   private async prepareAudioAssets(){
     const context=this.context;
     const session=this.session;
@@ -231,8 +237,10 @@ export class PulseGridAudioEngine {
         : [this.scene];
       for(const sceneIndex of sceneIndexes){
         const clip=track.clips[sceneIndex];
-        if(!clip?.audio_asset_id)continue;
-        const asset=session.assets.find((candidate)=>candidate.id===clip.audio_asset_id);
+        if(!clip)continue;
+        const assetId=this.activeAudioAssetId(clip);
+        if(!assetId)continue;
+        const asset=session.assets.find((candidate)=>candidate.id===assetId);
         if(asset&&asset.rights!=='restricted')wanted.set(asset.id,asset);
       }
     });
@@ -554,8 +562,9 @@ export class PulseGridAudioEngine {
         const shouldStart = this.playbackMode === 'arrangement'
           ? Boolean(arrangementPosition && arrangementPosition.bar===arrangementPosition.runStart && arrangementPosition.stepInBar===0)
           : step===0;
-        if(shouldStart&&clip.audio_asset_id){
-          const assetBuffer=this.audioBuffers.get(clip.audio_asset_id);
+        const activeAssetId=this.activeAudioAssetId(clip);
+        if(shouldStart&&activeAssetId){
+          const assetBuffer=this.audioBuffers.get(activeAssetId);
           if(assetBuffer){
             const durationSteps = arrangementPosition
               ? (arrangementPosition.runEnd-arrangementPosition.runStart+1)*PULSEGRID_STEPS_PER_BAR
