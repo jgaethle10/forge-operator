@@ -5,6 +5,8 @@ on:
       - 'systemia/organism/first-offer-command.mjs'
       - 'systemia/organism/first-offer-command.test.mjs'
       - 'systemia/organism/first-offer-lineage-proof.mjs'
+      - 'systemia/organism/first-offer-external-probe.mjs'
+      - 'systemia/organism/first-offer-external-probe.test.mjs'
       - 'systemia/organism/FIRST_OFFER_ONE_COMPANY.md'
       - '.github/workflows/systemia-one-company-offer1.yml'
   workflow_dispatch:
@@ -20,7 +22,7 @@ jobs:
         with:
           node-version: 22
       - name: Prove Systemia mission routing and all fail-closed commercial gates
-        run: node --test systemia/organism/first-offer-command.test.mjs
+        run: node --test systemia/organism/first-offer-command.test.mjs systemia/organism/first-offer-external-probe.test.mjs
       - name: Produce read-only company-wide Offer 1 readiness
         run: |
           node systemia/organism/first-offer-command.mjs > first-offer-command-status.json
@@ -29,6 +31,8 @@ jobs:
         run: |
           node systemia/organism/first-offer-lineage-proof.mjs > first-offer-lineage-proof.json
           node -e "const p=require('./first-offer-lineage-proof.json'); if(!p.integrity_ok||!p.git_artifact_byte_parity||p.production_deployed||p.durable_lineage_remote_persisted||p.payment_verified) process.exit(1)"
+      - name: Independently inspect the customer-facing buyer URL (GET only, held is reported)
+        run: node systemia/organism/first-offer-external-probe.mjs first-offer-external-probe.json
       - name: Retain source-only readiness, never present it as live order proof
         uses: actions/upload-artifact@v4
         with:
@@ -36,4 +40,5 @@ jobs:
           path: |
             first-offer-command-status.json
             first-offer-lineage-proof.json
+            first-offer-external-probe.json
           retention-days: 30
