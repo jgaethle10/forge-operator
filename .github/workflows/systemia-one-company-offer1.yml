@@ -1,5 +1,7 @@
 name: Systemia One Company Offer 1
 on:
+  schedule:
+    - cron: "41 12,22 * * *"
   pull_request:
     paths:
       - 'systemia/organism/first-offer-command.mjs'
