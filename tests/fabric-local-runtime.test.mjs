@@ -82,6 +82,51 @@ test('Fabric health exposes only redacted Saban Resource Field residency and fai
   }
 });
 
+test('Fabric health binds the source release once at process boot',async()=>{
+  const root=fs.mkdtempSync(path.join(os.tmpdir(),'fabric-release-ref-'));
+  const releaseFile=path.join(root,'runtime-release-ref');
+  const first='1111111111111111111111111111111111111111';
+  const second='2222222222222222222222222222222222222222';
+  fs.writeFileSync(releaseFile,first+'\n');
+
+  const runtime=await startFabricLocalRuntime({
+    host:'127.0.0.1',
+    port:0,
+    catalog,
+    releaseRefFile:releaseFile,
+  });
+  try{
+    let health=await fetch(runtime.url+'/health').then((r)=>r.json());
+    assert.equal(health.source_release_ref,first);
+    assert.equal(health.source_release_ref_bound,true);
+
+    fs.writeFileSync(releaseFile,second+'\n');
+    health=await fetch(runtime.url+'/health').then((r)=>r.json());
+    assert.equal(
+      health.source_release_ref,
+      first,
+      'disk marker changes must not masquerade as a resident process restart'
+    );
+  }finally{
+    await runtime.close();
+  }
+
+  const restarted=await startFabricLocalRuntime({
+    host:'127.0.0.1',
+    port:0,
+    catalog,
+    releaseRefFile:releaseFile,
+  });
+  try{
+    const health=await fetch(restarted.url+'/health').then((r)=>r.json());
+    assert.equal(health.source_release_ref,second);
+    assert.equal(health.source_release_ref_bound,true);
+  }finally{
+    await restarted.close();
+    fs.rmSync(root,{recursive:true,force:true});
+  }
+});
+
 test('Fabric local runtime is read-only, tunnel-compatible, and makes no Base44 transport available',async()=>{
   const runtime=await startFabricLocalRuntime({host:'127.0.0.1',port:0,catalog});
   try {
