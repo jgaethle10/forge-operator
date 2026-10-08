@@ -56,8 +56,11 @@ jobs:
         with:
           node-version: 22
 
+      - name: Setup Bun
+        uses: oven-sh/setup-bun@v2
+
       - name: Install exact dependencies
-        run: npm ci
+        run: bun install --frozen-lockfile
 
       - name: Prove person-sovereign lifecycle
         run: node --test tests/people-owned-runtime.test.mjs
