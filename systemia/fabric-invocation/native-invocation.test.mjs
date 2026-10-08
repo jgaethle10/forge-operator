@@ -1,0 +1,191 @@
+import assert from 'node:assert/strict';
+import fs from 'node:fs';
+import os from 'node:os';
+import path from 'node:path';
+import test from 'node:test';
+import { createHash } from 'node:crypto';
+import { LineageStore } from '../lineage/core.mjs';
+import { createGoalState, admitGoalPlan } from '../organism/goal-runtime.mjs';
+import { FabricNativeInvocation } from './native-invocation.mjs';
+
+const sha = (value) => createHash('sha256').update(typeof value === 'string' ? value : JSON.stringify(value)).digest('hex');
+const proof = (text) => 'sha256:' + sha(text);
+const missionKey = 'mission:fabric-browser-qa';
+const capabilityKey = 'evercraft.web.browser.public.v1';
+
+function fixture() {
+  const root = fs.mkdtempSync(path.join(os.tmpdir(), 'evercraft-fabric-native-'));
+  const stateDir = path.join(root, 'fabric-journal');
+  const lineageRoot = path.join(root, 'lineage');
+  let goal = createGoalState({
+    goalKey: 'fabric-browser-qa', missionKey,
+    objective: 'Public read-only browser conformance',
+  });
+  goal = admitGoalPlan({
+    state: goal,
+    plan: [{ work_key: 'browser-read', work_type: 'browser_read', human_gate_required: false }],
+  });
+  let permitted = true;
+  let dispatchCount = 0;
+  let disposition = 'ok';
+  const coordinator = new FabricNativeInvocation({
+    stateDir, lineageRoot, timeoutMs: 20,
+    missionLoader: async (key) => ({
+      state: key === missionKey ? goal : null,
+      admission_verified: true,
+      admission_receipt_hash: proof('admitted:systemia'),
+      allowed_capabilities: [capabilityKey],
+    }),
+    authorizationVerifier: async ({ actor_ref, tenant_key, capability_key }) => ({
+      decision: permitted ? 'allow' : 'deny',
+      receipt_hash: proof('passport:verified'),
+      actor_ref, tenant_key, capability_key,
+    }),
+    workerInvoker: async ({ capability_key, payload, correlation_id }) => {
+      dispatchCount++;
+      if (disposition === 'offline') throw new Error('private_browser_worker_unavailable');
+      if (disposition === 'hang') return new Promise(() => {});
+      if (disposition === 'forged') return { ok: true, evidence_receipt_sha256: '0'.repeat(64), target: 'forged' };
+      return {
+        ok: true, engine: 'evercraft-owned-browser-worker-v1',
+        evidence_receipt_sha256: sha({ capability_key, payload, correlation_id }),
+      };
+    },
+    workerReceiptVerifier: async ({ capability_key, correlation_id, worker_receipt }) =>
+      worker_receipt.engine === 'evercraft-owned-browser-worker-v1' &&
+      worker_receipt.evidence_receipt_sha256 === sha({
+        capability_key, payload: { url: 'https://example.org/' }, correlation_id,
+      }),
+  });
+  const input = {
+    actor_ref: 'agent:browser-qa', tenant_key: 'tenant:evercraft',
+    mission_key: missionKey, work_key: 'browser-read',
+    capability_key: capabilityKey, idempotency_key: 'fabric:qa:001',
+    payload: { url: 'https://example.org/' },
+  };
+  return {
+    root, lineageRoot, stateDir, coordinator, input,
+    dispatchCount: () => dispatchCount,
+    deny: () => { permitted = false; },
+    setWorker: (next) => { disposition = next; },
+    close: () => fs.rmSync(root, { recursive: true, force: true }),
+  };
+}
+
+test('Systemia admission + delegated Passport authority + worker receipt -> native Lineage transaction', async () => {
+  const f = fixture();
+  try {
+    await new LineageStore(f.lineageRoot).init();
+    const result = await f.coordinator.invoke(f.input);
+    assert.equal(result.state, 'completed');
+    assert.equal(result.execution_performed, false);
+    assert.match(result.worker_receipt_digest, /^sha256:[a-f0-9]{64}$/);
+    assert.ok(result.lineage_transaction_id);
+    assert.ok(result.lineage_receipt_id);
+    const store = new LineageStore(f.lineageRoot);
+    const tx = await store.readObject(result.lineage_transaction_id);
+    const receipt = await store.readObject(result.lineage_receipt_id);
+    assert.equal(tx.type, 'transaction');
+    assert.equal(receipt.type, 'receipt');
+    assert.equal(tx.payload.kind, 'fabric.capability.invocation');
+    assert.equal(tx.payload.authority.payment, false);
+    assert.equal(f.dispatchCount(), 1);
+
+    const duplicate = await f.coordinator.invoke(f.input);
+    assert.equal(duplicate.state, 'completed');
+    assert.equal(duplicate.duplicate, true);
+    assert.equal(duplicate.lineage_receipt_id, result.lineage_receipt_id);
+    assert.equal(f.dispatchCount(), 1);
+    const journal = fs.readdirSync(f.stateDir).find((name) => name.endsWith('.jsonl'));
+    const entries = fs.readFileSync(path.join(f.stateDir, journal), 'utf8');
+    assert.equal(entries.trim().split('\n').length, 4);
+    assert.equal(entries.includes('https://example.org'), false);
+  } finally { f.close(); }
+});
+
+test('cross-tenant or payload idempotency collisions fail closed and expired authorization cannot replay', async () => {
+  const f = fixture();
+  try {
+    await new LineageStore(f.lineageRoot).init();
+    await f.coordinator.invoke(f.input);
+    await assert.rejects(
+      f.coordinator.invoke({ ...f.input, tenant_key: 'tenant:intruder' }),
+      /fabric_idempotency_binding_conflict/
+    );
+    await assert.rejects(
+      f.coordinator.invoke({ ...f.input, payload: { url: 'https://different.example/' } }),
+      /fabric_idempotency_binding_conflict/
+    );
+    f.deny();
+    await assert.rejects(f.coordinator.invoke(f.input), /fabric_authorization_denied/);
+    assert.equal(f.dispatchCount(), 1);
+  } finally { f.close(); }
+});
+
+test('worker offline and timeout are outcome_unknown without automatic retry', async () => {
+  for (const failure of ['offline', 'hang', 'forged']) {
+    const f = fixture();
+    try {
+      await new LineageStore(f.lineageRoot).init();
+      f.setWorker(failure);
+      const first = await f.coordinator.invoke(f.input);
+      assert.equal(first.state, 'outcome_unknown', failure);
+      const second = await f.coordinator.invoke(f.input);
+      assert.equal(second.state, 'outcome_unknown', failure);
+      assert.equal(second.duplicate, true);
+      assert.equal(f.dispatchCount(), 1);
+      assert.equal(first.lineage_receipt_id, null);
+    } finally { f.close(); }
+  }
+});
+
+test('Lineage outage holds successful worker outcome instead of claiming completed evidence', async () => {
+  const f = fixture();
+  try {
+    const result = await f.coordinator.invoke(f.input);
+    assert.equal(result.state, 'evidence_pending');
+    assert.ok(result.worker_receipt_digest);
+    assert.equal(result.lineage_receipt_id, null);
+    assert.equal((await f.coordinator.invoke(f.input)).duplicate, true);
+    assert.equal(f.dispatchCount(), 1);
+  } finally { f.close(); }
+});
+
+test('journal tampering, forged mission and missing authority function fail closed', async () => {
+  const f = fixture();
+  try {
+    await new LineageStore(f.lineageRoot).init();
+    await f.coordinator.invoke(f.input);
+    const journal = fs.readdirSync(f.stateDir).find((name) => name.endsWith('.jsonl'));
+    const file = path.join(f.stateDir, journal);
+    fs.writeFileSync(file, fs.readFileSync(file, 'utf8').replace('"state":"completed"', '"state":"cancelled"'));
+    await assert.rejects(f.coordinator.invoke(f.input), /fabric_invocation_journal_integrity_failed/);
+    await assert.rejects(f.coordinator.invoke({
+      ...f.input, idempotency_key: 'new:fabric:key', mission_key: 'mission:forged',
+    }), /fabric_systemia_admission_not_verified/);
+    assert.throws(() => new FabricNativeInvocation({
+      stateDir: f.stateDir, lineageRoot: f.lineageRoot,
+    }), /fabric_missionLoader_required/);
+  } finally { f.close(); }
+});
+
+test('interrupted dispatch is not retried automatically and lock contention fails closed', async () => {
+  const f = fixture();
+  try {
+    await new LineageStore(f.lineageRoot).init();
+    await f.coordinator.invoke(f.input);
+    const journal = fs.readdirSync(f.stateDir).find((name) => name.endsWith('.jsonl'));
+    const file = path.join(f.stateDir, journal);
+    // A durable worker checkpoint with no acknowledgment is an unknown outcome;
+    // do not assume it is safe to repeat an external browser action.
+    const entries = fs.readFileSync(file, 'utf8').trim().split('\n');
+    fs.writeFileSync(file, entries.slice(0, 2).join('\n') + '\n');
+    const recovered = await f.coordinator.invoke(f.input);
+    assert.equal(recovered.state, 'outcome_unknown');
+    assert.equal(recovered.duplicate, true);
+    assert.equal(f.dispatchCount(), 1);
+    const lock = file.replace(/\.jsonl$/, '.lock');
+    fs.mkdirSync(lock);
+    await assert.rejects(f.coordinator.invoke(f.input), /fabric_invocation_busy_or_interrupted/);
+  } finally { f.close(); }
+});
