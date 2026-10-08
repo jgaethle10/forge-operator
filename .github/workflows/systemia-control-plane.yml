@@ -12,9 +12,11 @@ on:
       - "systemia/network/**"
       - "systemia/chum/**"
       - "systemia/mcp/**"
+      - "systemia/payments/owned-checkout-handoff.mjs"
       - "tests/fabric-offer-pages.test.mjs"
       - "tests/fabric-local-runtime.test.mjs"
       - "tests/fabric-ibmi-74-machine-handoff.test.mjs"
+      - "tests/owned-checkout-handoff.test.mjs"
       - "systemia/collider/**"
       - "systemia/beast-mode/**"
       - "systemia/media-studio/**"
@@ -39,9 +41,11 @@ on:
       - "systemia/network/**"
       - "systemia/chum/**"
       - "systemia/mcp/**"
+      - "systemia/payments/owned-checkout-handoff.mjs"
       - "tests/fabric-offer-pages.test.mjs"
       - "tests/fabric-local-runtime.test.mjs"
       - "tests/fabric-ibmi-74-machine-handoff.test.mjs"
+      - "tests/owned-checkout-handoff.test.mjs"
       - "systemia/collider/**"
       - "systemia/beast-mode/**"
       - "systemia/media-studio/**"
@@ -71,7 +75,7 @@ jobs:
         run: node --test tests/chum-universal-mcp-truth.test.mjs tests/chum-commerce-door-status.test.mjs tests/systemia-ai-agent-distribution-mission.test.mjs
 
       - name: Prove owned Fabric checkout fail-closed and buyer-page truth
-        run: node --test tests/fabric-offer-pages.test.mjs tests/fabric-local-runtime.test.mjs tests/fabric-ibmi-74-machine-handoff.test.mjs
+        run: node --test tests/fabric-offer-pages.test.mjs tests/fabric-local-runtime.test.mjs tests/fabric-ibmi-74-machine-handoff.test.mjs tests/owned-checkout-handoff.test.mjs
 
       - name: Externally probe owned Fabric read-only MCP without commerce or private data
         id: fabric_public_readonly_probe
