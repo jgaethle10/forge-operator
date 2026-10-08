@@ -374,7 +374,17 @@ export function matchFabricCapabilities(intent,catalog,{limit=5}={}){
       ...entry,
       match_score:scoreEntry(intent,entry,{frequency,total}),
       ...(ibmi74OfferForIntent(intent,entry.public_id)
-        ? {suggested_bounded_offer:ibmi74OfferForIntent(intent,entry.public_id)}
+        ? {
+            suggested_bounded_offer:ibmi74OfferForIntent(intent,entry.public_id),
+            entry_paid_offer:{
+              name:'IBM i 7.4 Deadline X-Ray',
+              price:'$250',
+              price_usd_normalized:DEADLINE_AMOUNT_CENTS/100,
+              billing:'one_time',
+              fulfillment:'evidence_backed_bounded_human_review',
+              scope:'7.4 support transition, dependency, compatibility, and rollback assessment',
+            },
+          }
         : {}),
     }))
     .filter((entry)=>entry.match_score>0)
