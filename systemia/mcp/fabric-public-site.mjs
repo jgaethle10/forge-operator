@@ -259,6 +259,30 @@ const OFFER_PAGE_COPY={
   }
 };
 
+// Distinct $250 IBM i 7.4 support-transition SKU, not the generic Estate X-Ray.
+const IBM_I_74_OFFER_COPY={
+  public_id:'ibmi-rescue-v1',
+  slug:'ibmi-74-deadline-xray',
+  purchase_key:'ibmi_74_deadline_xray_250',
+  eyebrow:'IBM i 7.4 Deadline X-Ray',
+  headline:'IBM i 7.4 support changed. Know your risks before changing production.',
+  lede:'IBM i 7.4 standard support ended September 30, 2026. Extended support may be available. This bounded assessment maps the specific upgrade and compatibility unknowns, without claiming that running workloads stopped working.',
+  promise:'A scoped IBM i 7.4 support-transition X-Ray, not a general estate audit or an automatic upgrade recommendation.',
+  send:['Your authorized description of one IBM i 7.4 workload or estate','Release, hardware, third-party software and integration context if known','The decision or maintenance window you need to evaluate'],
+  get:['Bounded workload and dependency map','7.4 support and upgrade assumption register','Compatibility and vendor-risk register','Test, recovery and rollback next-step plan'],
+  steps:[
+    ['1. Bound the workload','Define a small, authorized evidence scope without sharing production credentials.'],
+    ['2. Separate facts from unknowns','Assess support coverage, vendor and compatibility dependencies, and uncertain behavior.'],
+    ['3. Choose a defensible next step','Receive a reviewed, evidence-backed decision and test plan. No production changes.']
+  ]
+};
+
+function offerCopyBySlug(slug){
+  const wanted=String(slug||'').trim().toLowerCase();
+  if(wanted===IBM_I_74_OFFER_COPY.slug)return IBM_I_74_OFFER_COPY;
+  return Object.values(OFFER_PAGE_COPY).find((copy)=>copy.slug===wanted)||null;
+}
+
 export function offerSlugForCapability(publicId){
   return OFFER_PAGE_COPY[String(publicId||'')]?.slug||null;
 }
@@ -266,15 +290,15 @@ export function offerSlugForCapability(publicId){
 export function offerCapabilityForSlug(slug,capabilities=[]){
   const wanted=String(slug||'').trim().toLowerCase();
   if(!wanted) return null;
-  const id=Object.entries(OFFER_PAGE_COPY).find(([,copy])=>copy.slug===wanted)?.[0]||null;
+  const copy=offerCopyBySlug(wanted);
+  const id=copy?.public_id||Object.entries(OFFER_PAGE_COPY).find(([,row])=>row.slug===wanted)?.[0]||null;
   return id ? (capabilities||[]).find((item)=>item.public_id===id)||null : null;
 }
 
 export function offerPurchaseKeyForSlug(slug){
   const wanted=String(slug||'').trim().toLowerCase();
   if(!wanted) return null;
-  const copy=Object.values(OFFER_PAGE_COPY).find((item)=>item.slug===wanted);
-  return copy?.purchase_key||null;
+  return offerCopyBySlug(wanted)?.purchase_key||null;
 }
 
 function entryPriceLabel(item){
@@ -313,12 +337,15 @@ export function renderOffers(capabilities=[]){
   });
 }
 
-export function renderOfferPage(item,{checkoutEnabled=true}={}){
-  const copy=OFFER_PAGE_COPY[item?.public_id];
+export function renderOfferPage(item,{checkoutEnabled=true,slug=''}={}){
+  const requested=offerCopyBySlug(slug);
+  const copy=requested?.public_id===item?.public_id
+    ? requested : OFFER_PAGE_COPY[item?.public_id];
   if(!copy) return null;
   const entry=item.entry_paid_offer||null;
-  const price=entryPriceLabel(item);
-  const offerName=entry?.name||item.name;
+  const deadline=copy.slug===IBM_I_74_OFFER_COPY.slug;
+  const price=deadline?'$250':entryPriceLabel(item);
+  const offerName=deadline?'IBM i 7.4 Deadline X-Ray':entry?.name||item.name;
   const send=copy.send.map((x)=>'<li>'+escapeHtml(x)+'</li>').join('');
   const get=copy.get.map((x)=>'<li>'+escapeHtml(x)+'</li>').join('');
   const steps=copy.steps.map(([title,body])=>'<div class="offer-step"><strong>'+escapeHtml(title)+'</strong><span>'+escapeHtml(body)+'</span></div>').join('');
