@@ -16,3 +16,15 @@
 
 .fsNoteCell[draggable="true"]{cursor:grab}
 .fsNoteCell.dragging{opacity:.35;cursor:grabbing;outline:1px dashed #fff;outline-offset:1px}
+
+.fsAutomation{margin-top:10px;padding:10px;border:1px solid #2b333b;border-radius:10px;background:#0c1014;min-width:0}
+.fsAutomationHead{display:flex;align-items:end;justify-content:space-between;gap:10px;margin-bottom:8px}
+.fsAutomationHead strong{display:block;margin-top:4px;font-size:12px}
+.fsAutomationHead label{display:grid;gap:4px;color:#8f9ba5;font-size:9px}
+.fsAutomationHead select{background:#11161b;color:#edf2f6;border:1px solid #303841;border-radius:6px;padding:7px}
+.fsAutomationLane{display:grid;grid-auto-flow:column;grid-auto-columns:28px;gap:2px;max-width:100%;overflow-x:auto;padding:5px 2px 2px;border-top:1px solid #222a31;border-bottom:1px solid #222a31}
+.fsAutomationPoint{display:grid;justify-items:center;gap:4px;min-width:28px}
+.fsAutomationPoint input[type="range"]{writing-mode:vertical-lr;direction:rtl;width:24px;height:96px;margin:0;cursor:ns-resize}
+.fsAutomationPoint small{font-size:8px;color:#697681}
+.fsAutomationHint{margin:7px 0 0;color:#71808a;font-size:9px}
+@media(max-width:520px){.fsAutomationHead{display:block}.fsAutomationHead label{margin-top:8px}.fsAutomationPoint input[type="range"]{height:82px}}
