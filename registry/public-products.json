@@ -446,8 +446,8 @@
       "llms": "./faie/llms.txt",
       "registry_name": "io.github.jgaethle10/faie",
       "invocation": {
-        "mode": "discovery_only",
-        "url": null
+        "mode": "mcp",
+        "url": "https://fabric.systemiacommandcenters.com/mcp/faie"
       }
     },
     {

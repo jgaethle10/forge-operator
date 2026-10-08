@@ -18,6 +18,7 @@ Evercraft Lineage is an approved public Evercraft discovery record. This GitHub 
 
 - Canonical: https://fabric.systemiacommandcenters.com/capabilities/lineage-founding-pilot-v1
 - GitHub LLM mirror: ./llms.txt
+- Knowledge surface: https://fabric.systemiacommandcenters.com/capabilities/lineage-founding-pilot-v1
 
 ## Authority
 
