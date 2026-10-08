@@ -1,6 +1,9 @@
 import assert from 'node:assert/strict';
+import fs from 'node:fs';
+import os from 'node:os';
+import path from 'node:path';
 import test from 'node:test';
-import { compareCfbRankingToPoll } from './cfb-poll-comparison.mjs';
+import { compareCfbRankingToPoll, latestPollBaseline } from './cfb-poll-comparison.mjs';
 
 const ranking={
   schema:'evercraft.cfb-power-rankings.v1',
@@ -60,4 +63,27 @@ test('comparison requires a complete comparison-only Top 25 baseline',()=>{
     ()=>compareCfbRankingToPoll({ranking,baseline:{...baseline,use_policy:'model_input'}}),
     /cfb_poll_baseline_use_policy_invalid/
   );
+});
+
+test('baseline discovery accepts the current or previous weekly poll but fails closed once stale',()=>{
+  const dir=fs.mkdtempSync(path.join(os.tmpdir(),'cfb-poll-baseline-'));
+  try{
+    fs.writeFileSync(path.join(dir,'ap.json'),JSON.stringify(baseline));
+    const current=latestPollBaseline({
+      baselineDir:dir,
+      pollId:'ap-top25',
+      at:'2026-10-11T17:00:00.000Z',
+      maxAgeDays:8,
+    });
+    assert.equal(current.age_days,7);
+    assert.equal(current.baseline.published_date,'2026-10-04');
+    assert.throws(()=>latestPollBaseline({
+      baselineDir:dir,
+      pollId:'ap-top25',
+      at:'2026-10-13T17:00:00.000Z',
+      maxAgeDays:8,
+    }),/cfb_poll_baseline_stale/);
+  }finally{
+    fs.rmSync(dir,{recursive:true,force:true});
+  }
 });
