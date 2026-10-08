@@ -38,6 +38,7 @@ export default function FallenSessions(){
   const [playhead,setPlayhead]=useState(0);
   const [audioStatus,setAudioStatus]=useState<PulseGridAudioStatus>({playing:false,scene:0,step:0,context_state:'cold',clock_mode:'cold',track_buses:0,latency_ms:null,cached_audio_assets:0});
   const vaultRef=useRef<PulseGridBrowserAudioAssetVault|null>(null);
+  const fileInputRef=useRef<HTMLInputElement|null>(null);
   const audioRef=useRef<PulseGridAudioEngine|null>(null);
   if(!vaultRef.current)vaultRef.current=new PulseGridBrowserAudioAssetVault();
   if(!audioRef.current){
@@ -91,6 +92,60 @@ export default function FallenSessions(){
       setStatus(error instanceof Error?error.message:'PulseGrid operation failed.');
       return null;
     }
+  }
+
+  async function importAudioFile(file:File){
+    const vault=vaultRef.current;
+    if(!vault)return;
+    const audioTrack=session.tracks.find((candidate)=>candidate.type==='audio');
+    if(!audioTrack){
+      setStatus('No canonical audio track is available.');
+      return;
+    }
+
+    setStatus('Hashing and verifying '+file.name+'…');
+    try{
+      const asset=await vault.ingest(file,{
+        source_name:file.name,
+        source_refs:['local-file:'+file.name],
+        source_state:'imported',
+        rights:'unknown',
+      });
+      const result=applyPulseGridTransaction(session,{
+        intent:'Import a local audio file and attach it to Audio Take scene '+String(selectedScene+1)+'.',
+        operations:[
+          {type:'asset.register_audio',asset:{
+            digest:asset.digest,
+            mime_type:asset.mime_type,
+            byte_length:asset.byte_length,
+            duration_sec:asset.duration_sec,
+            sample_rate:asset.sample_rate,
+            channels:asset.channels,
+            source_name:asset.source_name,
+            source_refs:asset.source_refs,
+            source_state:asset.source_state,
+            rights:asset.rights,
+            parent_asset_ids:asset.parent_asset_ids,
+            created_at:asset.created_at,
+          }},
+          {type:'clip.attach_audio_asset',track_id:audioTrack.id,scene:selectedScene,asset_id:asset.id},
+        ],
+      },'human');
+      setSession(result.session);
+      setSelectedTrackId(audioTrack.id);
+      setStatus(
+        'Imported '+file.name+' · '+asset.duration_sec.toFixed(2)+'s · '+
+        asset.sample_rate+' Hz · '+asset.channels+'ch · rights unknown'
+      );
+    }catch(error){
+      setStatus(error instanceof Error?error.message:'Audio import failed.');
+    }finally{
+      if(fileInputRef.current)fileInputRef.current.value='';
+    }
+  }
+
+  function chooseAudioFile(){
+    fileInputRef.current?.click();
   }
 
   function forkVariation(){
@@ -254,8 +309,16 @@ export default function FallenSessions(){
         </div>
       </header>
 
+      <input
+        ref={fileInputRef}
+        type="file"
+        accept="audio/*"
+        hidden
+        onChange={(event)=>{const file=event.target.files?.[0];if(file)void importAudioFile(file)}}
+      />
       <section className="fsToolbar" aria-label="Session controls">
         <button onClick={togglePlay}>{playing?'■ Stop':'▶ Play'}</button>
+        <button onClick={chooseAudioFile}>Import Audio</button>
         <button onClick={runLiftPlan}>✦ Atomic Chorus Lift</button>
         <button onClick={forkVariation}>Fork Variation</button>
         <button onClick={growClip} disabled={clip.bars>=16}>+ Bar</button>
@@ -283,7 +346,7 @@ export default function FallenSessions(){
                     onClick={()=>{setSelectedTrackId(candidate.id);setSelectedScene(scene)}}
                   >
                     {scene+1}
-                    <small>{candidateClip.bars}b · {candidateClip.notes.length}n</small>
+                    <small>{candidateClip.bars}b · {candidateClip.notes.length}n{candidateClip.audio_asset_id?' · audio':''}</small>
                   </button>
                 ))}
               </div>
