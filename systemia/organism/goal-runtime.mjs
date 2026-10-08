@@ -1,5 +1,11 @@
 import { verifyGoalHumanApproval } from './goal-human-approval.mjs';
 const TERMINAL = new Set(['complete', 'skipped']);
+// Must stay aligned with Systemia control-plane machine-contract.json.
+// Consequential work may not opt out of its human gate through a raw plan.
+export const FORCED_HUMAN_GATE_WORK_TYPES = Object.freeze([
+  'trust_change','external_message','outreach','external_purchase','payment',
+]);
+const forcedHumanGateTypes = new Set(FORCED_HUMAN_GATE_WORK_TYPES);
 
 function clean(value) {
   return String(value ?? '').replace(/\s+/g, ' ').trim();
@@ -27,14 +33,18 @@ function assertGoalState(state) {
 function normalizeTask(raw, goalKey, missionKey) {
   const workKey = clean(raw?.work_key || raw?.key);
   if (!workKey) throw new Error('every goal task requires work_key');
-  const humanGateRequired = Boolean(raw?.human_gate_required || raw?.founder_attention_required);
+  const workType = clean(raw?.work_type || 'execute').toLowerCase();
+  const humanGateRequired = Boolean(
+    raw?.human_gate_required || raw?.founder_attention_required ||
+    forcedHumanGateTypes.has(workType)
+  );
   return {
     mission_key: clean(raw?.mission_key || missionKey || goalKey),
     goal_key: goalKey,
     work_key: workKey,
     dedupe_key: clean(raw?.dedupe_key || `${goalKey}:${workKey}`),
     title: clean(raw?.title || workKey),
-    work_type: clean(raw?.work_type || 'execute').toLowerCase(),
+    work_type: workType,
     dependency_keys: uniqueStrings(raw?.dependency_keys || []),
     assigned_agents: uniqueStrings(raw?.assigned_agents || [], 50),
     status: 'pending',
