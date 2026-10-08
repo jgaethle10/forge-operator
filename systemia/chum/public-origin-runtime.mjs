@@ -318,7 +318,7 @@ export class ChumPublicOriginRuntime {
 
         const origin = requestOrigin(req, this.publicOrigin);
 
-        if (pathname === '/sitemap.xml') {
+        if (pathname === '/sitemap.xml' || pathname === '/chum/sitemap.xml' || /^\/chum\/sitemaps\/[a-z0-9-]+\.xml$/.test(pathname)) {
           const file = staticFile(this.publicRoot, pathname);
           if (!file) {
             res.writeHead(404, { 'content-type': 'text/plain; charset=utf-8' });
