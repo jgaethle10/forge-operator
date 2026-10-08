@@ -7,6 +7,8 @@ on:
       - 'systemia/organism/first-offer-lineage-proof.mjs'
       - 'systemia/organism/first-offer-external-probe.mjs'
       - 'systemia/organism/first-offer-external-probe.test.mjs'
+      - 'systemia/organism/first-offer-ci-status.mjs'
+      - 'systemia/organism/first-offer-ci-status.test.mjs'
       - 'systemia/organism/FIRST_OFFER_ONE_COMPANY.md'
       - '.github/workflows/systemia-one-company-offer1.yml'
   workflow_dispatch:
@@ -22,7 +24,7 @@ jobs:
         with:
           node-version: 22
       - name: Prove Systemia mission routing and all fail-closed commercial gates
-        run: node --test systemia/organism/first-offer-command.test.mjs systemia/organism/first-offer-external-probe.test.mjs
+        run: node --test systemia/organism/first-offer-command.test.mjs systemia/organism/first-offer-external-probe.test.mjs systemia/organism/first-offer-ci-status.test.mjs
       - name: Produce read-only company-wide Offer 1 readiness
         run: |
           node systemia/organism/first-offer-command.mjs > first-offer-command-status.json
@@ -33,6 +35,10 @@ jobs:
           node -e "const p=require('./first-offer-lineage-proof.json'); if(!p.integrity_ok||!p.git_artifact_byte_parity||p.production_deployed||p.durable_lineage_remote_persisted||p.payment_verified) process.exit(1)"
       - name: Independently inspect the customer-facing buyer URL (GET only, held is reported)
         run: node systemia/organism/first-offer-external-probe.mjs first-offer-external-probe.json
+      - name: Surface release hold in job summary and create machine-readable evidence
+        run: |
+          node systemia/organism/first-offer-ci-status.mjs first-offer-command-status.json first-offer-lineage-proof.json first-offer-external-probe.json first-offer-release-status.json
+          node -e "const p=require('./first-offer-release-status.json'); if(p.release_state!=='held'||p.release_authorized||p.publication_authorized||p.payment_verified) process.exit(1)"
       - name: Retain source-only readiness, never present it as live order proof
         uses: actions/upload-artifact@v4
         with:
@@ -41,4 +47,5 @@ jobs:
             first-offer-command-status.json
             first-offer-lineage-proof.json
             first-offer-external-probe.json
+            first-offer-release-status.json
           retention-days: 30
