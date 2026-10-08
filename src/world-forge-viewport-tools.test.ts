@@ -6,6 +6,7 @@ import {
   axisDragWorldDelta,
   frameDistanceForScale,
   perspectiveVerticalFovRad,
+  resolveWorldForgeViewportViewMode,
   screenRotationDeltaDeg,
   snapWorldAngle,
   snapWorldDelta,
@@ -110,4 +111,25 @@ test('scale gizmo maps projected axis drag into snapped positive scale',()=>{
     snapStep:.1,
   });
   assert.equal(clamped,.01);
+});
+
+
+test('runtime WebGPU underlay locks viewport math to the authored runtime camera',()=>{
+  assert.deepEqual(
+    resolveWorldForgeViewportViewMode({
+      requestedMode:'orbit',
+      runtimeUnderlayActive:true,
+      hasActiveCamera:true,
+    }),
+    {mode:'camera',runtimeCameraLocked:true},
+  );
+
+  assert.deepEqual(
+    resolveWorldForgeViewportViewMode({
+      requestedMode:'orbit',
+      runtimeUnderlayActive:false,
+      hasActiveCamera:true,
+    }),
+    {mode:'orbit',runtimeCameraLocked:false},
+  );
 });
