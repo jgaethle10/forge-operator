@@ -1,0 +1,31 @@
+name: Fabric Public Discovery Routes
+
+on:
+  pull_request:
+    paths:
+      - 'systemia/mcp/fabric-local-runtime.mjs'
+      - 'systemia/mcp/fabric-static-discovery.mjs'
+      - 'tests/fabric-research-discovery-mount.test.mjs'
+      - '.github/workflows/fabric-chum-public-routes.yml'
+  push:
+    branches: [main]
+    paths:
+      - 'systemia/mcp/fabric-local-runtime.mjs'
+      - 'systemia/mcp/fabric-static-discovery.mjs'
+      - 'tests/fabric-research-discovery-mount.test.mjs'
+      - '.github/workflows/fabric-chum-public-routes.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  proof:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Test actual Fabric router for read-only sitemap and CHUM discovery
+        run: node --test tests/fabric-research-discovery-mount.test.mjs
