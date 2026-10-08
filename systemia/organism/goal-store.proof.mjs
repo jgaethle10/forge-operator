@@ -57,6 +57,7 @@ try {
   const finished = await mutateGoalState(file, (current) => recordGoalOutcome({
     state: current,
     workKey: 'persist-me',
+    expectedAttempt: current.tasks.find(t=>t.work_key==='persist-me').attempt,
     result: 'complete',
     receiptRef: 'exec:persist-me',
     evidenceRefs: ['artifact:persist-me'],

@@ -37,7 +37,7 @@ test('active execution cannot be reset to pending by an identical or changed pla
 test('completed work and its receipts survive attempted replay plan admission',()=>{
  const executing=startGoalWork({state:admitted(),workKey:'send',now});
  const completed=recordGoalOutcome({
-  state:executing,workKey:'send',result:'complete',receiptRef:'exec:verified',
+  state:executing,workKey:'send',expectedAttempt:executing.tasks[0].attempt,result:'complete',receiptRef:'exec:verified',
   evidenceRefs:['proof:verified'],now
  });
  assert.equal(completed.status,'complete');
@@ -63,7 +63,7 @@ test('on-disk plan re-admission rejection preserves exact revision and receipts'
   await mutateGoalState(file,state=>admitGoalPlan({state,plan,now}));
   await mutateGoalState(file,state=>startGoalWork({state,workKey:'send',now}));
   await mutateGoalState(file,state=>recordGoalOutcome({
-   state,workKey:'send',result:'complete',receiptRef:'exec:verified',now
+   state,workKey:'send',expectedAttempt:state.tasks[0].attempt,result:'complete',receiptRef:'exec:verified',now
   }));
   const before=await readGoalState(file);
   await assert.rejects(()=>mutateGoalState(file,state=>admitGoalPlan({

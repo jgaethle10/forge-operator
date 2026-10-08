@@ -223,7 +223,7 @@ export function heartbeatGoalWork({ state, workKey, expectedAttempt, now = new D
   return refreshGoal(next, now);
 }
 
-export function recordGoalOutcome({ state, workKey, result, receiptRef = '', evidenceRefs = [], blocker = '', now = new Date() }) {
+export function recordGoalOutcome({ state, workKey, expectedAttempt, result, receiptRef = '', evidenceRefs = [], blocker = '', now = new Date() }) {
   assertGoalState(state);
   const normalized = clean(result).toLowerCase();
   if (!['complete', 'blocked', 'retry', 'skipped'].includes(normalized)) throw new Error(`unsupported result ${normalized}`);
@@ -231,6 +231,10 @@ export function recordGoalOutcome({ state, workKey, result, receiptRef = '', evi
   const task = next.tasks.find((item) => item.work_key === clean(workKey));
   if (!task) throw new Error(`unknown work_key ${clean(workKey)}`);
   if (task.recovery_hold) throw new Error('interrupted attempt requires authoritative reconciliation before outcome or retry');
+  // A late worker or CLI caller cannot complete or retry a newer execution.
+  if (!Number.isSafeInteger(expectedAttempt) || expectedAttempt < 1 || task.attempt !== expectedAttempt) {
+    throw new Error('attempt mismatch: missing or stale execution outcome');
+  }
   if (task.status !== 'executing' && !(normalized === 'retry' && task.status === 'blocked')) {
     throw new Error(`${task.work_key} is not executing`);
   }
