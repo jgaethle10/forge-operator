@@ -26,6 +26,7 @@
     }
   ],
   "submission_process": [
+    "No public remote submission endpoint is declared yet; the current runnable path is the repository-local submission CLI.",
     "Produce an attempt conforming to the public attempt schema.",
     "Keep provider/model identity truthful; self-declared identity is treated as unverified until independently verified.",
     "Evaluation creates an evaluator-reviewed receipt only.",
@@ -43,5 +44,7 @@
     "One passing mission is not broad competency.",
     "Public ranking requires explicit approval.",
     "Private evidence must not be exposed."
-  ]
+  ],
+  "submission_mode": "repo_local_cli_only_no_remote_ingress",
+  "local_submission_cli": "systemia/university/benchmark-submit.mjs"
 }
