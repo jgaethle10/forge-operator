@@ -55,8 +55,10 @@ test('Fallen Sessions imports audio through vault plus one canonical transaction
   assert.match(ui,/importAudioFile/);
   assert.match(ui,/vault\.ingest/);
   assert.match(ui,/asset\.register_audio/);
-  assert.match(ui,/clip\.attach_audio_asset/);
+  assert.match(ui,/audio_take\.add/);
+  assert.match(ui,/activate:true/);
   assert.match(ui,/applyPulseGridTransaction/);
+  assert.doesNotMatch(ui,/type:'clip\.attach_audio_asset'/);
   assert.match(ui,/rights:'unknown'/);
   assert.doesNotMatch(ui,/rights:'owned'/);
 });
@@ -78,6 +80,7 @@ test('Fallen Sessions microphone recording uses the canonical asset pipeline',()
   assert.match(ui,/rights:'unknown'/);
   assert.match(ui,/vault\.ingest\(blob/);
   assert.match(ui,/commitAudioAsset/);
+  assert.match(ui,/audio_take\.add/);
   assert.match(ui,/applyPulseGridTransaction/);
 });
 
@@ -243,13 +246,17 @@ test('Fallen Sessions step grid selects, activates and double-click clears',()=>
   assert.match(css,/\.fsStep\.selected/);
 });
 
-test('Fallen Sessions does not render decorative drum controls for audio tracks',()=>{
+test('Fallen Sessions renders canonical non-destructive take lanes for audio tracks',()=>{
   const ui=fs.readFileSync('src/FallenSessions.tsx','utf8');
+  const css=fs.readFileSync('src/fallen-sessions.css','utf8');
   assert.match(ui,/track\.type==='drums'/);
-  assert.match(ui,/Canonical audio clip/);
-  assert.match(ui,/Verified asset attached/);
-  assert.match(ui,/No audio asset attached/);
-  assert.match(ui,/Import or record audio to attach verified bytes/);
+  assert.match(ui,/Canonical take lanes/);
+  assert.match(ui,/clip\.audio_takes\.map/);
+  assert.match(ui,/clip\.active_audio_take_id/);
+  assert.match(ui,/type:'audio_take\.set_active'/);
+  assert.match(ui,/Silence clip/);
+  assert.match(css,/\.fsAudioTake/);
+  assert.doesNotMatch(ui,/audio_asset_id/);
 });
 
 
@@ -321,4 +328,16 @@ test('Fallen Sessions device editor stays responsive',()=>{
   assert.match(css,/\.fsDeviceParams/);
   assert.match(css,/grid-template-columns:repeat\(3,minmax\(0,1fr\)\)/);
   assert.match(css,/@media\(max-width:720px\).*\.fsDeviceParams\{grid-template-columns:minmax\(0,1fr\)\}/s);
+});
+
+
+test('Fallen Sessions import and recording preserve prior takes instead of overwriting the clip',()=>{
+  const ui=fs.readFileSync('src/FallenSessions.tsx','utf8');
+  const commitStart=ui.indexOf('async function commitAudioAsset');
+  const importStart=ui.indexOf('async function importAudioFile',commitStart);
+  const commitBody=ui.slice(commitStart,importStart);
+  assert.match(commitBody,/type:'audio_take\.add'/);
+  assert.match(commitBody,/activate:true/);
+  assert.doesNotMatch(commitBody,/audio_takes\s*=/);
+  assert.doesNotMatch(commitBody,/active_audio_take_id\s*=/);
 });
