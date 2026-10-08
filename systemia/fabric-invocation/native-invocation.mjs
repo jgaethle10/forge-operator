@@ -303,4 +303,101 @@ export class FabricNativeInvocation {
     }
   }
 
+  /**
+   * Explicit recovery of a durable, already verified Lineage result whose
+   * Systemia acknowledgment has not been durably observed. Never dispatches
+   * a worker. missionOutcomeWriter MUST implement correlation-idempotent
+   * acknowledgment and return a freshly verified receipt on replay.
+   */
+  async reconcileSystemiaOutcome(input = {}) {
+    const actor = required(input.actor_ref, 'actor_ref');
+    const tenant = required(input.tenant_key, 'tenant_key');
+    const mission = required(input.mission_key, 'mission_key');
+    const work = required(input.work_key, 'work_key');
+    const capability = required(input.capability_key, 'capability_key');
+    const idempotency = required(input.idempotency_key, 'idempotency_key');
+    const payloadText = JSON.stringify(input.payload ?? null);
+    if (Buffer.byteLength(payloadText) > this.maxPayloadBytes) throw new Error('fabric_payload_too_large');
+    const binding = digest(canonical({
+      actor, tenant, mission, work, capability, payload: input.payload ?? null,
+    }));
+    const file = path.join(this.stateDir, digest(idempotency).slice(7) + '.jsonl');
+    const lock = path.join(this.stateDir, digest(idempotency).slice(7) + '.lock');
+    fs.mkdirSync(this.stateDir, { recursive: true, mode: 0o700 });
+    try { fs.mkdirSync(lock, { mode: 0o700 }); }
+    catch (error) {
+      if (error.code === 'EEXIST') throw new Error('fabric_invocation_busy_or_interrupted');
+      throw error;
+    }
+    try {
+      const auth = await this.authorizationVerifier({
+        actor_ref: actor, tenant_key: tenant, capability_key: capability,
+        mission_key: mission, work_key: work,
+      });
+      const expiry = Date.parse(String(auth?.expires_at || ''));
+      if (auth?.decision !== 'allow' || !RECEIPT.test(String(auth.receipt_hash || '')) ||
+          auth.actor_ref !== actor || auth.tenant_key !== tenant ||
+          auth.capability_key !== capability || !Number.isFinite(expiry) ||
+          expiry <= this.now().getTime() + this.timeoutMs + 1000) {
+        throw new Error('fabric_authorization_denied_or_expiring');
+      }
+      const events = readEvents(file);
+      if (!events.length) throw new Error('fabric_reconcile_invocation_not_found');
+      if (events[0].detail.binding_hash !== binding) {
+        throw new Error('fabric_idempotency_binding_conflict');
+      }
+      const latest = events.at(-1);
+      if (!['lineage_recorded', 'systemia_ack_pending'].includes(latest.state)) {
+        return { ...resultFromEvents(events, true), reconciled: false };
+      }
+      const { lineage_transaction_id: transactionId, lineage_receipt_id: receiptId,
+        worker_receipt_digest: workerHash, correlation_id: correlation } = latest.detail;
+      const lineage = new LineageStore(this.lineageRoot);
+      const [tx, txReceipt] = await Promise.all([
+        lineage.readObject(transactionId), lineage.readObject(receiptId),
+      ]);
+      if (tx?.type !== 'transaction' || txReceipt?.type !== 'receipt' ||
+          tx.payload?.kind !== 'fabric.capability.invocation' ||
+          tx.payload?.actor?.id !== actor || tx.payload?.scope !== capability ||
+          tx.payload?.inputs?.[0]?.mission_key !== mission ||
+          tx.payload?.inputs?.[0]?.work_key !== work ||
+          tx.payload?.inputs?.[0]?.request_digest !== events[0].detail.request_digest ||
+          tx.payload?.outputs?.[0]?.worker_receipt_digest !== workerHash ||
+          correlation !== events[0].detail.correlation_id ||
+          !RECEIPT.test(String(workerHash || ''))) {
+        throw new Error('fabric_reconcile_lineage_binding_invalid');
+      }
+      let acknowledgment;
+      try {
+        acknowledgment = await this.missionOutcomeWriter({
+          mission_key: mission, work_key: work,
+          capability_key: capability, correlation_id: correlation,
+          lineage_transaction_id: transactionId,
+          lineage_receipt_id: receiptId, worker_receipt_digest: workerHash,
+        });
+      } catch {
+        return { ...resultFromEvents(events, true), reconciled: false };
+      }
+      if (acknowledgment?.state !== 'recorded' ||
+          acknowledgment.mission_key !== mission ||
+          acknowledgment.work_key !== work ||
+          acknowledgment.correlation_id !== correlation ||
+          acknowledgment.lineage_receipt_id !== receiptId ||
+          !RECEIPT.test(String(acknowledgment.receipt_hash || ''))) {
+        throw new Error('fabric_reconcile_systemia_ack_invalid');
+      }
+      const completed = appendEvent(file, events, 'completed', {
+        correlation_id: correlation, worker_receipt_digest: workerHash,
+        lineage_transaction_id: transactionId, lineage_receipt_id: receiptId,
+        systemia_outcome_receipt_hash: acknowledgment.receipt_hash,
+        reconciliation_without_worker_dispatch: true,
+        external_delivery_verified: false,
+      }, this.now);
+      events.push(completed);
+      return { ...resultFromEvents(events), reconciled: true };
+    } finally {
+      fs.rmSync(lock, { recursive: true, force: true });
+    }
+  }
+
 }
