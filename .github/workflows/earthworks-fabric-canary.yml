@@ -2,6 +2,15 @@ name: EarthWorks Public Fabric Canary
 
 on:
   workflow_dispatch:
+  pull_request:
+    paths:
+      - 'public/demos/earthworks-autonomy/**'
+      - 'systemia/mcp/earthworks-simulator-page.mjs'
+      - 'systemia/mcp/earthworks-simulator-app.mjs'
+      - 'systemia/mcp/fabric-local-runtime.mjs'
+      - 'tests/earthworks-owned-page.test.mjs'
+      - 'tests/earthworks-public-playground.test.mjs'
+      - '.github/workflows/earthworks-fabric-canary.yml'
   push:
     branches: [main]
     paths:
@@ -14,6 +23,7 @@ on:
       - 'systemia/mcp/fabric-public-site.mjs'
       - 'systemia/mcp/fabric-local-runtime.mjs'
       - 'systemia/mcp/earthworks-simulator-page.mjs'
+      - 'systemia/mcp/earthworks-simulator-app.mjs'
       - 'tests/evercraft-fabric-runtime.test.mjs'
       - 'tests/earthworks-owned-page.test.mjs'
       - 'tests/fabric-offer-pages.test.mjs'
@@ -113,33 +123,118 @@ jobs:
           fi
           printf '%s\n' "$page" > /tmp/earthworks-public-page.html
 
-          live_yard=""
-          yard_ready=false
+          # The hot-read /demos surface is the stable public product door.
+          # It remains self-contained so the existing demo CSP and MIME map cannot
+          # make the browser experience depend on a resident-process upgrade.
+          static_ready=false
+          canonical_static_ready=false
+          legacy_static_ready=false
+          expected_controller_sha="$(sha256sum systemia/earthworks-autonomy/fleet-controller.mjs | awk '{print $1}')"
           for attempt in $(seq 1 16); do
+            static_yard="$(curl --fail --silent --show-error --max-time 25 "$FABRIC_ORIGIN/demos/earthworks-autonomy/" 2>/dev/null || true)"
+            printf '%s\n' "$static_yard" > /tmp/earthworks-static-yard-candidate.html
+
+            canonical_markers=false
+            if printf '%s' "$static_yard" | grep -Fq 'Live Yard 001' \
+              && printf '%s' "$static_yard" | grep -Fq 'data-mode="manual"' \
+              && printf '%s' "$static_yard" | grep -Fq 'data-mode="shadow"' \
+              && printf '%s' "$static_yard" | grep -Fq 'data-mode="autonomy"' \
+              && printf '%s' "$static_yard" | grep -Fq 'Truck Queue' \
+              && printf '%s' "$static_yard" | grep -Fq 'Loader Starvation' \
+              && printf '%s' "$static_yard" | grep -Fq 'Blocked Route' \
+              && printf '%s' "$static_yard" | grep -Fq 'Production Surge' \
+              && printf '%s' "$static_yard" | grep -Fq 'STOP ALL' \
+              && printf '%s' "$static_yard" | grep -Fq 'EARTHWORKS_CANONICAL_CONTROLLER_BEGIN' \
+              && printf '%s' "$static_yard" | grep -Fq 'createFleetController' \
+              && printf '%s' "$static_yard" | grep -Fq 'controller.stopAll' \
+              && ! printf '%s' "$static_yard" | grep -Fiq 'base44.app'; then
+              canonical_markers=true
+            fi
+
+            if [ "$canonical_markers" = "true" ] && node - <<'NODE'
+          const fs=require('fs');
+          const page=fs.readFileSync('/tmp/earthworks-static-yard-candidate.html','utf8').replace(/\n$/,'');
+          const canonical=fs.readFileSync('systemia/earthworks-autonomy/fleet-controller.mjs','utf8').replace(/\bexport\s+/g,'');
+          const begin='/* EARTHWORKS_CANONICAL_CONTROLLER_BEGIN */\n';
+          const end='\n/* EARTHWORKS_CANONICAL_CONTROLLER_END */';
+          const a=page.indexOf(begin);
+          const b=page.indexOf(end,a+begin.length);
+          if(a<0||b<0) process.exit(2);
+          const embedded=page.slice(a+begin.length,b);
+          if(embedded!==canonical) process.exit(3);
+          NODE
+            then
+              canonical_static_ready=true
+              static_ready=true
+              cp /tmp/earthworks-static-yard-candidate.html /tmp/earthworks-static-yard.html
+              printf '%s\n' "$FABRIC_ORIGIN/demos/earthworks-autonomy/" > /tmp/earthworks-live-yard-url.txt
+              echo "EarthWorks canonical-controller playground verified on attempt $attempt."
+              break
+            fi
+
+            if printf '%s' "$static_yard" | grep -Fq 'EarthWorks Autonomy Playground' \
+              && printf '%s' "$static_yard" | grep -Fq 'data-mode="manual"' \
+              && printf '%s' "$static_yard" | grep -Fq 'data-mode="shadow"' \
+              && printf '%s' "$static_yard" | grep -Fq 'data-mode="auto"' \
+              && printf '%s' "$static_yard" | grep -Fq 'STOP ALL' \
+              && ! printf '%s' "$static_yard" | grep -Fiq 'base44.app'; then
+              legacy_static_ready=true
+              if [ "$GITHUB_EVENT_NAME" = "pull_request" ]; then
+                static_ready=true
+                cp /tmp/earthworks-static-yard-candidate.html /tmp/earthworks-static-yard.html
+                printf '%s\n' "$FABRIC_ORIGIN/demos/earthworks-autonomy/" > /tmp/earthworks-live-yard-url.txt
+                echo "EarthWorks legacy playground still externally healthy while controller-backed generation is under review."
+                break
+              fi
+            fi
+
+            if [ "$attempt" -lt 16 ]; then
+              echo "EarthWorks controller-backed public playground has not converged yet ($attempt/16)."
+              sleep 20
+            fi
+          done
+
+          if [ "$GITHUB_EVENT_NAME" = "push" ] && [ "$canonical_static_ready" != "true" ]; then
+            echo "Main release did not converge the public playground onto the canonical EarthWorks controller." >&2
+            exit 1
+          fi
+
+          # The native /earthworks route is an additional door. It only earns
+          # controller-backed status when its module endpoints are present and
+          # the served controller matches this release's canonical controller.
+          live_yard=""
+          native_ready=false
+          canonical_native_ready=false
+          for attempt in $(seq 1 4); do
             live_yard="$(curl --fail --silent --show-error --max-time 25 "$FABRIC_ORIGIN/earthworks" 2>/dev/null || true)"
+            native_app="$(curl --fail --silent --show-error --max-time 25 "$FABRIC_ORIGIN/earthworks/app.mjs" 2>/dev/null || true)"
+            native_controller="$(curl --fail --silent --show-error --max-time 25 "$FABRIC_ORIGIN/earthworks/controller.mjs" 2>/dev/null || true)"
+            native_controller_sha="$(printf '%s' "$native_controller" | sha256sum | awk '{print $1}')"
             if printf '%s' "$live_yard" | grep -Fq 'Live Yard 001' \
               && printf '%s' "$live_yard" | grep -Fq 'Dispatch truck' \
               && printf '%s' "$live_yard" | grep -Fq 'Shadow' \
               && printf '%s' "$live_yard" | grep -Fq 'Autonomy' \
-              && printf '%s' "$live_yard" | grep -Fq 'Truck Queue' \
-              && printf '%s' "$live_yard" | grep -Fq 'Loader Starvation' \
-              && printf '%s' "$live_yard" | grep -Fq 'Blocked Route' \
-              && printf '%s' "$live_yard" | grep -Fq 'Production Surge' \
-              && printf '%s' "$live_yard" | grep -Fq 'STOP ALL'; then
-              yard_ready=true
-              echo "EarthWorks Live Yard verified on attempt $attempt."
+              && printf '%s' "$live_yard" | grep -Fq 'STOP ALL' \
+              && printf '%s' "$native_app" | grep -Fq 'createFleetController' \
+              && [ "$native_controller_sha" = "$expected_controller_sha" ]; then
+              native_ready=true
+              canonical_native_ready=true
+              printf '%s\n' "$live_yard" > /tmp/earthworks-native-yard.html
+              printf '%s\n' "$FABRIC_ORIGIN/earthworks" > /tmp/earthworks-live-yard-url.txt
+              echo "EarthWorks native controller-backed Live Yard verified on attempt $attempt."
               break
             fi
-            if [ "$attempt" -lt 16 ]; then
-              echo "EarthWorks Live Yard has not reached the resident edge yet ($attempt/16)."
-              sleep 20
-            fi
+            [ "$attempt" -lt 4 ] && sleep 10
           done
-          if [ "$yard_ready" != "true" ]; then
-            echo "EarthWorks Live Yard did not reach the public Fabric across the resident updater window." >&2
+
+          if [ "$static_ready" != "true" ] && [ "$native_ready" != "true" ]; then
+            echo "No owned EarthWorks playable surface is externally verified." >&2
             exit 1
           fi
-          printf '%s\n' "$live_yard" > /tmp/earthworks-live-yard.html
+
+          printf '%s\n' "$canonical_static_ready" > /tmp/earthworks-canonical-static-ready.txt
+          printf '%s\n' "$legacy_static_ready" > /tmp/earthworks-legacy-static-ready.txt
+          printf '%s\n' "$canonical_native_ready" > /tmp/earthworks-canonical-native-ready.txt
 
       - name: Write external receipt
         if: success()
@@ -168,9 +263,15 @@ jobs:
             connection_options_verified:connections.result?.structuredContent?.public_id==='earthworks-site-autonomy-study-v1',
             public_page_verified:fs.existsSync('/tmp/earthworks-public-page.html'),
             public_page_url:process.env.FABRIC_ORIGIN+'/capabilities/earthworks-site-autonomy-study-v1',
-            live_yard_verified:fs.existsSync('/tmp/earthworks-live-yard.html'),
-            live_yard_game_controls_verified:fs.existsSync('/tmp/earthworks-live-yard.html'),
-            live_yard_url:process.env.FABRIC_ORIGIN+'/earthworks',
+            live_yard_verified:fs.existsSync('/tmp/earthworks-static-yard.html')||fs.existsSync('/tmp/earthworks-native-yard.html'),
+            live_yard_game_controls_verified:fs.existsSync('/tmp/earthworks-static-yard.html')||fs.existsSync('/tmp/earthworks-native-yard.html'),
+            static_playground_verified:fs.existsSync('/tmp/earthworks-static-yard.html'),
+            controller_backed_playground_verified:fs.readFileSync('/tmp/earthworks-canonical-static-ready.txt','utf8').trim()==='true',
+            legacy_static_playground_observed:fs.readFileSync('/tmp/earthworks-legacy-static-ready.txt','utf8').trim()==='true',
+            public_controller_matches_canonical:fs.readFileSync('/tmp/earthworks-canonical-static-ready.txt','utf8').trim()==='true',
+            native_live_yard_verified:fs.existsSync('/tmp/earthworks-native-yard.html'),
+            native_controller_backed_verified:fs.readFileSync('/tmp/earthworks-canonical-native-ready.txt','utf8').trim()==='true',
+            live_yard_url:fs.readFileSync('/tmp/earthworks-live-yard-url.txt','utf8').trim(),
             transactional:false,
             payment_created:false,
             equipment_control_authorized:false,

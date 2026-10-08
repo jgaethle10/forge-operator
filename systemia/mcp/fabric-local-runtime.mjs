@@ -147,7 +147,7 @@ function sendInteractiveHtml(res,status,body) {
     'x-frame-options':'DENY',
     'referrer-policy':'no-referrer',
     'permissions-policy':'camera=(), microphone=(), geolocation=()',
-    'content-security-policy':"default-src 'none'; style-src 'unsafe-inline'; script-src 'unsafe-inline'; connect-src 'none'; img-src 'self' data:; base-uri 'none'; frame-ancestors 'none'; form-action 'none'",
+    'content-security-policy':"default-src 'none'; style-src 'unsafe-inline'; script-src 'self'; connect-src 'none'; img-src 'self' data:; base-uri 'none'; frame-ancestors 'none'; form-action 'none'",
   });
   res.end(data);
 }
@@ -698,6 +698,24 @@ export async function startFabricLocalRuntime({
           200,
           renderAliEvLanding(),
           {contentType:'text/html; charset=utf-8'}
+        );
+      }
+
+      if (req.method==='GET' && req.url==='/earthworks/controller.mjs') {
+        return sendBuffer(
+          res,
+          200,
+          fs.readFileSync(path.resolve(moduleDir,'../earthworks-autonomy/fleet-controller.mjs')),
+          {contentType:'application/javascript; charset=utf-8',cacheControl:'no-store'}
+        );
+      }
+
+      if (req.method==='GET' && req.url==='/earthworks/app.mjs') {
+        return sendBuffer(
+          res,
+          200,
+          fs.readFileSync(path.resolve(moduleDir,'./earthworks-simulator-app.mjs')),
+          {contentType:'application/javascript; charset=utf-8',cacheControl:'no-store'}
         );
       }
 
