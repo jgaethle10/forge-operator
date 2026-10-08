@@ -124,19 +124,17 @@ jobs:
           printf '%s\n' "$page" > /tmp/earthworks-public-page.html
 
           # The hot-read /demos surface is the stable public product door.
-          # On main/push it must serve the controller-backed generation and its
-          # public controller mirror must be byte-identical to the canonical
-          # EarthWorks fleet controller in this release.
+          # It remains self-contained so the existing demo CSP and MIME map cannot
+          # make the browser experience depend on a resident-process upgrade.
           static_ready=false
           canonical_static_ready=false
           legacy_static_ready=false
           expected_controller_sha="$(sha256sum systemia/earthworks-autonomy/fleet-controller.mjs | awk '{print $1}')"
           for attempt in $(seq 1 16); do
             static_yard="$(curl --fail --silent --show-error --max-time 25 "$FABRIC_ORIGIN/demos/earthworks-autonomy/" 2>/dev/null || true)"
-            static_app="$(curl --fail --silent --show-error --max-time 25 "$FABRIC_ORIGIN/demos/earthworks-autonomy/app.mjs" 2>/dev/null || true)"
-            static_controller="$(curl --fail --silent --show-error --max-time 25 "$FABRIC_ORIGIN/demos/earthworks-autonomy/controller.mjs" 2>/dev/null || true)"
-            observed_controller_sha="$(printf '%s' "$static_controller" | sha256sum | awk '{print $1}')"
+            printf '%s\n' "$static_yard" > /tmp/earthworks-static-yard-candidate.html
 
+            canonical_markers=false
             if printf '%s' "$static_yard" | grep -Fq 'Live Yard 001' \
               && printf '%s' "$static_yard" | grep -Fq 'data-mode="manual"' \
               && printf '%s' "$static_yard" | grep -Fq 'data-mode="shadow"' \
@@ -146,18 +144,29 @@ jobs:
               && printf '%s' "$static_yard" | grep -Fq 'Blocked Route' \
               && printf '%s' "$static_yard" | grep -Fq 'Production Surge' \
               && printf '%s' "$static_yard" | grep -Fq 'STOP ALL' \
-              && printf '%s' "$static_yard" | grep -Fq 'src="./app.mjs"' \
-              && printf '%s' "$static_app" | grep -Fq "from './controller.mjs'" \
-              && printf '%s' "$static_app" | grep -Fq 'createFleetController' \
-              && printf '%s' "$static_app" | grep -Fq 'controller.stopAll' \
-              && printf '%s' "$static_controller" | grep -Fq 'export function createFleetController' \
-              && [ "$observed_controller_sha" = "$expected_controller_sha" ] \
-              && ! printf '%s%s%s' "$static_yard" "$static_app" "$static_controller" | grep -Fiq 'base44.app'; then
+              && printf '%s' "$static_yard" | grep -Fq 'EARTHWORKS_CANONICAL_CONTROLLER_BEGIN' \
+              && printf '%s' "$static_yard" | grep -Fq 'createFleetController' \
+              && printf '%s' "$static_yard" | grep -Fq 'controller.stopAll' \
+              && ! printf '%s' "$static_yard" | grep -Fiq 'base44.app'; then
+              canonical_markers=true
+            fi
+
+            if [ "$canonical_markers" = "true" ] && node - <<'NODE'
+          const fs=require('fs');
+          const page=fs.readFileSync('/tmp/earthworks-static-yard-candidate.html','utf8').replace(/\n$/,'');
+          const canonical=fs.readFileSync('systemia/earthworks-autonomy/fleet-controller.mjs','utf8').replace(/\bexport\s+/g,'');
+          const begin='/* EARTHWORKS_CANONICAL_CONTROLLER_BEGIN */\n';
+          const end='\n/* EARTHWORKS_CANONICAL_CONTROLLER_END */';
+          const a=page.indexOf(begin);
+          const b=page.indexOf(end,a+begin.length);
+          if(a<0||b<0) process.exit(2);
+          const embedded=page.slice(a+begin.length,b);
+          if(embedded!==canonical) process.exit(3);
+          NODE
+            then
               canonical_static_ready=true
               static_ready=true
-              printf '%s\n' "$static_yard" > /tmp/earthworks-static-yard.html
-              printf '%s\n' "$static_app" > /tmp/earthworks-static-app.mjs
-              printf '%s\n' "$static_controller" > /tmp/earthworks-static-controller.mjs
+              cp /tmp/earthworks-static-yard-candidate.html /tmp/earthworks-static-yard.html
               printf '%s\n' "$FABRIC_ORIGIN/demos/earthworks-autonomy/" > /tmp/earthworks-live-yard-url.txt
               echo "EarthWorks canonical-controller playground verified on attempt $attempt."
               break
@@ -172,7 +181,7 @@ jobs:
               legacy_static_ready=true
               if [ "$GITHUB_EVENT_NAME" = "pull_request" ]; then
                 static_ready=true
-                printf '%s\n' "$static_yard" > /tmp/earthworks-static-yard.html
+                cp /tmp/earthworks-static-yard-candidate.html /tmp/earthworks-static-yard.html
                 printf '%s\n' "$FABRIC_ORIGIN/demos/earthworks-autonomy/" > /tmp/earthworks-live-yard-url.txt
                 echo "EarthWorks legacy playground still externally healthy while controller-backed generation is under review."
                 break
@@ -259,7 +268,7 @@ jobs:
             static_playground_verified:fs.existsSync('/tmp/earthworks-static-yard.html'),
             controller_backed_playground_verified:fs.readFileSync('/tmp/earthworks-canonical-static-ready.txt','utf8').trim()==='true',
             legacy_static_playground_observed:fs.readFileSync('/tmp/earthworks-legacy-static-ready.txt','utf8').trim()==='true',
-            public_controller_matches_canonical:fs.existsSync('/tmp/earthworks-static-controller.mjs'),
+            public_controller_matches_canonical:fs.readFileSync('/tmp/earthworks-canonical-static-ready.txt','utf8').trim()==='true',
             native_live_yard_verified:fs.existsSync('/tmp/earthworks-native-yard.html'),
             native_controller_backed_verified:fs.readFileSync('/tmp/earthworks-canonical-native-ready.txt','utf8').trim()==='true',
             live_yard_url:fs.readFileSync('/tmp/earthworks-live-yard-url.txt','utf8').trim(),
