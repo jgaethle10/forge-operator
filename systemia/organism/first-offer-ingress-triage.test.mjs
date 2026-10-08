@@ -108,3 +108,23 @@ test('operator status text is readable and makes no checkout claim',()=>{
  assert.match(status,/Not verified/);
  assert.match(status,/No router, DNS or firewall changes/);
 });
+
+test('a verified HTTP 404 means offer release route is absent, not a TCP diagnosis',()=>{
+ const r=check(external({http_status:404,reason:'http_404',ingress:null}),null);
+ assert.equal(r.diagnosis,'specific_offer_route_http_404');
+ assert.equal(r.next_action,'verify_yard_release_reverse_proxy_route_and_7_4_offer_page_binding');
+ assert.equal(r.evidence.local_doctor_usable,false);
+ assert.equal(r.provider_checkout_verified,false);
+ assert.equal(r.public_offer_release_verified,false);
+});
+test('an HTTP 200 with bad page content still holds customer contract',()=>{
+ const r=check(external({http_status:200,reason:'specific_offer_not_present',ingress:null}),null);
+ assert.equal(r.diagnosis,'offer_page_contract_unverified');
+ assert.equal(r.no_outreach_authority,true);
+});
+test('a proxy 503 and HTTP redirect remain distinct from lost public TCP',()=>{
+ const unavailable=check(external({http_status:503,reason:'http_503',ingress:null}),null);
+ assert.equal(unavailable.diagnosis,'offer_edge_upstream_http_failure');
+ const redirect=check(external({http_status:301,reason:'redirect_not_verified',ingress:null}),null);
+ assert.equal(redirect.diagnosis,'offer_route_redirect_unverified');
+});
