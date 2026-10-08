@@ -1,6 +1,7 @@
 #!/usr/bin/env node
 import fs from 'node:fs';
 import {pathToFileURL} from 'node:url';
+import {buildCommercialResearchQueue} from '../commercial-intelligence/signal-to-demand.mjs';
 
 export const OFFER_URL='https://fabric.systemiacommandcenters.com/offers/website-audit';
 export const CAMPAIGN_ID='website-audit-quick-win-20261007';
@@ -81,5 +82,11 @@ export function scorecard({events=[],coverage={}}={}){
 if(process.argv[1]&&import.meta.url===pathToFileURL(process.argv[1]).href){
   const i=process.argv.indexOf('--receipts');
   const input=i>=0?JSON.parse(fs.readFileSync(process.argv[i+1],'utf8')):{};
-  process.stdout.write(JSON.stringify({wave:buildWave(),scorecard:scorecard(input)},null,2)+'\n');
+  const observationFlag=process.argv.indexOf('--observations');
+  const observations=observationFlag>=0?JSON.parse(fs.readFileSync(process.argv[observationFlag+1],'utf8')):[];
+  process.stdout.write(JSON.stringify({
+    wave:buildWave(),
+    scorecard:scorecard(input),
+    commercial_research:buildCommercialResearchQueue(observations)
+  },null,2)+'\n');
 }
