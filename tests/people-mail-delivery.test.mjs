@@ -15,19 +15,22 @@ const challenge = {
 test('trusted adapter only attests provider-confirmed sends to exact recipient', async () => {
   const keys = generateKeyPairSync('ed25519');
   let sentTo='';
+  let deliveryKey='';
   const evidence = await dispatchPeopleEmailVerification({
     provider:'gmail_agent',
     recipient:'  Example.Person@Example.test  ',
     challenge,
     publicOrigin:'https://people.example.test',
     privateKey:keys.privateKey,
-    send:async ({to,text})=>{
+    send:async ({to,text,idempotency_key})=>{
       sentTo=to;
+      deliveryKey=idempotency_key;
       assert.match(text,/https:\/\/people\.example\.test\/people\/verify-email\?token=/);
       return {sent:true,message_ref:'gmail:synthetic-send-response'};
     },
   });
-  assert.equal(sentTo,'  Example.Person@Example.test  ');
+  assert.equal(sentTo,'Example.Person@Example.test');
+  assert.match(deliveryKey,/^people-email-[0-9a-f]{64}$/);
   assert.equal(evidence.destination_hash,emailDestinationHash('example.person@example.test'));
   assert.equal('to' in evidence,false);
   assert.equal('verification_path' in evidence,false);
