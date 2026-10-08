@@ -18,3 +18,10 @@ test('rejects altered pricing, currency, malformed response or duplicate identit
  assert.equal(checkIBMi74TierListing([{offer_key:DEADLINE_KEY,amount_cents:25000},{offer_key:DEADLINE_KEY,amount_cents:25000}]).reason,'ambiguous_deadline_tier');
  assert.equal(checkIBMi74TierListing(null).reason,'live_tiers_missing');
 });
+
+test('a USD price without an explicit currency is not a verified tier',()=>{
+ const result=checkIBMi74TierListing([{offer_key:DEADLINE_KEY,amount_cents:25000}]);
+ assert.equal(result.ready,false);
+ assert.equal(result.reason,'deadline_currency_missing');
+ assert.equal(result.checkout_verified,false);
+});
