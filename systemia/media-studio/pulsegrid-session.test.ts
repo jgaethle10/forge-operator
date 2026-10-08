@@ -2,6 +2,7 @@ import assert from 'node:assert/strict';
 import test from 'node:test';
 import { build } from 'esbuild';
 import {
+  PULSEGRID_ARRANGEMENT_BARS,
   PULSEGRID_ENGINE_VERSION,
   PULSEGRID_SESSION_SCHEMA,
   PULSEGRID_STEPS_PER_BAR,
@@ -516,4 +517,58 @@ test('PulseGrid step expression rejects empty edits and invalid indexes',()=>{
     step:999,
     velocity:.5,
   }),/step expression index is out of range/);
+});
+
+
+test('PulseGrid arrangement slots are canonical, targeted and reversible',()=>{
+  let session=createPulseGridSession('Arrangement Proof');
+  assert.equal(session.arrangement.length,session.tracks.length);
+  assert.equal(session.arrangement[0].length,PULSEGRID_ARRANGEMENT_BARS);
+
+  const result=applyPulseGridOperation(session,{
+    type:'arrangement.set_slot',
+    track_id:'keys',
+    bar:3,
+    scene:2,
+  },'human');
+  session=result.session;
+  const trackIndex=session.tracks.findIndex((track)=>track.id==='keys');
+  assert.equal(session.arrangement[trackIndex][3],2);
+  assert.equal(result.receipt.before,null);
+  assert.equal(result.receipt.after,2);
+  assert.deepEqual(result.receipt.targets,['arrangement:keys.bar:3']);
+
+  const undone=undoPulseGridReceipt(session,result.receipt.id,'human');
+  assert.equal(undone.session.arrangement[trackIndex][3],null);
+  assert.equal(validatePulseGridSession(undone.session).ok,true);
+});
+
+test('PulseGrid arrangement slots reject invalid bars and scenes',()=>{
+  const session=createPulseGridSession();
+  assert.throws(()=>applyPulseGridOperation(session,{
+    type:'arrangement.set_slot',
+    track_id:'keys',
+    bar:PULSEGRID_ARRANGEMENT_BARS,
+    scene:0,
+  }),/arrangement bar is out of range/);
+  assert.throws(()=>applyPulseGridOperation(session,{
+    type:'arrangement.set_slot',
+    track_id:'keys',
+    bar:0,
+    scene:999,
+  }),/arrangement scene is out of range/);
+});
+
+test('PulseGrid validation rejects malformed arrangement rows and scene references',()=>{
+  const malformed=createPulseGridSession();
+  malformed.arrangement[0]=[0];
+  let validation=validatePulseGridSession(malformed);
+  assert.equal(validation.ok,false);
+  assert.ok(validation.errors.some((error)=>error.includes('arrangement.0.length')));
+
+  const invalidScene=createPulseGridSession();
+  invalidScene.arrangement[0][0]=999;
+  validation=validatePulseGridSession(invalidScene);
+  assert.equal(validation.ok,false);
+  assert.ok(validation.errors.includes('arrangement.0.0'));
 });

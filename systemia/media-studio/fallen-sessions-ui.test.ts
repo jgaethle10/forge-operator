@@ -251,3 +251,29 @@ test('Fallen Sessions does not render decorative drum controls for audio tracks'
   assert.match(ui,/No audio asset attached/);
   assert.match(ui,/Import or record audio to attach verified bytes/);
 });
+
+
+test('Fallen Sessions arrangement editor mutates only through canonical arrangement.set_slot',()=>{
+  const ui=fs.readFileSync('src/FallenSessions.tsx','utf8');
+  assert.match(ui,/type:'arrangement\.set_slot'/);
+  assert.match(ui,/setArrangementSlot/);
+  assert.match(ui,/session\.arrangement\[trackIndex\]\?\.\[bar\]/);
+  assert.doesNotMatch(ui,/session\.arrangement\[[^\n]+\]\s*=/);
+});
+
+test('Fallen Sessions arrangement editor exposes every track and bar through bounded selects',()=>{
+  const ui=fs.readFileSync('src/FallenSessions.tsx','utf8');
+  const css=fs.readFileSync('src/fallen-sessions.css','utf8');
+  assert.match(ui,/Canonical arrangement/);
+  assert.match(ui,/session\.tracks\.map\(\(arrangementTrack,trackIndex\)=>/);
+  assert.match(ui,/arrangementBars\.map\(\(bar\)=>/);
+  assert.match(ui,/arrangementTrack\.clips\.map\(\(arrangementClip,scene\)=>/);
+  assert.match(css,/\.fsArrangementScroll/);
+  assert.match(css,/overflow-x:auto/);
+  assert.match(css,/min-width:980px/);
+});
+
+test('Fallen Sessions arrangement UI states the scheduler truth boundary',()=>{
+  const ui=fs.readFileSync('src/FallenSessions.tsx','utf8');
+  assert.match(ui,/Transport remains scene playback until the arrangement scheduler lands/);
+});

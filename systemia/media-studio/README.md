@@ -515,3 +515,14 @@ Transport timing now prefers the existing `pulsegrid-clock-worklet.js` AudioWork
 The UI exposes clock mode, browser-reported latency and live DSP-bus count. Static architecture tests prove that `scheduleStep` reuses the track-bus map, that the worklet and fallback paths both exist, that clock/DSP cleanup is explicit, and that the adapter remains a consumer of `PulseGridSession` rather than a second musical state owner.
 
 Stopping playback keeps the bounded track buses warm for the next play cycle. Closing the engine tears down the worklet, clock sink, every track bus, master node and AudioContext.
+
+
+### PulseGrid 0.24 canonical arrangement graph
+
+The arrangement matrix that was already present in `PulseGridSession` is now an explicit editable graph surface instead of latent state. Each track owns a fixed sixteen-bar arrangement row; each slot is either empty or references one of that track's canonical scenes.
+
+Arrangement edits use the reversible `arrangement.set_slot` operation. The operation resolves rows by canonical track identity, validates bar and scene bounds, emits an explicit receipt target, participates in atomic edit plans, and can be undone without bypassing graph validation. Session validation now rejects malformed arrangement dimensions and out-of-range scene references.
+
+Fallen Sessions exposes the same matrix as a horizontally scrollable track-by-bar editor. The browser does not mutate `session.arrangement` directly.
+
+Transport remains scene playback in this slice. Arrangement playback is intentionally deferred until the audio scheduler consumes the canonical timeline itself; the UI states that boundary instead of implying the timeline is already audible.

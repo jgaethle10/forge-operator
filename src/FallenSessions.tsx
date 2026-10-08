@@ -611,6 +611,15 @@ export default function FallenSessions(){
     });
   }
 
+  function setArrangementSlot(trackId:string,bar:number,value:string){
+    apply({
+      type:'arrangement.set_slot',
+      track_id:trackId,
+      bar,
+      scene:value===''?null:Number(value),
+    });
+  }
+
   function growClip(){
     apply({
       type:'clip.set_bars',
@@ -658,6 +667,7 @@ export default function FallenSessions(){
 
   const visibleSteps=clip.steps.map((_,index)=>index);
   const automationValues=clip.automation[automationParam];
+  const arrangementBars=Array.from({length:session.arrangement[0]?.length||16},(_,index)=>index);
   const latestReceipts=[...session.receipts].slice(-10).reverse();
 
   return (
@@ -968,6 +978,50 @@ export default function FallenSessions(){
             <p className="fsAutomationHint">
               Drag a point, then release to commit one canonical receipt. Keyboard changes commit on key release.
             </p>
+          </div>
+
+          <div className="fsArrangement">
+            <div className="fsArrangementHead">
+              <div>
+                <div className="fsSectionTitle">Canonical arrangement</div>
+                <strong>16-bar commitment timeline</strong>
+              </div>
+              <p>Timeline slots are receipt-backed now. Transport remains scene playback until the arrangement scheduler lands.</p>
+            </div>
+            <div className="fsArrangementScroll">
+              <table>
+                <thead>
+                  <tr>
+                    <th>Track</th>
+                    {arrangementBars.map((bar)=><th key={'arr-head-'+bar}>{bar+1}</th>)}
+                  </tr>
+                </thead>
+                <tbody>
+                  {session.tracks.map((arrangementTrack,trackIndex)=>(
+                    <tr key={'arr-'+arrangementTrack.id}>
+                      <th>{arrangementTrack.name}</th>
+                      {arrangementBars.map((bar)=>{
+                        const assigned=session.arrangement[trackIndex]?.[bar]??null;
+                        return (
+                          <td key={arrangementTrack.id+'-'+bar}>
+                            <select
+                              aria-label={arrangementTrack.name+' arrangement bar '+String(bar+1)}
+                              value={assigned===null?'':String(assigned)}
+                              onChange={(event)=>setArrangementSlot(arrangementTrack.id,bar,event.target.value)}
+                            >
+                              <option value="">—</option>
+                              {arrangementTrack.clips.map((arrangementClip,scene)=>(
+                                <option key={arrangementClip.id} value={scene}>S{scene+1}</option>
+                              ))}
+                            </select>
+                          </td>
+                        );
+                      })}
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
           </div>
 
           <div className="fsProvenance">
