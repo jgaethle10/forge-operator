@@ -18,6 +18,11 @@ import {
 import { nativeViewportTriangleData } from './world-forge-viewport-mesh';
 import { WorldEngineWebGpuClient } from './world-engine-webgpu-client';
 import {
+  createWorldForgePlaybackClock,
+  worldForgePlaybackTickBudget,
+  type WorldForgePlaybackClock,
+} from './world-forge-playback';
+import {
   runtimeBodiesByForgeNodeId,
   runtimeTransformsByForgeNodeId,
   worldForgeDirectionToWorldEngine,
@@ -120,6 +125,7 @@ type PlaySessionState={
   sessionId:string;
   projectVersion:number;
   worldVersion:number;
+  tickRateHz:number;
   tick:number;
   timeSec:number;
   snapshotDigest:string;
@@ -1304,6 +1310,9 @@ export default function WorldForgeEditor(){
   const [meshAmount,setMeshAmount]=useState(.25);
   const [playImpulse,setPlayImpulse]=useState(1);
   const [runtimeDragMode,setRuntimeDragMode]=useState(false);
+  const [playRunning,setPlayRunning]=useState(false);
+  const [playbackRate,setPlaybackRate]=useState(1);
+  const playbackClockRef=useRef<WorldForgePlaybackClock|null>(null);
   const [runtimeWebGpuState,setRuntimeWebGpuState]=useState<RuntimeWebGpuExecutionState>('off');
   const [transformMode,setTransformMode]=useState<'translate'|'rotate'|'scale'>('translate');
   const [stageMode,setStageMode]=useState(false);
@@ -1380,6 +1389,54 @@ export default function WorldForgeEditor(){
     selectedId,
     transformMode,
   ]);
+
+  useEffect(()=>{
+    if(
+      playRunning&&(
+        !playSession||
+        stagedOperations.length>0||
+        runtimeDragMode
+      )
+    ){
+      setPlayRunning(false);
+      playbackClockRef.current=null;
+    }
+  },[
+    playRunning,
+    playSession,
+    stagedOperations.length,
+    runtimeDragMode,
+  ]);
+
+  useEffect(()=>{
+    if(!playRunning||!playSession||busy) return;
+    const timer=window.setTimeout(()=>{
+      const now=window.performance.now();
+      const current=playbackClockRef.current??
+        createWorldForgePlaybackClock(now);
+      const budget=worldForgePlaybackTickBudget({
+        clock:current,
+        nowMs:now,
+        tickRateHz:playSession.tickRateHz,
+        playbackRate,
+        maxBatch:30,
+        maxElapsedMs:500,
+      });
+      playbackClockRef.current=budget.clock;
+      if(budget.ticks>0){
+        void stepPlaySession(budget.ticks,[],{quiet:true});
+      }
+    },50);
+    return ()=>window.clearTimeout(timer);
+  },[
+    playRunning,
+    playSession?.sessionId,
+    playSession?.tick,
+    playSession?.tickRateHz,
+    busy,
+    playbackRate,
+  ]);
+
 
   useEffect(()=>{
     if(!project) return;
@@ -1472,6 +1529,7 @@ export default function WorldForgeEditor(){
       sessionId:String(session.sessionId),
       projectVersion:Number(session.projectVersion),
       worldVersion:Number(session.worldVersion),
+      tickRateHz:Number(session.tickRateHz??60),
       tick:Number(snapshot?.tick??session.tick??0),
       timeSec:Number(snapshot?.timeSec??session.timeSec??0),
       snapshotDigest:String(snapshot?.digest??''),
@@ -1509,6 +1567,8 @@ export default function WorldForgeEditor(){
         throw new Error(payload.error||'Could not start World Forge Play Mode.');
       }
       setEngineRuntime(null);
+      setPlayRunning(false);
+      playbackClockRef.current=null;
       setPlaySession(playStateFromPayload(payload.session,payload.snapshot));
       setCommandNote(
         `Play Mode started at tick ${payload.snapshot.tick} · runtime world v${payload.session.worldVersion}.`
@@ -1522,6 +1582,8 @@ export default function WorldForgeEditor(){
 
   async function stopPlaySession(silent=false){
     if(!playSession) return;
+    setPlayRunning(false);
+    playbackClockRef.current=null;
     const current=playSession;
     try{
       const response=await fetch('/api/fallen/world-forge/play/stop',{
@@ -1543,7 +1605,11 @@ export default function WorldForgeEditor(){
     }
   }
 
-  async function stepPlaySession(ticks:number,inputs:any[]=[]){
+  async function stepPlaySession(
+    ticks:number,
+    inputs:any[]=[],
+    options:{quiet?:boolean}={},
+  ){
     if(!playSession||busy) return;
     setBusy(true);
     setError('');
@@ -1562,9 +1628,11 @@ export default function WorldForgeEditor(){
         throw new Error(payload.error||'World Forge Play Mode step failed.');
       }
       setPlaySession(playStateFromPayload(payload.session,payload.result.snapshot));
-      setCommandNote(
-        `Play Mode advanced ${ticks} tick${ticks===1?'':'s'} → ${payload.result.snapshot.tick}.`
-      );
+      if(!options.quiet){
+        setCommandNote(
+          `Play Mode advanced ${ticks} tick${ticks===1?'':'s'} → ${payload.result.snapshot.tick}.`
+        );
+      }
     }catch(err){
       setError(err instanceof Error?err.message:String(err));
     }finally{
@@ -1572,8 +1640,41 @@ export default function WorldForgeEditor(){
     }
   }
 
+  function startContinuousPlayback(){
+    if(!playSession||busy||stagedOperations.length) return;
+    setRuntimeDragMode(false);
+    playbackClockRef.current=createWorldForgePlaybackClock(
+      window.performance.now(),
+    );
+    setPlayRunning(true);
+    setCommandNote(
+      `Continuous Play running at ${playbackRate}× · ${playSession.tickRateHz} Hz runtime.`,
+    );
+  }
+
+  function pauseContinuousPlayback(){
+    if(!playRunning) return;
+    setPlayRunning(false);
+    playbackClockRef.current=null;
+    setCommandNote(`Continuous Play paused at tick ${playSession?.tick??0}.`);
+  }
+
+  function setContinuousPlaybackRate(value:number){
+    const next=Math.max(.25,Math.min(2,value));
+    setPlaybackRate(next);
+    if(playRunning){
+      playbackClockRef.current=createWorldForgePlaybackClock(
+        window.performance.now(),
+      );
+    }
+  }
+
   async function impulseSelected(axis:keyof Vec3,amount:number){
     if(!playSession||!selected||selected.physics?.mode!=='dynamic') return;
+    if(playRunning){
+      setPlayRunning(false);
+      playbackClockRef.current=null;
+    }
     if(stagedOperations.length){
       setError('Apply or clear staged authoring changes before sending runtime inputs.');
       return;
@@ -1597,6 +1698,10 @@ export default function WorldForgeEditor(){
 
   async function zeroSelectedVelocity(){
     if(!playSession||!selected||selected.physics?.mode!=='dynamic') return;
+    if(playRunning){
+      setPlayRunning(false);
+      playbackClockRef.current=null;
+    }
     if(stagedOperations.length){
       setError('Apply or clear staged authoring changes before sending runtime inputs.');
       return;
@@ -1824,6 +1929,10 @@ export default function WorldForgeEditor(){
 
   function queueOrMutate(operations:ForgeOperation[],label:string){
     if(stageMode){
+      if(playRunning){
+        setPlayRunning(false);
+        playbackClockRef.current=null;
+      }
       setStagedOperations(current=>[...current,...operations].slice(0,100));
       setCommandNote(`Staged: ${label}`);
       return;
