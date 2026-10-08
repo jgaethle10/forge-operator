@@ -44,4 +44,7 @@ The portable build also emits candidate feed/story SVGs for human QA. Terrain-ba
 
 The tournament is an art-direction and selection layer only. It never changes evidence coordinates, source lineage, rights state, or publication authority.
 
+The tournament report schema is `evercraft.graphics-command.shot-tournament.v1`; the canonical poster records the winning strategy in `data-shot-strategy`, making the selected visual grammar machine-verifiable as well as human-reviewable.
+
+
 Rendering does not grant publication authority.
