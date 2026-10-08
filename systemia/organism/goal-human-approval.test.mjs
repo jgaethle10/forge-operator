@@ -1,7 +1,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import { generateKeyPairSync, sign } from 'node:crypto';
-import {createGoalState,admitGoalPlan,authorizeGoalWork,startGoalWork,FORCED_HUMAN_GATE_WORK_TYPES} from './goal-runtime.mjs';
+import {createGoalState,admitGoalPlan,authorizeGoalWork,startGoalWork,FORCED_HUMAN_GATE_WORK_TYPES,FORCED_HUMAN_GATE_IMPACTS} from './goal-runtime.mjs';
 import {readFileSync} from 'node:fs';
 import {humanApprovalMessage,verifyGoalHumanApproval} from './goal-human-approval.mjs';
 
@@ -119,6 +119,24 @@ test('all consequential control-plane work types force a human gate in the goal 
  for(const task of plan.tasks){
    assert.equal(task.human_gate_required,true,task.work_type);
    assert.equal(task.human_gate_unresolved,true,task.work_type);
+   assert.ok(!plan.next_work_keys.includes(task.work_key));
+   assert.throws(()=>startGoalWork({state:plan,workKey:task.work_key,now:NOW}),/not ready/);
+ }
+});
+
+test('generic work carrying a consequential impact cannot bypass a human gate',()=>{
+ const contract=JSON.parse(readFileSync(new URL('../control-plane/machine-contract.json',import.meta.url),'utf8'));
+ assert.deepEqual([...FORCED_HUMAN_GATE_IMPACTS].sort(),[...contract.consequential_impacts].sort());
+ const plan=admitGoalPlan({
+   state:createGoalState({goalKey:'impact-gates',objective:'Protect impact classified actions',now:NOW}),
+   plan:contract.consequential_impacts.map((impact,i)=>({
+     work_key:'impact-'+i,work_type:'execute',impact,human_gate_required:false
+   })),
+   now:NOW
+ });
+ for(const task of plan.tasks){
+   assert.equal(task.human_gate_required,true,task.impact);
+   assert.equal(task.human_gate_unresolved,true,task.impact);
    assert.ok(!plan.next_work_keys.includes(task.work_key));
    assert.throws(()=>startGoalWork({state:plan,workKey:task.work_key,now:NOW}),/not ready/);
  }
