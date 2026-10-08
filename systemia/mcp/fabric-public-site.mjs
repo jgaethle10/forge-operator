@@ -259,6 +259,29 @@ const OFFER_PAGE_COPY={
   }
 };
 
+const SPECIAL_OFFER_VARIANTS={
+  'ibmi-74-deadline-xray':{
+    public_id:'ibmi-rescue-v1',
+    slug:'ibmi-74-deadline-xray',
+    purchase_key:'ibmi_74_deadline_xray_250',
+    eyebrow:'IBM i 7.4 · Support transition',
+    headline:'On IBM i 7.4? Find your upgrade blind spots before touching production.',
+    lede:'IBM i 7.4 moved from standard support to service extension on October 1, 2026. Your system did not simply stop working. Before making an upgrade decision, establish the dependencies, evidence gaps and tests that matter for your workload.',
+    promise:'A bounded, evidence-backed IBM i 7.4 Deadline X-Ray with a dependency map, support assumptions, vendor compatibility risks, and a test-and-rollback next-step plan. Not an upgrade or a guarantee of compatibility.',
+    priceLabel:'$250',
+    offerName:'IBM i 7.4 Deadline X-Ray',
+    availabilityLabel:'Scoped $250 offer · live checkout verification pending',
+    sampleUrl:'https://github.com/jgaethle10/forge-operator/blob/main/docs/ibmi-74-deadline-xray-illustrative-sample.md',
+    send:['Current IBM i release, intended target or business decision','One bounded workload, job flow or application and known integration/vendor inventory','Customer-authorized evidence, without sending credentials or sensitive exports through a public form'],
+    get:['Dependency map with evidence state and unresolved unknowns','7.4 standard/extended-support assumptions register','Hardware, vendor, PTF and integration compatibility question list','Bounded next-step test and rollback plan, reviewed before delivery'],
+    steps:[
+      ['1. Define one workload','A small scope for a practical $250 assessment'],
+      ['2. Verify the evidence','Check facts against IBM guidance and authorized customer materials; preserve unknowns'],
+      ['3. Plan the next move','Receive the four-part X-Ray before any separately authorized production changes']
+    ]
+  }
+};
+
 export function offerSlugForCapability(publicId){
   return OFFER_PAGE_COPY[String(publicId||'')]?.slug||null;
 }
@@ -266,7 +289,7 @@ export function offerSlugForCapability(publicId){
 export function offerCapabilityForSlug(slug,capabilities=[]){
   const wanted=String(slug||'').trim().toLowerCase();
   if(!wanted) return null;
-  const id=Object.entries(OFFER_PAGE_COPY).find(([,copy])=>copy.slug===wanted)?.[0]||null;
+  const id=SPECIAL_OFFER_VARIANTS[wanted]?.public_id||Object.entries(OFFER_PAGE_COPY).find(([,copy])=>copy.slug===wanted)?.[0]||null;
   return id ? (capabilities||[]).find((item)=>item.public_id===id)||null : null;
 }
 
@@ -274,7 +297,7 @@ export function offerPurchaseKeyForSlug(slug){
   const wanted=String(slug||'').trim().toLowerCase();
   if(!wanted) return null;
   const copy=Object.values(OFFER_PAGE_COPY).find((item)=>item.slug===wanted);
-  return copy?.purchase_key||null;
+  return SPECIAL_OFFER_VARIANTS[wanted]?.purchase_key||copy?.purchase_key||null;
 }
 
 function entryPriceLabel(item){
@@ -313,12 +336,14 @@ export function renderOffers(capabilities=[]){
   });
 }
 
-export function renderOfferPage(item){
-  const copy=OFFER_PAGE_COPY[item?.public_id];
+export function renderOfferPage(item,{slug=null}={}){
+  const requestedVariant=SPECIAL_OFFER_VARIANTS[String(slug||'').toLowerCase()]||null;
+  if(requestedVariant&&requestedVariant.public_id!==item?.public_id)return null;
+  const copy=requestedVariant||OFFER_PAGE_COPY[item?.public_id];
   if(!copy) return null;
   const entry=item.entry_paid_offer||null;
-  const price=entryPriceLabel(item);
-  const offerName=entry?.name||item.name;
+  const price=copy.priceLabel||entryPriceLabel(item);
+  const offerName=copy.offerName||entry?.name||item.name;
   const send=copy.send.map((x)=>'<li>'+escapeHtml(x)+'</li>').join('');
   const get=copy.get.map((x)=>'<li>'+escapeHtml(x)+'</li>').join('');
   const steps=copy.steps.map(([title,body])=>'<div class="offer-step"><strong>'+escapeHtml(title)+'</strong><span>'+escapeHtml(body)+'</span></div>').join('');
@@ -326,7 +351,7 @@ export function renderOfferPage(item){
   return shell(copy.headline+' · Evercraft',[
     '<main>',
     '<section class="offer-hero">',
-    '<div class="kicker"><span class="dot"></span> '+escapeHtml(copy.eyebrow)+' · available now</div>',
+    '<div class="kicker"><span class="dot"></span> '+escapeHtml(copy.eyebrow)+' · '+escapeHtml(copy.availabilityLabel||'available now')+'</div>',
     '<h1>'+escapeHtml(copy.headline)+'</h1>',
     '<p class="lede">'+escapeHtml(copy.lede)+'</p>',
     copy.heroVisual?'<div class="offer-visual"><picture>'+(copy.heroVisualMobile?'<source media="(max-width: 700px)" srcset="'+escapeHtml(copy.heroVisualMobile)+'">':'')+'<img src="'+escapeHtml(copy.heroVisual)+'" alt="" loading="eager"></picture></div>':'',
@@ -340,6 +365,7 @@ export function renderOfferPage(item){
     '<div class="checkout-note">Evercraft Payments prepares the checkout. Nothing is marked paid until settlement is verified.</div>',
     '</form>',
     '</section>',
+    copy.sampleUrl?'<p class="plain" style="text-align:center"><a href="'+escapeHtml(copy.sampleUrl)+'" rel="noopener noreferrer">See a clearly labeled illustrative sample X-Ray</a></p>':'',
     '<div class="offer-grid">',
     '<section class="offer-panel"><h2>What you are buying</h2><p class="plain">'+escapeHtml(copy.promise)+'</p></section>',
     '<section class="offer-panel"><h2>What you send us</h2><ul>'+send+'</ul></section>',
