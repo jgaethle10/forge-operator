@@ -40,6 +40,9 @@ function readLastLine(file){
     const buf=Buffer.alloc(size-start);
     fs.readSync(fd,buf,0,buf.length,start);
     const text=buf.toString('utf8');
+    // appendLocalReceipt writes a newline as the commit marker. Never treat a
+    // torn or unterminated append as durable verification after a crash.
+    if(!text.endsWith('\n'))throw new Error('unterminated_receipt_append');
     const lines=text.split('\n').filter(Boolean);
     if(!lines.length)throw new Error('receipt_line_missing');
     const last=lines.at(-1);
