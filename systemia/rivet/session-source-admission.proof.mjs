@@ -4,6 +4,7 @@ import {readFileSync} from 'node:fs';
 
 const registry=JSON.parse(readFileSync(new URL('./session-source-registry.json',import.meta.url),'utf8'));
 const policies=registry.admission_policy;
+const nycAudit=JSON.parse(readFileSync(new URL('./nyc-plugnyc-publisher-audit-2026-10-08.json',import.meta.url),'utf8'));
 const sources=registry.new_source_admission_queue||[];
 const checks=[];
 
@@ -32,6 +33,13 @@ check('barnet_commercial_ingest_blocked',barnet?.allowed_for_rivet_session_count
 check('penndot_operations_not_sessions',penn?.allowed_for_rivet_session_count===false&&penn?.allowed_evidence_class==='operational_status_candidate');
 check('candidate_keys_unique',sources.length===new Set(sources.map(s=>s.source_id)).size);
 check('all_held_sources_fail_closed',sources.every(s=>s.allowed_for_rivet_session_count===false));
+check('nyc_audit_distinguishes_publisher_from_ingested',nycAudit.month_partitions.every(p=>p.ingested_into_EVOpsSession_verified===false));
+check('nyc_audit_source_rows_reconcile_statuses',nycAudit.month_partitions.every(p=>p.source_rows===Object.values(p.statuses).reduce((a,b)=>a+b,0)));
+check('nyc_audit_excludes_aborted_invalid',nycAudit.month_partitions.every(p=>p.excluded_status_rows===(p.statuses.ABORTED||0)+(p.statuses.INVALID||0)));
+check('nyc_audit_valid_status_reconciles',nycAudit.month_partitions.every(p=>p.valid_status_rows===(p.statuses.PAID||0)+(p.statuses.ROAMING||0)+(p.statuses.DISCONNECTED||0)));
+check('nyc_audit_recent_publisher_lag_recorded',nycAudit.dataset_latest_observation_date==='2026-09-08');
+check('nyc_audit_overlap_guard',nycAudit.no_counting_rules.some(s=>/double-counted/.test(s)));
+check('nyc_audit_privacy',/driver_id\/id_tag/.test(nycAudit.source_rights));
 if(checks.some(c=>!c.pass)){
  console.error('RIVET_SESSION_SOURCE_ADMISSION_PROOF_FAIL',checks.filter(c=>!c.pass).map(c=>c.name));
  process.exit(1);
