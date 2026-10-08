@@ -141,3 +141,16 @@ An executable handler test covers an originally held/do-not-contact case being i
 **Verification on this checkpoint:** `npm run test:connect` PASS (**23/23** executable mocked-handler cases plus security smoke); `npm run build` PASS (authority contract and 23 behavioral tests); targeted ESLint on modified UI PASS. A non-blocking stale Browserslist data warning remains.
 
 **Deployment boundary remains unchanged.** These are sandbox/source and mock-handler proofs. No production publication, actual external connection, independently verified consent, recovery outcome, or production multi-user privacy test was established. Do not advance the canonical deployed-runtime record without separate evidence.
+
+## Private Recovery outbound note anonymization and replay gate (2026-10-07)
+
+Base44 sandbox checkpoint: `6ac7178d44f71058c4fc5402`  
+Checkpoint git commit: `1da17a4d54fd45c36dcc6ac88868d2fe43b2f55d`.
+
+**Verified changes:** For approved `ConnectCase` member handoffs, the trusted `create_connection` action now replaces any caller-provided free-text safe note with one deterministic, neutral introduction: “Interested in exploring a possible collaboration. Can we discuss general fit before any third-party details are shared?” This is enforced server-side even if a caller skips the UI or submits private names, financial distress details, or other sensitive content. The UI shows the neutral note as disabled/read-only for private cases. Public Project/member connection requests retain their ordinary editable safe note.
+
+A private-case request can no longer treat an existing generic pending connection as a successful anonymous handoff. Replays with the same key are accepted only if the previous request used the protected neutral note; replays of earlier non-anonymous requests fail closed. New FabricEvent metadata includes only a Boolean anonymization receipt and does not transmit private case identity.
+
+**Sandbox results:** `node tests/opportunity_fabric_authority_contract_test.mjs` PASS; `npm run test:connect` PASS with **28/28** executable mocked-handler behavioral cases and security smoke; `npm run build` PASS; targeted UI ESLint PASS. The regression suite now covers malicious attempted note disclosure, legacy request-key replay, generic pending-request conflict, and normal public-request behavior. Only the known stale Browserslist warning appeared.
+
+**No production release claim:** This checkpoint was saved in the Base44 sandbox, not independently deployed and authenticated against a public host. No real outreach or monetary/recovery outcome is claimed. Canonical `systemia/opportunity-fabric/runtime.json` stays unchanged pending deployment proof and owner/non-owner runtime verification.
