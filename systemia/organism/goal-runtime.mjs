@@ -129,6 +129,12 @@ export function createGoalState({ goalKey, objective, successCondition = '', con
 
 export function admitGoalPlan({ state, plan = [], now = new Date() }) {
   assertGoalState(state);
+  // Admission is not an update/retry operation. Replacing admitted work can
+  // erase in-flight/terminal receipts and make consequential work runnable twice.
+  // Revised plans must be a separately authorized, append-only operation.
+  if (state.status !== 'planning' || !Array.isArray(state.tasks) || state.tasks.length !== 0) {
+    throw new Error('goal plan already admitted: replacement would risk duplicate execution');
+  }
   if (!Array.isArray(plan) || plan.length === 0) throw new Error('non-empty plan is required');
   const seen = new Set();
   const tasks = plan.map((raw) => {
