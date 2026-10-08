@@ -95,3 +95,15 @@ Changes: ranking now requires positive `matched_terms` overlap with capability e
 **Reverified against this latest source:** `node tests/opportunity_fabric_authority_contract_test.mjs` PASS; `node scripts/opportunity-fabric-security-smoke.mjs` PASS; `npm run build` PASS (exit 0; stale Browserslist warning only). These remain sandbox/static authority and security checks, not authenticated live-user or production deployment proof.
 
 **Public deployment remains UNVERIFIED; do not update the canonical deployed-runtime record on this basis.**
+
+## Execution-blueprint capability-fit hardening addendum (2026-10-07)
+
+The Base44 source checkpoint has advanced to `6ac703b8c3e4803a619a7b6f`, git commit `b712fdeaa79de2e5bd7bd4ea8f4c8516c4cbcb73`. Source version string remains `evercraft-opportunity-fabric-runtime-v1.7.0`.
+
+- `plan_execution_team` now requires positive `matched_terms` capability overlap. Geography can raise a genuinely qualified candidate's ranking but **cannot** produce a match on its own. An unmatched need stays in `missing_capabilities`.
+- The executable mocked-handler harness in `tests/opportunity_fabric_connect_runtime_behavior_test.mjs` gained two cases: (a) local-only member is excluded while its gap remains explicit and private email absent, and (b) a declared capability match remains eligible with stable, receipt-backed blueprint idempotency.
+- Base44 sandbox verified: `npm run test:connect` PASS with **18/18** behavioral tests plus `OPPORTUNITY_SECURITY_PASS`; `npm run build` PASS with the authority contract and all 18 behavioral cases (only stale Browserslist warning).
+- At PR head `18c15646ddea9d32e7e4bc4a8fc9698e89e6ce73`, GitHub check runs: Evercraft Connect, Forge checks, Systemia Portfolio Sentinel, Base44 Runtime Debt Inventory, Validate Nexus cross-LLM probes, Node 001 field kit, and Evercraft NodeSeed all reported SUCCESS. This verifies CI on *that* prior GitHub head, not this subsequent documentation commit.
+- Canonical `systemia/opportunity-fabric/runtime.json` remains at previously verified v1.5.0 `not_claimed_public` state. Do not mutate it without verified public deployment and independent production access proof.
+
+**Evidence scope:** checkpoint and executable local/mocked-runtime tests. No authenticated public runtime deployment, protected disclosure, outreach, member onboarding, or recovery outcome is asserted.
