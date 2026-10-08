@@ -27,7 +27,15 @@ for (const route of routes) {
       record.state = 'http_error';
     } else {
       const body = await response.text();
-      if (route.requireAbsoluteLoc) {
+      if (route.name === 'health') {
+        const health = JSON.parse(body);
+        record.service = health.service || null;
+        record.source_release_ref = health.source_release_ref || null;
+        record.source_release_ref_bound = health.source_release_ref_bound === true;
+        record.state = health.service === 'evercraft-fabric-local'
+          ? 'reachable'
+          : 'unexpected_service_identity';
+      } else if (route.requireAbsoluteLoc) {
         const locs = [...body.matchAll(/<loc>([^<]+)<\/loc>/g)].map(m => m[1]);
         record.location_count = locs.length;
         record.relative_locations = locs.filter(loc => !/^https:\/\//i.test(loc)).length;
