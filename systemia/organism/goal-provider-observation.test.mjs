@@ -173,6 +173,7 @@ test('actual capability adapter must match predeclared provider before dispatch'
  });
  const makeRegistry=provider_key=>createCapabilityRegistry([{
   capability_key:'test.research',provider_key,work_types:['research'],
+  authority:'read-only',
   execute:async()=>{calls++;return {result:'complete',receipt_ref:'provider:exec:completed'};}
  }]);
  const wrong=await executeGoalWorkWithAdapter({
