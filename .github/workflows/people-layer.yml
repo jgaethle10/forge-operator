@@ -6,7 +6,6 @@ on:
       - 'systemia/people/**'
       - 'systemia/migrations/base44-exit/people-layer-*'
       - 'systemia/compute/runtime-node.mjs'
-      - 'systemia/yard/operator.mjs'
       - 'systemia/core/resident-services.json'
       - 'systemia/core/supervisor.evercraft.compute.json'
       - 'systemia/organism/people-layer-edge-*'
@@ -17,6 +16,7 @@ on:
       - 'server.ts'
       - 'tests/people-owned-runtime.test.mjs'
       - 'tests/people-mail-delivery.test.mjs'
+      - 'tests/people-sealed-dispatch.test.mjs'
       - 'tests/server-owned-routing-cutover.test.mjs'
       - '.github/workflows/people-layer.yml'
   push:
@@ -35,6 +35,7 @@ on:
       - 'server.ts'
       - 'tests/people-owned-runtime.test.mjs'
       - 'tests/people-mail-delivery.test.mjs'
+      - 'tests/people-sealed-dispatch.test.mjs'
       - 'tests/server-owned-routing-cutover.test.mjs'
       - '.github/workflows/people-layer.yml'
   workflow_dispatch:
@@ -59,8 +60,14 @@ jobs:
         with:
           node-version: 22
 
+      - name: Install dependencies using Forge-compatible npm path
+        run: npm install --no-audit --no-fund
+
       - name: Prove signed mailbox delivery boundary
         run: node --test tests/people-mail-delivery.test.mjs
+
+      - name: Prove sealed HTTP dispatch and person-only redemption
+        run: node --test tests/people-sealed-dispatch.test.mjs
 
       - name: Prove person-sovereign lifecycle
         run: node --test tests/people-owned-runtime.test.mjs
@@ -76,9 +83,6 @@ jobs:
 
       - name: Prove People Layer through Evercraft Hosting
         run: node systemia/people/hosting.proof.mjs
-
-      - name: Install dependencies for browser build
-        run: npm install --no-audit --no-fund
 
       - name: Build owned browser surfaces
         run: npm run build

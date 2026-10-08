@@ -54,7 +54,7 @@ function OperatorPeopleLayer() {
   const [error, setError] = useState('');
   const [busy, setBusy] = useState('');
   const [inviteUrl, setInviteUrl] = useState('');
-  const [verifyUrl, setVerifyUrl] = useState('');
+  const [verificationStatus, setVerificationStatus] = useState('');
   const [identityEmail, setIdentityEmail] = useState('');
   const [snapshot, setSnapshot] = useState<any>(null);
   const [personConfirmation, setPersonConfirmation] = useState('');
@@ -188,6 +188,7 @@ function OperatorPeopleLayer() {
     if (!selected || !identityEmail.trim()) return;
     setBusy('verify');
     setError('');
+    setVerificationStatus('');
     try {
       const response = await api('/api/people/brains/' + encodeURIComponent(selected.brain_key) + '/email-challenge', {
         method: 'POST',
@@ -196,7 +197,7 @@ function OperatorPeopleLayer() {
       });
       const body = await response.json();
       if (!response.ok || !body?.ok) throw new Error(body?.error || 'Unable to create verification.');
-      setVerifyUrl(window.location.origin + body.challenge.verification_path);
+      setVerificationStatus('Trusted provider accepted the message. Receipt: ' + String(body.delivery?.delivery_receipt_key || 'recorded') + '. Only the recipient receives the link.');
     } catch (err) {
       setError(err instanceof Error ? err.message : String(err));
     } finally {
@@ -443,11 +444,10 @@ function OperatorPeopleLayer() {
                   <input className="people-input" type="email" value={identityEmail} onChange={(e) => setIdentityEmail(e.target.value)} placeholder="Pilot email address" />
                   <button className="people-button quiet" onClick={createEmailChallenge} disabled={Boolean(busy) || selected.consent_state !== 'consented'}>Create 30-minute verification</button>
                 </div>
-                {verifyUrl && (
+                {verificationStatus && (
                   <div className="people-promise">
-                    <strong>Trusted delivery required</strong>
-                    <p className="people-muted">A Gmail/Resend agent must send this exact URL and record its provider message receipt before redemption can upgrade identity to verified_email.</p>
-                    <code>{verifyUrl}</code>
+                    <strong>Trusted provider accepted message</strong>
+                    <p className="people-muted">{verificationStatus}</p>
                   </div>
                 )}
               </div>
