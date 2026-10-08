@@ -8,6 +8,7 @@ on:
       - 'systemia/mcp/fabric-local-runtime.mjs'
       - 'systemia/mcp/fabric-public-site.mjs'
       - 'systemia/mcp/earthworks-simulator-page.mjs'
+      - 'systemia/mcp/earthworks-simulator-app.mjs'
       - 'systemia/visual-desk/**'
       - 'public/visuals/**'
       - 'public/demos/**'
