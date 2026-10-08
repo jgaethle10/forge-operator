@@ -309,6 +309,19 @@ function entryPriceLabel(item){
 }
 
 export function renderOffers(capabilities=[]){
+  const ibmi74Public=(capabilities||[]).some(item=>
+    item.public_id==='ibmi-rescue-v1'&&item.commercial_state==='sell_now');
+  // This is a scope-review link, not a verified checkout or availability claim.
+  const deadlineCard=ibmi74Public
+    ? '<article class="card">'
+      +'<div class="eyebrow">IBM i 7.4 support transition</div>'
+      +'<h3><a href="/offers/ibmi-74-deadline-xray" style="text-decoration:none">'
+      +escapeHtml(IBM_I_74_OFFER_COPY.headline)+'</a></h3>'
+      +'<p>'+escapeHtml(IBM_I_74_OFFER_COPY.promise)+'</p>'
+      +'<p class="price">$250 proposed bounded assessment</p>'
+      +'<div class="cardlinks"><a class="btn" href="/offers/ibmi-74-deadline-xray">Review the scope</a></div>'
+      +'</article>'
+    : '';
   const offers=(capabilities||[])
     .filter((item)=>item.commercial_state==='sell_now'&&offerSlugForCapability(item.public_id))
     .map((item)=>{
@@ -328,7 +341,7 @@ export function renderOffers(capabilities=[]){
     '<h1>One problem.<br>One clear offer.</h1>',
     '<p class="lede">No software scavenger hunt. These pages explain the pain, the smallest useful paid entry, what you send, what you get, and what happens next.</p>',
     '</section>',
-    '<div class="grid">'+(offers||'<article class="card"><h3>No public offer pages are available yet.</h3></article>')+'</div>',
+    '<div class="grid">'+(deadlineCard+offers||'<article class="card"><h3>No public offer pages are available yet.</h3></article>')+'</div>',
     '</main>'
   ].join('\n'),{
     description:'Simple Evercraft offers with a clear problem, first paid step, price, inputs, outputs, and next action.',
