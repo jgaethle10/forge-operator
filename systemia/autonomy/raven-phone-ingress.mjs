@@ -2,6 +2,7 @@
 // This does not send messages, admit a mission, or claim a real Twilio/provider event.
 import fs from 'node:fs';
 import path from 'node:path';
+import { randomBytes } from 'node:crypto';
 import { verifyRavenPhoneBridge, planRavenPhoneDemand } from './raven-phone-demand.mjs';
 
 const ROUTE = '/api/communications/raven-inbound';
@@ -41,23 +42,43 @@ function prepareStore(dir) {
   return resolved;
 }
 function persistCandidate(stateDir, candidate) {
-  // The event_key is HMAC-derived; raw phone numbers, texts and Twilio SIDs never land here.
+  // Construct the complete private record before making the final event key visible.
+  // A crash during a previous 'wx' write must never turn a truncated file into a false duplicate.
   const id = candidate.event_key.slice('raven:event:'.length);
   if (!/^[a-f0-9]{32}$/.test(id)) throw new Error('event_key_invalid');
   const file = path.join(stateDir, id + '.json');
-  const data = JSON.stringify(candidate) + '\n';
+  const temp = path.join(stateDir, '.' + id + '.' + randomBytes(12).toString('hex') + '.tmp');
   let fd = null;
   try {
-    fd = fs.openSync(file, 'wx', 0o600);
-    fs.writeFileSync(fd, data, { encoding: 'utf8' });
+    fd = fs.openSync(temp, 'wx', 0o600);
+    fs.writeFileSync(fd, JSON.stringify(candidate) + '\n', { encoding: 'utf8' });
     fs.fsyncSync(fd);
+    fs.closeSync(fd);
+    fd = null;
+    try {
+      // Atomic no-replace publication: concurrent workers cannot overwrite the same key.
+      fs.linkSync(temp, file);
+    } catch (error) {
+      if (error?.code !== 'EEXIST') throw error;
+      const stat = fs.lstatSync(file);
+      if (!stat.isFile() || stat.isSymbolicLink() || (stat.mode & 0o077)) {
+        throw new Error('existing_event_record_not_private');
+      }
+      let previous;
+      try { previous = JSON.parse(fs.readFileSync(file, 'utf8')); }
+      catch { throw new Error('existing_event_record_corrupt'); }
+      if (previous?.event_key !== candidate.event_key || previous?.schema !== candidate.schema) {
+        throw new Error('existing_event_record_collision');
+      }
+      return { state: 'existing_review_candidate', duplicate: true };
+    }
+    // Make the directory entry durable, not just the file contents.
+    const dirFd = fs.openSync(stateDir, fs.constants.O_RDONLY);
+    try { fs.fsyncSync(dirFd); } finally { fs.closeSync(dirFd); }
     return { state: 'review_candidate_persisted', duplicate: false };
-  } catch (error) {
-    if (error?.code === 'EEXIST') return { state: 'existing_review_candidate', duplicate: true };
-    if (fd !== null) { try { fs.unlinkSync(file); } catch {} }
-    throw error;
   } finally {
     if (fd !== null) fs.closeSync(fd);
+    try { fs.unlinkSync(temp); } catch {}
   }
 }
 export function createRavenPhoneIngress({ secret = '', stateDir = '', now = () => new Date() } = {}) {
