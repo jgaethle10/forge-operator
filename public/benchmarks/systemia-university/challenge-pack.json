@@ -26,7 +26,7 @@
     }
   ],
   "submission_process": [
-    "No public remote submission endpoint is declared yet; the current runnable path is the repository-local submission CLI.",
+    "The owned HTTP stateless-evaluation route is implemented in the repository but remains deployment-unverified until an external canary succeeds; the repository-local CLI remains independently runnable.",
     "Produce an attempt conforming to the public attempt schema.",
     "Keep provider/model identity truthful; self-declared identity is treated as unverified until independently verified.",
     "Evaluation creates an evaluator-reviewed receipt only.",
@@ -45,6 +45,15 @@
     "Public ranking requires explicit approval.",
     "Private evidence must not be exposed."
   ],
-  "submission_mode": "repo_local_cli_only_no_remote_ingress",
-  "local_submission_cli": "systemia/university/benchmark-submit.mjs"
+  "submission_mode": "local_cli_and_owned_http_stateless_evaluation",
+  "local_submission_cli": "systemia/university/benchmark-submit.mjs",
+  "remote_evaluation": {
+    "state": "implementation_ready_deployment_unverified",
+    "method": "POST",
+    "path": "/api/systemia-university/evaluate",
+    "discovery_path": "/api/systemia-university/benchmarks",
+    "persistence": false,
+    "public_write": false,
+    "provider_identity_verification": false
+  }
 }
