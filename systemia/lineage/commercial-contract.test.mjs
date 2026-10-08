@@ -41,8 +41,8 @@ test('Lineage commercial package has one consistent founding-pilot offer', async
   assert(machine);
   assert.equal(machine.commercial_state, 'verification_required');
   assert.equal(machine.machine_state, 'human_handoff_ready');
-  assert.equal(machine.public_url, null);
-  assert.equal(machine.public_url_source, 'held_pending_external_canary');
+  assert.equal(machine.public_url, 'https://fabric.systemiacommandcenters.com/capabilities/lineage-founding-pilot-v1');
+  assert.equal(machine.public_url_source, 'source_catalog');
   assert.equal(machine.offers[0].price_usd, 500);
 
   assert.match(page, /\$500/);
@@ -54,6 +54,8 @@ test('Lineage commercial package has one consistent founding-pilot offer', async
 test('Lineage public commercial package does not claim unverified self-serve deployment', async () => {
   const offer = JSON.parse(await read('commercial/lineage-offer-2026-10-07.json'));
   const discovery = JSON.parse(await read('public/lineage/discovery.json'));
+  const products = JSON.parse(await read('public/.well-known/evercraft-products.json'));
+  const product = products.products.find((row) => row.product_key === 'lineage');
   const machine = JSON.parse(await read('public/.well-known/evercraft-machine-catalog.json'))
     .offers.find((row) => row.public_id === 'lineage-founding-pilot-v1');
   const page = await read('public/lineage/index.html');
@@ -65,6 +67,8 @@ test('Lineage public commercial package does not claim unverified self-serve dep
   assert.equal(discovery.handoff.automatic_repository_access_allowed, false);
   assert.equal(discovery.handoff.automatic_payment_allowed, false);
   assert.equal(machine.live_canary_evidence, null);
+  assert.equal(product.canonical_url, machine.public_url);
+  assert.equal(product.knowledge_surfaces.hub, machine.public_url);
   assert.match(machine.invocation_status, /Promotion to sell_now is held until .*externally canaried/);
   assert.match(machine.invocation_status, /Do not claim automatic repository intake/);
   assert.match(machine.invocation_status, /checkout or payment/);
