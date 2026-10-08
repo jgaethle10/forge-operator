@@ -5,7 +5,7 @@
   "cyclone_id": "AL092026",
   "advisory_number": 8,
   "issued_at": "2026-10-08T15:00:00Z",
-  "source_url": "https://www.nhc.noaa.gov/mobile/text/refresh/MIATCPAT4%2Bhtml/081456.shtml",
+  "source_url": "https://www.nhc.noaa.gov/archive/2026/al09/al092026.public.008.shtml",
   "advisory_values": {
     "position": {
       "latitude": 23.7,
@@ -36,7 +36,7 @@
     "https://dashboard.waterdata.usgs.gov/"
   ],
   "nhc_advisory_identity": "AL092026/008",
-  "source_verification_note": "NHC mobile Advisory #8 directly indexed on October 8 2026; fetched original bytes have not been stored in baseline.json.",
+  "source_verification_note": "Dated official NHC archive advisory 8. Acquisition tool separately validates the exact headline, storm ID, issuance and measurements. Raw archive byte receipt requires successful read-only source intake.",
   "acquisition_adapter": "systemia/newsroom/isaias-agency-acquisition.mjs",
   "live_feeds_acquired": false
 }
