@@ -47,12 +47,15 @@ test('PulseGrid audio remains a consumer of canonical session state',()=>{
 });
 
 
-test('PulseGrid audio resolves canonical asset IDs through a replaceable resolver',()=>{
+test('PulseGrid audio resolves the active canonical take through a replaceable asset resolver',()=>{
   assert.match(audio,/setAudioAssetResolver/);
   assert.match(audio,/PulseGridAudioAssetResolver/);
-  assert.match(audio,/clip\.audio_asset_id/);
-  assert.match(audio,/this\.audioBuffers\.get\(clip\.audio_asset_id\)/);
+  assert.match(audio,/activeAudioAssetId/);
+  assert.match(audio,/clip\.active_audio_take_id/);
+  assert.match(audio,/clip\.audio_takes\.find/);
+  assert.match(audio,/this\.audioBuffers\.get\(activeAssetId\)/);
   assert.match(audio,/resolver\(asset\)/);
+  assert.doesNotMatch(audio,/clip\.audio_asset_id/);
   assert.doesNotMatch(audio,/indexedDB/);
 });
 
@@ -71,11 +74,12 @@ test('PulseGrid audio explicitly tracks and stops scheduled sound sources',()=>{
   assert.match(audio,/this\.activeSources\.clear\(\)/);
 });
 
-test('PulseGrid audio never fabricates missing asset bytes',()=>{
+test('PulseGrid audio never fabricates missing active-take bytes',()=>{
   const audioTrackBlock=audio.slice(audio.indexOf("if (track.type === 'audio')"),audio.indexOf('const noteEvents'));
-  assert.match(audioTrackBlock,/audio_asset_id/);
+  assert.match(audioTrackBlock,/activeAudioAssetId/);
   assert.match(audioTrackBlock,/this\.audioBuffers\.get/);
   assert.doesNotMatch(audioTrackBlock,/createBuffer\(/);
+  assert.doesNotMatch(audioTrackBlock,/audio_asset_id/);
 });
 
 
