@@ -67,7 +67,10 @@ test("Evercraft OS user supervisor boots Home on loopback and emits a receipt", 
     deviceClass: "laptop",
     homePort: 0,
     homeAuthMode: "local",
-    sourceReleaseRef: ""
+    sourceReleaseRef: "",
+    homeOptions: {
+      host: "0.0.0.0"
+    }
   });
   t.after(async () => {
     await runtime.close();
@@ -93,6 +96,27 @@ test("Evercraft OS user supervisor boots Home on loopback and emits a receipt", 
   assert.equal(health.ok, true);
   assert.equal(health.listen_scope, "loopback");
   assert.equal(health.deployment_receipt_bound, true);
+
+  const statusResponse = await fetch(runtime.home_url + "/api/os/status");
+  assert.equal(statusResponse.status, 200);
+  const status = await statusResponse.json();
+  assert.equal(status.user_session_boot.integrity, "verified");
+  assert.equal(status.user_session_boot.state, "ready");
+  assert.equal(status.user_session_boot.node_id, "node-supervisor-empty");
+  assert.equal(status.user_session_boot.receipt_hash, runtime.receipt.receipt_hash);
+  assert.equal(status.user_session_boot.execution_authority_granted_by_supervisor, false);
+
+  const latestFile = path.join(root, "boot", "latest.json");
+  const tampered = JSON.parse(fs.readFileSync(latestFile, "utf8"));
+  tampered.state = "ready-but-tampered";
+  fs.writeFileSync(latestFile, JSON.stringify(tampered, null, 2) + "\n", { mode: 0o600 });
+
+  const tamperedResponse = await fetch(runtime.home_url + "/api/os/status");
+  assert.equal(tamperedResponse.status, 200);
+  const tamperedStatus = await tamperedResponse.json();
+  assert.equal(tamperedStatus.user_session_boot.integrity, "hold");
+  assert.equal(tamperedStatus.user_session_boot.state, "held");
+  assert.match(tamperedStatus.user_session_boot.reason, /boot_receipt_integrity_mismatch/);
 });
 
 test("supervisor reconciles an authorized installed app into a verified capsule", async (t) => {
