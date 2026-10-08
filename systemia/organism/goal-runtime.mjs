@@ -1,4 +1,16 @@
+import { verifyGoalHumanApproval } from './goal-human-approval.mjs';
 const TERMINAL = new Set(['complete', 'skipped']);
+// Must stay aligned with Systemia control-plane machine-contract.json.
+// Consequential work may not opt out of its human gate through a raw plan.
+export const FORCED_HUMAN_GATE_WORK_TYPES = Object.freeze([
+  'trust_change','external_message','outreach','external_purchase','payment',
+]);
+const forcedHumanGateTypes = new Set(FORCED_HUMAN_GATE_WORK_TYPES);
+export const FORCED_HUMAN_GATE_IMPACTS = Object.freeze([
+  'payment','financial_obligation','contract','legal','employment','safety',
+  'trust_boundary','destructive_release','external_message','external_purchase',
+]);
+const forcedHumanGateImpacts = new Set(FORCED_HUMAN_GATE_IMPACTS);
 
 function clean(value) {
   return String(value ?? '').replace(/\s+/g, ' ').trim();
@@ -26,14 +38,20 @@ function assertGoalState(state) {
 function normalizeTask(raw, goalKey, missionKey) {
   const workKey = clean(raw?.work_key || raw?.key);
   if (!workKey) throw new Error('every goal task requires work_key');
-  const humanGateRequired = Boolean(raw?.human_gate_required || raw?.founder_attention_required);
+  const workType = clean(raw?.work_type || 'execute').toLowerCase();
+  const impact = clean(raw?.impact).toLowerCase();
+  const humanGateRequired = Boolean(
+    raw?.human_gate_required || raw?.founder_attention_required ||
+    forcedHumanGateTypes.has(workType) || forcedHumanGateImpacts.has(impact)
+  );
   return {
     mission_key: clean(raw?.mission_key || missionKey || goalKey),
     goal_key: goalKey,
     work_key: workKey,
     dedupe_key: clean(raw?.dedupe_key || `${goalKey}:${workKey}`),
     title: clean(raw?.title || workKey),
-    work_type: clean(raw?.work_type || 'execute').toLowerCase(),
+    work_type: workType,
+    impact,
     dependency_keys: uniqueStrings(raw?.dependency_keys || []),
     assigned_agents: uniqueStrings(raw?.assigned_agents || [], 50),
     status: 'pending',
@@ -128,29 +146,41 @@ export function admitGoalPlan({ state, plan = [], now = new Date() }) {
   return refreshGoal(next, now);
 }
 
-export function authorizeGoalWork({ state, workKey, authorizationRef, now = new Date() }) {
+export function authorizeGoalWork({ state, workKey, approval, trustedPublicKeys = {}, now = new Date() }) {
   assertGoalState(state);
   const key = clean(workKey);
-  const ref = clean(authorizationRef);
-  if (!ref) throw new Error('authorizationRef is required');
   const next = clone(state);
   const task = next.tasks.find((item) => item.work_key === key);
   if (!task) throw new Error(`unknown work_key ${key}`);
   if (!task.human_gate_required) throw new Error(`${key} does not require a human gate`);
+  if (task.status !== 'pending' && task.status !== 'blocked') throw new Error('cannot authorize task in current state');
+  // A caller-supplied string is never approval. Validate source authority,
+  // scope, mission, task, bounded validity and a real Ed25519 signature.
+  const checked = verifyGoalHumanApproval({ approval, state: next, workKey: key, trustedPublicKeys, now });
   task.human_gate_unresolved = false;
-  task.authorization_refs = uniqueStrings([...(task.authorization_refs || []), ref]);
+  task.authorization_refs = uniqueStrings([...(task.authorization_refs || []), checked.receipt_ref]);
+  task.authorization_proof = clone(approval);
   task.updated_at = nowIso(now);
   next.revision += 1;
   next.updated_at = nowIso(now);
   return refreshGoal(next, now);
 }
 
-export function startGoalWork({ state, workKey, now = new Date() }) {
+export function startGoalWork({ state, workKey, trustedPublicKeys = {}, now = new Date() }) {
   assertGoalState(state);
   const refreshed = refreshGoal(clone(state), now);
   const task = refreshed.tasks.find((item) => item.work_key === clean(workKey));
   if (!task) throw new Error(`unknown work_key ${clean(workKey)}`);
   if (!refreshed.next_work_keys.includes(task.work_key)) throw new Error(`${task.work_key} is not ready`);
+  if (task.human_gate_required) {
+    // Recheck at the actual dispatch boundary, even for previously persisted
+    // "authorized" state from an older runtime or an expired approval.
+    if (!task.authorization_proof) throw new Error('signed human approval required before execution');
+    verifyGoalHumanApproval({
+      approval: task.authorization_proof,state: refreshed,workKey:task.work_key,
+      trustedPublicKeys,now,
+    });
+  }
   task.status = 'executing';
   task.attempt = Number(task.attempt || 0) + 1;
   // Stable key per attempt for downstream idempotency; it does not itself grant dispatch authority.

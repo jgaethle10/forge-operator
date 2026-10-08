@@ -26,6 +26,13 @@ function output(value) {
   console.log(JSON.stringify({ ok: true, ...value }, null, 2));
 }
 
+function runtimeApprovalKeys() {
+  // A production supervisor must provision this out of band. Unconfigured
+  // authorizations fail closed rather than generating local approval authority.
+  const key = process.env.EVERCRAFT_SYSTEMIA_APPROVAL_PUBLIC_KEY_PEM;
+  return key ? { 'systemia-human-gate-v1': key } : {};
+}
+
 const [, , command, ...args] = process.argv;
 
 try {
@@ -42,14 +49,19 @@ try {
     const result = await mutateGoalState(file, (state) => admitGoalPlan({ state, plan }));
     output({ state: goalSnapshot(result.state), storage_receipt: result.receipt });
   } else if (command === 'authorize') {
-    const [file, workKey, authorizationRef] = args;
-    if (!file || !workKey || !authorizationRef) throw new Error('usage: authorize <file> <workKey> <authorizationRef>');
-    const result = await mutateGoalState(file, (state) => authorizeGoalWork({ state, workKey, authorizationRef }));
+    const [file, workKey, approvalFile] = args;
+    if (!file || !workKey || !approvalFile) throw new Error('usage: authorize <file> <workKey> <signed-approval.json>');
+    const approval = JSON.parse(await readFile(approvalFile, 'utf8'));
+    const result = await mutateGoalState(file, (state) => authorizeGoalWork({
+      state, workKey, approval, trustedPublicKeys: runtimeApprovalKeys(),
+    }));
     output({ state: goalSnapshot(result.state), storage_receipt: result.receipt });
   } else if (command === 'start') {
     const [file, workKey] = args;
     if (!file || !workKey) throw new Error('usage: start <file> <workKey>');
-    const result = await mutateGoalState(file, (state) => startGoalWork({ state, workKey }));
+    const result = await mutateGoalState(file, (state) => startGoalWork({
+      state, workKey, trustedPublicKeys: runtimeApprovalKeys(),
+    }));
     output({ state: goalSnapshot(result.state), storage_receipt: result.receipt });
   } else if (command === 'outcome') {
     const [file, workKey, resultName, receiptRef = '', blocker = '', ...evidenceRefs] = args;

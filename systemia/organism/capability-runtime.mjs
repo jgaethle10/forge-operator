@@ -61,6 +61,7 @@ export async function executeGoalWorkWithAdapter({
   workKey,
   registry,
   context = {},
+  trustedPublicKeys = {},
   now = new Date(),
 }) {
   const work = state?.tasks?.find((task) => task.work_key === clean(workKey));
@@ -100,7 +101,9 @@ export async function executeGoalWorkWithAdapter({
     };
   }
 
-  const started = startGoalWork({ state, workKey: work.work_key, now });
+  // Trust anchors are supplied only by the privileged execution host, never
+  // copied from adapter output, task context, or caller-submitted approval JSON.
+  const started = startGoalWork({ state, workKey: work.work_key, trustedPublicKeys, now });
   const liveWork = started.tasks.find((task) => task.work_key === work.work_key);
 
   let outcome;

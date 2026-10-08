@@ -73,6 +73,19 @@ Planning and continuity are separate from capability availability. Phone calls, 
 Run `npm run proof:goal-runtime` for the deterministic continuity proof, or `npm run proof:systemia` for the full organism plus goal-runtime proof set.
 
 
+### Signed human-gate authorization
+
+A string such as `human:approved` is **not authorization**. For a task with `human_gate_required`, Systemia now needs a signed, bounded human-approval envelope (Ed25519) whose canonical claims bind to the exact `mission_key`, `goal_key`, `work_key`, `systemia.goal.authorize` scope, receipt reference, and issue/expiry times (maximum 24 hours). Signing credentials are **not** part of this repository; an authorized approval issuer must own and protect the private key.
+
+A trusted supervisor must provision `EVERCRAFT_SYSTEMIA_APPROVAL_PUBLIC_KEY_PEM` securely at the goal CLI's runtime. The CLI pins this to the signer ID `systemia-human-gate-v1`. The caller supplies only the signed envelope JSON; its own public key or a free-form approval reference is never a trust anchor. Without configured trust, gated execution fails closed.
+
+```bash
+npm run goal -- authorize ./state/mission.json gated-work ./signed-human-approval.json
+npm run goal -- start ./state/mission.json gated-work
+```
+
+The signature is verified once at authorization and **again at dispatch**, preventing an expired persisted claim from authorizing new execution. The goal planner also force-enables human gates for consequential work types from the Systemia control-plane contract: `trust_change`, `external_message`, `outreach`, `external_purchase`, and `payment`, even if a caller submits `human_gate_required:false`. It also forces the gate whenever the task declares one of the contract's consequential impacts (financial obligation, legal, employment, safety, trust-boundary, destructive release, messaging, purchase, and related actions), even when the work type is `execute`. The file-based CLI does not itself generate approvals or appoint new issuers. This protects the local Systemia goal gate only; Passport, interaction preflight, payment, deployment, and other product-specific authorities still apply independently. External signer provisioning, revocation, credential rotation, and production deployment are not asserted as complete by these source tests.
+
 ### Interrupted work and safe recovery holds
 
 A persisted task can remain `executing` after its worker disappears. This does **not** prove that an external action failed. Systemia now persists an attempt-specific deduplication key and heartbeat, and exposes a conservative recovery inspection. Inspection only classifies stale work as **suspected interruption**. Nothing is automatically resent, published, charged, or retried.
@@ -101,7 +114,7 @@ Concurrent writers now take a cross-process exclusive `<state-file>.lock` direct
 npm run goal -- init ./state/customer-goal.json customer-goal "Finish the requested outcome"
 npm run goal -- plan ./state/customer-goal.json ./plan.json
 npm run goal -- status ./state/customer-goal.json
-npm run goal -- authorize ./state/customer-goal.json gated-work authorization:ref
+npm run goal -- authorize ./state/customer-goal.json gated-work ./signed-human-approval.json
 npm run goal -- start ./state/customer-goal.json work-key
 npm run goal -- outcome ./state/customer-goal.json work-key complete exec:receipt "" evidence:ref
 npm run goal -- receipt ./state/customer-goal.json acceptance:ref
