@@ -10,7 +10,9 @@ function iso(value, field){
   return d.toISOString();
 }
 function dateLabel(value){
-  return new Date(value).toLocaleDateString('en-US', {
+  const raw=clean(value);
+  const normalized=/^\d{4}-\d{2}-\d{2}$/.test(raw)?raw+'T12:00:00.000Z':raw;
+  return new Date(normalized).toLocaleDateString('en-US', {
     timeZone:'America/Los_Angeles',
     month:'long',
     day:'numeric',
