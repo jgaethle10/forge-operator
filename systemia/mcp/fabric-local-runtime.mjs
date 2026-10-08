@@ -831,6 +831,26 @@ export async function startFabricLocalRuntime({
 
         const body=await readOfferInput(req,{maxBytes:8192});
         const isForm=String(req.headers['content-type']||'').toLowerCase().includes('application/x-www-form-urlencoded');
+        // Offer #1 must never quietly route a new $250 buyer through the legacy
+        // Base44 purchase-intent default. A separately reviewed owned endpoint is
+        // required before an actual 7.4 checkout may be prepared.
+        if(slug==='ibmi-74-deadline-xray' && (
+          purchaseIntentEndpoint.hostname!=='fabric.systemiacommandcenters.com' ||
+          purchaseIntentEndpoint.protocol!=='https:' ||
+          purchaseIntentEndpoint.username || purchaseIntentEndpoint.password ||
+          purchaseIntentEndpoint.port
+        )){
+          if(isForm){
+            return sendText(res,503,renderPaymentHoldPage({slug,orderKey:''}),{
+              contentType:'text/html; charset=utf-8'
+            });
+          }
+          return sendJson(res,503,{
+            ok:false,error:'owned_ibmi_74_purchase_intent_not_configured',
+            authority:'Evercraft Payments',checkout_ready:false,
+            payment_attempted:false,fulfillment_release:false
+          });
+        }
         const confirmed=body?.user_confirmed===true||String(body?.user_confirmed||'').toLowerCase()==='true';
         if(!confirmed){
           return sendJson(res,409,{
