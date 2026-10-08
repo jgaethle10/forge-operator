@@ -32,6 +32,7 @@ import {
 } from './fabric-mobile-site.mjs';
 import { renderEarthWorksSimulator } from './earthworks-simulator-page.mjs';
 import { createFabricFaieSurface } from './fabric-faie-runtime.mjs';
+import { validateOwnedCheckoutHandoff } from '../payments/owned-checkout-handoff.mjs';
 import { buildVisualStory, normalizeVisualStory } from '../visual-desk/factory.mjs';
 import { buildCommercialCampaign } from '../graphics-command/commercial-renderer.mjs';
 
@@ -876,7 +877,10 @@ export async function startFabricLocalRuntime({
 
         const slug=decodeURIComponent(match[1]).toLowerCase();
         const capabilityKey=offerPurchaseKeyForSlug(slug);
-        if(!capabilityKey) return sendJson(res,404,{ok:false,error:'offer_not_found'});
+        const publicOffer=offerCapabilityForSlug(slug,preparedCatalog().capabilities);
+        if(!capabilityKey || !publicOffer || publicOffer.commercial_state!=='sell_now'){
+          return sendJson(res,404,{ok:false,error:'offer_not_found_or_not_published'});
+        }
         const ibmi74Deadline=slug==='ibmi-74-deadline-xray';
         const requiredOfferKey=ibmi74Deadline?'ibmi_74_deadline_xray_250':null;
 
@@ -956,48 +960,24 @@ export async function startFabricLocalRuntime({
           });
         }
 
-        // A same-price Estate X-Ray checkout is not a Deadline X-Ray checkout.
-        // Validate the distinct SKU on the owned payment response before handoff.
-        if(ibmi74Deadline&&(
-          String(result?.offer_key||'')!==requiredOfferKey||
-          Number(result?.amount_cents)!==25000||
-          String(result?.currency||'').toLowerCase()!=='usd'
-        )){
+        // The owned backend prepares an unpaid order. Before returning ANY external
+        // checkout link, independently bind its response to the published price,
+        // required SKU, authority, and allowlisted settlement destination.
+        const checkout=validateOwnedCheckoutHandoff({
+          slug,offer:publicOffer,result
+        });
+        if(!checkout.ok){
           if(isForm){
             return sendText(res,503,renderPaymentHoldPage({slug,orderKey:result?.order_key||''}),{
               contentType:'text/html; charset=utf-8'
             });
           }
           return sendJson(res,503,{
-            ok:false,error:'ibmi_74_checkout_contract_not_verified',
-            authority:'Evercraft Payments',checkout_ready:false,fulfillment_release:false,
+            ok:false,error:checkout.reason,authority:'Evercraft Payments',
+            checkout_ready:false,fulfillment_release:false,
           });
         }
-
-        let checkoutUrl=null;
-        try{
-          const candidate=new URL(String(result?.checkout_url||''));
-          if(candidate.protocol==='https:') checkoutUrl=candidate.toString();
-        }catch{}
-        if(result?.checkout_ready!==true||!checkoutUrl){
-          if(isForm){
-            return sendText(
-              res,
-              503,
-              renderPaymentHoldPage({slug,orderKey:result?.order_key||''}),
-              {contentType:'text/html; charset=utf-8'}
-            );
-          }
-          return sendJson(res,503,{
-            ok:false,
-            error:'evercraft_payments_checkout_not_ready',
-            authority:'Evercraft Payments',
-            order_key:result?.order_key||null,
-            gate_key:result?.gate_key||null,
-            checkout_ready:false,
-            fulfillment_release:false,
-          });
-        }
+        const checkoutUrl=checkout.checkout_url;
 
         if(isForm){
           const cents=Number(result?.amount_cents);
