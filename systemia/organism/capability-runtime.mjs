@@ -131,6 +131,7 @@ export async function executeGoalWorkWithAdapter({
   const next = recordGoalOutcome({
     state: started,
     workKey: work.work_key,
+    expectedAttempt: liveWork.attempt,
     result,
     receiptRef,
     evidenceRefs,
