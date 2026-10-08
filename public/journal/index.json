@@ -1,6 +1,6 @@
 {
   "schema": "evercraft.journal.index.v1",
-  "generated_at": "2026-10-08T13:31:55.373Z",
+  "generated_at": "2026-10-08T13:34:27.837Z",
   "live_edition": true,
   "stories": [
     {
@@ -9,8 +9,8 @@
       "title": "Evercraft College Football Power Rankings: Alabama Leads the Field",
       "dek": "Our results-first model ranks all FBS programs from completed NCAA game evidence through October 7, 2026, with opponent strength, capped scoring margins, venue, recent form and uncertainty kept visible.",
       "desk": "Sports",
-      "published_at": "2026-10-08T13:31:39.502Z",
-      "updated_at": "2026-10-08T13:31:39.502Z",
+      "published_at": "2026-10-08T13:34:26.595Z",
+      "updated_at": "2026-10-08T13:34:26.595Z",
       "evidence_state": "model_derived_from_verified_public_results",
       "canonical_url": "https://fabric.systemiacommandcenters.com/journal/college-football-power-rankings-2026-10-07/"
     },
