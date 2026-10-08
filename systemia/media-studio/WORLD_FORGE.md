@@ -498,3 +498,20 @@ Each frame binds:
 - explicit boundaries that keep production-render and publication authority off.
 
 The HTTP surface is `POST /api/fallen/world-forge/play/webgpu-frame` with a bounded viewport size. This is a runtime visualization contract, not a bake-back into authored World Forge state.
+
+
+## Browser World Engine WebGPU execution
+
+During Play Mode, World Forge can now execute the canonical World Engine WebGPU plan directly in the browser when WebGPU is available.
+
+The rendering stack is deliberately layered:
+
+- World Engine owns runtime truth, visual-frame construction, GeometryAssets, materials, lights, camera state, and the canonical WebGPU render plan;
+- the browser WebGPU client is an execution adapter only and does not compile or reinterpret Forge semantics;
+- the owned World Engine WGSL source is shared through a browser-safe module so server and browser do not drift into separate shading definitions;
+- the WebGPU canvas renders underneath World Forge's authoring canvas;
+- World Forge keeps the transparent overlay for grid, selection, and transform gizmos;
+- staged authoring changes hide the runtime underlay and return to Author Preview;
+- browsers without WebGPU fail over to the verified WebGL runtime visualization rather than breaking Play Mode.
+
+This still does not grant production-render or publication authority. It is direct runtime visualization of the deterministic Play session.
