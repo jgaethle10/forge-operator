@@ -4,6 +4,8 @@ on:
     paths:
       - 'public/demos/isaias-lifelines/**'
       - 'tests/isaias-lifeline-atlas.test.mjs'
+      - 'systemia/newsroom/isaias-lifeline-geo.mjs'
+      - 'tests/isaias-lifeline-geo.test.mjs'
       - '.github/workflows/isaias-lifeline-baseline-ci.yml'
   workflow_dispatch:
 permissions:
@@ -18,7 +20,7 @@ jobs:
         with:
           node-version: '22'
       - name: NHC source truth and owned static runtime
-        run: node --test tests/isaias-lifeline-atlas.test.mjs
+        run: node --test tests/isaias-lifeline-atlas.test.mjs tests/isaias-lifeline-geo.test.mjs
       - name: Separate visual preview from verified emergency guidance
         run: |
           grep -q 'NOT LIVE EMERGENCY GUIDANCE' public/demos/isaias-lifelines/index.html
