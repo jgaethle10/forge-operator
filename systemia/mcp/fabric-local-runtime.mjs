@@ -450,6 +450,21 @@ export async function startFabricLocalRuntime({
     if(purchaseIntentEndpoint.username||purchaseIntentEndpoint.password){
       throw new Error('purchase_intent_url_embedded_credentials_forbidden');
     }
+    // This is a buyer-data and economic-order authority boundary, not an
+    // arbitrary webhook. Explicit configuration alone does not prove trust.
+    // Until another owner domain is verified and admitted, keep this bound to
+    // the known Evercraft-owned Systemia domain and its subdomains.
+    const purchaseHost=purchaseIntentEndpoint.hostname.toLowerCase();
+    if(purchaseHost!=='systemiacommandcenters.com'&&
+       !purchaseHost.endsWith('.systemiacommandcenters.com')){
+      throw new Error('purchase_intent_owned_hostname_required');
+    }
+    if(purchaseIntentEndpoint.port&&purchaseIntentEndpoint.port!=='443'){
+      throw new Error('purchase_intent_nonstandard_port_forbidden');
+    }
+    if(purchaseIntentEndpoint.search||purchaseIntentEndpoint.hash){
+      throw new Error('purchase_intent_url_query_or_fragment_forbidden');
+    }
   }
   const staticPrepared=Array.isArray(catalog)?nativeOnlyCatalog(catalog):null;
   const preparedCatalog=()=>staticPrepared||nativeOnlyCatalog(loadFabricCatalogFromRepository());
@@ -926,6 +941,9 @@ export async function startFabricLocalRuntime({
         try{
           upstream=await purchaseIntentFetch(purchaseIntentEndpoint,{
             method:'POST',
+            // An upstream redirect could leak purchase-intent and buyer data
+            // to an unverified host. Never follow it automatically.
+            redirect:'error',
             headers:{
               'content-type':'application/json',
               'accept':'application/json',
