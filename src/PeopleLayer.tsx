@@ -188,6 +188,7 @@ function OperatorPeopleLayer() {
     if (!selected || !identityEmail.trim()) return;
     setBusy('verify');
     setError('');
+    setVerificationStatus('');
     try {
       const response = await api('/api/people/brains/' + encodeURIComponent(selected.brain_key) + '/email-challenge', {
         method: 'POST',
