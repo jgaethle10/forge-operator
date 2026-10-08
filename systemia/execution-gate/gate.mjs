@@ -223,6 +223,7 @@ export class EvercraftExecutionGate {
       scope: base.scope,
       resource_ref: base.resource_ref || null,
       specialist_slug: base.specialist_slug,
+      route_mode: base.route_mode || 'remote_mcp',
       request_fingerprint: base.request_fingerprint,
       route: base.route,
       permit_id: base.permit_id || null,
@@ -274,8 +275,24 @@ export class EvercraftExecutionGate {
       const specialistSlug = requiredString(input?.specialist_slug, 'specialist_slug');
       const fingerprint = requestFingerprint(input);
       const route = this.#routeFor(specialistSlug);
+      const routeMode = input?.route_mode
+        ? requiredString(input.route_mode, 'route_mode')
+        : 'remote_mcp';
+      if (!['remote_mcp', 'registered_internal'].includes(routeMode)) {
+        throw new Error('route_mode_invalid');
+      }
 
-      if (!route.route?.remote_mcp) {
+      if (routeMode === 'registered_internal') {
+        const registeredDispatcher = String(route.route?.registered_dispatcher || '').trim();
+        if (!registeredDispatcher || registeredDispatcher !== specialistSlug) {
+          return {
+            state: 'denied',
+            reason: 'registered_internal_route_not_ready',
+            route,
+            mutation_performed: false,
+          };
+        }
+      } else if (!route.route?.remote_mcp) {
         return {
           state: 'denied',
           reason: 'no_callable_or_fallback_route',
@@ -337,6 +354,7 @@ export class EvercraftExecutionGate {
         scope,
         resource_ref: resourceRef,
         specialist_slug: specialistSlug,
+        route_mode: routeMode,
         request_fingerprint: fingerprint,
         route,
         permit_id: input?.permit_id || 'permit_' + leaseId,

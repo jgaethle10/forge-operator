@@ -49,6 +49,8 @@ jobs:
         run: node --test systemia/evercraft-os/install-ledger.test.mjs
       - name: Prove mediated capability capsules
         run: node --test systemia/evercraft-os/runtime-capsule.test.mjs
+      - name: Prove Systemia-gated owned runtime launch
+        run: node --test systemia/evercraft-os/systemia-launcher.test.mjs
       - name: Prove Home OS status surface
         run: node --test systemia/evercraft-home/os-status.test.mjs
       - name: Emit boot envelope
