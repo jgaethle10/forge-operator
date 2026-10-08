@@ -22,6 +22,15 @@ function noteName(pitch:number){
   return NOTE_NAMES[pitch%12]+String(Math.floor(pitch/12)-1);
 }
 
+type HeldMidiNote={
+  trackId:string;
+  scene:number;
+  pitch:number;
+  velocity:number;
+  startedAt:number;
+  startStep:number;
+};
+
 function latestUndoableReceipt(session:PulseGridSession){
   const undone=new Set(session.receipts.map((receipt)=>receipt.undo_of).filter(Boolean));
   const transactionChildren=new Set(session.receipts.flatMap((receipt)=>receipt.child_receipt_ids||[]));
@@ -37,9 +46,16 @@ export default function FallenSessions(){
   const [status,setStatus]=useState('Canonical PulseGrid session ready.');
   const [playing,setPlaying]=useState(false);
   const [recording,setRecording]=useState(false);
+  const [midiEnabled,setMidiEnabled]=useState(false);
+  const [midiInputs,setMidiInputs]=useState(0);
   const [playhead,setPlayhead]=useState(0);
   const [audioStatus,setAudioStatus]=useState<PulseGridAudioStatus>({playing:false,scene:0,step:0,context_state:'cold',clock_mode:'cold',track_buses:0,latency_ms:null,cached_audio_assets:0});
   const sessionRef=useRef(session);
+  const selectedTrackRef=useRef(selectedTrackId);
+  const selectedSceneRef=useRef(selectedScene);
+  const playheadRef=useRef(0);
+  const midiAccessRef=useRef<any>(null);
+  const heldMidiNotesRef=useRef(new Map<string,HeldMidiNote>());
   const vaultRef=useRef<PulseGridBrowserAudioAssetVault|null>(null);
   const fileInputRef=useRef<HTMLInputElement|null>(null);
   const recorderRef=useRef<MediaRecorder|null>(null);
@@ -50,7 +66,7 @@ export default function FallenSessions(){
   if(!audioRef.current){
     audioRef.current=new PulseGridAudioEngine();
     audioRef.current.setAudioAssetResolver((asset)=>vaultRef.current!.getVerifiedBlob(asset));
-    audioRef.current.onStep=(step)=>setPlayhead(step);
+    audioRef.current.onStep=(step)=>{playheadRef.current=step;setPlayhead(step)};
     audioRef.current.onStatus=(next)=>{setAudioStatus(next);setPlaying(next.playing)};
   }
 
@@ -67,6 +83,11 @@ export default function FallenSessions(){
   },[session]);
 
   useEffect(()=>{
+    selectedTrackRef.current=selectedTrackId;
+  },[selectedTrackId]);
+
+  useEffect(()=>{
+    selectedSceneRef.current=selectedScene;
     audioRef.current?.setScene(selectedScene);
   },[selectedScene]);
 
@@ -81,6 +102,13 @@ export default function FallenSessions(){
     recorderRef.current=null;
     recordingStreamRef.current?.getTracks().forEach((mediaTrack)=>mediaTrack.stop());
     recordingStreamRef.current=null;
+    const midiAccess=midiAccessRef.current;
+    if(midiAccess){
+      midiAccess.onstatechange=null;
+      for(const input of midiAccess.inputs.values())input.onmidimessage=null;
+    }
+    midiAccessRef.current=null;
+    heldMidiNotesRef.current.clear();
     if(audioRef.current){audioRef.current.onStep=null;audioRef.current.onStatus=null;void audioRef.current.close();}
   },[]);
 
@@ -258,6 +286,123 @@ export default function FallenSessions(){
     fileInputRef.current?.click();
   }
 
+  function bindMidiInputs(access:any){
+    let count=0;
+    for(const input of access.inputs.values()){
+      count+=1;
+      input.onmidimessage=(event:any)=>handleMidiMessage(input,event);
+    }
+    setMidiInputs(count);
+    setStatus(count?('MIDI ready · '+count+' input'+(count===1?'':'s')):'MIDI enabled · no inputs detected');
+  }
+
+  function handleMidiMessage(input:any,event:any){
+    const data=Array.from(event?.data||[]) as number[];
+    if(data.length<3)return;
+    const statusByte=Number(data[0])||0;
+    const command=statusByte&0xf0;
+    const channel=statusByte&0x0f;
+    const pitch=Math.max(0,Math.min(127,Math.round(Number(data[1])||0)));
+    const rawVelocity=Math.max(0,Math.min(127,Math.round(Number(data[2])||0)));
+    const isNoteOn=command===0x90&&rawVelocity>0;
+    const isNoteOff=command===0x80||(command===0x90&&rawVelocity===0);
+    if(!isNoteOn&&!isNoteOff)return;
+
+    const key=String(input?.id||'midi')+':'+channel+':'+pitch;
+    if(isNoteOn){
+      const current=sessionRef.current;
+      const trackId=selectedTrackRef.current;
+      const scene=selectedSceneRef.current;
+      const targetTrack=current.tracks.find((candidate)=>candidate.id===trackId);
+      if(!targetTrack||targetTrack.type!=='synth'){
+        setStatus('Select a synth track before recording MIDI notes.');
+        return;
+      }
+      const targetClip=targetTrack.clips[scene];
+      if(!targetClip)return;
+      heldMidiNotesRef.current.set(key,{
+        trackId,
+        scene,
+        pitch,
+        velocity:rawVelocity/127,
+        startedAt:performance.now(),
+        startStep:Math.max(0,Math.min(targetClip.steps.length-1,playheadRef.current%targetClip.steps.length)),
+      });
+      return;
+    }
+
+    const held=heldMidiNotesRef.current.get(key);
+    if(!held)return;
+    heldMidiNotesRef.current.delete(key);
+
+    const current=sessionRef.current;
+    const targetTrack=current.tracks.find((candidate)=>candidate.id===held.trackId);
+    const targetClip=targetTrack?.clips[held.scene];
+    if(!targetTrack||targetTrack.type!=='synth'||!targetClip)return;
+
+    const elapsedMs=Math.max(1,performance.now()-held.startedAt);
+    const stepMs=60000/Math.max(20,current.transport.bpm)/4;
+    const maxLength=Math.max(.25,targetClip.steps.length-held.startStep);
+    const length=Math.max(.25,Math.min(maxLength,elapsedMs/stepMs));
+
+    try{
+      const result=applyPulseGridOperation(current,{
+        type:'note.add',
+        track_id:held.trackId,
+        scene:held.scene,
+        note:{
+          pitch:held.pitch,
+          start:held.startStep,
+          length,
+          velocity:held.velocity,
+          probability:1,
+          microtiming:0,
+        },
+      },'controller');
+      setSession(result.session);
+      setStatus(
+        'MIDI note committed · '+noteName(held.pitch)+' · '+
+        length.toFixed(2)+' steps · '+Math.round(held.velocity*127)+' velocity'
+      );
+    }catch(error){
+      setStatus(error instanceof Error?error.message:'MIDI note commit failed.');
+    }
+  }
+
+  async function toggleMidi(){
+    if(midiEnabled){
+      const access=midiAccessRef.current;
+      if(access){
+        access.onstatechange=null;
+        for(const input of access.inputs.values())input.onmidimessage=null;
+      }
+      midiAccessRef.current=null;
+      heldMidiNotesRef.current.clear();
+      setMidiEnabled(false);
+      setMidiInputs(0);
+      setStatus('MIDI disconnected.');
+      return;
+    }
+
+    const midiNavigator=navigator as Navigator&{
+      requestMIDIAccess?:()=>Promise<any>;
+    };
+    if(typeof midiNavigator.requestMIDIAccess!=='function'){
+      setStatus('Web MIDI is unavailable in this browser.');
+      return;
+    }
+
+    try{
+      const access=await midiNavigator.requestMIDIAccess();
+      midiAccessRef.current=access;
+      access.onstatechange=()=>bindMidiInputs(access);
+      bindMidiInputs(access);
+      setMidiEnabled(true);
+    }catch(error){
+      setStatus(error instanceof Error?error.message:'MIDI access failed.');
+    }
+  }
+
   function forkVariation(){
     const destination=(selectedScene+1)%track.clips.length;
     const result=apply({
@@ -414,6 +559,7 @@ export default function FallenSessions(){
           <span>{audioStatus.latency_ms===null?'Latency cold':'Latency '+audioStatus.latency_ms+' ms'}</span>
           <span>{audioStatus.track_buses} DSP buses</span>
           <span>{audioStatus.cached_audio_assets} audio asset{audioStatus.cached_audio_assets===1?'':'s'} cached</span>
+          <span>{midiEnabled?(midiInputs+' MIDI input'+(midiInputs===1?'':'s')):'MIDI off'}</span>
           <span>Local-first</span>
           <span>Engine alpha · not for sale</span>
         </div>
@@ -429,6 +575,7 @@ export default function FallenSessions(){
       <section className="fsToolbar" aria-label="Session controls">
         <button onClick={togglePlay} disabled={recording}>{playing?'■ Stop':'▶ Play'}</button>
         <button onClick={toggleRecording}>{recording?'■ Stop Recording':'● Record'}</button>
+        <button onClick={toggleMidi}>{midiEnabled?'Disconnect MIDI':'Enable MIDI'}</button>
         <button onClick={chooseAudioFile} disabled={recording}>Import Audio</button>
         <button onClick={runLiftPlan}>✦ Atomic Chorus Lift</button>
         <button onClick={forkVariation}>Fork Variation</button>
