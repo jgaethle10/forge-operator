@@ -4,11 +4,13 @@ Evercraft exposes public remote MCP servers so supported AI assistants can disco
 
 ## Evercraft Fabric read-only discovery MCP
 
-Owned read-only Fabric MCP URL (last independently verified on October 6, 2026, not a guarantee of current availability):
+Owned read-only Fabric MCP URL (fresh independent external canary passed October 8, 2026, 18:25 UTC; this does not establish ChatGPT connector availability):
 
 `https://fabric.systemiacommandcenters.com/mcp`
 
 Use the Fabric tools for capability matching, catalog inspection and public connection options only after the host has made the connector available and authorized it. A public registry entry alone does not install tools in ChatGPT, Claude, Gemini or Grok.
+
+External independent MCP probe receipt: https://github.com/jgaethle10/forge-operator/actions/runs/37824151905
 
 **Known connector issue:** The installed ChatGPT Evercraft Fabric binding can fail before reaching the owned origin. Reproduce and resolve the connector binding separately from owned-edge HTTPS/MCP health (issues #767, #785 and #1018). Do not interpret historical public-canary success as a fresh connected-app invocation.
 
