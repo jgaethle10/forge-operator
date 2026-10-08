@@ -859,6 +859,26 @@ export class YardOperator {
         }
         healthState = 'healthy';
         routeVerification = 'local_forensic_public_health_verified_public_route_unbound';
+      } else if (workloadClass === 'systemia.people-layer.v1') {
+        const peopleHealthy =
+          health.ok === true &&
+          health.service === 'evercraft-people-layer' &&
+          health.runtime === 'Evercraft Compute' &&
+          health.base44_runtime_dependency === false &&
+          job.result?.public_route_required === true &&
+          /^people_/.test(String(health.instance_id || '')) &&
+          health.instance_id === job.result?.instance_id;
+        if (!peopleHealthy) {
+          try {
+            await request(`${capacityEndpoint}/v1/services/${job.result.service_id}/stop`, {
+              method: 'POST',
+              body: JSON.stringify({ token: lease.token }),
+            });
+          } catch {}
+          throw new Error('People Layer failed initial owned runtime health verification');
+        }
+        healthState = 'healthy';
+        routeVerification = 'local_people_layer_health_verified_public_route_unbound';
       } else if (workloadClass === 'systemia.rivet-report-runtime.v1') {
         const rivetHealthy =
           health.ok === true &&
