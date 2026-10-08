@@ -7,6 +7,7 @@ import {
   validateRefreshEndpoint, invokeSessionRefresh, runOwnedFreshnessOnce,
   utcSlot, startOwnedSessionFreshnessResident
 } from './session-freshness-resident.mjs';
+import {claimFreshnessSlot,finishFreshnessSlot,inspectFreshnessSlot} from './session-freshness-slot.mjs';
 
 const endpoint='https://api.example.org/api/apps/69b9b64d86a732029ce0db81/functions/refreshSessionFreshness';
 const at='2026-10-08T01:32:00.000Z';
@@ -73,10 +74,14 @@ test('UTC shadow slot only once per distinct hour',async()=>{
   assert.equal(utcSlot(new Date('2026-10-08T01:32:00Z')),'2026-10-08T01Z');
   const clockValues=['2026-10-08T01:32:00Z','2026-10-08T01:32:30Z','2026-10-08T01:33:00Z','2026-10-08T02:32:00Z'];
   let count=0;let i=0;
-  const resident=await startOwnedSessionFreshnessResident({enabled:true,periodMs:3600000,clock:()=>new Date(clockValues[Math.min(i++,clockValues.length-1)]),run:async()=>{count++}});
-  await resident.tick();await resident.tick();await resident.tick();
-  resident.close();
-  assert.equal(count,2);
+  const dir=fs.mkdtempSync(path.join(os.tmpdir(),'owned-freshness-slots-'));
+  try{
+    const resident=await startOwnedSessionFreshnessResident({enabled:true,slotStateDir:dir,periodMs:3600000,clock:()=>new Date(clockValues[Math.min(i++,clockValues.length-1)]),run:async()=>{count++;return {ok:true,state:'VERIFIED',source_receipt_id:'test-'+count}}});
+    await resident.tick();await resident.tick();await resident.tick();
+    resident.close();
+    assert.equal(count,2);
+    assert.equal(inspectFreshnessSlot({stateDir:dir,slot:'2026-10-08T01Z'}).state,'VERIFIED');
+  }finally{fs.rmSync(dir,{recursive:true,force:true})}
 });
 test('production resident is disabled by default',async()=>{
   await assert.rejects(()=>startOwnedSessionFreshnessResident({enabled:false}),/resident_disabled_until_explicit_enablement/);
@@ -89,4 +94,48 @@ test('missing dynamic or historical receipt coverage is never VERIFIED',async()=
 test('breached historical sweep SLA is degraded even with zero HTTP errors',async()=>{
   const result=await invokeSessionRefresh({endpoint,machineKey:'fake-unit-test-key',fetchImpl:mock({...cycle,historical_watch:{...cycle.historical_watch,estimated_full_sweep_hours:14}}),now:clocks()});
   assert.equal(result.state,'DEGRADED');assert.equal(result.ok,false);
+});
+
+test('durable slot rejects same-hour restart and second resident on this host',async()=>{
+  const dir=fs.mkdtempSync(path.join(os.tmpdir(),'owned-freshness-multi-'));
+  try{
+    const slot='2026-10-08T04Z';
+    const first=claimFreshnessSlot({stateDir:dir,slot});
+    assert.equal(first.admitted,true);
+    const second=claimFreshnessSlot({stateDir:dir,slot});
+    assert.equal(second.admitted,false);
+    const done=finishFreshnessSlot(first,{receipt:{ok:true,state:'VERIFIED',source_receipt_id:'receipt-04'}});
+    assert.equal(done.state,'VERIFIED');
+    assert.equal(inspectFreshnessSlot({stateDir:dir,slot}).refresh_receipt_id,'receipt-04');
+    assert.equal(claimFreshnessSlot({stateDir:dir,slot}).admitted,false);
+    assert.equal(claimFreshnessSlot({stateDir:dir,slot:'2026-10-08T05Z'}).admitted,true);
+  }finally{fs.rmSync(dir,{recursive:true,force:true})}
+});
+test('interrupted slot remains STARTED and requires explicit inspection',async()=>{
+  const dir=fs.mkdtempSync(path.join(os.tmpdir(),'owned-freshness-crash-'));
+  try{
+    claimFreshnessSlot({stateDir:dir,slot:'2026-10-08T06Z'});
+    assert.equal(inspectFreshnessSlot({stateDir:dir,slot:'2026-10-08T06Z'}).state,'STARTED');
+    assert.equal(claimFreshnessSlot({stateDir:dir,slot:'2026-10-08T06Z'}).admitted,false);
+  }finally{fs.rmSync(dir,{recursive:true,force:true})}
+});
+test('resident marks rejected execution FAILED without replaying the same hour',async()=>{
+  const dir=fs.mkdtempSync(path.join(os.tmpdir(),'owned-freshness-error-'));
+  let called=0;let errors=0;
+  try{
+    const resident=await startOwnedSessionFreshnessResident({
+      enabled:true,slotStateDir:dir,periodMs:3600000,
+      clock:()=>new Date('2026-10-08T07:32:04Z'),
+      run:async()=>{called++;throw new Error('injected-run-failure')},
+      onError:()=>{errors++}
+    });
+    await resident.tick();
+    resident.close();
+    assert.equal(called,1);
+    assert.equal(errors,1);
+    assert.equal(inspectFreshnessSlot({stateDir:dir,slot:'2026-10-08T07Z'}).state,'FAILED');
+  }finally{fs.rmSync(dir,{recursive:true,force:true})}
+});
+test('resident requires durable slot storage before activating',async()=>{
+  await assert.rejects(()=>startOwnedSessionFreshnessResident({enabled:true,slotStateDir:''}),/durable_slot_state_directory_required/);
 });
