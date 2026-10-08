@@ -190,3 +190,17 @@ test('malformed read-only completion cannot fabricate a terminal goal result',as
   assert.equal((await readGoalState(file)).tasks[0].status,'blocked');
  });
 });
+
+test('untrusted adapter result prose never enters persistent recovery metadata',async()=>{
+ await fixture(async file=>{
+  const secret='private-token-should-not-leak';
+  const out=await executePersistedGoalWork({
+   filePath:file,workKey:'work',now:NOW,
+   registry:registry(async()=>({result:'unexpected '+secret})),
+  });
+  assert.equal(out.result,'provider_reconciliation_required');
+  const persisted=await readGoalState(file);
+  assert.equal(persisted.tasks[0].recovery_hold.source_reported_result,'invalid');
+  assert.equal(JSON.stringify(persisted).includes(secret),false);
+ });
+});
