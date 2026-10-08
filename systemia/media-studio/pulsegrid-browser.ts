@@ -7,12 +7,17 @@ export {
   applyPulseGridTransaction,
   createPulseGridSession,
   migratePulseGridSession,
+  pulseGridAudioAssetId,
   undoPulseGridReceipt,
   validatePulseGridSession,
 } from './pulsegrid-session.js';
 
 export type {
   PulseGridActor,
+  PulseGridAudioAsset,
+  PulseGridAudioAssetInput,
+  PulseGridAudioAssetRights,
+  PulseGridAudioAssetSourceState,
   PulseGridClip,
   PulseGridNote,
   PulseGridOperation,
