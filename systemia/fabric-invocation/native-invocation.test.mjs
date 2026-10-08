@@ -41,6 +41,7 @@ function fixture() {
       decision: permitted ? 'allow' : 'deny',
       receipt_hash: proof('passport:verified'),
       actor_ref, tenant_key, capability_key,
+      expires_at: new Date(Date.now() + 60000).toISOString(),
     }),
     workerInvoker: async ({ capability_key, payload, correlation_id }) => {
       dispatchCount++;
