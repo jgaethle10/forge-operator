@@ -28,6 +28,7 @@ import { startFabricLocalRuntime } from '../mcp/fabric-local-runtime.mjs';
 import { startPublicEdgeRuntime } from '../network/public-edge-runtime.mjs';
 import { startFederatedServiceBridge } from '../network/federated-service-bridge.mjs';
 import { startEvercraftHomeServer } from '../evercraft-home/server.mjs';
+import { startPeopleLayerRuntime } from '../people/service-runtime.mjs';
 import { startLineageRemoteRuntime } from '../lineage/yard-remote-runtime.mjs';
 import { LineageStore } from '../lineage/core.mjs';
 import { startLineageControlRoom } from '../lineage/control-room.mjs';
@@ -99,6 +100,7 @@ const BRIDGED_WORKLOADS = new Set([
   'systemia.rivet-report-runtime.v1',
   'systemia.lineage-remote.v1',
   'systemia.lineage-control-room.v1',
+  'systemia.people-layer.v1',
 ]);
 
 const BRIDGE_REQUEST_HEADERS = new Set([
@@ -155,6 +157,9 @@ function bridgeServiceOrigin(entry) {
     return String(entry?.runtime?.service_url || '');
   }
   if (entry?.workload_class === 'systemia.lineage-control-room.v1') {
+    return String(entry?.runtime?.service_url || '');
+  }
+  if (entry?.workload_class === 'systemia.people-layer.v1') {
     return String(entry?.runtime?.service_url || '');
   }
   return '';
@@ -925,6 +930,7 @@ export async function startEvercraftComputeNode({
     'systemia.evercraft-home.v1',
     'systemia.lineage-remote.v1',
     'systemia.lineage-control-room.v1',
+    'systemia.people-layer.v1',
     'saban.logical-agent',
     'saban.multiplier-assignment.v1',
   ]);
@@ -1917,6 +1923,104 @@ export async function startEvercraftComputeNode({
             workload_class: body.workload_class,
             result_schema: result.schema,
             instance_id: runtime.instance_id,
+          });
+          return send(res, 200, {
+            ok: true,
+            node_id: nodeId,
+            workload_class: body.workload_class,
+            result,
+            receipt,
+          });
+        }
+
+        if (workloadClass === 'systemia.people-layer.v1') {
+          const stateValue = String(
+            body.input?.state_root ||
+            process.env.PEOPLE_STATE_DIR ||
+            ''
+          ).trim();
+          if (!stateValue) {
+            return send(res, 422, { error: 'people_state_dir_required' });
+          }
+          const stateRoot = path.resolve(stateValue);
+          if (!isWithin(allowedRoot, stateRoot)) {
+            return send(res, 403, { error: 'people_state_dir_outside_admitted_root' });
+          }
+
+          const tokenFileValue = String(
+            body.input?.admin_token_file ||
+            process.env.PEOPLE_ADMIN_TOKEN_FILE ||
+            ''
+          ).trim();
+          if (!tokenFileValue) {
+            return send(res, 422, { error: 'people_admin_token_file_required' });
+          }
+          const adminTokenFile = path.resolve(tokenFileValue);
+          if (!isWithin(allowedRoot, adminTokenFile)) {
+            return send(res, 403, { error: 'people_admin_token_file_outside_admitted_root' });
+          }
+          if (!fs.existsSync(adminTokenFile) || !fs.statSync(adminTokenFile).isFile()) {
+            return send(res, 422, { error: 'people_admin_token_file_missing' });
+          }
+          if ((fs.statSync(adminTokenFile).mode & 0o077) !== 0) {
+            return send(res, 422, { error: 'people_admin_token_file_permissions_too_open' });
+          }
+
+          const mailKeysValue = String(
+            body.input?.mail_delivery_public_keys_file ||
+            process.env.PEOPLE_MAIL_DELIVERY_PUBLIC_KEYS_FILE ||
+            ''
+          ).trim();
+          const mailDeliveryPublicKeysFile = mailKeysValue ? path.resolve(mailKeysValue) : undefined;
+          if (mailDeliveryPublicKeysFile) {
+            if (!isWithin(allowedRoot, mailDeliveryPublicKeysFile)) {
+              return send(res, 403, { error: 'people_mail_public_keys_file_outside_admitted_root' });
+            }
+            if (!fs.existsSync(mailDeliveryPublicKeysFile) || !fs.statSync(mailDeliveryPublicKeysFile).isFile()) {
+              return send(res, 422, { error: 'people_mail_public_keys_file_missing' });
+            }
+            if ((fs.statSync(mailDeliveryPublicKeysFile).mode & 0o077) !== 0) {
+              return send(res, 422, { error: 'people_mail_public_keys_file_permissions_too_open' });
+            }
+          }
+
+          const runtime = await startPeopleLayerRuntime({
+            stateDir: stateRoot,
+            adminTokenFile,
+            mailDeliveryPublicKeysFile,
+            host: '127.0.0.1',
+            port: Number(body.input?.port || 0),
+          });
+          const serviceId = `svc_${randomBytes(8).toString('hex')}`;
+          services.set(serviceId, {
+            lease_id: body.lease_id,
+            workload_class: body.workload_class,
+            runtime,
+            service: runtime,
+          });
+
+          const result = {
+            schema: 'evercraft.compute.resident-service.v1',
+            service_id: serviceId,
+            workload_class: body.workload_class,
+            service_url: null,
+            local_url: runtime.service_url,
+            health_path: `/v1/services/${serviceId}/health`,
+            public_route_required: true,
+            public_health_path: '/health',
+            ui_path: '/people',
+            consent_path: '/people/consent',
+            verify_email_path: '/people/verify-email',
+            authenticated_operator_api: true,
+            public_person_token_flows: true,
+            base44_runtime_dependency: false,
+            instance_id: runtime.instance_id,
+          };
+          const receipt = chain.issue('service.started', {
+            lease_id: body.lease_id,
+            service_id: serviceId,
+            workload_class: body.workload_class,
+            result_schema: result.schema,
           });
           return send(res, 200, {
             ok: true,

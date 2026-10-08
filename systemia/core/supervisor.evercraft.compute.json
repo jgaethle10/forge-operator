@@ -42,7 +42,8 @@
     "sentinel-life-safety-watch",
     "cfb-clip-publisher",
     "rivet-session-freshness",
-    "space-dudz-clip-publisher"
+    "space-dudz-clip-publisher",
+    "people-layer-edge"
   ],
   "security": {
     "lease_required": true,
@@ -95,6 +96,8 @@
     "forensic_record_resident_supervised",
     "forensic_record_public_staging_resident_supervised",
     "forensic_record_canonical_domain_cutover_remains_separate_gate",
-    "space_dudz_clip_publisher_supervised"
+    "space_dudz_clip_publisher_supervised",
+    "people_layer_owned_runtime_resident_supervised",
+    "people_layer_base44_runtime_not_required"
   ]
 }

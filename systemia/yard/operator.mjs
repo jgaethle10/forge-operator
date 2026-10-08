@@ -859,6 +859,27 @@ export class YardOperator {
         }
         healthState = 'healthy';
         routeVerification = 'local_forensic_public_health_verified_public_route_unbound';
+      } else if (workloadClass === 'systemia.people-layer.v1') {
+        const peopleHealthy =
+          health.ok === true &&
+          health.service === 'evercraft-people-layer' &&
+          health.runtime === 'Evercraft Compute' &&
+          health.public_ui === true &&
+          health.operator_auth === 'private_token_file' &&
+          health.public_person_token_flows === true &&
+          health.base44_runtime_dependency === false &&
+          health.instance_id === job.result?.instance_id;
+        if (!peopleHealthy) {
+          try {
+            await request(`${capacityEndpoint}/v1/services/${job.result.service_id}/stop`, {
+              method: 'POST',
+              body: JSON.stringify({ token: lease.token }),
+            });
+          } catch {}
+          throw new Error('People Layer failed initial sovereign health verification');
+        }
+        healthState = 'healthy';
+        routeVerification = 'local_people_health_verified_public_route_unbound';
       } else if (workloadClass === 'systemia.rivet-report-runtime.v1') {
         const rivetHealthy =
           health.ok === true &&
@@ -1736,6 +1757,9 @@ export class YardOperator {
       healthPath = '/health';
     } else if (workloadClass === 'systemia.forensic-record-public-runtime.v1') {
       service = 'forensic-record-public-runtime';
+      healthPath = '/health';
+    } else if (workloadClass === 'systemia.people-layer.v1') {
+      service = 'evercraft-people-layer';
       healthPath = '/health';
     } else if (workloadClass === 'systemia.rivet-report-runtime.v1') {
       service = 'rivet-yard-report-runtime';

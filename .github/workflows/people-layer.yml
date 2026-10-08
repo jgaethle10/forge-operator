@@ -1,0 +1,84 @@
+name: People Layer owned runtime
+
+on:
+  pull_request:
+    paths:
+      - 'systemia/people/**'
+      - 'systemia/migrations/base44-exit/people-layer-*'
+      - 'systemia/compute/runtime-node.mjs'
+      - 'systemia/yard/operator.mjs'
+      - 'systemia/core/resident-services.json'
+      - 'systemia/core/supervisor.evercraft.compute.json'
+      - 'systemia/organism/people-layer-edge-*'
+      - 'registry/first-party-routing.json'
+      - 'src/PeopleLayer.tsx'
+      - 'src/main.tsx'
+      - 'src/index.css'
+      - 'server.ts'
+      - 'tests/people-owned-runtime.test.mjs'
+      - 'tests/people-mail-delivery.test.mjs'
+      - 'tests/server-owned-routing-cutover.test.mjs'
+      - '.github/workflows/people-layer.yml'
+  push:
+    branches: [main]
+    paths:
+      - 'systemia/people/**'
+      - 'systemia/migrations/base44-exit/people-layer-*'
+      - 'systemia/compute/runtime-node.mjs'
+      - 'systemia/core/resident-services.json'
+      - 'systemia/core/supervisor.evercraft.compute.json'
+      - 'systemia/organism/people-layer-edge-*'
+      - 'registry/first-party-routing.json'
+      - 'src/PeopleLayer.tsx'
+      - 'src/main.tsx'
+      - 'src/index.css'
+      - 'server.ts'
+      - 'tests/people-owned-runtime.test.mjs'
+      - 'tests/people-mail-delivery.test.mjs'
+      - 'tests/server-owned-routing-cutover.test.mjs'
+      - '.github/workflows/people-layer.yml'
+  workflow_dispatch:
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  prove:
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Prove signed mailbox delivery boundary
+        run: node --test tests/people-mail-delivery.test.mjs
+
+      - name: Prove person-sovereign lifecycle
+        run: node --test tests/people-owned-runtime.test.mjs
+
+      - name: Prove legacy extraction boundary
+        run: node --test systemia/migrations/base44-exit/people-layer-domain-adapter.proof.mjs
+
+      - name: Prove first-party owned routing
+        run: node --test tests/server-owned-routing-cutover.test.mjs
+
+      - name: Prove People Layer on Yard and Evercraft Compute
+        run: node systemia/people/compute-runtime.proof.mjs
+
+      - name: Prove People Layer through Evercraft Hosting
+        run: node systemia/people/hosting.proof.mjs
+
+      - name: Install dependencies for browser build
+        run: npm install --no-audit --no-fund
+
+      - name: Build owned browser surfaces
+        run: npm run build

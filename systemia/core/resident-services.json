@@ -246,6 +246,24 @@
       "restart_backoff_ms": 5000
     },
     {
+      "service_key": "people-layer-edge",
+      "mode": "resident",
+      "manifest": "systemia/organism/people-layer-edge.workflow.json",
+      "executable": "systemia/organism/people-layer-edge-runner.mjs",
+      "optional_when_unconfigured": true,
+      "env_args": {
+        "--people-state": "PEOPLE_STATE_DIR",
+        "--admin-token-file": "PEOPLE_ADMIN_TOKEN_FILE",
+        "--mail-public-keys": "PEOPLE_MAIL_DELIVERY_PUBLIC_KEYS_FILE"
+      },
+      "optional_env_args": {
+        "--hostname": "PEOPLE_YARD_HOSTNAME",
+        "--interval-ms": "PEOPLE_YARD_RECONCILE_INTERVAL_MS"
+      },
+      "max_restarts_per_hour": 12,
+      "restart_backoff_ms": 5000
+    },
+    {
       "service_key": "forensic-record-owned-runtime",
       "mode": "resident",
       "manifest": "systemia/organism/forensic-record.workflow.json",

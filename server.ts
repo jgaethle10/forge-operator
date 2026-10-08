@@ -22,6 +22,7 @@ import { registerNotificationFabricRoutes } from './systemia/notification-fabric
 import { registerRadarRoutes } from './systemia/radar/http.mjs';
 import { registerFaieRoutes } from './systemia/faie/http.mjs';
 import { registerUniversityBenchmarkRoutes } from './systemia/university/http.mjs';
+import { registerPeopleRoutes } from './systemia/people/http.mjs';
 
 dotenv.config();
 
@@ -204,6 +205,7 @@ registerRivetReportGateway(app);
 registerHouseholdFabricGateway(app);
 registerSpecialistHandoffMcps(app, { gatewayUrl: machineCommerceGatewayUrl });
 registerRemoteOperatorMcp(app);
+registerPeopleRoutes(app);
 
 const CENTRAL_MACHINE_COMMERCE_MCP = centralMachineCommerceMcp;
 

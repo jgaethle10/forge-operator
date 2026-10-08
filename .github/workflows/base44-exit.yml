@@ -22,6 +22,9 @@ on:
       - '.github/workflows/systemia-portfolio-sentinel.yml'
       - 'server.ts'
       - 'systemia/migrations/base44-exit/**'
+      - 'systemia/people/**'
+      - 'src/PeopleLayer.tsx'
+      - 'tests/people-owned-runtime.test.mjs'
       - 'systemia/collider/**'
       - 'systemia/organism/eps-social-continuity.mjs'
       - 'systemia/organism/eps-social-continuity.proof.mjs'
@@ -70,6 +73,9 @@ on:
       - '.github/workflows/systemia-portfolio-sentinel.yml'
       - 'server.ts'
       - 'systemia/migrations/base44-exit/**'
+      - 'systemia/people/**'
+      - 'src/PeopleLayer.tsx'
+      - 'tests/people-owned-runtime.test.mjs'
       - 'systemia/collider/**'
       - 'systemia/organism/eps-social-continuity.mjs'
       - 'systemia/organism/eps-social-continuity.proof.mjs'
@@ -118,6 +124,10 @@ jobs:
         run: node systemia/forensic-record/owned-corpus.proof.mjs
       - name: Prove Forensic Record on Yard / Evercraft Compute
         run: node systemia/yard/forensic-record-resident-runtime.proof.mjs
+      - name: Prove owned People Layer sovereignty lifecycle
+        run: node --test tests/people-owned-runtime.test.mjs
+      - name: Prove People Layer legacy extraction boundary
+        run: node --test systemia/migrations/base44-exit/people-layer-domain-adapter.proof.mjs
       - name: Enforce zero Base44 active hot paths
         run: node scripts/validate-no-base44-hotpath.mjs
       - name: Prove owned-only CHUM IndexNow routing
