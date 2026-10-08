@@ -2,6 +2,7 @@ import React, { useEffect, useMemo, useRef, useState } from 'react';
 import {
   PULSEGRID_ENGINE_VERSION,
   PulseGridAudioEngine,
+  PulseGridBrowserAudioAssetVault,
   applyPulseGridOperation,
   applyPulseGridTransaction,
   createPulseGridSession,
@@ -35,10 +36,13 @@ export default function FallenSessions(){
   const [status,setStatus]=useState('Canonical PulseGrid session ready.');
   const [playing,setPlaying]=useState(false);
   const [playhead,setPlayhead]=useState(0);
-  const [audioStatus,setAudioStatus]=useState<PulseGridAudioStatus>({playing:false,scene:0,step:0,context_state:'cold',clock_mode:'cold',track_buses:0,latency_ms:null});
+  const [audioStatus,setAudioStatus]=useState<PulseGridAudioStatus>({playing:false,scene:0,step:0,context_state:'cold',clock_mode:'cold',track_buses:0,latency_ms:null,cached_audio_assets:0});
+  const vaultRef=useRef<PulseGridBrowserAudioAssetVault|null>(null);
   const audioRef=useRef<PulseGridAudioEngine|null>(null);
+  if(!vaultRef.current)vaultRef.current=new PulseGridBrowserAudioAssetVault();
   if(!audioRef.current){
     audioRef.current=new PulseGridAudioEngine();
+    audioRef.current.setAudioAssetResolver((asset)=>vaultRef.current!.getVerifiedBlob(asset));
     audioRef.current.onStep=(step)=>setPlayhead(step);
     audioRef.current.onStatus=(next)=>{setAudioStatus(next);setPlaying(next.playing)};
   }
@@ -244,6 +248,7 @@ export default function FallenSessions(){
           <span>Clock {audioStatus.clock_mode}</span>
           <span>{audioStatus.latency_ms===null?'Latency cold':'Latency '+audioStatus.latency_ms+' ms'}</span>
           <span>{audioStatus.track_buses} DSP buses</span>
+          <span>{audioStatus.cached_audio_assets} audio asset{audioStatus.cached_audio_assets===1?'':'s'} cached</span>
           <span>Local-first</span>
           <span>Engine alpha · not for sale</span>
         </div>

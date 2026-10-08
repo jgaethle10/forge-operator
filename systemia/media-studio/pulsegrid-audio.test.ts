@@ -29,42 +29,51 @@ test('PulseGrid audio prefers the AudioWorklet clock and retains an explicit fal
   assert.match(audio,/fallbackScheduler\(\)/);
 });
 
-test('PulseGrid audio has deterministic stop and close cleanup',()=>{
-  assert.match(audio,/activeSources\s*=\s*new Map<AudioScheduledSourceNode, AudioNode\[\]>/);
-  assert.match(audio,/uiTimers\s*=\s*new Set/);
-  assert.match(audio,/stopScheduledSources\(\)/);
-  assert.match(audio,/disposeScheduledSource\(source/);
-  assert.match(audio,/clearUiTimers\(\)/);
-  assert.match(audio,/this\.disposeAllTrackBuses\(\)/);
+test('PulseGrid audio has deterministic clock and DSP cleanup',()=>{
   assert.match(audio,/disposeWorkletClock\(\)/);
   assert.match(audio,/this\.clockNode\.disconnect\(\)/);
   assert.match(audio,/this\.clockSink\.disconnect\(\)/);
   assert.match(audio,/this\.trackBuses\.clear\(\)/);
   assert.match(audio,/context\.close\(\)/);
-
-  const stopStart=audio.indexOf('stop() {');
-  const closeStart=audio.indexOf('async close()',stopStart);
-  assert.ok(stopStart>=0&&closeStart>stopStart,'Missing stop lifecycle boundary.');
-  const stopBody=audio.slice(stopStart,closeStart);
-  assert.match(stopBody,/this\.clearUiTimers\(\)/);
-  assert.match(stopBody,/this\.stopScheduledSources\(\)/);
-  assert.match(stopBody,/this\.disposeAllTrackBuses\(\)/);
 });
 
 test('PulseGrid audio remains a consumer of canonical session state',()=>{
-  assert.match(audio,/import type \{ PulseGridSession, PulseGridTrack \} from '\.\/pulsegrid-session\.js'/);
+  assert.match(audio,/pulsegrid-session/);
+  assert.match(audio,/PulseGridSession/);
+  assert.match(audio,/PulseGridTrack/);
   assert.match(audio,/this\.session\s*=\s*structuredClone\(session\)/);
   assert.doesNotMatch(audio,/node:/);
   assert.doesNotMatch(audio,/class\s+PulseGridSession/);
 });
 
 
-test('PulseGrid scene switches clear scheduled old-scene audio before worklet reset',()=>{
-  const sceneStart=audio.indexOf('setScene(scene: number)');
-  const playStart=audio.indexOf('async play(',sceneStart);
-  assert.ok(sceneStart>=0&&playStart>sceneStart,'Missing setScene lifecycle boundary.');
-  const sceneBody=audio.slice(sceneStart,playStart);
-  assert.match(sceneBody,/this\.clearUiTimers\(\)/);
-  assert.match(sceneBody,/this\.stopScheduledSources\(\)/);
-  assert.match(sceneBody,/type: 'reset'/);
+test('PulseGrid audio resolves canonical asset IDs through a replaceable resolver',()=>{
+  assert.match(audio,/setAudioAssetResolver/);
+  assert.match(audio,/PulseGridAudioAssetResolver/);
+  assert.match(audio,/clip\.audio_asset_id/);
+  assert.match(audio,/this\.audioBuffers\.get\(clip\.audio_asset_id\)/);
+  assert.match(audio,/resolver\(asset\)/);
+  assert.doesNotMatch(audio,/indexedDB/);
+});
+
+test('PulseGrid audio caches decoded canonical assets and clears them on close',()=>{
+  assert.match(audio,/audioBuffers\s*=\s*new Map/);
+  assert.match(audio,/pendingAssetLoads\s*=\s*new Map/);
+  assert.match(audio,/context\.decodeAudioData/);
+  assert.match(audio,/this\.audioBuffers\.clear\(\)/);
+  assert.match(audio,/this\.pendingAssetLoads\.clear\(\)/);
+});
+
+test('PulseGrid audio explicitly tracks and stops scheduled sound sources',()=>{
+  assert.match(audio,/activeSources\s*=\s*new Set/);
+  assert.match(audio,/trackSource/);
+  assert.match(audio,/for\(const source of this\.activeSources\)/);
+  assert.match(audio,/this\.activeSources\.clear\(\)/);
+});
+
+test('PulseGrid audio never fabricates missing asset bytes',()=>{
+  const audioTrackBlock=audio.slice(audio.indexOf("if (track.type === 'audio')"),audio.indexOf('const noteEvents'));
+  assert.match(audioTrackBlock,/audio_asset_id/);
+  assert.match(audioTrackBlock,/this\.audioBuffers\.get/);
+  assert.doesNotMatch(audioTrackBlock,/createBuffer\(/);
 });

@@ -7,6 +7,9 @@ test('Fallen Sessions UI consumes the canonical PulseGrid browser entrypoint',()
   assert.match(ui,/from '\.\.\/systemia\/media-studio\/pulsegrid-browser'/);
   assert.match(ui,/applyPulseGridTransaction/);
   assert.match(ui,/PulseGridAudioEngine/);
+  assert.match(ui,/PulseGridBrowserAudioAssetVault/);
+  assert.match(ui,/setAudioAssetResolver/);
+  assert.match(ui,/getVerifiedBlob/);
   assert.match(ui,/audioRef\.current\?\.updateSession\(session\)/);
   assert.match(ui,/audioRef\.current\?\.play\(session,selectedScene\)/);
   assert.match(ui,/audioStatus\.clock_mode/);
@@ -40,6 +43,8 @@ test('PulseGrid browser entrypoint exports the canonical audio adapter',()=>{
   const browser=fs.readFileSync('systemia/media-studio/pulsegrid-browser.ts','utf8');
   const audio=fs.readFileSync('systemia/media-studio/pulsegrid-audio.ts','utf8');
   assert.match(browser,/PulseGridAudioEngine/);
-  assert.match(audio,/import type \{ PulseGridSession, PulseGridTrack \} from '\.\/pulsegrid-session\.js'/);
+  assert.match(audio,/pulsegrid-session/);
+  assert.match(audio,/PulseGridSession/);
+  assert.match(audio,/PulseGridTrack/);
   assert.doesNotMatch(audio,/node:/);
 });

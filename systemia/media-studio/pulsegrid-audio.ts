@@ -1,6 +1,7 @@
-import type { PulseGridSession, PulseGridTrack } from './pulsegrid-session.js';
+import type { PulseGridAudioAsset, PulseGridSession, PulseGridTrack } from './pulsegrid-session.js';
 
 export type PulseGridClockMode = 'cold' | 'worklet' | 'fallback';
+export type PulseGridAudioAssetResolver = (asset:PulseGridAudioAsset)=>Promise<Blob|null>;
 
 export type PulseGridAudioStatus = {
   playing: boolean;
@@ -10,6 +11,7 @@ export type PulseGridAudioStatus = {
   clock_mode: PulseGridClockMode;
   track_buses: number;
   latency_ms: number | null;
+  cached_audio_assets: number;
 };
 
 type PulseGridTrackBus = {
@@ -34,9 +36,11 @@ export class PulseGridAudioEngine {
   private nextTime = 0;
   private playing = false;
   private noiseBuffer: AudioBuffer | null = null;
+  private assetResolver: PulseGridAudioAssetResolver | null = null;
+  private readonly audioBuffers = new Map<string, AudioBuffer>();
+  private readonly pendingAssetLoads = new Map<string, Promise<void>>();
+  private readonly activeSources = new Set<AudioScheduledSourceNode>();
   private readonly trackBuses = new Map<string, PulseGridTrackBus>();
-  private readonly activeSources = new Map<AudioScheduledSourceNode, AudioNode[]>();
-  private readonly uiTimers = new Set<ReturnType<typeof setTimeout>>();
   private readonly lookaheadMs = 25;
   private readonly scheduleAheadSeconds = 0.12;
 
@@ -56,7 +60,19 @@ export class PulseGridAudioEngine {
       clock_mode: this.clockMode,
       track_buses: this.trackBuses.size,
       latency_ms: context ? Math.round(latencySeconds * 1000) : null,
+      cached_audio_assets: this.audioBuffers.size,
     };
+  }
+
+  setAudioAssetResolver(resolver:PulseGridAudioAssetResolver|null){
+    if(this.assetResolver===resolver)return;
+    this.assetResolver=resolver;
+    this.audioBuffers.clear();
+    this.pendingAssetLoads.clear();
+    if(this.context&&this.session&&resolver){
+      void this.prepareAudioAssets();
+    }
+    this.emitStatus();
   }
 
   updateSession(session: PulseGridSession) {
@@ -69,6 +85,7 @@ export class PulseGridAudioEngine {
       this.ensureTrackBuses();
       this.syncAllTrackBuses(this.context.currentTime);
       this.configureClock();
+      void this.prepareAudioAssets();
     }
     this.emitStatus();
   }
@@ -77,10 +94,6 @@ export class PulseGridAudioEngine {
     const maxScene = Math.max(0, (this.session?.tracks[0]?.clips.length || 1) - 1);
     this.scene = Math.max(0, Math.min(Math.round(scene), maxScene));
     this.step = 0;
-    if (this.playing) {
-      this.clearUiTimers();
-      this.stopScheduledSources();
-    }
     if (this.context) {
       this.nextTime = this.context.currentTime + 0.05;
       this.configureClock();
@@ -100,6 +113,7 @@ export class PulseGridAudioEngine {
     this.setScene(scene);
     const context = await this.ensureContext();
     if (context.state === 'suspended') await context.resume();
+    await this.prepareAudioAssets();
     if (this.playing) return;
 
     this.playing = true;
@@ -128,9 +142,8 @@ export class PulseGridAudioEngine {
     if (this.fallbackTimer) clearInterval(this.fallbackTimer);
     this.fallbackTimer = null;
     if (this.clockNode) this.clockNode.port.postMessage({ type: 'stop' });
-    this.clearUiTimers();
-    this.stopScheduledSources();
-    this.disposeAllTrackBuses();
+    for(const source of this.activeSources){try{source.stop()}catch{}}
+    this.activeSources.clear();
     this.step = 0;
     this.onStep?.(0);
     this.emitStatus();
@@ -143,6 +156,8 @@ export class PulseGridAudioEngine {
     this.master?.disconnect();
     this.master = null;
     this.noiseBuffer = null;
+    this.audioBuffers.clear();
+    this.pendingAssetLoads.clear();
     const context = this.context;
     this.context = null;
     this.clockMode = 'cold';
@@ -152,6 +167,64 @@ export class PulseGridAudioEngine {
 
   private emitStatus() {
     this.onStatus?.(this.status);
+  }
+
+  private async prepareAudioAssets(){
+    const context=this.context;
+    const session=this.session;
+    const resolver=this.assetResolver;
+    if(!context||!session||!resolver)return;
+
+    const wanted=new Map<string,PulseGridAudioAsset>();
+    for(const track of session.tracks){
+      if(track.type!=='audio')continue;
+      const clip=track.clips[this.scene];
+      if(!clip?.audio_asset_id)continue;
+      const asset=session.assets.find((candidate)=>candidate.id===clip.audio_asset_id);
+      if(asset&&asset.rights!=='restricted')wanted.set(asset.id,asset);
+    }
+
+    const loads:Promise<void>[]=[];
+    for(const asset of wanted.values()){
+      if(this.audioBuffers.has(asset.id))continue;
+      const existing=this.pendingAssetLoads.get(asset.id);
+      if(existing){loads.push(existing);continue}
+      const load=(async()=>{
+        const blob=await resolver(asset);
+        if(!blob)return;
+        const bytes=await blob.arrayBuffer();
+        const buffer=await context.decodeAudioData(bytes.slice(0));
+        this.audioBuffers.set(asset.id,buffer);
+      })().finally(()=>{
+        this.pendingAssetLoads.delete(asset.id);
+        this.emitStatus();
+      });
+      this.pendingAssetLoads.set(asset.id,load);
+      loads.push(load);
+    }
+    await Promise.all(loads);
+  }
+
+  private trackSource<T extends AudioScheduledSourceNode>(source:T){
+    this.activeSources.add(source);
+    source.addEventListener('ended',()=>this.activeSources.delete(source),{once:true});
+    return source;
+  }
+
+  private scheduleAudioAsset(destination:AudioNode,buffer:AudioBuffer,time:number,duration:number){
+    const context=this.context!;
+    const source=this.trackSource(context.createBufferSource());
+    source.buffer=buffer;
+    if(buffer.duration<duration){
+      source.loop=true;
+      source.loopEnd=Math.max(0.01,buffer.duration);
+      source.connect(destination);
+      source.start(time);
+      source.stop(time+duration);
+      return;
+    }
+    source.connect(destination);
+    source.start(time,0,Math.min(buffer.duration,duration));
   }
 
   private async ensureContext() {
@@ -194,14 +267,12 @@ export class PulseGridAudioEngine {
         const time = Number(message.time) || context.currentTime;
         this.scheduleStep(step, time);
         const delayMs = Math.max(0, (time - context.currentTime) * 1000);
-        const timer = globalThis.setTimeout(() => {
-          this.uiTimers.delete(timer);
+        globalThis.setTimeout(() => {
           if (!this.playing) return;
           this.step = step;
           this.onStep?.(step);
           this.emitStatus();
         }, delayMs);
-        this.uiTimers.add(timer);
       };
       this.clockNode = node;
       this.clockSink = sink;
@@ -259,13 +330,11 @@ export class PulseGridAudioEngine {
       const scheduledTime = this.nextTime;
       this.scheduleStep(scheduledStep, scheduledTime);
       const delayMs = Math.max(0, (scheduledTime - context.currentTime) * 1000);
-      const timer = globalThis.setTimeout(() => {
-        this.uiTimers.delete(timer);
+      globalThis.setTimeout(() => {
         if (!this.playing || this.clockMode !== 'fallback') return;
         this.onStep?.(scheduledStep);
         this.emitStatus();
       }, delayMs);
-      this.uiTimers.add(timer);
       this.nextTime += this.stepDuration(this.step);
       this.step = (this.step + 1) % this.loopSteps();
     }
@@ -389,7 +458,14 @@ export class PulseGridAudioEngine {
       }
 
       if (track.type === 'audio') {
-        // Canonical binary audio assets are intentionally not fabricated here.
+        if(step===0&&clip.audio_asset_id){
+          const assetBuffer=this.audioBuffers.get(clip.audio_asset_id);
+          if(assetBuffer){
+            const sceneDuration=Array.from({length:clip.steps.length},(_,index)=>this.stepDuration(index))
+              .reduce((total,value)=>total+value,0);
+            this.scheduleAudioAsset(bus.input,assetBuffer,time,sceneDuration);
+          }
+        }
         continue;
       }
 
@@ -415,7 +491,7 @@ export class PulseGridAudioEngine {
 
   private kick(destination: AudioNode, time: number, velocity: number) {
     const context = this.context!;
-    const oscillator = context.createOscillator();
+    const oscillator = this.trackSource(context.createOscillator());
     const gain = context.createGain();
     oscillator.type = 'sine';
     oscillator.frequency.setValueAtTime(135, time);
@@ -423,7 +499,6 @@ export class PulseGridAudioEngine {
     gain.gain.setValueAtTime(Math.max(0.001, 0.7 * velocity), time);
     gain.gain.exponentialRampToValueAtTime(0.001, time + 0.22);
     oscillator.connect(gain).connect(destination);
-    this.trackScheduledSource(oscillator, [gain]);
     oscillator.start(time);
     oscillator.stop(time + 0.24);
   }
@@ -436,7 +511,7 @@ export class PulseGridAudioEngine {
       for (let index = 0; index < data.length; index += 1) data[index] = Math.random() * 2 - 1;
       this.noiseBuffer = buffer;
     }
-    const source = context.createBufferSource();
+    const source = this.trackSource(context.createBufferSource());
     const highpass = context.createBiquadFilter();
     const gain = context.createGain();
     source.buffer = this.noiseBuffer;
@@ -445,7 +520,6 @@ export class PulseGridAudioEngine {
     gain.gain.setValueAtTime(Math.max(0.001, 0.18 * velocity), time);
     gain.gain.exponentialRampToValueAtTime(0.001, time + 0.055);
     source.connect(highpass).connect(gain).connect(destination);
-    this.trackScheduledSource(source, [highpass, gain]);
     source.start(time);
     source.stop(time + 0.065);
   }
@@ -459,7 +533,7 @@ export class PulseGridAudioEngine {
     velocity: number,
   ) {
     const context = this.context!;
-    const oscillator = context.createOscillator();
+    const oscillator = this.trackSource(context.createOscillator());
     const gain = context.createGain();
     oscillator.type = track.id === 'bass' ? 'sawtooth' : track.id === 'bell' ? 'sine' : 'triangle';
     oscillator.frequency.value = 440 * Math.pow(2, (pitch - 69) / 12);
@@ -467,39 +541,7 @@ export class PulseGridAudioEngine {
     gain.gain.exponentialRampToValueAtTime(Math.max(0.005, velocity * 0.18), time + 0.008);
     gain.gain.setTargetAtTime(0.0001, time + Math.max(0.03, duration - 0.06), 0.03);
     oscillator.connect(gain).connect(destination);
-    this.trackScheduledSource(oscillator, [gain]);
     oscillator.start(time);
     oscillator.stop(time + duration + 0.12);
-  }
-
-  private trackScheduledSource(source: AudioScheduledSourceNode, cleanupNodes: AudioNode[]) {
-    this.activeSources.set(source, cleanupNodes);
-    source.onended = () => this.disposeScheduledSource(source);
-  }
-
-  private disposeScheduledSource(source: AudioScheduledSourceNode) {
-    const cleanupNodes = this.activeSources.get(source) || [];
-    this.activeSources.delete(source);
-    try { source.disconnect(); } catch {}
-    for (const node of cleanupNodes) {
-      try { node.disconnect(); } catch {}
-    }
-  }
-
-  private stopScheduledSources() {
-    for (const [source, cleanupNodes] of this.activeSources) {
-      source.onended = null;
-      try { source.stop(); } catch {}
-      try { source.disconnect(); } catch {}
-      for (const node of cleanupNodes) {
-        try { node.disconnect(); } catch {}
-      }
-    }
-    this.activeSources.clear();
-  }
-
-  private clearUiTimers() {
-    for (const timer of this.uiTimers) clearTimeout(timer);
-    this.uiTimers.clear();
   }
 }
