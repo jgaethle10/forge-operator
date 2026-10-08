@@ -20,6 +20,11 @@ export function normalizeMachineCommerceGateway(input){
     u.hash||u.hostname==='base44.app'||u.hostname.endsWith('.base44.app')){
    throw new Error('owned_https_machine_commerce_gateway_required');
  }
+ // The human-owned publication origin is the only currently reviewed host.
+ // A different Machine Commerce backend requires its own reviewed allowlist entry.
+ if(u.hostname!=='fabric.systemiacommandcenters.com'){
+   throw new Error('unapproved_machine_commerce_gateway_host');
+ }
  if(u.hostname==='localhost'||u.hostname.endsWith('.localhost')||
    u.hostname.includes(':') || u.hostname.startsWith('[') ||
    /^(?:127\.|0\.|10\.|169\.254\.|192\.168\.|172\.(?:1[6-9]|2[0-9]|3[01])\.)/.test(u.hostname)){
