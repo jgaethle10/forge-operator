@@ -45,12 +45,12 @@ assert.deepEqual(state.next_work_keys, ['research']);
 
 state = startGoalWork({ state, workKey: 'research', now: new Date('2026-09-24T17:01:00Z') });
 assert.equal(state.status, 'executing');
-assert.throws(() => recordGoalOutcome({ state, workKey: 'research', result: 'complete' }), /requires an execution receipt/);
-state = recordGoalOutcome({ state, workKey: 'research', result: 'complete', receiptRef: 'exec:research', now: new Date('2026-09-24T17:02:00Z') });
+assert.throws(() => recordGoalOutcome({ state, workKey: 'research', expectedAttempt: state.tasks.find(t=>t.work_key==='research').attempt, result: 'complete' }), /requires an execution receipt/);
+state = recordGoalOutcome({ state, workKey: 'research', expectedAttempt: state.tasks.find(t=>t.work_key==='research').attempt, result: 'complete', receiptRef: 'exec:research', now: new Date('2026-09-24T17:02:00Z') });
 assert.deepEqual(state.next_work_keys, ['build']);
 
 state = startGoalWork({ state, workKey: 'build', now: new Date('2026-09-24T17:03:00Z') });
-state = recordGoalOutcome({ state, workKey: 'build', result: 'complete', evidenceRefs: ['artifact:build'], now: new Date('2026-09-24T17:04:00Z') });
+state = recordGoalOutcome({ state, workKey: 'build', expectedAttempt: state.tasks.find(t=>t.work_key==='build').attempt, result: 'complete', evidenceRefs: ['artifact:build'], now: new Date('2026-09-24T17:04:00Z') });
 assert.equal(state.status, 'waiting');
 assert.deepEqual(state.next_work_keys, []);
 assert.ok(state.blockers.some((entry) => entry.includes('commit-money')));
@@ -72,16 +72,16 @@ assert.throws(
  /trusted human approval signer missing/
 );
 state = startGoalWork({ state, workKey: 'commit-money', trustedPublicKeys, now: new Date('2026-09-24T17:06:00Z') });
-state = recordGoalOutcome({ state, workKey: 'commit-money', result: 'complete', receiptRef: 'exec:commercial', now: new Date('2026-09-24T17:07:00Z') });
+state = recordGoalOutcome({ state, workKey: 'commit-money', expectedAttempt: state.tasks.find(t=>t.work_key==='commit-money').attempt, result: 'complete', receiptRef: 'exec:commercial', now: new Date('2026-09-24T17:07:00Z') });
 assert.deepEqual(state.next_work_keys, ['verify']);
 
 state = startGoalWork({ state, workKey: 'verify', now: new Date('2026-09-24T17:08:00Z') });
-state = recordGoalOutcome({ state, workKey: 'verify', result: 'blocked', blocker: 'synthetic verification failure', now: new Date('2026-09-24T17:09:00Z') });
+state = recordGoalOutcome({ state, workKey: 'verify', expectedAttempt: state.tasks.find(t=>t.work_key==='verify').attempt, result: 'blocked', blocker: 'synthetic verification failure', now: new Date('2026-09-24T17:09:00Z') });
 assert.equal(state.status, 'blocked');
-state = recordGoalOutcome({ state, workKey: 'verify', result: 'retry', now: new Date('2026-09-24T17:10:00Z') });
+state = recordGoalOutcome({ state, workKey: 'verify', expectedAttempt: state.tasks.find(t=>t.work_key==='verify').attempt, result: 'retry', now: new Date('2026-09-24T17:10:00Z') });
 assert.deepEqual(state.next_work_keys, ['verify']);
 state = startGoalWork({ state, workKey: 'verify', now: new Date('2026-09-24T17:11:00Z') });
-state = recordGoalOutcome({ state, workKey: 'verify', result: 'complete', receiptRef: 'exec:verify', evidenceRefs: ['evidence:verified'], now: new Date('2026-09-24T17:12:00Z') });
+state = recordGoalOutcome({ state, workKey: 'verify', expectedAttempt: state.tasks.find(t=>t.work_key==='verify').attempt, result: 'complete', receiptRef: 'exec:verify', evidenceRefs: ['evidence:verified'], now: new Date('2026-09-24T17:12:00Z') });
 assert.equal(state.status, 'complete');
 
 const snapshot = goalSnapshot(state);
