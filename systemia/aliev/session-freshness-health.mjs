@@ -107,3 +107,16 @@ export function readFreshnessHealth({
   health.ok=true;
   return health
 }
+
+if(process.argv[1] && import.meta.url===new URL('file://'+path.resolve(process.argv[1])).href){
+  const command=process.argv[2];
+  let result;
+  if(command==='--doctor')result=freshnessDeploymentPreflight();
+  else if(command==='--health')result=readFreshnessHealth({
+    ledgerPath:process.env.EVERCRAFT_FRESHNESS_RECEIPT_LEDGER,
+    slotStateDir:process.env.EVERCRAFT_FRESHNESS_SLOT_DIR
+  });
+  else throw new Error('usage: node session-freshness-health.mjs --doctor|--health');
+  process.stdout.write(JSON.stringify(result)+'\n');
+  if(command==='--doctor'?!result.ready_for_live_canary:!result.ok)process.exitCode=1;
+}
