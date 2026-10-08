@@ -5,7 +5,7 @@ import {reviewRivetFreshnessDecision} from './rivet-freshness-governance-review.
 test('review evidence reproduces decision change with no observed sessions',()=>{
  const e=reviewRivetFreshnessDecision();
  assert.equal(e.schema,'evercraft.rivet.freshness-owner-review-witness.v1');
- assert.equal(e.independently_verified_observed_session_rows,0);
+ assert.equal(e.synthetic_observed_session_rows,0);
  assert.equal(e.baseline_decision,'SCREENING INCOMPLETE');
  assert.equal(e.with_refresh_decision,'DEEPER DILIGENCE JUSTIFIED');
  assert.equal(e.freshness_alone_changes_report_decision,true);
