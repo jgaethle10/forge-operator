@@ -58,6 +58,12 @@ jobs:
         run: node systemia/university/model-canary.proof.mjs
       - name: Systemia University local submission CLI proof
         run: node systemia/university/benchmark-submit.proof.mjs
+      - name: Systemia University owned HTTP evaluator
+        run: node --test systemia/university/http.test.mjs
+      - name: Systemia University owned HTTP ingress proof
+        run: node systemia/university/http.proof.mjs
+      - name: Systemia University server/OpenAPI HTTP contract
+        run: node --test tests/systemia-university-http-contract.test.mjs
       - name: Evercraft Financial regulatory boundary
         run: node --test systemia/payments/financial-boundary.test.mjs
       - name: Evercraft Financial charter readiness
