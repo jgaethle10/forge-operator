@@ -34,3 +34,11 @@ New file: systemia/autonomy/raven-phone-demand.mjs
 8. Migrate any legacy Base44 webhook transports only after owned endpoint E2E proof, staged cutover and rollback readiness.
 
 Hard boundaries: no cold AI robocalls or unsolicited SMS, no new phone number purchases, no unapproved RIVET partner offers, no silent phone/webhook mutation, and no new CRM. Raven is the voice surface, Systemia governs decisions, Evercraft Payments governs paid-state truth.
+
+## Added in the same draft: disabled-by-default owned route
+
+Owned Fabric source now registers POST /api/communications/raven-inbound, using systemia/autonomy/raven-phone-ingress.mjs. If either EVERCRAFT_COMMUNICATIONS_BRIDGE_SECRET or EVERCRAFT_RAVEN_PHONE_STATE_DIR is absent, requests return 503. The handler requires the signed Raven request as application/json, validates HMAC and event contract, and writes an opaque review candidate to a mode-0700 private directory with a mode-0600 event file. The source's event identity is used as an exclusive-create filename; duplicate retries return duplicate rather than writing another record.
+
+A 202 reply means only a durable **review candidate** was stored, not Systemia mission admission, owner acknowledgment, Twilio event verification, consent, publication, payment or delivery. Health advertises raven_phone_private_ingress_ready and configured_not_externally_verified separately. This is a single-writer/on-host proof, not a multi-node shared transactional queue. Do not enable a multi-replica route until durability/locking, retention/deletion, and private replay-state ownership are independently verified.
+
+No production environment settings, DNS, Base44 webhooks, Twilio URLs, secrets, or phone numbers were changed by this pull request.
