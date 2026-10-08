@@ -230,7 +230,7 @@ test('context binding describes scopes but grants no access', () => {
 
 test('generated runtime policy artifact covers only explicitly contracted products', () => {
   const rendered = renderRuntimePolicies(process.cwd());
-  assert.equal(rendered.policy_count, 7);
+  assert.equal(rendered.policy_count, 10);
   assert.deepEqual(
     rendered.policies.map((row) => row.product_key),
     [
@@ -241,6 +241,9 @@ test('generated runtime policy artifact covers only explicitly contracted produc
       'opportunity-fabric',
       'systemia-university',
       'findmypart',
+      'lineage',
+      'earthworks-autonomy',
+      'fallen-sessions',
     ]
   );
   assert.equal(rendered.truth_boundary.non_shared_runtime_execution_fails_closed, true);
@@ -262,8 +265,27 @@ test('discovery-only and private-runtime contracts cannot be compiled into share
     compileProductRuntimePolicy('systemia-university', process.cwd()).adoption_stage,
     'discovery_only'
   );
+  assert.equal(
+    compileProductRuntimePolicy('lineage', process.cwd()).adoption_stage,
+    'discovery_only'
+  );
+  assert.equal(
+    compileProductRuntimePolicy('earthworks-autonomy', process.cwd()).adoption_stage,
+    'discovery_only'
+  );
+  assert.equal(
+    compileProductRuntimePolicy('fallen-sessions', process.cwd()).adoption_stage,
+    'discovery_only'
+  );
 
-  for (const product_key of ['evernest-atlas', 'opportunity-fabric', 'systemia-university']) {
+  for (const product_key of [
+    'evernest-atlas',
+    'opportunity-fabric',
+    'systemia-university',
+    'lineage',
+    'earthworks-autonomy',
+    'fallen-sessions',
+  ]) {
     assert.throws(
       () =>
         buildExecutionGateInput({
