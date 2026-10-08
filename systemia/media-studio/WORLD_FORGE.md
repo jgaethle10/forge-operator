@@ -526,3 +526,18 @@ The browser execution adapter compares the previous and next geometry digest map
 World Engine geometry IDs are already content-derived from the compiled geometry descriptor. The additional GeometryAsset digest binds the actual emitted triangle payload and normals to the frame, so identity and bytes both have explicit lineage.
 
 A geometry edit may therefore rotate the content-derived geometry ID entirely, while transform-only runtime motion preserves both geometry ID and digest. This optimization changes resource lifetime only. It does not change authored geometry, runtime simulation truth, material semantics, or authority boundaries.
+
+
+## Runtime WebGPU camera parity
+
+When the canonical World Engine WebGPU underlay is active, World Forge now locks the authoring overlay to the same authored/runtime camera view. This prevents free-orbit overlay math from drifting away from the pixels rendered by World Engine.
+
+While the runtime WebGPU layer is active:
+
+- the effective viewport view is Camera mode;
+- Frame Selected is disabled because it would switch the overlay into Orbit mode;
+- the Camera toggle becomes a locked **Runtime Camera** indicator;
+- orbit and wheel navigation are disabled;
+- picking, selection wireframes, grid overlays, and transform gizmos use the same camera projection as the World Engine underlay.
+
+If WebGPU falls back, Play stops, or Author Preview takes over because staged edits exist, the user’s previously requested Orbit/Camera mode becomes effective again. The lock changes visualization only; it does not mutate authored camera state or runtime camera state.
