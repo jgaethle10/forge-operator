@@ -2,7 +2,8 @@ import assert from 'node:assert/strict';
 import fs from 'node:fs';
 import os from 'node:os';
 import path from 'node:path';
-import { randomBytes } from 'node:crypto';
+import { randomBytes, generateKeyPairSync } from 'node:crypto';
+import { emailDestinationHash, signMailDeliveryEvidence } from './mail-delivery.mjs';
 import { startEvercraftComputeNode } from '../compute/runtime-node.mjs';
 import { YardOperator } from '../yard/operator.mjs';
 
@@ -11,11 +12,16 @@ const computeRoot=path.join(root,'compute');
 const yardState=path.join(root,'yard');
 const stateRoot=path.join(computeRoot,'people-state');
 const authorityFile=path.join(computeRoot,'people-authority');
+const mailPublicKeyFile=path.join(computeRoot,'people-mail-public-keys.json');
+const mailKeys=generateKeyPairSync('ed25519');
 const allocatorAuthority=randomBytes(32).toString('hex');
 const operatorAuthority=randomBytes(32).toString('hex');
 
 fs.mkdirSync(computeRoot,{recursive:true,mode:0o700});
 fs.writeFileSync(authorityFile,operatorAuthority+'\n',{mode:0o600});
+fs.writeFileSync(mailPublicKeyFile,JSON.stringify({
+  gmail_agent:mailKeys.publicKey.export({type:'spki',format:'pem'}),
+}),{mode:0o600});
 
 const node=await startEvercraftComputeNode({
   root:computeRoot,
@@ -31,7 +37,7 @@ try{
     workloadClass:'systemia.people-layer.v1',
     capacityEndpoint:node.endpoint,
     allocatorToken:allocatorAuthority,
-    input:{state_root:stateRoot,admin_token_file:authorityFile},
+    input:{state_root:stateRoot,admin_token_file:authorityFile,mail_delivery_public_keys_file:mailPublicKeyFile},
     rollbackTarget:'proof:people-layer-previous',
     leaseTtlMs:120000,
   });
@@ -107,12 +113,26 @@ try{
   });
   assert.equal(prematureVerify.status,409);
 
+  const evidence={
+    challenge_key:challenge.challenge_key,
+    destination_hash:emailDestinationHash('owned-runtime@example.test'),
+    provider:'gmail_agent',
+    status:'sent',
+    message_ref:'gmail:compute-proof',
+  };
+  const evidence_signature=signMailDeliveryEvidence(evidence,mailKeys.privateKey);
+  const fraudulentDelivery=await fetch(
+    deployment.result.local_url+'/api/people/identity-challenges/'+encodeURIComponent(challenge.challenge_key)+'/delivery',
+    {method:'POST',headers:{authorization:'Bearer '+operatorAuthority,'content-type':'application/json'},body:JSON.stringify(evidence)}
+  );
+  assert.equal(fraudulentDelivery.status,400);
+
   const deliveryResponse=await fetch(
     deployment.result.local_url+'/api/people/identity-challenges/'+encodeURIComponent(challenge.challenge_key)+'/delivery',
     {
       method:'POST',
       headers:{authorization:'Bearer '+operatorAuthority,'content-type':'application/json'},
-      body:JSON.stringify({provider:'gmail_agent',status:'sent',message_ref:'gmail:compute-proof'}),
+      body:JSON.stringify({...evidence,evidence_signature}),
     }
   );
   assert.equal(deliveryResponse.status,201);
