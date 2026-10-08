@@ -142,7 +142,7 @@ export function buildCfbPowerStoryDraft({
         label:pollComparison.poll.poll_name + ' comparison baseline published ' + pollComparison.poll.published_date,
         publisher:pollComparison.poll.source_authority,
         url:pollComparison.poll.source_url,
-        evidence_state:'verified_comparison_only',
+        evidence_state:'verified',
       }]:[]),
     ],
     machine_evidence:{
@@ -185,7 +185,7 @@ export function buildCfbPowerStoryDraft({
       },
       ...(pollComparison&&pollComparison.largest_disagreements?.length?[{
         claim:'Evercraft and ' + pollComparison.poll.poll_name + ' differ by at least ' + pollComparison.largest_disagreements[0].absolute_gap + ' ranking positions on ' + pollComparison.largest_disagreements[0].team_name + ' in this frozen comparison.',
-        evidence_state:'verified_comparison_only',
+        evidence_state:'verified',
         source_refs:['evercraft-cfb-edition-evidence','cfb-poll-baseline-' + pollComparison.poll.poll_id],
       }]:[]),
     ],
