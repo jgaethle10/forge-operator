@@ -2,7 +2,7 @@
   "schema": "evercraft.chum.crawl-pressure.v1",
   "provider": "Evercraft LLC",
   "coordinator": "CHUM",
-  "updated_at": "2026-10-08T00:42:37.496Z",
+  "updated_at": "2026-10-08T00:51:58.140Z",
   "purpose": "Content-hash-backed freshness signals for public Evercraft discovery surfaces. A freshness signal requests attention; it does not prove indexing, ranking, recommendation, citation or provider pickup.",
   "indexnow": {
     "supported": true,
@@ -11,17 +11,68 @@
   },
   "latest_change_batch": [
     {
+      "path": "/chum/crawler-radar.json",
+      "last_changed": "2026-10-08T00:51:58.140Z",
+      "priority": 80
+    },
+    {
+      "path": "/chum/crawler-radar.txt",
+      "last_changed": "2026-10-08T00:51:58.140Z",
+      "priority": 80
+    },
+    {
       "path": "/chum/hot/index.json",
-      "last_changed": "2026-10-08T00:42:37.496Z",
+      "last_changed": "2026-10-08T00:51:58.140Z",
+      "priority": 80
+    },
+    {
+      "path": "/chum/strike/index.json",
+      "last_changed": "2026-10-08T00:51:58.140Z",
       "priority": 80
     }
   ],
   "recent_surfaces": [
     {
+      "path": "/chum/crawler-radar.json",
+      "url": "/chum/crawler-radar.json",
+      "last_changed": "2026-10-08T00:51:58.140Z",
+      "priority": 80
+    },
+    {
+      "path": "/chum/crawler-radar.txt",
+      "url": "/chum/crawler-radar.txt",
+      "last_changed": "2026-10-08T00:51:58.140Z",
+      "priority": 80
+    },
+    {
       "path": "/chum/hot/index.json",
       "url": "/chum/hot/index.json",
-      "last_changed": "2026-10-08T00:42:37.496Z",
+      "last_changed": "2026-10-08T00:51:58.140Z",
       "priority": 80
+    },
+    {
+      "path": "/chum/strike/index.json",
+      "url": "/chum/strike/index.json",
+      "last_changed": "2026-10-08T00:51:58.140Z",
+      "priority": 80
+    },
+    {
+      "path": "/.well-known/agent-card.json",
+      "url": "/.well-known/agent-card.json",
+      "last_changed": "2026-10-08T00:51:57.553Z",
+      "priority": 104
+    },
+    {
+      "path": "/.well-known/agent.json",
+      "url": "/.well-known/agent.json",
+      "last_changed": "2026-10-08T00:51:57.553Z",
+      "priority": 102
+    },
+    {
+      "path": "/openapi.json",
+      "url": "/openapi.json",
+      "last_changed": "2026-10-08T00:51:57.553Z",
+      "priority": 60
     },
     {
       "path": "/chum/products/systemia-university/ai-conformance.json",
@@ -76,24 +127,6 @@
       "url": "/feed.xml",
       "last_changed": "2026-10-08T00:32:26.614Z",
       "priority": 60
-    },
-    {
-      "path": "/chum/crawler-radar.json",
-      "url": "/chum/crawler-radar.json",
-      "last_changed": "2026-10-08T00:32:22.028Z",
-      "priority": 80
-    },
-    {
-      "path": "/chum/crawler-radar.txt",
-      "url": "/chum/crawler-radar.txt",
-      "last_changed": "2026-10-08T00:32:22.028Z",
-      "priority": 80
-    },
-    {
-      "path": "/chum/strike/index.json",
-      "url": "/chum/strike/index.json",
-      "last_changed": "2026-10-08T00:32:22.028Z",
-      "priority": 80
     },
     {
       "path": "/.well-known/evercraft-products.json",
@@ -1496,24 +1529,6 @@
     {
       "path": "/chum/answers/doors/reduce-truck-queue-time-at-the-excavator-f102b7e8fe.json",
       "url": "/chum/answers/doors/reduce-truck-queue-time-at-the-excavator-f102b7e8fe.json",
-      "last_changed": "2026-10-07T02:56:26.782Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/reduce-truck-queue-time-at-the-excavator-f102b7e8fe/",
-      "url": "/chum/answers/doors/reduce-truck-queue-time-at-the-excavator-f102b7e8fe/",
-      "last_changed": "2026-10-07T02:56:26.782Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/remote-supervised-hazardous-material-handling-3b81f4e5a5.json",
-      "url": "/chum/answers/doors/remote-supervised-hazardous-material-handling-3b81f4e5a5.json",
-      "last_changed": "2026-10-07T02:56:26.782Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/remote-supervised-hazardous-material-handling-3b81f4e5a5/",
-      "url": "/chum/answers/doors/remote-supervised-hazardous-material-handling-3b81f4e5a5/",
       "last_changed": "2026-10-07T02:56:26.782Z",
       "priority": 100
     }

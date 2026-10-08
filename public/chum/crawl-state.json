@@ -2,7 +2,7 @@
   "schema": "evercraft.chum.crawl-state.v1",
   "provider": "Evercraft LLC",
   "coordinator": "CHUM",
-  "updated_at": "2026-10-08T00:42:37.496Z",
+  "updated_at": "2026-10-08T00:51:58.140Z",
   "url_count": 2967,
   "doctrine": {
     "crawl_can_be_requested_not_forced": true,
@@ -141,8 +141,8 @@
     },
     "/chum/hot/index.json": {
       "path": "/chum/hot/index.json",
-      "content_sha256": "5a95c8dd9c82693b47b81eb0afd04c1dc0d318c1b9f21af1b93e01f7a394e351",
-      "last_changed": "2026-10-08T00:42:37.496Z",
+      "content_sha256": "9de7eb3cd54e132f4ad1e79d19247cdab442ca46fd92cc92f5e28030c1df2d26",
+      "last_changed": "2026-10-08T00:51:58.140Z",
       "priority": 80
     },
     "/chum/strike/": {
@@ -153,20 +153,20 @@
     },
     "/chum/strike/index.json": {
       "path": "/chum/strike/index.json",
-      "content_sha256": "60f47fbd5725c5d16a454ef093c94b64de7948b83f17e46d56b1c9d3e5d751be",
-      "last_changed": "2026-10-08T00:32:22.028Z",
+      "content_sha256": "842b375d75a7d369c0691b2b1370c5d11b71ca643e7b2785e5cd902b1d0707b9",
+      "last_changed": "2026-10-08T00:51:58.140Z",
       "priority": 80
     },
     "/chum/crawler-radar.json": {
       "path": "/chum/crawler-radar.json",
-      "content_sha256": "fba55d9c77bb63d0e044ee0fa5f4aca02700ac50fd840d62cf8eb3b63a1d5439",
-      "last_changed": "2026-10-08T00:32:22.028Z",
+      "content_sha256": "99cce7732342acb24f6b9678bf58cfd52438edafaf8b8fa0a95bda1e309a02a0",
+      "last_changed": "2026-10-08T00:51:58.140Z",
       "priority": 80
     },
     "/chum/crawler-radar.txt": {
       "path": "/chum/crawler-radar.txt",
-      "content_sha256": "85ff0e64887379a3e7dce6f9de8b11e5997355d53d1aebe0c4ca71908984b4af",
-      "last_changed": "2026-10-08T00:32:22.028Z",
+      "content_sha256": "6b7edb9d5df3e6af66d01cd109a48cd884bd1e73ed98796f09aa5c207c7ea9bb",
+      "last_changed": "2026-10-08T00:51:58.140Z",
       "priority": 80
     },
     "/chum/proof/": {
@@ -747,8 +747,8 @@
     },
     "/openapi.json": {
       "path": "/openapi.json",
-      "content_sha256": "b4175aa48442506225c79f706e3aec74ca355a90a35ff9d88a27f64e4b9ffbc9",
-      "last_changed": "2026-10-02T17:01:08.152Z",
+      "content_sha256": "365e5f9d4ee0c5cab0b7fa788e920dadee2b2c68ed1956205eb7563258e9d181",
+      "last_changed": "2026-10-08T00:51:57.553Z",
       "priority": 60
     },
     "/.well-known/evercraft-agent.json": {
@@ -759,14 +759,14 @@
     },
     "/.well-known/agent-card.json": {
       "path": "/.well-known/agent-card.json",
-      "content_sha256": "c29a7c6357484d349395aa2133199eb2c9a2e15ac2b3d5f232fade010addea4c",
-      "last_changed": "2026-10-06T18:02:46.847Z",
+      "content_sha256": "155d5fc892ee8831a4a66893ae15057dbcff4a9bde046d4a721b8e1d02f79aae",
+      "last_changed": "2026-10-08T00:51:57.553Z",
       "priority": 104
     },
     "/.well-known/agent.json": {
       "path": "/.well-known/agent.json",
-      "content_sha256": "c29a7c6357484d349395aa2133199eb2c9a2e15ac2b3d5f232fade010addea4c",
-      "last_changed": "2026-10-06T18:02:46.847Z",
+      "content_sha256": "155d5fc892ee8831a4a66893ae15057dbcff4a9bde046d4a721b8e1d02f79aae",
+      "last_changed": "2026-10-08T00:51:57.553Z",
       "priority": 102
     },
     "/.well-known/evercraft-agent-directory.json": {

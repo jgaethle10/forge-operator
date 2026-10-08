@@ -2,10 +2,16 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
 <id>urn:evercraft:chum:crawl-pressure</id>
 <title>Evercraft CHUM Freshness Feed</title>
-<updated>2026-10-08T00:42:37.496Z</updated>
+<updated>2026-10-08T00:51:58.140Z</updated>
 <link rel="self" href="/chum/freshness.xml"/>
 <subtitle>Content-hash-backed public discovery changes. Freshness is not proof of provider pickup.</subtitle>
-<entry><id>urn:evercraft:chum:0df896994e643d779039e059</id><title>/chum/hot/index.json</title><updated>2026-10-08T00:42:37.496Z</updated><link href="/chum/hot/index.json"/><category term="priority-80"/></entry>
+<entry><id>urn:evercraft:chum:d8bcbc9c28ec3e0aa29125ea</id><title>/chum/crawler-radar.json</title><updated>2026-10-08T00:51:58.140Z</updated><link href="/chum/crawler-radar.json"/><category term="priority-80"/></entry>
+<entry><id>urn:evercraft:chum:aa9b916fd98945db10fa3cab</id><title>/chum/crawler-radar.txt</title><updated>2026-10-08T00:51:58.140Z</updated><link href="/chum/crawler-radar.txt"/><category term="priority-80"/></entry>
+<entry><id>urn:evercraft:chum:0df896994e643d779039e059</id><title>/chum/hot/index.json</title><updated>2026-10-08T00:51:58.140Z</updated><link href="/chum/hot/index.json"/><category term="priority-80"/></entry>
+<entry><id>urn:evercraft:chum:494de3a9b5c21a35fdfdb6c2</id><title>/chum/strike/index.json</title><updated>2026-10-08T00:51:58.140Z</updated><link href="/chum/strike/index.json"/><category term="priority-80"/></entry>
+<entry><id>urn:evercraft:chum:e610b2719a363b9cd7a32d50</id><title>/.well-known/agent-card.json</title><updated>2026-10-08T00:51:57.553Z</updated><link href="/.well-known/agent-card.json"/><category term="priority-104"/></entry>
+<entry><id>urn:evercraft:chum:fc4ec54a9f72170ce6e9f4b5</id><title>/.well-known/agent.json</title><updated>2026-10-08T00:51:57.553Z</updated><link href="/.well-known/agent.json"/><category term="priority-102"/></entry>
+<entry><id>urn:evercraft:chum:a41941b8b4af1fefc5445fd3</id><title>/openapi.json</title><updated>2026-10-08T00:51:57.553Z</updated><link href="/openapi.json"/><category term="priority-60"/></entry>
 <entry><id>urn:evercraft:chum:1812acb915d73558df05abcc</id><title>/chum/products/systemia-university/ai-conformance.json</title><updated>2026-10-08T00:32:26.614Z</updated><link href="/chum/products/systemia-university/ai-conformance.json"/><category term="priority-94"/></entry>
 <entry><id>urn:evercraft:chum:4815001afe881c64aa6f6890</id><title>/chum/products/systemia-university/ai-discovery.json</title><updated>2026-10-08T00:32:26.614Z</updated><link href="/chum/products/systemia-university/ai-discovery.json"/><category term="priority-94"/></entry>
 <entry><id>urn:evercraft:chum:b87924764a5e9f1846bf8e30</id><title>/chum/products/systemia-university/llms.txt</title><updated>2026-10-08T00:32:26.614Z</updated><link href="/chum/products/systemia-university/llms.txt"/><category term="priority-94"/></entry>
@@ -15,9 +21,6 @@
 <entry><id>urn:evercraft:chum:77a704907d8dde87e8af9c4e</id><title>/chum/syndication/index.json</title><updated>2026-10-08T00:32:26.614Z</updated><link href="/chum/syndication/index.json"/><category term="priority-80"/></entry>
 <entry><id>urn:evercraft:chum:0e4843ab15ffbf513def063d</id><title>/feed.json</title><updated>2026-10-08T00:32:26.614Z</updated><link href="/feed.json"/><category term="priority-60"/></entry>
 <entry><id>urn:evercraft:chum:579b3d9153fd3efe838f0372</id><title>/feed.xml</title><updated>2026-10-08T00:32:26.614Z</updated><link href="/feed.xml"/><category term="priority-60"/></entry>
-<entry><id>urn:evercraft:chum:d8bcbc9c28ec3e0aa29125ea</id><title>/chum/crawler-radar.json</title><updated>2026-10-08T00:32:22.028Z</updated><link href="/chum/crawler-radar.json"/><category term="priority-80"/></entry>
-<entry><id>urn:evercraft:chum:aa9b916fd98945db10fa3cab</id><title>/chum/crawler-radar.txt</title><updated>2026-10-08T00:32:22.028Z</updated><link href="/chum/crawler-radar.txt"/><category term="priority-80"/></entry>
-<entry><id>urn:evercraft:chum:494de3a9b5c21a35fdfdb6c2</id><title>/chum/strike/index.json</title><updated>2026-10-08T00:32:22.028Z</updated><link href="/chum/strike/index.json"/><category term="priority-80"/></entry>
 <entry><id>urn:evercraft:chum:85b28624a8b31b9bd8767fd1</id><title>/.well-known/evercraft-products.json</title><updated>2026-10-08T00:32:21.404Z</updated><link href="/.well-known/evercraft-products.json"/><category term="priority-88"/></entry>
 <entry><id>urn:evercraft:chum:e75551f8817a367b4412bca9</id><title>/chum/proof/forensiscope.json</title><updated>2026-10-07T23:53:14.810Z</updated><link href="/chum/proof/forensiscope.json"/><category term="priority-80"/></entry>
 <entry><id>urn:evercraft:chum:07ef7bcf722a12057ed32ee4</id><title>/chum/proof/index.json</title><updated>2026-10-07T23:53:14.810Z</updated><link href="/chum/proof/index.json"/><category term="priority-80"/></entry>
@@ -102,7 +105,4 @@
 <entry><id>urn:evercraft:chum:29ff79ccb463b9420815069d</id><title>/chum/answers/doors/retest-an-ai-system-against-a-versioned-benchmark-over-time-7ecc8cbcfa/</title><updated>2026-10-07T16:33:22.074Z</updated><link href="/chum/answers/doors/retest-an-ai-system-against-a-versioned-benchmark-over-time-7ecc8cbcfa/"/><category term="priority-100"/></entry>
 <entry><id>urn:evercraft:chum:895d9ddb4787cbed59513fd4</id><title>/chum/answers/doors/run-an-agent-proving-mission-7414546325.json</title><updated>2026-10-07T16:33:22.074Z</updated><link href="/chum/answers/doors/run-an-agent-proving-mission-7414546325.json"/><category term="priority-100"/></entry>
 <entry><id>urn:evercraft:chum:74746f80dd5519f7feaf18c1</id><title>/chum/answers/doors/stress-test-a-workflow-before-changing-live-operations-c9f0d0dd77.json</title><updated>2026-10-07T16:33:22.074Z</updated><link href="/chum/answers/doors/stress-test-a-workflow-before-changing-live-operations-c9f0d0dd77.json"/><category term="priority-100"/></entry>
-<entry><id>urn:evercraft:chum:f505542961fbdde28b06a55c</id><title>/chum/answers/doors/submit-an-ai-system-for-an-external-lab-22b4c83255.json</title><updated>2026-10-07T16:33:22.074Z</updated><link href="/chum/answers/doors/submit-an-ai-system-for-an-external-lab-22b4c83255.json"/><category term="priority-100"/></entry>
-<entry><id>urn:evercraft:chum:69d6de8d1ff524c4f9168f01</id><title>/chum/answers/doors/test-an-ai-agent-with-a-bounded-mission-3b66172d9e.json</title><updated>2026-10-07T16:33:22.074Z</updated><link href="/chum/answers/doors/test-an-ai-agent-with-a-bounded-mission-3b66172d9e.json"/><category term="priority-100"/></entry>
-<entry><id>urn:evercraft:chum:bb05d42aea799ab2819bfbdf</id><title>/chum/answers/doors/turn-a-real-task-into-a-structured-proving-exercise-c21c4fb857.json</title><updated>2026-10-07T16:33:22.074Z</updated><link href="/chum/answers/doors/turn-a-real-task-into-a-structured-proving-exercise-c21c4fb857.json"/><category term="priority-100"/></entry>
 </feed>
