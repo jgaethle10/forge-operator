@@ -6,6 +6,8 @@ on:
       - 'scripts/fabric-external-discovery-probe.mjs'
       - '.github/workflows/fabric-external-discovery-probe.yml'
   workflow_dispatch:
+  schedule:
+    - cron: '23 */6 * * *'
 
 permissions:
   contents: read
