@@ -4,6 +4,7 @@ on:
     paths:
       - 'systemia/organism/first-offer-command.mjs'
       - 'systemia/organism/first-offer-command.test.mjs'
+      - 'systemia/organism/first-offer-lineage-proof.mjs'
       - 'systemia/organism/FIRST_OFFER_ONE_COMPANY.md'
       - '.github/workflows/systemia-one-company-offer1.yml'
   workflow_dispatch:
@@ -24,9 +25,15 @@ jobs:
         run: |
           node systemia/organism/first-offer-command.mjs > first-offer-command-status.json
           node -e "const p=require('./first-offer-command-status.json'); if(p.declared_revenue_cents!==0||p.declared_external_live||p.no_payment_or_fulfillment_authority!==true||p.systemia_admission.execution_authority_granted!==false) process.exit(1)"
+      - name: Prove native Lineage checkpoint, integrity and exact Git mirror artifact
+        run: |
+          node systemia/organism/first-offer-lineage-proof.mjs > first-offer-lineage-proof.json
+          node -e "const p=require('./first-offer-lineage-proof.json'); if(!p.integrity_ok||!p.git_artifact_byte_parity||p.production_deployed||p.durable_lineage_remote_persisted||p.payment_verified) process.exit(1)"
       - name: Retain source-only readiness, never present it as live order proof
         uses: actions/upload-artifact@v4
         with:
           name: systemia-one-company-offer1-readiness
-          path: first-offer-command-status.json
+          path: |
+            first-offer-command-status.json
+            first-offer-lineage-proof.json
           retention-days: 30
