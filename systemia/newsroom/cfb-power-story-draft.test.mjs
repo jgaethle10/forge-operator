@@ -140,6 +140,7 @@ test('surfaces receipt-backed movement and comparison-only poll disagreements',(
   assert.match(movement.body,/Alpha State up 2 to No\. 1/);
   assert.ok(poll);
   assert.match(poll.body,/not evidence that Evercraft or the poll is already correct/);
+  assert.match(poll.body,/published October 4, 2026/);
   assert.equal(story.machine_evidence.payload.poll_comparison.ranking_run_id,fixture.run_id);
   assert.equal(story.sources.some(source=>source.source_id==='cfb-poll-baseline-ap-top25'),true);
   assert.equal(story.claims.some(claim=>claim.evidence_state==='verified'&&claim.source_refs?.includes('cfb-poll-baseline-ap-top25')),true);
