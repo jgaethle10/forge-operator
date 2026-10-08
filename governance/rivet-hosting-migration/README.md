@@ -1,6 +1,6 @@
 # RIVET Hosting Migration Decision Package
 
-Status: planning only. No RIVET migration authority is granted by this package.
+Status: the original decision package remains the governance baseline. Non-destructive staging and migration execution is now authorized by `EXECUTION-DIRECTIVE-2026-10-08.md`; production DNS cutover, destructive Base44 retirement, and ownership changes remain governed separately.
 
 ## Purpose
 
@@ -44,7 +44,7 @@ Supporting planning artifacts:
 - `visual-baseline-plan.json` defines the partner-gated screenshot capture plan without inventing an approval tolerance.
 - `CUTOVER-RUNBOOK.md` remains dormant until explicit approval.
 
-The five lanes are:
+Current execution state is machine-readable in `execution-state.json`. The active staging lane is Evercraft-owned Fabric / Compute while production cutover authority remains governed.\n\nThe five originally evaluated lanes are:
 
 1. Evercraft-owned Fabric / Compute.
 2. Partner-owned DigitalOcean App Platform.
