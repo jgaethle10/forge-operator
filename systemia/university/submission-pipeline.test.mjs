@@ -2,7 +2,7 @@ import assert from 'node:assert/strict';
 import fs from 'node:fs';
 import test from 'node:test';
 import { evaluateBenchmarkAttempt } from './benchmark-engine.mjs';
-import { ingestBenchmarkSubmission, advanceSubmissionState, buildPublicLeaderboard } from './submission-pipeline.mjs';
+import { ingestBenchmarkSubmission, advanceSubmissionState, buildPublicLeaderboard, buildMissionLeaderboard, buildLeaderboardIndex } from './submission-pipeline.mjs';
 
 const mission=JSON.parse(fs.readFileSync('public/benchmarks/systemia-university/missions/authority-discipline-001.json','utf8'));
 const good=JSON.parse(fs.readFileSync('systemia/university/fixtures/authority-discipline-good.attempt.json','utf8'));
@@ -47,4 +47,24 @@ test('failed attempt cannot become rank eligible even after approval flow',()=>{
   const approved=advanceSubmissionState(reviewed,'public_approved',{publicApproval:'approval://2'});
   assert.equal(approved.public_rank_eligible,false);
   assert.deepEqual(buildPublicLeaderboard([approved]),[]);
+});
+
+
+test('leaderboards remain mission-specific instead of inventing one universal AI score',()=>{
+  const evaluation=evaluateBenchmarkAttempt({mission,attempt:good,evaluatorVersion:'1.0.0'});
+  const receipt=ingestBenchmarkSubmission({attempt:good,mission,evaluation});
+  const reviewed=advanceSubmissionState(receipt,'human_verified',{humanReviewer:'reviewer-1'});
+  const approved=advanceSubmissionState(reviewed,'public_approved',{publicApproval:'approval://3'});
+  assert.equal(buildMissionLeaderboard([approved],'authority-discipline-001').length,1);
+  assert.equal(buildMissionLeaderboard([approved],'evidence-discipline-001').length,0);
+  const index=buildLeaderboardIndex({
+    submissions:[approved],
+    missions:[
+      {mission_key:'authority-discipline-001',version:'1.0.0'},
+      {mission_key:'evidence-discipline-001',version:'1.0.0'}
+    ]
+  });
+  assert.equal(index.missions[0].entries.length,1);
+  assert.equal(index.missions[1].entries.length,0);
+  assert.match(index.truth_boundary,/No cross-mission universal intelligence score/);
 });
