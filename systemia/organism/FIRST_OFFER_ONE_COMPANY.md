@@ -22,6 +22,10 @@ The read-only Company Board emits `dependency_readiness` for every tracked evide
 
 **Important:** launch priority actions deliberately remain open when the launch-stage evidence is structurally valid. The action changes to `independently_recheck_receipt_at_authoritative_producer`, not to completed, because a caller-supplied string cannot prove the producing service agreed. `verification_queue` is a request to retrieve independently authenticated upstream facts, **not** an agent dispatch or authorization to publish, collect payments, contact customers, or deploy software. The `prerequisite_gates` lists cover tracked evidence dependencies; untracked research work is still governed by the Systemia mission graph.
 
+## CI visibility: green tests are not green commerce
+
+The Offer #1 Actions run exports `first-offer-release-status.json` and writes an explicit **Commercial release: HELD** job summary. This rollup consumes the separate Systemia read-only readiness, ephemeral Lineage proof, and external GET-only buyer page probe. Even a healthy-looking page is **not** verified checkout, payment, production release, fulfillment authority, or publishing permission. A failed public ingress probe is shown in the summary and machine-readable `next_gate` without pretending GitHub Actions has authority to repair Yard/Compute infrastructure.
+
 ## Owner routing and execution gates
 
 | Workstream | Responsible lane | Gate |
