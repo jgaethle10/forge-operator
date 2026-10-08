@@ -47,6 +47,22 @@ ForensiScope by Evercraft supports [recording comparisons](https://evercraft-for
 
 *Methods note: October 8, 2026. CBS source acquired through the public X post. FFmpeg 7.0.2 was used for the video decode and duplicate-screening exercise. Review sources: White House, Reuters, Roll Call, CBS News and Lead Stories.*
 
+## Update: multi-source video cross-check (October 8, 2026)
+
+A second news-publisher clip and a long-form event mirror were retrieved and hashed independently of the CBS-distributed file. The three sources are *different distributed encodings* and cannot be assumed to be the original camera-master files.
+
+| Source examined | Retrieved file duration | Video stream | SHA-256 of retrieved bytes |
+|---|---|---|---|
+| [CBS News October 7 post](https://x.com/CBSNews/status/2107901936263430283) | 00:50.24 | H.264, 1920 × 1080, 29.97 fps, with AAC stereo audio | `e6702b05af53eaef399ca1ac3b8ca8bc74daa1b2095801f8debdf62180dc274d` |
+| [Fox News October 7 event clip](https://www.foxnews.com/video/6406438327112) | 01:23.57 | H.264, 960 × 540, 30 fps, **downloaded video-only rendition** | `1641a3281db5d3790a96527c1a4ebe57ec2bb2e41c848c996d8cbdf9e909889e` |
+| [49-minute Trump TV / Gan Jing World event mirror](https://www.ganjingworld.com/video/1ita6v4780cI2aSSAfYLvMO7r1bh1c) | 49:49.29 | H.264, 640 × 360, 29.97 fps, **downloaded video-only rendition** | `f5e03e27b048e341a3d556ba36002c43ff88357f577363c75b48c218755af836` |
+
+**Visual concordance observations, not an automated tamper verdict:** A sampled CBS frame at 00:20 shows Susan Dell gesturing while Trump is seated. Sampled frames from the wide-angle 49-minute recording at approximately 16:00, 17:00, 17:30 and 18:00 show the same Oval Office arrangement, participants and period of her remarks from a different framing. The Fox extract at 00:20 and 00:40 depicts Trump speaking in the same setting but does **not** represent a synchronized frame pair with the sampled CBS speech. The two camera framings prevent straightforward pixel-wise equality testing. Their agreement supports that this general scene existed in documented independent coverage; it does not settle whether a *specific subsequently reposted clip* had speed, crop, color, or audio modifications.
+
+The long-form mirror is independently hosted but is not represented as first-party White House-source bytes. The verified White House publication remains [the October 7 event page](https://www.whitehouse.gov/videos/president-trump-makes-an-announcement-oct-7-2026/), which embeds the White House YouTube recording. Those embedded video bytes were not obtained in this run.
+
+**Evidence state:** source cross-check complete on accessible downloaded distributions; exact Patrick W. Cutler Facebook derivative not acquired; direct side-by-side frame/audio edit comparison to the exact repost remains outstanding. No deepfake, editing, or authenticity certification has been issued.
+
 ## Chain-of-custody limitations
 
 This document records a retrieved and hashed CBS-distributed MP4; the hash is a fingerprint of this retrieved representation, not of the camera master. The full White House video is currently referenced through its official public page, not locally acquired or hashed. The exact Facebook repost shown in the originating screenshot has not been retrieved, so no direct before-and-after comparison is possible. As a result, **no claim is made that the Facebook repost is manipulated or authentic.**
