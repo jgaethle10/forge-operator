@@ -234,7 +234,7 @@ def _verified_helper_relations(source: str) -> dict[str, tuple[str, ...]]:
     relations: dict[str, tuple[str, ...]] = {}
     for helper_name in sorted(LITERAL_HELPER_NAMES):
         pattern = re.compile(
-            rf"\\b(?:async\\s+)?function\\s+{re.escape(helper_name)}\\s*\\(([^)]*)\\)\\s*\\{{",
+            rf"\b(?:async\s+)?function\s+{re.escape(helper_name)}\s*\(([^)]*)\)\s*\{",
             re.MULTILINE,
         )
         match = pattern.search(source)
@@ -249,8 +249,8 @@ def _verified_helper_relations(source: str) -> dict[str, tuple[str, ...]]:
             continue
         body = source[match.end():close]
         access = re.compile(
-            rf"\\bsr\\s*\\.entities\\s*\\[\\s*{re.escape(entity_param)}\\s*\\]\\s*\\.\\s*"
-            rf"(filter|list|get|create|update|delete|bulkCreate|bulkUpdate)\\b"
+            rf"\bsr\s*\.entities\s*\[\s*{re.escape(entity_param)}\s*\]\s*\.\s*"
+            rf"(filter|list|get|create|update|delete|bulkCreate|bulkUpdate)\b"
         )
         methods = {item.group(1) for item in access.finditer(body)}
         helper_relations = []
@@ -275,7 +275,7 @@ def scan_verified_helper_calls(
     lines = source.splitlines()
     for helper_name, relations in helper_relations.items():
         call_pattern = re.compile(
-            rf"\\b{re.escape(helper_name)}\\s*\\(\\s*sr\\s*,\\s*['\"]([A-Za-z_$][A-Za-z0-9_$]*)['\"]"
+            rf"\b{re.escape(helper_name)}\s*\(\s*sr\s*,\s*['\"]([A-Za-z_$][A-Za-z0-9_$]*)['\"]"
         )
         for match in call_pattern.finditer(source):
             entity_name = match.group(1)
@@ -461,7 +461,7 @@ def scan_js_family(root: Path, path: Path, nodes: dict, edges: dict, coverage: l
 
 def _manifest_field_line(source: str, value: str) -> tuple[int, str]:
     lines = source.splitlines() or [source]
-    pattern = re.compile(rf'["\\']name["\\']\\s*:\\s*["\\']{re.escape(value)}["\\']')
+    pattern = re.compile(rf"""["']name["']\s*:\s*["']{re.escape(value)}["']""")
     for line_number, line in enumerate(lines, 1):
         if pattern.search(line):
             return line_number, line
