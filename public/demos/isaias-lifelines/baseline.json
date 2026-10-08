@@ -5,7 +5,7 @@
   "cyclone_id": "AL092026",
   "advisory_number": 8,
   "issued_at": "2026-10-08T15:00:00Z",
-  "source_url": "https://www.nhc.noaa.gov/text/refresh/MIATCPAT4+shtml/080854.shtml",
+  "source_url": "https://www.nhc.noaa.gov/mobile/text/refresh/MIATCPAT4%2Bhtml/081456.shtml",
   "advisory_values": {
     "position": {
       "latitude": 23.7,
@@ -34,5 +34,9 @@
     "https://www.nhc.noaa.gov/gis/",
     "https://gis.fema.gov/arcgis/rest/services/NSS/OpenShelters/FeatureServer",
     "https://dashboard.waterdata.usgs.gov/"
-  ]
+  ],
+  "nhc_advisory_identity": "AL092026/008",
+  "source_verification_note": "NHC mobile Advisory #8 directly indexed on October 8 2026; fetched original bytes have not been stored in baseline.json.",
+  "acquisition_adapter": "systemia/newsroom/isaias-agency-acquisition.mjs",
+  "live_feeds_acquired": false
 }
