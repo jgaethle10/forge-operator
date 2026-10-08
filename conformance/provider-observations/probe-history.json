@@ -1,26 +1,8 @@
 {
   "schema": "evercraft.chum.provider-probe-history.v1",
-  "updated_at": "2026-10-08T01:52:22.484Z",
+  "updated_at": "2026-10-08T02:50:54.238Z",
   "max_records": 500,
   "records": [
-    {
-      "receipt_key_sha256": "0b46529c6424a67d33d63838860fe0a7181403142e53183684b10c0606d6acd4",
-      "observed_at": "2026-10-06T10:16:56.810Z",
-      "provider": "generic_agent",
-      "provider_surface": "machine_client",
-      "product_key": "evercraft-containment",
-      "case_id": "containment-persistence-001",
-      "prompt_sha256": "5f41a44f8b04c7a0cf57615eee536960de0e3da25a3522fc6e43587b07ca7159",
-      "pickup_observed": false,
-      "provider_receipt_sha256": "e02ee073d751cd762c2e441c61f967332fabb698749bd2e1c1c9054b6aaf7d26",
-      "response_sha256": "821ea95ec5b080e1e59a8d2fa7a67863f4283667998f4fce308bdf7dc9421da8",
-      "source": "authorized_provider_probe",
-      "privacy": {
-        "full_provider_response_persisted": false,
-        "provider_session_reference_persisted": false,
-        "credentials_persisted": false
-      }
-    },
     {
       "receipt_key_sha256": "4ff3752a74599e7809139a4d761fc8bcb119709acf2c13461d81a14d93e46119",
       "observed_at": "2026-10-06T10:16:59.953Z",
@@ -8996,6 +8978,24 @@
       "pickup_observed": false,
       "provider_receipt_sha256": "e8fca5b9ecdd36e7688165925c6e09ac6256216a0255ed01c895ae46b9bbdd41",
       "response_sha256": "20d857231ec3487a7781c445b45f93a9afc5b7036bdc0b29b52e38264eda3195",
+      "source": "authorized_provider_probe",
+      "privacy": {
+        "full_provider_response_persisted": false,
+        "provider_session_reference_persisted": false,
+        "credentials_persisted": false
+      }
+    },
+    {
+      "receipt_key_sha256": "ef55c7c7476303b0ae1bbfc0683630d68a070f03b28463a1982bf3383a728436",
+      "observed_at": "2026-10-08T02:50:54.238Z",
+      "provider": "generic_agent",
+      "provider_surface": "machine_client",
+      "product_key": "systemia-remote-ops",
+      "case_id": "business-simulator-startup-001",
+      "prompt_sha256": "877db7140c325f80f8988dbcf36c6c10b4ef488b9306daf52be2f39e4e0ee67e",
+      "pickup_observed": false,
+      "provider_receipt_sha256": "d640d5b24d0acc813dd9a27cf6029fb40da91819af3254c8aff77dad10c53db5",
+      "response_sha256": "aa5e24aa4296fa981b9b13998b2dbf99fb870e89a5da39baa2601e6db27e52b5",
       "source": "authorized_provider_probe",
       "privacy": {
         "full_provider_response_persisted": false,
