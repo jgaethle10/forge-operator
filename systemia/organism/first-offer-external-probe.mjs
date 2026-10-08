@@ -1,6 +1,8 @@
 #!/usr/bin/env node
 // Independent, GET-only buyer-path proof. It never prepares checkout or charges.
 import { createHash } from 'node:crypto';
+import dns from 'node:dns/promises';
+import net from 'node:net';
 import fs from 'node:fs/promises';
 import { resolve } from 'node:path';
 import { pathToFileURL } from 'node:url';
@@ -10,7 +12,38 @@ const MAX_BYTES=150000;
 const EXPECTED_FORM='/api/offers/ibmi-74-deadline-xray/checkout';
 const hash=s=>'sha256:'+createHash('sha256').update(s).digest('hex');
 
-export async function inspectFirstOfferBuyerPage({request=fetch,now=new Date(),timeoutMs=12000}={}){
+// Public DNS / TCP diagnostics only. Never ask the host to run remote shell
+// commands or probe arbitrary user-supplied hosts.
+export async function inspectOfferIngressTransport({
+ hostname='fabric.systemiacommandcenters.com',lookup=dns.resolve4,connect=net.createConnection,
+}={}){
+ if(hostname!=='fabric.systemiacommandcenters.com')throw Error('host_not_allowlisted');
+ const state={dns:'unknown',ipv4_count:0,tcp_443:'not_tested'};
+ try{
+   const ips=await lookup(hostname);
+   state.ipv4_count=Array.isArray(ips)?ips.length:0;
+   state.dns=state.ipv4_count?'resolved':'no_ipv4';
+ }catch(e){
+   state.dns='error';
+   state.dns_error_code=String(e?.code||e?.name||'lookup_error').slice(0,50);
+   return state;
+ }
+ if(state.ipv4_count===0)return state;
+ state.tcp_443=await new Promise(resolve=>{
+   const sock=connect({host:hostname,port:443});
+   let done=false;
+   const finish=(code)=>{
+     if(done)return;
+     done=true;sock.destroy();resolve(code);
+   };
+   sock.setTimeout(4000,()=>finish('timeout'));
+   sock.once('connect',()=>finish('reachable'));
+   sock.once('error',e=>finish(String(e?.code||'connect_error').slice(0,50)));
+ });
+ return state;
+}
+
+export async function inspectFirstOfferBuyerPage({request=fetch,now=new Date(),timeoutMs=12000,diagnose=inspectOfferIngressTransport}={}){
  const checkedAt=new Date(now).toISOString();
  const result={
    schema:'evercraft.systemia.offer-one.external-buyer-probe.v1',
@@ -70,6 +103,12 @@ export async function inspectFirstOfferBuyerPage({request=fetch,now=new Date(),t
  }catch(error){
    result.reason='network_or_tls_unavailable';
    result.error_code=String(error?.code||error?.cause?.code||error?.name||'fetch_error').slice(0,100);
+   try{
+     result.ingress=await diagnose();
+     if(result.ingress?.dns==='error'||result.ingress?.dns==='no_ipv4')result.reason='public_dns_unresolved';
+     else if(result.ingress?.tcp_443!=='reachable')result.reason='public_tcp_443_unreachable';
+     else result.reason='http_or_tls_handshake_unavailable';
+   }catch{result.ingress={state:'diagnosis_unavailable'};}
    return result;
  }finally{clearTimeout(timer);}
 }
@@ -80,6 +119,7 @@ if(process.argv[1]&&import.meta.url===pathToFileURL(resolve(process.argv[1])).hr
  process.stdout.write(JSON.stringify({
    schema:result.schema,state:result.state,verified:result.verified,
    reason:result.reason,http_status:result.http_status,
+   ingress:result.ingress||null,error_code:result.error_code||null,
    checkout_verified:false,payment_verified:false,
  })+'\n');
  // Held is a truthful field result, not a CI failure. Strict mode is available
