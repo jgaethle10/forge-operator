@@ -32,6 +32,7 @@ import {
 } from './fabric-mobile-site.mjs';
 import { renderEarthWorksSimulator } from './earthworks-simulator-page.mjs';
 import { createFabricFaieSurface } from './fabric-faie-runtime.mjs';
+import { createRavenPhoneIngress } from '../autonomy/raven-phone-ingress.mjs';
 import { buildVisualStory, normalizeVisualStory } from '../visual-desk/factory.mjs';
 import { buildCommercialCampaign } from '../graphics-command/commercial-renderer.mjs';
 
@@ -379,6 +380,8 @@ export async function startFabricLocalRuntime({
   faieStateDir='',
   faieCollectorConfig=null,
   faieSurfaceEnabled=true,
+  ravenPhoneIngressSecret='',
+  ravenPhoneIngressDir='',
   visualStateDir='',
   visualOrigin='',
   visualIngestToken='',
@@ -552,6 +555,10 @@ export async function startFabricLocalRuntime({
   }
   const visualIngestReady=()=>resolvedVisualIngestToken.length>=32;
 
+  const phoneIngress=createRavenPhoneIngress({
+    secret:ravenPhoneIngressSecret||process.env.EVERCRAFT_COMMUNICATIONS_BRIDGE_SECRET||'',
+    stateDir:ravenPhoneIngressDir||process.env.EVERCRAFT_RAVEN_PHONE_STATE_DIR||'',
+  });
   const faieSurface=faieSurfaceEnabled
     ? createFabricFaieSurface({
         stateDir:faieStateDir||undefined,
@@ -635,6 +642,11 @@ export async function startFabricLocalRuntime({
     visual_desk_ingest_ready:visualIngestReady(),
     visual_desk_ingest_authority:'authenticated_materialization_only',
     visual_desk_ingest_publication_authority:false,
+    raven_phone_private_ingress_ready:phoneIngress.ready,
+    raven_phone_private_ingress_path:phoneIngress.path,
+    raven_phone_private_ingress_state:phoneIngress.state,
+    raven_phone_outbound_authority:false,
+    raven_phone_payment_authority:false,
     faie_native_surface:Boolean(faieSurface),
     faie_public_path:faieSurface?'/faie/':null,
     faie_public_api:faieSurface?'/api/faie':null,
@@ -665,6 +677,7 @@ export async function startFabricLocalRuntime({
       if (req.method==='GET' && req.url==='/health') {
         return sendJson(res,200,health());
       }
+      if (await phoneIngress.handle(req,res)) return;
 
       if (req.method==='GET' && String(req.url||'').startsWith('/checkout/handoff/')) {
         const parsed=new URL(String(req.url||''),'http://fabric.local');

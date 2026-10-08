@@ -1,0 +1,30 @@
+name: Systemia Demand Response Continuity
+on:
+  pull_request:
+    paths:
+      - 'systemia/autonomy/demand-response-continuity.mjs'
+      - 'systemia/autonomy/demand-response-continuity.test.mjs'
+      - 'systemia/autonomy/raven-phone-demand.mjs'
+      - 'systemia/autonomy/raven-phone-demand.test.mjs'
+      - 'systemia/autonomy/raven-phone-ingress.mjs'
+      - 'systemia/autonomy/raven-phone-ingress.test.mjs'
+      - 'systemia/autonomy/raven-twilio-readonly-inspect.mjs'
+      - 'systemia/autonomy/raven-twilio-readonly-inspect.test.mjs'
+      - 'systemia/autonomy/raven-phone-fabric-http.test.mjs'
+      - 'systemia/mcp/fabric-local-runtime.mjs'
+      - '.github/workflows/systemia-demand-response-continuity.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  contract:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Syntax
+        run: node --check systemia/autonomy/demand-response-continuity.mjs && node --check systemia/autonomy/raven-phone-demand.mjs && node --check systemia/autonomy/raven-phone-ingress.mjs && node --check systemia/autonomy/raven-twilio-readonly-inspect.mjs && node --check systemia/mcp/fabric-local-runtime.mjs
+      - name: Test no-lost-lead triage and financial safety
+        run: node --test systemia/autonomy/demand-response-continuity.test.mjs systemia/autonomy/raven-phone-demand.test.mjs systemia/autonomy/raven-phone-ingress.test.mjs systemia/autonomy/raven-phone-fabric-http.test.mjs systemia/autonomy/raven-twilio-readonly-inspect.test.mjs
