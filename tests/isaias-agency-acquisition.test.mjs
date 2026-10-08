@@ -27,12 +27,19 @@ test('bounded read-only acquisition preserves provenance and does not claim open
 });
 test('a redirected, forged, or error-bearing source fails closed',async()=>{
  await assert.rejects(acquireIsaiasReadOnly({fetchImpl:async(url)=>reply('https://example.com/redirect',url.startsWith('https://www.nhc')?nhcText:fema)}),/origin/);
- await assert.rejects(acquireIsaiasReadOnly({fetchImpl:async(url)=>reply(String(url),url.startsWith('https://www.nhc')?nhcText:JSON.stringify({error:{message:'blocked'}}))}),/fema_service_error/);
+ const held=await acquireIsaiasReadOnly({fetchImpl:async(url)=>reply(String(url),url.startsWith('https://www.nhc')?nhcText:JSON.stringify({error:{code:400,message:'blocked'}}))});
+ assert.equal(held.status,'nhc_verified_fema_held');
+ assert.equal(held.facilities,null);
+ assert.equal(held.source_receipts.length,1);
+ assert.equal(held.facility_error,'fema_service_error_400');
 });
 test('no fake shelter counts or duplicate provider record IDs',async()=>{
  const duplicated=JSON.stringify({type:'FeatureCollection',features:[
   {type:'Feature',properties:{shelter_id:123},geometry:{type:'Point',coordinates:[-88,30]}},
   {type:'Feature',properties:{shelter_id:123},geometry:{type:'Point',coordinates:[-87,31]}}
  ]});
- await assert.rejects(acquireIsaiasReadOnly({fetchImpl:async(url)=>reply(String(url),String(url).startsWith('https://www.nhc')?nhcText:duplicated)}),/duplicate/);
+ const held=await acquireIsaiasReadOnly({fetchImpl:async(url)=>reply(String(url),String(url).startsWith('https://www.nhc')?nhcText:duplicated)});
+ assert.equal(held.facilities,null);
+ assert.equal(held.status,'nhc_verified_fema_held');
+ assert.match(held.facility_error,/duplicate/);
 });
