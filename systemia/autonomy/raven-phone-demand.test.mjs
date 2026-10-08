@@ -70,13 +70,20 @@ test('invalid provenance and channel identity are rejected', () => {
   assert.throws(() => verifyRavenPhoneBridge(signed({ ...call, channel: 'sms' })), /bridge_channel_mismatch/);
   assert.throws(() => verifyRavenPhoneBridge(signed({ ...call, provider_event_ref: '' })), /missing_or_invalid_provider_reference/);
 });
-test('retries preserve event identity and distinct updates cannot collide', () => {
+test('a Twilio MessageSid is idempotent even if Raven recreates the local message on retry', () => {
   const a = plan(message);
-  const b = plan(message);
-  const c = plan({ ...message, idempotency_key: 'raven:PhoneMessage:rec-b:updated' });
+  const b = plan({ ...message, source_record_ref: 'rec-c', idempotency_key: 'raven:PhoneMessage:rec-c:received' });
+  const c = plan({ ...message, provider_event_ref: 'another-message-sid' });
   assert.equal(a.event_key, b.event_key);
+  assert.equal(a.conversation_key, b.conversation_key);
   assert.notEqual(a.event_key, c.event_key);
-  assert.equal(a.conversation_key, c.conversation_key);
+});
+
+test('distinct provider phases share a conversation but do not collide', () => {
+  const start = plan(call);
+  const status = plan({ ...call, event_type: 'call_status_changed', idempotency_key: 'raven:VoiceCall:rec-a:status' });
+  assert.notEqual(start.event_key, status.event_key);
+  assert.equal(start.conversation_key, status.conversation_key);
 });
 test('verified envelope is private and unverified objects are rejected', () => {
   assert.throws(() => planRavenPhoneDemand({ data: message }), /verified_bridge_envelope_required/);
