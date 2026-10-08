@@ -15,6 +15,11 @@ on:
       - "systemia/beast-mode/**"
       - "systemia/media-studio/**"
       - "package.json"
+      - "distribution/machine-commerce-distribution.json"
+      - "systemia/missions/**"
+      - "tests/chum-universal-mcp-truth.test.mjs"
+      - "tests/chum-commerce-door-status.test.mjs"
+      - "tests/systemia-ai-agent-distribution-mission.test.mjs"
       - ".github/workflows/systemia-control-plane.yml"
   push:
     branches:
@@ -32,6 +37,11 @@ on:
       - "systemia/beast-mode/**"
       - "systemia/media-studio/**"
       - "package.json"
+      - "distribution/machine-commerce-distribution.json"
+      - "systemia/missions/**"
+      - "tests/chum-universal-mcp-truth.test.mjs"
+      - "tests/chum-commerce-door-status.test.mjs"
+      - "tests/systemia-ai-agent-distribution-mission.test.mjs"
 
 permissions:
   contents: read
@@ -47,3 +57,5 @@ jobs:
           node-version: 22
       - run: npm run machine:status
       - run: npm run proof:control-plane
+      - name: Verify external-agent commerce truth and Systemia authority gates
+        run: node --test tests/chum-universal-mcp-truth.test.mjs tests/chum-commerce-door-status.test.mjs tests/systemia-ai-agent-distribution-mission.test.mjs
