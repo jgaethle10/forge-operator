@@ -11,7 +11,7 @@ function endpoint(x) {
   try {
     const u = new URL(x);
     return { host: u.protocol === 'https:' ? u.hostname : null,
-      path: u.protocol === 'https:' ? u.pathname : null,
+      path: u.protocol === 'https:' ? (/^\/functions\/(?:ravenVoiceInbound|ravenVoiceTurn|ravenVoiceStatus|secretaryInbound)$/.test(u.pathname) ? u.pathname : '[noncanonical_path_redacted]') : null,
       secure: u.protocol === 'https:', query_redacted: !!(u.search || u.hash || u.username || u.password) };
   } catch { return { host: null, path: null, secure: false, query_redacted: true }; }
 }
@@ -43,8 +43,8 @@ export async function inspectRavenTwilio({ env = process.env, transport = fetch 
       voice: endpoint(number.voice_url), voice_method: number.voice_method || null,
       status_callback: endpoint(number.status_callback),
       sms: endpoint(number.sms_url), sms_method: number.sms_method || null,
-      voice_capability: number.capabilities?.voice ?? null,
-      sms_capability: number.capabilities?.sms ?? null,
+      voice_capability: number.capabilities?.voice ?? number.capabilities?.Voice ?? null,
+      sms_capability: number.capabilities?.sms ?? number.capabilities?.SMS ?? null,
     } : null,
     calls: c.ok ? entries(c.data.calls || [], 'voice') : [],
     messages: m.ok ? entries(m.data.messages || [], 'sms') : [],
