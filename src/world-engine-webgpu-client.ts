@@ -76,6 +76,53 @@ export function validateWorldEngineWebGpuClientPayload(
   return true;
 }
 
+export interface GeometryDigestDelta {
+  added:string[];
+  changed:string[];
+  removed:string[];
+  unchanged:string[];
+}
+
+export function diffGeometryDigests(
+  current:Record<string,string>,
+  next:Record<string,string>,
+):GeometryDigestDelta{
+  const currentIds=new Set(Object.keys(current));
+  const nextIds=new Set(Object.keys(next));
+  const added:string[]=[];
+  const changed:string[]=[];
+  const removed:string[]=[];
+  const unchanged:string[]=[];
+
+  for(const id of [...nextIds].sort()){
+    if(!currentIds.has(id)) added.push(id);
+    else if(current[id]!==next[id]) changed.push(id);
+    else unchanged.push(id);
+  }
+  for(const id of [...currentIds].sort()){
+    if(!nextIds.has(id)) removed.push(id);
+  }
+  return {added,changed,removed,unchanged};
+}
+
+function validateGeometryDigests(
+  geometries:GeometryAsset[],
+  digests:Record<string,string>,
+){
+  const ids=new Set(geometries.map(geometry=>geometry.id));
+  for(const geometry of geometries){
+    const digest=digests[geometry.id];
+    if(typeof digest!=='string'||!/^[a-f0-9]{64}$/i.test(digest)){
+      throw new Error(`world_engine_webgpu_client_geometry_digest_invalid:${geometry.id}`);
+    }
+  }
+  for(const id of Object.keys(digests)){
+    if(!ids.has(id)){
+      throw new Error(`world_engine_webgpu_client_geometry_digest_orphan:${id}`);
+    }
+  }
+}
+
 function floats(values:number[]){
   return new Float32Array(values);
 }
@@ -144,6 +191,7 @@ interface CachedGeometry {
 export class WorldEngineWebGpuClient {
   private geometryCache=new Map<string,CachedGeometry>();
   private geometries=new Map<string,GeometryAsset>();
+  private geometryDigests:Record<string,string>={};
   private pipelineCache=new Map<string,any>();
   private objectUniforms=new Map<string,any>();
   private frameBuffer:any|null=null;
@@ -165,6 +213,7 @@ export class WorldEngineWebGpuClient {
     private readonly context:any,
     private readonly format:string,
     geometries:GeometryAsset[],
+    geometryDigests:Record<string,string>,
   ){
     this.shaderModule=device.createShaderModule({
       label:'Evercraft World Engine browser WGSL',
@@ -182,14 +231,18 @@ export class WorldEngineWebGpuClient {
     this.pipelineLayout=device.createPipelineLayout({
       bindGroupLayouts:[this.frameLayout,this.objectLayout],
     });
-    this.replaceGeometries(geometries);
+    this.syncGeometries(geometries,geometryDigests);
   }
 
   static isSupported(){
     return Boolean((globalThis as any).navigator?.gpu);
   }
 
-  static async create(canvas:HTMLCanvasElement,geometries:GeometryAsset[]){
+  static async create(
+    canvas:HTMLCanvasElement,
+    geometries:GeometryAsset[],
+    geometryDigests:Record<string,string>,
+  ){
     const nav=(globalThis as any).navigator;
     if(!nav?.gpu) throw new Error('world_engine_webgpu_client_unavailable');
     const adapter=await nav.gpu.requestAdapter();
@@ -199,10 +252,20 @@ export class WorldEngineWebGpuClient {
     if(!context) throw new Error('world_engine_webgpu_client_context_unavailable');
     const format=nav.gpu.getPreferredCanvasFormat();
     context.configure({device,format,alphaMode:'premultiplied'});
-    return new WorldEngineWebGpuClient(canvas,device,context,format,geometries);
+    return new WorldEngineWebGpuClient(
+      canvas,
+      device,
+      context,
+      format,
+      geometries,
+      geometryDigests,
+    );
   }
 
-  replaceGeometries(geometries:GeometryAsset[]){
+  syncGeometries(
+    geometries:GeometryAsset[],
+    geometryDigests:Record<string,string>,
+  ){
     const probePlan={
       schema:'evercraft.world-engine.webgpu-plan.v1',
       width:1,
@@ -210,16 +273,22 @@ export class WorldEngineWebGpuClient {
       draws:[],
     } as WebGpuRenderPlan;
     validateWorldEngineWebGpuClientPayload(probePlan,geometries);
+    validateGeometryDigests(geometries,geometryDigests);
 
-    for(const geometry of this.geometryCache.values()){
-      geometry.vertexBuffer?.destroy?.();
-      geometry.indexBuffer?.destroy?.();
+    const delta=diffGeometryDigests(this.geometryDigests,geometryDigests);
+    for(const id of [...delta.changed,...delta.removed]){
+      const cached=this.geometryCache.get(id);
+      cached?.vertexBuffer?.destroy?.();
+      cached?.indexBuffer?.destroy?.();
+      this.geometryCache.delete(id);
     }
-    this.geometryCache.clear();
+
     this.geometries.clear();
     for(const geometry of geometries){
       this.geometries.set(geometry.id,clone(geometry));
     }
+    this.geometryDigests={...geometryDigests};
+    return delta;
   }
 
   private ensureDepth(width:number,height:number){
@@ -446,6 +515,7 @@ export class WorldEngineWebGpuClient {
     this.lightBuffer?.destroy?.();
     this.depthTexture?.destroy?.();
     this.geometryCache.clear();
+    this.geometryDigests={};
     this.objectUniforms.clear();
     this.pipelineCache.clear();
   }
