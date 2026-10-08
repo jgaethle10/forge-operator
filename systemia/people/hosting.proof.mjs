@@ -2,7 +2,7 @@ import assert from 'node:assert/strict';
 import fs from 'node:fs';
 import os from 'node:os';
 import path from 'node:path';
-import { randomBytes } from 'node:crypto';
+import { randomBytes, generateKeyPairSync } from 'node:crypto';
 import { startEvercraftComputeNode } from '../compute/runtime-node.mjs';
 import { EvercraftHostingControlPlane, validateEvercraftServiceSpec } from '../compute/hosting-control-plane.mjs';
 import { YardOperator } from '../yard/operator.mjs';
@@ -14,16 +14,21 @@ const yardState=path.join(root,'yard');
 const hostingState=path.join(root,'hosting');
 const stateRoot=path.join(computeRoot,'people-state');
 const authorityFile=path.join(computeRoot,'people-authority');
+const mailPublicKeyFile=path.join(computeRoot,'people-mail-public-keys.json');
 const allocatorAuthority=randomBytes(32).toString('hex');
 const operatorAuthority=randomBytes(32).toString('hex');
 
 fs.mkdirSync(computeRoot,{recursive:true,mode:0o700});
 fs.writeFileSync(authorityFile,operatorAuthority+'\n',{mode:0o600});
+const mailKeys=generateKeyPairSync('ed25519');
+fs.writeFileSync(mailPublicKeyFile,JSON.stringify({gmail_agent:mailKeys.publicKey.export({type:'spki',format:'pem'})}),{mode:0o600});
 
 const oldState=process.env.PEOPLE_STATE_DIR;
 const oldAuthority=process.env.PEOPLE_ADMIN_TOKEN_FILE;
+const oldMailKeys=process.env.PEOPLE_MAIL_DELIVERY_PUBLIC_KEYS_FILE;
 process.env.PEOPLE_STATE_DIR=stateRoot;
 process.env.PEOPLE_ADMIN_TOKEN_FILE=authorityFile;
+process.env.PEOPLE_MAIL_DELIVERY_PUBLIC_KEYS_FILE=mailPublicKeyFile;
 
 const node=await startEvercraftComputeNode({
   root:computeRoot,
@@ -124,5 +129,6 @@ try{
   try{await node.close();}catch{}
   if(oldState===undefined)delete process.env.PEOPLE_STATE_DIR;else process.env.PEOPLE_STATE_DIR=oldState;
   if(oldAuthority===undefined)delete process.env.PEOPLE_ADMIN_TOKEN_FILE;else process.env.PEOPLE_ADMIN_TOKEN_FILE=oldAuthority;
+  if(oldMailKeys===undefined)delete process.env.PEOPLE_MAIL_DELIVERY_PUBLIC_KEYS_FILE;else process.env.PEOPLE_MAIL_DELIVERY_PUBLIC_KEYS_FILE=oldMailKeys;
   fs.rmSync(root,{recursive:true,force:true});
 }
