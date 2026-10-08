@@ -133,3 +133,22 @@ export function axisDragScaleValue(input:{
   const snapped=Math.round(raw/input.snapStep)*input.snapStep;
   return Number(Math.max(.01,snapped).toFixed(9));
 }
+
+export type WorldForgeViewportViewMode='orbit'|'camera';
+
+export function resolveWorldForgeViewportViewMode(input:{
+  requestedMode:WorldForgeViewportViewMode;
+  runtimeUnderlayActive:boolean;
+  hasActiveCamera:boolean;
+}){
+  if(input.runtimeUnderlayActive&&input.hasActiveCamera){
+    return {
+      mode:'camera' as const,
+      runtimeCameraLocked:true,
+    };
+  }
+  return {
+    mode:input.requestedMode,
+    runtimeCameraLocked:false,
+  };
+}
