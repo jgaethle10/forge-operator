@@ -163,3 +163,13 @@ test('missing, contradictory, or malformed historical source counts fail closed'
     assert.equal(result.state,'DEGRADED');
   }
 });
+
+test('empty historical inventory or zero probes is not VERIFIED',async()=>{
+  for(const watch of [
+    {...cycle.historical_watch,eligible_source_count:0,probed_source_count:0,estimated_full_sweep_hours:0},
+    {...cycle.historical_watch,probed_source_count:0}
+  ]){
+    const result=await invokeSessionRefresh({endpoint,machineKey:'fake-unit-test-key',fetchImpl:mock({...cycle,historical_watch:watch}),now:clocks()});
+    assert.equal(result.state,'DEGRADED');
+  }
+});
