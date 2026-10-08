@@ -373,9 +373,11 @@ test('Play WebGPU geometry digest lineage changes only when authored geometry ch
     project:before,
   });
   const first=session.webGpuFrame({width:640,height:360});
-  const heroGeometryId=Object.keys(first.geometryDigests).find(id=>id.includes('hero-core'));
-  assert.ok(heroGeometryId);
-  const firstHeroDigest=first.geometryDigests[heroGeometryId!];
+  const firstHeroDraw=first.plan.draws.find(draw=>draw.entityId==='wfnode:hero-core');
+  assert.ok(firstHeroDraw);
+  const firstHeroGeometryId=firstHeroDraw!.geometryId;
+  const firstHeroDigest=first.geometryDigests[firstHeroGeometryId];
+  assert.ok(firstHeroDigest);
 
   const mutation=applyWorldForgeOperations({
     project:before,
@@ -395,6 +397,11 @@ test('Play WebGPU geometry digest lineage changes only when authored geometry ch
     reason:'Geometry lineage proof',
   });
   const second=session.webGpuFrame({width:640,height:360});
-  assert.equal(Object.keys(second.geometryDigests).length,Object.keys(first.geometryDigests).length);
-  assert.notEqual(second.geometryDigests[heroGeometryId!],firstHeroDigest);
+  const secondHeroDraw=second.plan.draws.find(draw=>draw.entityId==='wfnode:hero-core');
+  assert.ok(secondHeroDraw);
+  const secondHeroGeometryId=secondHeroDraw!.geometryId;
+  assert.notEqual(secondHeroGeometryId,firstHeroGeometryId);
+  assert.equal(second.geometryDigests[firstHeroGeometryId],undefined);
+  assert.ok(second.geometryDigests[secondHeroGeometryId]);
+  assert.notEqual(second.geometryDigests[secondHeroGeometryId],firstHeroDigest);
 });
