@@ -54,6 +54,8 @@ test('Lineage commercial package has one consistent founding-pilot offer', async
 test('Lineage public commercial package does not claim unverified self-serve deployment', async () => {
   const offer = JSON.parse(await read('commercial/lineage-offer-2026-10-07.json'));
   const discovery = JSON.parse(await read('public/lineage/discovery.json'));
+  const products = JSON.parse(await read('public/.well-known/evercraft-products.json'));
+  const product = products.products.find((row) => row.product_key === 'lineage');
   const machine = JSON.parse(await read('public/.well-known/evercraft-machine-catalog.json'))
     .offers.find((row) => row.public_id === 'lineage-founding-pilot-v1');
   const page = await read('public/lineage/index.html');
