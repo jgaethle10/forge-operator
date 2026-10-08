@@ -71,7 +71,9 @@ function resultFromEvents(events, duplicate = false) {
     worker_receipt_digest: last.detail.worker_receipt_digest || null,
     lineage_transaction_id: last.detail.lineage_transaction_id || null,
     lineage_receipt_id: last.detail.lineage_receipt_id || null,
-    execution_performed: false,
+    worker_outcome_verified: ['worker_acknowledged', 'lineage_recorded', 'completed', 'evidence_pending', 'systemia_ack_pending'].includes(last.state),
+    systemia_outcome_acknowledged: last.state === 'completed',
+    external_delivery_verified: false,
   };
 }
 
