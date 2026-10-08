@@ -48,3 +48,5 @@ jobs:
         run: node --test systemia/organism/goal-provider-observation.test.mjs
       - name: Commit durable execution checkpoint before adapter callback
         run: node --test systemia/organism/goal-durable-dispatch.test.mjs
+      - name: Reject skipped dependencies and false goal success
+        run: node --test systemia/organism/goal-skipped-dependencies.test.mjs
