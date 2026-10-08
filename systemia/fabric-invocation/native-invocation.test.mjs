@@ -5,7 +5,7 @@ import path from 'node:path';
 import test from 'node:test';
 import { createHash } from 'node:crypto';
 import { LineageStore } from '../lineage/core.mjs';
-import { createGoalState, admitGoalPlan } from '../organism/goal-runtime.mjs';
+import { createGoalState, admitGoalPlan, startGoalWork, recordGoalOutcome } from '../organism/goal-runtime.mjs';
 import { FabricNativeInvocation } from './native-invocation.mjs';
 
 const sha = (value) => createHash('sha256').update(typeof value === 'string' ? value : JSON.stringify(value)).digest('hex');
@@ -28,6 +28,7 @@ function fixture() {
   let permitted = true;
   let dispatchCount = 0;
   let disposition = 'ok';
+  let ackUnavailable = false;
   const coordinator = new FabricNativeInvocation({
     stateDir, lineageRoot, timeoutMs: 20,
     missionLoader: async (key) => ({
@@ -56,6 +57,18 @@ function fixture() {
       worker_receipt.evidence_receipt_sha256 === sha({
         capability_key, payload: { url: 'https://example.org/' }, correlation_id,
       }),
+    missionOutcomeWriter: async ({ mission_key, work_key, correlation_id, lineage_receipt_id, worker_receipt_digest }) => {
+      if (ackUnavailable) throw new Error('systemia_outcome_writer_unavailable');
+      const started = startGoalWork({ state: goal, workKey: work_key });
+      goal = recordGoalOutcome({
+        state: started, workKey: work_key, result: 'complete',
+        receiptRef: lineage_receipt_id, evidenceRefs: [worker_receipt_digest],
+      });
+      return {
+        state: 'recorded', mission_key, work_key, correlation_id,
+        lineage_receipt_id, receipt_hash: proof('systemia:ack:' + correlation_id),
+      };
+    },
   });
   const input = {
     actor_ref: 'agent:browser-qa', tenant_key: 'tenant:evercraft',
@@ -68,6 +81,8 @@ function fixture() {
     dispatchCount: () => dispatchCount,
     deny: () => { permitted = false; },
     setWorker: (next) => { disposition = next; },
+    setAckUnavailable: (next) => { ackUnavailable = next; },
+    goalState: () => goal,
     close: () => fs.rmSync(root, { recursive: true, force: true }),
   };
 }
@@ -98,7 +113,8 @@ test('Systemia admission + delegated Passport authority + worker receipt -> nati
     assert.equal(f.dispatchCount(), 1);
     const journal = fs.readdirSync(f.stateDir).find((name) => name.endsWith('.jsonl'));
     const entries = fs.readFileSync(path.join(f.stateDir, journal), 'utf8');
-    assert.equal(entries.trim().split('\n').length, 4);
+    assert.equal(entries.trim().split('\n').length, 5);
+    assert.equal(f.goalState().tasks[0].status, 'complete');
     assert.equal(entries.includes('https://example.org'), false);
   } finally { f.close(); }
 });
@@ -187,5 +203,22 @@ test('interrupted dispatch is not retried automatically and lock contention fail
     const lock = file.replace(/\.jsonl$/, '.lock');
     fs.mkdirSync(lock);
     await assert.rejects(f.coordinator.invoke(f.input), /fabric_invocation_busy_or_interrupted/);
+  } finally { f.close(); }
+});
+
+
+test('Systemia outcome failure holds durable Lineage evidence without claiming mission completion', async () => {
+  const f = fixture();
+  try {
+    await new LineageStore(f.lineageRoot).init();
+    f.setAckUnavailable(true);
+    const result = await f.coordinator.invoke(f.input);
+    assert.equal(result.state, 'systemia_ack_pending');
+    assert.ok(result.lineage_receipt_id);
+    assert.notEqual(f.goalState().tasks[0].status, 'complete');
+    const duplicate = await f.coordinator.invoke(f.input);
+    assert.equal(duplicate.state, 'systemia_ack_pending');
+    assert.equal(duplicate.duplicate, true);
+    assert.equal(f.dispatchCount(), 1);
   } finally { f.close(); }
 });
