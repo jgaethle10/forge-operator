@@ -3,6 +3,8 @@ import assert from 'node:assert/strict';
 import fs from 'node:fs';
 import os from 'node:os';
 import path from 'node:path';
+import { generateKeyPairSync } from 'node:crypto';
+import { emailDestinationHash, signMailDeliveryEvidence } from '../systemia/people/mail-delivery.mjs';
 import { createPeopleRuntime } from '../systemia/people/runtime.mjs';
 
 function tempDir() {
@@ -11,7 +13,13 @@ function tempDir() {
 
 test('owned People Layer completes person-sovereign lifecycle without Base44', () => {
   const runtimeStateDir = tempDir();
-  const runtime = createPeopleRuntime({ stateDir: runtimeStateDir });
+  const keys = generateKeyPairSync('ed25519');
+  const runtime = createPeopleRuntime({
+    stateDir: runtimeStateDir,
+    trustedMailDeliveryPublicKeys: {
+      gmail_agent: keys.publicKey.export({type:'spki',format:'pem'}),
+    },
+  });
 
   const health = runtime.health();
   assert.equal(health.ok, true);
@@ -153,12 +161,35 @@ test('owned People Layer completes person-sovereign lifecycle without Base44', (
     /trusted_email_delivery_required/
   );
 
-  const trustedDelivery = runtime.recordEmailDelivery(challenge.challenge_key, {
+  const mailEvidence = {
+    challenge_key: challenge.challenge_key,
+    destination_hash: emailDestinationHash('synthetic@example.test'),
     provider: 'gmail_agent',
     status: 'sent',
     message_ref: 'gmail:proof-message',
+  };
+  assert.throws(
+    () => runtime.recordEmailDelivery(challenge.challenge_key, mailEvidence),
+    /trusted_mail_attestation_required/
+  );
+  const evidence_signature = signMailDeliveryEvidence(mailEvidence, keys.privateKey);
+  assert.throws(
+    () => runtime.recordEmailDelivery(challenge.challenge_key, {...mailEvidence,message_ref:'gmail:forged',evidence_signature}),
+    /trusted_mail_attestation_required/
+  );
+  assert.throws(
+    () => runtime.recordEmailDelivery(challenge.challenge_key, {...mailEvidence,destination_hash:emailDestinationHash('wrong@example.test'),evidence_signature}),
+    /mail_delivery_destination_mismatch/
+  );
+  const trustedDelivery = runtime.recordEmailDelivery(challenge.challenge_key, {
+    ...mailEvidence,evidence_signature,
   });
+  assert.throws(
+    () => runtime.recordEmailDelivery(challenge.challenge_key, {...mailEvidence,evidence_signature}),
+    /trusted_mail_delivery_already_recorded/
+  );
   assert.equal(trustedDelivery.trusted_mailbox_delivery, true);
+  assert.equal(trustedDelivery.attestation_verified, true);
   assert.equal('destination_hash' in trustedDelivery, true);
   assert.equal('email' in trustedDelivery, false);
 
