@@ -100,10 +100,12 @@ function summarize(tasks) {
 
 function deriveGoalStatus(tasks) {
   if (tasks.length === 0) return 'planning';
-  if (tasks.every((task) => TERMINAL.has(task.status))) return 'complete';
+  // Skipped work may terminate its own attempt, not certify mission success.
+  if (tasks.every((task) => task.status === 'complete')) return 'complete';
   if (tasks.some((task) => task.status === 'executing')) return 'executing';
   if (tasks.some((task) => task.status === 'blocked')) return 'blocked';
   if (tasks.some((task) => task.human_gate_unresolved && task.status !== 'complete')) return 'waiting';
+  if (tasks.some((task) => task.status === 'skipped')) return 'blocked';
   return 'ready';
 }
 
@@ -273,9 +275,10 @@ export function recordGoalOutcome({ state, workKey, expectedAttempt, result, rec
 export function refreshGoal(state, now = new Date()) {
   assertGoalState(state);
   const next = clone(state);
-  const terminal = new Set(next.tasks.filter((task) => TERMINAL.has(task.status)).map((task) => task.work_key));
+  const completed = new Set(next.tasks.filter((task) => task.status === 'complete').map((task) => task.work_key));
+  const skipped = new Set(next.tasks.filter((task) => task.status === 'skipped').map((task) => task.work_key));
   const ready = [];
-  const blockers = [];
+  const blockers = [...[...skipped].map(key => `Skipped work ${key} cannot establish mission success.`)];
   for (const task of next.tasks) {
     if (TERMINAL.has(task.status) || task.status === 'executing') continue;
     if (task.status === 'blocked') {
@@ -286,7 +289,11 @@ export function refreshGoal(state, now = new Date()) {
       blockers.push(`Human gate unresolved for ${task.work_key}.`);
       continue;
     }
-    if (task.dependency_keys.every((dep) => terminal.has(dep))) ready.push(task.work_key);
+    if (task.dependency_keys.some((dep) => skipped.has(dep))) {
+      blockers.push(`Skipped prerequisite prevents ${task.work_key}: ${task.dependency_keys.filter(dep => skipped.has(dep)).join(', ')}.`);
+      continue;
+    }
+    if (task.dependency_keys.every((dep) => completed.has(dep))) ready.push(task.work_key);
   }
   next.next_work_keys = uniqueStrings(ready);
   next.blockers = uniqueStrings(blockers);
