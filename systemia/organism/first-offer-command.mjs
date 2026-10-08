@@ -135,6 +135,47 @@ export function firstOfferReadiness({evidence={},now=new Date()}={}){
   const holds=rows.filter(x=>x.state!=='source_asserted_requires_authoritative_recheck');
   const launchGates=['specialist','lineage','public_page','commerce'];
   const launchEvidenceSubmitted=launchGates.every(k=>byKey[k].state==='source_asserted_requires_authoritative_recheck');
+  // Work dependencies are authority boundaries, not just scheduling hints.
+  // This reader cannot promote submitted assertions to authenticated receipts.
+  const knownGateKeys=new Set(GATES.map(g=>g.key));
+  const gateDependencies=Object.fromEntries(WORK.filter(w=>knownGateKeys.has(w.key)).map(w=>[
+    w.key,w.depends.filter(key=>knownGateKeys.has(key))
+  ]));
+  const dependencyReadiness=rows.map(row=>{
+    const prerequisite_gates=gateDependencies[row.key]||[];
+    const missing_or_held_prerequisites=prerequisite_gates.filter(key=>
+      byKey[key].state!=='source_asserted_requires_authoritative_recheck');
+    const unverified_prerequisites=prerequisite_gates.filter(key=>
+      byKey[key].state==='source_asserted_requires_authoritative_recheck');
+    const stage_state=row.state!=='source_asserted_requires_authoritative_recheck'
+      ? 'evidence_blocked'
+      : missing_or_held_prerequisites.length
+        ? 'upstream_evidence_blocked'
+        : unverified_prerequisites.length
+          ? 'upstream_authentication_required'
+          : 'self_authentication_required';
+    return {
+      gate:row.key,claim_state:row.state,prerequisite_gates,
+      missing_or_held_prerequisites,unverified_prerequisites,
+      stage_state,execution_authorized:false,
+    };
+  });
+  const verificationQueue=rows.filter(row=>row.state==='source_asserted_requires_authoritative_recheck')
+    .map(row=>({
+      gate:row.key,producer:row.upstream_producer,receipt_ref:row.receipt_ref,
+      priority:launchGates.includes(row.key)?'launch':'downstream',
+      action:'independently_recheck_receipt_at_authoritative_producer',
+      independently_authenticated:false,execution_authority_granted:false,
+    }));
+  const priorityNextActions=launchGates.map(key=>({
+    gate:key,
+    action:byKey[key].state==='source_asserted_requires_authoritative_recheck'
+      ? 'independently_recheck_receipt_at_authoritative_producer'
+      : 'acquire_fresh_authoritative_receipt_and_verify_at_source',
+    missing:byKey[key].reasons,
+    prerequisite_gates:gateDependencies[key]||[],
+    execution_authority_granted:false,
+  }));
   return {
     schema:'evercraft.systemia.offer-one-readiness.v1',
     mission_key:OFFER_ONE.mission_key,
@@ -152,10 +193,9 @@ export function firstOfferReadiness({evidence={},now=new Date()}={}){
     required_gates:rows,
     held_count:holds.length,
     held_gates:holds.map(x=>({key:x.key,reasons:x.reasons})),
-    priority_next_actions:launchGates.filter(k=>byKey[k].state!=='source_asserted_requires_authoritative_recheck').map(k=>({
-      gate:k,action:'acquire_fresh_authoritative_receipt_and_verify_at_source',
-      missing:byKey[k].reasons
-    })),
+    dependency_readiness:dependencyReadiness,
+    verification_queue:verificationQueue,
+    priority_next_actions:priorityNextActions,
     operational_dependencies:WORK.map(w=>({work_key:w.key,team:w.team,depends_on:w.depends})),
   };
 }
