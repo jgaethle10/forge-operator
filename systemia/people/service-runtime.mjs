@@ -72,6 +72,7 @@ function publicPath(url){
 export async function startPeopleLayerRuntime({
   stateDir,
   adminTokenFile,
+  mailDeliveryPublicKeysFile,
   host='127.0.0.1',
   port=0,
 }={}){
@@ -79,8 +80,22 @@ export async function startPeopleLayerRuntime({
   if(!adminTokenFile)throw new Error('people_admin_token_file_required');
 
   const adminToken=requireSecureTokenFile(adminTokenFile);
+  // An operator API credential is never an email-provider attestation credential.
+  // The private signing keys must remain with external trusted mail adapters.
+  let trustedMailDeliveryPublicKeys={};
+  if(mailDeliveryPublicKeysFile){
+    const resolved=path.resolve(mailDeliveryPublicKeysFile);
+    if(!fs.existsSync(resolved)||!fs.statSync(resolved).isFile())throw new Error('people_mail_public_keys_file_missing');
+    if((fs.statSync(resolved).mode&0o077)!==0)throw new Error('people_mail_public_keys_file_permissions_too_open');
+    const parsed=JSON.parse(fs.readFileSync(resolved,'utf8'));
+    if(!parsed||typeof parsed!=='object'||Array.isArray(parsed))throw new Error('people_mail_public_keys_invalid');
+    trustedMailDeliveryPublicKeys={
+      gmail_agent:typeof parsed.gmail_agent==='string'?parsed.gmail_agent:'',
+      resend_agent:typeof parsed.resend_agent==='string'?parsed.resend_agent:'',
+    };
+  }
   const instanceId='people_'+randomUUID();
-  const runtime=createPeopleRuntime({stateDir:path.resolve(stateDir)});
+  const runtime=createPeopleRuntime({stateDir:path.resolve(stateDir),trustedMailDeliveryPublicKeys});
   const htmlFile=path.join(WEB_ROOT,'index.html');
   const cssFile=path.join(WEB_ROOT,'style.css');
   const jsFile=path.join(WEB_ROOT,'app.js');
@@ -103,6 +118,7 @@ export async function startPeopleLayerRuntime({
           operator_auth:'private_token_file',
           public_person_token_flows:true,
           base44_runtime_dependency:false,
+          trusted_mail_delivery_configured:Object.values(trustedMailDeliveryPublicKeys).some(Boolean),
         });
       }
 
