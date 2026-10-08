@@ -16,6 +16,12 @@ node --test systemia/organism/first-offer-command.test.mjs
 
 An authenticated internal operator may supply an evidence file with bounded keys such as `specialist`, `lineage`, `public_page`, `commerce`, `buyer`, `settlement`, `delivery` and `economics`. Each record requires `producer`, `observed_at`, `receipt_ref`, and stage-specific evidence. No customer secrets, names, contact details or raw receipts belong in public CI artifacts or this repository. The reader **cannot authenticate a caller's assertion**. Even contract-shaped records remain `source_asserted_requires_authoritative_recheck`, never conclusive commercial truth.
 
+## Dependency-aware readiness and verification frontier
+
+The read-only Company Board emits `dependency_readiness` for every tracked evidence gate, `verification_queue` for submitted source claims, and `priority_next_actions` for every launch gate. A contract-shaped claim is never authority: upstream missing/held gates produce `upstream_evidence_blocked`; source-asserted but unauthenticated prerequisites produce `upstream_authentication_required`. A downstream delivery assertion with absent QA remains blocked, even if its own fields look complete. The system never labels this offline reconciliation as live execution.
+
+**Important:** launch priority actions deliberately remain open when the launch-stage evidence is structurally valid. The action changes to `independently_recheck_receipt_at_authoritative_producer`, not to completed, because a caller-supplied string cannot prove the producing service agreed. `verification_queue` is a request to retrieve independently authenticated upstream facts, **not** an agent dispatch or authorization to publish, collect payments, contact customers, or deploy software. The `prerequisite_gates` lists cover tracked evidence dependencies; untracked research work is still governed by the Systemia mission graph.
+
 ## Owner routing and execution gates
 
 | Workstream | Responsible lane | Gate |
