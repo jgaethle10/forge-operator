@@ -20,6 +20,7 @@ on:
       - "tests/chum-universal-mcp-truth.test.mjs"
       - "tests/chum-commerce-door-status.test.mjs"
       - "tests/systemia-ai-agent-distribution-mission.test.mjs"
+      - "scripts/chum-owned-fabric-readonly-canary.mjs"
       - ".github/workflows/systemia-control-plane.yml"
   push:
     branches:
@@ -42,6 +43,7 @@ on:
       - "tests/chum-universal-mcp-truth.test.mjs"
       - "tests/chum-commerce-door-status.test.mjs"
       - "tests/systemia-ai-agent-distribution-mission.test.mjs"
+      - "scripts/chum-owned-fabric-readonly-canary.mjs"
 
 permissions:
   contents: read
@@ -59,3 +61,16 @@ jobs:
       - run: npm run proof:control-plane
       - name: Verify external-agent commerce truth and Systemia authority gates
         run: node --test tests/chum-universal-mcp-truth.test.mjs tests/chum-commerce-door-status.test.mjs tests/systemia-ai-agent-distribution-mission.test.mjs
+
+      - name: Externally probe owned Fabric read-only MCP without commerce or private data
+        id: fabric_public_readonly_probe
+        continue-on-error: true
+        run: node scripts/chum-owned-fabric-readonly-canary.mjs
+
+      - name: Upload independently observed read-only MCP receipt
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: owned-fabric-readonly-mcp-receipt
+          path: artifacts/chum/owned-fabric-readonly-mcp-canary.json
+          if-no-files-found: warn
