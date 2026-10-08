@@ -52,3 +52,5 @@ jobs:
         run: node --test systemia/organism/capability-volatile-dispatch.test.mjs
       - name: Reject skipped dependencies and false goal success
         run: node --test systemia/organism/goal-skipped-dependencies.test.mjs
+      - name: Preserve heartbeat monotonicity when durable adapters finish
+        run: node --test systemia/organism/goal-durable-clock.test.mjs

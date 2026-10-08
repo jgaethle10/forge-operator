@@ -108,12 +108,28 @@ export async function executePersistedGoalWork({
  // A provider's self-reported complete, skipped, retry, or exception is NOT
  // an independently checked external outcome. Only demonstrably scoped
  // read-only work may complete from its local adapter receipt.
- const finished=await mutateGoalState(filePath,state=>localReadonlyComplete
-  ? recordGoalOutcome({state,workKey:workName,expectedAttempt:attempt,
-     result:'complete',receiptRef,evidenceRefs,now})
-  : quarantineUncertainOutcome({state,workKey:workName,
-     expectedAttempt:attempt,sourceResult:resultCode,now})
- );
+ // An adapter can run longer than one heartbeat. Never reuse the dispatch
+ // clock when committing the postflight result: it could rewind updated_at,
+ // causing a still-live attempt to be misclassified as abandoned.
+ const returnedAt=Date.now();
+ const dispatchAt=new Date(now).getTime();
+ const outcomeAt=Math.max(returnedAt,dispatchAt);
+ const finished=await mutateGoalState(filePath,state=>{
+  const current=state.tasks.find(t=>t.work_key===workName);
+  if(!current||current.status!=='executing'||current.recovery_hold||
+     current.attempt!==attempt||current.attempt_key!==liveWork.attempt_key){
+   throw Error('attempt changed: refuse stale adapter outcome');
+  }
+  const lastAt=Date.parse(current.updated_at);
+  if(!Number.isFinite(lastAt))throw Error('invalid persisted task heartbeat timestamp');
+  // Guard clock adjustments and heartbeats that landed during the callback.
+  const recordedAt=new Date(Math.max(outcomeAt,lastAt));
+  return localReadonlyComplete
+   ? recordGoalOutcome({state,workKey:workName,expectedAttempt:attempt,
+      result:'complete',receiptRef,evidenceRefs,now:recordedAt})
+   : quarantineUncertainOutcome({state,workKey:workName,
+      expectedAttempt:attempt,sourceResult:resultCode,now:recordedAt});
+ });
  return {
   schema:'evercraft.goal.durable-dispatch-receipt.v1',
   mission_key:finished.state.mission_key,goal_key:finished.state.goal_key,
@@ -123,6 +139,7 @@ export async function executePersistedGoalWork({
   execution_checkpoint_persisted:true,
   start_storage_revision:started.receipt.revision,
   end_storage_revision:finished.receipt.revision,
+  outcome_recorded_at:finished.state.tasks.find(t=>t.work_key===workName).updated_at,
   executed:true,ok:localReadonlyComplete,
   state:goalSnapshot(finished.state),
   result:localReadonlyComplete?'local_readonly_completed':'provider_reconciliation_required',
