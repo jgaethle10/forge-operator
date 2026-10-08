@@ -141,9 +141,11 @@ async function main(){
   const baselineDir=clean(process.argv[3])||'systemia/newsroom/baselines';
   const output=clean(process.argv[4])||'public/journal/data/cfb-power-rankings-poll-comparison.json';
   const evidence=readJson(rankingEvidencePath);
-  const ranking=evidence?.ranking;
-  if(evidence?.schema!=='evercraft.cfb.edition-evidence.v1'||ranking?.schema!=='evercraft.cfb-power-rankings.v1'){
-    throw new Error('cfb_poll_comparison_edition_evidence_invalid');
+  const ranking=evidence?.schema==='evercraft.cfb-power-rankings.v1'
+    ? evidence
+    : evidence?.ranking;
+  if(ranking?.schema!=='evercraft.cfb-power-rankings.v1'){
+    throw new Error('cfb_poll_comparison_ranking_input_invalid');
   }
   const selected=latestPollBaseline({baselineDir,pollId:'ap-top25',at:ranking.generated_at||ranking.evidence_through_at});
   if(!selected) throw new Error('cfb_poll_comparison_no_baseline_available');
