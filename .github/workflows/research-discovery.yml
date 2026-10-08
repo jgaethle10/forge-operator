@@ -4,6 +4,7 @@ on:
   pull_request:
     paths:
       - 'public/research/**'
+      - 'scripts/probe-research-discovery-edge.mjs'
       - 'systemia/chum/public-origin-runtime.mjs'
       - 'tests/chum-public-origin-runtime.test.mjs'
       - 'tests/chum-research-atlas.test.mjs'
@@ -13,6 +14,7 @@ on:
     branches: [main]
     paths:
       - 'public/research/**'
+      - 'scripts/probe-research-discovery-edge.mjs'
       - 'systemia/chum/public-origin-runtime.mjs'
       - 'tests/chum-public-origin-runtime.test.mjs'
       - 'tests/chum-research-atlas.test.mjs'
@@ -33,3 +35,13 @@ jobs:
           node-version: '22'
       - name: Validate absolute public sitemaps and research draft safety
         run: npm run test:chum-public-origin
+      - name: Probe public Fabric edge and record external release state
+        if: always()
+        run: node scripts/probe-research-discovery-edge.mjs
+      - name: Retain external public-edge receipt
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: research-discovery-edge-receipt
+          path: artifacts/chum/research-edge-probe.json
+          if-no-files-found: warn
