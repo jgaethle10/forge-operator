@@ -33,5 +33,14 @@ jobs:
           node-version: '22'
       - name: Test actual Fabric router for read-only sitemap and CHUM discovery
         run: node --test tests/fabric-research-discovery-mount.test.mjs
+
+  journal-release-safety:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
       - name: Fail closed if owned updater threatens Journal evidence
         run: node --test tests/fabric-chum-release-safety.test.mjs
