@@ -263,6 +263,11 @@ export class ChumPublicOriginRuntime {
         }
 
         discoveryHeaders(res);
+        // Editorial research previews remain out of search indexes until explicitly reviewed.
+        // Match the HTML meta robots directive at the HTTP response boundary as well.
+        if (pathname === '/research' || pathname.startsWith('/research/')) {
+          res.setHeader('X-Robots-Tag', 'noindex, follow');
+        }
 
         if (pathname === '/api/health') {
           const data = Buffer.from(JSON.stringify(this.health()));
