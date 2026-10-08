@@ -17,11 +17,12 @@ test('deployment doctor is held without required configuration and does not expo
   assert.equal(d.state,'HELD');
   assert.equal(d.ready_for_live_canary,false);
   assert.equal(JSON.stringify(d).includes('not-shown'),false);
-  assert.deepEqual(d.gaps,['refresh_endpoint_invalid_or_missing','resident_not_enabled']);
+  assert.deepEqual(d.gaps,['trusted_refresh_origin_not_pinned','refresh_endpoint_invalid_or_untrusted','resident_not_enabled']);
 });
 test('configured is not a claim of an authorized invocation or deployment',()=>{
   const d=freshnessDeploymentPreflight({
     endpoint:'https://api.example.org/api/apps/test/functions/refreshSessionFreshness',
+    trustedOrigin:'https://api.example.org',
     machineKey:'test-only-secret',ledgerPath:'/var/lib/evercraft/rivet/receipts.jsonl',
     slotStateDir:'/var/lib/evercraft/rivet/slots',enabled:true
   });
@@ -103,4 +104,17 @@ test('complete JSON without trailing newline is a torn append and cannot verify'
     assert.equal(h.ok,false);
     assert(h.issues.includes('receipt_ledger_invalid_or_unreadable'));
   }finally{fs.rmSync(dir,{recursive:true,force:true})}
+});
+
+test('deployment doctor refuses valid-looking refresh endpoint without independent origin pin',()=>{
+  const d=freshnessDeploymentPreflight({
+    endpoint:'https://api.example.org/api/apps/test/functions/refreshSessionFreshness',
+    trustedOrigin:'',machineKey:'test-only-secret',
+    ledgerPath:'/var/lib/evercraft/rivet/receipts.jsonl',
+    slotStateDir:'/var/lib/evercraft/rivet/slots',enabled:true
+  });
+  assert.equal(d.ready_for_live_canary,false);
+  assert(d.gaps.includes('trusted_refresh_origin_not_pinned'));
+  assert(d.gaps.includes('refresh_endpoint_invalid_or_untrusted'));
+  assert.equal(d.configured_endpoint_origin,null);
 });
