@@ -20,7 +20,7 @@ const trustedObservers={'evercraft-provider-observer-v1':{
 function held(){
  let state=createGoalState({goalKey:'goal-recovery',missionKey:'mission-recovery',
   objective:'Reconcile interrupted side effects',now:later(0)});
- state=admitGoalPlan({state,plan:[{work_key:'publish',work_type:'research'},
+ state=admitGoalPlan({state,plan:[{work_key:'publish',work_type:'research',provider_key:'evercraft-fabric'},
   {work_key:'audit',work_type:'verify',dependency_keys:['publish']}],now:later(0)});
  state=startGoalWork({state,workKey:'publish',now:later(0)});
  return holdInterruptedGoalWork({state,workKey:'publish',expectedAttempt:1,
@@ -64,6 +64,19 @@ test('authenticated observer attestation remains quarantined, even for completed
   result:'retry',now:later(67)}),/authoritative reconciliation/);
  assert.equal(state.tasks[0].recovery_hold.reconciliation,undefined);
 });
+test('observer cannot substitute a different provider or attest unbound historical work',()=>{
+ const state=held();
+ assert.equal(state.tasks[0].attempt_provider_key,'evercraft-fabric');
+ const tampered=structuredClone(state);
+ tampered.tasks[0].provider_key='other-provider';
+ assert.throws(()=>record(tampered,signed()),/does not match execution provider/);
+ const unbound=structuredClone(state);
+ delete unbound.tasks[0].attempt_provider_key;
+ assert.throws(()=>record(unbound,signed()),/does not match execution provider/);
+ const other=signed({provider_key:'another-provider'});
+ assert.throws(()=>record(state,other),/does not match execution provider/);
+});
+
 test('not_found and unknown do not establish safe retry or negative finality',()=>{
  for(const outcome of ['not_found','unknown']){
   const next=record(held(),signed({outcome}));
