@@ -580,3 +580,58 @@ test('started duplicate retries never re-authorize dispatch or consume more quot
     fs.rmSync(root, { recursive: true, force: true });
   }
 });
+
+
+test('start, complete and cancel replay keys cannot disclose another lease', () => {
+  const first = setup();
+  try {
+    const prepared = prepare(first.gate);
+    const started = first.gate.startExecution({
+      lease_id: prepared.lease.lease_id,
+      idempotency_key: 'start:lease-bound',
+      start_evidence_ref: 'systemia:dispatch:bound',
+      started_at: '2026-09-27T18:02:00Z',
+    });
+    assert.equal(started.state, 'started');
+    assert.throws(() => first.gate.startExecution({
+      lease_id: 'lease_other_tenant',
+      idempotency_key: 'start:lease-bound',
+      start_evidence_ref: 'systemia:dispatch:bound',
+    }), /execution_gate_idempotency_binding_conflict/);
+
+    const completed = first.gate.completeExecution({
+      lease_id: prepared.lease.lease_id,
+      idempotency_key: 'complete:lease-bound',
+      outcome_evidence_ref: 'lineage:outcome:bound',
+      outcome_state: 'completed',
+      completed_at: '2026-09-27T18:05:00Z',
+    });
+    assert.equal(completed.state, 'completed');
+    assert.throws(() => first.gate.completeExecution({
+      lease_id: 'lease_other_tenant',
+      idempotency_key: 'complete:lease-bound',
+      outcome_evidence_ref: 'lineage:outcome:bound',
+    }), /execution_gate_idempotency_binding_conflict/);
+  } finally {
+    fs.rmSync(first.root, { recursive: true, force: true });
+  }
+
+  const second = setup();
+  try {
+    const prepared = prepare(second.gate);
+    const cancelled = second.gate.cancelExecution({
+      lease_id: prepared.lease.lease_id,
+      idempotency_key: 'cancel:lease-bound',
+      reason: 'test_cancelled',
+      cancelled_at: '2026-09-27T18:02:00Z',
+    });
+    assert.equal(cancelled.state, 'cancelled');
+    assert.throws(() => second.gate.cancelExecution({
+      lease_id: 'lease_other_tenant',
+      idempotency_key: 'cancel:lease-bound',
+      reason: 'test_cancelled',
+    }), /execution_gate_idempotency_binding_conflict/);
+  } finally {
+    fs.rmSync(second.root, { recursive: true, force: true });
+  }
+});
