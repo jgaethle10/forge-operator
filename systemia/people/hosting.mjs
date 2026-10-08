@@ -13,6 +13,7 @@ export function peopleLayerServiceSpec(releaseRef,{
     input_env:{
       state_root:'PEOPLE_STATE_DIR',
       admin_token_file:'PEOPLE_ADMIN_TOKEN_FILE',
+      mail_delivery_public_keys_file:'PEOPLE_MAIL_DELIVERY_PUBLIC_KEYS_FILE',
     },
     rollback_target:'evercraft:people-layer-previous',
     lease_ttl_ms:3600000,
