@@ -303,9 +303,13 @@ test('owned People Layer source has no Base44 runtime route', () => {
 
 
 test('owned People routes reject raw admin credential env path', () => {
-  for (const file of ['systemia/people/http.mjs','systemia/people/service-runtime.mjs']) {
-    const source=fs.readFileSync(file,'utf8');
-    assert.equal(source.includes("process.env.PEOPLE_ADMIN_TOKEN ||"), false, file + ' must not read a raw admin token from the environment');
-    assert.equal(source.includes('PEOPLE_ADMIN_TOKEN_FILE'), true, file + ' must use private-file authority');
-  }
+  const httpSource=fs.readFileSync('systemia/people/http.mjs','utf8');
+  const serviceSource=fs.readFileSync('systemia/people/service-runtime.mjs','utf8');
+
+  assert.equal(httpSource.includes("process.env.PEOPLE_ADMIN_TOKEN ||"), false);
+  assert.equal(httpSource.includes('PEOPLE_ADMIN_TOKEN_FILE'), true, 'Forge route must resolve operator authority from the private-file binding');
+
+  assert.equal(serviceSource.includes("process.env.PEOPLE_ADMIN_TOKEN ||"), false);
+  assert.equal(serviceSource.includes('requireSecureTokenFile(adminTokenFile)'), true, 'Compute service must require the admitted private authority file passed by its workload launcher');
+  assert.equal(serviceSource.includes('people_admin_token_file_permissions_too_open'), true, 'Compute service must reject broadly readable authority files');
 });
