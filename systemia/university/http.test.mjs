@@ -61,6 +61,10 @@ test('remote evaluation service returns a scored failure instead of publishing i
   const attempt=JSON.parse(fs.readFileSync(
     path.resolve(here,'fixtures/authority-discipline-bad.attempt.json'),'utf8'
   ));
+  attempt.handoff={
+    limitations:'This structurally valid negative fixture intentionally misclassifies regulated authority.',
+    next_step:'Evaluate the attempt without publishing it.'
+  };
   const payload=service.evaluate({
     missionKey:'authority-discipline-001',
     attempt
