@@ -59,10 +59,10 @@ test('only exact Stripe Checkout HTTPS host and session paths are accepted',()=>
     'https://checkout.stripe.com@evil.example/c/pay/test',
     'https://checkout.stripe.com:8443/c/pay/test',
     'https://checkout.stripe.com/pay/test',
-    'https://checkout.stripe.com/c/pay/',
     'http://checkout.stripe.com/c/pay/test',
     'https://checkout.stripe.com/c/pay/test#fragment',
   ]) blocked({...good,checkout_url:url},'unapproved_checkout_destination');
+  blocked({...good,checkout_url:'https://checkout.stripe.com/c/pay/'},'checkout_session_path_missing');
 });
 
 test('distinct IBM i 7.4 checkout is not the generic Estate X-Ray SKU',()=>{
