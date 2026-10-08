@@ -148,6 +148,7 @@ export async function startPublicEdgeRuntime({
     https_required:mode==='wildcard_https',
     proof_only:mode==='proof_loopback',
     lease_supported:true,
+    lease_renewal_supported:true,
     release_supported:true,
     wildcard_catchall_lease_supported:mode==='wildcard_https',
     hostname_mode:mode==='wildcard_https'?'wildcard_subdomain':'dedicated_loopback_port',
@@ -249,6 +250,47 @@ export async function startPublicEdgeRuntime({
     return publicLease;
   };
 
+  const renewRouteLease=async(leaseId,ttlMs=defaultLeaseTtlMs)=>{
+    const id=String(leaseId||'').trim();
+    const lease=leases.get(id);
+    if(!lease) return {ok:false,renewed:false,lease_id:id};
+    const requested=Number(ttlMs||defaultLeaseTtlMs);
+    const effectiveTtl=Math.max(60000,Math.min(
+      86400000,
+      Number.isFinite(requested)?requested:defaultLeaseTtlMs
+    ));
+    const previousExpiresAt=lease.expires_at;
+    lease.expires_at=new Date(Date.now()+effectiveTtl).toISOString();
+    leases.set(id,lease);
+    const publicLease={
+      protocol:'evercraft.public-route.v1',
+      lease_id:lease.lease_id,
+      deployment_id:lease.deployment_id,
+      deployment_receipt_hash:lease.deployment_receipt_hash,
+      instance_id:lease.instance_id,
+      upstream_origin:lease.upstream_origin,
+      created_at:lease.created_at,
+      expires_at:lease.expires_at,
+      origin:lease.origin,
+      hostname:lease.hostname,
+      wildcard_hostname:lease.wildcard_hostname,
+      wildcard_subdomains:lease.wildcard_subdomains,
+      stable_hostname:lease.stable_hostname,
+    };
+    publicLease.receipt_hash=sha(publicLease);
+    lease.receipt_hash=publicLease.receipt_hash;
+    const body={
+      ...publicLease,
+      ok:true,
+      renewed:true,
+      previous_expires_at:previousExpiresAt,
+      renewed_at:new Date().toISOString(),
+      origin_changed:false,
+    };
+    body.renewal_receipt_hash=sha(body);
+    return body;
+  };
+
   const releaseRouteLease=async(leaseId,reason='released')=>{
     const id=String(leaseId||'').trim();
     const lease=leases.get(id);
@@ -299,6 +341,16 @@ export async function startPublicEdgeRuntime({
         return sendJson(res,201,await createRouteLease(await readJson(req)));
       }
 
+      const renew=req.url?.match(/^\/v1\/public-route\/leases\/([^/]+)\/renew$/);
+      if(req.method==='POST'&&renew){
+        const body=await readJson(req);
+        const renewed=await renewRouteLease(
+          renew[1],
+          Number(body.ttl_ms||defaultLeaseTtlMs)
+        );
+        return sendJson(res,renewed.renewed?200:404,renewed);
+      }
+
       const release=req.url?.match(/^\/v1\/public-route\/leases\/([^/]+)\/release$/);
       if(req.method==='POST'&&release){
         const body=await readJson(req);
@@ -339,6 +391,7 @@ export async function startPublicEdgeRuntime({
     health,
     capabilities,
     createRouteLease,
+    renewRouteLease,
     releaseRouteLease,
     setDeploymentReceipt(ref){
       const value=String(ref||'').trim();
