@@ -75,6 +75,14 @@ try{
   const submitted=await runtime.submitReadOnlyJob(canaryEnvelope);
   assert.equal(submitted.ok,true);
   assert.match(submitted.job.id,/^[0-9a-f-]{36}$/);
+  // A copied worker bearer or anonymous HTTP request must not bypass
+  // Systemia's signed durable-admission gate.
+  const unsigned=await fetch(runtime.url+'/v1/jobs/'+submitted.job.id);
+  assert.equal(unsigned.status,401);
+  const wrongBearer=await fetch(runtime.url+'/v1/jobs/'+submitted.job.id,{
+    headers:{authorization:'Bearer unauthorized-raw-worker-token'}
+  });
+  assert.equal(wrongBearer.status,401);
   const duplicate=await runtime.submitReadOnlyJob(canaryEnvelope);
   assert.equal(duplicate.job.id,submitted.job.id);
   assert.equal(duplicate.job.deduplicated,true);
