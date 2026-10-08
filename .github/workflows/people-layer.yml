@@ -58,11 +58,8 @@ jobs:
         with:
           node-version: 22
 
-      - name: Setup Bun
-        uses: oven-sh/setup-bun@v2
-
-      - name: Install exact dependencies
-        run: bun install --frozen-lockfile
+      - name: Install dependencies using Forge-compatible npm path
+        run: npm install --no-audit --no-fund
 
       - name: Prove signed mailbox delivery boundary
         run: node --test tests/people-mail-delivery.test.mjs
