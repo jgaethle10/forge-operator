@@ -1,6 +1,6 @@
 import crypto from 'node:crypto';
 
-export const ISAIAS_NHC_ADVISORY_8='https://www.nhc.noaa.gov/mobile/text/refresh/MIATCPAT4%2Bhtml/081456.shtml';
+export const ISAIAS_NHC_ADVISORY_8='https://www.nhc.noaa.gov/archive/2026/al09/al092026.public.008.shtml';
 export const FEMA_SHELTERS_LAYER='https://gis.fema.gov/arcgis/rest/services/NSS/FEMA_NSS/FeatureServer/0/query';
 
 const sha256=(value)=>crypto.createHash('sha256').update(value).digest('hex');
@@ -25,7 +25,7 @@ function plainText(markup){
 }
 export function parseIsaiasAdvisory8(raw){
   const text=plainText(raw);
-  if(!/Hurricane\s+Isaias\s+Advisory\s+Number\s+8\b/i.test(text)||!/\bAL092026\b/.test(text))
+  if(!/Hurricane\s+Isaias\b/i.test(text)||!/(?:Advisory\s+Number\s*:?[\s]*8\b|Advisory\s*#\s*8\b)/i.test(text)||!/\bAL092026\b/.test(text))
     throw new Error('nhc_advisory_identity_mismatch');
   if(!/1000\s+AM\s+CDT\s+Thu\s+Oct\s+08\s+2026/i.test(text)||!/\b1500\s+UTC\b/.test(text))
     throw new Error('nhc_advisory_issuance_mismatch');
