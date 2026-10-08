@@ -67,3 +67,16 @@ test('mailbox redemption secret is never returned to an operator',async()=>{
     fs.rmSync(root,{recursive:true,force:true});
   }
 });
+
+test('both operator interfaces refuse copyable mailbox redemption links',()=>{
+  const react=fs.readFileSync('src/PeopleLayer.tsx','utf8');
+  const standalone=fs.readFileSync('systemia/people/web/app.js','utf8');
+  const legacy=fs.readFileSync('systemia/people/http.mjs','utf8');
+  const owned=fs.readFileSync('systemia/people/service-runtime.mjs','utf8');
+  assert.equal(react.includes('body.challenge.verification_path'),false);
+  assert.equal(standalone.includes('body.challenge.verification_path'),false);
+  assert.equal(react.includes('verifyUrl'),false);
+  assert.equal(legacy.includes('challenge: runtime.createEmailChallenge(req.params.brainKey'),false);
+  assert.match(legacy,/trusted_email_dispatch_unavailable/);
+  assert.match(owned,/trusted_email_dispatch_unavailable/);
+});
