@@ -32,6 +32,7 @@ test('IBM i 7.4 has separate exact $250 offer identity, not the generic Estate c
 test('IBM i 7.4 exact SKU requires human confirmation and passes through Evercraft Payments',async()=>{
  const sent=[];
  const runtime=await startFabricLocalRuntime({
+  purchaseIntentUrl:'https://fabric.systemiacommandcenters.com/__synthetic_not_deployed__/purchase-intent',
   host:'127.0.0.1',port:0,catalog:[ibmi],faieSurfaceEnabled:false,
   purchaseIntentFetch:async(_url,init)=>{
    const data=JSON.parse(init.body);
@@ -67,7 +68,8 @@ test('IBM i 7.4 exact SKU requires human confirmation and passes through Evercra
 
 test('unsupported live payment adapter fails closed rather than redirecting to unrelated offer',async()=>{
  const sent=[];
- const runtime=await startFabricLocalRuntime({host:'127.0.0.1',port:0,catalog:[ibmi],faieSurfaceEnabled:false,
+ const runtime=await startFabricLocalRuntime({
+  purchaseIntentUrl:'https://fabric.systemiacommandcenters.com/__synthetic_not_deployed__/purchase-intent',host:'127.0.0.1',port:0,catalog:[ibmi],faieSurfaceEnabled:false,
  purchaseIntentFetch:async(_url,init)=>{
   sent.push(JSON.parse(init.body));
   return new Response(JSON.stringify({ok:false,error:'unknown_offer_key'}),{status:422});
@@ -90,6 +92,7 @@ test('the 7.4 buyer is never redirected to a mismatched price or generic Estate 
   {amount_cents:25000,currency:'usd'},
  ]){
   const runtime=await startFabricLocalRuntime({
+  purchaseIntentUrl:'https://fabric.systemiacommandcenters.com/__synthetic_not_deployed__/purchase-intent',
     host:'127.0.0.1',port:0,catalog:[ibmi],faieSurfaceEnabled:false,
     purchaseIntentFetch:async()=>new Response(JSON.stringify({
       ok:true,checkout_ready:true,checkout_url:'https://settlement.example.test/never-redirect',
@@ -106,4 +109,32 @@ test('the 7.4 buyer is never redirected to a mismatched price or generic Estate 
    assert.match(await res.text(),/No charge was made/);
   }finally{await runtime.close()}
  }
+});
+
+test('7.4 route refuses default legacy Base44 purchase-intent URL before touching commerce',async()=>{
+ let upstreamCalls=0;
+ const runtime=await startFabricLocalRuntime({
+  host:'127.0.0.1',port:0,catalog:[ibmi],faieSurfaceEnabled:false,
+  // Intentionally omit purchaseIntentUrl: the live source default is legacy Base44.
+  purchaseIntentFetch:async()=>{upstreamCalls++;throw Error('must not contact legacy adapter');}
+ });
+ try{
+  const res=await fetch(runtime.url+'/api/offers/ibmi-74-deadline-xray/checkout',{
+   method:'POST',headers:{'content-type':'application/x-www-form-urlencoded'},
+   body:new URLSearchParams({user_confirmed:'true'}),redirect:'manual'
+  });
+  assert.equal(res.status,503);
+  assert.equal(res.headers.get('location'),null);
+  assert.match(await res.text(),/No charge was made/);
+  const api=await fetch(runtime.url+'/api/offers/ibmi-74-deadline-xray/checkout',{
+   method:'POST',headers:{'content-type':'application/json'},
+   body:JSON.stringify({user_confirmed:true})
+  });
+  assert.equal(api.status,503);
+  const body=await api.json();
+  assert.equal(body.error,'owned_ibmi_74_purchase_intent_not_configured');
+  assert.equal(body.payment_attempted,false);
+  assert.equal(body.checkout_ready,false);
+  assert.equal(upstreamCalls,0);
+ }finally{await runtime.close()}
 });
