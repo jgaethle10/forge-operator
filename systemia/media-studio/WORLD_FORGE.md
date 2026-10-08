@@ -468,3 +468,14 @@ The V1 render plan intentionally remains non-executable until a backend is selec
 - Missing rights are not treated as permission.
 - Render completion does not grant publication authority.
 - A pretty render cannot bypass continuity, provenance or Shot Tournament rules.
+
+
+## GPU solid viewport preview
+
+The browser editor now has an interactive GPU-rasterized **Solid** shading mode in addition to Wire mode.
+
+Solid mode uses native World Forge triangle and flat-normal buffers, the same geometry family used by native picking, authored node transforms, the node's first authored material base color when available, WebGL2 depth testing, and a bounded directional-light preview. Selected objects retain a wire overlay so transform handles and selection state remain legible.
+
+This is an **interactive authoring preview**, not production render authority. It does not add textures, shadows, environment lighting, path tracing, publication authority, or offline-render authority. World Engine remains the canonical runtime/simulation layer, and its WebGPU render plan remains the target for deeper runtime visual parity rather than silently redefining runtime truth inside the editor.
+
+The focused World Forge CI lane explicitly watches and runs the native viewport mesh contracts so buffer generation cannot bypass product verification.
