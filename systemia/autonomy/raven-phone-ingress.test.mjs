@@ -98,6 +98,37 @@ test('duplicate provider event yields same receipt and no second stored record',
   });
 });
 
+test('Twilio SID replay cannot create a second candidate after Raven record recreation', async () => {
+  await temporaryStore(async (dir) => {
+    const ingress = createRavenPhoneIngress({ secret: SECRET, stateDir: dir, now: () => new Date(NOW) });
+    const first = await request(ingress, SOURCE);
+    const recreated = await request(ingress, {
+      ...SOURCE,
+      source_record_ref: 'recreated-db-row',
+      idempotency_key: 'raven:PhoneMessage:recreated-db-row:received',
+    });
+    assert.equal(first.status, 202);
+    assert.equal(recreated.status, 200);
+    assert.equal(recreated.payload.status, 'duplicate');
+    assert.equal(first.payload.bridge_receipt_key, recreated.payload.bridge_receipt_key);
+    assert.equal(fs.readdirSync(dir).length, 1);
+  });
+});
+
+test('a truncated prior record fails closed instead of returning a false duplicate', async () => {
+  await temporaryStore(async (dir) => {
+    const ingress = createRavenPhoneIngress({ secret: SECRET, stateDir: dir, now: () => new Date(NOW) });
+    const first = await request(ingress, SOURCE);
+    assert.equal(first.status, 202);
+    const [record] = fs.readdirSync(dir);
+    fs.writeFileSync(path.join(dir, record), '{"truncated":', { encoding: 'utf8' });
+    const retry = await request(ingress, SOURCE);
+    assert.equal(retry.status, 503);
+    assert.equal(retry.payload.error, 'durable_review_store_unavailable');
+    assert.equal(fs.readdirSync(dir).length, 1);
+  });
+});
+
 test('failed bridge signatures cannot create a stored candidate', async () => {
   await temporaryStore(async (dir) => {
     const ingress = createRavenPhoneIngress({ secret: SECRET, stateDir: dir, now: () => new Date(NOW) });
