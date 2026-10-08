@@ -186,24 +186,38 @@ export class EvercraftOsHostSupervisor {
     fs.mkdirSync(this.stateDir, { recursive: true, mode: 0o700 });
 
     this.startedAt = new Date().toISOString();
-    this.reconcile();
+    try {
+      this.reconcile();
 
-    this.home = await this.homeStarter({
-      host: this.homeHost,
-      port: this.homePort,
-      authMode: this.homeAuth,
-      operator: "Evercraft OS"
-    });
+      this.home = await this.homeStarter({
+        host: this.homeHost,
+        port: this.homePort,
+        authMode: this.homeAuth,
+        operator: "Evercraft OS"
+      });
 
-    this.timer = setInterval(() => {
-      try {
-        this.reconcile();
-        this.status();
-      } catch {}
-    }, this.reconcileEveryMs);
-    this.timer.unref?.();
+      this.timer = setInterval(() => {
+        try {
+          this.reconcile();
+          this.status();
+        } catch {}
+      }, this.reconcileEveryMs);
+      this.timer.unref?.();
 
-    return this.status();
+      return this.status();
+    } catch (error) {
+      if (this.timer) {
+        clearInterval(this.timer);
+        this.timer = null;
+      }
+      if (this.home) {
+        try { await this.home.close(); } catch {}
+        this.home = null;
+      }
+      this.startedAt = null;
+      this.status();
+      throw error;
+    }
   }
 
   async close() {
