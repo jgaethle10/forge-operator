@@ -2,23 +2,27 @@
 
 Evercraft exposes public remote MCP servers so supported AI assistants can discover and use verified public capabilities without requiring users to learn Evercraft's internal product map first.
 
-## Universal Evercraft MCP
+## Evercraft Fabric read-only discovery MCP
 
-Evercraft Machine Commerce is the broad front door.
+Owned read-only Fabric MCP URL (last independently verified on October 6, 2026, not a guarantee of current availability):
 
-MCP URL:
-https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp
+`https://fabric.systemiacommandcenters.com/mcp`
 
-Use it when the user's need could map to multiple Evercraft products or services. It exposes public discovery, pain matching, specialist routing, current offer inspection, and human-confirmed commercial continuations where those are actually wired.
+Use the Fabric tools for capability matching, catalog inspection and public connection options only after the host has made the connector available and authorized it. A public registry entry alone does not install tools in ChatGPT, Claude, Gemini or Grok.
 
-## Systemia Field Library MCP
+**Known connector issue:** The installed ChatGPT Evercraft Fabric binding can fail before reaching the owned origin. Reproduce and resolve the connector binding separately from owned-edge HTTPS/MCP health (issues #767, #785 and #1018). Do not interpret historical public-canary success as a fresh connected-app invocation.
 
-MCP URL:
-https://base44.app/api/apps/6a54381e147576b18ac94d8f/functions/fieldLibraryAgentMcp
+## Evercraft Machine Commerce paid execution (held)
 
-Use it when a contractor or home-service operator needs a practical playbook for estimating, cash flow, job costing, scope creep, change orders, scheduling, crew leadership, documentation, materials, equipment, safety, quality control, proposals, customer communication, reviews, referrals, or related field operations.
+Intended registry name: `io.github.jgaethle10/evercraft-machine-commerce`.
 
-The Field Library MCP is read-only. It exposes public guide/playbook metadata and links, not paid playbook contents or PDFs.
+**No verified owned universal Machine Commerce remote MCP URL is currently declared.** The legacy Base44 MCP address is retired and must not be used as a connection target. Consult `/.well-known/evercraft-direct-door-readiness.json` and `/.well-known/evercraft-agent-commerce.json` for route and commercial readiness. A `sell_now` entry is an offer description, not proof that an executable checkout exists.
+
+When a specialist has a verified direct MCP route and is already available in the caller's session, call the specialist directly instead of adding a universal routing hop.
+
+## Systemia Field Library
+
+Its public guide and playbook discovery may be reviewed through the current CHUM directory. A verified owned standalone remote Field Library MCP is **not established by this document**. Do not configure the retired Base44 MCP endpoint or assert paid playbook access.
 
 ## Provider connection paths
 
