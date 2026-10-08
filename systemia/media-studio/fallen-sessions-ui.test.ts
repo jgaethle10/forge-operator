@@ -95,3 +95,32 @@ test('Fallen Sessions recorder cleanup severs callbacks before unmount teardown'
   assert.match(ui,/recorder\.onerror=null/);
   assert.match(ui,/getTracks\(\)\.forEach/);
 });
+
+
+test('Fallen Sessions Web MIDI note lifecycle commits canonical controller notes',()=>{
+  const ui=fs.readFileSync('src/FallenSessions.tsx','utf8');
+  assert.match(ui,/requestMIDIAccess/);
+  assert.match(ui,/onmidimessage/);
+  assert.match(ui,/command===0x90&&rawVelocity>0/);
+  assert.match(ui,/command===0x80\|\|\(command===0x90&&rawVelocity===0\)/);
+  assert.match(ui,/type:'note.add'/);
+  assert.match(ui,/\},'controller'\)/);
+  assert.match(ui,/velocity:held\.velocity/);
+  assert.match(ui,/length,/);
+});
+
+test('Fallen Sessions MIDI pins note-on destination and commits against latest graph',()=>{
+  const ui=fs.readFileSync('src/FallenSessions.tsx','utf8');
+  assert.match(ui,/selectedTrackRef\.current/);
+  assert.match(ui,/selectedSceneRef\.current/);
+  assert.match(ui,/heldMidiNotesRef\.current\.set/);
+  assert.match(ui,/const current=sessionRef\.current/);
+  assert.match(ui,/performance\.now\(\)-held\.startedAt/);
+});
+
+test('Fallen Sessions MIDI disconnect clears device handlers and held-note state',()=>{
+  const ui=fs.readFileSync('src/FallenSessions.tsx','utf8');
+  assert.match(ui,/input\.onmidimessage=null/);
+  assert.match(ui,/access\.onstatechange=null/);
+  assert.match(ui,/heldMidiNotesRef\.current\.clear\(\)/);
+});
