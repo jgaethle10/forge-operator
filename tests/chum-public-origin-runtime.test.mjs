@@ -25,6 +25,22 @@ fs.writeFileSync(path.join(publicRoot, 'sitemap.xml'), [
   '</urlset>',
   ''
 ].join('\n'));
+fs.mkdirSync(path.join(publicRoot, 'chum', 'sitemaps'), { recursive: true });
+fs.writeFileSync(path.join(publicRoot, 'chum', 'sitemaps', 'answers.xml'), [
+  '<?xml version="1.0" encoding="UTF-8"?>',
+  '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">',
+  '  <url><loc>/chum/answers/example/</loc></url>',
+  '</urlset>',
+  ''
+].join('\n'));
+fs.writeFileSync(path.join(publicRoot, 'chum', 'sitemaps', 'index.xml'), [
+  '<?xml version="1.0" encoding="UTF-8"?>',
+  '<sitemapindex xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">',
+  '  <sitemap><loc>/chum/sitemaps/answers.xml</loc></sitemap>',
+  '</sitemapindex>',
+  ''
+].join('\n'));
+fs.writeFileSync(path.join(publicRoot, 'chum', 'sitemap.xml'), '<urlset><url><loc>/chum/</loc></url></urlset>\n');
 fs.writeFileSync(path.join(publicRoot, '8aef5f814d0b9c2896c1bc753c65c9bc.txt'), '8aef5f814d0b9c2896c1bc753c65c9bc\n');
 fs.writeFileSync(path.join(publicRoot, 'chum', 'crawl-state.json'), JSON.stringify({
   schema: 'evercraft.chum.crawl-state.v1',
@@ -114,6 +130,24 @@ try {
   const sitemap = await fetch(runtime.url + '/sitemap.xml').then((r) => r.text());
   assert.equal(sitemap.includes(runtime.url + '/chum/'), true);
   assert.equal(sitemap.includes('old.invalid'), false);
+
+  const segmented = await fetch(runtime.url + '/chum/sitemaps/answers.xml').then((r) => r.text());
+  assert.match(segmented, new RegExp(runtime.url.replace(/[.*+?^${}()|[\]\\]/g, '\\  assert.equal(sitemap.includes('old.invalid'), false);
+
+  const robots') + '/chum/answers/example/'));
+  assert.doesNotMatch(segmented, /<loc>\/chum\//);
+
+  const nestedIndex = await fetch(runtime.url + '/chum/sitemaps/index.xml').then((r) => r.text());
+  assert.ok(nestedIndex.includes('<loc>' + runtime.url + '/chum/sitemaps/answers.xml</loc>'));
+  const chumSitemap = await fetch(runtime.url + '/chum/sitemap.xml').then((r) => r.text());
+  assert.ok(chumSitemap.includes('<loc>' + runtime.url + '/chum/</loc>'));
+
+  const proxiedSitemap = await requestWithHost('/chum/sitemaps/answers.xml', '127.0.0.1:4310', {
+    'x-forwarded-host': 'fabric.systemiacommandcenters.com',
+    'x-forwarded-proto': 'https',
+  });
+  assert.equal(proxiedSitemap.status, 200);
+  assert.ok(proxiedSitemap.body.includes('https://fabric.systemiacommandcenters.com/chum/answers/example/'));
 
   const robots = await fetch(runtime.url + '/robots.txt').then((r) => r.text());
   assert.equal(robots.includes('Sitemap: ' + runtime.url + '/sitemap.xml'), true);
