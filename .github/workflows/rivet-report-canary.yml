@@ -53,6 +53,7 @@ jobs:
           node-version: 22
       - run: node --test tests/rivet-session-freshness-runner.test.mjs
       - run: node systemia/rivet/session-source-admission.proof.mjs
+      - run: node systemia/rivet/nyc-plugnyc-reconciliation.proof.mjs
       - run: node systemia/rivet/http-gateway-readiness.proof.mjs
       - run: npm run proof:rivet-yard
       - run: node systemia/rivet/report-domain-projection.proof.mjs
