@@ -4,6 +4,7 @@ on:
     paths:
       - 'systemia/distribution/website-audit-growth-loop.mjs'
       - 'systemia/distribution/website-audit-growth-loop.test.mjs'
+      - 'systemia/commercial-intelligence/**'
       - '.github/workflows/website-audit-measured-distribution.yml'
   workflow_dispatch:
 permissions:
@@ -18,6 +19,8 @@ jobs:
           node-version: 22
       - name: Test attribution and payment truth
         run: node --test systemia/distribution/website-audit-growth-loop.test.mjs
+      - name: Test Rockies and FAIE commercial routing gates
+        run: node --test systemia/commercial-intelligence/signal-to-demand.test.mjs
       - name: Produce staged placements
         run: |
           node systemia/distribution/website-audit-growth-loop.mjs > /tmp/website-audit-wave.json
