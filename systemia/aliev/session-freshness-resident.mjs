@@ -1,11 +1,12 @@
 import fs from 'node:fs';
 import path from 'node:path';
+import {claimFreshnessSlot,finishFreshnessSlot} from './session-freshness-slot.mjs';
 
 export const OWNED_FRESHNESS_SCHEMA='evercraft.rivet.owned-session-freshness-receipt.v1';
 export const DEFAULT_MINUTE=32; // Base44 compatibility cron runs at :12 UTC.
 const clean=value=>String(value??'').trim();
 
-export function validateRefreshEndpoint(endpoint){
+export function validateRefreshEndpoint(endpoint,{trustedOrigin}={}){
   let url;
   try{url=new URL(clean(endpoint))}catch{throw new Error('refresh_endpoint_invalid')}
   if(url.protocol!=='https:' || url.username || url.password || url.search || url.hash ||
@@ -14,6 +15,15 @@ export function validateRefreshEndpoint(endpoint){
   }
   if(!url.hostname || url.hostname==='localhost' || url.hostname.endsWith('.local') ||
      /^\d+\.\d+\.\d+\.\d+$/.test(url.hostname))throw new Error('refresh_endpoint_host_invalid');
+  // Never send machine credentials to a host learned only from the request URL.
+  if(!clean(trustedOrigin))throw new Error('trusted_refresh_origin_required');
+  let trusted;
+  try{trusted=new URL(clean(trustedOrigin))}catch{throw new Error('trusted_refresh_origin_invalid')}
+  if(trusted.protocol!=='https:' || trusted.username || trusted.password || trusted.search || trusted.hash ||
+     trusted.pathname!=='/' || trusted.origin!==clean(trustedOrigin).replace(/\/$/,'')){
+    throw new Error('trusted_refresh_origin_invalid');
+  }
+  if(url.origin!==trusted.origin)throw new Error('refresh_endpoint_origin_not_admitted');
   return url.toString();
 }
 function requireIso(value,label){
@@ -39,13 +49,21 @@ function receiptFromBody(body,{requestedAt,endpoint,receivedAt}){
      Date.parse(refreshedAt)<Date.parse(requestedAt)-120000)throw new Error('refresh_timestamp_outside_invocation_window');
   if(!Array.isArray(body.failed_sources))throw new Error('failed_sources_contract_required');
   if(!Array.isArray(body.results) || body.results.length<4)throw new Error('dynamic_source_results_contract_required');
+  const requiredDynamic=['ingestNYCPlugNYCObservedUsage','ingestNYCPlugNYCSessions','penndot_nevi_observed_usage','ingestCaryObservedUsage'];
+  const operations=body.results.map(row=>({name:clean(row?.name),ok:row?.ok===true}));
+  if(!requiredDynamic.every(name=>operations.some(row=>row.name===name)))throw new Error('required_dynamic_sources_not_reconciled');
+  const sourceFailures=operations.filter(row=>!row.ok).map(row=>row.name||'unnamed_source');
   const watch=body.historical_watch;
   if(!watch || !Number.isSafeInteger(watch.warning_count) || watch.warning_count<0)throw new Error('historical_watch_contract_required');
-  const failedSources=body.failed_sources.map(clean).filter(Boolean);
+  const failedSources=[...new Set([...body.failed_sources.map(clean).filter(Boolean),...sourceFailures])];
   const warningCount=watch.warning_count;
-  const sweepHours=Number(watch.estimated_full_sweep_hours);
-  const inventoryUnknown=watch.eligible_source_count===null || watch.probed_source_count===null;
-  const missedSweepSla=Number.isFinite(sweepHours)&&sweepHours>6;
+  const countValid=Number.isSafeInteger(watch.eligible_source_count)&&watch.eligible_source_count>0 &&
+    Number.isSafeInteger(watch.probed_source_count)&&watch.probed_source_count>0 &&
+    watch.probed_source_count<=watch.eligible_source_count;
+  const sweepHours=watch.estimated_full_sweep_hours;
+  const sweepValid=Number.isSafeInteger(sweepHours)&&sweepHours>=0;
+  const inventoryUnknown=!countValid || !sweepValid;
+  const missedSweepSla=sweepValid&&sweepHours>6;
   const degraded=body.ok!==true || state==='completed_with_source_failures' || failedSources.length>0 ||
     warningCount>0 || inventoryUnknown || missedSweepSla;
   return {
@@ -65,9 +83,9 @@ function receiptFromBody(body,{requestedAt,endpoint,receivedAt}){
   };
 }
 export async function invokeSessionRefresh({
-  endpoint,machineKey,fetchImpl=fetch,now=()=>new Date().toISOString(),timeoutMs=90000
+  endpoint,machineKey,trustedOrigin=process.env.ALIEV_SESSION_REFRESH_TRUSTED_ORIGIN,fetchImpl=fetch,now=()=>new Date().toISOString(),timeoutMs=90000
 }={}){
-  const url=validateRefreshEndpoint(endpoint);
+  const url=validateRefreshEndpoint(endpoint,{trustedOrigin});
   if(!clean(machineKey))throw new Error('SYSTEMIA_MACHINE_KEY_required');
   if(!Number.isInteger(timeoutMs)||timeoutMs<1000||timeoutMs>110000)throw new Error('timeout_ms_invalid');
   const requestedAt=requireIso(now(),'request_time');
@@ -91,6 +109,7 @@ export function appendLocalReceipt(ledgerPath,receipt){
 }
 export async function runOwnedFreshnessOnce({
   endpoint=process.env.ALIEV_SESSION_REFRESH_URL,
+  trustedOrigin=process.env.ALIEV_SESSION_REFRESH_TRUSTED_ORIGIN,
   machineKey=process.env.SYSTEMIA_MACHINE_KEY,
   ledgerPath=process.env.EVERCRAFT_FRESHNESS_RECEIPT_LEDGER,
   fetchImpl=fetch,now=()=>new Date().toISOString()
@@ -98,10 +117,19 @@ export async function runOwnedFreshnessOnce({
   if(!clean(ledgerPath))throw new Error('EVERCRAFT_FRESHNESS_RECEIPT_LEDGER_required');
   let result;
   try{
-    result=await invokeSessionRefresh({endpoint,machineKey,fetchImpl,now});
+    result=await invokeSessionRefresh({endpoint,machineKey,trustedOrigin,fetchImpl,now});
   }catch(error){
+    // Never serialize arbitrary network/SDK exception text: it may contain
+    // response content, configuration values, credentials, or private URLs.
+    const reason=clean(error instanceof Error?error.message:error);
+    const safe=/^refresh_http_[1-5][0-9]{2}$/.test(reason)?reason:
+      reason==='refresh_endpoint_origin_not_admitted'?'refresh_endpoint_origin_not_admitted':
+      reason==='trusted_refresh_origin_required'?'trusted_refresh_origin_required':
+      reason==='trusted_refresh_origin_invalid'?'trusted_refresh_origin_invalid':
+      reason==='SYSTEMIA_MACHINE_KEY_required'?'machine_identity_unavailable':
+      'owned_refresh_invocation_failed';
     result={schema:OWNED_FRESHNESS_SCHEMA,ok:false,state:'FAILED',
-      attempted_at:now(),error_code:clean(error instanceof Error?error.message:error).slice(0,180)};
+      attempted_at:now(),error_code:safe};
   }
   return appendLocalReceipt(ledgerPath,result);
 }
@@ -114,20 +142,33 @@ export async function startOwnedSessionFreshnessResident({
   enabled=process.env.EVERCRAFT_FRESHNESS_RESIDENT_ENABLE==='1',
   minute=DEFAULT_MINUTE,
   periodMs=15000,
+  slotStateDir=process.env.EVERCRAFT_FRESHNESS_SLOT_DIR,
   run=()=>runOwnedFreshnessOnce(),
   clock=()=>new Date(),
   onError=error=>console.error('owned_session_freshness_error',clean(error?.message||error))
 }={}){
   if(!enabled)throw new Error('resident_disabled_until_explicit_enablement');
   if(!Number.isInteger(periodMs)||periodMs<1000)throw new Error('poll_period_invalid');
+  if(!clean(slotStateDir))throw new Error('durable_slot_state_directory_required');
   let lastSlot=null,active=false,closed=false;
   const tick=async()=>{
     if(closed||active)return;
     const slot=utcSlot(clock(),minute);
     if(!slot||slot===lastSlot)return;
-    // Slot admission happens before networking; a failed run cannot spray retries.
-    lastSlot=slot;active=true;
-    try{await run()}catch(error){onError(error)}finally{active=false}
+    let lease;
+    try{lease=claimFreshnessSlot({stateDir:slotStateDir,slot})}
+    catch(error){onError(error);return}
+    lastSlot=slot;
+    if(!lease.admitted)return;
+    active=true;
+    try{
+      const receipt=await run();
+      finishFreshnessSlot(lease,{receipt});
+    }catch(error){
+      onError(error);
+      try{finishFreshnessSlot(lease,{receipt:{ok:false,state:'FAILED'}})}
+      catch(finalizeError){onError(finalizeError)}
+    }finally{active=false}
   };
   const timer=setInterval(()=>{void tick()},periodMs);
   timer.unref?.();

@@ -1,0 +1,44 @@
+name: AliEV governed shadow freshness dispatch
+
+# This is a fallback executor, not evidence of a deployment or a live refresh.
+# A disabled job uses no runner minutes. Enable only after a signed canary.
+on:
+  schedule:
+    - cron: '32 * * * *'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: aliev-owned-session-freshness-shadow
+  cancel-in-progress: false
+
+jobs:
+  invoke-admitted-session-refresh:
+    if: ${{ vars.EVERCRAFT_ALIEV_SHADOW_SCHEDULE_ENABLED == '1' }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 4
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Invoke pinned, machine-authorized refresh
+        env:
+          ALIEV_SESSION_REFRESH_URL: ${{ vars.ALIEV_SESSION_REFRESH_URL }}
+          ALIEV_SESSION_REFRESH_TRUSTED_ORIGIN: ${{ vars.ALIEV_SESSION_REFRESH_TRUSTED_ORIGIN }}
+          SYSTEMIA_MACHINE_KEY: ${{ secrets.SYSTEMIA_MACHINE_KEY }}
+          EVERCRAFT_FRESHNESS_RECEIPT_LEDGER: ${{ runner.temp }}/aliev-freshness/receipts.jsonl
+          EVERCRAFT_FRESHNESS_RUN_ENABLED: '1'
+        run: |
+          set -euo pipefail
+          node systemia/aliev/session-freshness-resident.mjs --once
+      - name: Retain outcome receipt for audit and failure diagnosis
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: aliev-freshness-receipt-${{ github.run_id }}-${{ github.run_attempt }}
+          path: ${{ runner.temp }}/aliev-freshness/receipts.jsonl
+          retention-days: 14
+          if-no-files-found: warn

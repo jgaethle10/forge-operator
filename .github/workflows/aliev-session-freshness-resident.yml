@@ -4,13 +4,23 @@ on:
   pull_request:
     paths:
       - 'systemia/aliev/session-freshness-resident.mjs'
+      - 'systemia/aliev/session-freshness-slot.mjs'
+      - 'systemia/aliev/session-freshness-health.mjs'
+      - 'systemia/aliev/session-freshness-health.proof.mjs'
       - 'systemia/aliev/session-freshness-resident.proof.mjs'
+      - 'systemia/aliev/session-freshness-dispatch.proof.mjs'
+      - '.github/workflows/aliev-shadow-session-freshness.yml'
       - '.github/workflows/aliev-session-freshness-resident.yml'
   push:
     branches: [main]
     paths:
       - 'systemia/aliev/session-freshness-resident.mjs'
+      - 'systemia/aliev/session-freshness-slot.mjs'
+      - 'systemia/aliev/session-freshness-health.mjs'
+      - 'systemia/aliev/session-freshness-health.proof.mjs'
       - 'systemia/aliev/session-freshness-resident.proof.mjs'
+      - 'systemia/aliev/session-freshness-dispatch.proof.mjs'
+      - '.github/workflows/aliev-shadow-session-freshness.yml'
       - '.github/workflows/aliev-session-freshness-resident.yml'
   workflow_dispatch:
 
@@ -27,4 +37,4 @@ jobs:
         with:
           node-version: '22'
       - name: Prove owned scheduler boundaries without live credentials
-        run: node --test systemia/aliev/session-freshness-resident.proof.mjs
+        run: node --test systemia/aliev/session-freshness-resident.proof.mjs systemia/aliev/session-freshness-health.proof.mjs systemia/aliev/session-freshness-dispatch.proof.mjs
