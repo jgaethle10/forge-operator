@@ -5,14 +5,14 @@ import { inspectRavenTwilio } from './raven-twilio-readonly-inspect.mjs';
 const ENV = { TWILIO_ACCOUNT_SID: 'AC' + '1'.repeat(32), TWILIO_AUTH_TOKEN: 'never-print-fixture-secret' };
 const inbound = { sid: 'SM' + 'a'.repeat(32), direction: 'inbound', status: 'received',
   from: '+15095550000', to: '+15095672403', body: 'private customer text' };
-function fakeTransport(calls) {
+function fakeTransport(calls, voiceUrl = 'https://raven.example.test/functions/ravenVoiceInbound?private=secret-query') {
   return async (url, options) => {
     calls.push({ url, method: options.method, redirect: options.redirect });
     assert.equal(options.method, 'GET');
     assert.equal(new URL(url).origin, 'https://api.twilio.com');
     if (url.includes('/IncomingPhoneNumbers.json')) return Response.json({ incoming_phone_numbers: [{
       phone_number: '+15095672403',
-      voice_url: 'https://raven.example.test/functions/ravenVoiceInbound?private=secret-query',
+      voice_url: voiceUrl,
       sms_url: 'https://raven.example.test/functions/secretaryInbound',
       voice_method: 'POST', sms_method: 'POST',
       capabilities: { voice: true, sms: true },
@@ -43,6 +43,13 @@ test('authorized provider inventory is strictly GET and strips contact, message 
   assert.equal(receipt.owner_acknowledged, false);
   assert.equal(receipt.webhook_mutated, false);
 });
+test('noncanonical webhook path tokens are not printed in inspection output', async () => {
+  const secretPath = 'https://alternate.example.test/inbound/private-live-token-12345';
+  const receipt = await inspectRavenTwilio({ env: ENV, transport: fakeTransport([], secretPath) });
+  assert.equal(receipt.routing.voice.path, '[noncanonical_path_redacted]');
+  assert.equal(JSON.stringify(receipt).includes('private-live-token-12345'), false);
+});
+
 test('missing credentials fail closed without contacting Twilio', async () => {
   await assert.rejects(inspectRavenTwilio({ env: {}, transport: () => { throw Error('must-not-call'); } }),
     /credentials_unavailable/);
