@@ -397,7 +397,7 @@ export function renderPaymentHoldPage({slug='',orderKey=''}={}){
     '<section class="offer-hero">',
     '<div class="kicker"><span class="dot"></span> Evercraft Payments</div>',
     '<h1>No charge was made.</h1>',
-    '<p class="lede">We saved the purchase request, but the settlement rail did not open cleanly. Nothing was marked paid and no fulfillment was released.</p>',
+    '<p class="lede">Secure checkout is not currently available. No charge was attempted or verified, and no paid work was released. You can return to the public offer details.</p>',
     '<div class="actions">',
     '<a class="btn primary" href="'+back+'">Return to the offer</a>',
     '<a class="btn" href="'+back+'">Try again</a>',
