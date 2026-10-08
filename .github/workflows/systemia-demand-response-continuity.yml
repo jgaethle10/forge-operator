@@ -1,0 +1,22 @@
+name: Systemia Demand Response Continuity
+on:
+  pull_request:
+    paths:
+      - 'systemia/autonomy/demand-response-continuity.mjs'
+      - 'systemia/autonomy/demand-response-continuity.test.mjs'
+      - '.github/workflows/systemia-demand-response-continuity.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  contract:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Syntax
+        run: node --check systemia/autonomy/demand-response-continuity.mjs
+      - name: Test no-lost-lead triage and financial safety
+        run: node --test systemia/autonomy/demand-response-continuity.test.mjs
