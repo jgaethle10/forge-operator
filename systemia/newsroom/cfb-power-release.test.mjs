@@ -38,6 +38,25 @@ function ranking(){
   };
 }
 
+function pollComparison(runId='cfbpi:release-test'){
+  return {
+    schema:'evercraft.cfb.poll-comparison.v1',
+    ranking_run_id:runId,
+    authority_boundary:{poll_used_as_model_input:false,comparison_only:true},
+    poll:{
+      poll_id:'ap-top25',
+      poll_name:'AP Top 25',
+      published_date:'2026-10-04',
+      source_authority:'Associated Press',
+      source_url:'https://example.test/ap',
+    },
+    summary:{overlap_count:20},
+    largest_disagreements:[
+      {team_id:'team-1',team_name:'Alpha State',evercraft_rank:1,poll_rank:6,rank_delta:5,absolute_gap:5},
+    ],
+  };
+}
+
 function ledger(){
   return {
     schema:'evercraft.cfb.completed-game-ledger.v1',
@@ -98,4 +117,39 @@ test('fails closed on duplicate visible ranks before publication',()=>{
     ledger:ledger(),
     generatedAt:'2026-10-04T17:00:00.000Z',
   }),/duplicate_rank/);
+});
+
+test('approved release preserves comparison-only poll receipt and binds it into preflight digest',()=>{
+  const generatedAt='2026-10-04T17:00:00.000Z';
+  const comparison=pollComparison();
+  const {story,preflight}=buildApprovedCfbPowerStory({
+    ranking:ranking(),
+    ledger:ledger(),
+    pollComparison:comparison,
+    generatedAt,
+  });
+  assert.equal(story.machine_evidence.payload.poll_comparison.ranking_run_id,'cfbpi:release-test');
+  assert.equal(story.sections.some(section=>section.heading==='Where Evercraft disagrees with AP Top 25'),true);
+  assert.equal(preflight.status,'accepted');
+  assert.match(preflight.digest,/^sha256:[a-f0-9]{64}$/);
+});
+
+test('release fails closed if a poll comparison claims model-input authority',()=>{
+  const comparison=pollComparison();
+  comparison.authority_boundary.poll_used_as_model_input=true;
+  assert.throws(()=>preflightCfbPowerRelease({
+    ranking:ranking(),
+    ledger:ledger(),
+    pollComparison:comparison,
+    generatedAt:'2026-10-04T17:00:00.000Z',
+  }),/poll_used_as_model_input/);
+});
+
+test('release fails closed if the comparison belongs to a different ranking run',()=>{
+  assert.throws(()=>preflightCfbPowerRelease({
+    ranking:ranking(),
+    ledger:ledger(),
+    pollComparison:pollComparison('cfbpi:other'),
+    generatedAt:'2026-10-04T17:00:00.000Z',
+  }),/poll_comparison_run_mismatch/);
 });
