@@ -1,0 +1,32 @@
+name: Systemia One Company Offer 1
+on:
+  pull_request:
+    paths:
+      - 'systemia/organism/first-offer-command.mjs'
+      - 'systemia/organism/first-offer-command.test.mjs'
+      - 'systemia/organism/FIRST_OFFER_ONE_COMPANY.md'
+      - '.github/workflows/systemia-one-company-offer1.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  mission-contract:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Prove Systemia mission routing and all fail-closed commercial gates
+        run: node --test systemia/organism/first-offer-command.test.mjs
+      - name: Produce read-only company-wide Offer 1 readiness
+        run: |
+          node systemia/organism/first-offer-command.mjs > first-offer-command-status.json
+          node -e "const p=require('./first-offer-command-status.json'); if(p.declared_revenue_cents!==0||p.declared_external_live||p.no_payment_or_fulfillment_authority!==true||p.systemia_admission.execution_authority_granted!==false) process.exit(1)"
+      - name: Retain source-only readiness, never present it as live order proof
+        uses: actions/upload-artifact@v4
+        with:
+          name: systemia-one-company-offer1-readiness
+          path: first-offer-command-status.json
+          retention-days: 30
