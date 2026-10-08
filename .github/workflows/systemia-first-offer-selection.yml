@@ -26,8 +26,15 @@ jobs:
           node-version: 22
       - name: Test offer-selection evidence contract
         run: node --test systemia/offer-selection/rank-offers.test.mjs
-      - name: Test isolated IBM i 7.4 buyer route and payments handoff
-        run: node --test tests/ibmi-74-offer-launch.test.mjs tests/fabric-offer-pages.test.mjs
+      - name: Verify public IBM i buyer research retains uncertainty and no outbound authority
+        run: node --test systemia/offer-selection/ibmi-first-buyer-research.test.mjs
+      - name: Prove general Fabric offer-page and payment handoff only
+        run: node --test tests/fabric-offer-pages.test.mjs
+      - name: Confirm protected 7.4 route integration has not been claimed by evidence-only scope
+        run: |
+          test ! -e tests/ibmi-74-offer-launch.test.mjs
+          node -e "const fs=require('fs'); const s=fs.readFileSync('systemia/offer-selection/README.md','utf8'); if(!/NOT collected revenue|NOT collected revenue/i.test(s))process.exit(1)"
+
       - name: Confirm distinct IBM i 7.4 tier readiness does not infer payment
         run: node --test systemia/chum/ibmi-74-offer-contract.test.mjs
       - name: Produce first offer selection packet
