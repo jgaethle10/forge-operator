@@ -173,6 +173,92 @@ try{
   assert.equal(close.ok,true);
   assert.equal(close.closed,true);
 
+  // Actual OS-process crash proof. The first Chromium worker is killed while
+  // its durable GET-only job is in flight; a fresh worker must recover the same
+  // job ID from the same private state directory and finish on attempt two.
+  const restartEnvelope={
+    idempotency_key:'browser-crash-'+idempotencySuffix,
+    mission_key:'systemia-browser-native-proof',
+    work_key:'browser-native-restart-001',
+    job:{
+      url:'https://example.com/',
+      timeout_ms:15000,
+      include_screenshot:true,
+      include_screenshot_base64:false,
+      actions:[{type:'wait',ms:2000}],
+    },
+  };
+  const interrupted=(await runtime.submitReadOnlyJob(restartEnvelope)).job;
+  assert.equal(interrupted.state,'queued');
+  let runningBeforeCrash=null;
+  const runningDeadline=Date.now()+20_000;
+  while(Date.now()<runningDeadline){
+    const observation=(await runtime.readReadOnlyJob(interrupted.id)).job;
+    if(observation.state==='running'){
+      runningBeforeCrash=observation;
+      break;
+    }
+    if(['completed','failed','cancelled'].includes(observation.state)){
+      throw new Error('crash_canary_finished_before_crash');
+    }
+    await new Promise((resolve)=>setTimeout(resolve,40));
+  }
+  assert.ok(runningBeforeCrash,'must observe real running job before crash');
+  assert.equal(runningBeforeCrash.attempts,1);
+  const childPid=Number(/^browser_native_(\\d+)$/.exec(runtime.instanceId)?.[1]||0);
+  assert.ok(Number.isInteger(childPid)&&childPid>1,'owned child pid must be known');
+  process.kill(childPid,'SIGKILL');
+  // SIGKILL prevents graceful cancellation/receipt mutation. A genuine
+  // process restart must recover an on-disk "running" record.
+  await runtime.close();
+  runtime=null;
+  const interruptedPath=path.join(state,'durable-jobs',interrupted.id+'.json');
+  const persistedAtCrash=JSON.parse(fs.readFileSync(interruptedPath,'utf8'));
+  assert.equal(persistedAtCrash.state,'running');
+  assert.equal(persistedAtCrash.attempts,1);
+  assert.equal(persistedAtCrash.result,null);
+  runtime=await prepared.browserRuntimeFactory({
+    maxConcurrency:1,
+    jobStateDir:path.join(state,'durable-jobs'),
+  });
+  const recovered=await pollJob(interrupted.id,90_000);
+  assert.equal(recovered.state,'completed',JSON.stringify(recovered));
+  assert.equal(recovered.id,interrupted.id);
+  assert.equal(recovered.attempts,2);
+  assert.equal(recovered.recovery_count,1);
+  assert.match(recovered.result.evidence_receipt_sha256,/^[a-f0-9]{64}$/);
+  assert.match(recovered.result.screenshot_sha256,/^[a-f0-9]{64}$/);
+  const resumedDuplicate=(await runtime.submitReadOnlyJob(restartEnvelope)).job;
+  assert.equal(resumedDuplicate.id,recovered.id);
+  assert.equal(resumedDuplicate.deduplicated,true);
+  const crashRecoveryEvidence={
+    schema:'evercraft.browser.process-crash-recovery.v1',
+    execution_class:'real_sigkill_native_chromium_ci_not_production',
+    same_job_id_after_restart:recovered.id===interrupted.id,
+    observed_running_before_crash:true,
+    sigkill_applied_to_owned_worker:true,
+    persisted_running_record:true,
+    attempts:recovered.attempts,
+    recovery_count:recovered.recovery_count,
+    final_state:recovered.state,
+    screenshot_sha256:recovered.result.screenshot_sha256,
+    evidence_receipt_sha256:recovered.result.evidence_receipt_sha256,
+    idempotency_after_restart:true,
+    production_deployment_verified:false,
+  };
+  durableEvidence.real_process_restart=crashRecoveryEvidence;
+  fs.writeFileSync(path.join(state,'durable-proof.json'),JSON.stringify(durableEvidence,null,2)+'\\n',{mode:0o600});
+  if(process.env.GITHUB_STEP_SUMMARY){
+    fs.appendFileSync(process.env.GITHUB_STEP_SUMMARY,
+      '## Real Browser Worker process-crash recovery\\n'+
+      '- Fault: SIGKILL to owned worker while job RUNNING\\n'+
+      '- Recovered job ID: '+recovered.id+'\\n'+
+      '- Attempts: '+recovered.attempts+'\\n'+
+      '- Recovery count: '+recovered.recovery_count+'\\n'+
+      '- Evidence receipt SHA-256: '+recovered.result.evidence_receipt_sha256+'\\n'+
+      '- Execution class: native CI, not deployed production\\n');
+  }
+
   console.log(JSON.stringify({
     ok:true,
     schema:'evercraft.browser.native-runtime-proof.v1',
