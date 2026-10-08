@@ -3619,6 +3619,9 @@ export async function startEvercraftComputeNode({
         if (!lease || lease.token_hash !== sha(body.token || '')) {
           return send(res, 401, { error: 'invalid_lease' });
         }
+        if (lease.expires_at <= browserLeaseClock()) {
+          return send(res, 410, { error: 'expired_lease' });
+        }
         if (entry.workload_class !== 'systemia.evercraft-web-browser.v1') {
           return send(res, 422, { error: 'browser_auth_handoff_not_supported' });
         }
@@ -3650,6 +3653,9 @@ export async function startEvercraftComputeNode({
         const lease = leases.get(entry.lease_id);
         if (!lease || lease.token_hash !== sha(body.token || '')) {
           return send(res, 401, { error: 'invalid_lease' });
+        }
+        if (lease.expires_at <= browserLeaseClock()) {
+          return send(res, 410, { error: 'expired_lease' });
         }
         if (entry.workload_class !== 'systemia.evercraft-web-browser.v1') {
           return send(res, 422, { error: 'browser_delegated_snapshot_not_supported' });
@@ -3683,6 +3689,9 @@ export async function startEvercraftComputeNode({
         const lease = leases.get(entry.lease_id);
         if (!lease || lease.token_hash !== sha(body.token || '')) {
           return send(res, 401, { error: 'invalid_lease' });
+        }
+        if (lease.expires_at <= browserLeaseClock()) {
+          return send(res, 410, { error: 'expired_lease' });
         }
         if (entry.workload_class !== 'systemia.evercraft-web-browser.v1') {
           return send(res, 422, { error: 'browser_delegated_action_not_supported' });
