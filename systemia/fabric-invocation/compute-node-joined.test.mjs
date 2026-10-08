@@ -54,11 +54,13 @@ test('actual owned Compute Node lease -> Browser Worker service -> Fabric -> nat
   const deployment = proof('attested-local-test-deployment');
   const instance = 'browser_native_test_8';
   let browseCalls = 0;
+  let browserLeaseNow = Date.now();
   let node;
   try {
     node = await startEvercraftComputeNode({
       root: dir, nodeId,
       host: '127.0.0.1', port: 0,
+      browserLeaseClock: () => browserLeaseNow,
       browserRuntimeFactory: async () => ({
         instanceId: instance,
         async health() {
@@ -168,6 +170,19 @@ test('actual owned Compute Node lease -> Browser Worker service -> Fabric -> nat
       body: JSON.stringify({ token: 'invalid', job: { url: 'https://example.org/' } }),
     });
     assert.equal(denied.status, 401);
+    assert.equal(browseCalls, 1);
+    // Simulate time advancing past expiration while the interval-based
+    // service monitor has not yet swept the lease. The direct invocation
+    // route must reject an otherwise valid token without running a job.
+    browserLeaseNow = Date.parse(granted.expires_at) + 1000;
+    const expired = await fetch(node.endpoint + '/v1/services/' + serviceId + '/browser', {
+      method: 'POST', headers: { 'content-type': 'application/json' },
+      body: JSON.stringify({
+        token: granted.token, job: { url: 'https://example.org/' },
+      }),
+    });
+    assert.equal(expired.status, 410);
+    assert.equal((await expired.json()).error, 'expired_lease');
     assert.equal(browseCalls, 1);
   } finally {
     if (node) await node.close();
