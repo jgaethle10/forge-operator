@@ -59,3 +59,9 @@
 .fsDeviceParams label{display:grid;gap:4px;color:#8f9ba5;font-size:9px}
 .fsDeviceParams input[type="range"]{width:100%}
 @media(max-width:720px){.fsDeviceParams{grid-template-columns:minmax(0,1fr)}.fsDeviceTitle{align-items:flex-start;flex-wrap:wrap}.fsDeviceTitle small{width:100%;margin-left:25px}}
+
+
+.fsAudioTake{width:100%;display:grid;gap:3px;text-align:left;border:1px solid #283139;border-radius:7px;background:#10161b;color:#dce4ea;padding:8px;min-width:0}
+.fsAudioTake.active{outline:2px solid #e8eef2;outline-offset:1px;background:#151d23}
+.fsAudioTake span{font-size:10px;font-weight:700}
+.fsAudioTake small{font:8px ui-monospace,SFMono-Regular,Menlo,monospace;color:#71808a;overflow-wrap:anywhere}
