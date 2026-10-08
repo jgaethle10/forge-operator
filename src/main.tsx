@@ -4,6 +4,7 @@ import './index.css';
 import FallenFamilyCartoon from './FallenFamilyCartoon';
 import FallenSessions from './FallenSessions';
 import HouseholdFabricToday from './HouseholdFabricToday';
+import PeopleLayer from './PeopleLayer';
 
 type ForgeAction = {
   rank: number;
@@ -224,7 +225,9 @@ function Metric({ label, value }: { label: string; value: string }) {
   return <div className="metric"><span>{label}</span><strong>{value}</strong></div>;
 }
 
-const rootView = window.location.pathname.startsWith('/fallen-sessions')
+const rootView = window.location.pathname.startsWith('/people')
+  ? <PeopleLayer />
+  : window.location.pathname.startsWith('/fallen-sessions')
   ? <FallenSessions />
   : window.location.pathname.startsWith('/fallen')
     ? <FallenFamilyCartoon />

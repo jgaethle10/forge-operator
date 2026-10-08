@@ -1,0 +1,41 @@
+{
+  "schema": "evercraft.systemia.workflow-manifest.v1",
+  "workflow_key": "people-layer-edge",
+  "mission_key": "people-layer-sports-001",
+  "runtime": "systemia-core-resident",
+  "collider_compatible": false,
+  "cadence_seconds": 60,
+  "entrypoint": "systemia/organism/people-layer-edge-runner.mjs",
+  "authority": {
+    "reuse_existing_public_edge_capacity": "autonomous",
+    "deploy_people_layer_runtime": "autonomous_after_public_edge_ready",
+    "renew_compute_leases": "autonomous",
+    "verify_route_and_receipts": "autonomous",
+    "rebind_existing_route": "autonomous_after_receipt_and_instance_match",
+    "provision_new_external_capacity": false,
+    "use_base44_as_runtime": false,
+    "create_payment_obligation": false,
+    "grant_third_party_person_data_access": false,
+    "founder_login_required": false
+  },
+  "truth_gates": [
+    "evercraft_public_edge_ready",
+    "immutable_release_ref",
+    "people_private_state_root",
+    "people_private_operator_authority_file",
+    "non_base44_runtime",
+    "yard_deployment_receipt",
+    "health_contract_verified",
+    "public_https_route_verification",
+    "fresh_person_consent_canary_before_live_claim",
+    "trusted_mail_adapter_receipt_before_verified_email"
+  ],
+  "role": "person_sovereign_owned_runtime_edge",
+  "maintenance_owner": "systemia",
+  "hold_state": "held_waiting_for_owned_dependencies",
+  "proofs": [
+    "systemia/people/compute-runtime.proof.mjs",
+    "systemia/people/hosting.proof.mjs",
+    "systemia/people/email-delivery-contract.json"
+  ]
+}
