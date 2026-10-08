@@ -40,7 +40,7 @@ export function parseIsaiasAdvisory8(raw){
 }
 function normalizeFema(raw){
   let json;try{json=JSON.parse(raw);}catch{throw new Error('fema_invalid_json');}
-  if(json?.error)throw new Error('fema_service_error');
+  if(json?.error)throw new Error('fema_service_error_'+String(Number(json.error.code)||0));
   if(json?.type!=='FeatureCollection'||!Array.isArray(json.features))throw new Error('fema_geojson_required');
   if(json.features.length>4000)throw new Error('fema_page_limit_exceeded');
   if(json.features.some(f=>f.type!=='Feature'||f.geometry?.type!=='Point'||!isFiniteCoord(f.geometry.coordinates)))throw new Error('fema_geometry_invalid');
