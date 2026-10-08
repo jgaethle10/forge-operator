@@ -6,6 +6,8 @@ on:
       - 'systemia/mcp/fabric-local-runtime.mjs'
       - 'systemia/mcp/fabric-static-discovery.mjs'
       - 'tests/fabric-research-discovery-mount.test.mjs'
+      - 'tests/fabric-chum-release-safety.test.mjs'
+      - 'scripts/update-fabric-owned-edge.sh'
       - '.github/workflows/fabric-chum-public-routes.yml'
   push:
     branches: [main]
@@ -13,6 +15,8 @@ on:
       - 'systemia/mcp/fabric-local-runtime.mjs'
       - 'systemia/mcp/fabric-static-discovery.mjs'
       - 'tests/fabric-research-discovery-mount.test.mjs'
+      - 'tests/fabric-chum-release-safety.test.mjs'
+      - 'scripts/update-fabric-owned-edge.sh'
       - '.github/workflows/fabric-chum-public-routes.yml'
 
 permissions:
@@ -29,3 +33,5 @@ jobs:
           node-version: '22'
       - name: Test actual Fabric router for read-only sitemap and CHUM discovery
         run: node --test tests/fabric-research-discovery-mount.test.mjs
+      - name: Fail closed if owned updater threatens Journal evidence
+        run: node --test tests/fabric-chum-release-safety.test.mjs
