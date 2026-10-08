@@ -26,18 +26,22 @@ function fixture() {
     plan: [{ work_key: 'browser-read', work_type: 'browser_read', human_gate_required: false }],
   });
   let permitted = true;
+  let admissionHook = async () => {};
   let dispatchCount = 0;
   let disposition = 'ok';
   let ackUnavailable = false;
   let authorityExpiresAt = Date.now() + 60000;
   const coordinator = new FabricNativeInvocation({
     stateDir, lineageRoot, timeoutMs: 20,
-    missionLoader: async (key) => ({
-      state: key === missionKey ? goal : null,
-      admission_verified: true,
-      admission_receipt_hash: proof('admitted:systemia'),
-      allowed_capabilities: [capabilityKey],
-    }),
+    missionLoader: async (key) => {
+      await admissionHook();
+      return {
+        state: key === missionKey ? goal : null,
+        admission_verified: true,
+        admission_receipt_hash: proof('admitted:systemia'),
+        allowed_capabilities: [capabilityKey],
+      };
+    },
     authorizationVerifier: async ({ actor_ref, tenant_key, capability_key }) => ({
       decision: permitted ? 'allow' : 'deny',
       receipt_hash: proof('passport:verified'),
@@ -82,6 +86,7 @@ function fixture() {
     root, lineageRoot, stateDir, coordinator, input,
     dispatchCount: () => dispatchCount,
     deny: () => { permitted = false; },
+    setAdmissionHook: (fn) => { admissionHook = fn; },
     setWorker: (next) => { disposition = next; },
     setAckUnavailable: (next) => { ackUnavailable = next; },
     expireCredential: () => { authorityExpiresAt = Date.now() - 1000; },
@@ -327,5 +332,34 @@ test('reconciliation cannot rerun a worker with unknown outcome or create a new 
       f.coordinator.reconcileSystemiaOutcome({ ...f.input, idempotency_key: 'missing:key' }),
       /fabric_reconcile_invocation_not_found/,
     );
+  } finally { f.close(); }
+});
+
+
+test('revoking identity authority during Systemia admission denies before dispatch journal or worker', async () => {
+  const f = fixture();
+  try {
+    await new LineageStore(f.lineageRoot).init();
+    f.setAdmissionHook(async () => f.deny());
+    await assert.rejects(
+      f.coordinator.invoke(f.input),
+      /fabric_authorization_denied_or_expiring/,
+    );
+    assert.equal(f.dispatchCount(), 0);
+    assert.equal(fs.readdirSync(f.stateDir).filter((name) => name.endsWith('.jsonl')).length, 0);
+  } finally { f.close(); }
+});
+
+test('credential expiry during mission loading denies without creating a dispatch record', async () => {
+  const f = fixture();
+  try {
+    await new LineageStore(f.lineageRoot).init();
+    f.setAdmissionHook(async () => f.expireCredential());
+    await assert.rejects(
+      f.coordinator.invoke(f.input),
+      /fabric_authorization_denied_or_expiring/,
+    );
+    assert.equal(f.dispatchCount(), 0);
+    assert.equal(fs.readdirSync(f.stateDir).filter((name) => name.endsWith('.jsonl')).length, 0);
   } finally { f.close(); }
 });
