@@ -39,7 +39,7 @@ test('IBM i 7.4 exact SKU requires human confirmation and passes through Evercra
    sent.push(data);
    if(data.capability_key!=='ibmi_74_deadline_xray_250')return new Response(JSON.stringify({ok:false,error:'wrong_offer_key'}),{status:422});
    return new Response(JSON.stringify({ok:true,order_key:'synthetic-ibmi-74-test',offer_key:'ibmi_74_deadline_xray_250',amount_cents:25000,
-    currency:'usd',checkout_ready:true,checkout_url:'https://settlement.example.test/ibmi-74-demo',
+    currency:'usd',checkout_ready:true,checkout_url:'https://checkout.stripe.com/c/pay/cs_test_synthetic_ibmi74',
     payment_state:'unpaid',fulfillment_release:false}),{status:200});
   }
  });
@@ -137,4 +137,34 @@ test('7.4 route refuses default legacy Base44 purchase-intent URL before touchin
   assert.equal(body.checkout_ready,false);
   assert.equal(upstreamCalls,0);
  }finally{await runtime.close()}
+});
+
+test('exact 7.4 checkout cannot redirect a buyer to an arbitrary HTTPS URL',async()=>{
+ for(const badURL of [
+  'https://attacker.example/steal-payment',
+  'https://checkout.stripe.com.attacker.example/c/pay/forged',
+  'https://user:password@checkout.stripe.com/c/pay/forged',
+  'https://checkout.stripe.com:8443/c/pay/forged',
+  'http://checkout.stripe.com/c/pay/forged',
+ ]){
+  let calls=0;
+  const runtime=await startFabricLocalRuntime({
+   purchaseIntentUrl:'https://fabric.systemiacommandcenters.com/__synthetic_not_deployed__/purchase-intent',
+   host:'127.0.0.1',port:0,catalog:[ibmi],faieSurfaceEnabled:false,
+   purchaseIntentFetch:async()=>{calls++;return new Response(JSON.stringify({
+    ok:true,offer_key:'ibmi_74_deadline_xray_250',amount_cents:25000,
+    currency:'usd',checkout_ready:true,checkout_url:badURL,order_key:'synthetic-untrusted-destination'
+   }),{status:200});}
+  });
+  try{
+   const result=await fetch(runtime.url+'/api/offers/ibmi-74-deadline-xray/checkout',{
+    method:'POST',headers:{'content-type':'application/x-www-form-urlencoded'},
+    body:new URLSearchParams({user_confirmed:'true'}),redirect:'manual'
+   });
+   assert.equal(calls,1);
+   assert.equal(result.status,503);
+   assert.equal(result.headers.get('location'),null);
+   assert.match(await result.text(),/No charge was made/);
+  }finally{await runtime.close()}
+ }
 });
