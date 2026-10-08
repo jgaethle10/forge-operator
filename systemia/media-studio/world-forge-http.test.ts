@@ -156,6 +156,10 @@ test('World Forge Play Mode HTTP start → step → status → stop lifecycle is
   assert.equal(webgpu.payload.frame.plan.width,640);
   assert.equal(webgpu.payload.frame.plan.height,360);
   assert.ok(webgpu.payload.frame.geometries.length>0);
+  assert.equal(
+    Object.keys(webgpu.payload.frame.geometryDigests).length,
+    webgpu.payload.frame.geometries.length,
+  );
 
   const stopped=invoke(
     'POST /api/fallen/world-forge/play/stop',
