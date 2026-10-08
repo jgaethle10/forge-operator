@@ -3,17 +3,21 @@
 import assert from 'node:assert/strict';
 import crypto from 'node:crypto';
 import fs from 'node:fs';
+import { signDurableJobRequest } from './systemia-admission.mjs';
 
 const origin = String(process.env.EVERCRAFT_BROWSER_PROOF_URL || 'http://127.0.0.1:18787');
-const token = String(process.env.EVERCRAFT_BROWSER_PROOF_TOKEN || '');
-if (!token) throw new Error('browser_proof_token_required');
-const auth = { 'authorization': 'Bearer ' + token };
+const signingKey = String(process.env.EVERCRAFT_BROWSER_PROOF_SIGNING_KEY || '');
+if (signingKey.length < 32) throw new Error('browser_proof_systemia_signing_key_required');
 const base = { mission_key: 'systemia-browser-ci-canary', work_key: 'browser-ci-readonly-001' };
 const request = async (method, path, body) => {
+  const raw = body ? JSON.stringify(body) : '';
   const response = await fetch(origin + path, {
     method,
-    headers: { ...auth, ...(body ? { 'content-type': 'application/json' } : {}) },
-    body: body ? JSON.stringify(body) : undefined,
+    headers: {
+      ...(body ? { 'content-type': 'application/json' } : {}),
+      ...signDurableJobRequest(signingKey,{method,path,body:raw}),
+    },
+    body: body ? raw : undefined,
   });
   const json = await response.json();
   if (!response.ok) throw new Error('browser_proof_http_' + response.status + ':' + json.error);
