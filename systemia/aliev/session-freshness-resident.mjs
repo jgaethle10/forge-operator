@@ -48,8 +48,8 @@ function receiptFromBody(body,{requestedAt,endpoint,receivedAt}){
   if(!watch || !Number.isSafeInteger(watch.warning_count) || watch.warning_count<0)throw new Error('historical_watch_contract_required');
   const failedSources=[...new Set([...body.failed_sources.map(clean).filter(Boolean),...sourceFailures])];
   const warningCount=watch.warning_count;
-  const countValid=Number.isSafeInteger(watch.eligible_source_count)&&watch.eligible_source_count>=0 &&
-    Number.isSafeInteger(watch.probed_source_count)&&watch.probed_source_count>=0 &&
+  const countValid=Number.isSafeInteger(watch.eligible_source_count)&&watch.eligible_source_count>0 &&
+    Number.isSafeInteger(watch.probed_source_count)&&watch.probed_source_count>0 &&
     watch.probed_source_count<=watch.eligible_source_count;
   const sweepHours=watch.estimated_full_sweep_hours;
   const sweepValid=Number.isSafeInteger(sweepHours)&&sweepHours>=0;
