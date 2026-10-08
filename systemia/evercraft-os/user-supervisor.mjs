@@ -10,20 +10,7 @@ import { buildBootEnvelope } from "./runtime.mjs";
 import { buildDeviceProfile } from "./device-profile.mjs";
 import { EvercraftOsInstallLedger } from "./install-ledger.mjs";
 import { EvercraftOsCapabilityCapsules } from "./runtime-capsule.mjs";
-
-function canonical(value) {
-  if (Array.isArray(value)) return value.map(canonical);
-  if (value && typeof value === "object") {
-    return Object.fromEntries(Object.keys(value).sort().map((key) => [key, canonical(value[key])]));
-  }
-  return value;
-}
-
-function sha256(value) {
-  return "sha256:" + createHash("sha256")
-    .update(typeof value === "string" ? value : JSON.stringify(canonical(value)))
-    .digest("hex");
-}
+import { sealEvercraftOsUserSessionBootReceipt } from "./boot-receipt.mjs";
 
 function atomicJson(file, value) {
   fs.mkdirSync(path.dirname(file), { recursive: true, mode: 0o700 });
@@ -240,7 +227,7 @@ export async function startEvercraftOsUserSupervisor({
         boot_receipt_is_execution_authority: false
       }
     };
-    const receipt = { ...body, receipt_hash: sha256(body) };
+    const receipt = sealEvercraftOsUserSessionBootReceipt(body);
     atomicJson(bootReceiptFile, receipt);
     appendJsonl(path.join(bootRoot, "events.jsonl"), receipt);
     home.setDeploymentReceipt(receipt.receipt_hash);
