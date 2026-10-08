@@ -93,6 +93,7 @@ test('owned Fabric serves offer pages, requires confirmation, and delegates chec
     port:0,
     catalog:[websiteAudit],
     faieSurfaceEnabled:false,
+    purchaseIntentUrl:'https://payments.example.test/purchase-intent',
     purchaseIntentFetch:async(url,init)=>{
       seen.push({
         url:String(url),
@@ -177,12 +178,62 @@ test('owned Fabric serves offer pages, requires confirmation, and delegates chec
   }
 });
 
+test('unconfigured purchase-intent transport holds checkout without calling any upstream',async()=>{
+  let calls=0;
+  const runtime=await startFabricLocalRuntime({
+    host:'127.0.0.1',
+    port:0,
+    catalog:[websiteAudit],
+    faieSurfaceEnabled:false,
+    purchaseIntentFetch:async()=>{ calls++; throw new Error('must_not_call_unconfigured_checkout'); },
+  });
+  try{
+    const health=await (await fetch(runtime.url+'/health')).json();
+    assert.equal(health.base44_transport_enabled,false);
+    assert.equal(health.human_offer_checkout_enabled,false);
+    assert.equal(health.human_offer_checkout_transport_host,null);
+    assert.equal(health.human_offer_checkout_transport_state,'held_no_owned_purchase_intent_transport');
+
+    const unconfirmed=await fetch(runtime.url+'/api/offers/website-audit/checkout',{
+      method:'POST',headers:{'content-type':'application/json'},
+      body:JSON.stringify({user_confirmed:false}),
+    });
+    assert.equal(unconfirmed.status,409);
+    const confirmed=await fetch(runtime.url+'/api/offers/website-audit/checkout',{
+      method:'POST',headers:{'content-type':'application/json'},
+      body:JSON.stringify({user_confirmed:true}),
+    });
+    assert.equal(confirmed.status,503);
+    const body=await confirmed.json();
+    assert.equal(body.error,'evercraft_payments_owned_purchase_intent_unconfigured');
+    assert.equal(body.checkout_ready,false);
+    assert.equal(body.fulfillment_release,false);
+    assert.equal(calls,0);
+  }finally{
+    await runtime.close();
+  }
+});
+
+test('legacy Base44 checkout transport is rejected at startup',async()=>{
+  await assert.rejects(
+    startFabricLocalRuntime({
+      host:'127.0.0.1',
+      port:0,
+      catalog:[websiteAudit],
+      faieSurfaceEnabled:false,
+      purchaseIntentUrl:'https://base44.app/api/apps/legacy/functions/ravenNexusPurchaseIntent',
+    }),
+    /purchase_intent_legacy_base44_transport_forbidden/
+  );
+});
+
 test('human checkout failures render a branded Evercraft Payments page instead of raw JSON',async()=>{
   const runtime=await startFabricLocalRuntime({
     host:'127.0.0.1',
     port:0,
     catalog:[websiteAudit],
     faieSurfaceEnabled:false,
+    purchaseIntentUrl:'https://payments.example.test/purchase-intent',
     purchaseIntentFetch:async()=>new Response(JSON.stringify({
       ok:true,
       authority:'Evercraft Payments',
