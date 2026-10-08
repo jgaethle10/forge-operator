@@ -396,8 +396,8 @@ export function renderPaymentHoldPage({slug='',orderKey=''}={}){
     '<main>',
     '<section class="offer-hero">',
     '<div class="kicker"><span class="dot"></span> Evercraft Payments</div>',
-    '<h1>No charge was made.</h1>',
-    '<p class="lede">Secure checkout is not currently available. No charge was attempted or verified, and no paid work was released. You can return to the public offer details.</p>',
+    '<h1>Checkout is not confirmed.</h1>',
+    '<p class="lede">Evercraft has not verified a completed payment or authorized fulfillment for this request. If you already reached a payment provider, check the existing transaction before retrying. You can return to the public offer details.</p>',
     '<div class="actions">',
     '<a class="btn primary" href="'+back+'">Return to the offer</a>',
     '<a class="btn" href="'+back+'">Try again</a>',
@@ -410,7 +410,7 @@ export function renderPaymentHoldPage({slug='',orderKey=''}={}){
     '</section>',
     '</main>'
   ].join('\n'),{
-    description:'Evercraft Payments did not open a settlement checkout. No charge was made.',
+    description:'Evercraft has not verified payment or released fulfillment for this checkout request.',
     canonical:back,
     ogType:'website',
   });
