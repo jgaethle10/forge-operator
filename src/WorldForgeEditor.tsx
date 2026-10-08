@@ -1567,11 +1567,13 @@ export default function WorldForgeEditor(){
         throw new Error(payload.error||'Could not start World Forge Play Mode.');
       }
       setEngineRuntime(null);
-      setPlayRunning(false);
-      playbackClockRef.current=null;
+      playbackClockRef.current=createWorldForgePlaybackClock(
+        window.performance.now(),
+      );
       setPlaySession(playStateFromPayload(payload.session,payload.snapshot));
+      setPlayRunning(true);
       setCommandNote(
-        `Play Mode started at tick ${payload.snapshot.tick} · runtime world v${payload.session.worldVersion}.`
+        `Play Mode started + running at ${playbackRate}× · runtime world v${payload.session.worldVersion}.`
       );
     }catch(err){
       setError(err instanceof Error?err.message:String(err));
@@ -1634,6 +1636,10 @@ export default function WorldForgeEditor(){
         );
       }
     }catch(err){
+      if(options.quiet){
+        setPlayRunning(false);
+        playbackClockRef.current=null;
+      }
       setError(err instanceof Error?err.message:String(err));
     }finally{
       setBusy(false);
@@ -2402,13 +2408,39 @@ export default function WorldForgeEditor(){
                 className={playSession.projectVersion===project.version?'wf-play-badge':'wf-play-badge stale'}
                 title={playSession.snapshotDigest}
               >
-                PLAY · t{playSession.tick} · v{playSession.projectVersion}
+                {playRunning?'RUN':'PAUSED'} · t{playSession.tick} · v{playSession.projectVersion}
               </span>
-              <button onClick={()=>void stepPlaySession(1)} disabled={busy}>+1 Tick</button>
-              <button onClick={()=>void stepPlaySession(60)} disabled={busy}>+60 Ticks</button>
+              <button
+                className={playRunning?'wf-play-button active':'wf-play-button'}
+                onClick={()=>{
+                  if(playRunning) pauseContinuousPlayback();
+                  else startContinuousPlayback();
+                }}
+                disabled={!playRunning&&(busy||stagedOperations.length>0)}
+                title={playRunning?'Pause continuous deterministic simulation':'Run continuous deterministic simulation'}
+              >
+                {playRunning?'❚❚ Pause':'▶ Run'}
+              </button>
+              <label className="wf-playback-control">
+                <span>Rate</span>
+                <select
+                  value={playbackRate}
+                  onChange={event=>setContinuousPlaybackRate(Number(event.target.value))}
+                >
+                  <option value={.25}>0.25×</option>
+                  <option value={.5}>0.5×</option>
+                  <option value={1}>1×</option>
+                  <option value={2}>2×</option>
+                </select>
+              </label>
+              <button onClick={()=>void stepPlaySession(1)} disabled={busy||playRunning}>+1 Tick</button>
+              <button onClick={()=>void stepPlaySession(60)} disabled={busy||playRunning}>+60 Ticks</button>
               <button
                 className={runtimeDragMode?'wf-runtime-drag active':'wf-runtime-drag'}
-                onClick={()=>setRuntimeDragMode(current=>!current)}
+                onClick={()=>{
+                  if(playRunning) pauseContinuousPlayback();
+                  setRuntimeDragMode(current=>!current);
+                }}
                 disabled={
                   busy||
                   stagedOperations.length>0||
