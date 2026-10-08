@@ -81,3 +81,17 @@ Expected `evidence_available`, got `insufficient_evidence`.
 An independent diagnostic draft PR was opened to isolate this: #1161.
 
 **No claim of completed production deployment, approved external relationship, outreach, contract, payment, or recovered business is made by this receipt.**
+
+## Verification addendum: later checkpoint with positive-fit regression guard
+
+A subsequent Base44 checkpoint was created after fixing zero-capability-fit candidate ranking in **both** Project and ConnectCase route planners and reducing the private-case route response. This checkpoint supersedes the earlier v1.7 source checkpoint above as the most recent independently checked state:
+
+- Checkpoint: `6ac6f06e3422850b1688e4ac`
+- Base44 git commit: `96554cc43bf6742e69f012761144ccc67d9e4a42`
+- Source runtime version remains `evercraft-opportunity-fabric-runtime-v1.7.0`.
+
+Changes: ranking now requires positive `matched_terms` overlap with capability evidence; relationship and geography bonuses cannot by themselves trigger suggestions. Private ConnectNode matching uses declared `node.capabilities`, not labels, organization, node type, or public-safe summary. The private route returns `route_state` rather than the full `case:updatedCase` record. `ConnectCase.problem_statement` now has explicit owner/admin field-level read RLS. The security-smoke suite now asserts these anti-false-match and no-private-case-return contracts.
+
+**Reverified against this latest source:** `node tests/opportunity_fabric_authority_contract_test.mjs` PASS; `node scripts/opportunity-fabric-security-smoke.mjs` PASS; `npm run build` PASS (exit 0; stale Browserslist warning only). These remain sandbox/static authority and security checks, not authenticated live-user or production deployment proof.
+
+**Public deployment remains UNVERIFIED; do not update the canonical deployed-runtime record on this basis.**
