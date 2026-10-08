@@ -14,6 +14,7 @@ import {
   perspectivePickRay,
   pickNearestNativeMesh,
 } from './world-forge-picking';
+import { nativeViewportTriangleData } from './world-forge-viewport-mesh';
 import {
   runtimeBodiesByForgeNodeId,
   runtimeTransformsByForgeNodeId,
@@ -61,6 +62,7 @@ type ForgeNode={
   };
   light?:{type:string;intensity:number;color:[number,number,number]};
   physics?:ForgePhysics;
+  materialIds?:string[];
 };
 type ForgeProject={
   schema:string;
@@ -69,7 +71,13 @@ type ForgeProject={
   version:number;
   activeCameraNodeId?:string;
   nodes:ForgeNode[];
-  materials:Array<{id:string;name:string;baseColor:[number,number,number,number]}>;
+  materials:Array<{
+    id:string;
+    name:string;
+    baseColor:[number,number,number,number];
+    metallic?:number;
+    roughness?:number;
+  }>;
 };
 type ForgeOperation=
   |{type:'set_transform';nodeId:string;transform:Partial<Transform>}
@@ -321,6 +329,42 @@ function createProgram(gl:WebGL2RenderingContext){
   return program;
 }
 
+function createSolidProgram(gl:WebGL2RenderingContext){
+  const vertex=compileShader(gl,gl.VERTEX_SHADER,`#version 300 es
+    in vec3 aPosition;
+    in vec3 aNormal;
+    uniform mat4 uMvp;
+    uniform mat4 uModel;
+    out vec3 vNormal;
+    void main(){
+      gl_Position=uMvp*vec4(aPosition,1.0);
+      vNormal=mat3(transpose(inverse(uModel)))*aNormal;
+    }
+  `);
+  const fragment=compileShader(gl,gl.FRAGMENT_SHADER,`#version 300 es
+    precision highp float;
+    in vec3 vNormal;
+    uniform vec4 uBaseColor;
+    uniform vec3 uLightDirection;
+    out vec4 outColor;
+    void main(){
+      vec3 normal=normalize(vNormal);
+      float diffuse=max(dot(normal,normalize(uLightDirection)),0.0);
+      float light=0.24+0.76*diffuse;
+      outColor=vec4(uBaseColor.rgb*light,uBaseColor.a);
+    }
+  `);
+  const program=gl.createProgram();
+  if(!program) throw new Error('Could not create World Forge solid WebGL program.');
+  gl.attachShader(program,vertex);
+  gl.attachShader(program,fragment);
+  gl.linkProgram(program);
+  if(!gl.getProgramParameter(program,gl.LINK_STATUS)){
+    throw new Error(gl.getProgramInfoLog(program)||'World Forge solid WebGL program link failed.');
+  }
+  return program;
+}
+
 function WorldViewport({
   project,
   selectedId,
@@ -352,6 +396,7 @@ function WorldViewport({
     target:{x:0,y:0,z:1} as Vec3,
   });
   const [viewMode,setViewMode]=useState<'orbit'|'camera'>('orbit');
+  const [shadingMode,setShadingMode]=useState<'solid'|'wireframe'>('solid');
   const [gizmoPreview,setGizmoPreview]=useState<
     | {mode:'translate';nodeId:string;axis:keyof Vec3;delta:number}
     | {mode:'rotate';nodeId:string;axis:keyof Vec3;deltaDeg:number}
@@ -619,11 +664,21 @@ function WorldViewport({
     const gl=canvas.getContext('webgl2',{antialias:true});
     if(!gl) return;
 
-    const program=createProgram(gl);
-    const pos=gl.getAttribLocation(program,'aPosition');
-    const uMvp=gl.getUniformLocation(program,'uMvp');
-    const uColor=gl.getUniformLocation(program,'uColor');
-    const buffer=gl.createBuffer();
+    const lineProgram=createProgram(gl);
+    const linePos=gl.getAttribLocation(lineProgram,'aPosition');
+    const lineMvp=gl.getUniformLocation(lineProgram,'uMvp');
+    const lineColor=gl.getUniformLocation(lineProgram,'uColor');
+    const lineBuffer=gl.createBuffer();
+
+    const solidProgram=createSolidProgram(gl);
+    const solidPos=gl.getAttribLocation(solidProgram,'aPosition');
+    const solidNormal=gl.getAttribLocation(solidProgram,'aNormal');
+    const solidMvp=gl.getUniformLocation(solidProgram,'uMvp');
+    const solidModel=gl.getUniformLocation(solidProgram,'uModel');
+    const solidBaseColor=gl.getUniformLocation(solidProgram,'uBaseColor');
+    const solidLightDirection=gl.getUniformLocation(solidProgram,'uLightDirection');
+    const solidPositionBuffer=gl.createBuffer();
+    const solidNormalBuffer=gl.createBuffer();
 
     function resize(){
       const dpr=Math.min(2,window.devicePixelRatio||1);
@@ -637,22 +692,49 @@ function WorldViewport({
     }
 
     function drawVertices(vertices:Float32Array,mvp:Float32Array,color:[number,number,number,number]){
-      gl!.bindBuffer(gl!.ARRAY_BUFFER,buffer);
+      gl!.useProgram(lineProgram);
+      gl!.bindBuffer(gl!.ARRAY_BUFFER,lineBuffer);
       gl!.bufferData(gl!.ARRAY_BUFFER,vertices,gl!.STATIC_DRAW);
-      gl!.enableVertexAttribArray(pos);
-      gl!.vertexAttribPointer(pos,3,gl!.FLOAT,false,0,0);
-      gl!.uniformMatrix4fv(uMvp,false,mvp);
-      gl!.uniform4fv(uColor,color);
+      gl!.enableVertexAttribArray(linePos);
+      gl!.vertexAttribPointer(linePos,3,gl!.FLOAT,false,0,0);
+      gl!.uniformMatrix4fv(lineMvp,false,mvp);
+      gl!.uniform4fv(lineColor,color);
       gl!.drawArrays(gl!.LINES,0,vertices.length/3);
+    }
+
+    function drawSolid(node:ForgeNode,transform:Transform,mvp:Float32Array){
+      const data=nativeViewportTriangleData(node);
+      if(!data||data.triangleCount<1) return;
+      const materialId=node.materialIds?.[0];
+      const material=materialId
+        ? project.materials.find(item=>item.id===materialId)
+        : undefined;
+      const baseColor=material?.baseColor??[.58,.54,.46,1];
+
+      gl!.useProgram(solidProgram);
+      gl!.bindBuffer(gl!.ARRAY_BUFFER,solidPositionBuffer);
+      gl!.bufferData(gl!.ARRAY_BUFFER,data.positions,gl!.STATIC_DRAW);
+      gl!.enableVertexAttribArray(solidPos);
+      gl!.vertexAttribPointer(solidPos,3,gl!.FLOAT,false,0,0);
+
+      gl!.bindBuffer(gl!.ARRAY_BUFFER,solidNormalBuffer);
+      gl!.bufferData(gl!.ARRAY_BUFFER,data.normals,gl!.STATIC_DRAW);
+      gl!.enableVertexAttribArray(solidNormal);
+      gl!.vertexAttribPointer(solidNormal,3,gl!.FLOAT,false,0,0);
+
+      gl!.uniformMatrix4fv(solidMvp,false,mvp);
+      gl!.uniformMatrix4fv(solidModel,false,modelMatrix(transform));
+      gl!.uniform4fv(solidBaseColor,baseColor);
+      gl!.uniform3fv(solidLightDirection,new Float32Array([.35,-.45,.82]));
+      gl!.drawArrays(gl!.TRIANGLES,0,data.positions.length/3);
     }
 
     function render(){
       resize();
       gl!.enable(gl!.DEPTH_TEST);
+      gl!.depthFunc(gl!.LEQUAL);
       gl!.clearColor(.018,.021,.026,1);
       gl!.clear(gl!.COLOR_BUFFER_BIT|gl!.DEPTH_BUFFER_BIT);
-      gl!.useProgram(program);
-
       const {vp}=matrices(canvas.width,canvas.height);
       drawVertices(GRID_LINES,vp,[.13,.16,.19,1]);
 
@@ -661,12 +743,19 @@ function WorldViewport({
         const mvp=mat4Multiply(vp,modelMatrix(transform));
         const selected=node.id===selectedId;
         const locked=node.locked===true;
-        const color:[number,number,number,number]=selected
-          ? [.31,.75,1,1]
-          : locked
-            ? [.36,.39,.43,1]
-            : [.72,.63,.39,1];
-        drawVertices(editableMeshLines(node),mvp,color);
+
+        if(shadingMode==='solid'){
+          drawSolid(node,transform,mvp);
+        }
+
+        if(shadingMode==='wireframe'||selected){
+          const color:[number,number,number,number]=selected
+            ? [.31,.75,1,1]
+            : locked
+              ? [.36,.39,.43,1]
+              : [.72,.63,.39,1];
+          drawVertices(editableMeshLines(node),mvp,color);
+        }
       }
 
       if(selectedNode&&!selectedNode.locked){
@@ -687,10 +776,13 @@ function WorldViewport({
 
     render();
     return ()=>{
-      gl.deleteBuffer(buffer);
-      gl.deleteProgram(program);
+      gl.deleteBuffer(lineBuffer);
+      gl.deleteBuffer(solidPositionBuffer);
+      gl.deleteBuffer(solidNormalBuffer);
+      gl.deleteProgram(lineProgram);
+      gl.deleteProgram(solidProgram);
     };
-  },[project,meshNodes,orbit,selectedId,selectedNode,activeCamera,viewMode,gizmoPreview,transformMode]);
+  },[project,meshNodes,orbit,selectedId,selectedNode,activeCamera,viewMode,gizmoPreview,transformMode,shadingMode]);
 
   function pickGeometry(clientX:number,clientY:number){
     const canvas=canvasRef.current;
@@ -967,7 +1059,11 @@ function WorldViewport({
         }));
       }}
     />
-    <div className="wf-view-badge">{viewMode==='camera'?'CAMERA VIEW':'WEBGL2 ORBIT'}</div>
+    <div className="wf-view-badge">
+      {viewMode==='camera'
+        ? `CAMERA · ${shadingMode.toUpperCase()}`
+        : `WEBGL2 · ${shadingMode.toUpperCase()}`}
+    </div>
     <div className="wf-view-controls">
       <button type="button" onClick={frameSelected} disabled={!selectedNode}>Frame Selected</button>
       <button
@@ -977,6 +1073,13 @@ function WorldViewport({
         className={viewMode==='camera'?'active':''}
       >
         {viewMode==='camera'?'Exit Camera':'Camera View'}
+      </button>
+      <button
+        type="button"
+        onClick={()=>setShadingMode(current=>current==='solid'?'wireframe':'solid')}
+        className={shadingMode==='solid'?'active':''}
+      >
+        {shadingMode==='solid'?'Solid':'Wire'}
       </button>
       <span>
         {transformMode==='translate'
