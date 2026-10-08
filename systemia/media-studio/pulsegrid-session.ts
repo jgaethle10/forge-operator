@@ -128,6 +128,15 @@ export type PulseGridOperation =
     }
   | { type: 'note.move'; track_id: string; scene: number; note_id: string; start: number; pitch: number }
   | { type: 'note.resize'; track_id: string; scene: number; note_id: string; length: number }
+  | {
+      type: 'note.set_expression';
+      track_id: string;
+      scene: number;
+      note_id: string;
+      velocity?: number;
+      probability?: number;
+      microtiming?: number;
+    }
   | { type: 'note.delete'; track_id: string; scene: number; note_id: string };
 
 export type PulseGridTransactionRequest = {
@@ -641,6 +650,22 @@ export function applyPulseGridOperation(
     note.length = clamp(Number(operation.length), 0.01, Math.max(0.01, clip.steps.length - note.start));
     after = structuredClone(note);
     targets = [`clip:${clip.id}.note:${note.id}`];
+  } else if (operation.type === 'note.set_expression') {
+    const { clip } = getClip(session, operation.track_id, operation.scene);
+    const { note } = findNote(clip, operation.note_id);
+    if (
+      operation.velocity === undefined &&
+      operation.probability === undefined &&
+      operation.microtiming === undefined
+    ) {
+      throw new Error('PulseGrid note expression requires at least one value.');
+    }
+    before = structuredClone(note);
+    if (operation.velocity !== undefined) note.velocity = clamp(Number(operation.velocity), 0, 1);
+    if (operation.probability !== undefined) note.probability = clamp(Number(operation.probability), 0, 1);
+    if (operation.microtiming !== undefined) note.microtiming = clamp(Number(operation.microtiming), -1000, 1000);
+    after = structuredClone(note);
+    targets = [`clip:${clip.id}.note:${note.id}.expression`];
   } else {
     const { clip } = getClip(session, operation.track_id, operation.scene);
     const { index, note } = findNote(clip, operation.note_id);
@@ -783,7 +808,7 @@ export function undoPulseGridReceipt(
     const existing = clip.notes.findIndex((note) => note.id === created.id);
     if (existing < 0) throw new Error('PulseGrid created note no longer exists: ' + created.id);
     clip.notes.splice(existing, 1);
-  } else if (operation.type === 'note.move' || operation.type === 'note.resize') {
+  } else if (operation.type === 'note.move' || operation.type === 'note.resize' || operation.type === 'note.set_expression') {
     const { clip } = getClip(session, operation.track_id, operation.scene);
     const restored = structuredClone(originalReceipt.before as PulseGridNote);
     const { index } = findNote(clip, operation.note_id);
