@@ -18,7 +18,9 @@ import { EvercraftPassport } from '../passport/passport.mjs';
 import { EvercraftIdentity } from '../identity/identity.mjs';
 import { createEvercraftFabricSessionVerifier } from './signed-identity-verifier.mjs';
 import { createFabricPassportVerifier } from './passport-verifier.mjs';
-import { createGoalState, admitGoalPlan, startGoalWork, recordGoalOutcome } from '../organism/goal-runtime.mjs';
+import { createGoalState, admitGoalPlan } from '../organism/goal-runtime.mjs';
+import { createGoalStateFile, readGoalState } from '../organism/goal-store.mjs';
+import { createNativeSystemiaOutcomeWriter } from './systemia-goal-ack.mjs';
 import { FabricNativeInvocation } from './native-invocation.mjs';
 import { createPrivateBrowserWorkerAdapter, PUBLIC_BROWSER_CAPABILITY } from './browser-worker-adapter.mjs';
 import { createComputeBrowserLeaseRuntime } from './compute-browser-lease.mjs';
@@ -90,7 +92,7 @@ try {
   const lineageRoot = path.join(root, 'lineage');
   await new LineageStore(lineageRoot).init();
 
-  let goal = admitGoalPlan({
+  const goal = admitGoalPlan({
     state: createGoalState({
       goalKey: 'chromium-fabric-canary',
       missionKey: 'mission:chromium-fabric-canary',
@@ -98,6 +100,9 @@ try {
     }),
     plan: [{ work_key: 'render-example', work_type: 'browser_read' }],
   });
+  const goalStateFile = path.join(root, 'systemia-goal-state.json');
+  await createGoalStateFile(goalStateFile, goal);
+  const outcomeWriter = createNativeSystemiaOutcomeWriter({ goalStateFile });
   // CI-only private Identity store. Its signed, revocable session is real;
   // the operator, password and tenant binding are synthetic CI fixtures.
   const subjectRef = 'user:local-chromium-operator';
@@ -147,22 +152,12 @@ try {
     workerInvoker: browser.workerInvoker,
     workerReceiptVerifier: browser.workerReceiptVerifier,
     missionLoader: async () => ({
-      state: goal, admission_verified: true,
+      state: await readGoalState(goalStateFile), admission_verified: true,
       admission_receipt_hash: proof('local-canary-systemia-admission'),
       allowed_capabilities: [PUBLIC_BROWSER_CAPABILITY],
     }),
     authorizationVerifier: nativePassportVerifier,
-    missionOutcomeWriter: async ({ mission_key, work_key, correlation_id, lineage_receipt_id }) => {
-      goal = startGoalWork({ state: goal, workKey: work_key });
-      goal = recordGoalOutcome({
-        state: goal, workKey: work_key, result: 'complete',
-        receiptRef: lineage_receipt_id,
-      });
-      return {
-        state: 'recorded', mission_key, work_key, correlation_id,
-        lineage_receipt_id, receipt_hash: proof('local-canary-ack:' + correlation_id),
-      };
-    },
+    missionOutcomeWriter: outcomeWriter,
   });
   const request = {
     mission_key: 'mission:chromium-fabric-canary',
@@ -187,7 +182,17 @@ try {
   assert.equal(repeated.lineage_receipt_id, first.lineage_receipt_id);
   const tx = await new LineageStore(lineageRoot).readObject(first.lineage_transaction_id);
   assert.equal(tx.type, 'transaction');
-  assert.equal(goal.tasks[0].status, 'complete');
+  const persistedGoal = await readGoalState(goalStateFile);
+  assert.equal(persistedGoal.tasks[0].status, 'complete');
+  const acknowledgedAgain = await createNativeSystemiaOutcomeWriter({ goalStateFile })({
+    mission_key: request.mission_key,
+    work_key: request.work_key,
+    correlation_id: first.correlation_id,
+    lineage_transaction_id: first.lineage_transaction_id,
+    lineage_receipt_id: first.lineage_receipt_id,
+    worker_receipt_digest: first.worker_receipt_digest,
+  });
+  assert.equal(acknowledgedAgain.durable_goal_verified, true);
 
   // This receipt proves real Chromium in ephemeral CI. It does NOT prove a
   // persistent production node, remotely authenticated Systemia or Yard.
@@ -209,6 +214,7 @@ try {
     compute_service_receipt_hash: service.receipt?.receipt_hash || null,
     native_lineage_receipt_id: first.lineage_receipt_id,
     systemia_local_acknowledged: first.systemia_outcome_acknowledged,
+    systemia_goal_state_persisted_and_replayed: acknowledgedAgain.durable_goal_verified,
     exactly_one_dispatched_worker_call_by_idempotency: true,
     completed_at: new Date().toISOString(),
   };
