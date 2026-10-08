@@ -416,7 +416,15 @@ test('prepare saga resumes from a persisted preparing marker instead of duplicat
       route: null,
       permit_id: 'permit_lease_resume_001',
       meter_reservation_id: 'res_lease_resume_001',
-      meter: null,
+      // A resumable checkpoint must persist the original meter binding,
+      // even before capacity reservation has actually completed.
+      meter: {
+        subject_ref: 'org:demo',
+        product: 'rivet',
+        metric: 'site_reports',
+        quantity: 1,
+        unit: 'report',
+      },
       raw_request_stored: false,
       dispatch_performed: false,
       recorded_at: '2026-09-27T18:00:00Z',
@@ -484,4 +492,146 @@ test('prepare saga resumes from a persisted preparing marker instead of duplicat
   );
 
   fs.rmSync(root, { recursive: true, force: true });
+});
+
+
+test('idempotency replay is bound to actor, resource, payload, meter and lease, across restart', () => {
+  const { root, gate } = setup();
+  try {
+    const original = prepare(gate);
+    assert.equal(original.state, 'prepared');
+    const retry = prepare(gate);
+    assert.equal(retry.duplicate, true);
+    assert.equal(retry.dispatch_allowed, false);
+    assert.equal(retry.lease.receipt_hash, original.lease.receipt_hash);
+
+    const restarted = new EvercraftExecutionGate({
+      stateDir: path.join(root, 'gate'),
+      passportStateDir: path.join(root, 'passport'),
+      meterStateDir: path.join(root, 'meter'),
+      routeLedgerPath: path.join(root, 'routes.json'),
+    });
+    for (const altered of [
+      { actor_ref: 'agent:another-tenant' },
+      { passport_product: 'findmypart' },
+      { scope: 'payment.refund' },
+      { resource_ref: 'site:other-tenant' },
+      { specialist_slug: 'systemia-remote-ops' },
+      { route_mode: 'registered_internal' },
+      { lease_id: 'lease_other' },
+      { request: { address: 'different property', report: 'preliminary' } },
+      { meter: { subject_ref: 'org:other', product: 'rivet', metric: 'site_reports', quantity: 1, unit: 'report' } },
+      { meter: { subject_ref: 'org:demo', product: 'rivet', metric: 'site_reports', quantity: 2, unit: 'report' } },
+      { meter: null },
+    ]) {
+      assert.throws(
+        () => prepare(restarted, altered),
+        /execution_gate_idempotency_binding_conflict/,
+        JSON.stringify(altered)
+      );
+    }
+    assert.equal(restarted.getLease(original.lease.lease_id).state, 'prepared');
+  } finally {
+    fs.rmSync(root, { recursive: true, force: true });
+  }
+});
+
+test('started duplicate retries never re-authorize dispatch or consume more quota', () => {
+  const { root, gate, meter } = setup();
+  try {
+    const prepared = prepare(gate);
+    const started = gate.startExecution({
+      lease_id: prepared.lease.lease_id,
+      idempotency_key: 'execution:start:rivet:single-dispatch',
+      start_evidence_ref: 'systemia:dispatch-intent:single-dispatch',
+      started_at: '2026-09-27T18:02:00Z',
+    });
+    assert.equal(started.state, 'started');
+    assert.equal(started.dispatch_allowed, true);
+
+    const repeatedStart = gate.startExecution({
+      lease_id: prepared.lease.lease_id,
+      idempotency_key: 'execution:start:rivet:single-dispatch',
+      start_evidence_ref: 'systemia:dispatch-intent:single-dispatch',
+    });
+    assert.equal(repeatedStart.duplicate, true);
+    assert.equal(repeatedStart.dispatch_allowed, false);
+
+    const newKeySameLease = gate.startExecution({
+      lease_id: prepared.lease.lease_id,
+      idempotency_key: 'execution:start:rivet:different-key',
+      start_evidence_ref: 'systemia:dispatch-intent:single-dispatch',
+    });
+    assert.equal(newKeySameLease.duplicate, true);
+    assert.equal(newKeySameLease.dispatch_allowed, false);
+
+    const repeatedPrepare = prepare(gate);
+    assert.equal(repeatedPrepare.state, 'started');
+    assert.equal(repeatedPrepare.duplicate, true);
+    assert.equal(repeatedPrepare.dispatch_allowed, false);
+    assert.throws(() => prepare(gate, { actor_ref: 'agent:intruder' }), /execution_gate_idempotency_binding_conflict/);
+
+    const usage = meter.getEntitlementState('ent_rivet_reports', {
+      at: '2026-09-27T18:03:00Z',
+    });
+    assert.equal(usage.used, 1);
+    assert.equal(usage.reserved, 0);
+  } finally {
+    fs.rmSync(root, { recursive: true, force: true });
+  }
+});
+
+
+test('start, complete and cancel replay keys cannot disclose another lease', () => {
+  const first = setup();
+  try {
+    const prepared = prepare(first.gate);
+    const started = first.gate.startExecution({
+      lease_id: prepared.lease.lease_id,
+      idempotency_key: 'start:lease-bound',
+      start_evidence_ref: 'systemia:dispatch:bound',
+      started_at: '2026-09-27T18:02:00Z',
+    });
+    assert.equal(started.state, 'started');
+    assert.throws(() => first.gate.startExecution({
+      lease_id: 'lease_other_tenant',
+      idempotency_key: 'start:lease-bound',
+      start_evidence_ref: 'systemia:dispatch:bound',
+    }), /execution_gate_idempotency_binding_conflict/);
+
+    const completed = first.gate.completeExecution({
+      lease_id: prepared.lease.lease_id,
+      idempotency_key: 'complete:lease-bound',
+      outcome_evidence_ref: 'lineage:outcome:bound',
+      outcome_state: 'completed',
+      completed_at: '2026-09-27T18:05:00Z',
+    });
+    assert.equal(completed.state, 'completed');
+    assert.throws(() => first.gate.completeExecution({
+      lease_id: 'lease_other_tenant',
+      idempotency_key: 'complete:lease-bound',
+      outcome_evidence_ref: 'lineage:outcome:bound',
+    }), /execution_gate_idempotency_binding_conflict/);
+  } finally {
+    fs.rmSync(first.root, { recursive: true, force: true });
+  }
+
+  const second = setup();
+  try {
+    const prepared = prepare(second.gate);
+    const cancelled = second.gate.cancelExecution({
+      lease_id: prepared.lease.lease_id,
+      idempotency_key: 'cancel:lease-bound',
+      reason: 'test_cancelled',
+      cancelled_at: '2026-09-27T18:02:00Z',
+    });
+    assert.equal(cancelled.state, 'cancelled');
+    assert.throws(() => second.gate.cancelExecution({
+      lease_id: 'lease_other_tenant',
+      idempotency_key: 'cancel:lease-bound',
+      reason: 'test_cancelled',
+    }), /execution_gate_idempotency_binding_conflict/);
+  } finally {
+    fs.rmSync(second.root, { recursive: true, force: true });
+  }
 });
