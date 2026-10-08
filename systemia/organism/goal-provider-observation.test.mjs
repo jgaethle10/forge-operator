@@ -8,6 +8,7 @@ import {createGoalState,admitGoalPlan,startGoalWork,recordGoalOutcome} from './g
 import {holdInterruptedGoalWork} from './goal-recovery.mjs';
 import {providerObservationMessage,verifyProviderRecoveryObservation,recordProviderRecoveryObservation} from './goal-provider-observation.mjs';
 import {createGoalStateFile,mutateGoalState,readGoalState} from './goal-store.mjs';
+import {createCapabilityRegistry,executeGoalWorkWithAdapter} from './capability-runtime.mjs';
 
 const T0='2026-10-07T12:00:00.000Z';
 const later=(minutes)=>new Date(Date.parse(T0)+minutes*60000);
@@ -161,4 +162,35 @@ test('provider observations remain persisted, no dispatch or replay on restart',
    /already recorded/);
   assert.deepEqual(stored,await readGoalState(file));
  }finally{await rm(dir,{recursive:true,force:true});}
+});
+
+test('actual capability adapter must match predeclared provider before dispatch',async()=>{
+ let calls=0;
+ const goal=admitGoalPlan({
+  state:createGoalState({goalKey:'provider-route',objective:'Match real execution provider',now:later(0)}),
+  plan:[{work_key:'work',work_type:'research',provider_key:'evercraft-fabric'}],
+  now:later(0),
+ });
+ const makeRegistry=provider_key=>createCapabilityRegistry([{
+  capability_key:'test.research',provider_key,work_types:['research'],
+  execute:async()=>{calls++;return {result:'complete',receipt_ref:'provider:exec:completed'};}
+ }]);
+ const wrong=await executeGoalWorkWithAdapter({
+  state:goal,workKey:'work',registry:makeRegistry('wrong-provider'),now:later(0)
+ });
+ assert.equal(wrong.executed,false);
+ assert.equal(wrong.reason,'provider_binding_mismatch');
+ assert.equal(wrong.state.tasks[0].status,'pending');
+ assert.equal(calls,0);
+ const missing=await executeGoalWorkWithAdapter({
+  state:goal,workKey:'work',registry:makeRegistry(undefined),now:later(0)
+ });
+ assert.equal(missing.executed,false);
+ assert.equal(calls,0);
+ const correct=await executeGoalWorkWithAdapter({
+  state:goal,workKey:'work',registry:makeRegistry('evercraft-fabric'),now:later(0)
+ });
+ assert.equal(correct.executed,true);
+ assert.equal(correct.state.tasks[0].attempt_provider_key,'evercraft-fabric');
+ assert.equal(calls,1);
 });
