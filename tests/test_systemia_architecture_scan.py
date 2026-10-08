@@ -14,10 +14,16 @@ class ArchitectureScannerTests(unittest.TestCase):
     def run_scan(self, root: Path) -> dict:
         result = subprocess.run(
             [sys.executable, str(SCANNER), "--root", str(root)],
-            check=True,
+            check=False,
             capture_output=True,
             text=True,
         )
+        if result.returncode != 0:
+            self.fail(
+                f"scanner failed with exit code {result.returncode}\n"
+                f"stdout:\n{result.stdout}\n"
+                f"stderr:\n{result.stderr}"
+            )
         return json.loads(result.stdout)
 
     def test_static_scan_is_source_grounded_and_read_only(self):
