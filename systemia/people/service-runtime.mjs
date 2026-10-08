@@ -2,13 +2,19 @@ import fs from 'node:fs';
 import http from 'node:http';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
-import { randomUUID } from 'node:crypto';
+import { randomUUID, timingSafeEqual } from 'node:crypto';
 import { createPeopleRuntime } from './runtime.mjs';
 
 const ROOT=path.dirname(fileURLToPath(import.meta.url));
 const WEB_ROOT=path.join(ROOT,'web');
 
 function clean(value){return String(value??'').trim();}
+function tokenEqual(actual,expected){
+  if(!actual||!expected)return false;
+  const a=Buffer.from(String(actual));
+  const b=Buffer.from(String(expected));
+  return a.length===b.length&&timingSafeEqual(a,b);
+}
 function sendJson(res,status,body){
   const data=Buffer.from(JSON.stringify(body));
   res.writeHead(status,{
@@ -96,7 +102,25 @@ export async function startPeopleLayerRuntime({
     };
   }
   const instanceId='people_'+randomUUID();
+  const startedAt=new Date().toISOString();
+  let deploymentReceiptRef='';
+  let server=null;
   const runtime=createPeopleRuntime({stateDir:path.resolve(stateDir),trustedMailDeliveryPublicKeys});
+  const health=()=>({
+    ...runtime.health(),
+    ok:Boolean(server?.listening),
+    service:'evercraft-people-layer',
+    runtime:'Evercraft Compute',
+    public_ui:true,
+    instance_id:instanceId,
+    operator_auth:'private_token_file',
+    public_person_token_flows:true,
+    trusted_mail_delivery_configured:Object.values(trustedMailDeliveryPublicKeys).some(Boolean),
+    deployment_receipt_bound:Boolean(deploymentReceiptRef),
+    deployment_receipt_ref:deploymentReceiptRef||null,
+    started_at:startedAt,
+    base44_runtime_dependency:false,
+  });
   const htmlFile=path.join(WEB_ROOT,'index.html');
   const cssFile=path.join(WEB_ROOT,'style.css');
   const jsFile=path.join(WEB_ROOT,'app.js');
@@ -104,23 +128,13 @@ export async function startPeopleLayerRuntime({
     if(!fs.existsSync(file))throw new Error('people_web_asset_missing:'+path.basename(file));
   }
 
-  const server=http.createServer(async(req,res)=>{
+  server=http.createServer(async(req,res)=>{
     try{
       const method=String(req.method||'GET').toUpperCase();
       const {pathname,searchParams}=publicPath(req.url||'/');
 
       if(method==='GET'&&pathname==='/health'){
-        return sendJson(res,200,{
-          ...runtime.health(),
-          service:'evercraft-people-layer',
-          runtime:'Evercraft Compute',
-          public_ui:true,
-          instance_id:instanceId,
-          operator_auth:'private_token_file',
-          public_person_token_flows:true,
-          base44_runtime_dependency:false,
-          trusted_mail_delivery_configured:Object.values(trustedMailDeliveryPublicKeys).some(Boolean),
-        });
+        return sendJson(res,200,health());
       }
 
       if(method==='GET'&&pathname==='/people-assets/style.css')return sendAsset(res,cssFile,'text/css; charset=utf-8');
@@ -129,7 +143,7 @@ export async function startPeopleLayerRuntime({
         return sendAsset(res,htmlFile,'text/html; charset=utf-8','no-store');
       }
 
-      const adminOk=()=>bearer(req)===adminToken;
+      const adminOk=()=>tokenEqual(bearer(req),adminToken);
       const needAdmin=()=>{
         if(adminOk())return true;
         sendJson(res,401,{ok:false,error:'unauthorized'});
@@ -266,18 +280,12 @@ export async function startPeopleLayerRuntime({
     consent_path:'/people/consent',
     verify_email_path:'/people/verify-email',
     base44_runtime_dependency:false,
-    async health(){
-      return {
-        ...runtime.health(),
-        service:'evercraft-people-layer',
-        runtime:'Evercraft Compute',
-        public_ui:true,
-        instance_id:instanceId,
-        operator_auth:'private_token_file',
-        public_person_token_flows:true,
-        trusted_mail_delivery_configured:Object.values(trustedMailDeliveryPublicKeys).some(Boolean),
-        base44_runtime_dependency:false,
-      };
+    health,
+    setDeploymentReceipt(receiptRef){
+      const ref=clean(receiptRef);
+      if(!ref)throw new Error('deployment_receipt_ref_required');
+      deploymentReceiptRef=ref;
+      return health();
     },
     async close(){
       await new Promise(resolve=>server.close(()=>resolve()));
