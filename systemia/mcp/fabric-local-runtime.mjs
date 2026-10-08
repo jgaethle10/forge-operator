@@ -877,6 +877,8 @@ export async function startFabricLocalRuntime({
         const slug=decodeURIComponent(match[1]).toLowerCase();
         const capabilityKey=offerPurchaseKeyForSlug(slug);
         if(!capabilityKey) return sendJson(res,404,{ok:false,error:'offer_not_found'});
+        const ibmi74Deadline=slug==='ibmi-74-deadline-xray';
+        const requiredOfferKey=ibmi74Deadline?'ibmi_74_deadline_xray_250':null;
 
         const body=await readOfferInput(req,{maxBytes:8192});
         const isForm=String(req.headers['content-type']||'').toLowerCase().includes('application/x-www-form-urlencoded');
@@ -925,6 +927,7 @@ export async function startFabricLocalRuntime({
             body:JSON.stringify({
               user_confirmed:true,
               capability_key:capabilityKey,
+              ...(requiredOfferKey?{offer_key:requiredOfferKey}:{}),
               idempotency_key:idempotencyKey,
               customer_ref:customerRef,
             }),
@@ -950,6 +953,24 @@ export async function startFabricLocalRuntime({
             authority:'Evercraft Payments',
             checkout_ready:false,
             fulfillment_release:false,
+          });
+        }
+
+        // A same-price Estate X-Ray checkout is not a Deadline X-Ray checkout.
+        // Validate the distinct SKU on the owned payment response before handoff.
+        if(ibmi74Deadline&&(
+          String(result?.offer_key||'')!==requiredOfferKey||
+          Number(result?.amount_cents)!==25000||
+          String(result?.currency||'').toLowerCase()!=='usd'
+        )){
+          if(isForm){
+            return sendText(res,503,renderPaymentHoldPage({slug,orderKey:result?.order_key||''}),{
+              contentType:'text/html; charset=utf-8'
+            });
+          }
+          return sendJson(res,503,{
+            ok:false,error:'ibmi_74_checkout_contract_not_verified',
+            authority:'Evercraft Payments',checkout_ready:false,fulfillment_release:false,
           });
         }
 
@@ -1020,7 +1041,7 @@ export async function startFabricLocalRuntime({
         if(slug&&!slug.includes('/')){
           const offer=offerCapabilityForSlug(slug,preparedCatalog().capabilities);
           if(!offer) return sendJson(res,404,{error:'offer_not_found'});
-          const page=renderOfferPage(offer,{checkoutEnabled:Boolean(purchaseIntentEndpoint)});
+          const page=renderOfferPage(offer,{checkoutEnabled:Boolean(purchaseIntentEndpoint),slug});
           if(!page) return sendJson(res,404,{error:'offer_not_found'});
           return sendText(res,200,page,{contentType:'text/html; charset=utf-8'});
         }
