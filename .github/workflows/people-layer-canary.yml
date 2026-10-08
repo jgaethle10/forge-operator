@@ -69,7 +69,12 @@ jobs:
             .service == "evercraft-people-layer" and
             .runtime == "Evercraft Compute" and
             .base44_runtime_dependency == false and
-            .public_ui == true
+            .public_ui == true and
+            .operator_auth == "private_token_file" and
+            .public_person_token_flows == true and
+            .deployment_receipt_bound == true and
+            (.deployment_receipt_ref | test("^[a-f0-9]{64}$")) and
+            (.instance_id | test("^people_"))
           ' >/dev/null
 
           page="$(curl --fail --silent --show-error --max-time 20 "$origin/people")"
@@ -78,6 +83,16 @@ jobs:
 
           consent="$(curl --fail --silent --show-error --max-time 20 "$origin/people/consent?token=canary-invalid")"
           printf '%s' "$consent" | grep -Fq "Evercraft People Layer"
+
+          email_page="$(curl --fail --silent --show-error --max-time 20 "$origin/people/verify-email?token=canary-invalid")"
+          printf '%s' "$email_page" | grep -Fq "Evercraft People Layer"
+
+          admin_status="$(curl --silent --show-error --max-time 20 -o /tmp/people-admin.json -w '%{http_code}' "$origin/api/people/brains")"
+          test "$admin_status" = "401"
+
+          email_invalid_status="$(curl --silent --show-error --max-time 20 -o /tmp/people-invalid-email.json -w '%{http_code}' "$origin/api/people/verify-email/inspect?token=canary-invalid")"
+          test "$email_invalid_status" = "404"
+          jq -e '.ok == false and .error == "challenge_not_found"' /tmp/people-invalid-email.json >/dev/null
 
           invalid_status="$(curl --silent --show-error --max-time 20 -o /tmp/people-invalid.json -w '%{http_code}' "$origin/api/people/consent/inspect?token=canary-invalid")"
           test "$invalid_status" = "404"
@@ -110,3 +125,10 @@ jobs:
           path: artifacts/people-layer-canary.json
           if-no-files-found: error
           retention-days: 90
+
+      - name: Enforce external HTTPS canary gate
+        if: env.PEOPLE_ORIGIN == ''
+        shell: bash
+        run: |
+          echo "::error::People release held: no owned public HTTPS origin is configured. The canary receipt is a HOLD, not a pass."
+          exit 1
