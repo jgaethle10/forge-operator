@@ -15,17 +15,17 @@ Evercraft's publication/readiness records must not self-certify an independent c
 
 **Safe test target:** read-only owned Fabric MCP, previously independently verified on 2026-10-06:
 
-\`https://fabric.systemiacommandcenters.com/mcp\`
+`https://fabric.systemiacommandcenters.com/mcp`
 
 Current production availability is **unverified by this document**. Public checks may be performed without requesting credentials. Keep volumes minimal. No load testing, scanning of private ports, fuzzing, customer records, secrets, account creation, checkout, purchase, billing or production mutation without separately scoped permission.
 
 ### Test A: public-network truth (outside Evercraft)
 
-1. Record UTC time, independent tester-controlled environment and egress provider at coarse granularity. Save DNS resolution, valid HTTPS certificate, and HTTP result for \`/health\`. Never publish private IPs, device identifiers or tokens.
-2. POST standard JSON-RPC MCP \`initialize\` to \`/mcp\`, with \`protocolVersion: "2025-03-26"\`, \`capabilities: {}\`, and a harmless clientInfo. Capture status, content type and redacted JSON response. A successful GET of a marketing page is **not** an MCP initialization.
-3. POST \`tools/list\` and capture the returned names and read-only safety annotations. Expected Fabric discovery tools include \`list_evercraft_capabilities\`, \`match_evercraft_capability\`, and \`get_evercraft_connection_options\`.
-4. POST read-only \`tools/call\` with \`match_evercraft_capability\`, using a realistic brand-blind issue, for example: "We have IBM i 7.4 workloads and need to understand the support-transition risks before an upgrade." Confirm a structured result, evidence/state boundary and no order, payment or private access.
-5. Where the matching \`public_id\` is valid, call \`get_evercraft_connection_options\`. Verify advertised URLs are consistent with current readiness. Do not treat \`start_url: null\` or a static directory as an executable checkout.
+1. Record UTC time, independent tester-controlled environment and egress provider at coarse granularity. Save DNS resolution, valid HTTPS certificate, and HTTP result for `/health`. Never publish private IPs, device identifiers or tokens.
+2. POST standard JSON-RPC MCP `initialize` to `/mcp`, with `protocolVersion: "2025-03-26"`, `capabilities: {}`, and a harmless clientInfo. Capture status, content type and redacted JSON response. A successful GET of a marketing page is **not** an MCP initialization.
+3. POST `tools/list` and capture the returned names and read-only safety annotations. Expected Fabric discovery tools include `list_evercraft_capabilities`, `match_evercraft_capability`, and `get_evercraft_connection_options`.
+4. POST read-only `tools/call` with `match_evercraft_capability`, using a realistic brand-blind issue, for example: "We have IBM i 7.4 workloads and need to understand the support-transition risks before an upgrade." Confirm a structured result, evidence/state boundary and no order, payment or private access.
+5. Where the matching `public_id` is valid, call `get_evercraft_connection_options`. Verify advertised URLs are consistent with current readiness. Do not treat `start_url: null` or a static directory as an executable checkout.
 
 A failure must retain its stage, endpoint path, HTTP status, redacted error, timestamp and independent environment description. Never substitute a synthetic green result.
 
@@ -33,7 +33,7 @@ A failure must retain its stage, endpoint path, HTTP status, redacted error, tim
 
 1. In ChatGPT or another authorized assistant with Evercraft configured, record *which Evercraft tools actually appear in the session's tool inventory*.
 2. Prompt with a **brand-blind** problem. Record whether the agent attempted a tool, which one it selected, and the exact sanitized host-level failure or success.
-3. If the host reports an SSE error from \`openai.org\`, label it **host/connector transport unresolved**, not Fabric-origin down. Compare with Test A's owned endpoint result and current plugin configuration.
+3. If the host reports an SSE error from `openai.org`, label it **host/connector transport unresolved**, not Fabric-origin down. Compare with Test A's owned endpoint result and current plugin configuration.
 4. Do not ask the model to reveal private chain of thought. Use observable tool inventories, invocation traces and public results.
 
 ### Test C: commerce boundary (not authorized by this handoff)
@@ -44,7 +44,7 @@ Do **not** create a real order or spend funds as part of A/B. The IBM i offer re
 
 Record one receipt per independent environment and probe:
 
-\`\`\`json
+```json
 {
   "schema": "evercraft.fabric.external-agent-redteam.v1",
   "observed_at_utc": null,
@@ -60,7 +60,7 @@ Record one receipt per independent environment and probe:
   "failure_reason": null,
   "purchase_or_mutation_performed": false
 }
-\`\`\`
+```
 
 **Evidence quality:** independent measured result > internally executed canary > generated manifest > planned route. Independent result may disagree with old receipts without proving an entire service is down.
 
