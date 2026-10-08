@@ -13,3 +13,6 @@
 .fsNoteInspector button{border:1px solid #493034;background:#24171a;color:#ffc2c8;border-radius:7px;padding:7px 10px;cursor:pointer}
 @media(max-width:920px){.fsNoteInspector{grid-template-columns:repeat(2,minmax(0,1fr))}.fsNoteInspector button{grid-column:1/-1}}
 @media(max-width:520px){.fsNoteInspector{grid-template-columns:minmax(0,1fr)}}
+
+.fsNoteCell[draggable="true"]{cursor:grab}
+.fsNoteCell.dragging{opacity:.35;cursor:grabbing;outline:1px dashed #fff;outline-offset:1px}

@@ -152,3 +152,38 @@ test('Fallen Sessions note inspector remains responsive without widening the wor
   assert.match(css,/grid-template-columns:repeat\(4,minmax\(120px,1fr\)\)/);
   assert.match(css,/@media\(max-width:520px\).*\.fsNoteInspector\{grid-template-columns:minmax\(0,1fr\)\}/s);
 });
+
+
+test('Fallen Sessions piano roll moves notes through canonical note.move',()=>{
+  const ui=fs.readFileSync('src/FallenSessions.tsx','utf8');
+  assert.match(ui,/type:'note\.move'/);
+  assert.match(ui,/draggable=\{Boolean\(note\)\}/);
+  assert.match(ui,/onDragStart/);
+  assert.match(ui,/onDragOver/);
+  assert.match(ui,/onDrop/);
+  assert.match(ui,/dataTransfer\.setData\('text\/plain',note\.id\)/);
+  assert.match(ui,/moveNote\(draggedNoteId,pitch,step\)/);
+  assert.doesNotMatch(ui,/selectedNote\.start\s*=/);
+  assert.doesNotMatch(ui,/selectedNote\.pitch\s*=/);
+});
+
+test('Fallen Sessions note placement rejects occupied piano-roll cells',()=>{
+  const ui=fs.readFileSync('src/FallenSessions.tsx','utf8');
+  assert.match(ui,/candidate\.id!==noteId/);
+  assert.match(ui,/candidate\.pitch===pitch/);
+  assert.match(ui,/That piano-roll cell already contains a note/);
+});
+
+test('Fallen Sessions note placement remains editable without drag input',()=>{
+  const ui=fs.readFileSync('src/FallenSessions.tsx','utf8');
+  assert.match(ui,/Start step/);
+  assert.match(ui,/Pitch \{noteName\(selectedNote\.pitch\)\}/);
+  assert.match(ui,/moveSelectedNote\(\{start:Number\(event\.target\.value\)-1\}\)/);
+  assert.match(ui,/moveSelectedNote\(\{pitch:Number\(event\.target\.value\)\}\)/);
+});
+
+test('Fallen Sessions renders an explicit drag state for movable notes',()=>{
+  const css=fs.readFileSync('src/fallen-sessions.css','utf8');
+  assert.match(css,/\.fsNoteCell\[draggable="true"\]\{cursor:grab\}/);
+  assert.match(css,/\.fsNoteCell\.dragging/);
+});

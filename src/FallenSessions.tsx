@@ -44,6 +44,7 @@ export default function FallenSessions(){
   const [selectedTrackId,setSelectedTrackId]=useState('keys');
   const [selectedScene,setSelectedScene]=useState(0);
   const [selectedNoteId,setSelectedNoteId]=useState<string|null>(null);
+  const [draggedNoteId,setDraggedNoteId]=useState<string|null>(null);
   const [status,setStatus]=useState('Canonical PulseGrid session ready.');
   const [playing,setPlaying]=useState(false);
   const [recording,setRecording]=useState(false);
@@ -521,6 +522,40 @@ export default function FallenSessions(){
     });
   }
 
+  function moveNote(noteId:string,pitch:number,start:number){
+    const occupied=clip.notes.some((candidate)=>
+      candidate.id!==noteId &&
+      candidate.pitch===pitch &&
+      Math.round(candidate.start)===Math.round(start)
+    );
+    if(occupied){
+      setStatus('That piano-roll cell already contains a note.');
+      setDraggedNoteId(null);
+      return;
+    }
+    const result=apply({
+      type:'note.move',
+      track_id:track.id,
+      scene:selectedScene,
+      note_id:noteId,
+      start,
+      pitch,
+    });
+    if(result){
+      setSelectedNoteId(noteId);
+      setDraggedNoteId(null);
+    }
+  }
+
+  function moveSelectedNote(values:{pitch?:number;start?:number}){
+    if(!selectedNote)return;
+    moveNote(
+      selectedNote.id,
+      values.pitch??selectedNote.pitch,
+      values.start??selectedNote.start,
+    );
+  }
+
   function toggleStep(step:number){
     apply({
       type:'clip.set_step',
@@ -671,8 +706,27 @@ export default function FallenSessions(){
                     cells.push(
                       <button
                         key={pitch+'-'+step}
-                        className={'fsNoteCell '+(note?'active ':'')+(note?.id===selectedNoteId?'selected ':'')+(step%4===0?'beat ':'')+(playing&&step===playhead?'playhead':'')}
-                        title={note?(noteName(pitch)+' · step '+(step+1)+' · double-click to delete'):(noteName(pitch)+' · step '+(step+1))}
+                        className={'fsNoteCell '+(note?'active ':'')+(note?.id===selectedNoteId?'selected ':'')+(note?.id===draggedNoteId?'dragging ':'')+(step%4===0?'beat ':'')+(playing&&step===playhead?'playhead':'')}
+                        title={note?(noteName(pitch)+' · step '+(step+1)+' · drag to move · double-click to delete'):(noteName(pitch)+' · step '+(step+1))}
+                        draggable={Boolean(note)}
+                        onDragStart={(event)=>{
+                          if(!note)return;
+                          setDraggedNoteId(note.id);
+                          setSelectedNoteId(note.id);
+                          event.dataTransfer.effectAllowed='move';
+                          event.dataTransfer.setData('text/plain',note.id);
+                        }}
+                        onDragEnd={()=>setDraggedNoteId(null)}
+                        onDragOver={(event)=>{
+                          if(!draggedNoteId)return;
+                          event.preventDefault();
+                          event.dataTransfer.dropEffect='move';
+                        }}
+                        onDrop={(event)=>{
+                          if(!draggedNoteId)return;
+                          event.preventDefault();
+                          moveNote(draggedNoteId,pitch,step);
+                        }}
                         onClick={()=>selectOrCreateNote(pitch,step)}
                         onDoubleClick={()=>{if(note)deleteNote(note.id)}}
                       />
@@ -684,6 +738,28 @@ export default function FallenSessions(){
               {selectedNote&&(
                 <div className="fsNoteInspector">
                   <div className="fsSectionTitle">Selected note · {noteName(selectedNote.pitch)}</div>
+                  <label>
+                    <span>Start step</span>
+                    <input
+                      type="number"
+                      min={1}
+                      max={clip.steps.length}
+                      step={1}
+                      value={Math.round(selectedNote.start)+1}
+                      onChange={(event)=>moveSelectedNote({start:Number(event.target.value)-1})}
+                    />
+                  </label>
+                  <label>
+                    <span>Pitch {noteName(selectedNote.pitch)}</span>
+                    <input
+                      type="number"
+                      min={0}
+                      max={127}
+                      step={1}
+                      value={selectedNote.pitch}
+                      onChange={(event)=>moveSelectedNote({pitch:Number(event.target.value)})}
+                    />
+                  </label>
                   <label>
                     <span>Length</span>
                     <input
