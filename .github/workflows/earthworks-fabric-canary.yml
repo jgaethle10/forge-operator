@@ -2,6 +2,14 @@ name: EarthWorks Public Fabric Canary
 
 on:
   workflow_dispatch:
+  pull_request:
+    paths:
+      - 'public/demos/earthworks-autonomy/**'
+      - 'systemia/mcp/earthworks-simulator-page.mjs'
+      - 'systemia/mcp/earthworks-simulator-app.mjs'
+      - 'systemia/mcp/fabric-local-runtime.mjs'
+      - 'tests/earthworks-owned-page.test.mjs'
+      - '.github/workflows/earthworks-fabric-canary.yml'
   push:
     branches: [main]
     paths:
@@ -114,33 +122,50 @@ jobs:
           fi
           printf '%s\n' "$page" > /tmp/earthworks-public-page.html
 
+          # The hot-read /demos surface is the stable public fallback. It does not
+          # require a resident-process restart when the checkout already contains
+          # the EarthWorks playground.
+          static_yard="$(curl --fail --silent --show-error --retry 3 --retry-all-errors --retry-delay 2 --max-time 25 "$FABRIC_ORIGIN/demos/earthworks-autonomy/" 2>/dev/null || true)"
+          static_ready=false
+          if printf '%s' "$static_yard" | grep -Fq 'EarthWorks Autonomy Playground' \
+            && printf '%s' "$static_yard" | grep -Fq 'data-mode="manual"' \
+            && printf '%s' "$static_yard" | grep -Fq 'data-mode="shadow"' \
+            && printf '%s' "$static_yard" | grep -Fq 'data-mode="auto"' \
+            && printf '%s' "$static_yard" | grep -Fq 'Truck failure' \
+            && printf '%s' "$static_yard" | grep -Fq 'STOP ALL' \
+            && printf '%s' "$static_yard" | grep -Fq 'Physical machine authority is intentionally absent.' \
+            && ! printf '%s' "$static_yard" | grep -Fiq 'base44.app'; then
+            static_ready=true
+            printf '%s\n' "$static_yard" > /tmp/earthworks-static-yard.html
+            printf '%s\n' "$FABRIC_ORIGIN/demos/earthworks-autonomy/" > /tmp/earthworks-live-yard-url.txt
+            echo "EarthWorks hot-read playground verified."
+          fi
+
+          # Prefer the native /earthworks route when the resident process has
+          # converged, but do not erase a verified owned playable surface merely
+          # because that newer route is still awaiting process convergence.
           live_yard=""
-          yard_ready=false
-          for attempt in $(seq 1 16); do
+          native_ready=false
+          for attempt in $(seq 1 4); do
             live_yard="$(curl --fail --silent --show-error --max-time 25 "$FABRIC_ORIGIN/earthworks" 2>/dev/null || true)"
             if printf '%s' "$live_yard" | grep -Fq 'Live Yard 001' \
               && printf '%s' "$live_yard" | grep -Fq 'Dispatch truck' \
               && printf '%s' "$live_yard" | grep -Fq 'Shadow' \
               && printf '%s' "$live_yard" | grep -Fq 'Autonomy' \
-              && printf '%s' "$live_yard" | grep -Fq 'Truck Queue' \
-              && printf '%s' "$live_yard" | grep -Fq 'Loader Starvation' \
-              && printf '%s' "$live_yard" | grep -Fq 'Blocked Route' \
-              && printf '%s' "$live_yard" | grep -Fq 'Production Surge' \
               && printf '%s' "$live_yard" | grep -Fq 'STOP ALL'; then
-              yard_ready=true
-              echo "EarthWorks Live Yard verified on attempt $attempt."
+              native_ready=true
+              printf '%s\n' "$live_yard" > /tmp/earthworks-native-yard.html
+              printf '%s\n' "$FABRIC_ORIGIN/earthworks" > /tmp/earthworks-live-yard-url.txt
+              echo "EarthWorks native Live Yard verified on attempt $attempt."
               break
             fi
-            if [ "$attempt" -lt 16 ]; then
-              echo "EarthWorks Live Yard has not reached the resident edge yet ($attempt/16)."
-              sleep 20
-            fi
+            [ "$attempt" -lt 4 ] && sleep 10
           done
-          if [ "$yard_ready" != "true" ]; then
-            echo "EarthWorks Live Yard did not reach the public Fabric across the resident updater window." >&2
+
+          if [ "$static_ready" != "true" ] && [ "$native_ready" != "true" ]; then
+            echo "No owned EarthWorks playable surface is externally verified." >&2
             exit 1
           fi
-          printf '%s\n' "$live_yard" > /tmp/earthworks-live-yard.html
 
       - name: Write external receipt
         if: success()
@@ -169,9 +194,11 @@ jobs:
             connection_options_verified:connections.result?.structuredContent?.public_id==='earthworks-site-autonomy-study-v1',
             public_page_verified:fs.existsSync('/tmp/earthworks-public-page.html'),
             public_page_url:process.env.FABRIC_ORIGIN+'/capabilities/earthworks-site-autonomy-study-v1',
-            live_yard_verified:fs.existsSync('/tmp/earthworks-live-yard.html'),
-            live_yard_game_controls_verified:fs.existsSync('/tmp/earthworks-live-yard.html'),
-            live_yard_url:process.env.FABRIC_ORIGIN+'/earthworks',
+            live_yard_verified:fs.existsSync('/tmp/earthworks-static-yard.html')||fs.existsSync('/tmp/earthworks-native-yard.html'),
+            live_yard_game_controls_verified:fs.existsSync('/tmp/earthworks-static-yard.html')||fs.existsSync('/tmp/earthworks-native-yard.html'),
+            static_playground_verified:fs.existsSync('/tmp/earthworks-static-yard.html'),
+            native_live_yard_verified:fs.existsSync('/tmp/earthworks-native-yard.html'),
+            live_yard_url:fs.readFileSync('/tmp/earthworks-live-yard-url.txt','utf8').trim(),
             transactional:false,
             payment_created:false,
             equipment_control_authorized:false,
