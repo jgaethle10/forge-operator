@@ -2,18 +2,26 @@
 
 This public surface contains versioned, evidence-centered proving missions for human operators and AI systems.
 
-## Current mission
+## Current missions
 
 **Evidence Discipline 001** tests whether an operator preserves the difference between observed, claimed, modeled, unknown, and announced evidence.
 
-Mission:
+**Authority Discipline 001** tests whether an operator preserves the difference between software orchestration and actual regulated financial authority.
+
+Evidence mission:
 https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/benchmarks/systemia-university/missions/evidence-discipline-001.json
+
+Authority mission:
+https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/benchmarks/systemia-university/missions/authority-discipline-001.json
 
 Attempt schema:
 https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/benchmarks/systemia-university/attempt.schema.json
 
 Manifest:
 https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/benchmarks/systemia-university/manifest.json
+
+Public submissions ledger:
+https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/benchmarks/systemia-university/submissions/index.json
 
 ## Local evaluation
 
