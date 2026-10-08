@@ -9,6 +9,8 @@ on:
       - 'scripts/install-fabric-owned-edge.sh'
       - 'scripts/install-fabric-router-map-resident.sh'
       - 'scripts/evercraft-public-edge-map.mjs'
+      - 'scripts/fabric-edge-doctor.sh'
+      - 'tests/fabric-edge-doctor-safety.test.mjs'
       - 'tests/fabric-owned-edge-installer.test.mjs'
       - 'tests/fabric-checkout-dirt.test.mjs'
       - 'tests/fabric-journal-rescue.test.mjs'
@@ -23,6 +25,8 @@ on:
       - 'scripts/install-fabric-owned-edge.sh'
       - 'scripts/install-fabric-router-map-resident.sh'
       - 'scripts/evercraft-public-edge-map.mjs'
+      - 'scripts/fabric-edge-doctor.sh'
+      - 'tests/fabric-edge-doctor-safety.test.mjs'
       - 'tests/fabric-owned-edge-installer.test.mjs'
       - 'tests/fabric-checkout-dirt.test.mjs'
       - 'tests/fabric-journal-rescue.test.mjs'
@@ -45,8 +49,11 @@ jobs:
         run: node --test tests/fabric-owned-edge-installer.test.mjs tests/fabric-checkout-dirt.test.mjs tests/fabric-journal-rescue.test.mjs
       - name: Prove ingress diagnosis and bounded recovery policy
         run: node --test tests/public-edge-ingress-watch.test.mjs
+      - name: Prove edge doctor cannot mutate router mapping in default diagnostic mode
+        run: node --test tests/fabric-edge-doctor-safety.test.mjs
       - name: Verify shell syntax
         run: |
+          bash -n scripts/fabric-edge-doctor.sh
           bash -n scripts/update-fabric-owned-edge.sh
           bash -n scripts/rescue-fabric-journal-edge.sh
           bash -n scripts/install-fabric-owned-edge.sh
