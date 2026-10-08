@@ -56,6 +56,8 @@ test('Play Mode live-syncs an authored revision into the running session and con
   const first=session.step({ticks:5});
   assert.equal(first.snapshot.tick,5);
 
+  const geometryBeforeTransform=session.webGpuFrame({width:640,height:360}).geometryDigests;
+
   const mutation=applyWorldForgeOperations({
     project:before,
     expectedVersion:before.version,
@@ -77,6 +79,9 @@ test('Play Mode live-syncs an authored revision into the running session and con
   assert.equal(synced.session.projectVersion,mutation.project.version);
   assert.equal(synced.runtimeSync.snapshot.tick,5);
   assert.equal(synced.runtimeSync.receipt.runtimeStateMigrated,true);
+
+  const geometryAfterTransform=session.webGpuFrame({width:640,height:360}).geometryDigests;
+  assert.deepEqual(geometryAfterTransform,geometryBeforeTransform);
 
   const hero=synced.runtimeSync.snapshot.entities.find(
     entity=>entity.id==='wfnode:hero-core'
@@ -358,4 +363,51 @@ test('Play Mode WebGPU frame is bound to the live runtime snapshot',()=>{
     ()=>session.webGpuFrame({width:0,height:450}),
     /world_forge_play_webgpu_viewport_invalid/,
   );
+});
+
+
+test('Play WebGPU geometry digest lineage changes only when authored geometry changes',()=>{
+  const before=createWorldForgeStarterProject();
+  const session=new WorldForgePlaySession({
+    sessionId:'play-geometry-lineage',
+    project:before,
+  });
+  const first=session.webGpuFrame({width:640,height:360});
+  const firstHeroDraw=first.plan.draws.find(draw=>draw.entityId==='wfnode:hero-core');
+  assert.ok(firstHeroDraw);
+  const firstHeroGeometryId=firstHeroDraw!.geometryId;
+  const firstHeroDigest=first.geometryDigests[firstHeroGeometryId];
+  assert.ok(firstHeroDigest);
+
+  const mutation=applyWorldForgeOperations({
+    project:before,
+    expectedVersion:before.version,
+    operations:[{
+      type:'set_geometry',
+      nodeId:'hero-core',
+      geometry:{kind:'primitive',primitive:'plane'},
+      allowDestructive:true,
+    }],
+  });
+  assert.equal(mutation.status,'completed');
+
+  session.syncProject({
+    afterProject:mutation.project,
+    actor:{kind:'human',id:'world-forge-editor'},
+    reason:'Geometry lineage proof',
+  });
+  const second=session.webGpuFrame({width:640,height:360});
+  const secondHeroDraw=second.plan.draws.find(draw=>draw.entityId==='wfnode:hero-core');
+  assert.ok(secondHeroDraw);
+  const secondHeroGeometryId=secondHeroDraw!.geometryId;
+  assert.notEqual(secondHeroGeometryId,firstHeroGeometryId);
+  assert.equal(second.geometryDigests[firstHeroGeometryId],firstHeroDigest);
+  assert.equal(
+    second.plan.draws.some(
+      draw=>draw.entityId!=='wfnode:hero-core'&&draw.geometryId===firstHeroGeometryId,
+    ),
+    true,
+  );
+  assert.ok(second.geometryDigests[secondHeroGeometryId]);
+  assert.notEqual(second.geometryDigests[secondHeroGeometryId],firstHeroDigest);
 });

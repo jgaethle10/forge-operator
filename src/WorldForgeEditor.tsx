@@ -441,7 +441,9 @@ function RuntimeWorldEngineLayer({
           !response.ok||
           !payload.success||
           !payload.frame?.plan||
-          !Array.isArray(payload.frame?.geometries)
+          !Array.isArray(payload.frame?.geometries)||
+          !payload.frame?.geometryDigests||
+          typeof payload.frame.geometryDigests!=='object'
         ){
           throw new Error(payload.error||'World Engine WebGPU frame request failed.');
         }
@@ -452,10 +454,14 @@ function RuntimeWorldEngineLayer({
           clientRef.current=await WorldEngineWebGpuClient.create(
             canvas!,
             payload.frame.geometries,
+            payload.frame.geometryDigests,
           );
           sessionRef.current=session!.sessionId;
         }else{
-          clientRef.current.replaceGeometries(payload.frame.geometries);
+          clientRef.current.syncGeometries(
+            payload.frame.geometries,
+            payload.frame.geometryDigests,
+          );
         }
         if(cancelled) return;
 

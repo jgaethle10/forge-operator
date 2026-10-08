@@ -515,3 +515,14 @@ The rendering stack is deliberately layered:
 - browsers without WebGPU fail over to the verified WebGL runtime visualization rather than breaking Play Mode.
 
 This still does not grant production-render or publication authority. It is direct runtime visualization of the deterministic Play session.
+
+
+## WebGPU geometry cache lineage
+
+Play WebGPU frames now carry canonical SHA-256 lineage for every World Engine GeometryAsset. Runtime ticks, impulses, teleports, camera motion, and transform-only authoring revisions can therefore advance visual/runtime state without forcing unchanged mesh bytes back through GPU allocation.
+
+The browser execution adapter compares the previous and next geometry digest maps. Unchanged GeometryAssets keep their existing GPU vertex/index buffers; changed or removed assets evict only their own buffers; newly introduced geometry is uploaded lazily when its draw command is encountered.
+
+World Engine geometry IDs are already content-derived from the compiled geometry descriptor. The additional GeometryAsset digest binds the actual emitted triangle payload and normals to the frame, so identity and bytes both have explicit lineage.
+
+A geometry edit may therefore rotate the content-derived geometry ID entirely, while transform-only runtime motion preserves both geometry ID and digest. This optimization changes resource lifetime only. It does not change authored geometry, runtime simulation truth, material semantics, or authority boundaries.
