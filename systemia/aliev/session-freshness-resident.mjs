@@ -37,10 +37,17 @@ function receiptFromBody(body,{requestedAt,endpoint,receivedAt}){
   if(!receiptId)throw new Error('source_cycle_receipt_id_required');
   if(Date.parse(refreshedAt)>Date.parse(receivedAt)+120000 ||
      Date.parse(refreshedAt)<Date.parse(requestedAt)-120000)throw new Error('refresh_timestamp_outside_invocation_window');
-  const failedSources=Array.isArray(body.failed_sources)?body.failed_sources.map(clean).filter(Boolean):[];
-  const warningCount=Number(body.historical_watch?.warning_count??0);
+  if(!Array.isArray(body.failed_sources))throw new Error('failed_sources_contract_required');
+  if(!Array.isArray(body.results) || body.results.length<4)throw new Error('dynamic_source_results_contract_required');
+  const watch=body.historical_watch;
+  if(!watch || !Number.isSafeInteger(watch.warning_count) || watch.warning_count<0)throw new Error('historical_watch_contract_required');
+  const failedSources=body.failed_sources.map(clean).filter(Boolean);
+  const warningCount=watch.warning_count;
+  const sweepHours=Number(watch.estimated_full_sweep_hours);
+  const inventoryUnknown=watch.eligible_source_count===null || watch.probed_source_count===null;
+  const missedSweepSla=Number.isFinite(sweepHours)&&sweepHours>6;
   const degraded=body.ok!==true || state==='completed_with_source_failures' || failedSources.length>0 ||
-    !Number.isSafeInteger(warningCount) || warningCount>0;
+    warningCount>0 || inventoryUnknown || missedSweepSla;
   return {
     schema:OWNED_FRESHNESS_SCHEMA, state:degraded?'DEGRADED':'VERIFIED',ok:!degraded,
     attempted_at:requestedAt,received_at:receivedAt,refreshed_at:refreshedAt,
