@@ -923,6 +923,7 @@ export async function startFabricLocalRuntime({
         try{
           upstream=await purchaseIntentFetch(purchaseIntentEndpoint,{
             method:'POST',
+            redirect:'error',
             headers:{
               'content-type':'application/json',
               'accept':'application/json',
@@ -936,6 +937,17 @@ export async function startFabricLocalRuntime({
               customer_ref:customerRef,
             }),
             signal:controller.signal,
+          });
+        }catch{
+          // A timeout or transport error does not prove that the provider
+          // created no session or charge. Show no checkout and require review.
+          if(isForm) return sendText(res,503,renderPaymentHoldPage({slug}),{
+            contentType:'text/html; charset=utf-8'
+          });
+          return sendJson(res,503,{
+            ok:false,error:'purchase_intent_response_unverified',
+            authority:'Evercraft Payments',checkout_ready:false,
+            payment_verified:false,fulfillment_release:false,
           });
         }finally{
           clearTimeout(timer);
