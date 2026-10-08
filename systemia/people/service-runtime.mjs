@@ -266,6 +266,17 @@ export async function startPeopleLayerRuntime({
     consent_path:'/people/consent',
     verify_email_path:'/people/verify-email',
     base44_runtime_dependency:false,
+    async health(){
+      // Yard must probe the actual resident HTTP runtime rather than trusting
+      // static start metadata. A stale or failed listener must not be healthy.
+      const response=await fetch(service_url+'/health',{signal:AbortSignal.timeout(5000)});
+      if(!response.ok)throw new Error('people_runtime_health_probe_failed');
+      const health=await response.json();
+      if(health.service!=='evercraft-people-layer'||health.instance_id!==instanceId){
+        throw new Error('people_runtime_identity_mismatch');
+      }
+      return health;
+    },
     async close(){
       await new Promise(resolve=>server.close(()=>resolve()));
     },
