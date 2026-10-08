@@ -26,7 +26,7 @@ test('missing gateway remains held without contacting external sites',async()=>{
 });
 test('only valid credential-free HTTPS external gateway is accepted',()=>{
  for(const url of ['http://fabric.systemiacommandcenters.com','https://example.base44.app/x',
-  'https://admin:secret@fabric.systemiacommandcenters.com/x','https://localhost/private',
+  'https://admin:secret@fabric.systemiacommandcenters.com/x','https://unapproved-vendor.example.com/x','https://localhost/private',
   'https://127.0.0.1/x','https://[::1]/x','https://[fc00::2]/x','https://10.1.2.3/x']){
   assert.throws(()=>normalizeMachineCommerceGateway(url));
  }
