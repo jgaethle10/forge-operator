@@ -313,7 +313,7 @@ export function renderOffers(capabilities=[]){
   });
 }
 
-export function renderOfferPage(item){
+export function renderOfferPage(item,{checkoutEnabled=true}={}){
   const copy=OFFER_PAGE_COPY[item?.public_id];
   if(!copy) return null;
   const entry=item.entry_paid_offer||null;
@@ -326,19 +326,24 @@ export function renderOfferPage(item){
   return shell(copy.headline+' · Evercraft',[
     '<main>',
     '<section class="offer-hero">',
-    '<div class="kicker"><span class="dot"></span> '+escapeHtml(copy.eyebrow)+' · available now</div>',
+    '<div class="kicker"><span class="dot"></span> '+escapeHtml(copy.eyebrow)+(checkoutEnabled?' · available now':' · purchase corridor held')+'</div>',
     '<h1>'+escapeHtml(copy.headline)+'</h1>',
     '<p class="lede">'+escapeHtml(copy.lede)+'</p>',
     copy.heroVisual?'<div class="offer-visual"><picture>'+(copy.heroVisualMobile?'<source media="(max-width: 700px)" srcset="'+escapeHtml(copy.heroVisualMobile)+'">':'')+'<img src="'+escapeHtml(copy.heroVisual)+'" alt="" loading="eager"></picture></div>':'',
     '<div class="offer-price">'+escapeHtml(price)+'</div>',
     '<div class="offer-price-note">'+escapeHtml(offerName)+' · '+escapeHtml(item.pricing||'')+'</div>',
-    '<form class="checkout-form" method="post" action="/api/offers/'+encodeURIComponent(copy.slug)+'/checkout">',
-    '<input type="hidden" name="user_confirmed" value="true">',
-    '<input type="hidden" name="idempotency_key" value="'+escapeHtml(idempotencyKey)+'">',
-    '<button class="btn primary" type="submit">Continue to checkout · '+escapeHtml(price)+'</button>',
-    '<a class="btn" href="/capabilities/'+encodeURIComponent(item.public_id)+'">See technical proof</a>',
-    '<div class="checkout-note">Evercraft Payments prepares the checkout. Nothing is marked paid until settlement is verified.</div>',
-    '</form>',
+    ...(checkoutEnabled?[
+      '<form class="checkout-form" method="post" action="/api/offers/'+encodeURIComponent(copy.slug)+'/checkout">',
+      '<input type="hidden" name="user_confirmed" value="true">',
+      '<input type="hidden" name="idempotency_key" value="'+escapeHtml(idempotencyKey)+'">',
+      '<button class="btn primary" type="submit">Continue to checkout · '+escapeHtml(price)+'</button>',
+      '<a class="btn" href="/capabilities/'+encodeURIComponent(item.public_id)+'">See technical proof</a>',
+      '<div class="checkout-note">Evercraft Payments prepares the checkout. Nothing is marked paid until settlement is verified.</div>',
+      '</form>'
+    ]:[
+      '<div class="checkout-note">This is a public offer description. Secure checkout is not yet available through a verified Evercraft-owned payment backend. No purchase or charge can be made here.</div>',
+      '<div class="actions"><a class="btn" href="/capabilities/'+encodeURIComponent(item.public_id)+'">See technical proof</a></div>'
+    ]),
     '</section>',
     '<div class="offer-grid">',
     '<section class="offer-panel"><h2>What you are buying</h2><p class="plain">'+escapeHtml(copy.promise)+'</p></section>',
