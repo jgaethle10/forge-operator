@@ -11,7 +11,6 @@ import {createHash,createPrivateKey,createPublicKey,sign} from 'node:crypto';
 import {readGoalState,mutateGoalState} from './goal-store.mjs';
 import {providerObservationMessage,recordProviderRecoveryObservation} from './goal-provider-observation.mjs';
 
-const REF='/^[A-Za-z0-9._:/-]{8,180}$/';
 const MAX_EVIDENCE_BYTES=65536;
 const clean=x=>String(x??'').trim();
 const exact=(obj,keys)=>obj&&typeof obj==='object'&&!Array.isArray(obj)&&
@@ -55,7 +54,8 @@ function assertSigner({trustedObservers,keyId,providerKey,privateKey}){
  const trust=trustedObservers[keyId];
  if(!trust||trust.provider_key!==providerKey||!clean(trust.public_key_pem))
   throw Error('provider observer trust scope mismatch');
- const key=createPrivateKey(privateKey);
+ // Managed runtimes may provide an existing KeyObject rather than PEM.
+ const key=privateKey?.type==='private'?privateKey:createPrivateKey(privateKey);
  if(key.asymmetricKeyType!=='ed25519')throw Error('managed observer signer must be Ed25519');
  const pub=createPublicKey(key).export({format:'der',type:'spki'});
  const pinned=createPublicKey(trust.public_key_pem);
