@@ -139,3 +139,27 @@ test('resident marks rejected execution FAILED without replaying the same hour',
 test('resident requires durable slot storage before activating',async()=>{
   await assert.rejects(()=>startOwnedSessionFreshnessResident({enabled:true,slotStateDir:''}),/durable_slot_state_directory_required/);
 });
+
+test('required dynamic source absence is not concealed by unrelated green operations',async()=>{
+  const unrelated=Array.from({length:5},(_,i)=>({name:'other_'+i,ok:true}));
+  await assert.rejects(()=>invokeSessionRefresh({endpoint,machineKey:'fake-unit-test-key',
+    fetchImpl:mock({...cycle,results:unrelated}),now:clocks()}),/required_dynamic_sources_not_reconciled/);
+});
+test('failed child operation overrides an inconsistent green parent',async()=>{
+  const results=cycle.results.map(row=>row.name==='ingestCaryObservedUsage'?{...row,ok:false}:row);
+  const result=await invokeSessionRefresh({endpoint,machineKey:'fake-unit-test-key',
+    fetchImpl:mock({...cycle,results,failed_sources:[],ok:true}),now:clocks()});
+  assert.equal(result.state,'DEGRADED');
+  assert.deepEqual(result.critical_failed_sources,['ingestCaryObservedUsage']);
+});
+test('missing, contradictory, or malformed historical source counts fail closed',async()=>{
+  for(const watch of [
+    {...cycle.historical_watch,eligible_source_count:null},
+    {...cycle.historical_watch,probed_source_count:134},
+    {...cycle.historical_watch,estimated_full_sweep_hours:null}
+  ]){
+    const result=await invokeSessionRefresh({endpoint,machineKey:'fake-unit-test-key',
+      fetchImpl:mock({...cycle,historical_watch:watch}),now:clocks()});
+    assert.equal(result.state,'DEGRADED');
+  }
+});
