@@ -16,6 +16,7 @@ import {
   readGoalState,
 } from './goal-store.mjs';
 import { inspectInterruptedGoalWork, holdInterruptedGoalWork } from './goal-recovery.mjs';
+import {recordProviderRecoveryObservation} from './goal-provider-observation.mjs';
 
 function fail(message) {
   console.error(JSON.stringify({ ok: false, error: message }));
@@ -31,6 +32,16 @@ function runtimeApprovalKeys() {
   // authorizations fail closed rather than generating local approval authority.
   const key = process.env.EVERCRAFT_SYSTEMIA_APPROVAL_PUBLIC_KEY_PEM;
   return key ? { 'systemia-human-gate-v1': key } : {};
+}
+
+function runtimeProviderObservers(){
+  const pem=process.env.EVERCRAFT_SYSTEMIA_PROVIDER_OBSERVER_PUBLIC_KEY_PEM;
+  const provider=process.env.EVERCRAFT_SYSTEMIA_PROVIDER_OBSERVER_PROVIDER_KEY;
+  // The supervisor configures both together. An unprovisioned verifier
+  // cannot promote arbitrary JSON into an authenticated observation.
+  return pem&&provider?{'evercraft-provider-observer-v1':{
+    provider_key:provider,public_key_pem:pem
+  }}:{};
 }
 
 const [, , command, ...args] = process.argv;
@@ -99,6 +110,18 @@ try {
     }));
     output({state:goalSnapshot(result.state),storage_receipt:result.receipt,
       operator_warning:'attempt held; verify actual upstream outcome before any retry'});
+  } else if (command === 'recovery-observe') {
+    const [file,workKey,expectedAttempt,observationFile]=args;
+    if(!file||!workKey||!expectedAttempt||!observationFile)throw Error(
+      'usage: recovery-observe <file> <workKey> <expectedAttempt> <signed-provider-observation.json>'
+    );
+    const observation=JSON.parse(await readFile(observationFile,'utf8'));
+    const result=await mutateGoalState(file,state=>recordProviderRecoveryObservation({
+      state,workKey,expectedAttempt:Number(expectedAttempt),observation,
+      trustedObservers:runtimeProviderObservers()
+    }));
+    output({state:goalSnapshot(result.state),storage_receipt:result.receipt,
+      operator_warning:'signed observation stored, recovery hold remains; provider disposition and retry not authorized'});
   } else if (command === 'status') {
     const [file] = args;
     if (!file) throw new Error('usage: status <file>');
@@ -110,7 +133,7 @@ try {
     const state = await readGoalState(file);
     output({ receipt: createGoalCompletionReceipt({ state, successEvidenceRefs }) });
   } else {
-    throw new Error('commands: init, plan, authorize, start, heartbeat, recovery-scan, recovery-hold, outcome, status, receipt');
+    throw new Error('commands: init, plan, authorize, start, heartbeat, recovery-scan, recovery-hold, recovery-observe, outcome, status, receipt');
   }
 } catch (error) {
   fail(error instanceof Error ? error.message : String(error));

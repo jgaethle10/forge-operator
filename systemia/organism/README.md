@@ -102,6 +102,21 @@ A recovery hold uses both expected attempt number and last heartbeat time, valid
 
 This local adapter is neither a multi-host distributed lease nor evidence of production resident scheduling. The completion and authority gates stay independent.
 
+### Signed provider observations for interrupted work
+
+After a stale attempt is quarantined, a provider-specific privileged observer can independently refetch the upstream outcome and issue a **signed observation**. The original goal plan must explicitly set `provider_key`, which Systemia pins as `attempt_provider_key` at execution start. A signer cannot invent an absent provider or substitute another one after a crash. Capability adapters must now declare the matching `provider_key`; a mismatch (or missing provider identity) holds the task before dispatch, without incrementing its attempt. Systemia's new `goal-provider-observation.mjs` verifies Ed25519 message integrity and the runtime-configured trusted observer, exactly bound to the mission, goal, work, attempt, attempt key and provider. The envelope includes an opaque provider lookup receipt reference, hash of the fetched response, bounded timestamps (10-minute maximum validity), an `authenticated_provider_refetch` method claim, and an attested outcome (`completed`, `not_found`, or `unknown`).
+
+**Truth boundary:** a valid signature proves which configured observer made a claim. It does not independently prove that the observer truly contacted the provider, that the provider guarantees finality, or that a charge, publication, or message actually completed. In particular, `not_found` is never interpreted as permission to retry. Even a signed `completed` observation leaves the task `blocked`, the effect state `unknown`, `producer_outcome_verified:false`, and `auto_replay_allowed:false`; further outcome acceptance or replay requires a separately designed authenticated provider-specific disposition process. The raw provider payload is not stored in the goal file.
+
+Operator-only read and state-update surfaces (no dispatch):
+
+```bash
+npm run goal -- recovery-scan ./state/mission.json 3600000
+npm run goal -- recovery-observe ./state/mission.json work-key 1 ./signed-provider-observation.json
+```
+
+The privileged goal runtime must provision `EVERCRAFT_SYSTEMIA_PROVIDER_OBSERVER_PUBLIC_KEY_PEM` and `EVERCRAFT_SYSTEMIA_PROVIDER_OBSERVER_PROVIDER_KEY` through managed configuration, with key ID `evercraft-provider-observer-v1`. No signer private key is generated or committed. Missing keys, forged/expired envelopes, wrong provider identity, changed attempts and replayed observations fail closed. Signed observations remain local source/file adapter evidence until a real provider lookup adapter, credential protection, signer rotation/revocation, durable Lineage sync and production acceptance are independently verified.
+
 ### Attempt-fenced result recording
 
 Every `recordGoalOutcome` call now requires `expectedAttempt` and must match the currently persisted task attempt. This applies to completion, blocking, skip and retry. CLI callers supply the attempt number immediately after `result`, and capability adapters forward the attempt issued by `startGoalWork`. A late result from attempt 1 can never complete or retry a task already executing attempt 2. File-store optimistic revision checks still apply separately. This source invariant does **not** verify provider outcomes or authorize replay after crash quarantine.

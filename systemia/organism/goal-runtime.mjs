@@ -52,6 +52,9 @@ function normalizeTask(raw, goalKey, missionKey) {
     title: clean(raw?.title || workKey),
     work_type: workType,
     impact,
+    // Explicit provider binding for future privileged recovery observation.
+    // An unspecified provider cannot later be invented by a signed observer.
+    provider_key: clean(raw?.provider_key).toLowerCase(),
     dependency_keys: uniqueStrings(raw?.dependency_keys || []),
     assigned_agents: uniqueStrings(raw?.assigned_agents || [], 50),
     status: 'pending',
@@ -191,6 +194,7 @@ export function startGoalWork({ state, workKey, trustedPublicKeys = {}, now = ne
   task.attempt = Number(task.attempt || 0) + 1;
   // Stable key per attempt for downstream idempotency; it does not itself grant dispatch authority.
   task.attempt_key = `${task.dedupe_key}:attempt:${task.attempt}`;
+  task.attempt_provider_key = task.provider_key || null;
   task.execution_started_at = nowIso(now);
   task.last_heartbeat_at = task.execution_started_at;
   task.updated_at = task.execution_started_at;
