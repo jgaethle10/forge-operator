@@ -1,0 +1,12 @@
+import test from 'node:test';
+import assert from 'node:assert/strict';
+import fs from 'node:fs';
+import vm from 'node:vm';
+const html=fs.readFileSync(new URL('./window.html',import.meta.url),'utf8');
+const engine=html.match(/<script id="founders-engine">([\\s\\S]*?)<\\/script>/)?.[1];
+assert.ok(engine,'engine script available');
+const sandbox={};vm.createContext(sandbox);vm.runInContext(engine,sandbox);const F=sandbox.FoundersArena;
+test('deterministic world survives 100 turns',()=>{let a=F.createWorld(42),b=F.createWorld(42);for(let i=0;i<100;i++){a=F.step(a);b=F.step(b)}assert.equal(JSON.stringify(a),JSON.stringify(b));assert.equal(a.day,101);assert.ok(a.events.every(e=>e.basis.includes('simulat')))});
+test('step leaves input unmodified',()=>{const w=F.createWorld(42),orig=JSON.stringify(w);F.step(w);assert.equal(JSON.stringify(w),orig)});
+test('tampered replay rejected',()=>{let w=F.createWorld(15);const snapshots=[w];for(let i=0;i<12;i++){w=F.step(w);snapshots.push(w)}const r={schema:'evercraft.founders-arena.run.v0',seed:15,snapshots};assert.equal(F.verifyRun(r),true);r.snapshots[4].resources.food++;assert.throws(()=>F.verifyRun(r),/Evidence mismatch/)});
+test('discloses non-LLM nature',()=>{assert.match(html,/NOT LLM AGENTS/)});
