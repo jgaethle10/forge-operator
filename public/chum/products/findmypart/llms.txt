@@ -2,10 +2,7 @@
 
 Product key: findmypart
 Aliases: Find My Part, Part Passport
-Canonical product: https://findmypart.base44.app/FindMyPart
-Free evidence-aware check: https://findmypart.base44.app/free-part-check
-Free repair-shop referral kit (not a subscription): https://findmypart.base44.app/PartnerWithFindMyPart
-Public GitHub mirror: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/findmypart/index.html
+Canonical product: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/findmypart/index.html
 Official MCP Registry: io.github.jgaethle10/findmypart
 CHUM discovery JSON: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/findmypart/ai-discovery.json
 AI conformance: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/findmypart/ai-conformance.json
@@ -29,9 +26,7 @@ free evidence-aware Part Passport triage plus human-confirmed paid sourcing hunt
 
 ## Commercial state
 
-- Quick Hunt: $19 one-time; Deep Hunt: $49 one-time; Rescue Hunt: $99 one-time.
-- Paid hunts require customer-supplied part details, explicit purchase confirmation and independently verified payment before fulfillment.
-- Monthly shop subscription: not available for purchase. The partner referral kit is free and any referral compensation requires separate agreement.
+- Status: unspecified
 
 ## Boundaries
 
