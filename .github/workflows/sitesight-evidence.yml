@@ -24,4 +24,4 @@ jobs:
         with:
           node-version: '22'
       - name: Human-review synthetic evidence contract tests
-        run: node --test pilots/sitesight/evidence.test.mjs
+        run: node --test pilots/sitesight/*.test.mjs
