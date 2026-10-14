@@ -13,6 +13,7 @@ From the repository root:
 ```bash
 cd packages/evercraft-cli
 node cli.mjs doctor
+node cli.mjs capability validate examples/capability-candidate.json
 node cli.mjs tool add examples/local-demo-tool.json
 node cli.mjs tool list
 node cli.mjs tool inspect example.math
@@ -44,6 +45,12 @@ Then run \`node cli.mjs tool add ./my-tool.json\` to store metadata. That does n
 
 The CLI uses a per-user JSON store at \`$XDG_CONFIG_HOME/evercraft/operator-tools.json\`, or \`~/.config/evercraft/operator-tools.json\`. It passes a minimal environment instead of inheriting every API key. This is **not a sandbox**: the subprocess can access resources available to the operating-system user, including local files and network. Only run tools you trust, ideally in a separate least-privilege OS/container environment. Do not add downloaded manifests blindly.
 
+## Proposing an outside capability (offline, review-only)
+
+Contributors can prepare a versioned public-safe candidate manifest using `examples/capability-candidate.json`. Run `node cli.mjs capability validate ./my-candidate.json`. It checks the allowlisted shape, HTTPS public references, declared transport, authorization mode, side-effect category, and proposed commercial model. It prints a SHA-256 manifest fingerprint and **candidate_unverified** readiness with `execution_granted`, `publication_granted`, and `commerce_granted` all false.
+
+The example is **fictional**. Passing validation does not verify the publisher, URLs, functionality, identity, security, price, consent, use rights, or actual revenue. Do not include access tokens, private endpoints, client data, live checkout claims or other secrets. Submit a proposed manifest for human review via the existing GitHub pull-request process, not directly into the public Fabric directory. The optional commercial model `paid_proposed` is documentation of intent only, never payment authority.
+
 ## What is implemented
 
 | Ability | Preview state |
@@ -52,6 +59,7 @@ The CLI uses a per-user JSON store at \`$XDG_CONFIG_HOME/evercraft/operator-tool
 | Explicit subprocess start + stdio MCP initialize/tools/list | Implemented |
 | Explicit named tools/call with user-supplied JSON | Implemented |
 | No-shell spawning, bounded output and timeout | Implemented, not a security sandbox |
+| Offline external capability candidate manifest validation | Implemented, never grants trust or commerce |
 | Third-party remote HTTP MCP/OAuth | Not implemented |
 | Global/public tool publication, discovery ranking | Not implemented |
 | Signed supply chain, per-tool policy, revocation | Not implemented |
