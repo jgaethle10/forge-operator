@@ -37,7 +37,7 @@ export function parseStormAlert(feature, { now = new Date().toISOString() } = {}
   return {
     observation_id: 'nws-storm:' + hash(id),
     source_system: 'systemia-radar',
-    source_family: 'noaa-nws-alerts',
+    source_family: 'noaa-nws',
     observed_at: new Date(issued).toISOString(),
     region_key: region,
     domains: ['weather', 'emergency_report'],
