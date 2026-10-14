@@ -106,7 +106,6 @@ test('changing chosen mode or link after signature invalidates HMAC',()=>{
 test('public Drive link with signed-out download matching preview hash passes access preflight',()=>{
   const e=signed({
     ...base,mode:'external_public_link',
-    provider_attachment_proofs:undefined,
     url:'https://drive.google.com/uc?export=download&id=example',
     recipient_open_verified:true,
     open_http_status:200,
