@@ -3,10 +3,7 @@
 Provider: Evercraft
 Product key: findmypart
 Class: hard_to_source_parts
-Canonical URL: https://findmypart.base44.app/FindMyPart
-Free Part Check: https://findmypart.base44.app/free-part-check
-Free shop referral kit: https://findmypart.base44.app/PartnerWithFindMyPart
-Machine mirror: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/findmypart/index.html
+Canonical URL: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/findmypart/index.html
 Authority: free evidence-aware Part Passport triage plus human-confirmed paid sourcing hunts
 Human confirmation required: yes
 Runtime or CHUM llms.txt: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/findmypart/llms.txt
@@ -22,12 +19,6 @@ Runtime or CHUM llms.txt: https://raw.githubusercontent.com/jgaethle10/forge-ope
 - find a salvage or donor part
 - find a blueprint or fabrication path when the original part is unavailable
 - identify a hard-to-source part from markings measurements photos or equipment clues
-
-## Current buyer state
-- Quick Hunt $19, Deep Hunt $49 and Rescue Hunt $99 are one-time research services.
-- Customer submits part details before the site creates a canonical Evercraft Payments checkout.
-- A prepared checkout is not a completed purchase, an available part, or completed fulfillment.
-- The $199/month Shop Plan is inactive; a free referral kit is not a paid partnership.
 
 ## Boundaries
 - Part Passport normalization is not fitment proof
