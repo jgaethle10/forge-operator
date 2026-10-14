@@ -31,6 +31,9 @@ export function parseStormAlert(feature, { now = new Date().toISOString() } = {}
   const ref = clean(p['@id'] || feature?.id || p.id);
   if (!/^https:\/\/api\.weather\.gov\/alerts\/[a-z0-9:/?=&._%-]+$/i.test(ref)) return null;
   const region = clean(p.areaDesc || 'Unspecified NWS alert region').slice(0, 160);
+  const states = [...new Set((Array.isArray(p.geocode?.UGC) ? p.geocode.UGC : [])
+    .map((code) => String(code).slice(0, 2).toUpperCase())
+    .filter((code) => /^[A-Z]{2}$/.test(code)))].slice(0, 10);
   const id = ref + '|' + new Date(issued).toISOString() + '|' + clean(p.messageType) + '|' + (expires ?? '');
   const key = 'nws:storm:' + hash(ref);
   const isWatch = /Watch/i.test(event);
@@ -55,6 +58,7 @@ export function parseStormAlert(feature, { now = new Date().toISOString() } = {}
       forecast: true,
       impact_confirmed: false,
       event,
+      states,
       official_alert_id: ref,
       issued_at: new Date(issued).toISOString(),
       expires_at: expires !== null ? new Date(expires).toISOString() : null,
@@ -69,9 +73,30 @@ export function parseStormAlert(feature, { now = new Date().toISOString() } = {}
 export function parseStormAlerts(payload, options = {}) {
   const rows = Array.isArray(payload?.features) ? payload.features : [];
   const alerts = rows.map((r) => parseStormAlert(r, options)).filter(Boolean);
-  return [...new Map(alerts.map((row) => [row.observation_id, row])).values()]
-    .sort((a, b) => b.anomaly_score - a.anomaly_score || b.observed_at.localeCompare(a.observed_at) || a.observation_id.localeCompare(b.observation_id))
-    .slice(0, Math.max(1, Math.min(50, Number(options.max_items) || 25)));
+  const ordered = [...new Map(alerts.map((row) => [row.observation_id, row])).values()]
+    .sort((a, b) => b.anomaly_score - a.anomaly_score || b.observed_at.localeCompare(a.observed_at) || a.observation_id.localeCompare(b.observation_id));
+  // Editorial selection is geographically diverse. One active tornado outbreak
+  // should not silently erase all other states from the national desk's cap.
+  const limit = Math.max(1, Math.min(50, Number(options.max_items) || 25));
+  const pools = new Map();
+  for (const row of ordered) {
+    const state = row.facts.states[0] || 'unknown';
+    if (!pools.has(state)) pools.set(state, []);
+    pools.get(state).push(row);
+  }
+  const selected = [];
+  while (selected.length < limit) {
+    let added = false;
+    for (const pool of pools.values()) {
+      if (selected.length >= limit) break;
+      const next = pool.shift();
+      if (!next) continue;
+      selected.push(next);
+      added = true;
+    }
+    if (!added) break;
+  }
+  return selected;
 }
 
 export async function collectNwsStormAlerts({
