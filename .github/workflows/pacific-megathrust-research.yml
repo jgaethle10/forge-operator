@@ -24,3 +24,42 @@ jobs:
           node-version: '22'
       - run: node --test public/demos/pacific-megathrust/*.test.mjs
       - run: node --check public/demos/pacific-megathrust/atlas.mjs
+  browser-smoke:
+    name: Interactive map browser smoke (research only)
+    runs-on: ubuntu-latest
+    timeout-minutes: 9
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Launch local-only research preview
+        run: |
+          node public/demos/pacific-megathrust/smoke-server.mjs > /tmp/megathrust-server.log 2>&1 &
+          sleep 2
+          curl --fail http://127.0.0.1:4177/demos/pacific-megathrust/ -o /dev/null
+      - name: Render page with actual Chromium
+        run: |
+          CHROME="$(command -v google-chrome || command -v chromium || command -v chromium-browser)"
+          test -n "$CHROME"
+          "$CHROME" --headless=new --no-sandbox --disable-dev-shm-usage --disable-gpu --hide-scrollbars --window-size=1440,980 --virtual-time-budget=25000 --screenshot=/tmp/evercraft-pacific-megathrust.png --dump-dom http://127.0.0.1:4177/demos/pacific-megathrust/ > /tmp/megathrust-dom.html 2> /tmp/megathrust-chrome.log
+          test -s /tmp/evercraft-pacific-megathrust.png
+          node --input-type=module -e '
+            import fs from "node:fs";
+            import assert from "node:assert/strict";
+            const dom=fs.readFileSync("/tmp/megathrust-dom.html","utf8");
+            assert.ok(dom.includes("leaflet-container"),"Leaflet map failed to initialize");
+            assert.ok(!dom.includes("Map library unavailable"),"Map dependency failed to load");
+            assert.ok(dom.includes("Southwestern Kuril"),"Primary region absent");
+            console.log("REAL_BROWSER_SMOKE_PASSED: Leaflet initialized; map screenshot captured");
+          '
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: pacific-megathrust-browser-smoke
+          path: |
+            /tmp/evercraft-pacific-megathrust.png
+            /tmp/megathrust-chrome.log
+            /tmp/megathrust-dom.html
+            /tmp/megathrust-server.log
+          retention-days: 7
