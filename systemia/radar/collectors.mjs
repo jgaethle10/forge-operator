@@ -1,3 +1,5 @@
+import { collectNwsStormAlerts } from './nws-storm-desk.mjs';
+
 const clean = (value) => String(value ?? '').replace(/\s+/g, ' ').trim();
 const clamp01 = (value, fallback = 0) => {
   const n = Number(value);
@@ -196,10 +198,15 @@ export async function collectNoaaSpaceWeather({
   };
 }
 
-export const OFFICIAL_COLLECTORS = Object.freeze([
-  { id: 'usgs-earthquakes', run: collectUsgsEarthquakes },
-  { id: 'noaa-space-weather', run: collectNoaaSpaceWeather }
-]);
+export function createOfficialCollectors({ stormAlertsEnabled = process.env.RADAR_NWS_STORM_DESK_ENABLED === 'true' } = {}) {
+  return [
+    { id: 'usgs-earthquakes', run: collectUsgsEarthquakes },
+    { id: 'noaa-space-weather', run: collectNoaaSpaceWeather },
+    ...(stormAlertsEnabled ? [{ id: 'nws-storm-desk', run: collectNwsStormAlerts }] : [])
+  ];
+}
+
+export const OFFICIAL_COLLECTORS = Object.freeze(createOfficialCollectors());
 
 export async function runOfficialCollectors({
   fetchImpl = globalThis.fetch,
