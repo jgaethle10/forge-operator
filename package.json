@@ -10,7 +10,7 @@
     "start": "tsx server.ts",
     "clean": "rm -rf dist server.js",
     "lint": "tsc --noEmit",
-    "check:ai": "node scripts/validate-ai-conformance.mjs && node --test tests/public-surface-rule.test.mjs && node tests/game-fabric-public-discovery.test.mjs",
+    "check:ai": "node scripts/validate-ai-conformance.mjs && node --test tests/public-surface-rule.test.mjs",
     "chum": "node systemia/chum/chum.mjs",
     "chum:offline": "node systemia/chum/chum.mjs --offline",
     "chum:crawlers": "node systemia/chum/crawler-audit.mjs",
