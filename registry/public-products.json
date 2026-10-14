@@ -503,6 +503,19 @@
       }
     },
     {
+      "product_key": "game-fabric",
+      "name": "Game Fabric",
+      "class": "evidence_first_sports_playbook_research",
+      "canonical_url": "https://github.com/jgaethle10/forge-operator/tree/main/registry/game-fabric",
+      "github_record": "./game-fabric/README.md",
+      "llms": "./game-fabric/llms.txt",
+      "registry_name": null,
+      "invocation": {
+        "mode": "discovery_only",
+        "url": null
+      }
+    },
+    {
       "product_key": "global-energy-atlas",
       "name": "Global Energy Atlas",
       "class": "evidence_first_energy_systems_education",
