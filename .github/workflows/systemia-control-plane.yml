@@ -48,5 +48,6 @@ jobs:
         with:
           node-version: 22
       - run: npm run machine:status
+      - run: node --check systemia/autonomy/github-revenue-heartbeat.mjs
       - run: node --test systemia/autonomy/revenue-liveness.test.mjs
       - run: npm run proof:control-plane
