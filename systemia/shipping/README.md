@@ -40,6 +40,7 @@ A provider error with unclear acceptance is deliberately more conservative than 
 ## Modules
 
 - `package-preflight.mjs` - artifact integrity, openability, render QA, naming, package manifest.
+- `recipient-access-gate.mjs` - independent, signed **pre-send** client preview and link access validation. See [Recipient Access](RECIPIENT_ACCESS.md); source/test only until trusted signer and outbound adapters are wired.
 - `release-station.mjs` - physically materializes a frozen client-facing release directory with clean filenames, exact SHA-256 byte verification, channel limits, source lineage, a human-readable release note, and mutation detection before dispatch.
 - `control-tower.mjs` - version-aware shipment orchestration, stale-package supersession, deliberate reissue authority, stuck-shipment detection, repair recipes, and notification-fabric intents for operational exceptions.
 - `proof-bundle.mjs` - end-to-end chain-of-custody proof tying control-tower order, frozen release bytes, shipment ledger, sent-copy verification, provider message ID, and delivery receipt together.
