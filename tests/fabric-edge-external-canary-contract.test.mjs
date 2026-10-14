@@ -111,3 +111,33 @@ test('Lineage external proof preserves human-confirmed authority boundaries',()=
   assert.ok(script.includes("automatic_payment:false"));
   assert.ok(script.includes("direct_processor_checkout:false"));
 });
+
+
+test('FAIE AgNormal design-partner room is a first-class external production invariant',()=>{
+  assert.ok(script.includes("if(checks.faie_design_partner_surface!==true) return 'faie_design_partner_surface'"));
+  assert.ok(script.includes("getText('/faie/agnormal/')"));
+  assert.ok(script.includes("Prepared for AgNormal"));
+  assert.ok(script.includes("One real decision\\. Live evidence\\. No theater\\."));
+  assert.ok(script.includes('id="activityHud"'));
+  assert.ok(script.includes("Cancel operation"));
+  assert.ok(script.includes("Download handed off"));
+  assert.ok(script.includes("receipt.checks.faie_design_partner_surface=true"));
+});
+
+test('FAIE AgNormal external proof executes a bounded live decision packet and preserves authority',()=>{
+  assert.ok(script.includes("if(checks.faie_design_partner_investigation!==true) return 'faie_design_partner_investigation'"));
+  assert.ok(script.includes("postJson('/api/faie/investigate'"));
+  assert.ok(script.includes("evercraft.faie.investigation.v1"));
+  assert.ok(script.includes("SENSE_CHALLENGE_DECIDE"));
+  assert.ok(script.includes("human_review_required!==true"));
+  assert.ok(script.includes("action_authority!==false"));
+  assert.ok(script.includes("decision_authority!==false"));
+  assert.ok(script.includes("publication_authority!==false"));
+  assert.ok(script.includes("evidence_acquisition_queue"));
+  assert.ok(script.includes("receipt.checks.faie_design_partner_investigation=true"));
+});
+
+test('FAIE external health metadata exposes the clean design-partner path',()=>{
+  assert.ok(script.includes("faieHealth.design_partner_surface!=='/faie/agnormal/'"));
+  assert.ok(script.includes("design_partner_surface:faieHealth.design_partner_surface"));
+});
