@@ -1,0 +1,10 @@
+mission RenderFallenFrame(job) {
+  use FallenRenderWorker@^0.1
+  budget $0.01 USD
+  timeout 30s
+  replay prefer-live
+  require approval before FallenRenderWorker.render
+  receipt everything
+  call FallenRenderWorker.render(job) -> receipt
+  return receipt
+}
