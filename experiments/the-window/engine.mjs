@@ -42,12 +42,12 @@ export function createWorld(now=Date.now(),seed=818){
     social:65+(i%5)*6,coins:12+(i%4)*5,action:'Getting settled',bonds:{},memories:[],mood:78
   }));
   for(const a of actors)for(const b of actors)if(a.id!==b.id)a.bonds[b.id]=50;
-  return {version:1,seed,created_at:now,updated_at:now,last_tick_at:now,tick:0,minute:8*60,day:1,
+  return {version:1,seed,created_at:now,updated_at:now,last_tick_at:now,tick:0,next_event_id:1,minute:8*60,day:1,
     town:'Mossmere',zones:ZONES,actors,treasury:120,events:[],
     metrics:{bread:15,produce:22,repairs:0},recovery:{missed_ticks:0}};
 }
 function event(world,type,actor,description,extras={}){
-  const e={id:'e'+(world.tick)+'-'+world.events.length,type,agent:actor?.id||null,
+  const e={id:'e'+(world.next_event_id++),type,agent:actor?.id||null,
     day:world.day,time:timeLabel(world),description,...extras};
   world.events.unshift(e);
   world.events=world.events.slice(0,MAX_EVENTS_IN_SNAPSHOT);
@@ -134,6 +134,7 @@ export class WorldStore{
     if(fs.existsSync(this.file)){
       this.world=JSON.parse(fs.readFileSync(this.file,'utf8'));
       if(this.world.version!==1)throw new Error('Unsupported snapshot version');
+      if(!Number.isInteger(this.world.next_event_id))this.world.next_event_id=this.world.tick*32+1;
     }else{this.world=createWorld(this.now());this.save();}
   }
   save(){
