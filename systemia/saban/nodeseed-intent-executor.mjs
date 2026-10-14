@@ -225,11 +225,79 @@ export async function executeNodeSeedExecutionIntent({
   }
 }
 
+// Only one assignment per physical node runs at once. Two independently
+// authorized NodeSeeds may work concurrently, but a scheduler record is never
+// a device authorization or a replacement for the Yard capacity grant.
+export async function executeNodeSeedIntentLanes({
+  intents=[],
+  execute,
+  maxParallelNodes=2,
+}={}){
+  if(typeof execute!=='function') throw new Error('nodeseed_intent_executor_required');
+  const parallelLimit=Math.max(1,Math.min(2,Math.floor(Number(maxParallelNodes)||1)));
+  const lanes=new Map();
+  const seenIntents=new Set();
+  const seenJobs=new Set();
+  const rows=new Array(intents.length);
+
+  for(let index=0;index<intents.length;index++){
+    const intent=intents[index];
+    const intentId=String(intent?.intent_id||'').trim();
+    const jobId=String(intent?.job_id||'').trim();
+    const nodeId=String(intent?.node_id||'').trim();
+    if(!intentId||!jobId||!nodeId){
+      rows[index]={status:'held_invalid_intent',intent_id:intentId||null,job_id:jobId||null,node_id:nodeId||null,authority_material_persisted:false};
+      continue;
+    }
+    if(seenIntents.has(intentId)||seenJobs.has(jobId)){
+      rows[index]={status:'held_duplicate_intent',intent_id:intentId,job_id:jobId,node_id:nodeId,authority_material_persisted:false};
+      continue;
+    }
+    seenIntents.add(intentId);
+    seenJobs.add(jobId);
+    if(!lanes.has(nodeId)) lanes.set(nodeId,[]);
+    lanes.get(nodeId).push({index,intent});
+  }
+
+  const nodeLanes=[...lanes.values()];
+  let nextLane=0;
+  const workers=Array.from({length:Math.min(parallelLimit,nodeLanes.length)},async()=>{
+    // The cursor is claimed before each await. One worker owns each node lane.
+    while(nextLane<nodeLanes.length){
+      const lane=nodeLanes[nextLane++];
+      for(const {index,intent} of lane){
+        try{
+          const result=await execute(intent);
+          rows[index]=result&&typeof result==='object'?result:{
+            status:'executor_error',intent_id:intent.intent_id,job_id:intent.job_id,
+            node_id:intent.node_id,reason:'invalid_executor_result',authority_material_persisted:false,
+          };
+        }catch{
+          // Never convert an exception to a completed job or echo sensitive errors.
+          rows[index]={
+            status:'executor_error',intent_id:intent.intent_id,job_id:intent.job_id,
+            node_id:intent.node_id,reason:'unexpected_executor_failure',authority_material_persisted:false,
+          };
+        }
+      }
+    }
+  });
+  await Promise.all(workers);
+  return {
+    rows,
+    parallel_limit:parallelLimit,
+    parallel_node_lanes:nodeLanes.length,
+    per_node_serial:true,
+    machine_authority_inferred:false,
+  };
+}
+
 export async function drainNodeSeedExecutionIntents({
   root,
   yard,
   brokerDeploymentId,
   maxIntents=16,
+  maxParallelNodes=2,
   timeoutMs=10000,
   now=new Date(),
 }={}){
@@ -237,17 +305,19 @@ export async function drainNodeSeedExecutionIntents({
     root,
     states:['awaiting_yard_execution'],
   }).slice(0,Math.max(1,Math.floor(Number(maxIntents||16))));
-  const rows=[];
-  for(const intent of intents){
-    rows.push(await executeNodeSeedExecutionIntent({
+  const execution=await executeNodeSeedIntentLanes({
+    intents,
+    maxParallelNodes,
+    execute:(intent)=>executeNodeSeedExecutionIntent({
       root,
       intentId:intent.intent_id,
       yard,
       brokerDeploymentId,
       timeoutMs,
       now,
-    }));
-  }
+    }),
+  });
+  const {rows}=execution;
   return {
     schema:'evercraft.saban.nodeseed-intent-drain.v1',
     considered:intents.length,
@@ -255,6 +325,12 @@ export async function drainNodeSeedExecutionIntents({
     replan_required:rows.filter(x=>x.status==='replan_required').length,
     retry_wait:rows.filter(x=>x.status==='retry_wait').length,
     dead_letter:rows.filter(x=>x.status==='dead_letter').length,
+    executor_error:rows.filter(x=>x.status==='executor_error').length,
+    held_duplicate_intent:rows.filter(x=>x.status==='held_duplicate_intent').length,
+    parallel_limit:execution.parallel_limit,
+    parallel_node_lanes:execution.parallel_node_lanes,
+    per_node_serial:true,
+    machine_authority_inferred:false,
     authority_material_persisted:false,
     rows,
     generated_at:(now instanceof Date?now:new Date(now)).toISOString(),
