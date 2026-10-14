@@ -190,10 +190,10 @@ test('production ratchet passes while grandfathered debt remains visible', () =>
   assert.ok(mesh.summary.missing_contract_count > 0);
   assert.equal(mesh.summary.shared_runtime_contract_count, 4);
   assert.equal(mesh.summary.private_runtime_contract_count, 1);
-  assert.equal(mesh.summary.discovery_only_contract_count, 5);
+  assert.equal(mesh.summary.discovery_only_contract_count, 6);
   assert.deepEqual(
     mesh.priority_queues.contracted_not_shared_runtime,
-    ['earthworks-autonomy', 'evernest-atlas', 'fallen-sessions', 'lineage', 'opportunity-fabric', 'systemia-university']
+    ['earthworks-autonomy', 'evernest-atlas', 'fallen-sessions', 'game-fabric', 'lineage', 'opportunity-fabric', 'systemia-university']
   );
 });
 
