@@ -147,7 +147,7 @@ export async function main(args=process.argv.slice(2)){
     if(!name||name.startsWith('--')||position<0||!args[position+1])fail('Usage: tool call ID NAME --input JSON --approve');
     const input=JSON.parse(args[position+1]);
     if(!input||typeof input!=='object'||Array.isArray(input))fail('Input must be a JSON object.');
-    process.stderr.write('Calling '+id+'/'+name+' with '+JSON.stringify(input)+'\n');
+    process.stderr.write('Calling '+id+'/'+name+' with explicit approval; input omitted from logs\n');
     return write(await mcpStdio(tool,'call',name,input));
   }
   fail('Unknown tool command.');
