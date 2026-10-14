@@ -36,7 +36,7 @@ export function parseNwsLocalStormReport(product, {
   return {
     observation_id: 'nws-lsr:' + hash(office + '|' + issuedAt + '|' + id + '|' + body),
     source_system: 'systemia-radar',
-    source_family: 'noaa-nws-reports',
+    source_family: 'noaa-nws',
     observed_at: issuedAt,
     region_key: 'NWS forecast office ' + office,
     domains: ['weather', 'emergency_report'],
@@ -44,7 +44,7 @@ export function parseNwsLocalStormReport(product, {
     evidence_state: 'reported',
     reliability: 0.92,
     anomaly_score: 0.8,
-    summary: 'NWS ' + office + ' published a preliminary Local Storm Report. Received damage and weather reports require event-by-event verification; this record alone does not confirm impacts.',
+    summary: 'NWS ' + office + ' issued a preliminary Local Storm Report on ' + issuedAt + '. Any reported impacts remain preliminary and require event-by-event verification.',
     provenance_refs: [url],
     correlation_keys: [key],
     facts: {
@@ -52,6 +52,7 @@ export function parseNwsLocalStormReport(product, {
       subject: 'Preliminary NWS Local Storm Report ' + office,
       product_type: 'LSR',
       preliminary: true,
+      durable_record: true,
       impact_confirmed: false,
       forecast: false,
       issued_at: issuedAt,
