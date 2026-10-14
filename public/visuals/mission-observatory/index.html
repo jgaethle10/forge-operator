@@ -136,6 +136,7 @@ function polar(i){const angle = (i*2.3999632297)+1.4;const radius = 21+Math.sqrt
 const nodes = DEMO_EVENTS.map((event,i)=>{ const s=STAGES.findIndex(stage=>stage.id===event.stage), n=polar(i+3),c=centers[s];return { ...event, index:i, x:c[0], y:c[1], ox:n[0], oy:n[1], stageIndex:s }; });
 const byId = new Map(nodes.map(node=>[node.id,node]));
 const stars = Array.from({length:reducedMotion?100:370},(_,i)=>({x:rand(i*13+1),y:rand(i*17+4),r:.25+rand(i*23+3)*1.3,w:rand(i*31+2)*6.28,tw:.25+rand(i*41+5)*.7}));
+const motes = Array.from({length:reducedMotion?180:840},(_,i)=>({stage:i%6,rad:11+Math.pow(rand(i*3+17),.65)*110,theta:rand(i*7+1)*Math.PI*2,speed:(.025+rand(i*11+6)*.13)*(i%2?-1:1),size:.35+rand(i*5+8)*1.25,alpha:.1+rand(i*9+7)*.52}));
 function sizing(){
   const rect=canvas.getBoundingClientRect(),dpr=Math.min(window.devicePixelRatio||1,2);
   viewportWidth=Math.max(rect.width,1);viewportHeight=Math.max(rect.height,1);
@@ -162,6 +163,18 @@ function draw(now){
   glow(w*.77,h*.55,Math.min(w,h)*.5,"#9d6337",.10);
   glow(w*.20,h*.62,Math.min(w,h)*.31,"#5b2857",.07);
   for(const s of stars){ const flicker=reducedMotion?1:(.55+.45*Math.sin(t*.55+s.w));ctx.fillStyle="rgba(186,213,231,"+(.14+s.tw*flicker*.65)+")";ctx.fillRect(s.x*w,s.y*h,s.r,s.r); }
+  for(const mote of motes){
+    const stageFirst=nodes.find(n=>n.stageIndex===mote.stage),age=stageFirst?current-stageFirst.seconds:-1;
+    if(age<=0)continue;
+    const c=centers[mote.stage],pad=w<600?.03:.09;
+    const cx=pad*w+c[0]*(w*(1-2*pad)),cy=h*.11+c[1]*h*.77;
+    const a=mote.theta+(reducedMotion?0:t*mote.speed);
+    const fade=Math.min(1,age/2.5)*mote.alpha;
+    const radius=mote.rad*Math.min(w/800,1);
+    const x=cx+Math.cos(a)*radius*1.5,y=cy+Math.sin(a)*radius*.9;
+    ctx.fillStyle=STAGES[mote.stage].tint;
+    ctx.globalAlpha=fade;ctx.fillRect(x,y,mote.size,mote.size);ctx.globalAlpha=1;
+  }
   const currentFrame=frameAt(current),visibleSet=new Set(currentFrame.visible.map(e=>e.id));
   for(let si=0;si<STAGES.length;si++){
     const stage=STAGES[si],c=centers[si],px=w*(w<600?.03:.09)+c[0]*w*(w<600?.94:.82),py=h*.11+c[1]*h*.77;
