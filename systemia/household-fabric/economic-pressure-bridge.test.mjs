@@ -1,0 +1,63 @@
+import test from 'node:test';
+import assert from 'node:assert/strict';
+import { emptyLedger, ingestBatch } from './ingest.mjs';
+import sourceRegistry from './source-registry.json' with { type: 'json' };
+import { buildEconomicPressureHouseholdView, normalizeEconomicPressureSignal } from './economic-pressure-bridge.mjs';
+
+const now = new Date('2026-10-14T23:30:00Z');
+const septemberCpi = {
+  metric: 'us-cpi-all-items-yoy', geography: 'us', value: 3.7, unit: 'percent',
+  observed_period: '2026-09', release_at: '2026-10-14T12:30:00Z',
+  evidence_state: 'public',
+  source_url: 'https://www.bls.gov/news.release/archives/cpi_10142026.htm',
+};
+const yakimaUnemployment = {
+  metric: 'yakima-unemployment-rate', geography: 'yakima-wa', value: 5.5,
+  unit: 'percent', observed_period: '2026-08',
+  release_at: '2026-09-30T20:00:00Z', evidence_state: 'public',
+  source_url: 'https://esd.wa.gov/jobs-and-training/labor-market-information/reports-and-research/labor-market-county-profiles/yakima-county-profile',
+};
+
+test('dated national CPI and local Yakima labor evidence stay distinct', () => {
+  const view = buildEconomicPressureHouseholdView({
+    signals: [septemberCpi, yakimaUnemployment],
+    ledger: emptyLedger(), sourceRegistry, now,
+  });
+  assert.equal(view.measured_economic_context.length, 2);
+  assert.equal(view.measured_economic_context[0].geography, 'us');
+  assert.equal(view.measured_economic_context[1].geography, 'yakima-wa');
+  assert.equal(view.measured_economic_context[0].monetary_impact_cents, null);
+  assert.equal(view.household_opportunities.status, 'degraded');
+  assert.deepEqual(view.household_opportunities.opportunities, []);
+  assert.equal(view.boundaries.no_live_collector_implied, true);
+});
+
+test('no invented Yakima CPI, modeled observation or nonofficial source accepted', () => {
+  assert.throws(() => normalizeEconomicPressureSignal({ ...septemberCpi, geography: 'yakima-wa' }, now), /geography mismatch/);
+  assert.throws(() => normalizeEconomicPressureSignal({ ...septemberCpi, evidence_state: 'modeled' }, now), /only measured/);
+  assert.throws(() => normalizeEconomicPressureSignal({ ...septemberCpi, source_url: 'https://bls.gov.evil.example/something' }, now), /allowed official/);
+  assert.throws(() => normalizeEconomicPressureSignal({ ...septemberCpi, value: Number.POSITIVE_INFINITY }, now), /finite/);
+});
+
+test('no unreleased or conflicting measurement promoted as fact', () => {
+  assert.throws(() => normalizeEconomicPressureSignal({ ...septemberCpi, release_at: '2026-10-15T12:30:00Z' }, now), /not published yet/);
+  assert.throws(() => buildEconomicPressureHouseholdView({
+    signals: [septemberCpi, { ...septemberCpi, value: 4.1 }],
+    ledger: emptyLedger(), sourceRegistry, now,
+  }), /duplicate metric and period/);
+});
+
+test('national inflation does not modify locally ranked opportunities or imply savings', () => {
+  const fresh = {
+    id: 'community-event', title: 'Free public community event', category: 'event',
+    observed_at: '2026-10-14T22:30:00Z', source_url: 'https://www.yvl.org/events/',
+    evidence_state: 'public', eligibility: 'unknown', gross_savings_cents: 0,
+  };
+  const { ledger } = ingestBatch(emptyLedger(), [fresh], { now });
+  const base = { ledger, sourceRegistry, now };
+  const first = buildEconomicPressureHouseholdView({ ...base, signals: [septemberCpi] });
+  const second = buildEconomicPressureHouseholdView({ ...base, signals: [{ ...septemberCpi, value: 9.5 }] });
+  assert.deepEqual(first.household_opportunities, second.household_opportunities);
+  assert.equal(first.household_opportunities.opportunities[0].requires_eligibility_check, true);
+  assert.equal(first.boundaries.economic_signals_do_not_buy_organic_rank, true);
+});
