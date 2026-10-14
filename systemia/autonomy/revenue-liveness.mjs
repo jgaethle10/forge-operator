@@ -7,8 +7,8 @@ export const WORKFLOW_REQUIREMENTS = Object.freeze([
   { lane: 'portfolio_sentinel', workflow: '.github/workflows/systemia-portfolio-sentinel.yml', max_age_minutes: 20, retry_failed_after_minutes: 20, repair: 'dispatch' },
   { lane: 'legacy_rescue', workflow: '.github/workflows/systemia-legacy-rescue-watch.yml', max_age_minutes: 20, retry_failed_after_minutes: 20, repair: 'dispatch' },
   { lane: 'commercial_discovery', workflow: '.github/workflows/portfolio-sentinel-commercial-discovery.yml', max_age_minutes: 45, retry_failed_after_minutes: 30, repair: 'dispatch' },
-  { lane: 'revenue_watershed', workflow: '.github/workflows/chum-watershed.yml', max_age_minutes: 95, retry_failed_after_minutes: 45, repair: 'dispatch' },
-  { lane: 'owned_newsroom', workflow: '.github/workflows/evercraft-journal-owned.yml', max_age_minutes: 95, retry_failed_after_minutes: 45, repair: 'dispatch' },
+  { lane: 'revenue_watershed', workflow: '.github/workflows/chum-watershed.yml', max_age_minutes: 420, retry_failed_after_minutes: 45, repair: 'dispatch' },
+  { lane: 'owned_newsroom', workflow: '.github/workflows/evercraft-journal-owned.yml', cadence: 'event', repair: 'none' },
 ]);
 
 export const EXTERNAL_REVENUE_LANES = Object.freeze([
@@ -67,9 +67,28 @@ export function evaluateRevenueAutonomy({
   const workflowFindings = [];
   const workflowStates = [];
   const repairs = [];
+  // The scheduled event is distinct from push, PR and manual workflow execution.
+  // Null means an older snapshot that did not collect schedule evidence.
+  const scheduledRuns = Array.isArray(workflowSnapshot?.schedule_runs)
+    ? workflowSnapshot.schedule_runs
+    : null;
+  const scheduleStates = [];
+  const scheduleFindings = [];
 
   for (const requirement of workflowRequirements) {
     const run = latestRunFor(runs, requirement.workflow);
+    if (!run && requirement.cadence === 'event') {
+      workflowStates.push({
+        lane: requirement.lane,
+        workflow: requirement.workflow,
+        state: 'awaiting_event',
+        cadence: 'event',
+        latest_run_id: null,
+        latest_conclusion: null,
+        age_minutes: null,
+      });
+      continue;
+    }
     if (!run) {
       workflowStates.push({
         lane: requirement.lane,
@@ -99,10 +118,14 @@ export function evaluateRevenueAutonomy({
     const ageMinutes = createdMs == null ? null : Math.max(0, (nowMs - createdMs) / 60000);
     const active = ['queued', 'pending', 'in_progress', 'waiting', 'requested'].includes(String(run.status || ''));
     const failed = run.status === 'completed' && !['success', 'skipped'].includes(String(run.conclusion || ''));
-    const stale = !active && (ageMinutes == null || ageMinutes > requirement.max_age_minutes);
+    const activeStalled = active && (ageMinutes == null ||
+      (requirement.cadence !== 'event' && ageMinutes > requirement.max_age_minutes));
+    const stale = requirement.cadence !== 'event' && !active &&
+      (ageMinutes == null || ageMinutes > requirement.max_age_minutes);
 
-    let state = 'healthy';
-    if (active) state = 'active';
+    let state = requirement.cadence === 'event' ? 'event_observed' : 'healthy';
+    if (activeStalled) state = 'stalled_active';
+    else if (active) state = 'active';
     else if (failed) state = 'failed';
     else if (stale) state = 'stale';
 
@@ -119,7 +142,17 @@ export function evaluateRevenueAutonomy({
       html_url: run.html_url || null,
     });
 
-    if (failed) {
+    if (activeStalled) {
+      // A timed-out active run needs investigation, not another overlapping dispatch.
+      workflowFindings.push({
+        severity: 'critical',
+        code: 'autonomy_workflow_stalled_active',
+        lane: requirement.lane,
+        workflow: requirement.workflow,
+        run_id: run.id || null,
+        detail: 'An active workflow exceeded its observed execution window; no duplicate repair dispatched.',
+      });
+    } else if (failed) {
       workflowFindings.push({
         severity: 'critical',
         code: 'autonomy_workflow_failed',
@@ -162,6 +195,45 @@ export function evaluateRevenueAutonomy({
     }
   }
 
+  // A recent push or workflow_dispatch proves an execution attempt, NOT that cron is healthy.
+  // Schedule observations only exist when the upstream GitHub run query includes event=schedule.
+  // Cron recovery cannot be repaired by repeatedly invoking a regular job.
+  if (scheduledRuns !== null) {
+    for (const requirement of workflowRequirements) {
+      if (requirement.cadence === 'event') continue;
+      const run = latestRunFor(scheduledRuns, requirement.workflow);
+      const age = run ? asTime(run.created_at) : null;
+      const ageMinutes = age == null ? null : Math.max(0, (nowMs - age) / 60000);
+      const active = run && ['queued', 'pending', 'in_progress', 'waiting', 'requested'].includes(String(run.status || ''));
+      const failed = run?.status === 'completed' && !['success', 'skipped'].includes(String(run.conclusion || ''));
+      const state = !run ? 'missing' :
+        ageMinutes == null || ageMinutes > requirement.max_age_minutes ? 'stale' :
+        failed ? 'failed' : active ? 'active' : 'healthy';
+      scheduleStates.push({
+        lane: requirement.lane,
+        workflow: requirement.workflow,
+        state,
+        latest_scheduled_run_id: run?.id || null,
+        latest_scheduled_at: run?.created_at || null,
+        latest_status: run?.status || null,
+        latest_conclusion: run?.conclusion || null,
+        age_minutes: ageMinutes == null ? null : Number(ageMinutes.toFixed(1)),
+        max_age_minutes: requirement.max_age_minutes,
+        html_url: run?.html_url || null,
+      });
+      if (state !== 'healthy' && state !== 'active') {
+        scheduleFindings.push({
+          severity: 'critical',
+          code: 'autonomy_schedule_' + state,
+          lane: requirement.lane,
+          workflow: requirement.workflow,
+          run_id: run?.id || null,
+          detail: 'No fresh successful scheduled-event receipt. Push/PR/manual runs cannot certify cron cadence; do not auto-dispatch a duplicate.',
+        });
+      }
+    }
+  }
+
   const commerceFindings = [];
   const sellNow = (machineCatalog?.offers || []).filter((offer) =>
     offer?.public_id && offer?.commercial_state === 'sell_now'
@@ -187,7 +259,7 @@ export function evaluateRevenueAutonomy({
     };
   });
 
-  const critical = workflowFindings.filter((row) => row.severity === 'critical').length;
+  const critical = [...workflowFindings, ...scheduleFindings].filter((row) => row.severity === 'critical').length;
   const high = commerceFindings.length + workflowFindings.filter((row) => row.severity === 'high').length;
   const status = critical > 0 ? 'critical' : high > 0 ? 'degraded' : 'healthy';
 
@@ -201,6 +273,7 @@ export function evaluateRevenueAutonomy({
       sell_now_requires_structured_continuation: true,
       external_terms_and_job_applications_remain_human_gated: true,
       attempted_repair_is_not_success: true,
+      push_or_manual_run_does_not_prove_cron: true,
     },
     external_monitor_contract: {
       lanes: EXTERNAL_REVENUE_LANES,
@@ -208,11 +281,14 @@ export function evaluateRevenueAutonomy({
       note: 'Repository automation cannot truthfully substitute for authenticated inbox/web intake or accept third-party legal terms.',
     },
     workflows: workflowStates,
+    schedule: scheduleStates,
     commerce: commerceStates,
-    findings: [...workflowFindings, ...commerceFindings],
+    findings: [...workflowFindings, ...scheduleFindings, ...commerceFindings],
     repairs,
     summary: {
       monitored_workflows: workflowStates.length,
+      observed_scheduled_workflows: scheduleStates.length,
+      critical_schedule_findings: scheduleFindings.length,
       healthy_or_active_workflows: workflowStates.filter((row) => ['healthy', 'active'].includes(row.state)).length,
       critical_workflow_findings: critical,
       sell_now_offers: commerceStates.length,
