@@ -1,0 +1,27 @@
+name: RustGIS bounded worker policy
+
+on:
+  pull_request:
+    paths:
+      - 'systemia/compute/rustgis-bounded-worker/**'
+      - '.github/workflows/rustgis-bounded-worker-policy.yml'
+  push:
+    branches: [main]
+    paths:
+      - 'systemia/compute/rustgis-bounded-worker/**'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  synthetic-policy:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Verify signed synthetic worker policy and replay gates
+        run: node systemia/compute/rustgis-bounded-worker/tests/test-worker.mjs
