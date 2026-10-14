@@ -82,7 +82,7 @@ a:focus-visible,button:focus-visible,input:focus-visible{outline:2px solid var(-
 <script type="module">
 import {FEED_URL,WGS_MAP_SERVICE,ZONES,normalizeUsgsFeed,feedFreshness,summarize,htmlEscape} from "./atlas.mjs";
 const byId=id=>document.getElementById(id);
-let selected="kuril",map,quakes=L?.layerGroup?.(),wgsInundation=null,wgsEvacuation=null,observations=[],lastGenerated=null,feedError=null;
+let selected="kuril",map,quakes=null,wgsInundation=null,wgsEvacuation=null,observations=[],lastGenerated=null,feedError=null;
 const overlays={};
 function info(text){byId("dataStatus").textContent=text;}
 function bindClick(id,handler){byId(id).addEventListener("click",handler);}
