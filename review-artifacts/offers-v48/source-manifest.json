@@ -1,0 +1,33 @@
+{
+  "schema": "evercraft.review-artifacts.v1",
+  "candidate": "V4.8 visual-first engineering review",
+  "source_zip_sha256": "4e5d7d8924f19c2984b29ec2c9e7d78537f8721c85010b3043f6e495eba6900e",
+  "source_zip_drive_url": "https://drive.google.com/file/d/1nRNEC-wrPZu8Eu4YkM7UqJiKmliZ7Wl_/view",
+  "source_origin": "self-contained archived V4.8 previews; Isaias local navigation normalized",
+  "status": "review_only_not_published",
+  "traffic": "none",
+  "real_checkout": false,
+  "real_customer_intake": false,
+  "source_files": {
+    "index.html": {
+      "sha256": "f2c0cc7e446ff6df44dfeeb39bc933d33e26b01f2df6773a5d250a900cde583a",
+      "bytes": 62313
+    },
+    "ibm.html": {
+      "sha256": "d5bb8191f69489304c853ea80bec5b4643d7a06d4860077839423adf43f62b60",
+      "bytes": 76081
+    },
+    "findmypart.html": {
+      "sha256": "d7df15db88ba6e79d8c8265608e715ced9f99ab9fa4a0cf2e2fbb9463170feab",
+      "bytes": 69264
+    },
+    "legacy.html": {
+      "sha256": "a893389d2964620e4f1ea09bb5ebb46e4190ed1ee96e03ff2fce67f4e9514b5c",
+      "bytes": 68474
+    },
+    "isaias.html": {
+      "sha256": "e1dd9b7948ce8c6e02af6bdca49e3b96a6d21223b3fbd397f9743be1b246d91f",
+      "bytes": 349997
+    }
+  }
+}
