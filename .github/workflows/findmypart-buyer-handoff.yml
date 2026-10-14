@@ -1,0 +1,30 @@
+name: FindMyPart buyer handoff canary
+on:
+  pull_request:
+    paths:
+      - 'public/field-guides/findmypart/**'
+      - 'tests/findmypart-buyer-guide.test.mjs'
+      - 'scripts/probe-findmypart-buyer-doors.mjs'
+      - '.github/workflows/findmypart-buyer-handoff.yml'
+      - 'registry/catalog.json'
+      - 'public/.well-known/evercraft-direct-doors.json'
+  workflow_dispatch:
+  schedule:
+    - cron: '31 */6 * * *'
+permissions:
+  contents: read
+jobs:
+  verify-buyer-handoff:
+    runs-on: ubuntu-latest
+    timeout-minutes: 6
+    steps:
+      - name: Checkout exact revision
+        uses: actions/checkout@v4
+      - name: Set up Node 22
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Offline safety and pricing contract
+        run: node --test tests/findmypart-buyer-guide.test.mjs
+      - name: Read-only live buyer door probe
+        run: node scripts/probe-findmypart-buyer-doors.mjs
