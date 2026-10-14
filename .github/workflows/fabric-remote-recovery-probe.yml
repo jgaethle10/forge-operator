@@ -36,7 +36,10 @@ jobs:
           }
           JSON
             cat artifacts/fabric-remote-recovery-probe.json
-            exit 0
+            # Missing credentials must not produce a green CI result.
+            # The explicit not-configured receipt remains uploaded by if: always().
+            echo "::error title=Remote Operator not configured::Scoped endpoint or control token unavailable; no authenticated remote health check occurred."
+            exit 1
           fi
 
           node <<'NODE' > artifacts/fabric-remote-recovery-probe.json
