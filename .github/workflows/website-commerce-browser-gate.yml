@@ -1,0 +1,81 @@
+name: Evercraft Website Commerce Browser Gate
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+      - 'systemia/evercraft-web/browser-worker/website-commerce-acceptance.mjs'
+      - '.github/workflows/website-commerce-browser-gate.yml'
+
+permissions:
+  contents: read
+
+concurrency:
+  group: evercraft-website-commerce-browser-gate
+  cancel-in-progress: true
+
+jobs:
+  public-buyer-acceptance:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Install Evercraft Browser Worker and Chromium
+        working-directory: systemia/evercraft-web/browser-worker
+        run: |
+          npm install --no-audit --no-fund
+          npx playwright install --with-deps chromium
+      - name: Inspect public buyer forms and approved provider pages (read-only)
+        env:
+          EVERCRAFT_CHECKOUT_RECEIPT: artifacts/website-commerce-acceptance.receipt.json
+        run: node systemia/evercraft-web/browser-worker/website-commerce-acceptance.mjs
+      - name: Report truthful commercial state
+        if: always()
+        shell: bash
+        run: |
+          node --input-type=module <<'NODE'
+          import fs from 'node:fs';
+          const p='artifacts/website-commerce-acceptance.receipt.json';
+          if(!fs.existsSync(p)) {console.error('No buyer browser receipt');process.exit(1);}
+          const r=JSON.parse(fs.readFileSync(p,'utf8'));
+          const rows=[
+            '## Evercraft website browser-verified sales gate',
+            '',
+            '- Native engine: **Evercraft-owned Playwright/Chromium**',
+            '- Public buyer-ready: **'+String(r.buyer_ready)+'**',
+            '- New purchase attempted: **no**',
+            '- Payment or settlement verified: **no**',
+            '- Required offer blockers: **'+r.blockers.length+'**',
+            '',
+            '| Offer | Rendered payment surface |',
+            '| --- | --- |',
+            ...r.observed.filter(x=>x.surface==='provider_payment_page').map(x=>'| '+x.tier+' | '+x.state+' |'),
+            '',
+            'A 200 response alone is never checkout proof. Public promotion remains blocked until the real buyer journey and provider receipt are independently verified.'
+          ];
+          fs.appendFileSync(process.env.GITHUB_STEP_SUMMARY,rows.join('\n')+'\n');
+          NODE
+      - name: Preserve independent browser receipt
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: evercraft-website-commerce-browser-receipt
+          path: artifacts/website-commerce-acceptance.receipt.json
+          if-no-files-found: warn
+      - name: Enforce stop-sell when payment links are not ready
+        if: always()
+        run: |
+          node --input-type=module <<'NODE'
+          import fs from 'node:fs';
+          const p='artifacts/website-commerce-acceptance.receipt.json';
+          if(!fs.existsSync(p))throw new Error('buyer_acceptance_receipt_missing');
+          const r=JSON.parse(fs.readFileSync(p,'utf8'));
+          if(r.buyer_ready!==true){
+            console.error('CHECKOUT_DISTRIBUTION_BLOCKED: '+r.blockers.join(', '));
+            process.exitCode=1;
+          }
+          NODE
