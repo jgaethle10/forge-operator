@@ -12,7 +12,7 @@ test('FAIE AgNormal launch canary proves the exact partner room',()=>{
   assert.ok(script.includes('id="activityHud"'));
   assert.ok(script.includes('Cancel operation'));
   assert.ok(script.includes('Download handed off'));
-  assert.ok(script.includes('fetchWithTimeout'));
+  assert.ok(script.includes('timedFetch'));
   assert.ok(script.includes('faie_agnormal_base44_reference'));
 });
 
