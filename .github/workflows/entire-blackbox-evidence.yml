@@ -1,0 +1,37 @@
+name: Entire Black Box evidence gate
+
+on:
+  pull_request:
+    paths:
+      - "integrations/entire-blackbox/**"
+      - ".github/workflows/entire-blackbox-evidence.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  evidence-gate:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: integrations/entire-blackbox
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-go@v5
+        with:
+          go-version-file: integrations/entire-blackbox/go.mod
+      - name: Deterministic unit tests and vet
+        run: |
+          go test -count=1 -v ./...
+          go vet ./...
+      - name: Build and verify unknown-state smoke
+        run: |
+          go build -o /tmp/entire-blackbox .
+          /tmp/entire-blackbox inspect examples/unknown.json > /tmp/evidence.json
+          grep -q '"assessment":"UNKNOWN"' /tmp/evidence.json
+          grep -q '"externally_verified":false' /tmp/evidence.json
+      - name: Cross-build candidate binaries
+        run: |
+          GOOS=darwin GOARCH=arm64 go build -o /tmp/entire-blackbox_darwin_arm64 .
+          GOOS=windows GOARCH=amd64 go build -o /tmp/entire-blackbox_windows_amd64.exe .
