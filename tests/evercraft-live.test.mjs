@@ -5,7 +5,8 @@ import { readFileSync } from 'node:fs';
 const html = readFileSync(new URL('../public/live/index.html', import.meta.url), 'utf8');
 
 test('same existing public runtime, not an independent agent service', () => {
-  assert.match(html, /EVERCRAFT LIVE/);
+  assert.match(html, /EVERCRAFT/);
+  assert.match(html, /<span style="color:var\(--green\)">LIVE<\/span>/);
   assert.match(html, /data-scene="activity"/);
   assert.match(html, /data-scene="build"/);
   assert.match(html, /data-scene="proof"/);
