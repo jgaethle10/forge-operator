@@ -173,8 +173,22 @@ export async function main(args=process.argv.slice(2)){
       fail('Usage: tool call ID NAME (--input JSON | --input-stdin) --approve');
     }
     if(stdinCount===1&&process.stdin.isTTY)fail('--input-stdin requires piped JSON input, not an interactive terminal.');
-    const raw=stdinCount===1?fs.readFileSync(0,'utf8'):args[position+1];
-    if(Buffer.byteLength(raw,'utf8')>MAX_INPUT)fail('Tool arguments exceed 64 KiB preview limit.');
+    let raw;
+    if(stdinCount===1){
+      // Async iteration handles nonblocking pipes (macOS can return EAGAIN for
+      // synchronous reads on larger input) without buffering unbounded data.
+      const chunks=[];
+      let size=0;
+      for await(const chunk of process.stdin){
+        size+=chunk.length;
+        if(size>MAX_INPUT)fail('Tool arguments exceed 64 KiB preview limit.');
+        chunks.push(chunk);
+      }
+      raw=Buffer.concat(chunks).toString('utf8');
+    }else{
+      raw=args[position+1];
+      if(Buffer.byteLength(raw,'utf8')>MAX_INPUT)fail('Tool arguments exceed 64 KiB preview limit.');
+    }
     const input=JSON.parse(raw);
     if(!input||typeof input!=='object'||Array.isArray(input))fail('Input must be a JSON object.');
     process.stderr.write('Calling '+id+'/'+name+' with explicit approval; input omitted from logs\n');
