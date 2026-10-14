@@ -5,6 +5,7 @@ import path from 'node:path';
 import {spawn} from 'node:child_process';
 import {fileURLToPath} from 'node:url';
 import {validateCapabilitySubmission} from './capability.mjs';
+import {modernParams,checkModernDiscover} from './modern-protocol.mjs';
 
 const VERSION='0.1.0-dev';
 const STORE=path.join(process.env.XDG_CONFIG_HOME||path.join(os.homedir(),'.config'),'evercraft','operator-tools.json');
@@ -45,7 +46,9 @@ const allowedEnv=()=>{
   }
   return safe;
 };
-export async function mcpStdio(tool,mode,toolName,input={}){
+export async function mcpStdio(tool,mode,toolName,input={},options={}){
+  const protocol=options.protocol||'legacy';
+  if(!['legacy','modern'].includes(protocol))fail('Protocol must be legacy or modern.');
   const child=spawn(tool.command,tool.args||[],{shell:false,stdio:['pipe','pipe','pipe'],windowsHide:true,env:allowedEnv()});
   let lineBuffer='',stderr='',finished=false,bytes=0,seq=0;
   const awaiting=new Map();
@@ -79,15 +82,25 @@ export async function mcpStdio(tool,mode,toolName,input={}){
   });
   const timer=setTimeout(()=>{rejectAll(Error('MCP tool exceeded five-second preview limit'));child.kill();},TIMEOUT_MS);
   try{
-    const initialized=await send('initialize',{protocolVersion:'2025-11-25',capabilities:{},clientInfo:{name:'evercraft-operator-cli',version:VERSION}});
-    if(!initialized||!initialized.protocolVersion)fail('Invalid MCP initialize response.');
-    await send('notifications/initialized',{},true);
-    const listed=await send('tools/list',{});
+    let serverInfo,protocolVersion;
+    if(protocol==='modern'){
+      // Explicit only. Never try the modern probe on arbitrary legacy servers automatically.
+      const discovered=await send('server/discover',modernParams());
+      ({serverInfo,protocolVersion}=checkModernDiscover(discovered));
+    }else{
+      const initialized=await send('initialize',{protocolVersion:'2025-11-25',capabilities:{},clientInfo:{name:'evercraft-operator-cli',version:VERSION}});
+      if(!initialized||!initialized.protocolVersion)fail('Invalid MCP initialize response.');
+      serverInfo=initialized.serverInfo||{};
+      protocolVersion=initialized.protocolVersion;
+      await send('notifications/initialized',{},true);
+    }
+    const listed=await send('tools/list',protocol==='modern'?modernParams():{});
     if(!Array.isArray(listed?.tools))fail('Invalid MCP tools/list response.');
-    if(mode==='probe')return {status:'local_probe_succeeded',protocolVersion:initialized.protocolVersion,serverInfo:initialized.serverInfo||{},tools:listed.tools.map(x=>({name:x.name,description:x.description||''}))};
+    if(mode==='probe')return {status:'local_probe_succeeded',protocolEra:protocol,protocolVersion,serverInfo,tools:listed.tools.map(x=>({name:x.name,description:x.description||''}))};
     const advertised=listed.tools.find(x=>x.name===toolName);
     if(!advertised)fail('Tool is not advertised: '+toolName);
-    const response=await send('tools/call',{name:toolName,arguments:input});
+    const params={name:toolName,arguments:input};
+    const response=await send('tools/call',protocol==='modern'?modernParams(params):params);
     return {status:'tool_returned',tool:toolName,result:response};
   }finally{
     finished=true;
@@ -104,8 +117,8 @@ function help(){
     'evercraft tool inspect TOOL_ID',
     'evercraft tool remove TOOL_ID                 Removes registration, not files',
     'evercraft capability validate ./candidate.json  Offline review of publisher manifest',
-    'evercraft tool probe TOOL_ID --run             Launches local program',
-    'evercraft tool call TOOL_ID TOOL --input JSON --approve',
+    'evercraft tool probe TOOL_ID --run [--protocol modern] (default: legacy)',
+    'evercraft tool call TOOL_ID TOOL --input JSON --approve [--protocol modern]',
     'No remote registry, payments, public tool publishing or arbitrary installs.'
   ].join('\n')+'\n');
 }
@@ -137,9 +150,12 @@ export async function main(args=process.argv.slice(2)){
     store.tools=store.tools.filter(x=>x.id!==id);saveStore(store);
     return write({removed:id,executableDeleted:false});
   }
+  const protocolIndex=args.indexOf('--protocol');
+  const protocol=protocolIndex<0?'legacy':args[protocolIndex+1];
+  if(!['legacy','modern'].includes(protocol))fail('Use --protocol legacy or --protocol modern.');
   if(command==='probe'){
     if(!args.includes('--run'))fail('Launching a registered tool requires --run.');
-    return write(await mcpStdio(tool,'probe'));
+    return write(await mcpStdio(tool,'probe',undefined,{}, {protocol}));
   }
   if(command==='call'){
     if(!args.includes('--approve'))fail('Calling a registered tool requires --approve.');
@@ -148,7 +164,7 @@ export async function main(args=process.argv.slice(2)){
     const input=JSON.parse(args[position+1]);
     if(!input||typeof input!=='object'||Array.isArray(input))fail('Input must be a JSON object.');
     process.stderr.write('Calling '+id+'/'+name+' with explicit approval; input omitted from logs\n');
-    return write(await mcpStdio(tool,'call',name,input));
+    return write(await mcpStdio(tool,'call',name,input,{protocol}));
   }
   fail('Unknown tool command.');
 }
