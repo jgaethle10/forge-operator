@@ -1,0 +1,26 @@
+name: Pacific Megathrust Atlas research checks
+on:
+  push:
+    branches:
+      - 'research/pacific-megathrust-atlas-*'
+    paths:
+      - 'public/demos/pacific-megathrust/**'
+      - '.github/workflows/pacific-megathrust-research.yml'
+  pull_request:
+    paths:
+      - 'public/demos/pacific-megathrust/**'
+      - '.github/workflows/pacific-megathrust-research.yml'
+permissions:
+  contents: read
+jobs:
+  source-contract:
+    name: Source classification and safety invariants
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - run: node --test public/demos/pacific-megathrust/atlas.test.mjs
+      - run: node --check public/demos/pacific-megathrust/atlas.mjs
