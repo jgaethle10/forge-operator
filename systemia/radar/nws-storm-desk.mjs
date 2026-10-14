@@ -29,7 +29,7 @@ export function parseStormAlert(feature, { now = new Date().toISOString() } = {}
   // Radar marks weather evidence stale at six hours; do not relabel old issuance as fresh.
   if (nowMs - issued > 6 * 60 * 60 * 1000) return null;
   const ref = clean(p['@id'] || feature?.id || p.id);
-  if (!/^https:\/\/api\.weather\.gov\/alerts\/[a-z0-9/?=&._%-]+$/i.test(ref)) return null;
+  if (!/^https:\/\/api\.weather\.gov\/alerts\/[a-z0-9:/?=&._%-]+$/i.test(ref)) return null;
   const region = clean(p.areaDesc || 'Unspecified NWS alert region').slice(0, 160);
   const id = ref + '|' + new Date(issued).toISOString() + '|' + clean(p.messageType) + '|' + (expires ?? '');
   const key = 'nws:storm:' + hash(ref);
