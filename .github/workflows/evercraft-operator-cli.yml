@@ -4,17 +4,24 @@ on:
     paths:
       - 'packages/evercraft-cli/**'
       - '.github/workflows/evercraft-operator-cli.yml'
-  push:
-    branches:
-      - 'feature/evercraft-operator-cli-economy-20261014'
-    paths:
-      - 'packages/evercraft-cli/**'
-      - '.github/workflows/evercraft-operator-cli.yml'
+  workflow_dispatch:
+
 permissions:
   contents: read
+
+# PR pushes previously triggered both push and pull_request test runs.
+# Keep only the review path, and cancel superseded runs for the same PR.
+concurrency:
+  group: evercraft-operator-cli-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
 jobs:
   local-mcp-conformance:
-    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, windows-latest, macos-latest]
+    runs-on: ${{ matrix.os }}
     timeout-minutes: 5
     steps:
       - uses: actions/checkout@v4
