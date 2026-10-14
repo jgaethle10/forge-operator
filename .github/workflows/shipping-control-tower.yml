@@ -32,7 +32,7 @@ jobs:
         with:
           node-version: 22
       - name: Run Shipping contract suite
-        run: node --test systemia/shipping/shipping-department.test.mjs
+        run: npm run test:shipping
       - name: Verify fulfillment binds to Shipping v3
         shell: bash
         run: |
