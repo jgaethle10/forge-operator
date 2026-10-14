@@ -18,16 +18,13 @@ FindMyPart is an approved public Evercraft discovery record. This GitHub mirror 
 
 ## Public routes
 
-- Customer-facing FindMyPart: https://findmypart.base44.app/FindMyPart
-- Free Part Check: https://findmypart.base44.app/free-part-check
-- Free repair-shop referral kit: https://findmypart.base44.app/PartnerWithFindMyPart
-- Machine-readable public mirror: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/findmypart/index.html
+- Canonical: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/findmypart/index.html
 - GitHub LLM mirror: ./llms.txt
 - Runtime or CHUM llms.txt: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/findmypart/llms.txt
 
 ## Authority
 
-Free evidence-aware Part Passport triage plus human-confirmed one-time sourcing hunts: Quick $19, Deep $49, Rescue $99. These are research-service prices, not a promise that a particular part is available. The recurring Shop Plan remains inactive. Repair shops can generate a free referral link with separate review of any commercial terms.
+free evidence-aware Part Passport triage plus human-confirmed paid sourcing hunts
 
 Human confirmation required: yes
 
