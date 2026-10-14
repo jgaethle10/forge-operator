@@ -38,3 +38,7 @@ jobs:
         run: node tests/game-fabric-public-discovery.test.mjs
       - name: Validate cross-provider discovery boundary
         run: node scripts/validate-ai-conformance.mjs
+      - name: Prove new product carries complete Systemia capability contract
+        run: |
+          node systemia/capability-mesh/mesh.mjs --check
+          node --test systemia/capability-mesh/mesh.test.mjs
