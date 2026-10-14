@@ -62,27 +62,28 @@ jobs:
 
             retry=false
             if [ "$stage" = "partner_surface" ]; then
-              case "$error" in
-                http_404:/faie/agnormal/|                faie_agnormal_partner_identity_missing|                faie_agnormal_partner_promise_missing|                faie_agnormal_activity_hud_missing|                faie_agnormal_cancel_control_missing|                faie_agnormal_truthful_download_receipt_missing|                faie_agnormal_timeout_guard_missing)
-                  retry=true
-                  ;;
-              esac
+              if [ "$error" = "http_404:/faie/agnormal/" ] || \
+                 [ "$error" = "faie_agnormal_partner_identity_missing" ] || \
+                 [ "$error" = "faie_agnormal_partner_promise_missing" ] || \
+                 [ "$error" = "faie_agnormal_activity_hud_missing" ] || \
+                 [ "$error" = "faie_agnormal_cancel_control_missing" ] || \
+                 [ "$error" = "faie_agnormal_truthful_download_receipt_missing" ] || \
+                 [ "$error" = "faie_agnormal_timeout_guard_missing" ]; then
+                retry=true
+              fi
             fi
 
             if [ "$stage" = "health" ]; then
-              case "$error" in
-                faie_health_design_partner_path_mismatch|                json_http_404:/api/faie/health)
-                  retry=true
-                  ;;
-              esac
+              if [ "$error" = "faie_health_design_partner_path_mismatch" ] || \
+                 [ "$error" = "json_http_404:/api/faie/health" ]; then
+                retry=true
+              fi
             fi
 
             if [ "$stage" = "investigation" ]; then
-              case "$error" in
-                json_post_http_404:/api/faie/investigate)
-                  retry=true
-                  ;;
-              esac
+              if [ "$error" = "json_post_http_404:/api/faie/investigate" ]; then
+                retry=true
+              fi
             fi
 
             if [ "$retry" = "true" ] && [ "$attempt" -lt "$max_attempts" ]; then
