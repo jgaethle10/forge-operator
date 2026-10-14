@@ -3,6 +3,7 @@ import http from 'node:http';
 import { chromium } from 'playwright';
 import { DurableBrowserJobs } from './durable-jobs.mjs';
 import { verifyDurableJobRequest } from './systemia-admission.mjs';
+import { jobApplicationPreflight } from './job-application-preflight.mjs';
 import { createSecureOutboundProxy } from './secure-proxy.mjs';
 import { HEADING_SELECTOR, MAX_HEADINGS } from './snapshot-contract.mjs';
 import { AuthenticatedBrowserSessionManager, renderHumanBrowserHandoffPage } from './authenticated-handoff.mjs';
@@ -381,6 +382,18 @@ const server = http.createServer(async (req,res) => {
         delegated_new_terms_authority: false
       });
       return;
+    }
+
+    // Signed, non-mutating preparation boundary. This route never opens a browser,
+    // enters credentials, uploads a document, or submits an application.
+    if (req.method === 'POST' && pathname === '/v1/job-applications/preflight') {
+      if (SYSTEMIA_JOB_KEY.length < 32) return json(res,503,{ok:false,error:'job_application_preflight_unconfigured'});
+      const {data:body,raw} = await readJson(req,{includeRaw:true});
+      verifyDurableJobRequest(SYSTEMIA_JOB_KEY,{
+        headers:req.headers,method:req.method,path:pathname,body:raw,nonces:signedJobNonces
+      });
+      const result = await jobApplicationPreflight(body);
+      return json(res,result.ok ? 200 : 409,result);
     }
 
     if (req.method === 'POST' && pathname === '/v1/auth-browser/sessions') {
