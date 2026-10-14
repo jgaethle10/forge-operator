@@ -132,6 +132,8 @@ function failureStage(checks={},message=''){
   if(checks.journal_surface!==true) return 'journal_surface';
   if(checks.visual_desk!==true) return 'visual_desk';
   if(checks.faie_surface!==true) return 'faie_surface';
+  if(checks.faie_design_partner_surface!==true) return 'faie_design_partner_surface';
+  if(checks.faie_design_partner_investigation!==true) return 'faie_design_partner_investigation';
   if(checks.faie_health!==true) return 'faie_health';
   if(checks.faie_mcp!==true) return 'faie_mcp';
   if(checks.mobile_surface!==true) return 'mobile_surface';
@@ -494,6 +496,7 @@ try{
     truthful_download_handoff_verified:true,
     base44_reference_absent:true,
   };
+  receipt.checks.faie_design_partner_surface=true;
 
   const agnormalInvestigation=await postJson('/api/faie/investigate',{
     question:'What current evidence could materially weaken reliance on Yakima Valley water availability for regionally scaled food production?',
@@ -538,6 +541,7 @@ try{
     decision_authority:false,
     publication_authority:false,
   };
+  receipt.checks.faie_design_partner_investigation=true;
 
   const faieHealth=await getJson('/api/faie/health');
   if(faieHealth.fabric_native!==true) throw new Error('faie_health_not_fabric_native');
