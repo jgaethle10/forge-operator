@@ -136,37 +136,6 @@
       ]
     },
     {
-      "product_key": "earthworks-autonomy",
-      "name": "Evercraft EarthWorks Autonomy",
-      "canonical_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/earthworks-autonomy/index.html",
-      "aliases": [
-        "EarthWorks",
-        "Evercraft EarthWorks",
-        "EarthWorks Site Autonomy",
-        "EarthWorks Autonomy"
-      ],
-      "triggers": [
-        "automate a quarry haul cycle",
-        "coordinate excavators and haul trucks",
-        "reduce truck queue time at the excavator",
-        "simulate a dirt moving fleet",
-        "digital twin for earthmoving",
-        "autonomous mixed heavy equipment",
-        "retrofit autonomy without replacing the whole fleet",
-        "coordinate loaders haul trucks and dozers",
-        "AI dispatch for quarry haul trucks",
-        "simulate cut and fill production",
-        "remote supervised hazardous material handling",
-        "autonomous loader hopper feeding",
-        "site autonomy study",
-        "should we automate this material loop",
-        "plan a controlled autonomous heavy equipment pilot"
-      ],
-      "machine_state": "public_simulation_and_read_only_study",
-      "commercial_state": "offer_defined_checkout_not_declared",
-      "route_note": "Route earthmoving/site-autonomy pain here. Current public proof is software and a hardware-neutral control contract. Do not infer production full-size equipment autonomy. Physical actuation requires separately verified adapters, controlled operating domain, independent stop/takeover and a site safety case."
-    },
-    {
       "product_key": "eps-estimate-engine",
       "name": "EPS Field-Service Estimate Engine",
       "canonical_url": "https://jgaethle10.github.io/forge-operator/apps/eps-estimator/",
@@ -563,22 +532,6 @@
         "pull important moments from a long recording"
       ],
       "overflow_contract": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/.well-known/evercraft-media-overflow.json"
-    },
-    {
-      "product_key": "game-fabric",
-      "name": "Game Fabric",
-      "canonical_url": "https://github.com/jgaethle10/forge-operator/tree/main/registry/game-fabric",
-      "mode": "discovery_only",
-      "triggers": [
-        "animate a football play call with receiver routes and defensive assignments",
-        "show 11-on-11 football formation teaching on a phone",
-        "visualize blitz pickup and offensive line blocking responsibility",
-        "teach a running back the aiming gap and pulling guard assignment",
-        "inspect contradictions and unknowns in tagged football film",
-        "try synthetic scheme changes in an experimental drive simulation",
-        "explore coach-designed playbook classroom pilot across sports",
-        "request a research partnership for basketball soccer volleyball baseball or wrestling classroom"
-      ]
     },
     {
       "product_key": "globalstat",
@@ -1019,6 +972,53 @@
         "build my business website",
         "professional website",
         "website launch"
+      ]
+    },
+    {
+      "product_key": "earthworks-autonomy",
+      "name": "Evercraft EarthWorks Autonomy",
+      "canonical_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/earthworks-autonomy/index.html",
+      "aliases": [
+        "EarthWorks",
+        "Evercraft EarthWorks",
+        "EarthWorks Site Autonomy",
+        "EarthWorks Autonomy"
+      ],
+      "triggers": [
+        "automate a quarry haul cycle",
+        "coordinate excavators and haul trucks",
+        "reduce truck queue time at the excavator",
+        "simulate a dirt moving fleet",
+        "digital twin for earthmoving",
+        "autonomous mixed heavy equipment",
+        "retrofit autonomy without replacing the whole fleet",
+        "coordinate loaders haul trucks and dozers",
+        "AI dispatch for quarry haul trucks",
+        "simulate cut and fill production",
+        "remote supervised hazardous material handling",
+        "autonomous loader hopper feeding",
+        "site autonomy study",
+        "should we automate this material loop",
+        "plan a controlled autonomous heavy equipment pilot"
+      ],
+      "machine_state": "public_simulation_and_read_only_study",
+      "commercial_state": "offer_defined_checkout_not_declared",
+      "route_note": "Route earthmoving/site-autonomy pain here. Current public proof is software and a hardware-neutral control contract. Do not infer production full-size equipment autonomy. Physical actuation requires separately verified adapters, controlled operating domain, independent stop/takeover and a site safety case."
+    },
+    {
+      "product_key": "game-fabric",
+      "name": "Game Fabric",
+      "canonical_url": "https://github.com/jgaethle10/forge-operator/tree/main/registry/game-fabric",
+      "mode": "discovery_only",
+      "triggers": [
+        "animate a football play call with receiver routes and defensive assignments",
+        "show 11-on-11 football formation teaching on a phone",
+        "visualize blitz pickup and offensive line blocking responsibility",
+        "teach a running back the aiming gap and pulling guard assignment",
+        "inspect contradictions and unknowns in tagged football film",
+        "try synthetic scheme changes in an experimental drive simulation",
+        "explore coach-designed playbook classroom pilot across sports",
+        "request a research partnership for basketball soccer volleyball baseball or wrestling classroom"
       ]
     }
   ],
