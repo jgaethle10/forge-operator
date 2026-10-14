@@ -5,7 +5,9 @@ Pricing: Quick Hunt $19 one-time; Deep Hunt $49 one-time; Rescue Hunt $99 one-ti
 Commercial state: sell_now
 Machine state: payment_ready
 Public capability: https://fabric.systemiacommandcenters.com/capabilities/findmypart-paid-hunt-v1
-Start here: Not exposed until commercial verification is complete
+Start here (human, one-time hunts): https://findmypart.base44.app/FindMyPart
+Free check when part identity is uncertain: https://findmypart.base44.app/free-part-check
+Checkout creation requires a real part reservation and explicit buyer confirmation. Provider payment and fulfillment are not evidenced by these links.
 Human review fallback: null
 Machine offer JSON: Not exposed until commercial verification is complete
 Universal MCP: null
