@@ -90,6 +90,20 @@ async function getJson(path){
   if(!r.ok||!body) throw new Error('json_http_'+r.status+':'+path);
   return body;
 }
+async function postJson(path,payload){
+  const r=await timedFetch(origin+path,{
+    method:'POST',
+    headers:{
+      accept:'application/json',
+      'content-type':'application/json',
+      'user-agent':'Evercraft-Operator-Edge-Canary/1.0'
+    },
+    body:JSON.stringify(payload)
+  });
+  const body=await r.json().catch(()=>null);
+  if(!r.ok||!body) throw new Error('json_post_http_'+r.status+':'+path);
+  return body;
+}
 async function rpcAt(path,id,method,params={}){
   const r=await timedFetch(origin+path,{
     method:'POST',
@@ -460,9 +474,75 @@ try{
   };
   receipt.checks.faie_surface=true;
 
+  const agnormalPage=await getText('/faie/agnormal/');
+  const agnormalContentType=agnormalPage.response.headers.get('content-type')||'';
+  if(!/^text\/html/i.test(agnormalContentType)) throw new Error('faie_agnormal_surface_not_html');
+  if(!/Prepared for AgNormal/i.test(agnormalPage.text)) throw new Error('faie_agnormal_partner_identity_missing');
+  if(!/One real decision\. Live evidence\. No theater\./i.test(agnormalPage.text)) throw new Error('faie_agnormal_partner_promise_missing');
+  if(!/id="activityHud"/.test(agnormalPage.text)) throw new Error('faie_agnormal_activity_hud_missing');
+  if(!/Cancel operation/.test(agnormalPage.text)) throw new Error('faie_agnormal_cancel_control_missing');
+  if(!/Download handed off/.test(agnormalPage.text)) throw new Error('faie_agnormal_truthful_download_receipt_missing');
+  if(/base44\.app/i.test(agnormalPage.text)) throw new Error('faie_agnormal_base44_reference');
+  receipt.faie_design_partner_surface={
+    path:'/faie/agnormal/',
+    url:origin+'/faie/agnormal/',
+    status:agnormalPage.response.status,
+    content_type:agnormalContentType,
+    partner_identity_verified:true,
+    activity_hud_verified:true,
+    cancel_control_verified:true,
+    truthful_download_handoff_verified:true,
+    base44_reference_absent:true,
+  };
+
+  const agnormalInvestigation=await postJson('/api/faie/investigate',{
+    question:'What current evidence could materially weaken reliance on Yakima Valley water availability for regionally scaled food production?',
+    region_keys:['yakima-wa'],
+    asset_types:['regional food production infrastructure'],
+    water_source:'Yakima River Basin irrigation and groundwater',
+    thesis_assumptions:[
+      'Regional water availability can support the target production system.',
+      'Water constraints must be resolved before consequential capital decisions rely on the thesis.'
+    ],
+    horizon_days:90
+  });
+  if(agnormalInvestigation.schema!=='evercraft.faie.investigation.v1'){
+    throw new Error('faie_agnormal_investigation_schema_invalid');
+  }
+  if(!Array.isArray(agnormalInvestigation.findings)||!Array.isArray(agnormalInvestigation.unknowns)){
+    throw new Error('faie_agnormal_investigation_evidence_shape_invalid');
+  }
+  if(agnormalInvestigation.decision_packet?.framework!=='SENSE_CHALLENGE_DECIDE'){
+    throw new Error('faie_agnormal_decision_packet_framework_invalid');
+  }
+  if(
+    agnormalInvestigation.decision_packet?.decide?.human_review_required!==true||
+    agnormalInvestigation.decision_packet?.decide?.action_authority!==false||
+    agnormalInvestigation.decision_authority!==false||
+    agnormalInvestigation.publication_authority!==false
+  ){
+    throw new Error('faie_agnormal_authority_boundary_failed');
+  }
+  if(!Array.isArray(agnormalInvestigation.evidence_acquisition_queue)){
+    throw new Error('faie_agnormal_next_proof_queue_missing');
+  }
+  receipt.faie_design_partner_investigation={
+    schema:agnormalInvestigation.schema,
+    status:agnormalInvestigation.status,
+    finding_count:agnormalInvestigation.findings.length,
+    unknown_count:agnormalInvestigation.unknowns.length,
+    evidence_readiness:agnormalInvestigation.coverage?.decision_readiness||null,
+    next_proof_count:agnormalInvestigation.evidence_acquisition_queue.length,
+    human_review_required:true,
+    action_authority:false,
+    decision_authority:false,
+    publication_authority:false,
+  };
+
   const faieHealth=await getJson('/api/faie/health');
   if(faieHealth.fabric_native!==true) throw new Error('faie_health_not_fabric_native');
   if(faieHealth.public_surface!=='/faie/') throw new Error('faie_health_public_path_mismatch');
+  if(faieHealth.design_partner_surface!=='/faie/agnormal/') throw new Error('faie_health_design_partner_path_mismatch');
   if(faieHealth.public_mcp!=='/mcp/faie') throw new Error('faie_health_mcp_path_mismatch');
   if(faieHealth.base44_transport_enabled!==false) throw new Error('faie_health_base44_transport_enabled');
   if(faieHealth.decision_authority!==false||faieHealth.publication_authority!==false){
@@ -473,6 +553,7 @@ try{
     signal_count:Number(faieHealth.signal_count||0),
     observation_count:Number(faieHealth.observation_count||0),
     public_surface:faieHealth.public_surface,
+    design_partner_surface:faieHealth.design_partner_surface,
     public_mcp:faieHealth.public_mcp,
     fabric_native:true,
     base44_transport_enabled:false,
