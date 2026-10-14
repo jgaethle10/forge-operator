@@ -6,6 +6,7 @@ on:
       - "systemia/control-plane/**"
       - "systemia/organism/**"
       - "systemia/saban/**"
+      - "systemia/autonomy/**"
       - "systemia/signal-fabric/**"
       - "systemia/yard/**"
       - "systemia/compute/**"
@@ -23,6 +24,7 @@ on:
       - "systemia/control-plane/**"
       - "systemia/organism/**"
       - "systemia/saban/**"
+      - "systemia/autonomy/**"
       - "systemia/signal-fabric/**"
       - "systemia/yard/**"
       - "systemia/compute/**"
@@ -46,4 +48,5 @@ jobs:
         with:
           node-version: 22
       - run: npm run machine:status
+      - run: node --test systemia/autonomy/revenue-liveness.test.mjs
       - run: npm run proof:control-plane
