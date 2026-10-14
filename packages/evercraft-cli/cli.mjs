@@ -4,6 +4,7 @@ import os from 'node:os';
 import path from 'node:path';
 import {spawn} from 'node:child_process';
 import {fileURLToPath} from 'node:url';
+import {validateCapabilitySubmission} from './capability.mjs';
 
 const VERSION='0.1.0-dev';
 const STORE=path.join(process.env.XDG_CONFIG_HOME||path.join(os.homedir(),'.config'),'evercraft','operator-tools.json');
@@ -102,6 +103,7 @@ function help(){
     'evercraft tool list',
     'evercraft tool inspect TOOL_ID',
     'evercraft tool remove TOOL_ID                 Removes registration, not files',
+    'evercraft capability validate ./candidate.json  Offline review of publisher manifest',
     'evercraft tool probe TOOL_ID --run             Launches local program',
     'evercraft tool call TOOL_ID TOOL --input JSON --approve',
     'No remote registry, payments, public tool publishing or arbitrary installs.'
@@ -112,6 +114,11 @@ export async function main(args=process.argv.slice(2)){
   if(!section||section==='help'||section==='--help')return help();
   if(section==='--version'||section==='version')return process.stdout.write(VERSION+'\n');
   if(section==='doctor')return write({version:VERSION,node:process.version,store:STORE,registeredTools:readStore().tools.length,fabric:'not_tested',payments:'not_tested',mode:'local_developer_preview'});
+  if(section==='capability'){
+    if(command!=='validate'||!id)fail('Usage: capability validate ./candidate.json');
+    const candidate=JSON.parse(fs.readFileSync(path.resolve(id),'utf8'));
+    return write(validateCapabilitySubmission(candidate));
+  }
   if(section!=='tool')fail('Unknown command. Run --help.');
   const store=readStore();
   if(command==='list')return write(store.tools);
