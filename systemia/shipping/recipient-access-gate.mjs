@@ -6,7 +6,19 @@ import { createHmac, timingSafeEqual } from 'node:crypto';
 const RECEIPT_VERIFIER = 'evercraft-independent-shipping-verifier-v1';
 const MAX_AGE_MS = 30 * 60 * 1000;
 const SHA = /^(?:sha256:)?[0-9a-f]{64}$/i;
-const SUPPORTED_PREVIEWS = new Set(['application/pdf', 'image/png', 'image/jpeg', 'text/plain']);
+// MIME alone is insufficient. Drive iOS can refuse an uploaded .md, ZIP or
+// HTML artifact even when its content type was rewritten to a previewable one.
+const PREVIEW_SUFFIXES = Object.freeze({
+  'application/pdf':/\.pdf$/i,
+  'image/png':/\.png$/i,
+  'image/jpeg':/\.(?:jpg|jpeg)$/i,
+  'text/plain':/\.txt$/i
+});
+function supportedCustomerPreview(artifact) {
+  const mime = clean(artifact?.mime_type).toLowerCase();
+  const filename = clean(artifact?.client_filename);
+  return Boolean(filename && PREVIEW_SUFFIXES[mime]?.test(filename));
+}
 
 const clean = (value) => String(value ?? '').trim();
 const normalizeHash = (value) => clean(value).toLowerCase().replace(/^sha256:/, '');
@@ -64,9 +76,16 @@ function validateEvidence(plan, evidence, now) {
   }
   reject(evidence.restricted_dependency_count === 0, 'restricted_dependency_present');
 
-  const artifacts = plan?.package_manifest?.artifacts || [];
-  const preview = artifacts.find((x) => x.client_filename === evidence.client_preview_filename);
-  reject(Boolean(preview) && SUPPORTED_PREVIEWS.has(clean(preview?.mime_type).toLowerCase()),
+  // Malformed or ambiguous frozen manifests must return HOLD, never throw or
+  // permit the first duplicate filename to stand in for a different artifact.
+  const artifacts = Array.isArray(plan?.package_manifest?.artifacts)
+    ? plan.package_manifest.artifacts : [];
+  reject(artifacts.length > 0, 'package_artifact_inventory_missing');
+  const names = artifacts.map((x) => clean(x?.client_filename));
+  reject(names.every(Boolean), 'artifact_filename_missing');
+  reject(new Set(names).size === names.length, 'artifact_filenames_not_unique');
+  const preview = artifacts.find((x) => x?.client_filename === evidence.client_preview_filename);
+  reject(supportedCustomerPreview(preview),
     'customer_preview_missing_or_unsupported');
   if (preview && ['application/pdf'].includes(clean(preview.mime_type).toLowerCase())) {
     reject(preview.render_verified === true, 'preview_render_unverified');

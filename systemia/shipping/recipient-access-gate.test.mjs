@@ -136,3 +136,58 @@ test('no send-capable channel never passes',()=>{
   held(verdict({}, {releasePlan:bad}),'not_external_delivery_channel');
 });
 test('unsupported mode never passes',()=>held(verdict({mode:'internal_archive'}),'unsupported_delivery_mode'));
+
+test('Drive iPhone failure: raw .md mislabeled text/plain is never a customer preview',()=>{
+  const bad=structuredClone(plan);
+  bad.package_manifest.artifacts[0].client_filename='Mobile Handoff.md';
+  bad.package_manifest.artifacts[0].mime_type='text/plain';
+  held(verdict({
+    client_preview_filename:'Mobile Handoff.md',
+    provider_attachment_proofs:[{client_filename:'Mobile Handoff.md',provider_readback:true,sha256:'sha256:'+SHA}]
+  },{releasePlan:bad}), 'customer_preview_missing_or_unsupported');
+});
+test('PDF MIME cannot camouflage a .zip or .html filename',()=>{
+  for(const filename of ['Package.zip','Viewer.html']){
+    const bad=structuredClone(plan);
+    bad.package_manifest.artifacts[0].client_filename=filename;
+    held(verdict({
+      client_preview_filename:filename,
+      provider_attachment_proofs:[{client_filename:filename,provider_readback:true,sha256:'sha256:'+SHA}]
+    },{releasePlan:bad}), 'customer_preview_missing_or_unsupported');
+  }
+});
+test('plain text .txt remains a supported, explicitly named preview',()=>{
+  const ok=structuredClone(plan);
+  ok.package_manifest.artifacts[0].client_filename='Summary.txt';
+  ok.package_manifest.artifacts[0].mime_type='text/plain';
+  assert.equal(verdict({
+    client_preview_filename:'Summary.txt',
+    provider_attachment_proofs:[{client_filename:'Summary.txt',provider_readback:true,sha256:'sha256:'+SHA}]
+  },{releasePlan:ok}).pass,true);
+});
+test('a missing or non-array artifact inventory returns a HOLD without throwing',()=>{
+  for(const artifacts of [[],{},null]){
+    const bad=structuredClone(plan);
+    bad.package_manifest.artifacts=artifacts;
+    const result=verifyRecipientAccess({plan:bad,evidence:signed(),verifier_secret:SECRET,now:TIME});
+    held(result,'package_artifact_inventory_missing');
+  }
+});
+test('duplicate artifact names remain HOLD even with provider proofs',()=>{
+  const bad=structuredClone(plan);
+  bad.package_manifest.artifacts.push({...bad.package_manifest.artifacts[0]});
+  held(verdict({provider_attachment_proofs:[
+    {...base.provider_attachment_proofs[0]},
+    {...base.provider_attachment_proofs[0]}
+  ]},{releasePlan:bad}), 'artifact_filenames_not_unique');
+});
+test('manifest entries missing client filename fail closed',()=>{
+  const bad=structuredClone(plan);
+  delete bad.package_manifest.artifacts[0].client_filename;
+  held(verifyRecipientAccess({plan:bad,evidence:signed(),verifier_secret:SECRET,now:TIME}), 'artifact_filename_missing');
+});
+test('completely absent plan returns HOLD rather than throwing',()=>{
+  const out=verifyRecipientAccess({plan:null,evidence:signed(),verifier_secret:SECRET,now:TIME});
+  held(out,'release_plan_not_ready');
+  assert.equal(out.boundary.provider_send_not_inferred,true);
+});
