@@ -42,6 +42,14 @@ Open grok.com/connectors → New Connector → Custom, enter the remote MCP URL,
 
 For broad commercial distribution, package the remote MCP as a federated Microsoft 365 Copilot connector and submit it through Microsoft Partner Center for certification and Connectors Gallery distribution. Tenant-specific deployment can use the Microsoft 365 admin center.
 
+## Evercraft Payments: actual buyer handoff
+
+Human purchase hub: https://findmypart.base44.app/functions/evercraftBuy
+
+Machine-readable approved buyer offers: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/.well-known/evercraft-payments-buyer-doors.json
+
+The JSON documents 13 prepayment-verified offer journeys and separate native specialist intakes. Agents may surface exact purchase URLs only when the buyer requests one. Do not generate a charge, claim provider settlement, route into an EV legal-hold product, or treat a synthetic QA checkout as revenue. A verified provider payment receipt is still required before paid fulfillment.
+
 ## Commercial boundary
 
 Discovery and matching never create a payment obligation. Where a supported tool can prepare checkout, the human must explicitly confirm payment first. Checkout creation is not payment proof. Paid state and fulfillment require authoritative provider verification.
