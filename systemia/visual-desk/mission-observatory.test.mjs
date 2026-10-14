@@ -33,3 +33,17 @@ test("receipted evidence requires cryptographic or HTTPS locator",()=>{
   const sample=mutate((e,i)=>i===1?{...e,evidence_state:"receipted",source_ref:"https://example.org/receipt/1"}:e);
   assert.equal(validateEventStream(sample),true);
 });
+
+
+test("HTML module parses and preserves visible demo disclosure",async()=>{
+  const { readFileSync } = await import("node:fs");
+  const markup=readFileSync(new URL("../../public/visuals/mission-observatory/index.html",import.meta.url),"utf8");
+  assert.match(markup,/<canvas id="universe"/);
+  assert.match(markup,/SYNTHETIC REPLAY/);
+  assert.match(markup,/NO LIVE AGENTS, TRANSFERS OR PAYMENTS/);
+  assert.match(markup,/aria-label="Mission replay position"/);
+  const match=markup.match(/<script type="module">([\s\S]*?)<\/script>/);
+  assert.ok(match,"inline module must exist");
+  const script=match[1].replace(/^import\s+\{[^}]+\}\s+from\s+"\.\x2fscene\.mjs";/m,"");
+  assert.doesNotThrow(()=>new Function(script),"browser script must parse");
+});
