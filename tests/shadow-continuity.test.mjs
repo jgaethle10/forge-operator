@@ -13,7 +13,7 @@ const nonce=i=>({node_key:nodeKey,nonce_key:noncePrefix+key(i),request_fingerpri
 function fixture(){
  const samples=[sample(1,40000,140000),sample(2,6500,4),sample(3,300,6200),sample(4,0,6500)];
  return {nodeKey,sourceAdapter,samplePrefix,noncePrefix,samples,nonces:[1,2,3,4].map(nonce),now,
- registry:{node_key:nodeKey,last_seen_at:samples.at(-1).observed_at,status:'shadow',execution_allowed:false},
+ registry:{node_key:nodeKey,last_sample_key:samples.at(-1).sample_key,last_seen_at:samples.at(-1).observed_at,status:'shadow',execution_allowed:false},
  authority:{mode:'quarantined',allowed_execution:false},leaseCount:0};
 }
 test('gap timestamps and counter reversal are preserved without claiming restart cause',()=>{
@@ -67,4 +67,12 @@ test('input bounds and clock are strict',()=>{
  assert.throws(()=>assessShadowContinuity({...fixture(),samples:Array(2001).fill({})}),/unbounded/);
  assert.throws(()=>assessShadowContinuity({...fixture(),now:NaN}),/unbounded/);
  assert.throws(()=>assessShadowContinuity({...fixture(),nodeKey:''}),/unbounded/);
+});
+
+test('registry timestamp alone never proves same sample identity',()=>{
+ const a=fixture();a.registry.last_sample_key='SAMPLE-'+('f'.repeat(32));
+ const r=assessShadowContinuity(a);
+ assert.equal(r.last_sample_registry_linked,false);
+ assert.equal(r.fresh_observation,false);
+ assert.equal(r.work_execution_authorized,false);
 });
