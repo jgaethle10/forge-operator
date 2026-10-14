@@ -105,3 +105,11 @@ Shipping no longer has to go blind after delivery. A reply can be correlated bac
 Disposition remains evidence-bound. Shipping does not run a vibes engine over customer replies and call them "approved." A response remains `unknown` unless a classification is supplied with an explicit basis. Only an `approved` disposition with a `human_confirmed` basis can assert customer acceptance in the response record. Even then, Shipping does not infer satisfaction, payment, renewal, or downstream business outcome.
 
 Recipient-response signals can route work back into Systemia, for example scheduling, owner review, revision intake, relationship follow-up, or closeout review. Those signals never authorize autonomous customer communication.
+
+## ForensiScope large-parcel import (candidate, 2026-10-14)
+
+`forensiscope-parcel-bridge.mjs` provides **read-only, bounded local admission** for ForensiScope Ship's `evercraft-parcel-large-v0.2` manifest and 8/16 MiB numbered pieces. It checks exact original-size accounting, canonical part names, regular files (rejects symlinks), each part SHA-256 and the reconstructed content SHA-256 with streaming file reads. An optionally supplied independently trusted original SHA-256 must match.
+
+This is an existing Shipping Department integration point, not another sender, cloud transport, download host or approval authority. A successful result is `local_parcel_bytes_verified`, with `dispatch_authorized:false`, `provider_send_performed:false` and `delivery_state:not_verified`. The manifest and its SHA-256 values alone do not establish who created it. A separate authorized release, recipient-specific transport, provider readback and recipient opening test are still necessary. Source format is implemented in the separate Base44 ForensiScope app. No production deployment or customer-send is implied.
+
+Run only the offline bridge checks with `node --test systemia/shipping/forensiscope-parcel-bridge.test.mjs` or include them in `npm run test:shipping`. These tests use synthetic local files; no credentials or network egress.
