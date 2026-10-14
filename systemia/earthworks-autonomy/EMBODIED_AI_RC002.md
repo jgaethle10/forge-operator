@@ -9,7 +9,7 @@
 - A deterministic *simulated* motion step enforces an explicit sensor observation, lease age, obstacle clearance, human hold, synthetic emergency stop, angular speed, and movement bounds; expiry clears the goal.
 - Receipts are hash-chained locally, offering accidental-tamper detection but **not cryptographic authentication, durable evidence custody, signed hardware telemetry, or adversarial tamper resistance**.
 - No LLM, ASR, camera, ROS 2, Gazebo, robot SDK, machine, physical actuator, real watchdog, or human-safety-rated circuit is connected.
-- The existing EarthWorks workflow automatically runs Node test files added in this folder on PR/push. Local pre-push verification: `node --test systemia/earthworks-autonomy/embodied-goal-simulator.test.mjs` with 17/17 passing. GitHub Actions must verify independently.
+- The existing EarthWorks workflow automatically runs Node test files added in this folder on PR/push. Local pre-push verification: `node --test systemia/earthworks-autonomy/embodied-goal-simulator.test.mjs systemia/earthworks-autonomy/local-planner-goal-adapter.test.mjs` with 29/29 passing across two suites. GitHub Actions must verify independently.
 
 ## Reproduce
 
@@ -31,6 +31,10 @@ Example of an accepted *simulation-only* planner goal:
 ```
 
 The caller must explicitly provide authority context `{authority_state:'simulation',robot_id:'sim.robot.001'}` plus a fresh synthetic observation. No string prompt or text inference is executed by this code.
+
+## Offline local-model response boundary
+
+`local-planner-goal-adapter.mjs` accepts up to 1,024 UTF-8 bytes of plain JSON from a hypothetical locally hosted model, requires the exact `evercraft.embodied.goal.v1` schema and sends the parsed proposal only to a real `EmbodiedGoalSimulator` instance. Text never supplies its own authority context. No HTTP request, model inference or robot connection is included. The companion test file adds 12 fail-closed cases; total local unit tests and updated GitHub EarthWorks Autonomy proof checks are 29/29 green, run 38655208645.
 
 ## Next gates: NOT COMPLETE
 
