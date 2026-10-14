@@ -19,7 +19,7 @@ An operator's problem should find a safe, reusable capability and a trustworthy 
 
 ## Developer preview CLI
 
-A separately packaged, locally tested Node.js 20+ prototype was prepared. The proposed commands are:
+A separately packaged Node.js 20+ local developer preview is now committed at `packages/evercraft-cli/`. The proposed commands are (run from that directory with `node cli.mjs`, until an approved package release exists):
 
 ```sh
 evercraft doctor
@@ -30,7 +30,7 @@ evercraft tool probe example.math --run
 evercraft tool call example.math sum --input '{"a":2,"b":5}' --approve
 ```
 
-Local test result: four tests passed, including local stdio handshake, discovery and approved invocation. **The code is not yet committed to this proposal branch; do not claim GitHub provides an installable package.** The prototype can be inspected by the founder before code submission.
+Local test result: four tests passed, including local stdio handshake, discovery and approved invocation. **The code and automated tests are now committed to the draft proposal branch, with a read-only GitHub Actions CI workflow.** Local prototype tests passed previously; the precise submitted branch must pass its own CI before confidence is upgraded. No npm publication or production installation is claimed.
 
 Security model: local manifest registration alone runs nothing. Local execution is expressly opt-in, process env is minimized to avoid forwarding secrets, shell expansion is disabled, and time/output are bounded. This is not sandboxing, signed artifact verification or production-grade isolation. Tool outputs are untrusted. Credentials are never printed or embedded in public manifests.
 
@@ -62,4 +62,4 @@ Week 2: opt-in operator alpha with verified member profiles and genuinely usable
 Week 3: independent developer integration and one shareable working demonstration, test honest README and docs.
 Week 4: first permissioned partnership pilot with explicit contract and observable fulfillment; measure conversion, not signup counts.
 
-**Decision:** Reuse Forge and Socius; avoid another parallel core. Prototype remains local; this PR stages an explicit reviewed proposal only.
+**Decision:** Reuse Forge and Socius; avoid another parallel core. The CLI source, example and tests are available for review on the draft branch. Canonical Systemia admission, merging, publishing, production remote Fabric connections, commercial payments, operator onboarding and external distribution are still gated.
