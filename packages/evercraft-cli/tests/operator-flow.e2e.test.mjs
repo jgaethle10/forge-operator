@@ -51,7 +51,15 @@ test('operator CLI end-to-end: metadata registration, explicit probe, approved c
     assert.equal(blockedCall.status, 1);
     assert.match(blockedCall.stderr, /requires --approve/);
 
-    const approvedCall = invoke('tool', 'call', 'sample.math', 'sum', '--input', '{"a":2,"b":5}', '--approve');
+    const syntheticSensitiveInput = 'SYNTHETIC_TEST_SECRET_DO_NOT_LOG_9f8a';
+    const approvedCall = invoke('tool', 'call', 'sample.math', 'sum', '--input', JSON.stringify({
+      a: 2,
+      b: 5,
+      synthetic_secret: syntheticSensitiveInput
+    }), '--approve');
+    assert.doesNotMatch(approvedCall.stderr, /SYNTHETIC_TEST_SECRET_DO_NOT_LOG_9f8a/);
+    assert.doesNotMatch(approvedCall.stdout, /SYNTHETIC_TEST_SECRET_DO_NOT_LOG_9f8a/);
+    assert.match(approvedCall.stderr, /input omitted from logs/);
     assert.equal(approvedCall.status, 0, approvedCall.stderr);
     const response = JSON.parse(approvedCall.stdout);
     assert.equal(response.status, 'tool_returned');
