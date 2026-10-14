@@ -351,16 +351,19 @@ test('new current-trunk products are explicitly contracted without overclaiming 
   const earthworks = mesh.products.find((row) => row.product_key === 'earthworks-autonomy');
   const evernest = mesh.products.find((row) => row.product_key === 'evernest-atlas');
   const fallen = mesh.products.find((row) => row.product_key === 'fallen-sessions');
+  const gameFabric = mesh.products.find((row) => row.product_key === 'game-fabric');
   const lineage = mesh.products.find((row) => row.product_key === 'lineage');
   const opportunity = mesh.products.find((row) => row.product_key === 'opportunity-fabric');
   const university = mesh.products.find((row) => row.product_key === 'systemia-university');
 
-  for (const row of [earthworks, evernest, fallen, lineage, opportunity, university]) {
+  for (const row of [earthworks, evernest, fallen, gameFabric, lineage, opportunity, university]) {
     assert.equal(row.contract_state, 'complete_declaration');
   }
   assert.equal(earthworks.adoption_stage, 'discovery_only');
   assert.equal(evernest.adoption_stage, 'discovery_only');
   assert.equal(fallen.adoption_stage, 'discovery_only');
+  assert.equal(gameFabric.adoption_stage, 'discovery_only');
+  assert.equal(gameFabric.runtime_verified, false);
   assert.equal(lineage.adoption_stage, 'discovery_only');
   assert.equal(opportunity.adoption_stage, 'private_runtime');
   assert.equal(university.adoption_stage, 'discovery_only');
@@ -369,6 +372,7 @@ test('new current-trunk products are explicitly contracted without overclaiming 
     'earthworks-autonomy',
     'evernest-atlas',
     'fallen-sessions',
+    'game-fabric',
     'lineage',
     'opportunity-fabric',
     'systemia-university',
