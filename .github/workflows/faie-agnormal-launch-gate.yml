@@ -1,0 +1,141 @@
+name: FAIE AgNormal Launch Gate
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'public/faie/**'
+      - 'systemia/mcp/fabric-faie-runtime.mjs'
+      - 'systemia/faie/**'
+      - 'scripts/faie-agnormal-external-canary.mjs'
+      - '.github/workflows/faie-agnormal-launch-gate.yml'
+      - 'tests/faie-agnormal-external-canary-contract.test.mjs'
+  workflow_dispatch:
+  schedule:
+    - cron: '11,41 * * * *'
+
+concurrency:
+  group: faie-agnormal-launch-gate
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+  statuses: write
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    env:
+      EVERCRAFT_OPERATOR_EDGE_ORIGIN: https://fabric.systemiacommandcenters.com
+    steps:
+      - name: Checkout exact verifier revision
+        uses: actions/checkout@v4
+
+      - name: Verify FAIE AgNormal design-partner path
+        id: verify
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p artifacts
+          max_attempts=16
+          attempt=1
+          status=1
+
+          while [ "$attempt" -le "$max_attempts" ]; do
+            rm -f artifacts/faie-agnormal-launch.stdout.json artifacts/faie-agnormal-launch.stderr.json
+            set +e
+            node scripts/faie-agnormal-external-canary.mjs               --origin "$EVERCRAFT_OPERATOR_EDGE_ORIGIN"               > artifacts/faie-agnormal-launch.stdout.json               2> artifacts/faie-agnormal-launch.stderr.json
+            status=$?
+            set -e
+
+            if [ "$status" -eq 0 ]; then
+              break
+            fi
+
+            candidate="artifacts/faie-agnormal-launch.stdout.json"
+            if [ -s artifacts/faie-agnormal-launch.stderr.json ]; then
+              candidate="artifacts/faie-agnormal-launch.stderr.json"
+            fi
+            stage="$(jq -r '.stage // ""' "$candidate" 2>/dev/null || true)"
+            error="$(jq -r '.error // ""' "$candidate" 2>/dev/null || true)"
+
+            retry=false
+            if [ "$stage" = "partner_surface" ]; then
+              case "$error" in
+                http_404:/faie/agnormal/|                faie_agnormal_partner_identity_missing|                faie_agnormal_partner_promise_missing|                faie_agnormal_activity_hud_missing|                faie_agnormal_cancel_control_missing|                faie_agnormal_truthful_download_receipt_missing|                faie_agnormal_timeout_guard_missing)
+                  retry=true
+                  ;;
+              esac
+            fi
+
+            if [ "$stage" = "health" ]; then
+              case "$error" in
+                faie_health_design_partner_path_mismatch|                json_http_404:/api/faie/health)
+                  retry=true
+                  ;;
+              esac
+            fi
+
+            if [ "$stage" = "investigation" ]; then
+              case "$error" in
+                json_post_http_404:/api/faie/investigate)
+                  retry=true
+                  ;;
+              esac
+            fi
+
+            if [ "$retry" = "true" ] && [ "$attempt" -lt "$max_attempts" ]; then
+              echo "FAIE owned edge has not converged yet ($stage: $error); retrying ($attempt/$max_attempts)."
+              sleep 20
+              attempt=$((attempt + 1))
+              continue
+            fi
+            break
+          done
+
+          if [ "$status" -eq 0 ]; then
+            mv artifacts/faie-agnormal-launch.stdout.json artifacts/faie-agnormal-launch-gate.json
+            rm -f artifacts/faie-agnormal-launch.stderr.json
+            echo "FAIE AgNormal launch gate passed after $attempt attempt(s)."
+            cat artifacts/faie-agnormal-launch-gate.json
+          else
+            if [ -s artifacts/faie-agnormal-launch.stderr.json ]; then
+              mv artifacts/faie-agnormal-launch.stderr.json artifacts/faie-agnormal-launch-gate.json
+            else
+              mv artifacts/faie-agnormal-launch.stdout.json artifacts/faie-agnormal-launch-gate.json
+            fi
+            echo "FAIE AgNormal launch gate failed after $attempt attempt(s)." >&2
+            cat artifacts/faie-agnormal-launch-gate.json >&2 || true
+            exit "$status"
+          fi
+
+      - name: Publish FAIE launch status
+        if: always()
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          VERIFY_OUTCOME: ${{ steps.verify.outcome }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          if [ "$VERIFY_OUTCOME" = "success" ]; then
+            state="success"
+            description="FAIE AgNormal partner room externally verified"
+          else
+            state="failure"
+            stage="$(jq -r '.stage // "unknown"' artifacts/faie-agnormal-launch-gate.json 2>/dev/null || echo unknown)"
+            error="$(jq -r '.error // "verification_failed"' artifacts/faie-agnormal-launch-gate.json 2>/dev/null || echo verification_failed)"
+            description="FAIE launch failure: ${stage} (${error})"
+            description="${description:0:140}"
+          fi
+          payload="$(jq -cn             --arg state "$state"             --arg context "evercraft/faie-agnormal-launch"             --arg description "$description"             '{state:$state,context:$context,description:$description}')"
+          curl --fail --silent --show-error             -X POST             -H "Authorization: Bearer $GH_TOKEN"             -H "Accept: application/vnd.github+json"             -H "X-GitHub-Api-Version: 2022-11-28"             --data "$payload"             "https://api.github.com/repos/$GITHUB_REPOSITORY/statuses/$GITHUB_SHA" >/dev/null
+
+      - name: Upload FAIE launch receipt
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: faie-agnormal-launch-gate
+          path: artifacts/faie-agnormal-launch-gate.json
+          if-no-files-found: error
+          retention-days: 90
