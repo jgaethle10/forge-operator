@@ -1,6 +1,6 @@
 {
   "schema": "evercraft.syndication-state.v1",
-  "updated_at": "2026-10-08T06:27:28.566Z",
+  "updated_at": "2026-10-14T23:57:09.438Z",
   "complete_mirror": true,
   "product_hashes": {
     "aliev": "32e6dabf7b53521f73c1def4034ce3aa7cf0880f32c5e07e33184626cdde420a",
@@ -45,6 +45,7 @@
     "fallen-sessions": "3a5b71844120c1545c12329fb1f99174176b1b6018eca7dbd833ee4a2e4de334",
     "findmypart": "daeda7fb261390914481d2097c14394948c19608e9cca746b1280aa520e9f499",
     "forensiscope": "a48c8b0b0f89fdb53dc8d67f154449f2b5cc8f78e9d9677dde556ae202be7863",
+    "game-fabric": "19ffaad1e5d44fa3ccfa1cad616badb1a887b8693e294d9d4c1464cab6527bfb",
     "global-energy-atlas": "7cd8cc8a7a056a5870dc4f47a1bc741bad5855379e84c2f9a42353b3ac212ea6",
     "globalstat": "a3618fddbb4090a7b255a965333e64be4988b5e5fd568f3c2c1cce70cd325494",
     "guardian": "682dbe7bf98c64df305b737cd8fea991da1ce56184209d93708707d8ca83d038",

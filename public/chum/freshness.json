@@ -2,7 +2,7 @@
   "schema": "evercraft.chum.crawl-pressure.v1",
   "provider": "Evercraft LLC",
   "coordinator": "CHUM",
-  "updated_at": "2026-10-14T23:33:17.133Z",
+  "updated_at": "2026-10-14T23:57:09.569Z",
   "purpose": "Content-hash-backed freshness signals for public Evercraft discovery surfaces. A freshness signal requests attention; it does not prove indexing, ranking, recommendation, citation or provider pickup.",
   "indexnow": {
     "supported": true,
@@ -11,17 +11,468 @@
   },
   "latest_change_batch": [
     {
-      "path": "/chum/hot/index.json",
-      "last_changed": "2026-10-14T23:33:17.133Z",
+      "path": "/chum/sitemaps/answers.xml",
+      "last_changed": "2026-10-14T23:57:09.569Z",
+      "priority": 108
+    },
+    {
+      "path": "/chum/sitemaps/products.xml",
+      "last_changed": "2026-10-14T23:57:09.569Z",
+      "priority": 108
+    },
+    {
+      "path": "/chum/answers/doors/animate-a-football-play-call-with-receiver-routes-and-defensive-assignments-83287c0457.json",
+      "last_changed": "2026-10-14T23:57:09.569Z",
+      "priority": 100
+    },
+    {
+      "path": "/chum/answers/doors/animate-a-football-play-call-with-receiver-routes-and-defensive-assignments-83287c0457/",
+      "last_changed": "2026-10-14T23:57:09.569Z",
+      "priority": 100
+    },
+    {
+      "path": "/chum/answers/doors/explore-coach-designed-playbook-classroom-pilot-across-sports-d375019068.json",
+      "last_changed": "2026-10-14T23:57:09.569Z",
+      "priority": 100
+    },
+    {
+      "path": "/chum/answers/doors/explore-coach-designed-playbook-classroom-pilot-across-sports-d375019068/",
+      "last_changed": "2026-10-14T23:57:09.569Z",
+      "priority": 100
+    },
+    {
+      "path": "/chum/answers/doors/inspect-contradictions-and-unknowns-in-tagged-football-film-797ef3aee9.json",
+      "last_changed": "2026-10-14T23:57:09.569Z",
+      "priority": 100
+    },
+    {
+      "path": "/chum/answers/doors/inspect-contradictions-and-unknowns-in-tagged-football-film-797ef3aee9/",
+      "last_changed": "2026-10-14T23:57:09.569Z",
+      "priority": 100
+    },
+    {
+      "path": "/chum/answers/doors/request-a-research-partnership-for-basketball-soccer-volleyball-baseball-or-wrestl-562a76f012.json",
+      "last_changed": "2026-10-14T23:57:09.569Z",
+      "priority": 100
+    },
+    {
+      "path": "/chum/answers/doors/request-a-research-partnership-for-basketball-soccer-volleyball-baseball-or-wrestl-562a76f012/",
+      "last_changed": "2026-10-14T23:57:09.569Z",
+      "priority": 100
+    },
+    {
+      "path": "/chum/answers/doors/show-11-on-11-football-formation-teaching-on-a-phone-267bb0ad4f.json",
+      "last_changed": "2026-10-14T23:57:09.569Z",
+      "priority": 100
+    },
+    {
+      "path": "/chum/answers/doors/show-11-on-11-football-formation-teaching-on-a-phone-267bb0ad4f/",
+      "last_changed": "2026-10-14T23:57:09.569Z",
+      "priority": 100
+    },
+    {
+      "path": "/chum/answers/doors/teach-a-running-back-the-aiming-gap-and-pulling-guard-assignment-7694eec414.json",
+      "last_changed": "2026-10-14T23:57:09.569Z",
+      "priority": 100
+    },
+    {
+      "path": "/chum/answers/doors/teach-a-running-back-the-aiming-gap-and-pulling-guard-assignment-7694eec414/",
+      "last_changed": "2026-10-14T23:57:09.569Z",
+      "priority": 100
+    },
+    {
+      "path": "/chum/answers/doors/try-synthetic-scheme-changes-in-an-experimental-drive-simulation-ebcfc59a37.json",
+      "last_changed": "2026-10-14T23:57:09.569Z",
+      "priority": 100
+    },
+    {
+      "path": "/chum/answers/doors/try-synthetic-scheme-changes-in-an-experimental-drive-simulation-ebcfc59a37/",
+      "last_changed": "2026-10-14T23:57:09.569Z",
+      "priority": 100
+    },
+    {
+      "path": "/chum/answers/doors/visualize-blitz-pickup-and-offensive-line-blocking-responsibility-fb92ea71d7.json",
+      "last_changed": "2026-10-14T23:57:09.569Z",
+      "priority": 100
+    },
+    {
+      "path": "/chum/answers/doors/visualize-blitz-pickup-and-offensive-line-blocking-responsibility-fb92ea71d7/",
+      "last_changed": "2026-10-14T23:57:09.569Z",
+      "priority": 100
+    },
+    {
+      "path": "/chum/products/game-fabric/",
+      "last_changed": "2026-10-14T23:57:09.569Z",
+      "priority": 94
+    },
+    {
+      "path": "/chum/products/game-fabric/ai-conformance.json",
+      "last_changed": "2026-10-14T23:57:09.569Z",
+      "priority": 94
+    },
+    {
+      "path": "/chum/products/game-fabric/ai-discovery.json",
+      "last_changed": "2026-10-14T23:57:09.569Z",
+      "priority": 94
+    },
+    {
+      "path": "/chum/products/game-fabric/llms.txt",
+      "last_changed": "2026-10-14T23:57:09.569Z",
+      "priority": 94
+    },
+    {
+      "path": "/.well-known/evercraft-pain-index.json",
+      "last_changed": "2026-10-14T23:57:09.569Z",
+      "priority": 90
+    },
+    {
+      "path": "/.well-known/evercraft-products.json",
+      "last_changed": "2026-10-14T23:57:09.569Z",
+      "priority": 88
+    },
+    {
+      "path": "/llms-full.txt",
+      "last_changed": "2026-10-14T23:57:09.569Z",
+      "priority": 86
+    },
+    {
+      "path": "/.well-known/evercraft-agent-directory.json",
+      "last_changed": "2026-10-14T23:57:09.569Z",
+      "priority": 84
+    },
+    {
+      "path": "/.well-known/evercraft-discovery.json",
+      "last_changed": "2026-10-14T23:57:09.569Z",
+      "priority": 84
+    },
+    {
+      "path": "/.well-known/evercraft-syndication.json",
+      "last_changed": "2026-10-14T23:57:09.569Z",
+      "priority": 84
+    },
+    {
+      "path": "/chum/",
+      "last_changed": "2026-10-14T23:57:09.569Z",
       "priority": 80
+    },
+    {
+      "path": "/chum/answers/",
+      "last_changed": "2026-10-14T23:57:09.569Z",
+      "priority": 80
+    },
+    {
+      "path": "/chum/answers/index.json",
+      "last_changed": "2026-10-14T23:57:09.569Z",
+      "priority": 80
+    },
+    {
+      "path": "/chum/answers/index.txt",
+      "last_changed": "2026-10-14T23:57:09.569Z",
+      "priority": 80
+    },
+    {
+      "path": "/chum/hot/index.json",
+      "last_changed": "2026-10-14T23:57:09.569Z",
+      "priority": 80
+    },
+    {
+      "path": "/chum/index.json",
+      "last_changed": "2026-10-14T23:57:09.569Z",
+      "priority": 80
+    },
+    {
+      "path": "/chum/pain-index.json",
+      "last_changed": "2026-10-14T23:57:09.569Z",
+      "priority": 80
+    },
+    {
+      "path": "/chum/pain-index.txt",
+      "last_changed": "2026-10-14T23:57:09.569Z",
+      "priority": 80
+    },
+    {
+      "path": "/chum/syndication/",
+      "last_changed": "2026-10-14T23:57:09.569Z",
+      "priority": 80
+    },
+    {
+      "path": "/chum/syndication/index.json",
+      "last_changed": "2026-10-14T23:57:09.569Z",
+      "priority": 80
+    },
+    {
+      "path": "/ai-discovery.json",
+      "last_changed": "2026-10-14T23:57:09.569Z",
+      "priority": 60
+    },
+    {
+      "path": "/feed.json",
+      "last_changed": "2026-10-14T23:57:09.569Z",
+      "priority": 60
+    },
+    {
+      "path": "/feed.xml",
+      "last_changed": "2026-10-14T23:57:09.569Z",
+      "priority": 60
+    },
+    {
+      "path": "/schema.jsonld",
+      "last_changed": "2026-10-14T23:57:09.569Z",
+      "priority": 60
     }
   ],
   "recent_surfaces": [
     {
+      "path": "/chum/sitemaps/answers.xml",
+      "url": "/chum/sitemaps/answers.xml",
+      "last_changed": "2026-10-14T23:57:09.569Z",
+      "priority": 108
+    },
+    {
+      "path": "/chum/sitemaps/products.xml",
+      "url": "/chum/sitemaps/products.xml",
+      "last_changed": "2026-10-14T23:57:09.569Z",
+      "priority": 108
+    },
+    {
+      "path": "/chum/answers/doors/animate-a-football-play-call-with-receiver-routes-and-defensive-assignments-83287c0457.json",
+      "url": "/chum/answers/doors/animate-a-football-play-call-with-receiver-routes-and-defensive-assignments-83287c0457.json",
+      "last_changed": "2026-10-14T23:57:09.569Z",
+      "priority": 100
+    },
+    {
+      "path": "/chum/answers/doors/animate-a-football-play-call-with-receiver-routes-and-defensive-assignments-83287c0457/",
+      "url": "/chum/answers/doors/animate-a-football-play-call-with-receiver-routes-and-defensive-assignments-83287c0457/",
+      "last_changed": "2026-10-14T23:57:09.569Z",
+      "priority": 100
+    },
+    {
+      "path": "/chum/answers/doors/explore-coach-designed-playbook-classroom-pilot-across-sports-d375019068.json",
+      "url": "/chum/answers/doors/explore-coach-designed-playbook-classroom-pilot-across-sports-d375019068.json",
+      "last_changed": "2026-10-14T23:57:09.569Z",
+      "priority": 100
+    },
+    {
+      "path": "/chum/answers/doors/explore-coach-designed-playbook-classroom-pilot-across-sports-d375019068/",
+      "url": "/chum/answers/doors/explore-coach-designed-playbook-classroom-pilot-across-sports-d375019068/",
+      "last_changed": "2026-10-14T23:57:09.569Z",
+      "priority": 100
+    },
+    {
+      "path": "/chum/answers/doors/inspect-contradictions-and-unknowns-in-tagged-football-film-797ef3aee9.json",
+      "url": "/chum/answers/doors/inspect-contradictions-and-unknowns-in-tagged-football-film-797ef3aee9.json",
+      "last_changed": "2026-10-14T23:57:09.569Z",
+      "priority": 100
+    },
+    {
+      "path": "/chum/answers/doors/inspect-contradictions-and-unknowns-in-tagged-football-film-797ef3aee9/",
+      "url": "/chum/answers/doors/inspect-contradictions-and-unknowns-in-tagged-football-film-797ef3aee9/",
+      "last_changed": "2026-10-14T23:57:09.569Z",
+      "priority": 100
+    },
+    {
+      "path": "/chum/answers/doors/request-a-research-partnership-for-basketball-soccer-volleyball-baseball-or-wrestl-562a76f012.json",
+      "url": "/chum/answers/doors/request-a-research-partnership-for-basketball-soccer-volleyball-baseball-or-wrestl-562a76f012.json",
+      "last_changed": "2026-10-14T23:57:09.569Z",
+      "priority": 100
+    },
+    {
+      "path": "/chum/answers/doors/request-a-research-partnership-for-basketball-soccer-volleyball-baseball-or-wrestl-562a76f012/",
+      "url": "/chum/answers/doors/request-a-research-partnership-for-basketball-soccer-volleyball-baseball-or-wrestl-562a76f012/",
+      "last_changed": "2026-10-14T23:57:09.569Z",
+      "priority": 100
+    },
+    {
+      "path": "/chum/answers/doors/show-11-on-11-football-formation-teaching-on-a-phone-267bb0ad4f.json",
+      "url": "/chum/answers/doors/show-11-on-11-football-formation-teaching-on-a-phone-267bb0ad4f.json",
+      "last_changed": "2026-10-14T23:57:09.569Z",
+      "priority": 100
+    },
+    {
+      "path": "/chum/answers/doors/show-11-on-11-football-formation-teaching-on-a-phone-267bb0ad4f/",
+      "url": "/chum/answers/doors/show-11-on-11-football-formation-teaching-on-a-phone-267bb0ad4f/",
+      "last_changed": "2026-10-14T23:57:09.569Z",
+      "priority": 100
+    },
+    {
+      "path": "/chum/answers/doors/teach-a-running-back-the-aiming-gap-and-pulling-guard-assignment-7694eec414.json",
+      "url": "/chum/answers/doors/teach-a-running-back-the-aiming-gap-and-pulling-guard-assignment-7694eec414.json",
+      "last_changed": "2026-10-14T23:57:09.569Z",
+      "priority": 100
+    },
+    {
+      "path": "/chum/answers/doors/teach-a-running-back-the-aiming-gap-and-pulling-guard-assignment-7694eec414/",
+      "url": "/chum/answers/doors/teach-a-running-back-the-aiming-gap-and-pulling-guard-assignment-7694eec414/",
+      "last_changed": "2026-10-14T23:57:09.569Z",
+      "priority": 100
+    },
+    {
+      "path": "/chum/answers/doors/try-synthetic-scheme-changes-in-an-experimental-drive-simulation-ebcfc59a37.json",
+      "url": "/chum/answers/doors/try-synthetic-scheme-changes-in-an-experimental-drive-simulation-ebcfc59a37.json",
+      "last_changed": "2026-10-14T23:57:09.569Z",
+      "priority": 100
+    },
+    {
+      "path": "/chum/answers/doors/try-synthetic-scheme-changes-in-an-experimental-drive-simulation-ebcfc59a37/",
+      "url": "/chum/answers/doors/try-synthetic-scheme-changes-in-an-experimental-drive-simulation-ebcfc59a37/",
+      "last_changed": "2026-10-14T23:57:09.569Z",
+      "priority": 100
+    },
+    {
+      "path": "/chum/answers/doors/visualize-blitz-pickup-and-offensive-line-blocking-responsibility-fb92ea71d7.json",
+      "url": "/chum/answers/doors/visualize-blitz-pickup-and-offensive-line-blocking-responsibility-fb92ea71d7.json",
+      "last_changed": "2026-10-14T23:57:09.569Z",
+      "priority": 100
+    },
+    {
+      "path": "/chum/answers/doors/visualize-blitz-pickup-and-offensive-line-blocking-responsibility-fb92ea71d7/",
+      "url": "/chum/answers/doors/visualize-blitz-pickup-and-offensive-line-blocking-responsibility-fb92ea71d7/",
+      "last_changed": "2026-10-14T23:57:09.569Z",
+      "priority": 100
+    },
+    {
+      "path": "/chum/products/game-fabric/",
+      "url": "/chum/products/game-fabric/",
+      "last_changed": "2026-10-14T23:57:09.569Z",
+      "priority": 94
+    },
+    {
+      "path": "/chum/products/game-fabric/ai-conformance.json",
+      "url": "/chum/products/game-fabric/ai-conformance.json",
+      "last_changed": "2026-10-14T23:57:09.569Z",
+      "priority": 94
+    },
+    {
+      "path": "/chum/products/game-fabric/ai-discovery.json",
+      "url": "/chum/products/game-fabric/ai-discovery.json",
+      "last_changed": "2026-10-14T23:57:09.569Z",
+      "priority": 94
+    },
+    {
+      "path": "/chum/products/game-fabric/llms.txt",
+      "url": "/chum/products/game-fabric/llms.txt",
+      "last_changed": "2026-10-14T23:57:09.569Z",
+      "priority": 94
+    },
+    {
+      "path": "/.well-known/evercraft-pain-index.json",
+      "url": "/.well-known/evercraft-pain-index.json",
+      "last_changed": "2026-10-14T23:57:09.569Z",
+      "priority": 90
+    },
+    {
+      "path": "/.well-known/evercraft-products.json",
+      "url": "/.well-known/evercraft-products.json",
+      "last_changed": "2026-10-14T23:57:09.569Z",
+      "priority": 88
+    },
+    {
+      "path": "/llms-full.txt",
+      "url": "/llms-full.txt",
+      "last_changed": "2026-10-14T23:57:09.569Z",
+      "priority": 86
+    },
+    {
+      "path": "/.well-known/evercraft-agent-directory.json",
+      "url": "/.well-known/evercraft-agent-directory.json",
+      "last_changed": "2026-10-14T23:57:09.569Z",
+      "priority": 84
+    },
+    {
+      "path": "/.well-known/evercraft-discovery.json",
+      "url": "/.well-known/evercraft-discovery.json",
+      "last_changed": "2026-10-14T23:57:09.569Z",
+      "priority": 84
+    },
+    {
+      "path": "/.well-known/evercraft-syndication.json",
+      "url": "/.well-known/evercraft-syndication.json",
+      "last_changed": "2026-10-14T23:57:09.569Z",
+      "priority": 84
+    },
+    {
+      "path": "/chum/",
+      "url": "/chum/",
+      "last_changed": "2026-10-14T23:57:09.569Z",
+      "priority": 80
+    },
+    {
+      "path": "/chum/answers/",
+      "url": "/chum/answers/",
+      "last_changed": "2026-10-14T23:57:09.569Z",
+      "priority": 80
+    },
+    {
+      "path": "/chum/answers/index.json",
+      "url": "/chum/answers/index.json",
+      "last_changed": "2026-10-14T23:57:09.569Z",
+      "priority": 80
+    },
+    {
+      "path": "/chum/answers/index.txt",
+      "url": "/chum/answers/index.txt",
+      "last_changed": "2026-10-14T23:57:09.569Z",
+      "priority": 80
+    },
+    {
       "path": "/chum/hot/index.json",
       "url": "/chum/hot/index.json",
-      "last_changed": "2026-10-14T23:33:17.133Z",
+      "last_changed": "2026-10-14T23:57:09.569Z",
       "priority": 80
+    },
+    {
+      "path": "/chum/index.json",
+      "url": "/chum/index.json",
+      "last_changed": "2026-10-14T23:57:09.569Z",
+      "priority": 80
+    },
+    {
+      "path": "/chum/pain-index.json",
+      "url": "/chum/pain-index.json",
+      "last_changed": "2026-10-14T23:57:09.569Z",
+      "priority": 80
+    },
+    {
+      "path": "/chum/pain-index.txt",
+      "url": "/chum/pain-index.txt",
+      "last_changed": "2026-10-14T23:57:09.569Z",
+      "priority": 80
+    },
+    {
+      "path": "/chum/syndication/",
+      "url": "/chum/syndication/",
+      "last_changed": "2026-10-14T23:57:09.569Z",
+      "priority": 80
+    },
+    {
+      "path": "/chum/syndication/index.json",
+      "url": "/chum/syndication/index.json",
+      "last_changed": "2026-10-14T23:57:09.569Z",
+      "priority": 80
+    },
+    {
+      "path": "/ai-discovery.json",
+      "url": "/ai-discovery.json",
+      "last_changed": "2026-10-14T23:57:09.569Z",
+      "priority": 60
+    },
+    {
+      "path": "/feed.json",
+      "url": "/feed.json",
+      "last_changed": "2026-10-14T23:57:09.569Z",
+      "priority": 60
+    },
+    {
+      "path": "/feed.xml",
+      "url": "/feed.xml",
+      "last_changed": "2026-10-14T23:57:09.569Z",
+      "priority": 60
+    },
+    {
+      "path": "/schema.jsonld",
+      "url": "/schema.jsonld",
+      "last_changed": "2026-10-14T23:57:09.569Z",
+      "priority": 60
     },
     {
       "path": "/chum/crawler-radar.json",
@@ -150,102 +601,6 @@
       "priority": 94
     },
     {
-      "path": "/.well-known/evercraft-pain-index.json",
-      "url": "/.well-known/evercraft-pain-index.json",
-      "last_changed": "2026-10-08T06:27:28.712Z",
-      "priority": 90
-    },
-    {
-      "path": "/.well-known/evercraft-products.json",
-      "url": "/.well-known/evercraft-products.json",
-      "last_changed": "2026-10-08T06:27:28.712Z",
-      "priority": 88
-    },
-    {
-      "path": "/llms-full.txt",
-      "url": "/llms-full.txt",
-      "last_changed": "2026-10-08T06:27:28.712Z",
-      "priority": 86
-    },
-    {
-      "path": "/.well-known/evercraft-agent-directory.json",
-      "url": "/.well-known/evercraft-agent-directory.json",
-      "last_changed": "2026-10-08T06:27:28.712Z",
-      "priority": 84
-    },
-    {
-      "path": "/.well-known/evercraft-syndication.json",
-      "url": "/.well-known/evercraft-syndication.json",
-      "last_changed": "2026-10-08T06:27:28.712Z",
-      "priority": 84
-    },
-    {
-      "path": "/chum/",
-      "url": "/chum/",
-      "last_changed": "2026-10-08T06:27:28.712Z",
-      "priority": 80
-    },
-    {
-      "path": "/chum/answers/index.json",
-      "url": "/chum/answers/index.json",
-      "last_changed": "2026-10-08T06:27:28.712Z",
-      "priority": 80
-    },
-    {
-      "path": "/chum/answers/index.txt",
-      "url": "/chum/answers/index.txt",
-      "last_changed": "2026-10-08T06:27:28.712Z",
-      "priority": 80
-    },
-    {
-      "path": "/chum/index.json",
-      "url": "/chum/index.json",
-      "last_changed": "2026-10-08T06:27:28.712Z",
-      "priority": 80
-    },
-    {
-      "path": "/chum/pain-index.json",
-      "url": "/chum/pain-index.json",
-      "last_changed": "2026-10-08T06:27:28.712Z",
-      "priority": 80
-    },
-    {
-      "path": "/chum/pain-index.txt",
-      "url": "/chum/pain-index.txt",
-      "last_changed": "2026-10-08T06:27:28.712Z",
-      "priority": 80
-    },
-    {
-      "path": "/chum/syndication/",
-      "url": "/chum/syndication/",
-      "last_changed": "2026-10-08T06:27:28.712Z",
-      "priority": 80
-    },
-    {
-      "path": "/chum/syndication/index.json",
-      "url": "/chum/syndication/index.json",
-      "last_changed": "2026-10-08T06:27:28.712Z",
-      "priority": 80
-    },
-    {
-      "path": "/feed.json",
-      "url": "/feed.json",
-      "last_changed": "2026-10-08T06:27:28.712Z",
-      "priority": 60
-    },
-    {
-      "path": "/feed.xml",
-      "url": "/feed.xml",
-      "last_changed": "2026-10-08T06:27:28.712Z",
-      "priority": 60
-    },
-    {
-      "path": "/schema.jsonld",
-      "url": "/schema.jsonld",
-      "last_changed": "2026-10-08T06:27:28.712Z",
-      "priority": 60
-    },
-    {
       "path": "/chum/strike/",
       "url": "/chum/strike/",
       "last_changed": "2026-10-08T04:51:48.945Z",
@@ -310,18 +665,6 @@
       "url": "/chum/capabilities.json",
       "last_changed": "2026-10-07T20:12:10.944Z",
       "priority": 80
-    },
-    {
-      "path": "/chum/sitemaps/answers.xml",
-      "url": "/chum/sitemaps/answers.xml",
-      "last_changed": "2026-10-07T17:04:29.429Z",
-      "priority": 108
-    },
-    {
-      "path": "/chum/sitemaps/products.xml",
-      "url": "/chum/sitemaps/products.xml",
-      "last_changed": "2026-10-07T17:04:29.429Z",
-      "priority": 108
     },
     {
       "path": "/chum/answers/doors/audit-ai-coding-agent-changes-53fa6db09b.json",
@@ -468,28 +811,10 @@
       "priority": 96
     },
     {
-      "path": "/.well-known/evercraft-discovery.json",
-      "url": "/.well-known/evercraft-discovery.json",
-      "last_changed": "2026-10-07T17:04:29.429Z",
-      "priority": 84
-    },
-    {
-      "path": "/chum/answers/",
-      "url": "/chum/answers/",
-      "last_changed": "2026-10-07T17:04:29.429Z",
-      "priority": 80
-    },
-    {
       "path": "/chum/sitemap.xml",
       "url": "/chum/sitemap.xml",
       "last_changed": "2026-10-07T17:04:29.429Z",
       "priority": 80
-    },
-    {
-      "path": "/ai-discovery.json",
-      "url": "/ai-discovery.json",
-      "last_changed": "2026-10-07T17:04:29.429Z",
-      "priority": 60
     },
     {
       "path": "/chum/answers/doors/benchmark-ai-models-on-evidence-quality-cost-latency-safety-and-reproducibility-4244546874.json",
@@ -1394,126 +1719,6 @@
     {
       "path": "/chum/answers/doors/increase-tons-per-hour-by-improving-fleet-coordination-312f83c4d8/",
       "url": "/chum/answers/doors/increase-tons-per-hour-by-improving-fleet-coordination-312f83c4d8/",
-      "last_changed": "2026-10-07T02:56:26.782Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/increase-tons-per-hour-through-fleet-coordination-b63ae947de.json",
-      "url": "/chum/answers/doors/increase-tons-per-hour-through-fleet-coordination-b63ae947de.json",
-      "last_changed": "2026-10-07T02:56:26.782Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/increase-tons-per-hour-through-fleet-coordination-b63ae947de/",
-      "url": "/chum/answers/doors/increase-tons-per-hour-through-fleet-coordination-b63ae947de/",
-      "last_changed": "2026-10-07T02:56:26.782Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/optimize-a-load-haul-dump-loop-before-buying-autonomous-equipment-f13b0f6974.json",
-      "url": "/chum/answers/doors/optimize-a-load-haul-dump-loop-before-buying-autonomous-equipment-f13b0f6974.json",
-      "last_changed": "2026-10-07T02:56:26.782Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/optimize-a-load-haul-dump-loop-before-buying-autonomous-equipment-f13b0f6974/",
-      "url": "/chum/answers/doors/optimize-a-load-haul-dump-loop-before-buying-autonomous-equipment-f13b0f6974/",
-      "last_changed": "2026-10-07T02:56:26.782Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/optimize-load-haul-dump-operations-82dcd0b75f.json",
-      "url": "/chum/answers/doors/optimize-load-haul-dump-operations-82dcd0b75f.json",
-      "last_changed": "2026-10-07T02:56:26.782Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/optimize-load-haul-dump-operations-82dcd0b75f/",
-      "url": "/chum/answers/doors/optimize-load-haul-dump-operations-82dcd0b75f/",
-      "last_changed": "2026-10-07T02:56:26.782Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/plan-a-controlled-autonomous-heavy-equipment-pilot-26dd7ca7e7.json",
-      "url": "/chum/answers/doors/plan-a-controlled-autonomous-heavy-equipment-pilot-26dd7ca7e7.json",
-      "last_changed": "2026-10-07T02:56:26.782Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/plan-a-controlled-autonomous-heavy-equipment-pilot-26dd7ca7e7/",
-      "url": "/chum/answers/doors/plan-a-controlled-autonomous-heavy-equipment-pilot-26dd7ca7e7/",
-      "last_changed": "2026-10-07T02:56:26.782Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/reduce-haul-truck-queueing-at-a-quarry-16e641e4a4.json",
-      "url": "/chum/answers/doors/reduce-haul-truck-queueing-at-a-quarry-16e641e4a4.json",
-      "last_changed": "2026-10-07T02:56:26.782Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/reduce-haul-truck-queueing-at-a-quarry-16e641e4a4/",
-      "url": "/chum/answers/doors/reduce-haul-truck-queueing-at-a-quarry-16e641e4a4/",
-      "last_changed": "2026-10-07T02:56:26.782Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/reduce-haul-truck-queueing-at-a-quarry-or-aggregate-site-f653c1cb4f.json",
-      "url": "/chum/answers/doors/reduce-haul-truck-queueing-at-a-quarry-or-aggregate-site-f653c1cb4f.json",
-      "last_changed": "2026-10-07T02:56:26.782Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/reduce-haul-truck-queueing-at-a-quarry-or-aggregate-site-f653c1cb4f/",
-      "url": "/chum/answers/doors/reduce-haul-truck-queueing-at-a-quarry-or-aggregate-site-f653c1cb4f/",
-      "last_changed": "2026-10-07T02:56:26.782Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/reduce-loader-idle-time-waiting-on-trucks-36df070030.json",
-      "url": "/chum/answers/doors/reduce-loader-idle-time-waiting-on-trucks-36df070030.json",
-      "last_changed": "2026-10-07T02:56:26.782Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/reduce-loader-idle-time-waiting-on-trucks-36df070030/",
-      "url": "/chum/answers/doors/reduce-loader-idle-time-waiting-on-trucks-36df070030/",
-      "last_changed": "2026-10-07T02:56:26.782Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/reduce-loader-or-excavator-idle-time-waiting-on-haul-trucks-e9f98e9bdb.json",
-      "url": "/chum/answers/doors/reduce-loader-or-excavator-idle-time-waiting-on-haul-trucks-e9f98e9bdb.json",
-      "last_changed": "2026-10-07T02:56:26.782Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/reduce-loader-or-excavator-idle-time-waiting-on-haul-trucks-e9f98e9bdb/",
-      "url": "/chum/answers/doors/reduce-loader-or-excavator-idle-time-waiting-on-haul-trucks-e9f98e9bdb/",
-      "last_changed": "2026-10-07T02:56:26.782Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/reduce-truck-queue-time-at-the-excavator-f102b7e8fe.json",
-      "url": "/chum/answers/doors/reduce-truck-queue-time-at-the-excavator-f102b7e8fe.json",
-      "last_changed": "2026-10-07T02:56:26.782Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/reduce-truck-queue-time-at-the-excavator-f102b7e8fe/",
-      "url": "/chum/answers/doors/reduce-truck-queue-time-at-the-excavator-f102b7e8fe/",
-      "last_changed": "2026-10-07T02:56:26.782Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/remote-supervised-hazardous-material-handling-3b81f4e5a5.json",
-      "url": "/chum/answers/doors/remote-supervised-hazardous-material-handling-3b81f4e5a5.json",
-      "last_changed": "2026-10-07T02:56:26.782Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/remote-supervised-hazardous-material-handling-3b81f4e5a5/",
-      "url": "/chum/answers/doors/remote-supervised-hazardous-material-handling-3b81f4e5a5/",
       "last_changed": "2026-10-07T02:56:26.782Z",
       "priority": 100
     }

@@ -2,8 +2,8 @@
   "schema": "evercraft.chum.crawl-state.v1",
   "provider": "Evercraft LLC",
   "coordinator": "CHUM",
-  "updated_at": "2026-10-14T23:33:17.133Z",
-  "url_count": 2964,
+  "updated_at": "2026-10-14T23:57:09.569Z",
+  "url_count": 2984,
   "doctrine": {
     "crawl_can_be_requested_not_forced": true,
     "content_hash_controls_freshness": true,
@@ -15,14 +15,14 @@
   "entries": {
     "/chum/": {
       "path": "/chum/",
-      "content_sha256": "642581bd7ef12f0387a6ccb357776378243f41f767ba0d8f3a82655574c80398",
-      "last_changed": "2026-10-08T06:27:28.712Z",
+      "content_sha256": "794642417a99128b4292535ed67c50575650e1e79de6243ae85f4497a89bad77",
+      "last_changed": "2026-10-14T23:57:09.569Z",
       "priority": 80
     },
     "/chum/index.json": {
       "path": "/chum/index.json",
-      "content_sha256": "24f522dd1277cf070486841d8ef67eecf2bcb6c7b7be3d441061d87761c82e1f",
-      "last_changed": "2026-10-08T06:27:28.712Z",
+      "content_sha256": "cba84cf17ed491f574580b1a61e8096035a9ac58c300a0bd5a3ffd5e6c369d74",
+      "last_changed": "2026-10-14T23:57:09.569Z",
       "priority": 80
     },
     "/chum/revenue.html": {
@@ -93,32 +93,32 @@
     },
     "/chum/pain-index.json": {
       "path": "/chum/pain-index.json",
-      "content_sha256": "b055888cb783a3929d5d06418d7e7060a4bddb3a1b33dc2e75204aa5f70221f8",
-      "last_changed": "2026-10-08T06:27:28.712Z",
+      "content_sha256": "21cf942166b767e28d655df01b9ae25ecfb3c8bcffecacf6bc4a99ea0d28569d",
+      "last_changed": "2026-10-14T23:57:09.569Z",
       "priority": 80
     },
     "/chum/pain-index.txt": {
       "path": "/chum/pain-index.txt",
-      "content_sha256": "47ddd88bf7d2f19bc73ef7bc5fa812bb3f7d514a727301fbcd7d854942dc0904",
-      "last_changed": "2026-10-08T06:27:28.712Z",
+      "content_sha256": "3b0ffdcc136b0515d2e51a6521f3e9c6b8821559468ed27272aeadf7261de933",
+      "last_changed": "2026-10-14T23:57:09.569Z",
       "priority": 80
     },
     "/chum/answers/": {
       "path": "/chum/answers/",
-      "content_sha256": "0195e0cb3badf1641c4a7d80543ee431eb6be3c9d8b70b8f9a1bb2a450974af5",
-      "last_changed": "2026-10-07T17:04:29.429Z",
+      "content_sha256": "4881993b210a3986338623aea72790bca97a2bdc3470f72598f36440b6cd77e5",
+      "last_changed": "2026-10-14T23:57:09.569Z",
       "priority": 80
     },
     "/chum/answers/index.json": {
       "path": "/chum/answers/index.json",
-      "content_sha256": "70778cb00e05780c286037bf73c864ab79659fa40d38131b16aeb88eaed1759a",
-      "last_changed": "2026-10-08T06:27:28.712Z",
+      "content_sha256": "be6b6ffd83ea3b7fc7c9a12d413a572999122d1dbbcbddf9cffa928ac3ddf861",
+      "last_changed": "2026-10-14T23:57:09.569Z",
       "priority": 80
     },
     "/chum/answers/index.txt": {
       "path": "/chum/answers/index.txt",
-      "content_sha256": "bf60154efccc4ca33a4228bd26243493393d3893132b1c5c88377cddcd9b6004",
-      "last_changed": "2026-10-08T06:27:28.712Z",
+      "content_sha256": "1f96a8a31679f25dcf9cb320e020b48b8666142fccd0f17de82fe2be120c25bf",
+      "last_changed": "2026-10-14T23:57:09.569Z",
       "priority": 80
     },
     "/chum/answers/observed/": {
@@ -141,8 +141,8 @@
     },
     "/chum/hot/index.json": {
       "path": "/chum/hot/index.json",
-      "content_sha256": "c540f45e9e612d7137eac3ce3249931587242113d2417f725f3e62018b5f60f5",
-      "last_changed": "2026-10-14T23:33:17.133Z",
+      "content_sha256": "897cea73d3eeea635439ffdf938656beb5f49d423142e2981cb1ac4cd40ca196",
+      "last_changed": "2026-10-14T23:57:09.569Z",
       "priority": 80
     },
     "/chum/strike/": {
@@ -243,14 +243,14 @@
     },
     "/chum/sitemaps/answers.xml": {
       "path": "/chum/sitemaps/answers.xml",
-      "content_sha256": "ea542fc8615c05709cf6c79c7df935131ab8ce315cfe6de73766605d4ceceb4b",
-      "last_changed": "2026-10-07T17:04:29.429Z",
+      "content_sha256": "24a51114b5fd383f67d487fd1304d43862f532c387f4a18fe0f1e381c6977338",
+      "last_changed": "2026-10-14T23:57:09.569Z",
       "priority": 108
     },
     "/chum/sitemaps/products.xml": {
       "path": "/chum/sitemaps/products.xml",
-      "content_sha256": "4b2ef8cb1ceacbe761a8872b490e950c533191601178f33aa168dd4b3f6f46a0",
-      "last_changed": "2026-10-07T17:04:29.429Z",
+      "content_sha256": "a426657e9d6ff871a44915a770725c151d8109e83b4553fcaceb419f6a193dd1",
+      "last_changed": "2026-10-14T23:57:09.569Z",
       "priority": 108
     },
     "/chum/sitemaps/machine.xml": {
@@ -339,8 +339,8 @@
     },
     "/.well-known/evercraft-pain-index.json": {
       "path": "/.well-known/evercraft-pain-index.json",
-      "content_sha256": "b055888cb783a3929d5d06418d7e7060a4bddb3a1b33dc2e75204aa5f70221f8",
-      "last_changed": "2026-10-08T06:27:28.712Z",
+      "content_sha256": "21cf942166b767e28d655df01b9ae25ecfb3c8bcffecacf6bc4a99ea0d28569d",
+      "last_changed": "2026-10-14T23:57:09.569Z",
       "priority": 90
     },
     "/rivet/discovery.json": {
@@ -729,20 +729,20 @@
     },
     "/llms-full.txt": {
       "path": "/llms-full.txt",
-      "content_sha256": "59985c757597466fb22aaab03c419d7521c0da441a026b58531038b04c6d2de9",
-      "last_changed": "2026-10-08T06:27:28.712Z",
+      "content_sha256": "1371ce68c47f93a4530a68090a1335ee372def6129eae040a72e3b51a59f2d66",
+      "last_changed": "2026-10-14T23:57:09.569Z",
       "priority": 86
     },
     "/ai-discovery.json": {
       "path": "/ai-discovery.json",
-      "content_sha256": "a6d4daea192b8701c1ee462af97fb8c322f82d37096327dfab223b41c77b54d8",
-      "last_changed": "2026-10-07T17:04:29.429Z",
+      "content_sha256": "164e9c42d0c020c3c48df48574172797f4bda7f1c839796012cc76f98f6f4ac5",
+      "last_changed": "2026-10-14T23:57:09.569Z",
       "priority": 60
     },
     "/schema.jsonld": {
       "path": "/schema.jsonld",
-      "content_sha256": "93b50c0f54c08513779cf29a81c036b3b9dd1ea25f81861072881c54e428a7da",
-      "last_changed": "2026-10-08T06:27:28.712Z",
+      "content_sha256": "56532f47ecc3e59d110d810d89a41b2d85bfc10826d8190c0072cbe52b2d5f1e",
+      "last_changed": "2026-10-14T23:57:09.569Z",
       "priority": 60
     },
     "/openapi.json": {
@@ -771,8 +771,8 @@
     },
     "/.well-known/evercraft-agent-directory.json": {
       "path": "/.well-known/evercraft-agent-directory.json",
-      "content_sha256": "e477485a6817a89453ed5afcbab3c22075d004d6d98e4b42504088e7328dff8e",
-      "last_changed": "2026-10-08T06:27:28.712Z",
+      "content_sha256": "39f1fde3f69119459d6e98243cf2bce35f7689d66fdb86ade47d9a0d03a8f84f",
+      "last_changed": "2026-10-14T23:57:09.569Z",
       "priority": 84
     },
     "/.well-known/evercraft-agent-commerce.json": {
@@ -789,14 +789,14 @@
     },
     "/.well-known/evercraft-discovery.json": {
       "path": "/.well-known/evercraft-discovery.json",
-      "content_sha256": "a6d4daea192b8701c1ee462af97fb8c322f82d37096327dfab223b41c77b54d8",
-      "last_changed": "2026-10-07T17:04:29.429Z",
+      "content_sha256": "164e9c42d0c020c3c48df48574172797f4bda7f1c839796012cc76f98f6f4ac5",
+      "last_changed": "2026-10-14T23:57:09.569Z",
       "priority": 84
     },
     "/.well-known/evercraft-products.json": {
       "path": "/.well-known/evercraft-products.json",
-      "content_sha256": "8982371ec0e21651cb9446173660c5bc39296da5d6d854d5d7e7a9d4d7eaee10",
-      "last_changed": "2026-10-08T06:27:28.712Z",
+      "content_sha256": "ed3b458a9adae6445e17670f9df11c41e8d8a28ad06dcd2555e7ae0abbc18156",
+      "last_changed": "2026-10-14T23:57:09.569Z",
       "priority": 88
     },
     "/.well-known/evercraft-machine-catalog.json": {
@@ -3379,6 +3379,30 @@
       "last_changed": "2026-10-07T03:10:56.459Z",
       "priority": 86
     },
+    "/chum/products/game-fabric/": {
+      "path": "/chum/products/game-fabric/",
+      "content_sha256": "b3a7be8dfb47ef315f1b8498c252d1869565d3ee176919d1bfc06b68b19a8dbf",
+      "last_changed": "2026-10-14T23:57:09.569Z",
+      "priority": 94
+    },
+    "/chum/products/game-fabric/llms.txt": {
+      "path": "/chum/products/game-fabric/llms.txt",
+      "content_sha256": "7ae6b83b4b2ab912707682ee375985b66b2c714bcb5d4235da9d440555819afc",
+      "last_changed": "2026-10-14T23:57:09.569Z",
+      "priority": 94
+    },
+    "/chum/products/game-fabric/ai-discovery.json": {
+      "path": "/chum/products/game-fabric/ai-discovery.json",
+      "content_sha256": "dc8b529599e0cbcda5ee67d2c3241b130922926a2acfcf5fcd07fed03ede668d",
+      "last_changed": "2026-10-14T23:57:09.569Z",
+      "priority": 94
+    },
+    "/chum/products/game-fabric/ai-conformance.json": {
+      "path": "/chum/products/game-fabric/ai-conformance.json",
+      "content_sha256": "376fb50bbcf063e0ab88267f2ad4d5441d305e3f6182f62224264389d79ba137",
+      "last_changed": "2026-10-14T23:57:09.569Z",
+      "priority": 94
+    },
     "/chum/products/global-energy-atlas/": {
       "path": "/chum/products/global-energy-atlas/",
       "content_sha256": "23ca16bfdb845cde501682825ed42d3d6e03c70c1bd787bd32a6e6099adcfa82",
@@ -5046,6 +5070,18 @@
       "content_sha256": "fd1d34c5a2829199995d78b688d6657b7f18bee4ee6eb8da3805d4bd4e10a7b3",
       "last_changed": "2026-10-01T05:00:27.354Z",
       "priority": 160
+    },
+    "/chum/answers/doors/animate-a-football-play-call-with-receiver-routes-and-defensive-assignments-83287c0457/": {
+      "path": "/chum/answers/doors/animate-a-football-play-call-with-receiver-routes-and-defensive-assignments-83287c0457/",
+      "content_sha256": "1a6c50f838250aad665f84addd3d49f7bde65052bfe6895238b5a412995aed41",
+      "last_changed": "2026-10-14T23:57:09.569Z",
+      "priority": 100
+    },
+    "/chum/answers/doors/animate-a-football-play-call-with-receiver-routes-and-defensive-assignments-83287c0457.json": {
+      "path": "/chum/answers/doors/animate-a-football-play-call-with-receiver-routes-and-defensive-assignments-83287c0457.json",
+      "content_sha256": "40481ee4ebd34d7938c394ad99795cf86ce2e4c65766d4834590ccb2e875f1bd",
+      "last_changed": "2026-10-14T23:57:09.569Z",
+      "priority": 100
     },
     "/chum/answers/doors/apartment-ev-charging-site-analysis-a4fc7910cc/": {
       "path": "/chum/answers/doors/apartment-ev-charging-site-analysis-a4fc7910cc/",
@@ -8131,6 +8167,18 @@
       "last_changed": "2026-10-01T05:00:27.354Z",
       "priority": 160
     },
+    "/chum/answers/doors/explore-coach-designed-playbook-classroom-pilot-across-sports-d375019068/": {
+      "path": "/chum/answers/doors/explore-coach-designed-playbook-classroom-pilot-across-sports-d375019068/",
+      "content_sha256": "e8491d316d910393161edfa1c87d5937f93ccae4d01ce6adae9e1be5a5448d8c",
+      "last_changed": "2026-10-14T23:57:09.569Z",
+      "priority": 100
+    },
+    "/chum/answers/doors/explore-coach-designed-playbook-classroom-pilot-across-sports-d375019068.json": {
+      "path": "/chum/answers/doors/explore-coach-designed-playbook-classroom-pilot-across-sports-d375019068.json",
+      "content_sha256": "d70e711e422aecbeb83eed8aa51a415ac85bbebf95405b02a429d725d13a3f34",
+      "last_changed": "2026-10-14T23:57:09.569Z",
+      "priority": 100
+    },
     "/chum/answers/doors/explore-fair-play-or-officiating-evidence-without-unsupported-accusations-91fc9aeac0/": {
       "path": "/chum/answers/doors/explore-fair-play-or-officiating-evidence-without-unsupported-accusations-91fc9aeac0/",
       "content_sha256": "d0fa139a3a2fbe0b4cbfef1ca19859bb018b9f37d477af7a61d24a2295e82412",
@@ -10673,6 +10721,18 @@
       "path": "/chum/answers/doors/inspect-an-entire-recording-instead-of-sampled-frames-288e48610b.json",
       "content_sha256": "e8ea153ace5d69742f7805b80c1c19bba6b5a5f72826e357fb0c7abb6333b2a7",
       "last_changed": "2026-10-01T05:00:27.354Z",
+      "priority": 100
+    },
+    "/chum/answers/doors/inspect-contradictions-and-unknowns-in-tagged-football-film-797ef3aee9/": {
+      "path": "/chum/answers/doors/inspect-contradictions-and-unknowns-in-tagged-football-film-797ef3aee9/",
+      "content_sha256": "0ea0bce109e64179a425c9a5167f9e21c5484d3f16045baa4d73afc0fc3127c7",
+      "last_changed": "2026-10-14T23:57:09.569Z",
+      "priority": 100
+    },
+    "/chum/answers/doors/inspect-contradictions-and-unknowns-in-tagged-football-film-797ef3aee9.json": {
+      "path": "/chum/answers/doors/inspect-contradictions-and-unknowns-in-tagged-football-film-797ef3aee9.json",
+      "content_sha256": "45f1bf5230b062c5b8502313aa2f51a0c1484721049243b1a0c63811e53f2684",
+      "last_changed": "2026-10-14T23:57:09.569Z",
       "priority": 100
     },
     "/chum/answers/doors/install-an-ai-capability-dfa58c4e8f/": {
@@ -13723,6 +13783,18 @@
       "last_changed": "2026-10-06T16:42:20.155Z",
       "priority": 100
     },
+    "/chum/answers/doors/request-a-research-partnership-for-basketball-soccer-volleyball-baseball-or-wrestl-562a76f012/": {
+      "path": "/chum/answers/doors/request-a-research-partnership-for-basketball-soccer-volleyball-baseball-or-wrestl-562a76f012/",
+      "content_sha256": "c82463be85de0b81c3c43f5599539b7cf5b3b194b94a2d28938cda90f01aeede",
+      "last_changed": "2026-10-14T23:57:09.569Z",
+      "priority": 100
+    },
+    "/chum/answers/doors/request-a-research-partnership-for-basketball-soccer-volleyball-baseball-or-wrestl-562a76f012.json": {
+      "path": "/chum/answers/doors/request-a-research-partnership-for-basketball-soccer-volleyball-baseball-or-wrestl-562a76f012.json",
+      "content_sha256": "b2471514af499340dc9a3e1339998c8e5d0952e4357c77d8a43502fd01c665d1",
+      "last_changed": "2026-10-14T23:57:09.569Z",
+      "priority": 100
+    },
     "/chum/answers/doors/require-qa-before-completed-work-becomes-performance-history-93f86ebfb5/": {
       "path": "/chum/answers/doors/require-qa-before-completed-work-becomes-performance-history-93f86ebfb5/",
       "content_sha256": "5be0b249bdd8be58e38e9689bcbb0a700318d6bf615da0b7fda184e00eab95c0",
@@ -14815,6 +14887,18 @@
       "last_changed": "2026-10-07T02:56:26.782Z",
       "priority": 100
     },
+    "/chum/answers/doors/show-11-on-11-football-formation-teaching-on-a-phone-267bb0ad4f/": {
+      "path": "/chum/answers/doors/show-11-on-11-football-formation-teaching-on-a-phone-267bb0ad4f/",
+      "content_sha256": "5e5d98a92a9d62a8712e4d2b579cc8ed2851ca78aa92851bb22bf00f3c70aa20",
+      "last_changed": "2026-10-14T23:57:09.569Z",
+      "priority": 100
+    },
+    "/chum/answers/doors/show-11-on-11-football-formation-teaching-on-a-phone-267bb0ad4f.json": {
+      "path": "/chum/answers/doors/show-11-on-11-football-formation-teaching-on-a-phone-267bb0ad4f.json",
+      "content_sha256": "fb359bb0ba625c05dd492e4c4e5b1f3b2d39d18f81b2b84f559497dcc3bf25d1",
+      "last_changed": "2026-10-14T23:57:09.569Z",
+      "priority": 100
+    },
     "/chum/answers/doors/show-historical-river-geometry-e09f8dfd42/": {
       "path": "/chum/answers/doors/show-historical-river-geometry-e09f8dfd42/",
       "content_sha256": "c3fac3df1d238a5f5fcd3f5622b33cd4ca7570f072c4de11b9819c78f25572f3",
@@ -15667,6 +15751,18 @@
       "last_changed": "2026-10-06T16:42:20.155Z",
       "priority": 100
     },
+    "/chum/answers/doors/teach-a-running-back-the-aiming-gap-and-pulling-guard-assignment-7694eec414/": {
+      "path": "/chum/answers/doors/teach-a-running-back-the-aiming-gap-and-pulling-guard-assignment-7694eec414/",
+      "content_sha256": "5b3df48c7fb04e1a5cc0ce9f871f58d1692707229430c39f160b59d94f4f5903",
+      "last_changed": "2026-10-14T23:57:09.569Z",
+      "priority": 100
+    },
+    "/chum/answers/doors/teach-a-running-back-the-aiming-gap-and-pulling-guard-assignment-7694eec414.json": {
+      "path": "/chum/answers/doors/teach-a-running-back-the-aiming-gap-and-pulling-guard-assignment-7694eec414.json",
+      "content_sha256": "df8ec45ff58156b133cf86a36a3fc04f2a0ee2c4de14f498a97668dea74d9f52",
+      "last_changed": "2026-10-14T23:57:09.569Z",
+      "priority": 100
+    },
     "/chum/answers/doors/teach-me-about-regional-power-systems-7d95517b71/": {
       "path": "/chum/answers/doors/teach-me-about-regional-power-systems-7d95517b71/",
       "content_sha256": "72c5a74f13114360580f94ff3c035f431d8fe7fcd49e7a7679957455479deb94",
@@ -16169,6 +16265,18 @@
       "path": "/chum/answers/doors/trusted-support-circle-concepts-1f2644e586.json",
       "content_sha256": "6ea0dbe11bd7e332e35d06f95dd4394d321d8ba32b62e771fe04e4e679fbaecd",
       "last_changed": "2026-10-01T05:00:27.354Z",
+      "priority": 100
+    },
+    "/chum/answers/doors/try-synthetic-scheme-changes-in-an-experimental-drive-simulation-ebcfc59a37/": {
+      "path": "/chum/answers/doors/try-synthetic-scheme-changes-in-an-experimental-drive-simulation-ebcfc59a37/",
+      "content_sha256": "e71057c9feda2a4ff0ecc0bf0cc220b8961772cdca97a62145be1b80e8bc2253",
+      "last_changed": "2026-10-14T23:57:09.569Z",
+      "priority": 100
+    },
+    "/chum/answers/doors/try-synthetic-scheme-changes-in-an-experimental-drive-simulation-ebcfc59a37.json": {
+      "path": "/chum/answers/doors/try-synthetic-scheme-changes-in-an-experimental-drive-simulation-ebcfc59a37.json",
+      "content_sha256": "c0515909aae03981b660b168479dc5005d0ed870ca37a223ba27a18d89c22fed",
+      "last_changed": "2026-10-14T23:57:09.569Z",
       "priority": 100
     },
     "/chum/answers/doors/turn-a-long-video-into-a-searchable-transcript-and-timestamped-timeline-19dcd662cb/": {
@@ -16721,6 +16829,18 @@
       "path": "/chum/answers/doors/visitors-are-not-turning-into-leads-ae35f23b1a.json",
       "content_sha256": "5afb22a427489605df39c998a33744078ddcc41d44cb1760bc52a4125f496fcc",
       "last_changed": "2026-10-06T16:42:20.155Z",
+      "priority": 100
+    },
+    "/chum/answers/doors/visualize-blitz-pickup-and-offensive-line-blocking-responsibility-fb92ea71d7/": {
+      "path": "/chum/answers/doors/visualize-blitz-pickup-and-offensive-line-blocking-responsibility-fb92ea71d7/",
+      "content_sha256": "9de66615d46d6c012e42fabbe63d9f7480d11bd18841c1ca5d183f619246bc20",
+      "last_changed": "2026-10-14T23:57:09.569Z",
+      "priority": 100
+    },
+    "/chum/answers/doors/visualize-blitz-pickup-and-offensive-line-blocking-responsibility-fb92ea71d7.json": {
+      "path": "/chum/answers/doors/visualize-blitz-pickup-and-offensive-line-blocking-responsibility-fb92ea71d7.json",
+      "content_sha256": "4b00151bc6b4107c1f5bc48f7bd4deb5589886b385638e67544ed34d1af6df8c",
+      "last_changed": "2026-10-14T23:57:09.569Z",
       "priority": 100
     },
     "/chum/answers/doors/warehouse-or-dock-team-training-e2dcbbdfc2/": {
@@ -17763,14 +17883,14 @@
     },
     "/feed.xml": {
       "path": "/feed.xml",
-      "content_sha256": "e342f64ddd67bdaab13e5ba9b8fffa160cd1915270b8c2a183ef92938c088e69",
-      "last_changed": "2026-10-08T06:27:28.712Z",
+      "content_sha256": "6e599b8728d3e737c57e16abf126eb4d373d37321062530fedd5db24f6caac1a",
+      "last_changed": "2026-10-14T23:57:09.569Z",
       "priority": 60
     },
     "/feed.json": {
       "path": "/feed.json",
-      "content_sha256": "7a1d5d391a7cd7e4529e8b549d23cefdc89b908c40c3206aaa139bafc073d27a",
-      "last_changed": "2026-10-08T06:27:28.712Z",
+      "content_sha256": "e3903b54db6690bbe90c6584bbe718166957d3d487879e6b8c33e657e3f4bdbb",
+      "last_changed": "2026-10-14T23:57:09.569Z",
       "priority": 60
     },
     "/opensearch.xml": {
@@ -17781,20 +17901,20 @@
     },
     "/.well-known/evercraft-syndication.json": {
       "path": "/.well-known/evercraft-syndication.json",
-      "content_sha256": "37a7c43355150891e91923d5fa20b2c57856d50509d838f6ff87aca5f7c62665",
-      "last_changed": "2026-10-08T06:27:28.712Z",
+      "content_sha256": "f976e26d4c11023aea513184ce266e2da2eead09f0b6549462e6d7391083ae51",
+      "last_changed": "2026-10-14T23:57:09.569Z",
       "priority": 84
     },
     "/chum/syndication/": {
       "path": "/chum/syndication/",
-      "content_sha256": "ae078bcbfe407360f6023ed6b7bfa29b74629b2f3c26add8d54c9de55d8c8b8c",
-      "last_changed": "2026-10-08T06:27:28.712Z",
+      "content_sha256": "2ac4b61f15eb593121677b484020ca274664b64333affbaa4f2a9fd9b8ba1e6c",
+      "last_changed": "2026-10-14T23:57:09.569Z",
       "priority": 80
     },
     "/chum/syndication/index.json": {
       "path": "/chum/syndication/index.json",
-      "content_sha256": "0bc8e39b156c1549b172a94f235e4bc27f7d953a72bfc2948602ae24c66d1563",
-      "last_changed": "2026-10-08T06:27:28.712Z",
+      "content_sha256": "00e07eddcd1c4999ae45668417354cdfe30acfe8424cd92a025b5d79698e53d2",
+      "last_changed": "2026-10-14T23:57:09.569Z",
       "priority": 80
     }
   }

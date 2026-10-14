@@ -3,11 +3,11 @@
   "provider": "Evercraft LLC",
   "generated_from": {
     "product_directory_schema": "evercraft.product-directory.v1",
-    "product_directory_updated_at": "2026-10-07",
+    "product_directory_updated_at": "2026-10-14",
     "machine_catalog_schema": "evercraft.machine-catalog.snapshot.v1",
     "machine_catalog_source_generated_at": "2026-09-30T20:21:00.000Z",
     "registry_schema": "evercraft.agent.registry.v1",
-    "registry_updated_at": "2026-10-06"
+    "registry_updated_at": "2026-10-14"
   },
   "purpose": "Brand-blind machine routing from a user problem to the smallest relevant public Evercraft capability while preserving readiness, evidence, pricing, permissions and human-confirmation boundaries.",
   "routing_rule": "Start from pain language. Prefer the smallest relevant capability with the strongest verified invocation state. Never upgrade discovery-only, held, authentication-required, pricing, payment, entitlement or provider-pickup state by inference.",
@@ -28,10 +28,10 @@
     "provider_verification_required_for_paid_state": true
   },
   "summary": {
-    "entries": 119,
-    "product_entries": 67,
+    "entries": 120,
+    "product_entries": 68,
     "machine_offer_entries": 52,
-    "entries_with_pain_language": 119,
+    "entries_with_pain_language": 120,
     "sell_now_machine_offers": 17,
     "entries_with_declared_mcp": 1,
     "callable_or_routable_entries": 1,
@@ -4648,6 +4648,56 @@
       "source_refs": [
         "public/.well-known/evercraft-products.json",
         "registry/catalog.json"
+      ]
+    },
+    {
+      "capability_id": "product:game-fabric",
+      "product_key": "game-fabric",
+      "kind": "product",
+      "name": "Game Fabric",
+      "class": "evidence_first_sports_playbook_research",
+      "pain_phrases": [
+        "animate a football play call with receiver routes and defensive assignments",
+        "show 11-on-11 football formation teaching on a phone",
+        "visualize blitz pickup and offensive line blocking responsibility",
+        "teach a running back the aiming gap and pulling guard assignment",
+        "inspect contradictions and unknowns in tagged football film",
+        "try synthetic scheme changes in an experimental drive simulation",
+        "explore coach-designed playbook classroom pilot across sports",
+        "request a research partnership for basketball soccer volleyball baseball or wrestling classroom"
+      ],
+      "problem": null,
+      "inputs": null,
+      "outputs": null,
+      "canonical_url": "https://github.com/jgaethle10/forge-operator/tree/main/registry/game-fabric",
+      "registry_name": null,
+      "mcp": null,
+      "routing": {
+        "preferred": "universal_machine_commerce",
+        "target": null
+      },
+      "legacy_marketing_route_suppressed": false,
+      "authority": "public synthetic football teaching demo and multisport research discovery; no team data collection, automated outbound, real opponent report, payment or execution authority",
+      "boundaries": [
+        "playable football demo is constrained teaching choreography not calibrated sports prediction or complete collision physics",
+        "all public example plays and film-review datasets are fictional or synthetic",
+        "nonfootball sport-specific classrooms are research-stage invitations and are not presented as deployed",
+        "no private team film, identifiable youth athletes, school records, proprietary plays, or medical information is accepted by public demos",
+        "real opponent findings require permissioned film, independent review, and coaching signoff",
+        "no paid pilot, verified checkout, coach adoption or external AI provider pickup has been established",
+        "public discovery creates no outbound email, account access, payment authority or agent execution permission"
+      ],
+      "commercial_state": "product_contract",
+      "machine_state": "discovery_only",
+      "pricing": null,
+      "offers": [],
+      "commercial": null,
+      "human_confirmation_required": false,
+      "confirmation": "No payment obligation is created by discovery.",
+      "payment_authority": null,
+      "invocation_status": "Route through the universal Evercraft discovery surface unless a bounded specialist interface is later verified.",
+      "source_refs": [
+        "public/.well-known/evercraft-products.json"
       ]
     },
     {

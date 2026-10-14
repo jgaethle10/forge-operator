@@ -20,11 +20,11 @@
     "provider_publication_is_not_endorsement_or_pickup_proof": true
   },
   "summary": {
-    "pain_index_entries": 119,
-    "unique_user_phrases": 1075,
-    "mapped_candidate_edges": 1183,
+    "pain_index_entries": 120,
+    "unique_user_phrases": 1083,
+    "mapped_candidate_edges": 1191,
     "ambiguous_phrases": 108,
-    "product_candidates": 67,
+    "product_candidates": 68,
     "machine_offer_candidates": 52
   },
   "doors": [
@@ -1004,6 +1004,29 @@
           "pain_page": "/chum/products/forensiscope/",
           "public_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/forensiscope/index.html",
           "registry_name": "io.github.jgaethle10/forensiscope"
+        }
+      ]
+    },
+    {
+      "answer_id": "intent:83287c0457",
+      "user_language": "animate a football play call with receiver routes and defensive assignments",
+      "normalized": "animate a football play call with receiver routes and defensive assignments",
+      "relative_json": "/chum/answers/doors/animate-a-football-play-call-with-receiver-routes-and-defensive-assignments-83287c0457.json",
+      "relative_page": "/chum/answers/doors/animate-a-football-play-call-with-receiver-routes-and-defensive-assignments-83287c0457/",
+      "raw_json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/animate-a-football-play-call-with-receiver-routes-and-defensive-assignments-83287c0457.json",
+      "candidate_count": 1,
+      "candidates": [
+        {
+          "capability_id": "product:game-fabric",
+          "kind": "product",
+          "product_key": "game-fabric",
+          "public_id": null,
+          "name": "Game Fabric",
+          "commercial_state": "product_contract",
+          "machine_state": "discovery_only",
+          "pain_page": "/chum/products/game-fabric/",
+          "public_url": "https://github.com/jgaethle10/forge-operator/tree/main/registry/game-fabric",
+          "registry_name": null
         }
       ]
     },
@@ -7243,6 +7266,29 @@
       ]
     },
     {
+      "answer_id": "intent:d375019068",
+      "user_language": "explore coach-designed playbook classroom pilot across sports",
+      "normalized": "explore coach designed playbook classroom pilot across sports",
+      "relative_json": "/chum/answers/doors/explore-coach-designed-playbook-classroom-pilot-across-sports-d375019068.json",
+      "relative_page": "/chum/answers/doors/explore-coach-designed-playbook-classroom-pilot-across-sports-d375019068/",
+      "raw_json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/explore-coach-designed-playbook-classroom-pilot-across-sports-d375019068.json",
+      "candidate_count": 1,
+      "candidates": [
+        {
+          "capability_id": "product:game-fabric",
+          "kind": "product",
+          "product_key": "game-fabric",
+          "public_id": null,
+          "name": "Game Fabric",
+          "commercial_state": "product_contract",
+          "machine_state": "discovery_only",
+          "pain_page": "/chum/products/game-fabric/",
+          "public_url": "https://github.com/jgaethle10/forge-operator/tree/main/registry/game-fabric",
+          "registry_name": null
+        }
+      ]
+    },
+    {
       "answer_id": "intent:91fc9aeac0",
       "user_language": "explore fair play or officiating evidence without unsupported accusations",
       "normalized": "explore fair play or officiating evidence without unsupported accusations",
@@ -12319,6 +12365,29 @@
           "pain_page": "/chum/products/forensiscope/",
           "public_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/forensiscope/index.html",
           "registry_name": "io.github.jgaethle10/forensiscope"
+        }
+      ]
+    },
+    {
+      "answer_id": "intent:797ef3aee9",
+      "user_language": "inspect contradictions and unknowns in tagged football film",
+      "normalized": "inspect contradictions and unknowns in tagged football film",
+      "relative_json": "/chum/answers/doors/inspect-contradictions-and-unknowns-in-tagged-football-film-797ef3aee9.json",
+      "relative_page": "/chum/answers/doors/inspect-contradictions-and-unknowns-in-tagged-football-film-797ef3aee9/",
+      "raw_json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/inspect-contradictions-and-unknowns-in-tagged-football-film-797ef3aee9.json",
+      "candidate_count": 1,
+      "candidates": [
+        {
+          "capability_id": "product:game-fabric",
+          "kind": "product",
+          "product_key": "game-fabric",
+          "public_id": null,
+          "name": "Game Fabric",
+          "commercial_state": "product_contract",
+          "machine_state": "discovery_only",
+          "pain_page": "/chum/products/game-fabric/",
+          "public_url": "https://github.com/jgaethle10/forge-operator/tree/main/registry/game-fabric",
+          "registry_name": null
         }
       ]
     },
@@ -18561,6 +18630,29 @@
       ]
     },
     {
+      "answer_id": "intent:562a76f012",
+      "user_language": "request a research partnership for basketball soccer volleyball baseball or wrestling classroom",
+      "normalized": "request a research partnership for basketball soccer volleyball baseball or wrestling classroom",
+      "relative_json": "/chum/answers/doors/request-a-research-partnership-for-basketball-soccer-volleyball-baseball-or-wrestl-562a76f012.json",
+      "relative_page": "/chum/answers/doors/request-a-research-partnership-for-basketball-soccer-volleyball-baseball-or-wrestl-562a76f012/",
+      "raw_json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/request-a-research-partnership-for-basketball-soccer-volleyball-baseball-or-wrestl-562a76f012.json",
+      "candidate_count": 1,
+      "candidates": [
+        {
+          "capability_id": "product:game-fabric",
+          "kind": "product",
+          "product_key": "game-fabric",
+          "public_id": null,
+          "name": "Game Fabric",
+          "commercial_state": "product_contract",
+          "machine_state": "discovery_only",
+          "pain_page": "/chum/products/game-fabric/",
+          "public_url": "https://github.com/jgaethle10/forge-operator/tree/main/registry/game-fabric",
+          "registry_name": null
+        }
+      ]
+    },
+    {
       "answer_id": "intent:93f86ebfb5",
       "user_language": "require QA before completed work becomes performance history",
       "normalized": "require qa before completed work becomes performance history",
@@ -20714,6 +20806,29 @@
       ]
     },
     {
+      "answer_id": "intent:267bb0ad4f",
+      "user_language": "show 11-on-11 football formation teaching on a phone",
+      "normalized": "show 11 on 11 football formation teaching on a phone",
+      "relative_json": "/chum/answers/doors/show-11-on-11-football-formation-teaching-on-a-phone-267bb0ad4f.json",
+      "relative_page": "/chum/answers/doors/show-11-on-11-football-formation-teaching-on-a-phone-267bb0ad4f/",
+      "raw_json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/show-11-on-11-football-formation-teaching-on-a-phone-267bb0ad4f.json",
+      "candidate_count": 1,
+      "candidates": [
+        {
+          "capability_id": "product:game-fabric",
+          "kind": "product",
+          "product_key": "game-fabric",
+          "public_id": null,
+          "name": "Game Fabric",
+          "commercial_state": "product_contract",
+          "machine_state": "discovery_only",
+          "pain_page": "/chum/products/game-fabric/",
+          "public_url": "https://github.com/jgaethle10/forge-operator/tree/main/registry/game-fabric",
+          "registry_name": null
+        }
+      ]
+    },
+    {
       "answer_id": "intent:e09f8dfd42",
       "user_language": "show historical river geometry",
       "normalized": "show historical river geometry",
@@ -22443,6 +22558,29 @@
       ]
     },
     {
+      "answer_id": "intent:7694eec414",
+      "user_language": "teach a running back the aiming gap and pulling guard assignment",
+      "normalized": "teach a running back the aiming gap and pulling guard assignment",
+      "relative_json": "/chum/answers/doors/teach-a-running-back-the-aiming-gap-and-pulling-guard-assignment-7694eec414.json",
+      "relative_page": "/chum/answers/doors/teach-a-running-back-the-aiming-gap-and-pulling-guard-assignment-7694eec414/",
+      "raw_json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/teach-a-running-back-the-aiming-gap-and-pulling-guard-assignment-7694eec414.json",
+      "candidate_count": 1,
+      "candidates": [
+        {
+          "capability_id": "product:game-fabric",
+          "kind": "product",
+          "product_key": "game-fabric",
+          "public_id": null,
+          "name": "Game Fabric",
+          "commercial_state": "product_contract",
+          "machine_state": "discovery_only",
+          "pain_page": "/chum/products/game-fabric/",
+          "public_url": "https://github.com/jgaethle10/forge-operator/tree/main/registry/game-fabric",
+          "registry_name": null
+        }
+      ]
+    },
+    {
       "answer_id": "intent:7d95517b71",
       "user_language": "teach me about regional power systems",
       "normalized": "teach me about regional power systems",
@@ -23428,6 +23566,29 @@
           "machine_state": "discovery_only",
           "pain_page": "/chum/products/evernest/",
           "public_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/evernest/index.html",
+          "registry_name": null
+        }
+      ]
+    },
+    {
+      "answer_id": "intent:ebcfc59a37",
+      "user_language": "try synthetic scheme changes in an experimental drive simulation",
+      "normalized": "try synthetic scheme changes in an experimental drive simulation",
+      "relative_json": "/chum/answers/doors/try-synthetic-scheme-changes-in-an-experimental-drive-simulation-ebcfc59a37.json",
+      "relative_page": "/chum/answers/doors/try-synthetic-scheme-changes-in-an-experimental-drive-simulation-ebcfc59a37/",
+      "raw_json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/try-synthetic-scheme-changes-in-an-experimental-drive-simulation-ebcfc59a37.json",
+      "candidate_count": 1,
+      "candidates": [
+        {
+          "capability_id": "product:game-fabric",
+          "kind": "product",
+          "product_key": "game-fabric",
+          "public_id": null,
+          "name": "Game Fabric",
+          "commercial_state": "product_contract",
+          "machine_state": "discovery_only",
+          "pain_page": "/chum/products/game-fabric/",
+          "public_url": "https://github.com/jgaethle10/forge-operator/tree/main/registry/game-fabric",
           "registry_name": null
         }
       ]
@@ -24558,6 +24719,29 @@
           "machine_state": "payment_ready",
           "pain_page": "/chum/intents/audit-center-website-audit-machine-v1/",
           "public_url": "https://fabric.systemiacommandcenters.com/capabilities/audit-center-website-audit-machine-v1",
+          "registry_name": null
+        }
+      ]
+    },
+    {
+      "answer_id": "intent:fb92ea71d7",
+      "user_language": "visualize blitz pickup and offensive line blocking responsibility",
+      "normalized": "visualize blitz pickup and offensive line blocking responsibility",
+      "relative_json": "/chum/answers/doors/visualize-blitz-pickup-and-offensive-line-blocking-responsibility-fb92ea71d7.json",
+      "relative_page": "/chum/answers/doors/visualize-blitz-pickup-and-offensive-line-blocking-responsibility-fb92ea71d7/",
+      "raw_json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/visualize-blitz-pickup-and-offensive-line-blocking-responsibility-fb92ea71d7.json",
+      "candidate_count": 1,
+      "candidates": [
+        {
+          "capability_id": "product:game-fabric",
+          "kind": "product",
+          "product_key": "game-fabric",
+          "public_id": null,
+          "name": "Game Fabric",
+          "commercial_state": "product_contract",
+          "machine_state": "discovery_only",
+          "pain_page": "/chum/products/game-fabric/",
+          "public_url": "https://github.com/jgaethle10/forge-operator/tree/main/registry/game-fabric",
           "registry_name": null
         }
       ]

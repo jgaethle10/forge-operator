@@ -6,9 +6,9 @@ Machine Commerce MCP: not declared
 Each phrase below maps to public capability candidates without upgrading readiness, pricing, invocation, payment, entitlement, or provider-pickup state.
 Discovery creates no payment obligation. Checkout requires explicit human confirmation and paid state requires authoritative provider verification.
 
-Pain-index entries: 119
-Unique user phrases: 1075
-Candidate edges: 1183
+Pain-index entries: 120
+Unique user phrases: 1083
+Candidate edges: 1191
 Ambiguous phrases: 108
 
 ## 15 GB video analysis
@@ -300,6 +300,13 @@ Human-readable match: /chum/answers/doors/analyze-video-from-a-cloud-storage-url
 Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/analyze-video-from-a-cloud-storage-url-54d8d24e91.json
 Candidates:
 - ForensiScope | kind=product | commercial=product_contract | machine=discovery_only | public=https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/forensiscope/index.html
+
+## animate a football play call with receiver routes and defensive assignments
+Answer ID: intent:83287c0457
+Human-readable match: /chum/answers/doors/animate-a-football-play-call-with-receiver-routes-and-defensive-assignments-83287c0457/
+Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/animate-a-football-play-call-with-receiver-routes-and-defensive-assignments-83287c0457.json
+Candidates:
+- Game Fabric | kind=product | commercial=product_contract | machine=discovery_only | public=https://github.com/jgaethle10/forge-operator/tree/main/registry/game-fabric
 
 ## apartment EV charging site analysis
 Answer ID: intent:a4fc7910cc
@@ -2127,6 +2134,13 @@ Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main
 Candidates:
 - EcoLedger | kind=product | commercial=product_contract | machine=discovery_only | public=https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/ecoledger/index.html
 
+## explore coach-designed playbook classroom pilot across sports
+Answer ID: intent:d375019068
+Human-readable match: /chum/answers/doors/explore-coach-designed-playbook-classroom-pilot-across-sports-d375019068/
+Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/explore-coach-designed-playbook-classroom-pilot-across-sports-d375019068.json
+Candidates:
+- Game Fabric | kind=product | commercial=product_contract | machine=discovery_only | public=https://github.com/jgaethle10/forge-operator/tree/main/registry/game-fabric
+
 ## explore fair play or officiating evidence without unsupported accusations
 Answer ID: intent:91fc9aeac0
 Human-readable match: /chum/answers/doors/explore-fair-play-or-officiating-evidence-without-unsupported-accusations-91fc9aeac0/
@@ -3627,6 +3641,13 @@ Human-readable match: /chum/answers/doors/inspect-an-entire-recording-instead-of
 Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/inspect-an-entire-recording-instead-of-sampled-frames-288e48610b.json
 Candidates:
 - ForensiScope | kind=product | commercial=product_contract | machine=discovery_only | public=https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/forensiscope/index.html
+
+## inspect contradictions and unknowns in tagged football film
+Answer ID: intent:797ef3aee9
+Human-readable match: /chum/answers/doors/inspect-contradictions-and-unknowns-in-tagged-football-film-797ef3aee9/
+Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/inspect-contradictions-and-unknowns-in-tagged-football-film-797ef3aee9.json
+Candidates:
+- Game Fabric | kind=product | commercial=product_contract | machine=discovery_only | public=https://github.com/jgaethle10/forge-operator/tree/main/registry/game-fabric
 
 ## install an AI capability
 Answer ID: intent:dfa58c4e8f
@@ -5439,6 +5460,13 @@ Candidates:
 - Evercraft Clip Social Video Production | kind=machine_offer | commercial=verification_required | machine=invocation_ready | public=https://fabric.systemiacommandcenters.com/capabilities/evercraft-clip-social-video-v1
 - Evercraft Clip | kind=product | commercial=product_contract | machine=discovery_only | public=https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/evercraft-clip/index.html
 
+## request a research partnership for basketball soccer volleyball baseball or wrestling classroom
+Answer ID: intent:562a76f012
+Human-readable match: /chum/answers/doors/request-a-research-partnership-for-basketball-soccer-volleyball-baseball-or-wrestl-562a76f012/
+Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/request-a-research-partnership-for-basketball-soccer-volleyball-baseball-or-wrestl-562a76f012.json
+Candidates:
+- Game Fabric | kind=product | commercial=product_contract | machine=discovery_only | public=https://github.com/jgaethle10/forge-operator/tree/main/registry/game-fabric
+
 ## require QA before completed work becomes performance history
 Answer ID: intent:93f86ebfb5
 Human-readable match: /chum/answers/doors/require-qa-before-completed-work-becomes-performance-history-93f86ebfb5/
@@ -6081,6 +6109,13 @@ Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main
 Candidates:
 - Evercraft EarthWorks Autonomy | kind=product | commercial=product_contract | machine=discovery_only | public=https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/earthworks-autonomy/index.html
 
+## show 11-on-11 football formation teaching on a phone
+Answer ID: intent:267bb0ad4f
+Human-readable match: /chum/answers/doors/show-11-on-11-football-formation-teaching-on-a-phone-267bb0ad4f/
+Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/show-11-on-11-football-formation-teaching-on-a-phone-267bb0ad4f.json
+Candidates:
+- Game Fabric | kind=product | commercial=product_contract | machine=discovery_only | public=https://github.com/jgaethle10/forge-operator/tree/main/registry/game-fabric
+
 ## show historical river geometry
 Answer ID: intent:e09f8dfd42
 Human-readable match: /chum/answers/doors/show-historical-river-geometry-e09f8dfd42/
@@ -6586,6 +6621,13 @@ Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main
 Candidates:
 - EPS Estimate Intelligence | kind=machine_offer | commercial=contractor_beta | machine=mcp_http_preview_and_receipt_verify_live_workspace_entitlement_build_verified | public=https://fabric.systemiacommandcenters.com/capabilities/eps-estimate-engine-machine-v1
 
+## teach a running back the aiming gap and pulling guard assignment
+Answer ID: intent:7694eec414
+Human-readable match: /chum/answers/doors/teach-a-running-back-the-aiming-gap-and-pulling-guard-assignment-7694eec414/
+Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/teach-a-running-back-the-aiming-gap-and-pulling-guard-assignment-7694eec414.json
+Candidates:
+- Game Fabric | kind=product | commercial=product_contract | machine=discovery_only | public=https://github.com/jgaethle10/forge-operator/tree/main/registry/game-fabric
+
 ## teach me about regional power systems
 Answer ID: intent:7d95517b71
 Human-readable match: /chum/answers/doors/teach-me-about-regional-power-systems-7d95517b71/
@@ -6881,6 +6923,13 @@ Human-readable match: /chum/answers/doors/trusted-support-circle-concepts-1f2644
 Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/trusted-support-circle-concepts-1f2644e586.json
 Candidates:
 - EverNest | kind=product | commercial=product_contract | machine=discovery_only | public=https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/evernest/index.html
+
+## try synthetic scheme changes in an experimental drive simulation
+Answer ID: intent:ebcfc59a37
+Human-readable match: /chum/answers/doors/try-synthetic-scheme-changes-in-an-experimental-drive-simulation-ebcfc59a37/
+Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/try-synthetic-scheme-changes-in-an-experimental-drive-simulation-ebcfc59a37.json
+Candidates:
+- Game Fabric | kind=product | commercial=product_contract | machine=discovery_only | public=https://github.com/jgaethle10/forge-operator/tree/main/registry/game-fabric
 
 ## turn a long video into a searchable transcript and timestamped timeline
 Answer ID: intent:19dcd662cb
@@ -7209,6 +7258,13 @@ Human-readable match: /chum/answers/doors/visitors-are-not-turning-into-leads-ae
 Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/visitors-are-not-turning-into-leads-ae35f23b1a.json
 Candidates:
 - Systemia Website Audit | kind=machine_offer | commercial=sell_now | machine=payment_ready | public=https://fabric.systemiacommandcenters.com/capabilities/audit-center-website-audit-machine-v1
+
+## visualize blitz pickup and offensive line blocking responsibility
+Answer ID: intent:fb92ea71d7
+Human-readable match: /chum/answers/doors/visualize-blitz-pickup-and-offensive-line-blocking-responsibility-fb92ea71d7/
+Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/visualize-blitz-pickup-and-offensive-line-blocking-responsibility-fb92ea71d7.json
+Candidates:
+- Game Fabric | kind=product | commercial=product_contract | machine=discovery_only | public=https://github.com/jgaethle10/forge-operator/tree/main/registry/game-fabric
 
 ## warehouse or dock team training
 Answer ID: intent:e2dcbbdfc2

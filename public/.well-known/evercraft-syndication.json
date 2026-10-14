@@ -2,7 +2,7 @@
   "schema": "evercraft.syndication.v1",
   "provider": "Evercraft LLC",
   "coordinator": "CHUM",
-  "updated_at": "2026-10-06T00:00:00.000Z",
+  "updated_at": "2026-10-14T00:00:00.000Z",
   "purpose": "Fan one truthful public product graph into standard crawler, search, LLM, agent, feed and authorized publishing surfaces without duplicate doorway spam.",
   "canonical_sources": {
     "registry": "/.well-known/evercraft-products.json",
@@ -36,7 +36,7 @@
     "rule": "Only authorized brand destinations may auto-publish. Dedupe by product content hash and publish material changes, not repeated copies.",
     "current_change_queue": "/chum/syndication/social-queue.json"
   },
-  "product_count": 67,
+  "product_count": 68,
   "products": [
     {
       "product_key": "aliev",
@@ -499,6 +499,17 @@
       "registry_name": "io.github.jgaethle10/forensiscope",
       "mcp": null,
       "content_sha256": "a48c8b0b0f89fdb53dc8d67f154449f2b5cc8f78e9d9677dde556ae202be7863"
+    },
+    {
+      "product_key": "game-fabric",
+      "name": "Game Fabric",
+      "canonical_url": "https://github.com/jgaethle10/forge-operator/tree/main/registry/game-fabric",
+      "mirror": "/chum/products/game-fabric/",
+      "llms": "/chum/products/game-fabric/llms.txt",
+      "discovery": "/chum/products/game-fabric/ai-discovery.json",
+      "registry_name": null,
+      "mcp": null,
+      "content_sha256": "19ffaad1e5d44fa3ccfa1cad616badb1a887b8693e294d9d4c1464cab6527bfb"
     },
     {
       "product_key": "global-energy-atlas",

@@ -152,6 +152,10 @@
   <url><loc>/chum/products/forensiscope/ai-conformance.json</loc></url>
   <url><loc>/chum/products/forensiscope/ai-discovery.json</loc></url>
   <url><loc>/chum/products/forensiscope/llms.txt</loc></url>
+  <url><loc>/chum/products/game-fabric/</loc></url>
+  <url><loc>/chum/products/game-fabric/ai-conformance.json</loc></url>
+  <url><loc>/chum/products/game-fabric/ai-discovery.json</loc></url>
+  <url><loc>/chum/products/game-fabric/llms.txt</loc></url>
   <url><loc>/chum/products/global-energy-atlas/</loc></url>
   <url><loc>/chum/products/global-energy-atlas/ai-conformance.json</loc></url>
   <url><loc>/chum/products/global-energy-atlas/ai-discovery.json</loc></url>

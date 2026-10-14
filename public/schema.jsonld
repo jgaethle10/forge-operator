@@ -543,6 +543,18 @@
     },
     {
       "@type": "Service",
+      "@id": "https://github.com/jgaethle10/forge-operator/tree/main/registry/game-fabric#evercraft-service",
+      "name": "Game Fabric",
+      "alternateName": [],
+      "url": "https://github.com/jgaethle10/forge-operator/tree/main/registry/game-fabric",
+      "provider": {
+        "@id": "https://github.com/jgaethle10/forge-operator#evercraft"
+      },
+      "serviceType": "evidence_first_sports_playbook_research",
+      "description": "animate a football play call with receiver routes and defensive assignments; show 11-on-11 football formation teaching on a phone; visualize blitz pickup and offensive line blocking responsibility; teach a running back the aiming gap and pulling guard assignment"
+    },
+    {
+      "@type": "Service",
       "@id": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/global-energy-atlas/index.html#evercraft-service",
       "name": "Global Energy Atlas",
       "alternateName": [],

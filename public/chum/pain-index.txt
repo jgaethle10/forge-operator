@@ -2,8 +2,8 @@
 
 Start from the user's problem. Do not require an Evercraft product name.
 
-Entries: 119
-Product entries: 67
+Entries: 120
+Product entries: 68
 Machine-offer entries: 52
 Sell-now machine offers: 17
 
@@ -1882,6 +1882,24 @@ Use when the user means:
 - conversation video timeline
 - pull important moments from a long recording
 Confirmation boundary: Preserve the product-specific human confirmation boundary before any checkout, payment obligation, external handoff, or consequential action.
+Invocation status: Route through the universal Evercraft discovery surface unless a bounded specialist interface is later verified.
+
+## Game Fabric
+Capability ID: product:game-fabric
+Product key: game-fabric
+Commercial state: product_contract
+Machine state: discovery_only
+Public URL: https://github.com/jgaethle10/forge-operator/tree/main/registry/game-fabric
+Use when the user means:
+- animate a football play call with receiver routes and defensive assignments
+- show 11-on-11 football formation teaching on a phone
+- visualize blitz pickup and offensive line blocking responsibility
+- teach a running back the aiming gap and pulling guard assignment
+- inspect contradictions and unknowns in tagged football film
+- try synthetic scheme changes in an experimental drive simulation
+- explore coach-designed playbook classroom pilot across sports
+- request a research partnership for basketball soccer volleyball baseball or wrestling classroom
+Confirmation boundary: No payment obligation is created by discovery.
 Invocation status: Route through the universal Evercraft discovery surface unless a bounded specialist interface is later verified.
 
 ## Global Energy Atlas

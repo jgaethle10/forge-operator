@@ -1,0 +1,55 @@
+{
+  "schema": "evercraft.chum.answer-door.v2",
+  "provider": "Evercraft LLC",
+  "generated_from": "public/.well-known/evercraft-pain-index.json",
+  "updated_at": "2026-09-30T20:21:00.000Z",
+  "answer_id": "intent:562a76f012",
+  "user_language": "request a research partnership for basketball soccer volleyball baseball or wrestling classroom",
+  "normalized": "request a research partnership for basketball soccer volleyball baseball or wrestling classroom",
+  "purpose": "Brand-blind discovery cue from natural user language to truthful public Evercraft capability candidates.",
+  "candidate_count": 1,
+  "candidates": [
+    {
+      "capability_id": "product:game-fabric",
+      "kind": "product",
+      "product_key": "game-fabric",
+      "public_id": null,
+      "name": "Game Fabric",
+      "problem": null,
+      "pricing": null,
+      "commercial_state": "product_contract",
+      "machine_state": "discovery_only",
+      "public_url": "https://github.com/jgaethle10/forge-operator/tree/main/registry/game-fabric",
+      "pain_page": "/chum/products/game-fabric/",
+      "registry_name": null,
+      "direct_mcp": null,
+      "machine_review_url": null,
+      "machine_offer_url": null,
+      "universal_mcp": null,
+      "confirmation": "No payment obligation is created by discovery.",
+      "invocation_status": "Route through the universal Evercraft discovery surface unless a bounded specialist interface is later verified.",
+      "authority": "public synthetic football teaching demo and multisport research discovery; no team data collection, automated outbound, real opponent report, payment or execution authority",
+      "boundaries": [
+        "playable football demo is constrained teaching choreography not calibrated sports prediction or complete collision physics",
+        "all public example plays and film-review datasets are fictional or synthetic",
+        "nonfootball sport-specific classrooms are research-stage invitations and are not presented as deployed",
+        "no private team film, identifiable youth athletes, school records, proprietary plays, or medical information is accepted by public demos",
+        "real opponent findings require permissioned film, independent review, and coaching signoff",
+        "no paid pilot, verified checkout, coach adoption or external AI provider pickup has been established",
+        "public discovery creates no outbound email, account access, payment authority or agent execution permission"
+      ]
+    }
+  ],
+  "routing_policy": {
+    "fit_required": true,
+    "no_forced_product_match": true,
+    "smallest_sufficient_capability": true,
+    "preserve_commercial_and_machine_state": true,
+    "discovery_creates_payment_obligation": false,
+    "read_only_discovery_before_commerce": true,
+    "checkout_requires_explicit_human_confirmation": true,
+    "checkout_is_payment_proof": false,
+    "paid_state_requires_authoritative_provider_verification": true,
+    "provider_publication_is_not_endorsement_or_pickup_proof": true
+  }
+}

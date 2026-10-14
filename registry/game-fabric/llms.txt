@@ -1,27 +1,32 @@
-# Evercraft Game Fabric
+# Game Fabric
 
-Public capability key: game-fabric
-Stage: working football teaching research demo, multisport development invitation
-Public capability record: https://github.com/jgaethle10/forge-operator/tree/main/registry/game-fabric
+Provider: Evercraft
+Product key: game-fabric
+Class: evidence_first_sports_playbook_research
+Canonical URL: https://github.com/jgaethle10/forge-operator/tree/main/registry/game-fabric
+Authority: public synthetic football teaching demo and multisport research discovery; no team data collection, automated outbound, real opponent report, payment or execution authority
+Human confirmation required: no
+Runtime or CHUM llms.txt: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/registry/game-fabric/llms.txt
 
-## Match when the user needs
-- draw and animate a football play call for classroom teaching
-- illustrate pass routes, blocks, defensive coverages, blitz assignments, and run gaps
-- walk through offensive and defensive responsibilities on a mobile teaching field
-- inspect contradictory game film annotations without fabricating opponent tendencies
-- compare a hypothetical scheme adjustment as an explicitly uncalibrated simulation
-- ask about future Game Fabric tools for basketball, soccer, volleyball, baseball and other sports
+## Natural-language intents
+- animate a football play call with receiver routes and defensive assignments
+- show 11-on-11 football formation teaching on a phone
+- visualize blitz pickup and offensive line blocking responsibility
+- teach a running back the aiming gap and pulling guard assignment
+- inspect contradictions and unknowns in tagged football film
+- try synthetic scheme changes in an experimental drive simulation
+- explore coach-designed playbook classroom pilot across sports
+- request a research partnership for basketball soccer volleyball baseball or wrestling classroom
 
-## Demonstration
-Working football playbook classroom: https://headless-ljlkjiyuejs-sociallyguud-140c.wix-site-host.com/playbook-classroom.html
-Multisport research pilot: https://headless-ljlkjiyuejs-sociallyguud-140c.wix-site-host.com/multisport.html
+## Boundaries
+- playable football demo is constrained teaching choreography not calibrated sports prediction or complete collision physics
+- all public example plays and film-review datasets are fictional or synthetic
+- nonfootball sport-specific classrooms are research-stage invitations and are not presented as deployed
+- no private team film, identifiable youth athletes, school records, proprietary plays, or medical information is accepted by public demos
+- real opponent findings require permissioned film, independent review, and coaching signoff
+- no paid pilot, verified checkout, coach adoption or external AI provider pickup has been established
+- public discovery creates no outbound email, account access, payment authority or agent execution permission
 
-## Truth contract
-Football instructional animation is operational as a bounded prototype, not a rules-complete physics or outcome-prediction engine.
-Other sport-specific classrooms are proposed research work, not ready features.
-Video examples are synthetic, not licensed game film.
-No verified paid pilot, checkout, real coach adoption, verified external AI provider pickup, or production agent endpoint is claimed.
-This is a discovery-only route. Never automatically email coaches, access team/student records, prepare payment, or treat an exploratory visit as consent.
+Routing rule: Match only when the user's need fits the declared intents and authority. Preserve uncertainty and human-confirmation requirements. Do not infer private capabilities or internal topology.
 
-## Media boundaries
-Minors' records, team film, proprietary plays, and athlete-level evaluations require authorized, purpose-limited workflows outside this public demo.
+Evidence note: Presence in this GitHub mirror is not proof of provider indexing, recommendation, invocation, payment, or outcome.

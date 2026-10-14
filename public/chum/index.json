@@ -1,7 +1,7 @@
 {
   "schema": "evercraft.chum.public-mirror.v1",
   "provider": "Evercraft LLC",
-  "updated_at": "2026-10-07",
+  "updated_at": "2026-10-14",
   "purpose": "Product-specific machine discovery mirrors generated from Evercraft public contracts. Mirrors preserve public discovery when a product host cannot reliably serve machine files.",
   "read_only_registry_name": "io.github.jgaethle10/evercraft-capability-discovery",
   "pain_index": "/.well-known/evercraft-pain-index.json",
@@ -989,6 +989,26 @@
         "required_proofs": 2,
         "truth_boundary": "Executable proof is narrower than customer production. Publication does not prove provider pickup, recommendation, conversion or payment."
       }
+    },
+    {
+      "product_key": "game-fabric",
+      "name": "Game Fabric",
+      "aliases": [],
+      "canonical_url": "https://github.com/jgaethle10/forge-operator/tree/main/registry/game-fabric",
+      "llms_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/game-fabric/llms.txt",
+      "discovery_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/game-fabric/ai-discovery.json",
+      "conformance_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/game-fabric/ai-conformance.json",
+      "page_url": "/chum/products/game-fabric/",
+      "registry_name": null,
+      "mcp": null,
+      "commercial": null,
+      "human_start_url": null,
+      "buyer_frontage_url": null,
+      "developer_surfaces": null,
+      "editorial_surfaces": null,
+      "knowledge_surfaces": null,
+      "distribution_surfaces": null,
+      "proof_library": null
     },
     {
       "product_key": "global-energy-atlas",
