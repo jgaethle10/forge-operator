@@ -1,0 +1,66 @@
+{
+  "schema": "evercraft.public-product-url-gates.v1",
+  "as_of": "2026-10-14",
+  "authority": "Source-level routing and read-only public endpoint probes, not checkout, payment, mobile QA or publication authority.",
+  "offers": [
+    {
+      "id": "findmypart-agent-docs",
+      "product": "FindMyPart",
+      "url": "https://findmypart.base44.app/functions/findMyPartAgentGateway?view=docs",
+      "content_type": "text/html",
+      "marker": "FindMyPart is callable by AI agents.",
+      "distribution_state": "review_ready",
+      "paid_checkout_state": "unverified",
+      "paid_promotion_allowed": false,
+      "reason": "Public docs observed HTTP 200; dedicated one-time $19/$49/$99 hunts are priced separately. Free Part Check has a live fallback issue; no buyer checkout acceptance."
+    },
+    {
+      "id": "career-sprint-offer",
+      "product": "Career Command",
+      "url": "https://evercraft-career-command.base44.app/functions/careerAgentGateway?view=offers",
+      "content_type": "application/json",
+      "json_equals": {
+        "ok": true,
+        "offer.offer_key": "career.interview_sprint_19.v1",
+        "offer.amount_cents": 1900
+      },
+      "distribution_state": "review_ready",
+      "paid_checkout_state": "unverified",
+      "paid_promotion_allowed": false,
+      "reason": "Public offer JSON observed HTTP 200. Free interview practice may be described; paid Sprint checkout and fulfillment have not been independently accepted."
+    },
+    {
+      "id": "website-launch-docs",
+      "product": "Evercraft Website Launch",
+      "url": "https://instant-website-builder-usa-6feac193.base44.app/functions/websiteServiceAgentGateway?view=docs",
+      "content_type": "text/html",
+      "marker": "Evercraft Website Service for AI agents",
+      "distribution_state": "review_ready",
+      "paid_checkout_state": "unverified",
+      "paid_promotion_allowed": false,
+      "reason": "Agent docs observed HTTP 200; $500/$999/$1999 service tiers are documented but end-to-end buyer and fulfillment acceptance are not yet proven."
+    },
+    {
+      "id": "systemia-free-domain-check",
+      "product": "Systemia Website Audit",
+      "url": "https://systemia-audit-pro.base44.app/functions/auditAgentGateway?view=check",
+      "content_type": "text/html",
+      "marker": "Website Audit | Check your domain",
+      "distribution_state": "review_ready",
+      "paid_checkout_state": "blocked",
+      "paid_promotion_allowed": false,
+      "reason": "This is only a free HTTPS-domain-format checker, not a website crawl. Hosted $49 paid Quick Win createCheckout returned HTTP 400 Invalid tier in a prior live canary."
+    },
+    {
+      "id": "blackbox-free-crash-test",
+      "product": "Evercraft Black Box",
+      "url": "https://evercraft.base44.app/api/apps/6a9b99a2de0b9ce8e46ccf3c/functions/blackBoxExperienceDelivery",
+      "content_type": "text/html",
+      "marker": "Can you save the AI agent?",
+      "distribution_state": "review_ready",
+      "paid_checkout_state": "not_applicable",
+      "paid_promotion_allowed": false,
+      "reason": "Script-free public two-answer fictional engineering exercise previously tested; no outside partner hosting or permissioned editorial placement claimed."
+    }
+  ]
+}
