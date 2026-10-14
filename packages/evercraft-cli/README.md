@@ -45,7 +45,7 @@ Create a JSON file describing an executable that the operator **already installe
 }
 ```
 
-Then run \`node cli.mjs tool add ./my-tool.json\` to store metadata. That does not execute or validate the server. \`tool inspect builder.tools\` shows the exact program and arguments before the operator intentionally starts it. \`tool probe builder.tools --run\` starts the process to enumerate advertised MCP tools. \`tool call builder.tools TOOL_NAME --input '{"key":"value"}' --approve\` explicitly asks for a specific MCP tool call. Its diagnostic output deliberately omits tool-call input values to avoid accidentally copying sensitive arguments into logs. Tool responses still print to stdout and may themselves contain sensitive data. Avoid shell-history exposure of secrets in inline `--input` arguments; use test data in the preview.
+Then run \`node cli.mjs tool add ./my-tool.json\` to store metadata. That does not execute or validate the server. \`tool inspect builder.tools\` shows the exact program and arguments before the operator intentionally starts it. \`tool probe builder.tools --run\` starts the process to enumerate advertised MCP tools. \`tool call builder.tools TOOL_NAME --input '{"key":"value"}' --approve\` explicitly asks for a specific MCP tool call. Its diagnostic output deliberately omits tool-call input values to avoid accidentally copying sensitive arguments into logs. Tool responses still print to stdout and may themselves contain sensitive data. For JSON that must not appear in shell history, pipe it with `--input-stdin` instead of putting values in `--input` arguments. This is still a **developer preview**, not a secret vault or sandbox. Input is capped at 64 KiB; malformed/non-object JSON is rejected. Responses can contain sensitive data and must be handled accordingly. MCP subprocess stderr and server-returned error text are deliberately suppressed to prevent echoing tool arguments into client diagnostics.
 
 The CLI uses a per-user JSON store at \`$XDG_CONFIG_HOME/evercraft/operator-tools.json\`, or \`~/.config/evercraft/operator-tools.json\`. It passes a minimal environment instead of inheriting every API key. This is **not a sandbox**: the subprocess can access resources available to the operating-system user, including local files and network. Only run tools you trust, ideally in a separate least-privilege OS/container environment. Do not add downloaded manifests blindly.
 
@@ -63,6 +63,7 @@ The example is **fictional**. Passing validation does not verify the publisher, 
 | MCP 2026-07-28 explicit modern stdio protocol | Implemented behind `--protocol modern`, dedicated synthetic tests |
 | Explicit subprocess start + stdio MCP initialize/tools/list | Implemented |
 | Explicit named tools/call with user-supplied JSON | Implemented |
+| Piped JSON input without shell-history exposure and suppressed untrusted error text | Implemented, not an isolation boundary |
 | No-shell spawning, bounded output and timeout | Implemented, not a security sandbox |
 | Offline external capability candidate manifest validation | Implemented, never grants trust or commerce |
 | Automatic MCP era negotiation | Not implemented; legacy default, explicit modern opt-in |
