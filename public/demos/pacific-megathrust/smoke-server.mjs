@@ -2,7 +2,7 @@
 import http from "node:http";
 import {readFile} from "node:fs/promises";
 import {resolve,join,sep} from "node:path";
-const root=resolve(new URL("../../../",import.meta.url).pathname); // repository public/ (3 levels)
+const root=resolve(new URL("../../",import.meta.url).pathname); // repository public/ (2 levels)
 const port=Number(process.env.PORT||4177);
 const types={".html":"text/html; charset=utf-8",".mjs":"text/javascript; charset=utf-8",".js":"text/javascript; charset=utf-8",".css":"text/css; charset=utf-8"};
 const server=http.createServer(async(req,res)=>{
