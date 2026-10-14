@@ -19,6 +19,12 @@ test('only the thirteen observed, scoped offers enter the public buy directory',
   assert.equal(catalog.canonical_payment_authority, 'Evercraft Payments');
   assert.equal(catalog.provider_boundary, 'Raven Nexus');
   assert.equal(catalog.no_outreach_without_systemia_gate, true);
+  assert.equal(catalog.live_buyer_home, 'https://findmypart.base44.app/functions/evercraftBuy');
+  assert.equal(catalog.buyer_url_verification.checked, 13);
+  assert.equal(catalog.buyer_url_verification.passed, 13);
+  assert.equal(catalog.buyer_url_verification.checkout_sessions_created, false);
+  assert.equal(catalog.buyer_url_verification.charges_attempted, false);
+  assert.equal(catalog.buyer_url_verification.payment_receipts_observed, false);
   assert.equal(catalog.offers.length, approved.size);
   assert.equal(new Set(catalog.offers.map(x => x.slug)).size, approved.size);
   assert.equal(new Set(catalog.offers.map(x => x.offer_key)).size, approved.size);
@@ -52,8 +58,12 @@ test('no direct Stripe sessions, credentials or unapproved product sales are pub
   }
   assert.equal(catalog.native_specialist_doors.length, 3);
   for (const entry of catalog.native_specialist_doors) {
+    assert.ok(entry.checkout_state !== 'paid_verified');
+    if (entry.url === null) {
+      assert.ok(entry.page_state, 'A held specialist URL needs an explicit evidence state');
+      continue;
+    }
     const url = new URL(entry.url);
     assert.equal(url.protocol, 'https:');
-    assert.ok(entry.checkout_state !== 'paid_verified');
   }
 });
