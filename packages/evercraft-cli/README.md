@@ -19,6 +19,10 @@ node cli.mjs tool list
 node cli.mjs tool inspect example.math
 node cli.mjs tool probe example.math --run
 node cli.mjs tool call example.math sum --input '{"a":2,"b":5}' --approve
+# Optional strict MCP 2026-only integration probe (synthetic fixture):
+# node cli.mjs tool add ./my-trusted-modern-manifest.json
+# node cli.mjs tool probe modern.math --run --protocol modern
+# node cli.mjs tool call modern.math sum --input '{"a":2,"b":5}' --approve --protocol modern
 npm test
 ```
 
@@ -56,16 +60,26 @@ The example is **fictional**. Passing validation does not verify the publisher, 
 | Ability | Preview state |
 | --- | --- |
 | Local manifest registration and inspection | Implemented |
+| MCP 2026-07-28 explicit modern stdio protocol | Implemented behind `--protocol modern`, dedicated synthetic tests |
 | Explicit subprocess start + stdio MCP initialize/tools/list | Implemented |
 | Explicit named tools/call with user-supplied JSON | Implemented |
 | No-shell spawning, bounded output and timeout | Implemented, not a security sandbox |
 | Offline external capability candidate manifest validation | Implemented, never grants trust or commerce |
+| Automatic MCP era negotiation | Not implemented; legacy default, explicit modern opt-in |
 | Third-party remote HTTP MCP/OAuth | Not implemented |
 | Global/public tool publication, discovery ranking | Not implemented |
 | Signed supply chain, per-tool policy, revocation | Not implemented |
 | Workspaces, versioned API conformance and multi-agent auth | Not implemented |
 | Evercraft Payments, order verification, license contracts, payouts | Not implemented |
 | Discord, Facebook, Skool automatic posting or account linking | Not implemented |
+
+## MCP protocol compatibility
+
+The default `tool probe` and `tool call` behavior remains **legacy MCP 2025-11-25**, compatible with existing handshake-based MCP servers. For a trusted server you **know** implements MCP 2026-07-28, add `--protocol modern` to the explicitly approved probe or tool call. This performs `server/discover` and checks supported versions and capabilities before `tools/list`; each modern call includes its own protocol version and client capability metadata. A strict 2026 fixture proves this route.
+
+This preview intentionally does **not** silently auto-negotiate protocol eras. On stdio, some legacy servers may hang or terminate when probed with `server/discover` before `initialize`; an automatic modern probe would also launch an extra server process and could repeat startup side effects. Explicit mode is safer for this pre-release CLI. Per the MCP SDK guidance, we can implement opt-in safe auto-negotiation in a later reviewed release using a short-lived sibling process and bounded probe timeout. Never force `modern` against a server merely assumed to be modern. Verify its supported protocol first.
+
+Official specification: https://modelcontextprotocol.io/specification/2026-07-28/basic/versioning
 
 ## Operator Exchange architecture
 
