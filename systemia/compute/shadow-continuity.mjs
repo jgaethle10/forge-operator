@@ -36,11 +36,12 @@ export function assessShadowContinuity({
     ||!Number.isSafeInteger(row.uptime_seconds)||row.uptime_seconds<0)continue;
   const nk=noncePrefix+s,n=byNonce.get(nk),digest=evidence(row.evidence_refs);
   const linked=Boolean(digest&&nonceCounts.get(nk)===1&&n?.node_key===nodeKey&&n.request_fingerprint==='sha256:'+digest);
-  valid.push({when,uptime:row.uptime_seconds,linked});
+  valid.push({when,key:row.sample_key,uptime:row.uptime_seconds,linked});
  }
  valid.sort((a,b)=>a.when-b.when);
  const latest=valid.at(-1)||null;
- const registryLinked=Boolean(latest&&registry?.node_key===nodeKey&&registry.last_seen_at===new Date(latest.when).toISOString());
+ const registryLinked=Boolean(latest&&registry?.node_key===nodeKey&&registry.last_sample_key===latest.key
+  &&registry.last_seen_at===new Date(latest.when).toISOString());
  const held=registry?.node_key===nodeKey&&registry.status==='shadow'&&registry.execution_allowed===false
   &&authority?.mode==='quarantined'&&authority.allowed_execution===false&&leaseCount===0;
  const views=windows.map(hours=>{
