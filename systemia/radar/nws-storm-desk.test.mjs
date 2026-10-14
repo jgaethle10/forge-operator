@@ -75,3 +75,22 @@ test('Systemia Radar classifies official warnings as PENDING, never observed dam
   assert.equal(result.decision.signal.truth_state, 'PENDING');
   assert.equal(result.decision.publication_authority, false);
 });
+
+test('national editorial cap reserves room for another state during concentrated outbreaks', () => {
+  const features = Array.from({ length: 8 }, (_, i) => ({
+    ...base({ geocode: { UGC: ['KSC' + String(100 + i)] } }),
+    id: 'https://api.weather.gov/alerts/kansas-' + i
+  }));
+  features.push({
+    ...base({
+      event: 'Flood Watch',
+      geocode: { UGC: ['MAZ013'] },
+      areaDesc: 'Boston, Massachusetts'
+    }),
+    id: 'https://api.weather.gov/alerts/massachusetts'
+  });
+  const selected = parseStormAlerts({ features }, { now, max_items: 2 });
+  assert.equal(selected.length, 2);
+  assert.deepEqual(selected.map((row) => row.facts.states[0]), ['KS', 'MA']);
+  assert.equal(selected[1].facts.forecast, true);
+});
