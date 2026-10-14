@@ -16,7 +16,7 @@ A reviewer must be able to dismiss a false alarm. Low visibility, occluded footw
 - `evidence.test.mjs`: regression coverage for representative valid history, tampering, contradictory state, invalid chronology, missing human review, unsupported closeout and authority claims.
 - Separate path-scoped CI. No public discovery registry, commerce, browser deployment or production routing changes.
 
-The offline illustrative HTML preview `evercraft_ppe_safety_internal_demo.html` was previously packaged in the internal pilot kit. It is deliberately not an authenticated customer page. The JSON content SHA-256 is a local change detector, NOT a cryptographic proof of authorship or chain of custody.
+The offline illustrative HTML preview `evercraft_ppe_safety_internal_demo.html` is now versioned in this pilot directory, alongside the evidence validator. It was previously packaged in the internal pilot kit. It is deliberately not an authenticated customer page. The JSON content SHA-256 is a local change detector, NOT a cryptographic proof of authorship or chain of custody.
 
 ## Run
 
