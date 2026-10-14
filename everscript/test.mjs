@@ -55,6 +55,14 @@ assert.equal(plan.version, '0.3');
 assert.equal(plan.budgetCents, 200);
 assert.equal(plan.replayPolicy, 'prefer-replay');
 
+// RC0.5 regression: signed trust mode must reject an OMITTED manifest, not only a tampered signature.
+assert.throws(() => compile(source, {
+  manifests: [],
+  requireSignedManifests: true,
+  trustedManifestKeys: { 'evercraft-root-test': publicKey },
+}), (error) => error instanceof EverScriptCompileError && error.message.includes('no manifest'));
+
+
 let invokeCount = 0;
 const adapter = {
   manifest,
