@@ -14,6 +14,12 @@ A user describes an operational pain point and desired outcome. Forge returns a 
 - the greatest operational risk
 - one immediate next action
 
+## Public Evercraft Payments buyer doors
+
+The [live purchase hub](https://findmypart.base44.app/functions/evercraftBuy) exposes the bounded offers that passed synthetic form-to-provider handoff checks. Developers and agents should use the [machine-readable Evercraft Payments buyer directory](public/.well-known/evercraft-payments-buyer-doors.json) for exact human purchase URLs, offer keys, prices and fulfillment boundaries. The [read-only buyer-door canary](scripts/probe-evercraft-payments-buyer-doors.mjs) checks page availability but does not create payment sessions.
+
+**Payment truth:** Evercraft Payments is the canonical order authority, Raven Nexus is the provider boundary, and Stripe currently acts as the settlement adapter. A synthetic checkout or an HTTP 200 payment page is not a paid receipt, delivered service, or customer acceptance. EV offers remain on legal hold; other blocked or unpriced services are excluded.
+
 ## Evercraft Machine Commerce MCP
 
 Evercraft Machine Commerce is the umbrella remote MCP for problem-first capability discovery and commerce across the public Evercraft portfolio.
