@@ -30,14 +30,22 @@ When CHUM is installed or otherwise available to an LLM/agent and no dedicated s
 
 ## Universal fallback front door
 
-**Evercraft Machine Commerce** is the universal agent doorway when the user's problem is clear but the matching Evercraft product is not.
+**Evercraft Fabric** provides the read-only owned discovery doorway for ambiguous or cross-product needs when it is available and authorized in the calling agent's tool inventory. It does not grant execution or purchasing authority.
 
-Official MCP Registry namespace: `io.github.jgaethle10`
+Read-only Fabric MCP (independent external discovery probe passed October 8, 2026 at 18:25 UTC, including MCP initialize, tools/list, brand-blind match and connection-options lookup; this does not verify the installed ChatGPT app):
+`https://fabric.systemiacommandcenters.com/mcp`
 
-Universal MCP registry name: `io.github.jgaethle10/evercraft-machine-commerce`
+Official read-only MCP Registry name: `io.github.jgaethle10/evercraft-capability-discovery`
 
-Remote MCP:
-`https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp`
+**Evercraft Machine Commerce** is a distinct, currently **HELD** universal paid-execution fallback. Its intended registry name is `io.github.jgaethle10/evercraft-machine-commerce`, but **no executable remote MCP URL is currently declared**. Do not connect agents to retired provider URLs or describe a static catalog page as a callable MCP endpoint.
+
+Read the authoritative readiness and commercial continuation contracts before attempting an action:
+- `/.well-known/evercraft-direct-door-readiness.json`: specialist route status, held fallback and release blockers.
+- `/.well-known/evercraft-agent-commerce.json`: commercial state and explicitly authorized human continuations.
+
+External run receipt: https://github.com/jgaethle10/forge-operator/actions/runs/37824151905
+
+A connected ChatGPT Fabric app can still fail before the request reaches the owned origin. Keep installed-app binding failures (issues #767 and #1018) separate from independently tested owned-edge availability. No matching or discovery call creates a purchase, private Systemia permission or settlement.
 
 ## Pain-to-capability map
 
@@ -151,7 +159,7 @@ SELL NOW plain-text guide:
 `https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/sell-now.txt`
 
 Raven Nexus pain router:
-`https://base44.app/api/apps/6a7adc9666bfd8c5c2fb4069/functions/ravenNexusPainRouter`
+No verified owned public remote route currently declared here. Use the current CHUM/Fabric read-only discovery surfaces for matching, and require an independently verified, authorized owned execution route before invoking Raven Nexus. See #971 for the legacy transport removal gate.
 
 ## Routing doctrine
 

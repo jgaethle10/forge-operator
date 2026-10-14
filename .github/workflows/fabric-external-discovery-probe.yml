@@ -1,0 +1,33 @@
+name: Fabric External Discovery Probe
+
+on:
+  pull_request:
+    paths:
+      - 'scripts/fabric-external-discovery-probe.mjs'
+      - '.github/workflows/fabric-external-discovery-probe.yml'
+  workflow_dispatch:
+  schedule:
+    - cron: '23 */6 * * *'
+
+permissions:
+  contents: read
+
+jobs:
+  probe:
+    runs-on: ubuntu-latest
+    timeout-minutes: 3
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Probe independent public Fabric MCP without credentials or payments
+        run: node scripts/fabric-external-discovery-probe.mjs
+      - name: Preserve independent receipt, including failures
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: fabric-external-discovery-probe
+          path: artifacts/fabric-external-discovery-probe.json
+          if-no-files-found: warn
+          retention-days: 30
