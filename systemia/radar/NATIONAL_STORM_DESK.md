@@ -37,3 +37,26 @@ The official warning is verified as an **issued warning**, not an independently 
 5. Confirm no warning is rendered as observed property flooding, no stock or historical disaster photo is labeled current, and no public release occurs without the full 10/10 Journal editorial gate.
 
 The code change does not claim to execute the system, activate the resident, or publish on any outside network.
+
+
+## Preliminary aftermath lane (new, opt-in)
+
+NWS Forecast Offices issue Preliminary Local Storm Reports (LSR), including spotter, emergency-manager and public reports. NWS labels these reports **preliminary until certified**. An office-issued product is not independent Evercraft confirmation of every claimed damage event.
+
+The local-report collector polls the latest LSR for **up to four explicitly configured forecast offices** using the official NWS products API. Each record preserves its original `issuanceTime`, the official product link, a bounded text excerpt and `evidence_state=reported`. Reports remain labeled preliminary and durable for retrospective review; they never become a live danger warning or an observed property damage claim just because NWS hosted them.
+
+```bash
+# One-off staging only, no live public release is authorized by this command:
+RADAR_NWS_STORM_DESK_ENABLED=true RADAR_NWS_LSR_OFFICES=EAX,BOX npm run radar:once
+npm run test:radar
+```
+
+The NWS LSR endpoint is `https://api.weather.gov/products/types/LSR/locations/EAX/latest` (Kansas City office) and uses a capped set of offices to avoid a nationwide request storm. **The new LSR adapter has mock-based tests, but production payload, response-code and rate-limit behavior still require live-staging verification.** Any failed office poll marks the whole report collector failed instead of claiming an all-clear.
+
+**Coverage boundary:** These four configured offices are *not* national LSR coverage. Expired advisories can be retrieved from NWS's seven-day alerts history separately, and wider sustained coverage needs regional sharding, geography validation and backfill. A separate verified impact register is still needed to establish actual damage.
+
+**Source docs:** https://www.weather.gov/bgm/helpLocalStormReports and https://www.weather.gov/documentation/services-web-api . Both NOAA alert and preliminary-report adapters use the same `noaa-nws` upstream source family, avoiding fake independent corroboration.
+
+## CI gate
+
+The existing Forge CI workflow is now required to run `npm run test:radar` before the broader build. This PR remains a draft and should not be merged until GitHub checks and actual NWS staging are inspected.
