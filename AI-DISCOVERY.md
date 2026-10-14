@@ -2,6 +2,11 @@
 
 Evercraft publishes a public, machine-readable capability mesh so AI assistants and agents can route real user problems to the smallest appropriate Evercraft capability without needing the user to know an Evercraft product name first.
 
+## Purchase URLs and payment evidence
+
+For exact human buyer links and approved bounded offers, inspect [Evercraft Payments buyer doors](public/.well-known/evercraft-payments-buyer-doors.json). That file is an observed prepayment directory, not a payment receipt or authorization to execute paid work. The live human [purchase hub](https://findmypart.base44.app/functions/evercraftBuy) collects each buyer's scope before creating a processor checkout through Evercraft Payments and Raven Nexus. Only user-authorized purchases, never synthetic canaries or unsolicited outreach, should generate a commercial session. EV products remain under legal hold.
+
+
 ## Direct specialist doors
 
 Evercraft uses a direct-door-first routing model. When the user's intent clearly matches a dedicated Evercraft product and that specialist MCP/plugin is available in the current agent session, call the specialist directly. Do not force obvious product intent through CHUM or Evercraft Machine Commerce first.

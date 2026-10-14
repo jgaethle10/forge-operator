@@ -1,0 +1,40 @@
+name: Evercraft Payments buyer doors
+
+on:
+  pull_request:
+    paths:
+      - 'public/.well-known/evercraft-payments-buyer-doors.json'
+      - 'tests/evercraft-payments-buyer-doors.test.mjs'
+      - 'scripts/probe-evercraft-payments-buyer-doors.mjs'
+      - '.github/workflows/evercraft-payments-buyer-door-canary.yml'
+  push:
+    branches: [main]
+    paths:
+      - 'public/.well-known/evercraft-payments-buyer-doors.json'
+      - 'tests/evercraft-payments-buyer-doors.test.mjs'
+      - 'scripts/probe-evercraft-payments-buyer-doors.mjs'
+      - '.github/workflows/evercraft-payments-buyer-door-canary.yml'
+  schedule:
+    - cron: '0 */6 * * *'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: payments-buyer-doors-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  public-buyer-door:
+    runs-on: ubuntu-latest
+    timeout-minutes: 6
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Validate approved offers and payment truth
+        run: node --test tests/evercraft-payments-buyer-doors.test.mjs
+      - name: Check public purchase forms without creating payments
+        run: node scripts/probe-evercraft-payments-buyer-doors.mjs
