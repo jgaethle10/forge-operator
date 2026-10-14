@@ -2,6 +2,7 @@ import assert from 'node:assert/strict';
 import test from 'node:test';
 import { parseStormAlert, parseStormAlerts, collectNwsStormAlerts } from './nws-storm-desk.mjs';
 import { createOfficialCollectors } from './collectors.mjs';
+import { emptyRadarState, ingestRadarObservation } from './core.mjs';
 
 const now = '2026-10-14T01:00:00Z';
 const base = (overrides = {}) => ({
@@ -66,4 +67,11 @@ test('storm feed is opt-in and never replaces existing official collectors', () 
   const enabled = createOfficialCollectors({ stormAlertsEnabled: true });
   assert.deepEqual(defaultSet.map((x) => x.id), ['usgs-earthquakes', 'noaa-space-weather']);
   assert.deepEqual(enabled.map((x) => x.id), ['usgs-earthquakes', 'noaa-space-weather', 'nws-storm-desk']);
+});
+
+test('Systemia Radar classifies official warnings as PENDING, never observed damage', () => {
+  const warning = parseStormAlert(base(), { now });
+  const result = ingestRadarObservation(emptyRadarState(), warning, { now });
+  assert.equal(result.decision.signal.truth_state, 'PENDING');
+  assert.equal(result.decision.publication_authority, false);
 });
