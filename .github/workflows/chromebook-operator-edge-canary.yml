@@ -100,6 +100,36 @@ jobs:
               fi
             fi
 
+            # FAIE design-partner routes and UI deploy through the same owned
+            # Chromebook updater. Retry only signatures that can mean this
+            # commit has not reached the public edge yet. Once deployed,
+            # identity, authority and response-shape failures remain hard gates.
+            if [ "$stage" = "faie_design_partner_surface" ] && [ "$attempt" -lt "$max_attempts" ]; then
+              if [ "$error" = "http_404:/faie/agnormal/" ] || \
+                 [ "$error" = "faie_agnormal_partner_identity_missing" ] || \
+                 [ "$error" = "faie_agnormal_partner_promise_missing" ] || \
+                 [ "$error" = "faie_agnormal_activity_hud_missing" ] || \
+                 [ "$error" = "faie_agnormal_cancel_control_missing" ] || \
+                 [ "$error" = "faie_agnormal_truthful_download_receipt_missing" ]; then
+                deployment_wait_started=true
+                echo "FAIE AgNormal surface has not fully reached the owned edge yet ($error); retrying ($attempt/$max_attempts)."
+                sleep 20
+                attempt=$((attempt + 1))
+                continue
+              fi
+            fi
+
+            if [ "$stage" = "faie_design_partner_investigation" ] && [ "$attempt" -lt "$max_attempts" ]; then
+              if [ "$error" = "json_post_http_404:/api/faie/investigate" ] || \
+                 [ "$error" = "faie_agnormal_investigation_schema_invalid" ]; then
+                deployment_wait_started=true
+                echo "FAIE partner investigation path has not fully converged on the owned edge yet ($error); retrying ($attempt/$max_attempts)."
+                sleep 20
+                attempt=$((attempt + 1))
+                continue
+              fi
+            fi
+
             # AliEV deploys through the same Chromebook updater.
             # Retry only the known 404 deployment-lag signature. Identity,
             # policy and unexpected HTTP failures remain immediate.
