@@ -225,7 +225,10 @@ export function verifyCapabilityManifest(manifest, publicKey) {
 }
 
 function validateManifest(step, declaration, manifest, { requireSignedManifests = false, trustedManifestKeys = {} } = {}) {
-  if (!manifest) return;
+  if (!manifest) {
+    if (requireSignedManifests) throw new EverScriptCompileError(`Missing trusted manifest for ${step.capability}`);
+    return;
+  }
   if (manifest.name !== step.capability) {
     throw new EverScriptCompileError(`Manifest name mismatch for ${step.capability}`);
   }

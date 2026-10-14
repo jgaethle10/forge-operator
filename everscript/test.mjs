@@ -129,6 +129,15 @@ assert.throws(() => compile(source, {
   trustedManifestKeys: { wrong: publicKey },
 }), EverScriptCompileError);
 
+// Security regression: signed-manifest enforcement must fail closed when a declared capability is absent.
+assert.throws(() => compile(source, {
+  manifests: [],
+  requireSignedManifests: true,
+  trustedManifestKeys: { 'evercraft-root-test': publicKey },
+}), (error) => error instanceof EverScriptCompileError && error.message.includes('Missing trusted manifest'));
+// Existing unsigned compatibility is preserved only when enforcement is explicitly disabled.
+assert.equal(compile(source, { manifests: [] }).version, '0.3');
+
 const noReplayPlan = compile(source.replace('replay prefer-replay', 'replay prefer-live'), { manifests: [manifest] });
 await assert.rejects(
   () => run(noReplayPlan, { file: 'clip.mp4' }, { capabilities: [adapter] }),
