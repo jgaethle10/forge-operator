@@ -1,0 +1,26 @@
+name: ForensiScope Ship Showcase Proof
+on:
+  push:
+    paths:
+      - 'public/forensiscope/ship-proof/**'
+      - 'tests/forensiscope-ship-showcase.test.mjs'
+      - '.github/workflows/forensiscope-ship-showcase-proof.yml'
+  pull_request:
+    paths:
+      - 'public/forensiscope/ship-proof/**'
+      - 'tests/forensiscope-ship-showcase.test.mjs'
+      - '.github/workflows/forensiscope-ship-showcase-proof.yml'
+permissions:
+  contents: read
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Engine syntax
+        run: node --check public/forensiscope/ship-proof/parcel-large-engine.js
+      - name: Actual byte restoration and tamper rejection
+        run: node --test tests/forensiscope-ship-showcase.test.mjs
