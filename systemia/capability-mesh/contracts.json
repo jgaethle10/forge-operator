@@ -675,6 +675,59 @@
         "publishing_authority": false,
         "third_party_plugin_compatibility_proven": false
       }
+    },
+    {
+      "product_key": "game-fabric",
+      "contract_version": "1.0.0",
+      "owner": "systemia",
+      "adoption_stage": "discovery_only",
+      "authority": {
+        "state": "not_required",
+        "reason": "Public Game Fabric teaching demo uses synthetic role diagrams and does not grant Passport scopes, coaching authority, footage rights, or control of external systems."
+      },
+      "context": {
+        "state": "not_required",
+        "reason": "Public exercises run on fictional roles; no shared Context Fabric read or write scopes, student identifiers, private team film or proprietary playbooks are admitted."
+      },
+      "meter": {
+        "state": "not_required",
+        "reason": "No verified paid pilot or Game Fabric checkout is enabled. Discovery and local teaching demos create no billing obligation."
+      },
+      "intake": {
+        "state": "not_required",
+        "reason": "Local synthetic teaching exercises do not create an authorized school-film, student-data or coaching-staff intake workflow."
+      },
+      "execution": {
+        "state": "not_required",
+        "reason": "The public research demo cannot execute a school tactic, contact staff, publish a real scouting report, or make a production change through an agent."
+      },
+      "relationship": {
+        "state": "not_required",
+        "reason": "Public discovery does not send emails, contact teams, recruit student athletes, or create sales follow-ups."
+      },
+      "receipt_reconciliation": {
+        "state": "not_required",
+        "reason": "No shared private school/athlete receipt store is authorized; synthetic demonstration state does not become verified film or coaching evidence."
+      },
+      "rollback": {
+        "state": "declared",
+        "policy": "Remove public Game Fabric discovery admission or temporarily hide demo door; preserve permission boundaries and prior historical receipts, and never alter unrelated CHUM routes."
+      },
+      "compatibility": {
+        "intended_product_classes": [
+          "evidence_first_sports_playbook_research"
+        ]
+      },
+      "boundaries": {
+        "public_demo_synthetic_only": true,
+        "football_classroom_not_calibrated_prediction": true,
+        "nonfootball_classrooms_not_production": true,
+        "actual_film_requires_rights_and_coach_approval": true,
+        "minor_athlete_data_never_public": true,
+        "discovery_sends_no_email": true,
+        "discovery_creates_payment_obligation": false,
+        "shared_runtime_contracted": false
+      }
     }
   ]
 }
