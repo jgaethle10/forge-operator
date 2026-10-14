@@ -230,7 +230,7 @@ test('context binding describes scopes but grants no access', () => {
 
 test('generated runtime policy artifact covers only explicitly contracted products', () => {
   const rendered = renderRuntimePolicies(process.cwd());
-  assert.equal(rendered.policy_count, 10);
+  assert.equal(rendered.policy_count, 11);
   assert.deepEqual(
     rendered.policies.map((row) => row.product_key),
     [
@@ -244,6 +244,7 @@ test('generated runtime policy artifact covers only explicitly contracted produc
       'lineage',
       'earthworks-autonomy',
       'fallen-sessions',
+      'game-fabric',
     ]
   );
   assert.equal(rendered.truth_boundary.non_shared_runtime_execution_fails_closed, true);
