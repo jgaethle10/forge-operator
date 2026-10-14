@@ -92,57 +92,89 @@
       "adoption_stage": "shared_runtime"
     },
     {
-      "product_key": "earthworks-autonomy",
+      "product_key": "forensiscope",
       "contract_version": "1.0.0",
       "owner": "systemia",
-      "adoption_stage": "discovery_only",
+      "specialist_slug": "forensiscope",
       "authority": {
-        "state": "not_required",
-        "reason": "The public EarthWorks surface is discovery, bounded software simulation, study qualification, and human-confirmed Site Autonomy Study sales only. It grants no production equipment actuation, dispatch, safety, payment, or physical autonomy authority."
+        "state": "declared",
+        "passport_product": "forensiscope",
+        "scopes": [
+          "classify_media_route"
+        ],
+        "evidence_refs": [
+          "registry/forensiscope/server.json",
+          "registry/forensiscope/overflow-contract.json"
+        ]
       },
       "context": {
-        "state": "not_required",
-        "reason": "No shared Context Fabric namespace is declared for customer site telemetry, equipment state, maps, production data, or operating-domain details. Customer site data remains separately scoped and permissioned."
+        "state": "declared",
+        "namespace": "forensiscope",
+        "read_scope": "context.read.forensiscope",
+        "write_scope": "context.write.forensiscope",
+        "evidence_refs": [
+          "systemia/forensiscope/evidence-graph.mjs",
+          "systemia/context-fabric/fabric.mjs"
+        ]
       },
       "meter": {
         "state": "not_required",
-        "reason": "The $5,000 founding Site Autonomy Study is a human-confirmed one-time scoped offer, not a shared machine-usage meter. Checkout initiation is not payment proof and paid state remains authoritative in Evercraft Payments."
+        "reason": "The currently contracted machine action is media-route classification only. Published duration pricing and paid review do not establish a machine usage-meter contract, and paid state remains authoritative elsewhere."
       },
       "intake": {
         "state": "not_required",
-        "reason": "Public discovery and self-screening do not authorize ingestion of private site or equipment data. Detailed site inputs require an approved bounded study and explicit customer authorization."
+        "reason": "The currently contracted machine action does not ingest media. Public secure machine media intake remains verification-gated; actual media handoff is human-confirmed and the user submits authorized media through the product boundary."
       },
       "execution": {
-        "state": "not_required",
-        "reason": "The public product is limited to simulation, shadow-mode planning, and study workflows. No shared Execution Gate action for full-size physical machine control is declared; production autonomy requires a separate verified safety and operating-domain contract."
+        "state": "declared",
+        "gate_required": true,
+        "scopes": [
+          "classify_media_route"
+        ],
+        "actions": [
+          {
+            "scope": "classify_media_route"
+          }
+        ],
+        "evidence_refs": [
+          "registry/forensiscope/server.json",
+          "public/forensiscope/developers/status.json",
+          "registry/forensiscope/overflow-contract.json"
+        ]
       },
       "relationship": {
         "state": "not_required",
-        "reason": "Public discovery does not contact equipment vendors, operators, employees, customers, or third parties. Design-partner outreach and study onboarding are separately authorized human actions."
+        "reason": "Media-route classification does not itself perform outbound relationship contact."
       },
       "receipt_reconciliation": {
-        "state": "not_required",
-        "reason": "EarthWorks simulation and study artifacts may carry receipts, but no shared Context Receipt Bridge contract is declared for customer site operations at this discovery-only stage."
+        "state": "declared",
+        "namespace": "forensiscope",
+        "evidence_refs": [
+          "systemia/context-fabric/fabric.mjs",
+          "systemia/forensiscope/evidence-graph.mjs"
+        ]
       },
       "rollback": {
         "state": "declared",
-        "policy": "Remove public discovery or future shared-runtime bindings without converting simulations into physical authority, exposing customer site data, changing payment truth, or weakening stop, takeover, heartbeat, geofence, and safety-case requirements."
+        "policy": "Disable the ForensiScope product contract or specialist route without enabling machine media intake, weakening human-confirmed handoff, or changing Passport, Context, or Execution Gate defaults."
       },
       "compatibility": {
         "intended_product_classes": [
-          "site_autonomy_orchestration_for_earthmoving_and_material_operations"
+          "ai_media_overflow_and_analysis"
         ]
       },
       "boundaries": {
-        "shared_runtime_contracted": false,
-        "public_discovery_only": true,
-        "simulation_is_physical_deployment_proof": false,
-        "production_machine_actuation_authority": false,
-        "paid_study_authorizes_machine_control": false,
-        "customer_site_data_public": false,
-        "payment_authority": "Evercraft Payments",
-        "buyer_specific_payment_order_requires_explicit_purchase_confirmation": true
-      }
+        "contracted_machine_surface": [
+          "classify_media_route"
+        ],
+        "secure_machine_media_intake": "verification_gated",
+        "human_confirmed_media_handoff": true,
+        "automatic_media_transfer_allowed": false,
+        "user_must_have_right_or_lawful_authority_to_submit": true,
+        "published_duration_pricing_is_not_technical_ingestion_guarantee": true,
+        "runtime_analysis_action_contracted": false
+      },
+      "adoption_stage": "shared_runtime"
     },
     {
       "product_key": "evercraft-clip",
@@ -291,339 +323,6 @@
       }
     },
     {
-      "product_key": "fallen-sessions",
-      "contract_version": "1.0.0",
-      "owner": "systemia",
-      "adoption_stage": "discovery_only",
-      "authority": {
-        "state": "not_required",
-        "reason": "Fallen Sessions is publicly admitted as an engine-alpha discovery surface only. Discovery grants no authority to mutate private music sessions, publish media, invoke external plugins, distribute releases, or perform paid actions."
-      },
-      "context": {
-        "state": "not_required",
-        "reason": "No shared Context Fabric namespace is declared for private music sessions, recordings, MIDI, automation, stems, or artist project state. Creative project data remains inside the product boundary."
-      },
-      "meter": {
-        "state": "not_required",
-        "reason": "Fallen Sessions is not for sale yet and no live checkout or shared usage-meter contract is established."
-      },
-      "intake": {
-        "state": "not_required",
-        "reason": "Public discovery does not accept private audio, MIDI, project files, plugins, or recordings. Any future media intake requires separate authenticated and rights-aware authorization."
-      },
-      "execution": {
-        "state": "not_required",
-        "reason": "No public shared machine execution action is declared. Engine-alpha browser/audio behavior and reversible local edits do not establish remote execution, rendering, publishing, or plugin authority."
-      },
-      "relationship": {
-        "state": "not_required",
-        "reason": "Public discovery does not contact collaborators, labels, platforms, audiences, or other third parties. Future distribution handoff to Evercraft Clip remains separately gated."
-      },
-      "receipt_reconciliation": {
-        "state": "not_required",
-        "reason": "PulseGrid and Fallen can produce provenance and reversible edit receipts, but no shared Context Receipt Bridge contract is declared for external music projects at this discovery-only stage."
-      },
-      "rollback": {
-        "state": "declared",
-        "policy": "Remove public discovery or future shared-runtime bindings without deleting creative state, enabling media publication, changing ownership/provenance semantics, or representing engine alpha as a production-grade DAW."
-      },
-      "compatibility": {
-        "intended_product_classes": [
-          "agent_native_music_creation"
-        ]
-      },
-      "boundaries": {
-        "shared_runtime_contracted": false,
-        "public_discovery_only": true,
-        "engine_alpha": true,
-        "production_grade_daw_claimed": false,
-        "for_sale": false,
-        "checkout_enabled": false,
-        "private_media_intake_contracted": false,
-        "publishing_authority": false,
-        "third_party_plugin_compatibility_proven": false
-      }
-    },
-    {
-      "product_key": "findmypart",
-      "contract_version": "1.0.0",
-      "owner": "systemia",
-      "adoption_stage": "shared_runtime",
-      "specialist_slug": "findmypart",
-      "authority": {
-        "state": "declared",
-        "passport_product": "findmypart",
-        "scopes": [
-          "free_part_triage"
-        ],
-        "evidence_refs": [
-          "plugins/findmypart/skills/findmypart-direct/SKILL.md",
-          "mcp-registry/findmypart.json"
-        ]
-      },
-      "context": {
-        "state": "declared",
-        "namespace": "findmypart",
-        "read_scope": "context.read.findmypart",
-        "write_scope": "context.write.findmypart",
-        "evidence_refs": [
-          "registry/findmypart/README.md",
-          "systemia/context-fabric/fabric.mjs"
-        ]
-      },
-      "meter": {
-        "state": "not_required",
-        "reason": "The contracted action is the live free_part_triage tool, which explicitly creates no charge. Paid sourcing hunts remain separately human-confirmed and live MCP commercial state remains authoritative."
-      },
-      "intake": {
-        "state": "not_required",
-        "reason": "The contracted public action accepts bounded part clues through the specialist tool; no shared Intake Fabric adapter is declared."
-      },
-      "execution": {
-        "state": "declared",
-        "gate_required": true,
-        "scopes": [
-          "free_part_triage"
-        ],
-        "actions": [
-          {
-            "scope": "free_part_triage"
-          }
-        ],
-        "evidence_refs": [
-          "plugins/findmypart/skills/findmypart-direct/SKILL.md",
-          "mcp-registry/findmypart.json"
-        ]
-      },
-      "relationship": {
-        "state": "not_required",
-        "reason": "Free Part Passport triage does not itself contact vendors, buy parts, or perform outbound relationship actions."
-      },
-      "receipt_reconciliation": {
-        "state": "declared",
-        "namespace": "findmypart",
-        "evidence_refs": [
-          "systemia/context-fabric/fabric.mjs",
-          "registry/findmypart/README.md"
-        ]
-      },
-      "rollback": {
-        "state": "declared",
-        "policy": "Disable the FindMyPart contract or specialist route without enabling paid hunts, checkout, vendor contact, purchasing, or weakening evidence/fitment boundaries."
-      },
-      "compatibility": {
-        "intended_product_classes": [
-          "hard_to_source_parts"
-        ]
-      },
-      "boundaries": {
-        "contracted_machine_surface": [
-          "free_part_triage"
-        ],
-        "free_action_creates_charge": false,
-        "paid_hunts_contracted": false,
-        "checkout_creation_is_payment_proof": false,
-        "normalized_identity_is_fitment_proof": false,
-        "listing_is_live_inventory_proof": false,
-        "compatibility_guaranteed": false,
-        "private_vendor_analytics_session_command_center_sales_data_public": false
-      }
-    },
-    {
-      "product_key": "forensiscope",
-      "contract_version": "1.0.0",
-      "owner": "systemia",
-      "specialist_slug": "forensiscope",
-      "authority": {
-        "state": "declared",
-        "passport_product": "forensiscope",
-        "scopes": [
-          "classify_media_route"
-        ],
-        "evidence_refs": [
-          "registry/forensiscope/server.json",
-          "registry/forensiscope/overflow-contract.json"
-        ]
-      },
-      "context": {
-        "state": "declared",
-        "namespace": "forensiscope",
-        "read_scope": "context.read.forensiscope",
-        "write_scope": "context.write.forensiscope",
-        "evidence_refs": [
-          "systemia/forensiscope/evidence-graph.mjs",
-          "systemia/context-fabric/fabric.mjs"
-        ]
-      },
-      "meter": {
-        "state": "not_required",
-        "reason": "The currently contracted machine action is media-route classification only. Published duration pricing and paid review do not establish a machine usage-meter contract, and paid state remains authoritative elsewhere."
-      },
-      "intake": {
-        "state": "not_required",
-        "reason": "The currently contracted machine action does not ingest media. Public secure machine media intake remains verification-gated; actual media handoff is human-confirmed and the user submits authorized media through the product boundary."
-      },
-      "execution": {
-        "state": "declared",
-        "gate_required": true,
-        "scopes": [
-          "classify_media_route"
-        ],
-        "actions": [
-          {
-            "scope": "classify_media_route"
-          }
-        ],
-        "evidence_refs": [
-          "registry/forensiscope/server.json",
-          "public/forensiscope/developers/status.json",
-          "registry/forensiscope/overflow-contract.json"
-        ]
-      },
-      "relationship": {
-        "state": "not_required",
-        "reason": "Media-route classification does not itself perform outbound relationship contact."
-      },
-      "receipt_reconciliation": {
-        "state": "declared",
-        "namespace": "forensiscope",
-        "evidence_refs": [
-          "systemia/context-fabric/fabric.mjs",
-          "systemia/forensiscope/evidence-graph.mjs"
-        ]
-      },
-      "rollback": {
-        "state": "declared",
-        "policy": "Disable the ForensiScope product contract or specialist route without enabling machine media intake, weakening human-confirmed handoff, or changing Passport, Context, or Execution Gate defaults."
-      },
-      "compatibility": {
-        "intended_product_classes": [
-          "ai_media_overflow_and_analysis"
-        ]
-      },
-      "boundaries": {
-        "contracted_machine_surface": [
-          "classify_media_route"
-        ],
-        "secure_machine_media_intake": "verification_gated",
-        "human_confirmed_media_handoff": true,
-        "automatic_media_transfer_allowed": false,
-        "user_must_have_right_or_lawful_authority_to_submit": true,
-        "published_duration_pricing_is_not_technical_ingestion_guarantee": true,
-        "runtime_analysis_action_contracted": false
-      },
-      "adoption_stage": "shared_runtime"
-    },
-    {
-      "product_key": "game-fabric",
-      "contract_version": "1.0.0",
-      "owner": "systemia",
-      "adoption_stage": "discovery_only",
-      "authority": {
-        "state": "not_required",
-        "reason": "Public Game Fabric teaching demo uses synthetic role diagrams and does not grant Passport scopes, coaching authority, footage rights, or control of external systems."
-      },
-      "context": {
-        "state": "not_required",
-        "reason": "Public exercises run on fictional roles; no shared Context Fabric read or write scopes, student identifiers, private team film or proprietary playbooks are admitted."
-      },
-      "meter": {
-        "state": "not_required",
-        "reason": "No verified paid pilot or Game Fabric checkout is enabled. Discovery and local teaching demos create no billing obligation."
-      },
-      "intake": {
-        "state": "not_required",
-        "reason": "Local synthetic teaching exercises do not create an authorized school-film, student-data or coaching-staff intake workflow."
-      },
-      "execution": {
-        "state": "not_required",
-        "reason": "The public research demo cannot execute a school tactic, contact staff, publish a real scouting report, or make a production change through an agent."
-      },
-      "relationship": {
-        "state": "not_required",
-        "reason": "Public discovery does not send emails, contact teams, recruit student athletes, or create sales follow-ups."
-      },
-      "receipt_reconciliation": {
-        "state": "not_required",
-        "reason": "No shared private school/athlete receipt store is authorized; synthetic demonstration state does not become verified film or coaching evidence."
-      },
-      "rollback": {
-        "state": "declared",
-        "policy": "Remove public Game Fabric discovery admission or temporarily hide demo door; preserve permission boundaries and prior historical receipts, and never alter unrelated CHUM routes."
-      },
-      "compatibility": {
-        "intended_product_classes": [
-          "evidence_first_sports_playbook_research"
-        ]
-      },
-      "boundaries": {
-        "public_demo_synthetic_only": true,
-        "football_classroom_not_calibrated_prediction": true,
-        "nonfootball_classrooms_not_production": true,
-        "actual_film_requires_rights_and_coach_approval": true,
-        "minor_athlete_data_never_public": true,
-        "discovery_sends_no_email": true,
-        "discovery_creates_payment_obligation": false,
-        "shared_runtime_contracted": false
-      }
-    },
-    {
-      "product_key": "lineage",
-      "contract_version": "1.0.0",
-      "owner": "systemia",
-      "adoption_stage": "discovery_only",
-      "authority": {
-        "state": "not_required",
-        "reason": "The public Lineage founding-pilot surface is discovery and human-confirmed design-partner onboarding only. History visibility, Fabric discovery, and Control Room inspection grant no repository mutation, release, deployment, publication, payment, or private-data authority."
-      },
-      "context": {
-        "state": "not_required",
-        "reason": "No shared Context Fabric namespace is declared for customer repository contents or private Lineage history. Public discovery metadata is non-sensitive and private repository access requires separate explicit authorization."
-      },
-      "meter": {
-        "state": "not_required",
-        "reason": "The $500 founding pilot is a human-confirmed one-time offer. Public discovery creates no payment obligation, checkout is not payment proof, and no shared machine-usage Meter contract is established."
-      },
-      "intake": {
-        "state": "not_required",
-        "reason": "Public Fabric discovery does not ingest repositories. One buyer-authorized Git repository may be accepted only after explicit human confirmation and repository authorization through the pilot onboarding boundary."
-      },
-      "execution": {
-        "state": "not_required",
-        "reason": "No shared public machine mutation action is declared. Public Fabric may discover and explain Lineage, but may not import repositories, move refs, reconcile branches, mutate history, publish releases, deploy, or create payment obligations."
-      },
-      "relationship": {
-        "state": "not_required",
-        "reason": "Public Lineage discovery does not contact prospects, repository collaborators, vendors, or other third parties. Buyer outreach and onboarding remain separately authorized human actions."
-      },
-      "receipt_reconciliation": {
-        "state": "not_required",
-        "reason": "Lineage has native history and integrity receipts, but no shared Context Receipt Bridge contract is declared for external pilot repositories at this discovery-only stage."
-      },
-      "rollback": {
-        "state": "declared",
-        "policy": "Remove the public discovery admission or disable future shared-runtime bindings without deleting Lineage history, granting mutation authority, changing GitHub interoperability, or weakening Evercraft Payments and repository-authorization boundaries."
-      },
-      "compatibility": {
-        "intended_product_classes": [
-          "governed_multi_agent_history_and_version_control"
-        ]
-      },
-      "boundaries": {
-        "shared_runtime_contracted": false,
-        "public_discovery_only": true,
-        "automatic_repository_access": false,
-        "automatic_history_mutation": false,
-        "automatic_release_or_deployment_authority": false,
-        "automatic_payment": false,
-        "checkout_creation_is_payment_proof": false,
-        "payment_authority": "Evercraft Payments",
-        "settlement_boundary": "Raven Nexus",
-        "github_interoperability_preserved": true,
-        "hosted_self_serve_multi_tenant_saas_claimed": false
-      }
-    },
-    {
       "product_key": "opportunity-fabric",
       "contract_version": "1.0.0",
       "owner": "systemia",
@@ -726,6 +425,307 @@
         "competency_verification_human_reviewed": true,
         "public_proof_requires_explicit_approval": true,
         "discovery_creates_credential_or_employment_authority": false,
+        "shared_runtime_contracted": false
+      }
+    },
+    {
+      "product_key": "findmypart",
+      "contract_version": "1.0.0",
+      "owner": "systemia",
+      "adoption_stage": "shared_runtime",
+      "specialist_slug": "findmypart",
+      "authority": {
+        "state": "declared",
+        "passport_product": "findmypart",
+        "scopes": [
+          "free_part_triage"
+        ],
+        "evidence_refs": [
+          "plugins/findmypart/skills/findmypart-direct/SKILL.md",
+          "mcp-registry/findmypart.json"
+        ]
+      },
+      "context": {
+        "state": "declared",
+        "namespace": "findmypart",
+        "read_scope": "context.read.findmypart",
+        "write_scope": "context.write.findmypart",
+        "evidence_refs": [
+          "registry/findmypart/README.md",
+          "systemia/context-fabric/fabric.mjs"
+        ]
+      },
+      "meter": {
+        "state": "not_required",
+        "reason": "The contracted action is the live free_part_triage tool, which explicitly creates no charge. Paid sourcing hunts remain separately human-confirmed and live MCP commercial state remains authoritative."
+      },
+      "intake": {
+        "state": "not_required",
+        "reason": "The contracted public action accepts bounded part clues through the specialist tool; no shared Intake Fabric adapter is declared."
+      },
+      "execution": {
+        "state": "declared",
+        "gate_required": true,
+        "scopes": [
+          "free_part_triage"
+        ],
+        "actions": [
+          {
+            "scope": "free_part_triage"
+          }
+        ],
+        "evidence_refs": [
+          "plugins/findmypart/skills/findmypart-direct/SKILL.md",
+          "mcp-registry/findmypart.json"
+        ]
+      },
+      "relationship": {
+        "state": "not_required",
+        "reason": "Free Part Passport triage does not itself contact vendors, buy parts, or perform outbound relationship actions."
+      },
+      "receipt_reconciliation": {
+        "state": "declared",
+        "namespace": "findmypart",
+        "evidence_refs": [
+          "systemia/context-fabric/fabric.mjs",
+          "registry/findmypart/README.md"
+        ]
+      },
+      "rollback": {
+        "state": "declared",
+        "policy": "Disable the FindMyPart contract or specialist route without enabling paid hunts, checkout, vendor contact, purchasing, or weakening evidence/fitment boundaries."
+      },
+      "compatibility": {
+        "intended_product_classes": [
+          "hard_to_source_parts"
+        ]
+      },
+      "boundaries": {
+        "contracted_machine_surface": [
+          "free_part_triage"
+        ],
+        "free_action_creates_charge": false,
+        "paid_hunts_contracted": false,
+        "checkout_creation_is_payment_proof": false,
+        "normalized_identity_is_fitment_proof": false,
+        "listing_is_live_inventory_proof": false,
+        "compatibility_guaranteed": false,
+        "private_vendor_analytics_session_command_center_sales_data_public": false
+      }
+    },
+    {
+      "product_key": "lineage",
+      "contract_version": "1.0.0",
+      "owner": "systemia",
+      "adoption_stage": "discovery_only",
+      "authority": {
+        "state": "not_required",
+        "reason": "The public Lineage founding-pilot surface is discovery and human-confirmed design-partner onboarding only. History visibility, Fabric discovery, and Control Room inspection grant no repository mutation, release, deployment, publication, payment, or private-data authority."
+      },
+      "context": {
+        "state": "not_required",
+        "reason": "No shared Context Fabric namespace is declared for customer repository contents or private Lineage history. Public discovery metadata is non-sensitive and private repository access requires separate explicit authorization."
+      },
+      "meter": {
+        "state": "not_required",
+        "reason": "The $500 founding pilot is a human-confirmed one-time offer. Public discovery creates no payment obligation, checkout is not payment proof, and no shared machine-usage Meter contract is established."
+      },
+      "intake": {
+        "state": "not_required",
+        "reason": "Public Fabric discovery does not ingest repositories. One buyer-authorized Git repository may be accepted only after explicit human confirmation and repository authorization through the pilot onboarding boundary."
+      },
+      "execution": {
+        "state": "not_required",
+        "reason": "No shared public machine mutation action is declared. Public Fabric may discover and explain Lineage, but may not import repositories, move refs, reconcile branches, mutate history, publish releases, deploy, or create payment obligations."
+      },
+      "relationship": {
+        "state": "not_required",
+        "reason": "Public Lineage discovery does not contact prospects, repository collaborators, vendors, or other third parties. Buyer outreach and onboarding remain separately authorized human actions."
+      },
+      "receipt_reconciliation": {
+        "state": "not_required",
+        "reason": "Lineage has native history and integrity receipts, but no shared Context Receipt Bridge contract is declared for external pilot repositories at this discovery-only stage."
+      },
+      "rollback": {
+        "state": "declared",
+        "policy": "Remove the public discovery admission or disable future shared-runtime bindings without deleting Lineage history, granting mutation authority, changing GitHub interoperability, or weakening Evercraft Payments and repository-authorization boundaries."
+      },
+      "compatibility": {
+        "intended_product_classes": [
+          "governed_multi_agent_history_and_version_control"
+        ]
+      },
+      "boundaries": {
+        "shared_runtime_contracted": false,
+        "public_discovery_only": true,
+        "automatic_repository_access": false,
+        "automatic_history_mutation": false,
+        "automatic_release_or_deployment_authority": false,
+        "automatic_payment": false,
+        "checkout_creation_is_payment_proof": false,
+        "payment_authority": "Evercraft Payments",
+        "settlement_boundary": "Raven Nexus",
+        "github_interoperability_preserved": true,
+        "hosted_self_serve_multi_tenant_saas_claimed": false
+      }
+    },
+    {
+      "product_key": "earthworks-autonomy",
+      "contract_version": "1.0.0",
+      "owner": "systemia",
+      "adoption_stage": "discovery_only",
+      "authority": {
+        "state": "not_required",
+        "reason": "The public EarthWorks surface is discovery, bounded software simulation, study qualification, and human-confirmed Site Autonomy Study sales only. It grants no production equipment actuation, dispatch, safety, payment, or physical autonomy authority."
+      },
+      "context": {
+        "state": "not_required",
+        "reason": "No shared Context Fabric namespace is declared for customer site telemetry, equipment state, maps, production data, or operating-domain details. Customer site data remains separately scoped and permissioned."
+      },
+      "meter": {
+        "state": "not_required",
+        "reason": "The $5,000 founding Site Autonomy Study is a human-confirmed one-time scoped offer, not a shared machine-usage meter. Checkout initiation is not payment proof and paid state remains authoritative in Evercraft Payments."
+      },
+      "intake": {
+        "state": "not_required",
+        "reason": "Public discovery and self-screening do not authorize ingestion of private site or equipment data. Detailed site inputs require an approved bounded study and explicit customer authorization."
+      },
+      "execution": {
+        "state": "not_required",
+        "reason": "The public product is limited to simulation, shadow-mode planning, and study workflows. No shared Execution Gate action for full-size physical machine control is declared; production autonomy requires a separate verified safety and operating-domain contract."
+      },
+      "relationship": {
+        "state": "not_required",
+        "reason": "Public discovery does not contact equipment vendors, operators, employees, customers, or third parties. Design-partner outreach and study onboarding are separately authorized human actions."
+      },
+      "receipt_reconciliation": {
+        "state": "not_required",
+        "reason": "EarthWorks simulation and study artifacts may carry receipts, but no shared Context Receipt Bridge contract is declared for customer site operations at this discovery-only stage."
+      },
+      "rollback": {
+        "state": "declared",
+        "policy": "Remove public discovery or future shared-runtime bindings without converting simulations into physical authority, exposing customer site data, changing payment truth, or weakening stop, takeover, heartbeat, geofence, and safety-case requirements."
+      },
+      "compatibility": {
+        "intended_product_classes": [
+          "site_autonomy_orchestration_for_earthmoving_and_material_operations"
+        ]
+      },
+      "boundaries": {
+        "shared_runtime_contracted": false,
+        "public_discovery_only": true,
+        "simulation_is_physical_deployment_proof": false,
+        "production_machine_actuation_authority": false,
+        "paid_study_authorizes_machine_control": false,
+        "customer_site_data_public": false,
+        "payment_authority": "Evercraft Payments",
+        "buyer_specific_payment_order_requires_explicit_purchase_confirmation": true
+      }
+    },
+    {
+      "product_key": "fallen-sessions",
+      "contract_version": "1.0.0",
+      "owner": "systemia",
+      "adoption_stage": "discovery_only",
+      "authority": {
+        "state": "not_required",
+        "reason": "Fallen Sessions is publicly admitted as an engine-alpha discovery surface only. Discovery grants no authority to mutate private music sessions, publish media, invoke external plugins, distribute releases, or perform paid actions."
+      },
+      "context": {
+        "state": "not_required",
+        "reason": "No shared Context Fabric namespace is declared for private music sessions, recordings, MIDI, automation, stems, or artist project state. Creative project data remains inside the product boundary."
+      },
+      "meter": {
+        "state": "not_required",
+        "reason": "Fallen Sessions is not for sale yet and no live checkout or shared usage-meter contract is established."
+      },
+      "intake": {
+        "state": "not_required",
+        "reason": "Public discovery does not accept private audio, MIDI, project files, plugins, or recordings. Any future media intake requires separate authenticated and rights-aware authorization."
+      },
+      "execution": {
+        "state": "not_required",
+        "reason": "No public shared machine execution action is declared. Engine-alpha browser/audio behavior and reversible local edits do not establish remote execution, rendering, publishing, or plugin authority."
+      },
+      "relationship": {
+        "state": "not_required",
+        "reason": "Public discovery does not contact collaborators, labels, platforms, audiences, or other third parties. Future distribution handoff to Evercraft Clip remains separately gated."
+      },
+      "receipt_reconciliation": {
+        "state": "not_required",
+        "reason": "PulseGrid and Fallen can produce provenance and reversible edit receipts, but no shared Context Receipt Bridge contract is declared for external music projects at this discovery-only stage."
+      },
+      "rollback": {
+        "state": "declared",
+        "policy": "Remove public discovery or future shared-runtime bindings without deleting creative state, enabling media publication, changing ownership/provenance semantics, or representing engine alpha as a production-grade DAW."
+      },
+      "compatibility": {
+        "intended_product_classes": [
+          "agent_native_music_creation"
+        ]
+      },
+      "boundaries": {
+        "shared_runtime_contracted": false,
+        "public_discovery_only": true,
+        "engine_alpha": true,
+        "production_grade_daw_claimed": false,
+        "for_sale": false,
+        "checkout_enabled": false,
+        "private_media_intake_contracted": false,
+        "publishing_authority": false,
+        "third_party_plugin_compatibility_proven": false
+      }
+    },
+    {
+      "product_key": "game-fabric",
+      "contract_version": "1.0.0",
+      "owner": "systemia",
+      "adoption_stage": "discovery_only",
+      "authority": {
+        "state": "not_required",
+        "reason": "Public Game Fabric teaching demo uses synthetic role diagrams and does not grant Passport scopes, coaching authority, footage rights, or control of external systems."
+      },
+      "context": {
+        "state": "not_required",
+        "reason": "Public exercises run on fictional roles; no shared Context Fabric read or write scopes, student identifiers, private team film or proprietary playbooks are admitted."
+      },
+      "meter": {
+        "state": "not_required",
+        "reason": "No verified paid pilot or Game Fabric checkout is enabled. Discovery and local teaching demos create no billing obligation."
+      },
+      "intake": {
+        "state": "not_required",
+        "reason": "Local synthetic teaching exercises do not create an authorized school-film, student-data or coaching-staff intake workflow."
+      },
+      "execution": {
+        "state": "not_required",
+        "reason": "The public research demo cannot execute a school tactic, contact staff, publish a real scouting report, or make a production change through an agent."
+      },
+      "relationship": {
+        "state": "not_required",
+        "reason": "Public discovery does not send emails, contact teams, recruit student athletes, or create sales follow-ups."
+      },
+      "receipt_reconciliation": {
+        "state": "not_required",
+        "reason": "No shared private school/athlete receipt store is authorized; synthetic demonstration state does not become verified film or coaching evidence."
+      },
+      "rollback": {
+        "state": "declared",
+        "policy": "Remove public Game Fabric discovery admission or temporarily hide demo door; preserve permission boundaries and prior historical receipts, and never alter unrelated CHUM routes."
+      },
+      "compatibility": {
+        "intended_product_classes": [
+          "evidence_first_sports_playbook_research"
+        ]
+      },
+      "boundaries": {
+        "public_demo_synthetic_only": true,
+        "football_classroom_not_calibrated_prediction": true,
+        "nonfootball_classrooms_not_production": true,
+        "actual_film_requires_rights_and_coach_approval": true,
+        "minor_athlete_data_never_public": true,
+        "discovery_sends_no_email": true,
+        "discovery_creates_payment_obligation": false,
         "shared_runtime_contracted": false
       }
     }
