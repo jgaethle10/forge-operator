@@ -1,0 +1,18 @@
+{
+  "name": "@evercraft/operator-cli",
+  "version": "0.1.0-dev",
+  "private": true,
+  "description": "Local-first operator tool registry and opt-in MCP testing. Developer preview, no live marketplace.",
+  "type": "module",
+  "bin": {
+    "evercraft": "./cli.mjs"
+  },
+  "scripts": {
+    "test": "node --test tests/*.test.mjs",
+    "doctor": "node cli.mjs doctor"
+  },
+  "engines": {
+    "node": ">=20"
+  },
+  "license": "UNLICENSED"
+}
