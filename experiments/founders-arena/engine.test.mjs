@@ -3,7 +3,7 @@ import assert from 'node:assert/strict';
 import fs from 'node:fs';
 import vm from 'node:vm';
 const html=fs.readFileSync(new URL('./window.html',import.meta.url),'utf8');
-const engine=html.match(/<script id="founders-engine">([\\s\\S]*?)<\\/script>/)?.[1];
+const start=html.indexOf('<script id="founders-engine">');const end=html.indexOf('</script>',start);const engine=start>=0&&end>start?html.slice(start+'<script id="founders-engine">'.length,end):null;
 assert.ok(engine,'engine script available');
 const sandbox={};vm.createContext(sandbox);vm.runInContext(engine,sandbox);const F=sandbox.FoundersArena;
 test('deterministic world survives 100 turns',()=>{let a=F.createWorld(42),b=F.createWorld(42);for(let i=0;i<100;i++){a=F.step(a);b=F.step(b)}assert.equal(JSON.stringify(a),JSON.stringify(b));assert.equal(a.day,101);assert.ok(a.events.every(e=>e.basis.includes('simulat')))});
