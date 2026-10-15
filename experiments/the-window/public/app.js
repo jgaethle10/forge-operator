@@ -52,6 +52,14 @@ function renderProfile(w){
   profile.replaceChildren();
   profile.append(el('div','avatar',a.emoji),el('h3','',a.name),el('p','description',a.personality));
   profile.append(el('p','',a.action+' at '+(w.zones.find(z=>z.id===a.zone)?.name||'town')+'.'));
+  profile.append(el('p','description','Household: '+(a.household||'Willow Row')));
+  profile.append(el('h4','','LONG-TERM ASPIRATION'));
+  profile.append(el('p','',a.aspiration||'Finding a purpose in Mossmere'));
+  const progress=el('progress','goal-progress');
+  progress.max=100;progress.value=Math.max(0,Math.min(100,a.goal_progress||0));
+  progress.setAttribute('aria-label','Aspiration progress');
+  profile.append(progress,el('p','description',(a.goal_progress||0)+'% toward the next milestone · '+(a.goal_milestones||0)+' completed'));
+
   const facts=el('div','facts');
   for(const [name,value] of [['MOOD',a.mood+'%'],['ENERGY',a.energy+'%'],['COINS',a.coins]]) {
     const fact=el('div');fact.append(el('strong','',value),el('small','',name));facts.append(fact);
