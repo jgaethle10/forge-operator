@@ -72,6 +72,11 @@ try {
         entry.title=(await page.title()).slice(0,160);
         entry.has_customer_email_field=await page.locator('input[name="customer_ref"][type="email"]').count()>0;
         entry.has_checkout_cta=await page.getByRole('button',{name:/Continue to checkout/i}).count()>0;
+        // Record a genuine, read-only scroll through the real page for the human review video.
+        await page.evaluate(()=>window.scrollBy({top:Math.floor(window.innerHeight*.8),behavior:'smooth'}));
+        await page.waitForTimeout(650);
+        await page.evaluate(()=>window.scrollTo({top:0,behavior:'smooth'}));
+        await page.waitForTimeout(650);
         const screenshotPath=path.join(OUT,id+'.png');
         await page.screenshot({path:screenshotPath,fullPage:true,animations:'disabled'});
         entry.shot={file:path.relative(OUT,screenshotPath),sha256:digest(fs.readFileSync(screenshotPath))};
@@ -88,7 +93,7 @@ try {
       try{
         const rawPath=await video.path();
         const dest=path.join(OUT,id+'.webm');
-        if(fs.existsSync(rawPath)){fs.copyFileSync(rawPath,dest);entry.video={file:path.relative(OUT,dest),sha256:digest(fs.readFileSync(dest))};}
+        if(fs.existsSync(rawPath)){fs.renameSync(rawPath,dest);entry.video={file:path.relative(OUT,dest),sha256:digest(fs.readFileSync(dest))};}
       }catch(err){entry.errors.push('video:'+String(err?.message||err).slice(0,150))}
       entry.errors.push(...errors.slice(0,6));
       entry.blocked_methods=blockedMethods;
