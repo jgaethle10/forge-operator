@@ -1,0 +1,30 @@
+name: Systemia founder-directive admission gate
+
+on:
+  pull_request:
+    paths:
+      - 'systemia/control-plane/founder-directive.mjs'
+      - 'systemia/control-plane/founder-directive.proof.mjs'
+      - 'systemia/control-plane/control-plane.mjs'
+      - '.github/workflows/systemia-founder-directive.yml'
+  push:
+    paths:
+      - 'systemia/control-plane/founder-directive.mjs'
+      - 'systemia/control-plane/founder-directive.proof.mjs'
+      - 'systemia/control-plane/control-plane.mjs'
+      - '.github/workflows/systemia-founder-directive.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  admission-contract:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Verify founder directive admission boundaries
+        run: node --test systemia/control-plane/founder-directive.proof.mjs
