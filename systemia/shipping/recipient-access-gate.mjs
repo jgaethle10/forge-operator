@@ -1,4 +1,4 @@
-import { createHmac, timingSafeEqual } from 'node:crypto';
+import { createPublicKey, verify as verifySignature } from 'node:crypto';
 
 // Pre-send Shipping Department recipient-access verification.
 // This module does not issue approvals, send email, set Drive permissions, or call Systemia.
@@ -123,18 +123,21 @@ function validateEvidence(plan, evidence, now) {
   return [...new Set(reasons)];
 }
 
-export function verifyRecipientAccess({ plan, evidence, verifier_secret, now = Date.now() } = {}) {
+export function verifyRecipientAccess({ plan, evidence, trusted_verifier_public_key, now = Date.now() } = {}) {
   const reasons = validateEvidence(plan, evidence, now);
-  if (!verifier_secret || clean(verifier_secret).length < 32) reasons.push('independent_verifier_secret_not_configured');
-  if (!/^[a-f0-9]{64}$/i.test(clean(evidence?.signature))) reasons.push('shipping_attestation_signature_missing');
+  if (!clean(trusted_verifier_public_key)) reasons.push('trusted_verifier_public_key_not_configured');
+  if (!/^[A-Za-z0-9_-]{80,120}$/.test(clean(evidence?.signature))) reasons.push('shipping_attestation_signature_missing');
   if (!reasons.length) {
     try {
-      const expected = createHmac('sha256', verifier_secret)
-        .update(shippingAttestationPayload({plan,evidence}))
-        .digest();
-      const observed = Buffer.from(evidence.signature, 'hex');
-      if (observed.length !== expected.length || !timingSafeEqual(observed, expected)) {
-        reasons.push('shipping_signature_invalid_or_tampered');
+      const trusted = createPublicKey(trusted_verifier_public_key);
+      if (trusted.asymmetricKeyType !== 'ed25519') {
+        reasons.push('shipping_verifier_key_type_untrusted');
+      } else {
+        const payload = Buffer.from(shippingAttestationPayload({plan,evidence}));
+        const signature = Buffer.from(evidence.signature, 'base64url');
+        if (signature.length !== 64 || !verifySignature(null, payload, trusted, signature)) {
+          reasons.push('shipping_signature_invalid_or_tampered');
+        }
       }
     } catch {
       reasons.push('shipping_signature_could_not_be_verified');
