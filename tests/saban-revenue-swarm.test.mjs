@@ -37,7 +37,13 @@ const ids = new Set(all.map((x)=>x.public_id));
 if(ids.size!==expectedSellNow) fail('first-dollar lane should contain all healthy sell-now offers exactly once');
 if(!ids.has('roasted-text-pressure-test-machine-v1')) fail('ROASTED missing');
 if(!ids.has('website-launch-service-v1')) fail('Website Launch missing');
-if(!ids.has('audit-center-website-audit-machine-v1')) fail('Website Audit missing');
+const auditId='audit-center-website-audit-machine-v1';
+const heldAudit=catalog.offers.find((offer)=>offer.public_id===auditId);
+if(!heldAudit) fail('Website Audit missing from public discovery catalog');
+if(heldAudit.commercial_state!=='verification_required') fail('held Audit commercial state drift');
+if(ids.has(auditId)) fail('held Website Audit leaked into first-dollar distribution lane');
+if(result.lanes.high_value_cash.some((x)=>x.public_id===auditId)) fail('held Audit leaked into high-value cash lane');
+if(result.lanes.human_handoff.some((x)=>x.public_id===auditId)) fail('held Audit leaked into paid handoff lane');
 
 const roasted = all.find((x)=>x.public_id==='roasted-text-pressure-test-machine-v1');
 if(roasted.min_paid_usd!==0.99) fail('ROASTED price parsing failed');
