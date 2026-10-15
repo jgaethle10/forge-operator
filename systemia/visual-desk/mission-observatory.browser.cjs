@@ -64,6 +64,10 @@ async function run() {
         let lit=0;for(let i=0;i<pixels.length;i+=4*43){if(Math.max(pixels[i],pixels[i+1],pixels[i+2])>35)lit++;}
         return {horizontalOverflow:document.documentElement.scrollWidth-innerWidth,canvasWidth:b.width,canvasHeight:b.height,renderWidth:c.width,renderHeight:c.height,litSamples:lit};
       });
+      if(metrics.horizontalOverflow>3){
+        const offenders=await page.evaluate(()=>Array.from(document.querySelectorAll('body *')).map(el=>({selector:el.id?'#'+el.id:(el.className&&typeof el.className==='string'?'.'+el.className.split(' ').join('.') :el.tagName.toLowerCase()),right:Math.round(el.getBoundingClientRect().right),width:Math.round(el.getBoundingClientRect().width)})).filter(x=>x.right>innerWidth+3).sort((a,b)=>b.right-a.right).slice(0,15));
+        console.error('Horizontal overflow offenders',JSON.stringify(offenders));
+      }
       assert.ok(metrics.horizontalOverflow<=3,'Horizontal scroll overflow '+JSON.stringify(metrics));
       assert.ok(metrics.canvasWidth>100&&metrics.canvasHeight>100,'Canvas not sized '+JSON.stringify(metrics));
       assert.ok(metrics.litSamples>=15,'Canvas did not render sufficient visible pixels '+JSON.stringify(metrics));
