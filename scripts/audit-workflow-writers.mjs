@@ -23,7 +23,9 @@ export function inspectWorkflow(source, relativePath){
   const text=String(source||'');
   const permissionsWrite=/^\s*contents:\s*write\s*(?:#.*)?$/im.test(text) ||
     /^\s*permissions:\s*write-all\s*(?:#.*)?$/im.test(text);
-  const pushCommand=/(?:^|[\n;])\s*(?:if\s+)?(?:git\s+push|git\s+-C\s+\S+\s+push)\b/im.test(text) ||
+  // Include GitHub Actions YAML one-line steps: "- run: git push ...".
+  // Also conservatively flag commands buried in multi-line scripts.
+  const pushCommand=/\bgit\s+(?:-C\s+\S+\s+)?push\b/im.test(text) ||
     /\bgh\s+api\s+[^\n]*(?:git\/refs|\/contents\/)/i.test(text);
   const directMainPush=/\bgit\s+push\b[^\n]*(?:HEAD:main|\borigin\s+main\b|\brefs\/heads\/main\b)/im.test(text);
   const broaderMainMutation=/(?:^|[\n])\s*git\s+(?:add|commit)\b/im.test(text)&&pushCommand;
