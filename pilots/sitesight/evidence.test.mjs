@@ -38,7 +38,7 @@ function example() {
 test('accepts a synthetic human-reviewed closeout and retains dismissal', () => {
   const checked = inspectSiteSightExport(example());
   assert.equal(checked.ok, true);
-  assert.deepEqual(checked.counts, {pending: 0, verified: 0, dismissed: 1, closed: 1});
+  assert.deepEqual(checked.counts, {pending: 0, inspection_required: 0, verified: 0, dismissed: 1, closed: 1});
   assert.equal(checked.authenticated, false);
   assert.equal(checked.detection, 'not_connected');
   assert.match(checked.content_sha256, /^[a-f0-9]{64}$/);
@@ -76,4 +76,25 @@ test('rejects malformed and empty input', () => {
   for (const x of [null, undefined, {}, [], 'example']) {
     assert.equal(validateSiteSightExport(x).ok, false);
   }
+});
+
+test('uncertain visual PPE creates a dated, non-cleared field-inspection state', () => {
+  const doc = example();
+  doc.items = [candidate('P1', 'inspection_required', {
+    label: 'Boots not verifiable', kind: 'boots', confidence: 'unknown',
+    review_note: 'Image insufficient. Request a physical field PPE inspection.',
+    inspection_requested_at: iso('01'),
+    reviewed_at: iso('01'),
+  })];
+  doc.events = [
+    event('00', 'demo_reset', null),
+    event('01', 'field_inspection_requested', 'P1', 'Manual site inspection required'),
+  ];
+  assert.equal(validateSiteSightExport(doc).ok, true, JSON.stringify(validateSiteSightExport(doc).errors));
+  assert.equal(validateSiteSightExport(doc).counts.inspection_required, 1);
+  doc.events[1].action = 'human_dismissed';
+  assert.equal(validateSiteSightExport(doc).ok, false, 'unknown PPE must not be dismissed by camera');
+  doc.events[1].action = 'field_inspection_requested';
+  doc.items[0].inspection_requested_at = null;
+  assert.ok(validateSiteSightExport(doc).errors.some(e => e.code === 'inspection_request'));
 });
