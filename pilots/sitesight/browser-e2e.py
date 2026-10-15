@@ -31,22 +31,30 @@ def run_cli(path):
 
 
 with sync_playwright() as playwright, tempfile.TemporaryDirectory() as scratch:
+    artifact_dir = os.getenv('SITESIGHT_ARTIFACT_DIR')
+    evidence_dir = Path(artifact_dir) if artifact_dir else None
+    if evidence_dir:
+        evidence_dir.mkdir(parents=True, exist_ok=True)
     exe = os.getenv('SITESIGHT_BROWSER_EXECUTABLE')
     options = {'headless': True, 'args': ['--no-sandbox']}
     if exe:
         options['executable_path'] = exe
     browser = playwright.chromium.launch(**options)
     try:
-        page = browser.new_page(
+        context = browser.new_context(
             accept_downloads=True, viewport={'width': 390, 'height': 844},
-            device_scale_factor=1
+            device_scale_factor=1,
+            record_video_dir=str(evidence_dir) if evidence_dir else None,
         )
+        page = context.new_page()
         js_errors = []
         page.on('pageerror', lambda error: js_errors.append(str(error)))
         page.on('dialog', lambda dialog: dialog.accept())
         page.set_content(HTML.read_text(encoding='utf-8'), wait_until='load')
         check('SiteSight' in page.title(), 'SiteSight UI never mounted')
         check(page.locator('#nOpen').inner_text() == '2', 'arrival candidates missing')
+        if evidence_dir:
+            page.screenshot(path=str(evidence_dir / '01-arrival-simulation.png'), full_page=True)
 
         # Deliberate false-positive dismissal, followed by a reviewer closeout.
         page.locator('[data-act="dismiss"][data-id="A1"]').click()
@@ -57,6 +65,8 @@ with sync_playwright() as playwright, tempfile.TemporaryDirectory() as scratch:
         page.locator('#closeAction').click()
         check(page.locator('#nClosed').inner_text() == '1', 'closeout counter wrong')
         check(page.locator('#nDismissed').inner_text() == '1', 'dismissal counter wrong')
+        if evidence_dir:
+            page.screenshot(path=str(evidence_dir / '02-human-review-closeout.png'), full_page=True)
 
         with page.expect_download() as info:
             page.locator('#export').click()
@@ -77,6 +87,9 @@ with sync_playwright() as playwright, tempfile.TemporaryDirectory() as scratch:
         checked = run_cli(first)
         check(checked.returncode == 0, f'CLI rejected actual browser export: {checked.stdout}\n{checked.stderr}')
         receipt = json.loads(checked.stdout)
+        if evidence_dir:
+            (evidence_dir / '03-export-reviewed.json').write_text(first.read_text(), encoding='utf-8')
+            (evidence_dir / '04-validation-result.json').write_text(checked.stdout, encoding='utf-8')
         check(receipt['ok'] is True, 'invalid browser export')
         check(receipt['authenticated'] is False, 'synthetic export was misrepresented as authenticated')
         check(receipt['detection'] == 'not_connected', 'model connection was falsely asserted')
@@ -93,6 +106,8 @@ with sync_playwright() as playwright, tempfile.TemporaryDirectory() as scratch:
         page.locator('#scenario').select_option('poor')
         check(page.locator('[data-act="verify"]').count() == 0, 'Unknown PPE could be visually approved')
         check(page.locator('button:disabled').count() >= 2, 'Manual inspection warning control missing')
+        if evidence_dir:
+            page.screenshot(path=str(evidence_dir / '05-unverifiable-ppe.png'), full_page=True)
         with page.expect_download() as info:
             page.locator('#export').click()
         poor = Path(scratch) / 'occluded.json'
@@ -105,6 +120,8 @@ with sync_playwright() as playwright, tempfile.TemporaryDirectory() as scratch:
         )
         check(run_cli(poor).returncode == 0, 'Valid pending poor-visibility export was rejected')
         check(not js_errors, 'Browser errors: ' + ', '.join(js_errors))
+        if evidence_dir:
+            (evidence_dir / '06-occluded-export.json').write_text(poor.read_text(), encoding='utf-8')
         print(json.dumps({
             'result': 'PASS', 'mode': 'synthetic_only',
             'checks': ['dismissal', 'verification', 'human_closeout', 'browser_json_export',
@@ -114,4 +131,6 @@ with sync_playwright() as playwright, tempfile.TemporaryDirectory() as scratch:
             'systemia_admitted': False, 'checkout_connected': False,
         }, indent=2))
     finally:
+        if 'context' in locals():
+            context.close()
         browser.close()
