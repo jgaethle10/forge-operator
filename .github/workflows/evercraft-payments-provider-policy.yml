@@ -7,10 +7,12 @@ on:
       - 'systemia/payments/multi-provider-route-plan.mjs'
       - 'systemia/payments/merchant-opportunity-scanner.mjs'
       - 'systemia/payments/provider-evidence-gate.mjs'
+      - 'public/payments/merchant-lab.html'
       - 'tests/merchant-economics.test.mjs'
       - 'tests/multi-provider-route-plan.test.mjs'
       - 'tests/merchant-opportunity-scanner.test.mjs'
       - 'tests/provider-evidence-gate.test.mjs'
+      - 'tests/payments-merchant-lab.test.mjs'
       - '.github/workflows/evercraft-payments-provider-policy.yml'
   workflow_dispatch:
 
@@ -28,5 +30,5 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: '22'
-      - name: Test read-only merchant economics, growth, provider and evidence gates
-        run: node --test tests/merchant-economics.test.mjs tests/multi-provider-route-plan.test.mjs tests/merchant-opportunity-scanner.test.mjs tests/provider-evidence-gate.test.mjs
+      - name: Test read-only merchant product, provider and evidence gates
+        run: node --test tests/merchant-economics.test.mjs tests/multi-provider-route-plan.test.mjs tests/merchant-opportunity-scanner.test.mjs tests/provider-evidence-gate.test.mjs tests/payments-merchant-lab.test.mjs
