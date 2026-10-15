@@ -36,10 +36,32 @@ Packaging is not transport. A ZIP with a 30 MiB source remains roughly 30 MiB. E
 
 ## Systemia gates
 
-Existing mission key: `evercraft-distribution-engine-001-20261012`; recorded QA organism state `evercraft-distribution-engine-001-parcel-desk-v03` to be version-updated. Reuse the existing Systemia Shipping Department and ForensiScope; no duplicate specialist job created. Formal Systemia thread admission / release permit, independent recipient acceptance, real customer terms, corrected public turnaround claims, Evercraft Payments settlement and outbound AMBER clearance are still required.
+Existing mission key: `evercraft-distribution-engine-001-20261012`; recorded QA organism state `evercraft-distribution-engine-001-parcel-desk-v04` (candidate, not an admission permit). Reuse the existing Systemia Shipping Department and ForensiScope; no duplicate specialist job created. Formal Systemia thread admission / release permit, independent recipient acceptance, real customer terms, corrected public turnaround claims, Evercraft Payments settlement and outbound AMBER clearance are still required.
 
 ## Pilot acceptance definition
 
 **Success:** One authorized recipient who did not create the file can access an approved transport package, reconstruct the original without an engineer's intervention, show matching hash against the sender's independently conveyed expected digest, and acknowledge retrieval. Confirm terms and collected payment separately, then measure human labor time and rework before repricing the proposed $99 service.
 
 **Do not count as success:** local preview, source ZIP uploaded to Drive, self-downloading a private object, a test checksum alone, a prospect message, an unconfirmed link click, or a Stripe link existing.
+
+## GitHub review update | October 14, 2026
+
+GitHub draft PR #1250 now includes a `restore-zip` command in the existing offline CLI. This bridges the one-ZIP browser sender with Python recipients without requiring them to manually extract dozens of pieces.
+
+```bash
+# Open this HTML locally for sender/recipient processing
+# distribution/parcel-desk/index.html
+
+# Or restore a handoff archive using local Python (no network required)
+python distribution/parcel-desk/evercraft_parcel.py restore-zip evercraft-parcel-handoff.zip ./received
+
+# Keep the existing parts+manifest workflow when necessary
+python distribution/parcel-desk/evercraft_parcel.py restore ./parcel-parts ./received
+
+# Run both independently scoped suites
+python -m unittest discover -s distribution/parcel-desk -p 'test_*.py' -v
+```
+
+The v0.4 ZIP recipient validates an approved flat filename allowlist, disallows duplicate/unknown entries, directory traversal, ZIP symlinks, encryption or compression, bounds local sizes to 64 MiB, checks archive CRC, and then uses the original per-part + full SHA-256 verification. It refuses to overwrite an existing restored file. CLI restore-zip is a local review-only capability, not a cloud upload, malware filter, encrypted channel, identity verification, or commercial delivery service.
+
+**Required external proof:** A separately controlled recipient account/device must access one permissioned transport and recover the original independently, using the sender's separately authenticated expected digest. Test with synthetic content first; obtain Systemia/Shipping/Security acceptance and separate Evercraft Payments verification before paid promotion.
