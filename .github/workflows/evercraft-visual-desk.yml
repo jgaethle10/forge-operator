@@ -58,7 +58,7 @@ jobs:
           node -e "const fs=require('fs');const b=fs.readFileSync('$asset');const p=Buffer.from([0x89,0x50,0x4e,0x47,0x0d,0x0a,0x1a,0x0a]);if(!b.subarray(0,8).equals(p))process.exit(9)"
 
       - name: Prove visual story factory and Radar admission bridge
-        run: node --test systemia/graphics-command/director.test.mjs systemia/graphics-command/poster-renderer.test.mjs systemia/graphics-command/shot-tournament.test.mjs systemia/graphics-command/commercial-renderer.test.mjs systemia/visual-desk/factory.test.mjs systemia/visual-desk/radar-adapter.test.mjs systemia/visual-desk/transporter.test.mjs
+        run: node --test systemia/graphics-command/director.test.mjs systemia/graphics-command/poster-renderer.test.mjs systemia/graphics-command/shot-tournament.test.mjs systemia/graphics-command/commercial-renderer.test.mjs systemia/visual-desk/factory.test.mjs systemia/visual-desk/radar-adapter.test.mjs systemia/visual-desk/transporter.test.mjs systemia/visual-desk/mission-observatory.test.mjs
 
       - name: Prove Graphics Command handoff compiles through Fallen
         run: |
@@ -73,6 +73,9 @@ jobs:
           rm -rf _visual_desk_release
           mkdir -p _visual_desk_release
           cp public/visuals/index.html _visual_desk_release/index.html
+          cp -R public/visuals/mission-observatory _visual_desk_release/mission-observatory
+          test -f _visual_desk_release/mission-observatory/index.html
+          test -f _visual_desk_release/mission-observatory/scene.mjs
           node systemia/visual-desk/build-all.mjs systemia/visual-desk/stories _visual_desk_release https://fabric.systemiacommandcenters.com/visuals
           node systemia/graphics-command/build-commercial.mjs --campaign systemia/graphics-command/campaigns/website-audit-attention.json --output _visual_desk_release --origin https://fabric.systemiacommandcenters.com/visuals
           test -f _visual_desk_release/index.html
