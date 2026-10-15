@@ -444,7 +444,7 @@
       "public_id": "audit-center-website-audit-machine-v1",
       "name": "Systemia Website Audit",
       "execution_mode": "hybrid_native_and_systemia_managed",
-      "native_state": "quick_audit_source_ready_external_canary_pending_complete_patch_tiers_human_service",
+      "native_state": "held_new_purchase_existing_provider_verified_orders_only_hosted_negative_canary_3_of_6",
       "intake": [
         "buyer_email",
         "site_url",

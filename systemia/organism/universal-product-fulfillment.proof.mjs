@@ -11,7 +11,12 @@ const SELL_NOW = catalog.offers
 const audit = auditFulfillmentRegistry({ sellNowIds: SELL_NOW });
 assert.equal(audit.pass, true);
 assert.equal(audit.expected_sell_now_count, SELL_NOW.length);
-assert.equal(SELL_NOW.length, 17, 'current canonical sell-now count changed; add/remove fulfillment profiles deliberately');
+assert.equal(SELL_NOW.length, 16, 'canonical sell-now count must only change through deliberate fulfillment review');
+const heldAuditId='audit-center-website-audit-machine-v1';
+assert.equal(SELL_NOW.includes(heldAuditId),false,'Website Audit checkout must remain held');
+assert.equal(catalog.offers.find(o=>o.public_id===heldAuditId)?.commercial_state,'verification_required');
+assert.ok(getFulfillmentProfile(heldAuditId),'historical provider-verified orders retain a fulfillment profile');
+assert.match(getFulfillmentProfile(heldAuditId).native_state,/held_new_purchase/,'historical fulfillment profile must explicitly reflect paid release hold');
 assert.equal(audit.covered_sell_now_count, SELL_NOW.length);
 assert.deepEqual(audit.missing, []);
 assert.deepEqual(audit.invalid, []);
