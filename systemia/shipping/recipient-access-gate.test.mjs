@@ -1,9 +1,12 @@
 import assert from 'node:assert/strict';
-import { createHmac } from 'node:crypto';
+import { generateKeyPairSync, sign as signMessage } from 'node:crypto';
 import test from 'node:test';
 import { shippingAttestationPayload, verifyRecipientAccess } from './recipient-access-gate.mjs';
 
-const SECRET = 'shipping-fixture-secret-only-not-for-production-2026';
+const { privateKey: TEST_SIGNER, publicKey: TEST_VERIFIER } = generateKeyPairSync('ed25519');
+const { publicKey: WRONG_VERIFIER } = generateKeyPairSync('ed25519');
+const PUBLIC_KEY = TEST_VERIFIER.export({ type:'spki', format:'pem' });
+const WRONG_KEY = WRONG_VERIFIER.export({ type:'spki', format:'pem' });
 const SHA = 'a'.repeat(64);
 const TIME = Date.parse('2026-10-14T20:00:00Z');
 const plan = {
@@ -40,15 +43,17 @@ const base = {
     client_filename:'Customer Brief.pdf',provider_readback:true,sha256:'sha256:' + SHA
   }]
 };
-function signed(evidence = base, releasePlan = plan, secret = SECRET) {
+function signed(evidence = base, releasePlan = plan) {
   const copy = structuredClone(evidence);
-  copy.signature = createHmac('sha256', secret)
-    .update(shippingAttestationPayload({plan:releasePlan, evidence:copy}))
-    .digest('hex');
+  copy.signature = signMessage(null,
+    Buffer.from(shippingAttestationPayload({plan:releasePlan, evidence:copy})),
+    TEST_SIGNER).toString('base64url');
   return copy;
 }
-function verdict(overrides = {}, { releasePlan = plan, secret = SECRET, now = TIME } = {}) {
-  return verifyRecipientAccess({ plan:releasePlan, evidence:signed({...structuredClone(base), ...overrides}, releasePlan), verifier_secret:secret, now });
+function verdict(overrides = {}, { releasePlan = plan, public_key = PUBLIC_KEY, now = TIME } = {}) {
+  return verifyRecipientAccess({ plan:releasePlan,
+    evidence:signed({...structuredClone(base), ...overrides}, releasePlan),
+    trusted_verifier_public_key:public_key, now });
 }
 function held(value, reason) {
   assert.equal(value.pass,false);
@@ -62,14 +67,14 @@ test('independently signed provider PDF attachment readback passes pre-send', ()
   assert.equal(out.boundary.provider_send_not_inferred,true);
   assert.equal(out.boundary.customer_open_not_inferred_from_attachment,true);
 });
-test('missing protected verifier secret cannot release', () => held(verdict({}, {secret:null}), 'independent_verifier_secret_not_configured'));
+test('missing trusted verifier public key cannot release', () => held(verdict({}, {public_key:null}), 'trusted_verifier_public_key_not_configured'));
 test('wrong key cannot authenticate a signer', () => {
-  const out=verifyRecipientAccess({plan,evidence:signed(),verifier_secret:'wrong-but-long-enough-nonproduction-key-12345',now:TIME});
+  const out=verifyRecipientAccess({plan,evidence:signed(),trusted_verifier_public_key:WRONG_KEY,now:TIME});
   held(out,'shipping_signature_invalid_or_tampered');
 });
 test('tampered attachment hash after attestation is denied', () => {
   const ev=signed();ev.provider_attachment_proofs[0].sha256='sha256:'+'d'.repeat(64);
-  held(verifyRecipientAccess({plan,evidence:ev,verifier_secret:SECRET,now:TIME}),'provider_attachment_0_hash_or_readback_mismatch');
+  held(verifyRecipientAccess({plan,evidence:ev,trusted_verifier_public_key:PUBLIC_KEY,now:TIME}),'provider_attachment_0_hash_or_readback_mismatch');
 });
 test('signed receipt with missing provider readback is denied',()=>held(verdict({provider_attachment_proofs:[]}), 'provider_attachment_count_mismatch'));
 test('signed ZIP-only buyer preview is rejected',()=>{
@@ -89,19 +94,19 @@ test('future and stale approvals fail closed',()=>{
 });
 test('absent verified shipping signature is held',()=>{
   const e=signed();delete e.signature;
-  held(verifyRecipientAccess({plan,evidence:e,verifier_secret:SECRET,now:TIME}), 'shipping_attestation_signature_missing');
+  held(verifyRecipientAccess({plan,evidence:e,trusted_verifier_public_key:PUBLIC_KEY,now:TIME}), 'shipping_attestation_signature_missing');
 });
 test('changing recipient invalidates bound HMAC',()=>{
   const changed={...plan,recipient_ref:'different@example.invalid'};
-  held(verifyRecipientAccess({plan:changed,evidence:signed(),verifier_secret:SECRET,now:TIME}), 'shipping_signature_invalid_or_tampered');
+  held(verifyRecipientAccess({plan:changed,evidence:signed(),trusted_verifier_public_key:PUBLIC_KEY,now:TIME}), 'shipping_signature_invalid_or_tampered');
 });
 test('changing package digest invalidates bound HMAC',()=>{
   const changed=structuredClone(plan);changed.package_manifest.package_digest='sha256:'+'e'.repeat(64);
-  held(verifyRecipientAccess({plan:changed,evidence:signed(),verifier_secret:SECRET,now:TIME}), 'shipping_signature_invalid_or_tampered');
+  held(verifyRecipientAccess({plan:changed,evidence:signed(),trusted_verifier_public_key:PUBLIC_KEY,now:TIME}), 'shipping_signature_invalid_or_tampered');
 });
 test('changing chosen mode or link after signature invalidates HMAC',()=>{
   const e=signed();e.mode='external_public_link';
-  held(verifyRecipientAccess({plan,evidence:e,verifier_secret:SECRET,now:TIME}),'recipient_open_not_verified');
+  held(verifyRecipientAccess({plan,evidence:e,trusted_verifier_public_key:PUBLIC_KEY,now:TIME}),'recipient_open_not_verified');
 });
 test('public Drive link with signed-out download matching preview hash passes access preflight',()=>{
   const e=signed({
@@ -112,7 +117,7 @@ test('public Drive link with signed-out download matching preview hash passes ac
     opened_content_sha256:'sha256:'+SHA,
     share_scope:'anyone_reader'
   });
-  const out=verifyRecipientAccess({plan,evidence:e,verifier_secret:SECRET,now:TIME});
+  const out=verifyRecipientAccess({plan,evidence:e,trusted_verifier_public_key:PUBLIC_KEY,now:TIME});
   assert.equal(out.pass,true,JSON.stringify(out.reasons));
 });
 test('public Google Drive link with owner-only sharing is held',()=>{
@@ -169,7 +174,7 @@ test('a missing or non-array artifact inventory returns a HOLD without throwing'
   for(const artifacts of [[],{},null]){
     const bad=structuredClone(plan);
     bad.package_manifest.artifacts=artifacts;
-    const result=verifyRecipientAccess({plan:bad,evidence:signed(),verifier_secret:SECRET,now:TIME});
+    const result=verifyRecipientAccess({plan:bad,evidence:signed(),trusted_verifier_public_key:PUBLIC_KEY,now:TIME});
     held(result,'package_artifact_inventory_missing');
   }
 });
@@ -184,10 +189,10 @@ test('duplicate artifact names remain HOLD even with provider proofs',()=>{
 test('manifest entries missing client filename fail closed',()=>{
   const bad=structuredClone(plan);
   delete bad.package_manifest.artifacts[0].client_filename;
-  held(verifyRecipientAccess({plan:bad,evidence:signed(),verifier_secret:SECRET,now:TIME}), 'artifact_filename_missing');
+  held(verifyRecipientAccess({plan:bad,evidence:signed(),trusted_verifier_public_key:PUBLIC_KEY,now:TIME}), 'artifact_filename_missing');
 });
 test('completely absent plan returns HOLD rather than throwing',()=>{
-  const out=verifyRecipientAccess({plan:null,evidence:signed(),verifier_secret:SECRET,now:TIME});
+  const out=verifyRecipientAccess({plan:null,evidence:signed(),trusted_verifier_public_key:PUBLIC_KEY,now:TIME});
   held(out,'release_plan_not_ready');
   assert.equal(out.boundary.provider_send_not_inferred,true);
 });
