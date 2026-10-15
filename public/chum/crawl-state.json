@@ -2,7 +2,7 @@
   "schema": "evercraft.chum.crawl-state.v1",
   "provider": "Evercraft LLC",
   "coordinator": "CHUM",
-  "updated_at": "2026-10-15T15:48:18.271Z",
+  "updated_at": "2026-10-15T15:51:37.414Z",
   "url_count": 2984,
   "doctrine": {
     "crawl_can_be_requested_not_forced": true,
@@ -141,8 +141,8 @@
     },
     "/chum/hot/index.json": {
       "path": "/chum/hot/index.json",
-      "content_sha256": "ee7e3d39673aab72bc2bf71386a9a43ba76d68a59e7892fc079e6e5db947d049",
-      "last_changed": "2026-10-15T15:48:18.271Z",
+      "content_sha256": "7deb4d4959b57f08f939b3c1f71601cb2aef6ba4ab61e2f29f59477ed7a1e3de",
+      "last_changed": "2026-10-15T15:51:37.414Z",
       "priority": 80
     },
     "/chum/strike/": {
@@ -807,8 +807,8 @@
     },
     "/.well-known/evercraft-chum.json": {
       "path": "/.well-known/evercraft-chum.json",
-      "content_sha256": "dbeb947e316e245b10af520b2dda308bb5e72b7eca02f47760707a751e701906",
-      "last_changed": "2026-10-15T07:53:24.692Z",
+      "content_sha256": "f571a02e7d81ed29f4158381be5a9cefff8d0a7eb93267a05697efcc04936972",
+      "last_changed": "2026-10-15T15:51:37.414Z",
       "priority": 84
     },
     "/.well-known/evercraft-media-overflow.json": {
