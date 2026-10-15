@@ -26,7 +26,7 @@ jobs:
         with:
           python-version: "3.11"
       - name: Exact-byte and fail-closed tests
-        run: python -m unittest discover -s distribution/parcel-desk -p 'test_parcel.py' -v
+        run: python -m unittest discover -s distribution/parcel-desk -p 'test_*.py' -v
       - name: Verify offline review boundary
         run: |
           python - <<'PY'
