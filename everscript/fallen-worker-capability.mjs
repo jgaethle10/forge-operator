@@ -8,7 +8,10 @@ export function verifyFallenWorkerReceipt(job, response) {
   if (!response || response.ok !== true) throw new Error('fallen_worker_not_ok');
   const { ok, ...receipt } = response;
   if (receipt.schema !== 'evercraft.fallen.render-receipt.v1') throw new Error('fallen_receipt_schema_invalid');
-  if (receipt.job_id !== job.job_id || receipt.stage_id !== job.stage.id) throw new Error('fallen_receipt_identity_mismatch');
+  if (receipt.engine !== 'evercraft-fallen-render-worker-v1') throw new Error('fallen_receipt_engine_mismatch');
+  if (receipt.job_id !== job.job_id || receipt.stage_id !== job.stage.id || receipt.asset_scope_id !== job.asset_scope_id) {
+    throw new Error('fallen_receipt_identity_mismatch');
+  }
   if (receipt.frame_start !== job.frame_start || receipt.frame_count !== job.frame_count || receipt.total_frames !== job.total_frames) {
     throw new Error('fallen_receipt_frame_range_mismatch');
   }
@@ -23,19 +26,30 @@ export function verifyFallenWorkerReceipt(job, response) {
   if (!Array.isArray(receipt.console_errors) || receipt.console_errors.length) throw new Error('fallen_receipt_console_errors');
   if (!Array.isArray(receipt.assets) || receipt.assets.length !== job.assets.length) throw new Error('fallen_receipt_assets_missing');
   const expectedAssets = new Map(job.assets.map(a => [a.id, a]));
+  const observedAssets = new Set();
   for (const a of receipt.assets) {
-    const expected = expectedAssets.get(a.id);
-    if (!expected || expected.sha256 !== a.sha256 || expected.filename !== a.filename) throw new Error('fallen_receipt_asset_identity_mismatch');
+    const expected = expectedAssets.get(a?.id);
+    if (!expected || observedAssets.has(a.id) || expected.sha256 !== a.sha256 ||
+        expected.filename !== a.filename || expected.media_type !== a.media_type) {
+      throw new Error('fallen_receipt_asset_identity_mismatch');
+    }
+    observedAssets.add(a.id);
   }
   const seenFrames = new Set();
   for (let i = 0; i < receipt.frames.length; i++) {
     const frame = receipt.frames[i];
-    if (frame.frame !== job.frame_start + i || !shaRx.test(frame.sha256) || frame.bytes <= 0 || seenFrames.has(frame.frame)) {
+    const expectedIndex = job.frame_start + i;
+    const expectedName = `frame-${String(expectedIndex).padStart(8, '0')}.png`;
+    const expectedTime = Number((expectedIndex / job.stage.fps).toFixed(6));
+    if (frame.frame !== expectedIndex || frame.filename !== expectedName || frame.time_sec !== expectedTime ||
+        !shaRx.test(frame.sha256) || !Number.isSafeInteger(frame.bytes) || frame.bytes <= 0 ||
+        seenFrames.has(frame.frame)) {
       throw new Error('fallen_receipt_frame_invalid');
     }
     seenFrames.add(frame.frame);
   }
   if (!shaRx.test(receipt.receipt_sha256)) throw new Error('fallen_receipt_digest_missing');
+  // This digest is content integrity, not a worker signature or independent proof of production execution.
   const { receipt_sha256, ...unsigned } = receipt;
   if (digest(unsigned) !== receipt_sha256) throw new Error('fallen_receipt_digest_invalid');
   return { verified: true, job_id: receipt.job_id, frame_count: receipt.frame_count,

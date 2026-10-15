@@ -21,7 +21,7 @@ const stage = {schema:'evercraft.fallen.visual-stage.v1',id:'rc05-demo',width:64
   background:'#080b0b',camera:{keyframes:[{t:0,x:0,y:0,zoom:1}]},layers:[{id:'label',kind:'text',z:1,x:20,y:20,width:200,height:40,text:'SYNTHETIC'}]};
 const job = {schema:'evercraft.fallen.render-job.v1',job_id:'rc05-demo-job',stage,assets:[],frame_start:0,frame_count:1};
 function fakeWorkerResponse(j){
-  const receipt={schema:'evercraft.fallen.render-receipt.v1',engine:'fixture-not-real-worker',job_id:j.job_id,asset_scope_id:j.asset_scope_id,
+  const receipt={schema:'evercraft.fallen.render-receipt.v1',engine:'evercraft-fallen-render-worker-v1',job_id:j.job_id,asset_scope_id:j.asset_scope_id,
     stage_id:j.stage.id,stage_sha256:sha({...j.stage,createdAt:undefined}),frame_start:j.frame_start,frame_count:j.frame_count,
     total_frames:j.total_frames,assets:j.assets,frames:[{frame:0,filename:'frame-00000000.png',bytes:100,sha256:'a'.repeat(64),time_sec:0}],
     console_errors:[],boundaries:{external_network_allowed:false,arbitrary_html_accepted:false,asset_uri_only:true,asset_sha256_verified:true,exact_frame_control:true}};
@@ -46,6 +46,31 @@ assert.throws(()=>createFallenWorkerCapability({manifest}),/authorized_transport
 assert.throws(()=>createFallenWorkerCapability({manifest:{name:'FallenRenderWorker',actions:{render:{arity:1}}},dispatch:async()=>null}),/manifest_contract/);
 const tamper=edit=>{const j={...job,asset_scope_id:job.job_id,total_frames:12},r=fakeWorkerResponse(j);edit(r);assert.throws(()=>verifyFallenWorkerReceipt(j,r));};
 tamper(r=>{r.stage_id='wrong'});
+tamper(r=>{r.engine='forged-worker';});
+tamper(r=>{r.asset_scope_id='other-customer';});
+tamper(r=>{r.frames[0].filename='wrong-frame.png';});
+tamper(r=>{r.frames[0].time_sec=.25;});
+tamper(r=>{r.frames[0].bytes=0.5;});
+tamper(r=>{r.frames[0].bytes='100';});
+// Tamper with a field and recompute the content hash. Cross-field binding must still reject it.
+tamper(r=>{r.frames[0].time_sec=0.25;r.receipt_sha256=sha((({ok,...unsigned})=>{delete unsigned.receipt_sha256;return unsigned;})(r));});
+// Test genuine asset manifests, including a duplicate ID and MIME-type substitution.
+const asset={id:'clip-a',filename:'clip-a.png',media_type:'image/png',sha256:'c'.repeat(64)};
+const assetJob={...job,asset_scope_id:job.job_id,total_frames:12,assets:[asset]};
+const receiptWithAsset=fakeWorkerResponse(assetJob);
+receiptWithAsset.assets=[asset];
+receiptWithAsset.receipt_sha256=sha((({ok,...unsigned})=>{delete unsigned.receipt_sha256;return unsigned;})(receiptWithAsset));
+assert.equal(verifyFallenWorkerReceipt(assetJob,receiptWithAsset).verified,true);
+const assetMismatch=structuredClone(receiptWithAsset);
+assetMismatch.assets[0].media_type='image/jpeg';
+assetMismatch.receipt_sha256=sha((({ok,...unsigned})=>{delete unsigned.receipt_sha256;return unsigned;})(assetMismatch));
+assert.throws(()=>verifyFallenWorkerReceipt(assetJob,assetMismatch),/asset_identity_mismatch/);
+const twoAssets={...assetJob,assets:[asset,{...asset,id:'clip-b',filename:'clip-b.png',sha256:'d'.repeat(64)}]};
+const duplicateReceipt=fakeWorkerResponse(twoAssets);
+duplicateReceipt.assets=[asset,asset];
+duplicateReceipt.receipt_sha256=sha((({ok,...unsigned})=>{delete unsigned.receipt_sha256;return unsigned;})(duplicateReceipt));
+assert.throws(()=>verifyFallenWorkerReceipt(twoAssets,duplicateReceipt),/asset_identity_mismatch/);
+
 tamper(r=>{r.frame_count=12});
 tamper(r=>{r.boundaries.external_network_allowed=true});
 tamper(r=>{r.frames[0].sha256='invalid'});
