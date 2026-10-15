@@ -33,6 +33,22 @@ async function requestJson(url,options={},timeoutMs=10000){
   }
 }
 
+// Remote response bodies are untrusted and can contain identifiers or secrets.
+// Persist stable, bounded diagnostics only; keep raw error strings out of job
+// state, Systemia receipts and any returned machine-commerce projection.
+export function safeNodeSeedExecutionError(error){
+  const code=String(error?.message||'');
+  if([
+    'nodeseed_registered_worker_receipt_required',
+    'nodeseed_registered_worker_receipt_hash_required',
+    'nodeseed_compute_execution_receipt_required',
+    'nodeseed_execution_receipt_binding_mismatch',
+  ].includes(code)) return code;
+  const status=Number(error?.status);
+  if(Number.isInteger(status)&&status>=400&&status<=599) return 'nodeseed_remote_http_'+status;
+  return 'nodeseed_executor_failure_redacted';
+}
+
 function inventoryNode(inventory,nodeId){
   return (inventory?.nodes||[]).find(row=>String(row.node_id||'')===String(nodeId||''))||null;
 }
@@ -140,6 +156,21 @@ export async function executeNodeSeedExecutionIntent({
     if(result?.worker_receipt?.schema!=='evercraft.compute.registered-worker-receipt.v1'){
       throw new Error('nodeseed_registered_worker_receipt_required');
     }
+    if(!/^sha256:[a-f0-9]{64}$/.test(String(result.worker_receipt.receipt_hash||''))){
+      throw new Error('nodeseed_registered_worker_receipt_hash_required');
+    }
+    if(!/^sha256:[a-f0-9]{64}$/.test(String(result?.receipt?.receipt_hash||''))){
+      throw new Error('nodeseed_compute_execution_receipt_required');
+    }
+    if(
+      result.node_id!==intent.node_id ||
+      result.workload_class!==intent.workload_class ||
+      result.idempotency_key!==intent.idempotency_key ||
+      result.receipt?.worker_receipt_hash &&
+        result.receipt.worker_receipt_hash!==result.worker_receipt.receipt_hash
+    ){
+      throw new Error('nodeseed_execution_receipt_binding_mismatch');
+    }
 
     const completedAt=(now instanceof Date?now:new Date(now)).toISOString();
     updateNodeSeedExecutionIntent({
@@ -193,7 +224,7 @@ export async function executeNodeSeedExecutionIntent({
     const terminal=attempts>=Number(job.max_attempts||3);
     const at=(now instanceof Date?now:new Date(now));
     const waitMs=Math.min(60*60*1000,30_000*Math.pow(2,Math.min(6,attempts-1)));
-    const reason=String(error?.message||error);
+    const reason=safeNodeSeedExecutionError(error);
     updateNodeSeedExecutionIntent({
       root,intentId,
       patch:{
