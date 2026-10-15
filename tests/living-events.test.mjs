@@ -1,6 +1,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import {readFileSync} from 'node:fs';
+import {validateCaseRegistry, safeSourceUrl} from '../public/living-events/registry.mjs';
 const ROOT = new URL('../public/living-events/', import.meta.url);
 const cases = JSON.parse(readFileSync(new URL('cases.json', ROOT), 'utf8'));
 const html = readFileSync(new URL('index.html', ROOT), 'utf8');
@@ -42,6 +43,38 @@ test('exhibit does not claim surveyed coordinates or live emergency guidance', (
 test('public shell loads a single JSON registry and has an error state', () => {
  assert.match(html,/fetch\('\.\/cases\.json'/);
  assert.doesNotMatch(html,/<script id="events-json"/);
- assert.match(html,/Evidence dataset unavailable/);
+ assert.match(html,/Evidence unavailable or invalid/);
+ assert.match(html,/validateCaseRegistry\(await response.json\(\)\)/);
+ assert.match(html,/import \{validateCaseRegistry, safeSourceUrl\}/);
+ assert.match(html,/aria-label=\\\"Evidence for this timeline entry\\\"/);
+ assert.doesNotMatch(html,/offline-capable/i);
  assert.match(html,/setCase\('nepal'\)/);
+});
+
+test('runtime verifier accepts all three current source-linked dossiers', () => {
+ assert.equal(validateCaseRegistry(cases),cases);
+});
+test('runtime verifier rejects unsafe or inaccessible source records', () => {
+ const invalid = structuredClone(cases);
+ invalid.nepal.sources[0].url='javascript:alert(1)';
+ assert.throws(() => validateCaseRegistry(invalid),/HTTPS/);
+ assert.throws(() => safeSourceUrl('https://user:password@example.com/'),/credentials/);
+ assert.throws(() => safeSourceUrl('http://example.com/report'),/HTTPS/);
+});
+test('runtime verifier rejects orphaned references, uncertainty drift, and fake coordinates', () => {
+ const lostSource = structuredClone(cases);
+ lostSource.nepal.milestones[0].sources=['NOT-FOUND'];
+ assert.throws(() => validateCaseRegistry(lostSource),/orphaned/);
+ const inflated = structuredClone(cases);
+ inflated.nepal.features[0].state='verified-by-evercraft';
+ assert.throws(() => validateCaseRegistry(inflated),/evidence state/);
+ const location = structuredClone(cases);
+ location.nepal.features[0].x='50%;background:red';
+ assert.throws(() => validateCaseRegistry(location),/placement/);
+});
+test('runtime verifier rejects missing or extra events', () => {
+ const missing = structuredClone(cases);delete missing.yakima;
+ assert.throws(() => validateCaseRegistry(missing),/event IDs/);
+ const extra = structuredClone(cases);extra.unreviewed={};
+ assert.throws(() => validateCaseRegistry(extra),/event IDs/);
 });
