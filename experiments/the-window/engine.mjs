@@ -14,6 +14,13 @@ const ZONES = [
   {id:'library',name:'Town Library',x:79,y:72,type:'civic'},
   {id:'lake',name:'Glasswater Lake',x:34,y:84,type:'nature'}
 ];
+const HOUSEHOLDS = ['Birch House','Mallow Cottage','Foxglove Hall','Hearthside'];
+const AMBITIONS = [
+  'Expand the village bakery','Restore the old pier','Grow a year-round orchard',
+  'Open a public classroom','Create a thriving town market','Build a workshop of their own',
+  'Preserve Mossmere history','Write a treasured recipe book','Rebuild the lakeside docks',
+  'Open a gallery in town','Organize a harvest festival','Connect every corner of town'
+];
 const SEEDS = [
   ['Mara','baker','bakery','Patient, proud of her sourdough','🍞'],
   ['Ivo','carpenter','workshop','Practical, quietly competitive','🪚'],
@@ -38,12 +45,14 @@ function changeBond(a,b,delta){a.bonds[b.id]=clamp((a.bonds[b.id]||50)+delta,0,1
 export function createWorld(now=Date.now(),seed=818){
   const actors=SEEDS.map((data,i)=>({
     id:'r'+(i+1),name:data[0],job:data[1],work:data[2],personality:data[3],emoji:data[4],
-    zone:i%3===0?'homes':data[2],energy:70+(i%4)*6,hunger:75+(i%3)*8,
+    zone:i%3===0?'homes':data[2],household:HOUSEHOLDS[Math.floor(i/3)],
+    aspiration:AMBITIONS[i],goal_progress:0,goal_milestones:0,
+    energy:70+(i%4)*6,hunger:75+(i%3)*8,
     social:65+(i%5)*6,coins:12+(i%4)*5,action:'Getting settled',bonds:{},memories:[],mood:78
   }));
   for(const a of actors)for(const b of actors)if(a.id!==b.id)a.bonds[b.id]=50;
   return {version:1,seed,created_at:now,updated_at:now,last_tick_at:now,tick:0,next_event_id:1,minute:8*60,day:1,
-    town:'Mossmere',zones:ZONES,actors,treasury:120,events:[],
+    town:'Mossmere',zones:ZONES,actors,households:HOUSEHOLDS,treasury:120,events:[],
     metrics:{bread:15,produce:22,repairs:0},recovery:{missed_ticks:0}};
 }
 function event(world,type,actor,description,extras={}){
@@ -112,6 +121,19 @@ export function advanceWorld(w,at=Date.now()){
     a.hunger=clamp(a.hunger-3,0,100);
     a.social=clamp(a.social-2,0,100);
     const e=act(w,a,workHours);
+    // Persistent aspirations progress through work and social participation.
+    if(typeof a.aspiration!=='string')a.aspiration=AMBITIONS[w.actors.indexOf(a)]||'Find a purpose in Mossmere';
+    if(typeof a.household!=='string')a.household=HOUSEHOLDS[Math.floor(w.actors.indexOf(a)/3)];
+    if(!Number.isFinite(a.goal_progress))a.goal_progress=0;
+    if(!Number.isFinite(a.goal_milestones))a.goal_milestones=0;
+    a.goal_progress+=a.action.startsWith('Working')?4:
+      (a.action.startsWith('Visiting')||a.action.startsWith('Exploring')?2:0);
+    if(a.goal_progress>=100){
+      a.goal_progress-=100;a.goal_milestones+=1;
+      const msg=a.name+' reached milestone '+a.goal_milestones+' toward their dream: '+a.aspiration+'.';
+      note(a,msg);
+      event(w,'milestone',a,msg);
+    }
     a.mood=moodOf(a);
     if(e)generated.push(e);
   }
