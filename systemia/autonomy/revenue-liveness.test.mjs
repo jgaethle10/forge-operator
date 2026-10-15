@@ -153,3 +153,92 @@ test('failed workflow retries only after its cooldown instead of hot-looping', (
     repair.reason === 'failed_after_cooldown'
   ));
 });
+
+test('a recent successful push cannot masquerade as a healthy scheduled heartbeat', () => {
+  const result = evaluateRevenueAutonomy({
+    workflowSnapshot: { workflow_runs: healthyRuns(), schedule_runs: [] },
+    machineCatalog: { offers: [] },
+    agentCommerce: { offers: [] },
+    now,
+  });
+
+  assert.equal(result.status, 'critical');
+  assert.equal(result.summary.critical_schedule_findings,
+    WORKFLOW_REQUIREMENTS.filter((row) => row.cadence !== 'event').length);
+  assert.ok(result.findings.some((finding) =>
+    finding.code === 'autonomy_schedule_missing' && finding.lane === 'portfolio_sentinel'
+  ));
+  assert.equal(result.repairs.length, 0, 'Missing cron never auto-dispatches a duplicate job');
+});
+
+test('real schedule receipts respect the six-hour CHUM interval and event-only newsroom', () => {
+  const scheduled = healthyRuns().filter((row) => row.path !== '.github/workflows/evercraft-journal-owned.yml');
+  const watershed = scheduled.find((row) => row.path === '.github/workflows/chum-watershed.yml');
+  watershed.created_at = new Date(now.getTime() - 350 * 60_000).toISOString();
+  const result = evaluateRevenueAutonomy({
+    workflowSnapshot: { workflow_runs: healthyRuns(), schedule_runs: scheduled },
+    machineCatalog: { offers: [] },
+    agentCommerce: { offers: [] },
+    now,
+  });
+
+  assert.equal(result.status, 'healthy');
+  assert.equal(result.summary.critical_schedule_findings, 0);
+  assert.equal(result.schedule.find((row) => row.lane === 'revenue_watershed').state, 'healthy');
+  assert.equal(result.schedule.some((row) => row.lane === 'owned_newsroom'), false);
+});
+
+test('event-only newsroom does not create recurring alerts or duplicate dispatches when idle', () => {
+  const workflowRuns = healthyRuns().filter((row) => row.path !== '.github/workflows/evercraft-journal-owned.yml');
+  const result = evaluateRevenueAutonomy({
+    workflowSnapshot: { workflow_runs: workflowRuns, schedule_runs: workflowRuns },
+    machineCatalog: { offers: [] },
+    agentCommerce: { offers: [] },
+    now,
+  });
+
+  assert.equal(result.status, 'healthy');
+  assert.equal(result.workflows.find((row) => row.lane === 'owned_newsroom').state, 'awaiting_event');
+  assert.equal(result.repairs.length, 0);
+});
+
+test('failed cron evidence is critical even if a newer push run passed', () => {
+  const scheduled = healthyRuns().filter((row) => row.path !== '.github/workflows/evercraft-journal-owned.yml');
+  const target = scheduled.find((row) => row.path === '.github/workflows/systemia-portfolio-sentinel.yml');
+  target.status = 'completed';
+  target.conclusion = 'failure';
+  const result = evaluateRevenueAutonomy({
+    workflowSnapshot: { workflow_runs: healthyRuns(), schedule_runs: scheduled },
+    machineCatalog: { offers: [] },
+    agentCommerce: { offers: [] },
+    now,
+  });
+
+  assert.equal(result.status, 'critical');
+  assert.ok(result.findings.some((finding) =>
+    finding.code === 'autonomy_schedule_failed' && finding.lane === 'portfolio_sentinel'
+  ));
+  assert.equal(result.repairs.length, 0, 'Cron failure does not authorize recursive duplicate dispatch');
+});
+
+test('old in-progress jobs are stalled, not healthy and not retried concurrently', () => {
+  const runs = healthyRuns();
+  const stuck = runs.find((row) => row.path === '.github/workflows/systemia-legacy-rescue-watch.yml');
+  stuck.status = 'in_progress';
+  stuck.conclusion = null;
+  stuck.created_at = new Date(now.getTime() - 180 * 60_000).toISOString();
+
+  const result = evaluateRevenueAutonomy({
+    workflowSnapshot: { workflow_runs: runs },
+    machineCatalog: { offers: [] },
+    agentCommerce: { offers: [] },
+    now,
+  });
+
+  assert.equal(result.status, 'critical');
+  assert.equal(result.workflows.find((row) => row.lane === 'legacy_rescue').state, 'stalled_active');
+  assert.ok(result.findings.some((finding) =>
+    finding.code === 'autonomy_workflow_stalled_active' && finding.lane === 'legacy_rescue'
+  ));
+  assert.equal(result.repairs.some((repair) => repair.lane === 'legacy_rescue'), false);
+});

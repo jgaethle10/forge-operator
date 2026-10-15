@@ -32,10 +32,11 @@ async function github(pathname, { method = 'GET', body = null } = {}) {
   return await response.json();
 }
 
-async function latestWorkflowRun(repo, workflow) {
+async function latestWorkflowRun(repo, workflow, { event = null } = {}) {
   const file = workflow.split('/').pop();
   const payload = await github(
-    '/repos/' + repo + '/actions/workflows/' + encodeURIComponent(file) + '/runs?branch=main&per_page=1'
+    '/repos/' + repo + '/actions/workflows/' + encodeURIComponent(file) + '/runs?branch=main&per_page=1' +
+      (event ? '&event=' + encodeURIComponent(event) : '')
   );
   const run = payload?.workflow_runs?.[0] || null;
   return run ? { ...run, path: workflow } : null;
@@ -43,14 +44,22 @@ async function latestWorkflowRun(repo, workflow) {
 
 async function snapshotWorkflows(repo) {
   const rows = [];
+  const scheduledRows = [];
   for (const requirement of WORKFLOW_REQUIREMENTS) {
     const run = await latestWorkflowRun(repo, requirement.workflow);
     if (run) rows.push(run);
+    // GitHub's latest run can come from a push, PR or manual dispatch. Query
+    // event=schedule separately so source activity cannot forge cron liveness.
+    if (requirement.cadence !== 'event') {
+      const scheduledRun = await latestWorkflowRun(repo, requirement.workflow, { event: 'schedule' });
+      if (scheduledRun) scheduledRows.push(scheduledRun);
+    }
   }
   return {
     schema: 'evercraft.systemia.revenue-workflow-snapshot.v1',
     observed_at: new Date().toISOString(),
     workflow_runs: rows,
+    schedule_runs: scheduledRows,
   };
 }
 
@@ -86,6 +95,7 @@ function appendSummary(receipt) {
     '',
     '- Workflow lanes monitored: ' + receipt.liveness.summary.monitored_workflows,
     '- Critical workflow findings: ' + receipt.liveness.summary.critical_workflow_findings,
+    '- Critical scheduled-cadence findings: ' + receipt.liveness.summary.critical_schedule_findings,
     '- Sell-now offers: ' + receipt.liveness.summary.sell_now_offers,
     '- Sell-now offers with continuation: ' + receipt.liveness.summary.sell_now_with_continuation,
     '- Sell-now continuation gaps: ' + receipt.liveness.summary.sell_now_without_continuation,
@@ -158,6 +168,7 @@ async function main() {
   console.log(JSON.stringify({
     status: liveness.status,
     critical_workflow_findings: liveness.summary.critical_workflow_findings,
+    critical_schedule_findings: liveness.summary.critical_schedule_findings,
     continuation_gaps: liveness.summary.sell_now_without_continuation,
     dispatches: dispatches.length,
     dispatch_errors: dispatchErrors.length,
