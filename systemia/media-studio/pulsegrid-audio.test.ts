@@ -77,3 +77,39 @@ test('PulseGrid audio never fabricates missing asset bytes',()=>{
   assert.match(audioTrackBlock,/this\.audioBuffers\.get/);
   assert.doesNotMatch(audioTrackBlock,/createBuffer\(/);
 });
+
+
+test('PulseGrid arrangement playback consumes the canonical arrangement matrix',()=>{
+  assert.match(audio,/playArrangement\(session: PulseGridSession\)/);
+  assert.match(audio,/playbackMode\s*=\s*'arrangement'/);
+  assert.match(audio,/session\.arrangement\[trackIndex\]/);
+  assert.match(audio,/PULSEGRID_ARRANGEMENT_BARS \* PULSEGRID_STEPS_PER_BAR/);
+  assert.match(audio,/resolveArrangementPosition/);
+  assert.doesNotMatch(audio,/private\s+arrangement\s*=/);
+});
+
+test('PulseGrid arrangement preserves clip phase across contiguous repeated scene cells',()=>{
+  assert.match(audio,/while\(runStart>0&&row\[runStart-1\]===scene\)runStart-=1/);
+  assert.match(audio,/elapsedSteps=\(bar-runStart\)\*PULSEGRID_STEPS_PER_BAR\+stepInBar/);
+  assert.match(audio,/elapsedSteps%clip\.steps\.length/);
+});
+
+test('PulseGrid arrangement preloads only canonical audio assets referenced by arrangement scenes',()=>{
+  assert.match(audio,/session\.arrangement\[trackIndex\]/);
+  assert.match(audio,/track\.clips\[sceneIndex\]/);
+  assert.match(audio,/asset&&asset\.rights!=='restricted'/);
+  assert.match(audio,/wanted\.set\(asset\.id,asset\)/);
+});
+
+test('PulseGrid arrangement audio assets start once per contiguous run and are bounded to that run',()=>{
+  assert.match(audio,/arrangementPosition\.bar===arrangementPosition\.runStart/);
+  assert.match(audio,/arrangementPosition\.stepInBar===0/);
+  assert.match(audio,/arrangementPosition\.runEnd-arrangementPosition\.runStart\+1/);
+  assert.match(audio,/scheduleAudioAsset\(bus\.input,assetBuffer,time,playbackDuration\)/);
+});
+
+
+test('PulseGrid arrangement empty slots are silence and never fall back to the selected scene',()=>{
+  assert.match(audio,/const clip = this\.playbackMode === 'arrangement'[\s\S]*\? arrangementPosition\?\.clip[\s\S]*: track\.clips\[this\.scene\]/);
+  assert.doesNotMatch(audio,/arrangementPosition\?\.clip \|\| track\.clips\[this\.scene\]/);
+});
