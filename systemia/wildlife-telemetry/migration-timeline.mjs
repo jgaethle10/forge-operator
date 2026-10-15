@@ -1,4 +1,4 @@
-// Mirrored candidate from Evercraft Wildlife Atlas checkpoint 6ad011abe8c19d3bf09872eb. Reconcile copies before promotion.
+// Mirrored implementation from Evercraft Wildlife Atlas. Release candidate only; keep identical to src/lib/migrationTimeline.js.
 /**
  * Privacy-first wildlife telemetry parser.
  * Parsing happens in the user's browser. Do not persist fixes, transmit them,
@@ -71,10 +71,23 @@ export function segmentKm(a,b){
   const h=Math.sin(dLat/2)**2+Math.cos(rad(a.lat))*Math.cos(rad(b.lat))*Math.sin(dLon/2)**2;
   return 2*R*Math.asin(Math.min(1,Math.sqrt(h)));
 }
+export const MAX_OBSERVATION_GAP_MS=7*86400000;
+
+/** Linear-time summary. Coordinates are sampled fixes, not a measured flight path. */
 export function telemetrySummary(points){
   if(!points.length)return null;
-  const segments=points.slice(1).filter((p,i)=>p.animal===points[i].animal);
-  const distance=segments.reduce((sum,p)=>{const i=points.indexOf(p);return sum+segmentKm(points[i-1],p)},0);
-  const gapCount=points.slice(1).filter((p,i)=>p.animal===points[i].animal&&p.at-points[i].at>7*86400000).length;
-  return {distanceKm:distance,days:(points[points.length-1].at-points[0].at)/86400000,gapCount,count:points.length};
+  let distanceKm=0,gapCount=0;
+  for(let i=1;i<points.length;i++){
+    const a=points[i-1],b=points[i];
+    if(a.animal!==b.animal)continue;
+    distanceKm+=segmentKm(a,b);
+    if(b.at-a.at>MAX_OBSERVATION_GAP_MS)gapCount++;
+  }
+  return {distanceKm,days:(points[points.length-1].at-points[0].at)/86400000,gapCount,count:points.length};
+}
+/** Rendering-only downsampling; preserve full dataset for scientific statistics. */
+export function sampleForMap(points,max=1000){
+  if(!Number.isInteger(max)||max<2)throw new Error('Map sample size must be at least two.');
+  if(points.length<=max)return points;
+  return Array.from({length:max},(_,i)=>points[Math.round(i*(points.length-1)/(max-1))]);
 }
