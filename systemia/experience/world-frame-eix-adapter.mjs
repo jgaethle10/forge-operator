@@ -81,6 +81,12 @@ function normalizeFrame(frame, worldId) {
  * Only authored teaching cues, never auto-generated scientific claims.
  * A cue can explain an example but cannot reclassify evidence or certify output.
  */
+/**
+ * TypeScript consumers import this module directly from the World Engine.
+ * Make the full options contract explicit so tsc does not infer a defaults-only
+ * shape and reject native frames/world IDs during Forge's source check.
+ * @param {{world_id?: string, frames: any[], teaching_cues?: any[], title?: string}} [options]
+ */
 export function buildEixWorldReplay({world_id, frames, teaching_cues = [], title = 'World replay'} = {}) {
   if (!Array.isArray(frames) || frames.length === 0) fail('frames_missing');
   const worldId = clean(world_id || frames?.[0]?.worldId);
