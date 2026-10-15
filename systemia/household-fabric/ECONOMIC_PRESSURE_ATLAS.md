@@ -28,6 +28,12 @@ https://esd.wa.gov/jobs-and-training/labor-market-information/reports-and-resear
 
 Use date-specific evidence snapshots and revision records. A hard-coded snapshot is **not** a live feed.
 
+## Actionable but not fabricated: manually reviewed assistance doors
+
+`economic-pressure-review-referrals.json` contains a **reviewed, time-bounded informational seed**, currently three official provider pages for Basic Food, LIHEAP and Washington 211. An independent person must confirm eligibility and program availability. No amounts, awards, enrollments, current provider capacity or automatic collections are claimed. The seed expires October 21, 2026 and will drop out of the Household Fabric results unless reviewed and updated. The engine continues to mark other local categories as degraded instead of imagining prices or job vacancies.
+
+A reproducible read-only proof can be produced using `node systemia/household-fabric/economic-pressure-proof.mjs`. Its benefit cards are **not** proof an application was filed or that the household saved money. Monetary value remains zero until attributable, verified evidence exists. The 0 net value is a deliberate unknown, not a judgment about a program's usefulness.
+
 ## Acceptance gates
 
 1. `node --test systemia/household-fabric/economic-pressure-bridge.test.mjs` passes, including no future release, no forged local CPI, no savings generated from macro statistics, no ranking change from CPI, and truthful degraded coverage.
