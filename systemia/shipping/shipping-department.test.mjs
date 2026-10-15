@@ -2,7 +2,7 @@ import assert from 'node:assert/strict';
 import fs from 'node:fs';
 import os from 'node:os';
 import path from 'node:path';
-import { createHmac, randomBytes } from 'node:crypto';
+import { generateKeyPairSync, randomBytes, sign as signMessage } from 'node:crypto';
 import test from 'node:test';
 
 import {
@@ -30,9 +30,10 @@ import { admitShippingOrder, authorizeReissue, assertCurrentRelease, buildShippi
 import { buildShippingProofBundle } from './proof-bundle.mjs';
 import { buildRecipientResponseSignal, correlateRecipientResponse, dedupeRecipientResponses } from './recipient-response.mjs';
 
-// Test-only Shipping attestation fixture. This is not a production signer.
+// Test-only Shipping attestation fixture. The private key never goes to dispatch.
+const { privateKey: TEST_SHIPPING_SIGNER, publicKey: TEST_SHIPPING_VERIFIER } = generateKeyPairSync('ed25519');
+process.env.EVERCRAFT_SHIPPING_VERIFIER_PUBLIC_KEY = TEST_SHIPPING_VERIFIER.export({type:'spki',format:'pem'});
 function recipientAccessFixture(envelope) {
-  const secret='shipping-integration-test-only-secret-not-for-real-sends';
   const plan={
     release_key:envelope.logical_package_key,
     release_fingerprint:envelope.shipment_fingerprint,
@@ -57,10 +58,10 @@ function recipientAccessFixture(envelope) {
       client_filename:x.client_filename, provider_readback:true, sha256:x.sha256
     }))
   };
-  evidence.signature=createHmac('sha256',secret)
-    .update(shippingAttestationPayload({plan,evidence}))
-    .digest('hex');
-  return {plan,evidence,verifier_secret:secret};
+  evidence.signature=signMessage(null,
+    Buffer.from(shippingAttestationPayload({plan,evidence})),
+    TEST_SHIPPING_SIGNER).toString('base64url');
+  return {plan,evidence};
 }
 
 function tempDir() {
