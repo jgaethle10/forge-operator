@@ -45,4 +45,14 @@ jobs:
             python -m playwright install --with-deps chromium
           fi
       - name: Exercise browser review, export, validator and occlusion gates
+        env:
+          SITESIGHT_ARTIFACT_DIR: sitesight-artifacts
         run: python pilots/sitesight/browser-e2e.py
+      - name: Preserve synthetic browser QA receipts
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: sitesight-synthetic-browser-receipts
+          path: sitesight-artifacts/
+          if-no-files-found: warn
+          retention-days: 7
