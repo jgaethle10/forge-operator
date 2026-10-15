@@ -57,7 +57,7 @@ jobs:
       - name: Independently inspect exact $49 buyer page with GET only
         run: |
           mkdir -p artifacts/commercial
-          node systemia/distribution/website-audit-buyer-probe.mjs artifacts/commercial/website-audit-external-buyer-probe.json
+          node systemia/distribution/website-audit-buyer-probe.mjs artifacts/commercial/website-audit-external-buyer-probe.json --strict
       - name: Retain truthful public-page receipt even when page is held
         if: always()
         uses: actions/upload-artifact@v4
