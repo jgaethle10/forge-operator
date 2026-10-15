@@ -23,10 +23,16 @@ That inbox's `submit`/`claim`/`ack` protocol only records **local broker accepta
 
 No network access, broker tokens, customer data, signer keys, shell commands, or service installation are involved.
 
+### Additional signed-claim verification candidate
+
+`signed-completion-verifier.mjs` verifies a future completion **claim** under an externally pinned Ed25519 public key, exact node/job/request/nonce/source digest, a domain-separated signature, and bounded timestamps. The module has **no signing private key**, no broker interface, no OS access, and never upgrades a signed claim into physical execution proof. Its result explicitly reports that Systemia authorization, active lease, revocation/atomic fencing, OS isolation, and production completion remain **unverified**. Synthetic test keys are generated only in the unit tests.
+
+A successful signature means the expected device *key* signed the statement. It does **not** mean a verified inventory ran on a real host, that a device key wasn't copied, or that an independently authorized worker completed anything.
+
 ### Development-only tests
 
 ```bash
-node --test systemia/compute/node002-inventory-review/operator-inventory.test.mjs
+node --test systemia/compute/node002-inventory-review/*.test.mjs
 ```
 
 A CI pass verifies **repository code**, not physical execution on the HP. A CI runner's local measurements must never be labeled HP evidence.
