@@ -75,7 +75,14 @@ test('read-only Yakima proof emits five reviewed signals without invented househ
   const output = buildReviewProof(now);
   assert.equal(output.measured_economic_context.length, 5);
   assert.equal(output.household_opportunities.status, 'degraded');
-  assert.deepEqual(output.household_opportunities.opportunities, []);
+  assert.equal(output.household_opportunities.opportunities.length, 3);
+  for (const referral of output.household_opportunities.opportunities) {
+    assert.equal(referral.category, 'benefit');
+    assert.equal(referral.net_value_cents, 0);
+    assert.equal(referral.requires_eligibility_check, true);
+    assert.equal(referral.evidence_label, 'public');
+    assert.ok(referral.source_url.startsWith('https://'));
+  }
   assert.equal(output.household_opportunities.headline.money_kept_cents, 0);
   assert.equal(output.household_opportunities.headline.money_earned_cents, 0);
   assert.equal(output.boundaries.no_live_collector_implied, true);
