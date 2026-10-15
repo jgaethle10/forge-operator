@@ -1,0 +1,30 @@
+import assert from 'node:assert/strict';
+import fs from 'node:fs';
+const read = path => JSON.parse(fs.readFileSync(path,'utf8'));
+const ID='audit-center-website-audit-machine-v1';
+const FREE='https://systemia-audit-pro.base44.app/functions/auditAgentGateway?view=check';
+const catalog=read('public/.well-known/evercraft-machine-catalog.json');
+const offer=(catalog.offers||[]).find(x=>x.public_id===ID);
+assert.ok(offer,'held Website Audit must remain discoverable');
+assert.equal(offer.commercial_state,'verification_required');
+assert.equal(offer.machine_state,'free_checker_live_paid_checkout_held');
+assert.equal(offer.public_url,FREE);
+assert.equal(offer.offers?.length,1);
+assert.equal(offer.offers[0].price,'$0');
+assert.ok(!offer.offers.some(x=>x.offer_key==='quick'||x.price==='$49'),'held audit cannot offer paid checkout');
+for(const file of ['public/chum/revenue.json','public/chum/sell-now.json','public/chum/agent-commerce.json','public/.well-known/evercraft-agent-commerce.json']){
+  const d=read(file);
+  assert.ok(!(d.offers||[]).some(x=>x.public_id===ID),'held Audit leaked into paid offers: '+file);
+}
+const revenue=read('public/chum/revenue.json');
+assert.ok((revenue.discovery||revenue.discovery_offers||[]).some(x=>x.public_id===ID),'held Audit should remain discoverable');
+const pain=read('public/chum/intents/'+ID+'/offer.json');
+assert.equal(pain.commercial_state,'verification_required');
+assert.equal(pain.machine_state,'free_checker_live_paid_checkout_held');
+assert.ok(pain.entry_paid_offer===null,'no paid entry offer may survive generation');
+assert.equal(pain.offers.length,1);
+assert.equal(pain.offers[0].price,'$0');
+assert.ok(pain.start_url===null,'no unverified buyer start URL');
+const page=fs.readFileSync('public/chum/intents/'+ID+'/index.html','utf8');
+assert.ok(!/Quick Win Audit\s*\$49/i.test(page),'stale paid advertisement');
+console.log('CHUM_AUDIT_PAID_HOLD_INVARIANT_PASS',catalog.sell_now_count);

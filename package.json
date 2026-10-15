@@ -52,7 +52,7 @@
     "saban:discovery:check": "node systemia/saban/discovery-swarm.mjs --strict",
     "saban:watershed": "npm run saban:discovery && npm run saban:revenue && npm run chum:all",
     "chum:capabilities": "node systemia/chum/build-capability-mirror.mjs && node scripts/apply-rivet-brand.mjs",
-    "test:chum-revenue": "npm run chum:revenue && npm run test:chum-start-corridor && node tests/chum-revenue-watershed.test.mjs && node tests/chum-agent-commerce.test.mjs",
+    "test:chum-revenue": "npm run chum:revenue && npm run test:chum-start-corridor && node tests/chum-revenue-watershed.test.mjs && node tests/chum-audit-paid-hold-invariant.test.mjs && node tests/chum-agent-commerce.test.mjs",
     "test:chum-capabilities": "npm run chum:capabilities && node tests/chum-capability-mirrors.test.mjs",
     "test:signal-fabric": "node systemia/signal-fabric/router.test.mjs",
     "test:signal-fabric-engine": "node systemia/signal-fabric/engine.test.mjs && node systemia/signal-fabric/adapters/github-actions.test.mjs",
