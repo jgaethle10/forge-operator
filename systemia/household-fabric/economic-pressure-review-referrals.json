@@ -1,0 +1,110 @@
+{
+  "schema": "systemia.economic-pressure.manual-referral-seed.v1",
+  "geography": "yakima-wa",
+  "reviewed_on": "2026-10-14",
+  "next_review_due": "2026-10-21",
+  "state": "reviewed_public_information_not_live_collection",
+  "eligibility_verified": false,
+  "monetary_savings_claimed": false,
+  "referrals": [
+    {
+      "id": "wa-basic-food-official-20261014",
+      "title": "Check Washington Basic Food (SNAP)",
+      "description": "State program information and how to apply. Eligibility is determined by Washington DSHS after application and review; no individual benefit is guaranteed.",
+      "category": "benefit",
+      "source_name": "Washington DSHS",
+      "source_url": "https://www.dshs.wa.gov/family-food-and-housing-services/food-assistance/basic-food-benefits",
+      "observed_at": "2026-10-14T20:00:00.000Z",
+      "expires_at": "2026-10-21T20:00:00.000Z",
+      "evidence_state": "public",
+      "confidence": 1,
+      "eligibility": "unknown",
+      "gross_savings_cents": 0,
+      "gross_earnings_cents": 0,
+      "audience_tags": [
+        "household",
+        "worker"
+      ],
+      "actions": [
+        {
+          "type": "open_url",
+          "label": "Read official eligibility and application steps",
+          "url": "https://www.dshs.wa.gov/family-food-and-housing-services/food-assistance/basic-food-benefits"
+        }
+      ],
+      "raw_metadata": {
+        "verification_method": "manual_review",
+        "reviewed_on": "2026-10-14",
+        "live_collector": false,
+        "application_submitted": false,
+        "monetary_value_claimed": false
+      }
+    },
+    {
+      "id": "wa-liheap-official-20261014",
+      "title": "Check energy assistance through Washington LIHEAP",
+      "description": "The state describes eligibility and how to find a county provider. Funding and eligibility are determined by the local provider; no assistance amount is estimated.",
+      "category": "benefit",
+      "source_name": "Washington Commerce",
+      "source_url": "https://www.commerce.wa.gov/community-opportunities/liheap/",
+      "observed_at": "2026-10-14T20:00:00.000Z",
+      "expires_at": "2026-10-21T20:00:00.000Z",
+      "evidence_state": "public",
+      "confidence": 1,
+      "eligibility": "unknown",
+      "gross_savings_cents": 0,
+      "gross_earnings_cents": 0,
+      "audience_tags": [
+        "household",
+        "worker"
+      ],
+      "actions": [
+        {
+          "type": "open_url",
+          "label": "Find local LIHEAP provider",
+          "url": "https://www.commerce.wa.gov/community-opportunities/liheap/"
+        }
+      ],
+      "raw_metadata": {
+        "verification_method": "manual_review",
+        "reviewed_on": "2026-10-14",
+        "live_collector": false,
+        "application_submitted": false,
+        "monetary_value_claimed": false
+      }
+    },
+    {
+      "id": "wa-211-resource-directory-20261014",
+      "title": "Find nearby food, housing and financial assistance resources",
+      "description": "The Washington 211 resource directory supports locally matched referrals. Individual providers, hours and availability must be confirmed.",
+      "category": "benefit",
+      "source_name": "Washington 211",
+      "source_url": "https://search.wa211.org/",
+      "observed_at": "2026-10-14T20:00:00.000Z",
+      "expires_at": "2026-10-21T20:00:00.000Z",
+      "evidence_state": "public",
+      "confidence": 1,
+      "eligibility": "unknown",
+      "gross_savings_cents": 0,
+      "gross_earnings_cents": 0,
+      "audience_tags": [
+        "household",
+        "worker"
+      ],
+      "actions": [
+        {
+          "type": "open_url",
+          "label": "Search Washington 211 resources",
+          "url": "https://search.wa211.org/"
+        }
+      ],
+      "raw_metadata": {
+        "verification_method": "manual_review",
+        "reviewed_on": "2026-10-14",
+        "live_collector": false,
+        "application_submitted": false,
+        "monetary_value_claimed": false
+      }
+    }
+  ]
+}
