@@ -4,6 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="theme-color" content="#05080e">
+<link rel="icon" href="data:,">
 <meta name="description" content="Evercraft Living Intelligence Mission Observatory. A cinematic, evidence-labeled mission replay prototype.">
 <title>Mission Observatory · Evercraft Living Intelligence</title>
 <style>
@@ -77,6 +78,22 @@ a{color:#b9efff}
 @media(max-width:1050px){.main{grid-template-columns:minmax(0,1fr) 240px}.side{padding:20px 14px}.footer{grid-template-columns:1fr repeat(3,120px)}.stat{padding:22px 12px}.stat strong{font-size:27px}}
 @media(max-width:760px){.topbar{height:63px;padding:0 17px;gap:12px}.divider,.headline{display:none}.brand strong{font-size:11px}.mode{font-size:9px;letter-spacing:.06em;padding:7px}.main{display:flex;flex-direction:column;min-height:0}.theater{min-height:480px;height:59vh;max-height:690px}.theater-top{top:21px;left:19px;right:19px}.theater h1{font-size:29px;max-width:330px}.theater-sub{font-size:11px;max-width:310px}.phase-name{font-size:8px}.phase-name strong{font-size:13px}.theater-bottom{left:18px;right:18px;bottom:20px}.warning{font-size:9px}.side{border-left:0;border-top:1px solid var(--line);padding:17px}.stage-list{grid-template-columns:repeat(3,minmax(0,1fr));gap:5px}.stage{gap:6px;padding:11px 5px}.stage-name{font-size:9px}.stage small{display:none}.feed{min-height:0}.feed h2{margin:8px 0;font-size:17px}.feed p{min-height:0}.side-footer{display:none}.footer{grid-template-columns:repeat(3,1fr)}.controls{grid-column:1/-1;padding:15px 18px}.stat{padding:16px}.stat strong{font-size:25px;margin:8px 0}.step-dots{font-size:8px}}
 @media(prefers-reduced-motion:reduce){.stage{transition:none}}
+
+/* Small phones keep the entire command deck within the viewport. */
+@media(max-width:420px){
+  .controls-head{flex-direction:column;align-items:stretch;gap:10px}
+  .actions{justify-content:space-between;min-width:0}
+  .actions button{flex:1;min-width:0;padding:6px 4px}
+  .stage{min-width:0;gap:4px;padding:10px 3px}
+  .stage-name{min-width:0;font-size:8px;letter-spacing:0;overflow-wrap:anywhere}
+  .step-dots{gap:4px}
+  .step-dots span{min-width:0;max-width:20%;overflow-wrap:anywhere}
+  .topbar .brand{min-width:0}
+  .topbar .brand strong{font-size:10px;letter-spacing:.10em}
+  .stat{min-width:0;padding:13px 9px}
+  .stat .stat-label{font-size:9px;letter-spacing:.10em;overflow-wrap:anywhere}
+  .stat small{overflow-wrap:anywhere}
+}
 </style>
 </head>
 <body>
