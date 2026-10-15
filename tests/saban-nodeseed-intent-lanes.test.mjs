@@ -3,7 +3,7 @@ import assert from 'node:assert/strict';
 import fs from 'node:fs';
 import os from 'node:os';
 import path from 'node:path';
-import {executeNodeSeedIntentLanes,withNodeSeedDrainLock,drainNodeSeedExecutionIntents} from '../systemia/saban/nodeseed-intent-executor.mjs';
+import {executeNodeSeedIntentLanes,withNodeSeedDrainLock,drainNodeSeedExecutionIntents,safeNodeSeedExecutionError} from '../systemia/saban/nodeseed-intent-executor.mjs';
 
 const intent=(intent_id,job_id,node_id)=>({intent_id,job_id,node_id});
 
@@ -182,4 +182,12 @@ test('actual empty drainer is root-locked and returns zero without broker calls'
   }finally{
     fs.rmSync(root,{recursive:true,force:true});
   }
+});
+
+test('remote broker errors are redacted before persistence',()=>{
+  assert.equal(safeNodeSeedExecutionError(new Error('Bearer super-secret-key')),'nodeseed_executor_failure_redacted');
+  assert.equal(safeNodeSeedExecutionError({message:'secret provider response',status:503}),'nodeseed_remote_http_503');
+  assert.equal(safeNodeSeedExecutionError(new Error('nodeseed_registered_worker_receipt_hash_required')),
+    'nodeseed_registered_worker_receipt_hash_required');
+  assert.equal(safeNodeSeedExecutionError({status:0,message:'payment token secret'}),'nodeseed_executor_failure_redacted');
 });
