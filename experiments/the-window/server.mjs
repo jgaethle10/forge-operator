@@ -2,11 +2,12 @@ import http from 'node:http';
 import fs from 'node:fs';
 import path from 'node:path';
 import {fileURLToPath} from 'node:url';
-import {WorldStore,REAL_TICK_MS} from './engine.mjs';
+import {REAL_TICK_MS} from './engine.mjs';
+import {DurableWorldStore} from './durable-store.mjs';
 const __dirname=path.dirname(fileURLToPath(import.meta.url));
 const port=Number(process.env.PORT||8787);
 const dataDir=process.env.WINDOW_DATA_DIR||path.join(__dirname,'data');
-const store=new WorldStore(dataDir);
+const store=new DurableWorldStore(dataDir);
 const recovery=store.catchUp();
 const clients=new Set();
 const maxClients=120;
@@ -28,7 +29,7 @@ const server=http.createServer((req,res)=>{
   if(req.method!=='GET'){reply(res,405,{error:'Read only public spectator surface'});return;}
   if(url.pathname==='/api/health'){
     reply(res,200,{status:'ok',world:store.world.town,tick:store.world.tick,subscribers:clients.size,
-      persisted:fs.existsSync(store.file),recovery:store.world.recovery});
+      persisted:fs.existsSync(store.file),...store.status()});
   }else if(url.pathname==='/api/world'){
     reply(res,200,store.world);
   }else if(url.pathname==='/api/history'){
@@ -50,8 +51,10 @@ const server=http.createServer((req,res)=>{
 });
 const timer=setInterval(()=>{
   try{
-    store.tick();
-    for(const client of clients)if(!push(client,'snapshot',store.world))clients.delete(client);
+    const advance=store.catchUp(20);
+    if(advance.processed>0){
+      for(const client of clients)if(!push(client,'snapshot',store.world))clients.delete(client);
+    }
   }catch(err){console.error('Tick failed:',err);}
 },REAL_TICK_MS);
 timer.unref();
