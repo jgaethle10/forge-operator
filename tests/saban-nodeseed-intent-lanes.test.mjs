@@ -1,6 +1,9 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import {executeNodeSeedIntentLanes} from '../systemia/saban/nodeseed-intent-executor.mjs';
+import fs from 'node:fs';
+import os from 'node:os';
+import path from 'node:path';
+import {executeNodeSeedIntentLanes,withNodeSeedDrainLock,drainNodeSeedExecutionIntents} from '../systemia/saban/nodeseed-intent-executor.mjs';
 
 const intent=(intent_id,job_id,node_id)=>({intent_id,job_id,node_id});
 
@@ -99,4 +102,84 @@ test('unhandled executor error is never recorded as completed and secret error t
   assert.equal(result.rows[0].authority_material_persisted,false);
   assert.doesNotMatch(JSON.stringify(result),/sensitive-allocator-token/);
   assert.equal(result.rows[1].status,'completed');
+});
+
+test('root lock excludes simultaneous resident drainers even across independent calls',async()=>{
+  const root=fs.mkdtempSync(path.join(os.tmpdir(),'saban-two-drainers-'));
+  let release;
+  const hold=new Promise(resolve=>{release=resolve;});
+  let ran=0;
+  try{
+    const first=withNodeSeedDrainLock({root,work:async()=>{ran++;await hold;return 'first-done';}});
+    assert.equal(ran,1);
+    await assert.rejects(
+      withNodeSeedDrainLock({root,work:async()=>{ran++;}}),
+      /nodeseed_intent_drainer_busy_or_stale_lock/
+    );
+    assert.equal(ran,1);
+    release();
+    assert.equal(await first,'first-done');
+    assert.equal(await withNodeSeedDrainLock({root,work:async()=>{ran++;return 'next-wave';}}),'next-wave');
+    assert.equal(ran,2);
+  }finally{
+    release?.();
+    fs.rmSync(root,{recursive:true,force:true});
+  }
+});
+
+test('stale or ambiguous lock must not auto-expire into duplicate remote execution',async()=>{
+  const root=fs.mkdtempSync(path.join(os.tmpdir(),'saban-stale-drain-'));
+  const lock=path.join(root,'.nodeseed-intent-drain.lock');
+  try{
+    fs.writeFileSync(lock,'{"token":"operator-recovery-required","claimed_at":"1999-01-01T00:00:00Z"}');
+    let called=false;
+    await assert.rejects(
+      withNodeSeedDrainLock({root,work:async()=>{called=true;}}),
+      /nodeseed_intent_drainer_busy_or_stale_lock/
+    );
+    assert.equal(called,false);
+    assert.match(fs.readFileSync(lock,'utf8'),/operator-recovery-required/);
+  }finally{
+    fs.rmSync(root,{recursive:true,force:true});
+  }
+});
+
+test('unexpected failure releases only the current owner lock',async()=>{
+  const root=fs.mkdtempSync(path.join(os.tmpdir(),'saban-release-drain-'));
+  const lock=path.join(root,'.nodeseed-intent-drain.lock');
+  try{
+    await assert.rejects(withNodeSeedDrainLock({
+      root,work:async()=>{throw new Error('synthetic_work_failure');}
+    }),/synthetic_work_failure/);
+    assert.equal(fs.existsSync(lock),false);
+    assert.equal(await withNodeSeedDrainLock({root,work:async()=>42}),42);
+    await withNodeSeedDrainLock({root,work:async()=>{
+      fs.unlinkSync(lock);
+      fs.writeFileSync(lock,JSON.stringify({token:'different-owner'}));
+    }});
+    assert.equal(fs.existsSync(lock),true,'original owner may not delete replacement lock');
+  }finally{
+    fs.rmSync(root,{recursive:true,force:true});
+  }
+});
+
+test('actual empty drainer is root-locked and returns zero without broker calls',async()=>{
+  const root=fs.mkdtempSync(path.join(os.tmpdir(),'saban-empty-drain-'));
+  let granted=0;
+  try{
+    const yard={
+      async listRemoteCapacityNodes(){granted++;throw new Error('unexpected_broker_call');},
+      async remoteCapacityGrant(){granted++;throw new Error('unexpected_grant_call');}
+    };
+    const done=await drainNodeSeedExecutionIntents({
+      root,yard,brokerDeploymentId:'synthetic-proof-only'
+    });
+    assert.equal(done.considered,0);
+    assert.equal(done.completed,0);
+    assert.equal(done.machine_authority_inferred,false);
+    assert.equal(granted,0);
+    assert.equal(fs.existsSync(path.join(root,'.nodeseed-intent-drain.lock')),false);
+  }finally{
+    fs.rmSync(root,{recursive:true,force:true});
+  }
 });
