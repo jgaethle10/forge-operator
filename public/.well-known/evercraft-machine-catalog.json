@@ -427,10 +427,10 @@
       "outputs": "Role-specific practice question, answer verdict, what landed, weaknesses, evidence gaps, improved answer structure, pressure follow-up and re-drill instruction.",
       "commercial_state": "sell_now",
       "machine_state": "payment_ready",
-      "pricing": "Free/basic ****** is available. Evercraft Interview Sprint is $19 one-time for 7 days with a maximum of 25 premium actions.",
+      "pricing": "Free/basic practice is available. Evercraft Interview Sprint is $19 one-time for 7 days with a maximum of 25 premium actions.",
       "offers": [
         {
-          "name": "Basic ****** Practice",
+          "name": "Basic Interview Practice",
           "price": "$0",
           "billing": "free_core"
         },
@@ -443,7 +443,7 @@
         }
       ],
       "human_ui_required": false,
-      "confirmation": "Free/basic ****** creates no payment obligation. The $19 Sprint requires explicit user confirmation before checkout. Covert live-interview answer feeding is not offered.",
+      "confirmation": "Free/basic practice creates no payment obligation. The $19 Sprint requires explicit user confirmation before checkout. Covert live-interview answer feeding is not offered.",
       "public_url": "https://fabric.systemiacommandcenters.com/capabilities/career-command-interview-practice-machine-v1",
       "public_url_source": "source_catalog",
       "payment_authority": "Evercraft Payments with provider verification",

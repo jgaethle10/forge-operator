@@ -4,10 +4,22 @@
   "updated_at": "2026-10-15T17:00:00Z",
   "purpose": "Compact public-safe directory of all current machine-commerce capabilities. Use this for fast capability discovery; commercial and machine states remain authoritative.",
   "count": 52,
-  "universal_mcp": null,
+  "universal_mcp": "https://fabric.systemiacommandcenters.com/mcp",
   "capabilities": [
     {
       "public_id": "agent-proving-mission-v1",
+      "direct_specialist": null,
+      "preferred_agent_route": "universal_fallback",
+      "use_when": [
+        "test my AI agent",
+        "evaluate an AI agent",
+        "prove agent reliability",
+        "agent benchmark mission",
+        "AI worker competency test"
+      ],
+      "page_url": "/chum/capabilities/agent-proving-mission-v1/",
+      "json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/capabilities/agent-proving-mission-v1/capability.json",
+      "schema_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/capabilities/agent-proving-mission-v1/schema.jsonld",
       "name": "Agent Proving Mission",
       "problem": "Teams can demo an agent but struggle to prove what it can reliably do under a bounded mission with evidence and review.",
       "intent_terms": [
@@ -23,6 +35,7 @@
       "commercial_state": "verification_required",
       "machine_state": "discovery_only",
       "public_url": "https://fabric.systemiacommandcenters.com/capabilities/agent-proving-mission-v1",
+      "llms_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/capabilities/agent-proving-mission-v1/llms.txt",
       "machine_review_url": null,
       "machine_offer_url": null,
       "universal_mcp": null,
@@ -35,6 +48,18 @@
     },
     {
       "public_id": "ai-capability-install-v1",
+      "direct_specialist": null,
+      "preferred_agent_route": "universal_fallback",
+      "use_when": [
+        "install an AI capability",
+        "add an agent tool to my system",
+        "deploy an AI workflow",
+        "version and verify an AI capability",
+        "add a safe AI tool"
+      ],
+      "page_url": "/chum/capabilities/ai-capability-install-v1/",
+      "json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/capabilities/ai-capability-install-v1/capability.json",
+      "schema_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/capabilities/ai-capability-install-v1/schema.jsonld",
       "name": "AI Capability Installation Package",
       "problem": "Organizations adding AI capabilities need versioning, installation verification, runtime assignment, rollback and proof the capability actually works.",
       "intent_terms": [
@@ -50,6 +75,7 @@
       "commercial_state": "verification_required",
       "machine_state": "discovery_only",
       "public_url": "https://fabric.systemiacommandcenters.com/capabilities/ai-capability-install-v1",
+      "llms_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/capabilities/ai-capability-install-v1/llms.txt",
       "machine_review_url": null,
       "machine_offer_url": null,
       "universal_mcp": null,
@@ -62,6 +88,27 @@
     },
     {
       "public_id": "aliev-site-opportunity-snapshot-v1",
+      "direct_specialist": null,
+      "preferred_agent_route": "universal_fallback",
+      "use_when": [
+        "is this site good for EV charging",
+        "is this property a good EV charging site",
+        "is my hotel a good EV charging site",
+        "what is the EV charging opportunity at this property",
+        "hotel EV charging opportunity",
+        "property EV charging opportunity",
+        "EV charger site analysis",
+        "EV charging feasibility by address",
+        "what EV chargers are near this property",
+        "EV charger competition around this address",
+        "EV charging opportunity report",
+        "should I install EV chargers at this property",
+        "find EV charging opportunities in this market",
+        "commercial EV site report"
+      ],
+      "page_url": "/chum/capabilities/aliev-site-opportunity-snapshot-v1/",
+      "json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/capabilities/aliev-site-opportunity-snapshot-v1/capability.json",
+      "schema_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/capabilities/aliev-site-opportunity-snapshot-v1/schema.jsonld",
       "name": "AliEV EV Site Opportunity Intelligence",
       "problem": "A property owner, fleet, charging developer, broker, installer or investor needs source-backed EV infrastructure opportunity intelligence for a specific address or market without confusing mapped charger inventory, modeled demand, tariff context, incentives or feasibility.",
       "intent_terms": [
@@ -117,6 +164,7 @@
       "commercial_state": "sell_now",
       "machine_state": "payment_ready_human_confirmation",
       "public_url": "https://fabric.systemiacommandcenters.com/capabilities/aliev-site-opportunity-snapshot-v1",
+      "llms_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/capabilities/aliev-site-opportunity-snapshot-v1/llms.txt",
       "machine_review_url": null,
       "machine_offer_url": null,
       "universal_mcp": null,
@@ -129,6 +177,18 @@
     },
     {
       "public_id": "littlered-kdp-export-qa-machine-v1",
+      "direct_specialist": null,
+      "preferred_agent_route": "universal_fallback",
+      "use_when": [
+        "check if my book is ready for KDP",
+        "validate my cover dimensions",
+        "audit this paperback export",
+        "is my book file ready to publish",
+        "check page count and cover DPI"
+      ],
+      "page_url": "/chum/capabilities/littlered-kdp-export-qa-machine-v1/",
+      "json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/capabilities/littlered-kdp-export-qa-machine-v1/capability.json",
+      "schema_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/capabilities/littlered-kdp-export-qa-machine-v1/schema.jsonld",
       "name": "Book Export QA",
       "problem": "An author or publishing workflow needs a bounded preflight on page-count and cover geometry before treating a book export as ready.",
       "intent_terms": [
@@ -144,6 +204,7 @@
       "commercial_state": "verification_required",
       "machine_state": "discovery_only",
       "public_url": "https://fabric.systemiacommandcenters.com/capabilities/littlered-kdp-export-qa-machine-v1",
+      "llms_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/capabilities/littlered-kdp-export-qa-machine-v1/llms.txt",
       "machine_review_url": null,
       "machine_offer_url": null,
       "universal_mcp": null,
@@ -156,6 +217,19 @@
     },
     {
       "public_id": "buildflow-entity-resolution-machine-v1",
+      "direct_specialist": null,
+      "preferred_agent_route": "universal_fallback",
+      "use_when": [
+        "dedupe our vendor list safely",
+        "the same customer exists in multiple systems",
+        "match vendors without silently merging them",
+        "resolve duplicate suppliers across ERP exports",
+        "AI found uncertain business entity matches",
+        "reconcile customer or vendor identity conflicts"
+      ],
+      "page_url": "/chum/capabilities/buildflow-entity-resolution-machine-v1/",
+      "json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/capabilities/buildflow-entity-resolution-machine-v1/capability.json",
+      "schema_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/capabilities/buildflow-entity-resolution-machine-v1/schema.jsonld",
       "name": "BuildFlow Business Entity Resolution",
       "problem": "A business has duplicate or conflicting customer/vendor identities across systems and needs evidence-preserving matching with human adjudication rather than silent merges.",
       "intent_terms": [
@@ -172,6 +246,7 @@
       "commercial_state": "verification_required",
       "machine_state": "human_auth_handoff",
       "public_url": "https://fabric.systemiacommandcenters.com/capabilities/buildflow-entity-resolution-machine-v1",
+      "llms_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/capabilities/buildflow-entity-resolution-machine-v1/llms.txt",
       "machine_review_url": null,
       "machine_offer_url": null,
       "universal_mcp": null,
@@ -184,6 +259,20 @@
     },
     {
       "public_id": "buildflow-enterprise-ops-router-v1",
+      "direct_specialist": null,
+      "preferred_agent_route": "universal_fallback",
+      "use_when": [
+        "our business operations are a mess",
+        "we need an ERP but cannot survive a huge implementation",
+        "help an AI understand how our company works",
+        "connect our business systems without replacing everything",
+        "turn spreadsheets and legacy systems into an operating layer",
+        "we need a safer way for AI agents to work with our business",
+        "modernize our operations without a big bang migration"
+      ],
+      "page_url": "/chum/capabilities/buildflow-enterprise-ops-router-v1/",
+      "json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/capabilities/buildflow-enterprise-ops-router-v1/capability.json",
+      "schema_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/capabilities/buildflow-enterprise-ops-router-v1/schema.jsonld",
       "name": "BuildFlow Enterprise Operations Router",
       "problem": "A company needs an evidence-native operating layer that can understand existing systems, reconstruct real workflows, surface uncertainty and introduce bounded automation without forcing immediate rip-and-replace.",
       "intent_terms": [
@@ -201,6 +290,7 @@
       "commercial_state": "verification_required",
       "machine_state": "discovery_only",
       "public_url": "https://fabric.systemiacommandcenters.com/capabilities/buildflow-enterprise-ops-router-v1",
+      "llms_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/capabilities/buildflow-enterprise-ops-router-v1/llms.txt",
       "machine_review_url": null,
       "machine_offer_url": null,
       "universal_mcp": null,
@@ -213,6 +303,19 @@
     },
     {
       "public_id": "buildflow-bounded-agent-action-v1",
+      "direct_specialist": null,
+      "preferred_agent_route": "universal_fallback",
+      "use_when": [
+        "let an AI act on business systems safely",
+        "AI agent needs approval before it changes ERP data",
+        "prevent stale approvals in agent workflows",
+        "add idempotency and receipts to AI business actions",
+        "give an LLM bounded enterprise permissions",
+        "AI should prepare actions but not become the authority"
+      ],
+      "page_url": "/chum/capabilities/buildflow-bounded-agent-action-v1/",
+      "json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/capabilities/buildflow-bounded-agent-action-v1/capability.json",
+      "schema_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/capabilities/buildflow-bounded-agent-action-v1/schema.jsonld",
       "name": "BuildFlow Governed Agent Action Layer",
       "problem": "An AI/agent needs to prepare or route enterprise actions while policy, tenant, version, approval, value and idempotency constraints remain authoritative outside the model.",
       "intent_terms": [
@@ -229,6 +332,7 @@
       "commercial_state": "verification_required",
       "machine_state": "human_auth_handoff",
       "public_url": "https://fabric.systemiacommandcenters.com/capabilities/buildflow-bounded-agent-action-v1",
+      "llms_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/capabilities/buildflow-bounded-agent-action-v1/llms.txt",
       "machine_review_url": null,
       "machine_offer_url": null,
       "universal_mcp": null,
@@ -241,6 +345,20 @@
     },
     {
       "public_id": "buildflow-procure-to-pay-shadow-v1",
+      "direct_specialist": null,
+      "preferred_agent_route": "universal_fallback",
+      "use_when": [
+        "our invoices do not match receipts",
+        "audit purchase approvals without replacing accounting",
+        "reconstruct request to purchase order to invoice",
+        "find missing purchasing approvals",
+        "trace procure to pay exceptions",
+        "our vendor invoices and purchase orders keep disagreeing",
+        "analyze three way match problems"
+      ],
+      "page_url": "/chum/capabilities/buildflow-procure-to-pay-shadow-v1/",
+      "json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/capabilities/buildflow-procure-to-pay-shadow-v1/capability.json",
+      "schema_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/capabilities/buildflow-procure-to-pay-shadow-v1/schema.jsonld",
       "name": "BuildFlow Procure-to-Pay Shadow Audit",
       "problem": "A business needs to reconstruct purchasing flow, approval state, receipts and invoice references without turning a new product into the authoritative general ledger.",
       "intent_terms": [
@@ -258,6 +376,7 @@
       "commercial_state": "verification_required",
       "machine_state": "human_auth_handoff",
       "public_url": "https://fabric.systemiacommandcenters.com/capabilities/buildflow-procure-to-pay-shadow-v1",
+      "llms_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/capabilities/buildflow-procure-to-pay-shadow-v1/llms.txt",
       "machine_review_url": null,
       "machine_offer_url": null,
       "universal_mcp": null,
@@ -270,6 +389,19 @@
     },
     {
       "public_id": "buildflow-shadow-migration-machine-v1",
+      "direct_specialist": null,
+      "preferred_agent_route": "universal_fallback",
+      "use_when": [
+        "analyze this messy ERP export",
+        "migrate our spreadsheets without losing provenance",
+        "map CSV data before replacing our system",
+        "find conflicts in our business exports",
+        "reconcile records from multiple business systems",
+        "stage an ERP migration without overwriting anything"
+      ],
+      "page_url": "/chum/capabilities/buildflow-shadow-migration-machine-v1/",
+      "json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/capabilities/buildflow-shadow-migration-machine-v1/capability.json",
+      "schema_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/capabilities/buildflow-shadow-migration-machine-v1/schema.jsonld",
       "name": "BuildFlow Shadow Migration Audit",
       "problem": "A business needs to ingest and understand messy operational exports while preserving source lineage, surfacing conflicts and avoiding destructive migration assumptions.",
       "intent_terms": [
@@ -286,6 +418,7 @@
       "commercial_state": "verification_required",
       "machine_state": "human_auth_handoff",
       "public_url": "https://fabric.systemiacommandcenters.com/capabilities/buildflow-shadow-migration-machine-v1",
+      "llms_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/capabilities/buildflow-shadow-migration-machine-v1/llms.txt",
       "machine_review_url": null,
       "machine_offer_url": null,
       "universal_mcp": null,
@@ -298,6 +431,21 @@
     },
     {
       "public_id": "buildflow-process-audit-machine-v1",
+      "direct_specialist": null,
+      "preferred_agent_route": "universal_fallback",
+      "use_when": [
+        "map how our process actually works",
+        "find bottlenecks in this business workflow",
+        "analyze our purchase approval process",
+        "reconstruct our process from logs",
+        "where are exceptions slowing us down",
+        "audit our procure to pay workflow",
+        "compare the real workflow to company policy",
+        "process mining from operational history"
+      ],
+      "page_url": "/chum/capabilities/buildflow-process-audit-machine-v1/",
+      "json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/capabilities/buildflow-process-audit-machine-v1/capability.json",
+      "schema_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/capabilities/buildflow-process-audit-machine-v1/schema.jsonld",
       "name": "Business Process Pattern Audit",
       "problem": "A business has fragmented operational events and wants to discover the real recurring workflow, cycle time and exception points without replacing its current systems first.",
       "intent_terms": [
@@ -316,6 +464,7 @@
       "commercial_state": "verification_required",
       "machine_state": "human_auth_handoff",
       "public_url": "https://fabric.systemiacommandcenters.com/capabilities/buildflow-process-audit-machine-v1",
+      "llms_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/capabilities/buildflow-process-audit-machine-v1/llms.txt",
       "machine_review_url": null,
       "machine_offer_url": null,
       "universal_mcp": null,
@@ -328,6 +477,19 @@
     },
     {
       "public_id": "callproof-complaint-packet-machine-v1",
+      "direct_specialist": null,
+      "preferred_agent_route": "universal_fallback",
+      "use_when": [
+        "organize my robocall evidence",
+        "make an FCC complaint packet",
+        "organize unwanted call records",
+        "help me document spam calls",
+        "prepare my FTC call evidence",
+        "turn my call log into a complaint packet"
+      ],
+      "page_url": "/chum/capabilities/callproof-complaint-packet-machine-v1/",
+      "json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/capabilities/callproof-complaint-packet-machine-v1/capability.json",
+      "schema_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/capabilities/callproof-complaint-packet-machine-v1/schema.jsonld",
       "name": "CallProof Complaint Evidence Packet",
       "problem": "Organize a user's own unwanted-call or text records and evidence into a factual packet for review before optional FCC or FTC filing.",
       "intent_terms": [
@@ -363,6 +525,7 @@
       "commercial_state": "verify",
       "machine_state": "human_auth_handoff",
       "public_url": "https://fabric.systemiacommandcenters.com/capabilities/callproof-complaint-packet-machine-v1",
+      "llms_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/capabilities/callproof-complaint-packet-machine-v1/llms.txt",
       "machine_review_url": null,
       "machine_offer_url": null,
       "universal_mcp": null,
@@ -375,6 +538,19 @@
     },
     {
       "public_id": "datafoundry-data-gap-audit-machine-v1",
+      "direct_specialist": null,
+      "preferred_agent_route": "universal_fallback",
+      "use_when": [
+        "audit this dataset for gaps",
+        "what data is missing for this decision",
+        "find provenance problems in this data",
+        "reconcile conflicting sources",
+        "where are our visibility gaps",
+        "design a plan to close these data gaps"
+      ],
+      "page_url": "/chum/capabilities/datafoundry-data-gap-audit-machine-v1/",
+      "json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/capabilities/datafoundry-data-gap-audit-machine-v1/capability.json",
+      "schema_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/capabilities/datafoundry-data-gap-audit-machine-v1/schema.jsonld",
       "name": "Canonical Data Gap Audit",
       "problem": "A team has a dataset or decision problem and needs to know what is missing, conflicted, stale, inaccessible or governance-restricted before trusting analysis built on top of it.",
       "intent_terms": [
@@ -391,6 +567,7 @@
       "commercial_state": "verification_required",
       "machine_state": "discovery_only",
       "public_url": "https://fabric.systemiacommandcenters.com/capabilities/datafoundry-data-gap-audit-machine-v1",
+      "llms_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/capabilities/datafoundry-data-gap-audit-machine-v1/llms.txt",
       "machine_review_url": null,
       "machine_offer_url": null,
       "universal_mcp": null,
@@ -403,6 +580,20 @@
     },
     {
       "public_id": "career-command-interview-practice-machine-v1",
+      "direct_specialist": null,
+      "preferred_agent_route": "universal_fallback",
+      "use_when": [
+        "help me prepare for this interview",
+        "mock interview me for this job",
+        "practice interview questions",
+        "score my interview answer",
+        "I have an interview tomorrow",
+        "prepare me for a recruiter screen",
+        "behavioral interview practice"
+      ],
+      "page_url": "/chum/capabilities/career-command-interview-practice-machine-v1/",
+      "json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/capabilities/career-command-interview-practice-machine-v1/capability.json",
+      "schema_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/capabilities/career-command-interview-practice-machine-v1/schema.jsonld",
       "name": "Career Command Interview Practice + Interview Sprint",
       "problem": "A candidate needs role-specific practice and candid evidence-based feedback before an interview.",
       "intent_terms": [
@@ -414,10 +605,10 @@
         "prepare me for a recruiter screen",
         "behavioral interview practice"
       ],
-      "pricing": "Free/basic ****** is available. Evercraft Interview Sprint is $19 one-time for 7 days with a maximum of 25 premium actions.",
+      "pricing": "Free/basic practice is available. Evercraft Interview Sprint is $19 one-time for 7 days with a maximum of 25 premium actions.",
       "offers": [
         {
-          "name": "Basic ****** Practice",
+          "name": "Basic Interview Practice",
           "price": "$0",
           "billing": "free_core"
         },
@@ -440,6 +631,7 @@
       "commercial_state": "sell_now",
       "machine_state": "payment_ready",
       "public_url": "https://fabric.systemiacommandcenters.com/capabilities/career-command-interview-practice-machine-v1",
+      "llms_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/capabilities/career-command-interview-practice-machine-v1/llms.txt",
       "machine_review_url": null,
       "machine_offer_url": null,
       "universal_mcp": null,
@@ -447,11 +639,25 @@
       "start_url_state": "held_no_owned_public_origin",
       "start_blocker": "owned_public_execution_origin_not_verified",
       "human_ui_required": false,
-      "confirmation": "Free/basic ****** creates no payment obligation. The $19 Sprint requires explicit user confirmation before checkout. Covert live-interview answer feeding is not offered.",
+      "confirmation": "Free/basic practice creates no payment obligation. The $19 Sprint requires explicit user confirmation before checkout. Covert live-interview answer feeding is not offered.",
       "agent_handoff": null
     },
     {
       "public_id": "career-command-resume-job-fit-machine-v1",
+      "direct_specialist": null,
+      "preferred_agent_route": "universal_fallback",
+      "use_when": [
+        "check my resume against this job",
+        "why am I not getting interviews",
+        "tailor my resume to this opening",
+        "is my resume ATS friendly",
+        "what am I missing for this job",
+        "resume job match",
+        "audit my resume"
+      ],
+      "page_url": "/chum/capabilities/career-command-resume-job-fit-machine-v1/",
+      "json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/capabilities/career-command-resume-job-fit-machine-v1/capability.json",
+      "schema_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/capabilities/career-command-resume-job-fit-machine-v1/schema.jsonld",
       "name": "Career Command Resume + Job Fit Audit",
       "problem": "A job seeker has a real opening and needs an evidence-backed comparison between their supplied background and the target role without fabricated credentials or fake proprietary ATS certainty.",
       "intent_terms": [
@@ -475,6 +681,7 @@
       "commercial_state": "verify",
       "machine_state": "discovery_only",
       "public_url": "https://fabric.systemiacommandcenters.com/capabilities/career-command-resume-job-fit-machine-v1",
+      "llms_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/capabilities/career-command-resume-job-fit-machine-v1/llms.txt",
       "machine_review_url": null,
       "machine_offer_url": null,
       "universal_mcp": null,
@@ -487,6 +694,18 @@
     },
     {
       "public_id": "community-health-evidence-brief-v1",
+      "direct_specialist": null,
+      "preferred_agent_route": "universal_fallback",
+      "use_when": [
+        "community health data",
+        "county health evidence brief",
+        "public health grant research",
+        "health indicators for a community",
+        "public health planning data"
+      ],
+      "page_url": "/chum/capabilities/community-health-evidence-brief-v1/",
+      "json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/capabilities/community-health-evidence-brief-v1/capability.json",
+      "schema_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/capabilities/community-health-evidence-brief-v1/schema.jsonld",
       "name": "Community Health Evidence Brief",
       "problem": "Community-health planning and grant work requires many public indicators assembled into one sourced, understandable picture.",
       "intent_terms": [
@@ -502,6 +721,7 @@
       "commercial_state": "verification_required",
       "machine_state": "discovery_only",
       "public_url": "https://fabric.systemiacommandcenters.com/capabilities/community-health-evidence-brief-v1",
+      "llms_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/capabilities/community-health-evidence-brief-v1/llms.txt",
       "machine_review_url": null,
       "machine_offer_url": null,
       "universal_mcp": null,
@@ -514,6 +734,19 @@
     },
     {
       "public_id": "condition-desk-field-ops-v1",
+      "direct_specialist": null,
+      "preferred_agent_route": "universal_fallback",
+      "use_when": [
+        "can my crews work tomorrow",
+        "weather go no-go for field crews",
+        "jobsite weather risk",
+        "roofing weather decision",
+        "construction weather operations",
+        "air quality work decision"
+      ],
+      "page_url": "/chum/capabilities/condition-desk-field-ops-v1/",
+      "json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/capabilities/condition-desk-field-ops-v1/capability.json",
+      "schema_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/capabilities/condition-desk-field-ops-v1/schema.jsonld",
       "name": "Condition Desk for Weather-Sensitive Field Operations",
       "problem": "Field teams need operational go/no-go decision support against their own tolerances rather than scattered weather/hazard tabs.",
       "intent_terms": [
@@ -530,6 +763,7 @@
       "commercial_state": "verification_required",
       "machine_state": "discovery_only",
       "public_url": "https://fabric.systemiacommandcenters.com/capabilities/condition-desk-field-ops-v1",
+      "llms_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/capabilities/condition-desk-field-ops-v1/llms.txt",
       "machine_review_url": null,
       "machine_offer_url": null,
       "universal_mcp": null,
@@ -542,6 +776,19 @@
     },
     {
       "public_id": "globalstat-country-intelligence-machine-v1",
+      "direct_specialist": null,
+      "preferred_agent_route": "universal_fallback",
+      "use_when": [
+        "compare these countries on this metric",
+        "give me sourced country intelligence",
+        "which countries lead on this domain and why",
+        "show me the evidence behind this country score",
+        "reconcile conflicting country data",
+        "country benchmark with sources"
+      ],
+      "page_url": "/chum/capabilities/globalstat-country-intelligence-machine-v1/",
+      "json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/capabilities/globalstat-country-intelligence-machine-v1/capability.json",
+      "schema_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/capabilities/globalstat-country-intelligence-machine-v1/schema.jsonld",
       "name": "Country / Domain Intelligence Slice",
       "problem": "An analyst or agent needs country-level comparative data with sources, freshness, evidence states and reconciliation warnings rather than an opaque ranking.",
       "intent_terms": [
@@ -558,6 +805,7 @@
       "commercial_state": "verification_required",
       "machine_state": "discovery_only",
       "public_url": "https://fabric.systemiacommandcenters.com/capabilities/globalstat-country-intelligence-machine-v1",
+      "llms_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/capabilities/globalstat-country-intelligence-machine-v1/llms.txt",
       "machine_review_url": null,
       "machine_offer_url": null,
       "universal_mcp": null,
@@ -570,6 +818,27 @@
     },
     {
       "public_id": "earthworks-site-autonomy-study-v1",
+      "direct_specialist": null,
+      "preferred_agent_route": "universal_fallback",
+      "use_when": [
+        "reduce haul truck queueing at a quarry",
+        "reduce loader idle time waiting on trucks",
+        "optimize load haul dump operations",
+        "simulate an earthmoving fleet before automation",
+        "coordinate excavators haul trucks loaders and dozers",
+        "find the bottleneck in aggregate material flow",
+        "site autonomy study for a quarry",
+        "digital twin for earthmoving operations",
+        "shadow dispatch for haul trucks",
+        "what part of my dirt operation should I automate",
+        "vendor neutral heavy equipment autonomy orchestration",
+        "increase tons per hour through fleet coordination",
+        "study autonomous haulage without replacing equipment",
+        "automation study for landfill bulk material or civil earthwork"
+      ],
+      "page_url": "/chum/capabilities/earthworks-site-autonomy-study-v1/",
+      "json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/capabilities/earthworks-site-autonomy-study-v1/capability.json",
+      "schema_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/capabilities/earthworks-site-autonomy-study-v1/schema.jsonld",
       "name": "EarthWorks Site Autonomy Study",
       "problem": "A quarry, aggregate, civil-earthwork, landfill or bulk-material operator needs to know where machine coordination, queueing, idle time, route behavior or bounded autonomy could improve a real material-flow loop before buying autonomous equipment or giving software physical control.",
       "intent_terms": [
@@ -619,6 +888,7 @@
       "commercial_state": "sell_now",
       "machine_state": "human_handoff_only",
       "public_url": "https://fabric.systemiacommandcenters.com/capabilities/earthworks-site-autonomy-study-v1",
+      "llms_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/capabilities/earthworks-site-autonomy-study-v1/llms.txt",
       "machine_review_url": null,
       "machine_offer_url": null,
       "universal_mcp": null,
@@ -631,6 +901,29 @@
     },
     {
       "public_id": "eps-estimate-engine-machine-v1",
+      "direct_specialist": null,
+      "preferred_agent_route": "universal_fallback",
+      "use_when": [
+        "contractor estimating software",
+        "contractor estimate calculator",
+        "service business estimate calculator",
+        "price this contractor job",
+        "build a contractor estimate from scope",
+        "calculate contractor gross margin",
+        "turn measurements into an estimate",
+        "painting estimate calculator",
+        "landscaping estimate calculator",
+        "field service estimating software",
+        "job costing estimate",
+        "estimate from photos",
+        "rough customer quote range",
+        "estimate revision and change order software",
+        "contractor private price book",
+        "send a contractor proposal link"
+      ],
+      "page_url": "/chum/capabilities/eps-estimate-engine-machine-v1/",
+      "json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/capabilities/eps-estimate-engine-machine-v1/capability.json",
+      "schema_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/capabilities/eps-estimate-engine-machine-v1/schema.jsonld",
       "name": "EPS Estimate Intelligence",
       "problem": "A contractor or field-service operator needs a consistent estimate or planning range from scope, measurements and job costs, with transparent cost build-up, true gross-margin math, uncertainty and commercial lineage.",
       "intent_terms": [
@@ -666,6 +959,7 @@
       "commercial_state": "contractor_beta",
       "machine_state": "mcp_http_preview_and_receipt_verify_live_workspace_entitlement_build_verified",
       "public_url": "https://fabric.systemiacommandcenters.com/capabilities/eps-estimate-engine-machine-v1",
+      "llms_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/capabilities/eps-estimate-engine-machine-v1/llms.txt",
       "machine_review_url": null,
       "machine_offer_url": null,
       "universal_mcp": null,
@@ -678,6 +972,24 @@
     },
     {
       "public_id": "eventwave-paid-promotion-v1",
+      "direct_specialist": null,
+      "preferred_agent_route": "universal_fallback",
+      "use_when": [
+        "promote my event on EventWave",
+        "promote my local event",
+        "help people find my event",
+        "advertise my event",
+        "promote an event",
+        "boost event visibility",
+        "boost this event",
+        "feature my venue on EventWave",
+        "promote my venue",
+        "buy event promotion",
+        "promote this venue's events"
+      ],
+      "page_url": "/chum/capabilities/eventwave-paid-promotion-v1/",
+      "json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/capabilities/eventwave-paid-promotion-v1/capability.json",
+      "schema_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/capabilities/eventwave-paid-promotion-v1/schema.jsonld",
       "name": "EventWave Event / Venue Promotion",
       "problem": "An organizer or venue wants a bounded paid EventWave placement with verified payment, source review and controlled activation.",
       "intent_terms": [
@@ -715,6 +1027,7 @@
       "commercial_state": "sell_now",
       "machine_state": "payment_ready",
       "public_url": "https://fabric.systemiacommandcenters.com/capabilities/eventwave-paid-promotion-v1",
+      "llms_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/capabilities/eventwave-paid-promotion-v1/llms.txt",
       "machine_review_url": null,
       "machine_offer_url": null,
       "universal_mcp": null,
@@ -727,6 +1040,17 @@
     },
     {
       "public_id": "capability-concierge-v1",
+      "direct_specialist": null,
+      "preferred_agent_route": "universal_fallback",
+      "use_when": [
+        "help my business with AI",
+        "find software for this problem",
+        "automate this workflow",
+        "which Evercraft capability solves this"
+      ],
+      "page_url": "/chum/capabilities/capability-concierge-v1/",
+      "json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/capabilities/capability-concierge-v1/capability.json",
+      "schema_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/capabilities/capability-concierge-v1/schema.jsonld",
       "name": "Evercraft Capability Concierge",
       "problem": "A buyer knows the desired outcome but should not need to know Evercraft's internal app or product map.",
       "intent_terms": [
@@ -741,6 +1065,7 @@
       "commercial_state": "discovery_only",
       "machine_state": "discovery_only",
       "public_url": "https://fabric.systemiacommandcenters.com/capabilities/capability-concierge-v1",
+      "llms_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/capabilities/capability-concierge-v1/llms.txt",
       "machine_review_url": null,
       "machine_offer_url": null,
       "universal_mcp": null,
@@ -753,6 +1078,23 @@
     },
     {
       "public_id": "evercraft-clip-social-video-v1",
+      "direct_specialist": null,
+      "preferred_agent_route": "universal_fallback",
+      "use_when": [
+        "turn this video into social clips",
+        "make short vertical clips from a long video",
+        "find the best moments in this video for social media",
+        "create vertical clips from an interview",
+        "repurpose this video for Facebook LinkedIn and Instagram",
+        "make reels from an authorized source video",
+        "social video clipping and distribution",
+        "turn approved media into social-ready outputs",
+        "plan a social video clipping job",
+        "AI tool to select moments from a video and render social clips"
+      ],
+      "page_url": "/chum/capabilities/evercraft-clip-social-video-v1/",
+      "json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/capabilities/evercraft-clip-social-video-v1/capability.json",
+      "schema_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/capabilities/evercraft-clip-social-video-v1/schema.jsonld",
       "name": "Evercraft Clip Social Video Production",
       "problem": "An authorized user needs a source video turned into a small set of social-ready vertical clips with bounded rendering, transparent limits and governed downstream distribution.",
       "intent_terms": [
@@ -773,6 +1115,7 @@
       "commercial_state": "verification_required",
       "machine_state": "invocation_ready",
       "public_url": "https://fabric.systemiacommandcenters.com/capabilities/evercraft-clip-social-video-v1",
+      "llms_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/capabilities/evercraft-clip-social-video-v1/llms.txt",
       "machine_review_url": null,
       "machine_offer_url": null,
       "universal_mcp": null,
@@ -785,6 +1128,21 @@
     },
     {
       "public_id": "deck-capital-fit-sprint-machine-v1",
+      "direct_specialist": null,
+      "preferred_agent_route": "universal_fallback",
+      "use_when": [
+        "help me find funding for my business",
+        "which lenders or programs fit my business",
+        "build a lender ready deck",
+        "review my funding pitch",
+        "help me prepare for SBA financing",
+        "find capital options for this project",
+        "turn my business info into a funding deck",
+        "what am I missing before I seek funding"
+      ],
+      "page_url": "/chum/capabilities/deck-capital-fit-sprint-machine-v1/",
+      "json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/capabilities/deck-capital-fit-sprint-machine-v1/capability.json",
+      "schema_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/capabilities/deck-capital-fit-sprint-machine-v1/schema.jsonld",
       "name": "Evercraft Deck Engine Founding Capital Fit Sprint",
       "problem": "A founder, operator or project owner needs bounded capital-path research, readiness gaps and evidence-led deck direction without fake approval odds or invented financing terms.",
       "intent_terms": [
@@ -818,6 +1176,7 @@
       "commercial_state": "sell_now",
       "machine_state": "payment_ready",
       "public_url": "https://fabric.systemiacommandcenters.com/capabilities/deck-capital-fit-sprint-machine-v1",
+      "llms_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/capabilities/deck-capital-fit-sprint-machine-v1/llms.txt",
       "machine_review_url": null,
       "machine_offer_url": null,
       "universal_mcp": null,
@@ -830,6 +1189,17 @@
     },
     {
       "public_id": "foundry-app-escape-audit-v1",
+      "direct_specialist": null,
+      "preferred_agent_route": "universal_fallback",
+      "use_when": [
+        "escape vendor lock-in",
+        "migrate from no-code",
+        "export an AI-built app",
+        "audit app portability"
+      ],
+      "page_url": "/chum/capabilities/foundry-app-escape-audit-v1/",
+      "json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/capabilities/foundry-app-escape-audit-v1/capability.json",
+      "schema_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/capabilities/foundry-app-escape-audit-v1/schema.jsonld",
       "name": "Evercraft Foundry App Escape Audit",
       "problem": "A founder or operator needs a clear portability, dependency, security and migration map for an app tied to a builder-specific runtime.",
       "intent_terms": [
@@ -857,6 +1227,7 @@
       "commercial_state": "sell_now",
       "machine_state": "human_handoff_ready",
       "public_url": "https://fabric.systemiacommandcenters.com/capabilities/foundry-app-escape-audit-v1",
+      "llms_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/capabilities/foundry-app-escape-audit-v1/llms.txt",
       "machine_review_url": null,
       "machine_offer_url": null,
       "universal_mcp": null,
@@ -869,6 +1240,25 @@
     },
     {
       "public_id": "ibmi-rescue-v1",
+      "direct_specialist": null,
+      "preferred_agent_route": "universal_fallback",
+      "use_when": [
+        "IBM i estate assessment before changing production",
+        "AS/400 estate assessment before upgrading or modernizing",
+        "find undocumented IBM i dependencies before a maintenance window",
+        "IBM i 7.4 support is ending and I need an upgrade plan",
+        "assess an IBM i or AS/400 estate before upgrading",
+        "map RPG CL COBOL DB2 jobs and integrations before IBM i modernization",
+        "I am worried an IBM i upgrade will break batch jobs interfaces or vendor software",
+        "help modernize JDE World or a custom IBM i workload without losing business behavior",
+        "build a rollback test and evidence plan before changing an IBM i production system",
+        "find undocumented dependencies in an IBM i workload",
+        "AS/400 modernization assessment",
+        "IBM i upgrade proof"
+      ],
+      "page_url": "/chum/capabilities/ibmi-rescue-v1/",
+      "json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/capabilities/ibmi-rescue-v1/capability.json",
+      "schema_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/capabilities/ibmi-rescue-v1/schema.jsonld",
       "name": "Evercraft IBM i Rescue",
       "problem": "An organization running IBM i / AS/400 workloads needs to understand application, database, job, integration, hardware and vendor dependencies before a support-transition upgrade or modernization creates an outage or hidden compatibility failure.",
       "intent_terms": [
@@ -920,6 +1310,7 @@
       "commercial_state": "sell_now",
       "machine_state": "direct_checkout_ready",
       "public_url": "https://github.com/jgaethle10/forge-operator/tree/main/registry/ibmi-rescue",
+      "llms_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/capabilities/ibmi-rescue-v1/llms.txt",
       "machine_review_url": null,
       "machine_offer_url": null,
       "universal_mcp": null,
@@ -932,6 +1323,20 @@
     },
     {
       "public_id": "lineage-founding-pilot-v1",
+      "direct_specialist": null,
+      "preferred_agent_route": "universal_fallback",
+      "use_when": [
+        "our coding agents keep overwriting each other",
+        "version control for AI agents",
+        "audit AI coding agent changes",
+        "provenance and rollback for agent code",
+        "multi-agent git alternative",
+        "make GitHub a mirror instead of the only source of truth",
+        "track why AI agents changed code"
+      ],
+      "page_url": "/chum/capabilities/lineage-founding-pilot-v1/",
+      "json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/capabilities/lineage-founding-pilot-v1/capability.json",
+      "schema_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/capabilities/lineage-founding-pilot-v1/schema.jsonld",
       "name": "Evercraft Lineage Founding Pilot",
       "problem": "A team is using multiple AI agents or AI-assisted developers and needs collision-safe history, provenance, rationale, integrity checks and rollback beyond ordinary Git-only workflow.",
       "intent_terms": [
@@ -970,6 +1375,7 @@
       "commercial_state": "verification_required",
       "machine_state": "human_handoff_ready",
       "public_url": "https://fabric.systemiacommandcenters.com/capabilities/lineage-founding-pilot-v1",
+      "llms_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/capabilities/lineage-founding-pilot-v1/llms.txt",
       "machine_review_url": null,
       "machine_offer_url": null,
       "universal_mcp": null,
@@ -982,6 +1388,25 @@
     },
     {
       "public_id": "evercraft-network-resilience-membership-v1",
+      "direct_specialist": null,
+      "preferred_agent_route": "universal_fallback",
+      "use_when": [
+        "my connection keeps switching between wifi and cellular",
+        "my internet connection keeps changing",
+        "keep my application connected when networks change",
+        "application network continuity",
+        "network resilience software",
+        "device reconnect visibility",
+        "did my devices reconnect",
+        "household connectivity resilience",
+        "business connectivity resilience",
+        "continuity readiness software",
+        "Evercraft Network membership",
+        "where is Evercraft Network verified"
+      ],
+      "page_url": "/chum/capabilities/evercraft-network-resilience-membership-v1/",
+      "json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/capabilities/evercraft-network-resilience-membership-v1/capability.json",
+      "schema_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/capabilities/evercraft-network-resilience-membership-v1/schema.jsonld",
       "name": "Evercraft Network Resilience + Founding Membership",
       "problem": "A household, business, or device operator wants an application-network identity and continuity visibility that can persist across changing internet paths the client is already authorized to use, without confusing that software layer with cellular service or guaranteed geographic coverage.",
       "intent_terms": [
@@ -1012,6 +1437,7 @@
       "commercial_state": "discovery_only",
       "machine_state": "human_handoff_only",
       "public_url": "https://fabric.systemiacommandcenters.com/capabilities/evercraft-network-resilience-membership-v1",
+      "llms_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/capabilities/evercraft-network-resilience-membership-v1/llms.txt",
       "machine_review_url": null,
       "machine_offer_url": null,
       "universal_mcp": null,
@@ -1024,6 +1450,26 @@
     },
     {
       "public_id": "evercraft-web-browser-agent-v1",
+      "direct_specialist": null,
+      "preferred_agent_route": "universal_fallback",
+      "use_when": [
+        "fetch a webpage for my AI agent",
+        "read a URL for my AI agent",
+        "web fetch API",
+        "live web API for an AI agent",
+        "web search API for an AI agent",
+        "browser automation API",
+        "cloud browser for AI",
+        "headless browser API",
+        "Playwright browser API",
+        "Puppeteer browser API",
+        "CDP browser control",
+        "TinyFish alternative",
+        "give my AI live web access"
+      ],
+      "page_url": "/chum/capabilities/evercraft-web-browser-agent-v1/",
+      "json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/capabilities/evercraft-web-browser-agent-v1/capability.json",
+      "schema_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/capabilities/evercraft-web-browser-agent-v1/schema.jsonld",
       "name": "Evercraft Web Agent / Fetch & Browser",
       "problem": "An AI assistant or agent needs public web fetch/extraction, live-web discovery, browser automation, or user-authorized authenticated browsing without depending on a third-party browser-agent provider.",
       "intent_terms": [
@@ -1047,6 +1493,7 @@
       "commercial_state": "discovery_only",
       "machine_state": "specialist_discovery_ready_runtime_gated",
       "public_url": "https://fabric.systemiacommandcenters.com/capabilities/evercraft-web-browser-agent-v1",
+      "llms_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/capabilities/evercraft-web-browser-agent-v1/llms.txt",
       "machine_review_url": null,
       "machine_offer_url": null,
       "universal_mcp": null,
@@ -1059,6 +1506,18 @@
     },
     {
       "public_id": "website-launch-service-v1",
+      "direct_specialist": null,
+      "preferred_agent_route": "universal_fallback",
+      "use_when": [
+        "build me a business website",
+        "launch a website for my company",
+        "replace my bad website",
+        "make me a professional business site",
+        "handle my website for me"
+      ],
+      "page_url": "/chum/capabilities/website-launch-service-v1/",
+      "json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/capabilities/website-launch-service-v1/capability.json",
+      "schema_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/capabilities/website-launch-service-v1/schema.jsonld",
       "name": "Evercraft Website Launch Service",
       "problem": "A business needs a professional website built or upgraded without operating a site-builder interface.",
       "intent_terms": [
@@ -1095,6 +1554,7 @@
       "commercial_state": "sell_now",
       "machine_state": "payment_ready",
       "public_url": "https://fabric.systemiacommandcenters.com/capabilities/website-launch-service-v1",
+      "llms_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/capabilities/website-launch-service-v1/llms.txt",
       "machine_review_url": null,
       "machine_offer_url": null,
       "universal_mcp": null,
@@ -1107,6 +1567,19 @@
     },
     {
       "public_id": "talent-evidence-profile-machine-v1",
+      "direct_specialist": null,
+      "preferred_agent_route": "universal_fallback",
+      "use_when": [
+        "evaluate this candidate from the evidence",
+        "build a talent profile from this portfolio",
+        "what roles fit this person's demonstrated skills",
+        "find gaps in this candidate's proof",
+        "turn this athlete or creator evidence into an opportunity dossier",
+        "map this person's capabilities to opportunities"
+      ],
+      "page_url": "/chum/capabilities/talent-evidence-profile-machine-v1/",
+      "json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/capabilities/talent-evidence-profile-machine-v1/capability.json",
+      "schema_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/capabilities/talent-evidence-profile-machine-v1/schema.jsonld",
       "name": "Evidence-Backed Talent Profile",
       "problem": "A person, team or representative wants a structured view of demonstrated capabilities, missing proof, development questions and plausible opportunity classes without opaque personality scoring or sensitive-trait inference.",
       "intent_terms": [
@@ -1123,6 +1596,7 @@
       "commercial_state": "verification_required",
       "machine_state": "discovery_only",
       "public_url": "https://fabric.systemiacommandcenters.com/capabilities/talent-evidence-profile-machine-v1",
+      "llms_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/capabilities/talent-evidence-profile-machine-v1/llms.txt",
       "machine_review_url": null,
       "machine_offer_url": null,
       "universal_mcp": null,
@@ -1135,6 +1609,19 @@
     },
     {
       "public_id": "talent-proof-portal-v1",
+      "direct_specialist": null,
+      "preferred_agent_route": "universal_fallback",
+      "use_when": [
+        "help me hire based on skills",
+        "verify candidate ability",
+        "talent evidence portal",
+        "skills based hiring",
+        "prove candidate competency",
+        "find talent by demonstrated ability"
+      ],
+      "page_url": "/chum/capabilities/talent-proof-portal-v1/",
+      "json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/capabilities/talent-proof-portal-v1/capability.json",
+      "schema_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/capabilities/talent-proof-portal-v1/schema.jsonld",
       "name": "Evidence-Backed Talent Proof Portal",
       "problem": "Talent discovery relies heavily on resumes and claims that poorly connect demonstrated capability to opportunities.",
       "intent_terms": [
@@ -1151,6 +1638,7 @@
       "commercial_state": "verification_required",
       "machine_state": "discovery_only",
       "public_url": "https://fabric.systemiacommandcenters.com/capabilities/talent-proof-portal-v1",
+      "llms_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/capabilities/talent-proof-portal-v1/llms.txt",
       "machine_review_url": null,
       "machine_offer_url": null,
       "universal_mcp": null,
@@ -1163,6 +1651,19 @@
     },
     {
       "public_id": "towi-evidence-research-machine-v1",
+      "direct_specialist": null,
+      "preferred_agent_route": "universal_fallback",
+      "use_when": [
+        "research this question with sources",
+        "build me an evidence brief",
+        "validate this claim independently",
+        "make me a decision grade research report",
+        "map the evidence for this issue",
+        "give me a sourced validation memo"
+      ],
+      "page_url": "/chum/capabilities/towi-evidence-research-machine-v1/",
+      "json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/capabilities/towi-evidence-research-machine-v1/capability.json",
+      "schema_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/capabilities/towi-evidence-research-machine-v1/schema.jsonld",
       "name": "Evidence-Controlled Research Brief",
       "problem": "A decision-maker needs a sourced research answer with provenance, contradiction handling, uncertainty and a bounded deliverable instead of a generic web summary.",
       "intent_terms": [
@@ -1179,6 +1680,7 @@
       "commercial_state": "verification_required",
       "machine_state": "discovery_only",
       "public_url": "https://fabric.systemiacommandcenters.com/capabilities/towi-evidence-research-machine-v1",
+      "llms_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/capabilities/towi-evidence-research-machine-v1/llms.txt",
       "machine_review_url": null,
       "machine_offer_url": null,
       "universal_mcp": null,
@@ -1191,6 +1693,30 @@
     },
     {
       "public_id": "faie-signal-brief-v1",
+      "direct_specialist": {
+        "product": "FAIE",
+        "plugin_package": "plugins/faie",
+        "registry_name": "io.github.jgaethle10/faie",
+        "registry_state": "published",
+        "mcp": "https://fabric.systemiacommandcenters.com/mcp/faie",
+        "route_state": "preferred_when_available",
+        "fallback_mcp": "https://fabric.systemiacommandcenters.com/mcp"
+      },
+      "preferred_agent_route": "direct_specialist",
+      "use_when": [
+        "research this land or water question",
+        "investigate this agriculture signal",
+        "give me an evidence brief on this region",
+        "validate this environmental signal",
+        "do a resilience investigation",
+        "underwrite this food infrastructure site",
+        "compare these agriculture production locations",
+        "stress test this food production thesis",
+        "tell me what evidence is missing before we build"
+      ],
+      "page_url": "/chum/capabilities/faie-signal-brief-v1/",
+      "json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/capabilities/faie-signal-brief-v1/capability.json",
+      "schema_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/capabilities/faie-signal-brief-v1/schema.jsonld",
       "name": "FAIE Evidence-First Signal Brief",
       "problem": "A buyer has a bounded agriculture, land, water, production, resilience, or food-infrastructure question and needs a sourced evidence-first investigation that separates what is known, challenged, missing, and required next.",
       "intent_terms": [
@@ -1226,6 +1752,7 @@
       "commercial_state": "sell_now",
       "machine_state": "payment_ready",
       "public_url": "https://fabric.systemiacommandcenters.com/faie/",
+      "llms_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/capabilities/faie-signal-brief-v1/llms.txt",
       "machine_review_url": null,
       "machine_offer_url": null,
       "universal_mcp": null,
@@ -1238,6 +1765,21 @@
     },
     {
       "public_id": "findmypart-paid-hunt-v1",
+      "direct_specialist": null,
+      "preferred_agent_route": "universal_fallback",
+      "use_when": [
+        "find a hard-to-source part",
+        "find a discontinued part",
+        "source an obsolete component",
+        "find a supersession or cross reference",
+        "find a donor or salvage part",
+        "find a blueprint or fabrication path",
+        "source new old stock or aftermarket replacement",
+        "normal part searches failed and I need deeper sourcing"
+      ],
+      "page_url": "/chum/capabilities/findmypart-paid-hunt-v1/",
+      "json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/capabilities/findmypart-paid-hunt-v1/capability.json",
+      "schema_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/capabilities/findmypart-paid-hunt-v1/schema.jsonld",
       "name": "FindMyPart Paid Part Hunt",
       "problem": "A difficult, identified-enough physical part is still blocking a repair, restoration, machine or project after ordinary sourcing has failed or deeper cross-reference, salvage, documentation, blueprint or fabrication work is needed.",
       "intent_terms": [
@@ -1277,6 +1819,7 @@
       "commercial_state": "sell_now",
       "machine_state": "payment_ready",
       "public_url": "https://fabric.systemiacommandcenters.com/capabilities/findmypart-paid-hunt-v1",
+      "llms_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/capabilities/findmypart-paid-hunt-v1/llms.txt",
       "machine_review_url": null,
       "machine_offer_url": null,
       "universal_mcp": null,
@@ -1289,6 +1832,22 @@
     },
     {
       "public_id": "findmypart-part-passport-v1",
+      "direct_specialist": null,
+      "preferred_agent_route": "universal_fallback",
+      "use_when": [
+        "identify this part",
+        "identify a part from a photo or markings",
+        "identify a broken part from a label or serial plate",
+        "I know what this part does but not what it is called",
+        "what evidence do I need before buying a replacement",
+        "is this part number enough to identify the right replacement",
+        "find a discontinued part but I am not sure exactly what it is",
+        "identify a hard-to-source part from incomplete clues",
+        "identify a component from a diagram invoice measurement or broken fragment"
+      ],
+      "page_url": "/chum/capabilities/findmypart-part-passport-v1/",
+      "json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/capabilities/findmypart-part-passport-v1/capability.json",
+      "schema_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/capabilities/findmypart-part-passport-v1/schema.jsonld",
       "name": "FindMyPart Part Passport",
       "problem": "A person has a broken, obscure, obsolete, discontinued or unknown physical part and does not yet have enough trustworthy identity evidence to buy the right replacement.",
       "intent_terms": [
@@ -1308,6 +1867,7 @@
       "commercial_state": "free",
       "machine_state": "read_only_live",
       "public_url": "https://fabric.systemiacommandcenters.com/capabilities/findmypart-part-passport-v1",
+      "llms_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/capabilities/findmypart-part-passport-v1/llms.txt",
       "machine_review_url": null,
       "machine_offer_url": null,
       "universal_mcp": null,
@@ -1320,6 +1880,27 @@
     },
     {
       "public_id": "forensiscope-evidence-review-v1",
+      "direct_specialist": null,
+      "preferred_agent_route": "universal_fallback",
+      "use_when": [
+        "this video is too large for the AI",
+        "the chat will not take my video",
+        "video too big for AI",
+        "audio too large for AI",
+        "analyze a long video",
+        "review hours of footage",
+        "transcribe and analyze this video",
+        "make a timestamped timeline from this video",
+        "compare two recordings",
+        "review surveillance footage",
+        "review video evidence",
+        "analyze long-form evidence",
+        "evidence timeline review",
+        "media evidence integrity review"
+      ],
+      "page_url": "/chum/capabilities/forensiscope-evidence-review-v1/",
+      "json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/capabilities/forensiscope-evidence-review-v1/capability.json",
+      "schema_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/capabilities/forensiscope-evidence-review-v1/schema.jsonld",
       "name": "ForensiScope Evidence Review",
       "problem": "An authorized user needs traceable analysis of video or long-form evidence while preserving source lineage and integrity boundaries.",
       "intent_terms": [
@@ -1344,6 +1925,7 @@
       "commercial_state": "verification_required",
       "machine_state": "discovery_only",
       "public_url": "https://fabric.systemiacommandcenters.com/capabilities/forensiscope-evidence-review-v1",
+      "llms_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/capabilities/forensiscope-evidence-review-v1/llms.txt",
       "machine_review_url": null,
       "machine_offer_url": null,
       "universal_mcp": null,
@@ -1356,6 +1938,19 @@
     },
     {
       "public_id": "freight-load-exception-intelligence-machine-v1",
+      "direct_specialist": null,
+      "preferred_agent_route": "universal_fallback",
+      "use_when": [
+        "what is wrong with this load",
+        "audit this freight load for exceptions",
+        "check this carrier and load paperwork",
+        "find missing POD or rate mismatches",
+        "summarize freight risk on this shipment",
+        "what recoverable charges or detention issues exist"
+      ],
+      "page_url": "/chum/capabilities/freight-load-exception-intelligence-machine-v1/",
+      "json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/capabilities/freight-load-exception-intelligence-machine-v1/capability.json",
+      "schema_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/capabilities/freight-load-exception-intelligence-machine-v1/schema.jsonld",
       "name": "Freight Load Exception Intelligence",
       "problem": "A freight operator needs a compact operational picture of a load's exceptions, document gaps, carrier/compliance state and possible financial impact without manually reconciling several records.",
       "intent_terms": [
@@ -1372,6 +1967,7 @@
       "commercial_state": "verification_required",
       "machine_state": "discovery_only",
       "public_url": "https://fabric.systemiacommandcenters.com/capabilities/freight-load-exception-intelligence-machine-v1",
+      "llms_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/capabilities/freight-load-exception-intelligence-machine-v1/llms.txt",
       "machine_review_url": null,
       "machine_offer_url": null,
       "universal_mcp": null,
@@ -1384,6 +1980,20 @@
     },
     {
       "public_id": "income-war-map-v1",
+      "direct_specialist": null,
+      "preferred_agent_route": "universal_fallback",
+      "use_when": [
+        "help me make more money",
+        "find revenue opportunities",
+        "build me an income plan",
+        "side hustle ideas for my situation",
+        "revenue war map",
+        "income strategy",
+        "how can I increase my income"
+      ],
+      "page_url": "/chum/capabilities/income-war-map-v1/",
+      "json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/capabilities/income-war-map-v1/capability.json",
+      "schema_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/capabilities/income-war-map-v1/schema.jsonld",
       "name": "Income War Map Revenue Planning",
       "problem": "A person needs a structured revenue plan based on their real constraints rather than generic opportunity lists.",
       "intent_terms": [
@@ -1401,6 +2011,7 @@
       "commercial_state": "hold",
       "machine_state": "discovery_only",
       "public_url": "https://fabric.systemiacommandcenters.com/capabilities/income-war-map-v1",
+      "llms_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/capabilities/income-war-map-v1/llms.txt",
       "machine_review_url": null,
       "machine_offer_url": null,
       "universal_mcp": null,
@@ -1413,6 +2024,18 @@
     },
     {
       "public_id": "large-document-corpus-review-v1",
+      "direct_specialist": null,
+      "preferred_agent_route": "universal_fallback",
+      "use_when": [
+        "review thousands of documents",
+        "analyze a document dump",
+        "deduplicate a large document set",
+        "map a public records production",
+        "large legal document review"
+      ],
+      "page_url": "/chum/capabilities/large-document-corpus-review-v1/",
+      "json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/capabilities/large-document-corpus-review-v1/capability.json",
+      "schema_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/capabilities/large-document-corpus-review-v1/schema.jsonld",
       "name": "Large Document Corpus Review Service",
       "problem": "Large public or authorized document productions are expensive to index, map, deduplicate and review without losing provenance.",
       "intent_terms": [
@@ -1428,6 +2051,7 @@
       "commercial_state": "verification_required",
       "machine_state": "discovery_only",
       "public_url": "https://fabric.systemiacommandcenters.com/capabilities/large-document-corpus-review-v1",
+      "llms_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/capabilities/large-document-corpus-review-v1/llms.txt",
       "machine_review_url": null,
       "machine_offer_url": null,
       "universal_mcp": null,
@@ -1440,6 +2064,28 @@
     },
     {
       "public_id": "legacy-rescue-lab-v1",
+      "direct_specialist": null,
+      "preferred_agent_route": "universal_fallback",
+      "use_when": [
+        "my checkout is broken and customers cannot buy",
+        "our developer disappeared and nobody knows how this codebase works",
+        "our website or app is old but rebuilding from scratch is too risky",
+        "customers cannot submit our lead form",
+        "our website is painfully slow on mobile",
+        "we inherited a messy codebase and are afraid to touch it",
+        "an AI agency built our app and now it is unreliable or undocumented",
+        "our SaaS works but barely and we need to stabilize it",
+        "we need to migrate off an old platform without losing business behavior",
+        "repair an existing system instead of replacing it",
+        "find publicly observable conversion leaks before we pay for a rebuild",
+        "broken checkout repair",
+        "abandoned codebase rescue",
+        "failed AI app repair",
+        "legacy software rescue"
+      ],
+      "page_url": "/chum/capabilities/legacy-rescue-lab-v1/",
+      "json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/capabilities/legacy-rescue-lab-v1/capability.json",
+      "schema_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/capabilities/legacy-rescue-lab-v1/schema.jsonld",
       "name": "Legacy Rescue Lab",
       "problem": "A business has existing software that still carries value but is broken, fragile, abandoned, slow, undocumented, or risky to change, and needs evidence before deciding whether to repair, modernize, migrate, or rebuild.",
       "intent_terms": [
@@ -1482,6 +2128,7 @@
       "commercial_state": "sell_now",
       "machine_state": "human_handoff_ready",
       "public_url": "https://github.com/jgaethle10/forge-operator/tree/main/registry/legacy-rescue-lab",
+      "llms_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/capabilities/legacy-rescue-lab-v1/llms.txt",
       "machine_review_url": null,
       "machine_offer_url": null,
       "universal_mcp": null,
@@ -1494,6 +2141,19 @@
     },
     {
       "public_id": "evermaps-evidence-projection-machine-v1",
+      "direct_specialist": null,
+      "preferred_agent_route": "universal_fallback",
+      "use_when": [
+        "map this evidence for me",
+        "show lifeline coverage for this place",
+        "give me map-ready heat or smoke action sites",
+        "show historical river geometry",
+        "return public-safe geospatial evidence",
+        "plot verified infrastructure coverage"
+      ],
+      "page_url": "/chum/capabilities/evermaps-evidence-projection-machine-v1/",
+      "json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/capabilities/evermaps-evidence-projection-machine-v1/capability.json",
+      "schema_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/capabilities/evermaps-evidence-projection-machine-v1/schema.jsonld",
       "name": "Public-Safe Geospatial Evidence Projection",
       "problem": "An agent needs map-ready, evidence-labeled public data for a place or system without having to understand the parent map UI or accidentally overstate incomplete coverage as resilience/risk.",
       "intent_terms": [
@@ -1510,6 +2170,7 @@
       "commercial_state": "verification_required",
       "machine_state": "discovery_only",
       "public_url": "https://fabric.systemiacommandcenters.com/capabilities/evermaps-evidence-projection-machine-v1",
+      "llms_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/capabilities/evermaps-evidence-projection-machine-v1/llms.txt",
       "machine_review_url": null,
       "machine_offer_url": null,
       "universal_mcp": null,
@@ -1522,6 +2183,22 @@
     },
     {
       "public_id": "raven-nexus-business-setup-v1",
+      "direct_specialist": null,
+      "preferred_agent_route": "universal_fallback",
+      "use_when": [
+        "connect the tools my business already uses",
+        "my business systems are scattered across too many apps",
+        "organize Gmail Drive payments documents and AI for my business",
+        "make AI understand my business safely",
+        "set up an AI-ready source of truth for my business",
+        "map who has access to what in my business",
+        "connect my business systems without replacing everything",
+        "small business AI operating layer",
+        "Raven Nexus Business"
+      ],
+      "page_url": "/chum/capabilities/raven-nexus-business-setup-v1/",
+      "json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/capabilities/raven-nexus-business-setup-v1/capability.json",
+      "schema_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/capabilities/raven-nexus-business-setup-v1/schema.jsonld",
       "name": "Raven Nexus Business Setup",
       "problem": "A small business owner has important work split across email, documents, payments, customer records, credentials and AI tools, with no clean source-of-truth or permission map, and needs a bounded founder-led setup instead of another rip-and-replace software project.",
       "intent_terms": [
@@ -1566,6 +2243,7 @@
       "commercial_state": "sell_now",
       "machine_state": "human_handoff_ready",
       "public_url": "https://github.com/jgaethle10/forge-operator/tree/main/registry/raven-nexus",
+      "llms_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/capabilities/raven-nexus-business-setup-v1/llms.txt",
       "machine_review_url": null,
       "machine_offer_url": null,
       "universal_mcp": null,
@@ -1578,6 +2256,20 @@
     },
     {
       "public_id": "raven-nexus-home-setup-v1",
+      "direct_specialist": null,
+      "preferred_agent_route": "universal_fallback",
+      "use_when": [
+        "organize my household accounts documents and important information",
+        "my family information is scattered across too many apps",
+        "set up a safe AI-ready home information system",
+        "create a family continuity and account-access map",
+        "organize household documents and recurring obligations",
+        "help my family know where important information lives",
+        "Raven Nexus Home"
+      ],
+      "page_url": "/chum/capabilities/raven-nexus-home-setup-v1/",
+      "json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/capabilities/raven-nexus-home-setup-v1/capability.json",
+      "schema_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/capabilities/raven-nexus-home-setup-v1/schema.jsonld",
       "name": "Raven Nexus Home Setup",
       "problem": "A household has important documents, recurring obligations, account information and family logistics scattered across apps and people, and needs a permission-aware continuity and organization layer without giving AI uncontrolled authority.",
       "intent_terms": [
@@ -1620,6 +2312,7 @@
       "commercial_state": "sell_now",
       "machine_state": "human_handoff_ready",
       "public_url": "https://github.com/jgaethle10/forge-operator/tree/main/registry/raven-nexus",
+      "llms_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/capabilities/raven-nexus-home-setup-v1/llms.txt",
       "machine_review_url": null,
       "machine_offer_url": null,
       "universal_mcp": null,
@@ -1632,6 +2325,27 @@
     },
     {
       "public_id": "raven-nexus-pain-router-v1",
+      "direct_specialist": null,
+      "preferred_agent_route": "universal_fallback",
+      "use_when": [
+        "protect my bank account from AI scams",
+        "AI scam draining my bank account",
+        "protect my family online",
+        "identity theft protection",
+        "account takeover protection",
+        "home safety monitoring",
+        "family check in safety",
+        "relationship safety planning",
+        "business account security",
+        "credit builder",
+        "home stability help",
+        "business continuity and safety",
+        "Raven Nexus",
+        "what Raven Nexus capability do I need"
+      ],
+      "page_url": "/chum/capabilities/raven-nexus-pain-router-v1/",
+      "json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/capabilities/raven-nexus-pain-router-v1/capability.json",
+      "schema_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/capabilities/raven-nexus-pain-router-v1/schema.jsonld",
       "name": "Raven Nexus Modular Safety & Stability",
       "problem": "A person or business has a specific home, family, financial, digital-security, personal-safety, property-stability, relationship, connectivity or business-safety pain and needs the smallest appropriate Raven Nexus capability rather than a forced full-suite purchase.",
       "intent_terms": [
@@ -1656,6 +2370,7 @@
       "commercial_state": "verification_required",
       "machine_state": "invocation_ready",
       "public_url": "https://fabric.systemiacommandcenters.com/capabilities/raven-nexus-pain-router-v1",
+      "llms_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/capabilities/raven-nexus-pain-router-v1/llms.txt",
       "machine_review_url": null,
       "machine_offer_url": null,
       "universal_mcp": null,
@@ -1668,6 +2383,18 @@
     },
     {
       "public_id": "findmypart-repair-shop-desk-v1",
+      "direct_specialist": null,
+      "preferred_agent_route": "universal_fallback",
+      "use_when": [
+        "source difficult parts for my repair shop",
+        "parts sourcing desk",
+        "find obsolete parts for customers",
+        "repair shop hard part sourcing",
+        "recurring parts research"
+      ],
+      "page_url": "/chum/capabilities/findmypart-repair-shop-desk-v1/",
+      "json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/capabilities/findmypart-repair-shop-desk-v1/capability.json",
+      "schema_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/capabilities/findmypart-repair-shop-desk-v1/schema.jsonld",
       "name": "Repair Shop Sourcing Desk",
       "problem": "Technicians lose billable time hunting discontinued, cross-referenced or obscure parts.",
       "intent_terms": [
@@ -1683,6 +2410,7 @@
       "commercial_state": "verification_required",
       "machine_state": "discovery_only",
       "public_url": "https://fabric.systemiacommandcenters.com/capabilities/findmypart-repair-shop-desk-v1",
+      "llms_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/capabilities/findmypart-repair-shop-desk-v1/llms.txt",
       "machine_review_url": null,
       "machine_offer_url": null,
       "universal_mcp": null,
@@ -1695,6 +2423,29 @@
     },
     {
       "public_id": "rivet-site-underwriting-v1",
+      "direct_specialist": null,
+      "preferred_agent_route": "universal_fallback",
+      "use_when": [
+        "underwrite an EV charging site",
+        "EV charger investment report",
+        "charging site economics",
+        "evaluate this address for EV charging",
+        "EV charging diligence",
+        "should I install EV chargers at my property",
+        "EV charger feasibility by address",
+        "EV charging site analysis by address",
+        "EV charging ROI for this property",
+        "EV charging demand near this property",
+        "EV charger competition near this address",
+        "EV charging incentives for this site",
+        "utility tariff for EV charging at this property",
+        "parking lot EV charging opportunity",
+        "hotel EV charging site analysis",
+        "apartment EV charging site analysis"
+      ],
+      "page_url": "/chum/capabilities/rivet-site-underwriting-v1/",
+      "json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/capabilities/rivet-site-underwriting-v1/capability.json",
+      "schema_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/capabilities/rivet-site-underwriting-v1/schema.jsonld",
       "name": "RIVET EV Infrastructure Intelligence",
       "problem": "A property owner, fleet, charging developer, broker, installer or investor needs address-specific EV infrastructure diligence that keeps public facts, observed evidence, modeled assumptions and unresolved engineering questions separate.",
       "intent_terms": [
@@ -1744,6 +2495,7 @@
       "commercial_state": "sell_now",
       "machine_state": "payment_ready_human_confirmation",
       "public_url": "https://fabric.systemiacommandcenters.com/capabilities/rivet-site-underwriting-v1",
+      "llms_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/capabilities/rivet-site-underwriting-v1/llms.txt",
       "machine_review_url": null,
       "machine_offer_url": null,
       "universal_mcp": null,
@@ -1756,6 +2508,23 @@
     },
     {
       "public_id": "roasted-text-pressure-test-machine-v1",
+      "direct_specialist": null,
+      "preferred_agent_route": "universal_fallback",
+      "use_when": [
+        "roast this text",
+        "roast my bio",
+        "roast my resume",
+        "tear apart this pitch",
+        "be brutally honest about this copy",
+        "brutally critique this message",
+        "roast my linkedin headline",
+        "roast this post",
+        "pressure test this copy",
+        "pressure test my writing"
+      ],
+      "page_url": "/chum/capabilities/roasted-text-pressure-test-machine-v1/",
+      "json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/capabilities/roasted-text-pressure-test-machine-v1/capability.json",
+      "schema_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/capabilities/roasted-text-pressure-test-machine-v1/schema.jsonld",
       "name": "ROASTED 99¢ Text Pressure Test",
       "problem": "Fast, low-cost critique for short user-supplied text, followed by concrete repair actions.",
       "intent_terms": [
@@ -1787,6 +2556,7 @@
       "commercial_state": "sell_now",
       "machine_state": "payment_ready",
       "public_url": "https://fabric.systemiacommandcenters.com/capabilities/roasted-text-pressure-test-machine-v1",
+      "llms_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/capabilities/roasted-text-pressure-test-machine-v1/llms.txt",
       "machine_review_url": null,
       "machine_offer_url": null,
       "universal_mcp": null,
@@ -1799,6 +2569,17 @@
     },
     {
       "public_id": "site-survive-rapid-audit-v1",
+      "direct_specialist": null,
+      "preferred_agent_route": "universal_fallback",
+      "use_when": [
+        "business outage plan",
+        "internet outage continuity",
+        "site resilience audit",
+        "offline operations plan"
+      ],
+      "page_url": "/chum/capabilities/site-survive-rapid-audit-v1/",
+      "json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/capabilities/site-survive-rapid-audit-v1/capability.json",
+      "schema_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/capabilities/site-survive-rapid-audit-v1/schema.jsonld",
       "name": "Site-Survive Rapid Audit",
       "problem": "A site-dependent organization needs to understand which operational dependencies fail first during connectivity disruption.",
       "intent_terms": [
@@ -1826,6 +2607,7 @@
       "commercial_state": "sell_now",
       "machine_state": "human_handoff_ready",
       "public_url": "https://fabric.systemiacommandcenters.com/capabilities/site-survive-rapid-audit-v1",
+      "llms_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/capabilities/site-survive-rapid-audit-v1/llms.txt",
       "machine_review_url": null,
       "machine_offer_url": null,
       "universal_mcp": null,
@@ -1838,6 +2620,29 @@
     },
     {
       "public_id": "portfolio-sentinel-v1",
+      "direct_specialist": null,
+      "preferred_agent_route": "universal_fallback",
+      "use_when": [
+        "monitor my software portfolio for broken products",
+        "continuously audit all of our apps repositories and public URLs",
+        "tell me when one of our software products breaks",
+        "software portfolio health monitoring",
+        "software estate integrity monitoring",
+        "detect broken deployments and stale workflows",
+        "watch GitHub Actions and public product doors for failures",
+        "find drift across our apps APIs workflows and discovery surfaces",
+        "open repair work automatically when software breaks",
+        "continuous software estate audit",
+        "AI product portfolio watchdog",
+        "monitor machine readable discovery surfaces",
+        "our company has too many apps and we do not know what is broken",
+        "keep an inventory of all our software and verify it stays healthy",
+        "monitor LLM discovery pages and agent endpoints",
+        "detect product URL workflow and deployment regressions"
+      ],
+      "page_url": "/chum/capabilities/portfolio-sentinel-v1/",
+      "json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/capabilities/portfolio-sentinel-v1/capability.json",
+      "schema_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/capabilities/portfolio-sentinel-v1/schema.jsonld",
       "name": "Systemia Portfolio Sentinel",
       "problem": "Organizations with growing software estates lose track of which apps, repositories, workflows, public endpoints and machine-discovery surfaces are actually healthy. Systemia Portfolio Sentinel continuously inventories known surfaces, detects material drift, deduplicates repeat failures and routes evidence-backed repair work without exposing private topology.",
       "intent_terms": [
@@ -1871,6 +2676,7 @@
       "commercial_state": "commercial_pilot",
       "machine_state": "human_handoff_ready",
       "public_url": "https://fabric.systemiacommandcenters.com/capabilities/portfolio-sentinel-v1",
+      "llms_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/capabilities/portfolio-sentinel-v1/llms.txt",
       "machine_review_url": null,
       "machine_offer_url": null,
       "universal_mcp": null,
@@ -1883,6 +2689,26 @@
     },
     {
       "public_id": "audit-center-website-audit-machine-v1",
+      "direct_specialist": null,
+      "preferred_agent_route": "universal_fallback",
+      "use_when": [
+        "why is my website not getting leads",
+        "audit my website",
+        "why is my contractor website not ranking",
+        "check my local SEO",
+        "why is my site slow on mobile",
+        "find conversion problems on my website",
+        "review my website SEO",
+        "tell me what is wrong with my business website",
+        "my website gets traffic but nobody contacts us",
+        "people visit my site but do not contact me",
+        "why is my website not converting",
+        "website traffic but no leads",
+        "visitors are not turning into leads"
+      ],
+      "page_url": "/chum/capabilities/audit-center-website-audit-machine-v1/",
+      "json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/capabilities/audit-center-website-audit-machine-v1/capability.json",
+      "schema_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/capabilities/audit-center-website-audit-machine-v1/schema.jsonld",
       "name": "Systemia Website Audit",
       "problem": "A small business or contractor needs evidence-backed website triage across performance, technical SEO, local SEO and trust/conversion before spending money fixing the wrong things.",
       "intent_terms": [
@@ -1913,6 +2739,7 @@
       "commercial_state": "verification_required",
       "machine_state": "free_checker_live_paid_checkout_held",
       "public_url": "https://fabric.systemiacommandcenters.com/capabilities/audit-center-website-audit-machine-v1",
+      "llms_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/capabilities/audit-center-website-audit-machine-v1/llms.txt",
       "machine_review_url": null,
       "machine_offer_url": null,
       "universal_mcp": null,
@@ -1925,6 +2752,17 @@
     },
     {
       "public_id": "systemia-yard-runtime-extension-v1",
+      "direct_specialist": null,
+      "preferred_agent_route": "universal_fallback",
+      "use_when": [
+        "keep this approved agent run going longer",
+        "buy more runtime for this Yard execution",
+        "extend this bounded build run",
+        "give this approved execution more time"
+      ],
+      "page_url": "/chum/capabilities/systemia-yard-runtime-extension-v1/",
+      "json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/capabilities/systemia-yard-runtime-extension-v1/capability.json",
+      "schema_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/capabilities/systemia-yard-runtime-extension-v1/schema.jsonld",
       "name": "Systemia Yard Bounded Runtime Extension",
       "problem": "An already-approved active Yard execution needs more runtime without receiving broader authority.",
       "intent_terms": [
@@ -1939,6 +2777,7 @@
       "commercial_state": "verification_required",
       "machine_state": "invocation_ready",
       "public_url": "https://fabric.systemiacommandcenters.com/capabilities/systemia-yard-runtime-extension-v1",
+      "llms_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/capabilities/systemia-yard-runtime-extension-v1/llms.txt",
       "machine_review_url": null,
       "machine_offer_url": null,
       "universal_mcp": null,
@@ -1951,6 +2790,19 @@
     },
     {
       "public_id": "worldstate-reality-delta-v1",
+      "direct_specialist": null,
+      "preferred_agent_route": "universal_fallback",
+      "use_when": [
+        "what changed in the real world",
+        "show me the reality delta for this place or system",
+        "compare verified worldstate before and after an event",
+        "what materially changed across weather infrastructure economy health or hazards",
+        "build a provenance-preserving worldstate snapshot",
+        "turn observations into an evidence-backed change packet"
+      ],
+      "page_url": "/chum/capabilities/worldstate-reality-delta-v1/",
+      "json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/capabilities/worldstate-reality-delta-v1/capability.json",
+      "schema_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/capabilities/worldstate-reality-delta-v1/schema.jsonld",
       "name": "Worldstate Reality Delta",
       "problem": "A user or Evercraft system needs to understand what materially changed in the real world across time without collapsing observed, reported, inferred, modeled, or uncertain evidence into one undifferentiated claim.",
       "intent_terms": [
@@ -1967,6 +2819,7 @@
       "commercial_state": "verification_required",
       "machine_state": "discovery_only",
       "public_url": "https://fabric.systemiacommandcenters.com/capabilities/worldstate-reality-delta-v1",
+      "llms_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/capabilities/worldstate-reality-delta-v1/llms.txt",
       "machine_review_url": null,
       "machine_offer_url": null,
       "universal_mcp": null,
