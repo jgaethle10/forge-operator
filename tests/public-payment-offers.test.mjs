@@ -19,7 +19,7 @@ test('every additional approved offer serves its own price and exact payment key
    const send=confirmed=>fetch(runtime.url+'/api/offers/'+slug+'/checkout',{method:'POST',headers:{'content-type':'application/json'},body:JSON.stringify({user_confirmed:confirmed,customer_ref:'qa@example.com',idempotency_key:'qa-offer-'+slug})});
    const count=seen.length;assert.equal((await send(false)).status,409);assert.equal(seen.length,count);
    const response=await send(true);assert.equal(response.status,200,slug);const result=await response.json();assert.equal(result.checkout_ready,true);assert.equal(result.fulfillment_release,false);
-   assert.equal(seen.at(-1).body.offer_key,offer.offer_key);assert.equal(seen.at(-1).url,'https://findmypart.base44.app/functions/evercraftPaymentsOps');
+   assert.equal(seen.at(-1).body.offer_key,offer.offer_key);assert.equal(seen.at(-1).body.return_origin,'https://findmypart.base44.app');assert.equal(seen.at(-1).body.success_path,'/functions/evercraftBuy?payment=processing');assert.equal(seen.at(-1).url,'https://findmypart.base44.app/functions/evercraftPaymentsOps');
    mismatch=true;assert.equal((await send(true)).status,503,slug);mismatch=false;
   }
  }finally{await runtime.close();}
