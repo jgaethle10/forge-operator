@@ -61,6 +61,25 @@ test('human offer copy gives sell-now capabilities short memorable URLs',()=>{
   assert.doesNotMatch(page,/machine state|start_url_state|preferred_agent_route/i);
 });
 
+test('Site-Survive Rapid Audit has a truthful $250 owned offer page and purchase routing',()=>{
+  const site={
+    ...websiteAudit,
+    public_id:'site-survive-rapid-audit-v1',
+    name:'Site-Survive Rapid Audit',
+    pricing:'$250 one-time',
+    entry_paid_offer:{name:'Rapid Site-Survive Audit',price:'$250',price_usd_normalized:250,billing:'one_time'},
+  };
+  assert.equal(offerSlugForCapability(site.public_id),'site-survive');
+  assert.equal(offerPurchaseKeyForSlug('site-survive'),'site-survive-audit');
+  assert.equal(offerCapabilityForSlug('site-survive',[site])?.public_id,site.public_id);
+  const page=renderOfferPage(site);
+  assert.match(page,/\$250/);
+  assert.match(page,/name="customer_ref"/);
+  assert.match(page,/\/api\/offers\/site-survive\/checkout/);
+  assert.match(page,/Not an engineering certification or emergency guarantee/);
+  assert.match(renderOffers([site]),/\/offers\/site-survive/);
+});
+
 test('EarthWorks capability page offers a scoped human inquiry instead of checkout',()=>{
   const earthworks={
     public_id:'earthworks-site-autonomy-study-v1',
