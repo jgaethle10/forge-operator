@@ -20,10 +20,11 @@ button,.btn{padding:14px 20px;border-radius:13px;border:1px solid var(--mint);ba
 <section class="stage" aria-label="Live file packaging demonstration">
 <div class="label">Real file handling · Sender to local receiver</div>
 <div class="flow">
-<div class="node" id="nodeA"><div class="mini">01 / BLOCKED</div><b id="original">26 MiB</b><span>Above illustrative 18 MiB email target. Provider limits vary.</span></div>
+<div class="node" id="nodeA"><div class="mini">01 / BLOCKED</div><b id="original">26 MiB</b><span>Illustrative 18 MiB message ceiling exceeded. This is not an email-fit test.</span></div>
 <div class="node" id="nodeB"><div class="mini">02 / PREPARED</div><b id="pieces">Two pieces</b><span><span class="piece"></span><span class="piece"></span>16 MiB + 10 MiB, plus manifest.</span></div>
 <div class="node" id="nodeC"><div class="mini">03 / VERIFIED</div><b id="recovered">Same bytes</b><span>Local reconstruction with SHA-256 comparison.</span></div>
 </div>
+<p class="fine" style="margin:17px 0 0">Channel-fit warning: email MIME/base64 adds roughly one-third to the size of binary attachments. A 16 MiB piece can exceed an 18 MiB message limit. These pieces are <strong>locally verified, not verified sendable</strong>. The actual transport must set its own safe limits.</p>
 <div class="statusline"><div class="pulse" id="pulse"></div><span id="status" role="status" aria-live="polite">Ready for the exact-byte demonstration. Nothing has been sent.</span></div>
 <div class="meter"><i id="bar"></i></div>
 <div class="controls"><button type="button" id="run">Run the real proof ↗</button><a class="btn ghost" href="https://evercraft-forensiscope.base44.app/">ForensiScope home ↗</a></div>
