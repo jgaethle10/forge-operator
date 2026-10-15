@@ -166,10 +166,10 @@
       ],
       "human_ui_required": false,
       "confirmation": "The free checker has no payment obligation. No new paid purchase is authorized while the hosted checkout and buyer form have unresolved live failures.",
-      "public_url": "https://systemia-audit-pro.base44.app/functions/auditAgentGateway?view=check",
-      "public_url_source": "independently_verified_free_checker",
+      "public_url": "https://fabric.systemiacommandcenters.com/capabilities/audit-center-website-audit-machine-v1",
+      "public_url_source": "owned_fabric_read_only_discovery",
       "payment_authority": "Systemia Audit Center / Stripe, provider-verified",
-      "invocation_status": "October 15 2026: hosted $49 Quick Win checkout negative canary 3/6; Fabric buyer form missing email/site/consent. Machine Commerce new paid Audit actions safely return 409 paid_offer_release_held; paid fulfillment not verified. Free domain-format checker confirmed.",
+      "invocation_status": "October 15 2026: unpaid HTTPS domain-format checker available through verified Machine Commerce handoff. Standalone paid $49 hosted checkout canary failed 3/6 and Fabric buyer form lacks required email/site/consent. New payment held, no paid fulfillment verified.",
       "live_canary_evidence": "Machine Commerce public catalog and HTTP held canary October 15 2026; Systemia machine commerce checkpoint 6ad105318304d0d7a2a0f7d6",
       "catalog_version": "2026-09-26.17"
     },
