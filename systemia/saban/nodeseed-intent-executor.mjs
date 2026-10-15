@@ -1,6 +1,6 @@
 import path from 'node:path';
 import fs from 'node:fs';
-import {randomUUID} from 'node:crypto';
+import {createHash,randomUUID} from 'node:crypto';
 import {AmbientWorkQueue} from './ambient-work-queue.mjs';
 import {
   getNodeSeedExecutionIntent,
@@ -43,10 +43,77 @@ export function safeNodeSeedExecutionError(error){
     'nodeseed_registered_worker_receipt_hash_required',
     'nodeseed_compute_execution_receipt_required',
     'nodeseed_execution_receipt_binding_mismatch',
+    'nodeseed_execution_receipt_hash_mismatch',
   ].includes(code)) return code;
   const status=Number(error?.status);
   if(Number.isInteger(status)&&status>=400&&status<=599) return 'nodeseed_remote_http_'+status;
   return 'nodeseed_executor_failure_redacted';
+}
+
+const stableReceiptJson=(value)=>{
+  if(Array.isArray(value))return value.map(stableReceiptJson);
+  if(value&&typeof value==='object'){
+    return Object.fromEntries(Object.keys(value).sort().map(key=>[key,stableReceiptJson(value[key])]));
+  }
+  return value;
+};
+const receiptDigest=(value,stable=false)=>
+  'sha256:'+createHash('sha256').update(JSON.stringify(stable?stableReceiptJson(value):value)).digest('hex');
+
+// Source-integrity check of the exact NodeSeed job and lease receipt fields.
+// Hashes are not digital signatures; transport and session authorization
+// remain the responsibility of Yard and the attested device boundary.
+export function verifyNodeSeedJobReceipts({result,intent,lease,payload}={}){
+  const w=result?.worker_receipt;
+  const r=result?.receipt;
+  if(w?.schema!=='evercraft.compute.registered-worker-receipt.v1'||
+     r?.schema!=='evercraft.compute.receipt.v1'){
+    throw new Error('nodeseed_registered_worker_receipt_required');
+  }
+  const hashShape=/^sha256:[a-f0-9]{64}$/;
+  if(!hashShape.test(String(w.receipt_hash||''))){
+    throw new Error('nodeseed_registered_worker_receipt_hash_required');
+  }
+  if(!hashShape.test(String(r.receipt_hash||''))){
+    throw new Error('nodeseed_compute_execution_receipt_required');
+  }
+  const {receipt_hash:workerHash,...workerBody}=w;
+  const {receipt_hash:computeHash,...computeBody}=r;
+  // NodeSeed marks replayed receipts as deduplicated without changing the
+  // original signed-over content hash, which was minted with false.
+  const originalWorkerBody=w.deduplicated===true
+    ? {...workerBody,deduplicated:false}:workerBody;
+  if(receiptDigest(originalWorkerBody,true)!==workerHash||
+     receiptDigest(computeBody)!==computeHash){
+    throw new Error('nodeseed_execution_receipt_hash_mismatch');
+  }
+  const requestHash=receiptDigest({
+    node_id:intent?.node_id,
+    workload_class:intent?.workload_class,
+    idempotency_key:intent?.idempotency_key,
+    payload:payload??null,
+  },true);
+  if(
+    !lease?.lease_id||
+    result?.node_id!==intent?.node_id||
+    w.node_id!==intent?.node_id||
+    r.node_id!==intent?.node_id||
+    result?.workload_class!==intent?.workload_class||
+    w.workload_class!==intent?.workload_class||
+    r.workload_class!==intent?.workload_class||
+    result?.idempotency_key!==intent?.idempotency_key||
+    w.idempotency_key!==intent?.idempotency_key||
+    r.idempotency_key!==intent?.idempotency_key||
+    w.request_hash!==requestHash||
+    w.registered_workload_only!==true||
+    r.lease_id!==lease.lease_id||
+    r.worker_receipt_hash!==workerHash||
+    !['registered-workload.executed','registered-workload.reused'].includes(r.type)
+  ){
+    throw new Error('nodeseed_execution_receipt_binding_mismatch');
+  }
+  return {source_integrity_verified:true,device_signature_verified:false,
+    worker_receipt_hash:workerHash,compute_receipt_hash:computeHash};
 }
 
 function inventoryNode(inventory,nodeId){
@@ -153,24 +220,7 @@ export async function executeNodeSeedExecutionIntent({
       }),
     },timeoutMs);
 
-    if(result?.worker_receipt?.schema!=='evercraft.compute.registered-worker-receipt.v1'){
-      throw new Error('nodeseed_registered_worker_receipt_required');
-    }
-    if(!/^sha256:[a-f0-9]{64}$/.test(String(result.worker_receipt.receipt_hash||''))){
-      throw new Error('nodeseed_registered_worker_receipt_hash_required');
-    }
-    if(!/^sha256:[a-f0-9]{64}$/.test(String(result?.receipt?.receipt_hash||''))){
-      throw new Error('nodeseed_compute_execution_receipt_required');
-    }
-    if(
-      result.node_id!==intent.node_id ||
-      result.workload_class!==intent.workload_class ||
-      result.idempotency_key!==intent.idempotency_key ||
-      result.receipt?.worker_receipt_hash &&
-        result.receipt.worker_receipt_hash!==result.worker_receipt.receipt_hash
-    ){
-      throw new Error('nodeseed_execution_receipt_binding_mismatch');
-    }
+    verifyNodeSeedJobReceipts({result,intent,lease,payload:job.payload});
 
     const completedAt=(now instanceof Date?now:new Date(now)).toISOString();
     updateNodeSeedExecutionIntent({
