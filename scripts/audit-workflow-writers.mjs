@@ -25,6 +25,9 @@ export function inspectWorkflow(source, relativePath){
     /^\s*permissions:\s*write-all\s*(?:#.*)?$/im.test(text);
   // Include GitHub Actions YAML one-line steps: "- run: git push ...".
   // Also conservatively flag commands buried in multi-line scripts.
+  const oidcTokenWrite=/^\\s*id-token:\\s*write\\s*(?:#.*)?$/im.test(text);
+  const uses=[...text.matchAll(/^\\s*-?\\s*uses:\\s*([^\\s#]+)/gm)].map(x=>x[1]);
+  const unpinnedActions=uses.filter(x=>x.includes('@')&&!/@[a-f0-9]{40}$/.test(x));
   const pushCommand=/\bgit\s+(?:-C\s+\S+\s+)?push\b/im.test(text) ||
     /\bgh\s+api\s+[^\n]*(?:git\/refs|\/contents\/)/i.test(text);
   const directMainPush=/\bgit\s+push\b[^\n]*(?:HEAD:main|\borigin\s+main\b|\brefs\/heads\/main\b)/im.test(text);
@@ -42,6 +45,8 @@ export function inspectWorkflow(source, relativePath){
     file: latest(relativePath),
     writer,
     contents_write:permissionsWrite,
+    id_token_write:oidcTokenWrite,
+    unpinned_action_references:unpinnedActions.length,
     pushes_to_main:directMainPush,
     has_push_command:pushCommand,
     mutating_git_script:broaderMainMutation,
@@ -62,10 +67,13 @@ export function assessWriterInventory(items, baseline){
   }
   const seen=new Set();const findings=[];
   const prior=new Set(baseline.existing_direct_main_writers);
+  const priorOidc=new Set(baseline.existing_oidc_token_writers||[]);
   for(const item of items){
     if(seen.has(item.file))findings.push({code:'DUPLICATE_PATH',file:item.file});
     seen.add(item.file);
-    if(item.pulls_untrusted_pr_target&&item.writer)
+    if(item.id_token_write&&!priorOidc.has(item.file))
+      findings.push({code:'NEW_UNAPPROVED_OIDC_TOKEN_WRITER',file:item.file});
+    if(item.pulls_untrusted_pr_target&&(item.writer||item.id_token_write))
       findings.push({code:'UNTRUSTED_PR_TARGET_HAS_WRITE_AUTHORITY',file:item.file});
     if(item.has_push_command&&!item.contents_write)
       findings.push({code:'PUSH_WITHOUT_DECLARED_CONTENTS_WRITE',file:item.file});
@@ -75,6 +83,7 @@ export function assessWriterInventory(items, baseline){
       findings.push({code:'NEW_UNAPPROVED_WORKFLOW_WRITER',file:item.file});
   }
   const writers=items.filter(x=>x.writer).map(x=>x.file).sort();
+  const oidcWriters=items.filter(x=>x.id_token_write).map(x=>x.file).sort();
   const retired=[...prior].filter(x=>!writers.includes(x)).sort();
   const pushers=items.filter(x=>x.has_push_command).map(x=>x.file).sort();
   return {
@@ -82,6 +91,10 @@ export function assessWriterInventory(items, baseline){
     schema:'evercraft.audit.github-workflow-writers.v1',
     workflow_count:items.length,
     active_writer_count:writers.length,
+    oidc_token_writer_count:oidcWriters.length,
+    oidc_token_writers:oidcWriters,
+    workflows_with_unpinned_actions:items.filter(x=>x.unpinned_action_references>0).length,
+    unpinned_action_references:items.reduce((n,x)=>n+(x.unpinned_action_references||0),0),
     direct_main_push_count:items.filter(x=>x.pushes_to_main).length,
     writers,
     pushers,
@@ -95,6 +108,7 @@ export function assessWriterInventory(items, baseline){
       'Text-level scanner: may miss scripts or actions that push indirectly, dynamically, or with alternate credentials.',
       'Allowed legacy writers remain risky; presence in baseline is inventory only, not security approval.',
       'CI cannot stop writes directly to an unprotected main branch. Branch ruleset/review requirement is a separate control.',
+      'Unpinned third-party/action tag references are counted but not yet a release blocker; SHA pinning is a separate migration.',
     ],
   };
 }
