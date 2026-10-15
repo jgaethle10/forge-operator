@@ -9,6 +9,11 @@ on:
       - 'tests/evercraft-payments-buyer-doors.test.mjs'
       - 'scripts/probe-evercraft-payments-buyer-doors.mjs'
       - 'scripts/probe-evercraft-llm-commercial-routing.mjs'
+      - '.grok-plugin/marketplace.json'
+      - 'grok/evercraft/.grok-plugin/plugin.json'
+      - 'grok/evercraft/xai-marketplace-entry.json'
+      - 'grok/evercraft/README.md'
+      - 'tests/grok-marketplace-consistency.test.mjs'
       - '.github/workflows/evercraft-payments-buyer-door-canary.yml'
   push:
     branches: [main]
@@ -19,6 +24,11 @@ on:
       - 'tests/evercraft-payments-buyer-doors.test.mjs'
       - 'scripts/probe-evercraft-payments-buyer-doors.mjs'
       - 'scripts/probe-evercraft-llm-commercial-routing.mjs'
+      - '.grok-plugin/marketplace.json'
+      - 'grok/evercraft/.grok-plugin/plugin.json'
+      - 'grok/evercraft/xai-marketplace-entry.json'
+      - 'grok/evercraft/README.md'
+      - 'tests/grok-marketplace-consistency.test.mjs'
       - '.github/workflows/evercraft-payments-buyer-door-canary.yml'
   schedule:
     - cron: '0 */6 * * *'
@@ -42,6 +52,22 @@ jobs:
           node-version: '22'
       - name: Validate approved offers and payment truth
         run: node --test tests/evercraft-payments-buyer-doors.test.mjs
+      - name: Guard Grok pain-first buyer discovery metadata
+        run: node --test tests/grok-marketplace-consistency.test.mjs
+      - name: Verify Grok submission pinned package resolves to reviewed metadata
+        run: |
+          node --input-type=module <<'NODE'
+          import fs from 'node:fs';
+          import assert from 'node:assert/strict';
+          const entry=JSON.parse(fs.readFileSync('grok/evercraft/xai-marketplace-entry.json','utf8'));
+          const local=JSON.parse(fs.readFileSync('grok/evercraft/.grok-plugin/plugin.json','utf8'));
+          const url='https://raw.githubusercontent.com/jgaethle10/forge-operator/'+entry.source.sha+'/grok/evercraft/.grok-plugin/plugin.json';
+          const response=await fetch(url,{signal:AbortSignal.timeout(12000),headers:{'user-agent':'Evercraft-Grok-Source-Canary/1.0'}});
+          assert.equal(response.status,200,'Pinned GitHub package inaccessible');
+          const pinned=await response.json();
+          assert.deepEqual(pinned,local,'External pinned package differs from reviewed local manifest');
+          console.log('GROK_PINNED_MANIFEST_VERIFIED',entry.source.sha);
+          NODE
       - name: Check public purchase forms without creating payments
         run: node scripts/probe-evercraft-payments-buyer-doors.mjs
       - name: Verify public AI commerce front doors and 13 exact selected-offer URLs by GET only
