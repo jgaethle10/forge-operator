@@ -44,10 +44,32 @@ requireMainOnlyPush('.github/workflows/evercraft-mcp-canary.yml');
 {
   const path = '.github/workflows/publish-runtime.yml';
   const block = onBlock(read(path));
-  const match = block.match(/workflow_run:[\s\S]*?branches:\n((?:      - .+(?:\n|$))+)/);
-  const branches = match ? match[1].split('\n').map(line=>line.trim()).filter(line=>line.startsWith('- ')).map(line=>line.slice(2).trim().replace(/^["']|["']$/g,'')) : [];
-  if (branches.length !== 1 || branches[0] !== 'main') fail(`${path} workflow_run branches must be exactly [main]`);
-  else pass(`${path} follows main checks only`);
+  const workflowRunMatch = block.match(/workflow_run:[\s\S]*?branches:\n((?:      - .+(?:\n|$))+)/);
+  const workflowRunBranches = workflowRunMatch
+    ? workflowRunMatch[1].split('\n').map(line=>line.trim()).filter(line=>line.startsWith('- ')).map(line=>line.slice(2).trim().replace(/^["']|["']$/g,''))
+    : [];
+  const push = pushBranches(read(path));
+  const hasWorkflowRun = /\n  workflow_run:/.test(block);
+  const hasPush = /\n  push:/.test(block);
+
+  const safeWorkflowRun =
+    hasWorkflowRun &&
+    !hasPush &&
+    workflowRunBranches.length === 1 &&
+    workflowRunBranches[0] === 'main';
+  const safeDirectPush =
+    hasPush &&
+    !hasWorkflowRun &&
+    push.length === 1 &&
+    push[0] === 'main';
+
+  if (!safeWorkflowRun && !safeDirectPush) {
+    fail(`${path} must use exactly one release trigger scoped to [main]: workflow_run or push`);
+  } else if (safeDirectPush) {
+    pass(`${path} direct release trigger is main-only`);
+  } else {
+    pass(`${path} follows main checks only`);
+  }
 }
 
 {
