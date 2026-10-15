@@ -51,6 +51,8 @@ export function verifyPinnedNode002Completion(envelope,{
   expectedJobId,
   expectedRequestId,
   expectedSourceSha256,
+  expectedInventorySha256,
+  expectedDeviceKeyId,
   expectedNonce,
   now=Date.now(),
 }={}){
@@ -58,7 +60,9 @@ export function verifyPinnedNode002Completion(envelope,{
  if(typeof expectedJobId!=='string'||expectedJobId.length<8||
   typeof expectedRequestId!=='string'||expectedRequestId.length<8||
   typeof expectedNonce!=='string'||expectedNonce.length<16||
-  typeof expectedSourceSha256!=='string'||!SHA.test(expectedSourceSha256))fail('expected_job_scope_missing');
+  typeof expectedDeviceKeyId!=='string'||!/^[-A-Za-z0-9_.:]{8,128}$/.test(expectedDeviceKeyId)||
+  typeof expectedSourceSha256!=='string'||!SHA.test(expectedSourceSha256)||
+  typeof expectedInventorySha256!=='string'||!SHA.test(expectedInventorySha256))fail('expected_job_scope_missing');
  if(!Number.isFinite(now))fail('clock_invalid');
  fixed(envelope,['statement','signature']);
  const s=envelope.statement,sig=envelope.signature;
@@ -68,18 +72,21 @@ export function verifyPinnedNode002Completion(envelope,{
  if(s.schema!==SCOPE||s.node_id!==NODE_ID||s.node_key!==NODE_KEY||s.workload_key!==WORKLOAD_KEY)
   fail('wrong_node_or_workload');
  if(s.job_id!==expectedJobId||s.request_id!==expectedRequestId||
-  s.source_sha256!==expectedSourceSha256||s.nonce!==expectedNonce||!SHA.test(s.inventory_sha256))
+  s.source_sha256!==expectedSourceSha256||s.inventory_sha256!==expectedInventorySha256||s.nonce!==expectedNonce||!SHA.test(s.inventory_sha256))
   fail('completion_binding_invalid');
  const started=stamp(s.started_at),completed=stamp(s.completed_at);
  if(!Number.isFinite(started)||!Number.isFinite(completed)||completed<started||
   completed-started>120000||completed>now+30000||now-completed>300000)fail('completion_time_invalid');
- if(sig.scope!==SCOPE||sig.algorithm!=='Ed25519'||typeof sig.key_id!=='string'||sig.key_id.length<8||
+ if(sig.scope!==SCOPE||sig.algorithm!=='Ed25519'||sig.key_id!==expectedDeviceKeyId||
   typeof sig.value_base64!=='string'||!/^[A-Za-z0-9+/]{86}==$/.test(sig.value_base64))
   fail('completion_signature_fields_invalid');
  let pub;
  try{pub=crypto.createPublicKey(pinnedDevicePublicKeyPem)}catch{fail('trusted_device_key_invalid')}
  if(pub.asymmetricKeyType!=='ed25519')fail('trusted_device_key_invalid');
  const der=pub.export({format:'der',type:'spki'});
+ // Fingerprint contract: SHA256(SPKI DER) only. Existing NodeSeed PEM-string
+ // fingerprints and Raven key IDs are NOT interchangeable without an
+ // independently verified, explicit identity mapping.
  if(sha(der)!==pinnedDeviceFingerprint)fail('trusted_device_fingerprint_mismatch');
  const signature=Buffer.from(sig.value_base64,'base64');
  if(signature.length!==64||signature.toString('base64')!==sig.value_base64)fail('signature_encoding_invalid');
