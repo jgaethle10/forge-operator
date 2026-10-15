@@ -437,6 +437,12 @@ export async function startFabricLocalRuntime({
   if(purchaseIntentEndpoint.protocol!=='https:'){
     throw new Error('purchase_intent_url_requires_https');
   }
+  // Catalog/MCP legacy connection filtering does NOT mean the payment-intent
+  // backend is first-party. Expose a bounded truth state, never a secret URL.
+  const checkoutIntentLegacyProvider=/(^|\.)base44\.app$/i.test(purchaseIntentEndpoint.hostname);
+  const checkoutIntentTransport=checkoutIntentLegacyProvider
+    ? 'legacy_provider_hosted'
+    : 'configured_backend_unverified';
   const staticPrepared=Array.isArray(catalog)?nativeOnlyCatalog(catalog):null;
   const preparedCatalog=()=>staticPrepared||nativeOnlyCatalog(loadFabricCatalogFromRepository());
   const token=validateOpenAiChallengeToken(challengeToken);
@@ -612,6 +618,10 @@ export async function startFabricLocalRuntime({
     human_offer_checkout_path_template:'/api/offers/{slug}/checkout',
     human_offer_checkout_requires_explicit_confirmation:true,
     human_offer_checkout_handoff_mode:'explicit_evercraft_page',
+    checkout_intent_transport_state:checkoutIntentTransport,
+    checkout_intent_legacy_provider_dependency_active:checkoutIntentLegacyProvider,
+    checkout_intent_owned_transport_verified:false,
+    base44_transport_scope:'mcp_directory_connections_only',
     payment_authority:'Evercraft Payments',
     payment_router:'Raven Nexus',
     base44_transport_enabled:false,

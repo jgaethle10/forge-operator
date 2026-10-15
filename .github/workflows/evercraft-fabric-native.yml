@@ -6,6 +6,7 @@ on:
     paths:
       - 'systemia/mcp/fabric-directory.mjs'
       - 'systemia/mcp/fabric-local-runtime.mjs'
+      - 'tests/fabric-checkout-transport-truth.test.mjs'
       - 'systemia/mcp/fabric-public-site.mjs'
       - 'systemia/mcp/earthworks-simulator-page.mjs'
       - 'systemia/mcp/earthworks-simulator-app.mjs'
@@ -32,6 +33,7 @@ on:
     paths:
       - 'systemia/mcp/fabric-directory.mjs'
       - 'systemia/mcp/fabric-local-runtime.mjs'
+      - 'tests/fabric-checkout-transport-truth.test.mjs'
       - 'systemia/mcp/fabric-public-site.mjs'
       - 'systemia/mcp/fabric-faie-runtime.mjs'
       - 'public/chum/capabilities.json'
@@ -84,7 +86,7 @@ jobs:
         with:
           node-version: '22'
       - name: Prove Fabric MCP, human offer storefront, and mobile door
-        run: node --test tests/evercraft-fabric-runtime.test.mjs tests/fabric-offer-pages.test.mjs tests/aliev-owned-page.test.mjs tests/earthworks-owned-page.test.mjs tests/earthworks-public-playground.test.mjs tests/fabric-mobile-runtime.test.mjs tests/fabric-faie-native-runtime.test.mjs
+        run: node --test tests/evercraft-fabric-runtime.test.mjs tests/fabric-offer-pages.test.mjs tests/fabric-checkout-transport-truth.test.mjs tests/aliev-owned-page.test.mjs tests/earthworks-owned-page.test.mjs tests/earthworks-public-playground.test.mjs tests/fabric-mobile-runtime.test.mjs tests/fabric-faie-native-runtime.test.mjs
 
       - name: Verify deployed EarthWorks hot-read playground
         shell: bash
