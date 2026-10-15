@@ -2,7 +2,7 @@
   "schema": "evercraft.chum.crawl-pressure.v1",
   "provider": "Evercraft LLC",
   "coordinator": "CHUM",
-  "updated_at": "2026-10-15T04:51:15.040Z",
+  "updated_at": "2026-10-15T06:22:45.221Z",
   "purpose": "Content-hash-backed freshness signals for public Evercraft discovery surfaces. A freshness signal requests attention; it does not prove indexing, ranking, recommendation, citation or provider pickup.",
   "indexnow": {
     "supported": true,
@@ -12,7 +12,22 @@
   "latest_change_batch": [
     {
       "path": "/chum/hot/index.json",
-      "last_changed": "2026-10-15T04:51:15.040Z",
+      "last_changed": "2026-10-15T06:22:45.221Z",
+      "priority": 80
+    },
+    {
+      "path": "/chum/proof/forensiscope.json",
+      "last_changed": "2026-10-15T06:22:45.221Z",
+      "priority": 80
+    },
+    {
+      "path": "/chum/proof/index.json",
+      "last_changed": "2026-10-15T06:22:45.221Z",
+      "priority": 80
+    },
+    {
+      "path": "/chum/proof/rivet.json",
+      "last_changed": "2026-10-15T06:22:45.221Z",
       "priority": 80
     }
   ],
@@ -20,7 +35,25 @@
     {
       "path": "/chum/hot/index.json",
       "url": "/chum/hot/index.json",
-      "last_changed": "2026-10-15T04:51:15.040Z",
+      "last_changed": "2026-10-15T06:22:45.221Z",
+      "priority": 80
+    },
+    {
+      "path": "/chum/proof/forensiscope.json",
+      "url": "/chum/proof/forensiscope.json",
+      "last_changed": "2026-10-15T06:22:45.221Z",
+      "priority": 80
+    },
+    {
+      "path": "/chum/proof/index.json",
+      "url": "/chum/proof/index.json",
+      "last_changed": "2026-10-15T06:22:45.221Z",
+      "priority": 80
+    },
+    {
+      "path": "/chum/proof/rivet.json",
+      "url": "/chum/proof/rivet.json",
+      "last_changed": "2026-10-15T06:22:45.221Z",
       "priority": 80
     },
     {
@@ -310,24 +343,6 @@
       "url": "/.well-known/agent.json",
       "last_changed": "2026-10-08T16:24:55.476Z",
       "priority": 102
-    },
-    {
-      "path": "/chum/proof/forensiscope.json",
-      "url": "/chum/proof/forensiscope.json",
-      "last_changed": "2026-10-08T16:24:55.476Z",
-      "priority": 80
-    },
-    {
-      "path": "/chum/proof/index.json",
-      "url": "/chum/proof/index.json",
-      "last_changed": "2026-10-08T16:24:55.476Z",
-      "priority": 80
-    },
-    {
-      "path": "/chum/proof/rivet.json",
-      "url": "/chum/proof/rivet.json",
-      "last_changed": "2026-10-08T16:24:55.476Z",
-      "priority": 80
     },
     {
       "path": "/chum/answers/doors/audit-what-ai-coding-agents-changed-and-why-83aeab1316.json",
