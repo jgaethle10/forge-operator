@@ -26,13 +26,13 @@ test('Fallen compiles full nine-shot plan when supplied with TEST-ONLY reference
  assert.equal(cinematic.shots[2].mustProvideStartFrame,true);
  assert.equal(prepared.bridge.publicationAuthority,false);
 });
-test('Fallen performance director actually accepts all eleven directed character appearances',()=>{
+test('Fallen performance director actually accepts all ten directed character appearances',()=>{
  const prepared=buildCharacterPerformanceInput(campaign,{assets});
  const cinematic=compileCinematicSequence(prepared.bridge.cinematicSequenceInput);
  const performance=compilePerformancePlan({sequence:prepared.bridge.cinematicSequenceInput,performance:prepared.performancePlanInput});
  assert.equal(prepared.issues.length,0);assert.equal(performance.status,'accepted');
  assert.deepEqual(performance.errors,[]);
- assert.equal(performance.directions.length,11);
+ assert.equal(performance.directions.length,10);
  const enriched=applyPerformanceDirection({sequence:prepared.bridge.cinematicSequenceInput,plan:performance});
  assert.match(enriched.shots[0].prompt,/PERFORMANCE DIRECTION FOR maya/);
  assert.match(enriched.shots[3].prompt,/Dialogue delivery:/);
