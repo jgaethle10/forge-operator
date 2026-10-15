@@ -1,4 +1,6 @@
 import path from 'node:path';
+import fs from 'node:fs';
+import {randomUUID} from 'node:crypto';
 import {AmbientWorkQueue} from './ambient-work-queue.mjs';
 import {
   getNodeSeedExecutionIntent,
@@ -292,6 +294,46 @@ export async function executeNodeSeedIntentLanes({
   };
 }
 
+// Root-scoped, atomic process lock. Prevents two resident Saban drainers from
+// picking up the same filesystem-backed job while awaiting network I/O.
+// Stale locks fail closed and require explicit operator recovery; automatic
+// expiry could admit duplicate executions after a slow/hung remote call.
+export async function withNodeSeedDrainLock({root,work}={}){
+  if(!root) throw new Error('nodeseed_intent_root_required');
+  if(typeof work!=='function') throw new Error('nodeseed_drain_work_required');
+  const directory=path.resolve(root);
+  fs.mkdirSync(directory,{recursive:true,mode:0o700});
+  const lockFile=path.join(directory,'.nodeseed-intent-drain.lock');
+  const token=randomUUID();
+  let fd;
+  try{
+    fd=fs.openSync(lockFile,'wx',0o600);
+    fs.writeFileSync(fd,JSON.stringify({
+      schema:'evercraft.saban.nodeseed-drain-lock.v1',
+      token,pid:process.pid,claimed_at:new Date().toISOString(),
+    })+'\n');
+  }catch(error){
+    if(error?.code==='EEXIST') throw new Error('nodeseed_intent_drainer_busy_or_stale_lock');
+    if(fd!==undefined){
+      try{fs.unlinkSync(lockFile);}catch{}
+    }
+    throw error;
+  }finally{
+    if(fd!==undefined) fs.closeSync(fd);
+  }
+  try{
+    return await work();
+  }finally{
+    // Do not remove a lock that another process/operator has replaced.
+    try{
+      const row=JSON.parse(fs.readFileSync(lockFile,'utf8'));
+      if(row?.token===token) fs.unlinkSync(lockFile);
+    }catch{
+      // Ambiguous lock ownership is a hold, not authority for a new drainer.
+    }
+  }
+}
+
 export async function drainNodeSeedExecutionIntents({
   root,
   yard,
@@ -301,6 +343,7 @@ export async function drainNodeSeedExecutionIntents({
   timeoutMs=10000,
   now=new Date(),
 }={}){
+  return withNodeSeedDrainLock({root,work:async()=>{
   const intents=listNodeSeedExecutionIntents({
     root,
     states:['awaiting_yard_execution'],
@@ -335,4 +378,5 @@ export async function drainNodeSeedExecutionIntents({
     rows,
     generated_at:(now instanceof Date?now:new Date(now)).toISOString(),
   };
+  }});
 }
