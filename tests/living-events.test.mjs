@@ -46,7 +46,7 @@ test('public shell loads a single JSON registry and has an error state', () => {
  assert.match(html,/Evidence unavailable or invalid/);
  assert.match(html,/validateCaseRegistry\(await response.json\(\)\)/);
  assert.match(html,/import \{validateCaseRegistry, safeSourceUrl\}/);
- assert.match(html,/aria-label=\\\"Evidence for this timeline entry\\\"/);
+ assert.match(html,/aria-label="Evidence for this timeline entry"/);
  assert.doesNotMatch(html,/offline-capable/i);
  assert.match(html,/setCase\('nepal'\)/);
 });
