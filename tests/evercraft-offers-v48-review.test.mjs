@@ -40,3 +40,24 @@ test('storm brief does not claim a verified damage map',()=>{
  assert.match(html,/not a continuous best track/i);
  assert.match(html,/review-only|not a verified emergency operations product/i);
 });
+
+test('no broken font import remnants or remote stylesheets',()=>{
+ for(const name of names){
+  const html=readFileSync(join(root,name+'.html'),'utf8');
+  const css=html.match(/<style>([\s\S]*?)<\/style>/i)?.[1];
+  assert.ok(css,name+': missing inline stylesheet');
+  assert.match(css,/^\s*:root\s*\{/i,name+': invalid stylesheet prelude');
+  assert.doesNotMatch(css,/@import\s/i,name+': external/unsupported stylesheet import');
+  assert.doesNotMatch(css,/&family=Manrope|display=swap'\)/i,name+': leftover font URL fragment');
+  assert.doesNotMatch(html,/<link[^>]+rel=["']stylesheet["'][^>]+href=["']https?:/i);
+ }
+});
+test('commercial scene choices declare accessible, distinct control states',()=>{
+ for(const name of ['ibm','findmypart','legacy']){
+  const html=readFileSync(join(root,name+'.html'),'utf8');
+  for(const i of [0,1,2]){
+   assert.match(html,new RegExp('data-stage-select="'+i+'"[^>]*aria-pressed="(?:true|false)"'),name+': stage '+i+' missing ARIA state');
+  }
+  assert.match(html,/prefers-reduced-motion/,name+': reduced-motion control missing');
+ }
+});

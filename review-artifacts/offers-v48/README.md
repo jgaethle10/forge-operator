@@ -23,3 +23,7 @@ The Isaias brief is a dated example with explicitly unverified impact and no liv
 ## Local validation
 
 Run `node --test tests/evercraft-offers-v48-review.test.mjs` from repository root. The dedicated workflow is read-only and runs on this review path. Testing the archived HTML is not a publishing certification.
+
+## V4.8.1 review cleanup (October 15)
+
+An offline Chromium pass caught malformed trailing Google Fonts import characters in four commercial page stylesheets and a remaining Google Fonts CSS import in the Isaias draft. These were removed without changing content or customer intake/payment code. New tests reject external stylesheet imports, invalid preludes, missing state controls and reduced-motion regressions. The preserved V4.8 Drive ZIP remains unchanged; this is a subsequent GitHub review revision. All public-release holds remain.
