@@ -36,6 +36,16 @@ test('removing a legacy writer is allowed rather than requiring stale permission
  assert.equal(r.ok,true);
  assert.deepEqual(r.retired_baseline_writers,[known]);
 });
+
+test('new unreviewed OIDC grant fails; existing OIDC grants remain separately inventoried',()=>{
+ const r=inspectWorkflow("permissions:\\n  contents: read\\n  id-token: write\\nsteps:\\n  - uses: actions/checkout@v4",'.github/workflows/oidc-new.yml');
+ assert.equal(r.writer,false);
+ assert.equal(r.id_token_write,true);
+ assert.equal(r.unpinned_action_references,1);
+ const assessment=assessWriterInventory([r],{...baseline,existing_oidc_token_writers:[]});
+ assert.equal(assessment.ok,false);
+ assert.ok(assessment.findings.some(x=>x.code==='NEW_UNAPPROVED_OIDC_TOKEN_WRITER'));
+});
 test('real repository audit runs with no new unapproved main writer',()=>{
  const r=auditWorkflowFiles();
  assert.equal(r.ok,true,JSON.stringify(r.findings));
