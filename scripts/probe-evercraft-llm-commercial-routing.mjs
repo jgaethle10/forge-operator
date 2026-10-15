@@ -35,9 +35,11 @@ if(llms.includes('https://'+forbiddenHost+'/forge-operator/chum/'))
 if(JSON.stringify(chum).includes('https://'+forbiddenHost+'/forge-operator/chum/'))
  throw new Error('chum_references_known_404_host');
 if(!Array.isArray(buyer.offers)||buyer.offers.length!==13) throw new Error('unexpected_offer_count');
+const capabilities=JSON.parse(readFileSync(new URL('../public/chum/capabilities.json',import.meta.url),'utf8')).capabilities;
 const urls=[['buyer_home',expectedHome,'Evercraft Payments'],
  ['catalog',expectedDirectory,'Evercraft'],
- ...buyer.offers.map(o=>['offer:'+o.slug,o.buyer_url,o.slug])
+ ...buyer.offers.map(o=>['offer:'+o.slug,o.buyer_url,o.slug]),
+ ...capabilities.map(c=>['capability:'+c.public_id,'https://fabric.systemiacommandcenters.com/capabilities/'+encodeURIComponent(c.public_id),'Evercraft'])
 ];
 for(let i=0;i<urls.length;i+=4){
  const responses=await Promise.all(urls.slice(i,i+4).map(async([slug,url,needle])=>{

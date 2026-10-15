@@ -219,19 +219,30 @@
   "excluded": [
     {
       "product": "AliEV / RIVET",
-      "reason": "Founder legal hold. No new EV commercialization."
+      "reason": "Founder legal hold. No new EV commercialization.",
+      "public_ids": [
+        "aliev-site-opportunity-snapshot-v1",
+        "rivet-site-underwriting-v1"
+      ]
     },
     {
       "product": "ROASTED",
-      "reason": "Paused offer / blocked fulfillment bridge."
+      "reason": "Paused offer / blocked fulfillment bridge.",
+      "public_ids": [
+        "roasted-text-pressure-test-machine-v1"
+      ]
     },
     {
       "product": "Evercraft Clip paid production",
-      "reason": "No verified canonical ready paid execution."
+      "reason": "No verified canonical ready paid execution.",
+      "public_ids": [
+        "evercraft-clip-social-video-v1"
+      ]
     },
     {
       "product": "Black Box license",
-      "reason": "Price and stand-alone SKU not approved. Existing Workflow X-Ray is NOT a Black Box license."
+      "reason": "Price and stand-alone SKU not approved. Existing Workflow X-Ray is NOT a Black Box license.",
+      "public_ids": []
     }
   ],
   "no_outreach_without_systemia_gate": true,
