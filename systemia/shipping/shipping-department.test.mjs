@@ -2,6 +2,7 @@ import assert from 'node:assert/strict';
 import fs from 'node:fs';
 import os from 'node:os';
 import path from 'node:path';
+import { generateKeyPairSync, randomBytes, sign as signMessage } from 'node:crypto';
 import test from 'node:test';
 
 import {
@@ -23,10 +24,45 @@ import {
 } from './shipping-ledger.mjs';
 import { buildVerifiedDeliveryReceipt } from './delivery-receipt.mjs';
 import { dispatchVerifiedShipment } from './transport-runtime.mjs';
+import { shippingAttestationPayload } from './recipient-access-gate.mjs';
 import { buildReleasePlan, materializeReleasePackage, verifyMaterializedRelease } from './release-station.mjs';
 import { admitShippingOrder, authorizeReissue, assertCurrentRelease, buildShippingExceptionIntent, findShippingExceptions, markShippingOrderState, shippingControlTowerSummary } from './control-tower.mjs';
 import { buildShippingProofBundle } from './proof-bundle.mjs';
 import { buildRecipientResponseSignal, correlateRecipientResponse, dedupeRecipientResponses } from './recipient-response.mjs';
+
+// Test-only Shipping attestation fixture. The private key never goes to dispatch.
+const { privateKey: TEST_SHIPPING_SIGNER, publicKey: TEST_SHIPPING_VERIFIER } = generateKeyPairSync('ed25519');
+process.env.EVERCRAFT_SHIPPING_VERIFIER_PUBLIC_KEY = TEST_SHIPPING_VERIFIER.export({type:'spki',format:'pem'});
+function recipientAccessFixture(envelope) {
+  const plan={
+    release_key:envelope.logical_package_key,
+    release_fingerprint:envelope.shipment_fingerprint,
+    recipient_ref:envelope.recipient.recipient_ref,
+    channel:'email',
+    authorization_ref:envelope.authorization_ref,
+    ready:true,
+    channel_contract:{external_send:true},
+    package_manifest:envelope.package_manifest
+  };
+  const evidence={
+    verifier_id:'evercraft-independent-shipping-verifier-v1',
+    nonce:randomBytes(16).toString('hex'),
+    verified_at:new Date().toISOString(),
+    mode:'external_attachment',
+    claims_reviewed:true,
+    references_complete:true,
+    references:[],
+    restricted_dependency_count:0,
+    client_preview_filename:envelope.package_manifest.artifacts[0].client_filename,
+    provider_attachment_proofs:envelope.package_manifest.artifacts.map(x=>({
+      client_filename:x.client_filename, provider_readback:true, sha256:x.sha256
+    }))
+  };
+  evidence.signature=signMessage(null,
+    Buffer.from(shippingAttestationPayload({plan,evidence})),
+    TEST_SHIPPING_SIGNER).toString('base64url');
+  return {plan,evidence};
+}
 
 function tempDir() {
   return fs.mkdtempSync(path.join(os.tmpdir(), 'evercraft-shipping-'));
@@ -374,6 +410,7 @@ test('transport runtime reproduces the safe thread-to-fresh recovery without dup
   const result = await dispatchVerifiedShipment({
     envelope,
     adapter,
+    recipient_access:recipientAccessFixture(envelope),
     ledger_file:ledgerFile,
     provider:'gmail'
   });
@@ -384,6 +421,7 @@ test('transport runtime reproduces the safe thread-to-fresh recovery without dup
   const second = await dispatchVerifiedShipment({
     envelope,
     adapter,
+    recipient_access:recipientAccessFixture(envelope),
     ledger_file:ledgerFile,
     provider:'gmail'
   });
@@ -739,4 +777,66 @@ test('recipient response loop records evidence without silently inferring accept
 
   const deduped = dedupeRecipientResponses([response, response, approved]);
   assert.equal(deduped.length, 2);
+});
+
+test('transport refuses provider send without independent recipient access proof', async () => {
+  const file = makePdf(tempDir(), 'external-package.pdf');
+  const envelope = prepareShipment({
+    logical_package_key:'blocked-without-shipping-proof',
+    recipient:{address:'test-buyer@example.invalid'},
+    subject:'Proof Required',
+    body:'Attached.',
+    authorization_ref:'fixture-owner-approval',
+    preferred_route:'fresh_outbound',
+    artifacts:[{
+      path:file,
+      client_filename:'Customer Package.pdf',
+      mime_type:'application/pdf',
+      qa:{openable:true,render_verified:true,renderer_count:2}
+    }]
+  });
+  let sends = 0;
+  const adapter = {
+    async send() { sends++; return {id:'unexpected-send'}; },
+    async readSent() { throw Error('should_not_read_sent'); }
+  };
+  const result = await dispatchVerifiedShipment({envelope,adapter});
+  assert.equal(result.state,'blocked_recipient_access');
+  assert.equal(result.delivered,false);
+  assert.ok(result.reasons.includes('shipping_independent_recipient_plan_missing'));
+  assert.equal(sends,0);
+});
+
+test('transport refuses altered or expired Shipping evidence before reservation', async () => {
+  const file = makePdf(tempDir(), 'external-package.pdf');
+  const envelope = prepareShipment({
+    logical_package_key:'shipping-hash-route-attestation',
+    recipient:{address:'test-buyer@example.invalid'},
+    subject:'Evidence Gate',
+    body:'Attached.',
+    authorization_ref:'fixture-owner-approval',
+    preferred_route:'fresh_outbound',
+    artifacts:[{
+      path:file,
+      client_filename:'Customer Package.pdf',
+      mime_type:'application/pdf',
+      qa:{openable:true,render_verified:true,renderer_count:2}
+    }]
+  });
+  let sends=0;
+  const adapter={
+    async send() { sends++; return {id:'unexpected-send'}; },
+    async readSent() { throw Error('should_not_read_sent'); }
+  };
+  const mismatched=recipientAccessFixture(envelope);
+  mismatched.plan={...mismatched.plan,recipient_ref:'wrong@example.invalid'};
+  const blockedWrong=await dispatchVerifiedShipment({envelope,adapter,recipient_access:mismatched});
+  assert.equal(blockedWrong.state,'blocked_recipient_access');
+  assert.ok(blockedWrong.reasons.includes('shipping_recipient_binding_mismatch'));
+  const expired=recipientAccessFixture(envelope);
+  expired.evidence.verified_at='2026-01-01T00:00:00Z';
+  const blockedExpired=await dispatchVerifiedShipment({envelope,adapter,recipient_access:expired});
+  assert.equal(blockedExpired.state,'blocked_recipient_access');
+  assert.ok(blockedExpired.reasons.includes('verification_stale_or_missing'));
+  assert.equal(sends,0);
 });
