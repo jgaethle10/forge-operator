@@ -2,9 +2,9 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import {importFallenVisualCase} from './fallen-visual-case.mjs';
 import {sceneFromFallenVisualHandoff,verifyFallenVisualSceneReceipt} from './fallen-visual-scene.mjs';
-import {EvercraftWorldRuntime,validateWorldDefinition} from './engine.js';
+import {EvercraftWorldRuntime,validateWorldDefinition, type WorldDefinition} from './engine.js';
 import {compileVisualFrame,verifyVisualFrameContract} from './visual.js';
-import {compileWebGpuRenderPlan,verifyWebGpuRenderPlan,validateGeometryAsset} from './webgpu.js';
+import {compileWebGpuRenderPlan,verifyWebGpuRenderPlan,validateGeometryAsset, type GeometryAsset} from './webgpu.js';
 
 const response=()=>({
   schema:'fallen.visual-case.v1',sector:'response',title:'Fictional Flood Command',
@@ -23,7 +23,7 @@ const sports=()=>({
   ],
   defense:[{id:'CB1',x:415,y:178}]
 });
-function frame(projection){
+function frame(projection:{world:WorldDefinition;geometryAssets:GeometryAsset[]}){
   const runtime=new EvercraftWorldRuntime(projection.world);
   const snapshot=runtime.snapshot();
   return compileVisualFrame(snapshot.worldId,snapshot.tick,snapshot.timeSec,
@@ -31,7 +31,7 @@ function frame(projection){
 }
 test('response JSON compiles into real World Engine visual scene and valid WebGPU plan',()=>{
   const handoff=importFallenVisualCase(response());
-  const projection=sceneFromFallenVisualHandoff(handoff);
+  const projection=sceneFromFallenVisualHandoff(handoff) as {world:WorldDefinition;geometryAssets:GeometryAsset[];receipt:any};
   assert.equal(validateWorldDefinition(projection.world),true);
   assert.equal(validateGeometryAsset(projection.geometryAssets[0]),true);
   assert.equal(verifyFallenVisualSceneReceipt(projection.receipt,projection.world,projection.geometryAssets),true);
@@ -48,8 +48,8 @@ test('response JSON compiles into real World Engine visual scene and valid WebGP
 
 test('sports routes compile to actual visible geometry with deterministic orientation',()=>{
   const handoff=importFallenVisualCase(sports());
-  const a=sceneFromFallenVisualHandoff(handoff);
-  const b=sceneFromFallenVisualHandoff(handoff);
+  const a=sceneFromFallenVisualHandoff(handoff) as {world:WorldDefinition;geometryAssets:GeometryAsset[];receipt:any};
+  const b=sceneFromFallenVisualHandoff(handoff) as {world:WorldDefinition;geometryAssets:GeometryAsset[];receipt:any};
   assert.deepEqual(a,b);
   const frameA=frame(a);
   assert.equal(verifyVisualFrameContract(frameA),true);
@@ -62,7 +62,7 @@ test('sports routes compile to actual visible geometry with deterministic orient
 });
 
 test('tampering with scene geometry or release flag fails projection receipt',()=>{
-  const original=sceneFromFallenVisualHandoff(importFallenVisualCase(response()));
+  const original=sceneFromFallenVisualHandoff(importFallenVisualCase(response())) as {world:WorldDefinition;geometryAssets:GeometryAsset[];receipt:any};
   const changed=structuredClone(original.world);
   changed.entities[1].transform.position.x=25;
   assert.equal(verifyFallenVisualSceneReceipt(original.receipt,changed,original.geometryAssets),false);
@@ -85,7 +85,7 @@ test('rejects unsealed or forged-authority upstream evidence',()=>{
 });
 
 test('world runtime yields reproducible non-physical visual snapshots',()=>{
-  const a=sceneFromFallenVisualHandoff(importFallenVisualCase(response()));
+  const a=sceneFromFallenVisualHandoff(importFallenVisualCase(response())) as {world:WorldDefinition;geometryAssets:GeometryAsset[];receipt:any};
   const runtime1=new EvercraftWorldRuntime(a.world);
   const runtime2=new EvercraftWorldRuntime(a.world);
   runtime1.run(20);runtime2.run(20);
