@@ -13,7 +13,7 @@ test('real EarthWorks controller state flows through native World Engine into EI
   assert.equal(replay.delivery_authority,false);
 
   const before=inspectEixWorldEntity(replay,0,'HT-01');
-  const after=inspectEixWorldEntity(replay,100_000,'HT-01');
+  const after=inspectEixWorldEntity(replay,20_000,'HT-01');
   assert.ok(before && after);
   assert.notDeepEqual(before.entity.world_position_m,after.entity.world_position_m);
   assert.equal(after.entity.source.motion_state,'modeled');
