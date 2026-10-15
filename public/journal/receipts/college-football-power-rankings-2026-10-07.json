@@ -4,7 +4,7 @@
   "slug": "college-football-power-rankings-2026-10-07",
   "title": "Evercraft College Football Power Rankings: Alabama Leads the Field",
   "published_at": "2026-10-08T13:55:57.119Z",
-  "built_at": "2026-10-15T11:50:29.455Z",
+  "built_at": "2026-10-15T15:48:12.509Z",
   "canonical_url": "https://fabric.systemiacommandcenters.com/journal/college-football-power-rankings-2026-10-07/",
   "clip_handoff_ref": "production/college-football-power-rankings-2026-10-07/clip-handoff.json",
   "evidence_state": "model_derived_from_verified_public_results",
@@ -37,7 +37,7 @@
     "text_primary": false,
     "note": "The ranking surface is structured data. Fallen should build the social and motion visual package from the same Top 25 receipt."
   },
-  "article_sha256": "ec8d4648cf474b51a9e9d0a6bb1e3ccbc7c7049196f8fd663cc9a05bc60f7b2d",
+  "article_sha256": "a38a5030c7b40d3eb4aac4cc5fcb766b75836290d792b28ef00bb3505b043545",
   "fallen_brief_sha256": "b2b4211ba8b1a866aee6cc190234121c73c7b260ec8c6f7713f36ddaa74a53a6",
   "machine_evidence_ref": "data/college-football-power-rankings-2026-10-07.json",
   "machine_evidence_sha256": "a962ac507e867106c12d8304d57e615f58215d24c3b37bc0652b9ea51c0a2f86",
@@ -60,7 +60,7 @@
   },
   "publisher": "evercraft-owned-static-journal-v1",
   "publication_authority": true,
-  "publication_state": "live",
-  "live_edition_eligible": true,
-  "archive_reason": null
+  "publication_state": "archived",
+  "live_edition_eligible": false,
+  "archive_reason": "freshness_window_expired"
 }
