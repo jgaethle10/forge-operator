@@ -2,7 +2,7 @@
   "schema": "evercraft.chum.crawl-state.v1",
   "provider": "Evercraft LLC",
   "coordinator": "CHUM",
-  "updated_at": "2026-10-15T01:34:55.962Z",
+  "updated_at": "2026-10-15T01:35:26.111Z",
   "url_count": 2984,
   "doctrine": {
     "crawl_can_be_requested_not_forced": true,
@@ -141,32 +141,32 @@
     },
     "/chum/hot/index.json": {
       "path": "/chum/hot/index.json",
-      "content_sha256": "9c44964fbc5c49fa908dad9933396ab90af0d9455c3731fd5afd07d48abd938f",
-      "last_changed": "2026-10-15T01:34:55.962Z",
+      "content_sha256": "abb5684b7cdc2a040586041eaa71da7a109c830f5a3c90b90c6bb2ac1b7421ad",
+      "last_changed": "2026-10-15T01:35:26.111Z",
       "priority": 80
     },
     "/chum/strike/": {
       "path": "/chum/strike/",
-      "content_sha256": "04ea2fd0a6095a4e9f2e483532abb645722bf090b439c22dc478238d4458f19e",
-      "last_changed": "2026-10-08T04:51:48.945Z",
+      "content_sha256": "646bc167e6f80635ea7ce423d6bea44ca6cc05047117ef1264b923e0cd8b38d9",
+      "last_changed": "2026-10-15T01:35:26.111Z",
       "priority": 80
     },
     "/chum/strike/index.json": {
       "path": "/chum/strike/index.json",
-      "content_sha256": "8229da04fb923208760070ad680f8d388622c1f2b26e57dae0b0c7f636ac1a0a",
-      "last_changed": "2026-10-08T17:55:28.130Z",
+      "content_sha256": "5fb1b84484791e15954754180aea3c7d72495a4d153e1bd997fd8d66f0f6fa9c",
+      "last_changed": "2026-10-15T01:35:26.111Z",
       "priority": 80
     },
     "/chum/crawler-radar.json": {
       "path": "/chum/crawler-radar.json",
-      "content_sha256": "8614fbda0903976a240a6595571e19581f0e5af61bbeec24d579cfa1bbda9bf2",
-      "last_changed": "2026-10-08T17:55:28.130Z",
+      "content_sha256": "686b674f94fe98fc2c116b847e90a5598339cbeee49464a744a552ee78209241",
+      "last_changed": "2026-10-15T01:35:26.111Z",
       "priority": 80
     },
     "/chum/crawler-radar.txt": {
       "path": "/chum/crawler-radar.txt",
-      "content_sha256": "5d427bec921bbd1123cfb36f09573e1be28c225e400f315b13d55af36a7145ac",
-      "last_changed": "2026-10-08T17:55:28.130Z",
+      "content_sha256": "05870ea39add29a698033a8438a1450ea351944b44203d95fed751ef8bcb7743",
+      "last_changed": "2026-10-15T01:35:26.111Z",
       "priority": 80
     },
     "/chum/proof/": {
