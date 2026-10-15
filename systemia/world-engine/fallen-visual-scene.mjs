@@ -86,6 +86,13 @@ export function sceneFromFallenVisualHandoff(handoff){
       entities.push(entity('rc13:defender:'+n.id,point(n.position,.05),.055,.055,'defense',props,['sports','defender']));
     }
   }
+  if(handoff.sector==='response'){
+    entities.push(entity(
+      'rc13:scenario-front',{x:0,y:.94,z:.015},2.05,.012,'high',
+      {...common,source_kind:'synthetic_scenario_phase_indicator',scenario_validated:false},
+      ['response','authored_phase_indicator','not_hydraulic_model']
+    ));
+  }
   const world={
     schema:'evercraft.world-engine.world.v1',
     id:'fallen:visual:'+handoff.digest.slice(0,18),
