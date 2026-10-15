@@ -47,6 +47,9 @@ test('human offer copy gives sell-now capabilities short memorable URLs',()=>{
   assert.match(page,/How it works/);
   assert.match(page,/\/api\/offers\/website-audit\/checkout/);
   assert.match(page,/Continue to checkout/);
+  assert.match(page,/name="customer_ref"/);
+  assert.match(page,/type="email"/);
+  assert.match(page,/autocomplete="email"/);
   assert.match(page,/Evercraft Payments/);
   assert.match(page,/\$49/);
   assert.match(page,/property="og:title"/);
@@ -140,10 +143,19 @@ test('owned Fabric serves offer pages, requires confirmation, and delegates chec
     assert.equal(noConfirmation.status,409);
     assert.equal(seen.length,0);
 
+    const missingCustomer=await fetch(runtime.url+'/api/offers/website-audit/checkout',{
+      method:'POST',
+      headers:{'content-type':'application/json'},
+      body:JSON.stringify({user_confirmed:true}),
+    });
+    assert.equal(missingCustomer.status,422);
+    assert.equal((await missingCustomer.json()).error,'valid_customer_email_required');
+    assert.equal(seen.length,0);
+
     const checkout=await fetch(runtime.url+'/api/offers/website-audit/checkout',{
       method:'POST',
       headers:{'content-type':'application/x-www-form-urlencoded'},
-      body:new URLSearchParams({user_confirmed:'true'}),
+      body:new URLSearchParams({user_confirmed:'true',customer_ref:'buyer@example.com'}),
       redirect:'manual',
     });
     assert.equal(checkout.status,303);
@@ -161,6 +173,7 @@ test('owned Fabric serves offer pages, requires confirmation, and delegates chec
     assert.match(checkoutBody,/Evercraft Payments/);
     assert.equal(seen.length,1);
     assert.equal(seen[0].body.user_confirmed,true);
+    assert.equal(seen[0].body.customer_ref,'buyer@example.com');
     assert.equal(seen[0].body.capability_key,'website-audit-quick-win');
     assert.match(seen[0].body.idempotency_key,/^fabric-website-audit-/);
 
@@ -198,7 +211,7 @@ test('human checkout failures render a branded Evercraft Payments page instead o
     const response=await fetch(runtime.url+'/api/offers/website-audit/checkout',{
       method:'POST',
       headers:{'content-type':'application/x-www-form-urlencoded'},
-      body:new URLSearchParams({user_confirmed:'true'}),
+      body:new URLSearchParams({user_confirmed:'true',customer_ref:'buyer@example.com'}),
       redirect:'manual',
     });
     assert.equal(response.status,503);
