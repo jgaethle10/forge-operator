@@ -27,3 +27,15 @@ The existing EverMaps RC003 source remains in its own application workspace and 
 - Systemia dependency, reviewer, and exact-output gates before merge, public deployment, customer use or professional reliance.
 
 Reference record: Systemia `evermaps-world-street3d-20261013`; prior EverMaps RC003 source checkpoint `6acf188fa0dee32080bf5118`. No RIVET renderer source or customer data is included.
+
+## Actual World Engine snapshot integration
+
+`mountPublicReferencePoints(world, geojson, origin)` validates a real World Engine definition, adds the accepted reference overlay to `world.metadata.public_reference_points`, and bumps the world version. It does not create physics entities, colliders, materials, routes or renderable building assets.
+
+`publicReferenceFrame(world, snapshot)` requires a cryptographically digest-verified canonical World Engine snapshot bound to the exact world definition and version before exposing source-labeled, **nonphysical** overlay annotations. It rejects replay tampering, stale/mismatched world definitions and authority escalation. This is a functional snapshot-to-annotation bridge, **not a completed 3D user interface**.
+
+```sh
+node --import tsx --test systemia/world-engine/public-reference-*.test.mjs
+```
+
+The World Engine GitHub workflow executes that command in addition to the existing runtime tests. Production still requires a reviewed renderer/UI adapter, browser visual and mobile performance acceptance, explicit source-location validation and the Systemia release gate.
