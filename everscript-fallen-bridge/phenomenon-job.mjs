@@ -24,14 +24,13 @@ export function makeSyntheticPhenomenonJob({jobId='living-intelligence-rc05',fra
     camera:{keyframes:[{t:0,x:0,y:0,zoom:1},{t:2,x:0,y:0,zoom:1.045}]},
     layers:[
       {id:'storm-flow',kind:'phenomenon',z:1,x:0,y:0,width,height,
-        title:'THE ANATOMY OF MOTION',subtitle:'Illustrative atmospheric circulation',
-        callout:'A generated flow field, not an observed hurricane',
-        bounds:{north:37,south:18,west:-104,east:-71},
-        streamlines,motionLabel:'illustrative circulating flow',sourceLabel:'Evercraft synthetic procedural field RC0.5',
+        title:'LIVING FLOW FIELD',
+                bounds:{north:37,south:18,west:-104,east:-71},
+        streamlines,particleDensity:1.65,trailFraction:.075,motionLabel:'illustrative circulating flow',sourceLabel:'Evercraft synthetic procedural field RC0.5',
         colorEncoding:{label:'synthetic intensity index',min:0,max:100,unit:' index',palette:['#07121b','#246679','#57c1b3','#e5ae64','#e77b58']},
         brightnessEncoding:{label:'synthetic motion magnitude',min:0,max:8,unit:' a.u.'},
         evidenceState:'synthetic_visualization',sourceRefs:['evercraft:procedural-rc05']},
-      {id:'evidence',kind:'text',z:5,x:24,y:height-74,width:width-48,height:56,text:'SYNTHETIC VISUALIZATION  /  NOT OBSERVED WEATHER',fontSize:16,fontWeight:700,evidenceState:'synthetic_visualization',sourceRefs:['evercraft:procedural-rc05']}
+      
     ],createdAt:'2026-10-14T00:00:00.000Z'};
   const job={schema:'evercraft.fallen.render-job.v1',job_id:jobId,stage,assets:[],frame_start:0,frame_count:frames};
   return {job,job_sha256:sha(JSON.stringify(job)),provenance:{state:'synthetic_visualization',source_refs:['evercraft:procedural-rc05'],observed_data:false}};
