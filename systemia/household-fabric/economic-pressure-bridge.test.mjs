@@ -69,3 +69,14 @@ test('national inflation does not modify locally ranked opportunities or imply s
   assert.equal(first.household_opportunities.opportunities[0].requires_eligibility_check, true);
   assert.equal(first.boundaries.economic_signals_do_not_buy_organic_rank, true);
 });
+
+test('read-only Yakima proof emits five reviewed signals without invented household value', async () => {
+  const { buildReviewProof } = await import('./economic-pressure-proof.mjs');
+  const output = buildReviewProof(now);
+  assert.equal(output.measured_economic_context.length, 5);
+  assert.equal(output.household_opportunities.status, 'degraded');
+  assert.deepEqual(output.household_opportunities.opportunities, []);
+  assert.equal(output.household_opportunities.headline.money_kept_cents, 0);
+  assert.equal(output.household_opportunities.headline.money_earned_cents, 0);
+  assert.equal(output.boundaries.no_live_collector_implied, true);
+});
