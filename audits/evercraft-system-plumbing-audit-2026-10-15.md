@@ -74,3 +74,20 @@ No customer payment, Stripe operation, outreach, API credentials, GitHub main pu
 
 ## Immediate Systemia admission
 P0 release governance audit, P0 payment lineage, P0 source-to-runtime registry; then P1 deep-link crawl, repository CI and backup/restore. Dedupe with #971, #1220, #1224, #1303 and existing release/compute issues. Require owner-approved execution gate for consequential actions.
+
+
+## Addendum: workflow-authority and commercial-source sweep (October 15)
+**This is new evidence beyond the initial baseline**, generated from a complete untruncated GitHub tree and a local clone of the audit branch. It does not elevate test-only work to deployed state.
+
+### GitHub Actions inventory
+- Inspected **189** workflow YAML files from the GitHub repository snapshot, all fetched and inspected successfully.
+- **12** declare `contents: write` and contain direct `git push` commands to `main`. This count excludes indirect deploy rights embedded in scripts, external tokens and GitHub repository/organization branch rulesets, none of which were fully assessed.
+- The 12 observed direct writers are frozen in `audits/workflow-writer-baseline-2026-10-15.json` as **legacy inventory exceptions, not approval**. High-concern writers include a 5-minute `chum-crawl-pressure` source commit cycle, broad `public/chum` publisher `evercraft-public-edge-canary`, direct plugin package generator, and publication workflows for Journal, domain verification and registry.
+- Added `scripts/audit-workflow-writers.mjs`, `tests/workflow-writer-audit.test.mjs`, and read-only GitHub Actions `evercraft-plumbing-writer-audit.yml`. Newly introduced workflow writers, `pull_request_target` with writer authority, direct stages of protected buyer files, and apparent pushes without declared content-write permissions fail the gate. Retiring known writers is allowed. The audit cannot substitute for GitHub main branch protection.
+- Source-to-public commercial inventory: **52** capabilities in GitHub source `public/chum/capabilities.json`, but **51** returned by the currently connected Evercraft MCP plugin. The source-only extra was `lineage-founding-pilot-v1`. No deployment provenance receipt currently explains the difference; do not assume this is an outage rather than version lag.
+- Of **17** source capabilities labeled `sell_now`, **all 17** have `start_url:null` / `held_no_owned_public_origin`. Their commercial offering may be discoverable but the **owned purchase continuation has not been proved**; separately, 13 specific transitional buyer forms have externally verified GETs. These are different populations and must not be summed or automatically mapped.
+- Direct-door readiness source contains **17** products, **1** marked directly callable/published, **16** held. Registry source includes **44** product entries. Different catalog dimensions are not interchangeable with deployed app or permission counts.
+- New `scripts/audit-evercraft-commercial-topology.mjs` and tests reconcile 52/17/13/17/44 source dimensions into an explicit hold/evidence map without creating transactions or auto-claiming successful revenue.
+- Temporary read-only CI: `Evercraft Plumbing - writer and commerce topology` generated tests and audit artifact; a clone of the audit branch executed **12/12 tests successfully**. GitHub's dedicated PR workflow also completed successfully. Broader Forge and Sentinel checks were running at the audit instant.
+
+**High-leverage next action:** Require branch ruleset/status review for `.github/workflows`, `systemia/payments`, `public/.well-known`, `server.ts`, and production edge manifests; convert high-churn direct-to-main writers to artifact-only staging or reviewed PRs in a controlled migration, not in one uncontrolled cutover. Bind immutable deploy SHA to `/health` and create a receipt from the edge, then perform a product-to-runtime/merchant-flow canary.
