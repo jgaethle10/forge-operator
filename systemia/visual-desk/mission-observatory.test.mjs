@@ -44,6 +44,6 @@ test("HTML module parses and preserves visible demo disclosure",async()=>{
   assert.match(markup,/aria-label="Mission replay position"/);
   const match=markup.match(/<script type="module">([\s\S]*?)<\/script>/);
   assert.ok(match,"inline module must exist");
-  const script=match[1].replace(/^import\s+\{[^}]+\}\s+from\s+"\.\x2fscene\.mjs";/m,"");
+  const script=match[1].split("\n").filter(line=>!line.trim().startsWith("import ")).join("\n");
   assert.doesNotThrow(()=>new Function(script),"browser script must parse");
 });
