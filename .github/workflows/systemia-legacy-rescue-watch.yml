@@ -15,8 +15,10 @@ permissions:
   contents: read
 
 concurrency:
+  # One resident at a time. A nearby manual recovery must wait rather than
+  # cancelling the already-running scheduled evidence cycle.
   group: systemia-legacy-rescue-watch
-  cancel-in-progress: true
+  cancel-in-progress: false
 
 jobs:
   watch:
