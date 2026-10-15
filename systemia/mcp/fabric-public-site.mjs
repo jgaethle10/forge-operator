@@ -242,6 +242,21 @@ const OFFER_PAGE_COPY={
       ['3. Choose the smallest sane repair','Fix, stabilize, migrate, or rebuild only where the evidence justifies it.']
     ]
   },
+  'site-survive-rapid-audit-v1':{
+    slug:'site-survive',
+    purchase_key:'site-survive-audit',
+    eyebrow:'Site-Survive Rapid Audit',
+    headline:'How well will this property handle the next disruption?',
+    lede:'A bounded, evidence-first review of a site\'s public exposure and practical recovery vulnerabilities before an emergency becomes an expensive surprise.',
+    promise:'One rapid site-survival audit, prioritized risks, and practical next steps. Not an engineering certification or emergency guarantee.',
+    send:['The site address or location and type of property','The main concern: access, outages, flooding, heat, smoke, storm or continuity','Relevant site facts and constraints you can safely share'],
+    get:['A bounded risk and exposure snapshot with sources','A prioritized action and verification list','Explicit uncertainties requiring on-site or specialist inspection'],
+    steps:[
+      ['1. Identify the site','Start with one property and the specific disruption that worries you.'],
+      ['2. Audit documented exposures','We separate public evidence from assumptions and missing data.'],
+      ['3. Prioritize the work','You receive practical next actions and a list of what still needs verification.']
+    ]
+  },
   'findmypart-paid-hunt-v1':{
     slug:'findmypart',
     purchase_key:'findmypart-quick-hunt',
