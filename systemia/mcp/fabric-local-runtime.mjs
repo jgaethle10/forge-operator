@@ -439,7 +439,7 @@ export async function startFabricLocalRuntime({
   }
   // Catalog/MCP legacy connection filtering does NOT mean the payment-intent
   // backend is first-party. Expose a bounded truth state, never a secret URL.
-  const checkoutIntentLegacyProvider=/(^|\\.)base44\\.app$/i.test(purchaseIntentEndpoint.hostname);
+  const checkoutIntentLegacyProvider=/(^|\.)base44\.app$/i.test(purchaseIntentEndpoint.hostname);
   const checkoutIntentTransport=checkoutIntentLegacyProvider
     ? 'legacy_provider_hosted'
     : 'configured_backend_unverified';
