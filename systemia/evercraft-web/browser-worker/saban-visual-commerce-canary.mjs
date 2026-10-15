@@ -112,5 +112,10 @@ receipt.summary={
 };
 fs.writeFileSync(path.join(OUT,'receipt.json'),JSON.stringify(receipt,null,2)+'\n');
 console.log('SABAN_VISUAL_RECEIPT '+JSON.stringify(receipt.summary));
-// Upload diagnostic evidence even when the website fails. Never infer payment readiness.
-if(receipt.summary.videos===0||receipt.summary.screenshots===0) process.exitCode=2;
+// Always preserve diagnostic evidence, but broken buyer pages must fail the job.
+// The workflow uploads artifacts with if: always(), including on this failure.
+if(receipt.summary.http_ok!==receipt.summary.total ||
+   receipt.summary.missing_email_field_on_cta.length>0 ||
+   receipt.summary.videos!==receipt.summary.total ||
+   receipt.summary.screenshots!==receipt.summary.total ||
+   receipt.tests.some(entry=>entry.errors.length>0)) process.exitCode=2;
