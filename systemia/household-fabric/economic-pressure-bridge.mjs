@@ -1,4 +1,5 @@
 import { buildHouseholdToday } from './surface.mjs';
+import reviewed from './economic-pressure-reviewed-snapshots.json' with { type: 'json' };
 
 /**
  * Economic Pressure Atlas -> Systemia Household Fabric, v1.
@@ -8,6 +9,8 @@ import { buildHouseholdToday } from './surface.mjs';
  * outside the ranked local-opportunity engine, which retains its existing
  * freshness, eligibility, evidence, sponsorship, and coverage protections.
  */
+const REVIEWED = new Map(reviewed.snapshots.map(s => [s.metric + ':' + s.observed_period, s]));
+
 const SIGNALS = Object.freeze({
   'us-cpi-all-items-yoy': { geography: 'us', unit: 'percent', hosts: ['www.bls.gov', 'bls.gov'] },
   'us-cpi-gasoline-mom': { geography: 'us', unit: 'percent', hosts: ['www.bls.gov', 'bls.gov'] },
@@ -39,21 +42,33 @@ export function normalizeEconomicPressureSignal(raw, now = new Date()) {
   try { url = new URL(raw.source_url); }
   catch { throw new Error('official primary source URL required'); }
   if (url.protocol !== 'https:' || !rule.hosts.includes(url.hostname)) throw new Error('economic source must be an allowed official primary domain');
-  const released = timestamp(raw.release_at);
-  if (released > now.getTime()) throw new Error('economic signal is not published yet');
-  const releaseMonth = new Date(released).toISOString().slice(0, 7);
-  if (period > releaseMonth) throw new Error('observed period cannot be later than publication month');
-
+  const pinned = REVIEWED.get(raw.metric + ':' + period);
+  if (!pinned) throw new Error('economic snapshot has not been independently reviewed');
+  if (pinned.value !== numeric || pinned.unit !== raw.unit || pinned.geography !== raw.geography || pinned.source_url !== url.toString()) {
+    throw new Error('economic claim does not match reviewed source snapshot');
+  }
+  if (pinned.release_at !== null) {
+    const released = timestamp(pinned.release_at);
+    if (released > now.getTime()) throw new Error('economic signal is not published yet');
+    if (raw.release_at && timestamp(raw.release_at) !== released) throw new Error('official release timestamp mismatch');
+  } else if (raw.release_at != null) {
+    throw new Error('exact official release time not verified for this local source');
+  }
+  if (pinned.reviewed_on > now.toISOString().slice(0,10)) {
+    throw new Error('economic review date has not been reached');
+  }
   return Object.freeze({
     metric: raw.metric,
     geography: raw.geography,
     value: numeric,
     unit: rule.unit,
     observed_period: period,
-    release_at: new Date(released).toISOString(),
+    release_at: pinned.release_at,
+    source_date_precision: pinned.source_date_precision,
+    reviewed_on: pinned.reviewed_on,
     source_url: url.toString(),
     evidence_state: raw.evidence_state,
-    measurement_state: 'official_snapshot',
+    measurement_state: 'reviewed_official_snapshot_not_live',
     // The signal never becomes a monetary claim or a verified local deal.
     monetary_impact_cents: null,
     local_causation_claimed: false,
