@@ -2,6 +2,7 @@ import assert from 'node:assert/strict';
 import fs from 'node:fs';
 import os from 'node:os';
 import path from 'node:path';
+import { createHmac, randomBytes } from 'node:crypto';
 import test from 'node:test';
 
 import {
@@ -23,10 +24,44 @@ import {
 } from './shipping-ledger.mjs';
 import { buildVerifiedDeliveryReceipt } from './delivery-receipt.mjs';
 import { dispatchVerifiedShipment } from './transport-runtime.mjs';
+import { shippingAttestationPayload } from './recipient-access-gate.mjs';
 import { buildReleasePlan, materializeReleasePackage, verifyMaterializedRelease } from './release-station.mjs';
 import { admitShippingOrder, authorizeReissue, assertCurrentRelease, buildShippingExceptionIntent, findShippingExceptions, markShippingOrderState, shippingControlTowerSummary } from './control-tower.mjs';
 import { buildShippingProofBundle } from './proof-bundle.mjs';
 import { buildRecipientResponseSignal, correlateRecipientResponse, dedupeRecipientResponses } from './recipient-response.mjs';
+
+// Test-only Shipping attestation fixture. This is not a production signer.
+function recipientAccessFixture(envelope) {
+  const secret='shipping-integration-test-only-secret-not-for-real-sends';
+  const plan={
+    release_key:envelope.logical_package_key,
+    release_fingerprint:envelope.shipment_fingerprint,
+    recipient_ref:envelope.recipient.recipient_ref,
+    channel:'email',
+    authorization_ref:envelope.authorization_ref,
+    ready:true,
+    channel_contract:{external_send:true},
+    package_manifest:envelope.package_manifest
+  };
+  const evidence={
+    verifier_id:'evercraft-independent-shipping-verifier-v1',
+    nonce:randomBytes(16).toString('hex'),
+    verified_at:new Date().toISOString(),
+    mode:'external_attachment',
+    claims_reviewed:true,
+    references_complete:true,
+    references:[],
+    restricted_dependency_count:0,
+    client_preview_filename:envelope.package_manifest.artifacts[0].client_filename,
+    provider_attachment_proofs:envelope.package_manifest.artifacts.map(x=>({
+      client_filename:x.client_filename, provider_readback:true, sha256:x.sha256
+    }))
+  };
+  evidence.signature=createHmac('sha256',secret)
+    .update(shippingAttestationPayload({plan,evidence}))
+    .digest('hex');
+  return {plan,evidence,verifier_secret:secret};
+}
 
 function tempDir() {
   return fs.mkdtempSync(path.join(os.tmpdir(), 'evercraft-shipping-'));
@@ -374,6 +409,7 @@ test('transport runtime reproduces the safe thread-to-fresh recovery without dup
   const result = await dispatchVerifiedShipment({
     envelope,
     adapter,
+    recipient_access:recipientAccessFixture(envelope),
     ledger_file:ledgerFile,
     provider:'gmail'
   });
@@ -384,6 +420,7 @@ test('transport runtime reproduces the safe thread-to-fresh recovery without dup
   const second = await dispatchVerifiedShipment({
     envelope,
     adapter,
+    recipient_access:recipientAccessFixture(envelope),
     ledger_file:ledgerFile,
     provider:'gmail'
   });
