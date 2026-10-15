@@ -57,8 +57,11 @@ const stableReceiptJson=(value)=>{
   }
   return value;
 };
+// Registered workers prefix SHA-256 digests; the NodeSeed Compute chain
+// stores its SHA-256 digest as bare hex. Preserve both original contracts.
 const receiptDigest=(value,stable=false)=>
-  'sha256:'+createHash('sha256').update(JSON.stringify(stable?stableReceiptJson(value):value)).digest('hex');
+  (stable?'sha256:':'')+
+  createHash('sha256').update(JSON.stringify(stable?stableReceiptJson(value):value)).digest('hex');
 
 // Source-integrity check of the exact NodeSeed job and lease receipt fields.
 // Hashes are not digital signatures; transport and session authorization
@@ -70,11 +73,10 @@ export function verifyNodeSeedJobReceipts({result,intent,lease,payload}={}){
      r?.schema!=='evercraft.compute.receipt.v1'){
     throw new Error('nodeseed_registered_worker_receipt_required');
   }
-  const hashShape=/^sha256:[a-f0-9]{64}$/;
-  if(!hashShape.test(String(w.receipt_hash||''))){
+  if(!/^sha256:[a-f0-9]{64}$/.test(String(w.receipt_hash||''))){
     throw new Error('nodeseed_registered_worker_receipt_hash_required');
   }
-  if(!hashShape.test(String(r.receipt_hash||''))){
+  if(!/^[a-f0-9]{64}$/.test(String(r.receipt_hash||''))){
     throw new Error('nodeseed_compute_execution_receipt_required');
   }
   const {receipt_hash:workerHash,...workerBody}=w;
