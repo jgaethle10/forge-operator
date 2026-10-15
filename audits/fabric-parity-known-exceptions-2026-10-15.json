@@ -1,0 +1,13 @@
+{
+  "schema": "evercraft.audit.fabric-parity-known-exceptions.v1",
+  "observed_at": "2026-10-15",
+  "expires_at": "2026-10-22T00:00:00Z",
+  "known_source_only_capabilities": [
+    "lineage-founding-pilot-v1"
+  ],
+  "known_nonworking_public_routes": [
+    "https://fabric.systemiacommandcenters.com/capabilities/lineage-founding-pilot-v1"
+  ],
+  "reason": "Public GitHub source advertises this capability, but live owned Fabric MCP returned 51/52 without it and the exact public capability URL returned HTTP 404. This is an exception for transparent monitoring, not proof of valid customer delivery or permission to publish.",
+  "review": "Investigate edge content deployment and immutable source/receipt binding. Do not mark this live until external GET 200, catalog presence and source deployment lineage are evidenced."
+}
