@@ -777,3 +777,65 @@ test('recipient response loop records evidence without silently inferring accept
   const deduped = dedupeRecipientResponses([response, response, approved]);
   assert.equal(deduped.length, 2);
 });
+
+test('transport refuses provider send without independent recipient access proof', async () => {
+  const file = makePdf(tempDir(), 'external-package.pdf');
+  const envelope = prepareShipment({
+    logical_package_key:'blocked-without-shipping-proof',
+    recipient:{address:'test-buyer@example.invalid'},
+    subject:'Proof Required',
+    body:'Attached.',
+    authorization_ref:'fixture-owner-approval',
+    preferred_route:'fresh_outbound',
+    artifacts:[{
+      path:file,
+      client_filename:'Customer Package.pdf',
+      mime_type:'application/pdf',
+      qa:{openable:true,render_verified:true,renderer_count:2}
+    }]
+  });
+  let sends = 0;
+  const adapter = {
+    async send() { sends++; return {id:'unexpected-send'}; },
+    async readSent() { throw Error('should_not_read_sent'); }
+  };
+  const result = await dispatchVerifiedShipment({envelope,adapter});
+  assert.equal(result.state,'blocked_recipient_access');
+  assert.equal(result.delivered,false);
+  assert.ok(result.reasons.includes('shipping_independent_recipient_plan_missing'));
+  assert.equal(sends,0);
+});
+
+test('transport refuses altered or expired Shipping evidence before reservation', async () => {
+  const file = makePdf(tempDir(), 'external-package.pdf');
+  const envelope = prepareShipment({
+    logical_package_key:'shipping-hash-route-attestation',
+    recipient:{address:'test-buyer@example.invalid'},
+    subject:'Evidence Gate',
+    body:'Attached.',
+    authorization_ref:'fixture-owner-approval',
+    preferred_route:'fresh_outbound',
+    artifacts:[{
+      path:file,
+      client_filename:'Customer Package.pdf',
+      mime_type:'application/pdf',
+      qa:{openable:true,render_verified:true,renderer_count:2}
+    }]
+  });
+  let sends=0;
+  const adapter={
+    async send() { sends++; return {id:'unexpected-send'}; },
+    async readSent() { throw Error('should_not_read_sent'); }
+  };
+  const mismatched=recipientAccessFixture(envelope);
+  mismatched.plan={...mismatched.plan,recipient_ref:'wrong@example.invalid'};
+  const blockedWrong=await dispatchVerifiedShipment({envelope,adapter,recipient_access:mismatched});
+  assert.equal(blockedWrong.state,'blocked_recipient_access');
+  assert.ok(blockedWrong.reasons.includes('shipping_recipient_binding_mismatch'));
+  const expired=recipientAccessFixture(envelope);
+  expired.evidence.verified_at='2026-01-01T00:00:00Z';
+  const blockedExpired=await dispatchVerifiedShipment({envelope,adapter,recipient_access:expired});
+  assert.equal(blockedExpired.state,'blocked_recipient_access');
+  assert.ok(blockedExpired.reasons.includes('verification_stale_or_missing'));
+  assert.equal(sends,0);
+});
