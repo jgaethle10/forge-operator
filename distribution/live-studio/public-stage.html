@@ -1,0 +1,93 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'unsafe-inline'; style-src 'unsafe-inline'; img-src 'self'; media-src 'self'; connect-src 'self'; base-uri 'none'; object-src 'none'; form-action 'none'">
+<meta name="theme-color" content="#050c18"><title>Evercraft | Approved Public Stage</title>
+<style>
+:root{font-family:Inter,ui-sans-serif,system-ui,sans-serif;color:#e5f7ff;background:#050b13}
+*{box-sizing:border-box}html,body{margin:0;min-height:100%;background:#050b13}
+main{min-height:100dvh;position:relative;display:flex;flex-direction:column;overflow:hidden;background:radial-gradient(circle at 50% 20%,#12334a,#091322 48%,#050b13 85%)}
+header,footer{position:relative;z-index:3;display:flex;align-items:center;justify-content:space-between;gap:15px;padding:18px clamp(20px,4vw,64px)}
+.wordmark{display:flex;align-items:center;gap:12px;font-size:13px;font-weight:800;letter-spacing:.22em;text-transform:uppercase}
+.symbol{width:32px;height:32px;border:1px solid #6af2db;border-radius:9px;display:grid;place-items:center;color:#6af2db;font-size:19px}
+.pill{border:1px solid #406073;background:#0e2432a8;border-radius:99px;padding:8px 12px;font-size:10px;font-weight:750;letter-spacing:.11em;color:#a6d7e2;text-transform:uppercase}
+.stage{position:relative;flex:1;min-height:65vh;display:grid;place-items:center;margin:0 clamp(8px,2vw,24px);border:1px solid #183142;border-radius:21px;overflow:hidden;background:linear-gradient(135deg,#09182b,#06111c)}
+.mesh{position:absolute;inset:-50%;background-image:linear-gradient(#2b647518 1px,transparent 1px),linear-gradient(90deg,#2b647518 1px,transparent 1px);background-size:48px 48px;transform:perspective(500px) rotateX(60deg);opacity:.48;pointer-events:none}
+.glow{position:absolute;width:55vmin;height:55vmin;left:50%;top:40%;transform:translate(-50%,-50%);border:1px solid #2eacc851;border-radius:50%;box-shadow:0 0 100px #008db51d,inset 0 0 100px #008db51d;pointer-events:none}
+.glow:after{content:'';position:absolute;inset:18%;border:1px solid #2eacc83b;border-radius:50%}
+#visual{position:absolute;inset:0;display:grid;place-items:center}
+#visual img,#visual video{width:100%;height:100%;object-fit:contain}
+.info{z-index:2;position:relative;text-align:center;width:min(580px,88%);padding:30px}
+.info h1{font-size:clamp(34px,6vw,65px);font-weight:780;line-height:1.07;letter-spacing:-.04em;margin:10px 0 18px}
+.info p{font-size:clamp(13px,1.6vw,18px);line-height:1.6;color:#b0c5d3}
+.eyebrow{color:#6ef0d5;font-size:12px;letter-spacing:.2em;font-weight:800}
+#detail{font-size:13px;color:#9ec6d7}
+footer{font-size:11px;color:#7da4b4;letter-spacing:.07em;text-transform:uppercase}
+#status{color:#b8d6e1}
+.approved .stage{background:#03070d}
+.approved .mesh,.approved .glow{display:none}
+.approved #empty{display:none}
+.approved #visual{display:grid}
+.approved #receipt{display:block}
+#receipt{display:none;position:absolute;left:clamp(20px,4vw,65px);bottom:clamp(22px,5vw,65px);z-index:2;max-width:520px;padding:20px 24px;background:linear-gradient(90deg,#030c16ec,#030c16ad);border-left:2px solid #61e9d0;box-shadow:0 12px 55px #0008}
+#receipt h2{font-size:clamp(18px,3vw,30px);margin:0 0 8px}
+#receipt p{font-size:14px;color:#c2d1da;margin:0;line-height:1.45}
+#receipt small{color:#70d4d1;display:block;margin-top:12px;font-size:10px;letter-spacing:.09em}
+@media (orientation:portrait){header{padding:15px}header .pill{max-width:53%;font-size:9px;text-align:center}.stage{min-height:70dvh;margin:0 7px}.info h1{font-size:39px}.info{width:95%;padding:20px}footer{padding:14px;font-size:9px}#receipt{left:14px;right:14px;bottom:17px;padding:12px}#receipt h2{font-size:20px}#receipt p{font-size:12px}}
+</style>
+</head>
+<body>
+<main id="app">
+<header><div class="wordmark"><span class="symbol">✦</span> Evercraft <span style="color:#658ca1">/ STUDIO</span></div><div class="pill" id="mode">RELEASE GATE: HOLD</div></header>
+<section class="stage" role="region" aria-label="Approved public recording stage">
+<div class="mesh"></div><div class="glow"></div><div id="visual"></div>
+<div id="empty" class="info"><div class="eyebrow">EVERCRAFT VISUAL LAB</div><h1>Building what's next.</h1><p id="message">Awaiting an approved public recording. No private work is displayed.</p><div id="detail">The stream is not connected to TikTok or real-time Systemia telemetry.</div></div>
+<div id="receipt" aria-live="polite"><h2 id="title"></h2><p id="caption"></p><small id="truth"></small></div>
+</section>
+<footer><span>Source-first engineering · Human-reviewed releases</span><span id="status" role="status">NO PUBLIC FEED</span></footer>
+</main>
+<script>
+(()=>{'use strict';
+const $=id=>document.getElementById(id);
+const app=$('app'),visual=$('visual'),pattern=/^\/media\/[a-f0-9]{64}\.(?:png|jpg|jpeg|webp|mp4|webm)$/;
+const MIME={'png':'image/png','jpg':'image/jpeg','jpeg':'image/jpeg','webp':'image/webp','mp4':'video/mp4','webm':'video/webm'};
+let items=[],index=0,timer=null,refreshing=false,expiry=0,lastReceipt='';
+function hold(reason){clearTimeout(timer);items=[];visual.replaceChildren();app.classList.remove('approved');$('mode').textContent='RELEASE GATE: HOLD';$('status').textContent='NO APPROVED RECORDING';$('message').textContent=reason||'Awaiting an approved public recording.';$('detail').textContent='No live Systemia feed or TikTok broadcast is connected.'}
+function valid(feed){
+ if(!feed||feed.schema!=='evercraft.live.public-feed.v1'||feed.status!=='ready'||!Array.isArray(feed.items)||feed.items.length<1||feed.items.length>20)return false;
+ const created=Date.parse(feed.generated_at),expires=Date.parse(feed.expires_at),now=Date.now();
+ if(!Number.isFinite(created)||!Number.isFinite(expires)||created>now+5000||now-created>15*60*1000||now>=expires)return false;
+ for(const x of feed.items){
+   if(!x||typeof x.receipt_id!=='string'||!/^[-a-z0-9_]{8,100}$/.test(x.receipt_id)||typeof x.title!=='string'||x.title.length>100||typeof x.caption!=='string'||x.caption.length>280||x.content_kind!=='recorded_output'||x.truth_label!=='RECORDED OUTPUT / EDITOR-APPROVED, NOT LIVE TELEMETRY'||!Number.isInteger(x.seconds)||x.seconds<5||x.seconds>300||!pattern.test(x.src))return false;
+   const ext=x.src.split('.').pop(); if(MIME[ext]!==x.mime||x.sha256!==x.src.slice(7,71)||Date.parse(x.approved_at)>now)return false;
+ }
+ expiry=expires;return true;
+}
+function cue(pos){
+ if(!items.length||Date.now()>=expiry){hold('Feed expired or unavailable.');return}
+ clearTimeout(timer);index=pos%items.length;const x=items[index];visual.replaceChildren();
+ const media=document.createElement(x.mime.startsWith('video/')?'video':'img');
+ media.src=x.src; if(media.tagName==='VIDEO'){media.muted=true;media.autoplay=true;media.loop=false;media.playsInline=true;media.controls=false;}
+ media.addEventListener('error',()=>hold('An approved media file is unavailable.'));visual.append(media);
+ $('title').textContent=x.title;$('caption').textContent=x.caption;$('truth').textContent=x.truth_label+' · '+x.receipt_id;
+ app.classList.add('approved');$('mode').textContent='APPROVED RECORDING · NOT LIVE';$('status').textContent='CUE '+(index+1)+' / '+items.length;
+ timer=setTimeout(()=>cue(index+1),x.seconds*1000);
+}
+async function refresh(){
+ if(refreshing)return;refreshing=true;
+ try{
+   const response=await fetch('./public-feed.json',{cache:'no-store',credentials:'omit'});
+   if(!response.ok)throw Error('Feed not published');
+   const feed=await response.json();if(!valid(feed))throw Error('Approval missing, stale or expired');
+   const next=JSON.stringify(feed.items.map(x=>x.receipt_id));
+   items=feed.items;if(next!==lastReceipt){lastReceipt=next;cue(0)}
+ }catch(_){lastReceipt='';hold('The public approval feed is unavailable, stale, or held.')}
+ finally{refreshing=false}
+}
+document.addEventListener('visibilitychange',()=>{if(!document.hidden)refresh()});
+setInterval(refresh,45_000);setInterval(()=>{if(items.length&&Date.now()>=expiry)hold('Release expired.')},1000);
+hold();refresh();
+})();
+</script>
+</body></html>
