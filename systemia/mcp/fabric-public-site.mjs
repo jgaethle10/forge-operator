@@ -102,6 +102,10 @@ h1{font-size:clamp(48px,8vw,90px);line-height:.95;letter-spacing:-.065em;margin:
 .offer-step strong{display:block;margin-bottom:4px}
 .offer-proof{border-left:3px solid var(--green);padding:3px 0 3px 14px;color:#c8d8e9;margin-top:18px}
 .checkout-form{display:flex;flex-wrap:wrap;gap:10px;align-items:center;margin-top:30px}
+.checkout-email-field{display:flex;flex-direction:column;gap:7px;width:100%;max-width:460px}
+.checkout-email-field label{font-size:14px;font-weight:700}
+.checkout-email-field input{font:inherit;color:var(--text);background:var(--panel);border:1px solid #456188;border-radius:10px;padding:13px}
+.checkout-email-field small{font-size:12px;color:var(--muted)}
 .checkout-note{width:100%;color:var(--muted);font-size:13px;line-height:1.5;max-width:690px}
 .trust{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin:34px 0 76px}
 .trust div,.card,.prompt,.doc{
@@ -335,6 +339,7 @@ export function renderOfferPage(item){
     '<form class="checkout-form" method="post" action="/api/offers/'+encodeURIComponent(copy.slug)+'/checkout">',
     '<input type="hidden" name="user_confirmed" value="true">',
     '<input type="hidden" name="idempotency_key" value="'+escapeHtml(idempotencyKey)+'">',
+    '<div class="checkout-email-field"><label for="customer-email">Email for your receipt and service handoff</label><input id="customer-email" name="customer_ref" type="email" autocomplete="email" inputmode="email" maxlength="254" placeholder="you@example.com" required><small>Used to associate your checkout with the correct Evercraft Payments order. No charge occurs on this page.</small></div>',
     '<button class="btn primary" type="submit">Continue to checkout · '+escapeHtml(price)+'</button>',
     '<a class="btn" href="/capabilities/'+encodeURIComponent(item.public_id)+'">See technical proof</a>',
     '<div class="checkout-note">Evercraft Payments prepares the checkout. Nothing is marked paid until settlement is verified.</div>',
