@@ -54,7 +54,10 @@ export function validateSiteSightExport(doc) {
     if (item.confidence === 'unknown' && ['verified','closed','dismissed'].includes(item.status)) {
       fail('unknown_confirmation', item.id + ' cannot be verified from unavailable visual evidence');
     }
-    if (item.status === 'inspection_required' && (item.confidence !== 'unknown' || !validDate(item.inspection_requested_at) || !nonempty(item.review_note))) {\n      fail('inspection_request', item.id + ' requires a dated manual field-inspection request');\n    }\n    if (item.status === 'closed' && (!nonempty(item.action_owner) ||
+    if (item.status === 'inspection_required' && (item.confidence !== 'unknown' || !validDate(item.inspection_requested_at) || !nonempty(item.review_note))) {
+      fail('inspection_request', item.id + ' requires a dated manual field-inspection request');
+    }
+    if (item.status === 'closed' && (!nonempty(item.action_owner) ||
        typeof item.closeout_note !== 'string' || item.closeout_note.trim().length < 16 ||
        !validDate(item.closed_at))) {
       fail('unsupported_closeout', item.id + ' is missing human corrective-action evidence');
