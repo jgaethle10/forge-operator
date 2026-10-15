@@ -180,15 +180,20 @@ try {
       lane: "operations",
     }),
   });
-  assert.equal(ravenExecution.status, 200);
+  // Home credentials and a private Raven bridge are not durable Systemia dispatch
+  // authorization. The legacy executor must hold before provider invocation.
+  assert.equal(ravenExecution.status, 409);
   const ravenExecutionBody = await ravenExecution.json();
-  assert.equal(ravenExecutionBody.ok, true);
-  assert.equal(ravenExecutionBody.state, "executed");
-  assert.equal(ravenExecutionBody.execution_performed, true);
+  assert.equal(ravenExecutionBody.ok, false);
+  assert.equal(ravenExecutionBody.state, "blocked");
+  assert.equal(ravenExecutionBody.execution_performed, false);
   assert.equal(ravenExecutionBody.base44_required, false);
   assert.equal(ravenExecutionBody.external_side_effects_authorized, false);
-  assert.equal(ravenExecutionBody.output.results.length, 6);
-  assert.match(ravenExecutionBody.output.summary, /Compute handoff verified/);
+  assert.equal(ravenExecutionBody.receipt.result, "held");
+  assert.equal(ravenExecutionBody.receipt.durable_checkpoint_persisted, false);
+  assert.equal(ravenExecutionBody.receipt.external_effect_verified, false);
+  assert.equal(ravenExecutionBody.receipt.capability_key, "raven.nexus.readonly-team-review.v1");
+  assert.equal(ravenExecutionBody.output, null);
   assert.equal(JSON.stringify(ravenExecutionBody).includes(ravenToken), false);
 
   const logout = await fetch(job.result.local_url + "/api/logout", {
