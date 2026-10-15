@@ -92,7 +92,7 @@ def restore(folder, output_folder):
     if folder.is_symlink() or output_folder.is_symlink():
         raise ValueError("Unsafe symlinked parcel/output folder")
     manifest = json.loads((folder / "parcel-manifest.json").read_text(encoding="utf-8"))
-    if manifest.get("format") != "evercraft-parcel-v0.1":
+    if not isinstance(manifest, dict) or manifest.get("format") != "evercraft-parcel-v0.1":
         raise ValueError("Unsupported manifest format")
     name = manifest.get("original_name")
     if not isinstance(name, str) or name in ("", ".", "..") or Path(name).name != name or "\\" in name or any(ord(c) < 32 for c in name) or ":" in name:
@@ -194,7 +194,7 @@ def restore_zip(archive, output_folder):
             raise ValueError("Original exceeds 64 MiB pilot budget")
         with z.open(by_name['parcel-manifest.json']) as mf:
             manifest = json.loads(mf.read(ZIP_MAX_MANIFEST + 1).decode('utf-8'))
-        if manifest.get('format') != 'evercraft-parcel-v0.1':
+        if not isinstance(manifest, dict) or manifest.get('format') != 'evercraft-parcel-v0.1':
             raise ValueError("Unsupported manifest format")
         parts = manifest.get('parts')
         if not isinstance(parts, list) or len(parts) > ZIP_MAX_PARTS:
@@ -233,7 +233,7 @@ def main():
             print(f"Verified and restored: {restore(args.parcel_folder, args.output_folder)}")
         else:
             print(f"Verified ZIP and restored: {restore_zip(args.parcel_zip, args.output_folder)}")
-    except (ValueError, OSError, KeyError, TypeError, json.JSONDecodeError) as exc:
+    except (ValueError, OSError, KeyError, TypeError, UnicodeError, json.JSONDecodeError, zipfile.BadZipFile, zipfile.LargeZipFile) as exc:
         print("FAIL CLOSED:", exc, file=sys.stderr)
         sys.exit(1)
 
