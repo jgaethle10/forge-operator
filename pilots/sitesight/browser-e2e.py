@@ -105,18 +105,27 @@ with sync_playwright() as playwright, tempfile.TemporaryDirectory() as scratch:
         # Unknown/occluded frames must not offer visual verification.
         page.locator('#scenario').select_option('poor')
         check(page.locator('[data-act="verify"]').count() == 0, 'Unknown PPE could be visually approved')
-        check(page.locator('button:disabled').count() >= 2, 'Manual inspection warning control missing')
+        check(page.locator('[data-act="dismiss"]').count() == 0, 'Unknown PPE could be visually dismissed')
+        check(page.locator('[data-act="inspect"]').count() == 2, 'Manual field-inspection controls missing')
+        page.locator('[data-act="inspect"][data-id="P1"]').click()
+        check(page.locator('#nOpen').inner_text() == '2', 'Inspection needed was incorrectly counted as closed')
+        check('INSPECTION REQUESTED' in page.locator('[data-item="P1"]').inner_text(),
+              'The site inspection request was not kept visible')
         if evidence_dir:
-            page.screenshot(path=str(evidence_dir / '05-unverifiable-ppe.png'), full_page=True)
+            page.screenshot(path=str(evidence_dir / '05-field-inspection-requested.png'), full_page=True)
         with page.expect_download() as info:
             page.locator('#export').click()
         poor = Path(scratch) / 'occluded.json'
         info.value.save_as(str(poor))
         unclear = json.loads(poor.read_text(encoding='utf-8'))
         check(
-            all(item['status'] == 'pending' and item['confidence'] == 'unknown'
-                for item in unclear['items']),
-            'Unknown PPE was silently promoted to a confirmed violation'
+            {(item['id'], item['confidence'], item['status']) for item in unclear['items']}
+            == {('P1', 'unknown', 'inspection_required'), ('P2', 'unknown', 'pending')},
+            'Unknown PPE must remain open for physical inspection'
+        )
+        check(
+            [e['action'] for e in unclear['events']] == ['demo_reset', 'field_inspection_requested'],
+            'Manual inspection request was not recorded in evidence history'
         )
         check(run_cli(poor).returncode == 0, 'Valid pending poor-visibility export was rejected')
         check(not js_errors, 'Browser errors: ' + ', '.join(js_errors))
@@ -126,7 +135,7 @@ with sync_playwright() as playwright, tempfile.TemporaryDirectory() as scratch:
             'result': 'PASS', 'mode': 'synthetic_only',
             'checks': ['dismissal', 'verification', 'human_closeout', 'browser_json_export',
                        'node_evidence_validator', 'event_tamper_rejection',
-                       'occlusion_gate', 'browser_errors'],
+                       'occlusion_field_inspection', 'browser_errors'],
             'customer_ready': False, 'live_ppe_model': False,
             'systemia_admitted': False, 'checkout_connected': False,
         }, indent=2))
