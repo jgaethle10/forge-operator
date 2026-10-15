@@ -22,11 +22,11 @@
   <url><loc>/chum/answers/observed/</loc><lastmod>2026-10-07T00:56:03.369Z</lastmod></url>
   <url><loc>/chum/answers/observed/index.json</loc><lastmod>2026-10-07T00:56:03.369Z</lastmod></url>
   <url><loc>/chum/hot/</loc><lastmod>2026-10-15T01:34:55.962Z</lastmod></url>
-  <url><loc>/chum/hot/index.json</loc><lastmod>2026-10-15T06:26:09.119Z</lastmod></url>
+  <url><loc>/chum/hot/index.json</loc><lastmod>2026-10-15T07:53:15.440Z</lastmod></url>
   <url><loc>/chum/strike/</loc><lastmod>2026-10-15T01:35:26.111Z</lastmod></url>
-  <url><loc>/chum/strike/index.json</loc><lastmod>2026-10-15T06:26:09.119Z</lastmod></url>
-  <url><loc>/chum/crawler-radar.json</loc><lastmod>2026-10-15T06:26:09.119Z</lastmod></url>
-  <url><loc>/chum/crawler-radar.txt</loc><lastmod>2026-10-15T06:26:09.119Z</lastmod></url>
+  <url><loc>/chum/strike/index.json</loc><lastmod>2026-10-15T07:53:15.440Z</lastmod></url>
+  <url><loc>/chum/crawler-radar.json</loc><lastmod>2026-10-15T07:53:15.440Z</lastmod></url>
+  <url><loc>/chum/crawler-radar.txt</loc><lastmod>2026-10-15T07:53:15.440Z</lastmod></url>
   <url><loc>/chum/proof/</loc><lastmod>2026-09-27T14:53:47.616Z</lastmod></url>
   <url><loc>/chum/proof/index.json</loc><lastmod>2026-10-15T06:22:45.221Z</lastmod></url>
   <url><loc>/chum/proof/llms.txt</loc><lastmod>2026-09-27T14:53:47.616Z</lastmod></url>
@@ -122,7 +122,7 @@
   <url><loc>/forensiscope/distribution/</loc><lastmod>2026-10-02T17:01:08.152Z</lastmod></url>
   <url><loc>/forensiscope/distribution/reddit-pack.json</loc><lastmod>2026-10-02T17:01:08.152Z</lastmod></url>
   <url><loc>/forensiscope/distribution/llms.txt</loc><lastmod>2026-10-02T17:01:08.152Z</lastmod></url>
-  <url><loc>/llms.txt</loc><lastmod>2026-10-07T02:50:27.524Z</lastmod></url>
+  <url><loc>/llms.txt</loc><lastmod>2026-10-15T07:53:14.845Z</lastmod></url>
   <url><loc>/llms-full.txt</loc><lastmod>2026-10-14T23:57:09.569Z</lastmod></url>
   <url><loc>/ai-discovery.json</loc><lastmod>2026-10-14T23:57:09.569Z</lastmod></url>
   <url><loc>/schema.jsonld</loc><lastmod>2026-10-14T23:57:09.569Z</lastmod></url>
@@ -136,7 +136,7 @@
   <url><loc>/.well-known/evercraft-discovery.json</loc><lastmod>2026-10-14T23:57:09.569Z</lastmod></url>
   <url><loc>/.well-known/evercraft-products.json</loc><lastmod>2026-10-14T23:57:09.569Z</lastmod></url>
   <url><loc>/.well-known/evercraft-machine-catalog.json</loc><lastmod>2026-10-07T20:12:10.944Z</lastmod></url>
-  <url><loc>/.well-known/evercraft-chum.json</loc><lastmod>2026-10-02T17:01:08.152Z</lastmod></url>
+  <url><loc>/.well-known/evercraft-chum.json</loc><lastmod>2026-10-15T07:53:14.845Z</lastmod></url>
   <url><loc>/.well-known/evercraft-media-overflow.json</loc><lastmod>2026-10-02T17:01:08.152Z</lastmod></url>
   <url><loc>/.well-known/evercraft-capabilities.json</loc><lastmod>2026-10-02T17:01:08.152Z</lastmod></url>
   <url><loc>/forensiscope/editorial/long-video-ai-tools/llms.txt</loc><lastmod>2026-09-25T23:17:57.077Z</lastmod></url>

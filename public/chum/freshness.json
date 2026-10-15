@@ -2,7 +2,7 @@
   "schema": "evercraft.chum.crawl-pressure.v1",
   "provider": "Evercraft LLC",
   "coordinator": "CHUM",
-  "updated_at": "2026-10-15T06:26:09.119Z",
+  "updated_at": "2026-10-15T07:53:15.440Z",
   "purpose": "Content-hash-backed freshness signals for public Evercraft discovery surfaces. A freshness signal requests attention; it does not prove indexing, ranking, recommendation, citation or provider pickup.",
   "indexnow": {
     "supported": true,
@@ -12,22 +12,22 @@
   "latest_change_batch": [
     {
       "path": "/chum/crawler-radar.json",
-      "last_changed": "2026-10-15T06:26:09.119Z",
+      "last_changed": "2026-10-15T07:53:15.440Z",
       "priority": 80
     },
     {
       "path": "/chum/crawler-radar.txt",
-      "last_changed": "2026-10-15T06:26:09.119Z",
+      "last_changed": "2026-10-15T07:53:15.440Z",
       "priority": 80
     },
     {
       "path": "/chum/hot/index.json",
-      "last_changed": "2026-10-15T06:26:09.119Z",
+      "last_changed": "2026-10-15T07:53:15.440Z",
       "priority": 80
     },
     {
       "path": "/chum/strike/index.json",
-      "last_changed": "2026-10-15T06:26:09.119Z",
+      "last_changed": "2026-10-15T07:53:15.440Z",
       "priority": 80
     }
   ],
@@ -35,26 +35,38 @@
     {
       "path": "/chum/crawler-radar.json",
       "url": "/chum/crawler-radar.json",
-      "last_changed": "2026-10-15T06:26:09.119Z",
+      "last_changed": "2026-10-15T07:53:15.440Z",
       "priority": 80
     },
     {
       "path": "/chum/crawler-radar.txt",
       "url": "/chum/crawler-radar.txt",
-      "last_changed": "2026-10-15T06:26:09.119Z",
+      "last_changed": "2026-10-15T07:53:15.440Z",
       "priority": 80
     },
     {
       "path": "/chum/hot/index.json",
       "url": "/chum/hot/index.json",
-      "last_changed": "2026-10-15T06:26:09.119Z",
+      "last_changed": "2026-10-15T07:53:15.440Z",
       "priority": 80
     },
     {
       "path": "/chum/strike/index.json",
       "url": "/chum/strike/index.json",
-      "last_changed": "2026-10-15T06:26:09.119Z",
+      "last_changed": "2026-10-15T07:53:15.440Z",
       "priority": 80
+    },
+    {
+      "path": "/llms.txt",
+      "url": "/llms.txt",
+      "last_changed": "2026-10-15T07:53:14.845Z",
+      "priority": 86
+    },
+    {
+      "path": "/.well-known/evercraft-chum.json",
+      "url": "/.well-known/evercraft-chum.json",
+      "last_changed": "2026-10-15T07:53:14.845Z",
+      "priority": 84
     },
     {
       "path": "/chum/proof/forensiscope.json",
@@ -1517,18 +1529,6 @@
     {
       "path": "/chum/answers/doors/find-the-bottleneck-in-aggregate-material-flow-9e5ea70173/",
       "url": "/chum/answers/doors/find-the-bottleneck-in-aggregate-material-flow-9e5ea70173/",
-      "last_changed": "2026-10-07T02:56:26.782Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/increase-tons-per-hour-by-improving-fleet-coordination-312f83c4d8.json",
-      "url": "/chum/answers/doors/increase-tons-per-hour-by-improving-fleet-coordination-312f83c4d8.json",
-      "last_changed": "2026-10-07T02:56:26.782Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/increase-tons-per-hour-by-improving-fleet-coordination-312f83c4d8/",
-      "url": "/chum/answers/doors/increase-tons-per-hour-by-improving-fleet-coordination-312f83c4d8/",
       "last_changed": "2026-10-07T02:56:26.782Z",
       "priority": 100
     }
