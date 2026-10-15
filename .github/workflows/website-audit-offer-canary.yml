@@ -12,6 +12,8 @@ on:
       - "systemia/distribution/website-audit-payment-evidence.test.mjs"
       - "systemia/mcp/website-audit-checkout-boundary.mjs"
       - "systemia/mcp/website-audit-checkout-boundary.test.mjs"
+      - "systemia/mcp/website-audit-buyer-admission.mjs"
+      - "systemia/mcp/website-audit-buyer-admission.test.mjs"
       - "tests/fabric-offer-pages.test.mjs"
       - "systemia/distribution/website-audit-hosted-checkout-canary.mjs"
       - "systemia/distribution/website-audit-hosted-checkout-canary.test.mjs"
@@ -26,6 +28,8 @@ on:
       - "systemia/distribution/website-audit-payment-evidence.test.mjs"
       - "systemia/mcp/website-audit-checkout-boundary.mjs"
       - "systemia/mcp/website-audit-checkout-boundary.test.mjs"
+      - "systemia/mcp/website-audit-buyer-admission.mjs"
+      - "systemia/mcp/website-audit-buyer-admission.test.mjs"
       - "tests/fabric-offer-pages.test.mjs"
       - "systemia/distribution/website-audit-hosted-checkout-canary.mjs"
       - "systemia/distribution/website-audit-hosted-checkout-canary.test.mjs"
@@ -49,7 +53,7 @@ jobs:
         with:
           node-version: 22
       - name: Validate buyer-path audit evidence contract
-        run: node --test systemia/distribution/website-audit-buyer-probe.test.mjs systemia/distribution/website-audit-payment-evidence.test.mjs systemia/mcp/website-audit-checkout-boundary.test.mjs tests/fabric-offer-pages.test.mjs
+        run: node --test systemia/distribution/website-audit-buyer-probe.test.mjs systemia/distribution/website-audit-payment-evidence.test.mjs systemia/mcp/website-audit-checkout-boundary.test.mjs tests/fabric-offer-pages.test.mjs systemia/mcp/website-audit-buyer-admission.test.mjs
       - name: Independently inspect exact $49 buyer page with GET only
         run: |
           mkdir -p artifacts/commercial
