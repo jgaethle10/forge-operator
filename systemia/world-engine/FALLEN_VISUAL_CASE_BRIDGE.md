@@ -45,3 +45,16 @@ Coverage:
 2. Time-bound path and phase animation using existing World Engine tick-bound state, without misrepresenting authored motion as observations.
 3. Geometry source/rights clearance, real coordinate frames and external data ingestion as separately approved tasks.
 4. Fully verified browser → customer intake → payment → deliverable path before external commercial launch.
+
+## RC13 deterministic authored motion
+
+The existing native World Engine scene has a **bounded, human-authored timeline**.
+
+- `buildFallenVisualMotionLedger(handoff, projection, {ticks})` creates canonical Engine `teleport` inputs for 1 to 240 ticks at 60 Hz.
+- Sports play markers follow the *authored* RC13 route polylines at constant speed measured only in schematic presentation space; these are **not** real player tracking data, physical trajectories, field yards or athlete evaluations.
+- The response scene includes an explicitly fictional `rc13:scenario-front` strip that advances through the schematic display; it is **not** flood water, inundation forecast, hydrology, danger zone, evacuation advice or real incident status.
+- Native `EvercraftWorldRuntime.run(ticks, ledger.events)` produces snapshots that feed `compileVisualFrame` and, in turn, the existing WebGPU render planner. Both motion and source-projection receipts must verify before use.
+- The motion ledger has deterministic content hashes and immutable truth-boundary assertions: `sourceMotionClass: authored_schematic_not_observed`, `release_state: human_review_required`, and both authority flags `false`. A hash alone does not authenticate an external supplier.
+- Tests check mid-play/end-play positional change, visual-frame digests, deterministic replay, schematic constant arc-length, tampering, wrong-projection rejection and frame budget limits.
+
+**Still outstanding:** hardware-rendered pixels and Safari validation, physical/geodetic calibration (where appropriate), licensed real sources, media rights, user privacy/security, and customer-facing deployment. Existing Systemia outreach holds remain active.
