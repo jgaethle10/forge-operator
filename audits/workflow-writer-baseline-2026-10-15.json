@@ -1,0 +1,24 @@
+{
+  "schema": "evercraft.audit.workflow-writer-baseline.v1",
+  "observed_at": "2026-10-15",
+  "note": "Observed legacy exceptions only, not a security approval. Removal is welcome; adding a writer requires separate Systemia and founder review.",
+  "existing_direct_main_writers": [
+    ".github/workflows/chum-crawl-pressure.yml",
+    ".github/workflows/chum-watershed.yml",
+    ".github/workflows/direct-product-doors.yml",
+    ".github/workflows/evercraft-cfb-power-rankings.yml",
+    ".github/workflows/evercraft-home-owned-edge-canary.yml",
+    ".github/workflows/evercraft-journal-owned.yml",
+    ".github/workflows/evercraft-proof-factory.yml",
+    ".github/workflows/evercraft-public-edge-canary.yml",
+    ".github/workflows/publish-mcp-registry.yml",
+    ".github/workflows/reconcile-public-mcp-registry.yml",
+    ".github/workflows/saban-discovery-conformance-policy.yml",
+    ".github/workflows/systemia-ionos-domain-control.yml"
+  ],
+  "protected_commercial_paths": [
+    "public/.well-known/evercraft-payments-buyer-doors.json",
+    "public/.well-known/evercraft-chum.json",
+    "public/llms.txt"
+  ]
+}
