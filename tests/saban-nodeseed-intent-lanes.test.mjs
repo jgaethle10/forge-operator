@@ -3,7 +3,8 @@ import assert from 'node:assert/strict';
 import fs from 'node:fs';
 import os from 'node:os';
 import path from 'node:path';
-import {executeNodeSeedIntentLanes,withNodeSeedDrainLock,drainNodeSeedExecutionIntents,safeNodeSeedExecutionError} from '../systemia/saban/nodeseed-intent-executor.mjs';
+import {createHash} from 'node:crypto';
+import {executeNodeSeedIntentLanes,withNodeSeedDrainLock,drainNodeSeedExecutionIntents,safeNodeSeedExecutionError,verifyNodeSeedJobReceipts} from '../systemia/saban/nodeseed-intent-executor.mjs';
 
 const intent=(intent_id,job_id,node_id)=>({intent_id,job_id,node_id});
 
@@ -190,4 +191,57 @@ test('remote broker errors are redacted before persistence',()=>{
   assert.equal(safeNodeSeedExecutionError(new Error('nodeseed_registered_worker_receipt_hash_required')),
     'nodeseed_registered_worker_receipt_hash_required');
   assert.equal(safeNodeSeedExecutionError({status:0,message:'payment token secret'}),'nodeseed_executor_failure_redacted');
+});
+
+const canonical=value=>Array.isArray(value)?value.map(canonical):
+  value&&typeof value==='object'?Object.fromEntries(Object.keys(value).sort().map(k=>[k,canonical(value[k])])):value;
+const digest=(v,sorted=false)=>'sha256:'+createHash('sha256').update(JSON.stringify(sorted?canonical(v):v)).digest('hex');
+function fixtureReceipts(){
+  const intent={node_id:'hp-owned',workload_class:'systemia.content-hash.v1',idempotency_key:'node-job-1'};
+  const lease={lease_id:'bounded-lease-1'};
+  const payload={probe:'harmless',n:42};
+  const w={
+    schema:'evercraft.compute.registered-worker-receipt.v1',
+    node_id:intent.node_id,workload_class:intent.workload_class,idempotency_key:intent.idempotency_key,
+    request_hash:digest({...intent,payload},true),
+    result:{digest:'sha256:'+'a'.repeat(64)},
+    deduplicated:false,registered_workload_only:true,completed_at:'2026-10-15T16:00:00Z',
+  };
+  const worker_receipt={...w,receipt_hash:digest(w,true)};
+  const r={
+    schema:'evercraft.compute.receipt.v1',
+    node_id:intent.node_id,seq:3,type:'registered-workload.executed',
+    at:'2026-10-15T16:00:00Z',previous_hash:'GENESIS',
+    lease_id:lease.lease_id,workload_class:intent.workload_class,
+    idempotency_key:intent.idempotency_key,
+    worker_receipt_hash:worker_receipt.receipt_hash
+  };
+  const receipt={...r,receipt_hash:digest(r)};
+  const result={node_id:intent.node_id,workload_class:intent.workload_class,
+    idempotency_key:intent.idempotency_key,worker_receipt,receipt};
+  return {intent,lease,payload,result};
+}
+test('actual NodeSeed receipt format verifies exact payload, lease, node and worker digest',()=>{
+  const f=fixtureReceipts();
+  assert.equal(verifyNodeSeedJobReceipts(f).source_integrity_verified,true);
+  assert.equal(verifyNodeSeedJobReceipts(f).device_signature_verified,false);
+  const replay=structuredClone(f);
+  replay.result.worker_receipt.deduplicated=true;
+  replay.result.receipt.type='registered-workload.reused';
+  const {receipt_hash,...receiptBody}=replay.result.receipt;
+  replay.result.receipt.receipt_hash=digest(receiptBody);
+  assert.equal(verifyNodeSeedJobReceipts(replay).source_integrity_verified,true);
+});
+test('NodeSeed receipt checks reject modified digests, payloads, node and lease substitutions',()=>{
+  const f=fixtureReceipts();
+  const tamper=structuredClone(f);tamper.result.worker_receipt.result.digest='sha256:'+'b'.repeat(64);
+  assert.throws(()=>verifyNodeSeedJobReceipts(tamper),/nodeseed_execution_receipt_hash_mismatch/);
+  const payload=structuredClone(f);payload.payload.probe='different';
+  assert.throws(()=>verifyNodeSeedJobReceipts(payload),/nodeseed_execution_receipt_binding_mismatch/);
+  const lease=structuredClone(f);lease.lease.lease_id='replayed-old-lease';
+  assert.throws(()=>verifyNodeSeedJobReceipts(lease),/nodeseed_execution_receipt_binding_mismatch/);
+  const node=structuredClone(f);node.intent.node_id='not-the-authorized-machine';
+  assert.throws(()=>verifyNodeSeedJobReceipts(node),/nodeseed_execution_receipt_binding_mismatch/);
+  const missing=structuredClone(f);delete missing.result.receipt.receipt_hash;
+  assert.throws(()=>verifyNodeSeedJobReceipts(missing),/nodeseed_compute_execution_receipt_required/);
 });
