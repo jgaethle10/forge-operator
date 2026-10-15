@@ -933,8 +933,8 @@ export async function startFabricLocalRuntime({
             body:JSON.stringify(directOffer?{
               action:'create_checkout',offer_key:directOffer.offer_key,
               order_key:'fabric-'+slug+'-'+idempotencyKey,customer_email:customerRef,
-              source_ref:'fabric-native-offer|'+slug,return_origin:'https://fabric.systemiacommandcenters.com',
-              success_path:'/offers/'+slug+'?payment=processing',cancel_path:'/offers/'+slug+'?payment=cancelled',
+              source_ref:'fabric-native-offer|'+slug,return_origin:'https://findmypart.base44.app',
+              success_path:'/functions/evercraftBuy?payment=processing',cancel_path:'/functions/evercraftBuy?offer='+slug+'&payment=cancelled',
             }:{
               user_confirmed:true,
               capability_key:capabilityKey,
