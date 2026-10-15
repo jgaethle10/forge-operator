@@ -16,7 +16,7 @@ function mockHandler(healthy=true) {
     }
     if(url===SURFACES.central_quote) {
       assert.deepEqual(body,{action:'quote',offer_key:OFFER_KEY});
-      return response(200,{ok:true,offer:{offer_key:OFFER_KEY,amount_cents:4900,currency:'usd'},fulfillment:{ready:true}});
+      return response(200,{ok:true,offer:{offer_key:OFFER_KEY,amount_cents:4900,currency:'usd'},fulfillment:{ready:true,audit_context_custody:{schema:'evercraft.audit.checkout-context-custody.v1',required_before_checkout:true,requires_stored_context_readback:true,no_payment_created_by_quote:true}}});
     }
     if(url===SURFACES.raven_context_preflight){
       assert.equal(options.method,'POST');
