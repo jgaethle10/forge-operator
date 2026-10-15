@@ -57,3 +57,13 @@ test('bounded recovery makes missed downtime visible',()=>{
     assert.equal(b.world.recovery.missed_ticks,20);
   }finally{fs.rmSync(dir,{force:true,recursive:true});}
 });
+
+test('households and aspirations persist through multiple days',()=>{
+  const w=createWorld(1000,72);
+  assert.equal(new Set(w.actors.map(a=>a.household)).size,4);
+  for(let i=1;i<=950;i++)advanceWorld(w,1000+i*REAL_TICK_MS);
+  assert.ok(w.actors.every(a=>a.goal_milestones>=1));
+  assert.ok(w.actors.every(a=>Number.isFinite(a.goal_progress)&&a.goal_progress>=0&&a.goal_progress<100));
+  assert.ok(w.events.some(e=>e.type==='milestone'));
+  assert.ok(w.actors.every(a=>typeof a.aspiration==='string'&&a.aspiration.length>5));
+});
