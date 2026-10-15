@@ -13,9 +13,9 @@ The Shipping Department already owns package materialization, provider idempoten
 The independent Shipping verifier must observe the evidence before signing. For attached files, inspect the **provider-stored draft attachment bytes** and match each filename/hash against the frozen package. For public or scoped links, use a separate signed-out or recipient-scoped session and verify the actual response bytes, not merely a Drive permission row or HTTP 200 HTML shell. Inspect all supporting references and require explicit permission for each.
 
 ### Signing and authority
-The verifier creates a detached HMAC-SHA-256 signature over the canonical manifest, including release key, fingerprint, recipient identity, channel, package digest, artifacts, all evidence claims, and timestamps. Only the independent verifier and authorized verifier runtime can access the signing secret. Producer agents and external recipients must **never** receive it. Do not write keys, user data, or private link inventories into this public repository.
+The verifier creates a detached Ed25519 signature over the canonical manifest, including release key, fingerprint, recipient identity, channel, package digest, artifacts, all evidence claims, and timestamps. Only the independent Shipping verifier holds the private signing key. Senders verify with a trusted public key provisioned in `EVERCRAFT_SHIPPING_VERIFIER_PUBLIC_KEY`, outside sender-controlled requests. Producer agents and external recipients must **never** receive the private key. Do not write keys, user data, or private link inventories into this public repository.
 
-The sample tests use fixture-only credentials. Production **must** provision protected key custody, authentic provider/Drive access probes, replay handling, auditor separation, and trusted runtime wiring.
+The sample tests use fixture-only credentials. Production **must** provision protected private-key custody, pin the correct public verification key, authentic provider/Drive access probes, replay handling, auditor separation, and trusted runtime wiring.
 
 ### Outcome states
 - `hold`: evidence absent, expired, unsupported, inconsistent or untrusted. No commercial-send permission.
@@ -24,6 +24,6 @@ The sample tests use fixture-only credentials. Production **must** provision pro
 Separately, Systemia's canonical outbound-contact approval/reservation must be live and valid immediately before a consequential customer message. Shipment idempotency, sender authorization, provider send receipt and sent-copy verification remain independent steps. A successful preflight is not a sent message, recipient open, customer acceptance, or revenue.
 
 ## Integration boundary
-This PR adds verified primitives and mandatory test coverage to Forge's existing Shipping suite. It does **not** yet force every existing send adapter through this check, configure a production verifier, authorize any outgoing Port/partner email, change Drive visibility, or deploy another service. Runtime integration requires an authorized Systemia admission, a real signer service, exact-package receipt binding, audit log and an independently observed end-to-end canary.
+This PR adds verified primitives and mandatory test coverage and now fails closed in Forge's `dispatchVerifiedShipment` transport path, including retry attempts. It does **not** wire every other direct email/Clip sender through that runner, configure a production signer or public verifier key, authorize the Port/partner email, change Drive visibility, or deploy another service. Runtime integration requires an authorized Systemia admission, a real signer service, exact-package receipt binding, audit log and an independently observed end-to-end canary.
 
 **Security default:** if live verification is unavailable, release remains on hold. Do not silently enable an unsigned fallback.
