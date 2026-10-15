@@ -4,6 +4,7 @@ import { readFileSync } from 'node:fs';
 
 const catalog = JSON.parse(readFileSync(new URL('../public/.well-known/evercraft-payments-buyer-doors.json', import.meta.url), 'utf8'));
 const ownedBuyerHost = 'findmypart.base44.app';
+const liveBuyerHome = 'https://findmypart.base44.app/functions/evercraftBuy';
 const approved = new Map([
   ['website-audit', 4900], ['workflow-xray', 25000],
   ['browser-diagnosis', 14900], ['payments-pilot', 75000],
@@ -24,6 +25,13 @@ test('only the thirteen observed, scoped offers enter the public buy directory',
   assert.equal(new Set(catalog.offers.map(x => x.offer_key)).size, approved.size);
   assert.match(catalog.merchant_truth, /not receipts/i);
   assert.equal(catalog.revenue_verified_usd, null);
+  assert.equal(catalog.live_buyer_home, liveBuyerHome);
+  assert.equal(catalog.buyer_link_observation?.method, 'external_http_get_only');
+  assert.equal(catalog.buyer_link_observation?.passed_offer_count, 13);
+  assert.equal(catalog.buyer_link_observation?.checkout_post_retested, false);
+  assert.equal(catalog.buyer_link_observation?.provider_receipt_observed, false);
+  assert.equal(catalog.broken_prior_buyer_home?.observed_status, 404);
+  assert.equal(catalog.broken_prior_buyer_home?.routing, 'do_not_publish');
   for (const offer of catalog.offers) {
     assert.equal(approved.get(offer.slug), offer.amount_cents, 'Unexpected price or slug: ' + offer.slug);
     assert.equal(offer.currency, 'usd');
@@ -37,6 +45,7 @@ test('only the thirteen observed, scoped offers enter the public buy directory',
     assert.equal(url.hostname, ownedBuyerHost);
     assert.equal(url.pathname, '/functions/evercraftBuy');
     assert.equal(url.searchParams.get('offer'), offer.slug);
+    assert.equal(url.origin + url.pathname, liveBuyerHome);
     assert.equal([...url.searchParams.keys()].length, 1);
     assert.ok(!/aliev|rivet|roasted/i.test(offer.offer_key));
   }
@@ -52,8 +61,14 @@ test('no direct Stripe sessions, credentials or unapproved product sales are pub
   }
   assert.equal(catalog.native_specialist_doors.length, 3);
   for (const entry of catalog.native_specialist_doors) {
-    const url = new URL(entry.url);
-    assert.equal(url.protocol, 'https:');
     assert.ok(entry.checkout_state !== 'paid_verified');
+    // Separate specialist intakes are not verified checkout destinations.
+    // Preserve null rather than inventing a URL or advertising broken routing.
+    if (entry.url !== null) {
+      const url = new URL(entry.url);
+      assert.equal(url.protocol, 'https:');
+    } else {
+      assert.ok(['separate_intake_not_full_transaction_qa', 'not_asserted'].includes(entry.checkout_state));
+    }
   }
 });

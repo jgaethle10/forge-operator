@@ -4,15 +4,21 @@ on:
   pull_request:
     paths:
       - 'public/.well-known/evercraft-payments-buyer-doors.json'
+      - 'public/.well-known/evercraft-chum.json'
+      - 'public/llms.txt'
       - 'tests/evercraft-payments-buyer-doors.test.mjs'
       - 'scripts/probe-evercraft-payments-buyer-doors.mjs'
+      - 'scripts/probe-evercraft-llm-commercial-routing.mjs'
       - '.github/workflows/evercraft-payments-buyer-door-canary.yml'
   push:
     branches: [main]
     paths:
       - 'public/.well-known/evercraft-payments-buyer-doors.json'
+      - 'public/.well-known/evercraft-chum.json'
+      - 'public/llms.txt'
       - 'tests/evercraft-payments-buyer-doors.test.mjs'
       - 'scripts/probe-evercraft-payments-buyer-doors.mjs'
+      - 'scripts/probe-evercraft-llm-commercial-routing.mjs'
       - '.github/workflows/evercraft-payments-buyer-door-canary.yml'
   schedule:
     - cron: '0 */6 * * *'
@@ -38,3 +44,5 @@ jobs:
         run: node --test tests/evercraft-payments-buyer-doors.test.mjs
       - name: Check public purchase forms without creating payments
         run: node scripts/probe-evercraft-payments-buyer-doors.mjs
+      - name: Verify public AI commerce front doors and 13 exact selected-offer URLs by GET only
+        run: node scripts/probe-evercraft-llm-commercial-routing.mjs
