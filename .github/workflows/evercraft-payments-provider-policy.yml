@@ -1,0 +1,34 @@
+name: Evercraft Payments merchant and provider policy
+
+on:
+  pull_request:
+    paths:
+      - 'systemia/payments/merchant-economics.mjs'
+      - 'systemia/payments/multi-provider-route-plan.mjs'
+      - 'systemia/payments/merchant-opportunity-scanner.mjs'
+      - 'systemia/payments/provider-evidence-gate.mjs'
+      - 'public/payments/merchant-lab.html'
+      - 'tests/merchant-economics.test.mjs'
+      - 'tests/multi-provider-route-plan.test.mjs'
+      - 'tests/merchant-opportunity-scanner.test.mjs'
+      - 'tests/provider-evidence-gate.test.mjs'
+      - 'tests/payments-merchant-lab.test.mjs'
+      - '.github/workflows/evercraft-payments-provider-policy.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  provider-policy-tests:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Set up Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Test read-only merchant product, provider and evidence gates
+        run: node --test tests/merchant-economics.test.mjs tests/multi-provider-route-plan.test.mjs tests/merchant-opportunity-scanner.test.mjs tests/provider-evidence-gate.test.mjs tests/payments-merchant-lab.test.mjs

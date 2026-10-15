@@ -1,0 +1,218 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#0b1318">
+<meta name="robots" content="noindex,nofollow">
+<title>Evercraft Payments | Merchant OS Lab</title>
+<meta name="description" content="An interactive, clearly labeled demonstration of merchant payment cost intelligence and permissioned Systemia growth recommendations. No live money movement.">
+<style>
+:root{color-scheme:dark;--bg:#0b1318;--panel:#101e25;--card:#152730;--line:#30424a;--ink:#f0f6f3;--muted:#9fb3bb;--green:#aeffc9;--teal:#75e3d1;--gold:#e5cd8d;--red:#f5b0a6}
+*{box-sizing:border-box}
+body{margin:0;background:radial-gradient(ellipse 1000px 480px at 95% -10%,#1b4242 0%,transparent 75%),var(--bg);color:var(--ink);font:15px/1.55 Inter,ui-sans-serif,system-ui,-apple-system,Segoe UI,sans-serif}
+a{color:var(--teal)}
+.shell{display:grid;grid-template-columns:238px minmax(0,1fr);min-height:100vh}
+aside{background:#0c171c;border-right:1px solid var(--line);padding:27px 20px;display:flex;flex-direction:column;gap:26px}
+.brand{display:flex;align-items:center;gap:10px;font-size:13px;letter-spacing:.13em;font-weight:800}
+.badge-symbol{width:39px;height:39px;display:grid;place-items:center;border:1px solid #70d4c7;border-radius:12px;color:var(--green);font-size:22px}
+.sidebar-caption{font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);margin-bottom:11px}
+.nav{display:flex;flex-direction:column;gap:6px}
+.nav a{display:flex;align-items:center;gap:10px;padding:12px;border-radius:10px;color:var(--muted);text-decoration:none;font-weight:600;font-size:13px}
+.nav a.active,.nav a:hover,.nav a:focus-visible{background:#1b343a;color:var(--green);outline:1px solid #457b75}
+.nav a span{font-size:17px}
+.rail-note{margin-top:auto;border:1px solid var(--line);background:#162a30;border-radius:14px;padding:15px;color:var(--muted);font-size:12px}
+.rail-note strong{display:block;color:var(--ink);margin-bottom:5px}
+main{min-width:0;padding:32px clamp(20px,4.2vw,74px) 80px;max-width:1640px;width:100%}
+.topline{display:flex;gap:15px;flex-wrap:wrap;justify-content:space-between;align-items:center;font-size:12px;color:var(--muted)}
+.pill{border:1px solid #79663d;background:#30281d;color:var(--gold);padding:8px 12px;border-radius:99px;letter-spacing:.08em;font-size:10px;font-weight:850}
+.clock{font-variant-numeric:tabular-nums}
+h1{font-size:clamp(32px,5.3vw,61px);letter-spacing:-.06em;line-height:1.04;margin:42px 0 16px;max-width:840px}
+h1 em{font-style:normal;color:var(--green)}
+.lead{font-size:17px;color:var(--muted);max-width:820px;margin:0 0 28px}
+.notice{border-left:3px solid var(--gold);background:#292720;border-radius:0 12px 12px 0;padding:15px 18px;color:#e8ddc1;font-size:13px;max-width:850px;margin:25px 0 33px}
+h2{font-size:23px;letter-spacing:-.035em;margin:0 0 8px}
+h3{font-size:17px;letter-spacing:-.025em;margin:0 0 9px}
+.sub{color:var(--muted);font-size:13px;margin:0 0 25px}
+.section{margin-top:42px;scroll-margin-top:22px}
+.metrics{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:15px}
+.metric{background:var(--panel);border:1px solid var(--line);border-radius:17px;padding:19px}
+.metric small{color:var(--muted);font-size:11px;letter-spacing:.05em;text-transform:uppercase}
+.metric strong{display:block;font-size:27px;font-weight:730;letter-spacing:-.05em;margin-top:7px}
+.metric em{font-size:12px;color:#9ac5be;font-style:normal}
+.grid{display:grid;grid-template-columns:minmax(0,1.2fr) minmax(290px,.8fr);gap:18px}
+.card{background:var(--panel);border:1px solid var(--line);border-radius:19px;padding:clamp(18px,2.3vw,28px)}
+.formgrid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:13px}
+label{display:block;color:var(--muted);font-size:12px;margin-bottom:5px}
+input{width:100%;padding:12px;background:#0c1820;border:1px solid #455b62;border-radius:10px;color:white;font:inherit;font-variant-numeric:tabular-nums}
+input:focus-visible,button:focus-visible{outline:2px solid var(--teal);outline-offset:2px}
+.field{margin-bottom:12px}
+.form-foot{margin-top:9px;color:var(--muted);font-size:12px}
+.results{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin:20px 0 10px}
+.result{background:#1b3033;border:1px solid #416159;border-radius:13px;padding:14px}
+.result span{display:block;color:#b5d2c9;font-size:11px;text-transform:uppercase}
+.result strong{display:block;font-size:25px;letter-spacing:-.045em}
+.result.warn{border-color:#6f5948;background:#2b251f}
+.result.warn strong{color:var(--gold)}
+.status{padding:13px;border-radius:11px;background:#29271e;color:var(--gold);font-size:12px;font-weight:650;margin-top:12px}
+button{background:var(--green);border:0;border-radius:10px;padding:12px 15px;color:#0b1b18;font:inherit;font-weight:800;cursor:pointer}
+button:hover{background:#d4ffdf}
+button.secondary{border:1px solid #54766b;background:#20373a;color:var(--green);font-size:12px}
+.mini-list{display:grid;gap:10px}
+.mini-row{display:flex;justify-content:space-between;align-items:flex-start;gap:14px;border-bottom:1px solid #2d4248;padding:9px 0}
+.mini-row:last-child{border-bottom:0}
+.mini-row small{color:var(--muted)}
+.mini-row strong{font-size:13px;text-align:right}
+.hero-strip{display:flex;flex-wrap:wrap;align-items:center;gap:13px;background:linear-gradient(115deg,#173b39,#153139 66%,#222d33);padding:22px;border:1px solid #326257;border-radius:18px}
+.hero-strip p{color:#c1d6d3;margin:5px 0 0}
+.hero-strip strong{color:var(--green)}
+.growth{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:15px}
+.growth-card{background:var(--panel);border:1px solid var(--line);padding:19px;border-radius:15px}
+.growth-card .number{float:right;color:var(--green);font-size:24px;font-weight:800}
+.growth-card p{color:var(--muted);font-size:13px;min-height:55px}
+.growth-card details{border-top:1px solid var(--line);padding-top:12px;color:#cce0df;font-size:12px}
+summary{cursor:pointer;color:var(--teal);font-weight:700}
+.provider-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px}
+.provider{border:1px solid var(--line);background:var(--panel);border-radius:13px;padding:18px}
+.provider strong{display:block;font-size:16px}
+.provider span{display:block;margin-top:13px;font-size:11px;color:var(--gold)}
+.timeline{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px}
+.step{border-top:3px solid #516066;background:var(--panel);border-radius:8px;padding:15px;font-size:12px;color:var(--muted)}
+.step strong{display:block;color:var(--ink);margin-bottom:7px;font-size:14px}
+.footer{border-top:1px solid var(--line);margin-top:60px;padding-top:24px;color:var(--muted);font-size:12px}
+.faux{font-size:11px;background:#28312a;color:#d7e4c3;padding:3px 7px;border-radius:5px;white-space:nowrap}
+@media(max-width:1050px){.metrics{grid-template-columns:repeat(2,minmax(0,1fr))}.provider-grid,.timeline{grid-template-columns:repeat(2,minmax(0,1fr))}.shell{grid-template-columns:185px minmax(0,1fr)}aside{padding:25px 13px}}
+@media(max-width:750px){.shell{display:block}aside{position:static;padding:17px 18px;gap:12px;border-right:0;border-bottom:1px solid var(--line)}.rail-note{display:none}.nav{flex-direction:row;flex-wrap:wrap}.nav a{padding:8px}.sidebar-caption{display:none}main{padding:20px 16px 55px}h1{margin-top:28px}.grid{grid-template-columns:1fr}.growth{grid-template-columns:1fr}}
+@media(max-width:460px){.formgrid,.metrics,.provider-grid,.timeline{grid-template-columns:1fr}.results{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<div class="shell">
+<aside aria-label="Sidebar">
+ <div class="brand"><div class="badge-symbol" aria-hidden="true">E</div><div>EVERCRAFT<br>PAYMENTS</div></div>
+ <div><div class="sidebar-caption">Merchant OS · Concept lab</div><nav class="nav" aria-label="Explore the lab">
+ <a href="#overview" class="active"><span>◈</span>Overview</a>
+ <a href="#fees"><span>◎</span>Costs</a>
+ <a href="#growth"><span>↗</span>Systemia</a>
+ <a href="#providers"><span>◇</span>Providers</a>
+ <a href="#receipts"><span>▣</span>Receipts</a>
+ </nav></div>
+ <div class="rail-note"><strong>Demo environment</strong>No merchant accounts, processor credentials, deposits, orders, payments or invoices are connected to this lab.</div>
+</aside>
+<main>
+<div class="topline"><span>MERCHANT EXPERIENCE / INTERACTIVE CONCEPT</span><span class="pill">DEMO ONLY · NO MONEY MOVEMENT</span></div>
+<section id="overview">
+ <h1>Every dollar.<br><em>Working harder.</em></h1>
+ <p class="lead">One place to understand payment costs, explore better options, and let Systemia surface opportunities to improve your business, always under your control.</p>
+ <div class="notice"><strong>Engineering preview, not a live merchant dashboard.</strong> All figures below are synthetic unless you enter illustrative fee assumptions yourself. There are no connected merchant transactions or approved provider offers, and no savings, earnings or payment claims are being made.</div>
+ <div class="metrics" aria-label="Demo status">
+  <div class="metric"><small>Real merchant sales</small><strong>Not connected</strong><em>No transaction data imported</em></div>
+  <div class="metric"><small>Processor accounts</small><strong>0</strong><em>No provider has been activated</em></div>
+  <div class="metric"><small>Growth opportunities</small><strong>4 examples</strong><em>Sample aggregate data only</em></div>
+  <div class="metric"><small>Payment verification</small><strong>HELD</strong><em>No provider-paid receipt</em></div>
+ </div>
+</section>
+<section id="fees" class="section">
+ <h2>Know exactly what a payment costs.</h2>
+ <p class="sub">Change the assumptions to explore unit economics. This calculator is not a rate quote, and the potential provider rate below has not been negotiated.</p>
+ <div class="grid">
+  <article class="card">
+   <h3>Fee explorer <span class="faux">hypothetical</span></h3>
+   <div class="formgrid">
+    <div class="field"><label for="ticket">Average transaction ($)</label><input id="ticket" type="number" min="1" max="100000" step=".01" value="100"></div>
+    <div class="field"><label for="volume">Transactions per month</label><input id="volume" type="number" min="1" max="1000000" step="1" value="150"></div>
+    <div class="field"><label for="proposedRate">Illustrative Evercraft fee (%)</label><input id="proposedRate" type="number" min="0" max="100" step=".01" value="2.4"></div>
+    <div class="field"><label for="proposedFixed">Illustrative fixed fee ($)</label><input id="proposedFixed" type="number" min="0" max="100" step=".01" value=".30"></div>
+    <div class="field"><label for="providerRate">Assumed underlying provider cost (%)</label><input id="providerRate" type="number" min="0" max="100" step=".01" value="1.65"></div>
+    <div class="field"><label for="providerFixed">Assumed provider fixed cost ($)</label><input id="providerFixed" type="number" min="0" max="100" step=".01" value=".12"></div>
+    <div class="field"><label for="overhead">Assumed monthly overhead ($)</label><input id="overhead" type="number" min="0" max="100000" step=".01" value="30"></div>
+   </div>
+   <p class="form-foot">Reference for comparison: illustrative standard online US domestic Stripe card fees, 2.9% + $0.30, excluding other applicable charges. Enter actual processor terms only when separately verified.</p>
+   <div id="calculationStatus" role="status" aria-live="polite" class="status">Calculating illustrative costs...</div>
+  </article>
+  <article class="card">
+   <h3>Understand the tradeoff.</h3>
+   <div class="results">
+    <div class="result"><span>Reference fee / payment</span><strong id="reference">$3.20</strong></div>
+    <div class="result"><span>Illustrative merchant fee</span><strong id="merchantFee">$2.70</strong></div>
+    <div class="result"><span>Potential monthly difference</span><strong id="monthlyDifference">$75.00</strong></div>
+    <div class="result warn"><span>Illustrative platform margin</span><strong id="platformMargin">Unknown</strong></div>
+   </div>
+   <p class="sub">Positive simulated margin is not proof of commercial feasibility. Network charges, chargebacks, refunds, fraud, taxes, reserves, currency, and underwriting can change actual economics.</p>
+   <div class="mini-list">
+    <div class="mini-row"><small>Business fee visibility</small><strong>Explained per transaction</strong></div>
+    <div class="mini-row"><small>Real provider contract</small><strong>NOT VERIFIED</strong></div>
+    <div class="mini-row"><small>Public cheaper-than-Stripe claim</small><strong>NOT AUTHORIZED</strong></div>
+   </div>
+   <button type="button" id="export" class="secondary" style="margin-top:21px">Export sample analysis ↓</button>
+   <p class="form-foot" id="exportStatus" role="status">Downloads illustrative JSON only. Not a payment receipt.</p>
+  </article>
+ </div>
+</section>
+<section id="growth" class="section">
+ <div class="hero-strip"><div><strong>SYSTEMIA / MERCHANT GROWTH</strong><h2 style="margin:7px 0 0">Revenue intelligence, not another sales dashboard.</h2><p>Merchant-approved data → evidence-backed opportunities → human-approved improvements → measured outcomes.</p></div></div>
+ <p class="sub" style="margin-top:18px">All four cards below are synthetic examples. No merchant information has been accessed. The scout requires explicit opt-in and specific data permissions.</p>
+ <div class="growth">
+  <div class="growth-card"><span class="number">04</span><h3>Quotes without follow-up</h3><p>A possible conversion gap worth investigating before a business spends more money attracting leads.</p><details><summary>What Systemia would recommend</summary><p>Verify each quote's real status, get merchant permission, establish baseline, then propose a reviewable follow-up workflow. No customer messages have been sent.</p></details></div>
+  <div class="growth-card"><span class="number">12</span><h3>Repeat buyers without plans</h3><p>A possible fit for a subscription, scheduled service, or loyalty offer.</p><details><summary>What Systemia would recommend</summary><p>Check service suitability, customer consent, capacity, and profitability before proposing a recurring offering. No subscription has been created.</p></details></div>
+  <div class="growth-card"><span class="number">08</span><h3>Checkout failures</h3><p>Unexpected payment friction may be reducing conversions or blocking customers.</p><details><summary>What Systemia would recommend</summary><p>Inspect provider errors and verified order records before recommending a safe fix. Failed checkout is not a lost sale unless independently established.</p></details></div>
+  <div class="growth-card"><span class="number">01</span><h3>Completed, not invoiced</h3><p>Work may have been finished without a matching invoice, subject to validation.</p><details><summary>What Systemia would recommend</summary><p>Reconcile the approved contract and work completion evidence first. Require explicit approval before any invoice is issued.</p></details></div>
+ </div>
+</section>
+<section id="providers" class="section">
+ <h2>One merchant experience. Flexible processing.</h2>
+ <p class="sub">Candidate providers below are research categories, not connected accounts or approved payment rails. Raven Nexus would govern real merchant onboarding, verified credentials and routing.</p>
+ <div class="provider-grid">
+  <div class="provider"><strong>Stripe</strong><span>RESEARCH / NO LAB CONNECTION</span></div>
+  <div class="provider"><strong>Moov</strong><span>RESEARCH / NO LAB CONNECTION</span></div>
+  <div class="provider"><strong>Finix</strong><span>RESEARCH / NO LAB CONNECTION</span></div>
+  <div class="provider"><strong>Adyen</strong><span>RESEARCH / NO LAB CONNECTION</span></div>
+ </div>
+</section>
+<section id="receipts" class="section">
+ <h2>No green check without evidence.</h2>
+ <p class="sub">A buyer opening checkout is not a paid order. A paid order is not a settled bank payout. A settled payout is not a completed delivery.</p>
+ <div class="timeline" aria-label="Payment lifecycle stages">
+  <div class="step"><strong>1 / Buyer intent</strong>Not observed. No purchase created.</div>
+  <div class="step"><strong>2 / Payment order</strong>No Evercraft canonical order created.</div>
+  <div class="step"><strong>3 / Provider evidence</strong>No independently verified payment or payout receipt.</div>
+  <div class="step"><strong>4 / Fulfillment</strong>No entitlement, Shipping dispatch or delivery receipt.</div>
+ </div>
+</section>
+<div class="footer">© 2026 Evercraft LLC · Internal read-only merchant experience lab. No connected merchant, no payment authority, no funds custody. Architecture: Evercraft Payments → Raven Nexus → approved provider, with Systemia opportunity intelligence opt-in only.</div>
+</main></div>
+<script>
+'use strict';
+const ids=['ticket','volume','proposedRate','proposedFixed','providerRate','providerFixed','overhead'];
+const byId=id=>document.getElementById(id);
+const cash=n=>new Intl.NumberFormat('en-US',{style:'currency',currency:'USD'}).format(n);
+let latest=null;
+function calculate(){
+ const fields=Object.fromEntries(ids.map(id=>[id,Number(byId(id).value)]));
+ const valid=ids.every(id=>byId(id).value.trim()!==''&&Number.isFinite(fields[id])&&fields[id]>=0)&&fields.ticket>=1&&fields.volume>=1&&Number.isInteger(fields.volume)&&fields.proposedRate<=100&&fields.providerRate<=100&&fields.ticket<=100000&&fields.volume<=1000000;
+ if(!valid){byId('calculationStatus').textContent='Enter valid nonnegative assumptions, a positive ticket, whole-number volume, and percentages at most 100.';latest=null;for(const id of ['reference','merchantFee','monthlyDifference','platformMargin'])byId(id).textContent='—';return}
+ const ref=fields.ticket*.029+.30;
+ const fee=fields.ticket*fields.proposedRate/100+fields.proposedFixed;
+ const cost=fields.ticket*fields.providerRate/100+fields.providerFixed+fields.overhead/fields.volume;
+ const difference=(ref-fee)*fields.volume;
+ const margin=fee-cost;
+ latest={schema:'evercraft.payments.merchant-lab.synthetic.v1',demo_only:true,no_merchant_price_approved:true,no_payment_created:true,verification_state:'provider_cost_unverified',assumptions:fields,illustrative:{reference_fee_per_payment:ref,merchant_fee_per_payment:fee,estimated_monthly_difference:difference,estimated_margin_per_payment:margin}};
+ byId('reference').textContent=cash(ref);
+ byId('merchantFee').textContent=cash(fee);
+ byId('monthlyDifference').textContent=(difference<0?'-':'')+cash(Math.abs(difference));
+ byId('platformMargin').textContent=(margin<0?'-':'')+cash(Math.abs(margin));
+ byId('calculationStatus').textContent=margin<=0?'HOLD: simulated fees do not cover assumed costs. No price can be offered.':'HOLD: illustrative margin only. Actual provider economics and compliance remain unverified.';
+}
+ids.forEach(id=>byId(id).addEventListener('input',calculate));
+calculate();
+byId('export').addEventListener('click',()=>{
+ if(!latest){byId('exportStatus').textContent='Correct input assumptions before exporting.';return}
+ const blob=new Blob([JSON.stringify(latest,null,2)],{type:'application/json'});
+ const href=URL.createObjectURL(blob);
+ const a=document.createElement('a');a.href=href;a.download='evercraft-payments-synthetic-fee-analysis.json';document.body.appendChild(a);a.click();a.remove();
+ URL.revokeObjectURL(href);
+ byId('exportStatus').textContent='Synthetic estimate exported. Not a quote, receipt, paid order or payment authorization.';
+});
+</script>
+</body>
+</html>
