@@ -71,9 +71,12 @@ export async function runAuditCenterCheckoutCanary({fetchImpl=globalThis.fetch, 
   }
   const quote=await request(fetchImpl,SURFACES.central_quote,'POST',{action:'quote',offer_key:OFFER_KEY},timeoutMs);
   checks.push(baseCheck('central_quote_read_only',
-    quote.status===200 && quote.payload?.ok===true && quote.payload?.offer?.offer_key===OFFER_KEY && quote.payload?.offer?.amount_cents===4900 && quote.payload?.offer?.currency==='usd' && quote.payload?.fulfillment?.ready===true,
-    {http:quote.status, offer_key:quote.payload?.offer?.offer_key || null, amount_cents:quote.payload?.offer?.amount_cents ?? null, fulfillment_ready:quote.payload?.fulfillment?.ready ?? null, transport_error:quote.transport_error || null},
-    {http:200,offer_key:OFFER_KEY,amount_cents:4900,fulfillment_ready:true}));
+    quote.status===200 && quote.payload?.ok===true && quote.payload?.offer?.offer_key===OFFER_KEY && quote.payload?.offer?.amount_cents===4900 && quote.payload?.offer?.currency==='usd' && quote.payload?.fulfillment?.ready===true &&
+      quote.payload?.fulfillment?.audit_context_custody?.schema==='evercraft.audit.checkout-context-custody.v1' &&
+      quote.payload?.fulfillment?.audit_context_custody?.required_before_checkout===true &&
+      quote.payload?.fulfillment?.audit_context_custody?.requires_stored_context_readback===true,
+    {http:quote.status, offer_key:quote.payload?.offer?.offer_key || null, amount_cents:quote.payload?.offer?.amount_cents ?? null, fulfillment_ready:quote.payload?.fulfillment?.ready ?? null, context_custody:quote.payload?.fulfillment?.audit_context_custody?.schema || null, requires_readback:quote.payload?.fulfillment?.audit_context_custody?.requires_stored_context_readback ?? null, transport_error:quote.transport_error || null},
+    {http:200,offer_key:OFFER_KEY,amount_cents:4900,fulfillment_ready:true,context_custody:'evercraft.audit.checkout-context-custody.v1',requires_readback:true}));
   const preflight=await request(fetchImpl,SURFACES.public_preflight,'GET',undefined,timeoutMs);
   checks.push(baseCheck('free_preflight_localhost_refused',
     preflight.status===200 && preflight.payload?.format_eligible===false && preflight.payload?.checkout_created===false && preflight.payload?.payment_confirmed===false,
