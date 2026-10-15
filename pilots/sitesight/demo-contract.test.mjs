@@ -19,10 +19,12 @@ test('user-visible simulated and human-review disclosures cannot silently disapp
   }
 });
 
-test('unverifiable imagery has a non-actionable review control and runtime guard', () => {
+test('unverifiable imagery generates a field inspection request without visual clearance', () => {
   assert.ok(html.includes("i.confidence==='unknown'"));
-  assert.ok(html.includes('Cannot verify visually'));
-  assert.ok(html.includes('Request a physical site inspection.'));
+  assert.ok(html.includes('Request on-site inspection'));
+  assert.ok(html.includes("act!=='inspect'"));
+  assert.ok(html.includes("field_inspection_requested"));
+  assert.ok(html.includes('inspection_requested_at'));
 });
 
 test('demo does not auto-submit to live commerce, outside services, or surveillance endpoint', () => {
