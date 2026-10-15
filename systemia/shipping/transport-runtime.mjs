@@ -3,11 +3,12 @@ import { verifyRecipientAccess } from './recipient-access-gate.mjs';
 function preSendRecipientGate({ envelope, recipient_access, at = new Date() }) {
   const plan = recipient_access?.plan;
   const evidence = recipient_access?.evidence;
-  const verifier_secret = recipient_access?.verifier_secret;
+  // Public verifier key is pinned in the operator runtime, never provided by a producer.
+  const trusted_verifier_public_key = process.env.EVERCRAFT_SHIPPING_VERIFIER_PUBLIC_KEY;
   const reasons = [];
   if (!plan) reasons.push('shipping_independent_recipient_plan_missing');
   if (!evidence) reasons.push('shipping_independent_recipient_attestation_missing');
-  if (!verifier_secret) reasons.push('shipping_independent_verifier_key_missing');
+  if (!trusted_verifier_public_key) reasons.push('shipping_trusted_verifier_public_key_missing');
   if (plan) {
     if (plan.recipient_ref !== envelope?.recipient?.recipient_ref) reasons.push('shipping_recipient_binding_mismatch');
     if (plan.channel !== 'email' && plan.channel !== envelope?.channel) reasons.push('shipping_channel_binding_mismatch');
@@ -27,7 +28,7 @@ function preSendRecipientGate({ envelope, recipient_access, at = new Date() }) {
   }
   if (!reasons.length) {
     const verified = verifyRecipientAccess({
-      plan, evidence, verifier_secret, now:new Date(at).getTime()
+      plan, evidence, trusted_verifier_public_key, now:new Date(at).getTime()
     });
     reasons.push(...verified.reasons);
   }
