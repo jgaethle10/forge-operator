@@ -1,11 +1,13 @@
 import fs from 'node:fs';
 import path from 'node:path';
+import zlib from 'node:zlib';
 import { createWorld, advanceWorld, REAL_TICK_MS } from './engine.mjs';
 
 const FORMAT = 'evercraft.window.commit.v1';
 const MAX_HISTORY_IN_RAM = 3000;
 const MAX_HISTORY_PUBLIC = 1000;
 const MAX_BOOT_LOG_BYTES = 256 * 1024 * 1024;
+const ROTATE_AFTER_TICKS = 192;
 
 function atomicWrite(file, data) {
   const tmp = file + '.tmp-' + process.pid;
@@ -22,7 +24,7 @@ function atomicWrite(file, data) {
 function appendDurable(file, record) {
   const fd = fs.openSync(file, 'a', 0o600);
   try {
-    fs.writeSync(fd, JSON.stringify(record) + '\n');
+    fs.writeFileSync(fd, JSON.stringify(record) + '\n');
     fs.fsyncSync(fd);
   } finally {
     fs.closeSync(fd);
@@ -52,6 +54,8 @@ export class DurableWorldStore {
     this.now = options.now || Date.now;
     this.recoveredSnapshot = false;
     this.tornTailTruncated = false;
+    this.journalStartTick = null;
+    this.pendingTicks = 0;
     this.recentEvents = [];
     fs.mkdirSync(root, { recursive: true, mode: 0o700 });
     this.load();
@@ -66,6 +70,7 @@ export class DurableWorldStore {
       if (!Number.isSafeInteger(world.next_event_id)) world.next_event_id = world.tick * 32 + 1;
       if (!world.recovery) world.recovery = { missed_ticks: 0 };
       this.world = world;
+      this.journalStartTick = world.tick;
       const events = [...world.events].reverse();
       appendDurable(this.journalFile, { schema: FORMAT, tick: world.tick, world, events });
       atomicWrite(this.file, JSON.stringify(world));
@@ -93,6 +98,7 @@ export class DurableWorldStore {
     for (const line of text.split('\n')) {
       if (!line) continue;
       const record = verifyCommit(JSON.parse(line), last);
+      if (this.journalStartTick === null) this.journalStartTick = record.tick;
       last = record;
       events.push(...record.events);
       if (events.length > MAX_HISTORY_IN_RAM) events.splice(0, events.length - MAX_HISTORY_IN_RAM);
@@ -124,6 +130,7 @@ export class DurableWorldStore {
     }
     try {
       atomicWrite(this.file, JSON.stringify(this.world));
+      this.rotateIfNeeded();
     } catch (err) {
       // Journal is committed; next boot will repair the snapshot. Do not roll back.
       console.error('Snapshot cache write failed; durable journal remains authoritative', err);
@@ -132,13 +139,30 @@ export class DurableWorldStore {
     return events;
   }
 
+  rotateIfNeeded() {
+    if (this.world.tick - this.journalStartTick < ROTATE_AFTER_TICKS) return;
+    const archiveDir = path.join(this.root, 'archive');
+    fs.mkdirSync(archiveDir, { recursive: true, mode: 0o700 });
+    const archive = path.join(archiveDir,
+      'commits-' + this.journalStartTick + '-' + this.world.tick + '.jsonl.gz');
+    const compressed = zlib.gzipSync(fs.readFileSync(this.journalFile), { level: 6 });
+    atomicWrite(archive, compressed);
+    // Archive is durable before replacing the active log with its checkpoint.
+    const checkpoint = {
+      schema: FORMAT, tick: this.world.tick, world: this.world,
+      events: [...this.world.events].reverse()
+    };
+    atomicWrite(this.journalFile, JSON.stringify(checkpoint) + '\n');
+    this.journalStartTick = this.world.tick;
+  }
+
   catchUp(maxSteps = 480) {
     const missed = Math.max(0, Math.floor((this.now() - this.world.last_tick_at) / REAL_TICK_MS));
     const steps = Math.min(missed, Math.max(0, Math.floor(maxSteps)));
     for (let i = 0; i < steps; i++) this.tick(this.world.last_tick_at + REAL_TICK_MS);
     const pending = Math.max(0, missed - steps);
-    this.world.recovery.missed_ticks = pending;
-    // recovery.missed_ticks is an operational indicator, not a committed game event.
+    this.pendingTicks = pending;
+    // Pending time belongs to operational health, not immutable committed game state.
     return { processed: steps, unprocessed: pending };
   }
 
@@ -161,7 +185,8 @@ export class DurableWorldStore {
       snapshot_recovered: this.recoveredSnapshot,
       torn_tail_truncated: this.tornTailTruncated,
       history_in_memory: this.recentEvents.length,
-      recovery: this.world.recovery
+      recovery: { missed_ticks: this.pendingTicks },
+      journal_start_tick: this.journalStartTick
     };
   }
 }
