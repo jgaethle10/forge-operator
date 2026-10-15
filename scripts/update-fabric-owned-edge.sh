@@ -195,6 +195,7 @@ SABAN_CAPACITY_INSTALLER="$REPO_ROOT/scripts/install-saban-capacity-organism.sh"
 HOME_EDGE_INSTALLER="$REPO_ROOT/scripts/install-evercraft-home-edge.sh"
 
 mkdir -p "$STATE_DIR"
+chown root:"$RUN_USER" "$STATE_DIR"
 chmod 0750 "$STATE_DIR"
 
 write_runtime_release_ref() {
@@ -489,10 +490,10 @@ verify_current_runtime() {
   local earthworks_page=""
   earthworks_page="$(curl -fsS --max-time 5 "http://127.0.0.1:8787/earthworks" 2>/dev/null || true)"
   [[ -n "$earthworks_page" ]] || return 14
-  printf '%s' "$earthworks_page" | grep -Fq 'Live Yard 001' || return 14
-  printf '%s' "$earthworks_page" | grep -Fq 'Shadow' || return 14
-  printf '%s' "$earthworks_page" | grep -Fq 'Autonomy' || return 14
-  printf '%s' "$earthworks_page" | grep -Fq 'STOP ALL' || return 14
+  grep -F 'Live Yard 001' <<< "$earthworks_page" >/dev/null || return 14
+  grep -F 'Shadow' <<< "$earthworks_page" >/dev/null || return 14
+  grep -F 'Autonomy' <<< "$earthworks_page" >/dev/null || return 14
+  grep -F 'STOP ALL' <<< "$earthworks_page" >/dev/null || return 14
 
   local attestation_code=10
   for attempt in 1 2 3 4 5 6; do

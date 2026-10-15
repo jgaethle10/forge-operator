@@ -1,6 +1,7 @@
 #!/usr/bin/env node
 // Saban / Evercraft Customer Gauntlet: bounded public browser recording.
 // No credential capture, POST, payment, login, downloads or arbitrary target URLs.
+import { PUBLIC_PAYMENT_OFFERS } from '../../mcp/public-payment-offers.mjs';
 import { chromium } from 'playwright';
 import { createHash } from 'node:crypto';
 import fs from 'node:fs';
@@ -14,7 +15,8 @@ const CASES=[
   ['ibmi-rescue','/offers/ibmi-rescue'],
   ['legacy-rescue','/offers/legacy-rescue'],
   ['findmypart','/offers/findmypart'],
-  ['site-survive','/offers/site-survive']
+  ['site-survive','/offers/site-survive'],
+  ...Object.keys(PUBLIC_PAYMENT_OFFERS).map(slug=>[slug,'/offers/'+slug])
 ];
 const VIEWPORTS=[
   {name:'mobile',width:390,height:844,isMobile:true,deviceScaleFactor:1,hasTouch:true},
@@ -106,11 +108,13 @@ receipt.summary={
   total:receipt.tests.length,
   http_ok:receipt.tests.filter(r=>r.status===200).length,
   broken:receipt.tests.filter(r=>r.status!==200).map(r=>r.id),
-  missing_email_field_on_cta:receipt.tests.filter(r=>r.has_checkout_cta&&!r.has_customer_email_field).map(r=>r.id),
+  missing_email_field_on_cta:receipt.tests.filter(r=>r.path.startsWith('/offers/')&&!r.has_customer_email_field).map(r=>r.id),
+  missing_checkout_cta:receipt.tests.filter(r=>r.path.startsWith('/offers/')&&!r.has_checkout_cta).map(r=>r.id),
+  errors:receipt.tests.filter(r=>r.errors.length).map(r=>r.id),
   videos:receipt.tests.filter(r=>r.video).length,
   screenshots:receipt.tests.filter(r=>r.shot).length
 };
 fs.writeFileSync(path.join(OUT,'receipt.json'),JSON.stringify(receipt,null,2)+'\n');
 console.log('SABAN_VISUAL_RECEIPT '+JSON.stringify(receipt.summary));
 // Upload diagnostic evidence even when the website fails. Never infer payment readiness.
-if(receipt.summary.videos===0||receipt.summary.screenshots===0) process.exitCode=2;
+if(receipt.summary.broken.length||receipt.summary.missing_email_field_on_cta.length||receipt.summary.missing_checkout_cta.length||receipt.summary.errors.length||receipt.summary.videos!==receipt.summary.total||receipt.summary.screenshots!==receipt.summary.total) process.exitCode=2;
