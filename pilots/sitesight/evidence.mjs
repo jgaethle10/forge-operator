@@ -2,7 +2,7 @@ import { createHash } from 'node:crypto';
 
 // Fail-closed INTERNAL simulation reader. It neither ingests media nor proves provenance.
 export const SCHEMA = 'evercraft.sitesight.internal-demo.v1';
-const statuses = new Set(['pending', 'verified', 'dismissed', 'closed']);
+const statuses = new Set(['pending', 'inspection_required', 'verified', 'dismissed', 'closed']);
 const kinds = new Set(['helmet', 'vest', 'boots', 'visibility']);
 const scenarios = new Set(['arrival', 'scaffold', 'poor']);
 const safeOwn = (o, k) => Object.prototype.hasOwnProperty.call(o, k);
@@ -51,10 +51,10 @@ export function validateSiteSightExport(doc) {
       fail('candidate', 'Malformed, duplicated or unsupported candidate');
       continue;
     }
-    if (item.confidence === 'unknown' && ['verified','closed'].includes(item.status)) {
+    if (item.confidence === 'unknown' && ['verified','closed','dismissed'].includes(item.status)) {
       fail('unknown_confirmation', item.id + ' cannot be verified from unavailable visual evidence');
     }
-    if (item.status === 'closed' && (!nonempty(item.action_owner) ||
+    if (item.status === 'inspection_required' && (item.confidence !== 'unknown' || !validDate(item.inspection_requested_at) || !nonempty(item.review_note))) {\n      fail('inspection_request', item.id + ' requires a dated manual field-inspection request');\n    }\n    if (item.status === 'closed' && (!nonempty(item.action_owner) ||
        typeof item.closeout_note !== 'string' || item.closeout_note.trim().length < 16 ||
        !validDate(item.closed_at))) {
       fail('unsupported_closeout', item.id + ' is missing human corrective-action evidence');
@@ -92,7 +92,9 @@ export function validateSiteSightExport(doc) {
         fail('unknown_confirmation', 'No image-based confirmation of unknown visibility: ' + e.item_id);
       }
       replay.set(e.item_id, 'verified');
-    } else if (e.action === 'human_dismissed' && prior === 'pending') {
+    } else if (e.action === 'field_inspection_requested' && prior === 'pending' && byId.get(e.item_id).confidence === 'unknown') {
+      replay.set(e.item_id, 'inspection_required');
+    } else if (e.action === 'human_dismissed' && prior === 'pending' && byId.get(e.item_id).confidence !== 'unknown') {
       replay.set(e.item_id, 'dismissed');
     } else if (e.action === 'corrective_action_closed' && prior === 'verified') {
       replay.set(e.item_id, 'closed');
@@ -103,7 +105,7 @@ export function validateSiteSightExport(doc) {
   for (const [id, item] of byId) {
     if (replay.get(id) !== item.status) fail('state_mismatch', id + ': claimed ' + item.status + ', replayed ' + replay.get(id));
   }
-  const counts = { pending: 0, verified: 0, dismissed: 0, closed: 0 };
+  const counts = { pending: 0, inspection_required: 0, verified: 0, dismissed: 0, closed: 0 };
   for (const item of byId.values()) counts[item.status]++;
   return { ok: errors.length === 0, errors, mode: 'synthetic_only', counts };
 }
