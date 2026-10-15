@@ -1,0 +1,32 @@
+name: Evercraft LIVE RC04 gate checks
+on:
+  push:
+    branches:
+      - feature/evercraft-live-public-gate-rc04
+    paths:
+      - 'distribution/live-studio/**'
+      - '.github/workflows/evercraft-live-gate.yml'
+  pull_request:
+    paths:
+      - 'distribution/live-studio/**'
+      - '.github/workflows/evercraft-live-gate.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  release-gate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Unit and fail-closed integration tests
+        run: node --test distribution/live-studio/test/*.test.mjs
+      - name: Verify no embedded internal destinations in public viewer
+        shell: bash
+        run: |
+          if grep -Ein 'drive\.google\.com|docs\.google\.com|base44\.app/api' distribution/live-studio/public-stage.html; then
+            echo 'Internal URL detected in public stage'; exit 1
+          fi
