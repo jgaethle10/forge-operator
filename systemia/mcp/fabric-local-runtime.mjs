@@ -32,6 +32,7 @@ import {
 } from './fabric-mobile-site.mjs';
 import { renderEarthWorksSimulator } from './earthworks-simulator-page.mjs';
 import { createFabricFaieSurface } from './fabric-faie-runtime.mjs';
+import { validateOwnedCheckoutHandoff } from '../payments/owned-checkout-handoff.mjs';
 import { buildVisualStory, normalizeVisualStory } from '../visual-desk/factory.mjs';
 import { buildCommercialCampaign } from '../graphics-command/commercial-renderer.mjs';
 
@@ -396,7 +397,7 @@ export async function startFabricLocalRuntime({
   sabanCapacityHealthFile='',
   releaseRefFile='',
   purchaseIntentFetch=fetch,
-  purchaseIntentUrl='https://base44.app/api/apps/6a7adc9666bfd8c5c2fb4069/functions/ravenNexusPurchaseIntent',
+  purchaseIntentUrl=process.env.EVERCRAFT_OWNED_PURCHASE_INTENT_URL||'',
 }={}) {
   const instanceId='fabric_local_'+crypto.randomBytes(10).toString('hex');
   const resolvedReleaseRefFile=String(
@@ -433,9 +434,17 @@ export async function startFabricLocalRuntime({
   if(typeof purchaseIntentFetch!=='function'){
     throw new Error('purchase_intent_fetch_invalid');
   }
-  const purchaseIntentEndpoint=new URL(String(purchaseIntentUrl||''));
-  if(purchaseIntentEndpoint.protocol!=='https:'){
-    throw new Error('purchase_intent_url_requires_https');
+  // A missing owned payment adapter is a HOLD, not an implicit retired-provider fallback.
+  const configuredPurchaseUrl=String(purchaseIntentUrl||'').trim();
+  let purchaseIntentEndpoint=null;
+  if(configuredPurchaseUrl){
+    const candidate=new URL(configuredPurchaseUrl);
+    if(candidate.protocol!=='https:'||
+       candidate.username||candidate.password||candidate.hash||
+       candidate.hostname!=='fabric.systemiacommandcenters.com'){
+      throw new Error('purchase_intent_requires_approved_owned_https_backend');
+    }
+    purchaseIntentEndpoint=candidate;
   }
   const staticPrepared=Array.isArray(catalog)?nativeOnlyCatalog(catalog):null;
   const preparedCatalog=()=>staticPrepared||nativeOnlyCatalog(loadFabricCatalogFromRepository());
@@ -608,7 +617,8 @@ export async function startFabricLocalRuntime({
     transactional:false,
     external_action_authority:false,
     mcp_read_only:true,
-    human_offer_checkout_enabled:true,
+    human_offer_checkout_enabled:Boolean(purchaseIntentEndpoint),
+    purchase_intent_backend_state:purchaseIntentEndpoint?'configured_owned_backend_unverified_settlement':'held_no_owned_backend',
     human_offer_checkout_path_template:'/api/offers/{slug}/checkout',
     human_offer_checkout_requires_explicit_confirmation:true,
     human_offer_checkout_handoff_mode:'explicit_evercraft_page',
@@ -867,7 +877,12 @@ export async function startFabricLocalRuntime({
 
         const slug=decodeURIComponent(match[1]).toLowerCase();
         const capabilityKey=offerPurchaseKeyForSlug(slug);
-        if(!capabilityKey) return sendJson(res,404,{ok:false,error:'offer_not_found'});
+        const publicOffer=offerCapabilityForSlug(slug,preparedCatalog().capabilities);
+        if(!capabilityKey || !publicOffer || publicOffer.commercial_state!=='sell_now'){
+          return sendJson(res,404,{ok:false,error:'offer_not_found_or_not_published'});
+        }
+        const ibmi74Deadline=slug==='ibmi-74-deadline-xray';
+        const requiredOfferKey=ibmi74Deadline?'ibmi_74_deadline_xray_250':null;
 
         const body=await readOfferInput(req,{maxBytes:8192});
         const isForm=String(req.headers['content-type']||'').toLowerCase().includes('application/x-www-form-urlencoded');
@@ -877,6 +892,21 @@ export async function startFabricLocalRuntime({
             ok:false,
             error:'explicit_user_confirmation_required',
             authority:'Evercraft Payments',
+            fulfillment_release:false,
+          });
+        }
+
+        if(!purchaseIntentEndpoint){
+          if(isForm){
+            return sendText(res,503,renderPaymentHoldPage({slug}),{
+              contentType:'text/html; charset=utf-8'
+            });
+          }
+          return sendJson(res,503,{
+            ok:false,
+            error:'owned_payment_backend_not_configured',
+            authority:'Evercraft Payments',
+            checkout_ready:false,
             fulfillment_release:false,
           });
         }
@@ -893,6 +923,7 @@ export async function startFabricLocalRuntime({
         try{
           upstream=await purchaseIntentFetch(purchaseIntentEndpoint,{
             method:'POST',
+            redirect:'error',
             headers:{
               'content-type':'application/json',
               'accept':'application/json',
@@ -901,10 +932,22 @@ export async function startFabricLocalRuntime({
             body:JSON.stringify({
               user_confirmed:true,
               capability_key:capabilityKey,
+              ...(requiredOfferKey?{offer_key:requiredOfferKey}:{}),
               idempotency_key:idempotencyKey,
               customer_ref:customerRef,
             }),
             signal:controller.signal,
+          });
+        }catch{
+          // A timeout or transport error does not prove that the provider
+          // created no session or charge. Show no checkout and require review.
+          if(isForm) return sendText(res,503,renderPaymentHoldPage({slug}),{
+            contentType:'text/html; charset=utf-8'
+          });
+          return sendJson(res,503,{
+            ok:false,error:'purchase_intent_response_unverified',
+            authority:'Evercraft Payments',checkout_ready:false,
+            payment_verified:false,fulfillment_release:false,
           });
         }finally{
           clearTimeout(timer);
@@ -929,30 +972,24 @@ export async function startFabricLocalRuntime({
           });
         }
 
-        let checkoutUrl=null;
-        try{
-          const candidate=new URL(String(result?.checkout_url||''));
-          if(candidate.protocol==='https:') checkoutUrl=candidate.toString();
-        }catch{}
-        if(result?.checkout_ready!==true||!checkoutUrl){
+        // The owned backend prepares an unpaid order. Before returning ANY external
+        // checkout link, independently bind its response to the published price,
+        // required SKU, authority, and allowlisted settlement destination.
+        const checkout=validateOwnedCheckoutHandoff({
+          slug,offer:publicOffer,result
+        });
+        if(!checkout.ok){
           if(isForm){
-            return sendText(
-              res,
-              503,
-              renderPaymentHoldPage({slug,orderKey:result?.order_key||''}),
-              {contentType:'text/html; charset=utf-8'}
-            );
+            return sendText(res,503,renderPaymentHoldPage({slug,orderKey:result?.order_key||''}),{
+              contentType:'text/html; charset=utf-8'
+            });
           }
           return sendJson(res,503,{
-            ok:false,
-            error:'evercraft_payments_checkout_not_ready',
-            authority:'Evercraft Payments',
-            order_key:result?.order_key||null,
-            gate_key:result?.gate_key||null,
-            checkout_ready:false,
-            fulfillment_release:false,
+            ok:false,error:checkout.reason,authority:'Evercraft Payments',
+            checkout_ready:false,fulfillment_release:false,
           });
         }
+        const checkoutUrl=checkout.checkout_url;
 
         if(isForm){
           const cents=Number(result?.amount_cents);
@@ -996,7 +1033,7 @@ export async function startFabricLocalRuntime({
         if(slug&&!slug.includes('/')){
           const offer=offerCapabilityForSlug(slug,preparedCatalog().capabilities);
           if(!offer) return sendJson(res,404,{error:'offer_not_found'});
-          const page=renderOfferPage(offer);
+          const page=renderOfferPage(offer,{checkoutEnabled:Boolean(purchaseIntentEndpoint),slug});
           if(!page) return sendJson(res,404,{error:'offer_not_found'});
           return sendText(res,200,page,{contentType:'text/html; charset=utf-8'});
         }

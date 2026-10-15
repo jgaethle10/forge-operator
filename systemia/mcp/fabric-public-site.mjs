@@ -259,6 +259,30 @@ const OFFER_PAGE_COPY={
   }
 };
 
+// Distinct $250 IBM i 7.4 support-transition SKU, not the generic Estate X-Ray.
+const IBM_I_74_OFFER_COPY={
+  public_id:'ibmi-rescue-v1',
+  slug:'ibmi-74-deadline-xray',
+  purchase_key:'ibmi_74_deadline_xray_250',
+  eyebrow:'IBM i 7.4 Deadline X-Ray',
+  headline:'IBM i 7.4 support changed. Know your risks before changing production.',
+  lede:'IBM i 7.4 standard support ended September 30, 2026. Extended support may be available. This bounded assessment maps the specific upgrade and compatibility unknowns, without claiming that running workloads stopped working.',
+  promise:'A scoped IBM i 7.4 support-transition X-Ray, not a general estate audit or an automatic upgrade recommendation.',
+  send:['Your authorized description of one IBM i 7.4 workload or estate','Release, hardware, third-party software and integration context if known','The decision or maintenance window you need to evaluate'],
+  get:['Bounded workload and dependency map','7.4 support and upgrade assumption register','Compatibility and vendor-risk register','Test, recovery and rollback next-step plan'],
+  steps:[
+    ['1. Bound the workload','Define a small, authorized evidence scope without sharing production credentials.'],
+    ['2. Separate facts from unknowns','Assess support coverage, vendor and compatibility dependencies, and uncertain behavior.'],
+    ['3. Choose a defensible next step','Receive a reviewed, evidence-backed decision and test plan. No production changes.']
+  ]
+};
+
+function offerCopyBySlug(slug){
+  const wanted=String(slug||'').trim().toLowerCase();
+  if(wanted===IBM_I_74_OFFER_COPY.slug)return IBM_I_74_OFFER_COPY;
+  return Object.values(OFFER_PAGE_COPY).find((copy)=>copy.slug===wanted)||null;
+}
+
 export function offerSlugForCapability(publicId){
   return OFFER_PAGE_COPY[String(publicId||'')]?.slug||null;
 }
@@ -266,15 +290,15 @@ export function offerSlugForCapability(publicId){
 export function offerCapabilityForSlug(slug,capabilities=[]){
   const wanted=String(slug||'').trim().toLowerCase();
   if(!wanted) return null;
-  const id=Object.entries(OFFER_PAGE_COPY).find(([,copy])=>copy.slug===wanted)?.[0]||null;
+  const copy=offerCopyBySlug(wanted);
+  const id=copy?.public_id||Object.entries(OFFER_PAGE_COPY).find(([,row])=>row.slug===wanted)?.[0]||null;
   return id ? (capabilities||[]).find((item)=>item.public_id===id)||null : null;
 }
 
 export function offerPurchaseKeyForSlug(slug){
   const wanted=String(slug||'').trim().toLowerCase();
   if(!wanted) return null;
-  const copy=Object.values(OFFER_PAGE_COPY).find((item)=>item.slug===wanted);
-  return copy?.purchase_key||null;
+  return offerCopyBySlug(wanted)?.purchase_key||null;
 }
 
 function entryPriceLabel(item){
@@ -285,6 +309,19 @@ function entryPriceLabel(item){
 }
 
 export function renderOffers(capabilities=[]){
+  const ibmi74Public=(capabilities||[]).some(item=>
+    item.public_id==='ibmi-rescue-v1'&&item.commercial_state==='sell_now');
+  // This is a scope-review link, not a verified checkout or availability claim.
+  const deadlineCard=ibmi74Public
+    ? '<article class="card">'
+      +'<div class="eyebrow">IBM i 7.4 support transition</div>'
+      +'<h3><a href="/offers/ibmi-74-deadline-xray" style="text-decoration:none">'
+      +escapeHtml(IBM_I_74_OFFER_COPY.headline)+'</a></h3>'
+      +'<p>'+escapeHtml(IBM_I_74_OFFER_COPY.promise)+'</p>'
+      +'<p class="price">$250 proposed bounded assessment</p>'
+      +'<div class="cardlinks"><a class="btn" href="/offers/ibmi-74-deadline-xray">Review the scope</a></div>'
+      +'</article>'
+    : '';
   const offers=(capabilities||[])
     .filter((item)=>item.commercial_state==='sell_now'&&offerSlugForCapability(item.public_id))
     .map((item)=>{
@@ -304,7 +341,7 @@ export function renderOffers(capabilities=[]){
     '<h1>One problem.<br>One clear offer.</h1>',
     '<p class="lede">No software scavenger hunt. These pages explain the pain, the smallest useful paid entry, what you send, what you get, and what happens next.</p>',
     '</section>',
-    '<div class="grid">'+(offers||'<article class="card"><h3>No public offer pages are available yet.</h3></article>')+'</div>',
+    '<div class="grid">'+(deadlineCard+offers||'<article class="card"><h3>No public offer pages are available yet.</h3></article>')+'</div>',
     '</main>'
   ].join('\n'),{
     description:'Simple Evercraft offers with a clear problem, first paid step, price, inputs, outputs, and next action.',
@@ -313,12 +350,15 @@ export function renderOffers(capabilities=[]){
   });
 }
 
-export function renderOfferPage(item){
-  const copy=OFFER_PAGE_COPY[item?.public_id];
+export function renderOfferPage(item,{checkoutEnabled=true,slug=''}={}){
+  const requested=offerCopyBySlug(slug);
+  const copy=requested?.public_id===item?.public_id
+    ? requested : OFFER_PAGE_COPY[item?.public_id];
   if(!copy) return null;
   const entry=item.entry_paid_offer||null;
-  const price=entryPriceLabel(item);
-  const offerName=entry?.name||item.name;
+  const deadline=copy.slug===IBM_I_74_OFFER_COPY.slug;
+  const price=deadline?'$250':entryPriceLabel(item);
+  const offerName=deadline?'IBM i 7.4 Deadline X-Ray':entry?.name||item.name;
   const send=copy.send.map((x)=>'<li>'+escapeHtml(x)+'</li>').join('');
   const get=copy.get.map((x)=>'<li>'+escapeHtml(x)+'</li>').join('');
   const steps=copy.steps.map(([title,body])=>'<div class="offer-step"><strong>'+escapeHtml(title)+'</strong><span>'+escapeHtml(body)+'</span></div>').join('');
@@ -326,19 +366,24 @@ export function renderOfferPage(item){
   return shell(copy.headline+' · Evercraft',[
     '<main>',
     '<section class="offer-hero">',
-    '<div class="kicker"><span class="dot"></span> '+escapeHtml(copy.eyebrow)+' · available now</div>',
+    '<div class="kicker"><span class="dot"></span> '+escapeHtml(copy.eyebrow)+(checkoutEnabled?' · available now':' · purchase corridor held')+'</div>',
     '<h1>'+escapeHtml(copy.headline)+'</h1>',
     '<p class="lede">'+escapeHtml(copy.lede)+'</p>',
     copy.heroVisual?'<div class="offer-visual"><picture>'+(copy.heroVisualMobile?'<source media="(max-width: 700px)" srcset="'+escapeHtml(copy.heroVisualMobile)+'">':'')+'<img src="'+escapeHtml(copy.heroVisual)+'" alt="" loading="eager"></picture></div>':'',
     '<div class="offer-price">'+escapeHtml(price)+'</div>',
     '<div class="offer-price-note">'+escapeHtml(offerName)+' · '+escapeHtml(item.pricing||'')+'</div>',
-    '<form class="checkout-form" method="post" action="/api/offers/'+encodeURIComponent(copy.slug)+'/checkout">',
-    '<input type="hidden" name="user_confirmed" value="true">',
-    '<input type="hidden" name="idempotency_key" value="'+escapeHtml(idempotencyKey)+'">',
-    '<button class="btn primary" type="submit">Continue to checkout · '+escapeHtml(price)+'</button>',
-    '<a class="btn" href="/capabilities/'+encodeURIComponent(item.public_id)+'">See technical proof</a>',
-    '<div class="checkout-note">Evercraft Payments prepares the checkout. Nothing is marked paid until settlement is verified.</div>',
-    '</form>',
+    ...(checkoutEnabled?[
+      '<form class="checkout-form" method="post" action="/api/offers/'+encodeURIComponent(copy.slug)+'/checkout">',
+      '<input type="hidden" name="user_confirmed" value="true">',
+      '<input type="hidden" name="idempotency_key" value="'+escapeHtml(idempotencyKey)+'">',
+      '<button class="btn primary" type="submit">Continue to checkout · '+escapeHtml(price)+'</button>',
+      '<a class="btn" href="/capabilities/'+encodeURIComponent(item.public_id)+'">See technical proof</a>',
+      '<div class="checkout-note">Evercraft Payments prepares the checkout. Nothing is marked paid until settlement is verified.</div>',
+      '</form>'
+    ]:[
+      '<div class="checkout-note">This is a public offer description. Secure checkout is not yet available through a verified Evercraft-owned payment backend. No purchase or charge can be made here.</div>',
+      '<div class="actions"><a class="btn" href="/capabilities/'+encodeURIComponent(item.public_id)+'">See technical proof</a></div>'
+    ]),
     '</section>',
     '<div class="offer-grid">',
     '<section class="offer-panel"><h2>What you are buying</h2><p class="plain">'+escapeHtml(copy.promise)+'</p></section>',
@@ -391,8 +436,8 @@ export function renderPaymentHoldPage({slug='',orderKey=''}={}){
     '<main>',
     '<section class="offer-hero">',
     '<div class="kicker"><span class="dot"></span> Evercraft Payments</div>',
-    '<h1>No charge was made.</h1>',
-    '<p class="lede">We saved the purchase request, but the settlement rail did not open cleanly. Nothing was marked paid and no fulfillment was released.</p>',
+    '<h1>Checkout is not confirmed.</h1>',
+    '<p class="lede">Evercraft has not verified a completed payment or authorized fulfillment for this request. If you already reached a payment provider, check the existing transaction before retrying. You can return to the public offer details.</p>',
     '<div class="actions">',
     '<a class="btn primary" href="'+back+'">Return to the offer</a>',
     '<a class="btn" href="'+back+'">Try again</a>',
@@ -405,7 +450,7 @@ export function renderPaymentHoldPage({slug='',orderKey=''}={}){
     '</section>',
     '</main>'
   ].join('\n'),{
-    description:'Evercraft Payments did not open a settlement checkout. No charge was made.',
+    description:'Evercraft has not verified payment or released fulfillment for this checkout request.',
     canonical:back,
     ogType:'website',
   });

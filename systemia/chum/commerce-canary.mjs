@@ -1,4 +1,5 @@
 import fs from 'node:fs';
+import { classifyCommerceDoorProbe } from './commerce-door-status.mjs';
 
 const catalog=JSON.parse(fs.readFileSync('public/.well-known/evercraft-machine-catalog.json','utf8'));
 function ownedGateway(value){
@@ -189,7 +190,7 @@ const buyerFailures=buyerRequired.filter(r=>!r.buyer_door_valid);
 const receipt={
   schema:'evercraft.chum.commerce-canary.v2',
   generated_at:new Date().toISOString(),
-  status:'pass',
+  status:classifyCommerceDoorProbe({gateway,offers,results}),
   route_state:'owned_gateway_probed',
   base44_used:false,
   doctrine:{
@@ -241,4 +242,4 @@ const md=[
 fs.writeFileSync('artifacts/chum/commerce-canary-latest.md',md.join('\n'));
 console.log(JSON.stringify(receipt.summary));
 
-if(failures.length) throw new Error(`CHUM commerce canary found ${failures.length} broken sell-now money path(s)`);
+if(receipt.status==='fail') throw new Error(`CHUM commerce canary found ${failures.length} broken or incomplete sell-now money path(s)`);

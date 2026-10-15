@@ -93,9 +93,11 @@ test('owned Fabric serves offer pages, requires confirmation, and delegates chec
     port:0,
     catalog:[websiteAudit],
     faieSurfaceEnabled:false,
+    purchaseIntentUrl:'https://fabric.systemiacommandcenters.com/api/internal/test-payment-intent',
     purchaseIntentFetch:async(url,init)=>{
       seen.push({
         url:String(url),
+        redirect:init?.redirect,
         body:JSON.parse(String(init?.body||'{}')),
       });
       return new Response(JSON.stringify({
@@ -105,7 +107,7 @@ test('owned Fabric serves offer pages, requires confirmation, and delegates chec
         amount_cents:4900,
         currency:'usd',
         checkout_ready:true,
-        checkout_url:'https://settlement.example.test/pay/test',
+        checkout_url:'https://checkout.stripe.com/c/pay/test_session',
         payment_state:'unpaid',
         fulfillment_release:false,
       }),{
@@ -157,9 +159,10 @@ test('owned Fabric serves offer pages, requires confirmation, and delegates chec
     const checkoutBody=await handoff.text();
     assert.match(checkoutBody,/Your checkout is ready\./);
     assert.match(checkoutBody,/Open secure checkout/);
-    assert.match(checkoutBody,/settlement\.example\.test\/pay\/test/);
+    assert.match(checkoutBody,/checkout\.stripe\.com\/c\/pay\/test_session/);
     assert.match(checkoutBody,/Evercraft Payments/);
     assert.equal(seen.length,1);
+    assert.equal(seen[0].redirect,'error');
     assert.equal(seen[0].body.user_confirmed,true);
     assert.equal(seen[0].body.capability_key,'website-audit-quick-win');
     assert.match(seen[0].body.idempotency_key,/^fabric-website-audit-/);
@@ -183,6 +186,7 @@ test('human checkout failures render a branded Evercraft Payments page instead o
     port:0,
     catalog:[websiteAudit],
     faieSurfaceEnabled:false,
+    purchaseIntentUrl:'https://fabric.systemiacommandcenters.com/api/internal/test-payment-intent',
     purchaseIntentFetch:async()=>new Response(JSON.stringify({
       ok:true,
       authority:'Evercraft Payments',
@@ -204,7 +208,8 @@ test('human checkout failures render a branded Evercraft Payments page instead o
     assert.equal(response.status,503);
     assert.match(response.headers.get('content-type')||'',/^text\/html/i);
     const body=await response.text();
-    assert.match(body,/No charge was made\./);
+    assert.match(body,/Checkout is not confirmed\./);
+    assert.match(body,/not verified a completed payment/);
     assert.match(body,/Evercraft Payments/);
     assert.match(body,/Return to the offer/);
     assert.doesNotMatch(body,/evercraft_payments_checkout_not_ready|adapter_error|gate_key/);
@@ -213,3 +218,159 @@ test('human checkout failures render a branded Evercraft Payments page instead o
   }
 });
 
+
+test('default Fabric checkout holds without a configured approved owned backend', async()=>{
+  let calls=0;
+  const runtime=await startFabricLocalRuntime({
+    host:'127.0.0.1',port:0,catalog:[websiteAudit],faieSurfaceEnabled:false,
+    purchaseIntentUrl:'',
+    purchaseIntentFetch:async()=>{calls++;throw new Error('unapproved_dispatch');},
+  });
+  try {
+    const health=await fetch(runtime.url+'/health').then(r=>r.json());
+    assert.equal(health.human_offer_checkout_enabled,false);
+    assert.equal(health.purchase_intent_backend_state,'held_no_owned_backend');
+    const response=await fetch(runtime.url+'/api/offers/website-audit/checkout',{
+      method:'POST',
+      headers:{'content-type':'application/json'},
+      body:JSON.stringify({user_confirmed:true})
+    });
+    assert.equal(response.status,503);
+    const body=await response.json();
+    assert.equal(body.error,'owned_payment_backend_not_configured');
+    assert.equal(body.checkout_ready,false);
+    assert.equal(body.fulfillment_release,false);
+    assert.equal(calls,0);
+  }finally { await runtime.close(); }
+});
+
+test('retired and unrelated purchase backends cannot be configured', async()=>{
+  for(const backend of [
+    'https://base44.app/api/apps/retired',
+    'https://provider.base44.app/api/checkout',
+    'https://evil.example/checkout',
+    'http://fabric.systemiacommandcenters.com/checkout',
+    'https://fabric.systemiacommandcenters.com@evil.example/checkout',
+  ]) await assert.rejects(
+    startFabricLocalRuntime({host:'127.0.0.1',port:0,catalog:[websiteAudit],
+      faieSurfaceEnabled:false,purchaseIntentUrl:backend}),
+    /purchase_intent_requires_approved_owned_https_backend/
+  );
+});
+
+const ibmiRescue={
+  public_id:'ibmi-rescue-v1',
+  name:'Evercraft IBM i Rescue',
+  description:'A bounded IBM i / AS400 support-transition risk assessment.',
+  keywords:['ibm i 7.4 support','rpg','upgrade'],
+  state:'direct_checkout_ready',
+  commercial_state:'sell_now',
+  pricing:'$250 IBM i Estate X-Ray; $250 IBM i 7.4 Deadline X-Ray.',
+  entry_paid_offer:{name:'IBM i Estate X-Ray',price:'$250',price_usd_normalized:250,billing:'one_time'},
+  connections:[],
+};
+
+test('7.4 public route and purchase SKU remain distinct from general Estate X-Ray',async()=>{
+  const directory=renderOffers([ibmiRescue]);
+  assert.match(directory,/\/offers\/ibmi-74-deadline-xray/);
+  assert.match(directory,/Review the scope/);
+  assert.match(directory,/\$250 proposed bounded assessment/);
+  assert.equal(offerCapabilityForSlug('ibmi-74-deadline-xray',[ibmiRescue])?.public_id,'ibmi-rescue-v1');
+  assert.equal(offerPurchaseKeyForSlug('ibmi-74-deadline-xray'),'ibmi_74_deadline_xray_250');
+  assert.equal(offerPurchaseKeyForSlug('ibmi-rescue'),'ibmi-estate-xray');
+  const page=renderOfferPage(ibmiRescue,{slug:'ibmi-74-deadline-xray',checkoutEnabled:false});
+  assert.match(page,/September 30, 2026/);
+  assert.match(page,/IBM i 7\.4 Deadline X-Ray/);
+  assert.match(page,/\$250/);
+  assert.match(page,/purchase corridor held/);
+  assert.doesNotMatch(page,/Continue to checkout/);
+  const runtime=await startFabricLocalRuntime({
+    host:'127.0.0.1',port:0,catalog:[ibmiRescue],faieSurfaceEnabled:false,purchaseIntentUrl:''
+  });
+  try{
+    const result=await fetch(runtime.url+'/offers/ibmi-74-deadline-xray');
+    assert.equal(result.status,200);
+    const body=await result.text();
+    assert.match(body,/IBM i 7\.4 support changed/);
+    assert.match(body,/purchase corridor held/);
+    assert.doesNotMatch(body,/Continue to checkout/);
+  }finally{await runtime.close();}
+});
+
+test('7.4 checkout sends exact SKU and rejects a mismatched same-price Estate checkout',async()=>{
+  const seen=[];
+  let wrongOffer=true;
+  const runtime=await startFabricLocalRuntime({
+    host:'127.0.0.1',port:0,catalog:[ibmiRescue],faieSurfaceEnabled:false,
+    purchaseIntentUrl:'https://fabric.systemiacommandcenters.com/api/internal/test-payment-intent',
+    purchaseIntentFetch:async(url,init)=>{
+      seen.push(JSON.parse(init.body));
+      return new Response(JSON.stringify({
+        ok:true,
+        authority:'Evercraft Payments',
+        order_key:'IBMI-TEST-123',
+        offer_key:wrongOffer?'ibmi_estate_xray_250':'ibmi_74_deadline_xray_250',
+        amount_cents:25000,currency:'USD',
+        checkout_ready:true,checkout_url:'https://checkout.stripe.com/c/pay/test',
+        payment_state:'unpaid',fulfillment_release:false,
+      }),{status:200,headers:{'content-type':'application/json'}});
+    },
+  });
+  try{
+    const url=runtime.url+'/api/offers/ibmi-74-deadline-xray/checkout';
+    let result=await fetch(url,{
+      method:'POST',headers:{'content-type':'application/json'},
+      body:JSON.stringify({user_confirmed:true}),
+    });
+    assert.equal(result.status,503);
+    let body=await result.json();
+    assert.equal(body.error,'ibmi_74_checkout_contract_not_verified');
+    assert.equal(body.fulfillment_release,false);
+    assert.equal(seen[0].offer_key,'ibmi_74_deadline_xray_250');
+    assert.equal(seen[0].capability_key,'ibmi_74_deadline_xray_250');
+
+    wrongOffer=false;
+    result=await fetch(url,{
+      method:'POST',headers:{'content-type':'application/json'},
+      body:JSON.stringify({user_confirmed:true}),
+    });
+    assert.equal(result.status,200);
+    body=await result.json();
+    assert.equal(body.amount_cents,25000);
+    assert.equal(body.checkout_ready,true);
+    assert.equal(body.payment_state,'unpaid');
+    assert.equal(body.fulfillment_release,false);
+    assert.equal(seen.length,2);
+  }finally{await runtime.close();}
+});
+
+test('payment adapter network uncertainty holds both JSON and human forms',async()=>{
+  const runtime=await startFabricLocalRuntime({
+    host:'127.0.0.1',port:0,catalog:[websiteAudit],faieSurfaceEnabled:false,
+    purchaseIntentUrl:'https://fabric.systemiacommandcenters.com/api/internal/approved-intent',
+    purchaseIntentFetch:async(_url,init)=>{
+      assert.equal(init.redirect,'error');
+      throw new Error('simulated_backend_timeout');
+    },
+  });
+  try{
+    const api=await fetch(runtime.url+'/api/offers/website-audit/checkout',{
+      method:'POST',headers:{'content-type':'application/json'},
+      body:JSON.stringify({user_confirmed:true}),
+    });
+    assert.equal(api.status,503);
+    const body=await api.json();
+    assert.equal(body.error,'purchase_intent_response_unverified');
+    assert.equal(body.checkout_ready,false);
+    assert.equal(body.payment_verified,false);
+    assert.equal(body.fulfillment_release,false);
+    const form=await fetch(runtime.url+'/api/offers/website-audit/checkout',{
+      method:'POST',headers:{'content-type':'application/x-www-form-urlencoded'},
+      body:new URLSearchParams({user_confirmed:'true'})
+    });
+    assert.equal(form.status,503);
+    const html=await form.text();
+    assert.match(html,/Checkout is not confirmed/);
+    assert.doesNotMatch(html,/Open secure checkout/);
+  }finally{await runtime.close();}
+});
