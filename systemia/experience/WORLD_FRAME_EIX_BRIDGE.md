@@ -30,3 +30,13 @@ The first suite covers seeking, identity, source labels, malformed/tampered meta
 ## Next steps
 
 Review via Systemia preflight and dedupe. Integrate a *single* existing Gravity/Fallen authored world or consented source record through this bridge, then use the owned renderer and browser QA to judge visual fidelity on physical Safari. Map the browser player to this contract instead of substituting independent canvas illustrations. Bring ForensiScope's real delivery receipts into a separate adapter with honest sender/recipient verification. Keep EIX preview and public/payment authority separate until verified.
+
+## EarthWorks source-connected implementation
+
+`earthworks-world-replay.ts` reuses `earthworks-autonomy/fleet-controller.mjs` for the machine dispatch, loading, payload, haul, dump and STOP ALL state. That simulator feeds explicit tick-bound `teleport` and `set_property` inputs to the **existing World Engine**, whose `compileRenderFrame` outputs are transformed by EIX-001. Inspectable machine state is a deliberate five-field allowlist, not the complete internal machine record.
+
+The scene's coordinates are a **fictional authored site layout**. It is genuine EarthWorks controller output driving real World Engine frames, but it remains a software simulation. It is not surveyed 3D geometry, real machinery telemetry, a native WebGPU image, a safety-certified control system or a customer-ready Gravity rendering. This projection has no equipment actuation interface.
+
+The existing World Engine CI now runs `earthworks-eix-integration.test.ts`. Tests check movement from controller state, source/motion labels, inspectable state, and that a **simulated** STOP ALL freezes projected positions and zeroes speed. The GitHub branch still requires CI, visual-worker, Systemia admission and source-rights review before any public or partner claim.
+
+The next UX integration should load the produced `evercraft.experience.world-replay.v1` as a versioned scene cartridge and render the actual supplied frames, with empty/unavailable visual geometry shown as wireframe or inspection mode, never as a fake photoreal reconstruction.
