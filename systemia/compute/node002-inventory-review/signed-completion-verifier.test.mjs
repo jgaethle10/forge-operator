@@ -62,17 +62,19 @@ test('binding to exactly expected job, source, request, and nonce is required',(
   {expectedRequestId:'other_req_123456789'},
   {expectedSourceSha256:'sha256:'+'0'.repeat(64)},
   {expectedInventorySha256:'sha256:'+'0'.repeat(64)},
-  {expectedDeviceKeyId:'other-device-ed25519'},
   {expectedNonce:'other_nonce_123456789'},
  ]){
   assert.throws(()=>verify(p,item),/completion_binding_invalid/);
  }
 });
+test('independently pinned key ID prevents issuer-label substitution',()=>{
+ assert.throws(()=>verify(sign(statement()),{expectedDeviceKeyId:'other-device-ed25519'}),/completion_signature_fields_invalid/);
+});
 test('tampering and extra authority claims fail closed',()=>{
  const p=sign(statement());
  const modified=structuredClone(p);
  modified.statement.inventory_sha256='sha256:'+'c'.repeat(64);
- assert.throws(()=>verify(modified),/completion_signature_invalid/);
+ assert.throws(()=>verify(modified),/completion_binding_invalid/);
  const extra=structuredClone(p);extra.statement.execution_permitted=true;
  assert.throws(()=>verify(extra),/completion_fields_invalid/);
  const bogus=structuredClone(p);bogus.signature.value_base64='x';
