@@ -25,8 +25,8 @@ export function inspectWorkflow(source, relativePath){
     /^\s*permissions:\s*write-all\s*(?:#.*)?$/im.test(text);
   // Include GitHub Actions YAML one-line steps: "- run: git push ...".
   // Also conservatively flag commands buried in multi-line scripts.
-  const oidcTokenWrite=/^\\s*id-token:\\s*write\\s*(?:#.*)?$/im.test(text);
-  const uses=[...text.matchAll(/^\\s*-?\\s*uses:\\s*([^\\s#]+)/gm)].map(x=>x[1]);
+  const oidcTokenWrite=/^\s*id-token:\s*write\s*(?:#.*)?$/im.test(text);
+  const uses=[...text.matchAll(/^\s*-?\s*uses:\s*([^\s#]+)/gm)].map(x=>x[1]);
   const unpinnedActions=uses.filter(x=>x.includes('@')&&!/@[a-f0-9]{40}$/.test(x));
   const pushCommand=/\bgit\s+(?:-C\s+\S+\s+)?push\b/im.test(text) ||
     /\bgh\s+api\s+[^\n]*(?:git\/refs|\/contents\/)/i.test(text);
