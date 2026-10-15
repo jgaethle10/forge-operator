@@ -1,5 +1,11 @@
 name: Saban Checkout Production Truth
 on:
+  pull_request:
+    paths:
+      - "scripts/checkout-fabric-live-canary.mjs"
+      - "scripts/checkout-fabric-live-canary.test.mjs"
+      - ".github/workflows/saban-checkout-production-truth.yml"
+      - "systemia/mcp/fabric-public-site.mjs"
   workflow_dispatch:
   schedule:
     - cron: "17 * * * *"
@@ -28,6 +34,7 @@ jobs:
       - name: Test regression guard with positive and negative fixtures
         run: node --test scripts/checkout-fabric-live-canary.test.mjs
       - name: Check real production release and customer offer forms
+        if: github.event_name != 'pull_request'
         run: node scripts/checkout-fabric-live-canary.mjs
       - name: Archive evidence on success or failure
         if: always()
