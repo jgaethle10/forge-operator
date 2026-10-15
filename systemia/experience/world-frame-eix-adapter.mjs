@@ -33,7 +33,21 @@ function normalizeSource(entity) {
   };
 }
 
-// A small, explicit public-inspection allowlist. Never forward arbitrary\n// customer, operator, or credential fields from engine properties.\nfunction normalizeInspection(properties) {\n  const safe = {};\n  const allowed = ['machine_state','zone','payload_tons','commanded_speed_mps','controller_hold'];\n  for (const key of allowed) {\n    const value = properties?.[key];\n    if (typeof value === 'boolean' || (typeof value === 'number' && Number.isFinite(value)) || (typeof value === 'string' && value.length <= 100)) {\n      safe[key] = value;\n    }\n  }\n  return safe;\n}\n\nfunction normalizeEntity(entity) {
+// A small, explicit public-inspection allowlist. Never forward arbitrary
+// customer, operator, or credential fields from engine properties.
+function normalizeInspection(properties) {
+  const safe = {};
+  const allowed = ['machine_state','zone','payload_tons','commanded_speed_mps','controller_hold'];
+  for (const key of allowed) {
+    const value = properties?.[key];
+    if (typeof value === 'boolean' || (typeof value === 'number' && Number.isFinite(value)) || (typeof value === 'string' && value.length <= 100)) {
+      safe[key] = value;
+    }
+  }
+  return safe;
+}
+
+function normalizeEntity(entity) {
   if (!entity || !clean(entity.id)) fail('entity_id_missing');
   const position = entity.transform?.position;
   if (!position || !['x', 'y', 'z'].every(axis => finite(position[axis]))) {
