@@ -1,4 +1,5 @@
 #!/usr/bin/env node
+import { publicPaymentOffer } from './public-payment-offers.mjs';
 import http from 'node:http';
 import crypto from 'node:crypto';
 import fs from 'node:fs';
@@ -866,6 +867,7 @@ export async function startFabricLocalRuntime({
         if(!match) return sendJson(res,404,{ok:false,error:'offer_checkout_route_not_found'});
 
         const slug=decodeURIComponent(match[1]).toLowerCase();
+        const directOffer=publicPaymentOffer(slug);
         const capabilityKey=offerPurchaseKeyForSlug(slug);
         if(!capabilityKey) return sendJson(res,404,{ok:false,error:'offer_not_found'});
 
@@ -921,14 +923,19 @@ export async function startFabricLocalRuntime({
             }
             auditedDomain=ready.audited_domain;
           }
-          upstream=await purchaseIntentFetch(purchaseIntentEndpoint,{
+          upstream=await purchaseIntentFetch(directOffer?new URL('https://findmypart.base44.app/functions/evercraftPaymentsOps'):purchaseIntentEndpoint,{
             method:'POST',
             headers:{
               'content-type':'application/json',
               'accept':'application/json',
               'user-agent':'Evercraft-Fabric-Offer-Checkout/1.0',
             },
-            body:JSON.stringify({
+            body:JSON.stringify(directOffer?{
+              action:'create_checkout',offer_key:directOffer.offer_key,
+              order_key:'fabric-'+slug+'-'+idempotencyKey,customer_email:customerRef,
+              source_ref:'fabric-native-offer|'+slug,return_origin:'https://fabric.systemiacommandcenters.com',
+              success_path:'/offers/'+slug+'?payment=processing',cancel_path:'/offers/'+slug+'?payment=cancelled',
+            }:{
               user_confirmed:true,
               capability_key:capabilityKey,
               idempotency_key:idempotencyKey,
@@ -942,6 +949,10 @@ export async function startFabricLocalRuntime({
         }
 
         const result=await upstream.json().catch(()=>null);
+        if(directOffer&&result){
+          result.checkout_ready=upstream.ok&&result.ok===true&&Number(result.amount_cents)===directOffer.amount_cents&&String(result.currency||'').toLowerCase()===directOffer.currency;
+          result.payment_state='unpaid';
+        }
         if(!upstream.ok||result?.ok!==true){
           if(isForm){
             return sendText(

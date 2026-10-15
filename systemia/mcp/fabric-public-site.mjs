@@ -1,3 +1,4 @@
+import { PUBLIC_PAYMENT_OFFERS } from './public-payment-offers.mjs';
 import crypto from 'node:crypto';
 function escapeHtml(value='') {
   return String(value)
@@ -274,6 +275,18 @@ const OFFER_PAGE_COPY={
   }
 };
 
+// Additional approved products use the same native offer and handoff surfaces.
+const extraOfferItems=Object.entries(PUBLIC_PAYMENT_OFFERS).map(([slug,offer])=>{
+  const public_id='payment-offer-'+slug;
+  OFFER_PAGE_COPY[public_id]={slug,purchase_key:offer.offer_key,eyebrow:offer.title,
+    headline:offer.title,lede:offer.intent,promise:offer.intent,
+    send:['Your receipt and delivery email','The scope and supporting information requested during intake. Do not send passwords or secrets.'],
+    get:[offer.intent,'The bounded deliverable described in the approved offer; payment does not authorize production changes.'],
+    steps:[['1. Review the offer','Confirm the product and fixed price.'],['2. Open secure checkout','Evercraft Payments prepares your order.'],['3. Complete intake','Delivery follows verified payment and the required intake.']]};
+  return {public_id,name:offer.title,commercial_state:'sell_now',pricing:'$'+offer.amount_cents/100+' one-time',
+    entry_paid_offer:{name:offer.title,price:'$'+offer.amount_cents/100,price_usd_normalized:offer.amount_cents/100}};
+});
+
 export function offerSlugForCapability(publicId){
   return OFFER_PAGE_COPY[String(publicId||'')]?.slug||null;
 }
@@ -281,12 +294,14 @@ export function offerSlugForCapability(publicId){
 export function offerCapabilityForSlug(slug,capabilities=[]){
   const wanted=String(slug||'').trim().toLowerCase();
   if(!wanted) return null;
+  if(wanted==='part-quick') return offerCapabilityForSlug('findmypart',capabilities);
   const id=Object.entries(OFFER_PAGE_COPY).find(([,copy])=>copy.slug===wanted)?.[0]||null;
-  return id ? (capabilities||[]).find((item)=>item.public_id===id)||null : null;
+  return id ? [...(capabilities||[]),...extraOfferItems].find((item)=>item.public_id===id)||null : null;
 }
 
 export function offerPurchaseKeyForSlug(slug){
   const wanted=String(slug||'').trim().toLowerCase();
+  if(wanted==='part-quick') return 'findmypart-quick-hunt';
   if(!wanted) return null;
   const copy=Object.values(OFFER_PAGE_COPY).find((item)=>item.slug===wanted);
   return copy?.purchase_key||null;
@@ -300,7 +315,7 @@ function entryPriceLabel(item){
 }
 
 export function renderOffers(capabilities=[]){
-  const offers=(capabilities||[])
+  const offers=[...(capabilities||[]),...extraOfferItems]
     .filter((item)=>item.commercial_state==='sell_now'&&offerSlugForCapability(item.public_id))
     .map((item)=>{
       const copy=OFFER_PAGE_COPY[item.public_id];
@@ -352,9 +367,9 @@ export function renderOfferPage(item){
     '<input type="hidden" name="idempotency_key" value="'+escapeHtml(idempotencyKey)+'">',
     '<label for="offer-customer-email">Email for your receipt and delivery</label>',
     '<input id="offer-customer-email" name="customer_ref" type="email" autocomplete="email" inputmode="email" placeholder="you@example.com" maxlength="200" required aria-required="true" style="width:min(100%,340px);padding:12px 14px;border:1px solid var(--line);border-radius:12px;background:var(--panel);color:var(--text);font:inherit">',
-    copy.slug==='website-audit'?'<label for="offer-website-url">Website to audit</label><input id="offer-website-url" name="website_url" type="url" placeholder="https://yourbusiness.com" maxlength="1000" required aria-required="true">':'',
+    copy.slug==='website-audit'?'<label for="offer-website-url">Website to audit (include https://)</label><input id="offer-website-url" name="website_url" type="url" placeholder="https://yourbusiness.com" maxlength="1000" required aria-required="true" style="display:block;width:100%;max-width:100%;box-sizing:border-box;padding:12px 14px;border:1px solid var(--line);border-radius:12px;background:var(--panel);color:var(--text);font:inherit">':'',
     '<button class="btn primary" type="submit">Continue to checkout · '+escapeHtml(price)+'</button>',
-    '<a class="btn" href="/capabilities/'+encodeURIComponent(item.public_id)+'">See technical proof</a>',
+    item.public_id.startsWith('payment-offer-')?'':'<a class="btn" href="/capabilities/'+encodeURIComponent(item.public_id)+'">See technical proof</a>',
     '<div class="checkout-note">Evercraft Payments prepares the checkout. Nothing is marked paid until settlement is verified.</div>',
     '</form>',
     '</section>',

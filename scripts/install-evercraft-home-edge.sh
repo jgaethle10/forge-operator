@@ -39,7 +39,7 @@ if [[ -z "$REPO_ROOT" || ! -d "$REPO_ROOT/.git" ]]; then
   exit 2
 fi
 REPO_ROOT="$(cd "$REPO_ROOT" && pwd)"
-RELEASE_REF="$(git -C "$REPO_ROOT" rev-parse HEAD)"
+RELEASE_REF="$(git -c safe.directory="$REPO_ROOT" -C "$REPO_ROOT" rev-parse HEAD)"
 if [[ ! "$RELEASE_REF" =~ ^[a-f0-9]{40}$ ]]; then
   echo "ERROR: Forge release ref is invalid." >&2
   exit 3
@@ -185,7 +185,7 @@ for _ in 1 2 3 4 5 6 7 8 9 10; do
 done
 "$NODE_BIN" -e "const h=require('/tmp/evercraft-home-health.json'); const expected=process.argv[1]; if(h.ok!==true||h.service!=='evercraft-home'||h.auth_mode!=='passport'||h.source_release_ref!==expected||h.owner_claim_available!==true&&h.owner_bootstrapped!==true) process.exit(2)" "$RELEASE_REF"
 
-caddy validate --config "$CADDYFILE" --adapter caddyfile >/dev/null
+EVERCRAFT_PUBLIC_HOST="$PUBLIC_HOST" EVERCRAFT_ACME_EMAIL="$ACME_EMAIL" caddy validate --config "$CADDYFILE" --adapter caddyfile >/dev/null
 systemctl restart evercraft-public-edge.service
 
 echo "Evercraft Home edge resident is ready."
