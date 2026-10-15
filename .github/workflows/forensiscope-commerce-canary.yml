@@ -1,6 +1,8 @@
 name: ForensiScope commercial release canary
 
 on:
+  schedule:
+    - cron: '17 */6 * * *' # Read-only recurring drift check, no customer traffic or commerce mutation
   workflow_dispatch:
     inputs:
       strict:
