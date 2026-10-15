@@ -78,6 +78,63 @@ function normalizeConnection(item={}){
   };
 }
 
+// Verified, explicitly scoped human form continuation for ChatGPT/agent discovery.
+// Distinct from the MCP connections array: this is transitional provider-hosted
+// buyer intake, never a directly executable charge or owned checkout backend.
+export function approvedHumanBuyerOptions(publicId,capability,{
+  buyerCatalogPath='',crosswalkPath=''
+}={}){
+  const moduleDir=path.dirname(fileURLToPath(import.meta.url));
+  const buyerFile=buyerCatalogPath||path.resolve(moduleDir,'../../public/.well-known/evercraft-payments-buyer-doors.json');
+  const mapFile=crosswalkPath||path.resolve(moduleDir,'../../public/.well-known/evercraft-fabric-human-buyer-handoffs.json');
+  try{
+    const buyer=JSON.parse(fs.readFileSync(buyerFile,'utf8'));
+    const handoffs=JSON.parse(fs.readFileSync(mapFile,'utf8'));
+    const home='https://findmypart.base44.app/functions/evercraftBuy';
+    if(!capability||capability.public_id!==publicId||capability.commercial_state!=='sell_now'||
+      buyer.schema!=='evercraft.payments.public-buyer-doors.v1'||
+      handoffs.schema!=='evercraft.fabric.verified-human-handoffs.v1'||
+      buyer.live_buyer_home!==home||buyer.revenue_verified_usd!==null||
+      buyer.buyer_link_observation?.method!=='external_http_get_only'||
+      buyer.buyer_link_observation?.passed_offer_count!==buyer.offers?.length||
+      buyer.buyer_link_observation?.provider_receipt_observed!==false) return [];
+    if(!Array.isArray(handoffs.capabilities)) return [];
+    const matches=handoffs.capabilities.filter(x=>x.public_id===publicId);
+    if(matches.length!==1) return [];
+    const mapping=matches[0];
+    if(!Array.isArray(mapping.offer_slugs)||!mapping.offer_slugs.length||
+       new Set(mapping.offer_slugs).size!==mapping.offer_slugs.length||
+       !mapping.offer_slugs.includes(mapping.primary_offer_slug)) return [];
+    const primary=buyer.offers.find(x=>x.slug===mapping.primary_offer_slug);
+    const entryCents=Math.round(Number(capability.entry_paid_offer?.price_usd_normalized)*100);
+    if(!primary||!Number.isSafeInteger(entryCents)||entryCents!==primary.amount_cents) return [];
+    const options=[];
+    for(const slug of mapping.offer_slugs){
+      const rows=buyer.offers.filter(x=>x.slug===slug);
+      if(rows.length!==1) return [];
+      const offer=rows[0];
+      const url=home+'?offer='+encodeURIComponent(slug);
+      if(offer.buyer_url!==url||offer.payment_receipt_state!=='not_observed'||
+         !Number.isSafeInteger(offer.amount_cents)||offer.amount_cents<=0||
+         offer.currency!=='usd'||typeof offer.title!=='string'||!offer.title.trim()) return [];
+      options.push({
+        offer_slug:slug,offer_name:offer.title,price_cents:offer.amount_cents,
+        currency:'usd',human_form_url:url,
+        form_evidence:'exact_offer_price_form_get_200_observed_2026-10-15',
+        hosting:'transitional_provider_hosted',
+        source:'evercraft_payments_approved_buyer_directory',
+        buyer_confirmation_required:true,checkout_created:false,
+        payment_verified:false,fulfillment_verified:false,
+        notice:'Opening this form is not an order. Checkout and delivery require separate human authorization and verified paid receipt.',
+      });
+    }
+    return options;
+  }catch{
+    // Missing, contradictory or malformed payment source => no suggested buyer links.
+    return [];
+  }
+}
+
 export function loadFabricCatalogFromRepository({catalogPath=''}={}){
   const moduleDir=path.dirname(fileURLToPath(import.meta.url));
   const resolved=catalogPath
@@ -475,6 +532,8 @@ export async function executeFabricDirectoryRpc(rpc,catalog=[]){
         name:capability.name,
         state:capability.state,
         connections:capability.connections,
+        human_buyer_options:approvedHumanBuyerOptions(publicId,capability),
+        human_buyer_options_state:'read_only_exact_price_match_only',
         transactional:false,
         external_action_taken:false,
       }));

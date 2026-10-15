@@ -4,6 +4,9 @@ on:
   pull_request:
     paths:
       - 'public/.well-known/evercraft-payments-buyer-doors.json'
+      - 'public/.well-known/evercraft-fabric-human-buyer-handoffs.json'
+      - 'systemia/mcp/fabric-directory.mjs'
+      - 'tests/fabric-approved-buyer-handoffs.test.mjs'
       - 'public/.well-known/evercraft-chum.json'
       - 'public/llms.txt'
       - 'tests/evercraft-payments-buyer-doors.test.mjs'
@@ -19,6 +22,9 @@ on:
     branches: [main]
     paths:
       - 'public/.well-known/evercraft-payments-buyer-doors.json'
+      - 'public/.well-known/evercraft-fabric-human-buyer-handoffs.json'
+      - 'systemia/mcp/fabric-directory.mjs'
+      - 'tests/fabric-approved-buyer-handoffs.test.mjs'
       - 'public/.well-known/evercraft-chum.json'
       - 'public/llms.txt'
       - 'tests/evercraft-payments-buyer-doors.test.mjs'
@@ -51,7 +57,7 @@ jobs:
         with:
           node-version: '22'
       - name: Validate approved offers and payment truth
-        run: node --test tests/evercraft-payments-buyer-doors.test.mjs
+        run: node --test tests/evercraft-payments-buyer-doors.test.mjs tests/fabric-approved-buyer-handoffs.test.mjs
       - name: Guard Grok pain-first buyer discovery metadata
         run: node --test tests/grok-marketplace-consistency.test.mjs
       - name: Verify Grok submission pinned package resolves to reviewed metadata
