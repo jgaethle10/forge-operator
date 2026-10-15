@@ -815,7 +815,11 @@ export async function startEvercraftHomeServer({
       return json(res, 200, {
         ok: true,
         subject: session.subject,
-        ...readEvercraftOsStatus(),
+        ...readEvercraftOsStatus({
+          deviceClassHint: String(serviceOrigins?.EVERCRAFT_OS_DEVICE_CLASS || process.env.EVERCRAFT_OS_DEVICE_CLASS || "unknown"),
+          nodeId: String(serviceOrigins?.EVERCRAFT_NODE_ID || process.env.EVERCRAFT_NODE_ID || "").trim() || null,
+          bootReceiptFile: String(serviceOrigins?.EVERCRAFT_OS_BOOT_RECEIPT_FILE || process.env.EVERCRAFT_OS_BOOT_RECEIPT_FILE || "").trim()
+        }),
       });
     }
 
