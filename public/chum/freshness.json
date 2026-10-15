@@ -2,7 +2,7 @@
   "schema": "evercraft.chum.crawl-pressure.v1",
   "provider": "Evercraft LLC",
   "coordinator": "CHUM",
-  "updated_at": "2026-10-14T23:57:09.569Z",
+  "updated_at": "2026-10-15T01:34:55.962Z",
   "purpose": "Content-hash-backed freshness signals for public Evercraft discovery surfaces. A freshness signal requests attention; it does not prove indexing, ranking, recommendation, citation or provider pickup.",
   "indexnow": {
     "supported": true,
@@ -11,217 +11,29 @@
   },
   "latest_change_batch": [
     {
-      "path": "/chum/sitemaps/answers.xml",
-      "last_changed": "2026-10-14T23:57:09.569Z",
-      "priority": 108
-    },
-    {
-      "path": "/chum/sitemaps/products.xml",
-      "last_changed": "2026-10-14T23:57:09.569Z",
-      "priority": 108
-    },
-    {
-      "path": "/chum/answers/doors/animate-a-football-play-call-with-receiver-routes-and-defensive-assignments-83287c0457.json",
-      "last_changed": "2026-10-14T23:57:09.569Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/animate-a-football-play-call-with-receiver-routes-and-defensive-assignments-83287c0457/",
-      "last_changed": "2026-10-14T23:57:09.569Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/explore-coach-designed-playbook-classroom-pilot-across-sports-d375019068.json",
-      "last_changed": "2026-10-14T23:57:09.569Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/explore-coach-designed-playbook-classroom-pilot-across-sports-d375019068/",
-      "last_changed": "2026-10-14T23:57:09.569Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/inspect-contradictions-and-unknowns-in-tagged-football-film-797ef3aee9.json",
-      "last_changed": "2026-10-14T23:57:09.569Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/inspect-contradictions-and-unknowns-in-tagged-football-film-797ef3aee9/",
-      "last_changed": "2026-10-14T23:57:09.569Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/request-a-research-partnership-for-basketball-soccer-volleyball-baseball-or-wrestl-562a76f012.json",
-      "last_changed": "2026-10-14T23:57:09.569Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/request-a-research-partnership-for-basketball-soccer-volleyball-baseball-or-wrestl-562a76f012/",
-      "last_changed": "2026-10-14T23:57:09.569Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/show-11-on-11-football-formation-teaching-on-a-phone-267bb0ad4f.json",
-      "last_changed": "2026-10-14T23:57:09.569Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/show-11-on-11-football-formation-teaching-on-a-phone-267bb0ad4f/",
-      "last_changed": "2026-10-14T23:57:09.569Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/teach-a-running-back-the-aiming-gap-and-pulling-guard-assignment-7694eec414.json",
-      "last_changed": "2026-10-14T23:57:09.569Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/teach-a-running-back-the-aiming-gap-and-pulling-guard-assignment-7694eec414/",
-      "last_changed": "2026-10-14T23:57:09.569Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/try-synthetic-scheme-changes-in-an-experimental-drive-simulation-ebcfc59a37.json",
-      "last_changed": "2026-10-14T23:57:09.569Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/try-synthetic-scheme-changes-in-an-experimental-drive-simulation-ebcfc59a37/",
-      "last_changed": "2026-10-14T23:57:09.569Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/visualize-blitz-pickup-and-offensive-line-blocking-responsibility-fb92ea71d7.json",
-      "last_changed": "2026-10-14T23:57:09.569Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/visualize-blitz-pickup-and-offensive-line-blocking-responsibility-fb92ea71d7/",
-      "last_changed": "2026-10-14T23:57:09.569Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/products/game-fabric/",
-      "last_changed": "2026-10-14T23:57:09.569Z",
-      "priority": 94
-    },
-    {
-      "path": "/chum/products/game-fabric/ai-conformance.json",
-      "last_changed": "2026-10-14T23:57:09.569Z",
-      "priority": 94
-    },
-    {
-      "path": "/chum/products/game-fabric/ai-discovery.json",
-      "last_changed": "2026-10-14T23:57:09.569Z",
-      "priority": 94
-    },
-    {
-      "path": "/chum/products/game-fabric/llms.txt",
-      "last_changed": "2026-10-14T23:57:09.569Z",
-      "priority": 94
-    },
-    {
-      "path": "/.well-known/evercraft-pain-index.json",
-      "last_changed": "2026-10-14T23:57:09.569Z",
-      "priority": 90
-    },
-    {
-      "path": "/.well-known/evercraft-products.json",
-      "last_changed": "2026-10-14T23:57:09.569Z",
-      "priority": 88
-    },
-    {
-      "path": "/llms-full.txt",
-      "last_changed": "2026-10-14T23:57:09.569Z",
-      "priority": 86
-    },
-    {
-      "path": "/.well-known/evercraft-agent-directory.json",
-      "last_changed": "2026-10-14T23:57:09.569Z",
-      "priority": 84
-    },
-    {
-      "path": "/.well-known/evercraft-discovery.json",
-      "last_changed": "2026-10-14T23:57:09.569Z",
-      "priority": 84
-    },
-    {
-      "path": "/.well-known/evercraft-syndication.json",
-      "last_changed": "2026-10-14T23:57:09.569Z",
-      "priority": 84
-    },
-    {
-      "path": "/chum/",
-      "last_changed": "2026-10-14T23:57:09.569Z",
-      "priority": 80
-    },
-    {
-      "path": "/chum/answers/",
-      "last_changed": "2026-10-14T23:57:09.569Z",
-      "priority": 80
-    },
-    {
-      "path": "/chum/answers/index.json",
-      "last_changed": "2026-10-14T23:57:09.569Z",
-      "priority": 80
-    },
-    {
-      "path": "/chum/answers/index.txt",
-      "last_changed": "2026-10-14T23:57:09.569Z",
+      "path": "/chum/hot/",
+      "last_changed": "2026-10-15T01:34:55.962Z",
       "priority": 80
     },
     {
       "path": "/chum/hot/index.json",
-      "last_changed": "2026-10-14T23:57:09.569Z",
+      "last_changed": "2026-10-15T01:34:55.962Z",
       "priority": 80
-    },
-    {
-      "path": "/chum/index.json",
-      "last_changed": "2026-10-14T23:57:09.569Z",
-      "priority": 80
-    },
-    {
-      "path": "/chum/pain-index.json",
-      "last_changed": "2026-10-14T23:57:09.569Z",
-      "priority": 80
-    },
-    {
-      "path": "/chum/pain-index.txt",
-      "last_changed": "2026-10-14T23:57:09.569Z",
-      "priority": 80
-    },
-    {
-      "path": "/chum/syndication/",
-      "last_changed": "2026-10-14T23:57:09.569Z",
-      "priority": 80
-    },
-    {
-      "path": "/chum/syndication/index.json",
-      "last_changed": "2026-10-14T23:57:09.569Z",
-      "priority": 80
-    },
-    {
-      "path": "/ai-discovery.json",
-      "last_changed": "2026-10-14T23:57:09.569Z",
-      "priority": 60
-    },
-    {
-      "path": "/feed.json",
-      "last_changed": "2026-10-14T23:57:09.569Z",
-      "priority": 60
-    },
-    {
-      "path": "/feed.xml",
-      "last_changed": "2026-10-14T23:57:09.569Z",
-      "priority": 60
-    },
-    {
-      "path": "/schema.jsonld",
-      "last_changed": "2026-10-14T23:57:09.569Z",
-      "priority": 60
     }
   ],
   "recent_surfaces": [
+    {
+      "path": "/chum/hot/",
+      "url": "/chum/hot/",
+      "last_changed": "2026-10-15T01:34:55.962Z",
+      "priority": 80
+    },
+    {
+      "path": "/chum/hot/index.json",
+      "url": "/chum/hot/index.json",
+      "last_changed": "2026-10-15T01:34:55.962Z",
+      "priority": 80
+    },
     {
       "path": "/chum/sitemaps/answers.xml",
       "url": "/chum/sitemaps/answers.xml",
@@ -415,12 +227,6 @@
       "priority": 80
     },
     {
-      "path": "/chum/hot/index.json",
-      "url": "/chum/hot/index.json",
-      "last_changed": "2026-10-14T23:57:09.569Z",
-      "priority": 80
-    },
-    {
       "path": "/chum/index.json",
       "url": "/chum/index.json",
       "last_changed": "2026-10-14T23:57:09.569Z",
@@ -520,12 +326,6 @@
       "path": "/chum/proof/rivet.json",
       "url": "/chum/proof/rivet.json",
       "last_changed": "2026-10-08T16:24:55.476Z",
-      "priority": 80
-    },
-    {
-      "path": "/chum/hot/",
-      "url": "/chum/hot/",
-      "last_changed": "2026-10-08T11:21:03.326Z",
       "priority": 80
     },
     {
