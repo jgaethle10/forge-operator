@@ -5,6 +5,9 @@ import {inspectWebsiteAuditBuyerPage,formatWebsiteAuditBuyerProbe,WEBSITE_AUDIT_
 const html = `<!doctype html><html><title>Evercraft Quick Win Audit</title>
 <h1>Your website is getting attention</h1><p>Website Quick Win Audit $49</p>
 <form method="post" action="/api/offers/website-audit/checkout">
+<input type="email" name="customer_ref" required>
+<input type="url" name="website_url" required>
+<input type="checkbox" name="user_confirmed" value="true" required>
 <button>Continue through Evercraft Payments</button></form></html>`;
 const respond=(body=html,status=200,headers={'content-type':'text/html; charset=utf-8'})=>
   new Response(body,{status,headers});
@@ -34,6 +37,9 @@ test('redirect, missing price or CTA, and unsupported claims fail closed',async(
     [respond('',302,{location:'https://elsewhere.example','content-type':'text/html'}),'redirect_not_verified'],
     [respond(html.replace('$49','$99')),'price_missing'],
     [respond(html.replace('/api/offers/website-audit/checkout','/wrong')),'buyer_form_missing'],
+    [respond(html.replace('name="customer_ref"','name="missing_email"')),'buyer_email_field_missing'],
+    [respond(html.replace('name="website_url"','name="missing_site"')),'audited_website_field_missing'],
+    [respond(html.replace('type="checkbox"','type="hidden"')),'explicit_consent_missing'],
     [respond(html+'<span>guaranteed new customers</span>'),'unsupported_claim'],
     [respond('{"ok":true}',200,{'content-type':'application/json'}),'not_html'],
   ];
