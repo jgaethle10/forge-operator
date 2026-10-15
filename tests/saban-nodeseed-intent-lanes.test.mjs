@@ -195,7 +195,7 @@ test('remote broker errors are redacted before persistence',()=>{
 
 const canonical=value=>Array.isArray(value)?value.map(canonical):
   value&&typeof value==='object'?Object.fromEntries(Object.keys(value).sort().map(k=>[k,canonical(value[k])])):value;
-const digest=(v,sorted=false)=>'sha256:'+createHash('sha256').update(JSON.stringify(sorted?canonical(v):v)).digest('hex');
+const digest=(v,sorted=false)=>(sorted?'sha256:':'')+createHash('sha256').update(JSON.stringify(sorted?canonical(v):v)).digest('hex');
 function fixtureReceipts(){
   const intent={node_id:'hp-owned',workload_class:'systemia.content-hash.v1',idempotency_key:'node-job-1'};
   const lease={lease_id:'bounded-lease-1'};
