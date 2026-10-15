@@ -1,0 +1,39 @@
+name: Saban Checkout Production Truth
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: "17 * * * *"
+  push:
+    branches: [main]
+    paths:
+      - "scripts/checkout-fabric-live-canary.mjs"
+      - "scripts/checkout-fabric-live-canary.test.mjs"
+      - ".github/workflows/saban-checkout-production-truth.yml"
+      - "systemia/mcp/fabric-public-site.mjs"
+      - "systemia/mcp/fabric-local-runtime.mjs"
+permissions:
+  contents: read
+concurrency:
+  group: saban-checkout-truth-${{ github.ref }}
+  cancel-in-progress: true
+jobs:
+  externally-observed-checkout:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Test regression guard with positive and negative fixtures
+        run: node --test scripts/checkout-fabric-live-canary.test.mjs
+      - name: Check real production release and customer offer forms
+        run: node scripts/checkout-fabric-live-canary.mjs
+      - name: Archive evidence on success or failure
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: saban-checkout-production-truth-${{ github.run_id }}
+          path: artifacts/saban/checkout-health/latest.json
+          if-no-files-found: warn
+          retention-days: 14
