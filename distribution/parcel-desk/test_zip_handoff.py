@@ -103,6 +103,20 @@ class ZipHandoffTest(unittest.TestCase):
             with self.assertRaisesRegex(ValueError, "ZIP pieces"):
                 restore_zip(broken, root / "out")
 
+    def test_non_object_manifest_rejected(self):
+        with tempfile.TemporaryDirectory() as d:
+            root = Path(d)
+            z, _ = make_zip(root)
+            invalid = root / "invalid.zip"
+            with zipfile.ZipFile(z) as src, zipfile.ZipFile(invalid, "w") as dst:
+                for info in src.infolist():
+                    data = src.read(info.filename)
+                    if info.filename == "parcel-manifest.json":
+                        data = b"[]"
+                    dst.writestr(info.filename, data)
+            with self.assertRaisesRegex(ValueError, "manifest format"):
+                restore_zip(invalid, root / "out")
+
     def test_refuse_overwrite(self):
         with tempfile.TemporaryDirectory() as d:
             root = Path(d)
