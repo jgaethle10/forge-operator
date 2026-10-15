@@ -10,6 +10,8 @@ test('showcase uses the actual engine and avoids delivery claims',()=>{
  assert.ok(html.includes('Not a remote-delivery demonstration.'));
  assert.ok(html.includes('No file transmitted')||html.includes('No file was transmitted')||html.includes('Nothing remotely sent'));
  assert.ok(html.includes('illustrative 18 MiB'));
+ assert.ok(html.includes('MIME/base64 adds roughly one-third'));
+ assert.ok(html.includes('not verified sendable'));
  assert.ok(html.includes('Download proof JSON'));
 });
 test('26 MiB original reassembles with expected SHA-256; substitution blocked',async()=>{
