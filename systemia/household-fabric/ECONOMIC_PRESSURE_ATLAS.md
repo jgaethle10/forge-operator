@@ -10,7 +10,8 @@ This bridge joins **context** and **actions** without pretending one is the othe
 
 ## Inputs and outputs
 
-- `normalizeEconomicPressureSignal(raw, now)` accepts only allowed metric, geography, unit and HTTPS official source combinations, with valid observation month and already-released publication time.
+- `normalizeEconomicPressureSignal(raw, now)` accepts only **independently reviewed and pinned** metric, observed period, exact primary URL, geography, unit and numeric value combinations in `economic-pressure-reviewed-snapshots.json`. A link to an official domain is not evidence by itself. BLS release times are pinned. Yakima ESD currently supplies month-level publication dating, so the bridge does not invent an exact release timestamp.
+- For a new data release: check the original authoritative report, add a reviewed immutable snapshot with its date precision, add a factual test, run CI, and obtain independent review. This static allowlist is deliberately *not* an automatic CPI pipeline.
 - `buildEconomicPressureHouseholdView({signals, ledger, sourceRegistry, geography, now, householdOptions})` returns source-labeled macro/local measurements alongside the existing `buildHouseholdToday()` surface. It **does not** boost rankings, mint opportunities or claim a live source collector.
 
 The pilot recognizes:
