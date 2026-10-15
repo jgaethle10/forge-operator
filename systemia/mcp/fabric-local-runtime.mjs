@@ -897,10 +897,30 @@ export async function startFabricLocalRuntime({
           });
         }
 
+        const websiteUrl=slug==='website-audit'?String(body?.website_url||'').trim().slice(0,1001):null;
+        if(slug==='website-audit'&&!websiteUrl){
+          return sendJson(res,422,{ok:false,error:'public_https_website_required',checkout_ready:false,fulfillment_release:false});
+        }
+        let auditedDomain=null;
         const controller=new AbortController();
         const timer=setTimeout(()=>controller.abort(),15000);
         let upstream;
         try{
+          if(slug==='website-audit'){
+            // Confirm the downstream runtime can retain the target before purchase.
+            // This request cannot create a checkout or authorize fulfillment.
+            const preflight=await purchaseIntentFetch(purchaseIntentEndpoint,{
+              method:'POST',headers:{'content-type':'application/json','accept':'application/json'},
+              body:JSON.stringify({action:'website_audit_prepayment_preflight',capability_key:capabilityKey,website_url:websiteUrl}),
+              signal:controller.signal,
+            });
+            const ready=await preflight.json().catch(()=>null);
+            if(!preflight.ok||ready?.ok!==true||ready?.schema!=='raven.website-audit-context-preflight.v1'||ready?.checkout_created!==false||!ready?.audited_domain){
+              if(isForm) return sendText(res,503,renderPaymentHoldPage({slug}),{contentType:'text/html; charset=utf-8'});
+              return sendJson(res,503,{ok:false,error:'website_audit_context_preflight_failed',checkout_ready:false,fulfillment_release:false});
+            }
+            auditedDomain=ready.audited_domain;
+          }
           upstream=await purchaseIntentFetch(purchaseIntentEndpoint,{
             method:'POST',
             headers:{
@@ -913,6 +933,7 @@ export async function startFabricLocalRuntime({
               capability_key:capabilityKey,
               idempotency_key:idempotencyKey,
               customer_ref:customerRef,
+              ...(websiteUrl?{website_url:websiteUrl}:{}),
             }),
             signal:controller.signal,
           });
@@ -944,7 +965,7 @@ export async function startFabricLocalRuntime({
           const candidate=new URL(String(result?.checkout_url||''));
           if(candidate.protocol==='https:') checkoutUrl=candidate.toString();
         }catch{}
-        if(result?.checkout_ready!==true||!checkoutUrl){
+        if(result?.checkout_ready!==true||!checkoutUrl||(auditedDomain&&(result?.context_persisted!==true||result?.audited_domain!==auditedDomain))){
           if(isForm){
             return sendText(
               res,
