@@ -7,8 +7,16 @@ import os
 from pathlib import Path
 import re
 import sys
+import tempfile
+import zipfile
+import shutil
 
 BLOCK = 1024 * 1024
+ZIP_MAX_ORIGINAL = 64 * 1024 * 1024
+ZIP_MAX_PARTS = 64
+ZIP_MAX_MANIFEST = 100000
+ZIP_MAX_INSTRUCTIONS = 100000
+ZIP_MAX_PACKAGE = ZIP_MAX_ORIGINAL + ZIP_MAX_MANIFEST + ZIP_MAX_INSTRUCTIONS
 PART_RE = re.compile(r"part-[0-9]{5}\.bin\Z")
 SHA_RE = re.compile(r"[a-f0-9]{64}\Z")
 
@@ -34,7 +42,7 @@ def write_json_atomic(path, doc):
 def split(source, folder, max_bytes):
     source = Path(source)
     folder = Path(folder)
-    if not source.is_file() or source.is_symlink():
+    if not source.is_file() or source.is_symlink() or folder.is_symlink():
         raise ValueError("Input must be a regular source file, not a symlink")
     if max_bytes < 1 or max_bytes > 2_000_000_000:
         raise ValueError("Chunk size must be 1..2,000,000,000 bytes")
@@ -81,11 +89,13 @@ def split(source, folder, max_bytes):
 def restore(folder, output_folder):
     folder = Path(folder)
     output_folder = Path(output_folder)
+    if folder.is_symlink() or output_folder.is_symlink():
+        raise ValueError("Unsafe symlinked parcel/output folder")
     manifest = json.loads((folder / "parcel-manifest.json").read_text(encoding="utf-8"))
     if manifest.get("format") != "evercraft-parcel-v0.1":
         raise ValueError("Unsupported manifest format")
     name = manifest.get("original_name")
-    if not isinstance(name, str) or name in ("", ".", "..") or Path(name).name != name or "\\" in name:
+    if not isinstance(name, str) or name in ("", ".", "..") or Path(name).name != name or "\\" in name or any(ord(c) < 32 for c in name) or ":" in name:
         raise ValueError("Unsafe output name")
     parts = manifest.get("parts")
     if not isinstance(parts, list):
@@ -142,6 +152,64 @@ def restore(folder, output_folder):
         raise
 
 
+
+def restore_zip(archive, output_folder):
+    """Read a browser-generated Evercraft v0.4 stored ZIP; recover safely without extracting paths.
+
+    The sender/manifest identity remains unverified. ZIP support does not encrypt or transmit.
+    """
+    archive, output_folder = Path(archive), Path(output_folder)
+    if archive.is_symlink() or not archive.is_file() or output_folder.is_symlink():
+        raise ValueError("Unsafe or missing ZIP/output folder")
+    if archive.stat().st_size > ZIP_MAX_PACKAGE + 16384:
+        raise ValueError("ZIP exceeds 64 MiB local pilot budget")
+    with zipfile.ZipFile(archive, "r", allowZip64=False) as z:
+        infos = z.infolist()
+        if not (2 <= len(infos) <= ZIP_MAX_PARTS + 2):
+            raise ValueError("Unexpected ZIP entry count")
+        by_name = {}
+        original_bytes = 0
+        for info in infos:
+            name = info.filename
+            if (name in by_name or not (name in {"parcel-manifest.json", "README-RECIPIENT.txt"} or PART_RE.fullmatch(name))):
+                raise ValueError("Duplicate or unsafe ZIP entry")
+            if info.compress_type != zipfile.ZIP_STORED or info.flag_bits & 1 or info.is_dir():
+                raise ValueError("Compression, encryption, and directories are not supported")
+            # A ZIP entry might encode a POSIX symlink even with innocuous filename.
+            mode = (info.external_attr >> 16) & 0o170000
+            if mode == 0o120000:
+                raise ValueError("ZIP symlink entry prohibited")
+            if info.file_size != info.compress_size or info.file_size > ZIP_MAX_ORIGINAL:
+                raise ValueError("ZIP entry size inconsistent")
+            if name == "parcel-manifest.json" and info.file_size > ZIP_MAX_MANIFEST:
+                raise ValueError("Manifest too large")
+            if name == "README-RECIPIENT.txt" and info.file_size > ZIP_MAX_INSTRUCTIONS:
+                raise ValueError("Instructions too large")
+            if PART_RE.fullmatch(name):
+                original_bytes += info.file_size
+            by_name[name] = info
+        if not {'parcel-manifest.json', 'README-RECIPIENT.txt'} <= by_name.keys():
+            raise ValueError("Missing required ZIP metadata")
+        if original_bytes > ZIP_MAX_ORIGINAL:
+            raise ValueError("Original exceeds 64 MiB pilot budget")
+        with z.open(by_name['parcel-manifest.json']) as mf:
+            manifest = json.loads(mf.read(ZIP_MAX_MANIFEST + 1).decode('utf-8'))
+        if manifest.get('format') != 'evercraft-parcel-v0.1':
+            raise ValueError("Unsupported manifest format")
+        parts = manifest.get('parts')
+        if not isinstance(parts, list) or len(parts) > ZIP_MAX_PARTS:
+            raise ValueError("Invalid ZIP part count")
+        expected = {'parcel-manifest.json', 'README-RECIPIENT.txt'} | {f'part-{i:05d}.bin' for i in range(1, len(parts) + 1)}
+        if set(by_name) != expected:
+            raise ValueError("ZIP pieces do not match manifest")
+        with tempfile.TemporaryDirectory(prefix='evercraft-parcel-receive-') as tmp:
+            folder = Path(tmp)
+            # Never use ZipFile.extract: copy verified flat filenames only.
+            for name in ['parcel-manifest.json'] + sorted(n for n in by_name if PART_RE.fullmatch(n)):
+                with z.open(by_name[name]) as src, open(folder / name, 'xb') as dst:
+                    shutil.copyfileobj(src, dst, BLOCK)  # zipfile validates CRC on full read
+            return restore(folder, output_folder)
+
 def main():
     p = argparse.ArgumentParser(description=__doc__)
     sub = p.add_subparsers(dest="action", required=True)
@@ -152,14 +220,19 @@ def main():
     b = sub.add_parser("restore", help="Rebuild file only after verifying every part and original SHA256")
     b.add_argument("parcel_folder", type=Path)
     b.add_argument("output_folder", type=Path)
+    c = sub.add_parser("restore-zip", help="Restore original directly from the one-file ZIP handoff")
+    c.add_argument("parcel_zip", type=Path)
+    c.add_argument("output_folder", type=Path)
     args = p.parse_args()
     try:
         if args.action == "split":
             data = split(args.source, args.output_folder, int(args.max_mib * 1024 * 1024))
             print(f"Created {len(data['parts'])} parts; {data['original_size']} original bytes; SHA256 {data['original_sha256']}")
             print(f"Manifest: {args.output_folder / 'parcel-manifest.json'}")
-        else:
+        elif args.action == "restore":
             print(f"Verified and restored: {restore(args.parcel_folder, args.output_folder)}")
+        else:
+            print(f"Verified ZIP and restored: {restore_zip(args.parcel_zip, args.output_folder)}")
     except (ValueError, OSError, KeyError, TypeError, json.JSONDecodeError) as exc:
         print("FAIL CLOSED:", exc, file=sys.stderr)
         sys.exit(1)
