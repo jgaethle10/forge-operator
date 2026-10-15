@@ -8,19 +8,25 @@ A camera may suggest PPE concerns, but a bounding box isn't proof of compliance 
 
 consented observation → candidate requiring review → human judgment → assigned corrective action → documented closeout → auditable evidence export
 
-A reviewer must be able to dismiss a false alarm. Low visibility, occluded footwear and unknown confidence must not be promoted to definitive camera-based violations. Trained humans remain responsible for site safety.
+A reviewer must be able to dismiss an obvious **illustrative** false alarm. Low visibility, occluded footwear and unknown confidence cannot be promoted to a violation **or dismissed as visually safe**. They become tracked, still-open `inspection_required` tasks until a separate, authorized physical inspection workflow exists. Trained humans remain responsible for site safety.
 
 ## What is implemented in this branch
 
 - `evidence.mjs`: pure Node.js synthetic export validator. Replays candidate lifecycle events, prevents unreviewed closeouts, rejects unknown confidence as camera-confirmed violations and rejects production/admission/checkout claims.
 - `evidence.test.mjs`: regression coverage for representative valid history, tampering, contradictory state, invalid chronology, missing human review, unsupported closeout and authority claims.
+- `verify-export.mjs`: read-only CLI checker for a JSON file downloaded from the fictional browser session. A successful verdict is an internal consistency check, **not** chain-of-custody evidence.
+- `browser-e2e.py`: real Chromium browser acceptance run. Clicks the review and closeout flow, exports JSON, validates it using the Node CLI, confirms tamper rejection, and verifies the physical-inspection request branch. A CI run can save synthetic screenshots, short video, and exported receipts in a seven-day GitHub artifact.
 - Separate path-scoped CI. No public discovery registry, commerce, browser deployment or production routing changes.
 
 The offline illustrative HTML preview `evercraft_ppe_safety_internal_demo.html` is now versioned in this pilot directory, alongside the evidence validator. It was previously packaged in the internal pilot kit. It is deliberately not an authenticated customer page. The JSON content SHA-256 is a local change detector, NOT a cryptographic proof of authorship or chain of custody.
 
 ## Run
 
-    node --test pilots/sitesight/evidence.test.mjs
+    node --test pilots/sitesight/*.test.mjs
+    python -m pip install playwright==1.55.0
+    python -m playwright install chromium
+    python pilots/sitesight/browser-e2e.py
+    node pilots/sitesight/verify-export.mjs /path/to/synthetic-evidence.json
 
 ## Release blockers
 
