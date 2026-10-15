@@ -58,12 +58,20 @@ test('real Fabric HTTP request refuses off-domain or mismatched price and never 
   let calls=0;
   const runtime=await startFabricLocalRuntime({
     host:'127.0.0.1',port:0,catalog,faieSurfaceEnabled:false,
-    purchaseIntentFetch:async()=>{calls++;return Response.json(upstream);},
+    purchaseIntentFetch:async(_url,init)=>{
+      calls++;
+      const input=JSON.parse(String(init?.body||'{}'));
+      if(input.action==='website_audit_prepayment_preflight')return Response.json({
+        ok:true,schema:'raven.website-audit-context-preflight.v1',
+        audited_domain:'customer-business.org',checkout_created:false,
+      });
+      return Response.json({...upstream,context_persisted:true,audited_domain:'customer-business.org'});
+    },
   });
   try{
     const invoke=async()=>fetch(runtime.url+'/api/offers/website-audit/checkout',{
       method:'POST',headers:{'content-type':'application/x-www-form-urlencoded'},
-      body:new URLSearchParams({user_confirmed:'true'}),redirect:'manual',
+      body:new URLSearchParams({user_confirmed:'true',customer_ref:'buyer@customer-business.org',website_url:'https://customer-business.org'}),redirect:'manual',
     });
     let r=await invoke();
     assert.equal(r.status,503);
@@ -77,6 +85,6 @@ test('real Fabric HTTP request refuses off-domain or mismatched price and never 
     r=await invoke();
     assert.equal(r.status,303);
     assert.match(r.headers.get('location'),/^\/checkout\/handoff\//);
-    assert.equal(calls,3);
+    assert.equal(calls,6);
   }finally{await runtime.close();}
 });
