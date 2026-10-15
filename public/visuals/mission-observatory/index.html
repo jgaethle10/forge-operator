@@ -76,7 +76,7 @@ a{color:#b9efff}
 .bar{height:3px;width:100%;background:#172734;margin-top:12px;border-radius:3px;overflow:hidden}
 .bar span{display:block;height:100%;width:0;background:#83e2e2;box-shadow:0 0 12px #83e2e2}
 @media(max-width:1050px){.main{grid-template-columns:minmax(0,1fr) 240px}.side{padding:20px 14px}.footer{grid-template-columns:1fr repeat(3,120px)}.stat{padding:22px 12px}.stat strong{font-size:27px}}
-@media(max-width:760px){.topbar{height:63px;padding:0 17px;gap:12px}.divider,.headline{display:none}.brand strong{font-size:11px}.mode{font-size:9px;letter-spacing:.06em;padding:7px}.main{display:flex;flex-direction:column;min-height:0}.theater{min-height:480px;height:59vh;max-height:690px}.theater-top{top:21px;left:19px;right:19px}.theater h1{font-size:29px;max-width:330px}.theater-sub{font-size:11px;max-width:310px}.phase-name{font-size:8px}.phase-name strong{font-size:13px}.theater-bottom{left:18px;right:18px;bottom:20px}.warning{font-size:9px}.side{border-left:0;border-top:1px solid var(--line);padding:17px}.stage-list{grid-template-columns:repeat(3,minmax(0,1fr));gap:5px}.stage{gap:6px;padding:11px 5px}.stage-name{font-size:9px}.stage small{display:none}.feed{min-height:0}.feed h2{margin:8px 0;font-size:17px}.feed p{min-height:0}.side-footer{display:none}.footer{grid-template-columns:repeat(3,1fr)}.controls{grid-column:1/-1;padding:15px 18px}.stat{padding:16px}.stat strong{font-size:25px;margin:8px 0}.step-dots{font-size:8px}}
+@media(max-width:760px){.topbar{height:63px;padding:0 17px;gap:12px}.divider,.headline{display:none}.brand strong{font-size:11px}.mode{font-size:9px;letter-spacing:.06em;padding:7px}.main{display:flex;flex-direction:column;min-height:0}.theater{min-height:480px;height:59vh;max-height:690px}.theater-top{top:21px;left:19px;right:19px}.theater h1{font-size:29px;max-width:330px}.theater-sub{font-size:11px;max-width:310px}.phase-name{font-size:8px}.phase-name strong{font-size:13px}.theater-bottom{left:18px;right:18px;bottom:20px}.theater-top{padding-bottom:28px;background:linear-gradient(180deg,#030810ee,#030810a8 75%,transparent);z-index:4}.warning{font-size:9px}.side{border-left:0;border-top:1px solid var(--line);padding:17px}.stage-list{grid-template-columns:repeat(3,minmax(0,1fr));gap:5px}.stage{gap:6px;padding:11px 5px}.stage-name{font-size:9px}.stage small{display:none}.feed{min-height:0}.feed h2{margin:8px 0;font-size:17px}.feed p{min-height:0}.side-footer{display:none}.footer{grid-template-columns:repeat(3,1fr)}.controls{grid-column:1/-1;padding:15px 18px}.stat{padding:16px}.stat strong{font-size:25px;margin:8px 0}.step-dots{font-size:8px}}
 @media(prefers-reduced-motion:reduce){.stage{transition:none}}
 
 /* Small phones keep the entire command deck within the viewport. */
@@ -138,6 +138,7 @@ a{color:#b9efff}
 </div>
 <script type="module">
 import { STAGES, DEMO_EVENTS, DEMO_MISSION, frameAt, validateEventStream } from "./scene.mjs";
+import { constellationCenter, renderConstellations } from "./constellation.mjs";
 validateEventStream(DEMO_EVENTS, { syntheticOnly:true });
 const canvas = document.getElementById("universe");
 const ctx = canvas.getContext("2d", { alpha:false });
@@ -154,7 +155,7 @@ function polar(i){const angle = (i*2.3999632297)+1.4;const radius = 21+Math.sqrt
 const nodes = DEMO_EVENTS.map((event,i)=>{ const s=STAGES.findIndex(stage=>stage.id===event.stage), n=polar(i+3),c=centers[s];return { ...event, index:i, x:c[0], y:c[1], ox:n[0], oy:n[1], stageIndex:s }; });
 const byId = new Map(nodes.map(node=>[node.id,node]));
 const stars = Array.from({length:reducedMotion?100:370},(_,i)=>({x:rand(i*13+1),y:rand(i*17+4),r:.25+rand(i*23+3)*1.3,w:rand(i*31+2)*6.28,tw:.25+rand(i*41+5)*.7}));
-const motes = Array.from({length:reducedMotion?180:840},(_,i)=>({stage:i%6,rad:11+Math.pow(rand(i*3+17),.65)*110,theta:rand(i*7+1)*Math.PI*2,speed:(.025+rand(i*11+6)*.13)*(i%2?-1:1),size:.35+rand(i*5+8)*1.25,alpha:.1+rand(i*9+7)*.52}));
+const firstAt=STAGES.map((_,i)=>(nodes.find(n=>n.stageIndex===i)||{seconds:999}).seconds);
 function sizing(){
   const rect=canvas.getBoundingClientRect(),dpr=Math.min(window.devicePixelRatio||1,2);
   viewportWidth=Math.max(rect.width,1);viewportHeight=Math.max(rect.height,1);
@@ -166,7 +167,7 @@ function point(node){
   const factor=Math.min(viewportWidth/950,1.05);
   const w=viewportWidth,h=viewportHeight;
   const paddingX=w<600?.03:.09;
-  return [paddingX*w + node.x*(w*(1-2*paddingX))+node.ox*factor,h*.11+node.y*(h*.77)+node.oy*factor];
+  const [cx,cy]=constellationCenter(node.stageIndex,centers,w,h);return [cx+node.ox*factor,cy+node.oy*factor];
 }
 function glow(x,y,r,color,alpha){
   ctx.save();ctx.globalAlpha=alpha;
@@ -181,27 +182,16 @@ function draw(now){
   glow(w*.77,h*.55,Math.min(w,h)*.5,"#9d6337",.10);
   glow(w*.20,h*.62,Math.min(w,h)*.31,"#5b2857",.07);
   for(const s of stars){ const flicker=reducedMotion?1:(.55+.45*Math.sin(t*.55+s.w));ctx.fillStyle="rgba(186,213,231,"+(.14+s.tw*flicker*.65)+")";ctx.fillRect(s.x*w,s.y*h,s.r,s.r); }
-  for(const mote of motes){
-    const stageFirst=nodes.find(n=>n.stageIndex===mote.stage),age=stageFirst?current-stageFirst.seconds:-1;
-    if(age<=0)continue;
-    const c=centers[mote.stage],pad=w<600?.03:.09;
-    const cx=pad*w+c[0]*(w*(1-2*pad)),cy=h*.11+c[1]*h*.77;
-    const a=mote.theta+(reducedMotion?0:t*mote.speed);
-    const fade=Math.min(1,age/2.5)*mote.alpha;
-    const radius=mote.rad*Math.min(w/800,1);
-    const x=cx+Math.cos(a)*radius*1.5,y=cy+Math.sin(a)*radius*.9;
-    ctx.fillStyle=STAGES[mote.stage].tint;
-    ctx.globalAlpha=fade;ctx.fillRect(x,y,mote.size,mote.size);ctx.globalAlpha=1;
-  }
+  renderConstellations(ctx,{stages:STAGES,centers,firstAt,w,h,time:t,current,reducedMotion,glow});
   const currentFrame=frameAt(current),visibleSet=new Set(currentFrame.visible.map(e=>e.id));
   for(let si=0;si<STAGES.length;si++){
-    const stage=STAGES[si],c=centers[si],px=w*(w<600?.03:.09)+c[0]*w*(w<600?.94:.82),py=h*.11+c[1]*h*.77;
+    const stage=STAGES[si],[px,py]=constellationCenter(si,centers,w,h);
     const age=Math.max(0,current - (nodes.find(n=>n.stageIndex===si)||{seconds:999}).seconds);
     if(age<=0)continue;
     const opacity=Math.min(1,age/1.8);
     glow(px,py,53,stage.tint,.08*opacity);
     ctx.strokeStyle=stage.tint+"35";ctx.lineWidth=.5;ctx.beginPath();ctx.arc(px,py,13+(reducedMotion?0:3*Math.sin(t+si)),0,Math.PI*2);ctx.stroke();
-    ctx.fillStyle=stage.tint;ctx.globalAlpha=.55*opacity;ctx.font="600 10px ui-sans-serif, sans-serif";ctx.textAlign="center";ctx.fillText(stage.label,px,py-23);ctx.globalAlpha=1;
+    if(w>=600){ctx.fillStyle=stage.tint;ctx.globalAlpha=.82*opacity;ctx.font="700 11px ui-sans-serif, sans-serif";ctx.textAlign="center";ctx.fillText(stage.label,px,py-74);ctx.globalAlpha=1;}
   }
   for(const node of nodes){
     if(!visibleSet.has(node.id))continue;
@@ -220,8 +210,8 @@ function draw(now){
     ctx.strokeStyle="#d7eeff";ctx.lineWidth=.75;ctx.stroke();
     if(node.id===currentFrame.active?.id){
       ctx.strokeStyle=STAGES[node.stageIndex].tint+"aa";ctx.lineWidth=1;ctx.beginPath();ctx.arc(x,y,14+(reducedMotion?0:3*Math.sin(t*3)),0,Math.PI*2);ctx.stroke();
-      const left=x>w*.68;ctx.textAlign=left?"right":"left";ctx.fillStyle="#eaf7fa";ctx.font="11px ui-sans-serif, sans-serif";ctx.fillText(node.title,x+(left?-18:18),y-12);
-      ctx.font="9px ui-monospace, monospace";ctx.fillStyle="#9fbfc1";ctx.fillText(node.kind.toUpperCase()+" · SYNTHETIC",x+(left?-18:18),y+4);
+      if(w>=600){const left=x>w*.68;ctx.textAlign=left?"right":"left";ctx.fillStyle="#eaf7fa";ctx.font="11px ui-sans-serif, sans-serif";ctx.fillText(node.title,x+(left?-18:18),y-12);
+      ctx.font="9px ui-monospace, monospace";ctx.fillStyle="#9fbfc1";ctx.fillText(node.kind.toUpperCase()+" · SYNTHETIC",x+(left?-18:18),y+4);}
     }
   }
   const sweep=ctx.createLinearGradient(0,0,w,0);sweep.addColorStop(0,"transparent");sweep.addColorStop(.5,"#78def00c");sweep.addColorStop(1,"transparent");ctx.fillStyle=sweep;ctx.fillRect(0,h*.5-1,w,1);
