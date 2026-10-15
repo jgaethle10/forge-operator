@@ -1,4 +1,5 @@
 #!/usr/bin/env node
+import { buyerOrderKey, verifyNativePaymentReturn } from './payment-return.mjs';
 import { publicPaymentOffer } from './public-payment-offers.mjs';
 import http from 'node:http';
 import crypto from 'node:crypto';
@@ -932,7 +933,7 @@ export async function startFabricLocalRuntime({
             },
             body:JSON.stringify(directOffer?{
               action:'create_checkout',offer_key:directOffer.offer_key,
-              order_key:'fabric-'+slug+'-'+idempotencyKey,customer_email:customerRef,
+              order_key:buyerOrderKey(slug,idempotencyKey),customer_email:customerRef,
               source_ref:'fabric-native-offer|'+slug,return_origin:'https://findmypart.base44.app',
               success_path:'/functions/evercraftBuy?payment=processing',cancel_path:'/functions/evercraftBuy?offer='+slug+'&payment=cancelled',
             }:{
@@ -1038,6 +1039,14 @@ export async function startFabricLocalRuntime({
         if(slug&&!slug.includes('/')){
           const offer=offerCapabilityForSlug(slug,preparedCatalog().capabilities);
           if(!offer) return sendJson(res,404,{error:'offer_not_found'});
+          if(parsed.searchParams.get('payment')==='processing'){
+            const result=await verifyNativePaymentReturn(slug,parsed.searchParams,purchaseIntentFetch);
+            const message=result.state==='paid'?'Payment verified. '+(result.queued?'Your work is queued.':'Delivery status is awaiting confirmation.'):
+              result.state==='synthetic'?'QA payment verified. No fulfillment was released.':
+              result.state==='invalid'?'Checkout return cannot be verified. Do not pay twice. Contact Evercraft using your checkout email.':
+              'Payment verification pending. Do not pay again. Refresh this page later or contact Evercraft.';
+            return sendText(res,result.status,'<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="referrer" content="no-referrer"><title>Evercraft Payments</title></head><body style="background:#0b1120;color:#ecf1fa;font:18px/1.6 system-ui;padding:32px;max-width:720px;margin:auto"><h1>Evercraft Payments</h1><p>'+message+'</p><a style="color:#9debdc" href="/support">Contact support</a></body></html>',{contentType:'text/html; charset=utf-8'});
+          }
           const page=renderOfferPage(offer);
           if(!page) return sendJson(res,404,{error:'offer_not_found'});
           return sendText(res,200,page,{contentType:'text/html; charset=utf-8'});
