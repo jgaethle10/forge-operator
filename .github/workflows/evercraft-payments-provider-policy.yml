@@ -5,8 +5,10 @@ on:
     paths:
       - 'systemia/payments/merchant-economics.mjs'
       - 'systemia/payments/multi-provider-route-plan.mjs'
+      - 'systemia/payments/merchant-opportunity-scanner.mjs'
       - 'tests/merchant-economics.test.mjs'
       - 'tests/multi-provider-route-plan.test.mjs'
+      - 'tests/merchant-opportunity-scanner.test.mjs'
       - '.github/workflows/evercraft-payments-provider-policy.yml'
   workflow_dispatch:
 
@@ -24,5 +26,5 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: '22'
-      - name: Test non-transactional economics and provider readiness gates
-        run: node --test tests/merchant-economics.test.mjs tests/multi-provider-route-plan.test.mjs
+      - name: Test consent-only merchant growth and provider readiness gates
+        run: node --test tests/merchant-economics.test.mjs tests/multi-provider-route-plan.test.mjs tests/merchant-opportunity-scanner.test.mjs
