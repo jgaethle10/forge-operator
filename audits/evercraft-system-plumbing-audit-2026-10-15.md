@@ -91,3 +91,11 @@ P0 release governance audit, P0 payment lineage, P0 source-to-runtime registry; 
 - Temporary read-only CI: `Evercraft Plumbing - writer and commerce topology` generated tests and audit artifact; a clone of the audit branch executed **12/12 tests successfully**. GitHub's dedicated PR workflow also completed successfully. Broader Forge and Sentinel checks were running at the audit instant.
 
 **High-leverage next action:** Require branch ruleset/status review for `.github/workflows`, `systemia/payments`, `public/.well-known`, `server.ts`, and production edge manifests; convert high-churn direct-to-main writers to artifact-only staging or reviewed PRs in a controlled migration, not in one uncontrolled cutover. Bind immutable deploy SHA to `/health` and create a receipt from the edge, then perform a product-to-runtime/merchant-flow canary.
+
+
+### Additional action/runners supply-chain inventory
+- A read-only scan of all **189** GitHub workflow files found **40** scheduled workflows, with **six** on five-minute cron intervals (CHUM crawl pressure, KAIDANCE frontier field, revenue autonomy heartbeat, Saban ambient pilot, Systemia legacy rescue watch, Systemia portfolio Sentinel).
+- Seven workflows declare `id-token: write` (OIDC issuance authority). These are inventoried separately from `contents: write` because OIDC credentials can authorize cloud or runtime operations even when GitHub source access is read-only. The audit blocks unreviewed **new** OIDC grant paths but does not attest existing trusted federated identities.
+- **186/189** workflows reference at least one action by mutable version tag rather than exact commit SHA. There are **461** such `uses:` references. This is not evidence of compromise, but makes action-supply-chain reproducibility weaker than pinning and periodic reviewed upgrades.
+- The read-only gate has **13 passing Node tests** across workflow write/OIDC authority and cross-product commercial topology. Dedicated PR CI is required independently before integration.
+- **Do not disable six five-minute monitoring cycles en masse.** First separate observation/receipt production from Git writes; preserve intended cadence while moving recurrent generated source commits to an approved, narrow release mechanism. Protect workflow edits and dedicated commercial manifests with GitHub repository rulesets requiring review.
