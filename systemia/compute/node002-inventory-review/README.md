@@ -45,6 +45,26 @@ node systemia/compute/node002-inventory-review/operator-inventory.mjs --operator
 
 This is still only a manual, unsigned inventory report, not the first remotely dispatched Systemia compute workload. Avoid duplicating manual tests unless needed during commissioning.
 
+## Current live policy compatibility check (2026-10-15)
+
+At the last read of Raven Nexus, the pre-existing compute request `node002:evercraft.source.inventory.readonly.v1:pilot:20261012` was `blocked`, with `spend_authorized:false`, no active lease and its separately pinned `allowed_adapter_sha256` set to:
+
+```
+430dff3f9bd301127b9390eb4b9b5b3aa1ec0d1b6896d70e48ecd49a09d79ec4
+```
+
+**This draft's new collector has NOT been independently verified as that pinned adapter.** A matching workload *name* does not authorize changing the source bytes. Unless a reviewer independently verifies exact equality, a new owner + issuer signed permit tied to the new source digest is needed. Never edit a policy database field just to make a proposed binary pass.
+
+The HP broker accepts the action `inventory`, while the Compute request refers to `evercraft.source.inventory.readonly.v1`. Those are **different protocol identifiers** until an independently authorized adapter binds them and proves job scope. Broker `delivered` remains local acceptance only.
+
+Identity schemes also differ: current `signed-completion-verifier.mjs` pins `SHA256(SPKI DER)`; the existing NodeSeed `device-identity.mjs` fingerprints the **PEM text**. Raven reports the telemetry key ID `node002-device-ed25519`, but a key ID by itself is not a public-key fingerprint or trust proof. Reconcile an independently trusted physical device identity and *explicit* fingerprint scheme before creating an authorization or treating the signatures as equivalent.
+
+## Immutable source-only review artifact
+
+The GitHub Actions `Node002 inventory source gate (review only)` job packages a deterministic `node002-source-review.tar` plus `SHA256SUMS.txt`, `ARCHIVE_SHA256.txt`, and `SOURCE_REF.txt`. The archive comes from the checked-out GitHub source commit and has no runtime secrets or installer. It is a candidate for independent source review, **not** a signed production release or proof that an HP executed it.
+
+After obtaining the archived files from a trusted owner-confirmed GitHub workflow run, first inspect the listed paths, then independently compare its content and pinned source commit against a separately trusted expected release. Never install or execute a source artifact merely because CI reports success.
+
 ## Blocking gates before real remote execution
 
 1. Independently reviewed and pinned delivery of the source to the HP, with provenance and expected digest verified outside of a writable Drive/README record; no force-install from chat.
