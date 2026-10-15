@@ -1,0 +1,39 @@
+{
+  "schema": "evercraft.review-artifacts.v1",
+  "candidate": "V4.8.1 review-only stylesheet cleanup",
+  "source_zip_sha256": "4e5d7d8924f19c2984b29ec2c9e7d78537f8721c85010b3043f6e495eba6900e",
+  "source_zip_drive_url": "https://drive.google.com/file/d/1nRNEC-wrPZu8Eu4YkM7UqJiKmliZ7Wl_/view",
+  "source_origin": "Archived V4.8 standalone previews; Isaias navigation normalized; V4.8.1 stylesheet cleanup",
+  "status": "review_only_not_published",
+  "traffic": "none",
+  "real_checkout": false,
+  "real_customer_intake": false,
+  "source_files": {
+    "index.html": {
+      "sha256": "6cef2a0f6b40023a7e22a70e355fe8a3fc2a4a9e25edf7cdbc4579117809a4b1",
+      "bytes": 62242
+    },
+    "ibm.html": {
+      "sha256": "60b391b7c80be7041e162a4fe879cdb3bf46005597329de153665b98e34181a8",
+      "bytes": 76010
+    },
+    "findmypart.html": {
+      "sha256": "8aa136667261f2284a4910b3a42ea47a7cf879aa812f2020226d97aeca4d4792",
+      "bytes": 69193
+    },
+    "legacy.html": {
+      "sha256": "ded98f3351aa40d7a8b359e644acd9830056cf4ccb46b70a2c1dc1ff36c85e6e",
+      "bytes": 68403
+    },
+    "isaias.html": {
+      "sha256": "52e6797d1320ad73f68de0c633b22006589295ec6defe8dca8181386c998be74",
+      "bytes": 349854
+    }
+  },
+  "parent_release": "V4.8 recovered original",
+  "corrections": {
+    "commercial_stylesheet_header": "Removed broken trailing Google Fonts import fragment on four pages",
+    "storm_stylesheet_header": "Removed network-dependent Google Fonts CSS import; keeps system fallbacks"
+  },
+  "production_deployment_authorized": false
+}
