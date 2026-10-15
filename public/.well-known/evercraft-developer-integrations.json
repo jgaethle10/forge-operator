@@ -1,0 +1,129 @@
+{
+  "schema": "evercraft.developer-integration-shelf.v1",
+  "provider": "Evercraft LLC",
+  "snapshot_date": "2026-10-14",
+  "purpose": "Public MCP discovery for third-party developers, not an offer to sell or production outcome guarantee.",
+  "entry": {
+    "name": "Evercraft Capability Discovery",
+    "mcp_url": "https://findmypart.base44.app/functions/evercraftCapabilityDiscoveryMcp",
+    "human_url": "https://findmypart.base44.app/functions/evercraftCapabilityDiscoveryMcp",
+    "tool_to_list": "list_evercraft_integrations",
+    "tool_to_match": "match_evercraft_integration",
+    "readonly": true,
+    "payments_created": false,
+    "partner_installation_verified": false,
+    "last_independent_readback": "2026-10-14",
+    "browser_viewports_checked_px": [
+      320,
+      390,
+      768,
+      1280
+    ]
+  },
+  "modules": [
+    {
+      "key": "forensiscope",
+      "name": "ForensiScope",
+      "mcp_url": "https://evercraft-forensiscope.base44.app/functions/forensiScopeMcp",
+      "tools": [
+        "classify_media_route",
+        "get_forensiscope_pricing",
+        "prepare_forensiscope_handoff",
+        "get_forensiscope_capabilities"
+      ],
+      "business_effect": "Public media triage, quoted review, human handoff; attached-file analysis is separately authenticated and rights-attested",
+      "boundary": "No anonymous access to media upload or completed analysis"
+    },
+    {
+      "key": "findmypart",
+      "name": "FindMyPart",
+      "mcp_url": "https://findmypart.base44.app/functions/findMyPartMcp",
+      "tools": [
+        "free_part_triage",
+        "get_part_hunt_offers",
+        "prepare_part_hunt_checkout",
+        "get_part_hunt_status",
+        "get_findmypart_capabilities"
+      ],
+      "business_effect": "Part identity and sourcing triage; checkout preparation only with explicit human consent",
+      "boundary": "No charged order or fulfillment without Evercraft Payments canonical provider verification"
+    },
+    {
+      "key": "eventwave",
+      "name": "EventWave",
+      "mcp_url": "https://event-wave.base44.app/functions/eventWaveMcp",
+      "tools": [
+        "search_events",
+        "get_eventwave_promotion_offers",
+        "prepare_event_promotion_handoff",
+        "prepare_event_promotion_checkout",
+        "get_eventwave_promotion_status",
+        "get_eventwave_capabilities"
+      ],
+      "business_effect": "Source-linked event lookup and optional reviewed event promotion",
+      "boundary": "Promotion is not ticket issuance, confirmed attendance or guaranteed placement without appropriate review"
+    },
+    {
+      "key": "clip",
+      "name": "Evercraft Clip",
+      "mcp_url": "https://base44.app/api/apps/6a83af980c9f995f588c7df3/functions/clipMcp",
+      "tools": [
+        "get_clip_capabilities",
+        "plan_clip_job",
+        "plan_distribution_campaign"
+      ],
+      "business_effect": "Campaign and media planning only on public MCP",
+      "boundary": "Public MCP cannot upload customer media, charge users or publish posts"
+    },
+    {
+      "key": "web",
+      "name": "Evercraft Web",
+      "mcp_url": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/evercraftWebMcp",
+      "tools": [
+        "get_web_capabilities",
+        "route_web_request",
+        "fetch_url",
+        "fetch_urls",
+        "inspect_site"
+      ],
+      "business_effect": "Public URL retrieval and bounded extraction with source hashes",
+      "boundary": "Search, authenticated browser and JS browser automation remain held; direct HTML MCP landing returns 405 on GET"
+    },
+    {
+      "key": "discovery",
+      "name": "Evercraft Capability Discovery",
+      "mcp_url": "https://findmypart.base44.app/functions/evercraftCapabilityDiscoveryMcp",
+      "tools": [
+        "match_evercraft_capability",
+        "list_evercraft_capabilities",
+        "list_evercraft_integrations",
+        "match_evercraft_integration",
+        "get_evercraft_connection_options"
+      ],
+      "business_effect": "Read-only developer MCP directory and per-use-case matching separate from commercial offers",
+      "boundary": "An advertised MCP transport is not partner adoption or downstream tool completion"
+    }
+  ],
+  "commerce": {
+    "authority": "Evercraft Payments",
+    "router": "Raven Nexus",
+    "underlying_settlement_adapter": "configured payment provider",
+    "human_buyer_url": "https://findmypart.base44.app/functions/evercraftBuy",
+    "fixed_750_pilot": "existing optional one-time pilot",
+    "transaction_percentage_program": "DESIGN_ONLY_NOT_ENABLED",
+    "merchant_account_routing_verified": false,
+    "per_transaction_fee_collection_verified": false,
+    "real_canonical_payment_receipt_verified": false,
+    "referral_payout_approved": false,
+    "note": "A synthetic 303 processor checkout redirect does not prove payment, settlement, customer acceptance or fulfilled service."
+  },
+  "sovereign_fabric": {
+    "health_url": "https://fabric.systemiacommandcenters.com/health",
+    "mcp_url": "https://fabric.systemiacommandcenters.com/mcp",
+    "public_read_only_transport_observed": "http_200",
+    "deployment_receipt_bound_observed": false,
+    "release_attestation": "BLOCKED_PENDING_AUTHORIZED_YARD_SIGNED_RECEIPT",
+    "note": "Do not infer custody or release authority from an HTTP 200."
+  },
+  "source_of_truth": "Live MCP capabilities, Evercraft Payments order receipts, Systemia release gates; this snapshot must not replace them."
+}
