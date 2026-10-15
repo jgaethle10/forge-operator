@@ -38,7 +38,7 @@ test('removing a legacy writer is allowed rather than requiring stale permission
 });
 
 test('new unreviewed OIDC grant fails; existing OIDC grants remain separately inventoried',()=>{
- const r=inspectWorkflow("permissions:\\n  contents: read\\n  id-token: write\\nsteps:\\n  - uses: actions/checkout@v4",'.github/workflows/oidc-new.yml');
+ const r=inspectWorkflow(['permissions:', '  contents: read', '  id-token: write', 'steps:', '  - uses: actions/checkout@v4'].join(String.fromCharCode(10)),'.github/workflows/oidc-new.yml');
  assert.equal(r.writer,false);
  assert.equal(r.id_token_write,true);
  assert.equal(r.unpinned_action_references,1);
