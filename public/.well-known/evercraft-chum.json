@@ -54,7 +54,7 @@
     "sell_now_directory": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/sell-now.json",
     "sell_now_directory_page": null,
     "live_intent_hunter": "/api/chum/hunt",
-    "human_conversion": "https://findmypart.base44.app/functions/evercraftBuy",
+    "human_conversion": "https://jgaethle10.github.io/forge-operator/chum/",
     "tracked_human_conversion": "{CHUM_PUBLIC_ORIGIN}/api/chum/go/{publicId}",
     "crawlable_html_directory": "/capabilities",
     "product_page_pattern": null,
