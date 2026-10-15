@@ -1,0 +1,28 @@
+name: Wildlife telemetry candidate
+on:
+  pull_request:
+    paths:
+      - 'systemia/wildlife-telemetry/**'
+      - '.github/workflows/wildlife-telemetry.yml'
+  push:
+    branches:
+      - 'feature/wildlife-migration-telemetry-v0'
+    paths:
+      - 'systemia/wildlife-telemetry/**'
+      - '.github/workflows/wildlife-telemetry.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  test:
+    name: Source integrity and movement parser
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Run wildlife candidate unit tests
+        run: node --test systemia/wildlife-telemetry/*.test.mjs
