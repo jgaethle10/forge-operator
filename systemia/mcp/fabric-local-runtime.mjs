@@ -885,7 +885,16 @@ export async function startFabricLocalRuntime({
         const idempotencyKey=/^[A-Za-z0-9._:-]{8,120}$/.test(suppliedIdempotency)
           ? suppliedIdempotency
           : 'fabric-'+slug+'-'+crypto.randomUUID();
-        const customerRef=String(body?.customer_ref||'').trim().slice(0,200);
+        const customerRef=String(body?.customer_ref||'').trim().slice(0,254);
+        if(!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(customerRef)){
+          return sendJson(res,422,{
+            ok:false,
+            error:'valid_customer_email_required',
+            authority:'Evercraft Payments',
+            checkout_created:false,
+            fulfillment_release:false,
+          });
+        }
 
         const controller=new AbortController();
         const timer=setTimeout(()=>controller.abort(),15000);
