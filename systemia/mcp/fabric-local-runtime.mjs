@@ -32,6 +32,8 @@ import {
 } from './fabric-mobile-site.mjs';
 import { renderEarthWorksSimulator } from './earthworks-simulator-page.mjs';
 import { createFabricFaieSurface } from './fabric-faie-runtime.mjs';
+import { verifyWebsiteAuditCheckoutHandoff } from './website-audit-checkout-boundary.mjs';
+import { admitAuditBuyer } from './website-audit-buyer-admission.mjs';
 import { buildVisualStory, normalizeVisualStory } from '../visual-desk/factory.mjs';
 import { buildCommercialCampaign } from '../graphics-command/commercial-renderer.mjs';
 
@@ -886,6 +888,38 @@ export async function startFabricLocalRuntime({
           ? suppliedIdempotency
           : 'fabric-'+slug+'-'+crypto.randomUUID();
         const customerRef=String(body?.customer_ref||'').trim().slice(0,200);
+        let auditBuyer=null;
+        if(slug==='website-audit'){
+          auditBuyer=admitAuditBuyer({customer_ref:customerRef,website_url:body?.website_url});
+          if(!auditBuyer.ok){
+            if(isForm)return sendText(res,422,renderPaymentHoldPage({slug,orderKey:''}),{contentType:'text/html; charset=utf-8'});
+            return sendJson(res,422,{ok:false,error:auditBuyer.reason,checkout_ready:false,fulfillment_release:false});
+          }
+          // Non-purchasing handshake, BEFORE any real purchase intent.
+          // Legacy Raven ignores site context, so it must not be allowed to
+          // create a paid order until it attests context persistence support.
+          let siteAck=null;
+          try{
+            const head=await purchaseIntentFetch(purchaseIntentEndpoint,{
+              method:'POST',
+              headers:{'content-type':'application/json','accept':'application/json'},
+              body:JSON.stringify({
+                action:'website_audit_prepayment_preflight',
+                capability_key:capabilityKey,
+                user_confirmed:false,
+                website_url:auditBuyer.website_url,
+              }),
+              signal:AbortSignal.timeout(12000),
+            });
+            siteAck=head.ok?await head.json().catch(()=>null):null;
+          }catch{}
+          if(siteAck?.schema!=='raven.website-audit-context-preflight.v1'||
+            siteAck?.ok!==true||siteAck?.checkout_created!==false||
+            siteAck?.audited_domain!==auditBuyer.audited_domain){
+            if(isForm)return sendText(res,503,renderPaymentHoldPage({slug,orderKey:''}),{contentType:'text/html; charset=utf-8'});
+            return sendJson(res,503,{ok:false,error:'website_audit_context_bridge_not_activated',checkout_ready:false,fulfillment_release:false});
+          }
+        }
 
         const controller=new AbortController();
         const timer=setTimeout(()=>controller.abort(),15000);
@@ -902,7 +936,8 @@ export async function startFabricLocalRuntime({
               user_confirmed:true,
               capability_key:capabilityKey,
               idempotency_key:idempotencyKey,
-              customer_ref:customerRef,
+              customer_ref:auditBuyer?.customer_ref||customerRef,
+              ...(auditBuyer?{website_url:auditBuyer.website_url}:{}),
             }),
             signal:controller.signal,
           });
@@ -934,7 +969,13 @@ export async function startFabricLocalRuntime({
           const candidate=new URL(String(result?.checkout_url||''));
           if(candidate.protocol==='https:') checkoutUrl=candidate.toString();
         }catch{}
-        if(result?.checkout_ready!==true||!checkoutUrl){
+        // Keep the $49 public buyer handoff bound to exact approved price, product
+        // and Stripe-owned destination. Raven's success assertion is not provider proof.
+        const exactAuditHandoff=slug==='website-audit'
+          ? verifyWebsiteAuditCheckoutHandoff(result)
+          : {valid:true};
+        if(result?.checkout_ready!==true||!checkoutUrl||!exactAuditHandoff.valid||
+          (auditBuyer&&(result?.context_persisted!==true||result?.audited_domain!==auditBuyer.audited_domain))){
           if(isForm){
             return sendText(
               res,

@@ -103,6 +103,12 @@ h1{font-size:clamp(48px,8vw,90px);line-height:.95;letter-spacing:-.065em;margin:
 .offer-proof{border-left:3px solid var(--green);padding:3px 0 3px 14px;color:#c8d8e9;margin-top:18px}
 .checkout-form{display:flex;flex-wrap:wrap;gap:10px;align-items:center;margin-top:30px}
 .checkout-note{width:100%;color:var(--muted);font-size:13px;line-height:1.5;max-width:690px}
+.checkout-field{display:flex;flex-direction:column;gap:8px;flex:1 1 270px;font-size:14px;font-weight:650;color:#d7e7fb}
+.checkout-input{width:100%;min-height:46px;border:1px solid #385076;border-radius:10px;padding:11px 13px;background:#09152a;color:#f7f9fc;font:inherit}
+.checkout-input:focus-visible{outline:2px solid #55a7ff;outline-offset:2px}
+.checkout-consent{display:flex;align-items:flex-start;gap:10px;flex:1 1 100%;font-size:14px;line-height:1.5;color:#d7e7fb}
+.checkout-consent input{margin-top:3px;flex-shrink:0}
+
 .trust{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin:34px 0 76px}
 .trust div,.card,.prompt,.doc{
   border:1px solid var(--line);
@@ -333,7 +339,11 @@ export function renderOfferPage(item){
     '<div class="offer-price">'+escapeHtml(price)+'</div>',
     '<div class="offer-price-note">'+escapeHtml(offerName)+' · '+escapeHtml(item.pricing||'')+'</div>',
     '<form class="checkout-form" method="post" action="/api/offers/'+encodeURIComponent(copy.slug)+'/checkout">',
-    '<input type="hidden" name="user_confirmed" value="true">',
+    copy.slug==='website-audit'
+      ? '<label class="checkout-field">Email for your audit receipt<input class="checkout-input" type="email" name="customer_ref" maxlength="254" autocomplete="email" placeholder="you@business.com" required></label>'+
+        '<label class="checkout-field">Public website to audit<input class="checkout-input" type="url" name="website_url" maxlength="1000" inputmode="url" placeholder="https://yourbusiness.com" required></label>'+
+        '<label class="checkout-consent"><input type="checkbox" name="user_confirmed" value="true" required> I authorize preparing a $49 Website Audit checkout for this site.</label>'
+      : '<input type="hidden" name="user_confirmed" value="true">',
     '<input type="hidden" name="idempotency_key" value="'+escapeHtml(idempotencyKey)+'">',
     '<button class="btn primary" type="submit">Continue to checkout · '+escapeHtml(price)+'</button>',
     '<a class="btn" href="/capabilities/'+encodeURIComponent(item.public_id)+'">See technical proof</a>',

@@ -47,6 +47,9 @@ test('human offer copy gives sell-now capabilities short memorable URLs',()=>{
   assert.match(page,/How it works/);
   assert.match(page,/\/api\/offers\/website-audit\/checkout/);
   assert.match(page,/Continue to checkout/);
+  assert.match(page,/name="customer_ref"/);
+  assert.match(page,/name="website_url"/);
+  assert.match(page,/type="checkbox" name="user_confirmed"/);
   assert.match(page,/Evercraft Payments/);
   assert.match(page,/\$49/);
   assert.match(page,/property="og:title"/);
@@ -98,16 +101,25 @@ test('owned Fabric serves offer pages, requires confirmation, and delegates chec
         url:String(url),
         body:JSON.parse(String(init?.body||'{}')),
       });
-      return new Response(JSON.stringify({
+      const requestBody=JSON.parse(String(init?.body||'{}'));
+      return new Response(JSON.stringify(requestBody.action==='website_audit_prepayment_preflight'?{
+        ok:true,schema:'raven.website-audit-context-preflight.v1',
+        audited_domain:'customer-business.org',checkout_created:false
+      }:{
         ok:true,
         authority:'Evercraft Payments',
+        payment_runtime:'central',
+        offer_key:'systemia.website_audit_quick_win_49.v1',
+        capability_key:'website-audit-quick-win',
         order_key:'RAVEN-WEBSITE-AUDIT-QUICK-WIN-TEST',
         amount_cents:4900,
         currency:'usd',
         checkout_ready:true,
-        checkout_url:'https://settlement.example.test/pay/test',
+        checkout_url:'https://checkout.stripe.com/c/pay/cs_test_safe_fixture',
         payment_state:'unpaid',
         fulfillment_release:false,
+        context_persisted:true,
+        audited_domain:'customer-business.org',
       }),{
         status:200,
         headers:{'content-type':'application/json'},
@@ -143,7 +155,7 @@ test('owned Fabric serves offer pages, requires confirmation, and delegates chec
     const checkout=await fetch(runtime.url+'/api/offers/website-audit/checkout',{
       method:'POST',
       headers:{'content-type':'application/x-www-form-urlencoded'},
-      body:new URLSearchParams({user_confirmed:'true'}),
+      body:new URLSearchParams({user_confirmed:'true',customer_ref:'buyer@customer-business.org',website_url:'https://customer-business.org'}),
       redirect:'manual',
     });
     assert.equal(checkout.status,303);
@@ -157,12 +169,17 @@ test('owned Fabric serves offer pages, requires confirmation, and delegates chec
     const checkoutBody=await handoff.text();
     assert.match(checkoutBody,/Your checkout is ready\./);
     assert.match(checkoutBody,/Open secure checkout/);
-    assert.match(checkoutBody,/settlement\.example\.test\/pay\/test/);
+    assert.match(checkoutBody,/checkout\.stripe\.com\/c\/pay\/cs_test_safe_fixture/);
     assert.match(checkoutBody,/Evercraft Payments/);
-    assert.equal(seen.length,1);
-    assert.equal(seen[0].body.user_confirmed,true);
-    assert.equal(seen[0].body.capability_key,'website-audit-quick-win');
-    assert.match(seen[0].body.idempotency_key,/^fabric-website-audit-/);
+    assert.equal(seen.length,2);
+    assert.equal(seen[0].body.action,'website_audit_prepayment_preflight');
+    assert.equal(seen[0].body.user_confirmed,false);
+    assert.equal(seen[0].body.website_url,'https://customer-business.org/');
+    assert.equal(seen[1].body.user_confirmed,true);
+    assert.equal(seen[1].body.capability_key,'website-audit-quick-win');
+    assert.equal(seen[1].body.customer_ref,'buyer@customer-business.org');
+    assert.equal(seen[1].body.website_url,'https://customer-business.org/');
+    assert.match(seen[1].body.idempotency_key,/^fabric-website-audit-/);
 
     const review=await fetch(runtime.url+'/api/chum/go/'+websiteAudit.public_id+'?surface=offer-test',{
       redirect:'manual',
@@ -183,13 +200,11 @@ test('human checkout failures render a branded Evercraft Payments page instead o
     port:0,
     catalog:[websiteAudit],
     faieSurfaceEnabled:false,
-    purchaseIntentFetch:async()=>new Response(JSON.stringify({
-      ok:true,
-      authority:'Evercraft Payments',
-      order_key:'RAVEN-WEBSITE-AUDIT-QUICK-WIN-FAILCLOSED',
-      checkout_ready:false,
-      fulfillment_release:false,
-    }),{
+    purchaseIntentFetch:async(_url,init)=>new Response(JSON.stringify(
+      JSON.parse(String(init?.body||'{}')).action==='website_audit_prepayment_preflight'
+        ? {ok:true,schema:'raven.website-audit-context-preflight.v1',audited_domain:'customer-business.org',checkout_created:false}
+        : {ok:true,authority:'Evercraft Payments',order_key:'RAVEN-WEBSITE-AUDIT-QUICK-WIN-FAILCLOSED',checkout_ready:false,fulfillment_release:false}
+    ),{
       status:200,
       headers:{'content-type':'application/json'},
     }),
@@ -198,7 +213,7 @@ test('human checkout failures render a branded Evercraft Payments page instead o
     const response=await fetch(runtime.url+'/api/offers/website-audit/checkout',{
       method:'POST',
       headers:{'content-type':'application/x-www-form-urlencoded'},
-      body:new URLSearchParams({user_confirmed:'true'}),
+      body:new URLSearchParams({user_confirmed:'true',customer_ref:'buyer@customer-business.org',website_url:'https://customer-business.org'}),
       redirect:'manual',
     });
     assert.equal(response.status,503);

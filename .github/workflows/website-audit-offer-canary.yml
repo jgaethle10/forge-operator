@@ -1,36 +1,91 @@
-name: Website audit offer canary
+name: Website Audit Buyer Path Evidence
 
 on:
   workflow_dispatch:
+  schedule:
+    - cron: "17 13,23 * * *"
+  pull_request:
+    paths:
+      - "systemia/distribution/website-audit-buyer-probe.mjs"
+      - "systemia/distribution/website-audit-buyer-probe.test.mjs"
+      - "systemia/distribution/website-audit-payment-evidence.mjs"
+      - "systemia/distribution/website-audit-payment-evidence.test.mjs"
+      - "systemia/mcp/website-audit-checkout-boundary.mjs"
+      - "systemia/mcp/website-audit-checkout-boundary.test.mjs"
+      - "systemia/mcp/website-audit-buyer-admission.mjs"
+      - "systemia/mcp/website-audit-buyer-admission.test.mjs"
+      - "tests/fabric-offer-pages.test.mjs"
+      - "systemia/distribution/website-audit-hosted-checkout-canary.mjs"
+      - "systemia/distribution/website-audit-hosted-checkout-canary.test.mjs"
+      - ".github/workflows/website-audit-offer-canary.yml"
   push:
     branches: [main]
     paths:
-      - '.github/workflows/website-audit-offer-canary.yml'
-      - 'systemia/mcp/fabric-public-site.mjs'
-      - 'systemia/mcp/fabric-local-runtime.mjs'
+      - ".github/workflows/website-audit-offer-canary.yml"
+      - "systemia/distribution/website-audit-buyer-probe.mjs"
+      - "systemia/distribution/website-audit-buyer-probe.test.mjs"
+      - "systemia/distribution/website-audit-payment-evidence.mjs"
+      - "systemia/distribution/website-audit-payment-evidence.test.mjs"
+      - "systemia/mcp/website-audit-checkout-boundary.mjs"
+      - "systemia/mcp/website-audit-checkout-boundary.test.mjs"
+      - "systemia/mcp/website-audit-buyer-admission.mjs"
+      - "systemia/mcp/website-audit-buyer-admission.test.mjs"
+      - "tests/fabric-offer-pages.test.mjs"
+      - "systemia/distribution/website-audit-hosted-checkout-canary.mjs"
+      - "systemia/distribution/website-audit-hosted-checkout-canary.test.mjs"
+      - "systemia/mcp/fabric-public-site.mjs"
+      - "systemia/mcp/fabric-local-runtime.mjs"
 
 permissions:
   contents: read
 
+concurrency:
+  group: website-audit-buyer-evidence-${{ github.ref }}
+  cancel-in-progress: true
+
 jobs:
-  verify:
+  buyer-path:
     runs-on: ubuntu-latest
     timeout-minutes: 5
     steps:
-      - name: Verify live paid audit offer
-        shell: bash
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Validate buyer-path audit evidence contract
+        run: node --test systemia/distribution/website-audit-buyer-probe.test.mjs systemia/distribution/website-audit-payment-evidence.test.mjs systemia/mcp/website-audit-checkout-boundary.test.mjs tests/fabric-offer-pages.test.mjs systemia/mcp/website-audit-buyer-admission.test.mjs
+      - name: Independently inspect exact $49 buyer page with GET only
         run: |
-          set -euo pipefail
-          url="https://fabric.systemiacommandcenters.com/offers/website-audit"
-          body="$(curl --fail --silent --show-error --location --retry 24 --retry-all-errors --retry-delay 5 "$url")"
-          printf '%s' "$body" | grep -q "Your website is getting attention"
-          printf '%s' "$body" | grep -q "Quick Win Audit"
-          printf '%s' "$body" | grep -q '\$49'
-          printf '%s' "$body" | grep -q "/api/offers/website-audit/checkout"
-          printf '%s' "$body" | grep -q "Evercraft Payments"
-          {
-            echo "## Website Audit offer is live"
-            echo
-            echo "URL: $url"
-            echo 'Verified: offer copy + $49 price + human-confirmed checkout route + Evercraft Payments boundary'
-          } >> "$GITHUB_STEP_SUMMARY"
+          mkdir -p artifacts/commercial
+          node systemia/distribution/website-audit-buyer-probe.mjs artifacts/commercial/website-audit-external-buyer-probe.json
+      - name: Retain truthful public-page receipt even when page is held
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: website-audit-buyer-path-evidence
+          path: artifacts/commercial/website-audit-external-buyer-probe.json
+          if-no-files-found: warn
+          retention-days: 14
+
+  hosted-checkout-negative:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Test non-purchasing canary safety and fail-closed state
+        run: node --test systemia/distribution/website-audit-hosted-checkout-canary.test.mjs
+      - name: Verify real hosted checkout negative paths and canonical $49 read-only quote
+        # This intentionally fails while the Base44 hosted function is stale.
+        # No human-confirmed checkout or valid purchasable request is ever sent.
+        run: node systemia/distribution/website-audit-hosted-checkout-canary.mjs --require-negative-paths
+      - name: Preserve truthful receipt even if hosted checkout is blocked
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: website-audit-hosted-negative-canary
+          path: artifacts/audit-center-checkout-canary/latest.json
+          if-no-files-found: warn
+          retention-days: 14
