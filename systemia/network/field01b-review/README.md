@@ -1,19 +1,27 @@
-# Evercraft Network Field Test 01B review gate
+# Evercraft Network Field Test 01B, public-safe review gate v2
 
-**State: REVIEW_HELD. Deployment and physical continuity have NOT been proven.**
+**Status: REVIEW_HELD. No deployment. No physical continuity proof.**
 
-This is a **public-safe source-review metadata gate**, not the private Network Core. The public Forge repository must never become the private Core source of authority, per `systemia/core/YARD_HANDOFF.md`. The complete Core source, P03 test logs, and receipts remain in Evercraft-owned restricted custody.
+This directory holds a small public **metadata-consistency checker**. It does not contain Network Core source, credentials, signing keys, device data, private topology, deployment authority, or a live route. The private Core's custody remains separate from Forge, per `systemia/core/YARD_HANDOFF.md`.
 
-The validator checks consistency of a declared source digest, local test counts, offline Yard fixture hold, absent authoritative receipts, and the v3 reachability rule: **any valid HTTP response from the configured core, including HTTP 401/403/404, proves that server is reachable**. Only a real transport failure, while the Infrastructure LAN is still available, may advance the controlled core-loss test.
+## What this gate checks
 
-Run:
+- The reviewed P03 artifact's *declared* SHA-256, size, candidate ID, and historical offline test totals are pinned in the validator rather than accepted just because the record says they passed.
+- Record fields are strictly allowlisted, including nested claim and authority objects; extra `production_status` / `satellite_coverage` claims cause failure.
+- Every deployment, Systemia-admission, Compute-execution, rollback, route, carrier, emergency, and physical-test claim stays false or absent as required. The Yard fixture must retain `compute_attestation_required`.
+- Any valid HTTP response, including 401, 403 and 404, means the configured core is reachable. Core-unavailability requires an observed transport failure while the authorized Infrastructure LAN is still available.
+
+Run from repo root:
+
 ```sh
 node --test systemia/network/field01b-review/review-gate.test.mjs
 node systemia/network/field01b-review/review-gate.mjs systemia/network/field01b-review/review-record.json
 ```
 
-This gate **does not independently verify** the private ZIP's bytes, Systemia signatures, actual Compute attestation, Yard deployment, rollback, device APK, application-E2EE exchange, carrier service, or field-test evidence. CI success cannot authorize deployment or physical claims.
+## Limits
 
-Source lineage: canonical RC12 plus review-held P02 (corroboration and expiry) and P03 (bounded HTTP parser). Current P03 SHA-256 is in `review-record.json`. Authenticated GitHub source control is an available engineering rail again, **not** a replacement for Systemia/Yard governance.
+**This is not signed attestation**. Because the checker and its pinned constants live in the same review PR, a coordinated edit to both remains possible; code review is required. The reported 106/106 owned-core and 172/172 Yard CI results come from prior offline evidence, not from CI on this public branch. This gate does not fetch private artifacts, verify Drive custody, cryptographic Systemia admission, Compute execution, Yard deployment receipts, or device-to-device transmissions. Successful public CI can never grant those authorities.
 
-Required release path: Systemia admission → immutable owned source/release artifact → Yard release contract → approved Compute runtime → health/route/rollback verification → DeploymentReceipt → independent physical proof.
+Before a real field test: recover the exact Android v3 APK and signer custody, obtain independent Systemia mission admission, eligible attested Compute lease, immutable Yard release, health/route/rollback evidence and DeploymentReceipt. Then separately gather two-device application-E2EE, disconnected-core while LAN persists, durable-carry and SHA-matched delivery receipts.
+
+The review record is intentionally frozen to the P03 candidate. A successor candidate requires an explicit, independently reviewed digest and evidence update. **Do not merge or deploy solely because CI is green.**
