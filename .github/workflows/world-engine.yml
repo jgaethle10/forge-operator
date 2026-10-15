@@ -41,6 +41,9 @@ jobs:
       - name: Deterministic runtime tests
         run: npm run test:world-engine
 
+      - name: Public-reference bridge and native snapshot proof
+        run: node --import tsx --test systemia/world-engine/public-reference-*.test.mjs
+
       - name: Runtime proof
         run: npm run proof:world-engine
 
