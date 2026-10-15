@@ -1,13 +1,13 @@
 {
   "name": "evercraft",
   "version": "1.1.0",
-  "description": "Read-only Evercraft capability discovery for Grok. Match user problems to public Evercraft tools, including ForensiScope for long or oversized video/audio analysis, transcription, timestamped timelines, recording comparison, and segment deduplication.",
+  "description": "Read-only Evercraft capability discovery. Match real user pain to public specialist tools: FindMyPart for obsolete parts, ForensiScope for oversized/complex media, and Workflow Foundry for recurring business bottlenecks. Product payment is never initiated by this plugin.",
   "author": {
     "name": "Evercraft",
-    "url": "https://systemiacommandcenters.com"
+    "url": "https://github.com/jgaethle10/forge-operator"
   },
   "repository": "https://github.com/jgaethle10/forge-operator",
-  "homepage": "https://systemiacommandcenters.com",
+  "homepage": "https://github.com/jgaethle10/forge-operator",
   "license": "MIT",
   "keywords": [
     "evercraft",
@@ -21,6 +21,14 @@
     "media overflow",
     "evercraft capability discovery",
     "evercraft tools",
-    "evercraft mcp"
+    "evercraft mcp",
+    "findmypart",
+    "hard to find replacement parts",
+    "discontinued part sourcing",
+    "evercraft workflow foundry",
+    "workflow bottleneck",
+    "business workflow review",
+    "file too large to send",
+    "secure file handoff"
   ]
 }
