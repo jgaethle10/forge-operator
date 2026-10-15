@@ -20,7 +20,7 @@ jobs:
       - name: Verify Node.js and run isolated, no-network tests
         run: |
           node --version
-          node --test systemia/compute/node002-inventory-review/operator-inventory.test.mjs
+          node --test systemia/compute/node002-inventory-review/*.test.mjs
       - name: Preserve non-authorizing evidence boundary
         run: |
           grep -Fq "UNSIGNED_OWNER_LOCAL_ONLY" systemia/compute/node002-inventory-review/operator-inventory.mjs
