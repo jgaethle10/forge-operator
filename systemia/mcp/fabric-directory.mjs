@@ -87,7 +87,23 @@ export function loadFabricCatalogFromRepository({catalogPath=''}={}){
   const source=JSON.parse(fs.readFileSync(resolved,'utf8'));
   const rows=Array.isArray(source?.capabilities)?source.capabilities:[];
   const universalMcp=safeUrl(source?.universal_mcp||'');
-  const mapped=rows.map((item)=>{
+  // Payment-policy exclusions override older discovery snapshots. Discovery
+  // remains available, but a held product must never be advertised for sale.
+  const policyPath=path.resolve(moduleDir,'../../public/.well-known/evercraft-payments-buyer-doors.json');
+  const policy=JSON.parse(fs.readFileSync(policyPath,'utf8'));
+  const holds=new Map((policy.excluded||[]).flatMap((row)=>
+    (row.public_ids||[]).map((id)=>[id,row.reason])
+  ));
+  const mapped=rows.map((sourceItem)=>{
+    const hold=holds.get(sourceItem.public_id);
+    const item=hold?{
+      ...sourceItem,
+      commercial_state:'hold',
+      machine_state:'commercial_hold',
+      pricing:'Commercial continuation unavailable: '+hold,
+      entry_paid_offer:null,
+      start_url_state:'commercial_hold',
+    }:sourceItem;
     const connections=[];
     const direct=item?.direct_specialist;
     if(

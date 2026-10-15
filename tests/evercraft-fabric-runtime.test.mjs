@@ -42,12 +42,12 @@ test('Fabric boots from the canonical CHUM capability index without a manual rou
   assert.ok(aliev.connections.some((x)=>x.type==='website'&&x.url==='https://fabric.systemiacommandcenters.com/capabilities/aliev-site-opportunity-snapshot-v1'));
   assert.equal(aliev.connections.some((x)=>x.type==='website'&&/raw\.githubusercontent\.com/.test(x.url)),false);
   assert.ok(aliev.connections.some((x)=>x.type==='docs'));
-  assert.equal(aliev.start_url_state,'held_no_owned_public_origin');
+  assert.equal(aliev.start_url_state,'commercial_hold');
   assert.equal(aliev.preferred_agent_route,'universal_fallback');
-  assert.equal(aliev.commercial_state,'sell_now');
-  assert.match(aliev.pricing,/\$299 Preliminary Site Opportunity Report/);
+  assert.equal(aliev.commercial_state,'hold');
+  assert.match(aliev.pricing,/Founder legal hold/);
   assert.ok(aliev.use_when.includes('is this property a good EV charging site'));
-  assert.equal(aliev.entry_paid_offer?.price,'$250');
+  assert.equal(aliev.entry_paid_offer,null);
   assert.ok(canonical.every((x)=>x.connections.some((connection)=>connection.type==='mcp')));
   const findMyPart=canonical.find((x)=>x.public_id==='findmypart-paid-hunt-v1');
   assert.ok(findMyPart.connections.some((x)=>x.type==='mcp'&&x.url==='https://fabric.systemiacommandcenters.com/mcp'));
@@ -296,4 +296,18 @@ test('owned Evercraft Compute MCP runtime serves challenge and Fabric without ga
   }finally{
     await runtime.close();
   }
+});
+
+test('payment exclusions override stale sell-now discovery without disabling free discovery',()=>{
+  const rows=loadFabricCatalogFromRepository();
+  for(const id of ['aliev-site-opportunity-snapshot-v1','rivet-site-underwriting-v1','roasted-text-pressure-test-machine-v1','evercraft-clip-social-video-v1']){
+    const item=rows.find(x=>x.public_id===id);
+    assert.ok(item,id);
+    assert.equal(item.commercial_state,'hold',id);
+    assert.equal(item.state,'commercial_hold',id);
+    assert.equal(item.entry_paid_offer,null,id);
+    assert.equal(item.start_url_state,'commercial_hold',id);
+  }
+  assert.equal(rows.find(x=>x.public_id==='findmypart-part-passport-v1').commercial_state,'free');
+  assert.equal(rows.find(x=>x.public_id==='audit-center-website-audit-machine-v1').commercial_state,'sell_now');
 });
