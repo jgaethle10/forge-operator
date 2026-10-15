@@ -1,6 +1,15 @@
 #!/usr/bin/env node
 import fs from 'node:fs';
 import path from 'node:path';
+// SAFETY RETIREMENT: this legacy destructive migration used to overwrite
+// independently working buyer URLs with an unverified GitHub Pages 404.
+// It must not rewrite *any* customer-facing route without an approved owned
+// replacement. The replacement migration needs a separate, reviewed tool;
+// this blanket rewrite cannot be made safe with a fallback placeholder.
+throw new Error(
+  'destructive_legacy_provider_purge_retired: use read-only safe-cutover gate; '+
+  'restore verified buyer continuity and independently validate owned successor before retiring provider-hosted routes'
+);
 const ROOT=process.cwd();
 const PAGE_ROOT='https://jgaethle10.github.io/forge-operator';
 const RAW_ROOT='https://raw.githubusercontent.com/jgaethle10/forge-operator/main';
