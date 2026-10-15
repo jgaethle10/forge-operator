@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import {parseMigrationCSV,parseMigrationGeoJSON,telemetrySummary,segmentKm} from './migration-timeline.mjs';
+import {parseMigrationCSV,parseMigrationGeoJSON,telemetrySummary,segmentKm,sampleForMap,MAX_OBSERVATION_GAP_MS} from './migration-timeline.mjs';
 
 test('CSV observations are sorted, deduplicated and grouped by individual',()=>{
  const text=[
@@ -51,4 +51,27 @@ test('Cross-animal proximity is not interpreted as travel distance',()=>{
  ];
  const result=telemetrySummary(points);
  assert.equal(result.distanceKm,0);
+});
+
+
+test('Rendering sample caps 50,000 fixes at 1,000 and preserves boundaries',()=>{
+ const points=Array.from({length:50000},(_,i)=>({lat:30,lon:-120+i/100000,at:Date.parse('2007-01-01')+i*1000,animal:'goose'}));
+ const sample=sampleForMap(points);
+ assert.equal(sample.length,1000);
+ assert.equal(sample[0],points[0]);
+ assert.equal(sample.at(-1),points.at(-1));
+ assert.equal(telemetrySummary(points).count,50000);
+});
+test('Gaps are defined by time, not assumed movement, and the cutoff is stable',()=>{
+ assert.equal(MAX_OBSERVATION_GAP_MS,604800000);
+ const points=[
+  {lat:46,lon:-120,at:Date.parse('2007-01-01T00:00:00Z'),animal:'a'},
+  {lat:46.1,lon:-120,at:Date.parse('2007-01-08T00:00:00Z'),animal:'a'},
+  {lat:46.2,lon:-120,at:Date.parse('2007-01-16T00:00:00Z'),animal:'a'}
+ ];
+ assert.equal(telemetrySummary(points).gapCount,1);
+});
+test('Sampling options reject malformed maximum',()=>{
+ assert.throws(()=>sampleForMap([1,2,3],1));
+ assert.deepEqual(sampleForMap([1,2,3],4),[1,2,3]);
 });
