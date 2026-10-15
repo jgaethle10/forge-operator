@@ -18,6 +18,13 @@ function mockHandler(healthy=true) {
       assert.deepEqual(body,{action:'quote',offer_key:OFFER_KEY});
       return response(200,{ok:true,offer:{offer_key:OFFER_KEY,amount_cents:4900,currency:'usd'},fulfillment:{ready:true}});
     }
+    if(url===SURFACES.raven_context_preflight){
+      assert.equal(options.method,'POST');
+      assert.equal(body.action,'website_audit_prepayment_preflight');
+      assert.equal(body.user_confirmed,false);
+      assert.equal(body.website_url,'https://customer-business.org/');
+      return response(200,{ok:true,schema:'raven.website-audit-context-preflight.v1',audited_domain:'customer-business.org',checkout_created:false,payment_state:'unpaid',fulfillment_release:false});
+    }
     if(url===SURFACES.public_preflight){
       assert.equal(options.method,'GET');
       assert.equal(options.body,undefined);
@@ -35,7 +42,7 @@ test('the canary never submits a purchasable checkout payload',()=>{
 test('healthy public negative paths still require payment and fulfillment evidence separately',async()=>{
   const h=mockHandler();
   const result=await runAuditCenterCheckoutCanary({fetchImpl:h.fetchImpl,clock:()=> '2026-10-14T00:00:00Z'});
-  assert.equal(result.passed,5);assert.equal(result.failed,0);
+  assert.equal(result.passed,6);assert.equal(result.failed,0);
   assert.equal(result.release_state,'negative_path_passed_not_payment_certified');
   assert.equal(result.provider_paid_verified,false);assert.equal(result.fulfillment_delivered_verified,false);
   assert.equal(result.independent_source_revision_verified,false);
@@ -45,13 +52,13 @@ test('healthy public negative paths still require payment and fulfillment eviden
 test('hosted older Quick Win handler blocks the release despite a green quote',async()=>{
   const h=mockHandler(false);
   const result=await runAuditCenterCheckoutCanary({fetchImpl:h.fetchImpl,clock:()=> '2026-10-14T00:00:00Z'});
-  assert.equal(result.passed,2);assert.equal(result.failed,3);
+  assert.equal(result.passed,3);assert.equal(result.failed,3);
   assert.equal(result.release_state,'blocked_live_mismatch');
   assert.deepEqual(result.checks.slice(0,3).map(c=>c.observed.error),['Invalid tier','Invalid tier','Invalid tier']);
 });
 test('network/provider errors fail closed without falsely claiming an active checkout',async()=>{
   const fetchImpl=async()=>{throw new Error('unreachable');};
   const r=await runAuditCenterCheckoutCanary({fetchImpl});
-  assert.equal(r.failed,5);assert.equal(r.provider_paid_verified,false);
+  assert.equal(r.failed,6);assert.equal(r.provider_paid_verified,false);
   assert.equal(r.purchase_eligible_requests_sent,0);
 });
