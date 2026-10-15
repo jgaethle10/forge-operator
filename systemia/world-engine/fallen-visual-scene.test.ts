@@ -37,10 +37,10 @@ test('response JSON compiles into real World Engine visual scene and valid WebGP
   assert.equal(verifyFallenVisualSceneReceipt(projection.receipt,projection.world,projection.geometryAssets),true);
   const visual=frame(projection);
   assert.equal(verifyVisualFrameContract(visual),true);
-  assert.equal(visual.renderables.length,3);
+  assert.equal(visual.renderables.length,4);
   const plan=compileWebGpuRenderPlan(visual,projection.geometryAssets,{width:900,height:600});
   assert.equal(verifyWebGpuRenderPlan(plan),true);
-  assert.equal(plan.draws.length,3);
+  assert.equal(plan.draws.length,4);
   assert.ok(plan.draws.some(draw=>draw.entityId==='rc13:facility:H1'));
   assert.equal(projection.world.metadata.geospatial_authority,false);
   assert.equal(projection.world.metadata.physically_validated,false);
