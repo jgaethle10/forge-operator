@@ -1,0 +1,42 @@
+{
+  "schema": "evercraft.isaias-lifeline-baseline.v1",
+  "mission_key": "isaias-2026-lifeline-exposure-atlas-001",
+  "source_authority": "NWS National Hurricane Center",
+  "cyclone_id": "AL092026",
+  "advisory_number": 8,
+  "issued_at": "2026-10-08T15:00:00Z",
+  "source_url": "https://www.nhc.noaa.gov/archive/2026/al09/al092026.public.008.shtml",
+  "advisory_values": {
+    "position": {
+      "latitude": 23.7,
+      "longitude": -90.2
+    },
+    "maximum_sustained_wind_mph": 85,
+    "present_movement": "ENE",
+    "movement_mph": 10,
+    "minimum_central_pressure_mb": 975
+  },
+  "hazard_layers": [],
+  "exposed_lifeline_count": null,
+  "observed_disruptions_count": null,
+  "official_shelter_count": null,
+  "geospatial_join_state": "not_performed",
+  "external_snapshot_state": "advisory_read_and_cited_not_downloaded_or_archived",
+  "state": "historical_advisory_baseline_only",
+  "limitations": [
+    "This fixture is a dated advisory transcription, not a live feed or hazard polygon.",
+    "No exposed facilities or confirmed outages are asserted.",
+    "The original graphic is illustrative and cannot be used for evacuation or navigation.",
+    "Unknown counts are null, never zero."
+  ],
+  "companion_sources": [
+    "https://www.nhc.noaa.gov/",
+    "https://www.nhc.noaa.gov/gis/",
+    "https://gis.fema.gov/arcgis/rest/services/NSS/OpenShelters/FeatureServer",
+    "https://dashboard.waterdata.usgs.gov/"
+  ],
+  "nhc_advisory_identity": "AL092026/008",
+  "source_verification_note": "Dated official NHC archive advisory 8. Acquisition tool separately validates the exact headline, storm ID, issuance and measurements. Raw archive byte receipt requires successful read-only source intake.",
+  "acquisition_adapter": "systemia/newsroom/isaias-agency-acquisition.mjs",
+  "live_feeds_acquired": false
+}
