@@ -1,10 +1,16 @@
-name: Evercraft Plumbing - GitHub writer authority
+name: Evercraft Plumbing - writer and commerce topology
 
 on:
   pull_request:
     paths:
       - '.github/workflows/**'
       - 'scripts/audit-workflow-writers.mjs'
+      - 'scripts/audit-evercraft-commercial-topology.mjs'
+      - 'tests/audit-evercraft-commercial-topology.test.mjs'
+      - 'public/chum/capabilities.json'
+      - 'public/.well-known/evercraft-payments-buyer-doors.json'
+      - 'public/.well-known/evercraft-direct-door-readiness.json'
+      - 'registry/catalog.json'
       - 'tests/workflow-writer-audit.test.mjs'
       - 'audits/workflow-writer-baseline-2026-10-15.json'
   push:
@@ -12,6 +18,12 @@ on:
     paths:
       - '.github/workflows/**'
       - 'scripts/audit-workflow-writers.mjs'
+      - 'scripts/audit-evercraft-commercial-topology.mjs'
+      - 'tests/audit-evercraft-commercial-topology.test.mjs'
+      - 'public/chum/capabilities.json'
+      - 'public/.well-known/evercraft-payments-buyer-doors.json'
+      - 'public/.well-known/evercraft-direct-door-readiness.json'
+      - 'registry/catalog.json'
       - 'tests/workflow-writer-audit.test.mjs'
       - 'audits/workflow-writer-baseline-2026-10-15.json'
   schedule:
@@ -37,9 +49,11 @@ jobs:
         with:
           node-version: '22'
       - name: Run fail-closed regression tests
-        run: node --test tests/workflow-writer-audit.test.mjs
+        run: node --test tests/workflow-writer-audit.test.mjs tests/audit-evercraft-commercial-topology.test.mjs
       - name: Inspect all workflow-file write and main-push authority
         run: node scripts/audit-workflow-writers.mjs > "$RUNNER_TEMP/evercraft-workflow-writers.json"
+      - name: Capture source-to-commercial-pipe reconciliation
+        run: node scripts/audit-evercraft-commercial-topology.mjs > "$RUNNER_TEMP/evercraft-commercial-topology.json"
       - name: Post workflow audit summary
         if: always()
         shell: bash
@@ -53,6 +67,8 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: evercraft-workflow-writer-audit
-          path: ${{ runner.temp }}/evercraft-workflow-writers.json
+          path: |
+            ${{ runner.temp }}/evercraft-workflow-writers.json
+            ${{ runner.temp }}/evercraft-commercial-topology.json
           if-no-files-found: warn
           retention-days: 60
