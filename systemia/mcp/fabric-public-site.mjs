@@ -352,6 +352,7 @@ export function renderOfferPage(item){
     '<input type="hidden" name="idempotency_key" value="'+escapeHtml(idempotencyKey)+'">',
     '<label for="offer-customer-email">Email for your receipt and delivery</label>',
     '<input id="offer-customer-email" name="customer_ref" type="email" autocomplete="email" inputmode="email" placeholder="you@example.com" maxlength="200" required aria-required="true" style="width:min(100%,340px);padding:12px 14px;border:1px solid var(--line);border-radius:12px;background:var(--panel);color:var(--text);font:inherit">',
+    copy.slug==='website-audit'?'<label for="offer-website-url">Website to audit</label><input id="offer-website-url" name="website_url" type="url" placeholder="https://yourbusiness.com" maxlength="1000" required aria-required="true">':'',
     '<button class="btn primary" type="submit">Continue to checkout · '+escapeHtml(price)+'</button>',
     '<a class="btn" href="/capabilities/'+encodeURIComponent(item.public_id)+'">See technical proof</a>',
     '<div class="checkout-note">Evercraft Payments prepares the checkout. Nothing is marked paid until settlement is verified.</div>',

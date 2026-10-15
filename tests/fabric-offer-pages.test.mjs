@@ -120,7 +120,10 @@ test('owned Fabric serves offer pages, requires confirmation, and delegates chec
         url:String(url),
         body:JSON.parse(String(init?.body||'{}')),
       });
+      if(seen.at(-1).body.action==='website_audit_prepayment_preflight') return Response.json({ok:true,schema:'raven.website-audit-context-preflight.v1',audited_domain:'evercraftpropertyservices.com',checkout_created:false});
       return new Response(JSON.stringify({
+        context_persisted:true,
+        audited_domain:'evercraftpropertyservices.com',
         ok:true,
         authority:'Evercraft Payments',
         order_key:'RAVEN-WEBSITE-AUDIT-QUICK-WIN-TEST',
@@ -174,7 +177,7 @@ test('owned Fabric serves offer pages, requires confirmation, and delegates chec
     const checkout=await fetch(runtime.url+'/api/offers/website-audit/checkout',{
       method:'POST',
       headers:{'content-type':'application/x-www-form-urlencoded'},
-      body:new URLSearchParams({user_confirmed:'true',customer_ref:'buyer@example.com'}),
+      body:new URLSearchParams({user_confirmed:'true',customer_ref:'buyer@example.com',website_url:'https://evercraftpropertyservices.com/'}),
       redirect:'manual',
     });
     assert.equal(checkout.status,303);
@@ -190,7 +193,9 @@ test('owned Fabric serves offer pages, requires confirmation, and delegates chec
     assert.match(checkoutBody,/Open secure checkout/);
     assert.match(checkoutBody,/settlement\.example\.test\/pay\/test/);
     assert.match(checkoutBody,/Evercraft Payments/);
-    assert.equal(seen.length,1);
+    assert.equal(seen.length,2);
+    assert.equal(seen.shift().body.action,'website_audit_prepayment_preflight');
+    assert.equal(seen[0].body.website_url,'https://evercraftpropertyservices.com/');
     assert.equal(seen[0].body.user_confirmed,true);
     assert.equal(seen[0].body.customer_ref,'buyer@example.com');
     assert.equal(seen[0].body.capability_key,'website-audit-quick-win');
@@ -230,7 +235,7 @@ test('human checkout failures render a branded Evercraft Payments page instead o
     const response=await fetch(runtime.url+'/api/offers/website-audit/checkout',{
       method:'POST',
       headers:{'content-type':'application/x-www-form-urlencoded'},
-      body:new URLSearchParams({user_confirmed:'true',customer_ref:'buyer@example.com'}),
+      body:new URLSearchParams({user_confirmed:'true',customer_ref:'buyer@example.com',website_url:'https://evercraftpropertyservices.com/'}),
       redirect:'manual',
     });
     assert.equal(response.status,503);
@@ -245,3 +250,28 @@ test('human checkout failures render a branded Evercraft Payments page instead o
   }
 });
 
+
+test('audit checkout collects a target and rejects missing or unsupported custody before purchase',async()=>{
+  for(const scenario of ['missing','unsupported','rejected','mismatch']){
+    const calls=[];
+    const runtime=await startFabricLocalRuntime({host:'127.0.0.1',port:0,catalog:[websiteAudit],faieSurfaceEnabled:false,
+      purchaseIntentFetch:async(url,init)=>{
+        const body=JSON.parse(init.body);calls.push(body);
+        if(body.action==='website_audit_prepayment_preflight'){
+          if(scenario==='unsupported')return Response.json({ok:true,checkout_ready:true});
+          if(scenario==='rejected')return Response.json({ok:false,error:'public_https_website_required'},{status:400});
+          return Response.json({ok:true,schema:'raven.website-audit-context-preflight.v1',checkout_created:false,audited_domain:'evercraftpropertyservices.com'});
+        }
+        return Response.json({ok:true,checkout_ready:true,checkout_url:'https://checkout.example.test/test',context_persisted:true,audited_domain:'wrong-domain.com'});
+      }});
+    try{
+      const page=await fetch(runtime.url+'/offers/website-audit').then(r=>r.text());
+      assert.match(page,/name="website_url" type="url"/);
+      const r=await fetch(runtime.url+'/api/offers/website-audit/checkout',{method:'POST',headers:{'content-type':'application/json'},body:JSON.stringify({user_confirmed:true,customer_ref:'buyer@example.com',...(scenario==='missing'?{}:{website_url:'https://evercraftpropertyservices.com/'})})});
+      assert.equal(r.status,scenario==='missing'?422:503,scenario);
+      assert.equal((await r.json()).fulfillment_release,false);
+      assert.equal(calls.length,scenario==='missing'?0:scenario==='mismatch'?2:1,scenario);
+      if(calls.length)assert.equal(calls[0].user_confirmed,undefined);
+    }finally{await runtime.close();}
+  }
+});
