@@ -4,6 +4,8 @@ on:
     paths:
       - 'public/living-events/**'
       - 'tests/living-events.test.mjs'
+      - 'tests/living-events-adapter.test.mjs'
+      - 'systemia/living-events/**'
       - 'docs/living-events/**'
       - '.github/workflows/living-events-evidence.yml'
   workflow_dispatch:
@@ -18,4 +20,4 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: '22'
-      - run: node --test tests/living-events.test.mjs
+      - run: node --test tests/living-events.test.mjs tests/living-events-adapter.test.mjs
