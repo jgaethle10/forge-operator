@@ -13,6 +13,7 @@ export const SURFACES = Object.freeze({
   buyer_checkout: 'https://systemia-audit-pro.base44.app/functions/createCheckout',
   public_preflight: 'https://systemia-audit-pro.base44.app/functions/auditAgentGateway?view=preflight&domain=localhost',
   central_quote: 'https://findmypart.base44.app/functions/evercraftPaymentsOps',
+  raven_context_preflight: 'https://base44.app/api/apps/6a7adc9666bfd8c5c2fb4069/functions/ravenNexusPurchaseIntent',
 });
 export const OFFER_KEY = 'systemia.website_audit_quick_win_49.v1';
 export const BUYER_ORIGIN = 'https://systemia-audit-pro.base44.app';
@@ -78,6 +79,18 @@ export async function runAuditCenterCheckoutCanary({fetchImpl=globalThis.fetch, 
     preflight.status===200 && preflight.payload?.format_eligible===false && preflight.payload?.checkout_created===false && preflight.payload?.payment_confirmed===false,
     {http:preflight.status, format_eligible:preflight.payload?.format_eligible ?? null, checkout_created:preflight.payload?.checkout_created ?? null, payment_confirmed:preflight.payload?.payment_confirmed ?? null, transport_error:preflight.transport_error || null},
     {http:200,format_eligible:false,checkout_created:false,payment_confirmed:false}));
+  const context=await request(fetchImpl,SURFACES.raven_context_preflight,'POST',{
+    action:'website_audit_prepayment_preflight',
+    capability_key:'website-audit-quick-win',
+    user_confirmed:false,
+    website_url:'https://customer-business.org/',
+  },timeoutMs);
+  checks.push(baseCheck('raven_audit_domain_preflight_without_payment',
+    context.status===200&&context.payload?.ok===true&&context.payload?.schema==='raven.website-audit-context-preflight.v1'&&
+      context.payload?.audited_domain==='customer-business.org'&&context.payload?.checkout_created===false&&
+      context.payload?.payment_state==='unpaid'&&context.payload?.fulfillment_release===false,
+    {http:context.status,schema:context.payload?.schema||null,audited_domain:context.payload?.audited_domain||null,checkout_created:context.payload?.checkout_created??null,transport_error:context.transport_error||null},
+    {http:200,schema:'raven.website-audit-context-preflight.v1',audited_domain:'customer-business.org',checkout_created:false}));
   const passed=checks.filter(c=>c.pass).length;
   return {
     schema:'evercraft.audit-center.hosted-release-canary.v1',
@@ -86,9 +99,10 @@ export async function runAuditCenterCheckoutCanary({fetchImpl=globalThis.fetch, 
     release_state:passed===checks.length?'negative_path_passed_not_payment_certified':'blocked_live_mismatch',
     passed, failed:checks.length-passed, checks,
     purchase_eligible_requests_sent:0,
+    raven_domain_custody_preflight_only:true,
     processor_sessions_independently_checked:false,
     payment_authority:'Evercraft Payments / Stripe, not this canary',
-    truthful_boundary:'5/5 proves only hosted negative-path checks and a read-only $49 quote. It does not prove authenticated checkout, Stripe settlement, customer receipt, actual order, fulfillment, source revision identity or production release approval. Never promote to sell-now based on this result alone.',
+    truthful_boundary:'A fully passing canary proves only hosted negative-path checks, a read-only $49 quote and a non-purchasing Raven domain preflight. It does not prove authenticated checkout, Stripe settlement, customer receipt, actual order, fulfillment, source revision identity or production release approval. Never promote to sell-now based on this result alone.',
     independent_source_revision_verified:false,
     provider_paid_verified:false,
     fulfillment_delivered_verified:false,
