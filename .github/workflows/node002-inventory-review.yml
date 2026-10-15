@@ -1,0 +1,28 @@
+name: Node002 inventory source gate (review only)
+
+on:
+  pull_request:
+    paths:
+      - 'systemia/compute/node002-inventory-review/**'
+      - 'systemia/compute/hardware-inventory.mjs'
+      - '.github/workflows/node002-inventory-review.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  source-review-tests:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - name: Verify Node.js and run isolated, no-network tests
+        run: |
+          node --version
+          node --test systemia/compute/node002-inventory-review/operator-inventory.test.mjs
+      - name: Preserve non-authorizing evidence boundary
+        run: |
+          grep -Fq "UNSIGNED_OWNER_LOCAL_ONLY" systemia/compute/node002-inventory-review/operator-inventory.mjs
+          grep -Fq "execution_authorized:false" systemia/compute/node002-inventory-review/operator-inventory.mjs
+          grep -Fq "No change to" systemia/compute/node002-inventory-review/README.md
