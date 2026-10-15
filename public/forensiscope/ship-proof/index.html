@@ -1,0 +1,71 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>ForensiScope | From too large to prepared</title>
+<meta name="description" content="Watch a real local exact-byte file split-and-rebuild demonstration. No cloud upload or delivery is claimed.">
+<style>
+:root{color-scheme:dark;--bg:#050b12;--surface:#101d2a;--line:#2b4653;--mint:#86ead3;--gold:#f3d39b;--text:#f0f8f8;--muted:#a9c4cb}*{box-sizing:border-box}
+body{margin:0;background:radial-gradient(ellipse 65% 40% at 70% 0,#193747 0,transparent 75%),var(--bg);color:var(--text);font:15px/1.55 system-ui,-apple-system,'Segoe UI',sans-serif}
+main{max-width:1080px;margin:auto;padding:22px 18px 75px}.nav{display:flex;gap:12px;align-items:center;justify-content:space-between;border-bottom:1px solid #29414d;padding:0 0 17px}.brand{font-size:14px;font-weight:900;letter-spacing:.12em}.brand b{color:var(--mint)}.nav a{color:var(--muted);font-size:12px;text-decoration:none}.eyebrow{margin:45px 0 11px;color:var(--mint);font-size:12px;letter-spacing:.22em;text-transform:uppercase;font-weight:800}.title{max-width:780px;font-size:clamp(42px,7vw,84px);line-height:.98;letter-spacing:-.06em;margin:0}.title em{color:var(--mint);font-style:normal}.subtitle{font-size:clamp(15px,2vw,19px);max-width:680px;color:var(--muted);margin:24px 0 26px}.truth{display:flex;align-items:center;gap:10px;color:var(--gold);font-size:12px;background:#554a2d38;border:1px solid #957c464f;border-radius:99px;padding:10px 15px;width:fit-content;max-width:100%}
+.stage{margin:32px 0 18px;position:relative;overflow:hidden;border:1px solid #3b6367;border-radius:28px;background:linear-gradient(140deg,#102d36,#09131e 70%);padding:24px;box-shadow:0 25px 80px #0007}.stage:before{content:"";position:absolute;width:430px;height:430px;right:-160px;top:-190px;border:1px solid #72c7c552;border-radius:50%;box-shadow:0 0 0 75px #4dc2aa08,0 0 0 155px #74b8cc08;pointer-events:none}.label{font-size:11px;letter-spacing:.22em;text-transform:uppercase;color:var(--mint);font-weight:850}
+.flow{position:relative;display:grid;grid-template-columns:1fr 1fr 1fr;gap:14px;margin-top:25px}.node{min-width:0;border:1px solid #355664;border-radius:20px;padding:18px;background:#0d1a27eb;min-height:174px;transition:border-color .35s,background .35s,transform .35s}.node.active{border-color:var(--mint);background:#17413c}.node b{display:block;font-size:clamp(20px,3vw,35px);letter-spacing:-.035em;line-height:1.1;margin:18px 0 6px}.node span{display:block;font-size:13px;color:var(--muted)}.node .mini{color:var(--mint);font-size:11px;letter-spacing:.15em;font-weight:900}.senderVisual{font-size:22px}.arrow{color:var(--mint)}.piece{display:inline-block;width:17px;height:26px;border-radius:4px;background:linear-gradient(#d0fff6,#3dbea6);margin-right:5px;transform:translateY(3px)}.node.active .piece{animation:shimmer .9s ease-in-out infinite alternate}@keyframes shimmer{to{opacity:.48;transform:translateY(-5px)}}.statusline{margin-top:22px;border-top:1px solid #28444d;padding-top:18px;display:flex;align-items:center;gap:11px;font-size:13px;color:#cfebee}.pulse{width:9px;height:9px;border-radius:50%;background:var(--gold);box-shadow:0 0 0 5px #f3d39b1a}.pulse.good{background:var(--mint)}.meter{width:100%;height:7px;background:#203845;border-radius:20px;overflow:hidden;margin-top:12px}.meter i{display:block;background:linear-gradient(90deg,#68aacb,var(--mint));height:100%;width:0;transition:width .25s}.controls{display:flex;align-items:center;gap:12px;flex-wrap:wrap;margin:20px 0 0}
+button,.btn{padding:14px 20px;border-radius:13px;border:1px solid var(--mint);background:var(--mint);color:#082521;font:inherit;font-weight:850;cursor:pointer;text-decoration:none;display:inline-flex;align-items:center;gap:8px}button:disabled{opacity:.5;cursor:wait}.btn.ghost,button.ghost{background:transparent;color:var(--mint)}button:focus-visible,.btn:focus-visible,input:focus-visible{outline:3px solid var(--gold);outline-offset:2px}.fine{font-size:12px;color:var(--muted);line-height:1.7}.columns{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-top:18px}.panel{min-width:0;border:1px solid #324f5a;border-radius:19px;padding:22px;background:#101e2ae9}.panel h2{font-size:21px;line-height:1.2;margin:7px 0 10px;letter-spacing:-.025em}.panel p{color:var(--muted);font-size:13px;margin:0}.stats{display:flex;gap:12px;flex-wrap:wrap;margin:19px 0}.stat{flex:1;min-width:130px;background:#152b39;padding:13px;border-radius:13px}.stat strong{display:block;color:var(--mint);font-size:26px;letter-spacing:-.04em}.stat span{font-size:11px;color:var(--muted)}.receipt{display:none;margin-top:16px;min-width:0;border:1px solid #4c806d;border-radius:14px;background:#14342f;padding:17px}.receipt.on{display:block}.receipt h3{margin:0 0 8px;font-size:17px;color:#ccf9e6}.receipt p{font-size:13px;color:#c7e8df}.receipt code{display:block;word-break:break-all;font-size:11px;color:#dcf6f0;margin-top:9px}.receipt strong{color:#fff}.checks{list-style:none;padding:0;margin:10px 0}.checks li{color:#c5d9e2;padding:8px 0;border-bottom:1px solid #264350;font-size:13px}.checks li:before{content:"✓";color:var(--mint);margin-right:10px}.checks li.warn:before{content:"!";color:var(--gold)}.footer{font-size:12px;color:#a8bbc3;margin-top:32px;border-top:1px solid #2e4650;padding-top:20px}input[type=file]{max-width:100%;width:100%;font-size:12px;color:var(--muted)}.quick{margin-top:10px}.busy{display:none}.busy.on{display:block}
+@media(max-width:650px){main{padding:18px 14px 50px}.eyebrow{margin-top:32px}.stage{padding:18px;border-radius:23px}.flow{grid-template-columns:1fr;gap:9px}.node{min-height:93px;display:grid;grid-template-columns:1fr 2fr;gap:4px 14px;align-items:center;padding:14px 17px}.node .mini{grid-column:1/-1}.node b{font-size:24px;margin:0}.node span{font-size:12px}.node .senderVisual{font-size:17px}.columns{grid-template-columns:1fr}.controls button,.controls .btn{width:100%;justify-content:center}.title{font-size:clamp(39px,11.3vw,58px)}.stage:before{right:-240px}}
+@media(prefers-reduced-motion:reduce){.node.active .piece{animation:none}*,*:before,*:after{transition:none!important}}
+</style></head><body><main>
+<header class="nav"><div class="brand">EVERCRAFT <b>/ FORENSISCOPE</b></div><a href="https://evercraft-forensiscope.base44.app/">ForensiScope home ↗</a></header>
+<div class="eyebrow">Live computation / Shipping Department</div>
+<h1 class="title">Too big to send.<br><em>Not too big to solve.</em></h1>
+<p class="subtitle">We take a file that exceeds an illustrative email attachment limit, package the exact bytes into smaller pieces, then rebuild and verify the original. You can watch the local proof happen below.</p>
+<div class="truth">● Real local packaging and reconstruction. Not a remote-delivery demonstration.</div>
+<section class="stage" aria-label="Live file packaging demonstration">
+<div class="label">Real file handling · Sender to local receiver</div>
+<div class="flow">
+<div class="node" id="nodeA"><div class="mini">01 / BLOCKED</div><b id="original">26 MiB</b><span>Illustrative 18 MiB message ceiling exceeded. This is not an email-fit test.</span></div>
+<div class="node" id="nodeB"><div class="mini">02 / PREPARED</div><b id="pieces">Two pieces</b><span><span class="piece"></span><span class="piece"></span>16 MiB + 10 MiB, plus manifest.</span></div>
+<div class="node" id="nodeC"><div class="mini">03 / VERIFIED</div><b id="recovered">Same bytes</b><span>Local reconstruction with SHA-256 comparison.</span></div>
+</div>
+<p class="fine" style="margin:17px 0 0">Channel-fit warning: email MIME/base64 adds roughly one-third to the size of binary attachments. A 16 MiB piece can exceed an 18 MiB message limit. These pieces are <strong>locally verified, not verified sendable</strong>. The actual transport must set its own safe limits.</p>
+<div class="statusline"><div class="pulse" id="pulse"></div><span id="status" role="status" aria-live="polite">Ready for the exact-byte demonstration. Nothing has been sent.</span></div>
+<div class="meter"><i id="bar"></i></div>
+<div class="controls"><button type="button" id="run">Run the real proof ↗</button><a class="btn ghost" href="https://evercraft-forensiscope.base44.app/">ForensiScope home ↗</a></div>
+<div id="receipt" class="receipt" aria-live="polite"><h3>Exact original reconstructed locally</h3><p id="outcome">The same bytes were restored against their original SHA-256. No cloud transfer occurred.</p><code id="checksum"></code><div class="controls"><button id="downloadReceipt" type="button" class="ghost">Download proof JSON ↓</button></div></div>
+</section>
+<div class="columns">
+<section class="panel"><div class="label">Try your own file</div><h2>The real engine, not a mockup.</h2><p>Select a non-sensitive file up to 64 MiB for this demo. Its bytes stay in your browser. Larger files belong in the desktop Parcel Desk, which supports up to 512 MiB.</p><div class="quick"><input id="userFile" type="file" aria-label="Choose your own file"></div><div class="stats"><div class="stat"><strong>SHA-256</strong><span>Entire original and each piece</span></div><div class="stat"><strong>0</strong><span>Cloud uploads in this demo</span></div></div><p id="selected" class="fine">Using the built-in deterministic 26 MiB sample.</p></section>
+<section class="panel"><div class="label">The claim boundary</div><h2>Prepared ≠ delivered.</h2><ul class="checks"><li>Split exact original into bounded pieces</li><li>Reconstruct and verify original in-browser</li><li>Reject corrupted or missing pieces</li><li class="warn">Still requires manual transfer through an accepted channel</li><li class="warn">Not encryption, malware screening or recipient acknowledgment</li></ul><p>For sensitive files, use an approved encrypted, recipient-scoped transfer instead. A SHA-256 check proves a byte match to the manifest, not sender identity.</p></section>
+</div>
+<div class="footer">FORENSISCOPE / SHIP SHOWCASE · Built on Evercraft Parcel Large v0.2. Interactive local pilot only. The 18 MiB email target is illustrative, not a guarantee. Files never leave the browser from this page. The built-in sample is generated locally, not a customer's file. The receiving party must independently verify origin and actually receive every piece.</div>
+</main>
+<script type="module">
+import {MIB,createLargeParcel,restoreLargeParcel} from './parcel-large-engine.js';
+const $=id=>document.getElementById(id);
+const limit=64*MIB;
+let currentReceipt=null,selectedFile=null,working=false;
+const text=(id,val)=>{$(id).textContent=val;};
+function setStep(n,msg,pct){['A','B','C'].forEach((k,i)=>$('node'+k).classList.toggle('active',i===n));text('status',msg);$('bar').style.width=pct+'%';$('pulse').classList.toggle('good',n===2);}
+function sample(){const segment=new Uint8Array(MIB);for(let i=0;i<segment.length;i++)segment[i]=(i*17+31)%251;return new File(Array.from({length:26},()=>segment),'project-inspection-demo.bin',{type:'application/octet-stream'});}
+$('userFile').addEventListener('change',e=>{const f=e.target.files?.[0]||null;selectedFile=f;currentReceipt=null;$('receipt').classList.remove('on');if(f){text('selected',f.name+' · '+(f.size/MIB).toFixed(1)+' MiB. Select Run the real proof.');}else text('selected','Using the built-in deterministic 26 MiB sample.');});
+$('run').addEventListener('click',async()=>{
+ if(working)return;
+ working=true;$('run').disabled=true;$('receipt').classList.remove('on');
+ try{
+   const file=selectedFile||sample();
+   if(file.size>limit)throw new Error('This phone-friendly showcase has a 64 MiB limit. Use the desktop Parcel Desk for larger files.');
+   text('original',(file.size/MIB).toFixed(1)+' MiB');setStep(0,'Checking the illustrative attachment threshold…',6);
+   await new Promise(resolve=>setTimeout(resolve,320));
+   setStep(1,'Hashing and packaging exact original bytes locally…',12);
+   const parcel=await createLargeParcel(file,16*MIB,{onProgress:(done,total)=>{$('bar').style.width=(12+Math.round(44*(total?done/total:1)))+'%';}});
+   text('pieces',parcel.parts.length+' piece'+(parcel.parts.length===1?'':'s'));
+   setStep(1,'Reassembling the original and verifying every SHA-256…',57);
+   const parts=parcel.parts.map(x=>new File([x.blob],x.name,{type:'application/octet-stream'}));
+   const restored=await restoreLargeParcel(parcel.manifest,parts,{onProgress:(done,total)=>{$('bar').style.width=(57+Math.round(43*(total?done/total:1)))+'%';}});
+   if(restored.sha256!==parcel.manifest.original_sha256||restored.blob.size!==file.size)throw new Error('Local verification did not match.');
+   currentReceipt={schema:'evercraft.ship.showcase.proof.v1',format:parcel.manifest.format,file_name:file.name,file_bytes:file.size,part_count:parcel.parts.length,parts:parcel.manifest.parts,original_sha256:restored.sha256,verified_locally:true,recipient_delivery_confirmed:false,cloud_uploads:0,provenance: selectedFile?'user-selected-local-file':'generated-local-demo-data',limitations:['No file was transmitted to another device','SHA-256 equality is not recipient identity or original source certification']};
+   text('recovered',(restored.blob.size/MIB).toFixed(1)+' MiB');text('checksum','SHA-256: '+restored.sha256);
+   text('outcome','Verified: '+parcel.parts.length+' local pieces rebuilt to '+file.size.toLocaleString()+' original bytes. No file transmitted; no recipient delivery claimed.');
+   $('receipt').classList.add('on');setStep(2,'Verified locally. Complete source bytes restored. Nothing remotely sent.',100);
+ }catch(e){text('status','Proof stopped: '+(e.message||String(e)));$('bar').style.width='0%';}
+ finally{working=false;$('run').disabled=false;}
+});
+$('downloadReceipt').addEventListener('click',()=>{if(!currentReceipt)return;const url=URL.createObjectURL(new Blob([JSON.stringify(currentReceipt,null,2)+'\n'],{type:'application/json'}));const a=document.createElement('a');a.href=url;a.download='forensiscope-local-verification.json';a.click();setTimeout(()=>URL.revokeObjectURL(url),2000);});
+</script></body></html>
