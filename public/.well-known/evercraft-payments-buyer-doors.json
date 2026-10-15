@@ -267,5 +267,34 @@
     "observed_status": 404,
     "observed_date": "2026-10-15",
     "routing": "do_not_publish"
+  },
+  "synthetic_checkout_readback_20261015": {
+    "observation_date": "2026-10-15",
+    "execution": "first_party_public_form_POST_with_qa_identity",
+    "no_payment_submitted": true,
+    "no_customer_order_created": true,
+    "synthetic_order_records_only": true,
+    "offers": [
+      {
+        "slug": "payments-pilot",
+        "amount_cents": 75000,
+        "post_status": 303,
+        "redirect_host": "checkout.stripe.com",
+        "stored_order_state": "checkout_open",
+        "stored_synthetic": true,
+        "provider_paid_verified": false
+      },
+      {
+        "slug": "website-audit",
+        "amount_cents": 4900,
+        "post_status": 303,
+        "redirect_host": "checkout.stripe.com",
+        "stored_order_state": "checkout_open",
+        "stored_synthetic": true,
+        "provider_paid_verified": false,
+        "fulfillment_context_persisted": true
+      }
+    ],
+    "evidence_boundary": "Synthetic-only initiation validates POST, redirected checkout host, persisted order and scoped context. No charge, completed checkout, provider-paid receipt, funds settlement, buyer entitlement or actual fulfillment proved. Other 11 offer POSTs not retested in this observation."
   }
 }
