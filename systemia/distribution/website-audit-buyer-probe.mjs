@@ -48,11 +48,16 @@ export async function inspectWebsiteAuditBuyerPage({
     const hasOffer=/Quick Win Audit/i.test(html)&&/website/i.test(html);
     const hasPrice=/\$49(?:\b|<)/.test(html);
     const hasCheckout=html.includes('/api/offers/website-audit/checkout')&&/method=["']?post/i.test(html);
+    // A click-to-pay button without buyer email and the audit target creates
+    // an undeliverable order. Public-page readiness must see BOTH inputs.
+    const hasEmail=/name=["']customer_ref["']/i.test(html)&&/type=["']email["']/i.test(html);
+    const hasWebsite=/name=["']website_url["']/i.test(html)&&/type=["']url["']/i.test(html);
+    const hasConsent=/name=["']user_confirmed["']/i.test(html)&&/type=["']checkbox["']/i.test(html);
     const hasAuthority=/Evercraft Payments/i.test(html);
     const unsafe=/(?:guaranteed rankings|guaranteed new customers|payment successfully received|checkout already verified)/i.test(html);
-    if(!hasBrand||!hasOffer||!hasPrice||!hasCheckout||!hasAuthority||unsafe){
+    if(!hasBrand||!hasOffer||!hasPrice||!hasCheckout||!hasEmail||!hasWebsite||!hasConsent||!hasAuthority||unsafe){
       receipt.reason=!hasBrand?'brand_missing':!hasOffer?'offer_identity_missing':!hasPrice?'price_missing':
-        !hasCheckout?'buyer_form_missing':!hasAuthority?'payments_boundary_missing':'unsupported_claim';
+        !hasCheckout?'buyer_form_missing':!hasEmail?'buyer_email_field_missing':!hasWebsite?'audited_website_field_missing':!hasConsent?'explicit_consent_missing':!hasAuthority?'payments_boundary_missing':'unsupported_claim';
       return receipt;
     }
     receipt.state='externally_verified_buyer_page_only';
@@ -76,7 +81,7 @@ export function formatWebsiteAuditBuyerProbe(receipt){
     '',
     '| Gate | Evidence |',
     '| --- | --- |',
-    '| Public HTML + correct $49 page/form | '+(receipt.buyer_page_verified?'Confirmed by this GET only':'Not confirmed')+' |',
+    '| Public $49 page, buyer email + site fields, and explicit consent | '+(receipt.buyer_page_verified?'Confirmed by this GET only':'Not confirmed')+' |',
     '| Buyer checkout creates order | Not checked |',
     '| Provider-settled payment | Not checked |',
     '| Clip publication / qualified visitors | Not checked |',
