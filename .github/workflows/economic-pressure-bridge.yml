@@ -4,6 +4,7 @@ on:
     paths:
       - 'systemia/household-fabric/economic-pressure-bridge.mjs'
       - 'systemia/household-fabric/economic-pressure-bridge.test.mjs'
+      - 'systemia/household-fabric/economic-pressure-reviewed-snapshots.json'
       - 'systemia/household-fabric/ECONOMIC_PRESSURE_ATLAS.md'
       - '.github/workflows/economic-pressure-bridge.yml'
   push:
@@ -11,6 +12,7 @@ on:
     paths:
       - 'systemia/household-fabric/economic-pressure-bridge.mjs'
       - 'systemia/household-fabric/economic-pressure-bridge.test.mjs'
+      - 'systemia/household-fabric/economic-pressure-reviewed-snapshots.json'
 permissions:
   contents: read
 jobs:
