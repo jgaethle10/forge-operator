@@ -1,4 +1,5 @@
 import crypto from 'node:crypto';
+import {renderOfferIllustration} from './offer-illustrations.mjs';
 function escapeHtml(value='') {
   return String(value)
     .replaceAll('&','&amp;')
@@ -92,6 +93,9 @@ h1{font-size:clamp(48px,8vw,90px);line-height:.95;letter-spacing:-.065em;margin:
 .offer-visual{margin:26px 0 24px;border:1px solid var(--line);border-radius:22px;overflow:hidden;background:#07111b;box-shadow:0 28px 70px rgba(0,0,0,.26)}
 .offer-visual picture,.offer-visual img{display:block;width:100%}
 .offer-visual img{height:auto}
+.offer-original-art{display:block;width:100%;height:auto}
+.offer-art-note{font-size:12px;color:var(--muted);padding:11px 17px;border-top:1px solid var(--line);margin:0;background:#071422}
+@media (prefers-reduced-motion: reduce){.btn:hover{transform:none}}
 .offer-panel{border:1px solid var(--line);background:linear-gradient(180deg,rgba(14,25,48,.82),rgba(9,16,30,.82));border-radius:18px;padding:24px}
 .offer-panel h2{font-size:25px;margin:0 0 14px}
 .offer-panel p,.offer-panel li{color:#c5d2e4;line-height:1.65}
@@ -323,13 +327,14 @@ export function renderOfferPage(item){
   const get=copy.get.map((x)=>'<li>'+escapeHtml(x)+'</li>').join('');
   const steps=copy.steps.map(([title,body])=>'<div class="offer-step"><strong>'+escapeHtml(title)+'</strong><span>'+escapeHtml(body)+'</span></div>').join('');
   const idempotencyKey='offer-'+copy.slug+'-'+crypto.randomUUID();
+  const uniqueIllustration=copy.heroVisual?'':renderOfferIllustration(item?.public_id);
   return shell(copy.headline+' · Evercraft',[
     '<main>',
     '<section class="offer-hero">',
     '<div class="kicker"><span class="dot"></span> '+escapeHtml(copy.eyebrow)+' · available now</div>',
     '<h1>'+escapeHtml(copy.headline)+'</h1>',
     '<p class="lede">'+escapeHtml(copy.lede)+'</p>',
-    copy.heroVisual?'<div class="offer-visual"><picture>'+(copy.heroVisualMobile?'<source media="(max-width: 700px)" srcset="'+escapeHtml(copy.heroVisualMobile)+'">':'')+'<img src="'+escapeHtml(copy.heroVisual)+'" alt="" loading="eager"></picture></div>':'',
+    copy.heroVisual?'<div class="offer-visual"><picture>'+(copy.heroVisualMobile?'<source media="(max-width: 700px)" srcset="'+escapeHtml(copy.heroVisualMobile)+'">':'')+'<img src="'+escapeHtml(copy.heroVisual)+'" alt="" loading="eager"></picture></div>':(uniqueIllustration?'<div class="offer-visual">'+uniqueIllustration+'<p class="offer-art-note">Illustrative artwork, not observed customer data.</p></div>':''),
     '<div class="offer-price">'+escapeHtml(price)+'</div>',
     '<div class="offer-price-note">'+escapeHtml(offerName)+' · '+escapeHtml(item.pricing||'')+'</div>',
     '<form class="checkout-form" method="post" action="/api/offers/'+encodeURIComponent(copy.slug)+'/checkout">',
