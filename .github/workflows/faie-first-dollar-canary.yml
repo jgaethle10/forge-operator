@@ -1,0 +1,39 @@
+name: FAIE First Dollar Buyer Door
+
+on:
+  workflow_dispatch:
+  pull_request:
+    paths:
+      - 'scripts/faie-first-dollar-canary.mjs'
+      - 'tests/faie-first-dollar-canary.test.mjs'
+      - '.github/workflows/faie-first-dollar-canary.yml'
+  schedule:
+    - cron: '13 14 * * *'
+
+permissions:
+  contents: read
+
+jobs:
+  public-preflight:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Verify fail-closed commerce probe contracts
+        run: node --test tests/faie-first-dollar-canary.test.mjs
+      - name: Public read-only buyer-door checks (no checkout, no payments)
+        shell: bash
+        run: |
+          set -euo pipefail
+          node scripts/faie-first-dollar-canary.mjs | tee faie-first-dollar-canary-receipt.json
+      - name: Upload read-only probe receipt
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: faie-first-dollar-read-only-${{ github.run_id }}
+          path: faie-first-dollar-canary-receipt.json
+          if-no-files-found: ignore
+          retention-days: 7
