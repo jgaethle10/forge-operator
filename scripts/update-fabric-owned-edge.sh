@@ -661,6 +661,10 @@ if [[ "$before" == "$target" ]]; then
     exit "$code"
   fi
 
+  # Fabric commerce proof is independent of optional Home, observer, capacity and
+  # router sidecars. Preserve their separate fail-closed checks below.
+  write_runtime_deployment_proof "$before"
+
   if ! ensure_network_observer false; then
     echo "ERROR: Fabric is healthy but resident network observer installation failed" >&2
     exit 11
@@ -680,7 +684,6 @@ if [[ "$before" == "$target" ]]; then
     exit 12
   fi
 
-  write_runtime_deployment_proof "$before"
   clear_env_backup
   printf '{"schema":"evercraft.fabric-update.v1","state":"current","release_ref":"%s","capability_count":%s,"edge_attestation_expected":%s,"edge_attestation_verified":%s,"saban_capacity_resident":true,"observed_at":"%s"}\n'     "$before" "$expected_count" "$EDGE_ATTESTATION_EXPECTED" "$EDGE_ATTESTATION_EXPECTED" "$(date -u +%FT%TZ)"     > "$STATE_DIR/last-update.json"
   chmod 0640 "$STATE_DIR/last-update.json"
@@ -736,6 +739,10 @@ if [[ "$code" -ne 0 ]]; then
   exit "$code"
 fi
 
+# Fabric release proof has already passed resident health + edge-attestation;
+# unrelated sidecar repairs may fail without misrepresenting Fabric's readiness.
+write_runtime_deployment_proof "$target"
+
 if ! ensure_network_observer true; then
   echo "ERROR: Fabric update is healthy but resident network observer installation failed" >&2
   exit 11
@@ -757,7 +764,6 @@ if ! ensure_saban_capacity_resident; then
   exit 12
 fi
 
-write_runtime_deployment_proof "$target"
 clear_env_backup
 printf '{"schema":"evercraft.fabric-update.v1","state":"updated","from_ref":"%s","release_ref":"%s","capability_count":%s,"edge_attestation_expected":%s,"edge_attestation_verified":%s,"saban_capacity_resident":true,"observed_at":"%s"}\n'   "$before" "$target" "$expected_count" "$EDGE_ATTESTATION_EXPECTED" "$EDGE_ATTESTATION_EXPECTED" "$(date -u +%FT%TZ)"   > "$STATE_DIR/last-update.json"
 chmod 0640 "$STATE_DIR/last-update.json"
