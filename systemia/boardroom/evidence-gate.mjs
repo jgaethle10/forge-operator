@@ -17,7 +17,8 @@ function result(request,state,reason,details={}){
     session_id:text(request?.session_id),
     state,
     reason,
-    verified_advisory:false,
+    record_evidence_consistent:false,
+    provider_execution_verified:false,
     external_action_authorized:false,
     founder_approval_required:true,
     ...details,
@@ -39,9 +40,11 @@ function matchingAdvisors({request,messages,messageType}){
   return [...roles.values()];
 }
 function gateVerified(request,details){
-  return result(request,'verified_advisory','evidence_complete',{
+  return result(request,'records_correlated','record_consistency_passed',{
     ...details,
-    verified_advisory:true,
+    record_evidence_consistent:true,
+    // A model label and seat message are NOT a signed provider execution receipt.
+    provider_execution_verified:false,
     // Boardroom recommendations must NEVER imply authority to execute.
     external_action_authorized:false,
     founder_approval_required:true,
