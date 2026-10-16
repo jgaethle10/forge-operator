@@ -340,6 +340,18 @@ test('invalid domain is blocked before payment preflight or any checkout mutatio
       assert.equal((await response.json()).error,'public_https_website_required');
       assert.equal(calls,0);
     }
+    const browserResponse=await fetch(runtime.url+'/api/offers/website-audit/checkout',{
+      method:'POST',headers:{'content-type':'application/x-www-form-urlencoded'},
+      body:new URLSearchParams({user_confirmed:'true',customer_ref:'buyer@example.com',website_url:'http://127.0.0.1'}),
+      redirect:'manual',
+    });
+    assert.equal(browserResponse.status,422);
+    const html=await browserResponse.text();
+    assert.match(html,/Check your website address/);
+    assert.match(html,/Edit website address/);
+    assert.match(html,/No checkout was created/);
+    assert.equal((html.match(/class="btn primary/g)||[]).length,1);
+    assert.equal(calls,0);
   }finally{await runtime.close();}
 });
 
