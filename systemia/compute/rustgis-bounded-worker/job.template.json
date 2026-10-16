@@ -1,0 +1,14 @@
+{
+  "schema": "evercraft.rustgis.job.v1",
+  "job_id": "canary-JOB_ID",
+  "mission_key": "evercraft-rustgis-geospatial-engine-evaluation-20261013",
+  "target_node_id": "REPLACE_WITH_ENROLLED_NODE_ID",
+  "issued_at": "REPLACE_WITH_UTC_ISO_TIMESTAMP",
+  "expires_at": "REPLACE_WITH_UTC_ISO_TIMESTAMP_WITHIN_15_MINUTES",
+  "nonce": "nonce-UNIQUE_ID",
+  "operation": "render",
+  "dataset": "canary_baseline.geojson",
+  "dataset_sha256": "REPLACE_WITH_SHA256_OF_SOURCE_FILE",
+  "expected_binary_sha256": "REPLACE_WITH_SHA256_OF_PINNED_BINARY",
+  "synthetic_only": true
+}

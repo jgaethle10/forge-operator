@@ -1,0 +1,14 @@
+{
+  "schema": "evercraft.rustgis.worker-config.v1",
+  "mode": "isolated_canary",
+  "remote_jobs_enabled": false,
+  "node_id": "REPLACE_WITH_ENROLLED_NODE_ID",
+  "mission_key": "evercraft-rustgis-geospatial-engine-evaluation-20261013",
+  "rustgis_binary": "/opt/evercraft/rustgis/rustgis-cli",
+  "pinned_binary_sha256": "REPLACE_WITH_SHA256_OF_PINNED_BINARY",
+  "input_root": "/work/inputs",
+  "output_root": "/work/outputs",
+  "ledger_root": "/work/ledger",
+  "trusted_public_key_path": "/work/trust/issuer-public.pem",
+  "timeout_ms": 30000
+}
