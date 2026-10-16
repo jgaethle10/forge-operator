@@ -32,3 +32,11 @@ GitHub supplies source and CI evidence. GitHub Pages cannot host the EPS private
 - No external-device end-to-end proof of authenticated photo upload, save/reopen, PDF, or restore.
 
 **No Base44 dependency or user publishing action is part of this migration.**
+
+## RC3 independent release candidate: 2026-10-15
+
+RC3 is a private local ZIP handoff, **not** source code committed to this public repository and **not** a production release. Its exact ZIP SHA-256 is `d4aac5feb227668303c1f0f76d25a564dd3607daa3fc192cdf8a06ef3a90030a`.
+
+Local test receipt: **6/6 Node.js tests pass**, including persisted job/photo recovery across process restart, restricted admin creation of sales logins, anti-CSRF header enforcement, confidential user boundaries, pricing floor, and local SQLite/photo backup-manifest integrity with corruption rejection. Public TLS host, physical iPhone login, actual form/printing via browser, managed encrypted/offsite backups, security approval, restore drill and delivery are **not verified**. Container browser navigation is blocked by policy (`ERR_BLOCKED_BY_ADMINISTRATOR`), so there is no browser QA success receipt.
+
+Release must remain **BLOCKED** until the owner approves a private EPS repo, Evercraft Compute capacity and an independent recipient phone acceptance test. The public Forge PR is a non-deploying policy/CI gate only.
