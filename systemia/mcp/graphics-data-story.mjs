@@ -82,7 +82,7 @@ export function normalizeDataStory(input) {
   b.data = input.data.map((item) => {
     if (!isRecord(item, ['label', 'value']) || Object.keys(item).length !== 2)
       throw new Error('graphics_data_invalid_point');
-    const label = safeText(item.label, 'label', 24);
+    const label = safeText(item.label, 'label', b.chartType === 'trend' ? 10 : 24);
     const comparable = label.toLocaleLowerCase('en-US');
     if (seen.has(comparable)) throw new Error('graphics_data_duplicate_label');
     seen.add(comparable);
