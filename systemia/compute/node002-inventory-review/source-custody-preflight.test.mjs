@@ -76,11 +76,13 @@ test('tampered file manifests fail closed even if external archive digest matche
  const missing=opts.sha256SumsText.split('\n').slice(1).join('\n');
  assert.throws(()=>verifySourceCustodyCandidate({...opts,sha256SumsText:missing}),/manifest_member_set_mismatch/);
 }));
-const HEADERLESS_BYTES=names.length*1024; // each fixture member = one 512-byte header + one 512-byte content block\ntest('tar member tampering, missing terminator, and unsupported tar types fail closed',()=>runWithFixture(({opts})=>{
+const HEADERLESS_BYTES=names.length*1024; // each fixture member = one 512-byte header + one 512-byte content block
+test('tar member tampering, missing terminator, and unsupported tar types fail closed',()=>runWithFixture(({opts})=>{
  const blob=Buffer.from(opts.archiveBytes);
  blob[150]=(blob[150]+1)%256;
  assert.throws(()=>verifySourceCustodyCandidate({...opts,archiveBytes:blob,expectedArchiveSha256:sha(blob)}),/tar_header_checksum_invalid/);
- // GNU tar pads to 10 KiB, so remove ALL post-payload zero blocks.\n const cut=opts.archiveBytes.subarray(0,HEADERLESS_BYTES);
+ // GNU tar pads to 10 KiB, so remove ALL post-payload zero blocks.
+ const cut=opts.archiveBytes.subarray(0,HEADERLESS_BYTES);
  assert.throws(()=>verifySourceCustodyCandidate({...opts,archiveBytes:cut,expectedArchiveSha256:sha(cut)}));
 }));
 test('unexpected symlinks are never admitted as source',()=>runWithFixture(({opts,root})=>{
