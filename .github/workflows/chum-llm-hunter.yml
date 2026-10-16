@@ -163,6 +163,9 @@ jobs:
 
       - name: Push current Evercraft doors into search discovery
         continue-on-error: true
+        env:
+          CHUM_INDEXNOW_GATEWAY_URL: ${{ vars.CHUM_INDEXNOW_GATEWAY_URL }}
+          CHUM_INDEXNOW_PAIN_INDEX_URL: ${{ vars.CHUM_INDEXNOW_PAIN_INDEX_URL }}
         run: npm run chum:announce
 
       - name: Verify Official MCP Registry and remote MCP doors
@@ -216,6 +219,7 @@ jobs:
         if: always()
         continue-on-error: true
         env:
+          CHUM_ACQUISITION_EXPORT_URL: ${{ vars.CHUM_ACQUISITION_EXPORT_URL }}
           CHUM_MONEY_RADAR_STRICT: "false"
         run: npm run chum:money-radar
 
