@@ -9,10 +9,11 @@ import {
   renderCommercialMotion,
 } from '../graphics-command/commercial-renderer.mjs';
 import { ART_SCHEMA, renderArtDirectedSvg } from './graphics-art-directed.mjs';
+import { DATA_STORY_SCHEMA, renderDataStorySvg } from './graphics-data-story.mjs';
 
 // Preview-only contract. No Systemia job dispatch, public write, payment,
 // publication, network fetch, or model-provider inference is performed here.
-export const GRAPHICS_MCP_VERSION = '0.1.0-rc1';
+export const GRAPHICS_MCP_VERSION = '0.2.0-rc1';
 const PROTOCOL_VERSION = '2025-03-26';
 const FORMATS = ['feed', 'square', 'story', 'hero-wide'];
 const DELIVERABLES = [
@@ -69,6 +70,13 @@ export function graphicsDepartmentTools() {
       title: 'Create an art-directed vector concept preview',
       description: 'Render a bounded brand-text-only SVG concept using one of three distinctive geometric treatments and four curated palettes. Client copy and brand rights are unverified. No asset uploads, external images, model inference, video, charges or publication.',
       inputSchema: ART_SCHEMA,
+      annotations: COMMON,
+    },
+    {
+      name: 'graphics_preview_data_story',
+      title: 'Make a source-labeled data-story chart preview',
+      description: 'Render a deterministic SVG bar or ordered-category trend chart from explicit caller-provided numerical values. Source references and measurement claims are labeled but not independently verified. Always uses a zero baseline. No external queries, publication, or payment.',
+      inputSchema: DATA_STORY_SCHEMA,
       annotations: COMMON,
     },
     {
@@ -235,20 +243,22 @@ export function executeGraphicsMcpRpc(request) {
   if (name === 'graphics_get_capabilities') {
     if (!exactObject(args, [])) return rpcResult(id, toolExecutionError('Invalid arguments: this tool takes no inputs'));
     return rpcResult(id, toolResult({
-      available: ['graphics_preview_commercial', 'graphics_preview_art_directed', 'graphics_preview_motion_stage'],
+      available: ['graphics_preview_commercial', 'graphics_preview_art_directed', 'graphics_preview_data_story', 'graphics_preview_motion_stage'],
       availableMode: 'local_authenticated_preview_only',
       pending: ['paid_rendering', 'real_video', '3d_world_jobs', 'image_model_calls', 'public_discovery', 'tenant_billing', 'publishing'],
       commercialReadiness: 'not_approved',
       publicationAuthority: false,
     }));
   }
-  if (name !== 'graphics_preview_commercial' && name !== 'graphics_preview_motion_stage' && name !== 'graphics_preview_art_directed') {
+  if (name !== 'graphics_preview_commercial' && name !== 'graphics_preview_motion_stage' && name !== 'graphics_preview_art_directed' && name !== 'graphics_preview_data_story') {
     return rpcError(id, -32602, 'Unknown graphics tool');
   }
   try {
     return rpcResult(id, toolResult(name === 'graphics_preview_art_directed'
       ? renderArtDirectedSvg(args)
-      : renderGraphicsPreview(args, { motion: name === 'graphics_preview_motion_stage' })));
+      : name === 'graphics_preview_data_story'
+        ? renderDataStorySvg(args)
+        : renderGraphicsPreview(args, { motion: name === 'graphics_preview_motion_stage' })));
   } catch (e) {
     return rpcResult(id, toolExecutionError(e instanceof Error ? e.message : 'Graphics preview failed'));
   }
