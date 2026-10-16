@@ -17,10 +17,16 @@ export async function runCanary({origin=ORIGIN,fetchImpl=fetch}={}){
   try{
     const res=await request(origin+'/health',fetchImpl);
     const health=res.status===200?JSON.parse(res.body):{};
-    receipt.checks.push({route:'/health',http:res.status,release_ref:health.source_release_ref||null,release_bound:health.source_release_ref_bound===true,deployment_bound:health.deployment_receipt_bound===true,instance_id:health.instance_id||null});
+    const receiptSource=String(health.deployment_receipt_source||'');
+    const receiptRef=String(health.deployment_receipt_ref||'');
+    receipt.checks.push({route:'/health',http:res.status,release_ref:health.source_release_ref||null,release_bound:health.source_release_ref_bound===true,deployment_bound:health.deployment_receipt_bound===true,deployment_source:receiptSource||null,deployment_ref_format_valid:/^sha256:[a-f0-9]{64}$/i.test(receiptRef),instance_id:health.instance_id||null});
     if(res.status!==200)receipt.failures.push('health_http_'+res.status);
     if(health.source_release_ref_bound!==true)receipt.failures.push('source_release_unbound');
     if(health.deployment_receipt_bound!==true)receipt.failures.push('deployment_receipt_unbound');
+    if(health.deployment_receipt_bound===true){
+      if(!['owned_updater_verified','admitted_compute'].includes(receiptSource))receipt.failures.push('deployment_provenance_unverified');
+      if(!/^sha256:[a-f0-9]{64}$/i.test(receiptRef))receipt.failures.push('deployment_receipt_ref_invalid');
+    }
   }catch(e){receipt.failures.push('health_unreachable');receipt.checks.push({route:'/health',error:String(e?.message||e).slice(0,180)});}
   for(const [slug,price] of OFFERS){
     const route='/offers/'+slug;
