@@ -32,8 +32,9 @@ function run(overrides={}){
 
 test('verified board deliberation still never authorizes external actions',()=>{
   const proof=run();
-  assert.equal(proof.state,'verified_advisory');
-  assert.equal(proof.verified_advisory,true);
+  assert.equal(proof.state,'records_correlated');
+  assert.equal(proof.record_evidence_consistent,true);
+  assert.equal(proof.provider_execution_verified,false);
   assert.equal(proof.external_action_authorized,false);
   assert.equal(proof.founder_approval_required,true);
   assert.equal(proof.decision_status,'pending_approval');
@@ -50,7 +51,8 @@ test('held, failed, pending, running and partial requests never claim evidence',
   ]){
     const proof=run({request:{...request,status}});
     assert.equal(proof.state,state);
-    assert.equal(proof.verified_advisory,false);
+    assert.equal(proof.record_evidence_consistent,false);
+    assert.equal(proof.provider_execution_verified,false);
     assert.equal(proof.external_action_authorized,false);
   }
 });
@@ -100,7 +102,7 @@ test('ask_all output is advisory, requires real matching round evidence, no fina
   const ask={...request,action:'ask_all',decision_id:null};
   const messages=[advisor('chief_of_staff'),advisor('cfo'),advisor('ops')].map(m=>({...m,message_type:'ask_all'}));
   const ok=run({request:ask,messages,decisions:[]});
-  assert.equal(ok.state,'verified_advisory');
+  assert.equal(ok.state,'records_correlated');
   assert.equal(ok.external_action_authorized,false);
   assert.equal(ok.founder_approval_required,true);
 });
