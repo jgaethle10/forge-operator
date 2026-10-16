@@ -343,7 +343,7 @@ export function validateFabricDeploymentProof(proof,{sourceReleaseRef,instanceId
   const instance=String(instanceId||'');
   if(!/^[a-f0-9]{40,64}$/.test(release)||!/^fabric_local_[a-f0-9]{20}$/.test(instance))return null;
   if(proof.source_release_ref!==release||proof.instance_id!==instance)return null;
-  if(!/^\\d{4}-\\d{2}-\\d{2}T/.test(String(proof.observed_at||'')))return null;
+  if(!/^\d{4}-\d{2}-\d{2}T/.test(String(proof.observed_at||'')))return null;
   const canonical={
     schema:'evercraft.fabric.deployment-proof.v1',
     source_release_ref:release,
