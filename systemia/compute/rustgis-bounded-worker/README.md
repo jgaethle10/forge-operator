@@ -61,3 +61,24 @@ To re-run with the exact pinned official v0.2.0 Linux executable, run `node test
 - A fresh nonce paired with an already-used job ID may fail, but must **not overwrite** the existing output receipt.
 - Two additional mock-engine regression tests exercise these cases. This review version is not a new production or physical-node acceptance: the independent real RustGIS execution receipt reflects the earlier v1.1 worker, pending a v1.2 isolated integration rerun.
 - This source intentionally contains no registered NodeSeed workload, no remote dispatch, no internet access, and no production private keys.
+
+## Read-only Saban evidence intake (review-only)
+
+The src/saban-evidence-bridge.mjs module verifies the exact detached Ed25519 job
+signature, Saban assignment identity and idempotency key, claimed target node,
+mission, synthetic-only scope, result receipt fields, output name, output bytes
+and SHA-256. The output is a small
+evercraft.rustgis.saban-evidence-intake.v1 evidence record with explicit
+dispatch_allowed:false, machine_attestation_verified:false,
+remote_execution_authorized:false and systemia_release_ready:false.
+
+This is **not** an active Saban adapter, NodeSeed registration, Passport
+grant, Meter lease, remote work poller or proof of physical device identity.
+The trusted issuer key and expected node identity must be supplied from an
+authorized out-of-band config, never from the returned worker receipt alone.
+SHA hashes prove integrity only, not physical machine identity. Saban/Yard
+must still attest the physical node and Systemia must separately verify delivery.
+
+Run node systemia/compute/rustgis-bounded-worker/tests/saban-evidence-bridge.test.mjs
+for 20 read-only reconciliation tests. The dedicated RustGIS GitHub
+workflow runs this in addition to the 20 existing worker tests.
