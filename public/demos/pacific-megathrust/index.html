@@ -105,7 +105,18 @@ function initialize(){
  byId("toggleQuakes").addEventListener("change",e=>{if(e.target.checked)quakes.addTo(map);else map.removeLayer(quakes)});
  byId("toggleInundation").addEventListener("change",e=>toggleWgs(e,wgsInundation));
  byId("toggleEvacuation").addEventListener("change",e=>toggleWgs(e,wgsEvacuation));
- choose("kuril");
+ // Shareable research views; these are only viewport/overlay preferences, never alert states.
+ const params=new URLSearchParams(window.location.search);
+ const initialRegion=params.get("region")==="cascadia"?"cascadia":"kuril";
+ choose(initialRegion);
+ if(initialRegion==="cascadia" && params.get("inundation")==="1" && wgsInundation){
+  byId("toggleInundation").checked=true;
+  wgsInundation.addTo(map);
+ }
+ if(initialRegion==="cascadia" && params.get("evacuation")==="1" && wgsEvacuation){
+  byId("toggleEvacuation").checked=true;
+  wgsEvacuation.addTo(map);
+ }
  loadQuakes();
 }
 function choose(zone){
