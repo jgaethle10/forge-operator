@@ -8,6 +8,7 @@ import {
   executeGraphicsMcpRpc,
 } from './graphics-department.mjs';
 import { createGraphicsMcpServer } from './graphics-department-server.mjs';
+import { ART_FORMATS, ART_TREATMENTS, ART_PALETTES, renderArtDirectedSvg } from './graphics-art-directed.mjs';
 
 const BRIEF = {
   product: 'Evercraft Visuals',
@@ -196,4 +197,58 @@ test('HTTP transport refuses browser origins, rebinding host and unsupported pro
     });
     assert.equal(compatible.status, 200);
   });
+});
+
+
+test('art direction produces 48 deterministic layout, palette and format combinations', () => {
+  const base = {
+    brandName: 'Evercraft Media', eyebrow: 'Creative intelligence',
+    headline: 'Build better visual stories',
+    subhead: 'Synthetic vector proof with genuine variety of compositions and no invented customer outcomes.',
+    callToAction: 'Explore the concept',
+  };
+  const hashes = new Set();
+  for (const format of Object.keys(ART_FORMATS)) {
+    for (const treatment of ART_TREATMENTS) {
+      for (const palette of Object.keys(ART_PALETTES)) {
+        const request = { ...base, format, treatment, palette };
+        const output = renderArtDirectedSvg(request);
+        assert.equal(output.ok, true);
+        assert.match(output.data, /^<svg /);
+        assert.match(output.data, /CONCEPT VISUAL/);
+        assert.equal(output.sha256, crypto.createHash('sha256').update(output.data).digest('hex'));
+        assert.equal(output.sha256, renderArtDirectedSvg(request).sha256);
+        assert.equal(output.paymentAuthority, false);
+        assert.equal(output.publicationAuthority, false);
+        hashes.add(output.sha256);
+      }
+    }
+  }
+  assert.equal(hashes.size, 48);
+  const rpcResponse = rpc('tools/call', {
+    name: 'graphics_preview_art_directed',
+    arguments: { ...base, format: 'feed', treatment: 'orbit', palette: 'midnight' },
+  });
+  assert.equal(rpcResponse.result?.isError, false);
+  assert.equal(rpcResponse.result?.structuredContent?.imageryState, 'synthetic_vector_art');
+});
+
+test('art directed tool rejects injection, spoofed formats and bidi controls', () => {
+  const base = {
+    brandName: 'Evercraft', eyebrow: 'Concept', headline: 'A story with a point',
+    subhead: 'A concept, not customer evidence', callToAction: 'See more',
+    format: 'feed', treatment: 'orbit', palette: 'midnight',
+  };
+  for (const request of [
+    { ...base, format: 'execute-js' },
+    { ...base, palette: 'url(https://example.org/a)' },
+    { ...base, hidden: true },
+    { ...base, headline: 'A\u202E B' },
+  ]) {
+    const response = rpc('tools/call', { name: 'graphics_preview_art_directed', arguments: request });
+    assert.equal(response.result?.isError, true);
+  }
+  const escaped = renderArtDirectedSvg({ ...base, subhead: 'Never trust <script> & copy' });
+  assert.doesNotMatch(escaped.data, /<script>/i);
+  assert.match(escaped.data, /&lt;script&gt;/);
 });
