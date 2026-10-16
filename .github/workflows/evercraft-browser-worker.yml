@@ -166,6 +166,9 @@ jobs:
           node -e "const a=require('/tmp/evercraft-delegated-after-revoke.json'); if(a.error!=='authenticated_browser_delegation_required') process.exit(1)"
           curl -fsS -X DELETE "http://127.0.0.1:18787/v1/auth-browser/sessions/$SESSION_ID"             -H "x-evercraft-browser-claim: $CLAIM"             > /tmp/evercraft-auth-close.json
           node -e "const c=require('/tmp/evercraft-auth-close.json'); if(!c.ok||c.closed!==true) process.exit(1)"
+      - name: Prove signed Career Command preflight and no-submit boundary
+        run: |
+          EVERCRAFT_BROWSER_PROOF_SIGNING_KEY=ci-systemia-browser-job-signing-key-123456789 node job-application-preflight.proof.mjs
       - name: Prove Systemia signed durable jobs through Docker Chromium
         run: |
           EVERCRAFT_BROWSER_PROOF_SIGNING_KEY=ci-systemia-browser-job-signing-key-123456789 node durable-jobs.proof.mjs
