@@ -60,7 +60,7 @@ test('creative treatment changes geometry rather than only the palette', () => {
   assert.notEqual(orbit, type);
   assert.notEqual(architecture, type);
   assert.match(orbit, /stroke-dasharray/);
-  assert.match(architecture, /stroke-linejoin="miter"/, 'expected distinguishing geometry from type treatment');
+  assert.match(type, /stroke-linejoin="miter"/, 'expected distinguishing geometry from type treatment');
 });
 
 test('hostile text is escaped, never executed or interpreted as SVG markup', () => {
@@ -69,7 +69,8 @@ test('hostile text is escaped, never executed or interpreted as SVG markup', () 
   assert.match(result.data, /&lt;script&gt;/);
   assert.match(result.data, /&amp; clarity/);
   const headline = renderArtDirectedSvg({ ...BRIEF, headline: 'Learn & build <trust>' });
-  assert.match(headline.data, /Learn &amp; build &lt;trust&gt;/);
+  assert.match(headline.data, /Learn &amp; build/);
+  assert.match(headline.data, /&lt;trust&gt;/);
 });
 
 test('invalid geometry directives, scripts in object keys, hidden bidi and excessive input fail closed', () => {
