@@ -93,6 +93,22 @@ export function normalizePublicWebsiteUrl(value) {
   }
 }
 
+// Only the exact approved hosted Stripe checkout origins may be one-step
+// redirected after an explicit buyer submit. Unknown processors retain the
+// branded Evercraft Payments handoff instead of becoming open redirects.
+export function trustedDirectCheckoutUrl(value) {
+  try {
+    const url=new URL(String(value||''));
+    if(url.protocol!=='https:'||url.username||url.password||url.port||url.hash) return null;
+    const host=url.hostname.toLowerCase();
+    if(host==='checkout.stripe.com'&&/^\/(?:c\/pay\/|pay\/)[A-Za-z0-9]/.test(url.pathname)) return url.href;
+    if(host==='buy.stripe.com'&&/^\/[A-Za-z0-9]/.test(url.pathname)) return url.href;
+    return null;
+  }catch{
+    return null;
+  }
+}
+
 function sendJson(res,status,body,extraHeaders={}) {
   const data=Buffer.from(JSON.stringify(body));
   res.writeHead(status,{
@@ -1028,6 +1044,20 @@ export async function startFabricLocalRuntime({
         }
 
         if(isForm){
+          const directCheckout=trustedDirectCheckoutUrl(checkoutUrl);
+          if(directCheckout){
+            // Explicit form confirmation already occurred, and the provider
+            // returned the correct fixed offer and exact amount/currency.
+            // Visiting hosted checkout creates no paid receipt or fulfillment.
+            res.writeHead(303,{
+              location:directCheckout,
+              'cache-control':'no-store',
+              'x-content-type-options':'nosniff',
+              'referrer-policy':'no-referrer',
+              'x-evercraft-payment-authority':'Evercraft Payments',
+            });
+            return res.end();
+          }
           const cents=Number(result?.amount_cents);
           const amountLabel=Number.isFinite(cents)
             ? String.fromCharCode(36)+(cents/100).toFixed(2).replace(/\.00$/,'')
