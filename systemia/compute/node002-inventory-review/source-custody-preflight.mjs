@@ -129,12 +129,12 @@ const cli=process.argv[1]&&path.resolve(process.argv[1])===fileURLToPath(import.
 if(cli){
  try{
   const args=process.argv.slice(2);
-  if(args.length!==6||args[0]!=='--bundle-dir'||args[2]!=='--expected-archive-sha256'||args[4]!=='--expected-commit'){
-   fail('usage: --bundle-dir DIR --expected-archive-sha256 SHA --expected-commit 40HEX (policy adapter pin supplied in separate --policy-adapter-sha256 flag)');
+  if(args.length!==8||args[0]!=='--bundle-dir'||args[2]!=='--expected-archive-sha256'||args[4]!=='--expected-commit'||args[6]!=='--policy-adapter-sha256'){
+   fail('usage: --bundle-dir DIR --expected-archive-sha256 SHA256 --expected-commit 40HEX --policy-adapter-sha256 SHA256');
   }
   const dir=path.resolve(args[1]);
   // Explicit separate pin required, never infer the adapter trust from artifact.
-  const pin=process.env.EVERCRAFT_REVIEW_ONLY_APPROVED_ADAPTER_SHA256||'';
+  const pin=args[7];
   const output=verifySourceCustodyCandidate({
    archiveBytes:fs.readFileSync(path.join(dir,'node002-source-review.tar')),
    sha256SumsText:fs.readFileSync(path.join(dir,'SHA256SUMS.txt'),'utf8'),
