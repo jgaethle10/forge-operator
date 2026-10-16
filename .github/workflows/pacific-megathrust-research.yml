@@ -57,13 +57,41 @@ jobs:
             assert.ok(dom.includes("selectKuril"),"Kuril selector missing");
             console.log("REAL_BROWSER_SMOKE_PASSED: Leaflet initialized; visual snapshot captured; data status="+status);
           '
+      - name: Render Cascadia tsunami-planning overlays
+        run: |
+          CHROME="$(command -v google-chrome || command -v chromium || command -v chromium-browser)"
+          "$CHROME" --headless=new --no-sandbox --disable-dev-shm-usage --disable-gpu --hide-scrollbars --window-size=1440,980 --virtual-time-budget=25000 --screenshot=/tmp/evercraft-pacific-megathrust-cascadia.png --dump-dom "http://127.0.0.1:4177/demos/pacific-megathrust/?region=cascadia&inundation=1&evacuation=1" > /tmp/megathrust-cascadia-dom.html 2> /tmp/megathrust-cascadia-chrome.log
+          test -s /tmp/evercraft-pacific-megathrust-cascadia.png
+          node --input-type=module -e '
+            import fs from "node:fs";
+            import assert from "node:assert/strict";
+            const dom=fs.readFileSync("/tmp/megathrust-cascadia-dom.html","utf8");
+            const tag=dom.match(/<div\b[^>]*\bid="map"[^>]*>/)?.[0];
+            assert.match(tag||"",/\bleaflet-container\b/,"Cascadia map did not initialize");
+            const title=dom.match(/<b id="mapTitle">([^<]*)<\/b>/)?.[1];
+            assert.equal(title,"Cascadia / Pacific Northwest","Cascadia view did not initialize");
+            const images=[...dom.matchAll(/<img\b[^>]*\bsrc="([^"]+)"/g)].map(m=>m[1]);
+            const wa=images.find(url=>url.includes("gis.dnr.wa.gov") && url.includes("/MapServer/export"));
+            assert.ok(wa,"Official Washington tsunami map overlay did not request an image");
+            const sourceUrl=wa.replaceAll("&amp;","&");
+            const response=await fetch(sourceUrl,{signal:AbortSignal.timeout(20000)});
+            assert.equal(response.ok,true,"Washington GIS export request failed: "+response.status);
+            assert.match(response.headers.get("content-type")||"",/^image\//,"Washington GIS did not return an image");
+            const data=await response.arrayBuffer();
+            assert.ok(data.byteLength>100,"Washington GIS export image was empty");
+            console.log("CASCADE_OVERLAY_SMOKE_PASSED: official WGS MapServer returned image bytes="+data.byteLength);
+          '
+
       - uses: actions/upload-artifact@v4
         if: always()
         with:
           name: pacific-megathrust-browser-smoke
           path: |
             /tmp/evercraft-pacific-megathrust.png
+            /tmp/evercraft-pacific-megathrust-cascadia.png
             /tmp/megathrust-chrome.log
+            /tmp/megathrust-cascadia-chrome.log
             /tmp/megathrust-dom.html
+            /tmp/megathrust-cascadia-dom.html
             /tmp/megathrust-server.log
           retention-days: 7
