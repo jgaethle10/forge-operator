@@ -16,7 +16,9 @@ A user describes an operational pain point and desired outcome. Forge returns a 
 
 ## Public Evercraft Payments buyer doors
 
-The [live purchase hub](https://findmypart.base44.app/functions/evercraftBuy) exposes the bounded offers that passed synthetic form-to-provider handoff checks. Developers and agents should use the [machine-readable Evercraft Payments buyer directory](public/.well-known/evercraft-payments-buyer-doors.json) for exact human purchase URLs, offer keys, prices and fulfillment boundaries. The [read-only buyer-door canary](scripts/probe-evercraft-payments-buyer-doors.mjs) checks page availability but does not create payment sessions.
+The [live offer catalog](https://fabric.systemiacommandcenters.com/offers) contains 15 human offer pages. Use the [live JSON catalog](https://fabric.systemiacommandcenters.com/offers.json) for current offer links and prices. A buyer supplies the requested scope, confirms the purchase, and continues through Evercraft Payments to the settlement page. Checkout preparation has been observed; a completed payment and delivery require separate receipts.
+
+Developers: [connect an MCP client and run a read-only smoke test](docs/commerce/connect-evercraft-fabric.md). The legacy [buyer-door manifest](public/.well-known/evercraft-payments-buyer-doors.json) documents older adapter routes and is not the current owned catalog.
 
 **Payment truth:** Evercraft Payments is the canonical order authority, Raven Nexus is the provider boundary, and Stripe currently acts as the settlement adapter. A synthetic checkout or an HTTP 200 payment page is not a paid receipt, delivered service, or customer acceptance. EV offers remain on legal hold; other blocked or unpriced services are excluded.
 
@@ -26,11 +28,11 @@ Evercraft Machine Commerce is the umbrella remote MCP for problem-first capabili
 
 - Official MCP Registry name: `io.github.jgaethle10/evercraft-machine-commerce`
 - Transport: Streamable HTTP
-- Remote MCP: `https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp`
-- Health: `https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp?action=health`
+- Remote MCP: `https://fabric.systemiacommandcenters.com/mcp`
+- Health: `https://fabric.systemiacommandcenters.com/health`
 - Registry manifest: [mcp-registry/evercraft-machine-commerce.json](mcp-registry/evercraft-machine-commerce.json)
 
-The server matches natural-language problems to the smallest truthful public Evercraft capability, exposes machine documentation separately from human buyer URLs, and can prepare checkout only after explicit human confirmation for allowlisted sell-now products. Checkout creation is not payment proof. Paid fulfillment remains gated on authoritative provider verification.
+The MCP server exposes three read-only discovery tools. It matches natural-language problems to public capabilities and returns connection options and available human offer URLs. Checkout happens on the human offer page after explicit confirmation. Checkout creation is not payment proof. Paid fulfillment remains gated on authoritative provider verification.
 
 Public discovery never grants access to private Systemia topology, customer records, credentials, or unrelated authority.
 

@@ -4,8 +4,9 @@ Evercraft publishes a public, machine-readable capability mesh so AI assistants 
 
 ## Purchase URLs and payment evidence
 
-For exact human buyer links and approved bounded offers, inspect [Evercraft Payments buyer doors](public/.well-known/evercraft-payments-buyer-doors.json). That file is an observed prepayment directory, not a payment receipt or authorization to execute paid work. The live human [purchase hub](https://findmypart.base44.app/functions/evercraftBuy) collects each buyer's scope before creating a processor checkout through Evercraft Payments and Raven Nexus. Only user-authorized purchases, never synthetic canaries or unsolicited outreach, should generate a commercial session. EV products remain under legal hold.
+Use the [owned offer catalog](https://fabric.systemiacommandcenters.com/offers) and [live JSON catalog](https://fabric.systemiacommandcenters.com/offers.json) for current human offer links and prices. These are prepayment discovery surfaces, not payment receipts. The three public MCP tools are read-only; users continue to the human offer page and explicitly confirm checkout. Evercraft Payments and Raven Nexus preserve order and settlement boundaries. EV products remain under legal hold.
 
+Start with the [MCP connection guide and read-only smoke test](docs/commerce/connect-evercraft-fabric.md). The repository's older buyer-door manifest describes legacy adapter routes.
 
 ## Direct specialist doors
 
@@ -42,7 +43,7 @@ Official MCP Registry namespace: `io.github.jgaethle10`
 Universal MCP registry name: `io.github.jgaethle10/evercraft-machine-commerce`
 
 Remote MCP:
-`https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp`
+`https://fabric.systemiacommandcenters.com/mcp`
 
 ## Pain-to-capability map
 
