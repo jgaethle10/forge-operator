@@ -1,0 +1,22 @@
+name: Remote Operator Status Contract
+
+on:
+  pull_request:
+    paths:
+      - 'scripts/validate-fabric-remote-operator-status.mjs'
+      - 'tests/validate-fabric-remote-operator-status.test.mjs'
+      - '.github/workflows/fabric-remote-recovery-probe.yml'
+      - '.github/workflows/remote-operator-status-contract.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  verify-bounded-status:
+    runs-on: ubuntu-latest
+    timeout-minutes: 3
+    steps:
+      - uses: actions/checkout@v4
+      - name: Run fail-closed status contract tests
+        run: node --test tests/validate-fabric-remote-operator-status.test.mjs
