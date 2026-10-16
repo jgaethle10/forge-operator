@@ -5,12 +5,17 @@
  * a successful email send, or a paid customer. No POST or personal information.
  */
 import { pathToFileURL } from 'node:url';
+import { createHash } from 'node:crypto';
 
 export const ORIGIN = 'https://headless-ljlkjiyuejs-sociallyguud-140c.wix-site-host.com';
+const EXPECTED_MEDIA_SHA256='6c144783a110f4cc44c10359d78695ffce42fe9f02f6f56f4f12fbf35a899691';
+const EXPECTED_POSTER_SHA256='9e5647d8cc4ab73aa33da4f16b7bb2f611331d9f104e670516a719dff1df830e';
+const sha256 = data => createHash('sha256').update(data).digest('hex');
 const ROUTES = {
   reel: '/coach-reel.html',
   classroom: '/playbook-classroom.html',
   video: '/assets/zero-hour-reel.mp4',
+  poster: '/assets/zero-hour-poster.jpg',
   engine: '/assets/classroom-engine.js',
   ui: '/assets/classroom-ui.js',
 };
@@ -21,6 +26,9 @@ export function checkReelHtml(html) {
   assert(/<source\b[^>]*src=["']assets\/zero-hour-reel\.mp4["']/i.test(html), 'video source mismatch');
   assert(/<source\b[^>]*type=["']video\/mp4["']/i.test(html), 'video MIME declaration missing');
   assert(/playbook-classroom\.html/i.test(html), 'classroom CTA missing');
+  assert(/Game Fabric research release v2\.9/i.test(html), 'outdated reel version, expected v2.9');
+  assert(/nickel Cover 3 edge pressure/i.test(html), 'stale demo call, expected nickel Cover 3');
+  assert(/Open the MP4 directly/i.test(html), 'visible recipient fallback missing');
   return ['video_tag', 'controls', 'playsinline', 'video_source', 'classroom_cta'];
 }
 export function checkClassroomHtml(html) {
@@ -55,8 +63,8 @@ async function get(path, opts={}) {
 }
 export async function runLive() {
   const checks = [];
-  const [reel, classroom, engine, ui] = await Promise.all([
-    get(ROUTES.reel), get(ROUTES.classroom), get(ROUTES.engine), get(ROUTES.ui),
+  const [reel, classroom, engine, ui, poster] = await Promise.all([
+    get(ROUTES.reel), get(ROUTES.classroom), get(ROUTES.engine), get(ROUTES.ui), get(ROUTES.poster),
   ]);
   for(const [name, response] of [['reel',reel], ['classroom',classroom]]) {
     const ct = response.headers.get('content-type') || '';
@@ -79,7 +87,15 @@ export async function runLive() {
   const payload = Buffer.from(await video.arrayBuffer());
   assert(payload.length <= 3000000, 'unexpectedly large response for 64 KiB range probe');
   const format = checkMp4Header(payload.subarray(0, 65536));
-  checks.push('video_transport', 'mp4_magic', 'mp4_metadata');
+  const fullVideo=video.status===206?Buffer.from(await (await get(ROUTES.video)).arrayBuffer()):payload;
+  assert(fullVideo.length >= 100000, 'video asset is truncated');
+  const videoHash=sha256(fullVideo);
+  assert(videoHash===EXPECTED_MEDIA_SHA256, 'video digest mismatch: stale or swapped media');
+  const posterBytes=Buffer.from(await poster.arrayBuffer());
+  assert(posterBytes[0]===0xff&&posterBytes[1]===0xd8&&posterBytes[2]===0xff,'poster is not JPEG');
+  const posterHash=sha256(posterBytes);
+  assert(posterHash===EXPECTED_POSTER_SHA256,'poster digest mismatch: stale or swapped media');
+  checks.push('video_transport', 'mp4_magic', 'mp4_metadata', 'video_sha256', 'poster_sha256', 'v29_call_and_fallback');
   return {
     schema:'evercraft.game-fabric.recipient-transport.v1',
     origin:ORIGIN,
@@ -87,6 +103,9 @@ export async function runLive() {
     status:'transport_pass',
     video_http_status:video.status,
     media_format:format,
+    reel_revision:'2.9.1-review-held',
+    video_sha256:videoHash,
+    poster_sha256:posterHash,
     checks,
     browser_playback:'unverified',
     real_phone_playback:'unverified',
