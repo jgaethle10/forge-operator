@@ -13,7 +13,9 @@ Wrap the existing Evercraft Graphics Command commercial renderer in a guarded MC
 - graphics_preview_commercial: SVG in feed, square, story or hero-wide, with SHA-256 receipt and synthetic/unverified labels.
 - graphics_preview_motion_stage: HTML motion-stage source, not a finished video.
 
-The first candidate is intentionally Evercraft-branded, and **not yet a white-label production service**.
+The first candidate is intentionally Evercraft-branded, and **not yet a white-label production service**. The inherited commercial renderer has a fixed conversion-leak / "QUICK WIN AUDIT" visual grammar, so this is a layout and transport prototype rather than a fully general or art-directable graphics department. The sample offer price is client-provided advertising copy, not a price charged by Evercraft for rendering.
+
+This private adapter deliberately supports the legacy 2025-03-26 MCP HTTP protocol. Remote OAuth and current-generation MCP transport conformance are separately held. To reduce local DNS-rebinding exposure, browser Origin headers are refused, non-loopback Host values return HTTP 403, and the optional MCP-Protocol-Version header must match the supported version. Native clients should send Accept: application/json, text/event-stream and Content-Type: application/json.
 
 ## Local private demo
 
@@ -54,9 +56,9 @@ Sources, prices, brands and offers are seller-supplied and **unverified**. Outpu
 
 ## Tests
 
-    node --test systemia/mcp/graphics-department.test.mjs
+    node --test systemia/mcp/graphics-department.test.mjs systemia/mcp/graphics-mcp-client-conformance.test.mjs
 
-The test suite covers deterministic hashes, four formats, motion-stage classification, invalid input, markup/URL rejection, bearer authentication, HTTP bounds and no payment/publication authority.
+The test suite covers deterministic hashes, four formats, motion-stage classification, invalid input, markup/URL rejection, bearer authentication, HTTP bounds, Origin/Host/protocol spoofing, no payment/publication authority, and a genuinely separate Node process acting as a native MCP HTTP client. It does not establish ChatGPT/Claude/Gemini acceptance, public HTTPS service readiness, or authorization to ship.
 
 ## Release holds
 
