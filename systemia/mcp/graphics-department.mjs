@@ -8,6 +8,7 @@ import {
   renderCommercialPoster,
   renderCommercialMotion,
 } from '../graphics-command/commercial-renderer.mjs';
+import { ART_SCHEMA, renderArtDirectedSvg } from './graphics-art-directed.mjs';
 
 // Preview-only contract. No Systemia job dispatch, public write, payment,
 // publication, network fetch, or model-provider inference is performed here.
@@ -61,6 +62,13 @@ export function graphicsDepartmentTools() {
       title: 'Render an Evercraft-branded commercial graphic preview',
       description: 'Generate a deterministic, synthetic, Evercraft-branded SVG preview for feed, square, story, or hero format. Seller-provided offers, prices and source references are NOT independently verified. Does not publish, charge, run agents, or generate video.',
       inputSchema: BRIEF_SCHEMA,
+      annotations: COMMON,
+    },
+    {
+      name: 'graphics_preview_art_directed',
+      title: 'Create an art-directed vector concept preview',
+      description: 'Render a bounded brand-text-only SVG concept using one of three distinctive geometric treatments and four curated palettes. Client copy and brand rights are unverified. No asset uploads, external images, model inference, video, charges or publication.',
+      inputSchema: ART_SCHEMA,
       annotations: COMMON,
     },
     {
@@ -227,18 +235,20 @@ export function executeGraphicsMcpRpc(request) {
   if (name === 'graphics_get_capabilities') {
     if (!exactObject(args, [])) return rpcResult(id, toolExecutionError('Invalid arguments: this tool takes no inputs'));
     return rpcResult(id, toolResult({
-      available: ['graphics_preview_commercial', 'graphics_preview_motion_stage'],
+      available: ['graphics_preview_commercial', 'graphics_preview_art_directed', 'graphics_preview_motion_stage'],
       availableMode: 'local_authenticated_preview_only',
       pending: ['paid_rendering', 'real_video', '3d_world_jobs', 'image_model_calls', 'public_discovery', 'tenant_billing', 'publishing'],
       commercialReadiness: 'not_approved',
       publicationAuthority: false,
     }));
   }
-  if (name !== 'graphics_preview_commercial' && name !== 'graphics_preview_motion_stage') {
+  if (name !== 'graphics_preview_commercial' && name !== 'graphics_preview_motion_stage' && name !== 'graphics_preview_art_directed') {
     return rpcError(id, -32602, 'Unknown graphics tool');
   }
   try {
-    return rpcResult(id, toolResult(renderGraphicsPreview(args, { motion: name === 'graphics_preview_motion_stage' })));
+    return rpcResult(id, toolResult(name === 'graphics_preview_art_directed'
+      ? renderArtDirectedSvg(args)
+      : renderGraphicsPreview(args, { motion: name === 'graphics_preview_motion_stage' })));
   } catch (e) {
     return rpcResult(id, toolExecutionError(e instanceof Error ? e.message : 'Graphics preview failed'));
   }
