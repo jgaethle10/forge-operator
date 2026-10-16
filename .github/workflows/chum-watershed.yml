@@ -447,6 +447,7 @@ jobs:
         if: always()
         continue-on-error: true
         env:
+          CHUM_ACQUISITION_EXPORT_URL: ${{ vars.CHUM_ACQUISITION_EXPORT_URL }}
           CHUM_MONEY_RADAR_STRICT: "false"
         run: npm run chum:money-radar
 
@@ -458,6 +459,9 @@ jobs:
 
       - name: Announce updated central discovery surfaces
         id: announce
+        env:
+          CHUM_INDEXNOW_GATEWAY_URL: ${{ vars.CHUM_INDEXNOW_GATEWAY_URL }}
+          CHUM_INDEXNOW_PAIN_INDEX_URL: ${{ vars.CHUM_INDEXNOW_PAIN_INDEX_URL }}
         continue-on-error: true
         if: ${{ steps.trigger_policy.outputs.broadcast_discovery == 'true' }}
         shell: bash
