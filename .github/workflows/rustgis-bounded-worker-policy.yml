@@ -25,3 +25,5 @@ jobs:
           node-version: '22'
       - name: Verify signed synthetic worker policy and replay gates
         run: node systemia/compute/rustgis-bounded-worker/tests/test-worker.mjs
+      - name: Verify read-only Saban evidence reconciliation and tamper refusal
+        run: node systemia/compute/rustgis-bounded-worker/tests/saban-evidence-bridge.test.mjs
