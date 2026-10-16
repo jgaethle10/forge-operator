@@ -61,6 +61,36 @@ test('human offer copy gives sell-now capabilities short memorable URLs',()=>{
   assert.doesNotMatch(page,/machine state|start_url_state|preferred_agent_route/i);
 });
 
+
+test('conversion-first offer has one primary action, URL before email, and no competing technical button',()=>{
+  const page=renderOfferPage(websiteAudit);
+  assert.match(page,/<body class="conversion-page">/);
+  assert.match(page,/<div class="offer-convert" aria-label="Start your order">/);
+  assert.match(page,/<label for="offer-website-url">1\. Website URL<\/label>/);
+  assert.match(page,/<label for="offer-customer-email">2\. Email for your receipt<\/label>/);
+  assert.match(page,/aria-describedby="offer-website-help"/);
+  assert.match(page,/aria-describedby="offer-email-help"/);
+  assert.match(page,/placeholder="https:\/\/yourbusiness\.com"/);
+  assert.match(page,/<details class="offer-details"><summary>How it works<\/summary>/);
+  assert.match(page,/\.checkout-field input:focus-visible/);
+  assert.match(page,/\.conversion-page \.navlinks\{display:none\}/);
+  assert.equal((page.match(/class="btn primary/g)||[]).length,1,'exactly one primary checkout action');
+  assert.equal((page.match(/<button\b/g)||[]).length,1,'exactly one button');
+  assert.ok(page.indexOf('name="website_url"')<page.indexOf('name="customer_ref"'),'target first, then receipt email');
+  assert.ok(page.indexOf('class="offer-convert"')<page.indexOf('class="offer-visual"'),'form before large optional image');
+  assert.ok(page.indexOf('Continue to checkout')<page.indexOf('What you get back'),'checkout before deeper content');
+  assert.match(page,/<a class="offer-secondary" href="\/capabilities\//,'proof link demoted, not removed');
+});
+
+test('non-website offer does not ask for a URL that the checkout backend discards',()=>{
+  const site={...websiteAudit,public_id:'site-survive-rapid-audit-v1',
+    entry_paid_offer:{name:'Rapid Site-Survive Audit',price:'$250',price_usd_normalized:250,billing:'one_time'}};
+  const page=renderOfferPage(site);
+  assert.match(page,/Email for your receipt/);
+  assert.doesNotMatch(page,/name="website_url"/);
+  assert.equal((page.match(/<button\b/g)||[]).length,1);
+});
+
 test('Site-Survive Rapid Audit has a truthful $250 owned offer page and purchase routing',()=>{
   const site={
     ...websiteAudit,
