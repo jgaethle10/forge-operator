@@ -31,6 +31,17 @@ test('owned Evercraft mobile surface is installable and routes through live Fabr
     assert.match(mobileResponse.headers.get('content-security-policy')||'',/form-action 'self'/);
     const mobile=await mobileResponse.text();
     assert.match(mobile,/Bring the problem/);
+    assert.match(mobile,/One door\\./);
+    assert.match(mobile,/A world of capability/);
+    assert.match(mobile,/Presence · interactive preview/);
+    assert.match(mobile,/Choose your starting point/);
+    assert.match(mobile,/Property intelligence/);
+    assert.match(mobile,/Creator presence/);
+    assert.match(mobile,/Business strategy/);
+    assert.match(mobile,/Community services/);
+    assert.match(mobile,/No silent actions/);
+    assert.match(mobile,/prefers-reduced-motion/);
+    assert.doesNotMatch(mobile,/<script\\b/i);
     assert.match(mobile,/Add to Home Screen/);
     assert.match(mobile,/1 live capabilities/);
     assert.match(mobile,/\/mobile\/manifest\.webmanifest/);
@@ -42,6 +53,12 @@ test('owned Evercraft mobile surface is installable and routes through live Fabr
     assert.match(matched,/Open capability/);
     assert.match(matched,/Read-only discovery/);
     assert.equal(matched.includes('base44.app'),false);
+
+    const injected=await fetch(runtime.url+'/mobile?q='+encodeURIComponent('<img src=x onerror=alert(1)>')).then(r=>r.text());
+    assert.ok(injected.includes('&lt;img src=x onerror=alert(1)&gt;'));
+    assert.ok(!injected.includes('<img src=x onerror=alert(1)>'));
+    assert.ok(injected.includes('interactive preview'));
+
 
     const manifestResponse=await fetch(runtime.url+'/mobile/manifest.webmanifest');
     assert.equal(manifestResponse.status,200);
