@@ -51,3 +51,8 @@ for (const [label, mutation] of negatives) {
     assert.equal(result.stdout.trim(), 'false');
   });
 }
+
+test('draft PR fixture runs cannot cancel the live scheduled canary', () => {
+  assert.ok(workflow.includes("github.event_name == 'pull_request' && github.event.pull_request.number || 'live'"));
+  assert.ok(workflow.includes('cancel-in-progress: true'));
+});
