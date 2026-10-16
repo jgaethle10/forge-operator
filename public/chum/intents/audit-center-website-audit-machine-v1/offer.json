@@ -19,56 +19,27 @@
     "website traffic but no leads",
     "visitors are not turning into leads"
   ],
-  "pricing": "Free preview. Quick Win Audit $49 one-time and machine-fulfilled after verified payment; the $49 may be credited toward Complete Audit. Complete Audit $500 one-time. Audit + Patch $1,200 one-time.",
+  "pricing": "Free public domain-format checker only. Paid Quick Win and deeper audits remain held until verified production buyer checkout and delivery.",
   "offers": [
     {
-      "name": "Free Preview",
+      "name": "Free public HTTPS domain-format checker",
       "price": "$0",
-      "billing": "free"
-    },
-    {
-      "offer_key": "quick",
-      "name": "Quick Win Audit",
-      "price": "$49",
-      "price_usd": 49,
-      "billing": "one_time",
-      "fulfillment": "automatic",
-      "scope": "Bounded homepage/public-web evidence snapshot, automated health score, and top five prioritized fixes.",
-      "upgrade_credit": "$49"
-    },
-    {
-      "name": "Complete Audit",
-      "price": "$500",
-      "billing": "one_time"
-    },
-    {
-      "name": "Audit + Patch",
-      "price": "$1,200",
-      "billing": "one_time"
+      "billing": "free",
+      "scope": "Public HTTPS domain format eligibility only; no site crawl, diagnosis, payment or fulfillment."
     }
   ],
-  "entry_paid_offer": {
-    "offer_key": "quick",
-    "name": "Quick Win Audit",
-    "price": "$49",
-    "price_usd": 49,
-    "billing": "one_time",
-    "fulfillment": "automatic",
-    "scope": "Bounded homepage/public-web evidence snapshot, automated health score, and top five prioritized fixes.",
-    "upgrade_credit": "$49",
-    "price_usd_normalized": 49
-  },
-  "commercial_state": "sell_now",
-  "machine_state": "payment_ready",
+  "entry_paid_offer": null,
+  "commercial_state": "verification_required",
+  "machine_state": "free_checker_live_paid_checkout_held",
   "public_url": "https://fabric.systemiacommandcenters.com/capabilities/audit-center-website-audit-machine-v1",
   "human_ui_required": false,
-  "confirmation": "The free preview creates no payment obligation. Paid tiers require explicit user confirmation before checkout. Quick Win is automatically fulfilled only after provider-verified payment. Complete Audit and Audit + Patch retain their deeper intake and review flow.",
+  "confirmation": "The free checker has no payment obligation. No new paid purchase is authorized while the hosted checkout and buyer form have unresolved live failures.",
   "payment_authority": "Systemia Audit Center / Stripe, provider-verified",
-  "invocation_status": "SOURCE READY: specialist gateway/MCP now declares a $49 Quick Win Audit with explicit human checkout confirmation, exact Stripe amount verification, and automatic bounded public-site triage after verified payment. Existing $500/$1,200 tiers remain intact. Do not claim the $49 lane live until an independent public canary observes the updated specialist offers and tool schema.",
+  "invocation_status": "October 15 2026: unpaid HTTPS domain-format checker available through verified Machine Commerce handoff. Standalone paid $49 hosted checkout canary failed 3/6 and Fabric buyer form lacks required email/site/consent. New payment held, no paid fulfillment verified.",
   "machine_review_url": null,
   "machine_offer_url": null,
   "start_url": null,
-  "start_url_state": "held_no_owned_public_origin",
+  "start_url_state": "not_sell_now",
   "universal_mcp": null,
   "safety": {
     "fit_required": true,

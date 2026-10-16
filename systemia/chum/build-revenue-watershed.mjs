@@ -16,6 +16,18 @@ function safeConfiguredHttps(value) {
   }
 }
 
+// Preserve specialist-direct routing when regenerating the compact Fabric catalog.
+const directSpecIndex = JSON.parse(fs.readFileSync('distribution/direct-plugin-specs.json','utf8'));
+const directDoorIndex = JSON.parse(fs.readFileSync('public/.well-known/evercraft-direct-doors.json','utf8'));
+function publishedSpecialist(publicId) {
+  const spec=(directSpecIndex.products||[]).find(row=>(row.capability_public_ids||[]).includes(publicId));
+  if(!spec)return null;
+  const door=(directDoorIndex.doors||[]).find(row=>row.plugin_package==='plugins/'+spec.slug);
+  if(!door||door.registry_state!=='published'||!safeConfiguredHttps(door.remote_mcp))return null;
+  return {product:door.product,plugin_package:door.plugin_package,registry_name:door.registry_name,
+    registry_state:'published',mcp:door.remote_mcp,route_state:'preferred_when_available',
+    fallback_mcp:'https://fabric.systemiacommandcenters.com/mcp'};
+}
 const MACHINE_COMMERCE_GATEWAY = safeConfiguredHttps(process.env.EVERCRAFT_MACHINE_COMMERCE_GATEWAY_URL);
 const UNIVERSAL_MCP = safeConfiguredHttps(process.env.EVERCRAFT_UNIVERSAL_MCP_URL);
 
@@ -173,6 +185,13 @@ fs.writeFileSync('public/chum/revenue.json', JSON.stringify(output,null,2)+'\n')
 
 const compactOffer = (offer) => ({
   public_id: offer.public_id,
+  // Preserve both direct published specialists and the universal fallback.
+  direct_specialist: publishedSpecialist(offer.public_id),
+  preferred_agent_route: publishedSpecialist(offer.public_id)?'direct_specialist':'universal_fallback',
+  use_when: (offer.intent_terms||[]).slice(0,16),
+  page_url: '/chum/capabilities/'+encodeURIComponent(offer.public_id)+'/',
+  json_url: 'https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/capabilities/'+encodeURIComponent(offer.public_id)+'/capability.json',
+  schema_url: 'https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/capabilities/'+encodeURIComponent(offer.public_id)+'/schema.jsonld',
   name: offer.name,
   problem: offer.problem,
   intent_terms: offer.intent_terms || [],
@@ -182,6 +201,8 @@ const compactOffer = (offer) => ({
   commercial_state: offer.commercial_state,
   machine_state: offer.machine_state,
   public_url: offer.public_url,
+  // Preserve a public, read-only machine documentation link across regeneration.
+  llms_url: 'https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/capabilities/' + encodeURIComponent(offer.public_id) + '/llms.txt',
   machine_review_url: offer.machine_review_url,
   machine_offer_url: offer.machine_offer_url,
   universal_mcp: offer.universal_mcp,
@@ -199,7 +220,8 @@ const compactCapabilities = {
   updated_at: output.updated_at,
   purpose: 'Compact public-safe directory of all current machine-commerce capabilities. Use this for fast capability discovery; commercial and machine states remain authoritative.',
   count: discoveryOffers.length,
-  universal_mcp: UNIVERSAL_MCP || null,
+  // Preserve the verified public discovery fallback without granting checkout or a new human start URL.
+  universal_mcp: UNIVERSAL_MCP || OWNED_FABRIC_ORIGIN + '/mcp',
   capabilities: discoveryOffers.map(compactOffer)
 };
 fs.writeFileSync('public/chum/capabilities.json', JSON.stringify(compactCapabilities,null,2)+'\n');

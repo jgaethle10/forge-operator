@@ -7,10 +7,10 @@
   "source_schema_version": "2026-10-04.1",
   "gateway_version": "evercraft-machine-commerce-gateway-v0.9.1",
   "source_generated_at": "2026-09-30T20:21:00.000Z",
-  "generated_at": "2026-10-07T20:12:09.198Z",
+  "generated_at": "2026-10-15T17:00:00Z",
   "offer_count": 52,
-  "sell_now_count": 17,
-  "discovery_count": 35,
+  "sell_now_count": 16,
+  "discovery_count": 36,
   "safety": {
     "discovery_creates_obligation": false,
     "human_confirmation_required_for_checkout": true,
@@ -151,45 +151,26 @@
         "visitors are not turning into leads"
       ],
       "problem": "A small business or contractor needs evidence-backed website triage across performance, technical SEO, local SEO and trust/conversion before spending money fixing the wrong things.",
-      "inputs": "Website/domain. Business name, city, industry and Google Business Profile context improve local and trust checks.",
-      "outputs": "Free preview plus a machine-fulfilled $49 Quick Win Audit using observed public website evidence, deterministic scoring and the top five prioritized fixes; deeper fix plan/report for Complete Audit; remediation scope for Audit + Patch.",
-      "commercial_state": "sell_now",
-      "machine_state": "payment_ready",
-      "pricing": "Free preview. Quick Win Audit $49 one-time and machine-fulfilled after verified payment; the $49 may be credited toward Complete Audit. Complete Audit $500 one-time. Audit + Patch $1,200 one-time.",
+      "inputs": "Public website/domain for no-charge HTTPS domain-format eligibility screening.",
+      "outputs": "Public HTTPS domain-format eligibility only. This does not crawl, evaluate rankings, or perform a website audit.",
+      "commercial_state": "verification_required",
+      "machine_state": "free_checker_live_paid_checkout_held",
+      "pricing": "Free public domain-format checker only. Paid Quick Win and deeper audits remain held until verified production buyer checkout and delivery.",
       "offers": [
         {
-          "name": "Free Preview",
+          "name": "Free public HTTPS domain-format checker",
           "price": "$0",
-          "billing": "free"
-        },
-        {
-          "offer_key": "quick",
-          "name": "Quick Win Audit",
-          "price": "$49",
-          "price_usd": 49,
-          "billing": "one_time",
-          "fulfillment": "automatic",
-          "scope": "Bounded homepage/public-web evidence snapshot, automated health score, and top five prioritized fixes.",
-          "upgrade_credit": "$49"
-        },
-        {
-          "name": "Complete Audit",
-          "price": "$500",
-          "billing": "one_time"
-        },
-        {
-          "name": "Audit + Patch",
-          "price": "$1,200",
-          "billing": "one_time"
+          "billing": "free",
+          "scope": "Public HTTPS domain format eligibility only; no site crawl, diagnosis, payment or fulfillment."
         }
       ],
       "human_ui_required": false,
-      "confirmation": "The free preview creates no payment obligation. Paid tiers require explicit user confirmation before checkout. Quick Win is automatically fulfilled only after provider-verified payment. Complete Audit and Audit + Patch retain their deeper intake and review flow.",
+      "confirmation": "The free checker has no payment obligation. No new paid purchase is authorized while the hosted checkout and buyer form have unresolved live failures.",
       "public_url": "https://fabric.systemiacommandcenters.com/capabilities/audit-center-website-audit-machine-v1",
-      "public_url_source": "source_catalog",
+      "public_url_source": "owned_fabric_read_only_discovery",
       "payment_authority": "Systemia Audit Center / Stripe, provider-verified",
-      "invocation_status": "SOURCE READY: specialist gateway/MCP now declares a $49 Quick Win Audit with explicit human checkout confirmation, exact Stripe amount verification, and automatic bounded public-site triage after verified payment. Existing $500/$1,200 tiers remain intact. Do not claim the $49 lane live until an independent public canary observes the updated specialist offers and tool schema.",
-      "live_canary_evidence": null,
+      "invocation_status": "October 15 2026: unpaid HTTPS domain-format checker available through verified Machine Commerce handoff. Standalone paid $49 hosted checkout canary failed 3/6 and Fabric buyer form lacks required email/site/consent. New payment held, no paid fulfillment verified.",
+      "live_canary_evidence": "Machine Commerce public catalog and HTTP held canary October 15 2026; Systemia machine commerce checkpoint 6ad105318304d0d7a2a0f7d6",
       "catalog_version": "2026-09-26.17"
     },
     {

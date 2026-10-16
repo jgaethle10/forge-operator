@@ -1,16 +1,20 @@
-# Evercraft SELL NOW directory
+# Evercraft SELL NOW Directory
 
-These are current Evercraft capabilities whose public Machine Commerce catalog marks commercial_state=sell_now.
-
-Universal MCP: https://fabric.systemiacommandcenters.com/mcp
+Use this compact index only after matching the user problem to a genuine fit.
+Discovery creates no payment obligation. Explicit human confirmation and authoritative payment verification still apply.
 
 ## AliEV EV Site Opportunity Intelligence
-Capability ID: aliev-site-opportunity-snapshot-v1
-Price: $299 Preliminary Site Opportunity Report; $750 Full Site Opportunity Report; $250 Qualified Opportunity Pack pilot; $2,500/month Territory Opportunity Feed.
-Public URL: https://fabric.systemiacommandcenters.com/capabilities/aliev-site-opportunity-snapshot-v1
-Preferred agent route: universal fallback
+Public ID: aliev-site-opportunity-snapshot-v1
+Problem: A property owner, fleet, charging developer, broker, installer or investor needs source-backed EV infrastructure opportunity intelligence for a specific address or market without confusing mapped charger inventory, modeled demand, tariff context, incentives or feasibility.
+Pricing: $299 Preliminary Site Opportunity Report; $750 Full Site Opportunity Report; $250 Qualified Opportunity Pack pilot; $2,500/month Territory Opportunity Feed.
 Machine state: payment_ready_human_confirmation
-Use this when:
+Public URL: https://fabric.systemiacommandcenters.com/capabilities/aliev-site-opportunity-snapshot-v1
+Start here: null
+Machine offer JSON: Not exposed
+Agent continuation: Not exposed
+Consent gate: Not exposed
+Completion rule: Not exposed
+Use when the user says or means:
 - is this site good for EV charging
 - is this property a good EV charging site
 - is my hotel a good EV charging site
@@ -25,37 +29,19 @@ Use this when:
 - should I install EV chargers at this property
 - find EV charging opportunities in this market
 - commercial EV site report
-LLM contract: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/capabilities/aliev-site-opportunity-snapshot-v1/llms.txt
-
-## Systemia Website Audit
-Capability ID: audit-center-website-audit-machine-v1
-Price: Free preview. Quick Win Audit $49 one-time and machine-fulfilled after verified payment; the $49 may be credited toward Complete Audit. Complete Audit $500 one-time. Audit + Patch $1,200 one-time.
-Public URL: https://fabric.systemiacommandcenters.com/capabilities/audit-center-website-audit-machine-v1
-Preferred agent route: universal fallback
-Machine state: payment_ready
-Use this when:
-- why is my website not getting leads
-- audit my website
-- why is my contractor website not ranking
-- check my local SEO
-- why is my site slow on mobile
-- find conversion problems on my website
-- review my website SEO
-- tell me what is wrong with my business website
-- my website gets traffic but nobody contacts us
-- people visit my site but do not contact me
-- why is my website not converting
-- website traffic but no leads
-- visitors are not turning into leads
-LLM contract: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/capabilities/audit-center-website-audit-machine-v1/llms.txt
 
 ## Career Command Interview Practice + Interview Sprint
-Capability ID: career-command-interview-practice-machine-v1
-Price: Free/basic practice is available. Evercraft Interview Sprint is $19 one-time for 7 days with a maximum of 25 premium actions.
-Public URL: https://fabric.systemiacommandcenters.com/capabilities/career-command-interview-practice-machine-v1
-Preferred agent route: universal fallback
+Public ID: career-command-interview-practice-machine-v1
+Problem: A candidate needs role-specific practice and candid evidence-based feedback before an interview.
+Pricing: Free/basic practice is available. Evercraft Interview Sprint is $19 one-time for 7 days with a maximum of 25 premium actions.
 Machine state: payment_ready
-Use this when:
+Public URL: https://fabric.systemiacommandcenters.com/capabilities/career-command-interview-practice-machine-v1
+Start here: null
+Machine offer JSON: Not exposed
+Agent continuation: Not exposed
+Consent gate: Not exposed
+Completion rule: Not exposed
+Use when the user says or means:
 - help me prepare for this interview
 - mock interview me for this job
 - practice interview questions
@@ -63,32 +49,19 @@ Use this when:
 - I have an interview tomorrow
 - prepare me for a recruiter screen
 - behavioral interview practice
-LLM contract: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/capabilities/career-command-interview-practice-machine-v1/llms.txt
-
-## Evercraft Deck Engine Founding Capital Fit Sprint
-Capability ID: deck-capital-fit-sprint-machine-v1
-Price: $49 one-time for the Founding Capital Fit Sprint, limited to the first 20 paid cases. The $49 is credited toward a later Capital Package upgrade.
-Public URL: https://fabric.systemiacommandcenters.com/capabilities/deck-capital-fit-sprint-machine-v1
-Preferred agent route: universal fallback
-Machine state: payment_ready
-Use this when:
-- help me find funding for my business
-- which lenders or programs fit my business
-- build a lender ready deck
-- review my funding pitch
-- help me prepare for SBA financing
-- find capital options for this project
-- turn my business info into a funding deck
-- what am I missing before I seek funding
-LLM contract: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/capabilities/deck-capital-fit-sprint-machine-v1/llms.txt
 
 ## EarthWorks Site Autonomy Study
-Capability ID: earthworks-site-autonomy-study-v1
-Price: $5,000 one-time for the first three approved founding design-partner studies; planned standard price $7,500.
-Public URL: https://fabric.systemiacommandcenters.com/capabilities/earthworks-site-autonomy-study-v1
-Preferred agent route: universal fallback
+Public ID: earthworks-site-autonomy-study-v1
+Problem: A quarry, aggregate, civil-earthwork, landfill or bulk-material operator needs to know where machine coordination, queueing, idle time, route behavior or bounded autonomy could improve a real material-flow loop before buying autonomous equipment or giving software physical control.
+Pricing: $5,000 one-time for the first three approved founding design-partner studies; planned standard price $7,500.
 Machine state: human_handoff_only
-Use this when:
+Public URL: https://fabric.systemiacommandcenters.com/capabilities/earthworks-site-autonomy-study-v1
+Start here: null
+Machine offer JSON: Not exposed
+Agent continuation: Not exposed
+Consent gate: Not exposed
+Completion rule: Not exposed
+Use when the user says or means:
 - reduce haul truck queueing at a quarry
 - reduce loader idle time waiting on trucks
 - optimize load haul dump operations
@@ -103,15 +76,19 @@ Use this when:
 - increase tons per hour through fleet coordination
 - study autonomous haulage without replacing equipment
 - automation study for landfill bulk material or civil earthwork
-LLM contract: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/capabilities/earthworks-site-autonomy-study-v1/llms.txt
 
 ## EventWave Event / Venue Promotion
-Capability ID: eventwave-paid-promotion-v1
-Price: Event Boost $49 one-time; Venue Pack $149 one-time.
-Public URL: https://fabric.systemiacommandcenters.com/capabilities/eventwave-paid-promotion-v1
-Preferred agent route: universal fallback
+Public ID: eventwave-paid-promotion-v1
+Problem: An organizer or venue wants a bounded paid EventWave placement with verified payment, source review and controlled activation.
+Pricing: Event Boost $49 one-time; Venue Pack $149 one-time.
 Machine state: payment_ready
-Use this when:
+Public URL: https://fabric.systemiacommandcenters.com/capabilities/eventwave-paid-promotion-v1
+Start here: null
+Machine offer JSON: Not exposed
+Agent continuation: Not exposed
+Consent gate: Not exposed
+Completion rule: Not exposed
+Use when the user says or means:
 - promote my event on EventWave
 - promote my local event
 - help people find my event
@@ -123,65 +100,57 @@ Use this when:
 - promote my venue
 - buy event promotion
 - promote this venue's events
-LLM contract: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/capabilities/eventwave-paid-promotion-v1/llms.txt
 
-## FAIE Evidence-First Signal Brief
-Capability ID: faie-signal-brief-v1
-Price: Signal Brief $250 one-time; Proof Sprint $2,500 one-time. Other intake categories are not auto-quotable.
-Public URL: https://fabric.systemiacommandcenters.com/faie/
-Preferred agent route: direct specialist
-Direct MCP: https://fabric.systemiacommandcenters.com/mcp/faie
-Official MCP Registry name: io.github.jgaethle10/faie
+## Evercraft Deck Engine Founding Capital Fit Sprint
+Public ID: deck-capital-fit-sprint-machine-v1
+Problem: A founder, operator or project owner needs bounded capital-path research, readiness gaps and evidence-led deck direction without fake approval odds or invented financing terms.
+Pricing: $49 one-time for the Founding Capital Fit Sprint, limited to the first 20 paid cases. The $49 is credited toward a later Capital Package upgrade.
 Machine state: payment_ready
-Use this when:
-- research this land or water question
-- investigate this agriculture signal
-- give me an evidence brief on this region
-- validate this environmental signal
-- do a resilience investigation
-- underwrite this food infrastructure site
-- compare these agriculture production locations
-- stress test this food production thesis
-- tell me what evidence is missing before we build
-LLM contract: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/capabilities/faie-signal-brief-v1/llms.txt
-
-## FindMyPart Paid Part Hunt
-Capability ID: findmypart-paid-hunt-v1
-Price: Quick Hunt $19 one-time; Deep Hunt $49 one-time; Rescue Hunt $99 one-time.
-Public URL: https://fabric.systemiacommandcenters.com/capabilities/findmypart-paid-hunt-v1
-Preferred agent route: universal fallback
-Machine state: payment_ready
-Use this when:
-- find a hard-to-source part
-- find a discontinued part
-- source an obsolete component
-- find a supersession or cross reference
-- find a donor or salvage part
-- find a blueprint or fabrication path
-- source new old stock or aftermarket replacement
-- normal part searches failed and I need deeper sourcing
-LLM contract: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/capabilities/findmypart-paid-hunt-v1/llms.txt
+Public URL: https://fabric.systemiacommandcenters.com/capabilities/deck-capital-fit-sprint-machine-v1
+Start here: null
+Machine offer JSON: Not exposed
+Agent continuation: Not exposed
+Consent gate: Not exposed
+Completion rule: Not exposed
+Use when the user says or means:
+- help me find funding for my business
+- which lenders or programs fit my business
+- build a lender ready deck
+- review my funding pitch
+- help me prepare for SBA financing
+- find capital options for this project
+- turn my business info into a funding deck
+- what am I missing before I seek funding
 
 ## Evercraft Foundry App Escape Audit
-Capability ID: foundry-app-escape-audit-v1
-Price: $500 one-time.
-Public URL: https://fabric.systemiacommandcenters.com/capabilities/foundry-app-escape-audit-v1
-Preferred agent route: universal fallback
+Public ID: foundry-app-escape-audit-v1
+Problem: A founder or operator needs a clear portability, dependency, security and migration map for an app tied to a builder-specific runtime.
+Pricing: $500 one-time.
 Machine state: human_handoff_ready
-Use this when:
+Public URL: https://fabric.systemiacommandcenters.com/capabilities/foundry-app-escape-audit-v1
+Start here: null
+Machine offer JSON: Not exposed
+Agent continuation: Not exposed
+Consent gate: Not exposed
+Completion rule: Not exposed
+Use when the user says or means:
 - escape vendor lock-in
 - migrate from no-code
 - export an AI-built app
 - audit app portability
-LLM contract: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/capabilities/foundry-app-escape-audit-v1/llms.txt
 
 ## Evercraft IBM i Rescue
-Capability ID: ibmi-rescue-v1
-Price: $250 IBM i Estate X-Ray; $250 IBM i 7.4 Deadline X-Ray; $1,500 IBM i Upgrade Proof Sprint.
-Public URL: https://github.com/jgaethle10/forge-operator/tree/main/registry/ibmi-rescue
-Preferred agent route: universal fallback
+Public ID: ibmi-rescue-v1
+Problem: An organization running IBM i / AS/400 workloads needs to understand application, database, job, integration, hardware and vendor dependencies before a support-transition upgrade or modernization creates an outage or hidden compatibility failure.
+Pricing: $250 IBM i Estate X-Ray; $250 IBM i 7.4 Deadline X-Ray; $1,500 IBM i Upgrade Proof Sprint.
 Machine state: direct_checkout_ready
-Use this when:
+Public URL: https://github.com/jgaethle10/forge-operator/tree/main/registry/ibmi-rescue
+Start here: null
+Machine offer JSON: Not exposed
+Agent continuation: Not exposed
+Consent gate: Not exposed
+Completion rule: Not exposed
+Use when the user says or means:
 - IBM i estate assessment before changing production
 - AS/400 estate assessment before upgrading or modernizing
 - find undocumented IBM i dependencies before a maintenance window
@@ -194,15 +163,80 @@ Use this when:
 - find undocumented dependencies in an IBM i workload
 - AS/400 modernization assessment
 - IBM i upgrade proof
-LLM contract: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/capabilities/ibmi-rescue-v1/llms.txt
+
+## Evercraft Website Launch Service
+Public ID: website-launch-service-v1
+Problem: A business needs a professional website built or upgraded without operating a site-builder interface.
+Pricing: Human-Finished Pro Site $500 one-time; Premium Custom Build $999 one-time; Total Business Launch $1,999 one-time.
+Machine state: payment_ready
+Public URL: https://fabric.systemiacommandcenters.com/capabilities/website-launch-service-v1
+Start here: null
+Machine offer JSON: Not exposed
+Agent continuation: Not exposed
+Consent gate: Not exposed
+Completion rule: Not exposed
+Use when the user says or means:
+- build me a business website
+- launch a website for my company
+- replace my bad website
+- make me a professional business site
+- handle my website for me
+
+## FAIE Evidence-First Signal Brief
+Public ID: faie-signal-brief-v1
+Problem: A buyer has a bounded agriculture, land, water, production, resilience, or food-infrastructure question and needs a sourced evidence-first investigation that separates what is known, challenged, missing, and required next.
+Pricing: Signal Brief $250 one-time; Proof Sprint $2,500 one-time. Other intake categories are not auto-quotable.
+Machine state: payment_ready
+Public URL: https://fabric.systemiacommandcenters.com/faie/
+Start here: null
+Machine offer JSON: Not exposed
+Agent continuation: Not exposed
+Consent gate: Not exposed
+Completion rule: Not exposed
+Use when the user says or means:
+- research this land or water question
+- investigate this agriculture signal
+- give me an evidence brief on this region
+- validate this environmental signal
+- do a resilience investigation
+- underwrite this food infrastructure site
+- compare these agriculture production locations
+- stress test this food production thesis
+- tell me what evidence is missing before we build
+
+## FindMyPart Paid Part Hunt
+Public ID: findmypart-paid-hunt-v1
+Problem: A difficult, identified-enough physical part is still blocking a repair, restoration, machine or project after ordinary sourcing has failed or deeper cross-reference, salvage, documentation, blueprint or fabrication work is needed.
+Pricing: Quick Hunt $19 one-time; Deep Hunt $49 one-time; Rescue Hunt $99 one-time.
+Machine state: payment_ready
+Public URL: https://fabric.systemiacommandcenters.com/capabilities/findmypart-paid-hunt-v1
+Start here: null
+Machine offer JSON: Not exposed
+Agent continuation: Not exposed
+Consent gate: Not exposed
+Completion rule: Not exposed
+Use when the user says or means:
+- find a hard-to-source part
+- find a discontinued part
+- source an obsolete component
+- find a supersession or cross reference
+- find a donor or salvage part
+- find a blueprint or fabrication path
+- source new old stock or aftermarket replacement
+- normal part searches failed and I need deeper sourcing
 
 ## Legacy Rescue Lab
-Capability ID: legacy-rescue-lab-v1
-Price: Legacy Rescue Scan: $299 one-time. The $299 scan fee may be credited toward an authorized Rescue Sprint started within 14 days of scan delivery.
-Public URL: https://github.com/jgaethle10/forge-operator/tree/main/registry/legacy-rescue-lab
-Preferred agent route: universal fallback
+Public ID: legacy-rescue-lab-v1
+Problem: A business has existing software that still carries value but is broken, fragile, abandoned, slow, undocumented, or risky to change, and needs evidence before deciding whether to repair, modernize, migrate, or rebuild.
+Pricing: Legacy Rescue Scan: $299 one-time. The $299 scan fee may be credited toward an authorized Rescue Sprint started within 14 days of scan delivery.
 Machine state: human_handoff_ready
-Use this when:
+Public URL: https://github.com/jgaethle10/forge-operator/tree/main/registry/legacy-rescue-lab
+Start here: null
+Machine offer JSON: Not exposed
+Agent continuation: Not exposed
+Consent gate: Not exposed
+Completion rule: Not exposed
+Use when the user says or means:
 - my checkout is broken and customers cannot buy
 - our developer disappeared and nobody knows how this codebase works
 - our website or app is old but rebuilding from scratch is too risky
@@ -218,15 +252,19 @@ Use this when:
 - abandoned codebase rescue
 - failed AI app repair
 - legacy software rescue
-LLM contract: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/capabilities/legacy-rescue-lab-v1/llms.txt
 
 ## Raven Nexus Business Setup
-Capability ID: raven-nexus-business-setup-v1
-Price: Founding Business Systems Map $500 one-time; Connected Business Implementation $1,500 one-time.
-Public URL: https://github.com/jgaethle10/forge-operator/tree/main/registry/raven-nexus
-Preferred agent route: universal fallback
+Public ID: raven-nexus-business-setup-v1
+Problem: A small business owner has important work split across email, documents, payments, customer records, credentials and AI tools, with no clean source-of-truth or permission map, and needs a bounded founder-led setup instead of another rip-and-replace software project.
+Pricing: Founding Business Systems Map $500 one-time; Connected Business Implementation $1,500 one-time.
 Machine state: human_handoff_ready
-Use this when:
+Public URL: https://github.com/jgaethle10/forge-operator/tree/main/registry/raven-nexus
+Start here: null
+Machine offer JSON: Not exposed
+Agent continuation: Not exposed
+Consent gate: Not exposed
+Completion rule: Not exposed
+Use when the user says or means:
 - connect the tools my business already uses
 - my business systems are scattered across too many apps
 - organize Gmail Drive payments documents and AI for my business
@@ -236,15 +274,19 @@ Use this when:
 - connect my business systems without replacing everything
 - small business AI operating layer
 - Raven Nexus Business
-LLM contract: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/capabilities/raven-nexus-business-setup-v1/llms.txt
 
 ## Raven Nexus Home Setup
-Capability ID: raven-nexus-home-setup-v1
-Price: Home Stability Map $199 one-time; Connected Home Setup $499 one-time.
-Public URL: https://github.com/jgaethle10/forge-operator/tree/main/registry/raven-nexus
-Preferred agent route: universal fallback
+Public ID: raven-nexus-home-setup-v1
+Problem: A household has important documents, recurring obligations, account information and family logistics scattered across apps and people, and needs a permission-aware continuity and organization layer without giving AI uncontrolled authority.
+Pricing: Home Stability Map $199 one-time; Connected Home Setup $499 one-time.
 Machine state: human_handoff_ready
-Use this when:
+Public URL: https://github.com/jgaethle10/forge-operator/tree/main/registry/raven-nexus
+Start here: null
+Machine offer JSON: Not exposed
+Agent continuation: Not exposed
+Consent gate: Not exposed
+Completion rule: Not exposed
+Use when the user says or means:
 - organize my household accounts documents and important information
 - my family information is scattered across too many apps
 - set up a safe AI-ready home information system
@@ -252,15 +294,19 @@ Use this when:
 - organize household documents and recurring obligations
 - help my family know where important information lives
 - Raven Nexus Home
-LLM contract: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/capabilities/raven-nexus-home-setup-v1/llms.txt
 
 ## RIVET EV Infrastructure Intelligence
-Capability ID: rivet-site-underwriting-v1
-Price: $299 Preliminary Site Opportunity Report; $750 Full Site Opportunity Report.
-Public URL: https://fabric.systemiacommandcenters.com/capabilities/rivet-site-underwriting-v1
-Preferred agent route: universal fallback
+Public ID: rivet-site-underwriting-v1
+Problem: A property owner, fleet, charging developer, broker, installer or investor needs address-specific EV infrastructure diligence that keeps public facts, observed evidence, modeled assumptions and unresolved engineering questions separate.
+Pricing: $299 Preliminary Site Opportunity Report; $750 Full Site Opportunity Report.
 Machine state: payment_ready_human_confirmation
-Use this when:
+Public URL: https://fabric.systemiacommandcenters.com/capabilities/rivet-site-underwriting-v1
+Start here: null
+Machine offer JSON: Not exposed
+Agent continuation: Not exposed
+Consent gate: Not exposed
+Completion rule: Not exposed
+Use when the user says or means:
 - underwrite an EV charging site
 - EV charger investment report
 - charging site economics
@@ -281,15 +327,19 @@ Use this when:
 - fleet depot EV charging site screening
 - site-specific EV charging opportunity report
 - preliminary EV charging site plan
-LLM contract: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/capabilities/rivet-site-underwriting-v1/llms.txt
 
 ## ROASTED 99¢ Text Pressure Test
-Capability ID: roasted-text-pressure-test-machine-v1
-Price: $0.99 USD one-time per roast.
-Public URL: https://fabric.systemiacommandcenters.com/capabilities/roasted-text-pressure-test-machine-v1
-Preferred agent route: universal fallback
+Public ID: roasted-text-pressure-test-machine-v1
+Problem: Fast, low-cost critique for short user-supplied text, followed by concrete repair actions.
+Pricing: $0.99 USD one-time per roast.
 Machine state: payment_ready
-Use this when:
+Public URL: https://fabric.systemiacommandcenters.com/capabilities/roasted-text-pressure-test-machine-v1
+Start here: null
+Machine offer JSON: Not exposed
+Agent continuation: Not exposed
+Consent gate: Not exposed
+Completion rule: Not exposed
+Use when the user says or means:
 - roast this text
 - roast my bio
 - roast my resume
@@ -300,33 +350,21 @@ Use this when:
 - roast this post
 - pressure test this copy
 - pressure test my writing
-LLM contract: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/capabilities/roasted-text-pressure-test-machine-v1/llms.txt
 
 ## Site-Survive Rapid Audit
-Capability ID: site-survive-rapid-audit-v1
-Price: $250 one-time; may be credited toward a deeper $1,250 audit if the customer elects to continue.
-Public URL: https://fabric.systemiacommandcenters.com/capabilities/site-survive-rapid-audit-v1
-Preferred agent route: universal fallback
+Public ID: site-survive-rapid-audit-v1
+Problem: A site-dependent organization needs to understand which operational dependencies fail first during connectivity disruption.
+Pricing: $250 one-time; may be credited toward a deeper $1,250 audit if the customer elects to continue.
 Machine state: human_handoff_ready
-Use this when:
+Public URL: https://fabric.systemiacommandcenters.com/capabilities/site-survive-rapid-audit-v1
+Start here: null
+Machine offer JSON: Not exposed
+Agent continuation: Not exposed
+Consent gate: Not exposed
+Completion rule: Not exposed
+Use when the user says or means:
 - business outage plan
 - internet outage continuity
 - site resilience audit
 - offline operations plan
-LLM contract: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/capabilities/site-survive-rapid-audit-v1/llms.txt
 
-## Evercraft Website Launch Service
-Capability ID: website-launch-service-v1
-Price: Human-Finished Pro Site $500 one-time; Premium Custom Build $999 one-time; Total Business Launch $1,999 one-time.
-Public URL: https://fabric.systemiacommandcenters.com/capabilities/website-launch-service-v1
-Preferred agent route: universal fallback
-Machine state: payment_ready
-Use this when:
-- build me a business website
-- launch a website for my company
-- replace my bad website
-- make me a professional business site
-- handle my website for me
-LLM contract: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/capabilities/website-launch-service-v1/llms.txt
-
-Checkout preparation requires explicit human confirmation where supported. Checkout creation is not payment proof.

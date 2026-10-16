@@ -13,7 +13,10 @@ export function rankOffers({catalog,evidencePack=evidence}={}){
   const published=byID.get(candidate.public_id);
   if(!published)throw Error('unknown_published_offer:'+candidate.public_id);
   const listed=published.offers?.find(o=>o.name===candidate.entry_offer);
-  if(!listed)throw Error('canonical_entry_mismatch:'+candidate.public_id);
+  if(!listed && published.commercial_state==='sell_now')throw Error('canonical_entry_mismatch:'+candidate.public_id);
+  // Analyst evidence is historical. If an offer was withdrawn, retain the
+  // candidate for transparent comparison but do not invent its current price.
+  const withdrawn=!listed;
   const scoreBreakdown=keys.map(key=>{
    const raw=candidate.ratings?.[key];
    if(!Number.isInteger(raw)||raw<0||raw>5)throw Error('analyst_rating_invalid:'+key);
@@ -22,7 +25,8 @@ export function rankOffers({catalog,evidencePack=evidence}={}){
   const score=scoreBreakdown.reduce((sum,x)=>sum+x.points,0);
   return {
    public_id:candidate.public_id,offer_name:published.name,entry_offer:candidate.entry_offer,
-   entry_price_published:listed.price,entry_offer_key:candidate.offer_key||null,
+   entry_price_published:listed?.price||null,entry_offer_key:withdrawn?null:(candidate.offer_key||null),
+   entry_offer_state:withdrawn?'withdrawn_not_purchasable':'current_catalog',
    commercial_state:published.commercial_state,machine_state:published.machine_state,
    eligible:published.commercial_state==='sell_now',
    analyst_score:score,
@@ -30,7 +34,7 @@ export function rankOffers({catalog,evidencePack=evidence}={}){
    reasoning:candidate.rationale,
    evidence_refs:(candidate.evidence_ids||[]).map(id=>evidencePack.sources.find(s=>s.id===id)?.url||null).filter(Boolean),
    first_party_order_evidence:candidate.first_party_order_evidence||'not_verified',
-   critical_unknowns:candidate.critical_unknowns||[],
+   critical_unknowns:withdrawn?[...(candidate.critical_unknowns||[]),'Historical candidate offer has been withdrawn from the current commercial catalog. No payment path permitted.']:(candidate.critical_unknowns||[]),
    buyer_channel_hypothesis:candidate.partner_channel||null,
    is_sales_proven:false,
   };
