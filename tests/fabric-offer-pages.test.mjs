@@ -8,7 +8,7 @@ import {
   renderOfferPage,
   renderOffers,
 } from '../systemia/mcp/fabric-public-site.mjs';
-import { normalizePublicWebsiteUrl, startFabricLocalRuntime } from '../systemia/mcp/fabric-local-runtime.mjs';
+import { normalizePublicWebsiteUrl, trustedDirectCheckoutUrl, startFabricLocalRuntime } from '../systemia/mcp/fabric-local-runtime.mjs';
 
 const websiteAudit={
   public_id:'audit-center-website-audit-machine-v1',
@@ -260,6 +260,69 @@ test('simple website URLs normalize safely without relaxing public HTTPS preflig
     'example.com\nhost: injection', 'https://example.com\\@bad.com'
   ];
   for(const input of bad) assert.equal(normalizePublicWebsiteUrl(input),null,'reject '+input);
+});
+
+test('only exact hosted payment URLs qualify for the one-tap checkout redirect',()=>{
+  assert.equal(trustedDirectCheckoutUrl('https://checkout.stripe.com/c/pay/cs_test_safe'),'https://checkout.stripe.com/c/pay/cs_test_safe');
+  assert.equal(trustedDirectCheckoutUrl('https://buy.stripe.com/test123'),'https://buy.stripe.com/test123');
+  for(const bad of [
+    'https://checkout.stripe.com.evil.example/c/pay/demo',
+    'https://user@checkout.stripe.com/c/pay/demo',
+    'https://checkout.stripe.com:8443/c/pay/demo',
+    'http://checkout.stripe.com/c/pay/demo',
+    'https://checkout.stripe.com/c/pay/',
+    'https://checkout.stripe.com/evil/redirect',
+    'https://buy.stripe.com.evil.example/test123',
+    'https://evil.example/?checkout.stripe.com',
+    'javascript:alert(1)'
+  ]) assert.equal(trustedDirectCheckoutUrl(bad),null,'reject '+bad);
+});
+
+test('explicit buyer form goes directly to trusted secure checkout, not an extra handoff screen',async()=>{
+  const calls=[];
+  const runtime=await startFabricLocalRuntime({host:'127.0.0.1',port:0,catalog:[],faieSurfaceEnabled:false,
+    purchaseIntentFetch:async(url,init)=>{
+      const body=JSON.parse(init.body);calls.push(body);
+      return Response.json({
+        ok:true,order_key:body.order_key,amount_cents:25000,currency:'usd',
+        checkout_url:'https://checkout.stripe.com/c/pay/cs_test_proof',
+        payment_state:'unpaid',fulfillment_release:false,
+      });
+    },
+  });
+  try{
+    const response=await fetch(runtime.url+'/api/offers/workflow-xray/checkout',{
+      method:'POST',headers:{'content-type':'application/x-www-form-urlencoded'},
+      body:new URLSearchParams({user_confirmed:'true',customer_ref:'buyer@example.com',idempotency_key:'test-buyer-explicit'}),
+      redirect:'manual',
+    });
+    assert.equal(response.status,303);
+    assert.equal(response.headers.get('location'),'https://checkout.stripe.com/c/pay/cs_test_proof');
+    assert.equal(response.headers.get('referrer-policy'),'no-referrer');
+    assert.equal(response.headers.get('x-evercraft-payment-authority'),'Evercraft Payments');
+    assert.equal(calls.length,1);
+    assert.equal(calls[0].offer_key,'workflow_foundry.xray_250.v1');
+    assert.equal(calls[0].customer_email,'buyer@example.com');
+  }finally{await runtime.close();}
+});
+
+test('price mismatch blocks external redirect without issuing a buyer handoff',async()=>{
+  const runtime=await startFabricLocalRuntime({host:'127.0.0.1',port:0,catalog:[],faieSurfaceEnabled:false,
+    purchaseIntentFetch:async()=>Response.json({
+      ok:true,order_key:'QA-PRICE-MISMATCH',amount_cents:1,currency:'usd',
+      checkout_url:'https://checkout.stripe.com/c/pay/cs_test_mismatch',
+    }),
+  });
+  try{
+    const response=await fetch(runtime.url+'/api/offers/workflow-xray/checkout',{
+      method:'POST',headers:{'content-type':'application/x-www-form-urlencoded'},
+      body:new URLSearchParams({user_confirmed:'true',customer_ref:'buyer@example.com'}),
+      redirect:'manual',
+    });
+    assert.equal(response.status,503);
+    assert.equal(response.headers.get('location'),null);
+    assert.match(await response.text(),/No charge was made/);
+  }finally{await runtime.close();}
 });
 
 test('invalid domain is blocked before payment preflight or any checkout mutation',async()=>{
