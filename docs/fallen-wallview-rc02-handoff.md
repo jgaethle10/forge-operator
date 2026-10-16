@@ -38,3 +38,13 @@ Oct 14 authenticated GitHub API returned working login, repository read and writ
 The restored repository is generating multiple CI jobs on new PRs. This branch intentionally stages only an internal handoff with `[skip ci]` and **does not open a PR, publish a release, trigger external dispatch, or alter production**. Review CI fanout before first code PR.
 
 **Next owned action:** canonical Systemia admission, reviewed placement of source modules, native world-engine importer test, and physical-device acceptance. The asset must not be called shipped merely because this document is in Forge.
+
+## RC02.1 private QA update, October 15, 2026
+
+- **Current private QA artifact:** `evercraft_fallen_wallview_rc02_1_private_qa.zip`, SHA256 `f11e31519fe1feb4c0c016866c01460041e5ea348482f7dedf46b643adefb00f`.
+- Stored in private Evercraft Library under `/Evercraft/Fallen Studio/Wall View RC02/`, not in this public repository.
+- Locally verified Node tests: **21/21 passing**, including four-wall outward-facing triangle winding, nondegenerate UVs, and conservative unapplied-rotation warnings. ZIP integrity and per-file checksum verification also passed.
+- Native integration test `world-engine-fallen-import.test.mjs` prepared, but **NOT executed against Forge**; no native editor, 3D renderer, site measurements, payments or public product release verified.
+- **Canonical admission blocker:** connected Systemia `systemiaMissionGate` currently whitelists only `evercraft-ecosystem-loop-closure-v1` and `systemia-one-organism-orchestration-v1`; this existing Gravity/Fallen mission isn't eligible for that automatic route. Its FounderDirectiveDraft is not an admission receipt. Route through the authorized canonical Systemia preflight rather than forging a new mission or claiming an agent dispatch.
+- Never commit private candidate source to this public repository without owner approval of public code disclosure. A GitHub source branch is publicly visible even when no PR is opened.
+- Source handoff remains read-only, safe for review and separate from production deploy.
