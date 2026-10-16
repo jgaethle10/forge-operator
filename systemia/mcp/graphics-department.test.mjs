@@ -9,6 +9,7 @@ import {
 } from './graphics-department.mjs';
 import { createGraphicsMcpServer } from './graphics-department-server.mjs';
 import { ART_FORMATS, ART_TREATMENTS, ART_PALETTES, renderArtDirectedSvg } from './graphics-art-directed.mjs';
+import { renderDataStorySvg, normalizeDataStory } from './graphics-data-story.mjs';
 
 const BRIEF = {
   product: 'Evercraft Visuals',
@@ -29,7 +30,7 @@ test('MCP initialize, discovery, safe annotations and unknown tool', () => {
   assert.equal(rpc('initialize').result.serverInfo.name, 'evercraft-graphics-preview');
   const tools = rpc('tools/list').result.tools;
   assert.deepEqual(tools.map((tool) => tool.name), [
-    'graphics_get_capabilities', 'graphics_preview_commercial', 'graphics_preview_art_directed', 'graphics_preview_motion_stage'
+    'graphics_get_capabilities', 'graphics_preview_commercial', 'graphics_preview_art_directed', 'graphics_preview_data_story', 'graphics_preview_motion_stage'
   ]);
   assert.ok(tools.every((tool) => tool.annotations.readOnlyHint));
   assert.equal(rpc('tools/call', { name: 'unknown' }).error.code, -32602);
@@ -136,7 +137,7 @@ test('HTTP gateway authenticates discovery and denies unauthenticated access', a
     });
     assert.equal(good.status, 200);
     const response = await good.json();
-    assert.equal(response.result.tools.length, 4);
+    assert.equal(response.result.tools.length, 5);
     const deniedGet = await fetch(base + '/mcp/graphics', {
       headers: { authorization: 'Bearer ' + token },
     });
@@ -251,4 +252,119 @@ test('art directed tool rejects injection, spoofed formats and bidi controls', (
   const escaped = renderArtDirectedSvg({ ...base, subhead: 'Never trust <script> & copy' });
   assert.doesNotMatch(escaped.data, /<script>/i);
   assert.match(escaped.data, /&lt;script&gt;/);
+});
+
+
+const DATA_STORY_BRIEF = {
+  brandName: 'Evercraft Graphics',
+  eyebrow: 'Synthetic market brief',
+  headline: 'A clear view of change',
+  subhead: 'Illustrative category comparison using client-provided information.',
+  methodNote: 'Five synthetic observations to exercise graph layout.',
+  chartType: 'bars',
+  unit: 'count',
+  measurementState: 'synthetic_example',
+  format: 'feed',
+  palette: 'midnight',
+  sourceRefs: ['https://example.org/illustrative-methodology'],
+  data: [
+    { label: 'North', value: 32 }, { label: 'East', value: 14 },
+    { label: 'South', value: 79 }, { label: 'West', value: 43 },
+    { label: 'Central', value: 56 },
+  ],
+};
+
+test('data-story renders 32 unique chart/format/palette variants with zero baseline and SHA-256', () => {
+  const shapes = new Set();
+  for (const chartType of ['bars', 'trend']) {
+    for (const format of Object.keys(ART_FORMATS)) {
+      for (const palette of Object.keys(ART_PALETTES)) {
+        const request = { ...DATA_STORY_BRIEF, chartType, format, palette };
+        const result = renderDataStorySvg(request);
+        assert.equal(result.ok, true);
+        assert.equal(result.chartType, chartType);
+        assert.equal(result.mimeType, 'image/svg+xml');
+        assert.match(result.data, /^<svg /);
+        assert.match(result.data, /ZERO-BASED SCALE/);
+        assert.match(result.data, /NOT INDEPENDENTLY VERIFIED/);
+        assert.equal(result.scale.min, 0);
+        assert.equal(result.scale.max, 100);
+        assert.equal(result.dataCount, 5);
+        assert.equal(result.sha256, crypto.createHash('sha256').update(result.data).digest('hex'));
+        assert.equal(result.sha256, renderDataStorySvg(request).sha256);
+        assert.equal(result.evidenceState, 'client_references_not_verified');
+        assert.equal(result.externalActionTaken, false);
+        assert.equal(result.paymentAuthority, false);
+        assert.equal(result.publicationAuthority, false);
+        shapes.add(result.sha256);
+      }
+    }
+  }
+  assert.equal(shapes.size, 32);
+});
+
+test('data-story source refs are preserved as unverified and graph data never auto-claims observed truth', () => {
+  const request = {
+    ...DATA_STORY_BRIEF, unit: 'percent',
+    data: [{ label: 'A', value: 7 }, { label: 'B', value: 81 }],
+    measurementState: 'client_reported',
+  };
+  const output = renderDataStorySvg(request);
+  assert.equal(output.measurementState, 'client_reported');
+  assert.equal(output.scale.max, 100);
+  assert.deepEqual(output.sourceRefs, ['https://example.org/illustrative-methodology']);
+  assert.match(output.data, /CLIENT REPORTED/);
+  assert.match(output.data, /NOT INDEPENDENTLY VERIFIED/);
+});
+
+test('data-story fail-closed when numbers, references, axis labels, or method are invalid', () => {
+  const invalid = [
+    { ...DATA_STORY_BRIEF, data: [] },
+    { ...DATA_STORY_BRIEF, data: [{label:'North',value:10}] },
+    { ...DATA_STORY_BRIEF, data: [{label:'North',value:10},{label:'north',value:8}] },
+    { ...DATA_STORY_BRIEF, data: [{label:'North',value:-1},{label:'South',value:4}] },
+    { ...DATA_STORY_BRIEF, data: [{label:'North',value:Infinity},{label:'South',value:4}] },
+    { ...DATA_STORY_BRIEF, data: [{label:'North',value:NaN},{label:'South',value:4}] },
+    { ...DATA_STORY_BRIEF, sourceRefs: [] },
+    { ...DATA_STORY_BRIEF, sourceRefs: ['http://example.org/record'] },
+    { ...DATA_STORY_BRIEF, sourceRefs: ['https://localhost/private'] },
+    { ...DATA_STORY_BRIEF, sourceRefs: ['https://example.org/one','https://example.org/one'] },
+    { ...DATA_STORY_BRIEF, measurementState: 'verified_external' },
+    { ...DATA_STORY_BRIEF, unit: 'USD', chartType: 'pie' },
+    { ...DATA_STORY_BRIEF, unit: 'percent', data: [{label:'North',value:101},{label:'South',value:8}] },
+    { ...DATA_STORY_BRIEF, chartType: 'trend', data: [{label:'A very long period',value:1},{label:'June',value:2}] },
+    { ...DATA_STORY_BRIEF, extraSideEffect: true },
+    { ...DATA_STORY_BRIEF, methodNote: '' },
+    { ...DATA_STORY_BRIEF, methodNote: 'X\u202eY' },
+  ];
+  for (const request of invalid) {
+    assert.throws(() => normalizeDataStory(request), /graphics_data_/);
+    if (JSON.stringify(request).includes('null')) continue; // JSON cannot transmit NaN/Infinity
+    const call = rpc('tools/call', { name: 'graphics_preview_data_story', arguments: request });
+    assert.equal(call.result?.isError, true);
+  }
+});
+
+test('SVG data story safely escapes client copy and does not permit markup injection', () => {
+  const output = renderDataStorySvg({
+    ...DATA_STORY_BRIEF, subhead: 'A study <script>alert(1)</script> & a second source',
+    data: [{ label: '<unsafe>', value: 2 }, { label: 'Safe', value: 3 }],
+  });
+  assert.doesNotMatch(output.data, /<script/i);
+  assert.doesNotMatch(output.data, /<unsafe>/i);
+  assert.match(output.data, /&lt;unsafe&gt;/);
+  assert.match(output.data, /&amp; a second source/);
+});
+
+test('MCP tool exposes a digest-verifiable data story with no publishing or billing authority', () => {
+  const response = rpc('tools/call', { name: 'graphics_preview_data_story', arguments: DATA_STORY_BRIEF });
+  assert.equal(response.error, undefined);
+  assert.equal(response.result?.isError, false);
+  const v = response.result.structuredContent;
+  assert.equal(v.mode, 'source_labeled_vector_chart_preview');
+  assert.equal(v.scale.min, 0);
+  assert.equal(v.dataCount, 5);
+  assert.equal(v.sha256, crypto.createHash('sha256').update(v.data).digest('hex'));
+  assert.equal(v.publicationAuthority, false);
+  assert.equal(v.paymentAuthority, false);
 });
