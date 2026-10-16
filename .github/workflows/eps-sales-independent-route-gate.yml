@@ -1,0 +1,33 @@
+name: EPS Sales independent route gate
+on:
+  pull_request:
+    paths:
+      - 'scripts/eps-sales-owned-route-gate.mjs'
+      - 'tests/eps-sales-owned-route-gate.test.mjs'
+      - '.github/workflows/eps-sales-independent-route-gate.yml'
+  workflow_dispatch:
+    inputs:
+      public_origin:
+        description: 'Owner-approved EPS independent HTTPS origin; leave blank to run local logic checks only'
+        required: false
+        type: string
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    timeout-minutes: 4
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Test holding-page rejection and authentication boundary
+        run: node --test tests/eps-sales-owned-route-gate.test.mjs
+      - name: Check owned EPS public route only when explicitly specified
+        if: ${{ inputs.public_origin != '' }}
+        env:
+          EPS_SALES_PUBLIC_ORIGIN: ${{ inputs.public_origin }}
+        run: node scripts/eps-sales-owned-route-gate.mjs "$EPS_SALES_PUBLIC_ORIGIN"
+      - name: Public smoke is not authorization
+        run: echo 'Only logic/public surface tested. iPhone login, photo persistence, PDF, backups and owner release remain mandatory.'
