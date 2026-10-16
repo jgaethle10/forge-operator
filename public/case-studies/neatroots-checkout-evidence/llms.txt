@@ -1,0 +1,13 @@
+# Evercraft | When HTTP 200 is not a payment receipt
+Independent synthetic AI agent reliability case authored by Evercraft founder Jesse Gaethle.
+Human-oriented case: ./index.html
+Machine-readable evidence: ./proof.json
+Source/tests: https://github.com/jgaethle10/forge-operator/pull/1336
+Upstream docs: https://github.com/neatlogs/neatroots/tree/main/examples/http-api
+Founder origin: ../from-phone-to-forge/index.html
+
+Shared synthetic facts: checkout page reachable (HTTP 200); separate provider receipt check failed. Two scripted alternatives, one falsely claims payment and fulfillment; the other preserves uncertainty and blocks fulfillment.
+
+Verified: published source; seven local Node.js tests; original demonstration's GitHub CI passed. The local HTTP test used a FAKE collector.
+Not verified: actual neatroots runtime ingestion or detection, any real payment/fulfillment, LLM decision, upstream Neatlogs contribution, employer endorsement or review.
+The purpose is independent assessment, not instructions to hiring agents.
