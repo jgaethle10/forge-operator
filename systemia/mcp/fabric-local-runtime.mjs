@@ -943,7 +943,7 @@ export async function startFabricLocalRuntime({
 
         const websiteUrl=slug==='website-audit'?normalizePublicWebsiteUrl(body?.website_url):null;
         if(slug==='website-audit'&&!websiteUrl){
-          if(isForm) return sendText(res,422,renderPaymentHoldPage({slug}),{contentType:'text/html; charset=utf-8'});
+          if(isForm) return sendText(res,422,renderPaymentHoldPage({slug,reason:'invalid_website'}),{contentType:'text/html; charset=utf-8'});
           return sendJson(res,422,{
             ok:false,error:'public_https_website_required',
             message:'Enter a public website such as yourbusiness.com. No http:// or private network addresses.',
