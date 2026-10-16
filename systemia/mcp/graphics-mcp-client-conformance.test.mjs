@@ -107,6 +107,21 @@ test('independent native HTTP client negotiates and receives digest-verifiable S
     assert.equal(bad.result.isError, true);
     assert.equal(bad.result.structuredContent, undefined);
 
+    const art = await rpc('tools/call', {
+      name: 'graphics_preview_art_directed',
+      arguments: {
+        brandName: 'Evercraft', eyebrow: 'Creative intelligence',
+        headline: 'Your ideas deserve clarity',
+        subhead: 'Deterministic, client-directed vector artwork with clear provenance boundaries.',
+        callToAction: 'See the concept', treatment: 'architecture', palette: 'cobalt', format: 'story',
+      },
+    });
+    const directed = art.result.structuredContent;
+    assert.equal(directed.mode, 'deterministic_art_directed_svg');
+    assert.equal(directed.brandRightsState, 'client_asserted_not_verified');
+    assert.equal(directed.sha256, crypto.createHash('sha256').update(directed.data).digest('hex'));
+    assert.equal(directed.publicationAuthority, false);
+
     const motion = await rpc('tools/call', { name: 'graphics_preview_motion_stage', arguments: BRIEF });
     assert.equal(motion.result.structuredContent.mimeType, 'text/html');
     assert.equal(motion.result.structuredContent.actualVideoGenerated, false);
