@@ -91,6 +91,7 @@ test('independent native HTTP client negotiates and receives digest-verifiable S
     const names = discovered.result.tools.map((item) => item.name);
     assert.ok(names.includes('graphics_preview_commercial'));
     assert.ok(names.includes('graphics_preview_motion_stage'));
+    assert.ok(names.includes('graphics_preview_art_directed'));
 
     const first = await rpc('tools/call', { name: 'graphics_preview_commercial', arguments: { ...BRIEF, format: 'feed' } });
     const asset = first.result.structuredContent;
