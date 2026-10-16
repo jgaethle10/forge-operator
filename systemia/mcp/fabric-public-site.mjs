@@ -17,6 +17,7 @@ const shell=(title,body,{
   canonical='',
   ogType='website',
   ogImage='',
+  conversion=false,
 }={})=>{
   const canonicalUrl=canonical
     ? (String(canonical).startsWith('https://')?String(canonical):PUBLIC_ORIGIN+String(canonical))
@@ -143,9 +144,51 @@ footer{border-top:1px solid var(--line);padding:30px 0 48px;color:var(--muted);f
   .navlinks{display:none}.hero{padding-top:48px}.trust{grid-template-columns:repeat(2,1fr)}
   .grid,.prompts,.capability-grid,.detail-grid{grid-template-columns:1fr}
 }
+
+/* Human paid offer pages: one job, one obvious field group, one primary action. */
+.conversion-page nav{padding:17px 0}
+.conversion-page .navlinks{display:none}
+.conversion-page .offer-hero{padding:34px 0 22px;max-width:920px}
+.conversion-page .offer-hero h1{font-size:clamp(36px,5.2vw,60px);line-height:1.06;letter-spacing:-.05em;margin:18px 0 12px}
+.conversion-page .offer-hero .lede{font-size:clamp(17px,2vw,21px);line-height:1.48;max-width:760px;margin:0 0 20px}
+.offer-convert{max-width:740px;margin:24px 0 16px;border:1px solid #3b5b86;border-radius:22px;padding:clamp(20px,4vw,32px);background:linear-gradient(155deg,rgba(18,34,64,.97),rgba(8,17,32,.97));box-shadow:0 24px 70px rgba(0,0,0,.25)}
+.offer-convert-head{display:flex;gap:12px;align-items:end;justify-content:space-between;border-bottom:1px solid var(--line);padding-bottom:18px}
+.offer-convert-label{color:#d2e3ff;font-size:13px;font-weight:700;letter-spacing:.02em}
+.offer-convert .offer-price{font-size:clamp(34px,5vw,48px);margin:6px 0 0}
+.offer-convert .offer-price-note{font-size:13px;text-align:right;max-width:260px;line-height:1.45}
+.offer-purpose{color:#d1e0f1;font-size:15px;line-height:1.5;margin:18px 0 0}
+.conversion-page .checkout-form{display:flex;flex-direction:column;align-items:stretch;gap:16px;margin-top:22px}
+.checkout-field{display:flex;flex-direction:column;gap:7px}
+.checkout-field label{font-size:15px;font-weight:750;color:#f7f9fc}
+.checkout-field input{width:100%;min-width:0;min-height:56px;padding:15px 16px;border-radius:12px;border:1.5px solid #496387;background:#071427;color:var(--text);font:inherit;font-size:17px;outline-offset:3px}
+.checkout-field input::placeholder{color:#9eb1cd;opacity:1}
+.checkout-field input:focus-visible{border-color:#8ec4ff;outline:2px solid #8ec4ff}
+.checkout-field .field-note{color:#afc1da;font-size:13px;line-height:1.4}
+.checkout-submit{width:100%;min-height:55px;font-size:17px!important;text-align:center}
+.checkout-note{margin:0;line-height:1.5}
+.offer-secondary{color:#bcd2ed;font-size:13px;text-decoration:underline;text-underline-offset:3px}
+.conversion-page .offer-grid{grid-template-columns:repeat(2,minmax(0,1fr));max-width:920px;gap:14px;margin:24px 0 16px}
+.conversion-page .offer-panel{padding:22px}
+.conversion-page .offer-panel h2{font-size:22px;margin-bottom:10px}
+.conversion-page .offer-panel li{line-height:1.5;margin-bottom:6px}
+.offer-details{max-width:920px;border:1px solid var(--line);border-radius:15px;padding:16px 20px;margin-bottom:34px;background:rgba(11,19,36,.65)}
+.offer-details summary{cursor:pointer;font-weight:700;list-style-position:inside;min-height:34px;line-height:34px}
+.offer-details:focus-within{border-color:#5277ad}
+.offer-details .offer-steps{margin-top:10px}
+.conversion-page .offer-visual{max-width:740px;margin:18px 0 20px}
+.payment-back{display:inline-block;margin-top:18px;color:#bcd2ed;text-underline-offset:3px}
+@media(max-width:700px){
+  .conversion-page .offer-hero{padding-top:22px}
+  .offer-convert{padding:20px 17px;border-radius:17px}
+  .offer-convert-head{align-items:start;flex-direction:column;gap:6px}
+  .offer-convert .offer-price-note{text-align:left;max-width:100%}
+  .conversion-page .offer-grid{grid-template-columns:1fr}
+  .checkout-field input,.checkout-submit{font-size:16px}
+}
+
 </style>
 </head>
-<body>
+<body class="${conversion?'conversion-page':''}">
 <div class="wrap">
 <nav>
   <a class="brand" href="/"><img src="/assets/evercraft-icon.png" alt=""><span>Evercraft Fabric</span></a>
@@ -355,6 +398,7 @@ export function renderOfferPage(item){
   const entry=item.entry_paid_offer||null;
   const price=entryPriceLabel(item);
   const offerName=entry?.name||item.name;
+  const websiteFirst=copy.slug==='website-audit';
   const send=copy.send.map((x)=>'<li>'+escapeHtml(x)+'</li>').join('');
   const get=copy.get.map((x)=>'<li>'+escapeHtml(x)+'</li>').join('');
   const steps=copy.steps.map(([title,body])=>'<div class="offer-step"><strong>'+escapeHtml(title)+'</strong><span>'+escapeHtml(body)+'</span></div>').join('');
@@ -362,35 +406,36 @@ export function renderOfferPage(item){
   return shell(copy.headline+' · Evercraft',[
     '<main>',
     '<section class="offer-hero">',
-    '<div class="kicker"><span class="dot"></span> '+escapeHtml(copy.eyebrow)+' · available now</div>',
+    '<div class="kicker"><span class="dot"></span> '+escapeHtml(copy.eyebrow)+'</div>',
     '<h1>'+escapeHtml(copy.headline)+'</h1>',
     '<p class="lede">'+escapeHtml(copy.lede)+'</p>',
-    copy.heroVisual?'<div class="offer-visual"><picture>'+(copy.heroVisualMobile?'<source media="(max-width: 700px)" srcset="'+escapeHtml(copy.heroVisualMobile)+'">':'')+'<img src="'+escapeHtml(copy.heroVisual)+'" alt="" loading="eager"></picture></div>':'',
-    '<div class="offer-price">'+escapeHtml(price)+'</div>',
-    '<div class="offer-price-note">'+escapeHtml(offerName)+' · '+escapeHtml(item.pricing||'')+'</div>',
+    '<div class="offer-convert" aria-label="Start your order">',
+    '<div class="offer-convert-head"><div><div class="offer-convert-label">One clear next step</div><div class="offer-price">'+escapeHtml(price)+'</div></div><div class="offer-price-note">'+escapeHtml(offerName)+'<br>'+escapeHtml(entry?.billing==='one_time'?'One-time purchase':item.pricing||'')+'</div></div>',
+    '<p class="offer-purpose"><strong>What you are buying:</strong> '+escapeHtml(copy.promise)+'</p>',
     '<form class="checkout-form" method="post" action="/api/offers/'+encodeURIComponent(copy.slug)+'/checkout">',
     '<input type="hidden" name="user_confirmed" value="true">',
     '<input type="hidden" name="idempotency_key" value="'+escapeHtml(idempotencyKey)+'">',
-    '<label for="offer-customer-email">Email for your receipt and delivery</label>',
-    '<input id="offer-customer-email" name="customer_ref" type="email" autocomplete="email" inputmode="email" placeholder="you@example.com" maxlength="200" required aria-required="true" style="width:min(100%,340px);padding:12px 14px;border:1px solid var(--line);border-radius:12px;background:var(--panel);color:var(--text);font:inherit">',
-    copy.slug==='website-audit'?'<label for="offer-website-url">Website to audit (include https://)</label><input id="offer-website-url" name="website_url" type="url" placeholder="https://yourbusiness.com" maxlength="1000" required aria-required="true" style="display:block;width:100%;max-width:100%;box-sizing:border-box;padding:12px 14px;border:1px solid var(--line);border-radius:12px;background:var(--panel);color:var(--text);font:inherit">':'',
-    '<button class="btn primary" type="submit">Continue to checkout · '+escapeHtml(price)+'</button>',
-    item.public_id.startsWith('payment-offer-')?'':'<a class="btn" href="/capabilities/'+encodeURIComponent(item.public_id)+'">See technical proof</a>',
-    '<div class="checkout-note">Evercraft Payments prepares the checkout. Nothing is marked paid until settlement is verified.</div>',
+    websiteFirst?'<div class="checkout-field"><label for="offer-website-url">1. Website URL</label><input id="offer-website-url" name="website_url" type="url" inputmode="url" autocomplete="url" placeholder="https://yourbusiness.com" maxlength="1000" required aria-required="true" aria-describedby="offer-website-help"><span id="offer-website-help" class="field-note">Paste the website you want audited, including https://</span></div>':'',
+    '<div class="checkout-field"><label for="offer-customer-email">'+(websiteFirst?'2. Email for your receipt':'Email for your receipt')+'</label><input id="offer-customer-email" name="customer_ref" type="email" autocomplete="email" inputmode="email" placeholder="you@example.com" maxlength="200" required aria-required="true" aria-describedby="offer-email-help"><span id="offer-email-help" class="field-note">We use this to identify your order and coordinate delivery.</span></div>',
+    '<button class="btn primary checkout-submit" type="submit">Continue to checkout · '+escapeHtml(price)+'</button>',
+    '<div class="checkout-note">No charge on this page. Review the secure payment step before paying.</div>',
     '</form>',
+    '</div>',
+    copy.heroVisual?'<div class="offer-visual"><picture>'+(copy.heroVisualMobile?'<source media="(max-width: 700px)" srcset="'+escapeHtml(copy.heroVisualMobile)+'">':'')+'<img src="'+escapeHtml(copy.heroVisual)+'" alt="" loading="lazy"></picture></div>':'',
     '</section>',
     '<div class="offer-grid">',
-    '<section class="offer-panel"><h2>What you are buying</h2><p class="plain">'+escapeHtml(copy.promise)+'</p></section>',
-    '<section class="offer-panel"><h2>What you send us</h2><ul>'+send+'</ul></section>',
     '<section class="offer-panel"><h2>What you get back</h2><ul>'+get+'</ul></section>',
-    '<section class="offer-panel"><h2>How it works</h2><div class="offer-steps">'+steps+'</div></section>',
+    '<section class="offer-panel"><h2>What you send us</h2><ul>'+send+'</ul></section>',
     '</div>',
+    '<details class="offer-details"><summary>How it works</summary><div class="offer-steps">'+steps+'</div></details>',
+    item.public_id.startsWith('payment-offer-')?'':'<p><a class="offer-secondary" href="/capabilities/'+encodeURIComponent(item.public_id)+'">Read technical details</a></p>',
     '</main>'
   ].join('\n'),{
     description:copy.lede+' '+offerName+' starts at '+price+'.',
     canonical:'/offers/'+copy.slug,
     ogType:'website',
     ogImage:copy.shareImage||'',
+    conversion:true,
   });
 }
 
@@ -407,10 +452,8 @@ export function renderPaymentHandoffPage({slug='',checkoutUrl='',amountLabel='',
     '<h1>Your checkout is ready.</h1>',
     '<p class="lede">Evercraft Payments prepared the order successfully. Open the secure settlement page to continue. Nothing is marked paid until settlement is verified.</p>',
     amount?'<div class="offer-price">'+escapeHtml(amount)+'</div>':'',
-    '<div class="actions">',
-    '<a class="btn primary" href="'+escapeHtml(target)+'" rel="noreferrer">Open secure checkout</a>',
-    '<a class="btn" href="'+back+'">Back to the offer</a>',
-    '</div>',
+    '<div class="actions"><a class="btn primary" href="'+escapeHtml(target)+'" rel="noreferrer">Open secure checkout</a></div>',
+    '<a class="payment-back" href="'+back+'">Back to the offer</a>',
     order?'<div class="checkout-note">Order reference: <code>'+escapeHtml(order)+'</code></div>':'',
     '<div class="checkout-note">If your in-app browser does not open the settlement page automatically, use the blue button above. Evercraft Payments remains the payment authority.</div>',
     '</section>',
@@ -419,6 +462,7 @@ export function renderPaymentHandoffPage({slug='',checkoutUrl='',amountLabel='',
     description:'Your Evercraft Payments checkout is ready. Continue to the secure settlement page.',
     canonical:back,
     ogType:'website',
+    conversion:true,
   });
 }
 
@@ -432,10 +476,7 @@ export function renderPaymentHoldPage({slug='',orderKey=''}={}){
     '<div class="kicker"><span class="dot"></span> Evercraft Payments</div>',
     '<h1>No charge was made.</h1>',
     '<p class="lede">We saved the purchase request, but the settlement rail did not open cleanly. Nothing was marked paid and no fulfillment was released.</p>',
-    '<div class="actions">',
-    '<a class="btn primary" href="'+back+'">Return to the offer</a>',
-    '<a class="btn" href="'+back+'">Try again</a>',
-    '</div>',
+    '<div class="actions"><a class="btn primary" href="'+back+'">Return to the offer</a></div>',
     order?'<div class="checkout-note">Order reference: <code>'+escapeHtml(order)+'</code></div>':'',
     '</section>',
     '<section class="offer-panel">',
@@ -447,6 +488,7 @@ export function renderPaymentHoldPage({slug='',orderKey=''}={}){
     description:'Evercraft Payments did not open a settlement checkout. No charge was made.',
     canonical:back,
     ogType:'website',
+    conversion:true,
   });
 }
 
