@@ -59,7 +59,10 @@
     "crawlable_html_directory": "/capabilities",
     "product_page_pattern": null,
     "discovery_post": "/api/discover",
-    "discovery_get": "/api/discover?q={natural-language-problem}"
+    "discovery_get": "/api/discover?q={natural-language-problem}",
+    "owned_human_offers": "https://fabric.systemiacommandcenters.com/offers",
+    "owned_human_offer_catalog": "https://fabric.systemiacommandcenters.com/offers.json",
+    "owned_read_only_mcp": "https://fabric.systemiacommandcenters.com/mcp"
   },
   "verified_crawler_controls": [
     {

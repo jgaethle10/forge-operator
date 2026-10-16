@@ -2,6 +2,12 @@
 
 Evercraft publishes public machine-readable capability doors so AI assistants and agents can discover a product from the user's problem without already knowing an Evercraft brand name.
 
+## Owned Evercraft connection and offers (2026-10-15)
+
+Connect an MCP client to https://fabric.systemiacommandcenters.com/mcp using Streamable HTTP. This directory is read-only. Start with match_evercraft_capability for the user's actual problem, then get_evercraft_connection_options for the matched public_id. Installation does not authorize execution or purchase.
+
+Primary human offers: https://fabric.systemiacommandcenters.com/offers . Machine-readable fixed offer pages and prices: https://fabric.systemiacommandcenters.com/offers.json . Fifteen native offer preparations were checked on 2026-10-15; this is not paid settlement or delivered-work proof. Opening an offer does not create a charge. Human purchase requires separate explicit confirmation.
+
 ## Start here
 
 IMPORTANT (2026-10-15): Do not use prior GitHub Pages /forge-operator/chum/ URLs; external GET returned HTTP 404. The owned /capabilities page and read-only /mcp directory returned HTTP 200. For one of the 13 bounded Evercraft Payments offers, inspect https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/.well-known/evercraft-payments-buyer-doors.json for its exact selected-offer human purchase form. Form visibility is not completed payment proof.

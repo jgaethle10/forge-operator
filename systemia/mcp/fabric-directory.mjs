@@ -1,3 +1,4 @@
+import { ownedOfferLink } from './owned-offer-links.mjs';
 import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
@@ -226,6 +227,7 @@ export function normalizeFabricCatalog(input=[]){
     const keywords=Array.isArray(item.keywords)
       ? item.keywords.map((x)=>clean(x,120).toLowerCase()).filter(Boolean).slice(0,32)
       : [];
+    const owned=ownedOfferLink({...item,public_id:publicId});
     const connections=Array.isArray(item.connections)
       ? item.connections.map(normalizeConnection).filter((x)=>x.url)
       : [];
@@ -240,7 +242,8 @@ export function normalizeFabricCatalog(input=[]){
       pricing:clean(item.pricing||'',900)||null,
       use_when:normalizeUseWhen(item.use_when),
       entry_paid_offer:normalizeEntryPaidOffer(item.entry_paid_offer),
-      start_url_state:clean(item.start_url_state||'',120)||null,
+      start_url_state:owned?'owned_offer_page_available':clean(item.start_url_state||'',120)||null,
+      human_offer_url:owned?.human_form_url||null,
       preferred_agent_route:clean(item.preferred_agent_route||'',120)||null,
       connections,
     };
@@ -532,6 +535,8 @@ export async function executeFabricDirectoryRpc(rpc,catalog=[]){
         name:capability.name,
         state:capability.state,
         connections:capability.connections,
+        human_offer_url:ownedOfferLink(capability)?.human_form_url||null,
+        owned_human_buyer_options:ownedOfferLink(capability)?[ownedOfferLink(capability)]:[],
         human_buyer_options:approvedHumanBuyerOptions(publicId,capability),
         human_buyer_options_state:'read_only_exact_price_match_only',
         transactional:false,

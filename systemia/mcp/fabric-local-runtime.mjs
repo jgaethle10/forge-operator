@@ -24,6 +24,7 @@ import {
   renderMarkdownDocument,
   renderOfferPage,
   renderOffers,
+  listHumanOffers,
   renderPaymentHandoffPage,
   renderPaymentHoldPage,
   renderAliEvLanding,
@@ -1031,6 +1032,25 @@ export async function startFabricLocalRuntime({
           fulfillment_release:false,
           rule:'Checkout creation is not payment. Fulfillment remains locked until authoritative provider verification.',
         });
+      }
+
+      const discoveryFiles={
+        '/llms.txt':['../../public/llms.txt','text/plain; charset=utf-8'],
+        '/llms-full.txt':['../../public/llms-full.txt','text/plain; charset=utf-8'],
+        '/.well-known/evercraft-chum.json':['../../public/.well-known/evercraft-chum.json','application/json; charset=utf-8'],
+      };
+      if(req.method==='GET'&&Object.hasOwn(discoveryFiles,req.url)){
+        const [relative,contentType]=discoveryFiles[req.url];
+        return sendText(res,200,fs.readFileSync(path.resolve(moduleDir,relative),'utf8'),{contentType});
+      }
+      if(req.method==='GET'&&req.url==='/robots.txt')return sendText(res,200,'User-agent: *\nAllow: /\nSitemap: https://fabric.systemiacommandcenters.com/sitemap.xml\n',{contentType:'text/plain; charset=utf-8'});
+      if(req.method==='GET'&&req.url==='/sitemap.xml'){
+        const urls=['https://fabric.systemiacommandcenters.com/','https://fabric.systemiacommandcenters.com/offers',...listHumanOffers(preparedCatalog().capabilities).map(x=>x.url)];
+        return sendText(res,200,'<?xml version="1.0" encoding="UTF-8"?><urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">'+urls.map(url=>'<url><loc>'+url+'</loc></url>').join('')+'</urlset>',{contentType:'application/xml; charset=utf-8'});
+      }
+
+      if(req.method==='GET'&&req.url==='/offers.json'){
+        return sendJson(res,200,{schema:'evercraft.public-human-offers.v1',authority:'Evercraft Payments',offers:listHumanOffers(preparedCatalog().capabilities),checkout_created:false,payment_verified:false});
       }
 
       if (req.method==='GET' && String(req.url||'').startsWith('/offers/')) {
