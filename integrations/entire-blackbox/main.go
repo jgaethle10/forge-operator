@@ -38,11 +38,62 @@ type Assessment struct {
     NextAction          string `json:"next_action"`
 }
 
+
+// rejectDuplicateJSONMembers prevents a later JSON member from silently replacing
+// an earlier claimed operation, idempotency key, or provider state. Go's normal
+// struct decoder accepts repeated keys, even when DisallowUnknownFields is set.
+// The input is untrusted. Cap nesting and apply case-insensitive matching to
+// reflect encoding/json's field-name matching semantics.
+func rejectDuplicateJSONMembers(raw []byte) error {
+    dec := json.NewDecoder(bytes.NewReader(raw))
+    var walk func(int) error
+    walk = func(depth int) error {
+        if depth > 16 { return errors.New("JSON nesting exceeds 16 levels") }
+        token, err := dec.Token()
+        if err != nil { return err }
+        delim, isDelim := token.(json.Delim)
+        if !isDelim { return nil }
+        switch delim {
+        case '{':
+            seen := make(map[string]bool)
+            for dec.More() {
+                keyToken, err := dec.Token()
+                if err != nil { return err }
+                key, ok := keyToken.(string)
+                if !ok { return errors.New("invalid JSON object key") }
+                folded := strings.ToLower(key)
+                if seen[folded] { return fmt.Errorf("duplicate JSON member %q", key) }
+                seen[folded] = true
+                if err := walk(depth+1); err != nil { return err }
+            }
+            end, err := dec.Token()
+            if err != nil { return err }
+            if end != json.Delim('}') { return errors.New("invalid JSON object ending") }
+        case '[':
+            for dec.More() {
+                if err := walk(depth+1); err != nil { return err }
+            }
+            end, err := dec.Token()
+            if err != nil { return err }
+            if end != json.Delim(']') { return errors.New("invalid JSON array ending") }
+        default:
+            return errors.New("unexpected JSON delimiter")
+        }
+        return nil
+    }
+    if err := walk(0); err != nil { return err }
+    if _, err := dec.Token(); err != io.EOF {
+        return errors.New("input must contain exactly one JSON document")
+    }
+    return nil
+}
+
 func parse(r io.Reader) (Input, error) {
     var in Input
     raw, err := io.ReadAll(io.LimitReader(r, maxInputBytes+1))
     if err != nil { return in, err }
     if len(raw) > maxInputBytes { return in, errors.New("input exceeds 1 MiB") }
+    if err := rejectDuplicateJSONMembers(raw); err != nil { return in, fmt.Errorf("invalid input: %w", err) }
     dec := json.NewDecoder(bytes.NewReader(raw))
     dec.DisallowUnknownFields()
     if err := dec.Decode(&in); err != nil { return in, fmt.Errorf("invalid input: %w", err) }
