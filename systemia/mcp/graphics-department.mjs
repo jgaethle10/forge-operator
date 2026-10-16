@@ -200,6 +200,12 @@ function toolResult(payload) {
     isError: false,
   };
 }
+function toolExecutionError(message) {
+  return {
+    content: [{ type: 'text', text: String(message) }],
+    isError: true,
+  };
+}
 export function executeGraphicsMcpRpc(request) {
   const id = request?.id ?? null;
   if (!request || typeof request !== 'object' || Array.isArray(request)) return rpcError(null, -32600, 'Invalid request');
@@ -219,7 +225,7 @@ export function executeGraphicsMcpRpc(request) {
   const name = request.params?.name;
   const args = request.params?.arguments ?? {};
   if (name === 'graphics_get_capabilities') {
-    if (!exactObject(args, [])) return rpcError(id, -32602, 'Invalid arguments');
+    if (!exactObject(args, [])) return rpcResult(id, toolExecutionError('Invalid arguments: this tool takes no inputs'));
     return rpcResult(id, toolResult({
       available: ['graphics_preview_commercial', 'graphics_preview_motion_stage'],
       availableMode: 'local_authenticated_preview_only',
@@ -234,6 +240,6 @@ export function executeGraphicsMcpRpc(request) {
   try {
     return rpcResult(id, toolResult(renderGraphicsPreview(args, { motion: name === 'graphics_preview_motion_stage' })));
   } catch (e) {
-    return rpcError(id, -32602, e instanceof Error ? e.message : 'Graphics preview failed');
+    return rpcResult(id, toolExecutionError(e instanceof Error ? e.message : 'Graphics preview failed'));
   }
 }
