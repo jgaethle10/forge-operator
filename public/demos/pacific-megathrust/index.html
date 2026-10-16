@@ -118,11 +118,6 @@ function initialize(){
   byId("toggleEvacuation").checked=true;
   wgsEvacuation.addTo(map);
  }
- // Put the planning-data research view over the Grays Harbor coastline, where the
- // source's inundation and evacuation geometry is visible at useful scale.
- if(initialRegion==="cascadia" && (params.get("inundation")==="1" || params.get("evacuation")==="1")){
-  map.setView([46.98,-124.10],7,{animate:false});
- }
  loadQuakes();
 }
 function choose(zone){
