@@ -60,5 +60,7 @@ test('owned updater issues a root-owned runtime proof only after resident verifi
     const verified=s.indexOf('verify_current_runtime "$expected_count" "$'+expected+'"',branch);
     const proof=s.indexOf('write_runtime_deployment_proof "$'+expected+'"',branch);
     assert.ok(verified!==-1&&proof>verified,'deployment proof must follow independent resident verification');
+    const optionalSidecars=s.indexOf(expected==='before'?'ensure_network_observer false':'ensure_network_observer true',verified);
+    assert.ok(optionalSidecars>proof,'Fabric proof must not be blocked by optional Home/observer/capacity recovery');
   }
 });
