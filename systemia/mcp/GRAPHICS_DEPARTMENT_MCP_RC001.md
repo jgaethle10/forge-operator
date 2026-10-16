@@ -13,6 +13,7 @@ Wrap the existing Evercraft Graphics Command commercial renderer in a guarded MC
 - graphics_preview_commercial: SVG in feed, square, story or hero-wide, with SHA-256 receipt and synthetic/unverified labels.
 - graphics_preview_motion_stage: HTML motion-stage source, not a finished video.
 - graphics_preview_art_directed: an additional deterministic SVG art-direction lane with orbit, architecture and type treatments, four curated palettes, and the same feed/square/story/wide formats. Client-supplied brand text, no logos or source assets, 48 test combinations. It is not an image-model generator.
+- graphics_preview_data_story: a governed data-story SVG preview for client-provided numeric series in horizontal bar and ordered-category trend charts, four formats and four palettes. All charts use a zero-based scale and label data provenance as client-provided/unverified. 32 tested combinations. It cannot research or validate the input data.
 
 The original commercial renderer remains Evercraft-branded, with a fixed conversion-leak / "QUICK WIN AUDIT" grammar. The new art-directed lane independently supports limited brand-text customization and alternative visual geometry, but is not a general-purpose image generator, licensed client-logo pipeline or independently art-reviewed white-label production service. The sample offer price is client-provided advertising copy, not a price charged by Evercraft for rendering.
 
@@ -55,11 +56,33 @@ A tool-call JSON-RPC request:
 
 Sources, prices, brands and offers are seller-supplied and **unverified**. Outputs do not claim official source verification, customer outcomes, real video, paid work, autonomous specialist execution or publication authority.
 
+
+### Data-story preview example
+
+Use the `graphics_preview_data_story` tool through the same MCP endpoint with a bounded structured brief. It never fetches a URL or treats client-provided source references as verification.
+
+    {
+      "brandName": "Evercraft Journal",
+      "eyebrow": "Synthetic engineering illustration",
+      "headline": "The data should tell the story",
+      "subhead": "An example chart of mock observations, never a real-world metric",
+      "methodNote": "Three invented readings to demonstrate formatting",
+      "chartType": "bars",
+      "unit": "count",
+      "measurementState": "synthetic_example",
+      "format": "feed",
+      "palette": "midnight",
+      "sourceRefs": ["https://example.org/mock-methodology"],
+      "data": [{"label":"First","value":10},{"label":"Second","value":28},{"label":"Third","value":17}]
+    }
+
+The source labels and numbers originate only from the caller. Bar charts limit input to 6 groups; ordered trends support 2 to 8 short-label points with categorical equal spacing. Percentage graphs always scale 0-100. Long text fails closed when it cannot safely fit the canvas. Browser/device visual QA is still an uncompleted release gate.
+
 ## Tests
 
     node --test systemia/mcp/graphics-department.test.mjs systemia/mcp/graphics-mcp-client-conformance.test.mjs systemia/mcp/graphics-art-directed.test.mjs
 
-The test suite covers deterministic hashes, 48 art-directed format/treatment/palette combinations, SVG escaping, motion-stage classification, invalid input, markup/URL rejection, bearer authentication, HTTP bounds, Origin/Host/protocol spoofing, no payment/publication authority, and a genuinely separate Node process acting as a native MCP HTTP client. It does not establish ChatGPT/Claude/Gemini acceptance, public HTTPS service readiness, or authorization to ship.
+The test suite covers deterministic hashes, 48 art-directed format/treatment/palette combinations, 32 bar/trend data-story variations, zero-based scale assertions, SVG escaping, motion-stage classification, invalid input, source-reference validation, bearer authentication, HTTP bounds, Origin/Host/protocol spoofing, no payment/publication authority, and a genuinely separate Node process acting as a native MCP HTTP client. It does not establish ChatGPT/Claude/Gemini acceptance, public HTTPS service readiness, or authorization to ship.
 
 ## Release holds
 
