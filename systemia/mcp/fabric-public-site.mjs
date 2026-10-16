@@ -418,7 +418,7 @@ export function renderOfferPage(item){
     websiteFirst?'<div class="checkout-field"><label for="offer-website-url">1. Website URL</label><input id="offer-website-url" name="website_url" type="url" inputmode="url" autocomplete="url" placeholder="https://yourbusiness.com" maxlength="1000" required aria-required="true" aria-describedby="offer-website-help"><span id="offer-website-help" class="field-note">Paste the website you want audited, including https://</span></div>':'',
     '<div class="checkout-field"><label for="offer-customer-email">'+(websiteFirst?'2. Email for your receipt':'Email for your receipt')+'</label><input id="offer-customer-email" name="customer_ref" type="email" autocomplete="email" inputmode="email" placeholder="you@example.com" maxlength="200" required aria-required="true" aria-describedby="offer-email-help"><span id="offer-email-help" class="field-note">We use this to identify your order and coordinate delivery.</span></div>',
     '<button class="btn primary checkout-submit" type="submit">Continue to checkout · '+escapeHtml(price)+'</button>',
-    '<div class="checkout-note">No charge on this page. Review the secure payment step before paying.</div>',
+    '<div class="checkout-note">No charge on this page. Evercraft Payments opens the secure payment step, where you review before paying.</div>',
     '</form>',
     '</div>',
     copy.heroVisual?'<div class="offer-visual"><picture>'+(copy.heroVisualMobile?'<source media="(max-width: 700px)" srcset="'+escapeHtml(copy.heroVisualMobile)+'">':'')+'<img src="'+escapeHtml(copy.heroVisual)+'" alt="" loading="lazy"></picture></div>':'',
