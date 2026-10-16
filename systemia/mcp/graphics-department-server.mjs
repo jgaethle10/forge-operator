@@ -36,8 +36,10 @@ export function createGraphicsMcpServer({ token } = {}) {
       if (req.headers.origin !== undefined) {
         return json(res, 403, { error: 'browser_origin_not_allowed' });
       }
-      const host = String(req.headers.host || '').split(':')[0].toLowerCase();
-      if (!['127.0.0.1', 'localhost'].includes(host)) {
+      let host;
+      try { host = new URL('http://' + String(req.headers.host || '')).hostname.toLowerCase(); }
+      catch { return json(res, 403, { error: 'invalid_host_rejected' }); }
+      if (!['127.0.0.1', 'localhost', '[::1]'].includes(host)) {
         return json(res, 403, { error: 'non_loopback_host_rejected' });
       }
       if (!secureEqual(req.headers.authorization, 'Bearer ' + token)) {
