@@ -36,3 +36,14 @@ The same release was stored privately in Google Drive, then advertised by owner-
 The existing Evercraft OS proof workflow will run this test on the PR. Tests cover permitted review evidence, missing adapters, private source/archives, recipient scoping, hash binding, tampering, stale/future attestations, expiry and callback failure.
 
 **Remaining:** production adapters; persistent Files storage and authenticated issuer; signed-out/recipient-real-browser checks; Yard HTTPS deployment and rollback; owner-approved access policies. Do not merge or deploy from this note alone.
+
+
+## Concrete Passport integration (review-only)
+
+The real Passport core now has a read-only adapter at passport-share-verifier.mjs. Only the protected server may supply its passport instance, identity-authenticated actorRef, and short-lived single-use permitId. An internet client cannot submit arbitrary adapter results. Passport must have an active grant for product evercraft-os, scope files.share_public or files.share_scoped, and the exact resource os-file:<artifact_ref>. The action permit is bound to actor, grant, scope, resource and immutable share request fingerprint.
+
+The adapter checks the authoritative Passport grant and current permit state (including ancestor revocation, expiry and consumption), then returns a max-90-second authorization proof. It **does not consume** the permit, issue bytes, create a URL, or certify Shipping. The persistent share issuer must recheck authorization and consume the permit once as part of a crash-safe issuance transaction. A policy result alone is never sufficient proof of a successful customer opening.
+
+    node --test systemia/evercraft-os/files/passport-share-verifier.test.mjs
+
+This integration is exercised with the actual EvercraftPassport class in CI, including revocation, consumed-permit rejection, actor/resource mismatch and scoped-recipient fingerprint binding. Production-ready issuer persistence and separate Systemia/Shipping verification adapters remain held.
