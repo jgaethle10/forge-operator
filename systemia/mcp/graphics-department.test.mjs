@@ -136,7 +136,7 @@ test('HTTP gateway authenticates discovery and denies unauthenticated access', a
     });
     assert.equal(good.status, 200);
     const response = await good.json();
-    assert.equal(response.result.tools.length, 3);
+    assert.equal(response.result.tools.length, 4);
     const deniedGet = await fetch(base + '/mcp/graphics', {
       headers: { authorization: 'Bearer ' + token },
     });
