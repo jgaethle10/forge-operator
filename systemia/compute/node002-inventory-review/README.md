@@ -65,6 +65,26 @@ The GitHub Actions `Node002 inventory source gate (review only)` job packages a 
 
 After obtaining the archived files from a trusted owner-confirmed GitHub workflow run, first inspect the listed paths, then independently compare its content and pinned source commit against a separately trusted expected release. Never install or execute a source artifact merely because CI reports success.
 
+## Offline source-custody preflight now implemented
+
+The new `source-custody-preflight.mjs` parses the **read-only archive bytes**, validates USTAR header checksums, rejects symlinks, unsafe paths, duplicates and oversized entries, and confirms that every manifest SHA256 matches exactly one regular file. It independently checks the archive SHA256 and the actual reviewed HEAD commit, and compares the collector bytes to Raven's preexisting adapter pin **without overriding the pin**.
+
+GitHub Actions exports a `node002-source-review.tar` and `SOURCE_REF.txt` from the PR's **actual HEAD** (not GitHub's synthetic merge commit), with their checksums. The workflow summary prints the archive digest for independent inspection.
+
+Example **only after the owner has independently verified both the expected commit and expected archive SHA256**, in an unprivileged shell, from the folder containing a downloaded *review* artifact:
+
+```bash
+node systemia/compute/node002-inventory-review/source-custody-preflight.mjs \
+  --bundle-dir /trusted/local/review-artifact \
+  --expected-archive-sha256 <INDEPENDENTLY_VERIFIED_ARCHIVE_SHA256> \
+  --expected-commit <INDEPENDENTLY_VERIFIED_40_HEX_PR_HEAD_SHA> \
+  --policy-adapter-sha256 430dff3f9bd301127b9390eb4b9b5b3aa1ec0d1b6896d70e48ecd49a09d79ec4
+```
+
+This operation **reads files only**. It never extracts, loads, imports, installs, executes or signs bundled source, and it does not read or change existing Node002 secrets. It exits with code 3 when the candidate code differs from the already-pinned policy adapter; that **HOLD** is expected until the independent work-permit review reconciles the source version. A structurally valid archive or matching adapter digest is still **not** a machine installation grant or a compute execution permit.
+
+Cryptographic archive digests guarantee content integrity relative to the independently provided hash, **not** the trusted origin of those expected hashes. Do not trust an expected value solely because it appears in the same downloaded artifact.
+
 ## Blocking gates before real remote execution
 
 1. Independently reviewed and pinned delivery of the source to the HP, with provenance and expected digest verified outside of a writable Drive/README record; no force-install from chat.
