@@ -1,0 +1,25 @@
+name: Nepal 002 evidence QA
+
+on:
+  pull_request:
+    paths:
+      - "examples/nepal-flood-002/**"
+      - ".github/workflows/nepal-002-evidence-qa.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  source-only-review:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+      - name: Run candidate-only tests
+        run: node --test examples/nepal-flood-002/tests/*.test.mjs
+      - name: Validate dated evidence snapshot
+        run: node examples/nepal-flood-002/validate.mjs examples/nepal-flood-002/data/crossings.csv > /tmp/nepal-002-report.json
