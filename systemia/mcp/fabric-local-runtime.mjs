@@ -32,6 +32,7 @@ import {
 import {
   fabricMobileManifest,
   renderFabricMobileApp,
+  normalizeCompanionForm,
 } from './fabric-mobile-site.mjs';
 import { renderEarthWorksSimulator } from './earthworks-simulator-page.mjs';
 import { createFabricFaieSurface } from './fabric-faie-runtime.mjs';
@@ -1088,6 +1089,7 @@ export async function startFabricLocalRuntime({
         // Freeform prompts use POST so user descriptions are not placed in
         // browser URLs or links. The prewritten journey links remain GET.
         let rawQuery='';
+        let rawForm='';
         if(req.method==='POST'){
           let input;
           try {
@@ -1096,11 +1098,14 @@ export async function startFabricLocalRuntime({
             return sendJson(res,400,{error:'invalid_mobile_discovery_request',transactional:false,external_action_taken:false});
           }
           rawQuery=String(input.q||'');
+          rawForm=String(input.form||'');
         } else {
           const parsed=new URL(String(req.url||''),'http://fabric.local');
           rawQuery=String(parsed.searchParams.get('q')||'');
+          rawForm=String(parsed.searchParams.get('form')||'');
         }
         const query=rawQuery.trim().slice(0,4000);
+        const form=normalizeCompanionForm(rawForm);
         let matches=[];
         let error='';
         if(query.length>=3){
@@ -1142,6 +1147,7 @@ export async function startFabricLocalRuntime({
             capabilityCount:preparedCatalog().capabilities.length,
             error,
             proof,
+            form,
           })
         );
       }
