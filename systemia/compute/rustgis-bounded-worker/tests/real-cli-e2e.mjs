@@ -6,6 +6,7 @@ import {tmpdir} from 'node:os';
 import {join,resolve} from 'node:path';
 import {createHash,generateKeyPairSync,sign} from 'node:crypto';
 import {execute,stable,sha} from '../src/worker.mjs';
+import {reconcileRustgisSabanEvidence} from '../src/saban-evidence-bridge.mjs';
 const approvedHash='2481682c2e9f7577565b91d35b256109eb7d4f25ebe9e795f0a19fe4ce86917b';
 if(!process.argv[2]){console.error('Usage: node tests/real-cli-e2e.mjs /path/to/checksum-pinned/rustgis-cli');process.exit(2);}
 const binary=await realpath(process.argv[2]);
@@ -33,7 +34,21 @@ try {
    const bytes=await readFile(join(output,job.job_id,art.file));
    if(sha(bytes)!==art.sha256)throw Error('Artifact hash mismatch');
    if(operation==='render' && (bytes.readUInt32BE(16)!==640||bytes.readUInt32BE(20)!==420))throw Error('PNG dimensions wrong');
-   results.push({operation,features:receipt.feature_count,artifact:art,receipt_sha256:sha(await readFile(join(output,job.job_id,'receipt.json')))});
+   const assignment = {
+     agent_id:'agent-real-canary-review',role:'geospatial_canary_guard',
+     idempotency_key:job.job_id,work:{key:job.job_id,raw:{job_id:job.job_id}}
+   };
+   const intake=reconcileRustgisSabanEvidence({
+     assignment, job,
+     permit:{schema:'evercraft.rustgis.permit.v1',job_id:job.job_id,signature},
+     trustedIssuerPublicKey:publicKey.export({type:'spki',format:'pem'}),
+     workerReceipt:receipt,artifactBytes:bytes,expectedNodeId:cfg.node_id
+   });
+   if(intake.state!=='verified_synthetic_evidence_only' ||
+      intake.dispatch_allowed!==false || intake.systemia_release_ready!==false){
+     throw Error('Saban evidence intake must remain read-only');
+   }
+   results.push({operation,features:receipt.feature_count,artifact:art,receipt_sha256:sha(await readFile(join(output,job.job_id,'receipt.json'))),saban_evidence_sha256:intake.evidence_sha256});
  }
  console.log(JSON.stringify({schema:'evercraft.rustgis.worker-e2e.v1',status:'verified_synthetic_runtime_only',real_binary_sha256:approvedHash,signatures:true,remote_jobs_enabled:false,artifacts:results,physical_evercraft_worker_connected:false,systemia_release_state:'held'},null,2));
 } finally {
