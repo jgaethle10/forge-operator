@@ -204,8 +204,15 @@ export function renderDataStorySvg(raw) {
   const plotX = wide ? 740 : margin;
   const plotY = wide ? 162 : Math.max(subBottom + 48, Math.round(h * (b.format === 'story' ? .41 : .42)));
   const plotW = wide ? 790 : w - margin * 2;
-  const plotH = wide ? 570 : Math.min(b.format === 'story' ? 760 : 540, Math.round(h * .40));
-  if (plotY + plotH > h * .84) throw new Error('graphics_data_layout_overflow');
+  // A fixed plot height collides with two-line mobile headings, especially
+  // square canvases. Allocate chart height from the actual text bottom instead.
+  const plotH = wide ? 570 : Math.min(
+    b.format === 'story' ? 760 : 540,
+    Math.round(h * .40),
+    Math.floor(h * .825 - plotY),
+  );
+  if (plotH < 300 || plotY + plotH > h * .84)
+    throw new Error('graphics_data_layout_overflow');
   const sourceY = Math.round(h * .89);
   const note = fitArtText('METHOD: ' + b.methodNote, w - margin * 2, 2, 19, 14);
   const noteY = Math.round(h * .85);
