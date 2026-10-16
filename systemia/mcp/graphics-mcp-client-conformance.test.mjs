@@ -92,6 +92,7 @@ test('independent native HTTP client negotiates and receives digest-verifiable S
     assert.ok(names.includes('graphics_preview_commercial'));
     assert.ok(names.includes('graphics_preview_motion_stage'));
     assert.ok(names.includes('graphics_preview_art_directed'));
+    assert.ok(names.includes('graphics_preview_data_story'));
 
     const first = await rpc('tools/call', { name: 'graphics_preview_commercial', arguments: { ...BRIEF, format: 'feed' } });
     const asset = first.result.structuredContent;
@@ -121,6 +122,26 @@ test('independent native HTTP client negotiates and receives digest-verifiable S
     assert.equal(directed.brandRightsState, 'client_asserted_not_verified');
     assert.equal(directed.sha256, crypto.createHash('sha256').update(directed.data).digest('hex'));
     assert.equal(directed.publicationAuthority, false);
+
+    const dataGraphic = await rpc('tools/call', {
+      name: 'graphics_preview_data_story',
+      arguments: {
+        brandName: 'Evercraft', eyebrow: 'Synthetic proof',
+        headline: 'Three categories compared',
+        subhead: 'Client-provided sample values to demonstrate consistent vector rendering.',
+        methodNote: 'Synthetic dataset, no empirical claims.',
+        chartType: 'bars', unit: 'count', measurementState: 'synthetic_example',
+        format: 'feed', palette: 'cobalt',
+        sourceRefs: ['https://example.org/synthetic-source'],
+        data: [{label:'North',value:10},{label:'South',value:26},{label:'West',value:18}],
+      },
+    });
+    const graph = dataGraphic.result.structuredContent;
+    assert.equal(graph.mode, 'source_labeled_vector_chart_preview');
+    assert.equal(graph.scale.min, 0);
+    assert.match(graph.data, /NOT INDEPENDENTLY VERIFIED/);
+    assert.equal(graph.sha256, crypto.createHash('sha256').update(graph.data).digest('hex'));
+    assert.equal(graph.paymentAuthority, false);
 
     const motion = await rpc('tools/call', { name: 'graphics_preview_motion_stage', arguments: BRIEF });
     assert.equal(motion.result.structuredContent.mimeType, 'text/html');
