@@ -98,25 +98,25 @@ jobs:
           set -euo pipefail
           url="https://fabric.systemiacommandcenters.com/demos/earthworks-autonomy/"
           page="$(curl --fail --silent --show-error --retry 5 --retry-all-errors --retry-delay 2 --max-time 25 "$url")"
-          if printf '%s' "$page" | grep -Fq 'Live Yard 001'; then
-            printf '%s' "$page" | grep -Fq 'data-mode="manual"'
-            printf '%s' "$page" | grep -Fq 'data-mode="shadow"'
-            printf '%s' "$page" | grep -Fq 'data-mode="autonomy"'
-            printf '%s' "$page" | grep -Fq 'Truck Queue'
-            printf '%s' "$page" | grep -Fq 'Loader Starvation'
-            printf '%s' "$page" | grep -Fq 'Blocked Route'
-            printf '%s' "$page" | grep -Fq 'Production Surge'
+          if grep -F 'Live Yard 001' <<< "$page" >/dev/null; then
+            grep -F 'data-mode="manual"' <<< "$page" >/dev/null
+            grep -F 'data-mode="shadow"' <<< "$page" >/dev/null
+            grep -F 'data-mode="autonomy"' <<< "$page" >/dev/null
+            grep -F 'Truck Queue' <<< "$page" >/dev/null
+            grep -F 'Loader Starvation' <<< "$page" >/dev/null
+            grep -F 'Blocked Route' <<< "$page" >/dev/null
+            grep -F 'Production Surge' <<< "$page" >/dev/null
             echo "EARTHWORKS_PLAYGROUND_GENERATION=canonical-live-yard"
           else
-            printf '%s' "$page" | grep -Fq 'EarthWorks Autonomy Playground'
-            printf '%s' "$page" | grep -Fq 'data-mode="manual"'
-            printf '%s' "$page" | grep -Fq 'data-mode="shadow"'
-            printf '%s' "$page" | grep -Fq 'data-mode="auto"'
-            printf '%s' "$page" | grep -Fq 'Truck failure'
+            grep -F 'EarthWorks Autonomy Playground' <<< "$page" >/dev/null
+            grep -F 'data-mode="manual"' <<< "$page" >/dev/null
+            grep -F 'data-mode="shadow"' <<< "$page" >/dev/null
+            grep -F 'data-mode="auto"' <<< "$page" >/dev/null
+            grep -F 'Truck failure' <<< "$page" >/dev/null
             echo "EARTHWORKS_PLAYGROUND_GENERATION=legacy-playground"
           fi
-          printf '%s' "$page" | grep -Fq 'STOP ALL'
-          if printf '%s' "$page" | grep -Fiq 'base44.app'; then
+          grep -F 'STOP ALL' <<< "$page" >/dev/null
+          if grep -Fi 'base44.app' <<< "$page" >/dev/null; then
             echo "EarthWorks playground unexpectedly references Base44." >&2
             exit 1
           fi
