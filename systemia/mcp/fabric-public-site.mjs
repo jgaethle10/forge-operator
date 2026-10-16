@@ -466,26 +466,24 @@ export function renderPaymentHandoffPage({slug='',checkoutUrl='',amountLabel='',
   });
 }
 
-export function renderPaymentHoldPage({slug='',orderKey=''}={}){
+export function renderPaymentHoldPage({slug='',orderKey='',reason=''}={}){
   const safeSlug=String(slug||'').trim().toLowerCase();
   const back=safeSlug?'/offers/'+encodeURIComponent(safeSlug):'/offers';
   const order=String(orderKey||'').trim();
-  return shell('Payment is not ready yet · Evercraft',[
+  const invalidWebsite=reason==='invalid_website';
+  return shell((invalidWebsite?'Check your website address':'Payment is not ready yet')+' · Evercraft',[
     '<main>',
     '<section class="offer-hero">',
     '<div class="kicker"><span class="dot"></span> Evercraft Payments</div>',
-    '<h1>No charge was made.</h1>',
-    '<p class="lede">We saved the purchase request, but the settlement rail did not open cleanly. Nothing was marked paid and no fulfillment was released.</p>',
-    '<div class="actions"><a class="btn primary" href="'+back+'">Return to the offer</a></div>',
-    order?'<div class="checkout-note">Order reference: <code>'+escapeHtml(order)+'</code></div>':'',
+    '<h1>'+(invalidWebsite?'Check your website address.':'No charge was made.')+'</h1>',
+    '<p class="lede">'+(invalidWebsite?'Enter a public website address such as yourbusiness.com. You do not need to type https://. No checkout was created.':'We saved the purchase request, but the settlement rail did not open cleanly. Nothing was marked paid and no fulfillment was released.')+'</p>',
+    '<div class="actions"><a class="btn primary" href="'+back+'">'+(invalidWebsite?'Edit website address':'Return to the offer')+'</a></div>',
+    !invalidWebsite&&order?'<div class="checkout-note">Order reference: <code>'+escapeHtml(order)+'</code></div>':'',
     '</section>',
-    '<section class="offer-panel">',
-    '<h2>What happened?</h2>',
-    '<p>Evercraft Payments failed closed instead of sending you into a mismatched or unverified checkout. Your offer, price, and fulfillment scope were not changed.</p>',
-    '</section>',
+    invalidWebsite?'':'<section class="offer-panel"><h2>What happened?</h2><p>Evercraft Payments failed closed instead of sending you into a mismatched or unverified checkout. Your offer, price, and fulfillment scope were not changed.</p></section>',
     '</main>'
   ].join('\n'),{
-    description:'Evercraft Payments did not open a settlement checkout. No charge was made.',
+    description:invalidWebsite?'Check the website address before continuing to checkout. No charge was made.':'Evercraft Payments did not open a settlement checkout. No charge was made.',
     canonical:back,
     ogType:'website',
     conversion:true,
