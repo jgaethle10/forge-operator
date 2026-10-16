@@ -28,7 +28,7 @@ test('MCP initialize, discovery, safe annotations and unknown tool', () => {
   assert.equal(rpc('initialize').result.serverInfo.name, 'evercraft-graphics-preview');
   const tools = rpc('tools/list').result.tools;
   assert.deepEqual(tools.map((tool) => tool.name), [
-    'graphics_get_capabilities', 'graphics_preview_commercial', 'graphics_preview_motion_stage'
+    'graphics_get_capabilities', 'graphics_preview_commercial', 'graphics_preview_art_directed', 'graphics_preview_motion_stage'
   ]);
   assert.ok(tools.every((tool) => tool.annotations.readOnlyHint));
   assert.equal(rpc('tools/call', { name: 'unknown' }).error.code, -32602);
