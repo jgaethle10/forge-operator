@@ -12,8 +12,9 @@ Wrap the existing Evercraft Graphics Command commercial renderer in a guarded MC
 - graphics_get_capabilities: reports available preview scope.
 - graphics_preview_commercial: SVG in feed, square, story or hero-wide, with SHA-256 receipt and synthetic/unverified labels.
 - graphics_preview_motion_stage: HTML motion-stage source, not a finished video.
+- graphics_preview_art_directed: an additional deterministic SVG art-direction lane with orbit, architecture and type treatments, four curated palettes, and the same feed/square/story/wide formats. Client-supplied brand text, no logos or source assets, 48 test combinations. It is not an image-model generator.
 
-The first candidate is intentionally Evercraft-branded, and **not yet a white-label production service**. The inherited commercial renderer has a fixed conversion-leak / "QUICK WIN AUDIT" visual grammar, so this is a layout and transport prototype rather than a fully general or art-directable graphics department. The sample offer price is client-provided advertising copy, not a price charged by Evercraft for rendering.
+The original commercial renderer remains Evercraft-branded, with a fixed conversion-leak / "QUICK WIN AUDIT" grammar. The new art-directed lane independently supports limited brand-text customization and alternative visual geometry, but is not a general-purpose image generator, licensed client-logo pipeline or independently art-reviewed white-label production service. The sample offer price is client-provided advertising copy, not a price charged by Evercraft for rendering.
 
 This private adapter deliberately supports the legacy 2025-03-26 MCP HTTP protocol. Remote OAuth and current-generation MCP transport conformance are separately held. To reduce local DNS-rebinding exposure, browser Origin headers are refused, non-loopback Host values return HTTP 403, and the optional MCP-Protocol-Version header must match the supported version. Native clients should send Accept: application/json, text/event-stream and Content-Type: application/json.
 
@@ -56,13 +57,13 @@ Sources, prices, brands and offers are seller-supplied and **unverified**. Outpu
 
 ## Tests
 
-    node --test systemia/mcp/graphics-department.test.mjs systemia/mcp/graphics-mcp-client-conformance.test.mjs
+    node --test systemia/mcp/graphics-department.test.mjs systemia/mcp/graphics-mcp-client-conformance.test.mjs systemia/mcp/graphics-art-directed.test.mjs
 
-The test suite covers deterministic hashes, four formats, motion-stage classification, invalid input, markup/URL rejection, bearer authentication, HTTP bounds, Origin/Host/protocol spoofing, no payment/publication authority, and a genuinely separate Node process acting as a native MCP HTTP client. It does not establish ChatGPT/Claude/Gemini acceptance, public HTTPS service readiness, or authorization to ship.
+The test suite covers deterministic hashes, 48 art-directed format/treatment/palette combinations, SVG escaping, motion-stage classification, invalid input, markup/URL rejection, bearer authentication, HTTP bounds, Origin/Host/protocol spoofing, no payment/publication authority, and a genuinely separate Node process acting as a native MCP HTTP client. It does not establish ChatGPT/Claude/Gemini acceptance, public HTTPS service readiness, or authorization to ship.
 
 ## Release holds
 
-1. Systemia canonical admission/deduplication and authorized worker leases; separate evidence from Forge, Saban, Raven, Graphics, QA and Payments. This branch alone never proves team participation.
+1. Systemia canonical admission/deduplication and authorized worker leases; separate evidence from Forge, Saban, Raven, Graphics, QA and Payments. Read-only inspection of Systemia's existing mission bridge found it presently routes two integration missions, not the graphics distribution lineage, and only accepts draft/held states, not the current awaiting-admission state. Extend the signed admission contract through the official review process, do not rename the graphics mission to slip through. This branch alone never proves team participation.
 2. Fresh-clone runtime tests and independent client MCP conformance, secure remote authentication, tenant isolation, quotas and worker limits.
 3. Rights/licensing checks, allowed asset storage, real source verification, and proof of output fidelity.
 4. Actual commerce contract: quote, buyer approval, verified provider payment, entitlement, fulfillment, refunds and disputes. Nothing here moves money.
