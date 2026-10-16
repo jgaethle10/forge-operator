@@ -71,15 +71,15 @@ jobs:
             const title=dom.match(/<b id="mapTitle">([^<]*)<\/b>/)?.[1];
             assert.equal(title,"Cascadia / Pacific Northwest","Cascadia view did not initialize");
             const images=[...dom.matchAll(/<img\b[^>]*\bsrc="([^"]+)"/g)].map(m=>m[1]);
-            const wa=images.find(url=>url.includes("gis.dnr.wa.gov") && url.includes("/MapServer/export"));
-            assert.ok(wa,"Official Washington tsunami map overlay did not request an image");
-            const sourceUrl=wa.replaceAll("&amp;","&");
+            const officialImages=images.filter(url=>url.startsWith("https://gis.dnr.wa.gov/site3/rest/directories/arcgisoutput/Geology/Tsunami_Hazard_MapServer/"));
+            assert.ok(officialImages.length>=2,"Both official Washington map overlays must render image elements");
+            const sourceUrl=officialImages[0].replaceAll("&amp;","&");
             const response=await fetch(sourceUrl,{signal:AbortSignal.timeout(20000)});
             assert.equal(response.ok,true,"Washington GIS export request failed: "+response.status);
             assert.match(response.headers.get("content-type")||"",/^image\//,"Washington GIS did not return an image");
             const data=await response.arrayBuffer();
             assert.ok(data.byteLength>100,"Washington GIS export image was empty");
-            console.log("CASCADE_OVERLAY_SMOKE_PASSED: official WGS MapServer returned image bytes="+data.byteLength);
+            console.log("CASCADIA_OVERLAY_SMOKE_PASSED: WGS images="+officialImages.length+", independently retrieved PNG bytes="+data.byteLength);
           '
 
       - uses: actions/upload-artifact@v4
