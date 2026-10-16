@@ -48,13 +48,13 @@ jobs:
             import fs from "node:fs";
             import assert from "node:assert/strict";
             const dom=fs.readFileSync("/tmp/megathrust-dom.html","utf8");
-            const mapTag=dom.match(/<div\\b[^>]*\\bid="map"[^>]*>/)?.[0];
+            const mapTag=dom.match(/<div\b[^>]*\bid="map"[^>]*>/)?.[0];
             assert.ok(mapTag,"Rendered map container missing");
-            assert.match(mapTag,/\\bleaflet-container\\b/,"Leaflet map did not initialize");
-            assert.ok(dom.includes("class=\\"leaflet-map-pane"),"Leaflet map pane missing");
-            const status=dom.match(/<span id="dataStatus"[^>]*>([^<]*)<\\/span>/)?.[1] || "unknown";
+            assert.match(mapTag,/\bleaflet-container\b/,"Leaflet map did not initialize");
+            assert.ok(dom.includes("leaflet-map-pane"),"Leaflet map pane missing");
+            const status=dom.match(/<span id="dataStatus"[^>]*>([^<]*)<\/span>/)?.[1] || "unknown";
             assert.ok(!status.includes("Map library unavailable"),"Rendered map failed to load");
-            assert.ok(dom.includes('id="selectKuril"'),"Kuril selector missing");
+            assert.ok(dom.includes("selectKuril"),"Kuril selector missing");
             console.log("REAL_BROWSER_SMOKE_PASSED: Leaflet initialized; visual snapshot captured; data status="+status);
           '
       - uses: actions/upload-artifact@v4
