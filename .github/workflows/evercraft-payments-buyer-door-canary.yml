@@ -12,6 +12,8 @@ on:
       - 'tests/evercraft-payments-buyer-doors.test.mjs'
       - 'scripts/probe-evercraft-payments-buyer-doors.mjs'
       - 'scripts/probe-evercraft-llm-commercial-routing.mjs'
+      - 'scripts/audit-live-agent-buyer-handoffs.mjs'
+      - 'tests/live-agent-buyer-handoffs.test.mjs'
       - '.grok-plugin/marketplace.json'
       - 'grok/evercraft/.grok-plugin/plugin.json'
       - 'grok/evercraft/xai-marketplace-entry.json'
@@ -30,6 +32,8 @@ on:
       - 'tests/evercraft-payments-buyer-doors.test.mjs'
       - 'scripts/probe-evercraft-payments-buyer-doors.mjs'
       - 'scripts/probe-evercraft-llm-commercial-routing.mjs'
+      - 'scripts/audit-live-agent-buyer-handoffs.mjs'
+      - 'tests/live-agent-buyer-handoffs.test.mjs'
       - '.grok-plugin/marketplace.json'
       - 'grok/evercraft/.grok-plugin/plugin.json'
       - 'grok/evercraft/xai-marketplace-entry.json'
@@ -78,3 +82,7 @@ jobs:
         run: node scripts/probe-evercraft-payments-buyer-doors.mjs
       - name: Verify public AI commerce front doors and 13 exact selected-offer URLs by GET only
         run: node scripts/probe-evercraft-llm-commercial-routing.mjs
+      - name: Prove live read-only MCP buyer continuation contract
+        run: node --test tests/live-agent-buyer-handoffs.test.mjs tests/fabric-approved-buyer-handoffs.test.mjs
+      - name: Cross-check live agent purchase links and prices against approved customer forms
+        run: node scripts/audit-live-agent-buyer-handoffs.mjs
