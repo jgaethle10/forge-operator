@@ -31,6 +31,15 @@ export function createGraphicsMcpServer({ token } = {}) {
   }
   return http.createServer(async (req, res) => {
     try {
+      // RC001 is for native local clients only. Reject browser Origins rather
+      // than exposing a CORS surface or risking DNS rebinding.
+      if (req.headers.origin !== undefined) {
+        return json(res, 403, { error: 'browser_origin_not_allowed' });
+      }
+      const host = String(req.headers.host || '').split(':')[0].toLowerCase();
+      if (!['127.0.0.1', 'localhost'].includes(host)) {
+        return json(res, 403, { error: 'non_loopback_host_rejected' });
+      }
       if (!secureEqual(req.headers.authorization, 'Bearer ' + token)) {
         return json(res, 401, { error: 'unauthorized' });
       }
@@ -42,6 +51,10 @@ export function createGraphicsMcpServer({ token } = {}) {
       if (req.method !== 'POST') {
         res.writeHead(405, { allow: 'POST', 'cache-control': 'no-store' });
         return res.end();
+      }
+      const protocol = req.headers['mcp-protocol-version'];
+      if (protocol !== undefined && protocol !== '2025-03-26') {
+        return json(res, 400, { error: 'unsupported_mcp_protocol_version', supported: ['2025-03-26'] });
       }
       if (!String(req.headers['content-type'] || '').toLowerCase().startsWith('application/json')) {
         return json(res, 415, { error: 'application_json_required' });
