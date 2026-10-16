@@ -69,6 +69,30 @@ export function nativeOnlyCatalog(input=[]) {
   };
 }
 
+// A visitor can paste a bare public domain. Normalize it here rather than
+// disabling the downstream prepayment public-HTTPS custody gate.
+export function normalizePublicWebsiteUrl(value) {
+  const input=String(value??'').trim();
+  if(!input||input.length>1000||/[\u0000-\u0020\u007f\\]/.test(input)||input.startsWith('//')) return null;
+  if(/^[a-z][a-z0-9+.-]*:/i.test(input)&&!/^https:\/\//i.test(input)) return null;
+  const withScheme=/^https:\/\//i.test(input)?input:'https://'+input;
+  try {
+    const parsed=new URL(withScheme);
+    if(parsed.protocol!=='https:'||parsed.username||parsed.password||parsed.port) return null;
+    const host=parsed.hostname.toLowerCase();
+    const labels=host.split('.');
+    if(!host||host.length>253||labels.length<2||labels.some(label=>!label||label.length>63||!(/^[a-z0-9](?:[a-z0-9-]*[a-z0-9])?$/.test(label)))) return null;
+    if(!/^(?:[a-z]{2,63}|xn--[a-z0-9-]{2,59})$/.test(labels.at(-1))) return null;
+    if(/(?:^|\.)(?:localhost|local|internal|test|invalid)$/.test(host)) return null;
+    // A fragment has no effect on a server-side audit. Do not retain it in
+    // the purchase request or reveal it in downstream evidence.
+    parsed.hash='';
+    return parsed.href;
+  }catch{
+    return null;
+  }
+}
+
 function sendJson(res,status,body,extraHeaders={}) {
   const data=Buffer.from(JSON.stringify(body));
   res.writeHead(status,{
@@ -901,9 +925,14 @@ export async function startFabricLocalRuntime({
           });
         }
 
-        const websiteUrl=slug==='website-audit'?String(body?.website_url||'').trim().slice(0,1001):null;
+        const websiteUrl=slug==='website-audit'?normalizePublicWebsiteUrl(body?.website_url):null;
         if(slug==='website-audit'&&!websiteUrl){
-          return sendJson(res,422,{ok:false,error:'public_https_website_required',checkout_ready:false,fulfillment_release:false});
+          if(isForm) return sendText(res,422,renderPaymentHoldPage({slug}),{contentType:'text/html; charset=utf-8'});
+          return sendJson(res,422,{
+            ok:false,error:'public_https_website_required',
+            message:'Enter a public website such as yourbusiness.com. No http:// or private network addresses.',
+            checkout_ready:false,fulfillment_release:false,
+          });
         }
         let auditedDomain=null;
         const controller=new AbortController();
