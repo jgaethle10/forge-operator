@@ -14,7 +14,7 @@
 ## Reproduce
 
 ```bash
-node --test systemia/earthworks-autonomy/embodied-goal-simulator.test.mjs
+node --test systemia/earthworks-autonomy/*.test.mjs
 ```
 
 Example of an accepted *simulation-only* planner goal:
@@ -35,6 +35,32 @@ The caller must explicitly provide authority context `{authority_state:'simulati
 ## Offline local-model response boundary
 
 `local-planner-goal-adapter.mjs` accepts up to 1,024 UTF-8 bytes of plain JSON from a hypothetical locally hosted model, requires the exact `evercraft.embodied.goal.v1` schema and sends the parsed proposal only to a real `EmbodiedGoalSimulator` instance. Text never supplies its own authority context. No HTTP request, model inference or robot connection is included. The companion test file adds 12 fail-closed cases; total local unit tests and updated GitHub EarthWorks Autonomy proof checks are 29/29 green, run 38655208645.
+
+## RC003 localhost model probe and benchmark (opt-in, simulation only)
+
+The next increment adds `local-llm-simulation-probe.mjs`, a narrow OpenAI-compatible `/v1/chat/completions` HTTP client for a model server running **on the same machine**, plus `local-llm-benchmark-cli.mjs`. It never tries to execute a motor command or a shell/tool call from the model. The only allowed URL is `http://127.0.0.1:PORT/v1/chat/completions` or `http://[::1]:PORT/v1/chat/completions`, where the numeric port is specified explicitly. Localhost hostname aliases, remote hosts, credentials, redirects and other endpoint paths are rejected. The returned JSON is bounded to 16 KiB, the model output to 1 KiB, and the action schema to exactly `goto` or `stop` with fixed numeric limits. The trusted request ID must match the model response.
+
+**Opt-in command, only on an operator-authorized device with a pre-existing loopback-compatible inference server:**
+
+```bash
+node systemia/earthworks-autonomy/local-llm-benchmark-cli.mjs \
+  --live-local-inference \
+  --endpoint=http://127.0.0.1:8080/v1/chat/completions \
+  --model=YOUR_LOCAL_MODEL_NAME \
+  --intent="Navigate to x=0.25m y=0m within the synthetic map" \
+  --runs=3 \
+  --expect-kind=goto
+```
+
+This command makes network requests **only to the specified loopback server**. It does not install or start a model, grant Saban/Node002 execution authority, advance the simulated motion clock, or command any real hardware. It creates fresh synthetic observations and simulator instances per inference sample, and emits accepted/rejected counts, p50/p95 inference latency, classified proposed goal kinds, label mismatches and sanitized failure codes. `--expect-kind=stop` is useful for deliberately ambiguous/unsafe test phrases. A successful benchmark is **not** proof of real perception quality, general physical autonomy, authenticated machine identity, safety certification, or Saban production execution.
+
+**Offline tests (no real LLM required):**
+
+```bash
+node --test systemia/earthworks-autonomy/*.test.mjs
+```
+
+These tests include adversarial fake HTTP responses and a real, ephemeral 127.0.0.1 HTTP server that proves transport and redirect denial without model inference. Their independent GitHub Actions results must be checked on the *latest* PR head. **Do not interpret mock HTTP tests as evidence of an actual model.**
 
 ## Next gates: NOT COMPLETE
 
