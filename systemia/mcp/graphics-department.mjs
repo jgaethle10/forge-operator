@@ -79,7 +79,7 @@ function exactObject(value, allowed) {
 }
 
 function boundedText(value, name, max) {
-  if (typeof value !== 'string' || !value.trim() || value.length > max || /[<>\\u0000-\\u001f]/u.test(value)) {
+  if (typeof value !== 'string' || !value.trim() || value.length > max || /[<>\u0000-\u001f]/u.test(value)) {
     throw new Error('graphics_invalid_' + name);
   }
   return value.replace(/\s+/gu, ' ').trim();
