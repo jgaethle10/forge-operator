@@ -1,6 +1,8 @@
 #!/usr/bin/env node
 import http from 'node:http';
 import crypto from 'node:crypto';
+import path from 'node:path';
+import { fileURLToPath } from 'node:url';
 import { executeGraphicsMcpRpc } from './graphics-department.mjs';
 
 const MAX_BODY_BYTES = 128 * 1024;
@@ -66,7 +68,7 @@ export function createGraphicsMcpServer({ token } = {}) {
   });
 }
 
-if (process.argv[1] && import.meta.url === new URL('file://' + process.argv[1]).href) {
+if (process.argv[1] && fileURLToPath(import.meta.url) === path.resolve(process.argv[1])) {
   const token = process.env.EVERCRAFT_GRAPHICS_MCP_TOKEN;
   const host = process.env.EVERCRAFT_GRAPHICS_MCP_HOST || '127.0.0.1';
   const port = Number(process.env.EVERCRAFT_GRAPHICS_MCP_PORT || '8766');
