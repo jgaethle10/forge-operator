@@ -4,6 +4,7 @@ on:
   push:
     paths:
       - 'systemia/mcp/graphics-department*.mjs'
+      - 'systemia/mcp/graphics-mcp-client-conformance.test.mjs'
       - 'systemia/mcp/GRAPHICS_DEPARTMENT_MCP_RC001.md'
       - '.github/workflows/graphics-department-mcp-preview.yml'
       - 'systemia/graphics-command/commercial-director.mjs'
@@ -11,6 +12,7 @@ on:
   pull_request:
     paths:
       - 'systemia/mcp/graphics-department*.mjs'
+      - 'systemia/mcp/graphics-mcp-client-conformance.test.mjs'
       - 'systemia/mcp/GRAPHICS_DEPARTMENT_MCP_RC001.md'
       - '.github/workflows/graphics-department-mcp-preview.yml'
       - 'systemia/graphics-command/commercial-director.mjs'
@@ -33,5 +35,6 @@ jobs:
           node --check systemia/mcp/graphics-department.mjs
           node --check systemia/mcp/graphics-department-server.mjs
           node --check systemia/mcp/graphics-department.test.mjs
+          node --check systemia/mcp/graphics-mcp-client-conformance.test.mjs
       - name: Local renderer and MCP security tests
-        run: node --test systemia/mcp/graphics-department.test.mjs
+        run: node --test systemia/mcp/graphics-department.test.mjs systemia/mcp/graphics-mcp-client-conformance.test.mjs
