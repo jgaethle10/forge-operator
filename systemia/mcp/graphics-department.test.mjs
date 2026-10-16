@@ -1,6 +1,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import crypto from 'node:crypto';
+import http from 'node:http';
 import {
   graphicsDepartmentTools,
   renderGraphicsPreview,
@@ -168,10 +169,24 @@ test('HTTP transport refuses browser origins, rebinding host and unsupported pro
       method: 'POST', headers: { ...headers, origin: 'https://hostile.example' }, body,
     });
     assert.equal(origin.status, 403);
-    const rebinding = await fetch(base + '/mcp/graphics', {
-      method: 'POST', headers: { ...headers, host: 'evil.example:5000' }, body,
+    // Native fetch may replace Host with the URL's authority. Use raw HTTP
+    // to actually send the attacker-controlled Host header on the wire.
+    const rebindingStatus = await new Promise((resolve, reject) => {
+      const target = new URL(base);
+      const request = http.request({
+        hostname: target.hostname,
+        port: target.port,
+        path: '/mcp/graphics',
+        method: 'POST',
+        headers: { ...headers, host: 'evil.example:5000', 'content-length': Buffer.byteLength(body) },
+      }, (response) => {
+        response.resume();
+        response.on('end', () => resolve(response.statusCode));
+      });
+      request.on('error', reject);
+      request.end(body);
     });
-    assert.equal(rebinding.status, 403);
+    assert.equal(rebindingStatus, 403);
     const protocol = await fetch(base + '/mcp/graphics', {
       method: 'POST', headers: { ...headers, 'mcp-protocol-version': '2026-07-28' }, body,
     });
