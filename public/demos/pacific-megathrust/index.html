@@ -90,8 +90,9 @@ function initialize(){
  if(!window.L){byId("map").textContent="Mapping library unavailable. Source links remain accessible in the Evidence desk.";info("Map library unavailable");return;}
  map=L.map("map",{zoomControl:false,worldCopyJump:false,minZoom:2,preferCanvas:true});
  L.control.zoom({position:"bottomright"}).addTo(map);
- L.tileLayer("https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png",{
-  attribution:'&copy; OpenStreetMap contributors &copy; CARTO',subdomains:"abcd",maxZoom:18,noWrap:false
+ L.tileLayer("https://tile.openstreetmap.org/{z}/{x}/{y}.png",{
+  attribution:'&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
+  maxZoom:19,noWrap:false
  }).addTo(map);
  quakes=L.layerGroup().addTo(map);
  overlays.kuril=L.rectangle([[40,138],[61,168]],{color:"#f8c771",weight:1.2,dashArray:"5 8",fillColor:"#d4a85d",fillOpacity:.045,interactive:false});
@@ -116,6 +117,11 @@ function initialize(){
  if(initialRegion==="cascadia" && params.get("evacuation")==="1" && wgsEvacuation){
   byId("toggleEvacuation").checked=true;
   wgsEvacuation.addTo(map);
+ }
+ // Put the planning-data research view over the Grays Harbor coastline, where the
+ // source's inundation and evacuation geometry is visible at useful scale.
+ if(initialRegion==="cascadia" && (params.get("inundation")==="1" || params.get("evacuation")==="1")){
+  map.setView([46.98,-124.10],7,{animate:false});
  }
  loadQuakes();
 }
