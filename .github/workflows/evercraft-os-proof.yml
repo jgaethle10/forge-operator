@@ -53,6 +53,10 @@ jobs:
         run: node --test systemia/evercraft-os/systemia-launcher.test.mjs
       - name: Prove Home OS status surface
         run: node --test systemia/evercraft-home/os-status.test.mjs
+      - name: Prove OS Files public-share admission gate
+        run: node --test systemia/evercraft-os/files/share-gate.test.mjs
+      - name: Prove Passport-verified OS Files sharing
+        run: node --test systemia/evercraft-os/files/passport-share-verifier.test.mjs
       - name: Emit boot envelope
         run: node systemia/evercraft-os/runtime.mjs
       - name: Emit sanitized device profile
