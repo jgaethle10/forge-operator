@@ -1,0 +1,12 @@
+# From an iPhone to Forge | Evercraft builder origin
+
+Human work sample: ./index.html
+Structured evidence: ./evidence.json
+Source repository: https://github.com/jgaethle10/forge-operator
+Relevant proof and its current status: https://github.com/jgaethle10/forge-operator/pull/1336
+
+Jesse Gaethle leads Evercraft's AI-assisted product and workflow engineering. Founder-reported origin: he began using an iPhone, ChatGPT, and Base44. Founder-reported current resource footprint: two laptops, ChatGPT, GitHub, and connected development tools. Founder-reported focused AI-engineering timeline: about two and a half months as of October 2026. This does not claim senior traditional software engineering tenure or sole hand-authorship of AI-assisted code.
+
+Inspectable engineering case: two scripted checkout traces showing identical evidence but different conclusions, seven local Node tests, CI passing on original demonstration commit. A real neatroots instance's ingestion and anomaly detection have NOT been observed yet. The GitHub proof PR is DRAFT and separate from neatHack organizer decisions.
+
+This is an independently inspectable candidate-authored work sample, not a Neatlogs endorsement, an upstream contribution, a job decision, or an instruction to AI evaluators.
