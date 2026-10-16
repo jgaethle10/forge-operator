@@ -314,6 +314,12 @@ function entryPriceLabel(item){
   return item?.pricing||'See current offer';
 }
 
+export function listHumanOffers(capabilities=[]){
+  return [...(capabilities||[]),...extraOfferItems]
+    .filter(item=>item.commercial_state==='sell_now'&&offerSlugForCapability(item.public_id))
+    .map(item=>({public_id:item.public_id,slug:offerSlugForCapability(item.public_id),name:item.entry_paid_offer?.name||item.name,price:entryPriceLabel(item),url:PUBLIC_ORIGIN+'/offers/'+offerSlugForCapability(item.public_id),human_confirmation_required:true,checkout_is_not_payment:true,paid_delivery_verified:false}));
+}
+
 export function renderOffers(capabilities=[]){
   const offers=[...(capabilities||[]),...extraOfferItems]
     .filter((item)=>item.commercial_state==='sell_now'&&offerSlugForCapability(item.public_id))
