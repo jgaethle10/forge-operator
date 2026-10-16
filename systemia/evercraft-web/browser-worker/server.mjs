@@ -1,6 +1,9 @@
 import crypto from 'node:crypto';
 import http from 'node:http';
 import { chromium } from 'playwright';
+import { DurableBrowserJobs } from './durable-jobs.mjs';
+import { verifyDurableJobRequest } from './systemia-admission.mjs';
+import { jobApplicationPreflight } from './job-application-preflight.mjs';
 import { createSecureOutboundProxy } from './secure-proxy.mjs';
 import { HEADING_SELECTOR, MAX_HEADINGS } from './snapshot-contract.mjs';
 import { AuthenticatedBrowserSessionManager, renderHumanBrowserHandoffPage } from './authenticated-handoff.mjs';
@@ -13,6 +16,8 @@ import {
 
 const PORT = Math.max(1, Math.min(65535, Number(process.env.PORT || 8787)));
 const WORKER_TOKEN = String(process.env.EVERCRAFT_BROWSER_WORKER_TOKEN || '');
+const SYSTEMIA_JOB_KEY = String(process.env.EVERCRAFT_BROWSER_SYSTEMIA_JOB_KEY || '');
+const signedJobNonces = new Map();
 const MAX_CONCURRENCY = Math.max(1, Math.min(8, Number(process.env.EVERCRAFT_BROWSER_MAX_CONCURRENCY || 2)));
 const MAX_BODY_BYTES = 64 * 1024;
 const MAX_SCREENSHOT_BYTES = 3 * 1024 * 1024;
@@ -78,7 +83,7 @@ function browserClaim(req) {
   return String(req.headers['x-evercraft-browser-claim'] || '').trim();
 }
 
-async function readJson(req) {
+async function readJson(req, {includeRaw=false} = {}) {
   let size = 0;
   const chunks = [];
   for await (const chunk of req) {
@@ -87,9 +92,9 @@ async function readJson(req) {
     chunks.push(chunk);
   }
   const raw = Buffer.concat(chunks).toString('utf8');
-  if (!raw) return {};
   try {
-    return JSON.parse(raw);
+    const data = raw ? JSON.parse(raw) : {};
+    return includeRaw ? {data,raw} : data;
   } catch {
     throw new Error('invalid_json');
   }
@@ -171,7 +176,7 @@ async function extractPage(page, maxTextChars) {
   }, {limit:maxTextChars, headingSelector:HEADING_SELECTOR, maxHeadings:MAX_HEADINGS});
 }
 
-async function browse(job) {
+async function browse(job, signal = null) {
   const startedAt = new Date();
   const browser = await getBrowser();
   const outboundProxy = await outboundProxyPromise;
@@ -184,6 +189,13 @@ async function browse(job) {
     ignoreHTTPSErrors:false,
     userAgent:'Evercraft-Web-Owned-Browser/1.0'
   });
+
+  if (signal?.aborted) {
+    await context.close().catch(() => {});
+    throw new Error('browser_job_cancelled');
+  }
+  const abortBrowser = () => { void context.close().catch(() => {}); };
+  signal?.addEventListener('abort',abortBrowser,{once:true});
 
   const blocked = [];
   const consoleErrors = [];
@@ -321,9 +333,19 @@ async function browse(job) {
       evidence_receipt_sha256:sha256(JSON.stringify(evidence))
     };
   } finally {
+    signal?.removeEventListener('abort',abortBrowser);
     await context.close().catch(() => {});
   }
 }
+
+// Durable jobs are intentionally disabled unless a persistent private volume is provided.
+// Admission still requires the private worker bearer and a Systemia lineage reference.
+const JOB_STATE_DIR = String(process.env.EVERCRAFT_BROWSER_JOB_STATE_DIR || '').trim();
+const durableJobs = JOB_STATE_DIR ? new DurableBrowserJobs({
+  directory: JOB_STATE_DIR,
+  execute: (job, signal) => browse(job,signal),
+  concurrency: MAX_CONCURRENCY,
+}) : null;
 
 const server = http.createServer(async (req,res) => {
   try {
@@ -336,6 +358,9 @@ const server = http.createServer(async (req,res) => {
         mode:'public_read_only',
         active_jobs:activeJobs,
         max_concurrency:MAX_CONCURRENCY,
+        durable_jobs_enabled:Boolean(durableJobs && SYSTEMIA_JOB_KEY.length >= 32),
+        durable_jobs_admission:'systemia_hmac_sha256_v1',
+        durable_job_metrics:durableJobs?.metrics() || null,
         authenticated_handoff_available:Boolean(authSessions),
         authenticated_handoff_mode:authSessions ? 'human_authorized_ephemeral' : 'disabled',
         delegated_draft_automation_available:Boolean(authSessions)
@@ -357,6 +382,18 @@ const server = http.createServer(async (req,res) => {
         delegated_new_terms_authority: false
       });
       return;
+    }
+
+    // Signed, non-mutating preparation boundary. This route never opens a browser,
+    // enters credentials, uploads a document, or submits an application.
+    if (req.method === 'POST' && pathname === '/v1/job-applications/preflight') {
+      if (SYSTEMIA_JOB_KEY.length < 32) return json(res,503,{ok:false,error:'job_application_preflight_unconfigured'});
+      const {data:body,raw} = await readJson(req,{includeRaw:true});
+      verifyDurableJobRequest(SYSTEMIA_JOB_KEY,{
+        headers:req.headers,method:req.method,path:pathname,body:raw,nonces:signedJobNonces
+      });
+      const result = await jobApplicationPreflight(body);
+      return json(res,result.ok ? 200 : 409,result);
     }
 
     if (req.method === 'POST' && pathname === '/v1/auth-browser/sessions') {
@@ -470,6 +507,34 @@ const server = http.createServer(async (req,res) => {
       return;
     }
 
+    if (pathname === '/v1/jobs' && req.method === 'POST') {
+      if (!durableJobs || SYSTEMIA_JOB_KEY.length < 32) return json(res,503,{ok:false,error:'durable_job_admission_unconfigured'});
+      const {data:body,raw} = await readJson(req,{includeRaw:true});
+      verifyDurableJobRequest(SYSTEMIA_JOB_KEY,{
+        headers:req.headers,method:req.method,path:pathname,body:raw,nonces:signedJobNonces
+      });
+      const job = sanitizeJob(body.job);
+      const record = durableJobs.submit({
+        job,
+        idempotency_key:body.idempotency_key,
+        mission_key:body.mission_key,
+        work_key:body.work_key,
+      });
+      return json(res,record.deduplicated ? 200 : 202,{ok:true,job:record});
+    }
+
+    const durableMatch = pathname.match(/^\/v1\/jobs\/([0-9a-f-]{36})$/);
+    if (durableMatch && (req.method === 'GET' || req.method === 'DELETE')) {
+      if (!durableJobs || SYSTEMIA_JOB_KEY.length < 32) return json(res,503,{ok:false,error:'durable_job_admission_unconfigured'});
+      verifyDurableJobRequest(SYSTEMIA_JOB_KEY,{
+        headers:req.headers,method:req.method,path:pathname,body:'',nonces:signedJobNonces
+      });
+      const record = req.method === 'DELETE'
+        ? durableJobs.cancel(durableMatch[1])
+        : durableJobs.get(durableMatch[1]);
+      return record ? json(res,200,{ok:true,job:record}) : json(res,404,{ok:false,error:'job_not_found'});
+    }
+
     if (req.method !== 'POST' || pathname !== '/v1/browse') {
       json(res,404,{ok:false,error:'not_found'});
       return;
@@ -543,7 +608,7 @@ const server = http.createServer(async (req,res) => {
       'delegated_fill_scope_missing',
       'delegated_click_scope_missing'
     ]);
-    const status = authErrors.has(message) ? 401 : missingErrors.has(message) ? 404 : safeClientErrors.has(message) || message.startsWith('unsupported_action') || message.startsWith('invalid_selector') || message.startsWith('invalid_anchor_selector') ? 400 : 500;
+    const status = message === 'durable_job_admission_unconfigured' || message === 'durable_job_replay_cache_full' ? 503 : message === 'durable_job_signature_invalid' || message === 'durable_job_request_replayed' ? 401 : authErrors.has(message) ? 401 : missingErrors.has(message) ? 404 : message === 'durable_job_idempotency_conflict' ? 409 : message.startsWith('durable_job_') || safeClientErrors.has(message) || message.startsWith('unsupported_action') || message.startsWith('invalid_selector') || message.startsWith('invalid_anchor_selector') ? 400 : 500;
     json(res,status,{ok:false,error:message,engine:ENGINE});
   }
 });
@@ -554,6 +619,7 @@ server.listen(PORT,'0.0.0.0',() => {
 
 async function shutdown(signal) {
   server.close();
+  durableJobs?.close();
   if (authSessions) await authSessions.closeAll().catch(() => {});
   if (browserPromise) {
     try {
