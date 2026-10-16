@@ -31,7 +31,7 @@ test('owned Evercraft mobile surface is installable and routes through live Fabr
     assert.match(mobileResponse.headers.get('content-security-policy')||'',/form-action 'self'/);
     const mobile=await mobileResponse.text();
     assert.match(mobile,/Bring the problem/);
-    assert.match(mobile,/One door\\./);
+    assert.ok(mobile.includes('One door.'));
     assert.match(mobile,/A world of capability/);
     assert.match(mobile,/Presence · interactive preview/);
     assert.match(mobile,/Choose your starting point/);
@@ -41,7 +41,7 @@ test('owned Evercraft mobile surface is installable and routes through live Fabr
     assert.match(mobile,/Community services/);
     assert.match(mobile,/No silent actions/);
     assert.match(mobile,/prefers-reduced-motion/);
-    assert.doesNotMatch(mobile,/<script\\b/i);
+    assert.ok(!mobile.toLowerCase().includes('<script'));
     assert.match(mobile,/Add to Home Screen/);
     assert.match(mobile,/1 live capabilities/);
     assert.match(mobile,/\/mobile\/manifest\.webmanifest/);
