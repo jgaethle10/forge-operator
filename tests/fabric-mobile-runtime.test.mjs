@@ -54,7 +54,7 @@ test('owned Evercraft mobile surface is installable and routes through live Fabr
     assert.match(matched,/Read-only discovery/);
     assert.equal(matched.includes('base44.app'),false);
 
-    assert.match(mobile,/method="post" action="\\/mobile"/);
+    assert.ok(mobile.includes('method="post" action="/mobile"'));
     const privateReply=await fetch(runtime.url+'/mobile',{
       method:'POST',
       headers:{'content-type':'application/x-www-form-urlencoded'},
