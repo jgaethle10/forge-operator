@@ -246,7 +246,7 @@ export function renderDataStorySvg(raw) {
     sourceRefs: b.sourceRefs, evidenceState: 'client_references_not_verified',
     scale: { min: 0, max: yCeiling(Math.max(...b.data.map(d => d.value)), b.unit) },
     dataCount: b.data.length, categoriesEqualSpaced: b.chartType === 'trend',
-    mimeType: 'image/svg+xml', sha256: digest(text), data: text,
+    mimeType: 'image/svg+xml', sha256: crypto.createHash('sha256').update(text).digest('hex'), data: text,
     publicationAuthority: false, paymentAuthority: false, externalActionTaken: false,
   };
 }
