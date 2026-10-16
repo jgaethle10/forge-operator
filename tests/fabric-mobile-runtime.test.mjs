@@ -54,6 +54,28 @@ test('owned Evercraft mobile surface is installable and routes through live Fabr
     assert.match(matched,/Read-only discovery/);
     assert.equal(matched.includes('base44.app'),false);
 
+    assert.match(mobile,/method="post" action="\\/mobile"/);
+    const privateReply=await fetch(runtime.url+'/mobile',{
+      method:'POST',
+      headers:{'content-type':'application/x-www-form-urlencoded'},
+      body:new URLSearchParams({q:'I need a native capability right now'}),
+    });
+    assert.equal(privateReply.status,200);
+    const privateHtml=await privateReply.text();
+    assert.match(privateHtml,/What actually happened/);
+    assert.match(privateHtml,/Fabric matching: matched/);
+    assert.match(privateHtml,/1 candidates/);
+    assert.match(privateHtml,/No payment, external action, or Boardroom call was made/);
+    assert.match(privateHtml,/View [a-f0-9]{14}/);
+    assert.equal(privateReply.url.includes('?q='),false);
+    const invalidPost=await fetch(runtime.url+'/mobile',{
+      method:'POST',headers:{'content-type':'text/plain'},body:'raw text',
+    });
+    assert.equal(invalidPost.status,400);
+    const invalidBody=await invalidPost.json();
+    assert.equal(invalidBody.external_action_taken,false);
+
+
     const injected=await fetch(runtime.url+'/mobile?q='+encodeURIComponent('<img src=x onerror=alert(1)>')).then(r=>r.text());
     assert.ok(injected.includes('&lt;img src=x onerror=alert(1)&gt;'));
     assert.ok(!injected.includes('<img src=x onerror=alert(1)>'));
