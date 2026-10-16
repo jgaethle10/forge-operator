@@ -35,6 +35,13 @@ test('MCP initialize, discovery, safe annotations and unknown tool', () => {
   assert.equal(executeGraphicsMcpRpc({ jsonrpc: '2.0', method: 'notifications/initialized' }), null);
 });
 
+
+test('safe discovery tool returns correction-friendly error for unexpected input', () => {
+  const r = rpc('tools/call', { name: 'graphics_get_capabilities', arguments: { unsafe: true } });
+  assert.equal(r.result.isError, true);
+  assert.equal(r.error, undefined);
+});
+
 test('same brief produces byte-identical SVG with SHA-256 receipt and synthetic truth', () => {
   const one = renderGraphicsPreview(BRIEF);
   const two = renderGraphicsPreview(BRIEF);
@@ -85,7 +92,8 @@ test('malicious markup, untrusted URLs, unexpected keys, and false prices fail c
   ];
   for (const invalid of bad) {
     const response = rpc('tools/call', { name: 'graphics_preview_commercial', arguments: invalid });
-    assert.equal(response.error?.code, -32602, JSON.stringify(invalid));
+    assert.equal(response.result?.isError, true, JSON.stringify(invalid));
+    assert.equal(response.result?.structuredContent, undefined);
   }
 });
 
@@ -149,5 +157,28 @@ test('oversize RPC request returns 413 without producing graphics', async () => 
       } }),
     });
     assert.equal(response.status, 413);
+  });
+});
+
+test('HTTP transport refuses browser origins, rebinding host and unsupported protocol', async () => {
+  await liveServer(async ({ base, token }) => {
+    const body = JSON.stringify({ jsonrpc: '2.0', id: 7, method: 'tools/list' });
+    const headers = { authorization: 'Bearer ' + token, 'content-type': 'application/json' };
+    const origin = await fetch(base + '/mcp/graphics', {
+      method: 'POST', headers: { ...headers, origin: 'https://hostile.example' }, body,
+    });
+    assert.equal(origin.status, 403);
+    const rebinding = await fetch(base + '/mcp/graphics', {
+      method: 'POST', headers: { ...headers, host: 'evil.example:5000' }, body,
+    });
+    assert.equal(rebinding.status, 403);
+    const protocol = await fetch(base + '/mcp/graphics', {
+      method: 'POST', headers: { ...headers, 'mcp-protocol-version': '2026-07-28' }, body,
+    });
+    assert.equal(protocol.status, 400);
+    const compatible = await fetch(base + '/mcp/graphics', {
+      method: 'POST', headers: { ...headers, 'mcp-protocol-version': '2025-03-26' }, body,
+    });
+    assert.equal(compatible.status, 200);
   });
 });
