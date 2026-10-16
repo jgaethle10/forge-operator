@@ -29,6 +29,7 @@ export function renderFabricMobileApp({
   matches=[],
   capabilityCount=0,
   error='',
+  proof=null,
 }={}){
   const safeQuery=escapeHtml(query);
   return `<!doctype html>
@@ -140,7 +141,7 @@ footer{margin-top:40px;color:#71839e;font-size:12px;text-align:center}
 <h2 class="discovery-title">Bring the problem.</h2>
 <p class="discovery-note">Fabric matches your description against its public-safe capability catalog. Results are suggestions, not completed work, quotes, or bookings.</p>
 
-<form method="get" action="/mobile">
+<form method="post" action="/mobile">
   <textarea name="q" maxlength="4000" minlength="3" required placeholder="Example: I own a commercial property and want to know whether EV charging makes sense here.">${safeQuery}</textarea>
   <button type="submit">Find the right Evercraft capability</button>
 </form>
@@ -148,6 +149,7 @@ footer{margin-top:40px;color:#71839e;font-size:12px;text-align:center}
 
 ${error?`<div class="error">${escapeHtml(error)}</div>`:''}
 <section class="results">${resultCards(matches)}</section>
+${proof?`<section class="result" aria-label="Discovery trace"><h2>What actually happened</h2><p>Fabric matching: ${escapeHtml(proof.status)} · ${Number(proof.candidates)||0} candidates</p><p>Observed ${escapeHtml(proof.observed_at)} · View ${escapeHtml(proof.display_id)}</p><p>No payment, external action, or Boardroom call was made. This temporary display is not a permanent audit record.</p></section>`:''}
 
 <div class="install">
   <h2>Keep Evercraft on your phone</h2>
