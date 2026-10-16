@@ -8,7 +8,7 @@ import {
   renderOfferPage,
   renderOffers,
 } from '../systemia/mcp/fabric-public-site.mjs';
-import { startFabricLocalRuntime } from '../systemia/mcp/fabric-local-runtime.mjs';
+import { normalizePublicWebsiteUrl, startFabricLocalRuntime } from '../systemia/mcp/fabric-local-runtime.mjs';
 
 const websiteAudit={
   public_id:'audit-center-website-audit-machine-v1',
@@ -70,7 +70,9 @@ test('conversion-first offer has one primary action, URL before email, and no co
   assert.match(page,/<label for="offer-customer-email">2\. Email for your receipt<\/label>/);
   assert.match(page,/aria-describedby="offer-website-help"/);
   assert.match(page,/aria-describedby="offer-email-help"/);
-  assert.match(page,/placeholder="https:\/\/yourbusiness\.com"/);
+  assert.match(page,/placeholder="yourbusiness\.com"/);
+  assert.match(page,/No https:\/\/ needed/);
+  assert.match(page,/name="website_url" type="text"/);
   assert.match(page,/<details class="offer-details"><summary>How it works<\/summary>/);
   assert.match(page,/\.checkout-field input:focus-visible/);
   assert.match(page,/\.conversion-page \.navlinks\{display:none\}/);
@@ -207,7 +209,7 @@ test('owned Fabric serves offer pages, requires confirmation, and delegates chec
     const checkout=await fetch(runtime.url+'/api/offers/website-audit/checkout',{
       method:'POST',
       headers:{'content-type':'application/x-www-form-urlencoded'},
-      body:new URLSearchParams({user_confirmed:'true',customer_ref:'buyer@example.com',website_url:'https://evercraftpropertyservices.com/'}),
+      body:new URLSearchParams({user_confirmed:'true',customer_ref:'buyer@example.com',website_url:'evercraftpropertyservices.com'}),
       redirect:'manual',
     });
     assert.equal(checkout.status,303);
@@ -242,6 +244,40 @@ test('owned Fabric serves offer pages, requires confirmation, and delegates chec
   }finally{
     await runtime.close();
   }
+});
+
+test('simple website URLs normalize safely without relaxing public HTTPS preflight',()=>{
+  assert.equal(normalizePublicWebsiteUrl('yourbusiness.com'),'https://yourbusiness.com/');
+  assert.equal(normalizePublicWebsiteUrl('  www.example.com/services  '),'https://www.example.com/services');
+  assert.equal(normalizePublicWebsiteUrl('HTTPS://Example.com/path#internal-note'),'https://example.com/path');
+  assert.equal(normalizePublicWebsiteUrl('https://example.com/some-page'),'https://example.com/some-page');
+  const bad=[
+    '', 'http://example.com','ftp://example.com','javascript:alert(1)',
+    'localhost','localhost.local','service.internal','test.invalid',
+    '127.0.0.1','192.168.0.1','[::1]','http://127.0.0.1',
+    'example.com:8443','user:password@example.com','https://user@example.com',
+    '//example.com','bad domain.com','example..com',
+    'example.com\nhost: injection', 'https://example.com\\@bad.com'
+  ];
+  for(const input of bad) assert.equal(normalizePublicWebsiteUrl(input),null,'reject '+input);
+});
+
+test('invalid domain is blocked before payment preflight or any checkout mutation',async()=>{
+  let calls=0;
+  const runtime=await startFabricLocalRuntime({host:'127.0.0.1',port:0,catalog:[websiteAudit],faieSurfaceEnabled:false,
+    purchaseIntentFetch:async()=>{calls+=1;throw new Error('never call downstream for invalid website');},
+  });
+  try{
+    for(const target of ['http://example.com','localhost','https://user@example.com']){
+      const response=await fetch(runtime.url+'/api/offers/website-audit/checkout',{
+        method:'POST',headers:{'content-type':'application/json'},
+        body:JSON.stringify({user_confirmed:true,customer_ref:'buyer@example.com',website_url:target}),
+      });
+      assert.equal(response.status,422,target);
+      assert.equal((await response.json()).error,'public_https_website_required');
+      assert.equal(calls,0);
+    }
+  }finally{await runtime.close();}
 });
 
 test('human checkout failures render a branded Evercraft Payments page instead of raw JSON',async()=>{
@@ -296,7 +332,7 @@ test('audit checkout collects a target and rejects missing or unsupported custod
       }});
     try{
       const page=await fetch(runtime.url+'/offers/website-audit').then(r=>r.text());
-      assert.match(page,/name="website_url" type="url"/);
+      assert.match(page,/name="website_url" type="text"/);
       const r=await fetch(runtime.url+'/api/offers/website-audit/checkout',{method:'POST',headers:{'content-type':'application/json'},body:JSON.stringify({user_confirmed:true,customer_ref:'buyer@example.com',...(scenario==='missing'?{}:{website_url:'https://evercraftpropertyservices.com/'})})});
       assert.equal(r.status,scenario==='missing'?422:503,scenario);
       assert.equal((await r.json()).fulfillment_release,false);
