@@ -1,0 +1,23 @@
+{
+  "schema": "evercraft.fallen.hosted-mobile-staging.v1",
+  "product": "Fallen Studio",
+  "release": "RC 1.0.2 Mobile Director",
+  "mission_key": "fallen-rc101-mobile-https-validation-20261012",
+  "systemia_release_receipt": "fallen-rc102-mobile-director-20261014:v1",
+  "site_url": "https://headless-dogznkyujxa-sociallyguud-140c.wix-site-host.com/",
+  "source_sha256": "6b316f8559f39d872c8e1daa79e03030398dde050e7742276e0e5af33daff7dd",
+  "source_bytes": 1415969,
+  "known_host_injection": {
+    "description": "Wix adds one external script tag before </head>; strip only this exact-identity tag for source-byte comparison.",
+    "script_id": "wix-site-script",
+    "expected_added_bytes": 192
+  },
+  "status": "STAGING_QA_ONLY",
+  "audience": "public_URL_no_access_control",
+  "gates_remaining": [
+    "actual_physical_iPhone_Safari_RC102_acceptance",
+    "private_access_controls_for_sensitive_projects",
+    "Systemia_release_gate_authorization",
+    "owned_host_cutover_separate_from_this_canary"
+  ]
+}
