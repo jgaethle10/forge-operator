@@ -23,7 +23,9 @@ jobs:
           node --check examples/operator-fabric/public-discovery.mjs
           node --check examples/operator-fabric/local-test-tool.mjs
           node --check examples/operator-fabric/independent-tool-client.mjs
-      - name: Run independent client and contributor tool tests without external services
+          node --check examples/operator-fabric/review-gate.mjs
+          node --check examples/operator-fabric/reviewed-http-bridge.mjs
+      - name: Run signed review + remote loopback + independent tool tests without external services
         run: node --test examples/operator-fabric/test/*.test.mjs
       - name: Prove real local MCP tool handshake and invocation without secrets
         run: node examples/operator-fabric/independent-tool-client.mjs
