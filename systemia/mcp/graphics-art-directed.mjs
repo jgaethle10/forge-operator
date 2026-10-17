@@ -203,6 +203,8 @@ export function renderArtDirectedSvg(raw) {
     evidenceState: 'client_copy_unverified',
     imageryState: 'synthetic_vector_art',
     brandRightsState: 'client_asserted_not_verified',
+    creativeReviewState: 'founder_rejected_generic_gallery_20261016',
+    showcaseAuthority: false,
     publicationAuthority: false,
     paymentAuthority: false,
     actualVideoGenerated: false,
