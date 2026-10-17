@@ -95,7 +95,12 @@ export class PulseGridAudioEngine {
 
   setScene(scene: number) {
     const maxScene = Math.max(0, (this.session?.tracks[0]?.clips.length || 1) - 1);
-    this.scene = Math.max(0, Math.min(Math.round(scene), maxScene));
+    const nextScene = Math.max(0, Math.min(Math.round(scene), maxScene));
+    // Do not keep a transport running into a different scene until its
+    // recorded samples have been authorized, verified and decoded. This
+    // deliberately requires a new Play press instead of silent note loss.
+    if(nextScene!==this.scene && this.playing)this.stop();
+    this.scene = nextScene;
     this.step = 0;
     if (this.context) {
       this.nextTime = this.context.currentTime + 0.05;
