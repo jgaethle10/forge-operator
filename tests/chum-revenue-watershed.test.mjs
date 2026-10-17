@@ -1,4 +1,5 @@
 import fs from 'node:fs';
+import {withOwnedNativeWorkflowXray} from '../systemia/chum/owned-native-offer-overlay.mjs';
 
 const readJson = (p) => JSON.parse(fs.readFileSync(p, 'utf8'));
 const fail = (m) => { throw new Error(m); };
@@ -8,7 +9,7 @@ const capabilities = readJson('public/chum/capabilities.json');
 const sellNow = readJson('public/chum/sell-now.json');
 const sellNowText = fs.readFileSync('public/chum/sell-now.txt', 'utf8');
 
-const canonical = (machine.offers || []).filter((x) => x?.public_id && x?.name);
+const canonical = withOwnedNativeWorkflowXray(machine.offers || []).filter((x) => x?.public_id && x?.name);
 const canonicalSellNow = canonical.filter((x) => x.commercial_state === 'sell_now');
 
 if (capabilities.schema !== 'evercraft.chum.capabilities.v1') fail('unexpected capabilities schema');
@@ -56,6 +57,26 @@ for (const offer of canonicalSellNow) {
   if (heldNoOwnedOrigin) {
     if (compact.machine_review_url) fail(`held offer must not expose an unverified machine review URL: ${offer.public_id}`);
     if (compact.agent_handoff) fail(`held offer must not expose an executable agent handoff: ${offer.public_id}`);
+  } else if (offer.public_id === 'workflow-foundry-xray-v1') {
+    // Existing first-party paid offer, not a simulated Machine Commerce offer.
+    // Its native human buyer URL is independently observed; no executable
+    // agent-side checkout authority, gateway receipt or paid state is claimed.
+    const buyerUrl='https://fabric.systemiacommandcenters.com/offers/workflow-xray';
+    if (compact.start_url_state !== 'owned_direct_human_start' || startUrl !== buyerUrl) {
+      fail('native Workflow X-Ray lost verified owned buyer start');
+    }
+    if (compact.entry_paid_offer?.offer_key !== 'workflow_foundry.xray_250.v1' ||
+        compact.entry_paid_offer?.price_usd_normalized !== 250) {
+      fail('native Workflow X-Ray payment contract drifted');
+    }
+    if (compact.agent_handoff !== null || compact.machine_offer_url !== null ||
+        compact.machine_review_url !== null) {
+      fail('native direct buyer path must not fabricate a Machine Commerce agent authority');
+    }
+    if (!/human confirmation/i.test(String(offer.confirmation || '')) ||
+        !/provider-paid receipt/i.test(String(offer.confirmation || ''))) {
+      fail('native Workflow X-Ray lost consent or paid-verification boundary');
+    }
   } else {
     if (!compact.agent_handoff || typeof compact.agent_handoff !== 'object') {
       fail(`sell-now offer missing agent_handoff: ${offer.public_id}`);
