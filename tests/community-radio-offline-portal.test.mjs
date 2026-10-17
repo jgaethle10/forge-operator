@@ -5,6 +5,7 @@ import fs from 'node:fs';
 import os from 'node:os';
 import path from 'node:path';
 import {verifyLocalRadioPackage,startLocalRadioPortal} from '../systemia/network/community-radio-offline-portal.mjs';
+import {createCommunityRadioClockGuard} from '../systemia/network/community-radio-clock-guard.mjs';
 
 const time='2026-10-16T23:00:00Z';
 function fixture(){
@@ -31,3 +32,13 @@ test('tampered audio, symlink escape or traversal name fails closed',()=>{const 
 test('HTTP listener is loopback-only and plays a byte-range of local WAV',async()=>withServer(async(f,p)=>{assert.equal(p.server.address().address,'127.0.0.1');const page=await fetch(p.origin+'/');assert.equal(page.status,200);const html=await page.text();assert.match(html,/Locally cached recording/);assert.match(html,/&lt;script&gt;not real&lt;\/script&gt;/);assert.doesNotMatch(html,/<script>not real<\/script>/);const audio=await fetch(p.origin+'/audio',{headers:{range:'bytes=0-3'}});assert.equal(audio.status,206);assert.equal(audio.headers.get('content-range'),'bytes 0-3/1644');assert.equal(await audio.text(),'RIFF');const h=await fetch(p.origin+'/health');const status=await h.json();assert.equal(status.fm_broadcast,false);assert.equal(status.public_access,false);}));
 test('no mutating routes, device enrollment or arbitrary filesystem exposure',async()=>withServer(async(f,p)=>{assert.equal((await fetch(p.origin+'/',{method:'POST'})).status,405);assert.equal((await fetch(p.origin+'/api/enroll')).status,404);assert.equal((await fetch(p.origin+'/etc/passwd')).status,404);assert.equal((await fetch(p.origin+'/audio',{headers:{range:'bytes=999999-999999'}})).status,416);}));
 test('already-running service refuses stale or subsequently corrupted bulletin',async()=>{const f=fixture();let server;let now=time;try{const p=await startLocalRadioPortal({dir:f.dir,publicKey:f.publicKey,now:()=>new Date(now)});server=p.server;now='2026-10-17T01:00:00Z';assert.equal((await fetch(p.origin+'/')).status,503);now=time;fs.writeFileSync(path.join(f.dir,'fixture.wav'),'corrupted');assert.equal((await fetch(p.origin+'/audio')).status,503);}finally{if(server)await new Promise(ok=>server.close(ok));f.close();}});
+
+test('persisted clock rollback fails closed on already-started signed audio portal',async()=>{const f=fixture();let server;try{
+ const stateDir=path.join(f.dir,'private-state');fs.mkdirSync(stateDir,{mode:0o700});let clock=time;
+ const guard=createCommunityRadioClockGuard({stateDir,initialize:true,now:clock});
+ const portal=await startLocalRadioPortal({dir:f.dir,publicKey:f.publicKey,clockGuard:guard,now:()=>new Date(clock)});server=portal.server;
+ assert.equal((await fetch(portal.origin+'/')).status,200);
+ clock='2026-10-16T23:05:00Z';assert.equal((await fetch(portal.origin+'/audio')).status,200);
+ clock='2026-10-16T23:00:00Z';assert.equal((await fetch(portal.origin+'/audio')).status,503);
+ assert.throws(()=>createCommunityRadioClockGuard({stateDir,now:clock}),/wall_clock_rollback/);
+ }finally{if(server)await new Promise(ok=>server.close(ok));f.close();}});

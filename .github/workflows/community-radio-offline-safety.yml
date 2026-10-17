@@ -8,6 +8,12 @@ on:
       - 'tests/community-radio-offline-portal.test.mjs'
       - 'tests/community-radio-lan-lab.test.mjs'
       - 'systemia/network/community-radio-lan-lab.mjs'
+      - 'systemia/network/community-radio-clock-guard.mjs'
+      - 'systemia/network/community-radio-field-evidence.mjs'
+      - 'tests/community-radio-clock-guard.test.mjs'
+      - 'tests/community-radio-field-evidence.test.mjs'
+      - 'scripts/community-radio-review-field-receipt.mjs'
+      - 'systemia/network/fixtures/community-radio-field-attestation-template.json'
       - 'scripts/community-radio-offline-demo.mjs'
       - 'systemia/network/COMMUNITY-RADIO-LOCAL-PORTAL.md'
       - '.github/workflows/community-radio-offline-safety.yml'
@@ -20,6 +26,12 @@ on:
       - 'tests/community-radio-offline-portal.test.mjs'
       - 'tests/community-radio-lan-lab.test.mjs'
       - 'systemia/network/community-radio-lan-lab.mjs'
+      - 'systemia/network/community-radio-clock-guard.mjs'
+      - 'systemia/network/community-radio-field-evidence.mjs'
+      - 'tests/community-radio-clock-guard.test.mjs'
+      - 'tests/community-radio-field-evidence.test.mjs'
+      - 'scripts/community-radio-review-field-receipt.mjs'
+      - 'systemia/network/fixtures/community-radio-field-attestation-template.json'
       - 'scripts/community-radio-offline-demo.mjs'
       - '.github/workflows/community-radio-offline-safety.yml'
   workflow_dispatch:
@@ -41,4 +53,7 @@ jobs:
           node --check systemia/network/community-radio-offline-portal.mjs
           node --check scripts/community-radio-offline-demo.mjs
           node --check systemia/network/community-radio-lan-lab.mjs
-          node --test tests/community-broadcast-continuity.test.mjs tests/community-radio-offline-portal.test.mjs tests/community-radio-lan-lab.test.mjs
+          node --check systemia/network/community-radio-clock-guard.mjs
+          node --check systemia/network/community-radio-field-evidence.mjs
+          node --check scripts/community-radio-review-field-receipt.mjs
+          node --test tests/community-broadcast-continuity.test.mjs tests/community-radio-offline-portal.test.mjs tests/community-radio-lan-lab.test.mjs tests/community-radio-clock-guard.test.mjs tests/community-radio-field-evidence.test.mjs
