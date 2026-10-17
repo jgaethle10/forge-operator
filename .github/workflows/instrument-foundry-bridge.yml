@@ -6,6 +6,8 @@ on:
       - 'systemia/media-studio/instrument-foundry-bridge.mjs'
       - 'systemia/media-studio/instrument-foundry-bridge.test.mjs'
       - 'systemia/media-studio/instrument-foundry-pulsegrid.integration.test.mjs'
+      - 'systemia/media-studio/instrument-foundry-resolver.mjs'
+      - 'systemia/media-studio/instrument-foundry-resolver.test.mjs'
       - 'systemia/media-studio/INSTRUMENT-FOUNDRY.md'
       - '.github/workflows/instrument-foundry-bridge.yml'
   push:
@@ -25,4 +27,4 @@ jobs:
         with:
           node-version: '22'
       - name: Foundry custody and import tests
-        run: node --experimental-strip-types --test systemia/media-studio/instrument-foundry-bridge.test.mjs systemia/media-studio/instrument-foundry-pulsegrid.integration.test.mjs
+        run: node --experimental-strip-types --test systemia/media-studio/instrument-foundry-bridge.test.mjs systemia/media-studio/instrument-foundry-pulsegrid.integration.test.mjs systemia/media-studio/instrument-foundry-resolver.test.mjs
