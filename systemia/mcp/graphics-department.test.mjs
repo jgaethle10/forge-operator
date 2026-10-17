@@ -35,6 +35,8 @@ test('MCP initialize, discovery, safe annotations and unknown tool', () => {
   assert.ok(tools.every((tool) => tool.annotations.readOnlyHint));
   assert.equal(rpc('tools/call', { name: 'unknown' }).error.code, -32602);
   assert.equal(rpc('does/not/exist').error.code, -32601);
+  const disclosure = rpc('tools/call', {name:'graphics_get_capabilities'}).result.structuredContent;
+  assert.equal(disclosure.creativeReviewState, 'founder_rejected_generic_gallery_20261016');
   assert.equal(executeGraphicsMcpRpc({ jsonrpc: '2.0', method: 'notifications/initialized' }), null);
 });
 
@@ -220,6 +222,8 @@ test('art direction produces 48 deterministic layout, palette and format combina
         assert.equal(output.sha256, crypto.createHash('sha256').update(output.data).digest('hex'));
         assert.equal(output.sha256, renderArtDirectedSvg(request).sha256);
         assert.equal(output.paymentAuthority, false);
+        assert.equal(output.showcaseAuthority, false);
+        assert.equal(output.creativeReviewState, 'founder_rejected_generic_gallery_20261016');
         assert.equal(output.publicationAuthority, false);
         hashes.add(output.sha256);
       }
