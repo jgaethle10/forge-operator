@@ -7,6 +7,7 @@ import {SCHEMA} from './incident-event.mjs';
 const ID=/^[A-Za-z0-9_.:@/-]{1,160}$/;
 const SHA=/^[a-f0-9]{40}$/;
 const UTC=/^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(?:\.\d+)?Z$/;
+const providerChecked=new WeakSet();
 const STATES=new Set(['queued','in_progress','completed','waiting','pending','requested','action_required']);
 function hold(x){throw new Error('GITHUB_ACTIONS_READONLY_HELD: '+x);}
 function timestamp(x){
@@ -19,7 +20,7 @@ function scope({repo,workflow,run_id,tenant_id,mission_id}){
   if(!Number.isSafeInteger(Number(run_id))||Number(run_id)<1||String(run_id).length>16)hold('invalid run identifier');
   if(tenant_id!=='evercraft'||mission_id!=='evercraft-agent-continuity-fabric-20261016')hold('tenant or mission not authorized for adapter');
 }
-export function checkedGithubRun(run,config){
+function checkedGithubRun(run,config){
   scope(config);
   if(!run||typeof run!=='object'||Array.isArray(run))hold('missing provider run');
   if(run.id!==Number(config.run_id)||run.repository?.full_name!==config.repo)hold('provider run identity mismatch');
@@ -30,12 +31,14 @@ export function checkedGithubRun(run,config){
   timestamp(run.created_at);
   if(run.run_started_at!==null&&run.run_started_at!==undefined)timestamp(run.run_started_at);
   if(run.html_url!=='https://github.com/'+config.repo+'/actions/runs/'+run.id)hold('provider run URL mismatch');
-  return Object.freeze({
+  const observation=Object.freeze({
     run_id:run.id,run_attempt:run.run_attempt,workflow_file:config.workflow,repository:config.repo,head_sha:run.head_sha,
     github_status:run.status,github_conclusion:run.conclusion,provider_created_at:run.created_at,provider_started_at:run.run_started_at||null,
     provider_url:run.html_url,
     evidence_boundary:'GITHUB_WORKFLOW_STATE_ONLY_NOT_AGENT_OR_EXTERNAL_EFFECT'
   });
+  providerChecked.add(observation);
+  return observation;
 }
 /** Call only from a token with actions:read; enforce exact GET endpoint, no redirects. */
 export async function fetchOwnedGithubRun({repo,workflow,run_id,tenant_id,mission_id,token,fetcher=fetch}){
@@ -58,7 +61,7 @@ export async function fetchOwnedGithubRun({repo,workflow,run_id,tenant_id,missio
 }
 /** A reported queue state is NOT evidence that surviving subprocesses are terminated. */
 export function githubRunToIncidentEvent(observation,{tenant_id,mission_id,observed_at}){
-  if(!observation||observation.evidence_boundary!=='GITHUB_WORKFLOW_STATE_ONLY_NOT_AGENT_OR_EXTERNAL_EFFECT')hold('not a checked source observation');
+  if(!observation||!providerChecked.has(observation))hold('not a provider-fetched checked source observation');
   const config={repo:observation.repository,workflow:observation.workflow_file,run_id:observation.run_id,tenant_id,mission_id};
   scope(config);
   timestamp(observed_at);
