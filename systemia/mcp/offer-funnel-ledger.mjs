@@ -22,7 +22,8 @@ export const DEFAULT_OFFER_FUNNEL_PATH=path.join(
 
 export function normalizeOfferFunnelSource(value){
  const candidate=String(value??'').trim().toLowerCase();
- if(!candidate)return 'unattributed';
+ if(!candidate||candidate==='unattributed')return 'unattributed';
+ if([...SOURCES.values()].includes(candidate))return candidate;
  if(!/^[a-z0-9_-]{1,40}$/.test(candidate))return 'unattributed';
  return SOURCES.get(candidate)||'other_claimed';
 }
@@ -55,7 +56,7 @@ export function createOfferFunnelLedger({filePath,now=()=>new Date()}={}){
    day_utc:time.toISOString().slice(0,10),
    offer:'workflow-xray',
    stage,
-   source:normalizeOfferFunnelSource(source.replace?.(/_claimed$/,'')||source),
+   source:normalizeOfferFunnelSource(source),
    quality:QUALITY.has(quality)?quality:'ordinary_http',
    evidence:'http_request_only_not_unique_or_paid',
   };
