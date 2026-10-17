@@ -181,3 +181,41 @@ jobs:
           path: /tmp/blackbox-cross-job-acceptance.json
           if-no-files-found: error
           retention-days: 14
+
+
+  # Actual Saban scheduler/lease/retry test harness. This is a separate CI job
+  # with no access to production service tokens or grants. Synthetic fixtures
+  # are not a canonical Systemia preflight or delegated production authority.
+  saban-adversarial-review:
+    name: Saban bounded Black Box review
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Saban kernel scheduler and lease proof
+        run: |
+          set -euo pipefail
+          npm run proof:saban-kernel | tee /tmp/saban-kernel-proof.log
+          grep -q '"status":"pass"' /tmp/saban-kernel-proof.log
+      - name: Saban Black Box adversarial scheduler tests
+        run: node --test systemia/agent-continuity/saban-blackbox-review.test.mjs
+      - name: Execute Saban eight-work-item local security review
+        run: |
+          set -euo pipefail
+          node systemia/agent-continuity/saban-blackbox-review-cli.mjs | tee /tmp/saban-blackbox-review.json
+          grep -q '"runner": "REAL_SABAN_WORK_STATE_AND_SCHEDULER"' /tmp/saban-blackbox-review.json
+          grep -q '"status": "PASS_SYNTHETIC_REVIEW_ONLY"' /tmp/saban-blackbox-review.json
+          grep -q '"admission_readback": "NOT_RUN_CANONICAL_GATE"' /tmp/saban-blackbox-review.json
+          grep -q '"execution_authority": "NONE_READ_ONLY"' /tmp/saban-blackbox-review.json
+      - name: Archive Saban governed adversarial review
+        uses: actions/upload-artifact@v4
+        with:
+          name: saban-blackbox-readonly-review
+          path: /tmp/saban-blackbox-review.json
+          if-no-files-found: error
+          retention-days: 14
