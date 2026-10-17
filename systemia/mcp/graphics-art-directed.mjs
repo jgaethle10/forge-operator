@@ -122,16 +122,24 @@ function artArchitecture(x, y, w, h, palette) {
     '" stroke="' + palette.accent + '" stroke-width="7" stroke-linecap="round"/>');
   return rects.join('');
 }
-function artType(x, y, w, h, palette) {
+function artType(x, y, w, h, palette, brandName) {
+  // Typography must reflect the caller's actual, unverified brand text.
+  // A constant decorative "Z" is not a client monogram.
+  const letters = brandName.split(/\s+/u).filter(Boolean).slice(0, 2)
+    .map((word) => [...word][0] || '').join('').toLocaleUpperCase('en-US');
   const midX = x + w / 2, midY = y + h / 2;
   const size = Math.min(w, h) * .72;
-  return '<circle cx="' + midX + '" cy="' + midY + '" r="' + (size * .43) + '" fill="' + palette.panel + '"/>' +
-    '<path d="M' + (midX - size * .38) + ' ' + (midY - size * .27) +
-    ' L' + (midX + size * .35) + ' ' + (midY - size * .27) + ' L' +
-    (midX - size * .24) + ' ' + (midY + size * .32) +
-    ' L' + (midX + size * .36) + ' ' + (midY + size * .32) +
-    '" stroke="' + palette.accent + '" stroke-width="' + (size * .11) +
-    '" stroke-linecap="square" stroke-linejoin="miter" fill="none"/>';
+  const typeSize = Math.round(size * (letters.length === 1 ? .62 : .52));
+  const lineY = midY + size * .33;
+  return '<circle cx="' + midX + '" cy="' + midY + '" r="' + (size * .43) +
+    '" fill="' + palette.panel + '" stroke="' + palette.hairline + '" stroke-width="2"/>' +
+    '<text x="' + midX + '" y="' + (midY + typeSize * .33) +
+    '" text-anchor="middle" font-family="Arial,Helvetica,sans-serif" font-size="' +
+    typeSize + '" font-weight="900" letter-spacing="-5" fill="' + palette.accent +
+    '">' + esc(letters) + '</text>' +
+    '<path d="M' + (midX - size * .25) + ' ' + lineY + ' L' +
+    (midX + size * .25) + ' ' + lineY + '" stroke="' + palette.accent +
+    '" stroke-width="4" stroke-linejoin="miter" fill="none"/>';
 }
 
 export function renderArtDirectedSvg(raw) {
@@ -156,7 +164,7 @@ export function renderArtDirectedSvg(raw) {
   if (wide && summaryBottom >= h * .72) throw new Error('graphics_art_text_overflows_canvas');
   const art = b.treatment === 'orbit' ? artOrbit(artX, artY, artW, artH, p) :
     b.treatment === 'architecture' ? artArchitecture(artX, artY, artW, artH, p) :
-    artType(artX, artY, artW, artH, p);
+    artType(artX, artY, artW, artH, p, b.brandName);
   const kickerSize = wide ? 18 : 17;
   const footer = Math.round(h * .94);
   const ctaWidth = wide ? Math.round(w * .45) : w - inset * 2;
