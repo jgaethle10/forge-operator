@@ -37,3 +37,12 @@ test('all actions are display-only and no write webhooks, purchase or data sync 
  assert.doesNotMatch(source,/\bfetch\(|\bhttps\.request\(|\bPOST\b|publish_diary_items|read_jobs|write_jobs|manage_customers|sessionStorage|localStorage/);
  assert(!JSON.stringify(manifest).includes('billing'));
 });
+
+
+test('manifest is compatible with pinned local ServiceM8 Addon Kit package',()=>{
+ const pkg=JSON.parse(readFileSync(new URL('../package.json',import.meta.url),'utf8'));
+ assert.equal(pkg.private,true);
+ assert.equal(pkg.devDependencies['@servicem8/addon-kit'],'1.3.1');
+ assert.equal(manifest.$schema,'./node_modules/@servicem8/addon-kit/addon-schema.json');
+ assert.equal(Object.hasOwn(manifest,'addonTargetAudience'),false,'Addon Kit 1.3.1 rejects this optional field');
+});
