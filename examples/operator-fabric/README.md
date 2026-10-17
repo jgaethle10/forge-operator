@@ -14,11 +14,12 @@ This example deliberately imports **zero internal Evercraft code** and requires 
 From the repository checkout:
 
 ```bash
-node --test examples/operator-fabric/test/public-discovery.test.mjs
+node --test examples/operator-fabric/test/*.test.mjs
+node examples/operator-fabric/independent-tool-client.mjs
 node examples/operator-fabric/public-discovery.mjs
 ```
 
-The first command verifies behavior against a synthetic loopback-only MCP server (JSON and SSE response shapes plus fail-closed negatives). The second connects to the **real owned public Fabric domain** and tries:
+The first command verifies synthetic JSON/SSE remote MCP response handling and an independent local contributed MCP test server. The second spawns a real, least-authority local **test tool**, performs MCP initialize/tools/list/tools/call, and verifies the SHA-256 receipt returned from a disposable nonce. No remote publishing, customer information, or money is involved. The third command connects to the **real owned public Fabric domain** and tries:
 
 1. MCP `initialize` using the established `2025-03-26` protocol contract.
 2. `tools/list`, verifying the three published read-only discovery tool names.
@@ -28,6 +29,14 @@ The first command verifies behavior against a synthetic loopback-only MCP server
 The tool produces a human-readable JSON receipt: protocol, observed time, exact owned origin, matched public capability, whether a human offer URL is present, and explicit **false** flags for payment, checkout, execution authorization, publisher approval, and confirmed outside developer adoption.
 
 This **does not open a buyer form**, initiate a checkout, run specialist execution, transfer files, store credentials, submit a partner listing, enroll a customer, or modify any remote state. It rejects redirects, noncanonical origins, malformed JSON-RPC responses, unexpected matches, and off-domain buyer URLs. Failure exits nonzero. The local synthetic server is a test harness, not proof of production health.
+
+## Saban and boardroom proof boundaries
+
+The PR workflow uses the existing Saban `systemia/saban/discovery-path-probe.mjs`, which is already scheduled hourly elsewhere. It requests real public remote MCP initialization, discovery and exact human offer option readback with two read-only HTTP client profiles. The workflow then runs this standalone outsider client from the same independent GitHub-hosted machine. The receipt artifact records the Saban results and independent outsider response. It creates **no scheduled duplicate**, checkout, payment or actual third-party partner.
+
+The existing Evercraft AI Boardroom can evaluate the resulting **public-safe receipts** once its authenticated advisor-run worker is operational. On October 17 its latest two run requests were still `queued` and `held`; metadata-only gate #1342 is a verification mechanism, **not** evidence that the boardroom actually convened. Do not write synthetic opinions in place of identified model outputs or trigger unapproved model spending. Boardroom approval remains an explicit next gate.
+
+The local contributed test tool is `examples/operator-fabric/local-test-tool.mjs`. It offers only `operator_probe_nonce`, a deterministic test-nonce hash. It has no remote network integration and must **not** be added to the live Fabric catalog without Systemia review and contributor identity/permissions approval.
 
 ## If live access fails
 
