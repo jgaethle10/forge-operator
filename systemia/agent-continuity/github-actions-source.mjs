@@ -8,6 +8,7 @@ const ID=/^[A-Za-z0-9_.:@/-]{1,160}$/;
 const SHA=/^[a-f0-9]{40}$/;
 const UTC=/^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(?:\.\d+)?Z$/;
 const providerChecked=new WeakSet();
+const EVENT_TRIGGERS=new Set(['pull_request','push','schedule','workflow_dispatch']);
 const STATES=new Set(['queued','in_progress','completed','waiting','pending','requested','action_required']);
 function hold(x){throw new Error('GITHUB_ACTIONS_READONLY_HELD: '+x);}
 function timestamp(x){
@@ -28,12 +29,13 @@ function checkedGithubRun(run,config){
   if(!SHA.test(run.head_sha))hold('missing commit identity');
   if(!STATES.has(run.status)||typeof run.run_attempt!=='number'||!Number.isSafeInteger(run.run_attempt)||run.run_attempt<1)hold('invalid GitHub run state');
   if(run.conclusion!==null && typeof run.conclusion!=='string')hold('invalid conclusion field');
+  if(!EVENT_TRIGGERS.has(run.event))hold('unrecognized provider trigger event');
   timestamp(run.created_at);
   if(run.run_started_at!==null&&run.run_started_at!==undefined)timestamp(run.run_started_at);
   if(run.html_url!=='https://github.com/'+config.repo+'/actions/runs/'+run.id)hold('provider run URL mismatch');
   const observation=Object.freeze({
     run_id:run.id,run_attempt:run.run_attempt,workflow_file:config.workflow,repository:config.repo,head_sha:run.head_sha,
-    github_status:run.status,github_conclusion:run.conclusion,provider_created_at:run.created_at,provider_started_at:run.run_started_at||null,
+    github_status:run.status,github_conclusion:run.conclusion,trigger_event:run.event,provider_created_at:run.created_at,provider_started_at:run.run_started_at||null,
     provider_url:run.html_url,
     evidence_boundary:'GITHUB_WORKFLOW_STATE_ONLY_NOT_AGENT_OR_EXTERNAL_EFFECT'
   });
