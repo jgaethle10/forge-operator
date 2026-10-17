@@ -56,10 +56,18 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ github.token }}
         run: |
+          set -euo pipefail
           node ../../systemia/agent-continuity/github-actions-lab.mjs | tee /tmp/blackbox-source-lab.json
           grep -q '"live_agent_telemetry_verified": false' /tmp/blackbox-source-lab.json
           grep -q '"cross_product_runtime_integrated": false' /tmp/blackbox-source-lab.json
           grep -q '"same_root_local_readback": true' /tmp/blackbox-source-lab.json
+      - name: Save sanitized provider-readback laboratory receipt
+        uses: actions/upload-artifact@v4
+        with:
+          name: blackbox-owned-github-readback-lab
+          path: /tmp/blackbox-source-lab.json
+          if-no-files-found: error
+          retention-days: 14
       - name: Cross-build candidate binaries
         run: |
           GOOS=darwin GOARCH=arm64 go build -o /tmp/entire-blackbox_darwin_arm64 .
