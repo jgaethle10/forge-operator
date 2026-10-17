@@ -21,6 +21,10 @@ test('FAIE AgNormal launch canary runs a bounded live investigation',()=>{
   assert.ok(script.includes('evercraft.faie.investigation.v1'));
   assert.ok(script.includes('SENSE_CHALLENGE_DECIDE'));
   assert.ok(script.includes('evidence_acquisition_queue'));
+  assert.ok(script.includes('faie_agnormal_water_evidence_missing'));
+  assert.ok(script.includes('faie_agnormal_water_dimension_missing'));
+  assert.ok(script.includes('faie_agnormal_water_provenance_missing'));
+  assert.ok(script.includes("finding.dimensions.includes('water')"));
   assert.ok(script.includes('human_review_required!==true'));
   assert.ok(script.includes('action_authority!==false'));
   assert.ok(script.includes('decision_authority!==false'));
@@ -54,5 +58,7 @@ test('FAIE launch workflow retries only deploy-lag signatures',()=>{
   assert.ok(workflow.includes('http_404:/faie/agnormal/'));
   assert.ok(workflow.includes('faie_health_design_partner_path_mismatch'));
   assert.ok(workflow.includes('json_post_http_404:/api/faie/investigate'));
+  assert.ok(workflow.includes('faie_agnormal_water_evidence_missing'));
+  assert.ok(workflow.includes('faie_agnormal_water_dimension_missing'));
   assert.ok(workflow.includes('retry=false'));
 });
