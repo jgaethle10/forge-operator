@@ -20,6 +20,12 @@ Evercraft founder Jesse Gaethle reports beginning with an **iPhone, ChatGPT and 
 
 **Verified:** Public code and synthetic fixtures; seven local Node tests; original proof CI passed. A [new isolated GitHub Actions test](https://github.com/jgaethle10/forge-operator/actions/runs/38984442216) installed actual neatroots v0.2.8 and got HTTP 200 acceptance for both synthetic traces from its real local collector. **Not verified:** neatroots automatically diagnosed the contradiction, production payment or fulfillment, Neatlogs staff review, a merged upstream contribution, or a hiring outcome.
 
+## Follow-up work sample: did the external action happen?
+
+The [synthetic stateful recovery proof](integrations/neatroots/ambiguous-external-effect.mjs) models an action that commits, loses its acknowledgment, then triggers either authoritative receipt reconciliation, a safe pending state, or an idempotent retry with no second synthetic effect. [Unit tests](tests/ambiguous-external-effect.test.mjs) cover nine cases including restart, changed payload, invalid identifiers and trace representation. [Actual isolated CI receipt](https://github.com/jgaethle10/forge-operator/actions/runs/38995426901) confirms **19 passing tests** across the portfolio and HTTP 200 acceptance of all **five synthetic traces** by a real local neatroots v0.2.8 collector.
+
+**What this does not prove:** production-grade distributed idempotency, cross-process durability, real payment settlement, automatic neatroots contradiction detection, or an upstream patch.
+
 ## Where the tool story matters
 
 During a GitHub account suspension, the founder used an Entire-native repo approach for the neatHack Black Box project. GitHub access later returned. This is evidence of a practical contingency decision, **not proof of hackathon eligibility, judging, or prizes**.
