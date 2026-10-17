@@ -115,6 +115,7 @@ function help(){
     'evercraft tool add path/to/manifest.json       Metadata only; no execution',
     'evercraft tool list',
     'evercraft tool inspect TOOL_ID',
+    'evercraft tool export TOOL_ID --format portable|vscode  (JSON only, never executes)',
     'evercraft tool remove TOOL_ID                 Removes registration, not files',
     'evercraft capability validate ./candidate.json  Offline review of publisher manifest',
     'evercraft tool probe TOOL_ID --run [--protocol modern] (default: legacy)',
@@ -149,6 +150,16 @@ export async function main(args=process.argv.slice(2)){
   if(command==='remove'){
     store.tools=store.tools.filter(x=>x.id!==id);saveStore(store);
     return write({removed:id,executableDeleted:false});
+  }
+  if(command==='export'){
+    const index=args.indexOf('--format');
+    if(index<0||!args[index+1]||!['portable','vscode'].includes(args[index+1]))fail('Usage: tool export ID --format portable|vscode');
+    if(args.length!==5)fail('Export accepts only tool ID and --format portable|vscode.');
+    // Exports only the already-registered command/args. No credentials, network calls,
+    // execution, local client configuration modification or tool-granted permissions.
+    const profile=args[index+1];
+    const entry=profile==='vscode'?{type:'stdio',command:tool.command,args:tool.args}:{command:tool.command,args:tool.args};
+    return write(profile==='vscode'?{servers:{[tool.id]:entry}}:{mcpServers:{[tool.id]:entry}});
   }
   const protocolIndex=args.indexOf('--protocol');
   const protocol=protocolIndex<0?'legacy':args[protocolIndex+1];
