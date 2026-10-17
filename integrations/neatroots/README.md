@@ -50,3 +50,13 @@ Open `http://localhost:4100` and select the `evercraft-checkout-evidence-demo` p
 **Next verification gate:** Independently observe neatroots rules or configured decision-model findings on both real traces, with trace IDs, version, check configuration and screenshot evidence; then consider a focused upstream contribution if a confirmed gap exists.
 
 Sources: [neatroots HTTP example](https://github.com/neatlogs/neatroots/tree/main/examples/http-api), [checks documentation](https://github.com/neatlogs/neatroots/blob/main/docs/checks.md), [Apache-2.0 upstream](https://github.com/neatlogs/neatroots).
+
+## Additional execution proof: ambiguous external effects
+
+The companion [synthetic recovery simulator](./ambiguous-external-effect.mjs) goes beyond comparing scripted final answers. It models a **state-changing provider** that commits a synthetic payment effect and then loses its acknowledgment; the agent must either query the provider for the authoritative receipt, keep fulfillment blocked when lookup fails, or retry with the **same** stable idempotency key. Distinct request payloads cannot silently reuse a key.
+
+- Run: `node --test tests/ambiguous-external-effect.test.mjs`
+- Generate 3 trace records: `node integrations/neatroots/ambiguous-external-effect.mjs`
+- [CI receipt](https://github.com/jgaethle10/forge-operator/actions/runs/38995426901): all **19** combined isolated tests passed, and the real local neatroots v0.2.8 collector accepted 5 total synthetic traces, including all 3 recovery scenarios, with HTTP 200 each.
+- Safety: a deterministic in-memory fake provider; **zero real charges or irreversible external actions**. The invariant `providerEffects === 1` is tested across lost-ack and idempotent retry cases.
+- Limit: a local in-memory simulator cannot prove cross-process database durability, race-free distributed payment reconciliation, or neatroots' ability to diagnose the scenario. These remain future engineering/evaluation gates.
