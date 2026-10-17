@@ -4,7 +4,7 @@ import {createServer} from 'node:http';
 import {once} from 'node:events';
 import {probeFabric,validateOrigin,EXPECTED_ID} from '../public-discovery.mjs';
 
-async function serve({mode='json',missingTool=false,badMatch=false,badOffer=false,redirect=false}={}){
+async function serve({mode='json',missingTool=false,badMatch=false,badOffer=false,redirect=false,badIdentity=false}={}){
   const seen=[];
   const server=createServer(async(req,res)=>{
     if(redirect){res.writeHead(302,{location:'https://example.org/mcp'});res.end();return;}
@@ -16,7 +16,7 @@ async function serve({mode='json',missingTool=false,badMatch=false,badOffer=fals
     let result;
     switch(message.method){
       case 'initialize':
-        result={serverInfo:{name:'synthetic-owned-fabric',version:'test'},protocolVersion:'2025-03-26',capabilities:{tools:{}}};break;
+        result={serverInfo:{name:badIdentity?'untrusted-lookalike':'evercraft-fabric',version:'test'},protocolVersion:'2025-03-26',capabilities:{tools:{}}};break;
       case 'tools/list':
         result={tools:(missingTool?all.slice(0,2):all).map(name=>({name,description:'Read-only synthetic fixture'}))};break;
       case 'tools/call':
@@ -85,5 +85,11 @@ test('fail closed on external buyer URL even though client never opens buyer lin
 test('refuse redirects instead of forwarding requests to new origins',async()=>{
  const host=await serve({redirect:true});
  try{await assert.rejects(()=>probeFabric({origin:host.origin,allowLoopback:true}),/redirect refused/);}
+ finally{await host.close();}
+});
+
+test('fail closed when public endpoint claims an unexpected MCP server identity',async()=>{
+ const host=await serve({badIdentity:true});
+ try{await assert.rejects(()=>probeFabric({origin:host.origin,allowLoopback:true}),/server identity mismatch/);}
  finally{await host.close();}
 });
