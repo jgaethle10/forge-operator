@@ -4,7 +4,7 @@ import fs from 'node:fs';
 import {withOwnedNativeWorkflowXray} from '../systemia/chum/owned-native-offer-overlay.mjs';
 
 const machine=JSON.parse(fs.readFileSync('public/.well-known/evercraft-machine-catalog.json','utf8'));
-const authorizedOffers=withOwnedNativeWorkflowXrayauthorizedOffers;
+const authorizedOffers=withOwnedNativeWorkflowXray(machine.offers||[]);
 const capabilities=JSON.parse(fs.readFileSync('public/chum/capabilities.json','utf8'));
 const sellNow=JSON.parse(fs.readFileSync('public/chum/sell-now.json','utf8'));
 
