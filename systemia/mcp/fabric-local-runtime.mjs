@@ -960,6 +960,11 @@ export async function startFabricLocalRuntime({
             }),
             signal:controller.signal,
           });
+        }catch(error){
+          // The provider request failed before a validated checkout could be returned.
+          // Record the outage, not the buyer email, provider URL, or exception body.
+          observeXray(slug,'checkout_unavailable',{source:funnelSource,quality:funnelQuality});
+          throw error;
         }finally{
           clearTimeout(timer);
         }
@@ -970,6 +975,7 @@ export async function startFabricLocalRuntime({
           result.payment_state='unpaid';
         }
         if(!upstream.ok||result?.ok!==true){
+          observeXray(slug,'checkout_unavailable',{source:funnelSource,quality:funnelQuality});
           if(isForm){
             return sendText(
               res,
@@ -993,6 +999,7 @@ export async function startFabricLocalRuntime({
           if(candidate.protocol==='https:') checkoutUrl=candidate.toString();
         }catch{}
         if(result?.checkout_ready!==true||!checkoutUrl||(auditedDomain&&(result?.context_persisted!==true||result?.audited_domain!==auditedDomain))){
+          observeXray(slug,'checkout_unavailable',{source:funnelSource,quality:funnelQuality});
           if(isForm){
             return sendText(
               res,
