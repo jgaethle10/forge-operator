@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import {fetchScheduledRevenueHeartbeat} from './github-heartbeat-source.mjs';
+import {fetchScheduledRevenueHeartbeat,fetchRevenueHeartbeatWorkflowConfiguration} from './github-heartbeat-source.mjs';
 import {githubRunToIncidentEvent} from './github-actions-source.mjs';
 const now=Date.parse('2026-10-17T15:50:00Z'), created_at='2026-10-17T15:42:00Z';
 const repo='jgaethle10/forge-operator', mission_id='evercraft-agent-continuity-fabric-20261016';
@@ -74,4 +74,35 @@ test('provider failures and future timestamps fail closed',async()=>{
  await assert.rejects(()=>fetchScheduledRevenueHeartbeat({...args,fetcher:async()=>({ok:true,text:async()=>'{bad'})}),/invalid listing JSON/);
  const future={...stub(),created_at:'2026-10-18T15:42:00Z'};
  await assert.rejects(()=>fetchScheduledRevenueHeartbeat({...args,fetcher:api([future],future)}),/created in future/);
+});
+
+test('workflow active/disabled source uses exact read-only metadata API, never confuses configured cron with delivered runs',async()=>{
+ const calls=[];
+ for(const state of ['active','disabled_manually','disabled_inactivity']){
+  const details={id:9911,path:'.github/workflows/revenue-autonomy-heartbeat.yml',
+    html_url:'https://github.com/jgaethle10/forge-operator/actions/workflows/revenue-autonomy-heartbeat.yml',state};
+  const result=await fetchRevenueHeartbeatWorkflowConfiguration({repo,token:'test-readonly-token',fetcher:async(u,opts)=>{
+    calls.push([u,opts]);return {ok:true,text:async()=>JSON.stringify(details)};
+  }});
+  assert.equal(result.provider_workflow_state,state);
+  assert.equal(result.metadata_readback_verified,true);
+  assert.equal(result.scheduler_dispatch_authorized,false);
+  assert.equal(result.effective_scheduler_cadence_verified,false);
+ }
+ assert.equal(calls.length,3);
+ for(const [url,opts] of calls){
+  assert.equal(url,'https://api.github.com/repos/jgaethle10/forge-operator/actions/workflows/revenue-autonomy-heartbeat.yml');
+  assert.equal(opts.method,'GET');assert.equal(opts.body,undefined);
+ }
+});
+test('workflow metadata spoofing and API failures fail closed',async()=>{
+ const valid={id:9911,path:'.github/workflows/revenue-autonomy-heartbeat.yml',
+   html_url:'https://github.com/jgaethle10/forge-operator/actions/workflows/revenue-autonomy-heartbeat.yml',state:'active'};
+ for(const x of [{...valid,id:0},{...valid,path:'.github/workflows/fake.yml'},
+                   {...valid,state:'enabled'}, {...valid,html_url:'https://attacker.example/workflow'}]){
+   await assert.rejects(()=>fetchRevenueHeartbeatWorkflowConfiguration({repo,token:'test-readonly-token',
+     fetcher:async()=>({ok:true,text:async()=>JSON.stringify(x)})}),/HEARTBEAT_SOURCE_HELD/);
+ }
+ await assert.rejects(()=>fetchRevenueHeartbeatWorkflowConfiguration({repo,token:'test-readonly-token',
+   fetcher:async()=>({ok:false,status:403})}),/workflow metadata HTTP 403/);
 });
