@@ -79,7 +79,7 @@ export async function probeFabric({origin=OWNED_ORIGIN,allowLoopback=false,fetch
     capabilities:{},
     clientInfo:{name:'evercraft-outsider-proof',version:'0.1.0'},
   });
-  if(!initialized?.serverInfo?.name)throw Error('MCP handshake lacked server identity');
+  if(initialized?.serverInfo?.name!=='evercraft-fabric')throw Error('Owned Fabric MCP server identity mismatch');
   const tools=await rpc('tools/list');
   const names=Array.isArray(tools?.tools)?tools.tools.map(x=>x.name):[];
   if(!EXPECTED_TOOLS.every(name=>names.includes(name)))throw Error('Expected read-only Fabric discovery tools missing');
