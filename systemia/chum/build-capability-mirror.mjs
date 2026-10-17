@@ -1,6 +1,7 @@
 import fs from 'node:fs';
 import path from 'node:path';
 import { humanStartState, humanStartUrl, machineReviewUrl } from './start-corridor.mjs';
+import { withOwnedNativeWorkflowXray } from './owned-native-offer-overlay.mjs';
 
 const catalog = JSON.parse(fs.readFileSync('public/.well-known/evercraft-machine-catalog.json','utf8'));
 const conformance = JSON.parse(fs.readFileSync('conformance/products.json','utf8'));
@@ -100,7 +101,7 @@ function reconciledInvocationStatus(offer, productConformance){
 }
 const items=[];
 
-for(const offer of catalog.offers||[]){
+for(const offer of withOwnedNativeWorkflowXray(catalog.offers||[])){
   const id=String(offer.public_id||'').trim();
   if(!id) continue;
   const productConformance=conformanceByCapabilityId.get(id)||null;
