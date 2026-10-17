@@ -20,6 +20,9 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
+      - name: Verify bounded Remote Operator status validator (offline)
+        run: node --test tests/validate-fabric-remote-operator-status.test.mjs
+
       - name: Probe configured outbound Remote Operator without exposing credentials
         shell: bash
         run: |
@@ -42,25 +45,30 @@ jobs:
             exit 1
           fi
 
-          node <<'NODE' > artifacts/fabric-remote-recovery-probe.json
+          node --input-type=module <<'NODE' > artifacts/fabric-remote-recovery-probe.json
+          import {validateRemoteOperatorStatus} from './scripts/validate-fabric-remote-operator-status.mjs';
           const endpoint=String(process.env.CAPACITY_ENDPOINT||'').replace(/\/$/,'');
           const token=String(process.env.CONTROL_TOKEN||'');
           const controller=new AbortController();
           const timer=setTimeout(()=>controller.abort(),15000);
           try{
+            if(new URL(endpoint).protocol!=='https:') throw new TypeError('insecure_remote_operator_endpoint');
             const response=await fetch(endpoint+'/v1/operator/status',{
               headers:{authorization:'Bearer '+token,accept:'application/json'},
               signal:controller.signal,
+              redirect:'error',
             });
             const body=await response.json().catch(()=>null);
-            if(!response.ok||!body){
+            const validation=validateRemoteOperatorStatus(body);
+            if(response.status!==200||!validation.valid){
               process.stdout.write(JSON.stringify({
                 schema:'evercraft.fabric.remote-recovery-probe.v1',
                 configured:true,
                 reachable:false,
                 mutation_performed:false,
-                state:'remote_operator_status_failed',
+                state:response.status!==200?'remote_operator_http_error':'remote_operator_status_invalid',
                 http_status:response.status,
+                validation_reason:validation.reason,
               },null,2)+'\n');
               process.exitCode=1;
             }else{
