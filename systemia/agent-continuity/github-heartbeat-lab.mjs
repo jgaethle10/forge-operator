@@ -5,7 +5,7 @@ import {generateKeyPairSync,sign} from 'node:crypto';
 import {mkdtempSync,rmSync} from 'node:fs';
 import {tmpdir} from 'node:os';
 import {join} from 'node:path';
-import {fetchScheduledRevenueHeartbeat} from './github-heartbeat-source.mjs';
+import {fetchScheduledRevenueHeartbeat,fetchRevenueHeartbeatWorkflowConfiguration} from './github-heartbeat-source.mjs';
 import {githubRunToIncidentEvent} from './github-actions-source.mjs';
 import {appendJournalEvent,readJournalEvent,localIncidentProjections} from './incident-journal.mjs';
 
@@ -14,6 +14,7 @@ const observed=await fetchScheduledRevenueHeartbeat({
  repo:process.env.GITHUB_REPOSITORY,tenant_id,mission_id,
  token:process.env.GITHUB_TOKEN,max_age_ms:45*60_000
 });
+const configuration=await fetchRevenueHeartbeatWorkflowConfiguration({repo:process.env.GITHUB_REPOSITORY,token:process.env.GITHUB_TOKEN});
 const summary={
  schema:'evercraft.blackbox.scheduled-heartbeat-source-lab.v1',
  source:'owned_revenue_autonomy_heartbeat_scheduled_github_run',
@@ -21,6 +22,8 @@ const summary={
  provider_query:observed.source_query,provider_source_state:observed.source_state,
  source_runs_returned:observed.source_count,
  provider_workflow:'revenue-autonomy-heartbeat.yml',
+ provider_workflow_configuration_state:configuration.provider_workflow_state,
+ provider_workflow_metadata_verified:configuration.metadata_readback_verified,
  provider_run_id:observed.run?.run_id??null,
  provider_reported_status:observed.run?.github_status??null,
  provider_reported_conclusion:observed.run?.github_conclusion??null,
@@ -62,7 +65,9 @@ if(observed.run){
    rmSync(journal_root,{force:true,recursive:true});
  }
 }
-if(summary.provider_source_state!=='SCHEDULED_RUN_PROVIDER_OBSERVED'){
+if(configuration.provider_workflow_state!=='active'){
+ summary.next_proof='HELD_GITHUB_WORKFLOW_CONFIGURATION_NOT_ACTIVE_OWNER_REVIEW_REQUIRED';
+}else if(summary.provider_source_state!=='SCHEDULED_RUN_PROVIDER_OBSERVED'){
  summary.next_proof='HELD_SCHEDULED_HEARTBEAT_MISSING_OR_STALE_CHECK_WORKFLOW_CADENCE_AND_PROVIDER_STATUS';
 }
 process.stdout.write(JSON.stringify(summary,null,2)+'\n');
