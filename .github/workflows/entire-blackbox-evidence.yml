@@ -4,6 +4,7 @@ on:
   pull_request:
     paths:
       - "integrations/entire-blackbox/**"
+      - "systemia/agent-continuity/**"
       - ".github/workflows/entire-blackbox-evidence.yml"
   workflow_dispatch:
 
@@ -33,6 +34,15 @@ jobs:
           grep -q '"externally_verified":false' /tmp/evidence.json
       - name: Four-state adversarial showcase
         run: bash demo.sh
+      - name: Synthetic shared-incident reconciliation
+        run: |
+          node --test ../../systemia/agent-continuity/reconcile.test.mjs
+          node ../../systemia/agent-continuity/reconcile.mjs \
+            ../../systemia/agent-continuity/scenario.synthetic.json \
+            /tmp/evidence.json > /tmp/synthetic-incident.json
+          grep -q '"live_integrated": false' /tmp/synthetic-incident.json
+          grep -q '"verified_collateral": \[\]' /tmp/synthetic-incident.json
+          grep -q '"canonical_admission": "NOT_ADMITTED"' /tmp/synthetic-incident.json
       - name: Cross-build candidate binaries
         run: |
           GOOS=darwin GOARCH=arm64 go build -o /tmp/entire-blackbox_darwin_arm64 .
