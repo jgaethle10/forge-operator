@@ -104,6 +104,23 @@ jobs:
           path: /tmp/blackbox-scheduled-cohort.json
           if-no-files-found: error
           retention-days: 14
+      - name: Four role receipt-chain cryptographic denial tests
+        run: node --test ../../systemia/agent-continuity/detached-receipt-chain.test.mjs
+      - name: Detached four-role laboratory receipt chain
+        run: |
+          set -euo pipefail
+          node ../../systemia/agent-continuity/detached-receipt-lab.mjs /tmp/blackbox-scheduled-cohort.json | tee /tmp/blackbox-detached-chain.json
+          grep -q '"production_authorized": false' /tmp/blackbox-detached-chain.json
+          grep -q '"source_artifact_sha256"' /tmp/blackbox-detached-chain.json
+          grep -q '"producer_delivery_consumer_independence": "NOT_PROVEN"' /tmp/blackbox-detached-chain.json
+          grep -q '"execution_authority": "NONE_READ_ONLY"' /tmp/blackbox-detached-chain.json
+      - name: Archive detached public-key-only reproducible lab evidence
+        uses: actions/upload-artifact@v4
+        with:
+          name: blackbox-four-role-detached-verifier-lab
+          path: /tmp/blackbox-detached-chain.json
+          if-no-files-found: error
+          retention-days: 14
       - name: Cross-build candidate binaries
         run: |
           GOOS=darwin GOARCH=arm64 go build -o /tmp/entire-blackbox_darwin_arm64 .
