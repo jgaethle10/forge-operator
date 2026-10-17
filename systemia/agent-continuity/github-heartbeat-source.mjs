@@ -94,11 +94,13 @@ export async function fetchRevenueHeartbeatWorkflowConfiguration({
   if(Buffer.byteLength(raw)>131072)hold('oversized workflow metadata');
   let data;
   try{data=JSON.parse(raw);}catch{hold('invalid workflow metadata JSON');}
-  if(!data||!Number.isSafeInteger(data.id)||data.id<1||
-    data.path!=='.github/workflows/'+HEARTBEAT||
-    data.html_url!=='https://github.com/'+repo+'/actions/workflows/'+HEARTBEAT||
-    typeof data.state!=='string'||!['active','disabled_manually','disabled_inactivity','deleted'].includes(data.state))
-    hold('workflow configuration metadata mismatch');
+  if(!data||!Number.isSafeInteger(data.id)||data.id<1)hold('workflow metadata invalid numeric id');
+  if(data.path!=='.github/workflows/'+HEARTBEAT)hold('workflow metadata path mismatch');
+  const expectedByPath='https://github.com/'+repo+'/actions/workflows/'+HEARTBEAT;
+  const expectedById='https://github.com/'+repo+'/actions/workflows/'+data.id;
+  if(data.html_url!==expectedByPath && data.html_url!==expectedById)hold('workflow metadata URL mismatch');
+  if(typeof data.state!=='string'||!['active','disabled_manually','disabled_inactivity','deleted'].includes(data.state))
+    hold('workflow metadata state unsupported');
   return Object.freeze({
     provider:'GITHUB_ACTIONS_READONLY',
     workflow_id:data.id,workflow_file:HEARTBEAT,
