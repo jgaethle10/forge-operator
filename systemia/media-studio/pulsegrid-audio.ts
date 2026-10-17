@@ -1,5 +1,7 @@
 import type { PulseGridAudioAsset, PulseGridSession, PulseGridTrack } from './pulsegrid-session.js';
 import { schedulePulseGridAudioBuffer } from './pulsegrid-audio-scheduler.mjs';
+import {selectFoundrySample, scheduleFoundryPianoNote, validateFoundryPatch} from './instrument-foundry-piano.mjs';
+import type {FoundryInstrumentPatch} from './instrument-foundry-piano.mjs';
 
 export type PulseGridClockMode = 'cold' | 'worklet' | 'fallback';
 export type PulseGridAudioAssetResolver = (asset:PulseGridAudioAsset)=>Promise<Blob|null>;
@@ -174,15 +176,36 @@ export class PulseGridAudioEngine {
     const context=this.context;
     const session=this.session;
     const resolver=this.assetResolver;
-    if(!context||!session||!resolver)return;
+    if(!context||!session)return;
+    const requiresVerifiedAudio=session.tracks.some(track=>{
+      const clip=track.clips[this.scene];
+      return Boolean(clip?.audio_asset_id || clip?.provenance?.foundry_piano_patch);
+    });
+    if(!resolver){
+      if(requiresVerifiedAudio)throw new Error('PulseGrid verified audio resolver is required for sampled playback.');
+      return;
+    }
 
     const wanted=new Map<string,PulseGridAudioAsset>();
     for(const track of session.tracks){
-      if(track.type!=='audio')continue;
       const clip=track.clips[this.scene];
-      if(!clip?.audio_asset_id)continue;
-      const asset=session.assets.find((candidate)=>candidate.id===clip.audio_asset_id);
-      if(asset&&asset.rights!=='restricted')wanted.set(asset.id,asset);
+      if(!clip)continue;
+      if(track.type==='audio'&&clip.audio_asset_id){
+        const asset=session.assets.find((candidate)=>candidate.id===clip.audio_asset_id);
+        if(!asset||asset.rights==='restricted')throw new Error('PulseGrid audio take is missing or restricted.');
+        wanted.set(asset.id,asset);
+      }
+      if(clip.provenance?.foundry_piano_patch){
+        const patch=clip.provenance.foundry_piano_patch as FoundryInstrumentPatch;
+        if(track.type!=='synth')throw new Error('Recorded piano patch requires a synth instrument track.');
+        validateFoundryPatch(patch,session.assets);
+        for(const note of clip.notes){
+          const selected=selectFoundrySample(patch,note.pitch,note.velocity);
+          const asset=session.assets.find(candidate=>candidate.id===selected.asset_id);
+          if(!asset)throw new Error('Foundry recording missing from canonical graph.');
+          wanted.set(asset.id,asset);
+        }
+      }
     }
 
     const loads:Promise<void>[]=[];
@@ -464,19 +487,26 @@ export class PulseGridAudioEngine {
       }
 
       const noteEvents = clip.notes.filter((note) => Math.round(note.start) === step);
+      const foundryPatch=clip.provenance?.foundry_piano_patch as FoundryInstrumentPatch|undefined;
       for (const note of noteEvents) {
         if (Math.random() > (note.probability ?? 1)) continue;
-        this.note(
-          bus.input,
-          track,
-          note.pitch,
-          time + (note.microtiming || 0) / 1000,
-          this.stepDuration(step) * Math.max(0.01, note.length),
-          note.velocity,
-        );
+        const noteTime=time+(note.microtiming||0)/1000;
+        const noteDuration=this.stepDuration(step)*Math.max(0.01,note.length);
+        if(foundryPatch){
+          const selected=selectFoundrySample(foundryPatch,note.pitch,note.velocity);
+          const buffer=this.audioBuffers.get(selected.asset_id);
+          if(!buffer)throw new Error('Verified Foundry piano recording was not prepared: '+selected.asset_id);
+          scheduleFoundryPianoNote({
+            context:this.context,destination:bus.input,buffer,pitch:note.pitch,
+            velocity:note.velocity,time:noteTime,duration:noteDuration,selection:selected,
+            createSource:()=>this.trackSource(this.context!.createBufferSource()),
+          });
+        }else{
+          this.note(bus.input,track,note.pitch,noteTime,noteDuration,note.velocity);
+        }
       }
 
-      if (!noteEvents.length && velocity > 0 && Math.random() <= probability) {
+      if (!foundryPatch && !noteEvents.length && velocity > 0 && Math.random() <= probability) {
         const pitch = track.id === 'bass' ? 36 : track.id === 'bell' ? 72 : 60;
         this.note(bus.input, track, pitch, time + microtime, this.stepDuration(step) * 0.85, velocity);
       }
