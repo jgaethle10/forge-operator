@@ -1,3 +1,6 @@
+import {validateFoundryPatch, selectFoundrySample} from './instrument-foundry-piano.mjs';
+import type {FoundryInstrumentPatch} from './instrument-foundry-piano.mjs';
+
 export const PULSEGRID_SESSION_SCHEMA = 'evercraft.fallen.pulsegrid.session.v1';
 export const PULSEGRID_ENGINE_VERSION = '0.14.0';
 export const PULSEGRID_ARRANGEMENT_BARS = 16;
@@ -130,6 +133,7 @@ export type PulseGridOperation =
   | { type: 'arrangement.set_slot'; track_id: string; bar: number; scene: number | null }
   | { type: 'clip.fork_variation'; track_id: string; source_scene: number; destination_scene: number; name?: string }
   | { type: 'clip.set_audio_playback_mode'; track_id: string; scene: number; mode: 'loop' | 'one_shot' }
+  | { type: 'clip.set_foundry_piano_patch'; track_id: string; scene: number; patch: FoundryInstrumentPatch | null }
   | { type: 'asset.register_audio'; asset: PulseGridAudioAssetInput }
   | { type: 'clip.attach_audio_asset'; track_id: string; scene: number; asset_id: string | null }
   | {
@@ -489,6 +493,16 @@ export function validatePulseGridSession(session: PulseGridSession) {
       if (clip.automation.volume.length !== expectedSteps) errors.push(`${track.id}.${clip.id}.automation.volume`);
       if (clip.automation.filter.length !== expectedSteps) errors.push(`${track.id}.${clip.id}.automation.filter`);
       if (clip.probabilities.some((value) => value < 0 || value > 1)) errors.push(`${track.id}.${clip.id}.probabilities`);
+      if(clip.provenance?.foundry_piano_patch){
+        if(track.type!=='synth')errors.push(`${track.id}.${clip.id}.foundry_patch_type`);
+        else{
+          try{
+            const patch=clip.provenance.foundry_piano_patch as FoundryInstrumentPatch;
+            validateFoundryPatch(patch,session.assets);
+            for(const note of clip.notes)selectFoundrySample(patch,note.pitch,note.velocity);
+          }catch(error){errors.push(`${track.id}.${clip.id}.foundry_patch: ${error instanceof Error?error.message:String(error)}`)}
+        }
+      }
       if(clip.audio_asset_id){
         const asset=assetById.get(clip.audio_asset_id);
         if(track.type!=='audio') errors.push(`${track.id}.${clip.id}.audio_asset_track_type`);
@@ -689,6 +703,19 @@ export function applyPulseGridOperation(
     track.clips[operation.destination_scene] = fork;
     after = structuredClone(fork);
     targets = [`track:${track.id}.scene:${operation.destination_scene}`];
+  } else if (operation.type === 'clip.set_foundry_piano_patch') {
+    const {track,clip}=getClip(session,operation.track_id,operation.scene);
+    if(track.type!=='synth')throw new Error('Foundry piano patches require a synth instrument track.');
+    if(operation.patch!==null){
+      validateFoundryPatch(operation.patch,session.assets);
+      for(const note of clip.notes)selectFoundrySample(operation.patch,note.pitch,note.velocity);
+    }
+    before=structuredClone(clip.provenance?.foundry_piano_patch??null);
+    clip.provenance={...clip.provenance};
+    if(operation.patch===null)delete clip.provenance.foundry_piano_patch;
+    else clip.provenance.foundry_piano_patch=structuredClone(operation.patch);
+    after=structuredClone(operation.patch);
+    targets=[`clip:${clip.id}.foundry_piano_patch`];
   } else if (operation.type === 'clip.set_audio_playback_mode') {
     const {track,clip}=getClip(session,operation.track_id,operation.scene);
     if(track.type!=='audio')throw new Error('Audio playback modes apply only to audio tracks.');
@@ -911,6 +938,11 @@ export function undoPulseGridReceipt(
     const track = getTrack(session, operation.track_id);
     if (!track.clips[operation.destination_scene]) throw new Error('Unknown PulseGrid destination scene: ' + String(operation.destination_scene));
     track.clips[operation.destination_scene] = structuredClone(originalReceipt.before as PulseGridClip);
+  } else if(operation.type==='clip.set_foundry_piano_patch'){
+    const {clip}=getClip(session,operation.track_id,operation.scene);
+    clip.provenance={...clip.provenance};
+    if(originalReceipt.before===null)delete clip.provenance.foundry_piano_patch;
+    else clip.provenance.foundry_piano_patch=structuredClone(originalReceipt.before);
   } else if(operation.type==='clip.set_audio_playback_mode'){
     const {clip}=getClip(session,operation.track_id,operation.scene);
     const oldMode=originalReceipt.before as string|null;
