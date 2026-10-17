@@ -48,3 +48,15 @@ test('browser already uses the same local verified asset vault for actual audio 
   assert.match(source,/setAudioAssetResolver\(\(asset\)=>vaultRef\.current!\.getVerifiedBlob\(asset\)\)/);
   assert.match(source,/audioRef\.current\?\.play\(session,selectedScene\)/);
 });
+
+test('Foundry take explicitly selects one-shot while other PulseGrid audio remains loop-capable',()=>{
+  const source=ui();
+  const fn=source.slice(source.indexOf('async function importFoundryWavFile'),source.indexOf('async function importAudioFile'));
+  assert.match(fn,/type:'clip.set_audio_playback_mode'/);
+  assert.match(fn,/mode:'one_shot'/);
+  assert.match(clip(),/schedulePulseGridAudioBuffer/);
+  assert.match(clip(),/audio_playback_mode==='one_shot'/);
+});
+test('missing verified audio fails visibly instead of pretending an empty buffer played',()=>{
+  assert.match(clip(),/throw new Error\('PulseGrid audio asset is missing from verified storage:/);
+});
