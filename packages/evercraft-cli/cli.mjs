@@ -12,6 +12,7 @@ const STORE=path.join(process.env.XDG_CONFIG_HOME||path.join(os.homedir(),'.conf
 const TOOL_ID=/^[a-z][a-z0-9_.-]{2,63}$/;
 const TIMEOUT_MS=5000;
 const MAX_OUTPUT=1024*1024;
+const MAX_INPUT=64*1024;
 const write=value=>process.stdout.write(JSON.stringify(value,null,2)+'\n');
 const fail=message=>{throw Error(message)};
 
@@ -50,12 +51,13 @@ export async function mcpStdio(tool,mode,toolName,input={},options={}){
   const protocol=options.protocol||'legacy';
   if(!['legacy','modern'].includes(protocol))fail('Protocol must be legacy or modern.');
   const child=spawn(tool.command,tool.args||[],{shell:false,stdio:['pipe','pipe','pipe'],windowsHide:true,env:allowedEnv()});
-  let lineBuffer='',stderr='',finished=false,bytes=0,seq=0;
+  let lineBuffer='',finished=false,bytes=0,seq=0;
   const awaiting=new Map();
   const rejectAll=error=>{for(const a of awaiting.values())a.reject(error);awaiting.clear();};
   child.on('error',rejectAll);
-  child.on('exit',code=>{if(!finished)rejectAll(Error('MCP subprocess exited '+code+': '+stderr.slice(-250)));});
-  child.stderr.on('data',x=>{stderr=(stderr+x.toString()).slice(-2048);});
+  child.on('exit',code=>{if(!finished)rejectAll(Error('MCP subprocess exited '+code+' (child stderr suppressed)'));});
+  // Drain untrusted subprocess stderr without retaining or printing secrets.
+  child.stderr.resume();
   const send=(method,params={},notify=false)=>{
     const id=++seq;
     const promise=notify?Promise.resolve():new Promise((resolve,reject)=>awaiting.set(id,{resolve,reject}));
@@ -76,7 +78,11 @@ export async function mcpStdio(tool,mode,toolName,input={},options={}){
       const item=awaiting.get(message?.id);
       if(!item)continue;
       awaiting.delete(message.id);
-      if(message.error)item.reject(Error('MCP error: '+JSON.stringify(message.error)));
+      if(message.error){
+        // Remote error text is untrusted and may include tool arguments or credentials.
+        const code=Number.isSafeInteger(message.error.code)?message.error.code:'unknown';
+        item.reject(Error('MCP error code '+code+' (server details suppressed)'));
+      }
       else item.resolve(message.result);
     }
   });
@@ -119,7 +125,7 @@ function help(){
     'evercraft tool remove TOOL_ID                 Removes registration, not files',
     'evercraft capability validate ./candidate.json  Offline review of publisher manifest',
     'evercraft tool probe TOOL_ID --run [--protocol modern] (default: legacy)',
-    'evercraft tool call TOOL_ID TOOL --input JSON --approve [--protocol modern]',
+    'evercraft tool call TOOL_ID TOOL (--input JSON | --input-stdin) --approve [--protocol modern]',
     'No remote registry, payments, public tool publishing or arbitrary installs.'
   ].join('\n')+'\n');
 }
@@ -171,8 +177,30 @@ export async function main(args=process.argv.slice(2)){
   if(command==='call'){
     if(!args.includes('--approve'))fail('Calling a registered tool requires --approve.');
     const name=args[3],position=args.indexOf('--input');
-    if(!name||name.startsWith('--')||position<0||!args[position+1])fail('Usage: tool call ID NAME --input JSON --approve');
-    const input=JSON.parse(args[position+1]);
+    const inlineCount=args.filter(x=>x==='--input').length;
+    const stdinCount=args.filter(x=>x==='--input-stdin').length;
+    if(!name||name.startsWith('--')||inlineCount+stdinCount!==1||
+       (inlineCount===1&&(position<0||!args[position+1]||args[position+1].startsWith('--')))){
+      fail('Usage: tool call ID NAME (--input JSON | --input-stdin) --approve');
+    }
+    if(stdinCount===1&&process.stdin.isTTY)fail('--input-stdin requires piped JSON input, not an interactive terminal.');
+    let raw;
+    if(stdinCount===1){
+      // Async iteration handles nonblocking pipes (macOS can return EAGAIN for
+      // synchronous reads on larger input) without buffering unbounded data.
+      const chunks=[];
+      let size=0;
+      for await(const chunk of process.stdin){
+        size+=chunk.length;
+        if(size>MAX_INPUT)fail('Tool arguments exceed 64 KiB preview limit.');
+        chunks.push(chunk);
+      }
+      raw=Buffer.concat(chunks).toString('utf8');
+    }else{
+      raw=args[position+1];
+      if(Buffer.byteLength(raw,'utf8')>MAX_INPUT)fail('Tool arguments exceed 64 KiB preview limit.');
+    }
+    const input=JSON.parse(raw);
     if(!input||typeof input!=='object'||Array.isArray(input))fail('Input must be a JSON object.');
     process.stderr.write('Calling '+id+'/'+name+' with explicit approval; input omitted from logs\n');
     return write(await mcpStdio(tool,'call',name,input,{protocol}));
