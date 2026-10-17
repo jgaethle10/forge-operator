@@ -1,0 +1,116 @@
+name: Entire Black Box reproducible package and detached consumer
+
+on:
+  pull_request:
+    paths:
+      - "integrations/entire-blackbox/**"
+      - ".github/workflows/entire-blackbox-package-proof.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  produce:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-go@v5
+        with:
+          go-version-file: integrations/entire-blackbox/go.mod
+      - name: Source regression tests
+        working-directory: integrations/entire-blackbox
+        run: go test -count=1 ./...
+      - name: Produce six platform archives and checksum manifest
+        shell: bash
+        run: |
+          set -euo pipefail
+          bash integrations/entire-blackbox/packaging/build-candidate.sh 0.1.0 "$RUNNER_TEMP/blackbox-release"
+          python3 integrations/entire-blackbox/packaging/verify-candidate.py "$RUNNER_TEMP/blackbox-release" 0.1.0 > "$RUNNER_TEMP/producer-verification.json"
+          grep -q CANDIDATE_CHECKSUMS_AND_ARCHIVES_VALID "$RUNNER_TEMP/producer-verification.json"
+      - name: GitHub artifact storage handoff
+        uses: actions/upload-artifact@v4
+        with:
+          name: entire-blackbox-release-candidate
+          path: ${{ runner.temp }}/blackbox-release/
+          retention-days: 7
+          if-no-files-found: error
+      - name: Production claims prohibited
+        run: |
+          echo "PACKAGE PRODUCER PASS: six checksummed platform assets, not a GitHub Release, installation listing, or payment." >> "$GITHUB_STEP_SUMMARY"
+
+  detached-consumer:
+    needs: produce
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    steps:
+      - uses: actions/checkout@v4
+      - name: Download provider-stored release candidate on separate runner
+        uses: actions/download-artifact@v4
+        with:
+          name: entire-blackbox-release-candidate
+          path: ${{ runner.temp }}/blackbox-download
+      - name: Independently authenticate archive content against manifest
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 integrations/entire-blackbox/packaging/verify-candidate.py \
+            "$RUNNER_TEMP/blackbox-download" 0.1.0 "$RUNNER_TEMP/entire-blackbox" > "$RUNNER_TEMP/consumer-verification.json"
+          grep -q CANDIDATE_CHECKSUMS_AND_ARCHIVES_VALID "$RUNNER_TEMP/consumer-verification.json"
+          cp -R "$RUNNER_TEMP/blackbox-download" "$RUNNER_TEMP/blackbox-tampered"
+          printf 'tamper' >> "$RUNNER_TEMP/blackbox-tampered/entire-blackbox_0.1.0_linux_amd64.tar.gz"
+          if python3 integrations/entire-blackbox/packaging/verify-candidate.py \
+             "$RUNNER_TEMP/blackbox-tampered" 0.1.0 >/dev/null 2>"$RUNNER_TEMP/tamper-error"; then
+            echo "Corrupted archive unexpectedly accepted" >&2
+            exit 1
+          fi
+          grep -q PACKAGE_PROOF_REJECTED "$RUNNER_TEMP/tamper-error"
+          echo "DETACHED_ARTIFACT_AND_TAMPER_GATE_PASS"
+      - name: Download SHA-pinned actual Entire CLI v0.11.5
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p "$RUNNER_TEMP/entire-release" "$RUNNER_TEMP/entire-bin"
+          curl --fail --silent --show-error --location --retry 3 --max-time 120 \
+            https://github.com/entireio/cli/releases/download/v0.11.5/entire_linux_amd64.tar.gz \
+            -o "$RUNNER_TEMP/entire_linux_amd64.tar.gz"
+          printf '%s  %s\n' \
+            'c20476c4ba9689b1800fe8d590601792e2b6f3c89d03a95280d88484029d7eba' \
+            "$RUNNER_TEMP/entire_linux_amd64.tar.gz" | sha256sum --check
+          tar -xzf "$RUNNER_TEMP/entire_linux_amd64.tar.gz" -C "$RUNNER_TEMP/entire-release"
+          cli="$(find "$RUNNER_TEMP/entire-release" -type f -name entire -print -quit)"
+          test -n "$cli"
+          install -m 0755 "$cli" "$RUNNER_TEMP/entire-bin/entire"
+          echo "$RUNNER_TEMP/entire-bin" >> "$GITHUB_PATH"
+      - name: Install verified archive executable via real Entire and exercise behavior
+        env:
+          ENTIRE_PLUGIN_DIR: ${{ runner.temp }}/blackbox-isolated-plugin-dir
+        shell: bash
+        run: |
+          set -euo pipefail
+          entire plugin install "$RUNNER_TEMP/entire-blackbox"
+          entire blackbox inspect integrations/entire-blackbox/examples/unknown.json > "$RUNNER_TEMP/integration-result.json"
+          python3 - "$RUNNER_TEMP/integration-result.json" <<'PY'
+          import json,sys
+          with open(sys.argv[1],encoding="utf-8") as f: r=json.load(f)
+          assert r["assessment"] == "UNKNOWN",r
+          assert r["externally_verified"] is False,r
+          assert r["operation_id"] == "synthetic-ticket-001",r
+          print("DETACHED_ARCHIVE_REAL_ENTIRE_INSTALL_DISPATCH_PASS")
+          PY
+          if entire blackbox inspect ./missing-source.json >/dev/null 2>&1; then
+            echo "Missing incident input unexpectedly accepted" >&2
+            exit 1
+          fi
+          entire plugin remove blackbox
+          if entire blackbox --help >/dev/null 2>&1; then
+            echo "Plugin unexpectedly available after removal" >&2
+            exit 1
+          fi
+          echo "DETACHED_ARCHIVE_UNINSTALL_PASS"
+      - name: Evidence interpretation
+        run: |
+          echo "A distinct GitHub runner downloaded an artifact from GitHub storage and verified its six checksummed archives." >> "$GITHUB_STEP_SUMMARY"
+          echo "The released-shape Linux archive was extracted and the binary passed real Entire local installation, dispatch, failure and uninstall." >> "$GITHUB_STEP_SUMMARY"
+          echo "No public plugin repo/tag/release was created, no remote repository install, no approved Entire index listing, no authenticated external action/provider readback, no revenue." >> "$GITHUB_STEP_SUMMARY"
