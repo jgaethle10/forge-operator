@@ -234,6 +234,21 @@ test('art direction produces 48 deterministic layout, palette and format combina
   assert.equal(rpcResponse.result?.structuredContent?.imageryState, 'synthetic_vector_art');
 });
 
+test('art-directed typography uses client-specific initials, not a generic fixed symbol', () => {
+  const base = {
+    brandName: 'Evercraft Graphics', eyebrow: 'Concept',
+    headline: 'Brand-aware visual system',
+    subhead: 'A synthetic typography preview', callToAction: 'Review',
+    format: 'story', treatment: 'type', palette: 'ember',
+  };
+  const first = renderArtDirectedSvg(base);
+  const second = renderArtDirectedSvg({ ...base, brandName: 'Blue Lantern' });
+  assert.match(first.data, />EG<\/text>/u);
+  assert.match(second.data, />BL<\/text>/u);
+  assert.notEqual(first.sha256, second.sha256);
+  assert.equal(first.publicationAuthority, false);
+});
+
 test('art directed tool rejects injection, spoofed formats and bidi controls', () => {
   const base = {
     brandName: 'Evercraft', eyebrow: 'Concept', headline: 'A story with a point',
