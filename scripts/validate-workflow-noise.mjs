@@ -1,4 +1,5 @@
 import fs from 'node:fs';
+import {spawnSync} from 'node:child_process';
 
 const read = (path) => fs.readFileSync(path, 'utf8');
 const fail = (message) => {
@@ -62,6 +63,18 @@ for (const path of ['.github/workflows/chum-watershed.yml','.github/workflows/ev
   const text = read(path);
   if (!/concurrency:[\s\S]*?cancel-in-progress:\s*true/.test(text)) fail(`${path} must cancel superseded runs`);
   else pass(`${path} cancels superseded runs`);
+}
+
+{
+  // Keep the fan-out observer source and negative tests inside the existing
+  // noise-validation lane. This does not enable jobs or alter trigger policy.
+  const suite=spawnSync(process.execPath,['--test','tests/ci-fanout-audit.test.mjs'],
+    {encoding:'utf8',timeout:15000,maxBuffer:1024*1024});
+  if(suite.error || suite.status!==0 || !suite.stdout?.includes('pass 12') || !suite.stdout?.includes('fail 0')) {
+    fail('exact-commit CI fan-out evidence regression tests must pass');
+    if(suite.stdout) console.error(suite.stdout.slice(-1500));
+    if(suite.stderr) console.error(suite.stderr.slice(-500));
+  } else pass('exact-commit fan-out evidence tests passed');
 }
 
 if (process.exitCode) throw new Error('workflow notification-noise policy violated');
