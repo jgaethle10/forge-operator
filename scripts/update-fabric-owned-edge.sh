@@ -8,6 +8,7 @@ SERVICE="evercraft-fabric.service"
 HEALTH_URL="http://127.0.0.1:8787/health"
 STATE_DIR="/var/lib/evercraft/fabric-update"
 RUNTIME_RELEASE_REF_FILE="$STATE_DIR/runtime-release-ref"
+RUNTIME_DEPLOYMENT_PROOF_FILE="$STATE_DIR/runtime-deployment-proof.json"
 FABRIC_ENV="/etc/evercraft/fabric.env"
 ENV_BACKUP=""
 EDGE_ATTESTATION_EXPECTED=false
@@ -209,6 +210,55 @@ write_runtime_release_ref() {
   printf '%s\n' "${release,,}" > "$tmp"
   install -o root -g "$RUN_USER" -m 0640 "$tmp" "$RUNTIME_RELEASE_REF_FILE"
   rm -f "$tmp"
+}
+
+# This is not a payment receipt. It is the updater's root-owned proof that the
+# specific already-running Fabric instance passed the resident release checks.
+# The runtime accepts it only when release SHA, instance ID, root ownership and
+# digest match. Restarting Fabric invalidates proof until the next verification.
+write_runtime_deployment_proof() {
+  local release="$1"
+  local health="" bound_health="" tmp=""
+  [[ "$release" =~ ^[a-fA-F0-9]{40,64}$ ]] || return 1
+  health="$(read_health)"
+  [[ -n "$health" ]] || return 1
+  tmp="$(mktemp "$STATE_DIR/runtime-deployment-proof.XXXXXX")"
+  if ! runuser -u "$RUN_USER" -- env HEALTH_JSON="$health" EXPECTED_RELEASE="$release" node - <<'NODE' > "$tmp"; then
+const crypto=require('node:crypto');
+const h=JSON.parse(process.env.HEALTH_JSON||'{}');
+const ref=String(process.env.EXPECTED_RELEASE||'').toLowerCase();
+if(h.ok!==true||h.service!=='evercraft-fabric-local'||
+   h.source_release_ref_bound!==true||
+   String(h.source_release_ref||'').toLowerCase()!==ref||
+   !/^fabric_local_[a-f0-9]{20}$/.test(String(h.instance_id||'')))process.exit(2);
+const proof={
+  schema:'evercraft.fabric.deployment-proof.v1',
+  source_release_ref:ref,
+  instance_id:h.instance_id,
+  observed_at:new Date().toISOString(),
+};
+proof.receipt_hash='sha256:'+crypto.createHash('sha256')
+  .update(JSON.stringify(proof)).digest('hex');
+process.stdout.write(JSON.stringify(proof)+'\n');
+NODE
+    rm -f "$tmp"
+    return 1
+  fi
+  install -o root -g "$RUN_USER" -m 0640 "$tmp" "$RUNTIME_DEPLOYMENT_PROOF_FILE"
+  rm -f "$tmp"
+
+  # A root-written file is not enough; require the actual running /health to
+  # acknowledge the proof for its own identity. Never turn source parity into
+  # synthetic checkout or payment success.
+  bound_health="$(read_health)"
+  runuser -u "$RUN_USER" -- env HEALTH_JSON="$bound_health" EXPECTED_RELEASE="$release" node - <<'NODE'
+const h=JSON.parse(process.env.HEALTH_JSON||'{}');
+if(h.ok!==true||
+   String(h.source_release_ref||'').toLowerCase()!==String(process.env.EXPECTED_RELEASE||'').toLowerCase()||
+   h.deployment_receipt_bound!==true||
+   h.deployment_receipt_source!=='owned_updater_verified'||
+   !/^sha256:[a-f0-9]{64}$/.test(String(h.deployment_receipt_ref||'')))process.exit(2);
+NODE
 }
 
 ensure_visual_ingest_token() {
@@ -611,6 +661,10 @@ if [[ "$before" == "$target" ]]; then
     exit "$code"
   fi
 
+  # Fabric commerce proof is independent of optional Home, observer, capacity and
+  # router sidecars. Preserve their separate fail-closed checks below.
+  write_runtime_deployment_proof "$before"
+
   if ! ensure_network_observer false; then
     echo "ERROR: Fabric is healthy but resident network observer installation failed" >&2
     exit 11
@@ -643,6 +697,7 @@ fi
 
 rollback() {
   local reason="${1:-update_failed}"
+  rm -f "$RUNTIME_DEPLOYMENT_PROOF_FILE"
   as_user git -C "$REPO_ROOT" reset --hard "$before" >/dev/null
   write_runtime_release_ref "$before" || true
   restore_edge_attestation_env
@@ -683,6 +738,10 @@ if [[ "$code" -ne 0 ]]; then
   rollback "runtime_verification_failed_$code"
   exit "$code"
 fi
+
+# Fabric release proof has already passed resident health + edge-attestation;
+# unrelated sidecar repairs may fail without misrepresenting Fabric's readiness.
+write_runtime_deployment_proof "$target"
 
 if ! ensure_network_observer true; then
   echo "ERROR: Fabric update is healthy but resident network observer installation failed" >&2
