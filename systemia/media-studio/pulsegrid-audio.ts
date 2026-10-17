@@ -1,4 +1,5 @@
 import type { PulseGridAudioAsset, PulseGridSession, PulseGridTrack } from './pulsegrid-session.js';
+import { schedulePulseGridAudioBuffer } from './pulsegrid-audio-scheduler.mjs';
 
 export type PulseGridClockMode = 'cold' | 'worklet' | 'fallback';
 export type PulseGridAudioAssetResolver = (asset:PulseGridAudioAsset)=>Promise<Blob|null>;
@@ -191,7 +192,7 @@ export class PulseGridAudioEngine {
       if(existing){loads.push(existing);continue}
       const load=(async()=>{
         const blob=await resolver(asset);
-        if(!blob)return;
+        if(!blob)throw new Error('PulseGrid audio asset is missing from verified storage: '+asset.id);
         const bytes=await blob.arrayBuffer();
         const buffer=await context.decodeAudioData(bytes.slice(0));
         this.audioBuffers.set(asset.id,buffer);
@@ -211,20 +212,12 @@ export class PulseGridAudioEngine {
     return source;
   }
 
-  private scheduleAudioAsset(destination:AudioNode,buffer:AudioBuffer,time:number,duration:number){
+  private scheduleAudioAsset(destination:AudioNode,buffer:AudioBuffer,time:number,duration:number,mode:'loop'|'one_shot'='loop'){
     const context=this.context!;
-    const source=this.trackSource(context.createBufferSource());
-    source.buffer=buffer;
-    if(buffer.duration<duration){
-      source.loop=true;
-      source.loopEnd=Math.max(0.01,buffer.duration);
-      source.connect(destination);
-      source.start(time);
-      source.stop(time+duration);
-      return;
-    }
-    source.connect(destination);
-    source.start(time,0,Math.min(buffer.duration,duration));
+    return schedulePulseGridAudioBuffer({
+      buffer,time,duration,mode,destination,
+      createSource:()=>this.trackSource(context.createBufferSource()),
+    });
   }
 
   private async ensureContext() {
@@ -463,7 +456,8 @@ export class PulseGridAudioEngine {
           if(assetBuffer){
             const sceneDuration=Array.from({length:clip.steps.length},(_,index)=>this.stepDuration(index))
               .reduce((total,value)=>total+value,0);
-            this.scheduleAudioAsset(bus.input,assetBuffer,time,sceneDuration);
+            const mode=clip.provenance?.audio_playback_mode==='one_shot'?'one_shot':'loop';
+            this.scheduleAudioAsset(bus.input,assetBuffer,time,sceneDuration,mode);
           }
         }
         continue;

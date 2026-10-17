@@ -1,0 +1,38 @@
+name: Evercraft Instrument Foundry bridge
+
+on:
+  pull_request:
+    paths:
+      - 'systemia/media-studio/instrument-foundry-bridge.mjs'
+      - 'systemia/media-studio/instrument-foundry-bridge.test.mjs'
+      - 'systemia/media-studio/instrument-foundry-pulsegrid.integration.test.mjs'
+      - 'systemia/media-studio/instrument-foundry-resolver.mjs'
+      - 'systemia/media-studio/instrument-foundry-resolver.test.mjs'
+      - 'systemia/media-studio/instrument-foundry-ui.test.mjs'
+      - 'systemia/media-studio/pulsegrid-audio-scheduler.mjs'
+      - 'systemia/media-studio/pulsegrid-audio-scheduler.d.mts'
+      - 'systemia/media-studio/pulsegrid-audio-scheduler.test.mjs'
+      - 'systemia/media-studio/pulsegrid-session.ts'
+      - 'systemia/media-studio/pulsegrid-audio.ts'
+      - 'systemia/media-studio/instrument-foundry-bridge.d.mts'
+      - 'src/FallenSessions.tsx'
+      - 'systemia/media-studio/INSTRUMENT-FOUNDRY.md'
+      - '.github/workflows/instrument-foundry-bridge.yml'
+  push:
+    branches:
+      - main
+    paths:
+      - 'systemia/media-studio/instrument-foundry-bridge.mjs'
+      - 'systemia/media-studio/instrument-foundry-bridge.test.mjs'
+permissions:
+  contents: read
+jobs:
+  bridge-evidence:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Foundry custody and import tests
+        run: node --experimental-strip-types --test systemia/media-studio/instrument-foundry-bridge.test.mjs systemia/media-studio/instrument-foundry-pulsegrid.integration.test.mjs systemia/media-studio/instrument-foundry-resolver.test.mjs systemia/media-studio/instrument-foundry-ui.test.mjs systemia/media-studio/pulsegrid-audio-scheduler.test.mjs

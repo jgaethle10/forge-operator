@@ -1,6 +1,7 @@
 import React, { useEffect, useMemo, useRef, useState } from 'react';
 import {
   PULSEGRID_ENGINE_VERSION,
+  PULSEGRID_MAX_CLIP_BARS,
   PulseGridAudioEngine,
   PulseGridBrowserAudioAssetVault,
   applyPulseGridOperation,
@@ -13,6 +14,7 @@ import {
   type PulseGridOperation,
   type PulseGridSession,
 } from '../systemia/media-studio/pulsegrid-browser';
+import {compileFoundryImport,verifyFoundryWavBytes} from '../systemia/media-studio/instrument-foundry-bridge.mjs';
 import './fallen-sessions.css';
 
 const PITCHES=Array.from({length:13},(_,index)=>72-index);
@@ -62,6 +64,7 @@ export default function FallenSessions(){
   const heldMidiNotesRef=useRef(new Map<string,HeldMidiNote>());
   const vaultRef=useRef<PulseGridBrowserAudioAssetVault|null>(null);
   const fileInputRef=useRef<HTMLInputElement|null>(null);
+  const foundryInputRef=useRef<HTMLInputElement|null>(null);
   const recorderRef=useRef<MediaRecorder|null>(null);
   const recordingStreamRef=useRef<MediaStream|null>(null);
   const recordingSceneRef=useRef(0);
@@ -187,6 +190,66 @@ export default function FallenSessions(){
       successLabel+' · '+asset.duration_sec.toFixed(2)+'s · '+
       asset.sample_rate+' Hz · '+asset.channels+'ch · rights '+asset.rights
     );
+  }
+
+  async function importFoundryWavFile(file:File){
+    // This is a strictly local, unknown-rights audition path. It cannot certify
+    // a performer, claim sample ownership, or authorize public music release.
+    const vault=vaultRef.current;
+    if(!vault)return;
+    const scene=selectedScene;
+    setStatus('Verifying Foundry WAV for internal audition…');
+    try{
+      if(!/\.wav$/i.test(file.name)||file.size<44||file.size>64*1024*1024){
+        throw new Error('Foundry import requires a WAV file between 44 bytes and 64 MB.');
+      }
+      // Normalize inconsistent browser WAV MIME types without modifying bytes.
+      const wav=new Blob([file],{type:'audio/wav'});
+      const asset=await vault.ingest(wav,{
+        source_name:file.name,
+        source_refs:['local-file:'+file.name],
+        source_state:'imported',
+        rights:'unknown',
+      });
+      const verified=await vault.getVerifiedBlob(asset);
+      if(!verified)throw new Error('The stored Foundry take was not found.');
+      await verifyFoundryWavBytes(asset,new Uint8Array(await verified.arrayBuffer()));
+      const current=sessionRef.current;
+      const audioTrack=current.tracks.find((candidate)=>candidate.type==='audio');
+      if(!audioTrack)throw new Error('No canonical audio track exists.');
+      // This digest proves the locally supplied bytes, not artist/sample ownership.
+      const barDuration=4*60/current.transport.bpm; // 16 canonical 16th-steps per bar
+      const requiredBars=Math.max(1,Math.ceil((asset.duration_sec+0.01)/barDuration));
+      if(requiredBars>PULSEGRID_MAX_CLIP_BARS){
+        throw new Error('Foundry take exceeds the 16-bar audition limit. Use a shorter WAV; long-form masters require a separate arrangement path.');
+      }
+      const candidate={...asset,source_refs:['sha256:'+asset.digest]};
+      const admitted=compileFoundryImport({
+        session:current,assets:[candidate],
+        attachments:[{track_id:audioTrack.id,scene,asset_id:asset.id}],
+        actor:'human',
+      });
+      const currentBars=audioTrack.clips[scene]?.bars||1;
+      const operations=[
+        ...(requiredBars>currentBars
+          ? [{type:'clip.set_bars' as const,track_id:audioTrack.id,scene,bars:requiredBars}]
+          : []),
+        ...admitted.transaction.operations,
+        {type:'clip.set_audio_playback_mode' as const,track_id:audioTrack.id,scene,mode:'one_shot' as const},
+      ];
+      const committed=applyPulseGridTransaction(current,{
+        intent:'Verify, size, and attach Foundry WAV for internal audition.',
+        operations,
+      },admitted.actor);
+      setSession(committed.session);
+      setSelectedTrackId(audioTrack.id);
+      setSelectedScene(scene);
+      setStatus('Foundry WAV verified and attached for local audition · rights UNKNOWN · no commercial release clearance.');
+    }catch(error){
+      setStatus(error instanceof Error?error.message:'Foundry WAV verification failed.');
+    }finally{
+      if(foundryInputRef.current)foundryInputRef.current.value='';
+    }
   }
 
   async function importAudioFile(file:File){
@@ -697,11 +760,19 @@ export default function FallenSessions(){
         hidden
         onChange={(event)=>{const file=event.target.files?.[0];if(file)void importAudioFile(file)}}
       />
+      <input
+        ref={foundryInputRef}
+        type="file"
+        accept=".wav,audio/wav,audio/x-wav,audio/wave"
+        hidden
+        onChange={(event)=>{const file=event.target.files?.[0];if(file)void importFoundryWavFile(file)}}
+      />
       <section className="fsToolbar" aria-label="Session controls">
         <button onClick={togglePlay} disabled={recording}>{playing?'■ Stop':'▶ Play'}</button>
         <button onClick={toggleRecording}>{recording?'■ Stop Recording':'● Record'}</button>
         <button onClick={toggleMidi}>{midiEnabled?'Disconnect MIDI':'Enable MIDI'}</button>
         <button onClick={chooseAudioFile} disabled={recording}>Import Audio</button>
+        <button onClick={()=>foundryInputRef.current?.click()} disabled={recording}>Import Foundry WAV</button>
         <button onClick={runLiftPlan}>✦ Atomic Chorus Lift</button>
         <button onClick={forkVariation}>Fork Variation</button>
         <button onClick={growClip} disabled={clip.bars>=16}>+ Bar</button>
