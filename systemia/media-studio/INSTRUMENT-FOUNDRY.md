@@ -32,10 +32,10 @@ Tests cover transaction shape, unknown/restricted rights, forged metadata, custo
 
 ## Verified playback resolution (second engineering slice, v3)
 
-\`createFoundryVerifiedResolver\` implements the existing PulseGrid audio asset
+`createFoundryVerifiedResolver` implements the existing PulseGrid audio asset
 resolver contract. The host must supply a **trusted** authenticated tenant,
-session and audition/review scope, a separate \`authorizeRead\` guard that
-checks actual identity/tenant/project permissions, and a \`readBytes\` storage
+session and audition/review scope, a separate `authorizeRead` guard that
+checks actual identity/tenant/project permissions, and a `readBytes` storage
 adapter. Do not accept tenant context merely from client-supplied metadata.
 
 The resolver checks identity, format, budgets, and rights before storage;
@@ -43,7 +43,7 @@ authorizes every access, snapshots returned bytes before async verification,
 and checks actual RIFF/WAVE data and SHA-256. On success it returns a browser
 WAV Blob ready for PulseGridAudioEngine.setAudioAssetResolver.
 
-\`\`\`js
+```js
 import {createFoundryVerifiedResolver} from './instrument-foundry-resolver.mjs';
 const resolver=createFoundryVerifiedResolver({
   scope: authenticatedHostSession, // trusted, never raw user input
@@ -52,7 +52,7 @@ const resolver=createFoundryVerifiedResolver({
   onReceipt: auditVerifiedRead,
 });
 pulseGridAudioEngine.setAudioAssetResolver(resolver);
-\`\`\`
+```
 
 A verified read **is not audible playback proof**. This PR includes
 no live host storage connector, credentials, owned acoustic samples,
@@ -61,12 +61,12 @@ only independently authorized internal listening; restricted rights and
 self-declared release flags are rejected. Reader and verifier must be used
 together, not bypassed by a direct Blob URL.
 
-\`\`\`bash
+```bash
 node --experimental-strip-types --test \
   systemia/media-studio/instrument-foundry-bridge.test.mjs \
   systemia/media-studio/instrument-foundry-resolver.test.mjs \
   systemia/media-studio/instrument-foundry-pulsegrid.integration.test.mjs
-\`\`\`
+```
 
 Next: authorize a real recording storage adapter and run actual
 recording -> storage -> verified Blob -> canonical audio decode/playback
