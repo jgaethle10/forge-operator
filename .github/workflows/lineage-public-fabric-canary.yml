@@ -13,6 +13,8 @@ on:
       - 'commercial/lineage-offer-2026-10-07.json'
       - 'systemia/lineage/commercial-contract.test.mjs'
       - '.github/workflows/lineage-public-fabric-canary.yml'
+      - 'scripts/lineage-public-contract.jq'
+      - 'tests/lineage-canary-jq-contract.test.mjs'
   push:
     branches: [main]
     paths:
@@ -25,6 +27,8 @@ on:
       - 'commercial/lineage-offer-2026-10-07.json'
       - 'systemia/lineage/commercial-contract.test.mjs'
       - '.github/workflows/lineage-public-fabric-canary.yml'
+      - 'scripts/lineage-public-contract.jq'
+      - 'tests/lineage-canary-jq-contract.test.mjs'
   schedule:
     - cron: '*/30 * * * *'
 
@@ -51,6 +55,9 @@ jobs:
 
       - name: Verify Lineage commercial source contract
         run: node --test systemia/lineage/commercial-contract.test.mjs
+
+      - name: Prove jq authority predicate on positive and adversarial fixtures
+        run: node --test tests/lineage-canary-jq-contract.test.mjs
 
       - name: Verify Lineage public Fabric door
         if: github.event_name != 'pull_request'
@@ -126,14 +133,7 @@ jobs:
 
           raw_base="https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/capabilities/$PUBLIC_ID"
           capability="$(curl --fail --silent --show-error --retry 4 --retry-all-errors --retry-delay 2 --max-time 25 "$raw_base/capability.json")"
-          printf '%s' "$capability" | jq -e --arg url "$page_url" '
-            .public_id == "lineage-founding-pilot-v1" and
-            .commercial_state == "verification_required" and
-            .machine_state == "human_handoff_ready" and
-            .public_url == $url and
-            .entry_paid_offer.price_usd == 500 and
-            .authority_rule | contains("Checkout creation is not proof of payment")
-          ' >/dev/null
+          printf '%s' "$capability" | jq -e --arg url "$page_url" -f scripts/lineage-public-contract.jq >/dev/null
           printf '%s\n' "$capability" > /tmp/lineage-capability.json
 
           llms="$(curl --fail --silent --show-error --retry 4 --retry-all-errors --retry-delay 2 --max-time 25 "$raw_base/llms.txt")"
