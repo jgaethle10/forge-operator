@@ -4,7 +4,7 @@
 // of independent key governance, Passport enrollment or CHUM/Spider runtime.
 import {createHash} from 'node:crypto';
 import {readFileSync} from 'node:fs';
-import {fileURLToPath} from 'node:url';
+import {pathToFileURL} from 'node:url';
 import {resolve} from 'node:path';
 import {verifyLabChain} from './detached-receipt-chain.mjs';
 function hold(x){throw Error('BLACKBOX_CROSS_JOB_CONSUMER_HELD: '+x);}
@@ -64,4 +64,4 @@ function main(){
  const answer=consumeDetachedLabArtifact(JSON.parse(raw));
  process.stdout.write(JSON.stringify(answer,null,2)+'\n');
 }
-if(process.argv[1]&&import.meta.url===fileURLToPath(resolve(process.argv[1])).href)main();
+if(process.argv[1]&&import.meta.url===pathToFileURL(resolve(process.argv[1])).href)main();
