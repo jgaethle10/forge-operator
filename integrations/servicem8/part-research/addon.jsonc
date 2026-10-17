@@ -1,0 +1,26 @@
+{
+  "$schema": "https://api.servicem8.com/api_1.0/addonsdk/manifest-schema/v1.json",
+  "slug": "evercraft-part-research-pilot",
+  "name": "Evercraft Part Research (Pilot)",
+  "version": "0.1",
+  "main": "src/index.mjs",
+  "addonTargetAudience": "ServiceM8 job teams who occasionally need to identify an obsolete or hard-to-source replacement part. Explicit user-triggered free handoff only.",
+  "actions": [
+    {
+      "name": "Find a Replacement Part",
+      "type": "online",
+      "entity": "job",
+      "iconURL": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/integrations/servicem8/part-research/icon.svg",
+      "event": "evercraft_part_research",
+      "location": "modal"
+    },
+    {
+      "name": "Find a Replacement Part",
+      "type": "app",
+      "entity": "job",
+      "iconURL": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/integrations/servicem8/part-research/icon.svg",
+      "event": "evercraft_part_research",
+      "location": "window"
+    }
+  ]
+}
