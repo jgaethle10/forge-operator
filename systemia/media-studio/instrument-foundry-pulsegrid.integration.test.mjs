@@ -25,3 +25,39 @@ test('Foundry transaction can register and attach through canonical PulseGrid, t
   assert.equal(reverted.session.assets.length,0);
   assert.equal(reverted.session.tracks.find(t=>t.id===track.id).clips[0].audio_asset_id,null);
 });
+
+test('piano one-shot playback mode is a canonical reversible transaction, independent of loop mode',()=>{
+  const source=createPulseGridSession('One-shot piano release');
+  const track=source.tracks.find(t=>t.type==='audio');
+  const original=track.clips[0].provenance.audio_playback_mode;
+  assert.equal(original,undefined);
+  const result=applyPulseGridTransaction(source,{
+    intent:'Admit expressive piano one-shot without repetition',
+    operations:[
+      {type:'clip.set_bars',track_id:track.id,scene:0,bars:2},
+      {type:'clip.set_audio_playback_mode',track_id:track.id,scene:0,mode:'one_shot'},
+    ],
+  },'human');
+  assert.equal(result.session.tracks.find(t=>t.id===track.id).clips[0].provenance.audio_playback_mode,'one_shot');
+  assert.equal(source.tracks.find(t=>t.id===track.id).clips[0].provenance.audio_playback_mode,undefined);
+  const undone=undoPulseGridReceipt(result.session,result.receipt.id,'human');
+  assert.equal(undone.session.tracks.find(t=>t.id===track.id).clips[0].provenance.audio_playback_mode,undefined);
+  assert.equal(undone.session.tracks.find(t=>t.id===track.id).clips[0].bars,1);
+});
+test('invalid playback modes fail closed and cannot alter an existing graph',()=>{
+  const source=createPulseGridSession('Invalid mode');
+  const track=source.tracks.find(t=>t.type==='audio');
+  assert.throws(()=>applyPulseGridTransaction(source,{
+    intent:'Invalid sound mode must not mutate',
+    operations:[{type:'clip.set_audio_playback_mode',track_id:track.id,scene:0,mode:'alien_mode'}],
+  },'human'),/Unsupported audio playback mode/);
+  assert.equal(source.tracks.find(t=>t.id===track.id).clips[0].provenance.audio_playback_mode,undefined);
+});
+test('synth track cannot masquerade as a one-shot recorded piano',()=>{
+  const source=createPulseGridSession('Cross-track denial');
+  const track=source.tracks.find(t=>t.type==='synth');
+  assert.throws(()=>applyPulseGridTransaction(source,{
+    intent:'Audio mode cannot apply to synth',
+    operations:[{type:'clip.set_audio_playback_mode',track_id:track.id,scene:0,mode:'one_shot'}],
+  },'human'),/only to audio tracks/);
+});
