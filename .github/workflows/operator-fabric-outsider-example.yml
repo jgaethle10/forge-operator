@@ -1,4 +1,4 @@
-name: Outsider Fabric developer example (synthetic, safe)
+name: Outsider Fabric proof (synthetic + public read-only)
 on:
   pull_request:
     paths:
@@ -18,7 +18,38 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: '22'
-      - name: Verify syntax
-        run: node --check examples/operator-fabric/public-discovery.mjs
-      - name: Test standalone JSON and SSE MCP proof without touching production
-        run: node --test examples/operator-fabric/test/public-discovery.test.mjs
+      - name: Verify examples syntax
+        run: |
+          node --check examples/operator-fabric/public-discovery.mjs
+          node --check examples/operator-fabric/local-test-tool.mjs
+          node --check examples/operator-fabric/independent-tool-client.mjs
+      - name: Run independent client and contributor tool tests without external services
+        run: node --test examples/operator-fabric/test/*.test.mjs
+      - name: Prove real local MCP tool handshake and invocation without secrets
+        run: node examples/operator-fabric/independent-tool-client.mjs
+
+  saban-public-readback:
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Reuse Saban existing public remote MCP cold-client, no purchases
+        env:
+          EVERCRAFT_PROBE_ORIGIN: https://fabric.systemiacommandcenters.com
+          EVERCRAFT_PROBE_OUT: artifacts/operator-fabric/saban
+        run: node systemia/saban/discovery-path-probe.mjs
+      - name: Independently run documented outsider remote client on owned public endpoint
+        run: |
+          mkdir -p artifacts/operator-fabric
+          node examples/operator-fabric/public-discovery.mjs | tee artifacts/operator-fabric/outsider-readback.json
+      - name: Preserve exact external observations even if the remote probe fails
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: operator-fabric-saban-external-${{ github.run_id }}
+          path: artifacts/operator-fabric/
+          retention-days: 14
+          if-no-files-found: warn
