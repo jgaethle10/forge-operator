@@ -101,7 +101,9 @@ export default function FallenSessions(){
     selectedSceneRef.current=selectedScene;
     setSelectedNoteId(null);
     setSelectedStepIndex(null);
+    const active=Boolean(audioRef.current?.status.playing);
     audioRef.current?.setScene(selectedScene);
+    if(active)setStatus('Scene changed · playback paused to verify recordings. Press Play to continue.');
   },[selectedScene]);
 
   useEffect(()=>()=>{ 
