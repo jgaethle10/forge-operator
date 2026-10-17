@@ -1,0 +1,21 @@
+name: Boardroom evidence gate
+on:
+  pull_request:
+    paths:
+      - 'systemia/boardroom/evidence-gate.mjs'
+      - 'tests/boardroom-evidence-gate.test.mjs'
+      - '.github/workflows/boardroom-evidence-gate.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  verify-advisory-boundary:
+    runs-on: ubuntu-latest
+    timeout-minutes: 3
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Verify Boardroom advisory evidence gates
+        run: node --test tests/boardroom-evidence-gate.test.mjs
