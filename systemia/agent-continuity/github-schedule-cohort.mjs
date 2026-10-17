@@ -1,3 +1,5 @@
+import {createHash} from 'node:crypto';
+import {SCHEMA} from './incident-event.mjs';
 // Read-only provider-authoritative SCHEDULE cohort. No workflow dispatch,
 // health promotion, provider effect inference, credentials in receipt, or agent action.
 // Correlated stale scheduled runs do not prove GitHub's root cause.
@@ -9,6 +11,7 @@ export const COHORT = Object.freeze([
   {key:'chum_watershed',workflow:'chum-watershed.yml',fresh_ms:420*60000}
 ]);
 const REPO='jgaethle10/forge-operator';
+const sourceChecked=new WeakSet();
 const UTC=/^\d{4}-\d\d-\d\dT\d\d:\d\d:\d\d(?:\.\d+)?Z$/;
 function hold(code){throw new Error('BLACKBOX_SCHEDULE_COHORT_HELD: '+code);}
 function when(x){
@@ -72,7 +75,7 @@ export async function observeScheduledCohort({repo=REPO,token,now=Date.now(),fet
  const failures=lanes.filter(x=>x.schedule_state==='HELD_GITHUB_WORKFLOW_FAILED_OR_NON_SUCCESS');
  const fresh=lanes.filter(x=>x.schedule_state==='FRESH_SUCCESSFUL_GITHUB_WORKFLOW');
  const observed_clusters=stale.length>=3?'MULTIPLE_SCHEDULE_GAPS_PROVIDER_OBSERVED':'INSUFFICIENT_COHORT_GAP';
- return Object.freeze({
+ const result=Object.freeze({
    schema:'evercraft.blackbox.github-scheduled-cohort.v1',observed_at:new Date(now).toISOString(),
    repository:REPO,source:'GITHUB_ACTIONS_SCHEDULE_EVENT_EXACT_READBACK',source_scope:'OWNER_REPOSITORY_GITHUB_WORKFLOW_ONLY',
    lanes,summary:{cohort_size:lanes.length,stale_or_missing:stale.length,fresh_workflow_successes:fresh.length,
@@ -83,4 +86,43 @@ export async function observeScheduledCohort({repo=REPO,token,now=Date.now(),fet
    source_execution_authority:'NONE_READ_ONLY',
    interpretation:'Schedule state is provider GitHub Actions state only; a success is not proof of downstream agent or revenue.'
  });
+ sourceChecked.add(result);
+ return result;
+}
+
+
+/**
+ * Convert a provider-fetched cohort into ONE bounded shared READ-ONLY incident.
+ * Absence from provider list is not silently converted into a signed run record.
+ * Only exact provider-run items are emitted. Missing lanes remain in cohort receipt.
+ */
+export function cohortToSharedIncidentEvents(cohort,{tenant_id='evercraft',mission_id='evercraft-agent-continuity-fabric-20261016'}={}){
+ if(!cohort||!sourceChecked.has(cohort))hold('COHORT_NOT_AUTHENTICATED_IN_PROCESS');
+ if(tenant_id!=='evercraft'||mission_id!=='evercraft-agent-continuity-fabric-20261016')hold('COHORT_MISSION_SCOPE_MISMATCH');
+ const observations=cohort.lanes.filter(l=>l.last_scheduled_run_id!=null);
+ const incident_id='schedule-cohort-'+cohort.observed_at.slice(0,13).replaceAll(':','-');
+ const events=observations.map(l=>{
+   const runRef='github-run-'+l.last_scheduled_run_id;
+   const workflowRef=l.workflow.replace('.yml','').replaceAll('_','-');
+   const v=JSON.stringify([cohort.repository,l.last_scheduled_run_id,l.github_run_state,l.github_conclusion]);
+   const event_id='scheduled-'+createHash('sha256').update(v).digest('hex').slice(0,24);
+   return {
+     schema:SCHEMA,tenant_id,mission_id,incident_id,event_id,
+     source_id:'owned-github-actions-cohort',agent_id:'github-actions-observer',
+     workload_id:workflowRef,operation_id:runRef,occurred_at:l.created_at,
+     observed_at:cohort.observed_at,clock_uncertainty_ms:30000,
+     event_type:'queue_snapshot',evidence_kind:'source_report',
+     actor_id:'github-schedule-cohort-lab',permission_scope:'audit:read',
+     idempotency_key:'github-schedule-run-'+l.last_scheduled_run_id,
+     upstream_event_ids:[],persistence_paths:[{type:'queue',resource_id:runRef,state:'reported'}],
+     possible_impact:[],verified_impact:[],external_effect:'UNKNOWN'
+   };
+ });
+ if(new Set(events.map(e=>e.event_id)).size!==events.length)hold('COHORT_EVENT_COLLISION');
+ return {schema:'evercraft.blackbox.cohort-packet-prepared.v1',incident_id,
+   observed_at:cohort.observed_at,events,
+   excluded_missing_lanes:cohort.lanes.filter(l=>l.last_scheduled_run_id==null).map(l=>l.lane),
+   live_agent_verification:false,external_effect_verification:false,
+   semantic_edges:'TEMPORAL_CORRELATION_ONLY_NOT_CAUSATION',
+   execution_authority:'NONE_READ_ONLY'};
 }
