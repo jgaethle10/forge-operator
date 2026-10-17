@@ -54,7 +54,7 @@ test('cross-job reader refuses altered manifest, chain, live-service or provider
   x=>x.verification.chain_sha256='c'.repeat(64),
   x=>x.systemia_admission='ADMITTED'
  ]){
-  const a=fixture();mutate(a);
+  const a=structuredClone(fixture());mutate(a);
   assert.throws(()=>consumeDetachedLabArtifact(a),/BLACKBOX_(CROSS_JOB_CONSUMER|DETACHED_CHAIN)_HELD/);
  }
 });
