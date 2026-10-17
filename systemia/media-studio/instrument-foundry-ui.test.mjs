@@ -40,7 +40,7 @@ test('Foundry WAV scene adapts to recording and rejects >16 bars instead of sile
   assert.match(fn,/throw new Error\('Foundry take exceeds the 16-bar audition limit/);
   assert.match(fn,/type:'clip.set_bars'/);
   assert.ok(fn.indexOf('requiredBars>PULSEGRID_MAX_CLIP_BARS')<fn.indexOf('applyPulseGridTransaction'));
-  assert.match(clip(),/scheduleAudioAsset\(bus\.input,assetBuffer,time,sceneDuration\)/);
+  assert.match(clip(),/scheduleAudioAsset\(bus\.input,assetBuffer,time,sceneDuration,mode\)/);
 });
 test('browser already uses the same local verified asset vault for actual audio execution',()=>{
   const source=ui();
