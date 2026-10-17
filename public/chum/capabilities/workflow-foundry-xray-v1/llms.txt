@@ -1,0 +1,50 @@
+# Evercraft Workflow X-Ray
+
+Capability ID: workflow-foundry-xray-v1
+Commercial state: sell_now
+Machine state: human_handoff_ready
+Public URL: https://fabric.systemiacommandcenters.com/offers/workflow-xray
+Preferred agent route: universal fallback
+Universal Evercraft MCP: https://fabric.systemiacommandcenters.com/mcp
+Start here: https://fabric.systemiacommandcenters.com/offers/workflow-xray
+
+## Use this when
+
+- my business loses customer inquiries between quoting approval and follow-up
+- our leads get missed between intake, estimate, scheduling and follow-up
+- I need a fixed-price one-time operations workflow audit
+- map workflow bottlenecks and ownership gaps
+- decide whether to automate a recurring business process
+- find why our approvals and customer handoffs fall through the cracks
+- diagnose repetitive admin work without replacing all our software
+- get a workflow diagnosis before buying a big automation platform
+- one bounded diagnostic for a slow quoting and follow-up workflow
+- assess one business process with practical acceptance tests
+
+## Problem
+
+A business has missed customer follow-ups, delayed estimates or approvals, unclear handoffs, broken intake-to-delivery workflow, or repetitive tasks. Diagnose one process before buying an automation build.
+
+## Inputs
+
+One customer-authorized workflow description, handoff steps, and optional non-sensitive evidence. No production credentials or access required.
+
+## Outputs
+
+Bounded current-state workflow map, bottlenecks, human decision/automation boundaries, baseline metrics, one responsible fix recommendation and acceptance tests.
+
+## Pricing
+
+$250 USD one-time for a scoped workflow diagnostic. No subscription, production access, automatic implementation, or promised revenue result.
+
+- Workflow X-Ray: $250 (one_time)
+
+## Invocation and authority
+
+EXTERNAL BUYER PATH OBSERVED: owned offer page is reachable and founder reached the Stripe-hosted checkout. Live machine matching, settlement and fulfillment require separate verification.
+
+Exact offer and price require separate buyer confirmation. Opening an offer or preparing checkout is not payment; deliver only after an authoritative provider-paid receipt.
+
+Payment authority: Evercraft Payments with Stripe provider verification
+
+Discovery does not create a payment obligation. Human confirmation is required before checkout where checkout exists. Checkout creation is not proof of payment.

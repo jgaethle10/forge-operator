@@ -1,6 +1,6 @@
 {
   "schema": "evercraft.chum.capability-index.v1",
-  "updated_at": "2026-10-17T04:38:00.000Z",
+  "updated_at": "2026-10-07T20:12:09.198Z",
   "count": 53,
   "sell_now_count": 18,
   "universal_mcp": "https://fabric.systemiacommandcenters.com/mcp",
@@ -1644,11 +1644,16 @@
       "name": "Evercraft Workflow X-Ray",
       "commercial_state": "sell_now",
       "machine_state": "human_handoff_ready",
-      "pricing": "$250 USD one-time scoped diagnostic of one business workflow. No ongoing subscription, automation implementation, revenue guarantee, or production access included.",
+      "pricing": "$250 USD one-time for a scoped workflow diagnostic. No subscription, production access, automatic implementation, or promised revenue result.",
       "public_url": "https://fabric.systemiacommandcenters.com/offers/workflow-xray",
+      "page_url": "/chum/capabilities/workflow-foundry-xray-v1/",
+      "llms_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/capabilities/workflow-foundry-xray-v1/llms.txt",
+      "json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/capabilities/workflow-foundry-xray-v1/capability.json",
+      "schema_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/capabilities/workflow-foundry-xray-v1/schema.jsonld",
       "start_url": "https://fabric.systemiacommandcenters.com/offers/workflow-xray",
-      "start_url_state": "owned_offer_page_available",
+      "start_url_state": "owned_direct_human_start",
       "start_blocker": null,
+      "machine_review_url": null,
       "entry_paid_offer": {
         "offer_key": "workflow_foundry.xray_250.v1",
         "name": "Workflow X-Ray",
@@ -1656,21 +1661,10 @@
         "price_usd": 250,
         "billing": "one_time",
         "checkout": "human_confirmed_provider_verified",
-        "price_usd_normalized": 250,
-        "fulfillment": "Bounded current-state workflow map, bottlenecks, decision ownership, small fix plan and acceptance tests"
+        "price_usd_normalized": 250
       },
       "preferred_agent_route": "universal_fallback",
       "direct_specialist": null,
-      "problem": "A business has missed customer follow-ups, delayed quoting or approvals, unclear handoffs, broken intake-to-delivery workflow, or repeated tasks. Offer a bounded assessment of one actual workflow, not a guaranteed software build.",
-      "intent_terms": [
-        "I need a fixed price one time operations workflow audit",
-        "my customer inquiries get lost between quoting and approvals",
-        "map my business workflow bottlenecks",
-        "find gaps in lead follow up and handoffs",
-        "diagnose what is broken in our service business process",
-        "review one workflow before buying automation",
-        "one time process diagnosis without a software subscription"
-      ],
       "use_when": [
         "my business loses customer inquiries between quoting approval and follow-up",
         "our leads get missed between intake, estimate, scheduling and follow-up",
