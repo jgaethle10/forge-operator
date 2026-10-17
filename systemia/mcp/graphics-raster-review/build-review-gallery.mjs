@@ -80,6 +80,17 @@ export function buildReviewGallery(directory) {
     contents: records,
     allSynthetic: true,
     independentVisualAcceptance: false,
+    founderVisualVerdict: 'rejected',
+    founderVisualReviewDate: '2026-10-16',
+    presentationState: 'do_not_showcase',
+    founderVisualReviewRef: 'systemia/graphics-command/GRAPHICS_FOUNDER_VISUAL_REVIEW_20261016.md',
+    rejectionReasons: [
+      'Decorative geometry does not communicate the story',
+      'Copy dominates instead of artwork carrying the message',
+      'Same rigid template repeated across treatments',
+      'Too much fine print for a phone-sized social post',
+      'No compelling subject, licensed authentic imagery, or product-specific scene',
+    ],
     releaseAuthorized: false,
     buyerPaid: false,
     sourceReferencesVerified: false,
@@ -101,9 +112,10 @@ export function buildReviewGallery(directory) {
     '.thumb{height:400px;display:flex;justify-content:center;align-items:center;padding:20px;background:#202b3e}' +
     'img{max-width:100%;max-height:100%;object-fit:contain;box-shadow:0 12px 30px #0006}' +
     'figcaption{padding:16px;display:grid;gap:5px}span{font-size:13px;color:#91a6b8}a{color:#91d9ff}</style>' +
-    '<main><p>EVERCRAFT GRAPHICS / INTERNAL QA</p><h1>Six real PNG files. Zero invented client results.</h1>' +
+    '<main><p>EVERCRAFT GRAPHICS / FOUNDER REJECTED</p><h1>Rasterization passed. Creative review failed.</h1>' +
     '<p>Every image is generated from owned deterministic SVG code and accompanied by matching PNG/SVG SHA-256 receipts. ' +
-    'All claims and data are synthetic. Layout, aesthetics, device and recipient acceptance still require independent review. ' +
+    'All claims and data are synthetic. The founder rejected this gallery as generic and not showcase-worthy on 2026-10-16. ' +
+    'This archive exists to reproduce the failure, not as a creative-portfolio example. ' +
     'Do not publish, sell, or imply client authorization from this gallery.</p>' +
     '<section>' + cards + '</section></main></html>';
   saveNew(absolute, 'manifest.json', JSON.stringify(manifest, null, 2) + '\n');
