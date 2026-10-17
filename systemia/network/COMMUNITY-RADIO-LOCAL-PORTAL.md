@@ -42,13 +42,29 @@ Record the tested host/device models and OS, isolated network identity, LAN IPv4
 
 Automated suite: npm run test:community-radio-lan-lab. On GitHub-hosted runners, the positive private-interface HTTP test runs only when an assigned RFC1918 interface exists; its outcome is not a substitute for physical second-device testing.
 
+## Clock rollback and restart guard (software integrity only)
+
+The offline portal and synthetic LAN adapter now accept an optional `clockGuard` returned by `createCommunityRadioClockGuard({stateDir, initialize, now})` from `community-radio-clock-guard.mjs`. When provided, every signed-bulletin request observes the clock against a locally persisted UTC high-water mark. A clock rollback larger than one second, missing/corrupt state or weakened state directory/file permissions blocks content (HTTP 503). The demo always creates an ephemeral private clock guard for its run. The local guard's unit tests prove restart behavior *when the same private state directory survives the restart*.
+
+An actual persistence experiment must use a persistent absolute operator-owned directory (0700), initialize it explicitly once, reuse it without wiping it on restart, and test a clock rollback. The demo's temporary state is deleted when the demo stops; that alone **does not prove crash or reboot continuity**. This guard mitigates accidental clock rollback. It is not a secure time source, TPM-backed anti-rollback storage, tamper-resistant state, trusted NTP, or a sudden-power-loss certification. An attacker who can replace operator-owned state or manipulate system time and storage could still defeat it. Production must use independently anchored time and secured persistent state.
+
+## Field evidence review: do not manufacture physical receipts
+
+The template at `systemia/network/fixtures/community-radio-field-attestation-template.json` starts with blank values. Populate it only from an authorized **real two-device test**, using reference links to actual screenshots, measured results and the code revision. For review on an operator-owned computer, use:
+
+    npm run radio:field-review -- /absolute/path/to/operator-attestation.json
+
+This is an offline, read-only, bounded JSON check. It returns each missing criterion and a digest of the review output. Even when every self-reported field is present, its **maximum state is `operator_attested_pending_independent_witness_review`**. It never certifies field performance, safety suitability, station authorization, FM operation, or emergency reliability. The review does not inspect footage or validate the truth of operator-supplied references; a separate independent witness, rights review and physical measurements are mandatory before publishing results.
+
+For the first trial, do not include actual station music, private identities, precise sensitive addresses or equipment credentials. Use only the synthetic test audio. Ensure isolated operator-owned networking, distinct phones/computers, upstream Internet disconnected on both, and no modifications to public radio, emergency alerts or station systems.
+
 ## What is *not* verified or built
 
 - **No real neighborhood field proof, hotspot provisioning, phone-to-phone discovery, Wi-Fi Direct, BLE, RF link, or observed audience reach.** A separate synthetic-only, explicitly opted-in private IPv4 LAN lab exists, but it lacks production authentication, hardware isolation, range evidence and actual two-device receipts. Bench tests with real phones remain mandatory.
 - **No radio station live source, streaming path or audio ingest.** The current demo only serves a test WAV that is already on disk. Real station audio needs source custody, rights, an approved ingest path and resilient playback.
 - **No actual station signature or consent:** the synthetic signing key demonstrates cryptographic verification mechanics, not a station approval. Operational rights and editorial approvals must be independently authenticated.
 - **No FM, translator, EAS, NOAA, 911 or licensed broadcasting control.** KZFR has not agreed to any Network installation and is only a prospective partner from a separate website bid.
-- **No tested UPS duration, station power, multi-node sync, clock rollback resilience, client isolation or physical outage field receipt.** A local wall-clock assumption is not a trusted time source; next version must address anti-rollback/expiry across real power cycles.
+- **No tested UPS duration, station power, multi-node sync, securely anchored clock, client isolation or physical outage field receipt.** A local wall-clock assumption is not a trusted time source; next version must address anti-rollback/expiry across real power cycles.
 
 See COMMUNITY-BROADCAST-CONTINUITY.md for the separate licensed-station FM continuity track and future field tests. This prototype cannot be represented as an emergency radio system.
 
