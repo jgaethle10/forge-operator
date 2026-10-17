@@ -1,0 +1,39 @@
+name: Community Radio Offline Safety
+on:
+  pull_request:
+    paths:
+      - 'systemia/network/community-broadcast-continuity.mjs'
+      - 'systemia/network/community-radio-offline-portal.mjs'
+      - 'tests/community-broadcast-continuity.test.mjs'
+      - 'tests/community-radio-offline-portal.test.mjs'
+      - 'scripts/community-radio-offline-demo.mjs'
+      - 'systemia/network/COMMUNITY-RADIO-LOCAL-PORTAL.md'
+      - '.github/workflows/community-radio-offline-safety.yml'
+  push:
+    branches: [main]
+    paths:
+      - 'systemia/network/community-broadcast-continuity.mjs'
+      - 'systemia/network/community-radio-offline-portal.mjs'
+      - 'tests/community-broadcast-continuity.test.mjs'
+      - 'tests/community-radio-offline-portal.test.mjs'
+      - 'scripts/community-radio-offline-demo.mjs'
+      - '.github/workflows/community-radio-offline-safety.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  local-only-security:
+    name: Local offline radio proof
+    runs-on: ubuntu-latest
+    timeout-minutes: 3
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Verify only non-actuating local radio control code
+        run: |
+          node --check systemia/network/community-broadcast-continuity.mjs
+          node --check systemia/network/community-radio-offline-portal.mjs
+          node --check scripts/community-radio-offline-demo.mjs
+          node --test tests/community-broadcast-continuity.test.mjs tests/community-radio-offline-portal.test.mjs
