@@ -60,3 +60,28 @@ test('Foundry take explicitly selects one-shot while other PulseGrid audio remai
 test('missing verified audio fails visibly instead of pretending an empty buffer played',()=>{
   assert.match(clip(),/throw new Error\('PulseGrid audio asset is missing from verified storage:/);
 });
+
+test('the same Fallen Sessions screen exposes recording to playable canonical piano binding',()=>{
+ const source=ui();
+ assert.match(source,/Arm Recorded Piano/);
+ assert.match(source,/Foundry piano root MIDI note/);
+ assert.match(source,/async function armFoundryPianoFromTake\(\)/);
+ const fn=source.slice(source.indexOf('async function armFoundryPianoFromTake'),source.indexOf('async function importFoundryWavFile'));
+ assert.match(fn,/vaultRef\.current\?\.getVerifiedBlob/);
+ assert.match(fn,/verifyFoundryWavBytes/);
+ assert.match(fn,/type:'clip.set_foundry_piano_patch'/);
+ assert.match(fn,/applyPulseGridTransaction/);
+ assert.match(fn,/setSelectedTrackId\(keysTrack.id\)/);
+ assert.match(fn,/release_sec:0\.22/);
+ assert.match(fn,/One verified sample, audition only/);
+ assert.ok(fn.indexOf('verifyFoundryWavBytes')<fn.indexOf('applyPulseGridTransaction'));
+});
+test('piano patch remains bounded by user-selected pitch and cannot claim commercial clearance',()=>{
+ const source=ui();
+ const fn=source.slice(source.indexOf('async function armFoundryPianoFromTake'),source.indexOf('async function importFoundryWavFile'));
+ assert.match(fn,/root<21\|\|root>108/);
+ assert.match(fn,/max_transpose_semitones:2/);
+ assert.match(fn,/rights==='restricted'/);
+ assert.doesNotMatch(fn,/rights:'owned'/);
+ assert.doesNotMatch(fn,/release_ready:true/);
+});
