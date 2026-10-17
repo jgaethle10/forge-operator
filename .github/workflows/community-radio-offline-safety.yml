@@ -6,6 +6,8 @@ on:
       - 'systemia/network/community-radio-offline-portal.mjs'
       - 'tests/community-broadcast-continuity.test.mjs'
       - 'tests/community-radio-offline-portal.test.mjs'
+      - 'tests/community-radio-lan-lab.test.mjs'
+      - 'systemia/network/community-radio-lan-lab.mjs'
       - 'scripts/community-radio-offline-demo.mjs'
       - 'systemia/network/COMMUNITY-RADIO-LOCAL-PORTAL.md'
       - '.github/workflows/community-radio-offline-safety.yml'
@@ -16,6 +18,8 @@ on:
       - 'systemia/network/community-radio-offline-portal.mjs'
       - 'tests/community-broadcast-continuity.test.mjs'
       - 'tests/community-radio-offline-portal.test.mjs'
+      - 'tests/community-radio-lan-lab.test.mjs'
+      - 'systemia/network/community-radio-lan-lab.mjs'
       - 'scripts/community-radio-offline-demo.mjs'
       - '.github/workflows/community-radio-offline-safety.yml'
   workflow_dispatch:
@@ -36,4 +40,5 @@ jobs:
           node --check systemia/network/community-broadcast-continuity.mjs
           node --check systemia/network/community-radio-offline-portal.mjs
           node --check scripts/community-radio-offline-demo.mjs
-          node --test tests/community-broadcast-continuity.test.mjs tests/community-radio-offline-portal.test.mjs
+          node --check systemia/network/community-radio-lan-lab.mjs
+          node --test tests/community-broadcast-continuity.test.mjs tests/community-radio-offline-portal.test.mjs tests/community-radio-lan-lab.test.mjs
