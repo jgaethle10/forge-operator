@@ -1,0 +1,8 @@
+{
+  "schema_version": "1",
+  "operation_id": "synthetic-ticket-001",
+  "idempotency_key": "synthetic-idem-001",
+  "intended_action": "create_ticket",
+  "agent_report": "success",
+  "observations": []
+}
