@@ -98,7 +98,8 @@ export async function fetchRevenueHeartbeatWorkflowConfiguration({
   if(data.path!=='.github/workflows/'+HEARTBEAT)hold('workflow metadata path mismatch');
   const expectedByPath='https://github.com/'+repo+'/actions/workflows/'+HEARTBEAT;
   const expectedById='https://github.com/'+repo+'/actions/workflows/'+data.id;
-  if(data.html_url!==expectedByPath && data.html_url!==expectedById)hold('workflow metadata URL mismatch');
+  const expectedSourceBlob='https://github.com/'+repo+'/blob/main/.github/workflows/'+HEARTBEAT;
+  if(![expectedByPath,expectedById,expectedSourceBlob].includes(data.html_url))hold('workflow metadata URL mismatch');
   if(typeof data.state!=='string'||!['active','disabled_manually','disabled_inactivity','deleted'].includes(data.state))
     hold('workflow metadata state unsupported');
   return Object.freeze({
