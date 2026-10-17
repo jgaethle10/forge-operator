@@ -68,7 +68,7 @@ export function graphicsDepartmentTools() {
     {
       name: 'graphics_preview_art_directed',
       title: 'Create an art-directed vector concept preview',
-      description: 'Render a bounded brand-text-only SVG concept using one of three distinctive geometric treatments and four curated palettes. Client copy and brand rights are unverified. No asset uploads, external images, model inference, video, charges or publication.',
+      description: 'Render a bounded brand-text-only SVG concept using one of three distinctive geometric treatments and four curated palettes. Client copy and brand rights are unverified. Founder rejected the generic composition gallery for creative quality; ENGINEERING PREVIEW ONLY, never portfolio-approved. No asset uploads, external images, model inference, video, charges or publication.',
       inputSchema: ART_SCHEMA,
       annotations: COMMON,
     },
@@ -247,6 +247,8 @@ export function executeGraphicsMcpRpc(request) {
       availableMode: 'local_authenticated_preview_only',
       pending: ['paid_rendering', 'real_video', '3d_world_jobs', 'image_model_calls', 'public_discovery', 'tenant_billing', 'publishing'],
       commercialReadiness: 'not_approved',
+      creativeReviewState: 'founder_rejected_generic_gallery_20261016',
+      subjectFirstCandidate: 'Fallen RC09 authentic scene-based proof, separate from this generic MCP tool',
       publicationAuthority: false,
     }));
   }
