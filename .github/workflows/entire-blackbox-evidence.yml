@@ -31,6 +31,8 @@ jobs:
           /tmp/entire-blackbox inspect examples/unknown.json > /tmp/evidence.json
           grep -q '"assessment":"UNKNOWN"' /tmp/evidence.json
           grep -q '"externally_verified":false' /tmp/evidence.json
+      - name: Four-state adversarial showcase
+        run: bash demo.sh
       - name: Cross-build candidate binaries
         run: |
           GOOS=darwin GOARCH=arm64 go build -o /tmp/entire-blackbox_darwin_arm64 .
