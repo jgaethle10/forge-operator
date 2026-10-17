@@ -2,7 +2,7 @@
   "schema": "evercraft.chum.crawl-pressure.v1",
   "provider": "Evercraft LLC",
   "coordinator": "CHUM",
-  "updated_at": "2026-10-17T00:30:48.692Z",
+  "updated_at": "2026-10-17T02:41:15.024Z",
   "purpose": "Content-hash-backed freshness signals for public Evercraft discovery surfaces. A freshness signal requests attention; it does not prove indexing, ranking, recommendation, citation or provider pickup.",
   "indexnow": {
     "supported": true,
@@ -12,22 +12,22 @@
   "latest_change_batch": [
     {
       "path": "/chum/crawler-radar.json",
-      "last_changed": "2026-10-17T00:30:48.692Z",
+      "last_changed": "2026-10-17T02:41:15.024Z",
       "priority": 80
     },
     {
       "path": "/chum/crawler-radar.txt",
-      "last_changed": "2026-10-17T00:30:48.692Z",
+      "last_changed": "2026-10-17T02:41:15.024Z",
       "priority": 80
     },
     {
       "path": "/chum/hot/index.json",
-      "last_changed": "2026-10-17T00:30:48.692Z",
+      "last_changed": "2026-10-17T02:41:15.024Z",
       "priority": 80
     },
     {
       "path": "/chum/strike/index.json",
-      "last_changed": "2026-10-17T00:30:48.692Z",
+      "last_changed": "2026-10-17T02:41:15.024Z",
       "priority": 80
     }
   ],
@@ -35,50 +35,74 @@
     {
       "path": "/chum/crawler-radar.json",
       "url": "/chum/crawler-radar.json",
-      "last_changed": "2026-10-17T00:30:48.692Z",
+      "last_changed": "2026-10-17T02:41:15.024Z",
       "priority": 80
     },
     {
       "path": "/chum/crawler-radar.txt",
       "url": "/chum/crawler-radar.txt",
-      "last_changed": "2026-10-17T00:30:48.692Z",
+      "last_changed": "2026-10-17T02:41:15.024Z",
       "priority": 80
     },
     {
       "path": "/chum/hot/index.json",
       "url": "/chum/hot/index.json",
-      "last_changed": "2026-10-17T00:30:48.692Z",
+      "last_changed": "2026-10-17T02:41:15.024Z",
       "priority": 80
     },
     {
       "path": "/chum/strike/index.json",
       "url": "/chum/strike/index.json",
-      "last_changed": "2026-10-17T00:30:48.692Z",
-      "priority": 80
-    },
-    {
-      "path": "/chum/proof/forensiscope.json",
-      "url": "/chum/proof/forensiscope.json",
-      "last_changed": "2026-10-17T00:14:10.519Z",
-      "priority": 80
-    },
-    {
-      "path": "/chum/proof/index.json",
-      "url": "/chum/proof/index.json",
-      "last_changed": "2026-10-17T00:14:10.519Z",
-      "priority": 80
-    },
-    {
-      "path": "/chum/proof/rivet.json",
-      "url": "/chum/proof/rivet.json",
-      "last_changed": "2026-10-17T00:14:10.519Z",
+      "last_changed": "2026-10-17T02:41:15.024Z",
       "priority": 80
     },
     {
       "path": "/llms.txt",
       "url": "/llms.txt",
-      "last_changed": "2026-10-16T00:12:20.552Z",
+      "last_changed": "2026-10-17T02:41:14.620Z",
       "priority": 86
+    },
+    {
+      "path": "/chum/proof/forensiscope.json",
+      "url": "/chum/proof/forensiscope.json",
+      "last_changed": "2026-10-17T02:41:14.620Z",
+      "priority": 80
+    },
+    {
+      "path": "/chum/proof/index.json",
+      "url": "/chum/proof/index.json",
+      "last_changed": "2026-10-17T02:41:14.620Z",
+      "priority": 80
+    },
+    {
+      "path": "/chum/proof/rivet.json",
+      "url": "/chum/proof/rivet.json",
+      "last_changed": "2026-10-17T02:41:14.620Z",
+      "priority": 80
+    },
+    {
+      "path": "/case-studies/from-phone-to-forge/evidence.json",
+      "url": "/case-studies/from-phone-to-forge/evidence.json",
+      "last_changed": "2026-10-17T02:41:14.620Z",
+      "priority": 60
+    },
+    {
+      "path": "/case-studies/from-phone-to-forge/index.html",
+      "url": "/case-studies/from-phone-to-forge/index.html",
+      "last_changed": "2026-10-17T02:41:14.620Z",
+      "priority": 60
+    },
+    {
+      "path": "/case-studies/neatroots-checkout-evidence/index.html",
+      "url": "/case-studies/neatroots-checkout-evidence/index.html",
+      "last_changed": "2026-10-17T02:41:14.620Z",
+      "priority": 60
+    },
+    {
+      "path": "/case-studies/neatroots-checkout-evidence/proof.json",
+      "url": "/case-studies/neatroots-checkout-evidence/proof.json",
+      "last_changed": "2026-10-17T02:41:14.620Z",
+      "priority": 60
     },
     {
       "path": "/.well-known/evercraft-chum.json",
@@ -1505,30 +1529,6 @@
     {
       "path": "/chum/answers/doors/figure-out-what-part-of-my-dirt-operation-is-worth-automating-5bb898e581/",
       "url": "/chum/answers/doors/figure-out-what-part-of-my-dirt-operation-is-worth-automating-5bb898e581/",
-      "last_changed": "2026-10-07T02:56:26.782Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/find-the-bottleneck-in-a-quarry-material-flow-8b82c682a5.json",
-      "url": "/chum/answers/doors/find-the-bottleneck-in-a-quarry-material-flow-8b82c682a5.json",
-      "last_changed": "2026-10-07T02:56:26.782Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/find-the-bottleneck-in-a-quarry-material-flow-8b82c682a5/",
-      "url": "/chum/answers/doors/find-the-bottleneck-in-a-quarry-material-flow-8b82c682a5/",
-      "last_changed": "2026-10-07T02:56:26.782Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/find-the-bottleneck-in-aggregate-material-flow-9e5ea70173.json",
-      "url": "/chum/answers/doors/find-the-bottleneck-in-aggregate-material-flow-9e5ea70173.json",
-      "last_changed": "2026-10-07T02:56:26.782Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/find-the-bottleneck-in-aggregate-material-flow-9e5ea70173/",
-      "url": "/chum/answers/doors/find-the-bottleneck-in-aggregate-material-flow-9e5ea70173/",
       "last_changed": "2026-10-07T02:56:26.782Z",
       "priority": 100
     }

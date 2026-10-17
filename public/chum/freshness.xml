@@ -2,17 +2,21 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
 <id>urn:evercraft:chum:crawl-pressure</id>
 <title>Evercraft CHUM Freshness Feed</title>
-<updated>2026-10-17T00:30:48.692Z</updated>
+<updated>2026-10-17T02:41:15.024Z</updated>
 <link rel="self" href="/chum/freshness.xml"/>
 <subtitle>Content-hash-backed public discovery changes. Freshness is not proof of provider pickup.</subtitle>
-<entry><id>urn:evercraft:chum:d8bcbc9c28ec3e0aa29125ea</id><title>/chum/crawler-radar.json</title><updated>2026-10-17T00:30:48.692Z</updated><link href="/chum/crawler-radar.json"/><category term="priority-80"/></entry>
-<entry><id>urn:evercraft:chum:aa9b916fd98945db10fa3cab</id><title>/chum/crawler-radar.txt</title><updated>2026-10-17T00:30:48.692Z</updated><link href="/chum/crawler-radar.txt"/><category term="priority-80"/></entry>
-<entry><id>urn:evercraft:chum:0df896994e643d779039e059</id><title>/chum/hot/index.json</title><updated>2026-10-17T00:30:48.692Z</updated><link href="/chum/hot/index.json"/><category term="priority-80"/></entry>
-<entry><id>urn:evercraft:chum:494de3a9b5c21a35fdfdb6c2</id><title>/chum/strike/index.json</title><updated>2026-10-17T00:30:48.692Z</updated><link href="/chum/strike/index.json"/><category term="priority-80"/></entry>
-<entry><id>urn:evercraft:chum:e75551f8817a367b4412bca9</id><title>/chum/proof/forensiscope.json</title><updated>2026-10-17T00:14:10.519Z</updated><link href="/chum/proof/forensiscope.json"/><category term="priority-80"/></entry>
-<entry><id>urn:evercraft:chum:07ef7bcf722a12057ed32ee4</id><title>/chum/proof/index.json</title><updated>2026-10-17T00:14:10.519Z</updated><link href="/chum/proof/index.json"/><category term="priority-80"/></entry>
-<entry><id>urn:evercraft:chum:780bd435a8894bd856d47115</id><title>/chum/proof/rivet.json</title><updated>2026-10-17T00:14:10.519Z</updated><link href="/chum/proof/rivet.json"/><category term="priority-80"/></entry>
-<entry><id>urn:evercraft:chum:eb1119ab46acbbe2ac257ea9</id><title>/llms.txt</title><updated>2026-10-16T00:12:20.552Z</updated><link href="/llms.txt"/><category term="priority-86"/></entry>
+<entry><id>urn:evercraft:chum:d8bcbc9c28ec3e0aa29125ea</id><title>/chum/crawler-radar.json</title><updated>2026-10-17T02:41:15.024Z</updated><link href="/chum/crawler-radar.json"/><category term="priority-80"/></entry>
+<entry><id>urn:evercraft:chum:aa9b916fd98945db10fa3cab</id><title>/chum/crawler-radar.txt</title><updated>2026-10-17T02:41:15.024Z</updated><link href="/chum/crawler-radar.txt"/><category term="priority-80"/></entry>
+<entry><id>urn:evercraft:chum:0df896994e643d779039e059</id><title>/chum/hot/index.json</title><updated>2026-10-17T02:41:15.024Z</updated><link href="/chum/hot/index.json"/><category term="priority-80"/></entry>
+<entry><id>urn:evercraft:chum:494de3a9b5c21a35fdfdb6c2</id><title>/chum/strike/index.json</title><updated>2026-10-17T02:41:15.024Z</updated><link href="/chum/strike/index.json"/><category term="priority-80"/></entry>
+<entry><id>urn:evercraft:chum:eb1119ab46acbbe2ac257ea9</id><title>/llms.txt</title><updated>2026-10-17T02:41:14.620Z</updated><link href="/llms.txt"/><category term="priority-86"/></entry>
+<entry><id>urn:evercraft:chum:e75551f8817a367b4412bca9</id><title>/chum/proof/forensiscope.json</title><updated>2026-10-17T02:41:14.620Z</updated><link href="/chum/proof/forensiscope.json"/><category term="priority-80"/></entry>
+<entry><id>urn:evercraft:chum:07ef7bcf722a12057ed32ee4</id><title>/chum/proof/index.json</title><updated>2026-10-17T02:41:14.620Z</updated><link href="/chum/proof/index.json"/><category term="priority-80"/></entry>
+<entry><id>urn:evercraft:chum:780bd435a8894bd856d47115</id><title>/chum/proof/rivet.json</title><updated>2026-10-17T02:41:14.620Z</updated><link href="/chum/proof/rivet.json"/><category term="priority-80"/></entry>
+<entry><id>urn:evercraft:chum:02280ccece35669ec83d2513</id><title>/case-studies/from-phone-to-forge/evidence.json</title><updated>2026-10-17T02:41:14.620Z</updated><link href="/case-studies/from-phone-to-forge/evidence.json"/><category term="priority-60"/></entry>
+<entry><id>urn:evercraft:chum:4e8311322b037d0bad51b4c2</id><title>/case-studies/from-phone-to-forge/index.html</title><updated>2026-10-17T02:41:14.620Z</updated><link href="/case-studies/from-phone-to-forge/index.html"/><category term="priority-60"/></entry>
+<entry><id>urn:evercraft:chum:bd8ee24ad4ae941ca54e707c</id><title>/case-studies/neatroots-checkout-evidence/index.html</title><updated>2026-10-17T02:41:14.620Z</updated><link href="/case-studies/neatroots-checkout-evidence/index.html"/><category term="priority-60"/></entry>
+<entry><id>urn:evercraft:chum:5a4037e3ba5e5b9059470a5b</id><title>/case-studies/neatroots-checkout-evidence/proof.json</title><updated>2026-10-17T02:41:14.620Z</updated><link href="/case-studies/neatroots-checkout-evidence/proof.json"/><category term="priority-60"/></entry>
 <entry><id>urn:evercraft:chum:53be437bedb2961a4981d676</id><title>/.well-known/evercraft-chum.json</title><updated>2026-10-16T00:12:20.552Z</updated><link href="/.well-known/evercraft-chum.json"/><category term="priority-84"/></entry>
 <entry><id>urn:evercraft:chum:bc7689c4c0867339d0001ccc</id><title>/chum/strike/</title><updated>2026-10-15T01:35:26.111Z</updated><link href="/chum/strike/"/><category term="priority-80"/></entry>
 <entry><id>urn:evercraft:chum:770866315bf12f2c92446bfe</id><title>/chum/hot/</title><updated>2026-10-15T01:34:55.962Z</updated><link href="/chum/hot/"/><category term="priority-80"/></entry>
@@ -101,8 +105,4 @@
 <entry><id>urn:evercraft:chum:825f501ae683611d41f82909</id><title>/chum/answers/doors/version-control-for-ai-agents-5095c63425/</title><updated>2026-10-07T17:04:29.429Z</updated><link href="/chum/answers/doors/version-control-for-ai-agents-5095c63425/"/><category term="priority-100"/></entry>
 <entry><id>urn:evercraft:chum:d667ee3abdad011e445c2dad</id><title>/chum/intents/lineage-founding-pilot-v1/</title><updated>2026-10-07T17:04:29.429Z</updated><link href="/chum/intents/lineage-founding-pilot-v1/"/><category term="priority-98"/></entry>
 <entry><id>urn:evercraft:chum:aa9328632ab0cf39eee2465f</id><title>/chum/capabilities/</title><updated>2026-10-07T17:04:29.429Z</updated><link href="/chum/capabilities/"/><category term="priority-96"/></entry>
-<entry><id>urn:evercraft:chum:f420d94f556f4018d7f507e8</id><title>/chum/capabilities/lineage-founding-pilot-v1/</title><updated>2026-10-07T17:04:29.429Z</updated><link href="/chum/capabilities/lineage-founding-pilot-v1/"/><category term="priority-96"/></entry>
-<entry><id>urn:evercraft:chum:a193b7e7e33105cabb516c1a</id><title>/chum/capabilities/lineage-founding-pilot-v1/capability.json</title><updated>2026-10-07T17:04:29.429Z</updated><link href="/chum/capabilities/lineage-founding-pilot-v1/capability.json"/><category term="priority-96"/></entry>
-<entry><id>urn:evercraft:chum:c396a008fb2f6ac15ad0c764</id><title>/chum/capabilities/lineage-founding-pilot-v1/llms.txt</title><updated>2026-10-07T17:04:29.429Z</updated><link href="/chum/capabilities/lineage-founding-pilot-v1/llms.txt"/><category term="priority-96"/></entry>
-<entry><id>urn:evercraft:chum:f95b191115fc2c60f4d65237</id><title>/chum/capabilities/lineage-founding-pilot-v1/schema.jsonld</title><updated>2026-10-07T17:04:29.429Z</updated><link href="/chum/capabilities/lineage-founding-pilot-v1/schema.jsonld"/><category term="priority-96"/></entry>
 </feed>
