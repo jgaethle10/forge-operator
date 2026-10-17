@@ -1,0 +1,130 @@
+name: Entire Black Box standalone repository export (no publication)
+
+on:
+  pull_request:
+    paths:
+      - "integrations/entire-blackbox/**"
+      - ".github/workflows/entire-blackbox-standalone-export.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  export-and-snapshot:
+    runs-on: ubuntu-latest
+    timeout-minutes: 16
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-go@v5
+        with:
+          go-version-file: integrations/entire-blackbox/go.mod
+      - name: Fail-closed source-allowlisted export
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 integrations/entire-blackbox/packaging/prepare-standalone.py \
+            stage "$GITHUB_WORKSPACE/standalone-candidate" "$(git rev-parse HEAD)"
+          python3 integrations/entire-blackbox/packaging/prepare-standalone.py \
+            verify "$GITHUB_WORKSPACE/standalone-candidate"
+      - name: Source tests, vet, and local executable behavior in standalone module
+        working-directory: standalone-candidate
+        shell: bash
+        run: |
+          set -euo pipefail
+          go test -count=1 ./...
+          go vet ./...
+          go build -o "$RUNNER_TEMP/entire-blackbox" .
+          "$RUNNER_TEMP/entire-blackbox" inspect examples/unknown.json > "$RUNNER_TEMP/staged-outcome.json"
+          python3 - "$RUNNER_TEMP/staged-outcome.json" <<'PY'
+          import json,sys
+          with open(sys.argv[1]) as f: obj=json.load(f)
+          assert obj["assessment"] == "UNKNOWN",obj
+          assert obj["externally_verified"] is False,obj
+          print("STANDALONE_MODULE_UNKNOWN_GATE_PASS")
+          PY
+      - name: Validate standalone GoReleaser v2 configuration with real snapshot build
+        uses: goreleaser/goreleaser-action@v6
+        with:
+          version: v2.18.3
+          distribution: goreleaser
+          workdir: standalone-candidate
+          args: release --snapshot --clean
+      - name: Assemble deterministic six-platform candidate archive as independent comparison
+        shell: bash
+        run: |
+          set -euo pipefail
+          bash standalone-candidate/packaging/build-candidate.sh 0.1.0 "$RUNNER_TEMP/standalone-archives"
+          python3 standalone-candidate/packaging/verify-candidate.py "$RUNNER_TEMP/standalone-archives" 0.1.0 > "$RUNNER_TEMP/standalone-archives-verified.json"
+          grep -q CANDIDATE_CHECKSUMS_AND_ARCHIVES_VALID "$RUNNER_TEMP/standalone-archives-verified.json"
+          test -n "$(find standalone-candidate/dist -maxdepth 1 -name 'entire-blackbox_*_linux_amd64.tar.gz' -print -quit)"
+          echo "STANDALONE_GORELEASER_SNAPSHOT_AND_SIX_ASSETS_PASS"
+      - name: Store stage and receipts as expiring CI artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: entire-blackbox-standalone-source-candidate
+          path: |
+            standalone-candidate/PROVENANCE.json
+            standalone-candidate/README.md
+            standalone-candidate/.goreleaser.yaml
+            standalone-candidate/.gitignore
+            standalone-candidate/entire-plugin.yml
+            standalone-candidate/go.mod
+            standalone-candidate/main.go
+            standalone-candidate/main_test.go
+            standalone-candidate/examples/
+            standalone-candidate/packaging/
+          retention-days: 7
+          if-no-files-found: error
+      - name: Explicit publish hold
+        run: |
+          echo "Standalone candidate built and snapshotted; no GitHub repo/tag/release, license, index submission or production credential." >> "$GITHUB_STEP_SUMMARY"
+
+  separate-runner-readback:
+    needs: export-and-snapshot
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-go@v5
+        with:
+          go-version-file: integrations/entire-blackbox/go.mod
+      - name: GitHub artifact handoff to new runner
+        uses: actions/download-artifact@v4
+        with:
+          name: entire-blackbox-standalone-source-candidate
+          path: ${{ runner.temp }}/standalone-candidate
+      - name: Independent comparison with checked-out source
+        shell: bash
+        run: |
+          set -euo pipefail
+          export STAGED="$RUNNER_TEMP/standalone-candidate"
+          python3 integrations/entire-blackbox/packaging/prepare-standalone.py verify "$STAGED"
+          python3 - <<'PY'
+          import hashlib,json,os,pathlib,subprocess
+          rec=json.loads((pathlib.Path(os.environ["STAGED"])/"PROVENANCE.json").read_text())
+          assert rec["origin_commit"] == subprocess.check_output(["git","rev-parse","HEAD"],text=True).strip()
+          prefix=pathlib.Path("integrations/entire-blackbox")
+          for rel,want in rec["source_file_sha256"].items():
+              assert hashlib.sha256((prefix/rel).read_bytes()).hexdigest() == want,rel
+          assert not rec["release_authorized"] and rec["publication_state"] == "NOT_PUBLISHED"
+          assert rec["license_state"] == "OWNER_DECISION_REQUIRED"
+          print("DETACHED_SOURCE_ORIGIN_AND_PUBLICATION_HOLD_PASS",len(rec["source_file_sha256"]))
+          PY
+          go -C "$STAGED" test -count=1 ./...
+          go -C "$STAGED" vet ./...
+          go -C "$STAGED" build -o "$RUNNER_TEMP/entire-blackbox" .
+          "$RUNNER_TEMP/entire-blackbox" inspect "$STAGED/examples/unknown.json" > "$RUNNER_TEMP/decision.json"
+          grep -q '"externally_verified":false' "$RUNNER_TEMP/decision.json"
+          cp -a "$STAGED" "$RUNNER_TEMP/tampered"
+          printf 'malice' >> "$RUNNER_TEMP/tampered/main.go"
+          if python3 integrations/entire-blackbox/packaging/prepare-standalone.py verify \
+             "$RUNNER_TEMP/tampered" >/dev/null 2>&1; then
+            echo "Tampered source unexpectedly verified" >&2
+            exit 1
+          fi
+          echo "DETACHED_STANDALONE_READBACK_AND_TAMPER_GATE_PASS"
+      - name: End-state
+        run: |
+          echo "A separate GitHub job verified source provenance and rejection of tampered exported source." >> "$GITHUB_STEP_SUMMARY"
+          echo "No dedicated repository created, GitHub Release published, remote Entire URL install, real provider verified outcome, signed contract, or payment." >> "$GITHUB_STEP_SUMMARY"
