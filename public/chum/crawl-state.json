@@ -2,8 +2,8 @@
   "schema": "evercraft.chum.crawl-state.v1",
   "provider": "Evercraft LLC",
   "coordinator": "CHUM",
-  "updated_at": "2026-10-17T02:41:15.024Z",
-  "url_count": 2988,
+  "updated_at": "2026-10-17T02:41:22.803Z",
+  "url_count": 2984,
   "doctrine": {
     "crawl_can_be_requested_not_forced": true,
     "content_hash_controls_freshness": true,
@@ -141,8 +141,8 @@
     },
     "/chum/hot/index.json": {
       "path": "/chum/hot/index.json",
-      "content_sha256": "c011990236f4f1676dff110a499c2cbe1ac8bb083a01f0d744293f4684c0c760",
-      "last_changed": "2026-10-17T02:41:15.024Z",
+      "content_sha256": "a8d4db84dabaed87b5bcc865f6dec90739187c5e9743cf93aaca6307f2d17e06",
+      "last_changed": "2026-10-17T02:41:22.803Z",
       "priority": 80
     },
     "/chum/strike/": {
@@ -723,8 +723,8 @@
     },
     "/llms.txt": {
       "path": "/llms.txt",
-      "content_sha256": "48edef9b9671876d0bd40a35f576e2dad687991eb4cc3422d8bf1e5309a9debb",
-      "last_changed": "2026-10-17T02:41:14.620Z",
+      "content_sha256": "3cd12769ad5e658a8cf9770472825012d17fe795ce3102b9df093c7dc89b6641",
+      "last_changed": "2026-10-17T02:41:22.803Z",
       "priority": 86
     },
     "/llms-full.txt": {
@@ -17916,30 +17916,6 @@
       "content_sha256": "00e07eddcd1c4999ae45668417354cdfe30acfe8424cd92a025b5d79698e53d2",
       "last_changed": "2026-10-14T23:57:09.569Z",
       "priority": 80
-    },
-    "/case-studies/from-phone-to-forge/index.html": {
-      "path": "/case-studies/from-phone-to-forge/index.html",
-      "content_sha256": "b65805b6ce688929fff1b8bfd7ba9b83df5d337eb8d146b299ecbf225eb74970",
-      "last_changed": "2026-10-17T02:41:14.620Z",
-      "priority": 60
-    },
-    "/case-studies/from-phone-to-forge/evidence.json": {
-      "path": "/case-studies/from-phone-to-forge/evidence.json",
-      "content_sha256": "15449c69583891ab9afbfd0e7767aa0325aa56bf4931378eec81e2dc8149813e",
-      "last_changed": "2026-10-17T02:41:14.620Z",
-      "priority": 60
-    },
-    "/case-studies/neatroots-checkout-evidence/index.html": {
-      "path": "/case-studies/neatroots-checkout-evidence/index.html",
-      "content_sha256": "8f194a531f9154e4f20a922deae438c9f0ac3df7fe4b44fdf7f45f71158c8955",
-      "last_changed": "2026-10-17T02:41:14.620Z",
-      "priority": 60
-    },
-    "/case-studies/neatroots-checkout-evidence/proof.json": {
-      "path": "/case-studies/neatroots-checkout-evidence/proof.json",
-      "content_sha256": "68703996662663bd10b738795f30de8ea32f79d565ba5978b0472a9ea849d616",
-      "last_changed": "2026-10-17T02:41:14.620Z",
-      "priority": 60
     }
   }
 }

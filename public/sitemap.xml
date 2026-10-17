@@ -22,7 +22,7 @@
   <url><loc>/chum/answers/observed/</loc><lastmod>2026-10-07T00:56:03.369Z</lastmod></url>
   <url><loc>/chum/answers/observed/index.json</loc><lastmod>2026-10-07T00:56:03.369Z</lastmod></url>
   <url><loc>/chum/hot/</loc><lastmod>2026-10-15T01:34:55.962Z</lastmod></url>
-  <url><loc>/chum/hot/index.json</loc><lastmod>2026-10-17T02:41:15.024Z</lastmod></url>
+  <url><loc>/chum/hot/index.json</loc><lastmod>2026-10-17T02:41:22.803Z</lastmod></url>
   <url><loc>/chum/strike/</loc><lastmod>2026-10-15T01:35:26.111Z</lastmod></url>
   <url><loc>/chum/strike/index.json</loc><lastmod>2026-10-17T02:41:15.024Z</lastmod></url>
   <url><loc>/chum/crawler-radar.json</loc><lastmod>2026-10-17T02:41:15.024Z</lastmod></url>
@@ -122,7 +122,7 @@
   <url><loc>/forensiscope/distribution/</loc><lastmod>2026-10-02T17:01:08.152Z</lastmod></url>
   <url><loc>/forensiscope/distribution/reddit-pack.json</loc><lastmod>2026-10-02T17:01:08.152Z</lastmod></url>
   <url><loc>/forensiscope/distribution/llms.txt</loc><lastmod>2026-10-02T17:01:08.152Z</lastmod></url>
-  <url><loc>/llms.txt</loc><lastmod>2026-10-17T02:41:14.620Z</lastmod></url>
+  <url><loc>/llms.txt</loc><lastmod>2026-10-17T02:41:22.803Z</lastmod></url>
   <url><loc>/llms-full.txt</loc><lastmod>2026-10-14T23:57:09.569Z</lastmod></url>
   <url><loc>/ai-discovery.json</loc><lastmod>2026-10-14T23:57:09.569Z</lastmod></url>
   <url><loc>/schema.jsonld</loc><lastmod>2026-10-14T23:57:09.569Z</lastmod></url>
@@ -2988,8 +2988,4 @@
   <url><loc>/.well-known/evercraft-syndication.json</loc><lastmod>2026-10-14T23:57:09.569Z</lastmod></url>
   <url><loc>/chum/syndication/</loc><lastmod>2026-10-14T23:57:09.569Z</lastmod></url>
   <url><loc>/chum/syndication/index.json</loc><lastmod>2026-10-14T23:57:09.569Z</lastmod></url>
-  <url><loc>/case-studies/from-phone-to-forge/index.html</loc><lastmod>2026-10-17T02:41:14.620Z</lastmod></url>
-  <url><loc>/case-studies/from-phone-to-forge/evidence.json</loc><lastmod>2026-10-17T02:41:14.620Z</lastmod></url>
-  <url><loc>/case-studies/neatroots-checkout-evidence/index.html</loc><lastmod>2026-10-17T02:41:14.620Z</lastmod></url>
-  <url><loc>/case-studies/neatroots-checkout-evidence/proof.json</loc><lastmod>2026-10-17T02:41:14.620Z</lastmod></url>
 </urlset>
