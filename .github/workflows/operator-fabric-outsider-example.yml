@@ -25,8 +25,20 @@ jobs:
           node --check examples/operator-fabric/independent-tool-client.mjs
           node --check examples/operator-fabric/review-gate.mjs
           node --check examples/operator-fabric/reviewed-http-bridge.mjs
+          node --check examples/operator-fabric/pilot-check.mjs
       - name: Run signed review + remote loopback + independent tool tests without external services
         run: node --test examples/operator-fabric/test/*.test.mjs
+      - name: Produce self-service offline pilot receipt
+        run: |
+          mkdir -p artifacts/operator-fabric
+          node examples/operator-fabric/pilot-check.mjs --offline | tee artifacts/operator-fabric/offline-pilot-receipt.json
+      - name: Preserve offline test receipt
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: operator-fabric-offline-${{ github.run_id }}
+          path: artifacts/operator-fabric/offline-pilot-receipt.json
+          retention-days: 14
       - name: Prove real local MCP tool handshake and invocation without secrets
         run: node examples/operator-fabric/independent-tool-client.mjs
 
@@ -46,7 +58,7 @@ jobs:
       - name: Independently run documented outsider remote client on owned public endpoint
         run: |
           mkdir -p artifacts/operator-fabric
-          node examples/operator-fabric/public-discovery.mjs | tee artifacts/operator-fabric/outsider-readback.json
+          node examples/operator-fabric/pilot-check.mjs --live | tee artifacts/operator-fabric/outsider-readback.json
       - name: Preserve exact external observations even if the remote probe fails
         if: always()
         uses: actions/upload-artifact@v4
