@@ -36,7 +36,7 @@ test('funnel is private, fail-open, no buyer PII, and records HTTP stages withou
  assert.match(html,/Continue to checkout/);
  let providerCalls=0;
  const runtime=await startFabricLocalRuntime({
-  host:'127.0.0.1',port:0,catalog:[offer],faieSurfaceEnabled:false,
+  host:'127.0.0.1',port:0,catalog,faieSurfaceEnabled:false,
   offerFunnelLedgerPath:ledgerPath,
   purchaseIntentFetch:async()=>{
    providerCalls++;
