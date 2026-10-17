@@ -68,6 +68,24 @@ jobs:
           path: /tmp/blackbox-source-lab.json
           if-no-files-found: error
           retention-days: 14
+      - name: Scheduled revenue heartbeat source boundaries
+        run: node --test ../../systemia/agent-continuity/github-heartbeat-source.test.mjs
+      - name: Live scheduled revenue heartbeat readonly intake
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          node ../../systemia/agent-continuity/github-heartbeat-lab.mjs | tee /tmp/blackbox-scheduled-heartbeat.json
+          grep -q '"live_agent_telemetry_verified": false' /tmp/blackbox-scheduled-heartbeat.json
+          grep -q '"external_effect_provider_verified": false' /tmp/blackbox-scheduled-heartbeat.json
+          grep -q '"execution_authority": "NONE_READ_ONLY"' /tmp/blackbox-scheduled-heartbeat.json
+      - name: Archive sanitized scheduled heartbeat observation
+        uses: actions/upload-artifact@v4
+        with:
+          name: blackbox-scheduled-heartbeat-readonly-lab
+          path: /tmp/blackbox-scheduled-heartbeat.json
+          if-no-files-found: error
+          retention-days: 14
       - name: Cross-build candidate binaries
         run: |
           GOOS=darwin GOARCH=arm64 go build -o /tmp/entire-blackbox_darwin_arm64 .
