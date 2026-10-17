@@ -155,3 +155,25 @@ test('missing resolver refuses to claim MIDI instrument playback',{concurrency:f
     }finally{await engine.close()}
   });
 });
+
+test('switching scenes stops sampled playback until new scene is verified and explicitly started', {concurrency:false},async()=>{
+  await withSimulatedAudio(async()=>{
+    const {session,bytes}=prepare();
+    const engine=new PulseGridAudioEngine();
+    engine.setAudioAssetResolver(resolverOf(bytes));
+    try{
+      await engine.play(session,0);
+      assert.equal(engine.status.playing,true);
+      const prevSources=SimulatedAudioContext.instances.at(-1).starts;
+      assert.equal(prevSources.length,1);
+      engine.setScene(1);
+      assert.equal(engine.status.playing,false);
+      assert.equal(engine.status.scene,1);
+      assert.ok(prevSources[0].source.stops.length>=1,'prior piano source is stopped on scene change');
+      await engine.play(session,1);
+      assert.equal(engine.status.playing,true);
+      // No sampled instrument patch on empty scene 1.
+      assert.equal(SimulatedAudioContext.instances.at(-1).starts.length,1);
+    }finally{await engine.close()}
+  });
+});
