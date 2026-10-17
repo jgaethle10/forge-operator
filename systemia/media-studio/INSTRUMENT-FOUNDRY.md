@@ -85,3 +85,53 @@ This special import automatically grows an audio clip up to the existing 16-bar 
 **What the code tests prove:** the UI is wired to the canonical transaction and the verified stored-audio path; batch and byte custody tests pass. **What they do not prove yet:** an actual founder device clicked the new UI, audible browser playback of a captured acoustic piano, web deployment or release rights. Use an owned recording for that next end-to-end demonstration and capture the exact build/source/asset/playback receipts.
 
 Run the dedicated workflow and also existing `npm run test:media-studio` / TypeScript check before any merge. The original *Weight of Silence* master is immutable in this change.
+
+
+## Bounded playable sampled piano (fourth engineering slice)
+
+The canonical **MIDI Keys** synthesizer can now hold a reversible
+\`clip.set_foundry_piano_patch\` referencing content-addressed audio assets
+already registered in the **same** PulseGrid session. The patch lives on the
+canonical clip provenance and survives graph export, undo and session migration.
+It is not an independent hidden instrument database.
+
+The first supported patch is \`recorded_piano_v1\`, with explicitly declared
+sample root pitch (MIDI 21–108), recorded velocity range, \`release_sec\`,
+and a conservative **±2 semitone** maximum transposition. A missing sample,
+uncovered MIDI pitch, unrecorded velocity, restricted sample, malformed patch,
+or absent verified storage fails **closed**, rather than substituting the old
+oscillator synth or claiming the user has a fully sampled grand piano.
+
+During playback, \`PulseGridAudioEngine\` resolves and decodes every referenced
+sample through its existing vault-backed asset resolver and schedules an
+actual \`AudioBufferSourceNode\` through the existing track bus. The note
+uses playback-rate transposition, velocity scaling, a short attack envelope,
+and a controlled key-off release envelope. This is **first-generation
+sample playback**, not modeled hammer mechanics, multi-mic resonance, piano
+pedal sensing, continuous round-robin variation, or a natural-instrument
+performance guarantee.
+
+The Fallen Sessions screen exposes an **Import Foundry WAV** control and an
+**Arm Recorded Piano** action with an explicit **Piano root MIDI** field. The
+founder can import one genuine recording for internal listening, set its root
+note, attach it to the canonical \`keys\` MIDI scene, add/play MIDI notes within
+two semitones, and undo the assignment. WAV hash proves its bytes only, not
+exclusive rights, who performed it, or payment/distribution eligibility.
+Broader note-by-note instrument coverage will need more authorized captures.
+
+**Do not accidentally confuse the MIDI sampler with the existing Audio Take
+one-shot clip**. The latter plays the complete WAV as a clip. This new
+instrument voice is MIDI-triggered and envelope-controlled from a user-selected
+root note.
+
+Tests include a real canonical patch assignment and undo, pitch and velocity
+coverage, no invented missing notes, cross-track rejection, simulated Web Audio
+buffer rate/gain/start/stop events, and the UI's verify-before-arm path.
+These are **automated implementation tests**. To claim audible success, capture
+the authenticated source WAV, deploy the specific PR build in a supported
+browser, press Play, listen to the actual note and tail, and save the
+exact source/hash/session/asset/playback and human QA receipts.
+
+The beloved *Weight of Silence* master remains unchanged; no rights clearance,
+acoustic piano capture, production release, or proven listening quality is
+asserted by this code.
