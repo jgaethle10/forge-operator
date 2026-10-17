@@ -33,6 +33,7 @@ export function faieCollectorConfigFromEnv(env = process.env) {
   return {
     enabled: bool(env.FAIE_OFFICIAL_COLLECTORS_ENABLED, true),
     region_profile: resolved.profile,
+    region_aliases: resolved.region_aliases || [],
     nws_enabled: bool(env.FAIE_NWS_ENABLED, true),
     nws_area: resolved.nws_area,
     usgs_water_sites: resolved.usgs_water_locations,
@@ -61,7 +62,7 @@ function domainsForSentinelObservation(row = {}) {
   return ['general'];
 }
 
-export function sentinelObservationToFaie(row = {}) {
+export function sentinelObservationToFaie(row = {}, { regionAliases = [] } = {}) {
   const observationId = clean(row.observation_id);
   if (!observationId) throw new TypeError('sentinel observation_id is required');
 
@@ -80,7 +81,11 @@ export function sentinelObservationToFaie(row = {}) {
     source_system: 'systemia_sentinel_official',
     source_family: clean(row.source_family || 'sentinel-official-source'),
     observed_at: observedAt,
-    region_keys: [row.region_key, row.region_group].map(clean).filter(Boolean),
+    region_keys: [...new Set([
+      row.region_key,
+      row.region_group,
+      ...regionAliases
+    ].map(clean).filter(Boolean))],
     domains: domainsForSentinelObservation(row),
     kind: clean(row.kind || 'official_source_observation'),
     evidence_state: clean(row.evidence_state || 'reported').toLowerCase(),
@@ -104,6 +109,7 @@ export function sentinelObservationToFaie(row = {}) {
     },
     metadata: {
       bridge: 'faie_sentinel_official_source_bridge',
+      region_aliases: [...new Set(regionAliases.map(clean).filter(Boolean))],
       adapter_receipt: row.adapter_receipt && typeof row.adapter_receipt === 'object'
         ? structuredClone(row.adapter_receipt)
         : null
@@ -210,7 +216,9 @@ export async function collectFaieOfficialSources({
       });
       for (const row of result?.observations || []) {
         try {
-          observations.push(sentinelObservationToFaie(row));
+          observations.push(sentinelObservationToFaie(row, {
+            regionAliases: config.region_aliases || []
+          }));
         } catch (error) {
           receipts.push({
             source_id: job.id,
