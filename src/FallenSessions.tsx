@@ -1,6 +1,7 @@
 import React, { useEffect, useMemo, useRef, useState } from 'react';
 import {
   PULSEGRID_ENGINE_VERSION,
+  PULSEGRID_MAX_CLIP_BARS,
   PulseGridAudioEngine,
   PulseGridBrowserAudioAssetVault,
   applyPulseGridOperation,
@@ -217,13 +218,28 @@ export default function FallenSessions(){
       const audioTrack=current.tracks.find((candidate)=>candidate.type==='audio');
       if(!audioTrack)throw new Error('No canonical audio track exists.');
       // This digest proves the locally supplied bytes, not artist/sample ownership.
+      const barDuration=4*60/current.transport.bpm; // 16 canonical 16th-steps per bar
+      const requiredBars=Math.max(1,Math.ceil((asset.duration_sec+0.01)/barDuration));
+      if(requiredBars>PULSEGRID_MAX_CLIP_BARS){
+        throw new Error('Foundry take exceeds the 16-bar audition limit. Use a shorter WAV; long-form masters require a separate arrangement path.');
+      }
       const candidate={...asset,source_refs:['sha256:'+asset.digest]};
       const admitted=compileFoundryImport({
         session:current,assets:[candidate],
         attachments:[{track_id:audioTrack.id,scene,asset_id:asset.id}],
         actor:'human',
       });
-      const committed=applyPulseGridTransaction(current,admitted.transaction,admitted.actor);
+      const currentBars=audioTrack.clips[scene]?.bars||1;
+      const operations=[
+        ...(requiredBars>currentBars
+          ? [{type:'clip.set_bars' as const,track_id:audioTrack.id,scene,bars:requiredBars}]
+          : []),
+        ...admitted.transaction.operations,
+      ];
+      const committed=applyPulseGridTransaction(current,{
+        intent:'Verify, size, and attach Foundry WAV for internal audition.',
+        operations,
+      },admitted.actor);
       setSession(committed.session);
       setSelectedTrackId(audioTrack.id);
       setSelectedScene(scene);
