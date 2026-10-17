@@ -72,3 +72,16 @@ Next: authorize a real recording storage adapter and run actual
 recording -> storage -> verified Blob -> canonical audio decode/playback
 in a browser, with separately attributable producer and listener receipts.
 Continue holding the rejected oscillator remake out of the master path.
+
+
+## Founder audition path in Fallen Sessions (third slice)
+
+The `/fallen-sessions` route now has an **Import Foundry WAV** control beside the existing general import. It accepts a locally selected RIFF/WAV file as `rights:'unknown'`, then uses the existing `PulseGridBrowserAudioAssetVault` to hash, decode and retain the recording. Before any canonical transaction it re-reads the stored Blob, independently verifies WAV bytes/format/SHA-256 with `verifyFoundryWavBytes`, and invokes `compileFoundryImport` and the **existing** `applyPulseGridTransaction` to attach the asset to a real Audio Take scene. On Play, the existing `PulseGridAudioEngine` uses the same vault's `getVerifiedBlob` resolver.
+
+The source reference `sha256:<digest>` in this local workflow records **only the content fingerprint of the user-selected local WAV**. It does **not** verify performer attribution, commercial sampling rights, independent host identity or that the file is Evercraft-owned. The authenticated multi-tenant storage resolver remains a separate host-side integration, not a property of local imports.
+
+This special import automatically grows an audio clip up to the existing 16-bar limit based on the current PulseGrid BPM. Longer WAVs fail explicitly rather than being silently truncated. This is for **short piano and string instrument takes**, not for importing the full 68-second master through a single clip. General Import Audio continues to support normal formats and behavior.
+
+**What the code tests prove:** the UI is wired to the canonical transaction and the verified stored-audio path; batch and byte custody tests pass. **What they do not prove yet:** an actual founder device clicked the new UI, audible browser playback of a captured acoustic piano, web deployment or release rights. Use an owned recording for that next end-to-end demonstration and capture the exact build/source/asset/playback receipts.
+
+Run the dedicated workflow and also existing `npm run test:media-studio` / TypeScript check before any merge. The original *Weight of Silence* master is immutable in this change.
