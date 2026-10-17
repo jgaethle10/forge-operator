@@ -2,10 +2,8 @@
   "schema": "evercraft.audit.fabric-parity-known-exceptions.v1",
   "observed_at": "2026-10-17",
   "expires_at": "2026-10-22T00:00:00Z",
-  "known_source_only_capabilities": [
-    "workflow-foundry-xray-v1"
-  ],
+  "known_source_only_capabilities": [],
   "known_nonworking_public_routes": [],
-  "reason": "Current independent external read-only parity audit observed all 52 existing public MCP capability IDs including lineage-founding-pilot-v1 and all 53 candidate source URLs responding HTTP 200. The sole source-only ID is workflow-foundry-xray-v1: its approved $250 /offers/workflow-xray human buyer URL works, but this newly introduced matcher capability is not deployed in live MCP. This is a transparent time-limited exception for the candidate deployment gap, not live-match proof, release authority, paid settlement, or delivered work.",
-  "review": "After authorized owned-edge release, independently observe workflow-foundry-xray-v1 present in live read-only MCP, verify the exact owned buyer URL and correct price, and bind immutable running release and signed deployment receipt. Close this exception immediately on parity; it automatically fails closed at October 22, 2026 00:00 UTC if the ID is still missing. Any unrelated new missing ID, broken URL or mismatched product must still fail."
+  "reason": "No active source-only or 404 exceptions. After authorized PR #1360 landed, independent public Fabric MCP matching returned workflow-foundry-xray-v1 first for 2/2 unbranded buyer-intent probes, and the live source-versus-MCP audit found 53/53 capabilities, 53/53 public HTTP 200 routes, no source-only/live-only IDs and zero findings. This does not establish payment settlement, completed fulfillment, or signed deployment lineage.",
+  "review": "All future source-to-live capability gaps and nonworking advertised public routes must fail closed, without a standing Workflow X-Ray exception. Continue separately verifying the running immutable release and signed DeploymentReceipt under P0 #1346; public /health currently reports deployment_receipt_bound:false. Treat future checkout-open states only as checkout handoff evidence, not provider-paid receipt."
 }
