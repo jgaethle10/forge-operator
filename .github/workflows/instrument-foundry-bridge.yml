@@ -12,6 +12,9 @@ on:
       - 'systemia/media-studio/pulsegrid-audio-scheduler.mjs'
       - 'systemia/media-studio/pulsegrid-audio-scheduler.d.mts'
       - 'systemia/media-studio/pulsegrid-audio-scheduler.test.mjs'
+      - 'systemia/media-studio/instrument-foundry-piano.mjs'
+      - 'systemia/media-studio/instrument-foundry-piano.d.mts'
+      - 'systemia/media-studio/instrument-foundry-piano.test.mjs'
       - 'systemia/media-studio/pulsegrid-session.ts'
       - 'systemia/media-studio/pulsegrid-audio.ts'
       - 'systemia/media-studio/instrument-foundry-bridge.d.mts'
@@ -35,4 +38,4 @@ jobs:
         with:
           node-version: '22'
       - name: Foundry custody and import tests
-        run: node --experimental-strip-types --test systemia/media-studio/instrument-foundry-bridge.test.mjs systemia/media-studio/instrument-foundry-pulsegrid.integration.test.mjs systemia/media-studio/instrument-foundry-resolver.test.mjs systemia/media-studio/instrument-foundry-ui.test.mjs systemia/media-studio/pulsegrid-audio-scheduler.test.mjs
+        run: node --experimental-strip-types --test systemia/media-studio/instrument-foundry-bridge.test.mjs systemia/media-studio/instrument-foundry-pulsegrid.integration.test.mjs systemia/media-studio/instrument-foundry-resolver.test.mjs systemia/media-studio/instrument-foundry-ui.test.mjs systemia/media-studio/pulsegrid-audio-scheduler.test.mjs systemia/media-studio/instrument-foundry-piano.test.mjs
