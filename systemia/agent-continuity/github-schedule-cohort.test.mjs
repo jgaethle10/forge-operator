@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import {COHORT,observeScheduledCohort} from './github-schedule-cohort.mjs';
+import {COHORT,observeScheduledCohort,cohortToSharedIncidentEvents} from './github-schedule-cohort.mjs';
 const repo='jgaethle10/forge-operator',now=Date.parse('2026-10-17T17:00:00Z');
 function make(lane,i,age=3*60000,conclusion='success'){
  const created_at=new Date(now-age).toISOString().replace('.000Z','Z');
@@ -85,4 +85,30 @@ test('fail closed for GitHub API and giant or malformed response',async()=>{
  await assert.rejects(()=>observeScheduledCohort({token:'test-read-token',now,fetcher:async()=>({ok:false,status:403})}),/GITHUB_HTTP_403/);
  await assert.rejects(()=>observeScheduledCohort({token:'test-read-token',now,fetcher:async()=>({ok:true,text:async()=>'{bad'})}),/PROVIDER_JSON_INVALID/);
  await assert.rejects(()=>observeScheduledCohort({token:'test-read-token',now,fetcher:async()=>({ok:true,text:async()=>('x'.repeat(200000))})}),/PROVIDER_BODY_TOO_LARGE/);
+});
+
+test('all provider-fetched schedule events share exact incident identity without fabricated effects',async()=>{
+ const f=mock();const receipt=await observeScheduledCohort({token:'test-read-token',now,fetcher:f.fetcher});
+ const packet=cohortToSharedIncidentEvents(receipt);
+ assert.equal(packet.events.length,5);
+ assert.equal(new Set(packet.events.map(e=>e.incident_id)).size,1);
+ assert.equal(new Set(packet.events.map(e=>e.event_id)).size,5);
+ assert.equal(packet.incident_id,packet.events[0].incident_id);
+ assert.equal(packet.semantic_edges,'TEMPORAL_CORRELATION_ONLY_NOT_CAUSATION');
+ assert.equal(packet.execution_authority,'NONE_READ_ONLY');
+ for(const ev of packet.events){
+  assert.equal(ev.evidence_kind,'source_report');
+  assert.equal(ev.external_effect,'UNKNOWN');assert.deepEqual(ev.verified_impact,[]);
+  assert.deepEqual(ev.possible_impact,[]);
+  assert.equal(ev.persistence_paths[0].state,'reported');
+ }
+});
+test('missing run has no forged event and caller-created cohort cannot impersonate source',async()=>{
+ const f=mock({missing:[2]});
+ const r=await observeScheduledCohort({token:'test-read-token',now,fetcher:f.fetcher});
+ const packet=cohortToSharedIncidentEvents(r);
+ assert.equal(packet.events.length,4);
+ assert.deepEqual(packet.excluded_missing_lanes,['legacy_rescue']);
+ assert.throws(()=>cohortToSharedIncidentEvents({...r}),/COHORT_NOT_AUTHENTICATED/);
+ assert.throws(()=>cohortToSharedIncidentEvents(r,{tenant_id:'another'}),/COHORT_MISSION_SCOPE/);
 });
