@@ -156,6 +156,24 @@ jobs:
           grep -q '"github_job_artifact_transfer_consumed": true' /tmp/blackbox-cross-job-acceptance.json
           grep -q '"independent_provisioned_identity_verified": false' /tmp/blackbox-cross-job-acceptance.json
           grep -q '"live_chum_spider_consumer_verified": false' /tmp/blackbox-cross-job-acceptance.json
+      - name: Owner-pinned trust separation denial tests
+        run: node --test systemia/agent-continuity/owner-trust-preflight.test.mjs
+      - name: Prove lab signer keys are not owner-approved
+        run: |
+          set -euo pipefail
+          env -u BLACKBOX_OWNER_TRUST_SHA256 -u BLACKBOX_OWNER_PUBLIC_TRUST_JSON \
+            node systemia/agent-continuity/owner-trust-preflight-cli.mjs \
+            /tmp/blackbox-cross-job-in/blackbox-detached-chain.json | tee /tmp/blackbox-owner-trust-held.json
+          grep -q '"state": "HELD_OWNER_TRUST_FINGERPRINT_NOT_CONFIGURED"' /tmp/blackbox-owner-trust-held.json
+          grep -q '"release_authorized": false' /tmp/blackbox-owner-trust-held.json
+          grep -q '"independently_pinned_trust_verified": false' /tmp/blackbox-owner-trust-held.json
+      - name: Archive held owner-trust gate
+        uses: actions/upload-artifact@v4
+        with:
+          name: blackbox-owner-trust-not-enrolled
+          path: /tmp/blackbox-owner-trust-held.json
+          if-no-files-found: error
+          retention-days: 14
       - name: Preserve separate-runner acceptance receipt
         uses: actions/upload-artifact@v4
         with:
