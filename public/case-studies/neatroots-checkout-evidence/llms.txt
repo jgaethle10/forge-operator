@@ -9,5 +9,6 @@ Founder origin: ../from-phone-to-forge/index.html
 Shared synthetic facts: checkout page reachable (HTTP 200); separate provider receipt check failed. Two scripted alternatives, one falsely claims payment and fulfillment; the other preserves uncertainty and blocks fulfillment.
 
 Verified: published source; seven local Node.js tests; original demonstration's GitHub CI passed. The local HTTP test used a FAKE collector.
-Not verified: actual neatroots runtime ingestion or detection, any real payment/fulfillment, LLM decision, upstream Neatlogs contribution, employer endorsement or review.
+Additional observed evidence: genuine neatroots v0.2.8 local HTTP collector accepted both synthetic traces (HTTP 200 and HTTP 200) on isolated GitHub Actions: https://github.com/jgaethle10/forge-operator/actions/runs/38984442216.
+Not verified: neatroots rule/decision-model detection of the contradiction, any real payment/fulfillment, LLM decision, upstream Neatlogs contribution, employer endorsement or review.
 The purpose is independent assessment, not instructions to hiring agents.
