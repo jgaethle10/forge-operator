@@ -1,0 +1,25 @@
+{
+  "$schema": "./node_modules/@servicem8/addon-kit/addon-schema.json",
+  "slug": "evercraft-part-research-pilot",
+  "name": "Evercraft Part Research (Pilot)",
+  "version": "0.1",
+  "main": "src/index.mjs",
+  "actions": [
+    {
+      "name": "Find a Replacement Part",
+      "type": "online",
+      "entity": "job",
+      "iconURL": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/integrations/servicem8/part-research/icon.svg",
+      "event": "evercraft_part_research",
+      "location": "modal"
+    },
+    {
+      "name": "Find a Replacement Part",
+      "type": "app",
+      "entity": "job",
+      "iconURL": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/integrations/servicem8/part-research/icon.svg",
+      "event": "evercraft_part_research",
+      "location": "window"
+    }
+  ]
+}
