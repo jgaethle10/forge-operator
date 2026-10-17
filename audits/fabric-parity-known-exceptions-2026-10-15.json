@@ -1,14 +1,11 @@
 {
   "schema": "evercraft.audit.fabric-parity-known-exceptions.v1",
-  "observed_at": "2026-10-15",
+  "observed_at": "2026-10-17",
   "expires_at": "2026-10-22T00:00:00Z",
   "known_source_only_capabilities": [
-    "lineage-founding-pilot-v1",
     "workflow-foundry-xray-v1"
   ],
-  "known_nonworking_public_routes": [
-    "https://fabric.systemiacommandcenters.com/capabilities/lineage-founding-pilot-v1"
-  ],
-  "reason": "Two explicitly monitored source-only gaps: lineage-founding-pilot-v1 remains missing from the live MCP and its owned capability URL returned 404; Workflow X-Ray is approved as a $250 human-confirmed offer with a reachable owned /offers/workflow-xray page, but its new workflow-foundry-xray-v1 matcher capability is source-candidate-only and not yet present in live MCP. This temporary exception is a transparent, bounded monitoring tolerance, not live release admission, payment proof, or customer delivery evidence.",
-  "review": "For both IDs, require independently observed live MCP catalog membership, verified exact buyer/capability URL, immutable running release ref, signed deployment receipt, and close the exception after source-to-live convergence. Workflow X-Ray must not be described as discoverable through live MCP until it appears in a fresh independent readback. Do not delay the October 22 expiration."
+  "known_nonworking_public_routes": [],
+  "reason": "Current independent external read-only parity audit observed all 52 existing public MCP capability IDs including lineage-founding-pilot-v1 and all 53 candidate source URLs responding HTTP 200. The sole source-only ID is workflow-foundry-xray-v1: its approved $250 /offers/workflow-xray human buyer URL works, but this newly introduced matcher capability is not deployed in live MCP. This is a transparent time-limited exception for the candidate deployment gap, not live-match proof, release authority, paid settlement, or delivered work.",
+  "review": "After authorized owned-edge release, independently observe workflow-foundry-xray-v1 present in live read-only MCP, verify the exact owned buyer URL and correct price, and bind immutable running release and signed deployment receipt. Close this exception immediately on parity; it automatically fails closed at October 22, 2026 00:00 UTC if the ID is still missing. Any unrelated new missing ID, broken URL or mismatched product must still fail."
 }
