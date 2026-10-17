@@ -18,7 +18,7 @@ Evercraft founder Jesse Gaethle reports beginning with an **iPhone, ChatGPT and 
 
 **Case:** An agent sees HTTP 200 on a checkout page, but the separate payment receipt check fails. The two *scripted synthetic* traces compare a false success claim with a truthful blocked response. The underlying tool observations are identical.
 
-**Verified:** Public code and scenario fixtures; seven local Node tests; original proof CI passed on GitHub. **Not verified:** A real neatroots installation's acceptance and diagnosis of these traces; a production payment or fulfillment; any Neatlogs staff review; an upstream merged contribution; a hiring outcome.
+**Verified:** Public code and synthetic fixtures; seven local Node tests; original proof CI passed. A [new isolated GitHub Actions test](https://github.com/jgaethle10/forge-operator/actions/runs/38984442216) installed actual neatroots v0.2.8 and got HTTP 200 acceptance for both synthetic traces from its real local collector. **Not verified:** neatroots automatically diagnosed the contradiction, production payment or fulfillment, Neatlogs staff review, a merged upstream contribution, or a hiring outcome.
 
 ## Where the tool story matters
 
