@@ -235,6 +235,7 @@ export default function FallenSessions(){
           ? [{type:'clip.set_bars' as const,track_id:audioTrack.id,scene,bars:requiredBars}]
           : []),
         ...admitted.transaction.operations,
+        {type:'clip.set_audio_playback_mode' as const,track_id:audioTrack.id,scene,mode:'one_shot' as const},
       ];
       const committed=applyPulseGridTransaction(current,{
         intent:'Verify, size, and attach Foundry WAV for internal audition.',
