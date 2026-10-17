@@ -106,3 +106,14 @@ test('workflow metadata spoofing and API failures fail closed',async()=>{
  await assert.rejects(()=>fetchRevenueHeartbeatWorkflowConfiguration({repo,token:'test-readonly-token',
    fetcher:async()=>({ok:false,status:403})}),/workflow metadata HTTP 403/);
 });
+
+test('source-blob workflow URL accepted but a different branch is rejected',async()=>{
+ const metadata={id:9911,path:'.github/workflows/revenue-autonomy-heartbeat.yml',
+   html_url:'https://github.com/jgaethle10/forge-operator/blob/main/.github/workflows/revenue-autonomy-heartbeat.yml',state:'active'};
+ const fetcher=async()=>({ok:true,text:async()=>JSON.stringify(metadata)});
+ const good=await fetchRevenueHeartbeatWorkflowConfiguration({repo,token:'test-readonly-token',fetcher});
+ assert.equal(good.provider_workflow_state,'active');
+ assert.equal(good.metadata_readback_verified,true);
+ metadata.html_url=metadata.html_url.replace('/blob/main/','/blob/evil/');
+ await assert.rejects(()=>fetchRevenueHeartbeatWorkflowConfiguration({repo,token:'test-readonly-token',fetcher}),/URL mismatch/);
+});
