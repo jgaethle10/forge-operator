@@ -1,10 +1,9 @@
 {
-  "$schema": "https://api.servicem8.com/api_1.0/addonsdk/manifest-schema/v1.json",
+  "$schema": "./node_modules/@servicem8/addon-kit/addon-schema.json",
   "slug": "evercraft-part-research-pilot",
   "name": "Evercraft Part Research (Pilot)",
   "version": "0.1",
   "main": "src/index.mjs",
-  "addonTargetAudience": "ServiceM8 job teams who occasionally need to identify an obsolete or hard-to-source replacement part. Explicit user-triggered free handoff only.",
   "actions": [
     {
       "name": "Find a Replacement Part",
