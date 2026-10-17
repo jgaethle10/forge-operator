@@ -1,0 +1,38 @@
+// Explicitly simulated radio demo. No client data, actual station credentials, or RF.
+import fs from 'node:fs';
+import os from 'node:os';
+import path from 'node:path';
+import crypto from 'node:crypto';
+import {startLocalRadioPortal} from '../systemia/network/community-radio-offline-portal.mjs';
+const demoDir=fs.mkdtempSync(path.join(os.tmpdir(),'evercraft-offline-radio-demo-'));
+const pair=crypto.generateKeyPairSync('ed25519');
+const publicKey=pair.publicKey.export({format:'pem',type:'spki'});
+const wav=Buffer.alloc(44+16000);
+wav.write('RIFF',0);wav.writeUInt32LE(wav.length-8,4);wav.write('WAVEfmt ',8);
+wav.writeUInt32LE(16,16);wav.writeUInt16LE(1,20);wav.writeUInt16LE(1,22);
+wav.writeUInt32LE(8000,24);wav.writeUInt32LE(16000,28);wav.writeUInt16LE(2,32);
+wav.writeUInt16LE(16,34);wav.write('data',36);wav.writeUInt32LE(16000,40);
+for(let i=0;i<8000;i++)wav.writeInt16LE(Math.round(1500*Math.sin(2*Math.PI*440*i/8000)),44+i*2);
+fs.writeFileSync(path.join(demoDir,'demo.wav'),wav,{mode:0o600});
+const issued=new Date(),expires=new Date(issued.getTime()+20*60*1000);
+const signed_data={
+  schema:'evercraft.broadcast.local-bulletin.v1',
+  station_name:'Evercraft Simulated Community Station | No Real Broadcast',
+  title:'Offline demonstration: simulated message',
+  message:'SIMULATION ONLY. This example is not a real emergency update or station transmission. The portal and recording are served entirely from your own device.',
+  approved_at:issued.toISOString(),expires_at:expires.toISOString(),
+  editor_approval_ref:'simulation-editor-only',
+  local_distribution_rights_ref:'simulation-original-tone',
+  audio_file:'demo.wav',
+  audio_sha256:'sha256:'+crypto.createHash('sha256').update(wav).digest('hex'),
+};
+fs.writeFileSync(path.join(demoDir,'bulletin.json'),JSON.stringify({
+  schema:'evercraft.broadcast.signed-local-bulletin.v1',
+  signed_data,
+  signature:crypto.sign(null,Buffer.from(JSON.stringify(signed_data)),pair.privateKey).toString('base64'),
+}),{mode:0o600});
+const portal=await startLocalRadioPortal({dir:demoDir,publicKey});
+console.log(JSON.stringify({state:'simulated_loopback_demo_only',open_on_same_device:portal.origin,expires_at:expires.toISOString(),fm_transmission:false,lan_distribution:false,customer_hardware:false}));
+const cleanup=()=>{portal.server.close();fs.rmSync(demoDir,{recursive:true,force:true});};
+process.once('SIGTERM',()=>{cleanup();process.exit(0);});
+process.once('SIGINT',()=>{cleanup();process.exit(0);});
