@@ -94,6 +94,9 @@ test('gallery ships exact PNG and SVG bytes with matching manifest receipts with
     assert.equal(manifest.contents.length, 6);
     assert.equal(manifest.allSynthetic, true);
     assert.equal(manifest.independentVisualAcceptance, false);
+    assert.equal(manifest.founderVisualVerdict, 'rejected');
+    assert.equal(manifest.presentationState, 'do_not_showcase');
+    assert.equal(manifest.rejectionReasons.length, 5);
     assert.equal(manifest.releaseAuthorized, false);
     assert.equal(manifest.buyerPaid, false);
     const slugs = new Set();
@@ -108,7 +111,8 @@ test('gallery ships exact PNG and SVG bytes with matching manifest receipts with
       assert.ok(entry.receipt.bytes > 1000);
       assert.equal(entry.receipt.visualReviewState, 'not_independently_reviewed');
     }
-    assert.ok(fs.readFileSync(path.join(folder, 'gallery.html'), 'utf8').includes('Six real PNG files'));
+    assert.ok(fs.readFileSync(path.join(folder, 'gallery.html'), 'utf8').includes('Creative review failed.'));
+    assert.ok(fs.readFileSync(path.join(folder, 'gallery.html'), 'utf8').includes('FOUNDER REJECTED'));
     assert.ok(fs.readFileSync(path.join(folder, 'manifest.json'), 'utf8').includes('sourcePr'));
     assert.throws(() => buildReviewGallery(folder), { code: 'EEXIST' });
   } finally {
