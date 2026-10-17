@@ -8,7 +8,7 @@ import fs from 'node:fs';
 import os from 'node:os';
 import path from 'node:path';
 
-const STAGES=new Set(['offer_view','checkout_attempt','checkout_denied','checkout_ready','handoff_view']);
+const STAGES=new Set(['offer_view','checkout_attempt','checkout_denied','checkout_unavailable','checkout_ready','handoff_view']);
 const SOURCES=new Map([
  ['facebook','facebook_claimed'],['fb','facebook_claimed'],
  ['linkedin','linkedin_claimed'],['li','linkedin_claimed'],
