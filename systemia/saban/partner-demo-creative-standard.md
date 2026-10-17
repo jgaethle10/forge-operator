@@ -50,3 +50,21 @@ One measure is approximately 2.727 seconds. All scene cuts are score-aligned, no
 - No public exposure of private business correspondence, personal family detail, customer data, internal credentials or private topology.
 - Mandatory QA: evidence integrity, attribution, uncertainty, adversarial review, brand compliance, platform constraints, visual provenance, editorial review, mobile legibility, music/audio QC, accessibility, caption accuracy, independent reproducibility and release receipt.
 - This document is a **production acceptance plan**, not an assertion that live runtime, name rights, or retail book release are complete.
+
+
+## Founder quality review / revision 03–04 (2026-10-17)
+
+**Founder's verdict on original v02:** Both the soundtrack and visuals are below the intended standard. Reject v02 for any external outreach. A clean synthetic proof does not excuse ordinary design or music.
+
+**Diagnosed visual regression:** the old cut relied on flat dashboard typography, tiny dots, 2D orbit lines and repetitive cards; this is a technical infographic, not an emotionally compelling demonstration. A subsequent 24.8-second internal study improved type and timing but **still failed to break from the infographic look**; do not promote it as final. A separate cinematic environment treatment explores a different aesthetic as **generated concept art**, not a screen recording, and is also **not approved for delivery**.
+
+**Diagnosed sound regression:** the prior general MIDI piano/strings lacked nuanced attack, phrasing, instrumental realism and harmonic dynamics. A newly composed sparse felt-piano/sustained-tone sketch is an internal composition test **using synthesized notes**, not a professionally recorded or high-end sampled instrument performance and not a mastered final score. Secure properly licensed high-quality samples or record/live-play original instruments, refine expressive rubato and melody, then mix and master with real listening review.
+
+### Revised non-negotiable acceptance sequence
+1. **Audio first:** independently approve an emotionally compelling 20–30-second musical theme without visual distraction; retain melody, voicing, expressive timing, instrument/license provenance and stems. Do not simply add more orchestral layers to a weak theme.
+2. **Visual cinematic concept:** approve high-quality storyboards and a 6–12-second moving camera/environment test (not a 2D dashboard); explain concepts through spatial motion, texture, material, scale and recovery, rather than stacked title cards.
+3. **Verified product footage:** replace illustrative-only sections with genuine authorized Saban runtime recordings that show real input, admission, capability routing, assignment, execution, correction and quality receipts. The actual evidence remains distinct from conceptual cinematography.
+4. **Combined 90–120s film:** orchestrate cuts against musical phrases; strict editorial restraint, clear technical disclaimers, legible mobile export, no endorsement or third-party likeness/voice rights assumed. The film is not accepted until reviewed on headphones and phone speakers and manually watched in full by the founder.
+5. **Release gate:** source links/rights, true CI receipts and real-workload receipts, correct branding and clearance, editorial and audio QA. No external send without explicit human approval.
+
+Do not upload generated cinematic keyframes as misleading product screenshots or publish private score stems. Local render files are exploration assets, not canonical source evidence.
