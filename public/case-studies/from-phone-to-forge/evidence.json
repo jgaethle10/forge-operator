@@ -44,6 +44,12 @@
       "limitations": "Original proof seven local Node tests and GitHub CI passed; no actual neatroots product detection yet."
     },
     {
+      "name": "neatroots real local collector acceptance smoke test",
+      "url": "https://github.com/jgaethle10/forge-operator/actions/runs/38984442216",
+      "state": "actual_local_collector_accepted",
+      "note": "Pinned real release v0.2.8 on isolated GitHub Actions; both synthetic HTTP submissions returned 200. No evidence of anomaly detection or production settlement."
+    },
+    {
       "name": "Interactive human case study",
       "path": "../neatroots-checkout-evidence/index.html",
       "state": "staged_only_until_deployment_verified"
