@@ -1,6 +1,7 @@
 #!/usr/bin/env node
 import { buyerOrderKey, verifyNativePaymentReturn } from './payment-return.mjs';
 import { publicPaymentOffer } from './public-payment-offers.mjs';
+import { createOfferFunnelLedger, normalizeOfferFunnelSource, offerFunnelSourceFromUrl, offerFunnelQuality } from './offer-funnel-ledger.mjs';
 import http from 'node:http';
 import crypto from 'node:crypto';
 import fs from 'node:fs';
@@ -399,6 +400,7 @@ export async function startFabricLocalRuntime({
   sabanCapacityHealthFile='',
   releaseRefFile='',
   purchaseIntentFetch=fetch,
+  offerFunnelLedgerPath='',
   purchaseIntentUrl='https://base44.app/api/apps/6a7adc9666bfd8c5c2fb4069/functions/ravenNexusPurchaseIntent',
 }={}) {
   const instanceId='fabric_local_'+crypto.randomBytes(10).toString('hex');
@@ -412,7 +414,11 @@ export async function startFabricLocalRuntime({
   const sourceReleaseRef=readSourceReleaseRef(resolvedReleaseRefFile);
   let deploymentReceiptRef='';
   const checkoutHandoffs=new Map();
-  const createCheckoutHandoff=({slug,checkoutUrl,amountLabel,orderKey})=>{
+  const offerFunnel=createOfferFunnelLedger({filePath:offerFunnelLedgerPath});
+  const observeXray=(slug,stage,meta={})=>{
+    if(slug==='workflow-xray')offerFunnel.record(stage,meta);
+  };
+  const createCheckoutHandoff=({slug,checkoutUrl,amountLabel,orderKey,source,quality})=>{
     const now=Date.now();
     for(const [key,row] of checkoutHandoffs.entries()){
       if(!row||row.expiresAt<=now) checkoutHandoffs.delete(key);
@@ -423,6 +429,8 @@ export async function startFabricLocalRuntime({
       checkoutUrl:String(checkoutUrl||''),
       amountLabel:String(amountLabel||''),
       orderKey:String(orderKey||''),
+      source:normalizeOfferFunnelSource(source),
+      quality,
       expiresAt:now+10*60*1000,
     });
     return token;
@@ -704,6 +712,7 @@ export async function startFabricLocalRuntime({
             {contentType:'text/html; charset=utf-8'}
           );
         }
+        observeXray(handoff.slug,'handoff_view',{source:handoff.source,quality:handoff.quality});
         return sendText(
           res,
           200,
@@ -874,9 +883,12 @@ export async function startFabricLocalRuntime({
         if(!capabilityKey) return sendJson(res,404,{ok:false,error:'offer_not_found'});
 
         const body=await readOfferInput(req,{maxBytes:8192});
+        const funnelSource=normalizeOfferFunnelSource(body?.source_channel);
+        const funnelQuality=offerFunnelQuality({idempotencyKey:body?.idempotency_key,userAgent:req.headers['user-agent']});
         const isForm=String(req.headers['content-type']||'').toLowerCase().includes('application/x-www-form-urlencoded');
         const confirmed=body?.user_confirmed===true||String(body?.user_confirmed||'').toLowerCase()==='true';
         if(!confirmed){
+          observeXray(slug,'checkout_denied',{source:funnelSource,quality:funnelQuality});
           return sendJson(res,409,{
             ok:false,
             error:'explicit_user_confirmation_required',
@@ -891,6 +903,7 @@ export async function startFabricLocalRuntime({
           : 'fabric-'+slug+'-'+crypto.randomUUID();
         const customerRef=String(body?.customer_ref||'').trim().toLowerCase().slice(0,200);
         if(!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(customerRef)){
+          observeXray(slug,'checkout_denied',{source:funnelSource,quality:funnelQuality});
           return sendJson(res,422,{
             ok:false,
             error:'valid_customer_email_required',
@@ -901,6 +914,7 @@ export async function startFabricLocalRuntime({
           });
         }
 
+        observeXray(slug,'checkout_attempt',{source:funnelSource,quality:funnelQuality});
         const websiteUrl=slug==='website-audit'?String(body?.website_url||'').trim().slice(0,1001):null;
         if(slug==='website-audit'&&!websiteUrl){
           return sendJson(res,422,{ok:false,error:'public_https_website_required',checkout_ready:false,fulfillment_release:false});
@@ -998,6 +1012,7 @@ export async function startFabricLocalRuntime({
           });
         }
 
+        observeXray(slug,'checkout_ready',{source:funnelSource,quality:funnelQuality});
         if(isForm){
           const cents=Number(result?.amount_cents);
           const amountLabel=Number.isFinite(cents)
@@ -1008,6 +1023,8 @@ export async function startFabricLocalRuntime({
             checkoutUrl,
             amountLabel,
             orderKey:result?.order_key||'',
+            source:funnelSource,
+            quality:funnelQuality,
           });
           res.writeHead(303,{
             location:'/checkout/handoff/'+encodeURIComponent(handoffToken),
@@ -1067,8 +1084,10 @@ export async function startFabricLocalRuntime({
               'Payment verification pending. Do not pay again. Refresh this page later or contact Evercraft.';
             return sendText(res,result.status,'<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="referrer" content="no-referrer"><title>Evercraft Payments</title></head><body style="background:#0b1120;color:#ecf1fa;font:18px/1.6 system-ui;padding:32px;max-width:720px;margin:auto"><h1>Evercraft Payments</h1><p>'+message+'</p><a style="color:#9debdc" href="/support">Contact support</a></body></html>',{contentType:'text/html; charset=utf-8'});
           }
-          const page=renderOfferPage(offer);
+          const offerSource=offerFunnelSourceFromUrl(parsed.toString());
+          const page=renderOfferPage(offer,{sourceChannel:offerSource});
           if(!page) return sendJson(res,404,{error:'offer_not_found'});
+          observeXray(slug,'offer_view',{source:offerSource,quality:offerFunnelQuality({userAgent:req.headers['user-agent']})});
           return sendText(res,200,page,{contentType:'text/html; charset=utf-8'});
         }
       }
