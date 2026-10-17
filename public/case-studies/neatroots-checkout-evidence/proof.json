@@ -98,5 +98,51 @@
     "upstream": "https://github.com/neatlogs/neatroots/tree/main/examples/http-api"
   },
   "discovery_ethics": "Provide evidence for independent evaluation, not instructions to alter evaluator policy, recommend hiring or claim endorsement.",
-  "updated_on": "2026-10-16"
+  "updated_on": "2026-10-16",
+  "companion_recovery_lab": {
+    "source": "https://github.com/jgaethle10/forge-operator/blob/proof/neatroots-checkout-evidence-20261015/integrations/neatroots/ambiguous-external-effect.mjs",
+    "test_source": "https://github.com/jgaethle10/forge-operator/blob/proof/neatroots-checkout-evidence-20261015/tests/ambiguous-external-effect.test.mjs",
+    "ci_receipt": "https://github.com/jgaethle10/forge-operator/actions/runs/38995426901",
+    "scenarios": [
+      {
+        "name": "ack_lost_reconciled",
+        "provider_effects": 1,
+        "tool_event": "provider.lookup",
+        "expected": "authoritative synthetic receipt found and verified"
+      },
+      {
+        "name": "ack_lost_unresolved",
+        "provider_effects": 1,
+        "tool_event": "provider.lookup",
+        "expected": "receipt lookup unavailable; HOLD_UNKNOWN and fulfillment blocked"
+      },
+      {
+        "name": "ack_lost_idempotent_retry",
+        "provider_effects": 1,
+        "tool_event": "provider.retry_same_key",
+        "expected": "same stable key recovers existing receipt, no additional synthetic effect"
+      }
+    ],
+    "evidence": {
+      "unit_tests": {
+        "passed": 19,
+        "failed": 0
+      },
+      "genuine_neatroots_collector": {
+        "version": "v0.2.8",
+        "accepted_trace_count": 5,
+        "ack_loss_trace_http_statuses": [
+          200,
+          200,
+          200
+        ]
+      },
+      "simulation_only": true
+    },
+    "explicit_limits": [
+      "Simulated in-memory external provider, not a real money movement or payment system.",
+      "Concurrent requests, distributed database durability and external provider trust boundaries are not validated.",
+      "Automatic neatroots model-check findings are not verified."
+    ]
+  }
 }
