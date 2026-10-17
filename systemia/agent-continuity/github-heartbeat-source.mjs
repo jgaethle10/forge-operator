@@ -77,3 +77,36 @@ export async function fetchScheduledRevenueHeartbeat({
     agent_execution_verified:false,side_effects_verified:false,execution_authority:'NONE_READ_ONLY'
   });
 }
+
+
+/** Read the GitHub workflow's actual active/disabled configuration separately.
+ *  A YAML cron declaration is not evidence that GitHub has enabled its schedule.
+ */
+export async function fetchRevenueHeartbeatWorkflowConfiguration({
+  repo=OWNED_REPO,token,fetcher=fetch
+}={}){
+  if(repo!==OWNED_REPO)hold('workflow config wrong repository');
+  if(typeof token!=='string'||token.length<8)hold('workflow config read token missing');
+  const url='https://api.github.com/repos/'+repo+'/actions/workflows/'+HEARTBEAT;
+  const res=await fetcher(url,requestArgs(token));
+  if(!res?.ok)hold('workflow metadata HTTP '+String(res?.status??'unknown'));
+  const raw=await res.text();
+  if(Buffer.byteLength(raw)>131072)hold('oversized workflow metadata');
+  let data;
+  try{data=JSON.parse(raw);}catch{hold('invalid workflow metadata JSON');}
+  if(!data||!Number.isSafeInteger(data.id)||data.id<1||
+    data.path!=='.github/workflows/'+HEARTBEAT||
+    data.html_url!=='https://github.com/'+repo+'/actions/workflows/'+HEARTBEAT||
+    typeof data.state!=='string'||!['active','disabled_manually','disabled_inactivity','deleted'].includes(data.state))
+    hold('workflow configuration metadata mismatch');
+  return Object.freeze({
+    provider:'GITHUB_ACTIONS_READONLY',
+    workflow_id:data.id,workflow_file:HEARTBEAT,
+    provider_workflow_state:data.state,
+    provider_url:data.html_url,
+    metadata_readback_verified:true,
+    scheduler_dispatch_authorized:false,
+    effective_scheduler_cadence_verified:false,
+    source_boundary:'WORKFLOW_CONFIGURATION_NOT_CRON_DELIVERY_OR_AGENT_EXECUTION'
+  });
+}
