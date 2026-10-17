@@ -47,6 +47,8 @@ jobs:
         run: node --test ../../systemia/agent-continuity/response-policy.test.mjs
       - name: Signed read-only incident event contract and denial tests
         run: node --test ../../systemia/agent-continuity/incident-event.test.mjs
+      - name: Local custody and replay-safe incident projections
+        run: node --test ../../systemia/agent-continuity/incident-journal.test.mjs
       - name: Cross-build candidate binaries
         run: |
           GOOS=darwin GOARCH=arm64 go build -o /tmp/entire-blackbox_darwin_arm64 .
