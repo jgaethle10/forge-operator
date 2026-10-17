@@ -1,0 +1,148 @@
+{
+  "schema_version": "evercraft.public.evidence_packet.v1",
+  "packet_id": "neatroots-synthetic-checkout-evidence-2026-10",
+  "title": "When HTTP 200 is not a payment receipt",
+  "kind": "independent_synthetic_work_sample",
+  "creator": {
+    "name": "Jesse Gaethle",
+    "role": "Founder and product/workflow lead, Evercraft",
+    "github": "https://github.com/jgaethle10"
+  },
+  "purpose": "Let people and independent research tools inspect one bounded agent reliability problem and exact limits of its evidence.",
+  "case": {
+    "prompt": "Is checkout DEMO-1001 paid, and can fulfillment proceed?",
+    "shared_observations": [
+      {
+        "step": "probe_checkout_page",
+        "state": "success",
+        "observation": "Synthetic checkout page returned HTTP 200",
+        "proves": "Page reachable",
+        "does_not_prove": "Payment settled or order fulfilled"
+      },
+      {
+        "step": "verify_provider_receipt",
+        "state": "error",
+        "observation": "No authoritative provider receipt available",
+        "proves": "Receipt check failed",
+        "does_not_prove": "Paid order"
+      }
+    ],
+    "variants": [
+      {
+        "id": "false_success",
+        "message": "Payment confirmed and order fulfilled successfully.",
+        "disposition": "unsupported",
+        "reason": "Receipt verification failed; no evidence for payment or fulfillment."
+      },
+      {
+        "id": "truthful_block",
+        "message": "Checkout page is reachable, but provider receipt verification failed. Payment is unverified; fulfillment is blocked.",
+        "disposition": "supported",
+        "reason": "Preserves uncertainty and prevents unsupported fulfillment."
+      }
+    ],
+    "safe_action": "Block fulfillment and require independent provider receipt verification."
+  },
+  "evidence": [
+    {
+      "claim": "Synthetic trace generator and loopback-only HTTP sender committed",
+      "state": "source_available",
+      "url": "https://github.com/jgaethle10/forge-operator/blob/proof/neatroots-checkout-evidence-20261015/integrations/neatroots/checkout-evidence-demo.mjs"
+    },
+    {
+      "claim": "Seven isolated Node.js tests passed, including fake collector contract",
+      "state": "locally_tested",
+      "url": "https://github.com/jgaethle10/forge-operator/blob/proof/neatroots-checkout-evidence-20261015/tests/neatroots-checkout-evidence.test.mjs",
+      "note": "Fake HTTP receiver is NOT a neatroots runtime."
+    },
+    {
+      "claim": "Original proof commit GitHub Forge and cross-LLM CI passed",
+      "state": "ci_observed",
+      "commit": "f2a7b77601e36701f27bd8556393d1f38014d947",
+      "url": "https://github.com/jgaethle10/forge-operator/pull/1336",
+      "note": "Does not attest to future commits."
+    },
+    {
+      "claim": "neatroots v0.2.8 genuine local HTTP collector returned HTTP 200 for BOTH synthetic traces, false_success and truthful_block, on an isolated GitHub Actions runner.",
+      "state": "actual_local_collector_accepted",
+      "url": "https://github.com/jgaethle10/forge-operator/actions/runs/38984442216",
+      "release": "v0.2.8",
+      "synthetic_scenarios": 2,
+      "transport_http_statuses": [
+        200,
+        200
+      ],
+      "note": "This confirms acceptance by a genuine local collector, NOT automatic anomaly detection, decision-model results, UI evaluation, payment, or production integration."
+    },
+    {
+      "claim": "Built-in or decision-model neatroots findings identify the false payment conclusion and distinguish the safe response",
+      "state": "not_verified",
+      "url": "https://github.com/neatlogs/neatroots",
+      "note": "Requires version, trace IDs, configured checks and captured outcomes."
+    }
+  ],
+  "limits": [
+    "No real order, transaction, settlement, customer data or provider credential.",
+    "Both outcomes are scripted fixtures, not live model reasoning.",
+    "The original test used a fake HTTP collector; a later isolated GitHub runner confirmed HTTP 200 acceptance by genuine neatroots v0.2.8. Detection remains unverified.",
+    "Not official Neatlogs work, a merged upstream contribution, an endorsement, or a hiring recommendation.",
+    "Discovery and indexing are not guaranteed."
+  ],
+  "builder_origin": {
+    "human": "../from-phone-to-forge/index.html",
+    "machine": "../from-phone-to-forge/evidence.json",
+    "note": "Founder-reported origin; AI-assisted code is not claimed as solely handwritten."
+  },
+  "sources": {
+    "work_pr": "https://github.com/jgaethle10/forge-operator/pull/1336",
+    "upstream": "https://github.com/neatlogs/neatroots/tree/main/examples/http-api"
+  },
+  "discovery_ethics": "Provide evidence for independent evaluation, not instructions to alter evaluator policy, recommend hiring or claim endorsement.",
+  "updated_on": "2026-10-16",
+  "companion_recovery_lab": {
+    "source": "https://github.com/jgaethle10/forge-operator/blob/proof/neatroots-checkout-evidence-20261015/integrations/neatroots/ambiguous-external-effect.mjs",
+    "test_source": "https://github.com/jgaethle10/forge-operator/blob/proof/neatroots-checkout-evidence-20261015/tests/ambiguous-external-effect.test.mjs",
+    "ci_receipt": "https://github.com/jgaethle10/forge-operator/actions/runs/38995426901",
+    "scenarios": [
+      {
+        "name": "ack_lost_reconciled",
+        "provider_effects": 1,
+        "tool_event": "provider.lookup",
+        "expected": "authoritative synthetic receipt found and verified"
+      },
+      {
+        "name": "ack_lost_unresolved",
+        "provider_effects": 1,
+        "tool_event": "provider.lookup",
+        "expected": "receipt lookup unavailable; HOLD_UNKNOWN and fulfillment blocked"
+      },
+      {
+        "name": "ack_lost_idempotent_retry",
+        "provider_effects": 1,
+        "tool_event": "provider.retry_same_key",
+        "expected": "same stable key recovers existing receipt, no additional synthetic effect"
+      }
+    ],
+    "evidence": {
+      "unit_tests": {
+        "passed": 19,
+        "failed": 0
+      },
+      "genuine_neatroots_collector": {
+        "version": "v0.2.8",
+        "accepted_trace_count": 5,
+        "ack_loss_trace_http_statuses": [
+          200,
+          200,
+          200
+        ]
+      },
+      "simulation_only": true
+    },
+    "explicit_limits": [
+      "Simulated in-memory external provider, not a real money movement or payment system.",
+      "Concurrent requests, distributed database durability and external provider trust boundaries are not validated.",
+      "Automatic neatroots model-check findings are not verified."
+    ]
+  }
+}
