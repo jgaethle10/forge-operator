@@ -42,6 +42,7 @@ function validateProfile(raw) {
     schema: 'systemia.sentinel.region-profile.v1',
     profile_id: profile.profile_id,
     label: String(profile.label).trim(),
+    aliases: unique(profile.aliases).slice(0, 30),
     geography: structuredClone(profile.geography || {}),
     sources: {
       nws_area: nwsArea || null,
@@ -132,10 +133,17 @@ export function resolveSentinelRegionConfig({
     profile: profile ? {
       profile_id: profile.profile_id,
       label: profile.label,
+      aliases: profile.aliases,
       geography: profile.geography,
       verified_at: profile.verified_at,
       provenance_count: profile.provenance.length
     } : null,
+    region_aliases: unique([
+      profile?.profile_id,
+      profile?.label,
+      ...(profile?.aliases || []),
+      profile?.geography?.region
+    ]),
     nws_area: explicitArea || profile?.sources?.nws_area || null,
     nwps_gauges: gauges,
     usgs_water_locations: waterLocations
