@@ -5,7 +5,7 @@ import os from 'node:os';
 import path from 'node:path';
 import { startFabricLocalRuntime } from '../systemia/mcp/fabric-local-runtime.mjs';
 import { loadFabricCatalogFromRepository } from '../systemia/mcp/fabric-directory.mjs';
-import { renderOfferPage } from '../systemia/mcp/fabric-public-site.mjs';
+import { renderOfferPage, offerCapabilityForSlug } from '../systemia/mcp/fabric-public-site.mjs';
 import {
  createOfferFunnelLedger, normalizeOfferFunnelSource,
  offerFunnelSourceFromUrl, offerFunnelQuality, summarizeOfferFunnel,
@@ -27,7 +27,9 @@ test('funnel source is a bounded claim, never an arbitrary URL or token',()=>{
 test('funnel is private, fail-open, no buyer PII, and records HTTP stages without payment claims',async()=>{
  const root=fs.mkdtempSync(path.join(os.tmpdir(),'evercraft-offer-funnel-'));
  const ledgerPath=path.join(root,'private','daily.jsonl');
- const offer=loadFabricCatalogFromRepository().find(x=>x.public_id==='workflow-foundry-xray-v1');
+ const catalog=loadFabricCatalogFromRepository();
+ assert.ok(catalog.find(x=>x.public_id==='workflow-foundry-xray-v1'));
+ const offer=offerCapabilityForSlug('workflow-xray',catalog);
  assert.ok(offer);
  const html=renderOfferPage(offer,{sourceChannel:'facebook_claimed'});
  assert.match(html,/name="source_channel" value="facebook_claimed"/);
