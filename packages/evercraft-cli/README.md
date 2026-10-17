@@ -49,6 +49,25 @@ Then run \`node cli.mjs tool add ./my-tool.json\` to store metadata. That does n
 
 The CLI uses a per-user JSON store at \`$XDG_CONFIG_HOME/evercraft/operator-tools.json\`, or \`~/.config/evercraft/operator-tools.json\`. It passes a minimal environment instead of inheriting every API key. This is **not a sandbox**: the subprocess can access resources available to the operating-system user, including local files and network. Only run tools you trust, ideally in a separate least-privilege OS/container environment. Do not add downloaded manifests blindly.
 
+## Handing a trusted tool to an existing AI client
+
+After registering a tool, export its existing executable configuration in one of two formats. The output is **JSON only** and is neither a remote publishing operation nor an installation:
+
+```bash
+node cli.mjs tool inspect example.math
+node cli.mjs tool export example.math --format portable
+node cli.mjs tool export example.math --format vscode
+```
+
+- **Portable:** `{"mcpServers":{"example.math":{"command":"node","args":["tests/fixtures/math-server.mjs"]}}}`, intended for compatible MCP clients that accept the portable `.mcp.json` format.
+- **VS Code:** `{"servers":{"example.math":{"type":"stdio","command":"node","args":["tests/fixtures/math-server.mjs"]}}}`, intended for `.vscode/mcp.json`.
+
+The two exported formats use the exact command and arguments that the operator previously registered. They do **not** include arbitrary environment variables, access tokens or credentials and do **not** modify or write the client's configuration. After reviewing the output, the operator must manually merge it into the correct client configuration and consciously approve its execution. No client app is auto-detected, reconfigured, authorized or invoked by export.
+
+**Portability warning:** the included synthetic fixture uses a relative file path, which only works if the client's process launches from the proper working directory. Independent operators should register and inspect **absolute executable and script paths** appropriate to their machine before exporting. For client-specific syntax and locations, follow current [VS Code MCP configuration documentation](https://code.visualstudio.com/docs/agents/reference/mcp-configuration) or the appropriate destination client's instructions. The preview does not automatically set `cwd`, create secret input prompts, check that the installed client supports the MCP protocol version, or sandbox subprocesses. Client-side permissions and read/write effects still require review.
+
+This is an immediate local integration path for an operator to bring a trusted tool to a supported AI client. It is **not** proof that Evercraft Fabric's public MCP transport is healthy or that a third party has connected successfully.
+
 ## Proposing an outside capability (offline, review-only)
 
 Contributors can prepare a versioned public-safe candidate manifest using `examples/capability-candidate.json`. Run `node cli.mjs capability validate ./my-candidate.json`. It checks the allowlisted shape, HTTPS public references, declared transport, authorization mode, side-effect category, and proposed commercial model. It prints a SHA-256 manifest fingerprint and **candidate_unverified** readiness with `execution_granted`, `publication_granted`, and `commerce_granted` all false.
@@ -60,6 +79,7 @@ The example is **fictional**. Passing validation does not verify the publisher, 
 | Ability | Preview state |
 | --- | --- |
 | Local manifest registration and inspection | Implemented |
+| Portable and VS Code MCP client config export | Implemented; no credentials, installs or execution |
 | MCP 2026-07-28 explicit modern stdio protocol | Implemented behind `--protocol modern`, dedicated synthetic tests |
 | Explicit subprocess start + stdio MCP initialize/tools/list | Implemented |
 | Explicit named tools/call with user-supplied JSON | Implemented |
