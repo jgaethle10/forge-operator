@@ -5,6 +5,7 @@ import path from 'node:path';
 import crypto from 'node:crypto';
 import {startLocalRadioPortal} from '../systemia/network/community-radio-offline-portal.mjs';
 import {startCommunityRadioLanLab} from '../systemia/network/community-radio-lan-lab.mjs';
+import {createCommunityRadioClockGuard} from '../systemia/network/community-radio-clock-guard.mjs';
 const demoDir=fs.mkdtempSync(path.join(os.tmpdir(),'evercraft-offline-radio-demo-'));
 const pair=crypto.generateKeyPairSync('ed25519');
 const publicKey=pair.publicKey.export({format:'pem',type:'spki'});
@@ -40,9 +41,10 @@ if((hostArgument&&!consent)||(!hostArgument&&consent)){
   console.error('LAN lab requires BOTH --lan-lab=<private-interface-IP> and --consent-to-local-sharing. Synthetic material only.');
   fs.rmSync(demoDir,{recursive:true,force:true});process.exit(2);
 }
+const clockGuard=createCommunityRadioClockGuard({stateDir:demoDir,initialize:true,now:issued});
 const portal=hostArgument?
-  await startCommunityRadioLanLab({dir:demoDir,publicKey,host:hostArgument.slice('--lan-lab='.length),operatorAcknowledged:true,minutes:10}):
-  await startLocalRadioPortal({dir:demoDir,publicKey});
+  await startCommunityRadioLanLab({dir:demoDir,publicKey,host:hostArgument.slice('--lan-lab='.length),operatorAcknowledged:true,minutes:10,clockGuard}):
+  await startLocalRadioPortal({dir:demoDir,publicKey,clockGuard});
 console.log(JSON.stringify(hostArgument?{
   state:'synthetic_lan_lab_explicit_opt_in',join_url:portal.join_url,
   expires_at:portal.expires_at,plain_http_is_not_private:true,
