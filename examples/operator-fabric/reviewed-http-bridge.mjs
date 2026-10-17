@@ -1,6 +1,7 @@
 // Loopback-only, test-reviewed MCP-over-HTTP bridge. This is NOT Fabric and must
 // never listen on a public interface, advertise production capacity or accept money.
 import http from 'node:http';
+import crypto from 'node:crypto';
 import {exerciseIndependentTool} from './independent-tool-client.mjs';
 import {TEST_TOOL} from './review-gate.mjs';
 const PROTOCOL='2025-03-26';
@@ -84,6 +85,8 @@ export async function exerciseReviewedRemoteTool({origin,nonce='remote_operator_
     throw Error('Review gate has not listed the test tool');
   const response=await rpc('tools/call',{name:TEST_TOOL,arguments:{nonce}});
   if(response?.isError||!Array.isArray(response?.content)||!response.content[0]?.text)throw Error('Test receipt missing');
+  const expected=crypto.createHash('sha256').update('evercraft-operator-test-v1:'+nonce).digest('hex');
+  if(response.content[0].text!==expected)throw Error('Independent remote test receipt does not verify');
   return {schema:'evercraft.operator-reviewed-remote-lab-proof.v1',state:'reviewed_loopback_remote_invocation_verified',
     tool:TEST_TOOL,returned_digest:response.content[0].text,
     real_http_transport:true,real_separate_stdio_process:true,
