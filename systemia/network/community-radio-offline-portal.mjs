@@ -17,10 +17,11 @@ function file(dir,name,limit){
   if(bytes.length!==st.size)throw Error('package_changed');
   return bytes;
 }
-export function verifyLocalRadioPackage({dir,publicKey,now=new Date()}={}){
+export function verifyLocalRadioPackage({dir,publicKey,now=new Date(),clockGuard=null}={}){
   if(!dir||!publicKey)throw Error('separate_station_trust_key_required');
   const time=now instanceof Date?now.getTime():Date.parse(now);
   if(!Number.isFinite(time))throw Error('unverifiable_clock');
+  if(clockGuard)clockGuard.observe(now);
   const root=fs.realpathSync(dir);
   const p=JSON.parse(file(root,'bulletin.json',32768).toString());
   if(p.schema!=='evercraft.broadcast.signed-local-bulletin.v1'||!p.signed_data||
@@ -48,14 +49,14 @@ export function verifyLocalRadioPackage({dir,publicKey,now=new Date()}={}){
 }
 const headers=t=>({'content-type':t,'cache-control':'no-store, max-age=0','x-content-type-options':'nosniff','x-frame-options':'DENY','referrer-policy':'no-referrer','content-security-policy':"default-src 'none'; style-src 'unsafe-inline'; media-src 'self'; base-uri 'none'; frame-ancestors 'none'; form-action 'none'"});
 function html(b){return ['<!doctype html><html lang="en"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="robots" content="noindex,nofollow"><title>',safe(b.station),' | Local bulletin</title><style>body{background:#0b2536;color:#edf9f9;font:1rem/1.6 system-ui;margin:0}main{max-width:700px;margin:auto;padding:2rem}.notice{background:#154659;border-left:4px solid #83e2bb;padding:1rem}audio{width:100%}small{color:#c6d9df}</style><main><small>EVERCRAFT NETWORK | LOCAL EXPERIMENT ONLY</small><h1>',safe(b.station),'</h1><div class="notice">Station-signed locally cached information. Not a live FM broadcast, emergency alert or proof of current conditions. Check current official instructions.</div><h2>',safe(b.title),'</h2><p>',safe(b.message),'</p>',b.audio?'<h3>Locally cached recording</h3><audio controls preload="none" src="/audio"></audio>':'','<p>Approved: <time>',safe(b.approved),'</time><br>Expires: <time>',safe(b.expires),'</time></p><small>Expires automatically. No outside network calls. No transmitter control.</small></main></html>'].join('');}
-export async function startLocalRadioPortal({dir,publicKey,now=()=>new Date(),port=0}={}){
+export async function startLocalRadioPortal({dir,publicKey,now=()=>new Date(),port=0,clockGuard=null}={}){
   if(!Number.isInteger(port)||port<0||port>65535)throw Error('invalid_port');
-  verifyLocalRadioPackage({dir,publicKey,now:now()});
+  verifyLocalRadioPackage({dir,publicKey,now:now(),clockGuard});
   const server=http.createServer((req,res)=>{
     if(!['GET','HEAD'].includes(req.method)){res.writeHead(405,{...headers('text/plain'),'allow':'GET, HEAD'});res.end();return;}
     if(!['/','/audio','/health'].includes(req.url)){res.writeHead(404,headers('text/plain'));res.end();return;}
     try{
-      const b=verifyLocalRadioPackage({dir,publicKey,now:now()});
+      const b=verifyLocalRadioPackage({dir,publicKey,now:now(),clockGuard});
       let body,type='text/html; charset=utf-8',status=200,extra={};
       if(req.url==='/health'){body=Buffer.from(JSON.stringify({state:'signed_local_bulletin_only',bulletin_hash:b.hash,fm_broadcast:false,live_audio:false,public_access:false}));type='application/json';}
       else if(req.url==='/audio'){
