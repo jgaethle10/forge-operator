@@ -10,6 +10,9 @@ on:
       - 'systemia/network/community-radio-lan-lab.mjs'
       - 'systemia/network/community-radio-clock-guard.mjs'
       - 'systemia/network/community-radio-field-evidence.mjs'
+      - 'systemia/network/community-radio-second-device-probe.mjs'
+      - 'scripts/community-radio-second-device-probe.mjs'
+      - 'tests/community-radio-second-device-probe.test.mjs'
       - 'tests/community-radio-clock-guard.test.mjs'
       - 'tests/community-radio-field-evidence.test.mjs'
       - 'scripts/community-radio-review-field-receipt.mjs'
@@ -28,6 +31,9 @@ on:
       - 'systemia/network/community-radio-lan-lab.mjs'
       - 'systemia/network/community-radio-clock-guard.mjs'
       - 'systemia/network/community-radio-field-evidence.mjs'
+      - 'systemia/network/community-radio-second-device-probe.mjs'
+      - 'scripts/community-radio-second-device-probe.mjs'
+      - 'tests/community-radio-second-device-probe.test.mjs'
       - 'tests/community-radio-clock-guard.test.mjs'
       - 'tests/community-radio-field-evidence.test.mjs'
       - 'scripts/community-radio-review-field-receipt.mjs'
@@ -56,4 +62,6 @@ jobs:
           node --check systemia/network/community-radio-clock-guard.mjs
           node --check systemia/network/community-radio-field-evidence.mjs
           node --check scripts/community-radio-review-field-receipt.mjs
-          node --test tests/community-broadcast-continuity.test.mjs tests/community-radio-offline-portal.test.mjs tests/community-radio-lan-lab.test.mjs tests/community-radio-clock-guard.test.mjs tests/community-radio-field-evidence.test.mjs
+          node --check systemia/network/community-radio-second-device-probe.mjs
+          node --check scripts/community-radio-second-device-probe.mjs
+          node --test tests/community-broadcast-continuity.test.mjs tests/community-radio-offline-portal.test.mjs tests/community-radio-lan-lab.test.mjs tests/community-radio-clock-guard.test.mjs tests/community-radio-field-evidence.test.mjs tests/community-radio-second-device-probe.test.mjs
