@@ -67,7 +67,7 @@ jobs:
             | tee "${{ runner.temp }}/collector-acceptance.jsonl"
           node integrations/neatroots/ambiguous-external-effect.mjs \
             > "${{ runner.temp }}/synthetic-ack-loss.jsonl"
-          node --input-type=module -e 'import{readFileSync}from "node:fs";for(const line of readFileSync(process.argv[1],"utf8").trim().split("\\n")){const trace=JSON.parse(line);const r=await fetch("http://127.0.0.1:4100/v1/trace",{method:"POST",headers:{"content-type":"application/json"},body:JSON.stringify(trace)});console.log("ACK_LOSS_SYNTHETIC",trace.metadata.scenario,r.status);if(!r.ok)process.exitCode=1}' "${{ runner.temp }}/synthetic-ack-loss.jsonl"
+          node --input-type=module -e 'import{readFileSync}from "node:fs";for(const line of readFileSync(process.argv[1],"utf8").trim().split("\n")){const trace=JSON.parse(line);const r=await fetch("http://127.0.0.1:4100/v1/trace",{method:"POST",headers:{"content-type":"application/json"},body:JSON.stringify(trace)});console.log("ACK_LOSS_SYNTHETIC",trace.metadata.scenario,r.status);if(!r.ok)process.exitCode=1}' "${{ runner.temp }}/synthetic-ack-loss.jsonl"
 
           node -e "const f=require('fs');const a=f.readFileSync(process.argv[1],'utf8').trim().split('\\n').map(JSON.parse);if(a.length!==2||a.some(x=>x.status<200||x.status>=300))process.exit(1);console.log('REAL LOCAL NEATROOTS HTTP ACCEPTANCE:',a.map(x=>x.scenario).join(','));console.log('DOES NOT ESTABLISH anomaly detection or model decisions');" "${{ runner.temp }}/collector-acceptance.jsonl"
       - name: Attest evidence boundary in GitHub job summary
