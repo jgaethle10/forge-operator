@@ -2,6 +2,8 @@
 
 **Status: review-only developer proof, not a launched marketplace or an approved partner integration.**
 
+**Invited developer?** Start with the [10-minute consent-first alpha guide](./ALPHA-README.md). Its two self-check commands print bounded receipts without uploading data or granting permissions.
+
 This example deliberately imports **zero internal Evercraft code** and requires no npm packages, Evercraft account, API key, billing credentials, or access to Systemia. It lets an outside developer reproduce the exact public Fabric discovery flow using Node.js 20+ and the owned remote Streamable HTTP MCP.
 
 ## Two separate, existing layers
