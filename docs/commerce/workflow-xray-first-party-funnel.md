@@ -9,6 +9,7 @@ The existing HTML form and checkout response remain unchanged except for one hid
 - `offer_view`: a successful rendered GET of `/offers/workflow-xray`, excluding payment-status returns.
 - `checkout_denied`: request rejected for missing buyer confirmation or invalid email. The email itself is **never** persisted.
 - `checkout_attempt`: buyer-confirmed request with a syntactically valid email, before contacting Evercraft Payments.
+- `checkout_unavailable`: a downstream provider error, timeout, or unverified checkout URL prevented a checkout-ready handoff. This is an HTTP infrastructure failure signal, not proof a human buyer was lost.
 - `checkout_ready`: downstream checkout URL and exact offer price validated before returning the buyer to the owned handoff. **Not payment.**
 - `handoff_view`: the buyer opened the short-lived Evercraft Payments handoff page. **Not a verified Stripe visit, a charge, or settlement.**
 
