@@ -44,6 +44,7 @@ function latestUndoableReceipt(session:PulseGridSession){
 export default function FallenSessions(){
   const [session,setSession]=useState<PulseGridSession>(()=>createPulseGridSession('First Light'));
   const [selectedTrackId,setSelectedTrackId]=useState('keys');
+  const [foundryRootPitch,setFoundryRootPitch]=useState(60);
   const [selectedScene,setSelectedScene]=useState(0);
   const [selectedNoteId,setSelectedNoteId]=useState<string|null>(null);
   const [selectedStepIndex,setSelectedStepIndex]=useState<number|null>(null);
@@ -190,6 +191,42 @@ export default function FallenSessions(){
       successLabel+' · '+asset.duration_sec.toFixed(2)+'s · '+
       asset.sample_rate+' Hz · '+asset.channels+'ch · rights '+asset.rights
     );
+  }
+
+  async function armFoundryPianoFromTake(){
+    // Only an explicit human audition action may bind a local WAV to the
+    // canonical MIDI notes. Never infer sample copyright from storage.
+    setStatus('Checking sample before arming recorded piano…');
+    try{
+      const current=sessionRef.current;
+      const audioTrack=current.tracks.find(track=>track.type==='audio');
+      const keysTrack=current.tracks.find(track=>track.id==='keys'&&track.type==='synth');
+      if(!audioTrack||!keysTrack)throw new Error('Piano and Audio Take tracks are required.');
+      const assetId=audioTrack.clips[selectedScene]?.audio_asset_id;
+      if(!assetId)throw new Error('Import a verified Foundry WAV into this scene first.');
+      const asset=current.assets.find(candidate=>candidate.id===assetId);
+      if(!asset||asset.mime_type!=='audio/wav'||asset.rights==='restricted'){
+        throw new Error('A permitted canonical WAV is required for piano audition.');
+      }
+      const blob=await vaultRef.current?.getVerifiedBlob(asset);
+      if(!blob)throw new Error('Foundry recording is missing from local verified storage.');
+      await verifyFoundryWavBytes(asset,new Uint8Array(await blob.arrayBuffer()));
+      const root=Math.round(foundryRootPitch);
+      if(!Number.isInteger(root)||root<21||root>108)throw new Error('Piano MIDI root must be 21 to 108.');
+      const result=applyPulseGridTransaction(current,{
+        intent:'Bind locally verified WAV as one reversible recorded piano key; internal audition only.',
+        operations:[{type:'clip.set_foundry_piano_patch',track_id:keysTrack.id,scene:selectedScene,
+          patch:{kind:'recorded_piano_v1',max_transpose_semitones:2,samples:[{
+            asset_id:asset.id,root_pitch:root,velocity_min:0,velocity_max:1,release_sec:0.22,
+          }]},
+        }],
+      },'human');
+      setSession(result.session);
+      setSelectedTrackId(keysTrack.id);
+      setStatus('Foundry recorded piano armed at MIDI '+root+' (±2 semitones). One verified sample, audition only; no commercial rights claim.');
+    }catch(error){
+      setStatus(error instanceof Error?error.message:'Foundry piano note assignment failed.');
+    }
   }
 
   async function importFoundryWavFile(file:File){
@@ -773,6 +810,11 @@ export default function FallenSessions(){
         <button onClick={toggleMidi}>{midiEnabled?'Disconnect MIDI':'Enable MIDI'}</button>
         <button onClick={chooseAudioFile} disabled={recording}>Import Audio</button>
         <button onClick={()=>foundryInputRef.current?.click()} disabled={recording}>Import Foundry WAV</button>
+        <label className="fsFoundryRootLabel">Piano root MIDI
+          <input aria-label="Foundry piano root MIDI note" type="number" min={21} max={108}
+            value={foundryRootPitch} onChange={(event)=>setFoundryRootPitch(Number(event.target.value))}/>
+        </label>
+        <button onClick={()=>void armFoundryPianoFromTake()} disabled={recording}>Arm Recorded Piano</button>
         <button onClick={runLiftPlan}>✦ Atomic Chorus Lift</button>
         <button onClick={forkVariation}>Fork Variation</button>
         <button onClick={growClip} disabled={clip.bars>=16}>+ Bar</button>
