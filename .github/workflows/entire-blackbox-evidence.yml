@@ -10,6 +10,7 @@ on:
 
 permissions:
   contents: read
+  actions: read
 
 jobs:
   evidence-gate:
@@ -49,6 +50,16 @@ jobs:
         run: node --test ../../systemia/agent-continuity/incident-event.test.mjs
       - name: Local custody and replay-safe incident projections
         run: node --test ../../systemia/agent-continuity/incident-journal.test.mjs
+      - name: Authenticated Github Actions read-only source adapter tests
+        run: node --test ../../systemia/agent-continuity/github-actions-source.test.mjs
+      - name: Live Github Actions read-only source lab
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+        run: |
+          node ../../systemia/agent-continuity/github-actions-lab.mjs | tee /tmp/blackbox-source-lab.json
+          grep -q '"live_agent_telemetry_verified": false' /tmp/blackbox-source-lab.json
+          grep -q '"cross_product_runtime_integrated": false' /tmp/blackbox-source-lab.json
+          grep -q '"same_root_local_readback": true' /tmp/blackbox-source-lab.json
       - name: Cross-build candidate binaries
         run: |
           GOOS=darwin GOARCH=arm64 go build -o /tmp/entire-blackbox_darwin_arm64 .
