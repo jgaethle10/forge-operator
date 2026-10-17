@@ -110,3 +110,38 @@ test('unwritable observation state never blocks sales',()=>{
   assert.equal(ledger.record('not_a_paid_event',{}),false);
  }finally{fs.rmSync(root,{recursive:true,force:true});}
 });
+
+test('provider errors and invalid checkout URLs are separated from buyer abandonment',async()=>{
+ const cases=[
+  {name:'provider 503',provider:async()=>Response.json({ok:false,error:'payment_temporarily_unavailable'},{status:503}),status:503},
+  {name:'no HTTPS checkout',provider:async()=>Response.json({ok:true,order_key:'qa-never-paid',amount_cents:25000,currency:'usd',checkout_url:'http://unsafe.invalid/checkout'}),status:503},
+  {name:'network failure',provider:async()=>{throw new Error('simulated_provider_unreachable')},status:502},
+ ];
+ for(const scenario of cases){
+  const root=fs.mkdtempSync(path.join(os.tmpdir(),'evercraft-funnel-provider-'));
+  const ledgerPath=path.join(root,'private.jsonl');
+  const runtime=await startFabricLocalRuntime({
+   host:'127.0.0.1',port:0,catalog:loadFabricCatalogFromRepository(),faieSurfaceEnabled:false,
+   offerFunnelLedgerPath:ledgerPath,purchaseIntentFetch:scenario.provider,
+  });
+  try{
+   const response=await fetch(runtime.url+'/api/offers/workflow-xray/checkout',{
+    method:'POST',headers:{'content-type':'application/json'},
+    body:JSON.stringify({user_confirmed:true,customer_ref:'SECRET-CUSTOMER@example.com',
+     source_channel:'linkedin_claimed',idempotency_key:'qa-xray-test-provider-fail'}),
+   });
+   assert.equal(response.status,scenario.status,scenario.name);
+   const events=fs.readFileSync(ledgerPath,'utf8').trim().split('\n').map(JSON.parse);
+   assert.deepEqual(events.map(x=>x.stage),['checkout_attempt','checkout_unavailable'],scenario.name);
+   assert.ok(events.every(x=>x.quality==='qa_claimed'));
+   assert.ok(events.every(x=>x.source==='linkedin_claimed'));
+   assert.doesNotMatch(JSON.stringify(events),/SECRET-CUSTOMER|example.com|payment_temporarily_unavailable|provider_unreachable|qa-never-paid|unsafe.invalid/);
+   const summary=summarizeOfferFunnel(ledgerPath);
+   assert.equal(summary.by_stage.checkout_unavailable,1);
+   assert.equal(summary.by_stage.checkout_ready||0,0);
+  }finally{
+   await runtime.close();
+   fs.rmSync(root,{recursive:true,force:true});
+  }
+ }
+});
