@@ -26,8 +26,8 @@ export function authorizeCommunityRadioLanLab({host,operatorAcknowledged=false,
   if(!assigned)reject('host_must_be_nonloopback_local_interface');
   return {host,minutes,maxSeconds:minutes*60,synthetic_only:true,public_bind:false};
 }
-function verifiedSynthetic({dir,publicKey,now}){
-  const verified=verifyLocalRadioPackage({dir,publicKey,now});
+function verifiedSynthetic({dir,publicKey,now,clockGuard=null}){
+  const verified=verifyLocalRadioPackage({dir,publicKey,now,clockGuard});
   const raw=JSON.parse(fs.readFileSync(path.join(fs.realpathSync(dir),'bulletin.json'),'utf8'));
   if(raw?.signed_data?.lab_synthetic_fixture!==true||
     !String(verified.station).includes('Simulated')||
@@ -36,10 +36,10 @@ function verifiedSynthetic({dir,publicKey,now}){
   return verified;
 }
 export async function startCommunityRadioLanLab({dir,publicKey,host,operatorAcknowledged=false,
-  minutes=10,interfaces=os.networkInterfaces(),now=()=>new Date()}={}){
+  minutes=10,interfaces=os.networkInterfaces(),now=()=>new Date(),clockGuard=null}={}){
   authorizeCommunityRadioLanLab({host,operatorAcknowledged,interfaces,minutes});
-  verifiedSynthetic({dir,publicKey,now:now()});
-  const upstream=await startLocalRadioPortal({dir,publicKey,now});
+  verifiedSynthetic({dir,publicKey,now:now(),clockGuard});
+  const upstream=await startLocalRadioPortal({dir,publicKey,now,clockGuard});
   const token=crypto.randomBytes(32).toString('hex');
   const expires=Date.now()+minutes*60000;
   let closed=false;
@@ -62,7 +62,7 @@ export async function startCommunityRadioLanLab({dir,publicKey,host,operatorAckn
     }
     if(!['/','/audio'].includes(req.url)){finish(res,404,'Unknown local lab route');return;}
     try{
-      verifiedSynthetic({dir,publicKey,now:now()});
+      verifiedSynthetic({dir,publicKey,now:now(),clockGuard});
       const dest=new URL(req.url,upstream.origin);
       const upstreamResponse=await fetch(dest,{method:req.method,
         headers:req.headers.range?{range:req.headers.range}:{}});
