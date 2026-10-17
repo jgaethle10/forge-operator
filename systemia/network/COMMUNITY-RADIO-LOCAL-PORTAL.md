@@ -73,3 +73,17 @@ See COMMUNITY-BROADCAST-CONTINUITY.md for the separate licensed-station FM conti
 Run npm run test:community-radio-offline. The test suite generates isolated station fixtures, Ed25519 keys and valid locally synthesized WAV audio, checks the server over actual loopback HTTP, rejects forged content, rights gaps, expiry, malformed audio, file symlinks, traversal, mutations, and post-start corruption. The root Forge check also runs it. GitHub CI result is separate evidence from local tests.
 
 The next gate is a consented, isolated two-device LAN playback experiment with an external network disconnected, timed freshness and measured battery runtime. It requires a fresh independent test record, not an inference from this prototype.
+
+## Second-device read-only network receipt
+
+A field operator can now collect an independent **HTTP-observation receipt** by running the probe from a second operator-controlled computer attached to the same authorized, isolated network. The host starts the synthetic LAN lab described above; the second machine checks the HTTP invitation, access control, signed synthetic bulletin page, WAV range request, and complete WAV bytes. This helps establish data transfer over a private LAN but does not prove a distinct physical device, actual audible playback or upstream internet loss. A separately witnessed physical trial is still necessary.
+
+On the second computer with a Node 22+ checkout, run:
+
+    npm run radio:second-device-probe -- --acknowledge-local-test --output=/absolute/path/new-listener-probe.json
+
+The command reads the ephemeral join URL **from standard input, never a command-line argument**. Paste the temporary join URL printed by the host, press Enter and send EOF (Ctrl+D on most Unix terminals). Use a new output path; no existing file is overwritten, and the output is created with mode 0600. If no output is specified, the probe prints JSON to standard output. Neither path contains the bearer token or cookie. Do not post the join URL, shell captures or exact private networking details publicly.
+
+The verifier does not fetch any hostnames or public addresses: it requires an explicit HTTP URL to an RFC1918 private IPv4 with a port and exact /join/64hex route. All requests disallow redirects, time out, and cap their response sizes. The receipt reports real HTTP statuses and audio/page hashes. It explicitly labels upstream loss, separate physical hardware, auditory playback, power runtime, and broadcast authority **unverified**. This is a synthetic-only lab protocol over **unencrypted HTTP**, so it is unsuitable for sensitive environments.
+
+The operator must still separately record genuine footage or direct eyewitness evidence of playback, a measured no-internet condition on both devices, approval/expiration and server-stop negative tests, and measured battery performance. See the blank field-attestation template and the independent witness requirements. If the host is a Chromebook Linux guest or WSL2 instance, its private address may not be reachable by a second machine; do not modify firewall/router/forwarding without separate operator approval.
