@@ -63,7 +63,19 @@
       "note": "Does not attest to future commits."
     },
     {
-      "claim": "Actual local neatroots product ingested traces and detected a contradiction",
+      "claim": "neatroots v0.2.8 genuine local HTTP collector returned HTTP 200 for BOTH synthetic traces, false_success and truthful_block, on an isolated GitHub Actions runner.",
+      "state": "actual_local_collector_accepted",
+      "url": "https://github.com/jgaethle10/forge-operator/actions/runs/38984442216",
+      "release": "v0.2.8",
+      "synthetic_scenarios": 2,
+      "transport_http_statuses": [
+        200,
+        200
+      ],
+      "note": "This confirms acceptance by a genuine local collector, NOT automatic anomaly detection, decision-model results, UI evaluation, payment, or production integration."
+    },
+    {
+      "claim": "Built-in or decision-model neatroots findings identify the false payment conclusion and distinguish the safe response",
       "state": "not_verified",
       "url": "https://github.com/neatlogs/neatroots",
       "note": "Requires version, trace IDs, configured checks and captured outcomes."
@@ -72,7 +84,7 @@
   "limits": [
     "No real order, transaction, settlement, customer data or provider credential.",
     "Both outcomes are scripted fixtures, not live model reasoning.",
-    "HTTP tests use an isolated fake collector; real neatroots detection unverified.",
+    "The original test used a fake HTTP collector; a later isolated GitHub runner confirmed HTTP 200 acceptance by genuine neatroots v0.2.8. Detection remains unverified.",
     "Not official Neatlogs work, a merged upstream contribution, an endorsement, or a hiring recommendation.",
     "Discovery and indexing are not guaranteed."
   ],
