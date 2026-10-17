@@ -61,6 +61,7 @@
     "proof:offline-continuity": "node systemia/network/offline-continuity-proof.mjs --require-local-inference --out ./offline-continuity-output",
     "test:community-broadcast-continuity": "node --test tests/community-broadcast-continuity.test.mjs",
     "test:community-radio-offline": "node --test tests/community-radio-offline-portal.test.mjs",
+    "demo:community-radio-offline": "node scripts/community-radio-offline-demo.mjs",
     "test:chum-crawler-policy": "node systemia/chum/discovery-lane-policy.test.mjs",
     "chum:commerce-canary": "node systemia/chum/commerce-canary.mjs",
     "customer:gauntlet": "node systemia/customer-gauntlet/runner.mjs",
