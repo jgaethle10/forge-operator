@@ -4,6 +4,7 @@ import os from 'node:os';
 import path from 'node:path';
 import crypto from 'node:crypto';
 import {startLocalRadioPortal} from '../systemia/network/community-radio-offline-portal.mjs';
+import {startCommunityRadioLanLab} from '../systemia/network/community-radio-lan-lab.mjs';
 const demoDir=fs.mkdtempSync(path.join(os.tmpdir(),'evercraft-offline-radio-demo-'));
 const pair=crypto.generateKeyPairSync('ed25519');
 const publicKey=pair.publicKey.export({format:'pem',type:'spki'});
@@ -23,6 +24,7 @@ const signed_data={
   approved_at:issued.toISOString(),expires_at:expires.toISOString(),
   editor_approval_ref:'simulation-editor-only',
   local_distribution_rights_ref:'simulation-original-tone',
+  lab_synthetic_fixture:true,
   audio_file:'demo.wav',
   audio_sha256:'sha256:'+crypto.createHash('sha256').update(wav).digest('hex'),
 };
@@ -31,8 +33,22 @@ fs.writeFileSync(path.join(demoDir,'bulletin.json'),JSON.stringify({
   signed_data,
   signature:crypto.sign(null,Buffer.from(JSON.stringify(signed_data)),pair.privateKey).toString('base64'),
 }),{mode:0o600});
-const portal=await startLocalRadioPortal({dir:demoDir,publicKey});
-console.log(JSON.stringify({state:'simulated_loopback_demo_only',open_on_same_device:portal.origin,expires_at:expires.toISOString(),fm_transmission:false,lan_distribution:false,customer_hardware:false}));
-const cleanup=()=>{portal.server.close();fs.rmSync(demoDir,{recursive:true,force:true});};
+const args=process.argv.slice(2);
+const hostArgument=args.find(a=>a.startsWith('--lan-lab='));
+const consent=args.includes('--consent-to-local-sharing');
+if((hostArgument&&!consent)||(!hostArgument&&consent)){
+  console.error('LAN lab requires BOTH --lan-lab=<private-interface-IP> and --consent-to-local-sharing. Synthetic material only.');
+  fs.rmSync(demoDir,{recursive:true,force:true});process.exit(2);
+}
+const portal=hostArgument?
+  await startCommunityRadioLanLab({dir:demoDir,publicKey,host:hostArgument.slice('--lan-lab='.length),operatorAcknowledged:true,minutes:10}):
+  await startLocalRadioPortal({dir:demoDir,publicKey});
+console.log(JSON.stringify(hostArgument?{
+  state:'synthetic_lan_lab_explicit_opt_in',join_url:portal.join_url,
+  expires_at:portal.expires_at,plain_http_is_not_private:true,
+  customer_hardware:false,fm_transmission:false,actual_station_audio:false,
+  instruction:'Open the join URL on a second phone connected to the same isolated authorized Wi-Fi, with upstream internet off.'
+}:{state:'simulated_loopback_demo_only',open_on_same_device:portal.origin,expires_at:expires.toISOString(),fm_transmission:false,lan_distribution:false,customer_hardware:false}));
+const cleanup=()=>{if(hostArgument)void portal.stop().finally(()=>fs.rmSync(demoDir,{recursive:true,force:true}));else {portal.server.close();fs.rmSync(demoDir,{recursive:true,force:true});}};
 process.once('SIGTERM',()=>{cleanup();process.exit(0);});
 process.once('SIGINT',()=>{cleanup();process.exit(0);});
