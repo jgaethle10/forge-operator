@@ -1,4 +1,5 @@
 import type { PulseGridAudioAsset, PulseGridSession, PulseGridTrack } from './pulsegrid-session.js';
+import { schedulePulseGridAudioBuffer } from './pulsegrid-audio-scheduler.mjs';
 
 export type PulseGridClockMode = 'cold' | 'worklet' | 'fallback';
 export type PulseGridAudioAssetResolver = (asset:PulseGridAudioAsset)=>Promise<Blob|null>;
@@ -213,18 +214,10 @@ export class PulseGridAudioEngine {
 
   private scheduleAudioAsset(destination:AudioNode,buffer:AudioBuffer,time:number,duration:number,mode:'loop'|'one_shot'='loop'){
     const context=this.context!;
-    const source=this.trackSource(context.createBufferSource());
-    source.buffer=buffer;
-    if(mode==='loop'&&buffer.duration<duration){
-      source.loop=true;
-      source.loopEnd=Math.max(0.01,buffer.duration);
-      source.connect(destination);
-      source.start(time);
-      source.stop(time+duration);
-      return;
-    }
-    source.connect(destination);
-    source.start(time,0,Math.min(buffer.duration,duration));
+    return schedulePulseGridAudioBuffer({
+      buffer,time,duration,mode,destination,
+      createSource:()=>this.trackSource(context.createBufferSource()),
+    });
   }
 
   private async ensureContext() {
