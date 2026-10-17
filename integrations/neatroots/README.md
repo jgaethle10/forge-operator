@@ -45,6 +45,8 @@ Open `http://localhost:4100` and select the `evercraft-checkout-evidence-demo` p
 - Generating the JSONL requires **no collector**. HTTP test acceptance from a fake server proves only the emission contract, not actual ingestion or detection by neatroots.
 - Cloud upload, hosted models, payments, and production routing are **not enabled**.
 
-**Next verification gate:** Run against a real local neatroots release; capture server version, successful ingestion, observed checks and screenshots; then consider contributing a focused upstream check or test fixture if there's a confirmed gap.
+**New verified transport receipt (October 16, 2026):** [An isolated GitHub Actions run](https://github.com/jgaethle10/forge-operator/actions/runs/38984442216) installed the pinned genuine neatroots v0.2.8 release, started the local collector, and received HTTP 200 for BOTH synthetic traces. The local tests still separately validate the mock-collector contract. This confirms real collector acceptance, **not** that neatroots detected the contradictory answer, chose a check, or evaluated a model. No tokens, real orders, cloud forwarding, or production services were involved.
+
+**Next verification gate:** Independently observe neatroots rules or configured decision-model findings on both real traces, with trace IDs, version, check configuration and screenshot evidence; then consider a focused upstream contribution if a confirmed gap exists.
 
 Sources: [neatroots HTTP example](https://github.com/neatlogs/neatroots/tree/main/examples/http-api), [checks documentation](https://github.com/neatlogs/neatroots/blob/main/docs/checks.md), [Apache-2.0 upstream](https://github.com/neatlogs/neatroots).
