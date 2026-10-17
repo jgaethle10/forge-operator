@@ -73,7 +73,7 @@ for (const offer of canonicalSellNow) {
         compact.machine_review_url !== null) {
       fail('native direct buyer path must not fabricate a Machine Commerce agent authority');
     }
-    if (!/human confirmation/i.test(String(offer.confirmation || '')) ||
+    if (!/buyer confirmation/i.test(String(offer.confirmation || '')) ||
         !/provider-paid receipt/i.test(String(offer.confirmation || ''))) {
       fail('native Workflow X-Ray lost consent or paid-verification boundary');
     }
