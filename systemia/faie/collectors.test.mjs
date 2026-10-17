@@ -5,6 +5,11 @@ import {
   faieCollectorConfigFromEnv,
   sentinelObservationToFaie
 } from './collectors.mjs';
+import {
+  buildFaieInvestigation,
+  emptyFaieState,
+  ingestFaieObservation
+} from './core.mjs';
 
 function sentinelRow(overrides = {}) {
   return {
@@ -51,6 +56,8 @@ test('FAIE can inherit a verified Sentinel region profile', () => {
     FAIE_REGION_PROFILE: 'yakima-basin-wa'
   });
   assert.equal(config.region_profile.profile_id, 'yakima-basin-wa');
+  assert.ok(config.region_aliases.includes('yakima-wa'));
+  assert.ok(config.region_aliases.includes('Yakima Valley'));
   assert.equal(config.nws_area, 'WA');
   assert.equal(config.usgs_water_sites.length, 4);
   assert.ok(config.usgs_water_sites.includes('USGS-12484500'));
@@ -130,4 +137,49 @@ test('FAIE official collectors can be disabled without pretending source health'
   assert.equal(result.observations.length, 0);
   assert.equal(result.receipts[0].status, 'disabled');
   assert.equal(result.receipts[0].reason, 'collectors_disabled');
+});
+
+
+test('FAIE verified Yakima profile aliases prevent official water evidence from falling below the geography gate', () => {
+  const config = faieCollectorConfigFromEnv({
+    FAIE_REGION_PROFILE: 'yakima-basin-wa'
+  });
+  const normalized = sentinelObservationToFaie(sentinelRow({
+    observation_id: 'usgs-water-latest:yakima-alias-regression',
+    domain: 'hydrology',
+    kind: 'stream_discharge',
+    evidence_state: 'verified',
+    source_family: 'usgs-water-data-api',
+    independence_group: 'usgs',
+    provenance_ref: 'https://api.waterdata.usgs.gov/example',
+    summary: 'Yakima River at Umtanum stream discharge 2200 ft3/s',
+    region_key: 'Yakima River at Umtanum, Kittitas County, Washington',
+    region_group: 'coarse-grid:1deg:46:-121',
+    metric_value: 2200
+  }), {
+    regionAliases: config.region_aliases
+  });
+
+  assert.ok(normalized.region_keys.includes('yakima-wa'));
+  assert.ok(normalized.region_keys.includes('yakima-basin-wa'));
+  assert.ok(normalized.region_keys.includes('Yakima River Basin'));
+  assert.equal(normalized.metadata.region_aliases.includes('yakima-wa'), true);
+
+  const admitted = ingestFaieObservation(emptyFaieState(), normalized, {
+    now: '2026-09-30T20:05:00.000Z'
+  });
+  const investigation = buildFaieInvestigation(admitted.state, {
+    question: 'What current evidence should shape reliance on Yakima Valley water availability for regionally scaled food production?',
+    region_keys: ['yakima-wa'],
+    asset_types: ['regional food production infrastructure'],
+    water_source: 'Yakima River Basin irrigation and groundwater',
+    horizon_days: 90
+  }, {
+    now: '2026-09-30T20:05:00.000Z'
+  }).investigation;
+
+  assert.equal(investigation.status, 'evidence_available');
+  assert.ok(investigation.findings.length >= 1);
+  assert.ok(investigation.findings.some((row) => row.source_family === 'usgs-water-data-api'));
+  assert.ok(investigation.coverage.covered_dimensions.includes('water'));
 });
