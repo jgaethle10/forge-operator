@@ -1,0 +1,20 @@
+name: Jobber Quote Review Pilot
+on:
+  pull_request:
+    paths:
+      - "systemia/distribution/jobber-quote-review/**"
+      - ".github/workflows/jobber-quote-review.yml"
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  offline-no-secrets:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+      - name: Read-only quote analyzer synthetic tests
+        run: node --test systemia/distribution/jobber-quote-review/quote-review.test.mjs
