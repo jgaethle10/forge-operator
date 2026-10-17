@@ -129,6 +129,7 @@ export type PulseGridOperation =
     }
   | { type: 'arrangement.set_slot'; track_id: string; bar: number; scene: number | null }
   | { type: 'clip.fork_variation'; track_id: string; source_scene: number; destination_scene: number; name?: string }
+  | { type: 'clip.set_audio_playback_mode'; track_id: string; scene: number; mode: 'loop' | 'one_shot' }
   | { type: 'asset.register_audio'; asset: PulseGridAudioAssetInput }
   | { type: 'clip.attach_audio_asset'; track_id: string; scene: number; asset_id: string | null }
   | {
@@ -481,6 +482,8 @@ export function validatePulseGridSession(session: PulseGridSession) {
       if (!Number.isInteger(clip.bars) || clip.bars < 1 || clip.bars > PULSEGRID_MAX_CLIP_BARS) errors.push(`${track.id}.${clip.id}.bars`);
       if (clip.steps_per_bar !== PULSEGRID_STEPS_PER_BAR) errors.push(`${track.id}.${clip.id}.steps_per_bar`);
       if (clip.steps.length !== expectedSteps) errors.push(`${track.id}.${clip.id}.steps`);
+      if(clip.provenance?.audio_playback_mode!==undefined &&
+        !['loop','one_shot'].includes(String(clip.provenance.audio_playback_mode))) errors.push(`${track.id}.${clip.id}.audio_playback_mode`);
       if (clip.probabilities.length !== expectedSteps) errors.push(`${track.id}.${clip.id}.probabilities_length`);
       if (clip.microtiming.length !== expectedSteps) errors.push(`${track.id}.${clip.id}.microtiming_length`);
       if (clip.automation.volume.length !== expectedSteps) errors.push(`${track.id}.${clip.id}.automation.volume`);
@@ -686,6 +689,14 @@ export function applyPulseGridOperation(
     track.clips[operation.destination_scene] = fork;
     after = structuredClone(fork);
     targets = [`track:${track.id}.scene:${operation.destination_scene}`];
+  } else if (operation.type === 'clip.set_audio_playback_mode') {
+    const {track,clip}=getClip(session,operation.track_id,operation.scene);
+    if(track.type!=='audio')throw new Error('Audio playback modes apply only to audio tracks.');
+    if(!['loop','one_shot'].includes(operation.mode))throw new Error('Unsupported audio playback mode.');
+    before=clip.provenance?.audio_playback_mode??null;
+    clip.provenance={...clip.provenance,audio_playback_mode:operation.mode};
+    after=operation.mode;
+    targets=[`clip:${clip.id}.audio_playback_mode`];
   } else if (operation.type === 'asset.register_audio') {
     const incoming=normalizeAudioAsset(operation.asset);
     const index=session.assets.findIndex((asset)=>asset.id===incoming.id);
@@ -900,6 +911,16 @@ export function undoPulseGridReceipt(
     const track = getTrack(session, operation.track_id);
     if (!track.clips[operation.destination_scene]) throw new Error('Unknown PulseGrid destination scene: ' + String(operation.destination_scene));
     track.clips[operation.destination_scene] = structuredClone(originalReceipt.before as PulseGridClip);
+  } else if(operation.type==='clip.set_audio_playback_mode'){
+    const {clip}=getClip(session,operation.track_id,operation.scene);
+    const oldMode=originalReceipt.before as string|null;
+    if(oldMode===null || oldMode===undefined){
+      const restored={...clip.provenance};
+      delete restored.audio_playback_mode;
+      clip.provenance=restored;
+    }else{
+      clip.provenance={...clip.provenance,audio_playback_mode:oldMode};
+    }
   } else if(operation.type==='asset.register_audio'){
     const registered=originalReceipt.after as PulseGridAudioAsset|null;
     const prior=originalReceipt.before as PulseGridAudioAsset|null;
