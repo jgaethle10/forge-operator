@@ -3,7 +3,7 @@ import assert from 'node:assert/strict';
 import {fetchOwnedGithubRun,githubRunToIncidentEvent} from './github-actions-source.mjs';
 const tenant_id='evercraft',mission_id='evercraft-agent-continuity-fabric-20261016';
 const config={repo:'jgaethle10/forge-operator',workflow:'entire-blackbox-evidence.yml',run_id:39035884059,tenant_id,mission_id,token:'fake-test-token'};
-const fakeRun=()=>({id:39035884059,run_attempt:1,path:'.github/workflows/entire-blackbox-evidence.yml',head_sha:'b94f01a7f38e6c658b66c871c9559e03d186218a',status:'completed',conclusion:'success',created_at:'2026-10-17T13:16:28Z',run_started_at:'2026-10-17T13:16:28Z',repository:{full_name:'jgaethle10/forge-operator'},html_url:'https://github.com/jgaethle10/forge-operator/actions/runs/39035884059'});
+const fakeRun=()=>({id:39035884059,run_attempt:1,path:'.github/workflows/entire-blackbox-evidence.yml',head_sha:'b94f01a7f38e6c658b66c871c9559e03d186218a',status:'completed',conclusion:'success',event:'pull_request',created_at:'2026-10-17T13:16:28Z',run_started_at:'2026-10-17T13:16:28Z',repository:{full_name:'jgaethle10/forge-operator'},html_url:'https://github.com/jgaethle10/forge-operator/actions/runs/39035884059'});
 const fetcher=(body,record=()=>{})=>async(url,options)=>{record(url,options);return {ok:true,status:200,text:async()=>JSON.stringify(body)}};
 const observed_at='2026-10-17T13:17:01Z';
 test('owned authenticated API read is GET-only, scoped, no dispatch and cannot verify external effects',async()=>{
@@ -29,6 +29,7 @@ test('provider repository, workflow, id, sha or URL mismatch holds',async()=>{
    x=>x.head_sha='nonsha',
    x=>x.html_url='https://attacker.invalid/bad',
    x=>x.status='active_rogue',
+   x=>x.event='fake_schedule',
    x=>x.created_at='garbage',
    x=>x.run_attempt=0,
  ]){
