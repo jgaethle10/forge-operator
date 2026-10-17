@@ -51,6 +51,12 @@
         "USGS water locations were selected from official Water Data for the Nation monitoring-location surfaces with continuous-data availability.",
         "NWPS gauges remain empty until a gauge-to-place mapping is independently verified from the NOAA gauge endpoint.",
         "The NWS area filter is state-level because the public active-alert API area parameter is state/territory scoped."
+      ],
+      "aliases": [
+        "yakima-wa",
+        "yakima-basin-wa",
+        "Yakima River Basin",
+        "Yakima Valley"
       ]
     }
   ]
