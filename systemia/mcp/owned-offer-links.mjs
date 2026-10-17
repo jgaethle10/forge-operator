@@ -3,7 +3,8 @@ const ROUTES={
  'ibmi-rescue-v1':['ibmi-rescue',25000,'ibmi_estate_xray_250'],
  'legacy-rescue-lab-v1':['legacy-rescue',29900,'legacy_rescue_scan_299.v1'],
  'findmypart-paid-hunt-v1':['findmypart',1900,'findmypart.quick_hunt_19.v1'],
- 'site-survive-rapid-audit-v1':['site-survive',25000,'evercraft_network.site_survive_rapid_audit_250.v1']
+ 'site-survive-rapid-audit-v1':['site-survive',25000,'evercraft_network.site_survive_rapid_audit_250.v1'],
+ 'workflow-foundry-xray-v1':['workflow-xray',25000,'workflow_foundry.xray_250.v1']
 };
 export function ownedOfferLink(item){
  const route=ROUTES[item?.public_id];

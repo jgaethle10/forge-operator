@@ -1,6 +1,7 @@
 import fs from 'node:fs';
 import path from 'node:path';
 import { humanStartState, humanStartUrl, machineReviewUrl } from './start-corridor.mjs';
+import { withOwnedNativeWorkflowXray } from './owned-native-offer-overlay.mjs';
 
 function safeConfiguredHttps(value) {
   const raw = String(value || '').trim();
@@ -47,7 +48,7 @@ function safeOfferUrl(offer) {
 }
 
 const catalog = JSON.parse(fs.readFileSync('public/.well-known/evercraft-machine-catalog.json','utf8'));
-const offers = (catalog.offers || [])
+const offers = withOwnedNativeWorkflowXray(catalog.offers || [])
   .filter((offer) => offer && offer.public_id && offer.name)
   .sort((a,b) => String(a.name || '').localeCompare(String(b.name || '')));
 

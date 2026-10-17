@@ -61,3 +61,24 @@ test('deployment refs are reported as claims only, not independently signed in t
 test('empty or missing data is not a green health state',()=>{
  assert.throws(()=>assessFabricParity({}),/parity_source_or_observation_missing/);
 });
+
+test('scoped, unexpired $250 Workflow X-Ray source-only exception reports missing MCP without pretending deployment',()=>{
+ const offer={public_id:'workflow-foundry-xray-v1',public_url:'https://fabric.systemiacommandcenters.com/offers/workflow-xray'};
+ const extendedSource={capabilities:[...source.capabilities,offer]};
+ const scopedExceptions={...exceptions,known_source_only_capabilities:[...exceptions.known_source_only_capabilities,offer.public_id]};
+ const observed=[...observations,{public_id:offer.public_id,url:offer.public_url,status:200,html_identity_verified:null}];
+ const result=assessFabricParity({...args,source:extendedSource,observations:observed,exceptions:scopedExceptions});
+ assert.equal(result.ok,true);
+ assert.ok(result.source_only_ids.includes(offer.public_id));
+ assert.equal(result.source_capabilities,3);
+ assert.equal(result.live_mcp_capabilities,1);
+ assert.equal(result.deployment_receipt_bound,false);
+ assert.equal(result.release_lineage_state,'HOLD_MISSING_DEPLOYMENT_LINEAGE');
+ assert.equal(result.paid_receipt_verified,false);
+ const withoutException=assessFabricParity({...args,source:extendedSource,observations:observed});
+ assert.equal(withoutException.ok,false);
+ assert.ok(withoutException.findings.includes('unexpected_live_catalog_missing:'+offer.public_id));
+ const expired=assessFabricParity({...args,source:extendedSource,observations:observed,exceptions:scopedExceptions,now:'2026-10-22T00:00:00Z'});
+ assert.equal(expired.ok,false);
+ assert.ok(expired.findings.includes('source_live_exception_expired'));
+});

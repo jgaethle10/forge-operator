@@ -62,7 +62,8 @@
     "discovery_get": "/api/discover?q={natural-language-problem}",
     "owned_human_offers": "https://fabric.systemiacommandcenters.com/offers",
     "owned_human_offer_catalog": "https://fabric.systemiacommandcenters.com/offers.json",
-    "owned_read_only_mcp": "https://fabric.systemiacommandcenters.com/mcp"
+    "owned_read_only_mcp": "https://fabric.systemiacommandcenters.com/mcp",
+    "workflow_xray_offer": "https://fabric.systemiacommandcenters.com/offers/workflow-xray"
   },
   "verified_crawler_controls": [
     {

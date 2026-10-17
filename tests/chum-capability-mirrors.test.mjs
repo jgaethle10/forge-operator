@@ -1,13 +1,15 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import fs from 'node:fs';
+import {withOwnedNativeWorkflowXray} from '../systemia/chum/owned-native-offer-overlay.mjs';
 
 const machine=JSON.parse(fs.readFileSync('public/.well-known/evercraft-machine-catalog.json','utf8'));
+const authorizedOffers=withOwnedNativeWorkflowXray(machine.offers||[]);
 const capabilities=JSON.parse(fs.readFileSync('public/chum/capabilities.json','utf8'));
 const sellNow=JSON.parse(fs.readFileSync('public/chum/sell-now.json','utf8'));
 
-test('every public machine surface has one canonical capability mirror',()=>{
-  const expected=(machine.offers||[]).filter(x=>x?.public_id);
+test('every canonical or explicitly authorized native offer has one capability mirror',()=>{
+  const expected=authorizedOffers.filter(x=>x?.public_id);
   assert.equal(capabilities.count,expected.length);
   assert.equal(capabilities.capabilities.length,expected.length);
   const got=new Set(capabilities.capabilities.map(x=>x.public_id));
@@ -37,7 +39,7 @@ test('ROASTED preserves payment-ready 99c state',()=>{
 });
 
 test('mirror generation never upgrades commercial or machine state',()=>{
-  const live=new Map((machine.offers||[]).map(x=>[x.public_id,x]));
+  const live=new Map(authorizedOffers.map(x=>[x.public_id,x]));
   for(const row of capabilities.capabilities){
     const source=live.get(row.public_id);
     assert.ok(source,row.public_id);
@@ -46,8 +48,8 @@ test('mirror generation never upgrades commercial or machine state',()=>{
   }
 });
 
-test('SELL NOW directory count equals live catalog',()=>{
-  const expected=(machine.offers||[]).filter(x=>x.commercial_state==='sell_now');
+test('SELL NOW directory count equals canonical plus guarded native offer contracts',()=>{
+  const expected=authorizedOffers.filter(x=>x.commercial_state==='sell_now');
   assert.equal(sellNow.count,expected.length);
   assert.equal(sellNow.offers.length,expected.length);
   assert.equal(fs.existsSync('public/chum/sell-now.html'),true);
@@ -68,7 +70,7 @@ test('SELL NOW mirrors expose a verified Start corridor or an explicit hold',()=
       }
     }
     assert.equal(String(row.start_url||'').startsWith('/api/chum/go/'),false,row.public_id);
-    const source=(machine.offers||[]).find(x=>x.public_id===row.public_id);
+    const source=authorizedOffers.find(x=>x.public_id===row.public_id);
     assert.ok(source,row.public_id);
     const hasPaid=(source.offers||[]).some((tier)=>{
       const numeric=Number(tier?.price_usd);
