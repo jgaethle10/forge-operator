@@ -43,6 +43,8 @@ jobs:
           grep -q '"live_integrated": false' /tmp/synthetic-incident.json
           grep -q '"verified_collateral": \[\]' /tmp/synthetic-incident.json
           grep -q '"canonical_admission": "NOT_ADMITTED"' /tmp/synthetic-incident.json
+      - name: Synthetic anticipatory defense policy
+        run: node --test ../../systemia/agent-continuity/response-policy.test.mjs
       - name: Cross-build candidate binaries
         run: |
           GOOS=darwin GOARCH=arm64 go build -o /tmp/entire-blackbox_darwin_arm64 .
