@@ -38,6 +38,20 @@ The existing Evercraft AI Boardroom can evaluate the resulting **public-safe rec
 
 The local contributed test tool is `examples/operator-fabric/local-test-tool.mjs`. It offers only `operator_probe_nonce`, a deterministic test-nonce hash. It has no remote network integration and must **not** be added to the live Fabric catalog without Systemia review and contributor identity/permissions approval.
 
+## Third-party publishing rehearsal: separate signatures, scoped review, real local network transport
+
+The October 17 lab addition models a **future** external publisher-to-operator handoff without placing an untrusted service inside production Fabric:
+
+1. A mock contributor uses an **ephemeral Ed25519 publisher key** to sign a tightly limited capability candidate identifying only `operator_probe_nonce`.
+2. A distinct mock reviewer signs the **exact candidate digest**, a one-hour-or-less expiry and `synthetic_loopback_only` scope. Signatures are verified before the test capability appears in inventory. Neither key grants real organizational, passport, hosting, production, or payment privileges.
+3. `reviewed-http-bridge.mjs` listens exclusively on `127.0.0.1`, exposes a temporary HTTP MCP test endpoint and only advertises that one safe capability while the simulated review is valid.
+4. A separate independent HTTP MCP client enumerates that inventory and remotely invokes the capability. The lab bridge launches the already tested **separate stdio MCP test tool process** and verifies a disposable nonce SHA-256 receipt.
+5. Revoking review immediately empties the exposed inventory and rejects further calls. Forged signatures, changed scopes, self-review, expired reviews, extra tool names, public binding, and disallowed origins are negative tests.
+
+Run all scenarios with `node --test examples/operator-fabric/test/*.test.mjs`. The test suite starts and closes its own loopback service. It never contacts a prospective partner, installs a tool from the internet, modifies the actual Fabric catalog, exposes ports publicly, approves production rights, bills anyone or proves a real human reviewer signed anything. The test only proves the feasibility of the governance and MCP *mechanics*.
+
+**Current evidence ladder:** owned Fabric remote read-only discovery live verified by Saban and an independently written Node client; a test-only contributed MCP tool invoked over local stdio; a separately reviewed candidate routed over a *loopback* MCP HTTP bridge. Missing is a real outside publisher and authorized public installation/remote invocation. Keep this branch draft until Systemia admits the broader Operator Exchange mission and release authorization is explicit. Do not attach these lab keys/signatures to Evercraft Passport or use them as proof of human approval.
+
 ## If live access fails
 
 Separate the failure by **origin and authority**:
