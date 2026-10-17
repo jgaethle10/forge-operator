@@ -75,6 +75,7 @@ jobs:
             standalone-candidate/examples/
             standalone-candidate/packaging/
           retention-days: 7
+          include-hidden-files: true
           if-no-files-found: error
       - name: Explicit publish hold
         run: |
