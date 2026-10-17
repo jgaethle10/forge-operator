@@ -72,8 +72,10 @@ test('review is exact-content-bound, time-bounded and cannot be repurposed for m
  const forgery=signDocument(altered,s.reviewer.privateKey);
  assert.throws(()=>makeTestReviewGate({candidate:s.candidate,approval:forgery,
    publisherPublicKey:s.publisher.publicKey,reviewerPublicKey:s.reviewer.publicKey}),/does not authorize/);
- const expired=scenario(()=>Date.now()-1000000);
+ let time=Date.now();
+ const expired=scenario(()=>time);
  const gate=expired.gate();
+ time+=60001;
  assert.throws(()=>gate.check(),/currently valid/);
 });
 test('revocation clears tool inventory and denies tool invocation without affecting Fabric',async()=>{
