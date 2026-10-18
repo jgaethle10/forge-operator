@@ -46,5 +46,8 @@ jobs:
         run: |
           set -euo pipefail
           grep -q 'href="/apps/eps-estimator/"' public/eps/index.html
-          grep -q 'sms:+15099103256' public/eps/index.html
+          if grep -Eqi '509[[:space:]-]*910[[:space:]-]*3256|15099103256|sms:|tel:' public/eps/index.html; then
+            echo 'Unverified EPS phone or SMS handoff detected.'
+            exit 1
+          fi
           grep -q 'mailto:jesse@evercraftpropertyservices.com' public/eps/index.html
