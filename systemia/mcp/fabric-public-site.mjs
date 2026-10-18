@@ -448,7 +448,7 @@ export function renderPaymentHoldPage({slug='',orderKey='',noAttempt=false}={}){
     '<p>Evercraft can review the specific offer and discuss an approved invoice or another accepted payment method. This page does not automatically email you, create an invoice, take a charge, or begin fulfillment.</p>',
     '</section>',
     '</main>'
-  ].join('\\n'),{
+  ].join('\n'),{
     description:'Evercraft Payments checkout is unavailable or unverified. Request human assistance before paying again.',
     canonical:back,
     ogType:'website',
