@@ -6,8 +6,8 @@ import { PUBLIC_PAYMENT_OFFERS } from './public-payment-offers.mjs';
 export const PORTFOLIO_OFFER_COPY = Object.freeze({
   'browser-diagnosis': {
     eyebrow: 'Browser Workflow Diagnosis',
-    headline: 'Your browser workflow should not depend on lucky clicks.',
-    lede: 'Start with one browser task. Understand its inputs, fragile steps, permissions and human approval points before attempting automation.',
+    headline: 'When one browser task breaks, the whole day can get stuck.',
+    lede: 'You know the task needs doing, but getting it done depends on remembering every click. We diagnose one authorized browser workflow, making fragile handoffs, permissions and human approval points visible before anyone attempts automation.',
     promise: 'A scoped diagnosis of one authorized browser workflow, including practical failure and permission boundaries. This is not an unattended automation deployment.',
     send: [
       'A description of the browser task and where it gets stuck',
@@ -27,8 +27,8 @@ export const PORTFOLIO_OFFER_COPY = Object.freeze({
   },
   'payments-pilot': {
     eyebrow: 'Evercraft Payments Integration',
-    headline: 'Connect checkout to a verified order.',
-    lede: 'One founding integration for one approved offer on your existing payment processor. Connect buyer approval, checkout, payment verification and fulfillment controls.',
+    headline: 'Know when a customer paid. Know what happens next.',
+    lede: 'A customer reaches checkout, but your team still needs a trustworthy answer about payment and delivery. Scope one approved offer on your existing processor with explicit buyer approval, checkout handoff, settlement verification and fulfillment controls.',
     promise: 'One bounded founding integration for an approved processor-backed offer, subject to scoped access and acceptance checks. No promise of changed payment volume.',
     send: [
       'The buyer-owned processor and exact product or service being sold',
@@ -48,8 +48,8 @@ export const PORTFOLIO_OFFER_COPY = Object.freeze({
   },
   'legacy-xray': {
     eyebrow: 'Legacy Software X-Ray',
-    headline: 'Understand the system before you replace it.',
-    lede: 'A focused assessment of the dependencies and failure risks in one authorized legacy software workflow.',
+    headline: 'Your old system still runs the business. Know the risks before changing it.',
+    lede: 'An aging system can hold critical operations together, even when nobody has a complete map of it. Understand the dependencies and failure risks in one authorized legacy workflow before deciding whether to repair or replace it.',
     promise: 'One bounded dependency and risk diagnosis. It does not change production, migrate databases or promise a completed rescue.',
     send: [
       'The system or workflow you own or are authorized to assess',
@@ -69,8 +69,8 @@ export const PORTFOLIO_OFFER_COPY = Object.freeze({
   },
   'ibmi-xray': {
     eyebrow: 'IBM i 7.4 Upgrade X-Ray',
-    headline: 'Before the IBM i upgrade, know what depends on it.',
-    lede: 'Scope one IBM i 7.4 estate or workload and identify the integrations, jobs and operational risks that need attention in an upgrade plan.',
+    headline: 'An IBM i upgrade shouldn't introduce surprises to the workday.',
+    lede: 'That system supports real people, scheduled jobs and connected business processes. Before changing one IBM i 7.4 estate or workload, identify the integrations, jobs and operational risks that deserve an explicit upgrade plan.',
     promise: 'An IBM i 7.4-focused dependency and upgrade-risk diagnosis, not a production upgrade, certification or guaranteed compatibility finding.',
     send: [
       'The IBM i 7.4 estate, application or workload to assess',
@@ -90,8 +90,8 @@ export const PORTFOLIO_OFFER_COPY = Object.freeze({
   },
   'sign-pilot': {
     eyebrow: 'Evercraft Sign Founding Pilot',
-    headline: 'Prove one signing workflow before asking people to trust it.',
-    lede: 'Scope one electronic-signing journey with explicit identity, signer consent, evidence custody and human review requirements.',
+    headline: 'Make the signing journey clear to everyone involved.',
+    lede: 'Signing is a moment of trust. Scope one electronic-signing journey so signer consent, identity requirements, evidence custody and human review are defined before production use.',
     promise: 'One bounded founding signing-flow pilot with identity-control requirements. No universal legal enforceability or automated identity-verification guarantee.',
     send: [
       'The document type and who needs to sign it',
@@ -111,8 +111,8 @@ export const PORTFOLIO_OFFER_COPY = Object.freeze({
   },
   'towi-evidence': {
     eyebrow: 'TOWI Rapid Evidence Scan',
-    headline: 'A decision deserves evidence you can trace.',
-    lede: 'Frame one research question and assemble a bounded source-review plan that separates findings, uncertainty and contradictions.',
+    headline: 'Make the next decision with the evidence in view.',
+    lede: 'When a decision has consequences, vague confidence is not enough. Frame one defined research question and review sources, contradictions and unknowns so the decision-maker can see what is supported and what is not.',
     promise: 'One bounded evidence-scan deliverable for a defined question, not a guaranteed outcome, regulated professional opinion or comprehensive investigation.',
     send: [
       'The one decision or claim you need researched',
