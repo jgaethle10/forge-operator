@@ -18,6 +18,7 @@ import {compileFoundryImport,verifyFoundryWavBytes} from '../systemia/media-stud
 import {appendFoundryPianoSample} from '../systemia/media-studio/instrument-foundry-piano.mjs';
 import {analyzeFoundryPianoWav,checkFoundryPianoRootPitch} from '../systemia/media-studio/instrument-foundry-capture-qa.mjs';
 import {analyzePulseGridMusic} from '../systemia/media-studio/pulsegrid-music-insights.mjs';
+import {analyzePulseGridCounterpoint} from '../systemia/media-studio/pulsegrid-counterpoint-evidence.mjs';
 import type {FoundryInstrumentPatch} from '../systemia/media-studio/instrument-foundry-piano.mjs';
 import './fallen-sessions.css';
 
@@ -800,6 +801,7 @@ export default function FallenSessions(){
   }
 
   const musicInsights=useMemo(()=>analyzePulseGridMusic(session,selectedScene),[session,selectedScene]);
+  const counterpointEvidence=useMemo(()=>analyzePulseGridCounterpoint(session,selectedScene),[session,selectedScene]);
   const visibleSteps=clip.steps.map((_,index)=>index);
   const automationValues=clip.automation[automationParam];
   const arrangementBars=Array.from({length:session.arrangement[0]?.length||16},(_,index)=>index);
@@ -891,6 +893,20 @@ export default function FallenSessions(){
         ))}
         <p className="fsMusicInsightCaution">Dynamic arc by quarter: {musicInsights.velocity_arc.map(q=>
           q.mean_note_velocity.toFixed(2)).join(' · ')}. Velocity is not a loudness measurement.</p>
+        <div className="fsMusicInsightStats" aria-label="Counterpoint and motion analysis">
+          <span>Aligned voice onsets {counterpointEvidence.simultaneous_single_note_onsets}</span>
+          <span>Contrary motions {counterpointEvidence.motion_summary.contrary}</span>
+          <span>Parallel fifths {counterpointEvidence.motion_summary.parallel_fifths}</span>
+          <span>Parallel octaves/unisons {counterpointEvidence.motion_summary.parallel_octaves_or_unisons}</span>
+        </div>
+        {counterpointEvidence.findings.map((finding,index)=>(
+          <p key={'counterpoint-'+finding.kind+'-'+index}>
+            <strong>{finding.observation}</strong> {finding.recommendation}
+          </p>
+        ))}
+        <p className="fsMusicInsightCaution">Counterpoint evidence is limited to aligned, unambiguous single-note onsets.
+          No voice identity is assumed for chords or overlapping notes. Classical parallel intervals are not universal errors.</p>
+
       </details>
 
       <section className="fsWorkspace">
