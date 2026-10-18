@@ -12,13 +12,14 @@ test('portable EPS/Havenly bundle includes source files and honest SHA receipts'
   assert.equal(receipt.production_record_exported,false);
   assert.equal(receipt.server_side_intake_enabled,false);
   assert.equal(receipt.production_booking_enabled,false);
-  assert.equal(receipt.files.length,4);
+  assert.equal(receipt.files.length,5);
   for(const f of receipt.files){
    assert.match(f.sha256,/^sha256:[a-f0-9]{64}$/);
    assert.ok(fs.existsSync(path.join(output,'site',f.path)));
   }
   assert.match(fs.readFileSync(path.join(output,'site/eps/index.html'),'utf8'),/eps-continuity-20261017/);
   assert.match(fs.readFileSync(path.join(output,'site/havenly/index.html'),'utf8'),/havenly-continuity-20261017/);
+  assert.match(fs.readFileSync(path.join(output,'site/sunshine-spotless/index.html'),'utf8'),/sunshine-spotless-continuity-20261018/);
  }finally{fs.rmSync(output,{recursive:true,force:true})}
 });
 test('external proof distinguishes tested routes from undeployed sites',async()=>{
