@@ -1,0 +1,9 @@
+name = "evercraft-roman-edge-shell"
+main = "worker.mjs"
+compatibility_date = "2026-10-01"
+
+# Deliberately no routes or custom domains configured.
+# Preview first; only route voteroman.com after registrar-authorized DNS cutover
+# and a verified TLS/campaign ownership review.
+[vars]
+USE_REMOTE_MIRROR = "false"

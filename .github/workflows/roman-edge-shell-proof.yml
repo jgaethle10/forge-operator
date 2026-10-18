@@ -1,0 +1,44 @@
+name: Roman Evercraft edge shell proof
+
+on:
+  pull_request:
+    paths:
+      - 'campaign-recovery/roman-2026/edge/**'
+      - 'public/campaigns/roman/index.html'
+      - '.github/workflows/roman-edge-shell-proof.yml'
+  push:
+    branches: [main]
+    paths:
+      - 'campaign-recovery/roman-2026/edge/**'
+      - 'public/campaigns/roman/index.html'
+      - '.github/workflows/roman-edge-shell-proof.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  proof:
+    runs-on: ubuntu-latest
+    timeout-minutes: 3
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Verify shell source is identical to the canonical published fallback
+        run: |
+          node --input-type=module <<'NODE'
+          import fs from 'node:fs';
+          import { EMBEDDED_HTML } from './campaign-recovery/roman-2026/edge/embedded-site.mjs';
+          const canonical=fs.readFileSync('public/campaigns/roman/index.html','utf8');
+          if (EMBEDDED_HTML !== canonical) throw new Error('Embedded shell content is stale: rebuild before deployment');
+          if (!canonical.includes('https://donate.voteroman.com/')) throw new Error('Existing campaign donation link missing');
+          console.log('Canonical HTML parity and existing donation URL PASS');
+          NODE
+      - name: Run edge shell failure-mode suite
+        run: node --test campaign-recovery/roman-2026/edge/worker.test.mjs
+      - name: Confirm DNS deployment is not attempted
+        run: |
+          test -f campaign-recovery/roman-2026/edge/wrangler.toml
+          ! grep -Eq '^routes?\s*=|^zone_id\s*=|^custom_domains?\s*=' campaign-recovery/roman-2026/edge/wrangler.toml
