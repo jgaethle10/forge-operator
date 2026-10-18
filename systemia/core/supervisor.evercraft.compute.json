@@ -20,6 +20,7 @@
     "source_tree_writable": false
   },
   "supervised_workflows": [
+    "evercraft-company-crm-heartbeat",
     "portfolio-sentinel",
     "eps-social-continuity",
     "raven-private-runtime",
@@ -98,6 +99,7 @@
     "forensic_record_canonical_domain_cutover_remains_separate_gate",
     "space_dudz_clip_publisher_supervised",
     "people_layer_owned_runtime_resident_supervised",
-    "people_layer_base44_runtime_not_required"
+    "people_layer_base44_runtime_not_required",
+    "private_crm_heartbeat_review_holds_are_sanitized"
   ]
 }
