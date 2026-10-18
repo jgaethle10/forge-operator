@@ -20,6 +20,22 @@ node --test systemia/evercraft-web/owned-fetch-mcp/server.test.mjs
 
 It binds only to `127.0.0.1` by design, requiring an operator-managed private token. Its `/health` response says `production_ready:false`. Do not place it behind a public reverse proxy or publish a registry manifest as part of this candidate.
 
+## Governed private Compute integration
+
+The candidate is registered as `systemia.evercraft-web-fetch-mcp.v1` on NodeSeed/Evercraft Compute. Yard can admit it under an existing authorized capacity lease, verify `/v1/services/{service_id}/health`, bind its immutable deployment receipt and invoke `YardOperator.invokeWebFetch(deploymentId,{url})`. Compute enforces that invocation's private lease token and forwards it through the MCP worker's **same bearer-protected, rate-limited local transport**. Only content and SHA evidence are returned to the authorized operator. The Compute ledger holds hashes and byte counts, not the worker bearer or response content.
+
+This class is **not included** in the general-purpose public HTTP bridge allowlist. Yard's `verifyRoute` deliberately returns `ok:false, state:'public_route_unbound'` even when the private service health is green, and explicitly flags an accidental public route attachment.
+
+To reproduce the controlled proof on a review environment:
+
+```bash
+node --test systemia/evercraft-web/owned-fetch-mcp/server.test.mjs
+node systemia/yard/web-fetch-owned-resident.proof.mjs
+node --test systemia/evercraft-web/owned-fetch-mcp/live-smoke.test.mjs
+```
+
+The [October 18 CI proof](https://github.com/jgaethle10/forge-operator/actions/runs/39091570469) passed eight protocol/security tests, the leased Yard-to-Compute-to-MCP real-HTTPS Fetch and private-target denial, and an independent runner-local MCP public HTTPS smoke. It ran on temporary GitHub compute; **no persistent production Evercraft node, public origin, published Registry update or customer adoption was proven.**
+
 ## Release gates
 
 1. Independent code/security review, especially SSRF (DNS, redirects, IPv4-mapped and parser edge cases), TLS, resource limits, origin policy and rate/concurrency controls.
