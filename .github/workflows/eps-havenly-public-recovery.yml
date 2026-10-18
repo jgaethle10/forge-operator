@@ -4,20 +4,26 @@ on:
     paths:
       - 'public/eps/**'
       - 'public/havenly/**'
+      - 'public/sunshine-spotless/**'
+      - 'systemia/migrations/base44-exit/sunshine-spotless-recovery-state.json'
       - 'public/apps/eps-estimator/**'
       - 'scripts/build-eps-havenly-portable-release.mjs'
       - 'scripts/probe-eps-havenly-owned-service.mjs'
       - 'tests/eps-havenly-portable-release.test.mjs'
+      - 'tests/sunshine-spotless-rescue.test.mjs'
       - '.github/workflows/eps-havenly-public-recovery.yml'
   push:
     branches: [main]
     paths:
       - 'public/eps/**'
       - 'public/havenly/**'
+      - 'public/sunshine-spotless/**'
+      - 'systemia/migrations/base44-exit/sunshine-spotless-recovery-state.json'
       - 'public/apps/eps-estimator/**'
       - 'scripts/build-eps-havenly-portable-release.mjs'
       - 'scripts/probe-eps-havenly-owned-service.mjs'
       - 'tests/eps-havenly-portable-release.test.mjs'
+      - 'tests/sunshine-spotless-rescue.test.mjs'
       - '.github/workflows/eps-havenly-public-recovery.yml'
   workflow_dispatch:
 permissions:
@@ -32,7 +38,7 @@ jobs:
         with:
           node-version: 22
       - name: Verify owned local service release and fallback honesty
-        run: node --test tests/eps-havenly-portable-release.test.mjs tests/eps-havenly-rescue.test.mjs
+        run: node --test tests/eps-havenly-portable-release.test.mjs tests/eps-havenly-rescue.test.mjs tests/sunshine-spotless-rescue.test.mjs
       - name: Package two direct contact frontages plus EPS estimator
         run: node scripts/build-eps-havenly-portable-release.mjs
       - name: Publish durable portable artifact (not a live deployment)
