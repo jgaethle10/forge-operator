@@ -875,7 +875,14 @@ export default function FallenSessions(){
           <span>Parts {musicInsights.pitched_track_count}</span>
           <span>Pitch classes {musicInsights.pitch_class_evidence.map(item=>item.pitch_class).join(' · ')||'none'}</span>
           <span>Register overlaps {musicInsights.register_proximity_examples}</span>
+          <span>Between-note rests {musicInsights.track_profiles.reduce((sum,part)=>sum+part.rest_gap_count,0)}</span>
         </div>
+        {musicInsights.track_profiles.filter(part=>part.rest_gap_count>0).map(part=>(
+          <p key={'rest-'+part.track_id} className="fsMusicInsightCaution">
+            {part.track_id}: {part.rest_gap_count} measured gaps, longest {part.longest_rest_steps.toFixed(2)} steps.
+            Consider whether they give another voice space or heighten anticipation.
+          </p>
+        ))}
         {musicInsights.findings.map((finding,index)=>(
           <p key={finding.kind+'-'+index}><strong>{finding.observation}</strong> {finding.recommendation}</p>
         ))}
