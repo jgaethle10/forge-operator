@@ -115,6 +115,7 @@ test('owned Fabric serves offer pages, requires confirmation, and delegates chec
     port:0,
     catalog:[websiteAudit],
     faieSurfaceEnabled:false,
+    purchaseIntentUrl:'https://fabric.systemiacommandcenters.com/api/payments/intent',paymentOpsUrl:'https://fabric.systemiacommandcenters.com/api/payments/ops',
     purchaseIntentFetch:async(url,init)=>{
       seen.push({
         url:String(url),
@@ -220,6 +221,7 @@ test('human checkout failures render a branded Evercraft Payments page instead o
     port:0,
     catalog:[websiteAudit],
     faieSurfaceEnabled:false,
+    purchaseIntentUrl:'https://fabric.systemiacommandcenters.com/api/payments/intent',paymentOpsUrl:'https://fabric.systemiacommandcenters.com/api/payments/ops',
     purchaseIntentFetch:async()=>new Response(JSON.stringify({
       ok:true,
       authority:'Evercraft Payments',
@@ -255,7 +257,8 @@ test('audit checkout collects a target and rejects missing or unsupported custod
   for(const scenario of ['missing','unsupported','rejected','mismatch']){
     const calls=[];
     const runtime=await startFabricLocalRuntime({host:'127.0.0.1',port:0,catalog:[websiteAudit],faieSurfaceEnabled:false,
-      purchaseIntentFetch:async(url,init)=>{
+      purchaseIntentUrl:'https://fabric.systemiacommandcenters.com/api/payments/intent',paymentOpsUrl:'https://fabric.systemiacommandcenters.com/api/payments/ops',
+    purchaseIntentFetch:async(url,init)=>{
         const body=JSON.parse(init.body);calls.push(body);
         if(body.action==='website_audit_prepayment_preflight'){
           if(scenario==='unsupported')return Response.json({ok:true,checkout_ready:true});
