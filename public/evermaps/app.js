@@ -74,7 +74,7 @@ function projectedPixel(record){
  return {x:rect.width/2+point.x-center.x,y:rect.height/2+point.y-center.y};
 }
 function visibleRecords(){
- if(!state.showReports)return [];
+ if(!state.showReports || (state.lastFetch && Date.now()-state.lastFetch>15*60000))return [];
  const now=Date.now();
  return state.records.filter(r=>n(r.latitude)&&n(r.longitude)
   &&Number.isFinite(Date.parse(r.modified_at_utc))
@@ -191,6 +191,7 @@ async function refresh(){
   const result=await fetch('/api/evermaps/incidents/pnw',{signal:controller.signal,headers:{Accept:'application/json'},cache:'no-store'});
   if(!result.ok)throw new Error('HTTP '+result.status);
   const json=await result.json();
+  if(!state.showReports)return; // Ignore in-flight results after a user disables this layer.
   if(json.schema!=='evercraft.evermaps.incident-observations.v1'||!Array.isArray(json.records)
    ||json.count!==json.records.length||json.records.length>600
    ||json.guarantees?.current_feed_is_burning_confirmation!==false)
@@ -206,7 +207,7 @@ async function refresh(){
    state.records.length?'ready':'empty');
   renderMap();renderList();
  }catch{
-  clearUnavailable('Official incident source unavailable · nothing shown as current');
+  if(state.showReports)clearUnavailable('Official incident source unavailable · nothing shown as current');
  }finally{clearTimeout(timer);state.fetching=false;}
 }
 let drag=null;
