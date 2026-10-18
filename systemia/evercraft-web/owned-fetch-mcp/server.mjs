@@ -67,7 +67,17 @@ async function readBody(req) {
 export function pinnedRequest(target, publicAddress, {timeoutMs = 10000} = {}) {
   return new Promise((resolve, reject) => {
     const transport = target.protocol === 'https:' ? https : http;
-    const req = transport.request({
+    let settled = false;
+    let req;
+    let deadline;
+    const finish = (error, value) => {
+      if (settled) return;
+      settled = true;
+      clearTimeout(deadline);
+      if (error) reject(error);
+      else resolve(value);
+    };
+    req = transport.request({
       protocol: target.protocol,
       hostname: target.hostname.replace(/^\[|\]$/g, ''),
       port: Number(target.port || (target.protocol === 'https:' ? 443 : 80)),
@@ -100,13 +110,13 @@ export function pinnedRequest(target, publicAddress, {timeoutMs = 10000} = {}) {
         // Drain would allow a malicious infinite response to tie up the
         // socket. Reject and close the upstream connection immediately.
         upstream.destroy();
-        reject(new Error('unsupported_content_type_or_encoding'));
+        finish(new Error('unsupported_content_type_or_encoding'));
         return;
       }
       const lengthHeader = String(upstream.headers['content-length'] || '');
       if (/^\d+$/.test(lengthHeader) && Number(lengthHeader) > MAX_RESPONSE_BYTES) {
         upstream.destroy();
-        reject(new Error('response_too_large'));
+        finish(new Error('response_too_large'));
         return;
       }
       upstream.on('data', (chunk) => {
@@ -117,8 +127,8 @@ export function pinnedRequest(target, publicAddress, {timeoutMs = 10000} = {}) {
         }
         parts.push(chunk);
       });
-      upstream.on('error', reject);
-      upstream.on('end', () => resolve({
+      upstream.on('error', (error) => finish(error));
+      upstream.on('end', () => finish(null, {
         status: upstream.statusCode || 502,
         contentType: type,
         location: String(upstream.headers.location || ''),
@@ -126,8 +136,13 @@ export function pinnedRequest(target, publicAddress, {timeoutMs = 10000} = {}) {
         data: Buffer.concat(parts),
       }));
     });
-    req.setTimeout(timeoutMs, () => req.destroy(new Error('upstream_timeout')));
-    req.once('error', reject);
+    // req.setTimeout is an *idle* timer; a slow-drip peer could otherwise
+    // hold a socket indefinitely while sending fewer than MAX_RESPONSE_BYTES.
+    const wallClockMs = Math.max(100, Math.min(30_000, Math.trunc(timeoutMs) || 10_000));
+    deadline = setTimeout(() => req.destroy(new Error('upstream_deadline_exceeded')), wallClockMs);
+    deadline.unref?.();
+    req.setTimeout(wallClockMs, () => req.destroy(new Error('upstream_timeout')));
+    req.once('error', (error) => finish(error));
     req.end();
   });
 }
