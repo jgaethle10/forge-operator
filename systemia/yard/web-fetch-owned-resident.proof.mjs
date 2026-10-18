@@ -71,6 +71,27 @@ try {
   assert.equal(route.ok,false);
   assert.equal(route.state,'public_route_unbound');
 
+  // Full governed path: Yard lease -> Compute -> private authenticated MCP
+  // -> real public HTTPS -> SHA evidence. No external public MCP route.
+  const actual=await yard.invokeWebFetch(deploymentId,{url:'https://example.com/'});
+  assert.equal(actual.ok,true);
+  assert.equal(actual.result.ok,true);
+  assert.equal(actual.result.status,200);
+  assert.equal(actual.result.source_url_redacted,'https://example.com/');
+  assert.match([actual.result.title,actual.result.text].join(' '),
+    /Example Domain|domain is for use in documentation examples/i);
+  assert.match(actual.result.content_sha256,/^sha256:[a-f0-9]{64}$/);
+  assert.match(actual.result.evidence_receipt_sha256,/^sha256:[a-f0-9]{64}$/);
+  assert.match(actual.compute_receipt_hash,/^[a-f0-9]{64}$/);
+  assert.equal(actual.public_route_approved,false);
+  assert.equal(actual.payment_authority,false);
+  assert.equal(JSON.stringify(actual).includes('Bearer '),false);
+  await assert.rejects(
+    yard.invokeWebFetch(deploymentId,{url:'http://127.0.0.1/latest/meta-data'}),
+    /private_or_reserved_target/
+  );
+  assert.equal((await yard.verifyRoute(deploymentId)).state,'public_route_unbound');
+
   const stopped=await yard.stopDeployment(deploymentId,{reason:'proof_complete'});
   assert.equal(stopped.ok,true);
   const healthAfterStop=await fetch(endpoint);
@@ -86,6 +107,11 @@ try {
     public_route_unbound:true,
     no_bridge_or_registry_promotion:true,
     stop_lifecycle_verified:true,
+    independent_public_https_fetch_via_private_yard_lease:true,
+    ssrf_denial_on_lease_invoke:true,
+    content_sha256:actual.result.content_sha256,
+    evidence_receipt_sha256:actual.result.evidence_receipt_sha256,
+    authorized_yard_invoke_receipt:actual.compute_receipt_hash,
     deployment_receipt:d.receipt.receipt_hash,
   },null,2));
 } finally {
