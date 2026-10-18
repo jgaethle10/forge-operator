@@ -55,6 +55,7 @@ jobs:
                 https://www.voteroman.com/ \
                 https://donate.voteroman.com/ \
                 https://headless-jhpvqnpgxlh-sociallyguud-140c.wix-site-host.com/ \
+                https://fabric.systemiacommandcenters.com/campaigns/roman/ \
                 https://jgaethle10.github.io/forge-operator/campaigns/roman/; do
               echo "## GET $site"
               tmp=$(mktemp)
