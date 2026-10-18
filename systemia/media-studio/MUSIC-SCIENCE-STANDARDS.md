@@ -45,3 +45,26 @@ The internal TimGM6mb SoundFont render has GPL-2-related rights issues requiring
 - Final QA: founder + musician listens blind at matched playback level to unchanged original and new candidate; only a specific human-accepted improvement may be promoted. Boardroom responses are `unverified_pending` until distinct provider model receipts exist.
 
 **Explicitly incomplete:** professional acoustic sample recordings, physically validated room/pedal physics, genuine browser/device audio capture, independent Boardroom model rounds, mastering measurements and musical A/B approval. These require real recorded evidence and cannot be conjured from documentation.
+
+
+## Measured baseline: original `The Weight of Silence` MP3
+
+A **read-only** FFmpeg EBU R128 + true-peak analysis of the frozen original `The_Weight_of_Silence_Piano_and_Strings.mp3`, SHA-256 `d0a6165198d55072db31d26729532d73fadfb844792ed3421afded328d1ed2c6`, produced:
+
+| Measurement | Measured value | Interpretation and constraint |
+|---|---:|---|
+| Decoded MP3 duration | approximately 68.30 s | Rendering and MIDI duration differ; do not infer edits or offsets without timecode review. |
+| Integrated loudness | **-15.8 LUFS** | Existing audition reference, **not** a mandated loudness target for future compositions. |
+| Loudness range | **15.6 LU** | Significant long-form contrast. Future A/B should preserve intended soft-to-loud story instead of normalizing away dynamics. |
+| True peak | **-1.9 dBTP** | Based on FFmpeg ebur128 true-peak estimation, not a certificate of full mastered distribution readiness. |
+| Relative measurement threshold | -26.5 LUFS | Tool diagnostic only. |
+
+Reproducible non-destructive command from the repository operator's machine, supplying the local rights-held reference file path:
+
+```bash
+ffmpeg -hide_banner -nostats -i The_Weight_of_Silence_Piano_and_Strings.mp3 \
+  -af ebur128=peak=true -f null -
+```
+
+This matters **musically**: a lively dramatic range is part of the listening identity of the original. A new supposedly "better" master must be loudness-matched for subjective comparison without automatically flattening this range, and any release needs independent rights, mastering, codec/true-peak and platform checks. The reference MP3 remains untouched. FFmpeg measurement does not establish sample licensing, authorship, originality or waveform authenticity.
+
