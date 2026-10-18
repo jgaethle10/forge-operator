@@ -5,6 +5,7 @@ on:
     paths:
       - 'systemia/influence-lab/**'
       - 'systemia/evercraft-web/browser-worker/influence-website-audit-canary.mjs'
+      - 'systemia/mcp/fabric-public-site.mjs'
       - '.github/workflows/influence-lab-contract.yml'
   workflow_dispatch:
 
@@ -21,7 +22,7 @@ jobs:
         with:
           node-version: '22'
       - name: Validate influence policy and evidence boundaries
-        run: node --test systemia/influence-lab/*.test.mjs systemia/graphics-command/commercial-renderer.test.mjs
+        run: node --test systemia/influence-lab/*.test.mjs systemia/graphics-command/commercial-renderer.test.mjs tests/fabric-offer-pages.test.mjs
 
   review-preview:
     needs: source-policy
