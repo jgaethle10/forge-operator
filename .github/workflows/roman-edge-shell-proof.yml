@@ -4,12 +4,16 @@ on:
   pull_request:
     paths:
       - 'campaign-recovery/roman-2026/edge/**'
+      - 'systemia/mcp/fabric-local-runtime.mjs'
+      - 'tests/fabric-roman-campaign-mirror.test.mjs'
       - 'public/campaigns/roman/index.html'
       - '.github/workflows/roman-edge-shell-proof.yml'
   push:
     branches: [main]
     paths:
       - 'campaign-recovery/roman-2026/edge/**'
+      - 'systemia/mcp/fabric-local-runtime.mjs'
+      - 'tests/fabric-roman-campaign-mirror.test.mjs'
       - 'public/campaigns/roman/index.html'
       - '.github/workflows/roman-edge-shell-proof.yml'
   workflow_dispatch:
@@ -38,6 +42,8 @@ jobs:
           NODE
       - name: Run edge shell failure-mode suite
         run: node --test campaign-recovery/roman-2026/edge/worker.test.mjs
+      - name: Prove independent Fabric public mirror route
+        run: node --test tests/fabric-roman-campaign-mirror.test.mjs
       - name: Confirm DNS deployment is not attempted
         run: |
           test -f campaign-recovery/roman-2026/edge/wrangler.toml
