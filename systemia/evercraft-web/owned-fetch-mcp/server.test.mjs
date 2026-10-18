@@ -142,3 +142,47 @@ test('HTTP MCP is loopback-bound, bearer-authenticated, origin-restricted and no
     await app.close();
   }
 });
+
+
+test('MCP limits concurrent calls and rate without triggering duplicate fetch execution', {timeout:5000}, async () => {
+  const token = 'test-worker-capability-auth-secret-00001';
+  let release;
+  let entered;
+  const started = new Promise(resolve => { entered = resolve; });
+  let invocations = 0;
+  const app = await startOwnedWebFetchMcp({
+    token, maxConcurrent:1, maxRequestsPerMinute:2,
+    fetcher:async () => {
+      invocations++;
+      entered();
+      await new Promise(resolve => { release = resolve; });
+      return {ok:true,text:'fixture'};
+    },
+  });
+  const post = () => fetch(app.url+'/mcp',{
+    method:'POST',
+    headers:{authorization:'Bearer '+token,'content-type':'application/json'},
+    body:JSON.stringify({
+      jsonrpc:'2.0',id:7,method:'tools/call',
+      params:{name:'fetch_url',arguments:{url:'https://example.com/'}},
+    }),
+  });
+  try {
+    const first = post();
+    await started;
+    const overConcurrency = await post();
+    assert.equal(overConcurrency.status,429);
+    assert.equal((await overConcurrency.json()).error,'concurrency_limited');
+    assert.equal(invocations,1);
+    release();
+    const success = await first;
+    assert.equal(success.status,200);
+    const overRate = await post();
+    assert.equal(overRate.status,429);
+    assert.equal((await overRate.json()).error,'rate_limited');
+    assert.equal(invocations,1);
+  } finally {
+    if (release) release();
+    await app.close();
+  }
+});
