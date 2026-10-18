@@ -27,7 +27,8 @@ export function validateTransferPacket(mission){
  new Set(hashes).size!==hashes.length||
  packet.source_blackbox_event_count!==8||
  mission.blackbox?.events!==8||
- JSON.stringify(hashes)!==JSON.stringify(mission.blackbox.signed_event_hashes))
+ JSON.stringify(hashes)!==JSON.stringify(mission.blackbox.signed_event_hashes)||
+ packet.source_blackbox_manifest_sha256!==createHash('sha256').update(JSON.stringify(hashes)).digest('hex'))
  hold('Black Box source event hash lineage inconsistent');
  const s=packet.spider_snapshot;
  if(!s||s.schema!=='evercraft.spider.sandbox-quarantine-drill.v1'||
