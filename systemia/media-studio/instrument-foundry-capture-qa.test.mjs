@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import {analyzeFoundryPianoWav} from './instrument-foundry-capture-qa.mjs';
+import {analyzeFoundryPianoWav,checkFoundryPianoRootPitch} from './instrument-foundry-capture-qa.mjs';
 
 function wav({
   duration=.9,rate=48000,channels=1,bits=16,codec=1,
@@ -94,4 +94,54 @@ test('byte slices with nonzero offset decode without reading unrelated memory',(
  const sub=wrapped.subarray(9,wrapped.length-5);
  const r=analyzeFoundryPianoWav(sub);
  assert.equal(r.status,'technical_signal_pass');
+});
+
+test('recorded middle C tone maps to user-selected MIDI root 60 without granting release rights',()=>{
+ const r=checkFoundryPianoRootPitch(wav({frequency:261.625565}),60);
+ assert.equal(r.status,'consistent');
+ assert.ok(Math.abs(r.cents_error)<18,JSON.stringify(r));
+ assert.equal(r.expected_midi,60);
+ assert.equal(r.human_pitch_confirmed,false);
+});
+test('wrong semitone label is detected rather than silently transposing from a false root',()=>{
+ const r=checkFoundryPianoRootPitch(wav({frequency:261.625565}),61);
+ assert.equal(r.status,'mismatch',JSON.stringify(r));
+ assert.ok(Math.abs(r.cents_error)>45);
+});
+test('accurate higher-register and lower-register note captures are resolved',()=>{
+ const a=checkFoundryPianoRootPitch(wav({frequency:110}),45);
+ const b=checkFoundryPianoRootPitch(wav({frequency:880}),81);
+ assert.equal(a.status,'consistent',JSON.stringify(a));
+ assert.equal(b.status,'consistent',JSON.stringify(b));
+});
+test('out-of-range MIDI values are rejected rather than guessed from audio',()=>{
+ const b=wav();
+ assert.throws(()=>checkFoundryPianoRootPitch(b,20),/integer MIDI/);
+ assert.throws(()=>checkFoundryPianoRootPitch(b,109),/integer MIDI/);
+ assert.throws(()=>checkFoundryPianoRootPitch(b,60.1),/integer MIDI/);
+});
+test('blank piano capture provides indeterminate root evidence, not a fabricated note',()=>{
+ const r=checkFoundryPianoRootPitch(wav({mode:'silent'}),60);
+ assert.equal(r.status,'indeterminate');
+ assert.equal(r.estimated_hz,null);
+});
+test('opposite-phase stereo notes remain measurable without destructive channel summing',()=>{
+ const recording=wav({channels:2,bits:16,frequency:261.625565});
+ for(let o=46;o<recording.length;o+=4){
+   const v=recording.readInt16LE(o-2);
+   recording.writeInt16LE(-v,o);
+ }
+ const r=checkFoundryPianoRootPitch(recording,60);
+ assert.equal(r.status,'consistent',JSON.stringify(r));
+});
+test('real PCM24 stereo recording can have pitch evidence without relabeling rights',()=>{
+ const r=checkFoundryPianoRootPitch(wav({bits:24,channels:2,frequency:440}),69);
+ assert.equal(r.status,'consistent',JSON.stringify(r));
+ assert.equal(r.human_pitch_confirmed,false);
+});
+test('pitch parser works on sliced RIFF source with nonzero ArrayBuffer offset',()=>{
+ const b=wav({frequency:261.625565});
+ const whole=Buffer.concat([Buffer.alloc(13),b,Buffer.alloc(7)]);
+ const r=checkFoundryPianoRootPitch(whole.subarray(13,whole.length-7),60);
+ assert.equal(r.status,'consistent',JSON.stringify(r));
 });
