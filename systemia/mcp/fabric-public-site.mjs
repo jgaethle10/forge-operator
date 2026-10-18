@@ -98,7 +98,7 @@ h1{font-size:clamp(48px,8vw,90px);line-height:.95;letter-spacing:-.065em;margin:
 .pilot-buy-panel .checkout-form input[type=email]{grid-column:1;width:100%!important;max-width:none!important;min-height:49px}
 .pilot-buy-panel .checkout-form button{grid-column:2;grid-row:2;min-height:49px;white-space:nowrap}
 .pilot-buy-panel .checkout-form .checkout-note{grid-column:1/-1;font-size:12px}
-.pilot-process{margin:24px 0 8px}
+.pilot-process{margin:24px 0 8px;padding:0}
 .pilot-process h2{font-size:22px;margin:0 0 14px;letter-spacing:-.03em}
 .pilot-flow{list-style:none;padding:0;margin:0;display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px;counter-reset:stage}
 .pilot-flow li{border:1px solid #283d57;border-radius:14px;padding:16px;background:rgba(11,24,42,.82);min-height:105px}
