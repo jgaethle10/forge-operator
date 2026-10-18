@@ -19,6 +19,7 @@ const MAX_REQUEST_BYTES = 16 * 1024;
 const MAX_RESPONSE_BYTES = 256 * 1024;
 const MAX_TEXT_CHARS = 24_000;
 const MAX_REDIRECTS = 3;
+const MAX_BATCH_URLS = 5;
 const ALLOWED_TYPES = /^(?:text\/(?:html|plain|csv|xml)|application\/(?:json|xml|xhtml\+xml))(?:\s*;|$)/i;
 const sha256 = (value) => createHash('sha256').update(value).digest('hex');
 const safeText = (value, limit = MAX_TEXT_CHARS) => String(value ?? '').slice(0, limit);
@@ -235,6 +236,23 @@ export const WEB_MCP_TOOLS = Object.freeze([
       additionalProperties: false,
     },
   },
+  {
+    name: 'fetch_urls',
+    description: 'Fetch 1–5 independent public HTTP(S) URLs with per-URL isolation and bounded evidence receipts. No browser or search authority.',
+    inputSchema: {
+      type:'object',
+      properties:{
+        urls:{
+          type:'array',
+          items:{type:'string',description:'Public HTTP(S) URL without credentials'},
+          minItems:1,
+          maxItems:5,
+        },
+      },
+      required:['urls'],
+      additionalProperties:false,
+    },
+  },
 ]);
 
 export function webMcpResponse(request, { fetcher = fetchPublicPage } = {}) {
@@ -262,23 +280,59 @@ export function webMcpResponse(request, { fetcher = fetchPublicPage } = {}) {
   const name = request.params?.name;
   const args = request.params?.arguments || {};
   if (name === 'get_web_capabilities') {
-    const result = { mode: 'local_candidate_only', fetch_url: 'implemented_test_required',
-      fetch_urls: 'held', search: 'held', browser: 'held',
+    const result = { mode: 'local_candidate_only',
+      fetch_url: 'implemented_private_yard_tested',
+      fetch_urls: 'candidate_batch_up_to_five',
+      route_web_request: 'held',
+      search: 'held', browser: 'held',
       authentication: 'required', external_payment_authority: false };
     return {jsonrpc: '2.0', id, result: {
       content: [{type:'text', text: JSON.stringify(result)}], structuredContent: result,
     }};
   }
-  if (name !== 'fetch_url' || typeof args.url !== 'string' ||
-      Object.keys(args).some((k) => k !== 'url')) {
+  const single = name === 'fetch_url' &&
+    typeof args.url === 'string' &&
+    Object.keys(args).every((key) => key === 'url');
+  const batch = name === 'fetch_urls' &&
+    Array.isArray(args.urls) &&
+    args.urls.length >= 1 && args.urls.length <= MAX_BATCH_URLS &&
+    args.urls.every((url) => typeof url === 'string') &&
+    Object.keys(args).every((key) => key === 'urls');
+  if (!single && !batch) {
     return {jsonrpc:'2.0', id, error:{code:-32602, message:'Invalid tool arguments'}};
   }
-  return Promise.resolve().then(() => fetcher(args.url)).then(
-    (value) => ({ jsonrpc:'2.0', id, result:{
-      content:[{type:'text',text:JSON.stringify(value)}], structuredContent:value,
+  const run = async () => {
+    if (single) return fetcher(args.url);
+    const results = [];
+    // Sequential retrieval avoids multiplying outbound egress concurrency
+    // beyond the HTTP worker's existing global active-request budget.
+    for (const [index,url] of args.urls.entries()) {
+      try {
+        const evidence = await fetcher(url);
+        results.push({index,ok:true,evidence});
+      } catch (error) {
+        // No raw URL, query parameters, cookies or internal error stacks.
+        results.push({index,ok:false,error:safeText(error?.message || 'fetch_failed',120)});
+      }
+    }
+    const succeeded = results.filter((row) => row.ok).length;
+    return {
+      mode:'bounded_isolated_public_fetch_batch_v1',
+      attempted:results.length,
+      succeeded,
+      failed:results.length - succeeded,
+      results,
+      search_authority:false,
+      browser_authority:false,
+      payment_authority:false,
+    };
+  };
+  return Promise.resolve().then(run).then(
+    (value) => ({jsonrpc:'2.0',id,result:{
+      content:[{type:'text',text:JSON.stringify(value)}],structuredContent:value,
     }}),
-    (error) => ({ jsonrpc:'2.0', id, result:{
-      isError:true, content:[{type:'text',text:safeText(error?.message || 'fetch_failed', 120)}],
+    (error) => ({jsonrpc:'2.0',id,result:{
+      isError:true,content:[{type:'text',text:safeText(error?.message || 'fetch_failed',120)}],
     }}),
   );
 }
