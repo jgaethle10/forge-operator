@@ -45,6 +45,8 @@ test('scope copy never confers authority to run an agent, handle secrets or mark
     assert.match(page,/Nothing is marked paid until settlement is verified/);
     assert.equal(approvedPortfolioOfferCopy(slug,{...offer,currency:'eur'}),null);
     assert.equal(approvedPortfolioOfferCopy(slug,{...offer,amount_cents:0}),null);
+    assert.equal(approvedPortfolioOfferCopy(slug,{...offer,amount_cents:offer.amount_cents+1}),null);
+    assert.equal(approvedPortfolioOfferCopy(slug,{...offer,offer_key:'unapproved.'+offer.offer_key}),null);
   }
   assert.equal(approvedPortfolioOfferCopy('rivet',{currency:'usd',amount_cents:1000,offer_key:'invented'}),null);
 });
