@@ -14,7 +14,8 @@ const targetA='https://edge-a.example.net/rescue/';
 const targetB='https://edge-b.example.net/rescue/';
 const policy=()=>({
  schema:REGISTRY_SCHEMAS.POLICY,subject_host:host,
- owner_key_pem:pem,authority_verified:true,minimum_revision:0
+ owner_key_pem:pem,authority_verified:true,minimum_revision:0,
+ approved_mirror_origins:['https://edge-a.example.net','https://edge-b.example.net']
 });
 const payload=()=>({
  schema:REGISTRY_SCHEMAS.MANIFEST,subject_host:host,revision:7,
