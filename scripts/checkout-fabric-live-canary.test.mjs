@@ -2,7 +2,7 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import {runCanary} from './checkout-fabric-live-canary.mjs';
 import {PUBLIC_PAYMENT_OFFERS} from '../systemia/mcp/public-payment-offers.mjs';
-function mockFetch({old=false,missing=null,receipt=true}={}){
+function mockFetch({old=false,missing=null,receipt=true,priceOverride={}}={}){
   const calls=[];
   const fetchImpl=async(url,opts)=>{
     calls.push({url,method:opts.method});
@@ -11,7 +11,7 @@ function mockFetch({old=false,missing=null,receipt=true}={}){
     if(route==='/offers/'+missing)return new Response('{"error":"offer_not_found"}',{status:404});
     const prices={...Object.fromEntries(Object.entries(PUBLIC_PAYMENT_OFFERS).map(([slug,offer])=>[slug,'$'+(offer.amount_cents/100)])),'website-audit':'$49','ibmi-rescue':'$250','legacy-rescue':'$299','findmypart':'$19','site-survive':'$250'};
     const slug=route.split('/').at(-1);
-    return new Response('<form action="/api/offers/'+slug+'/checkout">'+(old?'':'<input name="customer_ref" type="email" required>')+'<button>Continue to checkout</button>'+prices[slug]+'</form>',{status:200});
+    return new Response('<form action="/api/offers/'+slug+'/checkout">'+(old?'':'<input name="customer_ref" type="email" required>')+'<button>Continue to checkout</button>'+(priceOverride[slug]||prices[slug])+'</form>',{status:200});
   };
   return {fetchImpl,calls};
 }
@@ -49,4 +49,16 @@ test('EventWave missing offer is P0 despite other successful public GETs',async(
   assert.equal(receipt.checkout_session_verified,false);
   assert.equal(receipt.settled_payment_verified,false);
   assert.ok(calls.every(x=>x.method==='GET'));
+});
+
+test('EventWave price check rejects larger or fractional price and accepts $49.00',async()=>{
+  for(const display of ['$490','$49.95']){
+    const r=await runCanary({fetchImpl:mockFetch({priceOverride:{'event-boost':display}}).fetchImpl});
+    assert.equal(r.passed,false,display);
+    assert.ok(r.failures.includes('event-boost_contract_incomplete'),display);
+    assert.equal(r.checks.find(x=>x.route==='/offers/event-boost')?.correct_price,false,display);
+  }
+  const valid=await runCanary({fetchImpl:mockFetch({priceOverride:{'event-boost':'$49.00'}}).fetchImpl});
+  assert.equal(valid.passed,true);
+  assert.equal(valid.checkout_session_verified,false);
 });
