@@ -19,6 +19,22 @@ test('Evercraft Fabric serves the independent read-only Roman emergency page, in
     assert.match(body, /https:\/\/donate\.voteroman\.com\//);
     assert.doesNotMatch(body, /\[APP UNAVAILABLE\]/);
 
+    const entry = await fetch(runtime.url + '/go/roman?ref=private-value', { redirect:'manual' });
+    assert.equal(entry.status,302);
+    assert.equal(entry.headers.get('location'),'/campaigns/roman/');
+    assert.equal(entry.headers.get('x-evercraft-continuity-route'),'local_ready');
+    assert.equal(entry.headers.get('cache-control'),'no-store');
+    assert.doesNotMatch(entry.headers.get('location'),/private-value/);
+    const shortHead=await fetch(runtime.url+'/go/roman/',{method:'HEAD',redirect:'manual'});
+    assert.equal(shortHead.status,302);
+    assert.equal(shortHead.headers.get('location'),'/campaigns/roman/');
+    assert.equal(await shortHead.text(),'');
+    const blockedPost=await fetch(runtime.url+'/go/roman',{method:'POST',redirect:'manual'});
+    assert.equal(blockedPost.status,405);
+    const h=await fetch(runtime.url+'/health').then(r=>r.json());
+    assert.equal(h.roman_owned_funnel_path,'/go/roman');
+    assert.equal(h.roman_owned_funnel_dns_interception,false);
+
     const alias = await fetch(runtime.url + '/campaigns/roman');
     assert.equal(alias.status, 200);
     assert.equal(await alias.text(), body);
