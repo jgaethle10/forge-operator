@@ -572,6 +572,14 @@ export async function startFabricLocalRuntime({
     ['/sunshine-spotless','public/sunshine-spotless/index.html'],
     ['/apps/eps-estimator','public/apps/eps-estimator/index.html'],
   ]);
+  const ownedServiceHostRoutes=new Map([
+    ['evercraftpropertyservices.com','/eps/'],
+    ['www.evercraftpropertyservices.com','/eps/'],
+    ['havenlycleaning.com','/havenly/'],
+    ['www.havenlycleaning.com','/havenly/'],
+    ['sunshineandspotless.com','/sunshine-spotless/'],
+    ['www.sunshineandspotless.com','/sunshine-spotless/'],
+  ]);
   const ownedPublicRoot=path.resolve(moduleDir,'../../');
   const resolveOwnedServicePage=(pathname)=>{
     const key=String(pathname||'').replace(/\/+$/,'');
@@ -695,6 +703,8 @@ export async function startFabricLocalRuntime({
     owned_service_frontages_source_ready:[...ownedServicePages.values()].every(p=>fs.existsSync(path.resolve(ownedPublicRoot,p))),
     owned_service_frontages_backend_intake_verified:false,
     owned_service_frontages_dns_cutover_verified:false,
+    owned_service_custom_host_routing_source_ready:true,
+    owned_service_custom_domain_tls_verified:false,
     visual_desk_path:'/visuals/',
     visual_desk_ready:visualMirror.ready,
     visual_desk_story_count:visualMirror.count,
@@ -717,6 +727,36 @@ export async function startFabricLocalRuntime({
 
   const server=http.createServer(async(req,res)=>{
     try {
+      // Exact custom domains are standalone public frontages, not aliases
+      // for Fabric's discovery/commerce/internal routes.
+      const publicHost=String(req.headers.host||'').trim().toLowerCase().replace(/:\d+$/,'');
+      const publicServiceHome=ownedServiceHostRoutes.get(publicHost);
+      if(publicServiceHome){
+        const reqPath=new URL(String(req.url||'/'),'http://fabric.local').pathname;
+        const isHome=(reqPath==='/'||reqPath==='/index.html');
+        const isEpsEstimator=publicServiceHome==='/eps/'&&
+          (reqPath==='/apps/eps-estimator'||reqPath==='/apps/eps-estimator/');
+        if((req.method!=='GET'&&req.method!=='HEAD')||(!isHome&&!isEpsEstimator)){
+          return sendJson(res,404,{ok:false,error:'service_public_path_not_found'});
+        }
+        const asset=resolveOwnedServicePage(isEpsEstimator?'/apps/eps-estimator/':publicServiceHome);
+        if(!asset)return sendJson(res,503,{ok:false,error:'owned_service_frontage_unavailable'});
+        const payload=fs.readFileSync(asset);
+        res.writeHead(200,{
+          'content-type':'text/html; charset=utf-8',
+          'content-length':payload.length,
+          'cache-control':'public, max-age=60, must-revalidate',
+          'x-content-type-options':'nosniff',
+          // Keep unlaunched domains out of search until DNS, TLS and operator
+          // release evidence exists. This is NOT a verified SEO cutover.
+          'x-robots-tag':'noindex, nofollow',
+          'referrer-policy':'no-referrer',
+          'content-security-policy':"default-src 'none'; style-src 'unsafe-inline'; script-src 'unsafe-inline'; img-src 'self' data:; base-uri 'none'; frame-ancestors 'none'",
+        });
+        if(req.method==='HEAD')return res.end();
+        return res.end(payload);
+      }
+
       if (req.method==='OPTIONS') {
         res.writeHead(204,{
           'access-control-allow-origin':'*',
