@@ -33,7 +33,7 @@ export async function observeBuyerMomentParity({origin=APPROVED_ORIGIN,fetchImpl
   const result={
     schema:'evercraft.fabric.buyer-moments.external-parity.v1',
     observed_at:new Date().toISOString(),origin,method:'GET',requests_posted:0,
-    payment_attempts:0,source_merge_claimed:false,deployed:false,checks:[],failures:[],
+    payment_attempts:0,source_merge_claimed:false,deployed:false,source_commit_attested:false,public_parity_observed:false,checks:[],failures:[],
   };
   try{
     const h=await get(origin+'/health',fetchImpl);
@@ -80,7 +80,11 @@ export async function observeBuyerMomentParity({origin=APPROVED_ORIGIN,fetchImpl
   result.passed=result.failures.length===0;
   // Public GET alone never proves the deployed source matches the reviewed commit,
   // nor merchant authorization, checkout creation, settlement or shipping.
-  result.deployed=result.passed&&result.checks[0]?.deployment_receipt_bound===true;
+  result.public_parity_observed=result.passed;
+  // Not equivalent to code-release provenance: only separately verified, signed
+  // source+edge artifacts can attest the exact deployed commit.
+  result.deployed=false;
+  result.source_commit_attested=false;
   result.summary={checks:result.checks.length,failures:result.failures.length,
     buyer_moments:BUYER_MOMENTS.length,passed:result.passed};
   result.receipt_hash='sha256:'+crypto.createHash('sha256').update(JSON.stringify(result)).digest('hex');
