@@ -1,0 +1,82 @@
+{
+  "schema": "evercraft.systemia.service-entity-extraction-plan.v1",
+  "observed_at": "2026-10-17",
+  "source": "Read-only authenticated Base44 entity-schema listing; no customer rows exported",
+  "security": {
+    "source_credentials_committed": false,
+    "customer_records_committed": false,
+    "target_requires_private_storage": true,
+    "allow_public_ci_source_records": false
+  },
+  "products": [
+    {
+      "product": "Evercraft Property Services",
+      "observed_entity_schemas": 24,
+      "p0": [
+        "Lead",
+        "CommandCenterLead",
+        "Appointment",
+        "ProjectEstimateEvent",
+        "Payment",
+        "Order",
+        "PackageSubscription",
+        "Subscription",
+        "ServicePackage"
+      ],
+      "p1": [
+        "BusinessProfile",
+        "ReferralPartner",
+        "FieldNote",
+        "Testimonial",
+        "EcosystemHandoff",
+        "FeatureFlags"
+      ],
+      "requires": [
+        "source_object_count",
+        "record_id_and_update_cursor",
+        "private_encrypted_export",
+        "attachment_recovery",
+        "idempotent_import",
+        "relational_links",
+        "stripe_reference_parity",
+        "source_target_count_and_digest_reconciliation",
+        "operator_auth_review",
+        "rollback"
+      ]
+    },
+    {
+      "product": "Havenly Cleaning",
+      "observed_entity_schemas": 19,
+      "p0": [
+        "Lead",
+        "LeadSubmission",
+        "ServiceJob",
+        "ServicePackage",
+        "CapacitySettings"
+      ],
+      "p1": [
+        "Testimonial",
+        "TrafficEvent",
+        "FeedbackRequest",
+        "CleanerCandidate",
+        "CommercialPilot",
+        "DistributionPost"
+      ],
+      "requires": [
+        "source_object_count",
+        "record_id_and_update_cursor",
+        "private_encrypted_export",
+        "attachment_recovery",
+        "idempotent_import",
+        "schedule_and_booking_parity",
+        "staff_access_review",
+        "source_target_count_and_digest_reconciliation",
+        "rollback"
+      ]
+    }
+  ],
+  "current_state": "schema_discovery_only",
+  "data_migration_complete": false,
+  "production_write_retargeted": false,
+  "cutover_authorized": false
+}
