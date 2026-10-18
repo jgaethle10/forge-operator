@@ -34,6 +34,48 @@ test('bounded text fetch returns source-labeled SHA-256 receipt and redacts quer
   assert.equal(row.payment_authority,false);
 });
 
+
+test('HTML source metadata and external links are bounded, query-redacted and unverified', async()=>{
+  const html = '<html><head><title>Research</title>'+
+    '<meta name="description" content="Useful &amp; focused" />'+
+    '<link rel="canonical" href="/article?session=should-not-leak" />'+
+    '</head><body><h2>Evidence</h2>'+
+    '<a href="https://other.example/out?token=should-not-leak">External &amp; link</a>'+
+    '<a href="javascript:alert(1)">Ignore</a>'+
+    '<a href="/internal">Internal</a>'+
+    '</body></html>';
+  const row=await fetchPublicPage('https://public.example/current?private=should-not-leak',{
+    resolveHost:async()=>[{address:'93.184.216.34',family:4}],
+    request:async()=>({status:200,contentType:'text/html',data:Buffer.from(html)}),
+  });
+  assert.equal(row.meta_description,'Useful & focused');
+  assert.equal(row.declared_canonical_url,'https://public.example/article');
+  assert.deepEqual(row.outbound_links,[{
+    url:'https://other.example/out',text:'External & link',
+  }]);
+  assert.equal(row.page_metadata_verification,'unverified_declared_by_source');
+  assert.equal(row.extraction,'bounded_static_html_text_v2');
+  assert.equal(row.outbound_links_truncated,false);
+  assert.doesNotMatch(JSON.stringify(row),/should-not-leak|javascript:alert/);
+});
+
+test('external HTML links are capped at twenty and never authorize following links', async()=>{
+  const html='<html><body>'+Array.from({length:30},(_,i)=>
+    '<a href="https://out'+i+'.example/path?q=secret">Site '+i+'</a>'
+  ).join('')+'</body></html>';
+  let calls=0;
+  const row=await fetchPublicPage('https://public.example/',{
+    resolveHost:async()=>[{address:'93.184.216.34',family:4}],
+    request:async()=>{calls++;return {status:200,contentType:'text/html',data:Buffer.from(html)};},
+  });
+  assert.equal(calls,1);
+  assert.equal(row.outbound_links.length,20);
+  assert.equal(row.outbound_links_truncated,true);
+  assert.equal(row.outbound_links[0].url,'https://out0.example/path');
+  assert.equal(row.outbound_links[19].url,'https://out19.example/path');
+  assert.equal(row.browser_execution,false);
+});
+
 test('private, localhost, credentials and non-http targets are rejected before network', async () => {
   const request = () => {throw Error('must never reach network');};
   for(const url of [
