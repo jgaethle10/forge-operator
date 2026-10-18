@@ -44,6 +44,7 @@ jobs:
             console.log('pages_run='+[run.id,run.event,run.status,run.conclusion||'none',run.created_at].join('|'));
           }
           NODE
+          cat pages-diagnostics.txt
           fi
           if [ "$STATUS" = "200" ]; then
             node - <<'NODE' >> pages-diagnostics.txt
