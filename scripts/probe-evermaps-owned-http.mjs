@@ -22,6 +22,15 @@ async function get(path,{expectType=null,timeout=22000}={}){
 }
 function ensure(test,message){if(!test)throw Error('BLOCKED: '+message)}
 try{
+ let ready=false;
+ for(let attempt=0;attempt<30;attempt++){
+  try{
+   const reply=await get('/api/health',{timeout:2000});
+   if(reply.status===200){ready=true;break;}
+  }catch{/* Forge production container is still starting. */}
+  await new Promise(done=>setTimeout(done,1000));
+ }
+ ensure(ready,'Forge production container failed startup health readiness');
  const html=await get('/evermaps/',{expectType:'text/html'});
  ensure(html.status===200,'EverMaps HTML not HTTP 200');
  ensure(html.body.includes('EverMaps | Evercraft Owned Preview'),'EverMaps ownership page missing');
