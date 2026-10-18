@@ -21,7 +21,7 @@ test('live read-only public Fetch through local MCP over actual HTTPS egress', {
     const initialized=await rpc(1,'initialize',{protocolVersion:'2025-03-26'});
     assert.equal(initialized.result.serverInfo.name,'evercraft-web-owned-fetch-candidate');
     const tools=await rpc(2,'tools/list',{});
-    assert.deepEqual(tools.result.tools.map(x=>x.name),['get_web_capabilities','fetch_url']);
+    assert.deepEqual(tools.result.tools.map(x=>x.name),['get_web_capabilities','fetch_url','fetch_urls']);
     const fetched=await rpc(3,'tools/call',{
       name:'fetch_url',arguments:{url:'https://example.com/'},
     });
