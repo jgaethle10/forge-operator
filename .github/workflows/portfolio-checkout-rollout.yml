@@ -5,6 +5,7 @@ on:
     paths:
       - 'systemia/commerce/portfolio-checkout-rollout.mjs'
       - 'public/.well-known/evercraft-fabric-human-buyer-handoffs.json'
+      - 'systemia/commerce/portfolio-human-buyer-handoffs-next.json'
       - 'public/.well-known/evercraft-payments-buyer-doors.json'
       - 'public/chum/capabilities.json'
       - 'systemia/mcp/public-payment-offers.mjs'
