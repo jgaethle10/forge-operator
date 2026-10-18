@@ -106,3 +106,96 @@ export function analyzeFoundryPianoWav(input){
     commercial_release_ready:false
   };
 }
+
+
+/**
+ * Estimate whether a bounded, mostly pitched piano recording agrees with the
+ * explicitly selected MIDI root. A normalized lag search on de-meaned audio
+ * is intentionally a CONSERVATIVE audition gate, never a legal, human or
+ * instrument-authenticity certification. Natural inharmonicity/noisy attacks
+ * may yield 'indeterminate'; those takes need musician review.
+ */
+export function checkFoundryPianoRootPitch(input,expectedMidi){
+  if(!Number.isInteger(expectedMidi)||expectedMidi<21||expectedMidi>108){
+    throw new Error('Expected piano root must be an integer MIDI note 21..108');
+  }
+  const bytes=input instanceof ArrayBuffer?new Uint8Array(input):input;
+  const w=readWav(bytes);
+  const expectedHz=440*Math.pow(2,(expectedMidi-69)/12);
+  // Preserve >=10 samples per period, while using a fixed bounded window.
+  const desiredRate=Math.max(11025,expectedHz*11);
+  const stride=Math.max(1,Math.floor(w.rate/desiredRate));
+  const sampledRate=w.rate/stride;
+  const firstFrame=Math.min(w.frames-1,Math.floor(w.rate*.035));
+  const lastFrame=Math.min(w.frames,firstFrame+Math.floor(w.rate*.25));
+  const n=Math.floor((lastFrame-firstFrame)/stride);
+  if(n<64)throw new Error('Insufficient WAV frames for pitch inspection');
+  const x=new Float64Array(n);
+  let mean=0;
+  for(let i=0;i<n;i++){
+    const at=firstFrame+i*stride;
+    let sample=0;
+    for(let c=0;c<w.channels;c++)sample+=sampleAt(w,at,c);
+    sample/=w.channels;
+    if(!Number.isFinite(sample))return {
+      schema:'evercraft.fallen.piano-root-evidence.v1',status:'indeterminate',
+      expected_midi:expectedMidi,expected_hz:Number(expectedHz.toFixed(3)),
+      estimated_hz:null,cents_error:null,periodicity:0,
+      reason:'nonfinite_sample_values',human_pitch_confirmed:false
+    };
+    x[i]=sample;mean+=sample;
+  }
+  mean/=n;
+  let totalEnergy=0;
+  for(let i=0;i<n;i++){x[i]-=mean;totalEnergy+=x[i]*x[i]}
+  const floor=Math.sqrt(totalEnergy/n);
+  const blank=(reason)=>({
+    schema:'evercraft.fallen.piano-root-evidence.v1',status:'indeterminate',
+    expected_midi:expectedMidi,expected_hz:Number(expectedHz.toFixed(3)),
+    estimated_hz:null,cents_error:null,periodicity:0,
+    reason,human_pitch_confirmed:false
+  });
+  if(floor<.00035)return blank('insufficient_pitched_signal_energy');
+  // Examine a localized pitch range; a distant/missing pitch results in a
+  // fail-closed 'indeterminate' rather than an invented global note label.
+  const semitoneRange=Math.pow(2,8/12);
+  const lowLag=Math.max(2,Math.floor(sampledRate/(expectedHz*semitoneRange)));
+  const highLag=Math.min(Math.floor(n*.52),Math.ceil(sampledRate/(expectedHz/semitoneRange)));
+  if(highLag<=lowLag+2)return blank('insufficient_period_resolution');
+  const scores=new Float64Array(highLag+2);
+  let best=-Infinity,bestLag=0;
+  for(let lag=lowLag;lag<=highLag;lag++){
+    let difference=0,energy=0;
+    // Bounded CPU: at most 0.25 seconds of decimated audio for this check.
+    for(let i=0;i<n-lag;i++){
+      const a=x[i],b=x[i+lag],delta=a-b;
+      difference+=delta*delta;
+      energy+=a*a+b*b;
+    }
+    const score=energy>1e-13?1-difference/energy:0;
+    scores[lag]=score;
+    if(score>best){best=score;bestLag=lag}
+  }
+  if(best<.60||bestLag<=lowLag||bestLag>=highLag){
+    return {...blank('fundamental_period_not_confidently_resolved'),
+      periodicity:Number(Math.max(0,best).toFixed(4))};
+  }
+  const a=scores[bestLag-1],b=scores[bestLag],c=scores[bestLag+1];
+  const curvature=a-2*b+c;
+  const offset=Math.abs(curvature)>1e-9?
+    Math.max(-.5,Math.min(.5,.5*(a-c)/curvature)):0;
+  const measuredHz=sampledRate/(bestLag+offset);
+  const cents=1200*Math.log2(measuredHz/expectedHz);
+  const matched=Math.abs(cents)<=45;
+  return {
+    schema:'evercraft.fallen.piano-root-evidence.v1',
+    status:matched?'consistent':'mismatch',
+    expected_midi:expectedMidi,
+    expected_hz:Number(expectedHz.toFixed(3)),
+    estimated_hz:Number(measuredHz.toFixed(3)),
+    cents_error:Number(cents.toFixed(2)),
+    periodicity:Number(best.toFixed(4)),
+    reason:matched?'instrument_capture_pitch_consistent':'pitch_outside_selected_midi_tolerance',
+    human_pitch_confirmed:false
+  };
+}
