@@ -10,6 +10,7 @@ on:
 
 permissions:
   contents: read
+  actions: read
 
 jobs:
   evidence-gate:
@@ -45,7 +46,384 @@ jobs:
           grep -q '"canonical_admission": "NOT_ADMITTED"' /tmp/synthetic-incident.json
       - name: Synthetic anticipatory defense policy
         run: node --test ../../systemia/agent-continuity/response-policy.test.mjs
+      - name: Signed read-only incident event contract and denial tests
+        run: node --test ../../systemia/agent-continuity/incident-event.test.mjs
+      - name: Local custody and replay-safe incident projections
+        run: node --test ../../systemia/agent-continuity/incident-journal.test.mjs
+      - name: Authenticated Github Actions read-only source adapter tests
+        run: node --test ../../systemia/agent-continuity/github-actions-source.test.mjs
+      - name: Live Github Actions read-only source lab
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          node ../../systemia/agent-continuity/github-actions-lab.mjs | tee /tmp/blackbox-source-lab.json
+          grep -q '"live_agent_telemetry_verified": false' /tmp/blackbox-source-lab.json
+          grep -q '"cross_product_runtime_integrated": false' /tmp/blackbox-source-lab.json
+          grep -q '"same_root_local_readback": true' /tmp/blackbox-source-lab.json
+      - name: Save sanitized provider-readback laboratory receipt
+        uses: actions/upload-artifact@v4
+        with:
+          name: blackbox-owned-github-readback-lab
+          path: /tmp/blackbox-source-lab.json
+          if-no-files-found: error
+          retention-days: 14
+      - name: Scheduled revenue heartbeat source boundaries
+        run: node --test ../../systemia/agent-continuity/github-heartbeat-source.test.mjs
+      - name: Live scheduled revenue heartbeat readonly intake
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          node ../../systemia/agent-continuity/github-heartbeat-lab.mjs | tee /tmp/blackbox-scheduled-heartbeat.json
+          grep -q '"live_agent_telemetry_verified": false' /tmp/blackbox-scheduled-heartbeat.json
+          grep -q '"external_effect_provider_verified": false' /tmp/blackbox-scheduled-heartbeat.json
+          grep -q '"execution_authority": "NONE_READ_ONLY"' /tmp/blackbox-scheduled-heartbeat.json
+      - name: Archive sanitized scheduled heartbeat observation
+        uses: actions/upload-artifact@v4
+        with:
+          name: blackbox-scheduled-heartbeat-readonly-lab
+          path: /tmp/blackbox-scheduled-heartbeat.json
+          if-no-files-found: error
+          retention-days: 14
+      - name: Scheduled workflow cohort adversarial boundary tests
+        run: node --test ../../systemia/agent-continuity/github-schedule-cohort.test.mjs
+      - name: Read-only scheduled workflow cohort
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          node ../../systemia/agent-continuity/github-schedule-cohort-lab.mjs | tee /tmp/blackbox-scheduled-cohort.json
+          grep -q '"common_cause_verified": false' /tmp/blackbox-scheduled-cohort.json
+          grep -q '"source_execution_authority": "NONE_READ_ONLY"' /tmp/blackbox-scheduled-cohort.json
+          grep -q '"service_recovery_verified": false' /tmp/blackbox-scheduled-cohort.json
+      - name: Archive five-lane source schedule cohort
+        uses: actions/upload-artifact@v4
+        with:
+          name: blackbox-owned-schedule-cohort-readonly
+          path: /tmp/blackbox-scheduled-cohort.json
+          if-no-files-found: error
+          retention-days: 14
+      - name: Four role receipt-chain cryptographic denial tests
+        run: node --test ../../systemia/agent-continuity/detached-receipt-chain.test.mjs
+      - name: Detached four-role laboratory receipt chain
+        run: |
+          set -euo pipefail
+          node ../../systemia/agent-continuity/detached-receipt-lab.mjs /tmp/blackbox-scheduled-cohort.json | tee /tmp/blackbox-detached-chain.json
+          grep -q '"production_authorized": false' /tmp/blackbox-detached-chain.json
+          grep -q '"source_artifact_sha256"' /tmp/blackbox-detached-chain.json
+          grep -q '"producer_delivery_consumer_independence": "NOT_PROVEN"' /tmp/blackbox-detached-chain.json
+          grep -q '"execution_authority": "NONE_READ_ONLY"' /tmp/blackbox-detached-chain.json
+      - name: Archive detached public-key-only reproducible lab evidence
+        uses: actions/upload-artifact@v4
+        with:
+          name: blackbox-four-role-detached-verifier-lab
+          path: /tmp/blackbox-detached-chain.json
+          if-no-files-found: error
+          retention-days: 14
       - name: Cross-build candidate binaries
         run: |
           GOOS=darwin GOARCH=arm64 go build -o /tmp/entire-blackbox_darwin_arm64 .
           GOOS=windows GOARCH=amd64 go build -o /tmp/entire-blackbox_windows_amd64.exe .
+
+
+  # This is an ACTUAL separate GitHub runner/job that downloads the first
+  # job's provider-stored lab receipt. Trust keys are still CI generated
+  # and self-contained, not independently provisioned Passport identities.
+  detached-cross-job-consumer:
+    name: Cross-job detached receipt acceptance
+    runs-on: ubuntu-latest
+    needs: evidence-gate
+    permissions:
+      contents: read
+      actions: read
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Prove separate-job artifact consumer rejects forged or overclaimed receipt
+        run: node --test systemia/agent-continuity/detached-artifact-consumer.test.mjs
+      - name: Download first-job provider-stored lab receipt
+        uses: actions/download-artifact@v4
+        with:
+          name: blackbox-four-role-detached-verifier-lab
+          path: /tmp/blackbox-cross-job-in
+      - name: Verify cross-job same source and chain without private signer keys
+        run: |
+          set -euo pipefail
+          node systemia/agent-continuity/detached-artifact-consumer.mjs /tmp/blackbox-cross-job-in/blackbox-detached-chain.json | tee /tmp/blackbox-cross-job-acceptance.json
+          grep -q '"github_job_artifact_transfer_consumed": true' /tmp/blackbox-cross-job-acceptance.json
+          grep -q '"independent_provisioned_identity_verified": false' /tmp/blackbox-cross-job-acceptance.json
+          grep -q '"live_chum_spider_consumer_verified": false' /tmp/blackbox-cross-job-acceptance.json
+      - name: Owner-pinned trust separation denial tests
+        run: node --test systemia/agent-continuity/owner-trust-preflight.test.mjs
+      - name: Prove lab signer keys are not owner-approved
+        run: |
+          set -euo pipefail
+          env -u BLACKBOX_OWNER_TRUST_SHA256 -u BLACKBOX_OWNER_PUBLIC_TRUST_JSON \
+            node systemia/agent-continuity/owner-trust-preflight-cli.mjs \
+            /tmp/blackbox-cross-job-in/blackbox-detached-chain.json | tee /tmp/blackbox-owner-trust-held.json
+          grep -q '"state": "HELD_OWNER_TRUST_FINGERPRINT_NOT_CONFIGURED"' /tmp/blackbox-owner-trust-held.json
+          grep -q '"release_authorized": false' /tmp/blackbox-owner-trust-held.json
+          grep -q '"independently_pinned_trust_verified": false' /tmp/blackbox-owner-trust-held.json
+      - name: Archive held owner-trust gate
+        uses: actions/upload-artifact@v4
+        with:
+          name: blackbox-owner-trust-not-enrolled
+          path: /tmp/blackbox-owner-trust-held.json
+          if-no-files-found: error
+          retention-days: 14
+      - name: Preserve separate-runner acceptance receipt
+        uses: actions/upload-artifact@v4
+        with:
+          name: blackbox-cross-job-readonly-acceptance
+          path: /tmp/blackbox-cross-job-acceptance.json
+          if-no-files-found: error
+          retention-days: 14
+
+
+  # Actual Saban scheduler/lease/retry test harness. This is a separate CI job
+  # with no access to production service tokens or grants. Synthetic fixtures
+  # are not a canonical Systemia preflight or delegated production authority.
+  saban-adversarial-review:
+    name: Saban bounded Black Box review
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Saban kernel scheduler and lease proof
+        run: |
+          set -euo pipefail
+          npm run proof:saban-kernel | tee /tmp/saban-kernel-proof.log
+          grep -q '"status":"pass"' /tmp/saban-kernel-proof.log
+      - name: Saban Black Box adversarial scheduler tests
+        run: node --test systemia/agent-continuity/saban-blackbox-review.test.mjs
+      - name: Execute Saban eight-work-item local security review
+        run: |
+          set -euo pipefail
+          node systemia/agent-continuity/saban-blackbox-review-cli.mjs | tee /tmp/saban-blackbox-review.json
+          grep -q '"runner": "REAL_SABAN_WORK_STATE_AND_SCHEDULER"' /tmp/saban-blackbox-review.json
+          grep -q '"status": "PASS_SYNTHETIC_REVIEW_ONLY"' /tmp/saban-blackbox-review.json
+          grep -q '"admission_readback": "NOT_RUN_CANONICAL_GATE"' /tmp/saban-blackbox-review.json
+          grep -q '"execution_authority": "NONE_READ_ONLY"' /tmp/saban-blackbox-review.json
+      - name: Archive Saban governed adversarial review
+        uses: actions/upload-artifact@v4
+        with:
+          name: saban-blackbox-readonly-review
+          path: /tmp/saban-blackbox-review.json
+          if-no-files-found: error
+          retention-days: 14
+
+
+  # Real Saban-dispatched OS subprocess (a controlled hardcoded rogue drill).
+  # Only inert IPC broker attempts; no deployment, provider action or external
+  # account access. Independent of the Black Box CI evidence path.
+  rogue-agent-field-drill:
+    name: Contained rogue agent mission
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Adversarial OS child and Spider persisted-queue restart tests
+        run: node --test systemia/agent-continuity/rogue-field-drill.test.mjs
+      - name: Execute one rogue-agent mission in bounded Saban sandbox
+        run: |
+          set -euo pipefail
+          node systemia/agent-continuity/rogue-field-drill-cli.mjs | tee /tmp/blackbox-rogue-field-mission.json
+          grep -q '"result": "PASSED_CONTAINED_LOCAL_ROGUE_DRILL_NOT_PRODUCTION"' /tmp/blackbox-rogue-field-mission.json
+          grep -q '"observed_rogue_process_terminated": true' /tmp/blackbox-rogue-field-mission.json
+          grep -q '"agent_post_quarantine_retry": "DENIED_QUARANTINED"' /tmp/blackbox-rogue-field-mission.json
+          grep -q '"real_spider_service_invoked": false' /tmp/blackbox-rogue-field-mission.json
+          grep -q '"operator_production_admission_verified": false' /tmp/blackbox-rogue-field-mission.json
+      - name: Archive contained rogue-agent mission receipt
+        uses: actions/upload-artifact@v4
+        with:
+          name: blackbox-real-process-rogue-mission-local
+          path: /tmp/blackbox-rogue-field-mission.json
+          if-no-files-found: error
+          retention-days: 14
+
+
+  # GitHub Actions schedules these jobs on separate runner instances. The first
+  # job produces a real scripted rogue process + quarantined state. This receiver
+  # gets it only through the GitHub artifact provider, with no shared local disk,
+  # launches a new LOOPBACK Spider test HTTP service and attacks it before and
+  # after a real service process restart. NO live product endpoint is contacted.
+  spider-cross-runner-replay:
+    name: Spider cross-runner quarantine replay
+    needs: rogue-agent-field-drill
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    permissions:
+      contents: read
+      actions: read
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Cross-runner HTTP persistence and forged-source tests
+        run: node --test systemia/agent-continuity/spider-cross-runner-mission.test.mjs
+      - name: Download actual rogue source mission artifact from separate runner
+        uses: actions/download-artifact@v4
+        with:
+          name: blackbox-real-process-rogue-mission-local
+          path: /tmp/spider-remote-source
+      - name: Start isolated Spider HTTP service and challenge across OS restart
+        run: |
+          set -euo pipefail
+          node systemia/agent-continuity/spider-cross-runner-mission-cli.mjs \
+            /tmp/spider-remote-source/blackbox-rogue-field-mission.json | tee /tmp/spider-cross-runner-readback.json
+          grep -q '"status": "PASSED_TWO_RUNNER_PROVIDER_HANDOFF_AND_RESTARTED_HTTP_SANDBOX_ONLY"' /tmp/spider-cross-runner-readback.json
+          grep -q '"receiver_service_os_restart_completed": true' /tmp/spider-cross-runner-readback.json
+          grep -q '"tampered_import_rejected": true' /tmp/spider-cross-runner-readback.json
+          grep -q '"global_no_regeneration_proven": false' /tmp/spider-cross-runner-readback.json
+          grep -q '"execution_authority": "NONE_READ_ONLY"' /tmp/spider-cross-runner-readback.json
+      - name: Archive provider-artifact receiver machine HTTP replay receipt
+        uses: actions/upload-artifact@v4
+        with:
+          name: spider-cross-runner-replay-no-production-authority
+          path: /tmp/spider-cross-runner-readback.json
+          if-no-files-found: error
+          retention-days: 14
+
+
+  # Two actual official NodeSeed servers run in distinct OS processes with
+  # independent ephemeral CI keys, but ONE GitHub runner host. Successful
+  # signatures cannot make these machines physically distinct or field enrolled.
+  pinned-nodeseed-identity:
+    name: Pinned NodeSeed challenge and replay gate
+    runs-on: ubuntu-latest
+    timeout-minutes: 9
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Verify two real NodeSeed processes and reject identity substitutions
+        run: node --test systemia/agent-continuity/pinned-nodeseed-pair.test.mjs
+      - name: On-device NodeSeed public receipt and candidate identity tests
+        run: |
+          node --test systemia/agent-continuity/field-node-readback.test.mjs
+          node --test systemia/agent-continuity/field-node-selfcheck.test.mjs
+      - name: Record independently pinned NodeSeed laboratory result
+        run: |
+          set -euo pipefail
+          node systemia/agent-continuity/pinned-nodeseed-pair-cli.mjs | tee /tmp/blackbox-pinned-node-pair.json
+          grep -q '"result": "PASS_TWO_REAL_NODESEED_PROCESSES_CI_SINGLE_HOST_ONLY"' /tmp/blackbox-pinned-node-pair.json
+          grep -q '"actual_http_attestation_round_trips": 2' /tmp/blackbox-pinned-node-pair.json
+          grep -q '"physically_distinct_hardware_verified": false' /tmp/blackbox-pinned-node-pair.json
+          grep -q '"authority": "NONE_READ_ONLY"' /tmp/blackbox-pinned-node-pair.json
+      - name: Prove production field gate remains held without external owner-pins
+        run: |
+          set -euo pipefail
+          env -u BLACKBOX_FIELD_PINNED_NODES_JSON -u BLACKBOX_FIELD_NODE_TOKENS_JSON \
+            node systemia/agent-continuity/pinned-nodeseed-field-probe-cli.mjs | tee /tmp/blackbox-two-node-field-held.json
+          grep -q '"state": "HELD_INDEPENDENT_OWNER_NODE_PINS_UNAVAILABLE"' /tmp/blackbox-two-node-field-held.json
+          grep -q '"device_query_performed": false' /tmp/blackbox-two-node-field-held.json
+      - name: Archive NodeSeed dual-process attestation and owner field hold
+        uses: actions/upload-artifact@v4
+        with:
+          name: blackbox-pinned-nodeseed-pair-readonly-gate
+          path: |
+            /tmp/blackbox-pinned-node-pair.json
+            /tmp/blackbox-two-node-field-held.json
+          if-no-files-found: error
+          retention-days: 14
+
+
+  # Integrates all actual lab layers on the recipient GitHub runner, but NEVER
+  # treats that CI host as independently owned two-node hardware.
+  nodeseed-spider-integrated-rogue-mission:
+    name: Saban Black Box Spider NodeSeed integrated mission
+    needs:
+      - rogue-agent-field-drill
+      - pinned-nodeseed-identity
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    permissions:
+      contents: read
+      actions: read
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - uses: actions/download-artifact@v4
+        with:
+          name: blackbox-real-process-rogue-mission-local
+          path: /tmp/blackbox-integrated-source
+      - name: Execute admitted synthetic integration across real NodeSeed and Spider HTTP processes
+        run: |
+          set -euo pipefail
+          node systemia/agent-continuity/rogue-nodeseed-spider-integration-cli.mjs \
+            /tmp/blackbox-integrated-source/blackbox-rogue-field-mission.json | tee /tmp/blackbox-integrated-rogue-mission.json
+          grep -q '"status": "PASS_REPO_HARDENED_CROSS_PRODUCT_CI_EXERCISE_NOT_PRODUCTION"' /tmp/blackbox-integrated-rogue-mission.json
+          grep -q '"receiver_real_nodeseed_http_servers": 2' /tmp/blackbox-integrated-rogue-mission.json
+          grep -q '"receiver_replay_denials_after_restart": 4' /tmp/blackbox-integrated-rogue-mission.json
+          grep -q '"actual_two_owner_devices_contacted": false' /tmp/blackbox-integrated-rogue-mission.json
+          grep -q '"execution_authority": "NONE_READ_ONLY"' /tmp/blackbox-integrated-rogue-mission.json
+      - name: Preserve integrated synthetic mission receipt
+        uses: actions/upload-artifact@v4
+        with:
+          name: blackbox-saban-spider-nodeseed-integrated-held-field
+          path: /tmp/blackbox-integrated-rogue-mission.json
+          if-no-files-found: error
+          retention-days: 14
+
+
+  # Founder-review challenge, available for source inspection on the draft PR.
+  # Running this job is not an outreach, publication or approval to connect
+  # developer machines to production services.
+  outside-reviewer-challenge:
+    name: External reviewer one-command safe challenge
+    runs-on: ubuntu-latest
+    timeout-minutes: 9
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Reviewer's zero-credential challenge integration and CLI tests
+        run: node --test systemia/agent-continuity/outside-reviewer-challenge.test.mjs
+      - name: Run exact one-command reviewer exercise
+        run: |
+          set -euo pipefail
+          node systemia/agent-continuity/outside-reviewer-challenge.mjs | tee /tmp/evercraft-blackbox-reviewer-rc01.json
+          grep -q '"status": "PASS_REVIEWER_LOCAL_SAFETY_DRILL_ONLY"' /tmp/evercraft-blackbox-reviewer-rc01.json
+          grep -q '"local_spider_replay_denied_after_restart": 4' /tmp/evercraft-blackbox-reviewer-rc01.json
+          grep -q '"pinned_lab_nodeseed_processes": 2' /tmp/evercraft-blackbox-reviewer-rc01.json
+          grep -q '"live_entire_integration_verified": false' /tmp/evercraft-blackbox-reviewer-rc01.json
+          grep -q '"permission_to_run_remote_actions": false' /tmp/evercraft-blackbox-reviewer-rc01.json
+      - name: Archive sanitized founder-review external tester packet
+        uses: actions/upload-artifact@v4
+        with:
+          name: blackbox-external-review-challenge-founder-held
+          path: /tmp/evercraft-blackbox-reviewer-rc01.json
+          if-no-files-found: error
+          retention-days: 14
