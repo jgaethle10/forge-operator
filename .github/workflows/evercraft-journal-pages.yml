@@ -163,6 +163,9 @@ jobs:
           grep -q 'Infinite Classroom' _public_pages/chum/products/infinite-classroom/index.html
           test -f _public_pages/apps/eps-estimator/index.html
           grep -q 'EPS Precise Estimator' _public_pages/apps/eps-estimator/index.html
+          test -f _public_pages/campaigns/roman/index.html
+          grep -q 'Roman Kilinkaridis' _public_pages/campaigns/roman/index.html
+          grep -q 'https://donate.voteroman.com/' _public_pages/campaigns/roman/index.html
 
       - name: Upload Pages artifact
         if: steps.page_state.outputs.enabled == 'true'
@@ -208,6 +211,10 @@ jobs:
           printf '%s' "$visual_body" | grep -q 'Washington'
           motion="${base%/}/visuals/washington-active-volcanoes/motion.html"
           curl --fail --silent --show-error --retry 8 --retry-all-errors --retry-delay 2 "$motion" | grep -q "__evercraftRenderAt"
+          roman="${base%/}/campaigns/roman/"
+          roman_body="$(curl --fail --silent --show-error --retry 8 --retry-all-errors --retry-delay 2 "$roman")"
+          printf '%s' "$roman_body" | grep -q 'Roman Kilinkaridis'
+          printf '%s' "$roman_body" | grep -q 'https://donate.voteroman.com/'
           {
             echo "## Evercraft public fallback live"
             echo
@@ -217,4 +224,5 @@ jobs:
             echo "EarthWorks design partner: $earthworks_partner"
             echo "EarthWorks sample study: $earthworks_sample"
             echo "Visual Desk specimen: $visual"
+            echo "Roman campaign emergency mirror: $roman"
           } >> "$GITHUB_STEP_SUMMARY"
