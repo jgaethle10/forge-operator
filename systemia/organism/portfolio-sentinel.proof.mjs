@@ -92,7 +92,7 @@ write('.github/workflows/job-default-directory.yml', [
   '      - name: repo-root file',
   '        run: node scripts/ok.mjs',
   ''
-].join('\\n'));
+].join('\n'));
 
 write('.github/workflows/working-directory.yml', [
   'name: working-directory',
