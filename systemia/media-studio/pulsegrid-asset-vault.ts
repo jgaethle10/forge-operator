@@ -13,6 +13,8 @@ export type PulseGridAudioAssetIngestOptions = {
   parent_asset_ids?: string[];
 };
 
+import { ingestReviewedRecordingIntoVault, type RecordedAudioReviewedAsset } from './recorded-audio-browser-custody.mjs';
+
 type StoredAudioBlob = {
   id:string;
   digest:string;
@@ -82,6 +84,15 @@ export class PulseGridBrowserAudioAssetVault {
     };
     await this.putVerifiedBlob(asset,blob);
     return asset;
+  }
+
+  /** Opt-in verified recording ingress. Never silently grants licensed/owned rights. */
+  async ingestReviewedRecording(
+    blob:Blob,
+    reviewedAsset:RecordedAudioReviewedAsset,
+    pinnedReviewerPublicKeyPem:string,
+  ){
+    return ingestReviewedRecordingIntoVault(this,blob,reviewedAsset,pinnedReviewerPublicKeyPem);
   }
 
   async putVerifiedBlob(asset:PulseGridAudioAsset,blob:Blob){
