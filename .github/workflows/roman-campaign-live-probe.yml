@@ -152,7 +152,7 @@ jobs:
           check_url "$donations" 'Roman Kilinkaridis' 'Existing campaign donation webpage'
           json_url="https://fabric.systemiacommandcenters.com/go/roman/links.json"
           pointer_check="$(mktemp)"
-          pointer_code="$(curl --location --silent --show-error --max-time 20 --output \"$pointer_check\" --write-out '%{http_code}' \"$json_url\")" || pointer_code=000
+          pointer_code="$(curl --location --silent --show-error --max-time 20 --output "$pointer_check" --write-out '%{http_code}' "$json_url")" || pointer_code=000
           if [ "$pointer_code" != 200 ] || ! jq -e '.subject == "voteroman.com" and .original_domain_auto_redirect_active == false and .existing_donation_website == "https://donate.voteroman.com/"' "$pointer_check" >/dev/null; then
             echo "FAIL Evercraft independent recovery pointer: HTTP $pointer_code or invalid route record." >> "$GITHUB_STEP_SUMMARY"
             rm -f "$pointer_check"
