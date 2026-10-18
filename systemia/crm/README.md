@@ -53,3 +53,17 @@ Missing, stale, incorrectly permissioned, oversized, invalid or unavailable priv
 Run the KAIDANCE field cycle without `EVERCRAFT_CRM_HEARTBEAT_INPUT`: it must report `source_not_configured` while other mission sources are still processed. Run with a private current file: it must report `read_only` (or `degraded` if a source fails) with no side effects. Change the source file between two cycles: the next read must reflect the change. Audit CI artifacts to ensure **only sanitized files** are uploaded.
 
 The heartbeat does not send emails, call prospects, mutate payment statuses, merge identities, publish offers or enable device autonomy. Sensitive health, child and household data stays purpose-limited in segregated, consent-gated systems; at most minimally authorized references may appear in an appropriate private CRM view. Authority checks and retention rules belong at every read and every action boundary.
+
+## Implemented first private source adapter (staged, not production deployed)
+
+A private Evercraft Interaction Ledger state directory, bound by `EVERCRAFT_INTERACTION_LEDGER_STATE_DIR`, can now feed the CRM reader directly. It reads **the existing** `interaction-events.jsonl` ledger with read-only filesystem access and validates event schema, unique event/idempotency keys and existing SHA-256 event receipts before generating private signals. It never copies an email address, person's name, message body or raw subject reference to the KAIDANCE artifact.
+
+- Overdue open commitments are `commitment_overdue` signals, closed by matching `commitment_fulfilled` or `commitment_cancelled` evidence. Future promises are not overdue.
+- An inbound message later than the last outbound on a channel can produce a **reported, review-only** `reply_waiting` signal after four hours. This is a signal for human/context review, not proof that the person expects another message. A channel with an opt-out does not create a new outreach opportunity.
+- The adapter never grants permission to email, SMS, DM, phone, charge, invoice or modify the Interaction Ledger. Live sends still require Passport scope, the Interaction Ledger's own contact preflight, exact-message one-time permit and the actual provider receipt.
+- Until canonical Payments, EPS, Havenly and partner pipelines are connected, their connectors explicitly report `unavailable`. The aggregate remains `degraded`, even if the Interaction Ledger is current.
+- Missing, insecure, corrupt or tampered ledger state yields a classified hold. The current adapter is intended for one trusted local private ledger volume, not general filesystem reads by arbitrary network callers.
+
+**Resident ordering guarantee:** `SystemiaMissionPublisher.syncOnce()` calls the CRM refresh hook **before** reading the CRM snapshot for each resident publication. If that refresh fails, the publisher pushes a new `source_refresh_failed` hold and does not reuse an older snapshot that happens to exist. The independent resident CRM cycle can still emit its own liveness receipt. The GitHub field workflow uses the same CRM resolution path but is not itself proof of a production resident machine or access to the private ledger.
+
+`node --test systemia/crm/*.test.mjs` covers ledger event integrity, meaningful state transitions, privacy, two consecutive KAIDANCE cycles, and publisher fail-closed behavior. The real private service binding, backup/restore, consent audit, tenant-purpose policy, cross-division adapters and live 300-second external observation are still separate release gates.
