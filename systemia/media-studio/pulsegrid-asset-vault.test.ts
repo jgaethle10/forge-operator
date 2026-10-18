@@ -36,3 +36,15 @@ test('PulseGrid browser vault has explicit deletion but no automatic graph mutat
   assert.match(source,/async remove\(assetId:string\)/);
   assert.doesNotMatch(source,/session\s*=/);
 });
+
+test('PulseGrid reviewed recording custody is opt-in and cannot escalate rights',()=>{
+  const source=fs.readFileSync('systemia/media-studio/pulsegrid-asset-vault.ts','utf8');
+  const bridge=fs.readFileSync('systemia/media-studio/recorded-audio-browser-custody.mjs','utf8');
+  assert.match(source,/async ingestReviewedRecording\(/);
+  assert.match(source,/ingestReviewedRecordingIntoVault\(this,blob,reviewedAsset,pinnedReviewerPublicKeyPem\)/);
+  assert.match(bridge,/rights:'unknown'/);
+  assert.match(bridge,/publicationAuthorized:false/);
+  assert.doesNotMatch(bridge,/rights:'licensed'/);
+  const barrel=fs.readFileSync('systemia/media-studio/pulsegrid-browser.ts','utf8');
+  assert.match(barrel,/export \{ verifyBrowserRecordedAudio/);
+});
