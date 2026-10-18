@@ -1,16 +1,19 @@
 #!/usr/bin/env node
 import path from 'node:path';
 import { writeCrmHeartbeatArtifacts } from './heartbeat.mjs';
+import { resolveCrmSource } from './interaction-ledger-adapter.mjs';
 function arg(flag, fallback='') {
   const i=process.argv.indexOf(flag);
   return i>=0 && process.argv[i+1] ? process.argv[i+1] : fallback;
 }
 const outDir=path.resolve(arg('--out','artifacts/crm-heartbeat'));
-const r=writeCrmHeartbeatArtifacts({
+const now=new Date();
+const source=resolveCrmSource({
   inputPath:arg('--input',process.env.EVERCRAFT_CRM_HEARTBEAT_INPUT||''),
-  outDir,
-  now:new Date()
+  ledgerStateDir:arg('--interaction-ledger-state',process.env.EVERCRAFT_INTERACTION_LEDGER_STATE_DIR||''),
+  now
 });
+const r=writeCrmHeartbeatArtifacts({...source,outDir,now});
 // Status contains counts and source-health classifications ONLY. No private IDs.
 console.log(JSON.stringify({schema:'evercraft.crm.resident-cycle-receipt.v1',
   state:r.report.state, observed_at:r.report.observed_at,
