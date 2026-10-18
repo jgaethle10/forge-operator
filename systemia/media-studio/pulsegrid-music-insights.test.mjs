@@ -66,3 +66,55 @@ test('invalid root objects or corrupt MIDI notes are rejected',()=>{
  const s=populated();s.tracks.find(x=>x.id==='keys').clips[0].notes[0].pitch=129;
  assert.throws(()=>analyzePulseGridMusic(s,0),/Invalid canonical note/);
 });
+
+test('a held melodic phrase exposes rests between sounding events without mistaking leading silence for a phrase break',()=>{
+ const source=createPulseGridSession('Phrase space');
+ const ops=[
+  {type:'note.add',track_id:'keys',scene:0,note:{pitch:60,start:4,length:3,velocity:.5}},
+  {type:'note.add',track_id:'keys',scene:0,note:{pitch:64,start:6,length:3,velocity:.6}},
+  {type:'note.add',track_id:'keys',scene:0,note:{pitch:67,start:13,length:1,velocity:.7}}
+ ];
+ const s=applyPulseGridTransaction(source,{intent:'observed notes and gaps',operations:ops},'human').session;
+ const r=analyzePulseGridMusic(s,0),profile=r.track_profiles.find(p=>p.track_id==='keys');
+ assert.equal(profile.rest_gap_count,1);
+ assert.deepEqual(profile.rest_gaps,[{start_step:9,duration_steps:4}]);
+ assert.equal(profile.longest_rest_steps,4);
+ assert.ok(r.findings.some(f=>f.kind==='phrase_space'));
+ assert.equal(r.automatic_composition_changes,false);
+});
+test('continuous legato notes and simultaneous chords do not invent breath gaps',()=>{
+ const s=createPulseGridSession('Legato');
+ const ops=[
+  {type:'note.add',track_id:'keys',scene:0,note:{pitch:60,start:0,length:3}},
+  {type:'note.add',track_id:'keys',scene:0,note:{pitch:64,start:0,length:3}},
+  {type:'note.add',track_id:'keys',scene:0,note:{pitch:67,start:3,length:3}}
+ ];
+ const a=applyPulseGridTransaction(s,{intent:'legato',operations:ops},'human').session;
+ const r=analyzePulseGridMusic(a,0);
+ assert.equal(r.track_profiles.find(p=>p.track_id==='keys').rest_gap_count,0);
+});
+test('register overlap sweep detects real simultaneous different-track voices and excludes nonoverlapping voices',()=>{
+ const s=createPulseGridSession('Register');
+ const first=applyPulseGridTransaction(s,{intent:'voice separation',operations:[
+  {type:'note.add',track_id:'keys',scene:0,note:{pitch:60,start:0,length:1}},
+  {type:'note.add',track_id:'bass',scene:0,note:{pitch:61,start:1,length:1}}
+ ]},'human').session;
+ assert.equal(analyzePulseGridMusic(first,0).register_proximity_examples,0);
+ const second=applyPulseGridTransaction(first,{intent:'another voice',operations:[
+  {type:'note.add',track_id:'bass',scene:0,note:{pitch:62,start:.5,length:.5}}
+ ]},'human').session;
+ assert.ok(analyzePulseGridMusic(second,0).register_proximity_examples>0);
+});
+test('music register scan stays bounded on dense same-track passages',()=>{
+ const s=createPulseGridSession('Dense score');
+ const clip=s.tracks.find(t=>t.id==='keys').clips[0];
+ clip.notes=Array.from({length:4000},(_,i)=>({
+  id:'dense-'+i,pitch:60,start:i*.002,length:2,velocity:.55,
+  probability:1,microtiming:0
+ }));
+ const a=analyzePulseGridMusic(s,0);
+ assert.equal(a.note_count,4000);
+ assert.equal(a.register_proximity_examples,0);
+ assert.equal(a.track_profiles[0].rest_gap_count,0);
+ assert.equal(a.automatic_composition_changes,false);
+});
