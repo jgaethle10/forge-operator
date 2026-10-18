@@ -28,6 +28,8 @@ const pages = () => ({
   original:item({status:402,valid:false}),
   www:item({status:402,valid:false}),
   evercraft:item({source}),
+  funnel:item({source}),
+  pages:item(),
   backup:item(),
   donation:item(),
 });
@@ -67,10 +69,22 @@ test('independent Wix backup remains the recommended public fallback if Fabric f
   assert.equal(res.independent_backup_healthy,true);
 });
 
+test('third independent GitHub Pages host is chosen when Fabric and Wix both fail',()=>{
+  const d=pages();
+  d.evercraft=item({status:503,valid:false});
+  d.funnel=item({status:503,valid:false});
+  d.backup=item({status:402,valid:false});
+  const res=evaluateContinuity({pages:d,dnsRecords:DNS,observedAt:'2026-10-18T00:00:00.000Z'});
+  assert.equal(res.independent_github_pages_healthy,true);
+  assert.equal(res.recommended_public_fallback,TARGETS.pages);
+  assert.equal(res.original_domain_verified_on_evercraft,false);
+  assert.equal(res.autonomous_dns_write_enabled,false);
+});
 test('no fallback yields a safe blocked state, not a DNS change',()=>{
   const d=pages();
   d.evercraft=item({status:500,valid:false});
   d.backup=item({status:500,valid:false});
+  d.pages=item({status:500,valid:false});
   const res=evaluateContinuity({pages:d,dnsRecords:DNS,observedAt:'2026-10-18T00:00:00.000Z'});
   assert.equal(res.recommended_public_fallback,null);
   assert.equal(res.next_step,'RECOVER_INDEPENDENT_PUBLIC_HOSTING_BEFORE_CUTOVER');
@@ -96,7 +110,7 @@ test('run uses public DNS reads and HTTP GET, without provider logins or writes'
     return new Response(html,{status,headers});
   };
   const result=await probeGuardian({fetchImpl,resolver,observedAt:'2026-10-18T00:00:00.000Z'});
-  assert.equal(fetches.length,5);
+  assert.equal(fetches.length,7);
   assert.equal(lookups.length,4);
   assert.ok(fetches.every(x=>x.options.method==='GET'));
   assert.equal(result.original_domain_http_status,402);
