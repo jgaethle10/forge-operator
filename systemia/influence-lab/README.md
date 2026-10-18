@@ -37,6 +37,19 @@ node systemia/influence-lab/render-concepts.mjs \
 
 The output must not be a pre-existing directory. It contains twelve SVGs, `index.html`, and `manifest.json`, with media/payment verification fields false and publication authority false. Do not attach actual customer screenshots until lawful usage rights and factual source receipts are recorded. Do not distribute concept previews as finished production artwork.
 
+
+## Commercial referral tags (no invasive tracking)
+
+`makeInfluenceAttributionLink` adds campaign, creative and channel UTM labels to the approved Evercraft Fabric offer path. It only supports an exact first-party offer origin and a bounded set of channels; external destinations, payment-session secrets and personally identifying tags are denied. Optional pseudonymous partner codes require **separately verified** rights, disclosures and signed partnership agreements before real use. Code-generated tags prove neither consent, checkout, human visits nor incremental sales.
+
+`reconcileTaggedVisit` checks whether a source observation claims the same campaign, asset and channel, but does not promote a click to a real unique visitor or a provider-verified sale. The existing canonical Evercraft Payments, Raven Nexus and Shipping authorities remain the only correct way to confirm payment and delivered outcomes.
+
+## CI-generated creative review artifact
+
+A dedicated GitHub Actions job generates a **seven-day GitHub workflow artifact**, `influence-lab-concept-review`, containing all 12 SVG concept previews, `index.html` and a no-authority manifest. It performs a basic completeness and watermark check. The generated gallery is not a public deployment and should not be used as an endorsement, finished product demo or proof of live payment success.
+
+An observed offer-readiness report must carry claimed source references and a timestamp no older than 24 hours and not from the future. Those fields remain untrusted until independently verified by the upstream Systemia release authority. A reviewable status never grants publishing rights.
+
 ## Test
 
 `node --test systemia/influence-lab/*.test.mjs systemia/graphics-command/commercial-renderer.test.mjs`
