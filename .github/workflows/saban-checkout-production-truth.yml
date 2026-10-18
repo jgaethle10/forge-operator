@@ -6,6 +6,10 @@ on:
       - "scripts/checkout-fabric-live-canary.test.mjs"
       - ".github/workflows/saban-checkout-production-truth.yml"
       - "systemia/mcp/fabric-public-site.mjs"
+      - "systemia/mcp/fabric-local-runtime.mjs"
+      - "scripts/update-fabric-owned-edge.sh"
+      - "tests/fabric-verified-deployment-proof.test.mjs"
+      - "package.json"
   workflow_dispatch:
   schedule:
     - cron: "17 * * * *"
@@ -17,6 +21,9 @@ on:
       - ".github/workflows/saban-checkout-production-truth.yml"
       - "systemia/mcp/fabric-public-site.mjs"
       - "systemia/mcp/fabric-local-runtime.mjs"
+      - "scripts/update-fabric-owned-edge.sh"
+      - "tests/fabric-verified-deployment-proof.test.mjs"
+      - "package.json"
 permissions:
   contents: read
 concurrency:
@@ -33,6 +40,10 @@ jobs:
           node-version: 22
       - name: Test regression guard with positive and negative fixtures
         run: node --test scripts/checkout-fabric-live-canary.test.mjs
+      - name: Test Fabric deployment proof contract without charges
+        run: |
+          bash -n scripts/update-fabric-owned-edge.sh
+          node --test tests/fabric-verified-deployment-proof.test.mjs
       - name: Check real production release and customer offer forms
         if: github.event_name != 'pull_request'
         run: node scripts/checkout-fabric-live-canary.mjs

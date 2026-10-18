@@ -337,6 +337,37 @@ function refreshVisualDeskMirror({outputDir,origin}) {
   };
 }
 
+// Bind external Fabric health only to a root-owned proof of the exact running
+// release AND instance. The updater writes it after verifying the real process.
+// A matching source tree or a published checkout page alone is not deployment proof.
+export function validateFabricDeploymentProof(proof,{sourceReleaseRef,instanceId}={}){
+  if(!proof||proof.schema!=='evercraft.fabric.deployment-proof.v1')return null;
+  const release=String(sourceReleaseRef||'').toLowerCase();
+  const instance=String(instanceId||'');
+  if(!/^[a-f0-9]{40,64}$/.test(release)||!/^fabric_local_[a-f0-9]{20}$/.test(instance))return null;
+  if(proof.source_release_ref!==release||proof.instance_id!==instance)return null;
+  if(!/^\d{4}-\d{2}-\d{2}T/.test(String(proof.observed_at||'')))return null;
+  const canonical={
+    schema:'evercraft.fabric.deployment-proof.v1',
+    source_release_ref:release,
+    instance_id:instance,
+    observed_at:proof.observed_at,
+  };
+  const hash='sha256:'+crypto.createHash('sha256').update(JSON.stringify(canonical)).digest('hex');
+  return proof.receipt_hash===hash?hash:null;
+}
+function readValidatedFabricDeploymentProof(sourceReleaseRef,instanceId){
+  const file='/var/lib/evercraft/fabric-update/runtime-deployment-proof.json';
+  try{
+    // Ordinary Fabric code may read the receipt, but cannot author or replace it.
+    // Reject symlinks, non-root owners, group/world writable data and oversized files.
+    const stat=fs.lstatSync(file);
+    if(!stat.isFile()||stat.uid!==0||(stat.mode&0o022)!==0||stat.size>4096)return null;
+    const proof=JSON.parse(fs.readFileSync(file,'utf8'));
+    return validateFabricDeploymentProof(proof,{sourceReleaseRef,instanceId});
+  }catch{return null;}
+}
+
 function readSourceReleaseRef(file){
   const value=String(file||'').trim();
   if(!value) return null;
@@ -623,6 +654,8 @@ export async function startFabricLocalRuntime({
   const health=()=>{
     const prepared=preparedCatalog();
     const sabanCapacity=readSabanCapacityHealth();
+    const verifiedRuntimeReceipt=readValidatedFabricDeploymentProof(sourceReleaseRef,instanceId);
+    const currentDeploymentReceipt=deploymentReceiptRef||verifiedRuntimeReceipt;
     return ({
     ok:true,
     service:'evercraft-fabric-local',
@@ -632,8 +665,9 @@ export async function startFabricLocalRuntime({
     instance_id:instanceId,
     source_release_ref:sourceReleaseRef,
     source_release_ref_bound:Boolean(sourceReleaseRef),
-    deployment_receipt_bound:Boolean(deploymentReceiptRef),
-    deployment_receipt_ref:deploymentReceiptRef||null,
+    deployment_receipt_bound:Boolean(currentDeploymentReceipt),
+    deployment_receipt_ref:currentDeploymentReceipt||null,
+    deployment_receipt_source:deploymentReceiptRef?'admitted_compute':verifiedRuntimeReceipt?'owned_updater_verified':null,
     transport:'Streamable HTTP',
     transport_modes:['application/json','text/event-stream'],
     mcp_path:'/mcp',
