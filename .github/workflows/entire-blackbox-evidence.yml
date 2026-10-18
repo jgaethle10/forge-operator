@@ -301,3 +301,47 @@ jobs:
           path: /tmp/spider-cross-runner-readback.json
           if-no-files-found: error
           retention-days: 14
+
+
+  # Two actual official NodeSeed servers run in distinct OS processes with
+  # independent ephemeral CI keys, but ONE GitHub runner host. Successful
+  # signatures cannot make these machines physically distinct or field enrolled.
+  pinned-nodeseed-identity:
+    name: Pinned NodeSeed challenge and replay gate
+    runs-on: ubuntu-latest
+    timeout-minutes: 9
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Verify two real NodeSeed processes and reject identity substitutions
+        run: node --test systemia/agent-continuity/pinned-nodeseed-pair.test.mjs
+      - name: Record independently pinned NodeSeed laboratory result
+        run: |
+          set -euo pipefail
+          node systemia/agent-continuity/pinned-nodeseed-pair-cli.mjs | tee /tmp/blackbox-pinned-node-pair.json
+          grep -q '"result": "PASS_TWO_REAL_NODESEED_PROCESSES_CI_SINGLE_HOST_ONLY"' /tmp/blackbox-pinned-node-pair.json
+          grep -q '"actual_http_attestation_round_trips": 2' /tmp/blackbox-pinned-node-pair.json
+          grep -q '"physically_distinct_hardware_verified": false' /tmp/blackbox-pinned-node-pair.json
+          grep -q '"authority": "NONE_READ_ONLY"' /tmp/blackbox-pinned-node-pair.json
+      - name: Prove production field gate remains held without external owner-pins
+        run: |
+          set -euo pipefail
+          env -u BLACKBOX_FIELD_PINNED_NODES_JSON -u BLACKBOX_FIELD_NODE_TOKENS_JSON \
+            node systemia/agent-continuity/pinned-nodeseed-field-probe-cli.mjs | tee /tmp/blackbox-two-node-field-held.json
+          grep -q '"state": "HELD_INDEPENDENT_OWNER_NODE_PINS_UNAVAILABLE"' /tmp/blackbox-two-node-field-held.json
+          grep -q '"device_query_performed": false' /tmp/blackbox-two-node-field-held.json
+      - name: Archive NodeSeed dual-process attestation and owner field hold
+        uses: actions/upload-artifact@v4
+        with:
+          name: blackbox-pinned-nodeseed-pair-readonly-gate
+          path: |
+            /tmp/blackbox-pinned-node-pair.json
+            /tmp/blackbox-two-node-field-held.json
+          if-no-files-found: error
+          retention-days: 14
