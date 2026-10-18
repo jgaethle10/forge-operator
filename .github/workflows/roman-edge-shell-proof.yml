@@ -5,6 +5,8 @@ on:
     paths:
       - 'campaign-recovery/roman-2026/edge/**'
       - 'systemia/mcp/fabric-local-runtime.mjs'
+      - 'systemia/domain-shield/roman-funnel.mjs'
+      - 'systemia/domain-shield/roman-funnel.test.mjs'
       - 'tests/fabric-roman-campaign-mirror.test.mjs'
       - 'public/campaigns/roman/index.html'
       - '.github/workflows/roman-edge-shell-proof.yml'
@@ -13,6 +15,8 @@ on:
     paths:
       - 'campaign-recovery/roman-2026/edge/**'
       - 'systemia/mcp/fabric-local-runtime.mjs'
+      - 'systemia/domain-shield/roman-funnel.mjs'
+      - 'systemia/domain-shield/roman-funnel.test.mjs'
       - 'tests/fabric-roman-campaign-mirror.test.mjs'
       - 'public/campaigns/roman/index.html'
       - '.github/workflows/roman-edge-shell-proof.yml'
@@ -44,6 +48,8 @@ jobs:
         run: node --test campaign-recovery/roman-2026/edge/worker.test.mjs
       - name: Prove independent Fabric public mirror route
         run: node --test tests/fabric-roman-campaign-mirror.test.mjs
+      - name: Verify local-first rescue funnel and malicious/unavailable backup rejection
+        run: node --test systemia/domain-shield/roman-funnel.test.mjs
       - name: Confirm DNS deployment is not attempted
         run: |
           test -f campaign-recovery/roman-2026/edge/wrangler.toml
