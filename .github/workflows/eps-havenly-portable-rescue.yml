@@ -1,0 +1,35 @@
+name: EPS and Havenly portable owned site rescue
+
+on:
+  pull_request:
+    paths:
+      - 'public/havenly/**'
+      - 'public/eps/**'
+      - 'public/apps/eps-estimator/**'
+      - 'scripts/package-owned-business-rescue*'
+      - '.github/workflows/eps-havenly-portable-rescue.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  build-portable-sites:
+    runs-on: ubuntu-latest
+    timeout-minutes: 6
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Portable site routing, tampering and truth-gate tests
+        run: node --test scripts/package-owned-business-rescue.test.mjs
+      - name: Build Base44-free portable sites
+        run: node scripts/package-owned-business-rescue.mjs
+      - name: Archive static websites and SHA-256 inventory
+        uses: actions/upload-artifact@v4
+        with:
+          name: eps-havenly-portable-sites
+          path: artifacts/owned-business-rescue/
+          retention-days: 7
+          if-no-files-found: error
