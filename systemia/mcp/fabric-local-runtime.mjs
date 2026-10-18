@@ -442,6 +442,14 @@ export async function startFabricLocalRuntime({
   if(purchaseIntentEndpoint.protocol!=='https:'){
     throw new Error('purchase_intent_url_requires_https');
   }
+  // Public MCP discovery is independent of Base44, but commerce transport
+  // is not. Report each boundary separately until independent owned
+  // payment-intent AND direct offer/return services are proven.
+  const directPaymentOpsEndpoint=new URL('https://findmypart.base44.app/functions/evercraftPaymentsOps');
+  const isLegacyCheckoutHost=(url)=>url.hostname==='base44.app'||url.hostname.endsWith('.base44.app');
+  const purchaseIntentUsesLegacy=isLegacyCheckoutHost(purchaseIntentEndpoint);
+  const directPaymentUsesLegacy=isLegacyCheckoutHost(directPaymentOpsEndpoint);
+  const checkoutLegacyDependency=purchaseIntentUsesLegacy||directPaymentUsesLegacy;
   const staticPrepared=Array.isArray(catalog)?nativeOnlyCatalog(catalog):null;
   const preparedCatalog=()=>staticPrepared||nativeOnlyCatalog(loadFabricCatalogFromRepository());
   const token=validateOpenAiChallengeToken(challengeToken);
@@ -621,7 +629,17 @@ export async function startFabricLocalRuntime({
     human_offer_checkout_handoff_mode:'explicit_evercraft_page',
     payment_authority:'Evercraft Payments',
     payment_router:'Raven Nexus',
+    // This legacy field covers read-only MCP connections only, not payment.
     base44_transport_enabled:false,
+    checkout_transport_contract:'Evercraft Payments / Raven Nexus',
+    checkout_purchase_intent_legacy_dependency:purchaseIntentUsesLegacy,
+    checkout_direct_offer_legacy_dependency:directPaymentUsesLegacy,
+    checkout_legacy_dependency:checkoutLegacyDependency,
+    checkout_operational_state:checkoutLegacyDependency
+      ? 'legacy_provider_transport_unverified'
+      : 'owned_transport_requires_independent_checkout_canary',
+    checkout_provider_paid_verified:false,
+    checkout_fulfillment_verified:false,
     removed_legacy_base44_connections:prepared.removed_legacy_base44_connections,
     removed_legacy_base44_mcp_connections:prepared.removed_legacy_base44_mcp_connections,
     secure_tunnel_compatible:true,
@@ -983,7 +1001,7 @@ export async function startFabricLocalRuntime({
             }
             auditedDomain=ready.audited_domain;
           }
-          upstream=await purchaseIntentFetch(directOffer?new URL('https://findmypart.base44.app/functions/evercraftPaymentsOps'):purchaseIntentEndpoint,{
+          upstream=await purchaseIntentFetch(directOffer?directPaymentOpsEndpoint:purchaseIntentEndpoint,{
             method:'POST',
             headers:{
               'content-type':'application/json',
