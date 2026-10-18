@@ -1,0 +1,39 @@
+name: Evercraft Distribution Read-only Proof
+on:
+  pull_request:
+    paths:
+      - 'systemia/distribution/revenue-route-audit.mjs'
+      - 'systemia/distribution/revenue-route-audit.test.mjs'
+      - 'systemia/distribution/partner-brief-preview.test.mjs'
+      - 'public/partners/workflow-continuity/index.html'
+      - 'docs/commerce/WORKFLOW_CONTINUITY_PARTNER_BRIEF_20261017.md'
+      - '.github/workflows/distribution-readonly-proof.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: distribution-readonly-proof-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  review-only:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Run bounded offline tests
+        run: node --test systemia/distribution/revenue-route-audit.test.mjs systemia/distribution/partner-brief-preview.test.mjs
+      - name: Inspect stale source catalog without changing it
+        run: |
+          node systemia/distribution/revenue-route-audit.mjs public/chum/sell-now.json > distribution-readonly-audit.json
+          node --input-type=module -e "import fs from 'node:fs'; const a=JSON.parse(fs.readFileSync('distribution-readonly-audit.json')); if(a.payment_verified || a.live_http_verified) process.exit(1); console.log({snapshot_stale:a.snapshot_stale, observed_catalog_count:a.declared_sell_now_count, held:a.sell_now_without_declared_https_start_count});"
+      - uses: actions/upload-artifact@v4
+        with:
+          name: distribution-readonly-audit
+          path: distribution-readonly-audit.json
+          retention-days: 7
