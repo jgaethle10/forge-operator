@@ -1,0 +1,23 @@
+name: Influence Lab contract checks
+
+on:
+  pull_request:
+    paths:
+      - 'systemia/influence-lab/**'
+      - '.github/workflows/influence-lab-contract.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  source-policy:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Validate influence policy and evidence boundaries
+        run: node --test systemia/influence-lab/influence-lab.test.mjs
