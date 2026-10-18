@@ -67,3 +67,16 @@ A private Evercraft Interaction Ledger state directory, bound by `EVERCRAFT_INTE
 **Resident ordering guarantee:** `SystemiaMissionPublisher.syncOnce()` calls the CRM refresh hook **before** reading the CRM snapshot for each resident publication. If that refresh fails, the publisher pushes a new `source_refresh_failed` hold and does not reuse an older snapshot that happens to exist. The independent resident CRM cycle can still emit its own liveness receipt. The GitHub field workflow uses the same CRM resolution path but is not itself proof of a production resident machine or access to the private ledger.
 
 `node --test systemia/crm/*.test.mjs` covers ledger event integrity, meaningful state transitions, privacy, two consecutive KAIDANCE cycles, and publisher fail-closed behavior. The real private service binding, backup/restore, consent audit, tenant-purpose policy, cross-division adapters and live 300-second external observation are still separate release gates.
+
+## Relationship-level memory and contact boundaries
+
+Two common business scenarios are covered by the new relationship policy:
+
+1. A prospective community partner explicitly asks to resume discussion after a busy season. Preserve the exact source thread, what they asked about, the acknowledged no-contact-before window, unresolved questions, meeting status, who owes the next move, and what example or deliverable was promised. When the window opens, emit a **review-needed** signal, never an automatically authorized outreach.
+2. A person already involved in live product delivery, financial reconciliation, or operational incident response must NOT enter generic lead-gen flows. Contact intent is constrained to the exact division and purpose; a RIVET billing context cannot authorize Home promotion, for example. Do not guess customer sentiment or infer payment success from someone's promise to process it.
+
+The private `evercraft.crm.relationship-ledger.v1` records relationship-specific stage, kind, effective outbound policy, allowed purposes, not-before and next-review timestamps, evidence-linked timeline events, and owner/decision context. They are read from a protected local file through `EVERCRAFT_CRM_RELATIONSHIP_LEDGER_FILE`. Code and CI contain **only synthetic cases**, not real people's correspondence or email addresses. Public heartbeat outputs have counts and opaque hashes, not the source relationship graph.
+
+A policy result of `allow_to_existing_preflight` **does not permit a send**. Passport, Interaction Ledger, provider and current consent checks are still mandatory, and a paused/manual-review contact stays blocked. The `preflightGovernedContact()` composition entrypoint is staged, but **not yet installed as a mandatory boundary on every production outbound connector**. A future merge and verified executor-by-executor binding must be completed before the company can claim accidental contact is technically prevented everywhere.
+
+Gmail and similar connectors are evidence discovery inputs, not permission for indiscriminate sync, retention or cross-division sharing. Every imported fact must preserve source, date, purpose, consent/retention classification and audit trail. Reconcile later replies before contact. A meeting proposed in October is not a meeting booked unless the calendar or an acceptance reply confirms it.
