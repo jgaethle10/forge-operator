@@ -345,3 +345,45 @@ jobs:
             /tmp/blackbox-two-node-field-held.json
           if-no-files-found: error
           retention-days: 14
+
+
+  # Integrates all actual lab layers on the recipient GitHub runner, but NEVER
+  # treats that CI host as independently owned two-node hardware.
+  nodeseed-spider-integrated-rogue-mission:
+    name: Saban Black Box Spider NodeSeed integrated mission
+    needs:
+      - rogue-agent-field-drill
+      - pinned-nodeseed-identity
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    permissions:
+      contents: read
+      actions: read
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - uses: actions/download-artifact@v4
+        with:
+          name: blackbox-real-process-rogue-mission-local
+          path: /tmp/blackbox-integrated-source
+      - name: Execute admitted synthetic integration across real NodeSeed and Spider HTTP processes
+        run: |
+          set -euo pipefail
+          node systemia/agent-continuity/rogue-nodeseed-spider-integration-cli.mjs \
+            /tmp/blackbox-integrated-source/blackbox-rogue-field-mission.json | tee /tmp/blackbox-integrated-rogue-mission.json
+          grep -q '"status": "PASS_REPO_HARDENED_CROSS_PRODUCT_CI_EXERCISE_NOT_PRODUCTION"' /tmp/blackbox-integrated-rogue-mission.json
+          grep -q '"receiver_real_nodeseed_http_servers": 2' /tmp/blackbox-integrated-rogue-mission.json
+          grep -q '"receiver_replay_denials_after_restart": 4' /tmp/blackbox-integrated-rogue-mission.json
+          grep -q '"actual_two_owner_devices_contacted": false' /tmp/blackbox-integrated-rogue-mission.json
+          grep -q '"execution_authority": "NONE_READ_ONLY"' /tmp/blackbox-integrated-rogue-mission.json
+      - name: Preserve integrated synthetic mission receipt
+        uses: actions/upload-artifact@v4
+        with:
+          name: blackbox-saban-spider-nodeseed-integrated-held-field
+          path: /tmp/blackbox-integrated-rogue-mission.json
+          if-no-files-found: error
+          retention-days: 14
