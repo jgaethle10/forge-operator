@@ -100,20 +100,25 @@ test('owned read-only HTTP route preserves 200/503 semantics and does not return
  };
  registerEvermapsIncidentRoutes(app,{service});
  function reply(){
-  let code=200,headers={};
-  const res={setHeader:(k,v)=>headers[k]=v,status:(v)=>{code=v;return res},json:v=>v};
-  return {res,status:()=>code,headers};
+  let code=200,payload,headers={};
+  const res={
+   setHeader:(k,v)=>{headers[k]=v;return res},
+   status:(v)=>{code=v;return res},
+   json:(v)=>{payload=v;return res}
+  };
+  return {res,status:()=>code,payload:()=>payload,headers};
  }
  let x=reply();
- assert.deepEqual(await routes.get('/api/evermaps/source-health')[0]({},x.res),{state:'fresh'});
+ routes.get('/api/evermaps/source-health')[0]({},x.res);
+ assert.deepEqual(x.payload(),{state:'fresh'});
  x=reply();
- const ok=await routes.get('/api/evermaps/incidents/pnw')[1]({},x.res);
- assert.equal(ok.count,1);assert.equal(x.status(),200);
+ await routes.get('/api/evermaps/incidents/pnw')[1]({},x.res);
+ assert.equal(x.payload().count,1);assert.equal(x.status(),200);
  fail=true;
  x=reply();
- const blocked=await routes.get('/api/evermaps/incidents/pnw')[1]({},x.res);
+ await routes.get('/api/evermaps/incidents/pnw')[1]({},x.res);
  assert.equal(x.status(),503);
- assert.equal(blocked.status,'SOURCE_UNAVAILABLE');
- assert.equal(blocked.count,null);
- assert.deepEqual(blocked.records,[]);
+ assert.equal(x.payload().status,'SOURCE_UNAVAILABLE');
+ assert.equal(x.payload().count,null);
+ assert.deepEqual(x.payload().records,[]);
 });
