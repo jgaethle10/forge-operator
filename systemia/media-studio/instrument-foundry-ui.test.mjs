@@ -73,14 +73,14 @@ test('the same Fallen Sessions screen exposes recording to playable canonical pi
  assert.match(fn,/applyPulseGridTransaction/);
  assert.match(fn,/setSelectedTrackId\(keysTrack.id\)/);
  assert.match(fn,/release_sec:0\.22/);
- assert.match(fn,/raw take detached to prevent doubling/);
+ assert.match(fn,/Raw take detached to prevent doubling/);
  assert.ok(fn.indexOf('verifyFoundryWavBytes')<fn.indexOf('applyPulseGridTransaction'));
 });
 test('piano patch remains bounded by user-selected pitch and cannot claim commercial clearance',()=>{
  const source=ui();
  const fn=source.slice(source.indexOf('async function armFoundryPianoFromTake'),source.indexOf('async function importFoundryWavFile'));
  assert.match(fn,/root<21\|\|root>108/);
- assert.match(fn,/max_transpose_semitones:2/);
+ assert.match(fn,/appendFoundryPianoSample/);
  assert.match(fn,/rights==='restricted'/);
  assert.doesNotMatch(fn,/rights:'owned'/);
  assert.doesNotMatch(fn,/release_ready:true/);
@@ -95,4 +95,16 @@ test('arming a piano sample atomically detaches original Audio Take to avoid dou
  const apply=fn.indexOf("applyPulseGridTransaction(current");
  assert.ok(apply>=0&&detach>apply&&patch>detach,'raw WAV must detach and patch attach inside same transaction');
  assert.match(fn,/asset_id:asset.id/);
+});
+
+test('Foundry UI accumulates additional pitch and velocity layers without replacing the piano bank',()=>{
+ const source=ui();
+ const fn=source.slice(source.indexOf('async function armFoundryPianoFromTake'),source.indexOf('async function importFoundryWavFile'));
+ assert.match(fn,/const existing=keysTrack.clips\[selectedScene\]\?\.provenance\?\.foundry_piano_patch/);
+ assert.match(fn,/appendFoundryPianoSample\(existing/);
+ assert.match(fn,/velocity_min:foundryVelocityMin/);
+ assert.match(fn,/velocity_max:foundryVelocityMax/);
+ assert.match(fn,/patch\.samples\.length/);
+ assert.match(source,/Foundry minimum sample velocity/);
+ assert.match(source,/Foundry maximum sample velocity/);
 });
