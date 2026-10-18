@@ -81,3 +81,35 @@ test('EventWave Facebook in-app browser form fails closed on provider rejection 
     assert.ok(seen.every(x=>x.url==='https://findmypart.base44.app/functions/evercraftPaymentsOps'));
   }finally{await runtime.close();}
 });
+
+test('EventWave browser checkout refuses wrong price, wrong currency and non-HTTPS provider URL',async()=>{
+  let scenario='price';
+  const runtime=await startFabricLocalRuntime({
+    host:'127.0.0.1',port:0,catalog:[],faieSurfaceEnabled:false,
+    purchaseIntentFetch:async(url,init)=>{
+      const order=JSON.parse(init.body);
+      return Response.json({
+        ok:true,order_key:order.order_key,
+        amount_cents:scenario==='price'?4901:4900,
+        currency:scenario==='currency'?'eur':'usd',
+        checkout_url:scenario==='url'?'http://checkout.stripe.com/c/pay/invalid':'https://checkout.stripe.com/c/pay/synthetic_test'
+      });
+    }
+  });
+  try{
+    for(const mode of ['price','currency','url']){
+      scenario=mode;
+      const response=await fetch(runtime.url+'/api/offers/event-boost/checkout',{
+        method:'POST',headers:{'content-type':'application/x-www-form-urlencoded'},
+        body:new URLSearchParams({
+          user_confirmed:'true',customer_ref:'buyer@example.com',idempotency_key:'event-drift-'+mode
+        }),redirect:'manual'
+      });
+      assert.equal(response.status,503,mode);
+      assert.equal(response.headers.get('cache-control'),'no-store',mode);
+      assert.equal(response.headers.get('x-evercraft-checkout-hold-stage'),'checkout_contract',mode);
+      assert.equal(response.headers.get('location'),null,mode);
+      assert.match(await response.text(),/No charge was made/,mode);
+    }
+  }finally{await runtime.close();}
+});
