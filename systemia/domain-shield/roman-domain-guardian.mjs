@@ -15,6 +15,8 @@ export const TARGETS = Object.freeze({
   original: 'https://voteroman.com/',
   www: 'https://www.voteroman.com/',
   evercraft: 'https://fabric.systemiacommandcenters.com/campaigns/roman/',
+  funnel: 'https://fabric.systemiacommandcenters.com/go/roman',
+  pages: 'https://jgaethle10.github.io/forge-operator/campaigns/roman/',
   backup: 'https://headless-jhpvqnpgxlh-sociallyguud-140c.wix-site-host.com/',
   donation: 'https://donate.voteroman.com/',
 });
@@ -74,17 +76,22 @@ export function evaluateContinuity({ pages, dnsRecords, observedAt }) {
   const root = pages.original || {};
   const owned = pages.evercraft || {};
   const backup = pages.backup || {};
+  const tertiary = pages.pages || {};
+  const funnel = pages.funnel || {};
   const donate = pages.donation || {};
   const www = pages.www || {};
 
   const ownedReady = owned.campaign_valid === true &&
     owned.evercraft_source_header === 'owned-fabric-static';
   const backupReady = backup.campaign_valid === true;
+  const tertiaryReady = tertiary.campaign_valid === true;
+  const funnelReady = funnel.campaign_valid === true &&
+    funnel.evercraft_source_header === 'owned-fabric-static';
   const rootShowsEvercraft = root.campaign_valid === true &&
     root.evercraft_source_header === 'owned-fabric-static';
   const rootServesCampaign = root.campaign_valid === true;
   const brokenOrigin = root.status === 402 || root.status === 404 || root.status === 503;
-  const fallbackUrl = ownedReady ? TARGETS.evercraft : backupReady ? TARGETS.backup : null;
+  const fallbackUrl = ownedReady ? TARGETS.evercraft : backupReady ? TARGETS.backup : tertiaryReady ? TARGETS.pages : null;
   let state = 'ORIGINAL_DOMAIN_UNVERIFIED';
   if (rootShowsEvercraft) state = 'ORIGINAL_DOMAIN_VERIFIED_ON_EVERCRAFT';
   else if (rootServesCampaign) state = 'ORIGINAL_DOMAIN_CAMPAIGN_LIVE_HOST_NOT_VERIFIED';
@@ -101,6 +108,8 @@ export function evaluateContinuity({ pages, dnsRecords, observedAt }) {
     www_http_status: www.status ?? null,
     evercraft_mirror_healthy: ownedReady,
     independent_backup_healthy: backupReady,
+    independent_github_pages_healthy: tertiaryReady,
+    evercraft_short_funnel_healthy: funnelReady,
     donation_page_healthy: donate.campaign_valid === true,
     external_checkout_transaction_tested: false,
     recommended_public_fallback: fallbackUrl,
@@ -167,6 +176,8 @@ export function markdownSummary(result) {
     '- Original domain on Evercraft: ' + ok(result.original_domain_verified_on_evercraft),
     '- Independent Evercraft mirror: ' + ok(result.evercraft_mirror_healthy),
     '- Wix informational backup: ' + ok(result.independent_backup_healthy),
+    '- GitHub Pages informational backup: ' + ok(result.independent_github_pages_healthy),
+    '- Evercraft short funnel: ' + ok(result.evercraft_short_funnel_healthy),
     '- Donation webpage: ' + ok(result.donation_page_healthy),
     '- Donation checkout transaction tested: NO',
     '- Current public backup: ' + (result.recommended_public_fallback || 'none'),
