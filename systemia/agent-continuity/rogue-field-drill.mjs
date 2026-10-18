@@ -5,7 +5,7 @@
 // intervention is authorized or called by this drill.
 import assert from 'node:assert/strict';
 import {fork,spawnSync} from 'node:child_process';
-import {generateKeyPairSync,sign} from 'node:crypto';
+import {createHash,generateKeyPairSync,sign} from 'node:crypto';
 import {mkdtempSync,mkdirSync,rmSync} from 'node:fs';
 import {join} from 'node:path';
 import {tmpdir} from 'node:os';
@@ -143,6 +143,8 @@ async function executeOneRogue({journal_root,spider_root,trust,privateKey}){
   blackbox:{real_local_signed_journal:true,events:events.length,
    signed_event_hashes:events.map(({sha256})=>sha256),verified_external_effects:0,
    blackbox_production_service_invoked:false},
+  spider_transfer_snapshot:structuredClone(state),
+  spider_transfer_snapshot_sha256:createHash('sha256').update(JSON.stringify(state)).digest('hex'),
   spider_sandbox:{...restart,out_of_process_restart:detachedRestart,queue_entries:state.queue.length,callbacks:state.callbacks.length,
    successor_entries:state.successors.length,lease_entries:state.leases.length},
   chum_live_service_invoked:false,network_real_device_invoked:false,
@@ -186,6 +188,15 @@ export async function runRogueAgentMission(){
    saban:{leased_jobs:1,completed_jobs:1,failed_jobs:0,physical_workers:1},
    blackbox:output.blackbox,
    spider_society_local_adapter:{...output.spider_sandbox,quarantine:output.quarantine},
+   transfer_packet:{schema:'evercraft.spider.rogue-cross-runner-transfer.v1',
+    source_mission_execution_id:'rogue-drill-20261017-local-001',
+    source_incident_id:INCIDENT,synthetic_drill_only:true,
+    source_blackbox_event_hashes:output.blackbox.signed_event_hashes,
+    source_blackbox_event_count:output.blackbox.events,
+    spider_snapshot_sha256:output.spider_transfer_snapshot_sha256,
+    spider_snapshot:output.spider_transfer_snapshot,
+    source_service_state:'LOCAL_SANDBOX_NOT_REAL_SPIDER',
+    transport_state:'AWAITING_PROVIDER_ARTIFACT_UPLOAD'},
    defensive_policy:output.defense,
    real_chum_service_invoked:false,real_spider_service_invoked:false,
    real_network_device_invoked:false,external_effect_verified:false,
