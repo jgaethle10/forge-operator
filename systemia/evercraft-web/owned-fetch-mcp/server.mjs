@@ -280,9 +280,16 @@ export async function startOwnedWebFetchMcp({
   port = 0,
   token,
   fetcher = fetchPublicPage,
+  maxConcurrent = 2,
+  maxRequestsPerMinute = 60,
 } = {}) {
   if (host !== '127.0.0.1' && host !== '::1') throw new Error('loopback_only_candidate');
   if (!token || String(token).length < 24) throw new Error('private_access_token_required');
+  const concurrencyLimit = Math.max(1, Math.min(8, Math.trunc(maxConcurrent) || 2));
+  const rateLimit = Math.max(1, Math.min(600, Math.trunc(maxRequestsPerMinute) || 60));
+  let active = 0;
+  let minuteStartsAt = Date.now();
+  let requestsThisMinute = 0;
   const server = http.createServer(async (req,res) => {
     if (req.method === 'GET' && req.url === '/health') {
       return send(res, 200, { ok:true, service:'evercraft-web-owned-fetch-candidate',
@@ -292,6 +299,18 @@ export async function startOwnedWebFetchMcp({
     if (!checkOrigin(req)) return send(res, 403, {error:'browser_origin_forbidden'});
     if (!authorized(req, String(token))) return send(res, 401, {error:'unauthorized'});
     if (req.method !== 'POST') return send(res, 405, {error:'method_not_allowed'});
+    const now = Date.now();
+    if (now - minuteStartsAt >= 60_000) {
+      minuteStartsAt = now;
+      requestsThisMinute = 0;
+    }
+    if (++requestsThisMinute > rateLimit) {
+      return send(res, 429, {error:'rate_limited', retryable:true});
+    }
+    if (active >= concurrencyLimit) {
+      return send(res, 429, {error:'concurrency_limited', retryable:true});
+    }
+    active++;
     try {
       const body = await readBody(req);
       const result = await webMcpResponse(body, { fetcher });
@@ -305,6 +324,8 @@ export async function startOwnedWebFetchMcp({
       send(res, 400, {jsonrpc:'2.0',id:null,error:{
         code:-32700,message:safeText(error?.message || 'invalid_request', 100),
       }});
+    } finally {
+      active--;
     }
   });
   await new Promise((resolve,reject) => {
