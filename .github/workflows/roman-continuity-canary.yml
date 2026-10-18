@@ -32,6 +32,18 @@ jobs:
             echo '::warning::One GitHub runner could not verify both campaign hostnames; this is not proof of downtime.'
           fi
           exit 0
+      - name: Public DNS and HTTP response fingerprint (no cookies or body)
+        shell: bash
+        run: |
+          for host in voteroman.com www.voteroman.com; do
+            echo "DNS observations: $host"
+            getent ahostsv4 "$host" | awk '{print $1}' | sort -u | head -n 5 || true
+            echo "HTTPS GET headers: $host"
+            curl --silent --show-error --max-time 15 --proto '=https' --max-redirs 0 \
+              -D roman-response-headers.tmp -o /dev/null "https://${host}/" || true
+            awk '(/^HTTP\// || tolower($0) ~ /^(server|content-type|via|x-cache|x-served-by|retry-after|cf-ray|x-powered-by):/) {print substr($0,1,160)}' roman-response-headers.tmp || true
+            rm -f roman-response-headers.tmp
+          done
       - uses: actions/upload-artifact@v4
         with:
           name: roman-continuity-advisory
