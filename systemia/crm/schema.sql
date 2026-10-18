@@ -156,6 +156,31 @@ CREATE TABLE evercraft_crm.audit_events (
   occurred_at timestamptz NOT NULL DEFAULT now(), previous_hash text, current_hash text NOT NULL,
   PRIMARY KEY(tenant_id,event_id)
 );
+-- Relationship covenants are explicitly purpose-scoped. A recorded email
+-- never provides authority for new marketing or unrelated company divisions.
+CREATE TABLE evercraft_crm.relationship_covenants (
+  tenant_id text NOT NULL, covenant_id uuid NOT NULL DEFAULT gen_random_uuid(),
+  engagement_id uuid NOT NULL,
+  outbound_policy text NOT NULL CHECK(outbound_policy IN
+    ('paused','manual_review_only','preflight_eligible')),
+  not_before timestamptz, next_review_at timestamptz,
+  allowed_purposes text[] NOT NULL DEFAULT '{}',
+  source_evidence_ref text NOT NULL, status_observed_at timestamptz NOT NULL,
+  changed_by_ref text NOT NULL, revision bigint NOT NULL DEFAULT 1,
+  PRIMARY KEY(tenant_id,covenant_id),
+  FOREIGN KEY(tenant_id,engagement_id) REFERENCES evercraft_crm.engagements(tenant_id,engagement_id)
+);
+CREATE TABLE evercraft_crm.relationship_timeline (
+  tenant_id text NOT NULL, timeline_event_id uuid NOT NULL DEFAULT gen_random_uuid(),
+  covenant_id uuid NOT NULL, source_event_ref text NOT NULL,
+  event_kind text NOT NULL, occurred_at timestamptz NOT NULL,
+  evidence_ref text NOT NULL, private_context_ref text,
+  PRIMARY KEY(tenant_id,timeline_event_id),
+  UNIQUE(tenant_id,covenant_id,source_event_ref),
+  FOREIGN KEY(tenant_id,covenant_id) REFERENCES evercraft_crm.relationship_covenants(tenant_id,covenant_id)
+);
+CREATE INDEX crm_relationship_reviews
+  ON evercraft_crm.relationship_covenants(tenant_id,next_review_at);
 CREATE INDEX crm_opportunity_due ON evercraft_crm.opportunities(tenant_id,next_action_due_at);
 CREATE INDEX crm_commitment_due ON evercraft_crm.commitments(tenant_id,due_at) WHERE state='open';
 CREATE INDEX crm_activity_due ON evercraft_crm.activities(tenant_id,due_at) WHERE state='open';
