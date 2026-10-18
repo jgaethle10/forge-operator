@@ -321,6 +321,10 @@ jobs:
           node-version: 22
       - name: Verify two real NodeSeed processes and reject identity substitutions
         run: node --test systemia/agent-continuity/pinned-nodeseed-pair.test.mjs
+      - name: On-device NodeSeed public receipt and candidate identity tests
+        run: |
+          node --test systemia/agent-continuity/field-node-readback.test.mjs
+          node --test systemia/agent-continuity/field-node-selfcheck.test.mjs
       - name: Record independently pinned NodeSeed laboratory result
         run: |
           set -euo pipefail
