@@ -58,13 +58,26 @@ export function analyzePulseGridMusic(session,scene){
     });
   }
   if(events.length>16384)throw new Error('Music analysis total note budget exceeded');
-  const pitchClasses=Array(12).fill(0);
-  for(const note of events)pitchClasses[note.pitch%12]+=Math.min(16,note.end-note.start)*note.velocity;
-  const ranked=pitchClasses.map((weight,pc)=>({pitch_class:NAMES[pc],pc,weight:+weight.toFixed(3)}))
-    // Never erase a softly played pitch class merely because five louder notes
-    // dominated the aggregate. This display is evidence, not a scale guess.
-    .filter(item=>item.weight>0)
-    .sort((a,b)=>b.weight-a.weight||a.pc-b.pc);
+  const pitchClassWeights=Array(12).fill(0);
+  const pitchClassCounts=Array(12).fill(0);
+  for(const note of events){
+    const pc=note.pitch%12;
+    pitchClassCounts[pc]++;
+    pitchClassWeights[pc]+=Math.min(16,note.end-note.start)*note.velocity;
+  }
+  // Canonical evidence is ALWAYS all twelve pitch classes in chromatic order,
+  // including absent classes (count 0). Rounding never determines presence.
+  // Duration x velocity is a MIDI statistic, not acoustic loudness or a key.
+  const pitchClassEvidence=pitchClassWeights.map((weight,pc)=>({
+    pitch_class:NAMES[pc],pc,note_count:pitchClassCounts[pc],
+    weight:Number(weight.toFixed(3))
+  }));
+  // Only the compact UI ranking is truncated. Use unrounded weights for
+  // sorting so quiet performances survive the evidence representation.
+  const prominentPitchClasses=pitchClassEvidence
+    .filter(item=>item.note_count>0)
+    .sort((a,b)=>pitchClassWeights[b.pc]-pitchClassWeights[a.pc]||a.pc-b.pc)
+    .slice(0,5);
   const total=events.reduce((s,n)=>s+n.velocity,0);
   const positions=events.length?events.map(n=>n.start):[];
   const end=events.length?Math.max(...events.map(n=>n.end)):0;
@@ -154,7 +167,9 @@ export function analyzePulseGridMusic(session,scene){
   return {
     schema:'evercraft.fallen.music-theory-insights.v1',scene,
     note_count:events.length,pitched_track_count:tracks.length,
-    track_profiles:tracks,pitch_class_evidence:ranked,
+    track_profiles:tracks,pitch_class_evidence:pitchClassEvidence,
+    prominent_pitch_classes:prominentPitchClasses,
+    pitch_class_weighting:'capped_note_duration_steps_times_midi_velocity',
     velocity_arc:windows,
     register_proximity_examples:collisions.length,
     findings,
