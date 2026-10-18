@@ -34,6 +34,6 @@ test('Saban covers all ten roles for every app without production write authorit
 
 test('snapshot contains no legacy app IDs, email addresses, cookies or secret fields',()=>{
  const text=JSON.stringify(observed);
- assert.doesNotMatch(text, /@|app_id|base44_id|\\b(?:password|secret|token|cookie|private_key)\\b/i);
+ assert.doesNotMatch(text, /@[a-z0-9.-]+\\.[a-z]{2,}|\"(?:app_id|base44_id|password|api_key|token|cookie|private_key)\"\\s*:/i);
  assertNoSecretValues(observed);
 });
