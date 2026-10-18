@@ -1,5 +1,6 @@
 import type { PulseGridAudioAsset, PulseGridSession, PulseGridTrack } from './pulsegrid-session.js';
 import { schedulePulseGridAudioBuffer } from './pulsegrid-audio-scheduler.mjs';
+import { pulseGridNoteDurationSeconds } from './pulsegrid-note-duration.mjs';
 import { pulseGridAudioAuthoritySignature } from './pulsegrid-audio-authority.mjs';
 import {selectFoundrySample, scheduleFoundryPianoNote, validateFoundryPatch} from './instrument-foundry-piano.mjs';
 import type {FoundryInstrumentPatch} from './instrument-foundry-piano.mjs';
@@ -524,7 +525,12 @@ export class PulseGridAudioEngine {
       for (const note of noteEvents) {
         if (Math.random() > (note.probability ?? 1)) continue;
         const noteTime=time+(note.microtiming||0)/1000;
-        const noteDuration=this.stepDuration(step)*Math.max(0.01,note.length);
+        const noteDuration=pulseGridNoteDurationSeconds({
+          bpm:this.session.transport.bpm,
+          swing:this.session.transport.swing,
+          start_step:step,
+          length_steps:Math.max(0.01,note.length),
+        });
         if(foundryPatch){
           const selected=selectFoundrySample(foundryPatch,note.pitch,note.velocity);
           const buffer=this.audioBuffers.get(selected.asset_id);
