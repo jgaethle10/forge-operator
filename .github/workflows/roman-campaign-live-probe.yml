@@ -56,6 +56,7 @@ jobs:
                 https://donate.voteroman.com/ \
                 https://headless-jhpvqnpgxlh-sociallyguud-140c.wix-site-host.com/ \
                 https://fabric.systemiacommandcenters.com/campaigns/roman/ \
+                https://fabric.systemiacommandcenters.com/go/roman \
                 https://jgaethle10.github.io/forge-operator/campaigns/roman/; do
               echo "## GET $site"
               tmp=$(mktemp)
@@ -70,6 +71,11 @@ jobs:
               echo
             done
           } | tee artifacts/roman-live-probe.txt
+          echo "## Evercraft-owned campaign short-entry proof" | tee -a artifacts/roman-live-probe.txt
+          redirect_metadata="$(curl --silent --show-error --max-time 20 \
+            --output /dev/null --write-out 'status=%{http_code} redirect=%{redirect_url}' \
+            https://fabric.systemiacommandcenters.com/go/roman)" || redirect_metadata="network_error"
+          echo "$redirect_metadata" | tee -a artifacts/roman-live-probe.txt
           echo "## Evercraft Fabric release marker" | tee -a artifacts/roman-live-probe.txt
           health_file="$(mktemp)"
           health_code="$(curl --location --silent --show-error --max-time 15 --output "$health_file" --write-out '%{http_code}' https://fabric.systemiacommandcenters.com/health)" || health_code=000
