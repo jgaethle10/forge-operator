@@ -3,6 +3,7 @@
 // this is a preview, not an approved production tile-service contract.
 const map=document.querySelector('#em-map');
 const tilesHost=document.querySelector('#em-tiles');
+const fallbackSvg=document.querySelector('#em-fallback');
 const markersHost=document.querySelector('#em-markers');
 const sourceEl=document.querySelector('#em-source');
 const listEl=document.querySelector('#em-list');
@@ -14,6 +15,9 @@ const TILE=256,MIN_ZOOM=3,MAX_ZOOM=12;
 const FALLBACK={lat:46.6021,lon:-120.5059,zoom:5};
 const state={...FALLBACK,showReports:true,records:[],sourceState:'loading',selectedId:null,lastFetch:0,fetching:false};
 const tileNodes=new Map();
+const SVG_NS='http://www.w3.org/2000/svg';
+let landPolygons=[];
+const geoCities=[['Seattle',47.6062,-122.3321],['Vancouver',49.2827,-123.1207],['Yakima',46.6021,-120.5059],['Portland',45.5152,-122.6784],['Spokane',47.6588,-117.426],['Boise',43.615,-116.202]];
 const n=(value)=>typeof value==='number'&&Number.isFinite(value);
 const clamp=(x,min,max)=>Math.min(max,Math.max(min,x));
 const sourceLine=(message,status)=>{
@@ -38,6 +42,75 @@ function coordinates(x,y,zoom){
 function showZoom(){
  document.querySelector('#em-zoom-label').textContent='Zoom '+state.zoom;
 }
+function updateTileCoverage(){
+ let needed=0,loaded=0;
+ const w=map.clientWidth,h=map.clientHeight;
+ for(const node of tileNodes.values()){
+  const x=parseFloat(node.style.left),y=parseFloat(node.style.top);
+  if(!Number.isFinite(x)||!Number.isFinite(y)||x+TILE<=0||y+TILE<=0||x>=w||y>=h)continue;
+  needed++;
+  if(node.complete&&node.naturalWidth>0)loaded++;
+ }
+ const coverage=needed?loaded/needed:0;
+ const rasterReady=needed>=2&&coverage>=0.9;
+ tilesHost.style.opacity=rasterReady?'1':'0';
+ tilesHost.dataset.coverage=coverage.toFixed(2);
+ tilesHost.dataset.state=rasterReady?'raster-ready':'geography-fallback';
+}
+function renderFallback(){
+ const w=map.clientWidth,h=map.clientHeight;
+ if(!w||!h)return;
+ fallbackSvg.setAttribute('viewBox',`0 0 ${w} ${h}`);
+ if(!landPolygons.length)return;
+ const center=mercator(state.lat,state.lon,state.zoom);
+ const xy=(lat,lon)=>{const p=mercator(lat,lon,state.zoom);return{x:Math.round((w/2+p.x-center.x)*10)/10,y:Math.round((h/2+p.y-center.y)*10)/10}};
+ const paths=[];
+ for(const polygon of landPolygons){
+  for(const ring of polygon){
+   if(ring.length<3)continue;
+   let d='';
+   for(let i=0;i<ring.length;i++){
+    const p=xy(ring[i][1],ring[i][0]);
+    d+=(i===0?'M':'L')+p.x+' '+p.y;
+   }
+   paths.push(d+'Z');
+  }
+ }
+ const land=document.createElementNS(SVG_NS,'path');
+ land.setAttribute('d',paths.join(''));
+ land.setAttribute('fill','#365e52');
+ land.setAttribute('stroke','#82a79a');
+ land.setAttribute('stroke-width',state.zoom>=9?'1.3':'0.85');
+ land.setAttribute('fill-rule','evenodd');
+ const fragment=document.createDocumentFragment();
+ fragment.append(land);
+ for(const [name,lat,lon] of geoCities){
+  const p=xy(lat,lon);
+  if(p.x<25||p.y<20||p.x>w-85||p.y>h-20)continue;
+  const circle=document.createElementNS(SVG_NS,'circle');
+  circle.setAttribute('cx',p.x);circle.setAttribute('cy',p.y);circle.setAttribute('r','3');
+  circle.setAttribute('fill','#b7d6c3');
+  const label=document.createElementNS(SVG_NS,'text');
+  label.setAttribute('x',p.x+8);label.setAttribute('y',p.y-4);
+  label.textContent=name;
+  fragment.append(circle,label);
+ }
+ fallbackSvg.replaceChildren(fragment);
+ fallbackSvg.dataset.source='natural-earth-50m-public-domain';
+}
+async function loadFallback(){
+ try{
+  const response=await fetch('/evermaps/pnw-land.geojson',{cache:'force-cache'});
+  if(!response.ok)throw Error('Natural Earth local geography HTTP '+response.status);
+  const body=await response.json();
+  if(body?.metadata?.rights!=='public domain'||!Array.isArray(body.features)||body.features.length<15)
+   throw Error('Natural Earth public-domain geography unavailable or malformed');
+  landPolygons=body.features.map(f=>f.geometry?.coordinates).filter(Array.isArray);
+  renderFallback();
+ }catch{
+  fallbackSvg.dataset.source='unavailable';
+ }
+}
 function repaintTiles(){
  const w=map.clientWidth,h=map.clientHeight;
  if(!w||!h)return;
@@ -56,6 +129,8 @@ function repaintTiles(){
    node.loading='lazy';
    node.alt='';
    node.decoding='async';
+   node.addEventListener('load',updateTileCoverage);
+   node.addEventListener('error',updateTileCoverage);
    node.src='https://tile.openstreetmap.org/'+key+'.png';
    tileNodes.set(key,node);
    tilesHost.append(node);
@@ -65,6 +140,7 @@ function repaintTiles(){
   used.add(key);
  }
  for(const [key,node] of tileNodes)if(!used.has(key)){node.remove();tileNodes.delete(key)}
+ updateTileCoverage();
  showZoom();
 }
 function projectedPixel(record){
@@ -136,7 +212,7 @@ function renderMarkers(){
  markersHost.replaceChildren(...groups.map(makeMarker));
  groupEl.textContent=state.showReports?String(groups.length):'Off';
 }
-function renderMap(){repaintTiles();renderMarkers();}
+function renderMap(){repaintTiles();renderFallback();renderMarkers();}
 function makeText(tag,className,text){
  const el=document.createElement(tag);el.className=className;el.textContent=text;return el;
 }
@@ -249,6 +325,7 @@ layerInput.addEventListener('change',()=>{
 const sizeObserver=new ResizeObserver(renderMap);
 sizeObserver.observe(map);
 renderMap();renderList();
+loadFallback();
 refresh();
 setInterval(()=>{
  if(!document.hidden&&state.showReports){
