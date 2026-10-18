@@ -4,6 +4,7 @@ on:
   pull_request:
     paths:
       - 'systemia/influence-lab/**'
+      - 'systemia/evercraft-web/browser-worker/influence-website-audit-canary.mjs'
       - '.github/workflows/influence-lab-contract.yml'
   workflow_dispatch:
 
@@ -99,4 +100,32 @@ jobs:
           name: influence-lab-website-audit-http-observation
           path: ${{ runner.temp }}/website-audit-http-observation.json
           if-no-files-found: error
+          retention-days: 7
+
+  saban-visual-buyer-preflight:
+    needs: source-policy
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Install existing Saban browser worker dependencies
+        working-directory: systemia/evercraft-web/browser-worker
+        run: npm install --no-audit --no-fund --ignore-scripts
+      - name: Install Chromium in ephemeral CI runner
+        working-directory: systemia/evercraft-web/browser-worker
+        run: npx playwright install --with-deps chromium
+      - name: Inspect real public Website Audit on mobile and desktop, GET-only
+        run: |
+          node systemia/evercraft-web/browser-worker/influence-website-audit-canary.mjs \
+            --out "$RUNNER_TEMP/influence-saban-visual"
+      - name: Attach real visual diagnostics even if route fails
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: influence-lab-saban-public-page-evidence
+          path: \${{ runner.temp }}/influence-saban-visual/**
+          if-no-files-found: warn
           retention-days: 7
