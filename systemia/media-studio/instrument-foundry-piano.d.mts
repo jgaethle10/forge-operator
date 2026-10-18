@@ -11,6 +11,11 @@ export type FoundryInstrumentPatch={
   max_transpose_semitones:2;
   samples:FoundrySampleLayer[];
 };
+export function appendFoundryPianoSample(
+  patch:FoundryInstrumentPatch|null|undefined,
+  layer:FoundrySampleLayer,
+  assets:PulseGridAudioAsset[],
+):FoundryInstrumentPatch;
 export function validateFoundryPatch(patch:unknown,assets:PulseGridAudioAsset[]):true;
 export function selectFoundrySample(patch:FoundryInstrumentPatch,pitch:number,velocity:number):{
   asset_id:string;
