@@ -112,5 +112,7 @@ export async function collectNwsStormAlerts({
     signal: typeof AbortSignal?.timeout === 'function' ? AbortSignal.timeout(12000) : undefined
   });
   if (!response?.ok) throw new Error('NWS alerts HTTP ' + String(response?.status ?? 'unknown'));
-  return { collector: 'nws-storm-desk', source_url: url, observations: parseStormAlerts(await response.json(), { now, max_items }) };
+  const payload = await response.json();
+  if (!payload || !Array.isArray(payload.features)) throw new TypeError('NWS alerts response missing GeoJSON features');
+  return { collector: 'nws-storm-desk', source_url: url, observations: parseStormAlerts(payload, { now, max_items }) };
 }
