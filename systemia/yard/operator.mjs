@@ -745,6 +745,30 @@ export class YardOperator {
         }
         healthState='healthy';
         routeVerification='private_federated_bridge_health_verified';
+      } else if (workloadClass === 'systemia.evercraft-web-fetch-mcp.v1') {
+        const fetchHealthy =
+          health.ok === true &&
+          health.service === 'evercraft-web-owned-fetch-candidate' &&
+          health.runtime === 'Evercraft Compute' &&
+          health.mode === 'authenticated_read_only' &&
+          health.loopback_only === true &&
+          health.public_route_approved === false &&
+          health.registry_repoint_authorized === false &&
+          health.payment_authority === false &&
+          health.instance_id === job.result?.instance_id &&
+          job.result?.token_exposed === false &&
+          job.result?.http_bridge_allowed === false;
+        if (!fetchHealthy) {
+          try {
+            await request(`${capacityEndpoint}/v1/services/${job.result.service_id}/stop`, {
+              method: 'POST',
+              body: JSON.stringify({token: lease.token}),
+            });
+          } catch {}
+          throw new Error('Evercraft Web Fetch MCP private health gate failed');
+        }
+        healthState = 'healthy';
+        routeVerification = 'private_web_fetch_health_verified_public_route_unbound';
       } else if (workloadClass === 'systemia.evercraft-web-browser.v1') {
         const browserHealthy =
           health.ok === true &&
