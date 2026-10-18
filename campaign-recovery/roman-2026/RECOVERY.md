@@ -21,6 +21,36 @@ QA inspected the committed HTML: standalone markup, mobile viewport, no external
 
 The fallback currently has `noindex,nofollow` to avoid creating duplicate campaign search results before owner review. Revisit indexing and canonical URLs at permanent migration.
 
+## Fastest authorized restoration of `voteroman.com` (prepared, NOT executed)
+
+**Current routing state (last externally probed Oct 18 UTC):** the original apex and `www` still served HTTP 402 from Base44. The independent Evercraft-hosted informational campaign page and Wix fallback served HTTP 200. The campaign donation webpage served HTTP 200, but no donation transaction was performed.
+
+**Prefer one reversible, temporary 302 forward to the independently deployed Evercraft page:**
+
+| GoDaddy control | Required value |
+| --- | --- |
+| Domain | `voteroman.com` (root/@ only) |
+| Destination protocol | `https://` |
+| Destination address | `fabric.systemiacommandcenters.com/campaigns/roman/` |
+| Forwarding type | **Temporary (302)**; **do not mask** |
+| `www` | Only after a DNS snapshot, change `www` CNAME to `@` as GoDaddy documents for www forwarding |
+| `donate`, `www.donate`, MX, TXT/SPF/DKIM/DMARC | **Preserve unchanged** |
+| Nameservers | Do **not** change as a general migration shortcut; validate current authoritative nameservers before and after |
+
+This is a **plan for the lawful registered owner or existing authorized DNS manager**, not a claim of access. Do not begin GoDaddy account recovery, OTP, or delegate request without explicit approval. If the domain is registered to another person, ownership and control must be respected. No connected credentials prove current write authority.
+
+**Safety and release gates:**
+1. Before any change, authorized manager captures **current DNS zone**, domain forwarding, nameservers, TTLs, mail records, and donation records. Confirm any GoDaddy Domain Protection checks are authorized.
+2. Verify the proposed destination returns HTTPS 200 and contains `Roman Kilinkaridis` and `https://donate.voteroman.com/` with a clean HTML body, then obtain campaign-owner approval of the abbreviated informational mirror and its `noindex` setting.
+3. In GoDaddy Domain Portfolio for **this exact domain**, open DNS → Forwarding → Add Forwarding → **Domain** → HTTPS → Evercraft URL → **Temporary 302** → Save. See [GoDaddy official forwarding instructions](https://www.godaddy.com/help/forward-my-godaddy-domain-12123). Changes can require GoDaddy verification and up to 48 hours for global propagation.
+4. For `www`, do not assume root forwarding covers it. GoDaddy specifies that `www` CNAME must point to `@`. Change only after authorized zone snapshot.
+5. From an independent network, test HTTP and HTTPS apex and `www`, ensure **302 Location** routes to the exact Evercraft destination, verify final HTTP 200 and candidate/legacy donation link markers. Then independently check `donate.voteroman.com` availability and owner-authorized donation checkout integrity. Check mail DNS for record drift.
+6. If any check fails, authorized manager removes domain forwarding and restores precisely the saved records. Never guess rollback IP addresses. Do not call cutover successful before independent external proof.
+
+**Failover distinction:** a 302 forwarding rule depends on the destination host. An autonomous guardian can monitor the original domain and recommend the healthy Wix backup, but **cannot redirect original-domain visitors to the Wix fallback unless authorized GoDaddy forwarding or an Evercraft-controlled ingress has been configured**. Do not deploy an automated registrar writer until authority is established and a separately verified rollback/test contract exists.
+
+The independent Wix backup remains at `https://headless-jhpvqnpgxlh-sociallyguud-140c.wix-site-host.com/`.
+
 ## Lowest-cost *temporary* domain recovery option
 
 GoDaddy offers HTTPS **temporary 302 forwarding** without needing to connect a premium Wix custom domain. Official instructions: https://www.godaddy.com/help/forward-my-godaddy-domain-12123 .
