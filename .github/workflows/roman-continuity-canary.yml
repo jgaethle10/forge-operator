@@ -1,0 +1,39 @@
+name: Roman public continuity canary (read-only)
+
+on:
+  workflow_dispatch:
+  pull_request:
+    paths:
+      - 'systemia/migrations/base44-exit/roman-continuity-canary*'
+      - '.github/workflows/roman-continuity-canary.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  verify-probe:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Run offline canary regression suite
+        run: node --test systemia/migrations/base44-exit/roman-continuity-canary.test.mjs
+      - name: Regional public probe (advisory, not a cutover signal)
+        shell: bash
+        run: |
+          set +e
+          node systemia/migrations/base44-exit/roman-continuity-canary.mjs > roman-continuity.json
+          code=$?
+          cat roman-continuity.json
+          if [ "$code" -ne 0 ]; then
+            echo '::warning::One GitHub runner could not verify both campaign hostnames; this is not proof of downtime.'
+          fi
+          exit 0
+      - uses: actions/upload-artifact@v4
+        with:
+          name: roman-continuity-advisory
+          path: roman-continuity.json
+          retention-days: 7
