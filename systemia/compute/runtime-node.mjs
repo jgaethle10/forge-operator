@@ -2413,6 +2413,7 @@ export async function startEvercraftComputeNode({
             service_url: null,
             local_url: runtime.url,
             health_path: `/v1/services/${serviceId}/health`,
+            invoke_path: `/v1/services/${serviceId}/web-fetch`,
             instance_id: runtime.instanceId,
             loopback_only: true,
             authenticated_read_only: true,
@@ -3805,6 +3806,44 @@ export async function startEvercraftComputeNode({
             lease_id: entry.lease_id,
             workload_class: entry.workload_class,
             result: result.ok === true ? 'completed' : `held:${result.hold || 'unknown'}`,
+          }),
+        });
+      }
+
+      const webFetchInvoke = req.url?.match(/^\/v1\/services\/([^/]+)\/web-fetch$/);
+      if (req.method === 'POST' && webFetchInvoke) {
+        const entry = services.get(webFetchInvoke[1]);
+        if (!entry) return send(res, 404, {error:'service_not_found'});
+        const body = await readJson(req, 16 * 1024);
+        const lease = leases.get(entry.lease_id);
+        if (!lease || lease.token_hash !== sha(body.token || '') ||
+            lease.expires_at < Date.now()) {
+          return send(res, 401, {error:'invalid_or_expired_lease'});
+        }
+        if (entry.workload_class !== 'systemia.evercraft-web-fetch-mcp.v1' ||
+            typeof entry.runtime.invokeFetch !== 'function') {
+          return send(res, 422, {error:'web_fetch_invoke_not_supported'});
+        }
+        const url = String(body.url || '');
+        if (url.length < 8 || url.length > 4096) {
+          return send(res, 400, {error:'web_fetch_url_invalid'});
+        }
+        const result = await entry.runtime.invokeFetch(url);
+        return send(res, 200, {
+          ok:true,
+          result,
+          receipt:chain.issue('web-fetch.public-read.executed', {
+            service_id:webFetchInvoke[1],
+            lease_id:entry.lease_id,
+            workload_class:entry.workload_class,
+            requested_url_sha256:sha(url),
+            evidence_receipt_sha256:result.evidence_receipt_sha256,
+            byte_count:result.byte_count,
+            public_read_only:true,
+            token_exposed:false,
+            payment_authority:false,
+            public_route_promotion:false,
+            content_recorded:false,
           }),
         });
       }
