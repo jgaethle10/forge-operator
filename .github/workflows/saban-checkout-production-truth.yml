@@ -4,6 +4,9 @@ on:
     paths:
       - "scripts/checkout-fabric-live-canary.mjs"
       - "scripts/checkout-fabric-live-canary.test.mjs"
+      - "tests/public-payment-offers.test.mjs"
+      - "systemia/mcp/public-payment-offers.mjs"
+      - "systemia/mcp/fabric-local-runtime.mjs"
       - ".github/workflows/saban-checkout-production-truth.yml"
       - "systemia/mcp/fabric-public-site.mjs"
   workflow_dispatch:
@@ -14,6 +17,9 @@ on:
     paths:
       - "scripts/checkout-fabric-live-canary.mjs"
       - "scripts/checkout-fabric-live-canary.test.mjs"
+      - "tests/public-payment-offers.test.mjs"
+      - "systemia/mcp/public-payment-offers.mjs"
+      - "systemia/mcp/fabric-local-runtime.mjs"
       - ".github/workflows/saban-checkout-production-truth.yml"
       - "systemia/mcp/fabric-public-site.mjs"
       - "systemia/mcp/fabric-local-runtime.mjs"
@@ -33,6 +39,8 @@ jobs:
           node-version: 22
       - name: Test regression guard with positive and negative fixtures
         run: node --test scripts/checkout-fabric-live-canary.test.mjs
+      - name: Verify native EventWave browser form and payment holds without real orders
+        run: node --test tests/public-payment-offers.test.mjs
       - name: Check real production release and customer offer forms
         if: github.event_name != 'pull_request'
         run: node scripts/checkout-fabric-live-canary.mjs
