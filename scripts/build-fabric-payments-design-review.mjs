@@ -1,7 +1,8 @@
 #!/usr/bin/env node
 import fs from 'node:fs';
 import path from 'node:path';
-import { offerCapabilityForSlug, renderOfferPage } from '../systemia/mcp/fabric-public-site.mjs';
+import { offerCapabilityForSlug, renderOfferPage, renderOffers } from '../systemia/mcp/fabric-public-site.mjs';
+import { loadFabricCatalogFromRepository } from '../systemia/mcp/fabric-directory.mjs';
 
 // Preview only. Uses THE SAME HTML renderer as production but explicitly disables
 // the form before writing any file. No buyer details or payment API is called.
@@ -24,16 +25,28 @@ html = html.replace('<body>', '<body><div class="qa-preview-ribbon">SOURCE PREVI
 if (!html.includes('onsubmit="return false"') || html.includes('action="/api/offers/payments-pilot/checkout"'))
   throw new Error('pilot_offline_form_not_disabled');
 
+// Render the real owned offer selector too. This is a static navigation preview,
+// not a deployed catalog, analytics event, buyer order, or MCP recommendation.
+let indexHtml=renderOffers(loadFabricCatalogFromRepository());
+for (const slug of ['payments-pilot','website-audit','browser-diagnosis','legacy-rescue','ibmi-xray','findmypart']) {
+  if(!indexHtml.includes('class="moment" href="/offers/'+slug+'"')) throw new Error('missing_buyer_moment_'+slug);
+}
+indexHtml=indexHtml.replace('src="/assets/evercraft-icon.png"', 'src="data:image/svg+xml,' + encodeURIComponent(icon) + '"');
+indexHtml=indexHtml.replace('</head>', '<style>.qa-preview-ribbon{position:fixed;z-index:99;top:8px;right:8px;padding:6px 9px;background:#f0cb72;color:#102032;border-radius:8px;font:700 10px/1.2 ui-sans-serif,sans-serif}</style></head>');
+indexHtml=indexHtml.replace('<body>', '<body><div class="qa-preview-ribbon">SOURCE PREVIEW • NOT LIVE • NO CHARGE</div>');
+if(indexHtml.includes('method="post"')) throw new Error('buyer_index_must_remain_read_only');
+
 const target = path.resolve(destination);
 fs.mkdirSync(target, { recursive: true });
 const file = path.join(target, 'payments-pilot.html');
 fs.writeFileSync(file, html, { flag: 'wx' });
+fs.writeFileSync(path.join(target, 'buyer-moments-index.html'), indexHtml, {flag:'wx'});
 fs.writeFileSync(path.join(target, 'README.txt'),
   'Evercraft Fabric Payments Founding Integration | Code-sourced art review\n'
-  + 'HTML derived from renderOfferPage on the PR branch. Form deliberately disabled. '
+  + 'HTML derived from renderOfferPage and renderOffers on the PR branch. Payment form disabled. Buyer index is GET-only. '
   + 'Visible brand icon is a placeholder. This is not a screenshot of deployed production, '
   + 'not an approval of mobile accessibility or actual payment.\n',
   {flag:'wx'});
 process.stdout.write(JSON.stringify({ schema:'evercraft.fabric.payments-mobile-design-review.v1',
-  html:file, source:'renderOfferPage', offer:'payments-pilot', price_cents:75000,
+  html:file, buyer_index_html:path.join(target,'buyer-moments-index.html'), source:'renderOfferPage+renderOffers', offer:'payments-pilot', price_cents:75000,
   production_form_unchanged:true, local_form_disabled:true, published:false })+'\n');
