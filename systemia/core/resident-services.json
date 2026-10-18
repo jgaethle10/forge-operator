@@ -10,7 +10,8 @@
       "optional_env_args": {
         "--input": "EVERCRAFT_CRM_HEARTBEAT_INPUT",
         "--out": "EVERCRAFT_CRM_OUT_DIR",
-        "--interaction-ledger-state": "EVERCRAFT_INTERACTION_LEDGER_STATE_DIR"
+        "--interaction-ledger-state": "EVERCRAFT_INTERACTION_LEDGER_STATE_DIR",
+        "--relationship-ledger-file": "EVERCRAFT_CRM_RELATIONSHIP_LEDGER_FILE"
       }
     },
     {
