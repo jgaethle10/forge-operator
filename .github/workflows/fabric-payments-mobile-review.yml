@@ -5,6 +5,7 @@ on:
       - 'scripts/build-fabric-payments-design-review.mjs'
       - 'systemia/mcp/fabric-public-site.mjs'
       - 'systemia/mcp/portfolio-offer-copy.mjs'
+      - 'tests/fabric-buyer-moments.test.mjs'
       - '.github/workflows/fabric-payments-mobile-review.yml'
   workflow_dispatch:
 
@@ -24,7 +25,7 @@ jobs:
         run: |
           node --check scripts/build-fabric-payments-design-review.mjs
           node scripts/build-fabric-payments-design-review.mjs payments-creative-review
-          node --test tests/portfolio-offer-copy.test.mjs tests/fabric-offer-pages.test.mjs
+          node --test tests/portfolio-offer-copy.test.mjs tests/fabric-offer-pages.test.mjs tests/fabric-buyer-moments.test.mjs
       - name: Capture real browser viewport screenshots without charge
         run: |
           CHROME="$(command -v google-chrome || command -v google-chrome-stable || command -v chromium || true)"
@@ -36,10 +37,17 @@ jobs:
             --hide-scrollbars --window-size=390,1650 --screenshot="$PWD/payments-creative-review/phone-long.png" "$FILE"
           timeout 50s "$CHROME" --headless --no-sandbox --disable-dev-shm-usage --disable-gpu \
             --hide-scrollbars --window-size=1280,900 --screenshot="$PWD/payments-creative-review/desktop-firstfold.png" "$FILE"
+          BUYER="file://$PWD/payments-creative-review/buyer-moments-index.html"
+          timeout 50s "$CHROME" --headless --no-sandbox --disable-dev-shm-usage --disable-gpu \
+            --hide-scrollbars --window-size=390,844 --screenshot="$PWD/payments-creative-review/buyer-index-phone-firstfold.png" "$BUYER"
+          timeout 50s "$CHROME" --headless --no-sandbox --disable-dev-shm-usage --disable-gpu \
+            --hide-scrollbars --window-size=390,1650 --screenshot="$PWD/payments-creative-review/buyer-index-phone-long.png" "$BUYER"
+          timeout 50s "$CHROME" --headless --no-sandbox --disable-dev-shm-usage --disable-gpu \
+            --hide-scrollbars --window-size=1280,900 --screenshot="$PWD/payments-creative-review/buyer-index-desktop-firstfold.png" "$BUYER"
           python3 - <<'PY'
           import pathlib,struct
           folder=pathlib.Path('payments-creative-review')
-          for filename in ['phone-firstfold.png','phone-long.png','desktop-firstfold.png']:
+          for filename in ['phone-firstfold.png','phone-long.png','desktop-firstfold.png','buyer-index-phone-firstfold.png','buyer-index-phone-long.png','buyer-index-desktop-firstfold.png']:
               data=(folder/filename).read_bytes()
               assert data[:8]==b'\x89PNG\r\n\x1a\n',filename
               width,height=struct.unpack('>II',data[16:24])
