@@ -31,7 +31,7 @@ if(!process.exitCode){
  const html=readFileSync(resolve(out,'index.html'),'utf8');
  const script=readFileSync(resolve(out,'app.js'),'utf8');
  if(!html.includes('/evermaps/app.js')||!html.includes('/evermaps/style.css')
-    ||!script.includes("fetch('/api/evermaps/incidents/pnw'"))){
+    ||!script.includes("fetch('/api/evermaps/incidents/pnw'")){
   console.error('BLOCKED: owned API/web asset linkage missing from built output');
   process.exitCode=1;
  }
