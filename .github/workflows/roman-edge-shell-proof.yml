@@ -12,6 +12,9 @@ on:
       - 'public/campaigns/roman/continuity.json'
       - 'tests/fabric-roman-campaign-mirror.test.mjs'
       - 'public/campaigns/roman/index.html'
+      - 'public/site-status/roman/**'
+      - 'public/sitemap.xml'
+      - '.github/workflows/evercraft-journal-pages.yml'
       - '.github/workflows/roman-edge-shell-proof.yml'
   push:
     branches: [main]
@@ -25,6 +28,9 @@ on:
       - 'public/campaigns/roman/continuity.json'
       - 'tests/fabric-roman-campaign-mirror.test.mjs'
       - 'public/campaigns/roman/index.html'
+      - 'public/site-status/roman/**'
+      - 'public/sitemap.xml'
+      - '.github/workflows/evercraft-journal-pages.yml'
       - '.github/workflows/roman-edge-shell-proof.yml'
   workflow_dispatch:
 
@@ -58,6 +64,17 @@ jobs:
         run: node --test systemia/domain-shield/roman-funnel.test.mjs
       - name: Prove owned public pages do not navigate into original broken apex
         run: node --test systemia/domain-shield/roman-public-link-guard.test.mjs
+      - name: Verify independent search-recovery directory has accurate links and indexing boundaries
+        run: |
+          test -f public/site-status/roman/index.html
+          grep -q 'name="robots" content="index,follow"' public/site-status/roman/index.html
+          grep -q 'not the voteroman.com website' public/site-status/roman/index.html
+          grep -q 'https://fabric.systemiacommandcenters.com/campaigns/roman/' public/site-status/roman/index.html
+          grep -q 'https://jgaethle10.github.io/forge-operator/campaigns/roman/' public/site-status/roman/index.html
+          grep -q 'https://headless-jhpvqnpgxlh-sociallyguud-140c.wix-site-host.com/' public/site-status/roman/index.html
+          grep -q 'https://jgaethle10.github.io/forge-operator/site-status/roman/' public/sitemap.xml
+          grep -q 'name="robots" content="noindex,nofollow"' public/campaigns/roman/index.html
+          ! grep -Eiq '<a[^>]+href="https?://(www\\.)?voteroman\\.com' public/site-status/roman/index.html
       - name: Confirm DNS deployment is not attempted
         run: |
           test -f campaign-recovery/roman-2026/edge/wrangler.toml
