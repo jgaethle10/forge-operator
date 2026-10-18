@@ -237,6 +237,13 @@ jobs:
           roman_body="$(curl --fail --silent --show-error --retry 8 --retry-all-errors --retry-delay 2 "$roman")"
           printf '%s' "$roman_body" | grep -q 'Roman Kilinkaridis'
           printf '%s' "$roman_body" | grep -q 'https://donate.voteroman.com/'
+          # Independent, indexable technical recovery directory, not campaign SEO cutover.
+          recovery_dir="${base%/}/site-status/roman/"
+          recovery_body="$(curl --fail --silent --show-error --retry 8 --retry-all-errors --retry-delay 2 "$recovery_dir")"
+          printf '%s' "$recovery_body" | grep -q 'Roman Kilinkaridis website access'
+          printf '%s' "$recovery_body" | grep -q 'not the voteroman.com website'
+          printf '%s' "$recovery_body" | grep -q 'https://jgaethle10.github.io/forge-operator/campaigns/roman/'
+
           {
             echo "## Evercraft public fallback live"
             echo
