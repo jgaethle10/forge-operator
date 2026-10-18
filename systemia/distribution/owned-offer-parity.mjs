@@ -76,7 +76,7 @@ async function main(){
   const capabilities=load('public/chum/capabilities.json');
   const live=process.argv.includes('--live');
   const publicOffers=live?JSON.parse(await fetchText(ORIGIN+'/offers.json')):
-    JSON.parse(fs.readFileSync(path.resolve(process.argv.find(a=>a.endsWith('.json'))||'public/chum/owned-offer-parity-fixture.json'),'utf8'));
+    JSON.parse(fs.readFileSync(path.resolve(process.argv.find(a=>a.endsWith('.json'))||'systemia/distribution/owned-offer-parity-fixture.json'),'utf8'));
   const report=reconcileOwnedOfferCatalog({publicOffers,buyerDoors,capabilities});
   if(live) {
     const pageResults=[];
