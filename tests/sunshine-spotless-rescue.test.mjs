@@ -7,7 +7,7 @@ test('Sunshine & Spotless page is independent, customer-directed and non-transac
  assert.match(page,/sunshine-spotless-continuity-20261018/);
  assert.match(page,/Sunshine &amp; Spotless/);
  for(const contact of ['sms:+15099309415','tel:+15099309415','mailto:sunshineandspotlesscleaningco@gmail.com'])assert.ok(page.includes(contact));
- assert.doesNotMatch(page,/base44\\.app|@base44|base44Client|base44-prod|5099103256|sms:\+15095605190/i);
+ assert.doesNotMatch(page,/base44[.]app|@base44|base44Client|base44-prod|5099103256|sms:\+15095605190/i);
  assert.match(page,/This page does not submit your details to a database or book an appointment/);
  assert.match(page,/No payment is taken here/);
  assert.doesNotMatch(page,/<form[^>]*action=/i);
