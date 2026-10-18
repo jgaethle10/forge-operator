@@ -114,7 +114,7 @@ export function buildPortfolioCheckoutMatrixFromRepository() {
   const read = relative => JSON.parse(fs.readFileSync(path.join(root, relative), 'utf8'));
   return buildPortfolioCheckoutMatrix({
     buyer: read('public/.well-known/evercraft-payments-buyer-doors.json'),
-    crosswalk: read('public/.well-known/evercraft-fabric-human-buyer-handoffs.json'),
+    crosswalk: read('systemia/commerce/portfolio-human-buyer-handoffs-next.json'),
     catalog: read('public/chum/capabilities.json'),
   });
 }
