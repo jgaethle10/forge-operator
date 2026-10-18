@@ -35,3 +35,24 @@ test('unknown checkout outcome never claims the provider did not charge',()=>{
   assert.match(html,/safe-ref/);
   assert.doesNotMatch(html,/No charge was made|We saved the purchase request/i);
 });
+
+test('unreachable owned payment transport gives assistance instead of a raw 500',async()=>{
+ const rt=await startFabricLocalRuntime({
+   host:'127.0.0.1',port:0,catalog:[],faieSurfaceEnabled:false,
+   purchaseIntentUrl:'https://fabric.systemiacommandcenters.com/api/payments/intent',
+   paymentOpsUrl:'https://fabric.systemiacommandcenters.com/api/payments/ops',
+   purchaseIntentFetch:async()=>{throw Error('provider_unreachable');}
+ });
+ try{
+  const response=await fetch(rt.url+'/api/offers/workflow-xray/checkout',{
+   method:'POST',headers:{'content-type':'application/x-www-form-urlencoded'},
+   body:new URLSearchParams({user_confirmed:'true',customer_ref:'buyer@example.com'})
+  });
+  assert.equal(response.status,503);
+  const html=await response.text();
+  assert.match(html,/Checkout could not be confirmed/);
+  assert.match(html,/Do not make a second payment/);
+  assert.match(html,/Request payment assistance/);
+  assert.doesNotMatch(html,/provider_unreachable|base44\\.app/);
+ }finally{await rt.close();}
+});
