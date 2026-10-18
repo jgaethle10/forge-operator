@@ -67,3 +67,13 @@ For each, store stable campaign, offer_key, URL/version, cohort/device, occurred
 
 ## Honest outcome statement
 This branch changes human-facing words and adds tests. It does not deploy, invoke a live AI Boardroom, create a checkout, collect money, run ads, contact prospects or establish a real buyer's conversion. Those require recorded Systemia and external receipts.
+
+## Live Fabric discovery smoke check (read-only connector, October 17)
+These are observed capability-matching results, not sales or production-page tests.
+- Buyer phrasing: "I need to connect an existing business checkout to verified paid order status and fulfillment controls for one offer." Top ranked Legacy Rescue Lab ($299), then Raven Nexus Business Setup ($500), then Evercraft Network; Payments Founding Integration did **not** appear in the returned top 10. This is a **discovery/positioning gap** even though the separate human $750 offer exists in source. Do not silently route a customer to a different product.
+- Buyer phrasing: "Website audit for $49: my website looks fine but customers are not converting and I need a bounded analysis." Systemia Website Audit ranked first with $49, `start_url_state=owned_offer_page_available` in returned catalog. Provider checkout and deliverable still require independent canaries.
+- Buyer phrasing: "I need to install an agent tool into my software platform with proof of safety and bounded permissions." Governed Agent Action Layer and AI Capability Installation Package ranked first and second, but both are marked verification_required / discovery_only. Do not machine-quote or advertise these as already buyable.
+
+**Next marketing+distribution engineering acceptance:** create a *scoped, human-reviewed* pain-phrase mapping for the exact Payments founding SKU, then read-only test the canonical matcher and authorized human offer URL. Do not infer exact offer match from semantically similar capabilities or bypass the public sell-state gate. Capture each test's intent, observed ranked candidates, offer identity, state, connector/deploy SHA and timestamp; fail if the rank points buyers at an unrelated SKU. Make no catalog changes until review with checkout #1303 and parity canary.
+
+**CI follow-up:** Initial draft code contained an unescaped apostrophe in the IBM i headline, causing a syntax failure. Corrected in subsequent commit. Fabric Portfolio Checkout Rollout workflow #39092628956 passed and Fabric Payments Mobile Creative Review #39092628937 passed on corrected head; Forge general CI remained in progress at time of this record. No deployment.
