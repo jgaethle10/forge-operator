@@ -73,7 +73,7 @@ test('the same Fallen Sessions screen exposes recording to playable canonical pi
  assert.match(fn,/applyPulseGridTransaction/);
  assert.match(fn,/setSelectedTrackId\(keysTrack.id\)/);
  assert.match(fn,/release_sec:0\.22/);
- assert.match(fn,/Raw take detached to prevent doubling/);
+ assert.match(fn,/raw take detached/);
  assert.ok(fn.indexOf('verifyFoundryWavBytes')<fn.indexOf('applyPulseGridTransaction'));
 });
 test('piano patch remains bounded by user-selected pitch and cannot claim commercial clearance',()=>{
@@ -107,4 +107,15 @@ test('Foundry UI accumulates additional pitch and velocity layers without replac
  assert.match(fn,/patch\.samples\.length/);
  assert.match(source,/Foundry minimum sample velocity/);
  assert.match(source,/Foundry maximum sample velocity/);
+});
+
+test('Foundry does not arm a silent, clipped, DC-damaged or truncated recording as piano',()=>{
+ const fn=ui().slice(ui().indexOf('async function armFoundryPianoFromTake'),ui().indexOf('async function importFoundryWavFile'));
+ assert.match(fn,/analyzeFoundryPianoWav\(sampleBytes\)/);
+ assert.match(fn,/signalQa\.status!=='technical_signal_pass'/);
+ assert.match(fn,/Piano capture held:/);
+ assert.match(fn,/signalQa\.blockers\.join/);
+ assert.ok(fn.indexOf('await verifyFoundryWavBytes')<fn.indexOf('analyzeFoundryPianoWav'));
+ assert.ok(fn.indexOf('analyzeFoundryPianoWav')<fn.indexOf('applyPulseGridTransaction'));
+ assert.match(fn,/performer rights and musical quality still unverified/);
 });
