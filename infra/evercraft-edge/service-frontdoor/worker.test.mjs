@@ -94,8 +94,8 @@ test('health is truthful about DNS and backend readiness',async()=>{
 
 test('no outbound network, secrets, remote HTML, Base44 fallback, or hidden customer data',async()=>{
   const source=fs.readFileSync(new URL('./worker.mjs',import.meta.url),'utf8');
-  assert.doesNotMatch(source,/await\\s+fetch\\s*\\(|globalThis\\.fetch|fetcher\\(|base44\\.app|\\/api\\/apps\\//i);
-  assert.equal((source.match(/\\bfetch\\s*\\(/g)||[]).length,1,'Only the worker export fetch method is allowed');
+  assert.doesNotMatch(source,/await\s+fetch\s*\(|globalThis\.fetch|fetcher\(|base44\.app|\/api\/apps\//i);
+  assert.equal((source.match(/\bfetch\s*\(/g)||[]).length,1,'Only the worker export fetch method is allowed');
   for(const html of [EPS_HTML,HAVENLY_HTML,EPS_ESTIMATOR_HTML]){
     assert.doesNotMatch(html,/@base44|base44Client|base44\.app|base44-prod/i);
   }
