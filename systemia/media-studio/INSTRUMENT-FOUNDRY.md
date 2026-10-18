@@ -159,3 +159,20 @@ At the first multi-layer commit, GitHub run 39085112409 passed 88/88 bridge test
 4. Complete independent rights and distribution-platform review before any commercial master is approved.
 
 No new acoustic samples, deployed instrument, commercial clearance or human-approved new sound quality is implied by a green CI status.
+
+
+## Technical acoustic-capture quality gate
+
+A verified SHA-256 checksum only proves that bytes match a source. It does **not** establish the recording is musically useful. The new \`instrument-foundry-capture-qa.mjs\` analyzes the **actual PCM/float samples** in a WAV and reports bounded, reproducible technical metrics before the canonical piano bank may accept it:
+
+- RIFF/WAVE, codec, channel count, sample rate and block alignment. Accepted: PCM16/24/32 and IEEE float32; mono/stereo; 44.1/48/96 kHz; 0.3–15 seconds; maximum 64 MiB.
+- Measured peak, RMS, the final 70 ms tail RMS, DC offset, non-finite samples, clipped-sample count and total samples inspected.
+- A near-silent recording, sustained sample clipping, excessive DC bias, non-finite/out-of-range samples, or a conspicuously loud final decay window holds sample admission. The high final tail may also represent an intentional non-piano effect; a new recording or explicit engineering review is required, never automatic silent correction.
+- The existing \`Arm Recorded Piano\` UI re-reads the **same** locally verified WAV byte source, first checks its identity via \`verifyFoundryWavBytes\`, then calls \`analyzeFoundryPianoWav\`. If held, no canonical instrument-bank transaction is committed. If passed, it displays peak/tail measurements while **retaining the unknown performer/music rights and no subjective quality claim**.
+- The Saban capture preflight now requires the technical-signal QA report to be declared successful in addition to the existing roles and human listening acceptance. Saban's current adapter **does not itself reexamine the waveform bytes**: this checks report completeness/consistency only; source bytes remain independently checked by the Foundry tool.
+
+**Limitations:** This is an early conservative signal gate, not pitch identification, piano authenticity classification, microphone calibration, room-noise analysis, semantic copyright clearance, or a substitute for listening and recording provenance. Passing does not mean \`musical_quality_approved\`, \`performer_rights_verified\` or \`commercial_release_ready\`. Quiet piano samples are allowed when their signal levels remain physically meaningful.
+
+CI exercises clean and quiet decays, heavily clipped samples, near silence, abrupt tails, DC bias, PCM24 stereo, float32/non-finite, malformed RIFF/alignment, and byte-slice handling. Run [39087701525](https://github.com/jgaethle10/forge-operator/actions/runs/39087701525) passed **101/101 Foundry and 6/6 Saban capture preflight tests** at commit \`8318c906ac678679e99eaa66790516b6cfcd1129\`. Broader Forge workflows are tracked separately.
+
+**Next artistic gate:** A real captured piano note with known origin, documented microphone setup and performer consent, followed by an actual user-browser playback receipt and human A/B versus the frozen original *Weight of Silence*.
