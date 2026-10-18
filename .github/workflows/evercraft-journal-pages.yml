@@ -115,8 +115,7 @@ jobs:
               echo "Product and customer fallback surfaces will still deploy."
             } >> "$GITHUB_STEP_SUMMARY"
           fi
-          EVERCRAFT_VISUAL_ORIGIN=https://jgaethle10.github.io/forge-operator/visuals \\
-            node systemia/visual-desk/build-all.mjs systemia/visual-desk/stories _public_pages/visuals
+          EVERCRAFT_VISUAL_ORIGIN=https://jgaethle10.github.io/forge-operator/visuals node systemia/visual-desk/build-all.mjs systemia/visual-desk/stories _public_pages/visuals
           test -f _public_pages/visuals/index.html
           test -f _public_pages/visuals/index.json
           test -f _public_pages/visuals/washington-active-volcanoes/index.html
