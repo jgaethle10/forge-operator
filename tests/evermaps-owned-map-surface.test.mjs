@@ -41,7 +41,7 @@ test('Mobile controls, source attribution and map provider boundaries are presen
  assert.match(js,/https:\/\/tile\.openstreetmap\.org\//);
  assert.match(js,/pointerdown/);
  assert.match(js,/pointermove/);
- assert.match(js,/keyboard/i) // Source includes arrow keys via keydown handler.
+ assert.match(js,/addEventListener\('keydown'/);
  assert.match(css,/@media\(max-width:640px\)/);
  assert.match(html,/aria-label="Zoom in"/);
  assert.match(html,/aria-label="Zoom out"/);
