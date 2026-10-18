@@ -7,6 +7,9 @@ on:
       - 'systemia/mcp/fabric-local-runtime.mjs'
       - 'systemia/domain-shield/roman-funnel.mjs'
       - 'systemia/domain-shield/roman-funnel.test.mjs'
+      - 'systemia/domain-shield/roman-public-link-guard.mjs'
+      - 'systemia/domain-shield/roman-public-link-guard.test.mjs'
+      - 'public/campaigns/roman/continuity.json'
       - 'tests/fabric-roman-campaign-mirror.test.mjs'
       - 'public/campaigns/roman/index.html'
       - '.github/workflows/roman-edge-shell-proof.yml'
@@ -17,6 +20,9 @@ on:
       - 'systemia/mcp/fabric-local-runtime.mjs'
       - 'systemia/domain-shield/roman-funnel.mjs'
       - 'systemia/domain-shield/roman-funnel.test.mjs'
+      - 'systemia/domain-shield/roman-public-link-guard.mjs'
+      - 'systemia/domain-shield/roman-public-link-guard.test.mjs'
+      - 'public/campaigns/roman/continuity.json'
       - 'tests/fabric-roman-campaign-mirror.test.mjs'
       - 'public/campaigns/roman/index.html'
       - '.github/workflows/roman-edge-shell-proof.yml'
@@ -50,6 +56,8 @@ jobs:
         run: node --test tests/fabric-roman-campaign-mirror.test.mjs
       - name: Verify local-first rescue funnel and malicious/unavailable backup rejection
         run: node --test systemia/domain-shield/roman-funnel.test.mjs
+      - name: Prove owned public pages do not navigate into original broken apex
+        run: node --test systemia/domain-shield/roman-public-link-guard.test.mjs
       - name: Confirm DNS deployment is not attempted
         run: |
           test -f campaign-recovery/roman-2026/edge/wrangler.toml

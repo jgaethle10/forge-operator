@@ -563,6 +563,7 @@ export async function startFabricLocalRuntime({
   const pluginDir=path.resolve(moduleDir,'../../plugins/evercraft-fabric');
   const journalDir=path.resolve(moduleDir,'../../public/journal');
   const romanCampaignFile=path.resolve(moduleDir,'../../public/campaigns/roman/index.html');
+  const romanPointerFile=path.resolve(moduleDir,'../../public/campaigns/roman/continuity.json');
   const romanCampaignPresent=()=>fs.existsSync(romanCampaignFile);
   const demoDir=path.resolve(moduleDir,'../../public/demos');
   // Emergency service frontages use first-party source, never a hosted app.
@@ -692,6 +693,7 @@ export async function startFabricLocalRuntime({
     chum_human_review_authority:'discovery_review_only',
     roman_emergency_mirror_path:'/campaigns/roman/',
     roman_owned_funnel_path:'/go/roman',
+    roman_owned_continuity_pointer_path:'/go/roman/links.json',
     roman_owned_funnel_mode:'local_first_verified_backup_if_local_unavailable',
     roman_owned_funnel_dns_interception:false,
     roman_emergency_mirror_ready:romanCampaignPresent(),
@@ -799,6 +801,35 @@ export async function startFabricLocalRuntime({
             capabilities,matches,intent,
             deploymentReceiptBound:health().deployment_receipt_bound===true,
           }),{contentType:'text/html; charset=utf-8'});
+        }
+      }
+
+      // Public machine-readable rescue addresses. No original-domain routing change.
+      // Other Evercraft-controlled sites can consume these reviewed static endpoints.
+      if(new URL(String(req.url||'/'),'http://fabric.local').pathname==='/go/roman/links.json'){
+        if(req.method!=='GET'&&req.method!=='HEAD'){
+          return sendJson(res,405,{error:'method_not_allowed'},{allow:'GET, HEAD'});
+        }
+        try{
+          const bytes=fs.readFileSync(romanPointerFile);
+          const p=JSON.parse(bytes.toString('utf8'));
+          if(p.subject!=='voteroman.com'||
+             p.original_domain_auto_redirect_active!==false||
+             p.primary_evercraft_entry!=='https://fabric.systemiacommandcenters.com/go/roman'||
+             p.existing_donation_website!=='https://donate.voteroman.com/'){
+            return sendJson(res,503,{error:'continuity_pointer_integrity_failed'});
+          }
+          res.writeHead(200,{
+            'content-type':'application/json; charset=utf-8',
+            'content-length':bytes.length,
+            'cache-control':'no-store',
+            'access-control-allow-origin':'*',
+            'x-content-type-options':'nosniff',
+            'x-robots-tag':'noindex, nofollow',
+          });
+          return res.end(req.method==='HEAD'?undefined:bytes);
+        }catch{
+          return sendJson(res,503,{error:'continuity_pointer_unavailable'});
         }
       }
 

@@ -1,0 +1,15 @@
+{
+  "schema": "evercraft.public-continuity-pointer.v1",
+  "subject": "voteroman.com",
+  "original_domain_control": "not_connected",
+  "original_domain_auto_redirect_active": false,
+  "authorized_owner_approval_for_original_domain_redirect": false,
+  "page_type": "independent_public_information_mirror",
+  "primary_evercraft_entry": "https://fabric.systemiacommandcenters.com/go/roman",
+  "primary_evercraft_information_page": "https://fabric.systemiacommandcenters.com/campaigns/roman/",
+  "secondary_independent_information_page": "https://headless-jhpvqnpgxlh-sociallyguud-140c.wix-site-host.com/",
+  "existing_donation_website": "https://donate.voteroman.com/",
+  "donation_checkout_transaction_verified": false,
+  "visitor_instruction": "This is an independent informational fallback. The original voteroman.com domain is not redirected by this pointer. Choose an alternate address directly.",
+  "deployed_on_original_domain": false
+}
