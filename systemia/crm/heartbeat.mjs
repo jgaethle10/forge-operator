@@ -100,9 +100,19 @@ export function writeCrmHeartbeatArtifacts({inputPath=process.env.EVERCRAFT_CRM_
   else try {
     const stat=fs.lstatSync(inputPath);
     if(!stat.isFile()||stat.isSymbolicLink()||(process.platform!=='win32'&&(stat.mode&0o077)!==0)) throw Error('unsafe_file');
-    if(stat.size>5*1024*1024) throw Error('oversize');
+    const fd=fs.openSync(inputPath,fs.constants.O_RDONLY|(fs.constants.O_NOFOLLOW||0));
+    let data;
+    try {
+      const opened=fs.fstatSync(fd);
+      if(!opened.isFile()||(process.platform!=='win32'&&(opened.mode&0o077)!==0)) throw Error('unsafe_file');
+      if(opened.size>5*1024*1024) throw Error('oversize');
+      // Read the file descriptor we just verified, not a potentially swapped path.
+      data=JSON.parse(fs.readFileSync(fd,'utf8'));
+    } finally {
+      fs.closeSync(fd);
+    }
     // Read a fresh private adapter projection on every cycle. Never upload input.
-    value=buildCrmHeartbeat(JSON.parse(fs.readFileSync(inputPath,'utf8')),{now});
+    value=buildCrmHeartbeat(data,{now});
   } catch(error) {
     const m=error?.message||'';
     const reason=error?.code==='ENOENT'?'source_missing'
