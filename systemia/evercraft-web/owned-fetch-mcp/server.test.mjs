@@ -1,6 +1,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { fetchPublicPage, startOwnedWebFetchMcp, webMcpResponse, WEB_MCP_TOOLS } from './server.mjs';
+import http from 'node:http';
+import { fetchPublicPage, pinnedRequest, startOwnedWebFetchMcp, webMcpResponse, WEB_MCP_TOOLS } from './server.mjs';
 
 const clock = () => new Date('2026-10-18T02:00:00.000Z');
 const resolved = [];
@@ -86,6 +87,39 @@ test('first release holds IPv6-only resolutions pending mapped-address safety re
     resolveHost:async()=>[{address:'127.0.0.1',family:4}],
     request:()=>{throw Error('private IPv4 outbound must not run');}
   }),/ipv4_public_target_required/);
+});
+
+
+test('mixed resolver answer rejects public plus private before any outbound request', async()=>{
+  let calls=0;
+  await assert.rejects(fetchPublicPage('https://public.example/',{
+    resolveHost:async()=>[
+      {address:'93.184.216.34',family:4},
+      {address:'127.0.0.1',family:4}
+    ],
+    request:async()=>{calls++;throw Error('should not connect');}
+  }),/private_or_reserved_target/);
+  assert.equal(calls,0);
+});
+
+test('pinned GET closes oversized declared responses before streaming body', async()=>{
+  const server=http.createServer((_req,res)=>{
+    res.writeHead(200,{
+      'content-type':'text/html',
+      'content-length':'99999999',
+    });
+    res.flushHeaders();
+  });
+  await new Promise(resolve=>server.listen(0,'127.0.0.1',resolve));
+  try {
+    const port=server.address().port;
+    await assert.rejects(pinnedRequest(
+      new URL('http://public-test.example:'+port+'/'),
+      {address:'127.0.0.1',family:4},{timeoutMs:1000},
+    ),/response_too_large/);
+  } finally {
+    await new Promise(resolve=>server.close(resolve));
+  }
 });
 
 test('MCP only exposes Fetch capabilities and read-only tool; wrong arguments fail closed', async () => {
