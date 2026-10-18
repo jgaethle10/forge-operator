@@ -45,3 +45,7 @@ To fix `voteroman.com` for **everyone** without a browser extension, the domain 
 ## Isolated Chromium verification
 
 The GitHub Actions proof installs a dedicated Playwright-bundled Chromium in the runner, opens a disposable browser profile, and exercises **disabled at install → explicit checkbox and click → apex/www browser redirect → donation exclusion → disabled again**. All tested public host responses are intercepted by mocks, so no production campaign server or payments are contacted during this test. The extension background worker exists only to expose an ephemeral extension ID in that isolated browser; it contains no listeners, timers, fetches, or redirect activation. Running unit tests alone is no longer sufficient for the CI release gate. This does **not** distribute/install the extension on any user's device or fix the original site globally.
+
+## Signed multi-mirror registry v1
+
+See [`registry/README.md`](registry/README.md) for an Ed25519-signed, 72-hour-expiring, revocable recovery record prototype. An independently verified domain-owner public key, fresh signed revocation status and explicit user opt-in are required. The registry has no DNS write authority; **no owner-authorized manifest exists for `voteroman.com`**. This is infrastructure research, not a redirect of ordinary visitors.
