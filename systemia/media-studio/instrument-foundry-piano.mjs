@@ -96,11 +96,21 @@ export function scheduleFoundryPianoNote({
   source.buffer=buffer;
   source.playbackRate.setValueAtTime(selection.playback_rate,time);
   const playable=buffer.duration/selection.playback_rate;
-  const end=time+Math.min(playable, duration+selection.release_sec);
-  const releaseStart=Math.max(time+.005,Math.min(time+duration,end-.02));
+  // Natural sampler release: never schedule gain automation after the WAV is
+  // exhausted, and always keep attack, key-off and end times ordered. An
+  // excessive fade-length on a short sample would otherwise produce invalid
+  // gain ramps, pops or unexpectedly silent notes.
+  const sounding=Math.min(playable,duration+selection.release_sec);
+  if(sounding<.012)throw new Error('Foundry sample too short for click-free piano release.');
+  const attackSeconds=Math.min(.004,sounding*.15);
+  const releaseSeconds=Math.min(selection.release_sec,sounding*.45);
+  const attackEnd=time+attackSeconds;
+  const end=time+sounding;
+  const releaseStart=time+Math.max(attackSeconds,Math.min(duration,sounding-releaseSeconds));
+  const voiceGain=Math.max(.0001,velocity*.68);
   gain.gain.setValueAtTime(.0001,time);
-  gain.gain.linearRampToValueAtTime(Math.max(.0001,velocity*.68),time+.004);
-  gain.gain.setValueAtTime(Math.max(.0001,velocity*.68),releaseStart);
+  gain.gain.linearRampToValueAtTime(voiceGain,attackEnd);
+  gain.gain.setValueAtTime(voiceGain,releaseStart);
   gain.gain.linearRampToValueAtTime(.0001,end);
   source.connect(gain);
   gain.connect(destination);
