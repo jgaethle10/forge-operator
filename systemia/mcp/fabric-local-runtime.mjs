@@ -949,29 +949,34 @@ export async function startFabricLocalRuntime({
         });
       }
 
-      // Customer domains remain held at DNS/TLS until independently attested.
-      // When approved hostname ingress is configured, route their "/" to the
-      // correct first-party service without a Base44 compatibility bridge.
-      if(req.method==='GET'||req.method==='HEAD'){
-        const candidateHost=String(req.headers.host||'').trim().toLowerCase().replace(/:\d+$/,'');
-        const servicePath=ownedServiceHostRoutes.get(candidateHost);
+      // Exact custom domains are standalone public frontages, not aliases
+      // for Fabric's discovery/commerce/internal routes.
+      const publicHost=String(req.headers.host||'').trim().toLowerCase().replace(/:\d+$/,'');
+      const publicServiceHome=ownedServiceHostRoutes.get(publicHost);
+      if(publicServiceHome){
         const reqPath=new URL(String(req.url||'/'),'http://fabric.local').pathname;
-        if(servicePath&&(reqPath==='/'||reqPath==='/index.html')){
-          const servicePage=resolveOwnedServicePage(servicePath);
-          if(!servicePage)return sendJson(res,503,{ok:false,error:'owned_service_frontage_unavailable'});
-          const payload=fs.readFileSync(servicePage);
-          res.writeHead(200,{
-            'content-type':'text/html; charset=utf-8',
-            'content-length':payload.length,
-            'cache-control':'public, max-age=60, must-revalidate',
-            'x-content-type-options':'nosniff',
-            'x-robots-tag':'noindex, nofollow',
-            'referrer-policy':'no-referrer',
-            'content-security-policy':"default-src 'none'; style-src 'unsafe-inline'; script-src 'unsafe-inline'; img-src 'self' data:; base-uri 'none'; frame-ancestors 'none'",
-          });
-          if(req.method==='HEAD')return res.end();
-          return res.end(payload);
+        const isHome=(reqPath==='/'||reqPath==='/index.html');
+        const isEpsEstimator=publicServiceHome==='/eps/'&&
+          (reqPath==='/apps/eps-estimator'||reqPath==='/apps/eps-estimator/');
+        if((req.method!=='GET'&&req.method!=='HEAD')||(!isHome&&!isEpsEstimator)){
+          return sendJson(res,404,{ok:false,error:'service_public_path_not_found'});
         }
+        const asset=resolveOwnedServicePage(isEpsEstimator?'/apps/eps-estimator/':publicServiceHome);
+        if(!asset)return sendJson(res,503,{ok:false,error:'owned_service_frontage_unavailable'});
+        const payload=fs.readFileSync(asset);
+        res.writeHead(200,{
+          'content-type':'text/html; charset=utf-8',
+          'content-length':payload.length,
+          'cache-control':'public, max-age=60, must-revalidate',
+          'x-content-type-options':'nosniff',
+          // Keep unlaunched domains out of search until DNS, TLS and operator
+          // release evidence exists. This is NOT a verified SEO cutover.
+          'x-robots-tag':'noindex, nofollow',
+          'referrer-policy':'no-referrer',
+          'content-security-policy':"default-src 'none'; style-src 'unsafe-inline'; script-src 'unsafe-inline'; img-src 'self' data:; base-uri 'none'; frame-ancestors 'none'",
+        });
+        if(req.method==='HEAD')return res.end();
+        return res.end(payload);
       }
       if (req.method==='GET' && req.url==='/') {
         return sendText(
