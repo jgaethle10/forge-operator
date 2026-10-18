@@ -34,6 +34,14 @@ test('real encoded video and audio can pass exact-frame technical handoff',()=>{
   assert.ok(Number.isFinite(review.audio.integratedLufs));
   assert.equal(review.creativeReview.audiovisualSync,'unverified');
   assert.equal(review.boundaries.notPublicationAuthority,true);
+  // Technical fixture only. Never label as a creative master or real product demonstration.
+  if(process.env.EVERCRAFT_QC_ARTIFACT_DIR){
+    const out=path.resolve(process.env.EVERCRAFT_QC_ARTIFACT_DIR);
+    fs.mkdirSync(out,{recursive:true});
+    fs.copyFileSync(video,path.join(out,'synthetic-lavfi-technical-fixture.mp4'));
+    fs.copyFileSync(review.receiptPath,path.join(out,'emotional-master-review.json'));
+    for(const row of review.sampledFrames) fs.copyFileSync(row.path,path.join(out,path.basename(row.path)));
+  }
 });
 
 test('black, unscored media fails closed rather than getting artistic release',()=>{
