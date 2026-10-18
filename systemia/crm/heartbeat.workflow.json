@@ -1,0 +1,31 @@
+{
+  "schema": "evercraft.systemia.workflow-manifest.v1",
+  "workflow_key": "evercraft-company-crm-heartbeat",
+  "mission_key": "evercraft-company-wide-coherence-v1-20261008",
+  "runtime": "systemia-core-resident",
+  "collider_compatible": true,
+  "cadence_seconds": 300,
+  "material_change_only": false,
+  "entrypoint": "systemia/crm/heartbeat-runner.mjs",
+  "proof": "systemia/crm/heartbeat.test.mjs",
+  "inputs": {
+    "private_crm_projection": "EVERCRAFT_CRM_HEARTBEAT_INPUT"
+  },
+  "outputs": {
+    "mission_snapshot": "artifacts/crm-heartbeat/mission-snapshot.json",
+    "sanitized_report": "artifacts/crm-heartbeat/latest.json"
+  },
+  "authority": {
+    "read_protected_crm_projection": "autonomous_when_configured",
+    "contact_or_message": false,
+    "payment_or_invoicing": false,
+    "identity_merge": false,
+    "modify_source_records": false,
+    "write_public_user_data": false
+  },
+  "failure_semantics": {
+    "missing_private_adapter": "emit_explicit_hold",
+    "source_stale": "emit_explicit_hold",
+    "source_unsafe": "emit_explicit_hold"
+  }
+}
