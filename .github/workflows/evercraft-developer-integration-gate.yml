@@ -10,7 +10,7 @@ on:
   workflow_dispatch:
     inputs:
       live_probe:
-        description: 'Perform only safe live MCP, HTML, Evercraft Payments quote, and Fabric health probes'
+        description: 'Recheck public MCP, HTML, Evercraft Payments quote, and Fabric health; automatic for PRs'
         required: true
         type: boolean
         default: true
@@ -41,8 +41,8 @@ jobs:
         run: node scripts/probe-evercraft-developer-integrations.mjs
 
   public-live:
-    name: Independent MCP read-only probes (on demand)
-    if: github.event_name == 'workflow_dispatch' && inputs.live_probe
+    name: Independent MCP read-only probes (PR and on demand)
+    if: github.event_name == 'pull_request' || (github.event_name == 'workflow_dispatch' && inputs.live_probe)
     runs-on: ubuntu-latest
     timeout-minutes: 5
     steps:
