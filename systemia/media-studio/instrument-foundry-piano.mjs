@@ -24,8 +24,45 @@ export function validateFoundryPatch(patch,assets){
     const layerKey=[sample.asset_id,sample.root_pitch,sample.velocity_min,sample.velocity_max].join(':');
     if(identities.has(layerKey))throw new Error('Duplicate Foundry sample layer');
     identities.add(layerKey);
+    for(const prior of patch.samples){
+      if(prior===sample)break;
+      if(prior.root_pitch!==sample.root_pitch)continue;
+      if(Math.max(prior.velocity_min,sample.velocity_min)<
+         Math.min(prior.velocity_max,sample.velocity_max)){
+        throw new Error('Overlapping piano velocity layers for one recorded root pitch');
+      }
+    }
   }
   return true;
+}
+
+
+/**
+ * Append a verified recording as another note/velocity layer without replacing
+ * previously approved takes. Never self-certifies sample rights.
+ *
+ * Overlaps at the SAME root pitch are rejected: ambiguous dynamic layers
+ * must be explicitly re-recorded or edited rather than silently selected.
+ */
+export function appendFoundryPianoSample(patch,layer,assets){
+  const current=patch||{kind:'recorded_piano_v1',max_transpose_semitones:2,samples:[]};
+  if(!layer || typeof layer!=='object')throw new Error('A recorded piano layer is required');
+  const next={
+    kind:'recorded_piano_v1',
+    max_transpose_semitones:2,
+    samples:[...current.samples, {
+      asset_id:layer.asset_id,
+      root_pitch:layer.root_pitch,
+      velocity_min:layer.velocity_min,
+      velocity_max:layer.velocity_max,
+      release_sec:layer.release_sec,
+    }],
+  };
+  // A new patch may begin from no samples. A pre-existing patch must have
+  // valid immutable references and may not be silently switched to another kind.
+  if(patch)validateFoundryPatch(patch,assets);
+  validateFoundryPatch(next,assets);
+  return next;
 }
 
 export function selectFoundrySample(patch,pitch,velocity){
