@@ -181,3 +181,33 @@ test('multi-note bank commits with canonical history and undo preserves register
  assert.equal(reverted.session.assets.length,0);
  assert.equal(source.assets.length,0);
 });
+
+// The proposed envelope is checked in scheduled AudioParam order. Passing
+// these tests is not equivalent to a recorded listener-quality measurement.
+test('short valid sample envelopes never schedule a ramp after source ends',()=>{
+ const m=mockAudio(),selection=selectFoundrySample(patch(),60,.7);
+ const receipt=scheduleFoundryPianoNote({context:m.context,destination:{},
+  buffer:{duration:.024},pitch:60,velocity:.7,time:.12,duration:.5,
+  selection,createSource:m.createSource});
+ const gains=m.calls.filter(x=>x[0]==='gain'&&(x[1]==='set'||x[1]==='ramp'));
+ const times=gains.map(x=>x[3]);
+ assert.deepEqual([...times].sort((a,b)=>a-b),times);
+ assert.ok(gains.at(-1)[3]<=receipt.stop_time);
+ assert.ok(receipt.release_start<receipt.stop_time);
+ assert.ok(receipt.stop_time<=.1440001);
+});
+test('piano note-off release respects natural sample exhaustion without extending WAV',()=>{
+ const m=mockAudio(),selection=selectFoundrySample(patch(),60,.8);
+ const r=scheduleFoundryPianoNote({context:m.context,destination:{},
+  buffer:{duration:.4},pitch:60,velocity:.8,time:.5,duration:1.2,
+  selection,createSource:m.createSource});
+ assert.ok(Math.abs(r.stop_time-.9)<1e-10);
+ assert.ok(r.release_start<r.stop_time);
+});
+test('implausibly tiny samples cannot generate pathological gain schedules',()=>{
+ const m=mockAudio(),selection=selectFoundrySample(patch(),60,.6);
+ assert.throws(()=>scheduleFoundryPianoNote({context:m.context,destination:{},
+  buffer:{duration:.004},pitch:60,velocity:.6,time:0,duration:.5,
+  selection,createSource:m.createSource}),/too short for click-free/);
+ assert.equal(m.calls.filter(x=>x[0]==='start').length,0);
+});
