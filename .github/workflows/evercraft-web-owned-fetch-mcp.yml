@@ -28,3 +28,5 @@ jobs:
         run: node --check systemia/evercraft-web/owned-fetch-mcp/server.mjs
       - name: Read-only MCP security and cold-client tests
         run: node --test systemia/evercraft-web/owned-fetch-mcp/server.test.mjs
+      - name: Independent GitHub runner public HTTPS Fetch smoke
+        run: node --test systemia/evercraft-web/owned-fetch-mcp/live-smoke.test.mjs
