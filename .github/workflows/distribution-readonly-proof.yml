@@ -4,6 +4,9 @@ on:
     paths:
       - 'systemia/distribution/revenue-route-audit.mjs'
       - 'systemia/distribution/revenue-route-audit.test.mjs'
+      - 'systemia/distribution/owned-offer-parity.mjs'
+      - 'systemia/distribution/owned-offer-parity.test.mjs'
+      - 'systemia/distribution/owned-offer-parity-fixture.json'
       - 'systemia/distribution/partner-brief-preview.test.mjs'
       - 'public/partners/workflow-continuity/index.html'
       - 'docs/commerce/WORKFLOW_CONTINUITY_PARTNER_BRIEF_20261017.md'
@@ -27,13 +30,22 @@ jobs:
         with:
           node-version: '22'
       - name: Run bounded offline tests
-        run: node --test systemia/distribution/revenue-route-audit.test.mjs systemia/distribution/partner-brief-preview.test.mjs
+        run: node --test systemia/distribution/revenue-route-audit.test.mjs systemia/distribution/partner-brief-preview.test.mjs systemia/distribution/owned-offer-parity.test.mjs
       - name: Inspect stale source catalog without changing it
         run: |
           node systemia/distribution/revenue-route-audit.mjs public/chum/sell-now.json > distribution-readonly-audit.json
           node --input-type=module -e "import fs from 'node:fs'; const a=JSON.parse(fs.readFileSync('distribution-readonly-audit.json')); if(a.payment_verified || a.live_http_verified) process.exit(1); console.log({snapshot_stale:a.snapshot_stale, observed_catalog_count:a.declared_sell_now_count, held:a.sell_now_without_declared_https_start_count});"
+      - name: Compare all fifteen approved offer declarations with source buyer contracts
+        run: node systemia/distribution/owned-offer-parity.mjs > distribution-offer-parity.json
+      - name: Independent public GET-only canary (no checkout POST)
+        run: node systemia/distribution/owned-offer-parity.mjs --live > distribution-live-readback.json
       - uses: actions/upload-artifact@v4
+        if: always()
         with:
           name: distribution-readonly-audit
-          path: distribution-readonly-audit.json
+          path: |
+            distribution-readonly-audit.json
+            distribution-offer-parity.json
+            distribution-live-readback.json
+          if-no-files-found: warn
           retention-days: 7
