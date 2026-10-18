@@ -391,3 +391,39 @@ jobs:
           path: /tmp/blackbox-integrated-rogue-mission.json
           if-no-files-found: error
           retention-days: 14
+
+
+  # Founder-review challenge, available for source inspection on the draft PR.
+  # Running this job is not an outreach, publication or approval to connect
+  # developer machines to production services.
+  outside-reviewer-challenge:
+    name: External reviewer one-command safe challenge
+    runs-on: ubuntu-latest
+    timeout-minutes: 9
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Reviewer's zero-credential challenge integration and CLI tests
+        run: node --test systemia/agent-continuity/outside-reviewer-challenge.test.mjs
+      - name: Run exact one-command reviewer exercise
+        run: |
+          set -euo pipefail
+          node systemia/agent-continuity/outside-reviewer-challenge.mjs | tee /tmp/evercraft-blackbox-reviewer-rc01.json
+          grep -q '"status": "PASS_REVIEWER_LOCAL_SAFETY_DRILL_ONLY"' /tmp/evercraft-blackbox-reviewer-rc01.json
+          grep -q '"local_spider_replay_denied_after_restart": 4' /tmp/evercraft-blackbox-reviewer-rc01.json
+          grep -q '"pinned_lab_nodeseed_processes": 2' /tmp/evercraft-blackbox-reviewer-rc01.json
+          grep -q '"live_entire_integration_verified": false' /tmp/evercraft-blackbox-reviewer-rc01.json
+          grep -q '"permission_to_run_remote_actions": false' /tmp/evercraft-blackbox-reviewer-rc01.json
+      - name: Archive sanitized founder-review external tester packet
+        uses: actions/upload-artifact@v4
+        with:
+          name: blackbox-external-review-challenge-founder-held
+          path: /tmp/evercraft-blackbox-reviewer-rc01.json
+          if-no-files-found: error
+          retention-days: 14
