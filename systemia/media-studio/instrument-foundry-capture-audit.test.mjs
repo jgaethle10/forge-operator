@@ -49,7 +49,7 @@ test('silent files retain quality blockers and cannot be admitted',async()=>{
 });
 test('malformed containers and invalid roots fail before reporting custody',async()=>{
  await assert.rejects(auditFoundryPianoCapture({bytes:new Uint8Array(44),expected_midi:60}),/Invalid WAV container/);
- await assert.rejects(auditFoundryPianoCapture({bytes:wav(),expected_midi:60.4}),/integer/);
+ await assert.rejects(auditFoundryPianoCapture({bytes:wav(),expected_midi:60.4}),/Expected piano root MIDI note/);
  await assert.rejects(auditFoundryPianoCapture({bytes:wav(),expected_midi:109}),/MIDI note/);
 });
 test('source path never leaks into the auditable source name',async()=>{
