@@ -31,8 +31,10 @@ a{color:inherit}
 .em-tool:hover{border-color:#80dad9}
 .em-map{position:relative;height:clamp(470px,65dvh,680px);background:#14283a;overflow:hidden;touch-action:none;cursor:grab}
 .em-map:active{cursor:grabbing}
+.em-fallback{position:absolute;inset:0;width:100%;height:100%;z-index:0;display:block;background:radial-gradient(ellipse at 4% 18%,#17354b,#14384b 85%)}
+.em-fallback text{font-family:Inter,system-ui,-apple-system,sans-serif;font-size:11px;fill:#c5d9c9;letter-spacing:.02em;paint-order:stroke;stroke:#163a38;stroke-width:3px;stroke-linejoin:round;pointer-events:none}
 .em-tiles,.em-markers{position:absolute;inset:0;overflow:hidden}
-.em-tiles{z-index:1;pointer-events:none;background:repeating-linear-gradient(45deg,#14283a,#14283a 20px,#162f43 20px,#162f43 40px)}
+.em-tiles{z-index:1;pointer-events:none;background:transparent;opacity:0;transition:opacity .25s}
 .em-tiles img{position:absolute;width:256px;height:256px;user-select:none;pointer-events:none}
 .em-markers{z-index:2;pointer-events:none}
 .em-marker{position:absolute;display:grid;place-items:center;transform:translate(-50%,-50%);pointer-events:auto;min-width:34px;height:34px;padding:0 7px;border:2px solid #ffdfad;border-radius:100px;background:#813c22;color:#fff9ed;box-shadow:0 4px 16px #08111dd9;font-weight:850;font-size:10px;white-space:nowrap}
