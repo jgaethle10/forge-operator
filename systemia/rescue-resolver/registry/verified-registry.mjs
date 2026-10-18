@@ -50,12 +50,17 @@ function timeWindow(payload,now){
  const begin=Date.parse(payload.issued_at),end=Date.parse(payload.expires_at);
  return end>begin&&end-begin<=MAX_SECONDS*1000&&begin<=now&&now<end;
 }
-function mirrorsValid(mirrors,subject) {
+function mirrorsValid(mirrors,subject,approvedOrigins) {
+ if(!Array.isArray(approvedOrigins)||approvedOrigins.length<1||approvedOrigins.length>8||
+    approvedOrigins.some(origin=>{
+      try{const u=new URL(origin);return u.protocol!=='https:'||u.origin!==origin||u.hostname===subject||!host(u.hostname);}catch{return true;}
+    })||new Set(approvedOrigins).size!==approvedOrigins.length)return false;
  if(!Array.isArray(mirrors)||mirrors.length<1||mirrors.length>4)return false;
  const seen=new Set(),ranks=new Set();
  for(const m of mirrors) {
    if(!allowedKeys(m,['url','priority','markers']))return false;
-   if(!exactHttps(m.url)||new URL(m.url).hostname===subject||seen.has(m.url))return false;
+   if(!exactHttps(m.url)||new URL(m.url).hostname===subject||
+       !approvedOrigins.includes(new URL(m.url).origin)||seen.has(m.url))return false;
    if(!Number.isInteger(m.priority)||m.priority<1||m.priority>10||ranks.has(m.priority))return false;
    if(!Array.isArray(m.markers)||m.markers.length<1||m.markers.length>3||
       m.markers.some(t=>!text(t,LIMITS.marker)||t.length<8))return false;
@@ -63,18 +68,19 @@ function mirrorsValid(mirrors,subject) {
  }
  return true;
 }
-function payloadValid(p,expectedHost,now){
+function payloadValid(p,expectedHost,now,approvedOrigins){
  if(!allowedKeys(p,['schema','subject_host','revision','issued_at','expires_at','notice','mirrors']))return false;
  return p.schema===MANIFEST&&host(p.subject_host)&&p.subject_host===expectedHost&&
  Number.isSafeInteger(p.revision)&&p.revision>0&&timeWindow(p,now)&&
  text(p.notice,LIMITS.notice)&&p.notice.includes('independent')&&
- mirrorsValid(p.mirrors,p.subject_host);
+ mirrorsValid(p.mirrors,p.subject_host,approvedOrigins);
 }
 function trustedPolicyValid(policy,expectedHost){
- return allowedKeys(policy,['schema','subject_host','owner_key_pem','authority_verified','minimum_revision'])&&
+ return allowedKeys(policy,['schema','subject_host','owner_key_pem','authority_verified','minimum_revision','approved_mirror_origins'])&&
  policy.schema===POLICY&&policy.subject_host===expectedHost&&host(expectedHost)&&
  policy.authority_verified===true&&pinnedKey(policy.owner_key_pem)&&
- Number.isSafeInteger(policy.minimum_revision)&&policy.minimum_revision>=0;
+ Number.isSafeInteger(policy.minimum_revision)&&policy.minimum_revision>=0&&
+ Array.isArray(policy.approved_mirror_origins)&&policy.approved_mirror_origins.length>0;
 }
 function revocationValid(envelope,policy,now){
  const p=envelope?.payload;
@@ -93,7 +99,7 @@ export function verifyRescueManifest({
 }={}) {
  const block=reason=>({verified:false,reason,mirrors:[],automatic_routing_authorized:false});
  if(!trustedPolicyValid(policy,expectedHost))return block('missing_verified_owner_trust_anchor');
- if(!payloadValid(envelope?.payload,expectedHost,now))return block('invalid_or_expired_manifest');
+ if(!payloadValid(envelope?.payload,expectedHost,now,policy.approved_mirror_origins))return block('invalid_or_expired_manifest');
  if(!verifySignature(envelope,policy.owner_key_pem))return block('invalid_owner_signature');
  if(!revocationValid(revocationEnvelope,policy,now))return block('missing_or_invalid_fresh_revocation_status');
  const floor=Math.max(policy.minimum_revision,revocationEnvelope.payload.revoked_through_revision);
