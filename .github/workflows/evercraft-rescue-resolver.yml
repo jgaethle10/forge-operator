@@ -29,6 +29,8 @@ jobs:
           node --check systemia/rescue-resolver/extension/redirect-contract.mjs
       - name: Prove opt-in browser-only rescue rules
         run: node --test systemia/rescue-resolver/redirect-contract.test.mjs
+      - name: Verify signed owner manifests, revocation, replay and multi-mirror health
+        run: node --test systemia/rescue-resolver/registry/verified-registry.test.mjs
       - name: Require narrow permissions and no extension auto-activation
         run: |
           node --input-type=module <<'NODE'
