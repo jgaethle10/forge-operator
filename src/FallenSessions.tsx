@@ -217,15 +217,21 @@ export default function FallenSessions(){
       if(!Number.isInteger(root)||root<21||root>108)throw new Error('Piano MIDI root must be 21 to 108.');
       const result=applyPulseGridTransaction(current,{
         intent:'Bind locally verified WAV as one reversible recorded piano key; internal audition only.',
-        operations:[{type:'clip.set_foundry_piano_patch',track_id:keysTrack.id,scene:selectedScene,
-          patch:{kind:'recorded_piano_v1',max_transpose_semitones:2,samples:[{
-            asset_id:asset.id,root_pitch:root,velocity_min:0,velocity_max:1,release_sec:0.22,
-          }]},
-        }],
+        operations:[
+          // Detach the raw Audio Take clip after assigning the SAME registered
+          // asset to MIDI Keys. Otherwise Play would trigger both at once.
+          // The asset remains in the vault and undo restores this attachment.
+          {type:'clip.attach_audio_asset',track_id:audioTrack.id,scene:selectedScene,asset_id:null},
+          {type:'clip.set_foundry_piano_patch',track_id:keysTrack.id,scene:selectedScene,
+            patch:{kind:'recorded_piano_v1',max_transpose_semitones:2,samples:[{
+              asset_id:asset.id,root_pitch:root,velocity_min:0,velocity_max:1,release_sec:0.22,
+            }]},
+          },
+        ],
       },'human');
       setSession(result.session);
       setSelectedTrackId(keysTrack.id);
-      setStatus('Foundry recorded piano armed at MIDI '+root+' (±2 semitones). One verified sample, audition only; no commercial rights claim.');
+      setStatus('Foundry recorded piano armed at MIDI '+root+' (±2 semitones). One verified sample; raw take detached to prevent doubling; audition only.');
     }catch(error){
       setStatus(error instanceof Error?error.message:'Foundry piano note assignment failed.');
     }
