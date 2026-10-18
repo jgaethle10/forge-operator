@@ -1,5 +1,6 @@
 import {makeInfluenceAttributionLink} from './attribution-link.mjs';
 import {INFLUENCE_SCHEMA} from './influence-lab.mjs';
+import {assessInfluenceSabanBrowserReceipt} from './saban-browser-review.mjs';
 
 const CANARY_SCHEMA='evercraft.chum.commerce-canary.v2';
 const GRAPHICS_SCHEMA='evercraft.influence-lab.graphics-review-slate.v1';
@@ -53,7 +54,7 @@ function inspectCanary(canary,at){
  * and even a full creative plan can never attest to a paid or shipped order.
  * No media bytes, personal contact fields, cookies, or provider tokens appear.
  */
-export function compileInfluenceDistributionReview({brief,slate,canaryReceipt=null,at}={}){
+export function compileInfluenceDistributionReview({brief,slate,canaryReceipt=null,sabanReceipt=null,at}={}){
   if(brief?.schema!==INFLUENCE_SCHEMA||brief.releaseState!=='review_only'||!clean(brief.digest)){
     throw Error('influence_distribution_brief_invalid');
   }
@@ -66,6 +67,7 @@ export function compileInfluenceDistributionReview({brief,slate,canaryReceipt=nu
   }
   if(!at||!Number.isFinite(Date.parse(at)))throw Error('influence_distribution_report_time_invalid');
   const canary=inspectCanary(canaryReceipt,at);
+  const sabanBrowser=assessInfluenceSabanBrowserReceipt({receipt:sabanReceipt,at});
   const outputs=[];
   for(const creative of slate.treatments){
     const treatment=creative.key;
@@ -91,6 +93,7 @@ export function compileInfluenceDistributionReview({brief,slate,canaryReceipt=nu
           'current_offer_checkout_and_fulfillment_not_independently_verified',
           'evercraft_clip_publication_authority_not_granted',
           ...(canary.state!=='canary_reports_readable'?[canary.reason]:[]),
+          ...(sabanBrowser.state!=='untrusted_report_says_ui_visible'?[sabanBrowser.reason]:[]),
         ],
         providerPostId:null,providerPostUrl:null,
         reportedQualifiedVisits:null,verifiedOrders:null,
@@ -103,7 +106,7 @@ export function compileInfluenceDistributionReview({brief,slate,canaryReceipt=nu
   return {schema:'evercraft.influence-lab.distribution-review.v1',
     campaignId:brief.campaignId,briefDigest:brief.digest,
     graphicsSlateDigest:slate.digest,generatedAt:new Date(Date.parse(at)).toISOString(),
-    state:'review_only',canary,copyAndLinkDrafts:outputs,
+    state:'review_only',canary,sabanBrowser,copyAndLinkDrafts:outputs,
     uniqueDrafts:outputs.length,
     buyerJourney:{publicRouteReadability:canary.state,qualifiedVisits:null,
       buyerIntents:null,createdCheckouts:null,independentlyVerifiedSettlements:null,
