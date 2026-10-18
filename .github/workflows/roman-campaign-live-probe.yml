@@ -76,6 +76,17 @@ jobs:
             --output /dev/null --write-out 'status=%{http_code} redirect=%{redirect_url}' \
             https://fabric.systemiacommandcenters.com/go/roman)" || redirect_metadata="network_error"
           echo "$redirect_metadata" | tee -a artifacts/roman-live-probe.txt
+          echo "## Independent recovery pointer" | tee -a artifacts/roman-live-probe.txt
+          pointer_file="$(mktemp)"
+          pointer_status="$(curl --silent --show-error --max-time 20 --output "$pointer_file" --write-out '%{http_code}' https://fabric.systemiacommandcenters.com/go/roman/links.json)" || pointer_status=000
+          echo "pointer_status=$pointer_status" | tee -a artifacts/roman-live-probe.txt
+          if [ "$pointer_status" = "200" ] && command -v jq >/dev/null 2>&1; then
+            jq -er '.subject == "voteroman.com" and .original_domain_auto_redirect_active == false and .primary_evercraft_entry == "https://fabric.systemiacommandcenters.com/go/roman" and .existing_donation_website == "https://donate.voteroman.com/"' "$pointer_file" >/dev/null
+            echo "pointer_integrity=verified_and_root_not_claimed_fixed" | tee -a artifacts/roman-live-probe.txt
+          else
+            echo "pointer_integrity=not_verified" | tee -a artifacts/roman-live-probe.txt
+          fi
+          rm -f "$pointer_file"
           echo "## Evercraft Fabric release marker" | tee -a artifacts/roman-live-probe.txt
           health_file="$(mktemp)"
           health_code="$(curl --location --silent --show-error --max-time 15 --output "$health_file" --write-out '%{http_code}' https://fabric.systemiacommandcenters.com/health)" || health_code=000
@@ -139,6 +150,16 @@ jobs:
           check_url "$funnel" 'Roman Kilinkaridis' 'Evercraft short continuation funnel'
           check_url "$funnel" 'https://donate.voteroman.com/' 'Evercraft short funnel preserves donation link'
           check_url "$donations" 'Roman Kilinkaridis' 'Existing campaign donation webpage'
+          json_url="https://fabric.systemiacommandcenters.com/go/roman/links.json"
+          pointer_check="$(mktemp)"
+          pointer_code="$(curl --location --silent --show-error --max-time 20 --output \"$pointer_check\" --write-out '%{http_code}' \"$json_url\")" || pointer_code=000
+          if [ "$pointer_code" != 200 ] || ! jq -e '.subject == "voteroman.com" and .original_domain_auto_redirect_active == false and .existing_donation_website == "https://donate.voteroman.com/"' "$pointer_check" >/dev/null; then
+            echo "FAIL Evercraft independent recovery pointer: HTTP $pointer_code or invalid route record." >> "$GITHUB_STEP_SUMMARY"
+            rm -f "$pointer_check"
+            exit 1
+          fi
+          rm -f "$pointer_check"
+          echo "PASS Evercraft recovery pointer: HTTP 200, donation preserved, no root-domain cutover claim." >> "$GITHUB_STEP_SUMMARY"
           echo "This checks page availability only. No donation transaction or checkout completion was attempted." >> "$GITHUB_STEP_SUMMARY"
 
       - uses: actions/upload-artifact@v4
