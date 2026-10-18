@@ -95,6 +95,14 @@ try{
   assert(http?.status()===200,profile.name+' failed navigation');
   await page.waitForFunction(()=>document.querySelector('#em-count')?.textContent==='3',{timeout:16000});
   await page.waitForFunction(()=>document.querySelector('#em-fallback')?.dataset.source==='natural-earth-50m-public-domain'&&document.querySelectorAll('#em-fallback path').length>=1,null,{timeout:14000});
+  await page.evaluate(()=>{
+   const badge=document.createElement('div');
+   badge.id='em-browser-qa-fixture-label';
+   badge.textContent='SYNTHETIC QA DATA · NOT REAL FIRE INCIDENTS';
+   badge.setAttribute('aria-hidden','true');
+   badge.style.cssText='position:absolute;z-index:60;top:14px;right:12px;max-width:250px;padding:7px 10px;border-radius:9px;background:#4f3117ed;border:1px solid #f7ca84;color:#fff3dd;font-size:10px;font-weight:800;letter-spacing:.05em;line-height:1.5;pointer-events:none;text-align:center';
+   document.querySelector('#em-map').appendChild(badge);
+  });
   const initial=await page.evaluate(()=>{
    const map=document.querySelector('#em-map')?.getBoundingClientRect();
    const panel=document.querySelector('.em-panel')?.getBoundingClientRect();
@@ -105,6 +113,7 @@ try{
     count:document.querySelector('#em-count')?.textContent,
     groups:document.querySelector('#em-groups')?.textContent,
     markers:document.querySelectorAll('.em-marker').length,
+    clearly_marked_synthetic_fixture:document.querySelector('#em-browser-qa-fixture-label')?.textContent?.includes('NOT REAL FIRE INCIDENTS'),
     fallback_shapes:document.querySelectorAll('#em-fallback path').length,
     fallback_source:document.querySelector('#em-fallback')?.dataset.source,
     raster_display_state:document.querySelector('#em-tiles')?.dataset.state,
@@ -120,6 +129,7 @@ try{
   assert(initial.count==='3',profile.name+' reported count was not 3');
   assert(initial.source_status==='ready',profile.name+' did not reach source ready state');
   assert(initial.markers>0,profile.name+' has no rendered incident marker');
+  assert(initial.clearly_marked_synthetic_fixture===true,profile.name+' fixture screenshot missing visible synthetic-data disclosure');
   assert(initial.fallback_shapes>=1&&initial.fallback_source==='natural-earth-50m-public-domain',profile.name+' has no sourced geographic fallback');
   assert(initial.raster_display_state==='geography-fallback'&&Number(initial.raster_opacity)===0,profile.name+' showed partially loaded third-party tiles');
   assert(initial.document_width<=initial.width+3,profile.name+' horizontal overflow');
