@@ -17,6 +17,8 @@ const state={...FALLBACK,showReports:true,records:[],sourceState:'loading',selec
 const tileNodes=new Map();
 const SVG_NS='http://www.w3.org/2000/svg';
 let landPolygons=[];
+let cachedLandZoom=null;
+let cachedProjectedLand=[];
 const geoCities=[['Seattle',47.6062,-122.3321],['Vancouver',49.2827,-123.1207],['Yakima',46.6021,-120.5059],['Portland',45.5152,-122.6784],['Spokane',47.6588,-117.426],['Boise',43.615,-116.202]];
 const n=(value)=>typeof value==='number'&&Number.isFinite(value);
 const clamp=(x,min,max)=>Math.min(max,Math.max(min,x));
@@ -64,14 +66,26 @@ function renderFallback(){
  if(!landPolygons.length)return;
  const center=mercator(state.lat,state.lon,state.zoom);
  const xy=(lat,lon)=>{const p=mercator(lat,lon,state.zoom);return{x:Math.round((w/2+p.x-center.x)*10)/10,y:Math.round((h/2+p.y-center.y)*10)/10}};
+ if(cachedLandZoom!==state.zoom){
+  cachedProjectedLand=landPolygons.map(polygon=>polygon.map(ring=>{
+   const points=ring.map(([lon,lat])=>mercator(lat,lon,state.zoom));
+   const xx=points.map(p=>p.x),yy=points.map(p=>p.y);
+   return {points,bounds:{left:Math.min(...xx),right:Math.max(...xx),top:Math.min(...yy),bottom:Math.max(...yy)}};
+  }));
+  cachedLandZoom=state.zoom;
+ }
+ const originX=w/2-center.x,originY=h/2-center.y;
  const paths=[];
- for(const polygon of landPolygons){
+ for(const polygon of cachedProjectedLand){
   for(const ring of polygon){
-   if(ring.length<3)continue;
+   if(ring.points.length<3)continue;
+   const b=ring.bounds;
+   if(b.right+originX<0||b.left+originX>w||b.bottom+originY<0||b.top+originY>h)continue;
    let d='';
-   for(let i=0;i<ring.length;i++){
-    const p=xy(ring[i][1],ring[i][0]);
-    d+=(i===0?'M':'L')+p.x+' '+p.y;
+   for(let i=0;i<ring.points.length;i++){
+    const p=ring.points[i];
+    const x=Math.round((p.x+originX)*10)/10,y=Math.round((p.y+originY)*10)/10;
+    d+=(i===0?'M':'L')+x+' '+y;
    }
    paths.push(d+'Z');
   }
@@ -106,6 +120,7 @@ async function loadFallback(){
   if(body?.metadata?.rights!=='public domain'||!Array.isArray(body.features)||body.features.length<15)
    throw Error('Natural Earth public-domain geography unavailable or malformed');
   landPolygons=body.features.map(f=>f.geometry?.coordinates).filter(Array.isArray);
+  cachedLandZoom=null;cachedProjectedLand=[];
   renderFallback();
  }catch{
   fallbackSvg.dataset.source='unavailable';
