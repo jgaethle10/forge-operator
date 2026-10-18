@@ -54,12 +54,16 @@ test('EventWave Facebook in-app browser form fails closed on provider rejection 
     assert.ok(html.includes('$49'));
     const rejected=await submit('event-form-provider-rejected');
     assert.equal(rejected.status,503);
+    assert.equal(rejected.headers.get('cache-control'),'no-store');
+    assert.equal(rejected.headers.get('x-evercraft-checkout-hold-stage'),'provider_response');
     assert.match(await rejected.text(),/No charge was made/);
     assert.equal(rejected.headers.get('location'),null);
 
     providerMode='network';
     const offline=await submit('event-form-provider-unreachable');
     assert.equal(offline.status,503);
+    assert.equal(offline.headers.get('cache-control'),'no-store');
+    assert.equal(offline.headers.get('x-evercraft-checkout-hold-stage'),'provider_transport');
     assert.match(await offline.text(),/No charge was made/);
     assert.equal(offline.headers.get('location'),null);
 
