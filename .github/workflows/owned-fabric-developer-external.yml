@@ -1,0 +1,68 @@
+name: Owned Fabric developer external acceptance
+
+on:
+  pull_request:
+    paths:
+      - 'scripts/probe-owned-fabric-developer-public.mjs'
+      - '.github/workflows/owned-fabric-developer-external.yml'
+  push:
+    branches: [main]
+    paths:
+      - 'scripts/probe-owned-fabric-developer-public.mjs'
+      - '.github/workflows/owned-fabric-developer-external.yml'
+      - 'systemia/mcp/fabric-developer-site.mjs'
+      - 'systemia/mcp/fabric-directory.mjs'
+      - 'systemia/mcp/fabric-local-runtime.mjs'
+  workflow_dispatch:
+  schedule:
+    - cron: '13 */2 * * *'
+
+permissions:
+  contents: read
+
+concurrency:
+  group: owned-fabric-developer-external-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  static:
+    name: Verify read-only external probe syntax
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Check syntax and owned source contract
+        run: |
+          node --check scripts/probe-owned-fabric-developer-public.mjs
+          node --test tests/fabric-developer-owned-entry.test.mjs
+
+  external-public:
+    name: Independently confirm exact served source, public HTML, MCP and buyer holds
+    if: github.event_name != 'pull_request'
+    needs: static
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Probe owned origin and record truthful receipt
+        env:
+          EVERCRAFT_EXPECTED_RELEASE_SHA: ${{ github.sha }}
+          EVERCRAFT_PROBE_RECEIPT_PATH: artifacts/fabric-developer-public-acceptance.json
+        run: node scripts/probe-owned-fabric-developer-public.mjs
+      - name: Always preserve the external result, including failed releases
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: evercraft-fabric-developer-public-acceptance
+          path: artifacts/fabric-developer-public-acceptance.json
+          retention-days: 30
+          if-no-files-found: warn
+      - name: Make custody boundary explicit
+        if: always()
+        run: |
+          echo "Public read-only success does NOT prove signed Yard runtime custody or completed Evercraft Payments settlement." >> "$GITHUB_STEP_SUMMARY"
