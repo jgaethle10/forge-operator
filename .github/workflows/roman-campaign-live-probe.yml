@@ -77,7 +77,20 @@ jobs:
           if [ "$health_code" = 200 ] && command -v jq >/dev/null 2>&1; then
             jq -r '"source_release_ref=" + (.source_release_ref // "unknown") + " mirror_ready=" + (.roman_emergency_mirror_ready | tostring)' "$health_file" | tee -a artifacts/roman-live-probe.txt || true
           fi
+          if [ "$health_code" = 200 ] && command -v jq >/dev/null 2>&1; then
+            if jq -e '.roman_emergency_mirror_ready == true and .roman_domain_dns_cutover_verified == false' "$health_file" >/dev/null 2>&1; then
+              echo "fabric_campaign_runtime_state=code_loaded_dns_unchanged" | tee -a artifacts/roman-live-probe.txt
+            elif jq -e '.roman_emergency_mirror_ready == null' "$health_file" >/dev/null 2>&1; then
+              echo "fabric_campaign_runtime_state=old_release_or_missing_route" | tee -a artifacts/roman-live-probe.txt
+            else
+              echo "fabric_campaign_runtime_state=unverified" | tee -a artifacts/roman-live-probe.txt
+            fi
+          else
+            echo "fabric_campaign_runtime_state=health_unavailable" | tee -a artifacts/roman-live-probe.txt
+          fi
           rm -f "$health_file"
+          echo "## Root cutover and mirror evidence" | tee -a artifacts/roman-live-probe.txt
+          echo "Public root status and Fabric mirror status are independent. A deployed mirror does not change GoDaddy DNS." | tee -a artifacts/roman-live-probe.txt
           cat artifacts/roman-live-probe.txt >> "$GITHUB_STEP_SUMMARY"
       - name: Check critical campaign continuity without touching accounts
         shell: bash
