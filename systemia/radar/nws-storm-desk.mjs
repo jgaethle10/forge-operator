@@ -1,14 +1,14 @@
 import crypto from 'node:crypto';
 
 export const NWS_STORM_ALERTS_URL = 'https://api.weather.gov/alerts/active';
-export const STORM_EVENT_PATTERN = /^(?:Severe Thunderstorm (?:Warning|Watch)|Tornado (?:Warning|Watch)|Flash Flood (?:Warning|Watch)|Flood (?:Warning|Watch)|Coastal Flood (?:Warning|Watch)|High Wind Warning|Hurricane (?:Warning|Watch)|Tropical Storm (?:Warning|Watch)|Storm Surge (?:Warning|Watch)|Extreme Wind Warning)$/i;
+export const STORM_EVENT_PATTERN = /^(?:Severe Thunderstorm (?:Warning|Watch)|Tornado (?:Warning|Watch)|Flash Flood (?:Warning|Watch)|Flood (?:Warning|Watch)|Coastal Flood (?:Warning|Watch)|High Wind Warning|Hurricane (?:Warning|Watch)|Tropical Storm (?:Warning|Watch)|Storm Surge (?:Warning|Watch)|Extreme Wind Warning|Blizzard (?:Warning|Watch)|Winter Storm (?:Warning|Watch)|Ice Storm Warning|Snow Squall Warning|Lake Effect Snow Warning|Winter Weather Advisory|Flood Advisory|Coastal Flood Advisory|High Wind Watch)$/i;
 const clean = (v) => String(v ?? '').replace(/\s+/g, ' ').trim();
 const validTime = (v) => { const t=Date.parse(String(v || '')); return Number.isFinite(t) ? t : null; };
 const hash = (v) => crypto.createHash('sha256').update(v).digest('hex').slice(0, 24);
 const severity = (event) => {
-  if (/Tornado Warning|Extreme Wind Warning|Flash Flood Warning|Storm Surge Warning/i.test(event)) return 1;
-  if (/Severe Thunderstorm Warning|Hurricane Warning/i.test(event)) return .94;
-  if (/Flood Warning|Tropical Storm Warning|High Wind Warning|Coastal Flood Warning/i.test(event)) return .86;
+  if (/Tornado Warning|Extreme Wind Warning|Flash Flood Warning|Storm Surge Warning|Snow Squall Warning/i.test(event)) return 1;
+  if (/Severe Thunderstorm Warning|Hurricane Warning|Blizzard Warning|Ice Storm Warning/i.test(event)) return .94;
+  if (/Flood Warning|Tropical Storm Warning|High Wind Warning|Coastal Flood Warning|Winter Storm Warning|Lake Effect Snow Warning/i.test(event)) return .86;
   if (/Watch/i.test(event)) return .72;
   return .65;
 };
