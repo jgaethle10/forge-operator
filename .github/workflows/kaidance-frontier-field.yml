@@ -11,6 +11,7 @@ on:
       - 'systemia/organism/kaidance-frontier-proof.mjs'
       - 'systemia/organism/kaidance-frontier-cycle.mjs'
       - 'systemia/collider/**'
+      - 'systemia/crm/**'
       - 'registry/**'
       - 'public/.well-known/evercraft-products.json'
       - 'public/chum/products/**'
@@ -22,6 +23,7 @@ on:
       - 'systemia/organism/kaidance-frontier-proof.mjs'
       - 'systemia/organism/kaidance-frontier-cycle.mjs'
       - 'systemia/collider/**'
+      - 'systemia/crm/**'
       - 'registry/**'
       - 'public/.well-known/evercraft-products.json'
       - 'public/chum/products/**'
@@ -55,6 +57,9 @@ jobs:
           restore-keys: |
             kaidance-frontier-state-${{ runner.os }}-
 
+      - name: Prove CRM privacy and freshness contracts
+        run: node --test systemia/crm/heartbeat.test.mjs
+
       - name: Prove frontier + science/hazard contracts
         run: node systemia/organism/kaidance-frontier-proof.mjs
 
@@ -81,6 +86,8 @@ jobs:
             artifacts/portfolio-frontier/mission-snapshot.json
             artifacts/science-hazard-watch/latest.json
             artifacts/science-hazard-watch/mission-snapshot.json
+            artifacts/crm-heartbeat/latest.json
+            artifacts/crm-heartbeat/mission-snapshot.json
           if-no-files-found: warn
           retention-days: 14
 
