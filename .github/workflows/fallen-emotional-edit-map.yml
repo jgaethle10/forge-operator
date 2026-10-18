@@ -4,6 +4,8 @@ on:
     paths:
       - 'systemia/graphics-command/emotional-edit-map.mjs'
       - 'systemia/graphics-command/emotional-edit-map.test.mjs'
+      - 'systemia/graphics-command/review-emotional-master.mjs'
+      - 'systemia/graphics-command/review-emotional-master.test.mjs'
       - 'systemia/graphics-command/build-commercial.mjs'
       - 'systemia/graphics-command/commercial-director.mjs'
       - 'systemia/graphics-command/campaigns/**'
@@ -27,5 +29,7 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: '22'
-      - name: Verify emotional beat map and existing commercial renderer
-        run: node --test systemia/graphics-command/emotional-edit-map.test.mjs systemia/graphics-command/commercial-renderer.test.mjs
+      - name: Install TypeScript module runner
+        run: npm install --no-audit --no-fund
+      - name: Verify emotional beat map, commercial renderer and actual encoded master
+        run: node --import tsx --test systemia/graphics-command/emotional-edit-map.test.mjs systemia/graphics-command/commercial-renderer.test.mjs systemia/graphics-command/review-emotional-master.test.mjs
