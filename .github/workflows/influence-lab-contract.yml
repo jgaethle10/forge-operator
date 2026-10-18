@@ -5,6 +5,7 @@ on:
     paths:
       - 'systemia/influence-lab/**'
       - 'systemia/evercraft-web/browser-worker/influence-website-audit-canary.mjs'
+      - 'systemia/evercraft-web/browser-worker/influence-layout-preview.mjs'
       - 'systemia/mcp/fabric-public-site.mjs'
       - '.github/workflows/influence-lab-contract.yml'
   workflow_dispatch:
@@ -122,6 +123,24 @@ jobs:
         run: |
           node systemia/evercraft-web/browser-worker/influence-website-audit-canary.mjs \
             --out "$RUNNER_TEMP/influence-saban-visual"
+      - name: Render and measure source-only redesign (not live deployment)
+        run: |
+          node systemia/evercraft-web/browser-worker/influence-layout-preview.mjs \
+            --out "$RUNNER_TEMP/influence-saban-visual"
+      - name: Check candidate preview never claims production or paid state
+        run: |
+          node --input-type=module -e '
+            import fs from "node:fs";
+            const p=process.env.RUNNER_TEMP+"/influence-saban-visual/branch-preview-receipt.json";
+            const r=JSON.parse(fs.readFileSync(p,"utf8"));
+            if(r.previewPubliclyDeployed!==false||r.customerCheckoutCreated!==false||
+              r.paymentPosted!==false||r.views?.length!==2||
+              r.views.some(v=>v.formSubmitted!==false||v.paymentAttempted!==false||
+                v.formActionVerified!==true||!v.screenshotSha256?.startsWith("sha256:"))){
+              throw Error("source_preview_boundary_invalid");
+            }
+            console.log(JSON.stringify(r.views.map(v=>({name:v.name,buttonFirstViewport:v.buttonFirstViewport,buttonTop:v.buttonTop}))));
+          '
       - name: Attach real visual diagnostics even if route fails
         if: always()
         uses: actions/upload-artifact@v4
