@@ -3,12 +3,16 @@ import assert from 'node:assert/strict';
 import {runFoundrySabanCaptureReview} from './instrument-foundry-saban-review.mjs';
 
 const SHA='a'.repeat(64);
+const goodQa=()=>({schema:'evercraft.fallen.piano-capture-technical-qa.v1',
+ status:'technical_signal_pass',blockers:[],
+ metrics:{peak_dbfs:-11,rms_dbfs:-26},commercial_release_ready:false});
 test('Saban runs four media-studio review roles concurrently but keeps release held',async()=>{
  const r=await runFoundrySabanCaptureReview({
   capture_id:'foundry-c4-quiet-001',source_sha256:SHA,
   rights_evidence_ref:'rights-record-123',provenance_receipt_id:'capture-receipt-123',
   performance_timing_receipt_id:'timing-123',
-  human_listening_review:{state:'accepted',receipt_id:'human-review-123'}
+  human_listening_review:{state:'accepted',receipt_id:'human-review-123'},
+  capture_signal_qa:goodQa()
  });
  assert.equal(r.roles_checked.length,4);
  assert.equal(r.planning_receipts.length,4);
@@ -47,4 +51,27 @@ test('invalid source SHA and missing capture provenance block all publication cl
  assert.ok(r.findings.includes('provenance_receipt_requirement_missing'));
  assert.ok(r.findings.includes('timing_control_requirement_missing'));
  assert.equal(r.release_ready,false);
+});
+
+test('Saban preflight will not promote a capture with missing technical waveform inspection',async()=>{
+ const r=await runFoundrySabanCaptureReview({
+  capture_id:'foundry-c4-bad-qa',source_sha256:SHA,
+  rights_evidence_ref:'claim',provenance_receipt_id:'receipt',
+  performance_timing_receipt_id:'timing',
+  human_listening_review:{state:'accepted',receipt_id:'review'},
+ });
+ assert.equal(r.review_status,'blocked');
+ assert.ok(r.findings.includes('piano_capture_signal_qa_missing_or_held'));
+});
+test('Saban preflight rejects a technically held/clipped waveform report',async()=>{
+ const r=await runFoundrySabanCaptureReview({
+  capture_id:'foundry-c4-clipped',source_sha256:SHA,
+  rights_evidence_ref:'claim',provenance_receipt_id:'receipt',
+  performance_timing_receipt_id:'timing',
+  human_listening_review:{state:'accepted',receipt_id:'review'},
+  capture_signal_qa:{...goodQa(),status:'held',blockers:['sustained_sample_clipping']},
+ });
+ assert.equal(r.review_status,'blocked');
+ assert.equal(r.qa_report_consistency_checked,false);
+ assert.equal(r.qa_waveform_bytes_reexamined_by_saban,false);
 });
