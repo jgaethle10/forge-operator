@@ -19,7 +19,7 @@ function fixture({black=false,audio=true}={}){
   if(audio) args.push('-c:a','aac','-b:a','96k','-shortest');
   args.push(video);
   const r=spawnSync('ffmpeg',args,{encoding:'utf8',timeout:120000});
-  if(r.status!==0) throw new Error('ffmpeg_fixture_failed:'+r.stderr);
+  if(r.error||r.status!==0) throw new Error('ffmpeg_fixture_failed:'+String(r.error?.message||r.stderr||'unknown').slice(-1200));
   return {dir,video,editPath};
 }
 
