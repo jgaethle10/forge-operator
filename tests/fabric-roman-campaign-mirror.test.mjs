@@ -19,6 +19,20 @@ test('Evercraft Fabric serves the independent read-only Roman emergency page, in
     assert.match(body, /https:\/\/donate\.voteroman\.com\//);
     assert.doesNotMatch(body, /\[APP UNAVAILABLE\]/);
 
+    const ptr=await fetch(runtime.url+'/go/roman/links.json');
+    assert.equal(ptr.status,200);
+    assert.equal(ptr.headers.get('cache-control'),'no-store');
+    const routes=await ptr.json();
+    assert.equal(routes.subject,'voteroman.com');
+    assert.equal(routes.original_domain_auto_redirect_active,false);
+    assert.equal(routes.primary_evercraft_entry,'https://fabric.systemiacommandcenters.com/go/roman');
+    assert.equal(routes.existing_donation_website,'https://donate.voteroman.com/');
+    assert.equal(routes.deployed_on_original_domain,false);
+    const ptrHead=await fetch(runtime.url+'/go/roman/links.json',{method:'HEAD'});
+    assert.equal(ptrHead.status,200);
+    assert.equal(await ptrHead.text(),'');
+    const ptrPost=await fetch(runtime.url+'/go/roman/links.json',{method:'POST'});
+    assert.equal(ptrPost.status,405);
     const entry = await fetch(runtime.url + '/go/roman?ref=private-value', { redirect:'manual' });
     assert.equal(entry.status,302);
     assert.equal(entry.headers.get('location'),'/campaigns/roman/');
