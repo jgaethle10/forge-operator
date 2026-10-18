@@ -873,10 +873,13 @@ export default function FallenSessions(){
           originality score, automatic composition edits or publishing clearance.</p>
         <div className="fsMusicInsightStats">
           <span>Parts {musicInsights.pitched_track_count}</span>
-          <span>Pitch classes {musicInsights.pitch_class_evidence.map(item=>item.pitch_class).join(' · ')||'none'}</span>
+          <span>Prominent MIDI pitch classes {musicInsights.prominent_pitch_classes.map(item=>item.pitch_class).join(' · ')||'none'}</span>
           <span>Register overlaps {musicInsights.register_proximity_examples}</span>
           <span>Between-note rests {musicInsights.track_profiles.reduce((sum,part)=>sum+part.rest_gap_count,0)}</span>
         </div>
+        <p className="fsMusicInsightCaution">Complete chromatic evidence (12 classes, note count / duration-weighted MIDI velocity;
+          zero means absent, not an inferred key): {musicInsights.pitch_class_evidence.map(item=>
+            item.pitch_class+': '+item.note_count+' / '+item.weight.toFixed(3)).join(' · ')}</p>
         {musicInsights.track_profiles.filter(part=>part.rest_gap_count>0).map(part=>(
           <p key={'rest-'+part.track_id} className="fsMusicInsightCaution">
             {part.track_id}: {part.rest_gap_count} measured gaps, longest {part.longest_rest_steps.toFixed(2)} steps.
