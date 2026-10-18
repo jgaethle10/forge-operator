@@ -117,5 +117,17 @@ test('Foundry does not arm a silent, clipped, DC-damaged or truncated recording 
  assert.match(fn,/signalQa\.blockers\.join/);
  assert.ok(fn.indexOf('await verifyFoundryWavBytes')<fn.indexOf('analyzeFoundryPianoWav'));
  assert.ok(fn.indexOf('analyzeFoundryPianoWav')<fn.indexOf('applyPulseGridTransaction'));
- assert.match(fn,/performer rights and musical quality still unverified/);
+ assert.match(fn,/musician review and performer rights still unverified/);
+});
+
+test('recorded piano root is checked against actual WAV waveform before any canonical transaction',()=>{
+ const source=ui();
+ const fn=source.slice(source.indexOf('async function armFoundryPianoFromTake'),source.indexOf('async function importFoundryWavFile'));
+ assert.match(fn,/checkFoundryPianoRootPitch\(sampleBytes,root\)/);
+ assert.match(fn,/pitchEvidence\.status!=='consistent'/);
+ assert.match(fn,/Piano root MIDI/);
+ assert.match(fn,/independent musician pitch review/);
+ assert.match(fn,/pitchEvidence\.cents_error/);
+ assert.ok(fn.indexOf('checkFoundryPianoRootPitch')<fn.indexOf('appendFoundryPianoSample'));
+ assert.ok(fn.indexOf('checkFoundryPianoRootPitch')<fn.indexOf('applyPulseGridTransaction'));
 });
