@@ -2,6 +2,8 @@
 import path from 'node:path';
 import { YardOperator } from '../yard/operator.mjs';
 import { SystemiaMissionPublisher } from './mission-publisher.mjs';
+import { resolveCrmSource } from '../crm/interaction-ledger-adapter.mjs';
+import { writeCrmHeartbeatArtifacts } from '../crm/heartbeat.mjs';
 
 function arg(name, fallback = null) {
   const i = process.argv.indexOf(name);
@@ -27,6 +29,21 @@ const publisher = new SystemiaMissionPublisher({
   configPath: path.resolve(configPath),
   allowedRoot: path.resolve(allowedRoot),
   ledgerPath: path.resolve(ledgerPath),
+  beforeSourceRead: ({ sourcePath, now }) => {
+    // The source path has already been bounded by the publisher's allowed root.
+    // Read the private ledger at this exact publish cycle and write only
+    // sanitized counts/evidence hashes to the declared mission snapshot.
+    const source = resolveCrmSource({
+      inputPath: process.env.EVERCRAFT_CRM_HEARTBEAT_INPUT || '',
+      ledgerStateDir: process.env.EVERCRAFT_INTERACTION_LEDGER_STATE_DIR || '',
+      now
+    });
+    writeCrmHeartbeatArtifacts({
+      ...source,
+      outDir: path.dirname(sourcePath),
+      now
+    });
+  },
 });
 
 if (!watch) {
