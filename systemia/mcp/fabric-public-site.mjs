@@ -1,4 +1,5 @@
 import { PUBLIC_PAYMENT_OFFERS } from './public-payment-offers.mjs';
+import { approvedPortfolioOfferCopy } from './portfolio-offer-copy.mjs';
 import crypto from 'node:crypto';
 function escapeHtml(value='') {
   return String(value)
@@ -278,11 +279,17 @@ const OFFER_PAGE_COPY={
 // Additional approved products use the same native offer and handoff surfaces.
 const extraOfferItems=Object.entries(PUBLIC_PAYMENT_OFFERS).map(([slug,offer])=>{
   const public_id='payment-offer-'+slug;
-  OFFER_PAGE_COPY[public_id]={slug,purchase_key:offer.offer_key,eyebrow:offer.title,
-    headline:offer.title,lede:offer.intent,promise:offer.intent,
-    send:['Your receipt and delivery email','The scope and supporting information requested during intake. Do not send passwords or secrets.'],
-    get:[offer.intent,'The bounded deliverable described in the approved offer; payment does not authorize production changes.'],
-    steps:[['1. Review the offer','Confirm the product and fixed price.'],['2. Open secure checkout','Evercraft Payments prepares your order.'],['3. Complete intake','Delivery follows verified payment and the required intake.']]};
+  const specific=approvedPortfolioOfferCopy(slug,offer);
+  OFFER_PAGE_COPY[public_id]={
+    slug,purchase_key:offer.offer_key,
+    eyebrow:specific?.eyebrow||offer.title,
+    headline:specific?.headline||offer.title,
+    lede:specific?.lede||offer.intent,
+    promise:specific?.promise||offer.intent,
+    send:specific?.send||['Your receipt and delivery email','The scope and supporting information requested during intake. Do not send passwords or secrets.'],
+    get:specific?.get||[offer.intent,'The bounded deliverable described in the approved offer; payment does not authorize production changes.'],
+    steps:specific?.steps||[['1. Review the offer','Confirm the product and fixed price.'],['2. Open secure checkout','Evercraft Payments prepares your order.'],['3. Complete intake','Delivery follows verified payment and the required intake.']],
+  };
   return {public_id,name:offer.title,commercial_state:'sell_now',pricing:'$'+offer.amount_cents/100+' one-time',
     entry_paid_offer:{name:offer.title,price:'$'+offer.amount_cents/100,price_usd_normalized:offer.amount_cents/100}};
 });
