@@ -85,3 +85,11 @@ Entrances provide useful evidence of intentional expansion: piano bass at 0.00 s
 
 For a future *Weight of Silence* successor, compare the **phrasing, silhouette of instrument entrances, foreground clarity, silence and low-end gravity** against this baseline, not just whole-file peak loudness. A MIDI count is a description, not an instruction to increase note density.
 
+
+## Incremental implementation: complete chromatic evidence and chord-safe motion
+
+The existing read-only `pulsegrid-music-insights.mjs` now emits all twelve chromatic pitch classes in C-to-B order with note counts and bounded duration×MIDI-velocity weights, plus a separately derived five-class ranking. This fixes the historic top-five representation/test disagreement without discarding softly represented notes or inventing a tonic. Empty and unused pitch classes remain explicit zeros. The actual Fallen Sessions Music Theory Lab shows both the compact and full views. Reference: [Open Music Theory, twelve-pitch-class cycle](https://openmusictheory.github.io/atonal.html). MIDI velocity is **not** a measured acoustic loudness value, and the chosen enharmonic names are display spellings, not inferred harmonic function.
+
+Horizontal interval analysis now groups notes starting at the exact same canonical step. Simultaneous chord tones are excluded from single-line leap and repeated-interval-motif inference, while still contributing to register and pitch-class evidence. New `stacked_onset_groups` and `melodic_interval_pairs` counts explain when a part is too polyphonic for trustworthy melody evidence. Closely spaced arpeggios and overlapping counterpoint still require individual voice assignment and human interpretation; this is deliberately a conservative analyzer, **not** an automatic counterpoint engine.
+
+Regression tests explicitly require D/F preservation when lower-ranked, all 12 classes including zeros, no fabricated key, true single-note melodic leaps, and no phantom melodic leaps from simultaneous chords. Dedicated CI and full Forge checks must be read separately after these changes. This is an engineering improvement, **not** evidence of newly recorded instrument samples, a superior musical performance, a finished Boardroom deliberation, or a released master.
