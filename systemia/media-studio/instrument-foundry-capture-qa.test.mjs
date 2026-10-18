@@ -145,3 +145,53 @@ test('pitch parser works on sliced RIFF source with nonzero ArrayBuffer offset',
  const r=checkFoundryPianoRootPitch(whole.subarray(13,whole.length-7),60);
  assert.equal(r.status,'consistent',JSON.stringify(r));
 });
+
+function harmonicCapture({
+  midi=60,duration=1.2,partials=[1,.44,.2,.12],inharmonicity=.00006,noise=.012
+}={}){
+ const rate=48000,frames=Math.round(rate*duration);
+ const output=Buffer.alloc(44+frames*2);
+ output.write('RIFF',0);output.writeUInt32LE(output.length-8,4);
+ output.write('WAVE',8);output.write('fmt ',12);output.writeUInt32LE(16,16);
+ output.writeUInt16LE(1,20);output.writeUInt16LE(1,22);
+ output.writeUInt32LE(rate,24);output.writeUInt32LE(rate*2,28);
+ output.writeUInt16LE(2,32);output.writeUInt16LE(16,34);
+ output.write('data',36);output.writeUInt32LE(frames*2,40);
+ const base=440*Math.pow(2,(midi-69)/12);
+ for(let i=0;i<frames;i++){
+  const t=i/rate,decay=Math.exp(-t*8);
+  let y=0;
+  for(let h=1;h<=partials.length;h++){
+   const freq=base*h*Math.sqrt(1+inharmonicity*h*h);
+   y+=partials[h-1]*Math.sin(2*Math.PI*freq*t);
+  }
+  // Deterministic noise transient, distinctly different from a pure oscillator.
+  const x=(Math.sin((i+1)*119.33)*43758.5453)%1;
+  y=(y*.15*decay+noise*(x-Math.trunc(x))*.5*Math.exp(-t*78));
+  output.writeInt16LE(Math.round(Math.max(-1,Math.min(1,y))*32767),44+2*i);
+ }
+ return output;
+}
+test('rich, slightly inharmonic concert-piano-style C4 is judged consistent without claiming acoustic realism',()=>{
+ const r=checkFoundryPianoRootPitch(harmonicCapture({midi:60}),60);
+ assert.equal(r.status,'consistent',JSON.stringify(r));
+ assert.equal(r.human_pitch_confirmed,false);
+});
+test('rich low A1 and high C8 synthetic harmonics exercise extreme register coverage',()=>{
+ const a=checkFoundryPianoRootPitch(harmonicCapture({midi:33,duration:1.5}),33);
+ const b=checkFoundryPianoRootPitch(harmonicCapture({midi:108,noise:.004}),108);
+ assert.equal(a.status,'consistent',JSON.stringify(a));
+ assert.equal(b.status,'consistent',JSON.stringify(b));
+});
+test('pure octave overtone cannot impersonate middle C and be admitted to the piano bank',()=>{
+ const r=checkFoundryPianoRootPitch(wav({frequency:523.25113}),60);
+ assert.notEqual(r.status,'consistent',JSON.stringify(r));
+});
+test('even-harmonic-only content must not masquerade as the octave below',()=>{
+ const r=checkFoundryPianoRootPitch(harmonicCapture({midi:60,partials:[0,1,0,.5],inharmonicity:0,noise:0}),60);
+ assert.notEqual(r.status,'consistent',JSON.stringify(r));
+});
+test('valid weak fundamental with strong second and third harmonics remains a candidate',()=>{
+ const r=checkFoundryPianoRootPitch(harmonicCapture({midi:60,partials:[.08,1,.45,.08],inharmonicity:0,noise:0}),60);
+ assert.equal(r.status,'consistent',JSON.stringify(r));
+});
