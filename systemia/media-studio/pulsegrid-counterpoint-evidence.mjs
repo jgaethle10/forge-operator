@@ -27,6 +27,13 @@ function onsetsFor(track,scene){
     if(last&&last.start===n.start)last.notes.push(n);
     else points.push({start:n.start,notes:[n]});
   }
+  let activeUntil=-Infinity;
+  for(const point of points){
+    // Another note in the same track still sounding at this onset means we
+    // cannot claim this is a uniquely assigned monophonic voice.
+    point.overlap_at_onset=activeUntil>point.start+EPS;
+    for(const note of point.notes)activeUntil=Math.max(activeUntil,note.end);
+  }
   return points;
 }
 function coOnsets(a,b){
@@ -36,8 +43,10 @@ function coOnsets(a,b){
     const dt=a[i].start-b[j].start;
     if(Math.abs(dt)<=EPS){
       // Multiple pitches at an onset (chords) cannot be treated as a single voice.
-      if(a[i].notes.length===1&&b[j].notes.length===1){
-        pairs.push({start:a[i].start,a:a[i].notes[0].pitch,b:b[j].notes[0].pitch});
+      if(a[i].notes.length===1&&b[j].notes.length===1&&
+         !a[i].overlap_at_onset&&!b[j].overlap_at_onset){
+        pairs.push({start:a[i].start,a:a[i].notes[0].pitch,b:b[j].notes[0].pitch,
+          index_a:i,index_b:j});
       }
       i++;j++;
     }else if(dt<0)i++;else j++;
@@ -63,6 +72,9 @@ export function analyzePulseGridCounterpoint(session,scene){
     sharedOnsets+=together.length;
     for(let k=1;k<together.length;k++){
       const previous=together[k-1],current=together[k];
+      // Shared onsets separated by an intervening independent onset do not
+      // establish two aligned successive voice-leading events.
+      if(current.index_a!==previous.index_a+1||current.index_b!==previous.index_b+1)continue;
       const moveA=current.a-previous.a,moveB=current.b-previous.b;
       if(!moveA&&!moveB)continue;
       const movingSame=(moveA>0&&moveB>0)||(moveA<0&&moveB<0);
