@@ -7,6 +7,7 @@ This is an owned, **loopback-only, bearer-authenticated** replacement *candidate
 - Stateless Streamable HTTP MCP: `POST /mcp` supports `initialize`, `tools/list`, `tools/call`, `ping`, and `notifications/initialized`.
 - Explicit tools: `get_web_capabilities` and `fetch_url`.
 - Single-page read-only public HTTP(S) GET, bounded to 256 KiB response and 24,000 characters extracted text. HTTPS uses original-hostname certificate verification plus DNS-pinned connection to a validated public IPv4 address; every redirect is revalidated. Private targets, userinfo, nonstandard ports, HTTPS downgrades, binary types, compressed encodings, unlimited redirects and browser `Origin` calls are denied.
+- Bounded local service traffic: at most two simultaneous authenticated MCP requests and 60 requests/minute by default (operator-configurable within hard limits). Over-budget calls return HTTP 429 with no tool execution.
 - Text/HTML evidence: source URL with query removed, UTC retrieval time, HTTP status, content SHA-256 and distinct receipt SHA-256. No credentials, cookies, browser execution, JavaScript, Search, autonomous browsing, paying, messaging, or third-party private endpoints.
 - This first release holds IPv6 outbound connections until shared policy and IPv4-mapped / NAT64 safety have independent proofs.
 
