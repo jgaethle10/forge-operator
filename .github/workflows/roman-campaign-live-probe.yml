@@ -7,6 +7,9 @@ on:
       - '.github/workflows/roman-campaign-live-probe.yml'
       - 'public/campaigns/roman/**'
   workflow_dispatch:
+  schedule:
+    # Quiet, read-only resilience checks four times daily during the 2026 election period.
+    - cron: '17 0,6,12,18 * * *'
 
 permissions:
   contents: read
@@ -67,6 +70,43 @@ jobs:
             done
           } | tee artifacts/roman-live-probe.txt
           cat artifacts/roman-live-probe.txt >> "$GITHUB_STEP_SUMMARY"
+      - name: Check critical campaign continuity without touching accounts
+        shell: bash
+        run: |
+          set -euo pipefail
+          # No scheduled continuity network calls after election day.
+          local_day="$(TZ=America/Los_Angeles date +%Y-%m-%d)"
+          if [ "$GITHUB_EVENT_NAME" = "schedule" ] && [[ "$local_day" > "2026-11-03" ]]; then
+            echo "Campaign continuity watch expired after election day." >> "$GITHUB_STEP_SUMMARY"
+            exit 0
+          fi
+
+          backup="https://headless-jhpvqnpgxlh-sociallyguud-140c.wix-site-host.com/"
+          donations="https://donate.voteroman.com/"
+          check_url() {
+            local url="$1"
+            local marker="$2"
+            local label="$3"
+            local file
+            file="$(mktemp)"
+            local code
+            if ! code="$(curl --location --silent --show-error --retry 2 --retry-delay 2 --max-time 20 --output "$file" --write-out '%{http_code}' "$url")"; then
+              rm -f "$file"
+              echo "FAIL $label: HTTP request failed." >> "$GITHUB_STEP_SUMMARY"
+              return 1
+            fi
+            if [ "$code" != "200" ] || ! grep -q "$marker" "$file"; then
+              rm -f "$file"
+              echo "FAIL $label: HTTP $code or expected page marker absent." >> "$GITHUB_STEP_SUMMARY"
+              return 1
+            fi
+            rm -f "$file"
+            echo "PASS $label: HTTP 200 and expected public page marker." >> "$GITHUB_STEP_SUMMARY"
+          }
+          check_url "$backup" 'Roman Kilinkaridis' 'Independent emergency campaign mirror'
+          check_url "$donations" 'Roman Kilinkaridis' 'Existing campaign donation webpage'
+          echo "This checks page availability only. No donation transaction or checkout completion was attempted." >> "$GITHUB_STEP_SUMMARY"
+
       - uses: actions/upload-artifact@v4
         if: always()
         with:
