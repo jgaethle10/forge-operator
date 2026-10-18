@@ -10,7 +10,7 @@ import { PUBLIC_PAYMENT_OFFERS } from '../systemia/mcp/public-payment-offers.mjs
 const read = p => JSON.parse(fs.readFileSync(new URL('../' + p, import.meta.url), 'utf8'));
 const source = () => ({
   buyer: read('public/.well-known/evercraft-payments-buyer-doors.json'),
-  crosswalk: read('public/.well-known/evercraft-fabric-human-buyer-handoffs.json'),
+  crosswalk: read('systemia/commerce/portfolio-human-buyer-handoffs-next.json'),
   catalog: read('public/chum/capabilities.json'),
 });
 
