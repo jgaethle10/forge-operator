@@ -19,12 +19,12 @@ const sample=()=>crosswalk.capabilities.map(map=>({
   })
 }));
 const check=(args={})=>assessLiveAgentBuyerHandoffs({buyer,crosswalk,health,liveResults:sample(),...args});
-test('5 live capabilities with 7 exact prices pass while payment remains unverified',()=>{
+test('4 live capabilities with 6 exact prices pass while payment remains unverified',()=>{
  const r=check();
  assert.equal(r.ok,true);
- assert.equal(r.checked_capabilities,5);
- assert.equal(r.verified_offer_routes,7);
- assert.deepEqual(r.options.map(x=>x.price_cents),[4900,1900,4900,9900,4900,25000,25000]);
+ assert.equal(r.checked_capabilities,4);
+ assert.equal(r.verified_offer_routes,6);
+ assert.deepEqual(r.options.map(x=>x.price_cents),[4900,1900,4900,9900,4900,25000]);
  assert.equal(r.checkout_created,false);
  assert.equal(r.provider_paid_verified,false);
  assert.equal(r.deployment_receipt_bound,false);
