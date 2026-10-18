@@ -1,6 +1,7 @@
 #!/usr/bin/env node
 import { buyerOrderKey, verifyNativePaymentReturn } from './payment-return.mjs';
 import { publicPaymentOffer } from './public-payment-offers.mjs';
+import { ownedPaymentTransportConfig } from './owned-payment-transport.mjs';
 import http from 'node:http';
 import crypto from 'node:crypto';
 import fs from 'node:fs';
@@ -401,7 +402,8 @@ export async function startFabricLocalRuntime({
   sabanCapacityHealthFile='',
   releaseRefFile='',
   purchaseIntentFetch=fetch,
-  purchaseIntentUrl='https://base44.app/api/apps/6a7adc9666bfd8c5c2fb4069/functions/ravenNexusPurchaseIntent',
+  purchaseIntentUrl=process.env.EVERCRAFT_PURCHASE_INTENT_OWNED_URL||'',
+  paymentOpsUrl=process.env.EVERCRAFT_PAYMENT_OPS_OWNED_URL||'',
 }={}) {
   const instanceId='fabric_local_'+crypto.randomBytes(10).toString('hex');
   const resolvedReleaseRefFile=String(
@@ -438,18 +440,11 @@ export async function startFabricLocalRuntime({
   if(typeof purchaseIntentFetch!=='function'){
     throw new Error('purchase_intent_fetch_invalid');
   }
-  const purchaseIntentEndpoint=new URL(String(purchaseIntentUrl||''));
-  if(purchaseIntentEndpoint.protocol!=='https:'){
-    throw new Error('purchase_intent_url_requires_https');
-  }
-  // Public MCP discovery is independent of Base44, but commerce transport
-  // is not. Report each boundary separately until independent owned
-  // payment-intent AND direct offer/return services are proven.
-  const directPaymentOpsEndpoint=new URL('https://findmypart.base44.app/functions/evercraftPaymentsOps');
-  const isLegacyCheckoutHost=(url)=>url.hostname==='base44.app'||url.hostname.endsWith('.base44.app');
-  const purchaseIntentUsesLegacy=isLegacyCheckoutHost(purchaseIntentEndpoint);
-  const directPaymentUsesLegacy=isLegacyCheckoutHost(directPaymentOpsEndpoint);
-  const checkoutLegacyDependency=purchaseIntentUsesLegacy||directPaymentUsesLegacy;
+  const commerceTransport=ownedPaymentTransportConfig({purchaseIntentUrl,paymentOpsUrl});
+  const purchaseIntentEndpoint=commerceTransport.purchaseIntentEndpoint;
+  const directPaymentOpsEndpoint=commerceTransport.paymentOpsEndpoint;
+  // No Base44 fallback. Missing owned endpoints leave paid actions on hold.
+  const checkoutLegacyDependency=false;
   const staticPrepared=Array.isArray(catalog)?nativeOnlyCatalog(catalog):null;
   const preparedCatalog=()=>staticPrepared||nativeOnlyCatalog(loadFabricCatalogFromRepository());
   const token=validateOpenAiChallengeToken(challengeToken);
@@ -632,12 +627,14 @@ export async function startFabricLocalRuntime({
     // This legacy field covers read-only MCP connections only, not payment.
     base44_transport_enabled:false,
     checkout_transport_contract:'Evercraft Payments / Raven Nexus',
-    checkout_purchase_intent_legacy_dependency:purchaseIntentUsesLegacy,
-    checkout_direct_offer_legacy_dependency:directPaymentUsesLegacy,
-    checkout_legacy_dependency:checkoutLegacyDependency,
-    checkout_operational_state:checkoutLegacyDependency
-      ? 'legacy_provider_transport_unverified'
-      : 'owned_transport_requires_independent_checkout_canary',
+    checkout_purchase_intent_legacy_dependency:false,
+    checkout_direct_offer_legacy_dependency:false,
+    checkout_legacy_dependency:false,
+    checkout_purchase_intent_configured:commerceTransport.purchase_intent_configured,
+    checkout_direct_offer_ops_configured:commerceTransport.direct_offer_ops_configured,
+    checkout_operational_state:commerceTransport.fully_configured
+      ? 'owned_transport_requires_independent_checkout_canary'
+      : 'held_owned_payment_endpoint_unconfigured',
     checkout_provider_paid_verified:false,
     checkout_fulfillment_verified:false,
     removed_legacy_base44_connections:prepared.removed_legacy_base44_connections,
@@ -985,6 +982,11 @@ export async function startFabricLocalRuntime({
         const controller=new AbortController();
         const timer=setTimeout(()=>controller.abort(),15000);
         let upstream;
+        // A working public offer page never authorizes a provider fallback.
+        if(!purchaseIntentEndpoint||!directPaymentOpsEndpoint){
+          if(isForm) return sendText(res,503,renderPaymentHoldPage({slug}),{contentType:'text/html; charset=utf-8'});
+          return sendJson(res,503,{ok:false,error:'owned_evercraft_payments_unavailable',authority:'Evercraft Payments',checkout_ready:false,fulfillment_release:false});
+        }
         try{
           if(slug==='website-audit'){
             // Confirm the downstream runtime can retain the target before purchase.
@@ -1011,8 +1013,8 @@ export async function startFabricLocalRuntime({
             body:JSON.stringify(directOffer?{
               action:'create_checkout',offer_key:directOffer.offer_key,
               order_key:buyerOrderKey(slug,idempotencyKey),customer_email:customerRef,
-              source_ref:'fabric-native-offer|'+slug,return_origin:'https://findmypart.base44.app',
-              success_path:'/functions/evercraftBuy?payment=processing',cancel_path:'/functions/evercraftBuy?offer='+slug+'&payment=cancelled',
+              source_ref:'fabric-native-offer|'+slug,return_origin:'https://fabric.systemiacommandcenters.com',
+              success_path:'/offers/'+slug+'?payment=processing',cancel_path:'/offers/'+slug+'?payment=cancelled',
             }:{
               user_confirmed:true,
               capability_key:capabilityKey,
@@ -1136,7 +1138,7 @@ export async function startFabricLocalRuntime({
           const offer=offerCapabilityForSlug(slug,preparedCatalog().capabilities);
           if(!offer) return sendJson(res,404,{error:'offer_not_found'});
           if(parsed.searchParams.get('payment')==='processing'){
-            const result=await verifyNativePaymentReturn(slug,parsed.searchParams,purchaseIntentFetch);
+            const result=await verifyNativePaymentReturn(slug,parsed.searchParams,purchaseIntentFetch,directPaymentOpsEndpoint);
             const message=result.state==='paid'?'Payment verified. '+(result.queued?'Your work is queued.':'Delivery status is awaiting confirmation.'):
               result.state==='synthetic'?'QA payment verified. No fulfillment was released.':
               result.state==='invalid'?'Checkout return cannot be verified. Do not pay twice. Contact Evercraft using your checkout email.':
