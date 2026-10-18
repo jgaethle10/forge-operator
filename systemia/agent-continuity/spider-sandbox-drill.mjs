@@ -65,8 +65,8 @@ export function spiderSandboxAttempt(root,{kind,id}){
  if(kind==='callback')state.callbacks.push(entry);
  if(kind==='successor')state.successors.push({...entry,state:'denied'});
  if(kind==='cross_tenant_read')return {kind,id,decision:'DENIED_TENANT_SCOPE',effect_executed:false};
- if(kind==='successor')return {kind,id,decision:'DENIED_SPAWN_GRANT',effect_executed:false};
  writeState(root,state);
+ if(kind==='successor')return {kind,id,decision:'DENIED_SPAWN_GRANT',effect_executed:false};
  return {kind,id,decision:entry.state==='denied'?'DENIED_QUARANTINED':'HELD_AS_SYNTHETIC_PENDING',effect_executed:false};
 }
 export function quarantineSpiderSandbox(root){
