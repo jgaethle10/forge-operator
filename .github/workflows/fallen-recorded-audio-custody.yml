@@ -1,0 +1,34 @@
+name: Fallen Recorded Audio Custody
+on:
+  pull_request:
+    paths:
+      - 'systemia/media-studio/recorded-audio-custody.*'
+      - 'systemia/media-studio/recorded-audio-browser-custody.*'
+      - 'systemia/media-studio/pulsegrid-asset-vault.ts'
+      - 'systemia/media-studio/pulsegrid-asset-vault.test.ts'
+      - 'systemia/media-studio/pulsegrid-browser.ts'
+      - '.github/workflows/fallen-recorded-audio-custody.yml'
+permissions:
+  contents: read
+concurrency:
+  group: fallen-recorded-audio-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+jobs:
+  custody-contracts:
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Offline reviewer signature and media integrity contracts
+        run: node --experimental-strip-types --test systemia/media-studio/recorded-audio-custody.test.ts
+      - name: Browser Ed25519 / actual Blob byte safety
+        run: node --test systemia/media-studio/recorded-audio-browser-custody.test.mjs
+      - name: Existing PulseGrid vault regression and exposed reviewed-import API
+        run: |
+          npm ci --ignore-scripts --no-audit --no-fund
+          node --import tsx --test systemia/media-studio/pulsegrid-asset-vault.test.ts
+      - name: Repository TypeScript compatibility
+        run: npm run lint
