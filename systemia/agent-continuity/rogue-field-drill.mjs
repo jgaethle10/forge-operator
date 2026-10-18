@@ -4,7 +4,7 @@
 // No production service, owner identity, hardware, external tool or network
 // intervention is authorized or called by this drill.
 import assert from 'node:assert/strict';
-import {fork} from 'node:child_process';
+import {fork,spawnSync} from 'node:child_process';
 import {generateKeyPairSync,sign} from 'node:crypto';
 import {mkdtempSync,mkdirSync,rmSync} from 'node:fs';
 import {join} from 'node:path';
@@ -79,7 +79,7 @@ async function executeOneRogue({journal_root,spider_root,trust,privateKey}){
   const pid=child.pid;
   writeEvidence('worker_start','rogue-process-start','worker','observed_active');
   let ready=false,lateDecision='',quarantine=null;
-  timeout=setTimeout(()=>finish(new Error('ROGUE_FIELD_DRILL_HELD: child timeout')),12000);
+  timeout=setTimeout(()=>{child?.kill('SIGKILL');finish(new Error('ROGUE_FIELD_DRILL_HELD: child timeout'))},12000);
   child.once('error',err=>finish(err));
   child.on('message',msg=>{
    try{
@@ -119,6 +119,15 @@ async function executeOneRogue({journal_root,spider_root,trust,privateKey}){
   child.send({type:'START'});
  });
  const restart=spiderSandboxRestartProbe(spider_root);
+ const verifier=fileURLToPath(new URL('./spider-sandbox-restart-child.mjs',import.meta.url));
+ const out=spawnSync(process.execPath,[verifier,spider_root],{cwd:spider_root,
+  env:{PATH:process.env.PATH||'',HOME:spider_root,TMPDIR:spider_root},
+  encoding:'utf8',timeout:5000,maxBuffer:65536});
+ invariant(out.status===0&&!out.error,'separate Spider process readback failed: '+String(out.stderr||out.error).slice(0,180));
+ const detachedRestart=JSON.parse(out.stdout);
+ invariant(detachedRestart.separate_process===true&&detachedRestart.runnable_retries===0&&
+  detachedRestart.denied_successors>=1&&detachedRestart.production_spider_process_restart_verified===false,
+  'detached Spider restart receipt invalid');
  const state=readSpiderSandbox(spider_root);
  const projections=localIncidentProjections({journal_root,tenant_id:TENANT,mission_id:MISSION,incident_id:INCIDENT,trust});
  invariant(events.length>=8&&projections.black_box.timeline.length===events.length,'Black Box event custody mismatch');
@@ -134,7 +143,7 @@ async function executeOneRogue({journal_root,spider_root,trust,privateKey}){
   blackbox:{real_local_signed_journal:true,events:events.length,
    signed_event_hashes:events.map(({sha256})=>sha256),verified_external_effects:0,
    blackbox_production_service_invoked:false},
-  spider_sandbox:{...restart,queue_entries:state.queue.length,callbacks:state.callbacks.length,
+  spider_sandbox:{...restart,out_of_process_restart:detachedRestart,queue_entries:state.queue.length,callbacks:state.callbacks.length,
    successor_entries:state.successors.length,lease_entries:state.leases.length},
   chum_live_service_invoked:false,network_real_device_invoked:false,
   independent_passport_identity_verified:false,systemia_canonical_admission_verified:false
