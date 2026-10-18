@@ -20,8 +20,25 @@ This is a **source-only candidate**, tracked by [Systemia intake issue #1389](ht
 4. Evercraft Clip first-party media intake and authorized publisher; not wired yet.
 5. Source-tagged first-party analytics plus payment and Shipping receipt reconciliation; not wired yet.
 
+## Graphics Command integration and storyboard previews
+
+`planInfluenceGraphics({brief,referenceCampaign})` compiles designer/human/proof treatments into three distinct native Graphics Command campaign and council plans without modifying the protected production renderer. This enables code-level review of creative direction and source lineage. The existing commercial SVG renderer is specifically a conversion-leak treatment; it is **not** compatible with presenting these three directions as differentiated finished assets.
+
+`renderInfluenceConceptCollection(slate)` creates twelve distinctly laid-out, watermark-labeled **concept-only** SVG previews (three treatments times four formats). All are illustration, not evidence of a customer, deployment, audited website, product interface, partner collaboration or paid result.
+
+To generate a **local, unpublished** reviewer gallery:
+
+```bash
+node systemia/influence-lab/render-concepts.mjs \
+  --brief /path/to/influence-lab-brief.json \
+  --reference systemia/graphics-command/campaigns/website-audit-attention.json \
+  --out /path/to/new-preview-directory
+```
+
+The output must not be a pre-existing directory. It contains twelve SVGs, `index.html`, and `manifest.json`, with media/payment verification fields false and publication authority false. Do not attach actual customer screenshots until lawful usage rights and factual source receipts are recorded. Do not distribute concept previews as finished production artwork.
+
 ## Test
 
-`node --test systemia/influence-lab/influence-lab.test.mjs`
+`node --test systemia/influence-lab/*.test.mjs systemia/graphics-command/commercial-renderer.test.mjs`
 
 Tests are local schema/policy checks only. They are not independent provider, deployment or payment tests.
