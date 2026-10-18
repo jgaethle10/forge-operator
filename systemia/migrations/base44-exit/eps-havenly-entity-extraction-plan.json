@@ -81,7 +81,7 @@
   "cutover_authorized": false,
   "source_readback": {
     "observed_at": "2026-10-17",
-    "method": "Read-only Base44 entity query, projected id only, limit 500 per entity",
+    "method": "Authenticated read-only Base44 entity query projecting ID only; count per class, limit 500, no PII fields pulled.",
     "sensitive_rows_persisted": false,
     "count_type": "records returned in one page (not an independently reconciled inventory)",
     "counts": {
@@ -97,7 +97,20 @@
       "other schemas have not been counted",
       "new writes may occur while legacy remains active",
       "zero in one collection does not prove absence of jobs elsewhere",
-      "no target import or parity receipt"
-    ]
+      "no target import or parity receipt",
+      "102 legacy PaymentOrder IDs is not 102 paid transactions or proof of revenue.",
+      "ID-only counts do not constitute encrypted export, data import or exact record reconciliation."
+    ],
+    "rechecked_at": "2026-10-17",
+    "payment_ledger_probe": {
+      "product": "Evercraft Payments (legacy FindMyPart store)",
+      "entity": "EvercraftPaymentOrder",
+      "id_only_records_returned": 102,
+      "method": "ID-only read, one 500-row page",
+      "payable_or_settled_count": "unknown",
+      "synthetic_vs_real": "not_classified",
+      "source_to_owned_export": "not_performed",
+      "customer_records_committed": false
+    }
   }
 }

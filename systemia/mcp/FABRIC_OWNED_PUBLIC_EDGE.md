@@ -198,3 +198,39 @@ The two local references are:
 ```
 
 The resident updater means an already-installed Chromebook edge can adopt this trust upgrade on its normal update cycle without a reinstall.
+
+## Base44-free payment migration contract (review candidate, not deployed)
+
+The source-only migration PR removes the active legacy purchase-intent,
+direct-payment-operations, and payment-return URLs from Fabric. No old
+payment backend is a fallback. The only accepted configurations are explicit
+first-party HTTPS services whose hosts are approved by
+`systemia/mcp/owned-payment-transport.mjs`.
+
+Two environment settings are consumed by the Fabric service:
+
+```text
+EVERCRAFT_PURCHASE_INTENT_OWNED_URL=
+EVERCRAFT_PAYMENT_OPS_OWNED_URL=
+```
+
+Leaving either unset safely holds paid checkout with HTTP 503 and the
+customer-facing no-charge page. These URLs must **not** be populated with a
+fake route simply to turn a health flag green. The owned service must exist
+and preserve Evercraft Payments as canonical order authority, Raven Nexus as
+provider-routing authority, processor-verified payment evidence, durable
+idempotent orders, scoped fulfillment and return/refund safety.
+
+Release only with secret custody outside GitHub; service-to-service
+authentication; signed provider webhook handling; audited data/finance
+migration; replay tests; full independent no-charge and authorized
+paid/fulfilled canary; signed Yard deployment and rollback receipts.
+The presence of both configuration keys alone is NOT a purchase-success
+claim, and no Stripe secret/account is provisioned by this source change.
+
+For locally owned public business fallback routes the same Fabric server
+has exact read-only `/eps/`, `/havenly/`, `/sunshine-spotless/`,
+and `/apps/eps-estimator/` paths as source candidates. These are not
+customer-data imports, automated booking, payments, or a completed DNS
+migration. They must pass real external HTTPS and source-release tests
+before public DNS routes may be switched.

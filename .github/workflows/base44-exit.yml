@@ -130,6 +130,10 @@ jobs:
         run: node --test systemia/migrations/base44-exit/people-layer-domain-adapter.proof.mjs
       - name: Enforce zero Base44 active hot paths
         run: node scripts/validate-no-base44-hotpath.mjs
+      - name: Prove owned-only payment and offer return fail-closed migration
+        run: node --test tests/fabric-checkout-transport-truth.test.mjs tests/public-payment-offers.test.mjs tests/payment-return.test.mjs tests/fabric-offer-pages.test.mjs
+      - name: Prove first-party service fallback frontages without legacy backends
+        run: node --test tests/fabric-owned-service-frontages.test.mjs
       - name: Prove owned-only CHUM IndexNow routing
         run: node --test systemia/chum/indexnow-owned-routing.test.mjs
       - name: Prove owned canary cutover boundaries

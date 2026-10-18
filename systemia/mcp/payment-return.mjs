@@ -1,3 +1,4 @@
+import {parseOwnedPaymentUrl} from './owned-payment-transport.mjs';
 import crypto from 'node:crypto';
 export function buyerOrderKey(slug,idempotencyKey){
   const h=crypto.createHash('sha256').update(JSON.stringify([slug,idempotencyKey])).digest('hex').slice(0,32);
@@ -11,13 +12,16 @@ const NATIVE_OFFERS={
  'part-quick':'findmypart.quick_hunt_19.v1',
  'site-survive':'evercraft_network.site_survive_rapid_audit_250.v1'
 };
-export async function verifyNativePaymentReturn(slug,params,paymentFetch=fetch){
+export async function verifyNativePaymentReturn(slug,params,paymentFetch=fetch,ownedOpsUrl=process.env.EVERCRAFT_PAYMENT_OPS_OWNED_URL||''){
  const offerKey=NATIVE_OFFERS[slug];
  const orderKey=params.get('evercraft_order_key')||'';
  const session=params.get('stripe_session_id')||'';
  if(!offerKey||params.get('offer_key')!==offerKey||!/^cs_(?:live|test)_[A-Za-z0-9]+$/.test(session)||!/^[A-Za-z0-9_-]{8,260}$/.test(orderKey))return {state:'invalid',status:400};
+ let endpoint;
+ try{endpoint=parseOwnedPaymentUrl(ownedOpsUrl)}catch{return {state:'pending',status:503}}
+ if(!endpoint)return {state:'pending',status:503};
  try{
-  const response=await paymentFetch('https://findmypart.base44.app/functions/evercraftPaymentsOps',{
+  const response=await paymentFetch(endpoint,{
    method:'POST',headers:{'content-type':'application/json','accept':'application/json','user-agent':'Evercraft-Fabric-Payment-Return/1.0'},
    body:JSON.stringify({action:'verify_checkout',offer_key:offerKey,order_key:orderKey,provider_session_id:session}),signal:AbortSignal.timeout(18000)
   });
