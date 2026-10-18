@@ -6,7 +6,7 @@
  */
 import http from 'node:http';
 import https from 'node:https';
-import { createHash, timingSafeEqual } from 'node:crypto';
+import { createHash, timingSafeEqual, randomBytes } from 'node:crypto';
 import { pathToFileURL } from 'node:url';
 import {
   normalizePublicHttpUrl,
@@ -293,6 +293,8 @@ export async function startOwnedWebFetchMcp({
 } = {}) {
   if (host !== '127.0.0.1' && host !== '::1') throw new Error('loopback_only_candidate');
   if (!token || String(token).length < 24) throw new Error('private_access_token_required');
+  const instanceId = 'evercraft_web_fetch_' + randomBytes(9).toString('hex');
+  let deploymentReceipt = null;
   const concurrencyLimit = Math.max(1, Math.min(8, Math.trunc(maxConcurrent) || 2));
   const rateLimit = Math.max(1, Math.min(600, Math.trunc(maxRequestsPerMinute) || 60));
   let active = 0;
@@ -342,8 +344,36 @@ export async function startOwnedWebFetchMcp({
   });
   const addr = server.address();
   if (!addr || typeof addr === 'string') throw new Error('bind_failed');
-  return { url: 'http://' + (host === '::1' ? '[::1]' : host) + ':' + addr.port,
-    close: () => new Promise((resolve) => server.close(resolve)) };
+  const url = 'http://' + (host === '::1' ? '[::1]' : host) + ':' + addr.port;
+  let closed = false;
+  return {
+    url,
+    instanceId,
+    health: () => ({
+      ok: !closed,
+      service: 'evercraft-web-owned-fetch-candidate',
+      runtime: 'Evercraft Compute',
+      instance_id: instanceId,
+      mode: 'authenticated_read_only',
+      loopback_only: true,
+      public_route_approved: false,
+      registry_repoint_authorized: false,
+      payment_authority: false,
+      deployment_receipt_bound: Boolean(deploymentReceipt),
+      deployment_receipt_ref: deploymentReceipt,
+    }),
+    setDeploymentReceipt: (value) => {
+      const ref = String(value || '');
+      if (!/^[a-f0-9]{64}$/i.test(ref)) throw new Error('invalid_deployment_receipt_ref');
+      deploymentReceipt = ref;
+      return {ok: true, deployment_receipt_bound: true, receipt_hash: ref};
+    },
+    async close() {
+      if (closed) return;
+      closed = true;
+      await new Promise((resolve) => server.close(resolve));
+    },
+  };
 }
 
 if (process.argv[1] && import.meta.url === pathToFileURL(process.argv[1]).href) {
