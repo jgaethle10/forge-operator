@@ -1,0 +1,31 @@
+name: Fallen emotional edit grammar
+on:
+  pull_request:
+    paths:
+      - 'systemia/graphics-command/emotional-edit-map.mjs'
+      - 'systemia/graphics-command/emotional-edit-map.test.mjs'
+      - 'systemia/graphics-command/build-commercial.mjs'
+      - 'systemia/graphics-command/commercial-director.mjs'
+      - 'systemia/graphics-command/campaigns/**'
+      - '.github/workflows/fallen-emotional-edit-map.yml'
+  push:
+    branches: [main]
+    paths:
+      - 'systemia/graphics-command/emotional-edit-map.mjs'
+      - 'systemia/graphics-command/emotional-edit-map.test.mjs'
+      - 'systemia/graphics-command/build-commercial.mjs'
+      - 'systemia/graphics-command/commercial-director.mjs'
+      - 'systemia/graphics-command/campaigns/**'
+      - '.github/workflows/fallen-emotional-edit-map.yml'
+jobs:
+  preproduction-contract:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Verify emotional beat map and existing commercial renderer
+        run: node --test systemia/graphics-command/emotional-edit-map.test.mjs systemia/graphics-command/commercial-renderer.test.mjs
