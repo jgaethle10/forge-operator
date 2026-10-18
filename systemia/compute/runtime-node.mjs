@@ -25,6 +25,7 @@ import { extractPublicForensicSnapshot } from '../migrations/base44-exit/forensi
 import { importPublicForensicSnapshot } from '../migrations/base44-exit/forensic-record-public-snapshot-importer.mjs';
 import { startSpecialistHandoffRuntime } from '../mcp/specialist-handoff-runtime.mjs';
 import { startFabricLocalRuntime } from '../mcp/fabric-local-runtime.mjs';
+import { startOwnedWebFetchMcp } from '../evercraft-web/owned-fetch-mcp/server.mjs';
 import { startPublicEdgeRuntime } from '../network/public-edge-runtime.mjs';
 import { startFederatedServiceBridge } from '../network/federated-service-bridge.mjs';
 import { startEvercraftHomeServer } from '../evercraft-home/server.mjs';
@@ -924,6 +925,7 @@ export async function startEvercraftComputeNode({
     'systemia.rivet-report-runtime.v1',
     'systemia.specialist-handoff-mcp.v1',
     'systemia.fabric-local-mcp.v1',
+    'systemia.evercraft-web-fetch-mcp.v1',
     'systemia.public-edge.v1',
     'systemia.evercraft-edge-dns.v1',
     'systemia.federated-service-bridge.v1',
@@ -2372,6 +2374,63 @@ export async function startEvercraftComputeNode({
             workload_class: body.workload_class,
             result_schema: result.schema,
             instance_id: runtime.instanceId,
+          });
+          return send(res, 200, {
+            ok: true,
+            node_id: nodeId,
+            workload_class: body.workload_class,
+            result,
+            receipt,
+          });
+        }
+
+        if (workloadClass === 'systemia.evercraft-web-fetch-mcp.v1') {
+          // A lease-authorized private resident. Raw bearer material stays
+          // in this process and is never returned in the job/health receipt.
+          // No public edge bridge is enabled until a separately admitted
+          // authorization and caller identity policy has passed review.
+          if (!deviceIdentity) {
+            return send(res, 422, { error: 'evercraft_web_fetch_device_identity_required' });
+          }
+          const runtime = await startOwnedWebFetchMcp({
+            host: '127.0.0.1',
+            port: 0,
+            token: randomBytes(32).toString('hex'),
+            maxConcurrent: 2,
+            maxRequestsPerMinute: 60,
+          });
+          const serviceId = `svc_${randomBytes(8).toString('hex')}`;
+          services.set(serviceId, {
+            lease_id: body.lease_id,
+            workload_class: body.workload_class,
+            runtime,
+            service: runtime,
+          });
+          const result = {
+            schema: 'evercraft.compute.resident-service.v1',
+            service_id: serviceId,
+            workload_class: body.workload_class,
+            service_url: null,
+            local_url: runtime.url,
+            health_path: `/v1/services/${serviceId}/health`,
+            instance_id: runtime.instanceId,
+            loopback_only: true,
+            authenticated_read_only: true,
+            public_route_required: true,
+            public_route_approved: false,
+            http_bridge_allowed: false,
+            registry_repoint_authorized: false,
+            token_exposed: false,
+            payment_authority: false,
+          };
+          const receipt = chain.issue('service.started', {
+            lease_id: body.lease_id,
+            service_id: serviceId,
+            workload_class: body.workload_class,
+            result_schema: result.schema,
+            instance_id: runtime.instanceId,
+            private_token_exposed: false,
+            public_route_approved: false,
           });
           return send(res, 200, {
             ok: true,
