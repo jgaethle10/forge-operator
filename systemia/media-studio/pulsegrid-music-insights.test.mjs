@@ -145,3 +145,34 @@ test('all twelve sounding pitch classes survive a five-item summary',()=>{
  assert.equal(r.inferred_key,null);
  assert.equal(r.automatic_composition_changes,false);
 });
+
+test('simultaneous chords are not misclassified as horizontal melodic leaps',()=>{
+ const source=createPulseGridSession('Vertical harmony');
+ const ops=[60,64,67].map(pitch=>({type:'note.add',track_id:'keys',scene:0,
+   note:{pitch,start:0,length:2,velocity:.6}})).concat(
+  [62,65,69].map(pitch=>({type:'note.add',track_id:'keys',scene:0,
+   note:{pitch,start:2,length:2,velocity:.6}})));
+ const s=applyPulseGridTransaction(source,{intent:'two stacked chords',operations:ops},'human').session;
+ const r=analyzePulseGridMusic(s,0),profile=r.track_profiles.find(t=>t.track_id==='keys');
+ assert.equal(profile.stacked_onset_groups,2);
+ assert.equal(profile.melodic_interval_pairs,0);
+ assert.equal(profile.large_melodic_leaps,0);
+ assert.equal(profile.repeated_interval_motifs,0);
+ assert.ok(!r.findings.some(f=>f.kind==='melodic_leaps'));
+ assert.equal(r.note_count,6,'all chord notes still contribute to pitch-class evidence');
+});
+
+test('single-note motion retains real leaps without inferring a key',()=>{
+ const source=createPulseGridSession('Single-note intervals');
+ const operations=[60,72,74].map((pitch,start)=>({
+  type:'note.add',track_id:'keys',scene:0,
+  note:{pitch,start,length:1,velocity:.6}
+ }));
+ const s=applyPulseGridTransaction(source,{intent:'single-note line',operations},'human').session;
+ const r=analyzePulseGridMusic(s,0),profile=r.track_profiles.find(t=>t.track_id==='keys');
+ assert.equal(profile.stacked_onset_groups,0);
+ assert.equal(profile.melodic_interval_pairs,2);
+ assert.equal(profile.large_melodic_leaps,1);
+ assert.ok(r.findings.some(f=>f.kind==='melodic_leaps'));
+ assert.equal(r.inferred_key,null);
+});
