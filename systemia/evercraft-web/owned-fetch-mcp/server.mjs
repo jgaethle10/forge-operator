@@ -349,6 +349,35 @@ export async function startOwnedWebFetchMcp({
   return {
     url,
     instanceId,
+    // Private compute-layer invocation. Reuse this service's actual MCP HTTP
+    // interface and its single concurrency/rate budget; the token stays
+    // closed over in this module and never enters a Yard receipt.
+    async invokeFetch(targetUrl) {
+      if (closed) throw new Error('web_fetch_service_stopped');
+      const response = await fetch(url + '/mcp', {
+        method:'POST',
+        headers:{
+          authorization:'Bearer ' + token,
+          'content-type':'application/json',
+        },
+        body:JSON.stringify({
+          jsonrpc:'2.0',id:1,method:'tools/call',
+          params:{name:'fetch_url',arguments:{url:String(targetUrl || '')}},
+        }),
+        signal:AbortSignal.timeout(20_000),
+      });
+      if (!response.ok) {
+        throw new Error(response.status === 429 ? 'web_fetch_capacity_limited' : 'web_fetch_internal_call_failed');
+      }
+      const body = await response.json();
+      if (body.result?.isError === true) {
+        throw new Error(String(body.result?.content?.[0]?.text || 'web_fetch_rejected').slice(0,120));
+      }
+      if (body.result?.structuredContent?.ok !== true) {
+        throw new Error('web_fetch_evidence_missing');
+      }
+      return body.result.structuredContent;
+    },
     health: () => ({
       ok: !closed,
       service: 'evercraft-web-owned-fetch-candidate',
