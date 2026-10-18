@@ -68,3 +68,20 @@ ffmpeg -hide_banner -nostats -i The_Weight_of_Silence_Piano_and_Strings.mp3 \
 
 This matters **musically**: a lively dramatic range is part of the listening identity of the original. A new supposedly "better" master must be loudness-matched for subjective comparison without automatically flattening this range, and any release needs independent rights, mastering, codec/true-peak and platform checks. The reference MP3 remains untouched. FFmpeg measurement does not establish sample licensing, authorship, originality or waveform authenticity.
 
+
+
+## Read-only arrangement arc: source MIDI
+
+The original MIDI extracted **in memory only** from the immutable editable-session ZIP provides a useful orchestration-density baseline. Dividing MIDI-time into four equal windows, without asserting this is the only phrase structure:
+
+| Quarter of MIDI time | Note-on events | Mean MIDI velocity 0–127 | Active named instrument parts |
+|---|---:|---:|---:|
+| First | 44 | 47.98 | 4 |
+| Second | 78 | 52.13 | 8 |
+| Third | 113 | 55.60 | 9 |
+| Fourth | 50 | 47.72 | 7 |
+
+Entrances provide useful evidence of intentional expansion: piano bass at 0.00 s, piano figure 0.10 s, melody 0.41 s, cello 8.37 s, viola and string ensemble ~16.3 s, solo violin 21.94 s, choir ~29.41 s, contrabass ~31.98 s. This shows a buildup of **layer count and MIDI activity** and a thinner fourth quarter, without automatically proving perceived loudness or artistic success. Don't conflate MIDI velocity with acoustic LUFS.
+
+For a future *Weight of Silence* successor, compare the **phrasing, silhouette of instrument entrances, foreground clarity, silence and low-end gravity** against this baseline, not just whole-file peak loudness. A MIDI count is a description, not an instruction to increase note density.
+
