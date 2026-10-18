@@ -71,6 +71,46 @@ export function nativeOnlyCatalog(input=[]) {
   };
 }
 
+// A visitor can paste a bare public domain. Normalize it here rather than
+// disabling the downstream prepayment public-HTTPS custody gate.
+export function normalizePublicWebsiteUrl(value) {
+  const input=String(value??'').trim();
+  if(!input||input.length>1000||/[\u0000-\u0020\u007f\\]/.test(input)||input.startsWith('//')) return null;
+  if(/^[a-z][a-z0-9+.-]*:/i.test(input)&&!/^https:\/\//i.test(input)) return null;
+  const withScheme=/^https:\/\//i.test(input)?input:'https://'+input;
+  try {
+    const parsed=new URL(withScheme);
+    if(parsed.protocol!=='https:'||parsed.username||parsed.password||parsed.port) return null;
+    const host=parsed.hostname.toLowerCase();
+    const labels=host.split('.');
+    if(!host||host.length>253||labels.length<2||labels.some(label=>!label||label.length>63||!(/^[a-z0-9](?:[a-z0-9-]*[a-z0-9])?$/.test(label)))) return null;
+    if(!/^(?:[a-z]{2,63}|xn--[a-z0-9-]{2,59})$/.test(labels.at(-1))) return null;
+    if(/(?:^|\.)(?:localhost|local|internal|test|invalid)$/.test(host)) return null;
+    // A fragment has no effect on a server-side audit. Do not retain it in
+    // the purchase request or reveal it in downstream evidence.
+    parsed.hash='';
+    return parsed.href;
+  }catch{
+    return null;
+  }
+}
+
+// Only the exact approved hosted Stripe checkout origins may be one-step
+// redirected after an explicit buyer submit. Unknown processors retain the
+// branded Evercraft Payments handoff instead of becoming open redirects.
+export function trustedDirectCheckoutUrl(value) {
+  try {
+    const url=new URL(String(value||''));
+    if(url.protocol!=='https:'||url.username||url.password||url.port||url.hash) return null;
+    const host=url.hostname.toLowerCase();
+    if(host==='checkout.stripe.com'&&/^\/(?:c\/pay\/|pay\/)[A-Za-z0-9]/.test(url.pathname)) return url.href;
+    if(host==='buy.stripe.com'&&/^\/[A-Za-z0-9]/.test(url.pathname)) return url.href;
+    return null;
+  }catch{
+    return null;
+  }
+}
+
 function sendJson(res,status,body,extraHeaders={}) {
   const data=Buffer.from(JSON.stringify(body));
   res.writeHead(status,{
@@ -959,9 +999,14 @@ export async function startFabricLocalRuntime({
           });
         }
 
-        const websiteUrl=slug==='website-audit'?String(body?.website_url||'').trim().slice(0,1001):null;
+        const websiteUrl=slug==='website-audit'?normalizePublicWebsiteUrl(body?.website_url):null;
         if(slug==='website-audit'&&!websiteUrl){
-          return sendJson(res,422,{ok:false,error:'public_https_website_required',checkout_ready:false,fulfillment_release:false});
+          if(isForm) return sendText(res,422,renderPaymentHoldPage({slug,reason:'invalid_website'}),{contentType:'text/html; charset=utf-8'});
+          return sendJson(res,422,{
+            ok:false,error:'public_https_website_required',
+            message:'Enter a public website such as yourbusiness.com. No http:// or private network addresses.',
+            checkout_ready:false,fulfillment_release:false,
+          });
         }
         let auditedDomain=null;
         const controller=new AbortController();
@@ -1057,6 +1102,20 @@ export async function startFabricLocalRuntime({
         }
 
         if(isForm){
+          const directCheckout=trustedDirectCheckoutUrl(checkoutUrl);
+          if(directCheckout){
+            // Explicit form confirmation already occurred, and the provider
+            // returned the correct fixed offer and exact amount/currency.
+            // Visiting hosted checkout creates no paid receipt or fulfillment.
+            res.writeHead(303,{
+              location:directCheckout,
+              'cache-control':'no-store',
+              'x-content-type-options':'nosniff',
+              'referrer-policy':'no-referrer',
+              'x-evercraft-payment-authority':'Evercraft Payments',
+            });
+            return res.end();
+          }
           const cents=Number(result?.amount_cents);
           const amountLabel=Number.isFinite(cents)
             ? String.fromCharCode(36)+(cents/100).toFixed(2).replace(/\.00$/,'')
