@@ -61,7 +61,8 @@ test('real owned Fabric local runtime serves read-only HTML and JSON, MCP remain
    assert.equal(response.status,200);
    const searched=await response.text();
    assert.match(searched,/Closest research matches/);
-   assert.match(searched,/\/capabilities\/findmypart-paid-hunt-v1/);
+   assert.match(searched,/Public directory information · specialist execution held/);
+   assert.doesNotMatch(searched,/href="\/capabilities\/findmypart-paid-hunt-v1"/);
 
    response=await fetch(runtime.url+'/developers.json');
    assert.equal(response.status,200);
