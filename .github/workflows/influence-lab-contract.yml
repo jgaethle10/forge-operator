@@ -46,6 +46,15 @@ jobs:
             const manifest=JSON.parse(fs.readFileSync(path.join(dir,"manifest.json"),"utf8"));
             if(manifest.assets.length!==12||manifest.publicationAuthority!==false||manifest.paymentVerified!==false||manifest.sourceMediaVerified!==false)throw Error("unsafe_or_incomplete_gallery");
             if(!fs.existsSync(path.join(dir,"index.html")))throw Error("gallery_missing");
+            const distribution=JSON.parse(fs.readFileSync(path.join(dir,"distribution-review.json"),"utf8"));
+            if(distribution.copyAndLinkDrafts.length!==12||distribution.state!=="review_only"||
+               distribution.boundaries.publicationAuthority!==false||
+               distribution.buyerJourney.independentlyVerifiedSettlements!==null)throw Error("distribution_contract_not_held");
+            for(const draft of distribution.copyAndLinkDrafts){
+              if(draft.reviewState!=="held"||draft.publicationAuthority!==false||
+                 draft.verifiedOrders!==null||draft.attributedIncrementalRevenueCents!==null)throw Error("unsafe_distribution_draft");
+            }
+            if(!fs.existsSync(path.join(dir,"copy-review.md")))throw Error("draft_copy_missing");
             for(const asset of manifest.assets){
               const svg=fs.readFileSync(path.join(dir,asset.filename),"utf8");
               if(!svg.includes("EDITORIAL REVIEW ONLY"))throw Error("concept_watermark_missing");
