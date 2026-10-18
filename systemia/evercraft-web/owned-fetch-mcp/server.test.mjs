@@ -76,6 +76,18 @@ test('HTTPS downgrade, redirect loop, huge body, upstream error and disallowed M
   }),/unsupported_content_type_or_encoding/);
 });
 
+
+test('first release holds IPv6-only resolutions pending mapped-address safety review', async () => {
+  await assert.rejects(fetchPublicPage('https://public.example/',{
+    resolveHost:async()=>[{address:'2606:4700:4700::1111',family:6}],
+    request:()=>{throw Error('IPv6 outbound must not run');}
+  }),/ipv4_public_target_required/);
+  await assert.rejects(fetchPublicPage('https://public.example/',{
+    resolveHost:async()=>[{address:'127.0.0.1',family:4}],
+    request:()=>{throw Error('private IPv4 outbound must not run');}
+  }),/ipv4_public_target_required/);
+});
+
 test('MCP only exposes Fetch capabilities and read-only tool; wrong arguments fail closed', async () => {
   assert.deepEqual(WEB_MCP_TOOLS.map(t=>t.name),['get_web_capabilities','fetch_url']);
   const init=webMcpResponse({jsonrpc:'2.0',id:1,method:'initialize',params:{protocolVersion:'2025-11-25'}});
