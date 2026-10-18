@@ -89,6 +89,26 @@ test('release gate clears a fresh, source-bound, nonpolitical edition', () => {
   assert.equal(gate.blockers.length, 0);
 });
 
+test('NWS storm warning and preliminary LSR cannot auto-publish as Radar release', () => {
+  for (const collector of ['nws-storm-desk', 'nws-local-storm-reports']) {
+    const input = edition();
+    input.signals[0] = {
+      ...input.signals[0],
+      subject_key: collector === 'nws-storm-desk' ? 'nws:storm:eax' : 'nws:lsr:eax',
+      domains: ['weather', 'emergency_report'],
+      kind: collector === 'nws-storm-desk' ? 'storm_warning' : 'storm_report',
+      truth_state: collector === 'nws-storm-desk' ? 'PENDING' : 'REPORTED',
+      observation: { metadata: { collector }, facts: { impact_confirmed: false } }
+    };
+    const gate = evaluateRadarRelease({ edition: input, editorialPacket: packet() });
+    assert.equal(gate.status, 'hold');
+    assert.equal(gate.unattended_publication_allowed, false);
+    assert.ok(gate.blockers.includes('storm_editorial_publication_boundary'));
+    const release = buildRadarRelease({ edition: input, editorialPacket: packet() });
+    assert.equal(release.status, 'hold');
+  }
+});
+
 test('political signals are held out of unattended release', () => {
   const political = edition();
   political.signals[0].domains = ['public_policy'];
