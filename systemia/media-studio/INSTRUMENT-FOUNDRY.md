@@ -195,3 +195,40 @@ The existing Saban planning preflight requires its **declared** pitch-evidence r
 At PR head \`b2c85e65d35b42b86b3e496ade4d682fb4c83d61\`, [Foundry workflow 39089331736](https://github.com/jgaethle10/forge-operator/actions/runs/39089331736) passed **110/110 Foundry tests and 8/8 Saban planning tests**. Broader Forge checks are validated independently. Tests currently use synthetic periodic WAV fixtures and *do not* establish performance accuracy on a real piano dataset. Before treating inferred pitch as reliable on acoustic multisamples, gather diverse clean/noisy note captures across the whole 88-key range and measure false acceptance/rejection in human-reviewed samples.
 
 The original *Weight of Silence* reference master is not modified. No release authorization, production deployment, professional acoustic sample recording or actual human browser audio proof is claimed.
+
+
+## Octave alias protection and reproducible local WAV intake
+
+The first bounded WAV pitch evidence tool accepted some incorrect octave labels because a waveform can repeat at both a fundamental's period and a multiple of that period. Adversarial **octave-only and even-harmonic** tests caught this defect on commit \`fbdc51b\`; both tests failed while the old code incorrectly returned \`consistent\`.
+
+The fix in \`instrument-foundry-capture-qa.mjs\` checks corroboration in the actual audio spectrum after lag-based periodicity measurement. A defensible MIDI root needs either clear root-frequency energy or jointly sufficient second and third harmonics indicating a *virtual fundamental*. An octave-only or even-harmonic-only recording now receives \`indeterminate\` rather than being silently labeled one octave lower. Rich, slightly inharmonic fixtures and a weak-fundamental recording with second and third harmonics remain accepted when evidence supports the selected note. Technical ambiguity is not an invitation to hallucinate a label.
+
+### Internal sampled-instrument reference diagnostic
+
+A **local, exploratory Python port** of the JS pitch checker was evaluated against the already-installed TimGM6mb SoundFont **GPL-2**, using its grand-piano program in a FluidSynth internal audition. This test **does not use Evercraft-owned recorded piano takes**, does not ship source samples, and is **not a claim of production JS equivalence or accuracy on genuine microphones**.
+
+Results at 19 MIDI roots from 21 to 108, and three velocities (40, 80, 120):
+- **True MIDI roots:** 56 of 57 marked \`consistent\`; one quiet note at root 108 held as \`indeterminate\`.
+- **Adjacent wrong note:** 0 of 54 falsely accepted; all 54 marked \`mismatch\`.
+- **Octave-below mislabeling:** 0 of 51 falsely accepted; 40 held \`indeterminate\` and 11 marked \`mismatch\`.
+
+The numerical diagnostic was generated locally and is not an acoustic-performance test or a commercial distribution artifact. A separate real-instrument corpus with independent MIDI and performer evidence is still required for statistical calibration.
+
+### Actual local piano capture receipt
+
+\`instrument-foundry-capture-audit.mjs\` adds a bounded, read-only capture intake that accepts a locally recorded WAV and the asserted MIDI note. It creates a SHA-256 asset identity, independently checks the WAV structure and recorded bytes, inspects waveform quality and checks pitch consistency. The result is an auditable **candidate for human listening** or a **held capture**, never an asset registration or commercial rights grant.
+
+From the repository root:
+
+\`\`\`bash
+node systemia/media-studio/instrument-foundry-capture-audit.mjs \
+  --wav ./captures/piano-c4-quiet.wav \
+  --midi 60 \
+  --out ./receipts/piano-c4-quiet.receipt.json
+\`\`\`
+
+Output receipt includes source basename, content fingerprint, byte count, selected root, detailed waveform and pitch reports, blockers, and explicit \`source_provenance_verified:false\`, \`performer_consent_verified:false\`, \`human_listening_review:null\`, \`music_sample_rights_verified:false\`, and \`release_ready:false\`. The source recording bytes are not modified, the receipt writes with exclusive creation and cannot silently overwrite a prior receipt. The CLI exits with code **0** for a technically sound candidate, **2** for a held capture, and **1** for a parser/file/usage failure. The job requires the recording to be locally authorized; the tool makes no network requests.
+
+This is a convenience intake for a **future genuine acoustic capture session**, not evidence one already occurred. The existing canonical PulseGrid import and Saban preflight still hold independent auth, source licensing, actual browser output, and human musical approval.
+
+[GitHub Foundry run 39090349758](https://github.com/jgaethle10/forge-operator/actions/runs/39090349758) passed **122/122 engineering tests and 8/8 Saban planning tests** with the audit CLI, octave fix and strict receipts. The broader Forge workflows must be checked at the exact current head. The original *Weight of Silence* master is unchanged.
