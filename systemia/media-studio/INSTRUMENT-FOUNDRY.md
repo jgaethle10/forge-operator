@@ -176,3 +176,22 @@ A verified SHA-256 checksum only proves that bytes match a source. It does **not
 CI exercises clean and quiet decays, heavily clipped samples, near silence, abrupt tails, DC bias, PCM24 stereo, float32/non-finite, malformed RIFF/alignment, and byte-slice handling. Run [39087701525](https://github.com/jgaethle10/forge-operator/actions/runs/39087701525) passed **101/101 Foundry and 6/6 Saban capture preflight tests** at commit \`8318c906ac678679e99eaa66790516b6cfcd1129\`. Broader Forge workflows are tracked separately.
 
 **Next artistic gate:** A real captured piano note with known origin, documented microphone setup and performer consent, followed by an actual user-browser playback receipt and human A/B versus the frozen original *Weight of Silence*.
+
+
+## Selected MIDI root versus measured WAV pitch
+
+The recording may have healthy amplitude, decay and bit depth yet still be the **wrong musical note**. The new \`checkFoundryPianoRootPitch(actualWavBytes, expectedMidi)\` uses a short, bounded channel-wise time-domain periodicity test to compare actual recorded content against the selected MIDI root (21–108). It returns immutable-style evidence with expected frequency, inferred frequency, estimated cents deviation, periodicity and one of:
+
+- \`consistent\`: period resolved with sufficient confidence and deviation within 45 cents of selected MIDI root
+- \`mismatch\`: a confident periodicity measurement differs by more than 45 cents
+- \`indeterminate\`: silence/weak signal, ambiguity, non-finite data or inadequate period resolution, requiring review rather than false automatic labeling
+
+The analyzer examines a bounded early section of the actual PCM samples after SHA-256 and technical waveform quality checks. Stereo takes select the stronger measured channel so phase-opposed stereo won't cancel a legitimate piano pitch. It **does not claim to detect piano authenticity, tune complex attack transients, identify a copyright holder or certify a note by human listening**. Heavy pedal resonance, hammer noise, room noise, instrument inharmonicity and complex polyphonic takes can cause uncertainty and require musician judgment.
+
+\`Arm Recorded Piano\` now holds mismatched or indeterminate captures before the canonical \`clip.set_foundry_piano_patch\` operation. The user sees the cause and cents deviation when available, and the WAV remains available for independent audition and review. A consistent signal still has \`human_pitch_confirmed:false\`.
+
+The existing Saban planning preflight requires its **declared** pitch-evidence root to match the selected root and pass this consistency status; its adapter **does not itself analyze the WAV** or authorize release. Missing, inconsistent and indeterminate pitch evidence blocks its review-ready state. Human listening and independently verified recording rights remain required after these technical gates.
+
+At PR head \`b2c85e65d35b42b86b3e496ade4d682fb4c83d61\`, [Foundry workflow 39089331736](https://github.com/jgaethle10/forge-operator/actions/runs/39089331736) passed **110/110 Foundry tests and 8/8 Saban planning tests**. Broader Forge checks are validated independently. Tests currently use synthetic periodic WAV fixtures and *do not* establish performance accuracy on a real piano dataset. Before treating inferred pitch as reliable on acoustic multisamples, gather diverse clean/noisy note captures across the whole 88-key range and measure false acceptance/rejection in human-reviewed samples.
+
+The original *Weight of Silence* reference master is not modified. No release authorization, production deployment, professional acoustic sample recording or actual human browser audio proof is claimed.
