@@ -97,3 +97,35 @@ export function spiderSandboxRestartProbe(root){
   proof_scope:'LOCAL_SANDBOX_SNAPSHOT_ONLY',
   global_no_regeneration_proven:false};
 }
+
+
+/** Transfer only an already-frozen, synthetic drill state into a NEW root.
+ * Never resumes a worker, never imports an active lease, and never creates
+ * an authorization scope for any real Spider Society service. */
+export function rehydrateSpiderSandbox(root,untrusted){
+ const snapshot=structuredClone(untrusted);
+ check(snapshot);
+ if(snapshot.status!=='quarantined'||snapshot.generation!==1)
+  fail('transferred state must be frozen in first quarantine generation');
+ if(Object.keys(snapshot).sort().join(',')!=='callbacks,generation,leases,queue,schema,status,successors,tenant_id,workload_id')
+  fail('transferred state includes unsupported authority fields');
+ for(const collection of ['queue','callbacks','successors','leases']){
+  for(const entry of snapshot[collection]){
+   if(Object.keys(entry).sort().join(',')!=='id,state')fail('entry contains unsupported authority fields');
+  }
+ }
+ if(snapshot.queue.filter(x=>x.state==='held').length!==1||
+   snapshot.callbacks.filter(x=>x.state==='held').length!==1||
+   snapshot.leases.filter(x=>x.state==='held').length!==1||
+   snapshot.successors.filter(x=>x.state==='denied').length!==1)
+  fail('expected owned rogue drill lineage not intact');
+ const p=assertRoot(root);
+ if(lstatSync(p,{throwIfNoEntry:false}))fail('transfer target not empty');
+ // One root, one incident, one handoff. Cross-runner import is intentionally
+ // disabled once a transfer or any state exists at the destination.
+ const fd=openSync(p,constants.O_WRONLY|constants.O_CREAT|constants.O_EXCL|constants.O_NOFOLLOW,0o600);
+ try{writeFileSync(fd,JSON.stringify(snapshot));fsyncSync(fd);}finally{closeSync(fd);}
+ const dfd=openSync(resolve(root),constants.O_RDONLY);
+ try{fsyncSync(dfd)}finally{closeSync(dfd);}
+ return {rehydrated:true,scope:'SYNTHETIC_QUARANTINED_SANDBOX_ONLY',state_generation:1};
+}
