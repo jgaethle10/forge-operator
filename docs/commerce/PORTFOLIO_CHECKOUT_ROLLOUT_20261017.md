@@ -45,6 +45,21 @@ For each product, separately record:
 4. **Delivery truth:** correct specialist admits a real job with Systemia, authorized inputs, output, recipient access and refund/dispute policy.
 5. **Production release:** Systemia independent admission, code/CI/edge release receipt, rollback and no interruption of any currently functioning route.
 
+## Conversion-quality upgrade for the six human-offer-only products
+
+The approved checkout pipeline was already working through Stripe as observed by the founder. The next development focus is **clear conversion copy**, not another payments abstraction. The six approved offers without exact specialist MCP mappings now have distinct, source-bounded headlines, short service scopes, concrete input lists, bounded deliverable expectations, and three understandable stages on the existing `/offers/<slug>` pages:
+
+- Browser Workflow Diagnosis: diagnose one authorized browser task, its fragile steps and human authorization boundaries.
+- Payments Founding Integration: one buyer-owned merchant/processor offer, paid-state and entitlement controls; never request secret processor credentials in the public form.
+- Legacy Software X-Ray: one authorized legacy workflow, documented risks and dependencies without production changes.
+- IBM i 7.4 Upgrade X-Ray: one bounded upgrade decision with dependencies and rollback/test requirements; not interchangeable with IBM i Estate X-Ray.
+- Evercraft Sign Founding Pilot: one signer journey and its identity, consent and applicable legal-review requirements.
+- TOWI Rapid Evidence Scan: one bounded decision question, source lineage and acknowledged uncertainty; separate from unpriced TOWI research capabilities.
+
+The wording in `systemia/mcp/portfolio-offer-copy.mjs` describes the allowed offer and the requested future intake without broadening it into a production implementation, guaranteed results or regulated professional opinion. It **does not collect new sensitive inputs**, change the existing email/consent form, modify prices/SKUs, create checkouts or alter the Evercraft Payments provider boundary. Detailed intake remains subject to the specialist's separately approved post-checkout workflow.
+
+`tests/portfolio-offer-copy.test.mjs` checks the six new descriptions, existing 13-offer routing, fixed-price parity and human consent. This is source + local runtime evidence, not an independent buyer usability review. Visual QA on mobile and public edge release verification remain required.
+
 ## Implementation and review state
 
 - `systemia/commerce/portfolio-checkout-rollout.mjs`: deterministic reconciliation of the 13 existing buyer doors with native checkout contracts and candidate product mappings.
