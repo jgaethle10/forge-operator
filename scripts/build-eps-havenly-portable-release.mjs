@@ -6,6 +6,7 @@ import { pathToFileURL } from 'node:url';
 const sources = [
  {source:'public/eps/index.html',target:'eps/index.html',marker:'eps-continuity-20261017'},
  {source:'public/havenly/index.html',target:'havenly/index.html',marker:'havenly-continuity-20261017'},
+ {source:'public/sunshine-spotless/index.html',target:'sunshine-spotless/index.html',marker:'sunshine-spotless-continuity-20261018'},
  {source:'public/apps/eps-estimator/index.html',target:'apps/eps-estimator/index.html',marker:'EPS Precise Estimator'}
 ];
 const sha256=input=>'sha256:'+createHash('sha256').update(input).digest('hex');
@@ -28,7 +29,7 @@ export function buildServiceContinuityRelease({root=process.cwd(),output=path.jo
  '<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Evercraft Local Services</title><meta name="robots" content="noindex"></head>',
  '<body style="font:16px/1.6 system-ui;max-width:720px;margin:3rem auto;padding:0 1.5rem;background:#f7f8f9;color:#121820">',
  '<h1>Evercraft Local Services</h1><p>Choose the service you need. Requests open in your own text or email app. They are not automatically submitted.</p>',
- '<p><a href="./eps/">Evercraft Property Services</a></p><p><a href="./havenly/">HAVENLY Cleaning</a></p></body></html>'
+ '<p><a href="./eps/">Evercraft Property Services</a></p><p><a href="./havenly/">HAVENLY Cleaning</a></p><p><a href="./sunshine-spotless/">Sunshine &amp; Spotless Cleaning Co</a></p></body></html>'
  ].join('\n');
  const bytes=Buffer.from(landing,'utf8');fs.writeFileSync(path.join(site,'index.html'),bytes);
  files.push({path:'index.html',bytes:bytes.length,sha256:sha256(bytes)});

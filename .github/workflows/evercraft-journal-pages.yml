@@ -166,6 +166,8 @@ jobs:
           test -f _public_pages/havenly/index.html
           grep -q 'eps-continuity-20261017' _public_pages/eps/index.html
           grep -q 'havenly-continuity-20261017' _public_pages/havenly/index.html
+          test -f _public_pages/sunshine-spotless/index.html
+          grep -q 'sunshine-spotless-continuity-20261018' _public_pages/sunshine-spotless/index.html
           test -f _public_pages/campaigns/roman/index.html
           grep -q 'Roman Kilinkaridis' _public_pages/campaigns/roman/index.html
           grep -q 'https://donate.voteroman.com/' _public_pages/campaigns/roman/index.html
@@ -206,6 +208,9 @@ jobs:
           havenly="${base%/}/havenly/"
           havenly_body="$(curl --fail --silent --show-error --retry 8 --retry-all-errors --retry-delay 2 "$havenly")"
           printf '%s' "$havenly_body" | grep -q 'havenly-continuity-20261017'
+          sunshine="${base%/}/sunshine-spotless/"
+          sunshine_body="$(curl --fail --silent --show-error --retry 8 --retry-all-errors --retry-delay 2 "$sunshine")"
+          printf '%s' "$sunshine_body" | grep -q 'sunshine-spotless-continuity-20261018'
           earthworks="${base%/}/apps/earthworks-autonomy/"
           earthworks_body="$(curl --fail --silent --show-error --retry 8 --retry-all-errors --retry-delay 2 "$earthworks")"
           printf '%s' "$earthworks_body" | grep -q 'Evercraft EarthWorks Autonomy'
@@ -231,6 +236,7 @@ jobs:
             echo "EPS estimator: $estimator"
           echo "EPS continuity: $eps"
           echo "HAVENLY continuity: $havenly"
+          echo "Sunshine & Spotless continuity: $sunshine"
             echo "EarthWorks: $earthworks"
             echo "EarthWorks design partner: $earthworks_partner"
             echo "EarthWorks sample study: $earthworks_sample"
