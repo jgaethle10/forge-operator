@@ -2,6 +2,7 @@
 import fs from 'node:fs';
 import path from 'node:path';
 import { buildCommercialCampaign } from './commercial-renderer.mjs';
+import { compileEmotionalEditMap } from './emotional-edit-map.mjs';
 import { runAssignment, reconcile } from '../media-studio/creative-council-saban-adapter.mjs';
 
 function arg(name){
@@ -19,6 +20,8 @@ async function main(){
 
   const campaign=JSON.parse(fs.readFileSync(path.resolve(campaignPath),'utf8'));
   const built=buildCommercialCampaign(campaign,{outputRoot:path.resolve(outputRoot),origin});
+  const emotionMap=compileEmotionalEditMap(campaign,{plan:built.plan});
+  fs.writeFileSync(path.join(built.dir,'emotional-edit-map.json'),JSON.stringify(emotionMap,null,2)+'\n','utf8');
   const results=[];
 
   for(const job of built.plan.council.shots){
@@ -52,6 +55,9 @@ async function main(){
     councilStatus:reconciliation.status,
     councilShotCount:reconciliation.shot_count,
     councilBlockedShotCount:reconciliation.blocked_shot_count,
+    emotionalEditMapDigest:emotionMap.digest,
+    emotionalEditMapState:'preproduction_only',
+    boardroomReviewState:emotionMap.boardroomHandoff.state,
     assets:built.manifest.assets,
     offerUrl:built.manifest.offerUrl,
     publicationAuthority:false,
