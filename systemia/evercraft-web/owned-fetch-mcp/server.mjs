@@ -164,15 +164,64 @@ function extractHtml(html, finalUrl) {
   const title = /<title\b[^>]*>([\s\S]*?)<\/title\s*>/i.exec(stripped);
   const headings = [...stripped.matchAll(/<h([1-3])\b[^>]*>([\s\S]*?)<\/h\1\s*>/gi)]
     .slice(0, 30).map((m) => ({ level: Number(m[1]), text: decode(m[2]).slice(0, 500) }));
+  const finalOrigin = new URL(finalUrl).origin;
+  const metaTags = [...stripped.matchAll(/<meta\b[^>]*>/gi)].slice(0, 100);
+  const descriptionTag = metaTags.map((m) => m[0]).find((tag) =>
+    ['description','og:description'].includes(
+      (htmlAttribute(tag, 'name') || htmlAttribute(tag, 'property')).toLowerCase()
+    )
+  );
+  const declaredDescription = descriptionTag
+    ? decode(htmlAttribute(descriptionTag,'content')).slice(0,500) : null;
+  const canonicalTag = [...stripped.matchAll(/<link\b[^>]*>/gi)].slice(0,100)
+    .map((m) => m[0]).find((tag) =>
+      htmlAttribute(tag,'rel').toLowerCase().split(/\s+/).includes('canonical'));
+  const declaredCanonical = canonicalTag
+    ? boundedDeclaredLink(htmlAttribute(canonicalTag,'href'),finalUrl) : null;
+  const outgoing = [];
+  const seen = new Set();
+  for (const match of stripped.matchAll(/<a\b[^>]*>[\s\S]*?<\/a\s*>/gi)) {
+    const href = htmlAttribute(match[0].split('>')[0]+'>','href');
+    const safeUrl = boundedDeclaredLink(href,finalUrl);
+    if (!safeUrl || seen.has(safeUrl)) continue;
+    if (new URL(safeUrl).origin === finalOrigin) continue;
+    seen.add(safeUrl);
+    outgoing.push({ url: safeUrl, text: decode(match[0]).slice(0,160) });
+    if (outgoing.length >= 20) break;
+  }
   const body = stripped.replace(/<head\b[^>]*>[\s\S]*?<\/head\s*>/gi, ' ');
   return {
     title: title ? decode(title[1]).slice(0, 500) : null,
+    meta_description: declaredDescription,
+    declared_canonical_url: declaredCanonical,
+    outbound_links: outgoing,
+    outbound_links_truncated: outgoing.length === 20,
+    page_metadata_verification: 'unverified_declared_by_source',
     headings,
     text: decode(body).slice(0, MAX_TEXT_CHARS),
-    extraction: 'bounded_static_html_text_v1',
+    extraction: 'bounded_static_html_text_v2',
     javascript_rendered: false,
-    final_origin: new URL(finalUrl).origin,
+    final_origin: finalOrigin,
   };
+}
+
+function htmlAttribute(tag, name) {
+  // Names are fixed literals chosen by the caller, not untrusted page input.
+  const match = new RegExp("(?:^|\\s)" + name +
+    "\\s*=\\s*(?:\"([^\"]*)\"|'([^']*)'|([^\\s>]+))", "i").exec(tag);
+  return match ? String(match[1] ?? match[2] ?? match[3] ?? '') : '';
+}
+
+function boundedDeclaredLink(href, base) {
+  if (!href || String(href).length > 2048) return null;
+  try {
+    const candidate = new URL(href, base);
+    if (!['https:', 'http:'].includes(candidate.protocol) ||
+        candidate.username || candidate.password) return null;
+    return redactUrl(candidate);
+  } catch {
+    return null;
+  }
 }
 
 export async function fetchPublicPage(input, {
