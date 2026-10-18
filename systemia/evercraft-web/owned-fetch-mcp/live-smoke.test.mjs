@@ -25,7 +25,7 @@ test('live read-only public Fetch through local MCP over actual HTTPS egress', {
     const fetched=await rpc(3,'tools/call',{
       name:'fetch_url',arguments:{url:'https://example.com/'},
     });
-    assert.equal(fetched.result?.isError,undefined,'fetch_url returned error instead of evidence');
+    assert.equal(fetched.result?.isError,undefined,'fetch_url returned error instead of evidence: '+JSON.stringify(fetched.result?.content || []));
     const row=fetched.result.structuredContent;
     assert.equal(row.ok,true);
     assert.equal(row.source_url_redacted,'https://example.com/');
