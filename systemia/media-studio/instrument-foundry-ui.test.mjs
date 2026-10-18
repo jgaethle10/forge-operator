@@ -73,7 +73,7 @@ test('the same Fallen Sessions screen exposes recording to playable canonical pi
  assert.match(fn,/applyPulseGridTransaction/);
  assert.match(fn,/setSelectedTrackId\(keysTrack.id\)/);
  assert.match(fn,/release_sec:0\.22/);
- assert.match(fn,/One verified sample, audition only/);
+ assert.match(fn,/raw take detached to prevent doubling/);
  assert.ok(fn.indexOf('verifyFoundryWavBytes')<fn.indexOf('applyPulseGridTransaction'));
 });
 test('piano patch remains bounded by user-selected pitch and cannot claim commercial clearance',()=>{
@@ -84,4 +84,15 @@ test('piano patch remains bounded by user-selected pitch and cannot claim commer
  assert.match(fn,/rights==='restricted'/);
  assert.doesNotMatch(fn,/rights:'owned'/);
  assert.doesNotMatch(fn,/release_ready:true/);
+});
+
+test('arming a piano sample atomically detaches original Audio Take to avoid double playback',()=>{
+ const source=ui();
+ const fn=source.slice(source.indexOf('async function armFoundryPianoFromTake'),source.indexOf('async function importFoundryWavFile'));
+ assert.match(fn,/type:'clip.attach_audio_asset',track_id:audioTrack.id,scene:selectedScene,asset_id:null/);
+ const detach=fn.indexOf("type:'clip.attach_audio_asset'");
+ const patch=fn.indexOf("type:'clip.set_foundry_piano_patch'");
+ const apply=fn.indexOf("applyPulseGridTransaction(current");
+ assert.ok(apply>=0&&detach>apply&&patch>detach,'raw WAV must detach and patch attach inside same transaction');
+ assert.match(fn,/asset_id:asset.id/);
 });
