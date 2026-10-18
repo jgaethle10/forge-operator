@@ -1,0 +1,17 @@
+{
+  "schema": "evercraft.influence-lab.brief.v1",
+  "campaignId": "website-audit-influence-specimen-001",
+  "product": "Systemia Website Audit",
+  "offerKey": "website-audit",
+  "offerUrl": "https://fabric.systemiacommandcenters.com/offers/website-audit",
+  "buyerProblem": "Small-business owners may not know where their public website's visitor experience becomes confusing. This is a general problem statement, not a finding about a specific client.",
+  "targetCommunity": "Independent service business owners and web professionals",
+  "evidenceRefs": [
+    "https://github.com/jgaethle10/forge-operator/blob/main/systemia/graphics-command/campaigns/website-audit-attention.json",
+    "https://fabric.systemiacommandcenters.com/offers/website-audit"
+  ],
+  "claims": [],
+  "audienceSensitiveAttributes": [],
+  "manufacturedScarcity": false,
+  "fakeSocialProof": false
+}

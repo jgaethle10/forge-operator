@@ -1,0 +1,151 @@
+name: Influence Lab contract checks
+
+on:
+  pull_request:
+    paths:
+      - 'systemia/influence-lab/**'
+      - 'systemia/evercraft-web/browser-worker/influence-website-audit-canary.mjs'
+      - 'systemia/evercraft-web/browser-worker/influence-layout-preview.mjs'
+      - 'systemia/mcp/fabric-public-site.mjs'
+      - '.github/workflows/influence-lab-contract.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  source-policy:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Validate influence policy and evidence boundaries
+        run: node --test systemia/influence-lab/*.test.mjs systemia/graphics-command/commercial-renderer.test.mjs tests/fabric-offer-pages.test.mjs
+
+  review-preview:
+    needs: source-policy
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Render private, unpublished review gallery
+        run: |
+          node systemia/influence-lab/render-concepts.mjs \
+            --brief systemia/influence-lab/specimens/website-audit-review-brief.json \
+            --reference systemia/graphics-command/campaigns/website-audit-attention.json \
+            --out "$RUNNER_TEMP/influence-review-gallery"
+      - name: Verify gallery completeness and absence of release authority
+        run: |
+          node --input-type=module -e '
+            import fs from "node:fs";
+            import path from "node:path";
+            const dir=path.join(process.env.RUNNER_TEMP,"influence-review-gallery");
+            const manifest=JSON.parse(fs.readFileSync(path.join(dir,"manifest.json"),"utf8"));
+            if(manifest.assets.length!==12||manifest.publicationAuthority!==false||manifest.paymentVerified!==false||manifest.sourceMediaVerified!==false)throw Error("unsafe_or_incomplete_gallery");
+            if(!fs.existsSync(path.join(dir,"index.html")))throw Error("gallery_missing");
+            const distribution=JSON.parse(fs.readFileSync(path.join(dir,"distribution-review.json"),"utf8"));
+            if(distribution.copyAndLinkDrafts.length!==12||distribution.state!=="review_only"||
+               distribution.boundaries.publicationAuthority!==false||
+               distribution.buyerJourney.independentlyVerifiedSettlements!==null)throw Error("distribution_contract_not_held");
+            for(const draft of distribution.copyAndLinkDrafts){
+              if(draft.reviewState!=="held"||draft.publicationAuthority!==false||
+                 draft.verifiedOrders!==null||draft.attributedIncrementalRevenueCents!==null)throw Error("unsafe_distribution_draft");
+            }
+            if(!fs.existsSync(path.join(dir,"copy-review.md")))throw Error("draft_copy_missing");
+            for(const asset of manifest.assets){
+              const svg=fs.readFileSync(path.join(dir,asset.filename),"utf8");
+              if(!svg.includes("EDITORIAL REVIEW ONLY"))throw Error("concept_watermark_missing");
+            }
+          '
+      - name: Attach concept-only review gallery (not published)
+        uses: actions/upload-artifact@v4
+        with:
+          name: influence-lab-concept-review
+          path: ${{ runner.temp }}/influence-review-gallery
+          if-no-files-found: error
+          retention-days: 7
+
+  buyer-door-observation:
+    needs: source-policy
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Observe public Website Audit door via read-only HTTP GET
+        run: |
+          node systemia/influence-lab/offer-door-probe.mjs --out "$RUNNER_TEMP/website-audit-http-observation.json"
+      - name: Verify honest limits of probe
+        run: |
+          node --input-type=module -e '
+            import fs from "node:fs";
+            const r=JSON.parse(fs.readFileSync(process.env.RUNNER_TEMP+"/website-audit-http-observation.json","utf8"));
+            if(r.schema!=="evercraft.influence-lab.website-audit-http-observation.v1"||
+               r.boundaries?.paymentAttempted!==false||r.boundaries?.checkoutCreated!==false||
+               r.boundaries?.providerSettlementVerified!==false||r.checkoutVerified!==false||
+               !["held","readable_http_only"].includes(r.status)){
+              throw Error("unsafe_http_observation_receipt");
+            }
+            console.log(JSON.stringify({status:r.status,httpStatus:r.httpStatus,reason:r.reason}));
+          '
+      - name: Upload read-only HTTP observation, even when route is held
+        uses: actions/upload-artifact@v4
+        with:
+          name: influence-lab-website-audit-http-observation
+          path: ${{ runner.temp }}/website-audit-http-observation.json
+          if-no-files-found: error
+          retention-days: 7
+
+  saban-visual-buyer-preflight:
+    needs: source-policy
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Install existing Saban browser worker dependencies
+        working-directory: systemia/evercraft-web/browser-worker
+        run: npm install --no-audit --no-fund --ignore-scripts
+      - name: Install Chromium in ephemeral CI runner
+        working-directory: systemia/evercraft-web/browser-worker
+        run: npx playwright install --with-deps chromium
+      - name: Inspect real public Website Audit on mobile and desktop, GET-only
+        run: |
+          node systemia/evercraft-web/browser-worker/influence-website-audit-canary.mjs \
+            --out "$RUNNER_TEMP/influence-saban-visual"
+      - name: Render and measure source-only redesign (not live deployment)
+        run: |
+          node systemia/evercraft-web/browser-worker/influence-layout-preview.mjs \
+            --out "$RUNNER_TEMP/influence-saban-visual"
+      - name: Check candidate preview never claims production or paid state
+        run: |
+          node --input-type=module -e '
+            import fs from "node:fs";
+            const p=process.env.RUNNER_TEMP+"/influence-saban-visual/branch-preview-receipt.json";
+            const r=JSON.parse(fs.readFileSync(p,"utf8"));
+            if(r.previewPubliclyDeployed!==false||r.customerCheckoutCreated!==false||
+              r.paymentPosted!==false||r.views?.length!==2||
+              r.views.some(v=>v.formSubmitted!==false||v.paymentAttempted!==false||
+                v.formActionVerified!==true||!v.screenshotSha256?.startsWith("sha256:"))){
+              throw Error("source_preview_boundary_invalid");
+            }
+            console.log(JSON.stringify(r.views.map(v=>({name:v.name,buttonFirstViewport:v.buttonFirstViewport,buttonTop:v.buttonTop}))));
+          '
+      - name: Attach real visual diagnostics even if route fails
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: influence-lab-saban-public-page-evidence
+          path: ${{ runner.temp }}/influence-saban-visual/**
+          if-no-files-found: error
+          retention-days: 7
