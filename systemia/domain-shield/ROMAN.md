@@ -32,3 +32,19 @@ This is **not DNS failover and it will not turn HTTP 402 at the original URL int
 
 ## Rollback
 The guardian only reads public data and writes CI receipts. Disable its GitHub Actions schedule to stop future checks. It has no production write permissions and does not expose a write endpoint.
+
+## Evercraft-owned continuity funnel
+
+The canonical independent informational page remains at `https://fabric.systemiacommandcenters.com/campaigns/roman/`. An additional stable entry is being deployed at `https://fabric.systemiacommandcenters.com/go/roman`.
+
+- This new route exists **only** on the Evercraft-owned Fabric host. It cannot intercept a request for `voteroman.com` without authorized registrar/host control.
+- GET/HEAD requests to `/go/roman` or `/go/roman/` 302 redirect to the first-party campaign page after local integrity checks. Input query parameters are deliberately dropped, not forwarded.
+- If local HTML is missing/invalid, the router makes a bounded read-only GET to the preapproved independent Wix informational mirror and checks HTTP 200, HTML and existing campaign/donation markers before issuing a 302. It never redirects to an arbitrary query-specified URL.
+- If both sources are invalid, the route returns HTTP 503 instead of sending someone to a dead or untrusted host.
+- No cookies, contact collection, tracking, altered DNS, donor checkout, email, or outreach.
+- The router cannot help when the Fabric host itself is offline; visitors require a separately distributed independent Wix URL in that case.
+- The site still contains selected public campaign information, not the original site's full functionality. Do not present the independent mirror as the original official hostname without domain/campaign authorization.
+
+Test: `node --test systemia/domain-shield/roman-funnel.test.mjs tests/fabric-roman-campaign-mirror.test.mjs`.
+
+**Rollout truth:** a passing PR test proves source behavior, not that the public host has updated. Only publish the short URL as live after an external HTTPS check confirms the redirect and destination.
