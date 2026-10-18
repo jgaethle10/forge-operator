@@ -16,6 +16,7 @@ import {
 } from '../systemia/media-studio/pulsegrid-browser';
 import {compileFoundryImport,verifyFoundryWavBytes} from '../systemia/media-studio/instrument-foundry-bridge.mjs';
 import {appendFoundryPianoSample} from '../systemia/media-studio/instrument-foundry-piano.mjs';
+import {analyzeFoundryPianoWav} from '../systemia/media-studio/instrument-foundry-capture-qa.mjs';
 import type {FoundryInstrumentPatch} from '../systemia/media-studio/instrument-foundry-piano.mjs';
 import './fallen-sessions.css';
 
@@ -216,7 +217,13 @@ export default function FallenSessions(){
       }
       const blob=await vaultRef.current?.getVerifiedBlob(asset);
       if(!blob)throw new Error('Foundry recording is missing from local verified storage.');
-      await verifyFoundryWavBytes(asset,new Uint8Array(await blob.arrayBuffer()));
+      const sampleBytes=new Uint8Array(await blob.arrayBuffer());
+      await verifyFoundryWavBytes(asset,sampleBytes);
+      const signalQa=analyzeFoundryPianoWav(sampleBytes);
+      if(signalQa.status!=='technical_signal_pass'){
+        throw new Error('Piano capture held: '+signalQa.blockers.join(', ')+
+          '. Record another take before arming.');
+      }
       const root=foundryRootPitch;
       if(!Number.isInteger(root)||root<21||root>108)throw new Error('Piano MIDI root must be 21 to 108.');
       if(!Number.isFinite(foundryVelocityMin)||!Number.isFinite(foundryVelocityMax)||
@@ -240,7 +247,9 @@ export default function FallenSessions(){
       },'human');
       setSession(result.session);
       setSelectedTrackId(keysTrack.id);
-      setStatus('Foundry piano bank now has '+patch.samples.length+' verified sample layers; latest MIDI root '+root+' (±2 semitones). Raw take detached to prevent doubling; rights still unknown.');
+      setStatus('Foundry piano bank now has '+patch.samples.length+' verified sample layers; latest MIDI root '+root+' (±2 semitones). Technical signal gate passed (peak '+signalQa.metrics.peak_dbfs+
+        ' dBFS, tail '+signalQa.metrics.tail_rms_dbfs+
+        ' dBFS); raw take detached; performer rights and musical quality still unverified.');
     }catch(error){
       setStatus(error instanceof Error?error.message:'Foundry piano note assignment failed.');
     }
