@@ -11,7 +11,7 @@ const countEl=document.querySelector('#em-count');
 const groupEl=document.querySelector('#em-groups');
 const fetchedEl=document.querySelector('#em-fetched');
 const layerInput=document.querySelector('#em-layer-toggle');
-const TILE=256,MIN_ZOOM=3,MAX_ZOOM=12;
+const TILE=256,MIN_ZOOM=4,MAX_ZOOM=12;
 const FALLBACK={lat:46.6021,lon:-120.5059,zoom:5};
 const state={...FALLBACK,showReports:true,records:[],sourceState:'loading',selectedId:null,lastFetch:0,fetching:false};
 const tileNodes=new Map();
@@ -172,8 +172,8 @@ function cluster(records){
 }
 function setCenter(lat,lon,zoom=state.zoom){
  if(!n(lat)||!n(lon))return;
- state.lat=clamp(lat,-80,80);
- state.lon=((lon+180)%360+360)%360-180;
+ state.lat=clamp(lat,39,55);
+ state.lon=clamp(lon,-133,-110);
  state.zoom=clamp(Math.round(zoom),MIN_ZOOM,MAX_ZOOM);
  renderMap();
 }
@@ -296,7 +296,7 @@ map.addEventListener('pointermove',(event)=>{
  if(!drag)return;
  const moveX=event.clientX-drag.x,moveY=event.clientY-drag.y;
  const next=coordinates(drag.center.x-moveX,drag.center.y-moveY,state.zoom);
- state.lat=next.lat;state.lon=next.lon;
+ state.lat=clamp(next.lat,39,55);state.lon=clamp(next.lon,-133,-110);
  renderMap();
 });
 function endDrag(){drag=null}
