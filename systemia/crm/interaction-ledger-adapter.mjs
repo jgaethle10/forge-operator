@@ -116,3 +116,16 @@ export function readPrivateInteractionLedger(stateDir,{now=new Date(),maxBytes=1
   const events=content.split('\n').filter(Boolean).map(line=>JSON.parse(line));
   return projectInteractionEvents(events,{now});
 }
+
+/** Never return exception text or private paths in public heartbeat receipts. */
+export function resolveCrmSource({inputPath='',ledgerStateDir='',now=new Date()}={}) {
+  if(inputPath) return {inputPath};
+  if(!ledgerStateDir) return {holdReason:'source_not_configured'};
+  try {
+    return {inputData:readPrivateInteractionLedger(ledgerStateDir,{now})};
+  } catch(error) {
+    if(error?.code==='ENOENT') return {holdReason:'source_missing'};
+    if(/unsafe/.test(String(error?.message||''))) return {holdReason:'source_permissions_or_type_invalid'};
+    return {holdReason:'source_invalid'};
+  }
+}
