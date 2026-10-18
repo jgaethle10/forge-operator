@@ -29,6 +29,16 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: '22'
+      - name: Ensure actual FFmpeg and FFprobe are available
+        shell: bash
+        run: |
+          set -euo pipefail
+          if ! command -v ffmpeg >/dev/null || ! command -v ffprobe >/dev/null; then
+            sudo apt-get update
+            sudo apt-get install -y --no-install-recommends ffmpeg
+          fi
+          ffmpeg -version | head -1
+          ffprobe -version | head -1
       - name: Install TypeScript module runner
         run: npm install --no-audit --no-fund
       - name: Verify emotional beat map, commercial renderer and actual encoded master
