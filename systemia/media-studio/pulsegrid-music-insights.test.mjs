@@ -32,12 +32,24 @@ test('pitch class evidence reflects actual MIDI note names, not guessed tonic',(
  const pcs=r.pitch_class_evidence.map(e=>e.pitch_class);
  assert.ok(pcs.includes('D'));
  assert.ok(pcs.includes('F'));
+ assert.equal(pcs.length,12,'complete chromatic evidence cannot be top-five truncated');
+ assert.deepEqual(pcs,['C','C#','D','Eb','E','F','F#','G','Ab','A','Bb','B']);
+ assert.equal(r.pitch_class_evidence.find(e=>e.pitch_class==='D').note_count,1);
+ assert.equal(r.pitch_class_evidence.find(e=>e.pitch_class==='B').note_count,0);
+ assert.equal(r.pitch_class_evidence.find(e=>e.pitch_class==='B').weight,0);
+ assert.deepEqual(r.prominent_pitch_classes.map(e=>e.pitch_class),['G','E','C','A','F']);
+ assert.ok(!r.prominent_pitch_classes.some(e=>e.pitch_class==='D'),
+   'D is not top-five, but must remain in full evidence');
+ assert.equal(r.pitch_class_weighting,'capped_note_duration_steps_times_midi_velocity');
 });
 test('drum and audio tracks are excluded from harmonic melody analysis',()=>{
  const s=createPulseGridSession('Rhythmic test');
  const r=analyzePulseGridMusic(s,0);
  assert.equal(r.note_count,0);
  assert.equal(r.inferred_key,null);
+ assert.equal(r.pitch_class_evidence.length,12);
+ assert.ok(r.pitch_class_evidence.every(e=>e.note_count===0&&e.weight===0));
+ assert.deepEqual(r.prominent_pitch_classes,[]);
  assert.ok(r.findings.some(f=>f.kind==='empty_arrangement'));
 });
 test('motif and melodic leap observations remain gentle musician prompts',()=>{
@@ -117,4 +129,19 @@ test('music register scan stays bounded on dense same-track passages',()=>{
  assert.equal(a.register_proximity_examples,0);
  assert.equal(a.track_profiles[0].rest_gap_count,0);
  assert.equal(a.automatic_composition_changes,false);
+});
+
+test('all twelve sounding pitch classes survive a five-item summary',()=>{
+ const s=createPulseGridSession('Chromatic evidence');
+ const operations=Array.from({length:12},(_,pc)=>({
+  type:'note.add',track_id:'keys',scene:0,
+  note:{pitch:60+pc,start:pc,length:1,velocity:.5}
+ }));
+ const populated=applyPulseGridTransaction(s,{intent:'chromatic coverage',operations},'human').session;
+ const r=analyzePulseGridMusic(populated,0);
+ assert.equal(r.note_count,12);
+ assert.deepEqual(r.pitch_class_evidence.map(e=>e.note_count),Array(12).fill(1));
+ assert.equal(r.prominent_pitch_classes.length,5);
+ assert.equal(r.inferred_key,null);
+ assert.equal(r.automatic_composition_changes,false);
 });
