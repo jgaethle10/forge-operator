@@ -35,13 +35,6 @@
       "offer_slugs": [
         "site-survive"
       ]
-    },
-    {
-      "public_id": "workflow-foundry-xray-v1",
-      "primary_offer_slug": "workflow-xray",
-      "offer_slugs": [
-        "workflow-xray"
-      ]
     }
   ],
   "exclusions": {
@@ -52,7 +45,7 @@
     "faie-signal-brief-v1": "No exact $250 authorized hosted buyer offer in the 13-offer directory.",
     "earthworks-site-autonomy-study-v1": "Human design-partner approval required, not generic checkout."
   },
-  "source_status": "explicit_crosswalk_for_read_only_directory_only; fifth capability adds the exact Workflow X-Ray $250 offer, not payment execution",
+  "source_status": "explicit_crosswalk_for_read_only_directory_only",
   "checkout_created": false,
   "paid_verified": false,
   "fulfillment_proven": false
