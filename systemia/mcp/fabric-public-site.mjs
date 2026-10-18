@@ -104,6 +104,28 @@ h1{font-size:clamp(48px,8vw,90px);line-height:.95;letter-spacing:-.065em;margin:
 .offer-proof{border-left:3px solid var(--green);padding:3px 0 3px 14px;color:#c8d8e9;margin-top:18px}
 .checkout-form{display:flex;flex-wrap:wrap;gap:10px;align-items:center;margin-top:30px}
 .checkout-note{width:100%;color:var(--muted);font-size:13px;line-height:1.5;max-width:690px}
+.offer-purchase-page .offer-hero{padding:38px 0 24px;max-width:1040px}
+.offer-purchase-page .offer-hero h1{font-size:clamp(38px,5.3vw,70px);line-height:1.05;letter-spacing:-.055em;max-width:940px;margin:20px 0 18px}
+.offer-purchase-page .offer-hero .lede{font-size:clamp(17px,1.8vw,22px);line-height:1.55;max-width:720px;margin:0}
+.offer-purchase-page .offer-hero-layout{display:grid;grid-template-columns:minmax(0,.92fr) minmax(0,1.08fr);gap:30px;align-items:start;margin:28px 0 10px}
+.offer-purchase-page .offer-visual{margin:0;border-radius:18px}
+.offer-purchase-page .offer-buy{padding:20px;border:1px solid var(--line);background:linear-gradient(165deg,rgba(14,25,48,.84),rgba(7,14,29,.92));border-radius:18px}
+.offer-purchase-page .offer-price{margin:0 0 8px;line-height:1}
+.offer-purchase-page .offer-price-note{font-size:15px;line-height:1.5;color:#c7d8eb;max-width:430px}
+.offer-purchase-page .offer-pricing-details{margin-top:12px;font-size:13px;color:var(--muted);line-height:1.6}
+.offer-purchase-page .offer-pricing-details summary{cursor:pointer;color:#cfe3ff}
+.offer-purchase-page .offer-pricing-details p{margin:8px 0 0}
+.offer-purchase-page .checkout-form{display:grid;gap:10px;margin-top:22px;align-items:stretch}
+.offer-purchase-page .checkout-form label{font-size:14px;font-weight:650}
+.offer-purchase-page .checkout-form input{width:100%!important;max-width:100%!important;min-height:44px}
+.offer-purchase-page .checkout-form .btn{min-height:46px;width:100%;text-align:center}
+.offer-purchase-page .checkout-note{font-size:12px;line-height:1.6}
+@media(max-width:780px){
+  .offer-purchase-page .offer-hero{padding-top:20px}
+  .offer-purchase-page .offer-hero h1{font-size:clamp(36px,9.5vw,48px);line-height:1.04;margin:16px 0}
+  .offer-purchase-page .offer-hero-layout{grid-template-columns:minmax(0,1fr);gap:18px;margin-top:22px}
+  .offer-purchase-page .offer-buy{padding:17px}
+}
 .trust{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin:34px 0 76px}
 .trust div,.card,.prompt,.doc{
   border:1px solid var(--line);
@@ -359,15 +381,18 @@ export function renderOfferPage(item){
   const get=copy.get.map((x)=>'<li>'+escapeHtml(x)+'</li>').join('');
   const steps=copy.steps.map(([title,body])=>'<div class="offer-step"><strong>'+escapeHtml(title)+'</strong><span>'+escapeHtml(body)+'</span></div>').join('');
   const idempotencyKey='offer-'+copy.slug+'-'+crypto.randomUUID();
+  const webOffer=copy.slug==='website-audit';
+  const visualMarkup=copy.heroVisual?'<div class="offer-visual"><picture>'+(copy.heroVisualMobile?'<source media="(max-width: 700px)" srcset="'+escapeHtml(copy.heroVisualMobile)+'">':'')+'<img src="'+escapeHtml(copy.heroVisual)+'" alt="Illustrative website audit concept, not a finding about your business" loading="eager"></picture></div>':'';
   return shell(copy.headline+' · Evercraft',[
-    '<main>',
+    '<main'+(webOffer?' class="offer-purchase-page"':'')+'>',
     '<section class="offer-hero">',
     '<div class="kicker"><span class="dot"></span> '+escapeHtml(copy.eyebrow)+' · available now</div>',
     '<h1>'+escapeHtml(copy.headline)+'</h1>',
     '<p class="lede">'+escapeHtml(copy.lede)+'</p>',
-    copy.heroVisual?'<div class="offer-visual"><picture>'+(copy.heroVisualMobile?'<source media="(max-width: 700px)" srcset="'+escapeHtml(copy.heroVisualMobile)+'">':'')+'<img src="'+escapeHtml(copy.heroVisual)+'" alt="" loading="eager"></picture></div>':'',
+    webOffer?'<div class="offer-hero-layout"><div class="offer-buy">':visualMarkup,
     '<div class="offer-price">'+escapeHtml(price)+'</div>',
-    '<div class="offer-price-note">'+escapeHtml(offerName)+' · '+escapeHtml(item.pricing||'')+'</div>',
+    '<div class="offer-price-note">'+escapeHtml(webOffer?'Quick Win Audit · one-time. Free preview available. Paid delivery follows verified settlement.':offerName+' · '+String(item.pricing||''))+'</div>',
+    webOffer?'<details class="offer-pricing-details"><summary>Compare audit options</summary><p>'+escapeHtml(String(item.pricing||''))+'</p></details>':'',
     '<form class="checkout-form" method="post" action="/api/offers/'+encodeURIComponent(copy.slug)+'/checkout">',
     '<input type="hidden" name="user_confirmed" value="true">',
     '<input type="hidden" name="idempotency_key" value="'+escapeHtml(idempotencyKey)+'">',
@@ -378,6 +403,7 @@ export function renderOfferPage(item){
     item.public_id.startsWith('payment-offer-')?'':'<a class="btn" href="/capabilities/'+encodeURIComponent(item.public_id)+'">See technical proof</a>',
     '<div class="checkout-note">Evercraft Payments prepares the checkout. Nothing is marked paid until settlement is verified.</div>',
     '</form>',
+    webOffer?'</div>'+visualMarkup+'</div>':'',
     '</section>',
     '<div class="offer-grid">',
     '<section class="offer-panel"><h2>What you are buying</h2><p class="plain">'+escapeHtml(copy.promise)+'</p></section>',
