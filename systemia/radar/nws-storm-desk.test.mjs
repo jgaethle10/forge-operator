@@ -103,3 +103,12 @@ test('NWS wrong-schema HTTP 200 does not masquerade as an all-clear', async () =
     /missing GeoJSON features/
   );
 });
+
+test('national desk includes inland winter storms and low-end flood advisories without inventing impact', () => {
+  for (const event of ['Blizzard Warning', 'Winter Storm Watch', 'Ice Storm Warning', 'Snow Squall Warning', 'Lake Effect Snow Warning', 'Flood Advisory', 'Coastal Flood Advisory']) {
+    const row = parseStormAlert(base({ event }), { now });
+    assert.ok(row, event + ' should be captured');
+    assert.equal(row.facts.forecast, true);
+    assert.equal(row.facts.impact_confirmed, false);
+  }
+});
