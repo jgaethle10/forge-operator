@@ -213,15 +213,14 @@ export class SystemiaCoreResidentSupervisor {
 
   async #runCycle(entry) {
     const { config, state } = entry;
-    if (state.status === 'running') {
-      const receipt = this.#receipt('cycle.held', {
+    if (!this.running) return;
+    // Never downgrade an active cycle to "held": the next timer tick could
+    // otherwise start a second child while the first still owns the work.
+    if (this.cycleChildren.has(config.service_key) || state.status === 'running') {
+      this.#receipt('cycle.skipped', {
         service_key: config.service_key,
         reason: 'previous_cycle_still_running',
       });
-      state.status = 'held';
-      state.hold_reason = 'previous_cycle_still_running';
-      state.last_receipt_hash = receipt.receipt_hash;
-      this.#persistHealth();
       return;
     }
 
@@ -284,7 +283,7 @@ export class SystemiaCoreResidentSupervisor {
         this.cycleChildren.delete(config.service_key);
         state.last_completed_at = this.clock().toISOString();
         state.last_exit_code = Number(code ?? -1);
-        state.status = code === 0 ? 'idle' : 'failed';
+        state.status = !this.running ? 'stopped' : code === 0 ? 'idle' : 'failed';
         state.hold_reason = null;
         const receipt = this.#receipt('cycle.completed', {
           service_key: config.service_key,
