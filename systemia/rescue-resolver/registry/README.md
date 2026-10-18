@@ -4,10 +4,10 @@
 
 ## Trust model
 
-1. An independent operator/approved domain manager must establish a subject domain's ownership or delegated consent **outside** the manifest. The user-provided `authority_verified: true` flag is not proof on its own. The verification/pinning ceremony is still unimplemented and must not be fabricated. A legitimate pinned Ed25519 public key and `minimum_revision` are prerequisites.
+1. An independent operator/approved domain manager must establish a subject domain's ownership or delegated consent **outside** the manifest. The user-provided `authority_verified: true` flag is not proof on its own. The verification/pinning ceremony is still unimplemented and must not be fabricated. A legitimate pinned Ed25519 public key and `minimum_revision`, plus an independently reviewed exact HTTPS `approved_mirror_origins` allowlist, are prerequisites.
 2. An owner-authorized signer creates a strict `evercraft.rescue.manifest.v1` with exact `subject_host`, revision, issuance/expiry (maximum 72 hours), non-impersonating independent-information notice, and 1–4 exact HTTPS mirror URLs plus content markers. Every byte of the canonicalized payload is signed with the Ed25519 key. Private keys are never stored in the repository.
 3. A *separately signed and fresh* `evercraft.rescue.revocation.v1` under the same owner key is mandatory. Without it, the registry refuses to select mirrors. `revoked_through_revision` and the trusted local minimum revision prevent replay of older records.
-4. A read-only health probe checks candidate URLs in priority order, rejects redirects, HTTP errors, non-HTML bodies, missing markers and large responses. Marker-based checks only prove expected page fragments, **not** the true identity, security or policy compliance of remote content.
+4. Each signed mirror URL must belong to an independently pinned approved origin. A read-only health probe checks candidate URLs in priority order, rejects redirects, HTTP errors, non-HTML bodies, missing markers and large responses. Marker-based checks only prove expected page fragments, **not** the true identity, security or policy compliance of remote content.
 5. The registry emits a potential healthy destination. It has **zero DNS/GoDaddy privilege and no automatic redirect authority**. The browser must separately obtain informed user consent and present the different destination, verified provenance, an easy Disable control, and a revocation explanation.
 
 ## Threat review
@@ -15,7 +15,7 @@
 | Risk | Guardrail in prototype | Remaining work |
 |---|---|---|
 | Unrelated actor claims to own a hostname | Exact hostname and pinned public key required, signatures mandatory | Real owner/registrar delegation verification ceremony, independent evidence provenance |
-| Malicious alternate site | Strict HTTPS URL, explicit notice, owner-signed mirror inventory, no URL parameters, no redirects | TLS/cert verification receipts, durable website content attestation, anti-phishing review |
+| Malicious alternate site | Strict HTTPS URL, independently pinned exact mirror origins, explicit notice, owner-signed mirror inventory, no URL parameters, no redirects | TLS/cert verification receipts, durable website content attestation, anti-phishing review |
 | Forged or modified manifest | Fixed-key Ed25519 verification on canonical payload | Safe key rotation protocol |
 | Stale or revoked version | Max 72h validity, fresh signed revocation, minimum revision floor | Durable client high-watermark storage, multi-source transparency log |
 | Payment subdomain interception | Existing browser extension matches only apex and www; donation subdomain excluded | Future manifest-to-browser integration must preserve exclusions and user consent |
