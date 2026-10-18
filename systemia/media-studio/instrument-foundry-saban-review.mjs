@@ -11,7 +11,7 @@ const HEX64=/^[0-9a-f]{64}$/;
 
 export async function runFoundrySabanCaptureReview({
   capture_id,source_sha256,rights_evidence_ref,provenance_receipt_id,
-  performance_timing_receipt_id,human_listening_review,capture_signal_qa
+  performance_timing_receipt_id,human_listening_review,capture_signal_qa,root_pitch_evidence,selected_midi_root
 }={}){
   const digest=typeof source_sha256==='string'&&HEX64.test(source_sha256)?source_sha256:null;
   const required=[];
@@ -38,11 +38,20 @@ export async function runFoundrySabanCaptureReview({
     Number.isFinite(capture_signal_qa.metrics?.peak_dbfs)&&
     Number.isFinite(capture_signal_qa.metrics?.rms_dbfs)&&
     capture_signal_qa.commercial_release_ready===false;
+  const pitchEvidenceAccepted=Number.isInteger(selected_midi_root)&&
+    selected_midi_root>=21&&selected_midi_root<=108&&
+    root_pitch_evidence?.schema==='evercraft.fallen.piano-root-evidence.v1'&&
+    root_pitch_evidence.status==='consistent'&&
+    root_pitch_evidence.expected_midi===selected_midi_root&&
+    Number.isFinite(root_pitch_evidence.estimated_hz)&&
+    Number.isFinite(root_pitch_evidence.cents_error)&&
+    Math.abs(root_pitch_evidence.cents_error)<=45&&
+    root_pitch_evidence.human_pitch_confirmed===false;
   return {
     schema:'evercraft.fallen.saban-capture-preflight.v1',
     capture_id:need.id,
     roles_checked:ROLES,
-    review_status:validation.status==='reconciled'&&digest&&listeningAccepted&&signalAccepted
+    review_status:validation.status==='reconciled'&&digest&&listeningAccepted&&signalAccepted&&pitchEvidenceAccepted
       ? 'review_ready_for_independent_rights_and_audio_QA'
       : 'blocked',
     findings: [
@@ -50,6 +59,7 @@ export async function runFoundrySabanCaptureReview({
       ...(!listeningAccepted?['human_listening_acceptance_missing']:[]),
       ...(!digest?['source_sha256_invalid']:[]),
       ...(!signalAccepted?['piano_capture_signal_qa_missing_or_held']:[]),
+      ...(!pitchEvidenceAccepted?['root_pitch_evidence_missing_mismatched_or_indeterminate']:[]),
     ],
     planning_receipts:rows,
     release_ready:false,
@@ -57,6 +67,8 @@ export async function runFoundrySabanCaptureReview({
     live_distributed_worker_execution:false,
     qa_report_consistency_checked:Boolean(signalAccepted),
     qa_waveform_bytes_reexamined_by_saban:false,
+    root_pitch_report_consistency_checked:Boolean(pitchEvidenceAccepted),
+    root_pitch_verified_by_saban:false,
     adapter_mode:'existing_saban_planning_checks_only',
     next_gate:'independent_rights_authenticity_and_real_browser_audio_QA',
   };
