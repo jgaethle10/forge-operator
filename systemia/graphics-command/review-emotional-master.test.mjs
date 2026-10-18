@@ -13,7 +13,7 @@ function fixture({black=false,audio=true}={}){
   const video=path.join(dir,'specimen.mp4');
   const editPath=path.join(dir,'emotional-edit-map.json');
   fs.writeFileSync(editPath,JSON.stringify(compileEmotionalEditMap(campaign),null,2));
-  const args=['-y','-hide_banner','-loglevel','error','-f','lavfi','-i',(black?'color=c=black':'testsrc2')+'=size=320x568:rate=24:duration=12'];
+  const args=['-y','-hide_banner','-loglevel','error','-f','lavfi','-i',(black?'color=c=black:s=320x568:r=24:d=12':'testsrc2=size=320x568:rate=24:duration=12')];
   if(audio) args.push('-f','lavfi','-i','sine=frequency=440:sample_rate=48000:duration=12');
   args.push('-c:v','libx264','-preset','ultrafast','-crf','28','-pix_fmt','yuv420p');
   if(audio) args.push('-c:a','aac','-b:a','96k','-shortest');
