@@ -19,6 +19,9 @@ on:
       - 'systemia/media-studio/pulsegrid-audio-authority.mjs'
       - 'systemia/media-studio/pulsegrid-audio-authority.d.mts'
       - 'systemia/media-studio/pulsegrid-audio-authority.test.mjs'
+      - 'systemia/media-studio/instrument-foundry-saban-review.mjs'
+      - 'systemia/media-studio/instrument-foundry-saban-review.test.mjs'
+      - 'systemia/media-studio/saban-adapter.mjs'
       - 'systemia/media-studio/pulsegrid-session.ts'
       - 'systemia/media-studio/pulsegrid-audio.ts'
       - 'systemia/media-studio/instrument-foundry-bridge.d.mts'
@@ -43,3 +46,13 @@ jobs:
           node-version: '22'
       - name: Foundry custody and import tests
         run: node --experimental-strip-types --test systemia/media-studio/instrument-foundry-bridge.test.mjs systemia/media-studio/instrument-foundry-pulsegrid.integration.test.mjs systemia/media-studio/instrument-foundry-resolver.test.mjs systemia/media-studio/instrument-foundry-ui.test.mjs systemia/media-studio/pulsegrid-audio-scheduler.test.mjs systemia/media-studio/instrument-foundry-piano.test.mjs systemia/media-studio/instrument-foundry-playback.integration.test.mjs systemia/media-studio/pulsegrid-audio-authority.test.mjs
+
+  saban-capture-review:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Saban media-studio capture preflight
+        run: node --test systemia/media-studio/instrument-foundry-saban-review.test.mjs
