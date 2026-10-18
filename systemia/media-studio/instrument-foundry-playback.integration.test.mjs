@@ -290,3 +290,33 @@ test('resolver swap stops old voices and forces fresh decoding only from replace
   }finally{await engine.close()}
  });
 });
+
+test('resolver swap cancels a Play still waiting for AudioContext resume',{concurrency:false},async()=>{
+ await withSimulatedAudio(async()=>{
+  const {session,bytes}=prepare();
+  let release,entered;
+  const gate=new Promise(resolve=>{release=resolve});
+  const resumed=new Promise(resolve=>{entered=resolve});
+  class Suspended extends SimulatedAudioContext{
+    constructor(){super();this.state='suspended'}
+    async resume(){entered();await gate;this.state='running'}
+  }
+  globalThis.AudioContext=Suspended;
+  let reads=0;
+  const engine=new PulseGridAudioEngine();
+  engine.setAudioAssetResolver(resolverOf(bytes,{
+    authorizeRead:async()=>{reads++;return true}
+  }));
+  try{
+    const opening=engine.play(session,0);
+    await resumed;
+    engine.setAudioAssetResolver(resolverOf(bytes,{authorizeRead:async()=>false}));
+    release();
+    await assert.rejects(opening,/superseded/);
+    assert.equal(reads,0);
+    assert.equal(engine.status.playing,false);
+    assert.equal(engine.status.cached_audio_assets,0);
+    assert.equal(SimulatedAudioContext.instances.at(-1).starts.length,0);
+  }finally{release();await engine.close()}
+ });
+});
