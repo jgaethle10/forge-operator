@@ -114,13 +114,14 @@ function browserSecurityHeaders() {
   };
 }
 
-function sendText(res,status,body,{contentType='text/plain; charset=utf-8'}={}) {
+function sendText(res,status,body,{contentType='text/plain; charset=utf-8',extraHeaders={}}={}) {
   const data=Buffer.from(String(body));
   res.writeHead(status,{
     'content-type':contentType,
     'content-length':data.length,
-    'cache-control':'public, max-age=300',
+    'cache-control':status>=400?'no-store':'public, max-age=300',
     ...browserSecurityHeaders(),
+    ...extraHeaders,
   });
   res.end(data);
 }
@@ -920,7 +921,7 @@ export async function startFabricLocalRuntime({
             });
             const ready=await preflight.json().catch(()=>null);
             if(!preflight.ok||ready?.ok!==true||ready?.schema!=='raven.website-audit-context-preflight.v1'||ready?.checkout_created!==false||!ready?.audited_domain){
-              if(isForm) return sendText(res,503,renderPaymentHoldPage({slug}),{contentType:'text/html; charset=utf-8'});
+              if(isForm) return sendText(res,503,renderPaymentHoldPage({slug}),{contentType:'text/html; charset=utf-8',extraHeaders:{'x-evercraft-checkout-hold-stage':'audit_context_preflight'}});
               return sendJson(res,503,{ok:false,error:'website_audit_context_preflight_failed',checkout_ready:false,fulfillment_release:false});
             }
             auditedDomain=ready.audited_domain;
@@ -953,7 +954,7 @@ export async function startFabricLocalRuntime({
             offer_slug:slug,phase:'provider_transport',
             failure_class:error?.name==='AbortError'?'timeout':'transport_unavailable'
           }));
-          if(isForm) return sendText(res,503,renderPaymentHoldPage({slug}),{contentType:'text/html; charset=utf-8'});
+          if(isForm) return sendText(res,503,renderPaymentHoldPage({slug}),{contentType:'text/html; charset=utf-8',extraHeaders:{'x-evercraft-checkout-hold-stage':'provider_transport'}});
           return sendJson(res,503,{
             ok:false,error:'evercraft_payments_transport_unavailable',
             authority:'Evercraft Payments',checkout_ready:false,fulfillment_release:false
@@ -977,7 +978,7 @@ export async function startFabricLocalRuntime({
               res,
               503,
               renderPaymentHoldPage({slug,orderKey:result?.order_key||''}),
-              {contentType:'text/html; charset=utf-8'}
+              {contentType:'text/html; charset=utf-8',extraHeaders:{'x-evercraft-checkout-hold-stage':'provider_response'}}
             );
           }
           return sendJson(res,upstream.status>=400&&upstream.status<600?upstream.status:502,{
@@ -1008,7 +1009,7 @@ export async function startFabricLocalRuntime({
               res,
               503,
               renderPaymentHoldPage({slug,orderKey:result?.order_key||''}),
-              {contentType:'text/html; charset=utf-8'}
+              {contentType:'text/html; charset=utf-8',extraHeaders:{'x-evercraft-checkout-hold-stage':'checkout_contract'}}
             );
           }
           return sendJson(res,503,{
