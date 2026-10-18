@@ -97,8 +97,16 @@ export function pinnedRequest(target, publicAddress, {timeoutMs = 10000} = {}) {
       const encoding = String(upstream.headers['content-encoding'] || 'identity').toLowerCase();
       if (!([301, 302, 303, 307, 308].includes(upstream.statusCode)) &&
           (!ALLOWED_TYPES.test(type) || !['identity', ''].includes(encoding))) {
-        upstream.resume();
+        // Drain would allow a malicious infinite response to tie up the
+        // socket. Reject and close the upstream connection immediately.
+        upstream.destroy();
         reject(new Error('unsupported_content_type_or_encoding'));
+        return;
+      }
+      const lengthHeader = String(upstream.headers['content-length'] || '');
+      if (/^\d+$/.test(lengthHeader) && Number(lengthHeader) > MAX_RESPONSE_BYTES) {
+        upstream.destroy();
+        reject(new Error('response_too_large'));
         return;
       }
       upstream.on('data', (chunk) => {
@@ -164,6 +172,12 @@ export async function fetchPublicPage(input, {
     // Validate and pin again on every hop, rejecting private/mixed DNS.
     const addresses = await resolveHost(target.hostname);
     if (!Array.isArray(addresses) || !addresses.length) throw new Error('dns_resolution_empty');
+    // Fail closed if *any* resolver answer is private, even if an otherwise
+    // public IPv4 address appeared first. Do not let alternate resolvers or
+    // mixed A/AAAA answers weaken the original policy.
+    if (addresses.some((row) => isNonPublicIp(row.address))) {
+      throw new Error('private_or_reserved_target');
+    }
     // Fail closed to public IPv4-only in this initial candidate. The shared
     // browser policy's IPv6 treatment needs separate mapped/NAT64 review
     // before we authorize outbound IPv6 connections.
