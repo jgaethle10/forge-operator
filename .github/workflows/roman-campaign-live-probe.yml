@@ -6,6 +6,7 @@ on:
     paths:
       - '.github/workflows/roman-campaign-live-probe.yml'
       - 'public/campaigns/roman/**'
+      - 'public/site-status/roman/**'
   workflow_dispatch:
   schedule:
     # Quiet, read-only resilience checks four times daily during the 2026 election period.
@@ -122,6 +123,7 @@ jobs:
 
           backup="https://headless-jhpvqnpgxlh-sociallyguud-140c.wix-site-host.com/"
           pages="https://jgaethle10.github.io/forge-operator/campaigns/roman/"
+          recovery="https://jgaethle10.github.io/forge-operator/site-status/roman/"
           owned="https://fabric.systemiacommandcenters.com/campaigns/roman/"
           funnel="https://fabric.systemiacommandcenters.com/go/roman"
           donations="https://donate.voteroman.com/"
@@ -148,6 +150,8 @@ jobs:
           check_url "$backup" 'Roman Kilinkaridis' 'Independent emergency campaign mirror'
           check_url "$pages" 'Roman Kilinkaridis' 'Independent GitHub Pages campaign information mirror'
           check_url "$pages" 'https://donate.voteroman.com/' 'GitHub Pages mirror preserves existing donation link'
+          check_url "$recovery" 'Roman Kilinkaridis website access' 'Independent searchable technical recovery directory'
+          check_url "$recovery" 'not the voteroman.com website' 'Recovery directory plainly distinguishes itself from original'
           check_url "$owned" 'Roman Kilinkaridis' 'Evercraft-owned campaign mirror'
           check_url "$owned" 'https://donate.voteroman.com/' 'Evercraft campaign mirror preserves donation link'
           check_url "$funnel" 'Roman Kilinkaridis' 'Evercraft short continuation funnel'
