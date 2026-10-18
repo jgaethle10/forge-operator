@@ -63,9 +63,9 @@ export function renderOwnedDeveloperPage({capabilities=[],matches=[],intent='',d
     '<div class="module-foot">Owned endpoint: <strong>not yet verified</strong></div></article>').join('');
   const results=query?'<section class="matches" aria-live="polite"><div class="eyebrow">READ-ONLY CAPABILITY MATCHING</div><h2>Closest research matches</h2>'+
     (items.length?'<div class="match-grid">'+items.map(x=>
-      '<a class="match" href="/capabilities/'+encodeURIComponent(String(x.public_id||''))+'"><strong>'+
+      '<article class="match"><strong>'+
       escapeHtml(x.name)+'</strong><span>'+escapeHtml(String(x.description||'').slice(0,200))+
-      '</span><em>View capability details ↗</em></a>').join('')+'</div>':
+      '</span><em>Public directory information · specialist execution held</em></article>').join('')+'</div>':
       '<p class="empty">No confident catalog match. We will not recommend an unrelated paid service.</p>')+
       '<p class="quiet">A match is a source-backed directory suggestion, not a functioning specialist integration, successful checkout or fulfilled task.</p></section>':'';
   return '<!doctype html><html lang="en"><head><meta charset="utf-8">'+
