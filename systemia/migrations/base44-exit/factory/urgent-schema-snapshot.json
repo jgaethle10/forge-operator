@@ -1,0 +1,65 @@
+{
+  "schema": "evercraft.base44-evac.urgent-source-schema-observation.v1",
+  "observed_at": "2026-10-17",
+  "purpose": "Public-safe aggregated application-schema observations. This is NOT source/data export or a deploy receipt.",
+  "observed_apps_minimum_for_portfolio": 100,
+  "snapshot_completeness": "four_named_apps_only",
+  "priority_order_note": "Critical public continuity and Systemia core may proceed as parallel technical lanes; authoritative Systemia admission and release sequence still govern.",
+  "apps": [
+    {
+      "name": "Systemia Command Center",
+      "entity_count": 61,
+      "auth": true,
+      "category": "core_control_plane",
+      "readiness": {},
+      "source_observation": "authenticated_schema_metadata_only",
+      "source_code_available": false,
+      "records_exported": false,
+      "deployed_to_owned_runtime": false
+    },
+    {
+      "name": "Evercraft Property Services",
+      "entity_count": 24,
+      "auth": true,
+      "payments": true,
+      "category": "urgent_operating_business",
+      "readiness": {},
+      "source_observation": "authenticated_schema_metadata_only",
+      "source_code_available": false,
+      "records_exported": false,
+      "deployed_to_owned_runtime": false
+    },
+    {
+      "name": "Havenly Cleaning Command Center",
+      "entity_count": 19,
+      "auth": true,
+      "category": "urgent_operating_business",
+      "readiness": {},
+      "source_observation": "authenticated_schema_metadata_only",
+      "source_code_available": false,
+      "records_exported": false,
+      "deployed_to_owned_runtime": false
+    },
+    {
+      "name": "Vote For Roman",
+      "entity_count": 28,
+      "auth": true,
+      "custom_domains": [
+        "voteroman.com"
+      ],
+      "category": "public_continuity_only",
+      "readiness": {},
+      "source_observation": "authenticated_schema_metadata_only",
+      "source_code_available": false,
+      "records_exported": false,
+      "deployed_to_owned_runtime": false
+    }
+  ],
+  "privacy_boundary": {
+    "source_app_ids_in_repo": false,
+    "records_or_pii_in_repo": false,
+    "secrets_in_repo": false,
+    "production_dns_cutover_performed": false
+  },
+  "known_constraint": "Unpaid Base44 account. Direct sandbox source reading requires higher paid plan; no upgrade authorized; favor already-held source archives, portable rebuild, available schema metadata and an independent hosting route."
+}
