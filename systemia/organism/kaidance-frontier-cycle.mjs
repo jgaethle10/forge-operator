@@ -5,7 +5,7 @@ import { writeFrontierArtifacts } from './frontier-watch.mjs';
 import { runScienceHazardWatch } from './science-hazard-watch.mjs';
 import { KaidanceRuntime } from '../collider/runtime.mjs';
 import { writeCrmHeartbeatArtifacts } from '../crm/heartbeat.mjs';
-import { resolveCrmSource } from '../crm/interaction-ledger-adapter.mjs';
+import { resolveCompanyRelationshipSource } from '../crm/relationship-composite.mjs';
 
 const rootDir = process.cwd();
 const now = new Date();
@@ -23,9 +23,10 @@ const science = await runScienceHazardWatch({
 // CRM is a required source on every cycle. A missing private adapter is a hold,
 // not evidence that there are zero relationships or outstanding commitments.
 const crm = writeCrmHeartbeatArtifacts({
-  ...resolveCrmSource({
+  ...resolveCompanyRelationshipSource({
     inputPath: process.env.EVERCRAFT_CRM_HEARTBEAT_INPUT || '',
     ledgerStateDir: process.env.EVERCRAFT_INTERACTION_LEDGER_STATE_DIR || '',
+      relationshipLedgerFile: process.env.EVERCRAFT_CRM_RELATIONSHIP_LEDGER_FILE || '',
     now
   }),
   outDir: path.join(artifactRoot, 'crm-heartbeat'),
