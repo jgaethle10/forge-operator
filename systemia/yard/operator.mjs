@@ -1138,6 +1138,34 @@ export class YardOperator {
     return record;
   }
 
+  async invokeWebFetch(deploymentId, {url} = {}) {
+    const record = this.deploymentStatus(deploymentId);
+    const secret = this.#loadLeaseSecret(deploymentId);
+    if (!record || record.state !== 'ready' || !secret) {
+      throw new Error('deployment lease authority unavailable');
+    }
+    if (record.receipt?.workload_class !== 'systemia.evercraft-web-fetch-mcp.v1') {
+      throw new Error('deployment is not an Evercraft Web Fetch worker');
+    }
+    if (!record.result?.service_id || !record.result?.invoke_path) {
+      throw new Error('Evercraft Web Fetch private invocation unavailable');
+    }
+    const target=String(url || '');
+    if (target.length < 8 || target.length > 4096) throw new Error('web_fetch_url_invalid');
+    const invoked = await request(
+      new URL(record.result.invoke_path, secret.capacity_endpoint).toString(),
+      {method:'POST',body:JSON.stringify({token:secret.token,url:target})}
+    );
+    return {
+      ok:true,
+      deployment_id:deploymentId,
+      result:invoked.result,
+      compute_receipt_hash:invoked.receipt?.receipt_hash || null,
+      public_route_approved:false,
+      payment_authority:false,
+    };
+  }
+
   async invokeBrowser(deploymentId, job = {}) {
     const record = this.deploymentStatus(deploymentId);
     const secret = this.#loadLeaseSecret(deploymentId);
