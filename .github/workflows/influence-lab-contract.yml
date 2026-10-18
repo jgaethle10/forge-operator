@@ -20,4 +20,4 @@ jobs:
         with:
           node-version: '22'
       - name: Validate influence policy and evidence boundaries
-        run: node --test systemia/influence-lab/influence-lab.test.mjs
+        run: node --test systemia/influence-lab/*.test.mjs systemia/graphics-command/commercial-renderer.test.mjs
