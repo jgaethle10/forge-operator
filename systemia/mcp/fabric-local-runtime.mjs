@@ -1005,7 +1005,7 @@ export async function startFabricLocalRuntime({
         let upstream;
         // A working public offer page never authorizes a provider fallback.
         if(!purchaseIntentEndpoint||!directPaymentOpsEndpoint){
-          if(isForm) return sendText(res,503,renderPaymentHoldPage({slug}),{contentType:'text/html; charset=utf-8'});
+          if(isForm) return sendText(res,503,renderPaymentHoldPage({slug,noAttempt:true}),{contentType:'text/html; charset=utf-8'});
           return sendJson(res,503,{ok:false,error:'owned_evercraft_payments_unavailable',authority:'Evercraft Payments',checkout_ready:false,fulfillment_release:false});
         }
         try{
@@ -1045,6 +1045,11 @@ export async function startFabricLocalRuntime({
             }),
             signal:controller.signal,
           });
+        }catch{
+          // Network, TLS and timeout failures never silently initiate a retry
+          // or claim an order was persisted. Offer owner-assisted recovery.
+          if(isForm)return sendText(res,503,renderPaymentHoldPage({slug}),{contentType:'text/html; charset=utf-8'});
+          return sendJson(res,503,{ok:false,error:'owned_evercraft_payments_unreachable',authority:'Evercraft Payments',checkout_ready:false,fulfillment_release:false});
         }finally{
           clearTimeout(timer);
         }

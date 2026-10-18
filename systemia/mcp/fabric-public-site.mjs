@@ -422,29 +422,34 @@ export function renderPaymentHandoffPage({slug='',checkoutUrl='',amountLabel='',
   });
 }
 
-export function renderPaymentHoldPage({slug='',orderKey=''}={}){
-  const safeSlug=String(slug||'').trim().toLowerCase();
+export function renderPaymentHoldPage({slug='',orderKey='',noAttempt=false}={}){
+  const safeSlug=/^[a-z0-9-]{1,80}$/.test(String(slug||''))?String(slug):'';
   const back=safeSlug?'/offers/'+encodeURIComponent(safeSlug):'/offers';
-  const order=String(orderKey||'').trim();
-  return shell('Payment is not ready yet · Evercraft',[
+  const order=String(orderKey||'').trim().slice(0,100);
+  const subject=encodeURIComponent('Evercraft Payments help'+(safeSlug?' | '+safeSlug:''));
+  const message=noAttempt
+    ?'The payment service was not contacted by this request. No order or charge was created by this attempt. You can contact Evercraft to arrange an approved manual invoice.'
+    :'We could not confirm whether a checkout session was created. Do not make a second payment before checking your provider receipt or contacting Evercraft. No paid order or fulfillment is verified here.';
+  return shell('Checkout needs assistance · Evercraft',[
     '<main>',
     '<section class="offer-hero">',
     '<div class="kicker"><span class="dot"></span> Evercraft Payments</div>',
-    '<h1>No charge was made.</h1>',
-    '<p class="lede">We saved the purchase request, but the settlement rail did not open cleanly. Nothing was marked paid and no fulfillment was released.</p>',
+    '<h1>'+ (noAttempt?'Checkout is temporarily unavailable.':'Checkout could not be confirmed.') +'</h1>',
+    '<p class="lede">'+message+'</p>',
     '<div class="actions">',
-    '<a class="btn primary" href="'+back+'">Return to the offer</a>',
-    '<a class="btn" href="'+back+'">Try again</a>',
+    '<a class="btn primary" href="mailto:jessegaethle10@gmail.com?subject='+subject+'">Request payment assistance</a>',
+    '<a class="btn" href="'+back+'">Return to the offer</a>',
+    '<a class="btn" href="tel:+15097590440">Call Evercraft</a>',
     '</div>',
-    order?'<div class="checkout-note">Order reference: <code>'+escapeHtml(order)+'</code></div>':'',
+    order?'<div class="checkout-note">Reference to mention when contacting support: <code>'+escapeHtml(order)+'</code></div>':'',
     '</section>',
     '<section class="offer-panel">',
-    '<h2>What happened?</h2>',
-    '<p>Evercraft Payments failed closed instead of sending you into a mismatched or unverified checkout. Your offer, price, and fulfillment scope were not changed.</p>',
+    '<h2>What happens next?</h2>',
+    '<p>Evercraft can review the specific offer and discuss an approved invoice or another accepted payment method. This page does not automatically email you, create an invoice, take a charge, or begin fulfillment.</p>',
     '</section>',
     '</main>'
   ].join('\n'),{
-    description:'Evercraft Payments did not open a settlement checkout. No charge was made.',
+    description:'Evercraft Payments checkout is unavailable or unverified. Request human assistance before paying again.',
     canonical:back,
     ogType:'website',
   });
