@@ -15,6 +15,8 @@ import {
   type PulseGridSession,
 } from '../systemia/media-studio/pulsegrid-browser';
 import {compileFoundryImport,verifyFoundryWavBytes} from '../systemia/media-studio/instrument-foundry-bridge.mjs';
+import {appendFoundryPianoSample} from '../systemia/media-studio/instrument-foundry-piano.mjs';
+import type {FoundryInstrumentPatch} from '../systemia/media-studio/instrument-foundry-piano.mjs';
 import './fallen-sessions.css';
 
 const PITCHES=Array.from({length:13},(_,index)=>72-index);
@@ -45,6 +47,8 @@ export default function FallenSessions(){
   const [session,setSession]=useState<PulseGridSession>(()=>createPulseGridSession('First Light'));
   const [selectedTrackId,setSelectedTrackId]=useState('keys');
   const [foundryRootPitch,setFoundryRootPitch]=useState(60);
+  const [foundryVelocityMin,setFoundryVelocityMin]=useState(0);
+  const [foundryVelocityMax,setFoundryVelocityMax]=useState(1);
   const [selectedScene,setSelectedScene]=useState(0);
   const [selectedNoteId,setSelectedNoteId]=useState<string|null>(null);
   const [selectedStepIndex,setSelectedStepIndex]=useState<number|null>(null);
@@ -213,25 +217,30 @@ export default function FallenSessions(){
       const blob=await vaultRef.current?.getVerifiedBlob(asset);
       if(!blob)throw new Error('Foundry recording is missing from local verified storage.');
       await verifyFoundryWavBytes(asset,new Uint8Array(await blob.arrayBuffer()));
-      const root=Math.round(foundryRootPitch);
+      const root=foundryRootPitch;
       if(!Number.isInteger(root)||root<21||root>108)throw new Error('Piano MIDI root must be 21 to 108.');
+      if(!Number.isFinite(foundryVelocityMin)||!Number.isFinite(foundryVelocityMax)||
+         foundryVelocityMin<0||foundryVelocityMax>1||foundryVelocityMin>=foundryVelocityMax){
+        throw new Error('Recorded velocity layer must have a valid min/max range from 0 to 1.');
+      }
+      const existing=keysTrack.clips[selectedScene]?.provenance?.foundry_piano_patch as FoundryInstrumentPatch|undefined;
+      const patch=appendFoundryPianoSample(existing,{
+        asset_id:asset.id,root_pitch:root,velocity_min:foundryVelocityMin,
+        velocity_max:foundryVelocityMax,release_sec:0.22,
+      },current.assets);
       const result=applyPulseGridTransaction(current,{
-        intent:'Bind locally verified WAV as one reversible recorded piano key; internal audition only.',
+        intent:'Add locally verified recording to one reversible multi-note piano bank; internal audition only.',
         operations:[
           // Detach the raw Audio Take clip after assigning the SAME registered
           // asset to MIDI Keys. Otherwise Play would trigger both at once.
           // The asset remains in the vault and undo restores this attachment.
           {type:'clip.attach_audio_asset',track_id:audioTrack.id,scene:selectedScene,asset_id:null},
-          {type:'clip.set_foundry_piano_patch',track_id:keysTrack.id,scene:selectedScene,
-            patch:{kind:'recorded_piano_v1',max_transpose_semitones:2,samples:[{
-              asset_id:asset.id,root_pitch:root,velocity_min:0,velocity_max:1,release_sec:0.22,
-            }]},
-          },
+          {type:'clip.set_foundry_piano_patch',track_id:keysTrack.id,scene:selectedScene,patch},
         ],
       },'human');
       setSession(result.session);
       setSelectedTrackId(keysTrack.id);
-      setStatus('Foundry recorded piano armed at MIDI '+root+' (±2 semitones). One verified sample; raw take detached to prevent doubling; audition only.');
+      setStatus('Foundry piano bank now has '+patch.samples.length+' verified sample layers; latest MIDI root '+root+' (±2 semitones). Raw take detached to prevent doubling; rights still unknown.');
     }catch(error){
       setStatus(error instanceof Error?error.message:'Foundry piano note assignment failed.');
     }
@@ -821,6 +830,14 @@ export default function FallenSessions(){
         <label className="fsFoundryRootLabel">Piano root MIDI
           <input aria-label="Foundry piano root MIDI note" type="number" min={21} max={108}
             value={foundryRootPitch} onChange={(event)=>setFoundryRootPitch(Number(event.target.value))}/>
+        </label>
+        <label className="fsFoundryRootLabel">Velocity min
+          <input aria-label="Foundry minimum sample velocity" type="number" min={0} max={1} step={0.05}
+            value={foundryVelocityMin} onChange={(event)=>setFoundryVelocityMin(Number(event.target.value))}/>
+        </label>
+        <label className="fsFoundryRootLabel">Velocity max
+          <input aria-label="Foundry maximum sample velocity" type="number" min={0} max={1} step={0.05}
+            value={foundryVelocityMax} onChange={(event)=>setFoundryVelocityMax(Number(event.target.value))}/>
         </label>
         <button onClick={()=>void armFoundryPianoFromTake()} disabled={recording}>Arm Recorded Piano</button>
         <button onClick={runLiftPlan}>✦ Atomic Chorus Lift</button>
