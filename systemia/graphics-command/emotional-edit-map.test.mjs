@@ -35,3 +35,23 @@ test('no false claims of team execution, emotional quality, commercial verificat
   assert.ok(edit.productionChecklist.every(x=>x.status==='unverified'));
   assert.ok(edit.warnings.includes('human_stake_not_explicitly_directed'));
 });
+
+test('actual commercial CLI emits boardroom packet and digest receipt without claiming a rendered movie',async()=>{
+  const {mkdtempSync,readFileSync,existsSync}=await import('node:fs');
+  const {tmpdir}=await import('node:os');
+  const {join}=await import('node:path');
+  const {execFileSync}=await import('node:child_process');
+  const root=mkdtempSync(join(tmpdir(),'fallen-emotion-cli-'));
+  const campaignPath=new URL('./campaigns/website-audit-attention.json',import.meta.url).pathname;
+  const scriptPath=new URL('./build-commercial.mjs',import.meta.url).pathname;
+  execFileSync(process.execPath,[scriptPath,'--campaign',campaignPath,'--output',root],{timeout:15000,stdio:'pipe'});
+  const dest=join(root,'website-audit-attention');
+  assert.equal(existsSync(join(dest,'motion.html')),true);
+  const map=JSON.parse(readFileSync(join(dest,'emotional-edit-map.json'),'utf8'));
+  const receipt=JSON.parse(readFileSync(join(dest,'commercial-build-receipt.json'),'utf8'));
+  assert.equal(map.digest,receipt.emotionalEditMapDigest);
+  assert.equal(receipt.emotionalEditMapState,'preproduction_only');
+  assert.equal(receipt.boardroomReviewState,'prepared_not_convened');
+  assert.equal(receipt.publicationAuthority,false);
+  assert.equal(map.boundaries.renderedArtifactsVerified,0);
+});
