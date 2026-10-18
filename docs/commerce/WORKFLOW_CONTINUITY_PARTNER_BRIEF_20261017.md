@@ -80,3 +80,5 @@ Subject: A bounded way to find the client handoffs your team keeps inheriting
 - Raven/Talon challenge inflated revenue assumptions; Sable/Prometheus check proof boundaries; Forge verifies source/tests; Saban/Tempo independently test only if active authorized runtime and workflow receipts exist. These are review requests, not executed worker claims.
 - Partner conversations count only when actually held. A partnership counts only with executed terms. Revenue counts only after verified payment/settlement. An offer's $250 price is not the forecast value of a $30k contract.
 - First target: **one** consented MSP/agency partner discovery call with an explicit client use case, followed by a scoped paid client transaction and accepted delivery. Do not fabricate responses or leads.
+
+**Partner authority boundary:** No automatic resale or revenue share rights are implied by this candidate brief. A commercial agreement and independently validated checkout/fulfillment path must be approved before a channel launch.
