@@ -52,9 +52,9 @@ test('two KAIDANCE cycles consume changed private relationship state without out
     });
     const one=await runtime.runOnce(start);
     assert.equal(one.ok,true);
-    assert.equal(one.cycle.held,5); // 1 overdue promise and four explicitly unavailable divisions
+    assert.equal(one.cycle.counts.held,5); // 1 overdue promise and four explicitly unavailable divisions
     assert.equal(one.health.mission_fabric_degraded_required_sources,0);
-    assert.equal(one.cycle.admitted,0);
+    assert.equal(one.cycle.counts.admitted,0);
 
     const twoAt=new Date(start.getTime()+301000);
     writeEvents(privateRoot,[signed('open'),signed('closed',{
@@ -66,8 +66,8 @@ test('two KAIDANCE cycles consume changed private relationship state without out
     assert.equal(second.report.coverage.open,0);
     const next=await runtime.runOnce(twoAt);
     assert.equal(next.ok,true);
-    assert.equal(next.cycle.held,4); // Only genuinely unconnected systems remain held
-    assert.notEqual(one.coverageReceipt.receipt_hash,next.coverageReceipt.receipt_hash);
+    assert.equal(next.cycle.counts.held,4); // Only genuinely unconnected systems remain held
+    assert.notEqual(one.coverageReceipt.receipt_key,next.coverageReceipt.receipt_key);
     const publicArtifacts=fs.readFileSync(path.join(output,'latest.json'),'utf8')+
       fs.readFileSync(path.join(output,'mission-snapshot.json'),'utf8');
     assert.equal(publicArtifacts.includes('person:private-contact'),false);
