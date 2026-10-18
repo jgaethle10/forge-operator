@@ -16,7 +16,7 @@ import {
 } from '../systemia/media-studio/pulsegrid-browser';
 import {compileFoundryImport,verifyFoundryWavBytes} from '../systemia/media-studio/instrument-foundry-bridge.mjs';
 import {appendFoundryPianoSample} from '../systemia/media-studio/instrument-foundry-piano.mjs';
-import {analyzeFoundryPianoWav} from '../systemia/media-studio/instrument-foundry-capture-qa.mjs';
+import {analyzeFoundryPianoWav,checkFoundryPianoRootPitch} from '../systemia/media-studio/instrument-foundry-capture-qa.mjs';
 import type {FoundryInstrumentPatch} from '../systemia/media-studio/instrument-foundry-piano.mjs';
 import './fallen-sessions.css';
 
@@ -226,6 +226,12 @@ export default function FallenSessions(){
       }
       const root=foundryRootPitch;
       if(!Number.isInteger(root)||root<21||root>108)throw new Error('Piano MIDI root must be 21 to 108.');
+      const pitchEvidence=checkFoundryPianoRootPitch(sampleBytes,root);
+      if(pitchEvidence.status!=='consistent'){
+        throw new Error('Piano root MIDI '+root+' not confirmed ('+pitchEvidence.reason+
+          (pitchEvidence.cents_error===null?'':', '+pitchEvidence.cents_error+' cents')+
+          '). Keep this WAV for independent musician pitch review or record another take.');
+      }
       if(!Number.isFinite(foundryVelocityMin)||!Number.isFinite(foundryVelocityMax)||
          foundryVelocityMin<0||foundryVelocityMax>1||foundryVelocityMin>=foundryVelocityMax){
         throw new Error('Recorded velocity layer must have a valid min/max range from 0 to 1.');
@@ -249,7 +255,8 @@ export default function FallenSessions(){
       setSelectedTrackId(keysTrack.id);
       setStatus('Foundry piano bank now has '+patch.samples.length+' verified sample layers; latest MIDI root '+root+' (±2 semitones). Technical signal gate passed (peak '+signalQa.metrics.peak_dbfs+
         ' dBFS, tail '+signalQa.metrics.tail_rms_dbfs+
-        ' dBFS); raw take detached; performer rights and musical quality still unverified.');
+        ' dBFS, pitch '+pitchEvidence.cents_error+
+        ' cents from MIDI '+root+'); raw take detached; musician review and performer rights still unverified.');
     }catch(error){
       setStatus(error instanceof Error?error.message:'Foundry piano note assignment failed.');
     }
