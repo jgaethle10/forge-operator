@@ -207,3 +207,86 @@ test('arming a recorded piano detaches raw clip, leaves one playable voice, and 
     assert.equal(reverted.session.assets[0].id,asset.id);
   });
 });
+
+test('each explicit playback reauthorizes even when audio digest and graph are unchanged',{concurrency:false},async()=>{
+ await withSimulatedAudio(async()=>{
+  const {session,bytes}=prepare();
+  let grant=true,reads=0;
+  const engine=new PulseGridAudioEngine();
+  engine.setAudioAssetResolver(resolverOf(bytes,{
+    authorizeRead:async()=>{reads++;return grant}
+  }));
+  try{
+    await engine.play(session,0);
+    assert.equal(reads,1);
+    engine.stop();
+    grant=false;
+    await assert.rejects(engine.play(session,0),/not authorized/);
+    assert.equal(reads,2,'cached prior authorization cannot bypass the new read');
+    assert.equal(engine.status.playing,false);
+    assert.equal(engine.status.cached_audio_assets,0);
+  }finally{await engine.close()}
+ });
+});
+test('changing recording rights mid-playback stops voices and evicts decoded samples',{concurrency:false},async()=>{
+ await withSimulatedAudio(async()=>{
+  const {session,bytes}=prepare();
+  const engine=new PulseGridAudioEngine();
+  engine.setAudioAssetResolver(resolverOf(bytes));
+  try{
+    await engine.play(session,0);
+    assert.equal(engine.status.cached_audio_assets,1);
+    const context=SimulatedAudioContext.instances.at(-1);
+    const restricted=structuredClone(session);
+    restricted.assets[0].rights='restricted';
+    engine.updateSession(restricted);
+    assert.equal(engine.status.playing,false);
+    assert.equal(engine.status.cached_audio_assets,0);
+    assert.ok(context.starts[0].source.stops.length>0);
+    await assert.rejects(engine.play(restricted,0),/missing or restricted/);
+    assert.equal(engine.status.playing,false);
+  }finally{await engine.close()}
+ });
+});
+test('late async sample read cannot refill another session cache',{concurrency:false},async()=>{
+ await withSimulatedAudio(async()=>{
+  const {session,bytes}=prepare();
+  let release;
+  const gate=new Promise(resolve=>{release=resolve});
+  let entered;
+  const firstRead=new Promise(resolve=>{entered=resolve});
+  const engine=new PulseGridAudioEngine();
+  engine.setAudioAssetResolver(resolverOf(bytes,{
+    readBytes:async()=>{entered();await gate;return new Uint8Array(bytes)}
+  }));
+  try{
+    const playing=engine.play(session,0);
+    await firstRead;
+    const different=structuredClone(session);
+    different.session_id='new-authenticated-session';
+    engine.updateSession(different);
+    release();
+    await assert.rejects(playing,/authorization changed|superseded/);
+    assert.equal(engine.status.cached_audio_assets,0);
+    assert.equal(engine.status.playing,false);
+    assert.equal(SimulatedAudioContext.instances.at(-1).starts.length,0);
+  }finally{release();await engine.close()}
+ });
+});
+test('resolver swap stops old voices and forces fresh decoding only from replacement resolver',{concurrency:false},async()=>{
+ await withSimulatedAudio(async()=>{
+  const {session,bytes}=prepare();
+  const engine=new PulseGridAudioEngine();
+  engine.setAudioAssetResolver(resolverOf(bytes));
+  try{
+    await engine.play(session,0);
+    const old=SimulatedAudioContext.instances.at(-1);
+    assert.equal(old.decodeCalls,1);
+    engine.setAudioAssetResolver(resolverOf(bytes,{authorizeRead:async()=>false}));
+    assert.equal(engine.status.playing,false);
+    assert.equal(engine.status.cached_audio_assets,0);
+    await assert.rejects(engine.play(session,0),/not authorized/);
+    assert.equal(old.decodeCalls,1);
+  }finally{await engine.close()}
+ });
+});
