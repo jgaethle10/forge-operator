@@ -5,7 +5,7 @@ import {createHash} from 'node:crypto';
 import {resolve} from 'node:path';
 
 const out=resolve('dist/evermaps');
-const files=['index.html','app.js','style.css'];
+const files=['index.html','app.js','style.css','pnw-land.geojson'];
 const digests={};
 for(const name of files){
  const path=resolve(out,name);
