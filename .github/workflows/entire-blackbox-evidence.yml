@@ -219,3 +219,39 @@ jobs:
           path: /tmp/saban-blackbox-review.json
           if-no-files-found: error
           retention-days: 14
+
+
+  # Real Saban-dispatched OS subprocess (a controlled hardcoded rogue drill).
+  # Only inert IPC broker attempts; no deployment, provider action or external
+  # account access. Independent of the Black Box CI evidence path.
+  rogue-agent-field-drill:
+    name: Contained rogue agent mission
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Adversarial OS child and Spider persisted-queue restart tests
+        run: node --test systemia/agent-continuity/rogue-field-drill.test.mjs
+      - name: Execute one rogue-agent mission in bounded Saban sandbox
+        run: |
+          set -euo pipefail
+          node systemia/agent-continuity/rogue-field-drill-cli.mjs | tee /tmp/blackbox-rogue-field-mission.json
+          grep -q '"result": "PASSED_CONTAINED_LOCAL_ROGUE_DRILL_NOT_PRODUCTION"' /tmp/blackbox-rogue-field-mission.json
+          grep -q '"observed_rogue_process_terminated": true' /tmp/blackbox-rogue-field-mission.json
+          grep -q '"agent_post_quarantine_retry": "DENIED_QUARANTINED"' /tmp/blackbox-rogue-field-mission.json
+          grep -q '"real_spider_service_invoked": false' /tmp/blackbox-rogue-field-mission.json
+          grep -q '"operator_production_admission_verified": false' /tmp/blackbox-rogue-field-mission.json
+      - name: Archive contained rogue-agent mission receipt
+        uses: actions/upload-artifact@v4
+        with:
+          name: blackbox-real-process-rogue-mission-local
+          path: /tmp/blackbox-rogue-field-mission.json
+          if-no-files-found: error
+          retention-days: 14
