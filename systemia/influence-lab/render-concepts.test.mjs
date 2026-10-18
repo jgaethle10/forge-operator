@@ -24,9 +24,20 @@ test('local concept gallery builds twelve source-only SVG files without publicat
     assert.equal(result.status,0,result.stderr);
     const output=JSON.parse(result.stdout);
     assert.equal(output.concepts,12);
+    assert.equal(output.distributionDrafts,12);
     assert.equal(output.publicationAuthority,false);
     const manifest=JSON.parse(fs.readFileSync(path.join(dir,'manifest.json'),'utf8'));
     assert.equal(manifest.assets.length,12);
+    const distribution=JSON.parse(fs.readFileSync(path.join(dir,'distribution-review.json'),'utf8'));
+    assert.equal(distribution.copyAndLinkDrafts.length,12);
+    assert.equal(distribution.state,'review_only');
+    assert.equal(distribution.buyerJourney.independentlyVerifiedSettlements,null);
+    assert.equal(distribution.boundaries.publicationAuthority,false);
+    const drafts=fs.readFileSync(path.join(dir,'copy-review.md'),'utf8');
+    assert.match(drafts,/Review only/);
+    assert.match(drafts,/Status: HELD/);
+    assert.match(drafts,/utm_source=linkedin/);
+
     assert.equal(manifest.sourceMediaVerified,false);
     assert.equal(manifest.paymentVerified,false);
     for(const item of manifest.assets){
