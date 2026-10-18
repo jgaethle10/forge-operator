@@ -3,6 +3,11 @@ import assert from 'node:assert/strict';
 import {runFoundrySabanCaptureReview} from './instrument-foundry-saban-review.mjs';
 
 const SHA='a'.repeat(64);
+const goodPitch=()=>({
+ schema:'evercraft.fallen.piano-root-evidence.v1',status:'consistent',expected_midi:60,
+ expected_hz:261.626,estimated_hz:261.7,cents_error:0.49,periodicity:.91,
+ reason:'instrument_capture_pitch_consistent',human_pitch_confirmed:false
+});
 const goodQa=()=>({schema:'evercraft.fallen.piano-capture-technical-qa.v1',
  status:'technical_signal_pass',blockers:[],
  metrics:{peak_dbfs:-11,rms_dbfs:-26},commercial_release_ready:false});
@@ -12,7 +17,8 @@ test('Saban runs four media-studio review roles concurrently but keeps release h
   rights_evidence_ref:'rights-record-123',provenance_receipt_id:'capture-receipt-123',
   performance_timing_receipt_id:'timing-123',
   human_listening_review:{state:'accepted',receipt_id:'human-review-123'},
-  capture_signal_qa:goodQa()
+  capture_signal_qa:goodQa(),
+  root_pitch_evidence:goodPitch(),selected_midi_root:60
  });
  assert.equal(r.roles_checked.length,4);
  assert.equal(r.planning_receipts.length,4);
@@ -74,4 +80,28 @@ test('Saban preflight rejects a technically held/clipped waveform report',async(
  assert.equal(r.review_status,'blocked');
  assert.equal(r.qa_report_consistency_checked,false);
  assert.equal(r.qa_waveform_bytes_reexamined_by_saban,false);
+});
+
+test('Saban review refuses incorrectly labeled root pitch even with completed signal and listening QA',async()=>{
+ const r=await runFoundrySabanCaptureReview({
+   capture_id:'piano-f3',source_sha256:SHA,rights_evidence_ref:'claim',
+   provenance_receipt_id:'receipt',performance_timing_receipt_id:'timing',
+   human_listening_review:{state:'accepted',receipt_id:'review'},
+   capture_signal_qa:goodQa(),root_pitch_evidence:goodPitch(),selected_midi_root:61,
+ });
+ assert.equal(r.review_status,'blocked');
+ assert.ok(r.findings.includes('root_pitch_evidence_missing_mismatched_or_indeterminate'));
+ assert.equal(r.root_pitch_verified_by_saban,false);
+});
+test('Saban review refuses indeterminate pitch and does not certify human pitch correctness',async()=>{
+ const r=await runFoundrySabanCaptureReview({
+   capture_id:'piano-f4',source_sha256:SHA,rights_evidence_ref:'claim',
+   provenance_receipt_id:'receipt',performance_timing_receipt_id:'timing',
+   human_listening_review:{state:'accepted',receipt_id:'review'},
+   capture_signal_qa:goodQa(),
+   root_pitch_evidence:{...goodPitch(),status:'indeterminate',estimated_hz:null},selected_midi_root:60
+ });
+ assert.equal(r.review_status,'blocked');
+ assert.equal(r.root_pitch_report_consistency_checked,false);
+ assert.equal(r.release_ready,false);
 });
