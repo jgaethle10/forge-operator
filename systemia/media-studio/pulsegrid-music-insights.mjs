@@ -47,7 +47,10 @@ export function analyzePulseGridMusic(session,scene){
   const pitchClasses=Array(12).fill(0);
   for(const note of events)pitchClasses[note.pitch%12]+=Math.min(16,note.end-note.start)*note.velocity;
   const ranked=pitchClasses.map((weight,pc)=>({pitch_class:NAMES[pc],pc,weight:+weight.toFixed(3)}))
-    .sort((a,b)=>b.weight-a.weight||a.pc-b.pc).slice(0,5);
+    // Never erase a softly played pitch class merely because five louder notes
+    // dominated the aggregate. This display is evidence, not a scale guess.
+    .filter(item=>item.weight>0)
+    .sort((a,b)=>b.weight-a.weight||a.pc-b.pc);
   const total=events.reduce((s,n)=>s+n.velocity,0);
   const positions=events.length?events.map(n=>n.start):[];
   const end=events.length?Math.max(...events.map(n=>n.end)):0;
