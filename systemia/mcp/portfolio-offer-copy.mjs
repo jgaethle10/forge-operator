@@ -1,6 +1,8 @@
 // Human-facing offer explanation only. The canonical amount, SKU, processor,
 // confirmation rules and fulfillment gate remain in public-payment-offers.mjs.
 // No invented agent mappings, new prices, checkout implementation or guarantees.
+import { PUBLIC_PAYMENT_OFFERS } from './public-payment-offers.mjs';
+
 export const PORTFOLIO_OFFER_COPY = Object.freeze({
   'browser-diagnosis': {
     eyebrow: 'Browser Workflow Diagnosis',
@@ -132,8 +134,10 @@ export const PORTFOLIO_OFFER_COPY = Object.freeze({
 
 export function approvedPortfolioOfferCopy(slug, offer) {
   const copy = PORTFOLIO_OFFER_COPY[slug];
-  if (!copy || !offer || offer.amount_cents <= 0 ||
-      typeof offer.offer_key !== 'string' || !offer.offer_key ||
-      offer.currency !== 'usd') return null;
+  const approved=PUBLIC_PAYMENT_OFFERS[slug];
+  if (!copy || !approved || !offer ||
+      offer.offer_key !== approved.offer_key ||
+      offer.amount_cents !== approved.amount_cents ||
+      offer.currency !== approved.currency) return null;
   return copy;
 }
