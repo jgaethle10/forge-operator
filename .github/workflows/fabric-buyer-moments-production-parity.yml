@@ -1,0 +1,64 @@
+name: Fabric Buyer Moments Production Parity
+on:
+  pull_request:
+    paths:
+      - 'systemia/mcp/fabric-public-site.mjs'
+      - 'scripts/fabric-buyer-moments-live-canary.mjs'
+      - 'tests/fabric-buyer-moments-live-canary.test.mjs'
+      - 'tests/fabric-buyer-moments.test.mjs'
+      - '.github/workflows/fabric-buyer-moments-production-parity.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  source-contract:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Validate read-only canary and exact offer link contracts
+        run: |
+          node --check scripts/fabric-buyer-moments-live-canary.mjs
+          node --test tests/fabric-buyer-moments-live-canary.test.mjs tests/fabric-buyer-moments.test.mjs
+
+  external-observation-not-deployment:
+    runs-on: ubuntu-latest
+    timeout-minutes: 6
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Observe currently deployed owned public origin using GET only
+        id: parity
+        continue-on-error: true
+        run: node scripts/fabric-buyer-moments-live-canary.mjs
+      - name: Summarize actual public parity without claiming release
+        if: always()
+        run: |
+          node --input-type=module - <<'NODE'
+          import fs from 'node:fs';
+          const file='artifacts/fabric/buyer-moments/external-parity.json';
+          let message='Public parity NOT verified: external canary returned no receipt. No deployment or sale can be inferred.';
+          if (fs.existsSync(file)) {
+            const p=JSON.parse(fs.readFileSync(file,'utf8'));
+            message=p.passed
+              ? 'Public GET contract and buyer-moment links observed. Source-to-edge commit identity, checkout creation, settlement and shipping remain separate unverified gates.'
+              : 'Public parity not established. Failures: '+p.failures.join(', ');
+          }
+          fs.appendFileSync(process.env.GITHUB_STEP_SUMMARY||'/dev/stdout',
+            '## Production boundary (observation only)\n\n'+message+'\n\nNo orders, charges, posts, or customer contact were attempted.\n');
+          NODE
+      - name: Archive external read-only receipt, including honest failures
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: fabric-buyer-moments-public-parity
+          path: artifacts/fabric/buyer-moments/external-parity.json
+          retention-days: 14
+          if-no-files-found: warn
