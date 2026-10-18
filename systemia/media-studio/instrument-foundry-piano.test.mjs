@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import {validateFoundryPatch,selectFoundrySample,scheduleFoundryPianoNote} from './instrument-foundry-piano.mjs';
+import {validateFoundryPatch,selectFoundrySample,scheduleFoundryPianoNote,appendFoundryPianoSample} from './instrument-foundry-piano.mjs';
 import {applyPulseGridTransaction,createPulseGridSession,undoPulseGridReceipt,validatePulseGridSession} from './pulsegrid-session.ts';
 
 const D='a'.repeat(64),id='audio-sha256:'+D;
@@ -122,4 +122,62 @@ test('bad scheduling data never spawns a fake audio voice',()=>{
  buffer:{duration:0},pitch:60,velocity:.7,time:0,duration:1,
  selection:selectFoundrySample(patch(),60,.7),createSource:m.createSource}),/Invalid/);
  assert.equal(m.calls.length,0);
+});
+
+test('the same instrument can accumulate distinct recorded pitches without replacing original takes',()=>{
+ const original=patch(),b={...audio(),id:'audio-sha256:'+'b'.repeat(64),digest:'b'.repeat(64)};
+ const bank=appendFoundryPianoSample(original,{
+   asset_id:b.id,root_pitch:67,velocity_min:0,velocity_max:1,release_sec:.23
+ },[audio(),b]);
+ assert.equal(bank.samples.length,2);
+ assert.equal(original.samples.length,1);
+ assert.equal(selectFoundrySample(bank,60,.6).asset_id,id);
+ assert.equal(selectFoundrySample(bank,67,.6).asset_id,b.id);
+ assert.throws(()=>selectFoundrySample(bank,73,.6),/No actual Foundry recording/);
+});
+test('one MIDI root can use properly bounded quiet and loud layers',()=>{
+ const a=audio(),b={...audio(),id:'audio-sha256:'+'b'.repeat(64),digest:'b'.repeat(64)};
+ const base={kind:'recorded_piano_v1',max_transpose_semitones:2,samples:[
+   {asset_id:a.id,root_pitch:60,velocity_min:0,velocity_max:.4,release_sec:.2},
+ ]};
+ const bank=appendFoundryPianoSample(base,{asset_id:b.id,root_pitch:60,
+   velocity_min:.4,velocity_max:1,release_sec:.2},[a,b]);
+ assert.equal(selectFoundrySample(bank,60,.4).asset_id,a.id);
+ assert.equal(selectFoundrySample(bank,60,.8).asset_id,b.id);
+ assert.equal(bank.samples.length,2);
+});
+test('ambiguous overlapping dynamic layers refuse silent arbitrary sample choices',()=>{
+ const a=audio(),b={...audio(),id:'audio-sha256:'+'b'.repeat(64),digest:'b'.repeat(64)};
+ assert.throws(()=>appendFoundryPianoSample(patch(),{asset_id:b.id,root_pitch:60,
+   velocity_min:.2,velocity_max:1,release_sec:.2},[a,b]),/Overlapping piano velocity layers/);
+});
+test('two neighboring root pitch recordings resolve toward closest real sample, no transposition beyond limit',()=>{
+ const a=audio(),b={...audio(),id:'audio-sha256:'+'b'.repeat(64),digest:'b'.repeat(64)};
+ const bank=appendFoundryPianoSample(patch(),{asset_id:b.id,root_pitch:63,
+   velocity_min:0,velocity_max:1,release_sec:.2},[a,b]);
+ assert.equal(selectFoundrySample(bank,61,.6).asset_id,a.id);
+ assert.equal(selectFoundrySample(bank,62,.6).asset_id,b.id);
+ assert.throws(()=>selectFoundrySample(bank,66,.6),/No actual Foundry recording/);
+});
+test('append never allows unregistered or restricted recordings to slip into multi-layer instrument',()=>{
+ const a=audio(),b={...audio(),id:'audio-sha256:'+'b'.repeat(64),digest:'b'.repeat(64),rights:'restricted'};
+ assert.throws(()=>appendFoundryPianoSample(patch(),{asset_id:b.id,root_pitch:67,
+  velocity_min:0,velocity_max:1,release_sec:.2},[a,b]),/missing or restricted/);
+});
+test('multi-note bank commits with canonical history and undo preserves registered WAVs',()=>{
+ const a=audio(),b={...audio(),digest:'b'.repeat(64),id:'audio-sha256:'+'b'.repeat(64)};
+ const bank=appendFoundryPianoSample(patch(),{asset_id:b.id,root_pitch:67,
+   velocity_min:0,velocity_max:1,release_sec:.2},[a,b]);
+ const source=createPulseGridSession('Foundry multi note');
+ const result=applyPulseGridTransaction(source,{intent:'verified piano library two sample layers',
+  operations:[
+    {type:'asset.register_audio',asset:a},
+    {type:'asset.register_audio',asset:b},
+    {type:'clip.set_foundry_piano_patch',track_id:'keys',scene:0,patch:bank},
+  ]},'human');
+ assert.equal(result.session.assets.length,2);
+ assert.equal(result.session.tracks.find(x=>x.id==='keys').clips[0].provenance.foundry_piano_patch.samples.length,2);
+ const reverted=undoPulseGridReceipt(result.session,result.receipt.id,'human');
+ assert.equal(reverted.session.assets.length,0);
+ assert.equal(source.assets.length,0);
 });
