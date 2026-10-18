@@ -162,6 +162,17 @@ h2{font-size:clamp(30px,4.5vw,52px);letter-spacing:-.04em;margin:10px 0 14px}
 .badge{display:inline-block;margin-top:12px;border:1px solid #2a4369;background:#0d1a30;color:#bcd5f8;padding:5px 8px;border-radius:999px;font-size:11px}
 .price{margin-top:14px!important;color:#f7f9fc!important;font-weight:700;font-size:14px!important}
 .cardlinks{display:flex;gap:12px;flex-wrap:wrap;margin-top:14px}
+.moments{padding:0 0 32px}
+.moments h2{font-size:clamp(26px,3.5vw,40px)}
+.moments .sub{margin:4px 0 18px}
+.moment-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+.moment{display:flex;flex-direction:column;justify-content:space-between;gap:13px;text-decoration:none;border:1px solid #345174;background:linear-gradient(135deg,rgba(21,48,76,.82),rgba(7,17,35,.92));border-radius:15px;padding:20px;min-width:0}
+.moment:hover{border-color:#72baff}
+.moment:focus-visible{outline:3px solid var(--green);outline-offset:3px}
+.moment strong{font-size:18px;line-height:1.4}
+.moment span{color:#c6d7ea;font-size:13px}
+.moment .moment-next{color:#9fe7ff;font-weight:750}
+@media(max-width:780px){.moment-grid{grid-template-columns:1fr}.moment{padding:17px;min-height:94px}}
 .docs-link{display:inline-block;color:#9ec8ff;font-size:13px;text-decoration:none}
 .detail-grid{display:grid;grid-template-columns:1.15fr .85fr;gap:16px;margin:28px 0 70px}
 .detail-panel{border:1px solid var(--line);background:linear-gradient(180deg,rgba(14,25,48,.82),rgba(9,16,30,.82));border-radius:16px;padding:22px}
@@ -361,7 +372,46 @@ export function listHumanOffers(capabilities=[]){
     .map(item=>({public_id:item.public_id,slug:offerSlugForCapability(item.public_id),name:item.entry_paid_offer?.name||item.name,price:entryPriceLabel(item),url:PUBLIC_ORIGIN+'/offers/'+offerSlugForCapability(item.public_id),human_confirmation_required:true,checkout_is_not_payment:true,paid_delivery_verified:false}));
 }
 
+// Explicit, human-reviewed buying moments. These are navigation hints to the
+// existing approved human products, NEVER MCP specialist mappings or checkout authority.
+// Keep each product identity exact: price, order key and fulfillment remain canonical.
+export const APPROVED_BUYER_MOMENTS=Object.freeze([
+  Object.freeze({public_id:'payment-offer-payments-pilot',slug:'payments-pilot',
+    problem:"Customers reach checkout, but I can't tell what was paid",
+    next:'Review one verified-order integration'}),
+  Object.freeze({public_id:'audit-center-website-audit-machine-v1',slug:'website-audit',
+    problem:"My website gets attention, but not enough inquiries",
+    next:'Review a five-fix public website audit'}),
+  Object.freeze({public_id:'payment-offer-browser-diagnosis',slug:'browser-diagnosis',
+    problem:"A browser task only works when someone remembers every click",
+    next:'Review one scoped workflow diagnosis'}),
+  Object.freeze({public_id:'legacy-rescue-lab-v1',slug:'legacy-rescue',
+    problem:"My existing software is unreliable and a rebuild feels risky",
+    next:'Review a bounded rescue scan'}),
+  Object.freeze({public_id:'payment-offer-ibmi-xray',slug:'ibmi-xray',
+    problem:"An IBM i upgrade has dependencies we have not mapped",
+    next:'Review an upgrade risk assessment'}),
+  Object.freeze({public_id:'findmypart-paid-hunt-v1',slug:'findmypart',
+    problem:"I cannot source a discontinued part",
+    next:'Review the first part hunt'}),
+]);
+
+export function availableBuyerMoments(capabilities=[]){
+  const items=[...(capabilities||[]),...extraOfferItems];
+  return APPROVED_BUYER_MOMENTS.filter((moment)=>{
+    const matches=items.filter((item)=>item.public_id===moment.public_id&&item.commercial_state==='sell_now');
+    // A held, missing or ambiguous product never becomes a misleading link.
+    return matches.length===1&&offerSlugForCapability(moment.public_id)===moment.slug&&
+      Boolean(offerPurchaseKeyForSlug(moment.slug))&&Boolean(offerCapabilityForSlug(moment.slug,capabilities));
+  });
+}
+
 export function renderOffers(capabilities=[]){
+  const moments=availableBuyerMoments(capabilities).map(({slug,problem,next})=>
+    '<a class="moment" href="/offers/'+escapeHtml(slug)+'" aria-label="'+escapeHtml(problem+' - '+next)+'">'
+    +'<strong>'+escapeHtml(problem)+'</strong>'
+    +'<span class="moment-next">'+escapeHtml(next)+' →</span></a>'
+  ).join('');
   const offers=[...(capabilities||[]),...extraOfferItems]
     .filter((item)=>item.commercial_state==='sell_now'&&offerSlugForCapability(item.public_id))
     .map((item)=>{
@@ -381,7 +431,8 @@ export function renderOffers(capabilities=[]){
     '<h1>One problem.<br>One clear offer.</h1>',
     '<p class="lede">No software scavenger hunt. These pages explain the pain, the smallest useful paid entry, what you send, what you get, and what happens next.</p>',
     '</section>',
-    '<div class="grid">'+(offers||'<article class="card"><h3>No public offer pages are available yet.</h3></article>')+'</div>',
+    moments?'<section class="moments" aria-labelledby="buyer-moments-title"><h2 id="buyer-moments-title">What is getting in your way?</h2><p class="sub">Start with the situation you recognize. Each link opens a specific existing offer with its own price, scope and checkout decision.</p><div class="moment-grid">'+moments+'</div></section>':'',
+    '<section id="all-offers" aria-label="All approved offers"><h2>All available offers</h2><div class="grid">'+(offers||'<article class="card"><h3>No public offer pages are available yet.</h3></article>')+'</div></section>',
     '</main>'
   ].join('\n'),{
     description:'Simple Evercraft offers with a clear problem, first paid step, price, inputs, outputs, and next action.',

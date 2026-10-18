@@ -67,7 +67,7 @@ test('Payments founding offer gets one conversion-focused responsive buy panel w
   const offer=PUBLIC_PAYMENT_OFFERS[slug];
   const page=renderOfferPage(offerCapabilityForSlug(slug,[]));
   const copy=PORTFOLIO_OFFER_COPY[slug];
-  assert.equal(copy.headline,'Connect checkout to a verified order.');
+  assert.equal(copy.headline,'Know when a customer paid. Know what happens next.');
   assert.match(page,/class="offer-hero offer-hero--payments"/);
   assert.match(page,/class="pilot-buy-panel"/);
   assert.match(page,/aria-label="Founding integration offer and secure checkout"/);
@@ -97,5 +97,25 @@ test('focused pilot layout cannot alter other approved product hero templates',(
     assert.doesNotMatch(page,/<section class="pilot-process"/);
     assert.match(page,/<section class="offer-hero">/);
     assert.match(page,/Evercraft Payments prepares the checkout/);
+  }
+});
+
+test('human-centered copy gives a recognizable buying moment without invented success proof',()=>{
+  const expected={
+    'browser-diagnosis': ['one browser task breaks','remembering every click'],
+    'payments-pilot': ['Know when a customer paid','settlement verification'],
+    'legacy-xray': ['Your old system still runs the business','critical operations'],
+    'ibmi-xray': ["should not introduce surprises",'scheduled jobs'],
+    'sign-pilot': ['signing journey clear','Signing is a moment of trust'],
+    'towi-evidence': ['next decision with the evidence','vague confidence is not enough'],
+  };
+  for (const [slug,[moment,context]] of Object.entries(expected)) {
+    const copy=PORTFOLIO_OFFER_COPY[slug];
+    assert.ok(copy.headline.includes(moment),slug+': buying-moment headline');
+    assert.ok(copy.lede.includes(context),slug+': precise customer context');
+    assert.match(copy.promise,/\b(one|a|an)\b/i,slug+': scoped promise');
+    const page=renderOfferPage(offerCapabilityForSlug(slug,[]));
+    assert.ok(page.includes(copy.headline.replaceAll('&','&amp;').replaceAll("'",'&#39;')),slug+': actual buyer page');
+    assert.doesNotMatch(page,/guaranteed (revenue|sales|returns)|as seen on|trusted by 10,000/i,slug+': no unsupported proof');
   }
 });
