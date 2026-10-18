@@ -104,18 +104,18 @@ h1{font-size:clamp(48px,8vw,90px);line-height:.95;letter-spacing:-.065em;margin:
 .offer-proof{border-left:3px solid var(--green);padding:3px 0 3px 14px;color:#c8d8e9;margin-top:18px}
 .checkout-form{display:flex;flex-wrap:wrap;gap:10px;align-items:center;margin-top:30px}
 .checkout-note{width:100%;color:var(--muted);font-size:13px;line-height:1.5;max-width:690px}
-.offer-purchase-page .offer-hero{padding:38px 0 24px;max-width:1040px}
-.offer-purchase-page .offer-hero h1{font-size:clamp(38px,5.3vw,70px);line-height:1.05;letter-spacing:-.055em;max-width:940px;margin:20px 0 18px}
+.offer-purchase-page .offer-hero{padding:28px 0 20px;max-width:1040px}
+.offer-purchase-page .offer-hero h1{font-size:clamp(38px,5vw,62px);line-height:1.05;letter-spacing:-.055em;max-width:940px;margin:16px 0 14px}
 .offer-purchase-page .offer-hero .lede{font-size:clamp(17px,1.8vw,22px);line-height:1.55;max-width:720px;margin:0}
-.offer-purchase-page .offer-hero-layout{display:grid;grid-template-columns:minmax(0,.92fr) minmax(0,1.08fr);gap:30px;align-items:start;margin:28px 0 10px}
+.offer-purchase-page .offer-hero-layout{display:grid;grid-template-columns:minmax(0,.92fr) minmax(0,1.08fr);gap:30px;align-items:start;margin:20px 0 10px}
 .offer-purchase-page .offer-visual{margin:0;border-radius:18px}
-.offer-purchase-page .offer-buy{padding:20px;border:1px solid var(--line);background:linear-gradient(165deg,rgba(14,25,48,.84),rgba(7,14,29,.92));border-radius:18px}
+.offer-purchase-page .offer-buy{padding:18px;border:1px solid var(--line);background:linear-gradient(165deg,rgba(14,25,48,.84),rgba(7,14,29,.92));border-radius:18px}
 .offer-purchase-page .offer-price{margin:0 0 8px;line-height:1}
 .offer-purchase-page .offer-price-note{font-size:15px;line-height:1.5;color:#c7d8eb;max-width:430px}
 .offer-purchase-page .offer-pricing-details{margin-top:12px;font-size:13px;color:var(--muted);line-height:1.6}
 .offer-purchase-page .offer-pricing-details summary{cursor:pointer;color:#cfe3ff}
 .offer-purchase-page .offer-pricing-details p{margin:8px 0 0}
-.offer-purchase-page .checkout-form{display:grid;gap:10px;margin-top:22px;align-items:stretch}
+.offer-purchase-page .checkout-form{display:grid;gap:10px;margin-top:18px;align-items:stretch}
 .offer-purchase-page .checkout-form label{font-size:14px;font-weight:650}
 .offer-purchase-page .checkout-form input{width:100%!important;max-width:100%!important;min-height:44px}
 .offer-purchase-page .checkout-form .btn{min-height:46px;width:100%;text-align:center}
