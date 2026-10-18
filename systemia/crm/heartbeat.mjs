@@ -22,7 +22,7 @@ export function buildCrmHeartbeat(input, { now = new Date(), maxAgeSeconds = 900
   if(!Number.isFinite(nowMs)) throw Error('clock_invalid');
   if(!fresh(time(input.generated_at,'generated_at'),nowMs,maxAgeSeconds*1000)) throw Error('crm_source_stale_or_future');
   need(input.source_revision,'source_revision');
-  if(!Array.isArray(input.connectors) || input.connectors.length>150) throw Error('crm_connectors_invalid');
+  if(!Array.isArray(input.connectors) || input.connectors.length===0 || input.connectors.length>150) throw Error('crm_connectors_invalid');
   if(!Array.isArray(input.signals) || input.signals.length>50000) throw Error('crm_signals_invalid');
   const sources=new Set(); const health={current:0,stale:0,unavailable:0,unauthorized:0}; let gaps=0;
   for(const item of input.connectors) {
