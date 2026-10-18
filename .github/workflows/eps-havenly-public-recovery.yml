@@ -1,0 +1,71 @@
+name: P0 EPS Havenly Public Recovery Truth Gate
+on:
+  pull_request:
+    paths:
+      - 'public/eps/**'
+      - 'public/havenly/**'
+      - 'public/apps/eps-estimator/**'
+      - 'scripts/build-eps-havenly-portable-release.mjs'
+      - 'scripts/probe-eps-havenly-owned-service.mjs'
+      - 'tests/eps-havenly-portable-release.test.mjs'
+      - '.github/workflows/eps-havenly-public-recovery.yml'
+  push:
+    branches: [main]
+    paths:
+      - 'public/eps/**'
+      - 'public/havenly/**'
+      - 'public/apps/eps-estimator/**'
+      - 'scripts/build-eps-havenly-portable-release.mjs'
+      - 'scripts/probe-eps-havenly-owned-service.mjs'
+      - 'tests/eps-havenly-portable-release.test.mjs'
+      - '.github/workflows/eps-havenly-public-recovery.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  portable-release:
+    runs-on: ubuntu-latest
+    timeout-minutes: 6
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Verify owned local service release and fallback honesty
+        run: node --test tests/eps-havenly-portable-release.test.mjs tests/eps-havenly-rescue.test.mjs
+      - name: Package two direct contact frontages plus EPS estimator
+        run: node scripts/build-eps-havenly-portable-release.mjs
+      - name: Publish durable portable artifact (not a live deployment)
+        uses: actions/upload-artifact@v4
+        with:
+          name: eps-havenly-portable-${{ github.sha }}
+          path: artifacts/eps-havenly-continuity/
+          retention-days: 90
+          if-no-files-found: error
+      - name: Explain artifact boundary
+        run: |
+          echo "## Portable build, not deployed" >> "$GITHUB_STEP_SUMMARY"
+          echo "EPS and HAVENLY frontages are packaged as a portable Actions artifact." >> "$GITHUB_STEP_SUMMARY"
+          echo "This is not a URL, backend intake, customer export, booking engine or verified DNS cutover." >> "$GITHUB_STEP_SUMMARY"
+  live-service-gate:
+    if: github.event_name != 'pull_request'
+    needs: portable-release
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    env:
+      EVERCRAFT_PUBLIC_SERVICE_ORIGIN: ${{ vars.EVERCRAFT_PUBLIC_SERVICE_ORIGIN }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Probe actual owned routes and canonical domains
+        run: node scripts/probe-eps-havenly-owned-service.mjs
+      - name: Preserve external route-state evidence even when blocked
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: eps-havenly-live-state-${{ github.sha }}
+          path: artifacts/eps-havenly-continuity/live-probe.json
+          if-no-files-found: warn
+          retention-days: 90
