@@ -83,6 +83,7 @@ export class PulseGridAudioEngine {
   setAudioAssetResolver(resolver:PulseGridAudioAssetResolver|null){
     if(this.assetResolver===resolver)return;
     if(this.playing)this.stop();
+    this.playbackAttempt+=1; // Cancel even a Play still waiting for Web Audio initialization.
     this.assetResolver=resolver;
     this.invalidateAudioCache();
   }
@@ -91,6 +92,7 @@ export class PulseGridAudioEngine {
     const authority=pulseGridAudioAuthoritySignature(session);
     if(this.audioAuthoritySignature!==authority){
       if(this.playing)this.stop();
+      this.playbackAttempt+=1;
       this.audioAuthoritySignature=authority;
       this.invalidateAudioCache();
     }
@@ -113,6 +115,7 @@ export class PulseGridAudioEngine {
     // deliberately requires a new Play press instead of silent note loss.
     if(nextScene!==this.scene){
       if(this.playing)this.stop();
+      this.playbackAttempt+=1;
       this.invalidateAudioCache();
     }
     this.scene = nextScene;
