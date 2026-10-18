@@ -101,7 +101,7 @@ test('register overlap sweep detects real simultaneous different-track voices an
  ]},'human').session;
  assert.equal(analyzePulseGridMusic(first,0).register_proximity_examples,0);
  const second=applyPulseGridTransaction(first,{intent:'another voice',operations:[
-  {type:'note.add',track_id:'bass',scene:0,note:{pitch:62,start:.5,length:.5}}
+  {type:'note.add',track_id:'bass',scene:0,note:{pitch:62,start:0,length:.5}}
  ]},'human').session;
  assert.ok(analyzePulseGridMusic(second,0).register_proximity_examples>0);
 });
