@@ -12,8 +12,6 @@ test('preserves donation, campaign email, plain quotes, alternate hosts and thir
  assert.deepEqual(findUnsafeLinks('<p>voteroman.com previously hosted the website.</p><a href="https://donate.voteroman.com/">Donation</a><a href="mailto:contact@voteroman.com">Email</a><a href="https://fabric.systemiacommandcenters.com/go/roman">Recovery</a>'),[]);
 });
 test('real published source contains no deliberate navigation to suspended apex',()=>{
- const root=new URL('../../',import.meta.url);
- const summary=auditPublicLinks(new URL('../../',import.meta.url).pathname.replace(/\/systemia\/$/,''));
  // Use process cwd, the canonical repository root in CI.
  const canonical=auditPublicLinks(process.cwd());
  assert.ok(canonical.files_scanned>0);
