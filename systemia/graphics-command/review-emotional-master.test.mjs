@@ -33,6 +33,8 @@ test('real encoded video and audio can pass exact-frame technical handoff',()=>{
   assert.ok(fs.existsSync(review.receiptPath));
   assert.ok(Number.isFinite(review.audio.integratedLufs));
   assert.equal(review.creativeReview.audiovisualSync,'unverified');
+  assert.equal(review.creativeCandidateGate.status,'rejected');
+  assert.ok(review.creativeCandidateGate.reasons.includes('creative_decision_missing'));
   assert.equal(review.boundaries.notPublicationAuthority,true);
   // Technical fixture only. Never label as a creative master or real product demonstration.
   if(process.env.EVERCRAFT_QC_ARTIFACT_DIR){
