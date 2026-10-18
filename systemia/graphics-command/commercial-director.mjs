@@ -217,7 +217,10 @@ export function assessCommercialScrollStop(plan){
     status:score>=0.9?'pass':'reject',
     score,
     checks,
-    rule:'Commercial creative is not ready unless the visual metaphor leads, copy stays subordinate, price and CTA are obvious, motion survives vertical delivery, and synthetic illustration cannot be mistaken for observed customer evidence.',
+    rule:'This is a structural and source-admission preflight only: the plan must define a leading visual, short copy, formats, exact-frame motion and truth boundaries. A pass does not validate emotional impact, rendered footage, visual beauty or video performance.',
+    evaluationScope:'plan_structure_only',
+    creativeQualityState:'not_observed',
+    cinematicApproval:false,
     publicationAuthority:false,
   };
 }
