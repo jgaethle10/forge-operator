@@ -8,6 +8,7 @@ on:
 
 permissions:
   contents: read
+  actions: read
 
 jobs:
   observe-public-pages:
@@ -28,6 +29,22 @@ jobs:
             -o /tmp/pages-meta.json \
             -w '%{http_code}' "https://api.github.com/repos/${REPOSITORY}/pages")"
           echo "github_pages_api_http=${STATUS}" | tee pages-diagnostics.txt
+          workflow_http="$(curl --silent --show-error --max-time 15 \
+            -H "Accept: application/vnd.github+json" \
+            -H "Authorization: Bearer ${GH_TOKEN}" \
+            -o /tmp/evercraft-pages-runs.json \
+            -w '%{http_code}' \
+            "https://api.github.com/repos/${REPOSITORY}/actions/workflows/evercraft-journal-pages.yml/runs?per_page=4")"
+          echo "pages_workflow_api_http=${workflow_http}" | tee -a pages-diagnostics.txt
+          if [ "$workflow_http" = "200" ]; then
+            node - <<'NODE' >> pages-diagnostics.txt
+          const fs=require('node:fs');
+          const data=JSON.parse(fs.readFileSync('/tmp/evercraft-pages-runs.json','utf8'));
+          for(const run of (data.workflow_runs||[]).slice(0,4)){
+            console.log('pages_run='+[run.id,run.event,run.status,run.conclusion||'none',run.created_at].join('|'));
+          }
+          NODE
+          fi
           if [ "$STATUS" = "200" ]; then
             node - <<'NODE' >> pages-diagnostics.txt
           const fs = require('node:fs');
