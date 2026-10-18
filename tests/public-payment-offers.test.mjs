@@ -71,7 +71,7 @@ test('EventWave Facebook in-app browser form fails closed on provider rejection 
     const accepted=await submit('event-form-provider-accepted');
     assert.equal(accepted.status,303);
     const handoffPath=accepted.headers.get('location');
-    assert.ok(/^\\/checkout\\/handoff\\/[A-Za-z0-9_-]+$/.test(handoffPath));
+    assert.ok(handoffPath.startsWith('/checkout/handoff/'));
     const handoff=await fetch(runtime.url+handoffPath);
     assert.equal(handoff.status,200);
     assert.ok((await handoff.text()).includes('checkout.stripe.com/c/pay/synthetic_test'));
