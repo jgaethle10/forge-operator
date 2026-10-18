@@ -78,5 +78,26 @@
   "current_state": "schema_discovery_only",
   "data_migration_complete": false,
   "production_write_retargeted": false,
-  "cutover_authorized": false
+  "cutover_authorized": false,
+  "source_readback": {
+    "observed_at": "2026-10-17",
+    "method": "Read-only Base44 entity query, projected id only, limit 500 per entity",
+    "sensitive_rows_persisted": false,
+    "count_type": "records returned in one page (not an independently reconciled inventory)",
+    "counts": {
+      "EPS Lead": 19,
+      "EPS CommandCenterLead": 3,
+      "EPS Appointment": 2,
+      "Havenly Lead": 75,
+      "Havenly LeadSubmission": 69,
+      "Havenly ServiceJob": 0
+    },
+    "limitations": [
+      "counts do not imply deduplicated customers",
+      "other schemas have not been counted",
+      "new writes may occur while legacy remains active",
+      "zero in one collection does not prove absence of jobs elsewhere",
+      "no target import or parity receipt"
+    ]
+  }
 }
