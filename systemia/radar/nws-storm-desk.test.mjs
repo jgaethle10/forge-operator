@@ -94,3 +94,12 @@ test('national editorial cap reserves room for another state during concentrated
   assert.deepEqual(selected.map((row) => row.facts.states[0]), ['KS', 'MA']);
   assert.equal(selected[1].facts.forecast, true);
 });
+
+test('NWS wrong-schema HTTP 200 does not masquerade as an all-clear', async () => {
+  await assert.rejects(
+    () => collectNwsStormAlerts({ now, fetchImpl: async () => ({
+      ok: true, status: 200, json: async () => ({ error: 'upstream gateway' })
+    }) }),
+    /missing GeoJSON features/
+  );
+});
