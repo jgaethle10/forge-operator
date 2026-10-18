@@ -34,7 +34,10 @@ export async function runCanary({origin=ORIGIN,fetchImpl=fetch}={}){
       const email=/<input\b[^>]*\bname=["']customer_ref["'][^>]*\btype=["']email["']/i.test(res.body);
       const cta=res.body.includes('Continue to checkout');
       const form=res.body.includes('/api/offers/'+slug+'/checkout');
-      const correctPrice=res.body.includes(price);
+      // Match complete dollar amounts. "$49" must never validate "$490" or "$49.95".
+      const dollarAmounts=[...res.body.matchAll(/\$\s*\d+(?:\.\d+)?/g)]
+        .map(match=>Number(match[0].replace('$','').trim()));
+      const correctPrice=dollarAmounts.includes(Number(price.slice(1)));
       receipt.checks.push({route,http:res.status,email,cta,form,correct_price:correctPrice,price});
       if(res.status!==200)receipt.failures.push(slug+'_http_'+res.status);
       if(res.status===200&&(!email||!cta||!form||!correctPrice))receipt.failures.push(slug+'_contract_incomplete');
