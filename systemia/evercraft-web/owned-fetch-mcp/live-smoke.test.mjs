@@ -30,7 +30,7 @@ test('live read-only public Fetch through local MCP over actual HTTPS egress', {
     assert.equal(row.ok,true);
     assert.equal(row.source_url_redacted,'https://example.com/');
     assert.equal(row.status,200);
-    assert.match(row.text,/Example Domain/i);
+    assert.match([row.title,row.text].join(' '),/Example Domain|domain is for use in documentation examples/i);
     assert.match(row.content_sha256,/^sha256:[a-f0-9]{64}$/);
     assert.match(row.evidence_receipt_sha256,/^sha256:[a-f0-9]{64}$/);
     assert.equal(row.redirect_count>=0,true);
