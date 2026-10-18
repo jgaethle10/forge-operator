@@ -48,3 +48,7 @@ The canonical independent informational page remains at `https://fabric.systemia
 Test: `node --test systemia/domain-shield/roman-funnel.test.mjs tests/fabric-roman-campaign-mirror.test.mjs`.
 
 **Rollout truth:** a passing PR test proves source behavior, not that the public host has updated. Only publish the short URL as live after an external HTTPS check confirms the redirect and destination.
+
+## Third independent continuity host
+
+GitHub Pages now supplies an additional public candidate address: `https://jgaethle10.github.io/forge-operator/campaigns/roman/`. Treat it as verified only after an external GET validates both the campaign identifier and unchanged existing donation URL. When Fabric's local campaign file cannot be served, `/go/roman` checks the independently hosted Wix page and then GitHub Pages in sequence; both must return valid HTML containing the expected content markers. If the entire Fabric host is down, its `/go/roman` redirect cannot run; the two independent hosted URLs must be available to users directly. None of these aliases affects DNS for `voteroman.com`.
