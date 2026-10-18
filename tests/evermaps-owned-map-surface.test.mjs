@@ -52,3 +52,18 @@ test('The static release defaults to noindex until independently verified and ap
  assert.match(html,/OWNED RUNTIME PREVIEW/);
  assert.match(html,/not an emergency operations product/);
 });
+
+test('public-domain natural-earth geography is bundled and credited as the raster fallback',()=>{
+ const land=JSON.parse(read('public/evermaps/pnw-land.geojson'));
+ assert.equal(land.type,'FeatureCollection');
+ assert.equal(land.metadata.rights,'public domain');
+ assert.equal(land.metadata.source,'Natural Earth 1:50m land');
+ assert.ok(land.features.length>=15);
+ assert.ok(land.features.every(f=>f.geometry?.type==='Polygon'));
+ assert.match(html,/id="em-fallback"/);
+ assert.match(html,/Natural Earth \(public domain\)/);
+ assert.match(js,/fetch\('\/evermaps\/pnw-land\.geojson'/);
+ assert.match(js,/function renderFallback\(\)/);
+ assert.match(js,/function updateTileCoverage\(\)/);
+ assert.match(css,/\.em-fallback\{/);
+});
