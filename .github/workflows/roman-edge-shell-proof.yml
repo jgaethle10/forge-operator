@@ -75,6 +75,12 @@ jobs:
           grep -q 'https://jgaethle10.github.io/forge-operator/site-status/roman/' public/sitemap.xml
           grep -q 'name="robots" content="noindex,nofollow"' public/campaigns/roman/index.html
           ! grep -Eiq '<a[^>]+href="https?://(www\\.)?voteroman\\.com' public/site-status/roman/index.html
+      - name: Verify mobile recovery access is one obvious action, without original-domain pretense
+        run: |
+          grep -q 'class="primary-link" href="https://fabric.systemiacommandcenters.com/go/roman"' public/site-status/roman/index.html
+          grep -q 'Copy working link' public/site-status/roman/index.html
+          grep -q 'Typing voteroman.com still follows the original domain' public/site-status/roman/index.html
+          grep -q 'not the voteroman.com website' public/site-status/roman/index.html
       - name: Confirm DNS deployment is not attempted
         run: |
           test -f campaign-recovery/roman-2026/edge/wrangler.toml
