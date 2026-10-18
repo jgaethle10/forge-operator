@@ -233,6 +233,12 @@ jobs:
           printf '%s' "$visual_body" | grep -q 'Washington'
           motion="${base%/}/visuals/washington-active-volcanoes/motion.html"
           curl --fail --silent --show-error --retry 8 --retry-all-errors --retry-delay 2 "$motion" | grep -q "__evercraftRenderAt"
+          rescue="${base%/}/site-status/roman/"
+          rescue_body="$(curl --fail --silent --show-error --retry 8 --retry-all-errors --retry-delay 2 "$rescue")"
+          printf '%s' "$rescue_body" | grep -q 'Copy working link'
+          printf '%s' "$rescue_body" | grep -q 'Open the available information page'
+          printf '%s' "$rescue_body" | grep -q 'https://fabric.systemiacommandcenters.com/go/roman'
+          printf '%s' "$rescue_body" | grep -q 'Typing voteroman.com still follows the original domain'
           roman="${base%/}/campaigns/roman/"
           roman_body="$(curl --fail --silent --show-error --retry 8 --retry-all-errors --retry-delay 2 "$roman")"
           printf '%s' "$roman_body" | grep -q 'Roman Kilinkaridis'
