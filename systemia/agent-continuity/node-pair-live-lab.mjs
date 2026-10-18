@@ -3,7 +3,7 @@
 // Nothing in this CI test is owner enrollment or proof of separate machines.
 import {fork} from 'node:child_process';
 import {randomBytes} from 'node:crypto';
-import {mkdtempSync,rmSync} from 'node:fs';
+import {mkdtempSync,mkdirSync,rmSync} from 'node:fs';
 import {join} from 'node:path';
 import {tmpdir} from 'node:os';
 import {fileURLToPath} from 'node:url';
@@ -13,6 +13,7 @@ const RUNNER=fileURLToPath(new URL('./node-pair-fixture-child.mjs',import.meta.u
 function hold(s){throw Error('NODESEED_PAIR_LIVE_LAB_HELD: '+s)}
 function ensure(condition,reason){if(!condition)hold(reason)}
 async function startOne(root,node_id,token){
+ mkdirSync(root,{recursive:true,mode:0o700});
  const child=fork(RUNNER,[],{cwd:root,execArgv:[],env:{
    PATH:process.env.PATH||'',HOME:root,TMPDIR:root,
    BLACKBOX_NODES_LAB_ONLY:'1',BLACKBOX_NODES_LAB_ID:node_id,
