@@ -561,6 +561,23 @@ export async function startFabricLocalRuntime({
   const romanCampaignFile=path.resolve(moduleDir,'../../public/campaigns/roman/index.html');
   const romanCampaignPresent=()=>fs.existsSync(romanCampaignFile);
   const demoDir=path.resolve(moduleDir,'../../public/demos');
+  // Emergency service frontages use first-party source, never a hosted app.
+  // These are public presentation routes, not a booking backend or DNS cutover.
+  const ownedServicePages=new Map([
+    ['/eps','public/eps/index.html'],
+    ['/havenly','public/havenly/index.html'],
+    ['/sunshine-spotless','public/sunshine-spotless/index.html'],
+    ['/apps/eps-estimator','public/apps/eps-estimator/index.html'],
+  ]);
+  const ownedPublicRoot=path.resolve(moduleDir,'../../');
+  const resolveOwnedServicePage=(pathname)=>{
+    const key=String(pathname||'').replace(/\/+$/,'');
+    const relative=ownedServicePages.get(key);
+    if(!relative)return null;
+    const target=path.resolve(ownedPublicRoot,relative);
+    if(!target.startsWith(ownedPublicRoot+path.sep))return null;
+    return fs.existsSync(target)&&fs.statSync(target).isFile()?target:null;
+  };
   const visualStateEphemeral=!String(visualStateDir||'').trim();
   const visualDir=path.resolve(
     visualStateDir||path.join(os.tmpdir(),'evercraft-visual-desk-'+instanceId)
@@ -659,6 +676,10 @@ export async function startFabricLocalRuntime({
     demo_surface_path:'/demos/',
     demo_surface_ready:fs.existsSync(path.join(demoDir,'hvac-lead-recovery','index.html')),
     demo_surface_authority:'public_static_proof_only',
+    owned_service_frontage_routes:['/eps/','/havenly/','/sunshine-spotless/','/apps/eps-estimator/'],
+    owned_service_frontages_source_ready:[...ownedServicePages.values()].every(p=>fs.existsSync(path.resolve(ownedPublicRoot,p))),
+    owned_service_frontages_backend_intake_verified:false,
+    owned_service_frontages_dns_cutover_verified:false,
     visual_desk_path:'/visuals/',
     visual_desk_ready:visualMirror.ready,
     visual_desk_story_count:visualMirror.count,
@@ -1282,6 +1303,25 @@ export async function startFabricLocalRuntime({
           return sendJson(res,200,{ok:true,...await nodeAttestation(body?.nonce)});
         }catch{
           return sendJson(res,503,{ok:false,error:'edge_attestation_unavailable'});
+        }
+      }
+
+      if(req.method==='GET'||req.method==='HEAD'){
+        const pathname=new URL(String(req.url||''),'http://fabric.local').pathname;
+        const servicePage=resolveOwnedServicePage(pathname);
+        if(servicePage){
+          const payload=fs.readFileSync(servicePage);
+          res.writeHead(200,{
+            'content-type':'text/html; charset=utf-8',
+            'content-length':payload.length,
+            'cache-control':'public, max-age=60, must-revalidate',
+            'x-content-type-options':'nosniff',
+            'x-robots-tag':'noindex, nofollow',
+            'referrer-policy':'no-referrer',
+            'content-security-policy':"default-src 'none'; style-src 'unsafe-inline'; script-src 'unsafe-inline'; img-src 'self' data:; base-uri 'none'; frame-ancestors 'none'",
+          });
+          if(req.method==='HEAD')return res.end();
+          return res.end(payload);
         }
       }
 
