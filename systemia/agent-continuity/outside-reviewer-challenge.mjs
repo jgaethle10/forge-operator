@@ -3,6 +3,8 @@
 // credentials, network endpoints or owner device trust imported. This executes
 // actual local OS worker and loopback HTTP test fixtures, not real remote nodes.
 import {createHash} from 'node:crypto';
+import {fileURLToPath} from 'node:url';
+import {resolve} from 'node:path';
 import {runRogueAgentMission} from './rogue-field-drill.mjs';
 import {runCrossRunnerSpiderMission} from './spider-cross-runner-mission.mjs';
 import {runPinnedNodeSeedPairLab} from './node-pair-live-lab.mjs';
@@ -65,8 +67,7 @@ export async function runOutsideReviewerChallenge(){
  };
 }
 
-const runDirect=process.argv[1]&&
- new URL('file://'+process.argv[1]).pathname===new URL(import.meta.url).pathname;
+const runDirect=process.argv[1]&&resolve(process.argv[1])===fileURLToPath(import.meta.url);
 if(runDirect){
  if(process.argv.length!==2)throw Error('EXTERNAL_QA_CHALLENGE_HELD: no arguments; local safety drill only');
  const result=await runOutsideReviewerChallenge();
