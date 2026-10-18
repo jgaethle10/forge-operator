@@ -74,7 +74,15 @@ export function pinnedRequest(target, publicAddress, {timeoutMs = 10000} = {}) {
       path: target.pathname + target.search,
       servername: target.hostname.replace(/^\[|\]$/g, ''),
       rejectUnauthorized: true,
-      lookup: (_host, _options, callback) => callback(null, publicAddress.address, publicAddress.family),
+      lookup: (_host, options, callback) => {
+        // Node 22's auto-family connector may request {all:true}; that
+        // callback expects an ARRAY, not the scalar (address,family) shape.
+        // Both paths remain pinned to the exact prevalidated public IP.
+        if (options?.all === true) {
+          return callback(null, [{address:publicAddress.address, family:publicAddress.family}]);
+        }
+        return callback(null, publicAddress.address, publicAddress.family);
+      },
       headers: {
         'user-agent': 'EvercraftWebOwnedFetchCandidate/0.1',
         accept: 'text/html,text/plain,application/json,application/xml,text/xml,text/csv',
