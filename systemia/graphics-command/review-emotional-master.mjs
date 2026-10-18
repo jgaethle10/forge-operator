@@ -4,6 +4,7 @@ import path from 'node:path';
 import crypto from 'node:crypto';
 import {spawnSync} from 'node:child_process';
 import {assessStudioMaster} from '../media-studio/master-qc.ts';
+import {assessCreativeDecision,gateCreativeCandidate} from './creative-decision.mjs';
 
 const fileHash=p=>crypto.createHash('sha256').update(fs.readFileSync(p)).digest('hex');
 function run(binary,args,{binaryOutput=false}={}){
@@ -30,7 +31,7 @@ function audioMetrics(videoPath){
   const peak=summary.match(/True peak:\s*Peak:\s*(-?[\d.]+)/);
   return {integratedLufs:integrated?Number(integrated[1]):null,truePeakDbfs:peak?Number(peak[1]):null,reviewRequired:true};
 }
-export function reviewEmotionalMaster({editMapPath,videoPath,outputDir,minShortEdge=1080}){
+export function reviewEmotionalMaster({editMapPath,videoPath,outputDir,minShortEdge=1080,creativeDecisionPath}){
   const edit=JSON.parse(fs.readFileSync(editMapPath,'utf8'));
   if(edit.schema!=='evercraft.graphics-command.emotional-edit-map.v1') throw new Error('emotional_master_edit_schema_invalid');
   if(!Number.isInteger(edit.durationFrames)||edit.durationFrames<1||!Number.isInteger(edit.frameRate)) throw new Error('emotional_master_timeline_invalid');
@@ -61,13 +62,24 @@ export function reviewEmotionalMaster({editMapPath,videoPath,outputDir,minShortE
     ...(frameCountPassed?[]:['exact_frame_count_mismatch']),
     ...(audio.integratedLufs===null?['audio_loudness_unavailable']:[]),
   ];
+  const masterSha256=fileHash(videoPath);
+  const creativeDecision=creativeDecisionPath
+    ? assessCreativeDecision(JSON.parse(fs.readFileSync(creativeDecisionPath,'utf8')))
+    : undefined;
+  const creativeCandidateGate=gateCreativeCandidate({
+    mediaSha256:masterSha256,
+    technicalStatus:blockedReasons.length?'rejected':'technical_pass',
+    creativeDecision,
+  });
   const core={
     schema:'evercraft.graphics-command.emotional-master-review.v1',
     status:blockedReasons.length?'rejected':'technical_pass',
     campaignId:edit.campaignId,editMapDigest:edit.digest,editMapFileSha256:fileHash(editMapPath),
-    masterSha256:fileHash(videoPath),actualFrameCount:measuredFrames,expectedFrameCount:edit.durationFrames,
+    masterSha256,actualFrameCount:measuredFrames,expectedFrameCount:edit.durationFrames,
     audio,technical,sampledFrames:samples,
-    blockedReasons,
+    blockedReasons,creativeCandidateGate,
+    creativeFeedbackDigest:creativeDecision?.digest||null,
+    creativeFeedbackState:creativeDecision?'review_recorded':'not_submitted',
     creativeReview:{state:'not_performed',emotionContinuity:'unverified',audiovisualSync:'unverified',rights:'unverified',humanReception:'unverified'},
     boundaries:{technicalPassDoesNotProveArtisticQuality:true,noBoardroomReviewImplied:true,notPublicationAuthority:true},
   };
@@ -81,8 +93,8 @@ if(process.argv[1]&&path.resolve(process.argv[1])===new URL(import.meta.url).pat
     const editMapPath=arg('--edit'),videoPath=arg('--video'),outputDir=arg('--out');
     if(!editMapPath||!videoPath||!outputDir) throw new Error('usage: --edit map.json --video master.mp4 --out review-dir [--prototype]');
     const isPrototype=process.argv.includes('--prototype');
-    const review=reviewEmotionalMaster({editMapPath,videoPath,outputDir,minShortEdge:isPrototype?240:1080});
-    console.log(JSON.stringify({status:review.status,sha256:review.masterSha256,frameCount:review.actualFrameCount,report:review.receiptPath,blocked:review.blockedReasons},null,2));
+    const review=reviewEmotionalMaster({editMapPath,videoPath,outputDir,minShortEdge:isPrototype?240:1080,creativeDecisionPath:arg('--creative-decision')});
+    console.log(JSON.stringify({status:review.status,creativeGate:review.creativeCandidateGate.status,sha256:review.masterSha256,frameCount:review.actualFrameCount,report:review.receiptPath,blocked:review.blockedReasons},null,2));
     if(review.status!=='technical_pass') process.exitCode=2;
   }catch(error){console.error(String(error?.stack||error));process.exitCode=1}
 }
