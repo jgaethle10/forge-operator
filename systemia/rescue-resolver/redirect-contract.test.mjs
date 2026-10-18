@@ -29,7 +29,10 @@ test('destination is locked to independently known HTTPS recovery endpoint',()=>
 test('extension is opt-in, disabled at install, no donation or blanket website permissions',()=>{
   assert.equal(manifest.manifest_version,3);
   assert.deepEqual(manifest.permissions,['declarativeNetRequestWithHostAccess']);
-  assert.equal('background' in manifest,false);
+  assert.equal(manifest.background?.service_worker,'background.js');
+  const inertWorker=fs.readFileSync(new URL('background.js',root),'utf8');
+  assert.equal(inertWorker.trim().endsWith('export {};'),true);
+  assert.doesNotMatch(inertWorker,/chrome\.|fetch\(|setInterval|setTimeout|addEventListener/);
   assert.equal('declarative_net_request' in manifest,false);
   assert.ok(manifest.host_permissions.every(x=>!x.includes('donate.')&&!x.includes('<all_urls>')));
   assert.equal(manifest.options_page,'options.html');
