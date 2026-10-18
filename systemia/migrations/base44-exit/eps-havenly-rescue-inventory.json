@@ -1,0 +1,22 @@
+{
+  "schema": "evercraft.saban.private-inventory-fixture.v1",
+  "purpose": "Bounded and redacted portfolio archaeology for the EPS/HAVENLY Base44 exit. Not a production data export.",
+  "apps": [
+    {
+      "name": "Evercraft Property Services",
+      "visibility": "public"
+    },
+    {
+      "name": "Havenly Cleaning Command Center",
+      "visibility": "public"
+    },
+    {
+      "name": "EPS Field Pass",
+      "visibility": "internal_only"
+    },
+    {
+      "name": "EPS Precise Estimator",
+      "visibility": "public"
+    }
+  ]
+}
