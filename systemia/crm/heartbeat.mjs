@@ -87,9 +87,16 @@ function write(file,obj) {
   fs.renameSync(tmp,file);
 }
 export function writeCrmHeartbeatArtifacts({inputPath=process.env.EVERCRAFT_CRM_HEARTBEAT_INPUT||'',
-  outDir=path.join(process.cwd(),'artifacts/crm-heartbeat'),now=new Date()}={}) {
+  inputData=null,holdReason='',outDir=path.join(process.cwd(),'artifacts/crm-heartbeat'),
+  now=new Date()}={}) {
   let value;
-  if(!inputPath) value=hold('source_not_configured',now);
+  if(holdReason) {
+    const allowed=new Set(['source_not_configured','source_missing','source_invalid','source_permissions_or_type_invalid','source_stale']);
+    value=hold(allowed.has(holdReason)?holdReason:'source_invalid',now);
+  } else if(inputData) {
+    try {value=buildCrmHeartbeat(inputData,{now});}
+    catch {value=hold('source_invalid',now);}
+  } else if(!inputPath) value=hold('source_not_configured',now);
   else try {
     const stat=fs.lstatSync(inputPath);
     if(!stat.isFile()||stat.isSymbolicLink()||(process.platform!=='win32'&&(stat.mode&0o077)!==0)) throw Error('unsafe_file');
