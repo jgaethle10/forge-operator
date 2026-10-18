@@ -35,6 +35,21 @@ test('live read-only public Fetch through local MCP over actual HTTPS egress', {
     assert.match(row.evidence_receipt_sha256,/^sha256:[a-f0-9]{64}$/);
     assert.equal(row.redirect_count>=0,true);
     assert.equal(row.payment_authority,false);
+    const batch=await rpc(5,'tools/call',{
+      name:'fetch_urls',arguments:{urls:[
+        'https://example.com/',
+        'http://127.0.0.1/latest/meta-data',
+      ]},
+    });
+    assert.equal(batch.result?.isError,undefined,'batch unexpectedly rejected');
+    assert.equal(batch.result.structuredContent.attempted,2);
+    assert.equal(batch.result.structuredContent.succeeded,1);
+    assert.equal(batch.result.structuredContent.failed,1);
+    assert.equal(batch.result.structuredContent.results[0].ok,true);
+    assert.match(batch.result.structuredContent.results[0].evidence.content_sha256,/^sha256:[a-f0-9]{64}$/);
+    assert.equal(batch.result.structuredContent.results[1].ok,false);
+    assert.match(batch.result.structuredContent.results[1].error,/private_or_reserved_target/);
+    assert.equal(batch.result.structuredContent.payment_authority,false);
     const denied=await rpc(4,'tools/call',{
       name:'fetch_url',arguments:{url:'http://127.0.0.1/latest/meta-data'},
     });
