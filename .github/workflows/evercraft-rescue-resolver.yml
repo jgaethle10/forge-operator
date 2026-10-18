@@ -1,0 +1,40 @@
+name: Evercraft Rescue Resolver proof
+
+on:
+  pull_request:
+    paths:
+      - 'systemia/rescue-resolver/**'
+      - '.github/workflows/evercraft-rescue-resolver.yml'
+  push:
+    branches: [main]
+    paths:
+      - 'systemia/rescue-resolver/**'
+      - '.github/workflows/evercraft-rescue-resolver.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  proof:
+    runs-on: ubuntu-latest
+    timeout-minutes: 3
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Confirm JavaScript parses
+        run: |
+          node --check systemia/rescue-resolver/extension/options.js
+          node --check systemia/rescue-resolver/extension/redirect-contract.mjs
+      - name: Prove opt-in browser-only rescue rules
+        run: node --test systemia/rescue-resolver/redirect-contract.test.mjs
+      - name: Require narrow permissions and no extension auto-activation
+        run: |
+          node --input-type=module <<'NODE'
+          import fs from 'node:fs';
+          const m=JSON.parse(fs.readFileSync('systemia/rescue-resolver/extension/manifest.json','utf8'));
+          if(m.background || m.declarative_net_request)throw Error('rescue rules must not activate at install');
+          if(m.host_permissions.some(x=>/donate\.|\*:\/\/\*\//.test(x)))throw Error('overbroad extension host permission');
+          console.log('Browser-only, opt-in rule contract passed');
+          NODE
