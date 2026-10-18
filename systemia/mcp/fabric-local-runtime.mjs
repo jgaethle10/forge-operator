@@ -10,10 +10,12 @@ import { fileURLToPath } from 'node:url';
 import {
   executeFabricDirectoryRpc,
   fabricDirectoryTools,
+  matchFabricCapabilities,
   loadFabricCatalogFromRepository,
   normalizeFabricCatalog,
   validateOpenAiChallengeToken,
 } from './fabric-directory.mjs';
+import {ownedDeveloperStatus,renderOwnedDeveloperPage} from './fabric-developer-site.mjs';
 import {
   offerCapabilityForSlug,
   offerPurchaseKeyForSlug,
@@ -695,6 +697,29 @@ export async function startFabricLocalRuntime({
 
       if (req.method==='GET' && req.url==='/health') {
         return sendJson(res,200,health());
+      }
+
+      // Developer recovery surface on the existing owned Fabric runtime.
+      // Read-only, no forwarding to provider-hosted MCPs returning HTTP 402.
+      if(req.method==='GET'){
+        const developerUrl=new URL(String(req.url||'/'),'http://fabric.local');
+        const pathname=developerUrl.pathname;
+        if(pathname==='/developers.json'){
+          return sendJson(res,200,ownedDeveloperStatus(preparedCatalog().capabilities,{
+            deploymentReceiptBound:health().deployment_receipt_bound===true,
+          }));
+        }
+        if(pathname==='/developers'||pathname==='/developers/'){
+          const capabilities=preparedCatalog().capabilities;
+          const intent=String(developerUrl.searchParams.get('intent')||'').trim().slice(0,200);
+          const matches=intent.length>=3
+            ? matchFabricCapabilities(intent,capabilities,{limit:6})
+            : [];
+          return sendText(res,200,renderOwnedDeveloperPage({
+            capabilities,matches,intent,
+            deploymentReceiptBound:health().deployment_receipt_bound===true,
+          }),{contentType:'text/html; charset=utf-8'});
+        }
       }
 
       // Independent, read-only campaign mirror. This route is *not* an apex-domain cutover.

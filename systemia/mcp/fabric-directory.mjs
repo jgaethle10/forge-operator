@@ -535,10 +535,15 @@ export async function executeFabricDirectoryRpc(rpc,catalog=[]){
         name:capability.name,
         state:capability.state,
         connections:capability.connections,
-        human_offer_url:ownedOfferLink(capability)?.human_form_url||null,
-        owned_human_buyer_options:ownedOfferLink(capability)?[ownedOfferLink(capability)]:[],
-        human_buyer_options:approvedHumanBuyerOptions(publicId,capability),
-        human_buyer_options_state:'read_only_exact_price_match_only',
+        // Public buyer URLs are held after independent HTTP 402 findings.
+        // A dated catalog validation does not prove current checkout availability.
+        // Restore only with an explicitly verified provider-to-canonical-receipt gate.
+        human_offer_url:null,
+        owned_human_buyer_options:[],
+        human_buyer_options:[],
+        human_buyer_options_state:'held_provider_http_402_requires_new_payment_receipt',
+        buyer_checkout_available:false,
+        checkout_suppression_reason:'evercraft_public_commercial_mcp_http402_20261017',
         transactional:false,
         external_action_taken:false,
       }));
