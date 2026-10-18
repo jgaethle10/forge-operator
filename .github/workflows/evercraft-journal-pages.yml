@@ -163,6 +163,10 @@ jobs:
           grep -q 'Infinite Classroom' _public_pages/chum/products/infinite-classroom/index.html
           test -f _public_pages/apps/eps-estimator/index.html
           grep -q 'EPS Precise Estimator' _public_pages/apps/eps-estimator/index.html
+          test -f _public_pages/eps/index.html
+          test -f _public_pages/havenly/index.html
+          grep -q 'eps-continuity-20261017' _public_pages/eps/index.html
+          grep -q 'havenly-continuity-20261017' _public_pages/havenly/index.html
           test -f _public_pages/campaigns/roman/index.html
           grep -q 'Roman Kilinkaridis' _public_pages/campaigns/roman/index.html
           grep -q 'https://donate.voteroman.com/' _public_pages/campaigns/roman/index.html
@@ -197,6 +201,12 @@ jobs:
           estimator="${base%/}/apps/eps-estimator/"
           estimator_body="$(curl --fail --silent --show-error --retry 8 --retry-all-errors --retry-delay 2 "$estimator")"
           printf '%s' "$estimator_body" | grep -q 'EPS Precise Estimator'
+          eps="${base%/}/eps/"
+          eps_body="$(curl --fail --silent --show-error --retry 8 --retry-all-errors --retry-delay 2 "$eps")"
+          printf '%s' "$eps_body" | grep -q 'eps-continuity-20261017'
+          havenly="${base%/}/havenly/"
+          havenly_body="$(curl --fail --silent --show-error --retry 8 --retry-all-errors --retry-delay 2 "$havenly")"
+          printf '%s' "$havenly_body" | grep -q 'havenly-continuity-20261017'
           earthworks="${base%/}/apps/earthworks-autonomy/"
           earthworks_body="$(curl --fail --silent --show-error --retry 8 --retry-all-errors --retry-delay 2 "$earthworks")"
           printf '%s' "$earthworks_body" | grep -q 'Evercraft EarthWorks Autonomy'
@@ -220,6 +230,8 @@ jobs:
             echo
             echo "Infinite Classroom: $classroom"
             echo "EPS estimator: $estimator"
+          echo "EPS continuity: $eps"
+          echo "HAVENLY continuity: $havenly"
             echo "EarthWorks: $earthworks"
             echo "EarthWorks design partner: $earthworks_partner"
             echo "EarthWorks sample study: $earthworks_sample"
