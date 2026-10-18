@@ -67,3 +67,36 @@ jobs:
           path: ${{ runner.temp }}/influence-review-gallery
           if-no-files-found: error
           retention-days: 7
+
+  buyer-door-observation:
+    needs: source-policy
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Observe public Website Audit door via read-only HTTP GET
+        run: |
+          node systemia/influence-lab/offer-door-probe.mjs --out "$RUNNER_TEMP/website-audit-http-observation.json"
+      - name: Verify honest limits of probe
+        run: |
+          node --input-type=module -e '
+            import fs from "node:fs";
+            const r=JSON.parse(fs.readFileSync(process.env.RUNNER_TEMP+"/website-audit-http-observation.json","utf8"));
+            if(r.schema!=="evercraft.influence-lab.website-audit-http-observation.v1"||
+               r.boundaries?.paymentAttempted!==false||r.boundaries?.checkoutCreated!==false||
+               r.boundaries?.providerSettlementVerified!==false||r.checkoutVerified!==false||
+               !["held","readable_http_only"].includes(r.status)){
+              throw Error("unsafe_http_observation_receipt");
+            }
+            console.log(JSON.stringify({status:r.status,httpStatus:r.httpStatus,reason:r.reason}));
+          '
+      - name: Upload read-only HTTP observation, even when route is held
+        uses: actions/upload-artifact@v4
+        with:
+          name: influence-lab-website-audit-http-observation
+          path: ${{ runner.temp }}/website-audit-http-observation.json
+          if-no-files-found: error
+          retention-days: 7
