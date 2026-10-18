@@ -27,8 +27,8 @@ export const PORTFOLIO_OFFER_COPY = Object.freeze({
   },
   'payments-pilot': {
     eyebrow: 'Evercraft Payments Integration',
-    headline: 'A checkout is the beginning. A verified order is the job.',
-    lede: 'Scope one buyer-owned processor offer and the order-state handling around it. Preserve the merchant relationship, exact prices and authorization boundaries.',
+    headline: 'Connect checkout to a verified order.',
+    lede: 'One founding integration for one approved offer on your existing payment processor. Connect buyer approval, checkout, payment verification and fulfillment controls.',
     promise: 'One bounded founding integration for an approved processor-backed offer, subject to scoped access and acceptance checks. No promise of changed payment volume.',
     send: [
       'The buyer-owned processor and exact product or service being sold',
