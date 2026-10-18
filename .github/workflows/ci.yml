@@ -82,6 +82,11 @@ jobs:
             -p 3000:3000 \
             forge-operator:${{ github.sha }}
 
+      - name: Verify owned EverMaps routes in the running production container
+        run: |
+          set -euo pipefail
+          node scripts/probe-evermaps-owned-http.mjs
+
       - name: Verify health and discovery surfaces
         run: |
           set -euo pipefail
