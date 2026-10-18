@@ -135,3 +135,27 @@ exact source/hash/session/asset/playback and human QA receipts.
 The beloved *Weight of Silence* master remains unchanged; no rights clearance,
 acoustic piano capture, production release, or proven listening quality is
 asserted by this code.
+
+
+## Reusable multi-note piano bank and Saban review lane
+
+The Fallen Sessions **Arm Recorded Piano** control now **appends** the verified Audio Take sample to the current canonical Keys scene's \`recorded_piano_v1\` patch. The UI exposes the recording's root MIDI pitch and bounded **velocity minimum/maximum**. Subsequent captures at new roots or non-overlapping velocity layers accumulate instead of replacing the first sample. The original recording is detached from Audio Take (not deleted from the asset vault), preventing double playback, and the same reversible PulseGrid transaction preserves undo.
+
+The \`appendFoundryPianoSample\` helper preserves previous layers, validates every referenced sample against registered canonical audio, rejects unregistered/restricted samples, rejects overlapping layers at an identical root, respects the same ±2-semitone transposition bound and refuses missing pitch or unrecorded velocity ranges. Existing sound-quality limits still apply: dynamic layers require **actual distinct recordings**, not amplitude scaling falsely presented as several real performance layers. A patch currently supports no more than 64 declared sample layers, and missing/overlapping coverage is surfaced as an error rather than silently repaired. The studio does not auto-authorize any recording for publication.
+
+### Saban in the review pipeline
+
+Existing \`systemia/media-studio/saban-adapter.mjs\` is reused by \`instrument-foundry-saban-review.mjs\` to run four **parallel planning reviewers**: continuity, rights-requirement, provenance and timing. Saban's current adapter checks **that requirements and references are present**, not the authenticity of legal ownership or musical quality. A wrapper further requires an accepted human-listening receipt and a valid SHA-256 digest, but still reports \`release_ready:false\` and \`sample_rights_independently_verified:false\`.
+
+GitHub Actions runs \`bridge-evidence\` and \`saban-capture-review\` as separate parallel jobs. The CI role checks are **local deterministic adapter invocations**, **not a deployed Saban resident compute worker or autonomous agent reviewing recorded audio**. This gets us faster repeatable preflight without misstating independent creative clearance.
+
+At the first multi-layer commit, GitHub run 39085112409 passed 88/88 bridge tests and 4/4 Saban review tests. The broader Forge workflows are checked separately.
+
+### Remaining proof
+
+1. Capture real consented/licensed multi-velocity acoustic piano notes with room, performer and equipment receipts; verify the actual sources.
+2. Test import, accumulation, note selection and audio in a real supported browser, documenting output and source fingerprints.
+3. Human A/B against the immutable original *Weight of Silence*.
+4. Complete independent rights and distribution-platform review before any commercial master is approved.
+
+No new acoustic samples, deployed instrument, commercial clearance or human-approved new sound quality is implied by a green CI status.
