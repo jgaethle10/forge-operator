@@ -18,6 +18,11 @@ function checkTime(x,label,now) {
   if (!Number.isFinite(n) || n > now.getTime()+120000) throw Error(label+'_invalid');
   return n;
 }
+function validDueTime(value) {
+  const n=Date.parse(requireStr(value,'due_at'));
+  if(!Number.isFinite(n)) throw Error('due_at_invalid');
+  return n;
+}
 function eventRow(row,now) {
   if (!row || typeof row !== 'object' || row.schema !== 'evercraft.interaction-ledger.event.v1') throw Error('interaction_event_schema_invalid');
   for (const key of ['event_id','idempotency_key','subject_ref','channel','direction','event_type','evidence_ref']) requireStr(row[key],key);
@@ -60,7 +65,7 @@ export function projectInteractionEvents(events, {now=new Date(), replyAgeHours=
   }
   const signals=[];
   for(const e of commitments.values()) {
-    if(!e.due_at || checkTime(e.due_at,'due_at',now)>now.getTime()) continue;
+    if(!e.due_at || validDueTime(e.due_at)>now.getTime()) continue;
     signals.push({
       signal_key:sha('commitment:'+e.event_id),domain:'relationships',
       kind:'commitment_overdue',state:'open',severity:'high',
