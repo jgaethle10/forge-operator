@@ -1,0 +1,31 @@
+name: Systemia Core cycle safety
+
+on:
+  pull_request:
+    paths:
+      - 'systemia/core/resident-supervisor.mjs'
+      - 'systemia/core/resident-cycle-overlap.test.mjs'
+      - 'systemia/core/resident-supervisor.proof.mjs'
+      - '.github/workflows/systemia-core-cycle-safety.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: systemia-core-cycle-safety-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  non-overlapping-cycles:
+    runs-on: ubuntu-latest
+    timeout-minutes: 3
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Regression - no duplicate in-flight cycle
+        run: node --test systemia/core/resident-cycle-overlap.test.mjs
+      - name: Existing Systemia resident supervisor proof
+        run: node systemia/core/resident-supervisor.proof.mjs
