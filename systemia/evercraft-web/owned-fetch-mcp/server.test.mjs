@@ -122,6 +122,31 @@ test('pinned GET closes oversized declared responses before streaming body', asy
   }
 });
 
+
+test('pinned GET enforces total wall-clock deadline despite continuous slow-drip bytes', {timeout:4000}, async()=>{
+  const server=http.createServer((_req,res)=>{
+    res.writeHead(200,{'content-type':'text/plain'});
+    res.flushHeaders();
+    const drip=setInterval(()=>{
+      if (!res.destroyed) res.write('x');
+    },20);
+    res.once('close',()=>clearInterval(drip));
+  });
+  await new Promise(resolve=>server.listen(0,'127.0.0.1',resolve));
+  try {
+    const port=server.address().port;
+    const started=Date.now();
+    await assert.rejects(pinnedRequest(
+      new URL('http://public-test.example:'+port+'/'),
+      {address:'127.0.0.1',family:4},
+      {timeoutMs:180},
+    ),/upstream_deadline_exceeded/);
+    assert.ok(Date.now()-started<1800,'request should not keep a slow-drip socket alive');
+  } finally {
+    await new Promise(resolve=>server.close(resolve));
+  }
+});
+
 test('MCP only exposes Fetch capabilities and read-only tool; wrong arguments fail closed', async () => {
   assert.deepEqual(WEB_MCP_TOOLS.map(t=>t.name),['get_web_capabilities','fetch_url','fetch_urls']);
   const init=webMcpResponse({jsonrpc:'2.0',id:1,method:'initialize',params:{protocolVersion:'2025-11-25'}});
