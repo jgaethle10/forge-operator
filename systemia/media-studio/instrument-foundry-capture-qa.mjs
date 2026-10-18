@@ -130,24 +130,30 @@ export function checkFoundryPianoRootPitch(input,expectedMidi){
   const lastFrame=Math.min(w.frames,firstFrame+Math.floor(w.rate*.25));
   const n=Math.floor((lastFrame-firstFrame)/stride);
   if(n<64)throw new Error('Insufficient WAV frames for pitch inspection');
-  const x=new Float64Array(n);
-  let mean=0;
+  // Inspect the strongest channel, not an L+R sum: a legitimate stereo
+  // sample can have opposing polarity and would vanish under averaging.
+  const candidates=Array.from({length:w.channels},()=>new Float64Array(n));
+  const channelMeans=new Float64Array(w.channels);
   for(let i=0;i<n;i++){
     const at=firstFrame+i*stride;
-    let sample=0;
-    for(let c=0;c<w.channels;c++)sample+=sampleAt(w,at,c);
-    sample/=w.channels;
-    if(!Number.isFinite(sample))return {
-      schema:'evercraft.fallen.piano-root-evidence.v1',status:'indeterminate',
-      expected_midi:expectedMidi,expected_hz:Number(expectedHz.toFixed(3)),
-      estimated_hz:null,cents_error:null,periodicity:0,
-      reason:'nonfinite_sample_values',human_pitch_confirmed:false
-    };
-    x[i]=sample;mean+=sample;
+    for(let c=0;c<w.channels;c++){
+      const sample=sampleAt(w,at,c);
+      if(!Number.isFinite(sample))return {
+        schema:'evercraft.fallen.piano-root-evidence.v1',status:'indeterminate',
+        expected_midi:expectedMidi,expected_hz:Number(expectedHz.toFixed(3)),
+        estimated_hz:null,cents_error:null,periodicity:0,
+        reason:'nonfinite_sample_values',human_pitch_confirmed:false
+      };
+      candidates[c][i]=sample;channelMeans[c]+=sample;
+    }
   }
-  mean/=n;
-  let totalEnergy=0;
-  for(let i=0;i<n;i++){x[i]-=mean;totalEnergy+=x[i]*x[i]}
+  let x=candidates[0],totalEnergy=-1;
+  for(let c=0;c<w.channels;c++){
+    const mean=channelMeans[c]/n;
+    let energy=0;
+    for(let i=0;i<n;i++){candidates[c][i]-=mean;energy+=candidates[c][i]*candidates[c][i]}
+    if(energy>totalEnergy){totalEnergy=energy;x=candidates[c]}
+  }
   const floor=Math.sqrt(totalEnergy/n);
   const blank=(reason)=>({
     schema:'evercraft.fallen.piano-root-evidence.v1',status:'indeterminate',
