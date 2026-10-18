@@ -35,14 +35,14 @@ export function analyzePulseGridMusic(session,scene){
     const repetitions=[...motifPatterns.values()].filter(n=>n>1).length;
     // These are measurable silences between the sounding spans on a part.
     // They do not imply a specific phrase, breath mark, meter or interpretation.
-    let soundingEnd=0;
+    let soundingEnd=null;
     const restGaps=[];
     for(const note of notes){
-      if(note.start>soundingEnd+.001){
+      if(soundingEnd!==null&&note.start>soundingEnd+.001){
         restGaps.push({start_step:Number(soundingEnd.toFixed(3)),
           duration_steps:Number((note.start-soundingEnd).toFixed(3))});
       }
-      soundingEnd=Math.max(soundingEnd,note.end);
+      soundingEnd=Math.max(soundingEnd??note.end,note.end);
     }
     tracks.push({
       track_id:track.id,note_count:notes.length,
