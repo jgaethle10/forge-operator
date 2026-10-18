@@ -24,12 +24,27 @@ export function analyzePulseGridMusic(session,scene){
     if(notes.length>4096)throw new Error('Music analysis note budget exceeded');
     events.push(...notes);
     if(!notes.length)continue;
+    // Vertical simultaneities are not a horizontal melodic line. Group
+    // identical note-on steps before describing motion, and conservatively
+    // skip intervals adjacent to a chord onset (voice assignment unknown).
+    const onsets=[];
+    for(const note of notes){
+      const last=onsets[onsets.length-1];
+      if(last&&last.start===note.start)last.pitches.push(note.pitch);
+      else onsets.push({start:note.start,pitches:[note.pitch]});
+    }
     const motions=[];
-    for(let i=1;i<notes.length;i++)motions.push(notes[i].pitch-notes[i-1].pitch);
-    const leapCount=motions.filter(x=>Math.abs(x)>=7).length;
+    for(let i=1;i<onsets.length;i++){
+      const before=onsets[i-1].pitches,after=onsets[i].pitches;
+      motions.push(before.length===1&&after.length===1
+        ?after[0]-before[0]:null);
+    }
+    const leapCount=motions.filter(x=>x!==null&&Math.abs(x)>=7).length;
     const motifPatterns=new Map();
     for(let i=0;i+3<=motions.length;i++){
-      const pattern=motions.slice(i,i+3).join(',');
+      const cell=motions.slice(i,i+3);
+      if(cell.includes(null))continue;
+      const pattern=cell.join(',');
       motifPatterns.set(pattern,(motifPatterns.get(pattern)||0)+1);
     }
     const repetitions=[...motifPatterns.values()].filter(n=>n>1).length;
@@ -49,6 +64,8 @@ export function analyzePulseGridMusic(session,scene){
       lowest_midi:Math.min(...notes.map(n=>n.pitch)),
       highest_midi:Math.max(...notes.map(n=>n.pitch)),
       large_melodic_leaps:leapCount,
+      melodic_interval_pairs:motions.filter(x=>x!==null).length,
+      stacked_onset_groups:onsets.filter(x=>x.pitches.length>1).length,
       repeated_interval_motifs:repetitions,
       rest_gap_count:restGaps.length,
       longest_rest_steps:Number(Math.max(0,...restGaps.map(x=>x.duration_steps)).toFixed(3)),
@@ -93,7 +110,7 @@ export function analyzePulseGridMusic(session,scene){
     kind:'empty_arrangement',observation:'No pitched MIDI notes in this scene.',
     recommendation:'Add or import a musical phrase before tonal or expressive analysis.'});
   if(tracks.some(t=>t.large_melodic_leaps>0))findings.push({
-    kind:'melodic_leaps',observation:'One or more parts leap at least a perfect fifth.',
+    kind:'melodic_leaps',observation:'A sequence of distinct single-note onsets leaps at least a perfect fifth.',
     recommendation:'Listen for phrase direction and use approach tones or contrast deliberately.'});
   if(tracks.some(t=>t.repeated_interval_motifs>0))findings.push({
     kind:'motif_repetition',observation:'Repeated three-interval cells appear in a part.',
