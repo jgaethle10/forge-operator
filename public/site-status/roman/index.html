@@ -26,6 +26,7 @@ a{color:#125a93;text-underline-offset:3px}
 a:focus-visible{outline:3px solid #bb7510;outline-offset:3px}
 .card{border:1px solid var(--border);background:white;border-radius:12px;padding:20px;margin:18px 0}
 .note{border-left:4px solid var(--accent);padding:12px 16px;background:#edf4fa}
+.priority{background:#ebf4fb;border:2px solid var(--accent);border-radius:12px;padding:20px;margin:20px 0 26px}.primary-link{display:block;background:var(--accent);color:white;border-radius:8px;text-align:center;font-weight:800;font-size:1.12rem;padding:17px;text-decoration:none;min-height:56px}.primary-link:hover,.primary-link:focus-visible{background:#0c3757}.copy-row{display:flex;flex-wrap:wrap;align-items:center;gap:10px;margin-top:14px}.copy-button{background:white;color:var(--accent);border:1px solid var(--accent);border-radius:8px;padding:10px 14px;min-height:44px;font-weight:700;cursor:pointer}.copy-status{min-height:1.5em}.text-url{display:block;overflow-wrap:anywhere;font-size:.88rem}
 .small{color:var(--muted);font-size:.89rem}
 footer{padding-top:24px;margin-top:40px;border-top:1px solid var(--border)}
 </style>
@@ -40,6 +41,17 @@ footer{padding-top:24px;margin-top:40px;border-top:1px solid var(--border)}
 <h1>Roman Kilinkaridis website access</h1>
 <p>This page provides alternate links to previously published campaign information when the original <strong>voteroman.com</strong> website is inaccessible.</p>
 </header>
+<section class="priority" aria-label="Open available information">
+<strong>Available independent information</strong>
+<p>The original website may be unavailable. This link opens an independently hosted informational copy using Evercraft's continuity route.</p>
+<a class="primary-link" href="https://fabric.systemiacommandcenters.com/go/roman" rel="noopener noreferrer">Open the available information page</a>
+<div class="copy-row">
+<button type="button" class="copy-button" id="copy-recovery-link">Copy working link</button>
+<span id="copy-feedback" role="status" aria-live="polite" class="copy-status small"></span>
+</div>
+<code class="text-url" id="recovery-address">https://fabric.systemiacommandcenters.com/go/roman</code>
+<p class="small">This is an alternate Evercraft address. Typing voteroman.com still follows the original domain's DNS routing.</p>
+</section>
 <div class="note"><strong>Important:</strong> This is an independently maintained technical recovery directory, not the voteroman.com website. These are alternate informational copies, not a replacement for the original site's complete features. Availability may change.</div>
 <h2>Available information locations</h2>
 <div class="card">
@@ -63,5 +75,16 @@ footer{padding-top:24px;margin-top:40px;border-top:1px solid var(--border)}
 <p class="small">Evercraft site continuity project · This page collects no visitor data and runs no analytics or external scripts.</p>
 </footer>
 </main>
+<script>
+(() => {
+  const button=document.getElementById('copy-recovery-link');
+  const output=document.getElementById('copy-feedback');
+  const url='https://fabric.systemiacommandcenters.com/go/roman';
+  button.addEventListener('click',async()=>{
+    try{await navigator.clipboard.writeText(url);output.textContent='Working link copied.';}
+    catch{output.textContent='Copy the address displayed below this button.';}
+  });
+})();
+</script>
 </body>
 </html>
