@@ -4,16 +4,21 @@ import fs from 'node:fs';
 import path from 'node:path';
 import crypto from 'node:crypto';
 import {fileURLToPath} from 'node:url';
+import {PUBLIC_PAYMENT_OFFERS} from '../systemia/mcp/public-payment-offers.mjs';
 
 const ORIGIN='https://fabric.systemiacommandcenters.com';
-const OFFERS=[['website-audit','$49'],['ibmi-rescue','$250'],['legacy-rescue','$299'],['findmypart','$19'],['site-survive','$250']];
+// Read-only Saban probe covers every public offer, including EventWave.
+const OFFERS=[
+  ['website-audit','$49'],['ibmi-rescue','$250'],['legacy-rescue','$299'],['findmypart','$19'],['site-survive','$250'],
+  ...Object.entries(PUBLIC_PAYMENT_OFFERS).map(([slug,offer])=>[slug,'$'+(offer.amount_cents/100)]),
+];
 async function request(url,fetchImpl){
   const r=await fetchImpl(url,{method:'GET',redirect:'follow',headers:{accept:'text/html,application/json','user-agent':'Evercraft-Saban-Checkout-Canary/1.0'},signal:AbortSignal.timeout(12000)});
   return {status:r.status,body:(await r.text()).slice(0,200000)};
 }
 export async function runCanary({origin=ORIGIN,fetchImpl=fetch}={}){
   if(origin!==ORIGIN)throw new Error('unapproved_canary_origin');
-  const receipt={schema:'evercraft.saban.checkout-release.v1',origin,observed_at:new Date().toISOString(),checkout_posts:0,payments:0,checks:[],failures:[]};
+  const receipt={schema:'evercraft.saban.checkout-release.v1',origin,observed_at:new Date().toISOString(),checkout_posts:0,payments:0,probe_scope:'GET_only',checkout_session_verified:false,settled_payment_verified:false,checks:[],failures:[]};
   try{
     const res=await request(origin+'/health',fetchImpl);
     const health=res.status===200?JSON.parse(res.body):{};
@@ -36,7 +41,7 @@ export async function runCanary({origin=ORIGIN,fetchImpl=fetch}={}){
     }catch(e){receipt.checks.push({route,error:String(e?.message||e).slice(0,180)});receipt.failures.push(slug+'_unreachable');}
   }
   receipt.passed=receipt.failures.length===0;
-  receipt.summary={passed:receipt.passed,offers:OFFERS.length,failures:receipt.failures.length};
+  receipt.summary={passed:receipt.passed,offers:OFFERS.length,failures:receipt.failures.length,meaning:'GET/form/price and release checks only; NOT checkout session or payment proof'};
   receipt.receipt_hash='sha256:'+crypto.createHash('sha256').update(JSON.stringify(receipt)).digest('hex');
   return receipt;
 }
