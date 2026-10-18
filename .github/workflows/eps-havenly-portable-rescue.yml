@@ -26,6 +26,30 @@ jobs:
         run: node --test scripts/package-owned-business-rescue.test.mjs
       - name: Build Base44-free portable sites
         run: node scripts/package-owned-business-rescue.mjs
+      - name: Observe independently hosted GitHub Pages availability
+        shell: bash
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set +e
+          echo "## Existing Pages publishing state" >> "$GITHUB_STEP_SUMMARY"
+          api_status="$(curl --silent --show-error --max-time 20 \
+            -H "Authorization: Bearer $GH_TOKEN" \
+            -H "Accept: application/vnd.github+json" \
+            -o /tmp/evercraft-pages-meta.json \
+            -w "%{http_code}" \
+            "https://api.github.com/repos/${{ github.repository }}/pages")"
+          echo "GitHub Pages API HTTP status: ${api_status}" >> "$GITHUB_STEP_SUMMARY"
+          if [ "$api_status" = "200" ]; then
+            node -e "const f=require('fs');let d=JSON.parse(f.readFileSync('/tmp/evercraft-pages-meta.json','utf8'));console.log('Pages status: '+(d.status||'unknown')+', URL: '+(d.html_url||'unknown')+', source: '+JSON.stringify(d.source||{}))" >> "$GITHUB_STEP_SUMMARY"
+          fi
+          for route in eps/ campaigns/roman/ apps/eps-estimator/; do
+            status="$(curl --silent --show-error --max-time 20 -o /dev/null \
+              -w "%{http_code}" "https://jgaethle10.github.io/forge-operator/${route}")"
+            echo "Public fallback /${route}: HTTP ${status}" >> "$GITHUB_STEP_SUMMARY"
+          done
+          echo "This observation is diagnostic only. It does not activate Pages or declare the domain migrated." >> "$GITHUB_STEP_SUMMARY"
+          exit 0
       - name: Archive static websites and SHA-256 inventory
         uses: actions/upload-artifact@v4
         with:
