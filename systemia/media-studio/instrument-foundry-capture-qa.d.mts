@@ -13,3 +13,12 @@ export type FoundryPianoCaptureQa={
  commercial_release_ready:false;
 };
 export function analyzeFoundryPianoWav(input:Uint8Array|ArrayBuffer):FoundryPianoCaptureQa;
+
+export type FoundryRootPitchEvidence={
+ schema:'evercraft.fallen.piano-root-evidence.v1';
+ status:'consistent'|'mismatch'|'indeterminate';
+ expected_midi:number;expected_hz:number;
+ estimated_hz:number|null;cents_error:number|null;
+ periodicity:number;reason:string;human_pitch_confirmed:false;
+};
+export function checkFoundryPianoRootPitch(input:Uint8Array|ArrayBuffer,expectedMidi:number):FoundryRootPitchEvidence;
