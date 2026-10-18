@@ -17,6 +17,7 @@ import {
 import {compileFoundryImport,verifyFoundryWavBytes} from '../systemia/media-studio/instrument-foundry-bridge.mjs';
 import {appendFoundryPianoSample} from '../systemia/media-studio/instrument-foundry-piano.mjs';
 import {analyzeFoundryPianoWav,checkFoundryPianoRootPitch} from '../systemia/media-studio/instrument-foundry-capture-qa.mjs';
+import {analyzePulseGridMusic} from '../systemia/media-studio/pulsegrid-music-insights.mjs';
 import type {FoundryInstrumentPatch} from '../systemia/media-studio/instrument-foundry-piano.mjs';
 import './fallen-sessions.css';
 
@@ -798,6 +799,7 @@ export default function FallenSessions(){
     setStatus('New canonical session created.');
   }
 
+  const musicInsights=useMemo(()=>analyzePulseGridMusic(session,selectedScene),[session,selectedScene]);
   const visibleSteps=clip.steps.map((_,index)=>index);
   const automationValues=clip.automation[automationParam];
   const arrangementBars=Array.from({length:session.arrangement[0]?.length||16},(_,index)=>index);
@@ -865,6 +867,21 @@ export default function FallenSessions(){
       </section>
 
       <div className="fsStatus">{status}</div>
+      <details className="fsMusicInsights">
+        <summary>Music Theory Lab · Scene {selectedScene+1} · {musicInsights.note_count} pitched notes</summary>
+        <p className="fsMusicInsightCaution">Observations for your ears to evaluate. No inferred key,
+          originality score, automatic composition edits or publishing clearance.</p>
+        <div className="fsMusicInsightStats">
+          <span>Parts {musicInsights.pitched_track_count}</span>
+          <span>Pitch classes {musicInsights.pitch_class_evidence.map(item=>item.pitch_class).join(' · ')||'none'}</span>
+          <span>Register overlaps {musicInsights.register_proximity_examples}</span>
+        </div>
+        {musicInsights.findings.map((finding,index)=>(
+          <p key={finding.kind+'-'+index}><strong>{finding.observation}</strong> {finding.recommendation}</p>
+        ))}
+        <p className="fsMusicInsightCaution">Dynamic arc by quarter: {musicInsights.velocity_arc.map(q=>
+          q.mean_note_velocity.toFixed(2)).join(' · ')}. Velocity is not a loudness measurement.</p>
+      </details>
 
       <section className="fsWorkspace">
         <aside className="fsTracks">
