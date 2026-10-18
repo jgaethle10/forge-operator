@@ -556,6 +556,8 @@ export async function startFabricLocalRuntime({
   const moduleDir=path.dirname(fileURLToPath(import.meta.url));
   const pluginDir=path.resolve(moduleDir,'../../plugins/evercraft-fabric');
   const journalDir=path.resolve(moduleDir,'../../public/journal');
+  const romanCampaignFile=path.resolve(moduleDir,'../../public/campaigns/roman/index.html');
+  const romanCampaignPresent=()=>fs.existsSync(romanCampaignFile);
   const demoDir=path.resolve(moduleDir,'../../public/demos');
   const visualStateEphemeral=!String(visualStateDir||'').trim();
   const visualDir=path.resolve(
@@ -645,6 +647,10 @@ export async function startFabricLocalRuntime({
     earthworks_simulator_authority:'interactive_software_simulation_only',
     chum_human_review_path_template:'/api/chum/go/{public_id}',
     chum_human_review_authority:'discovery_review_only',
+    roman_emergency_mirror_path:'/campaigns/roman/',
+    roman_emergency_mirror_ready:romanCampaignPresent(),
+    roman_emergency_mirror_owner_review_required:true,
+    roman_domain_dns_cutover_verified:false,
     journal_mirror_path:'/journal/',
     journal_mirror_ready:fs.existsSync(path.join(journalDir,'index.html')),
     journal_mirror_indexing:'index_follow_canonical_public_origin',
@@ -689,6 +695,33 @@ export async function startFabricLocalRuntime({
 
       if (req.method==='GET' && req.url==='/health') {
         return sendJson(res,200,health());
+      }
+
+      // Independent, read-only campaign mirror. This route is *not* an apex-domain cutover.
+      // It cannot modify donation DNS, expose visitor data, or proxy the Base44 outage.
+      if ((req.method==='GET'||req.method==='HEAD') &&
+          ['/campaigns/roman','/campaigns/roman/'].includes(
+            new URL(String(req.url||'/'),'http://fabric.local').pathname
+          )) {
+        if (!romanCampaignPresent()) {
+          return sendJson(res,503,{error:'campaign_mirror_source_unavailable'});
+        }
+        const content=fs.readFileSync(romanCampaignFile,'utf8');
+        if (!content.includes('Roman Kilinkaridis') ||
+            !content.includes('https://donate.voteroman.com/') ||
+            !content.includes('</html>')) {
+          return sendJson(res,503,{error:'campaign_mirror_integrity_failed'});
+        }
+        const body=Buffer.from(content,'utf8');
+        res.writeHead(200,{
+          'content-type':'text/html; charset=utf-8',
+          'content-length':body.length,
+          'cache-control':'public, max-age=60, must-revalidate',
+          ...browserSecurityHeaders(),
+          'x-robots-tag':'noindex, nofollow',
+          'x-evercraft-campaign-source':'owned-fabric-static',
+        });
+        return res.end(req.method==='HEAD'?undefined:body);
       }
 
       if (req.method==='GET' && String(req.url||'').startsWith('/checkout/handoff/')) {
