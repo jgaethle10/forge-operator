@@ -5,6 +5,10 @@ on:
     paths:
       - 'systemia/evercraft-web/owned-fetch-mcp/**'
       - 'systemia/evercraft-web/browser-worker/policy.mjs'
+      - 'systemia/yard/web-fetch-owned-resident.proof.mjs'
+      - 'systemia/yard/operator.mjs'
+      - 'systemia/compute/runtime-node.mjs'
+      - 'evercraft.compute.json'
       - '.github/workflows/evercraft-web-owned-fetch-mcp.yml'
   workflow_dispatch:
 
@@ -28,5 +32,7 @@ jobs:
         run: node --check systemia/evercraft-web/owned-fetch-mcp/server.mjs
       - name: Read-only MCP security and cold-client tests
         run: node --test systemia/evercraft-web/owned-fetch-mcp/server.test.mjs
+      - name: Leased private Evercraft Compute + Yard service proof
+        run: node systemia/yard/web-fetch-owned-resident.proof.mjs
       - name: Independent GitHub runner public HTTPS Fetch smoke
         run: node --test systemia/evercraft-web/owned-fetch-mcp/live-smoke.test.mjs
