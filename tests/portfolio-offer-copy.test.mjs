@@ -105,7 +105,7 @@ test('human-centered copy gives a recognizable buying moment without invented su
     'browser-diagnosis': ['one browser task breaks','remembering every click'],
     'payments-pilot': ['Know when a customer paid','settlement verification'],
     'legacy-xray': ['Your old system still runs the business','critical operations'],
-    'ibmi-xray': ["shouldn't introduce surprises",'scheduled jobs'],
+    'ibmi-xray': ["should not introduce surprises",'scheduled jobs'],
     'sign-pilot': ['signing journey clear','Signing is a moment of trust'],
     'towi-evidence': ['next decision with the evidence','vague confidence is not enough'],
   };
