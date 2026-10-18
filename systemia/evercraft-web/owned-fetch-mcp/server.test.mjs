@@ -86,7 +86,7 @@ test('first release holds IPv6-only resolutions pending mapped-address safety re
   await assert.rejects(fetchPublicPage('https://public.example/',{
     resolveHost:async()=>[{address:'127.0.0.1',family:4}],
     request:()=>{throw Error('private IPv4 outbound must not run');}
-  }),/ipv4_public_target_required/);
+  }),/private_or_reserved_target/);
 });
 
 
