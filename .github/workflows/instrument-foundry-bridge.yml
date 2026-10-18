@@ -15,6 +15,9 @@ on:
       - 'systemia/media-studio/instrument-foundry-piano.mjs'
       - 'systemia/media-studio/instrument-foundry-piano.d.mts'
       - 'systemia/media-studio/instrument-foundry-piano.test.mjs'
+      - 'systemia/media-studio/instrument-foundry-capture-qa.mjs'
+      - 'systemia/media-studio/instrument-foundry-capture-qa.d.mts'
+      - 'systemia/media-studio/instrument-foundry-capture-qa.test.mjs'
       - 'systemia/media-studio/instrument-foundry-playback.integration.test.mjs'
       - 'systemia/media-studio/pulsegrid-audio-authority.mjs'
       - 'systemia/media-studio/pulsegrid-audio-authority.d.mts'
@@ -45,7 +48,7 @@ jobs:
         with:
           node-version: '22'
       - name: Foundry custody and import tests
-        run: node --experimental-strip-types --test systemia/media-studio/instrument-foundry-bridge.test.mjs systemia/media-studio/instrument-foundry-pulsegrid.integration.test.mjs systemia/media-studio/instrument-foundry-resolver.test.mjs systemia/media-studio/instrument-foundry-ui.test.mjs systemia/media-studio/pulsegrid-audio-scheduler.test.mjs systemia/media-studio/instrument-foundry-piano.test.mjs systemia/media-studio/instrument-foundry-playback.integration.test.mjs systemia/media-studio/pulsegrid-audio-authority.test.mjs
+        run: node --experimental-strip-types --test systemia/media-studio/instrument-foundry-bridge.test.mjs systemia/media-studio/instrument-foundry-pulsegrid.integration.test.mjs systemia/media-studio/instrument-foundry-resolver.test.mjs systemia/media-studio/instrument-foundry-ui.test.mjs systemia/media-studio/pulsegrid-audio-scheduler.test.mjs systemia/media-studio/instrument-foundry-piano.test.mjs systemia/media-studio/instrument-foundry-capture-qa.test.mjs systemia/media-studio/instrument-foundry-playback.integration.test.mjs systemia/media-studio/pulsegrid-audio-authority.test.mjs
 
   saban-capture-review:
     runs-on: ubuntu-latest
