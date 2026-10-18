@@ -111,6 +111,7 @@ jobs:
 
           backup="https://headless-jhpvqnpgxlh-sociallyguud-140c.wix-site-host.com/"
           owned="https://fabric.systemiacommandcenters.com/campaigns/roman/"
+          funnel="https://fabric.systemiacommandcenters.com/go/roman"
           donations="https://donate.voteroman.com/"
           check_url() {
             local url="$1"
@@ -135,6 +136,8 @@ jobs:
           check_url "$backup" 'Roman Kilinkaridis' 'Independent emergency campaign mirror'
           check_url "$owned" 'Roman Kilinkaridis' 'Evercraft-owned campaign mirror'
           check_url "$owned" 'https://donate.voteroman.com/' 'Evercraft campaign mirror preserves donation link'
+          check_url "$funnel" 'Roman Kilinkaridis' 'Evercraft short continuation funnel'
+          check_url "$funnel" 'https://donate.voteroman.com/' 'Evercraft short funnel preserves donation link'
           check_url "$donations" 'Roman Kilinkaridis' 'Existing campaign donation webpage'
           echo "This checks page availability only. No donation transaction or checkout completion was attempted." >> "$GITHUB_STEP_SUMMARY"
 
