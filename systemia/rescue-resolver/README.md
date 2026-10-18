@@ -24,7 +24,7 @@ This laboratory prototype provides a Chrome Manifest V3 extension that redirects
 5. Check `https://donate.voteroman.com/` still visits the existing donation page without redirection.
 6. Open the popup and click Disable; original domain navigation should follow its current DNS route again.
 
-**No user browser has been enrolled and no published Chrome extension exists.** An actual Chrome end-to-end test and deployment review remain outstanding. iOS Safari and ordinary browsers without this extension are not covered.
+**No user browser has been enrolled and no published Chrome extension exists.** The integration suite uses only a disposable isolated Chromium profile and mocked network responses. A passing headless-browser check proves browser-level behavior within the test, not a public release, campaign approval, or original-domain DNS cutover. iOS Safari and ordinary browsers without this extension are not covered.
 
 ## Boardroom-style feasibility review (design-only, not a claimed live team session)
 
@@ -41,3 +41,7 @@ Generalize this to a voluntary decentralized Rescue Manifest Registry with short
 
 ## Immediate restoration gate
 To fix `voteroman.com` for **everyone** without a browser extension, the domain controller still must authorize GoDaddy forwarding, DNS delegation, or an equivalent existing-host change. The shortest prepared legitimate route is in `campaign-recovery/roman-2026/RECOVERY.md`. Do not contact Paola, Roman, or the registrar on the user's behalf.
+
+## Isolated Chromium verification
+
+The GitHub Actions proof installs a dedicated Playwright-bundled Chromium in the runner, opens a disposable browser profile, and exercises **disabled at install → explicit checkbox and click → apex/www browser redirect → donation exclusion → disabled again**. All tested public host responses are intercepted by mocks, so no production campaign server or payments are contacted during this test. The extension background worker exists only to expose an ephemeral extension ID in that isolated browser; it contains no listeners, timers, fetches, or redirect activation. Running unit tests alone is no longer sufficient for the CI release gate. This does **not** distribute/install the extension on any user's device or fix the original site globally.
