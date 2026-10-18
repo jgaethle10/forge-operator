@@ -1,5 +1,6 @@
 import type { PulseGridAudioAsset, PulseGridSession, PulseGridTrack } from './pulsegrid-session.js';
 import { schedulePulseGridAudioBuffer } from './pulsegrid-audio-scheduler.mjs';
+import { pulseGridAudioAuthoritySignature } from './pulsegrid-audio-authority.mjs';
 import {selectFoundrySample, scheduleFoundryPianoNote, validateFoundryPatch} from './instrument-foundry-piano.mjs';
 import type {FoundryInstrumentPatch} from './instrument-foundry-piano.mjs';
 
@@ -41,6 +42,9 @@ export class PulseGridAudioEngine {
   private noiseBuffer: AudioBuffer | null = null;
   private assetResolver: PulseGridAudioAssetResolver | null = null;
   private readonly audioBuffers = new Map<string, AudioBuffer>();
+  private audioAuthoritySignature: string | null = null;
+  private audioCacheEpoch = 0;
+  private playbackAttempt = 0;
   private readonly pendingAssetLoads = new Map<string, Promise<void>>();
   private readonly activeSources = new Set<AudioScheduledSourceNode>();
   private readonly trackBuses = new Map<string, PulseGridTrackBus>();
@@ -67,28 +71,36 @@ export class PulseGridAudioEngine {
     };
   }
 
-  setAudioAssetResolver(resolver:PulseGridAudioAssetResolver|null){
-    if(this.assetResolver===resolver)return;
-    this.assetResolver=resolver;
+  // Do not carry a decoded recording across project, rights, source or
+  // resolver boundaries. Existing in-flight reads are discarded by epoch.
+  private invalidateAudioCache() {
+    this.audioCacheEpoch += 1;
     this.audioBuffers.clear();
     this.pendingAssetLoads.clear();
-    if(this.context&&this.session&&resolver){
-      void this.prepareAudioAssets();
-    }
     this.emitStatus();
   }
 
+  setAudioAssetResolver(resolver:PulseGridAudioAssetResolver|null){
+    if(this.assetResolver===resolver)return;
+    if(this.playing)this.stop();
+    this.assetResolver=resolver;
+    this.invalidateAudioCache();
+  }
+
   updateSession(session: PulseGridSession) {
-    this.session = structuredClone(session);
-    this.scene = Math.max(
-      0,
-      Math.min(this.scene, Math.max(0, session.tracks[0]?.clips.length - 1 || 0)),
-    );
-    if (this.context) {
+    const authority=pulseGridAudioAuthoritySignature(session);
+    if(this.audioAuthoritySignature!==authority){
+      if(this.playing)this.stop();
+      this.audioAuthoritySignature=authority;
+      this.invalidateAudioCache();
+    }
+    this.session=structuredClone(session);
+    this.scene=Math.max(0,Math.min(this.scene,Math.max(0,session.tracks[0]?.clips.length-1||0)));
+    if(this.context){
       this.ensureTrackBuses();
       this.syncAllTrackBuses(this.context.currentTime);
       this.configureClock();
-      void this.prepareAudioAssets();
+      // No fire-and-forget reads: verified audio is loaded and awaited in play().
     }
     this.emitStatus();
   }
@@ -99,7 +111,10 @@ export class PulseGridAudioEngine {
     // Do not keep a transport running into a different scene until its
     // recorded samples have been authorized, verified and decoded. This
     // deliberately requires a new Play press instead of silent note loss.
-    if(nextScene!==this.scene && this.playing)this.stop();
+    if(nextScene!==this.scene){
+      if(this.playing)this.stop();
+      this.invalidateAudioCache();
+    }
     this.scene = nextScene;
     this.step = 0;
     if (this.context) {
@@ -117,35 +132,40 @@ export class PulseGridAudioEngine {
   }
 
   async play(session: PulseGridSession, scene = session.active_scene) {
+    if(this.playing)this.stop();
     this.updateSession(session);
     this.setScene(scene);
-    const context = await this.ensureContext();
-    if (context.state === 'suspended') await context.resume();
+    // Reauthorize on EVERY explicit Play. A locally cached buffer from an
+    // older audition never grants permission to play it again.
+    const attempt=++this.playbackAttempt;
+    this.invalidateAudioCache();
+    const context=await this.ensureContext();
+    if(context.state==='suspended')await context.resume();
+    if(attempt!==this.playbackAttempt)throw new Error('PulseGrid playback start superseded.');
     await this.prepareAudioAssets();
-    if (this.playing) return;
+    if(attempt!==this.playbackAttempt)throw new Error('PulseGrid playback start superseded.');
 
-    this.playing = true;
-    this.step = 0;
-    const workletReady = await this.ensureWorkletClock();
+    this.playing=true;
+    this.step=0;
+    const workletReady=await this.ensureWorkletClock();
+    if(attempt!==this.playbackAttempt)throw new Error('PulseGrid playback start superseded.');
 
-    if (!this.playing) return;
-    if (workletReady && this.clockNode) {
-      this.clockMode = 'worklet';
+    if(workletReady&&this.clockNode){
+      this.clockMode='worklet';
       this.clockNode.port.postMessage({
-        type: 'start',
-        bpm: this.session?.transport.bpm || 120,
-        swing: this.session?.transport.swing || 0,
-        steps: this.loopSteps(),
-        lookaheadSec: this.scheduleAheadSeconds,
-        startTime: context.currentTime + 0.07,
+        type:'start',bpm:this.session?.transport.bpm||120,
+        swing:this.session?.transport.swing||0,
+        steps:this.loopSteps(),lookaheadSec:this.scheduleAheadSeconds,
+        startTime:context.currentTime+0.07,
       });
-    } else {
+    }else{
       this.startFallbackClock();
     }
     this.emitStatus();
   }
 
   stop() {
+    this.playbackAttempt += 1;
     this.playing = false;
     if (this.fallbackTimer) clearInterval(this.fallbackTimer);
     this.fallbackTimer = null;
@@ -164,8 +184,7 @@ export class PulseGridAudioEngine {
     this.master?.disconnect();
     this.master = null;
     this.noiseBuffer = null;
-    this.audioBuffers.clear();
-    this.pendingAssetLoads.clear();
+    this.invalidateAudioCache();
     const context = this.context;
     this.context = null;
     this.clockMode = 'cold';
@@ -218,18 +237,24 @@ export class PulseGridAudioEngine {
       if(this.audioBuffers.has(asset.id))continue;
       const existing=this.pendingAssetLoads.get(asset.id);
       if(existing){loads.push(existing);continue}
+      const epoch=this.audioCacheEpoch;
+      const checkActive=()=>epoch===this.audioCacheEpoch&&resolver===this.assetResolver&&
+        context===this.context&&this.session?.session_id===session.session_id;
       const load=(async()=>{
         const blob=await resolver(asset);
         if(!blob)throw new Error('PulseGrid audio asset is missing from verified storage: '+asset.id);
+        if(!checkActive())throw new Error('PulseGrid audio authorization changed during loading.');
         const bytes=await blob.arrayBuffer();
         const buffer=await context.decodeAudioData(bytes.slice(0));
+        if(!checkActive())throw new Error('PulseGrid audio authorization changed during decoding.');
         this.audioBuffers.set(asset.id,buffer);
-      })().finally(()=>{
-        this.pendingAssetLoads.delete(asset.id);
+      })();
+      const tracked=load.finally(()=>{
+        if(this.pendingAssetLoads.get(asset.id)===tracked)this.pendingAssetLoads.delete(asset.id);
         this.emitStatus();
       });
-      this.pendingAssetLoads.set(asset.id,load);
-      loads.push(load);
+      this.pendingAssetLoads.set(asset.id,tracked);
+      loads.push(tracked);
     }
     await Promise.all(loads);
   }
