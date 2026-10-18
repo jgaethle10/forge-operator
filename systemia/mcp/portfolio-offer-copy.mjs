@@ -69,7 +69,7 @@ export const PORTFOLIO_OFFER_COPY = Object.freeze({
   },
   'ibmi-xray': {
     eyebrow: 'IBM i 7.4 Upgrade X-Ray',
-    headline: 'An IBM i upgrade shouldn't introduce surprises to the workday.',
+    headline: 'An IBM i upgrade should not introduce surprises to the workday.',
     lede: 'That system supports real people, scheduled jobs and connected business processes. Before changing one IBM i 7.4 estate or workload, identify the integrations, jobs and operational risks that deserve an explicit upgrade plan.',
     promise: 'An IBM i 7.4-focused dependency and upgrade-risk diagnosis, not a production upgrade, certification or guaranteed compatibility finding.',
     send: [
