@@ -106,8 +106,14 @@ export function preflightInfluenceDistribution({brief,creatorReview,offerReadine
   if(offerReadiness?.publicCanaryVerified!==true)reasons.push('live_offer_canary_missing');
   if(offerReadiness?.purchasePathIndependentlyVerified!==true)reasons.push('purchase_path_not_verified');
   if(offerReadiness?.fulfillmentReceiptVerified!==true)reasons.push('fulfillment_receipt_not_verified');
-  if(offerReadiness?.observedAt&&Date.now()-Date.parse(offerReadiness.observedAt)>24*3600*1000)reasons.push('offer_evidence_stale');
-  if(!offerReadiness?.observedAt||!Number.isFinite(Date.parse(offerReadiness.observedAt)))reasons.push('offer_observation_timestamp_missing');
+  const observedMs=Date.parse(offerReadiness?.observedAt);
+  if(!Number.isFinite(observedMs)) reasons.push('offer_observation_timestamp_missing');
+  else if(observedMs>Date.now()+5*60*1000) reasons.push('offer_observation_in_future');
+  else if(Date.now()-observedMs>24*3600*1000) reasons.push('offer_evidence_stale');
+  if(!Array.isArray(offerReadiness?.evidenceRefs)||!offerReadiness.evidenceRefs.length||
+      offerReadiness.evidenceRefs.some(ref=>typeof ref!=='string'||!ref.trim())){
+    reasons.push('offer_evidence_references_missing');
+  }
   return {schema:'evercraft.influence-lab.distribution-preflight.v1',campaignId:brief.campaignId,
     state:reasons.length?'hold':'ready_for_separate_execution_gate_review',reasons,
     externalContactAuthorized:false,creatorCompensationAuthorized:false,publicationAuthority:false,
