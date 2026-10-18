@@ -971,7 +971,11 @@ export async function startFabricLocalRuntime({
         if(!upstream.ok||result?.ok!==true){
           console.warn('EVERCRAFT_CHECKOUT_PROVIDER_HELD',JSON.stringify({
             offer_slug:slug,phase:'provider_response',http_status:upstream.status,
-            provider_ok:result?.ok===true,order_reference_present:Boolean(result?.order_key)
+            provider_ok:result?.ok===true,
+            // Only allow a narrowly shaped machine error token, never raw provider text.
+            provider_error_code:/^[a-z][a-z0-9_]{0,47}$/.test(String(result?.error||''))
+              ?String(result.error):'unclassified_provider_error',
+            order_reference_present:Boolean(result?.order_key)
           }));
           if(isForm){
             return sendText(
