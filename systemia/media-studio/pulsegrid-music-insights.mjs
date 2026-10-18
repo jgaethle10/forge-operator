@@ -33,12 +33,26 @@ export function analyzePulseGridMusic(session,scene){
       motifPatterns.set(pattern,(motifPatterns.get(pattern)||0)+1);
     }
     const repetitions=[...motifPatterns.values()].filter(n=>n>1).length;
+    // These are measurable silences between the sounding spans on a part.
+    // They do not imply a specific phrase, breath mark, meter or interpretation.
+    let soundingEnd=0;
+    const restGaps=[];
+    for(const note of notes){
+      if(note.start>soundingEnd+.001){
+        restGaps.push({start_step:Number(soundingEnd.toFixed(3)),
+          duration_steps:Number((note.start-soundingEnd).toFixed(3))});
+      }
+      soundingEnd=Math.max(soundingEnd,note.end);
+    }
     tracks.push({
       track_id:track.id,note_count:notes.length,
       lowest_midi:Math.min(...notes.map(n=>n.pitch)),
       highest_midi:Math.max(...notes.map(n=>n.pitch)),
       large_melodic_leaps:leapCount,
       repeated_interval_motifs:repetitions,
+      rest_gap_count:restGaps.length,
+      longest_rest_steps:Number(Math.max(0,...restGaps.map(x=>x.duration_steps)).toFixed(3)),
+      rest_gaps:restGaps.slice(0,8),
       velocity_min:Number(Math.min(...notes.map(n=>n.velocity)).toFixed(3)),
       velocity_max:Number(Math.max(...notes.map(n=>n.velocity)).toFixed(3)),
     });
@@ -75,16 +89,64 @@ export function analyzePulseGridMusic(session,scene){
     Math.min(...windows.map(x=>x.mean_note_velocity))<.1)findings.push({
     kind:'limited_velocity_arc',observation:'Average MIDI velocity varies little across quarters.',
     recommendation:'Audition whether the emotional arc benefits from contrast; velocity is not a complete loudness model.'});
+  if(tracks.some(t=>t.rest_gap_count>0))findings.push({
+    kind:'phrase_space',
+    observation:'At least one part contains a measurable rest between note spans.',
+    recommendation:'Audition whether each gap creates anticipation, room for another voice, or a phrase breath. The analyzer never inserts notes or silence.'
+  });
+  // Sweep in note-on order with a heap of note-offs and per-pitch active
+  // track counts. Complexity stays bounded for dense orchestration; it does
+  // not compare every note against all other notes.
   const collisions=[];
-  for(let i=0;i<events.length;i++){
-    for(let j=i+1;j<events.length;j++){
-      if(events[i].track_id===events[j].track_id)continue;
-      if(Math.abs(events[i].pitch-events[j].pitch)>2)continue;
-      if(Math.min(events[i].end,events[j].end)<=Math.max(events[i].start,events[j].start))continue;
-      collisions.push([events[i].track_id,events[j].track_id,events[i].pitch,events[j].pitch]);
-      if(collisions.length>=12)break;
+  const active=Array.from({length:128},()=>new Map());
+  const heap=[];
+  const insert=item=>{
+    heap.push(item);
+    let i=heap.length-1;
+    while(i>0){
+      const parent=Math.floor((i-1)/2);
+      if(heap[parent].end<=heap[i].end)break;
+      [heap[parent],heap[i]]=[heap[i],heap[parent]];
+      i=parent;
     }
-    if(collisions.length>=12)break;
+  };
+  const pop=()=>{
+    const top=heap[0],last=heap.pop();
+    if(heap.length){
+      heap[0]=last;
+      let i=0;
+      while(true){
+        const left=i*2+1,right=left+1;
+        let smallest=i;
+        if(left<heap.length&&heap[left].end<heap[smallest].end)smallest=left;
+        if(right<heap.length&&heap[right].end<heap[smallest].end)smallest=right;
+        if(smallest===i)break;
+        [heap[i],heap[smallest]]=[heap[smallest],heap[i]];
+        i=smallest;
+      }
+    }
+    return top;
+  };
+  for(const note of [...events].sort((a,b)=>a.start-b.start||a.pitch-b.pitch)){
+    while(heap.length&&heap[0].end<=note.start){
+      const old=pop(),bucket=active[old.pitch];
+      const next=(bucket.get(old.track_id)||0)-1;
+      if(next<=0)bucket.delete(old.track_id);
+      else bucket.set(old.track_id,next);
+    }
+    if(collisions.length<12){
+      for(let pitch=Math.max(0,note.pitch-2);pitch<=Math.min(127,note.pitch+2);pitch++){
+        for(const otherTrack of active[pitch].keys()){
+          if(otherTrack===note.track_id)continue;
+          collisions.push([otherTrack,note.track_id,pitch,note.pitch]);
+          if(collisions.length>=12)break;
+        }
+        if(collisions.length>=12)break;
+      }
+    }
+    const bucket=active[note.pitch];
+    bucket.set(note.track_id,(bucket.get(note.track_id)||0)+1);
+    insert(note);
   }
   if(collisions.length)findings.push({
     kind:'register_proximity',observation:'Multiple instrument parts overlap within two semitones in the same register.',
