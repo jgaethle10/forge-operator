@@ -5,8 +5,8 @@ const read = p => fs.readFileSync(new URL('../'+p,import.meta.url),'utf8');
 test('EPS and Havenly customer routes are present and not tied to legacy infrastructure',()=>{
   const eps=read('public/eps/index.html');
   const havenly=read('public/havenly/index.html');
-  for(const marker of ['mailto:jesse@evercraftpropertyservices.com','id="emailQuote"','id="copyQuote"']) assert.ok(eps.includes(marker));
-  assert.doesNotMatch(eps,/509[\\s-]*910[\\s-]*3256|15099103256|sms:|tel:/i);
+  for(const marker of ['mailto:jessegaethle10@gmail.com','mailto:evercraftpropertyservices@gmail.com','tel:+15097590440','sms:+15097590440','id="textQuote"','id="emailQuote"','id="copyQuote"']) assert.ok(eps.includes(marker),`Missing EPS marker: ${marker}`);
+  assert.doesNotMatch(eps,/509[\s-]*910[\s-]*3256|15099103256|jesse@evercraftpropertyservices\.com/i);
   for(const marker of ['sms:+15095605190','mailto:havenlycleaning@gmail.com','id="textRequest"','Nothing is automatically submitted or booked']) assert.ok(havenly.includes(marker));
   for(const page of [eps,havenly]) assert.doesNotMatch(page,/base44\.app|@base44|base44Client|base44-prod/i);
 });

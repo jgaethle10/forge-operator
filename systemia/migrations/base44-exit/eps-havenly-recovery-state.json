@@ -10,15 +10,17 @@
       "product": "Evercraft Property Services",
       "legacy_source": "Base44",
       "owned_source": "public/eps/index.html",
-      "contact_mode": "Email draft/copy only; phone awaiting owner confirmation",
-      "phone": null,
-      "email": "jesse@evercraftpropertyservices.com",
+      "contact_mode": "Owner-confirmed phone call + user-initiated SMS/email draft/copy; no server-side submission",
+      "phone": "+15097590440",
+      "email": "jessegaethle10@gmail.com",
       "legacy_records_state": "not_exported",
       "live_owned_domain_cutover": "not_verified",
       "dns_control": "unverified",
       "checkout_state": "not_verified",
       "customer_intake_server_state": "not_verified",
-      "phone_verification": "blocked_unverified_public_phone_removed"
+      "phone_verification": "owner_confirmed_2026-10-17",
+      "business_email": "evercraftpropertyservices@gmail.com",
+      "customer_contact_delivery_state": "not_verified_from_customer_device"
     },
     {
       "product": "Havenly Cleaning",
