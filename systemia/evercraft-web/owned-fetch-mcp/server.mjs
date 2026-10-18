@@ -11,6 +11,7 @@ import { pathToFileURL } from 'node:url';
 import {
   normalizePublicHttpUrl,
   resolvePublicHost,
+  isNonPublicIp,
   redactUrl,
 } from '../browser-worker/policy.mjs';
 
@@ -154,9 +155,13 @@ export async function fetchPublicPage(input, {
     // Validate and pin again on every hop, rejecting private/mixed DNS.
     const addresses = await resolveHost(target.hostname);
     if (!Array.isArray(addresses) || !addresses.length) throw new Error('dns_resolution_empty');
-    // Defense in depth: use only the already validated policy's resolver in
-    // production. Test substitutes are fixture-only and never registered.
-    const upstream = await request(target, addresses[0]);
+    // Fail closed to public IPv4-only in this initial candidate. The shared
+    // browser policy's IPv6 treatment needs separate mapped/NAT64 review
+    // before we authorize outbound IPv6 connections.
+    const publicIpv4 = addresses.find((row) =>
+      row.family === 4 && !isNonPublicIp(row.address));
+    if (!publicIpv4) throw new Error('ipv4_public_target_required');
+    const upstream = await request(target, publicIpv4);
     if ([301, 302, 303, 307, 308].includes(upstream.status)) {
       if (++redirects > MAX_REDIRECTS) throw new Error('redirect_limit_exceeded');
       if (!upstream.location) throw new Error('redirect_location_missing');
