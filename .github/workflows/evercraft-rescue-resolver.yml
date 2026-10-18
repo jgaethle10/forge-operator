@@ -36,7 +36,7 @@ jobs:
           const m=JSON.parse(fs.readFileSync('systemia/rescue-resolver/extension/manifest.json','utf8'));
           if(m.background?.service_worker !== 'background.js' || m.declarative_net_request)throw Error('unexpected rescue background or preinstalled rule');
           const b=fs.readFileSync('systemia/rescue-resolver/extension/background.js','utf8');
-          if(/chrome\\.|fetch\\(|onInstalled|setInterval|addEventListener/.test(b))throw Error('worker must remain inert');
+          if(/chrome[.]|fetch[(]|onInstalled|setInterval|addEventListener/.test(b))throw Error('worker must remain inert');
           if(m.host_permissions.some(x=>/donate\.|\*:\/\/\*\//.test(x)))throw Error('overbroad extension host permission');
           console.log('Browser-only, opt-in rule contract passed');
           NODE
