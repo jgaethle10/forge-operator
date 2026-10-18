@@ -37,6 +37,9 @@ test('Website Audit campaign passes commercial scroll-stop gate',()=>{
   const report=assessCommercialScrollStop(compileCommercialAttention(campaign));
   assert.equal(report.status,'pass');
   assert.equal(report.score,1);
+  assert.equal(report.evaluationScope,'plan_structure_only');
+  assert.equal(report.creativeQualityState,'not_observed');
+  assert.equal(report.cinematicApproval,false);
   assert.equal(report.checks.text_subordinate,true);
   assert.equal(report.checks.multi_format,true);
   assert.equal(report.checks.truth_guarded,true);
