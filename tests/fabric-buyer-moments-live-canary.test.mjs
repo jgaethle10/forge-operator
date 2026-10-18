@@ -36,6 +36,9 @@ test('full outsider path is seven public GETs plus health, no payment or contact
   assert.equal(r.requests_posted,0);
   assert.equal(r.payment_attempts,0);
   assert.equal(r.source_merge_claimed,false);
+  assert.equal(r.public_parity_observed,true);
+  assert.equal(r.deployed,false,'GET parity never proves source deployment');
+  assert.equal(r.source_commit_attested,false);
   assert.equal(calls.length,8);
   assert.ok(calls.every(c=>c.method==='GET'&&c.redirect==='error'));
 });
