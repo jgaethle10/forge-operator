@@ -54,6 +54,7 @@ const receipt={
  origin:checkOrigin.origin,
  fixture_provenance:'synthetic local source response, for behavior regression only',
  live_source_verification:'SEPARATE_CONTAINER_HTTP_PROBE',
+ base_raster_test:'Third-party OSM tile delivery deliberately unavailable; owned Natural Earth outline must render',
  browser:'Playwright Chromium, no physical iOS/Android or VR headset',
  safety_authority:false,
  published_release:false,
@@ -75,6 +76,8 @@ try{
   page.setDefaultTimeout(12000);
   const errors=[];
   page.on('pageerror',e=>errors.push(String(e.message).slice(0,250)));
+  // Force public tile delivery failure to verify an independently sourced fallback instead of a blank map.
+  await page.route('https://tile.openstreetmap.org/**',route=>route.abort('failed'));
   // A controlled source response is necessary for deterministic UI behavior.
   let sourceDown=false;
   await page.route('**/api/evermaps/incidents/pnw',route=>
@@ -91,6 +94,7 @@ try{
   const http=await page.goto(checkOrigin.origin+'/evermaps/',{waitUntil:'domcontentloaded',timeout:17000});
   assert(http?.status()===200,profile.name+' failed navigation');
   await page.waitForFunction(()=>document.querySelector('#em-count')?.textContent==='3',{timeout:16000});
+  await page.waitForFunction(()=>document.querySelector('#em-fallback')?.dataset.source==='natural-earth-50m-public-domain'&&document.querySelectorAll('#em-fallback path').length>=1,null,{timeout:14000});
   const initial=await page.evaluate(()=>{
    const map=document.querySelector('#em-map')?.getBoundingClientRect();
    const panel=document.querySelector('.em-panel')?.getBoundingClientRect();
@@ -98,6 +102,10 @@ try{
     count:document.querySelector('#em-count')?.textContent,
     groups:document.querySelector('#em-groups')?.textContent,
     markers:document.querySelectorAll('.em-marker').length,
+    fallback_shapes:document.querySelectorAll('#em-fallback path').length,
+    fallback_source:document.querySelector('#em-fallback')?.dataset.source,
+    raster_display_state:document.querySelector('#em-tiles')?.dataset.state,
+    raster_opacity:getComputedStyle(document.querySelector('#em-tiles')).opacity,
     source_status:document.querySelector('#em-source')?.dataset.state,
     width:innerWidth,document_width:document.documentElement.scrollWidth,
     map_width:map?.width,panel_width:panel?.width,
@@ -109,11 +117,13 @@ try{
   assert(initial.count==='3',profile.name+' reported count was not 3');
   assert(initial.source_status==='ready',profile.name+' did not reach source ready state');
   assert(initial.markers>0,profile.name+' has no rendered incident marker');
+  assert(initial.fallback_shapes>=1&&initial.fallback_source==='natural-earth-50m-public-domain',profile.name+' has no sourced geographic fallback');
+  assert(initial.raster_display_state==='geography-fallback'&&Number(initial.raster_opacity)===0,profile.name+' showed partially loaded third-party tiles');
   assert(initial.document_width<=initial.width+3,profile.name+' horizontal overflow');
   assert(initial.map_width<=initial.width+3,profile.name+' map overflow');
   assert(initial.panel_width<=initial.width+3,profile.name+' panel overflow');
   assert(initial.noindex,profile.name+' preview not noindex');
-  assert(initial.attribution.includes('OpenStreetMap contributors'),profile.name+' missing map credit');
+  assert(initial.attribution.includes('OpenStreetMap contributors')&&initial.attribution.includes('Natural Earth'),profile.name+' missing both geographic source credits');
   assert(initial.safety_language,profile.name+' missing incident limitation');
   await page.screenshot({path:output+'/'+profile.name+'-normal.png',animations:'disabled',timeout:10000});
   await page.locator('#em-increase').click();
