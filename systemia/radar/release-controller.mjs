@@ -150,6 +150,18 @@ export function evaluateRadarRelease({ edition, editorialPacket } = {}) {
     fail('political_auto_release_boundary', 'Political/government signals require a separate sourced editorial review before unattended release.');
   }
 
+  const pendingStormReview = signals.some((signal) => {
+    const origin = clean(signal?.observation?.metadata?.collector || '');
+    const subject = clean(signal?.subject_key || signal?.observation?.facts?.subject_key || '');
+    return ['nws-storm-desk', 'nws-local-storm-reports'].includes(origin) ||
+      /^nws:(?:storm|lsr):/i.test(subject);
+  });
+  if (pendingStormReview) {
+    fail('storm_editorial_publication_boundary', 'Official storm warnings and preliminary reports require Journal source, impact, imagery-rights and Systemia editorial approval before any unattended owned release.');
+  } else {
+    pass('storm_editorial_publication_boundary', 'No preliminary NWS storm-desk observation is selected for unattended publication.');
+  }
+
   const paragraphs = edition ? proseParagraphs(edition) : null;
   const paragraphLengths = paragraphs ? Object.values(paragraphs).map((value) => clean(value).length) : [];
   if (paragraphLengths.length >= 5 && paragraphLengths.every((length) => length >= 180)) {
