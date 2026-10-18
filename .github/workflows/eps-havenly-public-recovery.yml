@@ -10,6 +10,8 @@ on:
       - 'scripts/build-eps-havenly-portable-release.mjs'
       - 'scripts/probe-eps-havenly-owned-service.mjs'
       - 'tests/eps-havenly-portable-release.test.mjs'
+      - 'tests/fabric-owned-service-frontages.test.mjs'
+      - 'systemia/mcp/fabric-local-runtime.mjs'
       - 'tests/sunshine-spotless-rescue.test.mjs'
       - '.github/workflows/eps-havenly-public-recovery.yml'
   push:
@@ -23,6 +25,8 @@ on:
       - 'scripts/build-eps-havenly-portable-release.mjs'
       - 'scripts/probe-eps-havenly-owned-service.mjs'
       - 'tests/eps-havenly-portable-release.test.mjs'
+      - 'tests/fabric-owned-service-frontages.test.mjs'
+      - 'systemia/mcp/fabric-local-runtime.mjs'
       - 'tests/sunshine-spotless-rescue.test.mjs'
       - '.github/workflows/eps-havenly-public-recovery.yml'
   workflow_dispatch:
@@ -39,6 +43,8 @@ jobs:
           node-version: 22
       - name: Verify owned local service release and fallback honesty
         run: node --test tests/eps-havenly-portable-release.test.mjs tests/eps-havenly-rescue.test.mjs tests/sunshine-spotless-rescue.test.mjs
+      - name: Verify Evercraft Fabric first-party fallback routes
+        run: node --test tests/fabric-owned-service-frontages.test.mjs
       - name: Package two direct contact frontages plus EPS estimator
         run: node scripts/build-eps-havenly-portable-release.mjs
       - name: Publish durable portable artifact (not a live deployment)
