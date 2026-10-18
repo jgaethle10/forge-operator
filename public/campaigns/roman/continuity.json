@@ -11,5 +11,6 @@
   "existing_donation_website": "https://donate.voteroman.com/",
   "donation_checkout_transaction_verified": false,
   "visitor_instruction": "This is an independent informational fallback. The original voteroman.com domain is not redirected by this pointer. Choose an alternate address directly.",
-  "deployed_on_original_domain": false
+  "deployed_on_original_domain": false,
+  "tertiary_independent_information_page": "https://jgaethle10.github.io/forge-operator/campaigns/roman/"
 }

@@ -20,8 +20,19 @@ test('backup used only when local content absent and known remote is externally 
      return valid();
    },
  });
- assert.deepEqual(outcome,{state:'independent_backup_ready',status:302,location:ROMAN_ROUTES.backup});
+ assert.deepEqual(outcome,{state:'wix_independent_backup_ready',status:302,location:ROMAN_ROUTES.backup});
  assert.deepEqual(routes,[[ROMAN_ROUTES.backup,'GET','error']]);
+});
+test('GitHub Pages alternate is selected when Wix fails and its HTML passes checks',async()=>{
+ const endpoints=[];
+ const outcome=await resolveRomanContinuity({localHtml:'',fetchImpl:async(url,opts)=>{
+   endpoints.push(url);
+   if(url===ROMAN_ROUTES.backup)return new Response('APP UNAVAILABLE',{status:402});
+   if(url===ROMAN_ROUTES.tertiary)return valid();
+   throw new Error('untrusted alternate');
+ }});
+ assert.deepEqual(outcome,{state:'github_pages_independent_backup_ready',status:302,location:ROMAN_ROUTES.tertiary});
+ assert.deepEqual(endpoints,[ROMAN_ROUTES.backup,ROMAN_ROUTES.tertiary]);
 });
 test('original failing status, redirect, bad content type, missing marker and downtime fail closed',async()=>{
  const scenarios=[
