@@ -81,3 +81,24 @@ test('does not mistake any other offer for the named Website Audit canary',()=>{
   const c=canary();c.results=[{...c.results[0],public_id:'some-other-public-offer-v1'}];
   assert.equal(compileInfluenceDistributionReview({...source(),canaryReceipt:c}).canary.state,'unknown');
 });
+
+test('Saban browser supplied report cannot turn a held distribution pack live',()=>{
+  const p=source();
+  const report={schema:'evercraft.influence-lab.saban-website-audit-browser.v1',
+    observedAt:at,target:'https://fabric.systemiacommandcenters.com/offers/website-audit',
+    boundary:{readOnly:true,formSubmitAllowed:false,paymentPosted:false,
+      checkoutCreated:false,settledRevenueVerified:false},
+    verdict:'read_only_page_ui_checks_passed',blockers:[],
+    views:['mobile','desktop'].map(name=>({name,status:200,finalOrigin:'https://fabric.systemiacommandcenters.com',
+      pageRendered:true,offerNameVisible:true,priceVisible:true,emailFieldPresent:true,
+      checkoutCtaVisible:true,checkoutFormActionCorrect:true,checkoutFormMethodPost:true,
+      canonicalMatches:true,ogImageAllowed:true,
+      screenshotPath:name+'-website-audit.png',screenshotSha256:'sha256:'+'b'.repeat(64),
+      errors:[],blockedNonReadMethods:[],paymentPosted:false,formSubmitted:false,
+      checkoutCreated:false,providerSettlementVerified:false}))};
+  const receipt=compileInfluenceDistributionReview({...p,sabanReceipt:report});
+  assert.equal(receipt.sabanBrowser.state,'untrusted_report_says_ui_visible');
+  assert.equal(receipt.buyerJourney.createdCheckouts,null);
+  assert.equal(receipt.boundaries.evercraftClipPublished,false);
+  assert.equal(receipt.copyAndLinkDrafts.every(x=>x.reviewState==='held'),true);
+});
