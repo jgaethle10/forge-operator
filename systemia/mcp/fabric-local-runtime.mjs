@@ -946,6 +946,18 @@ export async function startFabricLocalRuntime({
             }),
             signal:controller.signal,
           });
+        }catch(error){
+          // A provider outage is a checkout hold, not an uncaught server error.
+          // Only log non-sensitive stage metadata, never customer data or provider URLs.
+          console.warn('EVERCRAFT_CHECKOUT_TRANSPORT_HELD',JSON.stringify({
+            offer_slug:slug,phase:'provider_transport',
+            failure_class:error?.name==='AbortError'?'timeout':'transport_unavailable'
+          }));
+          if(isForm) return sendText(res,503,renderPaymentHoldPage({slug}),{contentType:'text/html; charset=utf-8'});
+          return sendJson(res,503,{
+            ok:false,error:'evercraft_payments_transport_unavailable',
+            authority:'Evercraft Payments',checkout_ready:false,fulfillment_release:false
+          });
         }finally{
           clearTimeout(timer);
         }
@@ -956,6 +968,10 @@ export async function startFabricLocalRuntime({
           result.payment_state='unpaid';
         }
         if(!upstream.ok||result?.ok!==true){
+          console.warn('EVERCRAFT_CHECKOUT_PROVIDER_HELD',JSON.stringify({
+            offer_slug:slug,phase:'provider_response',http_status:upstream.status,
+            provider_ok:result?.ok===true,order_reference_present:Boolean(result?.order_key)
+          }));
           if(isForm){
             return sendText(
               res,
@@ -979,6 +995,14 @@ export async function startFabricLocalRuntime({
           if(candidate.protocol==='https:') checkoutUrl=candidate.toString();
         }catch{}
         if(result?.checkout_ready!==true||!checkoutUrl||(auditedDomain&&(result?.context_persisted!==true||result?.audited_domain!==auditedDomain))){
+          console.warn('EVERCRAFT_CHECKOUT_CONTRACT_HELD',JSON.stringify({
+            offer_slug:slug,phase:'checkout_contract',http_status:upstream.status,
+            exact_price:!directOffer||Number(result?.amount_cents)===directOffer.amount_cents,
+            exact_currency:!directOffer||String(result?.currency||'').toLowerCase()===directOffer.currency,
+            checkout_url_valid:Boolean(checkoutUrl),checkout_ready:result?.checkout_ready===true,
+            audit_context_ready:!auditedDomain||(result?.context_persisted===true&&result?.audited_domain===auditedDomain),
+            order_reference_present:Boolean(result?.order_key)
+          }));
           if(isForm){
             return sendText(
               res,
