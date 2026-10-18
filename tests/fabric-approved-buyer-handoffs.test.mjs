@@ -20,6 +20,7 @@ const selected=[
  ['findmypart-paid-hunt-v1',['part-quick','part-deep','part-rescue'],[1900,4900,9900]],
  ['eventwave-paid-promotion-v1',['event-boost'],[4900]],
  ['site-survive-rapid-audit-v1',['site-survive'],[25000]],
+ ['workflow-foundry-xray-v1',['workflow-xray'],[25000]],
 ];
 
 test('existing public MCP tool set remains read-only and exactly 3 tools',()=>{
@@ -27,7 +28,7 @@ test('existing public MCP tool set remains read-only and exactly 3 tools',()=>{
  assert.equal(tools.length,3);
  assert.ok(tools.every(t=>t.annotations.readOnlyHint===true));
 });
-test('only four exact approved capabilities receive 6 explicit hosted buyer handoffs',async()=>{
+test('five exact approved capabilities receive 7 explicit hosted buyer handoffs',async()=>{
  let total=0;
  for(const [id,slugs,amounts] of selected){
   const p=await run(id);
@@ -41,7 +42,7 @@ test('only four exact approved capabilities receive 6 explicit hosted buyer hand
    !x.checkout_created&&!x.payment_verified&&!x.fulfillment_verified));
   total+=p.human_buyer_options.length;
  }
- assert.equal(total,6);
+ assert.equal(total,7);
 });
 test('RIVET and AliEV protected state plus mismatched IBM i and legacy product stay held',async()=>{
  for(const id of [
