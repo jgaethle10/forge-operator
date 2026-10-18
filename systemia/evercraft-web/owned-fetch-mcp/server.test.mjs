@@ -107,6 +107,57 @@ test('MCP only exposes Fetch capabilities and read-only tool; wrong arguments fa
   assert.match(rejected.result.content[0].text,/private_or_reserved_target/);
 });
 
+
+test('bounded multi-URL Fetch isolates failures, preserves order and avoids parallel egress', async () => {
+  let active=0;
+  let maxActive=0;
+  const seen=[];
+  const fetcher=async (url) => {
+    active++;
+    maxActive=Math.max(maxActive,active);
+    seen.push(url);
+    await new Promise(resolve=>setImmediate(resolve));
+    active--;
+    if(url.includes('denied')) throw new Error('private_or_reserved_target');
+    return {ok:true,source_url_redacted:url,content_sha256:'sha256:'+'a'.repeat(64)};
+  };
+  const payload={jsonrpc:'2.0',id:11,method:'tools/call',
+    params:{name:'fetch_urls',arguments:{urls:[
+      'https://public.example/one',
+      'http://127.0.0.1/denied',
+      'https://public.example/three',
+    ]}}};
+  const response=await webMcpResponse(payload,{fetcher});
+  assert.equal(response.result.structuredContent.attempted,3);
+  assert.equal(response.result.structuredContent.succeeded,2);
+  assert.equal(response.result.structuredContent.failed,1);
+  assert.equal(response.result.structuredContent.results[0].index,0);
+  assert.equal(response.result.structuredContent.results[0].ok,true);
+  assert.equal(response.result.structuredContent.results[1].ok,false);
+  assert.equal(response.result.structuredContent.results[1].error,'private_or_reserved_target');
+  assert.equal(response.result.structuredContent.results[2].index,2);
+  assert.equal(maxActive,1);
+  assert.deepEqual(seen,payload.params.arguments.urls);
+  assert.equal(response.result.structuredContent.payment_authority,false);
+  assert.equal(response.result.structuredContent.browser_authority,false);
+});
+
+test('Fetch batch rejects empty, over-five, non-string and extra arguments before egress', async()=>{
+  let called=0;
+  const fetcher=async()=>{called++;return {ok:true};};
+  for(const args of [
+    {urls:[]}, {urls:Array(6).fill('https://example.com/')},
+    {urls:['https://example.com/',42]},
+    {urls:['https://example.com/'],admin:true},
+    {url:'https://example.com/'},
+  ]){
+    const reply=webMcpResponse({jsonrpc:'2.0',id:8,method:'tools/call',
+      params:{name:'fetch_urls',arguments:args}},{fetcher});
+    assert.equal(reply.error.code,-32602);
+  }
+  assert.equal(called,0);
+});
+
 test('HTTP MCP is loopback-bound, bearer-authenticated, origin-restricted and non-transactional', async () => {
   await assert.rejects(startOwnedWebFetchMcp({host:'0.0.0.0',token:'x'.repeat(28)}),/loopback_only_candidate/);
   await assert.rejects(startOwnedWebFetchMcp({token:'short'}),/private_access_token_required/);
