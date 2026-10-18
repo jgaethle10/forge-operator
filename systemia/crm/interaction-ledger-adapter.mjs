@@ -108,11 +108,19 @@ export function readPrivateInteractionLedger(stateDir,{now=new Date(),maxBytes=1
   if(!stat.isDirectory() || stat.isSymbolicLink() ||
       (process.platform!=='win32' && (stat.mode&0o077)!==0)) throw Error('interaction_ledger_root_unsafe');
   const file=path.join(root,'interaction-events.jsonl');
-  const fstat=fs.lstatSync(file);
-  if(!fstat.isFile() || fstat.isSymbolicLink() ||
-      (process.platform!=='win32' && (fstat.mode&0o077)!==0)) throw Error('interaction_ledger_file_unsafe');
-  if(fstat.size>maxBytes) throw Error('interaction_ledger_file_too_large');
-  const content=fs.readFileSync(file,'utf8');
+  const fd=fs.openSync(file,fs.constants.O_RDONLY|(fs.constants.O_NOFOLLOW||0));
+  let content;
+  try {
+    // Inspect the same open descriptor we read, preventing a symlink swap
+    // between lstat() and readFile() from revealing private ledger state.
+    const fstat=fs.fstatSync(fd);
+    if(!fstat.isFile() ||
+        (process.platform!=='win32' && (fstat.mode&0o077)!==0)) throw Error('interaction_ledger_file_unsafe');
+    if(fstat.size>maxBytes) throw Error('interaction_ledger_file_too_large');
+    content=fs.readFileSync(fd,'utf8');
+  } finally {
+    fs.closeSync(fd);
+  }
   const events=content.split('\n').filter(Boolean).map(line=>JSON.parse(line));
   return projectInteractionEvents(events,{now});
 }
