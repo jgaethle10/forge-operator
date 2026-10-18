@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width,initial-scale=1">
   <title>Evercraft Property Services | Yakima Valley</title>
   <meta name="evercraft-continuity-release" content="eps-continuity-20261017">
-  <meta name="description" content="Local property services across the Yakima Valley. Request a quote, call or text EPS, or use the EPS Precise Estimator.">
+  <meta name="description" content="Local property services across the Yakima Valley. Request a quote by email or use the EPS Precise Estimator.">
   <meta name="robots" content="index,follow,max-snippet:-1,max-image-preview:large">
   <style>
     :root{color-scheme:dark;--bg:#040806;--panel:#0b1310;--line:#1e3528;--text:#f5f7f6;--muted:#a9b7af;--green:#48e07d;--green2:#1c9c50}
@@ -20,7 +20,7 @@
       <a href="#services">Services</a>
       <a href="/apps/eps-estimator/">Estimator</a>
       <a href="#quote">Quote</a>
-      <a class="btn primary" href="tel:+15099103256">Call (509) 910-3256</a>
+      <a class="btn primary" href="mailto:jesse@evercraftpropertyservices.com">Email EPS</a>
     </div>
   </div></nav>
 
@@ -32,7 +32,7 @@
       <div class="actions">
         <a class="btn primary" href="#quote">Request a quote</a>
         <a class="btn secondary" href="/apps/eps-estimator/">Open EPS Precise Estimator</a>
-        <a class="btn secondary" href="sms:+15099103256?body=Hi%20EPS%2C%20I%27d%20like%20a%20quote%20for%20a%20property%20project.">Text EPS</a>
+        <a class="btn secondary" href="mailto:jesse@evercraftpropertyservices.com?subject=EPS%20quote%20request">Email EPS</a>
       </div>
       <div class="trust">
         <div><strong>Local</strong><span>Yakima Valley crew and service area.</span></div>
@@ -57,7 +57,7 @@
       <div class="panel">
         <div class="eyebrow">Fast intake</div>
         <h2>Request a quote</h2>
-        <p class="note">This page does not send your information to a third-party app. It prepares a message for your phone or email so you control the send.</p>
+        <p class="note">This page does not send your information to a third-party app. It prepares an email draft for you to review and send. Nothing is automatically submitted.</p>
         <div class="fields">
           <div class="field"><label for="name">Name</label><input id="name" autocomplete="name"></div>
           <div class="field"><label for="phone">Phone</label><input id="phone" autocomplete="tel"></div>
@@ -66,7 +66,6 @@
           <div class="field wide"><label for="details">Details</label><textarea id="details" placeholder="Size, condition, access notes, timing, anything useful."></textarea></div>
         </div>
         <div class="actions">
-          <button class="btn primary" id="textQuote" type="button">Text this request</button>
           <button class="btn secondary" id="emailQuote" type="button">Email this request</button>
           <button class="btn secondary" id="copyQuote" type="button">Copy summary</button>
         </div>
@@ -84,11 +83,11 @@
 
   <footer class="footer"><div class="wrap">
     Evercraft Property Services · Yakima Valley, Washington · WA Contractor Reg. EVERCPS747OH · UBI 606 112 241<br>
-    <a href="tel:+15099103256">(509) 910-3256</a> · <a href="mailto:jesse@evercraftpropertyservices.com">jesse@evercraftpropertyservices.com</a>
+    <a href="mailto:jesse@evercraftpropertyservices.com">jesse@evercraftpropertyservices.com</a>
   </div></footer>
 
   <div class="mobilebar">
-    <a class="btn secondary" href="tel:+15099103256">Call</a>
+    <a class="btn secondary" href="mailto:jesse@evercraftpropertyservices.com">Email</a>
     <a class="btn primary" href="#quote">Get quote</a>
   </div>
 
@@ -105,11 +104,6 @@ function summary(){
   ].join('\n');
 }
 const status=document.getElementById('status');
-document.getElementById('textQuote').addEventListener('click',()=>{
-  const body=encodeURIComponent(summary());
-  const sep=/iPhone|iPad|iPod/.test(navigator.userAgent)?'&':'?';
-  window.location.href='sms:+15099103256'+sep+'body='+body;
-});
 document.getElementById('emailQuote').addEventListener('click',()=>{
   window.location.href='mailto:jesse@evercraftpropertyservices.com?subject='+encodeURIComponent('EPS quote request')+'&body='+encodeURIComponent(summary());
 });
