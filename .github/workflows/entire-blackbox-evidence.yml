@@ -255,3 +255,49 @@ jobs:
           path: /tmp/blackbox-rogue-field-mission.json
           if-no-files-found: error
           retention-days: 14
+
+
+  # GitHub Actions schedules these jobs on separate runner instances. The first
+  # job produces a real scripted rogue process + quarantined state. This receiver
+  # gets it only through the GitHub artifact provider, with no shared local disk,
+  # launches a new LOOPBACK Spider test HTTP service and attacks it before and
+  # after a real service process restart. NO live product endpoint is contacted.
+  spider-cross-runner-replay:
+    name: Spider cross-runner quarantine replay
+    needs: rogue-agent-field-drill
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    permissions:
+      contents: read
+      actions: read
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Cross-runner HTTP persistence and forged-source tests
+        run: node --test systemia/agent-continuity/spider-cross-runner-mission.test.mjs
+      - name: Download actual rogue source mission artifact from separate runner
+        uses: actions/download-artifact@v4
+        with:
+          name: blackbox-real-process-rogue-mission-local
+          path: /tmp/spider-remote-source
+      - name: Start isolated Spider HTTP service and challenge across OS restart
+        run: |
+          set -euo pipefail
+          node systemia/agent-continuity/spider-cross-runner-mission-cli.mjs \
+            /tmp/spider-remote-source/blackbox-rogue-field-mission.json | tee /tmp/spider-cross-runner-readback.json
+          grep -q '"status": "PASSED_TWO_RUNNER_PROVIDER_HANDOFF_AND_RESTARTED_HTTP_SANDBOX_ONLY"' /tmp/spider-cross-runner-readback.json
+          grep -q '"receiver_service_os_restart_completed": true' /tmp/spider-cross-runner-readback.json
+          grep -q '"tampered_import_rejected": true' /tmp/spider-cross-runner-readback.json
+          grep -q '"global_no_regeneration_proven": false' /tmp/spider-cross-runner-readback.json
+          grep -q '"execution_authority": "NONE_READ_ONLY"' /tmp/spider-cross-runner-readback.json
+      - name: Archive provider-artifact receiver machine HTTP replay receipt
+        uses: actions/upload-artifact@v4
+        with:
+          name: spider-cross-runner-replay-no-production-authority
+          path: /tmp/spider-cross-runner-readback.json
+          if-no-files-found: error
+          retention-days: 14
