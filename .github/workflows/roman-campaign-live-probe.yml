@@ -1,0 +1,75 @@
+name: Roman campaign independent live verification
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/roman-campaign-live-probe.yml'
+      - 'public/campaigns/roman/**'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    timeout-minutes: 4
+    steps:
+      - uses: actions/checkout@v4
+      - name: Verify shipped static campaign artifact
+        shell: bash
+        run: |
+          set -euo pipefail
+          test -f public/campaigns/roman/index.html
+          grep -q 'Roman Kilinkaridis' public/campaigns/roman/index.html
+          grep -q 'https://donate.voteroman.com/' public/campaigns/roman/index.html
+          ! grep -qi 'base44' public/campaigns/roman/index.html
+
+      - name: Probe production site, fallback, and DNS without changing them
+        shell: bash
+        run: |
+          set -uo pipefail
+          mkdir -p artifacts
+          {
+            echo "# Roman campaign independent recovery probe"
+            echo "Revision: $GITHUB_SHA"
+            echo "Observed UTC: $(date -u +'%Y-%m-%dT%H:%M:%SZ')"
+            echo
+            for domain in voteroman.com www.voteroman.com donate.voteroman.com; do
+              echo "## DNS $domain"
+              if command -v dig >/dev/null 2>&1; then
+                dig +time=3 +tries=1 +short A "$domain" || true
+                dig +time=3 +tries=1 +short CNAME "$domain" || true
+                if [ "$domain" = voteroman.com ]; then dig +time=3 +tries=1 +short NS "$domain" || true; fi
+              else
+                getent ahosts "$domain" | head -n 3 || true
+              fi
+              echo
+            done
+            for site in \
+                https://voteroman.com/ \
+                https://www.voteroman.com/ \
+                https://donate.voteroman.com/ \
+                https://headless-jhpvqnpgxlh-sociallyguud-140c.wix-site-host.com/ \
+                https://jgaethle10.github.io/forge-operator/campaigns/roman/; do
+              echo "## GET $site"
+              tmp=$(mktemp)
+              result=$(curl --location --silent --show-error --max-time 20 \
+                --output "$tmp" --write-out 'status=%{http_code} effective=%{url_effective} content_type=%{content_type}' \
+                "$site" 2>&1) || true
+              echo "$result"
+              if grep -qi 'Roman Kilinkaridis' "$tmp"; then echo 'candidate_marker=present'; else echo 'candidate_marker=missing'; fi
+              if grep -qi 'https://donate.voteroman.com/' "$tmp"; then echo 'donation_link_marker=present'; else echo 'donation_link_marker=missing'; fi
+              if grep -Eqi 'APP UNAVAILABLE|currently unavailable|Payment Required' "$tmp"; then echo 'unavailable_marker=present'; else echo 'unavailable_marker=not_observed'; fi
+              rm -f "$tmp"
+              echo
+            done
+          } | tee artifacts/roman-live-probe.txt
+          cat artifacts/roman-live-probe.txt >> "$GITHUB_STEP_SUMMARY"
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: roman-public-recovery-live-probe
+          path: artifacts/roman-live-probe.txt
+          retention-days: 14
