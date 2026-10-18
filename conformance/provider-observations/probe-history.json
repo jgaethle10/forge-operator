@@ -1,26 +1,8 @@
 {
   "schema": "evercraft.chum.provider-probe-history.v1",
-  "updated_at": "2026-10-18T15:58:37.948Z",
+  "updated_at": "2026-10-18T16:32:11.113Z",
   "max_records": 500,
   "records": [
-    {
-      "receipt_key_sha256": "c7d1e2f23a63ae626b16f4bd8e623026560a69ae911dad4ee73d2ab8d09855fc",
-      "observed_at": "2026-10-17T04:37:40.138Z",
-      "provider": "generic_agent",
-      "provider_surface": "machine_client",
-      "product_key": "legacy-rescue-lab",
-      "case_id": "legacy-rescue-abandoned-codebase-001",
-      "prompt_sha256": "847b106b51da88ab97c20b5eea5682cf88dfab66f439835bb5ca6112777c7d90",
-      "pickup_observed": true,
-      "provider_receipt_sha256": "94694bd8ed7cb7f8c8001a4ceed01a1107529ef7669894477b79ca6290069341",
-      "response_sha256": "0330dd3833813e752773803a971235729a3145b00162faf06cd6e0f5b123893a",
-      "source": "authorized_provider_probe",
-      "privacy": {
-        "full_provider_response_persisted": false,
-        "provider_session_reference_persisted": false,
-        "credentials_persisted": false
-      }
-    },
     {
       "receipt_key_sha256": "86a4267892cea1db73315e75c20394fd5476f7a8cc162f55636cbee0a7f29ebb",
       "observed_at": "2026-10-17T04:37:41.786Z",
@@ -8996,6 +8978,24 @@
       "pickup_observed": true,
       "provider_receipt_sha256": "0f4421eede546080067f08102e55c1e4aa22cc0e7f971c5cb1401afff6317a4d",
       "response_sha256": "819985be22d89b3f0cb91c2488d536a0d2aa882a32d8532464042799e40882af",
+      "source": "authorized_provider_probe",
+      "privacy": {
+        "full_provider_response_persisted": false,
+        "provider_session_reference_persisted": false,
+        "credentials_persisted": false
+      }
+    },
+    {
+      "receipt_key_sha256": "e8310207a671da9475a4ed6522e73a9536c22a7c6569074ea5845d68023fcc81",
+      "observed_at": "2026-10-18T16:32:11.113Z",
+      "provider": "generic_agent",
+      "provider_surface": "machine_client",
+      "product_key": "career-command",
+      "case_id": "interview-001",
+      "prompt_sha256": "f9f09cf62b463921216e14b9f25f60fa348c28b76a9bc1ea871d264a2168a75b",
+      "pickup_observed": true,
+      "provider_receipt_sha256": "2ad15ce59472399c4e5622f38068f09899220e3fed2b079c57735ec41ff8700b",
+      "response_sha256": "00477fca583cd85932c9507ea7d87f6e7699cbf3e8a491883e469b482064c8ba",
       "source": "authorized_provider_probe",
       "privacy": {
         "full_provider_response_persisted": false,
