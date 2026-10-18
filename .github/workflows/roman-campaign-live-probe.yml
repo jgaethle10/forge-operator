@@ -70,6 +70,14 @@ jobs:
               echo
             done
           } | tee artifacts/roman-live-probe.txt
+          echo "## Evercraft Fabric release marker" | tee -a artifacts/roman-live-probe.txt
+          health_file="$(mktemp)"
+          health_code="$(curl --location --silent --show-error --max-time 15 --output "$health_file" --write-out '%{http_code}' https://fabric.systemiacommandcenters.com/health)" || health_code=000
+          echo "health_status=$health_code" | tee -a artifacts/roman-live-probe.txt
+          if [ "$health_code" = 200 ] && command -v jq >/dev/null 2>&1; then
+            jq -r '"source_release_ref=" + (.source_release_ref // "unknown") + " mirror_ready=" + (.roman_emergency_mirror_ready | tostring)' "$health_file" | tee -a artifacts/roman-live-probe.txt || true
+          fi
+          rm -f "$health_file"
           cat artifacts/roman-live-probe.txt >> "$GITHUB_STEP_SUMMARY"
       - name: Check critical campaign continuity without touching accounts
         shell: bash
