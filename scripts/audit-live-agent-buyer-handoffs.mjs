@@ -21,7 +21,7 @@ export function assessLiveAgentBuyerHandoffs({buyer,crosswalk,liveResults,health
     crosswalk.schema!=='evercraft.fabric.verified-human-handoffs.v1'||
     buyer.live_buyer_home!==HOME||buyer.revenue_verified_usd!==null||
     !Array.isArray(buyer.offers)||buyer.offers.length!==13||
-    !Array.isArray(entries)||entries.length!==5)
+    !Array.isArray(entries)||entries.length!==4)
   fail('catalog_or_crosswalk_contract_mismatch');
  const byOffer=new Map((buyer.offers||[]).map(x=>[x.slug,x]));
  if(byOffer.size!==(buyer.offers||[]).length)fail('duplicate_offer_source');
@@ -73,7 +73,7 @@ export function assessLiveAgentBuyerHandoffs({buyer,crosswalk,liveResults,health
  return {
    schema:'evercraft.audit.live-agent-human-buyer-handoffs.v1',
    ok:failures.length===0,checked_capabilities:seenIds.size,
-   verified_offer_routes:verified.length,expected_offer_routes:7,
+   verified_offer_routes:verified.length,expected_offer_routes:6,
    options:verified,failures:unique(failures).sort(),
    source_release_ref:health.source_release_ref||null,
    source_release_ref_bound:health.source_release_ref_bound===true,
