@@ -1,0 +1,159 @@
+{
+  "schema": "evercraft.public-human-offers.v1",
+  "authority": "Evercraft Payments",
+  "checkout_created": false,
+  "payment_verified": false,
+  "offers": [
+    {
+      "public_id": "audit-center-website-audit-machine-v1",
+      "slug": "website-audit",
+      "name": "Quick Win Audit",
+      "price": "$49",
+      "url": "https://fabric.systemiacommandcenters.com/offers/website-audit",
+      "human_confirmation_required": true,
+      "checkout_is_not_payment": true,
+      "paid_delivery_verified": false
+    },
+    {
+      "public_id": "findmypart-paid-hunt-v1",
+      "slug": "findmypart",
+      "name": "Quick Hunt",
+      "price": "$19",
+      "url": "https://fabric.systemiacommandcenters.com/offers/findmypart",
+      "human_confirmation_required": true,
+      "checkout_is_not_payment": true,
+      "paid_delivery_verified": false
+    },
+    {
+      "public_id": "ibmi-rescue-v1",
+      "slug": "ibmi-rescue",
+      "name": "IBM i Estate X-Ray",
+      "price": "$250",
+      "url": "https://fabric.systemiacommandcenters.com/offers/ibmi-rescue",
+      "human_confirmation_required": true,
+      "checkout_is_not_payment": true,
+      "paid_delivery_verified": false
+    },
+    {
+      "public_id": "legacy-rescue-lab-v1",
+      "slug": "legacy-rescue",
+      "name": "Legacy Rescue Scan",
+      "price": "$299",
+      "url": "https://fabric.systemiacommandcenters.com/offers/legacy-rescue",
+      "human_confirmation_required": true,
+      "checkout_is_not_payment": true,
+      "paid_delivery_verified": false
+    },
+    {
+      "public_id": "site-survive-rapid-audit-v1",
+      "slug": "site-survive",
+      "name": "Site-Survive Rapid Audit",
+      "price": "$250",
+      "url": "https://fabric.systemiacommandcenters.com/offers/site-survive",
+      "human_confirmation_required": true,
+      "checkout_is_not_payment": true,
+      "paid_delivery_verified": false
+    },
+    {
+      "public_id": "payment-offer-workflow-xray",
+      "slug": "workflow-xray",
+      "name": "Evercraft Workflow X-Ray",
+      "price": "$250",
+      "url": "https://fabric.systemiacommandcenters.com/offers/workflow-xray",
+      "human_confirmation_required": true,
+      "checkout_is_not_payment": true,
+      "paid_delivery_verified": false
+    },
+    {
+      "public_id": "payment-offer-browser-diagnosis",
+      "slug": "browser-diagnosis",
+      "name": "Browser Workflow Diagnosis",
+      "price": "$149",
+      "url": "https://fabric.systemiacommandcenters.com/offers/browser-diagnosis",
+      "human_confirmation_required": true,
+      "checkout_is_not_payment": true,
+      "paid_delivery_verified": false
+    },
+    {
+      "public_id": "payment-offer-payments-pilot",
+      "slug": "payments-pilot",
+      "name": "Evercraft Payments Founding Integration",
+      "price": "$750",
+      "url": "https://fabric.systemiacommandcenters.com/offers/payments-pilot",
+      "human_confirmation_required": true,
+      "checkout_is_not_payment": true,
+      "paid_delivery_verified": false
+    },
+    {
+      "public_id": "payment-offer-part-deep",
+      "slug": "part-deep",
+      "name": "FindMyPart Deep Hunt",
+      "price": "$49",
+      "url": "https://fabric.systemiacommandcenters.com/offers/part-deep",
+      "human_confirmation_required": true,
+      "checkout_is_not_payment": true,
+      "paid_delivery_verified": false
+    },
+    {
+      "public_id": "payment-offer-part-rescue",
+      "slug": "part-rescue",
+      "name": "FindMyPart Rescue Hunt",
+      "price": "$99",
+      "url": "https://fabric.systemiacommandcenters.com/offers/part-rescue",
+      "human_confirmation_required": true,
+      "checkout_is_not_payment": true,
+      "paid_delivery_verified": false
+    },
+    {
+      "public_id": "payment-offer-legacy-xray",
+      "slug": "legacy-xray",
+      "name": "Legacy Software X-Ray",
+      "price": "$250",
+      "url": "https://fabric.systemiacommandcenters.com/offers/legacy-xray",
+      "human_confirmation_required": true,
+      "checkout_is_not_payment": true,
+      "paid_delivery_verified": false
+    },
+    {
+      "public_id": "payment-offer-ibmi-xray",
+      "slug": "ibmi-xray",
+      "name": "IBM i 7.4 Upgrade X-Ray",
+      "price": "$250",
+      "url": "https://fabric.systemiacommandcenters.com/offers/ibmi-xray",
+      "human_confirmation_required": true,
+      "checkout_is_not_payment": true,
+      "paid_delivery_verified": false
+    },
+    {
+      "public_id": "payment-offer-sign-pilot",
+      "slug": "sign-pilot",
+      "name": "Evercraft Sign Founding Pilot",
+      "price": "$250",
+      "url": "https://fabric.systemiacommandcenters.com/offers/sign-pilot",
+      "human_confirmation_required": true,
+      "checkout_is_not_payment": true,
+      "paid_delivery_verified": false
+    },
+    {
+      "public_id": "payment-offer-towi-evidence",
+      "slug": "towi-evidence",
+      "name": "TOWI Rapid Evidence Scan",
+      "price": "$750",
+      "url": "https://fabric.systemiacommandcenters.com/offers/towi-evidence",
+      "human_confirmation_required": true,
+      "checkout_is_not_payment": true,
+      "paid_delivery_verified": false
+    },
+    {
+      "public_id": "payment-offer-event-boost",
+      "slug": "event-boost",
+      "name": "EventWave Single Event Boost",
+      "price": "$49",
+      "url": "https://fabric.systemiacommandcenters.com/offers/event-boost",
+      "human_confirmation_required": true,
+      "checkout_is_not_payment": true,
+      "paid_delivery_verified": false
+    }
+  ],
+  "observation": "Read-only public /offers.json extraction in this conversation. Not payment, fulfillment, or verified provider checkout proof."
+}
