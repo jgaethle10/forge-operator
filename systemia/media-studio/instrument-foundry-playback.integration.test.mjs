@@ -2,7 +2,7 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import {createHash} from 'node:crypto';
 import {PulseGridAudioEngine} from './pulsegrid-audio.ts';
-import {createPulseGridSession,applyPulseGridTransaction} from './pulsegrid-session.ts';
+import {createPulseGridSession,applyPulseGridTransaction,undoPulseGridReceipt} from './pulsegrid-session.ts';
 import {createFoundryVerifiedResolver} from './instrument-foundry-resolver.mjs';
 
 // An executable integration harness for the REAL PulseGridAudioEngine.
@@ -175,5 +175,35 @@ test('switching scenes stops sampled playback until new scene is verified and ex
       // No sampled instrument patch on empty scene 1.
       assert.equal(SimulatedAudioContext.instances.at(-1).starts.length,1);
     }finally{await engine.close()}
+  });
+});
+
+test('arming a recorded piano detaches raw clip, leaves one playable voice, and undo restores audio take', {concurrency:false},async()=>{
+  await withSimulatedAudio(async()=>{
+    const {session,bytes,asset}=prepare();
+    const raw=applyPulseGridTransaction(session,{
+      intent:'attach raw take before arming',
+      operations:[{type:'clip.attach_audio_asset',track_id:'audio',scene:0,asset_id:asset.id}]
+    },'human').session;
+    assert.equal(raw.tracks.find(x=>x.id==='audio').clips[0].audio_asset_id,asset.id);
+    const pianoPatch=raw.tracks.find(x=>x.id==='keys').clips[0].provenance.foundry_piano_patch;
+    const armed=applyPulseGridTransaction(raw,{
+      intent:'move raw audition take to MIDI piano, no doubling',
+      operations:[
+        {type:'clip.attach_audio_asset',track_id:'audio',scene:0,asset_id:null},
+        {type:'clip.set_foundry_piano_patch',track_id:'keys',scene:0,patch:pianoPatch},
+      ],
+    },'human');
+    assert.equal(armed.session.tracks.find(x=>x.id==='audio').clips[0].audio_asset_id,null);
+    assert.equal(armed.session.assets.length,1,'recording is not deleted');
+    const engine=new PulseGridAudioEngine();
+    engine.setAudioAssetResolver(resolverOf(bytes));
+    try{
+      await engine.play(armed.session,0);
+      assert.equal(SimulatedAudioContext.instances.at(-1).starts.length,1,'single sampled MIDI note, not raw WAV plus MIDI note');
+    }finally{await engine.close()}
+    const reverted=undoPulseGridReceipt(armed.session,armed.receipt.id,'human');
+    assert.equal(reverted.session.tracks.find(x=>x.id==='audio').clips[0].audio_asset_id,asset.id);
+    assert.equal(reverted.session.assets[0].id,asset.id);
   });
 });
