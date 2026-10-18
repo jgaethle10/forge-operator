@@ -1,6 +1,6 @@
 {
   "schema": "evercraft.saban.private-inventory-fixture.v1",
-  "purpose": "Bounded and redacted portfolio archaeology for the EPS/HAVENLY Base44 exit. Not a production data export.",
+  "purpose": "Bounded, redacted portfolio archaeology for EPS, Havenly and Sunshine & Spotless exit. No production record export.",
   "apps": [
     {
       "name": "Evercraft Property Services",
@@ -16,6 +16,10 @@
     },
     {
       "name": "EPS Precise Estimator",
+      "visibility": "public"
+    },
+    {
+      "name": "Sunshine & Spotless Cleaning Co",
       "visibility": "public"
     }
   ]
