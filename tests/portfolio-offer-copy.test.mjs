@@ -22,7 +22,7 @@ test('six existing products get genuinely specific pages while the exact approve
     assert.match(html,/name="customer_ref" type="email"/);
     assert.match(html,/Continue to checkout/);
     assert.match(html,/Nothing is marked paid until settlement is verified/);
-    assert.ok(html.includes(copy.eyebrow));
+    assert.ok(html.includes(slug==='payments-pilot'?'Evercraft Payments · founding pilot':copy.eyebrow));
     assert.ok(html.includes(copy.headline.replaceAll('&','&amp;').replaceAll("'",'&#39;')));
     for (const section of ['What you are buying','What you send us','What you get back','How it works']) assert.ok(html.includes(section),slug+': '+section);
     assert.ok(directory.includes('/offers/'+slug),slug);
