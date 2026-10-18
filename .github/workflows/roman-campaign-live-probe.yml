@@ -121,6 +121,7 @@ jobs:
           fi
 
           backup="https://headless-jhpvqnpgxlh-sociallyguud-140c.wix-site-host.com/"
+          pages="https://jgaethle10.github.io/forge-operator/campaigns/roman/"
           owned="https://fabric.systemiacommandcenters.com/campaigns/roman/"
           funnel="https://fabric.systemiacommandcenters.com/go/roman"
           donations="https://donate.voteroman.com/"
@@ -145,6 +146,8 @@ jobs:
             echo "PASS $label: HTTP 200 and expected public page marker." >> "$GITHUB_STEP_SUMMARY"
           }
           check_url "$backup" 'Roman Kilinkaridis' 'Independent emergency campaign mirror'
+          check_url "$pages" 'Roman Kilinkaridis' 'Independent GitHub Pages campaign information mirror'
+          check_url "$pages" 'https://donate.voteroman.com/' 'GitHub Pages mirror preserves existing donation link'
           check_url "$owned" 'Roman Kilinkaridis' 'Evercraft-owned campaign mirror'
           check_url "$owned" 'https://donate.voteroman.com/' 'Evercraft campaign mirror preserves donation link'
           check_url "$funnel" 'Roman Kilinkaridis' 'Evercraft short continuation funnel'
