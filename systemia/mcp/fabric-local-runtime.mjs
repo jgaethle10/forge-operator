@@ -38,6 +38,7 @@ import {
 } from './fabric-mobile-site.mjs';
 import { renderEarthWorksSimulator } from './earthworks-simulator-page.mjs';
 import { createFabricFaieSurface } from './fabric-faie-runtime.mjs';
+import { resolveRomanContinuity } from '../domain-shield/roman-funnel.mjs';
 import { buildVisualStory, normalizeVisualStory } from '../visual-desk/factory.mjs';
 import { buildCommercialCampaign } from '../graphics-command/commercial-renderer.mjs';
 
@@ -690,6 +691,9 @@ export async function startFabricLocalRuntime({
     chum_human_review_path_template:'/api/chum/go/{public_id}',
     chum_human_review_authority:'discovery_review_only',
     roman_emergency_mirror_path:'/campaigns/roman/',
+    roman_owned_funnel_path:'/go/roman',
+    roman_owned_funnel_mode:'local_first_verified_backup_if_local_unavailable',
+    roman_owned_funnel_dns_interception:false,
     roman_emergency_mirror_ready:romanCampaignPresent(),
     roman_emergency_mirror_owner_review_required:true,
     roman_domain_dns_cutover_verified:false,
@@ -796,6 +800,36 @@ export async function startFabricLocalRuntime({
             deploymentReceiptBound:health().deployment_receipt_bound===true,
           }),{contentType:'text/html; charset=utf-8'});
         }
+      }
+
+      // Public informational continuation route on the Evercraft-controlled origin.
+      // Does NOT receive visits to voteroman.com until lawful DNS/hosting routing changes.
+      // No visitor attribution, URL query forwarding, outbound messages or cookies.
+      if (['/go/roman','/go/roman/'].includes(
+        new URL(String(req.url||'/'),'http://fabric.local').pathname
+      )) {
+        if(req.method!=='GET'&&req.method!=='HEAD'){
+          return sendJson(res,405,{error:'method_not_allowed'},{allow:'GET, HEAD'});
+        }
+        let html='';
+        try { if(romanCampaignPresent())html=fs.readFileSync(romanCampaignFile,'utf8'); }
+        catch { /* local copy may be unavailable; independently verify backup */ }
+        const decision=await resolveRomanContinuity({localHtml:html});
+        if(decision.status===302){
+          res.writeHead(302,{
+            location:decision.location,
+            'cache-control':'no-store',
+            'x-content-type-options':'nosniff',
+            'x-robots-tag':'noindex, nofollow',
+            'referrer-policy':'no-referrer',
+            'x-evercraft-continuity-route':decision.state,
+          });
+          return res.end();
+        }
+        return sendJson(res,503,{
+          state:'independent_campaign_information_unavailable',
+          original_domain_routing_not_modified:true,
+        });
       }
 
       // Independent, read-only campaign mirror. This route is *not* an apex-domain cutover.
