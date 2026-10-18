@@ -192,6 +192,38 @@ export function checkFoundryPianoRootPitch(input,expectedMidi){
     Math.max(-.5,Math.min(.5,.5*(a-c)/curvature)):0;
   const measuredHz=sampledRate/(bestLag+offset);
   const cents=1200*Math.log2(measuredHz/expectedHz);
+  // Autocorrelation alone cannot distinguish a true lower piano note from
+  // its higher octave: both repeat at the lower note's period. Check whether
+  // the actual sound contains EITHER the root partial OR a pair of 2nd+3rd
+  // harmonics that jointly imply the virtual fundamental. Pure octave/even-
+  // harmonic recordings are held, not assigned to the wrong MIDI key.
+  const harmonicPower=multiple=>{
+    const hz=measuredHz*multiple;
+    if(hz>=sampledRate*.49)return 0;
+    let real=0,imag=0;
+    for(let i=0;i<n;i++){
+      const window=.5-.5*Math.cos(2*Math.PI*i/(n-1));
+      const angle=2*Math.PI*hz*i/sampledRate;
+      const v=x[i]*window;
+      real+=v*Math.cos(angle);
+      imag-=v*Math.sin(angle);
+    }
+    return real*real+imag*imag;
+  };
+  const rootEnergy=harmonicPower(1);
+  const secondEnergy=harmonicPower(2);
+  const thirdEnergy=harmonicPower(3);
+  const evenOctaveEnergy=Math.max(secondEnergy,1e-12);
+  const rootPresent=rootEnergy>=evenOctaveEnergy*.035;
+  const virtualRoot=secondEnergy>1e-10&&thirdEnergy>=evenOctaveEnergy*.055;
+  if(Math.abs(cents)<=45&&!rootPresent&&!virtualRoot){
+    return {
+      ...blank('octave_ambiguous_no_root_or_third_harmonic_evidence'),
+      estimated_hz:Number(measuredHz.toFixed(3)),
+      cents_error:Number(cents.toFixed(2)),
+      periodicity:Number(best.toFixed(4)),
+    };
+  }
   const matched=Math.abs(cents)<=45;
   return {
     schema:'evercraft.fallen.piano-root-evidence.v1',
