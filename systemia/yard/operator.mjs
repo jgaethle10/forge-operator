@@ -2356,6 +2356,43 @@ export class YardOperator {
     const record = this.deploymentStatus(deploymentId);
     if (!record) return { ok: false, state: 'missing' };
 
+    if (record.receipt?.workload_class === 'systemia.evercraft-web-fetch-mcp.v1') {
+      // A green private Compute service is NOT a public MCP endpoint.
+      // This candidate must not inherit generic "route verified" logic,
+      // even if somebody accidentally attaches a public-route record.
+      const expected = (health) =>
+        health?.ok === true &&
+        health?.service === 'evercraft-web-owned-fetch-candidate' &&
+        health?.runtime === 'Evercraft Compute' &&
+        health?.mode === 'authenticated_read_only' &&
+        health?.loopback_only === true &&
+        health?.public_route_approved === false &&
+        health?.registry_repoint_authorized === false &&
+        health?.payment_authority === false &&
+        health?.instance_id === record.result?.instance_id &&
+        health?.deployment_receipt_ref === record.receipt?.receipt_hash;
+      if (!record.management?.health_path) {
+        return {ok:false,state:'private_web_fetch_health_unavailable'};
+      }
+      try {
+        const health = await request(new URL(
+          record.management.health_path,
+          record.lease.capacity_endpoint
+        ).toString());
+        return {
+          ok:false,
+          state: record.public_route?.verified === true
+            ? 'unauthorized_public_route_attached'
+            : 'public_route_unbound',
+          local_health_ok: expected(health),
+          health,
+        };
+      } catch (error) {
+        return {ok:false,state:'private_web_fetch_health_unreachable',
+          error:String(error?.message||error)};
+      }
+    }
+
     if (record.receipt?.workload_class === 'systemia.forensic-record-public-runtime.v1') {
       const expected = (health) =>
         health?.ok === true &&
