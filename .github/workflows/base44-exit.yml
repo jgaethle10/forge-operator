@@ -134,6 +134,8 @@ jobs:
         run: node --test tests/fabric-checkout-transport-truth.test.mjs tests/public-payment-offers.test.mjs tests/payment-return.test.mjs tests/fabric-offer-pages.test.mjs
       - name: Prove first-party service fallback frontages without legacy backends
         run: node --test tests/fabric-owned-service-frontages.test.mjs
+      - name: Prove truthful held-checkout manual assistance
+        run: node --test tests/owned-payment-human-recovery.test.mjs
       - name: Prove owned-only CHUM IndexNow routing
         run: node --test systemia/chum/indexnow-owned-routing.test.mjs
       - name: Prove owned canary cutover boundaries
