@@ -27,7 +27,7 @@ test('Saban work is redacted, bounded, and non-transactional',()=>{
   assert.equal(formation.nodes[0].software,'portfolio-archaeology');
   assert.equal(formation.nodes[0].physical_workers,4);
   assert.equal(formation.nodes[0].execution.mode,'local');
-  assert.equal(inventory.apps.length,4);
+  assert.equal(inventory.apps.length,5);
   for(const app of inventory.apps){
     assert.equal(app.id,undefined);
     assert.equal(app.email,undefined);
