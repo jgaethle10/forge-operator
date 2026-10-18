@@ -89,11 +89,11 @@ test('first release holds IPv6-only resolutions pending mapped-address safety re
 });
 
 test('MCP only exposes Fetch capabilities and read-only tool; wrong arguments fail closed', async () => {
-  assert.deepEqual(WEB_MCP_TOOLS.map(t=>t.name),['get_web_capabilities','fetch_url']);
+  assert.deepEqual(WEB_MCP_TOOLS.map(t=>t.name),['get_web_capabilities','fetch_url','fetch_urls']);
   const init=webMcpResponse({jsonrpc:'2.0',id:1,method:'initialize',params:{protocolVersion:'2025-11-25'}});
   assert.equal(init.result.protocolVersion,'2025-11-25');
   assert.equal(init.result.serverInfo.name,'evercraft-web-owned-fetch-candidate');
-  assert.equal(webMcpResponse({jsonrpc:'2.0',id:2,method:'tools/list'}).result.tools.length,2);
+  assert.equal(webMcpResponse({jsonrpc:'2.0',id:2,method:'tools/list'}).result.tools.length,3);
   const bad=webMcpResponse({jsonrpc:'2.0',id:3,method:'tools/call',params:{name:'browser',arguments:{url:'https://example.com'}}});
   assert.equal(bad.error.code,-32602);
   const good=await webMcpResponse({jsonrpc:'2.0',id:4,method:'tools/call',params:{name:'fetch_url',arguments:{url:'https://example.com'}}},{
@@ -127,7 +127,7 @@ test('HTTP MCP is loopback-bound, bearer-authenticated, origin-restricted and no
       {authorization:'Bearer '+token,origin:'http://malicious.example'})).status,403);
     const listed=await (await post({jsonrpc:'2.0',id:2,method:'tools/list'},
       {authorization:'Bearer '+token})).json();
-    assert.equal(listed.result.tools.length,2);
+    assert.equal(listed.result.tools.length,3);
     const run=await (await post({jsonrpc:'2.0',id:3,method:'tools/call',
       params:{name:'fetch_url',arguments:{url:'https://example.com'}}},
       {authorization:'Bearer '+token})).json();
