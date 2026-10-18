@@ -98,6 +98,9 @@ try{
   const initial=await page.evaluate(()=>{
    const map=document.querySelector('#em-map')?.getBoundingClientRect();
    const panel=document.querySelector('.em-panel')?.getBoundingClientRect();
+   const hint=document.querySelector('.em-map-hint')?.getBoundingClientRect();
+   const attribution=document.querySelector('.em-map-credit')?.getBoundingClientRect();
+   const creditHintOverlap=!!(hint&&attribution&&hint.left<attribution.right&&hint.right>attribution.left&&hint.top<attribution.bottom&&hint.bottom>attribution.top);
    return{
     count:document.querySelector('#em-count')?.textContent,
     groups:document.querySelector('#em-groups')?.textContent,
@@ -108,7 +111,7 @@ try{
     raster_opacity:getComputedStyle(document.querySelector('#em-tiles')).opacity,
     source_status:document.querySelector('#em-source')?.dataset.state,
     width:innerWidth,document_width:document.documentElement.scrollWidth,
-    map_width:map?.width,panel_width:panel?.width,
+    map_width:map?.width,panel_width:panel?.width,credit_hint_overlap:creditHintOverlap,
     attribution:document.querySelector('.em-map-credit')?.textContent?.trim()||'',
     safety_language:document.body.innerText.includes('not a confirmation of ongoing combustion'),
     noindex:document.querySelector('meta[name="robots"]')?.content==='noindex,nofollow'
@@ -123,6 +126,7 @@ try{
   assert(initial.map_width<=initial.width+3,profile.name+' map overflow');
   assert(initial.panel_width<=initial.width+3,profile.name+' panel overflow');
   assert(initial.noindex,profile.name+' preview not noindex');
+  assert(initial.credit_hint_overlap===false,profile.name+' geographic attribution overlaps map controls');
   assert(initial.attribution.includes('OpenStreetMap contributors')&&initial.attribution.includes('Natural Earth'),profile.name+' missing both geographic source credits');
   assert(initial.safety_language,profile.name+' missing incident limitation');
   await page.screenshot({path:output+'/'+profile.name+'-normal.png',animations:'disabled',timeout:10000});
