@@ -27,7 +27,7 @@ let html=renderOfferPage(source);
 html=html.replaceAll('src="/visuals/', 'src="'+OWNED+'/visuals/')
   .replaceAll('srcset="/visuals/','srcset="'+OWNED+'/visuals/')
   .replaceAll('src="/assets/','src="'+OWNED+'/assets/');
-const label='<div id="source-preview" style="position:fixed;z-index:9999;right:10px;bottom:10px;max-width:260px;background:#3f1026;border:2px solid #ff9cc7;color:#fff;font:700 11px system-ui;padding:8px 10px;border-radius:8px;pointer-events:none">SOURCE BRANCH REVIEW • NOT LIVE • NO PAYMENT</div>';
+const label='<div id="source-preview" style="position:fixed;z-index:9999;right:12px;top:56px;max-width:164px;background:#3f1026;border:2px solid #ff9cc7;color:#fff;font:700 9px system-ui;padding:8px 10px;border-radius:8px;pointer-events:none">SOURCE BRANCH REVIEW • NOT LIVE • NO PAYMENT</div>';
 html=html.replace('<body>','<body>'+label);
 const server=http.createServer((req,res)=>{
   if(req.method!=='GET'||req.url!=='/offers/website-audit'){
