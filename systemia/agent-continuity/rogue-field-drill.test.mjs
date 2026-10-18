@@ -16,6 +16,9 @@ test('a real rogue OS child attempts forbidden actions, Saban leases and termina
  assert.equal(result.blackbox.real_local_signed_journal,true);
  assert.ok(result.blackbox.events>=8);
  assert.equal(result.spider_society_local_adapter.sandbox_restart_checked,true);
+ assert.equal(result.spider_society_local_adapter.out_of_process_restart.separate_process,true);
+ assert.equal(result.spider_society_local_adapter.out_of_process_restart.denied_successors,1);
+ assert.equal(result.spider_society_local_adapter.out_of_process_restart.production_spider_process_restart_verified,false);
  assert.equal(result.spider_society_local_adapter.runnable_retries,0);
  assert.equal(result.spider_society_local_adapter.executable_callbacks,0);
  assert.equal(result.spider_society_local_adapter.active_leases,0);
@@ -40,6 +43,7 @@ test('Spider local durable sandbox restarts with synthetic retries/callbacks and
   assert.equal(containment.queue_held,1);
   assert.equal(containment.callbacks_held,1);
   assert.equal(containment.leases_held,1);
+  assert.equal(containment.successors_denied,1);
   assert.equal(containment.live_spider_service_called,false);
   assert.equal(spiderSandboxAttempt(root,{kind:'retry',id:'rogue-retry-post-freeze'}).decision,'DENIED_QUARANTINED');
   assert.equal(readSpiderSandbox(root).status,'quarantined');
