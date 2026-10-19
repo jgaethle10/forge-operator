@@ -226,3 +226,29 @@ test('legibility annotations must be bounded, verified and visible',()=>{
   ]}),/product_focus_critical_text_clipped:hidden/);
   assert.throws(()=>compileProductFocusShot({...source,targetPhoneWidthPx:0}),/product_focus_legibility_contract_invalid/);
 });
+
+test('a native mobile Relay capture preserves phone-scale text that a desktop shrink destroys',()=>{
+  const mobile=compileProductFocusShot({
+    id:'relay-mobile-native-candidate',
+    sourcePath:'asset://relay-fictitious-mobile',
+    sourceRefs:['ci:fictional-phone-layout-evidence'],
+    sourceKind:'image',sourceWidth:390,sourceHeight:3170,
+    focus:{x:25,y:1930,width:330,height:430},
+    title:'Two accounts. One clarification.',
+    caption:'The structured conflict is visible in the original product.',
+    evidenceLabel:'FICTIONAL PRIVATE PILOT | REVIEW ONLY',
+    format:'portrait',durationSec:5,
+    criticalText:[{id:'real-mobile-copy',t:0,
+      region:{x:48,y:2000,width:160,height:80},
+      sourceGlyphHeightPx:14,minPhonePx:9}],
+  });
+  assert.equal(mobile.stage.width,1080);
+  assert.equal(mobile.evidence.criticalTextChecks,1);
+  assert.ok(mobile.evidence.minProjectedPhoneGlyphPx!>=9);
+  // The corresponding 14px desktop copy does not survive the much wider crop.
+  assert.throws(()=>compileProductFocusShot({...source,criticalText:[
+    {id:'desktop-body-text',t:0,
+      region:{x:650,y:1300,width:180,height:90},
+      sourceGlyphHeightPx:14,minPhonePx:9},
+  ]}),/product_focus_phone_text_below_minimum:desktop-body-text/);
+});
