@@ -36,3 +36,13 @@ A local Python rendering canary tests the *geometry* of the shot; it is explicit
 Mark a source-focused camera result as `candidate_requires_visual_review`. Audio sync, brand rights, genuine acting, environment continuity, target-device legibility, and end-to-end native-render output quality are unverified. No creative score, release authorization, or AI-generation quality claim follows from passing this contract.
 
 Next: verified native rendered frame pair at 0s and 6s; shot-to-shot continuity; film audio synchronization; phone-scale content readability; then Creative Council review before Clip intake.
+
+## Native Chromium parity and pixel proof (October 19)
+
+A production audit found that `visual-stage-html.ts` supported source-relative crop/camera movement while the private worker's independent `render-worker/runtime.mjs` ignored `sourceWindow` and `sourceWindowKeyframes`. This meant compiler and worker policy tests could pass although an exact Chromium frame showed no directed crop. The private runtime now supports the same bounded crop and camera interpolation as Visual Stage.
+
+The private worker CI runs three *actual* Chromium frame renders over a deterministic, entirely synthetic red/green/blue source bitmap. A dependency-free Node PNG fixture generator, decode routine and receipt verifier inspect the RGB center pixel of each PNG, require distinct frame SHA-256 values, reject console errors, and confirm asset-scoped SHA-256 verification and zero external network authority.
+
+This is **synthetic rendering evidence only**. It demonstrates working source camera movement and protects against runtime regression. It does not prove readability of real Relay product copy, a final MP4, film sound quality, native Kennedy Space Station handoff, or cinematic merit. Preserve the output frame receipts in the CI artifact when the workflow passes.
+
+The earlier static local camera preview and an exported PNG pixel-proof serve different purposes. Do not use one as a substitute for the other.
