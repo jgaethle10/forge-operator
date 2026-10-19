@@ -196,9 +196,11 @@ async function executeReferenceFrame(page,shaderSource){
       0,0,0,1,
       0,0,1,1,
       1,0,0,0,
+      0,0,0,0,
+      0,0,0,0,
     ]);
     const frameBuffer=device.createBuffer({
-      size:96,
+      size:frameValues.byteLength,
       usage:GPUBufferUsage.UNIFORM|GPUBufferUsage.COPY_DST,
     });
     device.queue.writeBuffer(frameBuffer,0,frameValues);
