@@ -13,7 +13,7 @@ test('first heartbeat imports existing public projection once, not on every view
   assert.equal(a.state.sequence,1);
   assert.equal(a.state.origin,'clock-replay-import-2026-10-18');
   assert.equal(a.state.authority,'github_actions_state_branch');
-  assert.equal(a.state.model_mode,'rule_policy_no_llm');
+  assert.equal(a.state.model_mode,'civic_and_social_policy_no_llm');
   assert.equal(a.state.release_status,'held');
   assert.equal(a.state.run.first_activation,true);
 });
