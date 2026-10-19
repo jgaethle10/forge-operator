@@ -99,3 +99,25 @@ test('long-running fictional civilization retains accurate bounded civic history
   assert.ok(w.events.length<=160);
   assert.equal(w.actors.length,12);
 });
+
+test('fictional residents make and resolve promises with lasting social consequences',()=>{
+  const init=advanceHeartbeat(placeholder,instant).state;
+  const later=advanceHeartbeat(init,instant+1700*REAL_TICK_MS).state;
+  const social=later.world.social;
+  assert.ok(social.stats.promised>=3);
+  assert.ok(social.stats.kept+social.stats.broken>=2);
+  assert.ok(social.stats.promised>=social.stats.kept+social.stats.broken);
+  const kinds=later.world.events.filter(x=>x.type.startsWith('promise_')).map(x=>x.type);
+  assert.ok(kinds.includes('promise_made')||kinds.includes('promise_kept')||kinds.includes('promise_broken'));
+  assert.ok(social.commitments.length<=72);
+  assert.equal(later.world.actors.length,12);
+  assert.ok(later.world.actors.some(x=>x.memories.some(m=>m.includes('promise'))));
+});
+test('social decisions replay deterministically from the same canonical snapshot',()=>{
+  const init=advanceHeartbeat(placeholder,instant).state;
+  const later=instant+260*REAL_TICK_MS;
+  const a=advanceHeartbeat(init,later);
+  const b=advanceHeartbeat(init,later);
+  assert.deepEqual(a,b);
+  assert.ok(a.state.world.social.stats.promised>0);
+});
