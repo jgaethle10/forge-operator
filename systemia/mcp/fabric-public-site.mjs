@@ -349,7 +349,7 @@ export function renderOffers(capabilities=[]){
   });
 }
 
-export function renderOfferPage(item){
+export function renderOfferPage(item,{checkoutConfigured=true}={}){
   const copy=OFFER_PAGE_COPY[item?.public_id];
   if(!copy) return null;
   const entry=item.entry_paid_offer||null;
@@ -359,15 +359,26 @@ export function renderOfferPage(item){
   const get=copy.get.map((x)=>'<li>'+escapeHtml(x)+'</li>').join('');
   const steps=copy.steps.map(([title,body])=>'<div class="offer-step"><strong>'+escapeHtml(title)+'</strong><span>'+escapeHtml(body)+'</span></div>').join('');
   const idempotencyKey='offer-'+copy.slug+'-'+crypto.randomUUID();
+  const checkoutHeld=!checkoutConfigured;
+  const supportSubject=encodeURIComponent('Evercraft | '+copy.slug+' | assisted invoice request');
+  const supportBody=encodeURIComponent('I would like to discuss '+offerName+' ('+price+'). Please confirm the scope, availability and an approved manual payment method before invoicing.');
   return shell(copy.headline+' · Evercraft',[
     '<main>',
     '<section class="offer-hero">',
-    '<div class="kicker"><span class="dot"></span> '+escapeHtml(copy.eyebrow)+' · available now</div>',
+    '<div class="kicker"><span class="dot"></span> '+escapeHtml(copy.eyebrow)+(checkoutHeld?' · online checkout on hold':' · checkout request')+'</div>',
     '<h1>'+escapeHtml(copy.headline)+'</h1>',
     '<p class="lede">'+escapeHtml(copy.lede)+'</p>',
     copy.heroVisual?'<div class="offer-visual"><picture>'+(copy.heroVisualMobile?'<source media="(max-width: 700px)" srcset="'+escapeHtml(copy.heroVisualMobile)+'">':'')+'<img src="'+escapeHtml(copy.heroVisual)+'" alt="" loading="eager"></picture></div>':'',
     '<div class="offer-price">'+escapeHtml(price)+'</div>',
     '<div class="offer-price-note">'+escapeHtml(offerName)+' · '+escapeHtml(item.pricing||'')+'</div>',
+    ...(checkoutHeld ? [
+      '<section class="offer-panel" aria-label="Assisted purchase request">',
+      '<h2>Online checkout is temporarily unavailable.</h2>',
+      '<p>Speak with Evercraft about this exact offer, confirm the scope, and request an approved manual invoice. This page does not create an order, collect money or schedule fulfillment.</p>',
+      '<div class="actions"><a class="btn primary" href="mailto:jessegaethle10@gmail.com?subject='+supportSubject+'&body='+supportBody+'">Request assisted invoicing</a><a class="btn" href="tel:+15097590440">Call Evercraft</a></div>',
+      '<div class="checkout-note">Email opens in your own mail app for you to review and send. No information is transmitted automatically from this page.</div>',
+      '</section>',
+    ] : [
     '<form class="checkout-form" method="post" action="/api/offers/'+encodeURIComponent(copy.slug)+'/checkout">',
     '<input type="hidden" name="user_confirmed" value="true">',
     '<input type="hidden" name="idempotency_key" value="'+escapeHtml(idempotencyKey)+'">',
@@ -378,6 +389,7 @@ export function renderOfferPage(item){
     item.public_id.startsWith('payment-offer-')?'':'<a class="btn" href="/capabilities/'+encodeURIComponent(item.public_id)+'">See technical proof</a>',
     '<div class="checkout-note">Evercraft Payments prepares the checkout. Nothing is marked paid until settlement is verified.</div>',
     '</form>',
+    ]),
     '</section>',
     '<div class="offer-grid">',
     '<section class="offer-panel"><h2>What you are buying</h2><p class="plain">'+escapeHtml(copy.promise)+'</p></section>',
