@@ -1,0 +1,21 @@
+name: Fallen public product capture bridge
+on:
+  pull_request:
+    paths:
+      - 'systemia/media-studio/public-product-capture.mjs'
+      - 'systemia/media-studio/public-product-capture.test.mjs'
+      - 'systemia/media-studio/PUBLIC_PRODUCT_CAPTURE_BRIDGE.md'
+      - '.github/workflows/fallen-public-product-capture.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  capture-bridge-contract:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - run: node --test systemia/media-studio/public-product-capture.test.mjs
