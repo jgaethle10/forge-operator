@@ -1,4 +1,4 @@
-import type { VisualStage } from './visual-stage.js';
+import type { VisualStage, EaseName } from './visual-stage.js';
 
 export interface SourceWindow {
   x:number; y:number; width:number; height:number;
@@ -17,6 +17,8 @@ export interface ProductFocusInput {
   sourceWidth:number;
   sourceHeight:number;
   focus:FocusRegion;
+  /** Multiple truthful subject windows that the on-screen camera should follow. */
+  focusPath?:Array<{t:number;focus:FocusRegion;action:string;ease?:EaseName}>;
   title:string;
   caption:string;
   evidenceLabel:string;
@@ -36,6 +38,8 @@ export interface ProductFocusResult {
     focusAreaFraction:number;
     sourcePixelsPerOutputPixel:number;
     target:string;
+    cameraStops:number;
+    cameraIntent:string[];
     sourcePixelsNotInvented:true;
     pixelLegibilityNotAutomaticallyVerified:true;
     noCreativeOrPublicationAuthority:true;
@@ -141,6 +145,44 @@ export function compileProductFocusShot(input:ProductFocusInput):ProductFocusRes
     minimumFocusFraction:input.minimumFocusFraction,
   });
   const {width,height,screen}=layout;
+  const path=input.focusPath;
+  if(path!==undefined){
+    if(!Array.isArray(path)||path.length<2||path.length>12||
+       Math.abs(path[0]?.t??-1)>1e-5||
+       Math.abs(path[path.length-1]?.t-duration)>1e-5){
+      throw new Error('product_focus_camera_path_invalid');
+    }
+    let prev=-1;
+    for(const item of path){
+      if(!Number.isFinite(item.t)||item.t<=prev||item.t<0||item.t>duration||
+         !item.action?.trim()||
+         (item.ease!==undefined&&!['linear','ease_in','ease_out','ease_in_out'].includes(item.ease))){
+        throw new Error('product_focus_camera_waypoint_invalid');
+      }
+      prev=item.t;
+    }
+  }
+  const cameraPath=path?.map(item=>{
+    const window=planProductSourceWindow({
+      sourceWidth:input.sourceWidth,sourceHeight:input.sourceHeight,
+      focus:item.focus,displayWidth:screen.width,displayHeight:screen.height,
+      paddingFraction:input.paddingFraction,
+      minimumFocusFraction:input.minimumFocusFraction,
+    }).sourceWindow;
+    return {t:item.t,x:window.x,y:window.y,width:window.width,height:window.height,ease:item.ease};
+  });
+  if(cameraPath?.length){
+    const first=cameraPath[0];
+    const w=crop.sourceWindow;
+    if(Math.max(Math.abs(first.x-w.x),Math.abs(first.y-w.y),
+      Math.abs(first.width-w.width),Math.abs(first.height-w.height))>1e-4){
+      throw new Error('product_focus_camera_initial_focus_mismatch');
+    }
+    const changed=cameraPath.some(item=>
+      Math.abs(item.x-first.x)+Math.abs(item.y-first.y)+
+      Math.abs(item.width-first.width)+Math.abs(item.height-first.height)>1);
+    if(!changed) throw new Error('product_focus_camera_no_attention_change');
+  }
   const compact=fmt!=='landscape';
   const stage:VisualStage={
     schema:'evercraft.fallen.visual-stage.v1',
@@ -152,9 +194,10 @@ export function compileProductFocusShot(input:ProductFocusInput):ProductFocusRes
       {
         id:'product-evidence',kind:'media',mediaKind:input.sourceKind,
         sourcePath:input.sourcePath,sourceWindow:crop.sourceWindow,
+        ...(cameraPath?{sourceWindowKeyframes:cameraPath}:{}),
         fit:'cover',x:screen.x,y:screen.y,width:screen.width,height:screen.height,z:2,
         sourceRefs:[...input.sourceRefs],evidenceState:'observed',
-        scale:[{t:0,value:1},{t:duration,value:1.015,ease:'ease_in_out'}],
+        scale:cameraPath?1:[{t:0,value:1},{t:duration,value:1.015,ease:'ease_in_out'}],
       },
       {
         id:'headline',kind:'text',text:input.title,fontSize:compact?67:75,
@@ -186,6 +229,8 @@ export function compileProductFocusShot(input:ProductFocusInput):ProductFocusRes
       focusAreaFraction:crop.focusAreaFraction,
       sourcePixelsPerOutputPixel:crop.sourcePixelsPerOutputPixel,
       target:fmt,
+      cameraStops:cameraPath?.length??1,
+      cameraIntent:path?.map(item=>item.action)??[],
       sourcePixelsNotInvented:true,
       pixelLegibilityNotAutomaticallyVerified:true,
       noCreativeOrPublicationAuthority:true,
