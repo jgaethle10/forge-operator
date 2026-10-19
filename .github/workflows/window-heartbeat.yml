@@ -6,13 +6,14 @@ on:
       - main
       - feature/window-independent-heartbeat-20261018
       - feature/window-civic-longrun-20261018
+      - feature/window-scheduler-recovery-20261019
     paths:
       - 'systemia/society/window-*.mjs'
       - 'tests/window-heartbeat.test.mjs'
       - '.github/workflows/window-heartbeat.yml'
   workflow_dispatch:
   schedule:
-    - cron: '3-58/5 * * * *'
+    - cron: '*/5 * * * *'
 
 permissions:
   contents: write
