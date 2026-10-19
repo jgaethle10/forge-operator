@@ -65,13 +65,13 @@ on:
 
 permissions:
   contents: read
-  actions: write
+  actions: read
 
 concurrency:
   # Keep the five-minute main/scheduled lane singleton, but never let it cancel
   # a pull-request proof that is validating a candidate quality-gate change.
   group: systemia-portfolio-sentinel-${{ github.event_name == 'pull_request' && github.event.pull_request.number || 'main' }}
-  cancel-in-progress: true
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
 
 jobs:
   sentinel:
@@ -149,7 +149,7 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ github.token }}
           PORTFOLIO_SENTINEL_GITHUB_OWNER: jgaethle10
-          PORTFOLIO_SENTINEL_AUTO_HEAL: ${{ github.event_name == 'pull_request' && 'false' || 'true' }}
+          PORTFOLIO_SENTINEL_AUTO_HEAL: 'false'
           PORTFOLIO_SENTINEL_ENFORCE_HEALTH: ${{ github.event_name == 'pull_request' && 'false' || 'true' }}
           EVERCRAFT_JOURNAL_URL: ${{ vars.EVERCRAFT_JOURNAL_URL }}
         run: node systemia/organism/portfolio-sentinel-runner.mjs --max-urls 200
@@ -192,8 +192,8 @@ jobs:
             echo
             echo "Cadence: 5 minutes"
             echo "Coverage: raw estate reconciliation + public products + conformance + MCP publication + all known canonical URLs (up to 200/cycle) + GitHub + workflows + Systemia resident services + machine discovery + capability-promotion queue"
-            echo "Repair Unit: persistent bounded repair pressure until verified green or quarantined"
-            echo "Failed-workflow retry: autonomous while incident remains active"
+            echo "Repair Unit: observation and bounded proposals; automatic GitHub failed-workflow rerun held"
+            echo "Failed-workflow retry: disabled; Systemia admission required for repair execution"
             echo "Architectural invariants: enforced before green"
             echo "Human experience gate: Saban fan-out + owned browser visual receipts; BLOCKED never equals PASS"
             echo "Trigger modes: push + schedule + manual simulated from one shared policy"
