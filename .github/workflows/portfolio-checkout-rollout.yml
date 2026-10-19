@@ -1,0 +1,40 @@
+name: Fabric Portfolio Checkout Rollout
+
+on:
+  pull_request:
+    paths:
+      - 'systemia/commerce/portfolio-checkout-rollout.mjs'
+      - 'public/.well-known/evercraft-fabric-human-buyer-handoffs.json'
+      - 'systemia/commerce/portfolio-human-buyer-handoffs-next.json'
+      - 'public/.well-known/evercraft-payments-buyer-doors.json'
+      - 'public/chum/capabilities.json'
+      - 'systemia/mcp/public-payment-offers.mjs'
+      - 'systemia/mcp/portfolio-offer-copy.mjs'
+      - 'systemia/mcp/fabric-public-site.mjs'
+      - 'tests/portfolio-offer-copy.test.mjs'
+      - 'scripts/audit-live-agent-buyer-handoffs.mjs'
+      - 'tests/portfolio-checkout-rollout.test.mjs'
+      - 'tests/fabric-approved-buyer-handoffs.test.mjs'
+      - 'tests/live-agent-buyer-handoffs.test.mjs'
+      - '.github/workflows/portfolio-checkout-rollout.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  contract-proof:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: No-cost checkout-continuity matrix
+        run: |
+          node --check systemia/commerce/portfolio-checkout-rollout.mjs
+          node systemia/commerce/portfolio-checkout-rollout.mjs > /tmp/evercraft-portfolio-checkout-matrix.json
+      - name: Buyer-link and payment truth regression suite
+        run: |
+          node --test tests/portfolio-offer-copy.test.mjs tests/fabric-offer-pages.test.mjs tests/portfolio-checkout-rollout.test.mjs tests/live-agent-buyer-handoffs.test.mjs tests/fabric-approved-buyer-handoffs.test.mjs tests/evercraft-payments-buyer-doors.test.mjs tests/public-payment-offers.test.mjs

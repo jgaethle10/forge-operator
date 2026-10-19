@@ -1,4 +1,5 @@
 import { PUBLIC_PAYMENT_OFFERS } from './public-payment-offers.mjs';
+import { approvedPortfolioOfferCopy } from './portfolio-offer-copy.mjs';
 import crypto from 'node:crypto';
 function escapeHtml(value='') {
   return String(value)
@@ -87,6 +88,40 @@ h1{font-size:clamp(48px,8vw,90px);line-height:.95;letter-spacing:-.065em;margin:
 .btn:hover{transform:translateY(-1px)}
 .offer-hero{padding:72px 0 30px;max-width:900px}
 .offer-hero h1{max-width:900px}
+.offer-hero--payments{max-width:900px;padding-top:34px}
+.offer-hero--payments h1{font-size:clamp(37px,5.3vw,64px);line-height:1.04;letter-spacing:-.055em;max-width:710px;margin:16px 0}
+.offer-hero--payments .lede{font-size:clamp(16px,1.9vw,21px);line-height:1.52;max-width:670px;margin:0}
+.pilot-buy-panel{border:1px solid #365174;border-radius:22px;padding:24px;background:linear-gradient(150deg,rgba(22,49,79,.70),rgba(8,18,32,.91));box-shadow:0 18px 60px rgba(0,0,0,.18);margin:25px 0 0}
+.pilot-buy-panel .offer-price{margin:0 0 3px}
+.pilot-buy-panel .checkout-form{display:grid;grid-template-columns:minmax(0,1fr) auto;align-items:end;gap:10px 16px;margin-top:18px}
+.pilot-buy-panel .checkout-form label{grid-column:1/-1;font-size:14px;font-weight:650}
+.pilot-buy-panel .checkout-form input[type=email]{grid-column:1;width:100%!important;max-width:none!important;min-height:49px}
+.pilot-buy-panel .checkout-form button{grid-column:2;grid-row:2;min-height:49px;white-space:nowrap}
+.pilot-buy-panel .checkout-form .checkout-note{grid-column:1/-1;font-size:12px}
+.pilot-process{margin:24px 0 8px;padding:0}
+.pilot-process h2{font-size:22px;margin:0 0 14px;letter-spacing:-.03em}
+.pilot-flow{list-style:none;padding:0;margin:0;display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px;counter-reset:stage}
+.pilot-flow li{border:1px solid #283d57;border-radius:14px;padding:16px;background:rgba(11,24,42,.82);min-height:105px}
+.pilot-flow .stage{display:block;font-size:11px;letter-spacing:.1em;color:#90c7ff;margin-bottom:8px;font-weight:750}
+.pilot-flow strong{font-size:15px;font-weight:700;line-height:1.25;display:block}
+.pilot-disclaimer{color:var(--muted);font-size:12px;line-height:1.55;margin:13px 0 0}
+@media(max-width:780px){
+ .offer-hero--payments{padding:18px 0 20px}
+ .offer-hero--payments .kicker{font-size:11px;padding:6px 10px}
+ .offer-hero--payments h1{font-size:clamp(35px,9vw,44px);line-height:1.06;margin:13px 0 12px}
+ .offer-hero--payments .lede{font-size:16px;line-height:1.4}
+ .pilot-buy-panel{padding:17px;border-radius:17px;margin-top:17px}
+ .pilot-buy-panel .offer-price{font-size:34px}
+ .pilot-buy-panel .offer-price-note{font-size:12px}
+ .pilot-buy-panel .checkout-form{display:flex;flex-direction:column;align-items:stretch;gap:8px;margin-top:13px}
+ .pilot-buy-panel .checkout-form label{font-size:13px}
+ .pilot-buy-panel .checkout-form input[type=email]{font-size:16px;min-height:45px}
+ .pilot-buy-panel .checkout-form button{width:100%;white-space:normal;min-height:47px;font-size:15px}
+ .pilot-flow{grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}
+ .pilot-flow li{padding:12px;min-height:83px}
+ .pilot-process{margin-top:20px}
+ .pilot-process h2{font-size:20px}
+}
 .offer-price{font-size:clamp(30px,5vw,52px);font-weight:850;letter-spacing:-.045em;margin:18px 0 8px}
 .offer-price-note{color:var(--muted);font-size:14px}
 .offer-grid{display:grid;grid-template-columns:1fr;gap:14px;margin:18px 0 70px;max-width:900px}
@@ -278,11 +313,17 @@ const OFFER_PAGE_COPY={
 // Additional approved products use the same native offer and handoff surfaces.
 const extraOfferItems=Object.entries(PUBLIC_PAYMENT_OFFERS).map(([slug,offer])=>{
   const public_id='payment-offer-'+slug;
-  OFFER_PAGE_COPY[public_id]={slug,purchase_key:offer.offer_key,eyebrow:offer.title,
-    headline:offer.title,lede:offer.intent,promise:offer.intent,
-    send:['Your receipt and delivery email','The scope and supporting information requested during intake. Do not send passwords or secrets.'],
-    get:[offer.intent,'The bounded deliverable described in the approved offer; payment does not authorize production changes.'],
-    steps:[['1. Review the offer','Confirm the product and fixed price.'],['2. Open secure checkout','Evercraft Payments prepares your order.'],['3. Complete intake','Delivery follows verified payment and the required intake.']]};
+  const specific=approvedPortfolioOfferCopy(slug,offer);
+  OFFER_PAGE_COPY[public_id]={
+    slug,purchase_key:offer.offer_key,
+    eyebrow:specific?.eyebrow||offer.title,
+    headline:specific?.headline||offer.title,
+    lede:specific?.lede||offer.intent,
+    promise:specific?.promise||offer.intent,
+    send:specific?.send||['Your receipt and delivery email','The scope and supporting information requested during intake. Do not send passwords or secrets.'],
+    get:specific?.get||[offer.intent,'The bounded deliverable described in the approved offer; payment does not authorize production changes.'],
+    steps:specific?.steps||[['1. Review the offer','Confirm the product and fixed price.'],['2. Open secure checkout','Evercraft Payments prepares your order.'],['3. Complete intake','Delivery follows verified payment and the required intake.']],
+  };
   return {public_id,name:offer.title,commercial_state:'sell_now',pricing:'$'+offer.amount_cents/100+' one-time',
     entry_paid_offer:{name:offer.title,price:'$'+offer.amount_cents/100,price_usd_normalized:offer.amount_cents/100}};
 });
@@ -359,15 +400,17 @@ export function renderOfferPage(item){
   const get=copy.get.map((x)=>'<li>'+escapeHtml(x)+'</li>').join('');
   const steps=copy.steps.map(([title,body])=>'<div class="offer-step"><strong>'+escapeHtml(title)+'</strong><span>'+escapeHtml(body)+'</span></div>').join('');
   const idempotencyKey='offer-'+copy.slug+'-'+crypto.randomUUID();
+  const isPaymentsPilot=copy.slug==='payments-pilot';
   return shell(copy.headline+' · Evercraft',[
     '<main>',
-    '<section class="offer-hero">',
-    '<div class="kicker"><span class="dot"></span> '+escapeHtml(copy.eyebrow)+' · available now</div>',
+    '<section class="offer-hero'+(isPaymentsPilot?' offer-hero--payments':'')+'">',
+    '<div class="kicker"><span class="dot"></span> '+(isPaymentsPilot?'Evercraft Payments · founding pilot':escapeHtml(copy.eyebrow)+' · available now')+'</div>',
     '<h1>'+escapeHtml(copy.headline)+'</h1>',
     '<p class="lede">'+escapeHtml(copy.lede)+'</p>',
     copy.heroVisual?'<div class="offer-visual"><picture>'+(copy.heroVisualMobile?'<source media="(max-width: 700px)" srcset="'+escapeHtml(copy.heroVisualMobile)+'">':'')+'<img src="'+escapeHtml(copy.heroVisual)+'" alt="" loading="eager"></picture></div>':'',
+    isPaymentsPilot?'<div class="pilot-buy-panel" aria-label="Founding integration offer and secure checkout">':'',
     '<div class="offer-price">'+escapeHtml(price)+'</div>',
-    '<div class="offer-price-note">'+escapeHtml(offerName)+' · '+escapeHtml(item.pricing||'')+'</div>',
+    '<div class="offer-price-note">'+escapeHtml(offerName)+' · '+(isPaymentsPilot?'one-time fixed offer':escapeHtml(item.pricing||''))+'</div>',
     '<form class="checkout-form" method="post" action="/api/offers/'+encodeURIComponent(copy.slug)+'/checkout">',
     '<input type="hidden" name="user_confirmed" value="true">',
     '<input type="hidden" name="idempotency_key" value="'+escapeHtml(idempotencyKey)+'">',
@@ -378,6 +421,7 @@ export function renderOfferPage(item){
     item.public_id.startsWith('payment-offer-')?'':'<a class="btn" href="/capabilities/'+encodeURIComponent(item.public_id)+'">See technical proof</a>',
     '<div class="checkout-note">Evercraft Payments prepares the checkout. Nothing is marked paid until settlement is verified.</div>',
     '</form>',
+    isPaymentsPilot?'</div><section class="pilot-process" aria-label="Integration scope, not a completed transaction"><h2>One integration. Four checkpoints.</h2><ol class="pilot-flow"><li><span class="stage">01 / CONSENT</span><strong>Buyer approval</strong></li><li><span class="stage">02 / CHECKOUT</span><strong>Processor handoff</strong></li><li><span class="stage">03 / EVIDENCE</span><strong>Payment verification</strong></li><li><span class="stage">04 / DELIVERY</span><strong>Fulfillment controls</strong></li></ol><p class="pilot-disclaimer">Proposed integration scope. These checkpoints do not claim a customer payment or an active merchant deployment.</p></section>':'',
     '</section>',
     '<div class="offer-grid">',
     '<section class="offer-panel"><h2>What you are buying</h2><p class="plain">'+escapeHtml(copy.promise)+'</p></section>',
