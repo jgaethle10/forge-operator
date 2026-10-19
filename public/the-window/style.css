@@ -83,3 +83,13 @@ footer span:last-child{text-align:right;max-width:570px}
 .zone .symbol{user-select:none}
 #connection{font-variant-numeric:tabular-nums}
 @media(max-width:640px){.transparency{margin:0 0 18px;padding:14px}.transparency div span{font-size:11px}}
+
+.heartbeat-receipt{font-size:11px;line-height:1.5;margin:-9px 0 18px;padding:10px 14px;border:1px solid #39564a;background:#142923;border-radius:8px;color:#bddcc0}
+.heartbeat-receipt[data-state="stale"],.heartbeat-receipt[data-state="error"]{color:#f4c5a2;border-color:#a16a43;background:#3c2c24}
+.projects-panel{flex:0 0 auto}
+.project-entry{border-top:1px solid #365046;padding:15px 0 7px;font-size:12px}
+.project-entry strong{color:#e4f6d7;font-weight:650;margin-right:8px}
+.project-entry .project-state{font-size:10px;text-transform:uppercase;letter-spacing:.06em;color:#d5c79a}
+.project-entry p{margin:9px 0;font-size:12px;line-height:1.5;color:#9ebbad}
+.project-entry .goal-progress{margin:0 0 9px;height:8px}
+@media(max-width:640px){.heartbeat-receipt{margin:0 0 15px;font-size:10px}.project-entry{padding:13px 0}}
