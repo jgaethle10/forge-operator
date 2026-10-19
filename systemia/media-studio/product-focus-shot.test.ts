@@ -120,7 +120,7 @@ test('camera directs attention from structured contradiction to human confirmati
 
 test('camera path must start at the nominated source focus and finish on time',()=>{
   const shot={...source,durationSec:6};
-  const badStart=[{t:0,focus:{x:500,y:1300,width:800,height:300},action:'Wrong initial frame'},
+  const badStart=[{t:0,focus:{x:500,y:1300,width:800,height:450},action:'Wrong initial frame'},
     {t:6,focus:source.focus,action:'End'}];
   assert.throws(()=>compileProductFocusShot({...shot,focusPath:badStart}),/initial_focus_mismatch/);
   assert.throws(()=>compileProductFocusShot({...shot,focusPath:[
