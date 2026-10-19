@@ -41,6 +41,8 @@ test('public spectator reads canonical world commits and remains unpromoted',()=
   assert.match(html,/Fictional rule-based agents/);
   assert.match(html,/independent GitHub runner/);
   assert.match(html,/id="projects"/);
+  assert.match(html,/id="social-arcs"/);
+  assert.match(js,/renderSocial/);
   assert.match(js,/window-society-state\/state\/window\.json/);
   assert.match(js,/crypto\.subtle\.digest/);
   assert.match(js,/Untrusted or noncanonical world state/);
