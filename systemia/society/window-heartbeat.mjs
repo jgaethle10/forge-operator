@@ -1,6 +1,7 @@
 import {createHash} from 'node:crypto';
 import {advanceWorld,REAL_TICK_MS,replayWorld} from '../../public/the-window/world.mjs';
 import {decideCivic,ensureCivic} from './window-civic.mjs';
+import {decideSocial,ensureSocial} from './window-social.mjs';
 
 export const STATE_SCHEMA='evercraft.window.heartbeat.v1';
 export const STATE_BRANCH='window-society-state';
@@ -37,6 +38,7 @@ export function advanceHeartbeat(previous,now,options={}){
     delete w.projection;
     assertWorld(w);
     ensureCivic(w);
+    ensureSocial(w);
     first=true;
     origin='clock-replay-import-2026-10-18';
   }else throw Error('Unknown initialization state');
@@ -49,14 +51,16 @@ export function advanceHeartbeat(previous,now,options={}){
     const nextAt=w.last_tick_at+REAL_TICK_MS;
     advanceWorld(w,nextAt);
     decideCivic(w);
+    decideSocial(w);
   }
   ensureCivic(w);
+  ensureSocial(w);
   assertWorld(w);
   const pending=Math.max(0,Math.floor((now-w.last_tick_at)/REAL_TICK_MS));
   const result={
     schema:STATE_SCHEMA,initialized:true,release_status:'held',
     authority:'github_actions_state_branch',
-    model_mode:'rule_policy_no_llm',
+    model_mode:'civic_and_social_policy_no_llm',
     external_actions:'none',
     origin,
     sequence:(Number(previous.sequence)||0)+1,
