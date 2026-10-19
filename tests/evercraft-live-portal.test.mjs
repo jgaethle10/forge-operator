@@ -1,0 +1,9 @@
+import test from 'node:test';
+import assert from 'node:assert/strict';
+import { readFile } from 'node:fs/promises';
+import { Script } from 'node:vm';
+const html=await readFile(new URL('../public/live/index.html',import.meta.url),'utf8');
+test('standalone public portal route, canvas and five interactive worlds',()=>{assert.match(html,/<title>Evercraft LIVE \| The Visual Portal<\/title>/);assert.match(html,/<canvas /);assert.equal((html.match(/class="door(?: active)?"/g)||[]).length,5);for(const id of ['earth','network','weather','science','creative'])assert.match(html,new RegExp('class="door(?: active)?" data-world="'+id+'"'));});
+test('public studio discloses simulation, provides film controls and never embeds secrets',()=>{for(const text of ['NOT LIVE TELEMETRY','NOT LIVE RADAR OR A FORECAST','SIMULATION','id="film"','id="toggle"','id="next"','const DURATION=25000'])assert.ok(html.includes(text),text);assert.doesNotMatch(html,/https?:\/\/(?:drive\.google\.com|docs\.google\.com|[^"'\s]*base44\.app)/i);assert.doesNotMatch(html,/<script[^>]+src=|<iframe|<video[^>]+src=/i);});
+test('inline application script parses and has no remote fetch dependency',()=>{const m=html.match(/<script>([\s\S]*?)<\/script>/);assert.ok(m);assert.doesNotThrow(()=>new Script(m[1]));assert.doesNotMatch(m[1],/\bfetch\s*\(|XMLHttpRequest|WebSocket|navigator\.sendBeacon/i);});
+test('responsive, keyboard accessible and idle tab aware',()=>{for(const x of ['width=device-width','max-width:600px','prefers-reduced-motion','keydown','visibilitychange','.shell{grid-template-columns:minmax(0,1fr)}'])assert.ok(html.includes(x),x);});
