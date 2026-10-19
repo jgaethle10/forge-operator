@@ -6,6 +6,8 @@ on:
       - "scripts/checkout-fabric-live-canary.test.mjs"
       - ".github/workflows/saban-checkout-production-truth.yml"
       - "systemia/mcp/fabric-public-site.mjs"
+      - "systemia/mcp/fabric-local-runtime.mjs"
+      - "tests/fabric-precheckout-hold.test.mjs"
   workflow_dispatch:
   schedule:
     - cron: "17 * * * *"
@@ -33,6 +35,8 @@ jobs:
           node-version: 22
       - name: Test regression guard with positive and negative fixtures
         run: node --test scripts/checkout-fabric-live-canary.test.mjs
+      - name: Test held payment fallback on actual local runtime
+        run: node --test tests/fabric-precheckout-hold.test.mjs tests/fabric-offer-pages.test.mjs
       - name: Check real production release and customer offer forms
         if: github.event_name != 'pull_request'
         run: node scripts/checkout-fabric-live-canary.mjs
