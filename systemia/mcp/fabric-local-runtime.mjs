@@ -645,7 +645,7 @@ export async function startFabricLocalRuntime({
     transactional:false,
     external_action_authority:false,
     mcp_read_only:true,
-    human_offer_checkout_enabled:true,
+    human_offer_checkout_enabled:commerceTransport.fully_configured,
     human_offer_checkout_path_template:'/api/offers/{slug}/checkout',
     human_offer_checkout_requires_explicit_confirmation:true,
     human_offer_checkout_handoff_mode:'explicit_evercraft_page',
@@ -1276,7 +1276,7 @@ export async function startFabricLocalRuntime({
               'Payment verification pending. Do not pay again. Refresh this page later or contact Evercraft.';
             return sendText(res,result.status,'<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="referrer" content="no-referrer"><title>Evercraft Payments</title></head><body style="background:#0b1120;color:#ecf1fa;font:18px/1.6 system-ui;padding:32px;max-width:720px;margin:auto"><h1>Evercraft Payments</h1><p>'+message+'</p><a style="color:#9debdc" href="/support">Contact support</a></body></html>',{contentType:'text/html; charset=utf-8'});
           }
-          const page=renderOfferPage(offer,{checkoutConfigured:publicPaymentOffer(slug)?commerceTransport.direct_offer_ops_configured:commerceTransport.purchase_intent_configured});
+          const page=renderOfferPage(offer,{checkoutConfigured:commerceTransport.fully_configured});
           if(!page) return sendJson(res,404,{error:'offer_not_found'});
           return sendText(res,200,page,{contentType:'text/html; charset=utf-8'});
         }
