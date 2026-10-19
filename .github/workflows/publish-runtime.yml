@@ -133,6 +133,10 @@ jobs:
 
   verify:
     needs: authorize
+    # Release admission must precede the expensive full check and Docker build.
+    # Held trust/destructive changes retain their classification receipt but
+    # cannot execute this verifier without separately authorized release input.
+    if: needs.authorize.outputs.release_allowed == 'true'
     runs-on: ubuntu-latest
     steps:
       - name: Checkout authorized revision
@@ -161,9 +165,7 @@ jobs:
         run: docker build -t forge-operator:${{ needs.authorize.outputs.sha }} .
 
   held:
-    needs:
-      - authorize
-      - verify
+    needs: authorize
     if: needs.authorize.outputs.release_allowed != 'true'
     runs-on: ubuntu-latest
     steps:
@@ -172,13 +174,13 @@ jobs:
           {
             echo "## Release held by Systemia"
             echo
-            echo "Revision \`${{ needs.authorize.outputs.sha }}\` passed verification but was **not** published."
+            echo "Revision \`${{ needs.authorize.outputs.sha }}\` was **held before verification/build** and was not published."
             echo
             echo "Risk class: **${{ needs.authorize.outputs.risk_class }}**"
             echo
             echo "Reasons: ${{ needs.authorize.outputs.reasons }}"
             echo
-            echo "Use the manual workflow dispatch against this exact main-branch SHA for an explicitly approved release."
+            echo "Full validation and image build were skipped because this release was not authorized. Use a separately authorized manual workflow dispatch against this exact main-branch SHA."
           } >> "$GITHUB_STEP_SUMMARY"
 
   publish:
