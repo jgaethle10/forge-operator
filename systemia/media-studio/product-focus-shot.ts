@@ -19,6 +19,8 @@ export interface ProductFocusInput {
   focus:FocusRegion;
   /** Multiple truthful subject windows that the on-screen camera should follow. */
   focusPath?:Array<{t:number;focus:FocusRegion;action:string;ease?:EaseName}>;
+  /** Human-nominated content areas that must remain fully visible at a given time. */
+  protectedRegions?:Array<{id:string;t:number;region:FocusRegion}>;
   title:string;
   caption:string;
   evidenceLabel:string;
@@ -40,6 +42,7 @@ export interface ProductFocusResult {
     target:string;
     cameraStops:number;
     cameraIntent:string[];
+    protectedRegionChecks:number;
     sourcePixelsNotInvented:true;
     pixelLegibilityNotAutomaticallyVerified:true;
     noCreativeOrPublicationAuthority:true;
@@ -183,6 +186,52 @@ export function compileProductFocusShot(input:ProductFocusInput):ProductFocusRes
       Math.abs(item.width-first.width)+Math.abs(item.height-first.height)>1);
     if(!changed) throw new Error('product_focus_camera_no_attention_change');
   }
+  const sampledWindow=(at:number):SourceWindow=>{
+    if(!cameraPath?.length) return crop.sourceWindow;
+    if(at<=cameraPath[0].t) return {...cameraPath[0],sourceWidth:input.sourceWidth,sourceHeight:input.sourceHeight};
+    if(at>=cameraPath[cameraPath.length-1].t){
+      return {...cameraPath[cameraPath.length-1],sourceWidth:input.sourceWidth,sourceHeight:input.sourceHeight};
+    }
+    for(let i=1;i<cameraPath.length;i++){
+      const a=cameraPath[i-1],b=cameraPath[i];
+      if(at<=b.t){
+        let q=(at-a.t)/(b.t-a.t);
+        const mode=b.ease??a.ease??'linear';
+        if(mode==='ease_in') q=q*q;
+        else if(mode==='ease_out') q=1-(1-q)*(1-q);
+        else if(mode==='ease_in_out') q=q<.5?2*q*q:1-Math.pow(-2*q+2,2)/2;
+        return {
+          x:a.x+(b.x-a.x)*q,y:a.y+(b.y-a.y)*q,
+          width:a.width+(b.width-a.width)*q,height:a.height+(b.height-a.height)*q,
+          sourceWidth:input.sourceWidth,sourceHeight:input.sourceHeight,
+        };
+      }
+    }
+    return crop.sourceWindow;
+  };
+  const protectedRegions=input.protectedRegions??[];
+  if(!Array.isArray(protectedRegions)||protectedRegions.length>24){
+    throw new Error('product_focus_protected_regions_invalid');
+  }
+  const names=new Set<string>();
+  for(const item of protectedRegions){
+    if(!/^[a-zA-Z0-9._-]{1,128}$/.test(item?.id??'')||names.has(item.id)||
+       !Number.isFinite(item.t)||item.t<0||item.t>duration||
+       !positiveFinite(item.region?.width,item.region?.height)||
+       !Number.isFinite(item.region?.x)||!Number.isFinite(item.region?.y)||
+       item.region.x<0||item.region.y<0||
+       item.region.x+item.region.width>input.sourceWidth||
+       item.region.y+item.region.height>input.sourceHeight){
+      throw new Error('product_focus_protected_region_invalid');
+    }
+    names.add(item.id);
+    const win=sampledWindow(item.t),reg=item.region;
+    if(reg.x<win.x-1e-4||reg.y<win.y-1e-4||
+       reg.x+reg.width>win.x+win.width+1e-4||
+       reg.y+reg.height>win.y+win.height+1e-4){
+      throw new Error('product_focus_protected_region_clipped:'+item.id);
+    }
+  }
   const compact=fmt!=='landscape';
   const stage:VisualStage={
     schema:'evercraft.fallen.visual-stage.v1',
@@ -231,6 +280,7 @@ export function compileProductFocusShot(input:ProductFocusInput):ProductFocusRes
       target:fmt,
       cameraStops:cameraPath?.length??1,
       cameraIntent:path?.map(item=>item.action)??[],
+      protectedRegionChecks:protectedRegions.length,
       sourcePixelsNotInvented:true,
       pixelLegibilityNotAutomaticallyVerified:true,
       noCreativeOrPublicationAuthority:true,
