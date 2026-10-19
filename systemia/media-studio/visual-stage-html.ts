@@ -43,9 +43,24 @@ function layerMarkup(layer:VisualLayer){
   const badge=label?`<div class="evidence-badge${evidenceClass(layer.evidenceState)}">${esc(label)}</div>`:'';
 
   if(layer.kind==='media'){
+    const win=layer.sourceWindow;
+    // Render the chosen source-pixel ROI at full stage resolution. The stage
+    // validator enforces source bounds and equal crop/output aspect ratios,
+    // preventing distorted UI or invisible subject regions.
+    const mediaStyle=win
+      ? [
+          'position:absolute',
+          'max-width:none',
+          'left:'+(-100*win.x/win.width)+'%',
+          'top:'+(-100*win.y/win.height)+'%',
+          'width:'+(100*win.sourceWidth/win.width)+'%',
+          'height:'+(100*win.sourceHeight/win.height)+'%',
+          'object-fit:fill',
+        ].join(';')+';'
+      : 'width:100%;height:100%;object-fit:'+layer.fit+';';
     const tag=layer.mediaKind==='video'
-      ? `<video src="${esc(layer.sourcePath)}" data-source="${esc(layer.sourcePath)}" muted playsinline preload="auto" style="width:100%;height:100%;object-fit:${layer.fit};"></video>`
-      : `<img src="${esc(layer.sourcePath)}" style="width:100%;height:100%;object-fit:${layer.fit};"/>`;
+      ? `<video src="${esc(layer.sourcePath)}" data-source="${esc(layer.sourcePath)}" muted playsinline preload="auto" style="${mediaStyle}"></video>`
+      : `<img src="${esc(layer.sourcePath)}" style="${mediaStyle}"/>`;
     return `<div class="layer media-layer" data-layer="${esc(layer.id)}" style="${base}">${tag}${badge}</div>`;
   }
 
