@@ -1,5 +1,7 @@
 # File Ferry
 
+**[Live browser demo](https://headless-cbhioezqgao-sociallyguud-140c.wix-site-host.com) · [Recipient reassembly](https://headless-cbhioezqgao-sociallyguud-140c.wix-site-host.com/reassemble.html)**
+
 **A local-first file handoff workbench for freelancers and small teams.**
 
 File Ferry helps prepare a client deliverable for a chosen attachment-size budget, without uploading that deliverable to a File Ferry server. It can keep the exact bytes, prepare verified numbered parts with a recipient-side reassembly page, or offer a clearly labeled lossy/compact derivative for supported images and text.
