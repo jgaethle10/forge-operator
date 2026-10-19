@@ -91,10 +91,7 @@ jobs:
           NODE
       - name: Render a native source-camera raster canary
         run: |
-          command -v ffmpeg
-          ffmpeg -y -v error -f lavfi -i "color=c=0xff0000:s=1440x2408:r=1:d=1" \
-            -vf "drawbox=x=0:y=1200:w=1440:h=400:color=0x00ff00:t=fill,drawbox=x=0:y=1600:w=1440:h=808:color=0x0000ff:t=fill" \
-            -frames:v 1 /tmp/fallen-native-camera-source.png
+          node camera-png.mjs create /tmp/fallen-native-camera-source.png
           docker exec fallen-render-ci mkdir -p /work/assets/native-camera-ci
           docker cp /tmp/fallen-native-camera-source.png fallen-render-ci:/work/assets/native-camera-ci/source.png
           node - <<'NODE'
