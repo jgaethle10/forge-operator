@@ -102,6 +102,7 @@ function toggleFilm(force){let next=typeof force==='boolean'?force:!portal.class
 byId('film').addEventListener('click',()=>toggleFilm());byId('filmExit').addEventListener('click',()=>toggleFilm(false));
 document.addEventListener('keydown',e=>{if(e.key==='Escape'&&portal.classList.contains('film'))toggleFilm(false);if(e.target===document.body&&e.key==='ArrowRight')select(current+1);if(e.target===document.body&&e.key.toLowerCase()==='f')toggleFilm()});
 stage.addEventListener('click',e=>{if(portal.classList.contains('film')&&e.target!==frame)toggleFilm(false)});
+document.addEventListener('visibilitychange',()=>{started=performance.now()});
 function advance(now){requestAnimationFrame(advance);if(document.hidden){started=now;return}if(!running){started=now;return}remaining-=Math.min(1000,Math.max(0,now-started));started=now;if(remaining<=0){select(current+1)}byId('progress').style.width=((1-remaining/(EXHIBITS[current].seconds*1000))*100).toFixed(2)+'%'}
 select(0);requestAnimationFrame(advance);
 })();
