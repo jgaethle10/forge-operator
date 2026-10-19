@@ -34,6 +34,7 @@ worldEls.forEach((el,i)=>el.addEventListener('click',()=>select(i)));
 document.getElementById('next').onclick=()=>select(scene+1);
 document.getElementById('toggle').onclick=()=>{running=!running;entered=performance.now()-elapsed;document.getElementById('toggle').textContent=running?'Ⅱ Pause':'▶ Resume';status.textContent=running?'AUTO DIRECTOR · 00:25 PER WORLD':'PAUSED · SELECT A WORLD'};
 document.getElementById('film').onclick=()=>{root.classList.toggle('hide-ui');document.getElementById('film').textContent=root.classList.contains('hide-ui')?'Exit film mode':'Film mode ⛶';resize()};
+stage.addEventListener('click',()=>{if(root.classList.contains('hide-ui'))document.getElementById('film').click()});
 document.addEventListener('keydown',e=>{if(e.key==='Escape'&&root.classList.contains('hide-ui')){root.classList.remove('hide-ui');resize()}else if(e.key==='ArrowRight')select(scene+1);else if(e.key===' '&&e.target===document.body){e.preventDefault();document.getElementById('toggle').click()}else if(e.key.toLowerCase()==='f'&&e.target===document.body)document.getElementById('film').click()});
 function back(){const grd=ctx.createLinearGradient(0,0,w,h);grd.addColorStop(0,'#050d16');grd.addColorStop(.6,'#061b27');grd.addColorStop(1,'#052334');ctx.fillStyle=grd;ctx.fillRect(0,0,w,h)}
 function point(x,y,r,color,blur=0){ctx.save();ctx.fillStyle=color;if(blur){ctx.shadowBlur=blur;ctx.shadowColor=color}ctx.beginPath();ctx.arc(x,y,r,0,Math.PI*2);ctx.fill();ctx.restore()}
