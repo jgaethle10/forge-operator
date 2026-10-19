@@ -9,6 +9,8 @@ const receipt=await runWorldEngineReferenceFrameConformance({
 
 assert.equal(receipt.status,'verified');
 assert.equal(receipt.pixel_verified,true);
+assert.equal(receipt.atmosphere_pixel_verified,true);
+assert.deepEqual(receipt.atmosphere_pixel.length,4);
 assert.match(receipt.shader_sha256,/^sha256:[a-f0-9]{64}$/);
 assert.match(receipt.receipt_hash,/^sha256:[a-f0-9]{64}$/);
 assert.deepEqual(receipt.observed_pixel.length,4);
