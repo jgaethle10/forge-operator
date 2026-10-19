@@ -1,0 +1,21 @@
+{
+  "id": "relay-product-focus-ci",
+  "sourcePath": "asset://relay-ci-capture",
+  "sourceRefs": [
+    "ci:fictional-relay-pilot-image"
+  ],
+  "sourceKind": "image",
+  "sourceWidth": 1440,
+  "sourceHeight": 2408,
+  "focus": {
+    "x": 450,
+    "y": 1260,
+    "width": 910,
+    "height": 480
+  },
+  "title": "One meeting. Two interpretations.",
+  "caption": "Structured differences, reviewed by people.",
+  "evidenceLabel": "FICTIONAL SCENARIO / CI FIXTURE",
+  "format": "portrait",
+  "durationSec": 4
+}
