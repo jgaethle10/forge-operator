@@ -46,7 +46,7 @@ export function decideCivic(w){
       id:'project-'+civic.decisions, title:kind.title, site:kind.site, need:kind.cost,
       funded:0, progress:0, state:'fundraising',
       founder:founder.id,partner:partner.id,benefit:kind.benefit,
-      started_day:w.day, decisions:0, supporters:[], completed_day:null
+      started_day:w.day, decisions:0, supporters:[], pledges:{}, completed_day:null
     };
     civic.proposals.push(item);
     result.push(chronicle(w,'proposal',founder,
@@ -63,11 +63,12 @@ export function decideCivic(w){
     const trust=supporter.bonds[founder.id]??50;
     const concern=supporter.hunger<35||supporter.energy<25;
     // A supporter can refuse. A project can ultimately fail rather than always win.
-    const pledges=(!concern&&trust>=38&&supporter.coins>=5)?Math.min(5,supporter.coins-2):0;
+    const pledges=(!concern&&trust>=38&&supporter.coins>=5)?Math.min(5,supporter.coins-2,active.need-active.funded):0;
     if(pledges>0){
       supporter.coins-=pledges;
       active.funded+=pledges;
       if(!active.supporters.includes(supporter.id))active.supporters.push(supporter.id);
+      active.pledges[supporter.id]=(active.pledges[supporter.id]||0)+pledges;
       result.push(chronicle(w,'pledge',supporter,
         supporter.name+' contributed '+pledges+' coins to '+active.title+'.',
         {project:active.id,amount:pledges}));
@@ -88,7 +89,7 @@ export function decideCivic(w){
       // Return unspent pledges proportionally, where possible; no real funds.
       for(const id of active.supporters){
         const a=w.actors.find(x=>x.id===id);
-        if(a)a.coins+=Math.floor(active.funded/Math.max(active.supporters.length,1));
+        if(a)a.coins+=active.pledges[id]||0;
       }
       result.push(chronicle(w,'failure',founder,
         active.title+' did not attract enough support and was abandoned.',
