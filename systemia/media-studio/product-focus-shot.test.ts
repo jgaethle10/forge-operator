@@ -180,3 +180,49 @@ test('critical product labels must be fully visible at nominated moments',()=>{
     {id:'invalid-timestamp',t:90,region:{x:500,y:1900,width:200,height:100}}
   ]}),/product_focus_protected_region_invalid/);
 });
+
+test('protected editorial text cannot disappear during a camera move even when endpoints are safe',()=>{
+  const camera={
+    ...source,id:'relay-interpolated-hold',durationSec:4,
+    focusPath:[
+      {t:0,focus:source.focus,action:'Start with the comparison'},
+      {t:2,focus:{x:520,y:1870,width:690,height:300},action:'Camera leaves this region'},
+      {t:4,focus:source.focus,action:'Camera returns to comparison'},
+    ],
+  };
+  const region={x:650,y:1300,width:180,height:90};
+  // Both endpoints are safe, but the region gets clipped mid-shot.
+  assert.doesNotThrow(()=>compileProductFocusShot({...camera,protectedRegions:[
+    {id:'endpoint-one',t:0,region},
+    {id:'endpoint-two',t:4,region},
+  ]}));
+  assert.throws(()=>compileProductFocusShot({...camera,protectedRegions:[
+    {id:'continuous-hold',startSec:0,endSec:4,region},
+  ]}),/product_focus_protected_region_clipped:continuous-hold/);
+  const safe=compileProductFocusShot({...camera,protectedRegions:[
+    {id:'first-half-second',startSec:0,endSec:.4,region},
+  ]});
+  assert.ok(safe.evidence.protectedFrameChecks>2);
+});
+test('phone-scale legibility gate rejects insufficient source glyph height',()=>{
+  const region={x:650,y:1300,width:180,height:90};
+  assert.throws(()=>compileProductFocusShot({...source,criticalText:[
+    {id:'tiny-note',t:0,region,sourceGlyphHeightPx:11},
+  ]}),/product_focus_phone_text_below_minimum:tiny-note/);
+  const pass=compileProductFocusShot({...source,criticalText:[
+    {id:'large-headline',t:0,region,sourceGlyphHeightPx:34,minPhonePx:9},
+  ]});
+  assert.equal(pass.evidence.criticalTextChecks,1);
+  assert.ok(pass.evidence.minProjectedPhoneGlyphPx!>=9);
+  assert.equal(pass.evidence.pixelLegibilityNotAutomaticallyVerified,true);
+});
+test('legibility annotations must be bounded, verified and visible',()=>{
+  const region={x:650,y:1300,width:180,height:90};
+  assert.throws(()=>compileProductFocusShot({...source,criticalText:[
+    {id:'bad',t:0,region,sourceGlyphHeightPx:Infinity},
+  ]}),/product_focus_text_annotation_invalid/);
+  assert.throws(()=>compileProductFocusShot({...source,criticalText:[
+    {id:'hidden',t:0,region:{x:1300,y:10,width:120,height:100},sourceGlyphHeightPx:45},
+  ]}),/product_focus_critical_text_clipped:hidden/);
+  assert.throws(()=>compileProductFocusShot({...source,targetPhoneWidthPx:0}),/product_focus_legibility_contract_invalid/);
+});
