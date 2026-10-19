@@ -1,0 +1,6 @@
+{
+  "schema": "evercraft.window.heartbeat.v1",
+  "initialized": false,
+  "release_status": "held",
+  "notes": "Independent canonical state branch. Initialize only via approved heartbeat workflow; this placeholder is not a running world."
+}
