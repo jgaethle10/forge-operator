@@ -103,7 +103,7 @@ function render(w){
   $('bread').textContent=w.metrics.bread;
   $('produce').textContent=w.metrics.produce;
   $('repairs').textContent=w.metrics.repairs;
-  renderZones(w);renderResidents(w);renderProfile(w);renderEvents(w);renderProjects(w);
+  renderZones(w);renderResidents(w);renderProfile(w);renderEvents(w);renderProjects(w);renderSocial(w);
 }
 function connection(online){
   $('connection').textContent=online?'Clock synchronized':'Sync unavailable';
@@ -165,6 +165,36 @@ function renderProjects(w) {
   if(!list.length)dest.append(el('p','description','The first proposals are still ahead.'));
   $('project-summary').textContent=w.civic.completed.length+' built · '+w.civic.failed.length+' abandoned · trust '+w.civic.trust;
 }
+
+function renderSocial(w){
+  const dest=$('social-arcs');
+  const summary=$('social-summary');
+  if(!dest||!summary)return;
+  dest.replaceChildren();
+  const social=w.social;
+  if(!social){summary.textContent='First commitments pending';dest.append(el('p','description','Residents have not yet recorded any formal promises.'));return;}
+  const counts=social.stats||{promised:0,kept:0,broken:0,declined:0};
+  summary.textContent=counts.kept+' kept · '+counts.broken+' broken';
+  const items=social.commitments.slice(-4).reverse();
+  if(!items.length){dest.append(el('p','description','No commitments yet. Come back after the next independent heartbeat.'));return;}
+  for(const p of items){
+    const a=w.actors.find(x=>x.id===p.from);
+    const b=w.actors.find(x=>x.id===p.to);
+    if(!a||!b)continue;
+    const item=el('div','project-entry');
+    item.append(el('strong','',a.emoji+' '+a.name+' → '+b.name));
+    item.append(el('span','project-state',p.state));
+    const detail=p.state==='promised'
+      ?a.name+' promised to '+p.label+'. The outcome is still open.'
+      :p.state==='kept'
+        ?a.name+' followed through. Their relationship strengthened.'
+        :a.name+' did not follow through. Their relationship weakened.';
+    item.append(el('p','',detail));
+    item.append(el('span','when','TOWN DAY '+(Math.floor((p.created_tick*15+480)/1440)+1)+' · '+(p.state==='promised'?'Awaiting decision':'Consequence recorded')));
+    dest.append(item);
+  }
+}
+
 async function refreshCanonical() {
   if(loading)return;
   loading=true;
