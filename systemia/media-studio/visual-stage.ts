@@ -51,6 +51,8 @@ export interface MediaLayer extends BaseLayer {
   fit: 'cover' | 'contain';
   /** Exact source-pixel crop window for product evidence closeups. */
   sourceWindow?: {x:number;y:number;width:number;height:number;sourceWidth:number;sourceHeight:number};
+  /** Source-relative camera path. Rects interpolate inside the original media, never within stage coordinates. */
+  sourceWindowKeyframes?: Array<{t:number;x:number;y:number;width:number;height:number;ease?:EaseName}>;
   trimStartSec?: number;
   playbackRate?: number;
   loop?: boolean;
@@ -375,7 +377,37 @@ export function evaluateStage(stage:VisualStage,t:number){
         const progress=clamp(valueAt(layer.progress,time,time/stage.durationSec),0,1);
         evaluated.metricValue=interpolate(layer.from,layer.to,progress);
       }
-      if(layer.kind==='geo'){
+      if(layer.kind==='media'&&layer.sourceWindowKeyframes!==undefined){
+      const frames=layer.sourceWindowKeyframes;
+      const win=layer.sourceWindow;
+      if(!win||!Array.isArray(frames)||frames.length<2||frames.length>12){
+        errors.push(`media_source_camera_invalid:${layer.id}`);
+      }else{
+        const eps=1e-4;
+        const ratio=layer.width/layer.height;
+        let previous=-1;
+        for(const frame of frames){
+          const vals=[frame.t,frame.x,frame.y,frame.width,frame.height];
+          if(!vals.every(Number.isFinite)||frame.t<=previous||frame.t<0||
+            frame.t>stage.durationSec||frame.x<0||frame.y<0||
+            frame.width<=0||frame.height<=0||
+            frame.x+frame.width>win.sourceWidth+eps||
+            frame.y+frame.height>win.sourceHeight+eps||
+            Math.abs(frame.width/frame.height/ratio-1)>.005||
+            (frame.ease!==undefined&&!['linear','ease_in','ease_out','ease_in_out'].includes(frame.ease))){
+            errors.push(`media_source_camera_keyframe_invalid:${layer.id}`);
+            break;
+          }
+          previous=frame.t;
+        }
+        if(Math.abs(frames[0].t)>eps||
+          Math.abs(frames[frames.length-1].t-stage.durationSec)>eps||
+          ['x','y','width','height'].some(k=>Math.abs((frames[0] as any)[k]-(win as any)[k])>eps)){
+          errors.push(`media_source_camera_endpoints_invalid:${layer.id}`);
+        }
+      }
+    }
+    if(layer.kind==='geo'){
         evaluated.geoRoutes=(layer.routes??[]).map(route=>({
           ...route,
           progressValue:clamp(valueAt(route.progress,time,time/stage.durationSec),0,1)
