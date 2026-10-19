@@ -5,6 +5,7 @@ on:
     branches:
       - main
       - feature/window-independent-heartbeat-20261018
+      - feature/window-civic-longrun-20261018
     paths:
       - 'systemia/society/window-*.mjs'
       - 'tests/window-heartbeat.test.mjs'
