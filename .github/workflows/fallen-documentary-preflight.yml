@@ -24,8 +24,12 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: 22
-      - name: Confirm FFmpeg/FFprobe
+      - name: Ensure FFmpeg and FFprobe
         run: |
+          if ! command -v ffmpeg >/dev/null 2>&1 || ! command -v ffprobe >/dev/null 2>&1; then
+            sudo apt-get update
+            sudo apt-get install -y ffmpeg
+          fi
           command -v ffmpeg
           command -v ffprobe
       - name: Check documentary preflight syntax
