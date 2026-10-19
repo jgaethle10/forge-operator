@@ -7,6 +7,7 @@ on:
       - feature/window-independent-heartbeat-20261018
       - feature/window-civic-longrun-20261018
       - feature/window-scheduler-recovery-20261019
+      - feature/window-relationship-arcs-20261019
     paths:
       - 'systemia/society/window-*.mjs'
       - 'tests/window-heartbeat.test.mjs'
@@ -38,6 +39,7 @@ jobs:
       - name: Validate world policy and branch safety
         run: |
           node --check systemia/society/window-civic.mjs
+          node --check systemia/society/window-social.mjs
           node --check systemia/society/window-heartbeat.mjs
           node --test tests/window-heartbeat.test.mjs
       - name: Write only canonical world-state branch
