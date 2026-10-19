@@ -1,0 +1,156 @@
+{
+  "schema": "evercraft.rockies.competition-winner-universe.v1",
+  "checked_on": "2026-10-19",
+  "mission_key": "rockies-competition-winners-public-intelligence-20261019",
+  "scope": "PUBLIC_PROJECTS_AND_COMPETITION_OUTCOMES_NOT_PEOPLE",
+  "authority": "research_only_not_admitted",
+  "policies": {
+    "source_only": "public_authorized_sources",
+    "no_people_surveillance": true,
+    "no_credential_reuse": true,
+    "no_outreach": true,
+    "no_code_copying_without_license": true,
+    "no_automatic_contact": true,
+    "source_family_diversity_required": true,
+    "detected_is_not_awarded": true,
+    "approval_required_for_release": true
+  },
+  "events": [
+    {
+      "competition_id": "neathack-2026",
+      "name": "neatHack 2026",
+      "organizer": "neatlogs",
+      "official_rules_url": "https://neatlogs.com/hackathon",
+      "judging_weights": {
+        "agent_end_to_end": 30,
+        "partner_integrations": 25,
+        "demo_clarity": 20,
+        "build_in_public": 15,
+        "usefulness_originality": 10
+      },
+      "status": "displayed_judging_order_awaiting_official_receipt",
+      "source_note": "Founder-provided October 19 livestream screenshots show Veritas 90.5, TrueUp 90.5, Mend 89.5; participant scoring and final eligibility/award receipts remain unverified.",
+      "projects": [
+        {
+          "project_id": "neathack-veritas",
+          "name": "Veritas",
+          "presentation_rank": 1,
+          "presentation_score": 90.5,
+          "awarded_rank": null,
+          "award_state": "not_independently_verified",
+          "description": "Dependency upgrade analysis and verified repairs as described in livestream screen recording; exact public repository and team attribution pending independent confirmation.",
+          "repo": null,
+          "repo_identity_state": "unresolved",
+          "public_sources": [
+            "https://neatlogs.com/hackathon"
+          ],
+          "focus": [
+            "dependency_upgrade",
+            "verified_patch",
+            "agent_eval"
+          ],
+          "monitor_state": "needs_verified_source"
+        },
+        {
+          "project_id": "neathack-trueup",
+          "name": "TrueUp Witness",
+          "presentation_rank": 2,
+          "presentation_score": 90.5,
+          "awarded_rank": null,
+          "award_state": "not_independently_verified",
+          "description": "Independent checks for disagreement between agent execution and recorded telemetry, including reproducible tracing fixes.",
+          "repo": "Jennycruzy/trueup",
+          "repo_identity_state": "matched_public_project_readme",
+          "public_sources": [
+            "https://github.com/Jennycruzy/trueup",
+            "https://x.com/jennyoliver57/status/2109706895699157023"
+          ],
+          "focus": [
+            "trace_truth",
+            "open_source_fixes",
+            "verified_results",
+            "customer_problem"
+          ],
+          "monitor_state": "read_only_public_repo"
+        },
+        {
+          "project_id": "neathack-mend",
+          "name": "Mend",
+          "presentation_rank": 3,
+          "presentation_score": 89.5,
+          "awarded_rank": null,
+          "award_state": "not_independently_verified",
+          "description": "Agent code repair with rerun verification, as described in founder-viewed livestream.",
+          "repo": null,
+          "repo_identity_state": "unresolved",
+          "public_sources": [
+            "https://neatlogs.com/hackathon"
+          ],
+          "focus": [
+            "agent_repair",
+            "rerun_proof",
+            "safety_gates"
+          ],
+          "monitor_state": "needs_verified_source"
+        },
+        {
+          "project_id": "neathack-community",
+          "name": "Community winner (identity pending)",
+          "presentation_rank": null,
+          "presentation_score": null,
+          "awarded_rank": null,
+          "award_state": "not_independently_verified",
+          "description": "A separate community award exists under official rules; recipient identity not yet verified.",
+          "repo": null,
+          "repo_identity_state": "unresolved",
+          "public_sources": [
+            "https://neatlogs.com/hackathon"
+          ],
+          "focus": [
+            "community_impact",
+            "public_build"
+          ],
+          "monitor_state": "needs_official_announcement"
+        }
+      ]
+    }
+  ],
+  "future_events": [
+    {
+      "competition_id": "qloo-agentic-hackathon-2026",
+      "official_url": "https://qloo.devpost.com/rules",
+      "winner_state": "not_yet_verified_or_awarded"
+    },
+    {
+      "competition_id": "nebius-nvidia-global-ai-hackathon-2026",
+      "official_url": "https://nebiusglobalaihackathon.devpost.com/rules",
+      "winner_state": "not_yet_verified_or_awarded"
+    },
+    {
+      "competition_id": "paypal-ai-hackathon-2026",
+      "official_url": "https://paypalaihackathon.devpost.com/rules",
+      "winner_state": "not_yet_verified_or_awarded"
+    },
+    {
+      "competition_id": "google-gemma-4-developer-agent-2026",
+      "official_url": "https://www.kaggle.com/competitions/gemma-4-developer-agent/overview",
+      "winner_state": "not_yet_verified_or_awarded"
+    },
+    {
+      "competition_id": "nfl-big-data-bowl-2027",
+      "official_url": "https://www.kaggle.com/competitions",
+      "winner_state": "not_yet_verified_or_awarded",
+      "official_results_url_unverified": true
+    }
+  ],
+  "analysis_questions": [
+    "Which customer pain is clearly explained and independently tested?",
+    "What was the exact working end-to-end task and where is reproduction evidence?",
+    "Which mandatory sponsor integrations were truly exercised?",
+    "What does before/after evidence actually prove?",
+    "What changed after judging: commits, releases, open-source PRs, live adoption?",
+    "What were demo quality, narrative, public-build and accessibility advantages?",
+    "Which improvement fits Evercraft's existing Systemia, Saban, Black Box, Spider Society, Lineage or production stack without copying proprietary code?",
+    "Which source claims are marketing vs independently verified and what remains unknown?"
+  ]
+}
