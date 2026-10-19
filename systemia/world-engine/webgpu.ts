@@ -1,6 +1,7 @@
 import crypto from 'node:crypto';
 import type {
   CameraProjection,
+  AtmosphereDefinition,
   ColorRGB,
   LightComponent,
   MaterialDefinition,
@@ -94,6 +95,7 @@ export interface WebGpuRenderPlan {
   width:number;
   height:number;
   clearColor:ColorRGB;
+  atmosphere?:AtmosphereDefinition;
   viewMatrix:number[];
   projectionMatrix:number[];
   viewProjectionMatrix:number[];
@@ -596,6 +598,7 @@ export function compileWebGpuRenderPlan(
     width:viewport.width,
     height:viewport.height,
     clearColor:clone(frame.clearColor),
+    ...(frame.atmosphere?{atmosphere:clone(frame.atmosphere)}:{}),
     viewMatrix,
     projectionMatrix,
     viewProjectionMatrix,
@@ -668,10 +671,13 @@ function objectUniformData(draw:WebGpuDrawCommand){
 }
 
 function frameUniformData(plan:WebGpuRenderPlan){
+  const fog=plan.atmosphere;
   return floats([
     ...plan.viewProjectionMatrix,
     plan.cameraPosition[0],plan.cameraPosition[1],plan.cameraPosition[2],plan.exposure,
-    plan.lights.length,0,0,0
+    plan.lights.length,0,0,0,
+    fog?.color.r??0,fog?.color.g??0,fog?.color.b??0,fog?.density??0,
+    fog?.startDistance??0,fog?.heightFalloff??0,fog?.referenceHeight??0,0
   ]);
 }
 
@@ -680,6 +686,8 @@ struct FrameUniforms {
   viewProjection: mat4x4<f32>,
   cameraExposure: vec4<f32>,
   lightMeta: vec4<f32>,
+  fogColorDensity: vec4<f32>,
+  fogParams: vec4<f32>,
 };
 
 struct ObjectUniforms {
@@ -732,6 +740,20 @@ fn vs_main(input: VertexIn) -> VertexOut {
 
 fn saturate(value: f32) -> f32 {
   return clamp(value, 0.0, 1.0);
+}
+
+// Actual world-space distance attenuation, not a 2D texture placed over a shot.
+// Density=0 is the pre-existing visual behavior. Unlit interface materials
+// bypass this intentionally so UI labels and product screenshots remain clear.
+fn applyAtmosphericDepth(lit: vec3<f32>, worldPosition: vec3<f32>) -> vec3<f32> {
+  let density = frame.fogColorDensity.w;
+  if (density <= 0.0) { return lit; }
+  let distance = max(length(frame.cameraExposure.xyz - worldPosition) - frame.fogParams.x, 0.0);
+  let midpointAltitude = 0.5 * (frame.cameraExposure.y + worldPosition.y);
+  let altitude = max(midpointAltitude - frame.fogParams.z, 0.0);
+  let effectiveDensity = density * exp(-frame.fogParams.y * altitude);
+  let transmittance = clamp(exp(-effectiveDensity * distance), 0.0, 1.0);
+  return mix(frame.fogColorDensity.rgb, lit, transmittance);
 }
 
 @fragment
@@ -832,7 +854,7 @@ fn fs_main(input: VertexOut) -> @location(0) vec4<f32> {
 
   let diffuse=base.rgb*lighting*mix(1.0,0.25,metallic);
   let color=(diffuse+specular+emissive)*frame.cameraExposure.w;
-  return vec4<f32>(color,base.a);
+  return vec4<f32>(applyAtmosphericDepth(color,input.worldPosition),base.a);
 }
 `;
 
@@ -880,7 +902,7 @@ export class EvercraftWebGpuRenderer {
     private readonly textureBudgetBytes:number
   ){
     this.shaderModule=device.createShaderModule({
-      label:'Evercraft World Engine v15 WGSL',
+      label:'Evercraft World Engine atmospheric depth WGSL',
       code:EVERCRAFT_WEBGPU_WGSL
     });
     this.frameLayout=device.createBindGroupLayout({
