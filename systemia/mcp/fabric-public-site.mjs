@@ -1,4 +1,5 @@
 import { PUBLIC_PAYMENT_OFFERS } from './public-payment-offers.mjs';
+import { approvedPortfolioOfferCopy } from './portfolio-offer-copy.mjs';
 import crypto from 'node:crypto';
 function escapeHtml(value='') {
   return String(value)
@@ -87,6 +88,40 @@ h1{font-size:clamp(48px,8vw,90px);line-height:.95;letter-spacing:-.065em;margin:
 .btn:hover{transform:translateY(-1px)}
 .offer-hero{padding:72px 0 30px;max-width:900px}
 .offer-hero h1{max-width:900px}
+.offer-hero--payments{max-width:900px;padding-top:34px}
+.offer-hero--payments h1{font-size:clamp(37px,5.3vw,64px);line-height:1.04;letter-spacing:-.055em;max-width:710px;margin:16px 0}
+.offer-hero--payments .lede{font-size:clamp(16px,1.9vw,21px);line-height:1.52;max-width:670px;margin:0}
+.pilot-buy-panel{border:1px solid #365174;border-radius:22px;padding:24px;background:linear-gradient(150deg,rgba(22,49,79,.70),rgba(8,18,32,.91));box-shadow:0 18px 60px rgba(0,0,0,.18);margin:25px 0 0}
+.pilot-buy-panel .offer-price{margin:0 0 3px}
+.pilot-buy-panel .checkout-form{display:grid;grid-template-columns:minmax(0,1fr) auto;align-items:end;gap:10px 16px;margin-top:18px}
+.pilot-buy-panel .checkout-form label{grid-column:1/-1;font-size:14px;font-weight:650}
+.pilot-buy-panel .checkout-form input[type=email]{grid-column:1;width:100%!important;max-width:none!important;min-height:49px}
+.pilot-buy-panel .checkout-form button{grid-column:2;grid-row:2;min-height:49px;white-space:nowrap}
+.pilot-buy-panel .checkout-form .checkout-note{grid-column:1/-1;font-size:12px}
+.pilot-process{margin:24px 0 8px;padding:0}
+.pilot-process h2{font-size:22px;margin:0 0 14px;letter-spacing:-.03em}
+.pilot-flow{list-style:none;padding:0;margin:0;display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px;counter-reset:stage}
+.pilot-flow li{border:1px solid #283d57;border-radius:14px;padding:16px;background:rgba(11,24,42,.82);min-height:105px}
+.pilot-flow .stage{display:block;font-size:11px;letter-spacing:.1em;color:#90c7ff;margin-bottom:8px;font-weight:750}
+.pilot-flow strong{font-size:15px;font-weight:700;line-height:1.25;display:block}
+.pilot-disclaimer{color:var(--muted);font-size:12px;line-height:1.55;margin:13px 0 0}
+@media(max-width:780px){
+ .offer-hero--payments{padding:18px 0 20px}
+ .offer-hero--payments .kicker{font-size:11px;padding:6px 10px}
+ .offer-hero--payments h1{font-size:clamp(35px,9vw,44px);line-height:1.06;margin:13px 0 12px}
+ .offer-hero--payments .lede{font-size:16px;line-height:1.4}
+ .pilot-buy-panel{padding:17px;border-radius:17px;margin-top:17px}
+ .pilot-buy-panel .offer-price{font-size:34px}
+ .pilot-buy-panel .offer-price-note{font-size:12px}
+ .pilot-buy-panel .checkout-form{display:flex;flex-direction:column;align-items:stretch;gap:8px;margin-top:13px}
+ .pilot-buy-panel .checkout-form label{font-size:13px}
+ .pilot-buy-panel .checkout-form input[type=email]{font-size:16px;min-height:45px}
+ .pilot-buy-panel .checkout-form button{width:100%;white-space:normal;min-height:47px;font-size:15px}
+ .pilot-flow{grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}
+ .pilot-flow li{padding:12px;min-height:83px}
+ .pilot-process{margin-top:20px}
+ .pilot-process h2{font-size:20px}
+}
 .offer-price{font-size:clamp(30px,5vw,52px);font-weight:850;letter-spacing:-.045em;margin:18px 0 8px}
 .offer-price-note{color:var(--muted);font-size:14px}
 .offer-grid{display:grid;grid-template-columns:1fr;gap:14px;margin:18px 0 70px;max-width:900px}
@@ -127,6 +162,17 @@ h2{font-size:clamp(30px,4.5vw,52px);letter-spacing:-.04em;margin:10px 0 14px}
 .badge{display:inline-block;margin-top:12px;border:1px solid #2a4369;background:#0d1a30;color:#bcd5f8;padding:5px 8px;border-radius:999px;font-size:11px}
 .price{margin-top:14px!important;color:#f7f9fc!important;font-weight:700;font-size:14px!important}
 .cardlinks{display:flex;gap:12px;flex-wrap:wrap;margin-top:14px}
+.moments{padding:0 0 32px}
+.moments h2{font-size:clamp(26px,3.5vw,40px)}
+.moments .sub{margin:4px 0 18px}
+.moment-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+.moment{display:flex;flex-direction:column;justify-content:space-between;gap:13px;text-decoration:none;border:1px solid #345174;background:linear-gradient(135deg,rgba(21,48,76,.82),rgba(7,17,35,.92));border-radius:15px;padding:20px;min-width:0}
+.moment:hover{border-color:#72baff}
+.moment:focus-visible{outline:3px solid var(--green);outline-offset:3px}
+.moment strong{font-size:18px;line-height:1.4}
+.moment span{color:#c6d7ea;font-size:13px}
+.moment .moment-next{color:#9fe7ff;font-weight:750}
+@media(max-width:780px){.moment-grid{grid-template-columns:1fr}.moment{padding:17px;min-height:94px}}
 .docs-link{display:inline-block;color:#9ec8ff;font-size:13px;text-decoration:none}
 .detail-grid{display:grid;grid-template-columns:1.15fr .85fr;gap:16px;margin:28px 0 70px}
 .detail-panel{border:1px solid var(--line);background:linear-gradient(180deg,rgba(14,25,48,.82),rgba(9,16,30,.82));border-radius:16px;padding:22px}
@@ -278,11 +324,17 @@ const OFFER_PAGE_COPY={
 // Additional approved products use the same native offer and handoff surfaces.
 const extraOfferItems=Object.entries(PUBLIC_PAYMENT_OFFERS).map(([slug,offer])=>{
   const public_id='payment-offer-'+slug;
-  OFFER_PAGE_COPY[public_id]={slug,purchase_key:offer.offer_key,eyebrow:offer.title,
-    headline:offer.title,lede:offer.intent,promise:offer.intent,
-    send:['Your receipt and delivery email','The scope and supporting information requested during intake. Do not send passwords or secrets.'],
-    get:[offer.intent,'The bounded deliverable described in the approved offer; payment does not authorize production changes.'],
-    steps:[['1. Review the offer','Confirm the product and fixed price.'],['2. Open secure checkout','Evercraft Payments prepares your order.'],['3. Complete intake','Delivery follows verified payment and the required intake.']]};
+  const specific=approvedPortfolioOfferCopy(slug,offer);
+  OFFER_PAGE_COPY[public_id]={
+    slug,purchase_key:offer.offer_key,
+    eyebrow:specific?.eyebrow||offer.title,
+    headline:specific?.headline||offer.title,
+    lede:specific?.lede||offer.intent,
+    promise:specific?.promise||offer.intent,
+    send:specific?.send||['Your receipt and delivery email','The scope and supporting information requested during intake. Do not send passwords or secrets.'],
+    get:specific?.get||[offer.intent,'The bounded deliverable described in the approved offer; payment does not authorize production changes.'],
+    steps:specific?.steps||[['1. Review the offer','Confirm the product and fixed price.'],['2. Open secure checkout','Evercraft Payments prepares your order.'],['3. Complete intake','Delivery follows verified payment and the required intake.']],
+  };
   return {public_id,name:offer.title,commercial_state:'sell_now',pricing:'$'+offer.amount_cents/100+' one-time',
     entry_paid_offer:{name:offer.title,price:'$'+offer.amount_cents/100,price_usd_normalized:offer.amount_cents/100}};
 });
@@ -320,7 +372,46 @@ export function listHumanOffers(capabilities=[]){
     .map(item=>({public_id:item.public_id,slug:offerSlugForCapability(item.public_id),name:item.entry_paid_offer?.name||item.name,price:entryPriceLabel(item),url:PUBLIC_ORIGIN+'/offers/'+offerSlugForCapability(item.public_id),human_confirmation_required:true,checkout_is_not_payment:true,paid_delivery_verified:false}));
 }
 
+// Explicit, human-reviewed buying moments. These are navigation hints to the
+// existing approved human products, NEVER MCP specialist mappings or checkout authority.
+// Keep each product identity exact: price, order key and fulfillment remain canonical.
+export const APPROVED_BUYER_MOMENTS=Object.freeze([
+  Object.freeze({public_id:'payment-offer-payments-pilot',slug:'payments-pilot',
+    problem:"Customers reach checkout, but I can't tell what was paid",
+    next:'Review one verified-order integration'}),
+  Object.freeze({public_id:'audit-center-website-audit-machine-v1',slug:'website-audit',
+    problem:"My website gets attention, but not enough inquiries",
+    next:'Review a five-fix public website audit'}),
+  Object.freeze({public_id:'payment-offer-browser-diagnosis',slug:'browser-diagnosis',
+    problem:"A browser task only works when someone remembers every click",
+    next:'Review one scoped workflow diagnosis'}),
+  Object.freeze({public_id:'legacy-rescue-lab-v1',slug:'legacy-rescue',
+    problem:"My existing software is unreliable and a rebuild feels risky",
+    next:'Review a bounded rescue scan'}),
+  Object.freeze({public_id:'payment-offer-ibmi-xray',slug:'ibmi-xray',
+    problem:"An IBM i upgrade has dependencies we have not mapped",
+    next:'Review an upgrade risk assessment'}),
+  Object.freeze({public_id:'findmypart-paid-hunt-v1',slug:'findmypart',
+    problem:"I cannot source a discontinued part",
+    next:'Review the first part hunt'}),
+]);
+
+export function availableBuyerMoments(capabilities=[]){
+  const items=[...(capabilities||[]),...extraOfferItems];
+  return APPROVED_BUYER_MOMENTS.filter((moment)=>{
+    const matches=items.filter((item)=>item.public_id===moment.public_id&&item.commercial_state==='sell_now');
+    // A held, missing or ambiguous product never becomes a misleading link.
+    return matches.length===1&&offerSlugForCapability(moment.public_id)===moment.slug&&
+      Boolean(offerPurchaseKeyForSlug(moment.slug))&&Boolean(offerCapabilityForSlug(moment.slug,capabilities));
+  });
+}
+
 export function renderOffers(capabilities=[]){
+  const moments=availableBuyerMoments(capabilities).map(({slug,problem,next})=>
+    '<a class="moment" href="/offers/'+escapeHtml(slug)+'" aria-label="'+escapeHtml(problem+' - '+next)+'">'
+    +'<strong>'+escapeHtml(problem)+'</strong>'
+    +'<span class="moment-next">'+escapeHtml(next)+' →</span></a>'
+  ).join('');
   const offers=[...(capabilities||[]),...extraOfferItems]
     .filter((item)=>item.commercial_state==='sell_now'&&offerSlugForCapability(item.public_id))
     .map((item)=>{
@@ -340,7 +431,8 @@ export function renderOffers(capabilities=[]){
     '<h1>One problem.<br>One clear offer.</h1>',
     '<p class="lede">No software scavenger hunt. These pages explain the pain, the smallest useful paid entry, what you send, what you get, and what happens next.</p>',
     '</section>',
-    '<div class="grid">'+(offers||'<article class="card"><h3>No public offer pages are available yet.</h3></article>')+'</div>',
+    moments?'<section class="moments" aria-labelledby="buyer-moments-title"><h2 id="buyer-moments-title">What is getting in your way?</h2><p class="sub">Start with the situation you recognize. Each link opens a specific existing offer with its own price, scope and checkout decision.</p><div class="moment-grid">'+moments+'</div></section>':'',
+    '<section id="all-offers" aria-label="All approved offers"><h2>All available offers</h2><div class="grid">'+(offers||'<article class="card"><h3>No public offer pages are available yet.</h3></article>')+'</div></section>',
     '</main>'
   ].join('\n'),{
     description:'Simple Evercraft offers with a clear problem, first paid step, price, inputs, outputs, and next action.',
@@ -359,15 +451,17 @@ export function renderOfferPage(item){
   const get=copy.get.map((x)=>'<li>'+escapeHtml(x)+'</li>').join('');
   const steps=copy.steps.map(([title,body])=>'<div class="offer-step"><strong>'+escapeHtml(title)+'</strong><span>'+escapeHtml(body)+'</span></div>').join('');
   const idempotencyKey='offer-'+copy.slug+'-'+crypto.randomUUID();
+  const isPaymentsPilot=copy.slug==='payments-pilot';
   return shell(copy.headline+' · Evercraft',[
     '<main>',
-    '<section class="offer-hero">',
-    '<div class="kicker"><span class="dot"></span> '+escapeHtml(copy.eyebrow)+' · available now</div>',
+    '<section class="offer-hero'+(isPaymentsPilot?' offer-hero--payments':'')+'">',
+    '<div class="kicker"><span class="dot"></span> '+(isPaymentsPilot?'Evercraft Payments · founding pilot':escapeHtml(copy.eyebrow)+' · available now')+'</div>',
     '<h1>'+escapeHtml(copy.headline)+'</h1>',
     '<p class="lede">'+escapeHtml(copy.lede)+'</p>',
     copy.heroVisual?'<div class="offer-visual"><picture>'+(copy.heroVisualMobile?'<source media="(max-width: 700px)" srcset="'+escapeHtml(copy.heroVisualMobile)+'">':'')+'<img src="'+escapeHtml(copy.heroVisual)+'" alt="" loading="eager"></picture></div>':'',
+    isPaymentsPilot?'<div class="pilot-buy-panel" aria-label="Founding integration offer and secure checkout">':'',
     '<div class="offer-price">'+escapeHtml(price)+'</div>',
-    '<div class="offer-price-note">'+escapeHtml(offerName)+' · '+escapeHtml(item.pricing||'')+'</div>',
+    '<div class="offer-price-note">'+escapeHtml(offerName)+' · '+(isPaymentsPilot?'one-time fixed offer':escapeHtml(item.pricing||''))+'</div>',
     '<form class="checkout-form" method="post" action="/api/offers/'+encodeURIComponent(copy.slug)+'/checkout">',
     '<input type="hidden" name="user_confirmed" value="true">',
     '<input type="hidden" name="idempotency_key" value="'+escapeHtml(idempotencyKey)+'">',
@@ -378,6 +472,7 @@ export function renderOfferPage(item){
     item.public_id.startsWith('payment-offer-')?'':'<a class="btn" href="/capabilities/'+encodeURIComponent(item.public_id)+'">See technical proof</a>',
     '<div class="checkout-note">Evercraft Payments prepares the checkout. Nothing is marked paid until settlement is verified.</div>',
     '</form>',
+    isPaymentsPilot?'</div><section class="pilot-process" aria-label="Integration scope, not a completed transaction"><h2>One integration. Four checkpoints.</h2><ol class="pilot-flow"><li><span class="stage">01 / CONSENT</span><strong>Buyer approval</strong></li><li><span class="stage">02 / CHECKOUT</span><strong>Processor handoff</strong></li><li><span class="stage">03 / EVIDENCE</span><strong>Payment verification</strong></li><li><span class="stage">04 / DELIVERY</span><strong>Fulfillment controls</strong></li></ol><p class="pilot-disclaimer">Proposed integration scope. These checkpoints do not claim a customer payment or an active merchant deployment.</p></section>':'',
     '</section>',
     '<div class="offer-grid">',
     '<section class="offer-panel"><h2>What you are buying</h2><p class="plain">'+escapeHtml(copy.promise)+'</p></section>',
