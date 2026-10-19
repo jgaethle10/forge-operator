@@ -49,6 +49,8 @@ export interface MediaLayer extends BaseLayer {
   sourcePath: string;
   mediaKind: 'image' | 'video';
   fit: 'cover' | 'contain';
+  /** Exact source-pixel crop window for product evidence closeups. */
+  sourceWindow?: {x:number;y:number;width:number;height:number;sourceWidth:number;sourceHeight:number};
   trimStartSec?: number;
   playbackRate?: number;
   loop?: boolean;
@@ -409,6 +411,19 @@ export function validateStage(stage:VisualStage){
     ids.add(layer.id);
     if(!Number.isFinite(layer.z)) errors.push(`layer_z_invalid:${layer.id}`);
     if(layer.kind==='media' && !layer.sourcePath) errors.push(`media_source_missing:${layer.id}`);
+    if(layer.kind==='media'&&layer.sourceWindow){
+      const win=layer.sourceWindow;
+      const values=[win.x,win.y,win.width,win.height,win.sourceWidth,win.sourceHeight,layer.width,layer.height];
+      const aspect=(win.width/win.height)/(layer.width/layer.height);
+      if(!values.every(Number.isFinite)||win.x<0||win.y<0||
+         win.width<=0||win.height<=0||win.sourceWidth<=0||win.sourceHeight<=0||
+         layer.width<=0||layer.height<=0||
+         win.x+win.width>win.sourceWidth+1e-5||
+         win.y+win.height>win.sourceHeight+1e-5||
+         !Number.isFinite(aspect)||Math.abs(aspect-1)>.005){
+        errors.push(`media_source_window_invalid:${layer.id}`);
+      }
+    }
     if(layer.kind==='geo'){
       if(layer.fitBounds){
         const b=layer.fitBounds;
