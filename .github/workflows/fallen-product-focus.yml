@@ -1,0 +1,35 @@
+name: Fallen Product Focus Shots
+
+on:
+  pull_request:
+    paths:
+      - "systemia/media-studio/product-focus-shot*"
+      - "systemia/media-studio/visual-stage.ts"
+      - "systemia/media-studio/visual-stage-html.ts"
+      - ".github/workflows/fallen-product-focus.yml"
+  push:
+    branches: [main]
+    paths:
+      - "systemia/media-studio/product-focus-shot*"
+      - "systemia/media-studio/visual-stage.ts"
+      - "systemia/media-studio/visual-stage-html.ts"
+      - ".github/workflows/fallen-product-focus.yml"
+
+permissions:
+  contents: read
+
+jobs:
+  product-focus:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Install
+        run: npm install --no-audit --no-fund
+      - name: Native product focus regression
+        run: node --import tsx --test systemia/media-studio/product-focus-shot.test.ts systemia/media-studio/visual-stage.test.ts
+      - name: Typecheck
+        run: npm run lint
