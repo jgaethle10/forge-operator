@@ -46,6 +46,9 @@ export function runwayGen45Endpoint(verified=false):VisualModelEndpoint{
       inputModes:['text','image_reference','start_frame'],
       requirements:['reference_identity','reference_environment','commercial_rights','provenance_receipt','timing_control'],
       aspectRatios:['16:9','9:16'],
+      // Native source output of this adapter. A final 1080p master needs a
+      // separate verified finish/upscale route, not a fictitious capability.
+      resolutions:['1280x720','720x1280'],
       maxDurationSec:10,
       maxReferences:1,
       referenceRoles:['identity','environment','start_frame'],
@@ -86,6 +89,12 @@ function validateJob(job:VisualModelJob){
   }
   if(job.aspectRatio&&!['16:9','9:16'].includes(job.aspectRatio)){
     throw new Error('runway_gen45_aspect_unsupported');
+  }
+  if(job.targetResolution){
+    const nativeResolution=job.aspectRatio==='9:16'?'720x1280':'1280x720';
+    if(job.targetResolution!==nativeResolution){
+      throw new Error('runway_gen45_target_resolution_unsupported:'+job.targetResolution);
+    }
   }
   if(job.references.some(ref=>ref.role==='end_frame')){
     throw new Error('runway_gen45_end_frame_not_supported_by_adapter');
