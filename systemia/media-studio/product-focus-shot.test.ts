@@ -157,3 +157,26 @@ test('native stage rejects unsafe source-camera keyframes without accepting misl
   layer.sourceWindowKeyframes[1].x=999999;
   assert.ok(validateStage(bad).errors.includes('media_source_camera_keyframe_invalid:product-evidence'));
 });
+
+test('critical product labels must be fully visible at nominated moments',()=>{
+  const config={
+    ...source,durationSec:6,
+    focusPath:[
+      {t:0,focus:source.focus,action:'Establish the comparison'},
+      {t:3,focus:{x:520,y:1490,width:690,height:300},action:'Reveal the contradiction',ease:'ease_in_out' as const},
+      {t:6,focus:{x:520,y:1870,width:690,height:300},action:'Reveal human approval',ease:'ease_in_out' as const},
+    ]
+  };
+  const accepted=compileProductFocusShot({...config,protectedRegions:[
+    {id:'comparison',t:0,region:{x:450,y:1300,width:880,height:280}},
+    {id:'warning',t:3,region:{x:520,y:1510,width:650,height:230}},
+    {id:'approval',t:6,region:{x:520,y:2010,width:650,height:240}},
+  ]});
+  assert.equal(accepted.evidence.protectedRegionChecks,3);
+  assert.throws(()=>compileProductFocusShot({...config,protectedRegions:[
+    {id:'important-label-cut',t:6,region:{x:1200,y:1950,width:200,height:180}}
+  ]}),/product_focus_protected_region_clipped:important-label-cut/);
+  assert.throws(()=>compileProductFocusShot({...config,protectedRegions:[
+    {id:'invalid-timestamp',t:90,region:{x:500,y:1900,width:200,height:100}}
+  ]}),/product_focus_protected_region_invalid/);
+});
