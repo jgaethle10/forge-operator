@@ -54,6 +54,43 @@ function sanitizeStage(input){
     if(!['media','text','shape','geo','metric','timeline','phenomenon'].includes(layer?.kind)) throw new Error(`layer_kind_invalid:${layerId}`);
     if(!Number.isFinite(Number(layer?.z))) throw new Error(`layer_z_invalid:${layerId}`);
     validateEvidence(layer);
+    if(layer?.kind==='media'){
+      const win=layer.sourceWindow;
+      const frames=layer.sourceWindowKeyframes;
+      const windowValid=(frame)=>{
+        if(!win||!frame) return false;
+        const numbers=[frame.x,frame.y,frame.width,frame.height,win.sourceWidth,win.sourceHeight,layer.width,layer.height];
+        return numbers.every(Number.isFinite)&&frame.x>=0&&frame.y>=0&&
+          frame.width>0&&frame.height>0&&win.sourceWidth>0&&win.sourceHeight>0&&
+          layer.width>0&&layer.height>0&&
+          frame.x+frame.width<=win.sourceWidth+1e-5&&
+          frame.y+frame.height<=win.sourceHeight+1e-5&&
+          Math.abs((frame.width/frame.height)/(layer.width/layer.height)-1)<.005;
+      };
+      if(win&&!windowValid(win)){
+        throw new Error(`media_source_window_invalid:${layerId}`);
+      }
+      if(frames!==undefined){
+        if(!Array.isArray(frames)||frames.length<2||frames.length>12||!win){
+          throw new Error(`media_source_camera_invalid:${layerId}`);
+        }
+        let previous=-1;
+        for(const frame of frames){
+          if(!Number.isFinite(frame.t)||frame.t<=previous||frame.t<0||
+             frame.t>durationSec||!windowValid(frame)||
+             (frame.ease!==undefined&&!['linear','ease_in','ease_out','ease_in_out'].includes(frame.ease))){
+            throw new Error(`media_source_camera_keyframe_invalid:${layerId}`);
+          }
+          previous=frame.t;
+        }
+        const first=frames[0];
+        if(Math.abs(first.t)>1e-5||
+          Math.abs(frames[frames.length-1].t-durationSec)>1e-5||
+          ['x','y','width','height'].some(key=>Math.abs(first[key]-win[key])>1e-4)){
+          throw new Error(`media_source_camera_endpoints_invalid:${layerId}`);
+        }
+      }
+    }
     if(layer?.kind==='phenomenon'){
       const b=layer.bounds||{};
       if(![b.north,b.south,b.east,b.west].every(v=>Number.isFinite(Number(v)))||Number(b.north)<=Number(b.south)||Number(b.east)===Number(b.west)){
