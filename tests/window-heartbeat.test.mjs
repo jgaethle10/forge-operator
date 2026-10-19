@@ -1,7 +1,8 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import {advanceHeartbeat,runHeartbeat,STATE_SCHEMA,STATE_BRANCH,STATE_PATH} from '../systemia/society/window-heartbeat.mjs';
-import {REAL_TICK_MS,PUBLIC_GENESIS_MS} from '../public/the-window/world.mjs';
+import {REAL_TICK_MS,PUBLIC_GENESIS_MS,replayWorld,advanceWorld} from '../public/the-window/world.mjs';
+import {decideCivic} from '../systemia/society/window-civic.mjs';
 
 const placeholder={schema:STATE_SCHEMA,initialized:false,release_status:'held'};
 const instant=PUBLIC_GENESIS_MS+100*REAL_TICK_MS;
@@ -80,4 +81,21 @@ test('write conflicts are surfaced rather than overwriting concurrent world stat
     return {ok:false,status:409,json:async()=>({message:'SHA mismatch'})};
   };
   await assert.rejects(()=>runHeartbeat({token:'fake',repo:'jgaethle10/forge-operator',now:instant,fetchImpl:fake}),/409/);
+});
+
+test('long-running fictional civilization retains accurate bounded civic history',()=>{
+  const w=replayWorld(PUBLIC_GENESIS_MS+100*REAL_TICK_MS);
+  delete w.projection;
+  for(let i=0;i<13000;i++){
+    advanceWorld(w,w.last_tick_at+REAL_TICK_MS);
+    decideCivic(w);
+  }
+  assert.ok(w.civic.stats.proposed>=w.civic.proposals.length);
+  assert.ok(w.civic.stats.proposed>30);
+  assert.ok(w.civic.stats.completed+w.civic.stats.failed<=w.civic.stats.proposed);
+  assert.ok(w.civic.proposals.length<=60);
+  assert.ok(w.civic.completed.length<=60);
+  assert.ok(w.civic.failed.length<=60);
+  assert.ok(w.events.length<=160);
+  assert.equal(w.actors.length,12);
 });
