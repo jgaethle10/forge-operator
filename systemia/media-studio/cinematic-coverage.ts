@@ -31,9 +31,10 @@ function validCandidate(asset:SourceAsset|undefined, requirement:CinematicSceneR
 export function cinematicCandidates(
   project:MediaProject,
   requirement:CinematicSceneRequirement,
-):SourceAsset[]{
+):Array<SourceAsset & {kind:'video'}>{
   const ids=new Set(requirement.candidateAssetIds);
-  return project.assets.filter(asset=>ids.has(asset.id)&&validCandidate(asset,requirement));
+  return project.assets.filter((asset):asset is SourceAsset & {kind:'video'}=>
+    asset.kind==='video'&&ids.has(asset.id)&&validCandidate(asset,requirement));
 }
 
 export function compileCinematicCoverage(
