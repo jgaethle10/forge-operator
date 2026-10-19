@@ -11,18 +11,16 @@ function requiredEnv(name) {
   return value;
 }
 
-async function github(pathname, { method = 'GET', body = null } = {}) {
+async function github(pathname) {
   const token = requiredEnv('GITHUB_TOKEN');
   const response = await fetch(API + pathname, {
-    method,
+    method: 'GET',
     headers: {
       accept: 'application/vnd.github+json',
       authorization: 'Bearer ' + token,
       'x-github-api-version': '2022-11-28',
       'user-agent': 'evercraft-revenue-autonomy-heartbeat',
-      ...(body ? { 'content-type': 'application/json' } : {}),
     },
-    ...(body ? { body: JSON.stringify(body) } : {}),
   });
   if (!response.ok) {
     const text = await response.text();
@@ -63,22 +61,7 @@ async function snapshotWorkflows(repo) {
   };
 }
 
-async function dispatchRepair(repo, repair) {
-  const file = String(repair.workflow || '').split('/').pop();
-  if (!file) throw new Error('repair_workflow_missing');
-  await github(
-    '/repos/' + repo + '/actions/workflows/' + encodeURIComponent(file) + '/dispatches',
-    { method: 'POST', body: { ref: 'main' } }
-  );
-  return {
-    workflow: repair.workflow,
-    lane: repair.lane,
-    reason: repair.reason,
-    action: 'workflow_dispatch',
-    state: 'accepted_by_github',
-    dispatched_at: new Date().toISOString(),
-  };
-}
+// GitHub is observation-only. Systemia approval is required before any repair execution.
 
 function writeJson(file, value) {
   fs.mkdirSync(path.dirname(path.resolve(file)), { recursive: true });
@@ -91,7 +74,7 @@ function appendSummary(receipt) {
   const lines = [
     '## Revenue Autonomy Heartbeat',
     '',
-    'Status before repair: **' + receipt.liveness.status + '**',
+    'Read-only liveness status: **' + receipt.liveness.status + '**',
     '',
     '- Workflow lanes monitored: ' + receipt.liveness.summary.monitored_workflows,
     '- Critical workflow findings: ' + receipt.liveness.summary.critical_workflow_findings,
@@ -99,7 +82,7 @@ function appendSummary(receipt) {
     '- Sell-now offers: ' + receipt.liveness.summary.sell_now_offers,
     '- Sell-now offers with continuation: ' + receipt.liveness.summary.sell_now_with_continuation,
     '- Sell-now continuation gaps: ' + receipt.liveness.summary.sell_now_without_continuation,
-    '- Recovery dispatches accepted: ' + receipt.dispatches.length,
+    '- Repair proposals held for Systemia: ' + receipt.repair_proposals.length,
     '',
     'External opportunity intake remains a separate authenticated monitor for competitions, AI jobs, Bridge Builders and partnerships. Repository automation does not accept third-party terms.',
     '',
@@ -124,39 +107,33 @@ async function main() {
     agentCommerce,
   });
 
-  const dispatches = [];
-  const dispatchErrors = [];
-  for (const repair of liveness.repairs || []) {
-    try {
-      dispatches.push(await dispatchRepair(repo, repair));
-    } catch (error) {
-      dispatchErrors.push({
-        workflow: repair.workflow,
-        lane: repair.lane,
-        reason: repair.reason,
-        error: error instanceof Error ? error.message : String(error),
-      });
-    }
-  }
+  // Preserve failure observations and repair intent, never mutate GitHub Actions.
+  const repairProposals = (liveness.repairs || []).map((repair) => ({
+    workflow: repair.workflow,
+    lane: repair.lane,
+    reason: repair.reason,
+    failed_run_id: repair.failed_run_id || null,
+    action: 'request_systemia_admission',
+    state: 'review_held_not_dispatched',
+  }));
 
   const receipt = {
     schema: 'evercraft.systemia.revenue-autonomy-heartbeat.v1',
     observed_at: new Date().toISOString(),
     liveness,
-    dispatches,
-    dispatch_errors: dispatchErrors,
-    repair_state:
-      dispatchErrors.length > 0
-        ? 'repair_dispatch_failed'
-        : dispatches.length > 0
-          ? 'repair_dispatched_awaiting_verification'
-          : liveness.status,
+    repair_proposals: repairProposals,
+    dispatches: [],
+    dispatch_errors: [],
+    repair_state: repairProposals.length ? 'review_held_awaiting_systemia_admission' : liveness.status,
     boundaries: {
       no_external_terms_accepted: true,
       no_job_application_submitted: true,
       no_checkout_created: true,
+      automatic_github_dispatch_disabled: true,
+      systemia_admission_required_before_execution: true,
       dispatch_is_not_recovery_proof: true,
       next_cycle_must_verify_green: true,
+      schedule_observations_are_distinct_from_push: true,
     },
   };
 
@@ -170,11 +147,11 @@ async function main() {
     critical_workflow_findings: liveness.summary.critical_workflow_findings,
     critical_schedule_findings: liveness.summary.critical_schedule_findings,
     continuation_gaps: liveness.summary.sell_now_without_continuation,
-    dispatches: dispatches.length,
-    dispatch_errors: dispatchErrors.length,
+    repair_proposals: repairProposals.length,
+    dispatches: 0,
+    dispatch_errors: 0,
   }));
 
-  if (dispatchErrors.length > 0) process.exitCode = 2;
 }
 
 await main();
