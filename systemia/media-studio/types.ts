@@ -75,6 +75,7 @@ export interface CinematicCoverageReport {
     subject:string;
     action:string;
     mode:CinematicSceneRequirement['mode'];
+    minDurationSec:number;
     sceneId:string|null;
     candidateAssetId:string|null;
     state:'missing'|'candidate_bound_unverified';
