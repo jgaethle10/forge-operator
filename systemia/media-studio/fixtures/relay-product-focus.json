@@ -17,5 +17,39 @@
   "caption": "Structured differences, reviewed by people.",
   "evidenceLabel": "FICTIONAL SCENARIO / CI FIXTURE",
   "format": "portrait",
-  "durationSec": 4
+  "durationSec": 6,
+  "focusPath": [
+    {
+      "t": 0,
+      "focus": {
+        "x": 450,
+        "y": 1260,
+        "width": 910,
+        "height": 480
+      },
+      "action": "Reveal two conflicting interpretations of the same milestone"
+    },
+    {
+      "t": 3,
+      "focus": {
+        "x": 520,
+        "y": 1490,
+        "width": 690,
+        "height": 300
+      },
+      "action": "Center the actual conflict flag",
+      "ease": "ease_in_out"
+    },
+    {
+      "t": 6,
+      "focus": {
+        "x": 520,
+        "y": 1870,
+        "width": 690,
+        "height": 300
+      },
+      "action": "Travel to the human confirmation controls",
+      "ease": "ease_in_out"
+    }
+  ]
 }
