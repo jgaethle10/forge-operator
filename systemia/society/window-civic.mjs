@@ -23,8 +23,12 @@ export function ensureCivic(w){
   if(!w.civic){
     w.civic={
       schema:1,proposals:[],completed:[],failed:[],
-      decisions:0,last_decision_tick:0,trust:55,treasury_spent:0
+      decisions:0,last_decision_tick:0,trust:55,treasury_spent:0,
+      stats:{proposed:0,completed:0,failed:0}
     };
+  }
+  if(!w.civic.stats){
+    w.civic.stats={proposed:w.civic.proposals.length,completed:w.civic.completed.length,failed:w.civic.failed.length};
   }
   return w.civic;
 }
@@ -49,6 +53,11 @@ export function decideCivic(w){
       started_day:w.day, decisions:0, supporters:[], pledges:{}, completed_day:null
     };
     civic.proposals.push(item);
+    civic.stats.proposed++;
+    if(civic.proposals.length>60){
+      const archived=civic.proposals.findIndex(p=>p.state==='completed'||p.state==='failed');
+      if(archived>=0)civic.proposals.splice(archived,1);
+    }
     result.push(chronicle(w,'proposal',founder,
       founder.name+' proposed '+kind.title+' and asked '+partner.name+' to help. The town has not decided whether to fund it.',
       {project:item.id,other_agent:partner.id}));
@@ -85,7 +94,8 @@ export function decideCivic(w){
         active.title+' reached its funding goal. '+founder.name+' and '+partner.name+' can begin construction.',
         {project:active.id}));
     }else if(active.decisions>=16){
-      active.state='failed';civic.failed.push(active.id);
+      active.state='failed';civic.failed.push(active.id);civic.stats.failed++;
+      civic.failed=civic.failed.slice(-60);
       // Return unspent pledges proportionally, where possible; no real funds.
       for(const id of active.supporters){
         const a=w.actors.find(x=>x.id===id);
@@ -105,7 +115,9 @@ export function decideCivic(w){
     }
     if(active.progress>=100){
       active.progress=100;active.state='completed';active.completed_day=w.day;
-      civic.completed.push(active.id);civic.treasury_spent+=active.funded;
+      civic.completed.push(active.id);civic.stats.completed++;
+      civic.completed=civic.completed.slice(-60);
+      civic.treasury_spent+=active.funded;
       if(active.benefit==='bread')w.metrics.bread+=20;
       if(active.benefit==='produce')w.metrics.produce+=20;
       if(active.benefit==='repairs')w.metrics.repairs+=12;
