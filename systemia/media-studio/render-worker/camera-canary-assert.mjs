@@ -1,21 +1,11 @@
 import assert from 'node:assert/strict';
 import fs from 'node:fs';
 import crypto from 'node:crypto';
-import { spawnSync } from 'node:child_process';
+import { pngPixel } from './camera-png.mjs';
 
 const base=process.argv[2];
 if(!base) throw new Error('Usage: node camera-canary-assert.mjs <artifact-prefix>');
 
-function pixelAt(file,x,y){
-  const result=spawnSync('ffmpeg',[
-    '-v','error','-i',file,'-vf',`crop=1:1:${x}:${y}`,
-    '-frames:v','1','-f','rawvideo','-pix_fmt','rgb24','pipe:1'
-  ],{encoding:null,maxBuffer:1024*1024});
-  if(result.status!==0||result.stdout?.length!==3){
-    throw new Error('camera_canary_pixel_decode_failed:'+String(result.stderr));
-  }
-  return [...result.stdout];
-}
 const seen=new Set();
 const expected=[['red',0],['green',45],['blue',89]];
 const results=[];
@@ -30,7 +20,7 @@ for(const [color,frame] of expected){
   const file=`${base}-${frame}.png`;
   const bytes=fs.readFileSync(file);
   assert.equal(reply.frames[0].sha256,crypto.createHash('sha256').update(bytes).digest('hex'));
-  const rgb=pixelAt(file,270,465);
+  const rgb=pngPixel(file,270,465);
   const index={red:0,green:1,blue:2}[color];
   if(index===undefined) throw new Error('unexpected_color');
   assert.ok(rgb[index]>175,`expected ${color} at frame ${frame}, got ${rgb.join(',')}`);
