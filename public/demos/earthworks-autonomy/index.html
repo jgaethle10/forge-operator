@@ -839,6 +839,8 @@ rebuildController('Live Yard 001 boot');
 setMode('manual');
 requestAnimationFrame(tick);
 
+/* EARTHWORKS_LIVE_YARD_APP_END */
+
 /* Camera-only mode repaints frames of the actual simulation canvas.
    Every metric comes from the same running controller as the public demo.
    Pan/zoom is editorial framing, NOT a simulated new telemetry source. */
@@ -897,9 +899,6 @@ if(new URLSearchParams(window.location.search).get('studio')==='1'){
   }
   requestAnimationFrame(project);
 }
-
-
-/* EARTHWORKS_LIVE_YARD_APP_END */
 </script>
 </body>
 </html>
