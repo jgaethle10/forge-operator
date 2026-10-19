@@ -88,6 +88,7 @@ export function compileCinematicCoverage(
       subject:requirement.subject,
       action:requirement.action,
       mode:requirement.mode,
+      minDurationSec:minSeconds(requirement),
       sceneId:assigned?.id??null,
       candidateAssetId:bound?(assigned?.assetId??null):null,
       state:bound?('candidate_bound_unverified' as const):('missing' as const),
@@ -126,7 +127,9 @@ export function assertCinematicCoverageForRender(plan:FilmPlan){
     const scene=plan.scenes.find(s=>s.id===item.sceneId&&s.beat===item.beat);
     const source=plan.provenance.find(p=>p.assetId===item.candidateAssetId);
     if(!scene||scene.mediaKind!=='video'||scene.assetId!==item.candidateAssetId||
-       !source||!allowedRights.has(source.rights)){
+       !source||!allowedRights.has(source.rights)||
+       !Number.isFinite(item.minDurationSec)||
+       scene.durationSec<item.minDurationSec){
       throw new Error('cinematic_coverage_binding_invalid:'+item.id);
     }
   }
