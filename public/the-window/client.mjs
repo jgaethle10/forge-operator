@@ -21,10 +21,16 @@ function renderZones(w){
 }
 function residentPosition(w,a){
   const zone=w.zones.find(z=>z.id===a.zone)||w.zones[0];
-  const index=w.actors.findIndex(x=>x.id===a.id);
-  const x=zone.x+Math.sin(index*2.399+w.tick*.15)*9;
-  const y=zone.y+Math.cos(index*1.847+w.tick*.13)*10;
-  return {x:Math.max(4,Math.min(95,x)),y:Math.max(6,Math.min(91,y))};
+  // Stable disjoint slots around each location: avoids residents occluding
+  // one another as their shared town evolves. No random browser jitter.
+  const members=w.actors.filter(x=>x.zone===a.zone);
+  const slot=members.findIndex(x=>x.id===a.id);
+  const count=Math.max(1,members.length);
+  const angle=(Math.PI*2*(slot+.5)/count)-Math.PI/2;
+  const radius=Math.min(17,10+Math.floor(count/4)*2.5);
+  const x=zone.x+Math.cos(angle)*radius;
+  const y=zone.y+Math.sin(angle)*radius;
+  return {x:Math.max(5,Math.min(95,x)),y:Math.max(7,Math.min(91,y))};
 }
 function renderResidents(w){
   for(const a of w.actors){
