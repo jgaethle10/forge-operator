@@ -1,0 +1,49 @@
+name: Rockies competition winner evidence
+on:
+  pull_request:
+    paths:
+      - 'systemia/rockies/competition-winners/**'
+      - '.github/workflows/rockies-competition-winners.yml'
+  workflow_dispatch:
+  schedule:
+    - cron: '23 15 * * *'
+
+permissions:
+  contents: read
+
+concurrency:
+  group: rockies-competition-winners-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  public-research-only:
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    steps:
+      - name: Checkout review source
+        uses: actions/checkout@v4
+      - name: Set up Node 22
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Verify source identity, quiet baselines and fail-closed behavior
+        run: node --test systemia/rockies/competition-winners/competition-winner-rocky.test.mjs
+      - name: Public read-only GitHub source scan
+        run: |
+          node systemia/rockies/competition-winners/scan-public.mjs > competition-winners-result.json
+          python3 - <<'PY'
+          import json
+          x=json.load(open('competition-winners-result.json'))
+          assert x['release_authorized'] is False
+          assert x['systemia_ingest_performed'] is False
+          assert x['external_contacts_sent'] == 0
+          print(json.dumps({k:x[k] for k in ('winner_targets','future_event_feeds','repository_snapshots','material_change_count','holds')},indent=2))
+          PY
+      - name: Preserve short-lived read-only observation receipt
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: rockies-winner-evidence-${{ github.run_id }}
+          path: competition-winners-result.json
+          if-no-files-found: ignore
+          retention-days: 7
