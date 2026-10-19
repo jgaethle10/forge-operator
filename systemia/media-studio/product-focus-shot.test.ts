@@ -89,3 +89,71 @@ test('invalid crop with distortion or out-of-source bounds is rejected by native
   item.sourceWindow.width*=2;
   assert.ok(validateStage(bad).errors.includes('media_source_window_invalid:product-evidence'));
 });
+
+test('camera directs attention from structured contradiction to human confirmation within the same real screenshot',()=>{
+  const shot=compileProductFocusShot({
+    ...source,id:'relay-alignment-to-decision',durationSec:6,
+    focusPath:[
+      {t:0,focus:source.focus,action:'Show participants interpreting the same date differently'},
+      {t:3,focus:{x:520,y:1490,width:690,height:300},action:'Move attention to the flagged conflict',ease:'ease_in_out'},
+      {t:6,focus:{x:520,y:1870,width:690,height:300},action:'Reveal the human confirmation form',ease:'ease_in_out'},
+    ]
+  });
+  assert.equal(validateStage(shot.stage).status,'accepted');
+  const layer=shot.stage.layers.find(item=>item.id==='product-evidence');
+  assert.ok(layer?.kind==='media');
+  if(layer?.kind!=='media') return;
+  assert.equal(layer.sourceWindowKeyframes?.length,3);
+  assert.equal(shot.evidence.cameraStops,3);
+  assert.deepEqual(shot.evidence.cameraIntent,[
+    'Show participants interpreting the same date differently',
+    'Move attention to the flagged conflict',
+    'Reveal the human confirmation form',
+  ]);
+  assert.equal(layer.scale,1);
+  const html=buildVisualStageHtml(shot.stage);
+  assert.match(html,/mediaWindowAt/);
+  assert.match(html,/setMediaWindow/);
+  assert.match(html,/sourceWindowKeyframes/);
+  assert.match(html,/querySelector\('img,video'\)/);
+});
+
+test('camera path must start at the nominated source focus and finish on time',()=>{
+  const shot={...source,durationSec:6};
+  const badStart=[{t:0,focus:{x:500,y:1300,width:800,height:300},action:'Wrong initial frame'},
+    {t:6,focus:source.focus,action:'End'}];
+  assert.throws(()=>compileProductFocusShot({...shot,focusPath:badStart}),/initial_focus_mismatch/);
+  assert.throws(()=>compileProductFocusShot({...shot,focusPath:[
+    {t:0,focus:source.focus,action:'Start'},
+    {t:5.5,focus:{x:520,y:1870,width:690,height:300},action:'End'}
+  ]}),/camera_path_invalid/);
+});
+
+test('camera requires meaningful movement, truthful action labels and contained source windows',()=>{
+  assert.throws(()=>compileProductFocusShot({...source,focusPath:[
+    {t:0,focus:source.focus,action:'Start'},
+    {t:5,focus:source.focus,action:'Stop'}
+  ]}),/camera_no_attention_change/);
+  assert.throws(()=>compileProductFocusShot({...source,focusPath:[
+    {t:0,focus:source.focus,action:'Start'},
+    {t:5,focus:{x:1390,y:2000,width:400,height:500},action:'Outside image'}
+  ]}),/product_focus_geometry_invalid/);
+  assert.throws(()=>compileProductFocusShot({...source,focusPath:[
+    {t:0,focus:source.focus,action:'Start'},
+    {t:5,focus:{x:520,y:1870,width:690,height:300},action:''}
+  ]}),/camera_waypoint_invalid/);
+});
+
+test('native stage rejects unsafe source-camera keyframes without accepting misleading output',()=>{
+  const shot=compileProductFocusShot({
+    ...source,focusPath:[
+      {t:0,focus:source.focus,action:'Start'},
+      {t:5,focus:{x:520,y:1870,width:690,height:300},action:'Decision'},
+    ]
+  });
+  const bad=structuredClone(shot.stage);
+  const layer=bad.layers.find(x=>x.id==='product-evidence');
+  if(layer?.kind!=='media'||!layer.sourceWindowKeyframes) throw new Error('camera_layer_missing');
+  layer.sourceWindowKeyframes[1].x=999999;
+  assert.ok(validateStage(bad).errors.includes('media_source_camera_keyframe_invalid:product-evidence'));
+});
