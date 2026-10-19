@@ -146,6 +146,19 @@ jobs:
             /tmp/fallen-camera-*.png
             /tmp/fallen-camera-proof.json
 
+      - name: Preserve exact runtime used by native rendering proof
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: fallen-runtime-verified-source
+          retention-days: 7
+          if-no-files-found: error
+          path: |
+            systemia/media-studio/render-worker/runtime.mjs
+            systemia/media-studio/render-worker/policy.mjs
+            systemia/media-studio/render-worker/camera-png.mjs
+            systemia/media-studio/render-worker/camera-canary-assert.mjs
+
       - name: Show renderer logs on failure
         if: failure()
         run: docker logs fallen-render-ci || true
