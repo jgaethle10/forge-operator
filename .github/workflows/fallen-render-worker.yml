@@ -105,7 +105,7 @@ jobs:
               id:'synthetic-source',kind:'media',mediaKind:'image',
               x:25,y:150,width:490,height:630,z:1,fit:'cover',
               sourcePath:'asset://synthetic-camera',
-              sourceRefs:['ci:synthetic-spatial-color-fixture'],evidenceState:'observed',
+              sourceRefs:['ci:synthetic-spatial-color-fixture'],evidenceState:'synthetic_visualization',
               sourceWindow:{x:300,y:400,width:840,height:1080,sourceWidth:1440,sourceHeight:2408},
               sourceWindowKeyframes:[
                 {t:0,x:300,y:400,width:840,height:1080},
