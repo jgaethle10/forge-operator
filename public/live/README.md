@@ -1,22 +1,26 @@
-# Evercraft LIVE portal RC05
+# Evercraft LIVE RC07 | Real work, camera first
 
-A self-contained static visual doorway at `public/live/index.html`, designed to be filmed immediately. It **does not** stream to TikTok, display actual Systemia private telemetry, or claim completed engineering output.
+**Public route after approved merge and independently verified Pages deployment:** `/forge-operator/live/`.
 
-## First recording
-1. Open the HTML file in a browser or the /live/ URL after deployment is verified.
-2. Choose Earth Systems, Network, Atmosphere, Life Science or Creative Studio.
-3. Click **Film mode** for a simplified visual stage. Press Esc to return.
-4. Use **Next scene** or **Pause** as needed. Default automatic rotation advances every 25 seconds while the page is visible. It requires an open browser.
-5. Record a permitted screen/window. Review labels, privacy, footage/music rights and applicable platform rules before publishing.
+The founder's Oct 18 phone recording exposed a bad viewing hierarchy: working EarthWorks motion and modeled production numbers were buried in a phone-sized nested control panel. RC07 removes the marketing hero and makes the actual application the program.
 
-## Accurate claims
-- Original abstract browser graphics, illustrative simulations, and Evercraft visual direction.
-- Five public-safe worlds with appropriate disclosures.
-- No approved Systemia media feed, automated import, live weather, 24/7 RTMP server, unattended TikTok stream, or uptime SLA.
-- No payment checkout or verified buyer conversion.
+## What plays
+- **Primary auto scene:** the real EarthWorks Live Yard controller in its opt-in `?studio=1` renderer. It copies pixels from the canonical 1100x620 simulated jobsite canvas and reads production, cycles, queue and loader metrics from `controller.snapshot()` and `stateMetrics()`; portrait framing pans among the *same scene's actual regions*. The fleet, conditions, measurements and activity are synthetic, not a physical quarry.
+- **Secondary auto scene:** the already-published Washington volcano visual produced using cited USGS information. Not live environmental monitoring.
+- **Manual doorways:** public EarthWorks Toy Yard, EPS cost estimator and HVAC lead prototype, all honestly labeled. Forms are not forced into the unattended rotation.
 
-## Publishing
-The public directory already has a GitHub Pages fallback workflow in .github/workflows/evercraft-journal-pages.yml. It copies the public directory after a successful main-branch run when Pages is available. A merged commit is **not proof** that the page is serving this revision. Verify the public URL and response before sharing.
+## Recording and operator controls
+1. Open the PUBLIC route in a real browser, not an HTML attachment preview.
+2. The first active scene should immediately occupy most of the viewport.
+3. **Film** removes operator controls and retains a minimal truth disclosure. A visible **Exit film** button works on touch screens; Escape also exits on desktop.
+4. **9:16** restricts framing for portrait capture where device dimensions allow it.
+5. **Doorways** lets you inspect any of the five first-party public artifacts; selecting a manual door pauses rotation. **Hold scene** pauses scene changes, not the running simulation. **Next** changes exhibits.
 
-## Next gates
-Systemia mission admission; RC04 editorial media approval; signed public feed, host canary, actual video QA, reliable stream supervision, TikTok platform checks. No Base44 dependency.
+## Hard boundaries
+- Public website being continuously available is NOT a 24/7 TikTok/RTMP broadcast, a sleeping-PC-independent video encoder, or real-time private Systemia telemetry.
+- No private Systemia feeds, credentials, customer media or unidentified agents are loaded.
+- The separate Mossmere/Window authoritative spectator upgrade remains founder-held and should not be silently promoted into the broadcast.
+- The public viewer is sandboxed with `allow-scripts` only. Embedded sources are a fixed, reviewed allowlist.
+
+## Release gate
+Run `node --test tests/evercraft-live-portal.test.mjs tests/earthworks-public-playground.test.mjs`, public mobile CI, EarthWorks Fabric CI, Pages deploy, and independent external readback. The hourly public canary verifies the source route and 5 doorways. Do not claim release before a matching live URL is verified. No new paid hosting and no Base44 dependency.

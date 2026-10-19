@@ -1,110 +1,121 @@
 <!doctype html>
 <html lang="en">
 <head>
-<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<meta name="theme-color" content="#060d13">
-<meta name="description" content="Watch actual Evercraft software prototypes, public demonstrations, and source-backed visual research. Real work, clear evidence boundaries.">
-<title>Evercraft LIVE | Real Work</title>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#050c12">
+<meta name="description" content="Watch the actual Evercraft public engineering prototypes and published source-backed visual research. Real working software, clearly labeled synthetic scenarios.">
+<title>Evercraft LIVE | Watch the Work</title>
 <style>
-:root{color-scheme:dark;--bg:#050b10;--panel:#0b171f;--panel2:#11212a;--line:#24404a;--text:#e9f7f7;--mute:#a2bdc6;--mint:#75e9ce;--amber:#e8bf75;--blue:#8ecbff}
-*{box-sizing:border-box}html,body{margin:0;min-height:100%;background:var(--bg);color:var(--text);font-family:Inter,ui-sans-serif,system-ui,-apple-system,"Segoe UI",sans-serif}
-button,a{font:inherit}button{cursor:pointer}button:focus-visible,a:focus-visible{outline:2px solid var(--mint);outline-offset:3px}a{color:inherit;text-decoration:none}
-.shell{min-height:100dvh;display:flex;flex-direction:column;background:radial-gradient(ellipse 75% 45% at 50% 0%,#10313c44,transparent),var(--bg)}
-header{display:flex;align-items:center;justify-content:space-between;gap:15px;padding:15px clamp(16px,3vw,45px);border-bottom:1px solid var(--line)}
-.brand{display:flex;align-items:center;gap:11px}.logo{width:40px;height:40px;border:1px solid #58cbb4;border-radius:11px;color:var(--mint);display:grid;place-items:center;font-size:25px;box-shadow:inset 0 0 25px #168f8124}.name{font-weight:850;letter-spacing:.21em;font-size:15px}.byline{font-size:10px;color:var(--mute);margin-top:4px;letter-spacing:.10em}
-.tag{border:1px solid #39735f;color:#aaf0d7;background:#0a2921;padding:9px 13px;border-radius:100px;font:700 10px/1.1 ui-monospace,monospace;letter-spacing:.07em;text-align:center}
-.tag:before{content:"";display:inline-block;background:#75e9ce;width:6px;height:6px;border-radius:50%;margin-right:7px;box-shadow:0 0 11px #75e9ce}
-main{flex:1;display:flex;flex-direction:column;min-height:0}
-.intro{display:flex;align-items:end;justify-content:space-between;gap:18px;padding:15px clamp(16px,3vw,45px);background:#09151a}
-.intro h1{font-size:clamp(20px,2.6vw,34px);line-height:1.12;margin:6px 0 3px;letter-spacing:-.03em}.eyebrow{font:750 10px ui-monospace,monospace;letter-spacing:.17em;color:var(--mint)}.intro p{color:var(--mute);font-size:12px;margin:6px 0 0;max-width:660px}.counter{font:700 12px ui-monospace,monospace;color:#8fb6c4;white-space:nowrap}
-.stage-wrap{display:flex;justify-content:center;align-items:center;flex:1;min-height:520px;padding:12px clamp(10px,2.2vw,32px);background:#050d13}
-.stage{position:relative;width:100%;min-height:540px;height:min(62vw,700px);max-height:calc(100dvh - 270px);border:1px solid #385263;border-radius:17px;overflow:hidden;background:#071116;box-shadow:0 24px 70px #0009}
-.stage iframe{position:absolute;inset:0;width:100%;height:100%;border:0;background:#081016;display:block}
-.stage .loading{position:absolute;inset:0;display:grid;place-items:center;background:#0b1b21;z-index:2;color:#a7dacf;font:650 13px ui-monospace,monospace;text-align:center;padding:15px}
+:root{color-scheme:dark;--bg:#050c12;--ink:#edf8f8;--muted:#9bbfc1;--mint:#75edcd;--border:#254651}
+*{box-sizing:border-box}html,body{margin:0;width:100%;height:100%;overflow:hidden;background:var(--bg);color:var(--ink);font-family:Inter,ui-sans-serif,system-ui,-apple-system,"Segoe UI",sans-serif}
+button,a{font:inherit}button{cursor:pointer}button:focus-visible,a:focus-visible{outline:2px solid var(--mint);outline-offset:3px}a{color:inherit}
+#app{position:relative;display:flex;flex-direction:column;width:100%;height:100dvh;min-height:370px;background:var(--bg);overflow:hidden}
+.strap{height:46px;flex-shrink:0;display:flex;align-items:center;justify-content:space-between;gap:10px;padding:0 clamp(12px,2vw,28px);background:#061018;border-bottom:1px solid #1d3b42}
+.brand{font-size:13px;font-weight:900;letter-spacing:.2em;white-space:nowrap}.brand span{color:var(--mint)}
+.pill{font:700 10px ui-monospace,monospace;letter-spacing:.09em;color:#a1dbc9;text-transform:uppercase;text-align:right}
+.pill:before{content:"";display:inline-block;width:7px;height:7px;background:#82dabe;border-radius:50%;box-shadow:0 0 10px #82dabe;margin-right:8px}
+.stage{position:relative;flex:1;min-height:0;overflow:hidden;background:#030b0f}
+.stage iframe{position:absolute;inset:0;width:100%;height:100%;border:0;background:#07121b;display:block}
+.loading{position:absolute;inset:0;display:grid;place-items:center;text-align:center;background:#07131b;color:#b8ddd5;font:700 14px ui-monospace,monospace;letter-spacing:.1em;z-index:1;padding:20px}
 .stage.ready .loading{display:none}
-.frame-banner{position:absolute;left:18px;top:15px;z-index:3;max-width:min(520px,calc(100% - 36px));padding:9px 12px;background:#061018e9;border:1px solid #30544b;border-radius:10px;pointer-events:none;box-shadow:0 4px 20px #0008}
-.frame-banner b{display:block;font-size:11px;letter-spacing:.1em;text-transform:uppercase}.frame-banner small{display:block;color:#a8cbd2;font-size:10px;line-height:1.4;margin-top:3px}
-.stage-footer{position:absolute;bottom:13px;left:15px;right:15px;display:flex;align-items:end;justify-content:space-between;gap:15px;z-index:3;pointer-events:none}
-.truth{border:1px solid #456271;background:#081520eb;color:#c3dce2;border-radius:8px;padding:7px 10px;font:700 10px/1.4 ui-monospace,monospace;max-width:74%}.watermark{font-size:10px;color:#a6b9c5;background:#081520bd;border-radius:8px;padding:9px 10px;letter-spacing:.09em}
-.film-exit{display:none;position:absolute;z-index:12;top:12px;right:12px;background:#04161fe9;color:#e1fafa;border:1px solid #8ce4cd;border-radius:9px;padding:10px 13px;font-size:11px}.film .film-exit{display:block}
-.progress{position:absolute;bottom:0;left:0;width:0;height:3px;background:var(--mint);z-index:5;box-shadow:0 0 11px #3ad0b6}
-.controls{padding:13px clamp(15px,3vw,45px) 17px;background:#0b1720;border-top:1px solid #24404a}
-.control-row{display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap}
-.show-title{font-size:11px;color:#b8dce0;font-weight:800;letter-spacing:.11em}.show-sub{color:#7d9dab;font:10px ui-monospace,monospace;margin-top:4px}
-.buttons{display:flex;gap:8px;flex-wrap:wrap}.ctl{border:1px solid #365663;background:#18303b;color:#d9eff2;border-radius:10px;padding:10px 14px;font-size:12px}.ctl.accent{color:#ccfff0;border-color:#69c8b0;background:#12362e}.ctl:active{transform:translateY(1px)}
-.doors{display:flex;gap:9px;overflow-x:auto;padding:13px 0 5px;scrollbar-color:#44616d #0b1720}
-.door{min-width:180px;flex:1;max-width:320px;min-height:88px;border:1px solid #34515b;background:#102632;color:#e4f4f6;border-radius:12px;padding:13px;text-align:left;transition:border-color .16s}
-.door[aria-pressed="true"]{border-color:#6dddc4;background:linear-gradient(135deg,#17403d,#102b35)}
-.door .num{font:750 10px ui-monospace,monospace;color:#74dbbe}.door b{font-size:13px;display:block;margin-top:6px}.door small{display:block;font-size:11px;line-height:1.4;color:#a1b6c0;margin-top:6px}
-footer{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:10px clamp(15px,3vw,45px);border-top:1px solid #1b333e;color:#94afba;font:10px ui-monospace,monospace}
-footer a{text-decoration:underline;color:#9de5d2}
-.film .intro,.film .controls,.film footer{display:none}
-.film header{height:51px;padding:6px 16px;border:0;background:#050b10}
-.film .brand .byline{display:none}.film header .tag{font-size:9px;padding:6px 9px}
-.film .stage-wrap{padding:0;min-height:calc(100dvh - 51px)}.film .stage{height:calc(100dvh - 51px);width:100%;max-height:none;min-height:0;border:0;border-radius:0}
-.film .frame-banner{top:12px;left:12px}.film .stage-footer{bottom:18px}
-.portrait .stage{width:min(calc((100dvh - 210px)*.5625),100%);height:calc(100dvh - 210px);min-height:500px;max-height:none}
-.portrait.film .stage{width:min(calc((100dvh - 51px)*.5625),100%);height:calc(100dvh - 51px)}
-.portrait .stage-wrap{min-height:600px}.portrait.film .stage-wrap{min-height:0}
-@media(max-width:850px){.stage{height:65vh;max-height:none;min-height:450px}.intro p{font-size:11px}.stage-wrap{min-height:0}.door{flex:none;min-width:185px}.counter{display:none}}
-@media(max-width:570px){header{padding:11px 13px}.name{font-size:12px}.byline{font-size:8px}.logo{width:33px;height:33px}.tag{font-size:8px;padding:8px}.intro{padding:12px 15px}.intro h1{font-size:23px}.stage-wrap{padding:8px;min-height:0}.stage{min-height:540px;height:68dvh}.stage .frame-banner{top:9px;left:9px;right:9px;padding:7px 9px}.frame-banner b{font-size:10px}.frame-banner small{font-size:9px}.stage-footer{bottom:9px;left:8px;right:8px}.truth{font-size:9px;max-width:100%}.watermark{display:none}.controls{padding:13px}.door{min-width:165px}.buttons{width:100%}.ctl{flex:1;padding:11px 8px}.portrait .stage{width:100%;height:70dvh;min-height:500px}.portrait.film .stage{height:calc(100dvh - 51px);width:100%;min-height:0}.film .stage-wrap{min-height:calc(100dvh - 51px)}}
-@media(prefers-reduced-motion:reduce){*{transition:none!important;scroll-behavior:auto!important}}
+.stage-warning{position:absolute;left:12px;right:12px;top:10px;text-align:center;font:700 11px ui-monospace,monospace;background:#1c1410ed;border:1px solid #805a37;border-radius:8px;padding:10px;z-index:4;display:none}
+.stage.error .stage-warning{display:block}
+.progress{position:absolute;left:0;bottom:0;height:2px;width:0;background:var(--mint);box-shadow:0 0 8px var(--mint);z-index:2}
+.dock{flex-shrink:0;display:flex;align-items:center;justify-content:space-between;gap:14px;padding:9px clamp(12px,2vw,28px);min-height:71px;background:#081720;border-top:1px solid #25505a}
+.now{min-width:0}.eyebrow{font:750 9px ui-monospace,monospace;color:var(--mint);letter-spacing:.15em}.now h1{font-size:clamp(14px,1.7vw,21px);margin:4px 0 0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.truth{font:650 9px ui-monospace,monospace;color:#9cbcc5;line-height:1.5;margin-top:4px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.actions{display:flex;align-items:center;gap:7px;flex-shrink:0}
+.action{border:1px solid #375e67;border-radius:9px;background:#102630;color:#dbf4f0;padding:11px 12px;font-weight:680;font-size:11px;white-space:nowrap}.action.primary{border-color:#75d7bd;background:#124034;color:#defff5}
+.film-hide{display:block}.exit-film{display:none}
+#app.film .strap,#app.film .dock{display:none}
+#app.film .exit-film{display:block;position:absolute;top:12px;right:12px;z-index:8;background:#09242ce8;color:#f1fffb;border:1px solid #78ddc4;padding:11px 14px;border-radius:9px;font-size:12px;font-weight:750}
+#app.film .film-disclosure{display:block}
+.film-disclosure{display:none;position:absolute;bottom:0;left:0;right:0;z-index:4;background:linear-gradient(transparent,#041218a8);padding:26px 16px 9px;text-align:center;font:750 10px ui-monospace,monospace;color:#dbf4ed;pointer-events:none}
+.drawer{position:absolute;right:12px;bottom:84px;z-index:11;width:min(445px,calc(100% - 24px));max-height:min(70dvh,660px);overflow-y:auto;background:#0a1b24f7;border:1px solid #426471;border-radius:18px;padding:18px;box-shadow:0 16px 70px #000c;display:none}
+.drawer.open{display:block}.drawer-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:16px;gap:8px}
+.drawer h2{font-size:19px;margin:0;letter-spacing:-.02em}
+.x{background:none;color:#d5f5ea;border:1px solid #3b6870;border-radius:8px;padding:6px 10px;font-size:12px}
+.exhibit{width:100%;background:#102a32;color:#e8fcfa;border:1px solid #30505d;text-align:left;padding:14px;border-radius:12px;margin:0 0 8px}
+.exhibit[aria-pressed="true"]{border-color:#70e3c0;background:#194239}
+.exhibit strong{display:block;font-size:13px}.exhibit small{display:block;font-size:11px;color:#9cbec4;margin-top:5px;line-height:1.4}
+.drawer-foot{font:11px/1.6 ui-monospace,monospace;color:#9db9c3;margin-top:14px}.drawer-foot a{color:#8cf1d5}
+#app.portrait .stage{width:min(100%,calc((100dvh - 46px - 75px)*.5625));margin:auto;border-left:1px solid #2c5156;border-right:1px solid #2c5156}
+#app.portrait.film .stage{width:min(100%,calc(100dvh*.5625))}
+@media(max-width:700px){.pill{font-size:8px}.strap{height:43px}.brand{font-size:11px}.dock{min-height:79px;gap:5px;flex-wrap:wrap;padding:8px 10px}.now{width:100%}.now h1{font-size:14px;margin:2px 0}.now .truth{font-size:8px}.actions{width:100%;justify-content:space-between;gap:5px}.action{flex:1;padding:9px 6px;font-size:10px;text-align:center}.drawer{bottom:11px;max-height:78dvh}#app.portrait .stage{width:100%}}
+@media(prefers-reduced-motion:reduce){*{scroll-behavior:auto!important;transition:none!important}}
 </style>
 </head>
 <body>
-<div class="shell" id="portal">
-<header><div class="brand"><div class="logo" aria-hidden="true">✧</div><div><div class="name">EVERCRAFT LIVE</div><div class="byline">THE WORK, NOT JUST THE PROMISE</div></div></div><span class="tag">PUBLIC ENGINEERING SHOWCASE · NOT LIVE TELEMETRY</span></header>
-<main>
-<div class="intro"><div><span class="eyebrow">PUBLIC OUTPUTS · RUNNING SOFTWARE · SOURCE-BACKED RESEARCH</span><h1 id="heading">Watch real Evercraft work.</h1><p id="description">Explore public working prototypes and research. Software is real, but example inputs and simulated physical scenarios are not customer operations.</p></div><div class="counter" id="counter">01 / 05</div></div>
-<div class="stage-wrap"><div class="stage" id="stage">
-<div class="loading" id="loading" role="status">LOADING PUBLIC EVERCRAFT ARTIFACT…</div>
-<iframe id="artifact" title="Evercraft public working artifact" sandbox="allow-scripts" referrerpolicy="no-referrer" loading="eager"></iframe>
-<button type="button" class="film-exit" id="filmExit">✕ Exit Film Mode</button>
-<div class="frame-banner"><b id="frameName">EARTHWORKS LIVE YARD</b><small id="frameContext">Working browser dispatch prototype · synthetic jobsite</small></div>
-<div class="stage-footer"><div class="truth" id="truth">REAL CODE · SIMULATED EQUIPMENT & DATA · NO PHYSICAL MACHINE CONTROL</div><div class="watermark">EVERCRAFT / PUBLIC DEMONSTRATION</div></div>
+<div id="app">
+<header class="strap"><div class="brand">EVERCRAFT <span>/ LIVE</span></div><div class="pill">ACTUAL PUBLIC BUILDS · NOT LIVE TELEMETRY</div></header>
+<main class="stage" id="stage" aria-label="Evercraft public engineering demonstration">
+<div id="loading" class="loading" role="status">OPENING AN ACTUAL EVERCRAFT BUILD…</div>
+<iframe id="artifact" sandbox="allow-scripts" referrerpolicy="no-referrer" loading="eager" title="Evercraft engineering prototype"></iframe>
+<div class="stage-warning" id="warning">This exhibit could not be displayed. Choose another public artifact.</div>
 <div class="progress" id="progress"></div>
-</div></div>
-<div class="controls" id="controls"><div class="control-row"><div><div class="show-title" id="status" role="status">AUTO DIRECTOR · PUBLIC ARTIFACTS</div><div class="show-sub" id="subStatus">Press Pause to interact without scene rotation · click a doorway to choose a build</div></div><div class="buttons"><button class="ctl" id="pause">⏸ Pause</button><button class="ctl" id="next">Next exhibit ↗</button><button class="ctl" id="portrait" aria-pressed="false">9:16</button><button class="ctl accent" id="film">⛶ Film mode</button></div></div>
-<div class="doors" id="doors" role="group" aria-label="Choose real Evercraft work">
-<button type="button" class="door" data-exhibit="yard"><span class="num">01 / SOFTWARE</span><b>EarthWorks Live Yard</b><small>Dispatch and site autonomy testbed</small></button>
-<button type="button" class="door" data-exhibit="volcano"><span class="num">02 / RESEARCH</span><b>Volcano Visual Desk</b><small>USGS-backed visual story</small></button>
-<button type="button" class="door" data-exhibit="estimate"><span class="num">03 / TOOL</span><b>EPS Estimator</b><small>Working contractor cost calculator</small></button>
-<button type="button" class="door" data-exhibit="hvac"><span class="num">04 / SOFTWARE</span><b>HVAC Lead Recovery</b><small>Interactive customer workflow demo</small></button>
-<button type="button" class="door" data-exhibit="yard2"><span class="num">05 / SOFTWARE</span><b>EarthWorks Toy Yard</b><small>Alternate control demonstration</small></button>
-</div></div>
 </main>
-<footer><span>Every exhibit is a previously public Evercraft artifact. No private Systemia feed or TikTok stream is connected.</span><a id="source" target="_blank" rel="noopener noreferrer" href="../demos/earthworks-autonomy/">Open exact public artifact ↗</a></footer>
+<div class="dock">
+<div class="now"><div class="eyebrow" id="eyebrow">01 / RUNNING SOFTWARE</div><h1 id="name">EarthWorks · Live Yard</h1><div class="truth" id="truth">ACTUAL SOFTWARE · SIMULATED EQUIPMENT · NO PHYSICAL CONTROL</div></div>
+<div class="actions">
+<button class="action" id="browse">Doorways <span aria-hidden="true">▦</span></button>
+<button class="action" id="next">Next →</button>
+<button class="action" id="hold">Hold scene</button>
+<button class="action" id="portrait">9:16</button>
+<button class="action primary" id="film">Film ⛶</button>
+</div>
+</div>
+<button class="exit-film" id="filmExit" type="button">✕ Exit film</button>
+<div class="film-disclosure">EVERCRAFT · PUBLIC SOFTWARE DEMONSTRATION · SCENARIO DATA IS SIMULATED WHERE MARKED</div>
+<aside class="drawer" id="drawer" aria-label="Public Evercraft work">
+<div class="drawer-top"><h2>Open a real build</h2><button class="x" id="closeDrawer">✕ Close</button></div>
+<div id="doors">
+<button class="exhibit" data-exhibit="earth" aria-pressed="true"><strong>EarthWorks · Live Yard</strong><small>Watch the real jobsite controller run against a simulated fleet and modeled production</small></button>
+<button class="exhibit" data-exhibit="volcano" aria-pressed="false"><strong>Visual Desk · Washington Volcanoes</strong><small>Published motion study backed by USGS source references; not live monitoring</small></button>
+<button class="exhibit" data-exhibit="yard2" aria-pressed="false"><strong>EarthWorks · Toy Yard</strong><small>Second public, interactive autonomy testbed using synthetic equipment states</small></button>
+<button class="exhibit" data-exhibit="estimate" aria-pressed="false"><strong>EPS · Precise Estimator</strong><small>Try a working contractor pricing tool using example inputs</small></button>
+<button class="exhibit" data-exhibit="hvac" aria-pressed="false"><strong>HVAC · Lead Recovery</strong><small>Try the actual lead-intake prototype without real customer data</small></button>
+</div>
+<div class="drawer-foot">Automatic rotation features active visual exhibits only. Calculators and forms stay available on demand. Every artifact is publicly accessible independently. <a id="openSource" href="../demos/earthworks-autonomy/" target="_blank" rel="noopener noreferrer">Open the original work ↗</a></div>
+</aside>
 </div>
 <script>
 (()=>{'use strict';
 const EXHIBITS=[
-{id:'yard',name:'EarthWorks Live Yard',src:'../demos/earthworks-autonomy/',heading:'Actual dispatch software, running in the browser.',desc:'A working Evercraft control interface and digital jobsite prototype. Trucks, queues and movements use simulated test conditions, not field telemetry.',context:'Real browser software · synthetic haul and dispatch scenario',truth:'WORKING CODE · SIMULATED JOBSITE · NO REAL MACHINE CONTROL',seconds:75},
-{id:'volcano',name:'Washington Volcanoes · Visual Desk',src:'../visuals/washington-active-volcanoes/motion.html',heading:'Real research, made visible.',desc:'An Evercraft visualization built from published USGS summit and elevation sources. Motion is editorial animation, not eruptive activity or live monitoring.',context:'Published visual research · USGS source references',truth:'SOURCE-BACKED VISUAL STORY · NOT LIVE VOLCANO MONITORING',seconds:55},
-{id:'estimate',name:'EPS Precise Estimator',src:'../apps/eps-estimator/',heading:'Working tools that solve real problems.',desc:'The actual contractor estimate calculator computes from user inputs. Default values are example costs, not real job quotes or payment records.',context:'Real calculator · example input values',truth:'WORKING COST CALCULATOR · EXAMPLE INPUTS · NO CHECKOUT',seconds:55},
-{id:'hvac',name:'HVAC Lead Recovery',src:'../demos/hvac-lead-recovery/',heading:'Real software, built for real business problems.',desc:'Interactive lead intake and office handoff prototype. Visitors can test an inquiry; it is not connected to a live customer inbox.',context:'Working intake interface · sample workflow',truth:'WORKING PROTOTYPE · SAMPLE LEADS · NO LIVE CUSTOMER DATA',seconds:55},
-{id:'yard2',name:'EarthWorks Toy Yard',src:'../apps/earthworks-autonomy/',heading:'More than one view into the build.',desc:'Original Evercraft construction autonomy simulation with operator controls and synthetic measures. No physical equipment connection.',context:'Original autonomy demonstration · synthetic site values',truth:'WORKING SOFTWARE · SYNTHETIC EQUIPMENT STATES · NO FIELD OPS',seconds:65}
+{id:'earth',type:'RUNNING SOFTWARE',name:'EarthWorks · Live Yard',url:'../demos/earthworks-autonomy/?studio=1',original:'../demos/earthworks-autonomy/',truth:'ACTUAL EARTHWORKS CONTROLLER · SIMULATED EQUIPMENT · NO PHYSICAL CONTROL',duration:90000,autoplay:true},
+{id:'volcano',type:'PUBLISHED VISUAL RESEARCH',name:'Visual Desk · Washington Volcanoes',url:'../visuals/washington-active-volcanoes/motion.html',original:'../visuals/washington-active-volcanoes/',truth:'USGS-SOURCED VISUALIZATION · NOT A LIVE ERUPTION OR FORECAST',duration:45000,autoplay:true},
+{id:'yard2',type:'RUNNING SOFTWARE',name:'EarthWorks · Toy Yard',url:'../apps/earthworks-autonomy/',original:'../apps/earthworks-autonomy/',truth:'WORKING AUTONOMY DEMO · SYNTHETIC SITE CONDITIONS',duration:60000,autoplay:false},
+{id:'estimate',type:'WORKING COMMERCIAL TOOL',name:'EPS · Precise Estimator',url:'../apps/eps-estimator/',original:'../apps/eps-estimator/',truth:'REAL CALCULATOR · EXAMPLE INPUTS · NOT A CUSTOMER QUOTE',duration:60000,autoplay:false},
+{id:'hvac',type:'WORKING PROTOTYPE',name:'HVAC · Lead Recovery',url:'../demos/hvac-lead-recovery/',original:'../demos/hvac-lead-recovery/',truth:'WORKING INTAKE PROTOTYPE · SAMPLE LEADS ONLY',duration:60000,autoplay:false}
 ];
-const byId=id=>document.getElementById(id),portal=byId('portal'),stage=byId('stage'),frame=byId('artifact'),loading=byId('loading'),status=byId('status'),doors=[...document.querySelectorAll('.door')],DURATION=EXHIBITS.length;
-let current=0,running=true,remaining=EXHIBITS[0].seconds*1000,started=performance.now(),timer=0;
-function select(n){
- current=(n+DURATION)%DURATION;const x=EXHIBITS[current];remaining=x.seconds*1000;started=performance.now();
- byId('heading').textContent=x.heading;byId('description').textContent=x.desc;byId('frameName').textContent=x.name;byId('frameContext').textContent=x.context;byId('truth').textContent=x.truth;byId('counter').textContent=String(current+1).padStart(2,'0')+' / 05';
- byId('source').href=x.src;frame.title=x.name+' · public Evercraft artifact';stage.classList.remove('ready');loading.textContent='LOADING PUBLIC EVERCRAFT ARTIFACT…';
- frame.src=x.src;doors.forEach(b=>b.setAttribute('aria-pressed',String(b.dataset.exhibit===x.id)));
- byId('status').textContent=(running?'AUTO DIRECTOR':'PAUSED')+' · '+x.name;
+const $=id=>document.getElementById(id),app=$('app'),frame=$('artifact'),stage=$('stage'),drawer=$('drawer');
+const auto=EXHIBITS.map((x,i)=>x.autoplay?i:-1).filter(i=>i>=0);
+let current=0,active=true,remaining=EXHIBITS[0].duration,clock=performance.now(),lastUrl='';
+function display(i){
+ current=(i+EXHIBITS.length)%EXHIBITS.length;const x=EXHIBITS[current];
+ remaining=x.duration;clock=performance.now();stage.classList.remove('ready','error');
+ $('name').textContent=x.name;$('eyebrow').textContent=String(current+1).padStart(2,'0')+' / '+x.type;
+ $('truth').textContent=x.truth;$('openSource').href=x.original;frame.title=x.name+' · real public Evercraft work';
+ if(lastUrl!==x.url){frame.src=x.url;lastUrl=x.url}else{frame.src=x.url}
+ document.querySelectorAll('[data-exhibit]').forEach(e=>e.setAttribute('aria-pressed',String(e.dataset.exhibit===x.id)));
+ $('hold').textContent=active?'Hold scene':'Resume rotation';$('progress').style.width='0%';
 }
-frame.addEventListener('load',()=>stage.classList.add('ready'));frame.addEventListener('error',()=>{stage.classList.remove('ready');loading.textContent='ARTIFACT UNAVAILABLE · OPEN THE ORIGINAL SOURCE'});
-doors.forEach((b,i)=>b.addEventListener('click',()=>select(i)));
-byId('next').addEventListener('click',()=>select(current+1));
-byId('pause').addEventListener('click',()=>{running=!running;started=performance.now();byId('pause').textContent=running?'⏸ Pause':'▶ Resume';byId('status').textContent=(running?'AUTO DIRECTOR':'PAUSED')+' · '+EXHIBITS[current].name});
-byId('portrait').addEventListener('click',()=>{const next=portal.classList.toggle('portrait');byId('portrait').setAttribute('aria-pressed',String(next));byId('portrait').textContent=next?'16:9':'9:16'});
-function toggleFilm(force){let next=typeof force==='boolean'?force:!portal.classList.contains('film');portal.classList.toggle('film',next);byId('film').textContent=next?'Exit Film Mode':'⛶ Film mode';byId('film').setAttribute('aria-pressed',String(next))}
-byId('film').addEventListener('click',()=>toggleFilm());byId('filmExit').addEventListener('click',()=>toggleFilm(false));
-document.addEventListener('keydown',e=>{if(e.key==='Escape'&&portal.classList.contains('film'))toggleFilm(false);if(e.target===document.body&&e.key==='ArrowRight')select(current+1);if(e.target===document.body&&e.key.toLowerCase()==='f')toggleFilm()});
-stage.addEventListener('click',e=>{if(portal.classList.contains('film')&&e.target!==frame)toggleFilm(false)});
-document.addEventListener('visibilitychange',()=>{started=performance.now()});
-function advance(now){requestAnimationFrame(advance);if(document.hidden){started=now;return}if(!running){started=now;return}remaining-=Math.min(1000,Math.max(0,now-started));started=now;if(remaining<=0){select(current+1)}byId('progress').style.width=((1-remaining/(EXHIBITS[current].seconds*1000))*100).toFixed(2)+'%'}
-select(0);requestAnimationFrame(advance);
+function next(){let j=auto.indexOf(current);display(auto[(j+1)%auto.length])}
+frame.addEventListener('load',()=>{stage.classList.add('ready')});
+frame.addEventListener('error',()=>{stage.classList.add('error');stage.classList.remove('ready')});
+$('next').onclick=next;
+$('hold').onclick=()=>{active=!active;clock=performance.now();$('hold').textContent=active?'Hold scene':'Resume rotation'};
+$('browse').onclick=()=>drawer.classList.toggle('open');
+$('closeDrawer').onclick=()=>drawer.classList.remove('open');
+document.querySelectorAll('[data-exhibit]').forEach(b=>b.onclick=()=>{display(EXHIBITS.findIndex(x=>x.id===b.dataset.exhibit));active=false;$('hold').textContent='Resume rotation';drawer.classList.remove('open')});
+function toggleFilm(force){app.classList.toggle('film',typeof force==='boolean'?force:!app.classList.contains('film'));drawer.classList.remove('open')}
+$('film').onclick=()=>toggleFilm(true);
+$('filmExit').onclick=()=>toggleFilm(false);
+$('portrait').onclick=()=>{const yes=app.classList.toggle('portrait');$('portrait').textContent=yes?'16:9':'9:16'};
+document.addEventListener('keydown',e=>{if(e.key==='Escape'){toggleFilm(false);drawer.classList.remove('open')}if(e.key==='ArrowRight'&&e.target===document.body)next();if(e.key.toLowerCase()==='f'&&e.target===document.body)toggleFilm()});
+function loop(t){requestAnimationFrame(loop);if(document.hidden){clock=t;return}const dt=Math.min(1000,Math.max(0,t-clock));clock=t;if(!active)return;
+ remaining-=dt;const x=EXHIBITS[current];$('progress').style.width=(100*(1-Math.max(0,remaining)/x.duration)).toFixed(2)+'%';if(remaining<=0)next()}
+document.addEventListener('visibilitychange',()=>{clock=performance.now()});
+display(0);requestAnimationFrame(loop);
 })();
 </script>
 </body></html>

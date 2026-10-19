@@ -22,12 +22,12 @@ jobs:
           temp="$(mktemp)"
           trap 'rm -f "$temp"' EXIT
           curl -L --fail --silent --show-error --retry 3 --retry-delay 3 --max-time 20 "$BASE/live/" -o "$temp"
-          grep -Fq 'Evercraft LIVE | Real Work' "$temp"
-          grep -Fq 'PUBLIC ENGINEERING SHOWCASE · NOT LIVE TELEMETRY' "$temp"
+          grep -Fq 'Evercraft LIVE | Watch the Work' "$temp"
+          grep -Fq 'ACTUAL PUBLIC BUILDS · NOT LIVE TELEMETRY' "$temp"
           grep -Fq 'sandbox="allow-scripts"' "$temp"
           grep -Fq 'id="filmExit"' "$temp"
           grep -Fq 'id="portrait"' "$temp"
-          grep -Fq 'data-exhibit="yard"' "$temp"
+          grep -Fq 'data-exhibit="earth"' "$temp"
           grep -Fq 'data-exhibit="volcano"' "$temp"
           grep -Fq 'data-exhibit="estimate"' "$temp"
           grep -Fq 'data-exhibit="hvac"' "$temp"
@@ -42,7 +42,7 @@ jobs:
             grep -Fq "$marker" "$temp"
             echo "PASS $path"
           }
-          check_artifact 'demos/earthworks-autonomy/' 'EarthWorks Live Yard'
+          check_artifact 'demos/earthworks-autonomy/?studio=1' 'studioCamera'
           check_artifact 'visuals/washington-active-volcanoes/motion.html' 'WASHINGTON'
           check_artifact 'apps/eps-estimator/' 'EPS Precise Estimator'
           check_artifact 'demos/hvac-lead-recovery/' 'Evercraft HVAC Lead Recovery Demo'

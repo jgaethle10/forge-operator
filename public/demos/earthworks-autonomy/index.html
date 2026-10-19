@@ -19,6 +19,35 @@ canvas{display:block;width:100%;height:auto;aspect-ratio:16/9;background:#0a0f13
 .log{max-height:220px;overflow:auto;padding:10px 12px;font:11px/1.5 ui-monospace,SFMono-Regular,Menlo,monospace}.log div{padding:4px 0;border-bottom:1px solid #182128;color:#aab6be}.log .ai{color:#7fd7ff}.log .warn{color:#ffc76c}.log .good{color:#80dda9}
 .legend{display:flex;gap:12px;flex-wrap:wrap;color:var(--muted);font-size:10px;padding:0 12px 11px}.legend i{display:inline-block;width:8px;height:8px;border-radius:50%;margin-right:4px}.footer{margin-top:10px;color:#657681;font-size:11px;display:flex;justify-content:space-between;gap:20px}.footer a{color:#a9cfff}
 @media(max-width:980px){.layout{grid-template-columns:1fr}.side{grid-template-columns:1fr 1fr}.logCard{grid-column:1/-1}.truth{display:none}}@media(max-width:680px){button,input{font-size:16px;min-height:44px}.shell{padding:9px}.side{grid-template-columns:1fr}.hud{grid-template-columns:1fr 1fr}.top{align-items:flex-start}.flowline{grid-template-columns:1fr 1fr}}
+
+/* Opt-in camera-first view of the SAME actual EarthWorks simulator; no separate fake animation. */
+body.studio-mode{margin:0;overflow:hidden;background:#061018}
+body.studio-mode > .shell{display:none!important}
+.studio-screen{height:100dvh;min-height:420px;width:100vw;overflow:hidden;display:flex;flex-direction:column;background:#061018;color:#f0f9f7;font-family:Inter,ui-sans-serif,system-ui,sans-serif}
+.studio-head{height:58px;flex-shrink:0;display:flex;align-items:center;justify-content:space-between;padding:0 clamp(16px,2vw,35px);background:#061018;gap:8px}
+.studio-eyebrow{color:#99efdb;font-weight:800;letter-spacing:.17em;font-size:clamp(10px,1.1vw,13px)}
+.studio-sim{display:flex;align-items:center;gap:8px;color:#93c9bf;font:700 10px ui-monospace,monospace;letter-spacing:.06em;text-align:right}
+.studio-sim:before{content:"";display:inline-block;width:7px;height:7px;background:#66ddbb;border-radius:50%;box-shadow:0 0 12px #66ddbb}
+.studio-camera{position:relative;flex:1;min-height:0;overflow:hidden;background:#030b11}
+.studio-camera canvas{display:block;width:100%;height:100%;aspect-ratio:auto!important;object-fit:fill;background:#06131b}
+.studio-camera:before{content:"";position:absolute;z-index:1;pointer-events:none;inset:0;box-shadow:inset 0 0 75px 20px #061018}
+.studio-camera:after{content:"";position:absolute;z-index:1;pointer-events:none;left:0;right:0;bottom:0;height:30%;background:linear-gradient(transparent,#061018aa)}
+.studio-caption{position:absolute;bottom:24px;left:clamp(16px,2vw,35px);z-index:2;pointer-events:none}
+.studio-caption b{display:block;font-size:clamp(24px,3.5vw,52px);letter-spacing:-.05em}
+.studio-caption small{display:block;color:#c9e4e1;letter-spacing:.09em;margin-top:7px;font:700 11px ui-monospace,monospace}
+.studio-bottom{flex-shrink:0;display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px;padding:10px clamp(16px,2vw,35px);background:#081820;border-top:1px solid #27505a}
+.studio-metric{min-width:0;padding:10px 14px;background:#0e242b;border:1px solid #244752;border-radius:10px}
+.studio-metric span{display:block;color:#91b1bb;font-size:10px;letter-spacing:.1em}
+.studio-metric strong{display:block;margin:4px 0 0;color:#eefdfa;font-size:clamp(19px,2.5vw,36px);letter-spacing:-.04em}
+.studio-metric strong i{font-style:normal;color:#7edbc2;font-size:.55em}
+.studio-footer{flex-shrink:0;display:flex;justify-content:space-between;align-items:center;gap:14px;padding:9px clamp(16px,2vw,35px);font:700 10px ui-monospace,monospace;color:#94b8b7;background:#061018;min-height:37px}
+@media (max-aspect-ratio:4/5){
+.studio-head{height:50px;padding:0 12px}.studio-eyebrow{font-size:10px}.studio-sim{font-size:8px}
+.studio-camera{min-height:0;flex:1}.studio-caption{left:14px;bottom:12px}.studio-caption b{font-size:clamp(24px,8vw,39px)}.studio-caption small{font-size:10px}
+.studio-bottom{grid-template-columns:repeat(2,minmax(0,1fr));gap:7px;padding:8px}.studio-metric{padding:12px}.studio-metric strong{font-size:clamp(21px,6vw,35px)}
+.studio-footer{padding:7px 10px;font-size:8px;line-height:1.4}
+}
+
 </style>
 </head>
 <body>
@@ -811,6 +840,65 @@ setMode('manual');
 requestAnimationFrame(tick);
 
 /* EARTHWORKS_LIVE_YARD_APP_END */
+
+/* Camera-only mode repaints frames of the actual simulation canvas.
+   Every metric comes from the same running controller as the public demo.
+   Pan/zoom is editorial framing, NOT a simulated new telemetry source. */
+if(new URLSearchParams(window.location.search).get('studio')==='1'){
+  document.body.classList.add('studio-mode');
+  setMode('autonomy');
+  const screen=document.createElement('div');
+  screen.className='studio-screen';
+  screen.innerHTML='<div class="studio-head"><span class="studio-eyebrow">EVERCRAFT / EARTHWORKS</span><span class="studio-sim">AUTONOMY · SOFTWARE SIMULATION</span></div>'
+    +'<div class="studio-camera"><canvas id="studioCamera" aria-label="Live rendering of the EarthWorks simulated jobsite"></canvas><div class="studio-caption"><b id="studioFocus">DIG FACE</b><small>ACTUAL CONTROLLER RUNNING · SIMULATED EQUIPMENT</small></div></div>'
+    +'<div class="studio-bottom"><div class="studio-metric"><span>MODELED PRODUCTION</span><strong><span id="studioTph">0</span> <i>TPH</i></strong></div><div class="studio-metric"><span>HAUL CYCLES</span><strong id="studioCycles">0</strong></div><div class="studio-metric"><span>QUEUE TIME</span><strong><span id="studioQueue">0.0</span> <i>MIN</i></strong></div><div class="studio-metric"><span>LOADER USE</span><strong><span id="studioUtil">0</span><i>%</i></strong></div></div>'
+    +'<div class="studio-footer"><span>REAL EVERCRAFT SOFTWARE · SYNTHETIC JOBSITE</span><span>NO PHYSICAL MACHINE CONNECTION</span></div>';
+  document.body.append(screen);
+  const sc=screen.querySelector('#studioCamera');
+  const g=sc.getContext('2d',{alpha:false});
+  const sx=screen.querySelector.bind(screen);
+  let lastSizes='';
+  function project(now){
+    requestAnimationFrame(project);
+    if(document.hidden)return;
+    const bounds=sc.getBoundingClientRect(),width=Math.max(1,Math.floor(bounds.width)),height=Math.max(1,Math.floor(bounds.height));
+    const pixelRatio=Math.min(2,window.devicePixelRatio||1);
+    const sizes=width+':'+height+':'+pixelRatio;
+    if(sizes!==lastSizes){sc.width=width*pixelRatio;sc.height=height*pixelRatio;lastSizes=sizes}
+    g.setTransform(pixelRatio,0,0,pixelRatio,0,0);
+    g.fillStyle='#051017';g.fillRect(0,0,width,height);
+    const portrait=height>width*1.18;
+    // On portrait screens the camera visits the real load/haul/dump regions in sequence.
+    // A landscape output shows the entire yard, without interpolation of machine state.
+    const focusT=(now/14000)%3,base=Math.floor(focusT),fraction=focusT-base;
+    const smooth=fraction*fraction*(3-2*fraction);
+    const centers=[230,570,890,230];
+    const center=centers[base]+(centers[base+1]-centers[base])*smooth;
+    if(portrait){
+      const cropH=565,cropW=Math.min(890,cropH*width/height);
+      const cx=Math.max(cropW/2,Math.min(canvas.width-cropW/2,center));
+      g.drawImage(canvas,cx-cropW/2,18,cropW,cropH,0,0,width,height);
+      sx('#studioFocus').textContent=['DIG FACE','HAUL CORRIDOR','STOCKPILE'][base];
+    } else {
+      const sourceRatio=canvas.width/canvas.height,targetRatio=width/height;
+      if(targetRatio>=sourceRatio){
+        const displayH=width/sourceRatio;
+        g.drawImage(canvas,0,(height-displayH)/2,width,displayH);
+      }else{
+        const displayW=height*sourceRatio;
+        g.drawImage(canvas,(width-displayW)/2,0,displayW,height);
+      }
+      sx('#studioFocus').textContent='LIVE YARD 001';
+    }
+    // No invented values: the same controller that powers the full app supplies all 4 metrics.
+    const snap=controller.snapshot(),metric=stateMetrics(snap);
+    sx('#studioTph').textContent=String(metric.tph);
+    sx('#studioCycles').textContent=String(snap.cyclesCompleted);
+    sx('#studioQueue').textContent=metric.queueMinutes.toFixed(1);
+    sx('#studioUtil').textContent=String(Math.round(metric.loaderUtil));
+  }
+  requestAnimationFrame(project);
+}
 </script>
 </body>
 </html>
