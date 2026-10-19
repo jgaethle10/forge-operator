@@ -33,6 +33,8 @@ jobs:
         run: npm install --no-audit --no-fund
       - name: Native product focus regression
         run: node --import tsx --test systemia/media-studio/product-focus-shot.test.ts systemia/media-studio/visual-stage.test.ts
+      - name: Private render-worker camera admission regressions
+        run: node --test systemia/media-studio/render-worker/policy.test.mjs
       - name: Product focus CLI end-to-end compile
         run: |
           npm run media:studio -- product-focus \
@@ -49,7 +51,10 @@ jobs:
           const html=fs.readFileSync('/tmp/relay-product-focus.html','utf8');
           if(stage.width!==1080||stage.height!==1920) throw new Error('native_vertical_missing');
           if(!stage.layers[0].sourceWindow) throw new Error('source_window_missing');
+          if(stage.layers[0].sourceWindowKeyframes?.length!==3) throw new Error('product_camera_waypoints_missing');
           if(!html.includes('position:absolute;max-width:none;left:')) throw new Error('real_source_crop_missing');
+          if(!html.includes('mediaWindowAt')||!html.includes('setMediaWindow')) throw new Error('animated_media_camera_runtime_missing');
+          if(receipt.evidence.cameraStops!==3) throw new Error('camera_evidence_receipt_missing');
           if(receipt.evidence.noCreativeOrPublicationAuthority!==true) throw new Error('publication_gate_missing');
           NODE
       - name: Typecheck
