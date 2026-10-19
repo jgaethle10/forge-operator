@@ -1,0 +1,36 @@
+name: The Window Live Browser Probe
+on:
+  push:
+    branches:
+      - test/window-live-browser-probe-20261018
+    paths:
+      - 'tests/window-live-browser-smoke.mjs'
+      - '.github/workflows/window-live-browser.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  chrome-spectator:
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+      - name: Install browser controller (no application dependency change)
+        run: npm install --prefix /tmp/window-probe --no-save --ignore-scripts playwright-core@1.55.0
+      - name: Independent desktop and mobile Chrome observation
+        run: |
+          which google-chrome
+          node tests/window-live-browser-smoke.mjs
+      - name: Preserve screenshots for review
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: window-browser-proof
+          path: artifacts/
+          if-no-files-found: ignore
+          retention-days: 14
