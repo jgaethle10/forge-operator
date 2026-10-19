@@ -14,6 +14,16 @@ export interface ColorRGBA extends ColorRGB {
 
 export type MaterialAlphaMode='opaque'|'mask'|'blend';
 
+// Distance fog is scene geometry/lighting context, not an assertion of real weather.
+// Opt-in per scene; absence preserves historic visual frame identity.
+export interface AtmosphereDefinition {
+  color:ColorRGB;
+  density:number;
+  startDistance?:number;
+  heightFalloff?:number;
+  referenceHeight?:number;
+}
+
 export interface MaterialDefinition {
   id:string;
   model:'pbr'|'unlit';
@@ -104,6 +114,7 @@ export interface VisualSceneDefinition {
   initialCameraEntityId:string;
   cameraTransitions?:CameraTransitionDefinition[];
   clearColor?:ColorRGB;
+  atmosphere?:AtmosphereDefinition;
 }
 
 export interface CameraTransitionRuntime {
@@ -143,6 +154,7 @@ export interface VisualFrameContract {
   timeSec:number;
   camera:CameraSample;
   clearColor:ColorRGB;
+  atmosphere?:AtmosphereDefinition;
   materials:MaterialDefinition[];
   renderables:Array<{
     entityId:string;
@@ -200,6 +212,25 @@ function validateLayerMask(value:number|undefined,label:string){
   if(!Number.isInteger(value) || value<0 || value>0xffffffff){
     throw new Error(`visual_invalid_${label}_layer_mask`);
   }
+}
+
+export function validateAtmosphere(atmosphere:AtmosphereDefinition){
+  validateColor(atmosphere?.color,'atmosphere_color');
+  finite(atmosphere.density,'atmosphere_density');
+  if(atmosphere.density<0||atmosphere.density>1) throw new Error('visual_atmosphere_density_out_of_range');
+  if(atmosphere.startDistance!==undefined){
+    finite(atmosphere.startDistance,'atmosphere_start_distance');
+    if(atmosphere.startDistance<0||atmosphere.startDistance>10000) throw new Error('visual_atmosphere_start_distance_out_of_range');
+  }
+  if(atmosphere.heightFalloff!==undefined){
+    finite(atmosphere.heightFalloff,'atmosphere_height_falloff');
+    if(atmosphere.heightFalloff<0||atmosphere.heightFalloff>2) throw new Error('visual_atmosphere_height_falloff_out_of_range');
+  }
+  if(atmosphere.referenceHeight!==undefined){
+    finite(atmosphere.referenceHeight,'atmosphere_reference_height');
+    if(Math.abs(atmosphere.referenceHeight)>10000) throw new Error('visual_atmosphere_reference_height_out_of_range');
+  }
+  return true;
 }
 
 export function validateMaterial(material:MaterialDefinition){
@@ -339,6 +370,7 @@ export function validateVisualScene(scene:VisualSceneDefinition,entities:WorldEn
   }
 
   if(scene.clearColor) validateColor(scene.clearColor,'scene_clear_color');
+  if(scene.atmosphere) validateAtmosphere(scene.atmosphere);
   if(!entityMap.size) throw new Error('visual_scene_entities_missing');
   return true;
 }
@@ -562,6 +594,7 @@ export function compileVisualFrame(
     timeSec,
     camera,
     clearColor:clone(scene.clearColor || {r:0,g:0,b:0}),
+    ...(scene.atmosphere?{atmosphere:clone(scene.atmosphere)}:{}),
     materials:[...(scene.materials || [])].sort((a,b)=>a.id.localeCompare(b.id)).map(clone),
     renderables,
     lights
