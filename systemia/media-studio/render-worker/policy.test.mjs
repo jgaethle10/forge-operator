@@ -131,3 +131,48 @@ test('rejects unsafe phenomenon palette at the worker boundary',()=>{
     }
   }),/phenomenon_color_palette_invalid/);
 });
+
+const cinematicMedia={
+  id:'product',kind:'media',z:1,x:0,y:0,width:640,height:360,
+  sourcePath:'asset://relay-frame',mediaKind:'image',fit:'cover',
+  sourceWindow:{x:100,y:100,width:640,height:360,sourceWidth:1440,sourceHeight:900},
+  sourceWindowKeyframes:[
+    {t:0,x:100,y:100,width:640,height:360},
+    {t:2,x:700,y:300,width:640,height:360,ease:'ease_in_out'},
+  ],
+  sourceRefs:['ci:verified-demo-capture'],
+};
+const cinematicManifest=[{id:'relay-frame',filename:'relay.png',sha256:'f'.repeat(64),media_type:'image/png'}];
+function cameraJob(layer){
+  return {...base,stage:{...base.stage,layers:[layer]},assets:cinematicManifest};
+}
+test('worker accepts bounded, source-grounded camera paths',()=>{
+  const result=sanitizeRenderJob(cameraJob(cinematicMedia));
+  assert.equal(result.stage.layers[0].sourceWindowKeyframes.length,2);
+});
+test('worker rejects viewport escape, frame distortion and out-of-order camera keys',()=>{
+  const tamper=(replacement)=>cameraJob({...cinematicMedia,sourceWindowKeyframes:replacement});
+  assert.throws(()=>sanitizeRenderJob(tamper([
+    cinematicMedia.sourceWindowKeyframes[0],
+    {...cinematicMedia.sourceWindowKeyframes[1],x:1200}
+  ])),/media_source_camera_keyframe_invalid/);
+  assert.throws(()=>sanitizeRenderJob(tamper([
+    cinematicMedia.sourceWindowKeyframes[0],
+    {...cinematicMedia.sourceWindowKeyframes[1],width:800}
+  ])),/media_source_camera_keyframe_invalid/);
+  assert.throws(()=>sanitizeRenderJob(tamper([
+    cinematicMedia.sourceWindowKeyframes[1],cinematicMedia.sourceWindowKeyframes[0]
+  ])),/media_source_camera_keyframe_invalid/);
+});
+test('worker forbids camera on unbounded media or without a full-duration path',()=>{
+  assert.throws(()=>sanitizeRenderJob(cameraJob({
+    ...cinematicMedia,sourceWindow:undefined
+  })),/media_source_camera_invalid/);
+  assert.throws(()=>sanitizeRenderJob(cameraJob({
+    ...cinematicMedia,
+    sourceWindowKeyframes:[
+      cinematicMedia.sourceWindowKeyframes[0],
+      {...cinematicMedia.sourceWindowKeyframes[1],t:1.9}
+    ]
+  })),/media_source_camera_endpoints_invalid/);
+});
