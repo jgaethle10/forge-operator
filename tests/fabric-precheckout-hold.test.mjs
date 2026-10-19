@@ -43,3 +43,39 @@ test('unconfigured Fabric runtime exposes assisted contact but no checkout form'
     assert.doesNotMatch(html,/class="checkout-form"/);
   }finally{await runtime.close()}
 });
+
+test('one configured owned endpoint is not sufficient to publish a checkout CTA',async()=>{
+  const cases=[
+    {purchaseIntentUrl:'https://fabric.systemiacommandcenters.com/api/payments/intent'},
+    {paymentOpsUrl:'https://fabric.systemiacommandcenters.com/api/payments/ops'},
+  ];
+  for(const config of cases){
+    const runtime=await startFabricLocalRuntime({host:'127.0.0.1',port:0,catalog:[offer],faieSurfaceEnabled:false,...config});
+    try{
+      const health=await fetch(runtime.url+'/health').then(r=>r.json());
+      assert.equal(health.checkout_operational_state,'held_owned_payment_endpoint_unconfigured');
+      assert.equal(health.human_offer_checkout_enabled,false);
+      const response=await fetch(runtime.url+'/offers/website-audit');
+      assert.equal(response.status,200);
+      const html=await response.text();
+      assert.match(html,/Request assisted invoicing/);
+      assert.doesNotMatch(html,/Continue to checkout/);
+      assert.doesNotMatch(html,/class="checkout-form"/);
+    }finally{await runtime.close()}
+  }
+});
+
+test('two configured owned endpoints expose preparation only, not paid fulfillment',async()=>{
+  const runtime=await startFabricLocalRuntime({
+    host:'127.0.0.1',port:0,catalog:[offer],faieSurfaceEnabled:false,
+    purchaseIntentUrl:'https://fabric.systemiacommandcenters.com/api/payments/intent',
+    paymentOpsUrl:'https://fabric.systemiacommandcenters.com/api/payments/ops'
+  });
+  try{
+    const health=await fetch(runtime.url+'/health').then(r=>r.json());
+    assert.equal(health.human_offer_checkout_enabled,true);
+    assert.equal(health.checkout_operational_state,'owned_transport_requires_independent_checkout_canary');
+    assert.equal(health.checkout_provider_paid_verified,false);
+    assert.equal(health.checkout_fulfillment_verified,false);
+  }finally{await runtime.close()}
+});
