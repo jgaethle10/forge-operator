@@ -46,3 +46,13 @@ The private worker CI runs three *actual* Chromium frame renders over a determin
 This is **synthetic rendering evidence only**. It demonstrates working source camera movement and protects against runtime regression. It does not prove readability of real Relay product copy, a final MP4, film sound quality, native Kennedy Space Station handoff, or cinematic merit. Preserve the output frame receipts in the CI artifact when the workflow passes.
 
 The earlier static local camera preview and an exported PNG pixel-proof serve different purposes. Do not use one as a substitute for the other.
+
+## Phone-scale source admission (October 19)
+
+The local Relay pilot has a 1440 x 2408 desktop screenshot and a native 390 x 3170 responsive phone capture. The pilot stylesheet uses 14px base text. In the earlier 1010px-wide portrait evidence viewport, a 1019.2px source-width desktop crop projects that text to approximately **5.0px** at a 390px viewing width. The mobile source at a 386.04px crop projects the same 14px-height text to approximately **13.2px**. This is a geometric planning estimate, not an OCR result or a measured end-user comprehension score.
+
+`criticalText` lets an editor annotate a source-region, source glyph height, and minimum target display height. The compiler checks that the region remains in frame and rejects the projected text if it falls below the annotated minimum (default 9px). No source font height is guessed by the program. `targetPhoneWidthPx` defaults to 390px.
+
+`protectedRegions` now supports a single time `t` **or** an interval `startSec`/`endSec`. An interval checks the interpolated camera window at every native 30-fps frame instant plus interval endpoints, blocking an important region that disappears between two safe keyframes. This is time-sampled geometric protection, not a proof of legibility/contrast at every possible subframe.
+
+**Source-selection recommendation:** for legible mobile product closeups, prefer a capture made at the device layout rather than shrinking an entire desktop screenshot. Missing source-context, privacy restrictions, synthetic content disclosure, final pixel review, and accessibility/contrast checks remain separate gates. The app UI is the real private pilot, not a published/customer-ready release.
