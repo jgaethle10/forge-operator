@@ -1,0 +1,50 @@
+name: Evercraft LIVE portal public canary
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: '17 * * * *'
+  push:
+    branches: [feature/evercraft-live-portal-uptime-canary]
+    paths:
+      - '.github/workflows/evercraft-live-portal-canary.yml'
+permissions:
+  contents: read
+concurrency:
+  group: evercraft-live-portal-public-canary
+  cancel-in-progress: true
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Probe externally published portal
+        shell: bash
+        env:
+          PORTAL_URL: https://jgaethle10.github.io/forge-operator/live/
+        run: |
+          set -euo pipefail
+          temp="$(mktemp)"
+          trap 'rm -f "$temp"' EXIT
+          code="$(curl -L --fail --silent --show-error --max-time 20 --retry 3 --retry-delay 3 -o "$temp" -w '%{http_code}' "$PORTAL_URL")"
+          test "$code" = 200
+          grep -Fq 'Evercraft LIVE | The Visual Portal' "$temp"
+          grep -Fq 'NOT LIVE TELEMETRY' "$temp"
+          grep -Fq 'id="film"' "$temp"
+          grep -Fq 'id="toggle"' "$temp"
+          grep -Fq 'id="next"' "$temp"
+          grep -Fq 'data-world="earth"' "$temp"
+          grep -Fq 'data-world="network"' "$temp"
+          grep -Fq 'data-world="weather"' "$temp"
+          grep -Fq 'data-world="science"' "$temp"
+          grep -Fq 'data-world="creative"' "$temp"
+          if grep -Eq 'drive\.google\.com|docs\.google\.com|base44\.app' "$temp"; then
+            echo "Private or legacy provider reference appeared on the public portal"
+            exit 1
+          fi
+          {
+            echo "## Evercraft LIVE public portal checked"
+            echo "URL: $PORTAL_URL"
+            echo "HTTP: $code"
+            echo "Source: original public illustration; no live feed is implied"
+            echo "Observed: $(date -u +%Y-%m-%dT%H:%M:%SZ)"
+          } >> "$GITHUB_STEP_SUMMARY"
