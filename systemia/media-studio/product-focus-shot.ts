@@ -20,7 +20,9 @@ export interface ProductFocusInput {
   /** Multiple truthful subject windows that the on-screen camera should follow. */
   focusPath?:Array<{t:number;focus:FocusRegion;action:string;ease?:EaseName}>;
   /** Human-nominated content areas that must remain fully visible at a given time. */
-  protectedRegions?:Array<{id:string;t:number;region:FocusRegion}>;
+  protectedRegions?:Array<{id:string;region:FocusRegion;t?:number;startSec?:number;endSec?:number}>;
+  criticalText?:Array<{id:string;t:number;sourceGlyphHeightPx:number;region:FocusRegion;minPhonePx?:number}>;
+  targetPhoneWidthPx?:number;
   title:string;
   caption:string;
   evidenceLabel:string;
@@ -43,6 +45,9 @@ export interface ProductFocusResult {
     cameraStops:number;
     cameraIntent:string[];
     protectedRegionChecks:number;
+    protectedFrameChecks:number;
+    criticalTextChecks:number;
+    minProjectedPhoneGlyphPx:number|null;
     sourcePixelsNotInvented:true;
     pixelLegibilityNotAutomaticallyVerified:true;
     noCreativeOrPublicationAuthority:true;
@@ -209,27 +214,86 @@ export function compileProductFocusShot(input:ProductFocusInput):ProductFocusRes
     }
     return crop.sourceWindow;
   };
+
   const protectedRegions=input.protectedRegions??[];
   if(!Array.isArray(protectedRegions)||protectedRegions.length>24){
     throw new Error('product_focus_protected_regions_invalid');
   }
   const names=new Set<string>();
+  let protectedFrameChecks=0;
+  const sourceRegionValid=(reg:FocusRegion)=>positiveFinite(reg?.width,reg?.height)&&
+    Number.isFinite(reg?.x)&&Number.isFinite(reg?.y)&&reg.x>=0&&reg.y>=0&&
+    reg.x+reg.width<=input.sourceWidth&&reg.y+reg.height<=input.sourceHeight;
+  const visible=(reg:FocusRegion,t:number)=>{
+    const win=sampledWindow(t);
+    return reg.x>=win.x-1e-4&&reg.y>=win.y-1e-4&&
+      reg.x+reg.width<=win.x+win.width+1e-4&&
+      reg.y+reg.height<=win.y+win.height+1e-4;
+  };
   for(const item of protectedRegions){
+    const point=item.t!==undefined;
+    const interval=item.startSec!==undefined||item.endSec!==undefined;
     if(!/^[a-zA-Z0-9._-]{1,128}$/.test(item?.id??'')||names.has(item.id)||
-       !Number.isFinite(item.t)||item.t<0||item.t>duration||
-       !positiveFinite(item.region?.width,item.region?.height)||
-       !Number.isFinite(item.region?.x)||!Number.isFinite(item.region?.y)||
-       item.region.x<0||item.region.y<0||
-       item.region.x+item.region.width>input.sourceWidth||
-       item.region.y+item.region.height>input.sourceHeight){
+       point===interval||!sourceRegionValid(item.region)){
       throw new Error('product_focus_protected_region_invalid');
     }
     names.add(item.id);
-    const win=sampledWindow(item.t),reg=item.region;
-    if(reg.x<win.x-1e-4||reg.y<win.y-1e-4||
-       reg.x+reg.width>win.x+win.width+1e-4||
-       reg.y+reg.height>win.y+win.height+1e-4){
-      throw new Error('product_focus_protected_region_clipped:'+item.id);
+    if(point){
+      if(!Number.isFinite(item.t)||item.t!<0||item.t!>duration){
+        throw new Error('product_focus_protected_region_invalid');
+      }
+      protectedFrameChecks++;
+      if(!visible(item.region,item.t!)){
+        throw new Error('product_focus_protected_region_clipped:'+item.id);
+      }
+    }else{
+      const first=item.startSec,last=item.endSec;
+      if(!Number.isFinite(first)||!Number.isFinite(last)||
+         first!<0||last!>duration||last!<=first!){
+        throw new Error('product_focus_protected_region_invalid');
+      }
+      const times=[first!];
+      for(let f=Math.ceil(first!*30);f<=Math.floor(last!*30);f++){
+        const t=f/30;
+        if(t>first!+1e-5&&t<last!-1e-5)times.push(t);
+      }
+      times.push(last!);
+      for(const t of times){
+        protectedFrameChecks++;
+        if(!visible(item.region,t)){
+          throw new Error('product_focus_protected_region_clipped:'+item.id);
+        }
+      }
+    }
+  }
+  // Editorially annotated source glyph size, not OCR or a readability claim.
+  const criticalText=input.criticalText??[];
+  const phoneWidth=input.targetPhoneWidthPx??390;
+  if(!Array.isArray(criticalText)||criticalText.length>24||
+     !Number.isFinite(phoneWidth)||phoneWidth<280||phoneWidth>1200){
+    throw new Error('product_focus_legibility_contract_invalid');
+  }
+  const textNames=new Set<string>();
+  let minProjected=Infinity;
+  for(const item of criticalText){
+    if(!/^[a-zA-Z0-9._-]{1,128}$/.test(item?.id??'')||
+       textNames.has(item.id)||!sourceRegionValid(item.region)||
+       !Number.isFinite(item.t)||item.t<0||item.t>duration||
+       !Number.isFinite(item.sourceGlyphHeightPx)||
+       item.sourceGlyphHeightPx<=0||item.sourceGlyphHeightPx>200||
+       !Number.isFinite(item.minPhonePx??9)||
+       (item.minPhonePx??9)<5||(item.minPhonePx??9)>24){
+      throw new Error('product_focus_text_annotation_invalid');
+    }
+    textNames.add(item.id);
+    if(!visible(item.region,item.t)){
+      throw new Error('product_focus_critical_text_clipped:'+item.id);
+    }
+    const crop=sampledWindow(item.t);
+    const projected=item.sourceGlyphHeightPx*screen.width/crop.width*phoneWidth/width;
+    minProjected=Math.min(minProjected,projected);
+    if(projected<(item.minPhonePx??9)){
+      throw new Error('product_focus_phone_text_below_minimum:'+item.id);
     }
   }
   const compact=fmt!=='landscape';
@@ -281,6 +345,9 @@ export function compileProductFocusShot(input:ProductFocusInput):ProductFocusRes
       cameraStops:cameraPath?.length??1,
       cameraIntent:path?.map(item=>item.action)??[],
       protectedRegionChecks:protectedRegions.length,
+      protectedFrameChecks,
+      criticalTextChecks:criticalText.length,
+      minProjectedPhoneGlyphPx:Number.isFinite(minProjected)?Number(minProjected.toFixed(2)):null,
       sourcePixelsNotInvented:true,
       pixelLegibilityNotAutomaticallyVerified:true,
       noCreativeOrPublicationAuthority:true,
