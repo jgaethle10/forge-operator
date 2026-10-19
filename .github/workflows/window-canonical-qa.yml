@@ -1,0 +1,48 @@
+name: Mossmere Canonical Spectator QA
+on:
+  push:
+    branches:
+      - feature/window-canonical-spectator-20261018
+    paths:
+      - 'public/the-window/**'
+      - 'tests/window-canonical-browser-check.mjs'
+      - 'tests/the-window-public.test.mjs'
+      - '.github/workflows/window-canonical-qa.yml'
+  pull_request:
+    paths:
+      - 'public/the-window/**'
+      - 'tests/window-canonical-browser-check.mjs'
+      - 'tests/the-window-public.test.mjs'
+      - '.github/workflows/window-canonical-qa.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  independent-spectator:
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+      - name: Source and simulation truth checks
+        run: |
+          node --check public/the-window/client.mjs
+          node --test tests/the-window-public.test.mjs
+      - name: Install isolated Chrome browser controller
+        run: npm install --prefix /tmp/window-probe --no-save --ignore-scripts playwright-core@1.55.0
+      - name: Chrome desktop/mobile connected to canonical state
+        run: |
+          python3 -m http.server 18887 --directory public/the-window >/tmp/window-server.log 2>&1 &
+          sleep 1
+          node tests/window-canonical-browser-check.mjs
+      - name: Preserve browser evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: mossmere-canonical-browser-evidence
+          path: artifacts/
+          if-no-files-found: ignore
+          retention-days: 14
