@@ -1,0 +1,49 @@
+name: Relay Licensed Commercial Footage Intake
+on:
+  workflow_dispatch:
+  push:
+    branches: [production/relay-commercial-footage-intake-20261019]
+    paths:
+      - ".github/workflows/relay-commercial-footage-intake.yml"
+permissions:
+  contents: read
+jobs:
+  intake:
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    steps:
+      - uses: actions/checkout@v4
+      - name: Acquire free-licensed footage with source receipts
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p /tmp/relay-footage
+          for item in "4802 meeting_end" "315 office_walk" "4648 architect_construction" "241 contract_document" "4813 meeting_conversation"; do
+            id="${item%% *}"
+            label="${item#* }"
+            url="https://assets.mixkit.co/videos/${id}/${id}-720.mp4"
+            echo "Fetching Mixkit free-licensed clip ${id}"
+            curl --fail --location --retry 3 --connect-timeout 15 --max-time 90 --silent --show-error "$url" -o "/tmp/relay-footage/${label}.mp4"
+            test "$(stat -c %s "/tmp/relay-footage/${label}.mp4")" -gt 60000
+            file "/tmp/relay-footage/${label}.mp4"
+            sha256sum "/tmp/relay-footage/${label}.mp4" >> /tmp/relay-footage/SHA256SUMS.txt
+            printf '%s\t%s\n' "$label" "$url" >> /tmp/relay-footage/origins.tsv
+          done
+          cat > /tmp/relay-footage/RIGHTS.txt <<'EOF'
+          Source: Mixkit Stock Video Free License (commercial projects, social videos, online marketing allowed).
+          License: https://mixkit.co/license/modal/videoFree/
+          Pages:
+          4802 https://mixkit.co/free-stock-video/people-ending-a-business-meeting-4802/
+          315 https://mixkit.co/free-stock-video/two-business-people-walk-in-an-office-hall-315/
+          4648 https://mixkit.co/free-stock-video/architect-talking-to-businessmen-4648/
+          241 https://mixkit.co/free-stock-video/signing-a-contract-241/
+          4813 https://mixkit.co/free-stock-video/business-partners-meeting-4813/
+          Clips are illustrative reenactment stock footage, not real Relay customers or endorsements.
+          EOF
+      - name: Retain footage evidence
+        uses: actions/upload-artifact@v4
+        with:
+          name: relay-stock-footage-free-license
+          path: /tmp/relay-footage/
+          if-no-files-found: error
+          retention-days: 7
