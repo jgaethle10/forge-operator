@@ -26,7 +26,10 @@ result.observed_at = new Date().toISOString();
 
 atomicJson(out, result);
 process.stdout.write(JSON.stringify({
-  ok: result.summary?.failed_count === 0,
+  // Zero failed requests does not mean the providers authenticated.
+  // A missing credential must never surface as a green operational status.
+  ok: Number(result.summary?.provider_count || 0) > 0 &&
+    Number(result.summary?.verified_count || 0) === Number(result.summary?.provider_count || 0),
   state: result.summary?.state || "unknown",
   route: result.route,
   receipt: out,
