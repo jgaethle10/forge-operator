@@ -51,5 +51,37 @@
       "action": "Travel to the human confirmation controls",
       "ease": "ease_in_out"
     }
+  ],
+  "protectedRegions": [
+    {
+      "id": "comparison",
+      "t": 0,
+      "region": {
+        "x": 450,
+        "y": 1300,
+        "width": 880,
+        "height": 280
+      }
+    },
+    {
+      "id": "warning",
+      "t": 3,
+      "region": {
+        "x": 520,
+        "y": 1510,
+        "width": 650,
+        "height": 230
+      }
+    },
+    {
+      "id": "approval",
+      "t": 6,
+      "region": {
+        "x": 520,
+        "y": 2010,
+        "width": 650,
+        "height": 240
+      }
+    }
   ]
 }
