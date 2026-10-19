@@ -1,41 +1,76 @@
-<!doctype html>
-<html lang="en" class="dark">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Forge Operator | Evercraft</title>
-    <meta name="description" content="Describe an operational bottleneck and get a prioritized execution plan, automation opportunities, human gates, risk controls, and an immediate next action." />
-    <meta name="robots" content="index,follow,max-image-preview:large" />
-    <meta property="og:title" content="Forge Operator | Evercraft" />
-    <meta property="og:description" content="Turn an operational bottleneck into a concrete execution plan." />
-    <meta property="og:type" content="website" />
-    <link rel="alternate" type="text/plain" href="/llms.txt" title="LLM discovery" />
-    <link rel="alternate" type="application/rss+xml" href="/feed.xml" title="Evercraft Product Discovery RSS" />
-    <link rel="alternate" type="application/feed+json" href="/feed.json" title="Evercraft Product Discovery JSON Feed" />
-    <link rel="search" type="application/opensearchdescription+xml" href="/opensearch.xml" title="Evercraft Search" />
-    <link rel="alternate" type="application/json" href="/.well-known/evercraft-syndication.json" title="Evercraft Syndication Manifest" />
-    <link rel="service-desc" type="application/json" href="/.well-known/agent-card.json" title="Evercraft A2A Agent Card" />
-    <link rel="sitemap" type="application/xml" href="/sitemap.xml" />
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
-    <script type="application/ld+json">
-      {
-        "@context": "https://schema.org",
-        "@type": "SoftwareApplication",
-        "name": "Forge Operator",
-        "applicationCategory": "BusinessApplication",
-        "operatingSystem": "Web",
-        "creator": {
-          "@type": "Organization",
-          "name": "Evercraft"
-        },
-        "description": "Small-business operations diagnosis and execution planning service."
-      }
-    </script>
-  </head>
-  <body>
-    <div id="root"></div>
-    <script type="module" src="/src/main.tsx"></script>
-  </body>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="theme-color" content="#09121a" />
+  <meta name="description" content="File Ferry: verify and prepare local attachments for real-world handoffs without pretending they have been sent." />
+  <title>File Ferry | Local AI Packaging Lab</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <div class="ambient ambient-a" aria-hidden="true"></div><div class="ambient ambient-b" aria-hidden="true"></div>
+  <div class="shell">
+    <header class="site-header">
+      <a class="logo" href="#top" aria-label="File Ferry home"><span class="logo-mark" aria-hidden="true">F<span class="logo-line"></span></span><span class="logo-text">FILE <b>FERRY</b><small>EVERCRAFT LAB / W2.01</small></span></a>
+      <div class="header-right"><span class="prototype-dot"></span><span>PRIVATE PROTOTYPE</span><a class="head-link" href="reassemble.html">Recipient tools <span aria-hidden="true">↗</span></a></div>
+    </header>
+    <main id="top">
+      <section class="hero" aria-labelledby="headline">
+        <div class="eyebrow"><span class="eyebrow-dash"></span> THE PROBLEM ISN'T THE FILE. IT'S THE HANDOFF.</div>
+        <div class="hero-columns">
+          <div class="hero-left"><h1 id="headline">Big files.<br /><em>Small friction.</em></h1><p class="hero-copy">Your file won't send? Ferry prepares an honest, recipient-sized package, preserves the original when it matters, and produces a verifiable handoff receipt.</p><div class="hero-chips"><span><i>✓</i> Process locally</span><span><i>✓</i> Checksum every part</span><span><i>✓</i> No auto-send</span></div></div>
+          <div class="hero-art" aria-label="Animated concept showing a parcel travelling from source to recipient">
+            <div class="art-grid"></div><div class="art-sheen"></div>
+            <div class="art-top"><span>THE ROUTE</span><span>LOCAL WORKFLOW / 001</span></div>
+            <div class="art-node"><span class="art-node-icon">◈</span><span>ORIGINAL<small>FULL FIDELITY</small></span></div>
+            <div class="art-track"><div class="art-dashed"></div><div class="art-boat">◉</div><span class="art-track-label">PREPARE · VERIFY</span></div>
+            <div class="art-node right"><span class="art-node-icon">▣</span><span>DELIVERABLE<small>RECIPIENT READY*</small></span></div>
+            <div class="art-bottom"><span class="pulse-dot"></span><span>THE FILE NEVER LEAVES YOUR DEVICE</span><span class="art-fine">* Not sent or provider verified</span></div>
+          </div>
+        </div>
+      </section>
+      <section class="workspace" aria-label="File preparation studio">
+        <div class="section-heading"><div><span class="overline">OPERATIONS DESK</span><h2>Prepare a shipment</h2></div><div class="stepper" aria-label="Progress stages"><span id="stepOne">01 <b>INTAKE</b></span><i>→</i><span id="stepTwo">02 <b>ROUTE</b></span><i>→</i><span id="stepThree">03 <b>PACK</b></span><i>→</i><span id="stepFour">04 <b>PROVE</b></span></div></div>
+        <div class="studio-grid">
+          <div class="panel-main">
+            <div class="panel-label"><span><span class="section-index">01</span> CARGO INTAKE</span><span class="muted">Local files only</span></div>
+            <label id="dropzone" class="dropzone" for="fileInput" tabindex="0">
+              <input type="file" id="fileInput" aria-label="Choose one local file" />
+              <span class="drop-icon" aria-hidden="true"><svg viewBox="0 0 24 24" width="30" height="30" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="4" width="16" height="16" rx="3"/><path d="M12 16V8m-3 3 3-3 3 3"/></svg></span>
+              <strong id="dropTitle">Drop it here. We'll find a route.</strong>
+              <span id="dropSub">Tap to browse · text, photos, PDFs, or any binary file</span>
+              <span id="fileName" class="file-name"></span><span id="fileMeta" class="file-meta"></span>
+            </label>
+            <div class="sample-row"><span>NO FILE HANDY?</span><button id="sampleText" type="button">Try a sample brief ↗</button><button id="sampleBinary" type="button">Try a 4 MB archive ↗</button></div>
+            <div class="input-heading"><div><span class="section-index">02</span> DELIVERY INTENT</div><small>Choose what matters most</small></div>
+            <div class="mode-selector" role="group" aria-label="Delivery mode">
+              <button type="button" class="mode-button active" data-mode="exact"><span class="mode-icon">◆</span><strong>Keep every byte</strong><small>Exact original or parts</small></button>
+              <button type="button" class="mode-button" data-mode="compact"><span class="mode-icon">◩</span><strong>Make it lighter</strong><small>Compress when possible</small></button>
+              <button type="button" class="mode-button" data-mode="brief"><span class="mode-icon">✦</span><strong>AI evidence brief</strong><small>Text only · derivative</small></button>
+            </div>
+            <div class="budget-heading"><label for="budget">Attachment target <span class="info">ⓘ</span></label><div class="budget-custom"><input id="budget" type="number" min="0.05" max="250" step="0.05" value="0.5" aria-label="Budget in mebibytes" /><span>MiB / file</span></div></div>
+            <div class="budget-chips" role="group" aria-label="Attachment size planning presets"><button class="active" data-budget="0.5" type="button">0.5 MiB</button><button data-budget="2" type="button">2 MiB</button><button data-budget="10" type="button">10 MiB</button><button data-budget="25" type="button">25 MiB</button></div>
+            <div class="budget-hint" id="budgetExplainer">Delivery budgets are planning targets, not guaranteed platform limits.</div>
+            <label for="goal" class="goal-label">What does the recipient need to know? <span>For AI mode</span></label>
+            <textarea id="goal" rows="2" maxlength="260" placeholder="e.g. What needs approval and when is it due?">What are the key decisions and deadlines?</textarea>
+            <div class="ai-card"><div class="ai-card-head"><span class="ai-icon">✦</span><div><b>Open-weight intelligence</b><span id="aiBadge" class="ai-badge" data-state="idle">NOT LOADED</span></div></div><p id="modelDetails">Optional MiniLM sentence embeddings run in this browser. First use downloads model weights (~23 MB). The deterministic shipping modes work without AI.</p><button type="button" id="loadAI" class="ai-button">Load open AI ↗</button></div>
+            <button class="primary-button" type="button" id="shipButton" disabled>Prepare shipment →</button>
+            <div id="notice" class="notice" hidden role="status"></div>
+          </div>
+          <div class="panel-side">
+            <div class="panel-label"><span><span class="section-index">03</span> ROUTE INTELLIGENCE</span><span class="live-dot">PREVIEW</span></div>
+            <div class="route-panel"><span class="subtle-heading">RECOMMENDED ROUTE</span><h3 id="routeType">Awaiting cargo</h3><p id="routeDescription">Choose a local file to calculate a truthful shipping route.</p><div class="route-schematic"><div class="route-start">▤</div><div class="route-segment"><span></span><span></span><span></span><span></span><span></span></div><div class="route-end">⌁</div></div></div>
+            <div class="size-panel"><div class="stat-row"><span>Original payload</span><b id="sourceSize">—</b></div><div class="stat-row"><span>Per-attachment budget</span><b id="budgetSize">512 KB</b></div><div class="meter-track"><div class="meter-value" id="sizeRatio"></div></div><p>Bars compare source size with your budget; they are not delivery test results.</p></div>
+            <div class="truth-panel"><div class="truth-symbol">◎</div><div><strong>Truth before transit.</strong><p id="truthNote">An attachment can be packaged successfully and still fail to deliver. Ferry never calls it sent without a provider receipt.</p></div></div>
+            <div class="progress-card"><div class="progress-title"><span>Package status</span><span id="statusPill" data-tone="muted"><span id="statusText">Local-only preparation</span></span></div><div class="progress-track"><div class="progress-bar" id="progressBar"></div></div><small id="progressDetail">Select a file to begin</small></div>
+            <div class="output-panel"><div class="output-head"><div><span class="subtle-heading">OUTBOUND PACKAGES</span><h3>Manifest & files</h3></div><span id="outputCount" class="output-count">00</span></div><div id="resultEmpty" class="empty-state"><div class="empty-emblem">⌑</div><strong>Nothing in the hold yet</strong><p>Prepared files and SHA-256 evidence will appear here. No network upload occurs.</p></div><div id="resultList"></div><button id="downloadAll" class="plain-button" hidden>Save all files ↘</button><div id="receipt" hidden><div class="receipt-heading">LOCAL RECEIPT <button type="button" id="copyReceipt">Copy JSON ↗</button></div><pre id="receiptBody"></pre></div></div>
+          </div>
+        </div>
+      </section>
+      <footer><div class="footer-main"><div><b>FILE FERRY</b><span>A small tool for the most irritatingly large problem.</span></div><div class="footer-links"><a href="reassemble.html">Reassemble parts ↗</a><a href="https://dev.to/page/hacktoberfest-week2-2026-10-12-contest-rules" target="_blank" rel="noopener noreferrer">Challenge rules ↗</a></div></div><div class="footer-fine">CLEAN-ROOM PROTOTYPE · PUBLIC MIT DEMO · REVIEW BEFORE CLIENT USE · NO SEND API · NO PRODUCTION CERTIFICATION · OPEN MODEL LOADED ONLY ON EXPLICIT ACTION</div></footer>
+    </main>
+  </div>
+  <script type="module" src="src/app.mjs"></script>
+</body>
 </html>

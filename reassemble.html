@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><meta name="theme-color" content="#09121a"><title>File Ferry | Reassemble</title><link rel="stylesheet" href="styles.css"></head>
+<body><div class="shell"><header class="site-header"><a class="logo" href="index.html"><span class="logo-mark">F<span class="logo-line"></span></span><span class="logo-text">FILE <b>FERRY</b><small>RECIPIENT WORKBENCH</small></span></a><div class="header-right"><a class="head-link" href="index.html">← Back to studio</a></div></header>
+<main style="max-width:840px;margin:70px auto 110px"><div class="eyebrow"><span class="eyebrow-dash"></span> NO ACCOUNT. NO UPLOAD. NO GUESSING.</div><h1 style="font-size:clamp(42px,7vw,72px);letter-spacing:-.06em;line-height:1;margin:22px 0">Put the pieces<br><span style="color:var(--teal)">back together.</span></h1><p class="hero-copy" style="max-width:690px">If someone sent you a File Ferry manifest and numbered parts, select them below. We verify the SHA-256 checksum of every part before rebuilding a byte-for-byte copy. Nothing is uploaded.</p>
+<div class="panel-main" style="margin-top:35px"><div class="panel-label"><span><span class="section-index">01</span> RECEIPT & PIECES</span><span class="muted">Local reconstruction</span></div><label for="manifestInput" class="goal-label">Select manifest JSON</label><input id="manifestInput" type="file" accept=".json,application/json" style="width:100%;background:#142c36;border:1px solid #36535a;padding:16px;border-radius:5px;color:#d2e8e8;margin-bottom:22px"><label for="partsInput" class="goal-label">Select all .part files together</label><input id="partsInput" type="file" multiple accept=".part,application/octet-stream" style="width:100%;background:#142c36;border:1px solid #36535a;padding:16px;border-radius:5px;color:#d2e8e8;margin-bottom:22px"><button id="rebuild" class="primary-button">Verify and reconstruct →</button><div class="progress-card"><div class="progress-title"><span>Verification</span><span id="verifyText">Waiting for inputs</span></div><div class="progress-track"><div id="verifyBar" class="progress-bar"></div></div></div><div id="feedback" class="notice" hidden role="status"></div><div id="rebuildOutput" hidden><p class="hero-copy" id="rebuildText"></p><button class="ai-button" id="saveRebuilt">Save verified original ↓</button></div></div>
+<p style="font-size:12px;line-height:1.8;color:#86a8a9;margin-top:26px">Security note: SHA-256 proves byte integrity, not that the sender is trustworthy, the source is malware-free, or a provider delivered the files. Only open content you trust. Reconstruction works in a secure context such as localhost or HTTPS.</p>
+</main><footer><div class="footer-fine">FILE FERRY / LOSSLESS RECIPIENT TOOL · PRIVATE PROTOTYPE</div></footer></div><script type="module">
+import {reassemblePieces,formatBytes} from './src/core.mjs';
+const $=x=>document.getElementById(x);let original=null;
+$('rebuild').addEventListener('click',async()=>{
+ $('feedback').hidden=true;$('rebuildOutput').hidden=true;original=null;$('rebuild').disabled=true;
+ try{
+  const jsonFile=$('manifestInput').files[0];const pieces=[...$('partsInput').files];
+  if(!jsonFile||!pieces.length)throw new Error('Select the JSON manifest and all part files');
+  if(jsonFile.size>MiBLimit())throw new Error('Manifest unexpectedly large');
+  const manifest=JSON.parse(await jsonFile.text());
+  original=await reassemblePieces(manifest,pieces,{onProgress:p=>{$('verifyBar').style.width=`${p*100}%`;$('verifyText').textContent=`${Math.round(p*100)}% checked`;}});
+  $('feedback').hidden=false;$('feedback').dataset.tone='success';$('feedback').textContent='All recorded checks passed. This is an exact reconstructed copy to the extent covered by the manifest.';
+  $('rebuildText').textContent=`${original.name} · ${formatBytes(original.blob.size)} · Verified ${pieces.length} parts`;
+  $('rebuildOutput').hidden=false;
+ }catch(err){$('feedback').hidden=false;$('feedback').dataset.tone='error';$('feedback').textContent=err.message;$('verifyText').textContent='Verification failed';}
+ finally{$('rebuild').disabled=false;}
+});
+function MiBLimit(){return 2*1024*1024;}
+$('saveRebuilt').addEventListener('click',()=>{if(!original)return;const url=URL.createObjectURL(original.blob);const link=document.createElement('a');link.href=url;link.download=original.name;link.click();setTimeout(()=>URL.revokeObjectURL(url),10000);});
+</script></body></html>

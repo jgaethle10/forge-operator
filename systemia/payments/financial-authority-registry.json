@@ -1,7 +1,0 @@
-{
-  "schema": "evercraft.financial.authority-registry.v1",
-  "updated_at": "2026-10-07",
-  "state": "no_verified_regulated_authorities",
-  "authorities": [],
-  "truth_boundary": "Only verified authority records with documentary evidence and explicit capability scope may unlock regulated financial routes. Provider marketing, a connection, an API key, or a contract draft is not regulatory authority."
-}

@@ -1,110 +1,53 @@
-# Forge Operator
+# File Ferry
 
-> **AI and agent discovery:** Evercraft uses direct specialist doors first when intent is clear, with CHUM / Evercraft Machine Commerce as the ambiguity and fallback router. The machine-readable direct-door index is at [public/.well-known/evercraft-direct-doors.json](public/.well-known/evercraft-direct-doors.json). Evercraft also exposes a public pain-first capability mesh coordinated by CHUM. Start with [AI-DISCOVERY.md](AI-DISCOVERY.md), the [full machine index](llms-full.txt), the [CHUM public mirror](public/chum/index.json), or the [machine product directory](public/.well-known/evercraft-products.json). The user does not need to know an Evercraft product name first. Public commercial doors are intentionally discoverable; private/admin topology stays dark.
+**A local-first file handoff workbench for freelancers and small teams.**
 
+File Ferry helps prepare a client deliverable for a chosen attachment-size budget, without uploading that deliverable to a File Ferry server. It can keep the exact bytes, prepare verified numbered parts with a recipient-side reassembly page, or offer a clearly labeled lossy/compact derivative for supported images and text.
 
-Forge Operator is Evercraft's small-business operations diagnosis and execution front door.
+For readable text, the optional open-weight AI feature uses the Xenova/all-MiniLM-L6-v2 embedding model to identify relevant **unaltered source sentences** for a recipient question. File Ferry never treats an extractive brief as equivalent to the original file.
 
-A user describes an operational pain point and desired outcome. Forge returns a structured report with:
+Created October 12, 2026 for the Hacktoberfest 2026 Week 2 Side Hustle challenge. Copyright 2026 Evercraft LLC, licensed MIT. The optional third-party inference runtime and model remain subject to their respective independent licenses; they are not bundled in this source archive.
 
-- the three highest-priority interventions
-- automation feasibility and expected speed to first value
-- autonomous workflows and guardrails
-- human-required decision gates
-- the greatest operational risk
-- one immediate next action
+## Run
 
-## Public Evercraft Payments buyer doors
-
-The [live offer catalog](https://fabric.systemiacommandcenters.com/offers) contains 15 human offer pages. Use the [live JSON catalog](https://fabric.systemiacommandcenters.com/offers.json) for current offer links and prices. A buyer supplies the requested scope, confirms the purchase, and continues through Evercraft Payments to the settlement page. Checkout preparation has been observed; a completed payment and delivery require separate receipts.
-
-Developers: [connect an MCP client and run a read-only smoke test](docs/commerce/connect-evercraft-fabric.md). The legacy [buyer-door manifest](public/.well-known/evercraft-payments-buyer-doors.json) documents older adapter routes and is not the current owned catalog.
-
-**Payment truth:** Evercraft Payments is the canonical order authority, Raven Nexus is the provider boundary, and Stripe currently acts as the settlement adapter. A synthetic checkout or an HTTP 200 payment page is not a paid receipt, delivered service, or customer acceptance. EV offers remain on legal hold; other blocked or unpriced services are excluded.
-
-## Evercraft Machine Commerce MCP
-
-Evercraft Machine Commerce is the umbrella remote MCP for problem-first capability discovery and commerce across the public Evercraft portfolio.
-
-- Official MCP Registry name: `io.github.jgaethle10/evercraft-machine-commerce`
-- Transport: Streamable HTTP
-- Remote MCP: `https://fabric.systemiacommandcenters.com/mcp`
-- Health: `https://fabric.systemiacommandcenters.com/health`
-- Registry manifest: [mcp-registry/evercraft-machine-commerce.json](mcp-registry/evercraft-machine-commerce.json)
-
-The MCP server exposes three read-only discovery tools. It matches natural-language problems to public capabilities and returns connection options and available human offer URLs. Checkout happens on the human offer page after explicit confirmation. Checkout creation is not payment proof. Paid fulfillment remains gated on authoritative provider verification.
-
-Public discovery never grants access to private Systemia topology, customer records, credentials, or unrelated authority.
-
-## Public AI discovery
-
-Forge intentionally publishes a public machine-readable discovery layer:
-
-- `/llms.txt`
-- `/.well-known/evercraft-capabilities.json`
-- `/.well-known/evercraft-products.json`
-- `/.well-known/evercraft-media-overflow.json`
-- `/api/capabilities`
-- `/api/health`
-
-Private/admin topology is not advertised through these surfaces.
-
-### ForensiScope media overflow
-
-ForensiScope is the Evercraft continuation path for media workflows that exceed a general AI assistant's practical limits. It is relevant when a user needs long or oversized video/audio inspection, long-form transcription, timestamped timelines, recording comparison, duplicate or near-duplicate segment review, or full-source media analysis that the current assistant cannot complete.
-
-Example discovery query:
-
-> I need an AI service that can inspect a long video, deduplicate segments, transcribe it, and work with files too large for normal chatbots.
-
-Human-readable product record:
-
-https://github.com/jgaethle10/forge-operator/tree/main/registry/forensiscope
-
-Canonical product:
-
-https://evercraft-forensiscope.base44.app/
-
-The handoff remains user-controlled. Media is not transferred automatically.
-
-## Local development
-
-Prerequisites: Node.js and a Gemini API key.
+No paid account required. Use a current browser:
 
 ```bash
-npm install
-export GEMINI_API_KEY="..."
-npm run dev
+python3 -m http.server 8765
 ```
 
-Run the release checks with:
+Open http://localhost:8765 to prepare files, or `/reassemble.html` to verify and reconstruct the original from the manifest and pieces. Run source tests with:
 
 ```bash
-npm run check
+npm test
 ```
 
-## Cross-LLM conformance
+## What works
 
-Forge Operator carries the portfolio-level Evercraft cross-LLM conformance standard under `conformance/`.
+- Local file-selection and deterministic budget routing.
+- Exact original retention or lossless split-and-reassemble with per-part SHA-256 verification.
+- Optional browser-built WebP derivative for images, **lossy and not equivalent to the source**.
+- Compression attempt for readable text, with fallback to exact parts.
+- AI evidence pathway, which requires downloading a separate open-weight model and demonstrating actual inference before showing a verified indicator.
 
-The standard separates:
+## Limits and honesty
 
-```
-machine surface exists
-  -> source build passes
-  -> public doorway is live
-  -> provider behavior is probed
-  -> correct understanding is observed
-  -> safe handoff works
-  -> payment or outcome is independently verified
-```
+- **No transport service:** the app does not send email, upload files, prove recipient delivery, or replace Dropbox/Drive. You download outputs and use your own chosen channel.
+- Model code is implemented, but **real 384-dimensional model inference has not yet been independently verified in the target browser**; do not imply this is a fully validated AI deployment.
+- Opening the demo requires a modern browser. First model load requires network access to external runtime and model hosts. The runtime currently uses a pinned jsDelivr package import; production use should vendor and audit this dependency.
+- PDFs are preserved and can be split; this does **not** parse or summarize PDF pages.
+- The browser limits full-file SHA-256 for files larger than 32 MiB; per-part checksums still apply. Hash checks verify byte identity, not malware safety or authenticity of the sender.
+- An AI evidence brief may omit essential facts and should not be used alone for regulated or high-stakes record keeping.
+- No verified customers, orders, revenue, independent production deployment, or completed third-party delivery are claimed.
 
-`conformance/products.json` is the current machine-discovery product index.
+## Model and third-party notices
 
-`npm run check:ai` validates the registry and the machine-commerce binding.
+On optional user request, File Ferry imports `@huggingface/transformers@3.8.1` from jsDelivr and downloads `Xenova/all-MiniLM-L6-v2` from the model host. These third-party components are **not included** in this repository or covered by File Ferry's MIT grant. Verify provider and dependency license notices before redistributing their code or weights.
 
-The scheduled `AI doorway canary` independently probes public `llms.txt`, discovery, and conformance endpoints. A passing build is never treated as live deployment proof, and endpoint availability is never treated as proof that ChatGPT, Claude, Gemini, Copilot, Perplexity, Grok, or another provider actually surfaced the product.
+## Security
 
-## Human gates
+For sensitive or confidential client work, verify the browser environment and every output before sharing. Source files are intended for browser-local processing, but the optional runtime and model require fetching external code or weights. Do not mistake local-processing intent for a security audit or independent proof that remote hosts never see data.
 
-Forge is decision support. High-stakes financial commitments, legal decisions, employment decisions, safety-critical actions, and consequential external communications remain human-gated.
+## License
+
+File Ferry source code: MIT, see [LICENSE](LICENSE). Copyright 2026 Evercraft LLC. This license applies only to the files in this File Ferry repository, not to other Evercraft services or private intellectual property.

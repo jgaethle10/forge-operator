@@ -1,9 +1,0 @@
-{
-  "name": "evercraft-rescue-resolver-browser-proof",
-  "version": "0.1.0",
-  "private": true,
-  "type": "module",
-  "dependencies": {
-    "playwright": "^1.58.0"
-  }
-}
