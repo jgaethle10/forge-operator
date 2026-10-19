@@ -21,7 +21,13 @@ Four synthetic cases: (1) agent success with no provider observations => UNKNOWN
 
 ## Entire compatibility boundary
 
-Entire's documented `entire-<name>` external-command mechanism is a command launcher with pass-through stdio and exit code. It **does not automatically capture transcripts or create checkpoints**. See [Entire external commands](https://github.com/entireio/cli/blob/main/docs/architecture/external-commands.md). This candidate is compiled as `entire-blackbox`; `entire plugin install ./entire-blackbox` and `entire blackbox inspect ...` remain an **unverified installation path** until separately exercised with the real CLI and recorded versions. We have no official Entire partnership or catalog entry.
+Entire's documented `entire-<name>` external-command mechanism is a command launcher with pass-through stdio and exit code. It **does not automatically capture transcripts or create checkpoints**. See [Entire external commands](https://github.com/entireio/cli/blob/main/docs/architecture/external-commands.md). This candidate is compiled as `entire-blackbox`. **Update (October 19, 2026):** the previously unverified local installation path was subsequently exercised against a hash-pinned **real Entire CLI v0.11.5** in [successful CI run #39055019209](https://github.com/jgaethle10/forge-operator/actions/runs/39055019209). Install, invoke, negative-input rejection, and uninstall passed in an isolated runner. Cross-platform release-shaped archives and detached source verification also passed in [run #39070140266](https://github.com/jgaethle10/forge-operator/actions/runs/39070140266). These are **local CLI and packaging proofs**, not Entire checkpoint hooks, an official catalog-listed plugin, a public release, third-party installation, provider outcome verification, or a partnership. No official Entire endorsement exists.
+
+## Broader failure-and-recovery evidence
+
+This four-case Go CLI remains the *introductory component*, not the complete incident demonstration. A separately tested **real local-process adversarial drill** exercised a scripted worker, eight locally signed observer events, a restarted sandbox receiver rejecting four persistence requests before and after restart, and two same-host NodeSeed test processes. [Exact-head CI run #39093796275](https://github.com/jgaethle10/forge-operator/actions/runs/39093796275) passed. This does **not** establish production security containment, authenticated external business side effects, independent physical-node identity, or live Entire checkpoint integration.
+
+The source-linked [Entire engineering review brief](../../systemia/agent-continuity/ENTIRE_REVIEW_BRIEF_20261019.md) explains which behaviors were actually tested and how to reproduce the founder-held local challenge. No public invitation is approved by this document.
 
 ## Technical question for Entire's community
 
