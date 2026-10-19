@@ -55,6 +55,7 @@ jobs:
           if(!html.includes('position:absolute;max-width:none;left:')) throw new Error('real_source_crop_missing');
           if(!html.includes('mediaWindowAt')||!html.includes('setMediaWindow')) throw new Error('animated_media_camera_runtime_missing');
           if(receipt.evidence.cameraStops!==3) throw new Error('camera_evidence_receipt_missing');
+          if(receipt.evidence.protectedRegionChecks!==3) throw new Error('critical_UI_region_protection_not_evidenced');
           if(receipt.evidence.noCreativeOrPublicationAuthority!==true) throw new Error('publication_gate_missing');
           NODE
       - name: Typecheck
