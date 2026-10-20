@@ -82,7 +82,7 @@ export function buildVoiceAudition({manifestPath,outputDir,templatePath=path.joi
    total+=result.bytes;
    if(total>TOTAL_MAX)throw Error('audition_total_audio_size_exceeded');
    const {sourcePath,...publicCandidate}=c;
-   return {...publicCandidate,audioPath:result.audioPath,signal:result.signal,bytes:result.bytes,
+   return {...publicCandidate,audioPath:result.audioPath,signal:result.signal,pacing:result.pacing,bytes:result.bytes,
      pacingReviewRequired:result.pacing.warnings.length>0,
      audibleQualityReviewed:false,consentEvidenceVerified:false,
      status:result.signal.status==='objective_measurements_only'?'awaiting_human_review':'signal_held'};
