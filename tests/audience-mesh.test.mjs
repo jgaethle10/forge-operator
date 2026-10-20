@@ -24,7 +24,7 @@ test('mesh links retain customer fallback and disclose trust boundaries',()=>{
 });
 
 test('publisher widget has a constrained referral label and safe link behavior',()=>{
-  assert.match(widget,/replace\(\/\[\^a-z0-9_-\]\/gi,'\'\)/);
+  assert.ok(widget.includes("replace(/[^a-z0-9_-]/gi,'')"));
   assert.match(widget,/\.slice\(0,40\)/);
   assert.match(widget,/noopener noreferrer sponsored/);
   assert.match(widget,/document\.createElement\('a'\)/);
