@@ -18,6 +18,7 @@ import type {WorldDefinition} from './engine.js';
 import type {GeometryAsset} from './webgpu.js';
 import {makeTorusGeometry} from './procedural-geometry.js';
 import {makeBrushedMetalTextures} from './brushed-metal.js';
+import {generateDeterministicTangents} from './fallen-geometry.js';
 import type {TextureAsset} from './texture.js';
 import {textureAssetDigest} from './texture.js';
 import {extractOwnedShader} from '../evercraft-web/browser-worker/webgpu-reference-frame.mjs';
@@ -56,7 +57,11 @@ function industrialTextures():TextureAsset[]{
 }
 function industrialGeometry(){
   return [cube(),makeTorusGeometry({id:'owned:outer-rotor',majorRadius:1.32,tubeRadius:.22}),
-    makeTorusGeometry({id:'owned:inner-rotor',majorRadius:.77,tubeRadius:.16,radialSegments:32,tubularSegments:8})];
+    makeTorusGeometry({id:'owned:inner-rotor',majorRadius:.77,tubeRadius:.16,radialSegments:32,tubularSegments:8})]
+    .map(geometry=>({
+      ...geometry,
+      tangents:generateDeterministicTangents(geometry.positions,geometry.normals,geometry.uvs??[])
+    }));
 }
 function industrialWorld():WorldDefinition{
   const material=(id:string,color:[number,number,number],metallic=.2,roughness=.55)=>({
