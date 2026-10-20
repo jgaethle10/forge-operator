@@ -5,6 +5,9 @@ on:
     paths:
       - "systemia/graphics-command/fallen-studio-handoff.ts"
       - "systemia/graphics-command/fallen-studio-handoff.test.ts"
+      - "systemia/graphics-command/fallen-voice-foundry-handoff.mjs"
+      - "systemia/graphics-command/fallen-voice-foundry-handoff.test.mjs"
+      - "systemia/graphics-command/write-voice-foundry-queue.mjs"
       - "systemia/graphics-command/campaigns/systemia-university-owned-handoff.v1.json"
       - ".github/workflows/systemia-university-owned-fallen-canary.yml"
   workflow_dispatch:
@@ -24,11 +27,19 @@ jobs:
       - name: Install project dependencies
         run: npm install --no-audit --no-fund
       - name: Test actual Fallen production-need compiler and negative safety gates
-        run: node --import tsx --test systemia/graphics-command/fallen-studio-handoff.test.ts
+        run: |
+          node --import tsx --test \
+            systemia/graphics-command/fallen-studio-handoff.test.ts \
+            systemia/graphics-command/fallen-voice-foundry-handoff.test.mjs
       - name: Compile production-owned editable timeline (NO provider work)
         run: |
           node --import tsx systemia/graphics-command/fallen-studio-handoff.ts \
             systemia/graphics-command/campaigns/systemia-university-owned-handoff.v1.json \
+            /tmp/systemia-university-owned-fallen-canary
+      - name: Produce held Voice Foundry script and timing queue
+        run: |
+          node --import tsx systemia/graphics-command/write-voice-foundry-queue.mjs \
+            /tmp/systemia-university-owned-fallen-canary/fallen-studio-draft.json \
             /tmp/systemia-university-owned-fallen-canary
       - name: Check every advertised scene remains a production requirement
         run: |
@@ -41,6 +52,10 @@ jobs:
           if(receipt.durationSec!==30||receipt.pendingPictureCount!==7||receipt.pendingVoiceCount!==7) throw new Error('scene_or_voice_proof_missing');
           if(!draft.project.assets.every(asset=>asset.path.startsWith('pending://production/'))) throw new Error('unverified_media_leak');
           if(draft.boundaries.paidGenerationAuthorityGranted!==false) throw new Error('paid_generation_leak');
+          const voice=JSON.parse(fs.readFileSync(root+'/voice-foundry-session.held.json','utf8'));
+          const voiceReceipt=JSON.parse(fs.readFileSync(root+'/voice-handoff-receipt.json','utf8'));
+          if(voice.cues.length!==7 || voice.profiles.length!==0 || voice.cues.some(c=>c.voiceProfileId!==null)) throw new Error('unapproved_voice_cast_leak');
+          if(voiceReceipt.status!=='held_cast_and_rights_required' || voiceReceipt.publicationAuthority!==false) throw new Error('voice_release_boundary_broken');
           NODE
       - name: Attach inspectable draft artifacts, never publish
         uses: actions/upload-artifact@v4
