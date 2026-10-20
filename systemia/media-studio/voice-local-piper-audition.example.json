@@ -1,0 +1,49 @@
+{
+  "schema": "evercraft.voice-foundry.local-piper-batch.v1",
+  "projectId": "evercraft-neural-audition-replace",
+  "scriptText": "The future does not announce itself. It begins with the people willing to build it.",
+  "locale": "en-US",
+  "allowPaidGeneration": false,
+  "candidates": [
+    {
+      "id": "audition-a",
+      "voiceProfileId": "narrator-a",
+      "accent": "general-american-unverified",
+      "genderPresentation": "unspecified",
+      "performanceDirection": "warm cinematic narrator, human listening needed",
+      "piperCliPath": "/ABSOLUTE/PATH/TO/piper",
+      "modelPath": "/ABSOLUTE/PATH/TO/voice-a.onnx",
+      "modelConfigPath": "/ABSOLUTE/PATH/TO/voice-a.onnx.json",
+      "expectedBinarySha256": "REPLACE_WITH_VERIFIED_BINARY_SHA256",
+      "expectedModelSha256": "REPLACE_WITH_VERIFIED_MODEL_A_SHA256",
+      "expectedConfigSha256": "REPLACE_WITH_VERIFIED_CONFIG_A_SHA256",
+      "speakerId": 0,
+      "lengthScale": 1,
+      "noiseScale": 0.667,
+      "noiseWidth": 0.8,
+      "sentenceSilenceSec": 0.2,
+      "rightsState": "unknown",
+      "licenseEvidenceRef": "REPLACE_WITH_ACTUAL_LICENSE_REVIEW_RECEIPT"
+    },
+    {
+      "id": "audition-b",
+      "voiceProfileId": "narrator-b",
+      "accent": "general-american-unverified",
+      "genderPresentation": "unspecified",
+      "performanceDirection": "intimate measured narrator, human listening needed",
+      "piperCliPath": "/ABSOLUTE/PATH/TO/piper",
+      "modelPath": "/ABSOLUTE/PATH/TO/voice-b.onnx",
+      "modelConfigPath": "/ABSOLUTE/PATH/TO/voice-b.onnx.json",
+      "expectedBinarySha256": "REPLACE_WITH_VERIFIED_BINARY_SHA256",
+      "expectedModelSha256": "REPLACE_WITH_VERIFIED_MODEL_B_SHA256",
+      "expectedConfigSha256": "REPLACE_WITH_VERIFIED_CONFIG_B_SHA256",
+      "speakerId": 0,
+      "lengthScale": 1.05,
+      "noiseScale": 0.667,
+      "noiseWidth": 0.8,
+      "sentenceSilenceSec": 0.2,
+      "rightsState": "unknown",
+      "licenseEvidenceRef": "REPLACE_WITH_ACTUAL_LICENSE_REVIEW_RECEIPT"
+    }
+  ]
+}
