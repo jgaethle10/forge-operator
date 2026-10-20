@@ -192,3 +192,11 @@ test('strict name pronunciation blocks paid request without a reviewed dictionar
  await assert.rejects(()=>adapter.execute(need),/dictionary_required_for_matched_terms/);
  assert.equal(calls.length,0);
 });
+
+test('an unrelated later scene cannot change the same speaker identity silently',async()=>{
+ const secondProfile={...profile,id:'other-actor',identityVersion:'2',providerVoiceId:'other-voice'};
+ const scene2={...cue,id:'second-scene',voiceProfileId:'other-actor'};
+ const {adapter,calls}=rig({profiles:[profile,secondProfile],cues:[cue,scene2]});
+ await assert.rejects(()=>adapter.execute(need),/speaker_voiceProfileId_changed/);
+ assert.equal(calls.length,0,'whole-session conflict must block before any paid call');
+});
