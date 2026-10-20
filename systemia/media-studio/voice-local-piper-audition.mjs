@@ -1,14 +1,36 @@
 import fs from 'node:fs';
+import crypto from 'node:crypto';
 import path from 'node:path';
 import {fileURLToPath} from 'node:url';
 import {createLocalPiperTake} from './voice-local-piper.mjs';
 import {buildVoiceAudition} from './voice-audition-kit.mjs';
 
 const ID=/^[a-zA-Z0-9][a-zA-Z0-9_.-]{0,59}$/;
+const SHA=/^[a-f0-9]{64}$/i;
 function fail(x){throw Error('voice_piper_batch_'+x);}
 function required(x,key){
  if(typeof x!=='string'||!x.trim())fail(key+'_missing');
  return x.trim();
+}
+async function hashFile(p){
+ const hash=crypto.createHash('sha256');
+ for await(const chunk of fs.createReadStream(p))hash.update(chunk);
+ return hash.digest('hex');
+}
+function normalizeLocale(v){try{return Intl.getCanonicalLocales(String(v).replace(/_/g,'-'))[0];}catch{fail('locale_invalid');}}
+async function preflightAllCandidates(candidates,locale){
+ const region=normalizeLocale(locale);
+ for(const c of candidates){
+   if(c.rightsState!=='cleared'||typeof c.licenseEvidenceRef!=='string'||!c.licenseEvidenceRef.trim())fail('batch_license_evidence_incomplete:'+c.id);
+   for(const [label,pin,p] of [['binary',c.expectedBinarySha256,c.piperCliPath],['model',c.expectedModelSha256,c.modelPath],['config',c.expectedConfigSha256,c.modelConfigPath]]){
+     if(typeof pin!=='string'||!SHA.test(pin))fail('batch_missing_sha_pin:'+c.id+':'+label);
+     if(typeof p!=='string'||!path.isAbsolute(p)||!fs.existsSync(p)||!fs.statSync(p).isFile())fail('batch_runtime_file_missing:'+c.id+':'+label);
+     if((await hashFile(p)).toLowerCase()!==pin.toLowerCase())fail('batch_runtime_digest_mismatch:'+c.id+':'+label);
+   }
+   let cfg;try{cfg=JSON.parse(fs.readFileSync(c.modelConfigPath,'utf8'));}catch{fail('batch_model_config_invalid:'+c.id);}
+   if(normalizeLocale(cfg.language?.code)!==region)fail('batch_model_locale_mismatch:'+c.id);
+   if(Number.isInteger(cfg.num_speakers)&&(c.speakerId??0)>=cfg.num_speakers)fail('batch_speaker_not_in_model:'+c.id);
+ }
 }
 /** Never spends money or downloads models. Creates a portable blind listening room
  * from two to six local Piper model/parameter auditions of the SAME spoken line.
@@ -31,6 +53,8 @@ export async function buildLocalPiperAudition({plan,outputDir}){
  const roomDir=path.join(base,'listening-room');
  if(fs.existsSync(manifestPath)||fs.existsSync(roomDir))fail('audition_already_exists');
  if(plan.allowPaidGeneration===true)fail('paid_generation_unsupported');
+ // Check every declared model and its rights before generating any take.
+ await preflightAllCandidates(plan.candidates,locale);
  const outputCandidates=[];
  for(const candidate of plan.candidates){
    // No fallback to other provider or model: each candidate must have its
