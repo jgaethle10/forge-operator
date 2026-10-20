@@ -36,3 +36,21 @@ test('page avoids deceptive synthetic traffic and payments',()=>{
   assert.doesNotMatch(page,/stripe\.com\/checkout|checkout_session_id|success=true/);
   assert.match(page,/We do not sell visitors' contact details or use fake traffic/i);
 });
+
+test('all monetization lanes stay independently tracked',()=>{
+  const ledger=JSON.parse(readFileSync(new URL('../public/mesh/lanes.json',import.meta.url),'utf8'));
+  assert.equal(ledger.lane_count,8);
+  assert.equal(ledger.lanes.length,8);
+  assert.equal(ledger.revenue_received_verified,false);
+  assert.equal(new Set(ledger.lanes.map(l=>l.id)).size,8);
+  for(const lane of ledger.lanes){
+    assert.ok(lane.name && lane.state && lane.conversion && lane.next);
+    assert.ok(!lane.state.includes('revenue_verified'));
+  }
+  assert.ok(ledger.lanes.some(l=>l.id==='adult-research' && l.state==='not_launched'));
+  assert.match(page,/id="channels"/);
+  assert.match(page,/id="partners"/);
+  for(const id of ['legacy-rescue','ibmi-rescue']){
+    assert.ok(page.includes('https://fabric.systemiacommandcenters.com/offers/'+id));
+  }
+});
