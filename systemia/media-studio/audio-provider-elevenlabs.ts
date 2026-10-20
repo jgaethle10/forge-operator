@@ -49,6 +49,8 @@ export interface ElevenLabsAudioAdapterConfig {
     profiles:Array<Record<string,unknown>>;
     cues:Array<Record<string,unknown>>;
     lexicon?:Array<Record<string,unknown>>;
+    /** Prior season approved cast contracts; no automatic evidence verification. */
+    previousCast?:Array<Record<string,unknown>>;
   };
   speechModelId?:string;
   musicModelId?:'music_v1'|'music_v2'|'music_v2_5';
