@@ -3,6 +3,7 @@ import path from 'node:path';
 import crypto from 'node:crypto';
 import { fileURLToPath } from 'node:url';
 import { inspectVoiceSignal } from './voice-signal-inspector.mjs';
+import { inspectVoicePacing } from './voice-pacing.mjs';
 
 const currentDir=path.dirname(fileURLToPath(import.meta.url));
 const AUDIO_EXTENSIONS=new Set(['.wav','.mp3','.flac','.m4a','.ogg','.opus']);
@@ -53,9 +54,11 @@ function copyCandidateAudio(sourcePath,destDir){
  const extension=path.extname(source).toLowerCase();
  if(!AUDIO_EXTENSIONS.has(extension))throw Error('audition_audio_format_unsupported');
  const signal=inspectVoiceSignal(source);
+ const pacing=inspectVoicePacing(source);
+ if(signal.audioDigest!==pacing.audioDigest)throw Error('audition_pacing_audio_digest_mismatch');
  const name=signal.audioDigest+extension;
  fs.copyFileSync(source,path.join(destDir,name));
- return {audioPath:'audio/'+name,signal,bytes:stat.size};
+ return {audioPath:'audio/'+name,signal,pacing,bytes:stat.size};
 }
 /** Generate an offline, portable audition report. No synthesis, publication, AI/voice calls, or network access. */
 export function buildVoiceAudition({manifestPath,outputDir,templatePath=path.join(currentDir,'voice-listening-room.html')}){
@@ -80,6 +83,7 @@ export function buildVoiceAudition({manifestPath,outputDir,templatePath=path.joi
    if(total>TOTAL_MAX)throw Error('audition_total_audio_size_exceeded');
    const {sourcePath,...publicCandidate}=c;
    return {...publicCandidate,audioPath:result.audioPath,signal:result.signal,bytes:result.bytes,
+     pacingReviewRequired:result.pacing.warnings.length>0,
      audibleQualityReviewed:false,consentEvidenceVerified:false,
      status:result.signal.status==='objective_measurements_only'?'awaiting_human_review':'signal_held'};
  });
