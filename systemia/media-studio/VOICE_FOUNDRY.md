@@ -127,3 +127,7 @@ Next milestone: verify model capabilities and speaker license in a real account,
 - Diagnostic exercise on the four prior basic synthetic voices: 11.316, 11.757, 10.967 and 9.405 seconds, with respectively 5, 4, 5, and 3 detected quiet intervals. Longest intervals approximately 0.431, 0.464, 0.430, 0.300 seconds. None is claimed to sound natural from this measurement.
 - Local offline modules: nine tests passed total (four silence/edge cases plus five continuity tests) against FFmpeg 7.1.5 and Node 22. The adapter and overall media test suites are separately gated by GitHub Actions.
 - Draft PR only: no merge, release, paid provider generation or verified high-fidelity neural-voice audition.
+
+### Automatic session continuity admission
+
+All `planVoiceSession` calls now attach a `continuity` audit and hold the session if one speaker changes voice profile, identity version, provider, or provider voice ID within the session or against an optional `previousCast` record. `preflightVoiceFoundrySpeech` checks the **entire** configured cast before billing a single scene; a second scene cannot hide a changed narrator behind a successful first-scene preflight. Prior records currently carry declared approval/evidence fields only; trusted external evidence resolution and actual human listening remain separate obligations. The legacy adapter requires `requireVoiceFoundry:true` for fail-closed admission if no cast is supplied.
