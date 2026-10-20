@@ -37,11 +37,11 @@ This is a casting target list only. No provider IDs, cast assignments, audio out
 
 ## Engineering boundaries
 
-The included tests are offline synthetic fixtures that prove logic only. The Foundry is not yet wired into the current ElevenLabs runtime, and there is no verified provider voice roster, provider generation receipt, commercial voice clearance, native-listener proof, deployed endpoint or professional mix proof from this change. In particular, published voice quality is NOT established by the unit tests.
+The included tests are offline synthetic fixtures that prove logic only. The Foundry is now wired as an optional strict per-cue preflight inside the ElevenLabs adapter, but is not enabled by existing callers, and there is no verified provider voice roster, provider generation receipt, commercial voice clearance, native-listener proof, deployed endpoint or professional mix proof from this change. In particular, published voice quality is NOT established by the unit tests.
 
 ## Next integration steps
 
-1. Integrate planVoiceSession into audio-provider-elevenlabs.ts on its preflight path without weakening the existing allowPaidGeneration flag, rights gates or continuity receipt.
+1. Connect trusted registry-backed cast data to the new optional `voiceFoundry` adapter configuration. Once provided, every matching speech cue is gated on verified provider binding, actor identity, exact text, region-specific voice/locale/accent, timing, consent and explicit commercial rights **before network calls**. Existing legacy callers remain functional but cannot claim Voice Foundry verification.
 2. Make an audition harness that renders multiple authorized performances for one 20-second script, preserving every take and file digest.
 3. Build a human A/B audition and reviewer evidence store. Follow with actual native-speaker ratings, subtitle sync checks, physical mastering measurements and provider cost receipts.
 4. Admit winning voices into the Series Bible / Systemia voice registry. Reject voice drift on every future scene and respect founder publication approval.
@@ -49,3 +49,11 @@ The included tests are offline synthetic fixtures that prove logic only. The Fou
 Offline test: node --test tests/media-voice-foundry.test.mjs
 
 No paid provider calls, checkout changes, deployments or public posts are part of this PR.
+
+## October 19–20 source-stage integration receipts
+
+- `audio-provider-elevenlabs.ts` calls `preflightVoiceFoundrySpeech` for speech when a `voiceFoundry` casting catalog is supplied. The bridge refuses unidentified/mismatched voices, changed spoken text, unsupported locale or accent, absent reviewed consent, incomplete production requirements and requests outside the casting window. `allowPaidGeneration` remains required, separate and unmodified.
+- `voice-signal-inspector.mjs` independently reads a real local audio file using FFprobe and FFmpeg. Its SHA-256-bound objective evidence includes duration, channel and sample information, integrated loudness, true peak, loudness range, sample peak, digital clipping risk and an optional final-master -1.5 dBTP gate. Signal inspection cannot establish whether audio contains beautiful human-sounding speech.
+- `evaluateVoiceTake` now holds every internal QA decision without a matching audio signal-inspection report. The signal report must match the exact take digest, duration and peak value. Evidence references remain declarations until a trusted evidence ledger verifies them.
+- `npm run test:voice-foundry` executes unit and mocked provider integration tests. `npm run test:media-studio` includes these offline tests and the FFmpeg signal measurements. Local Node test harness: 21 tests passed, 0 failed. The adapter TypeScript integration suite requires the repository's installed `tsx` dependencies and GitHub checks for independent verification.
+- No actual expressive voice, actor recording, voice cloning, provider voice ID or production-ready multilingual capability has been auditioned or approved in this change. No deployment, spend or public distribution is authorized.
