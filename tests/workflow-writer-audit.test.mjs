@@ -78,7 +78,7 @@ test('Mossmere scope review is tied to exact code and cannot authorize changed w
     assert.equal(blocked.ok,false);
     assert.ok(blocked.findings.some(x=>x.code==='NEW_UNAPPROVED_WORKFLOW_WRITER'));
   }
-  const unrelated=inspectWorkflow('permissions:\\n  contents: write\\n','.github/workflows/unreviewed-writer.yml');
+  const unrelated=inspectWorkflow('permissions:\n  contents: write\n','.github/workflows/unreviewed-writer.yml');
   assert.ok(assessWriterInventory([unrelated],baseline,{scopedReview:verified}).findings
     .some(x=>x.code==='NEW_UNAPPROVED_WORKFLOW_WRITER'));
 });
