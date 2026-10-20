@@ -124,8 +124,14 @@ export function produceVisualLanes(request,outputDir){
    const frame=path.join(tmp,cut.lane+'.png');
    run('ffmpeg',['-hide_banner','-loglevel','error','-y','-ss',String(srcInfo.duration/2),
     '-i',out,'-frames:v','1',frame]);
+   const sourceAspect=srcInfo.width/srcInfo.height,destAspect=w/h;
+   const contentCoverage=Math.min(sourceAspect/destAspect,destAspect/sourceAspect);
+   const reframingRequired=contentCoverage<.6;
    artifacts.push({lane:cut.lane,width:w,height:h,
     codec:result.videoCodec,durationSec:result.duration,hasAudio:result.audio,
+    sourceFrameCoverage:Number(contentCoverage.toFixed(4)),
+    compositionState:reframingRequired?'needs_dedicated_camera_or_reframe':'review_required',
+    releaseEligible:false,
     videoFile:cut.lane+'.mp4',sha256:hash(fs.readFileSync(out)),
     frameFile:cut.lane+'.png',frameSha256:hash(fs.readFileSync(frame)),
     claims:cut.lane==='educational'?cut.claims:[],
