@@ -286,6 +286,7 @@ async function renderGpuFrames(plans:ReturnType<typeof buildCinematicCameraSeque
     const handle=fs.openSync(framesFile,'wx',0o600);
     const hashes:string[]=[];
     let counterfactualChangedPixels=0;
+    let filterChangedPixels=0;
     try{
       for(const frame of plans.slice(0,-1)){
         const packet=frame.renderPlan;
@@ -409,6 +410,17 @@ async function renderGpuFrames(plans:ReturnType<typeof buildCinematicCameraSeque
               Math.abs(pixels[i+2]-noShadow[i+2])>8) counterfactualChangedPixels++;
           }
           if(counterfactualChangedPixels<300)throw new Error('shadow_pass_has_no_observable_pixel_occlusion');
+          const unfiltered=Buffer.from(await renderFrame({
+            ...packet,shadow:{...packet.shadow,softnessTexels:0}
+          }),'base64');
+          if(unfiltered.length!==pixels.length)throw new Error('shadow_filter_counterfactual_size_invalid');
+          fs.writeFileSync(path.join(out,'shadow-hard-first-frame.rgba'),unfiltered,{flag:'wx',mode:0o600});
+          for(let i=0;i<pixels.length;i+=4){
+            if(Math.abs(pixels[i]-unfiltered[i])>2 ||
+              Math.abs(pixels[i+1]-unfiltered[i+1])>2 ||
+              Math.abs(pixels[i+2]-unfiltered[i+2])>2) filterChangedPixels++;
+          }
+          // Record truth even when the filter's visual effect is imperceptible.
         }
         if(pixels.length!==WIDTH*HEIGHT*4)throw new Error('unexpected_render_bytes');
         fs.writeSync(handle,pixels);hashes.push(sha(pixels));
@@ -416,7 +428,8 @@ async function renderGpuFrames(plans:ReturnType<typeof buildCinematicCameraSeque
     }finally{fs.closeSync(handle)}
     if(new Set(hashes).size<3)throw new Error('rendered_frames_have_no_visible_motion');
     return {framesFile,profile:selected.name,softwareAdapterForced:selected.forcedSoftware,
-      frameHashes:hashes,uniqueFrameHashes:new Set(hashes).size,counterfactualChangedPixels};
+      frameHashes:hashes,uniqueFrameHashes:new Set(hashes).size,counterfactualChangedPixels,
+      filterChangedPixels};
   }finally{
     if(browser)await browser.close().catch(()=>{});
     await new Promise<void>(resolve=>server.server.close(()=>resolve()));
@@ -460,6 +473,10 @@ async function main(){
     '-f','rawvideo','-pixel_format','rgba','-video_size',WIDTH+'x'+HEIGHT,
     '-i',raw.framesFile,
     '-frames:v','1',path.join(out,'shadow-enabled-first-frame.png')]);
+  run('ffmpeg',['-hide_banner','-loglevel','error','-y',
+    '-f','rawvideo','-pixel_format','rgba','-video_size',WIDTH+'x'+HEIGHT,
+    '-i',path.join(out,'shadow-hard-first-frame.rgba'),
+    '-frames:v','1',path.join(out,'shadow-hard-first-frame.png')]);
   const measure=JSON.parse(run('ffprobe',['-v','error','-show_entries','stream=codec_type,codec_name,width,height,r_frame_rate,nb_frames:format=duration','-of','json',video]));
   const stream=measure.streams?.find((s:any)=>s.codec_type==='video');
   const audio=measure.streams?.find((s:any)=>s.codec_type==='audio');
@@ -485,6 +502,7 @@ async function main(){
     exactGpuReadbackFrames:raw.frameHashes.length,
     uniqueRawFrameDigests:raw.uniqueFrameHashes,
     shadowCounterfactualChangedPixels:raw.counterfactualChangedPixels,
+    shadowFilterChangedPixels:raw.filterChangedPixels,
     output:{path:video,sha256:sha(fs.readFileSync(video)),width:WIDTH,height:HEIGHT,
       durationSec:DURATION,fps:FPS,codec:'h264',audioCodec:'aac'},
     stills,sourceState:'synthetic_visualization',soundState:'synthetic_test_signal_not_commercial_music',
@@ -495,6 +513,7 @@ async function main(){
   fs.writeFileSync(path.join(out,'receipt.json'),JSON.stringify(receipt,null,2)+'\n');
   console.log(JSON.stringify({status:'rendered_gpu_master',receipt:receipt.output,frames:receipt.exactGpuReadbackFrames,
     uniqueFrames:receipt.uniqueRawFrameDigests,shadowChangedPixels:receipt.shadowCounterfactualChangedPixels,
+    pcfChangedPixels:receipt.shadowFilterChangedPixels,
     profile:raw.profile,hardwareExecutionClaim:false}));
 }
 main().catch(e=>{console.error('CINEMATIC_PIXEL_PROOF_FAILED '+String(e?.stack||e));process.exitCode=1});
