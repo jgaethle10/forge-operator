@@ -83,3 +83,14 @@ npm run voice:audition:build -- /tmp/evercraft-voices/input/audition.json /tmp/e
 Run QA: `npm run test:voice-foundry` or `npm run test:media-studio`. Audio source paths must be relative to the manifest directory, and real paths cannot escape that directory. Keep the resulting listening room local because consent evidence and commercial usage rights still require independent verification. A reviewer JSON download is NOT an independent signed review, consent record, identity match or commercial license.
 
 The next production work requires an authorized voice roster, checked provider terms and spend, actual candidate speech recordings, native/qualified accent listening, captured independent review evidence and a separately approved publishing gate.
+
+## Flagship model audition policy (October 2026)
+
+Provider documentation now describes `eleven_v4` as the current highest-quality content-creation model, with `eleven_v4_turbo` tailored to lower-latency interactive speech. Current adapter default remains `eleven_v3` for compatibility. Authorized audition sessions may opt into `speechModelId: 'eleven_v4'` and compare against their v3 baseline. The adapter test verifies the exact model ID and provenance model tag in its mocked request/receipt. Do not silently switch the production default or generate paid voice takes without explicit authorization.
+
+Each Listening Room candidate now requires a distinct `modelId` (even for consenting human-recorded speech) so A/B rankings can identify the exact engine used. **Reveal the model only after blind scoring.** Verify pronunciation, authenticity and emotional range with qualified listeners. Eleven v4 supports performance audio tags, but do not assume tags always work and do not mix tag text into the canonical transcript without a separate spoken-word check. Eleven v3/v4 do not support SSML break tags; use model-specific controls only after a measured test.
+
+Provider documentation:
+- https://elevenlabs.io/docs/eleven-creative/playground/text-to-speech
+- https://elevenlabs.io/docs/overview/capabilities/text-to-speech/best-practices
+- https://elevenlabs.io/docs/help-center/product/core-capabilities/text-to-speech/how-do-i-select-the-language-and-accent
