@@ -99,3 +99,23 @@ test('rejects malformed URLs and future availability claims', () => {
   assert.equal(assessed.listing_url, null);
   assert.equal(assessed.status, 'WATCH_UNVERIFIED');
 });
+
+test('rejects screening policy overrides that weaken evidence or inflate profit', () => {
+  const bypasses = [
+    { minimum_distinct_sold_comps: 0 },
+    { maximum_listing_age_minutes: 60 * 24 },
+    { maximum_comp_age_days: 365 },
+    { maximum_purchase_to_value_ratio: 0.9 },
+    { minimum_net_upside_cents: 0 },
+    { resale_fee_basis_points: 0 },
+    { resale_shipping_cents: 0 },
+    { risk_reserve_basis_points: 0 },
+    { invented_policy_key: true },
+  ];
+  for (const policy of bypasses) {
+    assert.throws(() => assessListing(example(), { now, policy }), /unsafe_asset_radar_policy_override/);
+  }
+  assert.throws(() => assessListing(example(), { now, policy: null }), /invalid_asset_radar_policy/);
+  assert.equal(assessListing(example(), { now, policy: { minimum_net_upside_cents: 20_000 } }).status, 'QUALIFIED_FOR_HUMAN_REVIEW');
+  assert.equal(assessListing(example(), { now, policy: { minimum_net_upside_cents: 30_000 } }).status, 'WATCH_UNVERIFIED');
+});
