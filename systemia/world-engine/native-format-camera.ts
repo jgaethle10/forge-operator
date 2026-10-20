@@ -36,10 +36,10 @@ export function nativeBattleshipFilmFrame(format:NativeFilmFormat):NativeFilmFra
   if(format==='portrait')return {
     format,viewport:{width:360,height:640},aspectRatio:'9:16',
     take:{...base,id:'battleship-native-portrait-superstructure',
-      orbit:{radius:24,startAngleDeg:-29,endAngleDeg:-5,
+      orbit:{radius:26,startAngleDeg:-29,endAngleDeg:-5,
         startHeight:7.2,endHeight:9.4},
-      lookAtOffset:{x:0,y:5.5,z:-4.5},
-      startFovYDeg:43,endFovYDeg:36},
+      lookAtOffset:{x:0,y:6.7,z:-4.5},
+      startFovYDeg:47,endFovYDeg:44},
     framingIntent:'intentionally featured armored gunhouse bridge and radar stack, not misleading full-ship fit',
     nativeGpuFrameRequired:true,releaseAuthority:false
   };
