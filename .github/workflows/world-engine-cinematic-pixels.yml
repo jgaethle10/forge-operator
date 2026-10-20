@@ -26,6 +26,8 @@ jobs:
         run: PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD=1 npm install --no-audit --no-fund
       - name: Verify world scene and camera contracts
         run: npm run test:world-engine
+      - name: Prove original stereo kinetic sound design
+        run: npm run test:kinetic-soundscape
       - name: Install FFmpeg encoder for H264/AAC artifact
         run: command -v ffmpeg || (sudo apt-get update -qq && sudo apt-get install -y ffmpeg)
       - name: Render actual pixels through owned WGSL, then H264/AAC
@@ -43,9 +45,13 @@ jobs:
           const r=JSON.parse(fs.readFileSync(p,'utf8'));
           if(r.kind!=='synthetic_internal_canary'||r.output.codec!=='h264'
             ||r.output.audioCodec!=='aac'||r.output.fps!==24
-            ||r.exactGpuReadbackFrames!==48||r.uniqueRawFrameDigests<3
+            ||r.exactGpuReadbackFrames!==96||r.uniqueRawFrameDigests<3
             ||r.shadowCounterfactualChangedPixels<300
             ||r.shadowFilterChangedPixels<10
+            ||r.soundState!=='original_multilayer_synthetic_soundscape_not_recorded_foley_or_commercial_score'
+            ||r.soundReceipt.channels!==2||r.soundReceipt.sampleRate!==48000
+            ||r.soundReceipt.peaks.nonSilentFraction<0.6
+            ||r.soundReceipt.peaks.peakDbfs>-1.6
             ||r.publicationAuthority!==false||r.hardwareExecutionClaim!==false) process.exit(2);
           const s=fs.statSync(r.output.path);
           if(s.size<10000)process.exit(3);
@@ -68,5 +74,8 @@ jobs:
             ${{ runner.temp }}/evercraft-world-cinematic/shadow-disabled-first-frame.png
             ${{ runner.temp }}/evercraft-world-cinematic/shadow-enabled-first-frame.png
             ${{ runner.temp }}/evercraft-world-cinematic/shadow-hard-first-frame.png
+            ${{ runner.temp }}/evercraft-world-cinematic/kinetic-original-soundscape.wav
+            ${{ runner.temp }}/evercraft-world-cinematic/soundscape-receipt.json
+            ${{ runner.temp }}/evercraft-world-cinematic/soundscape-waveform.png
           if-no-files-found: error
           retention-days: 7
