@@ -1,0 +1,29 @@
+name: Fallen Nebraska Documentary Pilot
+on:
+  pull_request:
+    paths:
+      - "systemia/media-studio/pilots/nebraska-source-first/**"
+      - ".github/workflows/fallen-nebraska-documentary.yml"
+  push:
+    branches: [main]
+    paths:
+      - "systemia/media-studio/pilots/nebraska-source-first/**"
+      - ".github/workflows/fallen-nebraska-documentary.yml"
+permissions:
+  contents: read
+jobs:
+  source-first-compile:
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - run: npm install --no-audit --no-fund
+      - name: Compile film pilot and prove pending footage is unexportable
+        run: node --import tsx --test systemia/media-studio/pilots/nebraska-source-first/opening.test.ts
+      - name: Materialize canonical storyboard and blocker inventory
+        run: |
+          npm run media:studio -- studio-create systemia/media-studio/pilots/nebraska-source-first/opening.plan.json /tmp/nebraska-source-first.json
+          node -e "const x=require('/tmp/nebraska-source-first.json');if(x.boundaries.publicationAuthorityGranted!==false || !x.productionNeeds?.length)process.exit(1)"
