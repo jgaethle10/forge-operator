@@ -1,0 +1,119 @@
+{
+  "schema": "evercraft.fallen.studio-draft-plan.v1",
+  "id": "evercraft-nebraska-giant-stirs-documentary-opening",
+  "title": "Nebraska | The Giant Stirs | Source-First Opening",
+  "prompt": "Source-first documentary about Nebraska's defensive identity and late-game losses. Real licensed football and interview source materials required. No synthetic event impersonation, no substitute typography slides, no invented football plays or quotes.",
+  "aspectRatio": "16:9",
+  "fps": 24,
+  "continuityDigest": "nebraska-source-first-fall-2026-creative-lock-01",
+  "sourceAssets": [],
+  "music": {
+    "prompt": "Original quiet documentary orchestral score, textured acoustic cello and minimal piano, no invented stadium crowd field recording; rights and mastering approval required.",
+    "volume": 0.24
+  },
+  "captions": {
+    "enabled": true,
+    "style": "documentary"
+  },
+  "scenes": [
+    {
+      "id": "lincoln-inheritance",
+      "durationSec": 4.5,
+      "visual": {
+        "prompt": "Authentic licensed moving establishing footage of Lincoln and Memorial Stadium. Aerial CC photograph from 2025 is reference only. Hold until moving footage is acquired and cleared.",
+        "sourceRefs": [
+          "https://commons.wikimedia.org/wiki/File:Memorial_Stadium_Lincoln_Nebraska.jpg",
+          "rights:pending"
+        ]
+      },
+      "narration": {
+        "text": "In Nebraska, football is an inheritance. But inheritance can't make the next tackle.",
+        "speakerId": "film-narrator",
+        "voiceProfileId": "pending-blind-audition",
+        "language": "en-US"
+      }
+    },
+    {
+      "id": "the-people",
+      "durationSec": 4,
+      "visual": {
+        "prompt": "Authentic filmed consenting multi-generation Nebraska fans with release and recorded location sound, not imagined characters or a generic synthetic fan portrait.",
+        "sourceRefs": [
+          "interview:needed-real-permission",
+          "rights:pending"
+        ]
+      },
+      "narration": {
+        "text": "For generations, people have waited for a certain kind of football to return.",
+        "speakerId": "film-narrator",
+        "voiceProfileId": "pending-blind-audition",
+        "language": "en-US"
+      }
+    },
+    {
+      "id": "physicality",
+      "durationSec": 4,
+      "visual": {
+        "prompt": "Authentic dated and rightsholder-licensed 2026 defensive Nebraska game footage, with exact opponent, timecode, source, and individual play verification. Hold until licensed.",
+        "sourceRefs": [
+          "https://huskers.com/news/2026/10/10/huskers-push-no-7-hoosiers-to-limit",
+          "https://huskers.com/news/2026/10/17/fb-recap",
+          "game-film-license:needed"
+        ]
+      },
+      "narration": {
+        "text": "Now, the defense is showing flashes of that physical identity.",
+        "speakerId": "film-narrator",
+        "voiceProfileId": "pending-blind-audition",
+        "language": "en-US"
+      }
+    },
+    {
+      "id": "late-leads",
+      "durationSec": 3,
+      "visual": {
+        "prompt": "Authentic rightsholder-licensed 2026 Indiana and Oregon fourth-quarter clips. Opponent and score context required. No archival or synthetic substitute.",
+        "sourceRefs": [
+          "https://huskers.com/news/2026/10/10/huskers-push-no-7-hoosiers-to-limit",
+          "https://huskers.com/news/2026/10/17/fb-recap",
+          "game-film-license:needed"
+        ]
+      },
+      "narration": {
+        "text": "Against Indiana and Oregon, the fourth-quarter leads slipped away.",
+        "speakerId": "film-narrator",
+        "voiceProfileId": "pending-blind-audition",
+        "language": "en-US"
+      }
+    },
+    {
+      "id": "unfinished",
+      "durationSec": 3,
+      "visual": {
+        "prompt": "Real rights-cleared Nebraska fan atmosphere or actual recorded fan interview. No simulated cheering presented as real stadium sound.",
+        "sourceRefs": [
+          "fan-capture:needed",
+          "rights:pending"
+        ]
+      },
+      "narration": {
+        "text": "The question isn't whether they can compete. It's whether they can finish.",
+        "speakerId": "film-narrator",
+        "voiceProfileId": "pending-blind-audition",
+        "language": "en-US"
+      }
+    },
+    {
+      "id": "last-frame",
+      "durationSec": 4,
+      "visual": {
+        "prompt": "One cleared captured photograph or genuine motion shot of Memorial Stadium with creator, date, license, and attribution ledger; no false 2026 dating.",
+        "sourceRefs": [
+          "https://commons.wikimedia.org/wiki/File:Memorial_Stadium_-_Lincoln,_Nebraska_-_Cornhuskers_(44250514125).jpg",
+          "capture-date:2018-09-22",
+          "rights:pending"
+        ]
+      }
+    }
+  ]
+}
