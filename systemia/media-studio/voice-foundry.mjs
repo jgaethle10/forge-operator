@@ -1,0 +1,143 @@
+import crypto from 'node:crypto';
+
+const DIGEST = /^[a-f0-9]{64}$/i;
+const VOICE_SCORE_KEYS = ['naturalness','accentAuthenticity','emotionalTruth','intelligibility','identityConsistency','mixFit'];
+
+function fingerprint(value) {
+  return crypto.createHash('sha256').update(JSON.stringify(value)).digest('hex');
+}
+function validLocale(value) {
+  if (typeof value !== 'string' || !value.trim()) return false;
+  try { return Intl.getCanonicalLocales(value).length === 1; } catch { return false; }
+}
+function eqLocale(a,b) {
+  return Intl.getCanonicalLocales(a)[0] === Intl.getCanonicalLocales(b)[0];
+}
+function unique(items) { return new Set(items).size === items.length; }
+function checkedString(value) { return typeof value === 'string' && value.trim().length > 0; }
+
+/**
+ * No provider calls are made. This is a deterministic, fail-closed casting and
+ * performance contract for upstream TTS adapters, actors, and audio QA workers.
+ */
+export function planVoiceSession({profiles, cues, lexicon=[]}) {
+  if (!Array.isArray(profiles) || !Array.isArray(cues) || !Array.isArray(lexicon)) {
+    throw new TypeError('voice_foundry_arrays_required');
+  }
+  const ids = profiles.map(p=>p?.id);
+  if (!unique(ids) || ids.some(id=>!checkedString(id))) throw new Error('voice_foundry_profile_ids_invalid');
+  const cueIds=cues.map(c=>c?.id);
+  if (!unique(cueIds) || cueIds.some(id=>!checkedString(id))) throw new Error('voice_foundry_cue_ids_invalid');
+  const catalog=new Map(profiles.map(p=>[p.id,p]));
+  const results=cues.map(cue=>{
+    const reasons=[];
+    const profile=catalog.get(cue?.voiceProfileId);
+    if (!profile) reasons.push('voice_profile_unregistered');
+    if (!checkedString(cue?.speakerId)) reasons.push('speaker_id_missing');
+    if (!checkedString(cue?.text)) reasons.push('spoken_text_missing');
+    if (!validLocale(cue?.locale)) reasons.push('locale_invalid');
+    if (!checkedString(cue?.accent)) reasons.push('accent_not_cast');
+    if (!checkedString(cue?.direction)) reasons.push('performance_direction_missing');
+    if (cue?.maxDurationSec !== undefined && (!Number.isFinite(cue.maxDurationSec) || cue.maxDurationSec <= 0)) reasons.push('duration_invalid');
+    if (profile) {
+      if (profile.approval !== 'human_audition_approved') reasons.push('voice_audition_unapproved');
+      if (profile.rights?.status !== 'cleared' || profile.rights?.commercialUse !== true || !checkedString(profile.rights?.evidenceRef)) reasons.push('voice_rights_or_consent_unverified');
+      if (!checkedString(profile.provider) || !checkedString(profile.providerVoiceId)) reasons.push('provider_voice_binding_missing');
+      if (!checkedString(profile.identityVersion)) reasons.push('identity_version_missing');
+      if (validLocale(cue?.locale)) {
+        const supported=(profile.locales??[]).some(locale=>validLocale(locale) && eqLocale(locale,cue.locale));
+        if (!supported) reasons.push('requested_locale_not_verified_for_voice');
+      }
+      if (checkedString(cue?.accent) && !((profile.accents??[]).includes(cue.accent))) reasons.push('requested_accent_not_verified_for_voice');
+    }
+    const matchedLexicon=[];
+    for (const entry of lexicon) {
+      if (!checkedString(entry?.term) || !checkedString(entry?.reading) || !validLocale(entry?.locale) || !checkedString(entry?.reviewerEvidenceRef)) {
+        reasons.push('pronunciation_entry_unverified');
+        continue;
+      }
+      if (validLocale(cue?.locale) && eqLocale(entry.locale,cue.locale) && checkedString(cue?.text) && cue.text.toLocaleLowerCase().includes(entry.term.toLocaleLowerCase())) {
+        matchedLexicon.push({term:entry.term,reading:entry.reading,evidenceRef:entry.reviewerEvidenceRef});
+      }
+    }
+    const plan={
+      cueId:cue.id,
+      speakerId:cue.speakerId,
+      voiceProfileId:cue.voiceProfileId,
+      identityVersion:profile?.identityVersion??null,
+      provider:profile?.provider??null,
+      providerVoiceId:profile?.providerVoiceId??null,
+      locale:cue.locale,
+      accent:cue.accent,
+      text:cue.text,
+      direction:cue.direction,
+      maxDurationSec:cue.maxDurationSec??null,
+      pronunciation:matchedLexicon,
+    };
+    return {
+      ...plan,
+      status:reasons.length?'blocked':'ready_for_authorized_generation',
+      reasons:[...new Set(reasons)],
+      planDigest:fingerprint(plan),
+    };
+  });
+  return {
+    schema:'evercraft.voice-foundry.session.v1',
+    status:results.length>0 && results.every(r=>r.status==='ready_for_authorized_generation')?'ready_for_authorized_generation':'held',
+    cues:results,
+    providerCallMade:false,
+    paidGenerationAuthorized:false,
+    publicationAuthorityGranted:false,
+  };
+}
+
+/**
+ * Reviews must be performed by two distinct people, including a listener who
+ * can attest to the specified locale/accent. Scores alone are not assertions
+ * of quality: evidence is required and reviewers remain humans.
+ */
+export function evaluateVoiceTake({plannedCue, take, reviews}) {
+  const reasons=[];
+  if (!plannedCue || plannedCue.status!=='ready_for_authorized_generation') reasons.push('casting_plan_not_ready');
+  if (!checkedString(take?.cueId) || take.cueId!==plannedCue?.cueId) reasons.push('take_cue_mismatch');
+  if (!checkedString(take?.voiceProfileId) || take.voiceProfileId!==plannedCue?.voiceProfileId) reasons.push('take_voice_identity_mismatch');
+  if (!checkedString(take?.planDigest) || take.planDigest!==plannedCue?.planDigest) reasons.push('take_plan_digest_mismatch');
+  if (!DIGEST.test(take?.artifactDigest??'')) reasons.push('audio_digest_missing');
+  if (!checkedString(take?.providerReceiptRef)) reasons.push('provider_receipt_missing');
+  if (take?.rightsVerified!==true) reasons.push('take_rights_unverified');
+  if (!validLocale(take?.locale) || (validLocale(plannedCue?.locale) && !eqLocale(take.locale,plannedCue.locale))) reasons.push('take_locale_mismatch');
+  if (take?.accent!==plannedCue?.accent) reasons.push('take_accent_mismatch');
+  if (!Number.isFinite(take?.durationSec) || take.durationSec<=0) reasons.push('take_duration_missing');
+  if (plannedCue?.maxDurationSec && take?.durationSec > plannedCue.maxDurationSec+.10) reasons.push('speech_outside_editorial_window');
+  if (!checkedString(take?.timingEvidenceRef)) reasons.push('timing_measurement_missing');
+  if (!checkedString(take?.transcriptEvidenceRef)) reasons.push('transcript_review_missing');
+  if (!checkedString(take?.audioMeasurementEvidenceRef)) reasons.push('signal_measurement_missing');
+  if (!Number.isFinite(take?.samplePeakDbFS) || take.samplePeakDbFS>=0) reasons.push('digital_clipping_or_peak_unmeasured');
+  if (!Array.isArray(reviews) || reviews.length < 2) reasons.push('two_human_reviews_required');
+  else {
+    const ids=reviews.map(r=>r?.reviewerId);
+    if (!unique(ids) || ids.some(id=>!checkedString(id))) reasons.push('independent_reviewers_required');
+    if (!reviews.some(r=>r?.localeAccentQualified===true && r?.locale===plannedCue?.locale && r?.accent===plannedCue?.accent)) reasons.push('native_or_qualified_accent_review_required');
+    for(const review of reviews) {
+      if (!checkedString(review?.evidenceRef)) reasons.push('human_review_evidence_missing');
+      if (review?.approved!==true) reasons.push('human_reviewer_rejected');
+      for (const key of VOICE_SCORE_KEYS) {
+        const score=review?.scores?.[key];
+        if (!Number.isFinite(score) || score<4 || score>5) reasons.push('human_quality_below_threshold:'+key);
+      }
+      const scores=VOICE_SCORE_KEYS.map(k=>review?.scores?.[k]);
+      if (scores.every(Number.isFinite) && scores.reduce((a,b)=>a+b,0)/scores.length < 4.5) reasons.push('human_average_below_4_5');
+    }
+  }
+  const accepted=reasons.length===0;
+  return {
+    schema:'evercraft.voice-foundry.take-qa.v1',
+    cueId:plannedCue?.cueId??null,
+    artifactDigest:take?.artifactDigest??null,
+    status:accepted?'passed_internal_voice_qa':'held',
+    reasons:[...new Set(reasons)],
+    manualEditorialApprovalStillRequired:true,
+    publicationAuthorityGranted:false,
+    reviewDigest:fingerprint({planDigest:plannedCue?.planDigest,take,reviews}),
+  };
+}
