@@ -94,3 +94,13 @@ Provider documentation:
 - https://elevenlabs.io/docs/eleven-creative/playground/text-to-speech
 - https://elevenlabs.io/docs/overview/capabilities/text-to-speech/best-practices
 - https://elevenlabs.io/docs/help-center/product/core-capabilities/text-to-speech/how-do-i-select-the-language-and-accent
+
+## Voice engineering push 05: performance preservation and acoustic finishing
+
+- Governed voice generation now limits time-fit to **8% max tempo change**, even when legacy adapter settings permit 20%. The limit applies **after** the provider has generated audio, when duration can actually be measured. Do not confuse a quality hold with avoiding the cost of an already-made provider request. Any attempted governed time-fit retains an untouched `.dry.mp3` and records a source SHA-256 reference for A/B listening.
+- `voice-mastering.mjs` creates a **separate** 48kHz mono 24-bit PCM WAV candidate, preserving the original untouched. Two-pass FFmpeg R128 loudness correction targets -16 LUFS, with -1.7 dBTP render headroom to satisfy the -1.5 dBTP admission ceiling, plus gentle 1.6:1 dynamics and highpass filtering. Overwritten files, clipping, large duration drift and loudness mistakes are held.
+- Four local **diagnostic synthetic speech** baselines were actually processed (US feminine, US masculine, UK feminine, Spanish feminine). Output integrated loudness ranged from -16.26 to -16.05 LUFS, and measured true peak was at or below -1.69 dBTP. The processing **does not** improve the underlying voice acting, naturalness, accent fidelity or pronunciation and does not constitute customer-ready audio.
+- Locale-specific lexicon term matching now prevents Latin-language substring false positives, e.g. 'Evercraft' does not match 'Evercrafting'. CJK text often lacks word breaks; a textual hit **does not verify acoustic pronunciation**, which must be reviewed by a qualified human.
+- The baseline A/B comparison is a diagnostic deliverable. This source change makes no paid requests and has no release/publishing authority. Live voice auditions and verified independent listening are still required.
+
+Local regression: `node --test tests/media-voice-mastering.test.mjs`; the test runner is also included in `npm run test:voice-foundry` and `npm run test:media-studio`.
