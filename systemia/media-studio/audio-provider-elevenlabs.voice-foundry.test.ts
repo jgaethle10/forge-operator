@@ -24,10 +24,11 @@ const need:ProductionNeed={
   continuityDigest:'locked-continuity',
   requires:['voice_profile','commercial_rights','provenance_receipt','timing_control'],status:'planned',
 };
-function rig(input?:{ profiles?:unknown[];cues?:unknown[]; allowPaidGeneration?:boolean; speechModelId?:string; commercialRights?:'allowed'|'unknown'|'denied'; sourceDurationSec?:number }){
+function rig(input?:{ profiles?:unknown[];cues?:unknown[]; allowPaidGeneration?:boolean; speechModelId?:string; commercialRights?:'allowed'|'unknown'|'denied'; sourceDurationSec?:number; auditionTakeId?:string; outputDir?:string }){
   const calls:Array<{url:string;body:any}>=[];
   const raw=Buffer.from('FAKE-MP3-BYTES-FOR-UNIT-TEST');
-  const outputDir=fs.mkdtempSync(path.join(os.tmpdir(),'evercraft-voice-foundry-'));
+  const outputDir=input?.outputDir??fs.mkdtempSync(path.join(os.tmpdir(),'evercraft-voice-foundry-'));
+
   const adapter=createElevenLabsAudioAdapter({
     apiKey:'fake-unit-test-key',
     outputDir,
@@ -36,6 +37,7 @@ function rig(input?:{ profiles?:unknown[];cues?:unknown[]; allowPaidGeneration?:
     commercialRights:input?.commercialRights??'allowed',
     speechModelId:input?.speechModelId??'eleven_v3',
     voiceProfiles:{'foundry-host':'voice-real'},
+    auditionTakeId:input?.auditionTakeId,
     voiceFoundry:{profiles:(input?.profiles??[profile]) as any,cues:(input?.cues??[cue]) as any},
     probeDurationSec:(filePath)=>filePath.endsWith('.source.mp3')?(input?.sourceDurationSec??3):3,
     fetchImpl:(async(url:string,options:any)=>{
@@ -142,4 +144,30 @@ test('strict production lane refuses all speech without Voice Foundry without an
   });
   await assert.rejects(()=>adapter.execute(need),/required_voice_foundry_missing/);
   assert.equal(calls,0);
+});
+
+test('same governed take cannot overwrite its already-generated audio',async()=>{
+ const {adapter,calls,outputDir}=rig();
+ await adapter.execute(need);
+ assert.ok(fs.existsSync(path.join(outputDir,'foundry-line.mp3')));
+ await assert.rejects(()=>adapter.execute(need),/voice_take_output_already_exists/);
+ assert.equal(calls.length,1,'collision rejected before second provider request');
+});
+test('model auditions use unique take IDs and preserve independent source recordings',async()=>{
+ const outputDir=fs.mkdtempSync(path.join(os.tmpdir(),'evercraft-voice-ab-'));
+ const v3=rig({outputDir,auditionTakeId:'v3-take01',speechModelId:'eleven_v3'});
+ const v4=rig({outputDir,auditionTakeId:'v4-take01',speechModelId:'eleven_v4'});
+ const result3=await v3.adapter.execute(need);
+ const result4=await v4.adapter.execute(need);
+ assert.notEqual(result3.artifact.path,result4.artifact.path);
+ assert.ok(fs.existsSync(path.join(outputDir,'foundry-line.v3-take01.dry.mp3')));
+ assert.ok(fs.existsSync(path.join(outputDir,'foundry-line.v4-take01.dry.mp3')));
+ assert.ok(result4.sourceRefs.includes('voice-audition-take-id:v4-take01'));
+ assert.equal(v3.calls.length,1);
+ assert.equal(v4.calls.length,1);
+});
+test('invalid audition ID is rejected before paid calls',async()=>{
+ const {adapter,calls}=rig({auditionTakeId:'../overwrite'});
+ await assert.rejects(()=>adapter.execute(need),/voice_take_id_unsafe/);
+ assert.equal(calls.length,0);
 });
