@@ -107,7 +107,7 @@ function validateTake(world:WorldDefinition,take:CinematicCameraTake){
   if(take.targetEntityId===take.cameraEntityId)err('self_target_invalid');
   const perspective=camera.camera.projection;
   if(perspective.type!=='perspective')err('perspective_camera_required');
-  const startFov=take.startFovYDeg??perspective.fovYDeg;
+  const startFov=take.startFovYDeg??('fovYDeg' in perspective ? perspective.fovYDeg : err('perspective_camera_required'));
   const endFov=take.endFovYDeg??startFov;
   for(const fov of [startFov,endFov]){
     finite(fov,'fov');
