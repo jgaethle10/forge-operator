@@ -64,6 +64,7 @@ test('three actual review MP4 files with aspect variants, image previews and has
   assert.equal(cinematic.compositionState,'review_required');
   assert.ok(fs.readFileSync(path.join(output,'educational-2.txt'),'utf8').includes('ILLUSTRATIVE'));
   assert.ok(fs.readFileSync(path.join(output,'commercial-2.txt'),'utf8').includes('NOT A CLIENT AD'));
+  assert.ok(fs.readFileSync(path.join(output,'commercial-3.txt'),'utf8').includes('REFRAME REQUIRED'));
   assert.equal(JSON.parse(fs.readFileSync(path.join(output,'receipt.json'))).gates.masterQcStillRequired,true);
  }finally{fs.rmSync(s.dir,{recursive:true,force:true})}
 });
