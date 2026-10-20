@@ -35,8 +35,8 @@ test('real canonical World Engine frame compilation differs for native 9:16 and 
   });
   assert.equal(result.frameCount,13);
   assert.equal(result.boundaries.publicationAuthority,false);
-  assert.equal(result.frames[0].renderPlan.viewport.width,profile.viewport.width);
-  assert.equal(result.frames[0].renderPlan.viewport.height,profile.viewport.height);
+  assert.equal(result.frames[0].renderPlan.width,profile.viewport.width);
+  assert.equal(result.frames[0].renderPlan.height,profile.viewport.height);
   assert.ok(result.frames[0].renderPlan.draws.length>45);
   summaries.push(result.frames[0].renderPlan.digest);
  }
