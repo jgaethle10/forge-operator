@@ -1,4 +1,5 @@
 import crypto from 'node:crypto';
+import { assessVoicePerformance } from './voice-performance.mjs';
 
 const DIGEST = /^[a-f0-9]{64}$/i;
 const VOICE_SCORE_KEYS = ['naturalness','accentAuthenticity','emotionalTruth','intelligibility','identityConsistency','mixFit'];
@@ -61,6 +62,8 @@ export function planVoiceSession({profiles, cues, lexicon=[]}) {
     if (!validLocale(cue?.locale)) reasons.push('locale_invalid');
     if (!checkedString(cue?.accent)) reasons.push('accent_not_cast');
     if (!checkedString(cue?.direction)) reasons.push('performance_direction_missing');
+    const approvedPerformance=assessVoicePerformance(cue?.performance);
+    if(approvedPerformance.status==='held') reasons.push(...approvedPerformance.reasons);
     if (cue?.maxDurationSec !== undefined && (!Number.isFinite(cue.maxDurationSec) || cue.maxDurationSec <= 0)) reasons.push('duration_invalid');
     if (profile) {
       if (profile.approval !== 'human_audition_approved') reasons.push('voice_audition_unapproved');
@@ -94,6 +97,7 @@ export function planVoiceSession({profiles, cues, lexicon=[]}) {
       accent:cue.accent,
       text:cue.text,
       direction:cue.direction,
+      performance:approvedPerformance.performance,
       maxDurationSec:cue.maxDurationSec??null,
       pronunciation:matchedLexicon,
     };
