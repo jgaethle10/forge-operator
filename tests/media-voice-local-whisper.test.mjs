@@ -68,7 +68,7 @@ test('failed CLI returns an error without generating audit evidence',async()=>{
  fs.writeFileSync(bad,'#!/usr/bin/env node\nprocess.exit(55)\n',{mode:0o755});
  fs.chmodSync(bad,0o755);
  const outputDir=dir();
- await assert.rejects(()=>run({whisperCliPath:bad,outputDir}),/process_failed:55/);
+ await assert.rejects(()=>run({whisperCliPath:bad,outputDir,expectedBinarySha256:digest(bad)}),/process_failed:55/);
  assert.deepEqual(fs.readdirSync(outputDir),[]);
 });
 test('local CLI output is still unverified speech and rights evidence',async()=>{
