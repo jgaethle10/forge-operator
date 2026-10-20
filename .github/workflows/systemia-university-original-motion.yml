@@ -1,0 +1,65 @@
+name: Systemia University Original Motion Canary
+
+on:
+  pull_request:
+    paths:
+      - "systemia/graphics-command/campaigns/render_systemia_permission_trace.py"
+      - "systemia/graphics-command/campaigns/systemia-university-owned-handoff.v1.json"
+      - ".github/workflows/systemia-university-original-motion.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  authored-pixel-review:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - name: Install original local rendering dependencies
+        run: |
+          python -m pip install --disable-pip-version-check numpy pillow
+          ffmpeg -version | head -1
+          fc-match DejaVuSans | head -1
+      - name: Render original moving geometric scene using real campaign source
+        run: |
+          set -euo pipefail
+          python systemia/graphics-command/campaigns/render_systemia_permission_trace.py \
+            --handoff systemia/graphics-command/campaigns/systemia-university-owned-handoff.v1.json \
+            --output /tmp/systemia-motion/permission-trace-original.mp4 \
+            --receipt /tmp/systemia-motion/permission-trace-receipt.json \
+            --stills /tmp/systemia-motion/stills
+      - name: Independently verify actual pixels and reject substituted audio
+        run: |
+          python - <<'PY'
+          import json,subprocess,pathlib
+          root=pathlib.Path('/tmp/systemia-motion')
+          receipt=json.loads((root/'permission-trace-receipt.json').read_text())
+          media=json.loads(subprocess.check_output([
+              'ffprobe','-v','error','-show_streams','-show_format','-of','json',
+              str(root/'permission-trace-original.mp4')]))
+          streams=media['streams']
+          assert len(streams)==1 and streams[0]['codec_type']=='video','unexpected audio or missing video'
+          assert streams[0]['codec_name']=='h264'
+          assert (streams[0]['width'],streams[0]['height'])==(1280,720)
+          assert streams[0]['r_frame_rate']=='24/1'
+          assert abs(float(media['format']['duration'])-5)<.02
+          assert len(set(receipt['frameSha256'].values()))==6,'repeated frames'
+          assert len(list((root/'stills').glob('*.png')))==4
+          assert not any([receipt['nativeWorldEngineGpu'],receipt['voicePresent'],
+                          receipt['shotTournamentApproved'],receipt['admittedIntoFallen'],
+                          receipt['publicationAuthority']]),'release claim fabricated'
+          assert receipt['visualState']=='original_software_render_synthetic_training_scene'
+          print('VERIFIED: 120 moving frames, native 1280x720, 24 fps, silent, unadmitted.')
+          PY
+      - name: Upload private founder-review asset and receipts only
+        uses: actions/upload-artifact@v4
+        with:
+          name: systemia-university-original-permission-trace-review
+          path: /tmp/systemia-motion/
+          if-no-files-found: error
+          retention-days: 14
