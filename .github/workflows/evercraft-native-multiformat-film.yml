@@ -69,7 +69,7 @@ jobs:
             ||m.humanCreativeReviewRequired!==true
             ||m.publicationAuthority!==false
             ||m.landmarkAudits.length!==3
-            ||m.landmarkAudits.some(x=>x.visibleSubjectLandmarks<3)
+            ||m.landmarkAudits.some(x=>x.visibleSubjectLandmarks<6)
             ||r.sceneType!=='procedural_battleship'
             ||r.soundState!=='silent_at_founder_direction_no_sound_invented'
             ||r.exactGpuReadbackFrames!==96
