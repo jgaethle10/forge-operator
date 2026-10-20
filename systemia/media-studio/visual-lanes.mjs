@@ -71,7 +71,7 @@ const dims={'16:9':[640,360],'9:16':[360,640],'1:1':[480,480]};
 function filterPath(p){
  return p.replaceAll('\\','/').replaceAll(':','\\:').replaceAll("'",'\\'+"'"+'').replaceAll(',','\\,');
 }
-function makeFilter(width,height,textfiles,font,duration,composition,source){
+function makeFilter(width,height,textfiles,font,duration,composition,source,teachingBeats=[]){
  let base='';
  if(composition?.mode==='directed_cover'){
   const ratio=width/height,sourceRatio=source.width/source.height;
@@ -88,6 +88,13 @@ function makeFilter(width,height,textfiles,font,duration,composition,source){
   const y=i===0?18:(textfiles.length===4?height-124+(i-1)*34:(i===1?height-67:height-35));
   base+=',drawtext=fontfile='+filterPath(font)+':textfile='+filterPath(textfiles[i])+
   ':fontsize='+fontsize+':fontcolor=white:borderw=2:bordercolor=black:x=(w-text_w)/2:y='+y;
+ }
+ for(const beat of teachingBeats){
+  const show='between(t\\,'+beat.start+'\\,'+beat.end+')';
+  base+=',drawbox=x=0:y='+Math.floor(height*.78)+':w=iw:h=44:color=black@0.66:t=fill:enable='+show;
+  base+=',drawtext=fontfile='+filterPath(font)+':textfile='+filterPath(beat.file)+
+    ':fontsize='+(width<400?12:14)+':fontcolor=white:borderw=1:bordercolor=black:'+
+    'x=(w-text_w)/2:y='+Math.floor(height*.80)+':enable='+show;
  }
  return base+',fade=t=in:st=0:d=0.15,fade=t=out:st='+Math.max(.2,duration-.25).toFixed(2)+':d=0.25';
 }
@@ -109,7 +116,7 @@ export function produceVisualLanes(request,outputDir){
    const isSynthetic=['synthetic_visualization','modeled_visualization'].includes(request.source.evidenceState);
    const labels=[cut.title];
    if(cut.lane==='educational'){
-    labels.push(cut.claims[0].text);
+    labels.push(cut.claims.length>1?'VISUAL FEATURES - MODELED SCENE':cut.claims[0].text);
     labels.push(isSynthetic?'ILLUSTRATIVE RECONSTRUCTION':'SOURCE BASED VISUALIZATION');
     labels.push('NOT AN OBSERVED HISTORICAL RECORD');
    }else if(cut.lane==='commercial'){
@@ -129,9 +136,16 @@ export function produceVisualLanes(request,outputDir){
     const p=path.join(tmp,cut.lane+'-'+i+'.txt');
     fs.writeFileSync(p,value,{flag:'wx',mode:0o600});return p;
    });
+   const teachingBeats=cut.lane==='educational'&&cut.claims.length>1
+    ?cut.claims.map((claim,i)=>{
+      const file=path.join(tmp,'educational-beat-'+i+'.txt');
+      fs.writeFileSync(file,claim.text,{flag:'wx',mode:0o600});
+      return {file,start:Number((i*srcInfo.duration/cut.claims.length).toFixed(3)),
+        end:Number((((i+1)*srcInfo.duration/cut.claims.length)-.001).toFixed(3))};
+    }):[];
    const out=path.join(tmp,cut.lane+'.mp4');
    const args=['-hide_banner','-loglevel','error','-y','-i',source,
-    '-vf',makeFilter(w,h,textfiles,fontPath,srcInfo.duration,cut.composition,srcInfo),'-map','0:v:0'];
+    '-vf',makeFilter(w,h,textfiles,fontPath,srcInfo.duration,cut.composition,srcInfo,teachingBeats),'-map','0:v:0'];
    if(cut.audio==='preserve'&&srcInfo.audio)args.push('-map','0:a:0','-c:a','aac');
    else args.push('-an');
    args.push('-c:v','libx264','-preset','veryfast','-crf','20','-pix_fmt','yuv420p',
@@ -151,6 +165,7 @@ export function produceVisualLanes(request,outputDir){
     artifacts.push({lane:cut.lane,width:w,height:h,
      cropPolicy:directed?'operator_directed_content_loss':'preserve_full_frame',
      cameraPan:directed?{start:cut.composition.start,end:cut.composition.end}:null,
+     temporalEducationalBeats:teachingBeats.map(x=>({start:x.start,end:x.end})),
      nativeCameraRequired:reframingRequired,
      sourceResolutionLimited:true,
     codec:result.videoCodec,durationSec:result.duration,hasAudio:result.audio,
