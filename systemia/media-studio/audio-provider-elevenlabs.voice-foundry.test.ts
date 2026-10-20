@@ -24,7 +24,7 @@ const need:ProductionNeed={
   continuityDigest:'locked-continuity',
   requires:['voice_profile','commercial_rights','provenance_receipt','timing_control'],status:'planned',
 };
-function rig(input?:{ profiles?:unknown[];cues?:unknown[]; allowPaidGeneration?:boolean; speechModelId?:string; commercialRights?:'allowed'|'unknown'|'denied'; sourceDurationSec?:number; auditionTakeId?:string; outputDir?:string }){
+function rig(input?:{ profiles?:unknown[];cues?:unknown[]; allowPaidGeneration?:boolean; speechModelId?:string; commercialRights?:'allowed'|'unknown'|'denied'; sourceDurationSec?:number; auditionTakeId?:string; outputDir?:string; strictPronunciation?:boolean; lexicon?:unknown[]; dictionaryBindings?:unknown[] }){
   const calls:Array<{url:string;body:any}>=[];
   const raw=Buffer.from('FAKE-MP3-BYTES-FOR-UNIT-TEST');
   const outputDir=input?.outputDir??fs.mkdtempSync(path.join(os.tmpdir(),'evercraft-voice-foundry-'));
@@ -38,7 +38,9 @@ function rig(input?:{ profiles?:unknown[];cues?:unknown[]; allowPaidGeneration?:
     speechModelId:input?.speechModelId??'eleven_v3',
     voiceProfiles:{'foundry-host':'voice-real'},
     auditionTakeId:input?.auditionTakeId,
-    voiceFoundry:{profiles:(input?.profiles??[profile]) as any,cues:(input?.cues??[cue]) as any},
+    strictPronunciation:input?.strictPronunciation,
+    pronunciationDictionaryBindings:input?.dictionaryBindings as any,
+    voiceFoundry:{profiles:(input?.profiles??[profile]) as any,cues:(input?.cues??[cue]) as any,lexicon:(input?.lexicon??[]) as any},
     probeDurationSec:(filePath)=>filePath.endsWith('.source.mp3')?(input?.sourceDurationSec??3):3,
     fetchImpl:(async(url:string,options:any)=>{
       calls.push({url,body:JSON.parse(options.body)});
@@ -169,5 +171,24 @@ test('model auditions use unique take IDs and preserve independent source record
 test('invalid audition ID is rejected before paid calls',async()=>{
  const {adapter,calls}=rig({auditionTakeId:'../overwrite'});
  await assert.rejects(()=>adapter.execute(need),/voice_take_id_unsafe/);
+ assert.equal(calls.length,0);
+});
+
+test('qualified reviewed dictionary version is transmitted for matching English term',async()=>{
+ const {adapter,calls}=rig({
+   strictPronunciation:true,
+   lexicon:[{term:'real',reading:'ree-uhl',locale:'en-US',reviewerEvidenceRef:'lexical-review'}],
+   dictionaryBindings:[{locale:'en-US',pronunciation_dictionary_id:'dictionary_1234',version_id:'version_5678',approval:'human_approved',approvalEvidenceRef:'pronunciation-review'}],
+ });
+ const result=await adapter.execute(need);
+ assert.deepEqual(calls[0].body.pronunciation_dictionary_locators,[{pronunciation_dictionary_id:'dictionary_1234',version_id:'version_5678'}]);
+ assert.match(result.sourceRefs.join(','),/voice-pronunciation-request-sha256:[a-f0-9]{64}/);
+});
+test('strict name pronunciation blocks paid request without a reviewed dictionary version',async()=>{
+ const {adapter,calls}=rig({
+   strictPronunciation:true,
+   lexicon:[{term:'real',reading:'ree-uhl',locale:'en-US',reviewerEvidenceRef:'lexical-review'}],
+ });
+ await assert.rejects(()=>adapter.execute(need),/dictionary_required_for_matched_terms/);
  assert.equal(calls.length,0);
 });
