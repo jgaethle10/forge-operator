@@ -27,6 +27,10 @@ test('audition builder exports portable offline listening room with two actual p
  assert.equal(report.providerCallsMade,false);assert.equal(report.rightsAndConsentUnverified,true);
  assert.equal(report.candidates[0].status,'awaiting_human_review');
  assert.match(report.candidates[0].signal.audioDigest,/^[a-f0-9]{64}$/);
+ assert.equal(report.candidates[0].pacing.audioDigest,report.candidates[0].signal.audioDigest);
+ assert.equal(report.candidates[0].pacing.schema,'evercraft.voice-foundry.pacing-inspection.v1');
+ assert.equal(report.candidates[0].pacing.publicationAuthorityGranted,false);
+ assert.equal(typeof report.candidates[0].pacingReviewRequired,'boolean');
  assert.equal(fs.readFileSync(path.join(s.outputDir,report.candidates[0].audioPath)).length>0,true);
  assert.ok(fs.readFileSync(path.join(s.outputDir,'index.html'),'utf8').includes('Blind audition'));
  assert.ok(fs.readFileSync(path.join(s.outputDir,'audition-data.js'),'utf8').startsWith('window.__EVERCRAFT_VOICE_AUDITION_DATA__'));
