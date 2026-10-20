@@ -42,6 +42,26 @@ function cube():GeometryAsset{
   return {schema:'evercraft.world-engine.geometry.v1',id:'owned:cube',
     primitive:'triangles',positions,normals,uvs};
 }
+// Triangulated curved geometry in real 3D (not a flat circular sprite).
+// Explicit outward normals let the existing PBR lighting show rounded metal.
+function torus(id:string,majorRadius:number,tubeRadius:number,radial=40,tubular=10):GeometryAsset{
+  const positions:number[]=[],normals:number[]=[],uvs:number[]=[];
+  const vertex=(i:number,j:number)=>{
+    const a=2*Math.PI*i/radial,b=2*Math.PI*j/tubular;
+    const ca=Math.cos(a),sa=Math.sin(a),cb=Math.cos(b),sb=Math.sin(b);
+    return {p:[(majorRadius+tubeRadius*cb)*ca,tubeRadius*sb,(majorRadius+tubeRadius*cb)*sa],
+      n:[ca*cb,sb,sa*cb],uv:[i/radial,j/tubular]};
+  };
+  for(let i=0;i<radial;i++)for(let j=0;j<tubular;j++){
+    for(const [x,y] of [[i,j],[i+1,j],[i+1,j+1],[i,j],[i+1,j+1],[i,j+1]]){
+      const v=vertex(x,y);positions.push(...v.p);normals.push(...v.n);uvs.push(...v.uv);
+    }
+  }
+  return {schema:'evercraft.world-engine.geometry.v1',id,primitive:'triangles',positions,normals,uvs};
+}
+function industrialGeometry(){
+  return [cube(),torus('owned:outer-rotor',1.32,.22),torus('owned:inner-rotor',.77,.16,32,8)];
+}
 function industrialWorld():WorldDefinition{
   const material=(id:string,color:[number,number,number],metallic=.2,roughness=.55)=>({
     id,model:'pbr' as const,baseColor:{r:color[0],g:color[1],b:color[2],a:1},metallic,roughness
@@ -82,9 +102,21 @@ function industrialWorld():WorldDefinition{
       box('distance-a',-9,3,-10,1.3,3,1.3,'structure'),
       box('distance-b',9,4,-12,1.2,4,1.2,'structure'),
       box('distance-c',0,5,-17,1.9,5,1.9,'dark'),
-      {id:'reactor',transform:{position:{x:0,y:2,z:0},scale:{x:1.25,y:1.25,z:1.25}},
-        behaviors:[{kind:'spin',degreesPerSecond:{x:0,y:45,z:8}}],
-        renderable:{geometryRef:'owned:cube',materialId:'core'}},
+      {id:'reactor',transform:{position:{x:0,y:2,z:0},rotationDeg:{x:34,y:0,z:22}},
+        behaviors:[{kind:'spin',degreesPerSecond:{x:6,y:34,z:12}}],
+        renderable:{geometryRef:'owned:outer-rotor',materialId:'core'}},
+      {id:'inner-rotor',transform:{position:{x:0,y:2,z:0},rotationDeg:{x:15,y:12,z:-33}},
+        behaviors:[{kind:'spin',degreesPerSecond:{x:-12,y:-55,z:22}}],
+        renderable:{geometryRef:'owned:inner-rotor',materialId:'accent'}},
+      box('reactor-spindle',0,2,0,.28,1.4,.28,'dark'),
+      box('cradle-left',-1.75,1.2,0,.22,1.2,.28,'structure'),
+      box('cradle-right',1.75,1.2,0,.22,1.2,.28,'structure'),
+      box('cradle-front',0,.65,1.7,1.8,.2,.22,'accent'),
+      box('cradle-back',0,.65,-1.7,1.8,.2,.22,'accent'),
+      box('reactor-backplate',0,2,-2.2,2.4,2.15,.12,'dark'),
+      box('light-frame-top',0,4.4,0,2.8,.08,.08,'accent'),
+      box('light-frame-left',-2.8,2.2,0,.08,2.15,.08,'structure'),
+      box('light-frame-right',2.8,2.2,0,.08,2.15,.08,'structure'),
       {id:'ambient',transform:{position:{x:0,y:0,z:0}},
         light:{type:'ambient',color:{r:.35,g:.52,b:.72},intensity:.42}},
       {id:'sun',transform:{position:{x:-8,y:12,z:1},rotationDeg:{x:32,y:-25,z:0}},
@@ -108,7 +140,7 @@ async function loopback(){
   if(!addr||typeof addr==='string')throw new Error('loopback_invalid');
   return {server,url:'http://127.0.0.1:'+addr.port+'/'};
 }
-async function renderGpuFrames(plans:ReturnType<typeof buildCinematicCameraSequence>['frames'],geometry:GeometryAsset,
+async function renderGpuFrames(plans:ReturnType<typeof buildCinematicCameraSequence>['frames'],geometries:GeometryAsset[],
   shader:string,out:string){
   const prepared=await prepareNativeBrowserRuntime({
     sourceDir:worker,stateDir:process.env.EVERCRAFT_NATIVE_BROWSER_STATE_DIR||path.join(out,'native-browser'),
@@ -136,7 +168,7 @@ async function renderGpuFrames(plans:ReturnType<typeof buildCinematicCameraSeque
         // Install only this inert name decorator in the isolated loopback lab.
         await page.addInitScript({content:"globalThis.__name=(fn,name)=>fn;"});
         await page.goto(server.url,{waitUntil:'domcontentloaded'});
-        const init=await page.evaluate(async({shader,geometry,width,height}:{shader:string;geometry:GeometryAsset;width:number;height:number})=>{
+        const init=await page.evaluate(async({shader,geometries,width,height}:{shader:string;geometries:GeometryAsset[];width:number;height:number})=>{
           const adapter=await (navigator as any).gpu?.requestAdapter();
           if(!adapter)return {ok:false,reason:'no_adapter'};
           const device=await adapter.requestDevice();
@@ -164,17 +196,19 @@ async function renderGpuFrames(plans:ReturnType<typeof buildCinematicCameraSeque
             primitive:{topology:'triangle-list',frontFace:'ccw',cullMode:'none'},
             depthStencil:{format:'depth24plus',depthWriteEnabled:true,depthCompare:'less'}
           });
-          const vertices=new Float32Array((()=>{
+          const buffers=new Map<string,any>();
+          for(const geometry of geometries){
             const output:number[]=[];
             for(let i=0;i<geometry.positions.length/3;i++){
               output.push(...geometry.positions.slice(i*3,i*3+3),
                 ...geometry.normals.slice(i*3,i*3+3),
                 ...(geometry.uvs?.slice(i*2,i*2+2)??[0,0]),1,0,0,1);
             }
-            return output;
-          })());
-          const vb=device.createBuffer({size:vertices.byteLength,usage:(globalThis as any).GPUBufferUsage.VERTEX|(globalThis as any).GPUBufferUsage.COPY_DST});
-          device.queue.writeBuffer(vb,0,vertices);
+            const vertices=new Float32Array(output);
+            const vb=device.createBuffer({size:vertices.byteLength,
+              usage:(globalThis as any).GPUBufferUsage.VERTEX|(globalThis as any).GPUBufferUsage.COPY_DST});
+            device.queue.writeBuffer(vb,0,vertices);buffers.set(geometry.id,vb);
+          }
           const pixel=(rgba:number[])=>{
             const texture=device.createTexture({size:[1,1,1],format:'rgba8unorm',
               usage:(globalThis as any).GPUTextureUsage.TEXTURE_BINDING|(globalThis as any).GPUTextureUsage.COPY_DST});
@@ -192,10 +226,9 @@ async function renderGpuFrames(plans:ReturnType<typeof buildCinematicCameraSeque
             usage:(globalThis as any).GPUTextureUsage.RENDER_ATTACHMENT|(globalThis as any).GPUTextureUsage.COPY_SRC});
           const depth=device.createTexture({size:[width,height,1],format:'depth24plus',usage:(globalThis as any).GPUTextureUsage.RENDER_ATTACHMENT});
           // Dedicated synthetic lab runtime; all values come from canonically verified WebGPU plans.
-          (window as any).__evercraftCinematic={device,frameLayout,objectLayout,pipeline,vb,fallback,sampler,target,depth,width,height,
-            vertexCount:geometry.positions.length/3};
+          (window as any).__evercraftCinematic={device,frameLayout,objectLayout,pipeline,buffers,fallback,sampler,target,depth,width,height};
           return {ok:true};
-        },{shader,geometry,width:WIDTH,height:HEIGHT});
+        },{shader,geometries,width:WIDTH,height:HEIGHT});
         if(init.ok){selected=profile;break;}
         errors.push(profile.name+':'+init.reason);
         await browser.close();browser=null;page=null;
@@ -240,7 +273,7 @@ async function renderGpuFrames(plans:ReturnType<typeof buildCinematicCameraSeque
             colorAttachments:[{view:r.target.createView(),clearValue:{...plan.clearColor,a:1},loadOp:'clear',storeOp:'store'}],
             depthStencilAttachment:{view:r.depth.createView(),depthClearValue:1,depthLoadOp:'clear',depthStoreOp:'store'}
           });
-          pass.setPipeline(r.pipeline);pass.setBindGroup(0,frameGroup);pass.setVertexBuffer(0,r.vb);
+          pass.setPipeline(r.pipeline);pass.setBindGroup(0,frameGroup);
           const objects:any[]=[];
           for(const draw of plan.draws){
             const obj=new Float32Array([
@@ -256,7 +289,9 @@ async function renderGpuFrames(plans:ReturnType<typeof buildCinematicCameraSeque
               {binding:3,resource:r.fallback[1].createView()},
               {binding:4,resource:r.fallback[2].createView()},
               {binding:5,resource:r.fallback[3].createView()}]});
-            objects.push(buffer);pass.setBindGroup(1,group);pass.draw(draw.vertexCount,1,0,0);
+            const mesh=r.buffers.get(draw.geometryId);
+            if(!mesh)throw Error('missing_real_geometry_buffer:'+draw.geometryId);
+            objects.push(buffer);pass.setBindGroup(1,group);pass.setVertexBuffer(0,mesh);pass.draw(draw.vertexCount,1,0,0);
           }
           pass.end();
           const rowBytes=r.width*4,bytesPerRow=Math.ceil(rowBytes/256)*256;
@@ -293,7 +328,7 @@ async function main(){
   const out=path.resolve(process.env.CINEMATIC_PROOF_OUTPUT||path.join(os.tmpdir(),'evercraft-cinematic-pixel-proof-'+process.pid));
   if(fs.existsSync(out))throw new Error('output_already_exists');
   fs.mkdirSync(out,{recursive:true,mode:0o700});
-  const geometry=cube(),world=industrialWorld();
+  const geometries=industrialGeometry(),world=industrialWorld();
   const take:CinematicCameraTake={
     schema:'evercraft.world-engine.cinematic-camera-take.v1',
     id:'orbital-foundry-take-one',cameraEntityId:'cinema-camera',targetEntityId:'reactor',
@@ -302,10 +337,10 @@ async function main(){
     startFovYDeg:53,endFovYDeg:43
   };
   const sequence=buildCinematicCameraSequence({
-    world,take,geometries:[geometry],viewport:{width:WIDTH,height:HEIGHT}
+    world,take,geometries,viewport:{width:WIDTH,height:HEIGHT}
   });
   const shader=extractOwnedShader(root);
-  const raw=await renderGpuFrames(sequence.frames,geometry,shader.source,out);
+  const raw=await renderGpuFrames(sequence.frames,geometries,shader.source,out);
   const video=path.join(out,'orbital-foundry-synthetic-canary.mp4');
   // The music bed is a synthetic lab signal, not licensed commercial music.
   run('ffmpeg',['-hide_banner','-loglevel','error','-y',
