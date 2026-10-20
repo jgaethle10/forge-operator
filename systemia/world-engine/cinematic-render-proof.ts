@@ -536,7 +536,7 @@ async function main(){
     shadowCounterfactualChangedPixels:raw.counterfactualChangedPixels,
     shadowFilterChangedPixels:raw.filterChangedPixels,
     output:{path:video,sha256:sha(fs.readFileSync(video)),width:WIDTH,height:HEIGHT,
-      durationSec:DURATION,fps:FPS,codec:'h264',audioCodec:'aac'},
+      durationSec:DURATION,fps:FPS,codec:'h264',audioCodec:isBattleship?null:'aac'},
     stills,sourceState:'synthetic_visualization',
     sceneType:isBattleship?'procedural_battleship':'procedural_industrial_rotor',
     soundState:isBattleship?'silent_at_founder_direction_no_sound_invented':'original_multilayer_synthetic_soundscape_not_recorded_foley_or_commercial_score',
