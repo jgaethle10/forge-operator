@@ -71,7 +71,7 @@ function verify(request){
     receipt.soundState!=='silent_at_founder_direction_no_sound_invented'||
     receipt.exactGpuReadbackFrames!==96||
     receipt.uniqueRawFrameDigests<20||
-    !isSha(receipt.shaderSha256)||!isSha(receipt.worldDigest)||
+    !/^sha256:[0-9a-f]{64}$/.test(receipt.shaderSha256)||!isSha(receipt.worldDigest)||
     !Array.isArray(director.cameraPlanDigests)||
     director.cameraPlanDigests.length!==3||
     media.codec!=='h264'||Math.abs(media.fps-FPS)>.001||
