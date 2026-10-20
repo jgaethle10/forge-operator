@@ -68,3 +68,12 @@ test('suspicious quiet intervals require explicit editorial acknowledgement with
  assert.equal(noted.status,'passed_internal_voice_qa');
  assert.equal(noted.publicationAuthorityGranted,false);
 });
+
+test('casting plan automatically blocks speaker identity switches inside a multi-scene session',()=>{
+ const secondVoice={...voice,id:'narrator-02',identityVersion:'2',providerVoiceId:'other-voice'};
+ const scene2={...cue,id:'scene-02',voiceProfileId:secondVoice.id};
+ const r=planVoiceSession({profiles:[voice,secondVoice],cues:[cue,scene2]});
+ assert.equal(r.status,'held');
+ assert.ok(r.continuity.reasons.includes('speaker_voiceProfileId_changed:narrator'));
+ assert.equal(r.publicationAuthorityGranted,false);
+});
