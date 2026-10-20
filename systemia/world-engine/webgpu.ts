@@ -1032,6 +1032,12 @@ export class EvercraftWebGpuRenderer {
   private frameLayout:any;
   private objectLayout:any;
   private pipelineLayout:any;
+  private shadowTexture:any|null=null;
+  private shadowSize=0;
+  private shadowSampler:any;
+  private shadowPipeline:any;
+  private shadowLayout:any;
+  private shadowFrameBuffers:any[]=[];
 
   private constructor(
     private readonly canvas:HTMLCanvasElement,
@@ -1049,8 +1055,26 @@ export class EvercraftWebGpuRenderer {
     this.frameLayout=device.createBindGroupLayout({
       entries:[
         {binding:0,visibility:3,buffer:{type:'uniform'}},
-        {binding:1,visibility:2,buffer:{type:'read-only-storage'}}
+        {binding:1,visibility:2,buffer:{type:'read-only-storage'}},
+        {binding:2,visibility:2,texture:{sampleType:'depth'}},
+        {binding:3,visibility:2,sampler:{type:'comparison'}}
       ]
+    });
+    this.shadowSampler=device.createSampler({compare:'less-equal'});
+    this.shadowLayout=device.createBindGroupLayout({entries:[
+      {binding:0,visibility:1,buffer:{type:'uniform'}}
+    ]});
+    const shadowModule=device.createShaderModule({
+      label:'Evercraft owned shadow depth-only WGSL',
+      code:EVERCRAFT_SHADOW_DEPTH_WGSL
+    });
+    this.shadowPipeline=device.createRenderPipeline({
+      layout:device.createPipelineLayout({bindGroupLayouts:[this.shadowLayout]}),
+      vertex:{module:shadowModule,entryPoint:'vs_main',buffers:[{
+        arrayStride:48,attributes:[{shaderLocation:0,offset:0,format:'float32x3'}]
+      }]},
+      primitive:{topology:'triangle-list',cullMode:'none'},
+      depthStencil:{format:'depth32float',depthWriteEnabled:true,depthCompare:'less'}
     });
     this.objectLayout=device.createBindGroupLayout({
       entries:[
@@ -1348,6 +1372,18 @@ export class EvercraftWebGpuRenderer {
     if(this.canvas.height!==plan.height) this.canvas.height=plan.height;
     this.ensureDepth(plan.width,plan.height);
     const textureResidency=this.applyTextureResidency(plan);
+    const desiredShadowSize=plan.shadow?.resolution ?? 1;
+    if(!this.shadowTexture || this.shadowSize!==desiredShadowSize){
+      this.shadowTexture?.destroy?.();
+      this.shadowTexture=this.device.createTexture({
+        size:[desiredShadowSize,desiredShadowSize,1],
+        format:'depth32float',
+        usage:((globalThis as any).GPUTextureUsage).RENDER_ATTACHMENT
+          |((globalThis as any).GPUTextureUsage).TEXTURE_BINDING
+      });
+      this.shadowSize=desiredShadowSize;
+      this.frameBindGroup=null;
+    }
 
     const usage=(globalThis as any).GPUBufferUsage;
     const frameData=frameUniformData(plan);
@@ -1379,12 +1415,48 @@ export class EvercraftWebGpuRenderer {
         layout:this.frameLayout,
         entries:[
           {binding:0,resource:{buffer:this.frameBuffer}},
-          {binding:1,resource:{buffer:this.lightBuffer}}
+          {binding:1,resource:{buffer:this.lightBuffer}},
+          {binding:2,resource:this.shadowTexture.createView()},
+          {binding:3,resource:this.shadowSampler}
         ]
       });
     }
 
     const encoder=this.device.createCommandEncoder({label:'Evercraft World Engine frame'});
+    if(plan.shadow){
+      const depthPass=encoder.beginRenderPass({
+        colorAttachments:[],
+        depthStencilAttachment:{
+          view:this.shadowTexture.createView(),
+          depthClearValue:1,depthLoadOp:'clear',depthStoreOp:'store'
+        }
+      });
+      depthPass.setPipeline(this.shadowPipeline);
+      for(const draw of plan.draws){
+        if(!draw.castsShadow || draw.alphaMode!=='opaque')continue;
+        const geom=this.ensureGeometry(draw.geometryId);
+        const uniform=new Float32Array([...plan.shadow.lightViewProjectionMatrix,...draw.modelMatrix]);
+        const shadowBuffer=this.device.createBuffer({
+          size:uniform.byteLength,
+          usage:usage.UNIFORM|usage.COPY_DST
+        });
+        this.device.queue.writeBuffer(shadowBuffer,0,uniform);
+        const bind=this.device.createBindGroup({
+          layout:this.shadowLayout,entries:[{binding:0,resource:{buffer:shadowBuffer}}]
+        });
+        depthPass.setBindGroup(0,bind);
+        depthPass.setVertexBuffer(0,geom.vertexBuffer);
+        if(geom.indexBuffer){
+          depthPass.setIndexBuffer(geom.indexBuffer,'uint32');
+          depthPass.drawIndexed(geom.indexCount,1,0,0,0);
+        }else{
+          depthPass.draw(geom.vertexCount,1,0,0);
+        }
+        // GPU submission happens below; keep this resource alive until the GPU consumes it.
+        this.shadowFrameBuffers.push(shadowBuffer);
+      }
+      depthPass.end();
+    }
     const pass=encoder.beginRenderPass({
       colorAttachments:[{
         view:this.context.getCurrentTexture().createView(),
@@ -1461,6 +1533,8 @@ export class EvercraftWebGpuRenderer {
 
     pass.end();
     this.device.queue.submit([encoder.finish()]);
+    for(const buffer of this.shadowFrameBuffers)buffer.destroy();
+    this.shadowFrameBuffers=[];
     return {
       schema:'evercraft.world-engine.webgpu-submit-receipt.v1' as const,
       planDigest:plan.digest,
