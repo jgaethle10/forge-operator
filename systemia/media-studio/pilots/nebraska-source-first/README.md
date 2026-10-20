@@ -42,3 +42,13 @@ node systemia/media-studio/pilots/nebraska-source-first/observational-edit-prefl
 ```
 
 **Gate boundaries:** a valid narrative intent cannot certify the underlying video contains real movement, can authenticate neither source rights nor the claimed human editor's identity, and cannot judge whether a shot feels compelling. The expected passing structural state is **`structure_passed_assets_pending`**, not ready-to-render or publish. The additional optical-flow checker supplies only a separate camera-compensated movement diagnostic. Editorial and rights approvals and actual footage remain blocked. Any publication or provider spend requires separate founder authorization.
+
+## Authentic Lincoln archive canary (October 20)
+
+The native GitHub runner completed an **actual internet media acquisition and real-frame render** for an independently recorded 2011 Lincoln shot. The original Wikimedia Commons file, by CrunchySkies, has a Commons-published CC BY-SA 3.0 license, 10,973,914 bytes, SHA-1 `d7fb114b1d2e9b0b12556950e0c45b6797f947ac`. The CI source matches BOTH exact bytes and digest. The eight-second excerpt uses **only observed original film pixels and original audio**, does not invent atmospheric sound, and passed full MP4 decode as 1280x720 H.264/AAC.
+
+GitHub Actions run **39476057525**, artifact **12289935681**, contained the movie, three original movie frames, a SHA-256 receipt and attribution. MP4 SHA-256: `a3742adba9b0eaf0c02dcc4c7b15c95659cb1d1768bd2d5450bfe0d68a72378d`.
+
+Human frame inspection saw the camera pan from heavy clouds toward a windmill. This is real **2011 Lincoln geographic atmosphere**, not stadium, football or an interview, and has not been admitted to a final Nebraska cut. Original audio has been retained, but independent editorial listening/third-party music clearance is **not** evidenced. The CC BY-SA ShareAlike condition requires independent release analysis; do not publish by default. See `source-rights-docket.json` for exact source refs, true owner contacts, game film shortages, usage boundaries and no-outreach receipts.
+
+**Release gate still closed**: full game footage rights, current interview releases, authenticated audience/field audio, image/sound creative review, and scene licensing are missing. `source-rights-docket.json` is a research record, not contact/outreach authorization.
