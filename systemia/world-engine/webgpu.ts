@@ -3,6 +3,7 @@ import type {
   CameraProjection,
   AtmosphereDefinition,
   FilmicColorManagement,
+  CinematicLightingDefinition,
   ColorRGB,
   LightComponent,
   MaterialDefinition,
@@ -98,6 +99,7 @@ export interface WebGpuRenderPlan {
   clearColor:ColorRGB;
   atmosphere?:AtmosphereDefinition;
   colorManagement?:FilmicColorManagement;
+  cinematicLighting?:CinematicLightingDefinition;
   viewMatrix:number[];
   projectionMatrix:number[];
   viewProjectionMatrix:number[];
@@ -602,6 +604,7 @@ export function compileWebGpuRenderPlan(
     clearColor:clone(frame.clearColor),
     ...(frame.atmosphere?{atmosphere:clone(frame.atmosphere)}:{}),
     ...(frame.colorManagement?{colorManagement:clone(frame.colorManagement)}:{}),
+    ...(frame.cinematicLighting?{cinematicLighting:clone(frame.cinematicLighting)}:{}),
     viewMatrix,
     projectionMatrix,
     viewProjectionMatrix,
@@ -682,7 +685,10 @@ function frameUniformData(plan:WebGpuRenderPlan){
     fog?.color.r??0,fog?.color.g??0,fog?.color.b??0,fog?.density??0,
     fog?.startDistance??0,fog?.heightFalloff??0,fog?.referenceHeight??0,0,
     plan.colorManagement?.toneMapper==='aces_filmic'?1:0,
-    plan.colorManagement?.exposureBiasStops??0,0,0
+    plan.colorManagement?.exposureBiasStops??0,0,0,
+    plan.cinematicLighting?.shading==='ggx_microfacet'?1:0,
+    plan.cinematicLighting?.localLightFalloff==='inverse_square'?1:0,
+    0,0
   ]);
 }
 
@@ -694,6 +700,7 @@ struct FrameUniforms {
   fogColorDensity: vec4<f32>,
   fogParams: vec4<f32>,
   gradeParams: vec4<f32>,
+  lightingParams: vec4<f32>,
 };
 
 struct ObjectUniforms {
@@ -814,6 +821,9 @@ fn fs_main(input: VertexOut) -> @location(0) vec4<f32> {
   let V = normalize(frame.cameraExposure.xyz - input.worldPosition);
   var lighting = vec3<f32>(0.0);
   var specular = vec3<f32>(0.0);
+  var ggxDirect = vec3<f32>(0.0);
+  var ggxAmbient = vec3<f32>(0.0);
+  let ndotv = max(dot(N,V),0.001);
   let lightCount = u32(frame.lightMeta.x);
 
   for (var i:u32=0u; i<lightCount; i=i+1u) {
@@ -830,7 +840,11 @@ fn fs_main(input: VertexOut) -> @location(0) vec4<f32> {
     let outerCos=colorOuter.w;
 
     if (kind==0u) {
-      lighting += color*intensity*ao;
+      if (frame.lightingParams.x > 0.5) {
+        ggxAmbient += color*intensity*ao;
+      } else {
+        lighting += color*intensity*ao;
+      }
       continue;
     }
 
@@ -846,7 +860,14 @@ fn fs_main(input: VertexOut) -> @location(0) vec4<f32> {
         continue;
       }
       L=delta/dist;
-      attenuation=saturate(1.0-dist/range);
+      if (frame.lightingParams.y > 0.5) {
+        // Squared inverse-distance falloff with smooth finite source range.
+        let normalizedDistance=dist/range;
+        let cutoff=max(1.0-pow(normalizedDistance,4.0),0.0);
+        attenuation=(cutoff*cutoff)/(1.0+dist*dist);
+      } else {
+        attenuation=saturate(1.0-dist/range);
+      }
       if (kind==3u) {
         let cone=dot(direction,-L);
         let coneWidth=max(innerCos-outerCos,0.00001);
@@ -855,6 +876,27 @@ fn fs_main(input: VertexOut) -> @location(0) vec4<f32> {
     }
 
     let ndotl=max(dot(N,L),0.0);
+    if (frame.lightingParams.x>0.5) {
+      if (ndotl>0.0) {
+        let H=normalize(L+V);
+        let ndoth=max(dot(N,H),0.0);
+        let vdoth=max(dot(V,H),0.0);
+        let alpha=roughness*roughness;
+        let alpha2=alpha*alpha;
+        let t=ndoth*ndoth*(alpha2-1.0)+1.0;
+        let distribution=alpha2/max(3.14159265*t*t,0.000001);
+        let k=pow(roughness+1.0,2.0)/8.0;
+        let geometryV=ndotv/max(ndotv*(1.0-k)+k,0.00001);
+        let geometryL=ndotl/max(ndotl*(1.0-k)+k,0.00001);
+        let F0=mix(vec3<f32>(0.04),base.rgb,metallic);
+        let fresnel=F0+(vec3<f32>(1.0)-F0)*pow(1.0-vdoth,5.0);
+        let microfacet=distribution*geometryV*geometryL*fresnel/max(4.0*ndotv*ndotl,0.001);
+        let diffuseEnergy=(vec3<f32>(1.0)-fresnel)*(1.0-metallic);
+        let diffuseBrdf=diffuseEnergy*base.rgb/3.14159265;
+        ggxDirect += (diffuseBrdf+microfacet)*color*intensity*ndotl*attenuation*ao;
+      }
+      continue;
+    }
     lighting += color*intensity*ndotl*attenuation;
 
     if (ndotl>0.0) {
@@ -867,8 +909,16 @@ fn fs_main(input: VertexOut) -> @location(0) vec4<f32> {
     }
   }
 
-  let diffuse=base.rgb*lighting*mix(1.0,0.25,metallic);
-  let color=(diffuse+specular+emissive)*frame.cameraExposure.w;
+  var color=vec3<f32>(0.0);
+  if (frame.lightingParams.x>0.5) {
+    // Ambient is a bounded fill, NOT a claim of environment-map reflections.
+    let metallicAmbientScale=mix(1.0,0.18,metallic);
+    let ambient=base.rgb*ggxAmbient*metallicAmbientScale;
+    color=(ambient+ggxDirect+emissive)*frame.cameraExposure.w;
+  } else {
+    let diffuse=base.rgb*lighting*mix(1.0,0.25,metallic);
+    color=(diffuse+specular+emissive)*frame.cameraExposure.w;
+  }
   return vec4<f32>(applyFilmicGrade(applyAtmosphericDepth(color,input.worldPosition)),base.a);
 }
 `;
