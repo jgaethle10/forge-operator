@@ -18,7 +18,7 @@ const b64 = (v) => {
   const bytes = v instanceof Uint8Array ? v : new Uint8Array(v);
   let s = "";
   for (const byte of bytes) s += String.fromCharCode(byte);
-  return btoa(s).replace(/\\+/g, "-").replace(/\\//g, "_").replace(/=+$/, "");
+  return btoa(s).split("+").join("-").split("/").join("_").replace(/=+$/, "");
 };
 const fromB64 = (s) => {
   if (!/^[A-Za-z0-9_-]+$/.test(String(s || ""))) throw new Error("invalid_envelope_encoding");
