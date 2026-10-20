@@ -43,16 +43,16 @@ jobs:
       - name: Render ship with independent 3D native camera, not a crop
         env:
           CINEMATIC_SCENE: battleship
-          CINEMATIC_FORMAT: \${{ matrix.format }}
-          CINEMATIC_PROOF_OUTPUT: \${{ runner.temp }}/native-\${{ matrix.format }}
-          EVERCRAFT_NATIVE_BROWSER_STATE_DIR: \${{ runner.temp }}/browser-native-\${{ matrix.format }}
+          CINEMATIC_FORMAT: ${{ matrix.format }}
+          CINEMATIC_PROOF_OUTPUT: ${{ runner.temp }}/native-${{ matrix.format }}
+          EVERCRAFT_NATIVE_BROWSER_STATE_DIR: ${{ runner.temp }}/browser-native-${{ matrix.format }}
         run: npm run world:cinematic-render-proof
       - name: Verify 96 true GPU frames and exact native output aspect
         env:
-          FILM_FORMAT: \${{ matrix.format }}
-          EXPECTED_WIDTH: \${{ matrix.width }}
-          EXPECTED_HEIGHT: \${{ matrix.height }}
-          PROOF_DIR: \${{ runner.temp }}/native-\${{ matrix.format }}
+          FILM_FORMAT: ${{ matrix.format }}
+          EXPECTED_WIDTH: ${{ matrix.width }}
+          EXPECTED_HEIGHT: ${{ matrix.height }}
+          PROOF_DIR: ${{ runner.temp }}/native-${{ matrix.format }}
         run: |
           node - <<'NODE'
           const fs=require('node:fs'),p=require('node:path');
@@ -81,12 +81,12 @@ jobs:
       - name: Upload private film for native composition review
         uses: actions/upload-artifact@v4
         with:
-          name: world-native-battleship-\${{ matrix.format }}
+          name: world-native-battleship-${{ matrix.format }}
           path: |
-            \${{ runner.temp }}/native-\${{ matrix.format }}/battleship-world-engine-trial.mp4
-            \${{ runner.temp }}/native-\${{ matrix.format }}/receipt.json
-            \${{ runner.temp }}/native-\${{ matrix.format }}/opening.png
-            \${{ runner.temp }}/native-\${{ matrix.format }}/middle.png
-            \${{ runner.temp }}/native-\${{ matrix.format }}/closing.png
+            ${{ runner.temp }}/native-${{ matrix.format }}/battleship-world-engine-trial.mp4
+            ${{ runner.temp }}/native-${{ matrix.format }}/receipt.json
+            ${{ runner.temp }}/native-${{ matrix.format }}/opening.png
+            ${{ runner.temp }}/native-${{ matrix.format }}/middle.png
+            ${{ runner.temp }}/native-${{ matrix.format }}/closing.png
           retention-days: 7
           if-no-files-found: error
