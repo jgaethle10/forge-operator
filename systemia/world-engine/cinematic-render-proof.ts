@@ -569,6 +569,7 @@ async function main(){
       sceneWorldDigest:sequence.worldDefinitionDigest,
       landmarkAudits:native.review,
       actualGeometryFraming,
+      opticalAutoFit:native.autoFit,
       humanCreativeReviewRequired:true,
       publicationAuthority:false
     }}:{}),
