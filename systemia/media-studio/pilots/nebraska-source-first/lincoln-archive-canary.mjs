@@ -95,7 +95,7 @@ export function buildRealArchiveStudy(outdir){
  if(!archivalReleaseBoundary(receipt))throw Error('release_boundary_failed');
  fs.writeFileSync(path.join(outdir,'receipt.json'),JSON.stringify(receipt,null,2)+'\n');
  fs.writeFileSync(path.join(outdir,'ATTRIBUTION.txt'),
- `Source: ${ARCHIVE.title} by ${ARCHIVE.author}\nPage: ${ARCHIVE.page}\nLicense: ${ARCHIVE.license} - ${ARCHIVE.licenseUrl}\nCaptured: ${ARCHIVE.capturedAt} in Lincoln, Nebraska\nModified: selected 8-second segment (original 02:00-10:00 timestamps mean seconds 2-10), transcoded to 24 fps H.264/AAC where native audio is present.\nShareAlike terms apply to adapted material. This is NOT footage of Nebraska football or 2026. Do not publish without attribution/rights/editor review.\n`);
+ `Source: ${ARCHIVE.title} by ${ARCHIVE.author}\nPage: ${ARCHIVE.page}\nLicense: ${ARCHIVE.license} - ${ARCHIVE.licenseUrl}\nCaptured: ${ARCHIVE.capturedAt} in Lincoln, Nebraska\nModified: selected 8-second segment (source seconds 2–10), transcoded to 24 fps H.264/AAC where native audio is present.\nShareAlike terms apply to adapted material. This is NOT footage of Nebraska football or 2026. Do not publish without attribution/rights/editor review.\n`);
  return receipt;
 }
 if(process.argv[1]&&path.resolve(process.argv[1])===path.resolve(new URL(import.meta.url).pathname)){
