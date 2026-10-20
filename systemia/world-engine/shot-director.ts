@@ -33,6 +33,12 @@ export interface DirectorShotReceipt{
  selected:{radius:number;focusOffset:{x:number;y:number;z:number};targetEntityId:string};
  titleSafeRegion:null|{left:number;right:number;top:number;bottom:number;axis:'right'};
  safeRegionClearanceScore:null|number;
+ titleSafeClearance:null|{
+   clearAtAllSamples:boolean;
+   maxSubjectRight:number;
+   maxSubjectOverflow:number;
+   reservedNdcMinX:number;
+ };
  fullHeroAutoFit:AutoFitReceipt|null;
  disclaimer:'synthetic_visual_study_no_observed_evidence';
  operatorCreativeReviewRequired:true;
@@ -85,7 +91,7 @@ function scoreTitleSafe(a:GeometryFrameAudit){
  // annotation/CTA placement. No text rendered or user rights inferred.
  const overlap=Math.max(0,b.right-.35);
  const cropped=partialPenalty(a);
- return 45*cropped + 18*overlap +
+ return 120*cropped + 150*overlap +
    Math.max(0,.22-a.coverage.width)*10 +
    Math.max(0,.25-a.coverage.height)*10 +
    Math.abs(a.center.y)*.4;
@@ -147,8 +153,8 @@ export function directWorldEngineShot(input:{
    }
   }else{
    copyRegion={left:.35,right:1,top:.85,bottom:-.85,axis:'right'};
-   for(const r of [1,1.15,1.3]){
-    for(const shiftX of [3,6,9,12]){
+   for(const r of [1,1.3,1.6,1.9]){
+    for(const shiftX of [6,9,12,15,18,21]){
      const candidate:CinematicCameraTake={
       ...take,id:take.id+'-title-safe',
       orbit:{...take.orbit,radius:Math.round(take.orbit.radius*r*100)/100},
@@ -192,6 +198,14 @@ export function directWorldEngineShot(input:{
    focusOffset:clone(chosen.lookAtOffset??{x:0,y:0,z:0}),
    targetEntityId:chosen.targetEntityId},
   titleSafeRegion:copyRegion,safeRegionClearanceScore:copyScore,
+  titleSafeClearance:copyRegion?{
+    clearAtAllSamples:checks.frameSamples.every(a=>
+      a.normalizedBounds.right<=.30&&a.normalizedBounds.left>=-.96
+      &&a.normalizedBounds.top<=.96&&a.normalizedBounds.bottom>=-.96),
+    maxSubjectRight:Math.max(...checks.frameSamples.map(a=>a.normalizedBounds.right)),
+    maxSubjectOverflow:Math.max(...checks.frameSamples.map(a=>partialPenalty(a))),
+    reservedNdcMinX:.35
+  }:null,
   fullHeroAutoFit:autoFit,
   disclaimer:'synthetic_visual_study_no_observed_evidence',
   operatorCreativeReviewRequired:true,
