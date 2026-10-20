@@ -22,7 +22,7 @@ import {prepareNativeBrowserRuntime} from '../evercraft-web/browser-worker/nativ
 const root=path.resolve(path.dirname(fileURLToPath(import.meta.url)),'../..');
 const worker=path.join(root,'systemia/evercraft-web/browser-worker');
 const sha=(value:Buffer|string)=>crypto.createHash('sha256').update(value).digest('hex');
-const WIDTH=320, HEIGHT=180, FPS=24, DURATION=2;
+const WIDTH=640, HEIGHT=360, FPS=24, DURATION=2;
 function cube():GeometryAsset{
   const q=[
     {n:[0,0,1],v:[[-1,-1,1],[1,-1,1],[1,1,1],[-1,1,1]]},
