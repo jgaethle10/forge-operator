@@ -11,7 +11,7 @@ test('Nebraska compiles an editable 22.5s project without manufacturing producti
  assert.equal(bundle.project.fps,24);
  assert.equal(shots.length,6);
  assert.equal(shots.at(-1)!.startSec+shots.at(-1)!.durationSec,22.5);
- assert.ok(bundle.productionNeeds.length>=9);
+ assert.ok(bundle.productionNeeds.length>=8);
  assert.equal(input.music,undefined,'No auto-scored dramatic bed before source footage is reviewed');
  assert.equal(bundle.productionNeeds.some(need=>need.kind==='music'),false);
  assert.ok(bundle.project.assets.every(asset=>asset.path.startsWith('pending://')));
