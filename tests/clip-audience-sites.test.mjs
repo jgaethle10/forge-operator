@@ -16,6 +16,8 @@ test('Clip distribution queue covers all seven sites, no silent drops',()=>{
  assert.equal(queue.provider_publications_confirmed,0);
  assert.equal(queue.verified_paid_orders,0);
  assert.equal(queue.publicationAuthority,false);
+ assert.equal(queue.state,'retired_brand_isolation');
+ assert.equal(queue.allowed_corporate_cross_promotion,false);
 });
 test('all native campaigns have specific hooks, truthful source and tracked landing',()=>{
  for(const site of queue.sites){
@@ -39,11 +41,13 @@ test('drafts fail closed in Evercraft Clip existing social publisher',()=>{
   assert.equal(handoff.authorization.approved,false);
   assert.equal(handoff.authorization.authorizationRef,'');
   assert.equal(handoff.publicationAuthority,false);
-  assert.equal(handoff.status,'staged_review_required');
+  assert.equal(handoff.status,'cancelled_brand_isolation');
+  assert.equal(handoff.distribution.corporate_channels_authorized,false);
   assert.equal(handoff.status_proofs.clip_provider_publish_receipt,null);
   assert.equal(handoff.status_proofs.payment_receipts,null);
   assert.equal(handoff.distribution.paid_spend_usd,0);
   assert.ok(handoff.disallowed.includes('adult_content_on_family_brands'));
+  assert.ok(handoff.disallowed.includes('evercraft_corporate_social_distribution'));
   assert.equal(handoff.creative.media_ready_for_provider_upload,false);
  }
 });

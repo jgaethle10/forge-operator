@@ -4,7 +4,7 @@
   "created_at": "2026-10-20",
   "engine": "Evercraft Clip",
   "site_count": 7,
-  "state": "staged_for_review",
+  "state": "retired_brand_isolation",
   "provider_publications_confirmed": 0,
   "verified_paid_orders": 0,
   "publicationAuthority": false,
@@ -39,7 +39,7 @@
         "id": "audience-sites-20261020-partscout-facebook-page",
         "destination": "facebook-page",
         "brandKey": "evercraft-audience-sites",
-        "status": "staged_review_required",
+        "status": "cancelled_brand_isolation",
         "authorization": {
           "approved": false,
           "authorizationRef": ""
@@ -67,16 +67,14 @@
           "native_video": "requires_first_party_render_and_QA"
         },
         "distribution": {
-          "organic_channels": [
-            "YouTube Shorts",
-            "Facebook repair communities (only with group permission)",
-            "repair publishers"
-          ],
+          "organic_channels": [],
           "publisher_permission_required": true,
           "approved_networks_only": true,
           "paid_spend_usd": 0,
           "comment_spam_forbidden": true,
-          "affiliate_status": "not_verified"
+          "affiliate_status": "not_verified",
+          "corporate_channels_authorized": false,
+          "independent_property_channel_required": true
         },
         "status_proofs": {
           "landing_page_verified_in_prior_session": true,
@@ -91,7 +89,8 @@
           "mass_unsolicited_DMs",
           "fake_accounts",
           "purchased_fake_visits",
-          "adult_content_on_family_brands"
+          "adult_content_on_family_brands",
+          "evercraft_corporate_social_distribution"
         ]
       }
     },
@@ -124,7 +123,7 @@
         "id": "audience-sites-20261020-valuescout-facebook-page",
         "destination": "facebook-page",
         "brandKey": "evercraft-audience-sites",
-        "status": "staged_review_required",
+        "status": "cancelled_brand_isolation",
         "authorization": {
           "approved": false,
           "authorizationRef": ""
@@ -152,16 +151,14 @@
           "native_video": "requires_first_party_render_and_QA"
         },
         "distribution": {
-          "organic_channels": [
-            "YouTube Shorts",
-            "TikTok collector creators",
-            "collector partners"
-          ],
+          "organic_channels": [],
           "publisher_permission_required": true,
           "approved_networks_only": true,
           "paid_spend_usd": 0,
           "comment_spam_forbidden": true,
-          "affiliate_status": "not_verified"
+          "affiliate_status": "not_verified",
+          "corporate_channels_authorized": false,
+          "independent_property_channel_required": true
         },
         "status_proofs": {
           "landing_page_verified_in_prior_session": true,
@@ -176,7 +173,8 @@
           "mass_unsolicited_DMs",
           "fake_accounts",
           "purchased_fake_visits",
-          "adult_content_on_family_brands"
+          "adult_content_on_family_brands",
+          "evercraft_corporate_social_distribution"
         ]
       }
     },
@@ -209,7 +207,7 @@
         "id": "audience-sites-20261020-playbook-lab-facebook-page",
         "destination": "facebook-page",
         "brandKey": "evercraft-audience-sites",
-        "status": "staged_review_required",
+        "status": "cancelled_brand_isolation",
         "authorization": {
           "approved": false,
           "authorizationRef": ""
@@ -237,16 +235,14 @@
           "native_video": "requires_first_party_render_and_QA"
         },
         "distribution": {
-          "organic_channels": [
-            "YouTube Shorts",
-            "football coaching publishers",
-            "permissioned sports groups"
-          ],
+          "organic_channels": [],
           "publisher_permission_required": true,
           "approved_networks_only": true,
           "paid_spend_usd": 0,
           "comment_spam_forbidden": true,
-          "affiliate_status": "not_verified"
+          "affiliate_status": "not_verified",
+          "corporate_channels_authorized": false,
+          "independent_property_channel_required": true
         },
         "status_proofs": {
           "landing_page_verified_in_prior_session": true,
@@ -261,7 +257,8 @@
           "mass_unsolicited_DMs",
           "fake_accounts",
           "purchased_fake_visits",
-          "adult_content_on_family_brands"
+          "adult_content_on_family_brands",
+          "evercraft_corporate_social_distribution"
         ]
       }
     },
@@ -294,7 +291,7 @@
         "id": "audience-sites-20261020-site-rescue-facebook-page",
         "destination": "facebook-page",
         "brandKey": "evercraft-audience-sites",
-        "status": "staged_review_required",
+        "status": "cancelled_brand_isolation",
         "authorization": {
           "approved": false,
           "authorizationRef": ""
@@ -322,16 +319,14 @@
           "native_video": "requires_first_party_render_and_QA"
         },
         "distribution": {
-          "organic_channels": [
-            "LinkedIn",
-            "small-business Facebook groups (with permission)",
-            "web agency partners"
-          ],
+          "organic_channels": [],
           "publisher_permission_required": true,
           "approved_networks_only": true,
           "paid_spend_usd": 0,
           "comment_spam_forbidden": true,
-          "affiliate_status": "not_verified"
+          "affiliate_status": "not_verified",
+          "corporate_channels_authorized": false,
+          "independent_property_channel_required": true
         },
         "status_proofs": {
           "landing_page_verified_in_prior_session": true,
@@ -346,7 +341,8 @@
           "mass_unsolicited_DMs",
           "fake_accounts",
           "purchased_fake_visits",
-          "adult_content_on_family_brands"
+          "adult_content_on_family_brands",
+          "evercraft_corporate_social_distribution"
         ]
       }
     },
@@ -379,7 +375,7 @@
         "id": "audience-sites-20261020-creative-studio-facebook-page",
         "destination": "facebook-page",
         "brandKey": "evercraft-audience-sites",
-        "status": "staged_review_required",
+        "status": "cancelled_brand_isolation",
         "authorization": {
           "approved": false,
           "authorizationRef": ""
@@ -407,16 +403,14 @@
           "native_video": "requires_first_party_render_and_QA"
         },
         "distribution": {
-          "organic_channels": [
-            "LinkedIn",
-            "Instagram Reels (authorized account)",
-            "local merchant partnerships"
-          ],
+          "organic_channels": [],
           "publisher_permission_required": true,
           "approved_networks_only": true,
           "paid_spend_usd": 0,
           "comment_spam_forbidden": true,
-          "affiliate_status": "not_verified"
+          "affiliate_status": "not_verified",
+          "corporate_channels_authorized": false,
+          "independent_property_channel_required": true
         },
         "status_proofs": {
           "landing_page_verified_in_prior_session": true,
@@ -431,7 +425,8 @@
           "mass_unsolicited_DMs",
           "fake_accounts",
           "purchased_fake_visits",
-          "adult_content_on_family_brands"
+          "adult_content_on_family_brands",
+          "evercraft_corporate_social_distribution"
         ]
       }
     },
@@ -464,7 +459,7 @@
         "id": "audience-sites-20261020-publisher-lab-facebook-page",
         "destination": "facebook-page",
         "brandKey": "evercraft-audience-sites",
-        "status": "staged_review_required",
+        "status": "cancelled_brand_isolation",
         "authorization": {
           "approved": false,
           "authorizationRef": ""
@@ -492,16 +487,14 @@
           "native_video": "requires_first_party_render_and_QA"
         },
         "distribution": {
-          "organic_channels": [
-            "LinkedIn publishers",
-            "YouTube creator channels",
-            "publisher partnerships"
-          ],
+          "organic_channels": [],
           "publisher_permission_required": true,
           "approved_networks_only": true,
           "paid_spend_usd": 0,
           "comment_spam_forbidden": true,
-          "affiliate_status": "not_verified"
+          "affiliate_status": "not_verified",
+          "corporate_channels_authorized": false,
+          "independent_property_channel_required": true
         },
         "status_proofs": {
           "landing_page_verified_in_prior_session": true,
@@ -516,7 +509,8 @@
           "mass_unsolicited_DMs",
           "fake_accounts",
           "purchased_fake_visits",
-          "adult_content_on_family_brands"
+          "adult_content_on_family_brands",
+          "evercraft_corporate_social_distribution"
         ]
       }
     },
@@ -549,7 +543,7 @@
         "id": "audience-sites-20261020-relay-notes-facebook-page",
         "destination": "facebook-page",
         "brandKey": "evercraft-audience-sites",
-        "status": "staged_review_required",
+        "status": "cancelled_brand_isolation",
         "authorization": {
           "approved": false,
           "authorizationRef": ""
@@ -577,16 +571,14 @@
           "native_video": "requires_first_party_render_and_QA"
         },
         "distribution": {
-          "organic_channels": [
-            "LinkedIn",
-            "management communities",
-            "newsletter partners"
-          ],
+          "organic_channels": [],
           "publisher_permission_required": true,
           "approved_networks_only": true,
           "paid_spend_usd": 0,
           "comment_spam_forbidden": true,
-          "affiliate_status": "not_verified"
+          "affiliate_status": "not_verified",
+          "corporate_channels_authorized": false,
+          "independent_property_channel_required": true
         },
         "status_proofs": {
           "landing_page_verified_in_prior_session": true,
@@ -601,7 +593,8 @@
           "mass_unsolicited_DMs",
           "fake_accounts",
           "purchased_fake_visits",
-          "adult_content_on_family_brands"
+          "adult_content_on_family_brands",
+          "evercraft_corporate_social_distribution"
         ]
       }
     }
@@ -626,5 +619,15 @@
     "social_posting_authority": "manual_and_scoped_only",
     "adult_brand_promotion_allowed": false,
     "adult_referral_or_teaser_allowed": false
-  }
+  },
+  "retirement_reason": "Owner directive: publisher properties are independent and must not be promoted as Evercraft brands or on Evercraft corporate social accounts.",
+  "social_distributions_authorized": 0,
+  "allowed_corporate_cross_promotion": false,
+  "social_relaunch_requirements": [
+    "independent_property_domain",
+    "independent_social_identity",
+    "merchant_approved_content",
+    "owner_authorization",
+    "revalidated_rights_and_compliance"
+  ]
 }

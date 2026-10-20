@@ -115,6 +115,18 @@ jobs:
             --destination _public_pages/clip/audience-sites
           test -s _public_pages/clip/audience-sites/partscout/feed.png
           test -s _public_pages/clip/audience-sites/relay-notes/story.png
+          # White-label revenue properties must never expose the corporate Clip
+          # handoff queue, channel approvals, or private publisher metadata.
+          for slug in partscout valuescout playbook-lab site-rescue creative-studio publisher-lab relay-notes; do
+            cp "_public_pages/clip/audience-sites/$slug/feed.png" "_public_pages/audience-sites/$slug/share.png"
+            test -s "_public_pages/audience-sites/$slug/share.png"
+          done
+          rm -rf _public_pages/clip/audience-sites
+          rm -f _public_pages/audience-sites/properties.json
+          rm -f _public_pages/affiliate-labs/sitemap.xml
+          rm -f _public_pages/audience-sites/sitemap.xml
+          # The old public creative dashboard must not connect quiet publisher
+          # properties to Evercraft, even via historical URLs.
           rm -rf _public_pages/journal
           if node systemia/newsroom/journal-publisher.mjs systemia/newsroom/stories _public_pages/journal; then
             echo "Journal included in Pages fallback."
@@ -246,7 +258,7 @@ jobs:
           motion="${base%/}/visuals/washington-active-volcanoes/motion.html"
           curl --fail --silent --show-error --retry 8 --retry-all-errors --retry-delay 2 "$motion" | grep -q "__evercraftRenderAt"
           # Confirm real browser-supported social previews exist after deployment.
-          preview="${base%/}/clip/audience-sites/partscout/feed.png"
+          preview="${base%/}/audience-sites/partscout/share.png"
           curl --fail --silent --show-error --retry 8 --retry-all-errors \
             --retry-delay 2 "$preview" -o /tmp/evercraft-clip-preview.png
           python - <<'PY'
@@ -257,6 +269,11 @@ jobs:
           assert struct.unpack('>II',payload[16:24])==(1080,1350),'wrong size'
           print('CLIP_SOCIAL_PREVIEW_HTTP_VERIFIED')
           PY
+          # No exposed white-label-to-corporate publishing control plane.
+          for path in clip/audience-sites/ clip/audience-sites/queue.json audience-sites/properties.json; do
+            code=$(curl --silent --show-error --max-time 10 -o /dev/null -w '%{http_code}' "${base%/}/$path")
+            test "$code" = "404"
+          done
           rescue="${base%/}/site-status/roman/"
           rescue_body="$(curl --fail --silent --show-error --retry 8 --retry-all-errors --retry-delay 2 "$rescue")"
           printf '%s' "$rescue_body" | grep -q 'Copy working link'

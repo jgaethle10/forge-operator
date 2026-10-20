@@ -20,7 +20,8 @@ test('seven independently useful original microproperties are present',()=>{
   assert.match(html,/<script>/);
   assert.match(html,/aria-live="polite"/);
   assert.ok(html.includes('https://jgaethle10.github.io/forge-operator/audience-sites/'+slug+'/'));
-  assert.ok(html.includes('mailto:jessegaethle10@gmail.com'));
+  assert.ok(!/evercraft|mailto:|fabric\\.systemiacommandcenters/i.test(html));
+  assert.match(html,/content="noindex,follow"/);
   assert.ok(!/base44\.app/i.test(html));
   assert.ok(!/rivet|aliev/i.test(html));
   const code=html.match(/<script>([\s\S]*?)<\/script>/)?.[1];
@@ -32,10 +33,11 @@ test('seven independently useful original microproperties are present',()=>{
 
 test('audience sites remain distinct from the existing Evercraft Network product',()=>{
  const dir=read('index.html');
- assert.match(dir,/Evercraft Network at \/network\/ is an unrelated existing product/);
+ assert.match(dir,/content="noindex,nofollow"/);
+ assert.doesNotMatch(dir,/evercraft|mailto:|\/mesh\/|\/live\//i);
  assert.ok(slugs.every(s=>dir.includes('href="./'+s+'/')));
  assert.ok(!dir.includes('<a href="./network/'));
- assert.match(dir,/one hosting origin with seven microsites/i);
+ assert.match(dir,/temporary technical index/i);
 });
 
 test('adult lane remains unpublished pending legal and payment compliance',()=>{
@@ -55,6 +57,6 @@ test('sitemap only contains seven current microproperties plus directory',()=>{
 test('no active ad, affiliate or payment receipts are fabricated',()=>{
  const index=read('index.html');
  assert.match(index,/No fabricated visitor counts/i);
- assert.match(index,/Revenue share requires a written agreement/i);
- assert.match(index,/verified receipt/i);
+ assert.match(index,/No paid product recommendation/i);
+ assert.match(index,/noindex,nofollow/i);
 });
