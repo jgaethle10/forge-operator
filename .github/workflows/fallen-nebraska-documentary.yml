@@ -53,3 +53,34 @@ jobs:
         run: |
           cd systemia/media-studio
           python -m unittest -v test_observational_motion.py
+  real-location-archival-canary:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Test source attestation and forbidden fabricated-game claims
+        run: node --test systemia/media-studio/pilots/nebraska-source-first/lincoln-archive-canary.test.mjs
+      - name: Ensure FFmpeg and actual video codecs
+        run: |
+          if ! command -v ffmpeg >/dev/null 2>&1 || ! command -v ffprobe >/dev/null 2>&1; then
+            sudo apt-get update
+            sudo apt-get install -y ffmpeg
+          fi
+          ffmpeg -hide_banner -encoders | grep libx264
+      - name: Acquire SHA1-bound CC BY-SA archival footage and make real-source test cut
+        run: |
+          node systemia/media-studio/pilots/nebraska-source-first/lincoln-archive-canary.mjs "$RUNNER_TEMP/lincoln-original-video"
+      - name: Archive review-only movie, three actual frames and attribution
+        uses: actions/upload-artifact@v4
+        with:
+          name: lincoln-2011-real-archival-footage-review-only
+          path: |
+            ${{ runner.temp }}/lincoln-original-video/Lincoln_2011_Genuine_Archive_Study_8s.mp4
+            ${{ runner.temp }}/lincoln-original-video/frame-*.png
+            ${{ runner.temp }}/lincoln-original-video/receipt.json
+            ${{ runner.temp }}/lincoln-original-video/ATTRIBUTION.txt
+          if-no-files-found: error
+          retention-days: 14
