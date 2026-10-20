@@ -1,0 +1,61 @@
+name: Fallen Path-Traced Glass Material Canary
+on:
+  pull_request:
+    paths:
+      - "systemia/media-studio/materials/fallen-glass-cycles.py"
+      - ".github/workflows/fallen-pathtraced-glass.yml"
+  push:
+    branches: [feat/fallen-pathtraced-glass-canary-20261020]
+    paths:
+      - "systemia/media-studio/materials/fallen-glass-cycles.py"
+      - ".github/workflows/fallen-pathtraced-glass.yml"
+permissions:
+  contents: read
+jobs:
+  cycles-glass-material:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 26
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install CPU path-traced renderer
+        run: |
+          sudo apt-get update -qq
+          sudo apt-get install -y -qq blender
+          blender --version | head -3
+      - name: Render three physically transmissive glass frames
+        run: |
+          blender -b -t 2 --python systemia/media-studio/materials/fallen-glass-cycles.py
+      - name: Verify material receipt and distinct renders
+        run: |
+          python3 - <<'PY'
+          import json,hashlib,os
+          from pathlib import Path
+          base=Path('/tmp/fallen-glass-cycles')
+          receipt=json.loads((base/'receipt.json').read_text())
+          assert receipt['glass']['ior']==1.49
+          assert receipt['glass']['geometric_thickness_m']>0
+          assert receipt['glass']['transmission']==1.0
+          assert receipt['commercial_ready'] is False
+          assert len(receipt['frames'])==3
+          hashes=set()
+          for item in receipt['frames']:
+              p=base/item['path']
+              data=p.read_bytes()
+              assert data.startswith(bytes([137,80,78,71,13,10,26,10])), p
+              actual=hashlib.sha256(data).hexdigest()
+              assert item['sha256']==actual
+              assert len(data)>15000
+              hashes.add(actual)
+          assert len(hashes)==3, 'camera should create distinct glass refraction images'
+          print('PASS: three distinct Cycles PNG renders + glass receipt')
+          PY
+      - name: Preserve glass material engineering evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: fallen-cycles-glass-material-canary
+          retention-days: 7
+          if-no-files-found: warn
+          path: |
+            /tmp/fallen-glass-cycles/glass_*.png
+            /tmp/fallen-glass-cycles/receipt.json
