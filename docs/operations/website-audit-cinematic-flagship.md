@@ -43,3 +43,63 @@
 - Until then: previsualization_only; not render-approved for distribution.
 
 This is a specific production work packet, not a completed cinematic commercial. Production, payment, publication and remote-compute permissions are all separate gates.
+
+## Physical HP NextGen workbench: real-footage intake (implemented)
+
+The bounded local intake entrypoint is `systemia/graphics-command/website-audit-cinematic-intake.mjs`.
+It does **not** fetch stock media, create footage, call models or grant remote compute authority.
+
+Run in a **new isolated worktree** to avoid perturbing Node002's existing operational source/graphics timer:
+
+```bash
+cd "$HOME/evercraft-qa/forge-operator" || exit 1
+git fetch origin commercial-visual-honesty-20261019
+WORK="$HOME/evercraft-qa/worktrees/website-audit-cinema"
+test ! -e "$WORK" || { echo "WORKTREE ALREADY EXISTS: inspect before using"; exit 1; }
+mkdir -p "$(dirname "$WORK")"
+git worktree add --detach "$WORK" FETCH_HEAD
+cd "$WORK" || exit 1
+node --test systemia/graphics-command/commercial-renderer.test.mjs systemia/graphics-command/website-audit-cinematic-intake.test.mjs
+```
+
+Create the non-secret manifest once:
+
+```bash
+INTAKE="$HOME/evercraft-qa/production/website-audit-cinema"
+node systemia/graphics-command/website-audit-cinematic-intake.mjs --init "$INTAKE"
+```
+
+The generated `film-intake.json` is deliberately blocked: five named assets, unknown rights and missing evidence.
+For each shot, add a **real** video in `media/`, a rights evidence file in `rights/`,
+pin `sha256` to the actual asset bytes using `sha256sum`, record provenance
+under `sourceRef` and choose a truthful rights state. Record at least one actual
+product capture evidence ref and five distinct real output evidence refs for the
+five-fixes shot. Merely typing evidence refs is not visual verification; the resulting
+clip still needs a separate human review and observable product proof.
+
+Check readiness, without rendering:
+
+```bash
+node systemia/graphics-command/website-audit-cinematic-intake.mjs --inspect "$INTAKE" "$INTAKE/film-intake.json" "$INTAKE/review"
+```
+
+If **and only if** all five source bytes, metadata, rights files and evidence
+references are admitted, the command writes a ready-to-review Fallen plan.
+It fails with exit code 2 and a detailed `film-admission.json` when any are missing.
+
+After approval to create a **silent picture preview**, not a finished film:
+
+```bash
+node systemia/graphics-command/website-audit-cinematic-intake.mjs --render "$INTAKE" "$INTAKE/film-intake.json" "$INTAKE/preview-001"
+```
+
+This calls the existing Fallen media-studio renderer, with no external provider,
+payment, publishing or automated URL fetching. It generates a local 25s 16:9 MP4
+and SHA-256 receipt only on successful assembly. The renderer intentionally
+strips sound, so mastering/sound/voice and human beauty review remain distinct
+required work. No 9:16 export is implied by this preview. Never advertise it
+as an audio-finished 25-second cinematic commercial.
+
+**Hard truth boundary:** `picture_preview_ready` is byte/provenance-format
+readiness only, not proof that the frames genuinely show the claimed subject.
+No computer-generated intake metadata can grant founder release approval.
