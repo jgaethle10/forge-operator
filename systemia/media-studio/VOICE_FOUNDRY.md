@@ -147,3 +147,23 @@ node systemia/media-studio/voice-review-reconciler.mjs \
 If scores disagree sharply, any category falls below 4/5, or average is below 4.5/5, the candidate is held for discussion. Rankings are deterministic with explicit model, provider, voice profile, per-axis scores and holds, but are **triage, not final winners**. If any reviewer file fails integrity checks, the **whole editorial shortlist is emptied**. Tampered source reports and alias reviewer IDs also fail closed.
 
 Security and truth boundaries: An audio digest proves the reviewed file was *named consistently* in exported data, not that its bytes were independently re-read or heard at reconciliation time. Draft export fields and claimed accent qualifications are not cryptographically authenticated. Do not treat `eligible_for_further_verified_review` as `passed_internal_voice_qa`; never treat it as commercial-rights consent or publication approval. Trusted reviewer identity and listening evidence need authenticated records outside this offline stage. No real provider generation, cost, deployment, or public release is performed.
+
+## Push 09: real-audio-linked transcription accuracy (ASR observation intake)
+
+New modules: `voice-transcript-verifier.mjs` and `voice-asr-evidence.mjs`. They compare externally generated automatic speech recognition (ASR) transcripts against the exact locked `planVoiceSession` dialogue, using Unicode-aware word segmentation, deterministic edit alignment, word error rate, and review flags for missing named terms. Insertions, substitutions and deletions are exposed. Native language orthography and locale must match the cast; changes in spelling, punctuation or diacritics can require review.
+
+**Important boundary:** there is no provider speech-recognition model installed in this source module. Merely passing a text observation does not demonstrate that real speech was transcribed. `voice-asr-evidence.mjs` hashes a real local audio file before comparing it with an external ASR observation; this independently checks *which file* is being evaluated, but does **not** authenticate the ASR model receipt, prove audible speech, or establish human-like voice quality.
+
+To audit a real recording with an existing, separately obtained ASR result:
+
+```bash
+node systemia/media-studio/voice-asr-evidence.mjs \
+  casting-session.json cue-001 recorded-take.wav asr-observation.json \
+  > voice-asr-evidence.json
+```
+
+The ASR observation must include the schema `evercraft.voice-foundry.asr-observation.v1`, `method: automated_asr`, `cueId`, exact `locale`, source `audioDigest`, `engineId`, `engineVersion`, `sourceReceiptRef` and `recognizedText`. The code treats these as declared evidence fields, **not verified credentials**. The file digest comes from the recording's actual bytes. This operation performs zero remote calls and no billable work.
+
+`evaluateVoiceTake` now requires the transcript audit in addition to signal measurement, pacing, independent listening scores and explicit evidence references. Any missing, mismatched or high-WER audit blocks internal QA. If an optional `asrObservationPath` is present in an audition manifest candidate, the offline `voice-audition-kit.mjs` reads it **only from inside the audition project**, limits its file size, binds it to measured audio, includes transcript findings in the report, and holds mismatched candidates. Without it, the report explicitly says `asr_not_provided`; no transcription is fabricated. The Listening Room displays matched, held or absent transcript status per take.
+
+Tests are synthetic and mock **ASR declarations**, plus real generated audio file hashes; they are not proof of a working neural speech recognizer or believable vocal performances. Real independent ASR receipts, careful pronunciation reviews and licensed model auditions remain to be done. The draft PR is not a production release.
