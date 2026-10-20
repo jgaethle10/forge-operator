@@ -1,0 +1,46 @@
+# Aiden's Undervalued Asset Radar | Review-stage core
+
+**Status:** read-only prototype. This code is not connected to a live marketplace feed, a running Systemia heartbeat, a production datastore or an automatic purchase mechanism. A separately scheduled ChatGPT research alert is not proof of owned-Fabric execution.
+
+## Goal
+
+Hunt for deeply undervalued legitimate physical assets, starting with collectible trading cards, sports cards, comics, retro games, toys and memorabilia, then watches, cameras, equipment and other resalable goods. Global discovery may include legal US-shippable objects, with Yakima-area pickup prioritized where useful.
+
+The module owns **pure evidence-backed evaluation** and human review selection only. After approved source connectors and independent runtime receipts, integrate as an admitted Systemia Radar lane, rather than creating a rival authority or touching CHUM Money Radar, which tracks Evercraft's buyer funnel.
+
+## Decision chain
+
+`Permissioned listing observation → exact identity and grade → verified completed-sale comps → conservative realized value → all-in acquisition cost → conservative resale costs and risk buffer → live seller/authenticity gate → deduplication → human review`
+
+Initial criteria:
+- Exact item variant/edition and condition or grade match; at least **two distinct, completed verified sales within 180 days**, never active asking prices.
+- Fresh verified-active listing (checked within two hours), direct HTTPS listing URL, seller reviewed, credible authenticity/provenance.
+- Acquisition includes listing price, shipping and tax. Resale defaults are **13% selling fee, $15 shipping, 10% risk reserve**, plus supplied grading, restoration and other expenses. These are screening assumptions, not specific marketplace quotes.
+- Conservative benchmark is the **lowest** valid completed-sale comparable, not a guidebook price or appraisal. Require acquisition ≤50% of the benchmark and estimated net upside ≥$100.
+- Missing costs, source status, exact grades, seller review, provenance or comps fail closed to `WATCH_UNVERIFIED`. Stolen, counterfeit or restricted goods are `REJECTED`.
+- A scored success is `QUALIFIED_FOR_HUMAN_REVIEW`, never authority to purchase, bid or contact a seller. Alert duplicate keys incorporate source, listing ID and all-in price inputs so a price drop can appear as a fresh candidate.
+
+## Source adapters not yet connected
+
+Evaluate permitted official marketplace interfaces and legitimately sourced transaction exports; eBay Browse/listing APIs, sale-history services with appropriate access, card transaction sources, approved auction feeds and legally accessible local/estate listings are potential starting points. Respect each source's terms, permissions, rate limits, and privacy restrictions. Do not scrape accounts or evade access restrictions. An active ask, price-guide estimate or similarly named card is **not** a transaction comp. Avoid unverified AI estimates of grading and condition.
+
+Source records must preserve listing status plus checked timestamp, origin URL/ID, actual sold transaction URLs and IDs, item variant and condition, seller review, fee assumptions and authenticity assessment, and the source's permission provenance. USD only in version one; other currencies require independently timestamped exchange-rate evidence before comparison.
+
+## Test and local offline trial
+
+```bash
+node --test systemia/asset-radar/engine.test.mjs
+node systemia/asset-radar/cli.mjs path/to/permissioned-observations.json
+```
+
+The CLI reads JSON with a `listings` array, optional `as_of` ISO timestamp, and optional `previously_alerted_keys` array. It emits assessments/review alerts on stdout, never polls marketplaces, installs timers, persists data, communicates with a seller or purchases anything. Current tests use fictional examples rather than real active listings.
+
+## Systemia admission gates before production
+
+1. Permissioned live-source integrations, verified completed-sale evidence, terms/rate-limit audits and provenance receipts.
+2. Canonical Systemia observation admission, structured evidence receipts, authorized ledger dedup and durable source-health monitoring; preserve `UNKNOWN` and `INFERRED` truth states.
+3. Human adult purchase approval: Aiden may scout and rank; **any transaction, bid, seller message, fund movement, shipping coordination or contract requires explicit founder/adult approval and relevant outbound contact gates**.
+4. Provider-freshness and anti-fraud canaries: reprints, raw-versus-graded condition, shipping inflation, auction ending, seller spoofing, duplicate comps, forged transaction claims, inappropriate categories and return risk.
+5. Separate deployment receipts proving the owned compute/heartbeat and user-facing candidate links actually work. The ChatGPT hourly alert is independent and does not mean this code is deployed.
+
+No profit guarantee. Keep discovery and purchase budgets separate and protect business-critical liquidity.
