@@ -55,6 +55,13 @@ test('three actual review MP4 files with aspect variants, image previews and has
   assert.deepEqual(receipt.deliverables.map(x=>[x.width,x.height]),[
    [640,360],[480,480],[360,640]
   ]);
+  const vertical=receipt.deliverables.find(x=>x.lane==='commercial');
+  assert.equal(vertical.compositionState,'needs_dedicated_camera_or_reframe');
+  assert.ok(vertical.sourceFrameCoverage<.33);
+  assert.equal(vertical.releaseEligible,false);
+  const cinematic=receipt.deliverables.find(x=>x.lane==='cinematic');
+  assert.equal(cinematic.sourceFrameCoverage,1);
+  assert.equal(cinematic.compositionState,'review_required');
   assert.ok(fs.readFileSync(path.join(output,'educational-2.txt'),'utf8').includes('ILLUSTRATIVE'));
   assert.ok(fs.readFileSync(path.join(output,'commercial-2.txt'),'utf8').includes('NOT A CLIENT AD'));
   assert.equal(JSON.parse(fs.readFileSync(path.join(output,'receipt.json'))).gates.masterQcStillRequired,true);
