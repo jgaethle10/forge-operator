@@ -22,6 +22,18 @@ async function preflightAllCandidates(candidates,locale){
  const region=normalizeLocale(locale);
  for(const c of candidates){
    if(c.rightsState!=='cleared'||typeof c.licenseEvidenceRef!=='string'||!c.licenseEvidenceRef.trim())fail('batch_license_evidence_incomplete:'+c.id);
+   if(typeof c.voiceProfileId!=='string'||!ID.test(c.voiceProfileId)||
+      typeof c.accent!=='string'||!c.accent.trim()||
+      typeof c.performanceDirection!=='string'||!c.performanceDirection.trim()||
+      !['feminine','masculine','neutral','unspecified'].includes(c.genderPresentation))fail('batch_candidate_cast_invalid:'+c.id);
+   if(!Number.isInteger(c.speakerId??0)||(c.speakerId??0)<0||(c.speakerId??0)>1000)fail('batch_candidate_speaker_invalid:'+c.id);
+   for(const [field,value,min,max] of [
+     ['lengthScale',c.lengthScale??1,.8,1.2],
+     ['noiseScale',c.noiseScale??.667,0,1.5],
+     ['noiseWidth',c.noiseWidth??.8,0,1.5],
+     ['sentenceSilenceSec',c.sentenceSilenceSec??.2,0,1]]){
+       if(typeof value!=='number'||!Number.isFinite(value)||value<min||value>max)fail('batch_candidate_parameter_invalid:'+c.id+':'+field);
+   }
    for(const [label,pin,p] of [['binary',c.expectedBinarySha256,c.piperCliPath],['model',c.expectedModelSha256,c.modelPath],['config',c.expectedConfigSha256,c.modelConfigPath]]){
      if(typeof pin!=='string'||!SHA.test(pin))fail('batch_missing_sha_pin:'+c.id+':'+label);
      if(typeof p!=='string'||!path.isAbsolute(p)||!fs.existsSync(p)||!fs.statSync(p).isFile())fail('batch_runtime_file_missing:'+c.id+':'+label);
