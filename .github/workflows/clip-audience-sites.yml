@@ -7,6 +7,8 @@ on:
       - 'tests/clip-family-social-safety.test.mjs'
       - 'systemia/clip/family-social-safety.mjs'
       - 'systemia/clip/social-publisher-runtime.mjs'
+      - 'systemia/clip/facebook-page-publisher.mjs'
+      - 'systemia/clip/facebook-page-photo-publisher.mjs'
       - '.github/workflows/clip-audience-sites.yml'
   push:
     branches: [main]
