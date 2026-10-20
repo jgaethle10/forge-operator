@@ -1,0 +1,109 @@
+name: Fallen 15s signed World Engine timeline
+on:
+  pull_request:
+    paths:
+      - 'systemia/media-studio/director-timeline.mjs'
+      - 'systemia/media-studio/director-timeline.test.mjs'
+      - '.github/workflows/fallen-flexible-directed-timeline.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+  actions: read
+jobs:
+  native-five-beat-film:
+    runs-on: ubuntu-latest
+    timeout-minutes: 19
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Verify editing dependencies
+        run: |
+          command -v ffmpeg || (sudo apt-get update -qq && sudo apt-get install -y ffmpeg)
+          command -v ffprobe
+          test -f /usr/share/fonts/truetype/dejavu/DejaVuSans.ttf || (sudo apt-get update -qq && sudo apt-get install -y fonts-dejavu-core)
+          node --check systemia/media-studio/director-timeline.mjs
+      - name: Download signed wide original GPU shot
+        uses: actions/download-artifact@v4
+        with:
+          run-id: 39449612562
+          name: world-director-hero_full-wide
+          github-token: ${{ github.token }}
+          path: signed-sources/hero
+      - name: Download signed square original GPU shot
+        uses: actions/download-artifact@v4
+        with:
+          run-id: 39449612562
+          name: world-director-detail_closeup-square
+          github-token: ${{ github.token }}
+          path: signed-sources/detail
+      - name: Download signed vertical original GPU shot
+        uses: actions/download-artifact@v4
+        with:
+          run-id: 39449612562
+          name: world-director-title_safe-vertical
+          github-token: ${{ github.token }}
+          path: signed-sources/title
+      - name: Build five beat manifest from actual signed local source videos
+        run: |
+          node --input-type=module <<'NODE'
+          import fs from 'node:fs';
+          import path from 'node:path';
+          import crypto from 'node:crypto';
+          const root=process.cwd(),sources={};
+          for(const [folder,intent] of [['hero','hero_full'],['detail','detail_closeup'],['title','title_safe']]){
+           const file=path.join(root,'signed-sources',folder,'battleship-world-engine-trial.mp4');
+           const receiptPath=path.join(root,'signed-sources',folder,'receipt.json');
+           const digest=crypto.createHash('sha256').update(fs.readFileSync(file)).digest('hex');
+           if(JSON.parse(fs.readFileSync(receiptPath)).output.sha256!==digest)throw Error('source_receipt_mismatch_'+intent);
+           sources[intent]={path:file,receiptPath,sha256:digest};
+          }
+          const script=[
+           ['hero_full','establishing','AN ORIGINAL MODEL',80,0],
+           ['detail_closeup','detail','A STUDY IN DETAIL',80,8],
+           ['hero_full','action','DIRECTION AND MOTION',80,0],
+           ['detail_closeup','explanation','UNDER THE SURFACE',80,8],
+           ['title_safe','closing','ILLUSTRATIVE ONLY',76,0]
+          ];
+          const usage=new Map();
+          const shots=script.map(([source,beat,title,frames,startFrame],i)=>{
+           const reused=(usage.get(source)||0)>0;
+           usage.set(source,(usage.get(source)||0)+1);
+           return {source,beat,title,frames,startFrame,transitionFrames:i===0?0:9,reuseAcknowledged:reused};
+          });
+          fs.writeFileSync('director-timeline-request.json',JSON.stringify({
+           schema:'evercraft.fallen.director-timeline-request.v2',
+           id:'evercraft-owned-five-beat-gpu-15s',targetSeconds:15,
+           audioPolicy:'silent',sourceClass:'illustrative_3d',publicationAuthority:false,sources,shots
+          },null,2));
+          NODE
+      - name: Test signed GPU source refusal and exact timeline composition
+        env:
+          DIRECTOR_TIMELINE_TEST_REQUEST: director-timeline-request.json
+        run: node --test systemia/media-studio/director-timeline.test.mjs
+      - name: Render and verify actual 15s source-backed MP4
+        run: |
+          node systemia/media-studio/director-timeline.mjs director-timeline-request.json directed-timeline-output
+          ffprobe -v error -show_entries format=duration:stream=codec_name,width,height,nb_frames -of json directed-timeline-output/evercraft-directed-timeline.mp4
+          node --input-type=module <<'NODE'
+          import fs from 'node:fs';
+          import crypto from 'node:crypto';
+          const root='directed-timeline-output/',r=JSON.parse(fs.readFileSync(root+'receipt.json'));
+          const sum=crypto.createHash('sha256').update(fs.readFileSync(root+r.output.file)).digest('hex');
+          if(sum!==r.output.sha256||r.output.frames!==360||r.output.durationSec!==15||
+             r.output.audio!==false||r.review.length!==5||r.pixelQc.blackFrames!==0||
+             r.pixelQc.movingFramePairs<16||r.creativeApproval!==false||
+             r.publicationAuthority!==false)process.exit(4);
+          console.log('NATIVE_WEBGPU_FIVE_BEAT_15S_TECHNICAL_PASS',r.output,r.pixelQc);
+          NODE
+      - name: Retain signed original-pixel founder review only
+        uses: actions/upload-artifact@v4
+        with:
+          name: fallen-real-world-engine-five-beat-15s
+          path: |
+            directed-timeline-output/evercraft-directed-timeline.mp4
+            directed-timeline-output/receipt.json
+            directed-timeline-output/shot-*.png
+          retention-days: 7
+          if-no-files-found: error
