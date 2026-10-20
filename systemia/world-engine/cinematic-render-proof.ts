@@ -285,11 +285,12 @@ async function renderGpuFrames(plans:ReturnType<typeof buildCinematicCameraSeque
     const framesFile=path.join(out,'frames.rgba');
     const handle=fs.openSync(framesFile,'wx',0o600);
     const hashes:string[]=[];
+    let counterfactualChangedPixels=0;
     try{
       for(const frame of plans.slice(0,-1)){
         const packet=frame.renderPlan;
         if(!packet?.digest||!packet.draws?.length)throw new Error('empty_gpu_plan');
-        const base64=await page.evaluate(async(plan:any)=>{
+        const renderFrame=async (submittedPlan:any)=>page.evaluate(async(plan:any)=>{
           const r=(window as any).__evercraftCinematic;
           const {device}=r;
           const fog=plan.atmosphere;
@@ -392,15 +393,30 @@ async function renderGpuFrames(plans:ReturnType<typeof buildCinematicCameraSeque
             binary+=String.fromCharCode(...raw.subarray(offset,offset+8192));
           }
           return btoa(binary);
-        },packet);
+        },submittedPlan);
+        const base64=await renderFrame(packet);
         const pixels=Buffer.from(base64,'base64');
+        if(frame.index===0 && packet.shadow){
+          // Render EXACTLY the same geometry, camera and lights, with ONLY
+          // directional shadow sampling disabled. This is a visual counterfactual,
+          // not a canonically signed camera plan or an independently real scene.
+          const noShadow=Buffer.from(await renderFrame({...packet,shadow:undefined}),'base64');
+          if(noShadow.length!==pixels.length)throw new Error('shadow_counterfactual_size_invalid');
+          fs.writeFileSync(path.join(out,'shadow-disabled-first-frame.rgba'),noShadow,{flag:'wx',mode:0o600});
+          for(let i=0;i<pixels.length;i+=4){
+            if(Math.abs(pixels[i]-noShadow[i])>8 ||
+              Math.abs(pixels[i+1]-noShadow[i+1])>8 ||
+              Math.abs(pixels[i+2]-noShadow[i+2])>8) counterfactualChangedPixels++;
+          }
+          if(counterfactualChangedPixels<300)throw new Error('shadow_pass_has_no_observable_pixel_occlusion');
+        }
         if(pixels.length!==WIDTH*HEIGHT*4)throw new Error('unexpected_render_bytes');
         fs.writeSync(handle,pixels);hashes.push(sha(pixels));
       }
     }finally{fs.closeSync(handle)}
     if(new Set(hashes).size<3)throw new Error('rendered_frames_have_no_visible_motion');
     return {framesFile,profile:selected.name,softwareAdapterForced:selected.forcedSoftware,
-      frameHashes:hashes,uniqueFrameHashes:new Set(hashes).size};
+      frameHashes:hashes,uniqueFrameHashes:new Set(hashes).size,counterfactualChangedPixels};
   }finally{
     if(browser)await browser.close().catch(()=>{});
     await new Promise<void>(resolve=>server.server.close(()=>resolve()));
@@ -436,6 +452,14 @@ async function main(){
     '-map','0:v:0','-map','[a]','-t',String(DURATION),
     '-c:v','libx264','-preset','medium','-crf','20','-pix_fmt','yuv420p',
     '-c:a','aac','-b:a','128k','-movflags','+faststart',video]);
+  run('ffmpeg',['-hide_banner','-loglevel','error','-y',
+    '-f','rawvideo','-pixel_format','rgba','-video_size',WIDTH+'x'+HEIGHT,
+    '-i',path.join(out,'shadow-disabled-first-frame.rgba'),
+    '-frames:v','1',path.join(out,'shadow-disabled-first-frame.png')]);
+  run('ffmpeg',['-hide_banner','-loglevel','error','-y',
+    '-f','rawvideo','-pixel_format','rgba','-video_size',WIDTH+'x'+HEIGHT,
+    '-i',raw.framesFile,
+    '-frames:v','1',path.join(out,'shadow-enabled-first-frame.png')]);
   const measure=JSON.parse(run('ffprobe',['-v','error','-show_entries','stream=codec_type,codec_name,width,height,r_frame_rate,nb_frames:format=duration','-of','json',video]));
   const stream=measure.streams?.find((s:any)=>s.codec_type==='video');
   const audio=measure.streams?.find((s:any)=>s.codec_type==='audio');
@@ -460,6 +484,7 @@ async function main(){
     hardwareExecutionClaim:false,
     exactGpuReadbackFrames:raw.frameHashes.length,
     uniqueRawFrameDigests:raw.uniqueFrameHashes,
+    shadowCounterfactualChangedPixels:raw.counterfactualChangedPixels,
     output:{path:video,sha256:sha(fs.readFileSync(video)),width:WIDTH,height:HEIGHT,
       durationSec:DURATION,fps:FPS,codec:'h264',audioCodec:'aac'},
     stills,sourceState:'synthetic_visualization',soundState:'synthetic_test_signal_not_commercial_music',
@@ -469,6 +494,7 @@ async function main(){
   };
   fs.writeFileSync(path.join(out,'receipt.json'),JSON.stringify(receipt,null,2)+'\n');
   console.log(JSON.stringify({status:'rendered_gpu_master',receipt:receipt.output,frames:receipt.exactGpuReadbackFrames,
-    uniqueFrames:receipt.uniqueRawFrameDigests,profile:raw.profile,hardwareExecutionClaim:false}));
+    uniqueFrames:receipt.uniqueRawFrameDigests,shadowChangedPixels:receipt.shadowCounterfactualChangedPixels,
+    profile:raw.profile,hardwareExecutionClaim:false}));
 }
 main().catch(e=>{console.error('CINEMATIC_PIXEL_PROOF_FAILED '+String(e?.stack||e));process.exitCode=1});
