@@ -31,6 +31,8 @@ export interface ElevenLabsAudioAdapterConfig {
   departmentId?:string;
   defaultVoiceId?:string;
   voiceProfiles?:Record<string,string>;
+  /** Opt-in strict speech lane: legacy caller without casting evidence is held. */
+  requireVoiceFoundry?:boolean;
   /** Optional governed per-cue casting; when present, rejected speech never reaches a paid API. */
   voiceFoundry?:{
     profiles:Array<Record<string,unknown>>;
@@ -207,6 +209,8 @@ export function createElevenLabsAudioAdapter(
     supports:['speech','music','sfx'],
     async execute(need:ProductionNeed):Promise<ProductionProviderResult>{
       validateNeed(need);
+      if(need.kind==='speech'&&config.requireVoiceFoundry===true&&!config.voiceFoundry)
+        throw new Error('elevenlabs_audio_required_voice_foundry_missing');
       // Pre-billing actor, pronunciation, locale, accent, timing and rights check.
       // Legacy callers without voiceFoundry remain functional but do not gain
       // an approved-voice or human-listening-quality claim.
