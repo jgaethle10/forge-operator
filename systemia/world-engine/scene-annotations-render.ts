@@ -74,8 +74,10 @@ export function produceBattleshipTeachingFilm(input:{sourceVideo:string;sourceRe
  };
  const annotations=compileTeachingCallouts(seq,manifest);
  for(const item of annotations.receipt.labels){
-  if(item.visibleFrames<8||item.changingPositionFrames<1)
+  if(item.visibleFrames<8||item.changingPositionFrames<1){
+   console.error('SCENE_ANCHOR_DIAGNOSTIC',JSON.stringify(item));
    fail('untracked_callout_'+item.calloutId);
+  }
  }
  const out=path.resolve(input.outDir),tmp=out+'.partial-'+process.pid;
  if(fs.existsSync(tmp))fail('partial_exists');
