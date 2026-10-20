@@ -55,3 +55,23 @@ test('encodes finished silent MP4 and inspects exact actual pixels, receipts and
  assert.equal(r.creativeApproval,false);
  assert.ok(Object.values(r.sourceProofs).every(p=>p.originalGpuReadbackFrames>=96));
 });
+test('compiles 30s and 60s repeat-aware authored timelines without fake new shots',()=>{
+ for(const [seconds,count,extras] of [[30,10,1],[60,20,11]]){
+  const r=clone();r.targetSeconds=seconds;
+  const usage=new Map();
+  r.shots=Array.from({length:count},(_,i)=>{
+   const proto=base.shots[i%5],source=proto.source;
+   const reuse=(usage.get(source)||0)>0;usage.set(source,(usage.get(source)||0)+1);
+   return {...proto,beat:i===0?'establishing':i===count-1?'closing':proto.beat,
+      frames:80+(i<extras?1:0),startFrame:0,transitionFrames:i===0?0:9,
+      reuseAcknowledged:reuse};
+  });
+  assert.equal(validateTimeline(r).total,seconds*24);
+ }
+});
+test('refuses unsupported >24-shot or untracked-duration narratives',()=>{
+ const r=clone();r.shots=Array.from({length:25},(_,i)=>({
+  ...r.shots[i%5],transitionFrames:i===0?0:9
+ }));
+ assert.throws(()=>validateTimeline(r),/shot_count/);
+});
