@@ -70,6 +70,19 @@ jobs:
             ||m.publicationAuthority!==false
             ||m.landmarkAudits.length!==3
             ||m.landmarkAudits.some(x=>x.visibleSubjectLandmarks<6)
+            ||m.actualGeometryFraming?.frameSamples.length!==3
+            ||m.actualGeometryFraming?.frameSamples.some(x=>
+              x.pointsExamined!==24||x.visibleProjectableVertices<1
+              ||x.publicationAuthority!==false
+              ||x.framingStatus==='subject_offscreen'
+              ||!/^([0-9a-f]{64})$/.test(x.sha256))
+            ||m.actualGeometryFraming?.publicationAuthority!==false
+            ||m.opticalAutoFit?.schema!=='evercraft.world-engine.optical-autofit.v1'
+            ||m.opticalAutoFit?.evaluated.length<6
+            ||m.opticalAutoFit?.selected.cameraScore>m.opticalAutoFit?.initial.cameraScore
+            ||m.opticalAutoFit?.noPostCrop!==true
+            ||m.opticalAutoFit?.creativeReviewRequired!==true
+            ||m.opticalAutoFit?.publicationAuthority!==false
             ||r.sceneType!=='procedural_battleship'
             ||r.soundState!=='silent_at_founder_direction_no_sound_invented'
             ||r.exactGpuReadbackFrames!==96

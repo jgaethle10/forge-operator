@@ -21,6 +21,7 @@ import {makeBrushedMetalTextures} from './brushed-metal.js';
 import {renderKineticSoundscape} from '../media-studio/kinetic-soundscape.mjs';
 import {battleshipWorld,battleshipGeometry,battleshipTake} from './battleship-scene.js';
 import {makeNativeBattleshipSequence,composeNativeBattleshipCamera,type NativeFilmFormat} from './native-format-camera.js';
+import {auditSequenceHeroFraming} from './shot-composition.js';
 import {generateDeterministicTangents} from './fallen-geometry.js';
 import type {TextureAsset} from './texture.js';
 import {textureAssetDigest} from './texture.js';
@@ -467,6 +468,15 @@ async function main(){
   });
   if(native?.review.some(r=>r.visibleSubjectLandmarks<6))
     throw Error('battleship_native_subject_composition_failed');
+  const actualGeometryFraming=native?auditSequenceHeroFraming({
+    frames:sequence.frames,geometries,
+    subject:{id:'battleship-hero',
+      entityIds:['ship-hull','bridge-house','mast-main'],
+      minVisibleFraction:.75}
+  }):null;
+  if(actualGeometryFraming?.frameSamples.some(sample=>
+    sample.framingStatus==='subject_offscreen'))
+    throw Error('battleship_true_geometry_offscreen');
   const shader=extractOwnedShader(root);
   const worldShaderSource=fs.readFileSync(path.join(root,'systemia/world-engine/webgpu.ts'),'utf8');
   const shadowSource=worldShaderSource.match(/export const EVERCRAFT_SHADOW_DEPTH_WGSL=`([\s\S]*?)`;/);
@@ -558,6 +568,8 @@ async function main(){
       cropApplied:false,
       sceneWorldDigest:sequence.worldDefinitionDigest,
       landmarkAudits:native.review,
+      actualGeometryFraming,
+      opticalAutoFit:native.autoFit,
       humanCreativeReviewRequired:true,
       publicationAuthority:false
     }}:{}),
