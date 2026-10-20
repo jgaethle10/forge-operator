@@ -1,3 +1,5 @@
+import { verifyBankDestination } from './bank-destination-policy.mjs';
+
 // Evercraft Payments owns the order. This module does not process money.
 // All provider status comes from Raven Nexus server-side probes, not browser input.
 export const PAYMENT_METHODS = Object.freeze({
@@ -24,9 +26,10 @@ const isVerifiedProvider = state => state?.connected === true &&
   state?.merchant_approved === true &&
   state?.live_checkout_canary_passed === true &&
   state?.canary_age_ok === true;
-const isVerifiedDestination = state => state?.business_account_eligible === true &&
+const isVerifiedDestination = (state, method) => state?.business_account_eligible === true &&
   state?.receiving_details_owner_approved === true &&
-  validKey(state?.instruction_reference);
+  validKey(state?.instruction_reference) &&
+  (!['ach_credit','zelle'].includes(method) || verifyBankDestination(method, state.bank_evidence));
 
 // providerReadiness and manualReadiness must be loaded by a trusted backend.
 // Never put bank details, PayPal secrets, tokens, or Cash App credentials here.
@@ -41,7 +44,7 @@ export function preparePaymentAttempt({
   if (!rail) throw new Error('unsupported payment method');
   const status = rail.channel === 'hosted'
     ? (isVerifiedProvider(providerReadiness[rail.provider]) ? 'provider_handoff_eligible' : 'blocked_unverified_provider')
-    : (isVerifiedDestination(manualReadiness[method]) ? 'manual_instructions_eligible' : 'blocked_unverified_destination');
+    : (isVerifiedDestination(manualReadiness[method], method) ? 'manual_instructions_eligible' : 'blocked_unverified_destination');
 
   return Object.freeze({
     schema: 'evercraft.payments.method-attempt.v1',
