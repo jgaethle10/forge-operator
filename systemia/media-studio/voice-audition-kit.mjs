@@ -83,7 +83,20 @@ export function buildVoiceAudition({manifestPath,outputDir,templatePath=path.joi
    const result=copyCandidateAudio(sourceFiles[manifest.candidates.indexOf(c)],path.join(output,'audio'));
    total+=result.bytes;
    if(total>TOTAL_MAX)throw Error('audition_total_audio_size_exceeded');
-   const {sourcePath,...publicCandidate}=c;
+   let transcriptAudit=null;
+   if(c.asrObservationPath){
+     if(path.isAbsolute(c.asrObservationPath))throw Error('audition_asr_absolute_path_rejected');
+     const resolved=fs.realpathSync(path.resolve(inputDir,c.asrObservationPath));
+     if(!resolved.startsWith(realInput+path.sep))throw Error('audition_asr_path_outside_project');
+     const stat=fs.statSync(resolved);
+     if(!stat.isFile()||stat.size>262144||stat.size===0)throw Error('audition_asr_json_size_invalid');
+     transcriptAudit=assessVoiceTranscript({
+       plannedCue:{cueId:c.id,text:c.scriptText,locale:c.locale,pronunciation:[]},
+       take:{artifactDigest:result.signal.audioDigest},
+       observation:JSON.parse(fs.readFileSync(resolved,'utf8'))
+     });
+   }
+   const {sourcePath,asrObservationPath,...publicCandidate}=c;
    return {...publicCandidate,audioPath:result.audioPath,signal:result.signal,pacing:result.pacing,bytes:result.bytes,
      pacingReviewRequired:result.pacing.warnings.length>0,
      audibleQualityReviewed:false,consentEvidenceVerified:false,
