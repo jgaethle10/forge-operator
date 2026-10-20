@@ -5,6 +5,7 @@ import {
   compileCommercialAttention,
   assessCommercialScrollStop,
 } from './commercial-director.mjs';
+import { commercialPosterLayout, assessCommercialComposition } from './commercial-layout-qa.mjs';
 
 const esc=(value)=>String(value??'')
   .replaceAll('&','&amp;')
@@ -117,20 +118,14 @@ export function renderCommercialPoster(campaignInput,planInput,format='feed'){
   const plan=planInput||compileCommercialAttention(campaign);
   const spec=SPECS[format];
   if(!spec) throw new Error('commercial_poster_format_invalid');
+  const layout=commercialPosterLayout(campaign,format);
   const {browser,svg:browserMarkup}=browserSvg(spec);
   const p=campaign.creative.palette;
-  const wide=spec.wide;
-  const left=wide?86:72;
-  const hookY=wide?170:(spec.height>1500?145:118);
-  const hookSize=wide?86:(spec.height>1500?96:72);
-  const maxChars=wide?18:16;
-  const hookLines=wrap(campaign.creative.hook,maxChars,2);
+  const {wide,left,hookY,hookSize,hookLines,subY,subSize,subLines}=layout;
   const hook=hookLines.map((row,index)=>
     '<text x="'+left+'" y="'+(hookY+index*hookSize*.92)+'" font-family="Arial,sans-serif" font-size="'+hookSize+'" font-weight="950" letter-spacing="-3" fill="'+esc(p.text)+'">'+esc(row)+'</text>'
   ).join('\n');
-  const subY=hookY+hookLines.length*hookSize*.92+38;
-  const subSize=wide?28:25;
-  const sub=wrap(campaign.creative.subhook,wide?38:44,2).map((row,index)=>
+  const sub=subLines.map((row,index)=>
     '<text x="'+left+'" y="'+(subY+index*(subSize+10))+'" font-family="Arial,sans-serif" font-size="'+subSize+'" font-weight="650" fill="'+esc(p.muted)+'">'+esc(row)+'</text>'
   ).join('\n');
   const priceX=wide?90:72;
@@ -232,6 +227,15 @@ export function buildCommercialCampaign(input,{outputRoot,origin='https://fabric
   const plan=compileCommercialAttention(campaign);
   const report=assessCommercialScrollStop(plan);
   if(report.status!=='pass') throw new Error('commercial_campaign_scroll_stop_rejected');
+  const composition=Object.fromEntries(Object.keys(SPECS).map(format=>
+    [format,assessCommercialComposition(campaign,format)]
+  ));
+  const rejected=Object.values(composition).filter(item=>item.status!=='pass');
+  if(rejected.length){
+    throw new Error('commercial_campaign_composition_rejected:'+rejected.map(
+      item=>item.format+':'+item.issues.join(',')
+    ).join(';'));
+  }
 
   const dir=path.join(path.resolve(outputRoot),campaign.slug);
   fs.mkdirSync(dir,{recursive:true});
@@ -242,6 +246,13 @@ export function buildCommercialCampaign(input,{outputRoot,origin='https://fabric
   fs.writeFileSync(path.join(dir,'campaign.json'),JSON.stringify(campaign,null,2)+'\n','utf8');
   fs.writeFileSync(path.join(dir,'graphics-plan.json'),JSON.stringify(plan,null,2)+'\n','utf8');
   fs.writeFileSync(path.join(dir,'scroll-stop-report.json'),JSON.stringify(report,null,2)+'\n','utf8');
+  fs.writeFileSync(path.join(dir,'composition-report.json'),JSON.stringify({
+    schema:'evercraft.graphics-command.composition-bundle.v1',
+    formats:composition,
+    status:'pass',
+    method:'estimated_glyph_bounds_and_scene_geometry',
+    publicationAuthority:false,
+  },null,2)+'\n','utf8');
   fs.writeFileSync(path.join(dir,'creative-council-inventory.json'),JSON.stringify(plan.council,null,2)+'\n','utf8');
 
   const base=String(origin||'').replace(/\/$/,'')+'/'+campaign.slug;
@@ -255,6 +266,11 @@ export function buildCommercialCampaign(input,{outputRoot,origin='https://fabric
     sourceRefs:campaign.sourceRefs,
     offerUrl:campaign.offerUrl,
     priceUsd:campaign.priceUsd,
+    deliveryState:'previsualization_only',
+    filmProductionStatus:'not_rendered',
+    verifiedShotMediaCount:0,
+    audioMasterStatus:'not_produced',
+    humanVisualApproval:false,
     assets:{
       feed:base+'/poster-feed.svg',
       square:base+'/poster-square.svg',
@@ -273,5 +289,5 @@ export function buildCommercialCampaign(input,{outputRoot,origin='https://fabric
   };
   fs.writeFileSync(path.join(dir,'manifest.json'),JSON.stringify(manifest,null,2)+'\n','utf8');
   fs.writeFileSync(path.join(dir,'clip-handoff.json'),JSON.stringify(manifest.clipHandoff,null,2)+'\n','utf8');
-  return {campaign,plan,report,manifest,dir};
+  return {campaign,plan,report,composition,manifest,dir};
 }
