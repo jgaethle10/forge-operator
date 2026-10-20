@@ -1,0 +1,47 @@
+{
+  "schema": "evercraft.voice-foundry.audition-script-bank.v1",
+  "status": "DRAFT_UNREVIEWED_TRANSLATIONS_REQUIRE_QUALIFIED_LOCAL_REVIEW",
+  "purpose": "Initial multilingual casting stress tests, not published translations or qualified pronunciations",
+  "scripts": [
+    {
+      "locale": "en-US",
+      "script": "A system is only as strong as the truth it can preserve. This is where we begin."
+    },
+    {
+      "locale": "en-GB",
+      "script": "A system is only as strong as the truth it can preserve. This is where we begin."
+    },
+    {
+      "locale": "es-MX",
+      "script": "Un sistema es tan sólido como la verdad que puede preservar. Aquí es donde comenzamos."
+    },
+    {
+      "locale": "es-ES",
+      "script": "Un sistema es tan sólido como la verdad que puede preservar. Aquí es donde comenzamos."
+    },
+    {
+      "locale": "fr-FR",
+      "script": "Un système ne vaut que par la vérité qu’il peut préserver. C’est ici que nous commençons."
+    },
+    {
+      "locale": "pt-BR",
+      "script": "Um sistema é tão forte quanto a verdade que consegue preservar. É aqui que começamos."
+    },
+    {
+      "locale": "de-DE",
+      "script": "Ein System ist nur so stark wie die Wahrheit, die es bewahren kann. Hier fangen wir an."
+    },
+    {
+      "locale": "ja-JP",
+      "script": "システムの強さは、守り続けられる真実によって決まります。ここから始めましょう。"
+    },
+    {
+      "locale": "ko-KR",
+      "script": "시스템의 가치는 지켜 낼 수 있는 진실에 달려 있습니다. 우리는 여기서 시작합니다."
+    },
+    {
+      "locale": "hi-IN",
+      "script": "किसी व्यवस्था की ताकत इस बात से तय होती है कि वह सच को कितनी अच्छी तरह सुरक्षित रख सकती है। यहीं से हम शुरुआत करते हैं।"
+    }
+  ]
+}
