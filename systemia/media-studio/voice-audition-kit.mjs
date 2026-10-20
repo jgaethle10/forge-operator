@@ -123,7 +123,7 @@ export function buildVoiceAudition({manifestPath,outputDir,templatePath=path.joi
  fs.writeFileSync(path.join(output,'audition-data.js'),'window.__EVERCRAFT_VOICE_AUDITION_DATA__ = '+embedded+';\n');
  fs.copyFileSync(templatePath,path.join(output,'index.html'));
  return {reportPath:path.join(output,'audition-report.json'),indexPath:path.join(output,'index.html'),
-         candidates:candidates.length,held:candidates.filter(c=>c.status==='signal_held').length};
+         candidates:candidates.length,held:candidates.filter(c=>c.status!=='awaiting_human_review').length};
 }
 function main(){
  const [manifestPath,outputDir,...extra]=process.argv.slice(2);
