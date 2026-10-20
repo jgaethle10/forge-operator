@@ -6,6 +6,7 @@ const scores=n=>Object.fromEntries(axes.map(key=>[key,n]));
 const digests=['a'.repeat(64),'b'.repeat(64)];
 const report=()=>({
  schema:'evercraft.voice-foundry.audition-report.v1',verdict:'INTERNAL_AUDITION_ONLY',projectId:'evercraft-v4-audition',
+ rightsAndConsentUnverified:true,publicationAuthorityGranted:false,paidGenerationAuthorized:false,
  candidates:digests.map((digest,i)=>({
   id:'take-'+(i+1),locale:'en-US',accent:'general-american',
   status:'awaiting_human_review',signal:{status:'objective_measurements_only',audioDigest:digest},
