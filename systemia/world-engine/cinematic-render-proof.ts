@@ -465,7 +465,7 @@ async function main(){
   const sequence=native?.sequence??buildCinematicCameraSequence({
     world,take:rotorTake,geometries,viewport:{width:WIDTH,height:HEIGHT},textures
   });
-  if(native?.review.some(r=>r.visibleSubjectLandmarks<3))
+  if(native?.review.some(r=>r.visibleSubjectLandmarks<6))
     throw Error('battleship_native_subject_composition_failed');
   const shader=extractOwnedShader(root);
   const worldShaderSource=fs.readFileSync(path.join(root,'systemia/world-engine/webgpu.ts'),'utf8');
