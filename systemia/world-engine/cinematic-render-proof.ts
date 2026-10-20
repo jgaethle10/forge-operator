@@ -81,7 +81,7 @@ function industrialWorld():WorldDefinition{
       atmosphere:{color:{r:.14,g:.25,b:.38},density:.048,startDistance:4,heightFalloff:.065,referenceHeight:0},
       colorManagement:{toneMapper:'aces_filmic',exposureBiasStops:0.35},
       cinematicLighting:{shading:'ggx_microfacet',localLightFalloff:'inverse_square'},
-      directionalShadows:{directionalLightEntityId:'sun',focus:{x:0,y:1.2,z:0},halfExtent:14,resolution:512,depthBias:.003,softnessTexels:1},
+      directionalShadows:{directionalLightEntityId:'sun',focus:{x:0,y:1.2,z:0},halfExtent:14,resolution:256,depthBias:.003,softnessTexels:2},
       materials:[
         material('floor',[.08,.14,.20],.25,.85),
         {...material('structure',[.29,.42,.54],.68,.35),
@@ -177,7 +177,7 @@ async function renderGpuFrames(plans:ReturnType<typeof buildCinematicCameraSeque
         // Install only this inert name decorator in the isolated loopback lab.
         await page.addInitScript({content:"globalThis.__name=(fn,name)=>fn;"});
         await page.goto(server.url,{waitUntil:'domcontentloaded'});
-        const init=await page.evaluate(async({shader,shadowShader,geometries,textures,width,height}:{shader:string;shadowShader:string;geometries:GeometryAsset[];textures:TextureAsset[];width:number;height:number})=>{
+        const init=await page.evaluate(async({shader,shadowShader,geometries,textures,width,height,shadowResolution}:{shader:string;shadowShader:string;geometries:GeometryAsset[];textures:TextureAsset[];width:number;height:number;shadowResolution:number})=>{
           const adapter=await (navigator as any).gpu?.requestAdapter();
           if(!adapter)return {ok:false,reason:'no_adapter'};
           const device=await adapter.requestDevice();
@@ -265,7 +265,7 @@ async function renderGpuFrames(plans:ReturnType<typeof buildCinematicCameraSeque
             usage:(globalThis as any).GPUTextureUsage.RENDER_ATTACHMENT|(globalThis as any).GPUTextureUsage.COPY_SRC});
           const depth=device.createTexture({size:[width,height,1],format:'depth24plus',usage:(globalThis as any).GPUTextureUsage.RENDER_ATTACHMENT});
           const shadowTexture=device.createTexture({
-            size:[512,512,1],format:'depth32float',
+            size:[shadowResolution,shadowResolution,1],format:'depth32float',
             usage:(globalThis as any).GPUTextureUsage.RENDER_ATTACHMENT|(globalThis as any).GPUTextureUsage.TEXTURE_BINDING
           });
           const shadowSampler=device.createSampler({compare:'less-equal'});
@@ -273,7 +273,8 @@ async function renderGpuFrames(plans:ReturnType<typeof buildCinematicCameraSeque
           (window as any).__evercraftCinematic={device,frameLayout,objectLayout,pipeline,buffers,
             fallback,sampler,textureMap,target,depth,width,height,shadowTexture,shadowSampler,shadowLayout,shadowPipeline};
           return {ok:true};
-        },{shader,shadowShader,geometries,textures,width:WIDTH,height:HEIGHT});
+        },{shader,shadowShader,geometries,textures,width:WIDTH,height:HEIGHT,
+          shadowResolution:plans[0].renderPlan.shadow?.resolution??1});
         if(init.ok){selected=profile;break;}
         errors.push(profile.name+':'+init.reason);
         await browser.close();browser=null;page=null;
