@@ -584,7 +584,7 @@ async function main(){
       original3dFrames:true,
       cropApplied:false,
       sceneWorldDigest:sequence.worldDefinitionDigest,
-      landmarkAudits:native.review,
+      landmarkAudits:director?[]:native.review,
       actualGeometryFraming,
       opticalAutoFit:director?.receipt.fullHeroAutoFit??native.autoFit,
       ...(director?{shotDirector:director.receipt}:{}),
