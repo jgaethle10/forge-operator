@@ -106,6 +106,8 @@ export function reconcileVoiceAudition({report,drafts}){
    if(mean!==null&&mean<4.5)holds.push('human_score_average_below_four_point_five');
    if(gap!==null&&gap>=2)holds.push('reviewer_disagreement_requires_discussion');
    return {candidateId:candidate.id,audioDigest:candidate.signal.audioDigest,
+     provider:candidate.provider??null,modelId:candidate.modelId??null,voiceProfileId:candidate.voiceProfileId??null,
+     performanceDirection:candidate.performanceDirection??null,
      locale:candidate.locale,accent:candidate.accent,reviewCount:own.length,
      perAxis,meanScore:mean,lowestScore:low,maxReviewerAxisDisagreement:gap,
      status:holds.length?'held_for_review':'eligible_for_further_verified_review',
