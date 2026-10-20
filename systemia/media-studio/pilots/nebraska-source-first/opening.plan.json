@@ -2,15 +2,11 @@
   "schema": "evercraft.fallen.studio-draft-plan.v1",
   "id": "evercraft-nebraska-giant-stirs-documentary-opening",
   "title": "Nebraska | The Giant Stirs | Source-First Opening",
-  "prompt": "Source-first documentary about Nebraska's defensive identity and late-game losses. Real licensed football and interview source materials required. No synthetic event impersonation, no substitute typography slides, no invented football plays or quotes.",
+  "prompt": "Source-first documentary about Nebraska's defensive identity and late-game losses. Real licensed football and interview source materials required. No synthetic event impersonation, no substitute typography slides, no invented football plays or quotes. Opening must allow silence. No automatic wall-to-wall score, percussive title-sync cues, or generated crowd ambience. Music may be editorially spotted later only after real source shots and recorded sound are reviewed.",
   "aspectRatio": "16:9",
   "fps": 24,
   "continuityDigest": "nebraska-source-first-fall-2026-creative-lock-01",
   "sourceAssets": [],
-  "music": {
-    "prompt": "Original quiet documentary orchestral score, textured acoustic cello and minimal piano, no invented stadium crowd field recording; rights and mastering approval required.",
-    "volume": 0.24
-  },
   "captions": {
     "enabled": true,
     "style": "documentary"
