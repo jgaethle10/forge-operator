@@ -1,0 +1,60 @@
+{
+  "schema": "evercraft.clip.social-publish-request.v1",
+  "id": "audience-sites-20261020-valuescout-facebook-page",
+  "destination": "facebook-page",
+  "brandKey": "evercraft-audience-sites",
+  "status": "staged_review_required",
+  "authorization": {
+    "approved": false,
+    "authorizationRef": ""
+  },
+  "metadata": {
+    "title": "VALUE SCOUT: THAT DEAL MIGHT NOT BE.",
+    "message": "That collectible looks underpriced until selling fees, shipping, and supplies show up. Enter your real comps and run the actual margin yourself.\n\nRun the free deal screen: https://jgaethle10.github.io/forge-operator/audience-sites/valuescout/?utm_source=evercraft_clip&utm_medium=organic_social&utm_campaign=audience_sites_20261020&utm_content=valuescout\n\nBuilt with Evercraft. Free browser utility. No signup required.",
+    "link": "https://jgaethle10.github.io/forge-operator/audience-sites/valuescout/",
+    "campaign": "audience_sites_20261020"
+  },
+  "linkVerification": {
+    "expectedText": [
+      "VALUE SCOUT"
+    ],
+    "expectedCanonicalUrl": "https://jgaethle10.github.io/forge-operator/audience-sites/valuescout/",
+    "requireCanonicalSelfMatch": true,
+    "requireOpenGraphSelfMatch": false
+  },
+  "creative": {
+    "source_production": "evercraft_clip",
+    "evidence_state": "synthetic_presentation_of_real_browser_utility",
+    "media_ready_for_provider_upload": false,
+    "story_asset": "https://jgaethle10.github.io/forge-operator/clip/audience-sites/valuescout/story.svg",
+    "feed_asset": "https://jgaethle10.github.io/forge-operator/clip/audience-sites/valuescout/feed.svg",
+    "native_video": "requires_first_party_render_and_QA"
+  },
+  "distribution": {
+    "organic_channels": [
+      "YouTube Shorts",
+      "TikTok collector creators",
+      "collector partners"
+    ],
+    "publisher_permission_required": true,
+    "approved_networks_only": true,
+    "paid_spend_usd": 0,
+    "comment_spam_forbidden": true,
+    "affiliate_status": "not_verified"
+  },
+  "status_proofs": {
+    "landing_page_verified_in_prior_session": true,
+    "poster_artifact_repository_committed_only": true,
+    "clip_provider_publish_receipt": null,
+    "traffic_receipts": null,
+    "conversion_receipts": null,
+    "payment_receipts": null
+  },
+  "publicationAuthority": false,
+  "disallowed": [
+    "mass_unsolicited_DMs",
+    "fake_accounts",
+    "purchased_fake_visits",
+    "adult_content_on_family_brands"
+  ]
+}

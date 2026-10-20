@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1080 1920" width="1080" height="1920" role="img" aria-label="AD STORY STUDIO social visual">
+<defs>
+<linearGradient id="bg" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#06121A"/><stop offset=".67" stop-color="#0B2630"/><stop offset="1" stop-color="#10212C"/></linearGradient>
+<radialGradient id="halo"><stop stop-color="#FFCB99" stop-opacity=".22"/><stop offset="1" stop-color="#FFCB99" stop-opacity="0"/></radialGradient>
+</defs>
+<rect width="1080" height="1920" fill="url(#bg)"/>
+<circle cx="840" cy="200" r="540" fill="url(#halo)"/>
+<path d="M85 90H995 M85 1790H995" stroke="#FFCB99" stroke-width="3" opacity=".7"/>
+<text x="90" y="164" font-family="Arial,sans-serif" font-size="35" fill="#FFCB99" font-weight="900" letter-spacing="8">AD STORY STUDIO</text>
+<text x="90" y="300" font-family="Arial,sans-serif" font-size="24" fill="#A2C0C8" font-weight="900" letter-spacing="5">VIDEO • COMMERCIALS</text>
+<text x="86" y="405" font-family="Arial,sans-serif" font-size="90" fill="#F4FFFF" font-weight="900" letter-spacing="-2">15 SECONDS.</text>
+<text x="86" y="505" font-family="Arial,sans-serif" font-size="90" fill="#FFCB99" font-weight="900" letter-spacing="-2">ONE CLEAR JOB.</text>
+<text x="90" y="595" font-family="Arial,sans-serif" font-size="33" fill="#C6DBE0">A commercial needs a point, not a template.</text>
+<g transform="translate(104 838)"><g fill="#162E36" stroke="#FFCB99" stroke-width="5"><rect width="252" height="370" rx="18"/><rect x="305" width="252" height="370" rx="18"/><rect x="610" width="252" height="370" rx="18"/></g><g fill="#FFCB99" font-family="Arial" font-size="92" font-weight="900"><text x="102" y="170">1</text><text x="405" y="170">2</text><text x="713" y="170">3</text></g><g fill="#DCE6E8" font-family="Arial" font-size="31" font-weight="800"><text x="55" y="299">PROBLEM</text><text x="372" y="299">PROOF</text><text x="677" y="299">ACTION</text></g></g>
+<rect x="87" y="1557" width="906" height="116" rx="26" fill="#FFCB99"/>
+<text x="119" y="1630" font-family="Arial,sans-serif" font-size="42" font-weight="900" fill="#082127">MAKE A FREE STORYBOARD</text>
+<text x="90" y="1852" font-family="Arial,sans-serif" font-size="26" fill="#9FBAC2">EVERCRAFT CLIP   /   FREE TOOL   /   STORY</text>
+</svg>
