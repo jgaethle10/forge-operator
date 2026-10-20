@@ -97,6 +97,7 @@ export interface WebGpuShadowPlan {
   lightViewProjectionMatrix:number[];
   resolution:256|512|1024;
   depthBias:number;
+  softnessTexels:number;
 }
 export interface WebGpuRenderPlan {
   schema:'evercraft.world-engine.webgpu-plan.v1';
@@ -621,7 +622,8 @@ export function compileWebGpuRenderPlan(
       lightIndex:index,
       lightViewProjectionMatrix:shadowProjection(lightPackets[index].direction,config.focus,config.halfExtent),
       resolution:config.resolution,
-      depthBias:config.depthBias
+      depthBias:config.depthBias,
+      softnessTexels:config.softnessTexels??1
     };
   }
   const texturePackets=requiredTextureIds.map(id=>{
@@ -736,7 +738,7 @@ function frameUniformData(plan:WebGpuRenderPlan){
     plan.cinematicLighting?.localLightFalloff==='inverse_square'?1:0,
     0,0,
     ...(plan.shadow?.lightViewProjectionMatrix??identity4()),
-    plan.shadow?.lightIndex??0,plan.shadow?1:0,plan.shadow?.depthBias??0,0
+    plan.shadow?.lightIndex??0,plan.shadow?1:0,plan.shadow?.depthBias??0,plan.shadow?.softnessTexels??0
   ]);
 }
 
@@ -829,7 +831,19 @@ fn directionalShadowVisibility(worldPosition: vec3<f32>) -> f32 {
   let ndc=clip.xyz/clip.w;
   let uv=vec2<f32>(ndc.x*0.5+0.5,0.5-ndc.y*0.5);
   if (uv.x<=0.0||uv.y<=0.0||uv.x>=1.0||uv.y>=1.0||ndc.z<=0.0||ndc.z>=1.0){return 1.0;}
-  return textureSampleCompareLevel(directionalShadow,directionalShadowSampler,uv,ndc.z-frame.shadowParams.z);
+  let compareDepth=ndc.z-frame.shadowParams.z;
+  if (frame.shadowParams.w<0.5){
+    return textureSampleCompareLevel(directionalShadow,directionalShadowSampler,uv,compareDepth);
+  }
+  let texel=vec2<f32>(1.0)/vec2<f32>(textureDimensions(directionalShadow));
+  var sum=0.0;
+  for(var y:i32=-1;y<=1;y=y+1){
+    for(var x:i32=-1;x<=1;x=x+1){
+      let offset=vec2<f32>(f32(x),f32(y))*texel*frame.shadowParams.w;
+      sum+=textureSampleCompareLevel(directionalShadow,directionalShadowSampler,uv+offset,compareDepth);
+    }
+  }
+  return sum/9.0;
 }
 
 // Compact ACES approximation: bounded highlights with gentle shoulder roll-off.
