@@ -22,6 +22,7 @@ export interface DirectionalShadowDefinition {
   halfExtent:number;
   resolution:256|512|1024;
   depthBias:number;
+  softnessTexels?:0|1|2;
 }
 export interface CinematicLightingDefinition {
   shading:'legacy_phong'|'ggx_microfacet';
@@ -253,6 +254,7 @@ export function validateDirectionalShadows(spec:DirectionalShadowDefinition){
   if(![256,512,1024].includes(spec.resolution))throw new Error('visual_shadow_resolution_invalid');
   finite(spec.depthBias,'shadow_depth_bias');
   if(spec.depthBias<0.0001||spec.depthBias>0.025)throw new Error('visual_shadow_depth_bias_out_of_range');
+  if(spec.softnessTexels!==undefined && ![0,1,2].includes(spec.softnessTexels))throw new Error('visual_shadow_softness_invalid');
   return true;
 }
 export function validateCinematicLighting(spec:CinematicLightingDefinition){
