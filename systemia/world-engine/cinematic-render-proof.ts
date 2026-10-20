@@ -113,11 +113,11 @@ async function renderGpuFrames(plans:ReturnType<typeof buildCinematicCameraSeque
   const prepared=await prepareNativeBrowserRuntime({
     sourceDir:worker,stateDir:process.env.EVERCRAFT_NATIVE_BROWSER_STATE_DIR||path.join(out,'native-browser'),
     allowInstall:true
-  });
+  } as any);
   if(prepared.ready!==true)throw new Error('native_browser_unavailable:'+prepared.reason);
   process.env.PLAYWRIGHT_BROWSERS_PATH=path.join(process.env.EVERCRAFT_NATIVE_BROWSER_STATE_DIR||path.join(out,'native-browser'),'browsers');
   const require=createRequire(path.join(worker,'package.json'));
-  const {chromium}=require('playwright') as typeof import('playwright');
+  const {chromium}=require('playwright') as {chromium:any};
   const server=await loopback();
   const profiles=[
     {name:'headless-adapter',forcedSoftware:false,args:['--enable-gpu','--enable-unsafe-webgpu','--enable-dawn-features=allow_unsafe_apis','--use-gpu-in-tests']},
