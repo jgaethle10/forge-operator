@@ -115,7 +115,7 @@ function videoFilter(index,shot,stage){
   ':fontsize=21:fontcolor=white:x=24:y=19:shadowx=2:shadowy=2,'+
   'drawbox=x=0:y=ih-26:w=iw:h=26:color=black@0.64:t=fill,'+
   'drawtext=fontfile='+font+':text=ILLUSTRATIVE\\ 3D\\ -\\ NOT\\ HISTORICAL\\ FOOTAGE'+
-  ':fontsize=11:fontcolor=white:x=20:y=ih-20['+label+'];';
+  ':fontsize=11:fontcolor=white:x=20:y=h-20['+label+'];';
  return base+fill+fit+overlay;
 }
 export function produceDirectorStoryboard(request,outDir){
