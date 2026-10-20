@@ -19,6 +19,7 @@ import type {GeometryAsset} from './webgpu.js';
 import {makeTorusGeometry} from './procedural-geometry.js';
 import {makeBrushedMetalTextures} from './brushed-metal.js';
 import {renderKineticSoundscape} from '../media-studio/kinetic-soundscape.mjs';
+import {battleshipWorld,battleshipGeometry,battleshipTake} from './battleship-scene.js';
 import {generateDeterministicTangents} from './fallen-geometry.js';
 import type {TextureAsset} from './texture.js';
 import {textureAssetDigest} from './texture.js';
@@ -440,14 +441,18 @@ async function main(){
   const out=path.resolve(process.env.CINEMATIC_PROOF_OUTPUT||path.join(os.tmpdir(),'evercraft-cinematic-pixel-proof-'+process.pid));
   if(fs.existsSync(out))throw new Error('output_already_exists');
   fs.mkdirSync(out,{recursive:true,mode:0o700});
-  const geometries=industrialGeometry(),textures=industrialTextures(),world=industrialWorld();
-  const take:CinematicCameraTake={
+  const isBattleship=process.env.CINEMATIC_SCENE==='battleship';
+  const geometries=isBattleship?battleshipGeometry():industrialGeometry();
+  const textures=isBattleship?[]:industrialTextures();
+  const world=isBattleship?battleshipWorld():industrialWorld();
+  const rotorTake:CinematicCameraTake={
     schema:'evercraft.world-engine.cinematic-camera-take.v1',
     id:'orbital-foundry-take-one',cameraEntityId:'cinema-camera',targetEntityId:'reactor',
     durationSec:DURATION,fps:FPS,move:'orbit',ease:'smootherstep',
     orbit:{radius:11,startAngleDeg:-52,endAngleDeg:58,startHeight:2.6,endHeight:5.2},
     startFovYDeg:51,endFovYDeg:43
   };
+  const take=isBattleship?battleshipTake():rotorTake;
   const sequence=buildCinematicCameraSequence({
     world,take,geometries,viewport:{width:WIDTH,height:HEIGHT},textures
   });
@@ -456,13 +461,24 @@ async function main(){
   const shadowSource=worldShaderSource.match(/export const EVERCRAFT_SHADOW_DEPTH_WGSL=`([\s\S]*?)`;/);
   if(!shadowSource)throw new Error('owned_shadow_shader_missing');
   const raw=await renderGpuFrames(sequence.frames,geometries,textures,shader.source,shadowSource[1],out);
-  const video=path.join(out,'orbital-foundry-synthetic-canary.mp4');
+  const video=path.join(out,isBattleship?'battleship-world-engine-trial.mp4':'orbital-foundry-synthetic-canary.mp4');
+  let soundReceipt:ReturnType<typeof renderKineticSoundscape>['receipt']|null=null;
+  if(isBattleship){
+    // The founder rejected the synthetic sound. Ship footage gets NO invented
+    // motors, explosions, fake sea recording or score.
+    run('ffmpeg',['-hide_banner','-loglevel','error','-y',
+      '-f','rawvideo','-pixel_format','rgba','-video_size',WIDTH+'x'+HEIGHT,
+      '-framerate',String(FPS),'-i',raw.framesFile,
+      '-an','-t',String(DURATION),'-c:v','libx264','-preset','medium',
+      '-crf','20','-pix_fmt','yuv420p','-movflags','+faststart',video]);
+  }else{
   // Original unlicensed-by-others mechanical soundtrack for this synthetic scene.
-  const sound=renderKineticSoundscape({
+    const sound=renderKineticSoundscape({
     durationSec:DURATION,sampleRate:48000,movement:'orbit',
     seed:'evercraft-foundry-original-kinetic-film-v1',
     impacts:[{at:.34,power:.6},{at:2.08,power:.8},{at:3.18,power:1}]
   });
+    soundReceipt=sound.receipt;
   const soundFile=path.join(out,'kinetic-original-soundscape.wav');
   fs.writeFileSync(soundFile,sound.wav,{flag:'wx',mode:0o600});
   fs.writeFileSync(path.join(out,'soundscape-receipt.json'),JSON.stringify(sound.receipt,null,2)+'\n',
@@ -479,6 +495,7 @@ async function main(){
     '-map','0:v:0','-map','[a]','-t',String(DURATION),
     '-c:v','libx264','-preset','medium','-crf','20','-pix_fmt','yuv420p',
     '-c:a','aac','-b:a','128k','-movflags','+faststart',video]);
+  }
   run('ffmpeg',['-hide_banner','-loglevel','error','-y',
     '-f','rawvideo','-pixel_format','rgba','-video_size',WIDTH+'x'+HEIGHT,
     '-i',path.join(out,'shadow-disabled-first-frame.rgba'),
@@ -495,7 +512,8 @@ async function main(){
   const stream=measure.streams?.find((s:any)=>s.codec_type==='video');
   const audio=measure.streams?.find((s:any)=>s.codec_type==='audio');
   if(!stream||stream.codec_name!=='h264'||stream.width!==WIDTH||stream.height!==HEIGHT||
-    !audio||audio.codec_name!=='aac'||audio.channels!==2||audio.sample_rate!=='48000'||Number(stream.nb_frames)!==DURATION*FPS){
+    Number(stream.nb_frames)!==DURATION*FPS||
+    (isBattleship?Boolean(audio):(!audio||audio.codec_name!=='aac'||audio.channels!==2||audio.sample_rate!=='48000'))){
     throw new Error('cinematic_master_contract_invalid');
   }
   const stills=[];
@@ -520,15 +538,16 @@ async function main(){
     output:{path:video,sha256:sha(fs.readFileSync(video)),width:WIDTH,height:HEIGHT,
       durationSec:DURATION,fps:FPS,codec:'h264',audioCodec:'aac'},
     stills,sourceState:'synthetic_visualization',
-    soundState:'original_multilayer_synthetic_soundscape_not_recorded_foley_or_commercial_score',
-    soundReceipt:sound.receipt,
+    sceneType:isBattleship?'procedural_battleship':'procedural_industrial_rotor',
+    soundState:isBattleship?'silent_at_founder_direction_no_sound_invented':'original_multilayer_synthetic_soundscape_not_recorded_foley_or_commercial_score',
+    soundReceipt,
     visualReviewState:'unreviewed',publicationAuthority:false,paidProductionReady:false,
     claims:['Real owned-WGSL shader pixels rendered from canonical World Engine moving 3D camera frame plans',
       'Not cinematic-photoreal-quality, not an authentic physical event, not a public marketing asset']
   };
   fs.writeFileSync(path.join(out,'receipt.json'),JSON.stringify(receipt,null,2)+'\n');
   console.log(JSON.stringify({status:'rendered_gpu_master',receipt:receipt.output,frames:receipt.exactGpuReadbackFrames,
-    uniqueFrames:receipt.uniqueRawFrameDigests,soundSha256:sound.receipt.sha256,
+    uniqueFrames:receipt.uniqueRawFrameDigests,soundSha256:soundReceipt?.sha256??null,
     shadowChangedPixels:receipt.shadowCounterfactualChangedPixels,
     pcfChangedPixels:receipt.shadowFilterChangedPixels,
     profile:raw.profile,hardwareExecutionClaim:false}));
