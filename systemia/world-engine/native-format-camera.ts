@@ -10,6 +10,7 @@ import {buildCinematicCameraSequence} from './cinematic-rig.js';
 import type {WorldDefinition,Vec3} from './engine.js';
 import type {GeometryAsset} from './webgpu.js';
 import type {TextureAsset} from './texture.js';
+import {autoFitOrbitCamera,type AutoFitReceipt} from './optical-autofit.js';
 
 export type NativeFilmFormat='wide'|'square'|'vertical';
 export interface NativeFrameSpec{
@@ -123,11 +124,19 @@ export function makeNativeBattleshipSequence(input:{
   textures?:TextureAsset[];
   format:NativeFilmFormat;
   overrideTake?:CinematicCameraTake;
-}):{spec:NativeFrameSpec;sequence:CinematicCameraSequence;review:NativeCompositionReview[]}{
+}):{spec:NativeFrameSpec;sequence:CinematicCameraSequence;review:NativeCompositionReview[];autoFit:AutoFitReceipt|null}{
   const spec=composeNativeBattleshipCamera(input.format);
+  const autoFit=input.overrideTake?null:autoFitOrbitCamera({
+    world:input.world,
+    take:spec.cameraTake,
+    geometries:input.geometries,
+    textures:input.textures,
+    viewport:spec.viewport,
+    subject:{id:'battleship-hero',entityIds:['ship-hull','bridge-house','mast-main']}
+  });
   const sequence=buildCinematicCameraSequence({
     world:input.world,
-    take:input.overrideTake??spec.cameraTake,
+    take:input.overrideTake??autoFit?.take??spec.cameraTake,
     geometries:input.geometries,
     textures:input.textures??[],
     viewport:spec.viewport
@@ -137,5 +146,5 @@ export function makeNativeBattleshipSequence(input:{
     auditNativeSubjectComposition(input.format,sequence.frames[Math.floor((sequence.frames.length-1)/2)].renderPlan.viewProjectionMatrix),
     auditNativeSubjectComposition(input.format,sequence.frames.at(-1)!.renderPlan.viewProjectionMatrix)
   ];
-  return {spec,sequence,review};
+  return {spec,sequence,review,autoFit:autoFit?.receipt??null};
 }
