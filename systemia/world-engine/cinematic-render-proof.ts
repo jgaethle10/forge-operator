@@ -28,7 +28,7 @@ import {prepareNativeBrowserRuntime} from '../evercraft-web/browser-worker/nativ
 const root=path.resolve(path.dirname(fileURLToPath(import.meta.url)),'../..');
 const worker=path.join(root,'systemia/evercraft-web/browser-worker');
 const sha=(value:Buffer|string)=>crypto.createHash('sha256').update(value).digest('hex');
-const WIDTH=640, HEIGHT=360, FPS=24, DURATION=2;
+const WIDTH=640, HEIGHT=360, FPS=24, DURATION=4;
 function cube():GeometryAsset{
   const q=[
     {n:[0,0,1],v:[[-1,-1,1],[1,-1,1],[1,1,1],[-1,1,1]]},
@@ -445,8 +445,8 @@ async function main(){
     schema:'evercraft.world-engine.cinematic-camera-take.v1',
     id:'orbital-foundry-take-one',cameraEntityId:'cinema-camera',targetEntityId:'reactor',
     durationSec:DURATION,fps:FPS,move:'orbit',ease:'smootherstep',
-    orbit:{radius:11,startAngleDeg:-38,endAngleDeg:38,startHeight:3.2,endHeight:4.5},
-    startFovYDeg:53,endFovYDeg:43
+    orbit:{radius:11,startAngleDeg:-52,endAngleDeg:58,startHeight:2.6,endHeight:5.2},
+    startFovYDeg:51,endFovYDeg:43
   };
   const sequence=buildCinematicCameraSequence({
     world,take,geometries,viewport:{width:WIDTH,height:HEIGHT},textures
@@ -461,7 +461,7 @@ async function main(){
   const sound=renderKineticSoundscape({
     durationSec:DURATION,sampleRate:48000,movement:'orbit',
     seed:'evercraft-foundry-original-kinetic-film-v1',
-    impacts:[{at:.26,power:.7},{at:1.27,power:1}]
+    impacts:[{at:.34,power:.6},{at:2.08,power:.8},{at:3.18,power:1}]
   });
   const soundFile=path.join(out,'kinetic-original-soundscape.wav');
   fs.writeFileSync(soundFile,sound.wav,{flag:'wx',mode:0o600});
@@ -499,7 +499,7 @@ async function main(){
     throw new Error('cinematic_master_contract_invalid');
   }
   const stills=[];
-  for(const [label,time] of [['opening',.12],['middle',.98],['closing',1.85]] as const){
+  for(const [label,time] of [['opening',.22],['middle',2.06],['closing',3.74]] as const){
     const filename=path.join(out,label+'.png');
     run('ffmpeg',['-hide_banner','-loglevel','error','-y','-ss',String(time),'-i',video,'-frames:v','1',filename]);
     stills.push({label,path:filename,sha256:sha(fs.readFileSync(filename))});
