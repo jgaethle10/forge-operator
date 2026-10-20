@@ -29,7 +29,7 @@ fs.chmodSync(whisperCliPath,0o755);
 const session={schema:'evercraft.voice-foundry.session.v1',status:'ready_for_authorized_generation',
  cues:[{cueId:'scene-001',status:'ready_for_authorized_generation',text:'We build the future.',locale:'en-US',pronunciation:[]}]};
 const dir=()=>fs.mkdtempSync(path.join(temp,'out-'));
-const run=(override={})=>runLocalWhisperAudit({session,cueId:'scene-001',audioPath,modelPath,whisperCliPath,outputDir:dir(),...override});
+const run=(override={})=>runLocalWhisperAudit({session,cueId:'scene-001',audioPath,modelPath,whisperCliPath,outputDir:dir(),expectedModelSha256:digest(modelPath),expectedBinarySha256:digest(whisperCliPath),...override});
 const digest=p=>crypto.createHash('sha256').update(fs.readFileSync(p)).digest('hex');
 
 test('invokes a configured local CLI, records true audio/model/binary hashes, without claiming human speech',async()=>{
@@ -78,4 +78,13 @@ test('local CLI output is still unverified speech and rights evidence',async()=>
  assert.equal(out.record.consentAndRightsVerified,false);
  assert.equal(out.record.transcript.acousticPronunciationVerified,false);
  assert.equal(out.record.transcript.humanListeningVerified,false);
+});
+
+test('model or executable changed since authorization is rejected before inference',async()=>{
+ await assert.rejects(()=>run({expectedModelSha256:'a'.repeat(64)}),/digest_pin_mismatch/);
+ await assert.rejects(()=>run({expectedBinarySha256:'b'.repeat(64)}),/digest_pin_mismatch/);
+});
+test('production cannot run with unpinned models or executable',async()=>{
+ await assert.rejects(()=>run({expectedModelSha256:undefined}),/digest_pins_required/);
+ await assert.rejects(()=>run({expectedBinarySha256:undefined}),/digest_pins_required/);
 });
