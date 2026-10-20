@@ -36,7 +36,7 @@ test('mismatched script cannot silently be auditioned as the same take',()=>{
  assert.throws(()=>buildVoiceAudition(s),/audition_script_mismatch/);
 });
 test('multiple locales cannot be smuggled into same-script A/B comparison',()=>{
- const s=setup();s.input.candidates[0].locale='en-GB';fs.writeFileSync(s.manifestPath,JSON.stringify(s.input));
+ const s=setup();s.input.candidates[0].locale='es-MX';fs.writeFileSync(s.manifestPath,JSON.stringify(s.input));
  assert.throws(()=>buildVoiceAudition(s),/audition_language_mismatch/);
 });
 test('unsafe IDs and duplicate candidates are rejected',()=>{
@@ -60,4 +60,11 @@ test('rejects audio file traversal and accidental access outside its own project
  assert.throws(()=>buildVoiceAudition(s),/ENOENT|outside_manifest_directory/);
  const absolute=setup();absolute.input.candidates[0].audioPath='/tmp/example.wav';fs.writeFileSync(absolute.manifestPath,JSON.stringify(absolute.input));
  assert.throws(()=>buildVoiceAudition(absolute),/absolute_source_path_rejected/);
+});
+
+test('supports A/B comparisons across accents in the same language',()=>{
+ const s=setup();s.input.candidates[1].locale='en-GB';s.input.candidates[1].accent='british-rp';fs.writeFileSync(s.manifestPath,JSON.stringify(s.input));
+ const out=buildVoiceAudition(s);const report=JSON.parse(fs.readFileSync(out.reportPath,'utf8'));
+ assert.equal(report.candidates[0].locale,'en-US');assert.equal(report.candidates[1].locale,'en-GB');
+ assert.equal(report.candidates[1].accent,'british-rp');
 });
