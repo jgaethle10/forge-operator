@@ -50,7 +50,7 @@ data.candidates.forEach((candidate,index)=>{
 function draw(){cards.forEach(({candidate,index,title,details})=>{
  title.textContent=blind?'Candidate '+String.fromCharCode(65+index):candidate.label;
  details.replaceChildren();
- const shown=blind?[['Script',data.locale],['Cast','Hidden'],['Accent','Hidden'],['Voice','Hidden']]:[['Locale',candidate.locale],['Accent',candidate.accent],['Presentation',candidate.genderPresentation],['Provider',candidate.provider]];
+ const shown=blind?[['Script',data.locale],['Cast','Hidden'],['Accent','Hidden'],['Voice','Hidden']]:[['Locale',candidate.locale],['Accent',candidate.accent],['Presentation',candidate.genderPresentation],['Provider',candidate.provider],['Model',candidate.modelId]];
  shown.forEach(([label,value])=>{const a=document.createElement('span');a.textContent=label+':';const b=document.createElement('strong');b.textContent=value;details.append(a,b);});
  });}
 $('blind').addEventListener('change',e=>{blind=e.target.checked;draw();});$('reveal').addEventListener('click',()=>{$('blind').checked=false;blind=false;draw();});draw();
