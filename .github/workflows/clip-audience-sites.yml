@@ -4,6 +4,9 @@ on:
     paths:
       - 'public/clip/audience-sites/**'
       - 'tests/clip-audience-sites.test.mjs'
+      - 'tests/clip-family-social-safety.test.mjs'
+      - 'systemia/clip/family-social-safety.mjs'
+      - 'systemia/clip/social-publisher-runtime.mjs'
       - '.github/workflows/clip-audience-sites.yml'
   push:
     branches: [main]
@@ -25,4 +28,4 @@ jobs:
         with:
           node-version: '22'
       - name: Verify seven Evercraft Clip handoffs and creative assets
-        run: node --test tests/clip-audience-sites.test.mjs
+        run: node --test tests/clip-audience-sites.test.mjs tests/clip-family-social-safety.test.mjs systemia/clip/social-publisher-runtime.test.mjs
