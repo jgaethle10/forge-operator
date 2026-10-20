@@ -3,6 +3,7 @@ import fs from 'node:fs';
 import path from 'node:path';
 import { spawnSync } from 'node:child_process';
 import { preflightVoiceFoundrySpeech } from './voice-foundry-bridge.mjs';
+import { compileVoicePerformance } from './voice-performance.mjs';
 import type { CreativeDepartment } from './departments.js';
 import type {
   ProductionProviderAdapter,
@@ -219,6 +220,9 @@ export function createElevenLabsAudioAdapter(
             commercialRights:config.commercialRights,
           })
         : null;
+      const directedTake=foundryPlan?.performance
+        ? compileVoicePerformance({scriptText:need.prompt,performance:foundryPlan.performance,modelId:speechModel,planDigest:foundryPlan.planDigest})
+        : null;
       if(!config.apiKey?.trim()) throw new Error('elevenlabs_audio_api_key_missing');
       if(config.allowPaidGeneration!==true) throw new Error('elevenlabs_audio_paid_generation_not_authorized');
       const fetchImpl=fetcher(config);
@@ -240,7 +244,7 @@ export function createElevenLabsAudioAdapter(
         modelId=speechModel;
         voiceProfileId=need.voiceProfileId;
         body={
-          text:need.prompt,
+          text:directedTake?.requestText??need.prompt,
           model_id:speechModel,
           ...(foundryPlan?{language_code:foundryPlan.languageCode}:need.language?{language_code:need.language}:{}),
         };
@@ -324,6 +328,7 @@ export function createElevenLabsAudioAdapter(
           'provider:elevenlabs',
           'provider-doc:'+DOCS[need.kind],
           ...(foundryPlan?['voice-foundry-preflight:'+foundryPlan.planDigest]:[]),
+          ...(directedTake?['voice-performance-script-sha256:'+directedTake.scriptDigest,'voice-performance-request-sha256:'+directedTake.requestDigest]:[]),
           ...(foundryPlan&&fs.existsSync(outputBase+'.dry.mp3')
             ? ['voice-foundry-dry-source-sha256:'+crypto.createHash('sha256').update(fs.readFileSync(outputBase+'.dry.mp3')).digest('hex')]
             : []),
