@@ -26,10 +26,13 @@ export function preflightVoiceFoundrySpeech({ need, foundry, configuredVoiceId, 
   if (cue.speakerId!==need.speakerId) deny('cast_speaker_mismatch');
   if (cue.text!==need.prompt) deny('spoken_text_mismatch');
   if (need.durationSec !== undefined && (!Number.isFinite(need.durationSec) || need.durationSec <= 0 || !Number.isFinite(cue.maxDurationSec) || need.durationSec>cue.maxDurationSec)) deny('cue_window_mismatch');
-  const session=planVoiceSession({profiles:foundry.profiles,cues:[cue],lexicon:foundry.lexicon??[]});
-  const planned=session.cues[0];
+  // Validate the whole scene cast, not just the requested cue, so speaker drift
+  // cannot be hidden in a second scene of the same generation session.
+  const session=planVoiceSession({profiles:foundry.profiles,cues:foundry.cues,lexicon:foundry.lexicon??[],previousCast:foundry.previousCast??[]});
+  const planned=session.cues.find(candidate=>candidate.cueId===need.id);
   if (session.status !== 'ready_for_authorized_generation' || !planned || planned.status !== 'ready_for_authorized_generation') {
-    deny('cast_not_approved:'+(planned?.reasons?.join(',')||'unknown'));
+    const causes=[...(planned?.reasons??[]),...(session.continuity?.reasons??[])];
+    deny('cast_not_approved:'+(causes.length?causes.join(','):'another_scene_cast_held'));
   }
   if (planned.provider!==provider) deny('cast_provider_mismatch');
   if (planned.providerVoiceId!==configuredVoiceId || !isText(configuredVoiceId)) deny('configured_voice_id_mismatch');
