@@ -64,7 +64,7 @@ function centsTimesBps(cents, bps) { return Math.ceil(cents * bps / 10_000); }
 function normalized(value) { return clean(value).toLowerCase(); }
 function addReason(reasons, reason) { if (!reasons.includes(reason)) reasons.push(reason); }
 
-export function assessListing(raw, { now = new Date(), policy = {} } = {}) {
+export function assessListing(raw, { now = new Date(), policy = {}, trusted_completed_sale_ids = [] } = {}) {
   const rules = resolvePolicy(policy);
   const clock = now instanceof Date ? now : new Date(now);
   if (!Number.isFinite(clock.getTime())) throw new TypeError('invalid_now');
@@ -98,12 +98,20 @@ export function assessListing(raw, { now = new Date(), policy = {} } = {}) {
   if (!extraFields.every(field => isNonnegativeInteger(resale[field]))) addReason(reasons, 'incomplete_resale_cost');
   if (!Array.isArray(raw?.sold_comps)) addReason(reasons, 'missing_comparables');
 
+  // A sales claim embedded in a listing JSON is NOT a proof of a transaction.
+  // Trust IDs are supplied out-of-band by a separately permissioned and audited
+  // completed-sales adapter. The public JSON CLI intentionally supplies none.
+  const trustedSaleIds = new Set(
+    Array.isArray(trusted_completed_sale_ids)
+      ? trusted_completed_sale_ids.filter(x => typeof x === 'string' && x.length > 0 && x.length <= 300)
+      : []
+  );
   const maxCompAgeMs = rules.maximum_comp_age_days * 86_400_000;
   const distinct = new Set();
   const matchedComps = [];
   for (const comp of Array.isArray(raw?.sold_comps) ? raw.sold_comps : []) {
     const identity = `${clean(comp.source_id)}:${clean(comp.sale_id)}`;
-    if (!clean(comp.source_id) || !clean(comp.sale_id) || distinct.has(identity)) continue;
+    if (!clean(comp.source_id) || !clean(comp.sale_id) || distinct.has(identity) || !trustedSaleIds.has(identity)) continue;
     if (comp.transaction_state !== 'completed_sold_verified' || comp.currency !== 'USD' ||
       !isNonnegativeInteger(comp.sold_price_cents) || comp.sold_price_cents === 0 ||
       !validUrl(comp.source_url) || !validTime(comp.sold_at, clock, maxCompAgeMs) ||
