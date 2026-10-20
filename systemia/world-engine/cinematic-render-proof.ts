@@ -81,6 +81,7 @@ function industrialWorld():WorldDefinition{
       atmosphere:{color:{r:.14,g:.25,b:.38},density:.048,startDistance:4,heightFalloff:.065,referenceHeight:0},
       colorManagement:{toneMapper:'aces_filmic',exposureBiasStops:0.35},
       cinematicLighting:{shading:'ggx_microfacet',localLightFalloff:'inverse_square'},
+      directionalShadows:{directionalLightEntityId:'sun',focus:{x:0,y:1.2,z:0},halfExtent:14,resolution:512,depthBias:.003},
       materials:[
         material('floor',[.08,.14,.20],.25,.85),
         {...material('structure',[.29,.42,.54],.68,.35),
@@ -149,7 +150,7 @@ async function loopback(){
   return {server,url:'http://127.0.0.1:'+addr.port+'/'};
 }
 async function renderGpuFrames(plans:ReturnType<typeof buildCinematicCameraSequence>['frames'],geometries:GeometryAsset[],textures:TextureAsset[],
-  shader:string,out:string){
+  shader:string,shadowShader:string,out:string){
   const prepared=await prepareNativeBrowserRuntime({
     sourceDir:worker,stateDir:process.env.EVERCRAFT_NATIVE_BROWSER_STATE_DIR||path.join(out,'native-browser'),
     allowInstall:true
@@ -176,7 +177,7 @@ async function renderGpuFrames(plans:ReturnType<typeof buildCinematicCameraSeque
         // Install only this inert name decorator in the isolated loopback lab.
         await page.addInitScript({content:"globalThis.__name=(fn,name)=>fn;"});
         await page.goto(server.url,{waitUntil:'domcontentloaded'});
-        const init=await page.evaluate(async({shader,geometries,textures,width,height}:{shader:string;geometries:GeometryAsset[];textures:TextureAsset[];width:number;height:number})=>{
+        const init=await page.evaluate(async({shader,shadowShader,geometries,textures,width,height}:{shader:string;shadowShader:string;geometries:GeometryAsset[];textures:TextureAsset[];width:number;height:number})=>{
           const adapter=await (navigator as any).gpu?.requestAdapter();
           if(!adapter)return {ok:false,reason:'no_adapter'};
           const device=await adapter.requestDevice();
@@ -184,7 +185,11 @@ async function renderGpuFrames(plans:ReturnType<typeof buildCinematicCameraSeque
           const errors=(await module.getCompilationInfo()).messages.filter(m=>m.type==='error').map(m=>m.message);
           if(errors.length)return {ok:false,reason:errors.join('|')};
           const frameLayout=device.createBindGroupLayout({entries:[
-            {binding:0,visibility:3,buffer:{type:'uniform'}},{binding:1,visibility:2,buffer:{type:'read-only-storage'}}]});
+            {binding:0,visibility:3,buffer:{type:'uniform'}},
+            {binding:1,visibility:2,buffer:{type:'read-only-storage'}},
+            {binding:2,visibility:2,texture:{sampleType:'depth'}},
+            {binding:3,visibility:2,sampler:{type:'comparison'}}
+          ]});
           const objectLayout=device.createBindGroupLayout({entries:[
             {binding:0,visibility:3,buffer:{type:'uniform'}},
             {binding:1,visibility:2,sampler:{type:'filtering'}},
@@ -203,6 +208,21 @@ async function renderGpuFrames(plans:ReturnType<typeof buildCinematicCameraSeque
             fragment:{module,entryPoint:'fs_main',targets:[{format:'rgba8unorm'}]},
             primitive:{topology:'triangle-list',frontFace:'ccw',cullMode:'none'},
             depthStencil:{format:'depth24plus',depthWriteEnabled:true,depthCompare:'less'}
+          });
+          const shadowModule=device.createShaderModule({code:shadowShader});
+          const shadowErrors=(await shadowModule.getCompilationInfo()).messages
+            .filter(m=>m.type==='error').map(m=>m.message);
+          if(shadowErrors.length)return {ok:false,reason:'shadow_shader:'+shadowErrors.join('|')};
+          const shadowLayout=device.createBindGroupLayout({entries:[
+            {binding:0,visibility:1,buffer:{type:'uniform'}}
+          ]});
+          const shadowPipeline=device.createRenderPipeline({
+            layout:device.createPipelineLayout({bindGroupLayouts:[shadowLayout]}),
+            vertex:{module:shadowModule,entryPoint:'vs_main',buffers:[{
+              arrayStride:48,attributes:[{shaderLocation:0,offset:0,format:'float32x3'}]
+            }]},
+            primitive:{topology:'triangle-list',cullMode:'none'},
+            depthStencil:{format:'depth32float',depthWriteEnabled:true,depthCompare:'less'}
           });
           const buffers=new Map<string,any>();
           for(const geometry of geometries){
@@ -244,11 +264,16 @@ async function renderGpuFrames(plans:ReturnType<typeof buildCinematicCameraSeque
           const target=device.createTexture({size:[width,height,1],format:'rgba8unorm',
             usage:(globalThis as any).GPUTextureUsage.RENDER_ATTACHMENT|(globalThis as any).GPUTextureUsage.COPY_SRC});
           const depth=device.createTexture({size:[width,height,1],format:'depth24plus',usage:(globalThis as any).GPUTextureUsage.RENDER_ATTACHMENT});
+          const shadowTexture=device.createTexture({
+            size:[512,512,1],format:'depth32float',
+            usage:(globalThis as any).GPUTextureUsage.RENDER_ATTACHMENT|(globalThis as any).GPUTextureUsage.TEXTURE_BINDING
+          });
+          const shadowSampler=device.createSampler({compare:'less-equal'});
           // Dedicated synthetic lab runtime; all values come from canonically verified WebGPU plans.
           (window as any).__evercraftCinematic={device,frameLayout,objectLayout,pipeline,buffers,
-            fallback,sampler,textureMap,target,depth,width,height};
+            fallback,sampler,textureMap,target,depth,width,height,shadowTexture,shadowSampler,shadowLayout,shadowPipeline};
           return {ok:true};
-        },{shader,geometries,textures,width:WIDTH,height:HEIGHT});
+        },{shader,shadowShader,geometries,textures,width:WIDTH,height:HEIGHT});
         if(init.ok){selected=profile;break;}
         errors.push(profile.name+':'+init.reason);
         await browser.close();browser=null;page=null;
@@ -275,7 +300,9 @@ async function renderGpuFrames(plans:ReturnType<typeof buildCinematicCameraSeque
             plan.colorManagement?.toneMapper==='aces_filmic'?1:0,
             plan.colorManagement?.exposureBiasStops??0,0,0,
             plan.cinematicLighting?.shading==='ggx_microfacet'?1:0,
-            plan.cinematicLighting?.localLightFalloff==='inverse_square'?1:0,0,0
+            plan.cinematicLighting?.localLightFalloff==='inverse_square'?1:0,0,0,
+            ...(plan.shadow?.lightViewProjectionMatrix??[1,0,0,0,0,1,0,0,0,0,1,0,0,0,0,1]),
+            plan.shadow?.lightIndex??0,plan.shadow?1:0,plan.shadow?.depthBias??0,0
           ]);
           const frameBuffer=device.createBuffer({size:frameData.byteLength,usage:(globalThis as any).GPUBufferUsage.UNIFORM|(globalThis as any).GPUBufferUsage.COPY_DST});
           device.queue.writeBuffer(frameBuffer,0,frameData);
@@ -289,8 +316,32 @@ async function renderGpuFrames(plans:ReturnType<typeof buildCinematicCameraSeque
           const lightBuffer=device.createBuffer({size:ls.byteLength,usage:(globalThis as any).GPUBufferUsage.STORAGE|(globalThis as any).GPUBufferUsage.COPY_DST});
           device.queue.writeBuffer(lightBuffer,0,ls);
           const frameGroup=device.createBindGroup({layout:r.frameLayout,entries:[
-            {binding:0,resource:{buffer:frameBuffer}},{binding:1,resource:{buffer:lightBuffer}}]});
+            {binding:0,resource:{buffer:frameBuffer}},{binding:1,resource:{buffer:lightBuffer}},
+            {binding:2,resource:r.shadowTexture.createView()},{binding:3,resource:r.shadowSampler}]});
           const encoder=device.createCommandEncoder();
+          const shadowObjects:any[]=[];
+          if(plan.shadow){
+            const shadowPass=encoder.beginRenderPass({
+              colorAttachments:[],depthStencilAttachment:{
+                view:r.shadowTexture.createView(),
+                depthClearValue:1,depthLoadOp:'clear',depthStoreOp:'store'
+              }
+            });
+            shadowPass.setPipeline(r.shadowPipeline);
+            for(const draw of plan.draws){
+              if(!draw.castsShadow||draw.alphaMode!=='opaque')continue;
+              const bytes=new Float32Array([...plan.shadow.lightViewProjectionMatrix,...draw.modelMatrix]);
+              const buffer=device.createBuffer({size:bytes.byteLength,
+                usage:(globalThis as any).GPUBufferUsage.UNIFORM|(globalThis as any).GPUBufferUsage.COPY_DST});
+              device.queue.writeBuffer(buffer,0,bytes);
+              const bind=device.createBindGroup({layout:r.shadowLayout,entries:[{binding:0,resource:{buffer}}]});
+              const vb=r.buffers.get(draw.geometryId);
+              if(!vb)throw Error('missing_shadow_caster_geometry:'+draw.geometryId);
+              shadowObjects.push(buffer);shadowPass.setBindGroup(0,bind);
+              shadowPass.setVertexBuffer(0,vb);shadowPass.draw(draw.vertexCount,1,0,0);
+            }
+            shadowPass.end();
+          }
           const pass=encoder.beginRenderPass({
             colorAttachments:[{view:r.target.createView(),clearValue:{...plan.clearColor,a:1},loadOp:'clear',storeOp:'store'}],
             depthStencilAttachment:{view:r.depth.createView(),depthClearValue:1,depthLoadOp:'clear',depthStoreOp:'store'}
@@ -301,7 +352,8 @@ async function renderGpuFrames(plans:ReturnType<typeof buildCinematicCameraSeque
             const obj=new Float32Array([
               ...draw.modelMatrix,...draw.normalMatrix,
               ...draw.baseColor,draw.materialModel,draw.metallic,draw.roughness,draw.alphaCutoff,
-              ...draw.emissive,draw.emissiveIntensity,...draw.textureFlags
+              ...draw.emissive,draw.emissiveIntensity,...draw.textureFlags,
+              draw.receivesShadow?1:0,0,0,0
             ]);
             const buffer=device.createBuffer({size:obj.byteLength,usage:(globalThis as any).GPUBufferUsage.UNIFORM|(globalThis as any).GPUBufferUsage.COPY_DST});
             device.queue.writeBuffer(buffer,0,obj);
@@ -331,7 +383,7 @@ async function renderGpuFrames(plans:ReturnType<typeof buildCinematicCameraSeque
           const padded=new Uint8Array(readback.getMappedRange().slice(0));
           const raw=new Uint8Array(rowBytes*r.height);
           for(let y=0;y<r.height;y++)raw.set(padded.subarray(y*bytesPerRow,y*bytesPerRow+rowBytes),y*rowBytes);
-          readback.unmap();readback.destroy();frameBuffer.destroy();lightBuffer.destroy();objects.forEach(z=>z.destroy());
+          readback.unmap();readback.destroy();frameBuffer.destroy();lightBuffer.destroy();objects.forEach(z=>z.destroy());shadowObjects.forEach(z=>z.destroy());
           // Browser bytes converted to base64 for an exact raw-video handoff.
           let binary='';
           for(let offset=0;offset<raw.length;offset+=8192){
@@ -368,7 +420,10 @@ async function main(){
     world,take,geometries,viewport:{width:WIDTH,height:HEIGHT},textures
   });
   const shader=extractOwnedShader(root);
-  const raw=await renderGpuFrames(sequence.frames,geometries,textures,shader.source,out);
+  const worldShaderSource=fs.readFileSync(path.join(root,'systemia/world-engine/webgpu.ts'),'utf8');
+  const shadowSource=worldShaderSource.match(/export const EVERCRAFT_SHADOW_DEPTH_WGSL=`([\s\S]*?)`;/);
+  if(!shadowSource)throw new Error('owned_shadow_shader_missing');
+  const raw=await renderGpuFrames(sequence.frames,geometries,textures,shader.source,shadowSource[1],out);
   const video=path.join(out,'orbital-foundry-synthetic-canary.mp4');
   // The music bed is a synthetic lab signal, not licensed commercial music.
   run('ffmpeg',['-hide_banner','-loglevel','error','-y',
@@ -395,6 +450,7 @@ async function main(){
   const receipt={
     schema:'evercraft.world-engine.cinematic-pixel-proof.v1',kind:'synthetic_internal_canary',
     worldDigest:sequence.worldDefinitionDigest,shaderSha256:shader.sha256,
+    shadowShaderSha256:sha(shadowSource[1]),shadowState:'depth_occlusion_real_gpu',
     textureAssetDigests:textures.map(asset=>({id:asset.id,digest:textureAssetDigest(asset)})),
     firstFramePlanDigest:sequence.frames[0].renderPlan.digest,
     lastFramePlanDigest:sequence.frames[sequence.frames.length-2].renderPlan.digest,
