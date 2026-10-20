@@ -154,14 +154,22 @@ export function compileTeachingCallouts(sequence:CinematicCameraSequence,
       if(previous&&(previous.x!==origin.x||previous.y!==origin.y))
         track.changingPositionFrames++;
       track.firstScreen??=origin;track.lastScreen=origin;previous=origin;
-      const x=clamp(origin.x+24,8,width-235),y=clamp(origin.y-45,14,height-62);
+      const fullLabel=(c.evidence==='modeled'?'MODEL: ':'FACT REVIEWED: ')+c.label;
+      // Conservative DejaVu Sans bold sizing for native 640x360 review.
+      // Prefer right-side label when it fits; otherwise flip to the left.
+      const estimatedWidth=Math.min(width-18,Math.ceil(fullLabel.length*9.1)+14);
+      const wouldOverflow=origin.x+24+estimatedWidth>width-10;
+      const desiredX=wouldOverflow?origin.x-estimatedWidth-24:origin.x+24;
+      const x=clamp(desiredX,8,width-estimatedWidth-8);
+      const y=clamp(origin.y-45,14,height-62);
+      const lineEndX=wouldOverflow?x+estimatedWidth-11:x;
       const cue=assTime(i/sequence.fps),end=assTime((i+1)/sequence.fps);
       // Both 3D-linked pointer and readable label follow projected scene
       // coordinates frame by frame; no software image recognition.
       lines.push('Dialogue: 0,'+cue+','+end+',Line,,0,0,0,,{\\an7\\pos(0,0)\\p1\\c&H00D9F6&}m '+
-        origin.x+' '+origin.y+' l '+x+' '+(y+11));
+        origin.x+' '+origin.y+' l '+lineEndX+' '+(y+11));
       lines.push('Dialogue: 2,'+cue+','+end+',Callout,,0,0,0,,{\\an7\\pos('+x+','+y+')}'+
-        (c.evidence==='modeled'?'MODEL: ':'FACT REVIEWED: ')+c.label);
+        fullLabel);
     }
     if(!track.visibleFrames)fail('callout_never_visible_'+c.id);
     tracks.push(track);
