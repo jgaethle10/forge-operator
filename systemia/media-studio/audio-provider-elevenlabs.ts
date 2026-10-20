@@ -279,13 +279,16 @@ export function createElevenLabsAudioAdapter(
       if(need.kind==='speech'&&need.durationSec!==undefined&&need.requires.includes('timing_control')){
         const sourcePath=outputBase+'.source.mp3';
         fs.writeFileSync(sourcePath,bytes);
+        // Governed takes keep an untouched dry take for subjective A/B review.
+        // A timing edit changes the acting, even when the words remain intact.
+        if(foundryPlan) fs.copyFileSync(sourcePath,outputBase+'.dry.mp3');
         const observed=probe(sourcePath);
         fitSpeechTiming({
           sourcePath,
           outputPath,
           observedDuration:observed,
           targetDuration:need.durationSec,
-          maxAdjustmentPct:maxSpeechTempoAdjustmentPct,
+          maxAdjustmentPct:foundryPlan?Math.min(maxSpeechTempoAdjustmentPct,8):maxSpeechTempoAdjustmentPct,
           runFfmpeg,
         });
       }else{
@@ -321,6 +324,9 @@ export function createElevenLabsAudioAdapter(
           'provider:elevenlabs',
           'provider-doc:'+DOCS[need.kind],
           ...(foundryPlan?['voice-foundry-preflight:'+foundryPlan.planDigest]:[]),
+          ...(foundryPlan&&fs.existsSync(outputBase+'.dry.mp3')
+            ? ['voice-foundry-dry-source-sha256:'+crypto.createHash('sha256').update(fs.readFileSync(outputBase+'.dry.mp3')).digest('hex')]
+            : []),
         ],
       };
     },
