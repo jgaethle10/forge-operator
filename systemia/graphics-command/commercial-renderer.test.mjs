@@ -13,6 +13,7 @@ import {
   renderCommercialMotion,
   buildCommercialCampaign,
 } from './commercial-renderer.mjs';
+import { commercialPosterLayout, assessCommercialComposition } from './commercial-layout-qa.mjs';
 
 const campaign=JSON.parse(fs.readFileSync(
   new URL('./campaigns/website-audit-attention.json',import.meta.url),
@@ -85,4 +86,41 @@ test('commercial builder emits complete campaign pack',()=>{
   assert.equal(built.manifest.assets.feed.endsWith('/poster-feed.svg'),true);
   assert.equal(built.manifest.offerUrl,'https://fabric.systemiacommandcenters.com/offers/website-audit');
   assert.equal(built.manifest.publicationAuthority,false);
+});
+
+test('wide campaign headline is complete and clears the browser illustration',()=>{
+  const layout=commercialPosterLayout(campaign,'hero-wide');
+  assert.equal(layout.hookLines.length,3);
+  assert.equal(layout.hookLines.join(' '),campaign.creative.hook);
+  const report=assessCommercialComposition(campaign,'hero-wide');
+  assert.equal(report.status,'pass',JSON.stringify(report.issues));
+  assert.equal(report.checks.text_clear_of_browser,true);
+  for(const format of ['feed','square','story','hero-wide']){
+    const result=assessCommercialComposition(campaign,format);
+    assert.equal(result.status,'pass',format+':'+result.issues.join(','));
+  }
+});
+
+test('oversized commercial headline rejects rather than silently truncating',()=>{
+  const tooLong=structuredClone(campaign);
+  tooLong.creative.hook='A HEADLINE THAT CANNOT FIT INTO THE ALLOWED SPATIAL COMPOSITION WITHOUT LOSING ITS CORE WORDS';
+  const report=assessCommercialComposition(tooLong,'hero-wide');
+  assert.equal(report.status,'reject');
+  assert.ok(report.issues.includes('headline_truncated'));
+});
+
+test('commercial build emits geometry QA and refuses to imply finished cinematic delivery',()=>{
+  const root=fs.mkdtempSync(path.join(os.tmpdir(),'evercraft-commercial-layout-'));
+  try{
+    const built=buildCommercialCampaign(campaign,{outputRoot:root,origin:'https://preview.invalid/visuals'});
+    assert.ok(Object.values(built.composition).every(x=>x.status==='pass'));
+    const outputDir=path.join(root,campaign.slug);
+    const report=JSON.parse(fs.readFileSync(path.join(outputDir,'composition-report.json'),'utf8'));
+    assert.equal(report.status,'pass');
+    assert.equal(built.manifest.deliveryState,'previsualization_only');
+    assert.equal(built.manifest.filmProductionStatus,'not_rendered');
+    assert.equal(built.manifest.verifiedShotMediaCount,0);
+    assert.equal(built.manifest.humanVisualApproval,false);
+    assert.equal(built.manifest.publicationAuthority,false);
+  }finally{fs.rmSync(root,{recursive:true,force:true});}
 });
