@@ -1,0 +1,18 @@
+import assert from 'node:assert/strict';
+import test from 'node:test';
+import { preflightVoiceFoundrySpeech } from '../systemia/media-studio/voice-foundry-bridge.mjs';
+const voice={id:'narrator-v1',identityVersion:'1',provider:'elevenlabs',providerVoiceId:'approved-voice',approval:'human_audition_approved',locales:['en-US','es-MX'],accents:['general-american','mexican-spanish'],rights:{status:'cleared',commercialUse:true,evidenceRef:'rights-ledger-001'}};
+const cue={id:'scene-001',speakerId:'narrator',voiceProfileId:'narrator-v1',text:'The evidence survived.',locale:'en-US',accent:'general-american',direction:'quiet confidence, natural pacing',maxDurationSec:4};
+const need={id:'scene-001',kind:'speech',speakerId:'narrator',voiceProfileId:'narrator-v1',prompt:cue.text,durationSec:3,language:'en',requires:['voice_profile','commercial_rights','provenance_receipt','timing_control']};
+const base=()=>({need:{...need},foundry:{profiles:[voice],cues:[cue]},configuredVoiceId:'approved-voice',provider:'elevenlabs',verified:true,commercialRights:'allowed'});
+const blocked=(args,fragment)=>assert.throws(()=>preflightVoiceFoundrySpeech(args),new RegExp(fragment));
+test('preflight permits an exact approved voice, correct locale and immutable line',()=>{const result=preflightVoiceFoundrySpeech(base());assert.equal(result.status,'ready_for_authorized_generation');assert.equal(result.languageCode,'en');assert.equal(result.qualityApproved,false);assert.equal(result.publicationAuthorityGranted,false);assert.equal(result.planDigest.length,64);});
+test('rejects a changed line without billing provider',()=>{const args=base();args.need.prompt='Different sentence.';blocked(args,'spoken_text_mismatch');});
+test('rejects a mismatched provider voice binding',()=>{const args=base();args.configuredVoiceId='unreviewed-voice';blocked(args,'configured_voice_id_mismatch');});
+test('rejects unsupported region and accent',()=>{const args=base();args.foundry.cues=[{...cue,locale:'en-GB',accent:'british-rp'}];blocked(args,'cast_not_approved');});
+test('rejects absent human approval and consent',()=>{const args=base();args.foundry.profiles=[{...voice,rights:{status:'unknown'}}];blocked(args,'cast_not_approved');});
+test('rejects provider capability or legal approval not verified',()=>{const args=base();args.verified=false;blocked(args,'provider_not_verified');const rights=base();rights.commercialRights='unknown';blocked(rights,'provider_commercial_rights_not_cleared');});
+test('rejects a missing or ambiguous speaker cue',()=>{const args=base();args.foundry.cues=[];blocked(args,'unique_cue_binding_missing');const duplicate=base();duplicate.foundry.cues=[cue,{...cue}];blocked(duplicate,'unique_cue_binding_missing');});
+test('rejects absent production governance requirements',()=>{const args=base();args.need.requires=['voice_profile'];blocked(args,'production_requirements_incomplete');});
+test('rejects language mismatch, accepts reviewed regional Spanish independently',()=>{const mismatch=base();mismatch.need.language='es';blocked(mismatch,'production_language_mismatch');const spanish=base();spanish.foundry.cues=[{...cue,locale:'es-MX',accent:'mexican-spanish'}];spanish.need.language='es';assert.equal(preflightVoiceFoundrySpeech(spanish).languageCode,'es');});
+test('rejects a time window larger than the approved cue',()=>{const args=base();args.need.durationSec=6;blocked(args,'cue_window_mismatch');});
