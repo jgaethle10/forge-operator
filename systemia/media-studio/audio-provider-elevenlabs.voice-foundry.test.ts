@@ -24,19 +24,20 @@ const need:ProductionNeed={
   continuityDigest:'locked-continuity',
   requires:['voice_profile','commercial_rights','provenance_receipt','timing_control'],status:'planned',
 };
-function rig(input?:{ profiles?:unknown[];cues?:unknown[]; allowPaidGeneration?:boolean; speechModelId?:string; commercialRights?:'allowed'|'unknown'|'denied' }){
+function rig(input?:{ profiles?:unknown[];cues?:unknown[]; allowPaidGeneration?:boolean; speechModelId?:string; commercialRights?:'allowed'|'unknown'|'denied'; sourceDurationSec?:number }){
   const calls:Array<{url:string;body:any}>=[];
   const raw=Buffer.from('FAKE-MP3-BYTES-FOR-UNIT-TEST');
+  const outputDir=fs.mkdtempSync(path.join(os.tmpdir(),'evercraft-voice-foundry-'));
   const adapter=createElevenLabsAudioAdapter({
     apiKey:'fake-unit-test-key',
-    outputDir:fs.mkdtempSync(path.join(os.tmpdir(),'evercraft-voice-foundry-')),
+    outputDir,
     verified:true,
     allowPaidGeneration:input?.allowPaidGeneration??true,
     commercialRights:input?.commercialRights??'allowed',
     speechModelId:input?.speechModelId??'eleven_v3',
     voiceProfiles:{'foundry-host':'voice-real'},
     voiceFoundry:{profiles:(input?.profiles??[profile]) as any,cues:(input?.cues??[cue]) as any},
-    probeDurationSec:()=>3,
+    probeDurationSec:(filePath)=>filePath.endsWith('.source.mp3')?(input?.sourceDurationSec??3):3,
     fetchImpl:(async(url:string,options:any)=>{
       calls.push({url,body:JSON.parse(options.body)});
       return {
@@ -46,7 +47,7 @@ function rig(input?:{ profiles?:unknown[];cues?:unknown[]; allowPaidGeneration?:
       };
     }) as any,
   });
-  return {adapter,calls};
+  return {adapter,calls,outputDir};
 }
 test('approved Foundry cue binds provider voice, base language, digest and keeps release unapproved',async()=>{
   const {adapter,calls}=rig();
@@ -95,4 +96,19 @@ test('explicit Eleven v4 audition pins model ID without silently changing the pr
   const legacy=rig();
   await legacy.adapter.execute(need);
   assert.equal(legacy.calls[0].body.model_id,'eleven_v3');
+});
+
+test('governed timing rejects a >8% stretch and preserves the unmodified generated take',async()=>{
+  const {adapter,calls,outputDir}=rig({sourceDurationSec:3.5});
+  await assert.rejects(()=>adapter.execute(need),/elevenlabs_speech_timing_out_of_bounds/);
+  assert.equal(calls.length,1,'provider response occurred, but quality rejected the generated take');
+  const dry=path.join(outputDir,'foundry-line.dry.mp3');
+  assert.equal(fs.readFileSync(dry,'utf8'),'FAKE-MP3-BYTES-FOR-UNIT-TEST');
+  assert.equal(fs.existsSync(path.join(outputDir,'foundry-line.mp3')),false);
+});
+test('approved unmodified dry speech carries original fingerprint for human listening comparison',async()=>{
+  const {adapter,outputDir}=rig();
+  const result=await adapter.execute(need);
+  assert.equal(fs.existsSync(path.join(outputDir,'foundry-line.dry.mp3')),true);
+  assert.match(result.sourceRefs.join(','),/voice-foundry-dry-source-sha256:[a-f0-9]{64}/);
 });
