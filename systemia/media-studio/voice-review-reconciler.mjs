@@ -20,7 +20,9 @@ const sameLocale=(a,b)=>{
  */
 export function reconcileVoiceAudition({report,drafts}){
  if(report?.schema!=='evercraft.voice-foundry.audition-report.v1'||
-   report.verdict!=='INTERNAL_AUDITION_ONLY'||!Array.isArray(report.candidates)||
+   report.verdict!=='INTERNAL_AUDITION_ONLY'||report.publicationAuthorityGranted!==false||
+   report.rightsAndConsentUnverified!==true||report.paidGenerationAuthorized!==false||
+   !Array.isArray(report.candidates)||
    report.candidates.length<2||report.candidates.length>20){
    throw new Error('voice_review_original_audition_report_required');
  }
@@ -49,8 +51,9 @@ export function reconcileVoiceAudition({report,drafts}){
      continue;
    }
    const reviewerId=draft.reviewerId.trim();
-   if(ids.has(reviewerId)){reasons.push('reviewers_not_independent');continue;}
-   ids.add(reviewerId);
+   const reviewKey=reviewerId.toLocaleLowerCase('en-US');
+   if(ids.has(reviewKey)){reasons.push('reviewers_not_independent');continue;}
+   ids.add(reviewKey);
    if(draft.reviews.length!==report.candidates.length){
      reasons.push('reviewer_did_not_score_every_candidate');
      continue;
