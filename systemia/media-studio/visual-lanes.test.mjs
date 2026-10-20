@@ -55,7 +55,7 @@ test('three actual review MP4 files with aspect variants, image previews and has
   assert.deepEqual(receipt.deliverables.map(x=>[x.width,x.height]),[
    [640,360],[480,480],[360,640]
   ]);
-  assert.ok(fs.readFileSync(path.join(output,'educational-1.txt'),'utf8').includes('ILLUSTRATIVE'));
+  assert.ok(fs.readFileSync(path.join(output,'educational-2.txt'),'utf8').includes('ILLUSTRATIVE'));
   assert.ok(fs.readFileSync(path.join(output,'commercial-2.txt'),'utf8').includes('NOT A CLIENT AD'));
   assert.equal(JSON.parse(fs.readFileSync(path.join(output,'receipt.json'))).gates.masterQcStillRequired,true);
  }finally{fs.rmSync(s.dir,{recursive:true,force:true})}
