@@ -128,7 +128,7 @@ export function planVoiceSession({profiles, cues, lexicon=[], previousCast=[]}) 
  * can attest to the specified locale/accent. Scores alone are not assertions
  * of quality: evidence is required and reviewers remain humans.
  */
-export function evaluateVoiceTake({plannedCue, take, reviews, signal, pacing}) {
+export function evaluateVoiceTake({plannedCue, take, reviews, signal, pacing, transcript}) {
   const reasons=[];
   if (!plannedCue || plannedCue.status!=='ready_for_authorized_generation') reasons.push('casting_plan_not_ready');
   if (!checkedString(take?.cueId) || take.cueId!==plannedCue?.cueId) reasons.push('take_cue_mismatch');
@@ -153,6 +153,12 @@ export function evaluateVoiceTake({plannedCue, take, reviews, signal, pacing}) {
   if (pacing?.audioDigest !== take?.artifactDigest) reasons.push('pacing_audio_digest_mismatch');
   if (!Number.isFinite(pacing?.durationSec) || !Number.isFinite(take?.durationSec) || Math.abs(pacing.durationSec-take.durationSec)>0.05) reasons.push('pacing_duration_mismatch');
   if (pacing?.status==='needs_human_rhythm_review' && (take?.pacingNotesReviewed!==true || !checkedString(take?.pacingReviewEvidenceRef))) reasons.push('pacing_warnings_need_editorial_acknowledgement');
+  if (transcript?.schema!=='evercraft.voice-foundry.transcript-audit.v1' || transcript?.status!=='candidate_text_match_needs_human_review') reasons.push('recognized_script_requires_review_or_correction');
+  if (transcript?.audioDigest!==take?.artifactDigest) reasons.push('transcript_audio_digest_mismatch');
+  if (transcript?.cueId!==plannedCue?.cueId) reasons.push('transcript_cue_mismatch');
+  if (!validLocale(transcript?.locale) || (validLocale(plannedCue?.locale)&&!eqLocale(transcript.locale,plannedCue.locale))) reasons.push('transcript_locale_mismatch');
+  if (!Number.isFinite(transcript?.wordErrorRate) || transcript.wordErrorRate>0.05) reasons.push('transcript_word_error_rate_unacceptable');
+  if (!checkedString(transcript?.evidenceDigest)) reasons.push('transcript_audit_evidence_missing');
   if (!Number.isFinite(take?.samplePeakDbFS) || take.samplePeakDbFS>=0) reasons.push('digital_clipping_or_peak_unmeasured');
   if (!Array.isArray(reviews) || reviews.length < 2) reasons.push('two_human_reviews_required');
   else {
@@ -179,6 +185,6 @@ export function evaluateVoiceTake({plannedCue, take, reviews, signal, pacing}) {
     reasons:[...new Set(reasons)],
     manualEditorialApprovalStillRequired:true,
     publicationAuthorityGranted:false,
-    reviewDigest:fingerprint({planDigest:plannedCue?.planDigest,take,reviews,signal,pacing}),
+    reviewDigest:fingerprint({planDigest:plannedCue?.planDigest,take,reviews,signal,pacing,transcript}),
   };
 }
