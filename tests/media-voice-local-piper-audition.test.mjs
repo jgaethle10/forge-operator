@@ -76,3 +76,10 @@ test('second model changing after approved hashes blocks entire batch before cre
  await assert.rejects(()=>buildLocalPiperAudition({plan:cfg,outputDir:dir}),/batch_runtime_digest_mismatch/);
  assert.deepEqual(fs.readdirSync(dir),[]);
 });
+
+test('invalid second-take pacing cannot leave a partly completed studio audition',async()=>{
+ const cfg=plan();cfg.candidates[1].lengthScale=1.9;
+ const dir=folder();
+ await assert.rejects(()=>buildLocalPiperAudition({plan:cfg,outputDir:dir}),/batch_candidate_parameter_invalid/);
+ assert.deepEqual(fs.readdirSync(dir),[]);
+});
