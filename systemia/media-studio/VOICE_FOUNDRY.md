@@ -191,3 +191,15 @@ node systemia/media-studio/voice-local-whisper.mjs \
 The command outputs a same-cue \`voice-asr-<cue>.json\` observation and a \`voice-asr-audit-<cue>.json\` report. Include the observation as a candidate's \`asrObservationPath\` within an audition folder to display its spoken-script accuracy. Exiting with status 2 means transcription ran but the word-level comparison was held; exiting with status 1 means an execution or validation error.
 
 **Honesty boundary:** no installed whisper.cpp binary or authentic model was available in the development runtime at authoring time, so the new regression tests invoke a clearly labeled test stub executable against **real FFmpeg-generated non-speech audio**. The tests validate subprocess arguments, deterministic hashes, model/binary drift protection, missing-resource holds and absence of false publication authority. The output of a stub is emphatically **not evidence that real spoken words were recognized**. A real model must be installed, run and independently audited before claiming any genuine ASR result. A transcript match from a real model still does not prove naturalness, emotional acting, phonetic pronunciation or commercial usage rights.
+
+## Push 11: first local neural TTS audition lane
+
+Voice Foundry has an executable, zero-cloud Piper-compatible generation lane, but no installed neural model has yet been run in the development environment.
+
+- voice-local-piper.mjs: creates one original WAV from an explicitly installed Piper executable, ONNX model and matching JSON config. Checks SHA-256 pins for all three files, exact model locale and speaker, declared license evidence, controlled pacing parameters and exclusive output files.
+- voice-local-piper-audition.mjs: preflights two to six casts, rights declarations, model/binary/config files and SHA pins, locale, speaker and generation settings BEFORE rendering the first take; creates separate WAVs and the existing blind offline Listening Room.
+- voice-local-piper-audition.example.json: intentionally unusable placeholders and rightsState unknown until the operator verifies model permissions and file digests. VOICE_LOCAL_PIPER.md is the hands-on guide.
+
+The Piper program and its eSpeak dependencies may carry commercial and redistribution obligations; voice models can have separate restrictive training-dataset licenses. A repository-level MIT label does not prove a particular model or generated voice is commercially cleared. No external network, paid API or model download occurs from these source modules.
+
+The regression tests use an explicitly fake Piper executable that creates real FFmpeg sine-wave WAVs. They verify actual subprocess invocation, matching hashes, portable audio rendering and fail-closed admission, NOT successful neural speech or cinematic acting. A licensed voice model must be installed and listened to before claims of a quality breakthrough.
