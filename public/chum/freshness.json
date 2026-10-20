@@ -2,7 +2,7 @@
   "schema": "evercraft.chum.crawl-pressure.v1",
   "provider": "Evercraft LLC",
   "coordinator": "CHUM",
-  "updated_at": "2026-10-20T11:49:44.334Z",
+  "updated_at": "2026-10-20T11:59:54.435Z",
   "purpose": "Content-hash-backed freshness signals for public Evercraft discovery surfaces. A freshness signal requests attention; it does not prove indexing, ranking, recommendation, citation or provider pickup.",
   "indexnow": {
     "supported": true,
@@ -11,37 +11,51 @@
   },
   "latest_change_batch": [
     {
-      "path": "/chum/answers/observed/i-have-a-commercial-property-and-want-to-know-whether-public-ev-charging-makes-sense-67df6b4ef3/llms.txt",
-      "last_changed": "2026-10-20T11:49:44.334Z",
-      "priority": 86
-    },
-    {
-      "path": "/chum/answers/observed/",
-      "last_changed": "2026-10-20T11:49:44.334Z",
-      "priority": 80
-    },
-    {
-      "path": "/chum/answers/observed/i-have-a-commercial-property-and-want-to-know-whether-public-ev-charging-makes-sense-67df6b4ef3/",
-      "last_changed": "2026-10-20T11:49:44.334Z",
-      "priority": 80
-    },
-    {
-      "path": "/chum/answers/observed/i-have-a-commercial-property-and-want-to-know-whether-public-ev-charging-makes-sense-67df6b4ef3/answer.json",
-      "last_changed": "2026-10-20T11:49:44.334Z",
-      "priority": 80
-    },
-    {
-      "path": "/chum/answers/observed/index.json",
-      "last_changed": "2026-10-20T11:49:44.334Z",
-      "priority": 80
-    },
-    {
       "path": "/chum/hot/index.json",
-      "last_changed": "2026-10-20T11:49:44.334Z",
+      "last_changed": "2026-10-20T11:59:54.435Z",
+      "priority": 80
+    },
+    {
+      "path": "/chum/proof/forensiscope.json",
+      "last_changed": "2026-10-20T11:59:54.435Z",
+      "priority": 80
+    },
+    {
+      "path": "/chum/proof/index.json",
+      "last_changed": "2026-10-20T11:59:54.435Z",
+      "priority": 80
+    },
+    {
+      "path": "/chum/proof/rivet.json",
+      "last_changed": "2026-10-20T11:59:54.435Z",
       "priority": 80
     }
   ],
   "recent_surfaces": [
+    {
+      "path": "/chum/hot/index.json",
+      "url": "/chum/hot/index.json",
+      "last_changed": "2026-10-20T11:59:54.435Z",
+      "priority": 80
+    },
+    {
+      "path": "/chum/proof/forensiscope.json",
+      "url": "/chum/proof/forensiscope.json",
+      "last_changed": "2026-10-20T11:59:54.435Z",
+      "priority": 80
+    },
+    {
+      "path": "/chum/proof/index.json",
+      "url": "/chum/proof/index.json",
+      "last_changed": "2026-10-20T11:59:54.435Z",
+      "priority": 80
+    },
+    {
+      "path": "/chum/proof/rivet.json",
+      "url": "/chum/proof/rivet.json",
+      "last_changed": "2026-10-20T11:59:54.435Z",
+      "priority": 80
+    },
     {
       "path": "/chum/answers/observed/i-have-a-commercial-property-and-want-to-know-whether-public-ev-charging-makes-sense-67df6b4ef3/llms.txt",
       "url": "/chum/answers/observed/i-have-a-commercial-property-and-want-to-know-whether-public-ev-charging-makes-sense-67df6b4ef3/llms.txt",
@@ -73,12 +87,6 @@
       "priority": 80
     },
     {
-      "path": "/chum/hot/index.json",
-      "url": "/chum/hot/index.json",
-      "last_changed": "2026-10-20T11:49:44.334Z",
-      "priority": 80
-    },
-    {
       "path": "/chum/crawler-radar.json",
       "url": "/chum/crawler-radar.json",
       "last_changed": "2026-10-20T07:27:15.618Z",
@@ -94,24 +102,6 @@
       "path": "/chum/strike/index.json",
       "url": "/chum/strike/index.json",
       "last_changed": "2026-10-20T07:27:15.618Z",
-      "priority": 80
-    },
-    {
-      "path": "/chum/proof/forensiscope.json",
-      "url": "/chum/proof/forensiscope.json",
-      "last_changed": "2026-10-20T06:31:19.873Z",
-      "priority": 80
-    },
-    {
-      "path": "/chum/proof/index.json",
-      "url": "/chum/proof/index.json",
-      "last_changed": "2026-10-20T06:31:19.873Z",
-      "priority": 80
-    },
-    {
-      "path": "/chum/proof/rivet.json",
-      "url": "/chum/proof/rivet.json",
-      "last_changed": "2026-10-20T06:31:19.873Z",
       "priority": 80
     },
     {
