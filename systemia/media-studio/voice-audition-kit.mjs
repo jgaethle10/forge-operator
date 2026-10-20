@@ -4,6 +4,7 @@ import crypto from 'node:crypto';
 import { fileURLToPath } from 'node:url';
 import { inspectVoiceSignal } from './voice-signal-inspector.mjs';
 import { inspectVoicePacing } from './voice-pacing.mjs';
+import { assessVoiceTranscript } from './voice-transcript-verifier.mjs';
 
 const currentDir=path.dirname(fileURLToPath(import.meta.url));
 const AUDIO_EXTENSIONS=new Set(['.wav','.mp3','.flac','.m4a','.ogg','.opus']);
