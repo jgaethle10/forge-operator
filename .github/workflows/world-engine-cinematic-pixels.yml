@@ -44,6 +44,8 @@ jobs:
           if(r.kind!=='synthetic_internal_canary'||r.output.codec!=='h264'
             ||r.output.audioCodec!=='aac'||r.output.fps!==24
             ||r.exactGpuReadbackFrames!==48||r.uniqueRawFrameDigests<3
+            ||r.shadowCounterfactualChangedPixels<300
+            ||r.shadowFilterChangedPixels<10
             ||r.publicationAuthority!==false||r.hardwareExecutionClaim!==false) process.exit(2);
           const s=fs.statSync(r.output.path);
           if(s.size<10000)process.exit(3);
@@ -63,5 +65,8 @@ jobs:
             ${{ runner.temp }}/evercraft-world-cinematic/opening.png
             ${{ runner.temp }}/evercraft-world-cinematic/middle.png
             ${{ runner.temp }}/evercraft-world-cinematic/closing.png
+            ${{ runner.temp }}/evercraft-world-cinematic/shadow-disabled-first-frame.png
+            ${{ runner.temp }}/evercraft-world-cinematic/shadow-enabled-first-frame.png
+            ${{ runner.temp }}/evercraft-world-cinematic/shadow-hard-first-frame.png
           if-no-files-found: error
           retention-days: 7

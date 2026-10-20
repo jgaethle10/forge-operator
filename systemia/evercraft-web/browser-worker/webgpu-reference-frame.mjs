@@ -135,6 +135,8 @@ async function executeReferenceFrame(page,shaderSource){
       entries:[
         {binding:0,visibility:GPUShaderStage.VERTEX|GPUShaderStage.FRAGMENT,buffer:{type:'uniform'}},
         {binding:1,visibility:GPUShaderStage.FRAGMENT,buffer:{type:'read-only-storage'}},
+        {binding:2,visibility:GPUShaderStage.FRAGMENT,texture:{sampleType:'depth'}},
+        {binding:3,visibility:GPUShaderStage.FRAGMENT,sampler:{type:'comparison'}},
       ],
     });
     const objectLayout=device.createBindGroupLayout({
@@ -200,6 +202,11 @@ async function executeReferenceFrame(page,shaderSource){
       0,0,0,0,
       0,0,0,0,
       0,0,0,0,
+      1,0,0,0,
+      0,1,0,0,
+      0,0,1,0,
+      0,0,0,1,
+      0,0,0,0,
     ]);
     const frameBuffer=device.createBuffer({
       size:frameValues.byteLength,
@@ -232,9 +239,10 @@ async function executeReferenceFrame(page,shaderSource){
       0,0,1,-1,
       0,0,0,0,
       1,0,0,0,
+      1,0,0,0,
     ]);
     const objectBuffer=device.createBuffer({
-      size:192,
+      size:objectValues.byteLength,
       usage:GPUBufferUsage.UNIFORM|GPUBufferUsage.COPY_DST,
     });
     device.queue.writeBuffer(objectBuffer,0,objectValues);
@@ -265,11 +273,18 @@ async function executeReferenceFrame(page,shaderSource){
       minFilter:'linear',
     });
 
+    const dummyShadow=device.createTexture({
+      size:[1,1,1],format:'depth32float',
+      usage:GPUTextureUsage.TEXTURE_BINDING|GPUTextureUsage.RENDER_ATTACHMENT,
+    });
+    const dummyComparison=device.createSampler({compare:'less-equal'});
     const frameBindGroup=device.createBindGroup({
       layout:frameLayout,
       entries:[
         {binding:0,resource:{buffer:frameBuffer}},
         {binding:1,resource:{buffer:lightBuffer}},
+        {binding:2,resource:dummyShadow.createView()},
+        {binding:3,resource:dummyComparison},
       ],
     });
     const objectBindGroup=device.createBindGroup({
@@ -388,6 +403,7 @@ async function executeReferenceFrame(page,shaderSource){
 
     vertexBuffer.destroy();
     fogReadback.destroy();
+    dummyShadow.destroy();
     frameBuffer.destroy();
     lightBuffer.destroy();
     objectBuffer.destroy();
