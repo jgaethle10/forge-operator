@@ -5,6 +5,7 @@ on:
     paths:
       - '.github/workflows/voice-model-shootout.yml'
       - 'systemia/media-studio/voice-model-shootout-ci.py'
+      - 'systemia/media-studio/voice-top3-scene-auditions.py'
   workflow_dispatch:
 
 permissions:
@@ -50,6 +51,22 @@ jobs:
           test "$(find neural-voice-shootout -maxdepth 1 -name '*.mp3' | wc -l)" -eq 6
           cp model/PIPER_MODEL_CARD.txt neural-voice-shootout/PIPER_MODEL_CARD.txt
           printf '%s\n'             'PRIVATE ENGINEERING COMPARISON ONLY: NO RIGHTS OR NATURALNESS CERTIFICATION.'             'Piper A/C LibriTTS model attribution: https://huggingface.co/rhasspy/piper-voices'             'Kokoro source/license: https://huggingface.co/hexgrad/Kokoro-82M (Apache 2.0, review voice/dataset provenance independently)'             > neural-voice-shootout/ATTRIBUTION_AND_LIMITS.txt
+      - name: Render three owner-selected voices across performance scenes
+        env:
+          HF_HUB_DISABLE_TELEMETRY: "1"
+        run: |
+          python systemia/media-studio/voice-top3-scene-auditions.py --verify-only
+          python systemia/media-studio/voice-top3-scene-auditions.py neural-top3-scenes
+          test -s neural-top3-scenes/index.html
+          test -s neural-top3-scenes/voice-scene-report.json
+          test "$(find neural-top3-scenes -maxdepth 1 -name '*.mp3' | wc -l)" -eq 9
+      - name: Upload top-three multi-scene voice auditions
+        uses: actions/upload-artifact@v4
+        with:
+          name: evercraft-top3-kokoro-scene-auditions
+          path: neural-top3-scenes/
+          retention-days: 7
+          if-no-files-found: error
       - name: Upload blind, playable model shootout
         uses: actions/upload-artifact@v4
         with:
