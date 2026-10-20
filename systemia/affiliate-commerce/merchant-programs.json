@@ -154,6 +154,34 @@
     "historical_application_evidence": true,
     "current_access_verified": false,
     "do_not_create_duplicate_account_before_checking": true,
-    "source": "Existing user's connected Gmail: 2025 and 2026 notification messages; no secrets or IDs stored."
+    "source": "Existing user's connected Gmail: 2025 and 2026 notification messages; no secrets or IDs stored.",
+    "historical_partner_outcomes": [
+      {
+        "merchant": "Home Depot",
+        "status": "declined",
+        "date": "2026-08-24",
+        "reason": "Publisher type/site traffic/promotional type/brand safety (generic merchant factors; exact decisive factor unknown)",
+        "reapply": "only after meaningful independent property and traffic change"
+      },
+      {
+        "merchant": "ERGO NEXT Insurance / NEXT Insurance",
+        "status": "declined",
+        "date_from_connected_email": "2025-02-07",
+        "screenshot_seen": "2026-10-20",
+        "reason": "No specific reason given",
+        "reapply": "do not reapply blindly"
+      }
+    ]
+  },
+  "publisher_identity_policy": {
+    "visible_corporate_brand": false,
+    "show_marketing_links_to_corporate": false,
+    "interim_host_origin": "github_pages_evercraft_owned_not_independent",
+    "interim_search_visibility": "noindex_until_independent_domain",
+    "operator_identity_visibility": "operator details disclosed to providers and legally where required, not misleadingly hidden",
+    "public_email": "not_configured",
+    "separate_social_accounts_required": true,
+    "adult_property_business": "fully isolated and not launched",
+    "next_step": "independent publisher domains, separate hosts/accounts as permitted, approved merchant enrollment"
   }
 }
