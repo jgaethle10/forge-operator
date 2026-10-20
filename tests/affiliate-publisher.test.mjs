@@ -17,10 +17,11 @@ test('all three shopping microsites have original browser-side calculators and m
   assert.match(page,/id="run"/);
   assert.match(page,/id="result"/);
   assert.match(page,/<script>/);
-  assert.match(page,/There are currently no approved commission-paying retailer links/);
+  assert.match(page,/There are no commission-paying retailer links on this page/);
   assert.match(page,/original|Original/);
   assert.match(page,/<link rel="canonical" href="https:\/\/jgaethle10.github.io\/forge-operator\/affiliate-labs\//);
-  assert.doesNotMatch(page,/(?:rivet|aliev|onlyfans|fansly|pornhub|nsfw)/i);
+  assert.doesNotMatch(page,/(?:rivet|aliev|onlyfans|fansly|pornhub|nsfw|evercraft|mailto:)/i);
+  assert.match(page,/content="noindex,follow"/);
   const script=page.match(/<script>([\s\S]*?)<\/script>/)?.[1];
   assert.ok(script?.length>200);
   assert.doesNotThrow(()=>new vm.Script(script,{filename:slug+'.js'}));
