@@ -1,0 +1,159 @@
+{
+  "schema": "evercraft.affiliate-commerce.program-registry.v1",
+  "generated_on": "2026-10-20",
+  "business_principle": "Actual commissions require publisher enrollment, separate per-merchant approval, approved tracking links, valid eligible purchase and payout receipt. Raw retailer URLs do not pay commissions.",
+  "registration_account_state": "historical_impact_publisher_applications_confirmed_via_connected_email_current_login_unverified",
+  "no_approved_tracking_links_on_file": true,
+  "measured_unique_visitors": null,
+  "earned_commissions_verified_usd": null,
+  "payouts_verified_usd": null,
+  "audience_partition_policy": {
+    "family_and_general": [
+      "pets",
+      "vehicle_parts",
+      "tools",
+      "sports",
+      "collectibles"
+    ],
+    "adult": [
+      "adult_products",
+      "age_restricted_entertainment"
+    ],
+    "strict_origin_isolation": true,
+    "strict_social_account_isolation": true,
+    "shared_affiliate_identifier_forbidden": true,
+    "cross_promotion_forbidden": true,
+    "adult_launch_status": "not_launched_compliance_hold",
+    "family_social_rule": "zero explicit, suggestive or sexual content or outbound links"
+  },
+  "public_safe_programs": [
+    {
+      "id": "petco",
+      "niche": "pets",
+      "program": "Petco affiliate",
+      "signup_url": "https://www.petco.com/affiliate",
+      "network_reported": "Impact",
+      "program_state": "not_applied_or_unverified",
+      "commission": "per current accepted agreement, not assumed",
+      "tracking_link": null,
+      "approved_site_refs": [],
+      "source_url": "https://www.petco.com/affiliate"
+    },
+    {
+      "id": "advance_auto",
+      "niche": "car_parts",
+      "program": "Advance Auto Parts affiliate",
+      "signup_url": "https://shop.advanceautoparts.com/o/affiliates",
+      "network_reported": "Impact",
+      "program_state": "not_applied_or_unverified",
+      "commission": "up to 10% advertised; subject to acceptance and terms",
+      "tracking_link": null,
+      "approved_site_refs": [],
+      "source_url": "https://shop.advanceautoparts.com/o/affiliates"
+    },
+    {
+      "id": "home_depot",
+      "niche": "tools",
+      "program": "The Home Depot affiliate",
+      "signup_url": "https://www.homedepot.com/c/SF_MS_The_Home_Depot_Affiliate_Program",
+      "network_reported": "Impact",
+      "program_state": "declined_2026_08_24",
+      "commission": "typically 1% on qualifying products, certain decor higher; see current agreement",
+      "tracking_link": null,
+      "approved_site_refs": [],
+      "source_url": "https://www.homedepot.com/c/SF_MS_Affiliate_Program_FAQs",
+      "decline_observation": "Merchant reported rejection factors publisher type, site traffic, promotional type, and brand safety; do not infer which individual factor was decisive.",
+      "next": "Do not immediately reapply; review publisher type, content and measurable traffic before requesting reconsideration."
+    },
+    {
+      "id": "lowes",
+      "niche": "tools",
+      "program": "Lowe's Creator",
+      "signup_url": "https://www.lowes.com/l/creator/joinlowescreator",
+      "network_reported": "Lowe's Creator Portal",
+      "program_state": "not_applied_or_unverified",
+      "commission": "up to 25% advertised for eligible category; requires qualification",
+      "tracking_link": null,
+      "approved_site_refs": [],
+      "source_url": "https://www.lowes.com/l/creator/joinlowescreator"
+    },
+    {
+      "id": "ebay_partner_network",
+      "niche": "collectibles_and_parts",
+      "program": "eBay Partner Network",
+      "signup_url": "https://partnernetwork.ebay.com/",
+      "network_reported": "eBay Partner Network",
+      "program_state": "not_applied_or_unverified",
+      "commission": "category-specific; eBay published up to 4% on eligible other-item purchases, subject to rules",
+      "tracking_link": null,
+      "approved_site_refs": [],
+      "special_gates": [
+        "AI tools and paid traffic may require prior written approval",
+        "no eBay affiliate links inside eBay listings or messages",
+        "payout monthly not immediate"
+      ],
+      "source_url": "https://www.ebay.com/sellercenter/growth/ebay-partner-network"
+    }
+  ],
+  "private_adult_programs": [
+    {
+      "id": "lovehoney",
+      "niche": "adult_products",
+      "program": "Lovehoney affiliate",
+      "signup_url": "https://help.lovehoney.com/affiliates.html",
+      "network_reported": "Impact",
+      "program_state": "not_applied_or_unverified",
+      "commission": "up to 22% advertised in US; actual contract controls",
+      "tracking_link": null,
+      "approved_site_refs": [],
+      "source_url": "https://help.lovehoney.com/affiliates.html"
+    },
+    {
+      "id": "shevibe",
+      "niche": "adult_products",
+      "program": "SheVibe affiliate",
+      "signup_url": "https://shevibe.com/pages/affiliate-program",
+      "network_reported": "Impact",
+      "program_state": "not_applied_or_unverified",
+      "commission": "10% advertised; qualified sales only",
+      "tracking_link": null,
+      "approved_site_refs": [],
+      "source_url": "https://shevibe.com/pages/affiliate-program"
+    }
+  ],
+  "application_gates": [
+    "human-approved-publisher-identity-and-business-details",
+    "approved_destination_property",
+    "merchant_specific_agreement",
+    "tax_and_payout_information_in_provider_not_github",
+    "provider_generated_tracking_link",
+    "clear_near_link_affiliate_disclosure",
+    "rel_sponsored",
+    "settlement_receipts"
+  ],
+  "adult_special_gates": [
+    "wholly_separate_brand_domain_and_social_accounts",
+    "adult_compliant_host_and_ad_network",
+    "rights_and_consent_of_all_performers_and_content",
+    "applicable_jurisdiction_age_verification_and_privacy",
+    "platform_permission_for_ai_generated_adult_content_if_used",
+    "qualified_legal_and_payment_review"
+  ],
+  "success_ladder": [
+    "site_online",
+    "organic_visitor_verified",
+    "merchant_application_submitted",
+    "merchant_approved",
+    "tracked_link_enabled",
+    "eligible_sale_recorded",
+    "commission_locked",
+    "payout_received"
+  ],
+  "account_context": {
+    "network": "Impact",
+    "historical_application_evidence": true,
+    "current_access_verified": false,
+    "do_not_create_duplicate_account_before_checking": true,
+    "source": "Existing user's connected Gmail: 2025 and 2026 notification messages; no secrets or IDs stored."
+  }
+}
