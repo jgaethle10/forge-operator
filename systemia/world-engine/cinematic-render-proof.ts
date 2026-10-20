@@ -79,7 +79,7 @@ function industrialWorld():WorldDefinition{
       initialCameraEntityId:'cinema-camera',
       clearColor:{r:.018,g:.038,b:.085},
       atmosphere:{color:{r:.14,g:.25,b:.38},density:.048,startDistance:4,heightFalloff:.065,referenceHeight:0},
-      colorManagement:{toneMapper:'aces_filmic',exposureBiasStops:-0.65},
+      colorManagement:{toneMapper:'aces_filmic',exposureBiasStops:0.35},
       cinematicLighting:{shading:'ggx_microfacet',localLightFalloff:'inverse_square'},
       materials:[
         material('floor',[.08,.14,.20],.25,.85),
@@ -126,13 +126,13 @@ function industrialWorld():WorldDefinition{
       box('light-frame-left',-2.8,2.2,0,.08,2.15,.08,'structure'),
       box('light-frame-right',2.8,2.2,0,.08,2.15,.08,'structure'),
       {id:'ambient',transform:{position:{x:0,y:0,z:0}},
-        light:{type:'ambient',color:{r:.35,g:.52,b:.72},intensity:.42}},
+        light:{type:'ambient',color:{r:.35,g:.52,b:.72},intensity:2.2}},
       {id:'sun',transform:{position:{x:-8,y:12,z:1},rotationDeg:{x:32,y:-25,z:0}},
-        light:{type:'directional',color:{r:.65,g:.78,b:1},intensity:2.7}},
+        light:{type:'directional',color:{r:.65,g:.78,b:1},intensity:4.2}},
       {id:'warm',transform:{position:{x:2,y:4,z:3}},
-        light:{type:'point',color:{r:1,g:.48,b:.14},intensity:13,range:12}},
+        light:{type:'point',color:{r:1,g:.48,b:.14},intensity:95,range:12}},
       {id:'rim',transform:{position:{x:-4,y:6,z:-2}},
-        light:{type:'point',color:{r:.24,g:.58,b:1},intensity:12,range:15}}
+        light:{type:'point',color:{r:.24,g:.58,b:1},intensity:85,range:15}}
     ]
   };
 }
