@@ -2,6 +2,7 @@ import crypto from 'node:crypto';
 import type {
   CameraProjection,
   AtmosphereDefinition,
+  FilmicColorManagement,
   ColorRGB,
   LightComponent,
   MaterialDefinition,
@@ -96,6 +97,7 @@ export interface WebGpuRenderPlan {
   height:number;
   clearColor:ColorRGB;
   atmosphere?:AtmosphereDefinition;
+  colorManagement?:FilmicColorManagement;
   viewMatrix:number[];
   projectionMatrix:number[];
   viewProjectionMatrix:number[];
@@ -599,6 +601,7 @@ export function compileWebGpuRenderPlan(
     height:viewport.height,
     clearColor:clone(frame.clearColor),
     ...(frame.atmosphere?{atmosphere:clone(frame.atmosphere)}:{}),
+    ...(frame.colorManagement?{colorManagement:clone(frame.colorManagement)}:{}),
     viewMatrix,
     projectionMatrix,
     viewProjectionMatrix,
@@ -677,7 +680,9 @@ function frameUniformData(plan:WebGpuRenderPlan){
     plan.cameraPosition[0],plan.cameraPosition[1],plan.cameraPosition[2],plan.exposure,
     plan.lights.length,0,0,0,
     fog?.color.r??0,fog?.color.g??0,fog?.color.b??0,fog?.density??0,
-    fog?.startDistance??0,fog?.heightFalloff??0,fog?.referenceHeight??0,0
+    fog?.startDistance??0,fog?.heightFalloff??0,fog?.referenceHeight??0,0,
+    plan.colorManagement?.toneMapper==='aces_filmic'?1:0,
+    plan.colorManagement?.exposureBiasStops??0,0,0
   ]);
 }
 
@@ -688,6 +693,7 @@ struct FrameUniforms {
   lightMeta: vec4<f32>,
   fogColorDensity: vec4<f32>,
   fogParams: vec4<f32>,
+  gradeParams: vec4<f32>,
 };
 
 struct ObjectUniforms {
@@ -754,6 +760,15 @@ fn applyAtmosphericDepth(lit: vec3<f32>, worldPosition: vec3<f32>) -> vec3<f32> 
   let effectiveDensity = density * exp(-frame.fogParams.y * altitude);
   let transmittance = clamp(exp(-effectiveDensity * distance), 0.0, 1.0);
   return mix(frame.fogColorDensity.rgb, lit, transmittance);
+}
+
+// Compact ACES approximation: bounded highlights with gentle shoulder roll-off.
+fn applyFilmicGrade(linearColor: vec3<f32>) -> vec3<f32> {
+  if (frame.gradeParams.x < 0.5) { return linearColor; }
+  let x=max(linearColor * exp2(frame.gradeParams.y),vec3<f32>(0.0));
+  let numerator=x*(2.51*x+vec3<f32>(0.03));
+  let denominator=x*(2.43*x+vec3<f32>(0.59))+vec3<f32>(0.14);
+  return clamp(numerator/denominator,vec3<f32>(0.0),vec3<f32>(1.0));
 }
 
 @fragment
@@ -854,7 +869,7 @@ fn fs_main(input: VertexOut) -> @location(0) vec4<f32> {
 
   let diffuse=base.rgb*lighting*mix(1.0,0.25,metallic);
   let color=(diffuse+specular+emissive)*frame.cameraExposure.w;
-  return vec4<f32>(applyAtmosphericDepth(color,input.worldPosition),base.a);
+  return vec4<f32>(applyFilmicGrade(applyAtmosphericDepth(color,input.worldPosition)),base.a);
 }
 `;
 
