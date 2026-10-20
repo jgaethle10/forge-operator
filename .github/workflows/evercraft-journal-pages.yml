@@ -39,6 +39,10 @@ jobs:
         with:
           node-version: 22
 
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
       - name: Prove public URL fabric
         run: |
           npm run test:chum-public-origin
@@ -103,6 +107,14 @@ jobs:
           rm -rf _public_pages
           mkdir -p _public_pages
           cp -R public/. _public_pages/
+          # Native image assets matter: Facebook/LinkedIn preview cards generally
+          # require PNG/JPEG rather than SVG-only Open Graph references.
+          python -m pip install --quiet --disable-pip-version-check cairosvg==2.8.2
+          python systemia/clip/build-audience-social-previews.py \
+            --source public/clip/audience-sites \
+            --destination _public_pages/clip/audience-sites
+          test -s _public_pages/clip/audience-sites/partscout/feed.png
+          test -s _public_pages/clip/audience-sites/relay-notes/story.png
           rm -rf _public_pages/journal
           if node systemia/newsroom/journal-publisher.mjs systemia/newsroom/stories _public_pages/journal; then
             echo "Journal included in Pages fallback."
@@ -233,6 +245,18 @@ jobs:
           printf '%s' "$visual_body" | grep -q 'Washington'
           motion="${base%/}/visuals/washington-active-volcanoes/motion.html"
           curl --fail --silent --show-error --retry 8 --retry-all-errors --retry-delay 2 "$motion" | grep -q "__evercraftRenderAt"
+          # Confirm real browser-supported social previews exist after deployment.
+          preview="${base%/}/clip/audience-sites/partscout/feed.png"
+          curl --fail --silent --show-error --retry 8 --retry-all-errors \
+            --retry-delay 2 "$preview" -o /tmp/evercraft-clip-preview.png
+          python - <<'PY'
+          from pathlib import Path
+          import struct
+          payload=Path('/tmp/evercraft-clip-preview.png').read_bytes()
+          assert payload[:8]==bytes.fromhex('89504e470d0a1a0a'), 'not a real PNG'
+          assert struct.unpack('>II',payload[16:24])==(1080,1350),'wrong size'
+          print('CLIP_SOCIAL_PREVIEW_HTTP_VERIFIED')
+          PY
           rescue="${base%/}/site-status/roman/"
           rescue_body="$(curl --fail --silent --show-error --retry 8 --retry-all-errors --retry-delay 2 "$rescue")"
           printf '%s' "$rescue_body" | grep -q 'Copy working link'
