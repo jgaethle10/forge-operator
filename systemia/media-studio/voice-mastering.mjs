@@ -5,7 +5,8 @@ import {inspectVoiceSignal} from './voice-signal-inspector.mjs';
 
 const SCHEMA='evercraft.voice-foundry.mastering.v1';
 const VOICE_CHAIN='highpass=f=65,acompressor=threshold=0.09:ratio=1.6:attack=14:release=160';
-const LOUDNESS='I=-16:TP=-1.5:LRA=9';
+// Render with 0.2 dBTP safety headroom; the admission ceiling stays -1.5 dBTP.
+const LOUDNESS='I=-16:TP=-1.7:LRA=9';
 function execFfmpeg(args){
   const result=spawnSync('ffmpeg',args,{encoding:'utf8',timeout:120000,maxBuffer:16*1024*1024});
   if(result.error) throw new Error('voice_mastering_ffmpeg_error:'+result.error.message);
