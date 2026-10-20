@@ -16,6 +16,13 @@ export type MaterialAlphaMode='opaque'|'mask'|'blend';
 
 // Optional scene-directed filmic tone mapping. Omission preserves exact legacy pixels.
 // Opt-in physically-motivated direct lighting. No change to legacy scene pixels.
+export interface DirectionalShadowDefinition {
+  directionalLightEntityId:string;
+  focus:Vec3;
+  halfExtent:number;
+  resolution:256|512|1024;
+  depthBias:number;
+}
 export interface CinematicLightingDefinition {
   shading:'legacy_phong'|'ggx_microfacet';
   localLightFalloff?:'legacy_linear'|'inverse_square';
@@ -129,6 +136,7 @@ export interface VisualSceneDefinition {
   atmosphere?:AtmosphereDefinition;
   colorManagement?:FilmicColorManagement;
   cinematicLighting?:CinematicLightingDefinition;
+  directionalShadows?:DirectionalShadowDefinition;
 }
 
 export interface CameraTransitionRuntime {
@@ -171,6 +179,7 @@ export interface VisualFrameContract {
   atmosphere?:AtmosphereDefinition;
   colorManagement?:FilmicColorManagement;
   cinematicLighting?:CinematicLightingDefinition;
+  directionalShadows?:DirectionalShadowDefinition;
   materials:MaterialDefinition[];
   renderables:Array<{
     entityId:string;
@@ -230,6 +239,22 @@ function validateLayerMask(value:number|undefined,label:string){
   }
 }
 
+export function validateDirectionalShadows(spec:DirectionalShadowDefinition){
+  if(!spec || typeof spec.directionalLightEntityId!=='string' ||
+    !/^[a-zA-Z0-9][a-zA-Z0-9._:/-]{0,127}$/.test(spec.directionalLightEntityId)){
+    throw new Error('visual_shadow_light_id_invalid');
+  }
+  for(const axis of ['x','y','z'] as const){
+    finite(spec.focus?.[axis],'shadow_focus_'+axis);
+    if(Math.abs(spec.focus[axis])>100000)throw new Error('visual_shadow_focus_out_of_range');
+  }
+  finite(spec.halfExtent,'shadow_half_extent');
+  if(spec.halfExtent<2||spec.halfExtent>100)throw new Error('visual_shadow_extent_out_of_range');
+  if(![256,512,1024].includes(spec.resolution))throw new Error('visual_shadow_resolution_invalid');
+  finite(spec.depthBias,'shadow_depth_bias');
+  if(spec.depthBias<0.0001||spec.depthBias>0.025)throw new Error('visual_shadow_depth_bias_out_of_range');
+  return true;
+}
 export function validateCinematicLighting(spec:CinematicLightingDefinition){
   if(!spec || !['legacy_phong','ggx_microfacet'].includes(spec.shading)){
     throw new Error('visual_cinematic_lighting_shading_invalid');
@@ -411,6 +436,7 @@ export function validateVisualScene(scene:VisualSceneDefinition,entities:WorldEn
   if(scene.atmosphere) validateAtmosphere(scene.atmosphere);
   if(scene.colorManagement) validateColorManagement(scene.colorManagement);
   if(scene.cinematicLighting) validateCinematicLighting(scene.cinematicLighting);
+  if(scene.directionalShadows) validateDirectionalShadows(scene.directionalShadows);
   if(!entityMap.size) throw new Error('visual_scene_entities_missing');
   return true;
 }
@@ -637,6 +663,7 @@ export function compileVisualFrame(
     ...(scene.atmosphere?{atmosphere:clone(scene.atmosphere)}:{}),
     ...(scene.colorManagement?{colorManagement:clone(scene.colorManagement)}:{}),
     ...(scene.cinematicLighting?{cinematicLighting:clone(scene.cinematicLighting)}:{}),
+    ...(scene.directionalShadows?{directionalShadows:clone(scene.directionalShadows)}:{}),
     materials:[...(scene.materials || [])].sort((a,b)=>a.id.localeCompare(b.id)).map(clone),
     renderables,
     lights
