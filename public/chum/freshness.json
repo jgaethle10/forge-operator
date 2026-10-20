@@ -2,7 +2,7 @@
   "schema": "evercraft.chum.crawl-pressure.v1",
   "provider": "Evercraft LLC",
   "coordinator": "CHUM",
-  "updated_at": "2026-10-20T11:45:18.527Z",
+  "updated_at": "2026-10-20T11:49:44.334Z",
   "purpose": "Content-hash-backed freshness signals for public Evercraft discovery surfaces. A freshness signal requests attention; it does not prove indexing, ranking, recommendation, citation or provider pickup.",
   "indexnow": {
     "supported": true,
@@ -11,16 +11,71 @@
   },
   "latest_change_batch": [
     {
+      "path": "/chum/answers/observed/i-have-a-commercial-property-and-want-to-know-whether-public-ev-charging-makes-sense-67df6b4ef3/llms.txt",
+      "last_changed": "2026-10-20T11:49:44.334Z",
+      "priority": 86
+    },
+    {
+      "path": "/chum/answers/observed/",
+      "last_changed": "2026-10-20T11:49:44.334Z",
+      "priority": 80
+    },
+    {
+      "path": "/chum/answers/observed/i-have-a-commercial-property-and-want-to-know-whether-public-ev-charging-makes-sense-67df6b4ef3/",
+      "last_changed": "2026-10-20T11:49:44.334Z",
+      "priority": 80
+    },
+    {
+      "path": "/chum/answers/observed/i-have-a-commercial-property-and-want-to-know-whether-public-ev-charging-makes-sense-67df6b4ef3/answer.json",
+      "last_changed": "2026-10-20T11:49:44.334Z",
+      "priority": 80
+    },
+    {
+      "path": "/chum/answers/observed/index.json",
+      "last_changed": "2026-10-20T11:49:44.334Z",
+      "priority": 80
+    },
+    {
       "path": "/chum/hot/index.json",
-      "last_changed": "2026-10-20T11:45:18.527Z",
+      "last_changed": "2026-10-20T11:49:44.334Z",
       "priority": 80
     }
   ],
   "recent_surfaces": [
     {
+      "path": "/chum/answers/observed/i-have-a-commercial-property-and-want-to-know-whether-public-ev-charging-makes-sense-67df6b4ef3/llms.txt",
+      "url": "/chum/answers/observed/i-have-a-commercial-property-and-want-to-know-whether-public-ev-charging-makes-sense-67df6b4ef3/llms.txt",
+      "last_changed": "2026-10-20T11:49:44.334Z",
+      "priority": 86
+    },
+    {
+      "path": "/chum/answers/observed/",
+      "url": "/chum/answers/observed/",
+      "last_changed": "2026-10-20T11:49:44.334Z",
+      "priority": 80
+    },
+    {
+      "path": "/chum/answers/observed/i-have-a-commercial-property-and-want-to-know-whether-public-ev-charging-makes-sense-67df6b4ef3/",
+      "url": "/chum/answers/observed/i-have-a-commercial-property-and-want-to-know-whether-public-ev-charging-makes-sense-67df6b4ef3/",
+      "last_changed": "2026-10-20T11:49:44.334Z",
+      "priority": 80
+    },
+    {
+      "path": "/chum/answers/observed/i-have-a-commercial-property-and-want-to-know-whether-public-ev-charging-makes-sense-67df6b4ef3/answer.json",
+      "url": "/chum/answers/observed/i-have-a-commercial-property-and-want-to-know-whether-public-ev-charging-makes-sense-67df6b4ef3/answer.json",
+      "last_changed": "2026-10-20T11:49:44.334Z",
+      "priority": 80
+    },
+    {
+      "path": "/chum/answers/observed/index.json",
+      "url": "/chum/answers/observed/index.json",
+      "last_changed": "2026-10-20T11:49:44.334Z",
+      "priority": 80
+    },
+    {
       "path": "/chum/hot/index.json",
       "url": "/chum/hot/index.json",
-      "last_changed": "2026-10-20T11:45:18.527Z",
+      "last_changed": "2026-10-20T11:49:44.334Z",
       "priority": 80
     },
     {
@@ -1484,36 +1539,6 @@
     {
       "path": "/chum/answers/doors/digital-twin-for-earthmoving-operations-667e0c16aa/",
       "url": "/chum/answers/doors/digital-twin-for-earthmoving-operations-667e0c16aa/",
-      "last_changed": "2026-10-07T02:56:26.782Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/digital-twin-for-quarry-or-earthmoving-operations-56520749be.json",
-      "url": "/chum/answers/doors/digital-twin-for-quarry-or-earthmoving-operations-56520749be.json",
-      "last_changed": "2026-10-07T02:56:26.782Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/digital-twin-for-quarry-or-earthmoving-operations-56520749be/",
-      "url": "/chum/answers/doors/digital-twin-for-quarry-or-earthmoving-operations-56520749be/",
-      "last_changed": "2026-10-07T02:56:26.782Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/evaluate-automation-for-landfill-bulk-material-or-civil-earthwork-operations-8a6ed5d6f7.json",
-      "url": "/chum/answers/doors/evaluate-automation-for-landfill-bulk-material-or-civil-earthwork-operations-8a6ed5d6f7.json",
-      "last_changed": "2026-10-07T02:56:26.782Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/evaluate-automation-for-landfill-bulk-material-or-civil-earthwork-operations-8a6ed5d6f7/",
-      "url": "/chum/answers/doors/evaluate-automation-for-landfill-bulk-material-or-civil-earthwork-operations-8a6ed5d6f7/",
-      "last_changed": "2026-10-07T02:56:26.782Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/figure-out-what-part-of-my-dirt-operation-is-worth-automating-5bb898e581.json",
-      "url": "/chum/answers/doors/figure-out-what-part-of-my-dirt-operation-is-worth-automating-5bb898e581.json",
       "last_changed": "2026-10-07T02:56:26.782Z",
       "priority": 100
     }

@@ -2,8 +2,8 @@
   "schema": "evercraft.chum.crawl-state.v1",
   "provider": "Evercraft LLC",
   "coordinator": "CHUM",
-  "updated_at": "2026-10-20T11:45:18.527Z",
-  "url_count": 2984,
+  "updated_at": "2026-10-20T11:49:44.334Z",
+  "url_count": 2987,
   "doctrine": {
     "crawl_can_be_requested_not_forced": true,
     "content_hash_controls_freshness": true,
@@ -123,14 +123,14 @@
     },
     "/chum/answers/observed/": {
       "path": "/chum/answers/observed/",
-      "content_sha256": "07999cbcbb49a6d214cc76dde0a5d2ab2fa0cfc415fb8bbce87843df3de74fd7",
-      "last_changed": "2026-10-07T00:56:03.369Z",
+      "content_sha256": "8d0a39b79205a12f76dc73ac468a6ea933601ca316f263f0abea940b9b8f8d76",
+      "last_changed": "2026-10-20T11:49:44.334Z",
       "priority": 80
     },
     "/chum/answers/observed/index.json": {
       "path": "/chum/answers/observed/index.json",
-      "content_sha256": "71abe6d6949ac26ef0b6cd1d8736d93f8f74ba77e6cb1d0137b31ed3f10a25d7",
-      "last_changed": "2026-10-07T00:56:03.369Z",
+      "content_sha256": "5d064006f5de2bb97e4d8b7fca7bc6cf6a99ae9d8cd493389945629b307c5d53",
+      "last_changed": "2026-10-20T11:49:44.334Z",
       "priority": 80
     },
     "/chum/hot/": {
@@ -141,8 +141,8 @@
     },
     "/chum/hot/index.json": {
       "path": "/chum/hot/index.json",
-      "content_sha256": "7944707bfe146cdf6b60e2c4c8ee9700d895926022725778ef60a9ccc304da2d",
-      "last_changed": "2026-10-20T11:45:18.527Z",
+      "content_sha256": "f5639f97446fb73332529c14bdba31f7a17d97e37c35b24f8ae0f298ec0b1fa0",
+      "last_changed": "2026-10-20T11:49:44.334Z",
       "priority": 80
     },
     "/chum/strike/": {
@@ -4217,6 +4217,24 @@
       "path": "/chum/answers/observed/i-am-thinking-about-starting-a-business-and-want-to-test-the-operating-and-cash-flow-9bfb09d8b7/llms.txt",
       "content_sha256": "274fdadd6cf5047d090740a1137082290d9e4d7222c1128736acdc72416a1e94",
       "last_changed": "2026-09-27T06:03:00.949Z",
+      "priority": 86
+    },
+    "/chum/answers/observed/i-have-a-commercial-property-and-want-to-know-whether-public-ev-charging-makes-sense-67df6b4ef3/": {
+      "path": "/chum/answers/observed/i-have-a-commercial-property-and-want-to-know-whether-public-ev-charging-makes-sense-67df6b4ef3/",
+      "content_sha256": "fbdf71b1a5003e6c8150f7ddcea0af5bec3493b578a82315e9628a3892fd1bda",
+      "last_changed": "2026-10-20T11:49:44.334Z",
+      "priority": 80
+    },
+    "/chum/answers/observed/i-have-a-commercial-property-and-want-to-know-whether-public-ev-charging-makes-sense-67df6b4ef3/answer.json": {
+      "path": "/chum/answers/observed/i-have-a-commercial-property-and-want-to-know-whether-public-ev-charging-makes-sense-67df6b4ef3/answer.json",
+      "content_sha256": "c3a408b3eca5b986f7aeef56e47caaa9ac244310077f2f31300fe0f5780820c1",
+      "last_changed": "2026-10-20T11:49:44.334Z",
+      "priority": 80
+    },
+    "/chum/answers/observed/i-have-a-commercial-property-and-want-to-know-whether-public-ev-charging-makes-sense-67df6b4ef3/llms.txt": {
+      "path": "/chum/answers/observed/i-have-a-commercial-property-and-want-to-know-whether-public-ev-charging-makes-sense-67df6b4ef3/llms.txt",
+      "content_sha256": "0d628bbcde40c7aa35570123b413d12dac5301cdb2f989598d9098b4f703551e",
+      "last_changed": "2026-10-20T11:49:44.334Z",
       "priority": 86
     },
     "/chum/answers/observed/i-have-a-multi-gigabyte-video-file-that-keeps-hitting-upload-or-context-limits-in-no-de628c2a95/": {

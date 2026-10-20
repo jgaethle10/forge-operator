@@ -1,0 +1,88 @@
+{
+  "schema": "evercraft.provider-observation.v1",
+  "observed_at": "2026-10-20T11:48:02.342Z",
+  "provider": "generic_agent",
+  "provider_surface": "machine_client",
+  "product_key": "aliev",
+  "source": "authorized_provider_probe",
+  "case_id": "ev-property-001",
+  "prompt": "I have a commercial property and want to know whether public EV charging makes sense there. I need nearby charger competition, traffic and demand context, utility and tariff considerations, incentives, and an opportunity screen before engineering. What service should I use?",
+  "surfaced_expected_product": false,
+  "surfaced_product": false,
+  "notable_gap": "Authorized brand-blind provider probe completed without surfacing the expected AliEV capability.",
+  "interpretation": "Negative pickup receipt. This is evidence of a discovery miss only, not a product-quality judgment or provider endorsement of alternatives.",
+  "evidence_state": "provider_receipt_hashed",
+  "semantic_miss_key_sha256": "3c071307fbc1b34064237a433143459aef3b74b9f0802541ef9bf9ccaf328a76",
+  "provider_receipt_sha256": "011799c712261f41afe4dc4483f3b58c559922e18a8ad44bd5e83e73a07648da",
+  "response_sha256": "8bc82e0fce54cc7225d255cc9c4c7e361855a887ef9366dc3076d861e31331bf",
+  "probe_id": "ev-property-001:generic_agent",
+  "intent_fingerprint": {
+    "normalized_prompt_sha256": "abf5d316fe0eae7c52d843a4e5c0b2a86e772b36c5b9e9e06bc2ba4b9f54b949",
+    "tokens": [
+      "commercial",
+      "property",
+      "know",
+      "whether",
+      "public",
+      "ev",
+      "charg",
+      "make",
+      "sense",
+      "there",
+      "nearby",
+      "charger",
+      "competition",
+      "traffic",
+      "demand",
+      "context",
+      "utility",
+      "tariff",
+      "consideration",
+      "incentiv",
+      "opportunity",
+      "screen",
+      "before",
+      "engineer",
+      "service"
+    ],
+    "concepts": [
+      "ev",
+      "property",
+      "competition",
+      "demand",
+      "tariff",
+      "incentive"
+    ],
+    "concept_evidence": [
+      {
+        "concept": "ev",
+        "evidence": "ev charging"
+      },
+      {
+        "concept": "property",
+        "evidence": "commercial property"
+      },
+      {
+        "concept": "competition",
+        "evidence": "competition"
+      },
+      {
+        "concept": "demand",
+        "evidence": "traffic"
+      },
+      {
+        "concept": "tariff",
+        "evidence": "tariff"
+      },
+      {
+        "concept": "incentive",
+        "evidence": "incentives"
+      }
+    ]
+  },
+  "privacy": {
+    "full_provider_response_persisted": false,
+    "provider_session_reference_persisted": false,
+    "credentials_persisted": false
+  }
+}
