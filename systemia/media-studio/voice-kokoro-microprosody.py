@@ -10,8 +10,6 @@ import subprocess
 import sys
 import wave
 
-import numpy as np
-
 SCRIPT="This is Evercraft, and this is only the beginning."
 BREATH="This is Evercraft... and this is only the beginning."
 VOICES=(("02","af_heart"),("05","af_bella"),("06","am_michael"))
@@ -68,6 +66,7 @@ def record_metrics(file):
   return {"durationSec":round(d,3),"sampleRate":w.getframerate()}
 def render(target):
  validate()
+ import numpy as np
  import soundfile as sf
  from kokoro import KPipeline
  dest=pathlib.Path(target);dest.mkdir(parents=True,exist_ok=False)
