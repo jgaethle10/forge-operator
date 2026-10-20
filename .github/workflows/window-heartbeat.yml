@@ -17,7 +17,7 @@ on:
     - cron: '*/5 * * * *'
 
 permissions:
-  contents: write
+  contents: read
 
 concurrency:
   group: window-independent-heartbeat
@@ -42,9 +42,10 @@ jobs:
           node --check systemia/society/window-social.mjs
           node --check systemia/society/window-heartbeat.mjs
           node --test tests/window-heartbeat.test.mjs
-      - name: Write only canonical world-state branch
+      - name: Read-only world-state heartbeat preview
         if: github.ref == 'refs/heads/main' && (github.event_name == 'schedule' || github.event_name == 'workflow_dispatch' || github.event_name == 'push')
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           GITHUB_REPOSITORY: ${{ github.repository }}
+          WINDOW_DRY_RUN: 'true'
         run: node systemia/society/window-heartbeat.mjs
