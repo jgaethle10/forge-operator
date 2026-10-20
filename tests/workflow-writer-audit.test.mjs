@@ -85,8 +85,8 @@ test('Mossmere scope review is tied to exact code and cannot authorize changed w
 
 test('direct Mossmere heartbeat remains read-only and cannot silently resume writes',()=>{
   const workflow=fs.readFileSync(new URL('../.github/workflows/window-heartbeat.yml',import.meta.url),'utf8');
-  assert.match(workflow,/^permissions:\\n  contents: read/m);
-  assert.doesNotMatch(workflow,/^\\s*contents: write\\s*$/m);
+  assert.match(workflow,/^permissions:\n  contents: read/m);
+  assert.doesNotMatch(workflow,/^\s*contents: write\s*$/m);
   assert.match(workflow,/WINDOW_DRY_RUN: 'true'/);
   const classification=inspectWorkflow(workflow,'.github/workflows/window-heartbeat.yml');
   assert.equal(classification.writer,false);
