@@ -10,6 +10,7 @@ const MAX_AUDIO_BYTES=30*1024*1024;
 const MAX_MODEL_BYTES=3500*1024*1024;
 const MAX_SECONDS=150;
 const MAX_TEXT_BYTES=64*1024;
+const SHA=/^[a-f0-9]{64}$/i;
 const CLI_TIMEOUT_MS=180000;
 const idRE=/^[a-zA-Z0-9][a-zA-Z0-9_.-]{0,79}$/;
 function fail(reason){throw new Error('voice_local_asr_'+reason);}
@@ -44,7 +45,7 @@ function getDuration(file){
  * No downloads, remote APIs, secret keys or paid generation.
  * This executes local programs: accept trusted paths only, never untrusted web input.
  */
-export async function runLocalWhisperAudit({session,cueId,audioPath,modelPath,whisperCliPath,outputDir}){
+export async function runLocalWhisperAudit({session,cueId,audioPath,modelPath,whisperCliPath,outputDir,expectedModelSha256,expectedBinarySha256}){
  if(session?.schema!=='evercraft.voice-foundry.session.v1'||session.status!=='ready_for_authorized_generation'||!Array.isArray(session.cues))
    fail('casting_session_not_ready');
  if(typeof cueId!=='string'||!idRE.test(cueId))fail('cue_id_unsafe');
@@ -65,9 +66,12 @@ export async function runLocalWhisperAudit({session,cueId,audioPath,modelPath,wh
  const auditPath=path.join(output,'voice-asr-audit-'+cueId+'.json');
  if(fs.existsSync(observationPath)||fs.existsSync(auditPath))fail('output_already_exists');
  getDuration(audio.file);
+ if(!SHA.test(expectedModelSha256??'')||!SHA.test(expectedBinarySha256??''))fail('model_and_binary_digest_pins_required');
  const [audioDigest,modelDigest,binaryDigest]=await Promise.all([
    fileSha256(audio.file),fileSha256(model.file),fileSha256(binary.file)
  ]);
+ if(modelDigest.toLowerCase()!==expectedModelSha256.toLowerCase()||binaryDigest.toLowerCase()!==expectedBinarySha256.toLowerCase())
+   fail('model_or_binary_digest_pin_mismatch');
  const scratch=fs.mkdtempSync(path.join(os.tmpdir(),'evercraft-whisper-asr-'));
  try{
    const pcm=path.join(scratch,'speech-16k-mono.wav');
@@ -118,14 +122,14 @@ export async function runLocalWhisperAudit({session,cueId,audioPath,modelPath,wh
 }
 const current=fileURLToPath(import.meta.url);
 if(process.argv[1]&&path.resolve(process.argv[1])===current){
- const [sessionPath,cueId,audioPath,cliPath,modelPath,outputDir,...rest]=process.argv.slice(2);
- if(!sessionPath||!cueId||!audioPath||!cliPath||!modelPath||!outputDir||rest.length){
-   process.stderr.write('Usage: node voice-local-whisper.mjs <casting-session.json> <cue-id> <audio> <absolute-whisper-cli> <model.bin> <existing-output-dir>\n');
+ const [sessionPath,cueId,audioPath,cliPath,modelPath,outputDir,expectedModelSha256,expectedBinarySha256,...rest]=process.argv.slice(2);
+ if(!sessionPath||!cueId||!audioPath||!cliPath||!modelPath||!outputDir||!expectedModelSha256||!expectedBinarySha256||rest.length){
+   process.stderr.write('Usage: node voice-local-whisper.mjs <casting-session.json> <cue-id> <audio> <absolute-whisper-cli> <model.bin> <existing-output-dir> <model-sha256> <cli-sha256>\n');
    process.exitCode=1;
  }else{
    try{
      const session=JSON.parse(fs.readFileSync(sessionPath,'utf8'));
-     const result=await runLocalWhisperAudit({session,cueId,audioPath,whisperCliPath:cliPath,modelPath,outputDir});
+     const result=await runLocalWhisperAudit({session,cueId,audioPath,whisperCliPath:cliPath,modelPath,outputDir,expectedModelSha256,expectedBinarySha256});
      process.stdout.write(JSON.stringify({status:result.record.status,observationPath:result.observationPath,auditPath:result.auditPath},null,2)+'\n');
      if(result.record.status==='held')process.exitCode=2;
    }catch(error){process.stderr.write(String(error.message??error)+'\n');process.exitCode=1;}
