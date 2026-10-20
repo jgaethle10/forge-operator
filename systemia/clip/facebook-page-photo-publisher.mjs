@@ -1,3 +1,4 @@
+import { assertEvercraftFamilySocialSafe } from './family-social-safety.mjs';
 function clean(value){ return String(value??'').trim(); }
 
 async function payload(response){
@@ -29,6 +30,7 @@ export function createFacebookPagePhotoPublisherAdapter(config={}){
       if(config.allowPublish!==true) throw new Error('facebook_photo_publish_not_authorized');
       if(!pageId) throw new Error('facebook_photo_page_id_missing');
       if(!pageAccessToken) throw new Error('facebook_photo_page_access_token_missing');
+      assertEvercraftFamilySocialSafe({message:caption});
       if(!(imageBytes instanceof Uint8Array)||imageBytes.byteLength<32) throw new Error('facebook_photo_bytes_invalid');
       if(!/^image\/(?:jpeg|png|webp)$/i.test(clean(mimeType))) throw new Error('facebook_photo_mime_invalid');
 
