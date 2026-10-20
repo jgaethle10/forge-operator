@@ -34,7 +34,7 @@ function probe(file){
   fps,duration,frames:Number(video.nb_frames||0),
   audio:doc.streams.some(s=>s.codec_type==='audio')};
 }
-function verify(request){
+export function verifyDirectorStoryboardSources(request){
  if(request?.schema!=='evercraft.fallen.director-storyboard-request.v1')err('schema_invalid');
  if(!/^[a-z0-9][a-z0-9_-]{2,65}$/.test(request.id||''))err('id_invalid');
  if(!Array.isArray(request.shots)||request.shots.length!==3||
@@ -119,7 +119,7 @@ function videoFilter(index,shot,stage){
  return base+fill+fit+overlay;
 }
 export function produceDirectorStoryboard(request,outDir){
- const {proofs,assets}=verify(request);
+ const {proofs,assets}=verifyDirectorStoryboardSources(request);
  if(typeof outDir!=='string'||!outDir||fs.existsSync(outDir))err('output_exists_or_missing');
  const dest=path.resolve(outDir),tmp=dest+'.partial-'+process.pid;
  if(fs.existsSync(tmp))err('partial_output_exists');
