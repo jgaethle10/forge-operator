@@ -19,7 +19,8 @@ import type {GeometryAsset} from './webgpu.js';
 import {makeTorusGeometry} from './procedural-geometry.js';
 import {makeBrushedMetalTextures} from './brushed-metal.js';
 import {renderKineticSoundscape} from '../media-studio/kinetic-soundscape.mjs';
-import {battleshipWorld,battleshipGeometry,battleshipTake} from './battleship-scene.js';
+import {battleshipWorld,battleshipGeometry} from './battleship-scene.js';
+import {nativeBattleshipFilmFrame,type NativeFilmFormat} from './native-format-camera.js';
 import {generateDeterministicTangents} from './fallen-geometry.js';
 import type {TextureAsset} from './texture.js';
 import {textureAssetDigest} from './texture.js';
@@ -29,7 +30,9 @@ import {prepareNativeBrowserRuntime} from '../evercraft-web/browser-worker/nativ
 const root=path.resolve(path.dirname(fileURLToPath(import.meta.url)),'../..');
 const worker=path.join(root,'systemia/evercraft-web/browser-worker');
 const sha=(value:Buffer|string)=>crypto.createHash('sha256').update(value).digest('hex');
-const WIDTH=640, HEIGHT=360, FPS=24, DURATION=4;
+const PROFILE=process.env.CINEMATIC_SCENE==='battleship'
+  ?nativeBattleshipFilmFrame((process.env.CINEMATIC_FORMAT||'landscape') as NativeFilmFormat):null;
+const WIDTH=PROFILE?.viewport.width??640, HEIGHT=PROFILE?.viewport.height??360, FPS=24, DURATION=4;
 function cube():GeometryAsset{
   const q=[
     {n:[0,0,1],v:[[-1,-1,1],[1,-1,1],[1,1,1],[-1,1,1]]},
@@ -452,7 +455,7 @@ async function main(){
     orbit:{radius:11,startAngleDeg:-52,endAngleDeg:58,startHeight:2.6,endHeight:5.2},
     startFovYDeg:51,endFovYDeg:43
   };
-  const take=isBattleship?battleshipTake():rotorTake;
+  const take=isBattleship?PROFILE!.take:rotorTake;
   const sequence=buildCinematicCameraSequence({
     world,take,geometries,viewport:{width:WIDTH,height:HEIGHT},textures
   });
@@ -539,6 +542,10 @@ async function main(){
       durationSec:DURATION,fps:FPS,codec:'h264',audioCodec:isBattleship?null:'aac'},
     stills,sourceState:'synthetic_visualization',
     sceneType:isBattleship?'procedural_battleship':'procedural_industrial_rotor',
+    nativeFormat:PROFILE?.format??'landscape',
+    sourceCameraMode:PROFILE?'format_specific_world_engine_camera':'original_world_engine_camera',
+    sceneViewportNative:PROFILE?.viewport??{width:WIDTH,height:HEIGHT},
+    compositionIntent:PROFILE?.framingIntent??'owned_orbit_proof',
     soundState:isBattleship?'silent_at_founder_direction_no_sound_invented':'original_multilayer_synthetic_soundscape_not_recorded_foley_or_commercial_score',
     soundReceipt,
     visualReviewState:'unreviewed',publicationAuthority:false,paidProductionReady:false,

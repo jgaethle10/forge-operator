@@ -1,0 +1,92 @@
+name: World Engine format-native GPU cameras
+on:
+  pull_request:
+    paths:
+      - 'systemia/world-engine/native-format-camera.ts'
+      - 'systemia/world-engine/native-format-camera.test.ts'
+      - 'systemia/world-engine/cinematic-render-proof.ts'
+      - '.github/workflows/world-engine-native-formats.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  native-camera-to-real-h264:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - format: landscape
+            width: 640
+            height: 360
+          - format: square
+            width: 480
+            height: 480
+          - format: portrait
+            width: 360
+            height: 640
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Install source dependencies
+        run: npm install --no-audit --no-fund
+      - name: Install native GPU browser worker
+        working-directory: systemia/evercraft-web/browser-worker
+        run: PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD=1 npm install --no-audit --no-fund
+      - name: Run canonical World Engine tests including native camera proof
+        run: npm run test:world-engine
+      - name: Ensure FFmpeg executable
+        run: command -v ffmpeg || (sudo apt-get update -qq && sudo apt-get install -y ffmpeg)
+      - name: Render ship with independent 3D native camera, not a crop
+        env:
+          CINEMATIC_SCENE: battleship
+          CINEMATIC_FORMAT: ${{ matrix.format }}
+          CINEMATIC_PROOF_OUTPUT: ${{ runner.temp }}/native-${{ matrix.format }}
+          EVERCRAFT_NATIVE_BROWSER_STATE_DIR: ${{ runner.temp }}/browser-native-${{ matrix.format }}
+        run: npm run world:cinematic-render-proof
+      - name: Verify 96 true GPU frames and exact native output aspect
+        env:
+          FILM_FORMAT: ${{ matrix.format }}
+          EXPECTED_WIDTH: ${{ matrix.width }}
+          EXPECTED_HEIGHT: ${{ matrix.height }}
+          PROOF_DIR: ${{ runner.temp }}/native-${{ matrix.format }}
+        run: |
+          node - <<'NODE'
+          const fs=require('node:fs'),p=require('node:path');
+          const r=JSON.parse(fs.readFileSync(p.join(process.env.PROOF_DIR,'receipt.json'),'utf8'));
+          if(r.nativeFormat!==process.env.FILM_FORMAT
+          ||r.output.width!==Number(process.env.EXPECTED_WIDTH)
+          ||r.output.height!==Number(process.env.EXPECTED_HEIGHT)
+          ||r.sceneType!=='procedural_battleship'
+          ||r.sourceCameraMode!=='format_specific_world_engine_camera'
+          ||r.exactGpuReadbackFrames!==96||r.uniqueRawFrameDigests<20
+          ||r.shadowCounterfactualChangedPixels<300
+          ||r.shadowFilterChangedPixels<10
+          ||r.output.codec!=='h264'
+          ||r.output.audioCodec!==null||r.soundReceipt!==null
+          ||r.publicationAuthority!==false
+          ||r.hardwareExecutionClaim!==false) {
+            console.error('NATIVE_FORMAT_EVIDENCE_FAILED',JSON.stringify(r,null,2));
+            process.exit(2);
+          }
+          console.log('OWNED_NATIVE_FORMAT_ACCEPTED',{
+            format:r.nativeFormat,resolution:r.output.width+'x'+r.output.height,
+            movingUniqueFrames:r.uniqueRawFrameDigests,sha256:r.output.sha256,
+            nativeComposition:r.compositionIntent
+          });
+          NODE
+      - name: Upload private film for native composition review
+        uses: actions/upload-artifact@v4
+        with:
+          name: world-native-battleship-${{ matrix.format }}
+          path: |
+            ${{ runner.temp }}/native-${{ matrix.format }}/battleship-world-engine-trial.mp4
+            ${{ runner.temp }}/native-${{ matrix.format }}/receipt.json
+            ${{ runner.temp }}/native-${{ matrix.format }}/opening.png
+            ${{ runner.temp }}/native-${{ matrix.format }}/middle.png
+            ${{ runner.temp }}/native-${{ matrix.format }}/closing.png
+          retention-days: 7
+          if-no-files-found: error
