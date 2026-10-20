@@ -131,7 +131,7 @@ async function renderGpuFrames(plans:ReturnType<typeof buildCinematicCameraSeque
         const context=await browser.newContext({viewport:{width:WIDTH,height:HEIGHT}});
         page=await context.newPage();await page.goto(server.url,{waitUntil:'domcontentloaded'});
         const init=await page.evaluate(async({shader,geometry,width,height}:{shader:string;geometry:GeometryAsset;width:number;height:number})=>{
-          const adapter=await navigator.gpu?.requestAdapter();
+          const adapter=await (navigator as any).gpu?.requestAdapter();
           if(!adapter)return {ok:false,reason:'no_adapter'};
           const device=await adapter.requestDevice();
           const module=device.createShaderModule({code:shader});
@@ -167,11 +167,11 @@ async function renderGpuFrames(plans:ReturnType<typeof buildCinematicCameraSeque
             }
             return output;
           })());
-          const vb=device.createBuffer({size:vertices.byteLength,usage:GPUBufferUsage.VERTEX|GPUBufferUsage.COPY_DST});
+          const vb=device.createBuffer({size:vertices.byteLength,usage:(globalThis as any).GPUBufferUsage.VERTEX|(globalThis as any).GPUBufferUsage.COPY_DST});
           device.queue.writeBuffer(vb,0,vertices);
           const pixel=(rgba:number[])=>{
             const texture=device.createTexture({size:[1,1,1],format:'rgba8unorm',
-              usage:GPUTextureUsage.TEXTURE_BINDING|GPUTextureUsage.COPY_DST});
+              usage:(globalThis as any).GPUTextureUsage.TEXTURE_BINDING|(globalThis as any).GPUTextureUsage.COPY_DST});
             device.queue.writeTexture({texture},new Uint8Array(rgba),{bytesPerRow:4,rowsPerImage:1},[1,1,1]);
             return texture;
           };
@@ -183,8 +183,8 @@ async function renderGpuFrames(plans:ReturnType<typeof buildCinematicCameraSeque
           ];
           const sampler=device.createSampler({magFilter:'linear',minFilter:'linear'});
           const target=device.createTexture({size:[width,height,1],format:'rgba8unorm',
-            usage:GPUTextureUsage.RENDER_ATTACHMENT|GPUTextureUsage.COPY_SRC});
-          const depth=device.createTexture({size:[width,height,1],format:'depth24plus',usage:GPUTextureUsage.RENDER_ATTACHMENT});
+            usage:(globalThis as any).GPUTextureUsage.RENDER_ATTACHMENT|(globalThis as any).GPUTextureUsage.COPY_SRC});
+          const depth=device.createTexture({size:[width,height,1],format:'depth24plus',usage:(globalThis as any).GPUTextureUsage.RENDER_ATTACHMENT});
           // Dedicated synthetic lab runtime; all values come from canonically verified WebGPU plans.
           (window as any).__evercraftCinematic={device,frameLayout,objectLayout,pipeline,vb,fallback,sampler,target,depth,width,height,
             vertexCount:geometry.positions.length/3};
@@ -214,7 +214,7 @@ async function renderGpuFrames(plans:ReturnType<typeof buildCinematicCameraSeque
             fog?.color.r??0,fog?.color.g??0,fog?.color.b??0,fog?.density??0,
             fog?.startDistance??0,fog?.heightFalloff??0,fog?.referenceHeight??0,0
           ]);
-          const frameBuffer=device.createBuffer({size:frameData.byteLength,usage:GPUBufferUsage.UNIFORM|GPUBufferUsage.COPY_DST});
+          const frameBuffer=device.createBuffer({size:frameData.byteLength,usage:(globalThis as any).GPUBufferUsage.UNIFORM|(globalThis as any).GPUBufferUsage.COPY_DST});
           device.queue.writeBuffer(frameBuffer,0,frameData);
           const lightValues:number[]=[];
           for(const l of plan.lights){
@@ -223,7 +223,7 @@ async function renderGpuFrames(plans:ReturnType<typeof buildCinematicCameraSeque
           }
           if(!lightValues.length)lightValues.push(0,0,0,0);
           const ls=new Float32Array(lightValues);
-          const lightBuffer=device.createBuffer({size:ls.byteLength,usage:GPUBufferUsage.STORAGE|GPUBufferUsage.COPY_DST});
+          const lightBuffer=device.createBuffer({size:ls.byteLength,usage:(globalThis as any).GPUBufferUsage.STORAGE|(globalThis as any).GPUBufferUsage.COPY_DST});
           device.queue.writeBuffer(lightBuffer,0,ls);
           const frameGroup=device.createBindGroup({layout:r.frameLayout,entries:[
             {binding:0,resource:{buffer:frameBuffer}},{binding:1,resource:{buffer:lightBuffer}}]});
@@ -240,7 +240,7 @@ async function renderGpuFrames(plans:ReturnType<typeof buildCinematicCameraSeque
               ...draw.baseColor,draw.materialModel,draw.metallic,draw.roughness,draw.alphaCutoff,
               ...draw.emissive,draw.emissiveIntensity,...draw.textureFlags
             ]);
-            const buffer=device.createBuffer({size:obj.byteLength,usage:GPUBufferUsage.UNIFORM|GPUBufferUsage.COPY_DST});
+            const buffer=device.createBuffer({size:obj.byteLength,usage:(globalThis as any).GPUBufferUsage.UNIFORM|(globalThis as any).GPUBufferUsage.COPY_DST});
             device.queue.writeBuffer(buffer,0,obj);
             const group=device.createBindGroup({layout:r.objectLayout,entries:[
               {binding:0,resource:{buffer}},{binding:1,resource:r.sampler},
@@ -252,11 +252,11 @@ async function renderGpuFrames(plans:ReturnType<typeof buildCinematicCameraSeque
           }
           pass.end();
           const rowBytes=r.width*4,bytesPerRow=Math.ceil(rowBytes/256)*256;
-          const readback=device.createBuffer({size:bytesPerRow*r.height,usage:GPUBufferUsage.COPY_DST|GPUBufferUsage.MAP_READ});
+          const readback=device.createBuffer({size:bytesPerRow*r.height,usage:(globalThis as any).GPUBufferUsage.COPY_DST|(globalThis as any).GPUBufferUsage.MAP_READ});
           encoder.copyTextureToBuffer({texture:r.target},
             {buffer:readback,bytesPerRow,rowsPerImage:r.height},[r.width,r.height,1]);
           device.queue.submit([encoder.finish()]);
-          await readback.mapAsync(GPUMapMode.READ);
+          await readback.mapAsync((globalThis as any).GPUMapMode.READ);
           const padded=new Uint8Array(readback.getMappedRange().slice(0));
           const raw=new Uint8Array(rowBytes*r.height);
           for(let y=0;y<r.height;y++)raw.set(padded.subarray(y*bytesPerRow,y*bytesPerRow+rowBytes),y*rowBytes);
