@@ -1,0 +1,29 @@
+name: Audience Sites Content and Truth Gate
+
+on:
+  pull_request:
+    paths:
+      - 'public/audience-sites/**'
+      - 'tests/audience-sites.test.mjs'
+      - '.github/workflows/audience-sites.yml'
+  push:
+    branches: [main]
+    paths:
+      - 'public/audience-sites/**'
+      - 'tests/audience-sites.test.mjs'
+      - '.github/workflows/audience-sites.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Verify all seven sites and privacy boundaries
+        run: node --test tests/audience-sites.test.mjs
