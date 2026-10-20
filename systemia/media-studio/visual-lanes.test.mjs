@@ -102,3 +102,40 @@ test('refuses pre-existing output directories, missing source provenance and dup
   assert.throws(()=>produceVisualLanes(s.request,s.dir),/visual_lanes_output_exists_or_missing/);
  }finally{fs.rmSync(s.dir,{recursive:true,force:true})}
 });
+
+test('directed square/vertical reframe produces actual full-frame videos without disguising source upscaling',()=>{
+ const s=sample();
+ try{
+  s.request.cuts[1].composition={mode:'directed_cover',start:.24,end:.67};
+  s.request.cuts[2].composition={mode:'directed_cover',start:.12,end:.88};
+  const out=path.join(s.dir,'directed-previews');
+  const receipt=produceVisualLanes(s.request,out);
+  const square=receipt.deliverables.find(x=>x.lane==='educational');
+  const vertical=receipt.deliverables.find(x=>x.lane==='commercial');
+  for(const result of [square,vertical]){
+   assert.equal(result.cropPolicy,'operator_directed_content_loss');
+   assert.equal(result.compositionState,'directed_crop_creative_review_required');
+   assert.equal(result.sourceResolutionLimited,true);
+   assert.equal(result.releaseEligible,false);
+   assert.ok(fs.statSync(path.join(out,result.videoFile)).size>2000);
+  }
+  assert.deepEqual(vertical.cameraPan,{start:.12,end:.88});
+  assert.equal(vertical.nativeCameraRequired,true);
+  assert.equal(square.width,480);
+  assert.equal(vertical.height,640);
+  assert.ok(fs.readFileSync(path.join(out,'commercial-3.txt'),'utf8').includes('DIRECTED CROP'));
+ }finally{fs.rmSync(s.dir,{recursive:true,force:true})}
+});
+test('invalid normalized pan cannot cross source frame bounds',()=>{
+ const s=sample();
+ try{
+  for(const bad of [{mode:'directed_cover',start:-.1,end:.8},
+    {mode:'directed_cover',start:.2,end:1.1},
+    {mode:'directed_cover',start:NaN,end:.5},
+    {mode:'free_camera',start:.2,end:.6}]){
+   s.request.cuts[2].composition=bad;
+   assert.throws(()=>produceVisualLanes(s.request,path.join(s.dir,'rejected')),
+     /visual_lanes_directed_composition_invalid/);
+  }
+ }finally{fs.rmSync(s.dir,{recursive:true,force:true})}
+});
