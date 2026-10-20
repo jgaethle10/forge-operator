@@ -1,5 +1,6 @@
 import crypto from 'node:crypto';
 import { preflightPublicLink } from './public-link-preflight.mjs';
+import { assertEvercraftFamilySocialSafe } from './family-social-safety.mjs';
 
 function hash(value){
   return crypto.createHash('sha256').update(value).digest('hex');
@@ -52,6 +53,9 @@ function contentDigestFor(request,metadata,linkVerification){
 export async function publishClipSocialPost({request,adapters,policy}){
   const validated=validateRequest(request);
   let metadata=validated.metadata;
+  // Evercraft corporate/first-party social publishing cannot carry adult or sexual
+  // content or send users to adult pages. It fails before any provider call.
+  assertEvercraftFamilySocialSafe(metadata);
   const linkVerification=validated.linkVerification;
   if(policy?.allowPublishing!==true) throw new Error('clip_social_publish_policy_disabled');
 
@@ -85,6 +89,8 @@ export async function publishClipSocialPost({request,adapters,policy}){
         timeoutMs:linkPolicy.timeoutMs,
       });
       metadata={...metadata,link:linkPreflight.finalUrl};
+      // A safe-looking short URL may redirect to an unsafe final destination.
+      assertEvercraftFamilySocialSafe(metadata);
       contentDigest=contentDigestFor(request,metadata,linkVerification);
     }
 
