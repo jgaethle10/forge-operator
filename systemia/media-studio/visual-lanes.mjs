@@ -46,6 +46,11 @@ function check(req){
   text(c.title,'title',70);
   if(!['16:9','9:16','1:1'].includes(c.aspectRatio)||
     !['silent','preserve'].includes(c.audio))err('cut_contract_invalid');
+  if(c.composition!==undefined){
+   const z=c.composition;
+   if(!z||z.mode!=='directed_cover'||!Number.isFinite(z.start)||!Number.isFinite(z.end)||
+      z.start<0||z.start>1||z.end<0||z.end>1)err('directed_composition_invalid');
+  }
   if(c.lane==='educational'){
    if(!Array.isArray(c.claims)||!c.claims.length||c.claims.length>4)err('education_claims_missing');
    for(const claim of c.claims){
@@ -66,9 +71,18 @@ const dims={'16:9':[640,360],'9:16':[360,640],'1:1':[480,480]};
 function filterPath(p){
  return p.replaceAll('\\','/').replaceAll(':','\\:').replaceAll("'",'\\'+"'"+'').replaceAll(',','\\,');
 }
-function makeFilter(width,height,textfiles,font,duration){
- let base='scale='+width+':'+height+':force_original_aspect_ratio=decrease:flags=lanczos,'+
- 'pad='+width+':'+height+':(ow-iw)/2:(oh-ih)/2:color=0x0b1624,setsar=1';
+function makeFilter(width,height,textfiles,font,duration,composition,source){
+ let base='';
+ if(composition?.mode==='directed_cover'){
+  const ratio=width/height,sourceRatio=source.width/source.height;
+  const pan='('+composition.start+'+('+(composition.end-composition.start)+')*t/'+duration+')';
+  if(sourceRatio>ratio)base='crop=w=ih*'+ratio+':h=ih:x=(iw-ow)*'+pan+':y=0,';
+  else if(sourceRatio<ratio)base='crop=w=iw:h=iw/'+ratio+':x=0:y=(ih-oh)*'+pan+',';
+  base+='scale='+width+':'+height+':flags=lanczos,setsar=1';
+ }else{
+  base='scale='+width+':'+height+':force_original_aspect_ratio=decrease:flags=lanczos,'+
+  'pad='+width+':'+height+':(ow-iw)/2:(oh-ih)/2:color=0x0b1624,setsar=1';
+ }
  for(let i=0;i<textfiles.length;i++){
   const fontsize=width<400?(i===0?17:13):(i===0?20:14);
   const y=i===0?18:(textfiles.length===4?height-124+(i-1)*34:(i===1?height-67:height-35));
@@ -109,14 +123,15 @@ export function produceVisualLanes(request,outputDir){
    // Warn inside the exported video itself, not just a hidden metadata receipt.
    const candidateAspect=w/h,originalAspect=srcInfo.width/srcInfo.height;
    const occupancy=Math.min(candidateAspect/originalAspect,originalAspect/candidateAspect);
-   if(occupancy<.6)labels.push('CAMERA REFRAME REQUIRED');
+   if(occupancy<.6&&!cut.composition)labels.push('CAMERA REFRAME REQUIRED');
+    if(cut.composition?.mode==='directed_cover')labels.push('DIRECTED CROP - SOURCE DETAIL LIMITED');
    const textfiles=labels.map((value,i)=>{
     const p=path.join(tmp,cut.lane+'-'+i+'.txt');
     fs.writeFileSync(p,value,{flag:'wx',mode:0o600});return p;
    });
    const out=path.join(tmp,cut.lane+'.mp4');
    const args=['-hide_banner','-loglevel','error','-y','-i',source,
-    '-vf',makeFilter(w,h,textfiles,fontPath,srcInfo.duration),'-map','0:v:0'];
+    '-vf',makeFilter(w,h,textfiles,fontPath,srcInfo.duration,cut.composition,srcInfo),'-map','0:v:0'];
    if(cut.audio==='preserve'&&srcInfo.audio)args.push('-map','0:a:0','-c:a','aac');
    else args.push('-an');
    args.push('-c:v','libx264','-preset','veryfast','-crf','20','-pix_fmt','yuv420p',
@@ -132,10 +147,15 @@ export function produceVisualLanes(request,outputDir){
    const sourceAspect=srcInfo.width/srcInfo.height,destAspect=w/h;
    const contentCoverage=Math.min(sourceAspect/destAspect,destAspect/sourceAspect);
    const reframingRequired=contentCoverage<.6;
-   artifacts.push({lane:cut.lane,width:w,height:h,
+    const directed=cut.composition?.mode==='directed_cover';
+    artifacts.push({lane:cut.lane,width:w,height:h,
+     cropPolicy:directed?'operator_directed_content_loss':'preserve_full_frame',
+     cameraPan:directed?{start:cut.composition.start,end:cut.composition.end}:null,
+     nativeCameraRequired:reframingRequired,
+     sourceResolutionLimited:true,
     codec:result.videoCodec,durationSec:result.duration,hasAudio:result.audio,
     sourceFrameCoverage:Number(contentCoverage.toFixed(4)),
-    compositionState:reframingRequired?'needs_dedicated_camera_or_reframe':'review_required',
+    compositionState:directed?'directed_crop_creative_review_required':(reframingRequired?'needs_dedicated_camera_or_reframe':'review_required'),
     releaseEligible:false,
     videoFile:cut.lane+'.mp4',sha256:hash(fs.readFileSync(out)),
     frameFile:cut.lane+'.png',frameSha256:hash(fs.readFileSync(frame)),
