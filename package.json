@@ -30,6 +30,8 @@
     "test:release-policy": "node systemia/release/release-policy.test.mjs && node systemia/release/scoped-approval.test.mjs",
     "media:studio": "tsx systemia/media-studio/cli.ts",
     "test:media-studio": "node --import tsx --test systemia/media-studio/*.test.ts",
+    "test:visual-lanes": "node --test systemia/media-studio/visual-lanes.test.mjs",
+    "media:visual-lanes": "node systemia/media-studio/visual-lanes.mjs",
     "proof:factory": "node systemia/proof-factory/proof-factory.mjs",
     "test:proof-factory": "node tests/proof-factory.test.mjs",
     "check:probes": "node scripts/validate-nexus-cross-llm-probes.mjs",
