@@ -33,7 +33,8 @@ test('seven independently useful original microproperties are present',()=>{
 
 test('audience sites remain distinct from the existing Evercraft Network product',()=>{
  const dir=read('index.html');
- assert.match(dir,/Evercraft Network at \/network\/ is an unrelated existing product/);
+ assert.match(dir,/content="noindex,nofollow"/);
+ assert.doesNotMatch(dir,/evercraft|mailto:|\/mesh\/|\/live\//i);
  assert.ok(slugs.every(s=>dir.includes('href="./'+s+'/')));
  assert.ok(!dir.includes('<a href="./network/'));
  assert.match(dir,/temporary technical index/i);
