@@ -15,7 +15,7 @@ scene.render.resolution_percentage=100
 scene.render.image_settings.file_format='PNG'
 scene.render.film_transparent=False
 scene.render.engine='CYCLES'
-scene.view_settings.view_transform='AgX' if 'AgX' in [x.identifier for x in bpy.types.ColorManagedViewSettings.bl_rna.properties['view_transform'].enum_items] else 'Filmic'
+scene.view_settings.view_transform='Filmic'
 
 def mat(name,color,metallic=0.0,roughness=.4,transmission=0.0,ior=1.45):
     m=bpy.data.materials.new(name)
@@ -45,7 +45,7 @@ def cube(name,scale,loc,material,bevel=0):
     if bevel:
       mod=ob.modifiers.new('physically rounded glass edges','BEVEL')
       mod.width=bevel;mod.segments=9
-      mod.affect='EDGES' if hasattr(mod,'affect') else None
+      if hasattr(mod,'affect'): mod.affect='EDGES'
       norm=ob.modifiers.new('weighted surface normals','WEIGHTED_NORMAL')
     return ob
 
