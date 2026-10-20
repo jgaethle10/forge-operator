@@ -15,6 +15,12 @@ export interface ColorRGBA extends ColorRGB {
 export type MaterialAlphaMode='opaque'|'mask'|'blend';
 
 // Optional scene-directed filmic tone mapping. Omission preserves exact legacy pixels.
+// Opt-in physically-motivated direct lighting. No change to legacy scene pixels.
+export interface CinematicLightingDefinition {
+  shading:'legacy_phong'|'ggx_microfacet';
+  localLightFalloff?:'legacy_linear'|'inverse_square';
+}
+
 export interface FilmicColorManagement {
   toneMapper:'legacy_linear'|'aces_filmic';
   exposureBiasStops?:number;
@@ -122,6 +128,7 @@ export interface VisualSceneDefinition {
   clearColor?:ColorRGB;
   atmosphere?:AtmosphereDefinition;
   colorManagement?:FilmicColorManagement;
+  cinematicLighting?:CinematicLightingDefinition;
 }
 
 export interface CameraTransitionRuntime {
@@ -163,6 +170,7 @@ export interface VisualFrameContract {
   clearColor:ColorRGB;
   atmosphere?:AtmosphereDefinition;
   colorManagement?:FilmicColorManagement;
+  cinematicLighting?:CinematicLightingDefinition;
   materials:MaterialDefinition[];
   renderables:Array<{
     entityId:string;
@@ -220,6 +228,17 @@ function validateLayerMask(value:number|undefined,label:string){
   if(!Number.isInteger(value) || value<0 || value>0xffffffff){
     throw new Error(`visual_invalid_${label}_layer_mask`);
   }
+}
+
+export function validateCinematicLighting(spec:CinematicLightingDefinition){
+  if(!spec || !['legacy_phong','ggx_microfacet'].includes(spec.shading)){
+    throw new Error('visual_cinematic_lighting_shading_invalid');
+  }
+  if(spec.localLightFalloff!==undefined &&
+     !['legacy_linear','inverse_square'].includes(spec.localLightFalloff)){
+    throw new Error('visual_cinematic_lighting_falloff_invalid');
+  }
+  return true;
 }
 
 export function validateColorManagement(grade:FilmicColorManagement){
@@ -391,6 +410,7 @@ export function validateVisualScene(scene:VisualSceneDefinition,entities:WorldEn
   if(scene.clearColor) validateColor(scene.clearColor,'scene_clear_color');
   if(scene.atmosphere) validateAtmosphere(scene.atmosphere);
   if(scene.colorManagement) validateColorManagement(scene.colorManagement);
+  if(scene.cinematicLighting) validateCinematicLighting(scene.cinematicLighting);
   if(!entityMap.size) throw new Error('visual_scene_entities_missing');
   return true;
 }
@@ -616,6 +636,7 @@ export function compileVisualFrame(
     clearColor:clone(scene.clearColor || {r:0,g:0,b:0}),
     ...(scene.atmosphere?{atmosphere:clone(scene.atmosphere)}:{}),
     ...(scene.colorManagement?{colorManagement:clone(scene.colorManagement)}:{}),
+    ...(scene.cinematicLighting?{cinematicLighting:clone(scene.cinematicLighting)}:{}),
     materials:[...(scene.materials || [])].sort((a,b)=>a.id.localeCompare(b.id)).map(clone),
     renderables,
     lights
