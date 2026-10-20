@@ -1,0 +1,35 @@
+import assert from 'node:assert/strict';
+import test from 'node:test';
+import {planVoiceSession,evaluateVoiceTake} from '../systemia/media-studio/voice-foundry.mjs';
+const voice={id:'narrator-01',identityVersion:'1',provider:'example',providerVoiceId:'approved-voice',approval:'human_audition_approved',locales:['en-US','es-MX'],accents:['general-american','mexican-spanish'],rights:{status:'cleared',commercialUse:true,evidenceRef:'consent-001'}};
+const cue={id:'cue-01',speakerId:'narrator',voiceProfileId:voice.id,text:'Evercraft is here.',locale:'en-US',accent:'general-american',direction:'gentle wonder, conversational',maxDurationSec:4};
+const plan=()=>planVoiceSession({profiles:[voice],cues:[cue],lexicon:[{term:'Evercraft',reading:'EHV-er-kraft',locale:'en-US',reviewerEvidenceRef:'pronunciation-review-01'}]});
+const take=p=>({cueId:cue.id,voiceProfileId:voice.id,planDigest:p.planDigest,artifactDigest:'a'.repeat(64),providerReceiptRef:'provider-123',rightsVerified:true,locale:cue.locale,accent:cue.accent,durationSec:2.6,timingEvidenceRef:'time-001',transcriptEvidenceRef:'transcript-001',audioMeasurementEvidenceRef:'signal-001',samplePeakDbFS:-2.2});
+const reviewers=[
+ {reviewerId:'a',approved:true,locale:'en-US',accent:'general-american',localeAccentQualified:true,evidenceRef:'review-a',scores:{naturalness:5,accentAuthenticity:5,emotionalTruth:5,intelligibility:5,identityConsistency:5,mixFit:5}},
+ {reviewerId:'b',approved:true,locale:'en-US',accent:'general-american',localeAccentQualified:false,evidenceRef:'review-b',scores:{naturalness:5,accentAuthenticity:5,emotionalTruth:5,intelligibility:5,identityConsistency:5,mixFit:5}}
+];
+test('approved cast is ready for authorized generation, not public release',()=>{
+ const r=plan(); assert.equal(r.status,'ready_for_authorized_generation');assert.equal(r.providerCallMade,false);assert.equal(r.publicationAuthorityGranted,false);assert.equal(r.cues[0].pronunciation.length,1);
+});
+test('rights fail closed and prevent unapproved voice use',()=>{
+ const r=planVoiceSession({profiles:[{...voice,rights:{status:'unknown',commercialUse:false}}],cues:[cue]});assert.equal(r.status,'held');assert.ok(r.cues[0].reasons.includes('voice_rights_or_consent_unverified'));
+});
+test('a language does not prove a regional accent; both must match independently',()=>{
+ const r=planVoiceSession({profiles:[voice],cues:[{...cue,locale:'en-GB',accent:'british-rp'}]}); assert.equal(r.status,'held');assert.ok(r.cues[0].reasons.includes('requested_locale_not_verified_for_voice'));assert.ok(r.cues[0].reasons.includes('requested_accent_not_verified_for_voice'));
+});
+test('review cannot fabricate a good score from a provider receipt',()=>{
+ const p=plan().cues[0];const r=evaluateVoiceTake({plannedCue:p,take:take(p),reviews:[]});assert.equal(r.status,'held');assert.ok(r.reasons.includes('two_human_reviews_required'));
+});
+test('independent quality and qualified accent review gates',()=>{
+ const p=plan().cues[0];const approved=evaluateVoiceTake({plannedCue:p,take:take(p),reviews:reviewers});assert.equal(approved.status,'passed_internal_voice_qa');assert.equal(approved.publicationAuthorityGranted,false);
+ const weak=evaluateVoiceTake({plannedCue:p,take:take(p),reviews:[reviewers[0],{...reviewers[1],scores:{...reviewers[1].scores,naturalness:3}}]}); assert.equal(weak.status,'held');
+ const unqualified=evaluateVoiceTake({plannedCue:p,take:take(p),reviews:reviewers.map(r=>({...r,localeAccentQualified:false}))});assert.ok(unqualified.reasons.includes('native_or_qualified_accent_review_required'));
+});
+test('identity drift and clipping are independent hard failures',()=>{
+ const p=plan().cues[0];const r=evaluateVoiceTake({plannedCue:p,take:{...take(p),voiceProfileId:'wrong',samplePeakDbFS:0},reviews:reviewers});assert.equal(r.status,'held');assert.ok(r.reasons.includes('take_voice_identity_mismatch'));assert.ok(r.reasons.includes('digital_clipping_or_peak_unmeasured'));
+});
+test('multilingual casting is per cue with region-specific support',()=>{
+ const es={...cue,id:'cue-02',text:'Hoy empezamos.',locale:'es-MX',accent:'mexican-spanish',direction:'warm and confident'};
+ const r=planVoiceSession({profiles:[voice],cues:[cue,es]});assert.equal(r.status,'ready_for_authorized_generation');assert.equal(r.cues[1].locale,'es-MX');
+});
