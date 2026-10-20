@@ -112,3 +112,34 @@ test('approved unmodified dry speech carries original fingerprint for human list
   assert.equal(fs.existsSync(path.join(outputDir,'foundry-line.dry.mp3')),true);
   assert.match(result.sourceRefs.join(','),/voice-foundry-dry-source-sha256:[a-f0-9]{64}/);
 });
+
+test('v4 audition actually sends approved whisper acting direction with unchanged spoken line',async()=>{
+  const guided={...cue,performance:{tag:'whispers',approval:'human_approved',evidenceRef:'manual-performance-review-001'}};
+  const {adapter,calls}=rig({cues:[guided],speechModelId:'eleven_v4'});
+  const result=await adapter.execute(need);
+  assert.equal(calls.length,1);
+  assert.equal(calls[0].body.text,'[whispers] '+need.prompt);
+  assert.equal(calls[0].body.model_id,'eleven_v4');
+  assert.match(result.sourceRefs.join(','),/voice-performance-script-sha256:[a-f0-9]{64}/);
+  assert.match(result.sourceRefs.join(','),/voice-performance-request-sha256:[a-f0-9]{64}/);
+});
+test('bad acting prompt and unsupported model never trigger provider billing',async()=>{
+  const held=rig({cues:[{...cue,performance:{tag:'shouts and laugh',approval:'human_approved',evidenceRef:'review'}}]});
+  await assert.rejects(()=>held.adapter.execute(need),/performance_tag_unreviewed_or_unsupported/);
+  assert.equal(held.calls.length,0);
+  const oldModel=rig({cues:[{...cue,performance:{tag:'sad',approval:'human_approved',evidenceRef:'review'}}],speechModelId:'eleven_multilingual_v2'});
+  await assert.rejects(()=>oldModel.adapter.execute(need),/model_tags_unsupported/);
+  assert.equal(oldModel.calls.length,0);
+});
+test('strict production lane refuses all speech without Voice Foundry without an API request',async()=>{
+  let calls=0;
+  const adapter=createElevenLabsAudioAdapter({
+    apiKey:'test-key',
+    outputDir:fs.mkdtempSync(path.join(os.tmpdir(),'voice-strict-')),
+    verified:true,commercialRights:'allowed',allowPaidGeneration:true,
+    requireVoiceFoundry:true,voiceProfiles:{'foundry-host':'voice-real'},
+    fetchImpl:(async()=>{calls++;throw Error('must not call provider');}) as any,
+  });
+  await assert.rejects(()=>adapter.execute(need),/required_voice_foundry_missing/);
+  assert.equal(calls,0);
+});
