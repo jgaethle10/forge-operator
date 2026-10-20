@@ -96,7 +96,7 @@ export function planVoiceSession({profiles, cues, lexicon=[]}) {
  * can attest to the specified locale/accent. Scores alone are not assertions
  * of quality: evidence is required and reviewers remain humans.
  */
-export function evaluateVoiceTake({plannedCue, take, reviews}) {
+export function evaluateVoiceTake({plannedCue, take, reviews, signal}) {
   const reasons=[];
   if (!plannedCue || plannedCue.status!=='ready_for_authorized_generation') reasons.push('casting_plan_not_ready');
   if (!checkedString(take?.cueId) || take.cueId!==plannedCue?.cueId) reasons.push('take_cue_mismatch');
@@ -112,6 +112,10 @@ export function evaluateVoiceTake({plannedCue, take, reviews}) {
   if (!checkedString(take?.timingEvidenceRef)) reasons.push('timing_measurement_missing');
   if (!checkedString(take?.transcriptEvidenceRef)) reasons.push('transcript_review_missing');
   if (!checkedString(take?.audioMeasurementEvidenceRef)) reasons.push('signal_measurement_missing');
+  if (signal?.schema !== 'evercraft.voice-foundry.signal-inspection.v1' || signal?.status !== 'objective_measurements_only') reasons.push('verified_signal_inspection_missing_or_held');
+  if (signal?.audioDigest !== take?.artifactDigest) reasons.push('signal_audio_digest_mismatch');
+  if (!Number.isFinite(signal?.durationSec) || !Number.isFinite(take?.durationSec) || Math.abs(signal.durationSec-take.durationSec)>0.05) reasons.push('signal_duration_mismatch');
+  if (!Number.isFinite(signal?.samplePeakDbFS) || !Number.isFinite(take?.samplePeakDbFS) || Math.abs(signal.samplePeakDbFS-take.samplePeakDbFS)>0.15) reasons.push('signal_peak_mismatch');
   if (!Number.isFinite(take?.samplePeakDbFS) || take.samplePeakDbFS>=0) reasons.push('digital_clipping_or_peak_unmeasured');
   if (!Array.isArray(reviews) || reviews.length < 2) reasons.push('two_human_reviews_required');
   else {
@@ -138,6 +142,6 @@ export function evaluateVoiceTake({plannedCue, take, reviews}) {
     reasons:[...new Set(reasons)],
     manualEditorialApprovalStillRequired:true,
     publicationAuthorityGranted:false,
-    reviewDigest:fingerprint({planDigest:plannedCue?.planDigest,take,reviews}),
+    reviewDigest:fingerprint({planDigest:plannedCue?.planDigest,take,reviews,signal}),
   };
 }
