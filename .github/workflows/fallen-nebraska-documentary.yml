@@ -3,11 +3,15 @@ on:
   pull_request:
     paths:
       - "systemia/media-studio/pilots/nebraska-source-first/**"
+      - "systemia/media-studio/observational_motion.py"
+      - "systemia/media-studio/test_observational_motion.py"
       - ".github/workflows/fallen-nebraska-documentary.yml"
   push:
     branches: [main]
     paths:
       - "systemia/media-studio/pilots/nebraska-source-first/**"
+      - "systemia/media-studio/observational_motion.py"
+      - "systemia/media-studio/test_observational_motion.py"
       - ".github/workflows/fallen-nebraska-documentary.yml"
 permissions:
   contents: read
@@ -27,3 +31,17 @@ jobs:
         run: |
           npm run media:studio -- studio-create systemia/media-studio/pilots/nebraska-source-first/opening.plan.json /tmp/nebraska-source-first.json
           node -e "const x=require('/tmp/nebraska-source-first.json');if(x.boundaries.publicationAuthorityGranted!==false || !x.productionNeeds?.length)process.exit(1)"
+  observational-motion-qa:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - name: Install deterministic motion-test dependencies
+        run: python -m pip install --disable-pip-version-check numpy==2.2.6 opencv-python-headless==4.11.0.86
+      - name: Static montage fails; independently moving scene passes
+        run: |
+          cd systemia/media-studio
+          python -m unittest -v test_observational_motion.py
