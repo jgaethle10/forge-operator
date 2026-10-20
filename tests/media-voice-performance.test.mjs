@@ -47,3 +47,9 @@ test('inline tags embedded in dialogue are not accepted by the compiler',()=>{
 test('oversized lines must be split with editorial approval instead of truncated by a model',()=>{
  assert.throws(()=>compileVoicePerformance({scriptText:'a'.repeat(5001),performance,modelId:'eleven_v4',planDigest:plan().planDigest}),/script_oversize/);
 });
+
+test('rejects unapproved inline acting notation in source dialogue',()=>{
+ const result=plan({...cue,text:'[shouts] This changes everything.',performance:undefined});
+ assert.equal(result.status,'blocked');
+ assert.ok(result.reasons.includes('inline_audio_tags_unapproved'));
+});
