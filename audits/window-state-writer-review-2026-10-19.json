@@ -1,0 +1,15 @@
+{
+  "schema": "evercraft.audit.scoped-state-writer-review.v1",
+  "review_status": "proposed_for_founder_review_not_prod_proof",
+  "observed_at": "2026-10-19",
+  "workflow": ".github/workflows/window-upstream-heartbeat.yml",
+  "workflow_blob_sha": "9f1e16a5133a7c3d23361afcdc038e3f02cd5956",
+  "runner": "systemia/society/window-heartbeat.mjs",
+  "runner_blob_sha": "d09b4038dee910452a384b8329d11bf033f56706",
+  "state_branch": "window-society-state",
+  "state_path": "state/window.json",
+  "purpose": "Mossmere fictional world state heartbeat triggered only after successful scheduled CHUM run",
+  "scope_limit": "Narrow observed code only; hash mismatch rejects. GitHub contents:write token remains repository-scoped and cannot be independently branch-limited by this check.",
+  "approval_gate": "Require founder review, branch protections and verified no-main-write controls before merge. This file is not a credential, user approval, or runtime attestation.",
+  "legacy_note": "Do not put the workflow into Oct 15 observed writer baseline. The primary independent workflow is converted to read-only preview."
+}
