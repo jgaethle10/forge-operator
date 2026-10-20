@@ -22,4 +22,4 @@ jobs:
         with:
           node-version: '22'
       - name: Fail-closed valuation and marketplace adapter tests
-        run: node --test systemia/asset-radar/engine.test.mjs systemia/asset-radar/ebay-browse-adapter.test.mjs
+        run: node --test systemia/asset-radar/*.test.mjs
