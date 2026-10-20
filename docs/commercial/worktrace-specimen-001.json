@@ -1,0 +1,52 @@
+{
+  "schema": "evercraft.worktrace.specimen.v0",
+  "specimen_id": "worktrace-001-checkout-canary",
+  "status": "public_text_only_example",
+  "created_date": "2026-10-20",
+  "recording_state": "not_captured",
+  "human_narration_state": "pending",
+  "human_review_state": "pending",
+  "data_license_state": "not_offered_for_ai_training",
+  "subject": "Evercraft Payments buyer-door synthetic canary investigation",
+  "source_type": "owned_public_first_party_ci",
+  "sources": [
+    {
+      "kind": "github_actions_run",
+      "uri": "https://github.com/jgaethle10/forge-operator/actions/runs/39414017288"
+    },
+    {
+      "kind": "probe_source",
+      "uri": "https://github.com/jgaethle10/forge-operator/blob/main/scripts/probe-evercraft-payments-buyer-doors.mjs"
+    },
+    {
+      "kind": "existing_issue",
+      "uri": "https://github.com/jgaethle10/forge-operator/issues/1303"
+    }
+  ],
+  "observed": {
+    "offers_tested": 13,
+    "offers_passed": 0,
+    "assertion_name": "checkout_action_missing",
+    "assertion_source": "body.includes('Continue to secure checkout')",
+    "checkout_created": false,
+    "payment_attempted": false
+  },
+  "claim_boundaries": [
+    "Exact missing copy is not proof of absent submit control",
+    "A GET-only canary is not a paid or checkout success receipt",
+    "Unattributed-return status must be verified independently"
+  ],
+  "prohibited": [
+    "charge",
+    "collect private data",
+    "disable attribution guards",
+    "publish client data"
+  ],
+  "next_acceptance": [
+    "Real consented presenter video",
+    "Native timestamps and immutable checksums",
+    "Human review and owner rights clearance",
+    "Redaction and secure private delivery",
+    "Buyer specification and separate training-use consent"
+  ]
+}
