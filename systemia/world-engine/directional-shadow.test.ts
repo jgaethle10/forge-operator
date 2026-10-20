@@ -41,6 +41,7 @@ test('real directional light generates a non-identity light-space matrix and cas
   assert.equal(plan.shadow?.directionalLightEntityId,'sun');
   assert.equal(plan.shadow?.resolution,512);
   assert.equal(plan.shadow?.depthBias,.003);
+  assert.equal(plan.shadow?.softnessTexels,1);
   assert.equal(plan.shadow?.lightViewProjectionMatrix.length,16);
   assert.ok(plan.shadow!.lightViewProjectionMatrix.every(Number.isFinite));
   assert.notDeepEqual(plan.shadow!.lightViewProjectionMatrix,[1,0,0,0,0,1,0,0,0,0,1,0,0,0,0,1]);
@@ -60,7 +61,7 @@ test('unsupported or missing shadow-casting light fails closed',()=>{
 });
 test('invalid shadow bounds, bias and resolution reject before rasterization',()=>{
   const cases=[{halfExtent:0},{halfExtent:101},{resolution:128},{resolution:2048},
-    {depthBias:0},{depthBias:.1},{depthBias:NaN},
+    {depthBias:0},{depthBias:.1},{depthBias:NaN},{softnessTexels:3},{softnessTexels:-1},
     {focus:{x:Infinity,y:0,z:0}},{directionalLightEntityId:'../invalid'}];
   for(const bad of cases){
     const w=world();(w.visualScene as any).directionalShadows={...config,...bad};
@@ -71,6 +72,8 @@ test('GPU shader exposes real depth comparison and dedicated depth-only vertex p
   assert.match(EVERCRAFT_WEBGPU_WGSL,/var directionalShadow: texture_depth_2d/);
   assert.match(EVERCRAFT_WEBGPU_WGSL,/textureSampleCompareLevel/);
   assert.match(EVERCRAFT_WEBGPU_WGSL,/directionalShadowVisibility/);
+  assert.match(EVERCRAFT_WEBGPU_WGSL,/textureDimensions\(directionalShadow\)/);
+  assert.match(EVERCRAFT_WEBGPU_WGSL,/return sum\/9\.0/);
   assert.match(EVERCRAFT_SHADOW_DEPTH_WGSL,/lightViewProjection\*object\.model/);
   assert.match(EVERCRAFT_SHADOW_DEPTH_WGSL,/@vertex/);
 });
