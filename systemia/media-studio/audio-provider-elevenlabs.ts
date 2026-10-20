@@ -33,6 +33,8 @@ export interface ElevenLabsAudioAdapterConfig {
   voiceProfiles?:Record<string,string>;
   /** Opt-in strict speech lane: legacy caller without casting evidence is held. */
   requireVoiceFoundry?:boolean;
+  /** Unique optional local audition take label. Never overwrites existing reviewed audio. */
+  auditionTakeId?:string;
   /** Optional governed per-cue casting; when present, rejected speech never reaches a paid API. */
   voiceFoundry?:{
     profiles:Array<Record<string,unknown>>;
@@ -236,7 +238,12 @@ export function createElevenLabsAudioAdapter(
       let body:Record<string,unknown>;
       let modelId:string;
       let voiceProfileId:string|undefined;
-      const outputBase=path.resolve(config.outputDir,safeName(need.id));
+      if(foundryPlan && !/^[a-zA-Z0-9][a-zA-Z0-9_.-]{0,79}$/.test(need.id)) throw new Error('elevenlabs_voice_cue_id_unsafe');
+      if(foundryPlan && config.auditionTakeId!==undefined && !/^[a-zA-Z0-9][a-zA-Z0-9_.-]{0,47}$/.test(config.auditionTakeId)) throw new Error('elevenlabs_voice_take_id_unsafe');
+      const takeSuffix=foundryPlan&&config.auditionTakeId?'.'+config.auditionTakeId:'';
+      const outputBase=path.resolve(config.outputDir,safeName(need.id)+takeSuffix);
+      if(foundryPlan && ['.mp3','.source.mp3','.dry.mp3'].some(suffix=>fs.existsSync(outputBase+suffix)))
+        throw new Error('elevenlabs_voice_take_output_already_exists');
       const headers={
         'xi-api-key':config.apiKey,
         'Content-Type':'application/json',
@@ -332,6 +339,7 @@ export function createElevenLabsAudioAdapter(
           'provider:elevenlabs',
           'provider-doc:'+DOCS[need.kind],
           ...(foundryPlan?['voice-foundry-preflight:'+foundryPlan.planDigest]:[]),
+          ...(foundryPlan&&config.auditionTakeId?['voice-audition-take-id:'+config.auditionTakeId]:[]),
           ...(directedTake?['voice-performance-script-sha256:'+directedTake.scriptDigest,'voice-performance-request-sha256:'+directedTake.requestDigest]:[]),
           ...(foundryPlan&&fs.existsSync(outputBase+'.dry.mp3')
             ? ['voice-foundry-dry-source-sha256:'+crypto.createHash('sha256').update(fs.readFileSync(outputBase+'.dry.mp3')).digest('hex')]
