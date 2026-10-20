@@ -987,6 +987,18 @@ fn fs_main(input: VertexOut) -> @location(0) vec4<f32> {
 }
 `;
 
+export const EVERCRAFT_SHADOW_DEPTH_WGSL=`
+struct ShadowObject {
+  lightViewProjection:mat4x4<f32>,
+  model:mat4x4<f32>,
+};
+@group(0) @binding(0) var<uniform> object:ShadowObject;
+@vertex
+fn vs_main(@location(0) position:vec3<f32>) -> @builtin(position) vec4<f32> {
+  return object.lightViewProjection*object.model*vec4<f32>(position,1.0);
+}
+`;
+
 interface CachedGeometry {
   vertexBuffer:any;
   indexBuffer:any|null;
