@@ -605,5 +605,26 @@
         ]
       }
     }
-  ]
+  ],
+  "corporate_social_safety": {
+    "policy": "evercraft.family-social.zero-sexual.v1",
+    "rule": "No sexual, suggestive, erotic, adult industry, adult redirect, teaser, or cross-promotion on ANY first-party Evercraft social channel.",
+    "allowed_content": "Family-friendly business, sports, repair, collectibles, community, original informational content.",
+    "applies_to": [
+      "owned social accounts",
+      "organic posts",
+      "sponsored posts",
+      "story/reel artwork",
+      "captions",
+      "link previews",
+      "hashtags",
+      "outbound URLs",
+      "partner cross-posts published under Evercraft brands"
+    ],
+    "visual_media_operator_review_required": true,
+    "automatic_metadata_link_gate": "systemia/clip/family-social-safety.mjs",
+    "social_posting_authority": "manual_and_scoped_only",
+    "adult_brand_promotion_allowed": false,
+    "adult_referral_or_teaser_allowed": false
+  }
 }
