@@ -97,10 +97,14 @@ export function buildVoiceAudition({manifestPath,outputDir,templatePath=path.joi
      });
    }
    const {sourcePath,asrObservationPath,...publicCandidate}=c;
-   return {...publicCandidate,audioPath:result.audioPath,signal:result.signal,pacing:result.pacing,bytes:result.bytes,
+   const status=result.signal.status!=='objective_measurements_only'?'signal_held'
+     :transcriptAudit&&transcriptAudit.status!=='candidate_text_match_needs_human_review'
+       ?'asr_review_held':'awaiting_human_review';
+   return {...publicCandidate,audioPath:result.audioPath,signal:result.signal,pacing:result.pacing,
+     transcriptAudit,asrAnalysisStatus:transcriptAudit?.status??'asr_not_provided',bytes:result.bytes,
      pacingReviewRequired:result.pacing.warnings.length>0,
      audibleQualityReviewed:false,consentEvidenceVerified:false,
-     status:result.signal.status==='objective_measurements_only'?'awaiting_human_review':'signal_held'};
+     status};
  });
  const report={
    schema:'evercraft.voice-foundry.audition-report.v1',
