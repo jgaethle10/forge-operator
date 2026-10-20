@@ -129,7 +129,12 @@ async function renderGpuFrames(plans:ReturnType<typeof buildCinematicCameraSeque
       try{
         browser=await chromium.launch({headless:true,args:profile.args});
         const context=await browser.newContext({viewport:{width:WIDTH,height:HEIGHT}});
-        page=await context.newPage();await page.goto(server.url,{waitUntil:'domcontentloaded'});
+        page=await context.newPage();
+        // tsx/esbuild annotates inline page.evaluate closures with __name().
+        // The browser runs serialized callbacks without Node's module helpers.
+        // Install only this inert name decorator in the isolated loopback lab.
+        await page.addInitScript({content:"globalThis.__name=(fn,name)=>fn;"});
+        await page.goto(server.url,{waitUntil:'domcontentloaded'});
         const init=await page.evaluate(async({shader,geometry,width,height}:{shader:string;geometry:GeometryAsset;width:number;height:number})=>{
           const adapter=await (navigator as any).gpu?.requestAdapter();
           if(!adapter)return {ok:false,reason:'no_adapter'};
