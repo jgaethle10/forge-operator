@@ -69,7 +69,8 @@ function industrialWorld():WorldDefinition{
   });
   const box=(id:string,x:number,y:number,z:number,sx:number,sy:number,sz:number,mat:string)=>({
     id,transform:{position:{x,y,z},scale:{x:sx,y:sy,z:sz}},
-    renderable:{geometryRef:'owned:cube',materialId:mat}
+    renderable:{geometryRef:'owned:cube',materialId:mat,
+      castsShadow:!['floor','platform'].includes(id),receivesShadow:true}
   });
   return {
     schema:'evercraft.world-engine.world.v1',id:'world:cinematic-fabric-synthetic',
@@ -128,8 +129,8 @@ function industrialWorld():WorldDefinition{
       box('light-frame-right',2.8,2.2,0,.08,2.15,.08,'structure'),
       {id:'ambient',transform:{position:{x:0,y:0,z:0}},
         light:{type:'ambient',color:{r:.35,g:.52,b:.72},intensity:2.2}},
-      {id:'sun',transform:{position:{x:-8,y:12,z:1},rotationDeg:{x:32,y:-25,z:0}},
-        light:{type:'directional',color:{r:.65,g:.78,b:1},intensity:4.2}},
+      {id:'sun',transform:{position:{x:-8,y:12,z:1},rotationDeg:{x:-35,y:-25,z:0}},
+        light:{type:'directional',color:{r:.65,g:.78,b:1},intensity:4.2,castsShadow:true}},
       {id:'warm',transform:{position:{x:2,y:4,z:3}},
         light:{type:'point',color:{r:1,g:.48,b:.14},intensity:95,range:12}},
       {id:'rim',transform:{position:{x:-4,y:6,z:-2}},
