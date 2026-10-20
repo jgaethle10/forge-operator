@@ -33,6 +33,7 @@ test('every native format generates actual digest-verified World Engine GPU plan
   assert.equal(result.sequence.boundaries.publicationAuthority,false);
   assert.ok(result.sequence.frames.every(x=>verifyWebGpuRenderPlan(x.renderPlan)));
   assert.ok(result.review.every(x=>x.landmarks.length===6));
+  assert.ok(result.review.every(x=>x.visibleSubjectLandmarks===6));
   assert.ok(result.review.every(x=>x.landmarks.every(z=>Number.isFinite(z.x)&&Number.isFinite(z.y))));
   return result;
  });
