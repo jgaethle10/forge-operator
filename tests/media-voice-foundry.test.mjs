@@ -42,3 +42,10 @@ test('signal inspection evidence is required and must match take bytes',()=>{
  const forged=evaluateVoiceTake({plannedCue:p,take:take(p),reviews:reviewers,signal:{...signal(p),audioDigest:'b'.repeat(64)}});
  assert.equal(forged.status,'held');assert.ok(forged.reasons.includes('signal_audio_digest_mismatch'));
 });
+
+test('pronunciation lexicon only matches whole Latin-language names, not accidental substrings',()=>{
+ const p=planVoiceSession({profiles:[voice],cues:[{...cue,text:'Evercrafting is not Evercraft.'}],lexicon:[{term:'Evercraft',reading:'EH-ver-kraft',locale:'en-US',reviewerEvidenceRef:'lexicon-review'}]});
+ assert.equal(p.cues[0].pronunciation.length,1);
+ const mismatched=planVoiceSession({profiles:[voice],cues:[{...cue,text:'Evercrafting makes things.'}],lexicon:[{term:'Evercraft',reading:'EH-ver-kraft',locale:'en-US',reviewerEvidenceRef:'lexicon-review'}]});
+ assert.equal(mismatched.cues[0].pronunciation.length,0);
+});
