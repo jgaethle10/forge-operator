@@ -13,7 +13,7 @@ function setup(){
   const result=spawnSync('ffmpeg',['-y','-v','error','-f','lavfi','-i',`sine=frequency=${freq}:sample_rate=48000`,'-t','1.25','-filter:a','volume=0.10',file],{encoding:'utf8'});
   assert.equal(result.status,0,result.stderr);
   voices.push({id:'synthetic-'+i,label:'Test Signal '+i,voiceProfileId:'unapproved-'+i,genderPresentation:i?'masculine':'feminine',
-   accent:'general-american',locale:'en-US',performanceDirection:'synthetic fixture only',scriptText:'No human audio was produced.',audioPath:path.basename(file),provider:'test-waveform',rightsState:'unknown'});
+   accent:'general-american',locale:'en-US',performanceDirection:'synthetic fixture only',scriptText:'No human audio was produced.',audioPath:path.basename(file),provider:'test-waveform',modelId:'fixture-sine',rightsState:'unknown'});
  }
  const input={schema:'evercraft.voice-foundry.audition-input.v1',projectId:'waveform-test',scriptText:'No human audio was produced.',locale:'en-US',candidates:voices};
  const manifestPath=path.join(root,'manifest.json');fs.writeFileSync(manifestPath,JSON.stringify(input));
@@ -67,4 +67,9 @@ test('supports A/B comparisons across accents in the same language',()=>{
  const out=buildVoiceAudition(s);const report=JSON.parse(fs.readFileSync(out.reportPath,'utf8'));
  assert.equal(report.candidates[0].locale,'en-US');assert.equal(report.candidates[1].locale,'en-GB');
  assert.equal(report.candidates[1].accent,'british-rp');
+});
+
+test('every audition take must identify its model for controlled v3 vs v4 comparison',()=>{
+ const s=setup();delete s.input.candidates[1].modelId;fs.writeFileSync(s.manifestPath,JSON.stringify(s.input));
+ assert.throws(()=>buildVoiceAudition(s),/audition_model_id_missing/);
 });
