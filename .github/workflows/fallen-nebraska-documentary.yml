@@ -27,6 +27,14 @@ jobs:
       - run: npm install --no-audit --no-fund
       - name: Compile film pilot and prove pending footage is unexportable
         run: node --import tsx --test systemia/media-studio/pilots/nebraska-source-first/opening.test.ts
+      - name: Verify documentary edit grammar is story-led, not a rhythmic montage
+        run: |
+          node --test systemia/media-studio/pilots/nebraska-source-first/observational-edit-preflight.test.mjs
+          node systemia/media-studio/pilots/nebraska-source-first/observational-edit-preflight.mjs \
+            systemia/media-studio/pilots/nebraska-source-first/opening.plan.json \
+            systemia/media-studio/pilots/nebraska-source-first/opening.observational-edit.json \
+            /tmp/nebraska-observational-edit-report.json
+          node -e "const r=require('/tmp/nebraska-observational-edit-report.json');if(r.status!=='structure_passed_assets_pending'||r.checks.publicationAuthorityGranted!==false)process.exit(1)"
       - name: Materialize canonical storyboard and blocker inventory
         run: |
           npm run media:studio -- studio-create systemia/media-studio/pilots/nebraska-source-first/opening.plan.json /tmp/nebraska-source-first.json
