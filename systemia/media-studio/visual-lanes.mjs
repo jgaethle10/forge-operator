@@ -105,6 +105,11 @@ export function produceVisualLanes(request,outputDir){
     labels.push(isSynthetic?'SYNTHETIC CINEMATIC STUDY':'EDITORIAL CINEMATIC STUDY');
     labels.push('INTERNAL REVIEW ONLY');
    }
+   // A camera intended for widescreen is not magically a vertical commercial.
+   // Warn inside the exported video itself, not just a hidden metadata receipt.
+   const candidateAspect=w/h,originalAspect=srcInfo.width/srcInfo.height;
+   const occupancy=Math.min(candidateAspect/originalAspect,originalAspect/candidateAspect);
+   if(occupancy<.6)labels.push('CAMERA REFRAME REQUIRED');
    const textfiles=labels.map((value,i)=>{
     const p=path.join(tmp,cut.lane+'-'+i+'.txt');
     fs.writeFileSync(p,value,{flag:'wx',mode:0o600});return p;
