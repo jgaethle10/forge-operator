@@ -34,3 +34,21 @@ A bank routing number and account number identify an account; they do **not** cr
 ```sh
 node --test systemia/payments/multi-rail-preflight.test.mjs
 ```
+
+## Bank-specific receiving plan (verified documentation, 2026-10-20)
+
+**Bluevine / primary:** Bluevine Business Checking can receive customer ACH credits, has an invoicing service without Stripe, and offers processor-powered card/wallet/ACH-debit links after an eligible Stripe connection. Bluevine expressly states that Zelle is *not* available. Cash App and Venmo can connect as third-party services, but that does not make them native Bluevine checkout methods.
+- Sources: https://www.bluevine.com/faq ; https://www.bluevine.com/accept-payments/payment-links ; https://support.bluevine.com/s/article/How-do-I-manage-Invoices
+
+**HAPO / secondary:** HAPO Commercial Checking publicly lists ACH origination and merchant services. Verify that Evercraft owns an actual *commercial* checking account and that it can receive the intended inbound transfer before activation. Business Zelle receiving is unverified. Do not use an individual's HAPO checking or savings for merchant receipts without explicit bank confirmation.
+- Sources: https://www.hapo.org/business/accounts/checking-accounts ; https://www.hapo.org/business/resources/merchant-services
+
+**SoFi / consumer, not Evercraft merchant:** SoFi checking supports consumer Zelle, but SoFi does not currently offer business checking or savings accounts. Do not make it an Evercraft settlement destination.
+- Sources: https://support.sofi.com/hc/en-us/articles/4423451888909-What-personal-information-do-I-need-to-be-eligible-to-open-SoFi-Checking-and-Savings-accounts ; https://www.sofi.com/banking/zelle-faq/how-do-i-use-zelle/
+
+### Implementation guardrails
+- `bank-destination-policy.mjs` enforces Bluevine Business Checking or verified HAPO Commercial Checking for ACH credit, and bans Bluevine/SoFi Zelle merchant routing.
+- HAPO business Zelle may only be enabled following a fresh *bank-verified* business enrollment and service check.
+- The current user has named three financial institutions, **not** provided evidence that their particular accounts are business registered, merchant approved or integrated. All actual attempts stay blocked without the server-side bank evidence.
+- Do not expose account or routing numbers in source, analytics, email or customer-visible materials unless the owner deliberately approves official invoice instructions in a secure system.
+- Keep bank destinations separate from actual payment methods. Money must not count as received or unlock delivery without bank/provider verification.
