@@ -104,3 +104,16 @@ Provider documentation:
 - The baseline A/B comparison is a diagnostic deliverable. This source change makes no paid requests and has no release/publishing authority. Live voice auditions and verified independent listening are still required.
 
 Local regression: `node --test tests/media-voice-mastering.test.mjs`; the test runner is also included in `npm run test:voice-foundry` and `npm run test:media-studio`.
+
+## Push 06: performance expression, voice continuity, and phonetic assets
+
+Status: **source stage**, no live provider audition or generated neural audio in this push. Quality cannot be claimed from passing mocked provider tests.
+
+- Original dialogue text remains locked to the cast cue and its SHA-256. For explicitly human-approved performance direction, `voice-performance.mjs` compiles a small reviewed inline tag (for example `[whispers]`) only for the supported v3, v4 and v4 Turbo models. Its direction contract, plan digest, original script SHA-256 and exact request SHA-256 are distinguishable. Arbitrary inline tags in raw dialogue are blocked. Natural-language `direction` descriptions in a cast remain a human brief and are **not** silently injected into model text.
+- `requireVoiceFoundry: true` makes speech fail closed if the adapter is missing a cast. Legacy routes still exist when the flag is not set. Do not interpret a valid declared `evidenceRef` as independent authentication; external consent and review receipts still need a trusted resolver.
+- For repeat takes, set `auditionTakeId` to a unique identifier (e.g., `v4-take01`) and do not reuse that ID within the same output directory. The adapter blocks collisions **before** requesting paid audio. Each take retains its own untreated dry recording and content digest for later A/B comparison. A generation already made by a provider can still incur costs if the audio is subsequently rejected for timing or other quality limits.
+- The existing per-cue pronunciation lexicon is **not** itself a provider phonetic dictionary. Configure human-approved `pronunciationDictionaryBindings` with a locale, provider dictionary ID, explicit version ID and approval evidence reference. `voice-pronunciation.mjs` selects only exact-region matches, allows at most three dictionary locators, prevents accidental duplicates, and can require a reviewed dictionary for a matched term with `strictPronunciation: true`. Only explicit version IDs go to the provider. Written name matching is not acoustic proof that the generated voice pronounced anything correctly.
+- The adapter's provider body contains `pronunciation_dictionary_locators` only when an approved relevant binding exists, and records a request digest for downstream lineage.
+- `tests/media-voice-performance.test.mjs`, `tests/media-voice-pronunciation.test.mjs` and ElevenLabs mocked adapter tests cover both passing and rejected requests. The standalone offline Node contract suite was independently executed locally with **23 passing tests and 0 failures**. Full GitHub Actions remain the separate TypeScript/CI gate.
+
+Next milestone: verify model capabilities and speaker license in a real account, obtain explicit permission to generate, audition real neural voices, compare blinded performances on multiple devices, and collect two qualified listening reviews. Do not claim release readiness from this source work alone.
