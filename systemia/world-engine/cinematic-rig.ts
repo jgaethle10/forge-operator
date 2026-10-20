@@ -105,7 +105,9 @@ function validateTake(world:WorldDefinition,take:CinematicCameraTake){
   if(!target||!target.renderable)err('visible_world_target_required');
   if(target.renderable.visible===false)err('hidden_target');
   if(take.targetEntityId===take.cameraEntityId)err('self_target_invalid');
-  const startFov=take.startFovYDeg??camera.camera.projection.fovYDeg;
+  const perspective=camera.camera.projection;
+  if(perspective.type!=='perspective')err('perspective_camera_required');
+  const startFov=take.startFovYDeg??perspective.fovYDeg;
   const endFov=take.endFovYDeg??startFov;
   for(const fov of [startFov,endFov]){
     finite(fov,'fov');
