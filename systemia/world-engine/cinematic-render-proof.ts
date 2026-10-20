@@ -81,7 +81,7 @@ function industrialWorld():WorldDefinition{
       atmosphere:{color:{r:.14,g:.25,b:.38},density:.048,startDistance:4,heightFalloff:.065,referenceHeight:0},
       colorManagement:{toneMapper:'aces_filmic',exposureBiasStops:0.35},
       cinematicLighting:{shading:'ggx_microfacet',localLightFalloff:'inverse_square'},
-      directionalShadows:{directionalLightEntityId:'sun',focus:{x:0,y:1.2,z:0},halfExtent:14,resolution:512,depthBias:.003},
+      directionalShadows:{directionalLightEntityId:'sun',focus:{x:0,y:1.2,z:0},halfExtent:14,resolution:512,depthBias:.003,softnessTexels:1},
       materials:[
         material('floor',[.08,.14,.20],.25,.85),
         {...material('structure',[.29,.42,.54],.68,.35),
@@ -302,7 +302,7 @@ async function renderGpuFrames(plans:ReturnType<typeof buildCinematicCameraSeque
             plan.cinematicLighting?.shading==='ggx_microfacet'?1:0,
             plan.cinematicLighting?.localLightFalloff==='inverse_square'?1:0,0,0,
             ...(plan.shadow?.lightViewProjectionMatrix??[1,0,0,0,0,1,0,0,0,0,1,0,0,0,0,1]),
-            plan.shadow?.lightIndex??0,plan.shadow?1:0,plan.shadow?.depthBias??0,0
+            plan.shadow?.lightIndex??0,plan.shadow?1:0,plan.shadow?.depthBias??0,plan.shadow?.softnessTexels??0
           ]);
           const frameBuffer=device.createBuffer({size:frameData.byteLength,usage:(globalThis as any).GPUBufferUsage.UNIFORM|(globalThis as any).GPUBufferUsage.COPY_DST});
           device.queue.writeBuffer(frameBuffer,0,frameData);
