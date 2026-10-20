@@ -167,3 +167,27 @@ The ASR observation must include the schema `evercraft.voice-foundry.asr-observa
 `evaluateVoiceTake` now requires the transcript audit in addition to signal measurement, pacing, independent listening scores and explicit evidence references. Any missing, mismatched or high-WER audit blocks internal QA. If an optional `asrObservationPath` is present in an audition manifest candidate, the offline `voice-audition-kit.mjs` reads it **only from inside the audition project**, limits its file size, binds it to measured audio, includes transcript findings in the report, and holds mismatched candidates. Without it, the report explicitly says `asr_not_provided`; no transcription is fabricated. The Listening Room displays matched, held or absent transcript status per take.
 
 Tests are synthetic and mock **ASR declarations**, plus real generated audio file hashes; they are not proof of a working neural speech recognizer or believable vocal performances. Real independent ASR receipts, careful pronunciation reviews and licensed model auditions remain to be done. The draft PR is not a production release.
+
+
+## Push 10: locally executable, hash-pinned whisper.cpp ASR
+
+The \`voice-local-whisper.mjs\` runner is a **real local-execution path**, not a provider API mock. It requires an already-installed executable from [whisper.cpp](https://github.com/ggml-org/whisper.cpp), a local model file, a previously admitted Voice Foundry session, a specific cue and a recording. It checks the actual input format/duration with \`ffprobe\`, converts the recording to mono 16 kHz PCM with FFmpeg, runs \`whisper-cli\` against that converted audio, consumes the generated plain-text transcript and feeds it through \`assessVoiceTranscript\`. Audio, PCM, model and binary hashes are recorded. All subprocesses use argument vectors without a shell.
+
+Important admission constraints: recordings are limited to 30 MiB and 150 seconds, model files to 3.5 GiB, transcript output to 64 KiB and the recognizer to a 180-second timeout. Commands fail if the binary, model, input, approved cast or expected binary/model SHA-256 pins are missing. Files are written using create-only flags into an existing output directory; temporary audio is deleted. Local model access and execution must be intentionally configured by the operator. There is no model download, hidden key access, cloud fallback, billed transcription or paid synthesis.
+
+Example (only once whisper.cpp and a lawful/approved model have been installed):
+
+\`\`\`bash
+MODEL=/trusted/models/ggml-base.bin
+WHISPER=/trusted/whisper.cpp/build/bin/whisper-cli
+sha256sum "$MODEL" "$WHISPER"
+mkdir -p ./local-asr-receipts
+node systemia/media-studio/voice-local-whisper.mjs \
+  ./casting-session.json cue-001 ./approved-take.wav \
+  "$WHISPER" "$MODEL" ./local-asr-receipts \
+  YOUR_APPROVED_MODEL_SHA256 YOUR_APPROVED_CLI_SHA256
+\`\`\`
+
+The command outputs a same-cue \`voice-asr-<cue>.json\` observation and a \`voice-asr-audit-<cue>.json\` report. Include the observation as a candidate's \`asrObservationPath\` within an audition folder to display its spoken-script accuracy. Exiting with status 2 means transcription ran but the word-level comparison was held; exiting with status 1 means an execution or validation error.
+
+**Honesty boundary:** no installed whisper.cpp binary or authentic model was available in the development runtime at authoring time, so the new regression tests invoke a clearly labeled test stub executable against **real FFmpeg-generated non-speech audio**. The tests validate subprocess arguments, deterministic hashes, model/binary drift protection, missing-resource holds and absence of false publication authority. The output of a stub is emphatically **not evidence that real spoken words were recognized**. A real model must be installed, run and independently audited before claiming any genuine ASR result. A transcript match from a real model still does not prove naturalness, emotional acting, phonetic pronunciation or commercial usage rights.
