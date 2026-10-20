@@ -1,0 +1,86 @@
+name: World Engine 3D anchored educational callouts
+on:
+  pull_request:
+    paths:
+      - 'systemia/world-engine/scene-annotations.ts'
+      - 'systemia/world-engine/scene-annotations-render.ts'
+      - 'systemia/world-engine/scene-annotations.test.ts'
+      - '.github/workflows/world-engine-anchored-education.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+  actions: read
+jobs:
+  real-world-engine-gpu-to-annotated-education:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Install canonical renderer and original source compiler
+        run: npm install --no-audit --no-fund
+      - name: Require proven libass and native H264 encoder
+        run: |
+          command -v ffmpeg || (sudo apt-get update -qq && sudo apt-get install -y ffmpeg)
+          ffmpeg -hide_banner -filters | grep -E '^ ... subtitles '
+          test -f /usr/share/fonts/truetype/dejavu/DejaVuSans.ttf || (sudo apt-get update -qq && sudo apt-get install -y fonts-dejavu-core)
+      - name: Run World Engine 3D annotation and historical-truth refusal tests
+        run: |
+          node --import tsx --test systemia/world-engine/scene-annotations.test.ts
+      - name: Retrieve original actual 96-frame World Engine hero film and camera provenance
+        uses: actions/download-artifact@v4
+        with:
+          run-id: 39449612562
+          name: world-director-hero_full-wide
+          github-token: ${{ github.token }}
+          path: ${{ runner.temp }}/original-world-gpu
+      - name: Project three educational labels through signed camera plans and burn them into real video
+        env:
+          SRC: ${{ runner.temp }}/original-world-gpu
+          OUT: ${{ runner.temp }}/evercraft-tracked-education
+        run: |
+          node --import tsx systemia/world-engine/scene-annotations-render.ts "$SRC/battleship-world-engine-trial.mp4" "$SRC/receipt.json" "$OUT"
+      - name: Independently verify actual moving annotations, source lineage, 96 H264 frames and review hold
+        env:
+          OUT: ${{ runner.temp }}/evercraft-tracked-education
+        run: |
+          node - <<'NODE'
+          const fs=require('node:fs'),path=require('node:path');
+          const r=JSON.parse(fs.readFileSync(path.join(process.env.OUT,'receipt.json'),'utf8'));
+          const labels=r.anchoredCalloutReceipt.labels;
+          const film=path.join(process.env.OUT,r.film.file);
+          if(r.schema!=='evercraft.world-engine.teaching-video-proof.v1'
+            ||r.sceneEvidenceType!=='modeled_not_observed'
+            ||r.claimState!=='no_verified_historical_facts'
+            ||r.publicationAuthority!==false||r.clientApproval!==false
+            ||r.film.audio!==false||r.film.frames!==96
+            ||r.film.width!==640||r.film.height!==360
+            ||r.film.changedPixelsAt07s<500
+            ||labels.length!==3
+            ||labels.some(x=>x.evidence!=='modeled'
+              ||x.visibleFrames<8||x.changingPositionFrames<1)
+            ||r.anchoredCalloutReceipt.occlusionDetection!==false
+            ||r.anchoredCalloutReceipt.educationalFactVerification!=='not_performed_by_renderer'
+            ||!fs.existsSync(film)||fs.statSync(film).size<12000){
+             console.error('SCENE_TRACKED_TEACHING_PROOF_FAILED',JSON.stringify(r,null,2));process.exit(2);
+          }
+          console.log('REAL_SCENE_ANCHORED_3D_TEACHING_VIDEO_VERIFIED',JSON.stringify({
+           pixelChanges:r.film.changedPixelsAt07s,labels,
+           sha256:r.film.sha256,actualGpuSourceSha256:r.sourceVideoSha256
+          }));
+          NODE
+      - name: Preserve genuine educational film, three decoded scenes and original projection receipts
+        uses: actions/upload-artifact@v4
+        with:
+          name: evercraft-world-engine-3d-tracked-education
+          path: |
+            ${{ runner.temp }}/evercraft-tracked-education/battleship-tracked-lesson.mp4
+            ${{ runner.temp }}/evercraft-tracked-education/receipt.json
+            ${{ runner.temp }}/evercraft-tracked-education/tracked-callouts.ass
+            ${{ runner.temp }}/evercraft-tracked-education/hull.png
+            ${{ runner.temp }}/evercraft-tracked-education/turret.png
+            ${{ runner.temp }}/evercraft-tracked-education/bridge.png
+          if-no-files-found: error
+          retention-days: 7
