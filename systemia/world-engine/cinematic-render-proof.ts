@@ -1,7 +1,7 @@
 /**
  * Owned World Engine cinematic pixel canary.
  * Actual WGSL GPU frames -> raw RGBA -> FFmpeg H.264/AAC master.
- * Deliberately SYNTHETIC industrial geometry and original lab-tone audio.
+ * Deliberately SYNTHETIC industrial geometry and original authored synth sound.
  * No public product or physical-world footage claims. No publication.
  */
 import crypto from 'node:crypto';
@@ -18,6 +18,7 @@ import type {WorldDefinition} from './engine.js';
 import type {GeometryAsset} from './webgpu.js';
 import {makeTorusGeometry} from './procedural-geometry.js';
 import {makeBrushedMetalTextures} from './brushed-metal.js';
+import {renderKineticSoundscape} from '../media-studio/kinetic-soundscape.mjs';
 import {generateDeterministicTangents} from './fallen-geometry.js';
 import type {TextureAsset} from './texture.js';
 import {textureAssetDigest} from './texture.js';
@@ -456,12 +457,25 @@ async function main(){
   if(!shadowSource)throw new Error('owned_shadow_shader_missing');
   const raw=await renderGpuFrames(sequence.frames,geometries,textures,shader.source,shadowSource[1],out);
   const video=path.join(out,'orbital-foundry-synthetic-canary.mp4');
-  // The music bed is a synthetic lab signal, not licensed commercial music.
+  // Original unlicensed-by-others mechanical soundtrack for this synthetic scene.
+  const sound=renderKineticSoundscape({
+    durationSec:DURATION,sampleRate:48000,movement:'orbit',
+    seed:'evercraft-foundry-original-kinetic-film-v1',
+    impacts:[{at:.26,power:.7},{at:1.27,power:1}]
+  });
+  const soundFile=path.join(out,'kinetic-original-soundscape.wav');
+  fs.writeFileSync(soundFile,sound.wav,{flag:'wx',mode:0o600});
+  fs.writeFileSync(path.join(out,'soundscape-receipt.json'),JSON.stringify(sound.receipt,null,2)+'\n',
+    {flag:'wx',mode:0o600});
+  run('ffmpeg',['-hide_banner','-loglevel','error','-y',
+    '-i',soundFile,
+    '-filter_complex','[0:a]showwavespic=s=960x256:scale=sqrt:colors=white[wave]',
+    '-map','[wave]','-frames:v','1',path.join(out,'soundscape-waveform.png')]);
   run('ffmpeg',['-hide_banner','-loglevel','error','-y',
     '-f','rawvideo','-pixel_format','rgba','-video_size',WIDTH+'x'+HEIGHT,
     '-framerate',String(FPS),'-i',raw.framesFile,
-    '-f','lavfi','-i','sine=frequency=72:sample_rate=48000:duration='+DURATION,
-    '-filter_complex','[1:a]volume=0.075,afade=t=in:st=0:d=0.25,afade=t=out:st=1.5:d=0.5[a]',
+    '-i',soundFile,
+    '-filter_complex','[1:a]highpass=f=28,lowpass=f=15000,acompressor=threshold=0.22:ratio=1.8:attack=12:release=110,alimiter=limit=0.89:level=false[a]',
     '-map','0:v:0','-map','[a]','-t',String(DURATION),
     '-c:v','libx264','-preset','medium','-crf','20','-pix_fmt','yuv420p',
     '-c:a','aac','-b:a','128k','-movflags','+faststart',video]);
@@ -477,11 +491,11 @@ async function main(){
     '-f','rawvideo','-pixel_format','rgba','-video_size',WIDTH+'x'+HEIGHT,
     '-i',path.join(out,'shadow-hard-first-frame.rgba'),
     '-frames:v','1',path.join(out,'shadow-hard-first-frame.png')]);
-  const measure=JSON.parse(run('ffprobe',['-v','error','-show_entries','stream=codec_type,codec_name,width,height,r_frame_rate,nb_frames:format=duration','-of','json',video]));
+  const measure=JSON.parse(run('ffprobe',['-v','error','-show_entries','stream=codec_type,codec_name,width,height,r_frame_rate,nb_frames,channels,sample_rate:format=duration','-of','json',video]));
   const stream=measure.streams?.find((s:any)=>s.codec_type==='video');
   const audio=measure.streams?.find((s:any)=>s.codec_type==='audio');
   if(!stream||stream.codec_name!=='h264'||stream.width!==WIDTH||stream.height!==HEIGHT||
-    !audio||audio.codec_name!=='aac'||Number(stream.nb_frames)!==DURATION*FPS){
+    !audio||audio.codec_name!=='aac'||audio.channels!==2||audio.sample_rate!=='48000'||Number(stream.nb_frames)!==DURATION*FPS){
     throw new Error('cinematic_master_contract_invalid');
   }
   const stills=[];
@@ -505,14 +519,17 @@ async function main(){
     shadowFilterChangedPixels:raw.filterChangedPixels,
     output:{path:video,sha256:sha(fs.readFileSync(video)),width:WIDTH,height:HEIGHT,
       durationSec:DURATION,fps:FPS,codec:'h264',audioCodec:'aac'},
-    stills,sourceState:'synthetic_visualization',soundState:'synthetic_test_signal_not_commercial_music',
+    stills,sourceState:'synthetic_visualization',
+    soundState:'original_multilayer_synthetic_soundscape_not_recorded_foley_or_commercial_score',
+    soundReceipt:sound.receipt,
     visualReviewState:'unreviewed',publicationAuthority:false,paidProductionReady:false,
     claims:['Real owned-WGSL shader pixels rendered from canonical World Engine moving 3D camera frame plans',
       'Not cinematic-photoreal-quality, not an authentic physical event, not a public marketing asset']
   };
   fs.writeFileSync(path.join(out,'receipt.json'),JSON.stringify(receipt,null,2)+'\n');
   console.log(JSON.stringify({status:'rendered_gpu_master',receipt:receipt.output,frames:receipt.exactGpuReadbackFrames,
-    uniqueFrames:receipt.uniqueRawFrameDigests,shadowChangedPixels:receipt.shadowCounterfactualChangedPixels,
+    uniqueFrames:receipt.uniqueRawFrameDigests,soundSha256:sound.receipt.sha256,
+    shadowChangedPixels:receipt.shadowCounterfactualChangedPixels,
     pcfChangedPixels:receipt.shadowFilterChangedPixels,
     profile:raw.profile,hardwareExecutionClaim:false}));
 }
