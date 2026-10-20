@@ -16,6 +16,7 @@ import {fileURLToPath} from 'node:url';
 import {buildCinematicCameraSequence,type CinematicCameraTake} from './cinematic-rig.js';
 import type {WorldDefinition} from './engine.js';
 import type {GeometryAsset} from './webgpu.js';
+import {makeTorusGeometry} from './procedural-geometry.js';
 import {extractOwnedShader} from '../evercraft-web/browser-worker/webgpu-reference-frame.mjs';
 import {prepareNativeBrowserRuntime} from '../evercraft-web/browser-worker/native-runtime.mjs';
 
@@ -42,25 +43,9 @@ function cube():GeometryAsset{
   return {schema:'evercraft.world-engine.geometry.v1',id:'owned:cube',
     primitive:'triangles',positions,normals,uvs};
 }
-// Triangulated curved geometry in real 3D (not a flat circular sprite).
-// Explicit outward normals let the existing PBR lighting show rounded metal.
-function torus(id:string,majorRadius:number,tubeRadius:number,radial=40,tubular=10):GeometryAsset{
-  const positions:number[]=[],normals:number[]=[],uvs:number[]=[];
-  const vertex=(i:number,j:number)=>{
-    const a=2*Math.PI*i/radial,b=2*Math.PI*j/tubular;
-    const ca=Math.cos(a),sa=Math.sin(a),cb=Math.cos(b),sb=Math.sin(b);
-    return {p:[(majorRadius+tubeRadius*cb)*ca,tubeRadius*sb,(majorRadius+tubeRadius*cb)*sa],
-      n:[ca*cb,sb,sa*cb],uv:[i/radial,j/tubular]};
-  };
-  for(let i=0;i<radial;i++)for(let j=0;j<tubular;j++){
-    for(const [x,y] of [[i,j],[i+1,j],[i+1,j+1],[i,j],[i+1,j+1],[i,j+1]]){
-      const v=vertex(x,y);positions.push(...v.p);normals.push(...v.n);uvs.push(...v.uv);
-    }
-  }
-  return {schema:'evercraft.world-engine.geometry.v1',id,primitive:'triangles',positions,normals,uvs};
-}
 function industrialGeometry(){
-  return [cube(),torus('owned:outer-rotor',1.32,.22),torus('owned:inner-rotor',.77,.16,32,8)];
+  return [cube(),makeTorusGeometry({id:'owned:outer-rotor',majorRadius:1.32,tubeRadius:.22}),
+    makeTorusGeometry({id:'owned:inner-rotor',majorRadius:.77,tubeRadius:.16,radialSegments:32,tubularSegments:8})];
 }
 function industrialWorld():WorldDefinition{
   const material=(id:string,color:[number,number,number],metallic=.2,roughness=.55)=>({
