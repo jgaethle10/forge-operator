@@ -2,6 +2,7 @@ import crypto from 'node:crypto';
 import fs from 'node:fs';
 import path from 'node:path';
 import { spawnSync } from 'node:child_process';
+import { preflightVoiceFoundrySpeech } from './voice-foundry-bridge.mjs';
 import type { CreativeDepartment } from './departments.js';
 import type {
   ProductionProviderAdapter,
@@ -29,6 +30,12 @@ export interface ElevenLabsAudioAdapterConfig {
   departmentId?:string;
   defaultVoiceId?:string;
   voiceProfiles?:Record<string,string>;
+  /** Optional governed per-cue casting; when present, rejected speech never reaches a paid API. */
+  voiceFoundry?:{
+    profiles:Array<Record<string,unknown>>;
+    cues:Array<Record<string,unknown>>;
+    lexicon?:Array<Record<string,unknown>>;
+  };
   speechModelId?:string;
   musicModelId?:'music_v1'|'music_v2'|'music_v2_5';
   soundModelId?:'eleven_text_to_sound_v2';
@@ -199,6 +206,19 @@ export function createElevenLabsAudioAdapter(
     supports:['speech','music','sfx'],
     async execute(need:ProductionNeed):Promise<ProductionProviderResult>{
       validateNeed(need);
+      // Pre-billing actor, pronunciation, locale, accent, timing and rights check.
+      // Legacy callers without voiceFoundry remain functional but do not gain
+      // an approved-voice or human-listening-quality claim.
+      const foundryPlan=need.kind==='speech'&&config.voiceFoundry
+        ? preflightVoiceFoundrySpeech({
+            need,
+            foundry:config.voiceFoundry,
+            configuredVoiceId:voiceIdFor(need,config),
+            provider:'elevenlabs',
+            verified:config.verified,
+            commercialRights:config.commercialRights,
+          })
+        : null;
       if(!config.apiKey?.trim()) throw new Error('elevenlabs_audio_api_key_missing');
       if(config.allowPaidGeneration!==true) throw new Error('elevenlabs_audio_paid_generation_not_authorized');
       const fetchImpl=fetcher(config);
@@ -222,7 +242,7 @@ export function createElevenLabsAudioAdapter(
         body={
           text:need.prompt,
           model_id:speechModel,
-          ...(need.language?{language_code:need.language}:{}),
+          ...(foundryPlan?{language_code:foundryPlan.languageCode}:need.language?{language_code:need.language}:{}),
         };
       }else if(need.kind==='music'){
         endpoint=base+'/v1/music?output_format=mp3_48000_192';
@@ -300,6 +320,7 @@ export function createElevenLabsAudioAdapter(
         sourceRefs:[
           'provider:elevenlabs',
           'provider-doc:'+DOCS[need.kind],
+          ...(foundryPlan?['voice-foundry-preflight:'+foundryPlan.planDigest]:[]),
         ],
       };
     },
