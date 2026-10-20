@@ -14,6 +14,12 @@ export interface ColorRGBA extends ColorRGB {
 
 export type MaterialAlphaMode='opaque'|'mask'|'blend';
 
+// Optional scene-directed filmic tone mapping. Omission preserves exact legacy pixels.
+export interface FilmicColorManagement {
+  toneMapper:'legacy_linear'|'aces_filmic';
+  exposureBiasStops?:number;
+}
+
 // Distance fog is scene geometry/lighting context, not an assertion of real weather.
 // Opt-in per scene; absence preserves historic visual frame identity.
 export interface AtmosphereDefinition {
@@ -115,6 +121,7 @@ export interface VisualSceneDefinition {
   cameraTransitions?:CameraTransitionDefinition[];
   clearColor?:ColorRGB;
   atmosphere?:AtmosphereDefinition;
+  colorManagement?:FilmicColorManagement;
 }
 
 export interface CameraTransitionRuntime {
@@ -155,6 +162,7 @@ export interface VisualFrameContract {
   camera:CameraSample;
   clearColor:ColorRGB;
   atmosphere?:AtmosphereDefinition;
+  colorManagement?:FilmicColorManagement;
   materials:MaterialDefinition[];
   renderables:Array<{
     entityId:string;
@@ -212,6 +220,17 @@ function validateLayerMask(value:number|undefined,label:string){
   if(!Number.isInteger(value) || value<0 || value>0xffffffff){
     throw new Error(`visual_invalid_${label}_layer_mask`);
   }
+}
+
+export function validateColorManagement(grade:FilmicColorManagement){
+  if(!grade || !['legacy_linear','aces_filmic'].includes(grade.toneMapper)){
+    throw new Error('visual_color_management_mapper_invalid');
+  }
+  if(grade.exposureBiasStops!==undefined){
+    finite(grade.exposureBiasStops,'color_management_exposure_bias');
+    if(Math.abs(grade.exposureBiasStops)>4) throw new Error('visual_color_management_exposure_bias_range');
+  }
+  return true;
 }
 
 export function validateAtmosphere(atmosphere:AtmosphereDefinition){
@@ -371,6 +390,7 @@ export function validateVisualScene(scene:VisualSceneDefinition,entities:WorldEn
 
   if(scene.clearColor) validateColor(scene.clearColor,'scene_clear_color');
   if(scene.atmosphere) validateAtmosphere(scene.atmosphere);
+  if(scene.colorManagement) validateColorManagement(scene.colorManagement);
   if(!entityMap.size) throw new Error('visual_scene_entities_missing');
   return true;
 }
@@ -595,6 +615,7 @@ export function compileVisualFrame(
     camera,
     clearColor:clone(scene.clearColor || {r:0,g:0,b:0}),
     ...(scene.atmosphere?{atmosphere:clone(scene.atmosphere)}:{}),
+    ...(scene.colorManagement?{colorManagement:clone(scene.colorManagement)}:{}),
     materials:[...(scene.materials || [])].sort((a,b)=>a.id.localeCompare(b.id)).map(clone),
     renderables,
     lights
