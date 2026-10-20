@@ -57,3 +57,29 @@ No paid provider calls, checkout changes, deployments or public posts are part o
 - `evaluateVoiceTake` now holds every internal QA decision without a matching audio signal-inspection report. The signal report must match the exact take digest, duration and peak value. Evidence references remain declarations until a trusted evidence ledger verifies them.
 - `npm run test:voice-foundry` executes unit and mocked provider integration tests. `npm run test:media-studio` includes these offline tests and the FFmpeg signal measurements. Local Node test harness: 21 tests passed, 0 failed. The adapter TypeScript integration suite requires the repository's installed `tsx` dependencies and GitHub checks for independent verification.
 - No actual expressive voice, actor recording, voice cloning, provider voice ID or production-ready multilingual capability has been auditioned or approved in this change. No deployment, spend or public distribution is authorized.
+
+## Offline Listening Room (Push 03)
+
+The production repo now includes:
+
+- `voice-audition-kit.mjs`: read a local audition manifest; verify one shared script and same base language; allow multiple regional accents, genders of presentation and delivery directions; inspect real audio using FFmpeg/FFprobe; copy fingerprinted audio into a portable local audition folder; never call providers or auto-publish.
+- `voice-listening-room.html`: an offline browser listening interface with blind/revealed cast, controlled side-by-side playback, six distinct subjective axes, reviewer notes, per-take measured signal readings, and an exportable **unverified** reviewer draft. No network, upload, user-account storage, or provider TTS calls.
+- `voice-audition-example.json`: example with feminine-presenting US and masculine-presenting UK voice roles. Example audio files and voice IDs are **not shipped**, and names are not auditions or provider endorsements.
+- `tests/media-voice-audition-kit.test.mjs`: offline FFmpeg waveform tests for output, source/script/locale mismatch, safe paths, escaped metadata and unsupported/missing recordings. Synthetic tones are not proof of voice quality.
+
+To audition your own approved takes from the source checkout:
+
+```bash
+# Keep the media locally; do not commit actual voices or consent forms to public GitHub.
+mkdir -p /tmp/evercraft-voices/input
+cp systemia/media-studio/voice-audition-example.json /tmp/evercraft-voices/input/audition.json
+# Place two real, consenting actor recordings or authorized TTS outputs there:
+# /tmp/evercraft-voices/input/warm-feminine-01.wav
+# /tmp/evercraft-voices/input/resonant-masculine-02.wav
+npm run voice:audition:build -- /tmp/evercraft-voices/input/audition.json /tmp/evercraft-voices/room
+# Open /tmp/evercraft-voices/room/index.html locally and listen.
+```
+
+Run QA: `npm run test:voice-foundry` or `npm run test:media-studio`. Audio source paths must be relative to the manifest directory, and real paths cannot escape that directory. Keep the resulting listening room local because consent evidence and commercial usage rights still require independent verification. A reviewer JSON download is NOT an independent signed review, consent record, identity match or commercial license.
+
+The next production work requires an authorized voice roster, checked provider terms and spend, actual candidate speech recordings, native/qualified accent listening, captured independent review evidence and a separately approved publishing gate.
