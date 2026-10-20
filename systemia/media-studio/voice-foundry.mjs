@@ -59,6 +59,8 @@ export function planVoiceSession({profiles, cues, lexicon=[]}) {
     if (!profile) reasons.push('voice_profile_unregistered');
     if (!checkedString(cue?.speakerId)) reasons.push('speaker_id_missing');
     if (!checkedString(cue?.text)) reasons.push('spoken_text_missing');
+    // No inline provider instructions can bypass separate human-approved acting cues.
+    if(checkedString(cue?.text)&&cue.text.includes('[')&&cue.text.includes(']')) reasons.push('inline_audio_tags_unapproved');
     if (!validLocale(cue?.locale)) reasons.push('locale_invalid');
     if (!checkedString(cue?.accent)) reasons.push('accent_not_cast');
     if (!checkedString(cue?.direction)) reasons.push('performance_direction_missing');
