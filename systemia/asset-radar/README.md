@@ -20,6 +20,34 @@ Initial criteria:
 - Missing costs, source status, exact grades, seller review, provenance or comps fail closed to `WATCH_UNVERIFIED`. Stolen, counterfeit or restricted goods are `REJECTED`.
 - A scored success is `QUALIFIED_FOR_HUMAN_REVIEW`, never authority to purchase, bid or contact a seller. Alert duplicate keys incorporate source, listing ID and all-in price inputs so a price drop can appear as a fresh candidate.
 
+## eBay Browse normalization, staged but not live
+
+`ebay-browse-adapter.mjs` now normalizes supplied **eBay Browse getItem** JSON
+into the same fail-closed assessment contract. It accepts an upstream trusted
+request receipt reference, permission reference, an explicitly quoted US shipping
+cost, tax verification and human-supplied exact variant/grade and resale costs.
+
+**Important:** these are caller-supplied assertions, not independently validated
+credentials or digitally signed API receipts. Production transport must confirm
+OAuth authority, HTTPS response origin, actual request ID, response status and
+provider item ID before passing `source_access`. The adapter neither fetches
+listings nor establishes that any credentials or market entitlements exist.
+
+- Live-item candidates preserve provider price, item URL, estimated in-stock
+  availability and specific US destination shipping when evidenced.
+- Missing tax quotes, delivery estimates, proof, fixed-price status, and
+  item end dates remain unverified. They are not silently assumed to be zero.
+- Seller feedback is contextual only, **never** proof of authenticity.
+- Browse getItem provides no completed-sale transaction evidence; the adapter
+  emits **zero sold comps** and deliberately cannot qualify a bargain alone.
+- Auctions remain unverified in v1 because a changing bid is not a final buy price.
+- Fee and evidence-screening policy overrides can only **tighten**, never relax,
+  the default thresholds.
+
+```bash
+node --test systemia/asset-radar/engine.test.mjs systemia/asset-radar/ebay-browse-adapter.test.mjs
+```
+
 ## Source adapters not yet connected
 
 Evaluate permitted official marketplace interfaces and legitimately sourced transaction exports; eBay Browse/listing APIs, sale-history services with appropriate access, card transaction sources, approved auction feeds and legally accessible local/estate listings are potential starting points. Respect each source's terms, permissions, rate limits, and privacy restrictions. Do not scrape accounts or evade access restrictions. An active ask, price-guide estimate or similarly named card is **not** a transaction comp. Avoid unverified AI estimates of grading and condition.
