@@ -54,3 +54,11 @@ test('all monetization lanes stay independently tracked',()=>{
     assert.ok(page.includes('https://fabric.systemiacommandcenters.com/offers/'+id));
   }
 });
+
+test('every immediate paid offer has a manual human-start path',()=>{
+  for(const subject of ['FindMyPart%20paid%20hunt%20inquiry','Website%20audit%20paid%20service%20inquiry','Legacy%20rescue%20scan%20inquiry','IBM%20i%20assessment%20inquiry']){
+    assert.ok(page.includes('mailto:jessegaethle10@gmail.com?subject='+subject));
+  }
+  assert.match(page,/never request card or bank credentials by email/i);
+  assert.match(page,/Online checkout availability is not independently verified/i);
+});
