@@ -14,6 +14,7 @@ The module owns **pure evidence-backed evaluation** and human review selection o
 
 Initial criteria:
 - Exact item variant/edition and condition or grade match; at least **two distinct, completed verified sales within 180 days**, never active asking prices.
+- A separate trusted completed-sales adapter must explicitly authorize the exact `source_id:sale_id` identities using the evaluator's `trusted_completed_sale_ids` option. Self-asserted JSON `completed_sold_verified` labels do not count as verified transactions. Public JSON CLI imports intentionally provide **no** such authority.
 - Fresh verified-active listing (checked within two hours), direct HTTPS listing URL, seller reviewed, credible authenticity/provenance.
 - Acquisition includes listing price, shipping and tax. Resale defaults are **13% selling fee, $15 shipping, 10% risk reserve**, plus supplied grading, restoration and other expenses. These are screening assumptions, not specific marketplace quotes.
 - Conservative benchmark is the **lowest** valid completed-sale comparable, not a guidebook price or appraisal. Require acquisition ≤50% of the benchmark and estimated net upside ≥$100.
@@ -75,12 +76,12 @@ request**. It uses eBay application OAuth and read-only Browse GET endpoints.
 For an operator with independently verified rights, credentials securely
 injected at runtime and an approved source-access record:
 
+Configure `EBAY_BROWSE_ACCESS_APPROVED=yes`, `EBAY_BROWSE_PERMISSION_REF`,
+`EBAY_CLIENT_ID`, `EBAY_CLIENT_SECRET` and `EBAY_DESTINATION_ZIP`
+using a trusted secrets-injection mechanism, not by pasting values into a
+recorded shell command. Example after those variables are securely injected:
+
 ```bash
-EBAY_BROWSE_ACCESS_APPROVED=yes \
-EBAY_BROWSE_PERMISSION_REF=<approved-internal-reference> \
-EBAY_CLIENT_ID=<securely-injected-client-id> \
-EBAY_CLIENT_SECRET=<securely-injected-client-secret> \
-EBAY_DESTINATION_ZIP=98901 \
 node systemia/asset-radar/ebay-smoke-cli.mjs 'graded pokemon holo' 'vintage nintendo game'
 ```
 
