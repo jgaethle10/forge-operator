@@ -151,7 +151,7 @@ export function compileTeachingCallouts(sequence:CinematicCameraSequence,
         c.localAnchor,width,height);
       if(!origin){track.omittedOutOfFrame++;continue;}
       track.visibleFrames++;
-      if(previous&&(Math.abs(previous.x-origin.x)+Math.abs(previous.y-origin.y)>=2))
+      if(previous&&(previous.x!==origin.x||previous.y!==origin.y))
         track.changingPositionFrames++;
       track.firstScreen??=origin;track.lastScreen=origin;previous=origin;
       const x=clamp(origin.x+24,8,width-235),y=clamp(origin.y-45,14,height-62);
