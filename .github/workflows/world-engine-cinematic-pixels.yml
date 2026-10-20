@@ -45,7 +45,7 @@ jobs:
           const r=JSON.parse(fs.readFileSync(p,'utf8'));
           if(r.kind!=='synthetic_internal_canary'||r.output.codec!=='h264'
             ||r.output.audioCodec!=='aac'||r.output.fps!==24
-            ||r.exactGpuReadbackFrames!==48||r.uniqueRawFrameDigests<3
+            ||r.exactGpuReadbackFrames!==96||r.uniqueRawFrameDigests<3
             ||r.shadowCounterfactualChangedPixels<300
             ||r.shadowFilterChangedPixels<10
             ||r.soundState!=='original_multilayer_synthetic_soundscape_not_recorded_foley_or_commercial_score'
