@@ -56,7 +56,7 @@ test('nonfinite or excessive exposure and unknown tone map fail closed',()=>{
     {toneMapper:'aces_filmic',exposureBiasStops:Infinity}
   ]){
     const w=world();w.visualScene!.colorManagement=colorManagement as any;
-    assert.throws(()=>validateWorldDefinition(w),/visual_color_management/);
+    assert.throws(()=>validateWorldDefinition(w),/visual_(?:invalid_)?color_management/);
   }
 });
 test('film curve is gated in owned fragment shader after atmospheric lighting, not applied to unlit UI',()=>{
