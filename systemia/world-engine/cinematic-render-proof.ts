@@ -20,6 +20,7 @@ import {makeTorusGeometry} from './procedural-geometry.js';
 import {makeBrushedMetalTextures} from './brushed-metal.js';
 import {renderKineticSoundscape} from '../media-studio/kinetic-soundscape.mjs';
 import {battleshipWorld,battleshipGeometry,battleshipTake} from './battleship-scene.js';
+import {makeNativeBattleshipSequence,composeNativeBattleshipCamera,type NativeFilmFormat} from './native-format-camera.js';
 import {generateDeterministicTangents} from './fallen-geometry.js';
 import type {TextureAsset} from './texture.js';
 import {textureAssetDigest} from './texture.js';
@@ -29,7 +30,13 @@ import {prepareNativeBrowserRuntime} from '../evercraft-web/browser-worker/nativ
 const root=path.resolve(path.dirname(fileURLToPath(import.meta.url)),'../..');
 const worker=path.join(root,'systemia/evercraft-web/browser-worker');
 const sha=(value:Buffer|string)=>crypto.createHash('sha256').update(value).digest('hex');
-const WIDTH=640, HEIGHT=360, FPS=24, DURATION=4;
+const requestedFormat=process.env.CINEMATIC_FORMAT||'wide';
+if(!['wide','square','vertical'].includes(requestedFormat))throw Error('cinematic_native_format_invalid');
+const nativeFormat=requestedFormat as NativeFilmFormat;
+const nativeViewport=composeNativeBattleshipCamera(nativeFormat).viewport;
+const WIDTH=process.env.CINEMATIC_SCENE==='battleship'?nativeViewport.width:640;
+const HEIGHT=process.env.CINEMATIC_SCENE==='battleship'?nativeViewport.height:360;
+const FPS=24,DURATION=4;
 function cube():GeometryAsset{
   const q=[
     {n:[0,0,1],v:[[-1,-1,1],[1,-1,1],[1,1,1],[-1,1,1]]},
@@ -452,10 +459,14 @@ async function main(){
     orbit:{radius:11,startAngleDeg:-52,endAngleDeg:58,startHeight:2.6,endHeight:5.2},
     startFovYDeg:51,endFovYDeg:43
   };
-  const take=isBattleship?battleshipTake():rotorTake;
-  const sequence=buildCinematicCameraSequence({
-    world,take,geometries,viewport:{width:WIDTH,height:HEIGHT},textures
+  const native= isBattleship ? makeNativeBattleshipSequence({
+    world,geometries,textures,format:nativeFormat
+  }):null;
+  const sequence=native?.sequence??buildCinematicCameraSequence({
+    world,take:rotorTake,geometries,viewport:{width:WIDTH,height:HEIGHT},textures
   });
+  if(native?.review.some(r=>r.visibleSubjectLandmarks<3))
+    throw Error('battleship_native_subject_composition_failed');
   const shader=extractOwnedShader(root);
   const worldShaderSource=fs.readFileSync(path.join(root,'systemia/world-engine/webgpu.ts'),'utf8');
   const shadowSource=worldShaderSource.match(/export const EVERCRAFT_SHADOW_DEPTH_WGSL=`([\s\S]*?)`;/);
@@ -539,6 +550,17 @@ async function main(){
       durationSec:DURATION,fps:FPS,codec:'h264',audioCodec:isBattleship?null:'aac'},
     stills,sourceState:'synthetic_visualization',
     sceneType:isBattleship?'procedural_battleship':'procedural_industrial_rotor',
+    ...(native?{nativeFormat:{
+      format:native.spec.format,
+      viewport:native.spec.viewport,
+      cameraSource:native.spec.cameraSource,
+      original3dFrames:true,
+      cropApplied:false,
+      sceneWorldDigest:sequence.worldDefinitionDigest,
+      landmarkAudits:native.review,
+      humanCreativeReviewRequired:true,
+      publicationAuthority:false
+    }}:{}),
     soundState:isBattleship?'silent_at_founder_direction_no_sound_invented':'original_multilayer_synthetic_soundscape_not_recorded_foley_or_commercial_score',
     soundReceipt,
     visualReviewState:'unreviewed',publicationAuthority:false,paidProductionReady:false,
