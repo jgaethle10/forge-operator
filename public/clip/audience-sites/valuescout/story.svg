@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1080 1920" width="1080" height="1920" role="img" aria-label="VALUE SCOUT social visual">
+<defs>
+<linearGradient id="bg" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#06121A"/><stop offset=".67" stop-color="#0B2630"/><stop offset="1" stop-color="#10212C"/></linearGradient>
+<radialGradient id="halo"><stop stop-color="#FFDC9E" stop-opacity=".22"/><stop offset="1" stop-color="#FFDC9E" stop-opacity="0"/></radialGradient>
+</defs>
+<rect width="1080" height="1920" fill="url(#bg)"/>
+<circle cx="840" cy="200" r="540" fill="url(#halo)"/>
+<path d="M85 90H995 M85 1790H995" stroke="#FFDC9E" stroke-width="3" opacity=".7"/>
+<text x="90" y="164" font-family="Arial,sans-serif" font-size="35" fill="#FFDC9E" font-weight="900" letter-spacing="8">VALUE SCOUT</text>
+<text x="90" y="300" font-family="Arial,sans-serif" font-size="24" fill="#A2C0C8" font-weight="900" letter-spacing="5">CARDS • COLLECTIBLES</text>
+<text x="86" y="405" font-family="Arial,sans-serif" font-size="90" fill="#F4FFFF" font-weight="900" letter-spacing="-2">THAT DEAL</text>
+<text x="86" y="505" font-family="Arial,sans-serif" font-size="90" fill="#FFDC9E" font-weight="900" letter-spacing="-2">MIGHT NOT BE.</text>
+<text x="90" y="595" font-family="Arial,sans-serif" font-size="33" fill="#C6DBE0">Selling fees can turn a bargain into a loss.</text>
+<g transform="translate(120 830)"><rect width="840" height="400" rx="30" fill="#1B2D36" stroke="#FFDC9E" stroke-width="4"/><path d="M55 260 L205 210 L325 250 L500 125 L640 175 L785 65" fill="none" stroke="#FFDC9E" stroke-width="15" stroke-linecap="round"/><g stroke="#60747A" stroke-width="3"><path d="M55 60V336H785"/><path d="M55 160H785 M55 260H785"/></g><rect x="70" y="300" width="172" height="48" rx="12" fill="#FFDC9E"/><text x="92" y="335" font-family="Arial" font-size="31" font-weight="900" fill="#13262A">FEES</text></g>
+<rect x="87" y="1557" width="906" height="116" rx="26" fill="#FFDC9E"/>
+<text x="119" y="1630" font-family="Arial,sans-serif" font-size="42" font-weight="900" fill="#082127">RUN THE FREE DEAL SCREEN</text>
+<text x="90" y="1852" font-family="Arial,sans-serif" font-size="26" fill="#9FBAC2">EVERCRAFT CLIP   /   FREE TOOL   /   STORY</text>
+</svg>
