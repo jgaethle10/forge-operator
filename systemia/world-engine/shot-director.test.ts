@@ -41,9 +41,12 @@ test('actual turret detail view targets fore turret and gun barrels, never silen
 test('native portrait title-safe view reserves measured right-hand region without screen-space cropping',()=>{
  const result=directWorldEngineShot({...base('vertical'),intent:'title_safe'});
  assert.equal(result.receipt.titleSafeRegion?.axis,'right');
- assert.equal(result.receipt.candidatesEvaluated,12);
+ assert.equal(result.receipt.candidatesEvaluated,24);
  assert.equal(result.receipt.composition.samples.length,3);
  assert.ok(result.receipt.safeRegionClearanceScore!==null);
+ assert.equal(result.receipt.titleSafeClearance?.clearAtAllSamples,true);
+ assert.ok(result.receipt.titleSafeClearance!.maxSubjectRight<=.30);
+ assert.ok(result.receipt.titleSafeClearance!.maxSubjectOverflow<.001);
  assert.equal(result.receipt.fullHeroAutoFit,null);
  assert.equal(result.sequence.frames[0].renderPlan.height,640);
  assert.notEqual(result.receipt.selected.focusOffset.x,0);
