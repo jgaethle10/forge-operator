@@ -1,0 +1,114 @@
+name: Fallen real GPU three-shot storytelling
+on:
+  pull_request:
+    paths:
+      - 'systemia/media-studio/director-storyboard.mjs'
+      - 'systemia/media-studio/director-storyboard.test.mjs'
+      - '.github/workflows/fallen-real-gpu-storyboard.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+  actions: read
+jobs:
+  verified-native-source-to-fallen-storyboard:
+    runs-on: ubuntu-latest
+    timeout-minutes: 16
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Require native H264 edit tools and audited font
+        run: |
+          command -v ffmpeg || (sudo apt-get update -qq && sudo apt-get install -y ffmpeg)
+          test -f /usr/share/fonts/truetype/dejavu/DejaVuSans.ttf || (sudo apt-get update -qq && sudo apt-get install -y fonts-dejavu-core)
+          node --check systemia/media-studio/director-storyboard.mjs
+      - name: Retrieve previously GPU-rendered, signed 16:9 full-ship source
+        uses: actions/download-artifact@v4
+        with:
+          run-id: 39449612562
+          name: world-director-hero_full-wide
+          github-token: ${{ github.token }}
+          path: ${{ runner.temp }}/storyboard-sources/hero
+      - name: Retrieve previously GPU-rendered, signed square turret source
+        uses: actions/download-artifact@v4
+        with:
+          run-id: 39449612562
+          name: world-director-detail_closeup-square
+          github-token: ${{ github.token }}
+          path: ${{ runner.temp }}/storyboard-sources/detail
+      - name: Retrieve corrected copy-safe original vertical GPU source
+        uses: actions/download-artifact@v4
+        with:
+          run-id: 39449612562
+          name: world-director-title_safe-vertical
+          github-token: ${{ github.token }}
+          path: ${{ runner.temp }}/storyboard-sources/title
+      - name: Construct provenance-bound ordered scene script from actual local source hashes
+        env:
+          ROOT: ${{ runner.temp }}/storyboard-sources
+          REQUEST: ${{ runner.temp }}/storyboard-request.json
+        run: |
+          node --input-type=module <<'NODE'
+          import crypto from 'node:crypto';
+          import fs from 'node:fs';
+          import path from 'node:path';
+          const root=process.env.ROOT;
+          const items=[
+            ['hero','hero_full','THE VESSEL IN VIEW'],
+            ['detail','detail_closeup','THE ART OF THE GUN TURRET'],
+            ['title','title_safe','A SCENE CAN TELL A STORY']
+          ];
+          const shots=items.map(([dir,intent,title])=>{
+            const file=path.join(root,dir,'battleship-world-engine-trial.mp4');
+            const receiptFile=path.join(root,dir,'receipt.json');
+            if(!fs.existsSync(file)||!fs.existsSync(receiptFile))throw Error('native_gpu_source_artifact_missing_'+dir);
+            const actual=crypto.createHash('sha256').update(fs.readFileSync(file)).digest('hex');
+            const receipt=JSON.parse(fs.readFileSync(receiptFile));
+            if(receipt.output?.sha256!==actual)throw Error('native_gpu_receipt_mismatch_'+intent);
+            return {path:file,receiptPath:receiptFile,sha256:actual,intent,title};
+          });
+          const req={schema:'evercraft.fallen.director-storyboard-request.v1',
+            id:'evercraft-owned-three-shot-scene',
+            audioPolicy:'silent',shots};
+          fs.writeFileSync(process.env.REQUEST,JSON.stringify(req,null,2));
+          console.log('SOURCE_MP4_RECEIPTS_VERIFIED',shots.map(s=>({intent:s.intent,sha256:s.sha256})));
+          NODE
+      - name: Verify strict source integrity, creative hold and generate actual directed storyboard film
+        env:
+          DIRECTOR_STORYBOARD_TEST_REQUEST: ${{ runner.temp }}/storyboard-request.json
+        run: node --test systemia/media-studio/director-storyboard.test.mjs
+      - name: Export playable founder-review MP4 from actual World Engine source shots
+        env:
+          REQUEST: ${{ runner.temp }}/storyboard-request.json
+          OUTPUT: ${{ runner.temp }}/evercraft-directed-film
+        run: |
+          node systemia/media-studio/director-storyboard.mjs "$REQUEST" "$OUTPUT"
+          ffprobe -v error -show_entries stream=codec_type,codec_name,width,height,nb_frames -show_entries format=duration -of json "$OUTPUT/evercraft-director-storyboard.mp4"
+          node --input-type=module <<'NODE'
+          import fs from 'node:fs';
+          import crypto from 'node:crypto';
+          const root=process.env.OUTPUT,r=JSON.parse(fs.readFileSync(root+'/receipt.json'));
+          const movie=fs.readFileSync(root+'/'+r.output.file);
+          const sum=crypto.createHash('sha256').update(movie).digest('hex');
+          if(r.publicationAuthority!==false||r.clientApproval!==false||
+             r.output.sha256!==sum||r.output.frames<190||r.output.audio!==false||
+             r.inputProofs.length!==3||
+             r.editing.historicalDisclosureBurnedIn!==true)process.exit(4);
+          console.log('REAL_WORLD_ENGINE_FALLEN_STORYBOARD_ACCEPTED',{
+            duration:r.output.durationSec,frames:r.output.frames,sha256:sum,
+            sourceProofs:r.inputProofs.map(x=>[x.intent,x.sourceVideoSha256])
+          });
+          NODE
+      - name: Preserve only human-review film and exact evidence receipts
+        uses: actions/upload-artifact@v4
+        with:
+          name: fallen-owned-world-engine-three-shot-storyboard
+          path: |
+            ${{ runner.temp }}/evercraft-directed-film/evercraft-director-storyboard.mp4
+            ${{ runner.temp }}/evercraft-directed-film/receipt.json
+            ${{ runner.temp }}/evercraft-directed-film/opening.png
+            ${{ runner.temp }}/evercraft-directed-film/closeup.png
+            ${{ runner.temp }}/evercraft-directed-film/final.png
+          retention-days: 7
+          if-no-files-found: error
