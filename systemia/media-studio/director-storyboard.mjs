@@ -61,10 +61,12 @@ function verify(request){
     receipt.nativeFormat?.cropApplied!==false||
     receipt.publicationAuthority!==false||
     director.publicationAuthority!==false||
-    director.clientApproval!==false||
-    director.sourceWorldId!==receipt.sceneType&&false)
+    director.clientApproval!==false)
     err('signed_world_engine_source_invalid_'+shot.intent);
-  if(receipt.sceneType!=='procedural_battleship'||
+  const requiredFormat={hero_full:'wide',detail_closeup:'square',title_safe:'vertical'}[shot.intent];
+  if(receipt.nativeFormat.format!==requiredFormat||
+    receipt.output.audioCodec!==null||
+    receipt.sceneType!=='procedural_battleship'||
     receipt.sourceState!=='synthetic_visualization'||
     receipt.soundState!=='silent_at_founder_direction_no_sound_invented'||
     receipt.exactGpuReadbackFrames!==96||
