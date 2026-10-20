@@ -1,5 +1,6 @@
 import crypto from 'node:crypto';
 import { assessVoicePerformance } from './voice-performance.mjs';
+import { checkVoiceContinuity } from './voice-continuity.mjs';
 
 const DIGEST = /^[a-f0-9]{64}$/i;
 const VOICE_SCORE_KEYS = ['naturalness','accentAuthenticity','emotionalTruth','intelligibility','identityConsistency','mixFit'];
@@ -44,7 +45,7 @@ export function containsPronunciationTerm(text, term, locale) {
  * No provider calls are made. This is a deterministic, fail-closed casting and
  * performance contract for upstream TTS adapters, actors, and audio QA workers.
  */
-export function planVoiceSession({profiles, cues, lexicon=[]}) {
+export function planVoiceSession({profiles, cues, lexicon=[], previousCast=[]}) {
   if (!Array.isArray(profiles) || !Array.isArray(cues) || !Array.isArray(lexicon)) {
     throw new TypeError('voice_foundry_arrays_required');
   }
@@ -110,9 +111,11 @@ export function planVoiceSession({profiles, cues, lexicon=[]}) {
       planDigest:fingerprint(plan),
     };
   });
+  const continuity=checkVoiceContinuity({session:{schema:'evercraft.voice-foundry.session.v1',cues:results},previousCast});
   return {
     schema:'evercraft.voice-foundry.session.v1',
-    status:results.length>0 && results.every(r=>r.status==='ready_for_authorized_generation')?'ready_for_authorized_generation':'held',
+    status:results.length>0 && results.every(r=>r.status==='ready_for_authorized_generation') && continuity.status==='cast_contract_consistent_requires_listening'?'ready_for_authorized_generation':'held',
+    continuity,
     cues:results,
     providerCallMade:false,
     paidGenerationAuthorized:false,
