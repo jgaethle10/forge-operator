@@ -18,6 +18,30 @@ export const DEFAULT_POLICY = Object.freeze({
   risk_reserve_basis_points: 1_000,
 });
 
+// Caller-supplied options may only tighten screening. A malicious or mistaken
+// override cannot lower comp count, fee reserves or economic thresholds.
+function resolvePolicy(overrides = {}) {
+  if (!overrides || typeof overrides !== 'object' || Array.isArray(overrides)) {
+    throw new TypeError('invalid_asset_radar_policy');
+  }
+  const rules = { ...DEFAULT_POLICY };
+  const checks = {
+    maximum_listing_age_minutes: v => Number.isSafeInteger(v) && v > 0 && v <= DEFAULT_POLICY.maximum_listing_age_minutes,
+    maximum_comp_age_days: v => Number.isSafeInteger(v) && v > 0 && v <= DEFAULT_POLICY.maximum_comp_age_days,
+    minimum_distinct_sold_comps: v => Number.isSafeInteger(v) && v >= DEFAULT_POLICY.minimum_distinct_sold_comps && v <= 100,
+    maximum_purchase_to_value_ratio: v => Number.isFinite(v) && v > 0 && v <= DEFAULT_POLICY.maximum_purchase_to_value_ratio,
+    minimum_net_upside_cents: v => Number.isSafeInteger(v) && v >= DEFAULT_POLICY.minimum_net_upside_cents,
+    resale_fee_basis_points: v => Number.isSafeInteger(v) && v >= DEFAULT_POLICY.resale_fee_basis_points && v <= 10_000,
+    resale_shipping_cents: v => Number.isSafeInteger(v) && v >= DEFAULT_POLICY.resale_shipping_cents,
+    risk_reserve_basis_points: v => Number.isSafeInteger(v) && v >= DEFAULT_POLICY.risk_reserve_basis_points && v <= 10_000,
+  };
+  for (const [key, value] of Object.entries(overrides)) {
+    if (!checks[key]?.(value)) throw new TypeError('unsafe_asset_radar_policy_override:' + key);
+    rules[key] = value;
+  }
+  return rules;
+}
+
 const BLOCKED_CATEGORIES = new Set([
   'weapon', 'firearm', 'ammunition', 'explosive', 'hazardous-chemical',
   'prescription-drug', 'recreational-drug', 'stolen-property', 'counterfeit',
@@ -41,7 +65,7 @@ function normalized(value) { return clean(value).toLowerCase(); }
 function addReason(reasons, reason) { if (!reasons.includes(reason)) reasons.push(reason); }
 
 export function assessListing(raw, { now = new Date(), policy = {} } = {}) {
-  const rules = { ...DEFAULT_POLICY, ...policy };
+  const rules = resolvePolicy(policy);
   const clock = now instanceof Date ? now : new Date(now);
   if (!Number.isFinite(clock.getTime())) throw new TypeError('invalid_now');
   const reasons = [];
