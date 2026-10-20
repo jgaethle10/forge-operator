@@ -64,6 +64,7 @@ function industrialWorld():WorldDefinition{
       clearColor:{r:.018,g:.038,b:.085},
       atmosphere:{color:{r:.14,g:.25,b:.38},density:.048,startDistance:4,heightFalloff:.065,referenceHeight:0},
       colorManagement:{toneMapper:'aces_filmic',exposureBiasStops:-0.65},
+      cinematicLighting:{shading:'ggx_microfacet',localLightFalloff:'inverse_square'},
       materials:[
         material('floor',[.08,.14,.20],.25,.85),
         material('structure',[.29,.42,.54],.68,.35),
@@ -238,7 +239,9 @@ async function renderGpuFrames(plans:ReturnType<typeof buildCinematicCameraSeque
             fog?.color.r??0,fog?.color.g??0,fog?.color.b??0,fog?.density??0,
             fog?.startDistance??0,fog?.heightFalloff??0,fog?.referenceHeight??0,0,
             plan.colorManagement?.toneMapper==='aces_filmic'?1:0,
-            plan.colorManagement?.exposureBiasStops??0,0,0
+            plan.colorManagement?.exposureBiasStops??0,0,0,
+            plan.cinematicLighting?.shading==='ggx_microfacet'?1:0,
+            plan.cinematicLighting?.localLightFalloff==='inverse_square'?1:0,0,0
           ]);
           const frameBuffer=device.createBuffer({size:frameData.byteLength,usage:(globalThis as any).GPUBufferUsage.UNIFORM|(globalThis as any).GPUBufferUsage.COPY_DST});
           device.queue.writeBuffer(frameBuffer,0,frameData);
