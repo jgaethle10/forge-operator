@@ -4,6 +4,7 @@ import type {
   AtmosphereDefinition,
   FilmicColorManagement,
   CinematicLightingDefinition,
+  DirectionalShadowDefinition,
   ColorRGB,
   LightComponent,
   MaterialDefinition,
@@ -63,6 +64,8 @@ export interface WebGpuDrawCommand {
   alphaMode:'opaque'|'mask'|'blend';
   alphaCutoff:number;
   doubleSided:boolean;
+  castsShadow:boolean;
+  receivesShadow:boolean;
   sampler:NormalizedTextureSampler;
   textureRefs:{
     baseColor:string|null;
@@ -88,6 +91,13 @@ export interface GeometryHotReloadResult {
   receipt:GeometryHotReloadReceipt;
 }
 
+export interface WebGpuShadowPlan {
+  directionalLightEntityId:string;
+  lightIndex:number;
+  lightViewProjectionMatrix:number[];
+  resolution:256|512|1024;
+  depthBias:number;
+}
 export interface WebGpuRenderPlan {
   schema:'evercraft.world-engine.webgpu-plan.v1';
   worldId:string;
@@ -100,6 +110,7 @@ export interface WebGpuRenderPlan {
   atmosphere?:AtmosphereDefinition;
   colorManagement?:FilmicColorManagement;
   cinematicLighting?:CinematicLightingDefinition;
+  shadow?:WebGpuShadowPlan;
   viewMatrix:number[];
   projectionMatrix:number[];
   viewProjectionMatrix:number[];
@@ -308,6 +319,23 @@ function perspective(projection:Extract<CameraProjection,{type:'perspective'}>,a
   ];
 }
 
+function shadowProjection(direction:[number,number,number],focus:Vec3,halfExtent:number){
+  const dir=normalize({x:direction[0],y:direction[1],z:direction[2]});
+  const eye={x:focus.x-dir.x*30,y:focus.y-dir.y*30,z:focus.z-dir.z*30};
+  const z=normalize({x:eye.x-focus.x,y:eye.y-focus.y,z:eye.z-focus.z});
+  const up=Math.abs(z.y)>.97?{x:0,y:0,z:1}:{x:0,y:1,z:0};
+  const cross=(a:Vec3,b:Vec3)=>({x:a.y*b.z-a.z*b.y,y:a.z*b.x-a.x*b.z,z:a.x*b.y-a.y*b.x});
+  const x=normalize(cross(up,z)),y=cross(z,x);
+  const view=[
+    x.x,y.x,z.x,0,
+    x.y,y.y,z.y,0,
+    x.z,y.z,z.z,0,
+    -(x.x*eye.x+x.y*eye.y+x.z*eye.z),
+    -(y.x*eye.x+y.y*eye.y+y.z*eye.z),
+    -(z.x*eye.x+z.y*eye.y+z.z*eye.z),1
+  ];
+  return multiply4(orthographic({type:'orthographic',orthoHeight:halfExtent*2},1,.1,90),view);
+}
 function orthographic(projection:Extract<CameraProjection,{type:'orthographic'}>,aspect:number,near:number,far:number){
   const top=projection.orthoHeight/2;
   const bottom=-top;
@@ -561,6 +589,8 @@ export function compileWebGpuRenderPlan(
         indexCount:geometry.indices?.length || 0,
         modelMatrix:model,
         normalMatrix:normal,
+        castsShadow:row.component.castsShadow!==false,
+        receivesShadow:row.component.receivesShadow!==false,
         ...packet,
         pipelineKey:[
           packet.materialModel,
@@ -580,6 +610,20 @@ export function compileWebGpuRenderPlan(
     ].filter((value):value is string=>Boolean(value)))
   )].sort();
 
+  const lightPackets=[...frame.lights].sort((a,b)=>a.entityId.localeCompare(b.entityId)).map(lightPacket);
+  let shadow:WebGpuShadowPlan|undefined;
+  if(frame.directionalShadows){
+    const config=frame.directionalShadows;
+    const index=lightPackets.findIndex(light=>light.entityId===config.directionalLightEntityId && light.kind===1);
+    if(index<0)throw new Error('webgpu_shadow_directional_light_missing');
+    shadow={
+      directionalLightEntityId:config.directionalLightEntityId,
+      lightIndex:index,
+      lightViewProjectionMatrix:shadowProjection(lightPackets[index].direction,config.focus,config.halfExtent),
+      resolution:config.resolution,
+      depthBias:config.depthBias
+    };
+  }
   const texturePackets=requiredTextureIds.map(id=>{
     const texture=textureMap.get(id);
     if(!texture) throw new Error(`webgpu_texture_missing:${id}`);
@@ -605,6 +649,7 @@ export function compileWebGpuRenderPlan(
     ...(frame.atmosphere?{atmosphere:clone(frame.atmosphere)}:{}),
     ...(frame.colorManagement?{colorManagement:clone(frame.colorManagement)}:{}),
     ...(frame.cinematicLighting?{cinematicLighting:clone(frame.cinematicLighting)}:{}),
+    ...(shadow?{shadow}:{}),
     viewMatrix,
     projectionMatrix,
     viewProjectionMatrix,
@@ -614,7 +659,7 @@ export function compileWebGpuRenderPlan(
       frame.camera.transform.position.z
     ] as [number,number,number],
     exposure:frame.camera.exposure,
-    lights:[...frame.lights].sort((a,b)=>a.entityId.localeCompare(b.entityId)).map(lightPacket),
+    lights:lightPackets,
     requiredTextureIds,
     textures:texturePackets,
     draws,
@@ -672,7 +717,8 @@ function objectUniformData(draw:WebGpuDrawCommand){
     ...draw.baseColor,
     draw.materialModel,draw.metallic,draw.roughness,draw.alphaCutoff,
     draw.emissive[0],draw.emissive[1],draw.emissive[2],draw.emissiveIntensity,
-    ...draw.textureFlags
+    ...draw.textureFlags,
+    draw.receivesShadow?1:0,0,0,0
   ]);
 }
 
@@ -688,7 +734,9 @@ function frameUniformData(plan:WebGpuRenderPlan){
     plan.colorManagement?.exposureBiasStops??0,0,0,
     plan.cinematicLighting?.shading==='ggx_microfacet'?1:0,
     plan.cinematicLighting?.localLightFalloff==='inverse_square'?1:0,
-    0,0
+    0,0,
+    ...(plan.shadow?.lightViewProjectionMatrix??identity4()),
+    plan.shadow?.lightIndex??0,plan.shadow?1:0,plan.shadow?.depthBias??0,0
   ]);
 }
 
@@ -701,6 +749,8 @@ struct FrameUniforms {
   fogParams: vec4<f32>,
   gradeParams: vec4<f32>,
   lightingParams: vec4<f32>,
+  lightViewProjection: mat4x4<f32>,
+  shadowParams: vec4<f32>,
 };
 
 struct ObjectUniforms {
@@ -710,10 +760,13 @@ struct ObjectUniforms {
   material: vec4<f32>,
   emissive: vec4<f32>,
   textureFlags: vec4<f32>,
+  shadowFlags: vec4<f32>,
 };
 
 @group(0) @binding(0) var<uniform> frame: FrameUniforms;
 @group(0) @binding(1) var<storage, read> lightData: array<vec4<f32>>;
+@group(0) @binding(2) var directionalShadow: texture_depth_2d;
+@group(0) @binding(3) var directionalShadowSampler: sampler_comparison;
 @group(1) @binding(0) var<uniform> object: ObjectUniforms;
 @group(1) @binding(1) var materialSampler: sampler;
 @group(1) @binding(2) var baseColorTexture: texture_2d<f32>;
@@ -767,6 +820,16 @@ fn applyAtmosphericDepth(lit: vec3<f32>, worldPosition: vec3<f32>) -> vec3<f32> 
   let effectiveDensity = density * exp(-frame.fogParams.y * altitude);
   let transmittance = clamp(exp(-effectiveDensity * distance), 0.0, 1.0);
   return mix(frame.fogColorDensity.rgb, lit, transmittance);
+}
+
+fn directionalShadowVisibility(worldPosition: vec3<f32>) -> f32 {
+  if (frame.shadowParams.y<0.5 || object.shadowFlags.x<0.5) {return 1.0;}
+  let clip=frame.lightViewProjection * vec4<f32>(worldPosition,1.0);
+  if (abs(clip.w)<0.0001){return 1.0;}
+  let ndc=clip.xyz/clip.w;
+  let uv=vec2<f32>(ndc.x*0.5+0.5,0.5-ndc.y*0.5);
+  if (uv.x<=0.0||uv.y<=0.0||uv.x>=1.0||uv.y>=1.0||ndc.z<=0.0||ndc.z>=1.0){return 1.0;}
+  return textureSampleCompareLevel(directionalShadow,directionalShadowSampler,uv,ndc.z-frame.shadowParams.z);
 }
 
 // Compact ACES approximation: bounded highlights with gentle shoulder roll-off.
@@ -876,6 +939,7 @@ fn fs_main(input: VertexOut) -> @location(0) vec4<f32> {
     }
 
     let ndotl=max(dot(N,L),0.0);
+    let shadowing=select(1.0,directionalShadowVisibility(input.worldPosition),kind==1u && i==u32(frame.shadowParams.x));
     if (frame.lightingParams.x>0.5) {
       if (ndotl>0.0) {
         let H=normalize(L+V);
@@ -893,11 +957,11 @@ fn fs_main(input: VertexOut) -> @location(0) vec4<f32> {
         let microfacet=distribution*geometryV*geometryL*fresnel/max(4.0*ndotv*ndotl,0.001);
         let diffuseEnergy=(vec3<f32>(1.0)-fresnel)*(1.0-metallic);
         let diffuseBrdf=diffuseEnergy*base.rgb/3.14159265;
-        ggxDirect += (diffuseBrdf+microfacet)*color*intensity*ndotl*attenuation*ao;
+        ggxDirect += (diffuseBrdf+microfacet)*color*intensity*ndotl*attenuation*ao*shadowing;
       }
       continue;
     }
-    lighting += color*intensity*ndotl*attenuation;
+    lighting += color*intensity*ndotl*attenuation*shadowing;
 
     if (ndotl>0.0) {
       let H=normalize(L+V);
@@ -905,7 +969,7 @@ fn fs_main(input: VertexOut) -> @location(0) vec4<f32> {
       let spec=pow(max(dot(N,H),0.0),shininess);
       let dielectric=vec3<f32>(0.04);
       let f0=mix(dielectric,base.rgb,metallic);
-      specular += f0*spec*intensity*attenuation;
+      specular += f0*spec*intensity*attenuation*shadowing;
     }
   }
 
