@@ -3,7 +3,7 @@
   "id": "audience-sites-20261020-playbook-lab-facebook-page",
   "destination": "facebook-page",
   "brandKey": "evercraft-audience-sites",
-  "status": "staged_review_required",
+  "status": "cancelled_brand_isolation",
   "authorization": {
     "approved": false,
     "authorizationRef": ""
@@ -31,16 +31,14 @@
     "native_video": "requires_first_party_render_and_QA"
   },
   "distribution": {
-    "organic_channels": [
-      "YouTube Shorts",
-      "football coaching publishers",
-      "permissioned sports groups"
-    ],
+    "organic_channels": [],
     "publisher_permission_required": true,
     "approved_networks_only": true,
     "paid_spend_usd": 0,
     "comment_spam_forbidden": true,
-    "affiliate_status": "not_verified"
+    "affiliate_status": "not_verified",
+    "corporate_channels_authorized": false,
+    "independent_publisher_only": true
   },
   "status_proofs": {
     "landing_page_verified_in_prior_session": true,
@@ -55,6 +53,7 @@
     "mass_unsolicited_DMs",
     "fake_accounts",
     "purchased_fake_visits",
-    "adult_content_on_family_brands"
+    "adult_content_on_family_brands",
+    "evercraft_corporate_social_distribution"
   ]
 }
