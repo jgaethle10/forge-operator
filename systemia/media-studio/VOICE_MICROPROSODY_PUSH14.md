@@ -20,3 +20,11 @@ Correct pronunciation requires a reviewer who actually listens to the audio, pre
 
 ## Next learning gate
 Listen blindly to three variants for each candidate and answer two questions separately: do **word-to-word connections** feel less manufactured, and does **the sentence finish naturally**? Keep the best *individual* take for a scene; do not force one stress strategy globally. In a later iteration combine recorded actor/reference beats, verified phoneme alignment and expressive model conditioning if accessible.
+
+## Correction from actual real-model receipt
+
+The **first** nine-take experimental run passed technically, but the phoneme audit caught a **linguistic regression**: original Kokoro phoneme sequence for 'beginning' was bəɡˈɪnɪŋ (stress correctly on the middle syllable); the experiment changed it to bˈəɡɪnɪŋ (incorrect first-syllable stress). The 'only' sequence ˈOnli remained unchanged. Hence first-run 'lexical_focus' clips are REJECTED NEGATIVE CONTROLS, NOT an improvement. They stay as private debug evidence only.
+
+Revised experiment: twelve private real-Kokoro takes across baseline, soft pause, completed thought and gentle speed 0.96, for V02/V05/V06. G2P original phoneme strings are measured, NOT altered. Source words identical. This is a listening experiment, not guaranteed naturalness.
+
+Lesson: phrase-final intonation cannot be repaired by moving lexical stress to the wrong syllable. Don't generate guessed word stress until linguistically reviewed. Longer-term answer is a model with genuine expressive/discourse control, not invalid phoneme surgery.
