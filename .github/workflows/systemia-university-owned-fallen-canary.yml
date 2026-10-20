@@ -1,0 +1,51 @@
+name: Systemia University Owned Fallen Canary
+
+on:
+  pull_request:
+    paths:
+      - "systemia/graphics-command/fallen-studio-handoff.ts"
+      - "systemia/graphics-command/fallen-studio-handoff.test.ts"
+      - "systemia/graphics-command/campaigns/systemia-university-owned-handoff.v1.json"
+      - ".github/workflows/systemia-university-owned-fallen-canary.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  governed-studio-draft:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Install project dependencies
+        run: npm install --no-audit --no-fund
+      - name: Test actual Fallen production-need compiler and negative safety gates
+        run: node --import tsx --test systemia/graphics-command/fallen-studio-handoff.test.ts
+      - name: Compile production-owned editable timeline (NO provider work)
+        run: |
+          node --import tsx systemia/graphics-command/fallen-studio-handoff.ts \
+            systemia/graphics-command/campaigns/systemia-university-owned-handoff.v1.json \
+            /tmp/systemia-university-owned-fallen-canary
+      - name: Check every advertised scene remains a production requirement
+        run: |
+          node --input-type=module - <<'NODE'
+          import fs from 'node:fs';
+          const root='/tmp/systemia-university-owned-fallen-canary';
+          const receipt=JSON.parse(fs.readFileSync(root+'/handoff-receipt.json','utf8'));
+          const draft=JSON.parse(fs.readFileSync(root+'/fallen-studio-draft.json','utf8'));
+          if(receipt.status!=='awaiting_governed_assets'||receipt.exportAllowed!==false||receipt.publicationAuthority!==false) throw new Error('release_boundary_broken');
+          if(receipt.durationSec!==30||receipt.pendingPictureCount!==7||receipt.pendingVoiceCount!==7) throw new Error('scene_or_voice_proof_missing');
+          if(!draft.project.assets.every(asset=>asset.path.startsWith('pending://production/'))) throw new Error('unverified_media_leak');
+          if(draft.boundaries.paidGenerationAuthorityGranted!==false) throw new Error('paid_generation_leak');
+          NODE
+      - name: Attach inspectable draft artifacts, never publish
+        uses: actions/upload-artifact@v4
+        with:
+          name: systemia-university-owned-fallen-draft
+          path: /tmp/systemia-university-owned-fallen-canary/
+          if-no-files-found: error
+          retention-days: 14
