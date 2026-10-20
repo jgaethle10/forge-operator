@@ -131,3 +131,19 @@ Next milestone: verify model capabilities and speaker license in a real account,
 ### Automatic session continuity admission
 
 All `planVoiceSession` calls now attach a `continuity` audit and hold the session if one speaker changes voice profile, identity version, provider, or provider voice ID within the session or against an optional `previousCast` record. `preflightVoiceFoundrySpeech` checks the **entire** configured cast before billing a single scene; a second scene cannot hide a changed narrator behind a successful first-scene preflight. Prior records currently carry declared approval/evidence fields only; trusted external evidence resolution and actual human listening remain separate obligations. The legacy adapter requires `requireVoiceFoundry:true` for fail-closed admission if no cast is supplied.
+
+## Push 08: listening-room review reconciliation
+
+The downloadable Listening Room produces `evercraft.voice-foundry.human-audition-draft.v1` files. These are **self-reported, unsigned, unauthenticated review drafts**, not evidence that someone listened or that they hold rights. The new `voice-review-reconciler.mjs` connects them to the original offline `audition-report.json`, requiring exact candidate IDs, source audio SHA-256, complete scored candidate sets, distinct claimed reviewer IDs, consistent locale claims and every six-axis score from 1 to 5. A locale-qualified reviewer must be claimed for each candidate. Two or more independently named reviewers are required.
+
+Usage after collecting two independent listening-room exports:
+
+```bash
+node systemia/media-studio/voice-review-reconciler.mjs \
+  ./audition-report.json ./first-review.json ./second-review.json \
+  > ./voice-review-reconciliation.json
+```
+
+If scores disagree sharply, any category falls below 4/5, or average is below 4.5/5, the candidate is held for discussion. Rankings are deterministic with explicit model, provider, voice profile, per-axis scores and holds, but are **triage, not final winners**. If any reviewer file fails integrity checks, the **whole editorial shortlist is emptied**. Tampered source reports and alias reviewer IDs also fail closed.
+
+Security and truth boundaries: An audio digest proves the reviewed file was *named consistently* in exported data, not that its bytes were independently re-read or heard at reconciliation time. Draft export fields and claimed accent qualifications are not cryptographically authenticated. Do not treat `eligible_for_further_verified_review` as `passed_internal_voice_qa`; never treat it as commercial-rights consent or publication approval. Trusted reviewer identity and listening evidence need authenticated records outside this offline stage. No real provider generation, cost, deployment, or public release is performed.
