@@ -28,7 +28,7 @@ function normalizeManifest(input){
    const id=candidateId(c?.id);
    if(ids.has(id))throw Error('audition_duplicate_candidate_id:'+id);ids.add(id);
    const cLocale=validLocale(c?.locale);
-   if(cLocale!==locale)throw Error('audition_language_mismatch:'+id);
+   if(new Intl.Locale(cLocale).language!==new Intl.Locale(locale).language)throw Error('audition_language_mismatch:'+id);
    if(required(c?.scriptText,'candidate_script_missing')!==scriptText)throw Error('audition_script_mismatch:'+id);
    const rightsState=required(c?.rightsState,'rights_missing');
    if(!allowedRights.has(rightsState))throw Error('audition_rights_state_invalid:'+id);
