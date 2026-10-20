@@ -16,6 +16,29 @@ function eqLocale(a,b) {
 function unique(items) { return new Set(items).size === items.length; }
 function checkedString(value) { return typeof value === 'string' && value.trim().length > 0; }
 
+/** Locale-aware term matching. Do not flag "Evercrafting" as "Evercraft".
+ * CJK scripts can be unspaced and need qualified human pronunciation review;
+ * matching a written term does NOT verify its phonetic realization.
+ */
+export function containsPronunciationTerm(text, term, locale) {
+  if (!checkedString(text) || !checkedString(term) || !validLocale(locale)) return false;
+  const language=Intl.getCanonicalLocales(locale)[0];
+  const hay=text.normalize('NFC').toLocaleLowerCase(language);
+  const word=term.normalize('NFC').toLocaleLowerCase(language);
+  if (/\p{Script=Han}|\p{Script=Hiragana}|\p{Script=Katakana}|\p{Script=Hangul}/u.test(word)) return hay.includes(word);
+  let start=0;
+  while (start < hay.length) {
+    const position=hay.indexOf(word,start);
+    if (position<0) return false;
+    const left=Array.from(hay.slice(0,position)).at(-1)??'';
+    const right=Array.from(hay.slice(position+word.length))[0]??'';
+    const wordChar=/[\p{L}\p{N}\p{M}]/u;
+    if ((!left||!wordChar.test(left))&&(!right||!wordChar.test(right))) return true;
+    start=position+word.length;
+  }
+  return false;
+}
+
 /**
  * No provider calls are made. This is a deterministic, fail-closed casting and
  * performance contract for upstream TTS adapters, actors, and audio QA workers.
@@ -56,7 +79,7 @@ export function planVoiceSession({profiles, cues, lexicon=[]}) {
         reasons.push('pronunciation_entry_unverified');
         continue;
       }
-      if (validLocale(cue?.locale) && eqLocale(entry.locale,cue.locale) && checkedString(cue?.text) && cue.text.toLocaleLowerCase().includes(entry.term.toLocaleLowerCase())) {
+      if (validLocale(cue?.locale) && eqLocale(entry.locale,cue.locale) && checkedString(cue?.text) && containsPronunciationTerm(cue.text,entry.term,cue.locale)) {
         matchedLexicon.push({term:entry.term,reading:entry.reading,evidenceRef:entry.reviewerEvidenceRef});
       }
     }
