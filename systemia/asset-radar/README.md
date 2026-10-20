@@ -63,6 +63,43 @@ node systemia/asset-radar/cli.mjs path/to/permissioned-observations.json
 
 The CLI reads JSON with a `listings` array, optional `as_of` ISO timestamp, and optional `previously_alerted_keys` array. It emits assessments/review alerts on stdout, never polls marketplaces, installs timers, persists data, communicates with a seller or purchases anything. Current tests use fictional examples rather than real active listings.
 
+## Optional authorized eBay Browse source smoke (not a deployed heartbeat)
+
+The owned collector in `ebay-browse-collector.mjs` can search up to two
+queries and refresh up to four official item details per one-shot run. It
+requires a properly licensed eBay application, an approved permission reference,
+application credentials in environment variables, and a destination ZIP. If
+authorization or credentials are absent, it fails **before making any network
+request**. It uses eBay application OAuth and read-only Browse GET endpoints.
+
+For an operator with independently verified rights, credentials securely
+injected at runtime and an approved source-access record:
+
+```bash
+EBAY_BROWSE_ACCESS_APPROVED=yes \
+EBAY_BROWSE_PERMISSION_REF=<approved-internal-reference> \
+EBAY_CLIENT_ID=<securely-injected-client-id> \
+EBAY_CLIENT_SECRET=<securely-injected-client-secret> \
+EBAY_DESTINATION_ZIP=98901 \
+node systemia/asset-radar/ebay-smoke-cli.mjs 'graded pokemon holo' 'vintage nintendo game'
+```
+
+Do **not** paste live credentials into chat, shell history, issues, CI YAML,
+public storage or Git. Source-access approval must reflect actual eBay licensing,
+not merely a set flag. Consult eBay's Browse API terms and call limits.
+
+This command returns **LISTING_DISCOVERY_ONLY**, not deals. It records public
+listing evidence and conservative WATCH_UNVERIFIED assessments, without verified
+sold comps or authenticity. The SHA response reference is a local artifact
+fingerprint, **not** provider-signed proof or independent authorization.
+
+A real completed-sale API or permissioned verified transaction export is a
+**separate gate**; active listing asks must never be turned into sold prices.
+
+```bash
+node --test systemia/asset-radar/*.test.mjs
+```
+
 ## Systemia admission gates before production
 
 1. Permissioned live-source integrations, verified completed-sale evidence, terms/rate-limit audits and provenance receipts.
