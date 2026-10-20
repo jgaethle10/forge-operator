@@ -43,6 +43,7 @@ function normalizeManifest(input){
      provider:required(c.provider,'provider_missing'),modelId:required(c.modelId,'model_id_missing'),providerReceiptRef:c.providerReceiptRef??null,
      rightsState,rightsEvidenceRef:c.rightsEvidenceRef??null,
      sourcePath:required(c.audioPath,'audio_path_missing'),
+     asrObservationPath:c.asrObservationPath===undefined?null:required(c.asrObservationPath,'asr_path_invalid'),
      performanceDirection:required(c.performanceDirection,'direction_missing')
    };
  });
