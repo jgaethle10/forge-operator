@@ -92,7 +92,10 @@ jobs:
             (d.selected.targetEntityId!=='turret-fore-a'||
               d.composition.subjectId!=='gun-turret-detail'))process.exit(3);
           if(process.env.SHOT==='title_safe'&&
-            (d.titleSafeRegion?.axis!=='right'||d.safeRegionClearanceScore===null))
+            (d.titleSafeRegion?.axis!=='right'||d.safeRegionClearanceScore===null
+              ||d.titleSafeClearance?.clearAtAllSamples!==true
+              ||d.titleSafeClearance?.maxSubjectRight>.30
+              ||d.titleSafeClearance?.maxSubjectOverflow>.001))
             process.exit(4);
           if(process.env.SHOT==='hero_full'&&!d.fullHeroAutoFit)process.exit(5);
           console.log('WORLD_DIRECTOR_NATIVE_3D_SHOT_ACCEPTED',JSON.stringify({
