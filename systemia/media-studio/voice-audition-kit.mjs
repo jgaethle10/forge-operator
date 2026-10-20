@@ -38,7 +38,7 @@ function normalizeManifest(input){
      id, label:required(c.label,'label_missing'),voiceProfileId:required(c.voiceProfileId,'voice_profile_missing'),
      locale:cLocale,accent:required(c.accent,'accent_missing'),genderPresentation,
      scriptText,
-     provider:required(c.provider,'provider_missing'),providerReceiptRef:c.providerReceiptRef??null,
+     provider:required(c.provider,'provider_missing'),modelId:required(c.modelId,'model_id_missing'),providerReceiptRef:c.providerReceiptRef??null,
      rightsState,rightsEvidenceRef:c.rightsEvidenceRef??null,
      sourcePath:required(c.audioPath,'audio_path_missing'),
      performanceDirection:required(c.performanceDirection,'direction_missing')
