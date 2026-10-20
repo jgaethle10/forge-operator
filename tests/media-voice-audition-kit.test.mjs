@@ -2,6 +2,7 @@ import assert from 'node:assert/strict';
 import fs from 'node:fs';
 import os from 'node:os';
 import path from 'node:path';
+import crypto from 'node:crypto';
 import {spawnSync} from 'node:child_process';
 import test from 'node:test';
 import { buildVoiceAudition } from '../systemia/media-studio/voice-audition-kit.mjs';
@@ -76,4 +77,44 @@ test('supports A/B comparisons across accents in the same language',()=>{
 test('every audition take must identify its model for controlled v3 vs v4 comparison',()=>{
  const s=setup();delete s.input.candidates[1].modelId;fs.writeFileSync(s.manifestPath,JSON.stringify(s.input));
  assert.throws(()=>buildVoiceAudition(s),/audition_model_id_missing/);
+});
+
+test('optional ASR observation for real audio bytes is included in the portable audition report',()=>{
+ const s=setup();
+ const source=path.join(s.root,s.input.candidates[0].audioPath);
+ const digest=crypto.createHash('sha256').update(fs.readFileSync(source)).digest('hex');
+ const observation={schema:'evercraft.voice-foundry.asr-observation.v1',method:'automated_asr',
+  engineId:'fixture-not-actual-ASR',engineVersion:'fixture-v1',sourceReceiptRef:'unverified-fixture',
+  cueId:'synthetic-0',audioDigest:digest,locale:'en-US',
+  recognizedText:'No human audio was produced.'};
+ fs.writeFileSync(path.join(s.root,'asr.json'),JSON.stringify(observation));
+ s.input.candidates[0].asrObservationPath='asr.json';
+ fs.writeFileSync(s.manifestPath,JSON.stringify(s.input));
+ const out=buildVoiceAudition(s);
+ const report=JSON.parse(fs.readFileSync(out.reportPath,'utf8'));
+ assert.equal(report.candidates[0].asrAnalysisStatus,'candidate_text_match_needs_human_review');
+ assert.equal(report.candidates[0].transcriptAudit.audioDigest,digest);
+ assert.equal(report.candidates[0].transcriptAudit.humanListeningVerified,false);
+ assert.equal(report.candidates[0].status,'awaiting_human_review');
+ assert.equal(report.candidates[1].asrAnalysisStatus,'asr_not_provided');
+ assert.ok(!JSON.stringify(report.candidates[0]).includes('asrObservationPath'));
+});
+test('wrong ASR audio digest holds audition candidate and does not promote silent fake text',()=>{
+ const s=setup();
+ const observation={schema:'evercraft.voice-foundry.asr-observation.v1',method:'automated_asr',
+  engineId:'fixture',engineVersion:'v1',sourceReceiptRef:'fixture-receipt',
+  cueId:'synthetic-0',audioDigest:'f'.repeat(64),locale:'en-US',
+  recognizedText:'No human audio was produced.'};
+ fs.writeFileSync(path.join(s.root,'asr.json'),JSON.stringify(observation));
+ s.input.candidates[0].asrObservationPath='asr.json';
+ fs.writeFileSync(s.manifestPath,JSON.stringify(s.input));
+ const out=buildVoiceAudition(s);
+ const report=JSON.parse(fs.readFileSync(out.reportPath,'utf8'));
+ assert.equal(report.candidates[0].status,'asr_review_held');
+ assert.ok(report.candidates[0].transcriptAudit.reasons.includes('asr_audio_digest_mismatch'));
+});
+test('ASR observation outside the project is refused before packaging',()=>{
+ const s=setup();s.input.candidates[0].asrObservationPath='../secret.json';
+ fs.writeFileSync(s.manifestPath,JSON.stringify(s.input));
+ assert.throws(()=>buildVoiceAudition(s),/ENOENT|asr_path_outside_project/);
 });
