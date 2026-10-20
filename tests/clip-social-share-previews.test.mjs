@@ -27,8 +27,8 @@ test('GitHub Pages deploy rasterizes, verifies and uploads each preview',()=>{
  assert.match(workflow,/cairosvg==2\.8\.2/);
  assert.match(workflow,/build-audience-social-previews\.py/);
  assert.match(workflow,/CLIP_SOCIAL_PREVIEW_HTTP_VERIFIED/);
- assert.match(workflow,/rm -rf _public_pages\\/clip\\/audience-sites/);
- assert.match(workflow,/audience-sites\\/\\$slug\\/share\\.png/);
+ assert.ok(workflow.includes('rm -rf _public_pages/clip/audience-sites'));
+ assert.ok(workflow.includes('_public_pages/audience-sites/$slug/share.png'));
  assert.match(script,/CLIP_PNG_BUILD_SUCCESS count=14/);
  for(const slug of slugs)assert.ok(script.includes('"'+slug+'"'));
 });
