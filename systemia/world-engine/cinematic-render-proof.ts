@@ -22,6 +22,7 @@ import {renderKineticSoundscape} from '../media-studio/kinetic-soundscape.mjs';
 import {battleshipWorld,battleshipGeometry,battleshipTake} from './battleship-scene.js';
 import {makeNativeBattleshipSequence,composeNativeBattleshipCamera,type NativeFilmFormat} from './native-format-camera.js';
 import {auditSequenceHeroFraming} from './shot-composition.js';
+import {directWorldEngineShot,type DirectorShotType} from './shot-director.js';
 import {generateDeterministicTangents} from './fallen-geometry.js';
 import type {TextureAsset} from './texture.js';
 import {textureAssetDigest} from './texture.js';
@@ -461,18 +462,34 @@ async function main(){
     startFovYDeg:51,endFovYDeg:43
   };
   const native= isBattleship ? makeNativeBattleshipSequence({
-    world,geometries,textures,format:nativeFormat
+    world,geometries,textures,format:nativeFormat,
+    ...(process.env.CINEMATIC_SHOT_ID?{overrideTake:composeNativeBattleshipCamera(nativeFormat).cameraTake}:{})
   }):null;
-  const sequence=native?.sequence??buildCinematicCameraSequence({
+  const shotType=process.env.CINEMATIC_SHOT_ID||'';
+  if(shotType&&!['hero_full','detail_closeup','title_safe'].includes(shotType))
+    throw new Error('cinematic_director_shot_unsupported');
+  if(shotType&&!isBattleship)throw new Error('cinematic_director_requires_battleship_scene');
+  const director=shotType?directWorldEngineShot({
+    world,geometries,textures,viewport:{width:WIDTH,height:HEIGHT},
+    take:composeNativeBattleshipCamera(nativeFormat).cameraTake,
+    intent:shotType as DirectorShotType,
+    hero:{id:'ship-hero',entityIds:['ship-hull','bridge-house','mast-main']},
+    detail:{id:'gun-turret-detail',entityIds:['turret-fore-a','barrel-fore-a-port','barrel-fore-a-starboard']},
+    detailTargetEntityId:'turret-fore-a'
+  }):null;
+  const sequence=director?.sequence??native?.sequence??buildCinematicCameraSequence({
     world,take:rotorTake,geometries,viewport:{width:WIDTH,height:HEIGHT},textures
   });
-  if(native?.review.some(r=>r.visibleSubjectLandmarks<6))
+  if(!director&&native?.review.some(r=>r.visibleSubjectLandmarks<6))
     throw Error('battleship_native_subject_composition_failed');
   const actualGeometryFraming=native?auditSequenceHeroFraming({
     frames:sequence.frames,geometries,
-    subject:{id:'battleship-hero',
-      entityIds:['ship-hull','bridge-house','mast-main'],
-      minVisibleFraction:.75}
+    subject:director?.receipt.intent==='detail_closeup'
+      ?{id:'gun-turret-detail',
+        entityIds:['turret-fore-a','barrel-fore-a-port','barrel-fore-a-starboard'],
+        minVisibleFraction:.5}
+      :{id:'battleship-hero',
+        entityIds:['ship-hull','bridge-house','mast-main'],minVisibleFraction:.75}
   }):null;
   if(actualGeometryFraming?.frameSamples.some(sample=>
     sample.framingStatus==='subject_offscreen'))
@@ -567,9 +584,10 @@ async function main(){
       original3dFrames:true,
       cropApplied:false,
       sceneWorldDigest:sequence.worldDefinitionDigest,
-      landmarkAudits:native.review,
+      landmarkAudits:director?[]:native.review,
       actualGeometryFraming,
-      opticalAutoFit:native.autoFit,
+      opticalAutoFit:director?.receipt.fullHeroAutoFit??native.autoFit,
+      ...(director?{shotDirector:director.receipt}:{}),
       humanCreativeReviewRequired:true,
       publicationAuthority:false
     }}:{}),

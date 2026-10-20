@@ -1,0 +1,120 @@
+name: World Engine director shot trials
+on:
+  pull_request:
+    paths:
+      - 'systemia/world-engine/shot-director.ts'
+      - 'systemia/world-engine/shot-director.test.ts'
+      - 'systemia/world-engine/cinematic-render-proof.ts'
+      - '.github/workflows/world-engine-director-shots.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  direct-real-webgpu-storyboard:
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - shot: hero_full
+            format: wide
+            width: 640
+            height: 360
+          - shot: detail_closeup
+            format: square
+            width: 480
+            height: 480
+          - shot: title_safe
+            format: vertical
+            width: 360
+            height: 640
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Install source and deterministic graphics runtime
+        run: npm install --no-audit --no-fund
+      - name: Install pinned Chromium WebGPU browser worker
+        working-directory: systemia/evercraft-web/browser-worker
+        run: PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD=1 npm install --no-audit --no-fund
+      - name: Run deterministic World Engine and cinematography tests
+        run: npm run test:world-engine
+      - name: Install native video encoder when missing
+        run: command -v ffmpeg || (sudo apt-get update -qq && sudo apt-get install -y ffmpeg)
+      - name: Render actual intentional 3D shot through 96-frame GPU pipeline
+        env:
+          CINEMATIC_SCENE: battleship
+          CINEMATIC_FORMAT: ${{ matrix.format }}
+          CINEMATIC_SHOT_ID: ${{ matrix.shot }}
+          CINEMATIC_PROOF_OUTPUT: /tmp/evercraft-shot-director
+          EVERCRAFT_NATIVE_BROWSER_STATE_DIR: /tmp/evercraft-shot-director-browser
+        run: npm run world:cinematic-render-proof
+      - name: Prove directorial intention, real source geometry, shadows, silence and no public authority
+        env:
+          SHOT: ${{ matrix.shot }}
+          FORMAT: ${{ matrix.format }}
+          WIDTH: ${{ matrix.width }}
+          HEIGHT: ${{ matrix.height }}
+        run: |
+          node - <<'NODE'
+          const fs=require('node:fs'),path=require('node:path');
+          const root='/tmp/evercraft-shot-director';
+          const r=JSON.parse(fs.readFileSync(path.join(root,'receipt.json'),'utf8'));
+          const n=r.nativeFormat,d=n?.shotDirector;
+          const movie=path.join(root,'battleship-world-engine-trial.mp4');
+          if(!d||d.schema!=='evercraft.world-engine.director-shot.v1'
+            ||d.intent!==process.env.SHOT
+            ||d.candidatesEvaluated<5
+            ||d.composition.samples.length!==3
+            ||d.cameraPlanDigests.length!==3
+            ||d.cameraPlanDigests.some(x=>!/^([a-f0-9]{64})$/.test(x))
+            ||d.sourceGeometryAssetIds.length<3
+            ||d.operatorCreativeReviewRequired!==true
+            ||d.publicationAuthority!==false||d.clientApproval!==false
+            ||n.format!==process.env.FORMAT||n.cropApplied!==false
+            ||n.original3dFrames!==true
+            ||n.actualGeometryFraming?.frameSamples.length!==3
+            ||r.exactGpuReadbackFrames!==96
+            ||r.uniqueRawFrameDigests<20
+            ||r.shadowCounterfactualChangedPixels<300
+            ||r.shadowFilterChangedPixels<10
+            ||r.output.width!==+process.env.WIDTH||r.output.height!==+process.env.HEIGHT
+            ||r.output.durationSec!==4||r.output.codec!=='h264'
+            ||r.output.audioCodec!==null
+            ||r.soundState!=='silent_at_founder_direction_no_sound_invented'
+            ||r.publicationAuthority!==false||r.hardwareExecutionClaim!==false
+            ||!fs.existsSync(movie)||fs.statSync(movie).size<12000){
+            console.error('WORLD_DIRECTOR_REAL_PIXEL_TEST_FAILED',JSON.stringify(r,null,2));process.exit(2);
+          }
+          if(process.env.SHOT==='detail_closeup'&&
+            (d.selected.targetEntityId!=='turret-fore-a'||
+              d.composition.subjectId!=='gun-turret-detail'))process.exit(3);
+          if(process.env.SHOT==='title_safe'&&
+            (d.titleSafeRegion?.axis!=='right'||d.safeRegionClearanceScore===null
+              ||d.titleSafeClearance?.clearAtAllSamples!==true
+              ||d.titleSafeClearance?.maxSubjectRight>.30
+              ||d.titleSafeClearance?.maxSubjectOverflow>.001))
+            process.exit(4);
+          if(process.env.SHOT==='hero_full'&&!d.fullHeroAutoFit)process.exit(5);
+          console.log('WORLD_DIRECTOR_NATIVE_3D_SHOT_ACCEPTED',JSON.stringify({
+            shot:d.intent,format:n.format,original3dFrames:true,
+            count:r.exactGpuReadbackFrames,camera:d.selected,
+            subject:d.composition.subjectId,framings:d.composition.samples,
+            titleRegion:d.titleSafeRegion,sha256:r.output.sha256
+          }));
+          NODE
+      - name: Retain actual founder-review silent video and raw frame evidence
+        uses: actions/upload-artifact@v4
+        with:
+          name: world-director-${{ matrix.shot }}-${{ matrix.format }}
+          path: |
+            /tmp/evercraft-shot-director/battleship-world-engine-trial.mp4
+            /tmp/evercraft-shot-director/receipt.json
+            /tmp/evercraft-shot-director/opening.png
+            /tmp/evercraft-shot-director/middle.png
+            /tmp/evercraft-shot-director/closing.png
+            /tmp/evercraft-shot-director/shadow-enabled-first-frame.png
+          if-no-files-found: error
+          retention-days: 7
