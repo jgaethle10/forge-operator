@@ -10,7 +10,7 @@ test('all seven websites contain shareable, canonical, original PNG Open Graph m
  for(const slug of slugs){
   const page=read('audience-sites/'+slug+'/index.html');
   const canonical='https://jgaethle10.github.io/forge-operator/audience-sites/'+slug+'/';
-  const image='https://jgaethle10.github.io/forge-operator/clip/audience-sites/'+slug+'/feed.png';
+  const image='https://jgaethle10.github.io/forge-operator/audience-sites/'+slug+'/share.png';
   assert.ok(page.includes('<link rel="canonical" href="'+canonical+'">'),slug);
   assert.ok(page.includes('property="og:url" content="'+canonical+'"'),slug);
   assert.ok(page.includes('property="og:image" content="'+image+'"'),slug);
@@ -27,6 +27,8 @@ test('GitHub Pages deploy rasterizes, verifies and uploads each preview',()=>{
  assert.match(workflow,/cairosvg==2\.8\.2/);
  assert.match(workflow,/build-audience-social-previews\.py/);
  assert.match(workflow,/CLIP_SOCIAL_PREVIEW_HTTP_VERIFIED/);
+ assert.match(workflow,/rm -rf _public_pages\\/clip\\/audience-sites/);
+ assert.match(workflow,/audience-sites\\/\\$slug\\/share\\.png/);
  assert.match(script,/CLIP_PNG_BUILD_SUCCESS count=14/);
  for(const slug of slugs)assert.ok(script.includes('"'+slug+'"'));
 });
