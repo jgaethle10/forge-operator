@@ -203,23 +203,23 @@ export function battleshipWorld():WorldDefinition{
     version:1,tickRateHz:120,gravity:{x:0,y:0,z:0},
     visualScene:{
       schema:'evercraft.world-engine.visual-scene.v1',initialCameraEntityId:'cinema-camera',
-      clearColor:{r:.020,g:.049,b:.10},
+      clearColor:{r:.046,g:.067,b:.112},
       atmosphere:{color:{r:.18,g:.29,b:.42},density:.012,startDistance:22,heightFalloff:.018,referenceHeight:0},
       colorManagement:{toneMapper:'aces_filmic',exposureBiasStops:.12},
       cinematicLighting:{shading:'ggx_microfacet',localLightFalloff:'inverse_square'},
       directionalShadows:{directionalLightEntityId:'sun',
         focus:{x:0,y:3,z:0},halfExtent:45,resolution:512,depthBias:.0025,softnessTexels:1},
       materials:[
-        material('hull',[.29,.36,.47],.7,.45),
-        material('deck',[.31,.37,.45],.25,.67),
-        material('steel',[.45,.52,.60],.65,.4),
-        material('turret',[.49,.56,.63],.67,.35),
+        material('hull',[.23,.28,.35],.67,.49),
+        material('deck',[.25,.28,.33],.26,.7),
+        material('steel',[.35,.40,.48],.59,.44),
+        material('turret',[.40,.46,.52],.62,.39),
         material('barrel',[.20,.23,.29],.81,.3),
         material('window',[.035,.085,.13],.22,.24),
         material('dark',[.14,.16,.20],.4,.65),
         material('antenna',[.34,.40,.45],.64,.45),
         material('accent',[.58,.63,.66],.5,.37),
-        material('water',[.045,.15,.23],.37,.22),
+        material('water',[.024,.077,.12],.3,.28),
         material('foam',[.65,.79,.82],.02,.95)
       ]
     },
@@ -234,8 +234,8 @@ export function battleshipTake():CinematicCameraTake{
     id:'battleship-sea-trial-hero',
     cameraEntityId:'cinema-camera',targetEntityId:'ship-hull',
     durationSec:4,fps:24,move:'orbit',ease:'smootherstep',
-    orbit:{radius:51,startAngleDeg:-63,endAngleDeg:-20,startHeight:10,endHeight:6.8},
+    orbit:{radius:36,startAngleDeg:-59,endAngleDeg:-22,startHeight:7.2,endHeight:5.3},
     lookAtOffset:{x:0,y:4,z:0},
-    startFovYDeg:50,endFovYDeg:44
+    startFovYDeg:44,endFovYDeg:40
   };
 }
