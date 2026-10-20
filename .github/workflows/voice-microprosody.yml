@@ -35,7 +35,7 @@ jobs:
           python systemia/media-studio/voice-kokoro-microprosody.py neural-microprosody
           test -s neural-microprosody/index.html
           test -s neural-microprosody/micro-prosody-report.json
-          test "$(find neural-microprosody -maxdepth 1 -name '*.mp3' | wc -l)" -eq 9
+          test "$(find neural-microprosody -maxdepth 1 -name '*.mp3' | wc -l)" -eq 12
       - name: Publish downloadable private listening artifact
         uses: actions/upload-artifact@v4
         with:
