@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1080 1920" width="1080" height="1920" role="img" aria-label="PLAYBOOK LAB social visual">
+<defs>
+<linearGradient id="bg" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#06121A"/><stop offset=".67" stop-color="#0B2630"/><stop offset="1" stop-color="#10212C"/></linearGradient>
+<radialGradient id="halo"><stop stop-color="#93CEFF" stop-opacity=".22"/><stop offset="1" stop-color="#93CEFF" stop-opacity="0"/></radialGradient>
+</defs>
+<rect width="1080" height="1920" fill="url(#bg)"/>
+<circle cx="840" cy="200" r="540" fill="url(#halo)"/>
+<path d="M85 90H995 M85 1790H995" stroke="#93CEFF" stroke-width="3" opacity=".7"/>
+<text x="90" y="164" font-family="Arial,sans-serif" font-size="35" fill="#93CEFF" font-weight="900" letter-spacing="8">PLAYBOOK LAB</text>
+<text x="90" y="300" font-family="Arial,sans-serif" font-size="24" fill="#A2C0C8" font-weight="900" letter-spacing="5">FOOTBALL • EXPLAINERS</text>
+<text x="86" y="405" font-family="Arial,sans-serif" font-size="90" fill="#F4FFFF" font-weight="900" letter-spacing="-2">SAME FIELD.</text>
+<text x="86" y="505" font-family="Arial,sans-serif" font-size="90" fill="#93CEFF" font-weight="900" letter-spacing="-2">NEW PROBLEM.</text>
+<text x="90" y="595" font-family="Arial,sans-serif" font-size="33" fill="#C6DBE0">See what changes when the concept changes.</text>
+<g transform="translate(97 830)"><rect width="886" height="400" rx="22" fill="#103A43" stroke="#93CEFF" stroke-width="5"/><g stroke="#BFEAFF" stroke-width="3" stroke-dasharray="12 11" opacity=".6"><path d="M0 100H886 M0 200H886 M0 300H886"/></g><path d="M220 320V90L185 135 M220 90L255 135" stroke="#93CEFF" stroke-width="18" fill="none" stroke-linecap="round"/><path d="M600 320Q630 175 740 110L680 123 M740 110L704 170" stroke="#93CEFF" stroke-width="18" fill="none" stroke-linecap="round"/><g fill="#CFE6FF"><circle cx="220" cy="320" r="30"/><circle cx="600" cy="320" r="30"/><circle cx="440" cy="330" r="30"/></g></g>
+<rect x="87" y="1557" width="906" height="116" rx="26" fill="#93CEFF"/>
+<text x="119" y="1630" font-family="Arial,sans-serif" font-size="42" font-weight="900" fill="#082127">OPEN THE FREE PLAYBOOK BOARD</text>
+<text x="90" y="1852" font-family="Arial,sans-serif" font-size="26" fill="#9FBAC2">EVERCRAFT CLIP   /   FREE TOOL   /   STORY</text>
+</svg>
