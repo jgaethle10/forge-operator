@@ -198,6 +198,7 @@ async function executeReferenceFrame(page,shaderSource){
       1,0,0,0,
       0,0,0,0,
       0,0,0,0,
+      0,0,0,0,
     ]);
     const frameBuffer=device.createBuffer({
       size:frameValues.byteLength,
