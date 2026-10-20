@@ -3,6 +3,11 @@ import test from 'node:test';
 import { LISTING_SCHEMA, assessListing, newReviewAlerts } from './engine.mjs';
 
 const now = new Date('2026-10-20T03:00:00Z');
+const trusted_completed_sale_ids = ['marketplace:sold-a', 'marketplace:sold-b'];
+function assessReviewedListing(raw, options = {}) {
+  return assessListing(raw, { ...options, trusted_completed_sale_ids });
+}
+
 const example = () => ({
   schema: LISTING_SCHEMA,
   item: { title: 'Demo collectible', category: 'trading-card', exact_variant_key: 'set-123-holo', condition_key: 'psa-9' },
@@ -20,7 +25,7 @@ const example = () => ({
 });
 
 test('qualifies current hypothetical arbitrage without granting purchase authority', () => {
-  const result = assessListing(example(), { now });
+  const result = assessReviewedListing(example(), { now });
   assert.equal(result.status, 'QUALIFIED_FOR_HUMAN_REVIEW');
   assert.equal(result.conservative_sold_value_cents, 60_000);
   assert.equal(result.cost_to_acquire_cents, 22_000);
@@ -32,14 +37,14 @@ test('qualifies current hypothetical arbitrage without granting purchase authori
 test('rejects stale listing availability', () => {
   const item = example();
   item.listing.availability_checked_at = '2026-10-19T20:00:00Z';
-  assert.equal(assessListing(item, { now }).status, 'WATCH_UNVERIFIED');
+  assert.equal(assessReviewedListing(item, { now }).status, 'WATCH_UNVERIFIED');
 });
 
 test('rejects unsold asks and mismatched condition', () => {
   const item = example();
   item.sold_comps[0].transaction_state = 'active_asking';
   item.sold_comps[1].condition_key = 'raw-near-mint';
-  const assessed = assessListing(item, { now });
+  const assessed = assessReviewedListing(item, { now });
   assert.equal(assessed.conservative_sold_value_cents, null);
   assert.ok(assessed.reasons.includes('insufficient_exact_verified_sold_comps'));
 });
@@ -47,7 +52,7 @@ test('rejects unsold asks and mismatched condition', () => {
 test('does not double-count a sold comp id with a second URL', () => {
   const item = example();
   item.sold_comps[1].sale_id = item.sold_comps[0].sale_id;
-  assert.equal(assessListing(item, { now }).exact_sold_comps, 1);
+  assert.equal(assessReviewedListing(item, { now }).exact_sold_comps, 1);
 });
 
 test('fails closed when fees, authenticity and seller checks are missing', () => {
@@ -55,7 +60,7 @@ test('fails closed when fees, authenticity and seller checks are missing', () =>
   delete item.resale_costs.grading_cents;
   item.provenance.authenticity_state = 'unverified';
   item.listing.seller_review_state = 'unknown';
-  const assessed = assessListing(item, { now });
+  const assessed = assessReviewedListing(item, { now });
   assert.equal(assessed.status, 'WATCH_UNVERIFIED');
   assert.equal(assessed.estimated_net_upside_cents, null);
 });
@@ -63,7 +68,7 @@ test('fails closed when fees, authenticity and seller checks are missing', () =>
 test('high asking price does not qualify', () => {
   const item = example();
   item.listing.price_cents = 50_000;
-  const assessed = assessListing(item, { now });
+  const assessed = assessReviewedListing(item, { now });
   assert.equal(assessed.status, 'WATCH_UNVERIFIED');
   assert.ok(assessed.reasons.includes('discount_below_threshold'));
   assert.ok(assessed.reasons.includes('net_upside_below_threshold'));
@@ -72,30 +77,30 @@ test('high asking price does not qualify', () => {
 test('refuses suspect items and unsupported currencies', () => {
   const item = example();
   item.item.category = 'firearm';
-  assert.equal(assessListing(item, { now }).status, 'REJECTED');
+  assert.equal(assessReviewedListing(item, { now }).status, 'REJECTED');
   item.item.category = 'trading-card';
   item.provenance.suspected_stolen = true;
-  assert.equal(assessListing(item, { now }).status, 'REJECTED');
+  assert.equal(assessReviewedListing(item, { now }).status, 'REJECTED');
   item.provenance.suspected_stolen = false;
   item.listing.currency = 'EUR';
-  assert.equal(assessListing(item, { now }).status, 'WATCH_UNVERIFIED');
+  assert.equal(assessReviewedListing(item, { now }).status, 'WATCH_UNVERIFIED');
 });
 
 test('deduplicates repeat alerts and retains price drops', () => {
-  const first = assessListing(example(), { now });
+  const first = assessReviewedListing(example(), { now });
   const batch = newReviewAlerts([first, first]);
   assert.equal(batch.alerts.length, 1);
   assert.equal(newReviewAlerts([first], batch.updated_alert_keys).alerts.length, 0);
   const reduced = example();
   reduced.listing.price_cents = 18_000;
-  assert.equal(newReviewAlerts([assessListing(reduced, { now })], batch.updated_alert_keys).alerts.length, 1);
+  assert.equal(newReviewAlerts([assessReviewedListing(reduced, { now })], batch.updated_alert_keys).alerts.length, 1);
 });
 
 test('rejects malformed URLs and future availability claims', () => {
   const item = example();
   item.listing.url = 'http://example.org/not-https';
   item.listing.availability_checked_at = '2026-10-25T00:00:00Z';
-  const assessed = assessListing(item, { now });
+  const assessed = assessReviewedListing(item, { now });
   assert.equal(assessed.listing_url, null);
   assert.equal(assessed.status, 'WATCH_UNVERIFIED');
 });
@@ -113,9 +118,19 @@ test('rejects screening policy overrides that weaken evidence or inflate profit'
     { invented_policy_key: true },
   ];
   for (const policy of bypasses) {
-    assert.throws(() => assessListing(example(), { now, policy }), /unsafe_asset_radar_policy_override/);
+    assert.throws(() => assessReviewedListing(example(), { now, policy }), /unsafe_asset_radar_policy_override/);
   }
-  assert.throws(() => assessListing(example(), { now, policy: null }), /invalid_asset_radar_policy/);
-  assert.equal(assessListing(example(), { now, policy: { minimum_net_upside_cents: 20_000 } }).status, 'QUALIFIED_FOR_HUMAN_REVIEW');
-  assert.equal(assessListing(example(), { now, policy: { minimum_net_upside_cents: 30_000 } }).status, 'WATCH_UNVERIFIED');
+  assert.throws(() => assessReviewedListing(example(), { now, policy: null }), /invalid_asset_radar_policy/);
+  assert.equal(assessReviewedListing(example(), { now, policy: { minimum_net_upside_cents: 20_000 } }).status, 'QUALIFIED_FOR_HUMAN_REVIEW');
+  assert.equal(assessReviewedListing(example(), { now, policy: { minimum_net_upside_cents: 30_000 } }).status, 'WATCH_UNVERIFIED');
+});
+
+test('untrusted self-declared sold transactions cannot produce a qualified deal', () => {
+  const forged = example();
+  assert.equal(assessListing(forged, { now }).status, 'WATCH_UNVERIFIED');
+  assert.equal(assessListing(forged, { now }).exact_sold_comps, 0);
+  const oneSale = assessListing(forged, { now, trusted_completed_sale_ids: ['marketplace:sold-a'] });
+  assert.equal(oneSale.status, 'WATCH_UNVERIFIED');
+  assert.equal(oneSale.exact_sold_comps, 1);
+  assert.equal(assessReviewedListing(forged, { now }).status, 'QUALIFIED_FOR_HUMAN_REVIEW');
 });
