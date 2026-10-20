@@ -1,0 +1,111 @@
+name: World Engine native three-format cinema
+on:
+  pull_request:
+    paths:
+      - 'systemia/world-engine/native-format-camera.ts'
+      - 'systemia/world-engine/native-format-camera.test.ts'
+      - 'systemia/world-engine/cinematic-render-proof.ts'
+      - '.github/workflows/evercraft-native-multiformat-film.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  native-world-engine-cameras:
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - format: wide
+            width: 640
+            height: 360
+          - format: square
+            width: 480
+            height: 480
+          - format: vertical
+            width: 360
+            height: 640
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Install owned renderer tools
+        run: npm install --no-audit --no-fund
+      - name: Install pinned browser worker
+        working-directory: systemia/evercraft-web/browser-worker
+        run: PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD=1 npm install --no-audit --no-fund
+      - name: Validate World Engine camera and source model
+        run: npm run test:world-engine
+      - name: Require video encoder
+        run: command -v ffmpeg || (sudo apt-get update -qq && sudo apt-get install -y ffmpeg)
+      - name: Render 96 actual WGSL/GPU scene frames in native aspect
+        env:
+          CINEMATIC_SCENE: battleship
+          CINEMATIC_FORMAT: ${{ matrix.format }}
+          CINEMATIC_PROOF_OUTPUT: /tmp/evercraft-native-world
+          EVERCRAFT_NATIVE_BROWSER_STATE_DIR: /tmp/evercraft-native-browser
+        run: npm run world:cinematic-render-proof
+      - name: Verify output dimensions, GPU frame source, native camera and shadow evidence
+        env:
+          FORMAT: ${{ matrix.format }}
+          WIDTH: ${{ matrix.width }}
+          HEIGHT: ${{ matrix.height }}
+        run: |
+          node - <<'NODE'
+          const fs=require('node:fs');
+          const path=require('node:path');
+          const root='/tmp/evercraft-native-world';
+          const r=JSON.parse(fs.readFileSync(path.join(root,'receipt.json'),'utf8'));
+          const m=r.nativeFormat;
+          const movie=path.join(root,'battleship-world-engine-trial.mp4');
+          if(!m||m.format!==process.env.FORMAT
+            ||m.viewport.width!==+process.env.WIDTH
+            ||m.viewport.height!==+process.env.HEIGHT
+            ||m.cameraSource!=='new_3d_camera_plan_not_post_crop'
+            ||m.cropApplied!==false
+            ||m.original3dFrames!==true
+            ||m.humanCreativeReviewRequired!==true
+            ||m.publicationAuthority!==false
+            ||m.landmarkAudits.length!==3
+            ||m.landmarkAudits.some(x=>x.visibleSubjectLandmarks<3)
+            ||r.sceneType!=='procedural_battleship'
+            ||r.soundState!=='silent_at_founder_direction_no_sound_invented'
+            ||r.exactGpuReadbackFrames!==96
+            ||r.uniqueRawFrameDigests<20
+            ||r.shadowCounterfactualChangedPixels<300
+            ||r.shadowFilterChangedPixels<10
+            ||r.output.width!==+process.env.WIDTH
+            ||r.output.height!==+process.env.HEIGHT
+            ||r.output.durationSec!==4
+            ||r.output.codec!=='h264'
+            ||r.output.audioCodec!==null
+            ||r.publicationAuthority!==false
+            ||r.hardwareExecutionClaim!==false
+            ||!fs.existsSync(movie)||fs.statSync(movie).size<12000){
+            console.error('NATIVE_CAMERA_GPU_VERIFICATION_FAILED',JSON.stringify(r,null,2));process.exit(2);
+          }
+          console.log('NATIVE_THREE_DIMENSIONAL_CAMERA_VERIFIED',JSON.stringify({
+            format:m.format,viewport:m.viewport,
+            frameCount:r.exactGpuReadbackFrames,
+            uniqueFrames:r.uniqueRawFrameDigests,
+            shadowCounterfactualChangedPixels:r.shadowCounterfactualChangedPixels,
+            humanReviewRequired:true,sha256:r.output.sha256
+          }));
+          NODE
+          ffprobe -v error -show_entries stream=codec_type,codec_name,width,height,nb_frames -of json /tmp/evercraft-native-world/battleship-world-engine-trial.mp4
+      - name: Retain actual per-format GPU film, 3 real stills and review receipt
+        uses: actions/upload-artifact@v4
+        with:
+          name: evercraft-native-${{ matrix.format }}-camera-film
+          path: |
+            /tmp/evercraft-native-world/battleship-world-engine-trial.mp4
+            /tmp/evercraft-native-world/receipt.json
+            /tmp/evercraft-native-world/opening.png
+            /tmp/evercraft-native-world/middle.png
+            /tmp/evercraft-native-world/closing.png
+            /tmp/evercraft-native-world/shadow-enabled-first-frame.png
+            /tmp/evercraft-native-world/shadow-disabled-first-frame.png
+          if-no-files-found: error
+          retention-days: 7
