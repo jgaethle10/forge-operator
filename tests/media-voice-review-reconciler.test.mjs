@@ -80,3 +80,13 @@ test('rejects source reports without measured SHA-bound audio and false producti
  const t=report();t.verdict='READY_TO_PUBLISH';
  assert.throws(()=>reconcileVoiceAudition({report:t,drafts:[draft('reviewer-a',5),draft('reviewer-b',5)]}),/original_audition_report_required/);
 });
+
+test('case variations of the same reviewer identity do not count as independent listens',()=>{
+ const r=reconcileVoiceAudition({report:report(),drafts:[draft('SoundDirector',5),draft('sounddirector',5)]});
+ assert.ok(r.reasons.includes('reviewers_not_independent'));
+ assert.equal(r.editorialShortlist.length,0);
+});
+test('a manually altered publishable report is never considered valid input',()=>{
+ const bad=report();bad.publicationAuthorityGranted=true;
+ assert.throws(()=>reconcileVoiceAudition({report:bad,drafts:[draft('reviewer-a',5),draft('reviewer-b',5)]}),/original_audition_report_required/);
+});
