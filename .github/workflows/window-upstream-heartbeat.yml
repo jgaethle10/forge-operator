@@ -15,7 +15,7 @@ on:
       - main
 
 permissions:
-  contents: write
+  contents: read
 
 concurrency:
   group: window-independent-heartbeat
@@ -35,6 +35,8 @@ jobs:
           node-version: '24'
       - run: node --test tests/window-heartbeat.test.mjs
   scheduled-mossmere:
+    permissions:
+      contents: write
     if: github.event.workflow_run.event == 'schedule' && github.event.workflow_run.conclusion == 'success' && github.event.workflow_run.head_branch == 'main'
     runs-on: ubuntu-latest
     timeout-minutes: 8
