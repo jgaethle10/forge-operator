@@ -4,8 +4,9 @@ import {planVoiceSession,evaluateVoiceTake} from '../systemia/media-studio/voice
 const voice={id:'narrator-01',identityVersion:'1',provider:'example',providerVoiceId:'approved-voice',approval:'human_audition_approved',locales:['en-US','es-MX'],accents:['general-american','mexican-spanish'],rights:{status:'cleared',commercialUse:true,evidenceRef:'consent-001'}};
 const cue={id:'cue-01',speakerId:'narrator',voiceProfileId:voice.id,text:'Evercraft is here.',locale:'en-US',accent:'general-american',direction:'gentle wonder, conversational',maxDurationSec:4};
 const plan=()=>planVoiceSession({profiles:[voice],cues:[cue],lexicon:[{term:'Evercraft',reading:'EHV-er-kraft',locale:'en-US',reviewerEvidenceRef:'pronunciation-review-01'}]});
-const take=p=>({cueId:cue.id,voiceProfileId:voice.id,planDigest:p.planDigest,artifactDigest:'a'.repeat(64),providerReceiptRef:'provider-123',rightsVerified:true,locale:cue.locale,accent:cue.accent,durationSec:2.6,timingEvidenceRef:'time-001',transcriptEvidenceRef:'transcript-001',audioMeasurementEvidenceRef:'signal-001',samplePeakDbFS:-2.2});
+const take=p=>({cueId:cue.id,voiceProfileId:voice.id,planDigest:p.planDigest,artifactDigest:'a'.repeat(64),providerReceiptRef:'provider-123',rightsVerified:true,locale:cue.locale,accent:cue.accent,durationSec:2.6,timingEvidenceRef:'time-001',transcriptEvidenceRef:'transcript-001',audioMeasurementEvidenceRef:'signal-001',pacingEvidenceRef:'pacing-report-001',samplePeakDbFS:-2.2});
 const signal=p=>({schema:'evercraft.voice-foundry.signal-inspection.v1',status:'objective_measurements_only',audioDigest:'a'.repeat(64),durationSec:2.6,samplePeakDbFS:-2.2});
+const pacing=p=>({schema:'evercraft.voice-foundry.pacing-inspection.v1',status:'measured_not_performance_approved',audioDigest:'a'.repeat(64),durationSec:2.6,warnings:[]});
 const reviewers=[
  {reviewerId:'a',approved:true,locale:'en-US',accent:'general-american',localeAccentQualified:true,evidenceRef:'review-a',scores:{naturalness:5,accentAuthenticity:5,emotionalTruth:5,intelligibility:5,identityConsistency:5,mixFit:5}},
  {reviewerId:'b',approved:true,locale:'en-US',accent:'general-american',localeAccentQualified:false,evidenceRef:'review-b',scores:{naturalness:5,accentAuthenticity:5,emotionalTruth:5,intelligibility:5,identityConsistency:5,mixFit:5}}
@@ -20,15 +21,15 @@ test('a language does not prove a regional accent; both must match independently
  const r=planVoiceSession({profiles:[voice],cues:[{...cue,locale:'en-GB',accent:'british-rp'}]}); assert.equal(r.status,'held');assert.ok(r.cues[0].reasons.includes('requested_locale_not_verified_for_voice'));assert.ok(r.cues[0].reasons.includes('requested_accent_not_verified_for_voice'));
 });
 test('review cannot fabricate a good score from a provider receipt',()=>{
- const p=plan().cues[0];const r=evaluateVoiceTake({plannedCue:p,take:take(p),reviews:[],signal:signal(p)});assert.equal(r.status,'held');assert.ok(r.reasons.includes('two_human_reviews_required'));
+ const p=plan().cues[0];const r=evaluateVoiceTake({plannedCue:p,take:take(p),reviews:[],signal:signal(p),pacing:pacing(p)});assert.equal(r.status,'held');assert.ok(r.reasons.includes('two_human_reviews_required'));
 });
 test('independent quality and qualified accent review gates',()=>{
- const p=plan().cues[0];const approved=evaluateVoiceTake({plannedCue:p,take:take(p),reviews:reviewers,signal:signal(p)});assert.equal(approved.status,'passed_internal_voice_qa');assert.equal(approved.publicationAuthorityGranted,false);
- const weak=evaluateVoiceTake({plannedCue:p,take:take(p),reviews:[reviewers[0],{...reviewers[1],scores:{...reviewers[1].scores,naturalness:3}}],signal:signal(p)}); assert.equal(weak.status,'held');
- const unqualified=evaluateVoiceTake({plannedCue:p,take:take(p),reviews:reviewers.map(r=>({...r,localeAccentQualified:false})),signal:signal(p)});assert.ok(unqualified.reasons.includes('native_or_qualified_accent_review_required'));
+ const p=plan().cues[0];const approved=evaluateVoiceTake({plannedCue:p,take:take(p),reviews:reviewers,signal:signal(p),pacing:pacing(p)});assert.equal(approved.status,'passed_internal_voice_qa');assert.equal(approved.publicationAuthorityGranted,false);
+ const weak=evaluateVoiceTake({plannedCue:p,take:take(p),reviews:[reviewers[0],{...reviewers[1],scores:{...reviewers[1].scores,naturalness:3}}],signal:signal(p),pacing:pacing(p)}); assert.equal(weak.status,'held');
+ const unqualified=evaluateVoiceTake({plannedCue:p,take:take(p),reviews:reviewers.map(r=>({...r,localeAccentQualified:false})),signal:signal(p),pacing:pacing(p)});assert.ok(unqualified.reasons.includes('native_or_qualified_accent_review_required'));
 });
 test('identity drift and clipping are independent hard failures',()=>{
- const p=plan().cues[0];const r=evaluateVoiceTake({plannedCue:p,take:{...take(p),voiceProfileId:'wrong',samplePeakDbFS:0},reviews:reviewers,signal:signal(p)});assert.equal(r.status,'held');assert.ok(r.reasons.includes('take_voice_identity_mismatch'));assert.ok(r.reasons.includes('digital_clipping_or_peak_unmeasured'));
+ const p=plan().cues[0];const r=evaluateVoiceTake({plannedCue:p,take:{...take(p),voiceProfileId:'wrong',samplePeakDbFS:0},reviews:reviewers,signal:signal(p),pacing:pacing(p)});assert.equal(r.status,'held');assert.ok(r.reasons.includes('take_voice_identity_mismatch'));assert.ok(r.reasons.includes('digital_clipping_or_peak_unmeasured'));
 });
 test('multilingual casting is per cue with region-specific support',()=>{
  const es={...cue,id:'cue-02',text:'Hoy empezamos.',locale:'es-MX',accent:'mexican-spanish',direction:'warm and confident'};
@@ -48,4 +49,22 @@ test('pronunciation lexicon only matches whole Latin-language names, not acciden
  assert.equal(p.cues[0].pronunciation.length,1);
  const mismatched=planVoiceSession({profiles:[voice],cues:[{...cue,text:'Evercrafting makes things.'}],lexicon:[{term:'Evercraft',reading:'EH-ver-kraft',locale:'en-US',reviewerEvidenceRef:'lexicon-review'}]});
  assert.equal(mismatched.cues[0].pronunciation.length,0);
+});
+
+test('pacing report must be from exact candidate bytes and duration',()=>{
+ const p=plan().cues[0];
+ const missing=evaluateVoiceTake({plannedCue:p,take:take(p),reviews:reviewers,signal:signal(p)});
+ assert.equal(missing.status,'held');
+ assert.ok(missing.reasons.includes('measured_pacing_missing'));
+ const wrong=evaluateVoiceTake({plannedCue:p,take:take(p),reviews:reviewers,signal:signal(p),pacing:{...pacing(p),audioDigest:'b'.repeat(64)}});
+ assert.ok(wrong.reasons.includes('pacing_audio_digest_mismatch'));
+});
+test('suspicious quiet intervals require explicit editorial acknowledgement without changing audio',()=>{
+ const p=plan().cues[0];
+ const warning={...pacing(p),status:'needs_human_rhythm_review',warnings:['long_internal_pause_review']};
+ const held=evaluateVoiceTake({plannedCue:p,take:take(p),reviews:reviewers,signal:signal(p),pacing:warning});
+ assert.ok(held.reasons.includes('pacing_warnings_need_editorial_acknowledgement'));
+ const noted=evaluateVoiceTake({plannedCue:p,take:{...take(p),pacingNotesReviewed:true,pacingReviewEvidenceRef:'human-pause-review'},reviews:reviewers,signal:signal(p),pacing:warning});
+ assert.equal(noted.status,'passed_internal_voice_qa');
+ assert.equal(noted.publicationAuthorityGranted,false);
 });
