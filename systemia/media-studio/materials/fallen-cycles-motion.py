@@ -73,7 +73,7 @@ vertices=[]
 faces=[]
 for surface in (0,1):
     for j in range(rings+1):
-        r=radius*j/rings
+        r=max(.006,radius*j/rings)
         sag=.26*(1-math.sqrt(max(0,1-(r/(radius*1.08))**2)))
         z=(.18-sag) if surface==0 else (-.18+sag)
         for k in range(sectors):
@@ -84,8 +84,8 @@ for j in range(rings):
     for k in range(sectors):
         a=j*sectors+k;b=j*sectors+(k+1)%sectors
         c=(j+1)*sectors+(k+1)%sectors;d=(j+1)*sectors+k
-        faces.append((a,b,c,d))
-        faces.append((step+d,step+c,step+b,step+a))
+        faces.append((d,c,b,a))
+        faces.append((step+a,step+b,step+c,step+d))
 for k in range(sectors):
     nxt=(k+1)%sectors
     faces.append((rings*sectors+k,rings*sectors+nxt,step+rings*sectors+nxt,step+rings*sectors+k))
@@ -100,7 +100,7 @@ bpy.context.view_layer.objects.active=optic
 optic.select_set(True)
 bpy.ops.object.mode_set(mode="EDIT")
 bpy.ops.mesh.select_all(action="SELECT")
-bpy.ops.mesh.normals_make_consistent(inside=False) if hasattr(bpy.ops.mesh,"normals_make_consistent") else None
+if hasattr(bpy.ops.mesh,'normals_make_consistent'): bpy.ops.mesh.normals_make_consistent(inside=False)
 bpy.ops.object.mode_set(mode="OBJECT")
 optic.select_set(False)
 
