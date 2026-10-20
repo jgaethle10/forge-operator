@@ -7,7 +7,7 @@ bpy.ops.object.select_all(action='SELECT')
 bpy.ops.object.delete(use_global=False)
 scene=bpy.context.scene
 scene.render.engine='CYCLES'
-scene.cycles.samples=40
+scene.cycles.samples=52
 scene.cycles.use_denoising=False
 scene.render.resolution_x=480
 scene.render.resolution_y=854
@@ -46,7 +46,7 @@ def cube(name,scale,loc,material,bevel=0):
       mod=ob.modifiers.new('physically rounded glass edges','BEVEL')
       mod.width=bevel;mod.segments=9
       if hasattr(mod,'affect'): mod.affect='EDGES'
-      norm=ob.modifiers.new('weighted surface normals','WEIGHTED_NORMAL')
+      for poly in ob.data.polygons: poly.use_smooth=True
     return ob
 
 cube('deep studio backdrop',(9,11,.16),(0,0,-.28),graphite,.08)
@@ -76,7 +76,7 @@ optic.rotation_euler[2]=math.radians(5)
 world=bpy.data.worlds.new('dark studio ambient')
 scene.world=world;world.use_nodes=True
 world.node_tree.nodes['Background'].inputs['Color'].default_value=(.17,.19,.25,1)
-world.node_tree.nodes['Background'].inputs['Strength'].default_value=.45
+world.node_tree.nodes['Background'].inputs['Strength'].default_value=.14
 
 def softbox(name,location,power,color,size,scale_y):
     bpy.ops.object.light_add(type='AREA',location=location)
@@ -87,13 +87,13 @@ def softbox(name,location,power,color,size,scale_y):
     direction=Vector((0,0,.02))-lamp.location
     lamp.rotation_euler=direction.to_track_quat('-Z','Y').to_euler()
 
-softbox('large cool softbox',(-3.8,1.6,5),680,(.66,.80,1),2.0,5.6)
-softbox('large warm opposing softbox',(3.9,-.3,4.6),820,(1,.76,.54),1.9,5.8)
-softbox('broad white reflection',(0.1,4.6,3.2),460,(1,1,1),4.1,1.3)
+softbox('large cool softbox',(-3.8,1.6,5),520,(.66,.80,1),1.2,3.3)
+softbox('large warm opposing softbox',(3.9,-.3,4.6),560,(1,.76,.54),1.1,4.0)
+softbox('broad white reflection',(0.1,4.6,3.2),130,(1,1,1),4.1,1.3)
 
-bpy.ops.object.camera_add(location=(0,-.55,6.2))
+bpy.ops.object.camera_add(location=(1.6,-3.0,5.9))
 camera=bpy.context.object;scene.camera=camera
-camera.data.type='ORTHO';camera.data.ortho_scale=6.4
+camera.data.type='PERSP';camera.data.lens=48
 target=Vector((0,0,.05))
 camera.rotation_euler=(target-camera.location).to_track_quat('-Z','Y').to_euler()
 camera.data.lens=42
@@ -104,8 +104,8 @@ start=time.time()
 for i in range(3):
     # Independent camera movement demonstrates correct refraction/parallax.
     u=i/2
-    camera.location.x=(-.55+1.1*u)
-    camera.location.y=-.55+.32*math.sin(u*math.pi)
+    camera.location.x=(1.0+1.1*u)
+    camera.location.y=-3.0+.45*math.sin(u*math.pi)
     camera.rotation_euler=(target-camera.location).to_track_quat('-Z','Y').to_euler()
     optic.rotation_euler[1]=math.radians(-7+14*u)
     scene.render.filepath=f'{outdir}/glass_{i:02d}.png'
@@ -116,6 +116,7 @@ receipt={'schema':'evercraft.fallen.cycles-glass-material.v1',
  'glass':{'geometric_thickness_m':.24,'ior':1.49,'roughness':.055,
           'transmission':1.0,'bevel_width_m':.135},
  'fixture':'synthetic printed sheet; not Relay private data',
+ 'material_review':'oblique perspective / differential softboxes / actual geometric thickness',
  'rights':'original procedural test scene',
  'full_film_approval':False,'commercial_ready':False,
  'elapsed_seconds':round(time.time()-start,1)}
