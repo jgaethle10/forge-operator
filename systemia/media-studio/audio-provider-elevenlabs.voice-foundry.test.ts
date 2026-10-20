@@ -24,7 +24,7 @@ const need:ProductionNeed={
   continuityDigest:'locked-continuity',
   requires:['voice_profile','commercial_rights','provenance_receipt','timing_control'],status:'planned',
 };
-function rig(input?:{ profiles?:unknown[];cues?:unknown[]; allowPaidGeneration?:boolean; commercialRights?:'allowed'|'unknown'|'denied' }){
+function rig(input?:{ profiles?:unknown[];cues?:unknown[]; allowPaidGeneration?:boolean; speechModelId?:string; commercialRights?:'allowed'|'unknown'|'denied' }){
   const calls:Array<{url:string;body:any}>=[];
   const raw=Buffer.from('FAKE-MP3-BYTES-FOR-UNIT-TEST');
   const adapter=createElevenLabsAudioAdapter({
@@ -33,6 +33,7 @@ function rig(input?:{ profiles?:unknown[];cues?:unknown[]; allowPaidGeneration?:
     verified:true,
     allowPaidGeneration:input?.allowPaidGeneration??true,
     commercialRights:input?.commercialRights??'allowed',
+    speechModelId:input?.speechModelId??'eleven_v3',
     voiceProfiles:{'foundry-host':'voice-real'},
     voiceFoundry:{profiles:(input?.profiles??[profile]) as any,cues:(input?.cues??[cue]) as any},
     probeDurationSec:()=>3,
@@ -83,4 +84,15 @@ test('reviewed Mexican Spanish routes as es while preserving exact regional cast
   const result=await spanish.adapter.execute({...need,language:'es'});
   assert.equal(spanish.calls[0].body.language_code,'es');
   assert.ok(result.sourceRefs.some(x=>x.startsWith('voice-foundry-preflight:')));
+});
+
+test('explicit Eleven v4 audition pins model ID without silently changing the production default',async()=>{
+  const v4=rig({speechModelId:'eleven_v4'});
+  const result=await v4.adapter.execute(need);
+  assert.equal(v4.calls.length,1);
+  assert.equal(v4.calls[0].body.model_id,'eleven_v4');
+  assert.equal(result.receipt.providerModel,'elevenlabs:eleven_v4');
+  const legacy=rig();
+  await legacy.adapter.execute(need);
+  assert.equal(legacy.calls[0].body.model_id,'eleven_v3');
 });
