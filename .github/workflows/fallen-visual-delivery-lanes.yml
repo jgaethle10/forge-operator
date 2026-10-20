@@ -4,6 +4,7 @@ on:
     paths:
       - 'systemia/media-studio/visual-lanes.mjs'
       - 'systemia/media-studio/visual-lanes.test.mjs'
+      - 'package.json'
       - '.github/workflows/fallen-visual-delivery-lanes.yml'
   workflow_dispatch:
 permissions:
@@ -24,7 +25,7 @@ jobs:
       - name: Source integrity, rights, historical truth and brand consent regression tests
         run: |
           node --check systemia/media-studio/visual-lanes.mjs
-          node --test systemia/media-studio/visual-lanes.test.mjs
+          npm run test:visual-lanes
       - name: Produce three actual internal review MP4s from a synthetic moving source
         run: |
           mkdir -p /tmp/evercraft-lane-test
@@ -47,7 +48,7 @@ jobs:
             ]};
           fs.writeFileSync('/tmp/evercraft-lane-test/request.json',JSON.stringify(req,null,2));
           NODE
-          node systemia/media-studio/visual-lanes.mjs /tmp/evercraft-lane-test/request.json /tmp/evercraft-lane-test/out
+          npm run media:visual-lanes -- /tmp/evercraft-lane-test/request.json /tmp/evercraft-lane-test/out
       - name: Independently verify real video files and release denial
         run: |
           node --input-type=module <<'NODE'
