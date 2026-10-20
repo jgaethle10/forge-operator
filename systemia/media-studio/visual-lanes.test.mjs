@@ -107,6 +107,11 @@ test('directed square/vertical reframe produces actual full-frame videos without
  const s=sample();
  try{
   s.request.cuts[1].composition={mode:'directed_cover',start:.24,end:.67};
+  s.request.cuts[1].claims=[
+   {text:'01 HULL - main model structure',kind:'modeled'},
+   {text:'02 TURRETS - modeled gun assemblies',kind:'modeled'},
+   {text:'03 MAST - modeled upper structure',kind:'modeled'}
+  ];
   s.request.cuts[2].composition={mode:'directed_cover',start:.12,end:.88};
   const out=path.join(s.dir,'directed-previews');
   const receipt=produceVisualLanes(s.request,out);
@@ -122,6 +127,11 @@ test('directed square/vertical reframe produces actual full-frame videos without
   assert.deepEqual(vertical.cameraPan,{start:.12,end:.88});
   assert.equal(vertical.nativeCameraRequired,true);
   assert.equal(square.width,480);
+  assert.equal(square.temporalEducationalBeats.length,3);
+  for(let i=0;i<3;i++){
+   assert.ok(fs.readFileSync(path.join(out,'educational-beat-'+i+'.txt'),'utf8').includes(['HULL','TURRETS','MAST'][i]));
+  }
+
   assert.equal(vertical.height,640);
   assert.ok(fs.readFileSync(path.join(out,'commercial-3.txt'),'utf8').includes('DIRECTED CROP'));
  }finally{fs.rmSync(s.dir,{recursive:true,force:true})}
