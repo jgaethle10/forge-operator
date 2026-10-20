@@ -49,7 +49,7 @@ function check(req){
   if(c.lane==='educational'){
    if(!Array.isArray(c.claims)||!c.claims.length||c.claims.length>4)err('education_claims_missing');
    for(const claim of c.claims){
-    text(claim.text,'claim',100);
+    text(claim.text,'claim',58);
     if(!['modeled','synthetic','verified_fact'].includes(claim.kind))err('claim_kind_invalid');
     if(claim.kind==='verified_fact'&&
      (!Array.isArray(claim.sourceRefs)||!claim.sourceRefs.length||!req.brand.factReviewRef))
@@ -71,7 +71,7 @@ function makeFilter(width,height,textfiles,font,duration){
  'pad='+width+':'+height+':(ow-iw)/2:(oh-ih)/2:color=0x0b1624,setsar=1';
  for(let i=0;i<textfiles.length;i++){
   const fontsize=width<400?(i===0?17:13):(i===0?20:14);
-  const y=i===0?18:(i===1?height-67:height-35);
+  const y=i===0?18:(textfiles.length===4?height-124+(i-1)*34:(i===1?height-67:height-35));
   base+=',drawtext=fontfile='+filterPath(font)+':textfile='+filterPath(textfiles[i])+
   ':fontsize='+fontsize+':fontcolor=white:borderw=2:bordercolor=black:x=(w-text_w)/2:y='+y;
  }
@@ -95,6 +95,7 @@ export function produceVisualLanes(request,outputDir){
    const isSynthetic=['synthetic_visualization','modeled_visualization'].includes(request.source.evidenceState);
    const labels=[cut.title];
    if(cut.lane==='educational'){
+    labels.push(cut.claims[0].text);
     labels.push(isSynthetic?'ILLUSTRATIVE RECONSTRUCTION':'SOURCE BASED VISUALIZATION');
     labels.push('NOT AN OBSERVED HISTORICAL RECORD');
    }else if(cut.lane==='commercial'){
