@@ -64,11 +64,11 @@ export function produceBattleshipTeachingFilm(input:{sourceVideo:string;sourceRe
   sequenceWorldDigest:seq.worldDefinitionDigest,
   authoredByHuman:true,publicationAuthority:false,
   callouts:[
-    {id:'modeled-hull',entityId:'ship-hull',label:'Modeled hull and deck structure',
+    {id:'modeled-hull',entityId:'ship-hull',label:'Hull and deck geometry',
      evidence:'modeled',localAnchor:{x:0,y:1.95,z:9},startSec:.18,endSec:1.30},
-    {id:'modeled-turret',entityId:'turret-fore-a',label:'Twin barrels on the forward turret',
+    {id:'modeled-turret',entityId:'turret-fore-a',label:'Forward twin-gun turret',
      evidence:'modeled',localAnchor:{x:0,y:.6,z:0},startSec:1.33,endSec:2.63},
-    {id:'modeled-bridge',entityId:'bridge-house',label:'Modeled bridge and upper deck',
+    {id:'modeled-bridge',entityId:'bridge-house',label:'Bridge superstructure',
      evidence:'modeled',localAnchor:{x:0,y:.2,z:0},startSec:2.67,endSec:3.95}
   ]
  };
