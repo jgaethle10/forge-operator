@@ -31,13 +31,21 @@ const cards=[];
 data.candidates.forEach((candidate,index)=>{
  const card=document.createElement('article');card.className='card';
  const header=document.createElement('div');header.className='header';
- const title=document.createElement('h3'); const pill=document.createElement('span');pill.className='pill';pill.textContent=candidate.signal?.status==='objective_measurements_only'?'Measured':'Signal hold'; header.append(title,pill);card.append(header);
+ const title=document.createElement('h3'); const pill=document.createElement('span');pill.className='pill';pill.textContent=candidate.status==='asr_review_held'?'Speech hold':candidate.signal?.status==='objective_measurements_only'?'Signal measured':'Signal hold'; header.append(title,pill);card.append(header);
  const number=document.createElement('div');number.className='number';number.textContent='TAKE '+String(index+1).padStart(2,'0');card.append(number);
  const details=document.createElement('div');details.className='facts';card.append(details);
  const wave=document.createElement('div');wave.className='wave';card.append(wave);
  const player=document.createElement('audio');player.controls=true;player.preload='metadata';player.src=candidate.audioPath;player.setAttribute('aria-label','Play take '+(index+1));card.append(player);
  player.addEventListener('play',()=>document.querySelectorAll('audio').forEach(other=>{if(other!==player)other.pause();}));
  const measurements=document.createElement('p');measurements.className='caption'; const s=candidate.signal||{};measurements.textContent=`Measured: ${Number(s.durationSec||0).toFixed(2)}s • ${s.integratedLufs??'?'} LUFS • ${s.truePeakDbTP??'?'} dBTP`;card.append(measurements);
+ const transcript=document.createElement('p');transcript.className='caption';
+ if(candidate.transcriptAudit){
+   const t=candidate.transcriptAudit;
+   transcript.textContent=t.status==='candidate_text_match_needs_human_review'
+     ?'Speech recognition: candidate text match ('+(t.wordErrorRate*100).toFixed(1)+'% WER), needs human verification'
+     :'Speech recognition: HOLD. '+(t.reasons||[]).join(', ');
+ }else transcript.textContent='Speech recognition: not provided; spoken-word accuracy unverified';
+ card.append(transcript);
  const scoreBox=document.createElement('div');scoreBox.className='score';const selects={};
  keys.forEach(([key,label])=>{
    const row=document.createElement('div');row.className='score-row';const field=document.createElement('label');field.textContent=label;field.htmlFor='score-'+index+'-'+key;
