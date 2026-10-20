@@ -38,7 +38,7 @@ export interface NativeCompositionReview{
 const formatError=(msg:string):never=>{throw Error('world_native_camera_'+msg);};
 const specs:Record<NativeFilmFormat,{viewport:[number,number],radius:number,start:number,end:number,height0:number,height1:number,fov0:number,fov1:number}>={
   wide:{viewport:[640,360],radius:36,start:-59,end:-22,height0:7.2,height1:5.3,fov0:44,fov1:40},
-  square:{viewport:[480,480],radius:40,start:-39,end:-12,height0:8.2,height1:6.0,fov0:44,fov1:40},
+  square:{viewport:[480,480],radius:42,start:-39,end:-12,height0:8.2,height1:6.0,fov0:44,fov1:40},
   vertical:{viewport:[360,640],radius:48,start:-22,end:-7,height0:7.2,height1:5.1,fov0:43,fov1:39}
 };
 export function composeNativeBattleshipCamera(format:NativeFilmFormat):NativeFrameSpec{
@@ -109,7 +109,7 @@ export function auditNativeSubjectComposition(
   const left=Math.min(...projected.map(p=>p.x)),right=Math.max(...projected.map(p=>p.x));
   const top=Math.max(...projected.map(p=>p.y)),bottom=Math.min(...projected.map(p=>p.y));
   // Pixel-free scene framing sanity guard, not a full visual quality score.
-  const warning=visible<4?'important_subject_landmarks_outside_frame'
+  const warning=visible<landmarks.length?'important_subject_landmarks_outside_frame'
     :right-left<.2?'subject_occupancy_too_small_for_review'
     :null;
   return {
