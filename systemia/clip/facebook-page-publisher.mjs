@@ -1,3 +1,4 @@
+import { assertEvercraftFamilySocialSafe } from './family-social-safety.mjs';
 import { assertPublicLinkShape } from './public-link-preflight.mjs';
 
 const DOCS=[
@@ -38,6 +39,7 @@ export function createFacebookPagePublisherAdapter(config){
 
       const message=String(input.metadata?.message??'').trim();
       const link=String(input.metadata?.link??'').trim();
+      assertEvercraftFamilySocialSafe({message,link});
       if(!message&&!link) throw new Error('facebook_post_content_missing');
       if(link) assertPublicLinkShape(link);
 
