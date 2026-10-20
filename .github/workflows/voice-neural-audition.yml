@@ -5,6 +5,7 @@ on:
     paths:
       - '.github/workflows/voice-neural-audition.yml'
       - 'systemia/media-studio/voice-neural-audition-ci.py'
+      - 'systemia/media-studio/voice-cadence-lab-ci.py'
   workflow_dispatch:
 
 permissions:
@@ -60,6 +61,21 @@ jobs:
             'Voice: Piper en_US-libritts-high, trained from scratch on LibriTTS train-clean-360 (CC BY 4.0).' \
             'See UPSTREAM_MODEL_CARD.txt and https://huggingface.co/rhasspy/piper-voices/tree/v1.0.0/en/en_US/libritts/high' \
             > neural-audition/README.txt
+      - name: Verify unchanged words, then render A/C cadence variants
+        run: |
+          python systemia/media-studio/voice-cadence-lab-ci.py --verify-only
+          python systemia/media-studio/voice-cadence-lab-ci.py \
+            neural-model/voice.onnx neural-model/voice.onnx.json neural-cadence
+          test -s neural-cadence/index.html
+          test -s neural-cadence/cadence-report.json
+          test "$(find neural-cadence -name '*.mp3' | wc -l)" -eq 8
+      - name: Attach neural cadence comparison
+        uses: actions/upload-artifact@v4
+        with:
+          name: evercraft-neural-cadence-A-C
+          path: neural-cadence/
+          retention-days: 7
+          if-no-files-found: error
       - name: Upload playable audition, not model weights
         uses: actions/upload-artifact@v4
         with:
