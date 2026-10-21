@@ -28,4 +28,4 @@ jobs:
           node-version: '22'
 
       - name: Run Opportunity Fabric protection tests
-        run: node --test systemia/opportunity-fabric/engine.test.mjs
+        run: node --test systemia/opportunity-fabric/*.test.mjs
