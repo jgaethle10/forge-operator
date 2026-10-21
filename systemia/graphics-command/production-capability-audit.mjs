@@ -72,6 +72,34 @@ const FEATURES=[
   ['family_social_safety','systemia/clip/family-social-safety.mjs','delivery'],
   ['interactive_world_experience','public/the-window/world.mjs','world']
 ];
+
+const PRODUCTION_PROFILES=[
+  {id:'family_cartoon',name:'Family cartoons and serialized toons',
+   requirements:['family_cartoon_frontend','family_cartoon_backend','series_character_canon','identity_fingerprinting','character_performance','dialogue_lipsync_admission','scene_continuity','world_skeletal_animation','world_geometry_bridge','narrative_film_pipeline','voice_provider','audio_master','studio_master_qc'],
+   evidence:['locked_character_bible','approved_character_reference','body_hand_face_eyeline_visual_review','gesture_anatomy_and_identity_review','viseme_voice_sync_receipt','animated_scene_render_receipt','voice_rights_and_music_master','master_quality_and_child_safety_gate']},
+  {id:'documentary',name:'History, battle, science and evidence documentaries',
+   requirements:['worldstate_data_projection','world_spatial_visuals','world_webgpu','world_materials','cinematic_sequence','visual_observation','sequence_aesthetic_jury','studio_master_qc','studio_delivery'],
+   evidence:['source_provenance_and_rights','documentary_vs_synthetic_labels','spatial_accuracy_review','exact_frame_render_and_factual_qc','original_or_licensed_score','master_and_distribution_gate']},
+  {id:'commercial',name:'Customer and product commercials',
+   requirements:['graphics_command','commercial_renderer','creative_council','design_tournament','shot_exploration','voice_provider','audio_master','studio_master_qc','clip_media_intake'],
+   evidence:['product_truth_and_brand_lock','actual_product_capture_or_labeled_simulation','customer_offer_validation','shot_tournament_selection','voiced_video_master','customer_review_and_publishing_approval']},
+  {id:'interactive_world',name:'Playable worlds and educational simulations',
+   requirements:['world_physics','world_materials','world_spatial_visuals','world_skeletal_animation','world_spatial_audio','world_webgpu','world_geometry_bridge'],
+   evidence:['actual_device_gpu_execution','deterministic_replay','controls_and_accessibility','geometry_and_asset_rights','measured_performance_and_user_qa']},
+  {id:'music_and_performance',name:'Music videos, performances and animated songs',
+   requirements:['pulsegrid_composition','pulsegrid_audio_engine','world_spatial_audio','voice_provider','audio_master','character_performance','dialogue_lipsync_admission','timeline_export'],
+   evidence:['original_composition_or_license','auditioned_human_quality_voice','timed_dialogue_or_lyrics','rhythm_to_motion_alignment','stereo_master_and_loudness_qc']},
+  {id:'social_creative',name:'Social art, storyboards and short-form publication',
+   requirements:['space_dudz_art_factory','visual_story_factory','commercial_renderer','design_tournament','clip_social_distribution','family_social_safety'],
+   evidence:['aspect_safe_zones_and_legible_art','source_or_design_rights','visual_quality_review','destination_preflight','explicit_publication_authority']},
+  {id:'data_education',name:'Geographic, data and classroom graphics',
+   requirements:['worldstate_data_projection','graphics_command','visual_story_factory','world_spatial_visuals','world_webgpu','owned_visual_desk_transporter'],
+   evidence:['verified_source_data','datum_coordinate_and_projection_review','clear_uncertainty_labels','accurate_scale_and_context','deployment_http_canary']},
+  {id:'distribution',name:'Commercial mastering, package delivery and publishing',
+   requirements:['render_worker','timeline_export','studio_master_qc','studio_delivery','clip_media_intake','clip_social_distribution','owned_visual_desk_transporter'],
+   evidence:['verified_artifact_digest','ffprobe_video_and_audio_decode','real_master_qc','rights_and_provenance','destination_specific_acceptance','authorized_publish_receipts']}
+];
+
 const DIRECT_HANDOFF=new Set(['graphics_command','graphics_production_mesh','commercial_renderer','creative_council','owned_visual_desk_transporter','clip_media_intake']);
 
 const hashBytes=bytes=>crypto.createHash('sha256').update(bytes).digest('hex');
@@ -125,18 +153,27 @@ export function auditGraphicsCapabilities({root=REPO_ROOT, baseline}={}){
       generatedMediaVerified:false};
   });
   const missingFeatures=features.filter(f=>!f.present).map(f=>f.id);
+  const index=new Map(features.map(f=>[f.id,f]));
+  const profiles=PRODUCTION_PROFILES.map(profile=>{
+    const missing=profile.requirements.filter(id=>!index.get(id)?.present);
+    return {...profile,status:missing.length?'missing_required_source':'contract_only_not_runtime_verified',
+      missingRequiredFeatures:missing,executionVerified:false};
+  });
+  const invalidProfileReferences=profiles.flatMap(profile=>profile.requirements.filter(id=>!index.has(id)).map(id=>profile.id+':'+id));
+  if(invalidProfileReferences.length) throw new Error('graphics_capability_unknown_profile_features:'+invalidProfileReferences.join('|'));
   const moduleHashes=observed.map(file=>[file,hashBytes(fs.readFileSync(path.join(root,file)))]);
   const sourceTreeDigest=hashBytes(JSON.stringify(moduleHashes));
   const core={
     schema:'evercraft.graphics-command.capability-audit.v1',
-    status:newUninventoried.length||missingFromCheckout.length||missingFeatures.length?'inventory_drift_blocked':'inventoried_runtime_unverified',
+    status:newUninventoried.length||missingFromCheckout.length||missingFeatures.length||profiles.some(p=>p.missingRequiredFeatures.length)?'inventory_drift_blocked':'inventoried_runtime_unverified',
     sourceModuleCount:observed.length, sourceTreeDigest,
     scopeDirectories:SCOPES, extraSources:EXTRA_MODULES,
     newUninventoried, missingFromCheckout, missingFeatures,
-    features, featureCount:features.length,
+    features, featureCount:features.length, profiles, profileCount:profiles.length,
     featuresWithTestFiles:features.filter(f=>f.sourceAndTestsPresent).length,
     featureWithoutDirectTest:features.filter(f=>!f.sourceAndTestsPresent).map(f=>f.id),
     toonAndCharacterCapabilities:features.filter(f=>f.lane==='toon').map(f=>f.id),
+    missingProfileRequirements:profiles.flatMap(profile=>profile.missingRequiredFeatures.map(id=>profile.id+':'+id)),
     boundaries:{
       testsPresentIsNotTestsPassed:true,
       sourcePresentIsNotRuntimeExecuted:true,
@@ -153,6 +190,7 @@ export function requireCompleteGraphicsInventory(audit){
       ...audit.newUninventoried.map(f=>'new:'+f),
       ...audit.missingFromCheckout.map(f=>'missing:'+f),
       ...audit.missingFeatures.map(f=>'feature:'+f),
+      ...(audit.missingProfileRequirements||[]).map(f=>'profile:'+f),
     ].join('|'));
   }
   return audit;
