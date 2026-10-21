@@ -50,6 +50,8 @@ jobs:
       - name: Validate multiplication contracts
         run: npm run check:saban-contracts
 
+      - name: Prove Evercraft OS parallel lanes preserve Saban admission boundaries
+        run: node systemia/saban/evercraft-os-parallel.proof.mjs
       - name: Prove kernel recovery and sharding
         run: npm run proof:saban-kernel
 
