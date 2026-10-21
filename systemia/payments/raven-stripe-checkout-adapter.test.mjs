@@ -130,6 +130,14 @@ test('account identity, charge status and price mismatches reject before POST',a
   }
 });
 
+test('wrong separately retrieved price does not produce checkout-ready state',async()=>{
+  const fake=mockStripe({wrongLineItems:true});
+  await assert.rejects(createRavenStripeCheckoutSession({
+    order,account,fetchImpl:fake.fetchImpl,secretReader:mockReader,
+  }),/new_session_unverified/);
+  assert.deepEqual(fake.requests.map(x=>x.method),['GET','GET','POST','GET']);
+});
+
 test('provider session reporting paid or completed at creation is rejected',async()=>{
   const fake=mockStripe({paidSession:true});
   await assert.rejects(createRavenStripeCheckoutSession({
