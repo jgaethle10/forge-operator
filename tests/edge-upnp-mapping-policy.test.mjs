@@ -58,6 +58,7 @@ test('production mapper preflights all entries before writes and never protocol-
   assert.match(src,/if\(row\.decision\.action==='keep'\)/);
   assert.match(src,/if\(error\.upnpCode==='714'\) missing=true/);
   assert.match(src,/if\(upnp\.ownership_conflict===true\)/);
+  assert.match(src,/args\.get\('scope'\) \|\| 'web'/);
   assert.ok(src.indexOf('if(upnp.ownership_conflict===true)') < src.indexOf('const natpmp = await natPmpMap'));
   assert.ok(src.indexOf('if(planned.some(row=>row.decision.action') < src.indexOf("await soap(control,service.serviceType,'AddPortMapping',b)"));
   assert.match(src,/parseUpnpErrorCode\(text\)/);
