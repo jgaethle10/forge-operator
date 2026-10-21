@@ -58,6 +58,13 @@ jobs:
         run: npm test
       - name: Prove native user-space Browser Worker
         run: EVERCRAFT_NATIVE_BROWSER_STATE_DIR="$RUNNER_TEMP/evercraft-native-browser" node native-runtime.proof.mjs
+      - name: Upload native browser execution and crash-recovery receipt
+        uses: actions/upload-artifact@v4
+        with:
+          name: evercraft-browser-native-crash-recovery
+          path: ${{ runner.temp }}/evercraft-native-browser/durable-proof.json
+          if-no-files-found: error
+          retention-days: 30
       - name: Prove browser WebGPU device execution
         run: |
           EVERCRAFT_NATIVE_BROWSER_STATE_DIR="$RUNNER_TEMP/evercraft-native-browser" node webgpu-device-conformance.proof.mjs | tee /tmp/evercraft-webgpu-device-conformance.json
@@ -101,7 +108,7 @@ jobs:
         run: docker build -t evercraft/browser-worker:ci .
       - name: Smoke worker image
         run: |
-          docker run -d --name evercraft-browser-smoke             -e EVERCRAFT_BROWSER_WORKER_TOKEN=ci-public-read-only-token             -e EVERCRAFT_AUTH_BROWSER_OPERATOR_TOKEN=ci-auth-handoff-operator-token             -p 127.0.0.1:18787:8787             evercraft/browser-worker:ci
+          docker run -d --name evercraft-browser-smoke             -e EVERCRAFT_BROWSER_WORKER_TOKEN=ci-public-read-only-token             -e EVERCRAFT_AUTH_BROWSER_OPERATOR_TOKEN=ci-auth-handoff-operator-token             -e EVERCRAFT_BROWSER_SYSTEMIA_JOB_KEY=ci-systemia-browser-job-signing-key-123456789             -e EVERCRAFT_BROWSER_JOB_STATE_DIR=/var/lib/evercraft-browser-jobs             --mount type=volume,source=evercraft-browser-ci-durable-jobs,target=/var/lib/evercraft-browser-jobs             -p 127.0.0.1:18787:8787             evercraft/browser-worker:ci
           for i in {1..30}; do
             if curl -fsS http://127.0.0.1:18787/healthz > /tmp/evercraft-browser-health.json; then break; fi
             sleep 1
@@ -159,6 +166,20 @@ jobs:
           node -e "const a=require('/tmp/evercraft-delegated-after-revoke.json'); if(a.error!=='authenticated_browser_delegation_required') process.exit(1)"
           curl -fsS -X DELETE "http://127.0.0.1:18787/v1/auth-browser/sessions/$SESSION_ID"             -H "x-evercraft-browser-claim: $CLAIM"             > /tmp/evercraft-auth-close.json
           node -e "const c=require('/tmp/evercraft-auth-close.json'); if(!c.ok||c.closed!==true) process.exit(1)"
+      - name: Prove signed Career Command preflight and no-submit boundary
+        run: |
+          EVERCRAFT_BROWSER_PROOF_SIGNING_KEY=ci-systemia-browser-job-signing-key-123456789 node job-application-preflight.proof.mjs
+      - name: Prove Systemia signed durable jobs through Docker Chromium
+        run: |
+          EVERCRAFT_BROWSER_PROOF_SIGNING_KEY=ci-systemia-browser-job-signing-key-123456789 node durable-jobs.proof.mjs
+      - name: Upload signed Docker browser job receipt
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: evercraft-browser-signed-docker-canary
+          path: /tmp/evercraft-browser-durable-canary.json
+          if-no-files-found: warn
+          retention-days: 30
       - name: Stop smoke worker
         if: always()
         run: docker rm -f evercraft-browser-smoke || true

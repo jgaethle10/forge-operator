@@ -2,6 +2,7 @@ import crypto from 'node:crypto';
 import path from 'node:path';
 import { spawnSync } from 'node:child_process';
 import { startBrowserPublicAdapter } from './public-adapter.mjs';
+import { signDurableJobRequest } from './systemia-admission.mjs';
 
 const DEFAULT_BUILD_TIMEOUT_MS = 10 * 60_000;
 const DEFAULT_START_TIMEOUT_MS = 30_000;
@@ -106,10 +107,21 @@ export async function startBrowserContainer({
   buildTimeoutMs = DEFAULT_BUILD_TIMEOUT_MS,
   startTimeoutMs = DEFAULT_START_TIMEOUT_MS,
   imageTag = '',
+  durableJobVolume = '',
+  systemiaJobKey = '',
 } = {}) {
   const root = path.resolve(String(sourceDir || ''));
   if (!root) throw new Error('browser_worker_source_dir_required');
   if (!browserContainerAvailable()) throw new Error('browser_container_runtime_unavailable');
+  if (Boolean(durableJobVolume) !== Boolean(systemiaJobKey)) {
+    throw new Error('browser_durable_volume_and_systemia_key_required_together');
+  }
+  if (durableJobVolume && !/^[A-Za-z0-9][A-Za-z0-9_.-]{2,79}$/.test(durableJobVolume)) {
+    throw new Error('browser_durable_volume_name_invalid');
+  }
+  if (systemiaJobKey && Buffer.byteLength(String(systemiaJobKey)) < 32) {
+    throw new Error('browser_systemia_job_signing_key_invalid');
+  }
 
   const sourceFingerprint = crypto
     .createHash('sha256')
@@ -132,6 +144,11 @@ export async function startBrowserContainer({
     '--memory', '1024m',
     '--cpus', '2',
     '-e', `EVERCRAFT_BROWSER_WORKER_TOKEN=${workerToken}`,
+    ...(durableJobVolume ? [
+      '-e', `EVERCRAFT_BROWSER_SYSTEMIA_JOB_KEY=${systemiaJobKey}`,
+      '-e', 'EVERCRAFT_BROWSER_JOB_STATE_DIR=/var/lib/evercraft-browser-jobs',
+      '--mount', `type=volume,source=${durableJobVolume},target=/var/lib/evercraft-browser-jobs`,
+    ] : []),
     '-e', `EVERCRAFT_AUTH_BROWSER_OPERATOR_TOKEN=${authOperatorToken}`,
     '-e', `EVERCRAFT_BROWSER_MAX_CONCURRENCY=${Math.max(1, Math.min(8, Number(maxConcurrency) || 2))}`,
     '-p', '127.0.0.1::8787',
@@ -177,6 +194,31 @@ export async function startBrowserContainer({
           },
           body: JSON.stringify(job || {}),
         }, Math.max(35_000, Number(job?.timeout_ms || 15_000) + 5000));
+      },
+      async submitReadOnlyJob(envelope) {
+        if(!durableJobVolume) throw new Error('browser_durable_job_volume_not_configured');
+        const endpoint='/v1/jobs',raw=JSON.stringify(envelope||{});
+        return fetchJson(`${url}${endpoint}`,{
+          method:'POST',
+          headers:{'content-type':'application/json',
+            ...signDurableJobRequest(systemiaJobKey,{method:'POST',path:endpoint,body:raw})},
+          body:raw,
+        },10000);
+      },
+      async readReadOnlyJob(jobId) {
+        if(!durableJobVolume) throw new Error('browser_durable_job_volume_not_configured');
+        const endpoint=`/v1/jobs/${encodeURIComponent(String(jobId||''))}`;
+        return fetchJson(`${url}${endpoint}`,{
+          headers:signDurableJobRequest(systemiaJobKey,{method:'GET',path:endpoint,body:''}),
+        },10000);
+      },
+      async cancelReadOnlyJob(jobId) {
+        if(!durableJobVolume) throw new Error('browser_durable_job_volume_not_configured');
+        const endpoint=`/v1/jobs/${encodeURIComponent(String(jobId||''))}`;
+        return fetchJson(`${url}${endpoint}`,{
+          method:'DELETE',
+          headers:signDurableJobRequest(systemiaJobKey,{method:'DELETE',path:endpoint,body:''}),
+        },10000);
       },
       async createAuthSession(job) {
         return fetchJson(`${url}/v1/auth-browser/sessions`, {
