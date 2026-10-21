@@ -1,0 +1,76 @@
+name: Fallen visual delivery lanes
+on:
+  pull_request:
+    paths:
+      - 'systemia/media-studio/visual-lanes.mjs'
+      - 'systemia/media-studio/visual-lanes.test.mjs'
+      - 'package.json'
+      - '.github/workflows/fallen-visual-delivery-lanes.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  three-real-review-videos:
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Require real FFmpeg and font renderer
+        run: |
+          command -v ffmpeg || (sudo apt-get update -qq && sudo apt-get install -y ffmpeg)
+          test -f /usr/share/fonts/truetype/dejavu/DejaVuSans.ttf || (sudo apt-get update -qq && sudo apt-get install -y fonts-dejavu-core)
+      - name: Source integrity, rights, historical truth and brand consent regression tests
+        run: |
+          node --check systemia/media-studio/visual-lanes.mjs
+          npm run test:visual-lanes
+      - name: Produce three actual internal review MP4s from a synthetic moving source
+        run: |
+          mkdir -p /tmp/evercraft-lane-test
+          ffmpeg -hide_banner -loglevel error -y -f lavfi -i testsrc2=s=320x180:r=24:d=1.5 -an -c:v libx264 -pix_fmt yuv420p /tmp/evercraft-lane-test/source.mp4
+          node --input-type=module <<'NODE'
+          import fs from 'node:fs';
+          import crypto from 'node:crypto';
+          const source='/tmp/evercraft-lane-test/source.mp4';
+          const sha=crypto.createHash('sha256').update(fs.readFileSync(source)).digest('hex');
+          const req={schema:'evercraft.fallen.visual-lanes-request.v1',id:'three-lane-ci',
+            source:{path:source,sha256:sha,rights:'owned',
+              evidenceState:'synthetic_visualization',sourceRefs:['owned-lavfi-movement-fixture']},
+            brand:{name:'Evercraft Visual Studio',state:'owned_concept'},
+            cuts:[
+              {lane:'cinematic',title:'REAL VISUAL PIPELINE',aspectRatio:'16:9',audio:'silent'},
+              {lane:'educational',title:'VISUAL LEARNING',aspectRatio:'1:1',audio:'silent',
+                claims:[{text:'Illustrative geometry, not historical evidence',kind:'synthetic'}]},
+              {lane:'commercial',title:'SHOW WHAT IS POSSIBLE',aspectRatio:'9:16',
+                tagline:'INTERNAL CLIENT FORMAT PROOF',audio:'silent'}
+            ]};
+          fs.writeFileSync('/tmp/evercraft-lane-test/request.json',JSON.stringify(req,null,2));
+          NODE
+          npm run media:visual-lanes -- /tmp/evercraft-lane-test/request.json /tmp/evercraft-lane-test/out
+      - name: Independently verify real video files and release denial
+        run: |
+          node --input-type=module <<'NODE'
+          import fs from 'node:fs';
+          import path from 'node:path';
+          const folder='/tmp/evercraft-lane-test/out';
+          const r=JSON.parse(fs.readFileSync(path.join(folder,'receipt.json'),'utf8'));
+          if(r.publicationAuthority!==false||r.clientDeliveryAuthority!==false||r.deliverables.length!==3)
+            process.exit(2);
+          for(const item of r.deliverables){
+            if(item.releaseState!=='review_only'||item.hasAudio||!fs.existsSync(path.join(folder,item.videoFile))
+              ||fs.statSync(path.join(folder,item.videoFile)).size<1000)process.exit(3);
+          }
+          console.log('REAL_THREE_LANE_VIDEO_PROOF',r.deliverables.map(x=>[x.lane,x.width,x.height,x.sha256]));
+          NODE
+      - name: Retain internal review video proof
+        uses: actions/upload-artifact@v4
+        with:
+          name: fallen-three-visual-delivery-review-cuts
+          path: |
+            /tmp/evercraft-lane-test/out/*.mp4
+            /tmp/evercraft-lane-test/out/*.png
+            /tmp/evercraft-lane-test/out/receipt.json
+          if-no-files-found: error
+          retention-days: 7
