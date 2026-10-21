@@ -37,4 +37,8 @@ test('silhouette world declares historical limits and preserves release denial',
  assert.equal(shot.durationSec,4);
  assert.equal(shot.fps,24);
  assert.equal(shot.targetEntityId,'hood-ship-hull');
+ const close=historicSilhouetteTake('bismarck_hero');
+ assert.equal(close.targetEntityId,'bismarck-ship-hull');
+ assert.ok(close.orbit.radius<shot.orbit.radius);
+ assert.throws(()=>historicSilhouetteTake('invalid_profile' as 'formation'),/historic_camera_profile_unapproved/);
 });
