@@ -23,3 +23,15 @@ Have the founder and Nikki listen to all nine takes with model/variant names ini
 Source: upstream Kokoro `KPipeline.generate_from_tokens` supports preprocessed MToken phoneme sequences: https://github.com/hexgrad/kokoro/blob/main/kokoro/pipeline.py . Original Kokoro model card: https://huggingface.co/hexgrad/Kokoro-82M .
 
 Status: code and private CI audition only. No real candidate improvement, voice-cloning consent, legal commercial rights or deployment may be claimed from test existence.
+
+## Owner rejected V05 vowel/stress test, 2026-10-20
+
+Owner report: 'That didn’t work at all lol the idk what’s going on'. This is unambiguous negative feedback about the attempted result **unless the owner clarifies a player-loading failure**. No take from the experimental pronunciation or stress trials has been approved.
+
+**Disposition:** Reject all `ever_primary`, `ever_relaxed`, and `open_a_only` experimental variants for casting or production. Freeze these generated files as negative-control research evidence. Do **not** apply raw IPA stress movement or broad /æ/→/ɑ/ substitution globally to V05. Keep Kokoro af_bella and its original input/output as the working voice reference.
+
+**Observed evidence**: baseline `V05.mp3` from the first Kokoro-versus-Piper shootout and later `tagline-model_original.mp3` decode to exactly 89,400 samples at 24 kHz and have cross-sample Pearson correlation approximately 0.99690 (one-pass MP3 decoder outputs). The changed stress WAVs showed near-zero direct raw-sample correlation with their corresponding unmodified WAVs over full take, but raw-sample correlation alone cannot diagnose perceived naturalness or isolate the word. Therefore these are not proven localized repairs.
+
+**Root-cause insight**: manually modifying phoneme stress within a whole utterance changes synthesis behavior and can alter duration and contextual prosody outside the targeted vowel. Good orthographic/IPA intentions do not establish better articulation. A token-path 'original' audit must always be referenced to a real `KPipeline(text, voice='af_bella')` control and not labeled an identical waveform without verification.
+
+**Better next gate**: (1) restore the founder-liked V05 full script as the reference; (2) capture a phonetic/accent director's precise target vowel and intended brand stress, including country/dialect; (3) only then test provider-supported lexicon/markup pronunciation on the same sentence, matched loudness, with blinded A/B listening. Prefer more expressive architectures or trained human actor reference if pronunciation still sounds unnatural. Nothing automatically selected, published or approved. If user reports audio player itself did not work, investigate HTML/relative-file playback before further modeling.
