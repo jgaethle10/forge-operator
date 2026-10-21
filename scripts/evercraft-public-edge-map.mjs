@@ -360,7 +360,38 @@ async function upnpMap() {
           `<NewLeaseDuration>${Number(m.lifetime || 86400)}</NewLeaseDuration>`;
         try {
           await soap(control, service.serviceType, 'AddPortMapping', b);
-          mapped.push({ requested: m, success: true });
+          // A router can acknowledge the request while retaining an old client.
+          // Read back the exact external port/protocol and fail closed if its
+          // target is not the currently configured ChromeOS Wi-Fi address.
+          const detail=await soap(
+            control,
+            service.serviceType,
+            'GetSpecificPortMappingEntry',
+            '<NewRemoteHost></NewRemoteHost>'+
+              `<NewExternalPort>${m.external}</NewExternalPort>`+
+              `<NewProtocol>${m.proto}</NewProtocol>`
+          );
+          const observedHost=tagValue(detail,'NewInternalClient');
+          const observedPort=Number(tagValue(detail,'NewInternalPort'));
+          const observedEnabled=tagValue(detail,'NewEnabled');
+          if(observedHost!==host||observedPort!==m.internal||observedEnabled!=='1'){
+            mapped.push({
+              requested:m,
+              success:false,
+              error:'upnp_mapping_readback_mismatch',
+              observed_host:observedHost,
+              observed_port:observedPort,
+              observed_enabled:observedEnabled,
+            });
+          }else{
+            mapped.push({
+              requested:m,
+              success:true,
+              readback_verified:true,
+              observed_host:observedHost,
+              observed_port:observedPort,
+            });
+          }
         } catch (e) {
           mapped.push({ requested: m, success: false, error: e.message });
         }
