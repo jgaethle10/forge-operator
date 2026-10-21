@@ -12,6 +12,7 @@ on:
       - 'commercial/LINEAGE.md'
       - 'commercial/lineage-offer-2026-10-07.json'
       - 'systemia/lineage/commercial-contract.test.mjs'
+      - 'tests/lineage-fabric-jq-guard.test.mjs'
       - '.github/workflows/lineage-public-fabric-canary.yml'
   push:
     branches: [main]
@@ -24,6 +25,7 @@ on:
       - 'commercial/LINEAGE.md'
       - 'commercial/lineage-offer-2026-10-07.json'
       - 'systemia/lineage/commercial-contract.test.mjs'
+      - 'tests/lineage-fabric-jq-guard.test.mjs'
       - '.github/workflows/lineage-public-fabric-canary.yml'
   schedule:
     - cron: '*/30 * * * *'
@@ -32,7 +34,9 @@ permissions:
   contents: read
 
 concurrency:
-  group: lineage-public-fabric-canary
+  # PR fixture checks must not cancel live scheduled Fabric truth canaries.
+  # Main push and scheduled runs stay in one bounded live lane.
+  group: lineage-public-fabric-canary-${{ github.event_name == 'pull_request' && github.event.pull_request.number || 'live' }}
   cancel-in-progress: true
 
 jobs:
@@ -51,6 +55,8 @@ jobs:
 
       - name: Verify Lineage commercial source contract
         run: node --test systemia/lineage/commercial-contract.test.mjs
+      - name: Regression test Lineage public jq truth gate
+        run: node --test tests/lineage-fabric-jq-guard.test.mjs
 
       - name: Verify Lineage public Fabric door
         if: github.event_name != 'pull_request'
@@ -132,7 +138,7 @@ jobs:
             .machine_state == "human_handoff_ready" and
             .public_url == $url and
             .entry_paid_offer.price_usd == 500 and
-            .authority_rule | contains("Checkout creation is not proof of payment")
+            (.authority_rule | contains("Checkout creation is not proof of payment"))
           ' >/dev/null
           printf '%s\n' "$capability" > /tmp/lineage-capability.json
 
