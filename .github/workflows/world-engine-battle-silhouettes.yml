@@ -11,6 +11,10 @@ permissions:
   contents: read
 jobs:
   class-specific-native-gpu:
+    strategy:
+      fail-fast: false
+      matrix:
+        camera: [formation, bismarck_hero]
     runs-on: ubuntu-latest
     timeout-minutes: 29
     steps:
@@ -32,6 +36,7 @@ jobs:
       - name: Render native GPU 3D ship-class scene, shadow depth passes, moving camera
         env:
           CINEMATIC_SCENE: denmark_strait_silhouettes
+          BATTLE_CAMERA: ${{ matrix.camera }}
           CINEMATIC_FORMAT: wide
           CINEMATIC_PROOF_OUTPUT: /tmp/evercraft-ship-silhouettes
           EVERCRAFT_NATIVE_BROWSER_STATE_DIR: /tmp/evercraft-silhouette-browser
@@ -71,7 +76,7 @@ jobs:
       - name: Preserve original GPU movie and three real source frame stills for founder review
         uses: actions/upload-artifact@v4
         with:
-          name: evercraft-four-distinct-naval-geometry-native-gpu
+          name: evercraft-four-distinct-naval-geometry-${{ matrix.camera }}-native-gpu
           path: |
             /tmp/evercraft-ship-silhouettes/denmark-strait-class-silhouettes-gpu.mp4
             /tmp/evercraft-ship-silhouettes/receipt.json
