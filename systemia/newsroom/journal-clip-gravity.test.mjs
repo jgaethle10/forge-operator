@@ -21,6 +21,8 @@ function release(){
     status: 'approved',
     approved_copy: copy,
     sensitivity: {state: 'public_unclassified'},
+    risk_class: 'public_safety',
+    qualified_public_safety_review: {approved: true, receipt_ref: 'qualified-review:public-safety:toledo:1'},
     editorial_gate: {status: 'accepted', score: 10},
     systemia_release: {
       status: 'accepted', publication_authority: true,
@@ -33,7 +35,7 @@ function release(){
       approved_at: '2026-10-21T17:05:00.000Z',
       copy_sha256: sha(copy),
     },
-    freshness_expires_at: '2026-10-21T23:59:00.000Z',
+    freshness_expires_at: '2026-10-21T23:00:00.000Z',
     claims_receipt_ref: 'systemia:toledo:claim-reactor:1',
     sources: [
       {source_id: 'city', url: 'https://toledo.oh.gov/news/2026/10/21/hazmat-evacuation-in-north-toledo', evidence_state: 'verified', verified_at: '2026-10-21T16:45:00.000Z'},
@@ -167,4 +169,35 @@ test('no Facebook credential means zero provider calls', async () => {
     publisher: async () => {calls++;},
   }), /facebook_credential_unavailable/);
   assert.equal(calls, 0);
+});
+
+test('public-safety bulletin requires an additional qualified review', () => {
+  const input = release();
+  input.qualified_public_safety_review.approved = false;
+  assert.throws(() => buildGravityClipFallbackRequest(input, opts), /public_safety_human_review_required/);
+});
+
+test('public-safety evidence older than two hours fails closed', () => {
+  const input = release();
+  input.sources[0].verified_at = '2026-10-21T15:00:00.000Z';
+  assert.throws(() => buildGravityClipFallbackRequest(input, opts), /public_safety_source_stale/);
+});
+
+test('public-safety bulletin cannot use a far-future expiry', () => {
+  const input = release();
+  input.freshness_expires_at = '2026-10-22T17:55:00.000Z';
+  assert.throws(() => buildGravityClipFallbackRequest(input, opts), /public_safety_review_or_expiry_out_of_window/);
+});
+
+test('approved body cannot smuggle an unverified commercial link', () => {
+  const input = release();
+  input.approved_copy += ' Buy this now: https://random-outlet.example/buy';
+  input.distribution_approval.copy_sha256 = sha(input.approved_copy);
+  assert.throws(() => buildGravityClipFallbackRequest(input, opts), /copy_contains_unverified_url/);
+});
+
+test('explicit risk classification cannot be omitted', () => {
+  const input = release();
+  delete input.risk_class;
+  assert.throws(() => buildGravityClipFallbackRequest(input, opts), /risk_class_required/);
 });
