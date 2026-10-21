@@ -123,6 +123,12 @@ export function createSyntheticInvoiceServer({dir,token}={}){
         }
         return json(res,status,{...publicOrder(row),replayed:status===200});
       }
+      // Explicitly deny money-state mutations even if a future route parser
+      // changes. The synthetic invoice service has no paid transition.
+      if(req.method==='POST' && /^\/v1\/orders\/buyer-[0-9a-f-]{36}\/paid$/.test(u.pathname)){
+        return json(res,405,{state:'money_or_unsupported_method_denied',
+          payment_verified:false,fulfillment_released:false});
+      }
       const match=u.pathname.match(/^\/v1\/orders\/(buyer-[0-9a-f-]{36})(?:\/(invoice|select|claim))?$/);
       if(!match||!ORDER.test(match[1]))return json(res,404,{state:'route_unavailable'});
       const id=match[1],action=match[2]||'';
