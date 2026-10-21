@@ -1,0 +1,182 @@
+{
+  "schema": "evercraft.gravity.character-commercial.v1",
+  "id": "forensiscope-ship-too-big-again-20261014",
+  "missionKey": "evercraft-distribution-engine-001-20261012",
+  "title": "Too Big Again?",
+  "product": "ForensiScope Ship",
+  "runtimeSec": 29,
+  "frameRate": 24,
+  "aspectRatios": [
+    "9:16",
+    "16:9"
+  ],
+  "publicationAuthority": false,
+  "paidGenerationAuthority": false,
+  "sourceRefs": [
+    "https://docs.google.com/document/d/1ZxqqV7WW-Tf0tA6VO8Y9ZlUfTDLJdreSmU51UBx3lR8/edit",
+    "https://drive.google.com/file/d/1j71I-KJJhazI8Kt9Bn5HWrUi-yDPFunI/view"
+  ],
+  "characters": [
+    {
+      "id": "maya",
+      "name": "Maya",
+      "isFictional": true,
+      "ageClass": "adult",
+      "role": "Operations lead",
+      "voiceProfileId": null
+    },
+    {
+      "id": "alex",
+      "name": "Alex",
+      "isFictional": true,
+      "ageClass": "adult",
+      "role": "Coworker",
+      "voiceProfileId": null
+    }
+  ],
+  "locationId": "shared-office",
+  "styleTreatments": {
+    "photoreal": {
+      "visual": "Naturalistic photography, lived-in office, believable adult skin/wardrobe, physically motivated eyelines, no hallucinated UI.",
+      "motion": "24fps continuous realistic body and facial performance"
+    },
+    "animated": {
+      "visual": "Premium stylized 3D acting with designed appeal, consistent rigs, expressive facial poses, physical hand-contact.",
+      "motion": "24fps authored full-animation timing"
+    },
+    "claymation": {
+      "visual": "Handbuilt stop-motion miniatures, fingerprints, tactile props and shallow depth, consistent replacement facial poses.",
+      "motion": "12 unique poses per second on 24fps output, character-held poses on twos"
+    }
+  },
+  "shotPlan": [
+    {
+      "id": "S01",
+      "durationSec": 3.2,
+      "speakerId": "maya",
+      "line": "The site photos won't attach.",
+      "shotScale": "wide",
+      "action": "Maya drags a site-photo PNG into an email composer; generic attachment-size warning, tired exhale.",
+      "cast": [
+        "maya"
+      ],
+      "lensMm": 35
+    },
+    {
+      "id": "S02",
+      "durationSec": 2.3,
+      "speakerId": "alex",
+      "line": "Too big again?",
+      "shotScale": "medium_close",
+      "action": "Alex swivels from adjacent screen, eyebrow rises, eye contact toward Maya.",
+      "cast": [
+        "alex"
+      ],
+      "lensMm": 55
+    },
+    {
+      "id": "S03",
+      "durationSec": 3,
+      "speakerId": "maya",
+      "line": "And they need a preview today.",
+      "shotScale": "medium_wide",
+      "action": "Maya slides the laptop to Alex; both hands and eye lines grounded.",
+      "cast": [
+        "maya",
+        "alex"
+      ],
+      "lensMm": 40
+    },
+    {
+      "id": "S04",
+      "durationSec": 4,
+      "speakerId": "alex",
+      "line": "Try ForensiScope Ship. Make a smaller image first.",
+      "shotScale": "medium",
+      "action": "Alex gestures toward the local file preparation flow; not a send action.",
+      "cast": [
+        "alex",
+        "maya"
+      ],
+      "lensMm": 40
+    },
+    {
+      "id": "S05",
+      "durationSec": 4.3,
+      "speakerId": null,
+      "line": null,
+      "shotScale": "close",
+      "action": "Real tested ForensiScope Ship local source recording only: image input, destination preset, smaller derivative and original preserved. Never simulate a successful transfer.",
+      "cast": [],
+      "lensMm": 75
+    },
+    {
+      "id": "S06",
+      "durationSec": 2.9,
+      "speakerId": "maya",
+      "line": "That's smaller. And the original?",
+      "shotScale": "close",
+      "action": "Maya reacts, comparing original and derivative sizes on the actual capture.",
+      "cast": [
+        "maya"
+      ],
+      "lensMm": 75
+    },
+    {
+      "id": "S07",
+      "durationSec": 3.2,
+      "speakerId": "alex",
+      "line": "Still there. Share it separately when you need full quality.",
+      "shotScale": "medium_close",
+      "action": "Alex points to original retained outside derivative flow.",
+      "cast": [
+        "alex"
+      ],
+      "lensMm": 55
+    },
+    {
+      "id": "S08",
+      "durationSec": 2.2,
+      "speakerId": "maya",
+      "line": "That makes sense.",
+      "shotScale": "medium_wide",
+      "action": "Relieved natural two-person exchange; Alex returns to own work.",
+      "cast": [
+        "maya",
+        "alex"
+      ],
+      "lensMm": 40
+    },
+    {
+      "id": "S09",
+      "durationSec": 3.9,
+      "speakerId": "voiceover",
+      "line": "ForensiScope Ship. Prepare the preview. Keep the original.",
+      "shotScale": "wide",
+      "action": "Brand payoff and clear illustration label, with CTA only after URL readback.",
+      "cast": [],
+      "lensMm": 35
+    }
+  ],
+  "gates": {
+    "syntheticActorsMustBeLabeled": true,
+    "identityReferencesRequired": true,
+    "licensedVoicesRequired": true,
+    "authenticProductCaptureRequired": true,
+    "recipientTransferClaimForbidden": true,
+    "checkoutOrPublicCTARequiresReadback": true,
+    "noPaidGenerationWithoutAuthorization": true,
+    "noPublicPostWithoutSystemiaAndClip": true
+  },
+  "assetSlots": {
+    "maya_identity": null,
+    "alex_identity": null,
+    "office_environment": null,
+    "forensiscope_actual_ui_capture": null,
+    "maya_voice_license": null,
+    "alex_voice_license": null,
+    "voiceover_voice_license": null,
+    "public_cta_readback": null
+  },
+  "renderStatus": "not_generated"
+}

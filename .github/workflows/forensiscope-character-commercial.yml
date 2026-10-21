@@ -1,0 +1,28 @@
+name: ForensiScope character-commercial preflight
+on:
+  pull_request:
+    paths:
+      - 'systemia/graphics-command/character-commercial-bridge.mjs'
+      - 'systemia/graphics-command/character-commercial-bridge.test.mjs'
+      - 'systemia/graphics-command/character-performance-bridge.mjs'
+      - 'systemia/graphics-command/character-performance-bridge.test.mjs'
+      - 'systemia/graphics-command/campaigns/forensiscope-ship-character-v1.json'
+      - '.github/workflows/forensiscope-character-commercial.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  offline-preflight:
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Offline character contract checks
+        run: node --test systemia/graphics-command/character-commercial-bridge.test.mjs
+      - name: Install existing Fallen test runtime
+        run: npm install --no-audit --no-fund
+      - name: Validate live Fallen cinematic and performance director integration
+        run: node --import tsx --test systemia/graphics-command/character-performance-bridge.test.mjs
