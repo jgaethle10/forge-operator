@@ -1,0 +1,58 @@
+name: Evercraft Fabric Public Ingress Monitor
+
+on:
+  workflow_dispatch:
+  pull_request:
+    paths:
+      - 'scripts/fabric-ingress-external-canary.mjs'
+      - 'tests/fabric-ingress-external-canary.test.mjs'
+      - '.github/workflows/evercraft-fabric-public-ingress-monitor.yml'
+  push:
+    branches: [main]
+    paths:
+      - 'scripts/fabric-ingress-external-canary.mjs'
+      - '.github/workflows/evercraft-fabric-public-ingress-monitor.yml'
+  schedule:
+    - cron: '2,22,42 * * * *'
+
+permissions:
+  contents: read
+
+concurrency:
+  group: evercraft-fabric-public-ingress-monitor
+  cancel-in-progress: true
+
+jobs:
+  ingress:
+    runs-on: ubuntu-latest
+    timeout-minutes: 4
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Check ingress-only truth contract
+        run: node --test tests/fabric-ingress-external-canary.test.mjs
+      - name: Verify real public HTTPS, SSE, device identity and read-only MCP
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p artifacts
+          if node scripts/fabric-ingress-external-canary.mjs \
+              --origin https://fabric.systemiacommandcenters.com \
+              > artifacts/fabric-ingress-receipt.json \
+              2> artifacts/fabric-ingress-failure.json; then
+            cat artifacts/fabric-ingress-receipt.json
+          else
+            cp artifacts/fabric-ingress-failure.json artifacts/fabric-ingress-receipt.json
+            cat artifacts/fabric-ingress-receipt.json >&2
+            exit 1
+          fi
+      - name: Preserve independent ingress receipt
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: fabric-public-ingress-evidence
+          path: artifacts/fabric-ingress-receipt.json
+          if-no-files-found: warn
+          retention-days: 30
