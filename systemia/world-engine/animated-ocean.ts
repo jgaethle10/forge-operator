@@ -65,7 +65,7 @@ export function attachAnimatedOcean(world:WorldDefinition):WorldDefinition{
  sea.transform.scale={x:2,y:1,z:2};
  sea.renderable.castsShadow=false;
  water.roughness=.24;water.metallic=.17;
- water.baseColor={r:.028,g:.086,b:.129,a:1};
+ water.baseColor={r:.037,g:.099,b:.145,a:1};
  result.metadata={...(result.metadata||{}),
   oceanSurface:'opt_in_original_wgsl_time_deformed_triangles_and_analytic_normals',
   animatedOceanShaderOptIn:true,
