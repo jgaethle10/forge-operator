@@ -25,6 +25,7 @@ import {historicSilhouetteWorld,historicSilhouetteTake,battleVesselGeometry} fro
 import {makeBattleMotionDemo} from './battle-motion-demo.js';
 import {makeBattleEnvironmentFx} from './battle-environment-fx.js';
 import {attachAnimatedOcean,makeAnimatedOceanGrid,OCEAN_WAVE_GEOMETRY_ID,OCEAN_WAVE_AMPLITUDE} from './animated-ocean.js';
+import {CINEMATIC_SKY_WGSL,cinematicSkyCameraUniform,skyShaderSha256} from './native-sky.js';
 import {attachCinematicFxToWorld,cinematicFxGeometry} from './cinematic-environment-fx.js';
 import {makeNativeBattleshipSequence,composeNativeBattleshipCamera,type NativeFilmFormat} from './native-format-camera.js';
 import {auditSequenceHeroFraming} from './shot-composition.js';
@@ -168,7 +169,7 @@ async function loopback(){
   return {server,url:'http://127.0.0.1:'+addr.port+'/'};
 }
 async function renderGpuFrames(plans:ReturnType<typeof buildCinematicCameraSequence>['frames'],geometries:GeometryAsset[],textures:TextureAsset[],
-  shader:string,shadowShader:string,out:string){
+  shader:string,shadowShader:string,out:string,skyShader:string|null=null){
   const prepared=await prepareNativeBrowserRuntime({
     sourceDir:worker,stateDir:process.env.EVERCRAFT_NATIVE_BROWSER_STATE_DIR||path.join(out,'native-browser'),
     allowInstall:true
@@ -195,7 +196,7 @@ async function renderGpuFrames(plans:ReturnType<typeof buildCinematicCameraSeque
         // Install only this inert name decorator in the isolated loopback lab.
         await page.addInitScript({content:"globalThis.__name=(fn,name)=>fn;"});
         await page.goto(server.url,{waitUntil:'domcontentloaded'});
-        const init=await page.evaluate(async({shader,shadowShader,geometries,textures,width,height,shadowResolution}:{shader:string;shadowShader:string;geometries:GeometryAsset[];textures:TextureAsset[];width:number;height:number;shadowResolution:number})=>{
+        const init=await page.evaluate(async({shader,shadowShader,skyShader,geometries,textures,width,height,shadowResolution}:{shader:string;shadowShader:string;skyShader:string|null;geometries:GeometryAsset[];textures:TextureAsset[];width:number;height:number;shadowResolution:number})=>{
           const adapter=await (navigator as any).gpu?.requestAdapter();
           if(!adapter)return {ok:false,reason:'no_adapter'};
           const device=await adapter.requestDevice();
@@ -245,6 +246,23 @@ async function renderGpuFrames(plans:ReturnType<typeof buildCinematicCameraSeque
             primitive:{topology:'triangle-list',frontFace:'ccw',cullMode:'none'},
             depthStencil:{format:'depth24plus',depthWriteEnabled:false,depthCompare:'less'}
           });
+          // Optional source-authored GPU sky pass, dormant for legacy shots.
+          let skyPipeline:any=null,skyLayout:any=null;
+          if(skyShader){
+            const skyModule=device.createShaderModule({code:skyShader});
+            const skyErrors=(await skyModule.getCompilationInfo()).messages
+              .filter((m:any)=>m.type==='error').map((m:any)=>m.message);
+            if(skyErrors.length)return {ok:false,reason:'sky_shader:'+skyErrors.join('|')};
+            skyLayout=device.createBindGroupLayout({entries:[
+              {binding:0,visibility:3,buffer:{type:'uniform'}}
+            ]});
+            skyPipeline=device.createRenderPipeline({
+              layout:device.createPipelineLayout({bindGroupLayouts:[skyLayout]}),
+              vertex:{module:skyModule,entryPoint:'vs_sky'},
+              fragment:{module:skyModule,entryPoint:'fs_sky',targets:[{format:'rgba8unorm'}]},
+              primitive:{topology:'triangle-list',cullMode:'none'}
+            });
+          }
           const shadowModule=device.createShaderModule({code:shadowShader});
           const shadowErrors=(await shadowModule.getCompilationInfo()).messages
             .filter(m=>m.type==='error').map(m=>m.message);
@@ -307,9 +325,9 @@ async function renderGpuFrames(plans:ReturnType<typeof buildCinematicCameraSeque
           const shadowSampler=device.createSampler({compare:'less-equal'});
           // Dedicated synthetic lab runtime; all values come from canonically verified WebGPU plans.
           (window as any).__evercraftCinematic={device,frameLayout,objectLayout,pipeline,transparentPipeline,buffers,
-            fallback,sampler,textureMap,target,depth,width,height,shadowTexture,shadowSampler,shadowLayout,shadowPipeline};
+            fallback,sampler,textureMap,target,depth,width,height,shadowTexture,shadowSampler,shadowLayout,shadowPipeline,skyPipeline,skyLayout};
           return {ok:true};
-        },{shader,shadowShader,geometries,textures,width:WIDTH,height:HEIGHT,
+        },{shader,shadowShader,skyShader,geometries,textures,width:WIDTH,height:HEIGHT,
           shadowResolution:plans[0].renderPlan.shadow?.resolution??1});
         if(init.ok){selected=profile;break;}
         errors.push(profile.name+':'+init.reason);
