@@ -79,6 +79,22 @@ export function createNativeFallenStudyProject(outdir:string):{
  assert.equal(plan.audioMaster.sampleRate,48000);
  return {project,inputReceipt:incoming,skyFile,latheFile};
 }
+/** Measured decoded PCM energy. This does not constitute a human sound-quality review. */
+function audioWindow(master:string,startSec:number,durationSec:number){
+ const r=spawnSync('ffmpeg',['-v','error','-ss',String(startSec),'-t',String(durationSec),
+  '-i',master,'-vn','-ac','2','-ar','48000','-f','f32le','pipe:1'],
+  {encoding:null,maxBuffer:4*1024*1024,timeout:90000});
+ if(r.status!==0||!r.stdout||r.stdout.length<16000)throw Error('native_sound_window_decode_missing:'+startSec);
+ let sum=0,peak=0,count=0;
+ for(let i=0;i+4<=r.stdout.length;i+=4){
+  const v=r.stdout.readFloatLE(i);
+  if(!Number.isFinite(v))throw Error('native_audio_nan');
+  sum+=v*v;peak=Math.max(peak,Math.abs(v));count++;
+ }
+ return {startSec,durationSec,rms:Number(Math.sqrt(sum/count).toFixed(6)),
+   peak:Number(peak.toFixed(6)),samples:count};
+}
+
 export function runNativeFallenStudy(outdir:string){
  const {project,inputReceipt,skyFile,latheFile}=createNativeFallenStudyProject(outdir);
  const master=path.join(outdir,'Evercraft_Native_Fallen_Real_Source_Study_RC02.mp4');
@@ -88,10 +104,22 @@ export function runNativeFallenStudy(outdir:string){
  const decode=spawnSync('ffmpeg',['-v','error','-xerror','-i',master,'-map','0:v:0','-map','0:a:0','-f','null','-'],
   {encoding:'utf8',timeout:180000});
  if(decode.status!==0)throw Error('native_master_full_decode_failed:'+String(decode.stderr).slice(-600));
+ const soundWindows=[
+  audioWindow(master,2,0.5),
+  audioWindow(master,7.67,0.26), // real machine sound before the picture cut
+  audioWindow(master,8.35,0.5),  // real machine sound after the picture cut
+  audioWindow(master,10.1,0.5)
+ ];
+ for(const window of soundWindows){
+  if(window.rms<0.001||window.peak<0.006){
+   throw Error('native_fallen_audio_dropped_at_'+window.startSec+'s:rms='+window.rms);
+  }
+ }
  const reviewed={
   schema:'evercraft.fallen.native-real-source-receipt.v1',status:'native_timeline_media_technical_proof_only',
   nativeExporter:'systemia/media-studio/timeline-export.ts',nativeProject:'evercraft.fallen.timeline.v1',
   nativeReceipt:receipt,
+  verifiedAudioSignalWindows:soundWindows,
   independentSourceBinds:{
    skySourceSha1:SKY_SHA1,latheSourceSha1:LATHE_SHA1,
    skyInputSha256:hash(skyFile),latheInputSha256:hash(latheFile),
