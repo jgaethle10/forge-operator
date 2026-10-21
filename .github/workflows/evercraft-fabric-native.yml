@@ -119,6 +119,12 @@ jobs:
           echo "PUBLIC_FABRIC_MCP_INITIALIZE=verified"
           echo "Note: full identity/authorization canary remains a separate required gate."
 
+      - name: Verify complete external Fabric public-edge canary
+        shell: bash
+        run: |
+          set -euo pipefail
+          node scripts/fabric-edge-external-canary.mjs --origin https://fabric.systemiacommandcenters.com
+
       - name: Verify deployed EarthWorks hot-read playground
         shell: bash
         run: |
