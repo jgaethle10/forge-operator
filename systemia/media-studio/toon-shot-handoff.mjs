@@ -19,6 +19,28 @@ function indexed(items,label){
   }
   return result;
 }
+// This small authored control surface is only for the original Fox Cel canary.
+// It is not an inferred performance model and does not attest character identity.
+const PREVIEW_MOTION_KEYS=['specimenProfile','reach','blinkAtSec','gazeX','lanternLift','tailEnergy'];
+function normalizePreviewMotion(value,durationSec,shotId){
+  if(value===undefined)return null;
+  requireValid(value&&typeof value==='object'&&!Array.isArray(value),'preview_motion_object_invalid:'+shotId);
+  requireValid(Object.keys(value).length===PREVIEW_MOTION_KEYS.length &&
+    PREVIEW_MOTION_KEYS.every(key=>Object.hasOwn(value,key)),
+    'preview_motion_fields_invalid:'+shotId);
+  requireValid(value.specimenProfile==='original_fox_v1','preview_motion_specimen_not_supported:'+shotId);
+  for(const field of ['reach','lanternLift','tailEnergy']){
+    requireValid(typeof value[field]==='number'&&Number.isFinite(value[field])&&
+      value[field]>=0&&value[field]<=1,'preview_motion_range_invalid:'+shotId+':'+field);
+  }
+  requireValid(typeof value.gazeX==='number'&&Number.isFinite(value.gazeX)&&
+    value.gazeX>=-1&&value.gazeX<=1,'preview_motion_range_invalid:'+shotId+':gazeX');
+  requireValid(typeof value.blinkAtSec==='number'&&Number.isFinite(value.blinkAtSec)&&
+    value.blinkAtSec>=0&&value.blinkAtSec<=durationSec,
+    'preview_motion_range_invalid:'+shotId+':blinkAtSec');
+  return Object.fromEntries(PREVIEW_MOTION_KEYS.map(k=>[k,value[k]]));
+}
+
 function requireDirection(value,label){
   requireValid(clean(value).length>=3,'direction_missing:'+label);
   requireValid(clean(value).length<=700,'direction_too_long:'+label);
@@ -131,6 +153,7 @@ export function compileToonShotHandoff(input={}){
       sequenceIndex:index,locationId:location.id,
       aspectRatio,durationSec:shot.durationSec,startFrame,frameCount:endFrame-startFrame,fps,
       action,soundDirection,characters,dialogue:shotCues,
+      previewMotion:normalizePreviewMotion(shot.previewMotion,shot.durationSec,shotId),
       execution:{
         identityReference:'not_verified',
         environmentReference:'not_verified',
