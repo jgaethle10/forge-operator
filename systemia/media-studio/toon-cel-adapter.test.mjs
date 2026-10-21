@@ -58,3 +58,30 @@ test('explicitly rejects humans, missing shots, voice and incompatible timing',(
     /explicit_canary_opt_in_required/);
 });
 
+
+test('offline fox dialogue requires opt-in, exact cast lock and the single approved scratch line',()=>{
+  const original=fixture();
+  const cue={id:'scratch-line-1',speakerId:'ember',
+    voiceProfileId:'fictional-scratch-voice',text:'Hello, little light.'};
+  original.shots[0].characters[0].voiceProfileId='fictional-scratch-voice';
+  original.shots[0].dialogue=[cue];
+  original.frameCount=144;original.shots[0].frameCount=144;
+  const {digest:_,...core}=original;original.digest=digest(core);
+  assert.throws(()=>prepareToonCelPreview({packet:original,shotId:'lantern-fox-shot'}),
+    /spoken_dialogue_not_supported/);
+  const plan=prepareToonCelPreview({packet:original,shotId:'lantern-fox-shot',allowSpeechCanary:true});
+  assert.equal(plan.speechText,'Hello, little light.');
+  assert.equal(plan.syntheticVoiceOnly,true);
+  assert.equal(plan.referenceMatched,false);
+  assert.equal(plan.publicationAuthority,false);
+  const mismatched=structuredClone(original);
+  mismatched.shots[0].dialogue[0].voiceProfileId='wrong-voice';
+  const {digest:__,...mismatchCore}=mismatched;mismatched.digest=digest(mismatchCore);
+  assert.throws(()=>prepareToonCelPreview({packet:mismatched,shotId:'lantern-fox-shot',allowSpeechCanary:true}),
+    /locked_voice_declared_mismatch/);
+  const unapproved=structuredClone(original);
+  unapproved.shots[0].dialogue[0].text='I have a new speaking script';
+  const {digest:___,...unapprovedCore}=unapproved;unapproved.digest=digest(unapprovedCore);
+  assert.throws(()=>prepareToonCelPreview({packet:unapproved,shotId:'lantern-fox-shot',allowSpeechCanary:true}),
+    /scratch_speech_phrase_not_supported/);
+});
