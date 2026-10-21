@@ -1,0 +1,60 @@
+name: Evercraft developer integration gate
+
+on:
+  pull_request:
+    paths:
+      - 'public/.well-known/evercraft-developer-integrations.json'
+      - 'scripts/probe-evercraft-developer-integrations.mjs'
+      - 'docs/EVERCRAFT_DEVELOPER_INTEGRATIONS_RELEASE_GATE_2026-10-14.md'
+      - '.github/workflows/evercraft-developer-integration-gate.yml'
+  workflow_dispatch:
+    inputs:
+      live_probe:
+        description: 'Recheck public MCP, HTML, Evercraft Payments quote, and Fabric health; automatic for PRs'
+        required: true
+        type: boolean
+        default: true
+      strict_release:
+        description: 'Require full commercial release gates; expected to FAIL until merchant/payments/Fabric signed acceptance'
+        required: true
+        type: boolean
+        default: false
+
+permissions:
+  contents: read
+
+concurrency:
+  group: integration-gate-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  inventory:
+    name: Read-only inventory contract
+    runs-on: ubuntu-latest
+    timeout-minutes: 3
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Verify no checkout, fee split or release status is misrepresented
+        run: node scripts/probe-evercraft-developer-integrations.mjs
+
+  public-live:
+    name: Independent MCP read-only probes (PR and on demand)
+    if: github.event_name == 'pull_request' || (github.event_name == 'workflow_dispatch' && inputs.live_probe)
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Probe existing public MCP connectors and Evercraft Payments quote only
+        shell: bash
+        run: |
+          if [ "${{ inputs.strict_release }}" = "true" ]; then
+            node scripts/probe-evercraft-developer-integrations.mjs --live --strict-release
+          else
+            node scripts/probe-evercraft-developer-integrations.mjs --live
+          fi
