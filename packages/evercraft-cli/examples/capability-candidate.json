@@ -1,0 +1,20 @@
+{
+  "schema": "evercraft.operator-capability.v0",
+  "id": "example.math",
+  "name": "Example mathematics MCP",
+  "summary": "Synthetic local demonstration of a third-party capability manifest, not a live public service.",
+  "publisher": {
+    "name": "Example developer (fictional)",
+    "website": "https://example.org/"
+  },
+  "integration": {
+    "transport": "mcp-stdio",
+    "authentication": "none",
+    "side_effects": "read_only"
+  },
+  "evidence": {
+    "documentation_url": "https://example.org/docs",
+    "source_url": "https://example.org/source"
+  },
+  "commercial_model": "free"
+}

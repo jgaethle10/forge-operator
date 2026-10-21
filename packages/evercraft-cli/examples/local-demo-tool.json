@@ -1,0 +1,10 @@
+{
+  "id": "example.math",
+  "name": "Local example math capability",
+  "description": "Synthetic fixture only; no production Evercraft services, accounts or payments.",
+  "transport": "mcp-stdio",
+  "command": "node",
+  "args": [
+    "tests/fixtures/math-server.mjs"
+  ]
+}
