@@ -1,0 +1,42 @@
+name: Fallen Authentic Early Husker Football
+on:
+  pull_request:
+    paths:
+      - "systemia/media-studio/pilots/nebraska-source-first/early-nebraska-game-reel.mjs"
+      - "systemia/media-studio/pilots/nebraska-source-first/early-nebraska-game-reel.test.mjs"
+      - ".github/workflows/fallen-early-nebraska-reel.yml"
+permissions:
+  contents: read
+jobs:
+  earliest-football-film:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Install real native Fallen dependencies
+        run: npm install --no-audit --no-fund
+      - name: Check historical date, source and publication boundaries
+        run: node --import tsx --test systemia/media-studio/pilots/nebraska-source-first/early-nebraska-game-reel.test.mjs
+      - name: Ensure FFmpeg and FFprobe
+        run: |
+          if ! command -v ffmpeg >/dev/null 2>&1 || ! command -v ffprobe >/dev/null 2>&1; then
+            sudo apt-get update
+            sudo apt-get install -y ffmpeg
+          fi
+      - name: Acquire publicly downloadable History Nebraska film and verify true moving-video bytes
+        run: node --import tsx systemia/media-studio/pilots/nebraska-source-first/early-nebraska-game-reel.mjs "$RUNNER_TEMP/nebraska-early-real-football"
+      - name: Preserve actual football film, edits, source receipt and frames for review
+        uses: actions/upload-artifact@v4
+        with:
+          name: history-nebraska-genuine-1919ish-football-film-review-only
+          path: |
+            ${{ runner.temp }}/nebraska-early-real-football/Evercraft_Genuine_Early_Nebraska_Football_RC05.mp4
+            ${{ runner.temp }}/nebraska-early-real-football/original-frame-*.jpg
+            ${{ runner.temp }}/nebraska-early-real-football/timeline.json
+            ${{ runner.temp }}/nebraska-early-real-football/receipt.json
+            ${{ runner.temp }}/nebraska-early-real-football/SOURCE_CREDITS.txt
+          if-no-files-found: error
+          retention-days: 14
