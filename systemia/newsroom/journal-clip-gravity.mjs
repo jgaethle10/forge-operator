@@ -46,6 +46,8 @@ export function buildGravityClipFallbackRequest(release, {now = new Date()} = {}
     throw new Error('gravity_story_not_approved');
   }
   if (release?.sensitivity?.state !== 'public_unclassified') throw new Error('gravity_sensitivity_blocked');
+  const risk = clean(release.risk_class);
+  if (!['ordinary', 'public_safety'].includes(risk)) throw new Error('gravity_risk_class_required');
   if (release?.editorial_gate?.status !== 'accepted' || Number(release.editorial_gate.score) !== 10) {
     throw new Error('gravity_editorial_10_of_10_required');
   }
@@ -69,8 +71,20 @@ export function buildGravityClipFallbackRequest(release, {now = new Date()} = {}
   const signedAt = date(release.systemia_release.approved_at, 'systemia_approved_at');
   const expires = date(release.freshness_expires_at, 'freshness_expires_at');
   if (expires <= clock || signedAt > clock + 60000) throw new Error('gravity_release_stale_or_future');
-  if (date(approved.approved_at, 'distribution_approved_at') > clock + 60000) {
+  const distributionApprovedAt = date(approved.approved_at, 'distribution_approved_at');
+  if (distributionApprovedAt > clock + 60000) {
     throw new Error('gravity_distribution_approval_future');
+  }
+  if (risk === 'public_safety') {
+    if (release.qualified_public_safety_review?.approved !== true ||
+        !clean(release.qualified_public_safety_review.receipt_ref)) {
+      throw new Error('gravity_public_safety_human_review_required');
+    }
+    if (clock - distributionApprovedAt > 60 * 60 * 1000 ||
+        clock - signedAt > 2 * 60 * 60 * 1000 ||
+        expires - clock > 6 * 60 * 60 * 1000) {
+      throw new Error('gravity_public_safety_review_or_expiry_out_of_window');
+    }
   }
   const sources = Array.isArray(release.sources) ? release.sources : [];
   if (sources.length < 2) throw new Error('gravity_two_sources_required');
@@ -81,13 +95,24 @@ export function buildGravityClipFallbackRequest(release, {now = new Date()} = {}
     if (ids.has(clean(source.source_id))) throw new Error('gravity_source_id_duplicate');
     ids.add(clean(source.source_id));
     hosts.add(url.hostname.replace(/^www\./, ''));
-    if (date(source.verified_at, 'source_verified_at') > clock + 60000) {
+    const verifiedAt = date(source.verified_at, 'source_verified_at');
+    if (verifiedAt > clock + 60000) {
       throw new Error('gravity_source_verification_future');
+    }
+    if (risk === 'public_safety' && clock - verifiedAt > 2 * 60 * 60 * 1000) {
+      throw new Error('gravity_public_safety_source_stale');
     }
   }
   if (hosts.size < 2) throw new Error('gravity_independent_sources_required');
   if (!sources.some((source) => copy.includes(clean(source.url)))) {
     throw new Error('gravity_copy_must_link_to_a_verified_source');
+  }
+  // Every URL in the approved body must be an evidence source, not a third-party
+  // redirect or a broken web edition. No anonymous link preflight is skipped.
+  const evidenceUrls = new Set(sources.map((s) => clean(s.url)));
+  for (const match of copy.matchAll(/https?:\/\/[^\s<>"']+/gi)) {
+    const linked = match[0].replace(/[),.;!?]+$/, '');
+    if (!evidenceUrls.has(linked)) throw new Error('gravity_copy_contains_unverified_url');
   }
   if (!clean(release.claims_receipt_ref)) throw new Error('gravity_claims_receipt_required');
   return {
