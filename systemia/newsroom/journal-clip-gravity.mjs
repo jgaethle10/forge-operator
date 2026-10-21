@@ -9,12 +9,53 @@ import { pathToFileURL } from 'node:url';
 import { publishClipSocialPost } from '../clip/social-publisher-runtime.mjs';
 import { createFacebookPagePublisherAdapter } from '../clip/facebook-page-publisher.mjs';
 import { resolveFacebookPageCredential } from '../clip/facebook-page-credential-resolver.mjs';
+import { verifyAttestation, attestations } from '../lineage/signatures.mjs';
 
 const clean = (v) => String(v ?? '').trim();
 const sha256 = (v) => crypto.createHash('sha256').update(v).digest('hex');
 const RELEASE_SCHEMA = 'evercraft.journal.clip-gravity-release.v1';
 const RECEIPT_SCHEMA = 'evercraft.journal.clip-gravity-receipt.v1';
 const DESTINATION = 'facebook-page';
+const ATTESTED_SUBJECT_TYPE = 'journal-clip-gravity-release';
+
+// The release file is untrusted input, including its "approved" booleans.
+// Its complete unsigned contents must be covered by a trusted Ed25519 signature.
+export function gravityReleaseDigest(release) {
+  const unsigned = structuredClone(release || {});
+  delete unsigned.operator_attestation;
+  return sha256(attestations.canonical(unsigned));
+}
+
+export function verifyGravityReleaseAuthority(release, {
+  trustedPublicKey, now = new Date(),
+} = {}) {
+  if (!trustedPublicKey) throw new Error('gravity_trusted_operator_key_required');
+  const proof = release?.operator_attestation;
+  if (!proof) throw new Error('gravity_operator_attestation_required');
+  const verified = verifyAttestation(proof, {
+    publicKey: trustedPublicKey,
+    expectedSubject: {type: ATTESTED_SUBJECT_TYPE, id: clean(release.story_id)},
+  });
+  if (!verified.ok) throw new Error('gravity_operator_signature_invalid:' + verified.reason);
+  const payload = proof.payload;
+  if (payload.actor?.type !== 'human' || !clean(payload.actor?.id)) {
+    throw new Error('gravity_human_issuer_required');
+  }
+  const claims = payload.claims || {};
+  if (claims.release_sha256 !== gravityReleaseDigest(release) ||
+      claims.destination !== DESTINATION ||
+      claims.copy_sha256 !== sha256(clean(release.approved_copy)) ||
+      claims.authorization_ref !== clean(release.distribution_approval?.authorization_ref)) {
+    throw new Error('gravity_operator_attestation_scope_or_digest_mismatch');
+  }
+  const clock = now instanceof Date ? now.getTime() : date(now, 'clock');
+  const issued = date(payload.issued_at, 'operator_issued_at');
+  if (issued > clock + 60000 || clock - issued > 2 * 60 * 60 * 1000 ||
+      issued < date(release.distribution_approval?.approved_at, 'distribution_approved_at')) {
+    throw new Error('gravity_operator_attestation_expired_or_not_current');
+  }
+  return {key_id: verified.key_id, attestation_id: verified.attestation_id};
+}
 
 function date(value, field) {
   const result = new Date(value);
@@ -40,7 +81,7 @@ function validSource(input) {
  * The trusted release authority is the Systemia publishing process that creates
  * the release record. A receipt reference alone cannot authorize publication.
  */
-export function buildGravityClipFallbackRequest(release, {now = new Date()} = {}) {
+export function buildGravityClipFallbackRequest(release, {now = new Date(), trustedPublicKey} = {}) {
   if (release?.schema !== RELEASE_SCHEMA) throw new Error('gravity_release_schema_invalid');
   if (release?.status !== 'approved' || !clean(release.story_id) || !clean(release.title)) {
     throw new Error('gravity_story_not_approved');
@@ -115,6 +156,7 @@ export function buildGravityClipFallbackRequest(release, {now = new Date()} = {}
     if (!evidenceUrls.has(linked)) throw new Error('gravity_copy_contains_unverified_url');
   }
   if (!clean(release.claims_receipt_ref)) throw new Error('gravity_claims_receipt_required');
+  const signedAuthority = verifyGravityReleaseAuthority(release, {trustedPublicKey, now});
   return {
     schema: 'evercraft.clip.social-publish-request.v1',
     id: 'gravity:' + sha256(clean(release.story_id) + ':' + DESTINATION).slice(0,24),
@@ -132,6 +174,8 @@ export function buildGravityClipFallbackRequest(release, {now = new Date()} = {}
     },
     lineage: {
       story_id: clean(release.story_id),
+      operator_attestation_id: signedAuthority.attestation_id,
+      operator_key_id: signedAuthority.key_id,
       systemia_public_release: clean(release.systemia_release.receipt_ref),
       claims_receipt_ref: clean(release.claims_receipt_ref),
       source_refs: sources.map((s) => clean(s.source_id)),
@@ -145,13 +189,13 @@ export function buildGravityClipFallbackRequest(release, {now = new Date()} = {}
  * becomes a manual reconciliation hold, not an automatic duplicate retry.
  */
 export async function dispatchGravityClipFallback({
-  release, stateRoot, now = new Date(), fire = false,
+  release, stateRoot, now = new Date(), fire = false, trustedPublicKey,
   resolveCredential = () => resolveFacebookPageCredential(),
   adapterFactory = createFacebookPagePublisherAdapter,
   fetchImpl = globalThis.fetch,
   publisher = publishClipSocialPost,
 } = {}) {
-  const request = buildGravityClipFallbackRequest(release, {now});
+  const request = buildGravityClipFallbackRequest(release, {now, trustedPublicKey});
   if (!fire) return {
     schema: RECEIPT_SCHEMA, status: 'preflight_only', request_id: request.id,
     approved_story: request.lineage.story_id, destination: DESTINATION,
@@ -244,10 +288,13 @@ async function main() {
   if (!input) throw new Error('Usage: journal-clip-gravity.mjs <approved-release.json> [--fire]');
   const fire = process.argv.includes('--fire');
   const release = JSON.parse(fs.readFileSync(path.resolve(input), 'utf8'));
+  const keyPath=clean(process.env.EVERCRAFT_CLIP_GRAVITY_TRUSTED_PUBLIC_KEY_FILE);
+  if (!keyPath) throw new Error('gravity_trusted_operator_key_file_required');
+  const trustedPublicKey=fs.readFileSync(path.resolve(keyPath),'utf8');
   const stateRoot = process.env.EVERCRAFT_CLIP_GRAVITY_STATE_DIR ||
     path.join(os.homedir(), '.local/share/evercraft/journal-clip-gravity');
   const receipt = await dispatchGravityClipFallback({
-    release, fire, stateRoot,
+    release, fire, stateRoot, trustedPublicKey,
     resolveCredential: () => resolveFacebookPageCredential({
       credentialStateDir: process.env.EVERCRAFT_CREDENTIAL_STATE_DIR,
     }),
