@@ -99,13 +99,19 @@ export function assessBuyerHandoff(match, options, expectedId, expectedUrl) {
     Boolean(options?.checkout_suppression_reason) ||
     /^held(?:_|-)/.test(options?.human_buyer_options_state || '');
   const optionUrl = options?.human_offer_url;
-  const offer_link_ok = !held && typeof optionUrl === 'string' && optionUrl === expectedUrl;
+  // Explicit authorization belongs to the connection-options service for this
+  // exact product. A URL on its own, or a successful catalog match, is not proof.
+  const correctOption = options?.ok === true && options?.public_id === expectedId;
+  const authorized = correctOption && options?.buyer_checkout_available === true;
+  const offer_link_ok = !held && match_ok && authorized &&
+    typeof optionUrl === 'string' && optionUrl === expectedUrl;
   return {
     matched: match_ok ? expectedId : null,
     match_ok,
     human_offer_url: offer_link_ok ? expectedUrl : null,
     offer_link_ok,
     buyer_handoff_state: held ? 'held_payment_authority' :
+      !authorized ? 'unverified_payment_authority' :
       offer_link_ok ? 'verified_connection_option' : 'missing_or_mismatched_connection_option'
   };
 }
