@@ -22,7 +22,7 @@ test('four source-authored vessel actors become distinct actual 3D entities with
  assert.equal(world.metadata?.detailedVesselModelsVerified,false);
  assert.equal(world.metadata?.realHistoricalTracksUsed,false);
  assert.equal(world.metadata?.publicReleaseAllowed,false);
- assert.equal(world.entities.filter(e=>e.renderable).length>battleshipWorld().entities.filter(e=>e.renderable).length*2);
+ assert.ok(world.entities.filter(e=>e.renderable).length>battleshipWorld().entities.filter(e=>e.renderable).length*2);
 });
 test('formation staging is deterministic and uses a real 4s camera take',()=>{
  const a=fourVesselProxyWorld(),b=fourVesselProxyWorld();
