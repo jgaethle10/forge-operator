@@ -32,7 +32,9 @@ function requireDirection(value,label){
  * Character directions and cue placement are author-authored, not fabricated.
  * Missing identity, location, acting, audio, or dialogue mapping rejects the packet.
  */
-export function compileToonShotHandoff({bible,episode,shots,fps=24}={}){
+/** @param {any} input */
+export function compileToonShotHandoff(input={}){
+  const {bible,episode,shots,fps=24}=input;
   requireValid(bible?.schema==='evercraft.fallen.series-bible.v1','bible_schema');
   requireValid(episode?.schema==='evercraft.fallen.series-plan.v1','episode_schema');
   requireValid(episode.seriesId===bible.id,'series_mismatch');
