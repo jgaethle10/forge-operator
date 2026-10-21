@@ -883,6 +883,21 @@ fn fs_main(input: VertexOut) -> @location(0) vec4<f32> {
   var metallic = saturate(object.material.y);
   var roughness = clamp(object.material.z, 0.04, 1.0);
   let alphaCutoff = object.material.w;
+  if(object.shadowFlags.y > 0.5) {
+    // Source-authored directional water striations. A visual surface shader,
+    // not a measured ocean spectrum, opaque card or layered video texture.
+    let crest = smoothstep(0.24, 0.72,
+      (input.worldPosition.y + 0.60) / max(object.shadowFlags.w, 0.01));
+    let x = input.worldPosition.x;
+    let z = input.worldPosition.z;
+    let t = object.shadowFlags.z;
+    let streak = pow(0.5 + 0.5 * sin(x * 1.1 + z * 1.6 - t * 3.4 +
+      0.5 * sin(z * 0.21 + x * 0.17)), 6.0);
+    let fine = 0.5 + 0.5 * sin(x * 0.52 - z * 0.88 - t * 1.8);
+    let foam = crest * (0.24 + 0.76 * streak) * (0.72 + 0.28 * fine);
+    base.rgb = mix(base.rgb, vec3<f32>(0.18, 0.30, 0.34), clamp(foam * 0.57, 0.0, 0.62));
+    roughness = mix(roughness, 0.68, foam * 0.35);
+  }
 
   if (object.textureFlags.x > 0.5) {
     base *= textureSample(baseColorTexture, materialSampler, input.uv);
