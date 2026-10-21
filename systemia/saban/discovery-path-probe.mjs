@@ -3,7 +3,7 @@
 // Fixed read-only MCP methods only. No orders, payments, provider API spend or messages.
 import fs from 'node:fs';
 import path from 'node:path';
-import { classifyDiscoveryReceipt, safeNetworkFailure, safeProbeError } from './discovery-path-classify.mjs';
+import { classifyDiscoveryReceipt, safeNetworkFailure, safeProbeError, assessBuyerHandoff } from './discovery-path-classify.mjs';
 const origin=process.env.EVERCRAFT_PROBE_ORIGIN||'https://fabric.systemiacommandcenters.com';
 const out=process.env.EVERCRAFT_PROBE_OUT||'artifacts/saban/discovery-path';
 const intents=[
@@ -32,9 +32,9 @@ for(const [name,accept] of profiles){
    const matches=await rpc(accept,'tools/call',{name:'match_evercraft_capability',arguments:{intent,limit:1}});
    const match=matches.matches?.[0];
    const options=await rpc(accept,'tools/call',{name:'get_evercraft_connection_options',arguments:{public_id:expected}});
-   const url=options.human_offer_url||match?.human_offer_url||null;
    const expectedUrl='https://fabric.systemiacommandcenters.com/offers/'+slug;
-   row.intents.push({intent,expected,matched:match?.public_id||null,match_ok:match?.public_id===expected,human_offer_url:url,offer_link_ok:url===expectedUrl,start_url_state:match?.start_url_state||null});
+   const handoff=assessBuyerHandoff(match,options,expected,expectedUrl);
+   row.intents.push({intent,expected,...handoff,start_url_state:match?.start_url_state||null});
   }
  }catch(e){
   const failure=safeNetworkFailure(e);
