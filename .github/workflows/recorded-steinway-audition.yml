@@ -1,0 +1,59 @@
+name: Recorded Steinway Sound Audition
+
+on:
+  pull_request:
+    paths:
+      - 'systemia/media-studio/recorded-steinway-pilot.py'
+      - 'systemia/media-studio/test-recorded-steinway-pilot.py'
+      - '.github/workflows/recorded-steinway-audition.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  authentic-recorded-piano:
+    runs-on: ubuntu-latest
+    timeout-minutes: 16
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Install minimal audio dependencies
+        run: python -m pip install --disable-pip-version-check numpy soundfile
+      - name: Test composition and audio signal invariants before any network samples
+        run: python -m unittest discover -s systemia/media-studio -p 'test-recorded-steinway-pilot.py' -v
+      - name: Fetch actual recorded University of Iowa piano source and render
+        run: |
+          python systemia/media-studio/recorded-steinway-pilot.py \
+            --out /tmp/steinway-audition \
+            --source-cache /tmp/steinway-source-cache
+      - name: Verify real 24-bit output and source-backed provenance
+        run: |
+          python - <<'PY'
+          import hashlib,json,pathlib,subprocess
+          root=pathlib.Path('/tmp/steinway-audition')
+          wav=root/'Evercraft_Iowa_Recorded_Steinway_Pilot.wav'
+          receipt=json.loads((root/'recording-custody.json').read_text())
+          assert len(receipt['source_receipts'])>=10, 'not enough genuine recorded note sources'
+          assert receipt['source_audio_owned_by_evercraft'] is False
+          assert receipt['music_release_approved'] is False
+          assert receipt['human_listening_accepted'] is False
+          assert receipt['output_sha256']==hashlib.sha256(wav.read_bytes()).hexdigest()
+          probe=json.loads(subprocess.check_output(['ffprobe','-v','error','-select_streams','a:0',
+             '-show_entries','stream=codec_name,sample_rate,channels,bits_per_sample:format=duration',
+             '-of','json',str(wav)]))
+          audio=probe['streams'][0]
+          assert audio['codec_name']=='pcm_s24le' and audio['sample_rate']=='44100' and audio['channels']==2,probe
+          assert 28<float(probe['format']['duration'])<30
+          print('VERIFIED: acoustic source receipts, 24-bit WAV, no commercial rights claim')
+          PY
+          ffmpeg -hide_banner -nostats -i /tmp/steinway-audition/Evercraft_Iowa_Recorded_Steinway_Pilot.wav \
+            -af ebur128=peak=true -f null - 2>&1 | tail -24
+      - uses: actions/upload-artifact@v4
+        if: success()
+        with:
+          name: internal-recorded-steinway-piano-audition
+          path: /tmp/steinway-audition/
+          retention-days: 14
