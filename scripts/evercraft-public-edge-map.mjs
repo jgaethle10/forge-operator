@@ -572,6 +572,22 @@ async function main() {
 
   const upnp = await upnpMap().catch(e => ({ method: 'UPnP-IGD', success: false, error: e.message }));
   out.attempts.push(upnp);
+  // A router readback revealed an occupied, stale or unverified mapping.
+  // Never fall back to NAT-PMP/PCP writes for the same port after an
+  // ownership hold. Recovery requires an operator-confirmed surgical fix.
+  if(upnp.ownership_conflict===true){
+    out.error='upnp_ownership_preflight_hold';
+    out.ownership_conflict=true;
+    const report=assessRouterMappings(mappings,upnp.mappings||[]);
+    out.production_mapping_control_ok=report.production_mapping_control_ok;
+    out.diagnostic_mapping_control_ok=report.diagnostic_mapping_control_ok;
+    out.web_mapping_control_ok=report.web_mapping_control_ok;
+    out.dns_mapping_control_ok=report.dns_mapping_control_ok;
+    out.missing_production_mappings=report.missing_production_mappings;
+    console.log(JSON.stringify(out,null,2));
+    process.exitCode=1;
+    return;
+  }
   if (upnp.success) {
     out.ok = true;
     out.method = upnp.method;
