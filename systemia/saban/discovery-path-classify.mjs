@@ -58,6 +58,15 @@ export function classifyDiscoveryReceipt(receipt) {
     };
   }
   if (profiles.some(p => Array.isArray(p.intents) &&
+      p.intents.some(i => i.buyer_handoff_state === 'held_payment_authority'))) {
+    return {
+      code: 'buyer_handoff_held_by_payment_authority',
+      evidence: 'authoritative_connection_options_suppress_buyer_url',
+      next_action: 'obtain_fresh_provider_payment_receipt_and_revalidate_buyer_options',
+      limitation: 'catalog_sell_now_label_does_not_override_connection_options_hold'
+    };
+  }
+  if (profiles.some(p => Array.isArray(p.intents) &&
       p.intents.some(i => !i.match_ok || !i.offer_link_ok))) {
     return {
       code: 'capability_match_or_offer_route_mismatch',
