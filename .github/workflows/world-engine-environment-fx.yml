@@ -54,6 +54,8 @@ jobs:
           if(!fx||!m||fx.schema!=='evercraft.world-engine.cinematic-fx-rig.v1'||
              fx.emitterCount!==12||fx.particleBudget!==104||fx.originalGeometryAssets!==2||
              !fx.originalWebGpuMeshes||fx.realGpuParticleDrawsAtMiddle<35||
+             fx.realGpuTransparentParticlesAtMiddle<20||
+             fx.separateDepthTestedAlphaBlendPipeline!==true||
              fx.firstFrameDigest===fx.lastFrameDigest||
              fx.activeParticleSamples.some(n=>!(n>35))||
              fx.fluidDynamicsVerified!==false||fx.historicallyVerifiedWeather!==false||
