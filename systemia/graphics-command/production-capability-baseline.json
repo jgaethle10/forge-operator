@@ -99,6 +99,7 @@
     "systemia/media-studio/timeline-export.ts",
     "systemia/media-studio/timeline-ingest.ts",
     "systemia/media-studio/timeline.ts",
+    "systemia/media-studio/toon-cel-adapter.mjs",
     "systemia/media-studio/toon-cel-canary.py",
     "systemia/media-studio/toon-shot-handoff.mjs",
     "systemia/media-studio/types.ts",
