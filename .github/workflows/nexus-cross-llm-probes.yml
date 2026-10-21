@@ -2,13 +2,27 @@ name: Validate Nexus cross-LLM probes
 
 on:
   pull_request:
+    paths:
+      - 'nexus-probes/**'
+      - 'scripts/validate-nexus-cross-llm-probes.mjs'
+      - '.github/workflows/nexus-cross-llm-probes.yml'
+      - 'scripts/validate-workflow-noise.mjs'
   push:
     branches:
       - main
+    paths:
+      - 'nexus-probes/**'
+      - 'scripts/validate-nexus-cross-llm-probes.mjs'
+      - '.github/workflows/nexus-cross-llm-probes.yml'
+      - 'scripts/validate-workflow-noise.mjs'
   workflow_dispatch:
 
 permissions:
   contents: read
+
+concurrency:
+  group: nexus-probes-${{ github.ref }}
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
 
 jobs:
   validate:
