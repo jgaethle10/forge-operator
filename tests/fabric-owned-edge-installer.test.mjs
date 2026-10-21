@@ -128,8 +128,11 @@ test('Fabric self updater can reconstruct only the bounded router mapper from sa
   assert.match(updater,/SUDO_USER="\$RUN_USER" bash "\$ROUTER_MAP_INSTALLER"/);
   assert.match(routerMapInstaller,/WAN 80\/TCP  -> Chromebook 18080\/TCP/);
   assert.match(routerMapInstaller,/WAN 443\/TCP -> Chromebook 8443\/TCP/);
-  assert.match(routerMapInstaller,/WAN 53\/TCP  -> Chromebook 1053\/TCP/);
-  assert.match(routerMapInstaller,/WAN 53\/UDP  -> Chromebook 1053\/UDP/);
+  // Web is resident by default. DNS mappings exist but require an explicit
+  // separately authorized scope; do not make a web repair depend on DNS.
+  assert.match(routerMapInstaller,/SCOPE="web"/);
+  assert.match(routerMapInstaller,/DNS scope is separate and opt-in/);
+  assert.match(routerMapInstaller,/EVERCRAFT_ROUTER_SCOPE=\$SCOPE/);
   assert.match(routerMapper,/external: 80, internal: 18080/);
   assert.match(routerMapper,/external: 443, internal: 8443/);
   assert.match(routerMapper,/external: 53, internal: 1053, proto: 'TCP'/);
