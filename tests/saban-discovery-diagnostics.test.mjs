@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { classifyDiscoveryReceipt, safeNetworkFailure, safeProbeError } from '../systemia/saban/discovery-path-classify.mjs';
+import { classifyDiscoveryReceipt, safeNetworkFailure, safeProbeError, assessBuyerHandoff } from '../systemia/saban/discovery-path-classify.mjs';
 
 const goodProfile = () => ({
   initialized: true, errors: [],
@@ -91,4 +91,40 @@ test('network errors on every MCP client and public surface retain outage classi
     surfaces:[{path:'/health',status:0,error:'fetch_failed'},{path:'/offers',status:0,error:'request_timeout'}]
   });
   assert.equal(finding.code, 'external_origin_unreachable');
+});
+
+test('payment-held connection cannot be revived by a sell_now catalog link', () => {
+  const expectedUrl='https://fabric.systemiacommandcenters.com/offers/website-audit';
+  const match={public_id:'audit-center-website-audit-machine-v1',human_offer_url:expectedUrl,commercial_state:'sell_now'};
+  const options={human_offer_url:null,buyer_checkout_available:false,human_buyer_options_state:'held_provider_http_402_requires_new_payment_receipt',checkout_suppression_reason:'evercraft_public_commercial_mcp_http402_20261017'};
+  const result=assessBuyerHandoff(match,options,match.public_id,expectedUrl);
+  assert.equal(result.match_ok,true);
+  assert.equal(result.offer_link_ok,false);
+  assert.equal(result.human_offer_url,null);
+  assert.equal(result.buyer_handoff_state,'held_payment_authority');
+});
+test('connection-options link must be exact, independent of match catalog advert', () => {
+  const expectedUrl='https://fabric.systemiacommandcenters.com/offers/findmypart';
+  const match={public_id:'findmypart-paid-hunt-v1',human_offer_url:expectedUrl};
+  const missing=assessBuyerHandoff(match,{},match.public_id,expectedUrl);
+  assert.equal(missing.offer_link_ok,false);
+  const wrong=assessBuyerHandoff(match,{human_offer_url:'https://another.example/offers/findmypart'},match.public_id,expectedUrl);
+  assert.equal(wrong.offer_link_ok,false);
+  assert.equal(wrong.human_offer_url,null);
+});
+test('explicit hold defeats even an apparently valid options URL', () => {
+  const url='https://fabric.systemiacommandcenters.com/offers/ibmi-rescue';
+  const match={public_id:'ibmi-rescue-v1',human_offer_url:url};
+  const hold=assessBuyerHandoff(match,{human_offer_url:url,buyer_checkout_available:false},match.public_id,url);
+  assert.equal(hold.offer_link_ok,false);
+  assert.equal(hold.buyer_handoff_state,'held_payment_authority');
+});
+test('unheld exact connection-option URL passes without claiming payment', () => {
+  const url='https://fabric.systemiacommandcenters.com/offers/website-audit';
+  const id='audit-center-website-audit-machine-v1';
+  const result=assessBuyerHandoff({public_id:id}, {human_offer_url:url},id,url);
+  assert.equal(result.offer_link_ok,true);
+  assert.equal(result.human_offer_url,url);
+  assert.equal(result.buyer_handoff_state,'verified_connection_option');
+  assert.equal('payment_verified' in result,false);
 });
