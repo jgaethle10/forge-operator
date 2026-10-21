@@ -26,7 +26,7 @@ test("Raven adapter fails closed without an owned Nexus bridge", async () => {
   assert.equal(outcome.output.base44_required, false);
 });
 
-test("Systemia plan can execute through owned Raven bridge and persist a sanitized receipt", async () => {
+test("Systemia plan refuses owned Raven bridge before a durable dispatch checkpoint", async () => {
   const repoRoot = path.resolve(path.dirname(new URL(import.meta.url).pathname), "..", "..");
   const planned = planSystemiaMission({
     objective: "Challenge the Tieton Recovery pilot before outreach.",
@@ -38,57 +38,34 @@ test("Systemia plan can execute through owned Raven bridge and persist a sanitiz
   }, repoRoot);
 
   const receiptDir = fs.mkdtempSync(path.join(os.tmpdir(), "raven-receipts-"));
-  let called = 0;
-  const fakeFetch = async (url, options) => {
-    called += 1;
-    assert.equal(url, "https://nexus.example/v1/team-review");
-    assert.equal(options.headers.authorization, "Bearer test-secret");
-    const request = JSON.parse(options.body);
-    assert.equal(request.constraints.read_only, true);
-    assert.equal(request.constraints.no_external_messages, true);
-    assert.equal(request.constraints.no_publication, true);
-    assert.equal(request.requested_team, "commissioned");
-    return {
-      ok: true,
-      status: 200,
-      async json() {
-        return {
-          status: "completed",
-          provider: "nexus-test",
-          provider_receipt: "provider:receipt:123",
-          summary: "GO WITH CHANGES",
-          results: [
-            { agent: "Talon", verdict: "GO WITH CHANGES", concern: "Validate contribution margin before subscription launch." },
-            { agent: "Sentinel", verdict: "HOLD OFFER", concern: "Do not claim distress beyond public evidence." }
-          ]
-        };
-      }
-    };
-  };
+  let invoked = 0;
+  try {
+    const result = await executeSystemiaRavenPlan({
+      systemiaPlan: planned.plan,
+      bridgeUrl: "https://nexus.example",
+      bridgeToken: "test-secret",
+      receiptDir,
+      fetchImpl: async () => {
+        invoked += 1;
+        throw new Error("provider_must_not_be_called_before_durable_dispatch");
+      },
+      now: () => new Date("2026-10-06T04:00:00Z"),
+    });
 
-  const result = await executeSystemiaRavenPlan({
-    systemiaPlan: planned.plan,
-    bridgeUrl: "https://nexus.example",
-    bridgeToken: "test-secret",
-    receiptDir,
-    fetchImpl: fakeFetch,
-    now: () => new Date("2026-10-06T04:00:00Z"),
-  });
-
-  assert.equal(called, 1);
-  assert.equal(result.ok, true);
-  assert.equal(result.executed, true);
-  assert.equal(result.reason, "complete");
-  assert.equal(result.output.base44_required, false);
-  assert.equal(result.output.summary, "GO WITH CHANGES");
-  assert.equal(result.state.status, "complete");
-
-  const receipts = fs.readdirSync(receiptDir);
-  assert.equal(receipts.length, 1);
-  const receipt = JSON.parse(fs.readFileSync(path.join(receiptDir, receipts[0]), "utf8"));
-  assert.equal(receipt.base44_required, false);
-  assert.equal(receipt.external_side_effects_authorized, false);
-  assert.equal(JSON.stringify(receipt).includes("test-secret"), false);
+    assert.equal(invoked, 0, "an unpersisted Systemia plan must not call a provider");
+    assert.equal(result.ok, false);
+    assert.equal(result.executed, false);
+    assert.equal(result.reason, "durable_dispatch_required");
+    assert.equal(result.receipt.result, "held");
+    assert.equal(result.receipt.durable_checkpoint_persisted, false);
+    assert.equal(result.receipt.external_effect_verified, false);
+    assert.equal(result.receipt.capability_key, "raven.nexus.readonly-team-review.v1");
+    assert.equal(result.state.tasks.find((row) => row.work_key === "raven-command").status, "pending");
+    assert.deepEqual(fs.readdirSync(receiptDir), [], "no provider receipt should be written");
+    assert.equal(JSON.stringify(result).includes("test-secret"), false);
+  } finally {
+    fs.rmSync(receiptDir, { recursive: true, force: true });
+  }
 });
 
 test("owned Raven execution refuses consequential lanes before provider invocation", async () => {
