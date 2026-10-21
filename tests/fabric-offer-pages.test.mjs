@@ -41,6 +41,9 @@ test('human offer copy gives sell-now capabilities short memorable URLs',()=>{
 
   const page=renderOfferPage(websiteAudit);
   assert.match(page,/Your website is getting attention\. Why isn&#39;t it getting customers\?/);
+  assert.match(page,/Automated website scores are easy to find/);
+  assert.match(page,/Five prioritized fixes/);
+  assert.match(page,/Practical next steps/);
   assert.match(page,/What you are buying/);
   assert.match(page,/What you send us/);
   assert.match(page,/What you get back/);
