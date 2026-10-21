@@ -37,7 +37,7 @@ export function inspectNebraskaHistory(ledger){
   safe(ledger?.interpretationsToInvestigate).some(x=>!x.question?.trim()))
   errors.push('historical_causes_must_remain_investigative');
  if(ledger?.publicationAuthorityGranted!==false||
-  !/not.*substitute/i.test(ledger?.rightsPolicy||''))errors.push('history_research_grants_no_media_rights');
+  !/not.*substitute|never.*substitute/i.test(ledger?.rightsPolicy||''))errors.push('history_research_grants_no_media_rights');
  return [...new Set(errors)];
 }
 
