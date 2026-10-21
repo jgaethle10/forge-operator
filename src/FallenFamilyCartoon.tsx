@@ -341,9 +341,9 @@ export default function FallenFamilyCartoon() {
   }
 
   async function generatePilotFrame() {
-    const scene = episode?.story.scenes[selectedScene];
-    if (!scene) {
-      setError('Build the episode first.');
+    const scene=selectedToonScene;
+    if (!toonHandoff || !selectedToonShot || !scene || !shotBinding) {
+      setError('Validate the toon shot directions before making a keyframe.');
       return;
     }
     if (!providerConsent) {
@@ -362,6 +362,8 @@ export default function FallenFamilyCartoon() {
           seriesTitle,
           style,
           scene,
+          toonHandoff,
+          toonShotId:selectedToonShot.id,
           characterSheetDataUrl: characterSheet || null,
         }),
       });
@@ -370,6 +372,7 @@ export default function FallenFamilyCartoon() {
         throw new Error(payload.error || 'Pilot frame generation failed.');
       }
       setPilotFrame(payload.imageDataUrl);
+      setPilotFrameBinding(shotBinding);
       setPilotVideo('');
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Pilot frame generation failed.');
@@ -379,9 +382,10 @@ export default function FallenFamilyCartoon() {
   }
 
   async function generatePilotClip() {
-    const scene = episode?.story.scenes[selectedScene];
-    if (!scene || !pilotFrame) {
-      setError('Generate a pilot frame first.');
+    const scene=selectedToonScene;
+    if (!scene || !pilotFrame || !toonHandoff || !selectedToonShot ||
+      !shotBinding || pilotFrameBinding!==shotBinding) {
+      setError('Generate a new keyframe using these validated shot directions first.');
       return;
     }
     if (!providerConsent) {
@@ -399,6 +403,8 @@ export default function FallenFamilyCartoon() {
           consent: true,
           scene,
           style,
+          toonHandoff,
+          toonShotId:selectedToonShot.id,
           imageDataUrl: pilotFrame,
           aspectRatio: '16:9',
         }),
@@ -441,6 +447,8 @@ export default function FallenFamilyCartoon() {
         bible: episode.bible,
         story: episode.story,
         seriesPlan: episode.seriesPlan,
+        toonHandoff:toonHandoff||null,
+        toonShotDrafts:toonDrafts,
         generatedAssets: {
           characterSheetIncluded: Boolean(characterSheet),
           pilotFrameIncluded: Boolean(pilotFrame),
@@ -604,7 +612,7 @@ export default function FallenFamilyCartoon() {
                     type="button"
                     className={selectedScene === index ? 'fallen-scene active' : 'fallen-scene'}
                     key={scene.title + index}
-                    onClick={() => setSelectedScene(index)}
+                    onClick={() => {setSelectedScene(index);invalidateShotMedia();}}
                   >
                     <span>0{index + 1}</span>
                     <div>
@@ -637,7 +645,11 @@ export default function FallenFamilyCartoon() {
       {episode && (
         <section className="fallen-shell fallen-production">
           <div className="fallen-card">
-            <div className="fallen-section-title">3 · Make it visual</div>
+            <div className="fallen-section-title">4 · Make it visual</div>
+            <p className="fallen-toon-note">
+              Media generation uses the selected validated shot, not an unreviewed generic prompt.
+              Planned shots do not certify anatomy, identity, audio, or finished video.
+            </p>
             <div className="fallen-actions-row">
               <button
                 type="button"
@@ -650,7 +662,7 @@ export default function FallenFamilyCartoon() {
               <button
                 type="button"
                 className="fallen-secondary"
-                disabled={Boolean(loading)}
+                disabled={Boolean(loading) || !toonHandoff || !selectedToonShot}
                 onClick={generatePilotFrame}
               >
                 {loading === 'frame' ? 'Drawing frame…' : 'Generate selected scene'}
@@ -658,7 +670,7 @@ export default function FallenFamilyCartoon() {
               <button
                 type="button"
                 className="fallen-primary compact"
-                disabled={Boolean(loading) || !pilotFrame}
+                disabled={Boolean(loading) || !pilotFrame || pilotFrameBinding!==shotBinding}
                 onClick={generatePilotClip}
               >
                 {loading === 'video' ? 'Animating pilot…' : 'Animate pilot clip'}
