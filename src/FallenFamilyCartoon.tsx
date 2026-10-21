@@ -1,4 +1,4 @@
-import React, { ChangeEvent, FormEvent, useMemo, useState } from 'react';
+import React, { ChangeEvent, FormEvent, useMemo, useRef, useState } from 'react';
 import './fallen.css';
 import {
   assignDialogueToShot,buildToonShotDrafts,selectToonShot,
@@ -127,6 +127,7 @@ export default function FallenFamilyCartoon() {
   const [selectedToonIndex, setSelectedToonIndex] = useState(0);
   const [toonHandoff, setToonHandoff] = useState<ToonHandoffPacket|null>(null);
   const [pilotFrameBinding, setPilotFrameBinding] = useState('');
+  const mediaEpoch=useRef(0);
   const [providerConsent, setProviderConsent] = useState(false);
   const [loading, setLoading] = useState<string>('');
   const [error, setError] = useState('');
@@ -149,6 +150,7 @@ export default function FallenFamilyCartoon() {
     ? toonHandoff.digest + ':' + selectedToonShot.id : '';
 
   function invalidateShotMedia() {
+    mediaEpoch.current+=1;
     setPilotFrame('');
     setPilotVideo('');
     setPilotFrameBinding('');
@@ -353,6 +355,7 @@ export default function FallenFamilyCartoon() {
 
     setLoading('frame');
     setError('');
+    const requestEpoch=mediaEpoch.current;
     try {
       const response = await fetch('/api/fallen/family/scene-image', {
         method: 'POST',
@@ -371,6 +374,7 @@ export default function FallenFamilyCartoon() {
       if (!response.ok || !payload.success || !payload.imageDataUrl) {
         throw new Error(payload.error || 'Pilot frame generation failed.');
       }
+      if(requestEpoch!==mediaEpoch.current) return;
       setPilotFrame(payload.imageDataUrl);
       setPilotFrameBinding(shotBinding);
       setPilotVideo('');
@@ -395,6 +399,7 @@ export default function FallenFamilyCartoon() {
 
     setLoading('video');
     setError('');
+    const requestEpoch=mediaEpoch.current;
     try {
       const start = await fetch('/api/fallen/family/video/start', {
         method: 'POST',
@@ -424,6 +429,7 @@ export default function FallenFamilyCartoon() {
           throw new Error(payload.error || 'Pilot video generation failed.');
         }
         if (payload.status === 'ready' && payload.videoUrl) {
+          if(requestEpoch!==mediaEpoch.current) return;
           setPilotVideo(payload.videoUrl);
           return;
         }
@@ -612,7 +618,11 @@ export default function FallenFamilyCartoon() {
                     type="button"
                     className={selectedScene === index ? 'fallen-scene active' : 'fallen-scene'}
                     key={scene.title + index}
-                    onClick={() => {setSelectedScene(index);invalidateShotMedia();}}
+                    onClick={() => {
+                    const linked=toonDrafts.findIndex(shot=>shot.sceneIndex===index);
+                    if(linked>=0) chooseToonShot(linked);
+                    else {setSelectedScene(index);invalidateShotMedia();}
+                  }}
                   >
                     <span>0{index + 1}</span>
                     <div>
@@ -778,7 +788,7 @@ export default function FallenFamilyCartoon() {
                 disabled={Boolean(loading) || !toonHandoff || !selectedToonShot}
                 onClick={generatePilotFrame}
               >
-                {loading === 'frame' ? 'Drawing frame…' : 'Generate selected scene'}
+                {loading === 'frame' ? 'Drawing frame…' : 'Generate selected shot keyframe'}
               </button>
               <button
                 type="button"
@@ -796,7 +806,7 @@ export default function FallenFamilyCartoon() {
                 {characterSheet ? <img src={characterSheet} alt="Generated family cartoon character sheet" /> : <div className="fallen-media-placeholder">CAST</div>}
               </figure>
               <figure>
-                <figcaption>Selected scene</figcaption>
+                <figcaption>Selected directed shot</figcaption>
                 {pilotFrame ? <img src={pilotFrame} alt="Generated pilot scene" /> : <div className="fallen-media-placeholder">FRAME</div>}
               </figure>
               <figure>
