@@ -10,7 +10,7 @@ import {validateGeometryAsset,type GeometryAsset} from './webgpu.js';
 import {validateWorldDefinition,type WorldDefinition} from './engine.js';
 
 export const OCEAN_WAVE_GEOMETRY_ID='owned:evercraft-dynamic-ocean-grid';
-export const OCEAN_WAVE_AMPLITUDE=0.62;
+export const OCEAN_WAVE_AMPLITUDE=0.80;
 const WAVE_COMPONENTS=[
  {a:.43,kx:.21,kz:.12,omega:1.4},
  {a:.38,kx:-.14,kz:.24,omega:-.8},
