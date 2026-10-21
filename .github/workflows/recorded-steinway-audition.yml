@@ -65,3 +65,10 @@ jobs:
           name: internal-recorded-steinway-piano-audition
           path: /tmp/steinway-audition/
           retention-days: 14
+      - name: Archive verified raw acoustic takes for continued internal engineering
+        uses: actions/upload-artifact@v4
+        if: success()
+        with:
+          name: internal-iowa-piano-source-cache
+          path: /tmp/steinway-source-cache/*.aiff
+          retention-days: 3
