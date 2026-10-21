@@ -69,7 +69,7 @@ export function renderNebraskaHeritage(outDir:string){
   '[Events]','Format: Layer, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text',
   'Dialogue: 0,0:00:08.00,0:00:11.80,Archive,,0,0,0,,LINCOLN  /  MAY 1973',
   ''
- ].join('\\n'));
+ ].join('\n'));
  const skyFile=sky.master.path;
  const assets=[
   {id:'sky',path:skyFile,kind:'video' as const,digest:hash(skyFile,'sha256'),
@@ -98,6 +98,16 @@ export function renderNebraskaHeritage(outDir:string){
  });
  const movie=path.join(outDir,'Evercraft_Nebraska_1973_Archive_Bridge_RC04.mp4');
  const result=renderTimelineExport({project:timeline,outputPath:movie});
+ // A syntactically valid subtitle asset is not evidence that the archive date is visible.
+ // Inspect the left black margin at 9s for real bright, burned-in caption glyph pixels.
+ const captionProbe=spawnSync('ffmpeg',['-v','error','-ss','9','-i',movie,
+  '-vf','crop=490:115:15:930,format=gray','-frames:v','1','-f','rawvideo','pipe:1'],
+  {encoding:null,maxBuffer:1024*1024,timeout:60000});
+ const pixels=Buffer.isBuffer(captionProbe.stdout)?captionProbe.stdout:Buffer.from(captionProbe.stdout||'');
+ if(captionProbe.status!==0||pixels.length!==490*115)throw Error('heritage_caption_pixels_unavailable');
+ let ink=0;for(const brightness of pixels){if(brightness>160)ink++;}
+ if(ink<1000)throw Error('heritage_archive_date_not_visibly_burned_in:'+ink);
+
  if(result.videoCodec!=='h264'||result.audioCodec!=='aac'||Math.abs(result.durationSec-12)>.12)throw Error('heritage_master_format_invalid');
  run('ffmpeg',['-v','error','-xerror','-i',movie,'-map','0:v:0','-map','0:a:0','-f','null','-']);
  const stills=[];
