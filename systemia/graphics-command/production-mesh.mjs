@@ -156,7 +156,8 @@ export function assembleGraphicsProductionMesh({dir, campaign, plan, report, man
       featureCount:capabilityAudit.featureCount,sourceModuleCount:capabilityAudit.sourceModuleCount,
       productionProfiles:capabilityAudit.profiles.map(p=>({id:p.id,name:p.name,status:p.status,requiredFeatures:p.requirements,evidence:p.evidence,executionVerified:false})),
       toonAndCharacterCapabilities:capabilityAudit.toonAndCharacterCapabilities,
-      unadmittedCapabilities:capabilityAudit.features.filter(f=>f.commercialMeshState==='not_admitted_to_commercial_mesh').map(f=>f.id)},
+      unadmittedCapabilities:capabilityAudit.features.filter(f=>f.commercialMeshState==='not_admitted_to_commercial_mesh').map(f=>f.id),
+      externalSurfacesPendingVerification:capabilityAudit.externalSurfacesPendingVerification.map(f=>f.id)},
     departments:{
       familyToonStudio:{state:'source_capabilities_inventoried_only',requiredEvidence:'series_bible_identity_animated_rig_performance_facial_mouth_hand_continuity_and_final_visual_review'},
       cinematicPerformance:{state:'source_capabilities_inventoried_only',requiredEvidence:'performance_direction_identity_fingerprint_dialogue_sync_and_aesthetic_admission'},
