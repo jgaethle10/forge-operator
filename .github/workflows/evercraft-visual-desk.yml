@@ -169,13 +169,25 @@ jobs:
       - name: Render validated Series Mode fox shot into bound MP4 preview
         run: |
           node --import tsx systemia/media-studio/toon-cel-render.proof.mjs \
-            _toon_bound_canary /tmp/fallen-toon-cel-env/bin/python
+            _toon_bound_canary /tmp/fallen-toon-cel-env/bin/python reach
+          node --import tsx systemia/media-studio/toon-cel-render.proof.mjs \
+            _toon_bound_canary_observe /tmp/fallen-toon-cel-env/bin/python observe
           node --input-type=module - <<'NODE'
           import fs from 'node:fs';
           import assert from 'node:assert/strict';
           const r=JSON.parse(fs.readFileSync('_toon_bound_canary/toon-shot-binding-receipt.json','utf8'));
           assert.equal(r.state,'rendered_synthetic_preview_only');
           assert.equal(r.actualMovieBytesVerified,true);
+          assert.equal(r.actualAuthoredMotionApplied,true);
+          const b=JSON.parse(fs.readFileSync('_toon_bound_canary_observe/toon-shot-binding-receipt.json','utf8'));
+          const aFrames=JSON.parse(fs.readFileSync('_toon_bound_canary/render-receipt.json','utf8'));
+          const bFrames=JSON.parse(fs.readFileSync('_toon_bound_canary_observe/render-receipt.json','utf8'));
+          assert.equal(b.state,'rendered_synthetic_preview_only');
+          assert.equal(b.frameCount,r.frameCount);
+          assert.equal(b.shotId,r.shotId);
+          assert.notEqual(b.previewMotionDigest,r.previewMotionDigest,'authored performances must differ');
+          assert.notEqual(bFrames.sampleFrameSha256,aFrames.sampleFrameSha256,'actual rendered frame pixels must differ');
+          assert.notEqual(b.mediaSha256,r.mediaSha256,'encoded video should reflect acted motion');
           assert.equal(r.referenceMatched,false);
           assert.equal(r.dialogueSynced,false);
           assert.equal(r.publicationAuthority,false);
@@ -193,6 +205,11 @@ jobs:
             _toon_bound_canary/toon-cel-canary.mp4
             _toon_bound_canary/toon-shot-binding-receipt.json
             _toon_bound_canary/bound-shot-work-order.json
+            _toon_bound_canary/authored-motion.json
+            _toon_bound_canary_observe/toon-cel-canary.mp4
+            _toon_bound_canary_observe/toon-shot-binding-receipt.json
+            _toon_bound_canary_observe/bound-shot-work-order.json
+            _toon_bound_canary_observe/authored-motion.json
           if-no-files-found: error
           retention-days: 30
 
