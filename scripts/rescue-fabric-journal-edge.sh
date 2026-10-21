@@ -12,9 +12,9 @@ usage(){
 Usage:
   sudo bash rescue-fabric-journal-edge.sh [--repo-root /path/to/forge-operator]
 
-One-time bounded recovery for an owned Fabric checkout stuck behind stale generated
-public/journal files. It does not discard ordinary source changes, rewrite history,
-or touch credentials.
+One-time bounded recovery for an owned Fabric checkout with verified clean
+Journal source and working tree. Dirty or ignored publication evidence forces a
+hold without deletion. Does not rewrite history or touch credentials.
 
 If --repo-root is omitted, the script reads WorkingDirectory from
 evercraft-fabric.service.
@@ -63,16 +63,25 @@ echo "repo=$REPO_ROOT"
 echo "user=$RUN_USER"
 echo "before=$(as_user git -C "$REPO_ROOT" rev-parse HEAD)"
 
-# public/journal is generated output. Normalize it first, including ignored files
-# from the era before this mirror became tracked. No other path is discarded.
-as_user git -C "$REPO_ROOT" restore --staged --worktree -- public/journal 2>/dev/null || true
-as_user git -C "$REPO_ROOT" clean -fdx -- public/journal >/dev/null 2>&1 || true
-
+# Rescue must not discard the user's only copy of a Journal story or receipt.
+# Untracked, tracked-dirty and legacy ignored paths are all protected. Operator
+# reconciliation should archive and review evidence outside this automated lane.
 dirty="$(as_user git -C "$REPO_ROOT" status --porcelain --untracked-files=all)"
-blocking="$(printf '%s\n' "$dirty" | grep -vE '^\?\? artifacts/' || true)"
-if [[ -n "$blocking" ]]; then
-  echo "HOLD: real source changes remain after Journal normalization; refusing recovery." >&2
-  printf '%s\n' "$blocking" >&2
+journal_ignored="$(as_user git -C "$REPO_ROOT" ls-files --others --ignored --exclude-standard -- public/journal)"
+if [[ -n "$journal_ignored" ]]; then
+  echo "HOLD: ignored Journal publication evidence found. No files were deleted." >&2
+  exit 4
+fi
+DIRT_CLASSIFIER="$REPO_ROOT/scripts/classify-fabric-checkout-dirt.mjs"
+if [[ ! -f "$DIRT_CLASSIFIER" ]]; then
+  echo "HOLD: missing checkout-drift classifier; cannot safely recover." >&2
+  exit 4
+fi
+blocking="$(printf '%s\n' "$dirty" | as_user node "$DIRT_CLASSIFIER" --blocking-lines)"
+journal_dirty="$(printf '%s\n' "$dirty" | as_user node "$DIRT_CLASSIFIER" --journal-dirty)"
+if [[ -n "$blocking" || "$journal_dirty" == "true" ]]; then
+  echo "HOLD: source or Journal evidence is dirty; refusing recovery without any deletion." >&2
+  [[ -n "$blocking" ]] && printf '%s\n' "$blocking" >&2
   exit 4
 fi
 
@@ -137,7 +146,8 @@ cat > /var/lib/evercraft/fabric-update/journal-rescue.json <<EOF
   "release_ref":"$after",
   "canonical_origin":"$EXPECTED_ORIGIN",
   "source_changes_discarded":false,
-  "generated_journal_reconciled":true,
+  "generated_journal_reconciled":false,
+  "journal_clean_verified":true,
   "observed_at":"$observed_at"
 }
 EOF

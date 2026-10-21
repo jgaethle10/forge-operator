@@ -4,26 +4,29 @@ import test from 'node:test';
 
 const rescue=fs.readFileSync(new URL('../scripts/rescue-fabric-journal-edge.sh',import.meta.url),'utf8');
 
-test('Journal rescue is scoped to the authorized Forge repository',()=>{
+test('Journal rescue is scoped to authorized Forge repository',()=>{
   assert.match(rescue,/jgaethle10\/forge-operator/);
   assert.match(rescue,/remote get-url "\$REMOTE"/);
   assert.match(rescue,/refusing recovery because origin is not the authorized Forge repository/);
 });
 
-test('Journal rescue only discards generated public\/journal and never hard-resets source',()=>{
-  assert.match(rescue,/restore --staged --worktree -- public\/journal/);
-  assert.match(rescue,/clean -fdx -- public\/journal/);
+test('Journal rescue preserves tracked, untracked and ignored publication evidence',()=>{
+  assert.doesNotMatch(rescue,/\bgit -C "\$REPO_ROOT" (?:restore|clean)[^\n]*public\/journal/);
   assert.doesNotMatch(rescue,/git .*reset --hard/);
-  assert.doesNotMatch(rescue,/clean -fdx(?! -- public\/journal)/);
+  assert.match(rescue,/status --porcelain --untracked-files=all/);
+  assert.match(rescue,/ls-files --others --ignored --exclude-standard -- public\/journal/);
+  assert.match(rescue,/if \[\[ -n "\$journal_ignored" \]\]/);
+  assert.match(rescue,/if \[\[ -n "\$blocking" \|\| "\$journal_dirty" == "true" \]\]/);
+  assert.match(rescue,/No files were deleted/);
 });
 
-test('Journal rescue refuses real source changes after generated output normalization',()=>{
-  const normalize=rescue.indexOf('restore --staged --worktree -- public/journal');
-  const status=rescue.indexOf('status --porcelain --untracked-files=all');
-  const hold=rescue.indexOf('real source changes remain after Journal normalization');
-  assert.ok(normalize>=0&&status>=0&&hold>=0);
-  assert.ok(normalize<status);
-  assert.ok(status<hold);
+test('Journal rescue gates mutation behind evidence and source checks',()=>{
+  const journalScan=rescue.indexOf('ls-files --others --ignored');
+  const journalHold=rescue.indexOf('HOLD: ignored Journal publication evidence');
+  const sourceHold=rescue.indexOf('HOLD: source or Journal evidence is dirty');
+  const remoteFetch=rescue.indexOf('fetch --prune "$REMOTE" "$BRANCH"');
+  assert.ok(journalScan>=0&&journalHold>journalScan);
+  assert.ok(sourceHold>journalHold&&remoteFetch>sourceHold);
 });
 
 test('Journal rescue permits only fast-forward recovery and verifies the local Journal afterwards',()=>{
@@ -36,10 +39,11 @@ test('Journal rescue permits only fast-forward recovery and verifies the local J
   assert.match(rescue,/https:\/\/fabric\.systemiacommandcenters\.com\/journal/);
 });
 
-test('Journal rescue leaves an auditable receipt and reinstalls the hardened updater',()=>{
+test('Journal rescue leaves a truthful receipt and reinstalls the hardened updater',()=>{
   assert.match(rescue,/install-fabric-self-update\.sh/);
   assert.match(rescue,/--cadence 5min/);
   assert.match(rescue,/evercraft\.fabric-journal-rescue\.v1/);
   assert.match(rescue,/source_changes_discarded":false/);
-  assert.match(rescue,/generated_journal_reconciled":true/);
+  assert.match(rescue,/generated_journal_reconciled":false/);
+  assert.match(rescue,/journal_clean_verified":true/);
 });
