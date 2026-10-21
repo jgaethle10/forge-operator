@@ -161,12 +161,29 @@ async function extractPage(page, maxTextChars) {
       .map((node) => ({text:clean(node.textContent).slice(0,200), href:String(node.href || '')}))
       .filter((row) => /^https?:\/\//i.test(row.href));
     const meta = document.querySelector('meta[name="description"]')?.getAttribute('content') || '';
+    // Public anonymous markup only. Never return input values, typed text, cookies, or hidden tokens.
+    // This is field discovery for a later human-approved session, NOT form submission.
+    const forms = [...document.querySelectorAll('form')].slice(0,12).map(form => ({
+      method: String(form.getAttribute('method') || 'get').toUpperCase(),
+      action_origin: (() => {
+        try { return new URL(form.getAttribute('action') || document.location.href, document.location.href).origin; }
+        catch { return null; }
+      })(),
+      fields:[...form.querySelectorAll('input,select,textarea')].slice(0,50).map(control => ({
+        tag:control.tagName.toLowerCase(),
+        type:String(control.getAttribute('type') || '').toLowerCase().slice(0,30) || null,
+        name:String(control.getAttribute('name') || '').slice(0,100) || null,
+        required:control.hasAttribute('required'),
+        // Never expose current value, placeholder, data attributes, aria-label or element HTML.
+      }))
+    }));
     return {
       title:clean(document.title).slice(0,500),
       meta_description:clean(meta).slice(0,1000),
       text,
       headings,
-      links
+      links,
+      forms
     };
   }, {limit:maxTextChars, headingSelector:HEADING_SELECTOR, maxHeadings:MAX_HEADINGS});
 }
