@@ -1,5 +1,9 @@
 import React, { ChangeEvent, FormEvent, useMemo, useState } from 'react';
 import './fallen.css';
+import {
+  assignDialogueToShot,buildToonShotDrafts,selectToonShot,
+  type ToonShotDraft,
+} from './fallen-toon-shot-drafts';
 
 type CharacterDraft = {
   id: string;
@@ -40,6 +44,15 @@ type EpisodeResponse = {
     };
   };
   error?: string;
+};
+
+type ToonHandoffPacket = {
+  schema:string;
+  digest:string;
+  state:string;
+  deliveryReady:boolean;
+  frameCount:number;
+  shots:Array<{id:string;sceneIndex?:number}>;
 };
 
 const STYLE_OPTIONS = [
@@ -110,6 +123,10 @@ export default function FallenFamilyCartoon() {
   const [characterSheet, setCharacterSheet] = useState<string>('');
   const [pilotFrame, setPilotFrame] = useState<string>('');
   const [pilotVideo, setPilotVideo] = useState<string>('');
+  const [toonDrafts, setToonDrafts] = useState<ToonShotDraft[]>([]);
+  const [selectedToonIndex, setSelectedToonIndex] = useState(0);
+  const [toonHandoff, setToonHandoff] = useState<ToonHandoffPacket|null>(null);
+  const [pilotFrameBinding, setPilotFrameBinding] = useState('');
   const [providerConsent, setProviderConsent] = useState(false);
   const [loading, setLoading] = useState<string>('');
   const [error, setError] = useState('');
@@ -125,7 +142,49 @@ export default function FallenFamilyCartoon() {
     [characters],
   );
 
+  const selectedToonShot = selectToonShot(toonDrafts,selectedToonIndex);
+  const selectedToonScene = selectedToonShot && episode
+    ? episode.story.scenes[selectedToonShot.sceneIndex] : null;
+  const shotBinding = toonHandoff && selectedToonShot
+    ? toonHandoff.digest + ':' + selectedToonShot.id : '';
+
+  function invalidateShotMedia() {
+    setPilotFrame('');
+    setPilotVideo('');
+    setPilotFrameBinding('');
+  }
+  function invalidateToonPlan() {
+    setToonHandoff(null);
+    invalidateShotMedia();
+  }
+  function changeToonDraft(index:number,patch:Partial<ToonShotDraft>) {
+    setToonDrafts(current=>current.map((shot,i)=>i===index?{...shot,...patch}:shot));
+    invalidateToonPlan();
+  }
+  function changeToonActing(entityId:string,field:keyof ToonShotDraft['characters'][number]['acting'],value:string) {
+    if (!selectedToonShot) return;
+    changeToonDraft(selectedToonIndex,{
+      characters:selectedToonShot.characters.map(actor=>actor.entityId===entityId
+        ? {...actor,acting:{...actor.acting,[field]:value}}
+        : actor),
+    });
+  }
+  function chooseToonShot(index:number) {
+    setSelectedToonIndex(index);
+    invalidateShotMedia();
+    const draft=selectToonShot(toonDrafts,index);
+    if(draft) setSelectedScene(draft.sceneIndex);
+  }
+  function resetSeriesPlan() {
+    setEpisode(null);
+    setToonDrafts([]);
+    setToonHandoff(null);
+    invalidateShotMedia();
+    setCharacterSheet('');
+  }
+
   function updateCharacter(index: number, patch: Partial<CharacterDraft>) {
+    if ('name' in patch || 'role' in patch || 'description' in patch) resetSeriesPlan();
     setCharacters((current) =>
       current.map((character, characterIndex) =>
         characterIndex === index ? { ...character, ...patch } : character,
@@ -134,6 +193,7 @@ export default function FallenFamilyCartoon() {
   }
 
   function addCharacter() {
+    resetSeriesPlan();
     setCharacters((current) => [
       ...current,
       {
@@ -146,6 +206,7 @@ export default function FallenFamilyCartoon() {
   }
 
   function removeCharacter(index: number) {
+    resetSeriesPlan();
     setCharacters((current) => current.filter((_, characterIndex) => characterIndex !== index));
   }
 
@@ -156,6 +217,7 @@ export default function FallenFamilyCartoon() {
     try {
       const photoDataUrl = await resizeImage(file);
       updateCharacter(index, { photoName: file.name, photoDataUrl });
+      invalidateShotMedia();
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Could not prepare that photo.');
     }
@@ -164,8 +226,7 @@ export default function FallenFamilyCartoon() {
   async function buildEpisode(event: FormEvent) {
     event.preventDefault();
     setError('');
-    setPilotFrame('');
-    setPilotVideo('');
+    resetSeriesPlan();
 
     if (!activeCharacters.length) {
       setError('Add at least one named character.');
@@ -195,6 +256,8 @@ export default function FallenFamilyCartoon() {
         throw new Error(payload.error || 'Fallen could not build the episode.');
       }
       setEpisode(payload.data);
+      setToonDrafts(buildToonShotDrafts(payload.data));
+      setSelectedToonIndex(0);
       setSelectedScene(0);
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Fallen could not build the episode.');
@@ -238,9 +301,41 @@ export default function FallenFamilyCartoon() {
         throw new Error(payload.error || 'Character sheet generation failed.');
       }
       setCharacterSheet(payload.imageDataUrl);
+      invalidateShotMedia();
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Character sheet generation failed.');
     } finally {
+      setLoading('');
+    }
+  }
+
+  async function validateToonDirections() {
+    if (!episode || !toonDrafts.length) {
+      setError('Build an episode with video work orders first.');
+      return;
+    }
+    setLoading('toon');
+    setError('');
+    invalidateToonPlan();
+    try {
+      const response=await fetch('/api/fallen/family/toon-handoff',{
+        method:'POST',headers:{'Content-Type':'application/json'},
+        body:JSON.stringify({
+          bible:episode.bible,seriesPlan:episode.seriesPlan,
+          shots:toonDrafts,fps:24,
+        }),
+      });
+      const payload=await response.json();
+      const packet=payload?.data?.handoff as ToonHandoffPacket|undefined;
+      if(!response.ok || !payload.success || !packet ||
+        packet.deliveryReady!==false || packet.shots.length!==toonDrafts.length ||
+        packet.state!=='preproduction_work_orders_only') {
+        throw new Error(payload.error||'Shot directions could not be validated.');
+      }
+      setToonHandoff(packet);
+    }catch(err){
+      setError(err instanceof Error?err.message:'Shot direction validation failed.');
+    }finally{
       setLoading('');
     }
   }
