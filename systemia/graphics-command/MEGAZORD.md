@@ -150,3 +150,36 @@ Remaining work is *execution integration*, not more contract documents:
 2. Matched voice/viseme timeline and original-score output from owned audio.
 3. Visual observer rejection and master QA over a playable produced film.
 4. Explicit delivery/Clip authorization only after all evidence is admitted.
+
+
+## First sound-reactive character mouth experiment
+
+The original-fox renderer additionally supports an **explicit, offline scratch-dialogue
+mode**. Its end-to-end proof uses a real Series Mode dialogue cue with the fixed
+experimental line "Hello, little light." and its locked *declared* speaker.
+
+For this proof only, an available local eSpeak/eSpeak-NG binary generates the
+experimental synthetic audio (not Voice Foundry and not the locked character
+voice). FFmpeg resamples it to a shared 32 kHz PCM clock. Python measures the
+actual speech RMS during each frame interval and opens/closes the vector fox's
+mouth from those measured samples. The script mixes the spoken audio with its
+original instrumental bed, then encodes a playable H.264/AAC MP4.
+
+GitHub Actions exercises the no-dialogue original-fox cel render, distinct
+authored reach/observe acting profiles, and the real Series Mode dialogue packet
+with a single approved scratch line. It compares an active and silent mouth
+crop in the resulting PNG frames and retains the WAV/MP4, measured mouth
+timeline, and preview receipts.
+
+**Important evidence boundary:** RMS envelope matching proves basic
+audio-reactive mouth movement, not alignment of individual phonemes or visemes.
+The test voice is *not* an identity/voice-profile match and has not been
+auditioned for naturalness or approved for a commercial. The system continues
+to report phonemeTimingVerified:false, voiceProfileMatched:false,
+dialogueSynced:false, masterQcPassed:false, and publicationAuthority:false.
+The speaker, source art, and sound are a fictional canary, never family
+identity. Other spoken text is rejected by this scratch-only renderer.
+
+The next advancement requires verified word/phoneme timing from an approved
+voice generator, mouth shapes for actual phonetic units rather than volume
+alone, audiovisual alignment testing, and an identity-aware character rig.
