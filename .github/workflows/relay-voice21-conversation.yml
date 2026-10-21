@@ -1,0 +1,53 @@
+name: Relay RC21 Conversational Native Bella Auditions (Private)
+on:
+  push:
+    branches: [feat/relay-voice05-film-audition-20261020]
+    paths:
+      - "systemia/media-studio/relay-voice21-native-study.py"
+      - ".github/workflows/relay-voice21-conversation.yml"
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  native-conversation:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - name: Check identical spoken words and performance intentions
+        run: python systemia/media-studio/relay-voice21-native-study.py --verify-only
+      - name: Install original native Kokoro production runtime
+        run: |
+          sudo apt-get update -qq
+          sudo apt-get install -y -qq ffmpeg espeak-ng libsndfile1
+          python -m pip install --disable-pip-version-check 'kokoro==0.9.4' 'soundfile>=0.12,<1.0'
+      - name: Generate fourteen native Bella auditions for private listening
+        env:
+          HF_HUB_DISABLE_TELEMETRY: "1"
+        run: |
+          python systemia/media-studio/relay-voice21-native-study.py private-relay-voice21
+          python - <<'PY'
+          from pathlib import Path
+          import hashlib,json
+          p=Path('private-relay-voice21')
+          report=json.loads((p/'evidence.json').read_text())
+          assert report['voiceId']=='af_bella'
+          assert report['phonemeOverrides'] is False
+          assert report['timbreBlends'] is False
+          assert report['pitchPostProcessing'] is False
+          assert len(report['takes'])==14
+          for t in report['takes']:
+              f=p/t['filename']
+              assert hashlib.sha256(f.read_bytes()).hexdigest()==t['sha256']
+              assert f.read_bytes()[:4]==b'RIFF'
+          print('14 independently validated native Bella WAV files')
+          PY
+      - uses: actions/upload-artifact@v4
+        with:
+          name: relay-voice21-native-conversation-private
+          path: private-relay-voice21/
+          retention-days: 7
+          if-no-files-found: error
