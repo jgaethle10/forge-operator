@@ -148,6 +148,8 @@ jobs:
           set -euo pipefail
           python3 -m venv /tmp/fallen-toon-cel-env
           /tmp/fallen-toon-cel-env/bin/pip install --disable-pip-version-check CairoSVG==2.7.1
+          sudo apt-get update -qq
+          sudo apt-get install -y -qq ffmpeg
           ffmpeg -version | head -n 1
           /tmp/fallen-toon-cel-env/bin/python systemia/media-studio/toon-cel-canary.py \
             --out _toon_cel_canary --seconds 1 --fps 24 --width 480 --height 270
