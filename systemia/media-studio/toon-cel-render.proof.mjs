@@ -1,6 +1,7 @@
 #!/usr/bin/env node
 /** End-to-end ORIGINAL-FOX CANARY ONLY: Fallen Series Mode -> shot packet -> FFmpeg MP4. */
 import assert from 'node:assert/strict';
+import crypto from 'node:crypto';
 import fs from 'node:fs';
 import path from 'node:path';
 import {compileSeriesEpisode} from './series.ts';
@@ -9,6 +10,8 @@ import {renderToonCelPreview} from './toon-cel-adapter.mjs';
 
 const output=process.argv[2]||'_toon_shot_preview';
 const python=process.argv[3]||'python3';
+const variant=process.argv[4]||'reach';
+assert.ok(['reach','observe'].includes(variant),'unknown original-fox acting variant');
 const bible={
   schema:'evercraft.fallen.series-bible.v1',
   id:'original-lantern-fox',
@@ -45,6 +48,12 @@ const shots=needs.map((need,i)=>({
     hands:'Preserve the single fox paw, claws and grip continuity',
   }}],
   dialogueCueIds:[],
+  previewMotion:variant==='reach'
+    ? {specimenProfile:'original_fox_v1',reach:1,blinkAtSec:.75,
+       gazeX:1,lanternLift:1,tailEnergy:.8}
+    : {specimenProfile:'original_fox_v1',reach:0,blinkAtSec:1.6,
+       gazeX:-1,lanternLift:0,tailEnergy:0},
+
 }));
 const packet=compileToonShotHandoff({bible,episode,shots,fps:24});
 const renderable=packet.shots.filter(s=>s.frameCount/s.fps<=8&&s.frameCount/s.fps>=.5);
@@ -59,8 +68,10 @@ assert.equal(result.packetDigest,packet.digest);
 assert.equal(result.shotId,target.id);
 assert.equal(result.referenceMatched,false);
 assert.equal(result.filmMasterReady,false);
+assert.equal(result.actualAuthoredMotionApplied,true);
+assert.equal(result.previewMotionDigest,crypto.createHash('sha256').update(JSON.stringify(target.previewMotion)).digest('hex'));
 fs.writeFileSync(path.join(path.resolve(output),'bound-shot-work-order.json'),
   JSON.stringify({schema:'evercraft.fallen.toon-original-canary-work-order.v1',
     shotId:target.id,packetDigest:packet.digest,
-    shot:target,filmMasterReady:false,publicationAuthority:false},null,2)+'\n');
+    shot:target,variant,filmMasterReady:false,publicationAuthority:false},null,2)+'\n');
 process.stdout.write(JSON.stringify(result,null,2)+'\n');
