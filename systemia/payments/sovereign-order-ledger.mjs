@@ -143,3 +143,63 @@ export function readSovereignOrder(orderId,{dir=DEFAULT_ORDER_DIR}={}){
   if(order.order_id!==orderId)throw Error('order_record_identity_mismatch');
   return order;
 }
+
+
+/**
+ * Serialize unpaid order state changes across independent Saban OS processes.
+ * An exclusive lock prevents two concurrent writers from selecting different
+ * rails or recording competing buyer claims. Missing/stale locks fail closed.
+ * No operation can mark an order paid, settled, entitled or fulfilled.
+ */
+export function transitionSovereignOrder(orderId,{
+  expectedVersion,action,rail,merchantRailConfigured=false,
+  buyerConfirmed=false,claimRef=null,
+}={}, {dir=DEFAULT_ORDER_DIR}={}){
+  if(!ID.test(String(orderId||'')))throw Error('order_id_invalid');
+  if(!Number.isSafeInteger(expectedVersion)||expectedVersion<1){
+    throw Error('expected_version_required');
+  }
+  if(!['select_external_rail','note_unverified_claim'].includes(action)){
+    throw Error('unsupported_or_money_mutating_action');
+  }
+  const lock=path.join(dir,orderId+'.lock');
+  let fd;
+  const flags=fs.constants.O_WRONLY|fs.constants.O_CREAT|fs.constants.O_EXCL|
+    (fs.constants.O_NOFOLLOW||0);
+  try{
+    fd=fs.openSync(lock,flags,0o600);
+    const original=readSovereignOrder(orderId,{dir});
+    if(original.version!==expectedVersion)throw Error('order_version_conflict');
+    const next=action==='select_external_rail'
+      ?prepareExternalPaymentInstructions(original,{rail,merchantRailConfigured,buyerConfirmed})
+      :noteCustomerPaymentClaim(original,{claimRef});
+    assertOrder(next);
+    if(next.version!==original.version+1)throw Error('order_transition_version_invalid');
+    const file=path.join(dir,orderId+'.json');
+    const temp=path.join(dir,orderId+'.next-'+randomUUID()+'.tmp');
+    let nextFd;
+    try{
+      nextFd=fs.openSync(temp,flags,0o600);
+      fs.writeFileSync(nextFd,JSON.stringify(next,null,2)+'\n','utf8');
+      fs.fsyncSync(nextFd);
+      fs.closeSync(nextFd);nextFd=undefined;
+      fs.renameSync(temp,file);
+      const dirFd=fs.openSync(dir,fs.constants.O_RDONLY);
+      try{fs.fsyncSync(dirFd);}finally{fs.closeSync(dirFd);}
+    }finally{
+      if(nextFd!==undefined)fs.closeSync(nextFd);
+      if(fs.existsSync(temp))fs.unlinkSync(temp);
+    }
+    return {
+      changed:true,order_id:orderId,version:next.version,
+      rail:next.rail,collection_state:next.collection_state,
+      payment_state:'unpaid',fulfillment_state:'held',
+      receipt_verified:false
+    };
+  }finally{
+    if(fd!==undefined){
+      fs.closeSync(fd);
+      fs.unlinkSync(lock);
+    }
+  }
+}
