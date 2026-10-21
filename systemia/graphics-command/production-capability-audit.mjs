@@ -100,6 +100,18 @@ const PRODUCTION_PROFILES=[
    evidence:['verified_artifact_digest','ffprobe_video_and_audio_decode','real_master_qc','rights_and_provenance','destination_specific_acceptance','authorized_publish_receipts']}
 ];
 
+
+const EXTERNAL_SURFACES=[
+ ['owned_voice_foundry','Local or separately housed expressive voice generation including Kokoro and custom voices','Runtime version, actual voice sample, rights, speaker identity, pronunciation, emotional performance'],
+ ['kaidance_music_studio','Music and sound production not represented by the scoped media-studio modules alone','Live composition engine, instruments, original-score render, mixing and mastering evidence'],
+ ['little_red_studio','Story and brand direction system outside this source audit','Accessible endpoint, shot brief handoff and approved brand assets'],
+ ['forensiscope_media_scout','External media evidence and documentary asset acquisition','Source receipt, footage access, factual/source rights and licensing'],
+ ['saban_worker_fleet','Local and remote compute outside the GitHub checkout','Worker reachability, GPU/CPU placement, task completion and signed production receipts'],
+ ['provider_credentials_and_entitlements','Paid or remote visual and audio model adapters','Actual credential connectivity, budget authorization, model/version, commercial-rights terms'],
+ ['uncommitted_family_assets','Family photos, voices, character references and unfinished animations','Owner consent, age-appropriate access, asset hashes, identity and privacy gates'],
+ ['public_edge_runtime','Publicly reachable Visual Desk and media-delivery infrastructure','HTTPS canary, correct deployed version, final media MIME and playback verification'],
+];
+
 const DIRECT_HANDOFF=new Set(['graphics_command','graphics_production_mesh','commercial_renderer','creative_council','owned_visual_desk_transporter','clip_media_intake']);
 
 const hashBytes=bytes=>crypto.createHash('sha256').update(bytes).digest('hex');
@@ -174,6 +186,7 @@ export function auditGraphicsCapabilities({root=REPO_ROOT, baseline}={}){
     featureWithoutDirectTest:features.filter(f=>!f.sourceAndTestsPresent).map(f=>f.id),
     toonAndCharacterCapabilities:features.filter(f=>f.lane==='toon').map(f=>f.id),
     missingProfileRequirements:profiles.flatMap(profile=>profile.missingRequiredFeatures.map(id=>profile.id+':'+id)),
+    externalSurfacesPendingVerification:EXTERNAL_SURFACES.map(([id,scope,evidenceRequired])=>({id,scope,evidenceRequired,status:'needs_live_inventory'})),
     boundaries:{
       testsPresentIsNotTestsPassed:true,
       sourcePresentIsNotRuntimeExecuted:true,
