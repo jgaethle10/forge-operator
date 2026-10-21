@@ -45,13 +45,18 @@ def render(silent, out):
   wav=out/('take-%02d.wav'%(i+1));sf.write(wav,np.concatenate(parts),24000,subtype='PCM_16')
   with wave.open(str(wav),'rb') as f:duration=f.getnframes()/f.getframerate()
   if not 1.0<duration<7.9:raise RuntimeError('invalid_narration_duration_'+str(i)+'_'+str(duration))
-  if start+duration>30.15:raise RuntimeError('narration_exceeds_timeline')
-  if i+1<len(CUES) and start+duration>CUES[i+1][1]+.15:raise RuntimeError('narration_overlap')
-  takes.append({'voice':voice,'cueSec':start,'script':words,'durationSec':round(duration,4),'wav':wav.name,'sha256':digest(wav),'castApproval':False})
+  # Neural durations are observed, not assumed. Keep the original authored cue
+  # target but slide an overlong take after the previous one, never overlap voices.
+  actual_start=max(start, takes[-1]['cueEndSec']+.18 if takes else 0)
+  actual_end=actual_start+duration
+  print('MEASURED_VOICE_CUE',i,voice,'duration',round(duration,3),'start',round(actual_start,3),'end',round(actual_end,3),flush=True)
+  if actual_end>29.85:raise RuntimeError('narration_does_not_fit_30s_review')
+  takes.append({'voice':voice,'authoredStartSec':start,'cueSec':round(actual_start,4),'cueEndSec':round(actual_end,4),
+   'script':words,'durationSec':round(duration,4),'wav':wav.name,'sha256':digest(wav),'castApproval':False})
  # Combine clean dry speech with NO MUSIC, preserving preview approval gates.
  graph=[]
- for i,(_,start,_) in enumerate(CUES):
-  ms=int(round(start*1000))
+ for i,item in enumerate(takes):
+  ms=int(round(item['cueSec']*1000))
   graph.append('[%d:a]aresample=48000,adelay=%d|%d,aformat=channel_layouts=stereo[s%d];'%(i+1,ms,ms,i))
  graph.append(''.join('[s%d]'%i for i in range(len(CUES)))+'amix=inputs=%d:duration=longest:normalize=0,atrim=0:30,apad=whole_dur=30,loudnorm=I=-16:TP=-1.5:LRA=11[mix]'%len(CUES))
  film=out/'denmark-strait-world-engine-voice-review.mp4'
