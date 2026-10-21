@@ -57,8 +57,19 @@ export function renderNebraskaHeritage(outDir:string){
  run('ffmpeg',['-y','-v','error','-i',originalPhoto,'-vf',
   'scale=1920:1080:force_original_aspect_ratio=decrease,pad=1920:1080:(ow-iw)/2:(oh-ih)/2:color=0x131114',
   '-frames:v','1',framed]);
- const srt=path.join(outDir,'heritage-date-caption.srt');
- fs.writeFileSync(srt,'1\n00:00:08,000 --> 00:00:11,900\nLINCOLN, NEBRASKA  |  MAY 1973\n');
+ const srt=path.join(outDir,'heritage-date-caption.ass');
+ // This is factual catalog labeling, not cinematic title animation.
+ // Place a restrained 29px label in the left black pillarbox, off the historic faces.
+ fs.writeFileSync(srt,[
+  '[Script Info]','Title: Archive provenance label','ScriptType: v4.00+',
+  'PlayResX: 1920','PlayResY: 1080','',
+  '[V4+ Styles]',
+  'Format: Name, Fontname, Fontsize, PrimaryColour, SecondaryColour, OutlineColour, BackColour, Bold, Italic, Underline, StrikeOut, ScaleX, ScaleY, Spacing, Angle, BorderStyle, Outline, Shadow, Alignment, MarginL, MarginR, MarginV, Encoding',
+  'Style: Archive,DejaVu Sans,29,&H00E5E2DD,&H00E5E2DD,&H80000000,&H80000000,0,0,0,0,100,100,0,0,1,1,0,1,48,40,75,1','',
+  '[Events]','Format: Layer, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text',
+  'Dialogue: 0,0:00:08.00,0:00:11.80,Archive,,0,0,0,,LINCOLN  /  MAY 1973',
+  ''
+ ].join('\\n'));
  const skyFile=sky.master.path;
  const assets=[
   {id:'sky',path:skyFile,kind:'video' as const,digest:hash(skyFile,'sha256'),
