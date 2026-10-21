@@ -1,0 +1,31 @@
+name: Game Fabric youth contract
+
+on:
+  pull_request:
+    paths:
+      - "systemia/game-fabric/**"
+      - ".github/workflows/game-fabric-youth-contract.yml"
+  push:
+    branches: [main]
+    paths:
+      - "systemia/game-fabric/**"
+      - ".github/workflows/game-fabric-youth-contract.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  youth-intake-contract:
+    name: Youth intake synthetic checks
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Checkout source
+        uses: actions/checkout@v4
+      - name: Set up Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+      - name: Run bounded Game Fabric tests
+        run: node --test systemia/game-fabric/youth-bridge.test.mjs
