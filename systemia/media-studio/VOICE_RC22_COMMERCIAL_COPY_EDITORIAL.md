@@ -41,3 +41,14 @@ The same-scene copy is identical across Bella, Heart, 85% Heart and Michael. Dia
 
 ## Release and revenue gates
 No final product SKU, buyer/persona, verified CTA destination, source model checkpoint digests, speaker data/usage rights documentation, or final advertisement proof approved by the founder in this experiment. Production assets must be independently licensed and customer claims independently validated. PR #1465 remains draft and unmerged.
+
+
+## Actual RC22 neural audition receipt and next decision
+
+- **Real GitHub Actions run:** https://github.com/jgaethle10/forge-operator/actions/runs/39545754923 ; final job status success, all preflight/inference/archive steps successful.
+- **Source artifact:** 12321018921 (evercraft-rc22-commercial-copy-audition).
+- **Independent source verification:** 14 complete neural 24kHz 16-bit PCM WAVs and 14 MP3 previews downloaded and SHA-256 verified, 28 files total. No tracks reconstructed from labels or fabricated.
+- **Additional private listening room:** Three copy concepts each recorded in Bella, Heart, 85% Heart, and Michael, plus two actual switched-voice casts of the dialogue. Four long comparison reels keep the voice identity fixed across all three scripts, so the founder can judge copy more fairly. Speaker identities and receipt hashes are available in local JSON; offline ratings export is optional and stays on-device.
+- **Observed track durations:** Problem 14.775–16.075s, studio 14.025–15.725s, moment 14.025–15.400s, dialogue 15.915–16.140s. No music, final picture, or validated CTA exists in this experiment.
+- **Next creative decision:** judge studio/product/moment script **without music** first, then compare individual voices, then select only one with a demonstrable visual proof and reachable CTA. Founder has not selected or approved RC22 yet. Green CI is NOT audience preference evidence.
+- **Release governance:** all results remain private; no publication, rights clearances, commercial ordering, or production voice changes. The expensive neural workflow was switched to explicit manual dispatch only after its successful run.
