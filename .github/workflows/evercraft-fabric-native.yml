@@ -101,6 +101,24 @@ jobs:
       - name: Prove Fabric MCP, human offer storefront, and mobile door
         run: node --test tests/evercraft-fabric-runtime.test.mjs tests/fabric-offer-pages.test.mjs tests/fabric-approved-buyer-handoffs.test.mjs tests/aliev-owned-page.test.mjs tests/earthworks-owned-page.test.mjs tests/earthworks-public-playground.test.mjs tests/fabric-mobile-runtime.test.mjs tests/fabric-faie-native-runtime.test.mjs
 
+      - name: Independently probe public Fabric HTTPS and MCP initialization
+        shell: bash
+        run: |
+          set -euo pipefail
+          origin="https://fabric.systemiacommandcenters.com"
+          echo "Checking production HTTPS health from GitHub's external runner..."
+          health="$(curl --fail --silent --show-error --connect-timeout 6 --max-time 15 "$origin/health")"
+          printf '%s' "$health" | jq -e '.ok == true' >/dev/null
+          echo "PUBLIC_FABRIC_HTTPS_HEALTH=verified"
+          echo "Checking public MCP JSON-RPC initialize..."
+          init="$(curl --fail --silent --show-error --connect-timeout 6 --max-time 15 \
+            -H 'content-type: application/json' \
+            --data '{"jsonrpc":"2.0","id":1,"method":"initialize","params":{"protocolVersion":"2025-03-26","capabilities":{},"clientInfo":{"name":"fabric-recovery-external-smoke","version":"1"}}}' \
+            "$origin/mcp")"
+          printf '%s' "$init" | jq -e '.result.serverInfo.name == "evercraft-fabric"' >/dev/null
+          echo "PUBLIC_FABRIC_MCP_INITIALIZE=verified"
+          echo "Note: full identity/authorization canary remains a separate required gate."
+
       - name: Verify deployed EarthWorks hot-read playground
         shell: bash
         run: |
