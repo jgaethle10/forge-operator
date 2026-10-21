@@ -20,6 +20,7 @@ import {makeTorusGeometry} from './procedural-geometry.js';
 import {makeBrushedMetalTextures} from './brushed-metal.js';
 import {renderKineticSoundscape} from '../media-studio/kinetic-soundscape.mjs';
 import {battleshipWorld,battleshipGeometry,battleshipTake} from './battleship-scene.js';
+import {fourVesselProxyWorld,fourVesselProxyTake} from './four-vessel-proxy-scene.js';
 import {makeNativeBattleshipSequence,composeNativeBattleshipCamera,type NativeFilmFormat} from './native-format-camera.js';
 import {auditSequenceHeroFraming} from './shot-composition.js';
 import {directWorldEngineShot,type DirectorShotType} from './shot-director.js';
@@ -36,8 +37,8 @@ const requestedFormat=process.env.CINEMATIC_FORMAT||'wide';
 if(!['wide','square','vertical'].includes(requestedFormat))throw Error('cinematic_native_format_invalid');
 const nativeFormat=requestedFormat as NativeFilmFormat;
 const nativeViewport=composeNativeBattleshipCamera(nativeFormat).viewport;
-const WIDTH=process.env.CINEMATIC_SCENE==='battleship'?nativeViewport.width:640;
-const HEIGHT=process.env.CINEMATIC_SCENE==='battleship'?nativeViewport.height:360;
+const WIDTH=['battleship','denmark_strait_formation'].includes(process.env.CINEMATIC_SCENE||'')?nativeViewport.width:640;
+const HEIGHT=['battleship','denmark_strait_formation'].includes(process.env.CINEMATIC_SCENE||'')?nativeViewport.height:360;
 const FPS=24,DURATION=4;
 function cube():GeometryAsset{
   const q=[
@@ -450,10 +451,11 @@ async function main(){
   const out=path.resolve(process.env.CINEMATIC_PROOF_OUTPUT||path.join(os.tmpdir(),'evercraft-cinematic-pixel-proof-'+process.pid));
   if(fs.existsSync(out))throw new Error('output_already_exists');
   fs.mkdirSync(out,{recursive:true,mode:0o700});
-  const isBattleship=process.env.CINEMATIC_SCENE==='battleship';
+  const isFormation=process.env.CINEMATIC_SCENE==='denmark_strait_formation';
+  const isBattleship=process.env.CINEMATIC_SCENE==='battleship'||isFormation;
   const geometries=isBattleship?battleshipGeometry():industrialGeometry();
   const textures=isBattleship?[]:industrialTextures();
-  const world=isBattleship?battleshipWorld():industrialWorld();
+  const world=isFormation?fourVesselProxyWorld():isBattleship?battleshipWorld():industrialWorld();
   const rotorTake:CinematicCameraTake={
     schema:'evercraft.world-engine.cinematic-camera-take.v1',
     id:'orbital-foundry-take-one',cameraEntityId:'cinema-camera',targetEntityId:'reactor',
@@ -461,7 +463,7 @@ async function main(){
     orbit:{radius:11,startAngleDeg:-52,endAngleDeg:58,startHeight:2.6,endHeight:5.2},
     startFovYDeg:51,endFovYDeg:43
   };
-  const native= isBattleship ? makeNativeBattleshipSequence({
+  const native= isBattleship&&!isFormation ? makeNativeBattleshipSequence({
     world,geometries,textures,format:nativeFormat,
     ...(process.env.CINEMATIC_SHOT_ID?{overrideTake:composeNativeBattleshipCamera(nativeFormat).cameraTake}:{})
   }):null;
@@ -478,7 +480,7 @@ async function main(){
     detailTargetEntityId:'turret-fore-a'
   }):null;
   const sequence=director?.sequence??native?.sequence??buildCinematicCameraSequence({
-    world,take:rotorTake,geometries,viewport:{width:WIDTH,height:HEIGHT},textures
+    world,take:isFormation?fourVesselProxyTake():rotorTake,geometries,viewport:{width:WIDTH,height:HEIGHT},textures
   });
   if(!director&&native?.review.some(r=>r.visibleSubjectLandmarks<6))
     throw Error('battleship_native_subject_composition_failed');
@@ -499,7 +501,7 @@ async function main(){
   const shadowSource=worldShaderSource.match(/export const EVERCRAFT_SHADOW_DEPTH_WGSL=`([\s\S]*?)`;/);
   if(!shadowSource)throw new Error('owned_shadow_shader_missing');
   const raw=await renderGpuFrames(sequence.frames,geometries,textures,shader.source,shadowSource[1],out);
-  const video=path.join(out,isBattleship?'battleship-world-engine-trial.mp4':'orbital-foundry-synthetic-canary.mp4');
+  const video=path.join(out,isFormation?'denmark-strait-four-vessel-gpu-proxy.mp4':isBattleship?'battleship-world-engine-trial.mp4':'orbital-foundry-synthetic-canary.mp4');
   let soundReceipt:ReturnType<typeof renderKineticSoundscape>['receipt']|null=null;
   if(isBattleship){
     // The founder rejected the synthetic sound. Ship footage gets NO invented
@@ -576,7 +578,7 @@ async function main(){
     output:{path:video,sha256:sha(fs.readFileSync(video)),width:WIDTH,height:HEIGHT,
       durationSec:DURATION,fps:FPS,codec:'h264',audioCodec:isBattleship?null:'aac'},
     stills,sourceState:'synthetic_visualization',
-    sceneType:isBattleship?'procedural_battleship':'procedural_industrial_rotor',
+    sceneType:isFormation?'procedural_four_vessel_illustrative_not_historical_tracks':isBattleship?'procedural_battleship':'procedural_industrial_rotor',
     ...(native?{nativeFormat:{
       format:native.spec.format,
       viewport:native.spec.viewport,
@@ -595,6 +597,7 @@ async function main(){
     soundReceipt,
     visualReviewState:'unreviewed',publicationAuthority:false,paidProductionReady:false,
     claims:['Real owned-WGSL shader pixels rendered from canonical World Engine moving 3D camera frame plans',
+      ...(isFormation?['Four distinct staged naval actors are genuine GPU-mesh entities but their geometry, courses and distance are artistic placeholders']:[]),
       'Not cinematic-photoreal-quality, not an authentic physical event, not a public marketing asset']
   };
   fs.writeFileSync(path.join(out,'receipt.json'),JSON.stringify(receipt,null,2)+'\n');
