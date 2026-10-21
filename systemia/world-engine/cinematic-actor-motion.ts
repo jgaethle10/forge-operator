@@ -58,12 +58,14 @@ export function validateActorMotionRig(world:WorldDefinition,rig:ActorMotionRig)
   }
   if(track.keyframes[0].timeSec!==0||track.keyframes.at(-1)!.timeSec!==rig.durationSec)
    error('keyframe_boundaries');
-  for(const spec of [track.heave,track.roll]){
-   if(!spec)continue;
-   if(!finite(spec.amplitude)||!finite(spec.frequencyHz)||!finite(spec.phaseRad)||
-      spec.frequencyHz<.03||spec.frequencyHz>2||Math.abs(spec.phaseRad)>2*Math.PI)
-     error('oscillator_invalid');
-  }
+  if(track.heave&&(!finite(track.heave.amplitude)||!finite(track.heave.frequencyHz)||
+       !finite(track.heave.phaseRad)||track.heave.frequencyHz<.03||
+       track.heave.frequencyHz>2||Math.abs(track.heave.phaseRad)>2*Math.PI))
+    error('heave_oscillator_invalid');
+  if(track.roll&&(!finite(track.roll.amplitudeDeg)||!finite(track.roll.frequencyHz)||
+       !finite(track.roll.phaseRad)||track.roll.frequencyHz<.03||
+       track.roll.frequencyHz>2||Math.abs(track.roll.phaseRad)>2*Math.PI))
+    error('roll_oscillator_invalid');
   if(track.heave&& (track.heave.amplitude<0||track.heave.amplitude>.9))error('heave_too_large');
   if(track.roll&& (track.roll.amplitudeDeg<0||track.roll.amplitudeDeg>6))error('roll_too_large');
  }
