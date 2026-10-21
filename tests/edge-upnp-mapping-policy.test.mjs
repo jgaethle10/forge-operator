@@ -15,6 +15,23 @@ test('identical occupied Evercraft port is preserved without AddPortMapping',()=
   assert.equal(planUpnpMapping(existing(),desired).ownership_verified,true);
 });
 
+test('only verified owned finite-lease ports renew when the resident clock says due',()=>{
+  const owned={...existing(),lease_seconds:'86400'};
+  const result=planUpnpMapping(owned,desired,{renewHealthy:true});
+  assert.equal(result.action,'renew');
+  assert.equal(result.ownership_verified,true);
+  assert.equal(planUpnpMapping(owned,desired).action,'keep');
+  assert.equal(planUpnpMapping({...owned,lease_seconds:'3200'},desired).action,'renew');
+  assert.equal(planUpnpMapping({...owned,lease_seconds:'0'},desired,{renewHealthy:true}).action,'keep');
+  assert.equal(planUpnpMapping({...owned,lease_seconds:''},desired,{renewHealthy:true}).action,'renew');
+});
+
+test('lease renewal never overrides a stale or foreign client',()=>{
+  for(const patch of [{host:'192.168.88.3'},{description:'Other Router Service'},{enabled:'0'}]){
+    assert.equal(planUpnpMapping(existing(patch),desired,{renewHealthy:true}).action,'hold');
+  }
+});
+
 test('missing port code 714 can be created after router verification',()=>{
   assert.equal(planUpnpMapping(null,desired,{missing:true}).action,'create');
   assert.equal(planUpnpMapping(null,desired).action,'hold');
@@ -53,7 +70,7 @@ test('production mapper preflights all entries before writes and never protocol-
   const path=new URL('../scripts/evercraft-public-edge-map.mjs',import.meta.url);
   execFileSync(process.execPath,['--check',path.pathname]);
   const src=fs.readFileSync(path,'utf8');
-  assert.match(src,/planUpnpMapping\(existing,\{\.\.\.m,host\},\{missing\}\)/);
+  assert.match(src,/planUpnpMapping\(existing,\{\.\.\.m,host\},\{missing,renewHealthy:renewOwned==='1'\}\)/);
   assert.match(src,/if\(planned\.some\(row=>row\.decision\.action==='hold'\)\)/);
   assert.match(src,/if\(row\.decision\.action==='keep'\)/);
   assert.match(src,/if\(error\.upnpCode==='714'\) missing=true/);
@@ -70,5 +87,9 @@ test('installed refresh script defaults to WEB only and preserves separate DNS o
   assert.match(src,/SCOPE="web"/);
   assert.match(src,/EVERCRAFT_ROUTER_SCOPE=\$SCOPE/);
   assert.match(src,/--scope "\$\{EVERCRAFT_ROUTER_SCOPE:-web\}"/);
+  assert.match(src,/--renew-owned "\$renew_due"/);
+  assert.match(src,/now-last >= 21600/);
+  assert.match(src,/last-owned-lease-renewal/);
+  assert.match(src,/if \[\[ "\$code" -eq 0 && "\$renew_due" -eq 1 \]\]/);
   assert.match(src,/\^\(web\|dns\|all\)\$/);
 });
