@@ -207,6 +207,7 @@ jobs:
           const b=JSON.parse(fs.readFileSync(dir+'/toon-shot-binding-receipt.json','utf8'));
           const track=JSON.parse(fs.readFileSync(dir+'/audio-mouth-track.json','utf8'));
           assert.equal(r.speechText,'Hello, little light.');
+          assert.equal(r.audio,'original_instrumental_plus_synthetic_scratch_speech');
           assert.equal(r.audioReactiveMouthObserved,true);
           assert.equal(r.phonemeTimingVerified,false);
           assert.equal(r.voiceProfileMatched,false);
