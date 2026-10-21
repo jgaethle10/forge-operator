@@ -12,12 +12,17 @@ def curve(n):
     n=max(0.,min(1.,n))
     return n*n*(3-2*n)
 
-def frame_svg(frame,fps):
+def frame_svg(frame,fps,motion=None):
+    # A small explicitly authored, bounded 2D performance rig, NOT an AI actor.
+    motion=motion or {'reach':1,'blinkAtSec':2.1,'gazeX':0,'lanternLift':1,'tailEnergy':.5}
+    reach=motion['reach']
+    gaze_x=motion['gazeX']
+    tail_energy=motion['tailEnergy']
     t=frame/fps
-    lift=curve((t-.45)/1.8)
+    lift=curve((t-.45)/1.8)*motion['lanternLift']
     wave=curve((t-.6)/1.5)
     glow=90+18*math.sin(t*2.8)
-    blink=max(.65,7*(1-max(0.,1-abs(t-2.1)/.12)))
+    blink=max(.65,7*(1-max(0.,1-abs(t-motion['blinkAtSec'])/.12)))
     x=650-42*lift+4*math.sin(t*1.7)
     y=181-44*lift+4*math.cos(t*2)
     dust=''.join(
@@ -41,14 +46,14 @@ def frame_svg(frame,fps):
 <path d="M0 432Q247 398 512 430T960 412V540H0Z" fill="url(#land)"/>
 <ellipse cx="450" cy="456" rx="164" ry="22" fill="#10252c" opacity=".65"/>
 <!-- locked hand-drawn cartoon specimen, not reference-matched human identity -->
-<g transform="translate({math.sin(t*.9)*5:.1f} 0)">
-<path d="M367 398Q295 {380+6*math.sin(t*2):.1f} 275 442L188 401Q202 477 364 455Z" fill="url(#fur)" stroke="#55343d" stroke-width="6"/>
+<g transform="translate({math.sin(t*.9)*(3+7*tail_energy):.1f} 0)">
+<path d="M367 398Q295 {380+12*tail_energy*math.sin(t*2):.1f} 275 442L188 401Q202 477 364 455Z" fill="url(#fur)" stroke="#55343d" stroke-width="6"/>
 <path d="M190 404Q220 467 275 464Q220 479 190 404Z" fill="#ffedd6"/>
 <path d="M356 363Q312 407 356 465H535Q566 411 506 368Q418 336 356 363Z" fill="url(#fur)" stroke="#55333b" stroke-width="6"/>
 <path d="M408 374Q398 417 427 447Q456 470 484 443L468 376Z" fill="#f9dfbd"/>
 <ellipse cx="372" cy="462" rx="48" ry="16" fill="#873d3a"/><ellipse cx="517" cy="462" rx="47" ry="15" fill="#853b3b"/>
 <!-- upper-arm shoulder pivot / articulated paw -->
-<g transform="translate(487 379) rotate({-49*wave:.2f})">
+<g transform="translate(487 379) rotate({-49*wave*reach:.2f})">
 <path d="M0 0Q30 8 53 40L60 71Q55 87 42 80L34 56L1 28Z" fill="#d66f4c" stroke="#54353b" stroke-width="5"/>
 <path d="M42 72Q43 63 51 64L54 77Q60 66 65 69L64 81Q70 72 77 77L71 91Q56 100 43 89Z" fill="#f1ba86" stroke="#684448" stroke-width="3"/>
 </g>
@@ -57,8 +62,8 @@ def frame_svg(frame,fps):
 <path d="M-62 -88L-63 -120L-33 -90ZM45 -90L70 -121L59 -83Z" fill="#f5bfac"/>
 <path d="M-88 -29Q-105 29 -65 73Q-3 118 58 75Q98 38 87 -33Q42 -88 -14 -73Q-62 -71 -88 -29Z" fill="url(#fur)" stroke="#55343d" stroke-width="6"/>
 <path d="M-85 22Q-84 64 -39 79L5 97L51 79Q86 62 85 26L32 48L1 33L-39 47Z" fill="#f8e8d5"/>
-<ellipse cx="-40" cy="-16" rx="8" ry="{blink:.2f}" fill="#172834"/><ellipse cx="40" cy="-16" rx="8" ry="{blink:.2f}" fill="#172834"/>
-<circle cx="-38" cy="-18" r="2" fill="#fff6e1"/><circle cx="42" cy="-18" r="2" fill="#fff6e1"/>
+<ellipse cx="{-40+7*gaze_x:.2f}" cy="-16" rx="8" ry="{blink:.2f}" fill="#172834"/><ellipse cx="{40+7*gaze_x:.2f}" cy="-16" rx="8" ry="{blink:.2f}" fill="#172834"/>
+<circle cx="{-38+7*gaze_x:.2f}" cy="-18" r="2" fill="#fff6e1"/><circle cx="{42+7*gaze_x:.2f}" cy="-18" r="2" fill="#fff6e1"/>
 <path d="M-36 43Q-14 18 5 24Q24 18 40 43Q23 74 4 74Q-12 70 -36 43Z" fill="#fff1df"/>
 <ellipse cx="5" cy="40" rx="11" ry="7" fill="#292a33"/>
 <path d="M5 48Q0 61 -10 59M5 48Q13 61 23 59" stroke="#63434a" stroke-width="3" fill="none" stroke-linecap="round"/>
@@ -89,6 +94,23 @@ def audio(path,seconds,rate=32000):
     with wave.open(str(path),'wb') as f:
         f.setnchannels(1);f.setsampwidth(2);f.setframerate(rate);f.writeframes(pcm.tobytes())
 
+def read_motion(motion_path,seconds):
+    if not motion_path:
+        return {'reach':1,'blinkAtSec':min(2.1,seconds*.7),'gazeX':0,
+                'lanternLift':1,'tailEnergy':.5},None,'default_original_fox_v1'
+    motion=json.loads(pathlib.Path(motion_path).read_text())
+    fields={'specimenProfile','reach','blinkAtSec','gazeX','lanternLift','tailEnergy'}
+    if not isinstance(motion,dict) or set(motion)!=fields or motion['specimenProfile']!='original_fox_v1':
+        raise ValueError('toon_motion_specimen_or_fields_invalid')
+    for key,low,high in [('reach',0,1),('blinkAtSec',0,seconds),
+                         ('gazeX',-1,1),('lanternLift',0,1),('tailEnergy',0,1)]:
+        v=motion[key]
+        if type(v) not in (float,int) or not math.isfinite(v) or not low<=v<=high:
+            raise ValueError('toon_motion_range_invalid:'+key)
+    canonical=json.dumps(motion,separators=(',',':'),ensure_ascii=False)
+    motion_digest=hashlib.sha256(canonical.encode('utf-8')).hexdigest()
+    return motion,motion_digest,'explicit_authored_original_fox_v1'
+
 def command(args):
     result=subprocess.run(args,text=True,stdout=subprocess.PIPE,stderr=subprocess.PIPE)
     if result.returncode:raise RuntimeError(args[0]+'_failed:'+result.stderr[-1300:])
@@ -96,14 +118,15 @@ def command(args):
 
 def digest(path):return hashlib.sha256(path.read_bytes()).hexdigest()
 
-def render(out,seconds=3,fps=24,width=768,height=432):
+def render(out,seconds=3,fps=24,width=768,height=432,motion_path=None):
     if not (.5<=seconds<=8 and 12<=fps<=60 and 320<=width<=1920 and 180<=height<=1080):
         raise ValueError('toon_canary_bounds_invalid')
+    motion,motion_digest,motion_source=read_motion(motion_path,seconds)
     output=pathlib.Path(out).resolve(); frames=output/'frames'
     frames.mkdir(parents=True,exist_ok=True)
     count=round(seconds*fps)
     for i in range(count):
-        cairosvg.svg2png(bytestring=frame_svg(i,fps).encode(),
+        cairosvg.svg2png(bytestring=frame_svg(i,fps,motion).encode(),
                         output_width=width,output_height=height,
                         write_to=str(frames/f'frame-{i:05d}.png'))
     wav=output/'original-synth-score.wav';audio(wav,seconds)
@@ -123,6 +146,9 @@ def render(out,seconds=3,fps=24,width=768,height=432):
       'source':'self_contained_original_vector_art', 'frameCount':count,'fps':fps,
       'width':width,'height':height,'durationSec':float(probe['format']['duration']),
       'mp4':mp4.name,'sha256':digest(mp4),'audio':'original_synth_instrumental_no_voice',
+      'previewMotionSource':motion_source,'previewMotionDigest':motion_digest,
+      'sampleFrameIndex':min(count-1,round(count*.67)),
+      'sampleFrameSha256':digest(frames/f"frame-{min(count-1,round(count*.67)):05d}.png"),
       'shotHandoffConnected':False,'characterIdentityVerified':False,
       'lipSyncVerified':False,'performanceAdmitted':False,
       'masterQcPassed':False,'publicationAuthority':False
@@ -135,7 +161,8 @@ if __name__=='__main__':
     p.add_argument('--out',required=True)
     p.add_argument('--seconds',type=float,default=3)
     p.add_argument('--fps',type=int,default=24)
+    p.add_argument('--motion-json')
     p.add_argument('--width',type=int,default=768)
     p.add_argument('--height',type=int,default=432)
     args=p.parse_args()
-    print(json.dumps(render(args.out,args.seconds,args.fps,args.width,args.height),indent=2))
+    print(json.dumps(render(args.out,args.seconds,args.fps,args.width,args.height,args.motion_json),indent=2))
