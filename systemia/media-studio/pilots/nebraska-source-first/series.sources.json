@@ -1,0 +1,187 @@
+{
+  "schema": "evercraft.fallen.nebraska-series-source-registry.v1",
+  "seriesId": "nebraska-the-giant-stirs",
+  "originalRightsDocket": "systemia/media-studio/pilots/nebraska-source-first/source-rights-docket.json",
+  "rightsAndMediaAdmissionRule": "A verified source hash is not publication permission; no file is distribution-ready without a rights determination, applicable release and founder editorial signoff.",
+  "sources": [
+    {
+      "id": "history-nebraska-rg6137",
+      "title": "Historical Husker moving game film, likely early 1900s",
+      "kind": "moving_film",
+      "acquisitionState": "acquired_digest_verified",
+      "rightsStatus": "written_archive_permission_required",
+      "publicationEligible": false,
+      "permissionReceiptId": null,
+      "editorialApprovalReceiptId": null,
+      "sha256": "3156cd2202c8c3189dc563994688fb0f49231c9d78b6645287b535e53347f517",
+      "bytes": 15543535,
+      "dated": "probably circa 1919; attribution uncertain",
+      "url": "https://nebraska.access.preservica.com/uncategorized/IO_b8e868d0-911f-4fce-9feb-3316f16b8b0c/"
+    },
+    {
+      "id": "nara-1973-spring-crowd",
+      "title": "Actual fans at Nebraska 1973 spring football game",
+      "kind": "historical_still",
+      "acquisitionState": "acquired_digest_verified",
+      "rightsStatus": "public_domain_attribution_editorial_review_pending",
+      "publicationEligible": false,
+      "permissionReceiptId": null,
+      "editorialApprovalReceiptId": null,
+      "sha1": "8476a2db33115d25a2fc0a60ea8618dea3795209",
+      "dated": "May 1973",
+      "url": "https://commons.wikimedia.org/wiki/File:THE_ANNUAL_SPRING_FOOTBALL_GAME_AT_THE_UNIVERSITY_OF_NEBRASKA_IS_A_STADIUM-PACKING_EVENT._IT_IS_AN_INTRA-SQUAD_GAME..._-_NARA_-_547323.jpg"
+    },
+    {
+      "id": "lincoln-sky-2011",
+      "title": "Actual Lincoln skies and windmill with source microphone",
+      "kind": "location_video",
+      "acquisitionState": "acquired_digest_verified",
+      "rightsStatus": "cc_by_sa_3_editorial_and_sharealike_review_pending",
+      "publicationEligible": false,
+      "permissionReceiptId": null,
+      "editorialApprovalReceiptId": null,
+      "sha1": "d7fb114b1d2e9b0b12556950e0c45b6797f947ac",
+      "dated": "2011-08-06",
+      "url": "https://commons.wikimedia.org/wiki/File:August_2011_sky_in_Lincoln,_Nebraska.webm"
+    },
+    {
+      "id": "kregel-workshop-2026",
+      "title": "Nebraska City workshop and turret-lathe source video",
+      "kind": "location_video",
+      "acquisitionState": "acquired_digest_verified",
+      "rightsStatus": "cc_by_4_attribution_editorial_review_pending",
+      "publicationEligible": false,
+      "permissionReceiptId": null,
+      "editorialApprovalReceiptId": null,
+      "sha1": "2858bfee9858dda6dc184222991e6e742681e3e9",
+      "dated": "2026-04-21",
+      "url": "https://commons.wikimedia.org/wiki/File:Kregel_Windmill_Factory_Museum_Turret_Lathe_2.webm"
+    },
+    {
+      "id": "memorial-stadium-still-2025",
+      "title": "Identified actual 2025 Memorial Stadium photograph",
+      "kind": "historical_still",
+      "acquisitionState": "identified_not_ingested",
+      "rightsStatus": "cc_by_4_source_bytes_and_attribution_pending",
+      "publicationEligible": false,
+      "permissionReceiptId": null,
+      "editorialApprovalReceiptId": null,
+      "dated": "2025-08-19",
+      "url": "https://commons.wikimedia.org/wiki/File:Memorial_Stadium_Lincoln_Nebraska.jpg"
+    },
+    {
+      "id": "legacy-supporter-interview",
+      "title": "One actual longer-term Husker supporter recounting their lived experience",
+      "kind": "consented_interview",
+      "acquisitionState": "not_recorded",
+      "rightsStatus": "consent_and_release_missing",
+      "publicationEligible": false,
+      "permissionReceiptId": null,
+      "editorialApprovalReceiptId": null
+    },
+    {
+      "id": "younger-supporter-interview",
+      "title": "A younger Nebraska supporter with different memories and expectations",
+      "kind": "consented_interview",
+      "acquisitionState": "not_recorded",
+      "rightsStatus": "consent_and_release_missing",
+      "publicationEligible": false,
+      "permissionReceiptId": null,
+      "editorialApprovalReceiptId": null
+    },
+    {
+      "id": "independent-reporter-context",
+      "title": "An independent, fact-checkable voice on change across eras",
+      "kind": "consented_interview",
+      "acquisitionState": "not_recorded",
+      "rightsStatus": "consent_and_release_missing",
+      "publicationEligible": false,
+      "permissionReceiptId": null,
+      "editorialApprovalReceiptId": null
+    },
+    {
+      "id": "championship-history-film",
+      "title": "Source-dated real Nebraska past championships footage",
+      "kind": "archival_game_video",
+      "acquisitionState": "identified_not_ingested",
+      "rightsStatus": "rightsholder_and_footage_missing",
+      "publicationEligible": false,
+      "permissionReceiptId": null,
+      "editorialApprovalReceiptId": null
+    },
+    {
+      "id": "indiana-2026-game-film",
+      "title": "Actual Indiana 2026 fourth-quarter football action and original sound",
+      "kind": "broadcast_game_video",
+      "acquisitionState": "not_acquired",
+      "rightsStatus": "veritone_or_other_rightsholder_clearance_missing",
+      "publicationEligible": false,
+      "permissionReceiptId": null,
+      "editorialApprovalReceiptId": null,
+      "dated": "2026-10-10",
+      "factualSource": "https://huskers.com/news/2026/10/10/huskers-push-no-7-hoosiers-to-limit"
+    },
+    {
+      "id": "oregon-2026-game-film",
+      "title": "Actual Oregon 2026 defensive possessions and last-minute touchdown",
+      "kind": "broadcast_game_video",
+      "acquisitionState": "not_acquired",
+      "rightsStatus": "veritone_or_other_rightsholder_clearance_missing",
+      "publicationEligible": false,
+      "permissionReceiptId": null,
+      "editorialApprovalReceiptId": null,
+      "dated": "2026-10-17",
+      "factualSource": "https://huskers.com/news/2026/10/17/fb-recap"
+    },
+    {
+      "id": "stadium-present-day-original",
+      "title": "Present-day location film with authorized venue access and original atmosphere",
+      "kind": "location_video",
+      "acquisitionState": "not_recorded",
+      "rightsStatus": "filming_access_and_publicity_review_missing",
+      "publicationEligible": false,
+      "permissionReceiptId": null,
+      "editorialApprovalReceiptId": null
+    },
+    {
+      "id": "washington-2026-game-film",
+      "title": "October 31 Nebraska vs Washington, result and footage TBD",
+      "kind": "broadcast_game_video",
+      "acquisitionState": "future_unrecorded",
+      "rightsStatus": "not_yet_played_and_game_rights_missing",
+      "publicationEligible": false,
+      "permissionReceiptId": null,
+      "editorialApprovalReceiptId": null,
+      "scheduled": "2026-10-31",
+      "scheduleSource": "https://bigten.org/schedule.aspx?schedule=8494"
+    },
+    {
+      "id": "november-2026-game-film",
+      "title": "Subsequent November football footage, dates and results verified game by game",
+      "kind": "broadcast_game_video",
+      "acquisitionState": "future_unrecorded",
+      "rightsStatus": "not_yet_played_and_game_rights_missing",
+      "publicationEligible": false,
+      "permissionReceiptId": null,
+      "editorialApprovalReceiptId": null,
+      "scheduleSource": "https://bigten.org/schedule.aspx?schedule=8494"
+    },
+    {
+      "id": "postseason-and-season-outcome",
+      "title": "Future final-season outcome, only upon official confirmation",
+      "kind": "outcome_record",
+      "acquisitionState": "future_unverified",
+      "rightsStatus": "season_incomplete",
+      "publicationEligible": false,
+      "permissionReceiptId": null,
+      "editorialApprovalReceiptId": null
+    }
+  ],
+  "production": {
+    "actual2026GameFootageAcquired": false,
+    "fanInterviewCapturedAndReleased": false,
+    "archiveUsePermissionObtained": false,
+    "paidLicensesPurchased": false,
+    "publicationAuthorityGranted": false
+  }
+}
