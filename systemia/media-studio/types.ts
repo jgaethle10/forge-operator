@@ -51,8 +51,48 @@ export interface ContinuityClaim {
   value: string;
 }
 
+export interface CinematicSceneRequirement {
+  id:string;
+  beat:StoryBeat;
+  subject:string;
+  action:string;
+  mode:'physical_action'|'environment'|'product_interaction';
+  candidateAssetIds:string[];
+  minDurationSec?:number;
+}
+
+export interface CinematicCoverageContract {
+  schema:'evercraft.fallen.cinematic-coverage-contract.v1';
+  shots:CinematicSceneRequirement[];
+}
+
+export interface CinematicCoverageReport {
+  schema:'evercraft.fallen.cinematic-coverage-report.v1';
+  status:'blocked'|'candidate_bound_unverified';
+  items:Array<{
+    id:string;
+    beat:StoryBeat;
+    subject:string;
+    action:string;
+    mode:CinematicSceneRequirement['mode'];
+    minDurationSec:number;
+    sceneId:string|null;
+    candidateAssetId:string|null;
+    state:'missing'|'candidate_bound_unverified';
+    reason:string|null;
+  }>;
+  boundaries:{
+    generatedStillsCannotReplaceRequiredVideo:true;
+    textCardsCannotReplacePhysicalAction:true;
+    assetIdsNotVisualEvidence:true;
+    creativeReviewRequired:true;
+    publicationAuthority:false;
+  };
+}
+
 export interface ProjectBrief {
   prompt: string;
+  cinematicCoverage?: CinematicCoverageContract;
   format?: ProjectFormat;
   durationSec?: number;
   aspectRatio?: AspectRatio;
@@ -119,6 +159,7 @@ export interface ProvenanceRecord {
 
 export interface FilmPlan {
   schema: 'evercraft.media.plan.v1';
+  cinematicCoverage?: CinematicCoverageReport;
   projectId: string;
   title: string;
   prompt: string;

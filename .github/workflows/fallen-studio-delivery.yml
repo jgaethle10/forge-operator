@@ -7,6 +7,13 @@ on:
       - "systemia/media-studio/studio-delivery.test.ts"
       - "systemia/media-studio/master-qc.ts"
       - "systemia/media-studio/master-qc.integration.test.ts"
+      - "systemia/media-studio/cinematic-master-audit.mjs"
+      - "systemia/media-studio/cinematic-master-audit.test.mjs"
+      - "systemia/media-studio/cinematic-coverage.ts"
+      - "systemia/media-studio/cinematic-coverage.test.ts"
+      - "systemia/media-studio/director.ts"
+      - "systemia/media-studio/render.ts"
+      - "systemia/media-studio/types.ts"
       - "systemia/media-studio/cli.ts"
       - ".github/workflows/fallen-studio-delivery.yml"
   push:
@@ -16,6 +23,13 @@ on:
       - "systemia/media-studio/studio-delivery.test.ts"
       - "systemia/media-studio/master-qc.ts"
       - "systemia/media-studio/master-qc.integration.test.ts"
+      - "systemia/media-studio/cinematic-master-audit.mjs"
+      - "systemia/media-studio/cinematic-master-audit.test.mjs"
+      - "systemia/media-studio/cinematic-coverage.ts"
+      - "systemia/media-studio/cinematic-coverage.test.ts"
+      - "systemia/media-studio/director.ts"
+      - "systemia/media-studio/render.ts"
+      - "systemia/media-studio/types.ts"
       - "systemia/media-studio/cli.ts"
       - ".github/workflows/fallen-studio-delivery.yml"
 
@@ -45,6 +59,11 @@ jobs:
           node --import tsx --test \
             systemia/media-studio/studio-delivery.test.ts \
             systemia/media-studio/master-qc.integration.test.ts
+      - name: Cinematic master audit tests
+        run: node --test systemia/media-studio/cinematic-master-audit.test.mjs
+
+      - name: Cinematic scene admission and director regression tests
+        run: node --import tsx --test systemia/media-studio/cinematic-coverage.test.ts systemia/media-studio/director.test.ts
       - name: Build media fixtures
         run: |
           set -euo pipefail

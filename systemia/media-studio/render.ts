@@ -3,6 +3,7 @@ import fs from 'node:fs';
 import os from 'node:os';
 import path from 'node:path';
 import type { AspectRatio, FilmPlan, ScenePlan } from './types.js';
+import { assertCinematicCoverageForRender } from './cinematic-coverage.js';
 
 const DIMENSIONS: Record<AspectRatio, { width: number; height: number }> = {
   '9:16': { width: 1080, height: 1920 },
@@ -67,6 +68,8 @@ function renderScene(scene: ScenePlan, outPath: string, width: number, height: n
 }
 
 export function renderFilm(plan: FilmPlan, outputPath: string) {
+  // Stop before invoking FFmpeg if mandatory story coverage is still missing.
+  assertCinematicCoverageForRender(plan);
   const { width, height } = DIMENSIONS[plan.aspectRatio];
   const tempDir = fs.mkdtempSync(path.join(os.tmpdir(), 'evercraft-media-'));
   const clips: string[] = [];

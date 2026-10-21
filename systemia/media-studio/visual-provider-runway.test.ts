@@ -198,3 +198,21 @@ test('Runway can use one environment canon image as promptImage for an establish
   });
   assert.equal(calls[0].body.promptImage,'https://assets.example/bridge.png');
 });
+
+test('Runway exposes native source resolutions instead of claiming 1080p cinematic output',()=>{
+  assert.deepEqual(runwayGen45Endpoint(true).capabilities[0].resolutions,['1280x720','720x1280']);
+});
+
+test('requested 1080p master must not trigger a paid 720p generation',async()=>{
+  let requests=0;
+  const adapter=createRunwayGen45Adapter({
+    apiKey:'test-key',outputDir:os.tmpdir(),verified:true,commercialRights:'allowed',allowPaidGeneration:true,
+    fetchImpl:(async()=>{requests++;throw new Error('network must not run');}) as any,
+  });
+  await assert.rejects(()=>adapter.execute({
+    ...baseJob,
+    aspectRatio:'9:16',
+    targetResolution:'1080x1920',
+  }),/runway_gen45_target_resolution_unsupported:1080x1920/);
+  assert.equal(requests,0);
+});

@@ -14,6 +14,7 @@ import {
   semanticCoverageGenerationRequests,
   subjectRelevanceScore,
 } from './visual-coverage.js';
+import { cinematicCandidates, compileCinematicCoverage } from './cinematic-coverage.js';
 
 const FORMAT_BEATS: Record<ProjectFormat, StoryBeat[]> = {
   commercial: ['hook', 'setup', 'proof', 'development', 'cta'],
@@ -171,7 +172,12 @@ export function compileFilmPlan(project: MediaProject): FilmPlan {
   const scenes: ScenePlan[] = [];
 
   beats.forEach((beat, index) => {
-    const asset = pickAsset(visuals, beat, project.brief.prompt, usedCount);
+    // Explicit cinematic coverage beats select only bound eligible source footage.
+    // If no eligible video exists, keep an editable placeholder scene but mark
+    // cinematic admission blocked, with a concrete production request below.
+    const required=project.brief.cinematicCoverage?.shots.find(shot=>shot.beat===beat);
+    const eligible=required?cinematicCandidates(project,required):[];
+    const asset=pickAsset(eligible.length?eligible:visuals,beat,project.brief.prompt,usedCount);
     const timesUsed = usedCount.get(asset.id) ?? 0;
     usedCount.set(asset.id, timesUsed + 1);
 
@@ -229,8 +235,28 @@ export function compileFilmPlan(project: MediaProject): FilmPlan {
     );
   }
 
+  const cinematicCoverage=compileCinematicCoverage(project,scenes);
+  const cinematicRequests:GenerationRequest[]=(cinematicCoverage?.items??[])
+    .filter(item=>item.state==='missing')
+    .map((item,index)=>({
+      id:'gen-cinematic-'+(index+1)+'-'+item.id,
+      reason:'semantic_coverage_gap',
+      prompt:[
+        'NON-SUBSTITUTABLE CINEMATIC SHOT: '+item.subject+'.',
+        'Required visible action: '+item.action+'.',
+        'Capture or generate actual motion footage with licensed/owned rights.',
+        'No still image zoom, abstract orb, title card, decorative animation,',
+        'or unrelated B-roll may stand in for this scene.',
+        'Treat synthetic scene footage as illustrative and verify continuity, provenance, and rights.',
+      ].join(' '),
+      durationSec:Math.max(3,project.brief.cinematicCoverage?.shots.find(shot=>shot.id===item.id)?.minDurationSec??1.5),
+      aspectRatio,
+      status:'requested',
+      subjectId:item.id,
+    }));
   return {
     schema: 'evercraft.media.plan.v1',
+    cinematicCoverage,
     projectId: project.id ?? safeId('project'),
     title: project.title ?? 'Untitled Evercraft Media Project',
     prompt: project.brief.prompt.trim(),
@@ -239,7 +265,7 @@ export function compileFilmPlan(project: MediaProject): FilmPlan {
     durationSec:
       Math.round(scenes.reduce((sum, scene) => sum + scene.durationSec, 0) * 10) / 10,
     scenes,
-    generationRequests: generationRequestsFor(project, aspectRatio, semanticRequests),
+    generationRequests: [...generationRequestsFor(project, aspectRatio, semanticRequests), ...cinematicRequests],
     visualCoverage,
     provenance,
     warnings,
