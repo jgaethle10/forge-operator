@@ -643,6 +643,119 @@ export default function FallenFamilyCartoon() {
       </section>
 
       {episode && (
+        <section className="fallen-shell fallen-production" aria-label="Toon shot director">
+          <div className="fallen-card fallen-toon-desk">
+            <div className="fallen-section-title">3 · Direct the animation</div>
+            <h2>Character acting, hands, voices and shot continuity</h2>
+            <p className="fallen-toon-note">
+              Series Mode creates {episode.story.scenes.length} story scenes but only {toonDrafts.length} optional
+              generated-video work orders. Direct those shots below. The remaining scenes still need
+              actual footage before the episode is complete.
+            </p>
+            {toonDrafts.length === 0 ? (
+              <p className="fallen-error">No generated-video work orders are available for this episode.</p>
+            ) : (
+              <>
+                <div className="fallen-toon-toolbar">
+                  <label>Work order
+                    <select value={selectedToonIndex} onChange={event=>chooseToonShot(Number(event.target.value))}>
+                      {toonDrafts.map((shot,index)=>(
+                        <option value={index} key={shot.id}>
+                          {shot.id} · {shot.durationSec}s
+                        </option>
+                      ))}
+                    </select>
+                  </label>
+                  <label>Scene used for visual direction
+                    <select value={selectedToonShot?.sceneIndex??0}
+                      onChange={event=>{
+                        const sceneIndex=Number(event.target.value);
+                        const scene=episode.story.scenes[sceneIndex];
+                        changeToonDraft(selectedToonIndex,{sceneIndex,action:scene.action});
+                        setSelectedScene(sceneIndex);
+                      }}>
+                      {episode.story.scenes.map((scene,index)=>(
+                        <option key={scene.title+index} value={index}>{index+1} · {scene.title}</option>
+                      ))}
+                    </select>
+                  </label>
+                </div>
+                {selectedToonShot && (
+                  <>
+                    <div className="fallen-toon-toolbar">
+                      <label>Physical action and blocking
+                        <textarea rows={3} maxLength={700} value={selectedToonShot.action}
+                          onChange={event=>changeToonDraft(selectedToonIndex,{action:event.target.value})}/>
+                      </label>
+                      <label>Score, Foley and dialogue mix direction
+                        <textarea rows={3} maxLength={700} value={selectedToonShot.soundDirection}
+                          onChange={event=>changeToonDraft(selectedToonIndex,{soundDirection:event.target.value})}/>
+                      </label>
+                    </div>
+                    <div className="fallen-toon-cast">
+                      {selectedToonShot.characters.map(actor=>(
+                        <div className="fallen-toon-actor" key={actor.entityId}>
+                          <strong>{episode.bible.entities.find((entity:any)=>entity.id===actor.entityId)?.name || actor.entityId}</strong>
+                          <div className="fallen-toon-acting">
+                            {([
+                              ['objective','Objective'],
+                              ['physicalAction','Physical action'],
+                              ['face','Facial expression'],
+                              ['gazeTarget','Eyeline / gaze target'],
+                              ['hands','Hands / paws and grips'],
+                            ] as const).map(([field,label])=>(
+                              <label key={field}>{label}
+                                <textarea rows={2} maxLength={700} value={actor.acting[field]}
+                                  onChange={event=>changeToonActing(actor.entityId,field,event.target.value)}/>
+                              </label>
+                            ))}
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                    <div className="fallen-toon-dialogue">
+                      <h3>Assign spoken lines to shots</h3>
+                      {(episode.seriesPlan.dialogue||[]).length===0 && (
+                        <p className="fallen-toon-note">No spoken dialogue in this episode.</p>
+                      )}
+                      {(episode.seriesPlan.dialogue||[]).map((cue:any)=>(
+                        <label key={cue.id}>
+                          <span><strong>{cue.speakerId}</strong>: {cue.text}</span>
+                          <select
+                            value={toonDrafts.find(shot=>shot.dialogueCueIds.includes(cue.id))?.id||''}
+                            onChange={event=>{
+                              setToonDrafts(current=>assignDialogueToShot(current,cue.id,event.target.value));
+                              invalidateToonPlan();
+                            }}>
+                            <option value="" disabled>Choose shot</option>
+                            {toonDrafts.map(shot=><option key={shot.id} value={shot.id}>{shot.id}</option>)}
+                          </select>
+                        </label>
+                      ))}
+                    </div>
+                  </>
+                )}
+                <div className="fallen-toon-validation">
+                  <button type="button" className="fallen-primary compact"
+                    disabled={Boolean(loading)} onClick={validateToonDirections}>
+                    {loading==='toon'?'Checking all shot contracts…':'Validate animation work orders'}
+                  </button>
+                  {toonHandoff ? (
+                    <p role="status">
+                      All {toonHandoff.shots.length} shot contracts validated.
+                      {' '}{toonHandoff.frameCount} frames planned. No footage or audio verified yet.
+                    </p>
+                  ):(
+                    <p>Edits invalidate the old shot packet. Validate again before paid generation.</p>
+                  )}
+                </div>
+              </>
+            )}
+          </div>
+        </section>
+      )}
+
+      {episode && (
         <section className="fallen-shell fallen-production">
           <div className="fallen-card">
             <div className="fallen-section-title">4 · Make it visual</div>
