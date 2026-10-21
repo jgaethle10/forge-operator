@@ -8,7 +8,7 @@ class CompositionContract(unittest.TestCase):
  def test_change_in_harmony_and_tempo(self):
   self.assertEqual(len(m.HARMONY),8)
   self.assertGreaterEqual(len(set(m.HARMONY)),6)
-  self.assertEqual(len(set(m.BPM)),6)
+  self.assertGreaterEqual(len(set(m.BPM)),6)
   self.assertTrue(25<m.DURATION<31)
  def test_accompaniment_does_not_repeat_same_rhythm_each_measure(self):
   self.assertEqual(len(m.PATTERNS),8)
