@@ -1,0 +1,41 @@
+name: Game Fabric recipient transport gate
+
+on:
+  workflow_dispatch:
+  pull_request:
+    paths:
+      - 'scripts/qa/game-fabric-recipient-canary.mjs'
+      - 'tests/game-fabric-recipient-canary.test.mjs'
+      - '.github/workflows/game-fabric-recipient-gate.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  recipient-gate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 6
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Run isolated contract tests
+        run: node --test tests/game-fabric-recipient-canary.test.mjs
+      - name: Probe real public HTML, scripts and MP4 transport
+        run: node scripts/qa/game-fabric-recipient-canary.mjs | tee game-fabric-recipient-transport.json
+      - name: Describe verification boundary
+        if: always()
+        run: |
+          echo '## Game Fabric recipient gate' >> "$GITHUB_STEP_SUMMARY"
+          echo '' >> "$GITHUB_STEP_SUMMARY"
+          echo 'This only tests HTTP/site assets and MP4 transport metadata.' >> "$GITHUB_STEP_SUMMARY"
+          echo 'It does not prove iPhone/Android playback or validate football assignments.' >> "$GITHUB_STEP_SUMMARY"
+          echo 'Do not infer permission to send coaching outreach or collect payment.' >> "$GITHUB_STEP_SUMMARY"
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: game-fabric-recipient-gate
+          path: game-fabric-recipient-transport.json
+          if-no-files-found: warn
+          retention-days: 14
