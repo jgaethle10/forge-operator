@@ -22,6 +22,7 @@ import {renderKineticSoundscape} from '../media-studio/kinetic-soundscape.mjs';
 import {battleshipWorld,battleshipGeometry,battleshipTake} from './battleship-scene.js';
 import {fourVesselProxyWorld,fourVesselProxyTake} from './four-vessel-proxy-scene.js';
 import {historicSilhouetteWorld,historicSilhouetteTake,battleVesselGeometry} from './battle-vessel-silhouettes.js';
+import {makeBattleMotionDemo} from './battle-motion-demo.js';
 import {makeNativeBattleshipSequence,composeNativeBattleshipCamera,type NativeFilmFormat} from './native-format-camera.js';
 import {auditSequenceHeroFraming} from './shot-composition.js';
 import {directWorldEngineShot,type DirectorShotType} from './shot-director.js';
@@ -482,7 +483,8 @@ async function main(){
     detailTargetEntityId:'turret-fore-a'
   }):null;
   const sequence=director?.sequence??native?.sequence??buildCinematicCameraSequence({
-    world,take:isSilhouette?historicSilhouetteTake((process.env.BATTLE_CAMERA||'formation') as 'formation'|'bismarck_hero'):isFormation?fourVesselProxyTake():rotorTake,geometries,viewport:{width:WIDTH,height:HEIGHT},textures
+    world,take:isSilhouette?historicSilhouetteTake((process.env.BATTLE_CAMERA||'formation') as 'formation'|'bismarck_hero'):isFormation?fourVesselProxyTake():rotorTake,geometries,viewport:{width:WIDTH,height:HEIGHT},textures,
+    ...(isSilhouette&&process.env.BATTLE_MOTION==='1'?{actorRig:makeBattleMotionDemo(world)}:{})
   });
   if(!director&&native?.review.some(r=>r.visibleSubjectLandmarks<6))
     throw Error('battleship_native_subject_composition_failed');
@@ -569,6 +571,15 @@ async function main(){
     worldDigest:sequence.worldDefinitionDigest,shaderSha256:shader.sha256,
     shadowShaderSha256:sha(shadowSource[1]),shadowState:'depth_occlusion_real_gpu',
     textureAssetDigests:textures.map(asset=>({id:asset.id,digest:textureAssetDigest(asset)})),
+    ...(sequence.actorRigProof?{actorMotion:{...sequence.actorRigProof,
+      firstAnimatedFrameDigest:sequence.frames[0].actorMotionDigest,
+      lastAnimatedFrameDigest:sequence.frames[sequence.frames.length-2].actorMotionDigest,
+      actualVerifiedGpuPlanSamples:[sequence.frames[0].renderPlan.digest,
+        sequence.frames[Math.floor(sequence.frames.length/2)].renderPlan.digest,
+        sequence.frames[sequence.frames.length-2].renderPlan.digest],
+      historicalTrajectoriesAuthenticated:false,
+      rigidBodyPhysicsExecuted:false,
+      humanCreativeReviewRequired:true}}:{}),
     firstFramePlanDigest:sequence.frames[0].renderPlan.digest,
     lastFramePlanDigest:sequence.frames[sequence.frames.length-2].renderPlan.digest,
     renderProfile:raw.profile,softwareAdapterForced:raw.softwareAdapterForced,
