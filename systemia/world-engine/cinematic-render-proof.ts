@@ -408,7 +408,7 @@ async function renderGpuFrames(plans:ReturnType<typeof buildCinematicCameraSeque
               draw.receivesShadow?1:0,
               draw.geometryId==='owned:evercraft-dynamic-ocean-grid'?1:0,
               draw.geometryId==='owned:evercraft-dynamic-ocean-grid'?plan.timeSec:0,
-              draw.geometryId==='owned:evercraft-dynamic-ocean-grid'?0.62:0
+              draw.geometryId==='owned:evercraft-dynamic-ocean-grid'?0.80:0
             ]);
             const buffer=device.createBuffer({size:obj.byteLength,usage:(globalThis as any).GPUBufferUsage.UNIFORM|(globalThis as any).GPUBufferUsage.COPY_DST});
             device.queue.writeBuffer(buffer,0,obj);
