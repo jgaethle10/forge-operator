@@ -3,6 +3,7 @@ import dgram from 'node:dgram';
 import net from 'node:net';
 import process from 'node:process';
 import { randomBytes } from 'node:crypto';
+import { assessRouterMappings } from './edge-mapping-control.mjs';
 
 const args = new Map();
 for (let i = 2; i < process.argv.length; i += 2) {
@@ -49,6 +50,9 @@ const out = {
   scope,
   mappings,
   host_forward_preflight: null,
+  // Router acknowledgement is not external connectivity evidence.
+  public_ingress_verified: false,
+  public_ingress_verification_source: 'independent_external_canary_required',
 };
 
 function sleep(ms) { return new Promise(r => setTimeout(r, ms)); }
@@ -179,11 +183,13 @@ async function natPmpMap() {
       }
     }
     {
-      const production=result.mappings.filter(x=>x.requested?.production);
-      const diagnostic=result.mappings.filter(x=>x.requested?.diagnostic);
-      result.success=production.length>0&&production.every(x=>x.success===true);
-      result.diagnostic_success=diagnostic.length>0&&diagnostic.every(x=>x.success===true);
-    }
+        const report=assessRouterMappings(mappings, result.mappings);
+        result.success=report.production_mapping_control_ok;
+        result.diagnostic_success=report.diagnostic_mapping_control_ok;
+        result.web_mapping_control_ok=report.web_mapping_control_ok;
+        result.dns_mapping_control_ok=report.dns_mapping_control_ok;
+        result.missing_production_mappings=report.missing_production_mappings;
+      }
   } finally {
     socket.close();
   }
@@ -367,10 +373,12 @@ async function upnpMap() {
         mapping_results: mapped,
       });
       {
-        const production=mapped.filter(x=>x.requested?.production);
-        const diagnostic=mapped.filter(x=>x.requested?.diagnostic);
-        result.success=production.length>0&&production.every(x=>x.success===true);
-        result.diagnostic_success=diagnostic.length>0&&diagnostic.every(x=>x.success===true);
+        const report=assessRouterMappings(mappings, mapped);
+        result.success=report.production_mapping_control_ok;
+        result.diagnostic_success=report.diagnostic_mapping_control_ok;
+        result.web_mapping_control_ok=report.web_mapping_control_ok;
+        result.dns_mapping_control_ok=report.dns_mapping_control_ok;
+        result.missing_production_mappings=report.missing_production_mappings;
       }
       if (result.success) {
         result.location = location;
@@ -463,11 +471,13 @@ async function pcpMap() {
       }
     }
     {
-      const production=result.mappings.filter(x=>x.requested?.production);
-      const diagnostic=result.mappings.filter(x=>x.requested?.diagnostic);
-      result.success=production.length>0&&production.every(x=>x.success===true);
-      result.diagnostic_success=diagnostic.length>0&&diagnostic.every(x=>x.success===true);
-    }
+        const report=assessRouterMappings(mappings, result.mappings);
+        result.success=report.production_mapping_control_ok;
+        result.diagnostic_success=report.diagnostic_mapping_control_ok;
+        result.web_mapping_control_ok=report.web_mapping_control_ok;
+        result.dns_mapping_control_ok=report.dns_mapping_control_ok;
+        result.missing_production_mappings=report.missing_production_mappings;
+      }
     const firstIp = result.mappings.find(x => x.external_ip)?.external_ip;
     if (firstIp) result.external_ip = firstIp;
   } finally {
@@ -495,8 +505,12 @@ async function main() {
     out.ok = true;
     out.method = upnp.method;
     out.external_ip = upnp.external_ip;
-    out.production_mapping_control_ok = true;
-    out.diagnostic_mapping_control_ok = upnp.diagnostic_success === true;
+    const report = assessRouterMappings(mappings, upnp.mappings || []);
+    out.production_mapping_control_ok = report.production_mapping_control_ok;
+    out.diagnostic_mapping_control_ok = report.diagnostic_mapping_control_ok;
+    out.web_mapping_control_ok = report.web_mapping_control_ok;
+    out.dns_mapping_control_ok = report.dns_mapping_control_ok;
+    out.missing_production_mappings = report.missing_production_mappings;
     console.log(JSON.stringify(out, null, 2));
     return;
   }
@@ -507,8 +521,12 @@ async function main() {
     out.ok = true;
     out.method = natpmp.method;
     out.external_ip = natpmp.external_ip;
-    out.production_mapping_control_ok = true;
-    out.diagnostic_mapping_control_ok = natpmp.diagnostic_success === true;
+    const report = assessRouterMappings(mappings, natpmp.mappings || []);
+    out.production_mapping_control_ok = report.production_mapping_control_ok;
+    out.diagnostic_mapping_control_ok = report.diagnostic_mapping_control_ok;
+    out.web_mapping_control_ok = report.web_mapping_control_ok;
+    out.dns_mapping_control_ok = report.dns_mapping_control_ok;
+    out.missing_production_mappings = report.missing_production_mappings;
     console.log(JSON.stringify(out, null, 2));
     return;
   }
@@ -519,20 +537,22 @@ async function main() {
     out.ok = true;
     out.method = pcp.method;
     out.external_ip = pcp.external_ip;
-    out.production_mapping_control_ok = true;
-    out.diagnostic_mapping_control_ok = pcp.diagnostic_success === true;
+    const report = assessRouterMappings(mappings, pcp.mappings || []);
+    out.production_mapping_control_ok = report.production_mapping_control_ok;
+    out.diagnostic_mapping_control_ok = report.diagnostic_mapping_control_ok;
+    out.web_mapping_control_ok = report.web_mapping_control_ok;
+    out.dns_mapping_control_ok = report.dns_mapping_control_ok;
+    out.missing_production_mappings = report.missing_production_mappings;
   }
 
-  out.production_mapping_control_ok = mappings.filter(m=>m.production).every(m=>
-    out.attempts.some(a=>Array.isArray(a.mappings)&&a.mappings.some(x=>
-      x.success===true && x.requested?.external===m.external && x.requested?.internal===m.internal && x.requested?.proto===m.proto
-    ))
-  );
-  out.diagnostic_mapping_control_ok = mappings.filter(m=>m.diagnostic).every(m=>
-    out.attempts.some(a=>Array.isArray(a.mappings)&&a.mappings.some(x=>
-      x.success===true && x.requested?.external===m.external && x.requested?.internal===m.internal && x.requested?.proto===m.proto
-    ))
-  );
+  // Never synthesize a successful mapping from partial successes across protocols.
+  const acceptedAttempt = out.attempts.find(a=>a.success===true);
+  const report = assessRouterMappings(mappings, (acceptedAttempt || out.attempts.find(a=>a.mappings?.length))?.mappings || []);
+  out.production_mapping_control_ok = report.production_mapping_control_ok;
+  out.diagnostic_mapping_control_ok = report.diagnostic_mapping_control_ok;
+  out.web_mapping_control_ok = report.web_mapping_control_ok;
+  out.dns_mapping_control_ok = report.dns_mapping_control_ok;
+  out.missing_production_mappings = report.missing_production_mappings;
   console.log(JSON.stringify(out, null, 2));
   process.exit(out.ok ? 0 : 1);
 }
