@@ -29,6 +29,7 @@ import {CINEMATIC_SKY_WGSL,cinematicSkyCameraUniform,skyShaderSha256} from './na
 import {organicFoamGeometry,ORGANIC_FOAM_PREFIX} from './organic-wake-geometry.js';
 import {applyNavalEditorialGrade,makeNavalEditorialTake,type NavalEditorialShot} from './naval-editorial-direction.js';
 import {auditWebGpuHeroFraming} from './shot-composition.js';
+import {auditNavalEditorialForeground} from './naval-foreground-audit.js';
 import {attachCinematicFxToWorld,cinematicFxGeometry} from './cinematic-environment-fx.js';
 import {makeNativeBattleshipSequence,composeNativeBattleshipCamera,type NativeFilmFormat} from './native-format-camera.js';
 import {auditSequenceHeroFraming} from './shot-composition.js';
@@ -627,9 +628,16 @@ async function main(){
     });
     if(a.framingStatus==='subject_offscreen')
       throw Error('editorial_naval_shot_hero_out_of_frame');
+    const foreground=auditNavalEditorialForeground({
+      plan:frame.renderPlan,geometries,hero});
+    if(!foreground.estimatedForegroundClear)
+      throw Error('editorial_naval_shot_foreground_obstructed');
     return {frameIndex:i,frameDigest:frame.renderPlan.digest,
       coverage:a.coverage,center:a.center,
       framingStatus:a.framingStatus,
+      foregroundClear:foreground.estimatedForegroundClear,
+      nearfieldObstructions:foreground.visibleNearfieldObstructions,
+      foregroundAuditSchema:foreground.schema,
       observable:a.framingStatus!=='subject_offscreen'};
   }):null;
   const shader=extractOwnedShader(root);
