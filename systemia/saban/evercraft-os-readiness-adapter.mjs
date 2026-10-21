@@ -78,7 +78,7 @@ export async function runAssignment({ assignment, rootDir = process.cwd() }) {
 export async function reconcile({ results, rootDir = process.cwd() }) {
   const { program, program_sha256 } = readProgram(rootDir);
   // Reuse central manifest validator, independent of assignment payloads.
-  validateProgram(program, { registry: { software: [] } });
+  validateProgram(program, { registry: JSON.parse(readFileSync(resolve(rootDir, 'systemia/saban/multiplication-registry.json'))) });
   const expected = new Set(program.lanes.map(x => x.id));
   const counts = new Map();
   const findings = [];
