@@ -107,6 +107,15 @@ export function assertRegistry(data){
 }
 
 function privateParent(dir){
+  // Never permit mkdir -p to traverse an existing symlink to a different
+  // filesystem tree. This state is local/private and must fail closed.
+  let cursor=path.resolve(dir);
+  while(cursor!==path.dirname(cursor)){
+    if(fs.existsSync(cursor)&&fs.lstatSync(cursor).isSymbolicLink()){
+      throw Error('merchant_rail_directory_symlink_ancestor');
+    }
+    cursor=path.dirname(cursor);
+  }
   fs.mkdirSync(dir,{recursive:true,mode:0o700});
   const stat=fs.lstatSync(dir);
   const uid=typeof process.getuid==='function'?process.getuid():null;
@@ -123,36 +132,55 @@ export function saveMerchantRailCandidates(registry,{
   if(!path.isAbsolute(file))throw Error('merchant_rail_path_not_absolute');
   const parent=path.dirname(file);
   privateParent(parent);
-  if(fs.existsSync(file)){
-    const prior=readMerchantRailCandidates({file});
-    if(prior.version>=registry.version)throw Error('merchant_rail_revision_or_overwrite_rejected');
-    const added=Object.keys(registry.records);
-    for(const [rail,entry] of Object.entries(prior.records)){
-      if(JSON.stringify(registry.records[rail])!==JSON.stringify(entry)){
-        throw Error('merchant_rail_existing_nomination_modified');
-      }
-    }
-    if(added.length!==Object.keys(prior.records).length+1){
-      throw Error('merchant_rail_revision_must_add_exactly_one');
-    }
-  }else if(registry.version!==1||Object.keys(registry.records).length!==0){
-    throw Error('merchant_rail_registry_must_begin_empty');
-  }
-  const candidate=file+'.new-'+process.pid;
+  // A per-registry O_EXCL lock serializes independent Saban/Node OS writers.
+  // No "stale lock takeover": an interrupted writer causes a reviewable hold,
+  // not two processes silently overwriting one another's merchant preferences.
+  const lock=file+'.lock';
   const flags=fs.constants.O_WRONLY|fs.constants.O_EXCL|fs.constants.O_CREAT|
     (fs.constants.O_NOFOLLOW||0);
-  let fd;
+  let lockFd,temp=null,fd=null;
   try{
-    fd=fs.openSync(candidate,flags,0o600);
+    try{lockFd=fs.openSync(lock,flags,0o600)}
+    catch(e){
+      if(e?.code==='EEXIST')throw Error('merchant_rail_registry_write_locked');
+      throw e;
+    }
+    if(fs.existsSync(file)){
+      const prior=readMerchantRailCandidates({file});
+      if(registry.merchant_key!==prior.merchant_key){
+        throw Error('merchant_rail_merchant_identity_mismatch');
+      }
+      if(registry.version!==prior.version+1){
+        throw Error('merchant_rail_revision_or_overwrite_rejected');
+      }
+      const oldRails=Object.keys(prior.records);
+      const newRails=Object.keys(registry.records);
+      if(newRails.length!==oldRails.length+1){
+        throw Error('merchant_rail_revision_must_add_exactly_one');
+      }
+      for(const [rail,entry] of Object.entries(prior.records)){
+        if(JSON.stringify(registry.records[rail])!==JSON.stringify(entry)){
+          throw Error('merchant_rail_existing_nomination_modified');
+        }
+      }
+    }else if(registry.version!==1||Object.keys(registry.records).length!==0){
+      throw Error('merchant_rail_registry_must_begin_empty');
+    }
+    temp=file+'.new-'+process.pid+'-'+Date.now().toString(36);
+    fd=fs.openSync(temp,flags,0o600);
     fs.writeFileSync(fd,JSON.stringify(registry,null,2)+'\n','utf8');
     fs.fsyncSync(fd);
     fs.closeSync(fd);fd=null;
-    fs.renameSync(candidate,file);
+    fs.renameSync(temp,file);temp=null;
     const dfd=fs.openSync(parent,fs.constants.O_RDONLY);
     try{fs.fsyncSync(dfd)}finally{fs.closeSync(dfd)}
   }finally{
-    if(fd!==null&&fd!==undefined)fs.closeSync(fd);
-    if(fs.existsSync(candidate))fs.unlinkSync(candidate);
+    if(fd!==null)fs.closeSync(fd);
+    if(temp&&fs.existsSync(temp))fs.unlinkSync(temp);
+    if(lockFd!==undefined){
+      fs.closeSync(lockFd);
+      fs.unlinkSync(lock);
+    }
   }
   return {saved:true,version:registry.version,rails_nominated:Object.keys(registry.records).length,
     public_payment_instructions_enabled:false};
