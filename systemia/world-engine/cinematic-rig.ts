@@ -4,6 +4,7 @@ import {EvercraftWorldRuntime,worldDefinitionDigest} from './engine.js';
 import {compileVisualFrame,verifyVisualFrameContract} from './visual.js';
 import {compileWebGpuRenderPlan,verifyWebGpuRenderPlan,type GeometryAsset,type WebGpuRenderPlan} from './webgpu.js';
 import type {TextureAsset} from './texture.js';
+import {animateCinematicEntities,validateActorMotionRig,type ActorMotionRig} from './cinematic-actor-motion.js';
 
 export type CinematicMove='dolly'|'crane'|'orbit'|'follow';
 export type CinematicEase='linear'|'smoothstep'|'smootherstep';
@@ -39,6 +40,7 @@ export interface CinematicCameraFrame {
   fovYDeg:number;
   frameDigest:string;
   renderPlan:WebGpuRenderPlan;
+  actorMotionDigest?:string;
 }
 export interface CinematicCameraSequence {
   schema:'evercraft.world-engine.cinematic-camera-sequence.v1';
@@ -49,6 +51,7 @@ export interface CinematicCameraSequence {
   durationSec:number;
   frameCount:number;
   frames:CinematicCameraFrame[];
+  actorRigProof?:{schema:string;rigDigest:string;rigId:string;actorCount:number;entityCount:number;publicationAuthority:false};
   boundaries:{
     actualWorldGeometryRequired:true;
     worldSimulationUsesFixedSteps:true;
@@ -157,9 +160,12 @@ export function buildCinematicCameraSequence(input:{
   geometries:GeometryAsset[];
   viewport:{width:number;height:number};
   textures?:TextureAsset[];
+  actorRig?:ActorMotionRig;
 }):CinematicCameraSequence{
   const {world,take}=input;
   const {startFov,endFov,count}=validateTake(world,take);
+  if(input.actorRig&&input.actorRig.durationSec!==take.durationSec)err('actor_rig_duration_mismatch');
+  const actorRigProof=input.actorRig?validateActorMotionRig(world,input.actorRig):undefined;
   const runtime=new EvercraftWorldRuntime(world);
   const frames:CinematicCameraFrame[]=[];
   const stride=world.tickRateHz/take.fps;
@@ -167,7 +173,12 @@ export function buildCinematicCameraSequence(input:{
   for(let index=0;index<=count;index++){
     if(index>0){for(let tick=0;tick<stride;tick++)runtime.step();}
     const snapshot=runtime.snapshot();
-    const targetEntity=snapshot.entities.find(entity=>entity.id===take.targetEntityId);
+    // A rig transforms *real world objects* before compiling the canonical
+    // VisualFrame and WebGPU render plan. It is cinematic animation, not
+    // collision physics or mutation of the sealed simulation snapshot.
+    const animated=input.actorRig?animateCinematicEntities(world,snapshot.entities,input.actorRig,snapshot.timeSec):undefined;
+    const sceneEntities=animated?.entities??snapshot.entities;
+    const targetEntity=sceneEntities.find(entity=>entity.id===take.targetEntityId);
     if(!targetEntity||targetEntity.renderable?.visible===false)err('runtime_target_missing');
     const target={x:targetEntity.transform.position.x+offset.x,
       y:targetEntity.transform.position.y+offset.y,
@@ -178,7 +189,7 @@ export function buildCinematicCameraSequence(input:{
     const fovYDeg=lerp(startFov,endFov,u);
     // Do NOT forge a VisualFrame digest. Compile through the canonical
     // World Engine camera and visually authenticated GPU plan mechanisms.
-    const entities=snapshot.entities.map((entity):WorldEntity=>
+    const entities=sceneEntities.map((entity):WorldEntity=>
       entity.id!==take.cameraEntityId?entity:{
         ...entity,
         transform:{...entity.transform,position,rotationDeg:rotation},
@@ -193,13 +204,15 @@ export function buildCinematicCameraSequence(input:{
     frames.push({
       index,timeSec:snapshot.timeSec,tick:snapshot.tick,
       cameraPosition:position,cameraRotationDeg:rotation,lookAt:target,
-      fovYDeg,frameDigest:frame.digest,renderPlan
+      fovYDeg,frameDigest:frame.digest,renderPlan,
+      ...(animated?{actorMotionDigest:animated.evidence.animationDigest}:{})
     });
   }
   return {
     schema:'evercraft.world-engine.cinematic-camera-sequence.v1',
     takeId:take.id,worldId:world.id,worldDefinitionDigest:worldDefinitionDigest(world),
     fps:take.fps,durationSec:take.durationSec,frameCount:frames.length,frames,
+    ...(actorRigProof?{actorRigProof}:{}),
     boundaries:{actualWorldGeometryRequired:true,worldSimulationUsesFixedSteps:true,
       webGpuPlansDigestVerified:true,renderingNotPerformed:true,
       visualReviewStillRequired:true,publicationAuthority:false}
