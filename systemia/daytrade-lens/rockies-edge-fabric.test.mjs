@@ -71,6 +71,29 @@ const failed = evaluateRockiesEdgeCandidate(overfit, { transaction_cost_bps: 2 }
 assert.equal(failed.status, "NOT_VALIDATED");
 assert.equal(failed.checks.train_holdout_sign_agreement, false);
 
+
+const negativeDirectionSamples = Array.from({ length: 50 }, (_, i) => ({
+  observed_at: new Date(Date.parse("2026-03-01T15:00:00Z") + i * 86400000).toISOString(),
+  forward_return: i % 5 === 0 ? -0.001 : -0.004,
+  benchmark_return: 0,
+}));
+const negativeDirection = evaluateRockiesEdgeCandidate(negativeDirectionSamples, {
+  transaction_cost_bps: 10,
+});
+assert.equal(negativeDirection.status, "RESEARCH_CANDIDATE");
+assert.equal(negativeDirection.learned_direction, "NEGATIVE_EXCESS_RETURN");
+assert.equal(negativeDirection.expected_sign, -1);
+assert.ok(negativeDirection.holdout.mean_excess_return_net > 0);
+
+const mixedLossSamples = Array.from({ length: 50 }, (_, i) => ({
+  observed_at: new Date(Date.parse("2026-05-01T15:00:00Z") + i * 86400000).toISOString(),
+  forward_return: i % 4 === 0 ? -0.003 : 0.005,
+  benchmark_return: 0,
+}));
+const lowCost = evaluateRockiesEdgeCandidate(mixedLossSamples, { transaction_cost_bps: 0 });
+const highCost = evaluateRockiesEdgeCandidate(mixedLossSamples, { transaction_cost_bps: 50 });
+assert.ok(highCost.holdout.mean_excess_return_net < lowCost.holdout.mean_excess_return_net);
+
 const ranges = marketRelevantRockiesRanges();
 assert.ok(ranges.length >= 15);
 assert.ok(ranges.some((x) => x.range === "semiconductors_compute"));
@@ -83,6 +106,8 @@ console.log(JSON.stringify({
   provenance_preserved: true,
   holdout_required: true,
   overfit_candidate_rejected: true,
+  directional_costs_strictly_adverse: true,
+  negative_direction_supported: true,
   live_trade_authority: false,
   mapped_ranges: ranges.length,
 }));
