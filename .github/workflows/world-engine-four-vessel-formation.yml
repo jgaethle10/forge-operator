@@ -1,0 +1,69 @@
+name: World Engine four independent naval actor WebGPU proof
+on:
+  pull_request:
+    paths:
+      - 'systemia/world-engine/four-vessel-proxy-scene.ts'
+      - 'systemia/world-engine/four-vessel-proxy-scene.test.ts'
+      - 'systemia/world-engine/cinematic-render-proof.ts'
+      - '.github/workflows/world-engine-four-vessel-formation.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  four-ship-owned-webgpu:
+    runs-on: ubuntu-latest
+    timeout-minutes: 28
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Install existing World Engine runtime
+        run: npm install --no-audit --no-fund
+      - name: Install existing Chromium WebGPU runtime
+        working-directory: systemia/evercraft-web/browser-worker
+        run: PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD=1 npm install --no-audit --no-fund
+      - name: Verify deterministic four-vessel geometry plus existing renderer suites
+        run: |
+          npx tsx --test systemia/world-engine/four-vessel-proxy-scene.test.ts
+          npm run test:world-engine
+      - name: Verify actual original multi-vessel WebGPU frame rendering to MP4
+        env:
+          CINEMATIC_SCENE: denmark_strait_formation
+          CINEMATIC_FORMAT: wide
+          CINEMATIC_PROOF_OUTPUT: /tmp/evercraft-four-vessel-gpu
+          EVERCRAFT_NATIVE_BROWSER_STATE_DIR: /tmp/evercraft-four-vessel-browser
+        run: npm run world:cinematic-render-proof
+      - name: Independently check GPU hashes, actor evidence gates, silent movie codec and rendered pixels
+        run: |
+          node <<'NODE'
+          const fs=require('node:fs'),crypto=require('node:crypto'),path=require('node:path'),cp=require('node:child_process');
+          const root='/tmp/evercraft-four-vessel-gpu';
+          const receipt=JSON.parse(fs.readFileSync(path.join(root,'receipt.json')));
+          const movie=path.join(root,'denmark-strait-four-vessel-gpu-proxy.mp4');
+          const sum=crypto.createHash('sha256').update(fs.readFileSync(movie)).digest('hex');
+          if(receipt.output.sha256!==sum||receipt.output.width!==640||receipt.output.height!==360||
+            receipt.output.audioCodec!==null||receipt.exactGpuReadbackFrames!==96||
+            receipt.sceneType!=='procedural_four_vessel_illustrative_not_historical_tracks'||
+            receipt.publicationAuthority!==false||receipt.uniqueRawFrameDigests<20||
+            receipt.shadowCounterfactualChangedPixels<50||receipt.shadowFilterChangedPixels<10)
+            throw Error('four_vessel_gpu_receipt_invalid');
+          const probe=JSON.parse(cp.execFileSync('ffprobe',['-v','error','-show_entries',
+            'stream=codec_type,codec_name,width,height,nb_frames','-of','json',movie]));
+          const v=probe.streams.find(s=>s.codec_type==='video');
+          if(!v||v.codec_name!=='h264'||+v.nb_frames!==96||probe.streams.some(s=>s.codec_type==='audio'))
+            throw Error('four_vessel_encoded_pixels_invalid');
+          console.log('REAL_FOUR_VESSEL_GPU_PIXEL_ACCEPTANCE',{sha256:sum,frames:96});
+          NODE
+      - name: Preserve real four-vessel GPU film and raw receipt for founder review
+        uses: actions/upload-artifact@v4
+        with:
+          name: evercraft-four-vessel-proxy-real-webgpu
+          path: |
+            /tmp/evercraft-four-vessel-gpu/denmark-strait-four-vessel-gpu-proxy.mp4
+            /tmp/evercraft-four-vessel-gpu/receipt.json
+            /tmp/evercraft-four-vessel-gpu/opening.png
+            /tmp/evercraft-four-vessel-gpu/middle.png
+            /tmp/evercraft-four-vessel-gpu/closing.png
+          retention-days: 7
+          if-no-files-found: error
