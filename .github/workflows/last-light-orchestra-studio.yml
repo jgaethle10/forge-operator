@@ -1,0 +1,31 @@
+name: The Last Light Orchestra Sound Studio
+
+on:
+  pull_request:
+    paths:
+      - 'systemia/media-studio/last-light-orchestra-*.py'
+      - '.github/workflows/last-light-orchestra-studio.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  orchestral-source-intake:
+    runs-on: ubuntu-latest
+    timeout-minutes: 16
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Fetch actual orchestral acoustic recordings (fail closed)
+        run: |
+          python systemia/media-studio/last-light-orchestra-source-intake.py \
+            --out /tmp/evercraft-ll-orchestra-raw
+      - name: Preserve recorded source bytes and source citations for offline QA
+        uses: actions/upload-artifact@v4
+        with:
+          name: internal-last-light-orchestra-raw-audio
+          path: /tmp/evercraft-ll-orchestra-raw/
+          retention-days: 3
