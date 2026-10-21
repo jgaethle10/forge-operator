@@ -143,6 +143,38 @@ jobs:
           grep -q '"aspectRatio": "9:16"' _visual_desk_release/washington-active-volcanoes/fallen-stage-input.json
           grep -q 'usgs.gov' _visual_desk_release/washington-active-volcanoes/story.json
 
+      - name: Render original toon cel canary to real MP4 and instrumental track
+        run: |
+          set -euo pipefail
+          python3 -m venv /tmp/fallen-toon-cel-env
+          /tmp/fallen-toon-cel-env/bin/pip install --disable-pip-version-check CairoSVG==2.7.1
+          ffmpeg -version | head -n 1
+          /tmp/fallen-toon-cel-env/bin/python systemia/media-studio/toon-cel-canary.py \
+            --out _toon_cel_canary --seconds 1 --fps 24 --width 480 --height 270
+          node --input-type=module - <<'NODE'
+          import fs from 'node:fs';
+          import crypto from 'node:crypto';
+          import assert from 'node:assert/strict';
+          const p=JSON.parse(fs.readFileSync('_toon_cel_canary/render-receipt.json','utf8'));
+          assert.equal(p.status,'rendered_canary_not_production_admitted');
+          assert.equal(p.frameCount,24);
+          assert.equal(p.shotHandoffConnected,false);
+          assert.equal(p.lipSyncVerified,false);
+          assert.equal(p.publicationAuthority,false);
+          assert.equal(p.sha256,crypto.createHash('sha256').update(fs.readFileSync('_toon_cel_canary/toon-cel-canary.mp4')).digest('hex'));
+          NODE
+
+      - name: Preserve reproducible toon MP4 canary
+        uses: actions/upload-artifact@v4
+        with:
+          name: fallen-toon-motion-original-canary
+          path: |
+            _toon_cel_canary/toon-cel-canary.mp4
+            _toon_cel_canary/original-synth-score.wav
+            _toon_cel_canary/render-receipt.json
+          if-no-files-found: error
+          retention-days: 30
+
       - name: Preserve portable Visual Desk release
         uses: actions/upload-artifact@v4
         with:
