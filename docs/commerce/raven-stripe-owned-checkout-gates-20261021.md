@@ -74,3 +74,34 @@ If an encrypted Stripe credential already exists, the next gate is authorized
 account revalidation through Raven. If it doesn't, the operator can authorize a
 single hidden-input intake through Evercraft's existing credential vault.
 Do not create a second Stripe-specific vault or bypass Evercraft Payments.
+
+## One-time restricted Stripe authorization using existing encrypted vault
+
+Penguin's October 21 bounded vault scan found no active sealed Stripe credential in its five known candidate locations. It found an existing private Evercraft Home encrypted provider vault at `/var/lib/evercraft/home/credentials`. This means **account identity is stored, but separate Raven API authorization is not yet established**. It does not prove no credentials exist in undiscovered locations.
+
+The intended operator workflow is one-time:
+
+1. Sign into the existing Evercraft Stripe Dashboard and create a **live restricted API key** dedicated to Evercraft Payments/Raven Nexus. Prefer the narrowest permissions supporting **account read**, **prices read**, and **Checkout Sessions write**. Do not grant refunds, payouts, transfers, full account write or unrelated permissions. Stripe reference: https://docs.stripe.com/keys/restricted-api-keys. Stripe's dashboard owns creating/revoking this credential.
+2. Stage the approved checkout branch, run `node scripts/systemia-stripe-restricted-intake.mjs status` from Penguin, and review `existing_live_stripe_credential_count` before doing anything else. This command inspects the **existing** encrypted Home vault and never attempts to create another.
+3. Only if no Stripe credential exists and you authorize enrollment, type the restricted key into a **hidden local terminal prompt**, then pipe it to `node scripts/systemia-stripe-restricted-intake.mjs seal --confirm-restricted-key-intake`. Never include the key in a shell command argument, GitHub, clipboard logs, chat or a publicly reachable web form.
+4. The intake performs **three read-only Stripe API GETs** before encryption: `/v1/account` must match Systemia's already-saved private Stripe account and be charges enabled; both already-approved fixed one-time offer price records must still match. If the key lacks necessary read scope or returns a different account, the process refuses to store it.
+5. On success the existing AES-256-GCM Evercraft Home `ProviderCredentialVault` seals the restricted key, preserving its original directory/encryption key. The intake refuses overwrite of an existing active live Stripe credential. The summary never returns the secret, Stripe account ID or vault credential reference.
+
+The operator-side hidden input is intended to be:
+
+```bash
+(
+  set -e
+  set +x
+  RUNTIME="$HOME/.local/share/evercraft/stripe-checkout-bridge"
+  node "$RUNTIME/scripts/systemia-stripe-restricted-intake.mjs" status
+  IFS= read -r -s -p "Restricted LIVE Stripe key (hidden): " STRIPE_RAK
+  printf '\n'
+  printf '%s' "$STRIPE_RAK" | node "$RUNTIME/scripts/systemia-stripe-restricted-intake.mjs" seal --confirm-restricted-key-intake
+  unset STRIPE_RAK
+)
+```
+
+**Do not run this until the latest branch and CI are verified**. This is an intentional credential-enrollment operation, not a read-only diagnostic. If an intake fails, do not repeatedly recreate keys. Inspect the sanitized error and correct its scope/account/access issue.
+
+A successful seal is **not** proof the Raven private runtime is bound, authenticated, producing real Checkout Sessions, recording signed provider receipts or releasing fulfillment. The adapter still needs an explicitly governed internal worker with an exact credential reference and durable Evercraft Payments orders. Payment and fulfillment remain held until independently verified.
