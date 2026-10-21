@@ -55,9 +55,12 @@ test('Megazord verifies physical graphics assets, council, timeline and honest d
 test('Megazord blocks missing posters and altered render API',async(t)=>{
   const input=await fixture(t);
   const poster=path.join(input.dir,'poster-story.svg');
+  const originalPoster=fs.readFileSync(poster);
   fs.unlinkSync(poster);
   assert.throws(()=>assembleGraphicsProductionMesh(input),/graphics_mesh_asset_missing:poster-story.svg/);
   fs.writeFileSync(poster,'<svg width="1080" height="1920"></svg>');
+  assert.throws(()=>assembleGraphicsProductionMesh(input),/graphics_mesh_svg_content_mismatch:story/);
+  fs.writeFileSync(poster,originalPoster);
   const html=path.join(input.dir,'motion.html');
   fs.writeFileSync(html,'<html>Fake video evidence</html>');
   assert.throws(()=>assembleGraphicsProductionMesh(input),/graphics_mesh_exact_frame_api_missing/);
