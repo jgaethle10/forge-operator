@@ -1,0 +1,36 @@
+{
+  "schema": "evercraft.live.playlist.v1",
+  "reviewed_for_public": true,
+  "items": [
+    {
+      "world": "creative",
+      "seconds": 30,
+      "label": "Visual graphics concept"
+    },
+    {
+      "world": "earth",
+      "seconds": 30,
+      "label": "Interactive terrain sandbox"
+    },
+    {
+      "world": "network",
+      "seconds": 25,
+      "label": "Illustrative mesh network"
+    },
+    {
+      "world": "storm",
+      "seconds": 25,
+      "label": "Conceptual storm model"
+    },
+    {
+      "world": "biology",
+      "seconds": 25,
+      "label": "Illustrative cell study"
+    },
+    {
+      "world": "systemia",
+      "seconds": 25,
+      "label": "Sample workflow model"
+    }
+  ]
+}
