@@ -1,0 +1,21 @@
+name: Fallen Visual Runtime Inventory
+
+on:
+  pull_request:
+    paths:
+      - 'systemia/media-studio/visual-runtime-inventory.ts'
+      - 'systemia/media-studio/visual-runtime-inventory.test.ts'
+      - 'systemia/media-studio/model-fabric-runtime.ts'
+      - '.github/workflows/fallen-visual-runtime-inventory.yml'
+  workflow_dispatch:
+
+jobs:
+  runtime-inventory:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - run: npm install --no-audit --no-fund
+      - run: node --import tsx --test systemia/media-studio/visual-runtime-inventory.test.ts
