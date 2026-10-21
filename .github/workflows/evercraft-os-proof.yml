@@ -39,6 +39,8 @@ jobs:
           node-version: "20"
       - name: Prove Evercraft OS composition
         run: node systemia/evercraft-os/runtime.proof.mjs
+      - name: Prove twelve parallel OS readiness lanes and Saban authority boundaries
+        run: node systemia/saban/evercraft-os-parallel.proof.mjs
       - name: Prove device profile contract
         run: node systemia/evercraft-os/device-profile.proof.mjs
       - name: Prove Evercraft OS app package contract
