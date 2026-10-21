@@ -1,10 +1,5 @@
 name: Voice Foundry RC23 Script One Refinement (private)
 on:
-  pull_request:
-    paths:
-      - '.github/workflows/voice-rc23-script-one.yml'
-      - 'systemia/media-studio/voice-rc23-script-one-refine.py'
-      - 'tests/media-voice-rc23-script-one-refine.test.mjs'
   workflow_dispatch:
 permissions:
   contents: read
