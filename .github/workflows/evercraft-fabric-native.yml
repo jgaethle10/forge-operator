@@ -96,6 +96,8 @@ jobs:
         run: node --test tests/edge-mapping-control.test.mjs
       - name: Prove idempotent UPnP mapping ownership and web-only resident refresh
         run: node --test tests/edge-upnp-mapping-policy.test.mjs
+      - name: Verify read-only Penguin upgrade preflight and strict rollback gates
+        run: node --test tests/router-resident-upgrade.test.mjs
       - name: Check guarded stale Chromebook UPnP recovery tool
         run: node --test tests/stale-fabric-upnp-repair.test.mjs
       - name: Prove Saban Fabric outbound bridge and device attestation
