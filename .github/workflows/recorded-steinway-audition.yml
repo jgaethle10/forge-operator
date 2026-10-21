@@ -5,6 +5,8 @@ on:
     paths:
       - 'systemia/media-studio/recorded-steinway-pilot.py'
       - 'systemia/media-studio/test_recorded_steinway_pilot.py'
+      - 'systemia/media-studio/recorded-steinway-phrasing-v2.py'
+      - 'systemia/media-studio/test_recorded_steinway_v2.py'
       - '.github/workflows/recorded-steinway-audition.yml'
   workflow_dispatch:
 
@@ -64,6 +66,55 @@ jobs:
         with:
           name: internal-recorded-steinway-piano-audition
           path: /tmp/steinway-audition/
+          retention-days: 14
+      - name: V2 source-pinned dynamics, onset and composition tests (real recordings)
+        env:
+          IOWA_SOURCE_DIR: /tmp/steinway-source-cache
+          IOWA_ORIGINAL_RECEIPT: /tmp/steinway-audition/recording-custody.json
+        run: python -m unittest discover -s systemia/media-studio -p 'test_recorded_steinway_v2.py' -v
+      - name: Render the second human-audition candidate without synth strings
+        run: |
+          python systemia/media-studio/recorded-steinway-phrasing-v2.py \
+            --sources /tmp/steinway-source-cache \
+            --original-receipt /tmp/steinway-audition/recording-custody.json \
+            --out /tmp/steinway-v2
+          ffmpeg -hide_banner -y -v error \
+            -i /tmp/steinway-v2/Evercraft_The_Last_Light_Real_Steinway_V2.wav \
+            -af volume=1.9dB -c:a pcm_s24le \
+            /tmp/steinway-v2/Evercraft_The_Last_Light_Steinway_V2_24bit.wav
+          ffmpeg -hide_banner -y -v error \
+            -i /tmp/steinway-v2/Evercraft_The_Last_Light_Steinway_V2_24bit.wav \
+            -c:a libmp3lame -b:a 192k \
+            /tmp/steinway-v2/Evercraft_The_Last_Light_Steinway_V2_Listen.mp3
+          python - <<'PY'
+          import hashlib,json,pathlib,subprocess
+          d=pathlib.Path('/tmp/steinway-v2')
+          r=json.loads((d/'v2-performance-custody.json').read_text())
+          raw=d/'Evercraft_The_Last_Light_Real_Steinway_V2.wav'
+          master=d/'Evercraft_The_Last_Light_Steinway_V2_24bit.wav'
+          assert r['output_sha256']==hashlib.sha256(raw.read_bytes()).hexdigest()
+          assert len(r['sources'])==12
+          assert 'Piano.pp.A4.aiff' not in r['sources']
+          assert all(s['source_noise_margin_db']>=18 for s in r['sources'].values())
+          assert r['commercial_release_approved'] is False
+          assert r['human_listening_accepted'] is False
+          p=json.loads(subprocess.check_output(['ffprobe','-v','error',
+            '-show_entries','stream=codec_name,sample_rate,channels:format=duration',
+            '-of','json',str(master)]))
+          assert p['streams'][0]['codec_name']=='pcm_s24le'
+          assert p['streams'][0]['sample_rate']=='44100'
+          assert p['streams'][0]['channels']==2
+          assert abs(float(p['format']['duration'])-35.0)<.01
+          print('V2 VERIFIED: 12 acoustic note takes, 35s PCM24, no clearance or human quality claim')
+          PY
+          ffmpeg -hide_banner -nostats -i /tmp/steinway-v2/Evercraft_The_Last_Light_Steinway_V2_24bit.wav \
+            -af ebur128=peak=true -f null - 2>&1 | tail -24
+      - name: Archive improved internal listening audition, not a master
+        uses: actions/upload-artifact@v4
+        if: success()
+        with:
+          name: internal-steinway-calibrated-expression-v2
+          path: /tmp/steinway-v2/
           retention-days: 14
       - name: Archive verified raw acoustic takes for continued internal engineering
         uses: actions/upload-artifact@v4
