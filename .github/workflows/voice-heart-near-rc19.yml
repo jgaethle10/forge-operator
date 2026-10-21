@@ -1,10 +1,5 @@
 name: Voice Foundry RC19 Heart-near (private audition)
 on:
-  pull_request:
-    paths:
-      - '.github/workflows/voice-heart-near-rc19.yml'
-      - 'systemia/media-studio/voice-heart-near-rc19.py'
-      - 'tests/media-voice-heart-near-rc19.test.mjs'
   workflow_dispatch:
 permissions:
   contents: read
