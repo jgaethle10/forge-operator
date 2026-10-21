@@ -110,7 +110,7 @@ export function renderEarlyHuskerArchive(outDir){
    independentFrameInspectionPending:true},
   claims:{exactGameYearConfirmed:false,currentNebraska2026Footage:false},
   boundaries:{originalUSPublicDomainBeliefNotGlobalLegalWarranty:true,
-   sourceRightsContactForDistributionMayBeNeeded:true,
+   sourceRightsWrittenPermissionAndPotentialFeeRequiredForPublication:true,
    personOrOrganizationEndorsementNotImplied:true,founderEditorialReviewRequired:true},
   publicationAuthorityGranted:false
  };
@@ -120,9 +120,9 @@ export function renderEarlyHuskerArchive(outDir){
  fs.writeFileSync(path.join(outDir,'SOURCE_CREDITS.txt'),
   'Source: Early University of Nebraska Scenes, University of Nebraska Collection RG6137.MI, History Nebraska digital archive.\n'+
   'Original: '+ARCHIVE.page+'\nContext and historical date reasoning: '+ARCHIVE.research+'\n'+
-  '18-second video excerpt from source seconds 12 to 30. Historic game probably 1919, dating NOT certain.\n'+
-  'No historic location audio exists in this study. No added sound, generated dialogue or recreated action.\n'+
-  'Rights catalog: believed public domain under US law; no determination for other countries. Review before distribution.\n');
+  '18-second video excerpt from source seconds 34 to 52, including an early forward pass near 0:44. Historic game probably 1919, dating NOT certain.\n'+
+  'Historic 1919 field audio is not authenticated; the digitized file audio was deliberately removed. No added sound, generated dialogue or recreated action.\n'+
+  'Rights catalog: believed public domain under US law, no determination internationally; NSHS collection policy separately requires written publication permission and possible use fees. No distribution approved.\n');
  return report;
 }
 if(process.argv[1]&&path.resolve(process.argv[1])===path.resolve(new URL(import.meta.url).pathname)){
