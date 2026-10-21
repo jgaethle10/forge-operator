@@ -4,7 +4,7 @@ import net from 'node:net';
 import process from 'node:process';
 import { randomBytes } from 'node:crypto';
 import { assessRouterMappings } from './edge-mapping-control.mjs';
-import {planUpnpMapping,parseUpnpErrorCode} from './edge-upnp-mapping-policy.mjs';
+import {planUpnpMapping,parseUpnpErrorCode,decodeUpnpCdata} from './edge-upnp-mapping-policy.mjs';
 
 const args = new Map();
 for (let i = 2; i < process.argv.length; i += 2) {
@@ -248,7 +248,7 @@ async function discoverUpnp() {
 
 function tagValue(block, localName) {
   const re = new RegExp('<(?:[A-Za-z0-9_.-]+:)?' + localName + '\\b[^>]*>([\\s\\S]*?)<\\/(?:[A-Za-z0-9_.-]+:)?' + localName + '>', 'i');
-  return block.match(re)?.[1]?.trim() || null;
+  return decodeUpnpCdata(block.match(re)?.[1] ?? null);
 }
 
 function extractServices(xml) {
