@@ -34,9 +34,14 @@ jobs:
           python -m pip install --disable-pip-version-check --no-cache-dir \
             torch==2.6.0 torchaudio==2.6.0 \
             --index-url https://download.pytorch.org/whl/cpu
-          python -m pip install --disable-pip-version-check --no-cache-dir \
-            chatterbox-tts==0.1.7
-          python -c 'import torch,torchaudio;print(torch.__version__,torchaudio.__version__)'
+          git clone --depth=1 --branch master https://github.com/resemble-ai/chatterbox.git /tmp/evercraft-upstream-chatterbox
+          test -f /tmp/evercraft-upstream-chatterbox/example_tts_nano.py
+          grep -q 'nano=True' /tmp/evercraft-upstream-chatterbox/example_tts_nano.py
+          SOURCE_SHA="$(git -C /tmp/evercraft-upstream-chatterbox rev-parse HEAD)"
+          echo "EVERCRAFT_MODEL_SOURCE_COMMIT=$SOURCE_SHA" >> "$GITHUB_ENV"
+          python -m pip install --disable-pip-version-check --no-cache-dir /tmp/evercraft-upstream-chatterbox
+          python -c 'import torch,torchaudio;from chatterbox.tts_turbo import ChatterboxTurboTTS;print(torch.__version__,torchaudio.__version__)'
+          printf 'Upstream Nano-capable source checkout %s\n' "$SOURCE_SHA"
       - name: Produce actual private baseline versus emotional tag takes
         env:
           HF_HUB_DISABLE_TELEMETRY: '1'
