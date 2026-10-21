@@ -133,14 +133,28 @@ export function buildRavenStripeCheckoutPlan({order,providerPrice,account,authen
   };
 }
 
-export function inspectCreatedStripeCheckoutSession(plan,session){
+/**
+ * Validate a newly created Stripe Checkout Session AND separately retrieved
+ * Stripe line items. The caller must fetch BOTH from authenticated Raven-owned
+ * provider APIs, not from the browser, return URL, or buyer-submitted payload.
+ *
+ * Stripe's own checkout URLs can contain #fid... fragments. The URL is
+ * a navigation artifact, never payment/fulfillment evidence.
+ */
+export function inspectCreatedStripeCheckoutSession(plan,session,providerLineItems){
   if(plan?.schema!=='evercraft.payments.raven-stripe-checkout-plan.v1' ||
      !session || typeof session!=='object')return {ok:false,reason:'invalid_session_evidence'};
   let url;
   try{url=new URL(session.url)}catch{return {ok:false,reason:'invalid_checkout_url'}}
+  const sessionId=String(session.id||'');
+  const binding=Object.values(STRIPE_FIXED_PRICE_BINDINGS).find(
+    item=>item.offer_key===plan.offer_key && item.stripe_price===plan.provider_price_id
+  );
   const valid=(url.protocol==='https:' && url.hostname==='checkout.stripe.com' &&
-    !url.username && !url.password && !url.hash &&
-    /^cs_live_[A-Za-z0-9]+$/.test(String(session.id||'')) &&
+    !url.username && !url.password &&
+    /^cs_live_[A-Za-z0-9]+$/.test(sessionId) &&
+    url.pathname==='/c/pay/'+sessionId &&
+    session.object==='checkout.session' &&
     session.livemode===true &&
     session.mode==='payment' &&
     session.status==='open' &&
@@ -149,8 +163,29 @@ export function inspectCreatedStripeCheckoutSession(plan,session){
     session.currency===plan.currency &&
     session.amount_total===plan.amount_cents &&
     session.metadata?.evercraft_order_key===plan.order_key &&
-    session.metadata?.evercraft_offer_key===plan.offer_key);
-  return valid
-    ? {ok:true,state:'checkout_prepared_unpaid',checkout_url:url.href,session_id:session.id,payment_verified:false,fulfillment_released:false}
-    : {ok:false,reason:'provider_checkout_binding_mismatch'};
+    session.metadata?.evercraft_offer_key===plan.offer_key &&
+    !!binding);
+  if(!valid)return {ok:false,reason:'provider_checkout_binding_mismatch'};
+  if(providerLineItems?.object!=='list' ||
+     !Array.isArray(providerLineItems.data) ||
+     providerLineItems.has_more!==false ||
+     providerLineItems.data.length!==1){
+    return {ok:false,reason:'provider_line_items_not_fully_verified'};
+  }
+  const line=providerLineItems.data[0];
+  if(line?.price?.id!==plan.provider_price_id ||
+     line?.price?.product!==binding.stripe_product ||
+     line?.price?.unit_amount!==plan.amount_cents ||
+     line?.price?.currency!==plan.currency ||
+     line?.quantity!==1 ||
+     line?.currency!==plan.currency ||
+     line?.amount_total!==plan.amount_cents){
+    return {ok:false,reason:'provider_line_item_offer_mismatch'};
+  }
+  return {
+    ok:true,state:'checkout_prepared_unpaid',
+    checkout_url:url.href,session_id:sessionId,
+    line_items_verified:true,
+    payment_verified:false,fulfillment_released:false,
+  };
 }
