@@ -119,7 +119,7 @@ because the systemd helper references its repository path after installation.
 
 **Phase A: stage and inspect without modifying the live service.**
 
-\`\`\`bash
+```bash
 cd ~/.local/share/evercraft/forge-operator
 git fetch --no-tags origin fix/fabric-edge-mapping-truth-20261020
 RUNTIME="$HOME/.local/share/evercraft/router-map-v2"
@@ -128,7 +128,7 @@ test ! -e "$RUNTIME" || { echo "STOP: staged worktree already exists"; exit 1; }
 git worktree add --detach "$RUNTIME" FETCH_HEAD
 bash "$RUNTIME/scripts/upgrade-fabric-router-map-resident.sh" \
   --repo-root "$RUNTIME" --preflight
-\`\`\`
+```
 
 This creates only a durable candidate checkout and performs a read-only
 configuration/systemd observation. It does **not** change UPnP, services, DNS,
@@ -140,18 +140,18 @@ has changed, stop and investigate before proceeding.
 
 **Phase B: separate operator-authorized promotion (only after review).**
 
-\`\`\`bash
+```bash
 RUNTIME="$HOME/.local/share/evercraft/router-map-v2"
 bash "$RUNTIME/scripts/upgrade-fabric-router-map-resident.sh" \
   --repo-root "$RUNTIME" \
   --apply --confirm-ip 192.168.88.5
-\`\`\`
+```
 
-The script requires an interactive \`UPGRADE\` confirmation. It backs up the
+The script requires an interactive `UPGRADE` confirmation. It backs up the
 saved router configuration, refresh helper, and systemd service/timer units;
 pauses the old timer; runs the web-only installer; demands independent readback
 of **both** exact Evercraft labels, internal ports, ChromeOS Wi-Fi target,
-\`scope=web\`, and \`public_ingress_verified=false\` in its local receipt.
+`scope=web`, and `public_ingress_verified=false` in its local receipt.
 If installation/receipt validation fails, its EXIT trap restores the old
 files and the prior timer state without deleting router mappings. Backup
 snapshots are retained for operator rollback even after success.
