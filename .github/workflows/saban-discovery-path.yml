@@ -6,6 +6,7 @@ on:
       - 'systemia/saban/discovery-path-probe.mjs'
       - 'systemia/saban/discovery-path-classify.mjs'
       - 'tests/saban-discovery-diagnostics.test.mjs'
+      - 'tests/owned-offer-links.test.mjs'
       - '.github/workflows/saban-discovery-path.yml'
   schedule:
     - cron: '23 * * * *'
@@ -15,6 +16,7 @@ on:
       - 'systemia/saban/discovery-path-probe.mjs'
       - 'systemia/saban/discovery-path-classify.mjs'
       - 'tests/saban-discovery-diagnostics.test.mjs'
+      - 'tests/owned-offer-links.test.mjs'
       - 'systemia/mcp/owned-offer-links.mjs'
       - '.github/workflows/saban-discovery-path.yml'
 permissions:
@@ -31,8 +33,8 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: 22
-      - name: Verify discovery diagnostics offline
-        run: node --test tests/saban-discovery-diagnostics.test.mjs
+      - name: Verify discovery diagnostics and held checkout contract locally
+        run: node --test tests/saban-discovery-diagnostics.test.mjs tests/owned-offer-links.test.mjs
       - name: Probe real public discovery (not required for PR diagnostics)
         if: github.event_name != 'pull_request'
         run: node systemia/saban/discovery-path-probe.mjs
