@@ -1,12 +1,20 @@
 name: Saban cold-client discovery path
 on:
   workflow_dispatch:
+  pull_request:
+    paths:
+      - 'systemia/saban/discovery-path-probe.mjs'
+      - 'systemia/saban/discovery-path-classify.mjs'
+      - 'tests/saban-discovery-diagnostics.test.mjs'
+      - '.github/workflows/saban-discovery-path.yml'
   schedule:
     - cron: '23 * * * *'
   push:
     branches: [main]
     paths:
       - 'systemia/saban/discovery-path-probe.mjs'
+      - 'systemia/saban/discovery-path-classify.mjs'
+      - 'tests/saban-discovery-diagnostics.test.mjs'
       - 'systemia/mcp/owned-offer-links.mjs'
       - '.github/workflows/saban-discovery-path.yml'
 permissions:
@@ -23,9 +31,13 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: 22
-      - run: node systemia/saban/discovery-path-probe.mjs
+      - name: Verify discovery diagnostics offline
+        run: node --test tests/saban-discovery-diagnostics.test.mjs
+      - name: Probe real public discovery (not required for PR diagnostics)
+        if: github.event_name != 'pull_request'
+        run: node systemia/saban/discovery-path-probe.mjs
       - uses: actions/upload-artifact@v4
-        if: always()
+        if: always() && github.event_name != 'pull_request'
         with:
           name: saban-discovery-path-${{ github.run_id }}
           path: artifacts/saban/discovery-path/receipt.json
