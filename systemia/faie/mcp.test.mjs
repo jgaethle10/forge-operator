@@ -96,7 +96,7 @@ test('FAIE MCP investigation uses preview path and does not persist the caller q
     assert.equal(payload.persisted, false);
     assert.equal(payload.decision_authority, false);
     assert.equal(payload.publication_authority, false);
-    assert.equal(payload.investigation.status, 'evidence_available');
+    assert.equal(payload.investigation.status, 'evidence_available', JSON.stringify({ ingested: runtime.health().signal_count, scope: payload.investigation.scope, coverage: payload.investigation.coverage, findings: payload.investigation.findings }));
     assert.equal(runtime.health().investigation_count, before);
 
     const finding = payload.investigation.findings[0];
