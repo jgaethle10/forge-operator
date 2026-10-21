@@ -47,7 +47,7 @@ function mockStripe({wrongAccount=false,disabled=false,wrongPrice=false,paidSess
     if(url==='https://api.stripe.com/v1/checkout/sessions'){
       const fields=new URLSearchParams(req.body);
       return response({
-        id:'cs_live_MOCKONLY123',
+        object:'checkout.session',id:'cs_live_MOCKONLY123',
         url:'https://checkout.stripe.com/c/pay/cs_live_MOCKONLY123',
         livemode:true,mode:'payment',status:'open',
         payment_status:paidSession?'paid':'unpaid',
@@ -58,6 +58,12 @@ function mockStripe({wrongAccount=false,disabled=false,wrongPrice=false,paidSess
           evercraft_offer_key:fields.get('metadata[evercraft_offer_key]'),
         },
       });
+    }
+    if(url.endsWith('/line_items')){
+      return response({object:'list',has_more:false,data:[{
+        quantity:1,currency:'usd',amount_total:1900,
+        price:{id:providerPrice.id,product:providerPrice.product,unit_amount:1900,currency:'usd'},
+      }]});
     }
     throw Error('mock_stripe_unexpected_endpoint');
   };
