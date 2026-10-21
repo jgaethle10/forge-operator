@@ -64,6 +64,7 @@ on:
       - 'tests/specialist-handoff-native-runtime.test.mjs'
       - 'tests/public-edge-native-specialist-invariants.test.mjs'
       - 'tests/public-edge-canary-contract.test.mjs'
+      - '.github/workflows/evercraft-public-edge-canary.yml'
       - 'tests/fabric-edge-doctor-contract.test.mjs'
       - 'tests/fabric-edge-external-canary-contract.test.mjs'
       - '.github/workflows/chromebook-operator-edge-canary.yml'
@@ -89,6 +90,8 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: '22'
+      - name: Reject green external canary when specialist origin is unconfigured
+        run: node --test tests/public-edge-canary-contract.test.mjs
       - name: Verify router mapping control cannot fake production ingress
         run: node --test tests/edge-mapping-control.test.mjs
       - name: Prove Saban Fabric outbound bridge and device attestation
