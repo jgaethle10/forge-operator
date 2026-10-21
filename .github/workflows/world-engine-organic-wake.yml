@@ -1,0 +1,90 @@
+name: World Engine organic ship-water wakes original GPU acceptance
+on:
+  pull_request:
+    paths:
+      - 'systemia/world-engine/organic-wake-geometry.ts'
+      - 'systemia/world-engine/organic-wake.test.ts'
+      - 'systemia/world-engine/cinematic-environment-fx.ts'
+      - 'systemia/world-engine/cinematic-render-proof.ts'
+      - '.github/workflows/world-engine-organic-wake.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  native-foam-hull-water:
+    runs-on: ubuntu-latest
+    timeout-minutes: 38
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Install owned World Engine dependencies
+        run: npm install --no-audit --no-fund
+      - name: Install native original browser WGSL runtime
+        working-directory: systemia/evercraft-web/browser-worker
+        run: PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD=1 npm install --no-audit --no-fund
+      - name: Verify original foam surface geometry, animated-water level and all engine regressions
+        run: |
+          npx tsx --test systemia/world-engine/organic-wake.test.ts
+          npm run test:world-engine
+      - name: Ensure FFmpeg H264 available
+        run: command -v ffmpeg || (sudo apt-get update -qq && sudo apt-get install -y ffmpeg)
+      - name: Produce ORIGINAL GPU four-ship film using scattered foam, live waves and native atmospheric sky
+        env:
+          CINEMATIC_SCENE: denmark_strait_silhouettes
+          BATTLE_CAMERA: bismarck_hero
+          BATTLE_MOTION: "1"
+          BATTLE_FX: "1"
+          BATTLE_ORGANIC_WAKE: "1"
+          BATTLE_ANIMATED_OCEAN: "1"
+          BATTLE_SKY: "1"
+          CINEMATIC_FORMAT: wide
+          CINEMATIC_PROOF_OUTPUT: /tmp/evercraft-native-organic-wake
+          EVERCRAFT_NATIVE_BROWSER_STATE_DIR: /tmp/evercraft-organic-wake-browser
+        run: npm run world:cinematic-render-proof
+      - name: Independent original GPU source geometry, ocean tracking and video integrity receipt
+        run: |
+          node <<'NODE'
+          const fs=require('node:fs'),crypto=require('node:crypto'),path=require('node:path'),cp=require('node:child_process');
+          const dir='/tmp/evercraft-native-organic-wake';
+          const movie=path.join(dir,'denmark-strait-class-silhouettes-gpu.mp4');
+          const r=JSON.parse(fs.readFileSync(path.join(dir,'receipt.json'),'utf8'));
+          const hash=crypto.createHash('sha256').update(fs.readFileSync(movie)).digest('hex');
+          const f=r.organicWake,o=r.animatedOcean,e=r.environmentalFx;
+          if(!f||f.source!=='original_non_chevron_3d_curved_alpha_foam_patches'||
+             f.sourceGeometryPrefix!=='owned:fx-organic-foam-'||
+             f.originalGeometryVariants!==4||f.centeredOnNativeWaveSurface!==true||
+             f.movingActorWakeSources!==4||f.realGpuFoamDrawsAtMiddle<25||
+             f.hasOldChevronDraws!==false||f.fluidDynamicsOrHistoricalWeatherVerified!==false||
+             f.publicationAuthority!==false||o?.vertexCount!==112*112*6||
+             e?.realGpuTransparentParticlesAtMiddle<20||
+             r.proceduralSky?.actualGpuPixelCounterfactualChangedPixels<500||
+             r.output.sha256!==hash||r.output.audioCodec!==null||
+             r.exactGpuReadbackFrames!==96||r.uniqueRawFrameDigests<80||
+             r.publicationAuthority!==false)
+             throw Error('actual_native_organic_foam_source_gpu_proof_failed');
+          const info=JSON.parse(cp.execFileSync('ffprobe',['-v','error','-show_entries',
+            'stream=codec_type,codec_name,width,height,nb_frames','-of','json',movie]));
+          const v=info.streams.find(s=>s.codec_type==='video');
+          if(v?.codec_name!=='h264'||v.width!==640||v.height!==360||
+             Number(v.nb_frames)!==96||info.streams.some(s=>s.codec_type==='audio'))
+             throw Error('native_original_foam_video_invalid');
+          console.log('VERIFIED_SOURCE_GPU_ORGANIC_FOAM',{sha256:hash,
+            realFoamDraws:f.realGpuFoamDrawsAtMiddle,
+            oldVShapeDraws:f.hasOldChevronDraws,
+            waveGeometryVertices:o.vertexCount,
+            frameCount:r.exactGpuReadbackFrames});
+          NODE
+      - name: Preserve actual original source GPU movie, genuine pixels and signed receipt
+        uses: actions/upload-artifact@v4
+        with:
+          name: evercraft-native-non-chevron-waterline-foam-gpu
+          path: |
+            /tmp/evercraft-native-organic-wake/denmark-strait-class-silhouettes-gpu.mp4
+            /tmp/evercraft-native-organic-wake/receipt.json
+            /tmp/evercraft-native-organic-wake/opening.png
+            /tmp/evercraft-native-organic-wake/middle.png
+            /tmp/evercraft-native-organic-wake/closing.png
+          if-no-files-found: error
+          retention-days: 7
