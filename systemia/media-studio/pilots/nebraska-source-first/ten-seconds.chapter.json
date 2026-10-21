@@ -1,0 +1,192 @@
+{
+  "schema": "evercraft.fallen.nebraska-finish-chapter.v1",
+  "title": "Nebraska | The Giant Stirs: Ten Seconds",
+  "durationSec": 138,
+  "releaseState": "research_only_source_assets_pending",
+  "automaticMusic": false,
+  "generatedFootageOfActualGames": false,
+  "verifiedHistoricalFacts": [
+    {
+      "id": "indiana-twelve-oh-one",
+      "source": "https://huskers.com/news/2026/10/10/huskers-push-no-7-hoosiers-to-limit",
+      "gameDate": "2026-10-10",
+      "clock": "Q4 12:01",
+      "score": {
+        "nebraska": 17,
+        "indiana": 6
+      },
+      "event": "Anthony Colandrea 39-yard touchdown run"
+    },
+    {
+      "id": "indiana-eleven-fifty-one",
+      "source": "https://huskers.com/news/2026/10/10/huskers-push-no-7-hoosiers-to-limit",
+      "gameDate": "2026-10-10",
+      "clock": "Q4 11:51",
+      "score": {
+        "nebraska": 17,
+        "indiana": 13
+      },
+      "event": "Nick Marsh 75-yard touchdown reception, ten seconds after Nebraska score"
+    },
+    {
+      "id": "indiana-seven-thirteen",
+      "source": "https://huskers.com/news/2026/10/10/huskers-push-no-7-hoosiers-to-limit",
+      "gameDate": "2026-10-10",
+      "clock": "Q4 07:13",
+      "score": {
+        "nebraska": 17,
+        "indiana": 20
+      },
+      "event": "Nick Marsh 44-yard touchdown reception on fourth-and-one"
+    },
+    {
+      "id": "oregon-fourth-start",
+      "source": "https://huskers.com/news/2026/10/17/fb-recap",
+      "gameDate": "2026-10-17",
+      "clock": "Q4 start",
+      "score": {
+        "nebraska": 14,
+        "oregon": 6
+      },
+      "event": "Nebraska leads entering fourth quarter"
+    },
+    {
+      "id": "oregon-defensive-work",
+      "source": "https://huskers.com/news/2026/10/17/fb-recap",
+      "gameDate": "2026-10-17",
+      "stat": {
+        "tacklesForLoss": 11,
+        "oregonTotalYards": 242
+      },
+      "event": "Nebraska season-high 11 tackles for loss, Oregon limited to 242 yards"
+    },
+    {
+      "id": "oregon-last-score",
+      "source": "https://huskers.com/news/2026/10/17/fb-recap",
+      "gameDate": "2026-10-17",
+      "clock": "Q4 00:28",
+      "score": {
+        "nebraska": 14,
+        "oregon": 17
+      },
+      "event": "Oregon takes final lead with 4-yard touchdown pass"
+    }
+  ],
+  "acts": [
+    {
+      "id": "ten-seconds",
+      "startSec": 0,
+      "durationSec": 36,
+      "question": "What can change in ten seconds?",
+      "requiredClaims": [
+        "indiana-twelve-oh-one",
+        "indiana-eleven-fifty-one",
+        "indiana-seven-thirteen"
+      ],
+      "clips": [
+        "indiana-17-6",
+        "indiana-75-yard",
+        "indiana-44-yard"
+      ],
+      "sound": "actual cleared broadcast or original field sound; no invented calls"
+    },
+    {
+      "id": "defense-is-real",
+      "startSec": 36,
+      "durationSec": 41,
+      "question": "How can a defense do enough and still lose?",
+      "requiredClaims": [
+        "oregon-fourth-start",
+        "oregon-defensive-work",
+        "oregon-last-score"
+      ],
+      "clips": [
+        "oregon-specific-tfl",
+        "oregon-final-possession"
+      ],
+      "sound": "actual game recording only, else hold"
+    },
+    {
+      "id": "inherited-by-people",
+      "startSec": 77,
+      "durationSec": 42,
+      "question": "What does this result mean to someone who grew up with it?",
+      "requiredClaims": [],
+      "clips": [
+        "independent-real-fan",
+        "nara-1973-spring-crowd"
+      ],
+      "sound": "genuine consented on-camera interview and original room tone; do not invent answers"
+    },
+    {
+      "id": "can-they-finish",
+      "startSec": 119,
+      "durationSec": 19,
+      "question": "What will Nebraska do with the next fourth quarter?",
+      "requiredClaims": [],
+      "clips": [
+        "dated-memorial-stadium-footage"
+      ],
+      "sound": "authentic source audio, unscored final pause"
+    }
+  ],
+  "media": [
+    {
+      "id": "indiana-17-6",
+      "kind": "licensed_2026_game_footage",
+      "rights": "missing",
+      "sourceSha256": null
+    },
+    {
+      "id": "indiana-75-yard",
+      "kind": "licensed_2026_game_footage",
+      "rights": "missing",
+      "sourceSha256": null
+    },
+    {
+      "id": "indiana-44-yard",
+      "kind": "licensed_2026_game_footage",
+      "rights": "missing",
+      "sourceSha256": null
+    },
+    {
+      "id": "oregon-specific-tfl",
+      "kind": "licensed_2026_game_footage",
+      "rights": "missing",
+      "sourceSha256": null
+    },
+    {
+      "id": "oregon-final-possession",
+      "kind": "licensed_2026_game_footage",
+      "rights": "missing",
+      "sourceSha256": null
+    },
+    {
+      "id": "independent-real-fan",
+      "kind": "consented_interview",
+      "rights": "missing",
+      "sourceSha256": null
+    },
+    {
+      "id": "nara-1973-spring-crowd",
+      "kind": "dated_archival_still",
+      "rights": "human_attribution_review_pending",
+      "sourceSha256": null,
+      "originalSha1": "8476a2db33115d25a2fc0a60ea8618dea3795209",
+      "archiveUrl": "https://commons.wikimedia.org/wiki/File:THE_ANNUAL_SPRING_FOOTBALL_GAME_AT_THE_UNIVERSITY_OF_NEBRASKA_IS_A_STADIUM-PACKING_EVENT._IT_IS_AN_INTRA-SQUAD_GAME..._-_NARA_-_547323.jpg"
+    },
+    {
+      "id": "dated-memorial-stadium-footage",
+      "kind": "authentic_dated_stadium_video",
+      "rights": "missing",
+      "sourceSha256": null
+    }
+  ],
+  "boundaries": {
+    "founderApproved": false,
+    "professionalNarrationAuditioned": false,
+    "real2026GameFootageAcquired": false,
+    "realFanInterviewAcquired": false,
+    "publicationAuthorityGranted": false
+  }
+}
