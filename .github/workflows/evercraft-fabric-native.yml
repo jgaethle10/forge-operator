@@ -94,6 +94,8 @@ jobs:
         run: node --test tests/public-edge-canary-contract.test.mjs
       - name: Verify router mapping control cannot fake production ingress
         run: node --test tests/edge-mapping-control.test.mjs
+      - name: Prove idempotent UPnP mapping ownership and web-only resident refresh
+        run: node --test tests/edge-upnp-mapping-policy.test.mjs
       - name: Check guarded stale Chromebook UPnP recovery tool
         run: node --test tests/stale-fabric-upnp-repair.test.mjs
       - name: Prove Saban Fabric outbound bridge and device attestation
