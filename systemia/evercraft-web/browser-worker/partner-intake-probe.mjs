@@ -71,6 +71,7 @@ try {
       page_text_sha256:null,
       candidate_links:[],
       page_clues:[],
+      anonymous_form_shapes:[],
       blocker:null
     };
     try {
@@ -104,6 +105,14 @@ try {
         .filter(l=>/partner|apply|contact|talk|intro|start|register|join|signup|sign up|supplier|data/i.test(l.text||''))
         .slice(0,12).map(l=>({label:String(l.text||'').slice(0,90),url:cleanUrl(l.href)}))
         .filter(l=>l.url);
+      // Only structural input metadata from a fresh unauthenticated context.
+      // Explicitly omit values, placeholders, hidden fields and sensitive tokens.
+      row.anonymous_form_shapes=(snap.forms||[]).slice(0,8).map(form=>({
+        method:form.method,
+        action_origin:form.action_origin,
+        fields:(form.fields||[]).filter(f=>f.type!=='hidden'&&!/token|csrf|secret|password/i.test(f.name||''))
+          .slice(0,25).map(f=>({tag:f.tag,type:f.type,name:f.name,required:f.required}))
+      }));
       const text=String(snap.text||'');
       for(const kw of ['AI Service Supplier','Data Partner','coding','Book an intro','Talk to our team','40+','login','Jira']){
         const k=text.toLowerCase().indexOf(kw.toLowerCase());
