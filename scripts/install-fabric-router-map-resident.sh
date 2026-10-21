@@ -77,10 +77,15 @@ tmp="$(mktemp "$STATE_DIR/latest.XXXXXX")"
 # timer tick. Keep independent router control and public ingress receipts.
 renew_marker="$STATE_DIR/last-owned-lease-renewal.$EVERCRAFT_ROUTER_LAN_HOST.${EVERCRAFT_ROUTER_SCOPE:-web}"
 now="$(date +%s)"
-last="$(stat -c %Y "$renew_marker" 2>/dev/null || echo 0)"
+last="$(stat -c %Y "$renew_marker" 2>/dev/null || true)"
 renew_due=0
-if [[ ! "$last" =~ ^[0-9]+$ ]] || (( now < last || now-last >= 21600 )); then
-  renew_due=1
+# First deployment must NOT immediately request AddPortMapping on already-
+# correct mappings. Establish a successful baseline before timed renewals.
+# Some consumer IGDs reject a duplicate AddPortMapping with UPnP 718/500.
+if [[ -n "$last" ]]; then
+  if [[ ! "$last" =~ ^[0-9]+$ ]] || (( now < last || now-last >= 21600 )); then
+    renew_due=1
+  fi
 fi
 set +e
 "$EVERCRAFT_ROUTER_NODE" "$EVERCRAFT_ROUTER_REPO_ROOT/scripts/evercraft-public-edge-map.mjs" \
@@ -90,7 +95,7 @@ code=$?
 set -e
 chmod 0640 "$tmp"
 mv "$tmp" "$STATE_DIR/latest.json"
-if [[ "$code" -eq 0 ]] && { [[ "$renew_due" -eq 1 ]] || grep -Eq '"renewed"[[:space:]]*:[[:space:]]*true' "$STATE_DIR/latest.json"; }; then
+if [[ "$code" -eq 0 ]] && { [[ ! -e "$renew_marker" ]] || [[ "$renew_due" -eq 1 ]] || grep -Eq '"renewed"[[:space:]]*:[[:space:]]*true' "$STATE_DIR/latest.json"; }; then
   tmp_marker="$(mktemp "$STATE_DIR/renewal.XXXXXX")"
   printf "%s\n" "$now" >"$tmp_marker"
   chmod 0640 "$tmp_marker"
