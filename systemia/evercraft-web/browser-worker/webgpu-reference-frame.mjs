@@ -196,9 +196,11 @@ async function executeReferenceFrame(page,shaderSource){
       0,0,0,1,
       0,0,1,1,
       1,0,0,0,
+      0,0,0,0,
+      0,0,0,0,
     ]);
     const frameBuffer=device.createBuffer({
-      size:96,
+      size:frameValues.byteLength,
       usage:GPUBufferUsage.UNIFORM|GPUBufferUsage.COPY_DST,
     });
     device.queue.writeBuffer(frameBuffer,0,frameValues);
@@ -334,11 +336,56 @@ async function executeReferenceFrame(page,shaderSource){
 
     const expectedPixel=[64,128,192,255];
     const tolerance=2;
-    const verified=observedPixel.every(
+    const originalVerified=observedPixel.every(
       (value,index)=>Math.abs(value-expectedPixel[index])<=tolerance
     );
 
+    // A second REAL GPU draw with distance fog on the same PBR triangle.
+    // The first draw above is the backward-compatible no-fog pixel baseline.
+    const fogValues=frameValues.slice();
+    fogValues.set([1,0,0,1],24); // red atmosphere, density 1 / world unit
+    fogValues.set([0,0,0,0],28); // no start threshold, no height falloff
+    device.queue.writeBuffer(frameBuffer,0,fogValues);
+    const fogReadback=device.createBuffer({
+      size:bytesPerRow*height,
+      usage:GPUBufferUsage.COPY_DST|GPUBufferUsage.MAP_READ,
+    });
+    const fogEncoder=device.createCommandEncoder();
+    const fogPass=fogEncoder.beginRenderPass({
+      colorAttachments:[{
+        view:target.createView(),
+        clearValue:{r:0,g:0,b:0,a:1},loadOp:'clear',storeOp:'store',
+      }],
+      depthStencilAttachment:{
+        view:depth.createView(),depthClearValue:1,
+        depthLoadOp:'clear',depthStoreOp:'store',
+      },
+    });
+    fogPass.setPipeline(pipeline);
+    fogPass.setBindGroup(0,frameBindGroup);
+    fogPass.setBindGroup(1,objectBindGroup);
+    fogPass.setVertexBuffer(0,vertexBuffer);
+    fogPass.draw(3,1,0,0);
+    fogPass.end();
+    fogEncoder.copyTextureToBuffer(
+      {texture:target},
+      {buffer:fogReadback,bytesPerRow,rowsPerImage:height},
+      [width,height,1],
+    );
+    device.queue.submit([fogEncoder.finish()]);
+    await device.queue.onSubmittedWorkDone();
+    await fogReadback.mapAsync(GPUMapMode.READ);
+    const fogPixels=new Uint8Array(fogReadback.getMappedRange().slice(0));
+    const fogObservedPixel=Array.from(fogPixels.slice(centerOffset,centerOffset+4));
+    fogReadback.unmap();
+    const fogVerified=fogObservedPixel[0]>observedPixel[0]+20
+      && fogObservedPixel[1]<observedPixel[1]-20
+      && fogObservedPixel[2]<observedPixel[2]-20
+      && fogObservedPixel[3]===255;
+    const verified=originalVerified && fogVerified;
+
     vertexBuffer.destroy();
+    fogReadback.destroy();
     frameBuffer.destroy();
     lightBuffer.destroy();
     objectBuffer.destroy();
@@ -357,6 +404,8 @@ async function executeReferenceFrame(page,shaderSource){
       adapterInfo,
       observedPixel,
       expectedPixel,
+      fogObservedPixel,
+      fogVerified,
       tolerance,
       verified,
       width,
@@ -467,6 +516,8 @@ export async function runWorldEngineReferenceFrameConformance({
       observed_pixel:selected.result.proof.observedPixel,
       pixel_tolerance:selected.result.proof.tolerance,
       pixel_verified:selected.result.proof.verified,
+      atmosphere_pixel_verified:selected.result.proof.fogVerified,
+      atmosphere_pixel:selected.result.proof.fogObservedPixel,
       render_size:{
         width:selected.result.proof.width,
         height:selected.result.proof.height,
