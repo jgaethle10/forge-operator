@@ -67,3 +67,11 @@ test('resident mapper uses fail-closed assessment rather than DNS-only shortcut'
   assert.doesNotMatch(source,/result\.success=production\.length>0/);
   assert.doesNotMatch(source,/out\.production_mapping_control_ok = true;/);
 });
+
+test('UPnP never reports a mapping healthy without router read-back to the current host',()=>{
+  const source=fs.readFileSync(new URL('../scripts/evercraft-public-edge-map.mjs',import.meta.url),'utf8');
+  assert.match(source,/GetSpecificPortMappingEntry/);
+  assert.match(source,/observedHost!==host\|\|observedPort!==m.internal/);
+  assert.match(source,/upnp_mapping_readback_mismatch/);
+  assert.match(source,/readback_verified:true/);
+});
