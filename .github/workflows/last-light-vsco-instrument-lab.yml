@@ -1,0 +1,82 @@
+name: Last Light Multisampled Instrument Lab
+on:
+  pull_request:
+    paths:
+      - 'systemia/media-studio/last-light-vsco-instrument-lab.py'
+      - 'systemia/media-studio/test_last_light_vsco_instrument_lab.py'
+      - '.github/workflows/last-light-vsco-instrument-lab.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  actual-multisample-instrument-lab:
+    runs-on: ubuntu-latest
+    timeout-minutes: 18
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Install audio runtime
+        run: |
+          python -m pip install --disable-pip-version-check numpy scipy soundfile
+          if ! command -v ffmpeg >/dev/null 2>&1 || ! command -v ffprobe >/dev/null 2>&1; then
+            sudo apt-get update -qq
+            sudo apt-get install -y ffmpeg
+          fi
+      - name: Run fail-closed sampled-instrument regression tests
+        run: python -m unittest discover -s systemia/media-studio -p 'test_last_light_vsco_instrument_lab.py' -v
+      - name: Rebuild precisely the protected original recorded Steinway composition
+        run: |
+          python systemia/media-studio/recorded-steinway-pilot.py \
+            --source-cache /tmp/last-light-piano-sources \
+            --out /tmp/last-light-piano-v1
+          python systemia/media-studio/recorded-steinway-phrasing-v2.py \
+            --sources /tmp/last-light-piano-sources \
+            --original-receipt /tmp/last-light-piano-v1/recording-custody.json \
+            --out /tmp/last-light-piano-v2
+          ffmpeg -y -hide_banner -v error \
+            -i /tmp/last-light-piano-v2/Evercraft_The_Last_Light_Real_Steinway_V2.wav \
+            -af volume=1.9dB -c:a pcm_s24le \
+            /tmp/last-light-piano-v2/Evercraft_The_Last_Light_Steinway_V2_24bit.wav
+      - name: Verify source fingerprint and build cellos/violins from CC0 acoustic multisamples
+        run: |
+          python systemia/media-studio/last-light-vsco-instrument-lab.py \
+            --piano /tmp/last-light-piano-v2/Evercraft_The_Last_Light_Steinway_V2_24bit.wav \
+            --cache /tmp/vsco-instrument-source-cache \
+            --out /tmp/last-light-instrument-audition
+      - name: Verify independently rendered WAVs and create listening MP3s
+        run: |
+          python - <<'PY'
+          import pathlib,json,hashlib,subprocess
+          root=pathlib.Path('/tmp/last-light-instrument-audition')
+          receipt=json.loads((root/'instrument-lab-provenance.json').read_text())
+          assert len(receipt['source_provenance'])==12
+          assert receipt['piano_original_byte_identical'] is True
+          assert receipt['human_listening_approved'] is False
+          assert receipt['public_release_approved'] is False
+          for name,digest in receipt['output_sha256'].items():
+            file=root/name
+            assert hashlib.sha256(file.read_bytes()).hexdigest()==digest
+          for name in ['isolated_cello_VSCO_CC0.wav','isolated_violin_VSCO_CC0.wav',
+                       'Last_Light_Instrument_Lab_cello_focus.wav','Last_Light_Instrument_Lab_duet.wav']:
+            p=root/name
+            fmt=json.loads(subprocess.check_output(['ffprobe','-v','error','-of','json',
+               '-show_entries','stream=codec_name,sample_rate,channels:format=duration',str(p)]))
+            assert fmt['streams'][0]['codec_name']=='pcm_s24le'
+            assert fmt['streams'][0]['sample_rate']=='44100'
+            assert fmt['streams'][0]['channels']==2
+            assert abs(float(fmt['format']['duration'])-35)<.001
+            subprocess.run(['ffmpeg','-y','-hide_banner','-v','error','-i',str(p),
+              '-c:a','libmp3lame','-b:a','192k',str(p.with_suffix('.mp3'))],check=True)
+          print('INSTRUMENT LAB: 12 Git-object-pinned actual recorded WAVs; four renders, no final release')
+          PY
+          ffmpeg -hide_banner -nostats \
+            -i /tmp/last-light-instrument-audition/Last_Light_Instrument_Lab_duet.wav \
+            -af ebur128=peak=true -f null - 2>&1 | tail -24
+      - uses: actions/upload-artifact@v4
+        if: success()
+        with:
+          name: internal-last-light-vsco-recorded-instrument-qa
+          path: /tmp/last-light-instrument-audition/
+          retention-days: 14
