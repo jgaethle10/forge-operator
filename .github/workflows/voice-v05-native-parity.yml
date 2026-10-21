@@ -1,0 +1,45 @@
+name: Voice Foundry V05 Native Path Parity (private diagnostic)
+
+on:
+  pull_request:
+    paths:
+      - '.github/workflows/voice-v05-native-parity.yml'
+      - 'systemia/media-studio/voice-v05-native-parity.py'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  native-path-parity:
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    steps:
+      - name: Checkout private source
+        uses: actions/checkout@v4
+      - name: Set up Python 3.11
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Validate before downloading model
+        run: python systemia/media-studio/voice-v05-native-parity.py --verify-only
+      - name: Install Kokoro and PCM audio dependencies
+        run: |
+          sudo apt-get update -qq
+          sudo apt-get install -y -qq ffmpeg espeak-ng libsndfile1
+          python -m pip install --disable-pip-version-check 'kokoro==0.9.4' 'soundfile>=0.12,<1.0'
+      - name: Run unmodified speech synthesis path comparison
+        env:
+          HF_HUB_DISABLE_TELEMETRY: "1"
+        run: |
+          python systemia/media-studio/voice-v05-native-parity.py V05-native-path-parity
+          test -s V05-native-path-parity/index.html
+          test -s V05-native-path-parity/path-parity-evidence.json
+          test "$(find V05-native-path-parity -maxdepth 1 -name '*.mp3' | wc -l)" -eq 9
+      - name: Archive WAV controls and diagnostic evidence
+        uses: actions/upload-artifact@v4
+        with:
+          name: evercraft-v05-original-pipeline-recovery
+          path: V05-native-path-parity/
+          retention-days: 7
+          if-no-files-found: error
