@@ -14,6 +14,7 @@ import { compileExplorationBatch } from './shot-exploration.js';
 import type { CreativeCouncilInventory, CreativeCouncilReconciliation } from './creative-council.js';
 import { compileSeriesEpisode } from './series.js';
 import { buildVisualStageHtml } from './visual-stage-html.js';
+import { compileProductFocusShot, type ProductFocusInput } from './product-focus-shot.js';
 import { compileWorldIntelStage, type WorldIntelStageInput } from './world-intel-stage.js';
 import { compilePhenomenonCanvas, compilePhenomenonStage, type PhenomenonInput } from './phenomenon-renderer.js';
 import { compileJournalEducationStage, type JournalFallenProductionBrief } from './journal-education.js';
@@ -88,6 +89,7 @@ function usage() {
     '  npm run media:studio -- observe <candidate.json> <observation-bundle.json> [frame-dir]',
     '  npm run media:studio -- explore <creative-bundle.json> <exploration-batch.json>',
     '  npm run media:studio -- stage <visual-stage.json> <stage.html>',
+    '  npm run media:studio -- product-focus <shot.json> <stage.json> [focus-receipt.json]',
     '  npm run media:studio -- world-intel <story.json> <visual-stage.json> [stage.html]',
     '  npm run media:studio -- phenomenon <phenomenon.json> <stage.html> [receipt.json]',
     '  npm run media:studio -- phenomenon-stage <phenomenon.json> <stage.json> [receipt.json]',
@@ -115,6 +117,27 @@ function main() {
 
   if (!command || command === '--help' || command === '-h') {
     usage();
+    return;
+  }
+
+  if (command === 'product-focus') {
+    if (!input || !output) {
+      usage();
+      process.exitCode = 1;
+      return;
+    }
+    const request=readJson<ProductFocusInput>(input);
+    const shot=compileProductFocusShot(request);
+    writeJson(output,shot.stage);
+    if (optionalPlan) writeJson(optionalPlan,{
+      schema:shot.schema,
+      status:shot.status,
+      stageId:shot.stage.id,
+      sourceWindow:shot.sourceWindow,
+      evidence:shot.evidence,
+    });
+    console.log(`Product focus stage created: ${path.resolve(output)}`);
+    console.log('Status: candidate_requires_visual_review. No publication authority.');
     return;
   }
 

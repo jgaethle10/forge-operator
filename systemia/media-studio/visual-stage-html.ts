@@ -43,9 +43,24 @@ function layerMarkup(layer:VisualLayer){
   const badge=label?`<div class="evidence-badge${evidenceClass(layer.evidenceState)}">${esc(label)}</div>`:'';
 
   if(layer.kind==='media'){
+    const win=layer.sourceWindow;
+    // Render the chosen source-pixel ROI at full stage resolution. The stage
+    // validator enforces source bounds and equal crop/output aspect ratios,
+    // preventing distorted UI or invisible subject regions.
+    const mediaStyle=win
+      ? [
+          'position:absolute',
+          'max-width:none',
+          'left:'+(-100*win.x/win.width)+'%',
+          'top:'+(-100*win.y/win.height)+'%',
+          'width:'+(100*win.sourceWidth/win.width)+'%',
+          'height:'+(100*win.sourceHeight/win.height)+'%',
+          'object-fit:fill',
+        ].join(';')+';'
+      : 'width:100%;height:100%;object-fit:'+layer.fit+';';
     const tag=layer.mediaKind==='video'
-      ? `<video src="${esc(layer.sourcePath)}" data-source="${esc(layer.sourcePath)}" muted playsinline preload="auto" style="width:100%;height:100%;object-fit:${layer.fit};"></video>`
-      : `<img src="${esc(layer.sourcePath)}" style="width:100%;height:100%;object-fit:${layer.fit};"/>`;
+      ? `<video src="${esc(layer.sourcePath)}" data-source="${esc(layer.sourcePath)}" muted playsinline preload="auto" style="${mediaStyle}"></video>`
+      : `<img src="${esc(layer.sourcePath)}" style="${mediaStyle}"/>`;
     return `<div class="layer media-layer" data-layer="${esc(layer.id)}" style="${base}">${tag}${badge}</div>`;
   }
 
@@ -333,6 +348,39 @@ body{display:flex;align-items:center;justify-content:center}
       const circle=document.createElementNS(ns,'circle');circle.setAttribute('cx',p.x);circle.setAttribute('cy',p.y);circle.setAttribute('r','5');circle.setAttribute('fill',stage.theme?.palette?.point||'#fff');el.appendChild(circle);if(point.label){const label=document.createElementNS(ns,'text');label.setAttribute('x',p.x+10);label.setAttribute('y',p.y-8);label.setAttribute('fill',stage.theme?.palette?.textPrimary||'rgba(255,255,255,.88)');label.setAttribute('font-size','16');label.setAttribute('font-family',stage.theme?.fontFamily||'Montserrat,Arial,sans-serif');label.textContent=point.label;el.appendChild(label)}
     }
   };
+  // Interpolate within the source media, not the stage. Moving the source
+  // window directs attention while overlays remain in their original positions.
+  const mediaWindowAt=(layer,t)=>{
+    const f=layer.sourceWindowKeyframes;
+    const original=layer.sourceWindow;
+    if(!original||!f?.length) return original;
+    const sample=(frame)=>({
+      x:frame.x,y:frame.y,width:frame.width,height:frame.height,
+      sourceWidth:original.sourceWidth,sourceHeight:original.sourceHeight
+    });
+    if(t<=f[0].t) return sample(f[0]);
+    if(t>=f[f.length-1].t) return sample(f[f.length-1]);
+    for(let i=1;i<f.length;i++){
+      const a=f[i-1],b=f[i];
+      if(t<=b.t){
+        const p=ease(b.ease||a.ease,(t-a.t)/(b.t-a.t));
+        return {
+          x:a.x+(b.x-a.x)*p,y:a.y+(b.y-a.y)*p,
+          width:a.width+(b.width-a.width)*p,
+          height:a.height+(b.height-a.height)*p,
+          sourceWidth:original.sourceWidth,sourceHeight:original.sourceHeight
+        };
+      }
+    }
+    return sample(f[f.length-1]);
+  };
+  const setMediaWindow=(element,win)=>{
+    if(!element||!win) return;
+    element.style.left=(-100*win.x/win.width)+'%';
+    element.style.top=(-100*win.y/win.height)+'%';
+    element.style.width=(100*win.sourceWidth/win.width)+'%';
+    element.style.height=(100*win.sourceHeight/win.height)+'%';
+  };
   window.__evercraftRenderAt=async(timeSec)=>{
     const t=clamp(Number(timeSec)||0,0,stage.durationSec);
     const c=cameraAt(t);
@@ -344,6 +392,9 @@ body{display:flex;align-items:center;justify-content:center}
       const px=c.x*(1-parallax),py=c.y*(1-parallax),pz=Math.pow(Math.max(.0001,c.zoom),parallax-1);
       el.style.opacity=opacity;el.style.transform='perspective('+perspective+'px) translate('+(tx+px)+'px,'+(ty+py)+'px) scale('+(scale*pz)+') rotateX('+rx+'deg) rotateY('+ry+'deg) rotate('+(rot+(c.rotationDeg||0)*(parallax-1))+'deg)';
       if(layer.kind==='media'){
+        if(layer.sourceWindowKeyframes?.length){
+          setMediaWindow(el.querySelector('img,video'),mediaWindowAt(layer,t));
+        }
         const video=el.querySelector('video');
         if(video){
           let desired=(layer.trimStartSec||0)+t*(layer.playbackRate||1);

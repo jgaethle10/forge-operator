@@ -1,0 +1,62 @@
+name: Fallen Product Focus Shots
+
+on:
+  pull_request:
+    paths:
+      - "systemia/media-studio/product-focus-shot*"
+      - "systemia/media-studio/fixtures/relay-product-focus.json"
+      - "systemia/media-studio/cli.ts"
+      - "systemia/media-studio/visual-stage.ts"
+      - "systemia/media-studio/visual-stage-html.ts"
+      - ".github/workflows/fallen-product-focus.yml"
+  push:
+    branches: [main]
+    paths:
+      - "systemia/media-studio/product-focus-shot*"
+      - "systemia/media-studio/visual-stage.ts"
+      - "systemia/media-studio/visual-stage-html.ts"
+      - ".github/workflows/fallen-product-focus.yml"
+
+permissions:
+  contents: read
+
+jobs:
+  product-focus:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Install
+        run: npm install --no-audit --no-fund
+      - name: Native product focus regression
+        run: node --import tsx --test systemia/media-studio/product-focus-shot.test.ts systemia/media-studio/visual-stage.test.ts
+      - name: Private render-worker camera admission regressions
+        run: node --test systemia/media-studio/render-worker/policy.test.mjs
+      - name: Product focus CLI end-to-end compile
+        run: |
+          npm run media:studio -- product-focus \
+            systemia/media-studio/fixtures/relay-product-focus.json \
+            /tmp/relay-product-focus.stage.json \
+            /tmp/relay-product-focus.receipt.json
+          npm run media:studio -- stage \
+            /tmp/relay-product-focus.stage.json \
+            /tmp/relay-product-focus.html
+          node - <<'NODE'
+          const fs=require('node:fs');
+          const stage=JSON.parse(fs.readFileSync('/tmp/relay-product-focus.stage.json','utf8'));
+          const receipt=JSON.parse(fs.readFileSync('/tmp/relay-product-focus.receipt.json','utf8'));
+          const html=fs.readFileSync('/tmp/relay-product-focus.html','utf8');
+          if(stage.width!==1080||stage.height!==1920) throw new Error('native_vertical_missing');
+          if(!stage.layers[0].sourceWindow) throw new Error('source_window_missing');
+          if(stage.layers[0].sourceWindowKeyframes?.length!==3) throw new Error('product_camera_waypoints_missing');
+          if(!html.includes('position:absolute;max-width:none;left:')) throw new Error('real_source_crop_missing');
+          if(!html.includes('mediaWindowAt')||!html.includes('setMediaWindow')) throw new Error('animated_media_camera_runtime_missing');
+          if(receipt.evidence.cameraStops!==3) throw new Error('camera_evidence_receipt_missing');
+          if(receipt.evidence.protectedRegionChecks!==3) throw new Error('critical_UI_region_protection_not_evidenced');
+          if(receipt.evidence.noCreativeOrPublicationAuthority!==true) throw new Error('publication_gate_missing');
+          NODE
+      - name: Typecheck
+        run: npm run lint

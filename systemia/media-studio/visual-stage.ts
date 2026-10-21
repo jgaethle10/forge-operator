@@ -49,6 +49,10 @@ export interface MediaLayer extends BaseLayer {
   sourcePath: string;
   mediaKind: 'image' | 'video';
   fit: 'cover' | 'contain';
+  /** Exact source-pixel crop window for product evidence closeups. */
+  sourceWindow?: {x:number;y:number;width:number;height:number;sourceWidth:number;sourceHeight:number};
+  /** Source-relative camera path. Rects interpolate inside the original media, never within stage coordinates. */
+  sourceWindowKeyframes?: Array<{t:number;x:number;y:number;width:number;height:number;ease?:EaseName}>;
   trimStartSec?: number;
   playbackRate?: number;
   loop?: boolean;
@@ -373,7 +377,7 @@ export function evaluateStage(stage:VisualStage,t:number){
         const progress=clamp(valueAt(layer.progress,time,time/stage.durationSec),0,1);
         evaluated.metricValue=interpolate(layer.from,layer.to,progress);
       }
-      if(layer.kind==='geo'){
+    if(layer.kind==='geo'){
         evaluated.geoRoutes=(layer.routes??[]).map(route=>({
           ...route,
           progressValue:clamp(valueAt(route.progress,time,time/stage.durationSec),0,1)
@@ -409,6 +413,50 @@ export function validateStage(stage:VisualStage){
     ids.add(layer.id);
     if(!Number.isFinite(layer.z)) errors.push(`layer_z_invalid:${layer.id}`);
     if(layer.kind==='media' && !layer.sourcePath) errors.push(`media_source_missing:${layer.id}`);
+    if(layer.kind==='media'&&layer.sourceWindow){
+      const win=layer.sourceWindow;
+      const values=[win.x,win.y,win.width,win.height,win.sourceWidth,win.sourceHeight,layer.width,layer.height];
+      const aspect=(win.width/win.height)/(layer.width/layer.height);
+      if(!values.every(Number.isFinite)||win.x<0||win.y<0||
+         win.width<=0||win.height<=0||win.sourceWidth<=0||win.sourceHeight<=0||
+         layer.width<=0||layer.height<=0||
+         win.x+win.width>win.sourceWidth+1e-5||
+         win.y+win.height>win.sourceHeight+1e-5||
+         !Number.isFinite(aspect)||Math.abs(aspect-1)>.005){
+        errors.push(`media_source_window_invalid:${layer.id}`);
+      }
+    }
+    if(layer.kind==='media'&&layer.sourceWindowKeyframes!==undefined){
+      const frames=layer.sourceWindowKeyframes;
+      const win=layer.sourceWindow;
+      if(!win||!Array.isArray(frames)||frames.length<2||frames.length>12){
+        errors.push(`media_source_camera_invalid:${layer.id}`);
+      }else{
+        const eps=1e-4;
+        const ratio=layer.width/layer.height;
+        let previous=-1;
+        for(const frame of frames){
+          const vals=[frame.t,frame.x,frame.y,frame.width,frame.height];
+          if(!vals.every(Number.isFinite)||frame.t<=previous||frame.t<0||
+            frame.t>stage.durationSec||frame.x<0||frame.y<0||
+            frame.width<=0||frame.height<=0||
+            frame.x+frame.width>win.sourceWidth+eps||
+            frame.y+frame.height>win.sourceHeight+eps||
+            Math.abs(frame.width/frame.height/ratio-1)>.005||
+            (frame.ease!==undefined&&!['linear','ease_in','ease_out','ease_in_out'].includes(frame.ease))){
+            errors.push(`media_source_camera_keyframe_invalid:${layer.id}`);
+            break;
+          }
+          previous=frame.t;
+        }
+        if(Math.abs(frames[0].t)>eps||
+          Math.abs(frames[frames.length-1].t-stage.durationSec)>eps||
+          (Math.abs(frames[0].x-win.x)>eps||Math.abs(frames[0].y-win.y)>eps||
+           Math.abs(frames[0].width-win.width)>eps||Math.abs(frames[0].height-win.height)>eps)){
+          errors.push(`media_source_camera_endpoints_invalid:${layer.id}`);
+        }
+      }
+    }
     if(layer.kind==='geo'){
       if(layer.fitBounds){
         const b=layer.fitBounds;
