@@ -92,6 +92,19 @@ export async function reconcile({ results, rootDir = process.cwd() }) {
     if (row.source_ready !== true || row.state !== 'source_anchors_found') {
       findings.push('lane_held:' + row.lane_id);
     }
+    const sourceLane = program.lanes.find(x => x.id === row.lane_id);
+    if (sourceLane) {
+      // Re-read the authorized anchors, rather than trusting a worker's
+      // claimed hashes, omitted paths, or synthetic "source_ready" field.
+      const authoritative = sourceLane.source_anchors.map(path => inspectAnchor(rootDir, path));
+      const reported = Array.isArray(row.anchors) ? row.anchors : [];
+      if (reported.length !== authoritative.length || authoritative.some((anchor, index) => {
+        const evidence = reported[index];
+        return !evidence || evidence.anchor !== anchor.anchor ||
+          evidence.state !== anchor.state || evidence.sha256 !== anchor.sha256;
+      })) findings.push('anchor_evidence_mismatch:' + row.lane_id);
+      if (authoritative.some(x => x.state === 'missing')) findings.push('authoritative_anchor_missing:' + row.lane_id);
+    }
     if (row.runtime_observed !== false || row.systemia_admitted !== false ||
         row.execution_authority_granted !== false || row.payment_received !== false ||
         row.customer_delivered !== false) findings.push('false_runtime_claim:' + row.lane_id);
