@@ -4,7 +4,7 @@ on:
   pull_request:
     paths:
       - 'systemia/payments/**'
-      - 'systemia/saban/payments-pre-money-*'
+      - 'systemia/saban/payments-*'
       - 'systemia/earthworks-autonomy/COMMERCIAL.md'
       - 'public/apps/earthworks-autonomy/capability.json'
       - '.github/workflows/evercraft-payments-routing.yml'
@@ -12,7 +12,7 @@ on:
     branches: [main]
     paths:
       - 'systemia/payments/**'
-      - 'systemia/saban/payments-pre-money-*'
+      - 'systemia/saban/payments-*'
       - 'systemia/earthworks-autonomy/COMMERCIAL.md'
       - 'public/apps/earthworks-autonomy/capability.json'
       - '.github/workflows/evercraft-payments-routing.yml'
@@ -35,6 +35,10 @@ jobs:
         run: node --test systemia/saban/payments-pre-money-gauntlet.test.mjs
       - name: Emit Saban independent pre-money acceptance receipt
         run: node systemia/saban/payments-pre-money-gauntlet.mjs --json --concurrency=4
+      - name: Prove Saban synthetic localhost HTTP invoices and independent buyer workers
+        run: node --test systemia/saban/payments-synthetic-http-gauntlet.test.mjs
+      - name: Emit Saban synthetic HTTP invoice acceptance receipt
+        run: node systemia/saban/payments-synthetic-http-gauntlet.mjs --json --concurrency=4
       - name: Reject Stripe-first EarthWorks commerce metadata
         run: |
           node -e "const x=require('./public/apps/earthworks-autonomy/capability.json'); if(x.commerce?.layer!=='evercraft_payments'||x.commerce?.provider_boundary!=='raven_nexus'||x.commerce?.direct_provider_checkout!==false) process.exit(1)"
