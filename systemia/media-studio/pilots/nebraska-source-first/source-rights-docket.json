@@ -3,6 +3,36 @@
   "film": "Nebraska | The Giant Stirs",
   "sources": [
     {
+      "id": "history-nebraska-early-university-scenes-rg6137-mi",
+      "title": "Early University of Nebraska Scenes",
+      "kind": "authentic_historical_football_moving_film",
+      "originalItem": "https://nebraska.access.preservica.com/uncategorized/IO_b8e868d0-911f-4fce-9feb-3316f16b8b0c/",
+      "research": "https://history.nebraska.gov/earliest-video-of-husker-football/",
+      "sourceCollection": "RG6137.MI",
+      "reelDateAttribution": "likely c. 1919 for first 55 seconds; exact year unconfirmed; c.1912-14 second reel segment",
+      "sourceReelSHA256": "3156cd2202c8c3189dc563994688fb0f49231c9d78b6645287b535e53347f517",
+      "sourceReelBytes": 15543535,
+      "sourceReelDurationSec": 250.116533,
+      "reviewClipReelSeconds": [
+        34,
+        52
+      ],
+      "reviewClipMP4Sha256": "90efcf1f1e9942953ba95f7bd2769bbecd964f44f1d66ca7aa779dc998f3cf15",
+      "observedSubject": "Original recorded Nebraska football action, field and grandstand; historical essay identifies a forward pass around source 00:44",
+      "sound": "original film catalog describes silent; digital carrier has an audio stream but no authentic 1919 live audio is attested; all soundtrack omitted",
+      "catalogCopyrightClaim": "believed public domain under US copyright; international status not determined",
+      "collectionUsePolicy": "https://history.nebraska.gov/collections/nebraska-state-historical-society-rights-reproductions-and-use-policy/",
+      "usageState": "private_research_review_only_written_collection_publication_permission_not_obtained",
+      "potentialFees": "published/commercial uses may incur NSHS moving-image use and copying fees, quoted terms to be confirmed",
+      "productionAdmission": "not_admitted",
+      "boundaries": [
+        "Date not conclusively established",
+        "No representation as 2026 game film",
+        "No synthetic action or source crowd recording",
+        "No publication without NSHS written permission and editor/founder review"
+      ]
+    },
+    {
       "id": "commons-lincoln-2011-sky",
       "title": "August 2011 sky in Lincoln, Nebraska",
       "kind": "authentic_archival_moving_video",
@@ -94,6 +124,13 @@
       "source": "https://nebraskapublicmedia.org/es/watch/archives/",
       "status": "gmail_draft_created_not_sent",
       "notes": "May assess research or digitization fee"
+    },
+    {
+      "organization": "History Nebraska Audiovisual Collections",
+      "role": "RG6137.MI use permission, reproduction and history verification",
+      "email": "reference@hn.libanswers.com",
+      "source": "https://history.nebraska.gov/collections/moving-image-inventories/",
+      "status": "gmail_draft_created_not_sent"
     }
   ],
   "safety": {
