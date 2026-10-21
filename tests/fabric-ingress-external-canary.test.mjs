@@ -18,7 +18,7 @@ test('monitor verifies TLS, exact transport, signed identity and real read-only 
     "resolve4", "tls.connect", "rejectUnauthorized:true",
     "method:'GET'", "text/event-stream", "mcp_sse_identity_missing",
     "verifyNodeAttestation", "expectedNonce:nonce", "field_claim!==false",
-    "method:'initialize'", "tools/list", "tools/call",
+    "rpc(1,'initialize'", "tools/list", "tools/call",
     "readOnlyHint!==true", "destructiveHint!==false",
     "external_action_taken!==false", "transactional!==false",
     "public_ingress_and_read_only_mcp_verified",
