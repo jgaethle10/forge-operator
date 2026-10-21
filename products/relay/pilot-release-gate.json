@@ -1,0 +1,47 @@
+{
+  "schema": "evercraft.relay.pilot-intake.v1",
+  "date": "2026-10-19",
+  "product": "Relay",
+  "status": "local_pilot_verified_not_public",
+  "evidence": {
+    "source_archive_url": "https://drive.google.com/file/d/1VX_L92dbn9gGZP92mybgF7wK7yXXnjy-/view?usp=drivesdk",
+    "archive_sha256": "a148f99608c3480683a661e8eb6b88da11653cf357e882c4db93743b1fe8d3ea",
+    "local_e2e": {
+      "tests_passed": 1,
+      "tests_failed": 0,
+      "fictional_responses": 2,
+      "structured_conflicts": 1,
+      "published_versions": 1,
+      "acknowledgments": 1
+    },
+    "video_review": {
+      "duration_sec": 28,
+      "width": 1920,
+      "height": 1080,
+      "fps": 30,
+      "sound": "intentionally_silent",
+      "status": "creative_review_required"
+    }
+  },
+  "capabilities": {
+    "independent_checkins": "implemented_local",
+    "structured_difference_detection": "implemented_local_rule_based",
+    "human_confirmed_decision": "implemented_local",
+    "versioned_acknowledgments": "implemented_local",
+    "calendar_and_notifications": "not_implemented",
+    "ai_semantic_detection": "not_implemented",
+    "public_deployment": "not_verified",
+    "enterprise_security": "not_verified",
+    "native_fallen_kss_execution": "not_verified"
+  },
+  "gates": {
+    "source_import": "pending",
+    "ci": "pending",
+    "security": "pending",
+    "visual_qa": "pending",
+    "audio_master": "pending",
+    "brand": "pending",
+    "founder_approval": "pending",
+    "external_publication": "blocked"
+  }
+}
