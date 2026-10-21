@@ -3,6 +3,8 @@ import assert from 'node:assert/strict';
 import fs from 'node:fs';
 import os from 'node:os';
 import path from 'node:path';
+import {spawn} from 'node:child_process';
+import {fileURLToPath} from 'node:url';
 import {
   newMerchantRailCandidates,nominateMerchantRail,assertRegistry,
   saveMerchantRailCandidates,readMerchantRailCandidates,
@@ -116,4 +118,71 @@ test('public interface never includes an actual payment destination or claimed s
   });
   assert.equal(publicMerchantRailReadiness(null,'bank_transfer').available,false);
   assert.equal(publicMerchantRailReadiness(null,'unknown').available,false);
+});
+
+
+test('merchant registry write lock refuses a second writer without mutating private data',()=>{
+  const dir=sandbox(),file=path.join(dir,'merchant.json'),lock=file+'.lock';
+  try{
+    const empty=newMerchantRailCandidates();
+    saveMerchantRailCandidates(empty,{file});
+    const proposed=nominateMerchantRail(empty,{rail:'bank_transfer',ownerConfirmed:true});
+    fs.writeFileSync(lock,'another writer',{flag:'wx',mode:0o600});
+    assert.throws(()=>saveMerchantRailCandidates(proposed,{file}),/registry_write_locked/);
+    assert.deepEqual(readMerchantRailCandidates({file}),empty);
+    assert.deepEqual(fs.readdirSync(dir).sort(),['merchant.json','merchant.json.lock'].sort());
+  }finally{fs.rmSync(dir,{recursive:true,force:true});}
+});
+
+test('Saban independent processes race to nominate competing rails and only one revision can commit',async()=>{
+  const dir=sandbox(),file=path.join(dir,'merchant.json');
+  const helper=fileURLToPath(new URL('./merchant-rail-race-worker.test-helper.mjs',import.meta.url));
+  const barrier=path.join(dir,'go');
+  const children=[];
+  function start(rail){
+    const child=spawn(process.execPath,[helper,file,rail,barrier],{
+      cwd:dir,shell:false,stdio:['ignore','pipe','pipe'],
+      env:{PATH:process.env.PATH||'/usr/bin:/bin',HOME:dir,
+        EVERCRAFT_PAYMENTS_TEST_ONLY:'1',NODE_ENV:'test'}
+    });
+    children.push(child);
+    return new Promise((resolve,reject)=>{
+      let stdout='',stderr='';
+      child.stdout.on('data',x=>{stdout+=String(x);if(stdout.length>2048)child.kill('SIGKILL')});
+      child.stderr.on('data',x=>{stderr+=String(x);if(stderr.length>2048)child.kill('SIGKILL')});
+      child.on('error',reject);
+      child.on('close',code=>{
+        if(code!==0)return reject(Error('race_worker_failed:'+stderr.slice(0,120)));
+        try{resolve(JSON.parse(stdout.trim()))}
+        catch{reject(Error('race_worker_bad_output'))}
+      });
+    });
+  }
+  try{
+    const initial=newMerchantRailCandidates();
+    saveMerchantRailCandidates(initial,{file});
+    const a=start('bank_transfer'),b=start('paypal_business');
+    const readyTimeout=Date.now()+7000;
+    while(!fs.existsSync(path.join(dir,'ready-bank_transfer'))||
+          !fs.existsSync(path.join(dir,'ready-paypal_business'))){
+      if(Date.now()>readyTimeout)throw Error('independent_workers_never_became_ready');
+      await new Promise(resolve=>setTimeout(resolve,15));
+    }
+    fs.writeFileSync(barrier,'go',{flag:'wx',mode:0o600});
+    const outputs=await Promise.all([a,b]);
+    assert.equal(outputs.filter(x=>x.result==='committed').length,1);
+    assert.equal(outputs.filter(x=>x.result==='conflicted').length,1);
+    const stored=readMerchantRailCandidates({file});
+    assert.equal(stored.version,2);
+    assert.equal(Object.keys(stored.records).length,1);
+    assert.equal(stored.provider_authorization_verified,false);
+    assert.equal(stored.live_payment_instructions_authorized,false);
+    const win=outputs.find(x=>x.result==='committed').rail;
+    assert.deepEqual(Object.keys(stored.records),[win]);
+    assert.equal(publicMerchantRailReadiness(stored,win).available,false);
+    assert.equal(fs.existsSync(file+'.lock'),false);
+  }finally{
+    for(const child of children)if(child.exitCode===null)child.kill('SIGKILL');
+    fs.rmSync(dir,{recursive:true,force:true});
+  }
 });
