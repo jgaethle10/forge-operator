@@ -175,6 +175,203 @@
       "publicationEligible": false,
       "permissionReceiptId": null,
       "editorialApprovalReceiptId": null
+    },
+    {
+      "id": "early-program-records",
+      "title": "Verified school and historical collection records of Nebraska football before Devaney",
+      "kind": "primary_records",
+      "acquisitionState": "sources_identified_not_fully_researched",
+      "rightsStatus": "source_documents_and_accuracy_review_missing",
+      "publicationEligible": false,
+      "permissionReceiptId": null,
+      "editorialApprovalReceiptId": null,
+      "researchSource": "https://huskers.com/news/2019/04/8/history-of-nebraska-football"
+    },
+    {
+      "id": "devaney-era-footage",
+      "title": "Actual Bob Devaney 1962-1972 coaching/team film and consenting archival voices",
+      "kind": "archival_game_video",
+      "acquisitionState": "not_acquired",
+      "rightsStatus": "historic_licensor_and_clip_access_missing",
+      "publicationEligible": false,
+      "permissionReceiptId": null,
+      "editorialApprovalReceiptId": null,
+      "researchSource": "https://huskers.com/news/2019/04/8/history-of-nebraska-football"
+    },
+    {
+      "id": "1970-1971-championship-game-film",
+      "title": "Genuine 1970 and 1971 championship and Nebraska-Oklahoma footage",
+      "kind": "archival_game_video",
+      "acquisitionState": "not_acquired",
+      "rightsStatus": "historic_broadcast_and_program_footage_rights_missing",
+      "publicationEligible": false,
+      "permissionReceiptId": null,
+      "editorialApprovalReceiptId": null,
+      "researchSource": "https://huskers.com/national-championships-football"
+    },
+    {
+      "id": "osborne-football-system",
+      "title": "Primary footage, team records and knowledgeable accounts on Osborne's recruiting, walk-ons, development, Blackshirts, strength and conditioning",
+      "kind": "primary_interview_and_archival",
+      "acquisitionState": "not_acquired",
+      "rightsStatus": "primary_interviews_and_historic_archive_rights_missing",
+      "publicationEligible": false,
+      "permissionReceiptId": null,
+      "editorialApprovalReceiptId": null,
+      "researchSource": "https://huskers.com/news/2019/04/8/history-of-nebraska-football"
+    },
+    {
+      "id": "1994-1997-championship-game-film",
+      "title": "Actual Nebraska national title teams and archival footage from 1994 1995 1997",
+      "kind": "archival_game_video",
+      "acquisitionState": "not_acquired",
+      "rightsStatus": "national_title_game_footage_licenses_missing",
+      "publicationEligible": false,
+      "permissionReceiptId": null,
+      "editorialApprovalReceiptId": null,
+      "researchSource": "https://huskers.com/national-championships-football"
+    },
+    {
+      "id": "2001-colorado-game-film",
+      "title": "Actual 2001 Colorado 62-36 Nebraska game video, independently attributed",
+      "kind": "archival_game_video",
+      "acquisitionState": "not_acquired",
+      "rightsStatus": "broadcast_rights_and_authentic_clips_missing",
+      "publicationEligible": false,
+      "permissionReceiptId": null,
+      "editorialApprovalReceiptId": null,
+      "researchSource": "https://huskers.com/news/2019/04/8/history-of-nebraska-football"
+    },
+    {
+      "id": "2002-2003-solich-records",
+      "title": "Official 2002 and 2003 team records, contemporaneous university decision coverage, valid fair interview accounts",
+      "kind": "primary_records_and_news",
+      "acquisitionState": "documents_identified_not_ingested",
+      "rightsStatus": "contemporaneous_footage_and_interviews_missing",
+      "publicationEligible": false,
+      "permissionReceiptId": null,
+      "editorialApprovalReceiptId": null,
+      "researchSource": "https://huskers.com/news/2019/04/8/history-of-nebraska-football"
+    },
+    {
+      "id": "callahan-era-footage",
+      "title": "Real 2004-2007 Callahan era game footage and contemporaneous explanations",
+      "kind": "archival_game_video",
+      "acquisitionState": "not_acquired",
+      "rightsStatus": "broadcast_footage_and_multiple_sided_interviews_missing",
+      "publicationEligible": false,
+      "permissionReceiptId": null,
+      "editorialApprovalReceiptId": null,
+      "researchSource": "https://huskers.com/staff/bill-callahan"
+    },
+    {
+      "id": "pelini-era-footage",
+      "title": "Real 2008-2014 Pelini era video including the nine-win seasons and unmet championship goals",
+      "kind": "archival_game_video",
+      "acquisitionState": "not_acquired",
+      "rightsStatus": "broadcast_footage_and_nuanced_interview_sources_missing",
+      "publicationEligible": false,
+      "permissionReceiptId": null,
+      "editorialApprovalReceiptId": null,
+      "researchSource": "https://huskers.com/news/2019/04/08/history-of-nebraska-football"
+    },
+    {
+      "id": "2011-big-ten-transition-records",
+      "title": "University and conference source documents, scheduling/recruiting and independently evaluated conference impacts",
+      "kind": "primary_records",
+      "acquisitionState": "sources_identified_not_fully_researched",
+      "rightsStatus": "causal_claims_need_data_and_interviews",
+      "publicationEligible": false,
+      "permissionReceiptId": null,
+      "editorialApprovalReceiptId": null,
+      "researchSource": "https://huskers.com/news/2019/04/08/history-of-nebraska-football"
+    },
+    {
+      "id": "riley-era-footage",
+      "title": "Real 2015-2017 Nebraska football game and coaching era records",
+      "kind": "archival_game_video",
+      "acquisitionState": "not_acquired",
+      "rightsStatus": "broadcast_rights_and_team_history_research_missing",
+      "publicationEligible": false,
+      "permissionReceiptId": null,
+      "editorialApprovalReceiptId": null,
+      "researchSource": "https://huskers.com/news/2019/04/08/history-of-nebraska-football"
+    },
+    {
+      "id": "frost-era-footage",
+      "title": "Real 2018-2022 Nebraska football results, close games and independent explanations",
+      "kind": "archival_game_video",
+      "acquisitionState": "not_acquired",
+      "rightsStatus": "broadcast_rights_and_contemporaneous_accounts_missing",
+      "publicationEligible": false,
+      "permissionReceiptId": null,
+      "editorialApprovalReceiptId": null,
+      "researchSource": "https://huskers.com/sports/football/roster/season/2026/staff/matt-rhule"
+    },
+    {
+      "id": "program-systems-analyst",
+      "title": "Independent evidence-led researcher or historian examining changing recruiting, institutions and college football economics",
+      "kind": "consented_interview",
+      "acquisitionState": "not_recorded",
+      "rightsStatus": "neutrality_affiliation_consent_and_recording_missing",
+      "publicationEligible": false,
+      "permissionReceiptId": null,
+      "editorialApprovalReceiptId": null
+    },
+    {
+      "id": "rhule-2023-arrival",
+      "title": "Verified 2023 Nebraska footage, program condition, staff changes and Rhule introductory documentation",
+      "kind": "modern_football_archive",
+      "acquisitionState": "not_acquired",
+      "rightsStatus": "modern_video_rights_and_team_source_verification_missing",
+      "publicationEligible": false,
+      "permissionReceiptId": null,
+      "editorialApprovalReceiptId": null,
+      "researchSource": "https://huskers.com/sports/football/roster/season/2026/staff/matt-rhule"
+    },
+    {
+      "id": "rhule-player-development",
+      "title": "Evidence and footage of present-day recruiting, player development, roster maturity, program staffing and facilities",
+      "kind": "original_program_filming_and_records",
+      "acquisitionState": "not_recorded",
+      "rightsStatus": "venue_access_personnel_consent_and_independent_verification_missing",
+      "publicationEligible": false,
+      "permissionReceiptId": null,
+      "editorialApprovalReceiptId": null,
+      "researchSource": "https://huskers.com/sports/football/roster/season/2026/staff/matt-rhule"
+    },
+    {
+      "id": "2024-pinstripe-bowl-film",
+      "title": "Actual December 2024 Nebraska 20-15 win over Boston College, first bowl victory since 2015",
+      "kind": "broadcast_game_video",
+      "acquisitionState": "not_acquired",
+      "rightsStatus": "broadcast_game_license_missing",
+      "publicationEligible": false,
+      "permissionReceiptId": null,
+      "editorialApprovalReceiptId": null,
+      "researchSource": "https://huskers.com/news/2024/12/28/huskers-topple-boston-college-in-bad-boy-mowers-pinstripe-bowl"
+    },
+    {
+      "id": "2025-season-game-footage",
+      "title": "Authentic 2025 7-6 Nebraska season gameplay and injuries only with accurate context",
+      "kind": "broadcast_game_video",
+      "acquisitionState": "not_acquired",
+      "rightsStatus": "2025_game_broadcast_rights_missing",
+      "publicationEligible": false,
+      "permissionReceiptId": null,
+      "editorialApprovalReceiptId": null,
+      "researchSource": "https://huskers.com/sports/football/roster/season/2026/staff/matt-rhule"
+    },
+    {
+      "id": "2026-five-win-start",
+      "title": "Real 2026 first five Nebraska wins with fact-checked opponent and score labels",
+      "kind": "broadcast_game_video",
+      "acquisitionState": "not_acquired",
+      "rightsStatus": "2026_opening_game_video_rights_missing",
+      "publicationEligible": false,
+      "permissionReceiptId": null,
+      "editorialApprovalReceiptId": null,
+      "researchSource": "https://huskers.com/sports/football/schedule"
     }
   ],
   "production": {
