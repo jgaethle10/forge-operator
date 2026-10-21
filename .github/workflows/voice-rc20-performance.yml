@@ -1,10 +1,5 @@
 name: Voice Foundry RC20 Performance Acting (private only)
 on:
-  pull_request:
-    paths:
-      - '.github/workflows/voice-rc20-performance.yml'
-      - 'systemia/media-studio/voice-rc20-performance.py'
-      - 'tests/media-voice-rc20-performance.test.mjs'
   workflow_dispatch:
 permissions:
   contents: read
