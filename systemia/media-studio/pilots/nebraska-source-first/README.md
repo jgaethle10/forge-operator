@@ -1,5 +1,34 @@
 # Nebraska | The Giant Stirs: source-first film pilot
 
+## Series development | October 21, 2026
+
+**Series:** NEBRASKA | THE GIANT STIRS is now a three-episode observational documentary **in development**, targeting 25 minutes each. No complete episode, trailer release, external distribution, filming release or participant permission is implied by this plan.
+
+- [Season one director's bible](SERIES_BIBLE_SEASON_ONE.md): *The Inheritance*, *Ten Seconds*, *The Giant Stirs*. Six story sequences per episode, 18 across the season. Episode 3 ends with what actually happens, not an invented comeback.
+- [Season structure](series.season1.json): 3 × 1,500 seconds, a full 75 minutes of *editorial targets*, not 75 minutes of finished film.
+- [Unified source inventory](series.sources.json): all verified older-film footage, 1973 crowd, Lincoln sky, Nebraska City workshop, archive leads, required real interviews and missing 2026 game footage remain individually labeled with their rights/identity state.
+- [Real-person field guide](FAN_INTERVIEW_FIELD_GUIDE.md): long-term supporter, younger supporter, independent contextual voice, actual sound and signed participant consent.
+- `series-production-gate.mjs`, `series-production-gate.test.mjs` and `.github/workflows/fallen-nebraska-series.yml` produce a machine-readable episode source-blocker report and refuse false release claims.
+- `before-the-echo.scenes.json`: an actual 50-second **private review cut** built using original source bytes; History Nebraska collection-use permission remains unresolved.
+- `ten-seconds.chapter.json`: 138 seconds of **planned** Episode 2 narrative with game-clock facts, *not* 138 seconds of cleared 2026 broadcast footage.
+
+The 2026 season was 5–2 as of October 21, with Washington next on October 31 (https://bigten.org/schedule.aspx?schedule=8494). Episodes are intentionally not on a release schedule while game rights, real human interviews, editorial quality and other source/collection permissions are missing.
+
+**Run honest series preflight:**
+
+```sh
+node --test systemia/media-studio/pilots/nebraska-source-first/series-production-gate.test.mjs
+node systemia/media-studio/pilots/nebraska-source-first/series-production-gate.mjs \
+  systemia/media-studio/pilots/nebraska-source-first/series.season1.json \
+  systemia/media-studio/pilots/nebraska-source-first/series.sources.json \
+  /tmp/nebraska-series-preflight.json
+```
+
+A green test means the development contracts are coherent. It does **not** indicate 75 minutes of actual recorded film, or permission to buy media, interview a person, merge a release or publish.
+
+---
+
+
 This is a *governed executable preproduction bundle*, not a finished documentary. The experimental 22.5-second externally rendered camera study from the October 19 session was made with **synthetic illustrations** outside the native Fallen exporter. It does **not** prove World Engine → Fallen → Clip integration or 2026 footage rights.
 
 - `opening.plan.json` is valid for `npm run media:studio -- studio-create`.
