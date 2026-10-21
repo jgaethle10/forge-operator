@@ -24,6 +24,7 @@ const FEATURES=[
   ['family_cartoon_frontend','src/FallenFamilyCartoon.tsx','toon'],
   ['family_cartoon_backend','systemia/media-studio/family-http.ts','toon'],
   ['series_character_canon','systemia/media-studio/series.ts','toon'],
+  ['toon_shot_handoff','systemia/media-studio/toon-shot-handoff.mjs','toon'],
   ['identity_fingerprinting','systemia/media-studio/identity-fingerprint.ts','toon'],
   ['character_performance','systemia/media-studio/performance-director.ts','toon'],
   ['dialogue_lipsync_admission','systemia/media-studio/dialogue-sync-gate.ts','toon'],
@@ -75,7 +76,7 @@ const FEATURES=[
 
 const PRODUCTION_PROFILES=[
   {id:'family_cartoon',name:'Family cartoons and serialized toons',
-   requirements:['family_cartoon_frontend','family_cartoon_backend','series_character_canon','identity_fingerprinting','character_performance','dialogue_lipsync_admission','scene_continuity','world_skeletal_animation','world_geometry_bridge','narrative_film_pipeline','voice_provider','audio_master','studio_master_qc'],
+   requirements:['family_cartoon_frontend','family_cartoon_backend','series_character_canon','toon_shot_handoff','identity_fingerprinting','character_performance','dialogue_lipsync_admission','scene_continuity','world_skeletal_animation','world_geometry_bridge','narrative_film_pipeline','voice_provider','audio_master','studio_master_qc'],
    evidence:['locked_character_bible','approved_character_reference','body_hand_face_eyeline_visual_review','gesture_anatomy_and_identity_review','viseme_voice_sync_receipt','animated_scene_render_receipt','voice_rights_and_music_master','master_quality_and_child_safety_gate']},
   {id:'documentary',name:'History, battle, science and evidence documentaries',
    requirements:['worldstate_data_projection','world_spatial_visuals','world_webgpu','world_materials','cinematic_sequence','visual_observation','sequence_aesthetic_jury','studio_master_qc','studio_delivery'],
@@ -87,7 +88,7 @@ const PRODUCTION_PROFILES=[
    requirements:['world_physics','world_materials','world_spatial_visuals','world_skeletal_animation','world_spatial_audio','world_webgpu','world_geometry_bridge'],
    evidence:['actual_device_gpu_execution','deterministic_replay','controls_and_accessibility','geometry_and_asset_rights','measured_performance_and_user_qa']},
   {id:'music_and_performance',name:'Music videos, performances and animated songs',
-   requirements:['pulsegrid_composition','pulsegrid_audio_engine','world_spatial_audio','voice_provider','audio_master','character_performance','dialogue_lipsync_admission','timeline_export'],
+   requirements:['pulsegrid_composition','pulsegrid_audio_engine','world_spatial_audio','toon_shot_handoff','voice_provider','audio_master','character_performance','dialogue_lipsync_admission','timeline_export'],
    evidence:['original_composition_or_license','auditioned_human_quality_voice','timed_dialogue_or_lyrics','rhythm_to_motion_alignment','stereo_master_and_loudness_qc']},
   {id:'social_creative',name:'Social art, storyboards and short-form publication',
    requirements:['space_dudz_art_factory','visual_story_factory','commercial_renderer','design_tournament','clip_social_distribution','family_social_safety'],
