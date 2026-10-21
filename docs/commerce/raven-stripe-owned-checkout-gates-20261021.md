@@ -1,0 +1,107 @@
+# Evercraft Payments: Raven-owned Stripe checkout bridge · October 21, 2026
+
+## Proven source evidence
+
+Authenticated read-only queries to the live **Evercraft Media & Technologies** Stripe account on October 21 found **five active product records, five active one-time prices, zero Payment Links, and zero Checkout Sessions**. Of these, two products are already approved Evercraft offers:
+
+| Owned offer | Offer key | Cents | Provider catalog observation |
+| --- | --- | ---: | --- |
+| Website Quick Win Audit | `systemia.website_audit_quick_win_49.v1` | 4900 | Matching active one-time USD Stripe product and price |
+| FindMyPart Quick Hunt | `findmypart.quick_hunt_19.v1` | 1900 | Matching active one-time USD Stripe product and price |
+
+The other three active product records are Garage Field Notes assets and **are not** automatically allowed by this bridge. No provider writes, products, Payment Links, checkouts, charges, order receipts or payouts were created during this audit.
+
+## Ownership and authorization
+
+Evercraft Payments remains the canonical order and entitlement owner. Raven Nexus holds server-side Stripe credentials and must independently confirm the Stripe account identity and exact price for each accepted order. `systemia/payments/stripe-connection-registry.mjs` stores the intended account identity in an owner-only local file, but that identity **does not grant API authorization**. ChatGPT's managed Stripe connection is separate and cannot automatically be used by Penguin.
+
+The Raven checkout bridge consists of:
+
+- `systemia/payments/raven-stripe-price-bridge.mjs`: two-offer fixed-price allowlist and pure checkout planning; validates persisted canonical order, buyer confirmation, unpaid non-synthetic state, account identity and authenticated live price evidence. Outputs an idempotent Stripe Checkout Sessions request that contains only authorized price and order metadata.
+- `systemia/payments/raven-stripe-checkout-adapter.mjs`: private, in-process Raven connector implementation. Reuses the existing encrypted `ProviderCredentialVault` through the operator-authorized `RAVEN_PROVIDER_CREDENTIAL_STATE_DIR`, with an exact live Stripe `credential_ref`. It fails closed if that already-provisioned vault or its owner-only key file is absent. It checks the authenticated Stripe account, `charges_enabled`, re-reads the exact Stripe price, makes the Checkout Sessions call with idempotency, and validates the returned open/unpaid hosted session.
+- Paired tests exercise the consent, order, account, price, secret-file security, idempotency and no-fake-paid boundaries. Test fixtures use injected mock credentials and network responses; there are **no real Stripe writes in CI**.
+
+**No production checkout is operational from these files alone.** None of these functions is connected to a public HTTP route or automatically installed on Penguin. This branch is a staged implementation and its PR is deliberately draft.
+
+## Required field gates before live checkout
+
+1. Explicitly authorize and securely seal a Stripe live API credential into the **existing Evercraft encrypted provider vault** via Evercraft Home/owned credential intake. Never paste it into chat, commit it to Git, or put it into public checkout HTML. Bind the resulting exact `provider_stripe_live_*` reference and the owner-only vault directory through Raven Nexus runtime configuration, not request parameters. Verify file ownership and permissions with no credential content in logs. A managed ChatGPT Stripe connection cannot be copied into the runtime.
+2. Install an *authenticated*, internal Evercraft Payments order/ops service, with durable idempotent order persistence and offer/price binding. Do **not** expose a raw `createCheckoutSession` adapter over public MCP or untrusted HTTP.
+3. Wire the existing Fabric checkout request contract `/api/offers/{slug}/checkout` through `EVERCRAFT_PURCHASE_INTENT_OWNED_URL` and `EVERCRAFT_PAYMENT_OPS_OWNED_URL`. Both must be approved owned HTTPS endpoints and their user-facing route must require positive buyer confirmation. The service must own the canonical order before calling Raven.
+4. Verify a Stripe-generated Checkout Session's `client_reference_id`, authorized line-item price, cents/currency, account/mode, and expected Evercraft metadata. Show `checkout_prepared_unpaid` until payment verification.
+5. Receive and cryptographically verify Stripe webhooks or securely re-fetch authoritative provider payment state using the authenticated Raven adapter; reconcile with order, offer, amount, currency, environment and idempotency. Generate canonical Evercraft receipt only after that check. Make replay processing idempotent.
+6. Gate entitlement and fulfillment on an actual canonical paid receipt and separate product delivery acceptance. Never treat redirect, Checkout Session creation, email click, or an agent claim as a paid order.
+7. Independently test public HTTPS, webhooks, client checkout, signed receipt, retry behavior and end-to-end fulfillment before marking any `sell_now` buyer CTA active.
+
+The legacy buyer-form `HTTP 402` hold is a separate external dependency. Nothing here asks for an account downgrade, moves the live router, weakens receipt validation, or authorizes generic Stripe-first product checkouts outside Evercraft Payments.
+
+## Safe checks
+
+```bash
+node --test systemia/payments/raven-stripe-price-bridge.test.mjs
+node --test systemia/payments/raven-stripe-checkout-adapter.test.mjs
+node scripts/systemia-stripe-connection.mjs --status
+```
+
+The status command masks the account identifier and truthfully displays `runtime_authorized:false` and `checkout_verified:false`. Do not merge, advertise live checkout, or promote payment/fulfillment from CI alone.
+
+## Read-only Penguin vault preflight
+
+After locally staging this branch, run:
+
+```bash
+node scripts/systemia-stripe-vault-preflight.mjs
+```
+
+The preflight checks the existing **encrypted** Evercraft provider vault's metadata
+and file permissions only. It never instantiates `ProviderCredentialVault` on a
+missing directory, creates a credential, decrypts an envelope, calls Stripe,
+returns a raw account ID, or displays a credential reference. It prints a
+sanitized state such as `sealed_live_stripe_metadata_found_not_authenticated`,
+`existing_private_vault_no_stripe_record`, `not_found_no_changes`, or a
+permission hold. It resolves the selected vault directory from
+`RAVEN_PROVIDER_CREDENTIAL_STATE_DIR` if explicitly configured, otherwise the
+standard Penguin local-organism vault path.
+
+**Interpretation:** Finding a sealed provider metadata record does NOT prove
+which Stripe account it authenticates, active charges capability, or successful
+checkout. A `not_found_no_changes` result only means **this selected path**
+wasn't found; an existing vault might be bound at another authorized systemd
+location. Do not paste a token in chat and do not invent credentials to turn
+a metadata hold green.
+
+If an encrypted Stripe credential already exists, the next gate is authorized
+account revalidation through Raven. If it doesn't, the operator can authorize a
+single hidden-input intake through Evercraft's existing credential vault.
+Do not create a second Stripe-specific vault or bypass Evercraft Payments.
+
+## One-time restricted Stripe authorization using existing encrypted vault
+
+Penguin's October 21 bounded vault scan found no active sealed Stripe credential in its five known candidate locations. It found an existing private Evercraft Home encrypted provider vault at `/var/lib/evercraft/home/credentials`. This means **account identity is stored, but separate Raven API authorization is not yet established**. It does not prove no credentials exist in undiscovered locations.
+
+The intended operator workflow is one-time:
+
+1. Sign into the existing Evercraft Stripe Dashboard and create a **live restricted API key** dedicated to Evercraft Payments/Raven Nexus. Prefer the narrowest permissions supporting **account read**, **prices read**, and **Checkout Sessions write**. Do not grant refunds, payouts, transfers, full account write or unrelated permissions. Stripe reference: https://docs.stripe.com/keys/restricted-api-keys. Stripe's dashboard owns creating/revoking this credential.
+2. Stage the approved checkout branch, run `node scripts/systemia-stripe-restricted-intake.mjs status` from Penguin, and review `existing_live_stripe_credential_count` before doing anything else. This command inspects the **existing** encrypted Home vault and never attempts to create another.
+3. Only if no Stripe credential exists and you authorize enrollment, type the restricted key into a **hidden local terminal prompt**, then pipe it to `node scripts/systemia-stripe-restricted-intake.mjs seal --confirm-restricted-key-intake`. Never include the key in a shell command argument, GitHub, clipboard logs, chat or a publicly reachable web form.
+4. The intake performs **three read-only Stripe API GETs** before encryption: `/v1/account` must match Systemia's already-saved private Stripe account and be charges enabled; both already-approved fixed one-time offer price records must still match. If the key lacks necessary read scope or returns a different account, the process refuses to store it.
+5. On success the existing AES-256-GCM Evercraft Home `ProviderCredentialVault` seals the restricted key, preserving its original directory/encryption key. The intake refuses overwrite of an existing active live Stripe credential. The summary never returns the secret, Stripe account ID or vault credential reference.
+
+The operator-side hidden input is intended to be:
+
+```bash
+(
+  set -e
+  set +x
+  RUNTIME="$HOME/.local/share/evercraft/stripe-checkout-bridge"
+  node "$RUNTIME/scripts/systemia-stripe-restricted-intake.mjs" status
+  IFS= read -r -s -p "Restricted LIVE Stripe key (hidden): " STRIPE_RAK
+  printf '\n'
+  printf '%s' "$STRIPE_RAK" | node "$RUNTIME/scripts/systemia-stripe-restricted-intake.mjs" seal --confirm-restricted-key-intake
+  unset STRIPE_RAK
+)
+```
+
+**Do not run this until the latest branch and CI are verified**. This is an intentional credential-enrollment operation, not a read-only diagnostic. If an intake fails, do not repeatedly recreate keys. Inspect the sanitized error and correct its scope/account/access issue.
+
+A successful seal is **not** proof the Raven private runtime is bound, authenticated, producing real Checkout Sessions, recording signed provider receipts or releasing fulfillment. The adapter still needs an explicitly governed internal worker with an exact credential reference and durable Evercraft Payments orders. Payment and fulfillment remain held until independently verified.
