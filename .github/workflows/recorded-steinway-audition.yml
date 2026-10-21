@@ -4,7 +4,7 @@ on:
   pull_request:
     paths:
       - 'systemia/media-studio/recorded-steinway-pilot.py'
-      - 'systemia/media-studio/test-recorded-steinway-pilot.py'
+      - 'systemia/media-studio/test_recorded_steinway_pilot.py'
       - '.github/workflows/recorded-steinway-audition.yml'
   workflow_dispatch:
 
@@ -23,12 +23,20 @@ jobs:
       - name: Install minimal audio dependencies
         run: python -m pip install --disable-pip-version-check numpy soundfile
       - name: Test composition and audio signal invariants before any network samples
-        run: python -m unittest discover -s systemia/media-studio -p 'test-recorded-steinway-pilot.py' -v
+        run: python -m unittest discover -s systemia/media-studio -p 'test_recorded_steinway_pilot.py' -v
       - name: Fetch actual recorded University of Iowa piano source and render
         run: |
           python systemia/media-studio/recorded-steinway-pilot.py \
             --out /tmp/steinway-audition \
             --source-cache /tmp/steinway-source-cache
+      - name: Ensure measured-audio tooling
+        run: |
+          if ! command -v ffprobe >/dev/null 2>&1; then
+            sudo apt-get update -qq
+            sudo apt-get install -y ffmpeg
+          fi
+          command -v ffmpeg
+          command -v ffprobe
       - name: Verify real 24-bit output and source-backed provenance
         run: |
           python - <<'PY'
