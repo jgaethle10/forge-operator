@@ -1,0 +1,76 @@
+{
+  "schema": "evercraft.systemia.drive-recovery-slice.v1",
+  "product": "Systemia Command Center",
+  "source_class": "control_plane_recovery_record",
+  "recovery_state": "control_plane_contract_recovered_pending_runtime_parity",
+  "doctrine": {
+    "entrypoint": "founder_and_thread_intent_routes_through_systemia_first",
+    "systemia_owns": [
+      "admission",
+      "deduplication",
+      "dependency_checks",
+      "capacity",
+      "standards",
+      "sequencing",
+      "downstream_routing"
+    ],
+    "specialist_bypass": "emergency_code_or_runtime_intervention_only"
+  },
+  "work_state_model": [
+    "assigned",
+    "dispatched",
+    "acknowledged",
+    "executing",
+    "completed",
+    "verified"
+  ],
+  "state_rules": [
+    "do_not_collapse_dispatch_into_execution",
+    "do_not_collapse_completion_into_verification",
+    "transport_success_does_not_prove_content_validity",
+    "code_presence_does_not_prove_runtime_recovery",
+    "agent_report_does_not_replace_direct_receipts"
+  ],
+  "recovery_lessons": [
+    "event_persistence_and_event_consumption_are_separate_health_states",
+    "fallback_transport_may_be_healthy_while_native_event_ingestion_is_degraded",
+    "large_queue_reconciliation_requires_authoritative_retrieval_backed_context",
+    "record_ids_and_external_claims_must_be_validated_before_downstream_execution",
+    "failed_canaries_are_evidence_and_should_not_be_erased",
+    "repair_native_transport_without_weakening_a_proven_bounded_fallback"
+  ],
+  "bounded_fallback_contract": {
+    "scope": "one_exact_existing_work_item_at_a_time",
+    "requirements": [
+      "authoritative_context_supplied",
+      "target_identity_verified",
+      "no_broad_dirty_backlog_drain",
+      "durable_receipts_required",
+      "independent_validation_before_follow_on_execution"
+    ],
+    "classification": "degraded_recovery_not_full_native_recovery"
+  },
+  "institutional_memory": {
+    "structured_layer": "machine_receipts_and_work_traces",
+    "narrative_layer": "archived_operational_reasoning_and_corrections",
+    "rule": "preserve_both_so_future_cycles_can_reconstruct_state_without_chat_memory"
+  },
+  "full_recovery_acceptance": [
+    "fresh_founder_origin_work_is_automatically_admitted",
+    "native_event_transport_consumes_it_without_manual_or_scheduled_forcing",
+    "acknowledgement_execution_completion_and_verification_are_durable_and_distinct",
+    "credits_and_authority_are_bounded",
+    "no_duplicate_execution",
+    "failed_or_held_work_remains_visible",
+    "health_surface_reports_degraded_vs_healthy_without_exposing_private_content",
+    "rollback_or_fallback_path_remains_available_during_cutover"
+  ],
+  "not_recovered_yet": [
+    "legacy_record_ids",
+    "private_queue_contents",
+    "runtime_credentials",
+    "customer_or_mission_payloads",
+    "exact_legacy_workflow_implementation",
+    "live_native_event_parity_proof"
+  ]
+}

@@ -1,0 +1,84 @@
+{
+  "schema": "evercraft.systemia.drive-recovery-slice.v1",
+  "product": "SkyOps Parking",
+  "source_class": "cross_product_institutional_record",
+  "recovery_state": "handoff_and_boundary_contract_recovered_pending_source_and_runtime_parity",
+  "product_boundary": {
+    "owns": [
+      "airport_parking_demand",
+      "parking_operations",
+      "reservations",
+      "vehicle_custody",
+      "ground_handoff"
+    ],
+    "upstream_rule": "travel_orchestration_routes_eligible_parking_demand_into_skyops_instead_of_duplicating_parking_operations"
+  },
+  "parking_handoff_contract": {
+    "required_for_ready_handoff": [
+      "authenticated_requester_identity",
+      "departure_airport_code",
+      "parking_arrival_date",
+      "parking_departure_date"
+    ],
+    "derived_fields": [
+      "trip_days",
+      "acquisition_source",
+      "landing_surface",
+      "campaign_attribution",
+      "creation_timestamp"
+    ],
+    "states": [
+      "pending_details",
+      "ready",
+      "failed"
+    ],
+    "rules": [
+      "departure_airport_drives_departure_parking_handoff",
+      "trip_can_be_saved_even_if_parking_handoff_fails",
+      "handoff_success_is_not_a_parking_reservation",
+      "lead_creation_is_not_live_capacity_or_availability_proof"
+    ]
+  },
+  "evidence_boundary": [
+    "parking_observations_are_not_reservations",
+    "published_capacity_is_not_live_availability",
+    "cross_product_handoff_state_must_be_persisted",
+    "provider_confirmation_requires_provider_receipt",
+    "planning_context_must_not_be_rendered_as_operational_guarantee"
+  ],
+  "privacy_boundary": {
+    "rule": "traveler_identity_and_exact_trip_records_remain_in_authorized_operational_storage_not_public_source_control",
+    "public_recovery_contains": [
+      "schema",
+      "handoff_states",
+      "field_classes",
+      "acceptance_rules"
+    ],
+    "public_recovery_excludes": [
+      "traveler_email_values",
+      "exact_trip_rows",
+      "reservation_records",
+      "vehicle_identifiers",
+      "customer_contact_data"
+    ]
+  },
+  "acceptance": [
+    "eligible_parking_request_with_required_fields_creates_one_bounded_skyops_handoff",
+    "missing_required_fields_yields_pending_details_not_false_success",
+    "handoff_failure_does_not_corrupt_or_block_the_parent_trip_record",
+    "handoff_state_is_visible_to_the_parent_travel_context",
+    "origin_and_destination_airports_are_not_conflated",
+    "reservation_or_live_availability_is_never_claimed_from_a_lead_handoff",
+    "authorization_prevents_cross_user_access_to_travel_or_parking_records",
+    "tests_and_live_runtime_parity_are_required_before_legacy_retirement"
+  ],
+  "not_recovered_yet": [
+    "exact_application_source",
+    "live_inventory_provider_contract",
+    "reservation_provider_integration",
+    "vehicle_custody_runtime",
+    "notification_provider_configuration",
+    "production_customer_data",
+    "live_payment_or_booking_authority"
+  ]
+}
