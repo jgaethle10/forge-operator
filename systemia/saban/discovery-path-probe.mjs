@@ -31,9 +31,22 @@ for(const [name,accept] of profiles){
    const matches=await rpc(accept,'tools/call',{name:'match_evercraft_capability',arguments:{intent,limit:1}});
    const match=matches.matches?.[0];
    const options=await rpc(accept,'tools/call',{name:'get_evercraft_connection_options',arguments:{public_id:expected}});
-   const url=options.human_offer_url||match?.human_offer_url||null;
    const expectedUrl='https://fabric.systemiacommandcenters.com/offers/'+slug;
-   row.intents.push({intent,expected,matched:match?.public_id||null,match_ok:match?.public_id===expected,human_offer_url:url,offer_link_ok:url===expectedUrl,start_url_state:match?.start_url_state||null});
+   // A catalog offer landing URL is not a verified buyer checkout. The
+   // provider HTTP 402 hold must remain consistent between matching and
+   // connection-options calls, even for a cold machine consumer.
+   const buyerHeld=options.human_offer_url===null&&options.buyer_checkout_available===false&&
+     match?.human_offer_url===null&&match?.buyer_checkout_available===false&&
+     options.human_buyer_options_state==='held_provider_http_402_requires_new_payment_receipt'&&
+     match?.human_buyer_options_state===options.human_buyer_options_state;
+   const pageLabeled=match?.advertised_offer_page_url===expectedUrl&&
+     match?.advertised_offer_page_state==='catalog_route_only_not_live_checkout_proof';
+   row.intents.push({
+     intent,expected,matched:match?.public_id||null,match_ok:match?.public_id===expected,
+     human_offer_url:null,buyer_checkout_available:false,
+     checkout_held_correctly:buyerHeld,advertised_offer_page_url:match?.advertised_offer_page_url||null,
+     catalog_page_labeled_correctly:pageLabeled,start_url_state:match?.start_url_state||null
+   });
   }
  }catch(e){row.errors.push(e.message)}
  receipt.profiles.push(row);
@@ -41,6 +54,6 @@ for(const [name,accept] of profiles){
 await Promise.all(['/llms.txt','/.well-known/evercraft-chum.json','/offers','/offers.json','/robots.txt','/sitemap.xml','/health'].map(async surface=>{
  try{const r=await fetch(origin+surface,{signal:AbortSignal.timeout(15000)});receipt.surfaces.push({path:surface,status:r.status});}catch(e){receipt.surfaces.push({path:surface,status:0,error:e.message})}
 }));
-receipt.ok=receipt.profiles.every(p=>p.initialized&&p.errors.length===0&&p.intents.length===intents.length&&p.intents.every(i=>i.match_ok&&i.offer_link_ok))&&receipt.surfaces.every(s=>s.status===200);
+receipt.ok=receipt.profiles.every(p=>p.initialized&&p.errors.length===0&&p.intents.length===intents.length&&p.intents.every(i=>i.match_ok&&i.checkout_held_correctly&&i.catalog_page_labeled_correctly))&&receipt.surfaces.every(s=>s.status===200);
 fs.mkdirSync(out,{recursive:true});fs.writeFileSync(path.join(out,'receipt.json'),JSON.stringify(receipt,null,2)+'\n');
 console.log(JSON.stringify(receipt,null,2));if(!receipt.ok)process.exitCode=1;
