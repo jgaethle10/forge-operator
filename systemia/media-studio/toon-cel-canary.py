@@ -7,6 +7,7 @@ Requires cairosvg and ffmpeg+ffprobe. No network, provider calls or source photo
 import argparse, hashlib, json, math, pathlib, shutil, subprocess, wave
 from array import array
 import cairosvg
+from PIL import Image
 
 def curve(n):
     n=max(0.,min(1.,n))
@@ -183,6 +184,20 @@ def render(out,seconds=3,fps=24,width=768,height=432,motion_path=None,speech_lin
         cairosvg.svg2png(bytestring=frame_svg(i,fps,motion,poses[i]).encode(),
                         output_width=width,output_height=height,
                         write_to=str(frames/f'frame-{i:05d}.png'))
+    if speech_line:
+        strongest=max(range(count),key=lambda i:poses[i])
+        quiet=next(i for i,v in enumerate(poses) if v==0)
+        def mouth_crop_digest(i):
+            with Image.open(frames/f'frame-{i:05d}.png') as image:
+                crop=image.crop((round(width*.425),round(height*.635),
+                                 round(width*.49),round(height*.79)))
+                return hashlib.sha256(crop.tobytes()).hexdigest()
+        active_mouth_digest=mouth_crop_digest(strongest)
+        quiet_mouth_digest=mouth_crop_digest(quiet)
+        if active_mouth_digest==quiet_mouth_digest:
+            raise RuntimeError('toon_speech_canary_rendered_mouth_did_not_change')
+    else:
+        active_mouth_digest=None;quiet_mouth_digest=None
     wav=output/'original-synth-score.wav';audio(wav,seconds,voice_samples=voice_samples,voice_start=speech_start_sec)
     mp4=output/'toon-cel-canary.mp4'
     command(['ffmpeg','-hide_banner','-loglevel','error','-y','-framerate',str(fps),
@@ -210,6 +225,8 @@ def render(out,seconds=3,fps=24,width=768,height=432,motion_path=None,speech_lin
       'speechPcmDigest':digest(voice_path) if voice_path else None,
       'mouthPoseDigest':hashlib.sha256(json.dumps(poses,separators=(',',':')).encode()).hexdigest(),
       'mouthActiveFrames':sum(value>.12 for value in poses),'mouthSilentFrames':sum(value==0 for value in poses),
+      'activeMouthCropSha256':active_mouth_digest,
+      'silentMouthCropSha256':quiet_mouth_digest,
       'performanceAdmitted':False,
       'masterQcPassed':False,'publicationAuthority':False
     }
