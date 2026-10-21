@@ -1,0 +1,86 @@
+name: World Engine genuine camera-aware sky GPU proof
+on:
+  pull_request:
+    paths:
+      - 'systemia/world-engine/native-sky.ts'
+      - 'systemia/world-engine/native-sky.test.ts'
+      - 'systemia/world-engine/cinematic-render-proof.ts'
+      - '.github/workflows/world-engine-native-sky.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  actual-worldspace-sky-webgpu:
+    runs-on: ubuntu-latest
+    timeout-minutes: 38
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Install original World Engine
+        run: npm install --no-audit --no-fund
+      - name: Install native source-owned WebGPU browser worker
+        working-directory: systemia/evercraft-web/browser-worker
+        run: PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD=1 npm install --no-audit --no-fund
+      - name: Verify camera-aware source sky, world scene signatures and engine regressions
+        run: |
+          npx tsx --test systemia/world-engine/native-sky.test.ts
+          npm run test:world-engine
+      - name: Verify native H264 codec available
+        run: command -v ffmpeg || (sudo apt-get update -qq && sudo apt-get install -y ffmpeg)
+      - name: Render the real original GPU sky with full 3D cinema, ocean and atmospheric FX
+        env:
+          CINEMATIC_SCENE: denmark_strait_silhouettes
+          BATTLE_CAMERA: bismarck_hero
+          BATTLE_MOTION: "1"
+          BATTLE_FX: "1"
+          BATTLE_ANIMATED_OCEAN: "1"
+          BATTLE_SKY: "1"
+          CINEMATIC_FORMAT: wide
+          CINEMATIC_PROOF_OUTPUT: /tmp/evercraft-native-sky-gpu
+          EVERCRAFT_NATIVE_BROWSER_STATE_DIR: /tmp/evercraft-native-sky-browser
+        run: npm run world:cinematic-render-proof
+      - name: Independently prove visible original GPU sky pixels and source cinematic limits
+        run: |
+          node <<'NODE'
+          const fs=require('node:fs'),crypto=require('node:crypto'),path=require('node:path'),cp=require('node:child_process');
+          const dir='/tmp/evercraft-native-sky-gpu',f=path.join(dir,'denmark-strait-class-silhouettes-gpu.mp4');
+          const receipt=JSON.parse(fs.readFileSync(path.join(dir,'receipt.json'),'utf8'));
+          const actual=crypto.createHash('sha256').update(fs.readFileSync(f)).digest('hex');
+          const sky=receipt.proceduralSky;
+          if(!sky||sky.source!=='original_camera_ray_webgpu_fullscreen_pass'||
+             sky.shaderSha256?.length!==64||sky.worldSpaceCameraRay!==true||
+             sky.actualGpuPixelCounterfactualChangedPixels<=500||
+             sky.legacySceneOptInOnly!==true||sky.physicallyScatteredAtmosphere!==false||
+             sky.historicalWeatherAuthenticated!==false||sky.publicationAuthority!==false||
+             receipt.publicationAuthority!==false||
+             receipt.actorMotion?.actorCount!==4||receipt.environmentalFx?.emitterCount!==12||
+             receipt.animatedOcean?.vertexCount!==112*112*6||
+             receipt.exactGpuReadbackFrames!==96||receipt.uniqueRawFrameDigests<72||
+             receipt.output?.sha256!==actual||receipt.output.audioCodec!==null||
+             !fs.existsSync(path.join(dir,'sky-disabled-first-frame.rgba')))
+             throw Error('native_source_sky_gpu_provenance_or_pixels_not_verified');
+          const result=JSON.parse(cp.execFileSync('ffprobe',['-v','error','-show_entries',
+            'stream=codec_type,codec_name,nb_frames,width,height','-of','json',f]));
+          const video=result.streams.find(s=>s.codec_type==='video');
+          if(video?.codec_name!=='h264'||Number(video.nb_frames)!==96||video.width!==640||
+             video.height!==360||result.streams.some(s=>s.codec_type==='audio'))
+             throw Error('native_original_sky_movie_invalid');
+          console.log('VERIFIED_WORLDSPACE_NATIVE_GPU_SKY',{sha256:actual,
+            skyChangedPixels:sky.actualGpuPixelCounterfactualChangedPixels,
+            sourceGpuFrames:receipt.uniqueRawFrameDigests,filmSeconds:4});
+          NODE
+      - name: Preserve raw GPU master, camera ray evidence and decoded review frames
+        uses: actions/upload-artifact@v4
+        with:
+          name: evercraft-original-native-camera-aware-sky-gpu
+          path: |
+            /tmp/evercraft-native-sky-gpu/denmark-strait-class-silhouettes-gpu.mp4
+            /tmp/evercraft-native-sky-gpu/receipt.json
+            /tmp/evercraft-native-sky-gpu/opening.png
+            /tmp/evercraft-native-sky-gpu/middle.png
+            /tmp/evercraft-native-sky-gpu/closing.png
+            /tmp/evercraft-native-sky-gpu/sky-disabled-first-frame.rgba
+          retention-days: 7
+          if-no-files-found: error

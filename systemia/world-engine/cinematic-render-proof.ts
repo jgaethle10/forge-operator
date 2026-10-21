@@ -25,6 +25,7 @@ import {historicSilhouetteWorld,historicSilhouetteTake,battleVesselGeometry} fro
 import {makeBattleMotionDemo} from './battle-motion-demo.js';
 import {makeBattleEnvironmentFx} from './battle-environment-fx.js';
 import {attachAnimatedOcean,makeAnimatedOceanGrid,OCEAN_WAVE_GEOMETRY_ID,OCEAN_WAVE_AMPLITUDE} from './animated-ocean.js';
+import {CINEMATIC_SKY_WGSL,cinematicSkyCameraUniform,skyShaderSha256} from './native-sky.js';
 import {attachCinematicFxToWorld,cinematicFxGeometry} from './cinematic-environment-fx.js';
 import {makeNativeBattleshipSequence,composeNativeBattleshipCamera,type NativeFilmFormat} from './native-format-camera.js';
 import {auditSequenceHeroFraming} from './shot-composition.js';
@@ -168,7 +169,7 @@ async function loopback(){
   return {server,url:'http://127.0.0.1:'+addr.port+'/'};
 }
 async function renderGpuFrames(plans:ReturnType<typeof buildCinematicCameraSequence>['frames'],geometries:GeometryAsset[],textures:TextureAsset[],
-  shader:string,shadowShader:string,out:string){
+  shader:string,shadowShader:string,out:string,skyShader:string|null=null){
   const prepared=await prepareNativeBrowserRuntime({
     sourceDir:worker,stateDir:process.env.EVERCRAFT_NATIVE_BROWSER_STATE_DIR||path.join(out,'native-browser'),
     allowInstall:true
@@ -195,7 +196,7 @@ async function renderGpuFrames(plans:ReturnType<typeof buildCinematicCameraSeque
         // Install only this inert name decorator in the isolated loopback lab.
         await page.addInitScript({content:"globalThis.__name=(fn,name)=>fn;"});
         await page.goto(server.url,{waitUntil:'domcontentloaded'});
-        const init=await page.evaluate(async({shader,shadowShader,geometries,textures,width,height,shadowResolution}:{shader:string;shadowShader:string;geometries:GeometryAsset[];textures:TextureAsset[];width:number;height:number;shadowResolution:number})=>{
+        const init=await page.evaluate(async({shader,shadowShader,skyShader,geometries,textures,width,height,shadowResolution}:{shader:string;shadowShader:string;skyShader:string|null;geometries:GeometryAsset[];textures:TextureAsset[];width:number;height:number;shadowResolution:number})=>{
           const adapter=await (navigator as any).gpu?.requestAdapter();
           if(!adapter)return {ok:false,reason:'no_adapter'};
           const device=await adapter.requestDevice();
@@ -245,6 +246,23 @@ async function renderGpuFrames(plans:ReturnType<typeof buildCinematicCameraSeque
             primitive:{topology:'triangle-list',frontFace:'ccw',cullMode:'none'},
             depthStencil:{format:'depth24plus',depthWriteEnabled:false,depthCompare:'less'}
           });
+          // Optional source-authored GPU sky pass, dormant for legacy shots.
+          let skyPipeline:any=null,skyLayout:any=null;
+          if(skyShader){
+            const skyModule=device.createShaderModule({code:skyShader});
+            const skyErrors=(await skyModule.getCompilationInfo()).messages
+              .filter((m:any)=>m.type==='error').map((m:any)=>m.message);
+            if(skyErrors.length)return {ok:false,reason:'sky_shader:'+skyErrors.join('|')};
+            skyLayout=device.createBindGroupLayout({entries:[
+              {binding:0,visibility:3,buffer:{type:'uniform'}}
+            ]});
+            skyPipeline=device.createRenderPipeline({
+              layout:device.createPipelineLayout({bindGroupLayouts:[skyLayout]}),
+              vertex:{module:skyModule,entryPoint:'vs_sky'},
+              fragment:{module:skyModule,entryPoint:'fs_sky',targets:[{format:'rgba8unorm'}]},
+              primitive:{topology:'triangle-list',cullMode:'none'}
+            });
+          }
           const shadowModule=device.createShaderModule({code:shadowShader});
           const shadowErrors=(await shadowModule.getCompilationInfo()).messages
             .filter(m=>m.type==='error').map(m=>m.message);
@@ -307,9 +325,9 @@ async function renderGpuFrames(plans:ReturnType<typeof buildCinematicCameraSeque
           const shadowSampler=device.createSampler({compare:'less-equal'});
           // Dedicated synthetic lab runtime; all values come from canonically verified WebGPU plans.
           (window as any).__evercraftCinematic={device,frameLayout,objectLayout,pipeline,transparentPipeline,buffers,
-            fallback,sampler,textureMap,target,depth,width,height,shadowTexture,shadowSampler,shadowLayout,shadowPipeline};
+            fallback,sampler,textureMap,target,depth,width,height,shadowTexture,shadowSampler,shadowLayout,shadowPipeline,skyPipeline,skyLayout};
           return {ok:true};
-        },{shader,shadowShader,geometries,textures,width:WIDTH,height:HEIGHT,
+        },{shader,shadowShader,skyShader,geometries,textures,width:WIDTH,height:HEIGHT,
           shadowResolution:plans[0].renderPlan.shadow?.resolution??1});
         if(init.ok){selected=profile;break;}
         errors.push(profile.name+':'+init.reason);
@@ -322,11 +340,13 @@ async function renderGpuFrames(plans:ReturnType<typeof buildCinematicCameraSeque
     const hashes:string[]=[];
     let counterfactualChangedPixels=0;
     let filterChangedPixels=0;
+    let skyCounterfactualChangedPixels=0;
     try{
       for(const frame of plans.slice(0,-1)){
         const packet=frame.renderPlan;
         if(!packet?.digest||!packet.draws?.length)throw new Error('empty_gpu_plan');
-        const renderFrame=async (submittedPlan:any)=>page.evaluate(async(plan:any)=>{
+        const skyFrame=skyShader?Array.from(cinematicSkyCameraUniform(packet)):null;
+        const renderFrame=async (submittedPlan:any,showSky=true)=>page.evaluate(async({plan,skyValues}:{plan:any;skyValues:number[]|null})=>{
           const r=(window as any).__evercraftCinematic;
           const {device}=r;
           const fog=plan.atmosphere;
@@ -381,8 +401,29 @@ async function renderGpuFrames(plans:ReturnType<typeof buildCinematicCameraSeque
             }
             shadowPass.end();
           }
+          // Fullscreen sky renders to the same original GPU color target, behind
+          // the opaque and alpha-blended geometry, without any stock sky pixels.
+          let skyBuffer:any=null;
+          if(r.skyPipeline&&skyValues){
+            if(skyValues.length!==20||skyValues.some((x:number)=>!Number.isFinite(x)))
+              throw Error('sky_camera_uniform_invalid');
+            const data=new Float32Array(skyValues);
+            skyBuffer=device.createBuffer({size:data.byteLength,
+              usage:(globalThis as any).GPUBufferUsage.UNIFORM|(globalThis as any).GPUBufferUsage.COPY_DST});
+            device.queue.writeBuffer(skyBuffer,0,data);
+            const skyGroup=device.createBindGroup({layout:r.skyLayout,entries:[
+              {binding:0,resource:{buffer:skyBuffer}}]});
+            const skyPass=encoder.beginRenderPass({colorAttachments:[{
+              view:r.target.createView(),clearValue:{...plan.clearColor,a:1},
+              loadOp:'clear',storeOp:'store'}]});
+            skyPass.setPipeline(r.skyPipeline);
+            skyPass.setBindGroup(0,skyGroup);
+            skyPass.draw(3,1,0,0);
+            skyPass.end();
+          }
           const pass=encoder.beginRenderPass({
-            colorAttachments:[{view:r.target.createView(),clearValue:{...plan.clearColor,a:1},loadOp:'clear',storeOp:'store'}],
+            colorAttachments:[{view:r.target.createView(),clearValue:{...plan.clearColor,a:1},
+              loadOp:r.skyPipeline&&skyValues?'load':'clear',storeOp:'store'}],
             depthStencilAttachment:{view:r.depth.createView(),depthClearValue:1,depthLoadOp:'clear',depthStoreOp:'store'}
           });
           pass.setPipeline(r.pipeline);pass.setBindGroup(0,frameGroup);
@@ -438,16 +479,27 @@ async function renderGpuFrames(plans:ReturnType<typeof buildCinematicCameraSeque
           const padded=new Uint8Array(readback.getMappedRange().slice(0));
           const raw=new Uint8Array(rowBytes*r.height);
           for(let y=0;y<r.height;y++)raw.set(padded.subarray(y*bytesPerRow,y*bytesPerRow+rowBytes),y*rowBytes);
-          readback.unmap();readback.destroy();frameBuffer.destroy();lightBuffer.destroy();objects.forEach(z=>z.destroy());shadowObjects.forEach(z=>z.destroy());
+          readback.unmap();readback.destroy();frameBuffer.destroy();lightBuffer.destroy();if(skyBuffer)skyBuffer.destroy();objects.forEach(z=>z.destroy());shadowObjects.forEach(z=>z.destroy());
           // Browser bytes converted to base64 for an exact raw-video handoff.
           let binary='';
           for(let offset=0;offset<raw.length;offset+=8192){
             binary+=String.fromCharCode(...raw.subarray(offset,offset+8192));
           }
           return btoa(binary);
-        },submittedPlan);
+        },{plan:submittedPlan,skyValues:showSky?skyFrame:null});
         const base64=await renderFrame(packet);
         const pixels=Buffer.from(base64,'base64');
+        if(frame.index===0&&skyShader){
+          const previous=Buffer.from(await renderFrame(packet,false),'base64');
+          if(previous.length!==pixels.length)throw Error('sky_counterfactual_invalid');
+          fs.writeFileSync(path.join(out,'sky-disabled-first-frame.rgba'),previous,{flag:'wx',mode:0o600});
+          for(let i=0;i<pixels.length;i+=4){
+            if(Math.abs(pixels[i]-previous[i])>8||
+               Math.abs(pixels[i+1]-previous[i+1])>8||
+               Math.abs(pixels[i+2]-previous[i+2])>8)skyCounterfactualChangedPixels++;
+          }
+          if(skyCounterfactualChangedPixels<500)throw Error('sky_pass_has_no_observable_original_gpu_pixels');
+        }
         if(frame.index===0 && packet.shadow){
           // Render EXACTLY the same geometry, camera and lights, with ONLY
           // directional shadow sampling disabled. This is a visual counterfactual,
@@ -480,7 +532,7 @@ async function renderGpuFrames(plans:ReturnType<typeof buildCinematicCameraSeque
     if(new Set(hashes).size<3)throw new Error('rendered_frames_have_no_visible_motion');
     return {framesFile,profile:selected.name,softwareAdapterForced:selected.forcedSoftware,
       frameHashes:hashes,uniqueFrameHashes:new Set(hashes).size,counterfactualChangedPixels,
-      filterChangedPixels};
+      filterChangedPixels,skyCounterfactualChangedPixels};
   }finally{
     if(browser)await browser.close().catch(()=>{});
     await new Promise<void>(resolve=>server.server.close(()=>resolve()));
@@ -494,6 +546,8 @@ async function main(){
   const isSilhouette=process.env.CINEMATIC_SCENE==='denmark_strait_silhouettes';
   const isBattleship=process.env.CINEMATIC_SCENE==='battleship'||isFormation||isSilhouette;
   const useFx=process.env.BATTLE_FX==='1';
+  const useSky=process.env.BATTLE_SKY==='1';
+  if(useSky&&!isSilhouette)throw Error('native_sky_requires_distinct_vessel_scene');
   const useAnimatedOcean=process.env.BATTLE_ANIMATED_OCEAN==='1';
   if(useAnimatedOcean&&!isSilhouette)throw Error('animated_ocean_requires_naval_silhouette_scene');
   if(useFx&&!isSilhouette)throw Error('cinematic_environment_fx_requires_naval_geometry');
@@ -553,7 +607,7 @@ async function main(){
   const worldShaderSource=fs.readFileSync(path.join(root,'systemia/world-engine/webgpu.ts'),'utf8');
   const shadowSource=worldShaderSource.match(/export const EVERCRAFT_SHADOW_DEPTH_WGSL=`([\s\S]*?)`;/);
   if(!shadowSource)throw new Error('owned_shadow_shader_missing');
-  const raw=await renderGpuFrames(sequence.frames,geometries,textures,shader.source,shadowSource[1],out);
+  const raw=await renderGpuFrames(sequence.frames,geometries,textures,shader.source,shadowSource[1],out,useSky?CINEMATIC_SKY_WGSL:null);
   const video=path.join(out,isSilhouette?'denmark-strait-class-silhouettes-gpu.mp4':isFormation?'denmark-strait-four-vessel-gpu-proxy.mp4':isBattleship?'battleship-world-engine-trial.mp4':'orbital-foundry-synthetic-canary.mp4');
   let soundReceipt:ReturnType<typeof renderKineticSoundscape>['receipt']|null=null;
   if(isBattleship){
@@ -619,6 +673,11 @@ async function main(){
     schema:'evercraft.world-engine.cinematic-pixel-proof.v1',kind:'synthetic_internal_canary',
     worldDigest:sequence.worldDefinitionDigest,shaderSha256:shader.sha256,
     shadowShaderSha256:sha(shadowSource[1]),shadowState:'depth_occlusion_real_gpu',
+    ...(useSky?{proceduralSky:{source:'original_camera_ray_webgpu_fullscreen_pass',
+      shaderSha256:skyShaderSha256(),worldSpaceCameraRay:true,
+      actualGpuPixelCounterfactualChangedPixels:raw.skyCounterfactualChangedPixels,
+      legacySceneOptInOnly:true,historicalWeatherAuthenticated:false,
+      physicallyScatteredAtmosphere:false,publicationAuthority:false}}:{}),
     textureAssetDigests:textures.map(asset=>({id:asset.id,digest:textureAssetDigest(asset)})),
     ...(sequence.actorRigProof?{actorMotion:{...sequence.actorRigProof,
       firstAnimatedFrameDigest:sequence.frames[0].actorMotionDigest,
@@ -687,6 +746,7 @@ async function main(){
       ...(isSilhouette?['Four separately authored original silhouette assemblies use researched turret counts; no photogrammetry, verified scale, 1941 positioning or battle simulation']:[]),
       ...(useFx?['Procedural 3D moving wake, spray and exhaust actors in true GPU scene; particles are stylized illustration, not fluid or volumetric simulation']:[]),
       ...(useAnimatedOcean?['Native WebGPU vertex shader deforming actual water mesh with time-varying waves and computed normals; no physical weather/CFD claim']:[]),
+      ...(useSky?['Original native GPU sky fragment shader reconstructs real world camera rays; no sky image, HDRI, authentic historical weather or atmospheric physics']:[]),
       'Not cinematic-photoreal-quality, not an authentic physical event, not a public marketing asset']
   };
   fs.writeFileSync(path.join(out,'receipt.json'),JSON.stringify(receipt,null,2)+'\n');
