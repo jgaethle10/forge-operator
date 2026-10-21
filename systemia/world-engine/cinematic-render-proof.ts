@@ -449,8 +449,10 @@ async function renderGpuFrames(plans:ReturnType<typeof buildCinematicCameraSeque
               ...draw.emissive,draw.emissiveIntensity,...draw.textureFlags,
               draw.receivesShadow?1:0,
               draw.geometryId==='owned:evercraft-dynamic-ocean-grid'?1:0,
-              draw.geometryId==='owned:evercraft-dynamic-ocean-grid'?plan.timeSec:0,
-              draw.geometryId==='owned:evercraft-dynamic-ocean-grid'?0.80:0
+              draw.geometryId==='owned:evercraft-dynamic-ocean-grid'?plan.timeSec:
+                draw.geometryId.startsWith('owned:fx-organic-foam-')?-2:0,
+              draw.geometryId==='owned:evercraft-dynamic-ocean-grid'?0.80:
+                draw.geometryId.startsWith('owned:fx-organic-foam-')?plan.timeSec:0
             ]);
             const buffer=device.createBuffer({size:obj.byteLength,usage:(globalThis as any).GPUBufferUsage.UNIFORM|(globalThis as any).GPUBufferUsage.COPY_DST});
             device.queue.writeBuffer(buffer,0,obj);
@@ -708,6 +710,7 @@ async function main(){
       source:'original_non_chevron_3d_curved_alpha_foam_patches',
       sourceGeometryPrefix:ORGANIC_FOAM_PREFIX,
       originalGeometryVariants:organicFoamGeometry().length,
+      nativeWgslFeatheredAlphaAndNoise:true,
       centeredOnNativeWaveSurface:useAnimatedOcean,
       movingActorWakeSources:sequence.actorRigProof?.actorCount??0,
       realGpuFoamDrawsAtMiddle:sequence.frames[Math.floor(sequence.frames.length/2)].renderPlan.draws.filter(
