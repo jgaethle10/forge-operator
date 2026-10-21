@@ -60,7 +60,7 @@ export function loadRavenStripeSecret({
 }
 
 async function stripeJson({secret,path:apiPath,method='GET',body='',idempotencyKey='',fetchImpl}){
-  if(!['GET','POST'].includes(method)||!/^\/v1\/(?:account|prices\/price_[A-Za-z0-9]+|checkout\/sessions)$/.test(apiPath)){
+  if(!['GET','POST'].includes(method)||!/^\/v1\/(?:account|prices\/price_[A-Za-z0-9]+|checkout\/sessions|checkout\/sessions\/cs_live_[A-Za-z0-9]+\/line_items)$/.test(apiPath)){
     throw Error('raven_stripe_api_operation_not_allowlisted');
   }
   const headers={authorization:'Bearer '+secret,accept:'application/json'};
@@ -135,7 +135,15 @@ export async function createRavenStripeCheckoutSession({
     body:plan.request.body,idempotencyKey:plan.request.idempotency_key,
     fetchImpl,
   });
-  const verified=inspectCreatedStripeCheckoutSession(plan,session);
+  // Verify the exact product behind the Checkout Session with an independent
+  // authenticated provider GET; a matching amount/order key alone is insufficient.
+  if(!/^cs_live_[A-Za-z0-9]+$/.test(String(session.id||''))){
+    throw Error('raven_stripe_new_session_id_invalid');
+  }
+  const lineItems=await stripeJson({
+    secret,path:'/v1/checkout/sessions/'+session.id+'/line_items',fetchImpl,
+  });
+  const verified=inspectCreatedStripeCheckoutSession(plan,session,lineItems);
   if(!verified.ok)throw Error('raven_stripe_new_session_unverified');
   // No id, key, email or order data is returned from a provider exception.
   return {
