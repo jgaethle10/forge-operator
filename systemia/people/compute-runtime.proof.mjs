@@ -103,50 +103,12 @@ try{
       body:JSON.stringify({email:'owned-runtime@example.test'}),
     }
   );
-  assert.equal(challengeResponse.status,201);
-  const challenge=(await challengeResponse.json()).challenge;
-
-  const prematureVerify=await fetch(deployment.result.local_url+'/api/people/verify-email/verify',{
-    method:'POST',
-    headers:{'content-type':'application/json'},
-    body:JSON.stringify({token:challenge.raw_token,confirmation_text:'VERIFY MY EMAIL'}),
-  });
-  assert.equal(prematureVerify.status,409);
-
-  const evidence={
-    challenge_key:challenge.challenge_key,
-    destination_hash:emailDestinationHash('owned-runtime@example.test'),
-    provider:'gmail_agent',
-    status:'sent',
-    message_ref:'gmail:compute-proof',
-  };
-  const evidence_signature=signMailDeliveryEvidence(evidence,mailKeys.privateKey);
-  const fraudulentDelivery=await fetch(
-    deployment.result.local_url+'/api/people/identity-challenges/'+encodeURIComponent(challenge.challenge_key)+'/delivery',
-    {method:'POST',headers:{authorization:'Bearer '+operatorAuthority,'content-type':'application/json'},body:JSON.stringify(evidence)}
-  );
-  assert.equal(fraudulentDelivery.status,400);
-
-  const deliveryResponse=await fetch(
-    deployment.result.local_url+'/api/people/identity-challenges/'+encodeURIComponent(challenge.challenge_key)+'/delivery',
-    {
-      method:'POST',
-      headers:{authorization:'Bearer '+operatorAuthority,'content-type':'application/json'},
-      body:JSON.stringify({...evidence,evidence_signature}),
-    }
-  );
-  assert.equal(deliveryResponse.status,201);
-  const delivery=(await deliveryResponse.json()).delivery;
-  assert.equal(delivery.trusted_mailbox_delivery,true);
-
-  const verifyResponse=await fetch(deployment.result.local_url+'/api/people/verify-email/verify',{
-    method:'POST',
-    headers:{'content-type':'application/json'},
-    body:JSON.stringify({token:challenge.raw_token,confirmation_text:'VERIFY MY EMAIL'}),
-  });
-  assert.equal(verifyResponse.status,200);
-  const verified=await verifyResponse.json();
-  assert.equal(verified.brain.identity_assurance,'verified_email');
+  // Without an isolated provider dispatcher, even an authorized operator
+  // cannot obtain a challenge token or promote identity assurance.
+  assert.equal(challengeResponse.status,503);
+  const challengeBody=await challengeResponse.json();
+  assert.equal(challengeBody.error,'trusted_email_dispatch_unavailable');
+  assert.equal('challenge' in challengeBody,false);
 
   const memoryResponse=await fetch(
     deployment.result.local_url+'/api/people/brains/'+encodeURIComponent(created.brain.brain_key)+'/memories',

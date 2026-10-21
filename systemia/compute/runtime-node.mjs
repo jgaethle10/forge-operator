@@ -545,6 +545,8 @@ export async function startEvercraftComputeNode({
   failureDomain = '',
   zeroCost = false,
   browserRuntimeFactory = null,
+  peopleMailDispatcher = null,
+  peoplePublicOrigin = '',
   remoteOperatorRoots = null,
   remoteOperatorStateDir = '',
   maxStagedBlobBytes = Number(process.env.EVERCRAFT_MAX_STAGED_BLOB_BYTES || 2147483648),
@@ -1988,6 +1990,8 @@ export async function startEvercraftComputeNode({
             stateDir: stateRoot,
             adminTokenFile,
             mailDeliveryPublicKeysFile,
+            mailDispatcher: peopleMailDispatcher,
+            publicOrigin: String(peoplePublicOrigin || process.env.PEOPLE_PUBLIC_ORIGIN || '').trim(),
             host: '127.0.0.1',
             port: Number(body.input?.port || 0),
           });

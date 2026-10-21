@@ -633,6 +633,22 @@ export function createPeopleRuntime({
     return structuredClone(receipt);
   }
 
+  function abortEmailChallenge(challengeKey) {
+    const state = load();
+    const challenge = state.identity_challenges.find(row => row.challenge_key === clean(challengeKey));
+    if (!challenge) throw new Error('challenge_not_found');
+    if (challenge.status === 'active') {
+      challenge.status = 'revoked';
+      challenge.delivery_state = 'failed';
+      save(state, {
+        event: 'identity_email_challenge_dispatch_aborted',
+        challenge_key: challenge.challenge_key,
+        brain_key: challenge.brain_key,
+      });
+    }
+    return { challenge_key: challenge.challenge_key, status: challenge.status };
+  }
+
   function inspectEmailChallenge(token) {
     const state = load();
     const challenge = expireIfNeeded(activeChallenge(state, clean(token)));
@@ -793,6 +809,7 @@ export function createPeopleRuntime({
     acceptInvite,
     createEmailChallenge,
     recordEmailDelivery,
+    abortEmailChallenge,
     inspectEmailChallenge,
     verifyEmail,
     exportBrain,

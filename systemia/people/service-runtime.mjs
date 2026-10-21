@@ -80,6 +80,8 @@ export async function startPeopleLayerRuntime({
   stateDir,
   adminTokenFile,
   mailDeliveryPublicKeysFile,
+  mailDispatcher=null,
+  publicOrigin='',
   host='127.0.0.1',
   port=0,
 }={}){
@@ -233,7 +235,48 @@ export async function startPeopleLayerRuntime({
         const action=match[2];
         const body=method==='POST'?await readJson(req):{};
         if(method==='POST'&&action==='invite')return sendJson(res,201,{ok:true,invite:runtime.createInvite(brainKey,body)});
-        if(method==='POST'&&action==='email-challenge')return sendJson(res,201,{ok:true,challenge:runtime.createEmailChallenge(brainKey,body)});
+        if(method==='POST'&&action==='email-challenge'){
+          let originValid=false;
+          try {
+            const origin=new URL(publicOrigin);
+            originValid=origin.protocol==='https:' && origin.username==='' &&
+              origin.password==='' && origin.search==='' && origin.hash==='' &&
+              origin.pathname==='/' &&
+              !/(^|\.)base44\.app$/i.test(origin.hostname);
+          } catch {}
+          if(typeof mailDispatcher!=='function'||!originValid)
+            return sendJson(res,503,{ok:false,error:'trusted_email_dispatch_unavailable'});
+          const challenge=runtime.createEmailChallenge(brainKey,body);
+          try {
+            const evidence=await mailDispatcher({
+              recipient:body.email,
+              challenge,
+              publicOrigin,
+            });
+            if(evidence?.challenge_key!==challenge.challenge_key)
+              throw new Error('mail_delivery_challenge_mismatch');
+            const delivery=runtime.recordEmailDelivery(challenge.challenge_key,evidence);
+            if(delivery.trusted_mailbox_delivery!==true)
+              throw new Error('trusted_email_delivery_required');
+            return sendJson(res,201,{
+              ok:true,
+              challenge:{
+                challenge_key:challenge.challenge_key,
+                email_hint:challenge.email_hint,
+                expires_at:challenge.expires_at,
+                delivery_state:'sent',
+              },
+              delivery:{
+                provider:delivery.provider,
+                status:delivery.status,
+                delivery_receipt_key:delivery.delivery_receipt_key,
+              },
+            });
+          } catch {
+            runtime.abortEmailChallenge(challenge.challenge_key);
+            return sendJson(res,502,{ok:false,error:'trusted_email_dispatch_failed'});
+          }
+        }
         if(method==='POST'&&action==='export')return sendJson(res,200,{ok:true,export:runtime.exportBrain(brainKey,body)});
         if(method==='POST'&&action==='delete-request')return sendJson(res,201,{ok:true,request:runtime.requestDelete(brainKey,body)});
         if(method==='POST'&&action==='delete')return sendJson(res,200,{ok:true,result:runtime.completeDelete(brainKey,body.confirmation_text)});
