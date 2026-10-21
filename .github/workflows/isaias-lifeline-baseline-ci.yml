@@ -1,0 +1,30 @@
+name: Isaias Lifeline Baseline Safety
+on:
+  pull_request:
+    paths:
+      - 'public/demos/isaias-lifelines/**'
+      - 'tests/isaias-lifeline-atlas.test.mjs'
+      - 'systemia/newsroom/isaias-lifeline-geo.mjs'
+      - 'tests/isaias-lifeline-geo.test.mjs'
+      - 'systemia/newsroom/isaias-agency-acquisition.mjs'
+      - 'tests/isaias-agency-acquisition.test.mjs'
+      - '.github/workflows/isaias-lifeline-baseline-ci.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  source-and-runtime-gates:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: NHC source truth and owned static runtime
+        run: node --test tests/isaias-lifeline-atlas.test.mjs tests/isaias-lifeline-geo.test.mjs tests/isaias-agency-acquisition.test.mjs
+      - name: Separate visual preview from verified emergency guidance
+        run: |
+          grep -q 'NOT LIVE EMERGENCY GUIDANCE' public/demos/isaias-lifelines/index.html
+          grep -q 'geospatial_join_state' public/demos/isaias-lifelines/baseline.json
+          test "$(node -p "require('./public/demos/isaias-lifelines/baseline.json').observed_disruptions_count")" = "null"

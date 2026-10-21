@@ -1,0 +1,32 @@
+name: Isaias Official Agency Read-Only Intake
+on:
+  pull_request:
+    paths:
+      - 'systemia/newsroom/isaias-agency-acquisition.mjs'
+      - 'scripts/isaias-readonly-source-probe.mjs'
+      - '.github/workflows/isaias-official-source-intake.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  probe-authoritative-sources:
+    runs-on: ubuntu-latest
+    timeout-minutes: 6
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Read official NHC and FEMA source feeds without mutating or publishing
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p "$RUNNER_TEMP/isaias-source-receipt"
+          node scripts/isaias-readonly-source-probe.mjs --out "$RUNNER_TEMP/isaias-source-receipt/source.json"
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: isaias-authoritative-intake-${{ github.run_id }}
+          path: ${{ runner.temp }}/isaias-source-receipt/source.json
+          if-no-files-found: error
+          retention-days: 14
