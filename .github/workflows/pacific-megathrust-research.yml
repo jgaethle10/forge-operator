@@ -1,0 +1,97 @@
+name: Pacific Megathrust Atlas research checks
+on:
+  push:
+    branches:
+      - 'research/pacific-megathrust-atlas-*'
+    paths:
+      - 'public/demos/pacific-megathrust/**'
+      - '.github/workflows/pacific-megathrust-research.yml'
+  pull_request:
+    paths:
+      - 'public/demos/pacific-megathrust/**'
+      - '.github/workflows/pacific-megathrust-research.yml'
+permissions:
+  contents: read
+jobs:
+  source-contract:
+    name: Source classification and safety invariants
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - run: node --test public/demos/pacific-megathrust/*.test.mjs
+      - run: node --check public/demos/pacific-megathrust/atlas.mjs
+  browser-smoke:
+    name: Interactive map browser smoke (research only)
+    runs-on: ubuntu-latest
+    timeout-minutes: 9
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Launch local-only research preview
+        run: |
+          node public/demos/pacific-megathrust/smoke-server.mjs > /tmp/megathrust-server.log 2>&1 &
+          sleep 2
+          curl --fail http://127.0.0.1:4177/demos/pacific-megathrust/ -o /dev/null
+      - name: Render page with actual Chromium
+        run: |
+          CHROME="$(command -v google-chrome || command -v chromium || command -v chromium-browser)"
+          test -n "$CHROME"
+          "$CHROME" --headless=new --no-sandbox --disable-dev-shm-usage --disable-gpu --hide-scrollbars --window-size=1440,980 --virtual-time-budget=25000 --screenshot=/tmp/evercraft-pacific-megathrust.png --dump-dom http://127.0.0.1:4177/demos/pacific-megathrust/ > /tmp/megathrust-dom.html 2> /tmp/megathrust-chrome.log
+          test -s /tmp/evercraft-pacific-megathrust.png
+          node --input-type=module -e '
+            import fs from "node:fs";
+            import assert from "node:assert/strict";
+            const dom=fs.readFileSync("/tmp/megathrust-dom.html","utf8");
+            const mapTag=dom.match(/<div\b[^>]*\bid="map"[^>]*>/)?.[0];
+            assert.ok(mapTag,"Rendered map container missing");
+            assert.match(mapTag,/\bleaflet-container\b/,"Leaflet map did not initialize");
+            assert.ok(dom.includes("leaflet-map-pane"),"Leaflet map pane missing");
+            const status=dom.match(/<span id="dataStatus"[^>]*>([^<]*)<\/span>/)?.[1] || "unknown";
+            assert.ok(!status.includes("Map library unavailable"),"Rendered map failed to load");
+            assert.ok(dom.includes("selectKuril"),"Kuril selector missing");
+            console.log("REAL_BROWSER_SMOKE_PASSED: Leaflet initialized; visual snapshot captured; data status="+status);
+          '
+      - name: Render Cascadia tsunami-planning overlays
+        run: |
+          CHROME="$(command -v google-chrome || command -v chromium || command -v chromium-browser)"
+          "$CHROME" --headless=new --no-sandbox --disable-dev-shm-usage --disable-gpu --hide-scrollbars --window-size=1440,980 --virtual-time-budget=25000 --screenshot=/tmp/evercraft-pacific-megathrust-cascadia.png --dump-dom "http://127.0.0.1:4177/demos/pacific-megathrust/?region=cascadia&inundation=1&evacuation=1" > /tmp/megathrust-cascadia-dom.html 2> /tmp/megathrust-cascadia-chrome.log
+          test -s /tmp/evercraft-pacific-megathrust-cascadia.png
+          node --input-type=module -e '
+            import fs from "node:fs";
+            import assert from "node:assert/strict";
+            const dom=fs.readFileSync("/tmp/megathrust-cascadia-dom.html","utf8");
+            const tag=dom.match(/<div\b[^>]*\bid="map"[^>]*>/)?.[0];
+            assert.match(tag||"",/\bleaflet-container\b/,"Cascadia map did not initialize");
+            const title=dom.match(/<b id="mapTitle">([^<]*)<\/b>/)?.[1];
+            assert.equal(title,"Cascadia / Pacific Northwest","Cascadia view did not initialize");
+            const images=[...dom.matchAll(/<img\b[^>]*\bsrc="([^"]+)"/g)].map(m=>m[1]);
+            const officialImages=images.filter(url=>url.startsWith("https://gis.dnr.wa.gov/site3/rest/directories/arcgisoutput/Geology/Tsunami_Hazard_MapServer/"));
+            assert.ok(officialImages.length>=2,"Both official Washington map overlays must render image elements");
+            const sourceUrl=officialImages[0].replaceAll("&amp;","&");
+            const response=await fetch(sourceUrl,{signal:AbortSignal.timeout(20000)});
+            assert.equal(response.ok,true,"Washington GIS export request failed: "+response.status);
+            assert.match(response.headers.get("content-type")||"",/^image\//,"Washington GIS did not return an image");
+            const data=await response.arrayBuffer();
+            assert.ok(data.byteLength>100,"Washington GIS export image was empty");
+            console.log("CASCADIA_OVERLAY_SMOKE_PASSED: WGS images="+officialImages.length+", independently retrieved PNG bytes="+data.byteLength);
+          '
+
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: pacific-megathrust-browser-smoke
+          path: |
+            /tmp/evercraft-pacific-megathrust.png
+            /tmp/evercraft-pacific-megathrust-cascadia.png
+            /tmp/megathrust-chrome.log
+            /tmp/megathrust-cascadia-chrome.log
+            /tmp/megathrust-dom.html
+            /tmp/megathrust-cascadia-dom.html
+            /tmp/megathrust-server.log
+          retention-days: 7

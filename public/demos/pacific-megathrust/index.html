@@ -1,0 +1,180 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="description" content="Evidence-first Kuril and Cascadia geophysical research map. Official-source earthquake observations and clearly labeled modeled tsunami layers.">
+<title>Pacific Megathrust | Evercraft Research Atlas</title>
+<link rel="preconnect" href="https://unpkg.com">
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
+<style>
+:root{color-scheme:dark;--bg:#050e1b;--paper:#0b1a2b;--line:#263e50;--muted:#93aabc;--teal:#78e9da;--gold:#ffc869;--white:#eff7ff;--red:#f9928e}
+*{box-sizing:border-box}html,body{margin:0;min-height:100%;background:var(--bg);font-family:ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;color:var(--white)}
+body:before{content:"";position:fixed;inset:0;pointer-events:none;background:radial-gradient(ellipse at 75% -20%,#13415d77,transparent 53%),radial-gradient(ellipse at 2% 90%,#16394b55,transparent 45%);z-index:0}
+.app{position:relative;max-width:1660px;margin:auto;min-height:100vh;display:grid;grid-template-rows:auto auto minmax(570px,1fr) auto}
+header{display:flex;justify-content:space-between;align-items:center;gap:18px;padding:22px 28px 18px;border-bottom:1px solid var(--line)}
+.brand{display:flex;align-items:center;gap:12px}.sigil{width:39px;height:39px;border:1px solid #55a9ba;border-radius:12px;display:grid;place-items:center;color:var(--teal);font-size:22px;background:#103248}
+.brand b{font-size:13px;letter-spacing:.21em;font-weight:800}.brand span{display:block;font-size:10px;text-transform:uppercase;letter-spacing:.18em;color:var(--muted);margin-top:3px}
+.status{display:flex;align-items:center;gap:8px;font-size:11px;color:var(--muted);text-align:right}.beacon{width:7px;height:7px;background:var(--gold);border-radius:50%;box-shadow:0 0 10px var(--gold)}
+.intro{padding:22px 28px 18px;display:flex;justify-content:space-between;align-items:end;gap:20px}
+h1{font-size:clamp(27px,3vw,47px);letter-spacing:-.052em;margin:4px 0 8px;font-weight:730;line-height:1.02}
+h1 span{color:var(--teal)}p{margin:0;line-height:1.55}.intro p{color:var(--muted);font-size:13px;max-width:650px}.eyebrow{color:var(--gold);text-transform:uppercase;letter-spacing:.2em;font-weight:800;font-size:10px}
+.legend{display:flex;gap:14px;flex-wrap:wrap;align-items:center;color:var(--muted);font-size:11px;justify-content:flex-end}.symbol{width:9px;height:9px;border-radius:50%;display:inline-block;margin-right:5px;background:var(--teal)}.symbol.orange{background:var(--gold)}.symbol.model{background:#e9838b}
+.workspace{display:grid;grid-template-columns:minmax(275px,340px) minmax(0,1fr) minmax(250px,315px);gap:14px;padding:0 18px 18px;min-height:570px}
+.panel{background:#0a1828ef;border:1px solid var(--line);border-radius:14px;overflow:hidden;min-height:0}
+.panel h2{font-size:12px;letter-spacing:.14em;color:var(--muted);text-transform:uppercase;margin:0 0 16px}
+.sidebar{padding:19px;display:flex;flex-direction:column;gap:18px;overflow-y:auto}.zone{width:100%;padding:14px;text-align:left;border-radius:10px;border:1px solid #2b4b5b;background:#102539;color:var(--white);cursor:pointer;transition:.2s}.zone.active{border-color:#69cbbf;background:#153848}.zone strong{font-size:14px;display:block}.zone small{display:block;color:var(--muted);font-size:11px;margin-top:6px}.zone .tag{font-size:9px;letter-spacing:.12em;color:var(--teal);display:block;margin-bottom:8px}
+.card{padding:14px;background:#102334;border:1px solid #253f50;border-radius:11px}.card h3{font-size:12px;margin:0 0 9px}.card p{color:var(--muted);font-size:12px}.metric{font-size:30px;line-height:1.12;letter-spacing:-.045em;color:var(--gold);font-weight:750}.metric-caption{color:var(--muted);font-size:10px;margin-top:8px;line-height:1.5}.label-pill{display:inline-block;border-radius:30px;padding:4px 8px;border:1px solid #4d687a;color:#b6cedc;font-size:9px;letter-spacing:.08em;text-transform:uppercase;margin-bottom:9px}
+.mapwrap{position:relative;min-height:540px;background:linear-gradient(30deg,#07263a,#02121f);overflow:hidden}
+#map{width:100%;height:100%;min-height:540px;background:#051827}
+.map-top{position:absolute;top:15px;left:15px;right:15px;z-index:500;display:flex;align-items:flex-start;justify-content:space-between;gap:9px;pointer-events:none}
+.overlay{background:#071725e8;backdrop-filter:blur(8px);border:1px solid #426074;border-radius:10px;padding:11px 13px;pointer-events:auto}
+.overlay b{font-size:11px;display:block}.overlay small{font-size:9px;color:var(--muted);line-height:1.5}
+.layers{position:absolute;bottom:22px;left:16px;z-index:500;display:grid;gap:9px;pointer-events:auto;max-width:calc(100% - 32px)}
+.layer{background:#071725ed;border:1px solid #3b576b;border-radius:9px;padding:9px 12px;display:flex;align-items:center;gap:9px;font-size:11px;width:max-content;max-width:100%;cursor:pointer}
+.layer input{accent-color:var(--teal);width:15px;height:15px}.layer small{color:var(--muted);font-size:9px}
+.research{padding:19px;overflow-y:auto;display:flex;flex-direction:column;gap:16px}
+.research .big{color:var(--teal);font-size:35px;letter-spacing:-.055em;font-weight:780}.research .sm{font-size:11px;color:var(--muted)}
+.facts{display:grid;grid-template-columns:1fr 1fr;gap:8px}.fact{padding:12px;border:1px solid #294355;border-radius:10px;background:#102539}.fact b{display:block;font-size:15px}.fact small{color:var(--muted);font-size:10px;line-height:1.4}
+.research h3{font-size:13px;margin:0 0 7px}.research p{font-size:12px;color:var(--muted)}.research a,.sidebar a{color:var(--teal);font-size:11px;text-decoration:underline;text-underline-offset:3px;overflow-wrap:anywhere}
+.line{border:0;border-top:1px solid var(--line);width:100%;margin:1px 0}
+.events{display:grid;gap:8px}.event{display:flex;justify-content:space-between;gap:8px;align-items:center;text-align:left;background:#11283a;border:1px solid #2c4554;border-radius:9px;padding:10px;color:var(--white);cursor:pointer;width:100%}
+.mag{font-weight:790;color:var(--gold);font-size:13px;min-width:37px}.event-desc{flex:1;min-width:0;font-size:10px;color:#c6dce8}.event-desc small{display:block;color:var(--muted);margin-top:3px}
+.note{padding:12px;border:1px solid #73584f;background:#3d27233a;border-radius:10px;color:#f7c5b1;font-size:10px;line-height:1.6}
+footer{display:flex;justify-content:space-between;align-items:center;gap:15px;flex-wrap:wrap;border-top:1px solid var(--line);padding:15px 28px;font-size:10px;color:var(--muted)}
+.leaflet-container{background:#061c2a;font-family:inherit}.leaflet-control-attribution{background:#081b2ecc!important;color:#b3cbda!important}.leaflet-control-attribution a{color:#86eadb!important}.leaflet-popup-content-wrapper,.leaflet-popup-tip{background:#0a1f30;color:#ebf5f9}.leaflet-popup-content{font-size:12px}.leaflet-popup-content a{color:var(--teal)}
+a:focus-visible,button:focus-visible,input:focus-visible{outline:2px solid var(--gold);outline-offset:3px}
+@media(max-width:1180px){.workspace{grid-template-columns:270px minmax(0,1fr)}.research{grid-column:1/-1;display:grid;grid-template-columns:repeat(3,minmax(0,1fr));align-items:start}.research>h2,.research>.note,.research>.events,.research>#eventHeading{grid-column:1/-1}}
+@media(max-width:740px){.app{display:block}header{padding:14px 16px}.intro{padding:20px 16px;display:block}.legend{justify-content:flex-start;margin-top:14px}.workspace{display:flex;flex-direction:column;padding:0 10px 10px;gap:10px}.sidebar{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;padding:11px}.sidebar h2,.sidebar .card,.sidebar .note{grid-column:1/-1}.zone{min-height:100px;padding:10px}.mapwrap,#map{height:58vh;min-height:410px}.map-top{top:9px;left:8px;right:8px}.overlay{padding:8px}.research{display:flex;padding:14px}footer{padding:16px}.layers{bottom:12px;left:10px}.layer{padding:8px}}
+</style>
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" defer></script>
+<script src="https://unpkg.com/esri-leaflet@3.0.12/dist/esri-leaflet.js" defer></script>
+</head>
+<body>
+<main class="app">
+<header><div class="brand"><div class="sigil" aria-hidden="true">◈</div><div><b>EVERCRAFT / EARTH ATLAS</b><span>Geophysical research laboratory</span></div></div><div class="status"><i class="beacon" aria-hidden="true"></i><span id="dataStatus">Preparing observational feed</span></div></header>
+<section class="intro"><div><div class="eyebrow">Research prototype · RC1 · not an emergency service</div><h1>Pacific <span>Megathrust</span></h1><p>What the Earth is actually telling us. Compare published geodetic evidence, recent USGS earthquake observations, and source-labeled Washington tsunami planning layers.</p></div><div class="legend"><span><i class="symbol"></i>Observed catalog event</span><span><i class="symbol orange"></i>Research estimate</span><span><i class="symbol model"></i>Modeled tsunami scenario</span></div></section>
+<div class="workspace">
+<aside class="panel sidebar"><h2>01 / Select study region</h2>
+<button class="zone active" id="selectKuril" type="button" aria-pressed="true"><span class="tag">RESEARCH FOCUS</span><strong>Southwestern Kuril</strong><small>Nemuro, Hokkaido · GNSS-acoustic measurements 2019–24</small></button>
+<button class="zone" id="selectCascadia" type="button" aria-pressed="false"><span class="tag">COMPARATIVE REGION</span><strong>Cascadia</strong><small>Washington and Oregon · official tsunami planning scenarios</small></button>
+<div class="card"><span class="label-pill">Estimated · not observed total</span><div class="metric">20.5–30m</div><div class="metric-caption">Potential 400-year southwestern Kuril slip deficit under the study's stated assumptions. Not a rupture forecast or direct stress measurement.</div><p style="margin-top:11px"><a href="https://www.nature.com/articles/s43247-026-03297-2" target="_blank" rel="noopener noreferrer">Open Tomita et al. (2026) ↗</a></p></div>
+<div class="note">No system can currently predict the date of a major earthquake. This atlas does not issue tsunami warnings or infer imminent danger from catalog activity.</div>
+</aside>
+<div class="panel mapwrap" aria-label="Interactive Pacific earthquake observation map">
+<div id="map" role="application" aria-label="Pacific earthquake map"><div style="padding:80px 15px;text-align:center;color:#a4bed0">Loading map library…</div></div>
+<div class="map-top"><div class="overlay"><b id="mapTitle">Southwestern Kuril / Nemuro</b><small>Study region envelope · schematic boundary</small></div><div class="overlay"><b>USGS M4.5+</b><small>Past 7 days · catalog observations</small></div></div>
+<div class="layers"><label class="layer"><input id="toggleQuakes" type="checkbox" checked><span>USGS observed earthquakes <small>(historical catalog)</small></span></label><label class="layer"><input id="toggleInundation" type="checkbox"><span>Washington modeled inundation <small>(Cascadia L1 scenario)</small></span></label><label class="layer"><input id="toggleEvacuation" type="checkbox"><span>WA published evacuation routes <small>(planning)</small></span></label></div>
+</div>
+<aside class="panel research">
+<h2>02 / Evidence desk</h2>
+<div><span class="label-pill" id="researchKind">Published geodetic research</span><div class="big" id="headlineMetric">2019–24</div><div class="sm" id="headlineLabel">Repeated GNSS-acoustic survey window, not continuous fault-stress telemetry.</div></div>
+<div class="facts"><div class="fact"><b id="eventCount">…</b><small>USGS selected-region events<br>M4.5+ past 7 days</small></div><div class="fact"><b id="generatedTime">…</b><small>Feed generated (UTC)<br>not an alert issue time</small></div></div>
+<div><h3>What is measured?</h3><p id="evidenceText">GNSS-acoustic positions of seafloor transponder arrays track crustal motion across research surveys. Interpreting that motion as a long-term slip deficit requires modeling assumptions.</p></div>
+<hr class="line">
+<div><h3>Data provenance</h3><p>USGS GeoJSON: observed earthquake catalog. Washington Geological Survey ArcGIS: published, modeled inundation extent and planning routes. Different evidence types, shown independently.</p><p style="margin-top:9px"><a href="https://earthquake.usgs.gov/earthquakes/feed/" target="_blank" rel="noopener noreferrer">USGS feed ↗</a> · <a href="https://gis.dnr.wa.gov/site3/rest/services/Geology/Tsunami_Hazard/MapServer" target="_blank" rel="noopener noreferrer">WA map service ↗</a> · <a href="https://www.ncei.noaa.gov/products/natural-hazards/tsunamis-earthquakes-volcanoes/tsunamis/global-historical-data" target="_blank" rel="noopener noreferrer">NOAA history ↗</a></p></div>
+<h3 id="eventHeading">Recent observed earthquakes <small style="color:var(--muted);font-weight:400"> (selected region)</small></h3>
+<div id="eventList" class="events" aria-live="polite"><p>Waiting for USGS feed…</p></div>
+<div class="note"><strong>Safety boundary:</strong> The rectangles represent atlas search windows, not scientifically mapped fault polygons. Absence of recent earthquakes is not evidence that a region is safe.</div>
+</aside>
+</div>
+<footer><span>Evercraft Research Atlas · experimental source-grounded prototype · Systemia mission admission pending</span><span>Official warnings: <a href="https://www.tsunami.gov/" target="_blank" rel="noopener noreferrer" style="color:#78e9da">tsunami.gov</a> · Map © OpenStreetMap contributors · WA Geological Survey layers</span></footer>
+</main>
+<script type="module">
+import {FEED_URL,WGS_MAP_SERVICE,ZONES,normalizeUsgsFeed,feedFreshness,summarize,htmlEscape} from "./atlas.mjs";
+const byId=id=>document.getElementById(id);
+let selected="kuril",map,quakes=null,wgsInundation=null,wgsEvacuation=null,observations=[],lastGenerated=null,feedError=null;
+const overlays={};
+function info(text){byId("dataStatus").textContent=text;}
+function bindClick(id,handler){byId(id).addEventListener("click",handler);}
+function initialize(){
+ if(!window.L){byId("map").textContent="Mapping library unavailable. Source links remain accessible in the Evidence desk.";info("Map library unavailable");return;}
+ map=L.map("map",{zoomControl:false,worldCopyJump:false,minZoom:2,preferCanvas:true});
+ L.control.zoom({position:"bottomright"}).addTo(map);
+ L.tileLayer("https://tile.openstreetmap.org/{z}/{x}/{y}.png",{
+  attribution:'&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
+  maxZoom:19,noWrap:false
+ }).addTo(map);
+ quakes=L.layerGroup().addTo(map);
+ overlays.kuril=L.rectangle([[40,138],[61,168]],{color:"#f8c771",weight:1.2,dashArray:"5 8",fillColor:"#d4a85d",fillOpacity:.045,interactive:false});
+ overlays.cascadia=L.rectangle([[39,-137],[53,-119]],{color:"#72e5d8",weight:1.2,dashArray:"5 8",fillOpacity:.035,interactive:false});
+ if(window.L.esri?.dynamicMapLayer){
+  wgsInundation=L.esri.dynamicMapLayer({url:WGS_MAP_SERVICE,layers:[29],opacity:.4});
+  wgsEvacuation=L.esri.dynamicMapLayer({url:WGS_MAP_SERVICE,layers:[20],opacity:.75});
+ }else{byId("toggleInundation").disabled=true;byId("toggleEvacuation").disabled=true;}
+ bindClick("selectKuril",()=>choose("kuril"));
+ bindClick("selectCascadia",()=>choose("cascadia"));
+ byId("toggleQuakes").addEventListener("change",e=>{if(e.target.checked)quakes.addTo(map);else map.removeLayer(quakes)});
+ byId("toggleInundation").addEventListener("change",e=>toggleWgs(e,wgsInundation));
+ byId("toggleEvacuation").addEventListener("change",e=>toggleWgs(e,wgsEvacuation));
+ // Shareable research views; these are only viewport/overlay preferences, never alert states.
+ const params=new URLSearchParams(window.location.search);
+ const initialRegion=params.get("region")==="cascadia"?"cascadia":"kuril";
+ choose(initialRegion);
+ if(initialRegion==="cascadia" && params.get("inundation")==="1" && wgsInundation){
+  byId("toggleInundation").checked=true;
+  wgsInundation.addTo(map);
+ }
+ if(initialRegion==="cascadia" && params.get("evacuation")==="1" && wgsEvacuation){
+  byId("toggleEvacuation").checked=true;
+  wgsEvacuation.addTo(map);
+ }
+ loadQuakes();
+}
+function choose(zone){
+ selected=zone;
+ for(const z of ["kuril","cascadia"]){const active=z===zone;byId(z==="kuril"?"selectKuril":"selectCascadia").classList.toggle("active",active);byId(z==="kuril"?"selectKuril":"selectCascadia").setAttribute("aria-pressed",String(active));if(map.hasLayer(overlays[z]))map.removeLayer(overlays[z]);}
+ // Display rectangles in a conventional 180° map frame; the zoomed Pacific overview can wrap.
+ overlays[zone].addTo(map);
+ const c=ZONES[zone].center;map.setView(c,zone==="kuril"?5:5,{animate:true});
+ byId("mapTitle").textContent=ZONES[zone].name;
+ byId("researchKind").textContent=zone==="kuril"?"Peer-reviewed geodesy":"Official modeled hazards";
+ byId("headlineMetric").textContent=zone==="kuril"?"2019–24":"M9.0 L1";
+ byId("headlineLabel").textContent=zone==="kuril"?
+  "Repeated GNSS-acoustic survey window; long-term slip deficit is modeled.":
+  "Washington Geological Survey Cascadia L1 tsunami scenario, not a prediction.";
+ byId("evidenceText").textContent=zone==="kuril"?
+  "Three offshore GNSS-acoustic stations were surveyed repeatedly. The 20.5–30m accumulated slip deficit is an estimate that extrapolates a modeled geophysical interpretation over approximately 400 years.":
+  "Washington provides modeled tsunami inundation, tsunami arrival times, shelters and evacuation routes. Scenario consequences are useful for preparedness but do not predict a rupture date.";
+ drawQuakes();updateEvents();
+}
+function toggleWgs(event,layer){
+ if(!layer){event.target.checked=false;info("WA map service unavailable");return;}
+ if(event.target.checked)layer.addTo(map);else map.removeLayer(layer);
+ if(event.target.checked){choose("cascadia");info("WA DNR modeled layer enabled · not a live warning");}
+}
+function drawQuakes(){
+ quakes.clearLayers();for(const e of observations){if(e.zone!==selected)continue;
+ const color=e.magnitude>=6.5?"#ffb765":"#7fe8d7";
+ const dot=L.circleMarker([e.lat,e.lon],{radius:Math.max(5,Math.min(14,2+e.magnitude*1.2)),weight:1,color,fillColor:color,fillOpacity:.45});
+ dot.bindPopup('<strong>M '+e.magnitude.toFixed(1)+'</strong><br>'+htmlEscape(e.place)+'<br><small>'+new Date(e.time).toISOString().slice(0,16)+' UTC · USGS observed</small><br><a target="_blank" rel="noopener noreferrer" href="'+e.url+'">Source event ↗</a>');
+ dot.addTo(quakes);
+ }}
+function updateEvents(){
+ const current=observations.filter(e=>e.zone===selected);byId("eventCount").textContent=String(current.length);
+ const list=byId("eventList");list.replaceChildren();
+ if(feedError){list.textContent="Unable to fetch USGS observations. "+feedError;return;}
+ if(!current.length){list.textContent=observations.length?"No M4.5+ catalog events in this study window during the feed period. Not a safety assessment.":"No recent catalog events available for this region.";return;}
+ for(const e of current.slice(0,7)){
+  const btn=document.createElement("button");btn.className="event";btn.type="button";
+  const mag=document.createElement("span");mag.className="mag";mag.textContent="M"+e.magnitude.toFixed(1);
+  const desc=document.createElement("span");desc.className="event-desc";desc.textContent=e.place;
+  const small=document.createElement("small");small.textContent=new Date(e.time).toISOString().slice(0,16).replace("T"," ")+" UTC";desc.append(small);
+  btn.append(mag,desc);
+  btn.addEventListener("click",()=>{map.setView([e.lat,e.lon],7,{animate:true});for(const layer of quakes.getLayers()){if(layer.getLatLng().lat===e.lat && layer.getLatLng().lng===e.lon){layer.openPopup();break;}}});
+  list.append(btn);
+ }
+}
+async function loadQuakes(){
+ const controller=new AbortController(),timeout=setTimeout(()=>controller.abort(),12000);
+ try{
+  const res=await fetch(FEED_URL,{cache:"no-store",signal:controller.signal});
+  if(!res.ok)throw new Error("HTTP "+res.status);
+  const data=normalizeUsgsFeed(await res.json());observations=data.events;lastGenerated=data.generatedAt;feedError=null;
+  const freshness=feedFreshness(lastGenerated);byId("generatedTime").textContent=lastGenerated?new Date(lastGenerated).toISOString().slice(11,16):"Unknown";
+  info("USGS feed "+freshness+" · "+summarize(observations).total+" study-area events");
+ }catch(error){feedError=error?.name==="AbortError"?"Request timed out":"Feed failed; no current data verified";info("USGS feed unavailable · no cached substitute");}
+ finally{clearTimeout(timeout);drawQuakes();updateEvents();}
+}
+if(document.readyState==="complete")initialize();else window.addEventListener("load",initialize,{once:true});
+</script>
+</body></html>
