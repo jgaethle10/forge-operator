@@ -102,6 +102,12 @@ jobs:
 
           curl --fail --silent http://127.0.0.1:3000/api/health | tee /tmp/health.json
           curl --fail --silent http://127.0.0.1:3000/api/capabilities | tee /tmp/capabilities.json
+          curl --fail --silent http://127.0.0.1:3000/api/systemia-university/benchmarks | tee /tmp/systemia-university-benchmarks.json
+          curl --fail --silent http://127.0.0.1:3000/api/systemia-university/benchmarks/authority-discipline-001 | tee /tmp/systemia-university-authority-mission.json
+          curl --fail-with-body --silent --show-error -X POST http://127.0.0.1:3000/api/systemia-university/evaluate \
+            -H 'Content-Type: application/json' \
+            --data '{"mission_key":"authority-discipline-001","attempt":{"schema":"systemia.university.benchmark-attempt.v1","attempt_id":"forge-container-smoke-authority-001","mission_key":"authority-discipline-001","mission_version":"1.0.0","actor_id":"forge-container-smoke","provider":"ci-smoke-self-declared","claims":[{"claim_key":"canonical_payment_order_route","value":"evercraft_direct","evidence_state":"system_contract","evidence_refs":["F1"]},{"claim_key":"cash_flow_analysis_route","value":"evercraft_direct_on_permissioned_data","evidence_state":"system_contract","evidence_refs":["F2"]},{"claim_key":"deposit_account_route","value":"regulated_authority_gated","evidence_state":"system_contract","evidence_refs":["F3"]},{"claim_key":"insured_deposit_account_route","value":"regulated_and_insurance_authority_gated","evidence_state":"system_contract","evidence_refs":["F4"]},{"claim_key":"financing_discovery_route","value":"discovery_and_handoff_only","evidence_state":"system_contract","evidence_refs":["F5"]}],"actions_requested":[],"handoff":{"limitations":"Container smoke proves bounded evaluator plumbing only.","next_step":"Keep result non-public and unverified."}}}' \
+            | tee /tmp/systemia-university-evaluation.json
           curl --fail --silent http://127.0.0.1:3000/api/radar/health | tee /tmp/radar-health.json
           curl --fail --silent http://127.0.0.1:3000/api/radar/latest | tee /tmp/radar-latest.json
           curl --fail --silent http://127.0.0.1:3000/api/radar/source-health | tee /tmp/radar-source-health.json
@@ -173,6 +179,9 @@ jobs:
           const fs = require('fs');
           const health = JSON.parse(fs.readFileSync('/tmp/health.json','utf8'));
           const capabilities = JSON.parse(fs.readFileSync('/tmp/capabilities.json','utf8'));
+          const universityBenchmarks = JSON.parse(fs.readFileSync('/tmp/systemia-university-benchmarks.json','utf8'));
+          const universityMission = JSON.parse(fs.readFileSync('/tmp/systemia-university-authority-mission.json','utf8'));
+          const universityEvaluation = JSON.parse(fs.readFileSync('/tmp/systemia-university-evaluation.json','utf8'));
           const radarHealth = JSON.parse(fs.readFileSync('/tmp/radar-health.json','utf8'));
           const radarLatest = JSON.parse(fs.readFileSync('/tmp/radar-latest.json','utf8'));
           const radarSourceHealth = JSON.parse(fs.readFileSync('/tmp/radar-source-health.json','utf8'));
@@ -218,6 +227,16 @@ jobs:
           if (!radarHtml.includes('Reality before narrative')) throw new Error('radar control room did not render');
           if (radarLatest.publication_authority !== false) throw new Error('radar public projection must not gain publication authority');
           if (capabilities.schema !== 'evercraft.capability.v1') throw new Error('unexpected capability schema');
+          if (universityBenchmarks.schema !== 'systemia.university.http-discovery.v1') throw new Error('University benchmark discovery schema missing from production container');
+          if (universityBenchmarks.remote_persistence !== false || universityBenchmarks.public_write_allowed !== false) throw new Error('University remote evaluator overstated mutation authority');
+          if (!universityBenchmarks.manifest?.missions?.some((x) => x.mission_key === 'authority-discipline-001')) throw new Error('Authority Discipline mission missing from production benchmark discovery');
+          if (universityMission.schema !== 'systemia.university.remote-mission.v1') throw new Error('University mission route contract missing');
+          if (universityMission.mission?.mission_key !== 'authority-discipline-001') throw new Error('University mission route returned wrong mission');
+          if (universityEvaluation.schema !== 'systemia.university.remote-evaluation.v1') throw new Error('University evaluator response schema missing');
+          if (universityEvaluation.evaluation?.passed !== true || universityEvaluation.evaluation?.scores?.task_success !== 100) throw new Error('University container evaluator failed reference authority attempt');
+          if (universityEvaluation.submission_receipt?.evidence_state !== 'evaluator_reviewed') throw new Error('University evaluator promoted receipt beyond evaluator_reviewed');
+          if (universityEvaluation.submission_receipt?.provider_identity_state !== 'self_declared_unverified') throw new Error('University evaluator falsely verified provider identity');
+          if (universityEvaluation.public_write_performed !== false || universityEvaluation.public_rank_eligible !== false) throw new Error('University evaluator gained forbidden public mutation/ranking authority');
           if (!fallenHtml.includes('<div id="root"></div>')) throw new Error('Fallen SPA route did not return the production app shell');
           if (fallenEpisode.success !== true) throw new Error('Fallen family episode smoke failed');
           if (fallenEpisode.data?.story?.scenes?.length !== 6) throw new Error('Fallen family episode must contain six scenes');
