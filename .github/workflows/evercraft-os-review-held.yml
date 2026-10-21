@@ -1,0 +1,96 @@
+name: Evercraft OS review-held candidate
+
+on:
+  pull_request:
+    paths:
+      - ".github/workflows/evercraft-os-review-held.yml"
+      - "docs/evercraft-os/review-held/**"
+      - "systemia/evercraft-os/**"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  offline-candidate:
+    name: Verify sealed OS candidate (no deployment)
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    steps:
+      - name: Checkout reviewed commit
+        uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - name: Install Node 22
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Verify exact sealed archive
+        shell: bash
+        run: |
+          set -euo pipefail
+          printf '%s  %s\n' \
+            'f5eaaf096dce8b12c0dd56198682b6953eca9cda505236eece5e519ceaf32aaa' \
+            'docs/evercraft-os/review-held/evercraft-os-lab-external-witness-20261013-REVIEW_HELD.zip' \
+            | sha256sum -c -
+      - name: Extract into isolated temporary directory
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p "$RUNNER_TEMP/os-candidate"
+          unzip -q docs/evercraft-os/review-held/evercraft-os-lab-external-witness-20261013-REVIEW_HELD.zip -d "$RUNNER_TEMP/os-candidate"
+          echo "CANDIDATE_ROOT=$RUNNER_TEMP/os-candidate/evercraft-os-package-trust-20261010" >> "$GITHUB_ENV"
+      - name: Verify candidate source inventory and canonical Passport compatibility
+        shell: bash
+        run: |
+          set -euo pipefail
+          cd "$CANDIDATE_ROOT"
+          sha256sum -c SHA256SUMS.txt
+          cmp -- systemia/passport/passport.mjs "$GITHUB_WORKSPACE/systemia/passport/passport.mjs"
+      - name: Run full offline OS candidate suite
+        shell: bash
+        run: |
+          set -euo pipefail
+          cd "$CANDIDATE_ROOT"
+          node --test systemia/evercraft-os/*.test.mjs
+      - name: Run existing canonical OS regressions
+        shell: bash
+        run: |
+          set -euo pipefail
+          node --test \
+            systemia/evercraft-os/install-ledger.test.mjs \
+            systemia/evercraft-os/runtime-capsule.test.mjs \
+            systemia/evercraft-os/systemia-launcher.test.mjs
+
+  additive-source:
+    name: Test imported OS source against sealed candidate (no deployment)
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    steps:
+      - name: Checkout reviewed source
+        uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - name: Install Node 22
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Verify imported 37 modules against pinned archive
+        shell: bash
+        run: |
+          set -euo pipefail
+          printf '%s  %s\n' \
+            'f5eaaf096dce8b12c0dd56198682b6953eca9cda505236eece5e519ceaf32aaa' \
+            'docs/evercraft-os/review-held/evercraft-os-lab-external-witness-20261013-REVIEW_HELD.zip' | sha256sum -c -
+          mkdir -p "$RUNNER_TEMP/os-imported"
+          unzip -q docs/evercraft-os/review-held/evercraft-os-lab-external-witness-20261013-REVIEW_HELD.zip -d "$RUNNER_TEMP/os-imported"
+          src="$RUNNER_TEMP/os-imported/evercraft-os-package-trust-20261010/systemia/evercraft-os"
+          test "$(find "$src" -maxdepth 1 -type f -name '*.mjs' | wc -l)" -eq 37
+          for file in "$src"/*.mjs; do
+            cmp "$file" "systemia/evercraft-os/$(basename "$file")"
+          done
+          cmp "$RUNNER_TEMP/os-imported/evercraft-os-package-trust-20261010/systemia/passport/passport.mjs" systemia/passport/passport.mjs
+      - name: Run imported and existing canonical OS tests together
+        run: node --test systemia/evercraft-os/*.test.mjs
+      - name: Verify existing Phase 0 composition
+        run: node systemia/evercraft-os/runtime.proof.mjs
