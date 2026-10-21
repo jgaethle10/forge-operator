@@ -57,6 +57,34 @@ try{
   const availabilityGuard=/checkout temporarily paused|checking checkout availability/i.test(currentText);
   receipt.observed.push({surface:'human_finished_app_form',state:appVisible?'rendered':'not_rendered',availability_guard_visible:availabilityGuard});
   if(!appVisible)receipt.blockers.push('managed_service_buyer_form_not_rendered');
+  // Require the exact visual release, not merely a healthy SPA shell or checkout page.
+  // The visual proofs are clearly labeled illustrative, not customer results.
+  const proofPage=await context.newPage();
+  try{
+    const visualResponse=await proofPage.goto(ORIGIN+'/websites',{waitUntil:'domcontentloaded',timeout:22000});
+    await proofPage.waitForTimeout(1100);
+    const proofText=await proofPage.locator('body').innerText();
+    const releaseVisible=visualResponse?.status()===200 &&
+      proofText.includes('Your next customer should get it in') &&
+      proofText.includes('illustrative concepts') &&
+      proofText.includes('Start a finished site from $500');
+    let comparisonFunctional=false;
+    if(releaseVisible){
+      await proofPage.getByRole('button',{name:'Studio',exact:true}).click();
+      const studioShown=(await proofPage.locator('body').innerText()).includes('Sunday Studio');
+      await proofPage.getByRole('button',{name:'Before',exact:true}).click();
+      const beforeShown=(await proofPage.locator('body').innerText()).includes('Welcome to our website.');
+      await proofPage.getByRole('button',{name:'Clearer concept',exact:true}).click();
+      const afterShown=(await proofPage.locator('body').innerText()).includes('Make time for a little more you.');
+      comparisonFunctional=studioShown&&beforeShown&&afterShown;
+    }
+    receipt.observed.push({surface:'website_launch_visual_release',state:releaseVisible?'rendered':'stale_or_unverified',comparison_functional:comparisonFunctional});
+    if(!releaseVisible)receipt.blockers.push('website_launch_release_revision_not_live');
+    else if(!comparisonFunctional)receipt.blockers.push('website_launch_visual_comparison_not_functional');
+  }catch(error){
+    receipt.observed.push({surface:'website_launch_visual_release',state:'browser_error',reason:String(error.message||error).slice(0,140)});
+    receipt.blockers.push('website_launch_visual_release_probe_failed');
+  }finally{await proofPage.close();}
   for(const offer of OFFERS){
     const view=await context.newPage();
     try{

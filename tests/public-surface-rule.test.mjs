@@ -2,6 +2,7 @@ import assert from 'node:assert/strict';
 import fs from 'node:fs';
 import path from 'node:path';
 import test from 'node:test';
+import { spawnSync } from 'node:child_process';
 
 const candidates=JSON.parse(fs.readFileSync('registry/public-surface-candidates.json','utf8'));
 const directory=JSON.parse(fs.readFileSync('public/.well-known/evercraft-products.json','utf8'));
@@ -112,11 +113,22 @@ test('public demo inline scripts parse cleanly and documents are not structurall
     assert.equal(closingHtml,1,'Public demo must contain exactly one closing html tag in '+file);
     const scripts=[...html.matchAll(/<script\b[^>]*>([\s\S]*?)<\/script>/gi)];
     for(const match of scripts){
-      assert.doesNotThrow(
-        ()=>new Function(match[1]),
-        undefined,
-        'Inline script syntax failed in '+file
-      );
+      const attributes=match[0].slice(0,match[0].indexOf('>')+1);
+      if(/\bsrc\s*=/.test(attributes)||!match[1].trim()) continue;
+      if(/\btype\s*=\s*["']application\/(?:ld\+json|json)["']/i.test(attributes)){
+        assert.doesNotThrow(()=>JSON.parse(match[1]),'Inline JSON syntax failed in '+file);
+        continue;
+      }
+      if(/\btype\s*=\s*["']module["']/i.test(attributes)){
+        // new Function cannot parse legitimate ES-module imports/exports.
+        // Node syntax checking validates module source without executing it.
+        const check=spawnSync(process.execPath,['--input-type=module','--check'],{
+          input:match[1],encoding:'utf8',timeout:10000,maxBuffer:1024*1024
+        });
+        assert.equal(check.status,0,'Inline module syntax failed in '+file+': '+String(check.stderr||check.error||''));
+        continue;
+      }
+      assert.doesNotThrow(()=>new Function(match[1]),'Inline classic script syntax failed in '+file);
     }
   }
 });
