@@ -2,6 +2,7 @@ import crypto from 'node:crypto';
 import fs from 'node:fs';
 import path from 'node:path';
 import {renderCommercialPoster, renderCommercialMotion} from './commercial-renderer.mjs';
+import {auditGraphicsCapabilities,requireCompleteGraphicsInventory} from './production-capability-audit.mjs';
 
 const sha256 = (value) => crypto.createHash('sha256').update(value).digest('hex');
 const hashJson = (value) => sha256(JSON.stringify(value));
@@ -83,6 +84,9 @@ export function assembleGraphicsProductionMesh({dir, campaign, plan, report, man
   assert(manifest.truthState === campaign.truthState, 'truth_state_mismatch');
   assert(manifest.offerUrl === campaign.offerUrl && manifest.priceUsd === campaign.priceUsd, 'offer_mismatch');
   const shotIds = verifyCouncil(plan, reconciliation);
+  // Inventory all relevant on-disk source modules before declaring departmental coverage.
+  const capabilityAudit=requireCompleteGraphicsInventory(auditGraphicsCapabilities());
+  fs.writeFileSync(path.join(root,'production-capability-audit.json'),JSON.stringify(capabilityAudit,null,2)+'\n');
 
   // Check immutable local media bytes instead of trusting public URLs or filenames.
   const formatMap = new Map([
@@ -122,6 +126,8 @@ export function assembleGraphicsProductionMesh({dir, campaign, plan, report, man
   const clipFile = readAsset(root, 'clip-handoff.json');
   artifacts.push({path:'clip-handoff.json',sha256:clipFile.sha256,sizeBytes:clipFile.sizeBytes,kind:'handoff'});
 
+  const capabilityFile=readAsset(root,'production-capability-audit.json');
+  artifacts.push({path:'production-capability-audit.json',sha256:capabilityFile.sha256,sizeBytes:capabilityFile.sizeBytes,kind:'audit'});
   let framesAllocated = 0;
   const shots = plan.motion.beats.map((beat,index) => {
     assert(shotIds[index] === 'commercial-' + campaign.slug + '-' + beat.id, 'shot_order_mismatch');
@@ -146,7 +152,14 @@ export function assembleGraphicsProductionMesh({dir, campaign, plan, report, man
     fps, frameCount:framesAllocated, resolution:{width:1080,height:1920},
     sourceRefs:campaign.sourceRefs, truthState:campaign.truthState,
     shots,
+    capabilityRegistry:{auditDigest:capabilityAudit.digest,sourceTreeDigest:capabilityAudit.sourceTreeDigest,
+      featureCount:capabilityAudit.featureCount,sourceModuleCount:capabilityAudit.sourceModuleCount,
+      toonAndCharacterCapabilities:capabilityAudit.toonAndCharacterCapabilities,
+      unadmittedCapabilities:capabilityAudit.features.filter(f=>f.commercialMeshState==='not_admitted_to_commercial_mesh').map(f=>f.id)},
     departments:{
+      familyToonStudio:{state:'source_capabilities_inventoried_only',requiredEvidence:'series_bible_identity_animated_rig_performance_facial_mouth_hand_continuity_and_final_visual_review'},
+      cinematicPerformance:{state:'source_capabilities_inventoried_only',requiredEvidence:'performance_direction_identity_fingerprint_dialogue_sync_and_aesthetic_admission'},
+      musicAndAudio:{state:'not_executed',requiredEvidence:'voice_profiles_original_score_foley_spatial_sound_and_master_receipts'},
       graphicsCommand:{state:'verified_local_assets',artifacts:artifacts.filter((x)=>x.kind==='svg').map((x)=>x.sha256)},
       fallenCreativeCouncil:{state:'reconciled',shotCount:shotIds.length,reconciliationSha256:readAsset(root,'creative-council-reconciliation.json').sha256},
       worldEngine:{state:'not_executed',requestedOutput:'replay_and_render_receipts_if_spatial_scenes_used'},
@@ -166,6 +179,8 @@ export function assembleGraphicsProductionMesh({dir, campaign, plan, report, man
     truthState:campaign.truthState, fps, frameCount:framesAllocated,
     artifacts:artifacts.sort((a,b)=>a.path.localeCompare(b.path)),
     councilStatus:reconciliation.status, councilShotCount:shotIds.length,
+    capabilityAuditDigest:capabilityAudit.digest,sourceModuleCount:capabilityAudit.sourceModuleCount,
+    toonCapabilitiesCount:capabilityAudit.toonAndCharacterCapabilities.length,
     jobpackSha256:hashJson(jobpack),
     status:'preproduction_verified_downstream_blocked',
     publicationAuthority:false, customerReady:false,
