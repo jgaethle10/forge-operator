@@ -39,7 +39,7 @@ University of Iowa Electronic Music Studios' published terms say its samples may
 | french_horn_pp | `8ad2790b8852ca3b39d58853a9bf0e1218bfe2b0543b9d98e6663211fc3bc48b` |
 | bassoon_pp | `a6c4404661284e85a4977ba6217979914c918482c7214345f44ddddc7984a653` |
 
-11? There are **10** recorded source scale files including held source. File hashes should be checked on every run; mismatches fail closed. The orchestral source fetch job completed successfully on [run 39646211653](https://github.com/jgaethle10/forge-operator/actions/runs/39646211653) and its instrument samples were also exported in the founder's audition kit.
+There are **10** recorded source scale files including the held viola source. File hashes should be checked on every run; mismatches fail closed. The orchestral source fetch job completed successfully on [run 39646211653](https://github.com/jgaethle10/forge-operator/actions/runs/39646211653) and its instrument samples were also exported in the founder's audition kit.
 
 ### Sound-quality limitations
 
